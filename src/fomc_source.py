@@ -194,6 +194,16 @@ class FomcSource:
                 log.warning("%s 引言寫 %d 張反對票，但解析出 %d 位反對者",
                             d, vote.stated_dissent, len(vote.dissents))
 
+        # 內容健全性檢查：聲明一定會提到委員會與目標區間。
+        # 兩者都沒有，代表抓到的根本不是聲明（版面改版、抓到錯的頁面），
+        # 這時寧可判定失敗，也不要把導覽選單之類的東西當成聲明拿去比對。
+        low = policy.lower()
+        if "committee" not in low and "target range" not in low:
+            log.warning("%s 抓到的內容不像聲明（缺 Committee／target range），跳過", d)
+            self.failed.append((STATEMENT_URL.format(ymd=d.strftime("%Y%m%d")),
+                                "內容不像聲明，可能是頁面改版"))
+            return None
+
         # 門檻設低一點：Warsh 任內的聲明明顯變短，
         # 用 Powell 時代的長度當門檻會把正常聲明整份丟掉。
         if len(policy) < 200:
@@ -275,9 +285,38 @@ _DROP_PARA = re.compile(
 )
 
 
+# 只有日期的段落（新聞稿的發布日期行）。留著會被當成內文，
+# 兩份聲明比對時就冒出「刪除 June 17 → 新增 July 29」這種假改動。
+_DATE_ONLY = re.compile(
+    r"^\s*(?:January|February|March|April|May|June|July|August|September|"
+    r"October|November|December)\s+\d{1,2},?\s+\d{4}\s*$", re.I)
+
+
+def _is_prose(t: str) -> bool:
+    """
+    判斷一段文字是「句子」還是導覽選單那種標題片語的堆疊。
+
+    聯準會頁面的側邊選單長這樣（全部連在一起、沒有句號、幾乎每個字大寫）：
+        Federal Open Market Committee Monetary Policy Principles and Practice
+        Policy Implementation Reports Review of Monetary Policy Strategy ...
+    聲明本文則是正常英文句子：句號多、大寫字少。用這兩個特徵就分得開。
+    """
+    words = t.split()
+    if len(words) < 4:
+        return False
+    if "." in t:                      # 有句號就當成句子
+        return True
+    caps = sum(1 for w in words if w[:1].isupper())
+    return caps / len(words) <= 0.5
+
+
 def extract_text(html_doc: str) -> str:
     html_doc = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html_doc)
-    paras = re.findall(r"(?is)<p[^>]*>(.*?)</p>", html_doc)
+
+    # 段落比對不能寫成 <p...>(.*?)</p>。聯準會的頁面有**未閉合的 <p>**，
+    # 非貪婪比對會從那個 <p> 一路吃到下一個 </p>，把整個側邊導覽選單
+    # 當成內文吞進來。改成「遇到下一個 <p 或 </p 就停」，避免跨區吸入。
+    paras = re.findall(r"(?is)<p[^>]*>((?:(?!</?p[\s/>]).)*)", html_doc)
 
     kept = []
     for p in paras:
@@ -286,7 +325,9 @@ def extract_text(html_doc: str) -> str:
         # 像 &#160;（不斷行空格）這種數字實體會原樣留在畫面上。
         t = html.unescape(t)
         t = re.sub(r"\s+", " ", t).strip()
-        if not t or _DROP_PARA.search(t):
+        if not t or _DROP_PARA.search(t) or _DATE_ONLY.match(t):
+            continue
+        if not _is_prose(t):
             continue
         kept.append(t)
 
