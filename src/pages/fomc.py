@@ -10,13 +10,13 @@ from ..site import esc
 # 全站其他頁面說的是「利升息／利降息」，兩套詞要能互相對上。
 DIR_COPY = {
     "hawkish": ("本次會議：偏鷹（利升息方向）",
-                "客觀訊號指向緊縮——反對票或點陣圖顯示有官員想要更高的利率。"
+                "客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。"
                 "這通常代表降息會比市場預期更慢，對債券價格不利。"),
     "dovish": ("本次會議：偏鴿（利降息方向）",
-               "客觀訊號指向寬鬆——反對票或點陣圖顯示有官員想要更低的利率。"
+               "客觀訊號指向寬鬆——政策行動、反對票或聲明點名的風險方向指向更低的利率。"
                "這通常是降息的前置訊號。"),
     "neutral": ("本次會議：方向不明",
-                "沒有反對票，點陣圖也沒有明顯偏向。委員會維持彈性，"
+                "維持利率不變、沒有反對票，聲明也沒有點名特定風險。委員會維持彈性，"
                 "方向由後續數據決定。"),
 }
 
@@ -125,7 +125,7 @@ def fomc_body(d: dict) -> str:
       <span style="font-weight:400;color:var(--muted)">
       　較上次 {sh.get('objective_delta', 0):+.2f}</span></div>
     <div class="dnote">刻度：0＝中性，正＝偏升息、負＝偏降息。
-      每張升息／降息反對票 ±2，點陣圖多數偏向另計。<br>{esc(d.get('obj_detail', ''))}</div>
+      政策行動 ±3、每張反對票 ±2、聲明點名的風險方向 ±1。<br>{esc(d.get('obj_detail', ''))}</div>
   </div>
   <div class="dbox {tone_cls}{tone_stale}">
     <div class="dtitle">措辭分數（輔助）{'　⚠ 本次不可靠' if regime.get('detected') else ''}</div>
@@ -150,6 +150,15 @@ def fomc_body(d: dict) -> str:
                    '通常代表委員會內部的分歧還沒反映到官方措辭上。'
                    '歷史上市場多半跟著客觀訊號走。</div>')
 
+    # ---- 反應函數（聯準會目前的重心）----
+    focus = d.get("focus") or {}
+    focus_cls = {"inflation": "hawkish", "employment": "dovish"}.get(
+        focus.get("focus", ""), "neutral")
+    focus_ev = ""
+    if focus.get("evidence"):
+        focus_ev = ('<div class="src" style="border-top:none;padding-top:10px">'
+                    '判定依據：' + esc("、".join(focus["evidence"])) + "</div>")
+
     presser_html = ""
     if d.get("presser_available"):
         presser_html = f"""
@@ -169,14 +178,29 @@ def fomc_body(d: dict) -> str:
     </details>
   </div>"""
     else:
-        presser_html = """
+        # 取不到的原因不同，讀者要採取的行動也不同——
+        # 「還沒發布」等就好，「缺套件」不處理就永遠不會有。
+        reason = d.get("presser_reason", "pending")
+        if reason == "no_pdfplumber":
+            note = ("<b>環境缺少 PDF 解析套件</b><br>"
+                    "逐字稿是 PDF，需要 <code>pdfplumber</code> 才能讀取，"
+                    "目前的執行環境沒有安裝，所以這一區不會有資料——"
+                    "這不是等待，不處理就不會自動出現。"
+                    "請確認 <code>requirements.txt</code> 含有 pdfplumber 並重新執行。")
+        elif reason == "parse_failed":
+            note = ("<b>逐字稿解析失敗</b><br>"
+                    "PDF 已下載但無法解析，可能是聯準會改了檔案格式。"
+                    "詳細錯誤列在頁面底部的失敗清單。")
+        else:
+            note = ("<b>尚未發布</b><br>"
+                    "逐字稿為 PDF，通常在會後數日才發布，所以會議當天無法納入。"
+                    "發布後系統會自動補上並重算分數。")
+        presser_html = f"""
   <div class="card">
     <h2 id="presser">記者會</h2>
     <p class="hint">會後記者會的逐字稿。市場的實際反應常常來自這裡。</p>
     <div class="warnbox" style="margin-top:4px">
-      <b>延遲取得</b><br>
-      逐字稿為 PDF，通常在會後數日才發布，所以會議當天無法納入。
-      發布後系統會自動補上並重算分數。目前的結論僅根據聲明與投票紀錄。
+      {note}<br>目前的結論僅根據聲明與投票紀錄。
     </div>
   </div>"""
 
@@ -210,16 +234,17 @@ def fomc_body(d: dict) -> str:
   </div>
 
   <div class="card">
-    <h2 id="dots">點陣圖</h2>
-    <p class="hint">每季更新一次，顯示每位官員對年底利率的預測。
-      比任何措辭都實在，但更新頻率低。</p>
-    <div class="stat-row">{d['dots_stats']}</div>
-    <div class="src">{esc(d.get('dots_note', ''))}</div>
-    <details data-m-collapse><summary>歷次點陣圖</summary>
-      <table style="margin-top:10px">
-        <thead><tr><th>發布</th><th>預期升息</th><th>預期降息／不變</th>
-          <th>年底中位數</th></tr></thead>
-        <tbody>{d['dots_rows']}</tbody></table></details>
+    <h2 id="focus">聯準會目前的重心</h2>
+    <p class="hint">雙重使命的權重會隨時間移動。同一份就業數據，
+      在「通膨優先」與「就業優先」下會導向相反的決定，
+      所以情境合成頁的九宮格會依這個判定調整結論。</p>
+    <div class="dbox {focus_cls}" style="margin-top:4px">
+      <div class="dtitle">目前重心</div>
+      <div class="dlab" style="font-size:19px;margin-top:6px">{esc(focus.get('label', '—'))}</div>
+      <div class="dnote">{esc(focus.get('note', ''))}</div>
+    </div>
+    {focus_ev}
+    <div class="src">判定只用聲明裡的制式句與投票紀錄，不用模型，每次執行結果一致。</div>
   </div>
 </div>
 
@@ -285,7 +310,7 @@ def fomc_body(d: dict) -> str:
 def fomc_footer(d: dict) -> str:
     return (
         "資料來源：美國聯準會（federalreserve.gov）會後聲明、投票紀錄、"
-        "SEP 點陣圖與記者會逐字稿。<br>"
-        "完整會議逐字稿依規定延後五年公布。點陣圖需手動更新於 config/fomc.yaml。<br>"
+        "與記者會逐字稿。<br>"
+        "完整會議逐字稿依規定延後五年公布。本模組無須手動維護資料。<br>"
         "計分與詞頻皆為確定性規則，不含模型生成內容。"
     )

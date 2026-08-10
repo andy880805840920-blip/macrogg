@@ -30,11 +30,15 @@ def _triggers(trigs) -> str:
         return '<div class="empty">資料不足，無法計算觸發距離</div>'
     out = []
     for t in trigs:
+        # 約束條件那一軸要標出來：在通膨優先的體制下，勞動那幾條就算
+        # 全部觸發也不會單獨改變政策方向，讀者該盯的是通膨那條。
+        tag = ('<span class="tbind">關鍵</span>'
+               if getattr(t, "binding", False) else "")
         out.append(
             f'<div class="trig{" met" if t.met else ""}">'
-            f'<div class="tname">{esc(t.label)}</div>'
+            f'<div class="tname">{esc(t.label)}{tag}</div>'
             f'<div class="tdist">{esc("已觸發" if t.met else t.distance)}</div>'
-            f'<div class="tnow">目前 {esc(t.current)}　·　門檻 {esc(t.threshold)}</div>'
+            f'<div class="tnow">目前 {esc(t.current)}　·　{esc(t.threshold)}</div>'
             f"</div>"
         )
     return "".join(out)
@@ -100,6 +104,32 @@ def scenario_body(d: dict) -> str:
     fomc_note = (f'<div class="v-why" style="margin-top:14px">{esc(sc.fomc_note)}</div>'
                  if sc.fomc_note else "")
 
+    # ---- 反應函數：聯準會目前把哪一邊擺在前面 ----
+    focus = sc.focus or {}
+    focus_cls = {"inflation": "hawkish", "employment": "dovish"}.get(
+        focus.get("focus", ""), "balanced")
+    focus_ev = ""
+    if focus.get("evidence"):
+        focus_ev = ('<div class="src">判定依據：'
+                    + esc("、".join(focus["evidence"]))
+                    + "　·　來源為聲明制式句與投票紀錄，不用模型。</div>")
+    focus_block = f"""
+<div class="grid">
+  <div class="card">
+    <h2 id="focus">聯準會目前的重心</h2>
+    <p class="hint">九宮格如果用固定的對照表，等於假設雙重使命的權重永遠一樣。
+      實際上反應函數會移動——2020 年是就業優先，現在明顯不是。
+      同一格在兩種體制下的結論可能完全相反，所以先判定重心，再修正結論。</p>
+    <div class="verdict {focus_cls}" style="margin-top:4px">
+      <div class="v-eyebrow">目前重心</div>
+      <div class="v-main" style="font-size:22px">{esc(focus.get('label', '無法判定'))}</div>
+      <div class="v-why">{esc(focus.get('note', ''))}</div>
+      {f'<div class="v-count">{esc(sc.focus_note)}</div>' if sc.focus_note else ''}
+    </div>
+    {focus_ev}
+  </div>
+</div>"""
+
     return f"""
 <div class="verdict {sc.lean}">
   <div class="v-eyebrow">{esc(d['as_of'])}　·　目前情境</div>
@@ -108,12 +138,14 @@ def scenario_body(d: dict) -> str:
   {fomc_note}
   <div class="v-count">
     定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
-    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}<br>
+    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}
+    {('（已依聯準會目前重心「' + esc(focus.get('label', '')) + '」修正）')
+     if sc.focus_note and focus.get('label') else ''}<br>
     這裡刻意不給機率。機率市場早就定價了，有價值的是「我的判讀跟市場定價差在哪」。
   </div>
   {incomplete}
 </div>
-
+{focus_block}
 <div class="grid">
   <div class="card">
     <h2 id="grid">九宮格定位</h2>
@@ -123,7 +155,8 @@ def scenario_body(d: dict) -> str:
     {_grid(d['cells'])}
     <p class="hint" style="margin-top:16px">
       左下角（就業弱、通膨低）是降息最順的情況；右下角（就業弱、通膨高）
-      是停滯性通膨，兩個目標互相打架，聯準會最難處理。
+      是停滯性通膨，兩個目標互相打架，聯準會最難處理。<br>
+      格子本身是固定的框架，最終的政策傾向還會依上方的「目前重心」修正。
     </p>
   </div>
 </div>
@@ -139,7 +172,9 @@ def scenario_body(d: dict) -> str:
   <div class="card">
     <h2 id="triggers">情境轉換門檻</h2>
     <p class="hint">不給機率，但給明確的門檻與目前的距離——
-      這比機率誠實，也更能直接拿來盯。</p>
+      這比機率誠實，也更能直接拿來盯。
+      標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，
+      在現在的反應函數下也不會單獨改變政策方向。</p>
     {_triggers(sc.triggers)}
   </div>
 </div>

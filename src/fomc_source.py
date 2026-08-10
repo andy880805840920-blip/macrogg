@@ -24,6 +24,7 @@ FOMC 文件擷取（P3）。
 from __future__ import annotations
 
 import re
+import html
 import time
 import logging
 import datetime as dt
@@ -90,7 +91,14 @@ class FomcSource:
                 if r.status_code == 404:
                     return None
                 r.raise_for_status()
-                return r.content if binary else r.text
+                if binary:
+                    return r.content
+                # federalreserve.gov 的 Content-Type 不一定帶 charset。
+                # 沒帶時 requests 依 RFC 對 text/* 退回 ISO-8859-1，
+                # 頁面實際是 UTF-8，於是「12‑0」會變成「12â0」這種亂碼。
+                if "charset" not in (r.headers.get("content-type") or "").lower():
+                    r.encoding = r.apparent_encoding or "utf-8"
+                return r.text
             except Exception as e:                # noqa: BLE001
                 last = e
                 if attempt < MAX_RETRIES - 1:
@@ -139,29 +147,35 @@ class FomcSource:
         return {"date": d.isoformat(), "text": policy,
                 "vote_text": vote_text, "vote": parse_votes(vote_text).__dict__}
 
-    def presser(self, d: dt.date) -> str | None:
+    def presser(self, d: dt.date) -> tuple[str | None, str | None]:
         """
-        記者會逐字稿（PDF）。會後幾天才發布，所以當天抓不到是正常的。
-        需要 pdfplumber；沒安裝就跳過，不影響其他功能。
+        記者會逐字稿（PDF）。回傳 (逐字稿, 取不到的原因)。
+
+        原因要往上傳，因為三種情況對讀者的意義完全不同：
+          pending      — 還沒發布（會後數日才有），之後會自動補上
+          no_pdfplumber— 環境缺套件，不裝就永遠不會有
+          parse_failed — 抓到了但解析失敗
+        以前一律當成「延遲取得」，缺套件時畫面會謊稱「發布後會自動補上」。
         """
-        raw = self._get(PRESSER_URL.format(ymd=d.strftime("%Y%m%d")), binary=True)
+        url = PRESSER_URL.format(ymd=d.strftime("%Y%m%d"))
+        raw = self._get(url, binary=True)
         if not raw:
-            return None
+            return None, "pending"
         try:
             import io
             import pdfplumber
             with pdfplumber.open(io.BytesIO(raw)) as pdf:
                 pages = [p.extract_text() or "" for p in pdf.pages]
-            return re.sub(r"\s+", " ", " ".join(pages)).strip()
+            return re.sub(r"\s+", " ", " ".join(pages)).strip(), None
         except ImportError:
-            log.warning("未安裝 pdfplumber，略過記者會逐字稿")
-            self.failed.append((PRESSER_URL.format(ymd=d.strftime("%Y%m%d")),
-                               "未安裝 pdfplumber"))
-            return None
+            log.warning("未安裝 pdfplumber，略過記者會逐字稿"
+                        "（請確認 requirements.txt 已安裝）")
+            self.failed.append((url, "未安裝 pdfplumber"))
+            return None, "no_pdfplumber"
         except Exception as e:                    # noqa: BLE001
             log.warning("記者會 PDF 解析失敗 %s：%s", d, e)
             self.failed.append((str(d), f"PDF 解析失敗：{e}"))
-            return None
+            return None, "parse_failed"
 
     # ------------------------------------------------------------------
     def collect(self, years_back: int = 4, with_presser: bool = True) -> list[dict]:
@@ -174,7 +188,7 @@ class FomcSource:
                 continue
             # 記者會只抓最近幾場，避免一次拉太多 PDF
             if with_presser and i >= len(dates) - 4:
-                st["presser"] = self.presser(d)
+                st["presser"], st["presser_error"] = self.presser(d)
             out.append(st)
             time.sleep(0.4)
         return out
@@ -183,13 +197,39 @@ class FomcSource:
 # ---------------------------------------------------------------------------
 # 文字處理
 # ---------------------------------------------------------------------------
-def extract_text(html: str) -> str:
-    html = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)
-    paras = re.findall(r"(?is)<p[^>]*>(.*?)</p>", html)
-    text = " ".join(re.sub(r"(?s)<[^>]+>", " ", p) for p in paras)
-    text = (text.replace("&nbsp;", " ").replace("&amp;", "&")
-                .replace("&#39;", "'").replace("&quot;", '"'))
-    return re.sub(r"\s+", " ", text).strip()
+# 新聞稿頁面裡不屬於聲明本文的段落。不濾掉的話，「Share」按鈕、
+# 發布時間、媒體聯絡方式會被黏進本文，變成
+# 「edt share the federal open market committee approved…」這種句子，
+# 還會每期都被逐句比對當成「整句刪除」的雜訊。
+_DROP_PARA = re.compile(
+    r"^\s*(share|print|email|facebook|linkedin|youtube|twitter|x|rss)\s*$"
+    r"|^\s*for\s+(immediate\s+)?release"      # 「For release at 2:00 p.m. EDT」
+    r"|^\s*for\s+media\s+inquiries"
+    r"|^\s*(last\s+update|last\s+modified)"
+    r"|email\W{0,3}protected"                # Cloudflare 信箱混淆
+    r"|^\s*implementation\s+note"
+    r"|^\s*board\s+of\s+governors\b"
+    r"|^\s*\d{3}-\d{3}-\d{4}\s*$",
+    re.I,
+)
+
+
+def extract_text(html_doc: str) -> str:
+    html_doc = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html_doc)
+    paras = re.findall(r"(?is)<p[^>]*>(.*?)</p>", html_doc)
+
+    kept = []
+    for p in paras:
+        t = re.sub(r"(?s)<[^>]+>", " ", p)
+        # 用標準函式一次處理所有 HTML 實體：先前只換 4 種，
+        # 像 &#160;（不斷行空格）這種數字實體會原樣留在畫面上。
+        t = html.unescape(t)
+        t = re.sub(r"\s+", " ", t).strip()
+        if not t or _DROP_PARA.search(t):
+            continue
+        kept.append(t)
+
+    return re.sub(r"\s+", " ", " ".join(kept)).strip()
 
 
 def split_statement(text: str) -> tuple[str, str]:

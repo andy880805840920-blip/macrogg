@@ -7,12 +7,15 @@ FOMC 文本與投票分析（P3）。
 
 兩個分數並列，刻意不合成
 ------------------------
-  1. 客觀訊號分數：反對票方向與人數 + 點陣圖分布
+  1. 客觀訊號分數：政策行動 + 反對票 + 聲明自述的風險方向
   2. 措辭分數：聲明用語的鷹鴿詞典計分
 
 合成會掩蓋最有價值的資訊——**兩者背離時，背離本身就是訊號**。
 2026 年 7 月正是如此：措辭因為主席刻意縮短聲明而讀起來偏鴿，
-但三張贊成升息的反對票與點陣圖都指向偏鷹，市場也照後者走。
+但三張贊成升息的反對票指向偏鷹，市場也照後者走。
+
+另外輸出「反應函數」（detect_focus）：委員會目前把雙重使命的哪一邊
+擺在前面。九宮格需要這個才不會假設權重永遠固定。
 
 ⚠️ 完整逐字稿依聯準會規定延後五年公布，故此處處理的是
    會後聲明、投票紀錄與記者會逐字稿。
@@ -61,19 +64,20 @@ class DocAnalysis:
     kind: str = "statement"
     word_count: int = 0
     tone_score: float = 0.0          # 措辭分數（詞典）
-    objective_score: float = 0.0     # 客觀訊號分數（反對票 + 點陣圖）
+    objective_score: float = 0.0     # 客觀訊號分數（政策行動 + 反對票 + 風險方向）
     obj_parts: dict = field(default_factory=dict)
     hawk_hits: dict = field(default_factory=dict)
     dove_hits: dict = field(default_factory=dict)
     phrases: dict = field(default_factory=dict)
     vote: dict = field(default_factory=dict)
-    dots: dict = field(default_factory=dict)
+    focus: dict = field(default_factory=dict)   # 反應函數：目前重心在哪一邊
     has_presser: bool = False
     presser_score: float | None = None
-    text: str = ""
+    text: str = ""            # 全小寫，供計分與詞頻比對
+    text_display: str = ""    # 保留原始大小寫，供逐句比對顯示
 
 
-def analyse(doc: dict, dots: dict | None = None) -> DocAnalysis:
+def analyse(doc: dict) -> DocAnalysis:
     """doc: {date, text, vote?, presser?}"""
     clean = _normalise(doc.get("text", ""))
     words = len(clean.split())
@@ -84,7 +88,9 @@ def analyse(doc: dict, dots: dict | None = None) -> DocAnalysis:
             - sum(DOVISH[k] * v for k, v in dove_hits.items())) / denom
 
     vote = doc.get("vote") or {}
-    obj, parts = objective_score(vote, dots)
+    raw_text = doc.get("text", "")
+    obj, parts = objective_score(vote, raw_text)
+    focus = detect_focus(raw_text, vote)
 
     presser = doc.get("presser")
     p_score = None
@@ -100,49 +106,165 @@ def analyse(doc: dict, dots: dict | None = None) -> DocAnalysis:
         tone_score=round(tone, 3), objective_score=round(obj, 3),
         obj_parts=parts, hawk_hits=hawk_hits, dove_hits=dove_hits,
         phrases={p: _wb_count(clean, p) for p in TRACKED_PHRASES},
-        vote=vote, dots=dots or {}, has_presser=bool(presser),
+        vote=vote, focus=focus, has_presser=bool(presser),
         presser_score=None if p_score is None else round(p_score, 3),
         text=clean,
+        # 逐句比對是給人讀的，不能用計分用的小寫版本——
+        # 否則畫面上會出現 "the federal open market committee" 這種怪句子。
+        text_display=re.sub(r"\s+", " ", doc.get("text", "")).strip(),
     )
 
 
-def objective_score(vote: dict, dots: dict | None) -> tuple[float, dict]:
-    """
-    客觀訊號分數。正＝偏鷹、負＝偏鴿。
+# 政策行動：聲明自己會寫「decided to maintain / raise / lower the target range」。
+# 這是文件裡的事實陳述，不是語氣判讀，所以歸在客觀訊號。
+_ACTION_RE = [
+    ("hike", re.compile(r"decided to (?:raise|increase)\s+the target range", re.I)),
+    ("cut", re.compile(r"decided to (?:lower|reduce|decrease)\s+the target range", re.I)),
+    ("hold", re.compile(r"decided to (?:maintain|keep)\s+the target range", re.I)),
+]
 
-    反對票：每一張贊成升息的反對票 +2，贊成降息 −2。
-            反對票是客觀事實，不受主席的措辭風格影響，所以權重最高。
-    點陣圖：預期升息與預期降息的官員人數差，除以總人數再乘 4。
-            一季才更新一次，但比任何措辭都實在。
+# 聲明自述的風險方向。這是委員會自己點名「我擔心哪一邊」，
+# 與詞典計分不同——它是明確的制式句，不是用字習慣。
+_RISK_INFL = re.compile(r"upside risks? to inflation", re.I)
+_RISK_EMPL = re.compile(r"downside risks? to (?:employment|the labor market)", re.I)
+_RISK_BAL = re.compile(r"risks?[^.]{0,40}(?:roughly )?(?:are |remain )?balanced", re.I)
+
+# 通膨是否被聲明明白描述為高於目標
+_INFL_ABOVE = re.compile(
+    r"inflation[^.]{0,60}(?:remains?|is|stays?)[^.]{0,30}"
+    r"(?:above|elevated|higher than)", re.I)
+
+
+def policy_action(text: str) -> str | None:
+    """從聲明本文判定本次的政策行動。回傳 hike / cut / hold / None。"""
+    for name, pat in _ACTION_RE:
+        if pat.search(text):
+            return name
+    return None
+
+
+def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
     """
-    parts = {}
+    客觀訊號分數。正＝偏鷹（利升息）、負＝偏鴿（利降息）。
+
+    三個成分，都是「文件裡的事實」而不是用字習慣：
+
+      政策行動   升息 +3、降息 −3、不變 0
+                 委員會實際做了什麼，權重最高。
+      反對票     每張贊成升息的反對票 +2、贊成降息 −2。
+                 反對票是投票紀錄，不受主席的措辭風格影響。
+      風險方向   聲明點名「通膨上行風險」+1、「就業下行風險」−1。
+                 這是制式句，與詞典計分的用字習慣不同。
+
+    （點陣圖成分已移除：聯準會在 Warsh 任內縮減預測公布，
+      這個輸入不再穩定存在，留著會讓分數的可比性時有時無。）
+    """
+    parts: dict = {}
+    total = 0.0
+
+    act = policy_action(text or "")
+    act_score = {"hike": 3.0, "cut": -3.0, "hold": 0.0}.get(act, 0.0)
+    parts["action"] = act_score
+    parts["action_detail"] = {
+        "hike": "本次升息", "cut": "本次降息", "hold": "本次維持利率不變",
+    }.get(act, "無法從聲明判定政策行動")
+    total += act_score
+
     hawk = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "hike")
     dove = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "cut")
     parts["dissent"] = 2.0 * (hawk - dove)
-    parts["dissent_detail"] = f"贊成升息 {hawk} 票、贊成降息 {dove} 票"
+    parts["dissent_detail"] = (f"贊成升息 {hawk} 票、贊成降息 {dove} 票"
+                               if (hawk or dove) else "全體一致，沒有反對票")
+    total += parts["dissent"]
 
-    total = (dots or {}).get("total")
-    up = (dots or {}).get("hike")
-    if dots and total and up is not None:
-        down = dots.get("cut")
-        if down is not None:
-            # 升息與降息人數都已知：用兩者的差
-            parts["dots"] = 4.0 * (up - down) / total
-            parts["dots_detail"] = (f"{total} 位提交預測的官員中，"
-                                    f"{up} 位預期升息、{down} 位預期降息")
-        else:
-            # 官方摘要常只說「其餘為不變或更低」，沒有拆出降息人數。
-            # 這時只能用「預期升息的比例是否超過一半」來衡量，不硬猜降息人數。
-            parts["dots"] = 4.0 * (2 * up / total - 1)
-            rest = dots.get("hold_or_cut", total - up)
-            parts["dots_detail"] = (f"{total} 位提交預測的官員中，"
-                                    f"{up} 位預期升息、{rest} 位預期不變或更低"
-                                    "（官方未拆分降息人數）")
+    risk = 0.0
+    bits = []
+    if _RISK_INFL.search(text or ""):
+        risk += 1.0
+        bits.append("聲明點名通膨上行風險")
+    if _RISK_EMPL.search(text or ""):
+        risk -= 1.0
+        bits.append("聲明點名就業下行風險")
+    if not bits and _RISK_BAL.search(text or ""):
+        bits.append("聲明稱風險大致平衡")
+    parts["risk"] = risk
+    parts["risk_detail"] = "、".join(bits) or "聲明未明確點名風險方向"
+    total += risk
+
+    parts["has_signal"] = bool(act or hawk or dove or bits)
+    return total, parts
+
+
+# ---------------------------------------------------------------------------
+# 反應函數：聯準會目前把哪一邊的使命擺在前面
+# ---------------------------------------------------------------------------
+FOCUS_TEXT = {
+    "inflation": ("通膨優先",
+                  "委員會目前把通膨擺在前面。這種體制下，就業轉弱不會單獨換來降息——"
+                  "要等通膨先回到目標附近，寬鬆才會啟動。"),
+    "employment": ("就業優先",
+                   "委員會目前把就業擺在前面。這種體制下，通膨略高於目標不會阻止降息，"
+                   "勞動市場的惡化才是決定性的。"),
+    "balanced": ("兩邊並重",
+                 "委員會沒有明顯偏向任何一邊，兩個使命的風險被描述為大致平衡。"
+                 "這時候哪一邊先出現極端值，哪一邊就會主導決策。"),
+    "unknown": ("無法判定",
+                "本次聲明沒有足夠的線索判斷委員會的重心，方向主要由後續數據決定。"),
+}
+
+
+def detect_focus(text: str, vote: dict | None = None) -> dict:
+    """
+    判斷聯準會目前把雙重使命的哪一邊擺在前面。
+
+    為什麼需要這個
+    --------------
+    九宮格如果用固定的對照表，等於假設聯準會對就業與通膨的權重永遠一樣。
+    實際上反應函數會移動：2020 年是就業優先，2026 年明顯是通膨優先。
+    同一格「就業弱 × 通膨高」，在兩種體制下的結論完全相反。
+
+    判定只用聲明裡的制式句與投票紀錄，不用模型，所以每次跑結果一致。
+    """
+    text = text or ""
+    vote = vote or {}
+    score = 0          # 正＝偏通膨、負＝偏就業
+    evidence: list[str] = []
+
+    if _RISK_INFL.search(text):
+        score += 2
+        evidence.append("聲明點名「通膨上行風險」")
+    if _RISK_EMPL.search(text):
+        score -= 2
+        evidence.append("聲明點名「就業下行風險」")
+    if _INFL_ABOVE.search(text):
+        score += 1
+        evidence.append("聲明描述通膨仍高於目標")
+
+    hawk = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "hike")
+    dove = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "cut")
+    if hawk > dove:
+        score += 1
+        evidence.append(f"{hawk} 張反對票主張升息")
+    elif dove > hawk:
+        score -= 1
+        evidence.append(f"{dove} 張反對票主張降息")
+
+    balanced_said = bool(_RISK_BAL.search(text))
+    if balanced_said and not evidence:
+        evidence.append("聲明稱兩邊風險大致平衡")
+
+    if score >= 2:
+        focus = "inflation"
+    elif score <= -2:
+        focus = "employment"
+    elif evidence or balanced_said:
+        focus = "balanced"
     else:
-        parts["dots"] = 0.0
-        parts["dots_detail"] = "尚無點陣圖資料"
+        focus = "unknown"
 
-    return parts["dissent"] + parts["dots"], parts
+    label, note = FOCUS_TEXT[focus]
+    return {"focus": focus, "label": label, "note": note,
+            "score": score, "evidence": evidence}
 
 
 def _normalise(t: str) -> str:

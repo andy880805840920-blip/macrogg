@@ -422,6 +422,9 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+.trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
+  border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
+  vertical-align:1px;white-space:nowrap}
 
 /* ---------- 折線圖（刻度用 HTML，避免文字被等比縮小） ---------- */
 /* 參考線只畫「資料實際的最高／最低值」，各附數值標籤——

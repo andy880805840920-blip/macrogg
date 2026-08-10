@@ -326,7 +326,7 @@ def main() -> int:
         statements, failed = gather_fomc(args.offline, fetch_cfg)
         all_failed += failed
         ctxs["fomc"] = build.build_fomc_context(
-            statements, fcfg.get("dots") or [], fcfg.get("policy_rate") or {},
+            statements, fcfg.get("policy_rate") or {},
             failed, args.offline)
         if not ctxs["fomc"].get("empty"):
             log.info("聯準會文本完成：%d 份聲明，最新 %s",

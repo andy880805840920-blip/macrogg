@@ -1,2 +1,4 @@
 requests>=2.31
 PyYAML>=6.0
+# 記者會逐字稿是 PDF，少了這個 FOMC 頁的「記者會」整區都拿不到資料
+pdfplumber>=0.11

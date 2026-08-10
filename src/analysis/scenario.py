@@ -97,6 +97,7 @@ class Trigger:
     threshold: str
     distance: str
     met: bool = False
+    binding: bool = False       # 這一軸是不是目前的政策約束條件
 
 
 @dataclass
@@ -111,6 +112,65 @@ class Scenario:
     drivers: list[str] = field(default_factory=list)
     fomc_note: str = ""
     incomplete: list[str] = field(default_factory=list)
+    focus: dict = field(default_factory=dict)   # 聯準會目前的重心
+    focus_note: str = ""                        # 重心如何修正這一格的結論
+    binding: str = ""                           # 目前的約束條件在哪一軸
+
+
+# ---------------------------------------------------------------------------
+# 反應函數對格子的修正
+# ---------------------------------------------------------------------------
+def _apply_focus(l_state: str, i_state: str, lean: str,
+                 focus: dict | None) -> tuple[str, str, str]:
+    """
+    用聯準會目前的重心修正政策傾向，並指出哪一軸才是約束條件。
+
+    回傳 (修正後的 lean, 說明, 約束條件所在的軸)。
+
+    為什麼要修正
+    ------------
+    固定的九宮格假設雙重使命的權重永遠一樣，但反應函數會移動。
+    「就業弱 × 通膨中」在就業優先的體制下確實是降息，
+    但在通膨優先的體制下，就業再弱也換不到降息——要等通膨先降。
+    不修正的話，這一格會給出方向完全相反的結論。
+    """
+    f = (focus or {}).get("focus")
+
+    if f == "inflation":
+        # 通膨沒回到低檔之前，就業轉弱不構成降息理由
+        if lean == "dovish" and i_state != "低":
+            return ("neutral",
+                    "九宮格本身偏向降息，但聯準會目前以通膨為優先——"
+                    "在通膨回到目標附近之前，就業轉弱不會單獨換來降息，"
+                    "所以實際傾向修正為觀望。",
+                    "通膨")
+        if lean == "hawkish":
+            return (lean,
+                    "聯準會目前以通膨為優先，與這一格的方向一致，判讀的信心較高。",
+                    "通膨")
+        return (lean, "聯準會目前以通膨為優先，降息的門檻比一般情況高。", "通膨")
+
+    if f == "employment":
+        # 就業優先：通膨略高不阻止降息
+        if lean == "hawkish" and l_state == "弱":
+            return ("neutral",
+                    "九宮格本身偏向升息，但聯準會目前以就業為優先——"
+                    "勞動市場已經轉弱時，緊縮的門檻會明顯提高，"
+                    "所以實際傾向修正為觀望。",
+                    "就業")
+        if lean == "dovish":
+            return (lean,
+                    "聯準會目前以就業為優先，與這一格的方向一致，判讀的信心較高。",
+                    "就業")
+        return (lean, "聯準會目前以就業為優先，升息的門檻比一般情況高。", "就業")
+
+    if f == "balanced":
+        return (lean,
+                "聯準會把兩邊的風險描述為大致平衡，九宮格的判定不做修正——"
+                "哪一邊先出現極端值，哪一邊就會主導決策。",
+                "兩者")
+
+    return (lean, "本次聲明看不出聯準會的重心，九宮格的判定不做修正。", "")
 
 
 # ---------------------------------------------------------------------------
@@ -173,12 +233,17 @@ def synthesise(labor: dict | None, inflation: dict | None,
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
                                  (inflation or {}).get("core_3m"))
 
-    name, desc, lean = GRID[(l_state, i_state)]
+    name, desc, base_lean = GRID[(l_state, i_state)]
+
+    # 反應函數：同一格在「通膨優先」與「就業優先」下的結論可能相反
+    focus = (fomc or {}).get("focus") or {}
+    lean, focus_note, binding = _apply_focus(l_state, i_state, base_lean, focus)
 
     sc = Scenario(labor_state=l_state, infl_state=i_state, name=name,
                   description=desc, lean=lean,
                   positioning=dict(POSITIONING.get(name, {})),
-                  incomplete=incomplete)
+                  incomplete=incomplete,
+                  focus=focus, focus_note=focus_note, binding=binding)
 
     # ---- 推動這個判定的主要因素 ----
     for f in (labor or {}).get("flags", [])[:2]:
@@ -203,24 +268,33 @@ def synthesise(labor: dict | None, inflation: dict | None,
             sc.fomc_note = "聯準會措辭沒有明顯變化，方向主要由數據決定。"
 
     # ---- 跨入相鄰格的觸發條件 ----
-    sc.triggers = _triggers(labor, inflation, l_state, i_state)
+    sc.triggers = _triggers(labor, inflation, l_state, i_state, binding)
     return sc
 
 
 def _triggers(labor: dict | None, inflation: dict | None,
-              l_state: str, i_state: str) -> list[Trigger]:
+              l_state: str, i_state: str, binding: str = "") -> list[Trigger]:
+    """
+    各軸離下一格還有多遠。
+
+    binding 指出目前哪一軸才是政策的約束條件——在通膨優先的體制下，
+    勞動那幾條就算全部觸發，也不會單獨改變政策方向。標示出來，
+    讀者才知道該盯哪一條。
+    """
     out: list[Trigger] = []
 
     score = (labor or {}).get("score")
     if score is not None:
-        if l_state != "弱":
-            gap = score - (-0.45)
-            out.append(Trigger("勞動轉「弱」", f"綜合分數 {score:+.2f}",
-                               "跌破 −0.45", f"還差 {gap:.2f}", gap <= 0))
-        if l_state != "強":
-            gap = 0.45 - score
-            out.append(Trigger("勞動轉「強」", f"綜合分數 {score:+.2f}",
-                               "升破 +0.45", f"還差 {gap:.2f}", gap <= 0))
+        for label, thr, gap in (
+            ("勞動轉「弱」", "需低於 −0.45", score - (-0.45)),
+            ("勞動轉「強」", "需高於 +0.45", 0.45 - score),
+        ):
+            if (label.endswith("「弱」") and l_state == "弱") or \
+               (label.endswith("「強」") and l_state == "強"):
+                continue
+            out.append(Trigger(label, f"綜合分數 {score:+.2f}", thr,
+                               f"還差 {gap:.2f}", gap <= 0,
+                               binding=(binding == "就業")))
 
     pce = (inflation or {}).get("core_pce_yoy")
     c3 = (inflation or {}).get("core_3m")
@@ -229,11 +303,13 @@ def _triggers(labor: dict | None, inflation: dict | None,
         if i_state != "低":
             gap = blended - 2.3
             out.append(Trigger("通膨轉「低」", f"綜合通膨水準 {blended:.2f}%",
-                               "跌破 2.30%", f"還差 {gap:.2f} 個百分點", gap <= 0))
+                               "需低於 2.30%", f"還差 {gap:.2f} 個百分點",
+                               gap <= 0, binding=(binding == "通膨")))
         if i_state != "高":
             gap = 2.9 - blended
             out.append(Trigger("通膨轉「高」", f"綜合通膨水準 {blended:.2f}%",
-                               "升破 2.90%", f"還差 {gap:.2f} 個百分點", gap <= 0))
+                               "需高於 2.90%", f"還差 {gap:.2f} 個百分點",
+                               gap <= 0, binding=(binding == "通膨")))
     return out
 
 

@@ -590,24 +590,18 @@ def _lights_from(computed: dict, cfgs: list) -> list:
 # ===========================================================================
 # 聯準會文本模組（P3）
 # ===========================================================================
-def build_fomc_context(statements: list[dict], dots_cfg: list, rate_cfg: dict,
+def build_fomc_context(statements: list[dict], rate_cfg: dict,
                        failed: list, offline: bool) -> dict:
     if not statements:
         return {"empty": True, "offline": offline, "failed": failed}
 
-    # 點陣圖沿用「發布日當時或之前最近一次」的 SEP
-    dots_sorted = sorted(dots_cfg or [], key=lambda d: d["date"])
-
-    def dots_for(date: str):
-        applicable = [d for d in dots_sorted if d["date"] <= date]
-        return applicable[-1] if applicable else None
-
-    docs = [fomc_text.analyse(st, dots_for(st["date"])) for st in statements]
+    docs = [fomc_text.analyse(st) for st in statements]
     docs.sort(key=lambda d: d.date)
 
     latest = docs[-1]
     prev = docs[-2] if len(docs) > 1 else None
-    rows = fomc_text.paired_redline(prev.text, latest.text) if prev else []
+    rows = (fomc_text.paired_redline(prev.text_display, latest.text_display)
+            if prev else [])
     changed = fomc_text.changed_rows(rows)
 
     from .pages.fomc import _diff_block, _heatmap
@@ -629,38 +623,6 @@ def build_fomc_context(statements: list[dict], dots_cfg: list, rate_cfg: dict,
         hits.append(f'<tr><td>{k}</td><td style="color:var(--series-1)">鴿派</td>'
                     f'<td>{v}</td></tr>')
 
-    dd = latest.dots or {}
-    dots_stats = ""
-    if dd and dd.get("hike") is not None:
-        total = dd.get("total", 0)
-        up = dd.get("hike", 0)
-        cut = dd.get("cut")
-        rest = dd.get("hold_or_cut")
-        dots_stats = "".join([
-            _stat("提交預測的官員", f"{total} 位",
-                  note="投票成員 12 人、全體參與者 19 人，三者不同"),
-            _stat("預期升息", f"{up} 位",
-                  "var(--serious)" if up * 2 > total else "inherit"),
-            (_stat("預期降息", f"{cut} 位", "var(--series-1)") if cut is not None
-             else _stat("預期不變或更低",
-                        f"{rest if rest is not None else total - up} 位",
-                        note="官方摘要未拆分降息人數")),
-            _stat("年底核心 PCE 預測",
-                  f"{dd['core_pce_yearend']:.1f}%" if dd.get("core_pce_yearend")
-                  else "—"),
-        ])
-
-    def _cell(v):
-        return "—" if v is None else str(v)
-
-    dots_rows = "".join(
-        f'<tr><td>{d["date"]}{"" if d.get("verified") else "（未確認）"}</td>'
-        f'<td>{_cell(d.get("hike"))}</td>'
-        f'<td>{_cell(d.get("cut") if d.get("cut") is not None else d.get("hold_or_cut"))}</td>'
-        f'<td>{("%.2f%%" % d["median_yearend"]) if d.get("median_yearend") else "—"}</td></tr>'
-        for d in reversed(dots_sorted)
-    ) or '<tr><td colspan="4">尚無資料</td></tr>'
-
     presser = statements[-1].get("presser")
     obj = latest.obj_parts
 
@@ -675,17 +637,19 @@ def build_fomc_context(statements: list[dict], dots_cfg: list, rate_cfg: dict,
         "vote": latest.vote,
         "rate_range": (f"{rate_cfg.get('lower', 0):.2f}–{rate_cfg.get('upper', 0):.2f}%"
                        if rate_cfg else "—"),
-        "obj_detail": f"{obj.get('dissent_detail', '')}；{obj.get('dots_detail', '')}",
+        "obj_detail": "；".join(x for x in (obj.get("action_detail"),
+                                           obj.get("dissent_detail"),
+                                           obj.get("risk_detail")) if x),
+        "obj_has_signal": obj.get("has_signal", False),
+        "focus": latest.focus,
         "diff_html": _diff_block(changed),
         "diff_full_html": _diff_block(rows, show_same=True),
         "changed_count": len(changed),
         "heatmap_html": _heatmap(fomc_text.phrase_matrix(docs)),
         "score_rows": score_rows,
         "hits_rows": "".join(hits) or '<tr><td colspan="3">本次沒有命中任何詞典用語</td></tr>',
-        "dots_stats": dots_stats or '<div class="empty">尚無點陣圖資料</div>',
-        "dots_rows": dots_rows,
-        "dots_note": dd.get("source", "點陣圖需在 config/fomc.yaml 手動更新"),
         "presser_available": bool(presser),
+        "presser_reason": statements[-1].get("presser_error") or "pending",
         "presser_score": latest.presser_score or 0,
         "presser_excerpt": (presser[:900] + "…") if presser else "",
         "docs": docs,
@@ -766,7 +730,11 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         s = infl_ctx["summary"]
         infl = {"core_pce_yoy": s.pce_core_yoy, "core_3m": s.core_3m,
                 "flags": infl_ctx["flags"]}
-    fomc = (fomc_ctx or {}).get("shift") if fomc_ctx and not fomc_ctx.get("empty") else None
+    fomc = None
+    if fomc_ctx and not fomc_ctx.get("empty"):
+        # 反應函數要一起帶進情境：同一格在通膨優先與就業優先下結論可能相反
+        fomc = dict(fomc_ctx.get("shift") or {})
+        fomc["focus"] = fomc_ctx.get("focus") or {}
 
     sc = scenario.synthesise(labor, infl, fomc)
     cells = scenario.grid_cells((sc.labor_state, sc.infl_state))
