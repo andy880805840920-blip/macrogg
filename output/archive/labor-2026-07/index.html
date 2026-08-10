@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="color-scheme" content="light dark">
+<title>勞動市場｜美國總經儀表板</title>
+<script>/* 在 CSS 之前決定主題，避免深色使用者看到白色閃屏 */
+(function(){try{var s=localStorage.getItem('theme');
+var d=s?s==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<style>
+*{box-sizing:border-box}
+/* 預設淺色。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。 */
+.viz-root{
+  color-scheme:light;
+  --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
+  --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#6b6a64;
+  --grid:#e3e2db; --baseline:#c3c2b7; --border:rgba(11,11,11,0.13);
+  --series-1:#2a78d6; --series-2:#eb6834;
+  --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
+  --good:#077c07; --warning:#9a6900; --serious:#b4552b; --critical:#c22f2f;
+  --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
+  --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
+}
+:root[data-theme="dark"] .viz-root{
+  color-scheme:dark;
+  --page:#0d0d0d; --surface-1:#1a1a19; --surface-2:#242423;
+  /* 主文字不用純白：#fff 在深底上對比 17:1，會暈光。
+     暖白 + 提亮一階的灰，是深色下小字可讀的關鍵。 */
+  --text-primary:#e9e8e2; --text-secondary:#cfcec4; --muted:#a4a29a;
+  --grid:#2c2c2a; --baseline:#454540; --border:rgba(255,255,255,0.14);
+  --series-1:#3987e5; --series-2:#d95926;
+  --pos:#3987e5; --neg:#e66767; --muted-bar:#55554f;
+  --tint-dov:rgba(57,135,229,.18); --tint-haw:rgba(236,131,90,.16);
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#e05353;
+  --shadow:none;
+}
+
+html{-webkit-text-size-adjust:100%}
+/* 中文字型（如 Noto Sans CJK）只有 400/500/700 等實體字重。
+   若指定 650 這類非標準值，瀏覽器會改用「合成粗體」——筆畫被撐寬但
+   前進距離不變，中文就會疊在一起。因此全站只用標準字重，
+   並額外加一點字距作為保險。 */
+h1,h2,h3,.v-main,.h-verdict,.f-head,.m-name,.l-top,.k-label,.gloss dt,
+.verdict .v-main,strong,b{letter-spacing:.035em}
+body{margin:0;background:var(--page);
+  /* CJK 家族一定要點名，而且要用含 "CJK" 的完整家族名。
+     只寫 system-ui / sans-serif 時，瀏覽器逐字回退找到的是 Regular 字面，
+     粗體只好用「合成粗體」——筆畫塗寬但前進距離不變，中文就疊在一起。
+     點名 "Noto Sans CJK TC" 之後會取到真正的 Bold 字面。
+     順序：iOS/macOS 走 PingFang，Windows 走微軟正黑，Android/Linux 走 Noto。 */
+  font-family:system-ui,-apple-system,"Segoe UI Variable","Segoe UI",
+    "PingFang TC","PingFang SC","Hiragino Sans CNS","Microsoft JhengHei",
+    "Noto Sans CJK TC","Noto Sans CJK SC","Noto Sans TC",sans-serif;
+  color:var(--text-primary);-webkit-font-smoothing:antialiased;
+  font-size:15px;line-height:1.6}
+.viz-root{max-width:1120px;margin:0 auto;padding:16px 14px 60px}
+@media(min-width:760px){.viz-root{padding:22px 20px 70px}}
+
+/* ---------- 頁首 ---------- */
+header.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
+@media(min-width:760px){h1{font-size:23px}}
+.sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55}
+.toggle{background:var(--surface-1);border:1px solid var(--border);
+  color:var(--text-secondary);border-radius:9px;padding:7px 11px;font-size:12px;
+  cursor:pointer;flex-shrink:0;white-space:nowrap}
+.toggle:hover{color:var(--text-primary)}
+
+/* ---------- 導覽列：手機上單行可左右滑 ---------- */
+nav.site{display:flex;gap:2px;margin:14px 0 0;background:var(--surface-1);
+  border:1px solid var(--border);border-radius:11px;padding:4px;
+  box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none}
+nav.site::-webkit-scrollbar{display:none}
+nav.site a{font-size:13.5px;color:var(--text-secondary);text-decoration:none;
+  padding:8px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+nav.site a:hover{background:var(--surface-2);color:var(--text-primary)}
+nav.site a.on{background:var(--surface-2);color:var(--text-primary);font-weight:700}
+nav.site a.soon{color:var(--muted)}
+nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
+
+.banner{background:var(--surface-1);border:1px solid var(--warning);
+  border-left-width:3px;border-radius:10px;padding:11px 14px;margin:14px 0 0;
+  font-size:13px;color:var(--text-secondary);line-height:1.7}
+.banner b{color:var(--warning)}
+
+/* ---------- 版面網格 ---------- */
+.grid{display:grid;gap:13px;margin-top:13px;grid-template-columns:1fr}
+@media(min-width:760px){
+  .grid{gap:14px;margin-top:14px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  /* 模組卡有五張。四欄會排成 4+1，最後一張孤零零的；三欄的 3+2 比較穩。 */
+  .g5{grid-template-columns:repeat(2,1fr)}
+}
+@media(min-width:1040px){
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g5{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1320px){.g5{grid-template-columns:repeat(5,1fr)}}
+
+.card{background:var(--surface-1);border:1px solid var(--border);
+  border-radius:13px;padding:17px 16px;box-shadow:var(--shadow)}
+@media(min-width:760px){.card{padding:18px 20px}}
+.card h2{font-size:17px;margin:0 0 5px;font-weight:700;line-height:1.5}
+.card h3{font-size:15px;margin:22px 0 4px;font-weight:700}
+.card .hint{font-size:13px;color:var(--muted);margin:0 0 15px;line-height:1.65}
+.card .src{font-size:12px;color:var(--muted);margin-top:15px;padding-top:11px;
+  border-top:1px solid var(--border);line-height:1.6}
+
+/* ---------- 結論卡 ---------- */
+.verdict{background:var(--surface-1);border:1px solid var(--border);
+  border-radius:13px;padding:19px 17px;box-shadow:var(--shadow);margin-top:13px;
+  border-left:4px solid var(--muted)}
+@media(min-width:760px){.verdict{padding:24px 24px}}
+.verdict.dovish{border-left-color:var(--series-1)}
+.verdict.hawkish{border-left-color:var(--serious)}
+.verdict.balanced{border-left-color:var(--muted)}
+.v-eyebrow{font-size:12.5px;color:var(--muted)}
+.v-main{font-size:26px;font-weight:700;margin-top:9px;line-height:1.45}
+@media(min-width:760px){.v-main{font-size:31px}}
+.v-why{font-size:14.5px;color:var(--text-secondary);margin-top:12px;line-height:1.85}
+.v-count{font-size:12.5px;color:var(--muted);margin-top:15px;padding-top:13px;
+  border-top:1px solid var(--border);line-height:1.75}
+
+/* ---------- KPI ---------- */
+.kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
+.kpi .k-value{font-size:32px;font-weight:700;line-height:1.15;margin-top:5px}
+.kpi .k-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+.kpi .k-plain{font-size:13.5px;color:var(--text-primary);margin-top:11px;
+  line-height:1.75;background:var(--surface-2);border-radius:9px;padding:10px 12px}
+.kpi .k-flag{font-size:12.5px;margin-top:9px;padding:5px 10px;border-radius:7px;
+  display:inline-block;background:var(--surface-2);color:var(--text-secondary);
+  font-weight:600}
+.kpi .k-flag.neg{color:var(--critical)} .kpi .k-flag.pos{color:var(--good)}
+.spark{margin-top:11px;display:block;width:100%;height:34px}
+
+/* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;
+  margin-bottom:4px}
+@media(min-width:760px){
+  .stat-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px}
+}
+.stat .s-label{font-size:12.5px;color:var(--muted);line-height:1.45}
+.stat .s-value{font-size:21px;font-weight:700;margin-top:4px;
+  font-variant-numeric:tabular-nums;line-height:1.25}
+.stat .s-note{font-size:12.5px;color:var(--text-secondary);margin-top:4px;
+  line-height:1.55}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px;
+  font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:9px 5px;border-bottom:1px solid var(--grid)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500;font-size:12px}
+tbody tr:last-child td{border-bottom:none}
+td.pos{color:var(--good)} td.neg{color:var(--critical)}
+td.muted-cell{color:var(--muted)}
+.revtab td:first-child{font-variant-numeric:normal}
+
+/* ---------- 發散長條（行業增減）---------- */
+.dbars{display:flex;flex-direction:column;gap:3px;margin-top:4px}
+.drow{display:grid;grid-template-columns:96px 1fr 76px;align-items:center;
+  gap:8px;padding:4px 0;border-radius:6px}
+@media(min-width:760px){.drow{grid-template-columns:150px 1fr 92px;gap:12px}}
+.drow:hover{background:var(--surface-2)}
+.dlabel{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
+@media(min-width:760px){.dlabel{font-size:13.5px}}
+.dtag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--warning);
+  border:1px solid var(--warning);border-radius:4px;padding:0 3px;margin-left:4px;
+  vertical-align:1px;white-space:nowrap}
+.dnote{display:block;font-size:11.5px;color:var(--muted)}
+.dtrack{position:relative;height:15px}
+.dzero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
+  background:var(--baseline)}
+.dfill{position:absolute;top:0;bottom:0;border-radius:3px;min-width:2px}
+.dfill.pos{background:var(--pos)} .dfill.neg{background:var(--neg)}
+.dfill.muted{background:var(--muted-bar)}
+.dval{font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;
+  color:var(--text-secondary)}
+@media(min-width:760px){.dval{font-size:13.5px}}
+.dval.pos{color:var(--good)} .dval.neg{color:var(--critical)}
+.dlegend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;padding-top:11px;
+  border-top:1px solid var(--grid);font-size:12px;color:var(--muted)}
+.dlegend span{display:flex;align-items:center;gap:5px}
+.dlegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* ---------- 紅綠燈 ---------- */
+.lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+@media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr)}}
+.light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
+  border:1px solid var(--border);display:flex;flex-direction:column}
+.light .l-top{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--text-secondary);font-weight:600;line-height:1.35}
+.light .l-icon{font-size:10px;flex-shrink:0}
+.light.good .l-icon,.light.good .l-state{color:var(--good)}
+.light.warning .l-icon,.light.warning .l-state{color:var(--warning)}
+.light.critical .l-icon,.light.critical .l-state{color:var(--critical)}
+.light.unknown .l-icon,.light.unknown .l-state{color:var(--muted)}
+.light .l-value{font-size:22px;font-weight:700;margin-top:8px;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.light .l-state{font-size:12px;margin-top:5px;font-weight:700}
+.light .l-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55;
+  margin-bottom:0}
+
+/* ---------- 訊號 ---------- */
+.flag{display:flex;gap:10px;padding:16px 0;border-bottom:1px solid var(--grid)}
+.flag:first-of-type{padding-top:2px}
+.flag:last-child{border-bottom:none;padding-bottom:2px}
+.flag .f-icon{font-size:10px;margin-top:6px;flex-shrink:0}
+.flag.alert .f-icon{color:var(--critical)}
+.flag.watch .f-icon{color:var(--warning)}
+.flag.info .f-icon{color:var(--muted)}
+.flag .f-head{font-size:15.5px;font-weight:700;line-height:1.6}
+.flag .f-detail{font-size:14px;color:var(--text-secondary);margin-top:7px;
+  line-height:1.85}
+.flag .f-tag{font-size:11.5px;color:var(--muted);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;margin-left:6px;white-space:nowrap;
+  font-weight:500;vertical-align:2px}
+.impact{display:inline-block;font-size:12.5px;font-weight:700;border-radius:7px;
+  padding:5px 10px;margin-top:10px;line-height:1.5}
+.impact.dovish{background:var(--tint-dov);color:var(--series-1)}
+.impact.hawkish{background:var(--tint-haw);color:var(--serious)}
+.impact.neutral{background:var(--surface-2);color:var(--muted)}
+
+/* ---------- 分數條 ---------- */
+.score-bar{height:9px;background:var(--surface-2);border-radius:5px;
+  position:relative;margin:15px 0 8px}
+.score-bar i{position:absolute;top:0;bottom:0;border-radius:5px}
+.score-mid{position:absolute;top:-3px;bottom:-3px;width:1px;
+  background:var(--baseline);left:50%}
+
+/* ---------- 首頁 ---------- */
+.hero{background:var(--surface-1);border:1px solid var(--border);
+  border-radius:13px;padding:19px 17px;box-shadow:var(--shadow);margin-top:13px}
+@media(min-width:760px){.hero{padding:24px}}
+.hero .h-label{font-size:12.5px;color:var(--muted)}
+.hero .h-verdict{font-size:26px;font-weight:700;margin-top:9px;line-height:1.45}
+@media(min-width:760px){.hero .h-verdict{font-size:31px}}
+.hero .h-line{font-size:14.5px;color:var(--text-secondary);margin-top:12px;
+  line-height:1.9}
+.hero .h-pending{font-size:12.5px;color:var(--muted);margin-top:15px;
+  padding-top:13px;border-top:1px solid var(--border);line-height:1.75}
+
+.modcard{display:block;text-decoration:none;color:inherit;
+  background:var(--surface-1);border:1px solid var(--border);border-radius:13px;
+  padding:16px;box-shadow:var(--shadow);transition:border-color .12s}
+.modcard:hover{border-color:var(--text-secondary)}
+.modcard.pending{opacity:.6}
+.modcard .m-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.modcard .m-name{font-size:14.5px;font-weight:700}
+.modcard .m-when{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.modcard .m-value{font-size:27px;font-weight:700;margin-top:9px;line-height:1.2}
+.modcard .m-note{font-size:13px;color:var(--text-secondary);margin-top:7px;
+  line-height:1.7}
+.modcard .m-more{font-size:12.5px;color:var(--muted);margin-top:12px}
+
+.soonbox{background:var(--surface-1);border:1px solid var(--border);
+  border-radius:13px;padding:34px 20px;text-align:center;box-shadow:var(--shadow);
+  margin-top:13px}
+.soonbox h3{font-size:16px;margin:0 0 10px}
+.soonbox p{font-size:14px;color:var(--text-secondary);margin:0 auto;max-width:520px;
+  line-height:1.85}
+
+.archive-list{list-style:none;padding:0;margin:0}
+.archive-list li{border-bottom:1px solid var(--grid)}
+.archive-list li:last-child{border-bottom:none}
+.archive-list a{display:flex;justify-content:space-between;gap:12px;padding:13px 2px;
+  text-decoration:none;color:var(--text-primary);font-size:14px}
+.archive-list a:hover{color:var(--series-1)}
+.archive-list .a-meta{color:var(--muted);font-size:12.5px}
+
+/* ---------- 名詞解釋 ---------- */
+.gloss{margin:6px 0 0}
+.gloss dt{font-weight:700;font-size:13.5px;margin-top:13px}
+.gloss dt:first-child{margin-top:0}
+.gloss dd{margin:3px 0 0;color:var(--text-secondary);font-size:13px;line-height:1.75}
+@media(min-width:760px){
+  .gloss{display:grid;grid-template-columns:130px 1fr;gap:11px 18px}
+  .gloss dt{margin-top:0} .gloss dd{margin-top:0}
+}
+
+/* ---------- 折疊 ---------- */
+details{margin-top:14px;border-top:1px solid var(--grid);padding-top:12px}
+details[open]{padding-bottom:2px}
+summary{font-size:13.5px;color:var(--series-1);cursor:pointer;font-weight:600;
+  list-style:none;padding:4px 0}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" ▾";font-size:11px}
+details[open]>summary::after{content:" ▴"}
+details.plain{border-top:none;padding-top:0}
+
+.empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
+
+#tip{position:fixed;pointer-events:none;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;
+  color:var(--text-primary);opacity:0;transition:opacity .1s;z-index:99;
+  box-shadow:0 4px 16px rgba(0,0,0,.3);white-space:nowrap}
+@media(hover:none){#tip{display:none}}
+
+footer{margin-top:26px;font-size:12.5px;color:var(--muted);line-height:1.8}
+
+/* ---------- 聲明配對比對 ---------- */
+.drow2{border:1px solid var(--border);border-radius:10px;padding:11px 13px;
+  margin-bottom:9px;background:var(--surface-1)}
+.drow2 .dlabel2{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin-bottom:7px}
+.drow2 .dold,.drow2 .dnew{font-size:13.5px;line-height:1.85;padding:7px 10px;
+  border-radius:7px}
+.drow2 .dold{background:var(--surface-2);color:var(--muted);margin-bottom:6px}
+.drow2 .dnew{background:var(--tint-dov)}
+.drow2 .darrow{font-size:11px;color:var(--muted);margin:2px 0 4px}
+.drow2.added{border-left:3px solid var(--series-1)}
+.drow2.removed{border-left:3px solid var(--muted)}
+.drow2.changed{border-left:3px solid var(--serious)}
+mark.mo{background:rgba(180,85,43,.18);color:var(--serious);
+  text-decoration:line-through;text-decoration-thickness:1px;
+  border-radius:3px;padding:0 2px}
+mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
+  font-weight:600;border-radius:3px;padding:0 2px}
+:root[data-theme="dark"] mark.mo{background:rgba(236,131,90,.22)}
+:root[data-theme="dark"] mark.mn{background:rgba(57,135,229,.28)}
+.dsame{font-size:12.5px;color:var(--muted);line-height:1.8;padding:5px 12px}
+
+/* ---------- 雙分數並列 ---------- */
+.dual{display:grid;grid-template-columns:1fr;gap:11px}
+@media(min-width:600px){.dual{grid-template-columns:1fr 1fr}}
+.dbox{background:var(--surface-2);border-radius:10px;padding:14px 14px;
+  border:1px solid var(--border)}
+.dbox.primary{border-color:var(--text-primary);border-width:1.5px}
+.dbox .dtitle{font-size:12.5px;color:var(--text-secondary);font-weight:600}
+.dbox .dscore{font-size:30px;font-weight:700;margin-top:7px;line-height:1.15;
+  font-variant-numeric:tabular-nums}
+.dbox .dlab{font-size:12.5px;font-weight:700;margin-top:5px}
+.dbox .dnote{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.6}
+.dbox.hawkish .dlab{color:var(--serious)}
+.dbox.dovish .dlab{color:var(--series-1)}
+.dbox.neutral .dlab{color:var(--muted)}
+.dbox.stale{opacity:.62}
+
+.warnbox{background:var(--surface-1);border:1px solid var(--warning);
+  border-left-width:3px;border-radius:10px;padding:13px 15px;margin-top:14px;
+  font-size:13px;line-height:1.8;color:var(--text-secondary)}
+.warnbox b{color:var(--warning)}
+
+/* ---------- 投票 ---------- */
+.votes{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.vchip{font-size:12px;border-radius:7px;padding:5px 10px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text-secondary)}
+.vchip.hike{border-color:var(--serious);color:var(--serious);font-weight:600}
+.vchip.cut{border-color:var(--series-1);color:var(--series-1);font-weight:600}
+
+/* ---------- 措辭熱力圖 ---------- */
+.heatwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:4px}
+.heat{border-collapse:separate;border-spacing:3px;font-size:12px;min-width:100%}
+.heat th{font-weight:500;color:var(--muted);font-size:11.5px;padding:2px 4px;
+  white-space:nowrap;text-align:center;border:none}
+.heat th.rowhead{text-align:left;position:sticky;left:0;background:var(--surface-1);
+  padding-right:9px;min-width:132px;z-index:1}
+.heat td{width:30px;height:26px;text-align:center;border-radius:5px;border:none;
+  font-variant-numeric:tabular-nums;padding:0}
+.heat td.h0{background:var(--surface-2);color:var(--muted)}
+.heat td.h1{background:rgba(42,120,214,.28);color:var(--text-primary)}
+.heat td.h2{background:rgba(42,120,214,.55);color:#fff}
+.heat td.h3{background:rgba(42,120,214,.85);color:#fff}
+:root[data-theme="dark"] .heat td.h1{background:rgba(57,135,229,.30)}
+:root[data-theme="dark"] .heat td.h2{background:rgba(57,135,229,.58)}
+:root[data-theme="dark"] .heat td.h3{background:rgba(57,135,229,.88)}
+
+/* ---------- 情境九宮格 ---------- */
+.sgrid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:5px;margin-top:4px;
+  font-size:12px}
+.sgrid .axis{color:var(--muted);font-size:12px;display:flex;align-items:center;
+  justify-content:center;padding:4px 3px;text-align:center}
+.sgrid .axis.row{writing-mode:horizontal-tb;min-width:40px}
+.scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
+  padding:9px 8px;min-height:72px}
+.scell .sname{font-size:12.5px;font-weight:700;line-height:1.4}
+.scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;
+  display:none}
+@media(min-width:760px){.scell{padding:12px 11px;min-height:96px}
+  .scell .sname{font-size:13.5px}.scell .sdesc{display:block}}
+.scell.on{border-color:var(--text-primary);background:var(--surface-1);
+  box-shadow:0 0 0 2px var(--text-primary) inset}
+.scell.on .sname{color:var(--text-primary)}
+.scell.hawkish .sname{color:var(--serious)}
+.scell.dovish .sname{color:var(--series-1)}
+.scell.neutral .sname{color:var(--text-secondary)}
+.sbadge{display:inline-block;font-size:11px;font-weight:700;margin-top:6px;
+  padding:1px 6px;border-radius:5px;background:var(--text-primary);color:var(--surface-1)}
+
+/* ---------- 觸發條件 ---------- */
+.trig{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:13px;
+  padding:11px 0;border-bottom:1px solid var(--grid);align-items:baseline}
+.trig:last-child{border-bottom:none}
+.trig .tname{font-weight:600}
+.trig .tnow{font-size:12px;color:var(--muted);grid-column:1/-1;margin-top:-4px}
+.trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
+  white-space:nowrap}
+.trig.met .tdist{color:var(--critical);font-weight:700}
+
+/* ---------- 折線圖（刻度用 HTML，避免文字被等比縮小） ---------- */
+/* 參考線只畫「資料實際的最高／最低值」，各附數值標籤——
+   之前的背景中線落在留白後區間的 50%，不對應任何數值，已移除。 */
+.lwrap{margin-top:6px}
+.lplot{position:relative;border-left:1px solid var(--grid);
+  border-bottom:1px solid var(--grid)}
+.lchart{display:block;width:100%;height:150px}
+.glab{position:absolute;left:5px;font-size:11.5px;color:var(--muted);
+  line-height:1;font-variant-numeric:tabular-nums;pointer-events:none;
+  text-shadow:0 0 4px var(--surface-1),0 0 4px var(--surface-1)}
+.lmark{position:absolute;top:3px;transform:translateX(-50%);font-size:11.5px;
+  color:var(--muted);white-space:nowrap;pointer-events:none;
+  text-shadow:0 0 4px var(--surface-1),0 0 4px var(--surface-1)}
+.lxaxis{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
+  font-size:12px;color:var(--muted);margin-top:7px;
+  font-variant-numeric:tabular-nums}
+.lxaxis b{color:var(--text-primary);font-size:12.5px}
+
+/* ---------- 本期變化摘要 ---------- */
+.chg{background:var(--surface-1);border:1px solid var(--border);border-radius:13px;
+  padding:17px 16px;box-shadow:var(--shadow);margin-top:13px}
+@media(min-width:760px){.chg{padding:20px 22px}}
+.chg .ctitle{font-size:12.5px;color:var(--muted)}
+/* 零變化時的單行版本 */
+.chg.quiet{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;
+  padding:12px 16px;font-size:13.5px}
+.chg.quiet .ctitle{font-size:12px}
+.chg .chead{font-size:19px;font-weight:700;margin-top:7px;line-height:1.5}
+@media(min-width:760px){.chg .chead{font-size:21px}}
+.chg.moved .chead{color:var(--serious)}
+.clist{display:grid;grid-template-columns:1fr;gap:7px;margin-top:14px}
+@media(min-width:700px){.clist{grid-template-columns:1fr 1fr}}
+.citem{display:flex;gap:8px;align-items:baseline;font-size:13.5px;
+  background:var(--surface-2);border-radius:8px;padding:9px 11px;line-height:1.6}
+.citem .cmark{font-size:11px;font-weight:700;flex-shrink:0}
+.citem.new .cmark{color:var(--serious)}
+.citem.gone .cmark{color:var(--series-1)}
+.citem .cmod{font-size:11px;color:var(--muted);flex-shrink:0}
+.cmoves{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid)}
+.cmove{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px;
+  padding:8px 0;border-bottom:1px solid var(--grid);align-items:baseline}
+.cmove:last-child{border-bottom:none}
+.cmove .cm-val{font-variant-numeric:tabular-nums;color:var(--text-secondary)}
+.cmove .cm-delta{font-weight:700;font-variant-numeric:tabular-nums}
+.cmove .cm-delta.up{color:var(--serious)} .cmove .cm-delta.down{color:var(--series-1)}
+
+/* ---------- 近 N 期數值列 ---------- */
+.mseries{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;
+  margin-top:10px;border-top:1px solid var(--grid);padding-top:9px}
+.mcell{text-align:center;padding:2px 1px;border-radius:5px}
+.mcell.last{background:var(--surface-2)}
+.mval{font-size:12px;font-variant-numeric:tabular-nums;color:var(--text-secondary);
+  line-height:1.3}
+.mcell.last .mval{color:var(--text-primary);font-weight:700}
+.mdate{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ---------- 狀態軌跡條 ---------- */
+.sstrip{display:flex;gap:2px;margin-top:9px}
+.sq{flex:1;height:7px;border-radius:2px;background:var(--surface-2)}
+.sq.good{background:var(--good)} .sq.warning{background:var(--warning)}
+.sq.critical{background:var(--critical)} .sq.unknown{background:var(--muted-bar)}
+.sstrip-note{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ---------- 資料截止日籤 ---------- */
+.asof{display:inline-block;font-size:11px;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:0 5px;margin-left:6px;
+  vertical-align:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- 頁內錨點導覽 ---------- */
+nav.anchors{position:sticky;top:0;z-index:8;display:flex;gap:2px;overflow-x:auto;
+  background:var(--page);padding:8px 0 9px;margin:12px 0 0;
+  scrollbar-width:none;box-shadow:0 6px 8px -6px rgba(0,0,0,.10)}
+nav.anchors::-webkit-scrollbar{display:none}
+nav.anchors a{font-size:12.5px;color:var(--text-secondary);text-decoration:none;
+  padding:6px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;
+  background:var(--surface-1);border:1px solid var(--border)}
+nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)}
+:root[data-theme="dark"] nav.anchors{box-shadow:0 6px 8px -6px rgba(0,0,0,.5)}
+.card h2{scroll-margin-top:60px}
+
+/* ---------- 意外值 ---------- */
+.surp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+@media(min-width:760px){.surp{gap:10px}}
+.sbox{background:var(--surface-2);border-radius:9px;padding:12px 8px;
+  border:1px solid var(--border);text-align:center}
+@media(min-width:760px){.sbox{padding:12px 11px}}
+.sbox .sl{font-size:12px;color:var(--muted)}
+.sbox .sv{font-size:19px;font-weight:700;margin-top:5px;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(min-width:760px){.sbox .sv{font-size:20px}}
+.sbox .su{font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+.sbox.beat .sv{color:var(--good)} .sbox.miss .sv{color:var(--critical)}
+.sbadge2{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:3px 9px;margin-top:9px}
+.sbadge2.beat{background:rgba(7,124,7,.13);color:var(--good)}
+.sbadge2.miss{background:rgba(194,47,47,.13);color:var(--critical)}
+.sbadge2.inline{background:var(--surface-2);color:var(--muted)}
+.sbox .szn{font-size:11px;color:var(--muted);margin-top:5px;
+  font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="viz-root">
+
+<header class="top">
+  <div>
+    <h1>勞動市場</h1>
+    <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-10 11:17</div>
+  </div>
+  <button class="toggle" id="themeBtn">深色</button>
+</header>
+
+<nav class="site"><a href="/">總覽</a><a href="/labor/" class="on">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav>
+<div class="banner"><b>離線示範模式</b>　標題數字取自 BLS 2026 年 7 月就業報告實際值，部分行業細項與每週失業金為示範資料，不可用於實際研究。</div>
+<nav class="anchors"><a href="#surprise">實際 vs 市場預期</a><a href="#signals">本期關鍵訊號</a><a href="#unrate">失業率變動分解</a><a href="#revision">歷史數據修正</a><a href="#breakeven">損益兩平就業增速</a><a href="#industry">行業別貢獻分解</a><a href="#lights">關鍵指標檢核</a><a href="#score">綜合強弱指數</a><a href="#glossary">名詞解釋</a></nav>
+
+<div class="verdict dovish">
+  <div class="v-eyebrow">2026-07 就業報告　·　一句話結論</div>
+  <div class="v-main">就業面：利降息</div>
+  <div class="v-why">最主要的訊號是：失業率下降源於勞動力退出，而非就業增加。轉弱訊號多於轉強。勞動市場走軟提高聯準會降息的正當性，對債券價格偏正面，但同時代表經濟動能流失。</div>
+  <div class="v-count">
+    本次共 6 項訊號：4 項利降息、1 項利升息、1 項中性。<br>
+    這是勞動市場單方面的判斷。聯準會同時要看通膨，完整結論要等通膨模組建置完成。
+  </div>
+</div>
+
+<div class="grid g4"><div class="card kpi">
+  <div class="k-label">非農就業月變動<span class="asof">2026-07</span></div>
+  <div class="k-value">-2.3 萬人</div>
+  <div class="k-sub">近三個月平均 +2.0 萬人　·　近一年平均 +10.7 萬人</div>
+  <div class="k-plain">美國企業這個月減少了約 2.3 萬個工作機會。近三個月平均每月增加 2.0 萬個。</div><div class="k-flag neg">前兩月合計修正 -10.3 萬人</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><line x1="3" y1="19.5" x2="117" y2="19.5" stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2"/><polyline points="3.0,3.1 13.4,13.2 23.7,10.6 34.1,3.0 44.5,4.1 54.8,7.7 65.2,31.0 75.5,3.7 85.9,8.5 96.3,14.8 106.6,18.0 117.0,21.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="21.2" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">-15.6 萬人</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">+21.4 萬人</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">+14.8 萬人</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">+6.3 萬人</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">+2.0 萬人</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">-2.3 萬人</div><div class="mdate">7月</div></div></div>
+</div><div class="card kpi">
+  <div class="k-label">失業率 U-3<span class="asof">2026-07</span></div>
+  <div class="k-value">4.1%</div>
+  <div class="k-sub">較上月 -0.1 個百分點　·　含低度就業 7.6%</div>
+  <div class="k-plain">每 100 個有在找工作的人裡，約 4.1 人還沒找到。已經放棄找工作的人不算在這個數字裡。</div><div class="k-flag neg">勞動力退出所致</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,6.5 13.4,28.7 23.7,16.7 34.1,23.4 44.5,27.2 54.8,31.0 65.2,21.7 75.5,12.3 85.9,3.0 96.3,12.3 106.6,12.3 117.0,21.7" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="21.7" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">4.1%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">4.2%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">4.3%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.2%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">4.2%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">4.1%</div><div class="mdate">7月</div></div></div>
+</div><div class="card kpi">
+  <div class="k-label">平均時薪年增率<span class="asof">2026-07</span></div>
+  <div class="k-value">3.2%</div>
+  <div class="k-sub">基層員工 3.6%　·　差距 -0.39 個百分點</div>
+  <div class="k-plain">薪水一年漲 3.2%，目前平均每小時 37.62 美元。</div><div class="k-flag ">基層薪資壓力較大</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,14.5 13.4,13.6 23.7,11.8 34.1,10.3 44.5,11.8 54.8,14.1 65.2,15.8 75.5,18.3 85.9,16.7 96.3,15.0 106.6,3.0 117.0,31.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="31.0" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">3.5%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">3.4%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.5%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.5%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.7%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.2%</div><div class="mdate">7月</div></div></div>
+</div><div class="card kpi">
+  <div class="k-label">勞動參與率<span class="asof">2026-07</span></div>
+  <div class="k-value">61.4%</div>
+  <div class="k-sub">較上月 -0.1 個百分點　·　25-54 歲 83.2%</div>
+  <div class="k-plain">16 歲以上的人裡，有 61.4% 在工作或正在找工作，其餘是退休、就學或已放棄找工作。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,6.3 13.4,3.0 23.7,3.1 34.1,4.9 44.5,4.3 54.8,3.1 65.2,7.1 75.5,11.1 85.9,15.1 96.3,23.0 106.6,27.0 117.0,31.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="31.0" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">62.0%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">61.9%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">61.8%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">61.6%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">61.5%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">61.4%</div><div class="mdate">7月</div></div></div>
+</div></div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="surprise">實際 vs 市場預期</h2>
+    <p class="hint">市場只對「意外」反應，不對水準反應。
+      預期 −5 萬而公布 −2.3 萬是利空出盡；預期 +8.5 萬而公布 −2.3 萬才是重擊。</p>
+    <div class="surp"><div class="sbox"><div class="sl">非農就業月變動｜實際</div><div class="sv">-2.3<span class="su">萬人</span></div></div><div class="sbox"><div class="sl">預期</div><div class="sv">+15.0<span class="su">萬人</span></div></div><div class="sbox miss"><div class="sl">意外值</div><div class="sv">-17.3<span class="su">萬人</span></div><div class="sbadge2 miss">不如預期</div><div class="szn">偏離 1.5 個標準差</div></div><div class="sbox"><div class="sl">失業率｜實際</div><div class="sv">4.1<span class="su">%</span></div></div><div class="sbox"><div class="sl">預期</div><div class="sv">4.2<span class="su">%</span></div></div><div class="sbox beat"><div class="sl">意外值</div><div class="sv">-0.1<span class="su">%</span></div><div class="sbadge2 beat">優於預期</div><div class="szn">偏離 1.0 個標準差</div></div></div><div class="src">預期來源：時間序列模型推估（非市場預期）</div><div class="warnbox" style="margin-top:12px"><b>目前使用模型推估</b><br>這不是市場預期，而是「若照歷史規律外推應該是多少」。兩者意義不同，請勿當成市場共識解讀。</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="signals">本期關鍵訊號</h2>
+    <p class="hint">依固定規則逐項檢查，結果可完整重現。每一項標註其對利率路徑的意涵。</p>
+    <div class="flag alert">
+  <span class="f-icon">■</span>
+  <div>
+    <div class="f-head">失業率下降源於勞動力退出，而非就業增加
+      <span class="f-tag">重要</span></div>
+    <div class="f-detail">失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 55.5 萬人，同時有 75.5 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。</div>
+    <div class="impact dovish">利降息　就業市場實際在轉弱</div>
+  </div>
+</div><div class="flag alert">
+  <span class="f-icon">■</span>
+  <div>
+    <div class="f-head">前兩月大幅下修，實質動能弱於初值
+      <span class="f-tag">重要</span></div>
+    <div class="f-detail">政府這次把前兩個月的就業人數合計往下修了 10.3 萬人，比本月的變動量還大。把修正算進去後，近三個月平均每月新增從 +5.4 萬人掉到 +2.0 萬人。就業數據第一次公布時是估算值，之後兩個月會用更完整的資料重算。</div>
+    <div class="impact dovish">利降息　就業動能比初值顯示的更弱</div>
+  </div>
+</div><div class="flag watch">
+  <span class="f-icon">▲</span>
+  <div>
+    <div class="f-head">初值近一年呈系統性下修
+      <span class="f-tag">留意</span></div>
+    <div class="f-detail">過去 12 個月，每個月的就業人數平均事後被往下修 0.6 萬人。看到剛公布的數字時，要記得它之後很可能被調降。</div>
+    <div class="impact dovish">利降息　初值應打折看待</div>
+  </div>
+</div><div class="flag watch">
+  <span class="f-icon">▲</span>
+  <div>
+    <div class="f-head">就業成長廣度不足
+      <span class="f-tag">留意</span></div>
+    <div class="f-detail">統計的 17 個行業裡，只有 6 個在增加就業。景氣好的時候通常是多數行業一起徵人；集中在少數行業，代表成長的基礎不夠穩固。</div>
+    <div class="impact dovish">利降息　成長基礎不夠穩固</div>
+  </div>
+</div><div class="flag watch">
+  <span class="f-icon">▲</span>
+  <div>
+    <div class="f-head">非管理職薪資增速高於總體
+      <span class="f-tag">留意</span></div>
+    <div class="f-detail">整體平均時薪年增 3.21%，但基層員工（不含主管）達 3.60%。基層薪資是服務業成本的主要來源，漲得比整體快，代表薪資推動的通膨壓力比整體數字顯示的更大。</div>
+    <div class="impact hawkish">利升息　薪資推動的通膨壓力比表面大</div>
+  </div>
+</div><div class="flag info">
+  <span class="f-icon">●</span>
+  <div>
+    <div class="f-head">低招聘、低裁員格局延續
+      <span class="f-tag">參考</span></div>
+    <div class="f-detail">每月錄取的人約佔總就業的 3.4%、被裁員的約 1.1%，兩個都在低檔。對已經有工作的人來說相對安全，但正在找工作的人會非常辛苦。</div>
+    <div class="impact neutral">中性　就業市場凍結，短期影響有限</div>
+  </div>
+</div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2 id="unrate">失業率變動分解</h2>
+    <p class="hint">將失業率變動拆解為就業效果與勞動力效果。同樣的下降幅度，成因不同則意義相反。</p>
+    <div class="stat-row">
+  <div class="stat"><div class="s-label">失業率變動</div>
+    <div class="s-value">-0.10pp</div></div>
+  <div class="stat"><div class="s-label">判定</div>
+    <div class="s-value" style="font-size:17px;color:var(--critical)">勞動力退出所致</div></div>
+  <div class="stat"><div class="s-label">就業效果</div>
+    <div class="s-value">+0.33pp</div>
+    <div class="s-note">有工作的人 -55.5 萬人</div></div>
+  <div class="stat"><div class="s-label">勞動力效果</div>
+    <div class="s-value">-0.43pp</div>
+    <div class="s-note">在找工作的人 -75.5 萬人</div></div>
+</div>
+<p class="hint" style="margin:16px 0 0">
+  失業率只計算「還在找工作」的人。放棄找工作的人變多時，失業率會下降，
+  但那不代表就業變好——上面兩欄就是把這兩種原因拆開來看。
+</p>
+  </div>
+
+  <div class="card">
+    <h2 id="revision">歷史數據修正</h2>
+    <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
+      修正幅度常常比當月的變動還大。</p>
+    <div class="stat-row"><div class="stat"><div class="s-label">前兩月合計修正</div><div class="s-value" style="color:var(--critical)">-10.3 萬人</div><div class="s-note">相對上次發布；相對初值累計 -14.6 萬人</div></div><div class="stat"><div class="s-label">近三個月平均新增</div><div class="s-value" style="color:inherit">+2.0 萬人</div><div class="s-note">若沒有這次修正，應為 +5.4 萬人</div></div><div class="stat"><div class="s-label">近一年修正傾向</div><div class="s-value" style="color:var(--warning)">-0.6 萬人/月</div><div class="s-note">初值偏樂觀，應打折看待</div></div></div>
+    <details data-m-collapse open><summary>逐月修正明細</summary>
+      <table class="revtab"><thead><tr><th>月份</th><th>初次公布</th><th>目前</th><th>修正</th></tr></thead><tbody><tr><td>2026-01</td><td class="muted-cell">+160,000</td><td>+160,000</td><td class="muted-cell">未修正</td></tr><tr><td>2026-02</td><td class="muted-cell">-156,000</td><td>-156,000</td><td class="muted-cell">未修正</td></tr><tr><td>2026-03</td><td class="muted-cell">+214,000</td><td>+214,000</td><td class="muted-cell">未修正</td></tr><tr><td>2026-04</td><td class="muted-cell">+148,000</td><td>+148,000</td><td class="muted-cell">未修正</td></tr><tr><td>2026-05</td><td class="muted-cell">+172,000</td><td>+63,000</td><td class="neg" style="font-weight:700">-109,000</td></tr><tr><td>2026-06</td><td class="muted-cell">+57,000</td><td>+20,000</td><td class="neg" style="font-weight:700">-37,000</td></tr><tr><td>2026-07</td><td class="muted-cell">-23,000</td><td>-23,000</td><td class="muted-cell">未修正</td></tr></tbody></table>
+      <p class="hint" style="margin-top:10px">
+        「修正」欄是相對初次公布的累計差異，與上方 BLS 口徑（相對上次發布）不同。</p>
+    </details>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="breakeven">損益兩平就業增速</h2>
+    <p class="hint">維持失業率不變，每個月需要新增多少工作。
+      <b>沒有這條基準線，非農的絕對數字無法解讀</b>——同樣是月增 2 萬，
+      在勞動供給每月增加 10 萬的環境下代表明顯轉弱，在只增加 3 萬的環境下則是大致平衡。</p>
+    <div class="stat-row"><div class="stat"><div class="s-label">損益兩平就業增速</div><div class="s-value" style="color:inherit">+4.3 萬人</div><div class="s-note">維持失業率不變所需的每月就業增加</div></div><div class="stat"><div class="s-label">非農三個月均</div><div class="s-value" style="color:inherit">+2.0 萬人</div></div><div class="stat"><div class="s-label">缺口</div><div class="s-value" style="color:inherit">-2.3 萬人</div><div class="s-note">接近損益兩平</div></div><div class="stat"><div class="s-label">每月人口成長</div><div class="s-value" style="color:inherit">+7.1 萬人</div><div class="s-note">參與率 61.5%</div></div></div>
+    <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,15.1 35.3,14.5 70.6,25.5 105.9,34.5 141.2,44.3 176.5,54.9 211.8,64.5 247.1,76.3 282.4,85.4 317.6,95.0 352.9,104.1 388.2,114.2 423.5,124.2 458.8,135.5 494.1,133.7 529.4,133.0 564.7,132.9 600.0,131.9 600,150" fill="var(--series-2)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,15.1 35.3,14.5 70.6,25.5 105.9,34.5 141.2,44.3 176.5,54.9 211.8,64.5 247.1,76.3 282.4,85.4 317.6,95.0 352.9,104.1 388.2,114.2 423.5,124.2 458.8,135.5 494.1,133.7 529.4,133.0 564.7,132.9 600.0,131.9" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="131.9" r="4" fill="var(--series-2)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">10.9 萬人</span><span class="glab" style="top:calc(90.3% + 4px)">4.1 萬人</span></div><div class="lxaxis"><span>2024-12-01</span><span><b>4.31 萬人</b>　2026-07-01</span></div></div></div>
+    <p class="hint" style="margin-top:14px">
+      就業成長與勞動供給大致同步，失業率應維持穩定。
+      以近 12 個月平均人口成長 7.1 萬人／月、參與率 61.5% 估計。此為推估值，非官方公布數字。
+    </p>
+    <details data-m-collapse><summary>計算方式與注意事項</summary>
+      <dl class="gloss" style="margin-top:10px">
+        <dt>計算式</dt>
+        <dd>每月損益兩平 ≈ 工作年齡人口月增 × 勞動參與率 × 機構調查／家庭調查就業比。
+          前兩項決定每月新增多少人想工作，第三項把家庭調查口徑換算成非農口徑。</dd>
+        <dt>為什麼會變動</dt>
+        <dd>主要來自人口成長率與移民政策。2025 年後移民收緊，勞動供給成長明顯放慢，
+          這個門檻從過去的 10–15 萬降到目前的水準。</dd>
+        <dt>注意事項</dt>
+        <dd>人口序列每年一月會做普查控制調整，出現不連續跳點，計算時已排除一月的變動。
+          此為推估值，非官方公布數字。</dd>
+      </dl>
+    </details>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="industry">行業別貢獻分解</h2>
+    <p class="hint">顯示增減幅度最大的各五個行業，加上任何「相對自己過去表現異常」的行業，
+      其餘合併為其他。灰色是醫療、社福與各級政府——這些行業用人比較不受景氣影響。</p>
+    <div class="stat-row"><div class="stat"><div class="s-label">全體合計</div><div class="s-value" style="color:inherit">-2.3 萬人</div></div><div class="stat"><div class="s-label">扣掉醫療與政府</div><div class="s-value" style="color:var(--critical)">-0.8 萬人</div><div class="s-note">跟景氣連動的部分</div></div><div class="stat"><div class="s-label">有增加人力的行業</div><div class="s-value" style="color:inherit">6 / 17 個</div><div class="s-note">佔 35%</div></div><div class="stat"><div class="s-label">其中：地方政府教育</div><div class="s-value" style="color:var(--warning)">-5.0 萬人</div><div class="s-note">學期結束的季節性因素，不一定代表真的裁員</div></div></div>
+    <details data-m-collapse open><summary>行業別明細</summary>
+    <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="醫療與社福｜+38,000 人｜相對自身歷史 -0.7 個標準差"><div class="dlabel">醫療與社福<span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:40.43%"></span></div><div class="dval pos">+38,000</div></div><div class="drow" data-tip="運輸倉儲｜+7,000 人｜相對自身歷史 +0.3 個標準差"><div class="dlabel">運輸倉儲</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:7.45%"></span></div><div class="dval pos">+7,000</div></div><div class="drow" data-tip="民間教育｜+6,000 人｜相對自身歷史 +0.1 個標準差"><div class="dlabel">民間教育</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:6.38%"></span></div><div class="dval pos">+6,000</div></div><div class="drow" data-tip="營建｜+4,000 人｜相對自身歷史 -0.3 個標準差"><div class="dlabel">營建</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:4.26%"></span></div><div class="dval pos">+4,000</div></div><div class="drow" data-tip="其他服務｜+3,000 人｜相對自身歷史 +0.1 個標準差"><div class="dlabel">其他服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:3.19%"></span></div><div class="dval pos">+3,000</div></div><div class="drow" data-tip="專業與商業服務｜-8,000 人｜相對自身歷史 -0.5 個標準差"><div class="dlabel">專業與商業服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:8.51%"></span></div><div class="dval neg">-8,000</div></div><div class="drow" data-tip="休閒與住宿餐飲｜-9,000 人｜相對自身歷史 -0.6 個標準差"><div class="dlabel">休閒與住宿餐飲</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:9.57%"></span></div><div class="dval neg">-9,000</div></div><div class="drow" data-tip="零售｜-12,000 人｜相對自身歷史 -0.7 個標準差"><div class="dlabel">零售</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:12.77%"></span></div><div class="dval neg">-12,000</div></div><div class="drow" data-tip="金融活動｜-14,000 人｜相對自身歷史 -0.8 個標準差"><div class="dlabel">金融活動</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:14.89%"></span></div><div class="dval neg">-14,000</div></div><div class="drow" data-tip="地方政府｜-47,000 人｜相對自身歷史 -2.5 個標準差"><div class="dlabel">地方政府<span class="dtag">值得注意</span><span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="right:50%;width:50.00%"></span></div><div class="dval neg">-47,000</div></div><div class="drow" data-tip="其餘 7 個行業合計 -20,000 人"><div class="dlabel">其他 7 個行業<span class="dnote">多個行業加總</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="right:50%;width:21.28%"></span></div><div class="dval neg">-20,000</div></div></div></div>
+    <div class="dlegend">
+      <span><i style="background:var(--pos)"></i>增加</span>
+      <span><i style="background:var(--neg)"></i>減少</span>
+      <span><i style="background:var(--muted-bar)"></i>不受景氣影響／加總列</span>
+      <span>單位：人</span>
+    </div>
+    </details>
+    <details data-m-collapse><summary>全部 17 個行業</summary>
+      <table style="margin-top:10px">
+        <thead><tr><th>行業</th><th>增減</th><th>佔總變動</th></tr></thead>
+        <tbody><tr><td>醫療與社福</td><td class="pos">+38,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>運輸倉儲</td><td class="pos">+7,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>民間教育</td><td class="pos">+6,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>營建</td><td class="pos">+4,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>其他服務</td><td class="pos">+3,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>公用事業</td><td class="pos">+1,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>礦業與伐木</td><td class="neg">-1,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>聯邦政府</td><td class="neg">-2,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>批發</td><td class="neg">-3,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>州政府</td><td class="neg">-4,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>資訊</td><td class="neg">-5,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>製造業</td><td class="neg">-6,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>專業與商業服務</td><td class="neg">-8,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>休閒與住宿餐飲</td><td class="neg">-9,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>零售</td><td class="neg">-12,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>金融活動</td><td class="neg">-14,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr><tr><td>地方政府</td><td class="neg">-47,000</td><td class="muted-cell">—（總變動過小，比例失真）</td></tr></tbody></table></details>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="lights">關鍵指標檢核</h2>
+    <p class="hint">八項關鍵指標的當期狀態。門檻設定於 config/indicators.yaml。</p>
+    <details data-m-collapse open><summary>八項指標</summary>
+      <div class="lights" style="margin-top:12px"><div class="light good">
+  <div class="l-top"><span class="l-icon">●</span>衰退警訊</div>
+  <div class="l-value">+0.13 <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">正常</div>
+  <div class="sstrip"><span class="sq good" data-tip="2025-08-01｜-0.02"></span><span class="sq good" data-tip="2025-09-01｜-0.09"></span><span class="sq good" data-tip="2025-10-01｜-0.01"></span><span class="sq good" data-tip="2025-11-01｜-0.06"></span><span class="sq good" data-tip="2025-12-01｜0.01"></span><span class="sq good" data-tip="2026-01-01｜-0.05"></span><span class="sq good" data-tip="2026-02-01｜0.01"></span><span class="sq good" data-tip="2026-03-01｜0.06"></span><span class="sq good" data-tip="2026-04-01｜0.16"></span><span class="sq good" data-tip="2026-05-01｜0.19"></span><span class="sq good" data-tip="2026-06-01｜0.19"></span><span class="sq good" data-tip="2026-07-01｜0.13"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">失業率近三月平均比過去一年最低點高多少。歷史上超過 0.5 都已進入衰退</div>
+</div><div class="light good">
+  <div class="l-top"><span class="l-icon">●</span>職缺 vs 失業人數</div>
+  <div class="l-value">1.04 <span style="font-size:13px;color:var(--muted)">↑</span></div>
+  <div class="l-state">正常</div>
+  <div class="sstrip"><span class="sq warning" data-tip="2025-07-01｜0.93"></span><span class="sq warning" data-tip="2025-08-01｜0.95"></span><span class="sq warning" data-tip="2025-09-01｜0.93"></span><span class="sq warning" data-tip="2025-10-01｜0.94"></span><span class="sq warning" data-tip="2025-11-01｜0.91"></span><span class="sq warning" data-tip="2025-12-01｜0.92"></span><span class="sq warning" data-tip="2026-01-01｜0.93"></span><span class="sq warning" data-tip="2026-02-01｜0.92"></span><span class="sq warning" data-tip="2026-03-01｜0.93"></span><span class="sq good" data-tip="2026-04-01｜1.03"></span><span class="sq good" data-tip="2026-05-01｜1.04"></span><span class="sq good" data-tip="2026-06-01｜1.04"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">每一個失業的人平均對應到幾個職缺。低於 1 代表工作機會不夠分</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>主動離職率</div>
+  <div class="l-value">2.0% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-state">留意</div>
+  <div class="sstrip"><span class="sq warning" data-tip="2025-07-01｜2.10"></span><span class="sq warning" data-tip="2025-08-01｜2.19"></span><span class="sq warning" data-tip="2025-09-01｜2.11"></span><span class="sq warning" data-tip="2025-10-01｜2.10"></span><span class="sq warning" data-tip="2025-11-01｜2.08"></span><span class="sq warning" data-tip="2025-12-01｜2.02"></span><span class="sq warning" data-tip="2026-01-01｜2.10"></span><span class="sq warning" data-tip="2026-02-01｜2.07"></span><span class="sq warning" data-tip="2026-03-01｜2.06"></span><span class="sq warning" data-tip="2026-04-01｜2.03"></span><span class="sq warning" data-tip="2026-05-01｜2.00"></span><span class="sq warning" data-tip="2026-06-01｜2.00"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">自己辭職的人佔比。敢辭職代表對找到新工作有信心，是勞工信心的溫度計</div>
+</div><div class="light good">
+  <div class="l-top"><span class="l-icon">●</span>裁員率</div>
+  <div class="l-value">1.1% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-state">正常</div>
+  <div class="sstrip"><span class="sq good" data-tip="2025-07-01｜1.09"></span><span class="sq good" data-tip="2025-08-01｜1.09"></span><span class="sq good" data-tip="2025-09-01｜1.07"></span><span class="sq good" data-tip="2025-10-01｜1.10"></span><span class="sq good" data-tip="2025-11-01｜1.11"></span><span class="sq good" data-tip="2025-12-01｜1.08"></span><span class="sq good" data-tip="2026-01-01｜1.08"></span><span class="sq good" data-tip="2026-02-01｜1.13"></span><span class="sq good" data-tip="2026-03-01｜1.02"></span><span class="sq good" data-tip="2026-04-01｜1.11"></span><span class="sq good" data-tip="2026-05-01｜1.10"></span><span class="sq good" data-tip="2026-06-01｜1.10"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">每月被裁員的人佔總就業的比例。愈高代表企業愈想縮編</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>還在領失業補助</div>
+  <div class="l-value">208 萬人 <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">留意</div>
+  <div class="sstrip"><span class="sq warning" data-tip="2026-05-16｜2080591.42"></span><span class="sq warning" data-tip="2026-05-23｜2087375.90"></span><span class="sq warning" data-tip="2026-05-30｜2081908.74"></span><span class="sq warning" data-tip="2026-06-06｜2098373.02"></span><span class="sq warning" data-tip="2026-06-13｜2069329.06"></span><span class="sq warning" data-tip="2026-06-20｜2084527.73"></span><span class="sq warning" data-tip="2026-06-27｜2065062.49"></span><span class="sq warning" data-tip="2026-07-04｜2073619.30"></span><span class="sq warning" data-tip="2026-07-11｜2080157.64"></span><span class="sq critical" data-tip="2026-07-18｜2101630.37"></span><span class="sq critical" data-tip="2026-07-25｜2109809.51"></span><span class="sq warning" data-tip="2026-08-01｜2084341.89"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">持續領失業給付的人數。愈多代表失業後愈難找到下一份工作</div>
+</div><div class="light critical">
+  <div class="l-top"><span class="l-icon">■</span>近三月平均新增工作</div>
+  <div class="l-value">+2.0 萬人 <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">警戒</div>
+  <div class="sstrip"><span class="sq good" data-tip="2025-08-01｜175.63"></span><span class="sq good" data-tip="2025-09-01｜136.03"></span><span class="sq good" data-tip="2025-10-01｜142.39"></span><span class="sq good" data-tip="2025-11-01｜142.89"></span><span class="sq good" data-tip="2025-12-01｜183.87"></span><span class="sq good" data-tip="2026-01-01｜197.13"></span><span class="sq warning" data-tip="2026-02-01｜70.80"></span><span class="sq warning" data-tip="2026-03-01｜72.67"></span><span class="sq warning" data-tip="2026-04-01｜68.67"></span><span class="sq good" data-tip="2026-05-01｜141.67"></span><span class="sq warning" data-tip="2026-06-01｜77.00"></span><span class="sq critical" data-tip="2026-07-01｜20.00"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">平均每個月多出多少工作。單月數字波動大，看三個月平均比較準</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>壯年就業比例</div>
+  <div class="l-value">80.4% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">留意</div>
+  <div class="sstrip"><span class="sq warning" data-tip="2025-08-01｜80.12"></span><span class="sq warning" data-tip="2025-09-01｜80.13"></span><span class="sq warning" data-tip="2025-10-01｜80.27"></span><span class="sq warning" data-tip="2025-11-01｜80.25"></span><span class="sq warning" data-tip="2025-12-01｜80.32"></span><span class="sq warning" data-tip="2026-01-01｜80.38"></span><span class="sq warning" data-tip="2026-02-01｜80.35"></span><span class="sq warning" data-tip="2026-03-01｜80.47"></span><span class="sq warning" data-tip="2026-04-01｜80.41"></span><span class="sq warning" data-tip="2026-05-01｜80.50"></span><span class="sq warning" data-tip="2026-06-01｜80.50"></span><span class="sq warning" data-tip="2026-07-01｜80.40"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">25 到 54 歲有工作的比例。排除退休與就學的干擾，最能反映真實就業狀況</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>隱藏性失業</div>
+  <div class="l-value">3.46pp <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">留意</div>
+  <div class="sstrip"><span class="sq warning" data-tip="2025-08-01｜3.42"></span><span class="sq warning" data-tip="2025-09-01｜3.68"></span><span class="sq warning" data-tip="2025-10-01｜3.60"></span><span class="sq warning" data-tip="2025-11-01｜3.55"></span><span class="sq warning" data-tip="2025-12-01｜3.50"></span><span class="sq warning" data-tip="2026-01-01｜3.42"></span><span class="sq good" data-tip="2026-02-01｜3.40"></span><span class="sq warning" data-tip="2026-03-01｜3.50"></span><span class="sq warning" data-tip="2026-04-01｜3.62"></span><span class="sq warning" data-tip="2026-05-01｜3.49"></span><span class="sq warning" data-tip="2026-06-01｜3.62"></span><span class="sq warning" data-tip="2026-07-01｜3.46"></span></div><div class="sstrip-note">近 12 期</div>
+  <div class="l-desc">想要全職卻只能打零工、或想工作卻沒在積極找的人有多少</div>
+</div></div>
+    </details>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2 id="score">綜合強弱指數</h2>
+    <p class="hint">把主要指標換算成同一個尺度後加權合成。
+      正數代表比近年平均強、負數代表弱。</p>
+    <div style="font-size:36px;font-weight:680;line-height:1.15">
+      -0.35
+      <span style="font-size:14px;color:var(--text-secondary);font-weight:400">
+        較上月 +0.08</span>
+    </div>
+    <div class="score-bar">
+      <i style="left:43.033646706277636%;width:6.966353293722364%;background:var(--critical)"></i>
+      <span class="score-mid"></span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
+      <span>−2.5 疲弱</span><span>0 持平</span><span>+2.5 強勁</span></div>
+    <details data-m-collapse><summary>各指標貢獻明細</summary>
+      <table style="margin-top:10px">
+        <thead><tr><th>指標</th><th>標準分數</th><th>權重</th><th>貢獻</th></tr></thead>
+        <tbody><tr><td>非農就業總數</td><td>-1.73</td><td class="muted-cell">1.0</td><td class="neg">-1.73</td></tr><tr><td>離職率 (quits)</td><td>-1.67</td><td class="muted-cell">0.8</td><td class="neg">-1.34</td></tr><tr><td>失業率 U-3</td><td>-1.33</td><td class="muted-cell">1.0</td><td class="pos">+1.33</td></tr><tr><td>黃金年齡就業人口比 (25-54)</td><td>+1.47</td><td class="muted-cell">0.6</td><td class="pos">+0.88</td></tr><tr><td>續領失業金</td><td>+0.95</td><td class="muted-cell">0.8</td><td class="neg">-0.76</td></tr><tr><td>裁員率</td><td>+0.97</td><td class="muted-cell">0.6</td><td class="neg">-0.58</td></tr><tr><td>廣義失業率 U-6</td><td>-1.40</td><td class="muted-cell">0.4</td><td class="pos">+0.56</td></tr><tr><td>初次申請失業金</td><td>+0.79</td><td class="muted-cell">0.4</td><td class="neg">-0.32</td></tr></tbody></table>
+      <p class="hint" style="margin-top:10px">
+        標準分數＝目前值比近五年平均高或低幾個標準差，已調整方向讓「正值＝就業強」。
+        權重目前為暫定值。</p>
+    </details>
+    <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
+      <p class="hint" style="margin:10px 0 8px">資料月份 2026-06（JOLTS 較就業報告落後約兩個月）</p>
+      <table><thead><tr><th>指標</th><th>最新值</th><th>較上月</th></tr></thead>
+      <tbody><tr><td>職缺數</td><td>735.9 萬人</td><td>-17.8 萬人</td></tr><tr><td>招聘率</td><td>3.4%</td><td>持平</td></tr><tr><td>離職率 (quits)</td><td>2.0%</td><td>持平</td></tr><tr><td>裁員率</td><td>1.1%</td><td>持平</td></tr></tbody></table></details>
+  </div>
+
+  <div class="card">
+    <h2 id="glossary">名詞解釋</h2>
+    <p class="hint">這頁出現的專有名詞。</p>
+    <details data-m-collapse open class="plain"><summary>展開名詞解釋</summary>
+    <dl class="gloss">
+      <dt>非農就業人數</dt>
+      <dd>美國政府向企業調查得出的就業人數，不含農業。最受市場關注的就業指標。</dd>
+      <dt>失業率</dt>
+      <dd>在「有在找工作的人」當中，找不到工作的比例。已經放棄找工作的人不算在內。</dd>
+      <dt>勞動參與率</dt>
+      <dd>16 歲以上人口中，有在工作或正在找工作的比例。退休、就學、放棄找工作的人不算。</dd>
+      <dt>JOLTS</dt>
+      <dd>職缺與人力流動調查。統計市場上有多少職缺、多少人被錄取、多少人主動離職。
+        資料比就業報告晚約兩個月。</dd>
+      <dt>主動離職率</dt>
+      <dd>自己辭職的人佔總就業的比例。敢主動辭職代表對找到下一份工作有信心，
+        所以是勞工信心的溫度計。</dd>
+      <dt>續領失業補助</dt>
+      <dd>持續在領失業給付的人數。比「新增失業人數」更能反映找到新工作的難度。</dd>
+      <dt>百分點（pp）</dt>
+      <dd>比例之間的差距。失業率從 4.2% 降到 4.1%，是下降 0.1 個百分點。</dd>
+      <dt>利升息／利降息</dt>
+      <dd>指這項數據會讓聯準會傾向升息或降息。就業轉弱通常利降息，
+        就業與薪資過熱則利升息。</dd>
+    </dl>
+    </details>
+  </div>
+</div>
+
+
+
+
+<footer>資料來源：美國勞工統計局（BLS）與勞工部（DOL），經 FRED 取得，數字為修正後的最新版本。<br>修正追蹤來源：ALFRED 官方歷史版本　·　所有判定由固定規則產生，每次執行結果一致。<br>本頁僅為數據整理，不構成投資建議。</footer>
+
+</div>
+<div id="tip"></div>
+<script>
+(function(){
+  // 手機上預設收合標記為 data-m-collapse 的區塊，把首屏壓短
+  if(window.innerWidth < 760){
+    document.querySelectorAll('details[data-m-collapse]').forEach(function(d){
+      d.removeAttribute('open');
+    });
+  }
+  var t=document.getElementById('tip');
+  document.addEventListener('mouseover',function(e){
+    var el=e.target.closest('[data-tip]'); if(!el||!t)return;
+    t.textContent=el.getAttribute('data-tip'); t.style.opacity=1;
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!t||t.style.opacity!=='1')return;
+    var x=e.clientX+14,y=e.clientY-34;
+    if(x+t.offsetWidth>window.innerWidth-8)x=e.clientX-t.offsetWidth-14;
+    if(y<8)y=e.clientY+22;
+    t.style.left=x+'px'; t.style.top=y+'px';
+  });
+  document.addEventListener('mouseout',function(e){
+    if(t&&e.target.closest('[data-tip]'))t.style.opacity=0;
+  });
+  // 主題：預設跟隨系統，手動切換後記住選擇（跨頁不重置）。
+  // 首次套用在 <head> 的前置腳本做，這裡只負責按鈕與同步。
+  var btn=document.getElementById('themeBtn');
+  function label(){
+    if(!btn)return;
+    var dark=document.documentElement.getAttribute('data-theme')==='dark';
+    btn.textContent=dark?'淺色':'深色';
+  }
+  label();
+  if(btn){btn.addEventListener('click',function(){
+    var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+    label();
+  });}
+  // 未手動選擇過時，跟著系統即時切換
+  try{
+    if(!localStorage.getItem('theme')&&window.matchMedia){
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+        document.documentElement.setAttribute('data-theme',e.matches?'dark':'light');
+        label();
+      });
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

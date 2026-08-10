@@ -1,0 +1,239 @@
+# ============================================================================
+# 長端利率與債務供給模組設定（P5）
+#
+# 主軸：現有三個模組解釋「政策利率往哪走」，這一頁解釋「長端為什麼在這裡」。
+#       長端由債券供給與期限溢酬決定，聯準會控制不了。
+# ============================================================================
+
+meta:
+  release_name: "Rates & Debt Supply"
+  note: >
+    政府與企業競爭同一池的存續期間需求。把兩者放在同一頁，
+    才看得出長端殖利率的供給面壓力來自哪裡。
+
+# ---------------------------------------------------------------------------
+# 一、名目殖利率
+# ---------------------------------------------------------------------------
+yields:
+  - id: DGS2
+    label: 2 年期
+    enabled: true
+  - id: DGS5
+    label: 5 年期
+    enabled: true
+  - id: DGS10
+    label: 10 年期
+    enabled: true
+  - id: DGS30
+    label: 30 年期
+    enabled: true
+  - id: DGS3MO
+    label: 3 個月期
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 二、實質利率與通膨損益兩平
+#     名目 = 實質 + 通膨補償（+ 期限溢酬）
+#     這個拆解才看得出殖利率上升是預期通膨、預期成長，還是風險補償
+# ---------------------------------------------------------------------------
+real_and_breakeven:
+  - id: DFII5
+    label: 5 年期實質利率
+    enabled: true
+  - id: DFII10
+    label: 10 年期實質利率
+    enabled: true
+  - id: DFII30
+    label: 30 年期實質利率
+    enabled: true
+  - id: T5YIE
+    label: 5 年通膨損益兩平
+    enabled: true
+  - id: T10YIE
+    label: 10 年通膨損益兩平
+    enabled: true
+  - id: T5YIFR
+    label: 5年後5年期通膨預期
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 三、期限溢酬
+#     投資人持有長債要求的額外補償。它上升代表「不是預期問題，
+#     是大家不想抱長債」——這正是供給壓力的直接證據。
+# ---------------------------------------------------------------------------
+term_premium:
+  - id: THREEFYTP10
+    label: 10 年期期限溢酬 (Kim-Wright)
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 四、信用市場
+# ---------------------------------------------------------------------------
+credit:
+  - id: BAMLC0A0CM
+    label: 投資級利差 (OAS)
+    enabled: true
+  - id: BAMLH0A0HYM2
+    label: 高收益利差 (OAS)
+    enabled: true
+  - id: BAMLC0A4CBBB
+    label: BBB 級利差
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 五、政府債務
+# ---------------------------------------------------------------------------
+debt:
+  - id: GFDEBTN
+    label: 聯邦公債總額
+    unit: millions
+    frequency: quarterly
+    enabled: true
+  - id: GFDEGDQ188S
+    label: 債務佔 GDP 比重
+    unit: percent
+    frequency: quarterly
+    enabled: true
+  - id: A091RC1Q027SBEA
+    label: 聯邦利息支出
+    unit: billions_saar
+    frequency: quarterly
+    enabled: true
+  - id: FGRECPT
+    label: 聯邦稅收
+    unit: billions_saar
+    frequency: quarterly
+    enabled: true
+  - id: FGEXPND
+    label: 聯邦支出
+    unit: billions_saar
+    frequency: quarterly
+    enabled: true
+  - id: GDP
+    label: 名目 GDP
+    unit: billions_saar
+    frequency: quarterly
+    enabled: true
+  - id: MTSDS133FMS
+    label: 月度財政赤字
+    unit: millions
+    frequency: monthly
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 六、Hyperscaler 資本支出與發債
+#
+# ⚠️ 這一段沒有免費 API，需手動維護，一季更新一次。
+#    來源：各公司 10-Q／10-K 的現金流量表，以及公司債發行公告。
+#
+#    capex        該季資本支出（十億美元，Purchases of property and equipment）
+#    ocf          該季營運現金流（十億美元）
+#    revenue      該季營收（十億美元）
+#    debt_issued  該季發行的公司債金額（十億美元，若無則填 0）
+#
+#    關鍵比率是 capex ÷ ocf：超過 100% 代表自由現金流轉負，
+#    資本支出必須靠舉債或動用現金支應——那就是它們變成投資級市場
+#    大型供給方的時點。
+# ---------------------------------------------------------------------------
+hyperscalers:
+  as_of: "2026Q2"
+  source: "各公司 10-Q 現金流量表；發債金額取自公司債發行公告"
+  verified: false          # 下方為示範值，正式使用前請對照財報更新
+  companies:
+    - name: Microsoft
+      ticker: MSFT
+      capex: 27.4
+      capex_yoy: 41.0
+      ocf: 41.2
+      revenue: 79.8
+      debt_issued: 0.0
+    - name: Alphabet
+      ticker: GOOGL
+      capex: 26.1
+      capex_yoy: 52.0
+      ocf: 38.9
+      revenue: 98.4
+      debt_issued: 12.5
+    - name: Amazon
+      ticker: AMZN
+      capex: 32.8
+      capex_yoy: 34.0
+      ocf: 34.1
+      revenue: 174.2
+      debt_issued: 15.0
+    - name: Meta
+      ticker: META
+      capex: 22.6
+      capex_yoy: 68.0
+      ocf: 26.4
+      revenue: 51.3
+      debt_issued: 30.0
+    - name: Oracle
+      ticker: ORCL
+      capex: 14.9
+      capex_yoy: 82.0
+      ocf: 8.7
+      revenue: 16.1
+      debt_issued: 18.0
+
+# ---------------------------------------------------------------------------
+# 七、投資級市場規模（用來算 hyperscaler 發債佔比）
+#     來源：SIFMA 或 Bloomberg 的季度投資級公司債發行統計
+# ---------------------------------------------------------------------------
+ig_market:
+  quarterly_issuance: 420.0   # 十億美元，該季投資級公司債總發行
+  as_of: "2026Q2"
+  verified: false
+
+# ---------------------------------------------------------------------------
+# 八、紅綠燈門檻
+# ---------------------------------------------------------------------------
+regime_lights:
+  - key: term_premium
+    label: 期限溢酬
+    desc: 投資人持有長債要求的額外補償。上升代表市場不想抱長債
+    direction: higher_is_worse
+    green_below: 0.40
+    red_above: 0.90
+  - key: curve_10_2
+    label: 10 年減 2 年
+    desc: 曲線斜率。負值（倒掛）歷史上是衰退的領先訊號
+    direction: lower_is_worse
+    green_above: 0.50
+    red_below: 0.00
+  - key: curve_30_10
+    label: 30 年減 10 年
+    desc: 長端斜率。走陡通常反映供給壓力或財政疑慮
+    direction: higher_is_worse
+    green_below: 0.60
+    red_above: 0.90
+  - key: real_10y
+    label: 10 年期實質利率
+    desc: 剔除通膨補償後的真實資金成本。高於潛在成長率會壓抑投資
+    direction: higher_is_worse
+    green_below: 1.80
+    red_above: 2.40
+  - key: breakeven_10y
+    label: 10 年通膨損益兩平
+    desc: 市場對未來十年平均通膨的定價
+    direction: higher_is_worse
+    green_below: 2.40
+    red_above: 2.70
+  - key: interest_to_revenue
+    label: 利息佔稅收比重
+    desc: 每收 100 元稅有多少拿去付利息。超過 20% 通常被視為警戒
+    direction: higher_is_worse
+    green_below: 14.0
+    red_above: 20.0
+  - key: r_minus_g
+    label: r 減 g 缺口
+    desc: 實質利率減實質成長率。大於零時債務會自我累積
+    direction: higher_is_worse
+    green_below: -0.5
+    red_above: 0.5
+  - key: ig_spread
+    label: 投資級利差
+    desc: 投資級公司債相對公債的風險補償。走闊代表企業融資成本上升
+    direction: higher_is_worse
+    green_below: 1.00
+    red_above: 1.40

@@ -1,0 +1,25 @@
+# Netlify 只負責靜態託管，不執行任何 build。
+# 頁面由 GitHub Actions 產生並 commit 進 output/，Netlify 偵測到 push 就部署。
+#
+# 這樣做的理由：
+#   1. FRED API key 只存在 GitHub secrets，不必交給 Netlify
+#   2. 不需要在 Netlify 裝 Python 依賴，也不會有 build 逾時風險
+#   3. 每次產出都留在 git 歷史裡 → 自動累積成 vintage 檔案庫
+
+[build]
+  publish = "output"
+  command = ""
+
+# 全站不被搜尋引擎收錄（頁面本身也帶 noindex meta，這裡是第二道）
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# HTML 不快取，資料一更新就看得到最新版
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
