@@ -78,8 +78,7 @@ def analyse(doc: dict, dots: dict | None = None) -> DocAnalysis:
     clean = _normalise(doc.get("text", ""))
     words = len(clean.split())
 
-    hawk_hits = _count(clean, HAWKISH)
-    dove_hits = _count(clean, DOVISH)
+    hawk_hits, dove_hits = _count_tones(clean)
     denom = max(words, 1) / 100
     tone = (sum(HAWKISH[k] * v for k, v in hawk_hits.items())
             - sum(DOVISH[k] * v for k, v in dove_hits.items())) / denom
@@ -92,14 +91,15 @@ def analyse(doc: dict, dots: dict | None = None) -> DocAnalysis:
     if presser:
         pc = _normalise(presser)
         pd = max(len(pc.split()), 1) / 100
-        p_score = ((sum(HAWKISH[k] * pc.count(k) for k in HAWKISH if k in pc)
-                    - sum(DOVISH[k] * pc.count(k) for k in DOVISH if k in pc)) / pd)
+        ph, pv = _count_tones(pc)
+        p_score = (sum(HAWKISH[k] * v for k, v in ph.items())
+                   - sum(DOVISH[k] * v for k, v in pv.items())) / pd
 
     return DocAnalysis(
         date=doc["date"], word_count=words,
         tone_score=round(tone, 3), objective_score=round(obj, 3),
         obj_parts=parts, hawk_hits=hawk_hits, dove_hits=dove_hits,
-        phrases={p: clean.count(p) for p in TRACKED_PHRASES},
+        phrases={p: _wb_count(clean, p) for p in TRACKED_PHRASES},
         vote=vote, dots=dots or {}, has_presser=bool(presser),
         presser_score=None if p_score is None else round(p_score, 3),
         text=clean,
@@ -149,8 +149,45 @@ def _normalise(t: str) -> str:
     return re.sub(r"\s+", " ", t).lower().strip()
 
 
-def _count(text: str, lexicon: dict) -> dict:
-    return {k: text.count(k) for k in lexicon if k in text}
+def _wb_count(text: str, phrase: str) -> int:
+    """
+    整詞比對的出現次數。
+
+    不能用裸的 substring（text.count）：
+      * "increased" 會被算成鴿派詞 "eased"、"patience" 會同時命中 "patient"
+      * 方向會整個反過來，而那正是這個模組要判斷的東西
+    文本已先轉小寫，所以邊界用「前後不是英文字母」判定即可。
+    """
+    return len(re.findall(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])", text))
+
+
+def _count_tones(text: str) -> tuple[dict, dict]:
+    """
+    同時計算鷹派與鴿派詞的命中次數，回傳 (hawk_hits, dove_hits)。
+
+    兩個詞典必須一起處理，並讓長詞優先、吃掉命中的區段：
+      * "remains elevated"（2.5 分）命中後，其中的 "elevated"（2 分）
+        不能再算一次——否則一個片語被計成 4.5 分
+      * 鴿派的 "less restrictive" 命中後，其中的鷹派詞 "restrictive"
+        不能再反向抵銷——否則明確轉鴿的句子會被計成中性
+    """
+    entries = ([(k, "h") for k in HAWKISH] + [(k, "d") for k in DOVISH])
+    entries.sort(key=lambda e: len(e[0]), reverse=True)
+
+    consumed: list[tuple[int, int]] = []
+    hawk: dict[str, int] = {}
+    dove: dict[str, int] = {}
+    for phrase, tag in entries:
+        pat = re.compile(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])")
+        n = 0
+        for m in pat.finditer(text):
+            if any(s < m.end() and m.start() < e for s, e in consumed):
+                continue                      # 已被更長的片語吃掉
+            consumed.append((m.start(), m.end()))
+            n += 1
+        if n:
+            (hawk if tag == "h" else dove)[phrase] = n
+    return hawk, dove
 
 
 # ---------------------------------------------------------------------------

@@ -70,7 +70,7 @@ def curve_state(s: dict[str, list[dict]]) -> CurveState:
             "residual": nom - real - be,      # 應接近零，用來檢查資料一致性
             "term_premium": c.term_premium,
         }
-        c.note = ("名目殖利率 ＝ 實質利率 ＋ 通膨補償。"
+        c.note = ("名目殖利率 = 實質利率 + 通膨補償。"
                   "期限溢酬是另一個角度的拆解，衡量投資人持有長債要求的額外補償，"
                   "與上述兩項有重疊，不可直接相加。")
     return c

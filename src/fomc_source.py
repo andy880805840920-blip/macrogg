@@ -42,8 +42,14 @@ MINUTES_URL = BASE + "/monetarypolicy/fomcminutes{ymd}.htm"
 PRESSER_URL = BASE + "/mediacenter/files/FOMCpresconf{ymd}.pdf"
 CALENDAR_URL = BASE + "/monetarypolicy/fomccalendars.htm"
 
-VOTE_MARKERS = ("Voting for the monetary policy action",
-                "Voting for this action")
+# 投票段落的起點。
+#
+# 不能只找 "Voting for"：2026 年 6 月起（Warsh 上任後）聲明改版，
+# 一致通過時不再列出贊成名單，有反對票時**只寫 "Voting against ..."**。
+# 只認 "Voting for" 會讓這種聲明整段抓不到投票，反對票被讀成「一致」，
+# 客觀訊號分數因此歸零——那正好是這份儀表板最重要的訊號。
+# 所以改成比對「最早出現的任一種寫法」。
+VOTE_RE = re.compile(r"Voting\s+(?:for|against)\b", re.I)
 
 
 @dataclass
@@ -187,11 +193,15 @@ def extract_text(html: str) -> str:
 
 
 def split_statement(text: str) -> tuple[str, str]:
-    """切成 (政策段落, 投票段落)。兩段都要保留。"""
-    for marker in VOTE_MARKERS:
-        i = text.find(marker)
-        if i > 0:
-            return text[:i].strip(), text[i:].strip()
+    """
+    切成 (政策段落, 投票段落)。兩段都要保留。
+
+    切點取「Voting for」與「Voting against」之中最早出現的那個，
+    因為新版聲明可能只有後者（見 VOTE_RE 的說明）。
+    """
+    m = VOTE_RE.search(text)
+    if m:
+        return text[:m.start()].strip(), text[m.start():].strip()
     return text, ""
 
 
@@ -234,6 +244,10 @@ def _direction(chunk: str) -> str:
         return "hike"
     if re.search(r"\b(lower|lowering|reduce|reducing|decrease|cut)\b", low):
         return "cut"
+    # 「preferred to maintain the target range」— 在委員會行動時主張按兵不動。
+    # 不辨識這種寫法的話，這張反對票會變成 unknown，畫面上整格空白。
+    if re.search(r"\b(maintain|maintaining|keep|keeping|unchanged|pause)\b", low):
+        return "hold"
     return "unknown"
 
 

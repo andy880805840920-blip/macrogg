@@ -143,7 +143,7 @@ def revision_table(rows: Sequence[dict], fmt=None) -> str:
 # ---------------------------------------------------------------------------
 def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
                color: str = "var(--series-1)", zero: bool = False,
-               marks: Sequence[dict] | None = None) -> str:
+               marks: Sequence[dict] | None = None, digits: int = 2) -> str:
     """
     折線圖。
 
@@ -224,18 +224,19 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
 
     # 高低參考線的數值標籤：貼在各自的線旁邊（高值標在線上方、低值在線下方），
     # 讀者不必再自己對照「區間」文字猜線的位置。
+    # 小數位數與最新值標籤共用 digits——同一張圖不能一個標 126.0、一個標 125.95。
     glabs = (
         f'<span class="glab" style="top:calc({y_pct(data_hi):.1f}% - 14px)">'
-        f'{data_hi:,.1f}{_esc(unit)}</span>'
+        f'{data_hi:,.{digits}f}{_esc(unit)}</span>'
         f'<span class="glab" style="top:calc({y_pct(data_lo):.1f}% + 4px)">'
-        f'{data_lo:,.1f}{_esc(unit)}</span>'
+        f'{data_lo:,.{digits}f}{_esc(unit)}</span>'
     )
 
     return (
         f'<div class="lwrap">'
         f'<div class="lplot">{svg}{glabs}{mark_labels}</div>'
         f'<div class="lxaxis"><span>{_esc(pts[0]["date"])}</span>'
-        f'<span><b>{pts[-1]["value"]:,.2f}{_esc(unit)}</b>　{_esc(pts[-1]["date"])}</span>'
+        f'<span><b>{pts[-1]["value"]:,.{digits}f}{_esc(unit)}</b>　{_esc(pts[-1]["date"])}</span>'
         f"</div></div>"
     )
 

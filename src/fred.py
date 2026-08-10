@@ -33,9 +33,15 @@ class FredError(RuntimeError):
     pass
 
 
+class FredAuthError(FredError):
+    """API key 本身被 FRED 拒絕。這種錯誤重試沒有意義，也不該逐序列吞掉。"""
+
+
 class FredClient:
     def __init__(self, api_key: str | None = None, session: requests.Session | None = None):
-        self.api_key = api_key or os.environ.get("FRED_API_KEY", "")
+        # 一定要 strip()。從網頁複製 key 時很容易帶到尾端空白或換行，
+        # 這種 key 送出去會被 FRED 判為無效，而且錯誤訊息看不出原因。
+        self.api_key = (api_key or os.environ.get("FRED_API_KEY", "")).strip()
         if not self.api_key:
             raise FredError(
                 "找不到 FRED API key。請設定環境變數 FRED_API_KEY，"
@@ -58,8 +64,25 @@ class FredClient:
                 if r.status_code == 429:          # 觸發限流，等久一點再試
                     time.sleep(RETRY_BACKOFF * (attempt + 2))
                     continue
+                # FRED 對「key 無效」回的是 400，不是 401。這種錯誤重試沒有意義，
+                # 而且若照一般失敗處理，56 個序列會各噴一次同樣的訊息，
+                # 最後還產出一份沒有資料的頁面覆蓋掉上一版——比直接失敗更糟。
+                if r.status_code == 400:
+                    msg = ""
+                    try:
+                        msg = (r.json() or {}).get("error_message", "")
+                    except Exception:             # noqa: BLE001
+                        msg = r.text[:200]
+                    if "api_key" in msg.lower():
+                        raise FredAuthError(
+                            f"FRED 拒絕這組 API key（{msg}）。"
+                            "請確認 FRED_API_KEY 的值正確、沒有多餘空白，"
+                            "且已在 fredaccount.stlouisfed.org 啟用。"
+                        )
                 r.raise_for_status()
                 return r.json()
+            except FredAuthError:                 # 直接往上拋，不重試也不記錄
+                raise
             except Exception as e:                # noqa: BLE001
                 last_err = e
                 if attempt < MAX_RETRIES - 1:
@@ -101,6 +124,8 @@ class FredClient:
             if not rows:
                 self.failed.append((series_id, "回傳空資料"))
             return rows
+        except FredAuthError:                     # key 有問題就不必再試其他序列
+            raise
         except Exception as e:                    # noqa: BLE001
             log.warning("序列 %s 抓取失敗：%s", series_id, e)
             self.failed.append((series_id, str(e)))

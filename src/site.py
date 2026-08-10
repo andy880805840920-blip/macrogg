@@ -461,6 +461,9 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .citem.new .cmark{color:var(--serious)}
 .citem.gone .cmark{color:var(--series-1)}
 .citem .cmod{font-size:11px;color:var(--muted);flex-shrink:0}
+.citem .clean{font-size:11px;font-weight:700;flex-shrink:0;margin-left:auto}
+.citem .clean.hawkish{color:var(--serious)}
+.citem .clean.dovish{color:var(--series-1)}
 .cmoves{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid)}
 .cmove{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px;
   padding:8px 0;border-bottom:1px solid var(--grid);align-items:baseline}
@@ -656,16 +659,26 @@ def soon_page(title: str, active: str, what: str, when: str) -> str:
 
 def next_first_friday(after: dt.date | None = None) -> dt.date:
     """
-    估算下一次就業報告發布日（慣例為次月第一個週五）。
+    估算下一次就業報告發布日（慣例為每月第一個週五）。
+
+    注意要先看**本月**的第一個週五：月初執行時（1 號到第一個週五之間），
+    下一份報告就在幾天後，不能直接跳到下個月——否則每個月初都會
+    顯示「約 31 天後」的錯誤推估。
 
     這是慣例推估，不是官方行事曆；遇假日或 BLS 調整會有偏差，
     畫面上一律標示為「預估」。
     """
     after = after or dt.date.today()
-    y, m = (after.year + (after.month == 12), 1 if after.month == 12 else after.month + 1)
-    d = dt.date(y, m, 1)
-    while d.weekday() != 4:
-        d += dt.timedelta(days=1)
-    if d <= after:
-        return next_first_friday(dt.date(y, m, 28))
+
+    def first_friday(y: int, m: int) -> dt.date:
+        d = dt.date(y, m, 1)
+        while d.weekday() != 4:
+            d += dt.timedelta(days=1)
+        return d
+
+    d = first_friday(after.year, after.month)
+    if d <= after:                       # 本月的已過 → 下個月
+        y, m = ((after.year + 1, 1) if after.month == 12
+                else (after.year, after.month + 1))
+        d = first_friday(y, m)
     return d

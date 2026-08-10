@@ -49,6 +49,7 @@ def snapshot(ctxs: dict) -> dict:
             "tilt": lab["tilt"]["tilt"],
             "flags": [f.key for f in lab["flags"]],
             "flag_titles": {f.key: f.headline for f in lab["flags"]},
+            "flag_leans": {f.key: f.lean for f in lab["flags"]},
             "metrics": lab.get("key_metrics", {}),
         }
     inf = ctxs.get("inflation")
@@ -58,6 +59,7 @@ def snapshot(ctxs: dict) -> dict:
             "tilt": inf["tilt"]["tilt"],
             "flags": [f.key for f in inf["flags"]],
             "flag_titles": {f.key: f.headline for f in inf["flags"]},
+            "flag_leans": {f.key: f.lean for f in inf["flags"]},
             "metrics": inf.get("key_metrics", {}),
         }
     scn = ctxs.get("scenario")
@@ -105,10 +107,12 @@ def compare(cur: dict, prev: dict | None) -> ChangeSet:
         label = "就業" if mod == "labor" else "物價"
         for k in ck - pk:
             cs.new_flags.append({"module": label,
-                                 "title": c.get("flag_titles", {}).get(k, k)})
+                                 "title": c.get("flag_titles", {}).get(k, k),
+                                 "lean": c.get("flag_leans", {}).get(k, "")})
         for k in pk - ck:
             cs.resolved_flags.append({"module": label,
-                                      "title": p.get("flag_titles", {}).get(k, k)})
+                                      "title": p.get("flag_titles", {}).get(k, k),
+                                      "lean": p.get("flag_leans", {}).get(k, "")})
         cs.persisting += len(pk & ck)
 
     # ---- 傾向與分數 ----
@@ -150,9 +154,9 @@ def _headline(cs: ChangeSet) -> str:
         return f"情境由「{cs.scenario_from}」移動到「{cs.scenario_to}」"
     bits = []
     if cs.new_flags:
-        bits.append(f"新增 {len(cs.new_flags)} 項訊號")
+        bits.append(f"新觸發 {len(cs.new_flags)} 項訊號")
     if cs.resolved_flags:
-        bits.append(f"{len(cs.resolved_flags)} 項訊號消失")
+        bits.append(f"{len(cs.resolved_flags)} 項訊號解除")
     if not bits:
         return "情境與訊號組成與上期相同"
     return "情境未變，但" + "、".join(bits)

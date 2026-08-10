@@ -46,16 +46,31 @@ def _change_card(cs) -> str:
                 f'<span>{esc(cs.headline)}</span>'
                 f'<span class="ctitle">對照 {esc(cs.prev_at)}</span></div>')
 
+    # 「新增／消失」語意不明——改成「新觸發／已解除」，並掛上該訊號
+    # 對利率的方向章，讀者不必點進分頁就知道這條變化偏哪邊。
+    def _lean_chip(lean: str) -> str:
+        if lean in ("dovish", "hawkish"):
+            return (f'<span class="clean {lean}">'
+                    f'{LEAN_TEXT.get(lean, "")}</span>')
+        return ""
+
     items = []
     for f in cs.new_flags[:6]:
-        items.append(f'<div class="citem new"><span class="cmark">新增</span>'
+        items.append(f'<div class="citem new"><span class="cmark">新觸發</span>'
                      f'<span>{esc(f["title"])}</span>'
-                     f'<span class="cmod">{esc(f["module"])}</span></div>')
+                     f'<span class="cmod">{esc(f["module"])}</span>'
+                     f'{_lean_chip(f.get("lean", ""))}</div>')
     for f in cs.resolved_flags[:6]:
-        items.append(f'<div class="citem gone"><span class="cmark">消失</span>'
+        items.append(f'<div class="citem gone"><span class="cmark">已解除</span>'
                      f'<span>{esc(f["title"])}</span>'
-                     f'<span class="cmod">{esc(f["module"])}</span></div>')
-    items_html = (f'<div class="clist">{"".join(items)}</div>' if items else "")
+                     f'<span class="cmod">{esc(f["module"])}</span>'
+                     f'{_lean_chip(f.get("lean", ""))}</div>')
+    items_html = ""
+    if items:
+        items_html = (
+            '<div class="src" style="border-top:none;padding-top:0;margin-top:10px">'
+            '「新觸發」＝本期新出現的訊號；「已解除」＝上期有、本期不再成立。</div>'
+            f'<div class="clist">{"".join(items)}</div>')
 
     moves = []
     for m in cs.metric_moves[:8]:
@@ -143,11 +158,15 @@ def home_body(ctxs: dict) -> str:
         # 對外一律報「客觀訊號分數」（反對票 + 點陣圖）。
         # 措辭分數只是輔助，而且在溝通方式改變時會被停用——
         # 首頁若顯示措辭分數，會出現「+0.00 偏鷹」這種自相矛盾的卡片。
+        # 首頁說的是「利升息／利降息」語言，鷹鴿要帶翻譯
+        lean_note = {"hawkish": "（利升息）", "dovish": "（利降息）"}.get(
+            shift.get("direction", ""), "")
         cards.append(_module_card(
             "/fomc/", "聯準會文本", f"{fom['latest_date']} 聲明",
             f"{shift.get('objective', 0):+.2f}",
-            f"{esc(shift.get('label', ''))}　·　本次 {fom['changed_count']} 處改動",
-            "看逐次紅線比對與措辭熱力圖"))
+            f"{esc(shift.get('label', ''))}{lean_note}　·　"
+            f"本次 {fom['changed_count']} 處改動",
+            "看聲明逐句比對與措辭熱力圖"))
     else:
         cards.append(_module_card("/fomc/", "聯準會文本", "建置中", "—",
                                   "聲明紅線比對、措辭熱力圖、鷹鴿計分", "P3",

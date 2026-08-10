@@ -147,7 +147,14 @@ def gather_fomc(offline: bool, fetch_cfg: dict):
 # ---------------------------------------------------------------------------
 # 網站產生
 # ---------------------------------------------------------------------------
-def write_site(ctxs: dict, offline: bool) -> list[Path]:
+def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]:
+    """
+    only 有值時（--only labor 等）＝局部重跑：只覆寫該模組自己的頁面。
+
+    不能把「模組被跳過」當成「設定檔未載入」處理——否則 --only labor
+    會把好端端的通膨、FOMC 頁蓋成「建置中」佔位頁，首頁與情境合成
+    也會拿殘缺的 context 產出降級的結論。
+    """
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
 
@@ -160,6 +167,8 @@ def write_site(ctxs: dict, offline: bool) -> list[Path]:
     banner = labor_page.offline_banner() if offline else ""
     lab, inf, fom, scn = (ctxs.get("labor"), ctxs.get("inflation"),
                           ctxs.get("fomc"), ctxs.get("scenario"))
+    if only:
+        scn = None                          # 情境頁需要全部模組，局部重跑不更新
 
     # ---- 勞動市場 ----
     if lab:
@@ -180,7 +189,7 @@ def write_site(ctxs: dict, offline: bool) -> list[Path]:
             footer=infl_page.inflation_footer(inf), banner=banner)
         write("inflation/index.html", html)
         write(f"archive/inflation-{inf['data_month']}/index.html", html)
-    else:
+    elif not only:
         write("inflation/index.html", site.soon_page(
             "通膨", "/inflation/", "設定檔 config/inflation.yaml 未載入。", "P2"))
 
@@ -190,7 +199,7 @@ def write_site(ctxs: dict, offline: bool) -> list[Path]:
             "聯準會文本", "/fomc/", fomc_page.fomc_body(fom),
             subtitle=(f"最新聲明 {fom['latest_date']}　·　更新於 {fom['generated_at']}"),
             footer=fomc_page.fomc_footer(fom), banner=banner))
-    else:
+    elif not only:
         write("fomc/index.html", site.soon_page(
             "聯準會文本", "/fomc/",
             "尚未取得任何聲明文本。正式執行時會從 federalreserve.gov 抓取近四年的會後聲明。",
@@ -212,7 +221,10 @@ def write_site(ctxs: dict, offline: bool) -> list[Path]:
             subtitle=f"{scn['as_of']}　·　更新於 {scn['generated_at']}",
             footer=scen_page.scenario_footer(scn), banner=banner))
 
-    # ---- 首頁 ----
+    # ---- 首頁與全站頁（局部重跑時不動，避免用殘缺 context 產生降級結論）----
+    if only:
+        return written
+
     write("index.html", site.page(
         "美國總經儀表板", "/", home_page.home_body(ctxs),
         subtitle=f"最後更新 {dt.datetime.now().strftime('%Y-%m-%d %H:%M')}",
@@ -328,13 +340,20 @@ def main() -> int:
     log.info("情境合成：%s（就業%s × 通膨%s）", sc.name, sc.labor_state, sc.infl_state)
 
     # ---- 本期變化摘要：跟上一次執行的快照比 ----
-    prev_snap = chg.load_previous(STATE_FILE)
-    cur_snap = chg.snapshot(ctxs)
-    ctxs["changes"] = chg.compare(cur_snap, prev_snap)
-    log.info("變化摘要：%s", ctxs["changes"].headline)
+    # 局部重跑（--only）的 context 是殘缺的，比對與存檔都會產生
+    # 「情境移動」的假訊號，所以跳過。
+    if args.only:
+        ctxs["changes"] = None
+        log.info("局部重跑（--only %s）：跳過變化比對與快照存檔", args.only)
+    else:
+        prev_snap = chg.load_previous(STATE_FILE)
+        cur_snap = chg.snapshot(ctxs)
+        ctxs["changes"] = chg.compare(cur_snap, prev_snap)
+        log.info("變化摘要：%s", ctxs["changes"].headline)
 
-    written = write_site(ctxs, args.offline)
-    chg.save(STATE_FILE, cur_snap)
+    written = write_site(ctxs, args.offline, only=args.only)
+    if not args.only:
+        chg.save(STATE_FILE, cur_snap)
     log.info("已產出 %d 個頁面至 %s", len(written), OUT_DIR)
     if all_failed:
         log.warning("有 %d 個資料來源抓取失敗，詳見頁面底部清單", len(all_failed))
@@ -364,4 +383,10 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    from src.fred import FredAuthError                             # noqa: E402
+    try:
+        sys.exit(main())
+    except FredAuthError as e:
+        # 明確失敗並中止，不要產出一份沒有資料的頁面覆蓋掉上一版好的結果
+        log.error("%s", e)
+        sys.exit(2)

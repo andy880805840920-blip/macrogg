@@ -82,6 +82,16 @@ def attribute_cpi(
         if meta_by_id.get(c.key, {}).get("group") == "food_energy"
     )
 
+    # 「剔除住房後」是一個**通膨率**，不是貢獻度：拿掉住房的貢獻之後，
+    # 還要除以剩餘權重重新正規化，否則會低估約等於住房權重的比例（~35%）。
+    # 下方的 ex_shelter_yoy（年增率版本）已經是這樣算的，這裡比照辦理。
+    shelter_w = sum(
+        float(meta_by_id.get(c.key, {}).get("weight", 0))
+        for c in contribs if meta_by_id.get(c.key, {}).get("laggy")
+    )
+    ex_shelter = ((total - shelter) / (1 - shelter_w / 100)
+                  if shelter_w < 100 else None)
+
     return AttributionResult(
         total=total,
         contributions=sorted(contribs, key=lambda c: c.value, reverse=True),
@@ -91,7 +101,7 @@ def attribute_cpi(
             "supercore": supercore,
             "shelter": shelter,
             "food_energy": food_energy,
-            "ex_shelter": total - shelter,
+            "ex_shelter": ex_shelter,
         },
         share_suppressed=suppress,
         unexplained=total - explained,
@@ -147,8 +157,8 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
 
-    s.median_cpi = value_at(g("MEDCPIM158SFRBCLE", []))
-    s.trimmed_cpi = value_at(g("TRMMEANCPIM158SFRBCLE", []))
+    s.median_cpi = value_at(g("MEDCPIM159SFRBCLE", []))
+    s.trimmed_cpi = value_at(g("TRMMEANCPIM159SFRBCLE", []))
     s.sticky_cpi = value_at(g("CORESTICKM159SFRBATL", []))
     s.expect_5y5y = value_at(g("T5YIFR", []))
     s.expect_1y = value_at(g("MICH", []))
@@ -204,7 +214,7 @@ def light_values(series: dict[str, list[dict]], summ: InflationSummary) -> dict[
         prev = yoy(pce[:-1]) if len(pce) > 13 else None
         put("core_pce_yoy", summ.pce_core_yoy, prev, f"{summ.pce_core_yoy:.1f}%")
 
-    med = series.get("MEDCPIM158SFRBCLE", [])
+    med = series.get("MEDCPIM159SFRBCLE", [])
     if summ.median_cpi is not None:
         put("median_cpi", summ.median_cpi, value_at(med, 1), f"{summ.median_cpi:.1f}%")
 
@@ -217,7 +227,7 @@ def light_values(series: dict[str, list[dict]], summ: InflationSummary) -> dict[
 
     gasr = series.get("GASREGW", [])
     if summ.gas is not None:
-        put("gas_price", summ.gas, value_at(gasr, 1), f"${summ.gas:.2f}")
+        put("gas_price", summ.gas, value_at(gasr, 1), f"{summ.gas:.2f} 美元")
 
     cg = series.get("CUSR0000SACL1E", [])
     if summ.core_goods_yoy is not None:

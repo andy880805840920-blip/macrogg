@@ -64,13 +64,22 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
 
     v = d.get("verdict")
     if v == "bad_decline":
+        # bad_decline 只保證「勞動力退出主導」，就業本身可能增也可能減——
+        # 文案必須跟著正負號走，不能一律寫「有工作的人少了」。
+        de = d.get("delta_employed")
+        if de is not None and de < 0:
+            emp_clause = f"但真正有工作的人其實少了 {fmt.wan_abs(de)}，"
+        elif de is not None:
+            emp_clause = f"但就業僅微增 {fmt.wan_abs(de)}，"
+        else:
+            emp_clause = ""
         return Flag(
             key="bad_decline",
             severity="alert",
             headline="失業率下降源於勞動力退出，而非就業增加",
             detail=(
                 f"失業率下降 {abs(d['delta_rate']):.2f} 個百分點，表面上是好消息。"
-                f"但真正有工作的人其實少了 {fmt.wan_abs(d['delta_employed'])}，"
+                f"{emp_clause}"
                 f"同時有 {fmt.wan_abs(d['delta_labor_force'])}乾脆放棄找工作、退出職場。"
                 "放棄找工作的人不會被算成失業，所以失業率反而被壓低了。"
             ),

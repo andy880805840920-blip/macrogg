@@ -89,14 +89,14 @@ shelter_detail:
 #     用來判斷「這次的高低是趨勢，還是被少數項目帶動」
 # ---------------------------------------------------------------------------
 trend_measures:
-  - id: MEDCPIM158SFRBCLE
+  - id: MEDCPIM159SFRBCLE
     label: 中位數 CPI
-    unit: annualized_pct
+    unit: yoy_pct        # 12 個月變化率。要跟核心 CPI 年增比較，兩者口徑必須相同
     enabled: true
     note: Cleveland Fed。取權重中位數的項目，完全不受極端值影響
-  - id: TRMMEANCPIM158SFRBCLE
+  - id: TRMMEANCPIM159SFRBCLE
     label: 截尾平均 CPI
-    unit: annualized_pct
+    unit: yoy_pct
     enabled: true
     note: Cleveland Fed。剔除漲跌最極端的項目後取平均
   - id: CORESTICKM159SFRBATL

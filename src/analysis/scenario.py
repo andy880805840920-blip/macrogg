@@ -196,7 +196,9 @@ def synthesise(labor: dict | None, inflation: dict | None,
             sc.fomc_note = ("聯準會的措辭比數據更鴿。可能是官員看到了數據還沒反映的訊號，"
                             "值得留意。")
         elif d in ("hawkish", "dovish"):
-            sc.fomc_note = f"聯準會措辭與數據方向一致（{fomc.get('label', '')}），判讀的信心較高。"
+            trans = {"hawkish": "利升息", "dovish": "利降息"}[d]
+            sc.fomc_note = (f"聯準會措辭與數據方向一致"
+                            f"（{fomc.get('label', '')}＝{trans}方向），判讀的信心較高。")
         else:
             sc.fomc_note = "聯準會措辭沒有明顯變化，方向主要由數據決定。"
 

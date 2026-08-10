@@ -6,11 +6,13 @@ from .. import charts
 from ..site import esc
 
 
+# 「鷹／鴿」是聯準會語境的標準詞，這頁保留，但首次出現一律加註方向——
+# 全站其他頁面說的是「利升息／利降息」，兩套詞要能互相對上。
 DIR_COPY = {
-    "hawkish": ("本次會議：偏鷹",
+    "hawkish": ("本次會議：偏鷹（利升息方向）",
                 "客觀訊號指向緊縮——反對票或點陣圖顯示有官員想要更高的利率。"
                 "這通常代表降息會比市場預期更慢，對債券價格不利。"),
-    "dovish": ("本次會議：偏鴿",
+    "dovish": ("本次會議：偏鴿（利降息方向）",
                "客觀訊號指向寬鬆——反對票或點陣圖顯示有官員想要更低的利率。"
                "這通常是降息的前置訊號。"),
     "neutral": ("本次會議：方向不明",
@@ -63,8 +65,8 @@ def _heatmap(matrix: dict) -> str:
 def _votes(vote: dict) -> str:
     chips = []
     for d in vote.get("dissents", []):
-        word = "贊成升息" if d["direction"] == "hike" else (
-            "贊成降息" if d["direction"] == "cut" else "反對")
+        word = {"hike": "贊成升息", "cut": "贊成降息",
+                "hold": "主張維持不變"}.get(d["direction"], "反對")
         chips.append(f'<span class="vchip {d["direction"]}">'
                      f'{esc(d["name"])}　{word}</span>')
     if not chips:
@@ -84,9 +86,17 @@ def fomc_body(d: dict) -> str:
     hawk = sum(1 for x in vote.get("dissents", []) if x["direction"] == "hike")
     dove = sum(1 for x in vote.get("dissents", []) if x["direction"] == "cut")
 
-    vote_line = (f"投票 {n_sup} 比 {n_dis}"
+    # 2026 年 6 月起的新版聲明在有反對票時只列反對者、不列贊成名單，
+    # 這時 n_sup 會是 0——不能寫成「投票 0 比 3」，那是假的票數。
+    if n_sup:
+        head = f"投票 {n_sup} 比 {n_dis}"
+    elif n_dis:
+        head = f"{n_dis} 票反對（本次聲明未列出贊成名單）"
+    else:
+        head = ""
+    vote_line = (head
                  + (f"，其中 {hawk} 票主張升息" if hawk else "")
-                 + (f"，{dove} 票主張降息" if dove else "")) if (n_sup or n_dis) else ""
+                 + (f"，{dove} 票主張降息" if dove else "")) if head else ""
 
     verdict = f"""<div class="verdict {lean_cls}">
   <div class="v-eyebrow">{esc(d['latest_date'])} 會議　·　一句話結論</div>
@@ -114,7 +124,8 @@ def fomc_body(d: dict) -> str:
     <div class="dlab">{esc(sh.get('objective_label', ''))}
       <span style="font-weight:400;color:var(--muted)">
       　較上次 {sh.get('objective_delta', 0):+.2f}</span></div>
-    <div class="dnote">{esc(d.get('obj_detail', ''))}</div>
+    <div class="dnote">刻度：0＝中性，正＝偏升息、負＝偏降息。
+      每張升息／降息反對票 ±2，點陣圖多數偏向另計。<br>{esc(d.get('obj_detail', ''))}</div>
   </div>
   <div class="dbox {tone_cls}{tone_stale}">
     <div class="dtitle">措辭分數（輔助）{'　⚠ 本次不可靠' if regime.get('detected') else ''}</div>
@@ -122,8 +133,8 @@ def fomc_body(d: dict) -> str:
     <div class="dlab">{esc(sh.get('tone_label', ''))}
       <span style="font-weight:400;color:var(--muted)">
       　較上次 {sh.get('tone_delta', 0):+.2f}</span></div>
-    <div class="dnote">依固定詞典計分。詞典為 Powell 時代的聲明體例校準，
-      主席更迭或體例改變時可比性下降。</div>
+    <div class="dnote">刻度同左：0＝中性，正＝措辭偏緊縮（依每百字的加權詞頻計算）。
+      詞典為 Powell 時代的聲明體例校準，主席更迭或體例改變時可比性下降。</div>
   </div>
 </div>"""
 
@@ -219,7 +230,8 @@ def fomc_body(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="trend">分數走勢</h2>
-    <p class="hint">兩個分數的歷史軌跡。措辭分數在主席更迭處會有斷點，已標示。</p>
+    <p class="hint">兩個分數的歷史軌跡，刻度相同：0＝中性，正＝偏升息方向、負＝偏降息方向。
+      措辭分數在主席更迭處會有斷點，已標示。</p>
     <details data-m-collapse open><summary>歷次分數明細</summary>
       <table style="margin-top:12px">
         <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>

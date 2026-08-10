@@ -114,9 +114,12 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     plain_nfp = "—"
     if nfp_now is not None:
         verb = "增加" if nfp_now >= 0 else "減少"
-        plain_nfp = f"美國企業這個月{verb}了約 {abs(nfp_now)/10:.1f} 萬個工作機會。"
+        # 單位統一用「萬人」——同一張卡的副標與數值列都是萬人，
+        # 白話句不能自己改用「萬個」。
+        plain_nfp = f"美國整體就業這個月{verb}約 {fmt.wan_abs(nfp_now)}。"
         if ma3 is not None:
-            plain_nfp += f"近三個月平均每月{'增加' if ma3>=0 else '減少'} {abs(ma3)/10:.1f} 萬個。"
+            plain_nfp += (f"近三個月平均每月{'增加' if ma3 >= 0 else '減少'}"
+                          f" {fmt.wan_abs(ma3)}。")
     plain_u3 = ("—" if u3_now is None else
                 f"每 100 個有在找工作的人裡，約 {u3_now:.1f} 人還沒找到。"
                 "已經放棄找工作的人不算在這個數字裡。")
@@ -333,8 +336,9 @@ def _breakeven_block(b) -> dict:
         # 圖表單位要跟上方數字一致（萬人），否則讀者要自己換算
         merged = [{"date": r["date"], "value": r["value"] / 10}
                   for r in since_year_start(b.series, min_points=18)]
+        # 萬人的全站慣例是一位小數（fmt.wan），圖上標籤跟著用
         chart = charts.line_chart(merged, unit=" 萬人", height=150,
-                                  color="var(--series-2)")
+                                  color="var(--series-2)", digits=1)
     return {"stats": stats, "chart": chart, "note": b.note,
             "verdict": b.verdict, "verdict_label": label, "verdict_note": note,
             "monthly": b.monthly, "gap": b.gap}
@@ -445,17 +449,20 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         {"label": "近三個月漲幅", "value": f"{att.total:+.2f}%"},
         {"label": "其中：住房貢獻", "value": f"{agg.get('shelter', 0):+.2f}pp",
          "note": "算法落後市場行情約一年"},
-        {"label": "剔除住房後", "value": f"{agg.get('ex_shelter', 0):+.2f}%",
-         "color": ("var(--good)" if agg.get("ex_shelter", 9) < 0.6 else "inherit"),
-         "note": "更接近當下的實際物價"},
+        {"label": "剔除住房後",
+         "value": (f"{agg['ex_shelter']:+.2f}%"
+                   if agg.get("ex_shelter") is not None else "—"),
+         "color": ("var(--good)"
+                   if (agg.get("ex_shelter") or 9) < 0.6 else "inherit"),
+         "note": "更接近當下的實際物價（已按剩餘權重換算回通膨率）"},
         {"label": "食物與能源貢獻", "value": f"{agg.get('food_energy', 0):+.2f}pp"},
     ]
 
     # ---- 趨勢型指標 ----
     trend_rows = []
     for sid, label, note in [
-        ("MEDCPIM158SFRBCLE", "中位數 CPI", "取漲幅正中間的項目，不受極端值影響"),
-        ("TRMMEANCPIM158SFRBCLE", "截尾平均 CPI", "剔除漲跌最極端的項目後平均"),
+        ("MEDCPIM159SFRBCLE", "中位數 CPI", "取漲幅正中間的項目，不受極端值影響"),
+        ("TRMMEANCPIM159SFRBCLE", "截尾平均 CPI", "剔除漲跌最極端的項目後平均"),
         ("CORESTICKM159SFRBATL", "黏性核心 CPI", "只看價格很少調整的項目，代表通膨慣性"),
     ]:
         v = value_at(series.get(sid, []))
@@ -470,7 +477,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "color": ("var(--serious)" if summ.oil_1m > 0 else "var(--series-1)"),
             "note": "領先加油站價格約 2–4 週"})
     if summ.gas is not None:
-        energy_stats.append({"label": "零售汽油", "value": f"${summ.gas:.2f}/加侖"})
+        energy_stats.append({"label": "零售汽油", "value": f"{summ.gas:.2f} 美元／加侖"})
     if summ.oil_1m is not None:
         est = summ.oil_1m * 0.062 * 0.4
         energy_stats.append({
@@ -518,6 +525,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "cpi": headline[-1]["date"] if headline else "",
             "pce": (series.get("PCEPILFE") or [{}])[-1].get("date", ""),
             "oil": (series.get("DCOILWTICO") or [{}])[-1].get("date", ""),
+            "exp": (series.get("T5YIFR") or [{}])[-1].get("date", ""),
         },
         "mini": {
             "headline": charts.mini_series(yoy_series(series.get("CPIAUCSL", [])),
@@ -605,7 +613,8 @@ def build_fomc_context(statements: list[dict], dots_cfg: list, rate_cfg: dict,
     from .pages.fomc import _diff_block, _heatmap
 
     score_rows = "".join(
-        f'<tr><td>{d.date}</td><td>{d.objective_score:+.2f}</td>'
+        f'<tr><td>{d.date}</td>'
+        f'<td>{"0.00" if abs(d.objective_score) < 1e-9 else format(d.objective_score, "+.2f")}</td>'
         f'<td class="muted-cell">{d.tone_score:+.2f}</td>'
         f'<td class="muted-cell">{d.word_count}</td>'
         f'<td>{_vote_cell(d.vote)}</td></tr>'
@@ -695,11 +704,14 @@ def _vote_cell(vote: dict) -> str:
         return '<span class="muted-cell">一致</span>'
     h = sum(1 for x in ds if x["direction"] == "hike")
     c = sum(1 for x in ds if x["direction"] == "cut")
+    other = len(ds) - h - c        # 主張維持不變（或方向無法判定）的反對票
     parts = []
     if h:
         parts.append(f'<span style="color:var(--serious)">{h} 鷹</span>')
     if c:
         parts.append(f'<span style="color:var(--series-1)">{c} 鴿</span>')
+    if other:
+        parts.append(f'<span class="muted-cell">{other} 維持</span>')
     return " ".join(parts)
 
 
@@ -825,7 +837,10 @@ def _surprise_block(items) -> dict:
         if "千人" in s.unit:
             return f'{v/10:+,.1f}<span class="su">萬人</span>'
         num = f"{v:+,.1f}" if signed else f"{v:,.1f}"
-        return f'{num}<span class="su">{s.unit.strip()}</span>'
+        # 兩個「率」相減的差是**個百分點**，不是 %——
+        # 失業率 4.1% 對預期 4.2%，意外是 −0.1 個百分點
+        unit = "個百分點" if (signed and s.unit == "%") else s.unit.strip()
+        return f'{num}<span class="su">{unit}</span>'
 
     boxes, notes = [], []
     for s in items:

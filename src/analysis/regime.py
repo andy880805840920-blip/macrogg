@@ -50,6 +50,19 @@ def _classify(value: float | None, cfg: dict) -> str:
         return "warning"
 
 
+# 各燈號歷史值的顯示格式，須與 _compute_light_values 的 display 格式一致
+_HISTORY_LABEL_FMT = {
+    "sahm": lambda v: f"{v:+.2f}",
+    "vu_ratio": lambda v: f"{v:.2f}",
+    "quits_rate": lambda v: f"{v:.1f}%",
+    "layoff_rate": lambda v: f"{v:.1f}%",
+    "prime_epop": lambda v: f"{v:.1f}%",
+    "continuing_claims": lambda v: fmt.persons_to_wan(v, digits=0),
+    "nfp_3m_avg": lambda v: fmt.wan(v),
+    "u6_u3_gap": lambda v: f"{v:.2f}pp",
+}
+
+
 def build_lights(series: dict[str, list[dict]], light_cfgs: list[dict],
                  histories: dict[str, list[dict]] | None = None) -> list[Light]:
     """依 config 產生所有燈號。缺資料的指標顯示為 unknown，不會讓流程中斷。"""
@@ -66,9 +79,13 @@ def build_lights(series: dict[str, list[dict]], light_cfgs: list[dict],
             direction = "up" if delta > 1e-9 else ("down" if delta < -1e-9 else "flat")
         else:
             direction = "flat"
+        # 軌跡條 tooltip 的數字要跟卡片本身同一種格式——
+        # 例如續領失業金卡片顯示「192 萬人」，tooltip 若顯示原始值
+        # 「1917000.00」，讀者會以 10 倍、100 倍的錯誤尺度解讀。
+        label_fmt = _HISTORY_LABEL_FMT.get(key, lambda v: f"{v:.2f}")
         hist = [
             {"date": h["date"], "status": _classify(h["value"], cfg),
-             "label": f'{h["value"]:.2f}'}
+             "label": label_fmt(h["value"])}
             for h in (histories.get(key) or [])
         ]
         out.append(

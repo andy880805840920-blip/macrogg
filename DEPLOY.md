@@ -21,50 +21,93 @@ Python 依賴，而且每次產出都留在 git 歷史裡，自動累積成 vint
 3. 點 **Request API Key**，用途隨便填（例如 personal research）
 4. 立刻拿到一組 32 碼字串，先複製起來
 
-**② 本機裝好 git**，並確認可以推到 GitHub（`git --version` 有回應即可）。
+**② 把 zip 解壓縮**（Windows）
 
-**③ 先在本機確認畫面正常**
+1. 在 `labordashboard_4.zip` 上按右鍵 → **解壓縮全部**
+2. 解壓後會得到一個 `labordashboard_4` 資料夾
+3. **打開它**，裡面應該直接看到 `run.py`、`README.md`、`config`、`src`、
+   `output`、`state`、`netlify.toml`、`.github`、`.gitignore`
 
-```bash
-pip install -r requirements.txt
-python run.py --offline
-python -m http.server -d output 8000    # 瀏覽器開 localhost:8000
-```
+記住這個「裡面」的位置，等一下要上傳的是**這些項目**，不是外層那個資料夾。
 
-看得到畫面再往下走。這一步不連網，純粹確認環境沒問題。
+不需要裝 git、也不需要裝 Python——全部用瀏覽器完成。
 
 ---
 
-## 步驟 1：建 GitHub repo
+## 步驟 1：建 GitHub repo 並上傳（全程用網頁）
 
-1. GitHub 右上 **+** → **New repository**
-2. 名稱隨意（例如 `macro-dashboard`）
+### 1-1 建立 repo
+
+1. <https://github.com> 登入 → 右上 **+** → **New repository**
+2. Repository name 填 `macro-dashboard`（或你喜歡的名字）
 3. 選 **Private**
 
    > 私有比較合適：頁面帶 noindex，本來就不打算給搜尋引擎收錄。
    > 私有 repo 的 Actions 免費額度是每月 2,000 分鐘，這個專案每月用不到 100 分鐘。
-4. **不要**勾 Add a README（本專案已經有了，會衝突）
+4. **不要**勾 Add a README file（本專案已經有了，會衝突）
 5. **Create repository**
 
-建好後把專案推上去：
+### 1-2 上傳檔案
 
-```bash
-cd 你的專案資料夾
-git init
-git add .
-git commit -m "初始版本"
-git branch -M main
-git remote add origin https://github.com/你的帳號/macro-dashboard.git
-git push -u origin main
+建好後會看到一個空 repo 的說明頁，點中間的
+**uploading an existing file** 連結（或網址直接加 `/upload/main`）。
+
+1. 開啟檔案總管，進到剛才解壓的 `labordashboard_4` 資料夾**裡面**
+2. 全選裡面所有項目（`Ctrl + A`）
+3. 整批拖進瀏覽器的上傳區
+
+   > 這個專案有 57 個檔案、最大的才 72 KB，
+   > 遠低於網頁上傳的限制（一次 100 個檔案、單檔 25 MB），一次就傳得完。
+4. 等檔案列表跑完（約 10–30 秒）
+5. 下方 Commit changes 填 `初始版本` → **Commit changes**
+
+⚠️ **最容易出錯的一步**：拖進去的必須是資料夾**裡面的內容**，
+不是 `labordashboard_4` 這個資料夾本身。傳錯的話 repo 裡會變成
+`labordashboard_4/run.py` 這種多一層的結構，Netlify 和排程都會失效。
+
+判斷方式：上傳完成後，**repo 首頁第一層就要看得到 `run.py` 和 `README.md`**。
+如果看到的是一個資料夾，就是傳錯了——進 Settings 最下面刪掉 repo 重來一次比較快。
+
+### 1-3 確認 `.github` 有上傳成功
+
+這一步很重要：`.github/workflows/update.yml` 就是「自動更新」本身，
+少了它整套排程都不會動。有些瀏覽器拖曳時會略過點開頭的資料夾。
+
+在 repo 首頁的檔案清單找找看有沒有 **`.github`**。
+
+**有** → 直接跳到步驟 2。
+
+**沒有** → 手動補上，一分鐘的事：
+
+1. repo 頁面 → **Add file** → **Create new file**
+2. 檔名欄位貼上：`.github/workflows/update.yml`
+
+   > 打斜線 GitHub 會自動建出資料夾層級，不用先建資料夾
+3. 內容從解壓資料夾裡的 `.github\workflows\update.yml` 用記事本打開、
+   全部複製貼上
+4. **Commit changes**
+
+同理，若 `.gitignore` 也沒上去，用一樣的方法補（這個影響較小，但補上比較乾淨）。
+
+### 1-4 確認清單
+
+repo 首頁第一層應該看得到這些：
+
+```
+.github/          ← 排程（最重要，缺了就不會自動更新）
+config/           ← 設定檔
+output/           ← Netlify 的取檔來源
+src/              ← 程式
+state/            ← 「跟上期比」的依據，缺了就永遠比不出變化
+.gitignore
+DEPLOY.md
+README.md
+netlify.toml
+requirements.txt
+run.py
 ```
 
-⚠️ **`output/` 和 `state/` 一定要一起推上去**，不能忽略：
-
-- `output/` 是 Netlify 的取檔來源
-- `state/snapshot.json` 是「跟上期比」的依據，不進 git 就永遠比不出變化
-
-`.gitignore` 已經設好了（只排除 `data/`、`__pycache__/`、`.env`），照上面的
-`git add .` 做就對了。推完後在 GitHub 網頁上確認 `output/index.html` 看得到。
+點進 `output/` 要看得到 `index.html`。都對就往下走。
 
 ---
 
@@ -150,16 +193,17 @@ git push -u origin main
 
 ## 之後怎麼維護
 
-### 改設定
+### 改設定（也是全程用網頁）
 
-改 `config/*.yaml` 之後，正常 commit + push 即可。下次排程執行就會套用；
-想立刻看到結果就到 Actions 手動觸發一次。
+日常維護幾乎都是改 `config/` 裡的 YAML，這在 GitHub 網頁上直接改就好，
+不必下載也不必裝任何東西：
 
-```bash
-git add config/
-git commit -m "調整失業率門檻"
-git push
-```
+1. repo → 進 `config/` → 點要改的檔案（例如 `consensus.yaml`）
+2. 右上角鉛筆圖示 **Edit this file**
+3. 改完 → 下方 **Commit changes**
+
+下次排程執行就會套用。想立刻看到結果，到 **Actions** → **更新儀表板**
+→ **Run workflow** 手動觸發一次即可。
 
 ### 手動維護清單（這些沒有免費 API，需要自己更新）
 

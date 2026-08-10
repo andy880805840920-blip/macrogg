@@ -80,8 +80,8 @@ def build() -> dict[str, list[dict]]:
     s["CUSR0000SEHC"] = _index(d, 398.3, 4.1, noise=0.02, recent_pct=3.0)
 
     # ---- 趨勢型指標（本身就是年化百分比）----
-    s["MEDCPIM158SFRBCLE"] = _flat(d, 3.5, drift=-1.0, noise=0.09)
-    s["TRMMEANCPIM158SFRBCLE"] = _flat(d, 3.3, drift=-0.9, noise=0.08)
+    s["MEDCPIM159SFRBCLE"] = _flat(d, 3.5, drift=-1.0, noise=0.09)
+    s["TRMMEANCPIM159SFRBCLE"] = _flat(d, 3.3, drift=-0.9, noise=0.08)
     s["CORESTICKM159SFRBATL"] = _flat(d, 3.6, drift=-0.8, noise=0.07)
 
     # ---- 通膨預期 ----

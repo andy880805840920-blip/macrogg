@@ -91,7 +91,7 @@ def inflation_body(d: dict) -> str:
                   mini=mini.get("pce", ""), asof=(a.get("pce") or "")[:7]),
         _kpi_card("5年後5年期通膨預期", k["exp_display"], k["exp_sub"],
                   k["exp_plain"], charts.sparkline(k["exp_spark"]),
-                  mini=mini.get("exp", ""), asof=(a.get("oil") or "")[:7]),
+                  mini=mini.get("exp", ""), asof=(a.get("exp") or "")[:7]),
     ])
 
     flags_html = "".join(_flag_row(f) for f in d["flags"]) or \

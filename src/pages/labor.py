@@ -128,7 +128,7 @@ def _verdict_card(d: dict) -> str:
   <div class="v-why">{esc(lead)}{esc(why)}</div>
   <div class="v-count">
     本次共 {len(flags)} 項訊號：{n_dov} 項利降息、{n_haw} 項利升息、{n_neu} 項中性。<br>
-    這是勞動市場單方面的判斷。聯準會同時要看通膨，完整結論要等通膨模組建置完成。
+    這是勞動市場單方面的判斷。聯準會同時要看通膨——兩者合併的結論見「情境合成」頁。
   </div>
 </div>"""
 
@@ -320,7 +320,7 @@ def labor_body(d: dict) -> str:
     <h2 id="score">綜合強弱指數</h2>
     <p class="hint">把主要指標換算成同一個尺度後加權合成。
       正數代表比近年平均強、負數代表弱。</p>
-    <div style="font-size:36px;font-weight:680;line-height:1.15">
+    <div style="font-size:36px;font-weight:700;line-height:1.15">
       {sc['score']:+.2f}
       <span style="font-size:14px;color:var(--text-secondary);font-weight:400">
         {'較上月 ' + format(sc['delta'], '+.2f') if sc.get('delta') is not None else ''}</span>
