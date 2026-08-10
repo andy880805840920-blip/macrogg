@@ -1,0 +1,366 @@
+# ============================================================================
+# 指標設定檔 — P1 勞動市場模組
+#
+# 新增指標只要在這裡加一段，不必改程式。
+# enabled: false 可以先關掉某個指標而不刪除設定（日後要用再打開）。
+#
+# group  : 決定它出現在畫面的哪一區
+# invert : true 表示「數值上升 = 勞動市場轉弱」（例如失業率、裁員率）
+#          用於綜合評分時的符號對齊
+# ============================================================================
+
+meta:
+  release_name: "Employment Situation"
+  source_note: "資料來源：BLS / DOL，經 FRED 取得（含修正後最新值）"
+
+# ---------------------------------------------------------------------------
+# 一、總量與家庭調查
+# ---------------------------------------------------------------------------
+headline:
+  - id: PAYEMS
+    label: 非農就業總數
+    short: NFP
+    unit: thousands
+    transform: diff          # 取月變動
+    track_revisions: true    # 需要 vintage 追蹤
+    enabled: true
+  - id: USPRIV
+    label: 民間部門就業
+    short: 私部門
+    unit: thousands
+    transform: diff
+    track_revisions: true
+    enabled: true
+  - id: USGOVT
+    label: 政府部門就業
+    short: 政府
+    unit: thousands
+    transform: diff
+    enabled: true
+  - id: UNRATE
+    label: 失業率 U-3
+    short: U-3
+    unit: percent
+    transform: level
+    invert: true
+    enabled: true
+  - id: U6RATE
+    label: 廣義失業率 U-6
+    short: U-6
+    unit: percent
+    transform: level
+    invert: true
+    enabled: true
+  - id: CIVPART
+    label: 勞動參與率
+    short: LFPR
+    unit: percent
+    transform: level
+    enabled: true
+  - id: EMRATIO
+    label: 就業人口比
+    short: EPOP
+    unit: percent
+    transform: level
+    enabled: true
+  - id: LNS11300060
+    label: 黃金年齡參與率 (25-54)
+    short: Prime LFPR
+    unit: percent
+    transform: level
+    enabled: true
+  - id: LNS12300060
+    label: 黃金年齡就業人口比 (25-54)
+    short: Prime EPOP
+    unit: percent
+    transform: level
+    enabled: true
+  - id: UNEMPLOY
+    label: 失業人數
+    unit: thousands
+    transform: level
+    invert: true
+    enabled: true
+  - id: CLF16OV
+    label: 勞動力人數
+    unit: thousands
+    transform: level
+    enabled: true
+  - id: CE16OV
+    label: 家庭調查就業人數
+    short: CPS 就業
+    unit: thousands
+    transform: diff
+    enabled: true
+  - id: CNP16OV
+    label: 工作年齡人口
+    unit: thousands
+    transform: level
+    enabled: true
+    note: >
+      估算損益兩平就業增速用。注意每年一月會做人口普查控制調整，
+      出現不連續跳點，計算時已排除一月的變動。
+
+# ---------------------------------------------------------------------------
+# 二、失業結構（判斷失業率變化是「好的」還是「壞的」）
+# ---------------------------------------------------------------------------
+unemployment_structure:
+  - id: LNS13023621
+    label: 永久性失業者
+    unit: thousands
+    invert: true
+    enabled: true
+  - id: LNS13026638
+    label: 暫時解雇
+    unit: thousands
+    invert: true
+    enabled: true
+  - id: LNS13023653
+    label: 自願離職者
+    unit: thousands
+    enabled: true
+  - id: LNS13023705
+    label: 重新進入勞動力
+    unit: thousands
+    enabled: true
+  - id: LNS13023569
+    label: 新進入者
+    unit: thousands
+    enabled: true
+  - id: UEMP27OV
+    label: 長期失業 (27週以上)
+    unit: thousands
+    invert: true
+    enabled: true
+  - id: UEMPMED
+    label: 失業週數中位數
+    unit: weeks
+    invert: true
+    enabled: true
+  - id: LNS12032194
+    label: 因經濟因素兼職
+    unit: thousands
+    invert: true
+    enabled: true
+  - id: LNS12026619
+    label: 多重工作者
+    unit: thousands
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 三、薪資與工時
+# ---------------------------------------------------------------------------
+wages:
+  - id: CES0500000003
+    label: 平均時薪（全體民間）
+    short: AHE
+    unit: dollars
+    enabled: true
+  - id: AHETPI
+    label: 平均時薪（非管理職）
+    short: AHE 非管理職
+    unit: dollars
+    enabled: true
+    note: 與總體 AHE 的差距＝組成偏誤的直接證據
+  - id: AWHAETP
+    label: 平均每週工時
+    unit: hours
+    enabled: true
+  - id: ECIALLCIV
+    label: 就業成本指數 ECI
+    unit: index
+    frequency: quarterly
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 四、JOLTS（落後約 2 個月）
+# ---------------------------------------------------------------------------
+jolts:
+  - id: JTSJOL
+    label: 職缺數
+    unit: thousands
+    enabled: true
+  - id: JTSHIR
+    label: 招聘率
+    unit: percent
+    enabled: true
+  - id: JTSQUR
+    label: 離職率 (quits)
+    unit: percent
+    enabled: true
+  - id: JTSLDR
+    label: 裁員率
+    unit: percent
+    invert: true
+    enabled: true
+  - id: JTSTSR
+    label: 總離職率
+    unit: percent
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 五、每週失業金申請
+# ---------------------------------------------------------------------------
+claims:
+  - id: ICSA
+    label: 初次申請失業金
+    unit: persons
+    invert: true
+    enabled: true
+  - id: IC4WSA
+    label: 初領 4 週移動平均
+    unit: persons
+    invert: true
+    enabled: true
+  - id: CCSA
+    label: 續領失業金
+    unit: persons
+    invert: true
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 六、參照指標（缺口與市場）
+# ---------------------------------------------------------------------------
+reference:
+  - id: NROU
+    label: 自然失業率 u* (CBO)
+    unit: percent
+    frequency: quarterly
+    enabled: true
+  - id: DGS2
+    label: 2 年期公債殖利率
+    unit: percent
+    frequency: daily
+    enabled: true
+  - id: DGS10
+    label: 10 年期公債殖利率
+    unit: percent
+    frequency: daily
+    enabled: true
+  - id: DFF
+    label: 有效聯邦資金利率
+    unit: percent
+    frequency: daily
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 七、產業細項 — 貢獻度瀑布圖的原料
+#     order 決定瀑布圖由左至右的排列
+# ---------------------------------------------------------------------------
+industries:
+  - id: USMINE
+    label: 礦業與伐木
+    order: 1
+  - id: USCONS
+    label: 營建
+    order: 2
+  - id: MANEMP
+    label: 製造業
+    order: 3
+  - id: USWTRADE
+    label: 批發
+    order: 4
+  - id: USTRADE
+    label: 零售
+    order: 5
+  - id: CES4300000001
+    label: 運輸倉儲
+    order: 6
+  - id: CES4422000001
+    label: 公用事業
+    order: 7
+  - id: USINFO
+    label: 資訊
+    order: 8
+  - id: USFIRE
+    label: 金融活動
+    order: 9
+  - id: USPBS
+    label: 專業與商業服務
+    order: 10
+  - id: CES6562000001
+    label: 醫療與社福
+    order: 11
+    noncyclical: true          # 標記為非週期性，用於「剔除後」的聚合
+  - id: CES6561000001
+    label: 民間教育
+    order: 12
+  - id: USLAH
+    label: 休閒與住宿餐飲
+    order: 13
+  - id: USSERV
+    label: 其他服務
+    order: 14
+  - id: CES9091000001
+    label: 聯邦政府
+    order: 15
+    noncyclical: true
+  - id: CES9092000001
+    label: 州政府
+    order: 16
+    noncyclical: true
+  - id: CES9093000001
+    label: 地方政府
+    order: 17
+    noncyclical: true
+
+# 地方政府教育 — 單獨追蹤（7 月的季節性爭議就在這裡）
+special_series:
+  - id: CES9093161101
+    label: 地方政府教育
+    enabled: true
+
+# ---------------------------------------------------------------------------
+# 八、Regime 紅綠燈門檻
+#     每個指標給「綠 / 黃 / 紅」的判定門檻。
+#     direction: lower_is_worse 表示數值越低越糟（例如 quits rate）
+# ---------------------------------------------------------------------------
+regime_lights:
+  - key: sahm
+    label: 衰退警訊
+    desc: 失業率近三月平均比過去一年最低點高多少。歷史上超過 0.5 都已進入衰退
+    direction: higher_is_worse
+    green_below: 0.30
+    red_above: 0.50
+  - key: vu_ratio
+    label: 職缺 vs 失業人數
+    desc: 每一個失業的人平均對應到幾個職缺。低於 1 代表工作機會不夠分
+    direction: lower_is_worse
+    green_above: 1.00
+    red_below: 0.80
+  - key: quits_rate
+    label: 主動離職率
+    desc: 自己辭職的人佔比。敢辭職代表對找到新工作有信心，是勞工信心的溫度計
+    direction: lower_is_worse
+    green_above: 2.20
+    red_below: 1.90
+  - key: layoff_rate
+    label: 裁員率
+    desc: 每月被裁員的人佔總就業的比例。愈高代表企業愈想縮編
+    direction: higher_is_worse
+    green_below: 1.20
+    red_above: 1.40
+  - key: continuing_claims
+    label: 還在領失業補助
+    desc: 持續領失業給付的人數。愈多代表失業後愈難找到下一份工作
+    direction: higher_is_worse
+    green_below: 1900000
+    red_above: 2100000
+  - key: nfp_3m_avg
+    label: 近三月平均新增工作
+    desc: 平均每個月多出多少工作。單月數字波動大，看三個月平均比較準
+    direction: lower_is_worse
+    green_above: 100
+    red_below: 50
+  - key: prime_epop
+    label: 壯年就業比例
+    desc: 25 到 54 歲有工作的比例。排除退休與就學的干擾，最能反映真實就業狀況
+    direction: lower_is_worse
+    green_above: 80.5
+    red_below: 79.5
+  - key: u6_u3_gap
+    label: 隱藏性失業
+    desc: 想要全職卻只能打零工、或想工作卻沒在積極找的人有多少
+    direction: higher_is_worse
+    green_below: 3.40
+    red_above: 3.90

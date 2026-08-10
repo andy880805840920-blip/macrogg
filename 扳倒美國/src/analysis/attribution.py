@@ -1,0 +1,275 @@
+"""
+歸因引擎 — 把「總變動」拆解成各組成的貢獻。
+
+這一支是整個系統最可重複使用的部分：
+  * 現在用來拆非農的產業貢獻
+  * P2 的通膨模組會用同一套邏輯拆 CPI 分項貢獻
+所以介面刻意寫得通用（components 進，contributions 出）。
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from .core import value_at, diff
+
+
+@dataclass
+class Contribution:
+    key: str
+    label: str
+    value: float                 # 貢獻的絕對量（同總量單位）
+    share: float | None = None   # 佔總變動的比例（總變動太小時為 None）
+    noncyclical: bool = False
+    order: int = 999
+    # 相對「這個行業自己的歷史波動」有多異常。
+    # 用途：有些行業規模小，變動絕對值進不了前五大，
+    #       但相對它自己的常態已經是極端值，那才是真正的訊號。
+    zscore: float | None = None
+    notable: bool = False
+
+
+@dataclass
+class AttributionResult:
+    total: float
+    contributions: list[Contribution] = field(default_factory=list)
+    aggregates: dict[str, float] = field(default_factory=dict)
+    share_suppressed: bool = False   # 總變動接近零時，百分比會失真，故隱藏
+    unexplained: float = 0.0         # 明細加總與總量的差（四捨五入與未涵蓋產業）
+
+    def top(self, n: int = 5, positive: bool = True) -> list[Contribution]:
+        s = sorted(self.contributions, key=lambda c: c.value, reverse=positive)
+        return [c for c in s if (c.value > 0) == positive][:n]
+
+    def display_set(self, n: int = 5) -> tuple[list[Contribution], float, int]:
+        """
+        手機版要顯示的精簡清單。
+
+        規則：增加最多的 n 個 + 減少最多的 n 個 + 任何「相對自身歷史異常」的行業，
+        其餘合併成「其他」。第三個條件是重點——小行業的異常變動不會因為
+        絕對值小就被藏起來。
+
+        回傳 (要顯示的清單, 其他合計, 其他家數)
+        """
+        ranked = sorted(self.contributions, key=lambda c: c.value, reverse=True)
+        keep_keys = {c.key for c in ranked[:n]}
+        keep_keys |= {c.key for c in ranked[-n:]}
+        keep_keys |= {c.key for c in self.contributions if c.notable}
+
+        shown = [c for c in ranked if c.key in keep_keys]
+        rest = [c for c in ranked if c.key not in keep_keys]
+        return shown, sum(c.value for c in rest), len(rest)
+
+
+# 總變動絕對值低於這個數就不顯示百分比（單位：千人）
+# 理由：-23K 的總變動下，某產業 -12K 會變成「佔 52%」，看起來像半數來源，
+#       但同期另有 +38K 的正貢獻，百分比完全誤導。
+SHARE_FLOOR = 50.0
+
+# 相對自身歷史超過幾個標準差就標記為「值得注意」
+NOTABLE_Z = 1.8
+# 計算歷史波動用的月數
+NOTABLE_LOOKBACK = 24
+
+
+def _own_history_zscore(rows: list[dict], idx_from_end: int = 0) -> float | None:
+    """
+    這個行業「本月變動」相對它自己過去 N 個月變動的標準分數。
+
+    為什麼需要：規模小的行業（例如公用事業）變動絕對值永遠進不了前五大，
+    但若它自己一向只在 ±1 千人之間跳動，這次卻動了 5 千人，那就是訊號。
+    只看絕對值會漏掉這種情況。
+    """
+    changes = []
+    for i in range(1, len(rows)):
+        changes.append(rows[i]["value"] - rows[i - 1]["value"])
+    if len(changes) < 13:
+        return None
+
+    end = len(changes) - idx_from_end
+    current = changes[end - 1]
+    hist = changes[max(0, end - 1 - NOTABLE_LOOKBACK): end - 1]
+    if len(hist) < 12:
+        return None
+
+    mean = sum(hist) / len(hist)
+    var = sum((v - mean) ** 2 for v in hist) / max(len(hist) - 1, 1)
+    sd = var ** 0.5
+    if sd == 0:
+        return None
+    return (current - mean) / sd
+
+
+def attribute_payrolls(
+    total_rows: list[dict],
+    industry_rows: dict[str, list[dict]],
+    industry_meta: list[dict],
+    idx_from_end: int = 0,
+) -> AttributionResult:
+    """
+    把非農總變動拆成產業貢獻。
+
+    total_rows     : PAYEMS 的水準值序列
+    industry_rows  : {series_id: 水準值序列}
+    industry_meta  : config 裡的 industries 段落
+    """
+    total = diff(total_rows, idx_from_end)
+    if total is None:
+        return AttributionResult(total=0.0)
+
+    meta_by_id = {m["id"]: m for m in industry_meta}
+    contribs: list[Contribution] = []
+
+    for sid, rows in industry_rows.items():
+        d = diff(rows, idx_from_end)
+        if d is None:
+            continue
+        m = meta_by_id.get(sid, {})
+        z = _own_history_zscore(rows, idx_from_end)
+        contribs.append(
+            Contribution(
+                key=sid,
+                label=m.get("label", sid),
+                value=d,
+                noncyclical=bool(m.get("noncyclical")),
+                order=m.get("order", 999),
+                zscore=z,
+                notable=(z is not None and abs(z) >= NOTABLE_Z),
+            )
+        )
+
+    suppress = abs(total) < SHARE_FLOOR
+    if not suppress and total != 0:
+        for c in contribs:
+            c.share = c.value / total * 100
+
+    explained = sum(c.value for c in contribs)
+
+    # ---- 聚合指標：這幾個才是判斷景氣的關鍵 ----
+    noncyc = sum(c.value for c in contribs if c.noncyclical)
+    aggregates = {
+        "explained": explained,
+        "noncyclical": noncyc,                 # 醫療社福 + 各級政府
+        "cyclical": total - noncyc,            # 剔除後的「真週期性就業」
+        "positive_sum": sum(c.value for c in contribs if c.value > 0),
+        "negative_sum": sum(c.value for c in contribs if c.value < 0),
+        "breadth": (
+            sum(1 for c in contribs if c.value > 0) / len(contribs) * 100
+            if contribs else 0.0
+        ),
+    }
+
+    return AttributionResult(
+        total=total,
+        contributions=sorted(contribs, key=lambda c: c.value, reverse=True),
+        aggregates=aggregates,
+        share_suppressed=suppress,
+        unexplained=total - explained,
+    )
+
+
+def attribute_unemployment_rate(
+    unrate_rows: list[dict],
+    employed_rows: list[dict],
+    labor_force_rows: list[dict],
+) -> dict:
+    """
+    把失業率變動拆成「就業效果」與「勞動力規模效果」。
+
+    推導
+    ----
+        u = U / L = (L - E) / L = 1 - E/L
+
+        Δu ≈ -ΔE/L + (E/L)·(ΔL/L)
+              └ 就業效果      └ 勞動力效果
+
+    直覺
+    ----
+        * 就業增加 → 失業率下降（就業效果為負）＝ 好的下降
+        * 勞動力萎縮 → 失業率也會下降（勞動力效果為負），
+          但那是因為人退出勞動力，不是因為找到工作 ＝ 壞的下降
+
+    注意：勞動力「縮小」會把失業率壓低，不是推高。
+    常見的直覺錯誤是把它想反（以為分母變小會讓比率變大，
+    但分子 U 同時也在減少，且減得更兇）。
+
+    employed_rows 要用家庭調查就業（CE16OV），與失業率同一份調查，
+    不能混用機構調查（PAYEMS），否則分解無法閉合。
+    """
+    if len(unrate_rows) < 2 or len(employed_rows) < 2 or len(labor_force_rows) < 2:
+        return {}
+
+    d_rate = unrate_rows[-1]["value"] - unrate_rows[-2]["value"]
+
+    E_now, E_prev = employed_rows[-1]["value"], employed_rows[-2]["value"]
+    L_now, L_prev = labor_force_rows[-1]["value"], labor_force_rows[-2]["value"]
+    if L_prev == 0:
+        return {}
+
+    dE, dL = E_now - E_prev, L_now - L_prev
+    dU = dL - dE                                    # 失業人數變動
+
+    employment_effect = -dE / L_prev * 100          # 百分點
+    laborforce_effect = (E_prev / L_prev) * dL / L_prev * 100
+
+    # ---- 判定 ----
+    verdict = "neutral"
+    if d_rate < -0.02:
+        # 下降：看主要驅動力是就業增加，還是勞動力萎縮
+        if laborforce_effect < 0 and abs(laborforce_effect) > abs(employment_effect):
+            verdict = "bad_decline"
+        elif employment_effect < 0:
+            verdict = "good_decline"
+        else:
+            verdict = "bad_decline"
+    elif d_rate > 0.02:
+        # 上升：就業減少是壞的；勞動力擴張則是健康的供給增加
+        if employment_effect > 0 and abs(employment_effect) >= abs(laborforce_effect):
+            verdict = "bad_rise"
+        else:
+            verdict = "supply_rise"
+
+    return {
+        "delta_rate": d_rate,
+        "employment_effect": employment_effect,
+        "laborforce_effect": laborforce_effect,
+        "delta_employed": dE,
+        "delta_unemployed": dU,
+        "delta_labor_force": dL,
+        "verdict": verdict,
+        "residual": d_rate - (employment_effect + laborforce_effect),   # 近似誤差
+    }
+
+
+def attribute_wage_composition(
+    ahe_all_rows: list[dict],
+    ahe_prod_rows: list[dict],
+) -> dict:
+    """
+    用「全體 AHE」與「非管理職 AHE」的年增率差距，估計組成偏誤的方向。
+
+    非管理職佔民間就業約 8 成且不含高階主管，所以：
+      全體年增 > 非管理職年增  →  高薪職位權重上升（低薪工作消失），
+                                 平均時薪被組成效果推高，通膨訊號被高估
+    """
+    from .core import yoy
+
+    y_all = yoy(ahe_all_rows)
+    y_prod = yoy(ahe_prod_rows)
+    if y_all is None or y_prod is None:
+        return {}
+
+    gap = y_all - y_prod
+    if gap > 0.15:
+        bias = "overstated"     # 總體 AHE 高估了真實加薪幅度
+    elif gap < -0.15:
+        bias = "understated"
+    else:
+        bias = "neutral"
+
+    return {
+        "yoy_all": y_all,
+        "yoy_production": y_prod,
+        "gap": gap,
+        "composition_bias": bias,
+    }
