@@ -1,0 +1,54 @@
+name: 更新儀表板
+
+# 每天跑一次。13:45 UTC 在美東夏令是 09:45、冬令是 08:45，
+# 兩種情況都在 08:30 ET 發布之後 → 換季不必手動調整。
+on:
+  schedule:
+    - cron: '45 13 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dashboard-update
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: 安裝依賴
+        run: pip install -r requirements.txt
+
+      - name: 還原資料庫快取
+        uses: actions/cache@v4
+        with:
+          path: data/labor.db
+          key: labor-db-${{ github.run_id }}
+          restore-keys: labor-db-
+
+      - name: 產生頁面
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python run.py --json
+
+      - name: Commit 產出
+        run: |
+          git config user.name  "dashboard-bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add output state
+          if git diff --staged --quiet; then
+            echo "資料沒有變化，跳過 commit"
+          else
+            git commit -m "更新儀表板 $(date -u +%Y-%m-%d\ %H:%M) UTC"
+            git pull --rebase --autostash
+            git push
+          fi
