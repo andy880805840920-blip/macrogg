@@ -127,7 +127,11 @@ _ACTION_RE = [
 # 與詞典計分不同——它是明確的制式句，不是用字習慣。
 _RISK_INFL = re.compile(r"upside risks? to inflation", re.I)
 _RISK_EMPL = re.compile(r"downside risks? to (?:employment|the labor market)", re.I)
-_RISK_BAL = re.compile(r"risks?[^.]{0,40}(?:roughly )?(?:are |remain )?balanced", re.I)
+# 實際句型是 "the risks to achieving its employment and inflation goals
+# are roughly in balance."——是 "in balance" 不是 "balanced"，
+# 而且中間隔了五十幾個字元，範圍要放寬。
+_RISK_BAL = re.compile(
+    r"risks?[^.]{0,80}(?:roughly\s+)?(?:in\s+balance|balanced)", re.I)
 
 # 通膨是否被聲明明白描述為高於目標
 _INFL_ABOVE = re.compile(
@@ -170,11 +174,28 @@ def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
     }.get(act, "無法從聲明判定政策行動")
     total += act_score
 
-    hawk = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "hike")
-    dove = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "cut")
+    ds = vote.get("dissents") or []
+    hawk = sum(1 for d in ds if d.get("direction") == "hike")
+    dove = sum(1 for d in ds if d.get("direction") == "cut")
+    other = len(ds) - hawk - dove          # 主張維持或方向無法判定
+    stated = vote.get("stated_dissent")
     parts["dissent"] = 2.0 * (hawk - dove)
-    parts["dissent_detail"] = (f"贊成升息 {hawk} 票、贊成降息 {dove} 票"
-                               if (hawk or dove) else "全體一致，沒有反對票")
+    if hawk or dove or other:
+        bits = []
+        if hawk:
+            bits.append(f"贊成升息 {hawk} 票")
+        if dove:
+            bits.append(f"贊成降息 {dove} 票")
+        if other:
+            bits.append(f"主張維持不變 {other} 票")
+        parts["dissent_detail"] = "反對票：" + "、".join(bits)
+    elif stated:
+        # 引言載明有反對票、名單卻解析不出來——這不是一致通過，
+        # 寫成「全體一致」是把解析失敗謊報成事實
+        parts["dissent_detail"] = (f"聲明載明 {stated} 張反對票，"
+                                   "但反對者名單解析失敗，方向未計入分數")
+    else:
+        parts["dissent_detail"] = "全體一致，沒有反對票"
     total += parts["dissent"]
 
     risk = 0.0
@@ -191,7 +212,7 @@ def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
     parts["risk_detail"] = "、".join(bits) or "聲明未明確點名風險方向"
     total += risk
 
-    parts["has_signal"] = bool(act or hawk or dove or bits)
+    parts["has_signal"] = bool(act or ds or stated or bits)
     return total, parts
 
 
@@ -211,17 +232,33 @@ PRESSER_TOPICS = [
 
 # 開場白與 Q&A 的分界。開場是準備稿、資訊密度最高；
 # Q&A 是即席回答，雜訊多但偶爾更有訊息量，所以分開處理而不是混在一起。
+#
+# Powell 自 2019 年起的標準結尾是
+# "Thank you. I look forward to your questions."——一定要涵蓋。
+# 另外 pdfplumber 抽出的是彎引號（U+2019），"we'll" 的比對要兩種引號都吃。
 _QA_MARKERS = [
+    r"look forward to (?:your|their) questions",       # Powell 的標準結尾
+    r"questions of your own[^.]*turn to them",         # Warsh 2026-07 的說法
+    r"let['’]?s turn to (?:them|your questions)",
     r"happy to take your questions", r"take your questions",
-    r"glad to take your questions", r"we'?ll now take questions",
-    r"i'?ll now take your questions",
+    r"glad to take your questions", r"we['’]?ll now take questions",
+    r"i['’]?ll now take your questions",
 ]
+
+# 縮寫的句點不是句尾。涵蓋人名縮寫（Kevin M. Warsh）、
+# 稱謂（Mr. Powell）與 U.S. 這類縮寫——這些後面接的正是大寫字，
+# 光靠「句號＋空白＋大寫」的切法一定會切錯。
+_ABBR_DOT = re.compile(
+    r"\b(Mr|Ms|Mrs|Dr|Gov|Sen|Rep|St|vs|Inc|Corp|No"
+    r"|[A-Z])\.(?=\s+[A-Z])")
 
 
 def _sentences_of(text: str) -> list[str]:
-    """切句。人名縮寫（"Kevin M. Warsh"）不能當句點，所以要求句號後接空白＋大寫。"""
-    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z])", text)
-    return [p.strip() for p in parts if len(p.strip()) > 40]
+    """切句。縮寫句點先以占位符保護，切完再還原。"""
+    protected = _ABBR_DOT.sub(lambda m: m.group(1) + "\x00", text)
+    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z])", protected)
+    return [p.replace("\x00", ".").strip()
+            for p in parts if len(p.strip()) > 40]
 
 
 def split_presser(text: str) -> tuple[str, str]:
@@ -306,7 +343,8 @@ FOCUS_TEXT = {
                  "委員會沒有明顯偏向任何一邊，兩個使命的風險被描述為大致平衡。"
                  "這時候哪一邊先出現極端值，哪一邊就會主導決策。"),
     "unknown": ("無法判定",
-                "本次聲明沒有足夠的線索判斷委員會的重心，方向主要由後續數據決定。"),
+                "本次聲明的線索不足或互相抵銷，無法明確判定委員會的重心，"
+                "方向主要由後續數據決定。"),
 }
 
 
@@ -339,23 +377,30 @@ def detect_focus(text: str, vote: dict | None = None) -> dict:
 
     hawk = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "hike")
     dove = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "cut")
-    if hawk > dove:
-        score += 1
+    # 反對票的權重要隨票數放大：三張升息反對票是強訊號，
+    # 跟一張不能同分——否則像 2026-07 那種聲明極簡、只剩投票可看的會議，
+    # 會被誤判成「兩邊並重」。
+    net_dissent = hawk - dove
+    if net_dissent > 0:
+        score += 2 if net_dissent >= 2 else 1
         evidence.append(f"{hawk} 張反對票主張升息")
-    elif dove > hawk:
-        score -= 1
+    elif net_dissent < 0:
+        score -= 2 if -net_dissent >= 2 else 1
         evidence.append(f"{dove} 張反對票主張降息")
 
     balanced_said = bool(_RISK_BAL.search(text))
-    if balanced_said and not evidence:
-        evidence.append("聲明稱兩邊風險大致平衡")
 
     if score >= 2:
         focus = "inflation"
     elif score <= -2:
         focus = "employment"
-    elif evidence or balanced_said:
+    elif balanced_said:
+        # 「兩邊並重」只在聲明**真的這樣說**時成立
+        #（"risks ... are roughly in balance"）。訊號互相抵銷不等於並重，
+        # 那是「無法判定」——兩者的中文說明完全不同，不能混用。
         focus = "balanced"
+        if not evidence:
+            evidence.append("聲明稱兩邊風險大致平衡")
     else:
         focus = "unknown"
 

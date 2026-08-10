@@ -104,6 +104,20 @@ def scenario_body(d: dict) -> str:
         f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>"
         for k, v in (sc.positioning or {}).items()
     )
+    pos_note = (f'<div class="warnbox" style="margin:0 0 14px">'
+                f'{esc(sc.positioning_note)}</div>'
+                if getattr(sc, "positioning_note", "") else "")
+
+    # 只有真的有某一軸被標成「關鍵」時才解釋這個標記——
+    # 「兩邊並重」與「無法判定」時沒有任何一條會被標，
+    # 這時還寫「標關鍵的那一軸…」等於叫讀者去找不存在的東西。
+    has_binding = any(getattr(t, "binding", False) for t in sc.triggers)
+    binding_hint = (
+        "標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，"
+        "在現在的反應函數下也不會單獨改變政策方向。"
+        if has_binding else
+        "目前聯準會沒有明顯偏向任何一邊，兩軸都可能主導——"
+        "哪一邊先觸發，哪一邊就會決定方向。")
 
     fomc_note = (f'<div class="v-why" style="margin-top:14px">{esc(sc.fomc_note)}</div>'
                  if sc.fomc_note else "")
@@ -185,9 +199,7 @@ def scenario_body(d: dict) -> str:
   <div class="card">
     <h2 id="triggers">情境轉換門檻</h2>
     <p class="hint">不給機率，但給明確的門檻與目前的距離——
-      這比機率誠實，也更能直接拿來盯。
-      標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，
-      在現在的反應函數下也不會單獨改變政策方向。</p>
+      這比機率誠實，也更能直接拿來盯。{binding_hint}</p>
     {_triggers(sc.triggers)}
   </div>
 </div>
@@ -196,6 +208,7 @@ def scenario_body(d: dict) -> str:
   <div class="card">
     <h2 id="positioning">固定收益部位對照</h2>
     <p class="hint">情境到部位的映射框架。這是方向性的參考，不是進出場訊號。</p>
+    {pos_note}
     <dl class="gloss">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
     <div class="src">
       本頁僅為分析框架，不構成投資建議。實際部位決策仍需自行判斷。

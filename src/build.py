@@ -671,6 +671,11 @@ def _stat(label, value, color="inherit", note=""):
 def _vote_cell(vote: dict) -> str:
     ds = vote.get("dissents") or []
     if not ds:
+        # 引言載明有反對票但名單解析失敗 → 顯示票數並示警，不能寫「一致」
+        stated = vote.get("stated_dissent")
+        if stated:
+            return (f'<span style="color:var(--warning)">{stated} 反對'
+                    f'（未解析）</span>')
         return '<span class="muted-cell">一致</span>'
     h = sum(1 for x in ds if x["direction"] == "hike")
     c = sum(1 for x in ds if x["direction"] == "cut")

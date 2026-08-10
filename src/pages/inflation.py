@@ -73,8 +73,6 @@ def _passthrough(p) -> str:
 
 def inflation_body(d: dict) -> str:
     k = d["kpi"]
-    s = d["summary"]
-
     mini = d.get("mini", {})
     a = d.get("asof", {})
     kpis = "".join([

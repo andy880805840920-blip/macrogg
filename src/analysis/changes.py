@@ -99,7 +99,19 @@ def compare(cur: dict, prev: dict | None) -> ChangeSet:
     ps, qs = prev.get("scenario"), cur.get("scenario")
     if ps and qs:
         cs.scenario_from, cs.scenario_to = ps["name"], qs["name"]
-        cs.scenario_moved = ps["name"] != qs["name"]
+        # 只用 name 比會誤報：name 現在存的是「修正後結論」，
+        # 舊快照存的是格名，改版後第一次執行會冒出一次假的「情境移動」。
+        # 格位（就業×通膨）才是真正的座標，兩者都變了才算移動。
+        moved_name = ps["name"] != qs["name"]
+        same_cell = (ps.get("labor"), ps.get("inflation")) == \
+                    (qs.get("labor"), qs.get("inflation"))
+        prev_grid = ps.get("grid_name")
+        if moved_name and same_cell and prev_grid is None:
+            # 舊快照沒有 grid_name → 無法分辨「改名」與「真移動」，
+            # 而格位沒變，判定為改名，不報移動
+            cs.scenario_moved = False
+        else:
+            cs.scenario_moved = moved_name
 
     # ---- 訊號的新增與消失 ----
     for mod in ("labor", "inflation"):

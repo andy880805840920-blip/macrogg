@@ -90,10 +90,19 @@ def _surprise(sb) -> str:
             f'<div class="src">預期來源：{esc(sb["sources"])}{notes_html}</div>{warn}')
 
 
-def offline_banner() -> str:
+def offline_banner(real_modules: list | None = None) -> str:
+    """
+    離線模式的警示條。哪些是真的、哪些是生成的，要講清楚——
+    含糊其辭比不標示更糟，讀者會不知道哪些數字能引用。
+    """
+    real = "、".join(real_modules or [])
+    series_note = (f"{real} 的時間序列為正式執行存下的真實資料快照；其餘"
+                   if real else "時間序列")
     return ('<div class="banner"><b>離線示範模式</b>　'
-            '標題數字取自 BLS 2026 年 7 月就業報告實際值，'
-            '部分行業細項與每週失業金為示範資料，不可用於實際研究。</div>')
+            '聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；'
+            f'{series_note}為程式生成的示範序列（統計特性接近真實，'
+            '但個別數值非實際發布值），不可用於研究引用。'
+            '正式執行（不加 --offline）一律使用即時資料。</div>')
 
 
 # ---------------------------------------------------------------------------

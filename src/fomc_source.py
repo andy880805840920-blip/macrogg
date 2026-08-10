@@ -63,7 +63,7 @@ VOTE_RE = re.compile(r"Voting\s+(?:for|against)\b", re.I)
 # 「The Federal Open Market Committee」黏在本文最前面。
 PREAMBLE_VOTE_RE = re.compile(
     r"(?:the\s+)?federal open market committee\s+"
-    r"approved the following statement for release by a\s*"
+    r"approved the following statement for release by an?\s*"
     r"(\d+)\s*[-‐‑–—]\s*(\d+)\s*vote\s*:?\s*", re.I)
 
 
@@ -187,9 +187,11 @@ class FomcSource:
             vote.stated_support = int(m.group(1))
             vote.stated_dissent = int(m.group(2))
             policy = PREAMBLE_VOTE_RE.sub("", policy, count=1).strip()
-            if vote.dissents and len(vote.dissents) != vote.stated_dissent:
+            # 不能加 vote.dissents 的前置條件——「引言寫 3 張反對票、
+            # 名單卻解析出 0 位」正是最需要示警的解析失敗。
+            if len(vote.dissents) != vote.stated_dissent:
                 vote.mismatch = True
-                log.warning("%s 引言寫 %d 張反對票，但只解析出 %d 位反對者",
+                log.warning("%s 引言寫 %d 張反對票，但解析出 %d 位反對者",
                             d, vote.stated_dissent, len(vote.dissents))
 
         # 門檻設低一點：Warsh 任內的聲明明顯變短，

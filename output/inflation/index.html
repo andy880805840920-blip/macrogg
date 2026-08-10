@@ -4,15 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <title>通膨｜美國總經儀表板</title>
-<script>/* 在 CSS 之前決定主題，避免深色使用者看到白色閃屏 */
-(function(){try{var s=localStorage.getItem('theme');
-var d=s?s==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
-if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 <style>
 *{box-sizing:border-box}
-/* 預設淺色。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。 */
+/* 單一淺色主題。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。 */
 .viz-root{
   color-scheme:light;
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
@@ -23,19 +19,6 @@ if(d)document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
   --good:#077c07; --warning:#9a6900; --serious:#b4552b; --critical:#c22f2f;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
-}
-:root[data-theme="dark"] .viz-root{
-  color-scheme:dark;
-  --page:#0d0d0d; --surface-1:#1a1a19; --surface-2:#242423;
-  /* 主文字不用純白：#fff 在深底上對比 17:1，會暈光。
-     暖白 + 提亮一階的灰，是深色下小字可讀的關鍵。 */
-  --text-primary:#e9e8e2; --text-secondary:#cfcec4; --muted:#a4a29a;
-  --grid:#2c2c2a; --baseline:#454540; --border:rgba(255,255,255,0.14);
-  --series-1:#3987e5; --series-2:#d95926;
-  --pos:#3987e5; --neg:#e66767; --muted-bar:#55554f;
-  --tint-dov:rgba(57,135,229,.18); --tint-haw:rgba(236,131,90,.16);
-  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#e05353;
-  --shadow:none;
 }
 
 html{-webkit-text-size-adjust:100%}
@@ -60,14 +43,10 @@ body{margin:0;background:var(--page);
 @media(min-width:760px){.viz-root{padding:22px 20px 70px}}
 
 /* ---------- 頁首 ---------- */
-header.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+header.top{margin:0}
 h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 @media(min-width:760px){h1{font-size:23px}}
 .sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55}
-.toggle{background:var(--surface-1);border:1px solid var(--border);
-  color:var(--text-secondary);border-radius:9px;padding:7px 11px;font-size:12px;
-  cursor:pointer;flex-shrink:0;white-space:nowrap}
-.toggle:hover{color:var(--text-primary)}
 
 /* ---------- 導覽列：手機上單行可左右滑 ---------- */
 nav.site{display:flex;gap:2px;margin:14px 0 0;background:var(--surface-1);
@@ -321,8 +300,6 @@ mark.mo{background:rgba(180,85,43,.18);color:var(--serious);
   border-radius:3px;padding:0 2px}
 mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   font-weight:600;border-radius:3px;padding:0 2px}
-:root[data-theme="dark"] mark.mo{background:rgba(236,131,90,.22)}
-:root[data-theme="dark"] mark.mn{background:rgba(57,135,229,.28)}
 .dsame{font-size:12.5px;color:var(--muted);line-height:1.8;padding:5px 12px}
 /* 記者會依主題抽出的原句 */
 .pline{font-size:13.5px;line-height:1.85;color:var(--text-secondary);
@@ -369,9 +346,6 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .heat td.h1{background:rgba(42,120,214,.28);color:var(--text-primary)}
 .heat td.h2{background:rgba(42,120,214,.55);color:#fff}
 .heat td.h3{background:rgba(42,120,214,.85);color:#fff}
-:root[data-theme="dark"] .heat td.h1{background:rgba(57,135,229,.30)}
-:root[data-theme="dark"] .heat td.h2{background:rgba(57,135,229,.58)}
-:root[data-theme="dark"] .heat td.h3{background:rgba(57,135,229,.88)}
 
 /* ---------- 情境九宮格 ---------- */
 .sgrid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:5px;margin-top:4px;
@@ -491,7 +465,6 @@ nav.anchors a{font-size:12.5px;color:var(--text-secondary);text-decoration:none;
   padding:6px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;
   background:var(--surface-1);border:1px solid var(--border)}
 nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)}
-:root[data-theme="dark"] nav.anchors{box-shadow:0 6px 8px -6px rgba(0,0,0,.5)}
 .card h2{scroll-margin-top:60px}
 
 /* ---------- 意外值 ---------- */
@@ -519,47 +492,44 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 <div class="viz-root">
 
 <header class="top">
-  <div>
-    <h1>通膨</h1>
-    <div class="sub">Consumer Price Index　·　資料月份 2026-06　·　更新於 2026-08-10 14:45</div>
-  </div>
-  <button class="toggle" id="themeBtn">深色</button>
+  <h1>通膨</h1>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-10 16:30</div>
 </header>
 
 <nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav>
-
+<div class="banner"><b>離線示範模式</b>　聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；時間序列為程式生成的示範序列（統計特性接近真實，但個別數值非實際發布值），不可用於研究引用。正式執行（不加 --offline）一律使用即時資料。</div>
 <nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#contrib">分項貢獻分解</a><a href="#lights">關鍵指標檢核</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#trend">剔除極端值的趨勢指標</a><a href="#glossary">名詞解釋</a><a href="#energy">能源價格與傳導</a></nav>
 
-<div class="verdict balanced">
-  <div class="v-eyebrow">2026-06 物價數據　·　一句話結論</div>
-  <div class="v-main">通膨面：方向不明</div>
-  <div class="v-why">最主要的訊號是：近三月年化明顯低於年增率。升溫與降溫的訊號互相抵消，這份數據不足以改變聯準會的方向。</div>
+<div class="verdict hawkish">
+  <div class="v-eyebrow">2026-07 物價數據　·　一句話結論</div>
+  <div class="v-main">通膨面：利升息</div>
+  <div class="v-why">最主要的訊號是：核心服務除住房仍高於目標區間。通膨的壓力高於預期。物價降不下來會讓聯準會不敢降息、甚至重新考慮緊縮，這對債券價格通常是負面的。</div>
   <div class="v-count">
-    本次共 4 項訊號：2 項利降息、2 項利升息。<br>
+    本次共 3 項訊號：0 項利降息、3 項利升息。<br>
     這是通膨單方面的判斷。聯準會同時要看就業，完整結論請見情境合成頁。
   </div>
 </div>
 
 <div class="grid g4"><div class="card kpi">
-  <div class="k-label">CPI 年增率<span class="asof">2026-06</span></div>
-  <div class="k-value">3.7%</div>
-  <div class="k-sub">近三個月年化 2.8%　·　走勢為年增率</div>
-  <div class="k-plain">你買的東西平均比一年前貴 3.7%。這個數字包含食物和能源，所以起伏會比較大。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,30.7 13.4,29.6 23.7,26.2 34.1,24.8 44.5,25.4 54.8,25.1 65.2,28.1 75.5,31.0 85.9,19.6 96.3,8.6 106.6,3.0 117.0,12.5" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="12.5" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">2.8%</div><div class="mdate">26年1月</div></div><div class="mcell"><div class="mval">2.7%</div><div class="mdate">2月</div></div><div class="mcell"><div class="mval">3.3%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.9%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.3%</div><div class="mdate">5月</div></div><div class="mcell last"><div class="mval">3.7%</div><div class="mdate">6月</div></div></div>
-</div><div class="card kpi">
-  <div class="k-label">核心 CPI 年增率<span class="asof">2026-06</span></div>
-  <div class="k-value">2.8%</div>
-  <div class="k-sub">近三個月年化 2.3%　·　近六個月年化 2.6%　·　走勢為年增率</div>
-  <div class="k-plain">剔除波動大的食物與能源後，物價一年漲 2.8%。聯準會看趨勢時主要看這一類數字。</div><div class="k-flag pos">三個月年化 2.3%，動能放緩</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,15.8 13.4,6.7 23.7,3.0 34.1,8.9 44.5,16.9 54.8,20.5 65.2,13.4 75.5,27.1 85.9,31.0 96.3,10.9 106.6,12.9 117.0,22.5" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="22.5" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">2.9%</div><div class="mdate">26年1月</div></div><div class="mcell"><div class="mval">2.7%</div><div class="mdate">2月</div></div><div class="mcell"><div class="mval">2.7%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">5月</div></div><div class="mcell last"><div class="mval">2.8%</div><div class="mdate">6月</div></div></div>
-</div><div class="card kpi">
-  <div class="k-label">核心 PCE 年增率<span class="asof">2026-06</span></div>
+  <div class="k-label">CPI 年增率<span class="asof">2026-07</span></div>
   <div class="k-value">3.3%</div>
-  <div class="k-sub">目標 2.0%　·　差距 +1.3 個百分點</div>
-  <div class="k-plain">核心 PCE 年增 3.3%。聯準會講的 2% 目標指的就是這個指標，不是 CPI。</div><div class="k-flag neg">仍高於目標</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,26.4 13.4,24.4 23.7,28.0 34.1,31.0 44.5,27.9 54.8,21.9 65.2,16.3 75.5,18.6 85.9,10.0 96.3,7.5 106.6,3.0 117.0,8.7" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="8.7" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">3.1%</div><div class="mdate">26年1月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">2月</div></div><div class="mcell"><div class="mval">3.3%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.3%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.4%</div><div class="mdate">5月</div></div><div class="mcell last"><div class="mval">3.3%</div><div class="mdate">6月</div></div></div>
+  <div class="k-sub">近三個月年化 4.2%　·　走勢為年增率</div>
+  <div class="k-plain">你買的東西平均比一年前貴 3.3%。這個數字包含食物和能源，所以起伏會比較大。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,28.1 13.4,31.0 23.7,27.3 34.1,24.9 44.5,25.9 54.8,24.4 65.2,18.6 75.5,15.3 85.9,16.3 96.3,12.6 106.6,9.1 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">3.0%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.1%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.2%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.3%</div><div class="mdate">7月</div></div></div>
+</div><div class="card kpi">
+  <div class="k-label">核心 CPI 年增率<span class="asof">2026-07</span></div>
+  <div class="k-value">3.3%</div>
+  <div class="k-sub">近三個月年化 3.5%　·　近六個月年化 3.6%　·　走勢為年增率</div>
+  <div class="k-plain">剔除波動大的食物與能源後，物價一年漲 3.3%。聯準會看趨勢時主要看這一類數字。</div><div class="k-flag neg">三個月年化 3.5%，動能回升</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,21.5 13.4,24.5 23.7,21.7 34.1,24.4 44.5,29.7 54.8,31.0 65.2,23.9 75.5,20.1 85.9,15.1 96.3,7.6 106.6,5.2 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">3.0%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">3.0%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.1%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.2%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.3%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.3%</div><div class="mdate">7月</div></div></div>
+</div><div class="card kpi">
+  <div class="k-label">核心 PCE 年增率<span class="asof">2026-07</span></div>
+  <div class="k-value">3.0%</div>
+  <div class="k-sub">目標 2.0%　·　差距 +1.0 個百分點</div>
+  <div class="k-plain">核心 PCE 年增 3.0%。聯準會講的 2% 目標指的就是這個指標，不是 CPI。</div><div class="k-flag neg">仍高於目標</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,26.1 13.4,28.9 23.7,29.4 34.1,31.0 44.5,29.9 54.8,30.5 65.2,24.8 75.5,22.1 85.9,18.8 96.3,14.1 106.6,10.3 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">2.6%</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">2.7%</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">2.7%</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">2.8%</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">2.9%</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.0%</div><div class="mdate">7月</div></div></div>
 </div><div class="card kpi">
   <div class="k-label">5年後5年期通膨預期<span class="asof">2026-08</span></div>
-  <div class="k-value">2.28%</div>
-  <div class="k-sub">密大 1 年預期 4.6%</div>
-  <div class="k-plain">市場對「五年後起算、之後五年」的通膨定價。目前 2.28%，貼近目標，代表預期錨定良好。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,13.4 3.8,12.3 4.5,11.3 5.3,11.3 6.0,12.3 6.8,11.3 7.6,13.4 8.3,12.3 9.1,13.4 9.8,13.4 10.6,8.2 11.4,9.2 12.1,9.2 12.9,15.4 13.6,17.5 14.4,16.5 15.2,14.4 15.9,13.4 16.7,17.5 17.4,16.5 18.2,17.5 19.0,16.5 19.7,16.5 20.5,19.6 21.2,17.5 22.0,15.4 22.8,18.6 23.5,20.6 24.3,22.7 25.0,23.7 25.8,22.7 26.6,20.6 27.3,20.6 28.1,22.7 28.8,23.7 29.6,23.7 30.4,21.7 31.1,22.7 31.9,25.8 32.6,23.7 33.4,23.7 34.2,23.7 34.9,24.8 35.7,21.7 36.4,23.7 37.2,22.7 38.0,21.7 38.7,22.7 39.5,24.8 40.2,21.7 41.0,23.7 41.8,21.7 42.5,22.7 43.3,22.7 44.0,22.7 44.8,24.8 45.6,24.8 46.3,23.7 47.1,30.0 47.8,31.0 48.6,30.0 49.4,28.9 50.1,24.8 50.9,24.8 51.6,23.7 52.4,22.7 53.2,25.8 53.9,23.7 54.7,21.7 55.4,20.6 56.2,20.6 57.0,18.6 57.7,17.5 58.5,19.6 59.2,22.7 60.0,19.6 60.8,20.6 61.5,9.2 62.3,12.3 63.0,9.2 63.8,10.3 64.6,10.3 65.3,10.3 66.1,8.2 66.8,7.1 67.6,8.2 68.4,9.2 69.1,6.1 69.9,7.1 70.6,8.2 71.4,10.3 72.2,11.3 72.9,8.2 73.7,7.1 74.4,8.2 75.2,3.0 76.0,6.1 76.7,14.4 77.5,9.2 78.2,8.2 79.0,10.3 79.8,11.3 80.5,11.3 81.3,9.2 82.0,9.2 82.8,12.3 83.6,11.3 84.3,11.3 85.1,12.3 85.8,13.4 86.6,11.3 87.4,17.5 88.1,12.3 88.9,11.3 89.6,13.4 90.4,14.4 91.2,12.3 91.9,17.5 92.7,17.5 93.4,18.6 94.2,16.5 95.0,16.5 95.7,15.4 96.5,13.4 97.2,15.4 98.0,13.4 98.8,14.4 99.5,13.4 100.3,16.5 101.0,17.5 101.8,15.4 102.6,14.4 103.3,13.4 104.1,14.4 104.8,15.4 105.6,14.4 106.4,13.4 107.1,11.3 107.9,9.2 108.6,8.2 109.4,7.1 110.2,11.3 110.9,11.3 111.7,7.1 112.4,5.1 113.2,5.1 114.0,4.0 114.7,8.2 115.5,9.2 116.2,6.1 117.0,7.1" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="7.1" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">2.23%</div><div class="mdate">26年6月</div></div><div class="mcell"><div class="mval">2.17%</div><div class="mdate">6月</div></div><div class="mcell"><div class="mval">2.21%</div><div class="mdate">7月</div></div><div class="mcell"><div class="mval">2.21%</div><div class="mdate">7月</div></div><div class="mcell"><div class="mval">2.28%</div><div class="mdate">7月</div></div><div class="mcell last"><div class="mval">2.27%</div><div class="mdate">8月</div></div></div>
+  <div class="k-value">2.66%</div>
+  <div class="k-sub">密大 1 年預期 3.6%</div>
+  <div class="k-plain">市場對「五年後起算、之後五年」的通膨定價。目前 2.66%，明顯高於聯準會 2% 的目標。預期一旦往上跑，通膨容易自我實現，這是聯準會最緊張的事。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,4.1 3.7,5.5 4.5,4.2 5.2,3.0 5.9,5.5 6.7,6.3 7.4,7.2 8.1,6.8 8.8,5.4 9.6,7.2 10.3,6.8 11.0,6.9 11.8,6.5 12.5,6.1 13.2,7.4 14.0,7.4 14.7,7.2 15.4,8.2 16.2,8.6 16.9,8.7 17.6,9.2 18.3,11.0 19.1,10.0 19.8,10.5 20.5,10.5 21.3,11.9 22.0,11.8 22.7,12.4 23.5,13.6 24.2,14.7 24.9,15.6 25.7,16.0 26.4,16.1 27.1,16.1 27.8,16.0 28.6,15.9 29.3,16.1 30.0,16.0 30.8,15.6 31.5,13.8 32.2,14.7 33.0,14.7 33.7,14.6 34.4,14.9 35.2,13.6 35.9,14.2 36.6,14.0 37.3,13.1 38.1,13.0 38.8,11.9 39.5,11.1 40.3,11.2 41.0,14.2 41.7,13.0 42.5,13.5 43.2,10.6 43.9,12.7 44.7,14.0 45.4,14.6 46.1,16.2 46.8,15.4 47.6,17.5 48.3,17.1 49.0,17.1 49.8,16.3 50.5,16.9 51.2,15.7 52.0,16.2 52.7,14.3 53.4,15.4 54.2,15.6 54.9,14.0 55.6,14.7 56.3,16.2 57.1,15.6 57.8,15.6 58.5,15.3 59.3,15.7 60.0,15.4 60.7,13.4 61.5,12.3 62.2,13.4 62.9,13.8 63.7,14.3 64.4,14.4 65.1,15.0 65.8,13.7 66.6,15.9 67.3,15.5 68.0,16.8 68.8,17.3 69.5,16.9 70.2,16.1 71.0,15.7 71.7,16.0 72.4,16.7 73.2,19.3 73.9,17.2 74.6,18.3 75.3,18.4 76.1,19.0 76.8,21.1 77.5,22.2 78.3,23.5 79.0,24.1 79.7,23.7 80.5,23.6 81.2,23.7 81.9,24.2 82.7,22.2 83.4,19.9 84.1,20.8 84.8,20.6 85.6,21.2 86.3,21.1 87.0,20.0 87.8,20.9 88.5,20.4 89.2,20.2 90.0,20.0 90.7,19.4 91.4,18.3 92.2,20.0 92.9,18.6 93.6,18.4 94.3,19.2 95.1,18.8 95.8,19.8 96.5,18.8 97.3,21.2 98.0,22.3 98.7,22.4 99.5,19.7 100.2,21.0 100.9,20.3 101.7,19.9 102.4,21.7 103.1,21.6 103.8,24.2 104.6,25.5 105.3,27.4 106.0,27.4 106.8,27.2 107.5,27.1 108.2,27.4 109.0,28.3 109.7,29.2 110.4,30.2 111.2,31.0 111.9,30.0 112.6,30.3 113.3,29.8 114.1,29.9 114.8,28.3 115.5,27.9 116.3,28.1 117.0,29.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="29.2" r="2.5" fill="var(--series-1)"/></svg><div class="mseries"><div class="mcell"><div class="mval">2.74%</div><div class="mdate">26年6月</div></div><div class="mcell"><div class="mval">2.75%</div><div class="mdate">6月</div></div><div class="mcell"><div class="mval">2.73%</div><div class="mdate">7月</div></div><div class="mcell"><div class="mval">2.67%</div><div class="mdate">7月</div></div><div class="mcell"><div class="mval">2.65%</div><div class="mdate">7月</div></div><div class="mcell last"><div class="mval">2.67%</div><div class="mdate">8月</div></div></div>
 </div></div>
 
 <div class="grid">
@@ -569,34 +539,26 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <div class="flag alert">
   <span class="f-icon">■</span>
   <div>
-    <div class="f-head">近三月年化明顯低於年增率
+    <div class="f-head">核心服務除住房仍高於目標區間
       <span class="f-tag">重要</span></div>
-    <div class="f-detail">核心 CPI 年增 2.8%，但把最近三個月的漲勢換算成年率只有 2.3%。年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。</div>
-    <div class="impact dovish">利降息　通膨降溫的證據</div>
+    <div class="f-detail">剔除住房後的核心服務，近三個月年化 4.7%。這一塊的成本主要是人力，所以跟薪資直接連動——只要它降不下來，聯準會就很難確定通膨真的受控。</div>
+    <div class="impact hawkish">利升息　聯準會最在意的一塊還沒降溫</div>
+  </div>
+</div><div class="flag alert">
+  <span class="f-icon">■</span>
+  <div>
+    <div class="f-head">長期通膨預期偏離目標
+      <span class="f-tag">重要</span></div>
+    <div class="f-detail">五年後起算五年的通膨預期來到 2.66%。這是聯準會最怕的情況——一旦大家「相信」通膨會一直高，就會反映在定價與薪資談判上，通膨會自我實現。</div>
+    <div class="impact hawkish">利升息　預期脫錨是聯準會的紅線</div>
   </div>
 </div><div class="flag alert">
   <span class="f-icon">■</span>
   <div>
     <div class="f-head">核心 PCE 顯著高於目標
       <span class="f-tag">重要</span></div>
-    <div class="f-detail">核心 PCE 年增 3.3%，高出目標 1.3 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。</div>
+    <div class="f-detail">核心 PCE 年增 3.0%，高出目標 1.0 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。</div>
     <div class="impact hawkish">利升息　通膨仍是降息的阻力</div>
-  </div>
-</div><div class="flag watch">
-  <span class="f-icon">▲</span>
-  <div>
-    <div class="f-head">住房落後項推升整體讀數
-      <span class="f-tag">留意</span></div>
-    <div class="f-detail">核心 CPI 年增 2.8%，但把住房剔除後只有 2.3%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。</div>
-    <div class="impact dovish">利降息　實際通膨比表面低</div>
-  </div>
-</div><div class="flag watch">
-  <span class="f-icon">▲</span>
-  <div>
-    <div class="f-head">油價上行，未來一至兩月推升總體 CPI
-      <span class="f-tag">留意</span></div>
-    <div class="f-detail">原油近一個月上漲 18%。油價通常兩到四週後反映到加油站價格，再進到 CPI 的能源項。以能源佔 CPI 約 6% 粗估，接下來一兩個月大約會推高整體 CPI 0.4 個百分點。注意這只影響總體，不影響核心。</div>
-    <div class="impact hawkish">利升息　總體 CPI 的短期逆風</div>
   </div>
 </div>
   </div>
@@ -607,9 +569,9 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <h2 id="contrib">分項貢獻分解</h2>
     <p class="hint">把物價的漲幅拆成各類別的貢獻。這裡看的是近三個月，
       因為單月數字雜訊太大。灰色的住房項要特別注意——它的算法會落後市場行情約一年。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">近三個月漲幅</div><div class="s-value" style="color:inherit">+0.69%</div></div><div class="stat"><div class="s-label">其中：住房貢獻</div><div class="s-value" style="color:inherit">+0.37pp</div><div class="s-note">算法落後市場行情約一年</div></div><div class="stat"><div class="s-label">剔除住房後</div><div class="s-value" style="color:var(--good)">+0.49%</div><div class="s-note">更接近當下的實際物價（已按剩餘權重換算回通膨率）</div></div><div class="stat"><div class="s-label">食物與能源貢獻</div><div class="s-value" style="color:inherit">+0.22pp</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="s-label">近三個月漲幅</div><div class="s-value" style="color:inherit">+1.03%</div></div><div class="stat"><div class="s-label">其中：住房貢獻</div><div class="s-value" style="color:inherit">+0.29pp</div><div class="s-note">算法落後市場行情約一年</div></div><div class="stat"><div class="s-label">剔除住房後</div><div class="s-value" style="color:inherit">+1.15%</div><div class="s-note">更接近當下的實際物價（已按剩餘權重換算回通膨率）</div></div><div class="stat"><div class="s-label">食物與能源貢獻</div><div class="s-value" style="color:inherit">+0.32pp</div></div></div>
     <details data-m-collapse open><summary>分項貢獻明細</summary>
-      <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="住房｜貢獻 +0.37 個百分點"><div class="dlabel">住房<span class="dnote">落後項</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:50.00%"></span></div><div class="dval pos">+0.37pp</div></div><div class="drow" data-tip="其他核心服務｜貢獻 +0.22 個百分點"><div class="dlabel">其他核心服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:29.54%"></span></div><div class="dval pos">+0.22pp</div></div><div class="drow" data-tip="食物｜貢獻 +0.12 個百分點"><div class="dlabel">食物</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:15.94%"></span></div><div class="dval pos">+0.12pp</div></div><div class="drow" data-tip="能源｜貢獻 +0.10 個百分點"><div class="dlabel">能源</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:14.06%"></span></div><div class="dval pos">+0.10pp</div></div><div class="drow" data-tip="核心商品｜貢獻 -0.03 個百分點"><div class="dlabel">核心商品</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:4.14%"></span></div><div class="dval neg">-0.03pp</div></div></div></div>
+      <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="其他核心服務｜貢獻 +0.31 個百分點"><div class="dlabel">其他核心服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:50.00%"></span></div><div class="dval pos">+0.31pp</div></div><div class="drow" data-tip="住房｜貢獻 +0.29 個百分點"><div class="dlabel">住房<span class="dnote">落後項</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:47.37%"></span></div><div class="dval pos">+0.29pp</div></div><div class="drow" data-tip="能源｜貢獻 +0.21 個百分點"><div class="dlabel">能源</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:34.78%"></span></div><div class="dval pos">+0.21pp</div></div><div class="drow" data-tip="核心商品｜貢獻 +0.13 個百分點"><div class="dlabel">核心商品</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:21.23%"></span></div><div class="dval pos">+0.13pp</div></div><div class="drow" data-tip="食物｜貢獻 +0.11 個百分點"><div class="dlabel">食物</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:17.71%"></span></div><div class="dval pos">+0.11pp</div></div></div></div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>推升物價</span>
       <span><i style="background:var(--neg)"></i>壓低物價</span>
@@ -629,51 +591,51 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <h2 id="lights">關鍵指標檢核</h2>
     <p class="hint">八項關鍵指標的當期狀態。門檻設定於 config/inflation.yaml。</p>
     <details data-m-collapse open><summary>八項指標</summary>
-      <div class="lights" style="margin-top:12px"><div class="light good">
-  <div class="l-top"><span class="l-icon">●</span>核心 CPI 三月年化</div>
-  <div class="l-value">2.3% <span style="font-size:13px;color:var(--muted)">↓</span></div>
-  <div class="l-state">正常</div>
+      <div class="lights" style="margin-top:12px"><div class="light critical">
+  <div class="l-top"><span class="l-icon">■</span>核心 CPI 三月年化</div>
+  <div class="l-value">3.5% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">警戒</div>
   
   <div class="l-desc">近三個月的漲勢換算成年率。比年增率更早看出轉折</div>
-</div><div class="light warning">
-  <div class="l-top"><span class="l-icon">▲</span>核心服務除住房</div>
-  <div class="l-value">3.4% <span style="font-size:13px;color:var(--muted)">↓</span></div>
-  <div class="l-state">留意</div>
+</div><div class="light critical">
+  <div class="l-top"><span class="l-icon">■</span>核心服務除住房</div>
+  <div class="l-value">4.7% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">警戒</div>
   
   <div class="l-desc">Fed 最在意的一塊。多為人力成本，跟薪資直接連動</div>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>核心 PCE 年增</div>
-  <div class="l-value">3.3% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-value">3.0% <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">警戒</div>
   
   <div class="l-desc">Fed 的政策目標，2% 指的就是這個數字</div>
-</div><div class="light good">
-  <div class="l-top"><span class="l-icon">●</span>中位數 CPI</div>
-  <div class="l-value">2.7% <span style="font-size:13px;color:var(--muted)">↓</span></div>
-  <div class="l-state">正常</div>
-  
-  <div class="l-desc">剔除極端項目後的通膨趨勢</div>
 </div><div class="light warning">
-  <div class="l-top"><span class="l-icon">▲</span>核心除住房</div>
-  <div class="l-value">2.3% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-top"><span class="l-icon">▲</span>中位數 CPI</div>
+  <div class="l-value">3.5% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">留意</div>
   
+  <div class="l-desc">剔除極端項目後的通膨趨勢</div>
+</div><div class="light critical">
+  <div class="l-top"><span class="l-icon">■</span>核心除住房</div>
+  <div class="l-value">3.0% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-state">警戒</div>
+  
   <div class="l-desc">住房項落後市場租金約一年，剔除後更接近當下的實際通膨</div>
-</div><div class="light good">
-  <div class="l-top"><span class="l-icon">●</span>長期通膨預期</div>
-  <div class="l-value">2.28% <span style="font-size:13px;color:var(--muted)">↓</span></div>
-  <div class="l-state">正常</div>
+</div><div class="light critical">
+  <div class="l-top"><span class="l-icon">■</span>長期通膨預期</div>
+  <div class="l-value">2.66% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-state">警戒</div>
   
   <div class="l-desc">市場對五年後起算五年的通膨定價。脫錨是 Fed 最怕的事</div>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>汽油價格</div>
-  <div class="l-value">4.08 美元 <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-value">3.96 美元 <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">警戒</div>
   
   <div class="l-desc">油價會在兩到四週後反映到 CPI 能源項</div>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>核心商品年增</div>
-  <div class="l-value">+1.0% <span style="font-size:13px;color:var(--muted)">↓</span></div>
+  <div class="l-value">+1.2% <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">留意</div>
   
   <div class="l-desc">商品通膨。受關稅與供應鏈影響最直接</div>
@@ -688,22 +650,22 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <p class="hint">核心服務除住房的成本主體是人力，所以薪資的走向會在數月後
       反映到這一塊。<b>這是判斷通膨黏性會不會持續的核心機制</b>，
       也是勞動與通膨兩個模組真正的連結。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">平均時薪年增</div><div class="s-value" style="color:inherit">3.41%</div></div><div class="stat"><div class="s-label">核心服務除住房年增</div><div class="s-value" style="color:inherit">3.42%</div></div><div class="stat"><div class="s-label">差距</div><div class="s-value" style="color:inherit">+0.01 個百分點</div><div class="s-note">薪資與服務業通膨大致同步</div></div><div class="stat"><div class="s-label">相關性最高的領先期數</div><div class="s-value" style="color:inherit">13 個月</div><div class="s-note">相關係數 +0.61</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="s-label">平均時薪年增</div><div class="s-value" style="color:inherit">3.21%</div></div><div class="stat"><div class="s-label">核心服務除住房年增</div><div class="s-value" style="color:inherit">4.22%</div></div><div class="stat"><div class="s-label">差距</div><div class="s-value" style="color:var(--serious)">+1.01 個百分點</div><div class="s-note">服務業通膨高於薪資增速</div></div><div class="stat"><div class="s-label">相關性最高的領先期數</div><div class="s-value" style="color:inherit">6 個月</div><div class="s-note">相關係數 -0.86</div></div></div>
 <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
-  <b>薪資與服務業通膨大致同步</b><br>兩者的增速接近，代表服務業的漲價主要反映人力成本，沒有額外的推力。
+  <b>服務業通膨高於薪資增速</b><br>服務業的漲價幅度超過人力成本的上升，除了薪資之外還有其他推力（例如租金、保險或訂價能力）。單靠薪資降溫不足以讓它回落。
 </div>
 <h3>平均時薪年增率</h3>
-<div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,120 0.0,85.2 10.2,71.1 20.3,69.1 30.5,46.1 40.7,29.7 50.8,31.6 61.0,47.4 71.2,23.5 81.4,34.4 91.5,11.6 101.7,16.8 111.9,24.3 122.0,30.2 132.2,27.3 142.4,30.6 152.5,40.4 162.7,45.1 172.9,42.0 183.1,47.8 193.2,64.6 203.4,54.0 213.6,59.7 223.7,60.6 233.9,69.6 244.1,58.3 254.2,57.9 264.4,65.5 274.6,67.3 284.7,74.9 294.9,79.0 305.1,79.5 315.3,68.4 325.4,78.2 335.6,77.7 345.8,84.1 355.9,77.6 366.1,86.3 376.3,97.1 386.4,86.1 396.6,86.6 406.8,81.4 416.9,76.2 427.1,80.1 437.3,84.2 447.5,78.9 457.6,75.2 467.8,86.6 478.0,83.9 488.1,88.7 498.3,84.7 508.5,84.2 518.6,89.0 528.8,85.8 539.0,93.6 549.2,96.3 559.3,94.6 569.5,104.7 579.7,99.5 589.8,108.4 600.0,105.5 600,120" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="11.6" x2="600" y2="11.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="108.4" x2="600" y2="108.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,85.2 10.2,71.1 20.3,69.1 30.5,46.1 40.7,29.7 50.8,31.6 61.0,47.4 71.2,23.5 81.4,34.4 91.5,11.6 101.7,16.8 111.9,24.3 122.0,30.2 132.2,27.3 142.4,30.6 152.5,40.4 162.7,45.1 172.9,42.0 183.1,47.8 193.2,64.6 203.4,54.0 213.6,59.7 223.7,60.6 233.9,69.6 244.1,58.3 254.2,57.9 264.4,65.5 274.6,67.3 284.7,74.9 294.9,79.0 305.1,79.5 315.3,68.4 325.4,78.2 335.6,77.7 345.8,84.1 355.9,77.6 366.1,86.3 376.3,97.1 386.4,86.1 396.6,86.6 406.8,81.4 416.9,76.2 427.1,80.1 437.3,84.2 447.5,78.9 457.6,75.2 467.8,86.6 478.0,83.9 488.1,88.7 498.3,84.7 508.5,84.2 518.6,89.0 528.8,85.8 539.0,93.6 549.2,96.3 559.3,94.6 569.5,104.7 579.7,99.5 589.8,108.4 600.0,105.5" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="105.5" r="4" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">5.89%</span><span class="glab" style="top:calc(90.3% + 4px)">3.34%</span></div><div class="lxaxis"><span>2021-06-01</span><span><b>3.41%</b>　2026-06-01</span></div></div>
+<div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,120 0.0,26.0 11.1,20.5 22.2,26.0 33.3,25.6 44.4,20.2 55.6,20.1 66.7,21.5 77.8,11.6 88.9,19.9 100.0,34.4 111.1,33.4 122.2,28.0 133.3,29.9 144.4,36.8 155.6,40.1 166.7,41.5 177.8,48.3 188.9,39.6 200.0,46.6 211.1,56.2 222.2,50.4 233.3,47.6 244.4,50.0 255.6,59.2 266.7,53.0 277.8,48.2 288.9,45.4 300.0,53.1 311.1,47.2 322.2,52.7 333.3,49.9 344.4,46.5 355.6,53.2 366.7,57.7 377.8,59.4 388.9,56.0 400.0,60.3 411.1,63.7 422.2,70.2 433.3,74.7 444.4,79.6 455.6,77.7 466.7,53.0 477.8,79.5 488.9,78.0 500.0,74.8 511.1,72.2 522.2,74.8 533.3,78.8 544.4,81.9 555.6,86.2 566.7,83.3 577.8,80.4 588.9,59.4 600.0,108.4 600,120" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="11.6" x2="600" y2="11.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="108.4" x2="600" y2="108.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,26.0 11.1,20.5 22.2,26.0 33.3,25.6 44.4,20.2 55.6,20.1 66.7,21.5 77.8,11.6 88.9,19.9 100.0,34.4 111.1,33.4 122.2,28.0 133.3,29.9 144.4,36.8 155.6,40.1 166.7,41.5 177.8,48.3 188.9,39.6 200.0,46.6 211.1,56.2 222.2,50.4 233.3,47.6 244.4,50.0 255.6,59.2 266.7,53.0 277.8,48.2 288.9,45.4 300.0,53.1 311.1,47.2 322.2,52.7 333.3,49.9 344.4,46.5 355.6,53.2 366.7,57.7 377.8,59.4 388.9,56.0 400.0,60.3 411.1,63.7 422.2,70.2 433.3,74.7 444.4,79.6 455.6,77.7 466.7,53.0 477.8,79.5 488.9,78.0 500.0,74.8 511.1,72.2 522.2,74.8 533.3,78.8 544.4,81.9 555.6,86.2 566.7,83.3 577.8,80.4 588.9,59.4 600.0,108.4" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="108.4" r="4" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">4.25%</span><span class="glab" style="top:calc(90.3% + 4px)">3.21%</span></div><div class="lxaxis"><span>2022-01-01</span><span><b>3.21%</b>　2026-07-01</span></div></div>
 <h3>核心服務除住房年增率</h3>
-<div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,120 0.0,101.6 10.2,106.0 20.3,108.4 30.5,104.7 40.7,96.8 50.8,93.2 61.0,87.7 71.2,79.7 81.4,73.2 91.5,67.3 101.7,61.6 111.9,56.3 122.0,49.2 132.2,47.5 142.4,36.9 152.5,24.7 162.7,22.7 172.9,21.1 183.1,16.7 193.2,13.8 203.4,11.6 213.6,14.7 223.7,20.9 233.9,26.4 244.1,35.2 254.2,36.1 264.4,40.9 274.6,45.3 284.7,49.0 294.9,49.3 305.1,53.2 315.3,51.5 325.4,54.9 335.6,51.5 345.8,53.0 355.9,55.5 366.1,59.2 376.3,61.7 386.4,61.3 396.6,65.1 406.8,64.6 416.9,68.6 427.1,71.7 437.3,74.6 447.5,78.9 457.6,88.1 467.8,90.3 478.0,91.2 488.1,89.6 498.3,88.6 508.5,89.5 518.6,92.4 528.8,96.5 539.0,97.0 549.2,93.4 559.3,97.8 569.5,99.1 579.7,90.6 589.8,90.7 600.0,93.7 600,120" fill="var(--series-2)" opacity="0.09"/><line x1="0" y1="11.6" x2="600" y2="11.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="108.4" x2="600" y2="108.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,101.6 10.2,106.0 20.3,108.4 30.5,104.7 40.7,96.8 50.8,93.2 61.0,87.7 71.2,79.7 81.4,73.2 91.5,67.3 101.7,61.6 111.9,56.3 122.0,49.2 132.2,47.5 142.4,36.9 152.5,24.7 162.7,22.7 172.9,21.1 183.1,16.7 193.2,13.8 203.4,11.6 213.6,14.7 223.7,20.9 233.9,26.4 244.1,35.2 254.2,36.1 264.4,40.9 274.6,45.3 284.7,49.0 294.9,49.3 305.1,53.2 315.3,51.5 325.4,54.9 335.6,51.5 345.8,53.0 355.9,55.5 366.1,59.2 376.3,61.7 386.4,61.3 396.6,65.1 406.8,64.6 416.9,68.6 427.1,71.7 437.3,74.6 447.5,78.9 457.6,88.1 467.8,90.3 478.0,91.2 488.1,89.6 498.3,88.6 508.5,89.5 518.6,92.4 528.8,96.5 539.0,97.0 549.2,93.4 559.3,97.8 569.5,99.1 579.7,90.6 589.8,90.7 600.0,93.7" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="93.7" r="4" fill="var(--series-2)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">7.26%</span><span class="glab" style="top:calc(90.3% + 4px)">2.73%</span></div><div class="lxaxis"><span>2021-06-01</span><span><b>3.42%</b>　2026-06-01</span></div></div>
+<div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 120" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,120 0.0,86.4 11.1,91.6 22.2,88.6 33.3,90.5 44.4,87.3 55.6,87.8 66.7,93.8 77.8,94.8 88.9,99.7 100.0,106.2 111.1,107.7 122.2,108.4 133.3,104.8 144.4,103.1 155.6,107.8 166.7,101.6 177.8,100.4 188.9,97.5 200.0,95.7 211.1,91.8 222.2,85.7 233.3,71.1 244.4,74.5 255.6,74.0 266.7,73.8 277.8,76.7 288.9,74.6 300.0,73.4 311.1,74.5 322.2,70.6 333.3,69.0 344.4,70.0 355.6,75.4 366.7,83.3 377.8,69.2 388.9,67.7 400.0,69.5 411.1,69.1 422.2,72.9 433.3,73.0 444.4,72.5 455.6,73.4 466.7,71.9 477.8,69.9 488.9,58.2 500.0,58.2 511.1,69.8 522.2,66.8 533.3,68.7 544.4,58.7 555.6,50.4 566.7,39.1 577.8,27.2 588.9,19.3 600.0,11.6 600,120" fill="var(--series-2)" opacity="0.09"/><line x1="0" y1="11.6" x2="600" y2="11.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="108.4" x2="600" y2="108.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,86.4 11.1,91.6 22.2,88.6 33.3,90.5 44.4,87.3 55.6,87.8 66.7,93.8 77.8,94.8 88.9,99.7 100.0,106.2 111.1,107.7 122.2,108.4 133.3,104.8 144.4,103.1 155.6,107.8 166.7,101.6 177.8,100.4 188.9,97.5 200.0,95.7 211.1,91.8 222.2,85.7 233.3,71.1 244.4,74.5 255.6,74.0 266.7,73.8 277.8,76.7 288.9,74.6 300.0,73.4 311.1,74.5 322.2,70.6 333.3,69.0 344.4,70.0 355.6,75.4 366.7,83.3 377.8,69.2 388.9,67.7 400.0,69.5 411.1,69.1 422.2,72.9 433.3,73.0 444.4,72.5 455.6,73.4 466.7,71.9 477.8,69.9 488.9,58.2 500.0,58.2 511.1,69.8 522.2,66.8 533.3,68.7 544.4,58.7 555.6,50.4 566.7,39.1 577.8,27.2 588.9,19.3 600.0,11.6" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="11.6" r="4" fill="var(--series-2)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">4.22%</span><span class="glab" style="top:calc(90.3% + 4px)">3.32%</span></div><div class="lxaxis"><span>2022-01-01</span><span><b>4.22%</b>　2026-07-01</span></div></div>
 <p class="hint" style="margin-top:14px">
   兩條線分開畫，不用雙軸——不同尺度硬放同一張圖會製造出實際上不存在的關係。
 </p>
 <details data-m-collapse><summary>領先落後的相關性</summary>
   <table style="margin-top:10px">
     <thead><tr><th>薪資領先期數</th><th>相關係數</th></tr></thead>
-    <tbody><tr><td>0 個月</td><td>+0.34</td></tr><tr><td>3 個月</td><td>+0.44</td></tr><tr><td>6 個月</td><td>+0.49</td></tr><tr><td>9 個月</td><td>+0.53</td></tr><tr><td>12 個月</td><td>+0.60</td></tr><tr><td>13 個月</td><td>+0.61</td></tr><tr><td>15 個月</td><td>+0.58</td></tr><tr><td>18 個月</td><td>+0.56</td></tr></tbody></table>
-  <p class="hint" style="margin-top:10px">樣本內相關性最高的組合是薪資領先 13 個月（相關係數 +0.61）。相關不等於因果，這只描述兩者在此樣本中的時間關係。</p>
+    <tbody><tr><td>0 個月</td><td>-0.76</td></tr><tr><td>3 個月</td><td>-0.84</td></tr><tr><td>6 個月</td><td>-0.86</td></tr><tr><td>9 個月</td><td>-0.84</td></tr><tr><td>12 個月</td><td>-0.81</td></tr><tr><td>15 個月</td><td>-0.76</td></tr><tr><td>18 個月</td><td>-0.61</td></tr></tbody></table>
+  <p class="hint" style="margin-top:10px">樣本內相關性最高的組合是薪資領先 6 個月（相關係數 -0.86）。相關不等於因果，這只描述兩者在此樣本中的時間關係。</p>
 </details>
   </div>
 </div>
@@ -714,7 +676,7 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <p class="hint">平均數容易被少數暴漲暴跌的項目帶偏。
       下面三個指標用不同方法把極端值拿掉，比較能看出真正的趨勢。</p>
     <table><thead><tr><th>指標</th><th>目前</th><th>說明</th></tr></thead>
-    <tbody><tr><td>中位數 CPI</td><td>2.7%</td><td class="muted-cell">取漲幅正中間的項目，不受極端值影響</td></tr><tr><td>截尾平均 CPI</td><td>2.6%</td><td class="muted-cell">剔除漲跌最極端的項目後平均</td></tr><tr><td>黏性核心 CPI</td><td>2.8%</td><td class="muted-cell">只看價格很少調整的項目，代表通膨慣性</td></tr></tbody></table>
+    <tbody><tr><td>中位數 CPI</td><td>3.5%</td><td class="muted-cell">取漲幅正中間的項目，不受極端值影響</td></tr><tr><td>截尾平均 CPI</td><td>3.3%</td><td class="muted-cell">剔除漲跌最極端的項目後平均</td></tr><tr><td>黏性核心 CPI</td><td>3.6%</td><td class="muted-cell">只看價格很少調整的項目，代表通膨慣性</td></tr></tbody></table>
     <details data-m-collapse><summary>各項指標的定義</summary>
       <dl class="gloss" style="margin-top:10px">
         <dt>中位數 CPI</dt>
@@ -762,13 +724,13 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     <h2 id="energy">能源價格與傳導</h2>
     <p class="hint">油價會在兩到四週後反映到加油站，再進到物價指數。
       這一區看的是「已經發生但還沒反映到數據裡」的部分——虛線是一個月前的位置。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">原油近一個月</div><div class="s-value" style="color:var(--serious)">+18%</div><div class="s-note">領先加油站價格約 2–4 週</div></div><div class="stat"><div class="s-label">零售汽油</div><div class="s-value" style="color:inherit">4.08 美元／加侖</div></div><div class="stat"><div class="s-label">對總體 CPI 的估計影響</div><div class="s-value" style="color:inherit">+0.43pp</div><div class="s-note">以能源佔比 6.2% 與傳導係數 0.4 粗估</div></div><div class="stat"><div class="s-label">對核心 CPI 的影響</div><div class="s-value" style="color:inherit">無</div><div class="s-note">核心已剔除能源</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="s-label">原油近一個月</div><div class="s-value" style="color:var(--serious)">+8%</div><div class="s-note">領先加油站價格約 2–4 週</div></div><div class="stat"><div class="s-label">零售汽油</div><div class="s-value" style="color:inherit">3.96 美元／加侖</div></div><div class="stat"><div class="s-label">對總體 CPI 的估計影響</div><div class="s-value" style="color:inherit">+0.19pp</div><div class="s-note">以能源佔比 6.2% 與傳導係數 0.4 粗估</div></div><div class="stat"><div class="s-label">對核心 CPI 的影響</div><div class="s-value" style="color:inherit">無</div><div class="s-note">核心已剔除能源</div></div></div>
 
     <h3>WTI 原油（今年以來）</h3>
-    <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,133.0 4.1,131.2 8.3,133.5 12.4,135.5 16.6,131.9 20.7,129.4 24.8,128.5 29.0,125.5 33.1,123.4 37.2,129.0 41.4,128.5 45.5,126.6 49.7,126.5 53.8,128.8 57.9,125.8 62.1,126.3 66.2,123.0 70.3,121.6 74.5,117.4 78.6,117.9 82.8,123.9 86.9,121.8 91.0,117.8 95.2,121.3 99.3,119.5 103.4,117.9 107.6,118.6 111.7,117.3 115.9,120.9 120.0,120.9 124.1,122.0 128.3,116.2 132.4,113.5 136.6,113.4 140.7,114.1 144.8,115.6 149.0,116.3 153.1,116.7 157.2,112.9 161.4,104.3 165.5,97.3 169.7,97.1 173.8,84.1 177.9,63.7 182.1,55.7 186.2,78.3 190.3,71.9 194.5,53.7 198.6,47.8 202.8,58.3 206.9,52.9 211.0,52.6 215.2,52.7 219.3,47.3 223.4,66.7 227.6,58.7 231.7,62.2 235.9,52.5 240.0,42.0 244.1,34.9 248.3,38.7 252.4,40.7 256.6,17.3 260.7,15.7 264.8,14.5 269.0,52.5 273.1,45.4 277.2,48.1 281.4,43.1 285.5,58.9 289.7,59.0 293.8,51.9 297.9,73.7 302.1,63.1 306.2,57.8 310.3,55.5 314.5,46.1 318.6,47.9 322.8,44.9 326.9,37.5 331.0,23.0 335.2,26.8 339.3,33.5 343.4,24.5 347.6,32.9 351.7,47.2 355.9,48.0 360.0,47.0 364.1,41.4 368.3,32.7 372.4,35.3 376.6,35.0 380.7,26.1 384.8,19.3 389.0,19.7 393.1,41.1 397.2,44.2 401.4,43.9 405.5,49.5 409.7,60.4 413.8,59.8 417.9,62.9 422.1,53.0 426.2,49.9 430.3,45.1 434.5,51.2 438.6,56.4 442.8,55.0 446.9,61.4 451.0,57.7 455.2,62.0 459.3,68.1 463.4,76.3 467.6,86.3 471.7,84.6 475.9,85.2 480.0,88.1 484.1,97.0 488.3,103.7 492.4,101.1 496.6,106.0 500.7,102.7 504.8,105.4 509.0,107.1 513.1,107.1 517.2,107.4 521.4,103.4 525.5,97.2 529.7,100.1 533.8,101.5 537.9,87.6 542.1,85.0 546.2,84.4 550.3,85.9 554.5,78.9 558.6,76.9 562.8,73.5 566.9,70.1 571.0,58.9 575.2,61.7 579.3,77.2 583.4,84.1 587.6,73.4 591.7,75.3 595.9,73.2 600.0,81.9 600,150" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="513.1" y1="0" x2="513.1" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="0.0,133.0 4.1,131.2 8.3,133.5 12.4,135.5 16.6,131.9 20.7,129.4 24.8,128.5 29.0,125.5 33.1,123.4 37.2,129.0 41.4,128.5 45.5,126.6 49.7,126.5 53.8,128.8 57.9,125.8 62.1,126.3 66.2,123.0 70.3,121.6 74.5,117.4 78.6,117.9 82.8,123.9 86.9,121.8 91.0,117.8 95.2,121.3 99.3,119.5 103.4,117.9 107.6,118.6 111.7,117.3 115.9,120.9 120.0,120.9 124.1,122.0 128.3,116.2 132.4,113.5 136.6,113.4 140.7,114.1 144.8,115.6 149.0,116.3 153.1,116.7 157.2,112.9 161.4,104.3 165.5,97.3 169.7,97.1 173.8,84.1 177.9,63.7 182.1,55.7 186.2,78.3 190.3,71.9 194.5,53.7 198.6,47.8 202.8,58.3 206.9,52.9 211.0,52.6 215.2,52.7 219.3,47.3 223.4,66.7 227.6,58.7 231.7,62.2 235.9,52.5 240.0,42.0 244.1,34.9 248.3,38.7 252.4,40.7 256.6,17.3 260.7,15.7 264.8,14.5 269.0,52.5 273.1,45.4 277.2,48.1 281.4,43.1 285.5,58.9 289.7,59.0 293.8,51.9 297.9,73.7 302.1,63.1 306.2,57.8 310.3,55.5 314.5,46.1 318.6,47.9 322.8,44.9 326.9,37.5 331.0,23.0 335.2,26.8 339.3,33.5 343.4,24.5 347.6,32.9 351.7,47.2 355.9,48.0 360.0,47.0 364.1,41.4 368.3,32.7 372.4,35.3 376.6,35.0 380.7,26.1 384.8,19.3 389.0,19.7 393.1,41.1 397.2,44.2 401.4,43.9 405.5,49.5 409.7,60.4 413.8,59.8 417.9,62.9 422.1,53.0 426.2,49.9 430.3,45.1 434.5,51.2 438.6,56.4 442.8,55.0 446.9,61.4 451.0,57.7 455.2,62.0 459.3,68.1 463.4,76.3 467.6,86.3 471.7,84.6 475.9,85.2 480.0,88.1 484.1,97.0 488.3,103.7 492.4,101.1 496.6,106.0 500.7,102.7 504.8,105.4 509.0,107.1 513.1,107.1 517.2,107.4 521.4,103.4 525.5,97.2 529.7,100.1 533.8,101.5 537.9,87.6 542.1,85.0 546.2,84.4 550.3,85.9 554.5,78.9 558.6,76.9 562.8,73.5 566.9,70.1 571.0,58.9 575.2,61.7 579.3,77.2 583.4,84.1 587.6,73.4 591.7,75.3 595.9,73.2 600.0,81.9" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="81.9" r="4" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">114.58 美元</span><span class="glab" style="top:calc(90.3% + 4px)">56.01 美元</span><span class="lmark" style="left:85.5%">一個月前</span></div><div class="lxaxis"><span>2026-01-02</span><span><b>81.96 美元</b>　2026-08-03</span></div></div>
+    <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,108.9 3.8,107.1 7.7,104.7 11.5,102.4 15.4,101.4 19.2,104.2 23.1,96.7 26.9,96.7 30.8,93.5 34.6,102.3 38.5,99.9 42.3,102.0 46.2,110.2 50.0,108.1 53.8,110.9 57.7,111.7 61.5,113.3 65.4,112.4 69.2,117.6 73.1,114.3 76.9,109.4 80.8,111.9 84.6,112.4 88.5,123.3 92.3,135.5 96.2,134.2 100.0,134.6 103.8,118.6 107.7,117.0 111.5,105.1 115.4,98.4 119.2,100.4 123.1,98.5 126.9,103.2 130.8,101.9 134.6,94.5 138.5,99.4 142.3,102.8 146.2,98.2 150.0,100.9 153.8,100.0 157.7,96.4 161.5,94.0 165.4,98.2 169.2,104.8 173.1,97.2 176.9,90.4 180.8,96.7 184.6,90.7 188.5,77.5 192.3,73.2 196.2,77.3 200.0,89.0 203.8,92.0 207.7,93.2 211.5,92.3 215.4,90.8 219.2,91.9 223.1,93.2 226.9,88.8 230.8,98.8 234.6,105.8 238.5,102.7 242.3,101.5 246.2,103.9 250.0,97.7 253.8,87.8 257.7,98.0 261.5,90.4 265.4,97.4 269.2,100.9 273.1,102.0 276.9,105.6 280.8,105.1 284.6,104.1 288.5,100.0 292.3,107.8 296.2,114.7 300.0,114.8 303.8,117.3 307.7,116.3 311.5,114.2 315.4,116.3 319.2,118.3 323.1,116.6 326.9,117.6 330.8,121.1 334.6,117.6 338.5,112.1 342.3,114.3 346.2,113.4 350.0,114.2 353.8,103.8 357.7,96.7 361.5,100.7 365.4,97.4 369.2,94.3 373.1,98.3 376.9,107.2 380.8,102.4 384.6,102.8 388.5,99.0 392.3,96.7 396.2,99.2 400.0,100.5 403.8,105.7 407.7,102.9 411.5,99.8 415.4,100.3 419.2,101.0 423.1,100.8 426.9,106.4 430.8,101.7 434.6,100.5 438.5,99.4 442.3,113.3 446.2,117.5 450.0,113.4 453.8,102.8 457.7,106.8 461.5,105.9 465.4,102.4 469.2,103.3 473.1,101.3 476.9,105.3 480.8,108.7 484.6,109.9 488.5,113.8 492.3,117.3 496.2,110.6 500.0,113.3 503.8,112.1 507.7,106.2 511.5,104.2 515.4,94.4 519.2,90.8 523.1,87.1 526.9,83.5 530.8,79.9 534.6,76.3 538.5,72.6 542.3,69.0 546.2,65.4 550.0,61.7 553.8,58.1 557.7,54.5 561.5,50.8 565.4,47.2 569.2,43.6 573.1,39.9 576.9,36.3 580.8,32.7 584.6,29.0 588.5,25.4 592.3,21.8 596.2,18.1 600.0,14.5 600,150" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="519.2" y1="0" x2="519.2" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="0.0,108.9 3.8,107.1 7.7,104.7 11.5,102.4 15.4,101.4 19.2,104.2 23.1,96.7 26.9,96.7 30.8,93.5 34.6,102.3 38.5,99.9 42.3,102.0 46.2,110.2 50.0,108.1 53.8,110.9 57.7,111.7 61.5,113.3 65.4,112.4 69.2,117.6 73.1,114.3 76.9,109.4 80.8,111.9 84.6,112.4 88.5,123.3 92.3,135.5 96.2,134.2 100.0,134.6 103.8,118.6 107.7,117.0 111.5,105.1 115.4,98.4 119.2,100.4 123.1,98.5 126.9,103.2 130.8,101.9 134.6,94.5 138.5,99.4 142.3,102.8 146.2,98.2 150.0,100.9 153.8,100.0 157.7,96.4 161.5,94.0 165.4,98.2 169.2,104.8 173.1,97.2 176.9,90.4 180.8,96.7 184.6,90.7 188.5,77.5 192.3,73.2 196.2,77.3 200.0,89.0 203.8,92.0 207.7,93.2 211.5,92.3 215.4,90.8 219.2,91.9 223.1,93.2 226.9,88.8 230.8,98.8 234.6,105.8 238.5,102.7 242.3,101.5 246.2,103.9 250.0,97.7 253.8,87.8 257.7,98.0 261.5,90.4 265.4,97.4 269.2,100.9 273.1,102.0 276.9,105.6 280.8,105.1 284.6,104.1 288.5,100.0 292.3,107.8 296.2,114.7 300.0,114.8 303.8,117.3 307.7,116.3 311.5,114.2 315.4,116.3 319.2,118.3 323.1,116.6 326.9,117.6 330.8,121.1 334.6,117.6 338.5,112.1 342.3,114.3 346.2,113.4 350.0,114.2 353.8,103.8 357.7,96.7 361.5,100.7 365.4,97.4 369.2,94.3 373.1,98.3 376.9,107.2 380.8,102.4 384.6,102.8 388.5,99.0 392.3,96.7 396.2,99.2 400.0,100.5 403.8,105.7 407.7,102.9 411.5,99.8 415.4,100.3 419.2,101.0 423.1,100.8 426.9,106.4 430.8,101.7 434.6,100.5 438.5,99.4 442.3,113.3 446.2,117.5 450.0,113.4 453.8,102.8 457.7,106.8 461.5,105.9 465.4,102.4 469.2,103.3 473.1,101.3 476.9,105.3 480.8,108.7 484.6,109.9 488.5,113.8 492.3,117.3 496.2,110.6 500.0,113.3 503.8,112.1 507.7,106.2 511.5,104.2 515.4,94.4 519.2,90.8 523.1,87.1 526.9,83.5 530.8,79.9 534.6,76.3 538.5,72.6 542.3,69.0 546.2,65.4 550.0,61.7 553.8,58.1 557.7,54.5 561.5,50.8 565.4,47.2 569.2,43.6 573.1,39.9 576.9,36.3 580.8,32.7 584.6,29.0 588.5,25.4 592.3,21.8 596.2,18.1 600.0,14.5" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="14.5" r="4" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">84.60 美元</span><span class="glab" style="top:calc(90.3% + 4px)">74.94 美元</span><span class="lmark" style="left:86.5%">一個月前</span></div><div class="lxaxis"><span>2026-01-01</span><span><b>84.60 美元</b>　2026-08-07</span></div></div>
 
     <details data-m-collapse><summary>零售汽油價格（今年以來）</summary>
-      <div style="margin-top:12px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,116.4 20.0,117.4 40.0,115.8 60.0,112.9 80.0,112.1 100.0,109.9 120.0,108.6 140.0,107.8 160.0,103.0 180.0,73.4 200.0,60.1 220.0,45.4 240.0,43.6 260.0,35.7 280.0,35.5 300.0,40.4 320.0,35.5 340.0,15.5 360.0,12.6 380.0,13.2 400.0,14.1 420.0,24.5 440.0,34.1 460.0,39.9 480.0,48.3 500.0,53.3 520.0,56.6 540.0,51.9 560.0,43.0 580.0,37.2 600.0,38.2 600,130" fill="var(--series-2)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,116.4 20.0,117.4 40.0,115.8 60.0,112.9 80.0,112.1 100.0,109.9 120.0,108.6 140.0,107.8 160.0,103.0 180.0,73.4 200.0,60.1 220.0,45.4 240.0,43.6 260.0,35.7 280.0,35.5 300.0,40.4 320.0,35.5 340.0,15.5 360.0,12.6 380.0,13.2 400.0,14.1 420.0,24.5 440.0,34.1 460.0,39.9 480.0,48.3 500.0,53.3 520.0,56.6 540.0,51.9 560.0,43.0 580.0,37.2 600.0,38.2" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="38.2" r="4" fill="var(--series-2)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">4.50 美元</span><span class="glab" style="top:calc(90.3% + 4px)">2.78 美元</span></div><div class="lxaxis"><span>2026-01-05</span><span><b>4.08 美元</b>　2026-08-03</span></div></div></div>
+      <div style="margin-top:12px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,111.0 20.0,117.4 40.0,101.2 60.0,98.3 80.0,94.0 100.0,90.5 120.0,83.5 140.0,73.7 160.0,76.3 180.0,67.6 200.0,47.3 220.0,37.8 240.0,45.9 260.0,48.2 280.0,48.2 300.0,43.3 320.0,36.0 340.0,32.9 360.0,21.8 380.0,12.6 400.0,34.9 420.0,30.5 440.0,40.1 460.0,41.5 480.0,46.8 500.0,37.5 520.0,62.7 540.0,65.9 560.0,74.3 580.0,64.7 600.0,75.4 600,130" fill="var(--series-2)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,111.0 20.0,117.4 40.0,101.2 60.0,98.3 80.0,94.0 100.0,90.5 120.0,83.5 140.0,73.7 160.0,76.3 180.0,67.6 200.0,47.3 220.0,37.8 240.0,45.9 260.0,48.2 280.0,48.2 300.0,43.3 320.0,36.0 340.0,32.9 360.0,21.8 380.0,12.6 400.0,34.9 420.0,30.5 440.0,40.1 460.0,41.5 480.0,46.8 500.0,37.5 520.0,62.7 540.0,65.9 560.0,74.3 580.0,64.7 600.0,75.4" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="600.0" cy="75.4" r="4" fill="var(--series-2)" stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">4.18 美元</span><span class="glab" style="top:calc(90.3% + 4px)">3.81 美元</span></div><div class="lxaxis"><span>2026-01-05</span><span><b>3.96 美元</b>　2026-08-03</span></div></div></div>
       <p class="hint" style="margin-top:10px">
         汽油是 CPI 能源項裡權重最大的一塊，也是消費者最有感的價格。
         它落後原油約兩到四週。</p>
@@ -810,30 +772,6 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
   document.addEventListener('mouseout',function(e){
     if(t&&e.target.closest('[data-tip]'))t.style.opacity=0;
   });
-  // 主題：預設跟隨系統，手動切換後記住選擇（跨頁不重置）。
-  // 首次套用在 <head> 的前置腳本做，這裡只負責按鈕與同步。
-  var btn=document.getElementById('themeBtn');
-  function label(){
-    if(!btn)return;
-    var dark=document.documentElement.getAttribute('data-theme')==='dark';
-    btn.textContent=dark?'淺色':'深色';
-  }
-  label();
-  if(btn){btn.addEventListener('click',function(){
-    var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-    document.documentElement.setAttribute('data-theme',next);
-    try{localStorage.setItem('theme',next);}catch(e){}
-    label();
-  });}
-  // 未手動選擇過時，跟著系統即時切換
-  try{
-    if(!localStorage.getItem('theme')&&window.matchMedia){
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
-        document.documentElement.setAttribute('data-theme',e.matches?'dark':'light');
-        label();
-      });
-    }
-  }catch(e){}
 })();
 </script>
 </body>

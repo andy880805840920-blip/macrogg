@@ -136,19 +136,27 @@ debt:
 #    大型供給方的時點。
 # ---------------------------------------------------------------------------
 hyperscalers:
+  # 資料改為自 SEC EDGAR XBRL 自動擷取（10-Q／10-K 的原始申報標記），
+  # 不再手動維護。每家的 cik 是 SEC 的公司代號，不會變動。
+  #
+  # auto: false 可強制改用下方的手動值（例如 SEC 改版時暫時停用）。
+  # 抓取失敗的公司會自動退回自己的手動值，並讓頁面標示「未驗證」。
+  auto: true
   as_of: "2026Q2"
-  source: "各公司 10-Q 現金流量表；發債金額取自公司債發行公告"
-  verified: false          # 下方為示範值，正式使用前請對照財報更新
+  source: "SEC EDGAR XBRL（各公司 10-Q 現金流量表原始申報標記）"
+  verified: false          # 由程式依實際抓取結果覆寫
   companies:
     - name: Microsoft
       ticker: MSFT
-      capex: 27.4
+      cik: 789019
+      capex: 27.4          # 以下為 SEC 抓取失敗時的後備值（十億美元）
       capex_yoy: 41.0
       ocf: 41.2
       revenue: 79.8
       debt_issued: 0.0
     - name: Alphabet
       ticker: GOOGL
+      cik: 1652044
       capex: 26.1
       capex_yoy: 52.0
       ocf: 38.9
@@ -156,6 +164,7 @@ hyperscalers:
       debt_issued: 12.5
     - name: Amazon
       ticker: AMZN
+      cik: 1018724
       capex: 32.8
       capex_yoy: 34.0
       ocf: 34.1
@@ -163,6 +172,7 @@ hyperscalers:
       debt_issued: 15.0
     - name: Meta
       ticker: META
+      cik: 1326801
       capex: 22.6
       capex_yoy: 68.0
       ocf: 26.4
@@ -170,6 +180,7 @@ hyperscalers:
       debt_issued: 30.0
     - name: Oracle
       ticker: ORCL
+      cik: 1341439
       capex: 14.9
       capex_yoy: 82.0
       ocf: 8.7

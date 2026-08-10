@@ -28,7 +28,11 @@ def rates_body(d: dict) -> str:
         ratio = c.get("capex_to_ocf")
         ratio_txt = "—" if ratio is None else f"{ratio:.0f}%"
         cls = "neg" if c.get("cash_negative") else ""
-        return (f'<tr><td>{esc(c["name"])}</td>'
+        # 期末日逐家標示：各家會計年度不同，同一列的「最新一季」不是同一季
+        pe = c.get("period_end") or ""
+        name = (f'{esc(c["name"])}<span class="dnote">{esc(pe)}</span>'
+                if pe else esc(c["name"]))
+        return (f'<tr><td>{name}</td>'
                 f'<td>{c["capex"] * 10:,.0f}</td>'
                 f'<td class="muted-cell">{yoy_txt}</td>'
                 f'<td class="muted-cell">{c["ocf"] * 10:,.0f}</td>'
@@ -40,10 +44,11 @@ def rates_body(d: dict) -> str:
     unverified = ""
     if not hs.verified:
         unverified = ('<div class="warnbox" style="margin-top:14px">'
-                      '<b>尚未對照財報</b><br>'
-                      '目前為示範值。請依各公司 10-Q 現金流量表更新 '
-                      '<code>config/rates.yaml</code> 的 hyperscalers 段落，'
-                      '一季一次。</div>')
+                      '<b>部分數字未取自 SEC</b><br>'
+                      '正常情況下這一區的數字由 SEC EDGAR 的 XBRL 申報自動擷取。'
+                      '本次有公司抓取失敗（或設定為離線／手動模式），'
+                      '該公司改用 <code>config/rates.yaml</code> 的後備值，'
+                      '失敗原因列在頁面底部。</div>')
 
     return f"""
 <div class="verdict {lean_cls}">

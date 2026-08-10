@@ -49,6 +49,8 @@ OUT_DIR = ROOT / "output"
 # 快照要進 git，這樣 GitHub Actions 上跑也比得出「跟上期的差異」
 STATE_FILE = ROOT / "state" / "snapshot.json"
 HISTORY_START = "2015-01-01"
+SAVE_FIXTURES = False
+REAL_MODULES: list[str] = []
 FOMC_YEARS_BACK = 4
 
 
@@ -92,10 +94,54 @@ RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt"
 # ---------------------------------------------------------------------------
 # 擷取
 # ---------------------------------------------------------------------------
+# 正式執行時存下的真實序列快照。離線模式優先讀這裡，
+# 讀不到才退回程式生成的示範序列。
+FIXTURE_DIR = ROOT / "fixtures"
+
+
+def _fixture_path(module: str):
+    return FIXTURE_DIR / f"{module}.json"
+
+
+def save_real_fixtures(module: str, series: dict, vintages: dict) -> None:
+    """把這次抓到的真實資料存成離線素材。"""
+    FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "saved_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "module": module,
+        "series": series,
+        "vintages": vintages or {},
+    }
+    _fixture_path(module).write_text(
+        json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    log.info("已存下 %s 模組的真實資料快照（%d 個序列）→ %s",
+             module, len(series), _fixture_path(module))
+
+
+def _load_real_fixtures(module: str):
+    """回傳 (series, vintages, saved_at) 或 None。"""
+    p = _fixture_path(module)
+    if not p.exists():
+        return None
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+        return d.get("series") or {}, d.get("vintages") or {}, d.get("saved_at", "")
+    except Exception as e:                        # noqa: BLE001
+        log.warning("讀取 %s 失敗（%s），改用生成的示範資料", p, e)
+        return None
+
+
 def gather_fred(offline: bool, ids: list[str], module: str,
                 vintage_ids: tuple[str, ...] = ()):
     """回傳 (series, vintages, failed)"""
     if offline:
+        real = _load_real_fixtures(module)
+        if real:
+            series, vintages, saved_at = real
+            log.info("%s 模組：使用 %s 存下的真實資料快照", module, saved_at[:16])
+            REAL_MODULES.append({"labor": "勞動", "inflation": "通膨",
+                                 "rates": "長端"}.get(module, module))
+            return series, vintages, []
         if module == "labor":
             from src import fixtures
             return fixtures.build(), fixtures.build_vintages(), []
@@ -129,7 +175,35 @@ def gather_fred(offline: bool, ids: list[str], module: str,
 
     store.finish_run(run_id, client.failed)
     store.close()
+    if SAVE_FIXTURES:
+        save_real_fixtures(module, series, vintages)
     return series, vintages, client.failed
+
+
+def gather_hyperscalers(cfg: dict, offline: bool) -> list:
+    """
+    用 SEC EDGAR 就地覆寫 config 的 hyperscalers 數字。回傳失敗清單。
+
+    離線模式或 auto:false 時完全不動 config，直接用手動值。
+    抓取成功的公司會被換成 SEC 的實際申報值，並把 verified 設為 True——
+    畫面上的「尚未對照財報」警示因此只會在真的沒對照時出現。
+    """
+    hs = cfg.get("hyperscalers") or {}
+    if offline or not hs.get("auto", False) or not hs.get("companies"):
+        return []
+    from src.sec import SecClient, fetch_hyperscalers
+    client = SecClient()
+    log.info("科技巨頭：向 SEC EDGAR 擷取 %d 家的最新一季財報",
+             len(hs["companies"]))
+    comps, as_of, verified = fetch_hyperscalers(hs, client)
+    hs["companies"] = comps
+    hs["as_of"] = as_of or hs.get("as_of", "")
+    hs["verified"] = verified
+    if verified:
+        log.info("科技巨頭完成：資料截至 %s，全部來自 SEC 申報", hs["as_of"])
+    else:
+        log.warning("科技巨頭：部分公司抓取失敗，該公司改用 config 的手動值")
+    return client.failed
 
 
 def gather_fomc(offline: bool, fetch_cfg: dict):
@@ -166,7 +240,8 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         p.write_text(content, encoding="utf-8")
         written.append(p)
 
-    banner = labor_page.offline_banner() if offline else ""
+    banner = (labor_page.offline_banner(ctxs.get("_real_modules") or [])
+              if offline else "")
     lab, inf, fom, scn = (ctxs.get("labor"), ctxs.get("inflation"),
                           ctxs.get("fomc"), ctxs.get("scenario"))
     if only:
@@ -191,7 +266,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             footer=infl_page.inflation_footer(inf), banner=banner)
         write("inflation/index.html", html)
         write(f"archive/inflation-{inf['data_month']}/index.html", html)
-    elif not only:
+    elif not only or not (OUT_DIR / "inflation/index.html").exists():
         write("inflation/index.html", site.soon_page(
             "通膨", "/inflation/", "設定檔 config/inflation.yaml 未載入。", "P2"))
 
@@ -201,7 +276,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             "聯準會文本", "/fomc/", fomc_page.fomc_body(fom),
             subtitle=(f"最新聲明 {fom['latest_date']}　·　更新於 {fom['generated_at']}"),
             footer=fomc_page.fomc_footer(fom), banner=banner))
-    elif not only:
+    elif not only or not (OUT_DIR / "fomc/index.html").exists():
         write("fomc/index.html", site.soon_page(
             "聯準會文本", "/fomc/",
             "尚未取得任何聲明文本。正式執行時會從 federalreserve.gov 抓取近四年的會後聲明。",
@@ -209,6 +284,11 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     # ---- 長端利率與債務 ----
     rts = ctxs.get("rates")
+    if not rts and not (OUT_DIR / "rates/index.html").exists():
+        # 沒有這一頁時導覽列會點出 404，所以至少要有佔位頁
+        write("rates/index.html", site.soon_page(
+            "長端與債務", "/rates/",
+            "設定檔 config/rates.yaml 未載入，或本次為局部重跑。", "P5"))
     if rts:
         write("rates/index.html", site.page(
             "長端與債務", "/rates/", rates_page.rates_body(rts),
@@ -217,15 +297,24 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             footer=rates_page.rates_footer(rts), banner=banner))
 
     # ---- 情境合成 ----
+    if not scn and not (OUT_DIR / "scenario/index.html").exists():
+        write("scenario/index.html", site.soon_page(
+            "情境合成", "/scenario/",
+            "情境合成需要勞動與通膨模組同時就緒；本次為局部重跑，尚未產生。", "P4"))
     if scn:
         write("scenario/index.html", site.page(
             "情境合成", "/scenario/", scen_page.scenario_body(scn),
             subtitle=f"{scn['as_of']}　·　更新於 {scn['generated_at']}",
             footer=scen_page.scenario_footer(scn), banner=banner))
 
-    # ---- 首頁與全站頁（局部重跑時不動，避免用殘缺 context 產生降級結論）----
-    if only:
+    # ---- 首頁與全站頁 ----
+    # 局部重跑原則上不動這些頁（避免用殘缺 context 產生降級結論），
+    # 但頁面若根本還不存在（第一次就下 --only），不寫的話整站 404、
+    # 導覽列全部點不動。所以改成「已存在才跳過」。
+    if only and (OUT_DIR / "index.html").exists():
         return written
+    if only:
+        log.info("首次執行即使用 --only：仍產生首頁與存檔頁，避免全站連結失效")
 
     write("index.html", site.page(
         "美國總經儀表板", "/", home_page.home_body(ctxs),
@@ -263,7 +352,15 @@ def main() -> int:
                     help="只跑指定模組")
     ap.add_argument("--open", action="store_true", help="產出後開啟")
     ap.add_argument("--json", action="store_true", help="額外輸出 latest.json")
+    ap.add_argument("--save-fixtures", action="store_true",
+                    help="把這次抓到的真實資料存成離線素材（供 --offline 使用）")
     args = ap.parse_args()
+
+    global SAVE_FIXTURES
+    SAVE_FIXTURES = args.save_fixtures
+    if SAVE_FIXTURES and args.offline:
+        log.error("--save-fixtures 需要抓真實資料，不能與 --offline 併用")
+        return 1
 
     if not args.offline and not os.environ.get("FRED_API_KEY"):
         log.error("找不到 FRED_API_KEY。請先 export FRED_API_KEY=...，"
@@ -313,6 +410,8 @@ def main() -> int:
             ids, labels, inverts = series_ids(cfg, RATES_GROUPS)
             log.info("長端模組：%d 個序列", len(ids))
             series, _, failed = gather_fred(args.offline, ids, "rates")
+            # 科技巨頭的財報改由 SEC EDGAR 自動擷取，就地覆寫 cfg
+            failed = failed + gather_hyperscalers(cfg, args.offline)
             all_failed += failed
             ctxs["rates"] = build.build_rates_context(
                 cfg, series, failed, args.offline)
@@ -355,6 +454,7 @@ def main() -> int:
         ctxs["changes"] = chg.compare(cur_snap, prev_snap)
         log.info("變化摘要：%s", ctxs["changes"].headline)
 
+    ctxs["_real_modules"] = REAL_MODULES
     written = write_site(ctxs, args.offline, only=args.only)
     if not args.only:
         chg.save(STATE_FILE, cur_snap)
@@ -362,7 +462,13 @@ def main() -> int:
     if all_failed:
         log.warning("有 %d 個資料來源抓取失敗，詳見頁面底部清單", len(all_failed))
 
-    if args.json:
+    # latest.json 是給其他程式吃的，代表全站狀態。局部重跑的 context 殘缺
+    # （缺的模組會退回預設值），寫下去會用一份方向可能相反的情境覆蓋掉
+    # 正確的舊檔——HTML 那邊已經擋了，這裡也要擋。
+    if args.json and args.only:
+        log.info("局部重跑（--only %s）：跳過 latest.json，避免覆蓋成殘缺狀態",
+                 args.only)
+    elif args.json:
         out = {"generated_at": dt.datetime.now().isoformat(timespec="seconds")}
         if ctxs.get("labor"):
             l = ctxs["labor"]

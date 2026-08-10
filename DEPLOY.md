@@ -210,7 +210,6 @@ run.py
 | 項目 | 檔案 | 頻率 | 來源 |
 |---|---|---|---|
 | 市場預期 | `config/consensus.yaml` | 每次數據發布前 | 券商調查 |
-| Hyperscaler 財報 | `config/rates.yaml` | 一季（財報後） | 各公司 10-Q |
 | 投資級季度發行量 | `config/rates.yaml` | 一季 | SIFMA |
 | CPI 相對重要性權重 | `config/inflation.yaml` | 一年（每年一月） | BLS |
 

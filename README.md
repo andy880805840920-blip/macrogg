@@ -96,6 +96,7 @@ src/
   fomc_source.py           # federalreserve.gov 聲明擷取
   store.py                 # SQLite，保留每次執行的快照
   fmt.py                   # 數字格式化（統一用「萬人」）
+  sec.py                   # SEC EDGAR XBRL 擷取（科技巨頭財報）
   charts.py                # HTML 長條與 SVG 走勢圖（無外部相依）
   site.py                  # 版面、導覽列、CSS ← 加新分頁改這裡
   build.py                 # 資料 → 畫面用結構（每個模組一個函式）
@@ -264,11 +265,24 @@ Netlify 不執行任何 build，理由有三：API key 只留在 GitHub secrets�
 供給壓力分數由四項加總（期限溢酬、財政缺口、科技巨頭融資缺口、投資級利差），
 每一項的貢獻都列出來，不做成黑箱。
 
-**科技巨頭那一段是手動維護的**，沒有免費 API。每季更新 `config/rates.yaml`
-的 `hyperscalers` 段落，數字取自各公司 10-Q 現金流量表（資本支出、營運現金流、
-營收）與公司債發行公告，單位填**十億美元**（頁面上會自動換算成億美元顯示）。
-更新完把 `verified` 改成 `true`，頁面上的「尚未對照財報」警示才會消失。
-`ig_market.quarterly_issuance` 同樣要每季更新（來源：SIFMA 季度投資級發行統計）。
+**科技巨頭改為自動擷取**。資料來自 SEC EDGAR 的 XBRL API——那是各公司
+自己申報的原始標記，免費、無需金鑰、每季自動更新，且每筆都能回溯到具體的
+10-Q 文件編號。`config/rates.yaml` 只需維護 `cik`（SEC 公司代號，不會變動）。
+
+實作上有三個坑必須處理，都在 `src/sec.py` 裡：
+
+1. **10-Q 現金流量表多半是「年初至今累計」而非單季**。直接取用會高估兩三倍。
+   程式優先取本來就是單季的標記，沒有的話用同一會計年度相鄰兩筆累計值相減還原。
+   累計序列的第一筆本身就是 89 天、看起來像單季，所以兩種來源必須**合併**
+   而不是二選一，否則最新一季會停在很久以前。
+2. **各家標記不同**。亞馬遜的資本支出標 `PaymentsToAcquireProductiveAssets`，
+   其餘四家標 `PaymentsToAcquirePropertyPlantAndEquipment`。每個指標都備一組
+   候選標記依序嘗試。
+3. **會計年度起點不同**（微軟 6 月底、甲骨文 5 月底、其餘曆年），
+   所以「最新一季」對各家是不同期間，表格逐列標出期末日，不假裝是同一季。
+
+抓取失敗的公司會退回 config 的後備值，並在頁面上明確標示。
+`ig_market.quarterly_issuance` 仍需每季手動更新（來源：SIFMA 季度投資級發行統計）。
 
 關鍵比率是 `capex ÷ ocf`：超過 100% 代表自由現金流轉負，擴張必須靠舉債——
 那正是這幾家從現金充裕的買方，變成投資級市場大型供給方的轉折點。
@@ -292,11 +306,16 @@ Netlify 不執行任何 build，理由有三：API key 只留在 GitHub secrets�
   且必須標明來源；沒有來源時面板會顯示「無預期資料」，不會拿模型推估冒充市場預期。
 - **綜合分數的權重是暫定值**，尚未由歷史迴歸校準（哪個指標的意外真的移動了利率定價）。
 - **擴散指數（diffusion index）未納入**，FRED 覆蓋不完整，需改走 BLS API。
-- **hyperscaler 財報是手動維護的**，一季更新一次，見上方模組說明。
 - **CPI 權重每年一月要重新校準**，BLS relative importance 表更新後不同步會讓貢獻度失真。
 - **市場隱含機率尚未接入**。規劃使用亞特蘭大聯準銀行的 Market Probability Tracker。
-- **示範資料不可用於研究**。標題數字取自 2026 年 7 月實際值，但部分細項為生成值。
-  離線模式的頁面頂端一律會掛上警示條。
+- **離線示範資料分兩類**。聯準會聲明與記者會逐字稿是 federalreserve.gov 的
+  **真實原文**（2026 年 1、3、4、6、7 月共五次會議）；FRED 的時間序列則是
+  程式生成的示範序列，統計特性接近真實但個別數值非實際發布值。
+
+  要讓離線預覽也用真實序列，執行一次 `python run.py --save-fixtures`
+  （需要 FRED key，通常在 GitHub Actions 上跑），它會把當次抓到的真實資料
+  存成 `fixtures/*.json`；之後 `--offline` 會優先讀這些快照，
+  頁面上的警示條也會跟著標明哪些模組是真實資料。
 
 ---
 
@@ -304,7 +323,6 @@ Netlify 不執行任何 build，理由有三：API key 只留在 GitHub secrets�
 
 | 項目 | 檔案 | 頻率 | 來源 |
 |---|---|---|---|
-| Hyperscaler 資本支出／發債 | `config/rates.yaml` | 一季（財報後） | 各公司 10-Q |
 | 投資級季度發行量 | `config/rates.yaml` | 一季 | SIFMA |
 | CPI 相對重要性權重 | `config/inflation.yaml` | 一年（每年一月） | BLS relative importance |
 | 市場預期 | `config/consensus.yaml` | 每次數據公布前 | 券商調查 |

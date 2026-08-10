@@ -121,6 +121,7 @@ class Scenario:
     verdict_name: str = ""
     verdict_desc: str = ""
     overridden: bool = False                    # 結論是否被反應函數改寫過
+    positioning_note: str = ""                  # 部位對照與修正後結論的落差說明
 
 
 # 反應函數改寫方向之後的標題。(原方向, 修正後方向) → (標題, 說明)
@@ -272,13 +273,24 @@ def synthesise(labor: dict | None, inflation: dict | None,
             (base_lean, lean),
             (name, desc))
 
+    # 部位對照表是按**九宮格原始格名**建的。方向被改寫時它就不再對應
+    # 最終結論——「降息受阻／中性」底下擺著「存續期間偏長」這種降息部位，
+    # 兩者直接打架。表格保留（它仍是原始情境的完整框架），但要明講落差。
+    pos_note = ""
+    if overridden:
+        pos_note = (
+            f"下表對應的是九宮格原始定位「{name}」。聯準會目前以"
+            f"{'通膨' if binding == '通膨' else '就業'}為優先，最終結論已修正為"
+            f"「{v_name}」，所以實際部位方向應該比下表更靠近中性——"
+            "下表可視為「若重心轉回另一邊會走向哪裡」的對照。")
+
     sc = Scenario(labor_state=l_state, infl_state=i_state, name=name,
                   description=desc, lean=lean,
                   positioning=dict(POSITIONING.get(name, {})),
                   incomplete=incomplete,
                   focus=focus, focus_note=focus_note, binding=binding,
                   verdict_name=v_name, verdict_desc=v_desc,
-                  overridden=overridden)
+                  overridden=overridden, positioning_note=pos_note)
 
     # ---- 推動這個判定的主要因素 ----
     for f in (labor or {}).get("flags", [])[:2]:

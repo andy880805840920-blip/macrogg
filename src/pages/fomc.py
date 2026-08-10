@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import re
 
-from .. import charts
 from ..site import esc
 
 
@@ -72,7 +71,14 @@ def _votes(vote: dict) -> str:
         chips.append(f'<span class="vchip {d["direction"]}">'
                      f'{esc(d["name"])}　{word}</span>')
     if not chips:
-        chips.append('<span class="vchip">全體一致，沒有反對票</span>')
+        # 引言載明有反對票、名單卻解析不出來時，
+        # 不能顯示「全體一致」——那是把解析失敗謊報成事實
+        stated = vote.get("stated_dissent")
+        if stated:
+            chips.append(f'<span class="vchip">聲明載明 {stated} 張反對票，'
+                         '名單解析失敗，請以原文為準</span>')
+        else:
+            chips.append('<span class="vchip">全體一致，沒有反對票</span>')
     return f'<div class="votes">{"".join(chips)}</div>'
 
 
@@ -187,15 +193,28 @@ def fomc_body(d: dict) -> str:
             for t in ps.get("topics", [])
         ) or '<div class="empty">逐字稿中找不到可歸類的段落</div>'
 
-        # 分數來源句：把命中的詞標出來，讓分數可以被回推
+        # 分數來源句：把命中的詞標出來，讓分數可以被回推。
+        # 標色分兩步：先把命中片段換成不含英文字母的占位符（長詞優先），
+        # 全部換完才展開成 <mark>。不能邊換邊插 <mark>——
+        # 後續的子詞（"elevated"）會命中已插入的
+        # <mark>remains elevated</mark> 內部，產生巢狀錯標。
         score_html = ""
         for ln in ps.get("score_lines", []):
-            marked = esc(ln["text"])
-            for h in sorted(ln["hits"], key=lambda x: -len(x["term"])):
-                cls = "mn" if h["tag"] == "hawk" else "mo"
-                marked = re.sub(
-                    r"(?i)(?<![a-z])(" + re.escape(esc(h["term"])) + r")(?![a-z])",
-                    rf'<mark class="{cls}">\1</mark>', marked, count=1)
+            src_text = ln["text"]
+            tokens: dict[str, tuple[str, str]] = {}   # 占位符 → (原文, css class)
+            for i, h in enumerate(sorted(ln["hits"], key=lambda x: -len(x["term"]))):
+                tok = f"\x01{i}\x02"
+                pat = re.compile(r"(?i)(?<![a-z])(" + re.escape(h["term"]) + r")(?![a-z])")
+                m = pat.search(src_text)
+                if not m:
+                    continue
+                tokens[tok] = (m.group(1),
+                               "mn" if h["tag"] == "hawk" else "mo")
+                src_text = src_text[:m.start()] + tok + src_text[m.end():]
+            marked = esc(src_text)
+            for tok, (orig, cls) in tokens.items():
+                marked = marked.replace(
+                    tok, f'<mark class="{cls}">{esc(orig)}</mark>')
             tags = "　".join(
                 f'{h["term"]}（{"鷹" if h["tag"] == "hawk" else "鴿"} {h["weight"]:.1f}）'
                 for h in ln["hits"])

@@ -234,6 +234,9 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
             "capex_yoy": c.get("capex_yoy"),
             "capex_to_ocf": ratio,
             "cash_negative": ratio is not None and ratio > 100,
+            # 各家會計年度起點不同（微軟 6 月底、甲骨文 5 月底、其餘曆年），
+            # 所以「最新一季」的期末日必須逐家標示，不能假裝是同一季
+            "period_end": c.get("period_end", ""),
         })
 
     if h.total_capex:
