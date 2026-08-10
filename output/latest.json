@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T13:34:38",
+  "generated_at": "2026-08-10T14:29:04",
   "labor": {
     "month": "2026-07",
     "score": -0.1989694078749631,
@@ -88,7 +88,8 @@
     ]
   },
   "scenario": {
-    "name": "轉向降息",
+    "name": "降息受阻",
+    "grid_name": "轉向降息",
     "labor": "弱",
     "inflation": "中",
     "lean": "neutral"
