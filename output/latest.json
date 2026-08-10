@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T11:55:45",
+  "generated_at": "2026-08-10T12:53:19",
   "labor": {
     "month": "2026-07",
     "score": -0.1989694078749631,
@@ -47,9 +47,9 @@
   "inflation": {
     "month": "2026-06",
     "tilt": {
-      "dovish": 4.0,
+      "dovish": 3.0,
       "hawkish": 3.0,
-      "net": -1.0,
+      "net": 0.0,
       "tilt": "balanced"
     },
     "flags": [
@@ -76,14 +76,6 @@
         "detail": "核心 CPI 年增 2.8%，但把住房剔除後只有 2.3%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。",
         "lean": "dovish",
         "impact": "實際通膨比表面低"
-      },
-      {
-        "key": "narrow_inflation",
-        "severity": "watch",
-        "headline": "核心高於中位數，漲價集中於少數項目",
-        "detail": "核心 CPI 2.8%，但中位數只有 2.1%。多數項目其實漲得不多，是少數幾項把平均拉上去的。",
-        "lean": "dovish",
-        "impact": "通膨集中在少數項目"
       },
       {
         "key": "oil_up",
