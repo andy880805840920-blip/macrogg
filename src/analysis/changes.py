@@ -65,7 +65,10 @@ def snapshot(ctxs: dict) -> dict:
     scn = ctxs.get("scenario")
     if scn:
         sc = scn["scenario"]
-        snap["scenario"] = {"name": sc.name, "labor": sc.labor_state,
+        # 比對用修正後的結論——反應函數從「通膨優先」翻成「就業優先」時，
+        # 格位沒動但結論已經翻轉，那正是最該被報出來的變化。
+        snap["scenario"] = {"name": sc.verdict_name or sc.name,
+                            "grid_name": sc.name, "labor": sc.labor_state,
                             "inflation": sc.infl_state}
     return snap
 

@@ -16,7 +16,11 @@ def _grid(cells) -> str:
         label = row[0]["labor"]
         rows.append(f'<div class="axis row">就業{esc(label)}</div>')
         for c in row:
-            badge = '<div class="sbadge">目前位置</div>' if c["current"] else ""
+            badge = ""
+            if c["current"]:
+                badge = '<div class="sbadge">目前位置</div>'
+                if c.get("overridden"):
+                    badge += ('<div class="sbadge alt">結論已依重心修正</div>')
             rows.append(
                 f'<div class="scell {c["lean"]}{" on" if c["current"] else ""}">'
                 f'<div class="sname">{esc(c["name"])}</div>'
@@ -130,17 +134,26 @@ def scenario_body(d: dict) -> str:
   </div>
 </div>"""
 
+    # 方向被反應函數改寫時，標題用修正後的結論，並把原始格位另外標明，
+    # 讀者才不會看到「標題寫轉向降息、傾向卻是中性」這種矛盾。
+    override_line = ""
+    if sc.overridden:
+        override_line = (
+            f'<div class="v-count" style="border-top:none;padding-top:0;'
+            f'margin-top:10px">九宮格原始定位是「{esc(sc.name)}」'
+            f'（就業{esc(sc.labor_state)} × 通膨{esc(sc.infl_state)}），'
+            f'已依聯準會目前重心「{esc(focus.get("label", ""))}」修正為上方的結論。</div>')
+
     return f"""
 <div class="verdict {sc.lean}">
   <div class="v-eyebrow">{esc(d['as_of'])}　·　目前情境</div>
-  <div class="v-main">{esc(sc.name)}</div>
-  <div class="v-why">{esc(sc.description)}</div>
+  <div class="v-main">{esc(sc.verdict_name or sc.name)}</div>
+  <div class="v-why">{esc(sc.verdict_desc or sc.description)}</div>
+  {override_line}
   {fomc_note}
   <div class="v-count">
     定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
-    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}
-    {('（已依聯準會目前重心「' + esc(focus.get('label', '')) + '」修正）')
-     if sc.focus_note and focus.get('label') else ''}<br>
+    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}<br>
     這裡刻意不給機率。機率市場早就定價了，有價值的是「我的判讀跟市場定價差在哪」。
   </div>
   {incomplete}

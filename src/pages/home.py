@@ -111,13 +111,19 @@ def home_body(ctxs: dict) -> str:
             incomplete = (f'⚠️ 以下模組尚無資料，結論並不完整：'
                           f'{esc("、".join(sc.incomplete))}。')
         drivers = "<br>".join(esc(x) for x in sc.drivers[:3])
+        # 結論被反應函數改寫時，首頁標題也要用修正後的版本
+        ovr = ""
+        if getattr(sc, "overridden", False):
+            ovr = (f'<br>九宮格原始定位「{esc(sc.name)}」，'
+                   f'已依聯準會目前重心'
+                   f'「{esc((sc.focus or {}).get("label", ""))}」修正。')
         hero = f"""<div class="verdict {lean_cls}">
   <div class="v-eyebrow">{esc((scn or {}).get('as_of', ''))}　·　目前情境</div>
-  <div class="v-main">{esc(sc.name)}</div>
-  <div class="v-why">{esc(sc.description)}</div>
+  <div class="v-main">{esc(sc.verdict_name or sc.name)}</div>
+  <div class="v-why">{esc(sc.verdict_desc or sc.description)}</div>
   <div class="v-count">
     定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
-    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}
+    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}{ovr}
     {('<br>' + drivers) if drivers else ''}
     {('<br>' + incomplete) if incomplete else ''}
   </div>
@@ -193,7 +199,7 @@ def home_body(ctxs: dict) -> str:
     if sc:
         cards.append(_module_card(
             "/scenario/", "情境合成", "即時",
-            sc.name,
+            sc.verdict_name or sc.name,
             f"就業{sc.labor_state} × 通膨{sc.infl_state}　·　"
             f"{LEAN_TEXT.get(sc.lean, '')}",
             "看九宮格定位與觸發距離"))

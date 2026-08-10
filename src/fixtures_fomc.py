@@ -98,14 +98,32 @@ STATEMENTS = [
             "Voting against this action were Beth M. Hammack, Neel Kashkari and "
             "Lorie K. Logan, who preferred to raise the target range by 25 basis points."
         ),
+        # 示範用逐字稿。長度與結構刻意做得接近真實（開場 + 問答），
+        # 這樣離線預覽才看得出主題分類與分數來源句的實際樣子。
         "presser": (
-            "The markets have done quite a bit even as we have done little over the past "
-            "42 days. Removing forward guidance allows market attention to be centered on "
-            "real data rather than on our own commentary. We are just trying to make sure "
-            "that that source of information is as direct and unfiltered as possible. "
+            "CHAIR WARSH. Good afternoon. The markets have done quite a bit even as we "
+            "have done little over the past 42 days. Removing forward guidance allows "
+            "market attention to be centered on real data rather than on our own "
+            "commentary. We are just trying to make sure that that source of information "
+            "is as direct and unfiltered as possible. "
             "Inflation remains elevated and the Committee will be patient in assessing "
-            "whether further policy firming is warranted. We are not on a preset course. "
-            "Financial conditions have eased and that is a consideration for us."
+            "whether further policy firming is warranted. We will deliver price stability "
+            "and we are resolute about returning to our 2 percent objective. "
+            "The labor market has cooled somewhat; job gains have slowed but the "
+            "unemployment rate has changed little, and we do not see downside risks to "
+            "employment as the binding constraint today. "
+            "We decided to maintain the target range for the federal funds rate, and "
+            "policy remains restrictive, which we judge appropriate for some time. "
+            "We are continuing to allow our securities holdings to run off while "
+            "maintaining ample reserves in the banking system. "
+            "I am happy to take your questions. "
+            "REPORTER. Three of your colleagues dissented in favor of a hike. How close "
+            "was the decision? "
+            "CHAIR WARSH. There was a robust discussion. We are not on a preset course, "
+            "and financial conditions have eased, which is a consideration for us. "
+            "REPORTER. What would it take to cut? "
+            "CHAIR WARSH. We would need greater confidence that inflation has moderated "
+            "on a sustained basis before moving to a less restrictive stance."
         ),
     },
 ]

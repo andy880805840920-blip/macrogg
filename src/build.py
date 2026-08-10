@@ -645,13 +645,19 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
         "diff_html": _diff_block(changed),
         "diff_full_html": _diff_block(rows, show_same=True),
         "changed_count": len(changed),
+        # 比對的是哪兩份要寫清楚——抓漏一份時比對對象會默默換掉，
+        # 不標出來的話讀者無從發現
+        "diff_pair": (prev.date if prev else None, latest.date),
+        "fetched_dates": [x.date for x in docs],
         "heatmap_html": _heatmap(fomc_text.phrase_matrix(docs)),
         "score_rows": score_rows,
         "hits_rows": "".join(hits) or '<tr><td colspan="3">本次沒有命中任何詞典用語</td></tr>',
         "presser_available": bool(presser),
         "presser_reason": statements[-1].get("presser_error") or "pending",
         "presser_score": latest.presser_score or 0,
-        "presser_excerpt": (presser[:900] + "…") if presser else "",
+        # 逐字稿不再切前 N 個字——那沒有資訊價值。改成依主題抽句，
+        # 外加「分數來源句」讓記者會措辭分數可追溯。
+        "presser_summary": fomc_text.summarise_presser(presser or ""),
         "docs": docs,
     }
 
@@ -737,7 +743,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         fomc["focus"] = fomc_ctx.get("focus") or {}
 
     sc = scenario.synthesise(labor, infl, fomc)
-    cells = scenario.grid_cells((sc.labor_state, sc.infl_state))
+    cells = scenario.grid_cells((sc.labor_state, sc.infl_state), sc.overridden)
 
     parts = []
     if labor_ctx:

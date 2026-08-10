@@ -115,6 +115,31 @@ class Scenario:
     focus: dict = field(default_factory=dict)   # 聯準會目前的重心
     focus_note: str = ""                        # 重心如何修正這一格的結論
     binding: str = ""                           # 目前的約束條件在哪一軸
+    # 修正後的結論。九宮格的格名是「座標」，反應函數修正過方向之後，
+    # 標題不能再沿用格名——否則會出現「標題寫轉向降息、傾向卻是中性」
+    # 這種自相矛盾的畫面。
+    verdict_name: str = ""
+    verdict_desc: str = ""
+    overridden: bool = False                    # 結論是否被反應函數改寫過
+
+
+# 反應函數改寫方向之後的標題。(原方向, 修正後方向) → (標題, 說明)
+#
+# 格子的名字只是座標，不是結論。「就業弱 × 通膨中」這一格叫「轉向降息」，
+# 但在通膨優先的體制下實際上降不了息——標題若還寫轉向降息，
+# 就會跟下面「政策傾向：中性」自相矛盾。
+OVERRIDE_COPY = {
+    ("dovish", "neutral"): (
+        "降息受阻",
+        "數據本身落在偏向降息的位置，但聯準會目前以通膨為優先。"
+        "在通膨回到目標附近之前，就業轉弱不會單獨換來降息——"
+        "所以實際上是「想降但還不能降」，不是真的要降。"),
+    ("hawkish", "neutral"): (
+        "升息受阻",
+        "數據本身落在偏向升息的位置，但聯準會目前以就業為優先。"
+        "勞動市場已經轉弱時，緊縮的門檻會明顯提高——"
+        "所以實際上是「該緊但不敢緊」，不是真的要升息。"),
+}
 
 
 # ---------------------------------------------------------------------------
@@ -239,11 +264,21 @@ def synthesise(labor: dict | None, inflation: dict | None,
     focus = (fomc or {}).get("focus") or {}
     lean, focus_note, binding = _apply_focus(l_state, i_state, base_lean, focus)
 
+    # 方向被改寫時，標題要跟著換掉——格名只是座標，不是結論
+    overridden = lean != base_lean
+    v_name, v_desc = name, desc
+    if overridden:
+        v_name, v_desc = OVERRIDE_COPY.get(
+            (base_lean, lean),
+            (name, desc))
+
     sc = Scenario(labor_state=l_state, infl_state=i_state, name=name,
                   description=desc, lean=lean,
                   positioning=dict(POSITIONING.get(name, {})),
                   incomplete=incomplete,
-                  focus=focus, focus_note=focus_note, binding=binding)
+                  focus=focus, focus_note=focus_note, binding=binding,
+                  verdict_name=v_name, verdict_desc=v_desc,
+                  overridden=overridden)
 
     # ---- 推動這個判定的主要因素 ----
     for f in (labor or {}).get("flags", [])[:2]:
@@ -313,15 +348,24 @@ def _triggers(labor: dict | None, inflation: dict | None,
     return out
 
 
-def grid_cells(current: tuple[str, str] | None = None) -> list[dict]:
-    """給畫面用的九宮格資料，列＝勞動由強到弱，欄＝通膨由低到高。"""
+def grid_cells(current: tuple[str, str] | None = None,
+               overridden: bool = False) -> list[dict]:
+    """
+    給畫面用的九宮格資料，列＝勞動由強到弱，欄＝通膨由低到高。
+
+    格子的名稱與說明是**固定的座標**，不隨反應函數改變——
+    它是一張地圖，地名不該每期換。方向被改寫時只在目前這一格標示，
+    完整的修正結論由結論卡負責。
+    """
     cells = []
     for l in reversed(LABOR_LEVELS):          # 強在上
         row = []
         for i in INFL_LEVELS:
             name, desc, lean = GRID[(l, i)]
+            is_cur = current == (l, i)
             row.append({"labor": l, "infl": i, "name": name,
                         "desc": desc, "lean": lean,
-                        "current": current == (l, i)})
+                        "current": is_cur,
+                        "overridden": is_cur and overridden})
         cells.append(row)
     return cells

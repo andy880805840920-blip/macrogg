@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from .. import charts
 from ..site import esc
 
@@ -81,13 +83,16 @@ def fomc_body(d: dict) -> str:
     lean_cls = {"hawkish": "hawkish", "dovish": "dovish"}.get(direction, "balanced")
 
     vote = d.get("vote") or {}
-    n_sup = len(vote.get("supporting", []))
-    n_dis = len(vote.get("dissents", []))
+    # 新版聲明把票數寫在開頭引言（「approved ... by a 9 – 3 vote」），
+    # 一致通過時那是唯一的票數來源，所以優先採用。
+    n_sup = vote.get("stated_support")
+    if n_sup is None:
+        n_sup = len(vote.get("supporting", []))
+    stated_dis = vote.get("stated_dissent")
+    n_dis = len(vote.get("dissents", [])) or (stated_dis or 0)
     hawk = sum(1 for x in vote.get("dissents", []) if x["direction"] == "hike")
     dove = sum(1 for x in vote.get("dissents", []) if x["direction"] == "cut")
 
-    # 2026 年 6 月起的新版聲明在有反對票時只列反對者、不列贊成名單，
-    # 這時 n_sup 會是 0——不能寫成「投票 0 比 3」，那是假的票數。
     if n_sup:
         head = f"投票 {n_sup} 比 {n_dis}"
     elif n_dis:
@@ -97,6 +102,9 @@ def fomc_body(d: dict) -> str:
     vote_line = (head
                  + (f"，其中 {hawk} 票主張升息" if hawk else "")
                  + (f"，{dove} 票主張降息" if dove else "")) if head else ""
+    if vote.get("mismatch"):
+        vote_line += ("　⚠ 引言票數與反對者名單不一致，"
+                      "可能是聲明格式改變，請以原文為準")
 
     verdict = f"""<div class="verdict {lean_cls}">
   <div class="v-eyebrow">{esc(d['latest_date'])} 會議　·　一句話結論</div>
@@ -159,22 +167,69 @@ def fomc_body(d: dict) -> str:
         focus_ev = ('<div class="src" style="border-top:none;padding-top:10px">'
                     '判定依據：' + esc("、".join(focus["evidence"])) + "</div>")
 
+    # 比對對象要寫明。若中間某份聲明抓失敗，比對對象會默默換成更早的一份，
+    # 不標出來讀者無從察覺「這兩份根本不是相鄰的兩次會議」。
+    pair = d.get("diff_pair") or (None, None)
+    diff_pair_note = ""
+    if pair[0]:
+        diff_pair_note = f"比對對象：{esc(pair[0])} → {esc(pair[1])} 的聲明。"
+        n = len(d.get("fetched_dates") or [])
+        if n:
+            diff_pair_note += f"本次共取得 {n} 份聲明。"
+
     presser_html = ""
     if d.get("presser_available"):
+        ps = d.get("presser_summary") or {}
+
+        topics_html = "".join(
+            f'<h3>{esc(t["name"])}</h3>'
+            + "".join(f'<div class="pline">{esc(s)}</div>' for s in t["sentences"])
+            for t in ps.get("topics", [])
+        ) or '<div class="empty">逐字稿中找不到可歸類的段落</div>'
+
+        # 分數來源句：把命中的詞標出來，讓分數可以被回推
+        score_html = ""
+        for ln in ps.get("score_lines", []):
+            marked = esc(ln["text"])
+            for h in sorted(ln["hits"], key=lambda x: -len(x["term"])):
+                cls = "mn" if h["tag"] == "hawk" else "mo"
+                marked = re.sub(
+                    r"(?i)(?<![a-z])(" + re.escape(esc(h["term"])) + r")(?![a-z])",
+                    rf'<mark class="{cls}">\1</mark>', marked, count=1)
+            tags = "　".join(
+                f'{h["term"]}（{"鷹" if h["tag"] == "hawk" else "鴿"} {h["weight"]:.1f}）'
+                for h in ln["hits"])
+            score_html += (f'<div class="drow2"><div class="dnew">{marked}</div>'
+                           f'<div class="dlabel2" style="margin:7px 0 0">'
+                           f'{esc(tags)}</div></div>')
+        score_html = score_html or '<div class="empty">本場沒有命中任何詞典用語</div>'
+
+        words = ps.get("opening_len", 0) + ps.get("qa_len", 0)
         presser_html = f"""
   <div class="card">
     <h2 id="presser">記者會</h2>
-    <p class="hint">會後記者會的逐字稿。市場的實際反應常常來自這裡，而不是聲明本身。</p>
+    <p class="hint">會後記者會的逐字稿。市場的實際反應常常來自這裡，而不是聲明本身。
+      下面依主題抽出逐字稿中的原句，不做改寫也不用模型——
+      每次執行抽到的句子完全一致。</p>
     <div class="stat-row">
       <div class="stat"><div class="s-label">記者會措辭分數</div>
         <div class="s-value">{d.get('presser_score', 0):+.2f}</div>
         <div class="s-note">與聲明用同一套詞典</div></div>
-      <div class="stat"><div class="s-label">取得狀態</div>
-        <div class="s-value" style="font-size:15px">已取得</div>
-        <div class="s-note">逐字稿為 PDF，會後數日發布</div></div>
+      <div class="stat"><div class="s-label">逐字稿長度</div>
+        <div class="s-value">{words:,} 字</div>
+        <div class="s-note">開場 {ps.get('opening_len', 0):,} ·
+          問答 {ps.get('qa_len', 0):,}</div></div>
     </div>
-    <details data-m-collapse><summary>逐字稿摘錄</summary>
-      <div class="dsame" style="margin-top:10px">{esc(d.get('presser_excerpt', ''))}</div>
+
+    <h3 style="margin-top:20px">各主題怎麼說</h3>
+    <p class="hint">開場聲明優先（那是準備稿），不足才從問答補。</p>
+    {topics_html}
+
+    <details data-m-collapse><summary>措辭分數是這幾句貢獻的</summary>
+      <p class="hint" style="margin:10px 0 8px">
+        藍色是鷹派詞、橘色是鴿派詞，括號內為權重。
+        分數 ＝ 命中詞加權後除以每百字，所以長度不同的逐字稿仍可比。</p>
+      {score_html}
     </details>
   </div>"""
     else:
@@ -230,7 +285,8 @@ def fomc_body(d: dict) -> str:
     {d['diff_html']}
     <details data-m-collapse><summary>含未改動段落的全文</summary>
       <div style="margin-top:10px">{d['diff_full_html']}</div></details>
-    <div class="src">本次共 {d['changed_count']} 處改動。原文為英文，未翻譯以免失真。</div>
+    <div class="src">{diff_pair_note}本次共 {d['changed_count']} 處改動。
+      原文為英文，未翻譯以免失真。</div>
   </div>
 
   <div class="card">

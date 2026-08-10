@@ -196,6 +196,103 @@ def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
 
 
 # ---------------------------------------------------------------------------
+# 記者會摘要
+# ---------------------------------------------------------------------------
+# 主題關鍵詞。逐字稿動輒上萬字，直接切前 N 個字沒有任何資訊價值；
+# 依主題抽句才讀得出「這場記者會對每個議題說了什麼」。
+PRESSER_TOPICS = [
+    ("通膨", ["inflation", "price stability", "2 percent", "prices"]),
+    ("就業", ["labor market", "employment", "unemployment", "job", "hiring"]),
+    ("利率路徑", ["target range", "rate cut", "rate hike", "policy rate",
+                  "restrictive", "accommodative", "neutral rate", "path"]),
+    ("資產負債表", ["balance sheet", "reserves", "runoff", "securities holdings",
+                    "ample reserves"]),
+]
+
+# 開場白與 Q&A 的分界。開場是準備稿、資訊密度最高；
+# Q&A 是即席回答，雜訊多但偶爾更有訊息量，所以分開處理而不是混在一起。
+_QA_MARKERS = [
+    r"happy to take your questions", r"take your questions",
+    r"glad to take your questions", r"we'?ll now take questions",
+    r"i'?ll now take your questions",
+]
+
+
+def _sentences_of(text: str) -> list[str]:
+    """切句。人名縮寫（"Kevin M. Warsh"）不能當句點，所以要求句號後接空白＋大寫。"""
+    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z])", text)
+    return [p.strip() for p in parts if len(p.strip()) > 40]
+
+
+def split_presser(text: str) -> tuple[str, str]:
+    """把逐字稿切成 (開場聲明, 問答)。找不到分界就整份當開場。"""
+    low = text.lower()
+    for pat in _QA_MARKERS:
+        m = re.search(pat, low)
+        if m:
+            return text[:m.end()].strip(), text[m.end():].strip()
+    return text, ""
+
+
+def summarise_presser(text: str, per_topic: int = 2) -> dict:
+    """
+    記者會逐字稿的確定性摘要。
+
+    做兩件事，都不用模型、每次跑結果一致：
+
+      1. 依主題（通膨／就業／利率路徑／資產負債表）抽出含關鍵詞的句子，
+         開場聲明優先——那是準備稿，比即席問答精確。
+      2. 列出「命中計分詞典」的句子，並標出命中的詞。
+         這一段的作用是讓記者會措辭分數**可追溯**：分數是這些句子貢獻的。
+
+    回傳 {"opening_len", "qa_len", "topics": [{name, sentences}], "score_lines": [...]}
+    """
+    if not text:
+        return {"topics": [], "score_lines": [], "opening_len": 0, "qa_len": 0}
+
+    opening, qa = split_presser(text)
+    open_s, qa_s = _sentences_of(opening), _sentences_of(qa)
+
+    topics = []
+    used: set[str] = set()
+    for name, keys in PRESSER_TOPICS:
+        picked = []
+        # 開場先挑，不夠再從問答補
+        for pool in (open_s, qa_s):
+            for s in pool:
+                if len(picked) >= per_topic:
+                    break
+                low = s.lower()
+                if any(k in low for k in keys) and s not in used:
+                    picked.append(s)
+                    used.add(s)
+            if len(picked) >= per_topic:
+                break
+        if picked:
+            topics.append({"name": name, "sentences": picked})
+
+    # 分數來源：命中詞典、且權重最高的幾句。
+    # 必須用 _count_tones（與計分同一套），它會處理重疊——
+    # 否則畫面上會同時列出 "restrictive" 與 "less restrictive"，
+    # 讀者照著加總會得到跟分數對不起來的數字。
+    score_lines = []
+    for s in (open_s + qa_s):
+        h_hits, d_hits = _count_tones(s.lower())
+        hits = ([{"term": k, "weight": HAWKISH[k], "tag": "hawk"} for k in h_hits]
+                + [{"term": k, "weight": DOVISH[k], "tag": "dove"} for k in d_hits])
+        if hits:
+            # 淨貢獻的絕對值大者優先——那才是真正推動分數的句子
+            net = (sum(HAWKISH[k] * v for k, v in h_hits.items())
+                   - sum(DOVISH[k] * v for k, v in d_hits.items()))
+            score_lines.append({"text": s, "hits": hits, "top": abs(net),
+                                "net": net})
+    score_lines.sort(key=lambda x: -x["top"])
+
+    return {"topics": topics, "score_lines": score_lines[:5],
+            "opening_len": len(opening.split()), "qa_len": len(qa.split())}
+
+
+# ---------------------------------------------------------------------------
 # 反應函數：聯準會目前把哪一邊的使命擺在前面
 # ---------------------------------------------------------------------------
 FOCUS_TEXT = {

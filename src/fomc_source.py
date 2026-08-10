@@ -53,19 +53,38 @@ CALENDAR_URL = BASE + "/monetarypolicy/fomccalendars.htm"
 VOTE_RE = re.compile(r"Voting\s+(?:for|against)\b", re.I)
 
 
+# 2026 年起的聲明在開頭就寫明票數：
+#   "The Federal Open Market Committee approved the following statement
+#    for release by a 9 – 3 vote:"
+# 這是**唯一**會出現在一致通過聲明裡的票數（一致時沒有 Voting 段落），
+# 所以不解析它就永遠只知道「沒有反對票」，不知道有幾個人投票。
+# 破折號有多種字元（-、‑、–、—），要一起收。
+# 主詞要一起吃掉，否則移除子句後會留下孤零零的
+# 「The Federal Open Market Committee」黏在本文最前面。
+PREAMBLE_VOTE_RE = re.compile(
+    r"(?:the\s+)?federal open market committee\s+"
+    r"approved the following statement for release by a\s*"
+    r"(\d+)\s*[-‐‑–—]\s*(\d+)\s*vote\s*:?\s*", re.I)
+
+
 @dataclass
 class Vote:
     supporting: list[str] = field(default_factory=list)
     dissents: list[dict] = field(default_factory=list)   # [{name, direction}]
     raw: str = ""
+    stated_support: int | None = None    # 聲明引言寫的贊成票數
+    stated_dissent: int | None = None    # 聲明引言寫的反對票數
+    mismatch: bool = False               # 引言票數與反對票名單不一致
 
     @property
     def n_support(self) -> int:
-        return len(self.supporting)
+        return self.stated_support if self.stated_support is not None \
+            else len(self.supporting)
 
     @property
     def n_dissent(self) -> int:
-        return len(self.dissents)
+        # 名單優先（有名字才知道方向）；一致通過時退回引言的數字
+        return len(self.dissents) or (self.stated_dissent or 0)
 
     @property
     def hawkish_dissents(self) -> int:
@@ -107,7 +126,15 @@ class FomcSource:
         return None
 
     # ------------------------------------------------------------------
-    def meeting_dates(self, years_back: int = 4) -> list[dt.date]:
+    def meeting_dates(self, years_back: int = 4,
+                      start: str | None = None) -> list[dt.date]:
+        """
+        取會議日期。start（YYYY-MM-DD）優先於 years_back。
+
+        行事曆頁其實內嵌列出 2021–2027 年，所以起點設多早就會抓多早。
+        抓太早的代價不只是速度：措辭分數跨主席本來就不可比，
+        擺一堆不可比的歷史點在趨勢圖上只會製造雜訊。
+        """
         html = self._get(CALENDAR_URL)
         dates: list[dt.date] = []
         if html:
@@ -120,7 +147,14 @@ class FomcSource:
             log.warning("行事曆抓取失敗，改用推估日期（由 404 過濾）")
             dates = self._guess_dates(years_back)
 
-        cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
+        if start:
+            try:
+                cutoff = dt.date.fromisoformat(start)
+            except ValueError:
+                log.warning("fetch.start 格式錯誤（%s），改用 years_back", start)
+                cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
+        else:
+            cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
         return sorted({d for d in dates if cutoff <= d <= dt.date.today()})
 
     @staticmethod
@@ -141,11 +175,33 @@ class FomcSource:
         html = self._get(STATEMENT_URL.format(ymd=d.strftime("%Y%m%d")))
         if html is None:
             return None
-        policy, vote_text = split_statement(extract_text(html))
-        if len(policy) < 300:
+        full = extract_text(html)
+        policy, vote_text = split_statement(full)
+
+        # 引言的票數要抽出來單獨處理，並從本文移除。
+        # 留在本文裡的話，逐句比對的第一列會變成一整段，
+        # 而真正變動的只有票數兩個數字——那是投票資訊，不是措辭改動。
+        vote = parse_votes(vote_text)
+        m = PREAMBLE_VOTE_RE.search(policy)
+        if m:
+            vote.stated_support = int(m.group(1))
+            vote.stated_dissent = int(m.group(2))
+            policy = PREAMBLE_VOTE_RE.sub("", policy, count=1).strip()
+            if vote.dissents and len(vote.dissents) != vote.stated_dissent:
+                vote.mismatch = True
+                log.warning("%s 引言寫 %d 張反對票，但只解析出 %d 位反對者",
+                            d, vote.stated_dissent, len(vote.dissents))
+
+        # 門檻設低一點：Warsh 任內的聲明明顯變短，
+        # 用 Powell 時代的長度當門檻會把正常聲明整份丟掉。
+        if len(policy) < 200:
+            log.warning("%s 的聲明本文只有 %d 字元，視為抓取失敗並跳過",
+                        d, len(policy))
+            self.failed.append((STATEMENT_URL.format(ymd=d.strftime("%Y%m%d")),
+                                f"本文過短（{len(policy)} 字元）"))
             return None
         return {"date": d.isoformat(), "text": policy,
-                "vote_text": vote_text, "vote": parse_votes(vote_text).__dict__}
+                "vote_text": vote_text, "vote": vote.__dict__}
 
     def presser(self, d: dt.date) -> tuple[str | None, str | None]:
         """
@@ -178,16 +234,19 @@ class FomcSource:
             return None, "parse_failed"
 
     # ------------------------------------------------------------------
-    def collect(self, years_back: int = 4, with_presser: bool = True) -> list[dict]:
+    def collect(self, years_back: int = 4, with_presser: bool = True,
+                start: str | None = None, presser_recent_n: int = 4) -> list[dict]:
         """回傳 [{date, text, vote_text, vote, presser}]，時間升冪。"""
         out = []
-        dates = self.meeting_dates(years_back)
+        dates = self.meeting_dates(years_back, start=start)
+        log.info("會議日期 %d 場（%s 起）", len(dates),
+                 start or f"近 {years_back} 年")
         for i, d in enumerate(dates):
             st = self.statement(d)
             if not st:
                 continue
             # 記者會只抓最近幾場，避免一次拉太多 PDF
-            if with_presser and i >= len(dates) - 4:
+            if with_presser and i >= len(dates) - presser_recent_n:
                 st["presser"], st["presser_error"] = self.presser(d)
             out.append(st)
             time.sleep(0.4)
@@ -272,10 +331,51 @@ def parse_votes(vote_text: str) -> Vote:
         elif re.match(r"\s*Voting\s+against", part, re.I):
             body = re.sub(r"^\s*Voting\s+against[^;]*?\b(?:were|was)\s+", "",
                           part, flags=re.I)
-            direction = _direction(body)
-            for n in _names(body):
-                v.dissents.append({"name": n, "direction": direction})
+            v.dissents.extend(_dissenters(body))
     return v
+
+
+def _dissenters(body: str) -> list[dict]:
+    """
+    解析反對者，**逐位**判定方向。
+
+    不能整段共用一個方向。實際出現過的寫法：
+
+        Voting against were A, who preferred to raise the target range,
+        and B, who preferred to lower the target range.
+
+    整段判定會讓兩人都變成「主張升息」，鷹鴿淨值算成 +2，正確是 0。
+    而且原本用 split(",?\\s*who")[0] 只取第一段，B 會整個消失。
+
+    做法：先在每個「姓名, who ...」的邊界切開，每一塊各自判定方向；
+    切不出來（沒有 who 子句）時退回整段共用一個方向。
+    """
+    # 只有一個 who 子句時，整段的人共用同一個方向（三人同時主張升息就是這種）。
+    if len(re.findall(r"\bwho\b", body, re.I)) <= 1:
+        d = _direction(body)
+        return [{"name": n, "direction": d} for n in _names(body)]
+
+    # 多個 who 子句 → 每位反對者方向可能不同，要逐段判定。
+    # 先在「, and 大寫字」處切開，再往後累積到出現 who 為止才算一組——
+    # 因為「A, B, and C, who preferred…」的前半段沒有 who，
+    # 不累積的話 A 與 B 會整個消失。
+    parts = re.split(r",?\s+and\s+(?=[A-Z])", body)
+    out: list[dict] = []
+    buf = ""
+    for p in parts:
+        buf = f"{buf} and {p}" if buf else p
+        if not re.search(r"\bwho\b", buf, re.I):
+            continue
+        names = _names(buf)
+        if names:
+            d = _direction(buf)
+            out.extend({"name": n, "direction": d} for n in names)
+        buf = ""
+
+    if buf:                                   # 尾段沒有 who，仍要收進來
+        d = _direction(body)
+        out.extend({"name": n, "direction": d} for n in _names(buf))
+    return out
 
 
 def _direction(chunk: str) -> str:
@@ -291,12 +391,23 @@ def _direction(chunk: str) -> str:
     return "unknown"
 
 
+# 投票段落裡會出現、但不是人名的職稱。
+# 「Vice Chair」剛好是兩個首字大寫的詞，會通過人名判定，
+# 讓 Powell 時代每份聲明的贊成票數都多算一票。
+_TITLES = {
+    "chair", "vice chair", "vice chairman", "chairman",
+    "vice chair for supervision", "chair pro tempore",
+}
+
+
 def _names(chunk: str) -> list[str]:
     """從一段人名字串抽出姓名。"""
     chunk = re.split(r",?\s*who\b", chunk)[0]
     out = []
     for p in re.split(r";|\band\b|,", chunk):
         p = p.strip(" .,;\n")
+        if p.lower() in _TITLES:
+            continue
         toks = p.split()
         # 姓名：2–5 個詞、每個詞首字大寫（涵蓋 "Kevin M. Warsh"）
         if 2 <= len(toks) <= 5 and all(t and t[0].isupper() for t in toks):

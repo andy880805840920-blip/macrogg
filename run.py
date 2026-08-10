@@ -140,7 +140,9 @@ def gather_fomc(offline: bool, fetch_cfg: dict):
     from src.fomc_source import FomcSource
     src = FomcSource()
     return (src.collect(fetch_cfg.get("years_back", FOMC_YEARS_BACK),
-                        with_presser=fetch_cfg.get("with_presser", True)),
+                        with_presser=fetch_cfg.get("with_presser", True),
+                        start=fetch_cfg.get("start"),
+                        presser_recent_n=fetch_cfg.get("presser_recent_n", 4)),
             src.failed)
 
 
@@ -337,7 +339,9 @@ def main() -> int:
         ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc"),
         ctxs.get("rates"))
     sc = ctxs["scenario"]["scenario"]
-    log.info("情境合成：%s（就業%s × 通膨%s）", sc.name, sc.labor_state, sc.infl_state)
+    log.info("情境合成：%s（就業%s × 通膨%s）%s",
+             sc.verdict_name or sc.name, sc.labor_state, sc.infl_state,
+             f"　※ 原始格位 {sc.name}，已依聯準會重心修正" if sc.overridden else "")
 
     # ---- 本期變化摘要：跟上一次執行的快照比 ----
     # 局部重跑（--only）的 context 是殘缺的，比對與存檔都會產生
@@ -369,7 +373,8 @@ def main() -> int:
             i = ctxs["inflation"]
             out["inflation"] = {"month": i["data_month"], "tilt": i["tilt"],
                                 "flags": [f.__dict__ for f in i["flags"]]}
-        out["scenario"] = {"name": sc.name, "labor": sc.labor_state,
+        out["scenario"] = {"name": sc.verdict_name or sc.name,
+                           "grid_name": sc.name, "labor": sc.labor_state,
                            "inflation": sc.infl_state, "lean": sc.lean}
         (OUT_DIR / "latest.json").write_text(
             json.dumps(out, ensure_ascii=False, indent=2, default=str),
