@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T12:53:19",
+  "generated_at": "2026-08-10T13:34:38",
   "labor": {
     "month": "2026-07",
     "score": -0.1989694078749631,
@@ -91,6 +91,6 @@
     "name": "轉向降息",
     "labor": "弱",
     "inflation": "中",
-    "lean": "dovish"
+    "lean": "neutral"
   }
 }
