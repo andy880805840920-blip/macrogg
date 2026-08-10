@@ -12,7 +12,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .core import sahm_rule, moving_avg, value_at, zscore, diff_series
+from .core import (sahm_rule, moving_avg, value_at, zscore,
+                   zscore_window, diff_series)
 from .. import fmt
 
 
@@ -204,7 +205,7 @@ def _compute_light_values(s: dict[str, list[dict]]) -> dict[str, tuple]:
         if pairs:
             cur = pairs[-1][1]
             prev = pairs[-2][1] if len(pairs) > 1 else None
-            out["u6_u3_gap"] = (cur, prev, f"{cur:.2f}pp")
+            out["u6_u3_gap"] = (cur, prev, f"{cur:.2f} 個百分點")
 
     return out
 
@@ -215,6 +216,9 @@ def _compute_light_values(s: dict[str, list[dict]]) -> dict[str, tuple]:
 
 # P3 之後這組權重會改由「歷史迴歸對利率定價的解釋力」校準。
 # 現階段先用等權重的變體：把資訊量較高的指標給高一點的權重。
+# 週頻序列。z-score 窗口換算成月時要除以每月約 4.345 週。
+_WEEKLY = {"CCSA", "ICSA"}
+
 DEFAULT_WEIGHTS = {
     "PAYEMS": 1.0,
     "UNRATE": 1.0,
@@ -235,6 +239,7 @@ class ScoreItem:
     weight: float
     contribution: float
     inverted: bool
+    window: int = 0          # 這一條的 z-score 實際用了幾個月
 
 
 @dataclass
@@ -242,6 +247,7 @@ class CompositeScore:
     score: float
     prev_score: float | None
     items: list[ScoreItem] = field(default_factory=list)
+    window: int = 0            # z-score 實際用到的期數（月），供畫面誠實標示
 
     @property
     def delta(self) -> float | None:
@@ -261,6 +267,7 @@ def composite_score(series: dict[str, list[dict]], labels: dict[str, str],
     items: list[ScoreItem] = []
     total_w = 0.0
     total = 0.0
+    windows: list[int] = []          # 各序列實際用到的期數，供畫面誠實標示
 
     for sid, w in weights.items():
         rows = series.get(sid, [])
@@ -269,17 +276,28 @@ def composite_score(series: dict[str, list[dict]], labels: dict[str, str],
         z = zscore(use)
         if z is None:
             continue
+        # 週資料（CCSA/ICSA）一筆是一週，不能跟月資料的筆數混在一起取 min——
+        # 60 筆週資料只有 14 個月，卻會被當成 60 期而蓋過真正最短的那條。
+        # 一律換算成「月」再比較。
+        n = zscore_window(use)
+        n_month = round(n / 4.345) if sid in _WEEKLY else n
+        windows.append(n_month)
         inv = invert_flags.get(sid, False)
         signed = -z if inv else z
-        items.append(ScoreItem(sid, labels.get(sid, sid), z, w, signed * w, inv))
+        items.append(ScoreItem(sid, labels.get(sid, sid), z, w, signed * w, inv,
+                               window=n_month))
         total += signed * w
         total_w += w
 
     score = total / total_w if total_w else 0.0
     items.sort(key=lambda i: abs(i.contribution), reverse=True)
 
-    # 上期分數：把每個序列砍掉最後一筆重算
-    prev_series = {k: v[:-1] for k, v in series.items() if len(v) > 1}
+    # 上期分數：把每個序列倒退「一個月」重算。
+    # 週資料倒退一筆只是倒退一週，畫面上卻標成「較上月」——
+    # 量測過的差距不只大小不同，連正負號都會相反。週資料要倒退四筆。
+    _back = {sid: (4 if sid in _WEEKLY else 1) for sid in series}
+    prev_series = {k: v[:-_back.get(k, 1)]
+                   for k, v in series.items() if len(v) > _back.get(k, 1)}
     prev = None
     if prev_series:
         pt, pw = 0.0, 0.0
@@ -294,4 +312,8 @@ def composite_score(series: dict[str, list[dict]], labels: dict[str, str],
             pw += w
         prev = pt / pw if pw else None
 
-    return CompositeScore(score=score, prev_score=prev, items=items)
+    # 窗口取各序列的最小值——分數是加總的，最短的那條決定了整體可信度。
+    # 但畫面不能拿這個最小值去描述每一列：多數序列用的是 60 個月，
+    # 只有週資料被壓到十幾個月，說成「全部都是近 14 個月」會錯得離譜。
+    return CompositeScore(score=score, prev_score=prev, items=items,
+                          window=min(windows) if windows else 0)

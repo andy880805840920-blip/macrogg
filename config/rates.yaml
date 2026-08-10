@@ -114,6 +114,13 @@ debt:
     unit: billions_saar
     frequency: quarterly
     enabled: true
+  # 實質 GDP：r 減 g 的 g。先前這個 g 是寫死的 1.8%，
+  # 造成 r−g 與 i−g 在同樣的說明文字下給出相反的結論。
+  - id: GDPC1
+    label: 實質 GDP
+    unit: billions_saar
+    frequency: quarterly
+    enabled: true
   - id: MTSDS133FMS
     label: 月度財政赤字
     unit: millions
@@ -237,8 +244,9 @@ regime_lights:
     green_below: 14.0
     red_above: 20.0
   - key: r_minus_g
-    label: r 減 g 缺口
-    desc: 實質利率減實質成長率。大於零時債務會自我累積
+    label: 前瞻缺口 r 減 g
+    desc: 市場現在的實質利率減實質 GDP 成長。看的是「舊債換成今天的利率之後」
+      會不會自我累積；表格裡的當前缺口用的是已發行債務的平均利率，兩者不同
     direction: higher_is_worse
     green_below: -0.5
     red_above: 0.5

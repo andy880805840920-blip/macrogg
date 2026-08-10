@@ -106,17 +106,30 @@ class SecClient:
 
     # ------------------------------------------------------------------
     def metric(self, cik: int, metric: str) -> list[dict]:
-        """回傳該指標的單季序列（時間升冪），每筆 {end, val, form, accn}。"""
+        """
+        回傳該指標的單季序列（時間升冪），每筆 {end, val, form, accn, tag}。
+
+        **必須比較所有候選標記，取資料最新的那個**，不能拿第一個有資料的就走。
+        公司會換標記，而舊標記的歷史資料還留在 XBRL 裡：亞馬遜的
+        PaymentsToAcquirePropertyPlantAndEquipment 停在 2017-03-31，
+        現行用的是 PaymentsToAcquireProductiveAssets。取第一個有資料的
+        會抓到停用九年的舊值，而且畫面上看起來像正常數字。
+        """
+        best: list[dict] = []
+        best_end = ""
         for tag in METRIC_TAGS.get(metric, []):
             js = self.concept(cik, tag)
             if not js:
                 continue
             rows = quarterly_series(js)
-            if rows:
+            if not rows:
+                continue
+            if rows[-1]["end"] > best_end:
+                best_end = rows[-1]["end"]
                 for r in rows:
                     r["tag"] = tag
-                return rows
-        return []
+                best = rows
+        return best
 
 
 # ---------------------------------------------------------------------------
@@ -250,6 +263,20 @@ def fetch_hyperscalers(cfg: dict,
         # 資本支出與營運現金流是核心，缺任一個就不能用這家的抓取結果
         if "capex" not in got or "ocf" not in got:
             log.warning("%s 的 SEC 資料不完整（缺 capex 或 ocf），改用手動值", name)
+            out.append(dict(c))
+            all_ok = False
+            continue
+
+        # 陳舊防線：財報最慢一季一次，超過 200 天沒更新代表抓到的是
+        # 停用標記的歷史資料（或公司停止申報），寧可退回手動值也不要
+        # 讓九年前的數字混進來假裝是最新一季。
+        stale_days = (dt.date.today()
+                      - dt.date.fromisoformat(got["_end"])).days
+        if stale_days > 200:
+            log.warning("%s 抓到的最新一季是 %s（%d 天前），太舊，改用手動值",
+                        name, got["_end"], stale_days)
+            client.failed.append(
+                (f"SEC {name}", f"最新資料僅到 {got['_end']}，可能是標記已停用"))
             out.append(dict(c))
             all_ok = False
             continue

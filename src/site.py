@@ -27,6 +27,7 @@ NAV = [
 MOBILE_BREAKPOINT = 760
 
 
+
 def esc(s) -> str:
     return html.escape(str(s), quote=True)
 
@@ -39,9 +40,13 @@ CSS = """
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
   --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#6b6a64;
   --grid:#e3e2db; --baseline:#c3c2b7; --border:rgba(11,11,11,0.13);
-  --series-1:#2a78d6; --series-2:#eb6834;
+  /* 文字用的藍與橘要壓深一點：#2a78d6 在卡片底色上只有 3.97:1，
+     而「展開…」這種連結、燈號狀態字全都用它。圖表線條另外留一組亮色，
+     線條屬於圖形元素，門檻是 3:1，不必跟著壓深。 */
+  --series-1:#266dc2; --series-2:#c25529;
+  --line-1:#2a78d6; --line-2:#eb6834;
   --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
-  --good:#077c07; --warning:#9a6900; --serious:#b4552b; --critical:#c22f2f;
+  --good:#077c07; --warning:#936400; --serious:#ae5229; --critical:#c22f2f;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
 }
@@ -51,7 +56,7 @@ html{-webkit-text-size-adjust:100%}
    若指定 650 這類非標準值，瀏覽器會改用「合成粗體」——筆畫被撐寬但
    前進距離不變，中文就會疊在一起。因此全站只用標準字重，
    並額外加一點字距作為保險。 */
-h1,h2,h3,.v-main,.h-verdict,.f-head,.m-name,.l-top,.k-label,.gloss dt,
+h1,h2,h3,.v-main,.f-head,.m-name,.l-top,.k-label,.gloss dt,
 .verdict .v-main,strong,b{letter-spacing:.035em}
 body{margin:0;background:var(--page);
   /* CJK 家族一定要點名，而且要用含 "CJK" 的完整家族名。
@@ -68,10 +73,10 @@ body{margin:0;background:var(--page);
 @media(min-width:760px){.viz-root{padding:22px 20px 70px}}
 
 /* ---------- 頁首 ---------- */
-header.top{margin:0}
 h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 @media(min-width:760px){h1{font-size:23px}}
 .sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55}
+
 
 /* ---------- 導覽列：手機上單行可左右滑 ---------- */
 nav.site{display:flex;gap:2px;margin:14px 0 0;background:var(--surface-1);
@@ -80,7 +85,7 @@ nav.site{display:flex;gap:2px;margin:14px 0 0;background:var(--surface-1);
   scrollbar-width:none}
 nav.site::-webkit-scrollbar{display:none}
 nav.site a{font-size:13.5px;color:var(--text-secondary);text-decoration:none;
-  padding:8px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+  padding:11px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0}
 nav.site a:hover{background:var(--surface-2);color:var(--text-primary)}
 nav.site a.on{background:var(--surface-2);color:var(--text-primary);font-weight:700}
 nav.site a.soon{color:var(--muted)}
@@ -93,6 +98,10 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
 
 /* ---------- 版面網格 ---------- */
 .grid{display:grid;gap:13px;margin-top:13px;grid-template-columns:1fr}
+/* 網格項目預設 min-width:auto，裡面只要有一個不能再窄的東西（寬表格、
+   長串數字），整欄就會被撐開，連帶把整頁推得比視窗寬。歸零之後，
+   撐不下的內容由它自己的捲動容器處理，版面不受影響。 */
+.grid>*{min-width:0}
 @media(min-width:760px){
   .grid{gap:14px;margin-top:14px}
   .g2{grid-template-columns:repeat(2,1fr)}
@@ -107,7 +116,7 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
 @media(min-width:1320px){.g5{grid-template-columns:repeat(5,1fr)}}
 
 .card{background:var(--surface-1);border:1px solid var(--border);
-  border-radius:13px;padding:17px 16px;box-shadow:var(--shadow)}
+  border-radius:13px;padding:17px 16px;box-shadow:var(--shadow);min-width:0}
 @media(min-width:760px){.card{padding:18px 20px}}
 .card h2{font-size:17px;margin:0 0 5px;font-weight:700;line-height:1.5}
 .card h3{font-size:15px;margin:22px 0 4px;font-weight:700}
@@ -123,16 +132,23 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
 .verdict.dovish{border-left-color:var(--series-1)}
 .verdict.hawkish{border-left-color:var(--serious)}
 .verdict.balanced{border-left-color:var(--muted)}
+/* 情境頁的傾向可能是 neutral（反應函數把方向改寫成中性時），
+   沒有這條規則那張卡就只剩預設灰邊，看起來像漏了樣式 */
+.verdict.neutral{border-left-color:var(--muted)}
 .v-eyebrow{font-size:12.5px;color:var(--muted)}
-.v-main{font-size:26px;font-weight:700;margin-top:9px;line-height:1.45}
-@media(min-width:760px){.v-main{font-size:31px}}
+/* 結論卡的字必須大於任何單一 KPI 數字。手機上原本是結論 26px、
+   KPI 32px，等於在版面上宣告「單一數字比整體結論重要」——
+   讀者的視線會先落在某個指標上，再回頭找結論。 */
+.v-main{font-size:29px;font-weight:700;margin-top:9px;line-height:1.4}
+@media(min-width:760px){.v-main{font-size:34px}}
 .v-why{font-size:14.5px;color:var(--text-secondary);margin-top:12px;line-height:1.85}
 .v-count{font-size:12.5px;color:var(--muted);margin-top:15px;padding-top:13px;
   border-top:1px solid var(--border);line-height:1.75}
 
 /* ---------- KPI ---------- */
 .kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
-.kpi .k-value{font-size:32px;font-weight:700;line-height:1.15;margin-top:5px}
+.kpi .k-value{font-size:26px;font-weight:700;line-height:1.2;margin-top:5px}
+@media(min-width:760px){.kpi .k-value{font-size:30px}}
 .kpi .k-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
 .kpi .k-plain{font-size:13.5px;color:var(--text-primary);margin-top:11px;
   line-height:1.75;background:var(--surface-2);border-radius:9px;padding:10px 12px}
@@ -140,7 +156,11 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
   display:inline-block;background:var(--surface-2);color:var(--text-secondary);
   font-weight:600}
 .kpi .k-flag.neg{color:var(--critical)} .kpi .k-flag.pos{color:var(--good)}
-.spark{margin-top:11px;display:block;width:100%;height:34px}
+/* 四張 KPI 卡被拉成同高，但卡內是普通區塊流，走勢圖與數值列因此
+   停在各自不同的位置，一列看過去參差不齊。把卡片改成直向 flex、
+   走勢圖以上推到頂，四張卡的圖與數值列就落在同一條線上。 */
+.kpi{display:flex;flex-direction:column}
+.spark{margin-top:auto;padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
 .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;
@@ -149,8 +169,14 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
   .stat-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px}
 }
 .stat .s-label{font-size:12.5px;color:var(--muted);line-height:1.45}
-.stat .s-value{font-size:21px;font-weight:700;margin-top:4px;
-  font-variant-numeric:tabular-nums;line-height:1.25}
+/* 數值＋單位不能從中間斷開。「-0.10 個百分點」折成兩行時，
+   讀者要多花一拍才確定那個單位屬於上面那個數字。 */
+.stat .s-value{font-size:20px;font-weight:700;margin-top:4px;
+  font-variant-numeric:tabular-nums;line-height:1.3;white-space:nowrap}
+@media(max-width:420px){.stat .s-value{font-size:18px}}
+/* 標籤長度不一時，數值會各自對到不同的基線。給標籤兩行的高度，
+   同一列的數字才會落在同一條水平線上。 */
+.stat .s-label{min-height:2.9em}
 .stat .s-note{font-size:12.5px;color:var(--text-secondary);margin-top:4px;
   line-height:1.55}
 
@@ -164,6 +190,10 @@ tbody tr:last-child td{border-bottom:none}
 td.pos{color:var(--good)} td.neg{color:var(--critical)}
 td.muted-cell{color:var(--muted)}
 .revtab td:first-child{font-variant-numeric:normal}
+/* 欄位多的表格（例如科技巨頭那張六欄表）在 390px 上會把儲存格擠成
+   一個字一行。包一層可橫向捲動的容器，寧可讓它滑，也不要把數字折斷。 */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.tscroll>table{min-width:460px}
 
 /* ---------- 發散長條（行業增減）---------- */
 .dbars{display:flex;flex-direction:column;gap:3px;margin-top:4px}
@@ -226,8 +256,9 @@ td.muted-cell{color:var(--muted)}
   font-weight:500;vertical-align:2px}
 .impact{display:inline-block;font-size:12.5px;font-weight:700;border-radius:7px;
   padding:5px 10px;margin-top:10px;line-height:1.5}
-.impact.dovish{background:var(--tint-dov);color:var(--series-1)}
-.impact.hawkish{background:var(--tint-haw);color:var(--serious)}
+/* 帶底色的小標籤要另外壓深：在自己的淡底上，一般文字色只有 4.3–4.4:1 */
+.impact.dovish{background:var(--tint-dov);color:#2469ba}
+.impact.hawkish{background:var(--tint-haw);color:#a44d27}
 .impact.neutral{background:var(--surface-2);color:var(--muted)}
 
 /* ---------- 分數條 ---------- */
@@ -238,16 +269,7 @@ td.muted-cell{color:var(--muted)}
   background:var(--baseline);left:50%}
 
 /* ---------- 首頁 ---------- */
-.hero{background:var(--surface-1);border:1px solid var(--border);
-  border-radius:13px;padding:19px 17px;box-shadow:var(--shadow);margin-top:13px}
-@media(min-width:760px){.hero{padding:24px}}
-.hero .h-label{font-size:12.5px;color:var(--muted)}
-.hero .h-verdict{font-size:26px;font-weight:700;margin-top:9px;line-height:1.45}
-@media(min-width:760px){.hero .h-verdict{font-size:31px}}
-.hero .h-line{font-size:14.5px;color:var(--text-secondary);margin-top:12px;
-  line-height:1.9}
-.hero .h-pending{font-size:12.5px;color:var(--muted);margin-top:15px;
-  padding-top:13px;border-top:1px solid var(--border);line-height:1.75}
+/* .hero / .h-verdict 一族已隨首頁改版移除，樣式一併刪除 */
 
 .modcard{display:block;text-decoration:none;color:inherit;
   background:var(--surface-1);border:1px solid var(--border);border-radius:13px;
@@ -258,7 +280,9 @@ td.muted-cell{color:var(--muted)}
 .modcard .m-name{font-size:14.5px;font-weight:700}
 .modcard .m-when{font-size:11.5px;color:var(--muted);white-space:nowrap}
 .modcard .m-value{font-size:27px;font-weight:700;margin-top:9px;line-height:1.2}
-.modcard .m-note{font-size:13px;color:var(--text-secondary);margin-top:7px;
+/* 13px 時「期限溢酬 +0.78%」剛好多 5px 塞不下，數字會單獨掉到第二行，
+   整張卡多一行、同列的另一張卡連結就對不齊了。 */
+.modcard .m-note{font-size:12.5px;color:var(--text-secondary);margin-top:7px;
   line-height:1.7}
 .modcard .m-more{font-size:12.5px;color:var(--muted);margin-top:12px}
 
@@ -290,8 +314,9 @@ td.muted-cell{color:var(--muted)}
 /* ---------- 折疊 ---------- */
 details{margin-top:14px;border-top:1px solid var(--grid);padding-top:12px}
 details[open]{padding-bottom:2px}
+/* 展開列是全站最常點的東西，高度要撐到 44px 才好按 */
 summary{font-size:13.5px;color:var(--series-1);cursor:pointer;font-weight:600;
-  list-style:none;padding:4px 0}
+  list-style:none;padding:11px 0}
 summary::-webkit-details-marker{display:none}
 summary::after{content:" ▾";font-size:11px}
 details[open]>summary::after{content:" ▴"}
@@ -302,7 +327,8 @@ details.plain{border-top:none;padding-top:0}
 #tip{position:fixed;pointer-events:none;background:var(--surface-2);
   border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;
   color:var(--text-primary);opacity:0;transition:opacity .1s;z-index:99;
-  box-shadow:0 4px 16px rgba(0,0,0,.3);white-space:nowrap}
+  /* 這個 30% 黑的陰影是深色模式時代留下的，在淺色底上會糊成一團灰塊 */
+  box-shadow:0 4px 14px rgba(15,23,42,.13);white-space:nowrap}
 @media(hover:none){#tip{display:none}}
 
 footer{margin-top:26px;font-size:12.5px;color:var(--muted);line-height:1.8}
@@ -320,7 +346,7 @@ footer{margin-top:26px;font-size:12.5px;color:var(--muted);line-height:1.8}
 .drow2.added{border-left:3px solid var(--series-1)}
 .drow2.removed{border-left:3px solid var(--muted)}
 .drow2.changed{border-left:3px solid var(--serious)}
-mark.mo{background:rgba(180,85,43,.18);color:var(--serious);
+mark.mo{background:rgba(180,85,43,.18);color:#8d4220;
   text-decoration:line-through;text-decoration-thickness:1px;
   border-radius:3px;padding:0 2px}
 mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
@@ -344,7 +370,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .dbox.hawkish .dlab{color:var(--serious)}
 .dbox.dovish .dlab{color:var(--series-1)}
 .dbox.neutral .dlab{color:var(--muted)}
-.dbox.stale{opacity:.62}
+/* 整塊套 opacity 會連內文一起壓暗——量到只剩 2.4:1，遠低於 4.5。
+   改成只把數字與標籤調淡，說明文字維持原本的對比。 */
+.dbox.stale{background:var(--surface-2);border-style:dashed}
+/* 不用 opacity 壓字（會直接壓垮對比），改用虛線框＋底色表示「這一格別當真」 */
+.dbox.stale .dscore{color:var(--text-secondary)}
 
 .warnbox{background:var(--surface-1);border:1px solid var(--warning);
   border-left-width:3px;border-radius:10px;padding:13px 15px;margin-top:14px;
@@ -360,7 +390,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 
 /* ---------- 措辭熱力圖 ---------- */
 .heatwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:4px}
-.heat{border-collapse:separate;border-spacing:3px;font-size:12px;min-width:100%}
+/* 全站 table{width:100%} 會把這張表撐到卡片寬，多出來的空間全被
+   自動版面塞進第一欄——標籤因此跟自己那一列的格子隔了七百多 px，
+   看起來像各自獨立的兩塊。改成內容寬即可，太寬時由 .heatwrap 捲動。 */
+.heat{border-collapse:separate;border-spacing:3px;font-size:12px;
+  width:max-content;min-width:0;max-width:100%}
 .heat th{font-weight:500;color:var(--muted);font-size:11.5px;padding:2px 4px;
   white-space:nowrap;text-align:center;border:none}
 .heat th.rowhead{text-align:left;position:sticky;left:0;background:var(--surface-1);
@@ -369,8 +403,10 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   font-variant-numeric:tabular-nums;padding:0}
 .heat td.h0{background:var(--surface-2);color:var(--muted)}
 .heat td.h1{background:rgba(42,120,214,.28);color:var(--text-primary)}
-.heat td.h2{background:rgba(42,120,214,.55);color:#fff}
-.heat td.h3{background:rgba(42,120,214,.85);color:#fff}
+/* 55% 藍上放白字只有 2.16:1，遠低於 WCAG 的 4.5。中間色階改用深色字，
+   最深的那一階把底色加深到 95% 才撐得起白字。 */
+.heat td.h2{background:rgba(42,120,214,.5);color:var(--text-primary)}
+.heat td.h3{background:rgba(28,86,158,.97);color:#fff}
 
 /* ---------- 情境九宮格 ---------- */
 .sgrid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:5px;margin-top:4px;
@@ -378,8 +414,10 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .sgrid .axis{color:var(--muted);font-size:12px;display:flex;align-items:center;
   justify-content:center;padding:4px 3px;text-align:center}
 .sgrid .axis.row{writing-mode:horizontal-tb;min-width:40px}
+/* 手機上 .sdesc 是隱藏的，min-height 若還留著桌機的高度，
+   九格會各空掉六成，白白多出四百多 px 的捲動。 */
 .scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
-  padding:9px 8px;min-height:72px}
+  padding:9px 8px;min-height:0}
 .scell .sname{font-size:12.5px;font-weight:700;line-height:1.4}
 .scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;
   display:none}
@@ -416,10 +454,21 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .lwrap{margin-top:6px}
 .lplot{position:relative;border-left:1px solid var(--grid);
   border-bottom:1px solid var(--grid)}
-.lchart{display:block;width:100%;height:150px}
-.glab{position:absolute;left:5px;font-size:11.5px;color:var(--muted);
+/* 高度由每張圖自己用 style 指定（charts.line_chart 的 height 參數）。
+   這裡寫死 150px 會讓要求 120px 的圖被拉高——SVG 是 preserveAspectRatio="none"，
+   拉高不會留白，而是把整條線縱向拉長，形狀因此失真。 */
+.lchart{display:block;width:100%}
+/* 最高／最低值標籤：加不透明底色，讓它壓在線上時仍讀得出來。
+   純文字陰影在深色線條上仍會糊成一團。 */
+.glab{position:absolute;left:4px;font-size:11.5px;color:var(--muted);
   line-height:1;font-variant-numeric:tabular-nums;pointer-events:none;
-  text-shadow:0 0 4px var(--surface-1),0 0 4px var(--surface-1)}
+  background:var(--surface-1);padding:1px 4px;border-radius:4px;
+  box-shadow:0 0 0 1px var(--surface-1)}
+/* 最新值的圓點：疊在 SVG 之上，才不會被 preserveAspectRatio="none" 壓扁，
+   也不會在右邊界被裁掉一半 */
+.ldot{position:absolute;width:8px;height:8px;border-radius:50%;
+  transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--surface-1);
+  pointer-events:none}
 .lmark{position:absolute;top:3px;transform:translateX(-50%);font-size:11.5px;
   color:var(--muted);white-space:nowrap;pointer-events:none;
   text-shadow:0 0 4px var(--surface-1),0 0 4px var(--surface-1)}
@@ -460,14 +509,22 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .cmove .cm-delta.up{color:var(--serious)} .cmove .cm-delta.down{color:var(--series-1)}
 
 /* ---------- 近 N 期數值列 ---------- */
-.mseries{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;
-  margin-top:10px;border-top:1px solid var(--grid);padding-top:9px}
-.mcell{text-align:center;padding:2px 1px;border-radius:5px}
+/* 六格等寬。欄寬用 max-content 當下限，格子才不會被壓到互相疊字；
+   單位已經抽到 .munit 只寫一次，所以六格在 390px 上也塞得下。 */
+.mwrap{margin-top:10px;border-top:1px solid var(--grid);padding-top:9px}
+.munit{font-size:11px;color:var(--muted);text-align:right;margin-bottom:3px}
+.mseries{display:grid;grid-auto-flow:column;
+  grid-auto-columns:minmax(max-content,1fr);gap:2px;
+  overflow-x:auto;scrollbar-width:thin}
+.mcell{text-align:center;padding:2px 2px;border-radius:5px;min-width:0}
 .mcell.last{background:var(--surface-2)}
-.mval{font-size:12px;font-variant-numeric:tabular-nums;color:var(--text-secondary);
-  line-height:1.3}
+/* KPI 卡在桌機四欄下內容寬只有 218px。字級再大一點，
+   最寬的那張卡（參與率 61.9%、日期帶年份）就會有一格被切掉半個字，
+   而被切掉的數字會讀成另一個數字，那比字小更糟。 */
+.mval{font-size:11px;font-variant-numeric:tabular-nums;color:var(--text-secondary);
+  line-height:1.3;white-space:nowrap}
 .mcell.last .mval{color:var(--text-primary);font-weight:700}
-.mdate{font-size:11px;color:var(--muted);margin-top:2px}
+.mdate{font-size:10.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
 
 /* ---------- 狀態軌跡條 ---------- */
 .sstrip{display:flex;gap:2px;margin-top:9px}
@@ -487,7 +544,7 @@ nav.anchors{position:sticky;top:0;z-index:8;display:flex;gap:2px;overflow-x:auto
   scrollbar-width:none;box-shadow:0 6px 8px -6px rgba(0,0,0,.10)}
 nav.anchors::-webkit-scrollbar{display:none}
 nav.anchors a{font-size:12.5px;color:var(--text-secondary);text-decoration:none;
-  padding:6px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;
+  padding:10px 11px;border-radius:7px;white-space:nowrap;flex-shrink:0;
   background:var(--surface-1);border:1px solid var(--border)}
 nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)}
 .card h2{scroll-margin-top:60px}
@@ -495,7 +552,10 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 /* ---------- 意外值 ---------- */
 .surp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
 @media(min-width:760px){.surp{gap:10px}}
-.sbox{background:var(--surface-2);border-radius:9px;padding:12px 8px;
+/* 三格會被拉成同高（最高那格有徽章與註解），其餘兩格因此上半滿、
+   下半空。改成垂直置中，視覺重量才平均。 */
+.sbox{display:flex;flex-direction:column;justify-content:center;
+  background:var(--surface-2);border-radius:9px;padding:12px 8px;
   border:1px solid var(--border);text-align:center}
 @media(min-width:760px){.sbox{padding:12px 11px}}
 .sbox .sl{font-size:12px;color:var(--muted)}
@@ -506,8 +566,8 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 .sbox.beat .sv{color:var(--good)} .sbox.miss .sv{color:var(--critical)}
 .sbadge2{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
   padding:3px 9px;margin-top:9px}
-.sbadge2.beat{background:rgba(7,124,7,.13);color:var(--good)}
-.sbadge2.miss{background:rgba(194,47,47,.13);color:var(--critical)}
+.sbadge2.beat{background:rgba(7,124,7,.13);color:#036b03}
+.sbadge2.miss{background:rgba(194,47,47,.13);color:#ad2929}
 .sbadge2.inline{background:var(--surface-2);color:var(--muted)}
 .sbox .szn{font-size:11px;color:var(--muted);margin-top:5px;
   font-variant-numeric:tabular-nums}
@@ -521,6 +581,20 @@ JS = """
       d.removeAttribute('open');
     });
   }
+  // 導覽列在窄螢幕上是橫向捲動的。目前所在的那一頁若排在後面，
+  // 進站時會停在可視範圍外——讀者看不到自己在哪，也不知道還有別的分頁。
+  // 把它捲進視野（只捲導覽列自己，不動整頁）。
+  document.querySelectorAll('nav.site,nav.anchors').forEach(function(nav){
+    var cur=nav.querySelector('a.on'); if(!cur)return;
+    var want=cur.offsetLeft-(nav.clientWidth-cur.offsetWidth)/2;
+    if(nav.scrollWidth>nav.clientWidth)nav.scrollLeft=Math.max(0,want);
+  });
+  // 近 N 期數值列在窄卡片裡會超出可視範圍。捲到最右邊，
+  // 讓「最新一期」那一格（.mcell.last）一定看得到——
+  // 停在最左邊等於把整列裡最重要的那個數字藏起來。
+  document.querySelectorAll('.mseries').forEach(function(m){
+    if(m.scrollWidth>m.clientWidth)m.scrollLeft=m.scrollWidth;
+  });
   var t=document.getElementById('tip');
   document.addEventListener('mouseover',function(e){
     var el=e.target.closest('[data-tip]'); if(!el||!t)return;

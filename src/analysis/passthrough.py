@@ -24,11 +24,20 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 
+# 一組相關係數至少要有這麼多個配對月份才算數
+_MIN_PAIRS = 18
+
+
 @dataclass
 class Passthrough:
     best_lag: int | None = None          # 薪資領先幾個月
     best_corr: float | None = None
     corr_by_lag: list = field(default_factory=list)   # [{lag, corr}]
+    max_lag_evaluated: int | None = None  # 樣本實際撐得住的最長領先期
+    max_lag_asked: int = 0                # 原本想測到幾期
+    truncated: bool = False               # 想測的期數被樣本長度砍掉了
+    n_overlap: int = 0                    # 重疊樣本期數
+    corr_note: str = ""                   # 相關係數符號的解讀
     wage_latest: float | None = None
     supercore_latest: float | None = None
     gap: float | None = None             # 薪資年增 − supercore 年化
@@ -52,14 +61,23 @@ def analyse(wage_yoy: list[dict], supercore_yoy: list[dict],
         return p
 
     # ---- 交叉相關：薪資落後 lag 期去對 supercore ----
-    for lag in range(0, max_lag + 1):
+    # 每多測一期領先，可用的配對就少一筆。樣本只有 n 期時，
+    # 領先 n−18 期以上的組合根本湊不到最低配對數，會被靜靜跳過——
+    # 於是「測到 18 個月」變成一句沒有兌現的話。這裡先算清楚實際能測到哪，
+    # 再把它寫進結果，畫面上才不會宣稱一個沒做過的檢定。
+    p.n_overlap = len(dates)
+    p.max_lag_asked = max_lag
+    p.max_lag_evaluated = max(0, min(max_lag, len(dates) - _MIN_PAIRS))
+    p.truncated = p.max_lag_evaluated < max_lag
+
+    for lag in range(0, p.max_lag_evaluated + 1):
         pairs = []
         for i in range(lag, len(dates)):
             w = wmap.get(dates[i - lag])
             s = smap.get(dates[i])
             if w is not None and s is not None:
                 pairs.append((w, s))
-        if len(pairs) < 18:
+        if len(pairs) < _MIN_PAIRS:
             continue
         c = _corr([a for a, _ in pairs], [b for _, b in pairs])
         if c is None:
@@ -85,9 +103,31 @@ def analyse(wage_yoy: list[dict], supercore_yoy: list[dict],
                 for d in dates[-60:]]
 
     if p.best_lag is not None:
-        p.note = (f"樣本內相關性最高的組合是薪資領先 {p.best_lag} 個月"
-                  f"（相關係數 {p.best_corr:+.2f}）。"
-                  "相關不等於因果，這只描述兩者在此樣本中的時間關係。")
+        bits = [f"在 0 到 {p.max_lag_evaluated} 個月的範圍內，"
+                f"相關性最強的組合是薪資領先 {p.best_lag} 個月"
+                f"（相關係數 {p.best_corr:+.2f}）。"]
+        if p.truncated:
+            bits.append(
+                f"原本要測到 {p.max_lag_asked} 個月，但重疊樣本只有 "
+                f"{p.n_overlap} 期——領先愈久，能配對的月份就愈少，"
+                f"超過 {p.max_lag_evaluated} 個月的組合湊不到最低 {_MIN_PAIRS} 組配對，"
+                "沒有納入檢定。真正的峰值有可能落在這個範圍之外。")
+        bits.append("相關不等於因果，這只描述兩者在此樣本中的時間關係。")
+        p.note = "".join(bits)
+
+        # 符號要講清楚。負相關代表「薪資高的時期對應 supercore 低」，
+        # 那是在**反駁**薪資推升服務業通膨的機制，不是佐證它。
+        if p.best_corr < -0.3:
+            p.corr_note = (
+                "注意相關係數是負的：在這段樣本裡，薪資年增較高的月份，"
+                f"{p.best_lag} 個月後的服務業通膨反而較低。"
+                "這與「薪資推升服務業通膨」的方向相反，"
+                "不能拿來佐證傳導機制。樣本只涵蓋通膨自高點回落的這一段，"
+                "兩條線同時下行但速度不同，就足以做出這種負相關——"
+                "把它讀成因果會得到錯誤的結論。")
+        elif abs(p.best_corr) < 0.3:
+            p.corr_note = ("相關係數接近零，這段樣本看不出穩定的領先落後關係，"
+                           "下方的領先期數不宜當作預測依據。")
     return p
 
 

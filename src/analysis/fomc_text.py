@@ -253,12 +253,19 @@ _ABBR_DOT = re.compile(
     r"|[A-Z])\.(?=\s+[A-Z])")
 
 
-def _sentences_of(text: str) -> list[str]:
-    """切句。縮寫句點先以占位符保護，切完再還原。"""
+def _sentences_of(text: str, min_len: int = 40) -> list[str]:
+    """
+    切句。縮寫句點先以占位符保護，切完再還原。
+
+    min_len 預設 40 是給「主題摘句」用的——太短的句子（"Thank you."）
+    當摘要沒有意義。但**分數來源句不能套這個門檻**：計分是對全文做的，
+    短句一樣會命中詞典。丟掉短句會讓畫面上列出的句子加總小於實際分數，
+    而那一區的存在意義正是「分數可以被回推」。
+    """
     protected = _ABBR_DOT.sub(lambda m: m.group(1) + "\x00", text)
     parts = re.split(r"(?<=[.!?])\s+(?=[A-Z])", protected)
     return [p.replace("\x00", ".").strip()
-            for p in parts if len(p.strip()) > 40]
+            for p in parts if len(p.strip()) > min_len]
 
 
 def split_presser(text: str) -> tuple[str, str]:
@@ -312,8 +319,12 @@ def summarise_presser(text: str, per_topic: int = 2) -> dict:
     # 必須用 _count_tones（與計分同一套），它會處理重疊——
     # 否則畫面上會同時列出 "restrictive" 與 "less restrictive"，
     # 讀者照著加總會得到跟分數對不起來的數字。
+    # 用不設長度門檻的切句結果，否則像 "The Committee remains resolute."
+    # 這種 31 個字元、卻帶 2.0 權重的句子會被丟掉，
+    # 畫面上加得出來的分數就只剩實際分數的一半。
+    score_pool = _sentences_of(opening, 0) + _sentences_of(qa, 0)
     score_lines = []
-    for s in (open_s + qa_s):
+    for s in score_pool:
         h_hits, d_hits = _count_tones(s.lower())
         hits = ([{"term": k, "weight": HAWKISH[k], "tag": "hawk"} for k in h_hits]
                 + [{"term": k, "weight": DOVISH[k], "tag": "dove"} for k in d_hits])
@@ -325,7 +336,16 @@ def summarise_presser(text: str, per_topic: int = 2) -> dict:
                                 "net": net})
     score_lines.sort(key=lambda x: -x["top"])
 
-    return {"topics": topics, "score_lines": score_lines[:5],
+    # 只列前五句時要講清楚列了幾句、佔多少——
+    # 不然讀者把畫面上的數字加起來對不上總分，會以為分數算錯了。
+    shown = score_lines[:5]
+    total_abs = sum(x["top"] for x in score_lines) or 0.0
+    shown_abs = sum(x["top"] for x in shown)
+    coverage = (shown_abs / total_abs * 100) if total_abs else 100.0
+
+    return {"topics": topics, "score_lines": shown,
+            "score_lines_total": len(score_lines),
+            "score_lines_coverage": round(coverage),
             "opening_len": len(opening.split()), "qa_len": len(qa.split())}
 
 
@@ -457,6 +477,19 @@ def _count_tones(text: str) -> tuple[dict, dict]:
 # ---------------------------------------------------------------------------
 # 溝通制度變化偵測
 # ---------------------------------------------------------------------------
+def _regime_note(shrink: float, vanished: list) -> str:
+    """依實際觸發的條件產生說明，不預設是哪一種。"""
+    bits = []
+    if shrink > 0.25:
+        bits.append(f"這次聲明比近四次平均短了 {shrink*100:.0f}%")
+    if len(vanished) >= 4:
+        bits.append(f"有 {len(vanished)} 個既有措辭整個消失")
+    reason = "、".join(bits) or "偵測到體例變化"
+    return (f"{reason}。篇幅或用語體例大幅改變，通常代表溝通方式改變，"
+            "而不是立場轉變——此時措辭分數與前幾次不可比，"
+            "請以客觀訊號分數為準。")
+
+
 def regime_change(docs: list) -> dict:
     """
     偵測「主席換人或溝通方式改變」造成的斷點。
@@ -483,12 +516,10 @@ def regime_change(docs: list) -> dict:
         "word_count": cur.word_count,
         "baseline": round(base),
         "vanished": vanished,
-        "note": (
-            f"這次聲明比近四次平均短了 {shrink*100:.0f}%，"
-            f"且有 {len(vanished)} 個既有措辭整個消失。"
-            "大量措辭同時消失通常代表溝通方式改變，而不是立場轉變——"
-            "此時措辭分數不可靠，請以客觀訊號分數為準。"
-        ) if detected else "",
+        # 文案必須跟**實際觸發的那個條件**一致。原本不論如何都寫
+        # 「大量措辭同時消失」，於是會出現「有 0 個既有措辭整個消失。
+        # 大量措辭同時消失通常代表…」這種自我否定的句子。
+        "note": _regime_note(shrink, vanished) if detected else "",
     }
 
 

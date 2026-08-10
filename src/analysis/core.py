@@ -100,7 +100,13 @@ def sahm_rule(unrate_rows: Sequence[dict]) -> float | None:
 
 
 def zscore(rows: Sequence[dict], lookback: int = 60) -> float | None:
-    """相對近 N 期的標準分數。用於綜合評分。"""
+    """
+    相對近 N 期的標準分數。用於綜合評分。
+
+    實際窗口是 min(lookback, 資料長度)——抓取起點縮短後窗口會跟著變短，
+    所以畫面上的說明要用 zscore_window() 取得**實際**期數，
+    不能寫死「近五年」，那會變成假話。
+    """
     if len(rows) < 12:
         return None
     window = [r["value"] for r in rows[-lookback:]]
@@ -111,6 +117,11 @@ def zscore(rows: Sequence[dict], lookback: int = 60) -> float | None:
     if sd == 0:
         return None
     return (rows[-1]["value"] - mean) / sd
+
+
+def zscore_window(rows: Sequence[dict], lookback: int = 60) -> int:
+    """z-score 實際用到的期數，供畫面標示。"""
+    return min(len(rows), lookback) if len(rows) >= 12 else 0
 
 
 def fmt_num(v: float | None, unit: str = "", digits: int = 1) -> str:
@@ -153,8 +164,37 @@ def annualized_series(rows: Sequence[dict], months: int = 3) -> list[dict]:
     return out
 
 
+def since(rows: Sequence[dict], start: str, min_points: int = 6) -> list[dict]:
+    """
+    只取 start（YYYY-MM-DD）之後的資料。
+
+    全站圖表共用同一個起點，否則會出現「就業圖只有今年、財政圖畫到五年前」
+    這種各說各話的狀況——讀者無法比對，也不知道哪張圖代表什麼期間。
+
+    不足 min_points 筆時回退到最後 min_points 筆，避免季資料（一年才四筆）
+    在起點附近變成一條沒有形狀的線。
+    """
+    if not rows:
+        return []
+    cut = [r for r in rows if r["date"] >= start]
+    return cut if len(cut) >= min_points else list(rows)[-min_points:]
+
+
+def span_label(rows: Sequence[dict]) -> str:
+    """
+    圖表標題用的期間字串，直接由畫出來的資料推得。
+
+    寫死「今年以來」會在兩個地方說謊：全站起點是 2025-01-01 而不是當年年初；
+    季資料觸發 since() 的 min_points 回退時，實際起點還會早於 2025 年。
+    """
+    if not rows:
+        return ""
+    d = rows[0]["date"]
+    return f"{d[:4]} 年 {int(d[5:7])} 月以來"
+
+
 def since_year_start(rows: Sequence[dict], min_points: int = 6) -> list[dict]:
-    """只取今年以來的資料。若不足 min_points 筆，則回退到最後 min_points 筆。"""
+    """只取今年以來的資料。保留給仍需要「本年度」語意的地方。"""
     if not rows:
         return []
     year = rows[-1]["date"][:4]

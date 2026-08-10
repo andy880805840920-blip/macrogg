@@ -16,9 +16,13 @@ DIR_COPY = {
     "dovish": ("本次會議：偏鴿（利降息方向）",
                "客觀訊號指向寬鬆——政策行動、反對票或聲明點名的風險方向指向更低的利率。"
                "這通常是降息的前置訊號。"),
+    # 中性只代表「客觀訊號淨值落在 ±1 之內」，不代表沒有反對票、
+    # 也不代表沒有升降息——降息 −3 加上兩張升息反對票 +4 也會落在這裡。
+    # 所以這段不能斷言任何具體事實，實際組成看下方的分數明細。
     "neutral": ("本次會議：方向不明",
-                "維持利率不變、沒有反對票，聲明也沒有點名特定風險。委員會維持彈性，"
-                "方向由後續數據決定。"),
+                "客觀訊號的正負兩邊大致抵銷，淨值接近中性。"
+                "這可能是各項訊號都很弱，也可能是強度相當但方向相反——"
+                "實際組成見下方「客觀訊號分數」的拆解。"),
 }
 
 
@@ -147,7 +151,7 @@ def fomc_body(d: dict) -> str:
     <div class="dlab">{esc(sh.get('tone_label', ''))}
       <span style="font-weight:400;color:var(--muted)">
       　較上次 {sh.get('tone_delta', 0):+.2f}</span></div>
-    <div class="dnote">刻度同左：0＝中性，正＝措辭偏緊縮（依每百字的加權詞頻計算）。
+    <div class="dnote">刻度與客觀訊號分數相同：0＝中性，正＝措辭偏緊縮（依每百字的加權詞頻計算）。
       詞典為 Powell 時代的聲明體例校準，主席更迭或體例改變時可比性下降。</div>
   </div>
 </div>"""
@@ -223,6 +227,16 @@ def fomc_body(d: dict) -> str:
                            f'{esc(tags)}</div></div>')
         score_html = score_html or '<div class="empty">本場沒有命中任何詞典用語</div>'
 
+        # 只列權重最高的前五句。列了幾句、佔總權重多少要講明，
+        # 否則讀者把畫面上的數字加起來對不上總分，會以為分數算錯。
+        _tot = ps.get("score_lines_total", 0)
+        _shown = len(ps.get("score_lines", []))
+        score_cov = ""
+        if _tot > _shown:
+            score_cov = (f"　這裡只列權重最高的 {_shown} 句（全文共 {_tot} 句命中，"
+                         f"這幾句佔總權重約 {ps.get('score_lines_coverage', 0)}%），"
+                         "所以逐句加總不會剛好等於分數。")
+
         words = ps.get("opening_len", 0) + ps.get("qa_len", 0)
         presser_html = f"""
   <div class="card">
@@ -247,7 +261,7 @@ def fomc_body(d: dict) -> str:
     <details data-m-collapse><summary>措辭分數是這幾句貢獻的</summary>
       <p class="hint" style="margin:10px 0 8px">
         藍色是鷹派詞、橘色是鴿派詞，括號內為權重。
-        分數 ＝ 命中詞加權後除以每百字，所以長度不同的逐字稿仍可比。</p>
+        分數 ＝ 命中詞加權後除以每百字，所以長度不同的逐字稿仍可比。{esc(score_cov)}</p>
       {score_html}
     </details>
   </div>"""
@@ -264,7 +278,7 @@ def fomc_body(d: dict) -> str:
         elif reason == "parse_failed":
             note = ("<b>逐字稿解析失敗</b><br>"
                     "PDF 已下載但無法解析，可能是聯準會改了檔案格式。"
-                    "詳細錯誤列在頁面底部的失敗清單。")
+                    "詳細錯誤只寫在 GitHub Actions 的執行紀錄裡，畫面上不另外列出。")
         else:
             note = ("<b>尚未發布</b><br>"
                     "逐字稿為 PDF，通常在會後數日才發布，所以會議當天無法納入。"
@@ -329,9 +343,10 @@ def fomc_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="trend">分數走勢</h2>
-    <p class="hint">兩個分數的歷史軌跡，刻度相同：0＝中性，正＝偏升息方向、負＝偏降息方向。
-      措辭分數在主席更迭處會有斷點，已標示。</p>
+    <h2 id="trend">歷次分數</h2>
+    <p class="hint">歷次會議的兩個分數並列，刻度相同：0＝中性、正＝偏升息方向、
+      負＝偏降息方向。措辭分數跨主席不可比（詞典是照 Powell 時代的體例校準的），
+      比較時請以同一位主席任內的區間為準。</p>
     <details data-m-collapse open><summary>歷次分數明細</summary>
       <table style="margin-top:12px">
         <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>
@@ -344,8 +359,10 @@ def fomc_body(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="phrases">關鍵措辭追蹤</h2>
-    <p class="hint">追蹤固定一組措辭在每次聲明中出現的次數。
-      顏色越深代表出現越多次。<b>整排突然變空白，通常代表體例改變而非立場轉變</b>。</p>
+    <p class="hint">追蹤固定一組措辭在每次聲明中出現的次數，數的是字面出現次數。
+      顏色越深代表出現越多次。<b>整排突然變空白，通常代表體例改變而非立場轉變</b>。
+      這組措辭與下方的計分詞典是兩份清單，用途不同——這裡看的是措辭的延續性，
+      計分看的是鷹鴿方向。</p>
     <details data-m-collapse open><summary>展開熱力圖</summary>
       <div style="margin-top:12px">{d['heatmap_html']}</div></details>
   </div>
@@ -354,7 +371,11 @@ def fomc_body(d: dict) -> str:
 <div class="grid g2">
   <div class="card">
     <h2 id="hits">詞典命中明細</h2>
-    <p class="hint">詞典命中明細，用來檢查措辭分數是怎麼算出來的。</p>
+    <p class="hint">措辭分數是怎麼算出來的，逐個用語攤開。
+      這裡的次數<b>可能少於上方熱力圖</b>，兩者算法不同：
+      熱力圖數的是該字面在全文出現幾次；計分為了避免重複扣分，
+      同一段文字只算一次、長詞優先——「remains elevated」命中之後，
+      裡面的「elevated」就不會再被算一遍。</p>
     <details data-m-collapse><summary>命中明細</summary>
       <table style="margin-top:10px">
         <thead><tr><th>用語</th><th>方向</th><th>次數</th></tr></thead>
@@ -366,7 +387,8 @@ def fomc_body(d: dict) -> str:
     <dl class="gloss">
       <dt>反對票最重要</dt>
       <dd>反對票是白紙黑字的事實，不會因為主席換人或文風改變而失真。
-        三票主張升息，比任何措辭都清楚。</dd>
+        每張反對票的方向都寫在聲明裡，比任何措辭都清楚——
+        本次的實際票數見上方結論卡。</dd>
       <dt>刪掉的字要小心解讀</dt>
       <dd>聯準會拿掉一個措辭，可能是立場改變，也可能只是主席不想再給指引。
         兩者意思完全不同——所以系統會偵測「大量措辭同時消失」並示警。</dd>

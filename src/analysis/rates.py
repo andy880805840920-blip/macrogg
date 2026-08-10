@@ -87,8 +87,11 @@ class DebtState:
     interest_to_revenue: float | None = None
     effective_rate: float | None = None       # 債務的有效利率 i
     nominal_growth: float | None = None       # 名目 GDP 成長 g
-    r_minus_g: float | None = None            # 實質利率 − 實質成長
-    i_minus_g: float | None = None            # 名目：有效利率 − 名目成長
+    real_growth: float | None = None          # 實質 GDP 成長（r−g 的 g）
+    real_growth_assumed: bool = False         # True = 取不到實質 GDP，用了假設值
+    r_minus_g: float | None = None            # 前瞻：市場實質利率 − 實質成長
+    i_minus_g: float | None = None            # 目前：有效利率 − 名目成長
+    gap_divergence: str = ""                  # 兩個缺口方向不一致時的說明
     stabilizing_pb: float | None = None       # 穩定債務比所需的基本盈餘（% GDP）
     actual_pb: float | None = None            # 實際基本盈餘（% GDP）
     pb_gap: float | None = None               # 差距＝問題的規模
@@ -151,8 +154,30 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
         if d.actual_pb is not None:
             d.pb_gap = d.actual_pb - d.stabilizing_pb
 
-    if real_10y is not None and real_growth is not None:
-        d.r_minus_g = real_10y - real_growth
+    # r 減 g 的 g：優先用實質 GDP 年增，取不到才退回呼叫端給的假設值。
+    # 寫死的成長率會讓 r−g 與 i−g 在資料變動時各說各話。
+    real_gdp = s.get("GDPC1") or []
+    if len(real_gdp) > 4 and real_gdp[-5]["value"]:
+        d.real_growth = (value_at(real_gdp) / real_gdp[-5]["value"] - 1) * 100
+        d.real_growth_assumed = False
+    elif real_growth is not None:
+        d.real_growth = real_growth
+        d.real_growth_assumed = True
+
+    if real_10y is not None and d.real_growth is not None:
+        d.r_minus_g = real_10y - d.real_growth
+
+    # 兩個缺口方向不一致時要講清楚，否則同一頁上兩個數字互相打臉。
+    # i−g 是「已發行債務的當前成本」，r−g 是「用市場現在的利率再融資後」——
+    # 存量利率還在往市場利率爬，所以前者小於後者是正常的，不是矛盾。
+    if d.i_minus_g is not None and d.r_minus_g is not None:
+        if (d.i_minus_g > 0) != (d.r_minus_g > 0):
+            worse = "前瞻" if d.r_minus_g > d.i_minus_g else "當前"
+            d.gap_divergence = (
+                "兩個缺口方向不同：當前缺口用的是已發行債務的平均利率（存量），"
+                "前瞻缺口用的是市場現在的實質利率（增量）。"
+                f"{worse}的那個為正，代表壓力還在後面——"
+                "舊債每到期換成新利率，存量利率就往市場利率靠攏一步。")
 
     # 判定
     if d.pb_gap is not None:
@@ -215,6 +240,7 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
         return h
 
     weighted_yoy_num = 0.0
+    weighted_yoy_den = 0.0
     for c in comps:
         capex = float(c.get("capex") or 0)
         ocf = float(c.get("ocf") or 0)
@@ -227,6 +253,7 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
             h.n_cash_negative += 1
         if c.get("capex_yoy") is not None:
             weighted_yoy_num += capex * float(c["capex_yoy"])
+            weighted_yoy_den += capex          # 分母只累計「有年增資料」的公司
         h.companies.append({
             "name": c.get("name", ""), "ticker": c.get("ticker", ""),
             "capex": capex, "ocf": ocf, "issued": issued,
@@ -239,8 +266,10 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
             "period_end": c.get("period_end", ""),
         })
 
-    if h.total_capex:
-        h.capex_yoy = weighted_yoy_num / h.total_capex
+    # 分母不能用 total_capex：沒有年增資料的公司被排除在分子外卻留在分母裡，
+    # 會把加權平均往零壓（少一家 Meta 就低估十個百分點以上）。
+    if weighted_yoy_den:
+        h.capex_yoy = weighted_yoy_num / weighted_yoy_den
     if h.total_ocf:
         h.capex_to_ocf = h.total_capex / h.total_ocf * 100
     if ig_quarterly:
@@ -288,7 +317,8 @@ class SupplyPressure:
 def supply_pressure(curve: CurveState, debt: DebtState,
                     hs: Hyperscalers, ig_oas: float | None) -> SupplyPressure:
     """
-    四個來源各自給分，並列出貢獻，避免變成不可解釋的黑箱。
+    各來源分別給分並列出貢獻，避免變成不可解釋的黑箱。
+    目前有：期限溢酬、財政缺口、科技巨頭融資缺口、投資級利差、30 減 10 年期差。
     """
     sp = SupplyPressure()
     total = 0.0

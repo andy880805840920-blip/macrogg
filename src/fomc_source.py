@@ -331,7 +331,32 @@ def extract_text(html_doc: str) -> str:
             continue
         kept.append(t)
 
-    return re.sub(r"\s+", " ", " ".join(kept)).strip()
+    return " ".join(_statement_span(kept)).strip()
+
+
+# 聲明本文一定會提到委員會、目標區間或投票；頁面上其他的散文段落
+# （相關新聞連結、頁尾說明、免責聲明）不會同時具備這些特徵。
+_CORE = re.compile(
+    r"\bcommittee\b|\btarget range\b|\bfederal funds rate\b|\bvoting\b",
+    re.I)
+
+
+def _statement_span(paras: list[str]) -> list[str]:
+    """
+    從所有散文段落中，只取「聲明本文」那一段連續範圍。
+
+    先前是把整頁通過過濾的段落全部串起來，所以任何漏網的雜訊
+    （相關報導連結、頁尾聲明、其他新聞稿摘要）都會被當成聲明內容，
+    然後在逐句比對裡冒出來。
+
+    改成鎖定範圍：從第一個提到委員會／目標區間的段落，
+    到最後一個提到的段落為止，中間全收（政策段落之間可能有不含
+    關鍵詞的句子），兩端以外一律丟掉。
+    """
+    idx = [i for i, t in enumerate(paras) if _CORE.search(t)]
+    if not idx:
+        return []
+    return paras[idx[0]:idx[-1] + 1]
 
 
 def split_statement(text: str) -> tuple[str, str]:

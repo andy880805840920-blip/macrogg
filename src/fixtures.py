@@ -141,6 +141,11 @@ def _interp_recent(dates: list[str], recent: dict[str, float],
 
 
 def build() -> dict[str, list[dict]]:
+    # 每次進 build() 都重設種子。random.seed 只在 import 時跑一次的話，
+    # 第二次呼叫（build_vintages 內部）會抽到完全不同的序列——
+    # 67 個月裡有 59 個對不上，於是離線模式會憑空生出一堆從未發生的
+    # 「修正」，把「近一年修正傾向」算成實際值的一半。
+    random.seed(20260807)
     d = MONTHS
     s: dict[str, list[dict]] = {}
 

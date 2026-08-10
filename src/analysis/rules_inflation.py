@@ -41,19 +41,25 @@ def r_momentum(ctx) -> Flag | None:
     if s.core_3m is None or s.core_yoy is None:
         return None
     gap = s.core_3m - s.core_yoy
+    # 標題要寫出實際的門檻。只寫「高於年增率」會讓人以為差 0.1 個百分點
+    # 就該亮燈，然後看到沒亮而以為程式壞了——門檻是 0.4 個百分點。
     if gap < -0.4:
         return Flag(
-            "cpi_cooling", "alert", "近三月年化明顯低於年增率",
+            "cpi_cooling", "alert", "近三月年化低於年增率 0.4 個百分點以上",
             f"核心 CPI 年增 {s.core_yoy:.1f}%，但把最近三個月的漲勢換算成年率只有 "
-            f"{s.core_3m:.1f}%。年增率會被一年前的舊數字拖住，"
-            "三個月年化反映的是當下的溫度，通常更早看出轉折。",
+            f"{s.core_3m:.1f}%，低了 {abs(gap):.1f} 個百分點。"
+            "年增率會被一年前的舊數字拖住，"
+            "三個月年化反映的是當下的溫度，通常更早看出轉折。"
+            "差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。",
             "dovish", "通膨降溫的證據",
         )
     if gap > 0.4:
         return Flag(
-            "cpi_reheating", "alert", "近三月年化高於年增率，動能回升",
+            "cpi_reheating", "alert", "近三月年化高於年增率 0.4 個百分點以上",
             f"核心 CPI 年增 {s.core_yoy:.1f}%，但最近三個月換算成年率達 "
-            f"{s.core_3m:.1f}%。短期動能正在回升，這是通膨重新加速的早期訊號。",
+            f"{s.core_3m:.1f}%，高了 {gap:.1f} 個百分點。"
+            "短期動能正在回升，這是通膨重新加速的早期訊號。"
+            "差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。",
             "hawkish", "通膨動能回升",
         )
     return None

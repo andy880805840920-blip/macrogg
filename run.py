@@ -48,7 +48,11 @@ ROOT = Path(__file__).parent
 OUT_DIR = ROOT / "output"
 # 快照要進 git，這樣 GitHub Actions 上跑也比得出「跟上期的差異」
 STATE_FILE = ROOT / "state" / "snapshot.json"
-HISTORY_START = "2015-01-01"
+# 抓取起點。圖表只畫 2025 之後（見 build.CHART_START），但統計量
+# （z-score、年增率、Sahm 法則）需要更長的歷史才有意義，所以抓得比畫的早。
+# 2023 起約三年，足夠讓 z-score 有 36 個月的分母；再往前拉對這套
+# 「近期體制」的判讀沒有增益，只是拖慢抓取。
+HISTORY_START = "2023-01-01"
 SAVE_FIXTURES = False
 REAL_MODULES: list[str] = []
 FOMC_YEARS_BACK = 4
@@ -240,6 +244,22 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         p.write_text(content, encoding="utf-8")
         written.append(p)
 
+    def archive(rel: str, content: str) -> None:
+        """
+        存檔頁只在該資料月份第一次出現時寫入，之後不再覆寫。
+
+        排程是每天跑的，但存檔路徑是按資料月份命名的。若每次都覆寫，
+        同一個月會被蓋掉三十次，最後留下的是「這個月最後一次執行看到的樣子」
+        ——而 BLS／BEA 在這期間已經修正過數字。那樣存檔頁宣稱的
+        「當時我們看到的是什麼」就不成立。只寫第一次，留下的才是發布日原始版本。
+        """
+        p = OUT_DIR / rel
+        if p.exists():
+            return
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(content, encoding="utf-8")
+        written.append(p)
+
     banner = (labor_page.offline_banner(ctxs.get("_real_modules") or [])
               if offline else "")
     lab, inf, fom, scn = (ctxs.get("labor"), ctxs.get("inflation"),
@@ -255,7 +275,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
                       f"　·　更新於 {lab['generated_at']}"),
             footer=labor_page.labor_footer(lab), banner=banner)
         write("labor/index.html", html)
-        write(f"archive/labor-{lab['data_month']}/index.html", html)
+        archive(f"archive/labor-{lab['data_month']}/index.html", html)
 
     # ---- 通膨 ----
     if inf:
@@ -265,7 +285,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
                       f"　·　更新於 {inf['generated_at']}"),
             footer=infl_page.inflation_footer(inf), banner=banner)
         write("inflation/index.html", html)
-        write(f"archive/inflation-{inf['data_month']}/index.html", html)
+        archive(f"archive/inflation-{inf['data_month']}/index.html", html)
     elif not only or not (OUT_DIR / "inflation/index.html").exists():
         write("inflation/index.html", site.soon_page(
             "通膨", "/inflation/", "設定檔 config/inflation.yaml 未載入。", "P2"))
@@ -338,7 +358,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     write("archive/index.html", site.page(
         "存檔", "/archive/", home_page.archive_body(entries),
         subtitle=f"共 {len(entries)} 期",
-        footer="官方會持續修正歷史數字，這裡保留每期發布當下的完整頁面。"))
+        footer="官方會持續修正歷史數字，這裡保留每個資料月份第一次產出時的完整頁面。"))
 
     write("robots.txt", "User-agent: *\nDisallow: /\n")
     return written

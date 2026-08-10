@@ -44,6 +44,7 @@ class Breakeven:
     nfp_3m: float | None = None           # 非農近三個月平均
     gap: float | None = None              # 非農 − 損益兩平
     verdict: str = "unknown"              # above | balanced | below | unknown
+    tolerance: float | None = None        # 判定用的容差（千人），相對於損益兩平
     series: list[dict] = field(default_factory=list)   # 逐月的損益兩平估計
     note: str = ""
 
@@ -93,9 +94,17 @@ def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
                for i in range(1, len(payems_rows))]
         b.nfp_3m = sum(chg[-3:]) / 3
         b.gap = b.nfp_3m - b.monthly
-        if b.gap > 25:
+        # 判定要相對於損益兩平線本身，不能用固定的 ±2.5 萬人。
+        # 這一整段的重點正是「同樣的月增，在不同的供給環境下意義相反」；
+        # 用絕對門檻等於把剛講完的道理丟掉——損益兩平 4.3 萬、實際 2.0 萬，
+        # 就業只跟上供給的一半，卻會被判成「大致同步」。
+        # 門檻取「損益兩平的一半」與 2.5 萬人的較大者：
+        # 損益兩平接近零時比例門檻會過度敏感，這時用絕對值兜底。
+        tol = max(25.0, abs(b.monthly) * 0.5)
+        b.tolerance = tol
+        if b.gap > tol:
             b.verdict = "above"
-        elif b.gap < -25:
+        elif b.gap < -tol:
             b.verdict = "below"
         else:
             b.verdict = "balanced"
@@ -103,8 +112,11 @@ def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
     # ---- 5. 逐月序列，供畫圖 ----
     b.series = _series(deltas, lfpr_rows, b.ces_cps_ratio, lookback)
 
+    _tol_txt = (f"判定容差 ±{b.tolerance/10:,.1f} 萬人（取損益兩平的一半與 "
+                f"2.5 萬人的較大者，因為同樣的月增在供給環境不同時意義不同）。"
+                if b.tolerance else "")
     b.note = (f"以近 {lookback} 個月平均人口成長 {b.pop_growth/10:,.1f} 萬人／月、"
-              f"參與率 {b.participation:.1f}% 估計。"
+              f"參與率 {b.participation:.1f}% 估計。{_tol_txt}"
               "此為推估值，非官方公布數字。")
     return b
 
@@ -127,7 +139,8 @@ def _series(pop_deltas: list[dict], lfpr_rows: list[dict],
 
 VERDICT_TEXT = {
     "above": ("高於損益兩平", "就業成長快過勞動供給，失業率有下行壓力"),
-    "balanced": ("接近損益兩平", "就業成長與勞動供給大致同步，失業率應維持穩定"),
+    "balanced": ("接近損益兩平", "就業成長與勞動供給的差距在容差之內，"
+                 "單就這一項看不出失業率的方向"),
     "below": ("低於損益兩平", "就業成長跟不上勞動供給，失業率有上行壓力"),
     "unknown": ("無法判定", ""),
 }

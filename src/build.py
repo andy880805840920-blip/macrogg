@@ -19,7 +19,11 @@ from .analysis import (attribution, regime, revisions, rules,
                        passthrough as pt)
 from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
                            annualized, yoy_series, annualized_series,
-                           since_year_start)
+                           since, span_label)
+
+# 全站圖表的顯示起點。資料本身可能抓得更早（統計量需要），
+# 但畫出來的一律從這裡開始，讓所有圖表的時間軸一致。
+CHART_START = "2025-01-01"
 
 
 def build_labor_context(cfg: dict, series: dict, vintages: dict,
@@ -139,7 +143,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "ahe_plain": plain_ahe,
         "lfpr_plain": plain_lfpr,
         "nfp_spark": [r["value"] for r in
-                      since_year_start(nfp_changes, min_points=12)],
+                      since(nfp_changes, CHART_START, 12)],
         "nfp_flag": (f"前兩月合計修正 {fmt.wan(rev.two_month_net)}"
                      if rev.two_month_net is not None else None),
         "nfp_flag_kind": ("neg" if (rev.two_month_net or 0) < 0 else "pos"),
@@ -148,7 +152,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "u3_sub": (f"較上月 {diff(u3):+.1f} 個百分點"
                    f"　·　含低度就業 {value_at(series.get('U6RATE', [])):.1f}%"
                    if u3 and series.get("U6RATE") else ""),
-        "u3_spark": [r["value"] for r in since_year_start(u3, min_points=12)],
+        "u3_spark": [r["value"] for r in since(u3, CHART_START, 12)],
         "u3_flag": dec.get("verdict_text") if dec else None,
         "u3_flag_kind": ("neg" if dec.get("verdict") in ("bad_decline", "bad_rise") else "pos") if dec else "",
 
@@ -157,7 +161,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                     f"差距 {wage['gap']:+.2f} 個百分點" if wage else ""),
         # 平均時薪是水準值（美元），直接畫是一條斜線 → 改畫年增率
         "ahe_spark": [r["value"] for r in
-                      since_year_start(yoy_series(ahe), min_points=12)],
+                      since(yoy_series(ahe), CHART_START, 12)],
         "ahe_flag": ("組成效果推高總體時薪" if wage.get("composition_bias") == "overstated"
                      else ("基層薪資壓力較大" if wage.get("composition_bias") == "understated" else None)),
         "ahe_flag_kind": "neg" if wage.get("composition_bias") == "overstated" else "",
@@ -166,7 +170,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "lfpr_sub": (f"較上月 {diff(lfpr):+.1f} 個百分點　·　"
                      f"25-54 歲 {value_at(series.get('LNS11300060', [])):.1f}%"
                      if lfpr and series.get("LNS11300060") else ""),
-        "lfpr_spark": [r["value"] for r in since_year_start(lfpr, min_points=12)],
+        "lfpr_spark": [r["value"] for r in since(lfpr, CHART_START, 12)],
         "lfpr_flag": None,
         "lfpr_flag_kind": "",
     }
@@ -249,16 +253,29 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         if not rows:
             continue
         cur, dd = value_at(rows), diff(rows)
-        vfmt = fmt.wan(cur, signed=False) if unit == "K" else f"{cur:.1f}%"
+        # 職缺數的單位是「個」不是「人」——一個雇主可以同時開多個職缺
+        vfmt = f"{cur/10:,.1f} 萬個" if unit == "K" else f"{cur:.1f}%"
         if dd is None:
             dfmt = "—"
         elif unit == "K":
-            dfmt = fmt.wan(dd)
+            dfmt = f"{dd/10:+,.1f} 萬個"
         else:
             dfmt = "持平" if abs(dd) < 0.005 else f"{dd:+.2f} 個百分點"
         jolts_rows.append({"label": labels.get(sid, sid), "value": vfmt, "chg": dfmt})
 
     jolts_date = series.get("JTSJOL", [{}])[-1].get("date", "")[:7] if series.get("JTSJOL") else "—"
+    # 落後幾期要算出來，不能寫死「約兩個月」——旁邊就印著兩個資料月份，
+    # 讀者一眼就能對照，寫死的那句話有一半的時候是錯的。
+    def _month_gap(a_date: str, b_date: str) -> int | None:
+        try:
+            ay, am = int(a_date[:4]), int(a_date[5:7])
+            by, bm = int(b_date[:4]), int(b_date[5:7])
+        except (ValueError, IndexError):
+            return None
+        return (ay - by) * 12 + (am - bm)
+    _lag = _month_gap(data_month, jolts_date) if jolts_date != "—" else None
+    jolts_lag_text = (f"較就業報告落後 {_lag} 個月" if _lag and _lag > 0
+                      else "與就業報告同月份")
 
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Employment Situation"),
@@ -279,10 +296,16 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "flags": flags,
         "tilt": tilt,
         "score": {"score": score.score, "delta": score.delta,
-                  "items": [{"label": i.label, "z": i.z, "weight": i.weight,
+                  "window": score.window,
+                  # z 要送「已調整方向」的值，否則表格數字與下方
+                  # 「正值＝就業強」的說明相反（失業率上升會顯示成正分）
+                  "items": [{"label": i.label,
+                             "z": (-i.z if i.inverted else i.z),
+                             "inverted": i.inverted, "weight": i.weight,
+                             "window": i.window,
                              "contribution": i.contribution} for i in score.items]},
         "jolts": jolts_rows,
-        "jolts_note": f"資料月份 {jolts_date}（JOLTS 較就業報告落後約兩個月）",
+        "jolts_note": f"資料月份 {jolts_date}（{jolts_lag_text}）",
         "breakeven": _breakeven_block(bkev),
         "surprises": _surprise_block(surprises),
         "asof": {
@@ -291,7 +314,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "claims": (series.get("CCSA") or [{}])[-1].get("date", ""),
         },
         "mini": {
-            "nfp": charts.mini_series(nfp_chg_series, fmt=lambda v: fmt.wan(v, digits=1)),
+            # 「萬人」抽到單位列，六格的數字才不會互相疊在一起
+            "nfp": charts.mini_series(nfp_chg_series, unit="萬人",
+                                      fmt=lambda v: f"{v/10:+,.1f}"),
             "u3": charts.mini_series(u3, fmt=lambda v: f"{v:.1f}%"),
             "ahe": charts.mini_series(yoy_series(ahe), fmt=lambda v: f"{v:.1f}%"),
             "lfpr": charts.mini_series(lfpr, fmt=lambda v: f"{v:.1f}%"),
@@ -305,11 +330,11 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                        "value": None if ma3 is None else ma3 / 10,
                        "unit": "萬人", "threshold": 1},
             "u3": {"label": "失業率", "value": value_at(u3),
-                   "unit": "%", "threshold": 0.05},
+                   "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "lfpr": {"label": "勞動參與率", "value": value_at(lfpr),
-                     "unit": "%", "threshold": 0.05},
+                     "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "ahe_yoy": {"label": "平均時薪年增", "value": ahe_yoy,
-                        "unit": "%", "threshold": 0.05},
+                        "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "breakeven": {"label": "損益兩平就業增速",
                           "value": None if bkev.monthly is None else bkev.monthly / 10,
                           "unit": "萬人", "threshold": 0.5},
@@ -335,10 +360,10 @@ def _breakeven_block(b) -> dict:
     if b.series:
         # 圖表單位要跟上方數字一致（萬人），否則讀者要自己換算
         merged = [{"date": r["date"], "value": r["value"] / 10}
-                  for r in since_year_start(b.series, min_points=18)]
+                  for r in since(b.series, CHART_START, 12)]
         # 萬人的全站慣例是一位小數（fmt.wan），圖上標籤跟著用
         chart = charts.line_chart(merged, unit=" 萬人", height=150,
-                                  color="var(--series-2)", digits=1)
+                                  color="var(--line-2)", digits=1)
     return {"stats": stats, "chart": chart, "note": b.note,
             "verdict": b.verdict, "verdict_label": label, "verdict_note": note,
             "monthly": b.monthly, "gap": b.gap}
@@ -382,12 +407,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         if not rows:
             return []
         r = yoy_series(rows) if kind == "yoy" else annualized_series(rows, 3)
-        return [x["value"] for x in since_year_start(r, min_points=12)]
+        return [x["value"] for x in since(r, CHART_START, 12)]
 
     def level_spark(sid):
         """本身就是比率的序列（例如通膨預期）可以直接畫水準值。"""
         rows = series.get(sid, [])
-        return [x["value"] for x in since_year_start(rows, min_points=20)]
+        return [x["value"] for x in since(rows, CHART_START, 20)]
 
     kpi = {
         "headline_display": _pct(summ.headline_yoy),
@@ -447,7 +472,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     agg = att.aggregates
     att_stats = [
         {"label": "近三個月漲幅", "value": f"{att.total:+.2f}%"},
-        {"label": "其中：住房貢獻", "value": f"{agg.get('shelter', 0):+.2f}pp",
+        {"label": "其中：住房貢獻", "value": f"{agg.get('shelter', 0):+.2f} 個百分點",
          "note": "算法落後市場行情約一年"},
         {"label": "剔除住房後",
          "value": (f"{agg['ex_shelter']:+.2f}%"
@@ -455,7 +480,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
          "color": ("var(--good)"
                    if (agg.get("ex_shelter") or 9) < 0.6 else "inherit"),
          "note": "更接近當下的實際物價（已按剩餘權重換算回通膨率）"},
-        {"label": "食物與能源貢獻", "value": f"{agg.get('food_energy', 0):+.2f}pp"},
+        {"label": "食物與能源貢獻", "value": f"{agg.get('food_energy', 0):+.2f} 個百分點"},
     ]
 
     # ---- 趨勢型指標 ----
@@ -473,7 +498,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     energy_stats = []
     if summ.oil_1m is not None:
         energy_stats.append({
-            "label": "原油近一個月", "value": f"{summ.oil_1m:+.0f}%",
+            # 一位小數：整數會讓下方「以能源佔比 6.2% 與傳導係數 0.4 粗估」
+            # 這句話算不回同一個答案，也會讓「>8% 才觸發旗標」看起來像壞掉
+            "label": "原油近一個月", "value": f"{summ.oil_1m:+.1f}%",
             "color": ("var(--serious)" if summ.oil_1m > 0 else "var(--series-1)"),
             "note": "領先加油站價格約 2–4 週"})
     if summ.gas is not None:
@@ -481,20 +508,24 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     if summ.oil_1m is not None:
         est = summ.oil_1m * 0.062 * 0.4
         energy_stats.append({
-            "label": "對總體 CPI 的估計影響", "value": f"{est:+.2f}pp",
+            "label": "對總體 CPI 的估計影響", "value": f"{est:+.2f} 個百分點",
             "note": "以能源佔比 6.2% 與傳導係數 0.4 粗估"})
     energy_stats.append({"label": "對核心 CPI 的影響", "value": "無",
                          "note": "核心已剔除能源"})
 
     # 油價與汽油走勢圖：油價領先加油站價格 2–4 週，這段落差就是「已發生但還沒進 CPI」
-    oil_rows = since_year_start(series.get("DCOILWTICO", []), min_points=40)
-    gas_rows = since_year_start(series.get("GASREGW", []), min_points=12)
+    oil_rows = since(series.get("DCOILWTICO", []), CHART_START, 40)
+    gas_rows = since(series.get("GASREGW", []), CHART_START, 12)
     oil_chart = charts.line_chart(
         oil_rows, unit=" 美元", height=150,
         marks=[{"index": max(len(oil_rows) - 22, 0), "label": "一個月前"}]
     ) if len(oil_rows) > 2 else ""
+    # 汽油圖也要有「一個月前」的虛線標記。旁邊的說明寫著「虛線是一個月前
+    # 的位置」，只有原油那張畫了標記時，讀者會把汽油圖上的高低參考線
+    # （那是最高值與最低值）誤讀成一個月前的位置。汽油是週資料，一個月約 4 筆。
     gas_chart = charts.line_chart(
-        gas_rows, unit=" 美元", height=130, color="var(--series-2)"
+        gas_rows, unit=" 美元", height=130, color="var(--line-2)",
+        marks=[{"index": max(len(gas_rows) - 5, 0), "label": "一個月前"}]
     ) if len(gas_rows) > 2 else ""
 
     # ---- 薪資 → 服務業通膨的傳導（把兩個模組真正接起來的地方）----
@@ -514,12 +545,15 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "lights": lights,
         "attribution": {
             "stats": att_stats,
-            "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f}pp"),
+            "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f} 個百分點"),
         },
         "trend_rows": trend_rows,
         "energy_stats": energy_stats,
         "oil_chart": oil_chart,
         "gas_chart": gas_chart,
+        # 標題的期間字串由實際畫出來的資料推得，不寫死「今年以來」
+        "oil_span": span_label(oil_rows),
+        "gas_span": span_label(gas_rows),
         "passthrough": pass_block,
         "asof": {
             "cpi": headline[-1]["date"] if headline else "",
@@ -534,20 +568,23 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                                        fmt=lambda v: f"{v:.1f}%"),
             "pce": charts.mini_series(yoy_series(series.get("PCEPILFE", [])),
                                       fmt=lambda v: f"{v:.1f}%"),
-            "exp": charts.mini_series(since_year_start(series.get("T5YIFR", []), 40)[::7],
-                                      fmt=lambda v: f"{v:.2f}%"),
+            # 日頻序列：從最新一筆往回每 7 個交易日取一點（[::7] 從頭取
+            # 會讓最後一格不是最新值），並標到「月/日」避免三格都寫同一個月
+            "exp": charts.mini_series(
+                since(series.get("T5YIFR", []), CHART_START, 40)[::-1][::7][::-1],
+                fmt=lambda v: f"{v:.2f}%", daily=True),
         },
         "key_metrics": {
             "core_cpi_yoy": {"label": "核心 CPI 年增", "value": summ.core_yoy,
-                             "unit": "%", "threshold": 0.05},
+                             "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "core_cpi_3m": {"label": "核心 CPI 三月年化", "value": summ.core_3m,
-                            "unit": "%", "threshold": 0.1},
+                            "unit": "%", "delta_unit": " 個百分點", "threshold": 0.1},
             "core_pce": {"label": "核心 PCE 年增", "value": summ.pce_core_yoy,
-                         "unit": "%", "threshold": 0.05},
+                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "supercore": {"label": "核心服務除住房", "value": summ.supercore_3m,
-                          "unit": "%", "threshold": 0.1},
+                          "unit": "%", "delta_unit": " 個百分點", "threshold": 0.1},
             "exp5y5y": {"label": "長期通膨預期", "value": summ.expect_5y5y,
-                        "unit": "%", "threshold": 0.03},
+                        "unit": "%", "delta_unit": " 個百分點", "threshold": 0.03},
         },
     }
 
@@ -868,17 +905,22 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
          "color": ("var(--serious)" if p.gap > 0.8 else
                    ("var(--series-1)" if p.gap < -0.8 else "inherit")),
          "note": title},
-        {"label": "相關性最高的領先期數", "value": f"{p.best_lag} 個月",
-         "note": f"相關係數 {p.best_corr:+.2f}"},
+        {"label": "相關性最強的領先期數", "value": f"{p.best_lag} 個月",
+         # 負相關要標紅：它是在反駁傳導機制，不是佐證
+         "color": ("var(--critical)" if p.best_corr < -0.3 else "inherit"),
+         "note": (f"相關係數 {p.best_corr:+.2f}"
+                  + (f"（測試範圍 0–{p.max_lag_evaluated} 個月）"
+                     if p.max_lag_evaluated is not None else ""))},
     ]
 
     # 兩條線疊圖：分別畫，避免雙軸（不同尺度硬放同一張圖會誤導）
-    wage_chart = charts.line_chart(
-        [{"date": r["date"], "value": r["wage"]} for r in p.series],
-        unit="%", height=120)
-    sc_chart = charts.line_chart(
-        [{"date": r["date"], "value": r["supercore"]} for r in p.series],
-        unit="%", height=120, color="var(--series-2)")
+    _pass_rows = since([{"date": r["date"], "value": r["wage"]} for r in p.series],
+                       CHART_START, 12)
+    _sc_rows = since([{"date": r["date"], "value": r["supercore"]} for r in p.series],
+                     CHART_START, 12)
+    wage_chart = charts.line_chart(_pass_rows, unit="%", height=120)
+    sc_chart = charts.line_chart(_sc_rows, unit="%", height=120,
+                                 color="var(--line-2)")
 
     lag_rows = "".join(
         f'<tr><td>{c["lag"]} 個月</td><td>{c["corr"]:+.2f}</td></tr>'
@@ -888,6 +930,7 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
 
     return {"available": True, "stats": stats, "wage_chart": wage_chart,
             "sc_chart": sc_chart, "lag_rows": lag_rows, "note": p.note,
+            "corr_note": p.corr_note,
             "verdict_title": title, "verdict_desc": desc}
 
 
@@ -963,10 +1006,10 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
          "color": ("var(--critical)" if (debt.interest_to_revenue or 0) > 20
                    else "inherit"),
          "note": "每收 100 元稅拿去付利息的比例"},
-        {"label": "有效利率 減 名目成長",
+        {"label": "當前缺口：有效利率 減 名目成長",
          "value": (f"{debt.i_minus_g:+.2f}%" if debt.i_minus_g is not None else "—"),
          "color": ("var(--critical)" if (debt.i_minus_g or -1) > 0 else "var(--good)"),
-         "note": "大於零時債務會自我累積"},
+         "note": "已發行債務的平均利率；大於零時債務會自我累積"},
         {"label": "穩定債務所需基本盈餘",
          "value": (f"{debt.stabilizing_pb:+.2f}% GDP"
                    if debt.stabilizing_pb is not None else "—")},
@@ -978,9 +1021,12 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
          "color": ("var(--critical)" if (debt.pb_gap or 0) < -0.5 else "var(--good)"),
          "note": "實際與穩定水準的差距"},
     ]
+    # 債務比是季資料，一年才四筆，min_points 放寬一點才有形狀。
+    # 這也代表實際起點可能早於 CHART_START，所以期間要標出來。
+    debt_rows = since(series.get("GFDEGDQ188S") or [], CHART_START, 6)
     debt_chart = charts.line_chart(
-        series.get("GFDEGDQ188S") or [], unit="%", height=150,
-        color="var(--series-2)")
+        debt_rows, unit="%", height=150, color="var(--line-2)")
+    debt_span = span_label(debt_rows)
 
     # ---- Hyperscaler ----
     # 單位一律換算成「億美元」。原始財報是 billion，但中文語境讀 10 億／十億
@@ -1009,7 +1055,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                 "label": label, "value": f"{rows[-1]['value']:.2f}%",
                 "note": (f"近一個月 {dv*100:+.0f} 基點" if dv is not None else "")})
     credit_chart = charts.line_chart(
-        since_year_start(series.get("BAMLC0A0CM") or [], 40), unit="%", height=140)
+        since(series.get("BAMLC0A0CM") or [], CHART_START, 40), unit="%", height=140)
 
     as_of = (series.get("DGS10") or [{}])[-1].get("date", "")
 
@@ -1033,17 +1079,24 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         "decomp_note": curve.note,
         "debt_stats": debt_stats,
         "debt_chart": debt_chart,
+        "debt_span": debt_span,
         "debt_note": debt.note,
+        "debt_divergence": debt.gap_divergence,
+        "debt_growth_note": (
+            f"r 減 g 的成長率用實質 GDP 年增 {debt.real_growth:.1f}%"
+            if debt.real_growth is not None and not debt.real_growth_assumed
+            else (f"取不到實質 GDP，r 減 g 的成長率暫用 {debt.real_growth:.1f}% 假設值"
+                  if debt.real_growth is not None else "")),
         "hs_stats": hs_stats,
         "credit_stats": credit_stats,
         "credit_chart": credit_chart,
         "key_metrics": {
             "dgs10": {"label": "10 年期殖利率", "value": curve.levels.get("10Y"),
-                      "unit": "%", "threshold": 0.05},
+                      "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "dgs30": {"label": "30 年期殖利率", "value": curve.levels.get("30Y"),
-                      "unit": "%", "threshold": 0.05},
+                      "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "term_premium": {"label": "期限溢酬", "value": curve.term_premium,
-                             "unit": "%", "threshold": 0.05},
+                             "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
             "ig_oas": {"label": "投資級利差", "value": ig_oas,
                        "unit": "%", "threshold": 0.05},
         },

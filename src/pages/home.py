@@ -75,9 +75,12 @@ def _change_card(cs) -> str:
     moves = []
     for m in cs.metric_moves[:8]:
         cls = "up" if m["delta"] > 0 else "down"
+        # 兩個「率」相減是**個百分點**，不是 %。用同一個單位字串印水準與變化量，
+        # 會讓「失業率 4.1 → 4.3」的變化顯示成「+0.20%」，讀者會當成漲了 0.2%。
+        dunit = m.get("delta_unit") or m.get("unit", "")
         moves.append(
             f'<div class="cmove"><div>{esc(m["label"])}</div>'
-            f'<div class="cm-delta {cls}">{m["delta"]:+.2f}{esc(m["unit"])}</div>'
+            f'<div class="cm-delta {cls}">{m["delta"]:+.2f}{esc(dunit)}</div>'
             f'<div class="cm-val">{m["from"]:,.2f} → {m["to"]:,.2f}{esc(m["unit"])}</div>'
             f"</div>")
     moves_html = (f'<div class="cmoves">{"".join(moves)}</div>' if moves else "")
@@ -269,7 +272,8 @@ def home_body(ctxs: dict) -> str:
     <h2>資料發布時程</h2>
     <p class="hint">下次更新時間與各資料的落後幅度。</p>
     <div class="stat-row">{pace_html}</div>
-    <div class="src">頁面於每次資料發布後自動重新產生，並存入存檔頁。</div>
+    <div class="src">頁面每天自動重新產生；存檔頁則每個資料月份只保留第一份，
+      作為未修正前的原始版本。</div>
   </div>
 </div>"""
 
@@ -277,7 +281,8 @@ def home_body(ctxs: dict) -> str:
 def archive_body(entries: list[dict]) -> str:
     if not entries:
         return ('<div class="soonbox"><h3>尚無存檔</h3>'
-                '<p>每次執行都會把當期報告存進這裡，日後可回頭查「當時看到的是什麼數字」。</p>'
+                '<p>每個資料月份第一次產出時會把當期報告存進這裡，'
+                '日後可回頭查「當時看到的是什麼數字」。</p>'
                 "</div>")
     items = "".join(
         f'<li><a href="{e["href"]}">'
@@ -287,8 +292,9 @@ def archive_body(entries: list[dict]) -> str:
     )
     return f"""<div class="card">
   <h2>歷次存檔</h2>
-  <p class="hint">每次資料發布都會保留一份當下的完整頁面。
-    因為官方會持續修正歷史數字，這份存檔就是你的原始版本檔案庫——
-    日後可以回頭查「當時我們看到的是什麼」。</p>
+  <p class="hint">每個資料月份保留一份，內容是<b>該月份第一次產出時</b>的樣子，
+    之後的每日執行不會覆蓋它。因為 BLS 與 BEA 會持續回頭修正歷史數字，
+    留下的才是發布當下的原始版本——日後可以回頭查
+    「當時我們看到的是什麼」，以及後來被改了多少。</p>
   <ul class="archive-list">{items}</ul>
 </div>"""

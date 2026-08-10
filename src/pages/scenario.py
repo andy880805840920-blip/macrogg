@@ -108,6 +108,12 @@ def scenario_body(d: dict) -> str:
                 f'{esc(sc.positioning_note)}</div>'
                 if getattr(sc, "positioning_note", "") else "")
 
+    # 就業格位不是靠分數、而是靠旗標淨值定案時要講出來——
+    # 否則門檻表裡沒有任何一條達標，讀者會以為算錯了。
+    basis_note = (f'<div class="warnbox" style="margin:0 0 14px">'
+                  f'{esc(sc.labor_basis_note)}</div>'
+                  if getattr(sc, "labor_basis_note", "") else "")
+
     # 只有真的有某一軸被標成「關鍵」時才解釋這個標記——
     # 「兩邊並重」與「無法判定」時沒有任何一條會被標，
     # 這時還寫「標關鍵的那一軸…」等於叫讀者去找不存在的東西。
@@ -200,6 +206,7 @@ def scenario_body(d: dict) -> str:
     <h2 id="triggers">情境轉換門檻</h2>
     <p class="hint">不給機率，但給明確的門檻與目前的距離——
       這比機率誠實，也更能直接拿來盯。{binding_hint}</p>
+    {basis_note}
     {_triggers(sc.triggers)}
   </div>
 </div>
@@ -256,8 +263,10 @@ def scenario_body(d: dict) -> str:
       <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的風險補償。
         景氣轉差時利差走闊，公司債價格相對承壓。</dd>
       <dt>文本的角色</dt>
-      <dd>聯準會的措辭用來校準，不是決定格子的位置。
-        當措辭與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
+      <dd>聯準會的客觀訊號（政策行動、反對票、聲明裡的風險用語）用來校準，
+        不是決定格子的位置。這裡刻意不採用措辭語氣分數——語氣會隨主席文風
+        改變，主席換人時分數會整段位移，不能用來加減信心。
+        當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
         或反過來——他們還沒承認數據已經轉向。</dd>
     </dl>
   </div>
@@ -268,7 +277,7 @@ def scenario_body(d: dict) -> str:
 def scenario_footer(d: dict) -> str:
     return (
         "情境分類由固定規則產生：勞動綜合分數 × 核心 PCE 與三月年化的加權水準，"
-        "再由聯準會文本語氣校準。<br>"
+        "再由聯準會的客觀訊號（政策行動、反對票、風險用語）校準。<br>"
         "長端供給壓力另行計算，不併入九宮格——它影響的是曲線形狀，不是政策方向。<br>"
         "本頁僅為分析框架，不構成投資建議。"
     )

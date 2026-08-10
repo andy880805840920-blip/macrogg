@@ -9,8 +9,8 @@
 會導向完全相反的決定。所以任何只看單邊的結論都是不完整的——
 這一層就是把兩邊擺在一起看。
 
-九宮格內部再用 FOMC 文本的語氣校準：同一格，聯準會措辭偏鷹或偏鴿
-會導向不同的路徑判斷。
+九宮格內部再用 FOMC 的**客觀訊號**校準（政策行動、反對票、聲明的風險用語），
+不用措辭語氣分數——語氣會隨主席文風改變，拿來加信心並不可靠。
 
 輸出刻意**不給機率**。理由：機率市場早就定價了，研究員的價值在於
 指出「我的判讀與市場定價哪裡不同」，而不是複述市場價格。
@@ -122,6 +122,8 @@ class Scenario:
     verdict_desc: str = ""
     overridden: bool = False                    # 結論是否被反應函數改寫過
     positioning_note: str = ""                  # 部位對照與修正後結論的落差說明
+    labor_basis: str = "score"                  # 就業格位是靠分數還是旗標定的
+    labor_basis_note: str = ""                  # 靠旗標定案時的說明
 
 
 # 反應函數改寫方向之後的標題。(原方向, 修正後方向) → (標題, 說明)
@@ -200,21 +202,27 @@ def _apply_focus(l_state: str, i_state: str, lean: str,
 
 
 # ---------------------------------------------------------------------------
-def classify_labor(score: float | None, tilt: dict | None) -> str:
-    """綜合分數為主，旗標傾向為輔。"""
+def classify_labor(score: float | None, tilt: dict | None) -> tuple[str, str]:
+    """
+    綜合分數為主，旗標傾向為輔。回傳 (狀態, 判定依據)。
+
+    依據要一起回傳：分數在 ±0.45 之間、靠旗標淨值定案時，畫面上只列
+    「需低於 −0.45」這條沒被滿足的門檻，讀者會看到「就業弱」卻找不到
+    任何達標的條件，看起來像出錯。
+    """
     if score is None:
-        return "中"
+        return "中", "score"
     if score <= -0.45:
-        return "弱"
+        return "弱", "score"
     if score >= 0.45:
-        return "強"
+        return "強", "score"
     # 分數在中間帶時，用旗標的鷹鴿淨值推一把
     net = (tilt or {}).get("net", 0)
     if net <= -3:
-        return "弱"
+        return "弱", "tilt"
     if net >= 3:
-        return "強"
-    return "中"
+        return "強", "tilt"
+    return "中", "score"
 
 
 def classify_inflation(core_pce_yoy: float | None,
@@ -255,7 +263,8 @@ def synthesise(labor: dict | None, inflation: dict | None,
     if not fomc:
         incomplete.append("聯準會文本")
 
-    l_state = classify_labor((labor or {}).get("score"), (labor or {}).get("tilt"))
+    l_state, l_basis = classify_labor((labor or {}).get("score"),
+                                      (labor or {}).get("tilt"))
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
                                  (inflation or {}).get("core_3m"))
 
@@ -290,7 +299,18 @@ def synthesise(labor: dict | None, inflation: dict | None,
                   incomplete=incomplete,
                   focus=focus, focus_note=focus_note, binding=binding,
                   verdict_name=v_name, verdict_desc=v_desc,
-                  overridden=overridden, positioning_note=pos_note)
+                  overridden=overridden, positioning_note=pos_note,
+                  labor_basis=l_basis)
+
+    if l_basis == "tilt":
+        _net = ((labor or {}).get("tilt") or {}).get("net", 0)
+        _sc = (labor or {}).get("score")
+        sc.labor_basis_note = (
+            f"就業格位定在「{l_state}」不是靠綜合分數——分數 "
+            f"{_sc:+.2f} 還在 ±0.45 的中間帶裡，沒有觸發下方任何一條門檻。"
+            f"是旗標的鷹鴿淨值 {_net:+.0f}（達到 ±3）把它推過去的。"
+            "分數是連續指標、旗標是離散事件，兩者不同步時以旗標為準，"
+            "因為旗標代表的是已經發生的具體事件。")
 
     # ---- 推動這個判定的主要因素 ----
     for f in (labor or {}).get("flags", [])[:2]:
@@ -298,21 +318,30 @@ def synthesise(labor: dict | None, inflation: dict | None,
     for f in (inflation or {}).get("flags", [])[:2]:
         sc.drivers.append(f"通膨｜{f.headline}")
 
-    # ---- FOMC 語氣校準 ----
+    # ---- FOMC 校準 ----
+    # 這裡拿到的 direction 來自 fomc_text.shift()，而 shift() 只看
+    # **客觀訊號分數**（政策行動＋反對票＋風險用語），完全沒有讀措辭分數。
+    # 先前這幾句都寫成「聯準會措辭…」，等於把讀者指向一個沒被用到的輸入——
+    # 而聯準會文本頁在同一次執行裡可能正好標著「本次措辭分數不可靠」。
     if fomc:
         d = fomc.get("direction")
         if d == "hawkish" and lean == "dovish":
-            sc.fomc_note = ("聯準會的措辭比數據更鷹。數據雖然偏向降息，"
-                            "但官方措辭尚未跟上，實際轉向可能比數據暗示的慢。")
+            sc.fomc_note = ("聯準會的實際動作比數據更鷹（看的是政策行動、反對票"
+                            "與聲明的風險用語，不是措辭語氣）。數據雖然偏向降息，"
+                            "但官方立場尚未跟上，實際轉向可能比數據暗示的慢。")
         elif d == "dovish" and lean == "hawkish":
-            sc.fomc_note = ("聯準會的措辭比數據更鴿。可能是官員看到了數據還沒反映的訊號，"
-                            "值得留意。")
+            sc.fomc_note = ("聯準會的實際動作比數據更鴿（看的是政策行動、反對票"
+                            "與聲明的風險用語，不是措辭語氣）。"
+                            "可能是官員看到了數據還沒反映的訊號，值得留意。")
         elif d in ("hawkish", "dovish"):
             trans = {"hawkish": "利升息", "dovish": "利降息"}[d]
-            sc.fomc_note = (f"聯準會措辭與數據方向一致"
-                            f"（{fomc.get('label', '')}＝{trans}方向），判讀的信心較高。")
+            sc.fomc_note = (f"聯準會的客觀訊號與數據方向一致"
+                            f"（{fomc.get('label', '')}＝{trans}方向），判讀的信心較高。"
+                            "這裡比對的是政策行動、反對票與聲明的風險用語，"
+                            "不含措辭語氣分數——語氣會隨主席文風改變，不宜用來加信心。")
         else:
-            sc.fomc_note = "聯準會措辭沒有明顯變化，方向主要由數據決定。"
+            sc.fomc_note = ("聯準會的客觀訊號（政策行動、反對票、風險用語）"
+                            "沒有明顯變化，方向主要由數據決定。")
 
     # ---- 跨入相鄰格的觸發條件 ----
     sc.triggers = _triggers(labor, inflation, l_state, i_state, binding)

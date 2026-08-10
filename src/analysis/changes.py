@@ -158,6 +158,8 @@ def compare(cur: dict, prev: dict | None) -> ChangeSet:
                 "label": meta.get("label", key),
                 "from": old, "to": new, "delta": delta,
                 "unit": meta.get("unit", ""),
+                # 水準與變化量的單位不同：率的變化是「個百分點」
+                "delta_unit": meta.get("delta_unit", meta.get("unit", "")),
             })
 
     cs.headline = _headline(cs)

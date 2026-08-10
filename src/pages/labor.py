@@ -177,15 +177,19 @@ def labor_body(d: dict) -> str:
     if dec:
         dec_html = f"""<div class="stat-row">
   <div class="stat"><div class="s-label">失業率變動</div>
-    <div class="s-value">{dec['delta_rate']:+.2f}pp</div></div>
+    <div class="s-value">{dec['delta_rate']:+.2f} 個百分點</div></div>
   <div class="stat"><div class="s-label">判定</div>
     <div class="s-value" style="font-size:17px;color:{dec['verdict_color']}">{esc(dec['verdict_text'])}</div></div>
   <div class="stat"><div class="s-label">就業效果</div>
-    <div class="s-value">{dec['employment_effect']:+.2f}pp</div>
+    <div class="s-value">{dec['employment_effect']:+.2f} 個百分點</div>
     <div class="s-note">有工作的人 {esc(fmt.wan(dec['delta_employed']))}</div></div>
   <div class="stat"><div class="s-label">勞動力效果</div>
-    <div class="s-value">{dec['laborforce_effect']:+.2f}pp</div>
-    <div class="s-note">在找工作的人 {esc(fmt.wan(dec['delta_labor_force']))}</div></div>
+    <div class="s-value">{dec['laborforce_effect']:+.2f} 個百分點</div>
+    <!-- 這一格的數字是「勞動力」的變動（有工作＋正在找工作），
+         不是失業人數。標成「在找工作的人」會被讀成失業人數，
+         而那個值差了將近四倍。 -->
+    <div class="s-note">勞動力（有工作＋正在找工作）{esc(fmt.wan(dec['delta_labor_force']))}
+      　·　其中失業人數 {esc(fmt.wan(dec['delta_unemployed']))}</div></div>
 </div>
 <p class="hint" style="margin:16px 0 0">
   失業率只計算「還在找工作」的人。放棄找工作的人變多時，失業率會下降，
@@ -203,12 +207,24 @@ def labor_body(d: dict) -> str:
         f'<td class="muted-cell">{esc(r["share"])}</td></tr>'
         for r in att["table"]
     )
+    # 每一列的樣本期數不一樣（週資料換算成月之後只有十幾個月，
+    # 月資料是 60 個月）。用 min() 一句話蓋掉全部，會把六列 5 年期的
+    # z-score 說成 14 個月——差 4 倍多。所以逐列標出來。
     score_items = "".join(
+        # 欄序：窄螢幕上表格要橫向捲，被推出畫面的應該是最不重要的那欄，
+        # 所以「樣本月數」放最後，貢獻留在看得到的位置
         f'<tr><td>{esc(i["label"])}</td><td>{i["z"]:+.2f}</td>'
         f'<td class="muted-cell">{i["weight"]:.1f}</td>'
-        f'<td class="{"pos" if i["contribution"]>=0 else "neg"}">{i["contribution"]:+.2f}</td></tr>'
+        f'<td class="{"pos" if i["contribution"]>=0 else "neg"}">{i["contribution"]:+.2f}</td>'
+        f'<td class="muted-cell">{i.get("window") or "—"}</td></tr>'
         for i in sc["items"]
     )
+    _wins = [i.get("window") or 0 for i in sc["items"] if i.get("window")]
+    win_note = (f"各列的樣本期數介於 {min(_wins)} 到 {max(_wins)} 個月之間"
+                if _wins and min(_wins) != max(_wins)
+                else (f"各列都以近 {_wins[0]} 個月為樣本" if _wins else ""))
+    short_note = ("　週頻序列（申請失業金）換算成月之後樣本較短，"
+                  "那兩列的分數波動會比其他列大。" if _wins and min(_wins) < 24 else "")
     pct = max(0, min(100, (sc["score"] + 2.5) / 5 * 100))
     bar_color = "var(--good)" if sc["score"] > 0 else "var(--critical)"
     left = min(50, pct) if sc["score"] < 0 else 50
@@ -341,11 +357,14 @@ def labor_body(d: dict) -> str:
     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted)">
       <span>−2.5 疲弱</span><span>0 持平</span><span>+2.5 強勁</span></div>
     <details data-m-collapse><summary>各指標貢獻明細</summary>
-      <table style="margin-top:10px">
-        <thead><tr><th>指標</th><th>標準分數</th><th>權重</th><th>貢獻</th></tr></thead>
-        <tbody>{score_items}</tbody></table>
+      <div class="tscroll" style="margin-top:10px"><table>
+        <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>
+          <th>貢獻</th><th>樣本月數</th></tr></thead>
+        <tbody>{score_items}</tbody></table></div>
       <p class="hint" style="margin-top:10px">
-        標準分數＝目前值比近五年平均高或低幾個標準差，已調整方向讓「正值＝就業強」。
+        標準分數＝目前值比同一條序列自己的平均高或低幾個標準差，
+        已調整方向讓「正值＝就業強」。{esc(win_note)}，
+        所以「樣本月數」那一欄逐列標出，不同列的分數不完全可比。{esc(short_note)}
         權重目前為暫定值。</p>
     </details>
     <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>

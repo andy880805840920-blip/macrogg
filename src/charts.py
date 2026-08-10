@@ -211,16 +211,20 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
 
     svg = (
         f'<svg class="lchart" viewBox="0 0 {W} {H}" preserveAspectRatio="none" '
-        f'role="img" aria-label="時間序列走勢">'
+        f'style="height:{H}px" role="img" aria-label="時間序列走勢">'
         f'<polygon points="{area}" fill="{color}" opacity="0.09"/>'
         f'{ref_svg}{mark_svg}'
         f'<polyline points="{poly}" fill="none" stroke="{color}" stroke-width="2" '
         f'stroke-linejoin="round" stroke-linecap="round" '
         f'vector-effect="non-scaling-stroke"/>'
-        f'<circle cx="{lx:.1f}" cy="{ly:.1f}" r="4" fill="{color}" '
-        f'stroke="var(--surface-1)" stroke-width="2" vector-effect="non-scaling-stroke"/>'
         f"</svg>"
     )
+
+    # 最新值的圓點改用 HTML 疊層畫，不放在 SVG 裡。
+    # SVG 用 preserveAspectRatio="none" 拉伸，圓形會被壓成橢圓；
+    # 而且圓心正好落在 x=W（右邊界），有一半會被裁掉。
+    end_dot = (f'<span class="ldot" style="left:{lx / W * 100:.2f}%;'
+               f'top:{ly / H * 100:.2f}%;background:{color}"></span>')
 
     # 高低參考線的數值標籤：貼在各自的線旁邊（高值標在線上方、低值在線下方），
     # 讀者不必再自己對照「區間」文字猜線的位置。
@@ -234,7 +238,7 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
 
     return (
         f'<div class="lwrap">'
-        f'<div class="lplot">{svg}{glabs}{mark_labels}</div>'
+        f'<div class="lplot">{svg}{glabs}{mark_labels}{end_dot}</div>'
         f'<div class="lxaxis"><span>{_esc(pts[0]["date"])}</span>'
         f'<span><b>{pts[-1]["value"]:,.{digits}f}{_esc(unit)}</b>　{_esc(pts[-1]["date"])}</span>'
         f"</div></div>"
@@ -244,8 +248,18 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
 # ---------------------------------------------------------------------------
 # 近 N 期數值列（放在 KPI 卡下方，補上走勢圖看不出的實際數字）
 # ---------------------------------------------------------------------------
-def mini_series(points: Sequence[dict], fmt=None, n: int = 6) -> str:
-    """走勢圖只看得出形狀，這一列補上實際數值與期別。"""
+def mini_series(points: Sequence[dict], fmt=None, n: int = 5,
+                daily: bool = False, unit: str = "") -> str:
+    """
+    走勢圖只看得出形狀，這一列補上實際數值與期別。
+
+    n 預設 5 不是 6：KPI 卡在桌機四欄版面下內容寬只有 218px，
+    六格會超出約 40px。橫向捲會把最左邊那格切掉半個字——
+    「-15.6」被切成「5.6」是**顯示成另一個數字**，比少一期嚴重得多。
+
+    daily=True 用於日頻序列（如 5y5y 通膨預期）：同一個月裡取到好幾個
+    觀測值時，只標月份會出現連續三格都寫「7月」，改標月/日。
+    """
     pts = [p for p in points if p.get("value") is not None][-n:]
     if len(pts) < 2:
         return ""
@@ -254,6 +268,9 @@ def mini_series(points: Sequence[dict], fmt=None, n: int = 6) -> str:
     def _dlabel(i: int, date: str) -> str:
         # 「26-02」會被誤讀成 26 日；改成「2月」，第一格與跨年時帶年份。
         y, m = date[2:4], int(date[5:7])
+        if daily:
+            d = int(date[8:10]) if len(date) >= 10 else 1
+            return f"{y}年{m}/{d}" if i == 0 else f"{m}/{d}"
         if i == 0 or m == 1:
             return f"{y}年{m}月"
         return f"{m}月"
@@ -264,7 +281,11 @@ def mini_series(points: Sequence[dict], fmt=None, n: int = 6) -> str:
         f'<div class="mdate">{_esc(_dlabel(i, p["date"]))}</div></div>'
         for i, p in enumerate(pts)
     )
-    return f'<div class="mseries">{cells}</div>'
+    # 單位在每一格重複（「-15.6 萬人」×6）會讓這一列比卡片還寬，
+    # 格子互相疊字、最新的那一格還被推到看不見的地方。
+    # 單位抽出來只寫一次，六格就塞得下了。
+    head = (f'<div class="munit">單位：{_esc(unit)}</div>' if unit else "")
+    return f'<div class="mwrap">{head}<div class="mseries">{cells}</div></div>'
 
 
 # ---------------------------------------------------------------------------

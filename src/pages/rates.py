@@ -47,8 +47,7 @@ def rates_body(d: dict) -> str:
                       '<b>部分數字未取自 SEC</b><br>'
                       '正常情況下這一區的數字由 SEC EDGAR 的 XBRL 申報自動擷取。'
                       '本次有公司抓取失敗（或設定為離線／手動模式），'
-                      '該公司改用 <code>config/rates.yaml</code> 的後備值，'
-                      '失敗原因列在頁面底部。</div>')
+                      '該公司改用 <code>config/rates.yaml</code> 的後備值。</div>')
 
     return f"""
 <div class="verdict {lean_cls}">
@@ -65,7 +64,7 @@ def rates_body(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="pressure">供給壓力的組成</h2>
-    <p class="hint">四個來源各自計分並列出貢獻，避免變成不可解釋的黑箱。</p>
+    <p class="hint">每個來源各自計分並列出貢獻，避免變成不可解釋的黑箱。下方各列相加即為總分。</p>
     <div class="cmoves" style="border-top:none;padding-top:0">{parts}</div>
   </div>
 </div>
@@ -107,7 +106,12 @@ def rates_body(d: dict) -> str:
     <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
       <b>{esc(debt_title)}</b><br>{esc(debt_desc)}
     </div>
-    <div style="margin-top:18px">{d['debt_chart']}</div>
+    {(f'<p class="hint" style="margin-top:14px">{esc(d["debt_divergence"])}</p>'
+      if d.get('debt_divergence') else '')}
+    {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
+      if d.get('debt_growth_note') else '')}
+    <h3 style="margin-top:18px">聯邦債務佔 GDP 比（{esc(d.get('debt_span', ''))}）</h3>
+    {d['debt_chart']}
     <details data-m-collapse><summary>財政損益兩平的算法</summary>
       <dl class="gloss" style="margin-top:10px">
         <dt>公式</dt>
@@ -137,10 +141,12 @@ def rates_body(d: dict) -> str:
     <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
       <b>{esc(hs_title)}</b><br>{esc(hs_desc)}
     </div>
-    <table style="margin-top:18px">
-      <thead><tr><th>公司</th><th>資本支出</th><th>年增</th>
-        <th>營運現金流</th><th>佔比</th><th>本季發債</th></tr></thead>
-      <tbody>{hs_rows}</tbody></table>
+    <div class="tscroll" style="margin-top:18px">
+      <table>
+        <thead><tr><th>公司</th><th>資本支出</th><th>年增</th>
+          <th>營運現金流</th><th>佔比</th><th>本季發債</th></tr></thead>
+        <tbody>{hs_rows}</tbody></table>
+    </div>
     <div class="src">單位：億美元　·　資料截止 {esc(hs.as_of)}　·　{esc(d['hs_source'])}</div>
     {unverified}
   </div>
@@ -198,6 +204,7 @@ def rates_body(d: dict) -> str:
 def rates_footer(d: dict) -> str:
     return (
         "資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數）。<br>"
-        "科技巨頭的資本支出與發債為手動維護，需依季報更新 config/rates.yaml。<br>"
+        "科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，"
+        "每季財報一申報就會自動更新。<br>"
         "本頁僅為數據整理，不構成投資建議。"
     )

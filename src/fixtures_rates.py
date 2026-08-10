@@ -88,6 +88,15 @@ def build() -> dict[str, list[dict]]:
     gdp.reverse()
     s["GDP"] = [{"date": dd, "value": round(x, 1)} for dd, x in zip(q, gdp)]
 
+    # 實質 GDP（鏈式美元）：名目季增約 1.15%，實質約 0.5%，
+    # 兩者的差就是平減指數——r 減 g 的 g 要用這一條，不能寫死。
+    rgdp, v = [], 23_900.0
+    for _ in q:
+        rgdp.append(v)
+        v /= 1.005
+    rgdp.reverse()
+    s["GDPC1"] = [{"date": dd, "value": round(x, 1)} for dd, x in zip(q, rgdp)]
+
     debt, v = [], 39_800_000.0          # 百萬美元
     for _ in q:
         debt.append(v)

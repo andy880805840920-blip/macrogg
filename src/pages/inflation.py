@@ -52,10 +52,15 @@ def _passthrough(p) -> str:
     if not p or not p.get("available"):
         return (f'<div class="warnbox"><b>尚無法估計</b><br>'
                 f'{esc((p or {}).get("reason", "資料不足"))}</div>')
+    corr_warn = (f'<div class="warnbox" style="margin-top:16px">'
+                 f'<b>相關性的方向與傳導機制相反</b><br>'
+                 f'{esc(p["corr_note"])}</div>'
+                 if p.get("corr_note") else "")
     return f"""<div class="stat-row">{_stats(p['stats'])}</div>
 <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
   <b>{esc(p['verdict_title'])}</b><br>{esc(p['verdict_desc'])}
 </div>
+{corr_warn}
 <h3>平均時薪年增率</h3>
 {p['wage_chart']}
 <h3>核心服務除住房年增率</h3>
@@ -214,10 +219,10 @@ def inflation_body(d: dict) -> str:
       這一區看的是「已經發生但還沒反映到數據裡」的部分——虛線是一個月前的位置。</p>
     <div class="stat-row">{_stats(d['energy_stats'])}</div>
 
-    <h3>WTI 原油（今年以來）</h3>
+    <h3>WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
     {d.get('oil_chart', '')}
 
-    <details data-m-collapse><summary>零售汽油價格（今年以來）</summary>
+    <details data-m-collapse><summary>零售汽油價格（{esc(d.get('gas_span', ''))}）</summary>
       <div style="margin-top:12px">{d.get('gas_chart', '')}</div>
       <p class="hint" style="margin-top:10px">
         汽油是 CPI 能源項裡權重最大的一塊，也是消費者最有感的價格。
