@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import re
 
+from .. import charts
 from ..site import esc
+from .labor import _kpi_card, _stats
 
 
 # 「鷹／鴿」是聯準會語境的標準詞，這頁保留，但首次出現一律加註方向——
@@ -122,8 +124,7 @@ def fomc_body(d: dict) -> str:
   <div class="v-why">{esc(why)}</div>
   <div class="v-count">
     {esc(vote_line)}{'　·　' if vote_line else ''}
-    政策利率 {esc(d.get('rate_range', '—'))}<br>
-    ⓘ 完整會議逐字稿依規定延後五年公布，所以這裡分析的是會後聲明、投票紀錄與記者會。
+    政策利率 {esc(d.get('rate_range', '—'))}
   </div>
 </div>"""
 
@@ -135,25 +136,37 @@ def fomc_body(d: dict) -> str:
     regime = d.get("regime") or {}
     tone_stale = " stale" if regime.get("detected") else ""
 
-    dual = f"""<div class="dual">
-  <div class="dbox primary {obj_cls}">
-    <div class="dtitle">客觀訊號分數（主要依據）</div>
-    <div class="dscore">{sh.get('objective', 0):+.2f}</div>
-    <div class="dlab">{esc(sh.get('objective_label', ''))}
-      <span style="font-weight:400;color:var(--muted)">
-      　較上次 {sh.get('objective_delta', 0):+.2f}</span></div>
-    <div class="dnote">刻度：0＝中性，正＝偏升息、負＝偏降息。
-      政策行動 ±3、每張反對票 ±2、聲明點名的風險方向 ±1。<br>{esc(d.get('obj_detail', ''))}</div>
+    # 兩個分數的版面權重要跟結論一致。先前兩者都是超大字並排，
+    # 但這一頁自己說「以客觀訊號為準、措辭本次不可靠」——
+    # 版面在說兩者同等重要，文字在說不是。改成主／副：
+    # 客觀訊號保留大字與刻度軸，措辭降成旁邊一行。
+    _obj = sh.get("objective", 0)
+    _obj_pct = max(0, min(100, (_obj + 8) / 16 * 100))
+    _obj_color = ("var(--serious)" if _obj > 1 else
+                  ("var(--series-1)" if _obj < -1 else "var(--muted)"))
+    _tone_flag = ('<span class="tone-flag">本次不可靠</span>'
+                  if regime.get("detected") else "")
+    dual = f"""<div class="dbox primary {obj_cls}">
+  <div class="dtitle">客觀訊號分數（主要依據）</div>
+  <div class="dscore">{_obj:+.2f}</div>
+  <div class="dlab">{esc(sh.get('objective_label', ''))}
+    <span style="font-weight:400;color:var(--muted)">
+    　較上次 {sh.get('objective_delta', 0):+.2f}</span></div>
+  <div class="score-bar" style="margin:14px 0 6px">
+    <i style="left:{min(50, _obj_pct):.1f}%;width:{abs(_obj_pct - 50):.1f}%;
+      background:{_obj_color}"></i><span class="score-mid"></span>
   </div>
-  <div class="dbox {tone_cls}{tone_stale}">
-    <div class="dtitle">措辭分數（輔助）{'　⚠ 本次不可靠' if regime.get('detected') else ''}</div>
-    <div class="dscore">{sh.get('tone', 0):+.2f}</div>
-    <div class="dlab">{esc(sh.get('tone_label', ''))}
-      <span style="font-weight:400;color:var(--muted)">
-      　較上次 {sh.get('tone_delta', 0):+.2f}</span></div>
-    <div class="dnote">刻度與客觀訊號分數相同：0＝中性，正＝措辭偏緊縮（依每百字的加權詞頻計算）。
-      詞典為 Powell 時代的聲明體例校準，主席更迭或體例改變時可比性下降。</div>
-  </div>
+  <div class="sax-scale"><span>−8 偏降息</span><span>0 中性</span><span>+8 偏升息</span></div>
+  <div class="dnote" style="margin-top:10px">組成：政策行動 ±3、每張反對票 ±2、
+    聲明點名的風險方向 ±1。<br>{esc(d.get('obj_detail', ''))}</div>
+</div>
+<div class="tone-row {tone_cls}{tone_stale}">
+  <span class="tone-label">措辭分數（輔助）{_tone_flag}</span>
+  <span class="tone-val">{sh.get('tone', 0):+.2f}</span>
+  <span class="tone-delta">較上次 {sh.get('tone_delta', 0):+.2f}</span>
+  <span class="tone-note">同一刻度，依每百字的加權詞頻計算。
+    詞典照 Powell 時代的體例校準，主席更迭或體例改變時可比性下降，
+    所以只當輔助、不用來下結論。</span>
 </div>"""
 
     warn = ""
@@ -186,6 +199,120 @@ def fomc_body(d: dict) -> str:
         n = len(d.get("fetched_dates") or [])
         if n:
             diff_pair_note += f"本次共取得 {n} 份聲明。"
+
+    # ---- KPI 區 ----
+    # 這一頁先前完全沒有 KPI，從結論卡直接跳進九百多 px 的大卡。
+    # 四個現成的頭條數字：政策利率、投票、客觀訊號、下次會議倒數。
+    vote = d.get("vote") or {}
+    dctx = d.get("dissent_ctx") or {}
+    mkt = d.get("market") or {}
+    nm = d.get("next_meeting") or {}
+
+    _act = (d.get("obj_parts") or {}).get("action_label") or ""
+    kpis = [_kpi_card(
+        "政策利率目標區間", d.get("rate_range", "—"),
+        f"本次{_act}" if _act else "",
+        "聯準會直接設定的短期利率區間。所有其他利率都以它為起點。")]
+
+    _sup = vote.get("stated_support")
+    _dis = vote.get("dissents") or []
+    _dis_n = len(_dis)
+    if _sup is not None or _dis_n:
+        _vv = (f"{_sup} 比 {_dis_n}" if _sup is not None else f"{_dis_n} 票反對")
+        # 標籤要放「方向」不是再寫一次票數——票數已經是主數字了。
+        # 反對票的方向才是決定鷹鴿的東西。
+        _dirs = [x.get("direction") for x in _dis]
+        _hike, _cut = _dirs.count("hike"), _dirs.count("cut")
+        if _dis_n and _hike == _dis_n:
+            _flag, _fk = f"{_dis_n} 票全主張升息", "neg"
+        elif _dis_n and _cut == _dis_n:
+            _flag, _fk = f"{_dis_n} 票全主張降息", "pos"
+        elif _dis_n:
+            _flag, _fk = f"{_hike} 票主張升息、{_cut} 票主張降息", ""
+        else:
+            _flag, _fk = "全體一致", "pos"
+        kpis.append(_kpi_card(
+            "本次投票", _vv,
+            esc(dctx.get("note", "")) if dctx else "",
+            "反對票是白紙黑字的事實，不受主席的溝通風格影響，"
+            "所以在這一頁的權重最高。",
+            flag=_flag, flag_kind=_fk))
+
+    # 客觀訊號給一條歷次走勢：五次會議的分數是現成的，
+    # 光看 +6.00 不知道這是常態還是跳動
+    _hist = d.get("objective_history") or []
+    kpis.append(_kpi_card(
+        "客觀訊號分數", f"{sh.get('objective', 0):+.2f}",
+        f"較上次 {sh.get('objective_delta', 0):+.2f}",
+        "政策行動、反對票與聲明點名的風險方向合計。"
+        "正數＝偏升息方向，負數＝偏降息方向。",
+        spark_html=(charts.sparkline(_hist, zero_line=True) if len(_hist) > 1 else "")))
+
+    if nm:
+        kpis.append(_kpi_card(
+            "下次會議", nm["display"], nm["sub"],
+            "在那之前，這份聲明就是委員會的官方立場——"
+            "距離下次會議越遠，它主導市場的時間越長。",
+            flag=(f'之後：{nm["later"][0]}' if nm.get("later") else None)))
+    elif mkt:
+        kpis.append(_kpi_card(
+            "市場定價 vs 現在", mkt["display"], "2 年期公債殖利率減政策利率中值",
+            mkt["text"] + "。這是粗略代理，不是會議層級的機率。"))
+
+    kpi_html = "".join(kpis)
+
+    # 市場定價對照：與本次判讀一致與否，本身就是資訊
+    market_html = ""
+    if mkt:
+        _cls = {"hawkish": "hawkish", "dovish": "dovish"}.get(mkt["lean"], "neutral")
+        _agree = ("與本次的客觀訊號方向一致——市場也讀到了同一件事。"
+                  if mkt["agree"] else
+                  "與本次的客觀訊號方向不一致。分歧本身就是值得追的東西："
+                  "要嘛市場還沒反映這次會議，要嘛判讀漏看了什麼。")
+        market_html = f"""
+<div class="grid">
+  <div class="card">
+    <h2 id="market">市場定價 vs 聯準會</h2>
+    <p class="hint">2 年期公債殖利率約等於市場預期的「未來兩年平均政策利率」。
+      它跟目前政策利率中值的差，就是市場定價的政策路徑方向。</p>
+    <div class="stat-row">{_stats([
+        {"label": "2 年期公債殖利率", "value": f"{mkt['dgs2']:.2f}%"},
+        {"label": "政策利率中值", "value": f"{mkt['mid']:.2f}%"},
+    ])}</div>
+    <div class="bkgap" style="color:{'var(--serious)' if mkt['lean'] == 'hawkish'
+                                    else ('var(--series-1)' if mkt['lean'] == 'dovish'
+                                          else 'var(--text-primary)')}">
+      <span class="bk-label">差距</span>
+      <span class="bk-val">{esc(mkt['display'])}</span>
+    </div>
+    <div class="verdict {_cls}" style="margin-top:14px">
+      <div class="v-main" style="font-size:19px">{esc(mkt['text'])}</div>
+      <div class="v-why" style="margin-top:8px">{esc(_agree)}</div>
+    </div>
+    <div class="src">這是<b>粗略代理</b>，不是會議層級的降息機率。
+      2 年期殖利率同時含有期限溢酬，不能直接讀成純粹的政策路徑預期。
+      要看逐次會議的隱含機率，需另接亞特蘭大聯準銀行的 Market Probability Tracker。</div>
+  </div>
+</div>"""
+
+    # 聲明穩定度：「只改了 N 處」本身是訊號
+    stab = d.get("stability") or {}
+    stability_html = (
+        f'<div class="verdict {stab["kind"]}" style="margin:0 0 16px">'
+        f'<div class="v-main" style="font-size:19px">{esc(stab["title"])}</div>'
+        f'<div class="v-why" style="margin-top:8px">{esc(stab["desc"])}</div></div>'
+        if stab else "")
+
+    # 反對票的歷史脈絡：「本次 3 票」單看沒有意義，
+    # 要知道這在近期算不算多，才能決定要給它多少權重。
+    dissent_hist = ""
+    if dctx:
+        _h = "、".join(f"{n}" for n in dctx["history"])
+        dissent_hist = (
+            f'<p class="hint" style="margin-top:14px">反對票脈絡：本次 '
+            f'{dctx["current"]} 票，{esc(dctx["note"])}'
+            f'（依序為 {_h} 票）。反對票數本身沒有方向——'
+            f'方向要看每張票主張的是升息還是降息，見上方的投票明細。</p>')
 
     presser_html = ""
     if d.get("presser_available"):
@@ -295,33 +422,25 @@ def fomc_body(d: dict) -> str:
     return f"""
 {verdict}
 
+<div class="grid g4">{kpi_html}</div>
+
 <div class="grid">
   <div class="card">
     <h2 id="score">政策訊號評分</h2>
-    <p class="hint">合成會掩蓋最有價值的資訊。兩者背離時，背離本身就是訊號。</p>
+    <p class="hint">兩個分數刻意不合成——合成會掩蓋最有價值的資訊。
+      兩者背離時，背離本身就是訊號。</p>
     {dual}
     {warn}{diverge}
-    <h3>本次投票</h3>
-    {_votes(vote)}
-    <div class="src">
-      反對票是客觀事實，不受主席的溝通風格影響，所以權重最高；
-      措辭則會隨主席個人偏好變動。
-    </div>
+    <details data-m-collapse><summary>本次投票明細</summary>
+      <div style="margin-top:12px">{_votes(vote)}</div>
+      <p class="hint" style="margin-top:12px">
+        反對票是客觀事實，不受主席的溝通風格影響，所以在計分裡權重最高；
+        措辭則會隨主席個人偏好變動。</p>
+    </details>
   </div>
 </div>
 
-<div class="grid g2">
-  <div class="card">
-    <h2 id="diff">聲明逐句比對</h2>
-    <p class="hint">同一列並排「舊 → 新」，只有實際改動的字會被標示。
-      橘色刪除線是拿掉的字，藍色是新增的字。</p>
-    {d['diff_html']}
-    <details data-m-collapse><summary>含未改動段落的全文</summary>
-      <div style="margin-top:10px">{d['diff_full_html']}</div></details>
-    <div class="src">{diff_pair_note}本次共 {d['changed_count']} 處改動。
-      原文為英文，未翻譯以免失真。</div>
-  </div>
-
+<div class="grid">
   <div class="card">
     <h2 id="focus">聯準會目前的重心</h2>
     <p class="hint">雙重使命的權重會隨時間移動。同一份就業數據，
@@ -336,6 +455,33 @@ def fomc_body(d: dict) -> str:
     <div class="src">判定只用聲明裡的制式句與投票紀錄，不用模型，每次執行結果一致。</div>
   </div>
 </div>
+{market_html}
+<div class="grid">
+  <div class="card">
+    <h2 id="diff">聲明逐句比對</h2>
+    <p class="hint">同一列並排「舊 → 新」，只有實際改動的字會被標示。
+      橘色刪除線是拿掉的字，藍色是新增的字。</p>
+    {stability_html}
+    {d['diff_html']}
+    <details data-m-collapse><summary>含未改動段落的全文</summary>
+      <div style="margin-top:10px">{d['diff_full_html']}</div></details>
+    <div class="src">{diff_pair_note}原文為英文，未翻譯以免失真。</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="trend">歷次分數</h2>
+    <p class="hint">歷次會議的兩個分數並列，刻度相同：0＝中性、正＝偏升息方向、
+      負＝偏降息方向。措辭分數跨主席不可比（詞典照 Powell 時代的體例校準），
+      比較時請以同一位主席任內的區間為準。</p>
+    <div class="tscroll" style="margin-top:12px"><table>
+      <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>
+        <th>字數</th><th>反對票</th></tr></thead>
+      <tbody>{d['score_rows']}</tbody></table></div>
+    {dissent_hist}
+  </div>
+</div>
 
 <div class="grid">
 {presser_html}
@@ -343,52 +489,32 @@ def fomc_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="trend">歷次分數</h2>
-    <p class="hint">歷次會議的兩個分數並列，刻度相同：0＝中性、正＝偏升息方向、
-      負＝偏降息方向。措辭分數跨主席不可比（詞典是照 Powell 時代的體例校準的），
-      比較時請以同一位主席任內的區間為準。</p>
-    <details data-m-collapse open><summary>歷次分數明細</summary>
-      <table style="margin-top:12px">
-        <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>
-          <th>字數</th><th>反對票</th></tr></thead>
-        <tbody>{d['score_rows']}</tbody></table>
-    </details>
+    <h2 id="phrases">措辭的支撐材料</h2>
+    <p class="hint">措辭分數的原始材料。<b>本頁的結論不依賴這一區</b>——
+      措辭會隨主席文風改變，所以它只用來檢查分數怎麼算出來的。</p>
+    <details data-m-collapse><summary>關鍵措辭追蹤（熱力圖）</summary>
+      <p class="hint" style="margin:10px 0 0">追蹤固定一組措辭在每次聲明中出現的次數，
+        數的是字面出現次數，顏色越深代表出現越多次。
+        <b>整排突然變空白，通常代表體例改變而非立場轉變</b>。</p>
+      <div style="margin-top:12px">{d['heatmap_html']}</div></details>
+    <details data-m-collapse><summary>詞典命中明細</summary>
+      <p class="hint" style="margin:10px 0 0">這裡的次數<b>可能少於上方熱力圖</b>，
+        兩者算法不同：熱力圖數的是該字面在全文出現幾次；計分為了避免重複扣分，
+        同一段文字只算一次、長詞優先——「remains elevated」命中之後，
+        裡面的「elevated」就不會再被算一遍。</p>
+      <table style="margin-top:10px">
+        <thead><tr><th>用語</th><th>方向</th><th>次數</th></tr></thead>
+        <tbody>{d['hits_rows']}</tbody></table></details>
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="phrases">關鍵措辭追蹤</h2>
-    <p class="hint">追蹤固定一組措辭在每次聲明中出現的次數，數的是字面出現次數。
-      顏色越深代表出現越多次。<b>整排突然變空白，通常代表體例改變而非立場轉變</b>。
-      這組措辭與下方的計分詞典是兩份清單，用途不同——這裡看的是措辭的延續性，
-      計分看的是鷹鴿方向。</p>
-    <details data-m-collapse open><summary>展開熱力圖</summary>
-      <div style="margin-top:12px">{d['heatmap_html']}</div></details>
-  </div>
-</div>
-
-<div class="grid g2">
-  <div class="card">
-    <h2 id="hits">詞典命中明細</h2>
-    <p class="hint">措辭分數是怎麼算出來的，逐個用語攤開。
-      這裡的次數<b>可能少於上方熱力圖</b>，兩者算法不同：
-      熱力圖數的是該字面在全文出現幾次；計分為了避免重複扣分，
-      同一段文字只算一次、長詞優先——「remains elevated」命中之後，
-      裡面的「elevated」就不會再被算一遍。</p>
-    <details data-m-collapse><summary>命中明細</summary>
-      <table style="margin-top:10px">
-        <thead><tr><th>用語</th><th>方向</th><th>次數</th></tr></thead>
-        <tbody>{d['hits_rows']}</tbody></table></details>
-  </div>
-
-  <div class="card">
     <h2 id="howto">判讀說明</h2>
     <dl class="gloss">
       <dt>反對票最重要</dt>
       <dd>反對票是白紙黑字的事實，不會因為主席換人或文風改變而失真。
-        每張反對票的方向都寫在聲明裡，比任何措辭都清楚——
-        本次的實際票數見上方結論卡。</dd>
+        每張反對票的方向都寫在聲明裡，比任何措辭都清楚。</dd>
       <dt>刪掉的字要小心解讀</dt>
       <dd>聯準會拿掉一個措辭，可能是立場改變，也可能只是主席不想再給指引。
         兩者意思完全不同——所以系統會偵測「大量措辭同時消失」並示警。</dd>
@@ -398,6 +524,9 @@ def fomc_body(d: dict) -> str:
       <dt>文本會落後數據</dt>
       <dd>聲明一年只有八次，中間可能已有兩三份就業與物價報告。
         文本用來校準數據判讀，不是取代它。</dd>
+      <dt>為什麼沒有完整逐字稿</dt>
+      <dd>會議的完整逐字稿依規定延後五年公布，所以這裡分析的是
+        會後聲明、投票紀錄與記者會。</dd>
     </dl>
   </div>
 </div>
@@ -408,6 +537,8 @@ def fomc_footer(d: dict) -> str:
     return (
         "資料來源：美國聯準會（federalreserve.gov）會後聲明、投票紀錄、"
         "與記者會逐字稿。<br>"
-        "完整會議逐字稿依規定延後五年公布。本模組無須手動維護資料。<br>"
+        "會議日期取自聯準會行事曆頁；2 年期公債殖利率取自 FRED。<br>"
+        "完整會議逐字稿依規定延後五年公布。政策利率區間需在 config/fomc.yaml "
+        "手動更新（每次利率決議後）；其餘資料皆自動擷取。<br>"
         "計分與詞頻皆為確定性規則，不含模型生成內容。"
     )

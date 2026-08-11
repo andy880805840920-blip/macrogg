@@ -30,8 +30,10 @@ SEC 的 XBRL API 是**公司自己申報的原始標記**，免費、無需金�
 from __future__ import annotations
 
 import os
+import re
 import time
 import json
+import html as html_mod
 import logging
 import datetime as dt
 
@@ -41,6 +43,22 @@ log = logging.getLogger(__name__)
 
 CONCEPT_URL = ("https://data.sec.gov/api/xbrl/companyconcept/"
                "CIK{cik:010d}/us-gaap/{tag}.json")
+# 近期申報清單（表格類型、日期、文件）。用來補 XBRL 的時效缺口：
+# 10-Q 是季末後約 45 天才申報，所以一筆新發債最久要等 135 天才會進到
+# 季報數字裡。發債本身則有即時的申報義務，這個端點當天就看得到。
+SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
+# 申報文件的目錄（accession 去掉連字號當路徑）
+ARCHIVE_DOC = ("https://www.sec.gov/Archives/edgar/data/{cik}/"
+               "{acc_nodash}/{doc}")
+
+# 代表「這家公司在發債」的表格類型。
+#   424B2 / 424B5  公開說明書補充——債券發行文件本身，定價當日申報
+#   FWP            自由書寫公開說明書（條件清單），同樣是定價當日
+#   8-K            只在項目含 2.03（產生直接財務義務）或 1.01（重大確定協議）時才算
+DEBT_FORMS = {"424B2", "424B5", "424B3", "FWP"}
+DEBT_8K_ITEMS = ("2.03", "1.01")
+# 只看最近這麼多天的申報。超過這個範圍的多半已經反映在最新一季的財報裡。
+RECENT_DAYS = 120
 
 # SEC 要求帶可聯絡的 User-Agent，否則會擋。
 # 可用環境變數覆寫成自己的信箱（SEC 的使用規範建議這麼做）。
@@ -130,6 +148,123 @@ class SecClient:
                     r["tag"] = tag
                 best = rows
         return best
+
+    # ------------------------------------------------------------------
+    def _json(self, url: str, label: str) -> dict | None:
+        last = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                r = self.session.get(url, timeout=TIMEOUT)
+                if r.status_code == 404:
+                    return None
+                r.raise_for_status()
+                time.sleep(THROTTLE)
+                return r.json()
+            except Exception as e:                 # noqa: BLE001
+                last = e
+                if attempt < MAX_RETRIES - 1:
+                    time.sleep(1.0 * (attempt + 1))
+        self.failed.append((label, str(last)))
+        return None
+
+    # ------------------------------------------------------------------
+    def debt_filings(self, cik: int, days: int = RECENT_DAYS) -> list[dict]:
+        """
+        近期的發債相關申報。回傳 [{form, date, items, doc_url, accession}]，時間降冪。
+
+        為什麼需要這個
+        --------------
+        XBRL 只到 10-Q，而 10-Q 是季末後約 45 天才申報——一筆七月的發債
+        最久要等到十一月才會出現在數字裡。但發債本身當天就要申報：
+        424B2／424B5 是債券發行文件本身，8-K 項目 2.03 是「產生直接財務義務」。
+
+        防禦性寫法
+        ----------
+        submissions 端點的欄位名稱無法在離線環境驗證（檔案太大、
+        查詢介面被 robots.txt 擋）。所以這裡把缺欄位一律當成
+        「解析不出來」處理：記錄並回傳空清單，畫面上該區塊就不顯示。
+        寧可少一個區塊，也不要憑對資料結構的假設印東西出去。
+        """
+        js = self._json(SUBMISSIONS_URL.format(cik=cik), f"SEC submissions {cik}")
+        if not js:
+            return []
+        recent = ((js.get("filings") or {}).get("recent")) or {}
+        forms = recent.get("form")
+        dates = recent.get("filingDate")
+        if not isinstance(forms, list) or not isinstance(dates, list):
+            log.warning("SEC submissions 的欄位與預期不符（CIK %s），略過發債申報", cik)
+            self.failed.append((f"SEC submissions {cik}", "欄位結構與預期不符"))
+            return []
+
+        items = recent.get("items") or []
+        accs = recent.get("accessionNumber") or []
+        docs = recent.get("primaryDocument") or []
+        descs = recent.get("primaryDocDescription") or []
+
+        def _at(arr, i):
+            return arr[i] if isinstance(arr, list) and i < len(arr) else ""
+
+        cutoff = (dt.date.today() - dt.timedelta(days=days)).isoformat()
+        out = []
+        for i, form in enumerate(forms):
+            date = _at(dates, i)
+            if not date or date < cutoff:
+                continue
+            it = _at(items, i) or ""
+            if form in DEBT_FORMS:
+                kind = "offering"
+            elif form.startswith("8-K") and any(x in it for x in DEBT_8K_ITEMS):
+                kind = "event"
+            else:
+                continue
+            acc = _at(accs, i)
+            doc = _at(docs, i)
+            url = ""
+            if acc and doc:
+                url = ARCHIVE_DOC.format(cik=cik, acc_nodash=acc.replace("-", ""),
+                                         doc=doc)
+            out.append({"form": form, "date": date, "items": it,
+                        "accession": acc, "doc_url": url,
+                        "desc": _at(descs, i), "kind": kind})
+        out.sort(key=lambda x: x["date"], reverse=True)
+        return out
+
+    # ------------------------------------------------------------------
+    def offering_amount(self, doc_url: str) -> float | None:
+        """
+        從公開說明書補充的封面抓總發行金額（回傳十億美元）。
+
+        封面的格式大致是「$3,000,000,000 / 4.125% Notes due 2035」或
+        「aggregate principal amount of $2,500,000,000」。這裡只認
+        **十億等級以上**的美元數字並取最大的一個——封面上還會有票息、
+        年份、每股價格等其他數字，取最大值可以避開它們。
+
+        解析不出來就回 None。這個數字只是輔助，抓不到就只列事件，
+        絕不用猜的補上——一個錯的發債金額比沒有金額糟得多。
+        """
+        if not doc_url:
+            return None
+        try:
+            r = self.session.get(doc_url, timeout=TIMEOUT)
+            r.raise_for_status()
+            time.sleep(THROTTLE)
+        except Exception as e:                     # noqa: BLE001
+            self.failed.append(("SEC 說明書封面", str(e)))
+            return None
+        # 只看前 40000 字元：封面在最前面，往後全是條款細節，
+        # 裡面的數字（票息計算例、面額）會干擾判斷
+        text = re.sub(r"<[^>]+>", " ", r.text[:40000])
+        text = html_mod.unescape(text)
+        best = None
+        for m in re.finditer(r"\$\s?([\d,]{11,})", text):
+            try:
+                v = float(m.group(1).replace(",", ""))
+            except ValueError:
+                continue
+            # 合理範圍：1 億～2000 億美元。超出就不是發行金額
+            if 1e8 <= v <= 2e11 and (best is None or v > best):
+                best = v
+        return best / 1e9 if best else None
 
 
 # ---------------------------------------------------------------------------
@@ -299,6 +434,39 @@ def fetch_hyperscalers(cfg: dict,
 
     as_of = max(ends) if ends else cfg.get("as_of", "")
     return out, as_of, all_ok and bool(ends)
+
+
+def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
+                           parse_amount: bool = True) -> list[dict]:
+    """
+    各家近期的發債申報。回傳 [{name, form, date, amount, doc_url, ...}]，時間降冪。
+
+    這一段補的是**時效缺口**：季報數字最久落後 135 天，而發債當天就要申報。
+    金額從說明書封面解析，解析不出來就留 None——只列事件，不用猜的補。
+
+    刻意不影響供給壓力分數：分數維持由經審核的 XBRL 數字決定，
+    否則歷史可比性會斷掉，而且同一筆發債下一季會被算第二次。
+    """
+    client = client or SecClient()
+    out: list[dict] = []
+    for c in cfg.get("companies") or []:
+        cik, name = c.get("cik"), c.get("name", c.get("ticker", "?"))
+        if not cik:
+            continue
+        for f in client.debt_filings(int(cik)):
+            amt = None
+            # 只對「發行文件本身」解析金額。8-K 是事件通知，
+            # 封面沒有標準化的金額欄位，硬解會抓到不相干的數字。
+            if parse_amount and f["kind"] == "offering" and f["form"] != "FWP":
+                amt = client.offering_amount(f["doc_url"])
+            out.append({**f, "name": name, "ticker": c.get("ticker", ""),
+                        "amount": amt})
+    out.sort(key=lambda x: x["date"], reverse=True)
+    if out:
+        log.info("SEC 發債申報：近 %d 天共 %d 筆（%d 筆解析到金額）",
+                 RECENT_DAYS, len(out),
+                 sum(1 for x in out if x["amount"] is not None))
+    return out
 
 
 def load_cache(path) -> dict | None:

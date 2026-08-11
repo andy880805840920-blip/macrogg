@@ -39,16 +39,16 @@ yields:
 real_and_breakeven:
   - id: DFII5
     label: 5 年期實質利率
-    enabled: true
+    enabled: false      # 沒有任何地方讀它；曲線拆解用的是 10 年期實質利率
   - id: DFII10
     label: 10 年期實質利率
     enabled: true
   - id: DFII30
     label: 30 年期實質利率
-    enabled: true
+    enabled: false      # 同上
   - id: T5YIE
     label: 5 年通膨損益兩平
-    enabled: true
+    enabled: false      # 通膨模組已經處理通膨預期，這裡不重複抓
   - id: T10YIE
     label: 10 年通膨損益兩平
     enabled: true
@@ -126,6 +126,14 @@ debt:
     unit: millions
     frequency: monthly
     enabled: true
+    note: 尚未接上分析（待辦：月度赤字的季節性與年度赤字的對照）
+  # 聯準會持有的公債（週頻，百萬美元）。縮表是第三個供給來源：
+  # 到期不續作的部分，等於改由私人市場吸收，效果跟財政部多發債一樣。
+  - id: TREAST
+    label: 聯準會持有公債
+    unit: millions
+    frequency: weekly
+    enabled: true
 
 # ---------------------------------------------------------------------------
 # 六、Hyperscaler 資本支出與發債
@@ -149,8 +157,16 @@ hyperscalers:
   # auto: false 可強制改用下方的手動值（例如 SEC 改版時暫時停用）。
   # 抓取失敗的公司會自動退回自己的手動值，並讓頁面標示「未驗證」。
   auto: true
+  # 除了季報之外，另外抓「近期發債申報」（424B2／424B5／FWP／8-K 項目 2.03）。
+  # 季報是季末後約 45 天才申報，一筆新發債最久要等 135 天才會進到數字裡；
+  # 發債本身則是定價當天就要申報，這一段補的就是那個時效缺口。
+  # 這些事件**不計入供給壓力分數**——分數維持由經審核的 XBRL 數字決定，
+  # 否則歷史可比性會斷掉，而且同一筆發債下一季會被重複計算一次。
+  track_offerings: true
+  # 試著從說明書封面解析發行金額。每筆多一個請求，解析不到就只列事件。
+  parse_offering_amount: true
   as_of: "2026Q2"
-  source: "SEC EDGAR XBRL（各公司 10-Q 現金流量表原始申報標記）"
+  source: "SEC EDGAR XBRL（各公司 10-Q 現金流量表原始申報標記）＋ EDGAR 申報清單（近期發債）"
   verified: false          # 由程式依實際抓取結果覆寫
   companies:
     - name: Microsoft

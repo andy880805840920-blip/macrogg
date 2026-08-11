@@ -1,25 +1,31 @@
 {
-  "at": "2026-08-10T23:42:27",
+  "at": "2026-08-11T05:01:15",
   "labor": {
     "month": "2026-07",
-    "score": -0.3298178637851931,
+    "score": -0.3483176646861179,
     "tilt": "dovish",
     "flags": [
       "bad_decline",
       "revision_swamps",
       "revision_bias_down",
+      "narrow_growth",
+      "wage_understated",
       "low_hire_low_fire"
     ],
     "flag_titles": {
       "bad_decline": "失業率下降源於勞動力退出，而非就業增加",
       "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
       "revision_bias_down": "初值近一年呈系統性下修",
+      "narrow_growth": "就業成長廣度不足",
+      "wage_understated": "非管理職薪資增速高於總體",
       "low_hire_low_fire": "低招聘、低裁員格局延續"
     },
     "flag_leans": {
       "bad_decline": "dovish",
       "revision_swamps": "dovish",
       "revision_bias_down": "dovish",
+      "narrow_growth": "dovish",
+      "wage_understated": "hawkish",
       "low_hire_low_fire": "neutral"
     },
     "metrics": {
@@ -51,72 +57,69 @@
       },
       "ahe_yoy": {
         "label": "平均時薪年增",
-        "value": 3.153276665752669,
+        "value": 3.2098765432098553,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.05
       },
       "breakeven": {
         "label": "損益兩平就業增速",
-        "value": 10.237060071917307,
+        "value": 4.297484519326089,
         "unit": "萬人",
         "threshold": 0.5
       }
     }
   },
   "inflation": {
-    "month": "2026-06",
-    "tilt": "balanced",
+    "month": "2026-07",
+    "tilt": "hawkish",
     "flags": [
-      "cpi_cooling",
-      "above_target",
-      "shelter_drag",
-      "oil_up"
+      "supercore_hot",
+      "expect_unanchored",
+      "above_target"
     ],
     "flag_titles": {
-      "cpi_cooling": "近三月年化低於年增率 0.4 個百分點以上",
-      "above_target": "核心 PCE 顯著高於目標",
-      "shelter_drag": "住房落後項推升整體讀數",
-      "oil_up": "油價上行，未來一至兩月推升總體 CPI"
+      "supercore_hot": "核心服務除住房仍高於目標區間",
+      "expect_unanchored": "長期通膨預期偏離目標",
+      "above_target": "核心 PCE 顯著高於目標"
     },
     "flag_leans": {
-      "cpi_cooling": "dovish",
-      "above_target": "hawkish",
-      "shelter_drag": "dovish",
-      "oil_up": "hawkish"
+      "supercore_hot": "hawkish",
+      "expect_unanchored": "hawkish",
+      "above_target": "hawkish"
     },
     "metrics": {
       "core_cpi_yoy": {
         "label": "核心 CPI 年增",
-        "value": 2.80581107579545,
+        "value": 3.297379054173666,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.05
       },
       "core_cpi_3m": {
         "label": "核心 CPI 三月年化",
-        "value": 2.2937962755186003,
+        "value": 3.455801923533297,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.1
       },
       "core_pce": {
         "label": "核心 PCE 年增",
-        "value": 3.286526430967074,
+        "value": 3.022085067252678,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.05
       },
       "supercore": {
         "label": "核心服務除住房",
-        "value": 3.3532935061701963,
+        "value": 4.740731590503633,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.1
       },
       "exp5y5y": {
         "label": "長期通膨預期",
-        "value": 2.33,
+        "value": 2.66,
         "unit": "%",
         "delta_unit": " 個百分點",
         "threshold": 0.03
@@ -124,9 +127,10 @@
     }
   },
   "scenario": {
-    "name": "降息受阻",
-    "grid_name": "轉向降息",
+    "name": "停滯性通膨：通膨優先",
+    "grid_name": "停滯性通膨：通膨優先",
+    "regime": "inflation",
     "labor": "弱",
-    "inflation": "中"
+    "inflation": "高"
   }
 }

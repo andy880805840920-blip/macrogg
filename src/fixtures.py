@@ -207,6 +207,18 @@ def build() -> dict[str, list[dict]]:
     s["CES0500000003"][-2]["value"] = 37.60
     s["CES0500000003"][-13]["value"] = round(37.62 / 1.032, 2)
 
+    # 僱用成本指數（季頻，指數值）。年增設定成約 3.6%，比平均時薪的 3.2%
+    # 略高——這是實務上常見的關係（平均時薪會被職位組成拉動，ECI 不會），
+    # 差距 0.4 個百分點在門檻（0.7）以內，離線畫面走的是「兩者一致」那條。
+    eci_end = 176.4
+    eci_levels, v = [], eci_end
+    for _ in range((len(d) // 3) + 6):
+        eci_levels.append(v)
+        v /= 1.0089                      # 季增約 0.89% → 年增約 3.6%
+    eci_dates = [dd for i, dd in enumerate(d) if i % 3 == 0][-len(eci_levels):]
+    s["ECIALLCIV"] = _series(eci_dates,
+                             list(reversed(eci_levels))[-len(eci_dates):])
+
     prod_end = 31.95
     prod_levels, v = [], prod_end
     for _ in range(len(d)):

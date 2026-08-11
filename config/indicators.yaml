@@ -31,12 +31,14 @@ headline:
     transform: diff
     track_revisions: true
     enabled: true
+    note: 不進畫面，只用來抓 ALFRED 歷史版本（修正追蹤的第二條序列）
   - id: USGOVT
     label: 政府部門就業
     short: 政府
     unit: thousands
     transform: diff
     enabled: true
+    note: 尚未接上分析；行業分解用的是 industries 那一組的 CES9091/9092/9093
   - id: UNRATE
     label: 失業率 U-3
     short: U-3
@@ -62,7 +64,7 @@ headline:
     short: EPOP
     unit: percent
     transform: level
-    enabled: true
+    enabled: false      # 全年齡就業人口比會被人口老化拖著走；黃金年齡那條才可比
   - id: LNS11300060
     label: 黃金年齡參與率 (25-54)
     short: Prime LFPR
@@ -142,10 +144,12 @@ unemployment_structure:
     unit: thousands
     invert: true
     enabled: true
+    note: 尚未接上分析（待辦：這是 U-6 與 U-3 差距的主要來源，隱性閒置）
   - id: LNS12026619
     label: 多重工作者
     unit: thousands
     enabled: true
+    note: 尚未接上分析（待辦：多重工作者上升常伴隨實質所得壓力）
 
 # ---------------------------------------------------------------------------
 # 三、薪資與工時
@@ -165,7 +169,7 @@ wages:
   - id: AWHAETP
     label: 平均每週工時
     unit: hours
-    enabled: true
+    enabled: false      # 沒有任何地方讀它。要用就得先寫一段「工時先於人數下降」的分析
   - id: ECIALLCIV
     label: 就業成本指數 ECI
     unit: index
@@ -196,7 +200,7 @@ jolts:
   - id: JTSTSR
     label: 總離職率
     unit: percent
-    enabled: true
+    enabled: false      # ＝離職率＋裁員率，兩者都已單獨列出，這條是重複資訊
 
 # ---------------------------------------------------------------------------
 # 五、每週失業金申請
@@ -231,17 +235,17 @@ reference:
     label: 2 年期公債殖利率
     unit: percent
     frequency: daily
-    enabled: true
+    enabled: false      # 長端模組已經抓同一條，重複抓一次只是多一次 API 呼叫
   - id: DGS10
     label: 10 年期公債殖利率
     unit: percent
     frequency: daily
-    enabled: true
+    enabled: false      # 同上，由長端模組負責
   - id: DFF
     label: 有效聯邦資金利率
     unit: percent
     frequency: daily
-    enabled: true
+    enabled: false      # 沒有任何地方讀它。政策利率由 config/fomc.yaml 的 policy_rate 提供
 
 # ---------------------------------------------------------------------------
 # 七、產業細項 — 貢獻度瀑布圖的原料

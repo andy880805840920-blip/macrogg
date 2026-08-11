@@ -36,6 +36,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src import site, build                                       # noqa: E402
 from src.analysis import changes as chg                           # noqa: E402
+from src.analysis import freshness                                # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
 from src.pages import scenario as scen_page                       # noqa: E402
@@ -194,8 +195,11 @@ def gather_hyperscalers(cfg: dict, offline: bool) -> list:
     """
     hs = cfg.get("hyperscalers") or {}
     if offline or not hs.get("auto", False) or not hs.get("companies"):
+        if offline:
+            from src import fixtures_rates
+            hs["offerings"] = fixtures_rates.offerings()
         return []
-    from src.sec import SecClient, fetch_hyperscalers
+    from src.sec import SecClient, fetch_hyperscalers, fetch_recent_offerings
     client = SecClient()
     log.info("科技巨頭：向 SEC EDGAR 擷取 %d 家的最新一季財報",
              len(hs["companies"]))
@@ -207,21 +211,62 @@ def gather_hyperscalers(cfg: dict, offline: bool) -> list:
         log.info("科技巨頭完成：資料截至 %s，全部來自 SEC 申報", hs["as_of"])
     else:
         log.warning("科技巨頭：部分公司抓取失敗，該公司改用 config 的手動值")
+
+    # 近期發債申報：補季報 45–135 天的時效缺口。
+    # 這一段失敗不影響主要數字，所以獨立處理。
+    if hs.get("track_offerings", True):
+        hs["offerings"] = fetch_recent_offerings(
+            hs, client, parse_amount=hs.get("parse_offering_amount", True))
     return client.failed
 
 
+def fetch_release_dates() -> dict:
+    """
+    就業報告與 CPI 的下一個**官方**發布日。
+
+    先前這兩個倒數是用「次月第一個週五」「次月第 12 天前後」的慣例推的。
+    慣例大多數月份是對的，但一年總有幾次不對——BLS 遇到聯邦假日會挪動。
+    FRED 直接提供官方行事曆，沒有理由自己猜。
+
+    任何一步失敗都回傳空 dict，畫面會自動退回慣例推估並照實標示，
+    不會因為多了這支呼叫而讓整份報告產不出來。
+    """
+    try:
+        from src.fred import FredClient, RELEASE_IDS
+        client = FredClient()
+    except Exception as e:                        # noqa: BLE001
+        log.warning("發布行事曆：無法建立 FRED 連線（%s），改用慣例推估", e)
+        return {}
+    out = {}
+    for key, rid in RELEASE_IDS.items():
+        d = client.next_release(rid)
+        if d:
+            out[key] = d.isoformat()
+    if out:
+        log.info("發布行事曆：%s", "、".join(f"{k} {v}" for k, v in out.items()))
+    else:
+        log.warning("發布行事曆：一個都沒問到，改用慣例推估")
+    return out
+
+
 def gather_fomc(offline: bool, fetch_cfg: dict):
-    """回傳 (statements, failed)"""
+    """回傳 (statements, upcoming, failed)"""
     if offline:
         from src import fixtures_fomc
-        return fixtures_fomc.build(), []
+        return fixtures_fomc.build(), fixtures_fomc.upcoming(), []
     from src.fomc_source import FomcSource
     src = FomcSource()
-    return (src.collect(fetch_cfg.get("years_back", FOMC_YEARS_BACK),
-                        with_presser=fetch_cfg.get("with_presser", True),
-                        start=fetch_cfg.get("start"),
-                        presser_recent_n=fetch_cfg.get("presser_recent_n", 4)),
-            src.failed)
+    statements = src.collect(fetch_cfg.get("years_back", FOMC_YEARS_BACK),
+                             with_presser=fetch_cfg.get("with_presser", True),
+                             start=fetch_cfg.get("start"),
+                             presser_recent_n=fetch_cfg.get("presser_recent_n", 4))
+    # 未來會議要另外解析行事曆表格：collect() 抓的是聲明連結，
+    # 而還沒開的會議沒有聲明，連結不存在。
+    upcoming = src.upcoming_meetings(3)
+    if upcoming:
+        log.info("下次會議 %s（另有 %d 場已排定）",
+                 upcoming[0].isoformat(), len(upcoming) - 1)
+    return statements, upcoming, src.failed
 
 
 # ---------------------------------------------------------------------------
@@ -262,6 +307,10 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     banner = (labor_page.offline_banner(ctxs.get("_real_modules") or [])
               if offline else "")
+    # 停更警告接在離線警告後面（兩者可以同時成立，但實務上不會）。
+    # 這個要放在每一頁，不能只放勞動頁——停更的可能是 DGS30，
+    # 而看長端頁的人不會先去勞動頁確認資料還新不新。
+    banner += freshness.banner_html(ctxs.get("_stale") or [], site.esc)
     lab, inf, fom, scn = (ctxs.get("labor"), ctxs.get("inflation"),
                           ctxs.get("fomc"), ctxs.get("scenario"))
     if only:
@@ -393,6 +442,12 @@ def main() -> int:
     ctxs: dict = {}
     all_failed: list = []
     labor_series: dict = {}
+    # FOMC 頁要用 2 年期殖利率跟政策利率比對「市場定價 vs 聯準會」，
+    # 那條序列是長端模組抓的，所以留一份給後面用。
+    rates_series: dict = {}
+    # 三個模組抓到的序列合在一起做新鮮度檢查。分開檢查會漏掉
+    # 「只有長端那組停更」這種情況，而那組的讀者最不會去別頁確認。
+    all_series: dict = {}
 
     # ---- 勞動市場 ----
     if want("labor"):
@@ -403,6 +458,7 @@ def main() -> int:
                                                vintage_ids=("PAYEMS", "USPRIV"))
         all_failed += failed
         labor_series = series          # 通膨模組的傳導分析要用到薪資序列
+        all_series.update(series)
         ctxs["labor"] = build.build_labor_context(
             cfg, series, vintages, labels, inverts, failed, args.offline,
             consensus=load_config("consensus.yaml"))
@@ -416,9 +472,11 @@ def main() -> int:
             ids, labels, inverts = series_ids(cfg, INFL_GROUPS)
             log.info("通膨模組：%d 個序列", len(ids))
             series, _, failed = gather_fred(args.offline, ids, "inflation")
+            all_series.update(series)
             all_failed += failed
             ctxs["inflation"] = build.build_inflation_context(
-                cfg, series, failed, args.offline, labor_series=labor_series)
+                cfg, series, failed, args.offline, labor_series=labor_series,
+                consensus=load_config("consensus.yaml"))
             log.info("通膨模組完成：%s，%d 項訊號",
                      ctxs["inflation"]["data_month"],
                      len(ctxs["inflation"]["flags"]))
@@ -430,6 +488,8 @@ def main() -> int:
             ids, labels, inverts = series_ids(cfg, RATES_GROUPS)
             log.info("長端模組：%d 個序列", len(ids))
             series, _, failed = gather_fred(args.offline, ids, "rates")
+            rates_series = series
+            all_series.update(series)
             # 科技巨頭的財報改由 SEC EDGAR 自動擷取，就地覆寫 cfg
             failed = failed + gather_hyperscalers(cfg, args.offline)
             all_failed += failed
@@ -442,13 +502,23 @@ def main() -> int:
     if want("fomc"):
         fcfg = load_config("fomc.yaml")
         fetch_cfg = fcfg.get("fetch") or {}
-        log.info("聯準會文本：抓取近 %d 年的會後聲明與投票紀錄",
-                 fetch_cfg.get("years_back", FOMC_YEARS_BACK))
-        statements, failed = gather_fomc(args.offline, fetch_cfg)
+        # 記錄真正生效的範圍。fetch.start 若有設定會**蓋過** years_back
+        #（見 gather_fomc），先前這行一律印 years_back，
+        # 於是設了 start=2025-01-01 的預設情況下，log 說「近 10 年」
+        # 而實際只抓 13 次會議——排查資料量不對時第一個看的就是這行。
+        _start = fetch_cfg.get("start")
+        if _start:
+            log.info("聯準會文本：抓取 %s 之後的會後聲明與投票紀錄"
+                     "（fetch.start 生效，years_back 不適用）", _start)
+        else:
+            log.info("聯準會文本：抓取近 %d 年的會後聲明與投票紀錄",
+                     fetch_cfg.get("years_back", FOMC_YEARS_BACK))
+        statements, upcoming, failed = gather_fomc(args.offline, fetch_cfg)
         all_failed += failed
         ctxs["fomc"] = build.build_fomc_context(
             statements, fcfg.get("policy_rate") or {},
-            failed, args.offline)
+            failed, args.offline, upcoming=upcoming,
+            rates_series=rates_series)
         if not ctxs["fomc"].get("empty"):
             log.info("聯準會文本完成：%d 份聲明，最新 %s",
                      len(statements), ctxs["fomc"]["latest_date"])
@@ -458,9 +528,10 @@ def main() -> int:
         ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc"),
         ctxs.get("rates"))
     sc = ctxs["scenario"]["scenario"]
-    log.info("情境合成：%s（就業%s × 通膨%s）%s",
-             sc.verdict_name or sc.name, sc.labor_state, sc.infl_state,
-             f"　※ 原始格位 {sc.name}，已依聯準會重心修正" if sc.overridden else "")
+    log.info("情境合成：%s（就業%s × 通膨%s，適用「%s」的九宮格%s）",
+             sc.name, sc.labor_state, sc.infl_state,
+             build.scenario.REGIME_LABEL.get(sc.regime, sc.regime),
+             "；本次判不出重心，暫用兩邊並重" if sc.regime_assumed else "")
 
     # ---- 本期變化摘要：跟上一次執行的快照比 ----
     # 局部重跑（--only）的 context 是殘缺的，比對與存檔都會產生
@@ -475,6 +546,16 @@ def main() -> int:
         log.info("變化摘要：%s", ctxs["changes"].headline)
 
     ctxs["_real_modules"] = REAL_MODULES
+    # 離線模式的示範資料日期是寫死的，一定會被判成停更——那不是訊息，
+    # 只會讓每次看離線頁的人以為真的出事了。
+    # 官方發布行事曆：能問到就用官方的，問不到才退回慣例推估。
+    # 離線模式不打 API（也沒有 key），一律走慣例。
+    ctxs["_releases"] = {} if args.offline else fetch_release_dates()
+    ctxs["_stale"] = [] if args.offline else freshness.check(all_series)
+    if ctxs["_stale"]:
+        log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),
+                    "、".join(f"{s['id']}（{s['days']} 天）"
+                              for s in ctxs["_stale"]))
     written = write_site(ctxs, args.offline, only=args.only)
     if not args.only:
         chg.save(STATE_FILE, cur_snap)
@@ -499,9 +580,13 @@ def main() -> int:
             i = ctxs["inflation"]
             out["inflation"] = {"month": i["data_month"], "tilt": i["tilt"],
                                 "flags": [f.__dict__ for f in i["flags"]]}
-        out["scenario"] = {"name": sc.verdict_name or sc.name,
-                           "grid_name": sc.name, "labor": sc.labor_state,
-                           "inflation": sc.infl_state, "lean": sc.lean}
+        # 九宮格改成「一個體制一張」之後，格名本身就是結論，
+        # verdict_name 那一族欄位已經移除——這裡忘了跟著改，
+        # 導致 --json 直接崩潰，而排程跑的正是 `python run.py --json`。
+        out["scenario"] = {"name": sc.name, "labor": sc.labor_state,
+                           "inflation": sc.infl_state, "lean": sc.lean,
+                           "regime": sc.regime,
+                           "regime_assumed": sc.regime_assumed}
         (OUT_DIR / "latest.json").write_text(
             json.dumps(out, ensure_ascii=False, indent=2, default=str),
             encoding="utf-8")

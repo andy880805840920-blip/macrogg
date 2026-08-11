@@ -20,6 +20,12 @@ class Contribution:
     label: str
     value: float                 # 貢獻的絕對量（同總量單位）
     share: float | None = None   # 佔總變動的比例（總變動太小時為 None）
+    # 佔「同方向總額」的比例：增項的分母是全部增加的合計，
+    # 減項的分母是全部減少的合計。淨額接近零時 share 會爆掉
+    # （正貢獻算出 −165%、最大的減項算出 +204%），這一欄不會。
+    gross_share: float | None = None
+    # 相對這個行業自己的規模變動了多少 %
+    own_pct: float | None = None
     noncyclical: bool = False
     order: int = 999
     # 相對「這個行業自己的歷史波動」有多異常。
@@ -32,6 +38,8 @@ class Contribution:
 @dataclass
 class AttributionResult:
     total: float
+    positive_sum: float = 0.0        # 全部增加的合計
+    negative_sum: float = 0.0        # 全部減少的合計（負值）
     contributions: list[Contribution] = field(default_factory=list)
     aggregates: dict[str, float] = field(default_factory=dict)
     share_suppressed: bool = False   # 總變動接近零時，百分比會失真，故隱藏
@@ -143,6 +151,19 @@ def attribute_payrolls(
         for c in contribs:
             c.share = c.value / total * 100
 
+    # 同向占比與自身變動率：這兩個在淨額接近零時仍然成立，
+    # 所以不受 SHARE_FLOOR 影響。淨額很小往往正是因為
+    # 增減兩邊都很大而互相抵消——那件事本身才是這個月的重點。
+    pos_sum = sum(c.value for c in contribs if c.value > 0)
+    neg_sum = sum(c.value for c in contribs if c.value < 0)
+    for c in contribs:
+        base = pos_sum if c.value > 0 else abs(neg_sum)
+        if base:
+            c.gross_share = abs(c.value) / base * 100
+        prev = value_at(industry_rows.get(c.key, []), idx_from_end + 1)
+        if prev:
+            c.own_pct = c.value / prev * 100
+
     explained = sum(c.value for c in contribs)
 
     # ---- 聚合指標：這幾個才是判斷景氣的關鍵 ----
@@ -161,6 +182,8 @@ def attribute_payrolls(
 
     return AttributionResult(
         total=total,
+        positive_sum=pos_sum,
+        negative_sum=neg_sum,
         contributions=sorted(contribs, key=lambda c: c.value, reverse=True),
         aggregates=aggregates,
         share_suppressed=suppress,

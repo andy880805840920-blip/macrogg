@@ -20,7 +20,10 @@
   --series-1:#266dc2; --series-2:#c25529;
   --line-1:#2a78d6; --line-2:#eb6834;
   --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
-  --good:#077c07; --warning:#936400; --serious:#ae5229; --critical:#c22f2f;
+  /* --warning 從 #936400 再壓深一級：它在白底上是 5.17，剛好過關，
+     但疊在有色底（例如 .k-surp 的紅色淡底）上只剩 4.39，掉到 AA 以下。
+     文字色要能在**任何**卡片底色上都成立，不能只看白底。 */
+  --good:#077c07; --warning:#8a5e00; --serious:#ae5229; --critical:#c22f2f;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
 }
@@ -58,8 +61,10 @@ nav.site{display:flex;gap:2px;margin:14px 0 0;background:var(--surface-1);
   box-shadow:var(--shadow);overflow-x:auto;-webkit-overflow-scrolling:touch;
   scrollbar-width:none}
 nav.site::-webkit-scrollbar{display:none}
+/* 導覽是全站最常按的東西，觸控目標要有 44px（先前 36.9px）。 */
 nav.site a{font-size:13.5px;color:var(--text-secondary);text-decoration:none;
-  padding:11px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+  padding:14px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0;
+  line-height:1.2}
 nav.site a:hover{background:var(--surface-2);color:var(--text-primary)}
 nav.site a.on{background:var(--surface-2);color:var(--text-primary);font-weight:700}
 nav.site a.soon{color:var(--muted)}
@@ -115,6 +120,9 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
    讀者的視線會先落在某個指標上，再回頭找結論。 */
 .v-main{font-size:29px;font-weight:700;margin-top:9px;line-height:1.4}
 @media(min-width:760px){.v-main{font-size:34px}}
+/* 360px 上「停滯性通膨：通膨優先」這種長情境名，最後一個字會單獨掉到
+   第二行。中文沒有連字號可斷，只能把字級縮一級——孤字比小一點的字礙眼。 */
+@media(max-width:400px){.v-main{font-size:26px;letter-spacing:.02em}}
 .v-why{font-size:14.5px;color:var(--text-secondary);margin-top:12px;line-height:1.85}
 .v-count{font-size:12.5px;color:var(--muted);margin-top:15px;padding-top:13px;
   border-top:1px solid var(--border);line-height:1.75}
@@ -149,8 +157,12 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
   font-variant-numeric:tabular-nums;line-height:1.3;white-space:nowrap}
 @media(max-width:420px){.stat .s-value{font-size:18px}}
 /* 標籤長度不一時，數值會各自對到不同的基線。給標籤兩行的高度，
-   同一列的數字才會落在同一條水平線上。 */
-.stat .s-label{min-height:2.9em}
+   同一列的數字才會落在同一條水平線上。
+   只在 ≥760px 生效：那裡欄位是 auto-fit、每欄可能窄到讓長標籤折行，
+   所以需要預留。手機固定兩欄、每欄約 160px，多數標籤本來就是一行，
+   硬撐兩行等於每個 .stat 白白多出 18px——全站數十個 stat 累積起來
+   接近一個螢幕高度的空白，而它換來的對齊在手機上根本用不到。 */
+@media(min-width:760px){.stat .s-label{min-height:2.9em}}
 .stat .s-note{font-size:12.5px;color:var(--text-secondary);margin-top:4px;
   line-height:1.55}
 
@@ -164,22 +176,42 @@ tbody tr:last-child td{border-bottom:none}
 td.pos{color:var(--good)} td.neg{color:var(--critical)}
 td.muted-cell{color:var(--muted)}
 .revtab td:first-child{font-variant-numeric:normal}
+/* 儲存格裡的外部連結（EDGAR 申報書、聲明原文）只有 14–15px 高，
+   在手機上幾乎按不到。用 inline-block 加上下內距把觸控區撐到 40px，
+   再用等量的負 margin 抵銷，視覺上仍然只是一段文字。 */
+td a[target="_blank"],.src a[target="_blank"]{
+  display:inline-block;padding:12px 8px;margin:-12px -8px}
 /* 欄位多的表格（例如科技巨頭那張六欄表）在 390px 上會把儲存格擠成
    一個字一行。包一層可橫向捲動的容器，寧可讓它滑，也不要把數字折斷。 */
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-.tscroll>table{min-width:460px}
+/* 寫死 min-width 會讓明明放得下的表格也被迫捲動。改成「內容多寬就多寬，
+   至少填滿容器」：塞得下就不捲，塞不下才捲。 */
+.tscroll>table{width:max-content;min-width:100%}
+/* 會捲的表格把左右內距收窄一點，多爭取的空間常常剛好夠讓它不用捲 */
+@media(max-width:520px){.tscroll th,.tscroll td{padding:9px 4px;font-size:13px}}
 
 /* ---------- 發散長條（行業增減）---------- */
 .dbars{display:flex;flex-direction:column;gap:3px;margin-top:4px}
 .drow{display:grid;grid-template-columns:96px 1fr 76px;align-items:center;
   gap:8px;padding:4px 0;border-radius:6px}
 @media(min-width:760px){.drow{grid-template-columns:150px 1fr 92px;gap:12px}}
+/* 窄螢幕上把行業名稱移到自己一行：96px 的欄寬塞不下「值得注意｜相對自身
+   歷史 −2.5 個標準差」，會被折成四行、把整列撐高。名稱獨立一行之後，
+   長條也順便變寬，方向更好判讀。 */
+@media(max-width:520px){
+  .drow{grid-template-columns:1fr 72px;row-gap:3px;padding:7px 0}
+  .dlabel{grid-column:1 / -1}
+}
 .drow:hover{background:var(--surface-2)}
 .dlabel{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
 @media(min-width:760px){.dlabel{font-size:13.5px}}
+/* 標籤帶理由：理由用一般字重接在後面，讓「值得注意」不再是一個
+   點下去沒反應的空標籤。窄螢幕上讓它掉到下一行，不要擠壓行業名稱。 */
 .dtag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--warning);
-  border:1px solid var(--warning);border-radius:4px;padding:0 3px;margin-left:4px;
-  vertical-align:1px;white-space:nowrap}
+  border:1px solid var(--warning);border-radius:4px;padding:0 4px;margin-left:4px;
+  vertical-align:1px}
+.dtag b{font-weight:400;margin-left:4px;color:var(--text-secondary)}
+@media(max-width:520px){.dtag{display:block;margin:3px 0 0;width:fit-content}}
 .dnote{display:block;font-size:11.5px;color:var(--muted)}
 .dtrack{position:relative;height:15px}
 .dzero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
@@ -197,8 +229,13 @@ td.muted-cell{color:var(--muted)}
 .dlegend i{width:10px;height:10px;border-radius:2px;display:inline-block}
 
 /* ---------- 紅綠燈 ---------- */
-.lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-@media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr)}}
+/* 手機兩欄時每張卡不再被拉高到同列最高——說明文字長度差很多，
+   齊高會讓短的那張有三到四成是空白，八張燈累積起來是一整個螢幕。
+   ≥1040px 四欄時仍然齊高：那裡卡片小、齊高才看得出是一組。 */
+.lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
+  align-items:start}
+@media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr);
+  align-items:stretch}}
 .light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
   border:1px solid var(--border);display:flex;flex-direction:column}
 .light .l-top{display:flex;align-items:center;gap:6px;font-size:12.5px;
@@ -208,11 +245,46 @@ td.muted-cell{color:var(--muted)}
 .light.warning .l-icon,.light.warning .l-state{color:var(--warning)}
 .light.critical .l-icon,.light.critical .l-state{color:var(--critical)}
 .light.unknown .l-icon,.light.unknown .l-state{color:var(--muted)}
+/* 數值與單位不能斷開：「4.3 個百分點」折成兩行時，
+   讀者要多花一拍才能確定那個單位屬於上面那個數字。
+   手機兩欄只有約 160px 寬，22px 的字放不下較長的值，所以一併縮一級。 */
 .light .l-value{font-size:22px;font-weight:700;margin-top:8px;
-  font-variant-numeric:tabular-nums;line-height:1.2}
+  font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+@media(max-width:420px){.light .l-value{font-size:19px}}
 .light .l-state{font-size:12px;margin-top:5px;font-weight:700}
 .light .l-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55;
   margin-bottom:0}
+
+/* 失業缺口 u − u*：水準的位置，跟上面那段「變化的成因」是兩件事，
+   所以用一條分隔線隔開，而不是再開一張卡。 */
+.ugap{margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.ug-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.ug-label{font-size:12.5px;color:var(--text-secondary);font-weight:600}
+.ug-val{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.ug-state{font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;
+  background:var(--surface-2);color:var(--text-secondary)}
+.ug-note{font-size:12.5px;color:var(--muted);line-height:1.75;margin-top:6px}
+
+/* 失業結構：五個類別各一列。名稱、橫條、數值三欄，
+   說明另起一行——手機上四欄並排會把每一欄擠成兩個字一行。 */
+.ustruct{margin-top:12px}
+.ustr-list{margin-top:12px;display:flex;flex-direction:column;gap:13px}
+.ustr{display:grid;grid-template-columns:1fr auto;gap:3px 10px;
+  align-items:center}
+.us-name{font-size:13px;font-weight:600}
+.us-bar{grid-column:1/-1;height:7px;background:var(--surface-2);
+  border-radius:4px;overflow:hidden;order:3}
+.us-bar i{display:block;height:100%;border-radius:4px;background:var(--muted-bar)}
+.ustr.bad .us-bar i{background:var(--neg)}
+.ustr.good .us-bar i{background:var(--pos)}
+.us-val{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;
+  white-space:nowrap;text-align:right}
+.us-share{font-size:11.5px;font-weight:500;color:var(--muted);margin-left:6px}
+.us-yoy{grid-column:1/-1;order:4;font-size:12px;color:var(--text-secondary);
+  font-variant-numeric:tabular-nums}
+.us-note{grid-column:1/-1;order:5;font-size:12px;color:var(--muted);
+  line-height:1.6}
 
 /* ---------- 訊號 ---------- */
 .flag{display:flex;gap:10px;padding:16px 0;border-bottom:1px solid var(--grid)}
@@ -235,6 +307,18 @@ td.muted-cell{color:var(--muted)}
 .impact.hawkish{background:var(--tint-haw);color:#a44d27}
 .impact.neutral{background:var(--surface-2);color:var(--muted)}
 
+/* 說明收合起來之後，「依據」這個開關要小、要低調——
+   它是次要動作，不能跟訊號標題搶注意力。 */
+.f-more{margin-top:9px;border-top:none;padding-top:0}
+/* 觸控目標至少 44px 高（WCAG 2.5.8 / Apple HIG）。字體維持 12.5px，
+   靠上下 padding 把可點區域撐到 44px，並用負的 margin 抵銷多出來的
+   視覺留白——看起來還是一個小開關，手指卻按得到。
+   全站有十個這種開關，每一個都太小的話，收合設計本身就失效了。 */
+.f-more>summary{font-size:12.5px;font-weight:500;color:var(--muted);
+  padding:13px 0;margin:-7px 0}
+.f-more>summary:hover{color:var(--series-1)}
+.f-more .f-detail{margin-top:2px}
+
 /* ---------- 分數條 ---------- */
 .score-bar{height:9px;background:var(--surface-2);border-radius:5px;
   position:relative;margin:15px 0 8px}
@@ -242,8 +326,161 @@ td.muted-cell{color:var(--muted)}
 .score-mid{position:absolute;top:-3px;bottom:-3px;width:1px;
   background:var(--baseline);left:50%}
 
+/* 分數軸：結論卡裡放 compact 版，明細卡裡放完整版，同一套樣式 */
+.sax{margin-top:16px;padding-top:15px;border-top:1px solid var(--border)}
+.sax.compact{margin-top:14px;padding-top:13px}
+.sax-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sax-label{font-size:12.5px;color:var(--muted)}
+.sax-val{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;
+  line-height:1.1}
+.sax.compact .sax-val{font-size:22px}
+.sax-delta{font-size:12.5px;color:var(--text-secondary)}
+.sax-scale{display:flex;justify-content:space-between;font-size:11.5px;
+  color:var(--muted)}
+
+/* KPI 卡裡的「vs 預期」一行 */
+.k-surp{margin-top:9px;padding:7px 10px;border-radius:8px;font-size:12.5px;
+  line-height:1.7;background:var(--surface-2);color:var(--text-secondary)}
+.k-surp.beat{background:rgba(7,124,7,.09)}
+.k-surp.miss{background:rgba(194,47,47,.09)}
+.k-surp .ks-sep{margin:0 6px;color:var(--muted)}
+.k-surp .ks-diff{font-weight:700;color:var(--text-primary)}
+.k-surp .ks-verdict{display:inline-block;margin-left:7px;font-weight:700}
+.k-surp.beat .ks-verdict{color:#036b03}
+.k-surp.miss .ks-verdict{color:#ad2929}
+.k-surp .ks-z{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.k-surp .ks-star{color:var(--warning);font-weight:700}
+.k-surp .su{font-size:11px;color:var(--muted);margin-left:1px}
+.kpi-foot{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;
+  padding:0 2px}
+.kpi-foot.warn{background:var(--surface-1);border:1px solid var(--border);
+  border-left:3px solid var(--warning);border-radius:9px;padding:11px 13px}
+.kpi-foot b{color:var(--text-primary)}
+
+/* 失業率變動分解：結論在上、拆解在下，兩項相加等於總變動 */
+.dsum{padding-bottom:14px;border-bottom:1px solid var(--grid)}
+.dsum-main{font-size:22px;font-weight:700;line-height:1.35}
+.dsum-sub{font-size:13px;color:var(--text-secondary);margin-top:5px}
+.dcomp{margin-top:14px}
+.dc-row{display:grid;grid-template-columns:84px 1fr 62px;align-items:center;
+  gap:9px;margin-top:9px}
+@media(min-width:760px){.dc-row{grid-template-columns:96px 1fr 70px;gap:12px}}
+.dc-name{font-size:12.5px;color:var(--text-secondary)}
+.dc-bar{position:relative;height:15px}
+.dc-zero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
+  background:var(--baseline)}
+/* 這兩條刻意用中性色。整張卡的重點就是「正負不等於好壞」——
+   勞動力效果是負的（壓低失業率），但成因是有人放棄找工作，那不是好消息。
+   上成紅綠會把讀者導向完全相反的結論，方向由左右與文字說明表示。 */
+.dc-bar i{position:absolute;top:0;bottom:0;border-radius:3px;min-width:2px;
+  background:var(--muted-bar)}
+.dc-val{font-size:14.5px;font-weight:700;text-align:right;
+  font-variant-numeric:tabular-nums}
+.dc-note{font-size:11.5px;color:var(--muted);line-height:1.6;
+  margin:3px 0 0 0;padding-left:2px}
+@media(min-width:760px){.dc-note{padding-left:108px}}
+.dc-total{margin-top:13px;padding-top:11px;border-top:1px solid var(--grid);
+  font-size:13px;font-weight:700;text-align:right;
+  font-variant-numeric:tabular-nums}
+
+/* 措辭分數降為副：一行橫排，不再跟客觀訊號並列成兩個等大的方塊。
+   這一頁的結論明說「以客觀訊號為準」，版面權重要跟著。 */
+.tone-row{display:grid;grid-template-columns:auto auto 1fr;align-items:baseline;
+  gap:6px 10px;margin-top:12px;padding:12px 14px;border-radius:10px;
+  background:var(--surface-2)}
+.tone-label{font-size:12.5px;color:var(--text-secondary);font-weight:600}
+.tone-val{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.tone-row.hawkish .tone-val{color:var(--serious)}
+.tone-row.dovish .tone-val{color:var(--series-1)}
+.tone-row.neutral .tone-val{color:var(--muted)}
+.tone-delta{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+/* 三欄（標籤｜分數｜較上次）在 360px 只剩約 32px 給第三欄，
+   「較上次 −0.12」會折成三行、每行兩三個字。窄螢幕改成兩欄，
+   把變化量放到自己的一整行。 */
+@media(max-width:520px){
+  .tone-row{grid-template-columns:auto 1fr}
+  .tone-delta{grid-column:1 / -1;margin-top:1px}
+}
+.tone-note{grid-column:1 / -1;font-size:12px;color:var(--muted);line-height:1.7}
+.tone-flag{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;
+  color:var(--warning);border:1px solid var(--warning);border-radius:4px;
+  padding:0 4px;vertical-align:1px}
+/* 不可靠時把數字本身也調成灰的——它還在，但不該吸引視線 */
+.tone-row.stale .tone-val{color:var(--muted)}
+
+/* 離目標軸：跟分數軸共用外框，但刻度上有一個固定的錨點（2% 目標），
+   填色是從目標畫到目前值——長度就是差距，方向就是高於還是低於。 */
+.tgt-bar{height:9px;background:var(--surface-2);border-radius:5px;
+  position:relative;margin:15px 0 8px}
+.tgt-bar i{position:absolute;top:0;bottom:0;border-radius:5px}
+.tgt-mark{position:absolute;top:-4px;bottom:-4px;width:2px;
+  background:var(--text-primary);border-radius:1px;z-index:2}
+.tgt-dot{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;
+  transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--surface-1);z-index:3}
+
+/* 但書：掛在結論框裡面、縮排一階，明確是「對上面那句話的但書」，
+   不是平行的第二個結論。兩個等重的警示框並排時讀者不知道該信哪個。 */
+.caveat{margin-top:12px;padding:10px 12px;border-left:2px solid var(--warning);
+  background:var(--surface-2);border-radius:0 8px 8px 0;
+  font-size:13px;line-height:1.8;color:var(--text-secondary)}
+.caveat b{color:var(--warning)}
+
+/* 文字欄位靠右讀起來很彆扭。這個類別讓最後一欄（說明）改回靠左。 */
+.lefty td:last-child,.lefty th:last-child{text-align:left}
+
+/* 損益兩平的缺口：這是整張卡的結論，要比兩個輸入值大 */
+.bkgap{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  margin-top:14px;padding-top:13px;border-top:1px solid var(--grid)}
+.bk-label{font-size:12.5px;color:var(--muted)}
+.bk-val{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;
+  line-height:1.1}
+.bk-verdict{font-size:13.5px;font-weight:700}
+
 /* ---------- 首頁 ---------- */
 /* .hero / .h-verdict 一族已隨首頁改版移除，樣式一併刪除 */
+
+/* 三個政策模組的方向一致度：首頁獨有的資訊——分頁只能講自己那一塊，
+   只有總覽能回答「三個觀點彼此同意嗎」。長端另外一格、不進票數，
+   因為它回答的是曲線形狀而不是政策方向（見 README「長端供給壓力不進九宮格」）。 */
+.cons{margin-top:15px;padding-top:14px;border-top:1px solid var(--border)}
+.cons-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:560px){.cons-row{grid-template-columns:repeat(3,1fr)}}
+.cons-i{background:var(--surface-2);border-radius:9px;padding:9px 10px}
+.cons-i.aside{background:transparent;border:1px dashed var(--border)}
+.cons-aside{margin-top:9px}
+.cons-aside .cons-row{grid-template-columns:1fr}
+@media(min-width:560px){.cons-aside .cons-row{grid-template-columns:1fr}}
+.cons-k{display:block;font-size:11.5px;color:var(--muted)}
+.cons-v{display:block;font-size:14px;font-weight:700;margin-top:3px}
+.cons-v.hawkish{color:var(--serious)} .cons-v.dovish{color:var(--series-1)}
+.cons-v.neutral{color:var(--text-secondary)}
+.cons-note{font-size:13px;color:var(--text-secondary);line-height:1.8;
+  margin-top:11px}
+
+/* 倒數：三個並排，日期與可信度說明在下方 */
+.cds{display:grid;gap:9px;margin-top:10px}
+@media(min-width:560px){.cds{grid-template-columns:repeat(3,1fr)}}
+.cd{background:var(--surface-2);border-radius:9px;padding:11px 12px}
+.cd-k{font-size:12px;color:var(--muted)}
+.cd-d{font-size:19px;font-weight:700;margin-top:3px;
+  font-variant-numeric:tabular-nums}
+.cd-n{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.6}
+
+/* 接下來要盯什麼：門檻與距離 */
+.wt{background:var(--surface-2);border-radius:9px;padding:11px 12px;
+  margin-bottom:9px}
+.wt-k{font-size:12.5px;color:var(--text-secondary);font-weight:600}
+.wt-v{font-size:19px;font-weight:700;margin-top:3px;
+  font-variant-numeric:tabular-nums}
+.wt-n{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.6}
+
+/* 模組卡的方向章 */
+.m-dir{display:inline-block;margin-left:9px;font-size:11.5px;font-weight:700;
+  padding:2px 7px;border-radius:6px;vertical-align:3px;background:var(--surface-2)}
+.m-dir.hawkish{color:#a44d27;background:var(--tint-haw)}
+.m-dir.dovish{color:#2469ba;background:var(--tint-dov)}
+.m-dir.neutral{color:var(--muted)}
 
 .modcard{display:block;text-decoration:none;color:inherit;
   background:var(--surface-1);border:1px solid var(--border);border-radius:13px;
@@ -290,7 +527,7 @@ details{margin-top:14px;border-top:1px solid var(--grid);padding-top:12px}
 details[open]{padding-bottom:2px}
 /* 展開列是全站最常點的東西，高度要撐到 44px 才好按 */
 summary{font-size:13.5px;color:var(--series-1);cursor:pointer;font-weight:600;
-  list-style:none;padding:11px 0}
+  list-style:none;padding:12px 0}
 summary::-webkit-details-marker{display:none}
 summary::after{content:" ▾";font-size:11px}
 details[open]>summary::after{content:" ▴"}
@@ -382,6 +619,47 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .heat td.h2{background:rgba(42,120,214,.5);color:var(--text-primary)}
 .heat td.h3{background:rgba(28,86,158,.97);color:#fff}
 
+/* ---------- 體制頁籤（純 CSS，不依賴 JS）----------
+   三張九宮格各一個 radio。選中的那個把對應的 .rpanel 顯示出來。
+   用 :checked 加 ~ 相鄰選擇器，沒有 JS 也能切；鍵盤操作由 radio 原生支援。 */
+.rtabs{margin-top:4px}
+.rtab-in{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+/* 頁籤是這一頁唯一的互動元件，觸控目標要有 44px（先前是 40.8px）。 */
+.rtab{display:inline-block;font-size:13px;font-weight:600;cursor:pointer;
+  padding:11px 14px;border-radius:9px;border:1px solid var(--border);
+  background:var(--surface-1);color:var(--text-secondary);
+  margin:0 6px 10px 0;white-space:nowrap}
+.rtab:hover{border-color:var(--text-secondary);color:var(--text-primary)}
+.rtab-in:checked + .rtab{background:var(--text-primary);color:var(--surface-1);
+  border-color:var(--text-primary)}
+/* 鍵盤 focus 要看得見——radio 本身是隱藏的，所以把外框畫在 label 上 */
+.rtab-in:focus-visible + .rtab{outline:2px solid var(--series-1);outline-offset:2px}
+.rt-now{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:700;
+  padding:0 5px;border-radius:4px;background:var(--surface-2);
+  color:var(--text-secondary)}
+.rtab-in:checked + .rtab .rt-now{background:rgba(255,255,255,.22);color:#fff}
+.rpanels{position:relative}
+.rpanel{display:none}
+/* 第 n 個 radio 選中 → 顯示第 n 個 panel */
+.rtabs > .rtab-in:nth-of-type(1):checked ~ .rpanels > .rpanel:nth-child(1),
+.rtabs > .rtab-in:nth-of-type(2):checked ~ .rpanels > .rpanel:nth-child(2),
+.rtabs > .rtab-in:nth-of-type(3):checked ~ .rpanels > .rpanel:nth-child(3){display:block}
+.rt-hypo{font-size:12.5px;line-height:1.75;color:var(--text-secondary);
+  background:var(--surface-2);border-left:2px solid var(--warning);
+  border-radius:0 8px 8px 0;padding:9px 12px;margin:0 0 12px}
+
+/* 目前這一格在三種體制下分別是什麼 */
+.rcmp-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.rcmp{display:grid;grid-template-columns:76px 1fr auto;align-items:center;
+  gap:10px;padding:8px 10px;border-radius:8px}
+.rcmp.on{background:var(--surface-2)}
+.rcmp-k{font-size:12.5px;color:var(--muted)}
+.rcmp-v{font-size:14px;font-weight:700}
+.rcmp-v.hawkish{color:var(--serious)} .rcmp-v.dovish{color:var(--series-1)}
+.rcmp-v.neutral{color:var(--text-secondary)}
+.rcmp-l{font-size:12px;color:var(--muted);white-space:nowrap}
+.cflag{color:var(--warning);font-weight:700}
+
 /* ---------- 情境九宮格 ---------- */
 .sgrid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:5px;margin-top:4px;
   font-size:12px}
@@ -393,10 +671,20 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
   padding:9px 8px;min-height:0}
 .scell .sname{font-size:12.5px;font-weight:700;line-height:1.4}
+/* 複合情境名的限定語（「：通膨優先」）：小一級、獨立一行。
+   主情境與「哪一邊優先」是兩層資訊，同一級字時會被讀成一個長字串。 */
+.scell .sn-qual{display:block;font-size:11px;font-weight:600;
+  color:var(--text-secondary);line-height:1.35;margin-top:1px}
+.scell.on .sn-qual{color:inherit}
 .scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;
   display:none}
 @media(min-width:760px){.scell{padding:12px 11px;min-height:96px}
   .scell .sname{font-size:13.5px}.scell .sdesc{display:block}}
+/* 會隨體制改變的三格：右上角一個小記號。
+   其餘六格不管誰優先都一樣，讀者不必為它們擔心重心翻轉。 */
+.scell.conflict{position:relative}
+.scell.conflict::after{content:"◆";position:absolute;top:5px;right:6px;
+  font-size:9px;color:var(--warning)}
 .scell.on{border-color:var(--text-primary);background:var(--surface-1);
   box-shadow:0 0 0 2px var(--text-primary) inset}
 .scell.on .sname{color:var(--text-primary)}
@@ -405,9 +693,18 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .scell.neutral .sname{color:var(--text-secondary)}
 .sbadge{display:inline-block;font-size:11px;font-weight:700;margin-top:6px;
   padding:1px 6px;border-radius:5px;background:var(--text-primary);color:var(--surface-1)}
-.sbadge.alt{background:transparent;color:var(--warning);
-  border:1px solid var(--warning);margin-top:4px;display:block;
-  width:fit-content}
+/* 手機：「目前位置」四個字自己佔一整行，會把所在的那一列撐到其他列的
+   兩倍半高——而那一列本來就因為情境名較長而偏高，兩件事疊起來整張
+   格子看起來是歪的。窄螢幕改成不畫這行字：格子已經有反白底 ＋ 粗框
+   ＋ 內陰影三重標示，徽章只是把同一件事再說一次。
+   圖說那一行會告訴讀者「反白粗框那一格是目前位置」，語意不會遺失。 */
+@media(max-width:759px){.scell .sbadge{display:none}}
+/* 圖說裡的小圖例：把樣式做得跟格子一樣，讀者不必猜「反白粗框」長怎樣 */
+.lg-on{background:var(--surface-1);color:var(--text-primary);font-weight:700;
+  box-shadow:0 0 0 2px var(--text-primary) inset;border-radius:5px;
+  padding:1px 5px}
+/* .sbadge.alt 已刪除：那是舊的「結論已依重心修正」徽章，
+   三張格子之後沒有任何頁面再產生它。 */
 
 /* ---------- 觸發條件 ---------- */
 .trig{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:13px;
@@ -425,7 +722,10 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 /* ---------- 折線圖（刻度用 HTML，避免文字被等比縮小） ---------- */
 /* 參考線只畫「資料實際的最高／最低值」，各附數值標籤——
    之前的背景中線落在留白後區間的 50%，不對應任何數值，已移除。 */
-.lwrap{margin-top:6px}
+/* 右邊留 5px：最新值的圓點是 8px、以最後一點為圓心，
+   在時間序列的右端會有一半（4px）超出繪圖區。留白比裁掉好，
+   裁掉會讓最新的那一點看起來比實際低。 */
+.lwrap{margin-top:6px;padding-right:5px}
 .lplot{position:relative;border-left:1px solid var(--grid);
   border-bottom:1px solid var(--grid)}
 /* 高度由每張圖自己用 style 指定（charts.line_chart 的 height 參數）。
@@ -552,7 +852,7 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 
 <header class="top">
   <h1>存檔</h1>
-  <div class="sub">共 3 期</div>
+  <div class="sub">共 2 期</div>
 </header>
 
 <nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/" class="on">存檔</a></nav>
@@ -564,7 +864,7 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
     之後的每日執行不會覆蓋它。因為 BLS 與 BEA 會持續回頭修正歷史數字，
     留下的才是發布當下的原始版本——日後可以回頭查
     「當時我們看到的是什麼」，以及後來被改了多少。</p>
-  <ul class="archive-list"><li><a href="/archive/labor-2026-07/"><span>就業報告　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-07/"><span>物價數據　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-06/"><span>物價數據　2026-06</span><span class="a-meta">開啟</span></a></li></ul>
+  <ul class="archive-list"><li><a href="/archive/labor-2026-07/"><span>就業報告　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-07/"><span>物價數據　2026-07</span><span class="a-meta">開啟</span></a></li></ul>
 </div>
 
 <footer>官方會持續修正歷史數字，這裡保留每個資料月份第一次產出時的完整頁面。</footer>

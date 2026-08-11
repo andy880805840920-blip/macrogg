@@ -90,9 +90,11 @@ def analyse(doc: dict) -> DocAnalysis:
     vote = doc.get("vote") or {}
     raw_text = doc.get("text", "")
     obj, parts = objective_score(vote, raw_text)
-    focus = detect_focus(raw_text, vote)
-
     presser = doc.get("presser")
+    # 記者會一併納入重心判定。主席在 Q&A 裡的表態往往比制式聲明直接得多，
+    # 先前完全沒讀，等於漏掉這一頁最明確的訊號來源。
+    focus = detect_focus(raw_text, vote, presser)
+
     p_score = None
     if presser:
         pc = _normalise(presser)
@@ -134,9 +136,58 @@ _RISK_BAL = re.compile(
     r"risks?[^.]{0,80}(?:roughly\s+)?(?:in\s+balance|balanced)", re.I)
 
 # 通膨是否被聲明明白描述為高於目標
+# 記者會裡的「表態句」。主席在 Q&A 與開場白裡對優先順序的表態，
+# 往往比制式聲明直接得多——七月那份逐字稿有
+# 「The path to central bank heaven requires delivering on our remit.
+#   These days that means delivering on price stability.」
+# 這種明講，而只讀聲明會完全錯過。
+#
+# 權重刻意比聲明低一級（見 detect_focus）：記者會是即席發言，
+# 而且逐字稿是 PDF、會後幾天才發布，不是每次都抓得到。
+_PRESSER_INFL = re.compile(
+    r"deliver(?:ing)?\s+(?:on\s+)?price stability"
+    r"|price stability\s+is\s+(?:our|the)\s+(?:top\s+)?(?:priority|focus)"
+    r"|(?:focused|focus)\s+on\s+(?:bringing\s+)?inflation"
+    r"|watching\s+(?:the\s+)?inflation data"
+    r"|no soft (?:inflation )?(?:target|implicit target)"
+    r"|restore price stability"
+    r"|inflation\s+(?:remains?|is)\s+(?:our|the)\s+(?:main|primary|central)",
+    re.I)
+_PRESSER_EMPL = re.compile(
+    r"(?:focused|focus)\s+on\s+(?:the\s+)?(?:labor market|employment)"
+    r"|(?:labor market|employment)\s+is\s+(?:our|the)\s+(?:top\s+)?(?:priority|focus|concern)"
+    r"|support(?:ing)?\s+the\s+labor market"
+    r"|maximum employment\s+is\s+(?:our|the)"
+    r"|act\s+to\s+(?:support|protect)\s+(?:the\s+)?(?:labor market|employment)"
+    r"|downside risks? to (?:employment|the labor market)",
+    re.I)
+
+# 「通膨仍高於目標」的現況描述。比風險制式句弱一級（+1 而非 +2），
+# 因為它陳述的是現況、不是委員會對風險分布的判斷。
 _INFL_ABOVE = re.compile(
     r"inflation[^.]{0,60}(?:remains?|is|stays?)[^.]{0,30}"
     r"(?:above|elevated|higher than)", re.I)
+
+# 就業側的**對稱**條款。先前只有通膨那一句有加分，就業沒有對應的，
+# 結果是每一份提到「通膨仍偏高」的聲明都會往通膨側偏 +1——
+# 而那句話幾乎每次都在，等於給判定加了一個常數偏誤。
+# 就業轉弱的現況描述同樣常見（「勞動市場已降溫」「就業增速放緩」），
+# 給它同樣的 −1，兩側才在同一個尺度上。
+# 拆成兩條而不是一條大的替換：失業率是**升＝弱**，就業增速是**降＝弱**，
+# 方向相反。混在同一個字組裡會讓「job gains have increased」也命中。
+#
+# 中間那段窗口用 (?!unemployment|inflation) 逐字擋掉換主詞的情況：
+# 「Job gains have increased and the unemployment rate has declined」
+# 兩個子句都是**偏強**，但 declined 落在 job gains 後 38 個字元內，
+# 用單純的 [^.]{0,60} 會誤判成勞動市場轉弱。
+_EMPL_SOFT = re.compile(
+    r"(?:labor market|job gains|employment growth|payroll growth|hiring)"
+    r"(?:(?!unemployment|inflation)[^.;]){0,50}"
+    r"\b(?:soften\w*|cool\w*|moderat\w*|slow\w*|eas(?:ed|ing)|declin\w*|weaken\w*)\b"
+    r"|unemployment rate"
+    r"(?:(?!job gains|inflation)[^.;]){0,50}"
+    r"(?:ha[sv]e?\s+)?\b(?:risen|increased|moved up|edged up|ticked up)\b",
+    re.I)
 
 
 def policy_action(text: str) -> str | None:
@@ -172,6 +223,10 @@ def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
     parts["action_detail"] = {
         "hike": "本次升息", "cut": "本次降息", "hold": "本次維持利率不變",
     }.get(act, "無法從聲明判定政策行動")
+    # KPI 卡的副標要短，另外給一個不含「本次」兩字的版本
+    parts["action_label"] = {
+        "hike": "升息", "cut": "降息", "hold": "維持不變",
+    }.get(act, "")
     total += act_score
 
     ds = vote.get("dissents") or []
@@ -368,7 +423,8 @@ FOCUS_TEXT = {
 }
 
 
-def detect_focus(text: str, vote: dict | None = None) -> dict:
+def detect_focus(text: str, vote: dict | None = None,
+                 presser: str | None = None) -> dict:
     """
     判斷聯準會目前把雙重使命的哪一邊擺在前面。
 
@@ -379,6 +435,20 @@ def detect_focus(text: str, vote: dict | None = None) -> dict:
     同一格「就業弱 × 通膨高」，在兩種體制下的結論完全相反。
 
     判定只用聲明裡的制式句與投票紀錄，不用模型，所以每次跑結果一致。
+
+    計分（正＝通膨優先、負＝就業優先）
+    ---------------------------------
+    | 來源 | 權重 | 說明 |
+    |---|---|---|
+    | 聲明的風險制式句 | ±2 | 「通膨上行風險」／「就業下行風險」，這是委員會自述的風險分布 |
+    | 聲明的現況描述   | ±1 | 「通膨仍高於目標」／「勞動市場已轉弱」，陳述現況而非風險判斷，弱一級 |
+    | 反對票方向與張數 | ±1～2 | 三張升息反對票是強訊號，跟一張不同分 |
+    | 記者會的明確表態 | ±1 | 即席發言、逐字稿延後數日、不是每次抓得到，刻意低一級 |
+
+    兩側刻意**對稱**：每一條加分項都有方向相反的對應項。不對稱會變成常數偏誤——
+    例如「通膨仍高於目標」這句幾乎每份聲明都在，只加通膨側等於每次先偏 +1。
+
+    這張表在 README 與情境合成頁的名詞解釋都有一份，改權重時三處要一起改。
     """
     text = text or ""
     vote = vote or {}
@@ -394,6 +464,9 @@ def detect_focus(text: str, vote: dict | None = None) -> dict:
     if _INFL_ABOVE.search(text):
         score += 1
         evidence.append("聲明描述通膨仍高於目標")
+    if _EMPL_SOFT.search(text):
+        score -= 1
+        evidence.append("聲明描述勞動市場已轉弱")
 
     hawk = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "hike")
     dove = sum(1 for d in (vote.get("dissents") or []) if d.get("direction") == "cut")
@@ -407,6 +480,21 @@ def detect_focus(text: str, vote: dict | None = None) -> dict:
     elif net_dissent < 0:
         score -= 2 if -net_dissent >= 2 else 1
         evidence.append(f"{dove} 張反對票主張降息")
+
+    # ---- 記者會：權重比聲明低一級（±1）----
+    # 理由：即席發言不如正式文件精確，而且逐字稿是 PDF、會後數日才發布，
+    # 不是每次都抓得到。給它跟聲明制式句同樣的 ±2 會讓判定隨著
+    # 「今天抓不抓得到 PDF」跳動。
+    presser = presser or ""
+    if presser:
+        p_infl = len(_PRESSER_INFL.findall(presser))
+        p_empl = len(_PRESSER_EMPL.findall(presser))
+        if p_infl > p_empl:
+            score += 1
+            evidence.append(f"記者會 {p_infl} 處表態以物價穩定為優先")
+        elif p_empl > p_infl:
+            score -= 1
+            evidence.append(f"記者會 {p_empl} 處表態以勞動市場為優先")
 
     balanced_said = bool(_RISK_BAL.search(text))
 
@@ -426,7 +514,8 @@ def detect_focus(text: str, vote: dict | None = None) -> dict:
 
     label, note = FOCUS_TEXT[focus]
     return {"focus": focus, "label": label, "note": note,
-            "score": score, "evidence": evidence}
+            "score": score, "evidence": evidence,
+            "used_presser": bool(presser)}
 
 
 def _normalise(t: str) -> str:

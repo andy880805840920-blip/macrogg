@@ -157,6 +157,70 @@ class FomcSource:
             cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
         return sorted({d for d in dates if cutoff <= d <= dt.date.today()})
 
+    # ------------------------------------------------------------------
+    _MONTHS = {m: i for i, m in enumerate(
+        ["January", "February", "March", "April", "May", "June", "July",
+         "August", "September", "October", "November", "December"], 1)}
+
+    def upcoming_meetings(self, n: int = 3) -> list[dt.date]:
+        """
+        接下來的 n 場會議。
+
+        為什麼不能沿用 meeting_dates()
+        ------------------------------
+        那個函式抓的是「聲明連結」（monetaryYYYYMMDDa.htm），而未來的會議
+        還沒有聲明，所以連結根本不存在——就算拿掉 `d <= today` 的過濾也抓不到。
+        行事曆表格本身**有**列到明年（本文撰寫時列到 2027），
+        所以這裡改成解析表格的「年份 → 月份 → 日期範圍」文字。
+
+        會議通常橫跨兩天，聲明在**最後一天**收盤前發布，所以取範圍的後緣。
+
+        解析失敗或結果不合理時回傳空清單，畫面上該區塊就不顯示——
+        寧可少一個數字，也不要印一個錯的會議日期出去。
+        """
+        html = self._get(CALENDAR_URL)
+        if not html:
+            return []
+        # 去標籤後只看文字，這樣官網改 class 或版型不會直接讓解析失效
+        text = re.sub(r"<[^>]+>", " ", html)
+        text = re.sub(r"&nbsp;?", " ", text)
+        text = re.sub(r"\s+", " ", text)
+
+        today = dt.date.today()
+        out: list[dt.date] = []
+        # 以「YYYY FOMC Meetings」切出各年度區塊，年份才不會張冠李戴
+        blocks = list(re.finditer(r"(20\d{2})\s+FOMC\s+Meetings", text, re.I))
+        for i, m in enumerate(blocks):
+            year = int(m.group(1))
+            seg = text[m.end(): blocks[i + 1].start() if i + 1 < len(blocks) else len(text)]
+            # 「January 26-27」「March 16-17*」「June 8-9」；跨月的
+            # 「April 28-May 1」型式取後面那個月日，由第二個分支處理
+            for mm in re.finditer(
+                    r"\b(" + "|".join(self._MONTHS) + r")\b\s*"
+                    r"(?:(\d{1,2})\s*[-–]\s*(?:(" + "|".join(self._MONTHS) + r")\s*)?"
+                    r"(\d{1,2})|(\d{1,2}))\*?", seg):
+                mon = self._MONTHS[mm.group(1)]
+                if mm.group(5):                       # 單日
+                    day = int(mm.group(5))
+                elif mm.group(3):                     # 跨月，取後面那個月
+                    mon, day = self._MONTHS[mm.group(3)], int(mm.group(4))
+                else:                                  # 同月的日期範圍，取後緣
+                    day = int(mm.group(4))
+                try:
+                    d = dt.date(year, mon, day)
+                except ValueError:
+                    continue
+                if d > today:
+                    out.append(d)
+
+        out = sorted(set(out))
+        # 合理性檢查：下一場會議不可能在一年之後（一年開八次，間隔約 6–8 週）。
+        # 抓到離譜的東西就整組丟掉，不要印出去。
+        if not out or (out[0] - today).days > 180:
+            log.warning("未來會議日期解析結果不合理，略過此區塊")
+            return []
+        return out[:n]
+
     @staticmethod
     def _guess_dates(years_back: int) -> list[dt.date]:
         out, this_year = [], dt.date.today().year

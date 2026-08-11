@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .core import value_at, diff
+from .core import value_at
 
 
 # ---------------------------------------------------------------------------
@@ -309,54 +309,134 @@ HS_VERDICT = {
 # ---------------------------------------------------------------------------
 @dataclass
 class SupplyPressure:
-    score: float = 0.0                # 正＝壓力大
+    score: float = 0.0                # 正＝供給壓力大（只由「原因」構成）
     level: str = "moderate"           # low | moderate | high
-    parts: list = field(default_factory=list)
+    parts: list = field(default_factory=list)      # 原因：誰在增加債券供給
+    priced: list = field(default_factory=list)     # 結果：價格已經反映多少
+    priced_score: float = 0.0
+    demand: list = field(default_factory=list)     # 需求端：買盤吃不吃得下
+    gap_note: str = ""                # 原因與結果背離時的說明
+
+
+def fed_holdings_pace(series: dict) -> float | None:
+    """
+    聯準會持有公債的月均變動（十億美元，負值＝縮表）。
+
+    用近三個月的月均而不是單月：TREAST 是**週頻**，會被單週的到期分布
+    甩出很大的雜訊，逐週看幾乎必然過度反應。
+    """
+    rows = series.get("TREAST") or []
+    if len(rows) < 14:
+        return None
+    # 週頻：13 週約當三個月
+    now, then = rows[-1]["value"], rows[-14]["value"]
+    if now is None or then is None:
+        return None
+    return (now - then) / 1000.0 / 3.0        # 百萬 → 十億，再除以三個月
 
 
 def supply_pressure(curve: CurveState, debt: DebtState,
-                    hs: Hyperscalers, ig_oas: float | None) -> SupplyPressure:
+                    hs: Hyperscalers, ig_oas: float | None,
+                    qt_monthly: float | None = None) -> SupplyPressure:
     """
-    各來源分別給分並列出貢獻，避免變成不可解釋的黑箱。
-    目前有：期限溢酬、財政缺口、科技巨頭融資缺口、投資級利差、30 減 10 年期差。
+    分成三層：原因（供給）、結果（價格）、需求端。
+
+    為什麼要分開
+    ------------
+    先前五項並列相加：期限溢酬、30−10 年斜率、財政缺口、科技巨頭融資缺口、
+    投資級利差。但**期限溢酬與斜率是被供給推高的價格，不是推高它的原因**——
+    把兩者加進同一個總分等於重複計算（財政缺口大 → 期限溢酬高 → 各算一次），
+    而且「30 年減 10 年」貢獻為負卻列在「壓力的組成」裡，讀起來自相矛盾。
+
+    現在總分只由真正的供給來源構成（政府財政缺口 ＋ 科技巨頭融資缺口
+    ＋ 聯準會縮表），期限溢酬與斜率改成「已經反映多少」的獨立指標。
+    兩者背離時——供給壓力大但價格還沒反映——那個落差本身就是最有價值的訊號。
     """
     sp = SupplyPressure()
-    total = 0.0
 
-    if curve.term_premium is not None:
-        v = (curve.term_premium - 0.4) * 2.0
-        total += v
-        sp.parts.append({"label": "期限溢酬",
-                         "detail": f"{curve.term_premium:+.2f}%（基準 0.40%）",
-                         "score": v})
-    if curve.slope_30_10 is not None:
-        v = (curve.slope_30_10 - 0.6) * 2.0
-        total += v
-        sp.parts.append({"label": "30 年減 10 年",
-                         "detail": f"{curve.slope_30_10:+.2f}%（基準 0.60%）",
-                         "score": v})
+    # ---- 原因：誰在增加債券供給 ----
+    total = 0.0
     if debt.pb_gap is not None:
         v = min(max(-debt.pb_gap * 0.5, -2.0), 2.0)
         total += v
-        sp.parts.append({"label": "財政缺口",
-                         "detail": f"基本盈餘較穩定水準低 {abs(debt.pb_gap):.1f}% GDP",
+        sp.parts.append({"label": "政府財政缺口",
+                         "detail": f"基本盈餘較穩定水準低 {abs(debt.pb_gap):.1f}% GDP，"
+                                   "需要持續淨發行公債",
                          "score": v})
     if hs.capex_to_ocf is not None:
         v = (hs.capex_to_ocf - 70) / 25
         total += v
         sp.parts.append({"label": "科技巨頭融資缺口",
-                         "detail": f"資本支出佔營運現金流 {hs.capex_to_ocf:.0f}%",
+                         "detail": f"資本支出佔營運現金流 {hs.capex_to_ocf:.0f}%，"
+                                   "超過 100% 就必須舉債",
                          "score": v})
-    if ig_oas is not None:
-        v = (ig_oas - 1.0) * 1.5
+    # 聯準會縮表：第三個供給來源，先前完全沒有進來。
+    #
+    # 政府發債的總量不變，但只要聯準會不再把到期的公債換新，
+    # 那一部分就必須改由私人市場吸收——對私人部門來說，
+    # 「聯準會每月減持 300 億」跟「財政部每月多發 300 億」是同一件事。
+    # 這一輪長端上行，縮表是公認的推力之一；一張專門討論長端供給壓力的頁面
+    # 把它整個略掉說不過去。
+    if qt_monthly is not None:
+        # 每月減持 500 億約當一個標準的緊縮步調 → 1 分。
+        # 正值（擴表）給負分：那代表聯準會正在幫忙吸收供給。
+        v = min(max(-qt_monthly / 50.0, -2.0), 2.0)
         total += v
-        sp.parts.append({"label": "投資級利差",
-                         "detail": f"{ig_oas:.2f}%（基準 1.00%）",
-                         "score": v})
+        if qt_monthly < -5:
+            detail = (f"每月減持約 {abs(qt_monthly):.0f} 十億美元公債，"
+                      "這些量得由私人市場接手")
+        elif qt_monthly > 5:
+            detail = (f"每月增持約 {qt_monthly:.0f} 十億美元公債，"
+                      "聯準會正在幫忙吸收供給")
+        else:
+            detail = "持有量大致持平，對供給既沒有額外推力也沒有幫助"
+        sp.parts.append({"label": "聯準會縮表", "detail": detail, "score": v})
 
     sp.score = total
-    sp.level = "high" if total > 1.5 else ("low" if total < -1.0 else "moderate")
+    # 門檻隨項數調整：兩項時是 0.8，加了縮表變三項，等比放到 1.2
+    sp.level = "high" if total > 1.2 else ("low" if total < -0.8 else "moderate")
     sp.parts.sort(key=lambda p: abs(p["score"]), reverse=True)
+
+    # ---- 結果：價格已經反映多少 ----
+    priced = 0.0
+    if curve.term_premium is not None:
+        v = (curve.term_premium - 0.4) * 2.0
+        priced += v
+        sp.priced.append({"label": "期限溢酬",
+                          "detail": f"{curve.term_premium:+.2f}%（中性參考 0.40%）",
+                          "score": v})
+    if curve.slope_30_10 is not None:
+        v = (curve.slope_30_10 - 0.6) * 2.0
+        priced += v
+        sp.priced.append({"label": "30 年減 10 年利差",
+                          "detail": f"{curve.slope_30_10:+.2f}%（中性參考 0.60%）",
+                          "score": v})
+    sp.priced_score = priced
+    sp.priced.sort(key=lambda p: abs(p["score"]), reverse=True)
+
+    # ---- 需求端：買盤還吃不吃得下 ----
+    if ig_oas is not None:
+        sp.demand.append({
+            "label": "投資級利差", "value": f"{ig_oas:.2f}%",
+            "detail": ("走闊，買方開始要求更高補償" if ig_oas > 1.3 else
+                       ("收斂，買盤積極" if ig_oas < 0.9 else
+                        "接近常態，買盤目前還吃得下新供給")),
+            "tight": ig_oas > 1.3,
+        })
+
+    # ---- 原因與結果的落差 ----
+    # 供給壓力大但價格還沒反映，代表壓力還在後面；反過來則是已經反映過頭。
+    if sp.parts and sp.priced:
+        d = total - priced
+        if d > 0.8:
+            sp.gap_note = ("供給面的壓力大於價格已經反映的程度——"
+                           "期限溢酬還沒完全把新增供給算進去，長端還有上行空間。")
+        elif d < -0.8:
+            sp.gap_note = ("價格反映的壓力大於供給面實際的程度——"
+                           "期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。")
+        else:
+            sp.gap_note = ("供給面的壓力與價格已經反映的程度相當，"
+                           "目前沒有明顯的錯價。")
     return sp
 
 

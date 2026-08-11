@@ -120,18 +120,25 @@ def historical_sd(series: list[dict], order: int = 3, window: int = 36) -> float
 
 def evaluate(label: str, series: list[dict], consensus: float | None,
              source: str, unit: str = "", higher_is_better: bool = True,
-             order: int = 3) -> Surprise:
+             order: int = 3, allow_model: bool = True) -> Surprise:
     """
     consensus 為 None 時自動退回模型推估，並把 source 標成 model。
+
+    allow_model=False 則不退回：沒有手動填入的預期就整項不顯示。
+    通膨用這個模式——月度 CPI 的市場預期各家定義不一（月增還是年增、
+    四捨五入到小數第幾位），拿 AR 外推去湊一個「意外值」只會產出
+    看起來很精確的假訊號。勞動的非農與失業率仍維持可退回。
     """
     if not series:
         return Surprise(label=label, unit=unit)
 
     actual = series[-1]["value"]
     expected, src = consensus, source
-    if expected is None:
+    if expected is None and allow_model:
         expected = ar_forecast(series[:-1], order)
         src = "model" if expected is not None else "none"
+    elif expected is None:
+        src = "none"
 
     s = Surprise(label=label, actual=actual, expected=expected,
                  source=src, unit=unit)

@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import os
 import time
-import json
 import logging
 import datetime as dt
 from typing import Any
@@ -206,6 +205,48 @@ class FredClient:
         except Exception as e:                    # noqa: BLE001
             log.warning("%s 的中繼資料抓取失敗：%s", series_id, e)
             return {"id": series_id}
+
+    # ------------------------------------------------------------------
+    # 官方發布行事曆
+    # ------------------------------------------------------------------
+    def next_release(self, release_id: int, after: dt.date | None = None
+                     ) -> dt.date | None:
+        """
+        某個 FRED release 的下一個發布日。抓不到就回 None，由呼叫端退回慣例推估。
+
+        為什麼要打這支：先前的倒數是用「次月第一個週五」「次月第 12 天前後」
+        這種**慣例**推的。慣例大多數月份是對的，但一年總有幾次不對——
+        BLS 遇到聯邦假日會挪動，2026 年 1 月的就業報告就不在第一個週五。
+        FRED 直接提供官方行事曆（release/dates），沒有理由自己猜。
+
+        release_id：就業報告 50、CPI 10（見 RELEASE_IDS）。
+        """
+        after = after or dt.date.today()
+        try:
+            data = self._get("release/dates", {
+                "release_id": release_id,
+                "realtime_start": after.isoformat(),
+                # FRED 預設只回「已經發生」的日期，要未來的必須明講
+                "include_release_dates_with_no_data": "true",
+                "sort_order": "asc",
+                "limit": 12,
+            })
+            for row in data.get("release_dates") or []:
+                d = dt.date.fromisoformat(row["date"])
+                if d > after:
+                    return d
+        except Exception as e:                    # noqa: BLE001
+            log.warning("release %s 的行事曆抓取失敗：%s", release_id, e)
+        return None
+
+
+# FRED release id。改這裡之前先用
+#   https://api.stlouisfed.org/fred/releases?api_key=…&file_type=json
+# 確認 id 沒有變。
+RELEASE_IDS = {
+    "employment": 50,      # Employment Situation（就業報告）
+    "cpi": 10,             # Consumer Price Index
+}
 
 
 def fetch_all(client: FredClient, series_ids: list[str], start: str) -> dict[str, list[dict]]:

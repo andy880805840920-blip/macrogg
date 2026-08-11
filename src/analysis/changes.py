@@ -33,6 +33,7 @@ class ChangeSet:
     infl_tilt_from: str = ""
     infl_tilt_to: str = ""
     metric_moves: list = field(default_factory=list)     # [{label, from, to, delta}]
+    regime_changed: bool = False    # 聯準會的重心（哪個使命優先）翻轉
     headline: str = ""
 
 
@@ -65,10 +66,13 @@ def snapshot(ctxs: dict) -> dict:
     scn = ctxs.get("scenario")
     if scn:
         sc = scn["scenario"]
-        # 比對用修正後的結論——反應函數從「通膨優先」翻成「就業優先」時，
-        # 格位沒動但結論已經翻轉，那正是最該被報出來的變化。
-        snap["scenario"] = {"name": sc.verdict_name or sc.name,
-                            "grid_name": sc.name, "labor": sc.labor_state,
+        # 九宮格改成「一個體制一張」之後，格名本身就是結論：
+        # 重心從通膨優先翻成就業優先時，同一個格位的名字會直接變
+        #（例如「停滯性通膨：通膨優先」→「停滯性通膨：救就業」），
+        # 所以只比 name 就抓得到體制翻轉，不需要另外存修正前後兩份。
+        snap["scenario"] = {"name": sc.name, "grid_name": sc.name,
+                            "regime": sc.regime,
+                            "labor": sc.labor_state,
                             "inflation": sc.infl_state}
     return snap
 
@@ -99,19 +103,20 @@ def compare(cur: dict, prev: dict | None) -> ChangeSet:
     ps, qs = prev.get("scenario"), cur.get("scenario")
     if ps and qs:
         cs.scenario_from, cs.scenario_to = ps["name"], qs["name"]
-        # 只用 name 比會誤報：name 現在存的是「修正後結論」，
-        # 舊快照存的是格名，改版後第一次執行會冒出一次假的「情境移動」。
-        # 格位（就業×通膨）才是真正的座標，兩者都變了才算移動。
+        # 名字變了就算移動——可能是格位移動，也可能是重心翻轉
+        #（格位沒動但那一格在新體制下叫別的名字）。兩者都值得報。
         moved_name = ps["name"] != qs["name"]
         same_cell = (ps.get("labor"), ps.get("inflation")) == \
                     (qs.get("labor"), qs.get("inflation"))
-        prev_grid = ps.get("grid_name")
-        if moved_name and same_cell and prev_grid is None:
-            # 舊快照沒有 grid_name → 無法分辨「改名」與「真移動」，
-            # 而格位沒變，判定為改名，不報移動
+        # 只有一種情況要壓下來：舊版快照存的是「修正後結論」而非格名，
+        # 改版後第一次執行會冒出一次假的移動。舊快照沒有 regime 欄位，
+        # 用它來辨識。
+        if moved_name and same_cell and "regime" not in ps:
             cs.scenario_moved = False
         else:
             cs.scenario_moved = moved_name
+        cs.regime_changed = (ps.get("regime") != qs.get("regime")
+                             and "regime" in ps)
 
     # ---- 訊號的新增與消失 ----
     for mod in ("labor", "inflation"):
@@ -167,6 +172,10 @@ def compare(cur: dict, prev: dict | None) -> ChangeSet:
 
 
 def _headline(cs: ChangeSet) -> str:
+    if cs.regime_changed:
+        # 重心翻轉是最重大的變化：同一份數據的結論會整個換一張九宮格
+        return (f"聯準會的重心翻轉，情境由「{cs.scenario_from}」"
+                f"變成「{cs.scenario_to}」")
     if cs.scenario_moved:
         return f"情境由「{cs.scenario_from}」移動到「{cs.scenario_to}」"
     bits = []

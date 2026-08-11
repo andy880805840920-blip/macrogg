@@ -160,7 +160,7 @@ def _compute_light_values(s: dict[str, list[dict]]) -> dict[str, tuple]:
         prev = sahm_rule(unrate[:-1]) if len(unrate) > 14 else None
         out["sahm"] = (cur, prev, f"{cur:+.2f}" if cur is not None else "—")
 
-    # --- V/U ratio（JOLTS 落後兩個月，要對齊到同一個月）---
+    # --- V/U ratio（JOLTS 落後就業報告，要對齊到同一個月）---
     jol, unemp = s.get("JTSJOL", []), s.get("UNEMPLOY", [])
     if jol and unemp:
         umap = {r["date"]: r["value"] for r in unemp}

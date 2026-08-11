@@ -88,7 +88,11 @@ def diverging_bars(items: Sequence[dict], fmt=None) -> str:
         style = (f"left:50%;width:{pctw:.2f}%" if pos
                  else f"right:50%;width:{pctw:.2f}%")
         tip = r.get("tip") or f'{r["label"]}｜{fmt(v)}'
-        tag = ('<span class="dtag">值得注意</span>' if r.get("notable") else "")
+        # 「值得注意」要把理由一起寫出來。只掛一個標籤、理由藏在 hover 提示裡，
+        # 在手機上等於沒有理由——那裡沒有 hover，點下去不會有任何反應。
+        tag = (f'<span class="dtag">值得注意<b>{_esc(r["notable_why"])}</b></span>'
+               if r.get("notable") and r.get("notable_why")
+               else ('<span class="dtag">值得注意</span>' if r.get("notable") else ""))
         note = f'<span class="dnote">{_esc(r["note"])}</span>' if r.get("note") else ""
 
         out.append(

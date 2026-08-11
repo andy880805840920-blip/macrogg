@@ -20,7 +20,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Callable
 
-from .core import diff_series, moving_avg, value_at
+from .core import value_at
 from .. import fmt
 
 

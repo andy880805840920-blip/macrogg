@@ -29,17 +29,22 @@ headline:
     note: 剔除食物與能源，Fed 觀察趨勢的主要依據
   - id: PCEPI
     label: PCE 物價指數
-    enabled: true
+    enabled: false      # 整體 PCE 沒有任何地方讀它；政策目標是核心 PCE（下一條）
   - id: PCEPILFE
     label: 核心 PCE
     enabled: true
     note: Fed 的政策目標就是這一項，2% 指的是它
+  # PPI 兩條目前**有抓、但沒有任何分析讀它**。留著是因為它是 CPI 的
+  # 上游（生產者端的漲價會在數月後傳到消費者端），值得補一段傳導分析——
+  # 那是待辦，不是浪費。要關掉省 API 呼叫的話改成 false 即可。
   - id: PPIFIS
     label: PPI 最終需求
     enabled: true
+    note: 尚未接上分析（待辦：PPI → CPI 的上游傳導）
   - id: PPIFES
     label: 核心 PPI
     enabled: true
+    note: 尚未接上分析（待辦：PPI → CPI 的上游傳導）
 
 # ---------------------------------------------------------------------------
 # 二、CPI 分項 — 貢獻度分解的原料
@@ -77,12 +82,17 @@ cpi_components:
 # 三、住房細項（用來判斷住房項的落後程度）
 # ---------------------------------------------------------------------------
 shelter_detail:
+  # 這兩條目前有抓、但住房落後那一段是用 CPI 住房總項算的，沒有讀它們。
+  # 待辦：把「新約租金 → 主要住所租金 → OER」三段的落後分別畫出來，
+  # OER 的落後比市場租金長得多，混在一起看會低估落後期數。
   - id: CUSR0000SEHA
     label: 主要住所租金
     enabled: true
+    note: 尚未接上分析（待辦：租金與 OER 分別看落後期數）
   - id: CUSR0000SEHC
     label: 自有住宅設算租金 (OER)
     enabled: true
+    note: 尚未接上分析（同上）
 
 # ---------------------------------------------------------------------------
 # 四、剔除極端值的替代指標
@@ -116,7 +126,7 @@ energy:
   - id: DCOILBRENTEU
     label: 布蘭特原油
     frequency: daily
-    enabled: true
+    enabled: false      # 能源傳導那一段用的是 WTI；兩者對美國 CPI 的訊息幾乎相同
   - id: GASREGW
     label: 零售汽油價格
     frequency: weekly
@@ -133,10 +143,12 @@ expectations:
   - id: EXPINF1YR
     label: Cleveland Fed 1 年預期
     enabled: true
+    note: 尚未接上分析（待辦：與密大 1 年預期並列，家戶調查 vs 模型）
   - id: T5YIE
     label: 5 年損益兩平通膨率
     frequency: daily
-    enabled: true
+    enabled: false      # 脫錨判斷用的是 5Y5Y 遠期（T5YIFR，下一條）——
+                        # 那條剔除了未來五年的已知衝擊，才是「長期預期」
   - id: T5YIFR
     label: 5年後5年期預期 (5y5y)
     frequency: daily

@@ -297,3 +297,16 @@ def build() -> list[dict]:
             d["presser_error"] = None
         out.append(d)
     return out
+
+
+# 官方行事曆上 2026 年最後三場（已對照 federalreserve.gov 的行事曆頁）。
+# 正式執行時由 FomcSource.upcoming_meetings() 直接解析行事曆，
+# 這裡只是離線模式的對應素材，讓兩條路徑產出同樣形狀的資料。
+_UPCOMING = ["2026-09-16", "2026-10-28", "2026-12-09"]
+
+
+def upcoming() -> list:
+    """離線模式的未來會議日期。只回傳今天之後的場次。"""
+    import datetime as dt
+    today = dt.date.today()
+    return [d for d in (dt.date.fromisoformat(x) for x in _UPCOMING) if d > today]

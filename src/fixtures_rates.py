@@ -133,6 +133,21 @@ def build() -> dict[str, list[dict]]:
     outlays.reverse()
     s["FGEXPND"] = [{"date": dd, "value": round(x, 1)} for dd, x in zip(q, outlays)]
 
+    # 聯準會持有的公債（週頻，百萬美元）。設成緩步下降，
+    # 對應目前仍在進行的縮表——這樣離線畫面才會走到「縮表推升供給」那條分支。
+    wk, cur = [], END
+    while len(wk) < 60:
+        wk.append(cur.isoformat())
+        cur -= dt.timedelta(days=7)
+    wk.reverse()
+    treast, v = [], 4_180_000.0            # 百萬美元
+    for _ in wk:
+        treast.append(v)
+        v += 8_500.0                       # 往回走 → 過去比較高，代表在減持
+    treast.reverse()
+    s["TREAST"] = [{"date": d_, "value": round(x, 0)}
+                   for d_, x in zip(wk, treast)]
+
     # 月度赤字
     months, y, m = [], 2026, 7
     for _ in range(36):
@@ -144,3 +159,41 @@ def build() -> dict[str, list[dict]]:
     s["MTSDS133FMS"] = [{"date": dd, "value": round(-190_000 + random.gauss(0, 45_000))}
                         for dd in months]
     return s
+
+
+# ---------------------------------------------------------------------------
+# 近期發債申報（離線示範）
+# ---------------------------------------------------------------------------
+def offerings() -> list[dict]:
+    """
+    離線模式的發債申報素材，形狀與 sec.fetch_recent_offerings 一致。
+
+    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意混入
+    「有解析到金額」與「沒解析到」兩種，讓畫面的兩條路徑都會被畫到。
+    """
+    import datetime as dt
+    today = dt.date.today()
+
+    def d(days_ago: int) -> str:
+        return (today - dt.timedelta(days=days_ago)).isoformat()
+
+    return [
+        {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
+         "date": d(6), "items": "", "kind": "offering", "amount": 12.5,
+         "accession": "0001652044-26-000090",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
+                    "000165204426000090/d424b2.htm",
+         "desc": "424B2"},
+        {"name": "Meta", "ticker": "META", "form": "8-K",
+         "date": d(19), "items": "2.03,9.01", "kind": "event", "amount": None,
+         "accession": "0001326801-26-000058",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1326801/"
+                    "000132680126000058/meta-8k.htm",
+         "desc": "8-K"},
+        {"name": "Oracle", "ticker": "ORCL", "form": "424B5",
+         "date": d(41), "items": "", "kind": "offering", "amount": 18.0,
+         "accession": "0001341439-26-000031",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1341439/"
+                    "000134143926000031/d424b5.htm",
+         "desc": "424B5"},
+    ]

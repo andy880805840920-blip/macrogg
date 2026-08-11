@@ -102,6 +102,9 @@ def attribute_cpi(
             "shelter": shelter,
             "food_energy": food_energy,
             "ex_shelter": ex_shelter,
+            # 住房權重（%）。畫面上要用它把住房的「貢獻」還原成
+            # 住房自己的漲幅，才能跟非住房的漲幅並排比較。
+            "shelter_weight": shelter_w,
         },
         share_suppressed=suppress,
         unexplained=total - explained,
@@ -133,6 +136,7 @@ class InflationSummary:
     core_goods_yoy: float | None = None
     ex_shelter_yoy: float | None = None
     pce_core_yoy: float | None = None
+    pce_core_3m: float | None = None   # 核心 PCE 三個月年化（KPI 副標的短期動能）
     median_cpi: float | None = None
     trimmed_cpi: float | None = None
     sticky_cpi: float | None = None
@@ -156,6 +160,7 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.shelter_3m = annualized(g("CUSR0000SAH1", []), 3)
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
+    s.pce_core_3m = annualized(g("PCEPILFE", []), 3)
 
     s.median_cpi = value_at(g("MEDCPIM159SFRBCLE", []))
     s.trimmed_cpi = value_at(g("TRMMEANCPIM159SFRBCLE", []))
