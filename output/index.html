@@ -852,43 +852,47 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-11 05:01</div>
+  <div class="sub">最後更新 2026-08-11 05:10</div>
 </header>
 
 <nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav>
-<div class="banner"><b>離線示範模式</b>　聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；時間序列為程式生成的示範序列（統計特性接近真實，但個別數值非實際發布值），不可用於研究引用。正式執行（不加 --offline）一律使用即時資料。</div>
 
-<div class="verdict hawkish">
-  <div class="v-eyebrow">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-07　·　目前情境</div>
-  <div class="v-main">停滯性通膨：通膨優先</div>
-  <div class="v-why">兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</div>
+
+<div class="verdict neutral">
+  <div class="v-eyebrow">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-07　·　目前情境</div>
+  <div class="v-main">降息受阻</div>
+  <div class="v-why">就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</div>
   <div class="v-count">
-    定位：就業弱　×　通膨高　·
-    政策傾向 利升息<br>適用的九宮格：通膨優先
+    定位：就業弱　×　通膨中　·
+    政策傾向 中性<br>適用的九宮格：通膨優先
     
   </div>
-  <div class="cons"><div class="cons-row"><div class="cons-i"><span class="cons-k">就業</span><span class="cons-v dovish">利降息</span></div><div class="cons-i"><span class="cons-k">物價</span><span class="cons-v hawkish">利升息</span></div><div class="cons-i"><span class="cons-k">聯準會</span><span class="cons-v hawkish">利升息</span></div></div><div class="cons-note">政策方向：3 個模組裡 2 個偏利升息、1 個偏利降息——方向分歧，任何單一模組的結論都要打折。</div><div class="cons-aside"><div class="cons-row"><div class="cons-i aside"><span class="cons-k">長端</span><span class="cons-v hawkish">利升息</span></div></div><div class="cons-note">長端供給壓力偏高——即使政策利率往下，長端也不容易跟著降。不算進上面的票數：它回答的是曲線形狀，不是政策方向。</div></div></div>
+  <div class="cons"><div class="cons-row"><div class="cons-i"><span class="cons-k">就業</span><span class="cons-v dovish">利降息</span></div><div class="cons-i"><span class="cons-k">物價</span><span class="cons-v neutral">方向不明</span></div><div class="cons-i"><span class="cons-k">聯準會</span><span class="cons-v hawkish">利升息</span></div></div><div class="cons-note">政策方向：1 個偏利升息、1 個偏利降息，正好對半——這種時候不該只信其中一邊。</div><div class="cons-aside"><div class="cons-row"><div class="cons-i aside"><span class="cons-k">長端</span><span class="cons-v neutral">中性</span></div></div><div class="cons-note">長端供給壓力中性。不算進上面的票數：它回答的是曲線形狀，不是政策方向。</div></div></div>
 </div>
 
 <div class="grid">
   <div class="card">
     <h2>本期關鍵訊號</h2>
-    <p class="hint">來自就業與物價兩個模組的規則引擎，共 9 條：4 條利降息、4 條利升息、1 條中性。依嚴重度排序。</p>
-    <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">失業率下降源於勞動力退出，而非就業增加<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業市場實際在轉弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心服務除住房仍高於目標區間<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　聯準會最在意的一塊還沒降溫</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">長期通膨預期偏離目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　預期脫錨是聯準會的紅線</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="src">另有 3 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
+    <p class="hint">來自就業與物價兩個模組的規則引擎，共 8 條：5 條利降息、2 條利升息、1 條中性。依嚴重度排序。</p>
+    <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">失業率下降源於勞動力退出，而非就業增加<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業市場實際在轉弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">近三月年化低於年增率 0.4 個百分點以上<span class="f-tag">物價</span></div><div class="impact dovish">利降息　通膨降溫的證據</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">住房落後項推升整體讀數<span class="f-tag">物價</span></div><div class="impact dovish">利降息　實際通膨比表面低</div></div></div><div class="src">另有 2 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
   </div>
 </div>
 
 <div class="grid g2">
   <div class="card">
     <h2>接下來要盯什麼</h2>
-    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸是目前的政策約束條件；另一軸就算觸發，在現在的重心下也不會單獨改變方向。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.90 個百分點</div><div class="wt-n">目前 綜合通膨水準 3.20%　·　需低於 2.30%</div></div>
+    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸是目前的政策約束條件；另一軸就算觸發，在現在的重心下也不會單獨改變方向。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.59 個百分點</div><div class="wt-n">目前 綜合通膨水準 2.89%　·　需低於 2.30%</div></div><div class="wt"><div class="wt-k">通膨轉「高」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.01 個百分點</div><div class="wt-n">目前 綜合通膨水準 2.89%　·　需高於 2.90%</div></div>
     <h3 style="margin-top:20px">下次更新</h3>
-    <div class="cds"><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">1 天後</div><div class="cd-n">2026-08-12　·　依「次月第 12 天前後」慣例推估</div></div><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">24 天後</div><div class="cd-n">2026-09-04　·　依「次月第一個週五」慣例推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">36 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
+    <div class="cds"><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">1 天後</div><div class="cd-n">2026-08-12　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">24 天後</div><div class="cd-n">2026-09-04　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">36 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
   </div>
 
   <div class="card">
     <h2>跟上期比，什麼變了</h2>
-    <div class="chg quiet"><span class="ctitle">本期變化</span><span>情境與訊號組成與上期相同</span><span class="ctitle">對照 2026-08-11 05:01</span></div>
+    <div class="chg moved">
+  <div class="ctitle">本期變化　·　勞動綜合分數 +0.02　·　5 項訊號延續　·　對照 2026-08-11 05:01</div>
+  <div class="chead">情境由「停滯性通膨：通膨優先」移動到「降息受阻」</div>
+  <div class="src" style="border-top:none;padding-top:0;margin-top:10px">「新觸發」＝本期新出現的訊號；「已解除」＝上期有、本期不再成立。</div><div class="clist"><div class="citem new"><span class="cmark">新觸發</span><span>油價上行，未來一至兩月推升總體 CPI</span><span class="cmod">物價</span><span class="clean hawkish">利升息</span></div><div class="citem new"><span class="cmark">新觸發</span><span>住房落後項推升整體讀數</span><span class="cmod">物價</span><span class="clean dovish">利降息</span></div><div class="citem new"><span class="cmark">新觸發</span><span>近三月年化低於年增率 0.4 個百分點以上</span><span class="cmod">物價</span><span class="clean dovish">利降息</span></div><div class="citem gone"><span class="cmark">已解除</span><span>非管理職薪資增速高於總體</span><span class="cmod">就業</span><span class="clean hawkish">利升息</span></div><div class="citem gone"><span class="cmark">已解除</span><span>就業成長廣度不足</span><span class="cmod">就業</span><span class="clean dovish">利降息</span></div><div class="citem gone"><span class="cmark">已解除</span><span>長期通膨預期偏離目標</span><span class="cmod">物價</span><span class="clean hawkish">利升息</span></div><div class="citem gone"><span class="cmark">已解除</span><span>核心服務除住房仍高於目標區間</span><span class="cmod">物價</span><span class="clean hawkish">利升息</span></div></div><div class="cmoves"><div class="cmove"><div>平均時薪年增</div><div class="cm-delta down">-0.06 個百分點</div><div class="cm-val">3.21 → 3.15%</div></div><div class="cmove"><div>損益兩平就業增速</div><div class="cm-delta up">+5.94萬人</div><div class="cm-val">4.30 → 10.24萬人</div></div><div class="cmove"><div>核心 CPI 年增</div><div class="cm-delta down">-0.49 個百分點</div><div class="cm-val">3.30 → 2.81%</div></div><div class="cmove"><div>核心 CPI 三月年化</div><div class="cm-delta down">-1.16 個百分點</div><div class="cm-val">3.46 → 2.29%</div></div><div class="cmove"><div>核心 PCE 年增</div><div class="cm-delta up">+0.26 個百分點</div><div class="cm-val">3.02 → 3.29%</div></div><div class="cmove"><div>核心服務除住房</div><div class="cm-delta down">-1.39 個百分點</div><div class="cm-val">4.74 → 3.35%</div></div><div class="cmove"><div>長期通膨預期</div><div class="cm-delta down">-0.33 個百分點</div><div class="cm-val">2.66 → 2.33%</div></div></div>
+</div>
   </div>
 </div>
 
@@ -900,9 +904,9 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
   <div class="m-more">看修正追蹤、行業增減與健康檢查 →</div>
 </a><a class="modcard" href="/inflation/">
   <div class="m-top"><span class="m-name">通膨</span>
-    <span class="m-when">2026-07 資料</span></div>
-  <div class="m-value">3.3%<span class="m-dir hawkish">利升息</span></div>
-  <div class="m-note">核心 PCE 3.0%</div>
+    <span class="m-when">2026-06 資料</span></div>
+  <div class="m-value">2.8%<span class="m-dir neutral">方向不明</span></div>
+  <div class="m-note">核心 PCE 3.3%</div>
   <div class="m-more">看分項貢獻、住房落後與能源傳導 →</div>
 </a><a class="modcard" href="/fomc/">
   <div class="m-top"><span class="m-name">聯準會文本</span>
@@ -913,15 +917,15 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 </a><a class="modcard" href="/rates/">
   <div class="m-top"><span class="m-name">長端與債務</span>
     <span class="m-when">2026-08-07 資料</span></div>
-  <div class="m-value">5.21%<span class="m-dir hawkish">利升息</span></div>
-  <div class="m-note">30 年期　·　供給壓力偏高</div>
+  <div class="m-value">5.19%<span class="m-dir neutral">中性</span></div>
+  <div class="m-note">30 年期　·　供給壓力中性</div>
   <div class="m-more">看曲線拆解、債務動態與科技巨頭發債 →</div>
 </a></div>
 
 <div class="card" style="margin-top:13px">
   <div class="src" style="border-top:none;padding-top:0">
     資料月份：2026-07（就業）　·　
-    2026-07（物價）　·　
+    2026-06（物價）　·　
     2026-07-29（聲明）。
     JOLTS 較就業報告落後 1 個月，
     PCE 較 CPI 晚約兩週。<br>
