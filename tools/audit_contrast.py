@@ -128,6 +128,10 @@ def main() -> int:
             page = b.new_page(viewport={"width": 390, "height": 900})
             for path in PAGES:
                 page.goto(f"http://127.0.0.1:{port}{path}", wait_until="load")
+                # 收合的內容量不到（getBoundingClientRect 全是 0），
+                # 不先展開的話這支腳本會對著一串標題列回報「全部通過」。
+                page.evaluate("""() => document.querySelectorAll('details')
+                    .forEach(d => d.open = true)""")
                 hits = page.evaluate(PROBE)
                 if hits:
                     total += len(hits)

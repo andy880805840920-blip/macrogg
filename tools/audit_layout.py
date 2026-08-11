@@ -153,7 +153,20 @@ def main() -> int:
                 for path in PAGES:
                     page.goto(f"http://127.0.0.1:{port}{path}",
                               wait_until="load")
+                    # 卡區預設收合之後，量到的只會是一串標題列——版面問題
+                    # 全部躲在收合區裡，稽核會回報「沒有問題」而其實沒量到。
+                    # 所以先全部展開再量。收合狀態自己的問題（標題列的觸控
+                    # 目標、摘要句折行）由下方的 collapsed 那一輪負責。
+                    page.evaluate("""() => document.querySelectorAll('details')
+                        .forEach(d => d.open = true)""")
                     r = page.evaluate(PROBE)
+                    # 收合狀態：只看標題列本身
+                    page.evaluate("""() => document.querySelectorAll('details')
+                        .forEach(d => d.open = false)""")
+                    r2 = page.evaluate(PROBE)
+                    for key in r:
+                        seen = {repr(x) for x in r[key]}
+                        r[key] += [x for x in r2[key] if repr(x) not in seen]
                     hits = []
                     for o in r["overflow"]:
                         hits.append(f"溢出 {o['over']}px  {o['el']}  "

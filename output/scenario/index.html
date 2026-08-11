@@ -103,6 +103,70 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
 .card .src{font-size:12px;color:var(--muted);margin-top:15px;padding-top:11px;
   border-top:1px solid var(--border);line-height:1.6}
 
+/* ---------- 可收合的卡區 ----------
+   每一頁只有最上方的結論卡與緊接著的第一張內容卡是常開的，其餘預設收合。
+   理由是每個人要看的那一塊不一樣：看勞動的人不需要每次都捲過行業分解，
+   看行業分解的人也不需要每次先讀完修正追蹤。收合之後整頁變成一張
+   可以一眼掃完的清單。
+
+   關鍵在 .sect-sum：收合的標題列一定要帶一句結論，否則讀者得逐一點開
+   才知道哪張有事——那比不收合還糟。 */
+.sect{padding:0}                       /* 內距移到 summary 與 sect-body */
+.sect>summary{list-style:none;cursor:pointer;padding:15px 16px;
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;
+  gap:2px 12px;border-radius:13px}
+@media(min-width:760px){.sect>summary{padding:16px 20px}}
+.sect>summary::-webkit-details-marker{display:none}
+.sect>summary::after{content:"▾";grid-column:2;grid-row:1;
+  font-size:12px;color:var(--muted)}
+.sect[open]>summary::after{content:"▴"}
+.sect>summary:hover{background:var(--surface-2)}
+.sect>summary:focus-visible{outline:2px solid var(--series-1);outline-offset:-2px}
+.sect>summary h2{margin:0;grid-column:1;grid-row:1}
+/* 摘要句：收合時是「要不要點開」的唯一依據；展開後內容自己會講，藏起來 */
+.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;color:var(--muted);
+  line-height:1.6;padding-right:4px}
+.sect[open] .sect-sum{display:none}
+.sect-body{padding:0 16px 17px}
+@media(min-width:760px){.sect-body{padding:0 20px 18px}}
+.sect-body>:first-child{margin-top:2px}
+
+/* 「關鍵數字」那一區是四張 KPI 卡包在一張卡裡。卡中卡會有兩層底色與
+   兩層陰影，看起來像出錯——內層改成只用分隔線區隔。 */
+.grid.inner{margin-top:2px;gap:0}
+.grid.inner>.card{background:transparent;border:none;box-shadow:none;
+  border-radius:0;padding:15px 0;border-bottom:1px solid var(--grid)}
+.grid.inner>.card:last-child{border-bottom:none;padding-bottom:2px}
+.grid.inner>.card:first-child{padding-top:4px}
+@media(min-width:760px){
+  .grid.inner{gap:0 22px}
+  .grid.inner>.card{padding:15px 0}
+  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
+     視覺上剛好變成欄與欄之間的水平分隔 */
+}
+
+/* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
+   （hidden-until-found 支援度還不齊），所以這一列不是方便，是補償。 */
+.sect-tools{display:flex;gap:8px;margin:12px 0 0}
+.sect-tools button{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+  color:var(--text-secondary);background:var(--surface-1);
+  border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.sect-tools button:hover{border-color:var(--text-secondary);
+  color:var(--text-primary)}
+.sect-tools button:focus-visible{outline:2px solid var(--series-1);
+  outline-offset:2px}
+
+/* 錨點跳過來的那一區給一個外框，否則展開之後看不出跳到哪一張 */
+.sect:target>summary{box-shadow:0 0 0 2px var(--series-1) inset}
+
+/* 列印／存成 PDF 時全部展開。JS 另有 beforeprint 保險——
+   新版 Chrome 用 content-visibility 實作收合，純 CSS 不一定壓得過。 */
+@media print{
+  .sect-tools,nav.site,nav.anchors{display:none}
+  .sect>summary::after,.sect-sum{display:none}
+  details>*:not(summary){display:block!important}
+}
+
 /* ---------- 結論卡 ---------- */
 .verdict{background:var(--surface-1);border:1px solid var(--border);
   border-radius:13px;padding:19px 17px;box-shadow:var(--shadow);margin-top:13px;
@@ -699,8 +763,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
    ＋ 內陰影三重標示，徽章只是把同一件事再說一次。
    圖說那一行會告訴讀者「反白粗框那一格是目前位置」，語意不會遺失。 */
 @media(max-width:759px){.scell .sbadge{display:none}}
-/* 圖說裡的小圖例：把樣式做得跟格子一樣，讀者不必猜「反白粗框」長怎樣 */
-.lg-on{background:var(--surface-1);color:var(--text-primary);font-weight:700;
+/* 圖說裡的小圖例：把樣式做得跟格子一樣，讀者不必猜「反白粗框」長怎樣。
+   inline-block ＋ nowrap 是必要的：純 inline 元素折到下一行時，
+   內陰影會在斷點處各畫半個框，看起來像兩個壞掉的方塊。 */
+.lg-on{display:inline-block;white-space:nowrap;
+  background:var(--surface-1);color:var(--text-primary);font-weight:700;
   box-shadow:0 0 0 2px var(--text-primary) inset;border-radius:5px;
   padding:1px 5px}
 /* .sbadge.alt 已刪除：那是舊的「結論已依重心修正」徽章，
@@ -760,27 +827,50 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .chg.quiet{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;
   padding:12px 16px;font-size:13.5px}
 .chg.quiet .ctitle{font-size:12px}
-.chg .chead{font-size:19px;font-weight:700;margin-top:7px;line-height:1.5}
+.chg .chead{font-size:19px;font-weight:700;margin-top:2px;line-height:1.5}
 @media(min-width:760px){.chg .chead{font-size:21px}}
 .chg.moved .chead{color:var(--serious)}
-.clist{display:grid;grid-template-columns:1fr;gap:7px;margin-top:14px}
-@media(min-width:700px){.clist{grid-template-columns:1fr 1fr}}
-.citem{display:flex;gap:8px;align-items:baseline;font-size:13.5px;
-  background:var(--surface-2);border-radius:8px;padding:9px 11px;line-height:1.6}
-.citem .cmark{font-size:11px;font-weight:700;flex-shrink:0}
-.citem.new .cmark{color:var(--serious)}
-.citem.gone .cmark{color:var(--series-1)}
+
+/* 一句淨結論。七條變化平鋪而沒有加總，讀者只能自己數——而且很容易數錯，
+   因為「解除一條鷹派訊號」其實是鴿派的變化。 */
+.cnet{font-size:14px;line-height:1.8;margin-top:10px;padding:10px 12px;
+  border-radius:9px;background:var(--surface-2)}
+.cnet.dovish{background:var(--tint-dov)} .cnet.hawkish{background:var(--tint-haw)}
+.cnet b{color:var(--text-primary)}
+
+/* 訊號變化按**方向**分兩欄，不按新觸發／已解除分。
+   一條已解除的鷹派訊號是鴿派的變化，照增減分組會把它跟真正的鷹派變化
+   排在一起，讀者看到的方向剛好相反。 */
+.ccols{display:grid;grid-template-columns:1fr;gap:11px;margin-top:13px}
+@media(min-width:700px){.ccols{grid-template-columns:1fr 1fr;gap:13px}}
+.ccol{border-radius:10px;padding:11px 12px;background:var(--surface-2);
+  border-left:3px solid var(--border)}
+.ccol.dovish{border-left-color:var(--series-1)}
+.ccol.hawkish{border-left-color:var(--serious)}
+.ccol-h{font-size:12.5px;font-weight:700;color:var(--text-secondary);
+  margin-bottom:4px}
+.ccol.dovish .ccol-h{color:var(--series-1)}
+.ccol.hawkish .ccol-h{color:var(--serious)}
+.ccol-n{font-weight:700;margin-left:6px;font-variant-numeric:tabular-nums}
+/* ＋／− 只表示「新出現／不再成立」，刻意不上色：顏色留給方向，
+   一個元件同時用顏色表達兩件事，讀者只會看到兩個互相打架的訊息。 */
+.citem{display:flex;gap:7px;align-items:baseline;font-size:13.5px;
+  line-height:1.65;padding:4px 0}
+.citem .cmark{font-size:12px;font-weight:700;flex-shrink:0;color:var(--muted);
+  font-variant-numeric:tabular-nums;width:1.1em}
+.citem .ctext{flex:1;min-width:0}
 .citem .cmod{font-size:11px;color:var(--muted);flex-shrink:0}
-.citem .clean{font-size:11px;font-weight:700;flex-shrink:0;margin-left:auto}
-.citem .clean.hawkish{color:var(--serious)}
-.citem .clean.dovish{color:var(--series-1)}
-.cmoves{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid)}
+.clegend{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+.cmoves{margin-top:10px}
 .cmove{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px;
   padding:8px 0;border-bottom:1px solid var(--grid);align-items:baseline}
 .cmove:last-child{border-bottom:none}
 .cmove .cm-val{font-variant-numeric:tabular-nums;color:var(--text-secondary)}
 .cmove .cm-delta{font-weight:700;font-variant-numeric:tabular-nums}
-.cmove .cm-delta.up{color:var(--serious)} .cmove .cm-delta.down{color:var(--series-1)}
+/* 顏色是「這個變動對利率的意思」，不是數字漲跌 */
+.cmove .cm-delta.hawkish{color:var(--serious)}
+.cmove .cm-delta.dovish{color:var(--series-1)}
+.cmove .cm-delta.flat{color:var(--text-secondary)}
 
 /* ---------- 近 N 期數值列 ---------- */
 /* 六格等寬。欄寬用 max-content 當下限，格子才不會被壓到互相疊字；
@@ -852,132 +942,124 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
 
 <header class="top">
   <h1>情境合成</h1>
-  <div class="sub">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-07　·　更新於 2026-08-11 07:29</div>
+  <div class="sub">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-07　·　更新於 2026-08-11 07:38</div>
 </header>
 
 <nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/" class="on">情境合成</a><a href="/archive/">存檔</a></nav>
-
+<div class="banner"><b>離線示範模式</b>　聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；時間序列為程式生成的示範序列（統計特性接近真實，但個別數值非實際發布值），不可用於研究引用。正式執行（不加 --offline）一律使用即時資料。</div>
 <nav class="anchors"><a href="#grid">九宮格定位</a><a href="#drivers">主要驅動因素</a><a href="#triggers">情境轉換門檻</a><a href="#positioning">固定收益部位對照</a><a href="#market">市場定價對照</a><a href="#curve-pressure">長端供給壓力（不進九宮格）</a><a href="#howto">判讀說明</a></nav>
 
-<div class="verdict neutral">
-  <div class="v-eyebrow">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-07　·　目前情境</div>
-  <div class="v-main">降息受阻</div>
-  <div class="v-why">就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</div>
+<div class="verdict hawkish">
+  <div class="v-eyebrow">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-07　·　目前情境</div>
+  <div class="v-main">停滯性通膨：通膨優先</div>
+  <div class="v-why">兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</div>
   <div class="v-why" style="margin-top:14px">聯準會的客觀訊號與數據方向一致（偏鷹＝利升息方向），判讀的信心較高。這裡比對的是政策行動、反對票與聲明的風險用語，不含措辭語氣分數——語氣會隨主席文風改變，不宜用來加信心。</div>
   <div class="v-count">
-    定位：就業弱　×　通膨中　·
-    政策傾向 中性<br>
+    定位：就業弱　×　通膨高　·
+    政策傾向 利升息<br>
     這裡刻意不給機率。機率市場早就定價了，有價值的是「我的判讀跟市場定價差在哪」。
   </div>
   
 </div>
 
+<div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <div class="card">
-    <h2 id="grid">九宮格定位</h2>
-    <p class="hint">聯準會有兩個目標：充分就業與物價穩定。同一份就業數據，
-      在通膨高和通膨低的環境下會導向完全相反的決定，所以要把兩邊擺在一起看。
-      <b>而同一格在「通膨優先」與「就業優先」下的結論也可能相反</b>，
-      所以三種體制各有一張格子——目前適用的那張已經選好。</p>
+  <details class="card sect" open><summary><h2 id="grid">九宮格定位</h2><span class="sect-sum">就業弱 × 通膨高　·　停滯性通膨：通膨優先　·　利升息</span></summary><div class="sect-body">
+    <p class="hint">就業 × 通膨，<b>每個重心各一張格子</b>——目前適用的那張已經選好。</p>
     <div class="verdict hawkish" style="margin:0 0 18px">
       <div class="v-eyebrow">目前重心（決定用哪一張格子）</div>
       <div class="v-main" style="font-size:22px">通膨優先</div>
       <div class="v-why">委員會目前把通膨擺在前面。這種體制下，就業轉弱不會單獨換來降息——要等通膨先回到目標附近，寬鬆才會啟動。</div>
       
     </div>
-    <div class="src">判定依據：聲明描述通膨仍高於目標、3 張反對票主張升息、記者會 7 處表態以物價穩定為優先　·　來源為聲明制式句與投票紀錄，不用模型。</div>
-    <div class="rtabs"><input type="radio" name="regime" id="rg-inflation" checked class="rtab-in"><label for="rg-inflation" class="rtab">通膨優先<span class="rt-now">目前</span></label><input type="radio" name="regime" id="rg-employment" class="rtab-in"><label for="rg-employment" class="rtab">就業優先</label><input type="radio" name="regime" id="rg-balanced" class="rtab-in"><label for="rg-balanced" class="rtab">兩邊並重</label><div class="rpanels"><div class="rpanel"><p class="hint" style="margin:0 0 12px"><b>通膨優先的規則：</b>通膨沒回到目標附近之前，就業轉弱不會單獨換來降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell hawkish conflict"><div class="sname">傾向緊縮</div><div class="sdesc">通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell neutral on conflict"><div class="sname">降息受阻</div><div class="sdesc">就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</div><div class="sbadge">目前位置</div></div><div class="scell hawkish conflict"><div class="sname">停滯性通膨<span class="sn-qual">通膨優先</span></div><div class="sdesc">兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以就業優先時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>就業優先的規則：</b>勞動市場的惡化是決定性的；通膨略高於目標不會阻止降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell neutral conflict"><div class="sname">忍受通膨</div><div class="sdesc">通膨還高，但委員會把就業擺在前面，而就業還沒轉弱。這一格不會主動緊縮——通膨略高於目標本身不構成升息理由。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell dovish on conflict"><div class="sname">轉向降息</div><div class="sdesc">就業惡化成為主要考量，通膨的阻力正在消退。在就業優先的體制下，這一格降息沒有障礙。</div><div class="sbadge">目前位置</div></div><div class="scell dovish conflict"><div class="sname">停滯性通膨<span class="sn-qual">救就業</span></div><div class="sdesc">兩個使命指向相反，而委員會把就業擺在前面。即使通膨仍高於目標，勞動市場的惡化才是決定性的——會忍受一段時間的高通膨去撐就業。</div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以兩邊並重時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>兩邊並重的規則：</b>沒有優先順序。哪一邊先出現極端值，哪一邊就主導。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell hawkish conflict"><div class="sname">兩難</div><div class="sdesc">通膨還高但就業開始鬆動，兩個使命沒有明確的優先順序。哪一邊先出現極端值，哪一邊就會主導。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell dovish on conflict"><div class="sname">轉向降息</div><div class="sdesc">就業惡化成為主要考量，通膨的阻力正在消退。兩邊並重時，這一格由就業那一側主導。</div><div class="sbadge">目前位置</div></div><div class="scell neutral conflict"><div class="sname">兩難僵局</div><div class="sdesc">最棘手的情況，而且沒有優先順序可以打破僵局。降息會助長通膨、升息會加深衰退，兩股力量互相抵消——結果通常是按兵不動，直到某一邊先失控。</div></div></div></div></div></div><div class="rcmp-box"><p class="hint" style="margin:0 0 10px">目前這一格<b>會</b>隨重心改變——下面三列是同一格在三種體制下的結論。重心翻轉的風險要一起盯。</p><div class="rcmp on"><div class="rcmp-k">通膨優先</div><div class="rcmp-v neutral">降息受阻</div><div class="rcmp-l">中性</div></div><div class="rcmp"><div class="rcmp-k">就業優先</div><div class="rcmp-v dovish">轉向降息</div><div class="rcmp-l">利降息</div></div><div class="rcmp"><div class="rcmp-k">兩邊並重</div><div class="rcmp-v dovish">轉向降息</div><div class="rcmp-l">利降息</div></div></div>
+    <div class="src">判定依據：聲明描述通膨仍高於目標、3 張反對票主張升息、記者會 5 處表態以物價穩定為優先</div>
+    <div class="rtabs"><input type="radio" name="regime" id="rg-inflation" checked class="rtab-in"><label for="rg-inflation" class="rtab">通膨優先<span class="rt-now">目前</span></label><input type="radio" name="regime" id="rg-employment" class="rtab-in"><label for="rg-employment" class="rtab">就業優先</label><input type="radio" name="regime" id="rg-balanced" class="rtab-in"><label for="rg-balanced" class="rtab">兩邊並重</label><div class="rpanels"><div class="rpanel"><p class="hint" style="margin:0 0 12px"><b>通膨優先的規則：</b>通膨沒回到目標附近之前，就業轉弱不會單獨換來降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell hawkish conflict"><div class="sname">傾向緊縮</div><div class="sdesc">通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell neutral conflict"><div class="sname">降息受阻</div><div class="sdesc">就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</div></div><div class="scell hawkish on conflict"><div class="sname">停滯性通膨<span class="sn-qual">通膨優先</span></div><div class="sdesc">兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</div><div class="sbadge">目前位置</div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以就業優先時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>就業優先的規則：</b>勞動市場的惡化是決定性的；通膨略高於目標不會阻止降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell neutral conflict"><div class="sname">忍受通膨</div><div class="sdesc">通膨還高，但委員會把就業擺在前面，而就業還沒轉弱。這一格不會主動緊縮——通膨略高於目標本身不構成升息理由。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell dovish conflict"><div class="sname">轉向降息</div><div class="sdesc">就業惡化成為主要考量，通膨的阻力正在消退。在就業優先的體制下，這一格降息沒有障礙。</div></div><div class="scell dovish on conflict"><div class="sname">停滯性通膨<span class="sn-qual">救就業</span></div><div class="sdesc">兩個使命指向相反，而委員會把就業擺在前面。即使通膨仍高於目標，勞動市場的惡化才是決定性的——會忍受一段時間的高通膨去撐就業。</div><div class="sbadge">目前位置</div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以兩邊並重時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>兩邊並重的規則：</b>沒有優先順序。哪一邊先出現極端值，哪一邊就主導。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div><div class="sdesc">就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</div></div><div class="scell neutral"><div class="sname">小心觀望</div><div class="sdesc">就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</div></div><div class="scell hawkish"><div class="sname">升息壓力</div><div class="sdesc">經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div><div class="sdesc">通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</div></div><div class="scell neutral"><div class="sname">按兵不動</div><div class="sdesc">兩邊都不極端，這份數據不足以改變方向。</div></div><div class="scell hawkish conflict"><div class="sname">兩難</div><div class="sdesc">通膨還高但就業開始鬆動，兩個使命沒有明確的優先順序。哪一邊先出現極端值，哪一邊就會主導。</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div><div class="sdesc">就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</div></div><div class="scell dovish conflict"><div class="sname">轉向降息</div><div class="sdesc">就業惡化成為主要考量，通膨的阻力正在消退。兩邊並重時，這一格由就業那一側主導。</div></div><div class="scell neutral on conflict"><div class="sname">兩難僵局</div><div class="sdesc">最棘手的情況，而且沒有優先順序可以打破僵局。降息會助長通膨、升息會加深衰退，兩股力量互相抵消——結果通常是按兵不動，直到某一邊先失控。</div><div class="sbadge">目前位置</div></div></div></div></div></div><details class="f-more rcmp-box"><summary>重心若翻轉，這一格會變成「停滯性通膨：救就業」或「兩難僵局」</summary><p class="hint" style="margin:10px 0 10px">下面三列是同一格在三種體制下的結論。重心是由聲明、投票與記者會判定的，會隨會議改變——所以這一格的結論帶著一個額外的風險，要跟數據本身一起盯。</p><div class="rcmp on"><div class="rcmp-k">通膨優先</div><div class="rcmp-v hawkish">停滯性通膨：通膨優先</div><div class="rcmp-l">利升息</div></div><div class="rcmp"><div class="rcmp-k">就業優先</div><div class="rcmp-v dovish">停滯性通膨：救就業</div><div class="rcmp-l">利降息</div></div><div class="rcmp"><div class="rcmp-k">兩邊並重</div><div class="rcmp-v neutral">兩難僵局</div><div class="rcmp-l">中性</div></div></details>
     <p class="hint" style="margin-top:16px">
-      左下角（就業弱、通膨低）是降息最順的情況；右下角（就業弱、通膨高）
-      是停滯性通膨，兩個目標互相打架，聯準會最難處理。
-      標<span class="cflag">◆</span>的三格會隨重心改變，其餘六格三種體制下都一樣；
-      <span class="lg-on">反白粗框</span>那一格是目前位置。
+      <span class="lg-on">反白粗框</span>＝目前位置　·
+      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
     </p>
-  </div>
+  </div></details>
 </div>
 <div class="grid g2">
-  <div class="card">
-    <h2 id="drivers">主要驅動因素</h2>
-    <p class="hint">來自兩個模組的規則引擎，依嚴重度排序。</p>
-    <ul style="margin:10px 0 0;padding-left:20px;font-size:14px;line-height:1.9;color:var(--text-secondary)"><li>勞動｜失業率下降源於勞動力退出，而非就業增加</li><li>勞動｜前兩月大幅下修，實質動能弱於初值</li><li>通膨｜近三月年化低於年增率 0.4 個百分點以上</li><li>通膨｜核心 PCE 顯著高於目標</li></ul>
+  <details class="card sect"><summary><h2 id="drivers">主要驅動因素</h2><span class="sect-sum">4 項　·　失業率下降源於勞動力退出，而非就業增加</span></summary><div class="sect-body">
+    <p class="hint">依嚴重度排序。</p>
+    <ul style="margin:10px 0 0;padding-left:20px;font-size:14px;line-height:1.9;color:var(--text-secondary)"><li>勞動｜失業率下降源於勞動力退出，而非就業增加</li><li>勞動｜前兩月大幅下修，實質動能弱於初值</li><li>通膨｜核心服務除住房仍高於目標區間</li><li>通膨｜長期通膨預期偏離目標</li></ul>
     <div class="src">完整清單請見勞動市場頁與通膨頁。</div>
-  </div>
+  </div></details>
 
-  <div class="card">
-    <h2 id="triggers">情境轉換門檻</h2>
-    <p class="hint">不給機率，但給明確的門檻與目前的距離——
-      這比機率誠實，也更能直接拿來盯。標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，在現在的重心下也不會單獨改變政策方向。</p>
-    <div class="warnbox" style="margin:0 0 14px">就業格位定在「弱」不是靠綜合分數——分數 -0.33 還在 ±0.45 的中間帶裡，沒有觸發下方任何一條門檻。是旗標的鷹鴿淨值 -5（達到 ±3）把它推過去的。分數是連續指標、旗標是離散事件，兩者不同步時以旗標為準，因為旗標代表的是已經發生的具體事件。</div>
-    <div class="trig"><div class="tname">勞動轉「強」</div><div class="tdist">還差 0.78</div><div class="tnow">目前 綜合分數 -0.33　·　需高於 +0.45</div></div><div class="trig"><div class="tname">通膨轉「低」<span class="tbind">關鍵</span></div><div class="tdist">還差 0.59 個百分點</div><div class="tnow">目前 綜合通膨水準 2.89%　·　需低於 2.30%</div></div><div class="trig"><div class="tname">通膨轉「高」<span class="tbind">關鍵</span></div><div class="tdist">還差 0.01 個百分點</div><div class="tnow">目前 綜合通膨水準 2.89%　·　需高於 2.90%</div></div>
-  </div>
+  <details class="card sect"><summary><h2 id="triggers">情境轉換門檻</h2><span class="sect-sum">關鍵：通膨轉「低」　·　還差 0.90 個百分點</span></summary><div class="sect-body">
+    <p class="hint">標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，在現在的重心下也不會單獨改變政策方向。</p>
+    <div class="warnbox" style="margin:0 0 14px">就業格位定在「弱」不是靠綜合分數——分數 -0.35 還在 ±0.45 的中間帶裡，沒有觸發下方任何一條門檻。是旗標的鷹鴿淨值 -5（達到 ±3）把它推過去的。分數是連續指標、旗標是離散事件，兩者不同步時以旗標為準，因為旗標代表的是已經發生的具體事件。</div>
+    <div class="trig"><div class="tname">勞動轉「強」</div><div class="tdist">還差 0.80</div><div class="tnow">目前 綜合分數 -0.35　·　需高於 +0.45</div></div><div class="trig"><div class="tname">通膨轉「低」<span class="tbind">關鍵</span></div><div class="tdist">還差 0.90 個百分點</div><div class="tnow">目前 綜合通膨水準 3.20%　·　需低於 2.30%</div></div>
+  </div></details>
 </div>
 
 <div class="grid g2">
-  <div class="card">
-    <h2 id="positioning">固定收益部位對照</h2>
-    <p class="hint">情境到部位的映射框架。這是方向性的參考，不是進出場訊號。</p>
-    <dl class="gloss"><dt>殖利率曲線</dt><dd>區間震盪。市場想定價降息但遲遲等不到</dd><dt>債券存續期間</dt><dd>中性偏長，但要有等待的準備——方向對，時點取決於通膨何時回到目標附近</dd><dt>抗通膨債券</dt><dd>大致持平</dd><dt>公司債利差</dt><dd>偏向走闊。就業已在轉弱，信用面開始承壓</dd></dl>
-    <div class="src">
-      本頁僅為分析框架，不構成投資建議。實際部位決策仍需自行判斷。
-    </div>
-  </div>
+  <details class="card sect"><summary><h2 id="positioning">固定收益部位對照</h2><span class="sect-sum">停滯性通膨：通膨優先 對應的四類部位</span></summary><div class="sect-body">
+    <p class="hint">方向性參考，不是進出場訊號。</p>
+    <dl class="gloss poslist"><dt>殖利率曲線</dt><dd>短天期被通膨推高、長天期被衰退壓低，曲線變平（熊平）。但目前長端供給壓力偏高，期限溢酬可能抵銷這個方向，平坦化的力道會比一般情況小</dd><dt>債券存續期間</dt><dd>縮短。委員會以通膨為優先時，寬鬆的時點會一再延後</dd><dt>抗通膨債券</dt><dd>走強，這是少數同時受惠的資產</dd><dt>公司債利差</dt><dd>走闊。企業獲利與融資成本兩頭受壓，而且沒有政策救援</dd></dl>
+    <div class="src">本頁為分析框架，不構成投資建議。</div>
+  </div></details>
 
-  <div class="card">
-    <h2 id="market">市場定價對照</h2>
-    <p class="hint">研究的價值在於找出自己的判讀與市場的分歧。</p>
+  <details class="card sect"><summary><h2 id="market">市場定價對照</h2><span class="sect-sum">差距 +0.21 個百分點　·　與本頁判讀一致</span></summary><div class="sect-body">
+    <p class="hint">自己的判讀與市場定價差在哪。</p>
     <div class="stat-row" style="margin-top:0">
       <div class="stat"><div class="s-label">市場定價的政策路徑</div>
-        <div class="s-value">+0.57 個百分點</div>
+        <div class="s-value">+0.21 個百分點</div>
         <div class="s-note">2 年期公債殖利率減政策利率中值</div></div>
       <div class="stat"><div class="s-label">本頁判讀</div>
-        <div class="s-value" style="font-size:17px">中性</div>
+        <div class="s-value" style="font-size:17px">利升息</div>
         <div class="s-note">目前這張九宮格給出的方向</div></div>
     </div>
     <div class="verdict hawkish" style="margin-top:14px">
       <div class="v-main" style="font-size:19px">市場定價未來兩年的平均政策利率高於現在——偏向再緊縮</div>
       <div class="v-why" style="margin-top:8px">目前<b>一致</b>：兩邊都指向同一個方向。一致不代表沒有機會，但代表這個判讀已經反映在價格裡了。</div>
     </div>
-    <div class="src">2 年期殖利率約等於市場預期的「未來兩年平均政策利率」，
-      是<b>粗略代理</b>而非會議層級的機率——它同時含有期限溢酬，
-      不能直接讀成純粹的政策路徑預期。逐次會議的隱含機率需另接
-      亞特蘭大聯準銀行的 Market Probability Tracker。</div>
-  </div>
+    <div class="src">用 2 年期殖利率當代理，是粗略估計而非會議層級的機率
+      （見判讀說明）。</div>
+  </div></details>
 </div>
 
 
 <div class="grid">
-  <div class="card">
-    <h2 id="curve-pressure">長端供給壓力（不進九宮格）</h2>
-    <p class="hint">九宮格決定的是<b>政策利率往哪走</b>；長端供給壓力決定的是
-      <b>曲線的形狀</b>。兩者由不同的力量驅動，硬合成會把
-      「降息但長端不降」這種最需要看見的情況抹掉，所以分開列。</p>
-    <div class="verdict balanced" style="margin:14px 0 0">
-      <div class="v-eyebrow">供給壓力 中性　·　綜合分數 -0.71</div>
-      <div class="v-main">政策與供給面都沒有明確方向</div>
-      <div class="v-why">曲線形狀的變動主要來自資料面的意外，而非結構性力量。</div>
-      <div class="v-count">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</div>
+  <details class="card sect"><summary><h2 id="curve-pressure">長端供給壓力（不進九宮格）</h2><span class="sect-sum">供給壓力 偏高　·　升息與供給壓力同向，長端承壓最重</span></summary><div class="sect-body">
+    <p class="hint">九宮格講<b>政策利率往哪走</b>，這裡講<b>曲線的形狀</b>——
+      兩件事，所以分開列。</p>
+    <div class="verdict hawkish" style="margin:14px 0 0">
+      <div class="v-eyebrow">供給壓力 偏高　·　綜合分數 +1.89</div>
+      <div class="v-main">升息與供給壓力同向，長端承壓最重</div>
+      <div class="v-why">政策利率往上，同時投資人要求更高的期限溢酬才願意持有長債。兩股力量同向，30 年期的上行風險大於 2 年期。</div>
+      <div class="v-count">債券供給大於需求，投資人要求更高的補償才願意持有長天期債券。在這種環境下，即使聯準會降息，長端殖利率也可能不跟著下降——曲線會走陡而非平行下移。</div>
     </div>
-    <p class="hint" style="margin-top:18px">壓力分數只由供給來源構成——
-      期限溢酬與斜率是被這些供給推高的<b>價格</b>，不是原因，
-      所以不計入分數，改在長端頁另外呈現「已經反映多少」：</p>
-    <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>政府財政缺口</div><div class="cm-delta down">-0.93</div><div class="cm-val">基本盈餘較穩定水準低 1.9% GDP，需要持續淨發行公債</div></div><div class="cmove"><div>科技巨頭融資缺口</div><div class="cm-delta up">+0.85</div><div class="cm-val">資本支出佔營運現金流 91%，超過 100% 就必須舉債</div></div><div class="cmove"><div>聯準會縮表</div><div class="cm-delta down">-0.64</div><div class="cm-val">每月增持約 32 十億美元公債，聯準會正在幫忙吸收供給</div></div></div>
+    <p class="hint" style="margin-top:18px">壓力分數的來源：</p>
+    <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>聯準會縮表</div><div class="cm-delta up">+0.74</div><div class="cm-val">每月減持約 37 十億美元公債，這些量得由私人市場接手</div></div><div class="cmove"><div>政府財政缺口</div><div class="cm-delta up">+0.64</div><div class="cm-val">基本盈餘較穩定水準低 1.3% GDP，需要持續淨發行公債</div></div><div class="cmove"><div>科技巨頭融資缺口</div><div class="cm-delta up">+0.52</div><div class="cm-val">資本支出佔營運現金流 83%，超過 100% 就必須舉債</div></div></div>
     <div class="src">完整拆解、殖利率曲線、政府債務動態與科技巨頭發債請見
       <a href="/rates/">長端與債務</a>頁。</div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid">
-  <div class="card">
-    <h2 id="howto">判讀說明</h2>
-    <p class="hint">這一頁的方法與名詞。</p>
-    <details data-m-collapse open class="plain"><summary>展開判讀說明</summary>
-    <dl class="gloss">
+  <details class="card sect"><summary><h2 id="howto">判讀說明</h2><span class="sect-sum">三張格子的規則、重心怎麼判定、名詞解釋</span></summary><div class="sect-body">
+        <dl class="gloss">
       <dt>為什麼有三張九宮格</dt>
       <dd>聯準會有兩個使命，而它們有時指向相反的方向——就業弱要降息、
         通膨高不能降。誰優先，結論就完全不同。所以三種體制各一張格子，
         由聲明、投票與記者會判定目前適用哪一張。<br>
         九格裡只有三格會隨體制改變（標◆那三格），
         其餘六格兩個使命同向或都不極端，不管誰優先都一樣。</dd>
+      <dt>四個角各是什麼意思</dt>
+      <dd>左下角（就業弱、通膨低）是降息最順的情況——兩個使命指向同一邊。
+        右下角（就業弱、通膨高）是停滯性通膨，兩個目標互相打架，
+        聯準會最難處理，也是三張格子差最多的那一格。
+        上排（就業強）不論通膨高低都不急著降息，差別只在要不要往緊縮走。</dd>
+      <dt>2 年期為什麼能當市場定價的代理</dt>
+      <dd>2 年期殖利率約等於市場預期的「未來兩年平均政策利率」。
+        這是<b>粗略</b>代理而不是會議層級的機率——它同時含有期限溢酬，
+        不能直接讀成純粹的政策路徑預期。要看逐次會議的隱含機率，
+        得用聯邦資金期貨。</dd>
+      <dt>為什麼不給機率</dt>
+      <dd>機率市場早就定價了，複述它沒有附加價值。給明確的門檻與目前的距離
+        比較誠實，也更能直接拿來盯。</dd>
       <dt>重心怎麼判定</dt>
       <dd>聲明裡的制式風險句（±2）、聲明對現況的描述
         （±1，「通膨仍高於目標」／「勞動市場已轉弱」，講現況不是講風險，弱一級）、
@@ -1017,8 +1099,7 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
         當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
         或反過來——他們還沒承認數據已經轉向。</dd>
     </dl>
-    </details>
-  </div>
+  </div></details>
 </div>
 
 
@@ -1034,6 +1115,43 @@ nav.anchors a:hover{color:var(--text-primary);border-color:var(--text-secondary)
       d.removeAttribute('open');
     });
   }
+
+  // ---- 可收合卡區 ----
+  // 錨點跳轉時要把目標展開。不做的話，點頁內導覽跳過去只會看到
+  // 一條收合的標題列，讀者會以為那一區是空的。
+  // 目標可能是 <h2 id> 本身（在 summary 裡），所以往上找最近的 details。
+  function openTarget(){
+    var id = location.hash.slice(1);
+    if(!id) return;
+    var el = document.getElementById(id);
+    if(!el) return;
+    var d = el.closest('details');
+    while(d){ d.open = true; d = d.parentElement && d.parentElement.closest('details'); }
+    // 展開會改變版面高度，捲動位置要重算
+    el.scrollIntoView({block:'start'});
+  }
+  window.addEventListener('hashchange', openTarget);
+  if(location.hash) setTimeout(openTarget, 0);
+
+  function setAll(open){
+    document.querySelectorAll('details.sect').forEach(function(d){ d.open = open; });
+  }
+  document.querySelectorAll('.sect-tools button').forEach(function(b){
+    b.addEventListener('click', function(){ setAll(b.dataset.all === 'open'); });
+  });
+
+  // 列印／存成 PDF 前全部展開。CSS 那邊也寫了 @media print，但新版 Chrome
+  // 用 content-visibility 實作收合，作者樣式不一定壓得過，所以這裡再保險一次。
+  window.addEventListener('beforeprint', function(){
+    document.querySelectorAll('details').forEach(function(d){
+      if(!d.open){ d.dataset.wasClosed = '1'; d.open = true; }
+    });
+  });
+  window.addEventListener('afterprint', function(){
+    document.querySelectorAll('details[data-was-closed]').forEach(function(d){
+      d.open = false; delete d.dataset.wasClosed;
+    });
+  });
   // 導覽列在窄螢幕上是橫向捲動的。目前所在的那一頁若排在後面，
   // 進站時會停在可視範圍外——讀者看不到自己在哪，也不知道還有別的分頁。
   // 把它捲進視野（只捲導覽列自己，不動整頁）。

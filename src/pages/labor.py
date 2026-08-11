@@ -187,7 +187,7 @@ def _claims_card(c: dict | None) -> str:
     lean_cls = c.get("lean", "neutral")
     return f"""<div class="grid">
   <div class="card">
-    <h2 id="claims">每週失業金申請</h2>
+    <h2 id="claims" data-sum="{esc(c['stats'][0]['label'])} {esc(c['stats'][0]['value'])}　·　{esc(c['stats'][1]['label'])} {esc(c['stats'][1]['value'])}">每週失業金申請</h2>
     <p class="hint">這一頁唯一的週頻資料，資料截至 {esc(c['as_of'])}。
       就業報告一個月才出一次、JOLTS 還要再落後一到兩個月——
       兩次就業報告之間，只有這一條會更新。</p>
@@ -425,23 +425,54 @@ def labor_body(d: dict) -> str:
                        f'<ul style="font-size:13px;color:var(--text-secondary)">{items}</ul>'
                        f"</details></div>")
 
+    # 收合摘要：最嚴重的那一條訊號。收合狀態下這是讀者判斷
+    # 「要不要點開」的唯一依據——只寫標題的話得逐一點開才知道哪張有事。
+    _top = next((f for f in d["flags"] if f.severity == "alert"),
+                (d["flags"] or [None])[0])
+    _sig_sum = (f'{len(d["flags"])} 項　·　{_top.headline}' if _top
+                else "本次沒有觸發任何訊號")
+    _kpi_sum = (f'非農 {k["nfp_display"]}　·　失業率 {k["u3_display"]}'
+                f'　·　時薪年增 {k["ahe_display"]}')
+    _dec_sum = (f'失業率 {dec.get("delta_rate", 0):+.2f} 個百分點'
+                + (f'　·　{k["u3_flag"]}' if k.get("u3_flag") else ""))
+    _bk = d["breakeven"]
+    _bk_sum = f'缺口 {_bk["gap_display"]}　·　{_bk["verdict_label"]}'
+    _att_sum = "　·　".join(f'{s["label"]} {s["value"]}'
+                           for s in att["stats"][:2])
+    _rev_sum = next((f'{s["label"]} {s["value"]}' for s in rev["stats"]
+                     if s["value"] not in ("—", "")), "本次無修正資料")
+    _lt = {}
+    for _l in d["lights"]:
+        _lt[_l.status] = _lt.get(_l.status, 0) + 1
+    _light_sum = "、".join(
+        f'{_n} 項{_lab}' for _k, _lab in
+        (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
+         ("unknown", "無資料")) if (_n := _lt.get(_k)))
+    _score_sum = (f'{sc["score"]:+.2f}　·　較上期 {sc["delta"]:+.2f}'
+                  if sc.get("delta") is not None else f'{sc["score"]:+.2f}')
+
     return f"""
 {_verdict_card(d)}
 
-<div class="grid g4">{kpis}</div>
-{_surprise_footnote(d.get('surprises'))}
+<div class="grid">
+  <div class="card">
+    <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
+    <p class="hint">點「依據」看支撐的數字。</p>
+    {flags_html}
+  </div>
+</div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="signals">本期關鍵訊號</h2>
-    <p class="hint">依固定規則逐項檢查，結果可完整重現。點「依據」看支撐的數字。</p>
-    {flags_html}
+    <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
+    <div class="grid g4 inner">{kpis}</div>
+    {_surprise_footnote(d.get('surprises'))}
   </div>
 </div>
 
 <div class="grid g2">
   <div class="card">
-    <h2 id="unrate">失業率變動分解</h2>
+    <h2 id="unrate" data-sum="{esc(_dec_sum)}">失業率變動分解</h2>
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
     {dec_html}
     {_ustar_row(d.get('ustar'))}
@@ -449,7 +480,7 @@ def labor_body(d: dict) -> str:
   </div>
 
   <div class="card">
-    <h2 id="breakeven">損益兩平就業增速</h2>
+    <h2 id="breakeven" data-sum="{esc(_bk_sum)}">損益兩平就業增速</h2>
     <p class="hint">維持失業率不變，每個月需要新增多少工作。
       沒有這條基準線，非農的絕對數字無法解讀。</p>
     <div class="stat-row">{_stats(d['breakeven']['stats'])}</div>
@@ -472,7 +503,6 @@ def labor_body(d: dict) -> str:
         <dd>人口序列每年一月做普查控制調整會出現跳點，計算時已排除一月。
           此為推估值，非官方公布數字。</dd>
       </dl>
-    </details>
   </div>
 </div>
 
@@ -480,7 +510,7 @@ def labor_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="industry">行業別貢獻分解</h2>
+    <h2 id="industry" data-sum="{esc(_att_sum)}">行業別貢獻分解</h2>
     <p class="hint">增減最大的各五個行業，加上任何「相對自己過去表現異常」的行業。
       灰色是醫療、社福與各級政府，用人較不受景氣影響。</p>
     <div class="stat-row">{_stats(att['stats'])}</div>
@@ -510,7 +540,7 @@ def labor_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="revision">歷史數據修正</h2>
+    <h2 id="revision" data-sum="{esc(_rev_sum)}">歷史數據修正</h2>
     <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
       修正幅度常常比當月的變動還大。</p>
     <div class="stat-row">{_stats(rev['stats'])}</div>
@@ -524,8 +554,8 @@ def labor_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="lights">關鍵指標檢核</h2>
-    <p class="hint">八項關鍵指標的當期狀態。門檻設定於 config/indicators.yaml。</p>
+    <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
+    <p class="hint">八項關鍵指標的當期狀態。</p>
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
@@ -534,7 +564,7 @@ def labor_body(d: dict) -> str:
 
 <div class="grid g2">
   <div class="card">
-    <h2 id="score">綜合強弱指數</h2>
+    <h2 id="score" data-sum="{esc(_score_sum)}">綜合強弱指數</h2>
     <p class="hint">最上方那條分數軸的組成明細。
       把主要指標換算成同一個尺度後加權合成，正數代表比自身歷史平均強。</p>
     {_score_axis(sc)}
@@ -556,10 +586,8 @@ def labor_body(d: dict) -> str:
   </div>
 
   <div class="card">
-    <h2 id="glossary">名詞解釋</h2>
-    <p class="hint">這頁出現的專有名詞。</p>
-    <details data-m-collapse open class="plain"><summary>展開名詞解釋</summary>
-    <dl class="gloss">
+    <h2 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h2>
+        <dl class="gloss">
       <dt>非農就業人數</dt>
       <dd>美國政府向企業調查得出的就業人數，不含農業。最受市場關注的就業指標。</dd>
       <dt>失業率</dt>

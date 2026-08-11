@@ -216,26 +216,58 @@ def inflation_body(d: dict) -> str:
         f'color:var(--muted)">{esc(eh["note"])}</span></div>'
         if eh else "")
 
+    # 收合摘要：一律取這一區已經算出來的結論，不另外造句——
+    # 摘要與內文若各說各話，收合狀態反而會誤導。
+    _top = next((f for f in d["flags"] if f.severity == "alert"),
+                (d["flags"] or [None])[0])
+    _sig_sum = (f'{len(d["flags"])} 項　·　{_top.headline}' if _top
+                else "本次沒有觸發任何訊號")
+    _k = d["kpi"]
+    _kpi_sum = (f'CPI {_k["headline_display"]}　·　核心 {_k["core_display"]}'
+                f'　·　核心 PCE {_k["pce_display"]}')
+    _att_sum = "　·　".join(f'{s["label"]} {s["value"]}'
+                           for s in d["attribution"]["stats"][:2])
+    # trend_verdict 是 dict（title/desc/kind），不是字串——直接 esc() 會把
+    # 整個 dict 的 repr 印到標題列上。
+    _tv = d.get("trend_verdict") or {}
+    _trend_sum = esc(_tv.get("title") if isinstance(_tv, dict) else _tv
+                     or "剔除極端值後的比較")
+    _pt = d.get("passthrough") or {}
+    _pt_sum = esc(_pt.get("verdict_title") or "資料不足")
+    _en_sum = "　·　".join(f'{s["label"]} {s["value"]}'
+                          for s in d["energy_stats"][:2])
+    _lt = {}
+    for _l in d["lights"]:
+        _lt[_l.status] = _lt.get(_l.status, 0) + 1
+    _light_sum = "、".join(
+        f'{_n} 項{_lab}' for _key, _lab in
+        (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
+         ("unknown", "無資料")) if (_n := _lt.get(_key)))
+
     return f"""
 {_verdict_card(d)}
 
-<div class="grid g4">{kpis}</div>
-{surp_foot}
-
 <div class="grid">
   <div class="card">
-    <h2 id="signals">本期關鍵訊號</h2>
-    <p class="hint">依固定規則逐項檢查，結果可完整重現。點「依據」看支撐的數字。</p>
+    <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
+    <p class="hint">點「依據」看支撐的數字。</p>
     {flags_html}
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="contrib">分項貢獻分解</h2>
-    <p class="hint">把近三個月的<b>累計</b>漲幅拆成各塊的貢獻。看三個月是因為單月雜訊太大。
-      注意這一區是累計值，上方 KPI 卡的「近三個月年化」是同一件事換算成年率，
-      兩者不是同一個數字。</p>
+    <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
+    <div class="grid g4 inner">{kpis}</div>
+    {surp_foot}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="contrib" data-sum="{esc(_att_sum)}">分項貢獻分解</h2>
+    <p class="hint">近三個月的<b>累計</b>漲幅拆成各塊的貢獻
+      （上方 KPI 卡是同一件事的年率）。</p>
     <div class="stat-row">{_stats(att['stats'])}</div>
     {parts_html}
     {shelter_html}
@@ -256,9 +288,8 @@ def inflation_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="trend">是全面在漲，還是少數項目？</h2>
-    <p class="hint">平均數容易被少數暴漲暴跌的項目帶偏。
-      下面三個指標用不同方法把極端值拿掉，再跟核心 CPI 比對。</p>
+    <h2 id="trend" data-sum="{_trend_sum}">是全面在漲，還是少數項目？</h2>
+    <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     {trend_html}
     <details data-m-collapse><summary>三個指標的定義與數值</summary>
       <table class="lefty" style="margin-top:10px">
@@ -273,30 +304,26 @@ def inflation_body(d: dict) -> str:
         <dd>只看價格很少調整的項目（例如房租、保險）。這些代表通膨的慣性，
           一旦漲上去就很難降下來。</dd>
       </dl>
-    </details>
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="passthrough">薪資到服務業通膨的傳導</h2>
-    <p class="hint">核心服務除住房的成本主體是人力，所以薪資的走向會在數月後
-      反映到這一塊。<b>這是判斷通膨黏性會不會持續的核心機制</b>，
-      也是勞動與通膨兩個模組真正的連結。</p>
+    <h2 id="passthrough" data-sum="{_pt_sum}">薪資到服務業通膨的傳導</h2>
+    <p class="hint">這一塊的成本主體是人力。
+      <b>薪資走向會在數月後反映到這裡，是通膨黏性的核心機制。</b></p>
     {_passthrough(d.get('passthrough'))}
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="energy">能源價格與傳導</h2>
-    <p class="hint">油價會在兩到四週後反映到加油站，再進到物價指數。
-      這一區看的是「已經發生但還沒反映到數據裡」的部分。</p>
+    <h2 id="energy" data-sum="{esc(_en_sum)}">能源價格與傳導</h2>
+    <p class="hint">「已經發生但還沒反映到數據裡」的部分。</p>
     <div class="stat-row">{_stats(d['energy_stats'])}</div>
     {energy_head}
     <p class="hint" style="margin:12px 0 0">{esc(d.get('energy_core_note', ''))}
-      油價漲跌通常不會直接改變利率決策——<b>除非它久到開始推高通膨預期</b>，
-      那就會變成核心的問題。</p>
+      <b>除非久到推高通膨預期</b>，油價不會直接改變利率決策。</p>
 
     <h3 style="margin-top:20px">WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
     <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>
@@ -313,8 +340,8 @@ def inflation_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="lights">關鍵指標檢核</h2>
-    <p class="hint">八項關鍵指標的當期狀態。門檻設定於 config/inflation.yaml。</p>
+    <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
+    <p class="hint">八項關鍵指標的當期狀態。</p>
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
@@ -323,10 +350,8 @@ def inflation_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="glossary">名詞解釋</h2>
-    <p class="hint">這頁出現的專有名詞。</p>
-    <details data-m-collapse open class="plain"><summary>展開名詞解釋</summary>
-    <dl class="gloss">
+    <h2 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h2>
+        <dl class="gloss">
       <dt>CPI</dt>
       <dd>消費者物價指數。統計一籃子商品與服務的價格變化，是最常被報導的通膨指標。</dd>
       <dt>核心 CPI</dt>

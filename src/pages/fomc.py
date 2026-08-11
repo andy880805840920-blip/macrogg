@@ -157,16 +157,13 @@ def fomc_body(d: dict) -> str:
       background:{_obj_color}"></i><span class="score-mid"></span>
   </div>
   <div class="sax-scale"><span>−8 偏降息</span><span>0 中性</span><span>+8 偏升息</span></div>
-  <div class="dnote" style="margin-top:10px">組成：政策行動 ±3、每張反對票 ±2、
-    聲明點名的風險方向 ±1。<br>{esc(d.get('obj_detail', ''))}</div>
+  <div class="dnote" style="margin-top:10px">{esc(d.get('obj_detail', ''))}</div>
 </div>
 <div class="tone-row {tone_cls}{tone_stale}">
   <span class="tone-label">措辭分數（輔助）{_tone_flag}</span>
   <span class="tone-val">{sh.get('tone', 0):+.2f}</span>
   <span class="tone-delta">較上次 {sh.get('tone_delta', 0):+.2f}</span>
-  <span class="tone-note">同一刻度，依每百字的加權詞頻計算。
-    詞典照 Powell 時代的體例校準，主席更迭或體例改變時可比性下降，
-    所以只當輔助、不用來下結論。</span>
+  <span class="tone-note">同一刻度。跨主席不可比，只當輔助。</span>
 </div>"""
 
     warn = ""
@@ -261,6 +258,24 @@ def fomc_body(d: dict) -> str:
 
     kpi_html = "".join(kpis)
 
+    # 收合摘要：一律取這一區已經算出來的結論。
+    _sc_sum = (f'客觀訊號 {sh.get("objective", 0):+.2f}'
+               f'　·　措辭 {sh.get("tone", 0):+.2f}'
+               + ("　·　兩者背離" if sh.get("diverge") else ""))
+    _kpi_sum = (f'{esc(d.get("latest_date", ""))} 聲明　·　'
+                f'改動 {d.get("changed_count", 0)} 處　·　'
+                f'客觀訊號 {sh.get("objective", 0):+.2f}')
+    _focus_sum = esc(focus.get("label", "無法判定"))
+    _diff_sum = (f'{d.get("changed_count", 0)} 處改動'
+                 + (f'（對照 {d["diff_pair"][0]}）'
+                    if (d.get("diff_pair") or [None])[0] else ""))
+    _n_stmt = len(d.get("fetched_dates") or [])
+    _trend_sum = f'近 {_n_stmt} 次會議的分數與反對票'
+    _mkt = d.get("market") or {}
+    _mkt_sum = (f'差距 {_mkt["display"]}　·　'
+                + ("與本次判讀一致" if _mkt.get("agree") else "與本次判讀分歧")
+                ) if _mkt else ""
+
     # 市場定價對照：與本次判讀一致與否，本身就是資訊
     market_html = ""
     if mkt:
@@ -272,9 +287,8 @@ def fomc_body(d: dict) -> str:
         market_html = f"""
 <div class="grid">
   <div class="card">
-    <h2 id="market">市場定價 vs 聯準會</h2>
-    <p class="hint">2 年期公債殖利率約等於市場預期的「未來兩年平均政策利率」。
-      它跟目前政策利率中值的差，就是市場定價的政策路徑方向。</p>
+    <h2 id="market" data-sum="{esc(_mkt_sum)}">市場定價 vs 聯準會</h2>
+    <p class="hint">2 年期殖利率跟政策利率中值的差，就是市場定價的政策路徑方向。</p>
     <div class="stat-row">{_stats([
         {"label": "2 年期公債殖利率", "value": f"{mkt['dgs2']:.2f}%"},
         {"label": "政策利率中值", "value": f"{mkt['mid']:.2f}%"},
@@ -289,9 +303,7 @@ def fomc_body(d: dict) -> str:
       <div class="v-main" style="font-size:19px">{esc(mkt['text'])}</div>
       <div class="v-why" style="margin-top:8px">{esc(_agree)}</div>
     </div>
-    <div class="src">這是<b>粗略代理</b>，不是會議層級的降息機率。
-      2 年期殖利率同時含有期限溢酬，不能直接讀成純粹的政策路徑預期。
-      要看逐次會議的隱含機率，需另接亞特蘭大聯準銀行的 Market Probability Tracker。</div>
+    <div class="src">粗略代理，不是會議層級的降息機率（見判讀說明）。</div>
   </div>
 </div>"""
 
@@ -367,10 +379,8 @@ def fomc_body(d: dict) -> str:
         words = ps.get("opening_len", 0) + ps.get("qa_len", 0)
         presser_html = f"""
   <div class="card">
-    <h2 id="presser">記者會</h2>
-    <p class="hint">會後記者會的逐字稿。市場的實際反應常常來自這裡，而不是聲明本身。
-      下面依主題抽出逐字稿中的原句，不做改寫也不用模型——
-      每次執行抽到的句子完全一致。</p>
+    <h2 id="presser" data-sum="措辭分數 {d.get('presser_score', 0):+.2f}　·　逐字稿原句與主題摘要">記者會</h2>
+    <p class="hint">市場的實際反應常常來自這裡，而不是聲明本身。以下是逐字稿原句。</p>
     <div class="stat-row">
       <div class="stat"><div class="s-label">記者會措辭分數</div>
         <div class="s-value">{d.get('presser_score', 0):+.2f}</div>
@@ -412,7 +422,7 @@ def fomc_body(d: dict) -> str:
                     "發布後系統會自動補上並重算分數。")
         presser_html = f"""
   <div class="card">
-    <h2 id="presser">記者會</h2>
+    <h2 id="presser" data-sum="本次逐字稿尚未發布">記者會</h2>
     <p class="hint">會後記者會的逐字稿。市場的實際反應常常來自這裡。</p>
     <div class="warnbox" style="margin-top:4px">
       {note}<br>目前的結論僅根據聲明與投票紀錄。
@@ -422,59 +432,59 @@ def fomc_body(d: dict) -> str:
     return f"""
 {verdict}
 
-<div class="grid g4">{kpi_html}</div>
-
 <div class="grid">
   <div class="card">
-    <h2 id="score">政策訊號評分</h2>
-    <p class="hint">兩個分數刻意不合成——合成會掩蓋最有價值的資訊。
-      兩者背離時，背離本身就是訊號。</p>
+    <h2 id="score" data-open="1" data-sum="{esc(_sc_sum)}">政策訊號評分</h2>
+    <p class="hint">兩個分數刻意不合成——<b>背離本身就是訊號</b>。</p>
     {dual}
     {warn}{diverge}
     <details data-m-collapse><summary>本次投票明細</summary>
       <div style="margin-top:12px">{_votes(vote)}</div>
-      <p class="hint" style="margin-top:12px">
-        反對票是客觀事實，不受主席的溝通風格影響，所以在計分裡權重最高；
-        措辭則會隨主席個人偏好變動。</p>
+      <p class="hint" style="margin-top:12px">反對票是客觀事實、權重最高；
+        措辭會隨主席個人偏好變動。</p>
     </details>
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="focus">聯準會目前的重心</h2>
-    <p class="hint">雙重使命的權重會隨時間移動。同一份就業數據，
-      在「通膨優先」與「就業優先」下會導向相反的決定，
-      所以情境合成頁的九宮格會依這個判定調整結論。</p>
+    <h2 id="kpi" data-sum="{_kpi_sum}">關鍵數字</h2>
+    <div class="grid g4 inner">{kpi_html}</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="focus" data-sum="{_focus_sum}">聯準會目前的重心</h2>
+    <p class="hint">同一份就業數據，在「通膨優先」與「就業優先」下會導向相反的決定。</p>
     <div class="dbox {focus_cls}" style="margin-top:4px">
       <div class="dtitle">目前重心</div>
       <div class="dlab" style="font-size:19px;margin-top:6px">{esc(focus.get('label', '—'))}</div>
       <div class="dnote">{esc(focus.get('note', ''))}</div>
     </div>
     {focus_ev}
-    <div class="src">判定只用聲明裡的制式句與投票紀錄，不用模型，每次執行結果一致。</div>
+    <div class="src">只用聲明制式句與投票紀錄，不用模型。</div>
   </div>
 </div>
 {market_html}
 <div class="grid">
   <div class="card">
-    <h2 id="diff">聲明逐句比對</h2>
-    <p class="hint">同一列並排「舊 → 新」，只有實際改動的字會被標示。
+    <h2 id="diff" data-sum="{esc(_diff_sum)}">聲明逐句比對</h2>
+    <p class="hint">「舊 → 新」並排，只標實際改動的字。
       橘色刪除線是拿掉的字，藍色是新增的字。</p>
     {stability_html}
     {d['diff_html']}
     <details data-m-collapse><summary>含未改動段落的全文</summary>
       <div style="margin-top:10px">{d['diff_full_html']}</div></details>
-    <div class="src">{diff_pair_note}原文為英文，未翻譯以免失真。</div>
+    <div class="src">{diff_pair_note}原文為英文。</div>
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="trend">歷次分數</h2>
-    <p class="hint">歷次會議的兩個分數並列，刻度相同：0＝中性、正＝偏升息方向、
-      負＝偏降息方向。措辭分數跨主席不可比（詞典照 Powell 時代的體例校準），
-      比較時請以同一位主席任內的區間為準。</p>
+    <h2 id="trend" data-sum="{esc(_trend_sum)}">歷次分數</h2>
+    <p class="hint">刻度相同：0＝中性、正＝偏升息、負＝偏降息。
+      <b>措辭分數跨主席不可比</b>。</p>
     <div class="tscroll" style="margin-top:12px"><table>
       <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>
         <th>字數</th><th>反對票</th></tr></thead>
@@ -489,9 +499,8 @@ def fomc_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="phrases">措辭的支撐材料</h2>
-    <p class="hint">措辭分數的原始材料。<b>本頁的結論不依賴這一區</b>——
-      措辭會隨主席文風改變，所以它只用來檢查分數怎麼算出來的。</p>
+    <h2 id="phrases" data-sum="熱力圖與詞典命中明細，本頁結論不依賴這一區">措辭的支撐材料</h2>
+    <p class="hint">措辭分數的原始材料。<b>本頁的結論不依賴這一區</b>。</p>
     <details data-m-collapse><summary>關鍵措辭追蹤（熱力圖）</summary>
       <p class="hint" style="margin:10px 0 0">追蹤固定一組措辭在每次聲明中出現的次數，
         數的是字面出現次數，顏色越深代表出現越多次。
@@ -510,8 +519,30 @@ def fomc_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="howto">判讀說明</h2>
-    <dl class="gloss">
+    <h2 id="howto" data-sum="計分方式、名詞與注意事項">判讀說明</h2>
+        <dl class="gloss">
+      <dt>客觀訊號分數怎麼算</dt>
+      <dd>政策行動 ±3、每張反對票 ±2、聲明點名的風險方向 ±1，範圍 −8～+8。
+        三項都是白紙黑字的事實，不受主席的溝通風格影響，所以跨主席可比。
+        措辭分數則是依每百字的加權詞頻計算，只當輔助。</dd>
+      <dt>2 年期為什麼能當市場定價的代理</dt>
+      <dd>2 年期殖利率約等於市場預期的「未來兩年平均政策利率」，它跟目前
+        政策利率中值的差就是市場定價的方向。但這是<b>粗略代理</b>而非會議
+        層級的機率——2 年期同時含有期限溢酬，不能直接讀成純粹的政策路徑預期。
+        要看逐次會議的隱含機率，得用聯邦資金期貨或亞特蘭大聯準銀行的
+        Market Probability Tracker。</dd>
+      <dt>措辭分數為什麼跨主席不可比</dt>
+      <dd>計分詞典是照 Powell 時代的聲明體例校準的。主席換人、聲明體例改變，
+        同樣的立場會得到不同的分數。比較時請以同一位主席任內的區間為準；
+        客觀訊號分數（政策行動＋反對票＋風險方向）則不受影響，可以跨主席比。</dd>
+      <dt>熱力圖與詞典命中的次數為什麼不一樣</dt>
+      <dd>兩者算法不同。熱力圖數的是該字面在全文出現幾次；計分為了避免重複
+        扣分，同一段文字只算一次、長詞優先——「remains elevated」命中之後，
+        裡面的「elevated」就不會再被算一遍。所以命中明細的次數會少於熱力圖。</dd>
+      <dt>記者會的句子是怎麼抽的</dt>
+      <dd>依主題（通膨／就業／利率路徑／資產負債表）從逐字稿抽原句，
+        開場聲明優先——那是準備稿，比即席問答精確。不做改寫也不用模型，
+        每次執行抽到的句子完全一致。</dd>
       <dt>反對票最重要</dt>
       <dd>反對票是白紙黑字的事實，不會因為主席換人或文風改變而失真。
         每張反對票的方向都寫在聲明裡，比任何措辭都清楚。</dd>

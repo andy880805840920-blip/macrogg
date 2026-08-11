@@ -25,6 +25,25 @@ def rates_body(d: dict) -> str:
                                  if (n := _lc.get(k)))
                      + "。") if d["lights"] else ""
 
+    # 收合摘要：一律取這一區已經算出來的結論。
+    _dh = d.get("decomp_head") or {}
+    _dec_sum = (f'名目 10 年期 {_dh["nominal"]}　·　其中期限溢酬 {_dh["value"]}'
+                if _dh else "名目利率的三段拆解")
+    _ss = d.get("supply_side") or {}
+    _sup_sum = (f'政府年赤字 {_ss["gov_display"]}　·　'
+                f'科技巨頭年化 {_ss["hs_display"]}' if _ss else "供給來源與壓力分數")
+    _dm = (sp.demand or [{}])[0]
+    _dem_sum = (f'{_dm["label"]} {_dm["value"]}　·　{_dm["detail"]}'
+                if _dm else "需求端的溫度計")
+    _pr_sum = (f'已反映 {sp.priced_score:+.2f}　·　供給壓力 {sp.score:+.2f}'
+               if sp.priced else "價格已經反映多少")
+    _dg = d.get("debt_gap") or {}
+    _debt_sum = (f'財政缺口 {_dg["value"]}　·　{debt_title}' if _dg else debt_title)
+    _hs_sum = ((f'資本支出佔營運現金流 {hs.capex_to_ocf:.0f}%　·　{hs_title}'
+                if hs.capex_to_ocf is not None else hs_title)
+               + (f'　·　近 120 天 {d["offerings"]["count"]} 筆發債交易'
+                  if (d.get("offerings") or {}).get("available") else ""))
+
     def _cmoves(items) -> str:
         return "".join(
             f'<div class="cmove"><div>{esc(p["label"])}</div>'
@@ -81,12 +100,9 @@ def rates_body(d: dict) -> str:
         supply_html = f"""
 <div class="grid">
   <div class="card">
-    <h2 id="supply">誰在發債</h2>
-    <p class="hint">政府發公債、科技巨頭發投資級公司債，
-      <b>兩者競爭的是同一批固定收益買盤</b>——退休基金、保險公司、外國央行。
-      這就是為什麼美國財政與幾家科技公司的財報會出現在同一頁。
-      第三個來源是聯準會縮表：到期不續作的公債，等於改由私人市場接手，
-      對買盤來說跟財政部多發債是同一件事。</p>
+    <h2 id="supply" data-sum="{esc(_sup_sum)}">誰在發債</h2>
+    <p class="hint">政府、科技巨頭與聯準會縮表，
+      <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
     <div class="stat-row">
       <div class="stat"><div class="s-label">政府：年度赤字</div>
         <div class="s-value">{esc(ss['gov_display'])}</div>
@@ -102,9 +118,7 @@ def rates_body(d: dict) -> str:
     <p class="hint" style="margin-top:14px">{_sum_html}</p>
     <p class="hint" style="margin-top:12px">壓力分數的{esc(_n_parts)}個來源：</p>
     <div class="cmoves" style="border-top:none;padding-top:0">{parts}</div>
-    <div class="src">科技巨頭的年化是把單季發債乘以四。發債是機會式的
-      （挑市場條件好的時候一次發），不是每季均勻，所以這個數字只用來
-      比較<b>量級</b>，不宜當成精確預測。</div>
+    <div class="src">單位：億美元。年化＝單季 × 4，只用來比較量級。</div>
   </div>
 </div>"""
 
@@ -165,31 +179,30 @@ def rates_body(d: dict) -> str:
             f'<tr><td>{esc(r["name"])}</td>'
             f'<td class="muted-cell">{esc(r["date"])}</td>'
             f'<td class="muted-cell">{esc(r["kind"])}</td>'
-            f'<td>{esc(r["amount"])}</td>'
+            + ('<td class="muted-cell">' if r.get("pending") else '<td>')
+            + f'{esc(r["amount"])}</td>'
             f'<td class="muted-cell">'
             + (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">'
                f'{esc(r["form"])}</a>' if r["url"] else esc(r["form"]))
             + '</td></tr>'
             for r in off["rows"])
-        _unknown = (f'，其中 {off["unknown_n"]} 筆的金額無法從申報書解析'
+        # 筆數與金額分開講：「5 筆交易、其中 4 筆已確認金額」比
+        #「5 筆申報、合計 X（另有 1 筆無法解析）」好讀，而且不會讓人
+        # 把合計誤讀成全部。
+        _known = (f"{off['known_n']} 筆已確認金額，合計 "
+                  f"{esc(off['total_display'])}")
+        _unknown = (f"；另 {off['unknown_n']} 筆金額待確認"
                     if off["unknown_n"] else "")
-        _ratio = (f'，相當於最新一季申報發債（{esc(off["ref_display"])}）的 '
-                  f'{off["ratio_display"]}' if off.get("ratio_display") else "")
+        _ratio = (f"，相當於最新一季申報發債（{esc(off['ref_display'])}）的 "
+                  f"{off['ratio_display']}" if off.get("ratio_display") else "")
         offerings_html = f"""<div class="warnbox" style="margin:0 0 16px">
-      <b>近 120 天有 {off['count']} 筆發債申報，尚未反映在下方的季報數字裡</b><br>
-      已解析到金額的合計 {esc(off['total_display'])}{_unknown}{_ratio}。
-      最近一筆在 {esc(off['latest'])}。
+      <b>近 120 天有 {off['count']} 筆發債交易，尚未反映在下方的季報數字裡</b><br>
+      {_known}{_ratio}{_unknown}。最近一筆在 {esc(off['latest'])}。
       <details class="f-more" style="margin-top:10px"><summary>逐筆明細</summary>
         <div class="tscroll" style="margin-top:10px"><table>
-          <thead><tr><th>公司</th><th>申報日</th><th>文件</th>
+          <thead><tr><th>公司</th><th>日期</th><th>類型</th>
             <th>金額</th><th>原文</th></tr></thead>
           <tbody>{_rows}</tbody></table></div>
-        <p class="hint" style="margin-top:10px">
-          來源：SEC EDGAR 的申報清單。424B2／424B5 是債券發行說明書本身
-          （定價當日申報），8-K 項目 2.03 是「產生直接財務義務」（四個營業日內）。
-          金額由說明書封面解析，解析不到就留空——<b>不會用推估值填補</b>。
-          這些事件<b>不計入</b>上方的供給壓力分數：分數維持由經審核的季報數字
-          決定，否則同一筆發債下一季會被算第二次。</p>
       </details>
     </div>"""
 
@@ -249,10 +262,8 @@ def rates_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="decomp">長端利率為什麼在這裡</h2>
-    <p class="hint">名目殖利率可以拆成三段，三段的政策意涵完全不同。
-      <b>只有期限溢酬那一段是供需造成的，也只有那一段聯準會降息壓不下來</b>——
-      這一整頁就是在追那一段。</p>
+    <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率為什麼在這裡</h2>
+    <p class="hint"><b>只有期限溢酬那一段聯準會降息壓不下來</b>——這一頁在追那一段。</p>
     {decomp_head_html}
     <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
     <p class="hint" style="margin-top:14px">{esc(d['decomp_note'])}</p>
@@ -267,41 +278,41 @@ def rates_body(d: dict) -> str:
         <dd>既不是預期通膨也不是預期成長，純粹是投資人要求更多補償
           才願意持有長債——通常來自供給過多或財政疑慮。
           <b>這一種聯準會降息也壓不下來。</b></dd>
+        <dt>三段為什麼不能相加</dt>
+        <dd>名目殖利率 ＝ 實質利率 ＋ 通膨補償，這兩段是完整的拆解。
+          期限溢酬是<b>另一個角度</b>的拆解，衡量的是投資人持有長債要求的
+          額外補償，跟前兩段有重疊。三個數字加起來不會等於名目殖利率，
+          也不該這樣用。</dd>
       </dl>
-    </details>
   </div>
 </div>
 {supply_html}
 <div class="grid g2">
   <div class="card">
-    <h2 id="demand">買盤吃不吃得下</h2>
-    <p class="hint">供給增加不必然推高利率——要看需求端撐不撐得住。
-      信用利差就是買方的溫度計：走闊代表買方開始要求更高的補償才願意接。</p>
+    <h2 id="demand" data-sum="{esc(_dem_sum)}">買盤吃不吃得下</h2>
+    <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
     {demand_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
     <div style="margin-top:16px">{d['credit_chart']}</div>
   </div>
 
   <div class="card">
-    <h2 id="priced">壓力已經反映多少</h2>
-    <p class="hint">上面兩張講的是「供給與需求」，這裡看的是<b>價格</b>——
-      期限溢酬與長端內部的斜率，就是市場已經替這些壓力定了多少價。</p>
+    <h2 id="priced" data-sum="{esc(_pr_sum)}">壓力已經反映多少</h2>
+    <p class="hint">市場已經替這些壓力定了多少價。</p>
     {priced_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['curve_stats'])}</div>
     <details data-m-collapse><summary>其他天期</summary>
       <div class="stat-row" style="margin-top:12px">{_stats(d['curve_short'])}</div>
-      <p class="hint" style="margin-top:12px">
-        短天期主要由政策利率預期決定，跟這一頁的供給壓力沒有直接關係，
-        所以收在這裡。政策利率的方向見<a href="/fomc/">聯準會文本</a>頁。</p>
+      <p class="hint" style="margin-top:12px">短天期由政策利率預期決定，
+        見<a href="/fomc/">聯準會文本</a>頁。</p>
     </details>
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="debt">供給端細節一：政府財政</h2>
-    <p class="hint">重點不是債務總額，是<b>會不會失控</b>。
-      債務比會不會上升，取決於利率、成長與基本盈餘三者的關係。</p>
+    <h2 id="debt" data-sum="{esc(_debt_sum)}">供給端細節一：政府財政</h2>
+    <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
     <div class="stat-row">{_stats(d['debt_stats'])}</div>
     <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
       <b>{esc(debt_title)}</b><br>{esc(debt_desc)}
@@ -332,10 +343,9 @@ def rates_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="hyperscalers">供給端細節二：科技巨頭</h2>
-    <p class="hint">關鍵不是資本支出的絕對金額，是<b>融資方式</b>。
-      資本支出超過營運現金流時自由現金流轉負，擴張就必須舉債——
-      那正是這幾家從現金充裕的<b>買方</b>，變成投資級市場<b>賣方</b>的轉折點。</p>
+    <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">供給端細節二：科技巨頭</h2>
+    <p class="hint">關鍵不是資本支出的金額，是<b>融資方式</b>——
+      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。</p>
     {offerings_html}
     {hs_head_html}
     <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
@@ -361,18 +371,16 @@ def rates_body(d: dict) -> str:
 
 <div class="grid g2">
   <div class="card">
-    <h2 id="lights">關鍵指標檢核</h2>
-    <p class="hint">{light_summary}門檻設定於 config/rates.yaml。</p>
+    <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
+    <p class="hint">{light_summary}</p>
     <details data-m-collapse open><summary>逐項展開</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
   </div>
 
   <div class="card">
-    <h2 id="glossary">名詞解釋</h2>
-    <p class="hint">這頁出現的專有名詞。</p>
-    <details data-m-collapse open class="plain"><summary>展開名詞解釋</summary>
-    <dl class="gloss">
+    <h2 id="glossary" data-sum="這一頁出現的專有名詞與計算方式">名詞解釋</h2>
+        <dl class="gloss">
       <dt>期限溢酬</dt>
       <dd>投資人因為承擔「長期持有」的風險而要求的額外補償。
         它與利率預期無關——即使大家預期利率不變，供給過多也會推高它。</dd>
@@ -392,6 +400,28 @@ def rates_body(d: dict) -> str:
       <dt>存續期間需求</dt>
       <dd>市場願意買進長天期債券的總量。政府與企業發債競爭的就是這一池資金，
         供給超過需求時長端殖利率就會被推高。</dd>
+
+      <dt>為什麼財政與科技公司會在同一頁</dt>
+      <dd>政府發公債、科技巨頭發投資級公司債，兩者搶的是同一批買盤——
+        退休基金、保險公司、外國央行。第三個來源是聯準會縮表：
+        到期不續作的公債改由私人市場接手，對買盤而言跟財政部多發債是同一件事。</dd>
+      <dt>供給壓力分數怎麼算</dt>
+      <dd>只由供給來源構成（政府財政缺口、科技巨頭融資缺口、聯準會縮表）。
+        期限溢酬與 30 年減 10 年斜率是被這些供給推高的<b>價格</b>、不是原因，
+        算進同一個分數等於重複計算，所以改列成「壓力已經反映多少」。
+        兩者背離時（壓力大但價格還沒反映），那個落差本身就是訊號。</dd>
+      <dt>科技巨頭的年化發債</dt>
+      <dd>把單季發債乘以四。發債是機會式的（挑市場條件好的時候一次發）、
+        不是每季均勻，所以這個數字只用來比較<b>量級</b>，不宜當成精確預測。</dd>
+      <dt>近期發債交易怎麼來的</dt>
+      <dd>來源是 SEC EDGAR 的申報清單，只收 424B2／424B5（定價當日的債券發行
+        說明書）與配不到說明書的 8-K 項目 2.03（銀行貸款、私募這一類）。
+        FWP 是行銷用的條款表、一筆債會發好幾份，424B3 多半是再售登記、
+        公司沒拿到新錢，兩者都不計入。同一家公司十天內同金額的申報視為同一筆交易。
+        金額由說明書封面解析，解析不到就標「待確認」——<b>不用推估值填補</b>，
+        也不計入合計。<br>
+        這些交易<b>不進</b>供給壓力分數：分數維持由經審核的季報數字決定，
+        否則同一筆發債下一季會被算第二次，歷史可比性也會斷掉。</dd>
     </dl>
     </details>
   </div>

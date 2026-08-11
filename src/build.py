@@ -356,22 +356,31 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "lfpr": charts.mini_series(lfpr, unit="%", fmt=lambda v: f"{v:.1f}"),
         },
         # 給「本期變化摘要」比對用。人數一律以「萬人」呈現，與全站口徑一致。
+        # up_is：這個指標**往上**代表偏鷹還是偏鴿。首頁的「本期變化」用它
+        # 決定變動要標成什麼顏色——用漲跌上色會出錯，例如損益兩平就業增速
+        # 變高其實是偏鴿的（同樣的非農代表更弱的就業），跟核心 CPI 上升
+        # 剛好相反，卻會被標成同一個顏色。
         "key_metrics": {
             "nfp": {"label": "非農就業月變動",
                     "value": None if nfp_now is None else nfp_now / 10,
-                    "unit": "萬人", "threshold": 1},
+                    "unit": "萬人", "threshold": 1, "up_is": "hawkish"},
             "nfp_3m": {"label": "非農三個月均",
                        "value": None if ma3 is None else ma3 / 10,
-                       "unit": "萬人", "threshold": 1},
+                       "unit": "萬人", "threshold": 1, "up_is": "hawkish"},
             "u3": {"label": "失業率", "value": value_at(u3),
-                   "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
+                   "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
+                   "up_is": "dovish"},
+            # 參與率上升＝勞動供給增加＝薪資壓力減輕
             "lfpr": {"label": "勞動參與率", "value": value_at(lfpr),
-                     "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
+                     "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
+                     "up_is": "dovish"},
             "ahe_yoy": {"label": "平均時薪年增", "value": ahe_yoy,
-                        "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
+                        "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
+                        "up_is": "hawkish"},
+            # 門檻變高 → 同樣的非農代表更弱的就業 → 偏鴿
             "breakeven": {"label": "損益兩平就業增速",
                           "value": None if bkev.monthly is None else bkev.monthly / 10,
-                          "unit": "萬人", "threshold": 0.5},
+                          "unit": "萬人", "threshold": 0.5, "up_is": "dovish"},
         },
     }
 
@@ -959,17 +968,23 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                 since(series.get("T5YIFR", []), CHART_START, 40)[::-1][::7][::-1],
                 unit="%", fmt=lambda v: f"{v:.2f}", daily=True),
         },
+        # 通膨這五條一律「往上＝偏鷹」，沒有例外
         "key_metrics": {
             "core_cpi_yoy": {"label": "核心 CPI 年增", "value": summ.core_yoy,
-                             "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
+                             "unit": "%", "delta_unit": " 個百分點",
+                             "threshold": 0.05, "up_is": "hawkish"},
             "core_cpi_3m": {"label": "核心 CPI 三月年化", "value": summ.core_3m,
-                            "unit": "%", "delta_unit": " 個百分點", "threshold": 0.1},
+                            "unit": "%", "delta_unit": " 個百分點",
+                            "threshold": 0.1, "up_is": "hawkish"},
             "core_pce": {"label": "核心 PCE 年增", "value": summ.pce_core_yoy,
-                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05},
+                         "unit": "%", "delta_unit": " 個百分點",
+                         "threshold": 0.05, "up_is": "hawkish"},
             "supercore": {"label": "核心服務除住房", "value": summ.supercore_3m,
-                          "unit": "%", "delta_unit": " 個百分點", "threshold": 0.1},
+                          "unit": "%", "delta_unit": " 個百分點",
+                          "threshold": 0.1, "up_is": "hawkish"},
             "exp5y5y": {"label": "長期通膨預期", "value": summ.expect_5y5y,
-                        "unit": "%", "delta_unit": " 個百分點", "threshold": 0.03},
+                        "unit": "%", "delta_unit": " 個百分點",
+                        "threshold": 0.03, "up_is": "hawkish"},
         },
     }
 
@@ -1212,8 +1227,9 @@ def _offerings_block(offerings: list, hs) -> dict:
     if not offerings:
         return {"available": False}
 
-    # 只有解析到金額的才加總，並標明有幾筆沒解析到，
-    # 免得讀者把「已知金額合計」誤讀成「全部發債合計」。
+    # 合計只由**已確認金額**構成。沒解析到金額的仍然列出來——
+    # 讀者知道「有一筆但金額還沒讀到」比完全看不到有用——但不進合計，
+    # 也不用推估值補；一個錯的發債金額比沒有金額糟得多。
     known = [o for o in offerings if o.get("amount") is not None]
     unknown_n = len(offerings) - len(known)
     total = sum(o["amount"] for o in known)
@@ -1224,14 +1240,17 @@ def _offerings_block(offerings: list, hs) -> dict:
 
     rows = []
     for o in offerings:
-        amt = ("—" if o.get("amount") is None
+        pending = o.get("amount") is None
+        amt = ("金額待確認" if pending
                else f'{o["amount"] * 10:,.0f} 億美元')
-        # 表格類型對一般讀者沒有意義，翻成在講什麼
-        kind = {"424B2": "債券發行說明書", "424B5": "債券發行說明書",
-                "424B3": "債券發行說明書", "FWP": "發行條件清單",
-                "8-K": "重大事件公告"}.get(o["form"], o["form"])
+        # 表格類型對投資人沒有意義，翻成在講什麼。
+        # 只剩兩類：424B 是發行文件本身，8-K 2.03 是配不到 424B 的舉債
+        #（銀行貸款、定期貸款、私募）。
+        kind = {"424B2": "公開發行", "424B5": "公開發行",
+                "8-K": "舉債公告"}.get(o["form"], o["form"])
         rows.append({"name": o["name"], "date": o["date"], "form": o["form"],
-                     "kind": kind, "amount": amt, "url": o.get("doc_url", ""),
+                     "kind": kind, "amount": amt, "pending": pending,
+                     "url": o.get("doc_url", ""),
                      "items": o.get("items", "")})
 
     latest = offerings[0]["date"]
@@ -1691,13 +1710,12 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         }
         if supply_side["ratio"] is not None:
             supply_side["ratio_display"] = f"{supply_side['ratio']:.0f}%"
+            # 只留結論。「為什麼方向比比例重要」是方法論，已經搬進頁尾的
+            # 名詞解釋——投資人第一眼要的是那個百分比與它是往哪邊走。
             supply_side["summary"] = (
                 f"科技巨頭的發債規模約是政府年赤字的 "
-                f"{supply_side['ratio']:.0f}%。單看比例不大，但方向是關鍵："
-                "政府的赤字是結構性的、短期不會消失，而科技巨頭是"
-                "**新增**的供給——過去它們是淨買方（帳上現金多到要買公債），"
-                "現在轉成淨賣方。同一批買盤要同時吃下兩邊的新增量，"
-                "價格（期限溢酬）就是這樣被推上去的。")
+                f"{supply_side['ratio']:.0f}%，而且是**新增**的供給——"
+                "這幾家過去是淨買方，現在轉成淨賣方。")
 
     credit_stats = []
     for sid, label in (("BAMLC0A0CM", "投資級利差"), ("BAMLC0A4CBBB", "BBB 級利差"),

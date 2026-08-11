@@ -18,8 +18,12 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# HTML 不快取，資料一更新就看得到最新版
+# HTML 不快取，資料一更新就看得到最新版。
+#
+# 這裡要用 /* 不能用 /*.html：Netlify 是拿**請求路徑**去比對的，
+# 而分頁的網址是 /labor/ 這種目錄形式，不是 /labor/index.html——
+# 寫成 /*.html 的話除了根目錄以外一條都不會命中，整條規則等於沒設。
 [[headers]]
-  for = "/*.html"
+  for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"

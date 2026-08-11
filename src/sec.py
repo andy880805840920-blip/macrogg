@@ -51,12 +51,34 @@ SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 ARCHIVE_DOC = ("https://www.sec.gov/Archives/edgar/data/{cik}/"
                "{acc_nodash}/{doc}")
 
-# 代表「這家公司在發債」的表格類型。
-#   424B2 / 424B5  公開說明書補充——債券發行文件本身，定價當日申報
-#   FWP            自由書寫公開說明書（條件清單），同樣是定價當日
-#   8-K            只在項目含 2.03（產生直接財務義務）或 1.01（重大確定協議）時才算
-DEBT_FORMS = {"424B2", "424B5", "424B3", "FWP"}
-DEBT_8K_ITEMS = ("2.03", "1.01")
+# 代表「這家公司**真的發了債**」的表格類型。
+#
+# 只收兩種：
+#   424B2 / 424B5  定價後的公開說明書補充——債券發行文件本身，定價當日申報。
+#                  一筆交易對應一份，是唯一乾淨的「一份文件＝一筆發行」關係。
+#
+# 以下三種先前有收，現在刻意排除——它們都不是「真的有發行」：
+#   FWP     自由書寫公開說明書，本質是**行銷文件**。一筆債通常會發兩到三份
+#           （初步條款表、最終條款表、定價補充），全部列出來會讓一筆
+#           125 億的發行看起來像三筆，合計金額也跟著灌水。
+#   424B3   多半是**再售**登記與生效後更新的說明書，賣的是既有股東手上的
+#           證券，公司沒有拿到新錢——跟債券供給無關。
+#   8-K 1.01「簽訂重大確定性協議」是 8-K 裡最寬的萬用項：供應合約、合資、
+#           租約、循環額度修訂都走這一項。真正是發債的比例極低，
+#           收進來等於用雜訊稀釋整張表。
+DEBT_FORMS = {"424B2", "424B5"}
+
+# 8-K 只認 2.03「產生直接財務義務」。
+#
+# 它跟 424B 的關係要講清楚：同一筆公開發行通常**兩者都會申報**
+#（424B 定價當日、8-K 在四個營業日內），所以直接兩邊都列會重複計算。
+# 處理方式是把 8-K 2.03 當**補漏**用——只有在找不到對應的 424B 時才單獨
+# 成為一筆，那種情況通常是銀行貸款、定期貸款或私募，本來就不會有 424B。
+DEBT_8K_ITEMS = ("2.03",)
+
+# 同一家公司、金額相同、日期相差在這個範圍內 → 視為同一筆交易。
+# 定價日與 8-K 申報日之間隔四個營業日，遇連假可能拉到七八天，取十天有餘裕。
+DEDUP_DAYS = 10
 # 只看最近這麼多天的申報。超過這個範圍的多半已經反映在最新一季的財報裡。
 RECENT_DAYS = 120
 
@@ -436,13 +458,77 @@ def fetch_hyperscalers(cfg: dict,
     return out, as_of, all_ok and bool(ends)
 
 
+def _days_apart(a: str, b: str) -> int | None:
+    try:
+        return abs((dt.date.fromisoformat(a) - dt.date.fromisoformat(b)).days)
+    except (ValueError, TypeError):
+        return None
+
+
+def dedupe_deals(rows: list[dict]) -> list[dict]:
+    """
+    把「申報」收斂成「交易」。
+
+    為什麼要做
+    ----------
+    一筆公開發行通常會產生兩份申報：424B（定價當日）與 8-K 2.03
+    （四個營業日內）。兩份都列出來，畫面上會看到同一筆債出現兩次，
+    金額合計也會直接翻倍——而那個合計正是這一段唯一有交易意涵的數字。
+
+    規則
+    ----
+    1. 424B 是主體。同一家公司、金額相同、日期相差 DEDUP_DAYS 天以內的
+       424B 只留最早那一筆（定價日才是交易發生的日子）。
+    2. 8-K 2.03 只在**配不到任何 424B** 時才成為獨立的一筆。配對條件放寬到
+       只看公司與日期距離，因為 8-K 沒有可解析的金額可以比對。
+       配不到的通常是銀行貸款、定期貸款或私募——那些本來就不發 424B，
+       是真的該獨立列出的交易。
+
+    金額為 None 的 424B 仍然參與去重（同公司、同日期範圍、兩邊都沒金額
+    視為同一筆），否則封面解析失敗的那幾筆會逃過去重。
+    """
+    offerings = [r for r in rows if r.get("kind") == "offering"]
+    events = [r for r in rows if r.get("kind") != "offering"]
+
+    # ---- ① 424B 之間去重 ----
+    offerings.sort(key=lambda r: r["date"])          # 由舊到新，保留最早的
+    kept: list[dict] = []
+    for r in offerings:
+        dup = False
+        for k in kept:
+            if k["name"] != r["name"]:
+                continue
+            gap = _days_apart(k["date"], r["date"])
+            if gap is None or gap > DEDUP_DAYS:
+                continue
+            if k.get("amount") == r.get("amount"):   # 兩邊都 None 也算相同
+                dup = True
+                break
+        if not dup:
+            kept.append(r)
+
+    # ---- ② 8-K 2.03：配不到 424B 才留 ----
+    for e in events:
+        if any(k["name"] == e["name"]
+               and (_days_apart(k["date"], e["date"]) or 999) <= DEDUP_DAYS
+               for k in kept):
+            continue                                  # 同一筆交易，已由 424B 代表
+        kept.append(e)
+
+    kept.sort(key=lambda r: r["date"], reverse=True)
+    return kept
+
+
 def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
                            parse_amount: bool = True) -> list[dict]:
     """
-    各家近期的發債申報。回傳 [{name, form, date, amount, doc_url, ...}]，時間降冪。
+    各家近期**真正發生的發債交易**。回傳 [{name, form, date, amount, ...}]，時間降冪。
 
     這一段補的是**時效缺口**：季報數字最久落後 135 天，而發債當天就要申報。
     金額從說明書封面解析，解析不出來就留 None——只列事件，不用猜的補。
+
+    顯示的單位是「交易」不是「申報」：同一筆債的 424B 與 8-K 會先合併
+    （見 dedupe_deals），否則畫面上的筆數與合計金額都會重複計算。
 
     刻意不影響供給壓力分數：分數維持由經審核的 XBRL 數字決定，
     否則歷史可比性會斷掉，而且同一筆發債下一季會被算第二次。
@@ -457,14 +543,15 @@ def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
             amt = None
             # 只對「發行文件本身」解析金額。8-K 是事件通知，
             # 封面沒有標準化的金額欄位，硬解會抓到不相干的數字。
-            if parse_amount and f["kind"] == "offering" and f["form"] != "FWP":
+            if parse_amount and f["kind"] == "offering":
                 amt = client.offering_amount(f["doc_url"])
             out.append({**f, "name": name, "ticker": c.get("ticker", ""),
                         "amount": amt})
-    out.sort(key=lambda x: x["date"], reverse=True)
-    if out:
-        log.info("SEC 發債申報：近 %d 天共 %d 筆（%d 筆解析到金額）",
-                 RECENT_DAYS, len(out),
+    raw_n = len(out)
+    out = dedupe_deals(out)
+    if out or raw_n:
+        log.info("SEC 發債：近 %d 天 %d 份申報 → %d 筆交易（%d 筆有金額）",
+                 RECENT_DAYS, raw_n, len(out),
                  sum(1 for x in out if x["amount"] is not None))
     return out
 

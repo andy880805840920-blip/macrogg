@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+import re
 import html
 import datetime as dt
 
@@ -128,6 +129,70 @@ nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
 .card .hint{font-size:13px;color:var(--muted);margin:0 0 15px;line-height:1.65}
 .card .src{font-size:12px;color:var(--muted);margin-top:15px;padding-top:11px;
   border-top:1px solid var(--border);line-height:1.6}
+
+/* ---------- 可收合的卡區 ----------
+   每一頁只有最上方的結論卡與緊接著的第一張內容卡是常開的，其餘預設收合。
+   理由是每個人要看的那一塊不一樣：看勞動的人不需要每次都捲過行業分解，
+   看行業分解的人也不需要每次先讀完修正追蹤。收合之後整頁變成一張
+   可以一眼掃完的清單。
+
+   關鍵在 .sect-sum：收合的標題列一定要帶一句結論，否則讀者得逐一點開
+   才知道哪張有事——那比不收合還糟。 */
+.sect{padding:0}                       /* 內距移到 summary 與 sect-body */
+.sect>summary{list-style:none;cursor:pointer;padding:15px 16px;
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;
+  gap:2px 12px;border-radius:13px}
+@media(min-width:760px){.sect>summary{padding:16px 20px}}
+.sect>summary::-webkit-details-marker{display:none}
+.sect>summary::after{content:"▾";grid-column:2;grid-row:1;
+  font-size:12px;color:var(--muted)}
+.sect[open]>summary::after{content:"▴"}
+.sect>summary:hover{background:var(--surface-2)}
+.sect>summary:focus-visible{outline:2px solid var(--series-1);outline-offset:-2px}
+.sect>summary h2{margin:0;grid-column:1;grid-row:1}
+/* 摘要句：收合時是「要不要點開」的唯一依據；展開後內容自己會講，藏起來 */
+.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;color:var(--muted);
+  line-height:1.6;padding-right:4px}
+.sect[open] .sect-sum{display:none}
+.sect-body{padding:0 16px 17px}
+@media(min-width:760px){.sect-body{padding:0 20px 18px}}
+.sect-body>:first-child{margin-top:2px}
+
+/* 「關鍵數字」那一區是四張 KPI 卡包在一張卡裡。卡中卡會有兩層底色與
+   兩層陰影，看起來像出錯——內層改成只用分隔線區隔。 */
+.grid.inner{margin-top:2px;gap:0}
+.grid.inner>.card{background:transparent;border:none;box-shadow:none;
+  border-radius:0;padding:15px 0;border-bottom:1px solid var(--grid)}
+.grid.inner>.card:last-child{border-bottom:none;padding-bottom:2px}
+.grid.inner>.card:first-child{padding-top:4px}
+@media(min-width:760px){
+  .grid.inner{gap:0 22px}
+  .grid.inner>.card{padding:15px 0}
+  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
+     視覺上剛好變成欄與欄之間的水平分隔 */
+}
+
+/* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
+   （hidden-until-found 支援度還不齊），所以這一列不是方便，是補償。 */
+.sect-tools{display:flex;gap:8px;margin:12px 0 0}
+.sect-tools button{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+  color:var(--text-secondary);background:var(--surface-1);
+  border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.sect-tools button:hover{border-color:var(--text-secondary);
+  color:var(--text-primary)}
+.sect-tools button:focus-visible{outline:2px solid var(--series-1);
+  outline-offset:2px}
+
+/* 錨點跳過來的那一區給一個外框，否則展開之後看不出跳到哪一張 */
+.sect:target>summary{box-shadow:0 0 0 2px var(--series-1) inset}
+
+/* 列印／存成 PDF 時全部展開。JS 另有 beforeprint 保險——
+   新版 Chrome 用 content-visibility 實作收合，純 CSS 不一定壓得過。 */
+@media print{
+  .sect-tools,nav.site,nav.anchors{display:none}
+  .sect>summary::after,.sect-sum{display:none}
+  details>*:not(summary){display:block!important}
+}
 
 /* ---------- 結論卡 ---------- */
 .verdict{background:var(--surface-1);border:1px solid var(--border);
@@ -725,8 +790,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
    ＋ 內陰影三重標示，徽章只是把同一件事再說一次。
    圖說那一行會告訴讀者「反白粗框那一格是目前位置」，語意不會遺失。 */
 @media(max-width:759px){.scell .sbadge{display:none}}
-/* 圖說裡的小圖例：把樣式做得跟格子一樣，讀者不必猜「反白粗框」長怎樣 */
-.lg-on{background:var(--surface-1);color:var(--text-primary);font-weight:700;
+/* 圖說裡的小圖例：把樣式做得跟格子一樣，讀者不必猜「反白粗框」長怎樣。
+   inline-block ＋ nowrap 是必要的：純 inline 元素折到下一行時，
+   內陰影會在斷點處各畫半個框，看起來像兩個壞掉的方塊。 */
+.lg-on{display:inline-block;white-space:nowrap;
+  background:var(--surface-1);color:var(--text-primary);font-weight:700;
   box-shadow:0 0 0 2px var(--text-primary) inset;border-radius:5px;
   padding:1px 5px}
 /* .sbadge.alt 已刪除：那是舊的「結論已依重心修正」徽章，
@@ -786,27 +854,50 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .chg.quiet{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;
   padding:12px 16px;font-size:13.5px}
 .chg.quiet .ctitle{font-size:12px}
-.chg .chead{font-size:19px;font-weight:700;margin-top:7px;line-height:1.5}
+.chg .chead{font-size:19px;font-weight:700;margin-top:2px;line-height:1.5}
 @media(min-width:760px){.chg .chead{font-size:21px}}
 .chg.moved .chead{color:var(--serious)}
-.clist{display:grid;grid-template-columns:1fr;gap:7px;margin-top:14px}
-@media(min-width:700px){.clist{grid-template-columns:1fr 1fr}}
-.citem{display:flex;gap:8px;align-items:baseline;font-size:13.5px;
-  background:var(--surface-2);border-radius:8px;padding:9px 11px;line-height:1.6}
-.citem .cmark{font-size:11px;font-weight:700;flex-shrink:0}
-.citem.new .cmark{color:var(--serious)}
-.citem.gone .cmark{color:var(--series-1)}
+
+/* 一句淨結論。七條變化平鋪而沒有加總，讀者只能自己數——而且很容易數錯，
+   因為「解除一條鷹派訊號」其實是鴿派的變化。 */
+.cnet{font-size:14px;line-height:1.8;margin-top:10px;padding:10px 12px;
+  border-radius:9px;background:var(--surface-2)}
+.cnet.dovish{background:var(--tint-dov)} .cnet.hawkish{background:var(--tint-haw)}
+.cnet b{color:var(--text-primary)}
+
+/* 訊號變化按**方向**分兩欄，不按新觸發／已解除分。
+   一條已解除的鷹派訊號是鴿派的變化，照增減分組會把它跟真正的鷹派變化
+   排在一起，讀者看到的方向剛好相反。 */
+.ccols{display:grid;grid-template-columns:1fr;gap:11px;margin-top:13px}
+@media(min-width:700px){.ccols{grid-template-columns:1fr 1fr;gap:13px}}
+.ccol{border-radius:10px;padding:11px 12px;background:var(--surface-2);
+  border-left:3px solid var(--border)}
+.ccol.dovish{border-left-color:var(--series-1)}
+.ccol.hawkish{border-left-color:var(--serious)}
+.ccol-h{font-size:12.5px;font-weight:700;color:var(--text-secondary);
+  margin-bottom:4px}
+.ccol.dovish .ccol-h{color:var(--series-1)}
+.ccol.hawkish .ccol-h{color:var(--serious)}
+.ccol-n{font-weight:700;margin-left:6px;font-variant-numeric:tabular-nums}
+/* ＋／− 只表示「新出現／不再成立」，刻意不上色：顏色留給方向，
+   一個元件同時用顏色表達兩件事，讀者只會看到兩個互相打架的訊息。 */
+.citem{display:flex;gap:7px;align-items:baseline;font-size:13.5px;
+  line-height:1.65;padding:4px 0}
+.citem .cmark{font-size:12px;font-weight:700;flex-shrink:0;color:var(--muted);
+  font-variant-numeric:tabular-nums;width:1.1em}
+.citem .ctext{flex:1;min-width:0}
 .citem .cmod{font-size:11px;color:var(--muted);flex-shrink:0}
-.citem .clean{font-size:11px;font-weight:700;flex-shrink:0;margin-left:auto}
-.citem .clean.hawkish{color:var(--serious)}
-.citem .clean.dovish{color:var(--series-1)}
-.cmoves{margin-top:14px;padding-top:12px;border-top:1px solid var(--grid)}
+.clegend{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+.cmoves{margin-top:10px}
 .cmove{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px;
   padding:8px 0;border-bottom:1px solid var(--grid);align-items:baseline}
 .cmove:last-child{border-bottom:none}
 .cmove .cm-val{font-variant-numeric:tabular-nums;color:var(--text-secondary)}
 .cmove .cm-delta{font-weight:700;font-variant-numeric:tabular-nums}
-.cmove .cm-delta.up{color:var(--serious)} .cmove .cm-delta.down{color:var(--series-1)}
+/* 顏色是「這個變動對利率的意思」，不是數字漲跌 */
+.cmove .cm-delta.hawkish{color:var(--serious)}
+.cmove .cm-delta.dovish{color:var(--series-1)}
+.cmove .cm-delta.flat{color:var(--text-secondary)}
 
 /* ---------- 近 N 期數值列 ---------- */
 /* 六格等寬。欄寬用 max-content 當下限，格子才不會被壓到互相疊字；
@@ -881,6 +972,43 @@ JS = """
       d.removeAttribute('open');
     });
   }
+
+  // ---- 可收合卡區 ----
+  // 錨點跳轉時要把目標展開。不做的話，點頁內導覽跳過去只會看到
+  // 一條收合的標題列，讀者會以為那一區是空的。
+  // 目標可能是 <h2 id> 本身（在 summary 裡），所以往上找最近的 details。
+  function openTarget(){
+    var id = location.hash.slice(1);
+    if(!id) return;
+    var el = document.getElementById(id);
+    if(!el) return;
+    var d = el.closest('details');
+    while(d){ d.open = true; d = d.parentElement && d.parentElement.closest('details'); }
+    // 展開會改變版面高度，捲動位置要重算
+    el.scrollIntoView({block:'start'});
+  }
+  window.addEventListener('hashchange', openTarget);
+  if(location.hash) setTimeout(openTarget, 0);
+
+  function setAll(open){
+    document.querySelectorAll('details.sect').forEach(function(d){ d.open = open; });
+  }
+  document.querySelectorAll('.sect-tools button').forEach(function(b){
+    b.addEventListener('click', function(){ setAll(b.dataset.all === 'open'); });
+  });
+
+  // 列印／存成 PDF 前全部展開。CSS 那邊也寫了 @media print，但新版 Chrome
+  // 用 content-visibility 實作收合，作者樣式不一定壓得過，所以這裡再保險一次。
+  window.addEventListener('beforeprint', function(){
+    document.querySelectorAll('details').forEach(function(d){
+      if(!d.open){ d.dataset.wasClosed = '1'; d.open = true; }
+    });
+  });
+  window.addEventListener('afterprint', function(){
+    document.querySelectorAll('details[data-was-closed]').forEach(function(d){
+      d.open = false; delete d.dataset.wasClosed;
+    });
+  });
   // 導覽列在窄螢幕上是橫向捲動的。目前所在的那一頁若排在後面，
   // 進站時會停在可視範圍外——讀者看不到自己在哪，也不知道還有別的分頁。
   // 把它捲進視野（只捲導覽列自己，不動整頁）。
@@ -932,7 +1060,6 @@ def _anchor_nav(body: str) -> str:
     從內文的 <h2 id="..."> 自動產生頁內導覽。
     頁面很長時沒有導覽會很難跳，這條在捲動時固定在頂端。
     """
-    import re
     items = re.findall(r'<h2 id="([^"]+)"[^>]*>(.*?)</h2>', body, re.S)
     if len(items) < 3:
         return ""
@@ -942,9 +1069,110 @@ def _anchor_nav(body: str) -> str:
     return f'<nav class="anchors">{links}</nav>'
 
 
+_SECT_OPEN = re.compile(r'<div class="card">\s*<h2 (id="[^"]+"[^>]*)>(.*?)</h2>', re.S)
+_DIV_TOKEN = re.compile(r'<div\b[^>]*>|</div>')
+_ATTR = re.compile(r'(\w[\w-]*)="([^"]*)"')
+
+
+def _close_of(s: str, start: int) -> int | None:
+    """
+    從 start（開標籤之後）往後找對應的 </div>，回傳它的起始位置。
+
+    卡片裡面有很多層 div，不能用「下一個 </div>」——必須數層。
+    分頁的卡片實測沒有巢狀（`.card` 不會包 `.card`），所以只需要
+    在單一卡片內平衡即可。
+    """
+    depth = 1
+    for t in _DIV_TOKEN.finditer(s, start):
+        if t.group(0) == "</div>":
+            depth -= 1
+            if depth == 0:
+                return t.start()
+        else:
+            depth += 1
+    return None
+
+
+def _collapse_sections(body: str) -> str:
+    """
+    把每一個「卡片 ＋ 標題」轉成可收合的 <details>。
+
+    為什麼在這裡做而不是各分頁自己寫
+    --------------------------------
+    五個分頁一共 38 個卡區，每個都手動包一次 <details> 有兩個問題：
+    改版時容易漏掉某一頁，而且 <details>/<summary> 的巢狀縮排會把
+    本來就很長的 f-string 再撐大一圈。卡片的結構是固定的
+    （`<div class="card">` 緊接 `<h2 id=...>`，而且卡片不巢狀），
+    所以在這裡做一次機械式轉換最省、也不可能有哪一頁忘了改。
+
+    兩個由 <h2> 的屬性控制的行為：
+        data-open="1"  這一區預設展開（每頁只給緊接結論卡的那一張）
+        data-sum="…"   收合時標題列右邊顯示的一句結論
+
+    data-sum 很重要：只寫標題的收合卡，讀者得逐一點開才知道哪張有事，
+    那比不收合還糟。帶上一句結論之後，收合狀態仍然可以一眼掃完整頁。
+
+    KPI 卡（`class="card kpi"`）沒有 <h2>，不會被這裡動到——
+    它們由分頁自己包進「關鍵數字」那一區。
+    """
+    out, pos = [], 0
+    for m in _SECT_OPEN.finditer(body):
+        end = _close_of(body, m.end())
+        if end is None:                     # 結構不如預期就整段原樣保留
+            continue
+        attrs = dict(_ATTR.findall(m.group(1)))
+        sid = attrs.get("id", "")
+        title = m.group(2)
+        summ = attrs.get("data-sum", "")
+        is_open = attrs.get("data-open") == "1"
+        inner = body[m.end():end]
+
+        head = (f'<h2 id="{sid}">{title}</h2>'
+                + (f'<span class="sect-sum">{summ}</span>' if summ else ""))
+        out.append(body[pos:m.start()])
+        out.append(
+            f'<details class="card sect"{" open" if is_open else ""}>'
+            f'<summary>{head}</summary>'
+            f'<div class="sect-body">{inner}</div>'
+            f'</details>')
+        pos = end + len("</div>")
+    out.append(body[pos:])
+    return "".join(out)
+
+
+_TOOLS = ('<div class="sect-tools">'
+          '<button type="button" data-all="open">展開全部</button>'
+          '<button type="button" data-all="close">收合全部</button>'
+          '</div>')
+
+
+def _insert_tools(body: str) -> str:
+    """
+    把「展開全部／收合全部」插在第一個卡區**之前**、結論卡之後。
+
+    放在整頁最上面看起來會像「這一頁的主要動作是展開東西」——
+    但這一頁的主角是結論。工具列該出現在讀者已經讀完結論、
+    開始決定要看哪幾區的位置。
+
+    收合狀態下瀏覽器的 Ctrl+F 找不到內文（hidden-until-found 支援度
+    還不齊），所以這一列不只是方便，是必要的補償。
+    """
+    i = body.find('<details class="card sect"')
+    if i < 0:
+        return body
+    # 往前退到這張卡外層 <div class="grid"> 的開頭，工具列才不會擠進網格裡
+    j = body.rfind('<div class="grid', 0, i)
+    at = j if j >= 0 else i
+    return body[:at] + _TOOLS + "\n" + body[at:]
+
+
 def page(title: str, active: str, body: str, subtitle: str = "",
          footer: str = "", banner: str = "") -> str:
     """組出一個完整的自足 HTML 頁面。"""
+    # 錨點導覽要在轉換**前**產生：轉換後 <h2> 會被包進 <summary>，
+    # 屬性順序也可能改變，用轉換前的原文抓最穩。
+    anchors = _anchor_nav(body)
+    body = _insert_tools(_collapse_sections(body))
     return f"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -965,7 +1193,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 
 {_nav(active)}
 {banner}
-{_anchor_nav(body)}
+{anchors}
 {body}
 
 <footer>{footer}</footer>

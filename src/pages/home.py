@@ -10,6 +10,7 @@ from __future__ import annotations
 import datetime as dt
 
 from ..site import esc, next_first_friday, next_cpi_release
+from ..analysis import changes as chg_mod
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -54,75 +55,139 @@ def _module_card(href, name, when, value, note, more,
 </a>"""
 
 
+VINTAGE_LABEL = {"labor": "就業報告", "inflation": " CPI", "fomc": "聲明"}
+
+
+def _vintage_text(v: dict) -> str:
+    """把資料版本寫成人看得懂的一行：「7 月就業報告　·　7 月 CPI　·　7/29 聲明」。"""
+    if not v:
+        return ""
+    out = []
+    for key in ("labor", "inflation", "fomc"):
+        raw = v.get(key)
+        if not raw:
+            continue
+        if key == "fomc":                       # YYYY-MM-DD
+            parts = raw.split("-")
+            out.append(f"{int(parts[1])}/{int(parts[2])} 聲明"
+                       if len(parts) == 3 else f"{raw} 聲明")
+        else:                                   # YYYY-MM
+            m = raw.split("-")
+            out.append(f"{int(m[1])} 月{VINTAGE_LABEL[key]}"
+                       if len(m) == 2 else f"{raw} {VINTAGE_LABEL[key]}")
+    # 「7 月 CPI」的空格：中文接英文縮寫要留白，否則會黏成「7 月CPI」
+    return "　·　".join(out)
+
+
 def _change_card(cs) -> str:
-    """本期變化摘要——對每期都追的人，這裡的邊際資訊量最高。"""
+    """
+    本期變化摘要——對每期都追的人，這裡的邊際資訊量最高。
+
+    三個刻意的選擇
+    --------------
+    ① **按變化的方向分組，不按新觸發／已解除分組。** 一條已解除的鷹派訊號
+       是鴿派的變化；照「新出現／消失」分組會把它跟真正的鷹派變化排在一起。
+       讀者要的是「本期整體往哪邊移」，不是訊號的異動流水帳。
+    ② **顏色只有一組語意：對利率的方向。** 先前橘色同時代表「新觸發」與
+       「利升息」、藍色同時代表「已解除」與「利降息」，於是
+       「已解除（藍）… 利升息（橘）」一列裡兩個顏色互相打架。
+       新觸發／已解除改用 ＋／− 符號，不佔顏色。
+    ③ **對照的是資料版本，不是執行時間。** 排程每天跑、資料一個月出一次，
+       「對照 08-11 05:01」會讓人以為核心 CPI 在一小時內掉了半個百分點。
+    """
     if cs is None:
         return ""
     if not cs.has_previous:
-        return (f'<div class="chg"><div class="ctitle">本期變化</div>'
-                f'<div class="chead">{esc(cs.headline)}</div>'
-                f'<div class="v-count" style="border-top:none;padding-top:8px">'
-                f'下次執行後，這裡會自動列出情境移動、新增與消失的訊號，'
-                f'以及關鍵數字的變化。</div></div>')
+        return ('<div class="chg"><div class="chead">'
+                '這是第一次執行，還沒有可以比對的上期資料。</div>'
+                '<div class="v-count" style="border-top:none;padding-top:8px">'
+                '下次有新資料時，這裡會列出情境移動、訊號的增減與關鍵數字的變化。'
+                '</div></div>')
 
-    # 什麼都沒變時不值得一整張卡：壓成一行，把版面留給有變化的資訊。
+    prev_v = _vintage_text(cs.prev_vintage)
+    base = f"對照 {prev_v}" if prev_v else f"對照 {cs.prev_at}"
+
+    # 資料月份沒變 ＝ 這次執行只是重新產生同一份頁面。與其顯示一堆
+    # 因為重跑而產生的微小差異，不如直接講「沒有新資料」。
     quiet = (not cs.scenario_moved and not cs.new_flags
              and not cs.resolved_flags and not cs.metric_moves)
-    if quiet:
+    if quiet or not cs.data_changed:
+        # 沒有新資料時，訊息本身已經把資料版本講完了，右邊不必再重複一次。
+        if not cs.data_changed:
+            msg, tailchip = f"自 {prev_v or cs.prev_at} 以來沒有新資料發布", ""
+        else:
+            msg, tailchip = cs.headline, f'<span class="ctitle">{esc(base)}</span>'
         return (f'<div class="chg quiet"><span class="ctitle">本期變化</span>'
-                f'<span>{esc(cs.headline)}</span>'
-                f'<span class="ctitle">對照 {esc(cs.prev_at)}</span></div>')
+                f'<span>{esc(msg)}</span>{tailchip}</div>')
 
-    # 「新增／消失」語意不明——改成「新觸發／已解除」，並掛上該訊號
-    # 對利率的方向章，讀者不必點進分頁就知道這條變化偏哪邊。
-    def _lean_chip(lean: str) -> str:
-        if lean in ("dovish", "hawkish"):
-            return (f'<span class="clean {lean}">'
-                    f'{LEAN_TEXT.get(lean, "")}</span>')
-        return ""
+    # ---- 訊號變化：按方向分兩欄 ----
+    def _row(f: dict) -> str:
+        mark = "＋" if f.get("kind") == "new" else "－"
+        tip = "本期新出現" if f.get("kind") == "new" else "上期有、本期不再成立"
+        return (f'<div class="citem"><span class="cmark" title="{tip}">{mark}</span>'
+                f'<span class="ctext">{esc(f["title"])}</span>'
+                f'<span class="cmod">{esc(f["module"])}</span></div>')
 
-    items = []
-    for f in cs.new_flags[:6]:
-        items.append(f'<div class="citem new"><span class="cmark">新觸發</span>'
-                     f'<span>{esc(f["title"])}</span>'
-                     f'<span class="cmod">{esc(f["module"])}</span>'
-                     f'{_lean_chip(f.get("lean", ""))}</div>')
-    for f in cs.resolved_flags[:6]:
-        items.append(f'<div class="citem gone"><span class="cmark">已解除</span>'
-                     f'<span>{esc(f["title"])}</span>'
-                     f'<span class="cmod">{esc(f["module"])}</span>'
-                     f'{_lean_chip(f.get("lean", ""))}</div>')
-    items_html = ""
-    if items:
-        items_html = (
-            '<div class="src" style="border-top:none;padding-top:0;margin-top:10px">'
-            '「新觸發」＝本期新出現的訊號；「已解除」＝上期有、本期不再成立。</div>'
-            f'<div class="clist">{"".join(items)}</div>')
+    all_flags = cs.new_flags + cs.resolved_flags
+    cols = []
+    for lean, label in (("dovish", "偏降息的變化"), ("hawkish", "偏升息的變化")):
+        rows = [f for f in all_flags if f["change_lean"] == lean]
+        if not rows:
+            continue
+        cols.append(
+            f'<div class="ccol {lean}"><div class="ccol-h">{label}'
+            f'<span class="ccol-n">{len(rows)}</span></div>'
+            + "".join(_row(f) for f in rows[:6]) + "</div>")
+    neutral = [f for f in all_flags if f["change_lean"] not in ("dovish", "hawkish")]
+    if neutral:
+        cols.append('<div class="ccol neutral"><div class="ccol-h">方向不明</div>'
+                    + "".join(_row(f) for f in neutral[:4]) + "</div>")
+    items_html = (f'<div class="ccols">{"".join(cols)}</div>'
+                  f'<div class="clegend">＋ 本期新出現　　－ 上期有、本期不再成立</div>'
+                  if cols else "")
 
+    net = chg_mod.net_line(cs)
+    net_html = ""
+    if net:
+        _n = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
+                     for i, s in enumerate(net.split("**")))
+        net_html = f'<div class="cnet {cs.net_lean}">{_n}</div>'
+
+    # ---- 數字變化：收進摺疊 ----
     moves = []
     for m in cs.metric_moves[:8]:
-        cls = "up" if m["delta"] > 0 else "down"
-        # 兩個「率」相減是**個百分點**，不是 %。用同一個單位字串印水準與變化量，
-        # 會讓「失業率 4.1 → 4.3」的變化顯示成「+0.20%」，讀者會當成漲了 0.2%。
+        # 顏色是「這個變動對利率的意思」，不是「數字漲了還是跌了」。
+        cls = m.get("lean") or "flat"
         dunit = m.get("delta_unit") or m.get("unit", "")
         moves.append(
             f'<div class="cmove"><div>{esc(m["label"])}</div>'
             f'<div class="cm-delta {cls}">{m["delta"]:+.2f}{esc(dunit)}</div>'
             f'<div class="cm-val">{m["from"]:,.2f} → {m["to"]:,.2f}{esc(m["unit"])}</div>'
             f"</div>")
-    moves_html = (f'<div class="cmoves">{"".join(moves)}</div>' if moves else "")
+    moves_html = ""
+    if moves:
+        moves_html = (
+            f'<details class="f-more"><summary>關鍵數字的變動'
+            f'（{len(cs.metric_moves)} 項）</summary>'
+            f'<div class="cmoves">{"".join(moves)}</div>'
+            f'<p class="hint" style="margin:10px 0 0">'
+            f'顏色是這個變動<b>對利率的意思</b>，不是數字漲跌。'
+            f'兩者不一定同向——損益兩平就業增速變高，代表同樣的非農其實'
+            f'更弱，數字往上但方向偏降息。</p>'
+            f'</details>')
 
-    sub = []
-    if cs.labor_score_delta is not None:
-        sub.append(f"勞動綜合分數 {cs.labor_score_delta:+.2f}")
+    tail = []
+    # +0.00 不是資訊，是雜訊——小於顯示精度就不要佔一格
+    if cs.labor_score_delta is not None and abs(cs.labor_score_delta) >= 0.005:
+        tail.append(f"勞動綜合分數 {cs.labor_score_delta:+.2f}")
     if cs.persisting:
-        sub.append(f"{cs.persisting} 項訊號延續")
-    sub.append(f"對照 {cs.prev_at}")
+        tail.append(f"{cs.persisting} 項訊號延續")
+    tail.append(base)
 
     return f"""<div class="chg{' moved' if cs.scenario_moved else ''}">
-  <div class="ctitle">本期變化　·　{esc('　·　'.join(sub))}</div>
   <div class="chead">{esc(cs.headline)}</div>
-  {items_html}{moves_html}
+  {net_html}{items_html}{moves_html}
+  <div class="src" style="margin-top:12px">{esc('　·　'.join(tail))}</div>
 </div>"""
 
 
@@ -390,8 +455,7 @@ def home_body(ctxs: dict) -> str:
             f'<div class="wt-n">目前 {esc(t.current)}　·　{esc(t.threshold)}</div>'
             f'</div>'
             for t in picked[:2])
-        _b = ("　標「關鍵」的那一軸是目前的政策約束條件；另一軸就算觸發，"
-              "在現在的重心下也不會單獨改變方向。" if binding else "")
+        _b = "　標「關鍵」的那一軸才是目前的約束條件。" if binding else ""
         trig_html = (f'<p class="hint" style="margin:0 0 12px">'
                      f'情境要換一格，還差多少。{_b}</p>{items}')
 
@@ -428,10 +492,8 @@ def home_body(ctxs: dict) -> str:
     資料月份：{esc((lab or {}).get('data_month', '—'))}（就業）　·　
     {esc((inf or {}).get('data_month', '—'))}（物價）　·　
     {esc((fom or {}).get('latest_date', '—'))}（聲明）。
-    {esc((lab or {}).get('jolts_lag_text', 'JOLTS 較就業報告落後數個月'))}，
-    PCE 較 CPI 晚約兩週。<br>
-    頁面每天自動重新產生；存檔頁則每個資料月份只保留第一份，
-    作為未修正前的原始版本。
+    {esc((lab or {}).get('jolts_lag_text', 'JOLTS 較就業報告落後數個月'))}。
+    每天自動重新產生。
   </div>
 </div>"""
 

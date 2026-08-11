@@ -166,24 +166,37 @@ def build() -> dict[str, list[dict]]:
 # ---------------------------------------------------------------------------
 def offerings() -> list[dict]:
     """
-    離線模式的發債申報素材，形狀與 sec.fetch_recent_offerings 一致。
+    離線模式的發債素材，形狀與 sec.fetch_recent_offerings 的**輸入**一致
+    （也就是尚未去重的原始申報），最後一樣走 dedupe_deals。
 
-    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意混入
-    「有解析到金額」與「沒解析到」兩種，讓畫面的兩條路徑都會被畫到。
+    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意鋪三種情況，
+    讓畫面與去重邏輯的每一條路徑都會被走到：
+      ① Alphabet — 424B2 有金額，四天後同一筆再發一份 8-K 2.03（要被合併）
+      ② Oracle   — 424B5 有金額，沒有對應的 8-K（單純的公開發行）
+      ③ Meta     — 只有 8-K 2.03、配不到任何 424B（銀行貸款那一類，要獨立列）
+                   而且金額解析不到，走「金額待確認」那條路徑
     """
     import datetime as dt
+    from .sec import dedupe_deals
     today = dt.date.today()
 
     def d(days_ago: int) -> str:
         return (today - dt.timedelta(days=days_ago)).isoformat()
 
-    return [
+    raw = [
         {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
          "date": d(6), "items": "", "kind": "offering", "amount": 12.5,
          "accession": "0001652044-26-000090",
          "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
                     "000165204426000090/d424b2.htm",
          "desc": "424B2"},
+        # 同一筆交易的 8-K：定價後四天申報，去重之後不該再出現
+        {"name": "Alphabet", "ticker": "GOOGL", "form": "8-K",
+         "date": d(2), "items": "2.03", "kind": "event", "amount": None,
+         "accession": "0001652044-26-000093",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
+                    "000165204426000093/goog-8k.htm",
+         "desc": "8-K"},
         {"name": "Meta", "ticker": "META", "form": "8-K",
          "date": d(19), "items": "2.03,9.01", "kind": "event", "amount": None,
          "accession": "0001326801-26-000058",
@@ -197,3 +210,4 @@ def offerings() -> list[dict]:
                     "000134143926000031/d424b5.htm",
          "desc": "424B5"},
     ]
+    return dedupe_deals(raw)

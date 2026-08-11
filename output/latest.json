@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-08-11T07:29:13",
+  "generated_at": "2026-08-11T07:38:27",
   "labor": {
     "month": "2026-07",
-    "score": -0.3298178637851931,
+    "score": -0.3483176646861179,
     "tilt": {
-      "dovish": 5.0,
-      "hawkish": 0,
+      "dovish": 6.0,
+      "hawkish": 1.0,
       "net": -5.0,
       "tilt": "dovish"
     },
@@ -14,7 +14,7 @@
         "key": "bad_decline",
         "severity": "alert",
         "headline": "失業率下降源於勞動力退出，而非就業增加",
-        "detail": "失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。",
+        "detail": "失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 55.5 萬人，同時有 75.5 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。",
         "lean": "dovish",
         "impact": "就業市場實際在轉弱"
       },
@@ -30,9 +30,25 @@
         "key": "revision_bias_down",
         "severity": "watch",
         "headline": "初值近一年呈系統性下修",
-        "detail": "過去 12 個月，每個月的就業人數平均事後被往下修 0.9 萬人。看到剛公布的數字時，要記得它之後很可能被調降。",
+        "detail": "過去 12 個月，每個月的就業人數平均事後被往下修 1.2 萬人。看到剛公布的數字時，要記得它之後很可能被調降。",
         "lean": "dovish",
         "impact": "初值應打折看待"
+      },
+      {
+        "key": "narrow_growth",
+        "severity": "watch",
+        "headline": "就業成長廣度不足",
+        "detail": "統計的 17 個行業裡，只有 6 個在增加就業。景氣好的時候通常是多數行業一起徵人；集中在少數行業，代表成長的基礎不夠穩固。",
+        "lean": "dovish",
+        "impact": "成長基礎不夠穩固"
+      },
+      {
+        "key": "wage_understated",
+        "severity": "watch",
+        "headline": "非管理職薪資增速高於總體",
+        "detail": "整體平均時薪年增 3.21%，但基層員工（不含主管）達 3.60%。基層薪資是服務業成本的主要來源，漲得比整體快，代表薪資推動的通膨壓力比整體數字顯示的更大。",
+        "lean": "hawkish",
+        "impact": "薪資推動的通膨壓力比表面大"
       },
       {
         "key": "low_hire_low_fire",
@@ -45,53 +61,45 @@
     ]
   },
   "inflation": {
-    "month": "2026-06",
+    "month": "2026-07",
     "tilt": {
-      "dovish": 3.0,
-      "hawkish": 3.0,
-      "net": 0.0,
-      "tilt": "balanced"
+      "dovish": 0,
+      "hawkish": 6.0,
+      "net": 6.0,
+      "tilt": "hawkish"
     },
     "flags": [
       {
-        "key": "cpi_cooling",
+        "key": "supercore_hot",
         "severity": "alert",
-        "headline": "近三月年化低於年增率 0.4 個百分點以上",
-        "detail": "核心 CPI 年增 2.8%，但把最近三個月的漲勢換算成年率只有 2.3%，低了 0.5 個百分點。年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。",
-        "lean": "dovish",
-        "impact": "通膨降溫的證據"
+        "headline": "核心服務除住房仍高於目標區間",
+        "detail": "剔除住房後的核心服務，近三個月年化 4.7%。這一塊的成本主要是人力，所以跟薪資直接連動——只要它降不下來，聯準會就很難確定通膨真的受控。",
+        "lean": "hawkish",
+        "impact": "聯準會最在意的一塊還沒降溫"
+      },
+      {
+        "key": "expect_unanchored",
+        "severity": "alert",
+        "headline": "長期通膨預期偏離目標",
+        "detail": "五年後起算五年的通膨預期來到 2.66%。這是聯準會最怕的情況——一旦大家「相信」通膨會一直高，就會反映在定價與薪資談判上，通膨會自我實現。",
+        "lean": "hawkish",
+        "impact": "預期脫錨是聯準會的紅線"
       },
       {
         "key": "above_target",
         "severity": "alert",
         "headline": "核心 PCE 顯著高於目標",
-        "detail": "核心 PCE 年增 3.3%，高出目標 1.3 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
+        "detail": "核心 PCE 年增 3.0%，高出目標 1.0 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
         "lean": "hawkish",
         "impact": "通膨仍是降息的阻力"
-      },
-      {
-        "key": "shelter_drag",
-        "severity": "watch",
-        "headline": "住房落後項推升整體讀數",
-        "detail": "核心 CPI 年增 2.8%，但把住房剔除後只有 2.3%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。",
-        "lean": "dovish",
-        "impact": "實際通膨比表面低"
-      },
-      {
-        "key": "oil_up",
-        "severity": "watch",
-        "headline": "油價上行，未來一至兩月推升總體 CPI",
-        "detail": "原油近一個月上漲 18%。油價通常兩到四週後反映到加油站價格，再進到 CPI 的能源項。以能源佔 CPI 約 6% 粗估，接下來一兩個月大約會推高整體 CPI 0.4 個百分點。注意這只影響總體，不影響核心。",
-        "lean": "hawkish",
-        "impact": "總體 CPI 的短期逆風"
       }
     ]
   },
   "scenario": {
-    "name": "降息受阻",
+    "name": "停滯性通膨：通膨優先",
     "labor": "弱",
-    "inflation": "中",
-    "lean": "neutral",
+    "inflation": "高",
+    "lean": "hawkish",
     "regime": "inflation",
     "regime_assumed": false
   }

@@ -84,18 +84,32 @@ def _grid_tabs(d: dict, sc) -> str:
         f'<div class="rcmp-v {m["cell_lean"]}">{esc(m["cell_name"])}</div>'
         f'<div class="rcmp-l">{esc(LEAN_TEXT.get(m["cell_lean"], ""))}</div></div>'
         for m in metas)
+    # 這一整段是「反事實」：重心翻轉的話這一格會變成什麼。
+    # 它是追問，不是主線——主線是上面那張格子。所以收起來，
+    # 但**答案要寫在摺疊列上**，讀者不點開也知道結論是什麼。
     if d.get("cell_is_conflict"):
-        cmp_note = ("目前這一格<b>會</b>隨重心改變——下面三列是同一格在三種體制下"
-                    "的結論。重心翻轉的風險要一起盯。")
+        # 有差異時，把「會變成什麼」直接寫進摺疊列
+        _alt = [m for m in metas if not m["current"]]
+        _names = []
+        for m in _alt:
+            if m["cell_name"] not in _names:
+                _names.append(m["cell_name"])
+        cmp_head = ("重心若翻轉，這一格會變成"
+                    + "或".join(f'「{n}」' for n in _names[:2]))
+        cmp_note = ("下面三列是同一格在三種體制下的結論。"
+                    "重心是由聲明、投票與記者會判定的，會隨會議改變——"
+                    "所以這一格的結論帶著一個額外的風險，要跟數據本身一起盯。")
     else:
-        cmp_note = ("目前這一格<b>不會</b>隨重心改變：兩個使命指向同一邊，"
-                    "所以不管誰優先，結論都一樣。這是好消息——"
-                    "少一個需要擔心的變數。")
+        cmp_head = "重心翻轉也不影響這一格"
+        cmp_note = ("兩個使命指向同一邊，所以不管誰優先，結論都一樣。"
+                    "這是好消息——少一個需要擔心的變數。"
+                    "下面三列是同一格在三種體制下的結論，可以核對。")
 
     return (f'<div class="rtabs">{"".join(tabs)}'
             f'<div class="rpanels">{"".join(panels)}</div></div>'
-            f'<div class="rcmp-box"><p class="hint" style="margin:0 0 10px">'
-            f'{cmp_note}</p>{cur_row}</div>')
+            f'<details class="f-more rcmp-box"><summary>{esc(cmp_head)}</summary>'
+            f'<p class="hint" style="margin:10px 0 10px">{cmp_note}</p>'
+            f'{cur_row}</details>')
 
 
 def _triggers(trigs) -> str:
@@ -134,19 +148,16 @@ def _rates_line(r: dict | None) -> str:
     return f"""
 <div class="grid">
   <div class="card">
-    <h2 id="curve-pressure">長端供給壓力（不進九宮格）</h2>
-    <p class="hint">九宮格決定的是<b>政策利率往哪走</b>；長端供給壓力決定的是
-      <b>曲線的形狀</b>。兩者由不同的力量驅動，硬合成會把
-      「降息但長端不降」這種最需要看見的情況抹掉，所以分開列。</p>
+    <h2 id="curve-pressure" data-sum="供給壓力 {esc(PRESSURE_LABEL.get(r['level'], '—'))}　·　{esc(r['curve_title'])}">長端供給壓力（不進九宮格）</h2>
+    <p class="hint">九宮格講<b>政策利率往哪走</b>，這裡講<b>曲線的形狀</b>——
+      兩件事，所以分開列。</p>
     <div class="verdict {cls}" style="margin:14px 0 0">
       <div class="v-eyebrow">供給壓力 {esc(PRESSURE_LABEL.get(r['level'], '—'))}　·　綜合分數 {r['score']:+.2f}</div>
       <div class="v-main">{esc(r['curve_title'])}</div>
       <div class="v-why">{esc(r['curve_desc'])}</div>
       <div class="v-count">{esc(r['desc'])}</div>
     </div>
-    <p class="hint" style="margin-top:18px">壓力分數只由供給來源構成——
-      期限溢酬與斜率是被這些供給推高的<b>價格</b>，不是原因，
-      所以不計入分數，改在長端頁另外呈現「已經反映多少」：</p>
+    <p class="hint" style="margin-top:18px">壓力分數的來源：</p>
     <div class="cmoves" style="border-top:none;padding-top:0">{parts}</div>
     <div class="src">完整拆解、殖利率曲線、政府債務動態與科技巨頭發債請見
       <a href="/rates/">長端與債務</a>頁。</div>
@@ -201,6 +212,24 @@ def scenario_body(d: dict) -> str:
 
     grid_tabs = _grid_tabs(d, sc)
 
+    # 收合摘要：一律取這一區已經算出來的結論。
+    _grid_sum = (f'就業{sc.labor_state} × 通膨{sc.infl_state}　·　{sc.name}'
+                 f'　·　{LEAN_TEXT.get(sc.lean, "")}')
+    # drivers 的元素長得像「勞動｜失業率下降源於…」，模組名在收合列上是雜訊，
+    # 只取分隔線後面的標題。
+    _d0 = (sc.drivers[0].split("｜")[-1] if sc.drivers else "")
+    _drv_sum = (f'{len(sc.drivers)} 項　·　{_d0}' if sc.drivers else "尚無資料")
+    _met = [x for x in sc.triggers if x.met]
+    _bind = next((x for x in sc.triggers if getattr(x, "binding", False)), None)
+    _trig_sum = (f'{len(_met)} 項已觸發' if _met else
+                 (f'關鍵：{_bind.label}　·　{_bind.distance}' if _bind else
+                  (f'{len(sc.triggers)} 項門檻與距離' if sc.triggers else "資料不足")))
+    _pos_sum = (f'{sc.name} 對應的四類部位' if sc.positioning else "尚無資料")
+    _mk = d.get("market") or {}
+    _mkt_sum = ((f'差距 {_mk["display"]}　·　'
+                 + ("與本頁判讀一致" if _mk.get("agree") else "與本頁判讀分歧"))
+                if _mk else "資料不足")
+
     # 市場定價：用 2 年期殖利率相對政策利率中值當代理。
     # 這不是會議層級的機率，但它回答了本頁真正在問的問題——
     # 「我的判讀跟市場定價差在哪」。
@@ -227,10 +256,8 @@ def scenario_body(d: dict) -> str:
       <div class="v-main" style="font-size:19px">{esc(mk['text'])}</div>
       <div class="v-why" style="margin-top:8px">{_agree_html}</div>
     </div>
-    <div class="src">2 年期殖利率約等於市場預期的「未來兩年平均政策利率」，
-      是<b>粗略代理</b>而非會議層級的機率——它同時含有期限溢酬，
-      不能直接讀成純粹的政策路徑預期。逐次會議的隱含機率需另接
-      亞特蘭大聯準銀行的 Market Probability Tracker。</div>"""
+    <div class="src">用 2 年期殖利率當代理，是粗略估計而非會議層級的機率
+      （見判讀說明）。</div>"""
     else:
         market_html = ('<div class="soonbox" style="margin-top:0;padding:26px 18px;'
                        'box-shadow:none;border-style:dashed"><h3>資料不足</h3>'
@@ -243,9 +270,11 @@ def scenario_body(d: dict) -> str:
         focus.get("focus", ""), "balanced")
     focus_ev = ""
     if focus.get("evidence"):
+        # 只留這一次真正的判定依據。「來源為聲明制式句與投票紀錄，不用模型」
+        # 是方法論、每一期都一樣，已經寫在頁尾的判讀說明裡——
+        # 留在這裡等於每次都在證據旁邊把同一句話再講一遍。
         focus_ev = ('<div class="src">判定依據：'
-                    + esc("、".join(focus["evidence"]))
-                    + "　·　來源為聲明制式句與投票紀錄，不用模型。</div>")
+                    + esc("、".join(focus["evidence"])) + "</div>")
     # 判不出重心時要明講：訊號互相抵銷 ≠ 聯準會真的兩邊並重
     assumed_note = ""
     if getattr(sc, "regime_assumed", False):
@@ -271,11 +300,8 @@ def scenario_body(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="grid">九宮格定位</h2>
-    <p class="hint">聯準會有兩個目標：充分就業與物價穩定。同一份就業數據，
-      在通膨高和通膨低的環境下會導向完全相反的決定，所以要把兩邊擺在一起看。
-      <b>而同一格在「通膨優先」與「就業優先」下的結論也可能相反</b>，
-      所以三種體制各有一張格子——目前適用的那張已經選好。</p>
+    <h2 id="grid" data-open="1" data-sum="{esc(_grid_sum)}">九宮格定位</h2>
+    <p class="hint">就業 × 通膨，<b>每個重心各一張格子</b>——目前適用的那張已經選好。</p>
     <div class="verdict {focus_cls}" style="margin:0 0 18px">
       <div class="v-eyebrow">目前重心（決定用哪一張格子）</div>
       <div class="v-main" style="font-size:22px">{esc(focus.get('label', '無法判定'))}</div>
@@ -285,25 +311,22 @@ def scenario_body(d: dict) -> str:
     {focus_ev}
     {grid_tabs}
     <p class="hint" style="margin-top:16px">
-      左下角（就業弱、通膨低）是降息最順的情況；右下角（就業弱、通膨高）
-      是停滯性通膨，兩個目標互相打架，聯準會最難處理。
-      標<span class="cflag">◆</span>的三格會隨重心改變，其餘六格三種體制下都一樣；
-      <span class="lg-on">反白粗框</span>那一格是目前位置。
+      <span class="lg-on">反白粗框</span>＝目前位置　·
+      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
     </p>
   </div>
 </div>
 <div class="grid g2">
   <div class="card">
-    <h2 id="drivers">主要驅動因素</h2>
-    <p class="hint">來自兩個模組的規則引擎，依嚴重度排序。</p>
+    <h2 id="drivers" data-sum="{esc(_drv_sum)}">主要驅動因素</h2>
+    <p class="hint">依嚴重度排序。</p>
     {drivers_html or '<div class="empty">尚無資料</div>'}
     <div class="src">完整清單請見勞動市場頁與通膨頁。</div>
   </div>
 
   <div class="card">
-    <h2 id="triggers">情境轉換門檻</h2>
-    <p class="hint">不給機率，但給明確的門檻與目前的距離——
-      這比機率誠實，也更能直接拿來盯。{binding_hint}</p>
+    <h2 id="triggers" data-sum="{esc(_trig_sum)}">情境轉換門檻</h2>
+    <p class="hint">{binding_hint}</p>
     {basis_note}
     {_triggers(sc.triggers)}
   </div>
@@ -311,17 +334,15 @@ def scenario_body(d: dict) -> str:
 
 <div class="grid g2">
   <div class="card">
-    <h2 id="positioning">固定收益部位對照</h2>
-    <p class="hint">情境到部位的映射框架。這是方向性的參考，不是進出場訊號。</p>
-    <dl class="gloss">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
-    <div class="src">
-      本頁僅為分析框架，不構成投資建議。實際部位決策仍需自行判斷。
-    </div>
+    <h2 id="positioning" data-sum="{esc(_pos_sum)}">固定收益部位對照</h2>
+    <p class="hint">方向性參考，不是進出場訊號。</p>
+    <dl class="gloss poslist">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
+    <div class="src">本頁為分析框架，不構成投資建議。</div>
   </div>
 
   <div class="card">
-    <h2 id="market">市場定價對照</h2>
-    <p class="hint">研究的價值在於找出自己的判讀與市場的分歧。</p>
+    <h2 id="market" data-sum="{esc(_mkt_sum)}">市場定價對照</h2>
+    <p class="hint">自己的判讀與市場定價差在哪。</p>
     {market_html}
   </div>
 </div>
@@ -329,16 +350,27 @@ def scenario_body(d: dict) -> str:
 {_rates_line(d.get('rates_line'))}
 <div class="grid">
   <div class="card">
-    <h2 id="howto">判讀說明</h2>
-    <p class="hint">這一頁的方法與名詞。</p>
-    <details data-m-collapse open class="plain"><summary>展開判讀說明</summary>
-    <dl class="gloss">
+    <h2 id="howto" data-sum="三張格子的規則、重心怎麼判定、名詞解釋">判讀說明</h2>
+        <dl class="gloss">
       <dt>為什麼有三張九宮格</dt>
       <dd>聯準會有兩個使命，而它們有時指向相反的方向——就業弱要降息、
         通膨高不能降。誰優先，結論就完全不同。所以三種體制各一張格子，
         由聲明、投票與記者會判定目前適用哪一張。<br>
         九格裡只有三格會隨體制改變（標◆那三格），
         其餘六格兩個使命同向或都不極端，不管誰優先都一樣。</dd>
+      <dt>四個角各是什麼意思</dt>
+      <dd>左下角（就業弱、通膨低）是降息最順的情況——兩個使命指向同一邊。
+        右下角（就業弱、通膨高）是停滯性通膨，兩個目標互相打架，
+        聯準會最難處理，也是三張格子差最多的那一格。
+        上排（就業強）不論通膨高低都不急著降息，差別只在要不要往緊縮走。</dd>
+      <dt>2 年期為什麼能當市場定價的代理</dt>
+      <dd>2 年期殖利率約等於市場預期的「未來兩年平均政策利率」。
+        這是<b>粗略</b>代理而不是會議層級的機率——它同時含有期限溢酬，
+        不能直接讀成純粹的政策路徑預期。要看逐次會議的隱含機率，
+        得用聯邦資金期貨。</dd>
+      <dt>為什麼不給機率</dt>
+      <dd>機率市場早就定價了，複述它沒有附加價值。給明確的門檻與目前的距離
+        比較誠實，也更能直接拿來盯。</dd>
       <dt>重心怎麼判定</dt>
       <dd>聲明裡的制式風險句（±2）、聲明對現況的描述
         （±1，「通膨仍高於目標」／「勞動市場已轉弱」，講現況不是講風險，弱一級）、
@@ -378,7 +410,6 @@ def scenario_body(d: dict) -> str:
         當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
         或反過來——他們還沒承認數據已經轉向。</dd>
     </dl>
-    </details>
   </div>
 </div>
 """
