@@ -296,6 +296,57 @@ except polish.requests.HTTPError:
     hit = True
 check("㊹ 500 不觸發換模型", hit)
 
+
+# ---------------------------------------------------------------------------
+# ⑤ 驗證沒過 → 帶著原因重試一次（不是直接放棄，也不是無限重試）
+#
+# 實際發生過：404 換上的替代模型把「重點：」前綴弄丟了。格式錯誤跟
+# API 掛掉不一樣——模型看得懂「你上次錯在哪」，再講一次通常就對了。
+# 但只准一次：兩次都做不到就是這個模型做不到，繼續燒額度沒有意義。
+# ---------------------------------------------------------------------------
+BAD = GOOD.replace("重點：", "總結來說，")     # 前綴不見（實際發生的那種錯）
+
+# 第一次壞、帶原因重試後好 → 模型版
+seq = []
+
+
+def flaky(key, model, text):
+    seq.append(text)
+    return BAD if len(seq) == 1 else GOOD
+
+
+r = polish.maybe_polish(assembled(SRC + "重試測試"), tmp / "c8.json",
+                        env={"GEMINI_API_KEY": "g1"}, _post=flaky)
+check("㊺ 驗證沒過 → 重試後成功用模型版",
+      r["source"] == "model" and r["text"] == GOOD, r["source"])
+check("㊻ 重試的輸入帶著被退回的原因",
+      len(seq) == 2 and "上一次的輸出被退回" in seq[1] and "重點" in seq[1])
+check("㊼ 第一次的輸入沒有多餘的附註", "被退回" not in seq[0])
+
+# 兩次都壞 → 組裝版，而且**正好**兩次（不是三次、不是一次）
+seq2 = []
+r = polish.maybe_polish(assembled(SRC + "重試上限測試"), tmp / "c9.json",
+                        env={"GEMINI_API_KEY": "g1"},
+                        _post=lambda k, m, t: (seq2.append(t), BAD)[1])
+check("㊽ 重試後仍沒過 → 組裝版", r["source"] == "assembled")
+check("㊾ 重試只有一次（共兩個呼叫）", len(seq2) == 2, f"{len(seq2)} 次")
+check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
+
+# 重試那一次拋例外 → 一樣安全退回組裝版
+seq3 = []
+
+
+def then_boom(key, model, text):
+    seq3.append(text)
+    if len(seq3) == 1:
+        return BAD
+    raise RuntimeError("connection reset")
+
+
+r = polish.maybe_polish(assembled(SRC + "重試爆炸測試"), tmp / "c10.json",
+                        env={"GEMINI_API_KEY": "g1"}, _post=then_boom)
+check("51 重試時 API 掛掉 → 組裝版", r["source"] == "assembled")
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

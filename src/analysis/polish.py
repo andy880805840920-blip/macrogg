@@ -184,19 +184,36 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     # ---- 呼叫 ----
     # 供應商可以回 (文字, 實際用的模型)：Gemini 在模型被汰換時會自己換一個，
     # 而畫面與執行紀錄要標的是**真的用了哪一個**，不是設定裡寫的那一個。
-    try:
-        post = _post or _POST[provider]
-        text = post(key, model, out["text"])
-        if isinstance(text, tuple):
-            text, model = text[0], (text[1] or model)
-    except Exception as e:                         # noqa: BLE001
-        log.warning("整體情勢潤稿失敗（%s），改用組裝版", e)
-        return out
-
-    text = " ".join((text or "").split())
-    reason = validate(text, out["text"])
+    #
+    # 驗證沒過時**帶著原因重試一次**。實際發生過：換上的替代模型把
+    # 「重點：」前綴弄丟了——格式錯誤跟 API 掛掉不一樣，模型看得懂
+    # 「你上次錯在哪」，再講一次通常就對了。只重試一次：兩次都做不到
+    # 就是這個模型做不到，繼續燒額度不會變出第三種結果。
+    # 防護欄本身一個字都沒鬆——不合格照樣退組裝版。
+    post = _post or _POST[provider]
+    reason = ""
+    text = ""
+    for attempt in (1, 2):
+        note = ("" if not reason else
+                f"\n\n（上一次的輸出被退回，原因：{reason}。"
+                f"請重新改寫並逐條遵守硬性規則——"
+                f"特別注意最後一句必須以「重點：」開頭、"
+                f"不得新增任何原文沒有的數字。）")
+        try:
+            res = post(key, model, out["text"] + note)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("整體情勢潤稿失敗（%s），改用組裝版", e)
+            return out
+        if isinstance(res, tuple):
+            res, model = res[0], (res[1] or model)
+        text = " ".join((res or "").split())
+        reason = validate(text, out["text"])
+        if not reason:
+            break
+        if attempt == 1:
+            log.warning("整體情勢潤稿未通過驗證（%s），帶著原因重試一次", reason)
     if reason:
-        log.warning("整體情勢潤稿未通過驗證（%s），改用組裝版", reason)
+        log.warning("整體情勢潤稿重試後仍未通過驗證（%s），改用組裝版", reason)
         return out
 
     # ---- 存快取（state/ 由 workflow commit，跨執行有效）----
