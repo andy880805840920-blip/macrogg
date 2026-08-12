@@ -289,6 +289,20 @@ def _yoy_nsa(nsa: list, sa: list, label: str = "") -> float | None:
     return sav
 
 
+def _log_yoy(label: str, rows: list, val) -> None:
+    """把年增率用到的兩個觀測印進執行紀錄，方便跟官方數字核對。"""
+    if not rows or val is None:
+        return
+    from .core import _shift_months, _at_date
+    d1 = rows[-1]["date"]
+    d0 = _shift_months(d1, 12)
+    v0 = _at_date(rows, d0)
+    log.info("%s 年增 %.2f%%：%s %.3f ÷ %s %s", label, val, d1,
+             rows[-1]["value"], d0,
+             f"{v0:.3f}" if v0 is not None
+             else f"（找不到，退回往前數 12 列的 {rows[-13]['value']:.3f}）")
+
+
 def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> InflationSummary:
     s = InflationSummary()
     g = series.get
@@ -299,6 +313,10 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     # 但那是退路不是常態。
     s.headline_yoy = _yoy_nsa(g("CPIAUCNS", []), g("CPIAUCSL", []), "總體 CPI")
     s.core_yoy = _yoy_nsa(g("CPILFENS", []), g("CPILFESL", []), "核心 CPI")
+    # 把年增率用到的兩個點印出來。這一段跟 BLS 公布的數字差 0.1 個百分點
+    # 就會被讀者抓到，而反推除數很費事——直接印出來，一眼就能核對。
+    _log_yoy("總體 CPI", g("CPIAUCNS", []) or g("CPIAUCSL", []), s.headline_yoy)
+    _log_yoy("核心 CPI", g("CPILFENS", []) or g("CPILFESL", []), s.core_yoy)
     s.core_mom = mom_pct(g("CPILFESL", []))
     s.core_3m = annualized(g("CPILFESL", []), 3)
     s.core_6m = annualized(g("CPILFESL", []), 6)

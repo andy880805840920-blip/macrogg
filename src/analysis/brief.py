@@ -207,7 +207,9 @@ _NEW_MAX = 2
 # 寧可少講一項，也不要把別的發布日的數字冠上「本次」。
 _RELEASE_KEYS = {
     "labor": {"nfp", "nfp_3m", "u3", "lfpr", "ahe_yoy"},
-    "inflation": {"core_cpi_yoy", "core_cpi_3m", "supercore"},
+    # cpi_yoy 排在前面只是為了讀起來順；真正的排序是按變動幅度。
+    # 這裡**不能**放 core_pce（BEA 月底發布）與 exp5y5y（每日）。
+    "inflation": {"cpi_yoy", "core_cpi_yoy", "core_cpi_3m", "supercore"},
 }
 
 
@@ -234,21 +236,27 @@ def _whats_new(ctxs: dict) -> str:
     那張卡同一組來源），只挑**這次剛發布的那個模組**的變動——非發布日的
     模組不該被算進「本次更新」。
 
-    判斷「有沒有新資料」完全機械：這次的資料期別跟上一次執行存下的期別
-    相比，有推進才算。沒有上次的紀錄（第一次跑）也不宣稱是新的。
+    判斷「有沒有新資料」不在這裡做——`run.py` 的 `_fresh_releases()` 已經
+    算好了，這裡拿到的 `ctxs["_fresh"]` 就是 `{模組: 期別}`，且只含
+    **72 小時內才第一次看到**的期別。
+
+    為什麼是 72 小時而不是「只在抓到的那一次執行顯示」：排程一天跑三次，
+    發布當天你未必打開網站；只顯示一次的話，隔天想看就已經消失了。
+    三天內的新數據叫「本次更新」還名副其實。
     """
-    prev = ctxs.get("_prev_months") or {}
-    if not prev:
+    fresh_months = ctxs.get("_fresh") or {}
+    if not fresh_months:
         return ""
 
     fresh = []                                     # [(模組鍵, 中文名, 期別字串)]
     for key, name in (("labor", "就業"), ("inflation", "物價")):
+        month = fresh_months.get(key)
+        if not month:
+            continue
         ctx = ctxs.get(key) or {}
-        cur, was = ctx.get("data_month", ""), prev.get(key, "")
-        if cur and was and cur > was:
-            m = _month(cur)
-            tag = "（速報）" if ctx.get("provisional") else ""
-            fresh.append((key, name, f"{m}{tag}" if m else ""))
+        m = _month(month)
+        tag = "（速報）" if ctx.get("provisional") else ""
+        fresh.append((key, name, f"{m}{tag}" if m else ""))
     if not fresh:
         return ""
 

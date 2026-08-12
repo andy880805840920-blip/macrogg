@@ -296,7 +296,19 @@ def merge(series: dict, client: BlsClient | None = None,
         if not rows_b or not rows_f:
             continue
         last_f = rows_f[-1]["date"]
-        newer = [r for r in rows_b if r["date"] > last_f]
+        # 只接「比最後一筆新」**而且原本沒有**的日期。
+        #
+        # 兩個條件都要：先前只比大於最後一筆，而 FRED 的序列尾端偶爾不是
+        # 嚴格遞增（補資料、修正），一筆重複的月份就這樣被接進去。後果不是
+        # 多一列而已——yoy() 的除數會整個偏一格，整條年增率歷史跟著差
+        # 0.2–0.4 個百分點，而畫面上完全看不出來。
+        have = {r["date"] for r in rows_f}
+        newer = [r for r in rows_b
+                 if r["date"] > last_f and r["date"] not in have]
+        # 同一批 BLS 資料裡也可能有重複的期別，一併去掉
+        seen_new: set[str] = set()
+        newer = [r for r in newer
+                 if not (r["date"] in seen_new or seen_new.add(r["date"]))]
         if not newer:
             continue
         ok, why = _agrees(rows_f, rows_b)

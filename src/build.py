@@ -1025,8 +1025,14 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                 since(series.get("T5YIFR", []), CHART_START, 40)[::-1][::7][::-1],
                 unit="%", fmt=lambda v: f"{v:.2f}", daily=True),
         },
-        # 通膨這五條一律「往上＝偏鷹」，沒有例外
+        # 通膨這幾條一律「往上＝偏鷹」，沒有例外
         "key_metrics": {
+            # 頭條 CPI 排第一。CPI 發布日新聞標題上的那個數字就是它——
+            # 先前這裡只有核心，結果 CPI 出爐當天的「本次更新」講得出核心、
+            # 講不出讀者真正在找的那一個。
+            "cpi_yoy": {"label": "CPI 年增", "value": summ.headline_yoy,
+                        "unit": "%", "delta_unit": " 個百分點",
+                        "threshold": 0.05, "up_is": "hawkish"},
             "core_cpi_yoy": {"label": "核心 CPI 年增", "value": summ.core_yoy,
                              "unit": "%", "delta_unit": " 個百分點",
                              "threshold": 0.05, "up_is": "hawkish"},

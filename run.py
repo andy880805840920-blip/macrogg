@@ -25,6 +25,7 @@ from __future__ import annotations
 import os
 import sys
 import json
+import datetime as dt
 import logging
 import argparse
 from pathlib import Path
@@ -210,6 +211,66 @@ def gather_fred(offline: bool, ids: list[str], module: str,
     if SAVE_FIXTURES:
         save_real_fixtures(module, series, vintages)
     return series, vintages, client.failed
+
+
+# 「本次更新」要顯示多久。
+#
+# 只在「抓到新資料的那一次執行」顯示是最嚴格的，但實務上看不到——排程一天
+# 跑三次，發布當天你未必打開網站，隔天想看卻已經消失了。
+# 72 小時涵蓋「週五發布、週一才看」這種最常見的情況，而「三天內的新數據」
+# 叫「本次更新」也還名副其實。
+FRESH_HOURS = 72
+RELEASES_FILE = ROOT / "state" / "releases.json"
+
+
+def _fresh_releases(ctxs: dict) -> dict:
+    """
+    回傳 {模組: 期別字串}，只含**FRESH_HOURS 小時內才首次出現**的期別。
+
+    為什麼要另外存一份而不是用 snapshot：snapshot 記的是「上一期的值是
+    多少」（給「跟上期比什麼變了」用），這裡要的是「這一期是什麼時候第一次
+    看到的」——是時間，不是數值。硬塞進 snapshot 會讓那邊的語意變混濁。
+
+    檔案讀不到、寫不進去都不影響主流程：最差的情況是這一句不顯示。
+    """
+    now = clock.now()
+    try:
+        old = json.loads(RELEASES_FILE.read_text(encoding="utf-8"))
+    except Exception:                              # noqa: BLE001
+        old = {}
+
+    if not isinstance(old, dict):                  # 檔案被改成別的型別
+        old = {}
+
+    out, state = {}, {}
+    for key in ("labor", "inflation"):
+        month = (ctxs.get(key) or {}).get("data_month", "")
+        if not month:
+            continue
+        rec = old.get(key)
+        # 舊格式或手改壞掉的紀錄都可能不是字典。當成「沒有紀錄」處理：
+        # 最差的情況是這一期重新計時，不是整個執行掛掉。
+        rec = rec if isinstance(rec, dict) else {}
+        if rec.get("month") == month and rec.get("first_seen"):
+            state[key] = rec                       # 沿用第一次看到的時間
+        else:
+            state[key] = {"month": month, "first_seen": clock.iso()}
+        try:
+            seen = dt.datetime.fromisoformat(state[key]["first_seen"])
+            fresh = (now - seen).total_seconds() <= FRESH_HOURS * 3600
+        except (ValueError, TypeError):
+            fresh = False
+        # 第一次跑（本來就沒有紀錄）不算新——否則每次換機器都會宣稱「本次更新」
+        if fresh and old.get(key):
+            out[key] = month
+
+    try:
+        RELEASES_FILE.parent.mkdir(parents=True, exist_ok=True)
+        RELEASES_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=1),
+                                 encoding="utf-8")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("發布時間紀錄寫入失敗（%s），下次「本次更新」可能不顯示", e)
+    return out
 
 
 def gather_hyperscalers(cfg: dict, offline: bool) -> list:
@@ -582,14 +643,6 @@ def main() -> int:
         log.info("局部重跑（--only %s）：跳過變化比對與快照存檔", args.only)
     else:
         prev_state = chg.load_previous(STATE_FILE)
-        # 「這一次多了什麼資料」——拿上一次執行存下的期別跟這次比。
-        # 這是唯一能回答這個問題的地方：changes 模組比的是「跟上一期比
-        # 數字怎麼變」，而這裡要的是「這一次執行**新拿到**了哪一份資料」。
-        # 兩者不一樣：非發布日跑起來，前者有內容（跟上期比）、後者是空的。
-        _prev_months = {
-            k: ((((prev_state or {}).get("modules") or {}).get(k) or {})
-                .get("current") or {}).get("month", "")
-            for k in ("labor", "inflation")}
         cur_snap = chg.snapshot(ctxs)
         # 只有資料期別真的變了才輪替基準——同一期別的重跑會更新 current，
         # 但不會把 previous 往前推。這樣「7 月就業報告帶來的變化」
@@ -606,7 +659,7 @@ def main() -> int:
         if ctxs["changes"].bases:
             log.info("對照基準：%s", chg.basis_text(ctxs["changes"]))
 
-        ctxs["_prev_months"] = _prev_months
+        ctxs["_fresh"] = _fresh_releases(ctxs)
 
     # ---- 首頁的整體總述：規則組裝 → （選配）模型潤稿 ----
     # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。

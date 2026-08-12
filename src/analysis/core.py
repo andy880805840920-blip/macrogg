@@ -41,12 +41,48 @@ def diff_series(rows: Sequence[dict]) -> list[dict]:
     return out
 
 
+def _shift_months(date: str, back: int) -> str:
+    """"2026-07-01" 往前 12 個月 → "2025-07-01"。壞字串回空。"""
+    try:
+        y, m, d = date.split("-")
+        y, m = int(y), int(m)
+    except (ValueError, AttributeError):
+        return ""
+    m -= back
+    y += (m - 1) // 12
+    m = (m - 1) % 12 + 1
+    return f"{y:04d}-{m:02d}-{d}"
+
+
+def _at_date(rows: Sequence[dict], date: str):
+    for r in rows:
+        if r["date"] == date:
+            return r["value"]
+    return None
+
+
 def yoy(rows: Sequence[dict], periods: int = 12) -> float | None:
+    """
+    年增率。**除數用日期找，不是往前數 N 列。**
+
+    為什麼這件事很重要：`rows[-1-periods]` 數的是**列數**，不是月份。
+    序列裡只要多一筆或少一筆觀測，除數就整個偏一格——而且結果看起來
+    完全正常，只是差 0.2–0.4 個百分點。
+
+    這是實際發生過的：核心 CPI 年增印成 2.7%，BLS 公布的是 2.5%。
+    反推出來的除數正好是「去年六月」而不是「去年七月」——序列尾巴
+    多了一筆重複的月份，整條歷史就跟著偏。
+
+    找不到正好十二個月前那一筆時才退回數列數（週頻、日頻序列本來就
+    對不到月份），但月頻序列不該走到那條路。
+    """
     if len(rows) <= periods:
         return None
     cur = rows[-1]["value"]
-    old = rows[-1 - periods]["value"]
-    if old == 0:
+    old = _at_date(rows, _shift_months(rows[-1]["date"], periods))
+    if old is None:
+        old = rows[-1 - periods]["value"]
+    if not old:
         return None
     return (cur / old - 1) * 100
 
@@ -144,9 +180,15 @@ def yoy_series(rows: Sequence[dict], periods: int = 12) -> list[dict]:
     直接畫水準值就是一條斜線，看不出任何訊息。
     要畫的是變化率，不是水準。
     """
+    # 除數一樣用日期找（理由見 yoy()）。整條年增率序列都會受影響——
+    # 畫面上那一列「26年3月 4月 5月 6月 7月」的歷史數字就是從這裡來的，
+    # 先前每一格都偏了 0.2–0.4 個百分點。
+    by_date = {r["date"]: r["value"] for r in rows}
     out = []
     for i in range(periods, len(rows)):
-        old = rows[i - periods]["value"]
+        old = by_date.get(_shift_months(rows[i]["date"], periods))
+        if old is None:
+            old = rows[i - periods]["value"]
         if old:
             out.append({"date": rows[i]["date"],
                         "value": (rows[i]["value"] / old - 1) * 100})
