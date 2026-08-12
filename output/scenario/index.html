@@ -313,10 +313,16 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 /* ---------- 表格 ---------- */
 table{width:100%;border-collapse:collapse;font-size:13.5px;
   font-variant-numeric:tabular-nums}
-th,td{text-align:right;padding:9px 5px;border-bottom:1px solid var(--grid)}
+/* 上下 11px：表格裡的儲存格常常放連結（原文申報、EDGAR 頁面），
+   相鄰兩列的連結之間必須留得下手指。9px 時量到只剩 5.3px 的間距，
+   低於 tools/audit_layout.py 的 8px 門檻。 */
+th,td{text-align:right;padding:11px 5px;border-bottom:1px solid var(--grid)}
 th:first-child,td:first-child{text-align:left}
 th{color:var(--muted);font-weight:500;font-size:12px}
-tbody tr:last-child td{border-bottom:none}
+/* 最後一列多留一點下緣：那一列的儲存格常常是連結，而表格後面緊接著的
+   往往是另一個可點的 summary。少了這幾 px，兩個觸控目標會靠到 8px 以內
+   （tools/audit_layout.py 的門檻）。 */
+tbody tr:last-child td{border-bottom:none;padding-bottom:15px}
 td.pos{color:var(--good)} td.neg{color:var(--critical)}
 td.muted-cell{color:var(--muted)}
 .revtab td:first-child{font-variant-numeric:normal}
@@ -327,12 +333,15 @@ td a[target="_blank"],.src a[target="_blank"]{
   display:inline-block;padding:12px 8px;margin:-12px -8px}
 /* 欄位多的表格（例如科技巨頭那張六欄表）在 390px 上會把儲存格擠成
    一個字一行。包一層可橫向捲動的容器，寧可讓它滑，也不要把數字折斷。 */
-.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+/* 下緣留白：表格最後一列的儲存格常常放連結，而後面緊接著的往往是
+   另一個可點的 summary。不留的話兩個觸控目標會靠到 7px 以內。 */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
+  margin-bottom:6px}
 /* 寫死 min-width 會讓明明放得下的表格也被迫捲動。改成「內容多寬就多寬，
    至少填滿容器」：塞得下就不捲，塞不下才捲。 */
 .tscroll>table{width:max-content;min-width:100%}
 /* 會捲的表格把左右內距收窄一點，多爭取的空間常常剛好夠讓它不用捲 */
-@media(max-width:520px){.tscroll th,.tscroll td{padding:9px 4px;font-size:13px}}
+@media(max-width:520px){.tscroll th,.tscroll td{padding:11px 4px;font-size:13px}}
 
 /* ---------- 發散長條（行業增減）---------- */
 .dbars{display:flex;flex-direction:column;gap:3px;margin-top:4px}
@@ -459,7 +468,11 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* margin-bottom 是觸控間距用的：這種展開列的下一個元素常常也是可點的
    （另一個展開列、表格裡的外部連結）。展開之後內容的最後一行離下一個
    觸控目標只有兩三 px 時，點錯的代價是收合掉一整張卡。 */
-.f-more{margin-top:4px;margin-bottom:8px;border-top:none;padding-top:0}
+/* padding-top 而不是 margin-top：summary 是 .f-more 的第一個子元素，
+   給它 margin 會跟父層的 margin **合併**（margin collapsing），實際只多出
+   兩者的差額。要真的把觸控框推開必須用 padding——它不合併。
+   前一個區塊常常是另一張表，最後一列的儲存格多半是連結。 */
+.f-more{margin-top:4px;margin-bottom:8px;border-top:none;padding-top:6px}
 /* 這一塊底下緊接著另一個展開列（失業結構），兩個觸控盒之間要留得出間距 */
 /* 觸控目標至少 44px 高（WCAG 2.5.8 / Apple HIG）。字體維持 12.5px，
    靠上下 padding 把可點區域撐到 44px，並用負的 margin 抵銷多出來的
@@ -1175,7 +1188,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">情境合成</a></h1>
-  <div class="sub">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-10　·　更新於 2026-08-12 19:14（台北）</div>
+  <div class="sub">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-10　·　更新於 2026-08-12 19:51（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/" class="on">情境合成</a><a href="/archive/">存檔</a></nav></div>

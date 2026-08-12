@@ -313,10 +313,16 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 /* ---------- 表格 ---------- */
 table{width:100%;border-collapse:collapse;font-size:13.5px;
   font-variant-numeric:tabular-nums}
-th,td{text-align:right;padding:9px 5px;border-bottom:1px solid var(--grid)}
+/* 上下 11px：表格裡的儲存格常常放連結（原文申報、EDGAR 頁面），
+   相鄰兩列的連結之間必須留得下手指。9px 時量到只剩 5.3px 的間距，
+   低於 tools/audit_layout.py 的 8px 門檻。 */
+th,td{text-align:right;padding:11px 5px;border-bottom:1px solid var(--grid)}
 th:first-child,td:first-child{text-align:left}
 th{color:var(--muted);font-weight:500;font-size:12px}
-tbody tr:last-child td{border-bottom:none}
+/* 最後一列多留一點下緣：那一列的儲存格常常是連結，而表格後面緊接著的
+   往往是另一個可點的 summary。少了這幾 px，兩個觸控目標會靠到 8px 以內
+   （tools/audit_layout.py 的門檻）。 */
+tbody tr:last-child td{border-bottom:none;padding-bottom:15px}
 td.pos{color:var(--good)} td.neg{color:var(--critical)}
 td.muted-cell{color:var(--muted)}
 .revtab td:first-child{font-variant-numeric:normal}
@@ -327,12 +333,15 @@ td a[target="_blank"],.src a[target="_blank"]{
   display:inline-block;padding:12px 8px;margin:-12px -8px}
 /* 欄位多的表格（例如科技巨頭那張六欄表）在 390px 上會把儲存格擠成
    一個字一行。包一層可橫向捲動的容器，寧可讓它滑，也不要把數字折斷。 */
-.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+/* 下緣留白：表格最後一列的儲存格常常放連結，而後面緊接著的往往是
+   另一個可點的 summary。不留的話兩個觸控目標會靠到 7px 以內。 */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
+  margin-bottom:6px}
 /* 寫死 min-width 會讓明明放得下的表格也被迫捲動。改成「內容多寬就多寬，
    至少填滿容器」：塞得下就不捲，塞不下才捲。 */
 .tscroll>table{width:max-content;min-width:100%}
 /* 會捲的表格把左右內距收窄一點，多爭取的空間常常剛好夠讓它不用捲 */
-@media(max-width:520px){.tscroll th,.tscroll td{padding:9px 4px;font-size:13px}}
+@media(max-width:520px){.tscroll th,.tscroll td{padding:11px 4px;font-size:13px}}
 
 /* ---------- 發散長條（行業增減）---------- */
 .dbars{display:flex;flex-direction:column;gap:3px;margin-top:4px}
@@ -459,7 +468,11 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* margin-bottom 是觸控間距用的：這種展開列的下一個元素常常也是可點的
    （另一個展開列、表格裡的外部連結）。展開之後內容的最後一行離下一個
    觸控目標只有兩三 px 時，點錯的代價是收合掉一整張卡。 */
-.f-more{margin-top:4px;margin-bottom:8px;border-top:none;padding-top:0}
+/* padding-top 而不是 margin-top：summary 是 .f-more 的第一個子元素，
+   給它 margin 會跟父層的 margin **合併**（margin collapsing），實際只多出
+   兩者的差額。要真的把觸控框推開必須用 padding——它不合併。
+   前一個區塊常常是另一張表，最後一列的儲存格多半是連結。 */
+.f-more{margin-top:4px;margin-bottom:8px;border-top:none;padding-top:6px}
 /* 這一塊底下緊接著另一個展開列（失業結構），兩個觸控盒之間要留得出間距 */
 /* 觸控目標至少 44px 高（WCAG 2.5.8 / Apple HIG）。字體維持 12.5px，
    靠上下 padding 把可點區域撐到 44px，並用負的 margin 抵銷多出來的
@@ -1175,7 +1188,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-10　·　更新於 2026-08-12 19:14（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-10　·　更新於 2026-08-12 19:50（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1340,17 +1353,30 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
       </details>
     </div>
     <div class="warnbox" style="margin:0 0 16px">
-      <b>近 120 天有 9 筆發債交易，尚未反映在下方的季報數字裡</b><br>
-      金額暫不顯示：解析出的合計與季報申報值差距過大，多半是封面解析出錯。逐筆的原文連結仍可查。最近一筆在 2026-08-07。
+      <b>近 120 天有 7 筆已定價的債券發行，尚未反映在下方的季報數字裡</b><br>
+      7 筆已確認金額，合計 1,052 億美元，相當於最新一季申報發債（450 億美元）的 234%。幣別分布：USD 3 筆、CAD 2 筆、JPY 1 筆、EUR 1 筆。另有 4 筆已宣布、尚未定價。另有 7 件非債券的融資申報（股票發行、ATM 增發或貸款額度），不計入。最近一筆在
+      2026-08-07。
       <details class="f-more" style="margin-top:10px"><summary>逐筆明細</summary>
         <div class="tscroll" style="margin-top:10px"><table>
           <thead><tr><th>公司</th><th>日期</th><th>類型</th>
-            <th>金額</th><th>原文</th></tr></thead>
-          <tbody><tr><td>Alphabet</td><td class="muted-cell">2026-08-07</td><td class="muted-cell">公開發行</td><td>458 億美元</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526340264/d32286d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-07-08</td><td class="muted-cell">公開發行</td><td>500 億美元</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926081786/tm2619352-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Oracle</td><td class="muted-cell">2026-06-23</td><td class="muted-cell">公開發行</td><td class="muted-cell">金額待確認</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526278585/d120346d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">公開發行</td><td>280 億美元</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072332/tm2613616-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">舉債公告</td><td class="muted-cell">金額待確認</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072140/tm2613616d4_8k.htm" target="_blank" rel="noopener">8-K</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-04</td><td class="muted-cell">公開發行</td><td class="muted-cell">金額待確認</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526256375/d152107d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-05-18</td><td class="muted-cell">公開發行</td><td class="muted-cell">金額待確認</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526228923/d137872d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-05-07</td><td class="muted-cell">公開發行</td><td>150 億美元</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526212210/d152073d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Meta</td><td class="muted-cell">2026-05-01</td><td class="muted-cell">公開發行</td><td>500 億美元</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1326801/000119312526201738/d109954d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr></tbody></table></div>
+            <th>金額（原幣）</th><th>原文</th></tr></thead>
+          <tbody><tr><td>Alphabet</td><td class="muted-cell">2026-08-07</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526340264/d32286d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-08-06</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526336853/d140593d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-07-08</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926081786/tm2619352-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Oracle</td><td class="muted-cell">2026-06-23</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1341439/000119312526278585/d120346d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">債券發行</td><td>C$140 億<span class="dnote">約 US$100 億（匯率 0.7177，2026-08-07）</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072332/tm2613616-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">其他融資</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072140/tm2613616d4_8k.htm" target="_blank" rel="noopener">8-K</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-08</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926071190/tm2613616-1_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-04</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526257702/d152175d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-04</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526257690/d159942d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-04</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526256375/d152107d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-02</td><td class="muted-cell">股票發行</td><td class="muted-cell">不計入發債</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526252439/d150348d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-02</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526252392/d152175d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-02</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526252374/d159942d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-06-02</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526252362/d152107d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-05-18</td><td class="muted-cell">債券發行</td><td>¥5,765 億<span class="dnote">約 US$37 億（匯率 0.006348，2026-08-07）</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526228923/d137872d424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-05-07</td><td class="muted-cell">債券發行</td><td>C$85 億<span class="dnote">約 US$61 億（匯率 0.7177，2026-08-07）</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526212222/d325417d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-05-07</td><td class="muted-cell">債券發行</td><td>€90 億<span class="dnote">約 US$104 億（匯率 1.156，2026-08-07）</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526212210/d152073d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Meta</td><td class="muted-cell">2026-05-01</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1326801/000119312526201738/d109954d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr></tbody></table></div>
         <p class="hint" style="margin-top:10px">
+          <b>表格號不代表證券種類</b>：424B2／424B5 只代表「定價後的公開
+          說明書補充」，賣的可能是債券、普通股、特別股、存託股或 ATM 增發
+          計畫。這裡是<b>讀文件內容</b>來分類的——要出現
+          <code>aggregate principal amount</code>、<code>Senior Notes</code>
+          或 <code>Notes due 20xx</code> 這類證據才算債券。股票發行、
+          ATM 增發、銀行貸款與循環額度（8-K 項目 2.03）全部不計入。<br>
           <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
           預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
-          同一筆會被數兩次。已經有對應定價版的預估版直接不列。</p>
+          同一筆會被數兩次。已經有對應定價版的預估版直接不列。<br>
+          <b>金額以原幣為準</b>：分券金額逐檔相加，同一檔券在文件裡重複
+          出現只算一次（依幣別、金額、到期年、票息去重）。美元等值是用
+          FRED 當日匯率換算的衍生值，匯率與日期都標出來，可以自己重算。<br>
+          <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
+          融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
+          市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
       </details>
     </div>
     <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">資本支出佔營運現金流</span><span class="bk-val">91%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金支應不了這一季的資本支出</span></div>
