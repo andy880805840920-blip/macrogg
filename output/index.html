@@ -177,7 +177,10 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 /* 摘要句：收合時是「要不要點開」的唯一依據；展開後內容自己會講，藏起來。
    顏色提到 --text-secondary：它是這一列上唯一會變的東西，
    壓成 --muted 的話比旁邊的固定標籤還不顯眼。 */
-.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;color:var(--text-secondary);
+/* font-weight 一定要寫死：summary 是 600，不覆寫的話摘要會繼承成粗體，
+   一整列變成「粗體標題 ＋ 粗體摘要」，兩者又打平了。 */
+.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;font-weight:400;
+  color:var(--text-secondary);
   line-height:1.6;padding-right:4px;
   /* 中文預設可以在**任意兩個字之間**斷行，於是收合清單上出現
      「利升⏎息」「長端承壓最⏎重」這種第二行只有一個字的斷法——
@@ -249,10 +252,6 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 .v-why{font-size:14.5px;color:var(--text-secondary);margin-top:12px;line-height:1.85}
 .v-count{font-size:12.5px;color:var(--muted);margin-top:15px;padding-top:13px;
   border-top:1px solid var(--border);line-height:1.75}
-/* 「這一格已維持 N 期」。低調——它是脈絡不是結論，
-   但它回答的是讀者看到「仍是」兩個字之後的第一個問題。 */
-.v-tenure{font-size:12.5px;color:var(--muted);margin-top:11px}
-
 /* 結論卡底部通往情境頁的出口。做成一整塊可點的區域而不是一行文字連結：
    它是首頁唯一通往「該怎麼擺部位」的路，而讀者剛看完同一段結論，
    一條灰色小字連結不足以說服他「後面還有沒看過的東西」。
@@ -710,6 +709,9 @@ details[open]>summary::after{content:" ▴"}
 details.plain{border-top:none;padding-top:0}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
+/* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
+   那看起來像兩個殘缺的數字。 */
+.nb{white-space:nowrap}
 
 #tip{position:fixed;pointer-events:none;background:var(--surface-2);
   border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;
@@ -1022,6 +1024,42 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   border:1px solid var(--border);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
 
+/* ---------- 首頁的整體總述 ----------
+   這是首頁上唯一要「讀」的東西（其餘都是掃的），所以字級比內文大、
+   行距放寬，並限制行長：桌機的卡片寬 1080px，13px 字會排到每行 80 個中文字，
+   是舒適上限的兩倍，眼睛換行時很容易回到同一行。 */
+.brief{background:var(--surface-1)}
+.brief-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.08em;margin-bottom:9px}
+.brief-t{font-size:15px;line-height:2;margin:0;max-width:34em;
+  color:var(--text-primary)}
+@media(min-width:760px){.brief-t{font-size:15.5px}}
+/* 重點句：整段的結論（下一步是升是降、解鎖條件），獨立一行加粗，
+   掃視的人只讀這一行也帶得走東西。 */
+.brief-key{font-size:15px;line-height:1.9;margin:10px 0 0;max-width:34em;
+  font-weight:700;color:var(--text-primary)}
+@media(min-width:760px){.brief-key{font-size:15.5px}}
+
+/* ---------- 「這一格是怎麼判出來的」 ----------
+   刻意做成算式而不是散文：讀者要能自己驗算，尤其是門檻——
+   那是整頁權重最大（跨過去整張部位表就換掉）、先前卻完全沒有交代的東西。 */
+.wx{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:13px 14px;margin-top:10px}
+.wx-h{font-size:13.5px;font-weight:700;margin-bottom:9px}
+.wx-r{display:grid;grid-template-columns:1fr auto auto;gap:4px 10px;
+  align-items:baseline;font-size:12.5px;color:var(--text-secondary);padding:3px 0}
+.wx-k{min-width:0}
+.wx-w{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.wx-v{font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.wx-sum{border-top:1px solid var(--border);margin-top:5px;padding-top:7px}
+.wx-thr{margin-top:9px;font-size:13.5px;font-weight:700;
+  font-variant-numeric:tabular-nums}
+.wx-src{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.7}
+/* 「為什麼兩頁講的不一樣」——這一段是整塊的重點，要跟算式區分開 */
+.wx-note{margin-top:10px;padding-top:9px;border-top:1px solid var(--border);
+  font-size:12.5px;color:var(--text-secondary);line-height:1.75}
+
 /* ---------- 頁內錨點導覽 ----------
    預設**完全不出現**（height:0）。
    卡區本來就收合，那八九條標題列自己就是目錄，而且每條都帶一句結論——
@@ -1103,25 +1141,31 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-12 13:42（台北）</div>
+  <div class="sub">最後更新 2026-08-12 16:19（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
 <div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#watch">接下來要盯什麼</a><a href="#changed">跟上期比，什麼變了</a></nav></div>
 <div class="verdict hawkish">
-  <div class="v-eyebrow">就業 2026-07　·　物價 2026-06　·　聲明 2026-07-29　·　利率 2026-08-10　·　目前情境</div>
+  <div class="v-eyebrow">目前情境</div>
   <div class="v-main">停滯性通膨：通膨優先</div>
   <div class="v-why">兩個使命指向相反，而委員會把通膨擺在前面。</div>
   <div class="v-count">
-    定位：就業弱　×　通膨高　·
-    政策傾向 利升息<br>適用的九宮格：通膨優先
+    就業弱　×　通膨高　·　利升息　·　九宮格：通膨優先
     
   </div>
-  <div class="cons"><div class="cons-row"><div class="cons-i"><span class="cons-k">就業</span><span class="cons-v dovish">利降息</span></div><div class="cons-i"><span class="cons-k">物價</span><span class="cons-v neutral">方向不明</span></div><div class="cons-i"><span class="cons-k">聯準會</span><span class="cons-v hawkish">利升息</span></div></div><div class="cons-note">政策方向：1 個偏利升息、1 個偏利降息，正好對半——這種時候不該只信其中一邊。</div><div class="cons-aside"><div class="cons-row"><div class="cons-i aside"><span class="cons-k">長端</span><span class="cons-v neutral">中性</span></div></div><div class="cons-note">長端供給壓力中性。不算進上面的票數：它回答的是曲線形狀，不是政策方向。</div></div></div>
-  
   <a class="v-cta" href="/scenario/#positioning">這個判斷怎麼來的、對應什麼部位
     <span>九宮格定位　·　三種重心下會變成什麼　·　固定收益部位對照</span></a>
+</div>
+
+
+<div class="grid">
+  <div class="card brief">
+    <div class="brief-k">整體情勢</div>
+    <p class="brief-t">聯準會把通膨擺在前面；三方裡一方偏升息、一方偏降息，方向分歧。失業率 4.1% 仍算充分就業，但三月均非農 +2.0 萬人低於損益兩平的 +10.2 萬，撐不住現有失業率。另一頭，核心 PCE 3.3%、三月年化 2.9% 已在放緩，仍高於聯準會對明年的預測；核心服務除住房連 12 個月高於目標。面對這個組合，7/29 會議維持不變、3 票主張升息，下次會議 35 天後。財政缺口 1.9% GDP 與 AI 資本支出佔營運現金流 91%，同推長端供給，長端大致跟著政策走。</p>
+    <p class="brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.88 個百分點）；升息風險未消。</p>
+  </div>
 </div>
 
 <div class="grid g4"><a class="modcard" href="/labor/">
@@ -1152,15 +1196,15 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="signals">本期關鍵訊號</h2><span class="sect-sum">來自就業與物價兩個模組的規則引擎，共 8 條：5 條利降息、2 條利升息、1 條中性。依嚴重度排序。</span></summary><div class="sect-body">
+  <details class="card sect" open><summary><h2 id="signals">本期關鍵訊號</h2><span class="sect-sum">8 項　·　前兩月大幅下修，實質動能弱於初值</span></summary><div class="sect-body">
     <p class="hint">來自就業與物價兩個模組的規則引擎，共 8 條：5 條利降息、2 條利升息、1 條中性。依嚴重度排序。</p>
     <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">近三月年化低於年增率 0.4 個百分點以上<span class="f-tag">物價</span></div><div class="impact dovish">利降息　通膨降溫的證據</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">住房落後項推升整體讀數<span class="f-tag">物價</span></div><div class="impact dovish">利降息　實際通膨比表面低</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">油價上行，未來一至兩月推升總體 CPI<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　總體 CPI 的短期逆風</div></div></div><div class="src">另有 2 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
   </div></details>
 </div>
 
 <div class="grid g2">
-  <details class="card sect"><summary><h2 id="watch">接下來要盯什麼</h2><span class="sect-sum">通膨轉「低」：還差 0.83 個百分點　·　最近一次發布 23 天後</span></summary><div class="sect-body">
-    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸才是目前的約束條件。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.83 個百分點</div><div class="wt-n">目前 綜合通膨水準 3.13%　·　需低於 2.30%</div></div>
+  <details class="card sect"><summary><h2 id="watch">接下來要盯什麼</h2><span class="sect-sum">通膨轉「低」：還差 0.88 個百分點　·　最近一次發布 23 天後</span></summary><div class="sect-body">
+    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸才是目前的約束條件。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.88 個百分點</div><div class="wt-n">目前 綜合通膨水準 3.13%　·　需低於 2.25%</div></div>
     <h3 style="margin-top:20px">下次更新</h3>
     <div class="cds"><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">23 天後</div><div class="cd-n">2026-09-04　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">30 天後</div><div class="cd-n">2026-09-11　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">35 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
   </div></details>
@@ -1175,15 +1219,8 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   </div></details>
 </div>
 
-<div class="card" style="margin-top:13px">
-  <div class="src" style="border-top:none;padding-top:0">
-    資料月份：2026-07（就業）　·　
-    2026-06（物價）　·　
-    2026-07-29（聲明）。每天自動重新產生。
-  </div>
-</div>
 
-<footer>資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。所有量化判定由固定規則產生，每次執行結果一致。<br>本站僅為數據整理，不構成投資建議。</footer>
+<footer>資料月份：<span class="nb">2026-07</span>（就業）　·　<span class="nb">2026-06</span>（物價）　·　<span class="nb">2026-07-29</span>（聲明）。每天自動重新產生。<br>資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。所有量化判定由固定規則產生，每次執行結果一致。<br>本站僅為數據整理，不構成投資建議。</footer>
 
 </div>
 <div id="tip"></div>

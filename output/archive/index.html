@@ -177,7 +177,10 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 /* 摘要句：收合時是「要不要點開」的唯一依據；展開後內容自己會講，藏起來。
    顏色提到 --text-secondary：它是這一列上唯一會變的東西，
    壓成 --muted 的話比旁邊的固定標籤還不顯眼。 */
-.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;color:var(--text-secondary);
+/* font-weight 一定要寫死：summary 是 600，不覆寫的話摘要會繼承成粗體，
+   一整列變成「粗體標題 ＋ 粗體摘要」，兩者又打平了。 */
+.sect-sum{grid-column:1;grid-row:2;font-size:12.5px;font-weight:400;
+  color:var(--text-secondary);
   line-height:1.6;padding-right:4px;
   /* 中文預設可以在**任意兩個字之間**斷行，於是收合清單上出現
      「利升⏎息」「長端承壓最⏎重」這種第二行只有一個字的斷法——
@@ -249,10 +252,6 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 .v-why{font-size:14.5px;color:var(--text-secondary);margin-top:12px;line-height:1.85}
 .v-count{font-size:12.5px;color:var(--muted);margin-top:15px;padding-top:13px;
   border-top:1px solid var(--border);line-height:1.75}
-/* 「這一格已維持 N 期」。低調——它是脈絡不是結論，
-   但它回答的是讀者看到「仍是」兩個字之後的第一個問題。 */
-.v-tenure{font-size:12.5px;color:var(--muted);margin-top:11px}
-
 /* 結論卡底部通往情境頁的出口。做成一整塊可點的區域而不是一行文字連結：
    它是首頁唯一通往「該怎麼擺部位」的路，而讀者剛看完同一段結論，
    一條灰色小字連結不足以說服他「後面還有沒看過的東西」。
@@ -710,6 +709,9 @@ details[open]>summary::after{content:" ▴"}
 details.plain{border-top:none;padding-top:0}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
+/* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
+   那看起來像兩個殘缺的數字。 */
+.nb{white-space:nowrap}
 
 #tip{position:fixed;pointer-events:none;background:var(--surface-2);
   border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;
@@ -1021,6 +1023,42 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .asof{display:inline-block;font-size:11px;color:var(--muted);
   border:1px solid var(--border);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:2px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- 首頁的整體總述 ----------
+   這是首頁上唯一要「讀」的東西（其餘都是掃的），所以字級比內文大、
+   行距放寬，並限制行長：桌機的卡片寬 1080px，13px 字會排到每行 80 個中文字，
+   是舒適上限的兩倍，眼睛換行時很容易回到同一行。 */
+.brief{background:var(--surface-1)}
+.brief-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.08em;margin-bottom:9px}
+.brief-t{font-size:15px;line-height:2;margin:0;max-width:34em;
+  color:var(--text-primary)}
+@media(min-width:760px){.brief-t{font-size:15.5px}}
+/* 重點句：整段的結論（下一步是升是降、解鎖條件），獨立一行加粗，
+   掃視的人只讀這一行也帶得走東西。 */
+.brief-key{font-size:15px;line-height:1.9;margin:10px 0 0;max-width:34em;
+  font-weight:700;color:var(--text-primary)}
+@media(min-width:760px){.brief-key{font-size:15.5px}}
+
+/* ---------- 「這一格是怎麼判出來的」 ----------
+   刻意做成算式而不是散文：讀者要能自己驗算，尤其是門檻——
+   那是整頁權重最大（跨過去整張部位表就換掉）、先前卻完全沒有交代的東西。 */
+.wx{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  padding:13px 14px;margin-top:10px}
+.wx-h{font-size:13.5px;font-weight:700;margin-bottom:9px}
+.wx-r{display:grid;grid-template-columns:1fr auto auto;gap:4px 10px;
+  align-items:baseline;font-size:12.5px;color:var(--text-secondary);padding:3px 0}
+.wx-k{min-width:0}
+.wx-w{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.wx-v{font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.wx-sum{border-top:1px solid var(--border);margin-top:5px;padding-top:7px}
+.wx-thr{margin-top:9px;font-size:13.5px;font-weight:700;
+  font-variant-numeric:tabular-nums}
+.wx-src{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.7}
+/* 「為什麼兩頁講的不一樣」——這一段是整塊的重點，要跟算式區分開 */
+.wx-note{margin-top:10px;padding-top:9px;border-top:1px solid var(--border);
+  font-size:12.5px;color:var(--text-secondary);line-height:1.75}
 
 /* ---------- 頁內錨點導覽 ----------
    預設**完全不出現**（height:0）。
