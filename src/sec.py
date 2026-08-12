@@ -376,22 +376,21 @@ class SecClient:
         糟得多，而「取最大值」正是錯得最有系統的那一種。
         """
         if not doc_url:
-            return {"amount": None, "preliminary": False}
+            return _EMPTY_COVER.copy()
         try:
             r = self.session.get(doc_url, timeout=TIMEOUT)
             r.raise_for_status()
             time.sleep(THROTTLE)
         except Exception as e:                     # noqa: BLE001
             self.failed.append(("SEC 說明書封面", str(e)))
-            return {"amount": None, "preliminary": False}
+            return _EMPTY_COVER.copy()
         # 只看前 40000 字元：封面在最前面，往後全是條款細節
         text = re.sub(r"<[^>]+>", " ", r.text[:40000])
         text = html_mod.unescape(text)
-        return {"amount": parse_offering_amount(text),
-                "preliminary": is_preliminary(text)}
+        return _read_cover(text)
 
     def offering_amount(self, doc_url: str) -> float | None:
-        """只要金額時的薄包裝。保留是為了不讓呼叫端都得改成讀 dict。"""
+        """只要美元金額時的薄包裝。保留是為了不讓呼叫端都得改成讀 dict。"""
         return self.cover_info(doc_url)["amount"]
 
 
@@ -600,19 +599,124 @@ _PRELIM_RE = re.compile(
     r"|not\s+complete\s+and\s+may\s+be\s+changed",
     re.I)
 
-# 分券格式：金額 ＋（票息／浮動）＋ Notes/Debentures/Bonds due YYYY。
-# 中間允許 80 字元的雜訊（"aggregate principal amount of"、"Senior"、
-# 空白與換行），但不允許再出現一個 $——不然會從貨架額度一路跨到分券那一行。
-_TRANCHE_RE = re.compile(
-    r"\$\s?([\d,]{11,})(?:(?!\$)[^\n]){0,80}?"
-    r"(?:Notes|Debentures|Bonds)\s+due\s+20\d\d",
+# ---------------------------------------------------------------------------
+# 證券類型分類
+#
+# ⚠️ 表格號**不能**當成證券類型。這是這一段最貴的一個教訓：
+# 424B2／424B5 只代表「這是一份定價後的公開說明書補充」，賣的東西可能是
+# 債券、普通股、特別股、存託股、結構型商品，或 ATM 增發計畫。
+# 先前的程式只要看到 424B2／424B5 就當成發債，於是把
+#   · Oracle 的 200 億美元 ATM 普通股增發
+#   · Alphabet 的 Class A／Class C 股票發行
+# 都算成了債券發行，還把金額加進合計。
+#
+# 現在改成讀文件內容。方向刻意保守：**只有拿到正面證據才算債券**，
+# 拿不準一律不算。漏掉一筆債的代價，遠小於把一筆股票增發印成發債。
+# ---------------------------------------------------------------------------
+
+# 這是債券的正面證據。少了這些就不算，不管表格號是什麼。
+_BOND_POS = re.compile(
+    r"aggregate\s+principal\s+amount"
+    r"|senior\s+notes"
+    r"|(?:notes|debentures|bonds)\s+due\s+20\d\d"
+    r"|floating\s+rate\s+notes"
+    r"|debt\s+securities",
     re.I)
 
-# 沒有分券格式時的備案：明講 aggregate principal amount 的那個數字。
-_AGG_RE = re.compile(r"\$\s?([\d,]{11,})\s+aggregate\s+principal\s+amount",
-                     re.I)
+# 這些是「賣的不是債券」的證據。只在封面標題區判斷——
+# 債券說明書的內文常常會順帶提到普通股（「本公司普通股於那斯達克掛牌」），
+# 全文比對會把真正的債券發行誤殺。
+_NOT_BOND = re.compile(
+    r"common\s+stock"
+    r"|class\s+[abc]\s+(?:common|capital)\s+stock"
+    r"|capital\s+stock"
+    r"|preferred\s+stock"
+    r"|depositary\s+shares"
+    r"|at[-\s]the[-\s]market"
+    r"|sales\s+agreement"
+    r"|tender\s+offer"
+    r"|exchange\s+offer"
+    r"|repurchase"
+    r"|revolving\s+credit"
+    r"|credit\s+agreement"
+    r"|(?:delayed\s+draw\s+)?term\s+loan"
+    r"|credit\s+facility",
+    re.I)
 
-AMOUNT_MIN, AMOUNT_MAX = 1e8, 2e11        # 1 億～2000 億美元
+# 封面標題區。說明書把「賣什麼」寫在最前面（金額、證券名稱、發行人），
+# 後面才是條款細節與風險因子。3000 字元大致涵蓋封面那一頁。
+TITLE_CHARS = 3000
+
+SEC_BOND, SEC_EQUITY, SEC_OTHER, SEC_UNKNOWN = "bond", "equity", "other", "unknown"
+
+
+def classify_security(cover_text: str) -> str:
+    """
+    這份說明書賣的是什麼。回傳 bond / equity / other / unknown。
+
+    判斷順序刻意是「先看標題區排除，再看全文找正面證據」：
+      ① 標題區出現股票／ATM／貸款額度這類字樣，而且**沒有**債券的正面
+         證據 → 不是債券。
+      ② 有債券正面證據（aggregate principal amount、Senior Notes、
+         Notes due 20xx）→ 債券。
+      ③ 其餘 → unknown，不計入發債。
+    """
+    text = cover_text or ""
+    if not text.strip():
+        return SEC_UNKNOWN
+    head = text[:TITLE_CHARS]
+    bond_head = bool(_BOND_POS.search(head))
+    not_bond_head = bool(_NOT_BOND.search(head))
+
+    if not_bond_head and not bond_head:
+        # 標題區明講賣的是股票／ATM／貸款——這種不必再看內文
+        m = _NOT_BOND.search(head)
+        kind = (m.group(0) or "").lower()
+        return SEC_OTHER if ("loan" in kind or "credit" in kind
+                             or "tender" in kind or "exchange" in kind
+                             or "repurchase" in kind) else SEC_EQUITY
+    if bond_head or _BOND_POS.search(text):
+        return SEC_BOND
+    return SEC_UNKNOWN
+
+
+# ---------------------------------------------------------------------------
+# 金額解析（多幣別）
+#
+# 兩個先前的錯誤：
+#   ① **同一組分券被加總兩次。** 封面的分券表在「Calculation of Filing Fee」
+#      與摘要段落各出現一次，程式把兩次都加進去 → Meta 的 250 億變成 500 億、
+#      Amazon 的 250 億變成 500 億、C$140 億變成 280 億。
+#      修法：依（幣別、金額、到期年、票息）去重，同一張券只算一次。
+#   ② **所有幣別都被當成美元。** 舊的樣式只認 `$`，而 "C$1,250,000,000"
+#      裡面就含有 `$1,250,000,000`——加拿大幣直接被讀成美元。
+#      修法：幣別記號一起抓，而且 C$／A$／US$ 必須排在 $ 前面比對。
+# ---------------------------------------------------------------------------
+_CCY_ALT = r"C\$|CA\$|A\$|AU\$|US\$|\$|€|£|¥|CHF|SEK|NOK"
+_CCY_MAP = {"C$": "CAD", "CA$": "CAD", "A$": "AUD", "AU$": "AUD",
+            "US$": "USD", "$": "USD", "€": "EUR", "£": "GBP", "¥": "JPY",
+            "CHF": "CHF", "SEK": "SEK", "NOK": "NOK"}
+_SCALE = {"billion": 1e9, "bn": 1e9, "million": 1e6, "mm": 1e6, "": 1.0}
+
+# 數字有兩種寫法：完整位數（1,250,000,000）與帶單位（1.25 billion）
+_NUM_ALT = r"(?:[\d][\d,]{6,}|[\d]+(?:\.\d+)?\s*(?:billion|million|bn|mm))"
+
+_TRANCHE_RE = re.compile(
+    rf"({_CCY_ALT})\s?({_NUM_ALT})"
+    rf"((?:(?!{_CCY_ALT})[^\n]){{0,90}}?)"
+    r"(?:Notes|Debentures|Bonds)\s+due\s+(20\d\d)",
+    re.I)
+
+# 沒有分券表時的備案：明講 aggregate principal amount 的那一個數字。
+_AGG_RE = re.compile(
+    rf"({_CCY_ALT})\s?({_NUM_ALT})\s+aggregate\s+principal\s+amount", re.I)
+
+_COUPON_RE = re.compile(r"(\d+\.\d+)\s*%|floating", re.I)
+
+# 原幣的合理區間。下緣擋掉頁碼、CUSIP 這類雜訊；上緣要放得夠寬，
+# 因為日圓的面額本來就大（¥576,500,000,000 是合理的一筆）。
+# 換算成美元之後還有一道 sanity 檢查（見 build._offerings_block）。
+NATIVE_MIN, NATIVE_MAX = 1e7, 1e13
 
 
 def is_preliminary(cover_text: str) -> bool:
@@ -620,81 +724,151 @@ def is_preliminary(cover_text: str) -> bool:
     return bool(_PRELIM_RE.search(cover_text or ""))
 
 
-def _amounts(pattern, text) -> list[float]:
-    out = []
-    for m in pattern.finditer(text):
-        try:
-            v = float(m.group(1).replace(",", ""))
-        except ValueError:
+def _to_number(raw: str) -> float | None:
+    s = (raw or "").replace(",", "").strip().lower()
+    scale = 1.0
+    for word, mult in _SCALE.items():
+        if word and s.endswith(word):
+            s, scale = s[:-len(word)].strip(), mult
+            break
+    try:
+        return float(s) * scale
+    except ValueError:
+        return None
+
+
+def parse_tranches(cover_text: str) -> list[dict]:
+    """
+    解析封面的分券表，回傳 [{currency, amount, maturity, coupon}]，**已去重**。
+
+    去重的鍵是（幣別、金額、到期年、票息）。同一張券在文件裡出現幾次都只
+    算一次——這正是先前把 250 億讀成 500 億的原因。兩張真正不同的券不可能
+    幣別、金額、到期年、票息全部相同，所以這個鍵不會誤併。
+    """
+    text = cover_text or ""
+    out: list[dict] = []
+    seen: set[tuple] = set()
+
+    for m in _TRANCHE_RE.finditer(text):
+        sym, num, middle, maturity = m.group(1), m.group(2), m.group(3), m.group(4)
+        val = _to_number(num)
+        if val is None or not (NATIVE_MIN <= val <= NATIVE_MAX):
             continue
-        if AMOUNT_MIN <= v <= AMOUNT_MAX:
-            out.append(v)
+        ccy = _CCY_MAP.get(sym.upper().replace("CA$", "C$"), _CCY_MAP.get(sym, ""))
+        if not ccy:
+            continue
+        cm = _COUPON_RE.search(middle or "")
+        coupon = (cm.group(0).lower().strip() if cm else "")
+        key = (ccy, round(val, 2), maturity, coupon)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"currency": ccy, "amount": val,
+                    "maturity": maturity, "coupon": coupon})
+
+    if out:
+        return out
+
+    # 備案：aggregate principal amount。同樣去重，並取每個幣別的最大值——
+    # 這種寫法通常只出現一次總額，重複出現是同一個數字被引用兩次。
+    best: dict[str, float] = {}
+    for m in _AGG_RE.finditer(text):
+        val = _to_number(m.group(2))
+        ccy = _CCY_MAP.get(m.group(1).upper().replace("CA$", "C$"),
+                           _CCY_MAP.get(m.group(1), ""))
+        if val is None or not ccy or not (NATIVE_MIN <= val <= NATIVE_MAX):
+            continue
+        best[ccy] = max(best.get(ccy, 0.0), val)
+    return [{"currency": c, "amount": v, "maturity": "", "coupon": ""}
+            for c, v in best.items()]
+
+
+def totals_by_currency(tranches: list[dict]) -> dict[str, float]:
+    out: dict[str, float] = {}
+    for t in tranches:
+        out[t["currency"]] = out.get(t["currency"], 0.0) + t["amount"]
     return out
 
 
 def parse_offering_amount(cover_text: str) -> float | None:
     """
-    從封面文字解析這一筆的發行總額（十億美元）。
+    只要「美元金額（十億）」時的薄包裝，保留給既有呼叫端。
 
-    先找分券格式並**加總**；一筆多年期或多幣別的交易，封面會逐券列出，
-    加起來才是這一筆的規模。找不到分券才退回 aggregate principal amount
-    那一種寫法，並取最大的一個。
-
-    兩種都找不到就回 None。**刻意不退回「封面最大的數字」**——
-    那個備案會抓到貨架註冊額度，而且錯得很有系統（同一個額度每次都被讀成
-    一筆新的交易），比沒有數字糟得多。
-
-    分券與 aggregate 不相加：封面常常兩者都寫（先講總額再逐券列），
-    相加會直接翻倍。
+    非美元的交易會回 None——不是解析失敗，是**這一筆本來就不是美元計價**。
+    要正確處理請改用 parse_tranches()，它保留原始幣別。
     """
-    text = cover_text or ""
-    tranches = _amounts(_TRANCHE_RE, text)
-    if tranches:
-        return sum(tranches) / 1e9
-    agg = _amounts(_AGG_RE, text)
-    if agg:
-        return max(agg) / 1e9
-    return None
+    tot = totals_by_currency(parse_tranches(cover_text))
+    return tot["USD"] / 1e9 if "USD" in tot else None
+
+
+# 讀不到封面時的預設值。security 是 unknown 而不是 bond——
+# 拿不到內容就不能宣稱它是債券，這是整段分類的預設立場。
+_EMPTY_COVER = {"amount": None, "preliminary": False,
+                "security": SEC_UNKNOWN, "tranches": [], "totals": {}}
+
+
+def _read_cover(text: str) -> dict:
+    """把封面純文字變成 {amount, preliminary, security, tranches, totals}。"""
+    tranches = parse_tranches(text)
+    totals = totals_by_currency(tranches)
+    return {
+        "amount": (totals["USD"] / 1e9 if "USD" in totals else None),
+        "preliminary": is_preliminary(text),
+        "security": classify_security(text),
+        "tranches": tranches,
+        "totals": totals,
+    }
+
+
+def _dominant(totals: dict) -> tuple[str, float | None]:
+    """一份文件的主要幣別與該幣別的合計。沒有金額時回 ("", None)。"""
+    if not totals:
+        return "", None
+    ccy = max(totals, key=lambda c: totals[c])
+    return ccy, totals[ccy]
 
 
 def dedupe_deals(rows: list[dict]) -> list[dict]:
     """
     把「申報」收斂成「交易」。
 
-    為什麼要做
-    ----------
-    同一筆債會產生**三到四份**申報：預估版 424B（宣布日）、定價版 424B
-    （定價日）、8-K 2.03（四個營業日內），多幣別的話再加一份。
-    全部列出來的話，同一筆債會被算三次，而金額合計正是這一段唯一有
-    交易意涵的數字——實際跑出來灌到季報申報值的四倍。
+    這裡要回答的是一個比表面複雜的問題：**幾筆真正獨立、已定價的債券發行。**
+    不是幾份 SEC 申報，也不是幾份 424B。
 
     規則
     ----
-    1. **預估版不算一筆交易。** 它是同一筆的前身，通常兩三天內就會有
-       定價版。仍然保留在明細裡並標示，因為「有一筆正在路上」對供給面
-       本身就是資訊。
-    2. 同一家公司、日期相差 DEDUP_DAYS 天以內的定價版 424B **視為同一筆
-       交易**——不再要求金額相同。先前要求同金額，結果預估版（金額 None
-       或貨架額度）跟定價版（真實金額）配不起來，兩份都被留下。
-    3. 一筆交易的金額 ＝ 群組內**相異**金額的總和。相異是必要的：
-       多幣別 tranche 分開申報要相加，但同一個數字重複出現
-       （重新申報、預估與定價金額相同）不能算兩次。
-    4. 8-K 2.03 只在**配不到任何 424B** 時才成為獨立的一筆。
-       配不到的通常是銀行貸款、定期貸款或私募——那些本來就不發 424B。
+    1. **只有 security == bond 才可能成為一筆發債。** 表格號不算數：
+       424B5 可能是普通股、ATM 增發、特別股或存託股。股票與 ATM 完全不進
+       筆數與金額（但仍保留一行，讓讀者知道有這件事、可以點連結）。
+    2. **預估版不算一筆交易。** 有對應定價版就整個不列；沒有定價版就列出來
+       標「尚未定價」，但不計入筆數與金額——「有一筆正在路上」本身是資訊。
+    3. **同公司、同幣別、DEDUP_DAYS 天內 → 同一筆交易。**
+       幣別必須進分組鍵：Alphabet 在同一週發過 €90 億與 C$85 億，
+       那是兩筆不同的交易，合併成一個美元數字會讓兩筆都失真。
+    4. 一筆交易的金額 ＝ 群組內**相異分券**的總和。相異的鍵是
+       （幣別、金額、到期年、票息）——同一張券在不同申報、或同一份文件的
+       不同段落重複出現，都只算一次。這正是先前 250 億被讀成 500 億的原因。
+    5. **8-K 2.03 不算發債。** 它是「產生直接財務義務」，涵蓋銀行貸款、
+       定期貸款、循環額度——Amazon 的 175 億美元 delayed draw term loan
+       就是走這一項。這些是融資事件，不是公開債券發行，另外列、不進合計。
+       配得到同期債券交易的則直接不列（同一件事的第二份申報）。
     """
     offerings = [r for r in rows if r.get("kind") == "offering"]
     events = [r for r in rows if r.get("kind") != "offering"]
 
-    # ---- ① 預估版：不成為交易，但留在明細 ----
-    prelim = [r for r in offerings if r.get("preliminary")]
-    priced = [r for r in offerings if not r.get("preliminary")]
+    bonds = [r for r in offerings if r.get("security") == SEC_BOND]
+    nonbond = [r for r in offerings if r.get("security") != SEC_BOND]
 
-    # ---- ② 定價版：同公司、時間相近 → 併成一筆交易 ----
+    prelim = [r for r in bonds if r.get("preliminary")]
+    priced = [r for r in bonds if not r.get("preliminary")]
+
+    # ---- ① 定價版：同公司＋同幣別＋時間相近 → 併成一筆 ----
     priced.sort(key=lambda r: r["date"])          # 由舊到新
     groups: list[list[dict]] = []
     for r in priced:
+        rc = r.get("currency") or ""
         for g in groups:
-            if g[0]["name"] != r["name"]:
+            if g[0]["name"] != r["name"] or (g[0].get("currency") or "") != rc:
                 continue
             gap = _days_apart(g[-1]["date"], r["date"])
             if gap is not None and gap <= DEDUP_DAYS:
@@ -708,31 +882,49 @@ def dedupe_deals(rows: list[dict]) -> list[dict]:
         # 代表這一筆的是**最後一份**申報：定價版比宣布版晚，
         # 而最後一份的日期才是交易真正完成的日子。
         lead = dict(g[-1])
-        amts = []
+        seen: set[tuple] = set()
+        merged_tranches = []
         for r in g:
-            a = r.get("amount")
-            if a is not None and a not in amts:
-                amts.append(a)
-        lead["amount"] = sum(amts) if amts else None
-        lead["merged"] = len(g)
+            for tr in (r.get("tranches") or []):
+                key = (tr["currency"], round(tr["amount"], 2),
+                       tr.get("maturity", ""), tr.get("coupon", ""))
+                if key in seen:
+                    continue
+                seen.add(key)
+                merged_tranches.append(tr)
+        totals = totals_by_currency(merged_tranches)
+        ccy, principal = _dominant(totals)
+        lead.update({"tranches": merged_tranches, "totals": totals,
+                     "currency": ccy or lead.get("currency", ""),
+                     "principal": principal,
+                     "amount": (totals["USD"] / 1e9 if "USD" in totals else None),
+                     "merged": len(g), "counts": True})
         kept.append(lead)
 
-    # ---- ③ 8-K 2.03：配不到 424B 才留 ----
+    # ---- ② 8-K 2.03：配得到同期債券交易就不列（同一件事的第二份申報）----
     for e in events:
         if any(k["name"] == e["name"]
                and (_days_apart(k["date"], e["date"]) or 999) <= DEDUP_DAYS
                for k in kept):
-            continue                                  # 同一筆交易，已由 424B 代表
-        kept.append(e)
+            continue
+        kept.append({**e, "security": e.get("security") or SEC_OTHER,
+                     "amount": None, "principal": None,
+                     "counts": False, "merged": 1})
 
-    # ---- ④ 預估版接回明細，但標記成不計數 ----
+    # ---- ③ 預估版：沒有對應定價版才列，且不計數 ----
     for r in prelim:
-        # 已經有對應的定價版就不必再列——那只是同一筆的前身
-        if any(k["name"] == r["name"]
+        if any(k["name"] == r["name"] and k.get("counts")
                and (_days_apart(k["date"], r["date"]) or 999) <= DEDUP_DAYS
                for k in kept):
             continue
-        kept.append({**r, "amount": None})
+        kept.append({**r, "amount": None, "principal": None,
+                     "counts": False, "merged": 1})
+
+    # ---- ④ 非債券（股票、ATM、特別股）：列出來但完全不計數 ----
+    # 金額也一併拿掉：一個「不算數但看起來像發債」的數字最容易被誤讀。
+    for r in nonbond:
+        kept.append({**r, "amount": None, "principal": None,
+                     "counts": False, "merged": 1})
 
     kept.sort(key=lambda r: r["date"], reverse=True)
     return kept
@@ -759,24 +951,36 @@ def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
         if not cik:
             continue
         for f in client.debt_filings(int(cik)):
-            amt, prelim = None, False
-            # 只對「發行文件本身」讀封面。8-K 是事件通知，
-            # 沒有標準化的金額欄位，硬解會抓到不相干的數字。
+            row = {**f, "name": name, "ticker": c.get("ticker", ""),
+                   "amount": None, "preliminary": False,
+                   "security": SEC_OTHER if f["kind"] != "offering" else SEC_UNKNOWN,
+                   "tranches": [], "totals": {},
+                   "currency": "", "principal": None}
+            # 424B 一律要讀封面——**分類靠的是內容，不是表格號**。
+            # 8-K 是事件通知，沒有標準化的金額欄位，硬解會抓到不相干的數字，
+            # 而且它本來就不計入發債（見 dedupe_deals 的規則 5）。
             if parse_amount and f["kind"] == "offering":
                 info = client.cover_info(f["doc_url"])
-                amt, prelim = info["amount"], info["preliminary"]
-            out.append({**f, "name": name, "ticker": c.get("ticker", ""),
-                        "amount": amt, "preliminary": prelim})
+                ccy, principal = _dominant(info["totals"])
+                row.update({"amount": info["amount"],
+                            "preliminary": info["preliminary"],
+                            "security": info["security"],
+                            "tranches": info["tranches"],
+                            "totals": info["totals"],
+                            "currency": ccy, "principal": principal})
+            out.append(row)
+
     raw_n = len(out)
     n_prelim = sum(1 for x in out if x.get("preliminary"))
+    n_nonbond = sum(1 for x in out
+                    if x["kind"] == "offering" and x["security"] != SEC_BOND)
     out = dedupe_deals(out)
-    n_deals = sum(1 for x in out if not x.get("preliminary"))
+    deals = [x for x in out if x.get("counts")]
     if out or raw_n:
-        log.info("SEC 發債：近 %d 天 %d 份申報（其中 %d 份是預估版）"
-                 " → %d 筆交易（%d 筆有金額）",
-                 RECENT_DAYS, raw_n, n_prelim, n_deals,
-                 sum(1 for x in out
-                     if x["amount"] is not None and not x.get("preliminary")))
+        log.info("SEC 發債：近 %d 天 %d 份申報（%d 份預估版、%d 份不是債券）"
+                 " → %d 筆已定價的債券交易（%d 筆有金額）",
+                 RECENT_DAYS, raw_n, n_prelim, n_nonbond, len(deals),
+                 sum(1 for x in deals if x.get("principal") is not None))
     return out
 
 

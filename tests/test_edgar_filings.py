@@ -180,14 +180,27 @@ ok &= hit
 # （定價日）、8-K 2.03（四個營業日內），多幣別再加一份。不去重的話
 # 同一筆債會被算三次，而金額合計正是這一段唯一有交易意涵的數字。
 # ---------------------------------------------------------------------------
-def off(name, day, amt, form="424B2", prelim=False):
+def off(name, day, amt, form="424B2", prelim=False, ccy="USD"):
+    """
+    一份債券說明書。金額用**分券**表示，因為去重的鍵是分券而不是總額——
+    同一張券在不同申報裡重複出現只能算一次，不同的券要相加。
+    到期年固定：這樣「同金額」會撞成同一個鍵（該去重），
+    「不同金額」是不同鍵（該相加）。
+    """
+    tr = ([] if amt is None else
+          [{"currency": ccy, "amount": amt * 1e9,
+            "maturity": "2035", "coupon": ""}])
     return {"name": name, "date": d(day), "form": form,
-            "kind": "offering", "amount": amt, "preliminary": prelim}
+            "kind": "offering", "amount": amt, "preliminary": prelim,
+            "security": "bond", "currency": ccy if amt else "",
+            "tranches": tr,
+            "totals": ({ccy: amt * 1e9} if amt else {})}
 
 
 def evt(name, day):
     return {"name": name, "date": d(day), "form": "8-K",
-            "kind": "event", "amount": None, "items": "2.03"}
+            "kind": "event", "amount": None, "items": "2.03",
+            "security": "other", "tranches": [], "totals": {}}
 
 
 dd_cases = [
@@ -276,22 +289,49 @@ ok &= n == 2
 from src.fixtures_rates import offerings as fx_offerings   # noqa: E402
 
 fx = fx_offerings()
-deals = [r for r in fx if not r.get("preliminary")]
-prelim = [r for r in fx if r.get("preliminary")]
+deals = [r for r in fx if r.get("counts")]
 names = sorted(r["name"] for r in deals)
-hit = names == ["Alphabet", "Amazon", "Meta", "Oracle"]
-print("㉜ 離線素材收斂成 4 筆  :", "通過" if hit else f"失敗（{names}）")
+hit = names == ["Alphabet", "Alphabet", "Alphabet", "Amazon", "Meta"]
+print("㉜ 離線素材收斂成 5 筆  :", "通過" if hit else f"失敗（{names}）")
 ok &= hit
-hit = len(prelim) == 1 and prelim[0]["name"] == "Microsoft"
-print("㉝ 孤兒預估版留在明細   :",
-      "通過" if hit else f"失敗（{[r['name'] for r in prelim]}）")
-ok &= hit
-tot = sum(r["amount"] for r in deals if r["amount"] is not None)
-hit = abs(tot - 43.0) < 1e-9      # 12.5 ＋ 12.5（9.0+3.5）＋ 18.0
-print("㉞ 合計金額不重複計算   :",
-      "通過（430 億）" if hit else f"失敗（{tot}）")
+print("   （Alphabet 三筆＝美元／歐元／加幣，同一週但不同幣別是不同交易）")
+
+# 幣別必須進分組鍵，否則同一週的歐元與加幣會被併成一筆
+ccys = sorted(r["currency"] for r in deals if r["name"] == "Alphabet")
+hit = ccys == ["CAD", "EUR", "USD"]
+print("㉜b 同期不同幣別分開算  :", "通過" if hit else f"失敗（{ccys}）")
 ok &= hit
 
+# 三份申報（預估版＋定價版＋8-K）要收斂成一筆，而且金額不能翻倍
+# 預估版被定價版吸收：整份清單裡 Alphabet 的美元交易只能出現一次，
+# 金額是 250 億而不是 500 億（分券表在文件裡出現兩次也只算一次）。
+usd = [r for r in fx if r["name"] == "Alphabet" and r.get("currency") == "USD"]
+hit = len(usd) == 1 and abs(usd[0]["principal"] - 25e9) < 1
+_amts = [f"{(x.get('principal') or 0):,.0f}" for x in usd]
+print("㉝ 預估版被吸收、金額不翻倍:",
+      "通過（一筆 250 億美元）" if hit else f"失敗（{len(usd)} 列，{_amts}）")
+ok &= hit
+
+# 表格號一樣、內容不一樣：ATM 普通股與銀行貸款都不能算發債
+excluded = {(r["name"], r["security"]) for r in fx if not r.get("counts")}
+hit = ("Oracle", "equity") in excluded and ("Amazon", "other") in excluded
+print("㉞ ATM 增發與貸款額度被排除:",
+      "通過" if hit else f"失敗（{sorted(excluded)}）")
+ok &= hit
+print("   （Oracle 的 424B5 賣的是普通股、Amazon 的 8-K 2.03 是定期貸款額度）")
+
+# 孤兒預估版仍然列出，但不計數
+orphan = [r for r in fx if r.get("preliminary") and not r.get("counts")]
+hit = len(orphan) == 1 and orphan[0]["name"] == "Microsoft"
+print("㉞b 孤兒預估版列出但不計數:",
+      "通過" if hit else f"失敗（{[r['name'] for r in orphan]}）")
+ok &= hit
+
+# 不計數的列一律不帶金額——「不算數但看起來像發債」最容易被誤讀
+hit = all(r.get("principal") is None and r.get("amount") is None
+          for r in fx if not r.get("counts"))
+print("㉞c 不計數的列不帶金額   :", "通過" if hit else "失敗")
+ok &= hit
 
 # ---------------------------------------------------------------------------
 # 財報新聞稿（8-K 項目 2.02）—— 實績的時效補丁

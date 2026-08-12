@@ -78,6 +78,12 @@ def main() -> int:
     c = cfg("rates.yaml")
     ids, labels, inv = R.series_ids(c, R.RATES_GROUPS)
     s_rt = Tracked(fixtures_rates.build())
+    # 匯率序列只在「有非美元發債要換算」時才會被讀到，而 config 的
+    # hyperscalers 本身不帶 offerings——不先塞進去的話，那幾條匯率序列
+    # 會被誤報成「抓了沒人讀」。這跟先前 DFEDTARL／DFEDTARU 是同一類的
+    # 假警報：稽核工具沒走到那條路徑，不代表程式沒讀。
+    _hs = c.setdefault("hyperscalers", {})
+    _hs.setdefault("offerings", fixtures_rates.offerings())
     build.build_rates_context(c, s_rt, [], True)
     groups.append(("長端", set(ids), s_rt.read))
 

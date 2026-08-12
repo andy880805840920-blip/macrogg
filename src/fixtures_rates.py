@@ -82,6 +82,15 @@ def build() -> dict[str, list[dict]]:
     # ---- 期限溢酬：由負轉正，這是長端上行的主因 ----
     s["THREEFYTP10"] = _walk(d, 0.78, 0.0022, 0.014)
 
+    # ---- 匯率 ----
+    # 只用來把海外發債的原幣金額換算成美元等值。方向刻意跟 FRED 一致
+    #（DEXUSEU 是「一歐元換多少美元」、DEXJPUS 是「一美元換多少日圓」），
+    # 離線與正式執行走同一段換算程式，方向寫反在這裡就會被看出來。
+    s["DEXUSEU"] = _walk(d, 1.0850, 0.00002, 0.004)     # 美元／歐元
+    s["DEXUSUK"] = _walk(d, 1.2720, 0.00002, 0.005)     # 美元／英鎊
+    s["DEXCAUS"] = _walk(d, 1.3720, -0.00002, 0.004)    # 加幣／美元
+    s["DEXJPUS"] = _walk(d, 152.40, 0.0040, 0.500)      # 日圓／美元
+
     # ---- 信用利差 ----
     s["BAMLC0A0CM"] = _walk(d, 1.12, -0.0004, 0.011)
     s["BAMLC0A4CBBB"] = _walk(d, 1.38, -0.0005, 0.013)
@@ -175,20 +184,26 @@ def build() -> dict[str, list[dict]]:
 def offerings() -> list[dict]:
     """
     離線模式的發債素材，形狀與 sec.fetch_recent_offerings 的**輸入**一致
-    （也就是尚未去重的原始申報），最後一樣走 dedupe_deals。
+    （尚未去重的原始申報），最後一樣走 dedupe_deals。
 
-    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意鋪五種情況，
-    讓畫面與去重邏輯的每一條路徑都會被走到：
-      ① Alphabet — 先一份預估版 424B2（封面沒有定價、金額 None），三天後
-                   定價版 424B2 有金額，再四天後同一筆的 8-K 2.03。
-                   三份申報要收斂成**一筆**交易。
-      ② Oracle   — 424B5 有金額，沒有對應的 8-K（單純的公開發行）
-      ③ Meta     — 只有 8-K 2.03、配不到任何 424B（銀行貸款那一類，要獨立列）
-                   而且金額解析不到，走「金額待確認」那條路徑
-      ④ Microsoft— 昨天才申報的預估版，還沒有定價版 → 走「尚未定價」那條
-                   路徑：列在明細裡但不計入筆數與合計
-      ⑤ Amazon   — 同一筆的兩個幣別分開申報（相隔一天、金額不同），
-                   要併成一筆並把兩個金額相加
+    這裡刻意鋪的是**真實世界踩過的每一種坑**，讓分類、去重與多幣別的
+    每一條路徑都會被走到：
+
+      ① Alphabet 美元 — 預估版 424B2 → 三天後定價版 → 再四天後 8-K 2.03。
+                       三份申報要收斂成**一筆** 250 億美元。
+                       而且分券表在文件裡出現兩次（封面＋費用表），
+                       去重之後仍然是 250 億，不是 500 億。
+      ② Alphabet 歐元 — €90 億，與 ③ 同一週但**不同幣別** → 兩筆不同交易
+      ③ Alphabet 加幣 — C$85 億
+      ④ Amazon 加幣   — C$140 億，五檔分券
+      ⑤ Amazon 貸款   — 8-K 2.03 的 US$175 億 delayed draw term loan。
+                       這**不是**公開債券發行：另外列，不進筆數與金額。
+      ⑥ Oracle ATM    — 424B5 賣的是最高 200 億美元的普通股 ATM 增發。
+                       表格號跟債券一模一樣，靠內容才分得出來 → 完全排除。
+      ⑦ Microsoft     — 昨天申報的預估版，還沒有定價版 → 列出但不計數
+      ⑧ Meta 美元     — 250 億美元，分券表同樣重複出現
+
+    預期結果：**5 筆**已定價的債券交易（①②③④⑧）。
     """
     import datetime as dt
     from .sec import dedupe_deals
@@ -197,66 +212,66 @@ def offerings() -> list[dict]:
     def d(days_ago: int) -> str:
         return (today - dt.timedelta(days=days_ago)).isoformat()
 
+    def tr(ccy, *pairs):
+        return [{"currency": ccy, "amount": a, "maturity": m, "coupon": ""}
+                for a, m in pairs]
+
+    def deal(name, ticker, cik, day, form, ccy, tranches, *,
+             prelim=False, security="bond", doc="d424b.htm"):
+        totals = {}
+        for x in tranches:
+            totals[x["currency"]] = totals.get(x["currency"], 0.0) + x["amount"]
+        return {"name": name, "ticker": ticker, "form": form, "date": d(day),
+                "items": "", "kind": "offering", "preliminary": prelim,
+                "security": security, "tranches": tranches, "totals": totals,
+                "currency": (max(totals, key=lambda c: totals[c])
+                             if totals else ""),
+                "principal": (max(totals.values()) if totals else None),
+                "amount": (totals["USD"] / 1e9 if "USD" in totals else None),
+                "accession": f"0001652044-26-{day:06d}",
+                "doc_url": ("https://www.sec.gov/Archives/edgar/data/"
+                            f"{cik}/000165204426{day:06d}/{doc}"),
+                "desc": form}
+
+    GOOG = tr("USD", (3e9, "2031"), (2e9, "2033"), (6e9, "2036"),
+              (4e9, "2046"), (6e9, "2056"), (4e9, "2066"))      # 250 億
+    META = tr("USD", (5e9, "2032"), (7e9, "2036"), (8e9, "2046"), (5e9, "2056"))
+    AMZN = tr("CAD", (1.25e9, "2028"), (2.5e9, "2030"), (2.0e9, "2032"),
+              (3.5e9, "2035"), (4.75e9, "2055"))                 # C$140 億
+
     raw = [
-        # 預估版：封面寫 Subject to Completion，定價欄是空的 → 沒有金額。
-        # 三天後的定價版會把它吃掉，畫面上不該看到這一份。
-        {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
-         "date": d(9), "items": "", "kind": "offering", "amount": None,
-         "preliminary": True,
-         "accession": "0001652044-26-000088",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
-                    "000165204426000088/d424b2-prelim.htm",
-         "desc": "424B2"},
-        {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
-         "date": d(6), "items": "", "kind": "offering", "amount": 12.5,
-         "preliminary": False,
-         "accession": "0001652044-26-000090",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
-                    "000165204426000090/d424b2.htm",
-         "desc": "424B2"},
-        # 同一筆交易的 8-K：定價後四天申報，去重之後不該再出現
-        {"name": "Alphabet", "ticker": "GOOGL", "form": "8-K",
-         "date": d(2), "items": "2.03", "kind": "event", "amount": None,
+        # ① 同一筆的三份申報。預估版的封面定價欄是空的 → 沒有分券。
+        deal("Alphabet", "GOOGL", 1652044, 9, "424B2", "USD", [],
+             prelim=True, doc="d424b2-prelim.htm"),
+        deal("Alphabet", "GOOGL", 1652044, 6, "424B2", "USD", GOOG),
+        {"name": "Alphabet", "ticker": "GOOGL", "form": "8-K", "date": d(2),
+         "items": "2.03,9.01", "kind": "event", "security": "other",
+         "tranches": [], "totals": {}, "amount": None, "preliminary": False,
          "accession": "0001652044-26-000093",
          "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
-                    "000165204426000093/goog-8k.htm",
-         "desc": "8-K"},
-        {"name": "Meta", "ticker": "META", "form": "8-K",
-         "date": d(19), "items": "2.03,9.01", "kind": "event", "amount": None,
-         "accession": "0001326801-26-000058",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/1326801/"
-                    "000132680126000058/meta-8k.htm",
-         "desc": "8-K"},
-        {"name": "Oracle", "ticker": "ORCL", "form": "424B5",
-         "date": d(41), "items": "", "kind": "offering", "amount": 18.0,
-         "preliminary": False,
-         "accession": "0001341439-26-000031",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/1341439/"
-                    "000134143926000031/d424b5.htm",
-         "desc": "424B5"},
-        # 昨天申報、還沒定價 → 明細列「尚未定價」，不計入筆數與合計
-        {"name": "Microsoft", "ticker": "MSFT", "form": "424B5",
-         "date": d(1), "items": "", "kind": "offering", "amount": None,
-         "preliminary": True,
-         "accession": "0000789019-26-000042",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/789019/"
-                    "000078901926000042/d424b5-prelim.htm",
-         "desc": "424B5"},
-        # 同一筆交易的美元券與歐元券分兩份申報 → 併成一筆、金額相加
-        {"name": "Amazon", "ticker": "AMZN", "form": "424B2",
-         "date": d(33), "items": "", "kind": "offering", "amount": 9.0,
-         "preliminary": False,
-         "accession": "0001018724-26-000071",
+                    "000165204426000093/goog-8k.htm", "desc": "8-K"},
+        # ②③ 同一週、不同幣別 → 兩筆
+        deal("Alphabet", "GOOGL", 1652044, 5, "424B5", "EUR",
+             tr("EUR", (4e9, "2033"), (5e9, "2041"))),
+        deal("Alphabet", "GOOGL", 1652044, 4, "424B5", "CAD",
+             tr("CAD", (3.5e9, "2030"), (5e9, "2045"))),
+        # ④ 加幣五檔
+        deal("Amazon", "AMZN", 1018724, 33, "424B2", "CAD", AMZN),
+        # ⑤ 銀行貸款額度：8-K 2.03，配不到債券交易 → 另外列、不計數
+        {"name": "Amazon", "ticker": "AMZN", "form": "8-K", "date": d(63),
+         "items": "2.03,9.01", "kind": "event", "security": "other",
+         "tranches": [], "totals": {}, "amount": None, "preliminary": False,
+         "accession": "0001018724-26-000080",
          "doc_url": "https://www.sec.gov/Archives/edgar/data/1018724/"
-                    "000101872426000071/d424b2-usd.htm",
-         "desc": "424B2"},
-        {"name": "Amazon", "ticker": "AMZN", "form": "424B2",
-         "date": d(32), "items": "", "kind": "offering", "amount": 3.5,
-         "preliminary": False,
-         "accession": "0001018724-26-000072",
-         "doc_url": "https://www.sec.gov/Archives/edgar/data/1018724/"
-                    "000101872426000072/d424b2-eur.htm",
-         "desc": "424B2"},
+                    "000101872426000080/amzn-8k.htm", "desc": "8-K"},
+        # ⑥ ATM 普通股增發：表格號跟債券一樣，靠內容排除
+        deal("Oracle", "ORCL", 1341439, 41, "424B5", "", [],
+             security="equity", doc="d424b5-atm.htm"),
+        # ⑦ 孤兒預估版
+        deal("Microsoft", "MSFT", 789019, 1, "424B5", "USD", [],
+             prelim=True, doc="d424b5-prelim.htm"),
+        # ⑧ Meta 美元
+        deal("Meta", "META", 1326801, 19, "424B2", "USD", META),
     ]
     return dedupe_deals(raw)
 

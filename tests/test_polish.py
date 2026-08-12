@@ -441,11 +441,46 @@ check("73 提示詞帶的是算出來的範圍",
 check("74 gemini-2.x 用 thinkingBudget",
       polish._thinking("gemini-2.5-flash") == {"thinkingConfig":
                                                {"thinkingBudget": 0}})
-check("75 gemini-3.x 用 thinkingLevel",
-      polish._thinking("gemini-3.6-flash") == {"thinkingLevel": "minimal"})
+# 3.x 不能送 thinkingLevel：v1beta 回 400 Unknown name。送了只是每次
+# 白花一個來回，關不掉的部分改用 MAX_OUT 給足額度來防空字串。
+check("75 gemini-3.x 不送推理欄位（v1beta 不認得）",
+      polish._thinking("gemini-3.6-flash") == {})
 check("76 認不出版本就不送（靠額度撐）",
       polish._thinking("gemini-flash-latest") == {})
 check("77 輸出額度夠大，不會被推理吃光", polish.MAX_OUT >= 2000)
+
+
+# ---------------------------------------------------------------------------
+# ⑧ 逐字的字元編號：被字數要求逼出來的「數出聲音」
+#
+# 實際收到過的輸出長這樣（模型把字元位置標進正文）：
+#     ，(77)核(78)心(79) PCE(82) 3.3%(86)、(87)三(88)月(89)化(91)…
+# 一次觸發兩件事：畫面上全是括號數字，而且那些數字全部被數字鎖定
+# 判成「原文沒有的數字」——連退兩次，最後整段被丟掉。
+# ---------------------------------------------------------------------------
+ANNOT = "，(77)核(78)心(79) PCE(82) 3.3%(86)、(87)三(88)月(89)年(90)化(91) 2.5%"
+check("78 字元編號被清掉",
+      polish._sanitize(ANNOT) == "，核心 PCE 3.3%、三月年化 2.5%",
+      polish._sanitize(ANNOT))
+check("79 清掉之後不再有假的新數字",
+      polish._numbers(polish._sanitize(ANNOT)) == {repr(3.3), repr(2.5)},
+      str(polish._numbers(polish._sanitize(ANNOT))))
+# 門檻：偶爾一兩個括號數字是正常內容，不能誤刪
+check("80 只有一個括號數字 → 不動",
+      polish._sanitize("還差 1.02 個百分點（3）") == "還差 1.02 個百分點（3）")
+check("81 兩個也不動（低於門檻）",
+      polish._sanitize("甲（1）乙（2）") == "甲（1）乙（2）")
+check("82 三個以上才清", polish._sanitize("甲（1）乙（2）丙（3）") == "甲乙丙")
+check("83 有單位的括號不算編號",
+      "3 票" in polish._sanitize("甲（3 票）乙（4 票）丙（5 票）"),
+      polish._sanitize("甲（3 票）乙（4 票）丙（5 票）"))
+check("84 半形括號也認得", polish._sanitize("甲(1)乙(2)丙(3)") == "甲乙丙")
+
+# 提示詞要明講不准數字數、不准加註記——這是這個病灶的成因
+_sys = polish._system("中" * 180)
+check("85 提示詞禁止逐字計數與標註",
+      all(k in _sys for k in ("不要逐字計數", "字元位置", "括號編號")),
+      _sys[-160:])
 
 print()
 print("全部通過" if ok else "有失敗")

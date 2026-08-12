@@ -61,7 +61,7 @@ TIMEOUT = 45
 MAX_OUT = 4000
 
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 2
+PROMPT_VERSION = 3
 
 
 def _target_range(source: str) -> tuple[int, int]:
@@ -94,10 +94,13 @@ def _system(source: str) -> str:
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
         "不要寫「約兩週」這類原文沒有的量。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
-        f"3. 長度 {lo} 到 {hi} 個中文字。\n"
+        f"3. 長度大約 {lo} 到 {hi} 個中文字。這是**寬鬆的參考**，"
+        "不要逐字計數、不要在輸出裡標註字數或字元位置、"
+        "也不要提到這個範圍本身。\n"
         "4. 最後一句必須以「重點：」開頭（全形冒號），內容沿用原文的重點句"
         "（語氣可以改，意思不可以改）。\n"
-        "5. 輸出純文字一段：不用列點、不用 markdown、不用換行。\n"
+        "5. 輸出純文字一段：不用列點、不用 markdown、不用換行、"
+        "不要有括號編號或任何註記。\n"
         "6. 直接輸出改寫後的文字，開頭不要有「以下是」「好的」這類引言，"
         "結尾不要有任何說明。"
     )
@@ -122,6 +125,14 @@ _MD = re.compile(r"[*#`_~]|^[ \t]*(?:[-•]|\d+[.)])[ \t]+", re.M)
 _WIDE = str.maketrans("０１２３４５６７８９％．", "0123456789%.")
 # 「重點」後面接任何冒號（含半形、含中間夾空白）一律收斂成全形
 _LEAD_COLON = re.compile(r"重點\s*[:：]\s*")
+
+# 括號裡只有一個數字、沒有單位——例如「核(78)心(79)」。
+# 這是模型逐字標字元位置留下的東西，不是內容。
+_BARE_PAREN_NUM = re.compile(r"[(（]\s*\d{1,4}\s*[)）]")
+# 至少要出現這麼多次才動手。真正的散文偶爾會有「（3 票）」這種寫法，
+# 但不會連續出現三個「只有數字、沒有任何單位」的括號——
+# 門檻擋住的就是那個差別，寧可少清也不要誤刪內容。
+_ANNOT_MIN = 3
 
 
 def _numbers(s: str) -> set[str]:
@@ -164,10 +175,21 @@ def _sanitize(out: str) -> str:
 
     ② **半形冒號**。「重點:」跟「重點：」意思一樣，但檢查的是全形那個，
        模型打成半形就會被判成「重點句的前綴不見了」——最沒有意義的一種退回。
+
+    ③ **逐字的字元編號**。實際收到過這種輸出：
+
+           ，(77)核(78)心(79) PCE(82) 3.3%(86)、(87)三(88)月(89)化(91)…
+
+       模型被字數要求逼著「數出聲音來」，把字元位置一個一個標進正文。
+       這會一次觸發兩件事：畫面上全是括號數字，而且那些數字全部被
+       數字鎖定判成「原文沒有的數字」。清掉它們才看得出底下的散文
+       其實是好的。門檻是 _ANNOT_MIN，避免誤刪真正的括號內容。
     """
     s = _MD_LIST.sub("", out or "")
     s = _MD_CHARS.sub("", s)
     s = s.translate(_WIDE)
+    if len(_BARE_PAREN_NUM.findall(s)) >= _ANNOT_MIN:
+        s = _BARE_PAREN_NUM.sub("", s)
     s = _LEAD_COLON.sub("重點：", s)
     return " ".join(s.split())
 
@@ -432,15 +454,23 @@ def _thinking(model: str) -> dict:
     `finishReason: MAX_TOKENS` 而且**一個字都沒有**——不是報錯，是空字串。
     這種失敗最難查，因為看起來像模型「不想回答」。
 
-    欄位名稱跨世代改過：2.x 是 thinkingConfig.thinkingBudget（0 ＝ 關），
-    3.x 之後是 thinkingLevel（minimal ＝ 最少）。認不出版本就兩個都不送，
-    改靠 MAX_OUT 的額度撐住——寧可多花一點額度，也不要拿到空字串。
+    2.x 用 thinkingConfig.thinkingBudget（0 ＝ 關），實測有效。
+
+    3.x 以後**不送任何欄位**。文件上寫的是 thinking_level，但 v1beta 的
+    generateContent 實際回的是：
+
+        400 Invalid JSON payload received.
+        Unknown name "thinkingLevel" at 'generation_config'
+
+    camelCase 與 snake_case 在 proto JSON 是等價的，所以這不是大小寫問題，
+    是這個 API 版本根本沒有這個欄位。既然關不掉，就改用 MAX_OUT 給足額度
+    讓推理跟輸出都放得下——那才是真正在防「回一個空字串」的那道保險。
+    每次都先送一次註定失敗的 400 只是白花一個來回。
     """
     m = _VER.search(model.lower())
-    if not m:
+    if not m or float(m.group(1)) >= 3:
         return {}
-    return ({"thinkingConfig": {"thinkingBudget": 0}} if float(m.group(1)) < 3
-            else {"thinkingLevel": "minimal"})
+    return {"thinkingConfig": {"thinkingBudget": 0}}
 
 
 def _gemini_call(key: str, model: str, source_text: str,

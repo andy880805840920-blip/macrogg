@@ -260,17 +260,26 @@ def rates_body(d: dict) -> str:
     off = d.get("offerings") or {}
     offerings_html = ""
     if off.get("available"):
-        _rows = "".join(
-            f'<tr><td>{esc(r["name"])}</td>'
-            f'<td class="muted-cell">{esc(r["date"])}</td>'
-            f'<td class="muted-cell">{esc(r["kind"])}</td>'
-            + ('<td class="muted-cell">' if r.get("pending") else '<td>')
-            + f'{esc(r["amount"])}</td>'
-            f'<td class="muted-cell">'
-            + (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">'
-               f'{esc(r["form"])}</a>' if r["url"] else esc(r["form"]))
-            + '</td></tr>'
-            for r in off["rows"])
+        # 金額欄以**原幣為主、美元為輔**：原幣是說明書封面上白紙黑字的
+        # 數字，美元是我們用某一天的匯率換算出來的。把換算值當主角，
+        # 等於讓一個會隨匯率漂動的數字蓋掉一個歷史事實。
+        def _off_row(r) -> str:
+            amt = ('<td class="muted-cell">' if r.get("pending") else "<td>")
+            amt += esc(r["amount"])
+            if r.get("usd_note"):
+                amt += f'<span class="dnote">{esc(r["usd_note"])}</span>'
+            amt += "</td>"
+            src = ('<td class="muted-cell">'
+                   + (f'<a href="{esc(r["url"])}" target="_blank" '
+                      f'rel="noopener">{esc(r["form"])}</a>'
+                      if r["url"] else esc(r["form"]))
+                   + "</td>")
+            return (f'<tr><td>{esc(r["name"])}</td>'
+                    f'<td class="muted-cell">{esc(r["date"])}</td>'
+                    f'<td class="muted-cell">{esc(r["kind"])}</td>'
+                    + amt + src + "</tr>")
+
+        _rows = "".join(_off_row(r) for r in off["rows"])
         # 筆數與金額分開講：「5 筆交易、其中 4 筆已確認金額」比
         #「5 筆申報、合計 X（另有 1 筆無法解析）」好讀，而且不會讓人
         # 把合計誤讀成全部。
@@ -290,18 +299,40 @@ def rates_body(d: dict) -> str:
         # 預估版不算交易，但要講出來——「還有幾筆正在路上」對供給面是資訊
         _prelim = (f"另有 {off['prelim_n']} 筆已宣布、尚未定價。"
                    if off.get("prelim_n") else "")
+        # 被排除的（股票發行、ATM 增發、銀行貸款額度）也要交代筆數，
+        # 否則讀者點開明細看到多出來的列會以為筆數算錯了。
+        _other = (f"另有 {off['other_n']} 件非債券的融資申報（股票發行、"
+                  f"ATM 增發或貸款額度），不計入。"
+                  if off.get("other_n") else "")
+        _ccy = (f"幣別分布：{esc(off['ccy_note'])}。"
+                if off.get("multi_ccy") else "")
+        _nofx = (f"其中 {off['no_fx']} 筆換不到匯率，不進合計。"
+                 if off.get("no_fx") else "")
         offerings_html = f"""<div class="warnbox" style="margin:0 0 16px">
-      <b>近 120 天有 {off['count']} 筆發債交易，尚未反映在下方的季報數字裡</b><br>
-      {_known}{_ratio}{_unknown}。{_prelim}最近一筆在 {esc(off['latest'])}。
+      <b>近 120 天有 {off['count']} 筆已定價的債券發行，尚未反映在下方的季報數字裡</b><br>
+      {_known}{_ratio}{_unknown}。{_ccy}{_nofx}{_prelim}{_other}最近一筆在
+      {esc(off['latest'])}。
       <details class="f-more" style="margin-top:10px"><summary>逐筆明細</summary>
         <div class="tscroll" style="margin-top:10px"><table>
           <thead><tr><th>公司</th><th>日期</th><th>類型</th>
-            <th>金額</th><th>原文</th></tr></thead>
+            <th>金額（原幣）</th><th>原文</th></tr></thead>
           <tbody>{_rows}</tbody></table></div>
         <p class="hint" style="margin-top:10px">
+          <b>表格號不代表證券種類</b>：424B2／424B5 只代表「定價後的公開
+          說明書補充」，賣的可能是債券、普通股、特別股、存託股或 ATM 增發
+          計畫。這裡是<b>讀文件內容</b>來分類的——要出現
+          <code>aggregate principal amount</code>、<code>Senior Notes</code>
+          或 <code>Notes due 20xx</code> 這類證據才算債券。股票發行、
+          ATM 增發、銀行貸款與循環額度（8-K 項目 2.03）全部不計入。<br>
           <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
           預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
-          同一筆會被數兩次。已經有對應定價版的預估版直接不列。</p>
+          同一筆會被數兩次。已經有對應定價版的預估版直接不列。<br>
+          <b>金額以原幣為準</b>：分券金額逐檔相加，同一檔券在文件裡重複
+          出現只算一次（依幣別、金額、到期年、票息去重）。美元等值是用
+          FRED 當日匯率換算的衍生值，匯率與日期都標出來，可以自己重算。<br>
+          <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
+          融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
+          市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
       </details>
     </div>"""
 

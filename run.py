@@ -94,7 +94,11 @@ LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
                 "claims", "reference", "special_series", "industries")
 INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
                "trend_measures", "energy", "expectations", "sep")
-RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt")
+RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt",
+                # 匯率：只為了把海外發債的原幣金額換算成美元等值。
+                # 少了這一組，非美元的發債仍然會列出原幣金額，
+                # 只是旁邊少一句「約合多少美元」——不會壞，只是少一點資訊。
+                "fx")
 
 
 # ---------------------------------------------------------------------------

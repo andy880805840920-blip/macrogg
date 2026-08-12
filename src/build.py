@@ -1386,7 +1386,7 @@ def _vote_cell(vote: dict) -> str:
 OFFERING_SANITY_X = 3.0
 
 
-def _offerings_block(offerings: list, hs) -> dict:
+def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
     """
     近期發債交易的畫面資料。
 
@@ -1394,21 +1394,42 @@ def _offerings_block(offerings: list, hs) -> dict:
     而發債當天就要申報。所以它回答的是「下一期的數字會往哪邊走」，
     刻意不動供給壓力分數——否則同一筆發債下一季會被算第二次，
     歷史可比性也會斷掉。
+
+    金額以**原幣為主、美元為輔**。原幣是說明書封面上白紙黑字的那個數字，
+    美元是我們用某一天的匯率換算出來的衍生值——把換算值當主角，等於讓
+    一個會隨匯率漂動的數字蓋掉一個歷史事實。畫面上兩個都給，並標出
+    匯率與匯率日期，讓人能自己重算。
     """
+    from .analysis import fx as fxmod
+
     if not offerings:
         return {"available": False}
 
-    # 預估版不算交易：它是同一筆的前身，通常兩三天內就會有定價版。
-    # 仍然列在明細裡並標示——「有一筆正在路上」對供給面本身就是資訊。
-    deals = [o for o in offerings if not o.get("preliminary")]
-    prelim_n = len(offerings) - len(deals)
+    fx = fxmod.rates(series or {})
 
-    # 合計只由**已確認金額**構成。沒解析到金額的仍然列出來——
-    # 讀者知道「有一筆但金額還沒讀到」比完全看不到有用——但不進合計，
-    # 也不用推估值補；一個錯的發債金額比沒有金額糟得多。
-    known = [o for o in deals if o.get("amount") is not None]
-    unknown_n = len(deals) - len(known)
-    total = sum(o["amount"] for o in known)
+    # 只有「已定價的債券發行」才算一筆交易。counts 由 sec.dedupe_deals 決定：
+    # 股票／ATM 增發、銀行貸款額度、尚未定價的預估版全部是 False。
+    deals = [o for o in offerings if o.get("counts")]
+    prelim_n = sum(1 for o in offerings
+                   if o.get("preliminary") and not o.get("counts"))
+    other_n = sum(1 for o in offerings
+                  if not o.get("counts") and not o.get("preliminary"))
+
+    # 合計走美元等值，但只加**換得出來**的。換不出來的仍然列在明細裡
+    #（原幣金額照樣看得到），只是不進合計——寧可合計少一筆，
+    # 也不要用一個假設的匯率把它補進去。
+    usd_vals, no_fx = [], 0
+    for o in deals:
+        if o.get("principal") is None:
+            continue
+        conv = fxmod.to_usd(o["principal"], o.get("currency", ""), fx)
+        if conv["usd"] is None:
+            no_fx += 1
+        else:
+            usd_vals.append(conv["usd"] / 1e9)
+    known_n = len(usd_vals)
+    unknown_n = len(deals) - known_n
+    total = sum(usd_vals)
 
     # 跟最新一季的申報值比，讀者才知道這批新申報的量級
     ref = hs.total_issued or 0
@@ -1419,35 +1440,65 @@ def _offerings_block(offerings: list, hs) -> dict:
     # 但報一個錯了四倍的合計，會直接毀掉整頁的可信度。
     insane = bool(ref and total > ref * OFFERING_SANITY_X)
 
+    # 表格類型對投資人沒有意義，而且**表格號不代表證券種類**——
+    # 424B5 可能是債券也可能是 ATM 增發。標籤要講的是「這是什麼」。
+    _SEC_LABEL = {"equity": "股票發行", "other": "其他融資", "unknown": "未分類"}
+
     rows = []
     for o in offerings:
         is_prelim = bool(o.get("preliminary"))
-        pending = o.get("amount") is None
+        sec_kind = o.get("security", "unknown")
+        counts = bool(o.get("counts"))
+        ccy = o.get("currency") or ""
+        principal = o.get("principal")
+
+        native = usd_note = ""
         if is_prelim:
-            amt = "尚未定價"
-        elif pending:
-            amt = "金額待確認"
+            native = "尚未定價"
+        elif not counts:
+            native = "不計入發債"
+        elif principal is None:
+            native = "金額待確認"
         else:
-            amt = f'{o["amount"] * 10:,.0f} 億美元'
-        # 表格類型對投資人沒有意義，翻成在講什麼。
+            native = fxmod.fmt_native(principal, ccy)
+            conv = fxmod.to_usd(principal, ccy, fx)
+            if ccy != "USD" and conv["usd"] is not None:
+                usd_note = (f'約 US${conv["usd"] / 1e8:,.0f} 億'
+                            f'（匯率 {conv["rate"]:.4g}'
+                            + (f"，{conv['date']}" if conv["date"] else "") + "）")
+
         kind = ("預估版" if is_prelim else
-                {"424B2": "公開發行", "424B5": "公開發行",
-                 "8-K": "舉債公告"}.get(o["form"], o["form"]))
+                _SEC_LABEL.get(sec_kind) if not counts else "債券發行")
         rows.append({"name": o["name"], "date": o["date"], "form": o["form"],
-                     "kind": kind, "amount": amt,
-                     "pending": pending or is_prelim,
+                     "kind": kind, "amount": native, "usd_note": usd_note,
+                     "pending": not counts or principal is None,
                      "preliminary": is_prelim,
+                     "counts": counts,
+                     "security": sec_kind,
+                     "currency": ccy,
                      "merged": o.get("merged", 1),
                      "url": o.get("doc_url", ""),
                      "items": o.get("items", "")})
+
+    # 幣別分布：讓「合計美元」不會看起來像是五筆美元債
+    by_ccy: dict[str, int] = {}
+    for o in deals:
+        if o.get("currency"):
+            by_ccy[o["currency"]] = by_ccy.get(o["currency"], 0) + 1
+    ccy_note = "、".join(f"{c} {n} 筆" for c, n in
+                        sorted(by_ccy.items(), key=lambda kv: -kv[1]))
 
     return {
         "available": True,
         "rows": rows,
         "count": len(deals),
         "prelim_n": prelim_n,
-        "known_n": len(known),
+        "other_n": other_n,
+        "known_n": known_n,
         "unknown_n": unknown_n,
+        "no_fx": no_fx,
+        "ccy_note": ccy_note,
+        "multi_ccy": len(by_ccy) > 1,
         "insane": insane,
         "show_amount": bool(total) and not insane,
         "total_display": (f"{total * 10:,.0f} 億美元" if total else "—"),
@@ -2217,7 +2268,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             else (f"取不到實質 GDP，r 減 g 的成長率暫用 {debt.real_growth:.1f}% 假設值"
                   if debt.real_growth is not None else "")),
         "hs_stats": hs_stats,
-        "offerings": _offerings_block(offerings, hs),
+        "offerings": _offerings_block(offerings, hs, series),
         "earnings": _earnings_block(earnings),
         "guidance": _guidance_block(cfg.get("capex_guidance") or {}, hs),
         "credit_stats": credit_stats,
