@@ -200,6 +200,24 @@ def _mismatch_note(axis: str, state: str, tilt: str | None,
             + "。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div>")
 
 
+def _axis_head(axis: str, state: str, lead: str) -> str:
+    """
+    一條軸的常駐標題列：軸名 ＋ 判定 ＋ 一句話理由，右邊一個展開箭頭。
+
+    為什麼結論不能收合：先前整塊算式包在一個 12.5px 灰色的展開列裡，
+    而那一列跟旁邊的圖例說明長得一模一樣（同字級、同顏色、同位置），
+    讀者掃過去只會把它歸類成註腳——等於做了跟沒做一樣。
+    讀者要的答案是「為什麼是弱／高」，那句話必須永遠看得到；
+    收合的應該是**算式**，那才是只有要驗算的人才需要的東西。
+    """
+    return ('<details class="ax"><summary>'
+            f'<span class="ax-k">{esc(axis)}</span>'
+            f'<span class="ax-v">{esc(state)}</span>'
+            f'<span class="ax-lead">{esc(lead)}</span>'
+            "</summary>"
+            '<div class="ax-body">')
+
+
 def _why_axes(w: dict) -> str:
     """
     「為什麼落在這一格」——兩條軸的算式、輸入值與門檻出處。
@@ -216,7 +234,10 @@ def _why_axes(w: dict) -> str:
     if not w:
         return ""
     inf, lab = w.get("inflation"), w.get("labor")
+    # 就業排前面：九宮格的列是就業、欄是通膨，全站的講法也一律是
+    # 「就業弱 × 通膨高」。這裡反過來會讓讀者的視線跟格子對不上。
     blocks = []
+    order = []
 
     if inf:
         rows = "".join(
@@ -243,15 +264,15 @@ def _why_axes(w: dict) -> str:
             "離 2% 目標多遠")
 
         blocks.append(
-            '<div class="wx"><div class="wx-h">通膨　→　<b>' + esc(state)
-            + "</b></div>" + rows
+            _axis_head("通膨", state, inf.get("lead", "")) + rows
             + '<div class="wx-r wx-sum"><span class="wx-k">加權後的水準</span>'
             '<span class="wx-w"></span><span class="wx-v">'
             + esc(inf["level"]) + "</span></div>"
             + '<div class="wx-thr">' + esc(inf["level"]) + "　" + cmp_txt
             + "　門檻 " + thr + "</div>"
             + '<div class="wx-src">門檻出處：' + esc(src) + warn + "</div>"
-            + tilt_note + "</div>")
+            + tilt_note + "</div></details>")
+        order.append(("inflation", blocks.pop()))
 
     if lab:
         rows = "".join(
@@ -260,27 +281,28 @@ def _why_axes(w: dict) -> str:
             + '</span><span class="wx-v">' + esc(r["value"]) + "</span></div>"
             for r in lab.get("rows") or [])
         basis_txt = {
-            "level": "由<b>水準</b>定案：失業率相對 FOMC 自己對長期失業率的判斷。",
-            "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）。",
+            "level": "由<b>水準</b>定案：失業率相對 FOMC 自己對長期失業率的判斷；",
+            "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）；",
             "breakeven": "水準上不算弱，但<b>三月均非農低於損益兩平</b>——"
-                         "就業增速已經撐不住目前的失業率，所以往「弱」推一格。",
-            "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則。",
+                         "就業增速已經撐不住目前的失業率，所以往「弱」推一格；",
+            "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則；",
         }.get(lab.get("basis"), "")
         blocks.append(
-            '<div class="wx"><div class="wx-h">就業　→　<b>' + esc(lab["state"])
-            + "</b></div>" + rows
+            _axis_head("就業", lab["state"], lab.get("lead", "")) + rows
             + '<div class="wx-src" style="margin-top:8px">' + basis_txt
-            + "　三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是"
+            + "三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是"
             "委員彼此的分歧程度）、Sahm 法則的 0.50、以及由人口成長推導出來的"
             "損益兩平——沒有一個是本站選的數字。動能只往「弱」推，"
             "因為就業轉強沒有對應的公認規則，寧可不推也不自己發明一條。</div>"
             + _mismatch_note("就業", lab["state"], lab.get("tilt"),
                              lab.get("net"), "失業率離充分就業多遠")
-            + "</div>")
+            + "</div></details>")
+        order.append(("labor", blocks.pop()))
 
-    return ('<details class="f-more" style="margin-top:16px">'
-            "<summary>這一格是怎麼判出來的（兩條軸的算式與門檻）</summary>"
-            '<div style="margin-top:10px">' + "".join(blocks) + "</div></details>")
+    seq = dict(order)
+    return ('<div class="axg">'
+            + "".join(seq[k] for k in ("labor", "inflation") if k in seq)
+            + "</div>")
 
 
 def scenario_body(d: dict) -> str:
@@ -428,11 +450,11 @@ def scenario_body(d: dict) -> str:
     </div>
     {focus_ev}
     {grid_tabs}
+    {_why_html}
     <p class="hint" style="margin-top:16px">
       <span class="lg-on">反白粗框</span>＝目前位置　·
       <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
     </p>
-    {_why_html}
   </div>
 </div>
 <div class="grid g2">

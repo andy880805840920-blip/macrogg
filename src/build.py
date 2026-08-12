@@ -1529,8 +1529,19 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
                if b.get("auto") and b.get("next_lo") is not None
                else ("FOMC 對 {y} 年的核心 PCE 預測中位數".format(y=b.get("next_year"))
                      if b.get("auto") else "後備值（沒有外部依據）"))
+        # 常駐的一句話：讀者不展開也要知道「高」是怎麼來的。
+        # 先前這一整塊是收合的，而收合列長得跟旁邊的圖例一樣（12.5px 灰字），
+        # 讀者根本不會發現那裡有答案——等於做了跟沒做一樣。
+        _cmp = {"高": f'高於門檻 {b.get("high", 2.90):.2f}%',
+                "低": f'低於門檻 {b.get("low", 2.30):.2f}%'}.get(
+                    sc.infl_state,
+                    f'落在門檻 {b.get("low", 2.30):.2f}–{b.get("high", 2.90):.2f}% 之間')
+        _lead = (f"核心 PCE {_pct(yoy_v)} 與三月年化 {_pct(m3)} 加權後 "
+                 f"{lvl:.2f}%，{_cmp}"
+                 if lvl is not None else "資料不足")
         out["inflation"] = {
             "state": sc.infl_state,
+            "lead": _lead,
             "rows": [
                 {"label": "核心 PCE 年增率（水準）", "value": _pct(yoy_v), "w": "×0.6"},
                 {"label": "核心 PCE 三月年化（動能）", "value": _pct(m3), "w": "×0.4"},
@@ -1569,8 +1580,33 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
             rows.append({"label": "三月均非農　vs　損益兩平（動能）",
                          "value": f"{n3/10:+.1f} / {bk/10:+.1f} 萬人",
                          "w": "低於" if labor.get("below_breakeven") else "高於"})
+        # 常駐的一句話。分支順序必須跟 scenario.classify_labor 一致，
+        # 否則會出現「摘要說水準正常、格位說弱」而沒有解釋的情況。
+        _basis = sc.labor_basis
+        if _basis == "sahm":
+            _lead = (f"Sahm 法則 {labor.get('sahm'):+.2f} 觸發衰退門檻"
+                     "（0.50），勞動市場正在快速惡化"
+                     if labor.get("sahm") is not None else "Sahm 法則已觸發")
+        elif _basis == "breakeven":
+            _lead = (f"失業率 {u:.1f}% 仍在充分就業區間，但三月均非農 "
+                     f"{n3 / 10:+.1f} 萬低於損益兩平 {bk / 10:+.1f} 萬，"
+                     "增速撐不住現有失業率"
+                     if None not in (u, n3, bk) else "非農低於損益兩平")
+        elif _basis == "fallback":
+            _lead = (f"沒有取得 FOMC 的長期失業率預測，改用後備門檻："
+                     f"綜合分數 {labor.get('score', 0):+.2f}（±0.45）"
+                     "、旗標淨值（±3）——這兩個數字沒有外部依據")
+        elif u is not None and lo is not None:
+            _lead = {"弱": f"失業率 {u:.1f}% 高於聯準會認定的充分就業上緣 {hi:.1f}%",
+                     "強": f"失業率 {u:.1f}% 低於充分就業下緣 {lo:.1f}%",
+                     }.get(sc.labor_state,
+                           f"失業率 {u:.1f}% 落在充分就業區間 "
+                           f"{lo:.1f}–{hi:.1f}% 之內，動能也沒有轉弱")
+        else:
+            _lead = "資料不足"
         out["labor"] = {
             "state": sc.labor_state,
+            "lead": _lead,
             "rows": rows,
             "basis": sc.labor_basis,
             "note": sc.labor_basis_note,

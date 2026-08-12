@@ -140,18 +140,43 @@ if (OUT / "labor" / "index.html").exists():
         # 自訂的 ** 粗體標記，忘了脫掉的話讀者會直接看到「往**降息**的方向」。
         check(f"㉓ {name}：摘要沒有殘留 markdown",
               not [s for s in sums if "**" in s], str(sums)[:80])
+    # 情境頁：兩條軸的判定依據必須**常駐**在九宮格下方。
+    # 這一塊做過一次「有做但看不到」——整塊包在一個 12.5px 灰色的展開列裡，
+    # 跟旁邊的圖例說明同字級同顏色同位置，使用者回報「還是沒寫」。
+    # 所以要釘住的不是「有沒有這段」，是「結論有沒有露在外面」。
+    h = (OUT / "scenario" / "index.html").read_text(encoding="utf-8")
+    heads = re.findall(
+        r'<span class="ax-k">([^<]*)</span><span class="ax-v">([^<]*)</span>'
+        r'<span class="ax-lead">([^<]*)</span>', h)
+    check("㉔ scenario：兩條軸的判定都常駐", len(heads) == 2,
+          f"{len(heads)} 條")
+    check("㉕ scenario：就業排在通膨前面（跟九宮格的列欄一致）",
+          [x[0] for x in heads] == ["就業", "通膨"], str([x[0] for x in heads]))
+    check("㉖ scenario：判定值與情境卡一致",
+          all(x[1] for x in heads)
+          and f'就業{heads[0][1]}　×　通膨{heads[1][1]}' in h,
+          str([x[1] for x in heads]))
+    # 理由句要帶得出數字——只寫「因為就業弱」等於沒解釋
+    check("㉗ scenario：理由句帶具體數字",
+          all(re.search(r"\d", x[2]) for x in heads),
+          str([x[2][:24] for x in heads]))
+    # 算式收在裡面（要驗算的人才展開），且預設是收合的
+    check("㉘ scenario：算式收合在裡面",
+          h.count('<details class="ax">') == 2
+          and '<details class="ax" open' not in h)
+
     # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
     h = (OUT / "index.html").read_text(encoding="utf-8")
     hs = _sums(h)
-    check("㉔ index：三張卡都有摘要", len(hs) == 3, f"{len(hs)} 條")
-    check("㉕ index：摘要沒有殘留 markdown",
+    check("㉙ index：三張卡都有摘要", len(hs) == 3, f"{len(hs)} 條")
+    check("㉚ index：摘要沒有殘留 markdown",
           not [s for s in hs if "**" in s], str(hs)[:90])
     # 摘要是拿來掃視的。超過 40 字在 390px 下會折成三行，而且多半代表
     # 那句話寫成了方法說明而不是結論——「這張卡要不要點開」就答不出來。
     long = [(len(s), s) for s in hs + [x for p_ in pages
             for x in _sums((OUT / p_ / "index.html").read_text(encoding="utf-8"))]
             if len(s) > 45]
-    check("㉖ 沒有過長的摘要（>45 字）", not long, str(long[:1]))
+    check("㉛ 沒有過長的摘要（>45 字）", not long, str(long[:1]))
 else:
     print("（output/ 尚未產生，跳過實際頁面的檢查）")
 
