@@ -61,12 +61,24 @@ jobs:
       - name: 產生頁面
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          # SEC 要求帶可聯絡的 User-Agent。沒設會用預設值，
-          # 通常也能過，但被限流的風險較高。
+          # SEC 要求帶可聯絡的 User-Agent，格式是「名稱 你的信箱」。
+          #
+          # ⚠️ 這個變數沒設定時，Actions 送進來的是**空字串**（不是「沒有這
+          # 個變數」）。程式端已經用 `or` 接住並退回預設值——但預設值裡的
+          # 信箱是假的，SEC 有可能限流甚至擋掉。強烈建議到
+          # Settings → Secrets and variables → Actions → Variables
+          # 新增 SEC_USER_AGENT，值填「你的名字 你的信箱」。
+          #
+          # 為什麼要特別講：SEC 擋掉請求時，科技巨頭那一區會退回 config 的
+          # 手動後備值，畫面上仍然有數字、看起來完全正常，只是那是上一次
+          # 人工填的舊數字。現在退回時會印一行 error，畫面上也會明講。
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
           # 選配：首頁「整體情勢」的模型潤稿。設一把就好，兩把都設時
           # 優先用 Gemini（有免費額度）。沒設就用規則組裝版，一樣能跑。
           # 事實沒變不會重新呼叫（快取在 state/brief.json）。
+          # 模型退場時（打過去回 404）會自己問一次可用清單、換一個重試，
+          # 並把清單印進這一步的 log。想固定用某一個就設 BRIEF_MODEL。
+          BRIEF_MODEL: ${{ vars.BRIEF_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python run.py --json
