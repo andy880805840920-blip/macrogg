@@ -1,23 +1,15 @@
 {
-  "generated_at": "2026-08-11T14:46:16",
+  "generated_at": "2026-08-12T13:42:41+08:00",
   "labor": {
     "month": "2026-07",
     "score": -0.3298178637851931,
     "tilt": {
-      "dovish": 5.0,
+      "dovish": 3.5,
       "hawkish": 0,
-      "net": -5.0,
+      "net": -3.5,
       "tilt": "dovish"
     },
     "flags": [
-      {
-        "key": "bad_decline",
-        "severity": "alert",
-        "headline": "失業率下降源於勞動力退出，而非就業增加",
-        "detail": "失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。",
-        "lean": "dovish",
-        "impact": "就業市場實際在轉弱"
-      },
       {
         "key": "revision_swamps",
         "severity": "alert",
@@ -33,6 +25,14 @@
         "detail": "過去 12 個月，每個月的就業人數平均事後被往下修 0.9 萬人。看到剛公布的數字時，要記得它之後很可能被調降。",
         "lean": "dovish",
         "impact": "初值應打折看待"
+      },
+      {
+        "key": "bad_decline",
+        "severity": "info",
+        "headline": "失業率下降源於勞動力退出，而非就業增加",
+        "detail": "失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。（不過這個月只動了 0.1 個百分點，低於 0.2 個百分點的統計顯著門檻，方向可以參考，強度不要當真。）",
+        "lean": "dovish",
+        "impact": "就業市場實際在轉弱"
       },
       {
         "key": "low_hire_low_fire",
@@ -88,10 +88,10 @@
     ]
   },
   "scenario": {
-    "name": "降息受阻",
+    "name": "停滯性通膨：通膨優先",
     "labor": "弱",
-    "inflation": "中",
-    "lean": "neutral",
+    "inflation": "高",
+    "lean": "hawkish",
     "regime": "inflation",
     "regime_assumed": false
   }
