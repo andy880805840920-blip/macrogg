@@ -104,7 +104,7 @@ check("⑬ 離線 → 組裝版", r["source"] == "assembled")
 calls = []
 
 
-def fake_post(key, model, text):
+def fake_post(key, model, text, system=None):
     calls.append(model)
     return GOOD
 
@@ -124,17 +124,17 @@ check("⑰ 事實沒變 → 沿用快取、不呼叫 API",
 
 # 事實變了 → 重新生成
 r = polish.maybe_polish(assembled(SRC.replace("4.1%", "4.4%")), cache,
-                        env=env, _post=lambda k, m, t: GOOD.replace("4.1%", "4.4%"))
+                        env=env, _post=lambda k, m, t, s=None: GOOD.replace("4.1%", "4.4%"))
 check("⑱ 事實變了 → 重新生成", r["source"] == "model")
 
 # 模型換了 → 快取失效（雜湊含模型名）
 r = polish.maybe_polish(assembled(), cache,
                         env={**env, "BRIEF_MODEL": "claude-x"},
-                        _post=lambda k, m, t: GOOD)
+                        _post=lambda k, m, t, s=None: GOOD)
 check("⑲ 換模型 → 快取失效重生成", r["source"] == "model")
 
 # API 例外 → 組裝版
-def boom(key, model, text):
+def boom(key, model, text, system=None):
     raise RuntimeError("connection reset")
 
 
@@ -145,7 +145,7 @@ check("⑳ API 掛掉 → 組裝版", r["source"] == "assembled")
 # 驗證沒過 → 組裝版、不寫快取
 c3 = tmp / "c3.json"
 r = polish.maybe_polish(assembled(), c3, env=env,
-                        _post=lambda k, m, t: GOOD.replace("83%", "93%"))
+                        _post=lambda k, m, t, s=None: GOOD.replace("83%", "93%"))
 check("㉑ 驗證沒過 → 組裝版", r["source"] == "assembled")
 check("㉒ 驗證沒過不寫快取（壞結果不能被沿用）", not c3.exists())
 
@@ -171,7 +171,7 @@ check("㉗ 都沒設 → 空字串",
 gcalls = []
 r = polish.maybe_polish(assembled(SRC + "再改一下"), tmp / "c4.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t2: (gcalls.append((k, m)), GOOD)[1])
+                        _post=lambda k, m, t2, s=None: (gcalls.append((k, m)), GOOD)[1])
 check("㉘ Gemini 路徑用 Gemini 的預設模型",
       r["source"] == "model"
       and gcalls == [("g1", polish.PROVIDERS["gemini"]["model"])],
@@ -183,16 +183,16 @@ check("㉙ 結果帶模型名（進執行紀錄）",
 mcalls = []
 polish.maybe_polish(assembled(SRC + "再改兩下"), tmp / "c5.json",
                     env={"GEMINI_API_KEY": "g1", "BRIEF_MODEL": "gemini-2.5-pro"},
-                    _post=lambda k, m, t2: (mcalls.append(m), GOOD)[1])
+                    _post=lambda k, m, t2, s=None: (mcalls.append(m), GOOD)[1])
 check("㉚ BRIEF_MODEL 覆寫生效", mcalls == ["gemini-2.5-pro"], str(mcalls))
 
 # 換供應商 → 快取失效（雜湊含供應商）：同一份事實不能拿 A 家的快取
 # 冒充 B 家的結果——兩家的文風不同，換供應商本來就該重生
 c6 = tmp / "c6.json"
 polish.maybe_polish(assembled(), c6, env={"GEMINI_API_KEY": "g1"},
-                    _post=lambda k, m, t2: GOOD)
+                    _post=lambda k, m, t2, s=None: GOOD)
 r = polish.maybe_polish(assembled(), c6, env={"ANTHROPIC_API_KEY": "a1"},
-                        _post=lambda k, m, t2: GOOD)
+                        _post=lambda k, m, t2, s=None: GOOD)
 check("㉛ 換供應商 → 快取失效重生成", r["source"] == "model")
 
 # 金鑰失效但事實沒變 → 沿用舊快取（不是跳回組裝版）
@@ -255,7 +255,7 @@ def http404():
 tried = []
 
 
-def fake_call(key, model, text):
+def fake_call(key, model, text, system=None):
     tried.append(model)
     if model == "gemini-2.5-flash":
         raise http404()
@@ -273,7 +273,7 @@ check("㊵ 真的試了兩個模型", tried == ["gemini-2.5-flash", "gemini-3.6-
 # 換過的模型名要進結果（畫面與執行紀錄要標真的用了哪一個）
 r = polish.maybe_polish(assembled(SRC + "換模型測試"), tmp / "c7.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t: (GOOD, "gemini-3.6-flash"))
+                        _post=lambda k, m, t, s=None: (GOOD, "gemini-3.6-flash"))
 check("㊶ 實際用的模型進結果",
       r["source"] == "model" and r["model"] == "gemini-3.6-flash", str(r))
 check("㊷ 也寫進快取",
@@ -289,7 +289,7 @@ except polish.requests.HTTPError:
 check("㊸ 查不到清單 → 拋回原本的錯（退組裝版）", hit)
 
 # 404 以外的錯不要亂換模型——換了只會多燒一次額度
-def boom500(key, model, text):
+def boom500(key, model, text, system=None):
     e = polish.requests.HTTPError("500")
     e.response = Resp(500)
     raise e
@@ -318,7 +318,7 @@ BAD = GOOD.replace("重點：", "總結來說，")     # 前綴不見（實際�
 seq = []
 
 
-def flaky(key, model, text):
+def flaky(key, model, text, system=None):
     seq.append(text)
     return BAD if len(seq) == 1 else GOOD
 
@@ -335,7 +335,7 @@ check("㊼ 第一次的輸入沒有多餘的附註", "被退回" not in seq[0])
 seq2 = []
 r = polish.maybe_polish(assembled(SRC + "重試上限測試"), tmp / "c9.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t: (seq2.append(t), BAD)[1])
+                        _post=lambda k, m, t, s=None: (seq2.append(t), BAD)[1])
 check("㊽ 重試後仍沒過 → 組裝版", r["source"] == "assembled")
 check("㊾ 重試只有一次（共兩個呼叫）", len(seq2) == 2, f"{len(seq2)} 次")
 check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
@@ -344,7 +344,7 @@ check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
 seq3 = []
 
 
-def then_boom(key, model, text):
+def then_boom(key, model, text, system=None):
     seq3.append(text)
     if len(seq3) == 1:
         return BAD
@@ -390,7 +390,7 @@ check("60 清理不動內容裡的數字與文字",
 # 端到端：模型把重點加粗 → 清掉後通過，不再退回組裝版
 r = polish.maybe_polish(assembled(SRC + "粗體測試"), tmp / "c11.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t: GOOD.replace("重點：", "**重點**："))
+                        _post=lambda k, m, t, s=None: GOOD.replace("重點：", "**重點**："))
 check("61 加粗的改寫最後仍是模型版",
       r["source"] == "model" and "**" not in r["text"], r["source"])
 check("62 存進畫面的文字沒有殘留星號", "*" not in r["text"])
@@ -589,6 +589,78 @@ check("99 沒有金鑰 → 講清楚會走組裝版", "組裝版" in n, n)
 check("100 診斷字串不會外洩金鑰",
       "g" not in polish.config_note({"GEMINI_API_KEY": "supersecret"})
       or "supersecret" not in polish.config_note({"GEMINI_API_KEY": "supersecret"}))
+
+
+# ---------------------------------------------------------------------------
+# ⑪ 重點句不交給模型
+#
+# 這是兩種退回的共同根因。模型同時被要求「壓在字數範圍內」與「保留重點句」，
+# 兩件事會互相排擠——實測到的順序是：
+#   第一次 206 字（超出上限）→ 帶著「太長」的理由重試
+#   第二次為了縮短，直接把整句重點句刪掉 → 「重點句的前綴不見了」
+# 兩次都不是模型寫壞，是給了兩個會打架的要求。
+#
+# 拆開之後「重點：」變成**結構上保證存在**，不再靠模型配合。
+# ---------------------------------------------------------------------------
+BODY = SRC[:SRC.index("重點：")]
+TAIL = SRC[SRC.index("重點："):]
+
+
+def parted():
+    return {"text": SRC, "chars": polish.cjk_len(SRC),
+            "parts": [{"key": "direction", "text": BODY,
+                       "chars": polish.cjk_len(BODY)},
+                      {"key": "takeaway", "text": TAIL,
+                       "chars": polish.cjk_len(TAIL)}]}
+
+
+seen = []
+
+
+def spy(key, model, text, system=None):
+    """回一段長度合格、但**刻意不寫重點句**的改寫。"""
+    seen.append((text, system))
+    return GOOD[:GOOD.index("重點：")]
+
+
+r = polish.maybe_polish(parted(), tmp / "d1.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=spy)
+check("101 送給模型的內容不含重點句", "重點：" not in seen[0][0], seen[0][0][-30:])
+check("102 送給模型的是事實段落", seen[0][0].startswith("聯準會把通膨"))
+check("103 重點句原封不動接回去", r["text"].endswith(TAIL), r["text"][-40:])
+check("104 就算模型沒寫重點句，結果照樣有",
+      "重點：" in r["text"] and r["source"] == "model")
+
+# 模型交出一段不含重點句的文字 → 仍然通過驗證（因為我們自己接回去了）
+check("105 前綴變成結構上保證，不靠模型配合",
+      polish.validate(r["text"], SRC) == "")
+
+# 字數上限要先扣掉重點句的長度，否則接回去就超出護欄。
+# 用一段夠長的本文，讓上限由 MAX_CJK 決定而不是由「原長 +10」決定——
+# 那才是 reserve 真正起作用的情況。
+_LONG = "中" * 200
+lo_r, hi_r = polish._target_range(_LONG, polish.cjk_len(TAIL))
+lo_n, hi_n = polish._target_range(_LONG, 0)
+check("106 有 reserve 時上限更嚴", hi_r < hi_n, f"{hi_r} vs {hi_n}")
+check("107 扣掉之後接回去不會超出護欄",
+      hi_r + polish.cjk_len(TAIL) <= polish.MAX_CJK,
+      f"{hi_r} + {polish.cjk_len(TAIL)}")
+_hb, _ht = polish._target_range(BODY, polish.cjk_len(TAIL))
+check("107b 實際這一段接回去也不會超出",
+      _ht + polish.cjk_len(TAIL) <= polish.MAX_CJK,
+      f"{_ht} + {polish.cjk_len(TAIL)}")
+check("108 提示詞用的是扣過的上限", f"不要超過 {_ht} 字" in seen[0][1],
+      seen[0][1][seen[0][1].find("長度"):][:40])
+check("109 提示詞明講不要自己寫結論", "不要自己寫結論" in seen[0][1])
+
+# 只有重點句 → 沒有東西好改寫，直接回組裝版、不呼叫 API
+only = {"text": TAIL, "chars": polish.cjk_len(TAIL),
+        "parts": [{"key": "takeaway", "text": TAIL,
+                   "chars": polish.cjk_len(TAIL)}]}
+r = polish.maybe_polish(only, tmp / "d2.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=boom)
+check("110 只有重點句 → 不呼叫、直接回組裝版",
+      r["source"] == "assembled" and r["text"] == TAIL)
 
 print()
 print("全部通過" if ok else "有失敗")

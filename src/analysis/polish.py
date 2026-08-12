@@ -87,30 +87,32 @@ _SLEEP = time.sleep
 MAX_OUT = 4000
 
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 3
+PROMPT_VERSION = 4
 
 
-def _target_range(source: str) -> tuple[int, int]:
+def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
     """
-    要求的字數範圍，**由這一次的組裝版長度算出來**，不是寫死的。
+    要求的字數範圍，**由這一次要改寫的段落長度算出來**，不是寫死的。
 
     先前寫死「140 到 170」，但組裝版實際長度會隨資料變（實測 179–180 字）。
     等於一邊要求模型壓掉 20% 的字、一邊又用 190 的上限去驗——模型照做會
     偏短、不照做就頂到上限。兩種都可能被擋，而且原因完全不同。
 
-    改成貼著實際長度給範圍，並在兩端都留 10 字的緩衝，
-    讓「照著做」跟「通過驗證」變成同一件事。
+    `reserve` 是**不交給模型、但會接回去**的那一段（重點句）的長度。
+    上限要先把它扣掉，否則模型寫到剛好合格、接上重點句之後就超出護欄——
+    實際發生過：模型交出 206 字，退回的理由是長度，它第二次為了縮短
+    就把重點句整句刪掉了。
     """
     n = cjk_len(source)
-    lo = max(MIN_CJK + 10, n - 25)
-    hi = min(MAX_CJK - 10, n + 10)
+    lo = max(MIN_CJK - reserve + 10, n - 25)
+    hi = min(MAX_CJK - reserve - 5, n + 10)
     if hi <= lo:                                   # 極端情況下不要給出反向區間
-        lo, hi = MIN_CJK + 10, MAX_CJK - 10
+        lo, hi = max(1, MIN_CJK - reserve), max(2, MAX_CJK - reserve - 5)
     return lo, hi
 
 
-def _system(source: str) -> str:
-    lo, hi = _target_range(source)
+def _system(source: str, reserve: int = 0) -> str:
+    lo, hi = _target_range(source, reserve)
     return (
         "你是財經媒體的資深編輯。使用者會給你一段由程式組裝的美國總經情勢總述。"
         "把它改寫成一段連貫、自然的繁體中文散文，語氣像法人晨會的口頭摘要——"
@@ -120,11 +122,11 @@ def _system(source: str) -> str:
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
         "不要寫「約兩週」這類原文沒有的量。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
-        f"3. 長度大約 {lo} 到 {hi} 個中文字。這是**寬鬆的參考**，"
+        f"3. 長度大約 {lo} 到 {hi} 個中文字，**不要超過 {hi} 字**。"
         "不要逐字計數、不要在輸出裡標註字數或字元位置、"
         "也不要提到這個範圍本身。\n"
-        "4. 最後一句必須以「重點：」開頭（全形冒號），內容沿用原文的重點句"
-        "（語氣可以改，意思不可以改）。\n"
+        "4. 這段話後面會再接一句由程式產生的結論，**你不必也不要自己寫結論**，"
+        "寫到最後一段事實就停。\n"
         "5. 輸出純文字一段：不用列點、不用 markdown、不用換行、"
         "不要有括號編號或任何註記。\n"
         "6. 直接輸出改寫後的文字，開頭不要有「以下是」「好的」這類引言，"
@@ -358,14 +360,35 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     if offline or not key:
         return out
 
+    # ---- 重點句不交給模型 ----
+    #
+    # 重點句（「重點：降息還遠，解鎖條件是…」）是整段裡**最重要、也最
+    # 由規則決定**的一句：升降息傾向、解鎖條件、還差多少個百分點，
+    # 全部來自九宮格與觸發條件。讓模型碰它只有下檔沒有上檔。
+    #
+    # 而且它是先前兩種退回的共同原因。模型同時被要求「壓在字數範圍內」
+    # 與「保留重點句」，這兩件事會互相排擠——實測到的順序是：
+    #   第一次 206 字（超出上限）→ 帶著「太長」的理由重試
+    #   第二次為了縮短，直接把整句重點句刪掉 → 「重點句的前綴不見了」
+    # 兩次都不是模型寫壞，是我給了兩個會打架的要求。
+    #
+    # 拆開之後：模型只改寫事實段落，重點句由我們原封不動接回去。
+    # 少一個限制、而且「重點：」前綴變成**結構上保證存在**，不再靠
+    # 模型配合。字數上限也先把重點句的長度扣掉（見 _target_range 的 reserve）。
+    tail = next((p["text"] for p in parts if p.get("key") == "takeaway"), "")
+    body = "".join(p["text"] for p in parts if p.get("key") != "takeaway")
+    if not body:                                   # 只有重點句時沒東西好改寫
+        return out
+    reserve = cjk_len(tail)
+    sys_prompt = _system(body, reserve)
+
     # ---- 呼叫 ----
     # 供應商可以回 (文字, 實際用的模型)：Gemini 在模型被汰換時會自己換一個，
     # 而畫面與執行紀錄要標的是**真的用了哪一個**，不是設定裡寫的那一個。
     #
-    # 驗證沒過時**帶著原因重試一次**。實際發生過：換上的替代模型把
-    # 「重點：」前綴弄丟了——格式錯誤跟 API 掛掉不一樣，模型看得懂
-    # 「你上次錯在哪」，再講一次通常就對了。只重試一次：兩次都做不到
-    # 就是這個模型做不到，繼續燒額度不會變出第三種結果。
+    # 驗證沒過時**帶著原因重試一次**：格式錯誤跟 API 掛掉不一樣，模型看得懂
+    # 「你上次錯在哪」，再講一次通常就對了。只重試一次——兩次都做不到就是
+    # 這個模型做不到，繼續燒額度不會變出第三種結果。
     # 防護欄本身一個字都沒鬆——不合格照樣退組裝版。
     post = _post or _POST[provider]
     reason = ""
@@ -374,16 +397,17 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
         note = ("" if not reason else
                 f"\n\n（上一次的輸出被退回，原因：{reason}。"
                 f"請重新改寫並逐條遵守硬性規則——"
-                f"特別注意最後一句必須以「重點：」開頭、"
+                f"特別注意不得超過字數上限、"
                 f"不得新增任何原文沒有的數字。）")
         try:
-            res = post(key, model, out["text"] + note)
+            res = post(key, model, body + note, sys_prompt)
         except Exception as e:                     # noqa: BLE001
             log.warning("整體情勢潤稿失敗（%s），改用組裝版", e)
             return out
         if isinstance(res, tuple):
             res, model = res[0], (res[1] or model)
-        text = _sanitize(res)
+        # 重點句原封不動接回去——模型沒看過它，也就改不壞它
+        text = _sanitize(res) + tail
         reason = validate(text, out["text"])
         if not reason:
             break
@@ -410,7 +434,8 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
             "model": model}
 
 
-def _post_anthropic(key: str, model: str, source_text: str) -> str:
+def _post_anthropic(key: str, model: str, source_text: str,
+                    system: str | None = None) -> str:
     r = _http("POST", "https://api.anthropic.com/v1/messages",
               label=f"Anthropic {model}", headers={
                           "x-api-key": key,
@@ -420,7 +445,7 @@ def _post_anthropic(key: str, model: str, source_text: str) -> str:
                           "model": model,
                           "max_tokens": MAX_OUT,
                           "temperature": 0,
-                          "system": _system(source_text),
+                          "system": system or _system(source_text),
                           "messages": [{"role": "user",
                                         "content": source_text}],
                       })
@@ -574,7 +599,7 @@ def _thinking(model: str) -> dict:
 
 
 def _gemini_call(key: str, model: str, source_text: str,
-                 think: bool = True) -> str:
+                 system: str | None = None, think: bool = True) -> str:
     # 金鑰放 header 不放網址：放網址會跟著出現在錯誤訊息與代理的存取紀錄裡。
     cfg = {"temperature": 0, "maxOutputTokens": MAX_OUT}
     if think:
@@ -584,7 +609,8 @@ def _gemini_call(key: str, model: str, source_text: str,
             "x-goog-api-key": key,
             "content-type": "application/json",
         }, json={
-            "system_instruction": {"parts": [{"text": _system(source_text)}]},
+            "system_instruction": {"parts": [{"text": system
+                                             or _system(source_text)}]},
             "contents": [{"role": "user",
                           "parts": [{"text": source_text}]}],
             "generationConfig": cfg,
@@ -594,7 +620,7 @@ def _gemini_call(key: str, model: str, source_text: str,
     if r.status_code == 400 and think and _thinking(model):
         log.warning("Gemini 退回設定（%s），改成不指定推理層級再試一次",
                     r.text[:120])
-        return _gemini_call(key, model, source_text, think=False)
+        return _gemini_call(key, model, source_text, system, think=False)
     r.raise_for_status()
 
     js = r.json()
@@ -612,7 +638,8 @@ def _gemini_call(key: str, model: str, source_text: str,
     return text
 
 
-def _post_gemini(key: str, model: str, source_text: str):
+def _post_gemini(key: str, model: str, source_text: str,
+                 system: str | None = None):
     """
     回傳改寫後的文字，或 (文字, 實際用的模型)。
 
@@ -622,7 +649,7 @@ def _post_gemini(key: str, model: str, source_text: str):
     有名字可以抄，不必去猜。
     """
     try:
-        return _gemini_call(key, model, source_text)
+        return _gemini_call(key, model, source_text, system)
     except requests.HTTPError as e:
         resp = getattr(e, "response", None)
         if resp is None or resp.status_code != 404:
@@ -636,7 +663,7 @@ def _post_gemini(key: str, model: str, source_text: str):
         if not alt:
             raise
         log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成想用的名字）", alt)
-        return _gemini_call(key, alt, source_text), alt
+        return _gemini_call(key, alt, source_text, system), alt
 
 
 _POST = {"gemini": _post_gemini, "anthropic": _post_anthropic}
