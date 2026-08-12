@@ -1175,7 +1175,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-10　·　更新於 2026-08-12 17:11（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-10　·　更新於 2026-08-12 18:25（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1300,9 +1300,30 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="hyperscalers">供給端細節二：科技巨頭</h2><span class="sect-sum">資本支出佔營運現金流 83%　·　正在轉向舉債支應</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="hyperscalers">供給端細節二：科技巨頭</h2><span class="sect-sum">2026 年計畫 6,900–7,200 億美元　·　佔營運現金流 83%</span></summary><div class="sect-body">
     <p class="hint">關鍵不是資本支出的金額，是<b>融資方式</b>——
-      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。</p>
+      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。
+      先看承諾要花多少，再看現金流撐不撐得住。</p>
+    <div class="warnbox"
+         style="border-left-color:var(--critical);margin:0 0 16px">
+      <b>2026 年資本支出計畫：4 家合計
+        6,900–7,200 億美元</b>，是最新一季年化實績（4,952 億美元）的 1.4 倍<br>
+      Oracle 未提供年度指引，不在合計內。下方的季報是<b>已經花掉的</b>；這一區是<b>還沒花、但已經承諾的</b>——
+      推高長端供給的是後者。
+      <details class="f-more" style="margin-top:10px"><summary>各家指引</summary>
+        <div class="tscroll" style="margin-top:10px"><table>
+          <thead><tr><th>公司</th><th>2026 年指引</th>
+            <th>備註</th></tr></thead>
+          <tbody><tr><td>Amazon</td><td>2,000 億美元</td><td class="muted-cell"></td></tr><tr><td>Microsoft</td><td>1,900 億美元</td><td class="muted-cell">含約 250 億美元的零組件漲價</td></tr><tr><td>Alphabet</td><td>1,750–1,850 億美元</td><td class="muted-cell"></td></tr><tr><td>Meta</td><td>1,250–1,450 億美元</td><td class="muted-cell"></td></tr></tbody></table></div>
+        <p class="hint" style="margin-top:10px">
+          <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
+          它是法說會與新聞稿裡用自然語言講的（「approximately」
+          「in the range of」），每家寫法不同、每季還會改。
+          硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
+          更新於 2026-04-29　·　各公司法說會與財報新聞稿</p>
+      </details>
+    </div>
+    
     
     <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">資本支出佔營運現金流</span><span class="bk-val">83%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">超過 100% 代表自由現金流轉負，擴張必須舉債</span></div>
     <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
@@ -1432,6 +1453,25 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
         解析不到就標「待確認」，<b>不用推估值填補</b>，也不計入合計。<br>
         這些交易<b>不進</b>供給壓力分數：分數維持由經審核的季報數字決定，
         否則同一筆發債下一季會被算第二次，歷史可比性也會斷掉。</dd>
+      <dt>資本支出指引</dt>
+      <dd>各公司在法說會上對<b>整年</b>資本支出的公開承諾，跟下方表格的
+        「上一季實際花掉的」是兩件事。長端供給壓力來自還沒花的那一段——
+        承諾要花而現金流不夠，差額就得到債市籌。<br>
+        這幾個數字<b>不在任何申報欄位裡</b>，是用自然語言講的
+        （「approximately」「in the range of」），所以由人工季更，
+        來源與更新日標在指引區塊裡。沒有指引的公司會單獨列出，
+        不會被默默算成零。<br>
+        跟實績的對照用的是<b>最新一季 × 4</b> 的年化推估。資本支出有季節性
+        （第四季通常最重），所以這個倍數是量級參考，不是精確的年對年。</dd>
+      <dt>財報新聞稿的時效</dt>
+      <dd>財報新聞稿（8-K 項目 2.02）約在季末後三週申報，10-Q 的結構化
+        數字（XBRL）要再等兩週左右。下方表格只用 10-Q 的原始標記，
+        所以中間那兩週會落後一季。<br>
+        這一區只取<b>公布日期與原文連結</b>，<b>不解析新聞稿裡的數字</b>：
+        新聞稿是非結構化文字，各家口徑不同，硬解會拿到一個不知道是什麼的
+        數字混進表格。判斷「新聞稿是不是講下一季」只比對兩個日期——
+        新聞稿日期比該公司自己的季末日晚 60 天以上就是下一季
+        （一季約 91 天、新聞稿約季末後 20–30 天，60 天在兩群中間）。</dd>
     </dl>
     </details>
   </div></details>
