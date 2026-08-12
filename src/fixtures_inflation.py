@@ -65,8 +65,8 @@ def build() -> dict[str, list[dict]]:
     # 未季調版本：年增率專用。刻意給一組**略低**的值，因為實際上季調與
     # 未季調算出來的年增率就是會差 0.1–0.3 個百分點——離線畫面要能反映
     # 「這兩條不是同一個數字」，否則這個口徑差異在離線時完全看不出來。
-    s["CUUR0000SA0"] = _index(d, 324.1, 2.9, noise=0.04, recent_pct=3.8)
-    s["CUUR0000SA0L1E"] = _index(d, 330.9, 2.9, noise=0.03, recent_pct=3.5)
+    s["CPIAUCNS"] = _index(d, 324.1, 2.9, noise=0.04, recent_pct=3.8)
+    s["CPILFENS"] = _index(d, 330.9, 2.9, noise=0.03, recent_pct=3.5)
     s["PCEPI"] = _index(d, 131.1, 2.6, noise=0.03, recent_pct=3.7)
     s["PCEPILFE"] = _index(d, 132.2, 2.7, noise=0.02, recent_pct=3.6)
     s["PPIFIS"] = _index(d, 149.6, 2.4, noise=0.06, recent_pct=3.4)

@@ -697,12 +697,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     exp = ((consensus or {}).get("expectations") or {}).get(data_month) or {}
     cpi_surprises = [
         sp.evaluate("CPI 年增率",
-                    yoy_series(series.get("CUUR0000SA0") or headline),
+                    yoy_series(series.get("CPIAUCNS") or headline),
                     exp.get("CPIAUCSL_YOY"),
                     "manual" if exp.get("CPIAUCSL_YOY") is not None else "none",
                     unit="%", higher_is_better=False, allow_model=False),
         sp.evaluate("核心 CPI 年增率",
-                    yoy_series(series.get("CUUR0000SA0L1E")
+                    yoy_series(series.get("CPILFENS")
                                or series.get("CPILFESL", [])),
                     exp.get("CPILFESL_YOY"),
                     "manual" if exp.get("CPILFESL_YOY") is not None else "none",
@@ -760,7 +760,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             if summ.headline_yoy is not None else "—"),
         # 年增率一律用未季調（跟大數字同一個口徑，見 inflation._yoy_nsa）。
         # 混用的話卡片上的 3.4% 會配一條 3.5% 的走勢線，看起來像資料錯亂。
-        "headline_spark": rate_spark("CUUR0000SA0", fallback="CPIAUCSL"),
+        "headline_spark": rate_spark("CPIAUCNS", fallback="CPIAUCSL"),
 
         "core_display": _pct(summ.core_yoy),
         # 四張 KPI 的副標統一成「短期動能 · 離目標」兩段，每張都回答
@@ -774,7 +774,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             f"剔除波動大的食物與能源後，物價一年漲 {summ.core_yoy:.1f}%。"
             "聯準會看趨勢時主要看這一類數字。"
             if summ.core_yoy is not None else "—"),
-        "core_spark": rate_spark("CUUR0000SA0L1E", fallback="CPILFESL"),
+        "core_spark": rate_spark("CPILFENS", fallback="CPILFESL"),
         "core_flag": (f"三個月年化 {summ.core_3m:.1f}%，動能"
                       + ("放緩" if (summ.core_3m or 9) < (summ.core_yoy or 0) else "回升")
                       if summ.core_3m is not None and summ.core_yoy is not None else None),
@@ -1010,11 +1010,11 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         },
         "mini": {
             "headline": charts.mini_series(
-                yoy_series(series.get("CUUR0000SA0")
+                yoy_series(series.get("CPIAUCNS")
                            or series.get("CPIAUCSL", [])),
                                            unit="%", fmt=lambda v: f"{v:.1f}"),
             "core": charts.mini_series(
-                yoy_series(series.get("CUUR0000SA0L1E")
+                yoy_series(series.get("CPILFENS")
                            or series.get("CPILFESL", [])),
                                        unit="%", fmt=lambda v: f"{v:.1f}"),
             "pce": charts.mini_series(yoy_series(series.get("PCEPILFE", [])),

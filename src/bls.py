@@ -80,6 +80,9 @@ MAP = {
     "CPILFESL": "CUSR0000SA0L1E",      # 核心 CPI（扣食物與能源），季調
     "CPIUFDSL": "CUSR0000SAF1",        # 食物
     "CPIENGSL": "CUSR0000SA0E",        # 能源
+    # 未季調：年增率專用（BLS 公布的年增率就是這個口徑）
+    "CPIAUCNS": "CUUR0000SA0",         # 總體 CPI，未季調
+    "CPILFENS": "CUUR0000SA0L1E",      # 核心 CPI，未季調
 
     # ---- 就業報告（每月第一個週五 08:30 發布）----
     "PAYEMS": "CES0000000001",         # 非農就業總數
@@ -122,7 +125,7 @@ GROUPS = {
     # 未季調兩條也在同一份新聞稿裡，而且年增率就是用它們算的——
     # 沒有一起推進的話，畫面上會出現「七月的月增率配六月的年增率」。
     "cpi": ["CPIAUCSL", "CPILFESL", "CPIUFDSL", "CPIENGSL",
-            "CUUR0000SA0", "CUUR0000SA0L1E",
+            "CPIAUCNS", "CPILFENS",
             "CUSR0000SACL1E", "CUSR0000SAH1", "CUSR0000SASLE",
             "CUSR0000SEHA", "CUSR0000SEHC"],
     "jobs": ["PAYEMS", "USPRIV", "USGOVT", "UNRATE", "U6RATE", "CIVPART",

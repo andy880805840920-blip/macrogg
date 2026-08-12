@@ -263,10 +263,12 @@ check("㊱ 未季調資料不足時也退回季調",
 # 未季調兩條必須跟其他 CPI 序列同組推進，否則會出現
 # 「七月的月增率配六月的年增率」
 check("㊲ 未季調在 CPI 那一組裡",
-      "CUUR0000SA0" in bls.GROUPS["cpi"]
-      and "CUUR0000SA0L1E" in bls.GROUPS["cpi"])
-check("㊳ 而且走得了快速通道（CUUR 前綴直接沿用）",
-      bls._bls_id("CUUR0000SA0") == "CUUR0000SA0")
+      "CPIAUCNS" in bls.GROUPS["cpi"] and "CPILFENS" in bls.GROUPS["cpi"])
+# ⚠️ 用的必須是 **FRED 真的有的代號**。先前寫成 CUUR0000SA0L1E——那是
+# BLS 的代號，FRED 上沒有，於是抓不到、靜靜退回季調，修正等於沒生效。
+check("㊳ 對應到 BLS 的未季調代號",
+      bls._bls_id("CPIAUCNS") == "CUUR0000SA0"
+      and bls._bls_id("CPILFENS") == "CUUR0000SA0L1E")
 
 print()
 print("全部通過" if ok else "有失敗")

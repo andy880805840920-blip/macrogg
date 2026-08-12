@@ -11,6 +11,10 @@
 
 from __future__ import annotations
 
+import logging
+
+log = logging.getLogger(__name__)
+
 from dataclasses import dataclass, field
 
 from .core import annualized, annualized_series, yoy, mom_pct, value_at
@@ -257,7 +261,7 @@ def inflation_bands(s: "InflationSummary") -> dict:
                     f"{n:.2f}%")}
 
 
-def _yoy_nsa(nsa: list, sa: list) -> float | None:
+def _yoy_nsa(nsa: list, sa: list, label: str = "") -> float | None:
     """
     年增率：優先用未季調，抓不到才退回季調。
 
@@ -267,11 +271,22 @@ def _yoy_nsa(nsa: list, sa: list) -> float | None:
                      而且 BLS 公布的那個數字就是這樣算的。
 
     還有一個實務理由：季調指數在原始發布後最長五年內都可能因為季節因子
-    重估而被回溯修改，未季調則永遠不動。一個會事後變動的年增率，
-    跟「這個月漲了多少」這種歷史事實放在一起會很奇怪。
+    重估而被回溯修改，未季調則永遠不動。
+
+    ⚠️ **退回季調時一定要出聲。** 這個退路曾經安靜地吃掉一次真正的錯：
+    未季調的序列代號打錯（用了 FRED 上不存在的 CUUR0000SA0L1E），抓不到
+    資料，於是每次都退回季調——畫面照樣有數字，只是跟 BLS 差 0.3 個百分點，
+    而且沒有任何跡象顯示修正沒有生效。安靜的退路會把 bug 藏起來。
     """
     v = yoy(nsa)
-    return v if v is not None else yoy(sa)
+    if v is not None:
+        return v
+    sav = yoy(sa)
+    if sav is not None:
+        log.warning("%s 抓不到未季調序列，年增率退回季調——這會跟 BLS 公布的"
+                    "數字差 0.1–0.3 個百分點。檢查 config/inflation.yaml 的"
+                    "CPIAUCNS／CPILFENS 是否抓得到。", label or "CPI")
+    return sav
 
 
 def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> InflationSummary:
@@ -282,8 +297,8 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     # 用季調算會系統性地差 0.1–0.3 個百分點，畫面上就跟所有媒體對不上。
     # 抓不到未季調時退回季調——少 0.2 個百分點，總比整個數字消失好，
     # 但那是退路不是常態。
-    s.headline_yoy = _yoy_nsa(g("CUUR0000SA0", []), g("CPIAUCSL", []))
-    s.core_yoy = _yoy_nsa(g("CUUR0000SA0L1E", []), g("CPILFESL", []))
+    s.headline_yoy = _yoy_nsa(g("CPIAUCNS", []), g("CPIAUCSL", []), "總體 CPI")
+    s.core_yoy = _yoy_nsa(g("CPILFENS", []), g("CPILFESL", []), "核心 CPI")
     s.core_mom = mom_pct(g("CPILFESL", []))
     s.core_3m = annualized(g("CPILFESL", []), 3)
     s.core_6m = annualized(g("CPILFESL", []), 6)

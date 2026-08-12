@@ -347,14 +347,14 @@ class MV:                      # 假的 ChangeSet
         self.metric_moves = moves
 
 
-def mv(mod, label, frm, to, lean="dovish"):
-    return {"module": mod, "label": label, "from": frm, "to": to,
+def mv(mod, key, label, frm, to, lean="dovish"):
+    return {"module": mod, "key": key, "label": label, "from": frm, "to": to,
             "delta": to - frm, "unit": "%", "lean": lean}
 
 
-INF_MOVES = [mv("inflation", "核心 CPI 年增", 2.6, 2.5),
-             mv("inflation", "CPI 年增", 3.5, 3.4),
-             mv("labor", "失業率", 4.0, 4.1)]
+INF_MOVES = [mv("inflation", "core_cpi_yoy", "核心 CPI 年增", 2.6, 2.5),
+             mv("inflation", "core_cpi_3m", "核心 CPI 三月年化", 2.0, 1.9),
+             mv("labor", "u3", "失業率", 4.0, 4.1)]
 
 
 def wn(prev, cur="2026-07", prov=False, moves=INF_MOVES):
@@ -386,19 +386,34 @@ check("61 這一句排在最前面",
       brief.compose({**ctx_with(), "_prev_months": OLD,
                      "changes": MV(INF_MOVES)})["parts"][0]["key"] == "whatsnew")
 check("62 動最多的排前面（重點不是清單順序）",
-      wn(OLD, moves=[mv("inflation", "小動", 2.0, 2.05),
-                     mv("inflation", "大動", 3.0, 3.8)]).index("大動")
-      < wn(OLD, moves=[mv("inflation", "小動", 2.0, 2.05),
-                       mv("inflation", "大動", 3.0, 3.8)]).index("小動"))
+      wn(OLD, moves=[mv("inflation", "core_cpi_yoy", "小動", 2.0, 2.05),
+                     mv("inflation", "core_cpi_3m", "大動", 3.0, 3.8)])
+      .index("大動")
+      < wn(OLD, moves=[mv("inflation", "core_cpi_yoy", "小動", 2.0, 2.05),
+                       mv("inflation", "core_cpi_3m", "大動", 3.0, 3.8)])
+      .index("小動"))
 check("63 最多只講兩個數字（三個以上變流水帳）",
       wn(OLD).count("上月") <= 2)
 check("64 同向才講方向",
       "方向偏降息" in wn(OLD)
       and "方向偏" not in wn(OLD, moves=[
-          mv("inflation", "甲", 2.0, 2.5, "hawkish"),
-          mv("inflation", "乙", 3.0, 2.5, "dovish")]))
+          mv("inflation", "core_cpi_yoy", "甲", 2.0, 2.5, "hawkish"),
+          mv("inflation", "core_cpi_3m", "乙", 3.0, 2.5, "dovish")]))
 check("65 有新資料但都沒動 → 講「變動都在雜訊範圍內」",
       "雜訊範圍" in wn(OLD, moves=[]))
+
+# CPI 發布日不能拿核心 PCE 來充數——那是月底 BEA 發布的，是上個月的數字。
+# 這是實際發生過的：CPI 出爐當天，摘要寫的是「7 月核心 PCE 3.3%」。
+_MIXED = [mv("inflation", "core_pce", "核心 PCE 年增", 3.0, 3.3, "hawkish"),
+          mv("inflation", "core_cpi_yoy", "核心 CPI 年增", 2.6, 2.5)]
+check("65b CPI 發布日不會寫成核心 PCE",
+      "核心 PCE" not in wn(OLD, moves=_MIXED)
+      and "核心 CPI" in wn(OLD, moves=_MIXED), wn(OLD, moves=_MIXED))
+check("65c 就算 PCE 動得比較多也一樣（用允許清單不是比幅度）",
+      abs(_MIXED[0]["delta"]) > abs(_MIXED[1]["delta"]))
+check("65d 不在清單裡的指標一律不算本次新增",
+      "雜訊範圍" in wn(OLD, moves=[
+          mv("inflation", "exp5y5y", "長期通膨預期", 2.3, 2.5)]))
 
 # 上限放寬之後仍然有防呆
 check("66 上限只是防呆，放得很寬", brief.MAX_CJK >= 400)

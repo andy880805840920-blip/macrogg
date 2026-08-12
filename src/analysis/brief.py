@@ -196,6 +196,20 @@ def _pick_signal(flags, covered=_COVERED) -> str:
 # 三個以上就變成流水帳，而讀者要的是「這次的重點是什麼」。
 _NEW_MAX = 2
 
+# 哪些指標屬於「這個模組的月度發布」。
+#
+# ⚠️ 一個模組裡不是每個指標都同一天更新。通膨模組同時放著 CPI（月中發布）、
+# 核心 PCE（月底發布，來自 BEA）、通膨預期（每日）、油價（每週）。CPI 出爐
+# 那天只有 CPI 是新的，但先前的程式把**整個模組**的變動都算成「本次更新」，
+# 結果 CPI 發布日的摘要寫的是核心 PCE——那是上個月的數字。
+#
+# 所以用允許清單而不是排除清單：沒列到的一律不算「本次新增」。
+# 寧可少講一項，也不要把別的發布日的數字冠上「本次」。
+_RELEASE_KEYS = {
+    "labor": {"nfp", "nfp_3m", "u3", "lfpr", "ahe_yoy"},
+    "inflation": {"core_cpi_yoy", "core_cpi_3m", "supercore"},
+}
+
 
 def _fmt_move(m: dict) -> str:
     """一條數字變動 → 「核心 CPI 年增 2.5%（上月 2.6%）」。"""
@@ -241,7 +255,9 @@ def _whats_new(ctxs: dict) -> str:
     changes = ctxs.get("changes")
     moves = list(getattr(changes, "metric_moves", None) or [])
     keys = {k for k, _, _ in fresh}
-    mine = [m for m in moves if m.get("module") in keys]
+    mine = [m for m in moves
+            if m.get("module") in keys
+            and m.get("key") in _RELEASE_KEYS.get(m.get("module"), set())]
     # 動得最多的排前面：這一次真正的重點是變化幅度最大的那一個，
     # 不是清單裡剛好排第一的那一個。
     mine.sort(key=lambda m: -abs(m.get("delta") or 0))
