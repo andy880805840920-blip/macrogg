@@ -205,9 +205,17 @@ def gather_hyperscalers(cfg: dict, offline: bool) -> list:
             hs["offerings"] = fixtures_rates.offerings()
             hs["earnings"] = fixtures_rates.earnings(hs.get("companies") or [])
         return []
+    from src import sec as _sec
     from src.sec import (SecClient, fetch_hyperscalers, fetch_recent_offerings,
                          fetch_recent_earnings)
     client = SecClient()
+    # 印出實際送出的 User-Agent。SEC 擋掉請求時整區會退回手動值，而
+    # 「變數沒設」「設在 Secrets 分頁」「workflow 沒把它傳進來」三種情況
+    # 先前的 log 長得一模一樣——直接印出來就不必再猜。
+    log.info("SEC User-Agent：%s%s", _sec.USER_AGENT,
+             "" if _sec.USER_AGENT != _sec.DEFAULT_USER_AGENT
+             else "（SEC_USER_AGENT 沒有傳進來，用內建預設值；"
+                  "預設值的信箱是假的，SEC 可能限流）")
     log.info("科技巨頭：向 SEC EDGAR 擷取 %d 家的最新一季財報",
              len(hs["companies"]))
     comps, as_of, verified = fetch_hyperscalers(hs, client)

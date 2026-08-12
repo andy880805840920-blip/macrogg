@@ -482,6 +482,114 @@ check("85 提示詞禁止逐字計數與標註",
       all(k in _sys for k in ("不要逐字計數", "字元位置", "括號編號")),
       _sys[-160:])
 
+
+# ---------------------------------------------------------------------------
+# ⑨ 暫時性失敗要重試
+#
+# 實際發生過：伺服器回 503 Service Unavailable，整段總述就退回組裝版。
+# 這種錯跟送出去的內容無關，過幾秒再送多半就成功——不重試等於讓一次
+# 幾秒的伺服器抖動決定首頁那一段的樣子。
+# 但 400／404 不能重試：再送幾次都是同樣的結果，只是白花額度。
+# ---------------------------------------------------------------------------
+class FakeResp:
+    def __init__(self, code, headers=None):
+        self.status_code, self.headers = code, headers or {}
+
+
+slept = []
+polish._SLEEP = lambda s: slept.append(s)
+
+
+def fake_requests(codes):
+    """依序回傳這些狀態碼；int 代表回應，Exception 代表連線層失敗。"""
+    seq, calls = list(codes), []
+
+    def request(method, url, **kw):
+        calls.append(url)
+        nxt = seq.pop(0) if seq else 200
+        if isinstance(nxt, Exception):
+            raise nxt
+        return FakeResp(nxt)
+    return request, calls
+
+
+_real_request = polish.requests.request
+try:
+    # 503 → 503 → 200：第三次成功
+    slept.clear()
+    polish.requests.request, calls = fake_requests([503, 503, 200])
+    r = polish._http("POST", "https://x", label="測試")
+    check("86 503 會重試到成功", r.status_code == 200 and len(calls) == 3,
+          f"{len(calls)} 次")
+    check("87 兩次之間有退避", slept == list(polish.BACKOFF), str(slept))
+
+    # 400 不重試
+    slept.clear()
+    polish.requests.request, calls = fake_requests([400, 200])
+    r = polish._http("POST", "https://x", label="測試")
+    check("88 400 不重試（再送也一樣）",
+          r.status_code == 400 and len(calls) == 1, f"{len(calls)} 次")
+
+    # 404 不重試——模型不存在要走換模型那條路，不是重送
+    polish.requests.request, calls = fake_requests([404, 200])
+    check("89 404 不重試",
+          polish._http("GET", "https://x", label="測試").status_code == 404
+          and len(calls) == 1)
+
+    # 一直 503 → 試滿次數後回最後一個 response，讓呼叫端產生一致的錯誤
+    slept.clear()
+    polish.requests.request, calls = fake_requests([503] * 5)
+    r = polish._http("POST", "https://x", label="測試")
+    check("90 一直失敗 → 試滿次數就放棄",
+          r.status_code == 503 and len(calls) == polish.MAX_TRIES,
+          f"{len(calls)} 次")
+
+    # 連線層例外也重試；全部失敗要把例外丟出去（不能假裝成功）
+    slept.clear()
+    boom_exc = polish.requests.RequestException("connection reset")
+    polish.requests.request, calls = fake_requests([boom_exc, boom_exc, 200])
+    check("91 連線失敗也重試",
+          polish._http("POST", "https://x", label="測試").status_code == 200)
+    polish.requests.request, calls = fake_requests([boom_exc] * 5)
+    try:
+        polish._http("POST", "https://x", label="測試")
+        hit = False
+    except polish.requests.RequestException:
+        hit = True
+    check("92 全部連線失敗 → 丟出例外", hit)
+
+    # 429 照 Retry-After 等，但要有上限
+    slept.clear()
+    polish.requests.request = lambda m, u, **kw: (
+        FakeResp(429, {"Retry-After": "5"}) if len(slept) < 1 else FakeResp(200))
+    polish._http("POST", "https://x", label="測試")
+    check("93 429 照 Retry-After 等", slept == [5.0], str(slept))
+    check("94 Retry-After 有上限（伺服器亂給不能照單全收）",
+          polish._retry_after(FakeResp(429, {"Retry-After": "9999"})) == 0.0)
+    check("95 沒有 Retry-After 就用固定退避",
+          polish._retry_after(FakeResp(503)) == 0.0)
+finally:
+    polish.requests.request = _real_request
+    polish._SLEEP = __import__("time").sleep
+
+
+# ---------------------------------------------------------------------------
+# ⑩ 設定診斷：讓「我明明設了為什麼沒生效」在 log 裡有答案
+# ---------------------------------------------------------------------------
+n = polish.config_note({"GEMINI_API_KEY": "g", "BRIEF_MODEL": "gemini-flash-latest"})
+check("96 有覆寫 → 印出模型與來源",
+      "gemini-flash-latest" in n and "BRIEF_MODEL" in n, n)
+n = polish.config_note({"GEMINI_API_KEY": "g"})
+check("97 沒覆寫 → 講出「沒有傳進來」並指向 update.yml",
+      "沒有傳進來" in n and "update.yml" in n, n)
+check("98 沒覆寫時印的是預設模型",
+      polish.PROVIDERS["gemini"]["model"] in n)
+n = polish.config_note({})
+check("99 沒有金鑰 → 講清楚會走組裝版", "組裝版" in n, n)
+check("100 診斷字串不會外洩金鑰",
+      "g" not in polish.config_note({"GEMINI_API_KEY": "supersecret"})
+      or "supersecret" not in polish.config_note({"GEMINI_API_KEY": "supersecret"}))
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

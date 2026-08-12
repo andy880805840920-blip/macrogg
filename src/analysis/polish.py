@@ -43,6 +43,7 @@ from __future__ import annotations
 import os
 import re
 import json
+import time
 import logging
 
 import requests
@@ -53,6 +54,31 @@ from .brief import cjk_len, MIN_CJK, MAX_CJK
 log = logging.getLogger(__name__)
 
 TIMEOUT = 45
+
+# ---------------------------------------------------------------------------
+# 暫時性失敗要重試
+#
+# 實際發生過：模型伺服器回 503 Service Unavailable，整段總述就退回組裝版。
+# 這種錯跟「模型不存在」（404）或「參數寫錯」（400）完全不同——它跟我們送
+# 什麼無關，過幾秒再送一次多半就成功了。不重試等於讓一次幾秒的伺服器抖動
+# 決定首頁那一段的樣子。
+#
+# 只重試這幾個狀態碼：
+#   429  被限流（免費額度的尖峰時段很常見）
+#   500 / 502 / 503 / 504  伺服器端的暫時故障
+# 其餘一律不重試——400／401／403／404 再送幾次都是同樣的結果，
+# 只是白花額度。
+RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
+MAX_TRIES = 3
+# 退避秒數。刻意短：這是每天跑一次的排程，不值得為了一段選配的敘述
+# 卡住整個 workflow；三次試完還是不行就用組裝版，明天再說。
+BACKOFF = (3, 9)
+# 429 會帶 Retry-After。照它給的等，但設上限——伺服器偶爾會回幾百秒，
+# 那已經超過「值得為這一段等」的範圍了。
+RETRY_AFTER_MAX = 30
+
+# 測試用的注入點：不要真的睡。
+_SLEEP = time.sleep
 
 # 輸出額度。這段文字本身只要 300 token 上下，但**推理用掉的 token 也算在
 # 這個上限裡**——額度給太緊，推理模型會把它花光然後回一個空字串
@@ -250,6 +276,34 @@ PROVIDERS = {
 }
 
 
+def config_note(env) -> str:
+    """
+    一行字說明「這次實際會用什麼」，給執行紀錄看。
+
+    存在的理由是一個查了三次的問題：使用者把 BRIEF_MODEL 設好了，
+    log 卻還是走預設模型。可能的原因有三個，而它們的畫面完全一樣：
+
+      ① 變數真的沒設
+      ② 設在 Secrets 分頁而不是 Variables 分頁
+      ③ 變數設對了，但 repo 裡的 update.yml 是舊版、沒有那一行
+         `BRIEF_MODEL: ${{ vars.BRIEF_MODEL }}`——變數再對也傳不進來
+
+    程式看得到的只有「環境變數有沒有值」，所以就把這件事明確講出來：
+    印出 BRIEF_MODEL 到底有沒有傳進這個行程。剩下的判斷交給人，
+    但至少不必再猜了。
+    """
+    provider, key = _pick_provider(env)
+    if not provider:
+        return "沒有可用的金鑰 → 用規則組裝版（設 GEMINI_API_KEY 或 " \
+               "ANTHROPIC_API_KEY 才會啟用潤稿）"
+    override = (env.get("BRIEF_MODEL") or "").strip()
+    if override:
+        return f"供應商 {provider}、模型 {override}（來自 BRIEF_MODEL）"
+    return (f"供應商 {provider}、模型 {PROVIDERS[provider]['model']}（預設值）"
+            "；BRIEF_MODEL 沒有傳進來——變數若已設定，檢查 update.yml 的 env "
+            "有沒有那一行 BRIEF_MODEL: ${{ vars.BRIEF_MODEL }}")
+
+
 def _pick_provider(env) -> tuple[str, str]:
     """回傳 (供應商, 金鑰)；沒有任何金鑰時回 ("", "")。"""
     for name in PROVIDER_ORDER:
@@ -277,8 +331,13 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
         return out
 
     provider, key = _pick_provider(env)
-    model = ((env.get("BRIEF_MODEL") or "").strip()
-             or (PROVIDERS[provider]["model"] if provider else ""))
+    override = (env.get("BRIEF_MODEL") or "").strip()
+    model = override or (PROVIDERS[provider]["model"] if provider else "")
+    # 每次都印出「這次實際用什麼」。沒有這一行的話，「我明明設了
+    # BRIEF_MODEL 為什麼沒生效」只能靠猜——變數可能沒設、可能設在
+    # Secrets 分頁、也可能 workflow 根本沒把它傳進來（舊版的 update.yml
+    # 沒有那一行）。三種的畫面與 log 先前長得一模一樣。
+    log.info("整體情勢潤稿設定：%s", config_note(env))
     parts = assembled.get("parts") or []
     facts_h = _hash(parts, "")                     # 只看事實
     h = _hash(parts, f"{provider}:{model}")        # 事實＋供應商＋模型
@@ -352,8 +411,8 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
 
 
 def _post_anthropic(key: str, model: str, source_text: str) -> str:
-    r = requests.post("https://api.anthropic.com/v1/messages",
-                      timeout=TIMEOUT, headers={
+    r = _http("POST", "https://api.anthropic.com/v1/messages",
+              label=f"Anthropic {model}", headers={
                           "x-api-key": key,
                           "anthropic-version": "2023-06-01",
                           "content-type": "application/json",
@@ -367,6 +426,47 @@ def _post_anthropic(key: str, model: str, source_text: str) -> str:
                       })
     r.raise_for_status()
     return r.json()["content"][0]["text"]
+
+
+def _retry_after(resp) -> float:
+    """讀 Retry-After 標頭，讀不到或不合理就回 0（改用固定退避）。"""
+    try:
+        v = float((resp.headers or {}).get("Retry-After", ""))
+    except (TypeError, ValueError, AttributeError):
+        return 0.0
+    return v if 0 < v <= RETRY_AFTER_MAX else 0.0
+
+
+def _http(method: str, url: str, *, label: str, **kw):
+    """
+    帶重試的 HTTP 呼叫。**不**自己判斷成功與否——回傳 response 讓呼叫端
+    決定（Gemini 的 400 要看內容再決定要不要換參數重送）。
+
+    只有 RETRY_STATUS 與連線層例外會重試。試完還是不行的話：
+    有 response 就回傳它（讓呼叫端用 raise_for_status 產生一致的訊息），
+    連 response 都沒有才把最後一個例外丟出去。
+    """
+    resp = None
+    last_exc = None
+    for attempt in range(MAX_TRIES):
+        try:
+            resp = requests.request(method, url, timeout=TIMEOUT, **kw)
+            last_exc = None
+            if resp.status_code not in RETRY_STATUS:
+                return resp
+        except requests.RequestException as e:      # noqa: PERF203
+            resp, last_exc = None, e
+        if attempt == MAX_TRIES - 1:
+            break
+        wait = (_retry_after(resp) if resp is not None else 0.0) \
+            or BACKOFF[min(attempt, len(BACKOFF) - 1)]
+        why = (f"HTTP {resp.status_code}" if resp is not None else last_exc)
+        log.warning("%s 暫時失敗（%s），%.0f 秒後重試（第 %d／%d 次）",
+                    label, why, wait, attempt + 2, MAX_TRIES)
+        _SLEEP(wait)
+    if resp is not None:
+        return resp
+    raise last_exc
 
 
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
@@ -409,8 +509,8 @@ def _gemini_models(key: str) -> list[str]:
     因為前者要改程式、後者只要換個模型名。
     """
     try:
-        r = requests.get(f"{GEMINI_BASE}/models", timeout=TIMEOUT,
-                         headers={"x-goog-api-key": key})
+        r = _http("GET", f"{GEMINI_BASE}/models", label="Gemini 模型清單",
+                  headers={"x-goog-api-key": key})
         r.raise_for_status()
         out = []
         for m in (r.json().get("models") or []):
@@ -479,9 +579,8 @@ def _gemini_call(key: str, model: str, source_text: str,
     cfg = {"temperature": 0, "maxOutputTokens": MAX_OUT}
     if think:
         cfg.update(_thinking(model))
-    r = requests.post(
-        f"{GEMINI_BASE}/models/{model}:generateContent",
-        timeout=TIMEOUT, headers={
+    r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent",
+              label=f"Gemini {model}", headers={
             "x-goog-api-key": key,
             "content-type": "application/json",
         }, json={
