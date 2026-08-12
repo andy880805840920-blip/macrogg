@@ -96,8 +96,12 @@ class TruncatedError(RuntimeError):
 # 不看上限。先前設 800，正好落在會被推理吃光的區間。
 MAX_OUT = 8000
 
+# 2.5 Pro 的推理**關不掉**：thinkingBudget 的合法值是 128–32768 或 -1，
+# 送 0 會回 400。送最小值 128 —— 合法、而且把 MAX_OUT 幾乎整份留給文字。
+PRO_MIN_THINKING = 128
+
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 8
+PROMPT_VERSION = 9
 
 
 def _max_cjk(cfg: dict | None = None) -> int:
@@ -159,7 +163,9 @@ def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
         "硬性規則：\n"
         "1. 不得新增、刪除或改動任何數字與百分比。輸出中的每個數字都必須"
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
-        "不要寫「約兩週」這類原文沒有的量。\n"
+        "不要寫「約兩週」這類原文沒有的量。**用中文數字寫的數量也算數字**"
+        "——「三方裡兩方偏升息、一方偏降息」的「三／兩／一」不可改動，"
+        "尤其不要把「兩方」寫成「一方」或「另一方」，那會把多數變成平手。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
         # 先前這裡有一條 2c：「開頭若有『本次更新：…』那一句，保留在最前面
         # 且不得改動任何數字」。拿掉了——那句話現在根本不會出現在模型看到的
@@ -296,6 +302,33 @@ def looks_truncated(body: str) -> bool:
     return bool(s) and s[-1] not in _END
 
 
+# 中文數字寫的「幾方」也要鎖。
+#
+# 數字鎖定只認阿拉伯數字（`_NUM` 是 `\d`），而共識句刻意用中文數字寫——
+# 「三方裡兩方偏升息、一方偏降息」比「3 方裡 2 方」像人話。代價是那三個
+# 數字**完全在鎖定範圍之外**，模型可以隨便改而三道防護欄都不作聲。
+#
+# 實際發生過的：
+#     組裝版　聯準會把通膨擺在前面；三方裡**兩方**偏升息、一方偏降息。
+#     畫面上　聯準會目前把通膨擺在前面，三方陣營裡有**一方**偏升息、
+#             另一方偏降息。
+# 二比一變成一比一——多數變成平手，而這一句正是整段的第一個結論。
+#
+# 為什麼不把所有中文數字都正規化進 `_numbers()`：「一致」「一半」「三個月」
+# 到處都是，全鎖會讓正常的改寫大量誤判。所以只鎖**緊接著「方」**的那一個字
+# ——那是這段話裡唯一用中文數字表達「數量」的地方。
+#
+# 排除「方面／方向／方案／方式」：「方向分歧」就在同一句裡，不排掉會誤判。
+_CN_DIGIT = {"〇": 0, "零": 0, "一": 1, "二": 2, "兩": 2, "三": 3, "四": 4,
+             "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
+_SIDES = re.compile(r"([〇零一二兩三四五六七八九])\s*方(?![面向案式])")
+
+
+def _sides(s: str) -> list[int]:
+    """「三方裡兩方偏升息、一方偏降息」→ [1, 2, 3]（排序後比對）。"""
+    return sorted(_CN_DIGIT[c] for c in _SIDES.findall(s or ""))
+
+
 def validate(out: str, source: str, cap: int | None = None) -> str:
     """
     防護欄一。回傳空字串＝通過；否則回傳失敗原因（進執行紀錄）。
@@ -314,6 +347,11 @@ def validate(out: str, source: str, cap: int | None = None) -> str:
     extra = _numbers(out) - _numbers(source)
     if extra:
         return f"出現原文沒有的數字：{sorted(extra)}"
+    # 這一條要雙向比對，不是「有沒有多出來」：實際的錯是把「兩方」改小成
+    # 「一方」——**少掉**一個數量，單向檢查抓不到。
+    if _sides(out) != _sides(source):
+        return (f"共識句的方數對不上（原文 {_sides(source)}、"
+                f"輸出 {_sides(out)}）")
     if "重點：" not in out:
         return "重點句的前綴不見了"
     n = cjk_len(out)
@@ -344,7 +382,15 @@ PROVIDER_ORDER = ("gemini", "anthropic")
 PROVIDERS = {
     "gemini": {
         "env": ("GEMINI_API_KEY", "GOOGLE_API_KEY"),
-        "model": "gemini-2.5-flash",
+        # 為什麼預設是 pro 而不是 flash：這一段**一個月只重新生成幾次**
+        #（事實沒變就走 state/brief.json 的快取），所以「貴的模型」在這裡
+        # 幾乎不花錢，也吃不掉免費額度。而 flash 實測寫出來的東西偏平，
+        # 還把「三方裡兩方偏升息」改成「一方」——換句話說省下來的那點
+        # 額度買到的是比較差的稿子加上一次事實錯誤。
+        #
+        # 選 2.5 而不是 3.x pro：2.x 才收 thinkingConfig，能把推理壓到最小
+        # 而不是讓它吃掉輸出額度（見 _thinking）。3.x 關不掉，截斷風險高。
+        "model": "gemini-2.5-pro",
     },
     "anthropic": {
         "env": ("ANTHROPIC_API_KEY",),
@@ -725,10 +771,19 @@ def _thinking(model: str) -> dict:
     3.x 關不掉推理，改用三道防線頂著：MAX_OUT 給足額度、截斷檢查
     （looks_truncated／finishReason），以及真的截斷時換成預設不推理的
     lite 模型。
+
+    **2.5 Pro 也關不掉，但它跟 3.x 不一樣**：它收 thinkingConfig，只是
+    `thinkingBudget` 的合法範圍是 128–32768 或 -1（動態），送 0 會直接 400。
+    所以這裡送**最小值 128** 而不是省略——省略等於 -1（動態），模型可能
+    花掉幾千個 token 去想一段 200 字的改寫，剩下的額度就不夠寫完，
+    又會踩回截斷那個坑。128 是「合法的最少」，把額度留給文字。
     """
-    m = _VER.search(model.lower())
+    low = model.lower()
+    m = _VER.search(low)
     if not m or float(m.group(1)) >= 3:
         return {}
+    if _family(low) == 2:                          # pro
+        return {"thinkingConfig": {"thinkingBudget": PRO_MIN_THINKING}}
     return {"thinkingConfig": {"thinkingBudget": 0}}
 
 

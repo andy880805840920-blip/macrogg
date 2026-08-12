@@ -283,13 +283,23 @@ New repository secret，二選一（都設的話優先用 Gemini，因為有免�
 
 | Secret 名稱 | 金鑰哪裡拿 | 用的模型 |
 |---|---|---|
-| `GEMINI_API_KEY` | aistudio.google.com/apikey（免費） | gemini-2.5-flash |
+| `GEMINI_API_KEY` | aistudio.google.com/apikey（免費） | gemini-2.5-pro |
 | `ANTHROPIC_API_KEY` | console.anthropic.com | claude-haiku-4-5 |
 
 設完下次執行自動生效；不設就永遠用組裝版，什麼都不會壞。
-執行紀錄會寫「整體情勢：模型潤稿，gemini-2.5-flash／規則組裝」，看得出走哪條路。
+執行紀錄會寫「整體情勢：模型潤稿，gemini-2.5-pro／規則組裝」，看得出走哪條路。
 Gemini 免費層有每日次數限制，但這裡**事實沒變不會重新呼叫**，
 一個月大約只打十幾次，離上限很遠。
+
+**為什麼預設是 pro 而不是 flash。** 就是因為上面那一行：一個月只打十幾次。
+在這個用量下「貴的模型」幾乎不花錢，也吃不掉免費額度，而 flash 寫出來的
+東西實測偏平——還把「三方裡兩方偏升息」改寫成「一方」，把多數講成平手。
+省下來的那點額度買到的是比較差的稿子加上一次事實錯誤。
+
+**⚠️ 已經設過 `BRIEF_MODEL` 變數的話，這個預設值不會生效**——變數的優先權
+比較高。到 Settings → Secrets and variables → Actions → Variables，把
+`BRIEF_MODEL` 改成 `gemini-2.5-pro`，或**整個刪掉**讓程式用預設值。
+執行紀錄第一行就會寫這次實際用的是哪一個，改完看一眼就知道有沒有生效。
 
 ⚠️ 金鑰**只能放 Secrets**：不要貼進聊天、不要寫進程式或 config、
 不要 commit。貼出去過的金鑰一律視同外流，回到發金鑰的網站刪掉重生一把。

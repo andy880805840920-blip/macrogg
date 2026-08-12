@@ -458,6 +458,31 @@ check("76c lite 也是看版本不是看名字",
       == {"thinkingConfig": {"thinkingBudget": 0}})
 check("77 輸出額度夠大，不會被推理吃光", polish.MAX_OUT >= 2000)
 
+# 2.5 Pro **關不掉推理**：thinkingBudget 只收 128–32768 或 -1，送 0 會 400。
+# 跟 3.x 不同的是它照收 thinkingConfig，所以不是「不送」而是「送最小值」。
+# 這一條的價值跟當初 thinkingLevel 那次一模一樣：**已知會失敗的請求不要送**，
+# 否則每一次執行都白花一個來回、log 裡固定一段 400。
+check("77b 2.5 Pro 送最小推理額度，不是 0（0 會被 400 拒絕）",
+      polish._thinking("gemini-2.5-pro")
+      == {"thinkingConfig": {"thinkingBudget": polish.PRO_MIN_THINKING}},
+      str(polish._thinking("gemini-2.5-pro")))
+check("77c 最小值在合法範圍內（128–32768）",
+      128 <= polish.PRO_MIN_THINKING <= 32768)
+check("77d 推理額度遠小於輸出額度，額度留給文字",
+      polish.PRO_MIN_THINKING < polish.MAX_OUT / 10,
+      f"{polish.PRO_MIN_THINKING} vs {polish.MAX_OUT}")
+check("77e 同世代的 flash 不受影響（flash 可以真的關掉）",
+      polish._thinking("gemini-2.5-flash")
+      == {"thinkingConfig": {"thinkingBudget": 0}})
+check("77f 3.x 的 pro 仍然什麼都不送（那一代關不掉也收不了）",
+      polish._thinking("gemini-3.1-pro-preview") == {})
+check("77g 預設模型是 2.5 Pro",
+      polish.PROVIDERS["gemini"]["model"] == "gemini-2.5-pro",
+      polish.PROVIDERS["gemini"]["model"])
+check("77h 而且預設模型自己送得出合法的推理設定",
+      polish._thinking(polish.PROVIDERS["gemini"]["model"])
+      .get("thinkingConfig", {}).get("thinkingBudget") != 0)
+
 
 # ---------------------------------------------------------------------------
 # ⑧ 逐字的字元編號：被字數要求逼出來的「數出聲音」
@@ -747,6 +772,62 @@ r = polish.maybe_polish(headed(head=""), tmp / "d5.json",
                         env={"GEMINI_API_KEY": "g"}, _post=spy2)
 check("110i 沒有那一句時不受影響",
       r["source"] == "model" and not r["text"].startswith("本次更新"))
+
+
+# ---------------------------------------------------------------------------
+# ⑪c 中文數字寫的「幾方」也要鎖
+#
+# 數字鎖定只認阿拉伯數字（`_NUM` 是 `\d`），而共識句刻意用中文數字寫，
+# 於是那三個數量完全在鎖定範圍外。實際印上畫面的：
+#
+#     組裝版　…；三方裡**兩方**偏升息、一方偏降息，方向分歧。
+#     畫面上　…，三方陣營裡有**一方**偏升息、另一方偏降息，政策方向分歧。
+#
+# 二比一被寫成一比一——多數變平手，而這是整段的第一個結論。
+# 三道防護欄一道都沒作聲，因為裡面沒有任何一個阿拉伯數字。
+#
+# 這一條**必須雙向比對**：錯的方式是把「兩方」改小成「一方」，
+# 也就是**少掉**一個數量，「有沒有多出來」的單向檢查抓不到。
+# ---------------------------------------------------------------------------
+_SRC_SIDE = "聯準會把通膨擺在前面；三方裡兩方偏升息、一方偏降息，方向分歧。"
+_BAD_SIDE = ("聯準會目前把通膨擺在前面，三方陣營裡有一方偏升息、"
+             "另一方偏降息，政策方向分歧。")
+
+check("110j 抽得出中文數字寫的方數", polish._sides(_SRC_SIDE) == [1, 2, 3],
+      str(polish._sides(_SRC_SIDE)))
+check("110k 真實那次的改寫會被抓到",
+      polish._sides(_BAD_SIDE) == [1, 1, 3], str(polish._sides(_BAD_SIDE)))
+check("110l 而且數字鎖定確實抓不到（所以才需要這一條）",
+      polish._numbers(_BAD_SIDE) - polish._numbers(_SRC_SIDE) == set())
+
+# 合理的改寫不能被誤擋——這一條的誤判成本很高（整段退回組裝版）
+for _name, _t in [
+        ("加了「有」「另」", "三方裡有兩方偏升息、另一方偏降息，方向分歧。"),
+        ("換連接詞", "三方之中兩方偏升息，一方偏降息，方向並不一致。"),
+        ("整句重組", "方向分歧：偏升息的有兩方，偏降息的一方，共三方。")]:
+    check(f"110m 合理改寫不被誤擋（{_name}）",
+          polish._sides(_t) == polish._sides(_SRC_SIDE),
+          str(polish._sides(_t)))
+
+# 「方向」「方面」就在同一句裡，不排掉會誤判
+check("110n 「方向分歧」不算方數", polish._sides("方向分歧") == [])
+check("110o 「一方面…另一方面」不算方數",
+      polish._sides("一方面通膨仍高，另一方面就業轉弱") == [],
+      str(polish._sides("一方面通膨仍高，另一方面就業轉弱")))
+
+# 接到 validate 上：真實那次要被退回，理由要看得懂
+_r = polish.validate(_BAD_SIDE + TAIL, _SRC_SIDE + TAIL)
+check("110p validate 會擋下來", "方數對不上" in _r, _r)
+check("110q 理由印出兩邊的數字，方便對照",
+      "[1, 2, 3]" in _r and "[1, 1, 3]" in _r, _r)
+# 接上完整的本文才過得了長度護欄——這一項要驗的是方數，不是長度
+_OK_SIDE = "三方裡有兩方偏升息、另一方偏降息，方向分歧。" + GOOD[GOOD.index("失業率"):]
+check("110r 沒改動就通過",
+      polish.validate(_OK_SIDE, _SRC_SIDE + SRC[SRC.index("失業率"):]) == "",
+      polish.validate(_OK_SIDE, _SRC_SIDE + SRC[SRC.index("失業率"):]))
+check("110s 提示詞也講了（防護欄擋下來之前先讓模型別犯）",
+      "中文數字寫的數量也算數字" in polish.SYSTEM)
+check("110t 提示詞改版 → 快取失效", polish.PROMPT_VERSION >= 9)
 
 
 # ---------------------------------------------------------------------------
