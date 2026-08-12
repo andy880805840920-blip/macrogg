@@ -84,10 +84,10 @@ _SLEEP = time.sleep
 # 這個上限裡**——額度給太緊，推理模型會把它花光然後回一個空字串
 #（finishReason: MAX_TOKENS）。給寬一點不會多花錢：計費看實際用量，
 # 不看上限。先前設 800，正好落在會被推理吃光的區間。
-MAX_OUT = 4000
+MAX_OUT = 8000
 
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 4
+PROMPT_VERSION = 5
 
 
 def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
@@ -104,8 +104,11 @@ def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
     就把重點句整句刪掉了。
     """
     n = cjk_len(source)
-    lo = max(MIN_CJK - reserve + 10, n - 25)
-    hi = min(MAX_CJK - reserve - 5, n + 10)
+    # 下限貼著原長（-10）：這一段的工作是**改寫**不是**摘要**，
+    # 少於原長就代表有事實被丟掉。上限給 +45 的餘裕，讓句子有空間寫順，
+    # 但仍受 MAX_CJK 扣掉 reserve 之後的硬上限約束。
+    lo = max(MIN_CJK - reserve, n - 10)
+    hi = min(MAX_CJK - reserve - 5, n + 45)
     if hi <= lo:                                   # 極端情況下不要給出反向區間
         lo, hi = max(1, MIN_CJK - reserve), max(2, MAX_CJK - reserve - 5)
     return lo, hi
@@ -220,6 +223,29 @@ def _sanitize(out: str) -> str:
         s = _BARE_PAREN_NUM.sub("", s)
     s = _LEAD_COLON.sub("重點：", s)
     return " ".join(s.split())
+
+
+# 句子結束的標點。缺了它就代表話沒講完。
+_END = "。！？」』）.!?"
+
+
+def looks_truncated(body: str) -> bool:
+    """
+    這段改寫是不是**話講到一半**。
+
+    為什麼需要這個：`finishReason` 是最權威的截斷訊號，但只有 Gemini 會給，
+    遇到代理或供應商改版就可能拿不到。結尾標點則是純文字層面的判斷，
+    誰來做都成立。
+
+    實際被印上畫面的那一次長這樣：
+
+        …對此 7/29 會議維持不變，有 3 票主張升息，下次會議
+
+    後面直接沒了。長度 146 字落在護欄內、數字也全部合法，所以三道防護欄
+    一道都沒攔住——因為它們檢查的是「有沒有亂寫」，沒有檢查「有沒有寫完」。
+    """
+    s = (body or "").strip()
+    return bool(s) and s[-1] not in _END
 
 
 def validate(out: str, source: str) -> str:
@@ -406,9 +432,15 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
             return out
         if isinstance(res, tuple):
             res, model = res[0], (res[1] or model)
+        body_out = _sanitize(res)
         # 重點句原封不動接回去——模型沒看過它，也就改不壞它
-        text = _sanitize(res) + tail
-        reason = validate(text, out["text"])
+        text = body_out + tail
+        # 先問「有沒有寫完」，再問「有沒有寫對」。順序有意義：截斷的輸出
+        # 常常長度合格、數字也全部合法，validate 一道都攔不住，
+        # 但它就是不能印上畫面。
+        reason = ("輸出看起來被截斷（結尾不是完整的句子）"
+                  if looks_truncated(body_out)
+                  else validate(text, out["text"]))
         if not reason:
             break
         if attempt == 1:
@@ -592,9 +624,6 @@ def _thinking(model: str) -> dict:
     讓推理跟輸出都放得下——那才是真正在防「回一個空字串」的那道保險。
     每次都先送一次註定失敗的 400 只是白花一個來回。
     """
-    m = _VER.search(model.lower())
-    if not m or float(m.group(1)) >= 3:
-        return {}
     return {"thinkingConfig": {"thinkingBudget": 0}}
 
 
@@ -630,11 +659,18 @@ def _gemini_call(key: str, model: str, source_text: str,
         raise RuntimeError(f"沒有回覆內容（{js.get('promptFeedback')}）")
     parts = ((cands[0].get("content") or {}).get("parts")) or []
     text = "".join(p.get("text", "") for p in parts)
+    finish = str(cands[0].get("finishReason") or "")
     if not text.strip():
         # 講清楚是哪一種空：MAX_TOKENS 代表額度被推理吃光，
         # SAFETY 代表內容被擋。兩者的處置完全不同。
+        raise RuntimeError(f"回覆是空的（finishReason={finish}）")
+    # ⚠️ 有文字**不代表寫完了**。額度用盡時回的是一段「寫到一半」的文字，
+    # finishReason 為 MAX_TOKENS——先前只檢查空字串，所以這種半截的輸出
+    # 一路通過驗證印上了畫面：讀者看到的是「…下次會議」後面直接沒了。
+    # 有明確的截斷訊號就當失敗，讓上層帶著理由重試。
+    if finish.upper() in ("MAX_TOKENS", "LENGTH"):
         raise RuntimeError(
-            f"回覆是空的（finishReason={cands[0].get('finishReason')}）")
+            f"回覆被截斷（finishReason={finish}，可能是推理用掉了輸出額度）")
     return text
 
 

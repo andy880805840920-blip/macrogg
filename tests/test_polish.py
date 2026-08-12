@@ -441,12 +441,15 @@ check("73 提示詞帶的是算出來的範圍",
 check("74 gemini-2.x 用 thinkingBudget",
       polish._thinking("gemini-2.5-flash") == {"thinkingConfig":
                                                {"thinkingBudget": 0}})
-# 3.x 不能送 thinkingLevel：v1beta 回 400 Unknown name。送了只是每次
-# 白花一個來回，關不掉的部分改用 MAX_OUT 給足額度來防空字串。
-check("75 gemini-3.x 不送推理欄位（v1beta 不認得）",
-      polish._thinking("gemini-3.6-flash") == {})
-check("76 認不出版本就不送（靠額度撐）",
-      polish._thinking("gemini-flash-latest") == {})
+# 推理一律試著關掉：thinkingBudget 是 v1beta 認得的欄位（2.5 實測有效），
+# 3.x 不確定認不認得——但 400 會自動退回不帶欄位重送，所以「試了不吃虧」。
+# 反過來不送才有實害：推理會吃掉 maxOutputTokens，回一段寫到一半的文字。
+check("75 一律送 thinkingBudget（400 有退路）",
+      polish._thinking("gemini-3.6-flash")
+      == {"thinkingConfig": {"thinkingBudget": 0}})
+check("76 別名模型也一樣（認不出版本不代表不用關）",
+      polish._thinking("gemini-flash-latest")
+      == {"thinkingConfig": {"thinkingBudget": 0}})
 check("77 輸出額度夠大，不會被推理吃光", polish.MAX_OUT >= 2000)
 
 
@@ -661,6 +664,57 @@ r = polish.maybe_polish(only, tmp / "d2.json",
                         env={"GEMINI_API_KEY": "g"}, _post=boom)
 check("110 只有重點句 → 不呼叫、直接回組裝版",
       r["source"] == "assembled" and r["text"] == TAIL)
+
+
+# ---------------------------------------------------------------------------
+# ⑫ 截斷：三道防護欄檢查的是「有沒有亂寫」，不是「有沒有寫完」
+#
+# 實際印上畫面的那一次：
+#     …對此 7/29 會議維持不變，有 3 票主張升息，下次會議
+# 後面直接沒了。長度 146 字在護欄內、數字全部合法，所以一道都沒攔住。
+# 讀者看到的是一句話講到一半的總述，會以為網站壞掉。
+# ---------------------------------------------------------------------------
+check("111 沒有結尾標點 → 判定截斷",
+      polish.looks_truncated("有 3 票主張升息，下次會議"))
+check("112 正常結尾 → 不算截斷",
+      not polish.looks_truncated("有 3 票主張升息，下次會議在 35 天後。"))
+for _tc in "！？」』）.!?":
+    check(f"113 「{_tc}」也算完整的結尾",
+          not polish.looks_truncated("測試" + _tc))
+check("114 空字串不算截斷（那是另一條檢查在管）",
+      not polish.looks_truncated("") and not polish.looks_truncated("   "))
+
+# 端到端：模型交出半截的文字 → 不能通過，要重試
+half = []
+
+
+def half_post(key, model, text, system=None):
+    half.append(text)
+    if len(half) == 1:
+        return "聯準會把通膨擺在前面，內部分歧，下次會議"      # 沒有結尾標點
+    return GOOD[:GOOD.index("重點：")]
+
+
+r = polish.maybe_polish(parted(), tmp / "d3.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=half_post)
+check("115 截斷的輸出會被擋下並重試", len(half) == 2, f"{len(half)} 次")
+check("116 重試後的完整版才會被採用",
+      r["source"] == "model" and r["text"].endswith(TAIL), r["source"])
+
+# 兩次都截斷 → 退回組裝版，不能把半截的東西印出去
+half2 = []
+r = polish.maybe_polish(parted(), tmp / "d4.json",
+                        env={"GEMINI_API_KEY": "g"},
+                        _post=lambda k, m, t, s=None: (
+                            half2.append(1), "講到一半就沒了")[1])
+check("117 兩次都截斷 → 退回組裝版", r["source"] == "assembled")
+check("118 半截的文字不會寫進快取", not (tmp / "d4.json").exists())
+
+# 護欄放寬之後，完整的長版本才進得來
+check("119 上限放寬到 260", polish.MAX_CJK == 260)
+check("120 目標下限貼著原長（是改寫不是摘要）",
+      polish._target_range("中" * 125, 21)[0] >= 115,
+      str(polish._target_range("中" * 125, 21)))
 
 print()
 print("全部通過" if ok else "有失敗")
