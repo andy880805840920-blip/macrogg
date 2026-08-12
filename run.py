@@ -36,6 +36,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src import site, build, clock                                # noqa: E402
 from src.analysis import changes as chg                           # noqa: E402
 from src.analysis import freshness                                # noqa: E402
+from src.analysis import brief as brief_mod                        # noqa: E402
+from src.analysis import polish                                    # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
 from src.pages import scenario as scen_page                       # noqa: E402
@@ -91,7 +93,7 @@ def series_ids(cfg: dict, groups: tuple[str, ...]) -> tuple[list, dict, dict]:
 LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
                 "claims", "reference", "special_series", "industries")
 INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
-               "trend_measures", "energy", "expectations")
+               "trend_measures", "energy", "expectations", "sep")
 RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt")
 
 
@@ -387,9 +389,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     write("index.html", site.page(
         "美國總經儀表板", "/", home_page.home_body(ctxs),
         subtitle=f"最後更新 {clock.stamp()}",
-        footer=("資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。"
-                "所有量化判定由固定規則產生，每次執行結果一致。<br>"
-                "本站僅為數據整理，不構成投資建議。"),
+        footer=home_page.home_footer(ctxs),
         banner=banner))
 
     # ---- 存檔 ----
@@ -555,6 +555,20 @@ def main() -> int:
                      f"（前一格：{_tn['from']}）" if _tn.get("from") else "")
         if ctxs["changes"].bases:
             log.info("對照基準：%s", chg.basis_text(ctxs["changes"]))
+
+    # ---- 首頁的整體總述：規則組裝 → （選配）模型潤稿 ----
+    # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。
+    _brief = brief_mod.compose(ctxs)
+    if _brief["text"]:
+        ctxs["_brief"] = polish.maybe_polish(
+            _brief, STATE_FILE.parent / "brief.json", offline=args.offline)
+        _bm = ctxs["_brief"].get("model") or ""
+        log.info("整體情勢：%s%s（%d 中文字）",
+                 {"model": "模型潤稿（新生成）",
+                  "model-cache": "模型潤稿（沿用快取）",
+                  "assembled": "規則組裝"}[ctxs["_brief"]["source"]],
+                 f"，{_bm}" if _bm else "",
+                 ctxs["_brief"]["chars"])
 
     ctxs["_real_modules"] = REAL_MODULES
     # 離線模式的示範資料日期是寫死的，一定會被判成停更——那不是訊息，

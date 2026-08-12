@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 
 from .core import annualized, annualized_series, yoy, mom_pct, value_at
 from .attribution import Contribution, AttributionResult
+from .. import clock
 
 
 # 三個月年化低於這個值就不顯示分項百分比（避免總變動接近零時比例失真）
@@ -155,6 +156,12 @@ class InflationSummary:
     expect_1y: float | None = None
     gas: float | None = None
     oil_1m: float | None = None       # 油價近一個月變化 %
+    # ---- 聯準會自己的預測（SEP）：九宮格通膨軸的門檻來源 ----
+    sep_target: float | None = None       # 長期通膨目標（中位數）
+    sep_next: float | None = None         # 對「明年」的核心 PCE 預測中位數
+    sep_next_lo: float | None = None      # 同上，中央趨勢下緣
+    sep_next_hi: float | None = None      # 同上，中央趨勢上緣
+    sep_next_year: int | None = None      # 「明年」是哪一年
     extras: dict = field(default_factory=dict)
 
 
@@ -203,6 +210,53 @@ def _direction(v12: float | None, v6: float | None, v3: float | None) -> str:
     return "flat"
 
 
+def _sep_year(rows: list[dict], year: int) -> float | None:
+    """SEP 年頻序列裡對某一年的預測值。觀測日是那一年的 1 月 1 日。"""
+    for r in rows or []:
+        if str(r.get("date", ""))[:4] == str(year):
+            return r.get("value")
+    return None
+
+
+# 抓不到 SEP 時的後備門檻。這兩個數字沒有外部依據——保留只是為了
+# 「畫面不要因為一條序列抓不到就整頁失效」，而且用到時會在畫面上標示。
+FALLBACK_LOW, FALLBACK_HIGH = 2.30, 2.90
+# 「已經回到目標」不能卡在 2.00 這個點上：BEA 對核心 PCE 年增率的年度
+# 修正常在 ±0.1–0.2 個百分點，取 0.25 是把量測誤差算進去。
+# 這個 0.25 是判斷，不是外部標準——所以要寫出來。
+TARGET_TOL = 0.25
+# 「中」這一帶至少要有多寬。若聯準會對明年的預測已經收斂到 2.0，
+# high 會落到 low 底下；這條下限保證兩條門檻不會交叉。
+MIN_BAND = 0.25
+
+
+def inflation_bands(s: "InflationSummary") -> dict:
+    """
+    九宮格通膨軸的兩條門檻，錨在聯準會自己給的數字。
+
+        低 = 長期通膨目標 + 0.25
+        高 = FOMC 對「明年」的核心 PCE 預測中位數
+
+    回傳 {"low", "high", "auto", "why", "target", "next", "next_year", ...}，
+    畫面直接照這個印，讀者才看得出門檻是哪來的。
+    """
+    t, n = s.sep_target, s.sep_next
+    if t is None or n is None:
+        return {"low": FALLBACK_LOW, "high": FALLBACK_HIGH, "auto": False,
+                "target": t, "next": n, "next_year": s.sep_next_year,
+                "next_lo": s.sep_next_lo, "next_hi": s.sep_next_hi,
+                "why": "沒有取得 FOMC 預測序列，改用後備門檻（無外部依據）"}
+    low = t + TARGET_TOL
+    high = max(n, low + MIN_BAND)
+    return {"low": low, "high": high, "auto": True,
+            "target": t, "next": n, "next_year": s.sep_next_year,
+            "next_lo": s.sep_next_lo, "next_hi": s.sep_next_hi,
+            "clamped": high > n,
+            "why": (f"低＝長期目標 {t:.2f}% ＋ 0.25（量測誤差）；"
+                    f"高＝FOMC 對 {s.sep_next_year} 年的核心 PCE 預測中位數 "
+                    f"{n:.2f}%")}
+
+
 def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> InflationSummary:
     s = InflationSummary()
     g = series.get
@@ -227,6 +281,17 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
     s.pce_core_3m = annualized(g("PCEPILFE", []), 3)
+
+    # ---- FOMC 經濟預測摘要（SEP）----
+    # 年頻序列，觀測日就是被預測的那一年（2027-01-01 的值＝對 2027 年的預測）。
+    # 取「明年」而不是「今年」：今年的預測是聯準會**預期會發生什麼**，
+    # 明年的預測才是它認為的**收斂軌道**。見 config/inflation.yaml 的說明。
+    s.sep_target = value_at(g("PCECTPIMDLR", []))
+    _ny = clock.today().year + 1
+    s.sep_next_year = _ny
+    s.sep_next = _sep_year(g("JCXFEMD", []), _ny)
+    s.sep_next_lo = _sep_year(g("JCXFECTL", []), _ny)
+    s.sep_next_hi = _sep_year(g("JCXFECTH", []), _ny)
 
     s.median_cpi = value_at(g("MEDCPIM159SFRBCLE", []))
     s.trimmed_cpi = value_at(g("TRMMEANCPIM159SFRBCLE", []))

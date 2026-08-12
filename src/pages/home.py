@@ -13,6 +13,7 @@ from .. import clock
 
 from ..site import esc, next_first_friday, next_cpi_release
 from ..analysis import changes as chg_mod
+from ..analysis import brief as brief_mod
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -181,66 +182,37 @@ def _chip(k: str, d: str, extra: str = "") -> str:
             f'{esc(DIR_CHIP.get(d, ("—", ""))[0])}</span></div>')
 
 
-def _consensus_row(dirs: list, curve: tuple | None = None) -> str:
+def _brief_card(ctxs: dict) -> str:
     """
-    三個**政策方向**模組並排 ＋ 一句共識度，長端另外一格。
+    整體總述：一段約 150 字的散文，把五個模組的結論串成一件事。
 
-    這是首頁獨有、分頁做不到的事：分頁只能講自己那一塊，
-    只有總覽能回答「這幾個觀點彼此同意嗎」。全部一致與彼此打架，
-    是完全不同強度的訊息，而先前這件事完全沒有呈現——
-    五張模組卡各報一個不同單位的數字，讀者根本無從比較。
+    為什麼放在結論卡正下方：結論卡回答「現在是什麼情境」，總述回答
+    「為什麼、各方向的細節是什麼」。讀者的下一個問題就是後者，
+    中間不該再隔著四張模組入口卡。
 
-    長端刻意**不計入票數**：就業、物價、聯準會三者回答的是同一個問題
-    （政策利率往哪走），可以互相佐證；長端供給壓力回答的是曲線形狀，
-    跟政策方向是兩個軸。把它算成第四票，等於在首頁做了 README
-    與 `scenario.py` 都明講不該做的加總——「供給壓力偏高」會被
-    當成一張鷹派票，讓「四個模組全部指向升息」這種最強語氣，
-    在其實只有三個政策訊號同向時就被觸發。它仍然顯示，
-    因為讀者需要知道曲線那一側在說什麼，只是分開講。
+    共識列（三個色塊 ＋ 一句話 ＋ 長端）先前佔掉結論卡的一半（358／711px），
+    卻只顯示十幾個字，而且跟定位列講同一件事。它回答的是「各模組同不同意」，
+    現在併進總述的第一句。
     """
-    if len(dirs) < 2:
+    b = ctxs.get("_brief") or brief_mod.compose(ctxs)
+    txt = b.get("text") or ""
+    if not txt:
         return ""
-    chips = "".join(_chip(k, d) for k, d in dirs)
-
-    haw = sum(1 for _, d in dirs if d == "hawkish")
-    dov = sum(1 for _, d in dirs if d == "dovish")
-    n = len(dirs)
-    if haw == n:
-        note = f"{n} 個模組全部指向利升息——方向一致，訊息強度最高。"
-    elif dov == n:
-        note = f"{n} 個模組全部指向利降息——方向一致，訊息強度最高。"
-    elif haw and dov:
-        lead = ("利升息", haw) if haw > dov else (
-            ("利降息", dov) if dov > haw else (None, 0))
-        if lead[0]:
-            note = (f"{n} 個模組裡 {lead[1]} 個偏{lead[0]}、"
-                    f"{dov if lead[0] == '利升息' else haw} 個偏"
-                    f"{'利降息' if lead[0] == '利升息' else '利升息'}"
-                    "——方向分歧，任何單一模組的結論都要打折。")
-        else:
-            note = (f"{haw} 個偏利升息、{dov} 個偏利降息，正好對半——"
-                    "這種時候不該只信其中一邊。")
-    else:
-        side = "利升息" if haw else ("利降息" if dov else "")
-        note = (f"{n} 個模組裡 {max(haw, dov)} 個偏{side}，其餘中性——"
-                f"沒有反向訊號。" if side else f"{n} 個模組都沒有明確方向。")
-    note = "政策方向：" + note
-
-    aside = ""
-    if curve:
-        ck, cd = curve
-        cnote = {
-            "hawkish": "長端供給壓力偏高——即使政策利率往下，長端也不容易跟著降。",
-            "dovish": "長端供給壓力偏低——長端比較跟得上政策利率的方向。",
-        }.get(cd, "長端供給壓力中性。")
-        aside = (f'<div class="cons-aside"><div class="cons-row">'
-                 f'{_chip(ck, cd, " aside")}</div>'
-                 f'<div class="cons-note">{esc(cnote)}'
-                 f'不算進上面的票數：它回答的是曲線形狀，不是政策方向。'
-                 f'</div></div>')
-
-    return (f'<div class="cons"><div class="cons-row">{chips}</div>'
-            f'<div class="cons-note">{esc(note)}</div>{aside}</div>')
+    # 重點句拆成獨立一行加粗。它是整段的結論（下一步是升還是降、
+    # 解鎖條件是什麼），埋在段尾會被掃視略過。「重點：」前綴由
+    # polish.validate 強制保留，所以這個拆法對組裝版與潤稿版都成立。
+    key_html = ""
+    if "重點：" in txt:
+        txt, _, key = txt.rpartition("重點：")
+        key_html = f'<p class="brief-key">重點：{esc(key.strip())}</p>'
+    return f"""
+<div class="grid">
+  <div class="card brief">
+    <div class="brief-k">整體情勢</div>
+    <p class="brief-t">{esc(txt.strip())}</p>
+    {key_html}
+  </div>
+</div>"""
 
 
 def home_body(ctxs: dict) -> str:
@@ -263,7 +235,6 @@ def home_body(ctxs: dict) -> str:
     # #positioning——site.py 的 openTarget() 會自動展開那張收合卡。
     cards = []
     dirs = []          # 三個政策模組的方向，給結論卡的一致度用
-    curve_dir = None   # 長端另計：曲線形狀不是政策方向，不進票數
 
     if lab:
         k = lab["kpi"]
@@ -315,7 +286,8 @@ def home_body(ctxs: dict) -> str:
         # 長端的「方向」講的是供給壓力，不是政策利率——壓力大＝
         # 長端不容易跟著降，效果上與利升息同向，所以對應到同一組詞。
         _d = {"high": "hawkish", "low": "dovish"}.get(sp.level, "neutral")
-        curve_dir = ("長端", _d)
+        # 長端不進共識票數：曲線形狀不是政策方向。它在總述的最後一句
+        # 單獨交代（財政與 AI 一起推長端供給）。
         cards.append(_module_card(
             "/rates/", "長端與債務", f"{rat['as_of']} 資料",
             (f"{y30:.2f}%" if y30 is not None else "—"),
@@ -342,30 +314,26 @@ def home_body(ctxs: dict) -> str:
         # 「已維持 N 期」：只有累積到兩期以上才講得出來，所以會空一陣子。
         # 這是刻意的——編一個「已維持 1 期」出來只是廢話。
         _tn = ctxs.get("_tenure") or {}
-        _ten_html = ""
-        if _tn.get("periods", 0) >= 2:
-            _frm = (f"　·　上次移動來自「{esc(_tn['from'])}」"
-                    if _tn.get("from") else "")
-            _ten_html = (f'<div class="v-tenure">這一格已維持 '
-                         f'{_tn["periods"]} 期{_frm}</div>')
+        _ten = (f"　·　已維持 {_tn['periods']} 期"
+                if _tn.get("periods", 0) >= 2 else "")
         _why = (sc.description or "").split("。")[0]
         _why = (_why + "。") if _why else (sc.description or "")
         _rl = esc((sc.focus or {}).get("label", ""))
-        ovr = (f'<br>適用的九宮格：{_rl}'
-               + ('（本次判不出重心，暫用兩邊並重的對照）'
+        ovr = (f"　·　九宮格：{_rl}"
+               + ("（本次判不出重心，暫用兩邊並重）"
                   if getattr(sc, "regime_assumed", False) else "")
                if _rl else "")
+        # 眉標只留「目前情境 ＋ 已維持幾期」。四個資料日期先前排在這裡、
+        # 在 390px 下折成兩行，而那些日期在頁尾的「資料月份」已經有了，
+        # 頁面副標也寫著更新時間——結論卡的第一行不該花在時間戳上。
         hero = f"""<div class="verdict {lean_cls}">
-  <div class="v-eyebrow">{esc((scn or {}).get('as_of', ''))}　·　目前情境</div>
+  <div class="v-eyebrow">目前情境{_ten}</div>
   <div class="v-main">{esc(sc.name)}</div>
   <div class="v-why">{esc(_why)}</div>
   <div class="v-count">
-    定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
-    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}{ovr}
+    就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·　{esc(LEAN_TEXT.get(sc.lean, ''))}{ovr}
     {('<br>' + incomplete) if incomplete else ''}
   </div>
-  {_consensus_row(dirs, curve_dir)}
-  {_ten_html}
   <a class="v-cta" href="/scenario/#positioning">這個判斷怎麼來的、對應什麼部位
     <span>九宮格定位　·　三種重心下會變成什麼　·　固定收益部位對照</span></a>
 </div>"""
@@ -475,7 +443,13 @@ def home_body(ctxs: dict) -> str:
     # 首頁先前是全站**預設最長**的頁（390px 下 4026px），卻是唯一沒有收合的頁——
     # 整站的閱讀模型在入口那一頁不成立。改成跟內容頁一樣：只留關鍵訊號展開，
     # 其餘收合並在標題列帶一句結論。
-    _flag_sum = flags_sub
+    # 摘要要帶**結論**，不是方法說明。先前直接沿用卡片副標
+    #（「來自就業與物價兩個模組的規則引擎，共 9 條：…依嚴重度排序」），
+    # 那是 50 字的方法論，在 390px 下折成三行、而且完全不回答
+    # 「這張卡要不要點開」。改成跟各模組頁一致：條數 ＋ 最重要的那一條。
+    _top = all_flags[0][1] if all_flags else None
+    _flag_sum = (f"{len(all_flags)} 項　·　{_top.headline}" if _top
+                 else "本次沒有觸發任何訊號")
     _trig_sum = "資料不足"
     if sc and sc.triggers:
         _b0 = ([x for x in sc.triggers if getattr(x, "binding", False)]
@@ -484,12 +458,17 @@ def home_body(ctxs: dict) -> str:
     if counts:
         _trig_sum += f"　·　最近一次發布 {(counts[0]['date'] - today).days} 天後"
     _chg = ctxs.get("changes")
+    # net_line 帶著 ** 的自訂粗體標記（畫面上由 _change_card 轉成 <b>）。
+    # data-sum 是純文字屬性，不脫掉的話讀者會直接看到「往**降息**的方向」。
     _chg_sum = ("尚無可比對的上期" if not (_chg and _chg.has_previous)
-                else (chg_mod.net_line(_chg) or "訊號組成與上期相同"))
+                else ((chg_mod.net_line(_chg) or "").replace("**", "")
+                      or "訊號組成與上期相同"))
 
     # 模組入口移到結論卡正下方。先前排在整頁最後，390px 下讀者要捲過
     # 4000px 才看得到——首頁的主要功能之一是「往哪走」，那個功能被埋在最底下。
     return f"""{hero}
+
+{_brief_card(ctxs)}
 
 <div class="grid g4">{"".join(cards)}</div>
 
@@ -514,14 +493,29 @@ def home_body(ctxs: dict) -> str:
     {change_html or '<div class="empty">尚無可比對的上期資料</div>'}
   </div>
 </div>
+"""
 
-<div class="card" style="margin-top:13px">
-  <div class="src" style="border-top:none;padding-top:0">
-    資料月份：{esc((lab or {}).get('data_month', '—'))}（就業）　·　
-    {esc((inf or {}).get('data_month', '—'))}（物價）　·　
-    {esc((fom or {}).get('latest_date', '—'))}（聲明）。每天自動重新產生。
-  </div>
-</div>"""
+
+def home_footer(ctxs: dict) -> str:
+    """
+    首頁頁尾。
+
+    資料月份先前是頁面最後一張卡——一個只裝了一行灰色小字的空盒子，
+    下面緊接著同樣是灰色小字的頁尾，兩塊疊在一起看起來像排版壞掉。
+    那一行本來就是頁尾性質的資訊，直接併進來。
+    """
+    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
+    def _d(v: str) -> str:
+        return f'<span class="nb">{esc(v)}</span>'
+
+    return (
+        f"資料月份：{_d((lab or {}).get('data_month', '—'))}（就業）　·　"
+        f"{_d((inf or {}).get('data_month', '—'))}（物價）　·　"
+        f"{_d((fom or {}).get('latest_date', '—'))}（聲明）。"
+        "每天自動重新產生。<br>"
+        "資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。"
+        "所有量化判定由固定規則產生，每次執行結果一致。<br>"
+        "本站僅為數據整理，不構成投資建議。")
 
 def archive_body(entries: list[dict]) -> str:
     if not entries:

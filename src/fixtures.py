@@ -282,6 +282,13 @@ def build() -> dict[str, list[dict]]:
 
     # ---- 參照 ----
     s["NROU"] = _series(d, [4.4] * len(d))
+    # FOMC 對長期失業率的判斷。取自 2026 年 6 月 SEP 的**真實值**
+    # （federalreserve.gov/monetarypolicy/fomcprojtabl20260617.htm）——
+    # 九宮格的就業軸門檻直接由它們決定，用假的會讓離線畫面的判定
+    # 與正式執行對不起來。SEP 一季更新一次，所以只有幾個觀測點。
+    s["UNRATEMDLR"] = [{"date": "2026-06-17", "value": 4.2}]
+    s["UNRATECTLLR"] = [{"date": "2026-06-17", "value": 4.0}]
+    s["UNRATECTHLR"] = [{"date": "2026-06-17", "value": 4.3}]
     return s
 
 

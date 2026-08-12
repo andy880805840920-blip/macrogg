@@ -165,8 +165,127 @@ def _rates_line(r: dict | None) -> str:
 """
 
 
+# 各頁結論卡上那句話的用詞，用來在對照時原樣引用
+_TILT_LABEL = {"hawkish": "利升息", "dovish": "利降息",
+               "balanced": "本期方向不明"}
+# 哪些組合會讓讀者覺得「這兩頁在打架」
+_MISMATCH = {("高", "balanced"), ("高", "dovish"),
+             ("低", "balanced"), ("低", "hawkish"),
+             ("弱", "balanced"), ("弱", "hawkish"),
+             ("強", "balanced"), ("強", "dovish")}
+
+
+def _mismatch_note(axis: str, state: str, tilt: str | None,
+                   net, level_desc: str) -> str:
+    """
+    「為什麼那一頁寫 A、這裡卻是 B」。
+
+    這是整個說明區真正要解決的問題。讀者在通膨頁看到「本期方向不明」、
+    翻到這裡看到「通膨高」，直覺結論是網站在自打嘴巴——但兩者問的
+    根本不是同一件事：一個是**本期新訊號把政策往哪推**，
+    一個是**水準離目標多遠**。卡在高檔但這個月沒有新推力，
+    兩者完全可以同時成立。
+
+    只在真的會被誤讀的組合上印（見 _MISMATCH），同向時不印。
+    """
+    if not tilt or (state, tilt) not in _MISMATCH:
+        return ""
+    page = "通膨" if axis == "通膨" else "勞動市場"
+    return ('<div class="wx-note"><b>為什麼' + page + "頁寫「" + axis + "面："
+            + _TILT_LABEL.get(tilt, tilt) + "」、這裡卻是「" + esc(state)
+            + "」</b>：兩者問的不是同一件事。"
+            + page + "頁的結論看的是<b>本期新訊號的方向</b>（旗標鷹鴿淨值 "
+            + esc(str(net if net is not None else "—"))
+            + "）；這一軸看的是<b>水準</b>——" + level_desc
+            + "。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div>")
+
+
+def _why_axes(w: dict) -> str:
+    """
+    「為什麼落在這一格」——兩條軸的算式、輸入值與門檻出處。
+
+    這一塊解決的是一個**看起來像 bug 的東西**：讀者在通膨頁看到
+    「通膨面：方向不明」，翻到情境頁看到「通膨高」，直覺結論是網站在自打嘴巴。
+    實際上兩者問的不是同一件事——一個是本期新訊號的**方向**，
+    一個是核心 PCE 的**水準**。兩件事必須擺在同一個畫面上對照著講，
+    分開講讀者不會自己接起來。
+
+    格式刻意做成「算式」而不是散文：讀者要能自己驗算，
+    尤其是門檻——那是整頁權重最大、先前卻完全沒有交代的東西。
+    """
+    if not w:
+        return ""
+    inf, lab = w.get("inflation"), w.get("labor")
+    blocks = []
+
+    if inf:
+        rows = "".join(
+            '<div class="wx-r"><span class="wx-k">' + esc(r["label"])
+            + '</span><span class="wx-w">' + esc(r["w"])
+            + '</span><span class="wx-v">' + esc(r["value"]) + "</span></div>"
+            for r in inf["rows"])
+        state = inf["state"]
+        if state == "高":
+            cmp_txt, thr, src = "＞", esc(inf["high"]), inf["high_src"]
+        elif state == "低":
+            cmp_txt, thr, src = "＜", esc(inf["low"]), inf["low_src"]
+        else:
+            cmp_txt = "落在"
+            thr = esc(inf["low"]) + " ～ " + esc(inf["high"])
+            src = inf["low_src"] + "；" + inf["high_src"]
+        warn = "" if inf["auto"] else "　⚠️ 本次沒有取得 FOMC 預測序列，用的是後備值"
+
+        # 方向與水準的對照。這一段是整塊的重點，但只在兩者**看起來打架**時才出現：
+        # 水準高而本期方向偏鴿或不明、水準低而本期方向偏鷹或不明。
+        # 兩者同向時這段話是廢話，天天印只會被跳過。
+        tilt_note = _mismatch_note(
+            "通膨", state, inf.get("tilt"), inf.get("tilt_net"),
+            "離 2% 目標多遠")
+
+        blocks.append(
+            '<div class="wx"><div class="wx-h">通膨　→　<b>' + esc(state)
+            + "</b></div>" + rows
+            + '<div class="wx-r wx-sum"><span class="wx-k">加權後的水準</span>'
+            '<span class="wx-w"></span><span class="wx-v">'
+            + esc(inf["level"]) + "</span></div>"
+            + '<div class="wx-thr">' + esc(inf["level"]) + "　" + cmp_txt
+            + "　門檻 " + thr + "</div>"
+            + '<div class="wx-src">門檻出處：' + esc(src) + warn + "</div>"
+            + tilt_note + "</div>")
+
+    if lab:
+        rows = "".join(
+            '<div class="wx-r"><span class="wx-k">' + esc(r["label"])
+            + '</span><span class="wx-w">' + esc(r["w"])
+            + '</span><span class="wx-v">' + esc(r["value"]) + "</span></div>"
+            for r in lab.get("rows") or [])
+        basis_txt = {
+            "level": "由<b>水準</b>定案：失業率相對 FOMC 自己對長期失業率的判斷。",
+            "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）。",
+            "breakeven": "水準上不算弱，但<b>三月均非農低於損益兩平</b>——"
+                         "就業增速已經撐不住目前的失業率，所以往「弱」推一格。",
+            "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則。",
+        }.get(lab.get("basis"), "")
+        blocks.append(
+            '<div class="wx"><div class="wx-h">就業　→　<b>' + esc(lab["state"])
+            + "</b></div>" + rows
+            + '<div class="wx-src" style="margin-top:8px">' + basis_txt
+            + "　三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是"
+            "委員彼此的分歧程度）、Sahm 法則的 0.50、以及由人口成長推導出來的"
+            "損益兩平——沒有一個是本站選的數字。動能只往「弱」推，"
+            "因為就業轉強沒有對應的公認規則，寧可不推也不自己發明一條。</div>"
+            + _mismatch_note("就業", lab["state"], lab.get("tilt"),
+                             lab.get("net"), "失業率離充分就業多遠")
+            + "</div>")
+
+    return ('<details class="f-more" style="margin-top:16px">'
+            "<summary>這一格是怎麼判出來的（兩條軸的算式與門檻）</summary>"
+            '<div style="margin-top:10px">' + "".join(blocks) + "</div></details>")
+
+
 def scenario_body(d: dict) -> str:
     sc = d["scenario"]
+    _why_html = _why_axes(d.get("why") or {})
 
     incomplete = ""
     if sc.incomplete:
@@ -313,6 +432,7 @@ def scenario_body(d: dict) -> str:
       <span class="lg-on">反白粗框</span>＝目前位置　·
       <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
     </p>
+    {_why_html}
   </div>
 </div>
 <div class="grid g2">

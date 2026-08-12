@@ -245,36 +245,103 @@ class Scenario:
 
 
 # ---------------------------------------------------------------------------
-def classify_labor(score: float | None, tilt: dict | None) -> tuple[str, str]:
-    """
-    綜合分數為主，旗標傾向為輔。回傳 (狀態, 判定依據)。
+# 分數與旗標淨值的舊門檻。只在拿不到 FOMC 長期失業率時才用得到——
+# 這兩個數字是這個專案自己選的，沒有外部依據，用到時畫面上會標示。
+FALLBACK_SCORE, FALLBACK_NET = 0.45, 3
 
-    依據要一起回傳：分數在 ±0.45 之間、靠旗標淨值定案時，畫面上只列
-    「需低於 −0.45」這條沒被滿足的門檻，讀者會看到「就業弱」卻找不到
-    任何達標的條件，看起來像出錯。
+
+def classify_labor(score: float | None, tilt: dict | None,
+                   lab: dict | None = None) -> tuple[str, str]:
     """
-    if score is None:
-        return "中", "score"
-    if score <= -0.45:
-        return "弱", "score"
-    if score >= 0.45:
-        return "強", "score"
-    # 分數在中間帶時，用旗標的鷹鴿淨值推一把
-    net = (tilt or {}).get("net", 0)
-    if net <= -3:
-        return "弱", "tilt"
-    if net >= 3:
-        return "強", "tilt"
-    return "中", "score"
+    就業軸：**水準為主，兩條外部錨的動能修正**。回傳 (狀態, 判定依據)。
+
+    水準
+    ----
+    失業率相對 **FOMC 自己對長期失業率的判斷**（＝聯準會認定的充分就業）：
+
+        u > 中央趨勢上緣  →  弱
+        u < 中央趨勢下緣  →  強
+        落在區間內        →  中
+
+    為什麼用 FOMC 的而不是 CBO 的 NROU：九宮格問的是「聯準會會怎麼做」，
+    而聯準會照**它自己的**估計行動。帶寬也不是選的——直接用中央趨勢的寬度，
+    那是 FOMC 成員彼此意見的分歧程度。這樣兩條軸都錨在同一份 SEP 上。
+
+    動能
+    ----
+    只看水準會犯一個大錯：聯準會 2024 年 9 月降息 2 碼時，失業率約 4.2%，
+    **低於**當時多數的自然失業率估計——它降息的理由不是水準，是惡化的速度。
+    所以加兩條同樣有外部依據的動能條件：
+
+      · **Sahm 法則觸發**（失業率三月均比過去一年最低點高 0.50 個百分點以上）
+        → 直接判「弱」。門檻出自 Sahm 的原始論文，FRED 另有 SAHMREALTIME。
+      · **三個月平均非農 < 損益兩平就業增速** → 往「弱」推一格。
+        損益兩平是由人口成長 × 參與率 × 機構／家庭調查比推導出來的，
+        不是選的門檻；低於它在定義上就是「撐不住目前的失業率」。
+
+    動能只往一個方向推。往「強」推需要對稱的證據，而就業轉強沒有
+    對應的公認規則——寧可不推，也不要自己發明一條。
+
+    拿不到 SEP 時才退回舊的綜合分數 ±0.45／旗標淨值 ±3（沒有外部依據）。
+    """
+    lab = lab or {}
+    u = lab.get("unrate")
+    lo, hi = lab.get("u_lo"), lab.get("u_hi")
+
+    if u is None or lo is None or hi is None:
+        # ---- 後備：舊規則 ----
+        if score is None:
+            return "中", "fallback"
+        if score <= -FALLBACK_SCORE:
+            return "弱", "fallback"
+        if score >= FALLBACK_SCORE:
+            return "強", "fallback"
+        net = (tilt or {}).get("net", 0)
+        if net <= -FALLBACK_NET:
+            return "弱", "fallback"
+        if net >= FALLBACK_NET:
+            return "強", "fallback"
+        return "中", "fallback"
+
+    # ---- ① 水準 ----
+    if u > hi:
+        state, basis = "弱", "level"
+    elif u < lo:
+        state, basis = "強", "level"
+    else:
+        state, basis = "中", "level"
+
+    # ---- ② 動能：只往「弱」推 ----
+    if lab.get("sahm_triggered"):
+        return "弱", "sahm"
+    if lab.get("below_breakeven") and state != "弱":
+        return ("中" if state == "強" else "弱"), "breakeven"
+    return state, basis
+
+
+def blended_inflation(core_pce_yoy: float | None,
+                      core_pce_3m: float | None) -> float | None:
+    """水準與動能的加權值。兩項都必須是核心 PCE，理由見下方。"""
+    if core_pce_yoy is None:
+        return None
+    if core_pce_3m is None:
+        return core_pce_yoy
+    return 0.6 * core_pce_yoy + 0.4 * core_pce_3m
 
 
 def classify_inflation(core_pce_yoy: float | None,
-                       core_pce_3m: float | None) -> str:
+                       core_pce_3m: float | None,
+                       bands: dict | None = None) -> str:
     """
     以核心 PCE 相對 2% 目標為主軸，再用三個月年化的動能修正。
 
     只看年增率會太遲鈍（被一年前的基期拖住），
     只看三個月年化又太吵，所以兩個一起看。
+
+    兩條門檻由 `inflation.inflation_bands()` 給，錨在聯準會自己的預測
+    （長期目標＋對明年的核心 PCE 預測中位數），不再寫死。
+    先前是 2.3／2.9，程式碼與文件裡都沒有任何依據——而它們決定整張
+    固定收益部位對照表，那是這個專案裡權重與依據落差最大的一組數字。
 
     ⚠️ 兩項都必須是**核心 PCE**，不能一個 PCE 一個 CPI。
     先前動能項送進來的是核心 CPI 的三月年化，而核心 CPI 長期比核心 PCE
@@ -284,15 +351,14 @@ def classify_inflation(core_pce_yoy: float | None,
     配上就業「弱」，格子就從「轉向降息」跳成「停滯性通膨」，
     整張部位表跟著換掉。同一個指標的水準與動能才可以相加。
     """
-    if core_pce_yoy is None:
+    level = blended_inflation(core_pce_yoy, core_pce_3m)
+    if level is None:
         return "中"
-    level = core_pce_yoy
-    if core_pce_3m is not None:
-        # 動能與水準各半，讓轉折早一點反映
-        level = 0.6 * core_pce_yoy + 0.4 * core_pce_3m
-    if level < 2.3:
+    b = bands or {}
+    lo, hi = b.get("low", 2.30), b.get("high", 2.90)
+    if level < lo:
         return "低"
-    if level > 2.9:
+    if level > hi:
         return "高"
     return "中"
 
@@ -315,9 +381,12 @@ def synthesise(labor: dict | None, inflation: dict | None,
         incomplete.append("聯準會文本")
 
     l_state, l_basis = classify_labor((labor or {}).get("score"),
-                                      (labor or {}).get("tilt"))
+                                      (labor or {}).get("tilt"),
+                                      labor)
+    _bands = (inflation or {}).get("bands") or {}
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
-                                 (inflation or {}).get("core_pce_3m"))
+                                 (inflation or {}).get("core_pce_3m"),
+                                 _bands)
 
     # ---- 依聯準會目前的重心選一張九宮格 ----
     # 不再「先用固定格子再事後改寫」。格子裡寫什麼就是結論。
@@ -346,15 +415,33 @@ def synthesise(labor: dict | None, inflation: dict | None,
                   regime=regime, regime_assumed=regime_assumed,
                   labor_basis=l_basis)
 
-    if l_basis == "tilt":
-        _net = ((labor or {}).get("tilt") or {}).get("net", 0)
-        _sc = (labor or {}).get("score")
+    _lab = labor or {}
+    _u, _lo, _hi = _lab.get("unrate"), _lab.get("u_lo"), _lab.get("u_hi")
+    if l_basis == "sahm":
         sc.labor_basis_note = (
-            f"就業格位定在「{l_state}」不是靠綜合分數——分數 "
-            f"{_sc:+.2f} 還在 ±0.45 的中間帶裡，沒有觸發下方任何一條門檻。"
-            f"是旗標的鷹鴿淨值 {_net:+.0f}（達到 ±3）把它推過去的。"
-            "分數是連續指標、旗標是離散事件，兩者不同步時以旗標為準，"
-            "因為旗標代表的是已經發生的具體事件。")
+            f"就業格位定在「弱」不是靠失業率的水準——失業率 {_u:.1f}% "
+            f"還在 FOMC 長期判斷的 {_lo:.1f}–{_hi:.1f}% 之內。"
+            "是 Sahm 法則觸發（失業率三月均比過去一年最低點高 0.50 個百分點"
+            "以上）把它推過去的：那條規則量的是惡化的速度，不是水準。"
+            if _u is not None and _lo is not None else
+            "就業格位由 Sahm 法則觸發定案。")
+    elif l_basis == "breakeven":
+        sc.labor_basis_note = (
+            f"就業格位往「弱」推了一格。失業率 {_u:.1f}% 還在 FOMC 長期判斷的 "
+            f"{_lo:.1f}–{_hi:.1f}% 之內（水準上不算弱），但三個月平均非農"
+            "低於損益兩平就業增速——也就是就業增加的速度已經撐不住目前的"
+            "失業率。損益兩平是由人口成長推導出來的，不是選的門檻。"
+            if _u is not None and _lo is not None else
+            "就業格位因非農低於損益兩平而往「弱」推一格。")
+    elif l_basis == "fallback":
+        _net = (_lab.get("tilt") or {}).get("net", 0)
+        _sc = _lab.get("score")
+        sc.labor_basis_note = (
+            "⚠️ 本次沒有取得 FOMC 對長期失業率的預測（FRED 的 UNRATECTLLR／"
+            "UNRATECTHLR），改用後備規則：綜合分數 "
+            + (f"{_sc:+.2f}" if _sc is not None else "—")
+            + f"（門檻 ±0.45）與旗標鷹鴿淨值 {_net:+.0f}（門檻 ±3）。"
+            "這兩個門檻是這個專案自己選的，沒有外部依據。")
 
     # ---- 推動這個判定的主要因素 ----
     for f in (labor or {}).get("flags", [])[:2]:
@@ -403,32 +490,49 @@ def _triggers(labor: dict | None, inflation: dict | None,
     """
     out: list[Trigger] = []
 
-    score = (labor or {}).get("score")
-    if score is not None:
-        for label, thr, gap in (
-            ("勞動轉「弱」", "需低於 −0.45", score - (-0.45)),
-            ("勞動轉「強」", "需高於 +0.45", 0.45 - score),
-        ):
-            if (label.endswith("「弱」") and l_state == "弱") or \
-               (label.endswith("「強」") and l_state == "強"):
-                continue
-            out.append(Trigger(label, f"綜合分數 {score:+.2f}", thr,
-                               f"還差 {gap:.2f}", gap <= 0,
+    # 就業軸的門檻＝FOMC 對長期失業率的中央趨勢。用失業率而不是綜合分數，
+    # 讀者才盯得動——「還差 0.2 個百分點」是可以拿去對新聞的東西，
+    # 「綜合分數還差 0.80」不是。
+    lab = labor or {}
+    u, lo, hi = lab.get("unrate"), lab.get("u_lo"), lab.get("u_hi")
+    if u is not None and lo is not None and hi is not None:
+        cur = f"失業率 {u:.1f}%"
+        if l_state != "弱":
+            out.append(Trigger("就業轉「弱」", cur, f"需高於 {hi:.1f}%",
+                               f"還差 {hi - u:.1f} 個百分點", u > hi,
                                binding=(binding == "就業")))
+        if l_state != "強":
+            out.append(Trigger("就業轉「強」", cur, f"需低於 {lo:.1f}%",
+                               f"還差 {u - lo:.1f} 個百分點", u < lo,
+                               binding=(binding == "就業")))
+    else:
+        score = lab.get("score")
+        if score is not None:
+            for label, thr, gap in (
+                ("勞動轉「弱」", "需低於 −0.45", score - (-0.45)),
+                ("勞動轉「強」", "需高於 +0.45", 0.45 - score),
+            ):
+                if (label.endswith("「弱」") and l_state == "弱") or \
+                   (label.endswith("「強」") and l_state == "強"):
+                    continue
+                out.append(Trigger(label, f"綜合分數 {score:+.2f}", thr,
+                                   f"還差 {gap:.2f}", gap <= 0,
+                                   binding=(binding == "就業")))
 
-    pce = (inflation or {}).get("core_pce_yoy")
-    c3 = (inflation or {}).get("core_pce_3m")
-    if pce is not None:
-        blended = 0.6 * pce + 0.4 * c3 if c3 is not None else pce
+    blended = blended_inflation((inflation or {}).get("core_pce_yoy"),
+                                (inflation or {}).get("core_pce_3m"))
+    if blended is not None:
+        b = (inflation or {}).get("bands") or {}
+        lo, hi = b.get("low", 2.30), b.get("high", 2.90)
         if i_state != "低":
-            gap = blended - 2.3
+            gap = blended - lo
             out.append(Trigger("通膨轉「低」", f"綜合通膨水準 {blended:.2f}%",
-                               "需低於 2.30%", f"還差 {gap:.2f} 個百分點",
+                               f"需低於 {lo:.2f}%", f"還差 {gap:.2f} 個百分點",
                                gap <= 0, binding=(binding == "通膨")))
         if i_state != "高":
-            gap = 2.9 - blended
+            gap = hi - blended
             out.append(Trigger("通膨轉「高」", f"綜合通膨水準 {blended:.2f}%",
-                               "需高於 2.90%", f"還差 {gap:.2f} 個百分點",
+                               f"需高於 {hi:.2f}%", f"還差 {gap:.2f} 個百分點",
                                gap <= 0, binding=(binding == "通膨")))
     return out
 

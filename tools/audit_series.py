@@ -81,8 +81,18 @@ def main() -> int:
     build.build_rates_context(c, s_rt, [], True)
     groups.append(("長端", set(ids), s_rt.read))
 
-    # 勞動那組要在通膨跑完之後才結算：ECI 是在通膨模組裡被讀的
+    # 聯準會文本模組不自己抓序列，但它會讀長端那組的兩條：
+    # DGS2（算「市場定價 vs 聯準會」）與 DFEDTARL／DFEDTARU（政策利率區間）。
+    # 不跑它的話那三條會被誤報成「抓了沒人讀」。
+    cf = cfg("fomc.yaml")
+    stmts, upcoming, _ = R.gather_fomc(True, cf.get("fetch") or {})
+    build.build_fomc_context(stmts, cf.get("policy_rate") or {}, [], True,
+                             upcoming=upcoming, rates_series=s_rt)
+
+    # 勞動那組要在通膨跑完之後才結算：ECI 是在通膨模組裡被讀的。
+    # 長端那組同理，要等聯準會文本跑完。
     groups[0] = ("勞動", groups[0][1], s_lab.read)
+    groups[2] = ("長端", groups[2][1], s_rt.read)
 
     for name, ids, read in groups:
         unused = sorted(ids - read)

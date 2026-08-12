@@ -93,6 +93,10 @@ check("⑮ 內容沒有錯位",
 # ---------------------------------------------------------------------------
 OUT = pathlib.Path(__file__).parent.parent / "output"
 pages = ["labor", "inflation", "fomc", "rates", "scenario"]
+
+
+def _sums(html_text: str) -> list[str]:
+    return re.findall(r'<span class="sect-sum">(.*?)</span>', html_text, re.S)
 if (OUT / "labor" / "index.html").exists():
     for name in pages:
         h = (OUT / name / "index.html").read_text(encoding="utf-8")
@@ -132,6 +136,22 @@ if (OUT / "labor" / "index.html").exists():
                    or re.search(r'[\u4e00-\u9fff：] [+\-\d]', s)]
         check(f"㉒ {name}：摘要的數字與單位不分家", not bad_gap,
               str(bad_gap[:2]))
+        # 摘要是純文字屬性，不會渲染 markdown。net_line 之類的來源帶著
+        # 自訂的 ** 粗體標記，忘了脫掉的話讀者會直接看到「往**降息**的方向」。
+        check(f"㉓ {name}：摘要沒有殘留 markdown",
+              not [s for s in sums if "**" in s], str(sums)[:80])
+    # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
+    h = (OUT / "index.html").read_text(encoding="utf-8")
+    hs = _sums(h)
+    check("㉔ index：三張卡都有摘要", len(hs) == 3, f"{len(hs)} 條")
+    check("㉕ index：摘要沒有殘留 markdown",
+          not [s for s in hs if "**" in s], str(hs)[:90])
+    # 摘要是拿來掃視的。超過 40 字在 390px 下會折成三行，而且多半代表
+    # 那句話寫成了方法說明而不是結論——「這張卡要不要點開」就答不出來。
+    long = [(len(s), s) for s in hs + [x for p_ in pages
+            for x in _sums((OUT / p_ / "index.html").read_text(encoding="utf-8"))]
+            if len(s) > 45]
+    check("㉖ 沒有過長的摘要（>45 字）", not long, str(long[:1]))
 else:
     print("（output/ 尚未產生，跳過實際頁面的檢查）")
 

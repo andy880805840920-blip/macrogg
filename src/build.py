@@ -25,6 +25,19 @@ from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
 CHART_START = "2025-01-01"
 
 
+# Sahm 法則的觸發門檻。出自 Claudia Sahm 的原始論文（失業率三月移動平均
+# 比過去十二個月的最低值高 0.50 個百分點以上），不是這個專案選的。
+SAHM_TRIGGER = 0.50
+
+
+def _sahm_value(lights) -> float | None:
+    """紅綠燈清單裡的 Sahm 值。lights 是 Light 物件的 list，不是 dict。"""
+    for lt in lights or []:
+        if getattr(lt, "key", None) == "sahm":
+            return getattr(lt, "value", None)
+    return None
+
+
 def build_labor_context(cfg: dict, series: dict, vintages: dict,
                         labels: dict, inverts: dict, failed: list, offline: bool,
                         consensus: dict | None = None) -> dict:
@@ -317,6 +330,21 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                         "total_count": n_ind},
         "decomp": dec,
         "ustar": _ustar_gap(u3, series.get("NROU", [])),
+        # 九宮格就業軸的判定材料。全部是外部標準：
+        #   u_lo/u_hi  FOMC 對長期失業率的中央趨勢（＝聯準會認定的充分就業）
+        #   sahm       Sahm 法則（原始論文的 0.50 門檻）
+        #   breakeven  三月均非農 vs 損益兩平（由人口成長推導，不是選的門檻）
+        "axis": {
+            "unrate": value_at(u3),
+            "u_lo": value_at(series.get("UNRATECTLLR", [])),
+            "u_hi": value_at(series.get("UNRATECTHLR", [])),
+            "u_mid": value_at(series.get("UNRATEMDLR", [])),
+            "sahm": _sahm_value(lights),
+            "sahm_triggered": (_sahm_value(lights) or 0) >= SAHM_TRIGGER,
+            "nfp_3m": bkev.nfp_3m,
+            "breakeven": bkev.monthly,
+            "below_breakeven": (bkev.gap is not None and bkev.gap < 0),
+        },
         "claims": _claims_block(series),
         "unemp_structure": _unemp_structure(series),
         "lights": lights,
@@ -918,6 +946,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "offline": offline,
         "failed": failed,
         "summary": summ,
+        # 九宮格通膨軸的兩條門檻。放在通膨 context 裡是因為它需要的
+        # SEP 序列由這個模組抓；情境層直接取用，不必再算一次。
+        "bands": infl_an.inflation_bands(summ),
         "kpi": kpi,
         "flags": flags,
         "tilt": tilt,
@@ -1465,13 +1496,100 @@ CURVE_IMPLICATION = {
 }
 
 
+def _axis_derivation(sc, labor: dict | None, infl: dict | None,
+                     labor_ctx: dict | None, infl_ctx: dict | None) -> dict:
+    """
+    「這一格是怎麼判出來的」——兩條軸的輸入值、權重、門檻與門檻的出處。
+
+    為什麼一定要有這一塊
+    --------------------
+    讀者會在通膨頁看到「通膨面：方向不明」，然後在情境頁看到「通膨高」，
+    結論是「這個網站在自打嘴巴」。實際上那是兩個不同的問題：
+
+        通膨頁的結論 = **方向**（這一期的新訊號把政策往哪推，看旗標鷹鴿淨值）
+        九宮格的軸   = **水準**（離 2% 目標多遠，看核心 PCE）
+
+    「水準很高、但這個月的新訊號互相抵消」完全可能同時成立。
+    但畫面上從來沒說這兩件事不一樣，所以讀起來就是矛盾。
+
+    就業那一軸更需要講：它**兩者混用**——綜合分數在 ±0.45 中間帶時，
+    會用旗標淨值 ±3 去推。所以「就業弱」可能是分數定的、也可能是旗標定的，
+    而先前只有後者才會顯示說明。
+    """
+    out: dict = {}
+
+    if infl:
+        b = infl.get("bands") or {}
+        yoy_v, m3 = infl.get("core_pce_yoy"), infl.get("core_pce_3m")
+        lvl = scenario.blended_inflation(yoy_v, m3)
+        tilt = (infl_ctx or {}).get("tilt") or {}
+        src = ("FOMC 對 {y} 年的核心 PCE 預測中位數（{lo:.1f}–{hi:.1f}% 中央趨勢）"
+               .format(y=b.get("next_year"), lo=b.get("next_lo") or 0,
+                       hi=b.get("next_hi") or 0)
+               if b.get("auto") and b.get("next_lo") is not None
+               else ("FOMC 對 {y} 年的核心 PCE 預測中位數".format(y=b.get("next_year"))
+                     if b.get("auto") else "後備值（沒有外部依據）"))
+        out["inflation"] = {
+            "state": sc.infl_state,
+            "rows": [
+                {"label": "核心 PCE 年增率（水準）", "value": _pct(yoy_v), "w": "×0.6"},
+                {"label": "核心 PCE 三月年化（動能）", "value": _pct(m3), "w": "×0.4"},
+            ],
+            "level": (f"{lvl:.2f}%" if lvl is not None else "—"),
+            "low": f'{b.get("low", 2.30):.2f}%',
+            "high": f'{b.get("high", 2.90):.2f}%',
+            "auto": bool(b.get("auto")),
+            "target": b.get("target"),
+            "high_src": src,
+            "low_src": (f'長期通膨目標 {b["target"]:.1f}% ＋ 0.25（量測誤差）'
+                        if b.get("auto") and b.get("target") is not None
+                        else "後備值（沒有外部依據）"),
+            # 兩頁的用詞不一致正是讀者覺得矛盾的來源，這裡直接對照著講
+            "tilt": tilt.get("tilt"),
+            "tilt_net": tilt.get("net"),
+        }
+
+    if labor:
+        u, lo, hi = labor.get("unrate"), labor.get("u_lo"), labor.get("u_hi")
+        net = (labor.get("tilt") or {}).get("net")
+        rows = []
+        if u is not None and lo is not None:
+            lvl = ("高於上緣" if u > hi else
+                   ("低於下緣" if u < lo else "落在區間內"))
+            rows.append({"label": "失業率（水準）",
+                         "value": f"{u:.1f}%", "w": lvl})
+            rows.append({"label": "FOMC 長期失業率　中央趨勢",
+                         "value": f"{lo:.1f}–{hi:.1f}%", "w": "門檻"})
+        sahm = labor.get("sahm")
+        if sahm is not None:
+            rows.append({"label": "Sahm 法則（動能）", "value": f"{sahm:+.2f}",
+                         "w": "觸發" if labor.get("sahm_triggered") else "門檻 0.50"})
+        n3, bk = labor.get("nfp_3m"), labor.get("breakeven")
+        if n3 is not None and bk is not None:
+            rows.append({"label": "三月均非農　vs　損益兩平（動能）",
+                         "value": f"{n3/10:+.1f} / {bk/10:+.1f} 萬人",
+                         "w": "低於" if labor.get("below_breakeven") else "高於"})
+        out["labor"] = {
+            "state": sc.labor_state,
+            "rows": rows,
+            "basis": sc.labor_basis,
+            "note": sc.labor_basis_note,
+            "score": (f'{labor["score"]:+.2f}'
+                      if labor.get("score") is not None else "—"),
+            "net": (f"{net:+.0f}" if net is not None else "—"),
+            "tilt": ((labor_ctx or {}).get("tilt") or {}).get("tilt"),
+        }
+    return out
+
+
 def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
                            fomc_ctx: dict | None, rates_ctx: dict | None = None) -> dict:
     labor = None
     if labor_ctx:
         labor = {"score": labor_ctx["score"]["score"],
                  "tilt": labor_ctx["tilt"],
-                 "flags": labor_ctx["flags"]}
+                 "flags": labor_ctx["flags"],
+                 **(labor_ctx.get("axis") or {})}
     infl = None
     if infl_ctx:
         s = infl_ctx["summary"]
@@ -1479,6 +1597,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 兩者長期差 0.3–0.5 個百分點，混用會讓九宮格的通膨軸固定偏鷹。
         # 見 scenario.classify_inflation 的說明。
         infl = {"core_pce_yoy": s.pce_core_yoy, "core_pce_3m": s.pce_core_3m,
+                "bands": infl_ctx.get("bands") or {},
                 "flags": infl_ctx["flags"]}
     fomc = None
     if fomc_ctx and not fomc_ctx.get("empty"):
@@ -1538,6 +1657,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         "scenario": sc,
         "cells": cells,
         "grids": grids,
+        "why": _axis_derivation(sc, labor, infl, labor_ctx, infl_ctx),
         "regime_meta": [
             {"key": r, "label": scenario.REGIME_LABEL[r],
              "rule": scenario.REGIME_RULE[r],

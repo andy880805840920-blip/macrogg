@@ -231,6 +231,31 @@ reference:
     unit: percent
     frequency: quarterly
     enabled: true
+
+  # ---- FOMC 對長期失業率的判斷（＝聯準會自己認定的充分就業）----
+  #
+  # 九宮格就業軸的門檻來源。先前是綜合分數 ±0.45 加旗標淨值 ±3，
+  # 兩個都是這個專案自己選的、沒有任何外部依據——而它們跟通膨軸一起
+  # 決定整張固定收益部位對照表。
+  #
+  # 為什麼用 FOMC 的而不是 CBO 的 NROU：九宮格問的是「聯準會會怎麼做」，
+  # 而聯準會是照**它自己的**估計行動。而且這樣兩條軸都錨在同一份 SEP 的
+  # 長期判斷上，完全對稱。
+  #
+  # 帶寬也不用自己選——直接用中央趨勢的寬度（2026-06 SEP 是 4.0–4.3%），
+  # 那是 FOMC 成員彼此意見的分歧程度，不是誰拍板的。
+  - id: UNRATEMDLR
+    label: FOMC 長期失業率（中位數）
+    unit: percent
+    enabled: true
+  - id: UNRATECTLLR
+    label: FOMC 長期失業率（中央趨勢下緣）
+    unit: percent
+    enabled: true
+  - id: UNRATECTHLR
+    label: FOMC 長期失業率（中央趨勢上緣）
+    unit: percent
+    enabled: true
   - id: DGS2
     label: 2 年期公債殖利率
     unit: percent

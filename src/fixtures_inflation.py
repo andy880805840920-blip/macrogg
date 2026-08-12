@@ -119,6 +119,23 @@ def build() -> dict[str, list[dict]]:
     s["T5YIE"] = _daily(days, 2.63, 0.012)
     s["T5YIFR"] = _daily(days, 2.66, 0.010)
 
+    # ---- FOMC 經濟預測摘要（SEP）----
+    # 年頻、觀測日就是被預測的那一年。數值取自 2026 年 6 月 SEP 的**真實值**
+    # （federalreserve.gov/monetarypolicy/fomcprojtabl20260617.htm）——
+    # 這幾條不是模擬的，因為九宮格的門檻直接由它們決定，用假的會讓
+    # 離線畫面的判定與正式執行對不起來。
+    s["PCECTPIMDLR"] = [{"date": f"{y}-01-01", "value": 2.0}
+                        for y in (2024, 2025, 2026)]
+    s["JCXFEMD"] = [{"date": "2026-01-01", "value": 3.3},
+                    {"date": "2027-01-01", "value": 2.5},
+                    {"date": "2028-01-01", "value": 2.1}]
+    s["JCXFECTL"] = [{"date": "2026-01-01", "value": 3.2},
+                     {"date": "2027-01-01", "value": 2.3},
+                     {"date": "2028-01-01", "value": 2.0}]
+    s["JCXFECTH"] = [{"date": "2026-01-01", "value": 3.5},
+                     {"date": "2027-01-01", "value": 2.6},
+                     {"date": "2028-01-01", "value": 2.2}]
+
     # 汽油（週頻）
     weeks, cur = [], dt.date(2026, 8, 3)
     while len(weeks) < 140:
