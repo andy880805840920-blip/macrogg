@@ -1,12 +1,33 @@
 name: 更新儀表板
 
-# 每天跑一次。13:45 UTC 在美東夏令是 09:45、冬令是 08:45，
-# 兩種情況都在 08:30 ET 發布之後 → 換季不必手動調整。
+# 每天跑一次，不對準個別發布日。
+#
+# 為什麼不排「每月第一個週五」這種精準排程：
+#   1. 執行是冪等的——非發布日跑起來只是重新產生同一份頁面，沒有副作用
+#   2. 一份日排程就涵蓋就業報告、失業金、JOLTS、CPI、PCE、FOMC，
+#      不必維護發布日對照表，新增資料源也不必改這裡
+#   3. 13:45 UTC 在美東夏令是 09:45、冬令是 08:45，兩種情況都在
+#      08:30 ET 發布之後 → 換季不必手動調整（GitHub Actions 沒有時區支援）
+#
+# 成本：每次約 2–3 分鐘，一個月不到 100 分鐘，
+# 遠低於私有 repo 每月 2,000 分鐘的免費額度。
 on:
   schedule:
     - cron: '45 13 * * *'
-  workflow_dispatch:
+  workflow_dispatch:        # 也可以在 Actions 頁面手動觸發
+  # 改了程式或設定就重新產生一次。沒有這一段的話，push 完網站不會有任何
+  # 反應——要等到隔天 13:45 UTC 的排程才會套用新的版面。
+  #
+  # paths-ignore 是必要的：這個 workflow 自己會 commit output/ 與 state/，
+  # 不排除的話它會觸發自己，變成無窮迴圈。
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - 'output/**'
+      - 'state/**'
+      - '**.md'
 
+# 需要寫入權限才能把產出 commit 回 repo
 permissions:
   contents: write
 
@@ -18,9 +39,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: pip
@@ -28,8 +49,10 @@ jobs:
       - name: 安裝依賴
         run: pip install -r requirements.txt
 
+      # SQLite 內含每次抓取的快照（修正追蹤的後備來源）。
+      # 只放進 Actions 快取、不 commit 進 repo，避免二進位檔把 repo 撐大。
       - name: 還原資料庫快取
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/labor.db
           key: labor-db-${{ github.run_id }}
@@ -38,17 +61,34 @@ jobs:
       - name: 產生頁面
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          # SEC 要求帶可聯絡的 User-Agent。沒設會用預設值，
+          # 通常也能過，但被限流的風險較高。
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+          # 選配：首頁「整體情勢」的模型潤稿。設一把就好，兩把都設時
+          # 優先用 Gemini（有免費額度）。沒設就用規則組裝版，一樣能跑。
+          # 事實沒變不會重新呼叫（快取在 state/brief.json）。
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python run.py --json
 
       - name: Commit 產出
         run: |
           git config user.name  "dashboard-bot"
           git config user.email "dashboard-bot@users.noreply.github.com"
+          # state/ 在第一次成功執行前不存在，直接 git add 會讓整步失敗
+          mkdir -p state
           git add output state
           if git diff --staged --quiet; then
             echo "資料沒有變化，跳過 commit"
           else
-            git commit -m "更新儀表板 $(date -u +%Y-%m-%d\ %H:%M) UTC"
+            # 把產出的時間戳印進 log，方便跟網站上的「更新於」對照：
+            # 兩者不一致就代表這次的產出沒有上線。
+            grep -o '更新於 [0-9: -]*' output/labor/index.html | head -1 || true
+            # commit 訊息也用台北時間。runner 的時鐘是 UTC，不指定 TZ 的話
+            # git log 是 UTC、網站上是台北時間，同一次執行兩個數字差 8 小時。
+            git commit -m "更新儀表板 $(TZ=Asia/Taipei date +%Y-%m-%d\ %H:%M) 台北"
+            # 期間若有手動 commit（例如改了 config），先接上去再推，
+            # 否則這次的產出會因為落後遠端而整個失敗。
             git pull --rebase --autostash
             git push
           fi
