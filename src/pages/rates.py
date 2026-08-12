@@ -180,7 +180,8 @@ def rates_body(d: dict) -> str:
             f'<span class="bk-label">資本支出佔營運現金流</span>'
             f'<span class="bk-val">{_ratio:.0f}%</span>'
             f'<span class="bk-verdict" style="font-weight:400;font-size:12.5px;'
-            f'color:var(--muted)">超過 100% 代表自由現金流轉負，擴張必須舉債</span></div>')
+            f'color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金'
+            f'支應不了這一季的資本支出</span></div>')
 
     # ---- 近期發債申報 ----
     # 這是時效補丁：季報最久落後 135 天，發債當天就要申報。
@@ -319,10 +320,12 @@ def rates_body(d: dict) -> str:
         ratio = c.get("capex_to_ocf")
         ratio_txt = "—" if ratio is None else f"{ratio:.0f}%"
         cls = "neg" if c.get("cash_negative") else ""
-        # 期末日逐家標示：各家會計年度不同，同一列的「最新一季」不是同一季
+        # 期末日逐家標示：各家會計年度不同，同一列的「最新一季」不是同一季。
+        # 沒有期末日代表這一列是 config 的手動後備值——那要明講，不能留白，
+        # 因為留白看起來只是「少標一個日期」，而不是「這個數字沒被核對過」。
         pe = c.get("period_end") or ""
-        name = (f'{esc(c["name"])}<span class="dnote">{esc(pe)}</span>'
-                if pe else esc(c["name"]))
+        tag = esc(pe) if pe else "未取自 SEC"
+        name = f'{esc(c["name"])}<span class="dnote">{tag}</span>'
         # 資本支出佔營收：規模差五倍的兩家公司，同樣的「資本支出 200 億」
         # 代表的擴張強度完全不同。營收本來就跟 capex／ocf 一起從 EDGAR 抓，
         # 只是沒印出來——加一欄就把「絕對金額」變成可以互相比較的比率。
@@ -338,13 +341,43 @@ def rates_body(d: dict) -> str:
 
     hs_rows = "".join(_hs_row(c) for c in hs.companies)
 
+    # 資料來源逐家列出，附上 EDGAR 的申報清單連結，讓讀者能自己核對。
+    # 這一區的每個結論都建立在這五家的數字上，沒有連結就等於要人相信我。
+    _srcs = " ".join(
+        (f'<a href="{esc(c["filings_url"])}" target="_blank" rel="noopener">'
+         f'{esc(c["name"])}</a>' if c.get("filings_url") else esc(c["name"]))
+        for c in hs.companies)
+    hs_source_html = (
+        f'<div class="src">資料來源：SEC EDGAR 的 XBRL 申報（10-Q／10-K 現金流量表'
+        f'原始標記）　·　{_srcs}　·　'
+        f'{esc(hs.period_span) if hs.period_span else "期別未標示"}'
+        f'　·　{hs.n_from_sec} / {len(hs.companies)} 家取自 SEC</div>')
+
+    # 退回後備值時要分辨「部分」與「全部」——兩者的嚴重程度差很多，
+    # 而先前兩種情況的畫面長得一模一樣。全部退回代表整區的數字都是
+    # 幾個月前手填的，那時候畫面上的任何結論都不該被當成當前狀況。
     unverified = ""
     if not hs.verified:
-        unverified = ('<div class="warnbox" style="margin-top:14px">'
-                      '<b>部分數字未取自 SEC</b><br>'
-                      '正常情況下這一區的數字由 SEC EDGAR 的 XBRL 申報自動擷取。'
-                      '本次有公司抓取失敗（或設定為離線／手動模式），'
-                      '該公司改用 <code>config/rates.yaml</code> 的後備值。</div>')
+        _all_stale = hs.n_from_sec == 0
+        unverified = (
+            '<div class="warnbox" style="margin-top:14px'
+            + ('；border-left-color:var(--critical)' if _all_stale else '')
+            + '">'
+            + ('<b>這一區的數字全部不是最新的</b><br>'
+               '五家公司<b>全部</b>擷取失敗，整區改用 '
+               '<code>config/rates.yaml</code> 的手動後備值——那是上一次人工'
+               '填入的數字，不是最新一季的財報。上方的比率與結論都是照這批'
+               '舊數字算的，請先不要據以判斷。<br>'
+               '最常見的原因是 SEC 擋掉了請求（<code>SEC_USER_AGENT</code> '
+               '沒設定時會送出空的 User-Agent）。執行紀錄裡會有一行 '
+               '<code>科技巨頭：N 家全部擷取失敗</code>。'
+               if _all_stale else
+               '<b>部分數字未取自 SEC</b><br>'
+               '正常情況下這一區的數字由 SEC EDGAR 的 XBRL 申報自動擷取。'
+               '本次有公司抓取失敗（或設定為離線／手動模式），'
+               '該公司改用 <code>config/rates.yaml</code> 的後備值，'
+               '在表格裡標為「未取自 SEC」。')
+            + '</div>')
 
     return f"""
 <div class="verdict {lean_cls}">
@@ -458,13 +491,18 @@ def rates_body(d: dict) -> str:
         <table>
           <thead><tr><th>公司</th><th>資本支出</th><th>年增</th>
             <th>營運現金流</th><th>佔營運現金流</th><th>佔營收</th>
-            <th>本季發債</th></tr></thead>
+            <th>單季發債</th></tr></thead>
           <tbody>{hs_rows}</tbody></table>
       </div>
-      <div class="src">金額單位：億美元　·　「佔營運現金流」超過 100% 代表
-        自由現金流轉負　·　「佔營收」是同一季的資本支出除以營收，
-        用來比較規模不同的公司誰擴張得比較猛　·
-        資料截止 {esc(hs.as_of)}　·　{esc(d['hs_source'])}</div>
+      <div class="src">金額單位：億美元　·　公司名稱下方是該公司自己的
+        <b>會計季末日</b>（各家年度起點不同，同一列不是同一季）　·
+        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引　·
+        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依
+        「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負　·
+        「佔營收」＝同一季的資本支出 ÷ 營收，用來比較規模不同的公司
+        誰擴張得比較猛　·　所有百分比都由左邊的原始金額算出來，
+        沒有手填的百分比</div>
+      {hs_source_html}
     </details>
     {unverified}
   </div>

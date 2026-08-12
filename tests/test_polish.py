@@ -22,6 +22,14 @@ import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 from src.analysis import polish  # noqa: E402
+from src.analysis import brief   # noqa: E402
+
+
+class _S:                        # 最小的假 Scenario
+    regime, lean = "inflation", "hawkish"
+    labor_state, infl_state = "弱", "高"
+    triggers = []
+
 
 ok = True
 
@@ -346,6 +354,98 @@ def then_boom(key, model, text):
 r = polish.maybe_polish(assembled(SRC + "重試爆炸測試"), tmp / "c10.json",
                         env={"GEMINI_API_KEY": "g1"}, _post=then_boom)
 check("51 重試時 API 掛掉 → 組裝版", r["source"] == "assembled")
+
+
+# ---------------------------------------------------------------------------
+# ⑥ 兩種誤判：檢查太嚴，把合格的改寫丟掉
+#
+# 兩次都實際發生過，而且失敗理由聽起來都很嚴重：
+#   「出現原文沒有的數字：['2']」——其實只是把「+2.0 萬」寫成「+2 萬」
+#   「輸出含 markdown」        ——其實只是把「重點」加粗
+# 兩種都不是模型寫錯，是我的檢查分不清**內容**與**排版**。
+# 修法是：數字用數值比、排版記號機械拿掉；鎖定的嚴格程度不變。
+# ---------------------------------------------------------------------------
+check("52 「2」與「2.0」是同一個數字",
+      polish._numbers("2 萬") == polish._numbers("2.0 萬"))
+check("53 「4.1」與「4.2」仍然是兩個（沒有放寬）",
+      polish._numbers("4.1") != polish._numbers("4.2"))
+check("54 「2」與「20」仍然是兩個",
+      polish._numbers("2") != polish._numbers("20"))
+check("55 千分位照舊不算新數字",
+      polish._numbers("1,828 億") == polish._numbers("1828 億"))
+check("56 省略尾數零的改寫可以通過",
+      polish.validate(GOOD.replace("+2.0 萬", "+2 萬"), SRC) == "",
+      polish.validate(GOOD.replace("+2.0 萬", "+2 萬"), SRC))
+
+check("57 粗體被清掉而不是整段退回",
+      polish._sanitize("**重點**：降息還遠。") == "重點：降息還遠。",
+      polish._sanitize("**重點**：降息還遠。"))
+check("58 標題記號與清單符號也清掉",
+      polish._sanitize("# 標題\n- 一項\n1. 兩項") == "標題 一項 兩項",
+      polish._sanitize("# 標題\n- 一項\n1. 兩項"))
+check("59 換行折成空格", "\n" not in polish._sanitize("甲\n乙"))
+check("60 清理不動內容裡的數字與文字",
+      polish._sanitize(GOOD) == GOOD)
+
+# 端到端：模型把重點加粗 → 清掉後通過，不再退回組裝版
+r = polish.maybe_polish(assembled(SRC + "粗體測試"), tmp / "c11.json",
+                        env={"GEMINI_API_KEY": "g1"},
+                        _post=lambda k, m, t: GOOD.replace("重點：", "**重點**："))
+check("61 加粗的改寫最後仍是模型版",
+      r["source"] == "model" and "**" not in r["text"], r["source"])
+check("62 存進畫面的文字沒有殘留星號", "*" not in r["text"])
+
+# 後備防線還在：清理沒做到時 validate 照樣擋
+check("63 validate 仍把殘留的 markdown 當失敗",
+      polish.validate("**重點**：" + GOOD[3:], SRC) != "")
+
+
+# ---------------------------------------------------------------------------
+# ⑦ 其餘的退回路徑：一條一條堵掉「其實沒寫錯卻被擋下」
+# ---------------------------------------------------------------------------
+check("64 半形冒號收斂成全形（不然會判成前綴不見）",
+      polish._sanitize("重點: 降息還遠。") == "重點：降息還遠。",
+      polish._sanitize("重點: 降息還遠。"))
+check("65 冒號前夾空白也收斂",
+      polish._sanitize("重點 ：降息還遠。") == "重點：降息還遠。")
+check("66 全形數字轉半形",
+      polish._sanitize("失業率 ４.１％") == "失業率 4.1%",
+      polish._sanitize("失業率 ４.１％"))
+check("67 全形數字轉完之後不算新數字",
+      polish.validate(polish._sanitize(GOOD.replace("4.1%", "４.１％")), SRC) == "",
+      polish.validate(polish._sanitize(GOOD.replace("4.1%", "４.１％")), SRC))
+# 所有空白（含全形空格、不斷行空格）都折成一般空格。這是安全的，
+# 但**只在組裝版本身不含那些字元時**才安全——否則折掉會弄壞排版。
+# 所以真正要釘的是那個前提，不是折不折。
+check("68 空白一律折成一般空格", polish._sanitize("甲　·　乙") == "甲 · 乙",
+      polish._sanitize("甲　·　乙"))
+# 這一段要驗的是**真的組裝版**，不是手寫的樣本——手寫的樣本永遠會通過。
+_BRIEF = brief.compose({"scenario": {"scenario": _S()}})["text"]
+check("68b 前提成立：組裝版不含全形空格或不斷行空格",
+      "　" not in _BRIEF and " " not in _BRIEF, repr(_BRIEF[:40]))
+
+# 字數範圍要跟著組裝版走，不能寫死
+lo, hi = polish._target_range("中" * 180)
+check("69 字數範圍貼著實際長度", lo <= 180 <= hi, f"{lo}–{hi}")
+check("70 範圍留在護欄內側",
+      lo >= polish.MIN_CJK and hi <= polish.MAX_CJK, f"{lo}–{hi}")
+lo2, hi2 = polish._target_range("中" * 100)
+check("71 組裝版短的時候範圍跟著往下移", lo2 < lo and hi2 < hi, f"{lo2}–{hi2}")
+check("72 範圍永遠不會反過來",
+      all(a < b for a, b in (polish._target_range("中" * n)
+                             for n in (0, 50, 120, 180, 300))))
+check("73 提示詞帶的是算出來的範圍",
+      f"{lo} 到 {hi}" in polish._system("中" * 180))
+
+# 推理層級：欄位名稱跨世代不同，關錯等於沒關
+check("74 gemini-2.x 用 thinkingBudget",
+      polish._thinking("gemini-2.5-flash") == {"thinkingConfig":
+                                               {"thinkingBudget": 0}})
+check("75 gemini-3.x 用 thinkingLevel",
+      polish._thinking("gemini-3.6-flash") == {"thinkingLevel": "minimal"})
+check("76 認不出版本就不送（靠額度撐）",
+      polish._thinking("gemini-flash-latest") == {})
+check("77 輸出額度夠大，不會被推理吃光", polish.MAX_OUT >= 2000)
 
 print()
 print("全部通過" if ok else "有失敗")

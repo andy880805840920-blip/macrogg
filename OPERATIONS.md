@@ -122,6 +122,23 @@ FOMC 頁的「市場定價 vs 聯準會」是拿 `2 年期殖利率 − 政策�
 
 ---
 
+## 建議設定一次就好：SEC_USER_AGENT
+
+**位置**：repo → Settings → Secrets and variables → Actions → **Variables** 分頁
+→ New repository variable
+**Name**：`SEC_USER_AGENT`　**Value**：`你的名字 你的信箱`（例如 `GC gc@example.com`）
+
+SEC 規定抓取它的資料要帶可聯絡的 User-Agent。沒設定的話程式會用一個
+內建的預設值，格式合法但信箱是假的——SEC 有可能限流甚至擋掉。
+
+**擋掉的後果值得特別講**：科技巨頭那一區會退回 `config/rates.yaml` 的
+手動後備值，而畫面上仍然有數字、看起來完全正常，只是那是上一次人工填的
+舊數字。這種失敗曾經真的發生過（見 README 的「安靜地用了舊數字」）。
+現在退回時執行紀錄會印一行 error，畫面上也會直接寫「這一區的數字全部
+不是最新的」，但最好的做法還是把這個變數設好。
+
+---
+
 ## 改設定怎麼做
 
 全程在 GitHub 網頁上完成，不用裝任何東西：

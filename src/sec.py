@@ -103,8 +103,19 @@ EARNINGS_AHEAD_DAYS = 60
 
 # SEC 要求帶可聯絡的 User-Agent，否則會擋。
 # 可用環境變數覆寫成自己的信箱（SEC 的使用規範建議這麼做）。
-USER_AGENT = os.environ.get(
-    "SEC_USER_AGENT", "macro-dashboard (contact: dashboard@example.com)")
+#
+# ⚠️ 這裡**必須**用 `or` 而不是 os.environ.get 的第二個參數。
+#
+# 踩過的坑：workflow 寫 `SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}`，
+# 而那個變數沒設定時，GitHub Actions 不是「不設環境變數」，是把它
+# **設成空字串**。`os.environ.get(key, default)` 只在 key 不存在時才回
+# default——key 存在而值是空的話，回的是空字串。
+#
+# 結果是送出 `User-Agent: `（空的），SEC 直接擋掉，五家公司**全部**抓取失敗，
+# 整區安靜地退回 config 的後備值。畫面上還是有數字、看起來完全正常，
+# 只是那是幾個月前手填的數字。這正是實際發生過的事。
+DEFAULT_USER_AGENT = "macro-dashboard (contact: dashboard@example.com)"
+USER_AGENT = (os.environ.get("SEC_USER_AGENT") or "").strip() or DEFAULT_USER_AGENT
 
 TIMEOUT = 30
 MAX_RETRIES = 3
@@ -482,6 +493,10 @@ def fetch_hyperscalers(cfg: dict,
 
     回傳 (companies, as_of, verified)。單位為**十億美元**，與原本手動填的一致。
     任何一家抓不到就退回該家的手動值，並讓 verified 轉為 False。
+
+    每一列都會帶 `from_sec`：這一家的數字是不是真的來自 SEC。畫面靠它
+    逐列標示，因為「五家裡有一家退回手動值」跟「五家全部退回手動值」
+    在讀者眼中是完全不同的兩件事，而先前兩者的畫面長得一模一樣。
     """
     client = client or SecClient()
     comps_cfg = cfg.get("companies") or []
@@ -489,12 +504,19 @@ def fetch_hyperscalers(cfg: dict,
     ends: list[str] = []
     all_ok = True
 
+    def _fallback(c: dict) -> dict:
+        """退回 config 的手動值，並標記它不是來自 SEC。"""
+        row = dict(c)
+        row["from_sec"] = False
+        row["period_end"] = ""          # 手動值沒有可信的期末日，不要假裝有
+        return row
+
     for c in comps_cfg:
         cik = c.get("cik")
         name = c.get("name", c.get("ticker", "?"))
         if not cik:
             log.warning("%s 沒有填 cik，改用手動值", name)
-            out.append(dict(c))
+            out.append(_fallback(c))
             all_ok = False
             continue
 
@@ -515,7 +537,7 @@ def fetch_hyperscalers(cfg: dict,
         # 資本支出與營運現金流是核心，缺任一個就不能用這家的抓取結果
         if "capex" not in got or "ocf" not in got:
             log.warning("%s 的 SEC 資料不完整（缺 capex 或 ocf），改用手動值", name)
-            out.append(dict(c))
+            out.append(_fallback(c))
             all_ok = False
             continue
 
@@ -529,7 +551,7 @@ def fetch_hyperscalers(cfg: dict,
                         name, got["_end"], stale_days)
             client.failed.append(
                 (f"SEC {name}", f"最新資料僅到 {got['_end']}，可能是標記已停用"))
-            out.append(dict(c))
+            out.append(_fallback(c))
             all_ok = False
             continue
 
@@ -545,9 +567,19 @@ def fetch_hyperscalers(cfg: dict,
                           if got.get("capex_yoy") is not None else None),
             "period_end": got["_end"],
             "source_tag": got.get("_tag", ""),
+            "from_sec": True,
         })
         log.info("SEC %s：資本支出 %.1f 十億、營運現金流 %.1f 十億（截至 %s）",
                  name, got["capex"], got["ocf"], got["_end"])
+
+    # 全部失敗是一種完全不同的狀況：不是「某一家的標記變了」，
+    # 而是「根本連不上 SEC」（憑證、User-Agent 被擋、網路）。
+    # 這種時候整區的數字都是幾個月前手填的，必須用 error 等級講出來，
+    # 不能混在一堆 warning 裡讓人滑過去。
+    if comps_cfg and not ends:
+        log.error("科技巨頭：%d 家**全部**擷取失敗，整區改用 config 的手動值。"
+                  "常見原因是 SEC_USER_AGENT 沒設或被擋（SEC 會擋空的 "
+                  "User-Agent）。目前送出的是：%r", len(comps_cfg), USER_AGENT)
 
     as_of = max(ends) if ends else cfg.get("as_of", "")
     return out, as_of, all_ok and bool(ends)

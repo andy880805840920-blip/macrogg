@@ -1980,8 +1980,9 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     real10 = (curve.decomposition or {}).get("real")
     debt = rt.debt_state(series, real_10y=real10, real_growth=real_growth or 1.8)
     _hs_cfg = cfg.get("hyperscalers") or {}
-    hs = rt.hyperscalers(_hs_cfg,
-                         (cfg.get("ig_market") or {}).get("quarterly_issuance"))
+    _ig_cfg = cfg.get("ig_market") or {}
+    hs = rt.hyperscalers(_hs_cfg, _ig_cfg.get("quarterly_issuance"),
+                         ig_verified=bool(_ig_cfg.get("verified")))
     # 近期發債申報：補季報 45–135 天的時效缺口。刻意不進供給壓力分數。
     offerings = _hs_cfg.get("offerings") or []
     # 財報新聞稿：補實績從「季末後 40 天」到「約 3 週」的缺口。同樣不計分。
@@ -2102,18 +2103,31 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     # ---- Hyperscaler ----
     # 單位一律換算成「億美元」。原始財報是 billion，但中文語境讀 10 億／十億
     # 容易誤讀成十位數，而且在手機上會換行；統一乘以 10 寫成億。
+    # 每一格都要講清楚「這是哪一段期間的數字」。各家會計年度不同，
+    # 「本季」對五家公司不是同一段時間——period_span 印出實際的期末日範圍。
+    _span = hs.period_span or hs.as_of or ""
+    _span_note = f"各家最新一季，期末 {_span}" if _span else "期別未標示"
     hs_stats = [
         {"label": "資本支出合計", "value": f"{hs.total_capex * 10:,.0f} 億美元",
-         "note": f"年增 {hs.capex_yoy:+.0f}%" if hs.capex_yoy is not None else ""},
+         "note": (f"年增 {hs.capex_yoy:+.0f}%（對去年同季）"
+                  if hs.capex_yoy is not None else _span_note)},
         {"label": "佔營運現金流",
          "value": (f"{hs.capex_to_ocf:.0f}%" if hs.capex_to_ocf else "—"),
          "color": ("var(--critical)" if (hs.capex_to_ocf or 0) > 100
                    else ("var(--serious)" if (hs.capex_to_ocf or 0) > 80 else "inherit")),
-         "note": "超過 100% 代表自由現金流轉負"},
-        {"label": "本季發債", "value": f"{hs.total_issued * 10:,.0f} 億美元",
+         # 明講是合計除合計。先前只寫「超過 100% 代表自由現金流轉負」，
+         # 讀者無從知道這是加總的比率還是五家百分比的平均——兩者差很多。
+         "note": "合計 ÷ 合計，非五家平均"},
+        # 發債金額的期間**必須**寫在標籤裡。先前寫「本季」——五家的
+        # 「本季」是五段不同的期間，這樣寫等於沒有期間定義。
+        {"label": f"單季發債合計{f'（期末 {_span}）' if _span else ''}",
+         "value": f"{hs.total_issued * 10:,.0f} 億美元",
+         # 佔投資級市場的比重只有在分母經人工確認時才顯示（見 rates.hyperscalers）
          "note": (f"佔投資級發行 {hs.ig_share:.0f}%"
-                  if hs.ig_share is not None else "")},
-        {"label": "現金流轉負家數", "value": f"{hs.n_cash_negative} / {len(hs.companies)} 家"},
+                  if hs.ig_share is not None else "分子為五家不同會計期別之和")},
+        {"label": "簡化口徑自由現金流為負",
+         "value": f"{hs.n_cash_negative} / {len(hs.companies)} 家",
+         "note": "營運現金流 − 現金資本支出 < 0"},
     ]
 
     # ---- 誰在發債：把政府與科技巨頭放進同一個尺度 ----
@@ -2134,7 +2148,9 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             "gov_note": f"財政赤字 {abs(debt.deficit_gdp):.1f}% GDP，需靠淨發行公債填補",
             "hs_year": hs_yr,
             "hs_display": (f"{hs_yr:,.0f} 億美元" if hs_yr else "—"),
-            "hs_note": (f"本季 {hs.total_issued*10:,.0f} 億美元年化"
+            # 「本季」對五家公司不是同一段期間，所以標出實際的期末日範圍。
+            "hs_note": (f"單季 {hs.total_issued*10:,.0f} 億美元年化"
+                        + (f"（期末 {hs.period_span}）" if hs.period_span else "")
                         + (f"，佔投資級發行 {hs.ig_share:.0f}%"
                            if hs.ig_share is not None else "")),
             "ratio": (hs_yr / gov_yr * 100 if hs_yr and gov_yr else None),
@@ -2174,8 +2190,13 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         "pressure": press,
         "pressure_text": rt.PRESSURE_TEXT.get(press.level, ("—", "")),
         "debt_text": rt.DEBT_VERDICT.get(debt.verdict, ("—", "")),
-        "hs_text": rt.HS_VERDICT.get(hs.verdict, ("—", "")),
+        "hs_text": rt.hs_verdict(hs),
+        # 來源字串現在由 pages/rates.py 依實際擷取狀況組出來（含逐家連結與
+        # 「N / 5 家取自 SEC」），config 的這一行只當補充說明。
         "hs_source": (cfg.get("hyperscalers") or {}).get("source", ""),
+        "hs_ig": {"issuance": _ig_cfg.get("quarterly_issuance"),
+                  "as_of": _ig_cfg.get("as_of", ""),
+                  "verified": bool(_ig_cfg.get("verified"))},
         "lights": lights,
         "curve_stats": curve_stats,
         "curve_short": curve_short,

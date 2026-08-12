@@ -54,29 +54,122 @@ log = logging.getLogger(__name__)
 
 TIMEOUT = 45
 
-# 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 1
+# 輸出額度。這段文字本身只要 300 token 上下，但**推理用掉的 token 也算在
+# 這個上限裡**——額度給太緊，推理模型會把它花光然後回一個空字串
+#（finishReason: MAX_TOKENS）。給寬一點不會多花錢：計費看實際用量，
+# 不看上限。先前設 800，正好落在會被推理吃光的區間。
+MAX_OUT = 4000
 
-SYSTEM = (
-    "你是財經媒體的資深編輯。使用者會給你一段由程式組裝的美國總經情勢總述。"
-    "把它改寫成一段連貫、自然的繁體中文散文，語氣像法人晨會的口頭摘要——"
-    "專業但不堆術語，句與句之間要有自然的承接。\n"
-    "硬性規則：\n"
-    "1. 不得新增、刪除或改動任何數字與百分比。輸出中的每個數字都必須"
-    "出現在原文裡。\n"
-    "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
-    "3. 長度 140 到 170 個中文字。\n"
-    "4. 最後一句必須以「重點：」開頭，內容沿用原文的重點句"
-    "（語氣可以改，意思不可以改）。\n"
-    "5. 輸出純文字一段：不用列點、不用 markdown、不用換行。\n"
-    "只輸出改寫後的文字，不要任何說明。"
-)
+# 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
+PROMPT_VERSION = 2
+
+
+def _target_range(source: str) -> tuple[int, int]:
+    """
+    要求的字數範圍，**由這一次的組裝版長度算出來**，不是寫死的。
+
+    先前寫死「140 到 170」，但組裝版實際長度會隨資料變（實測 179–180 字）。
+    等於一邊要求模型壓掉 20% 的字、一邊又用 190 的上限去驗——模型照做會
+    偏短、不照做就頂到上限。兩種都可能被擋，而且原因完全不同。
+
+    改成貼著實際長度給範圍，並在兩端都留 10 字的緩衝，
+    讓「照著做」跟「通過驗證」變成同一件事。
+    """
+    n = cjk_len(source)
+    lo = max(MIN_CJK + 10, n - 25)
+    hi = min(MAX_CJK - 10, n + 10)
+    if hi <= lo:                                   # 極端情況下不要給出反向區間
+        lo, hi = MIN_CJK + 10, MAX_CJK - 10
+    return lo, hi
+
+
+def _system(source: str) -> str:
+    lo, hi = _target_range(source)
+    return (
+        "你是財經媒體的資深編輯。使用者會給你一段由程式組裝的美國總經情勢總述。"
+        "把它改寫成一段連貫、自然的繁體中文散文，語氣像法人晨會的口頭摘要——"
+        "專業但不堆術語，句與句之間要有自然的承接。\n"
+        "硬性規則：\n"
+        "1. 不得新增、刪除或改動任何數字與百分比。輸出中的每個數字都必須"
+        "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
+        "不要寫「約兩週」這類原文沒有的量。\n"
+        "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
+        f"3. 長度 {lo} 到 {hi} 個中文字。\n"
+        "4. 最後一句必須以「重點：」開頭（全形冒號），內容沿用原文的重點句"
+        "（語氣可以改，意思不可以改）。\n"
+        "5. 輸出純文字一段：不用列點、不用 markdown、不用換行。\n"
+        "6. 直接輸出改寫後的文字，開頭不要有「以下是」「好的」這類引言，"
+        "結尾不要有任何說明。"
+    )
+
+
+# 舊名稱保留給既有呼叫端與測試；內容與 _system("") 等價。
+SYSTEM = _system("")
 
 _NUM = re.compile(r"\d+(?:\.\d+)?")
 
+# 純排版記號。這些在中文總經散文裡沒有任何正當用途，出現就是模型的
+# 排版習慣，直接拿掉。分兩組是因為**去掉的方式不一樣**：
+#   記號本身要換成空字串——換成空格的話「**重點**：」會變成「重點 ：」，
+#   「重點：」就不見了，反而觸發另一條檢查。
+#   清單項目符號連同後面的空白一起去掉。
+_MD_CHARS = re.compile(r"[*#`_~]")
+_MD_LIST = re.compile(r"^[ \t]*(?:[-•]|\d+[.)])[ \t]+", re.M)
+_MD = re.compile(r"[*#`_~]|^[ \t]*(?:[-•]|\d+[.)])[ \t]+", re.M)
+
+# 全形數字與百分號 → 半形。只動這幾個字元：全形空格與間隔號是全站的
+# 排版慣例，動了會讓這一段跟其他地方長得不一樣。
+_WIDE = str.maketrans("０１２３４５６７８９％．", "0123456789%.")
+# 「重點」後面接任何冒號（含半形、含中間夾空白）一律收斂成全形
+_LEAD_COLON = re.compile(r"重點\s*[:：]\s*")
+
 
 def _numbers(s: str) -> set[str]:
-    return set(_NUM.findall((s or "").replace(",", "")))
+    """
+    抽出文字裡的數字，**正規化成數值**再比對。
+
+    為什麼不能比字串：組裝版寫「+2.0 萬」，模型改寫成「+2 萬」——
+    意思完全一樣，字串卻不同，於是「2」被判成「原文沒有的數字」而整段退回。
+    實際發生過，而且退回的理由聽起來很嚴重（像模型亂編數字），
+    其實只是把尾數的零省掉。
+
+    正規化成 float 之後，「2」與「2.0」收斂成同一個，
+    但「4.1」與「4.2」仍然是兩個——鎖定的嚴格程度一點都沒有放寬。
+    """
+    out = set()
+    for tok in _NUM.findall((s or "").replace(",", "")):
+        try:
+            out.add(repr(float(tok)))
+        except ValueError:                         # noqa: PERF203
+            out.add(tok)
+    return out
+
+
+def _sanitize(out: str) -> str:
+    """
+    機械清理：拿掉純排版記號、把所有空白折成單一空格。
+
+    這不是放寬防護欄，是分清楚**排版**與**內容**。星號與井號是模型的
+    排版習慣，拿掉不會改變任何一個字的意思——就像編輯把手稿上的
+    底線畫掉。數字、方向、結論仍然由 validate() 一字不差地鎖著。
+
+    先前這裡是「看到 ** 就整段退回」。結果是模型只要把「重點」加粗，
+    一整段合格的改寫就被丟掉，畫面退回組裝版——為了一個星號。
+
+    另外兩種也是純打字習慣、一律就地修正：
+
+    ① **全形數字**。「４.１%」跟「4.1%」是同一個數字，但正規表達式抓不到
+       全形的，於是原文的數字看起來「消失了」（不會被擋，因為少數字是允許的），
+       畫面上卻出現一串跟全站其他地方不一樣的數字。
+
+    ② **半形冒號**。「重點:」跟「重點：」意思一樣，但檢查的是全形那個，
+       模型打成半形就會被判成「重點句的前綴不見了」——最沒有意義的一種退回。
+    """
+    s = _MD_LIST.sub("", out or "")
+    s = _MD_CHARS.sub("", s)
+    s = s.translate(_WIDE)
+    s = _LEAD_COLON.sub("重點：", s)
+    return " ".join(s.split())
 
 
 def validate(out: str, source: str) -> str:
@@ -86,10 +179,13 @@ def validate(out: str, source: str) -> str:
     只驗「機械上可驗的」：數字、長度、格式。方向與語意靠兩件事保護——
     數字鎖定（方向反了通常伴隨數字亂配）與重點句強制保留（結論由規則層
     寫死在裡面）。不假裝能驗語意。
+
+    輸入預期已經過 _sanitize()。這裡仍然把排版記號與換行列為失敗，
+    當作清理沒做到的後備防線——真的漏到畫面上會很難看。
     """
     if not out or not out.strip():
         return "輸出是空的"
-    if "**" in out or "#" in out or "\n" in out:
+    if _MD.search(out) or "\n" in out:
         return "輸出含 markdown 或換行"
     extra = _numbers(out) - _numbers(source)
     if extra:
@@ -206,14 +302,18 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
             return out
         if isinstance(res, tuple):
             res, model = res[0], (res[1] or model)
-        text = " ".join((res or "").split())
+        text = _sanitize(res)
         reason = validate(text, out["text"])
         if not reason:
             break
         if attempt == 1:
             log.warning("整體情勢潤稿未通過驗證（%s），帶著原因重試一次", reason)
     if reason:
-        log.warning("整體情勢潤稿重試後仍未通過驗證（%s），改用組裝版", reason)
+        # 把被退回的文字也印出來：光看理由分不出「模型真的寫錯」與
+        # 「檢查太嚴」。前 60 個字通常就夠判斷了，而且這段本來就是
+        # 要印在首頁上的文字，沒有外洩疑慮。
+        log.warning("整體情勢潤稿重試後仍未通過驗證（%s），改用組裝版；"
+                    "被退回的開頭是「%s…」", reason, text[:60])
         return out
 
     # ---- 存快取（state/ 由 workflow commit，跨執行有效）----
@@ -237,9 +337,9 @@ def _post_anthropic(key: str, model: str, source_text: str) -> str:
                           "content-type": "application/json",
                       }, json={
                           "model": model,
-                          "max_tokens": 500,
+                          "max_tokens": MAX_OUT,
                           "temperature": 0,
-                          "system": SYSTEM,
+                          "system": _system(source_text),
                           "messages": [{"role": "user",
                                         "content": source_text}],
                       })
@@ -323,28 +423,64 @@ def _gemini_pick(names: list[str], exclude: str = "") -> str:
     return sorted(cands, key=rank)[0] if cands else ""
 
 
-def _gemini_call(key: str, model: str, source_text: str) -> str:
+def _thinking(model: str) -> dict:
+    """
+    這一次呼叫要怎麼關掉推理鏈。回傳要併進 generationConfig 的欄位。
+
+    為什麼一定要關：**推理用掉的 token 算在 maxOutputTokens 裡**。
+    推理模型如果把額度花在想，回來的 candidate 會是
+    `finishReason: MAX_TOKENS` 而且**一個字都沒有**——不是報錯，是空字串。
+    這種失敗最難查，因為看起來像模型「不想回答」。
+
+    欄位名稱跨世代改過：2.x 是 thinkingConfig.thinkingBudget（0 ＝ 關），
+    3.x 之後是 thinkingLevel（minimal ＝ 最少）。認不出版本就兩個都不送，
+    改靠 MAX_OUT 的額度撐住——寧可多花一點額度，也不要拿到空字串。
+    """
+    m = _VER.search(model.lower())
+    if not m:
+        return {}
+    return ({"thinkingConfig": {"thinkingBudget": 0}} if float(m.group(1)) < 3
+            else {"thinkingLevel": "minimal"})
+
+
+def _gemini_call(key: str, model: str, source_text: str,
+                 think: bool = True) -> str:
     # 金鑰放 header 不放網址：放網址會跟著出現在錯誤訊息與代理的存取紀錄裡。
-    cfg = {"temperature": 0, "maxOutputTokens": 800}
-    # thinkingBudget 設 0：這種改寫不需要推理鏈，關掉比較快也比較省額度。
-    # 只對 gemini-2.x 送——這個欄位在後續世代改過形狀，送過去會被擋成 400。
-    # 沒送也只是慢一點，不影響結果。
-    if model.startswith("gemini-2"):
-        cfg["thinkingConfig"] = {"thinkingBudget": 0}
+    cfg = {"temperature": 0, "maxOutputTokens": MAX_OUT}
+    if think:
+        cfg.update(_thinking(model))
     r = requests.post(
         f"{GEMINI_BASE}/models/{model}:generateContent",
         timeout=TIMEOUT, headers={
             "x-goog-api-key": key,
             "content-type": "application/json",
         }, json={
-            "system_instruction": {"parts": [{"text": SYSTEM}]},
+            "system_instruction": {"parts": [{"text": _system(source_text)}]},
             "contents": [{"role": "user",
                           "parts": [{"text": source_text}]}],
             "generationConfig": cfg,
         })
+    # 400 有可能是推理欄位的名稱又改了。這種情況再送一次、不帶那個欄位——
+    # 欄位名稱是 Google 的實作細節，不該讓整區因此消失。
+    if r.status_code == 400 and think and _thinking(model):
+        log.warning("Gemini 退回設定（%s），改成不指定推理層級再試一次",
+                    r.text[:120])
+        return _gemini_call(key, model, source_text, think=False)
     r.raise_for_status()
-    parts = r.json()["candidates"][0]["content"]["parts"]
-    return "".join(p.get("text", "") for p in parts)
+
+    js = r.json()
+    cands = js.get("candidates") or []
+    if not cands:
+        # 沒有 candidate 通常是提示詞被安全過濾擋下，理由在 promptFeedback
+        raise RuntimeError(f"沒有回覆內容（{js.get('promptFeedback')}）")
+    parts = ((cands[0].get("content") or {}).get("parts")) or []
+    text = "".join(p.get("text", "") for p in parts)
+    if not text.strip():
+        # 講清楚是哪一種空：MAX_TOKENS 代表額度被推理吃光，
+        # SAFETY 代表內容被擋。兩者的處置完全不同。
+        raise RuntimeError(
+            f"回覆是空的（finishReason={cands[0].get('finishReason')}）")
+    return text
 
 
 def _post_gemini(key: str, model: str, source_text: str):

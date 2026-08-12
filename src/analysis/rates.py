@@ -208,6 +208,13 @@ DEBT_VERDICT = {
 # ---------------------------------------------------------------------------
 # 三、Hyperscaler 資本支出與發債
 # ---------------------------------------------------------------------------
+# 逐家的申報清單頁，給畫面當「去核對原始資料」的連結用。
+# 用 EDGAR 的公司頁而不是單一份文件：文件的 accession 每季都會變，
+# 公司頁的網址固定，而且點進去看得到全部的 10-Q／10-K。
+FILINGS_URL = ("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany"
+               "&CIK={cik:010d}&type=10-Q&dateb=&owner=include&count=10")
+
+
 @dataclass
 class Hyperscalers:
     as_of: str = ""
@@ -216,21 +223,31 @@ class Hyperscalers:
     total_issued: float = 0.0
     capex_yoy: float | None = None
     capex_to_ocf: float | None = None
-    n_cash_negative: int = 0          # 資本支出超過營運現金流的家數
+    n_cash_negative: int = 0          # 依 OCF − CapEx 的簡化口徑為負的家數
     ig_share: float | None = None     # 發債佔投資級市場比重
     companies: list = field(default_factory=list)
     verdict: str = "unknown"
     verified: bool = False
     note: str = ""
+    n_from_sec: int = 0               # 五家裡有幾家真的取自 SEC
+    period_span: str = ""             # 各家期末日的實際範圍（不是「本季」）
 
 
-def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
+def hyperscalers(cfg: dict, ig_quarterly: float | None = None,
+                 ig_verified: bool = False) -> Hyperscalers:
     """
     關鍵不是資本支出的絕對金額，是**融資方式**。
 
-    capex ÷ 營運現金流 超過 100% 代表自由現金流轉負，資本支出必須靠
-    舉債或動用現金支應。那正是這幾家從「現金充裕的買方」變成
-    「投資級市場大型供給方」的轉折點——它們開始跟公債競爭同一批買盤。
+    capex ÷ 營運現金流 超過 100% 代表（依 OCF − CapEx 的簡化口徑）
+    自由現金流轉負，這一季的資本支出必須靠本業以外的來源支應——
+    帳上現金、發債、融資租賃、供應商融資或股權融資都有可能。
+    那正是這幾家從「現金充裕的買方」變成「投資級市場大型供給方」的
+    轉折點——它們開始跟公債競爭同一批買盤。
+
+    **總體比率是 SUM(capex) ÷ SUM(ocf)，不是各家百分比取平均。**
+    取平均會讓規模最小的公司跟最大的一樣重：甲骨文的營運現金流不到
+    微軟的四分之一，它 171% 的比率在平均法下會把總體拉高十幾個百分點，
+    而那不是市場實際要吸收的金額比例。
     """
     h = Hyperscalers(as_of=cfg.get("as_of", ""), verified=bool(cfg.get("verified")))
     comps = cfg.get("companies") or []
@@ -259,10 +276,24 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
             "revenue": float(c.get("revenue") or 0),
             "capex_yoy": c.get("capex_yoy"),
             "capex_to_ocf": ratio,
+            # 自由現金流用的是**簡化口徑**：營運現金流 − 現金資本支出。
+            # 不扣股息、不扣庫藏股買回、不含融資租賃的本金償還——這一頁要
+            # 回答的是「本業賺的現金夠不夠付這一季的機器」，不是完整的 FCF。
+            # 畫面上必須標明口徑，否則會跟券商報告的 FCF 對不起來。
+            "fcf": ocf - capex,
             "cash_negative": ratio is not None and ratio > 100,
             # 各家會計年度起點不同（微軟 6 月底、甲骨文 5 月底、其餘曆年），
             # 所以「最新一季」的期末日必須逐家標示，不能假裝是同一季
             "period_end": c.get("period_end", ""),
+            # 這一列是不是真的來自 SEC。**逐列**標示，因為「五家裡一家退回
+            # 手動值」跟「五家全部退回手動值」在讀者眼中是完全不同的兩件事，
+            # 而先前這兩種情況的畫面長得一模一樣。
+            "from_sec": bool(c.get("from_sec")),
+            # 去核對原始申報的連結。只由 cik 決定，所以離線／退回手動值時
+            # 一樣給得出來——「數字可能是舊的」跟「你查不到原始資料」
+            # 是兩回事，後者沒有理由發生。
+            "filings_url": (FILINGS_URL.format(cik=int(c["cik"]))
+                            if str(c.get("cik") or "").isdigit() else ""),
         })
 
     # 分母不能用 total_capex：沒有年增資料的公司被排除在分子外卻留在分母裡，
@@ -271,7 +302,22 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
         h.capex_yoy = weighted_yoy_num / weighted_yoy_den
     if h.total_ocf:
         h.capex_to_ocf = h.total_capex / h.total_ocf * 100
-    if ig_quarterly:
+    h.n_from_sec = sum(1 for c in h.companies if c["from_sec"])
+
+    # 期間範圍：各家會計年度不同，最新一季的期末日不是同一天。
+    # 印出實際的範圍（最早～最晚），而不是含糊的「本季」。
+    _pes = sorted(c["period_end"] for c in h.companies if c["period_end"])
+    if _pes:
+        h.period_span = _pes[0] if _pes[0] == _pes[-1] else f"{_pes[0]}～{_pes[-1]}"
+
+    # 發債佔投資級市場的比重：只有在分母**經過人工確認**時才算。
+    #
+    # 為什麼要這個條件：分子是五家**不同會計期別**的單季發債相加，
+    # 分母是某一個曆季的市場總發行量。兩者的期間本來就對不齊，
+    # 已經是量級參考而非精確比率；如果分母還是個沒人核對過的數字
+    #（config 的 ig_market.verified: false），那就是拿不確定去除以不確定，
+    # 印出來的百分比看起來精確、實際上沒有意義。寧可不顯示。
+    if ig_quarterly and ig_verified:
         h.ig_share = h.total_issued / ig_quarterly * 100
 
     # 判定
@@ -289,16 +335,53 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None) -> Hyperscalers:
     return h
 
 
+# 「其他資金來源」要講完整：把「資本支出超過營運現金流」直接等同於
+# 「必須舉債」是錯的推論。公司還可以動用帳上現金、走融資租賃、
+# 供應商融資、客戶預付款，或發股票。舉債只是其中一條路——雖然對這一頁
+# 關心的長端供給來說是最相關的一條。
+_OTHER_FUNDING = "外部融資、既有現金與其他資金來源"
+
+
+def hs_verdict(h: Hyperscalers) -> tuple[str, str]:
+    """
+    結論文案。**依實際比率動態產生**，不是查表拿一句寫死的話。
+
+    先前是三句寫死的文案，其中「再擴張就必須舉債」有兩個問題：
+      ① 過度絕對——舉債只是選項之一（見 _OTHER_FUNDING）
+      ② 沒有把實際比率講出來，讀者無從判斷「接近上限」是 83% 還是 98%
+
+    現在比率直接寫進句子裡，超過 100% 與否走不同的措辭。
+    """
+    r = h.capex_to_ocf
+    if r is None:
+        return "資料不足", ""
+    n, tot = h.n_cash_negative, len(h.companies)
+    neg = (f"依「營運現金流 − 現金資本支出」的簡化口徑，{tot} 家中有 {n} 家為負。"
+           if tot else "")
+
+    if r > 100:
+        return ("已轉為舉債支應",
+                f"合計資本支出已達同期營運現金流的 {r:.0f}%，超過本業產生的現金。"
+                f"{neg}"
+                f"AI 基礎設施擴張正在提高這幾家對{_OTHER_FUNDING}的依賴；"
+                "就長端而言，它們已成為投資級市場的大型供給方，"
+                "與公債競爭同一批存續期間需求。")
+    if r > 70:
+        return ("正在轉向舉債支應",
+                f"合計資本支出已達同期營運現金流的 {r:.0f}%，"
+                f"逼近本業現金所能支應的範圍。{neg}"
+                f"若 AI 基礎設施投資持續擴張，對{_OTHER_FUNDING}的依賴"
+                "可能進一步上升。這是供給壓力的前置訊號，不是既成事實。")
+    return ("資本支出仍由現金流支應",
+            f"合計資本支出約為同期營運現金流的 {r:.0f}%，本業現金足以覆蓋。"
+            f"{neg}對債券市場的供給壓力有限。")
+
+
+# 舊的查表保留給既有呼叫端當標題來源；敘述已由 hs_verdict() 取代。
 HS_VERDICT = {
-    "cash_funded": ("資本支出仍由現金流支應",
-                    "營運現金流足以覆蓋資本支出，對債券市場的供給壓力有限。"),
-    "transitioning": ("正在轉向舉債支應",
-                      "資本支出已接近營運現金流的上限，再擴張就必須舉債。"
-                      "這是供給壓力的前置訊號。"),
-    "debt_funded": ("已轉為舉債支應",
-                    "資本支出超過營運現金流，多家公司自由現金流轉負。"
-                    "這幾家已成為投資級市場的大型供給方，"
-                    "與公債競爭同一批存續期間需求，會推升整體長端利率。"),
+    "cash_funded": ("資本支出仍由現金流支應", ""),
+    "transitioning": ("正在轉向舉債支應", ""),
+    "debt_funded": ("已轉為舉債支應", ""),
     "unknown": ("資料不足", ""),
 }
 
