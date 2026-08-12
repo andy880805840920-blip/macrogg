@@ -199,8 +199,10 @@ def gather_hyperscalers(cfg: dict, offline: bool) -> list:
         if offline:
             from src import fixtures_rates
             hs["offerings"] = fixtures_rates.offerings()
+            hs["earnings"] = fixtures_rates.earnings(hs.get("companies") or [])
         return []
-    from src.sec import SecClient, fetch_hyperscalers, fetch_recent_offerings
+    from src.sec import (SecClient, fetch_hyperscalers, fetch_recent_offerings,
+                         fetch_recent_earnings)
     client = SecClient()
     log.info("科技巨頭：向 SEC EDGAR 擷取 %d 家的最新一季財報",
              len(hs["companies"]))
@@ -218,6 +220,12 @@ def gather_hyperscalers(cfg: dict, offline: bool) -> list:
     if hs.get("track_offerings", True):
         hs["offerings"] = fetch_recent_offerings(
             hs, client, parse_amount=hs.get("parse_offering_amount", True))
+
+    # 財報新聞稿（8-K 2.02）：補實績從「季末後 40 天」到「約 3 週」的缺口。
+    # 必須排在 fetch_hyperscalers 之後——它要拿各家的 period_end 才能判斷
+    # 這份新聞稿講的是不是下方表格還沒有的那一季。
+    if hs.get("track_earnings", True):
+        hs["earnings"] = fetch_recent_earnings(hs, client)
     return client.failed
 
 

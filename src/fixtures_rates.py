@@ -259,3 +259,54 @@ def offerings() -> list[dict]:
          "desc": "424B2"},
     ]
     return dedupe_deals(raw)
+
+
+# ---------------------------------------------------------------------------
+# 財報新聞稿（離線示範）
+# ---------------------------------------------------------------------------
+def earnings(companies: list) -> list[dict]:
+    """
+    離線模式的財報新聞稿素材，形狀與 sec.fetch_recent_earnings 的**輸出**一致。
+
+    正式執行時由 EDGAR 的 submissions 端點取 8-K 項目 2.02。
+
+    這裡刻意鋪出兩種狀態，讓畫面的兩條路徑都會被走到：
+      ① 前兩家 — 新聞稿已經是**下一季**的（ahead=True）：季末後約 3 週公布，
+                 而 XBRL 還停在上一季。這正是這一區存在的理由，
+                 畫面要跳出「下方數字還沒更新到那一季」的提示。
+      ② 其餘   — 新聞稿與下方表格是同一季（ahead=False），只列日期與連結。
+
+    離線用的 period_end 是 config 的手動值（沒有 period_end 欄位），
+    所以這裡自己造一個：以今天回推，讓相對關係固定、不隨執行日漂移。
+    """
+    import datetime as dt
+    today = clock.today()
+
+    def d(days_ago: int) -> str:
+        return (today - dt.timedelta(days=days_ago)).isoformat()
+
+    out = []
+    for i, c in enumerate(companies):
+        cik = c.get("cik") or 0
+        ahead = i < 2
+        # ahead：期末日在 115 天前、新聞稿在 21 天前 → 相差 94 天 > 60
+        # 非 ahead：期末日在 45 天前、新聞稿在 24 天前 → 相差 21 天
+        pe, day = (d(115), 21) if ahead else (d(45), 24)
+        out.append({
+            "name": c.get("name", ""), "ticker": c.get("ticker", ""),
+            "date": d(day + i), "form": "8-K", "items": "2.02,9.01",
+            "doc_url": (f"https://www.sec.gov/Archives/edgar/data/{cik}/"
+                        f"00000000002600{i:02d}/earnings-8k.htm"),
+            "accession": f"0000000000-26-0000{i:02d}",
+            "period_end": c.get("period_end") or pe,
+            "lag": None, "ahead": ahead,
+        })
+    # lag 照 sec.fetch_recent_earnings 的定義補上，讓兩邊的欄位完全一致
+    for r in out:
+        try:
+            r["lag"] = abs((dt.date.fromisoformat(r["date"])
+                            - dt.date.fromisoformat(r["period_end"])).days)
+        except (ValueError, TypeError):
+            r["lag"] = None
+    out.sort(key=lambda x: x["date"], reverse=True)
+    return out

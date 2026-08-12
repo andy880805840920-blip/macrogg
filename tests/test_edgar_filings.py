@@ -40,11 +40,25 @@ GOOD = {"filings": {"recent": {
                               "FWP","424B3","8-K","424B2"],
 }}}
 
-c = SecClient.__new__(SecClient)
-c.failed = []
 ok = True
 
-c._json = lambda url, label: GOOD
+
+def bare(payload):
+    """
+    不建連線的 SecClient。
+
+    每個情況都要一個**全新**的：submissions 的回應現在會依 cik 快取
+    （發債與財報新聞稿讀同一份，抓兩次沒有意義）。共用同一個 client
+    的話，第二個情況會吃到第一個情況的快取，測試就變成假的通過。
+    """
+    c = SecClient.__new__(SecClient)
+    c.failed = []
+    c._subs = {}
+    c._json = lambda url, label: payload
+    return c
+
+
+c = bare(GOOD)
 got = c.debt_filings(1652044)
 want = [("424B2", d(5)), ("8-K", d(12)), ("424B5", d(60))]
 res = [(x["form"], x["date"]) for x in got]
@@ -54,17 +68,14 @@ print("   （已排除 10-Q、表格 4、FWP、424B3、只含 5.02／1.01 的 8-
 print("   文件連結範例 :", got[0]["doc_url"][:78])
 
 # 缺 form 欄位 —— 這正是我無法離線驗證的那個假設
-c.failed = []
-c._json = lambda url, label: {"filings": {"recent": {"filingDate": [d(5)]}}}
-r = c.debt_filings(1652044)
-print("② 欄位名不符   :", "通過（回空並記錄）" if r == [] and c.failed else f"失敗 {r}")
-ok &= (r == [] and bool(c.failed))
+c2 = bare({"filings": {"recent": {"filingDate": [d(5)]}}})
+r = c2.debt_filings(1652044)
+print("② 欄位名不符   :", "通過（回空並記錄）" if r == [] and c2.failed else f"失敗 {r}")
+ok &= (r == [] and bool(c2.failed))
 
 for name, payload in [("③ 端點回 404   ", None),
                       ("④ 結構全非預期 ", {"unexpected": 1})]:
-    c.failed = []
-    c._json = lambda url, label, p=payload: p
-    r = c.debt_filings(1652044)
+    r = bare(payload).debt_filings(1652044)
     print(f"{name}:", "通過（回空）" if r == [] else f"失敗 {r}")
     ok &= (r == [])
 
@@ -280,6 +291,71 @@ hit = abs(tot - 43.0) < 1e-9      # 12.5 ＋ 12.5（9.0+3.5）＋ 18.0
 print("㉞ 合計金額不重複計算   :",
       "通過（430 億）" if hit else f"失敗（{tot}）")
 ok &= hit
+
+
+# ---------------------------------------------------------------------------
+# 財報新聞稿（8-K 項目 2.02）—— 實績的時效補丁
+#
+# 兩件事會安靜地壞掉：
+#   ① 項目篩錯 —— 8-K 的項目欄是逗號串接的字串（"2.02,9.01"），
+#      而 2.03（發債）與 2.02（財報）只差一個字。混掉的話，
+#      發債公告會被當成財報新聞稿印在「已公布新一季財報」那一列。
+#   ② ahead 判錯 —— 這是整區唯一的判斷。判成 True 卻其實同季，
+#      畫面就會宣稱「下方表格已過期」而其實沒有；判成 False 則整區消失，
+#      使用者看不出表格落後了一季。
+# ---------------------------------------------------------------------------
+from src.sec import fetch_recent_earnings, EARNINGS_AHEAD_DAYS   # noqa: E402
+
+EARN = {"filings": {"recent": {
+    "form":            ["8-K",       "8-K",       "10-Q", "8-K",       "8-K"],
+    "filingDate":      [d(20),       d(25),       d(30),  d(112),      d(300)],
+    # 2.03 是發債、5.02 是人事——都不是財報新聞稿
+    "items":           ["2.02,9.01", "2.03,9.01", "",     "2.02,9.01", "2.02"],
+    "accessionNumber": ["0000789019-26-000001"]*5,
+    "primaryDocument": ["e1.htm", "d1.htm", "q.htm", "e2.htm", "e3.htm"],
+    "primaryDocDescription": ["8-K"]*5,
+}}}
+
+c3 = bare(EARN)
+got = c3.earnings_filings(789019)
+hit = [x["date"] for x in got] == [d(20), d(112)]
+print("㉟ 只收 2.02、排除 2.03 :", "通過" if hit
+      else f"失敗 {[(x['date'], x['items']) for x in got]}")
+ok &= hit
+print("   （300 天前那一份超出 EARNINGS_DAYS，也被排除）")
+
+# 同一份 submissions 給兩個呼叫端用，只能抓一次
+calls = []
+c4 = SecClient.__new__(SecClient)
+c4.failed, c4._subs = [], {}
+c4._json = lambda url, label: (calls.append(url), EARN)[1]
+c4.debt_filings(789019)
+c4.earnings_filings(789019)
+print("㊱ submissions 只抓一次 :", "通過" if len(calls) == 1 else f"失敗 {len(calls)} 次")
+ok &= len(calls) == 1
+
+# ahead：新聞稿比公司自己的季末日晚多少天
+for name, pe, want in [
+        ("同一季（季末後 20 天）", d(40), False),
+        ("下一季（季末後 111 天）", d(131), True),
+        ("沒有期末日就不宣稱",      "",    False)]:
+    rows = fetch_recent_earnings(
+        {"companies": [{"name": "Microsoft", "cik": 789019, "period_end": pe}]},
+        bare(EARN))
+    got_ahead = rows[0]["ahead"] if rows else None
+    hit = got_ahead is want
+    print(f"㊲ {name:22s}:", "通過" if hit else f"失敗（ahead={got_ahead}）")
+    ok &= hit
+
+# 門檻要落在兩群中間，不能貼著任一群的邊
+hit = 40 <= EARNINGS_AHEAD_DAYS <= 80
+print("㊳ ahead 門檻在兩群中間 :", "通過" if hit else f"失敗（{EARNINGS_AHEAD_DAYS}）")
+ok &= hit
+
+# 沒填 cik 的公司要跳過，不能整個炸掉
+rows = fetch_recent_earnings({"companies": [{"name": "X"}]}, bare(EARN))
+print("㊴ 沒有 cik → 跳過       :", "通過" if rows == [] else f"失敗 {rows}")
+ok &= rows == []
 
 print()
 print("全部通過" if ok else "有失敗")

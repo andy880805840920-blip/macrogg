@@ -1457,6 +1457,110 @@ def _offerings_block(offerings: list, hs) -> dict:
     }
 
 
+def _earnings_block(earnings: list) -> dict:
+    """
+    財報新聞稿（8-K 項目 2.02）的畫面資料。
+
+    這一段只回答一個問題：**下方那張表是不是已經過期了。**
+
+    10-Q 的 XBRL 是季末後約 40 天才申報，財報新聞稿約三週就出來。
+    中間那兩週，表格上寫的還是上一季，讀者卻已經在新聞上看到新一季的
+    資本支出——不講清楚的話，這一頁看起來就像沒跟上。
+
+    刻意只有日期與連結，沒有任何數字：新聞稿是非結構化文字，
+    各家的口徑不同，硬解會拿到一個不知道是什麼的數字混進表格。
+    這裡的價值是「知道已經有更新的數字了、去哪裡看」，不是「幫你讀」。
+    """
+    if not earnings:
+        return {"available": False}
+    ahead = [e for e in earnings if e.get("ahead")]
+    rows = [{
+        "name": e["name"],
+        "date": e["date"],
+        "period_end": e.get("period_end", ""),
+        "ahead": bool(e.get("ahead")),
+        # 「季末後 N 天」是讀者判斷這份新聞稿新不新的依據
+        "lag_display": (f"季末後 {e['lag']} 天"
+                        if e.get("lag") is not None and not e.get("ahead")
+                        else ""),
+        "url": e.get("doc_url", ""),
+    } for e in earnings]
+    return {
+        "available": True,
+        "rows": rows,
+        "count": len(earnings),
+        "ahead_n": len(ahead),
+        "ahead_names": "、".join(e["name"] for e in ahead),
+        "latest": earnings[0]["date"],
+    }
+
+
+# 指引與實績的比較倍數。低於這個值就不特別強調——資本支出本來就在成長，
+# 「明年比今年多」不是新聞；倍數拉開才是這一區想講的事。
+GUIDANCE_NOTE_X = 1.15
+
+
+def _guidance_block(cfg: dict, hs) -> dict:
+    """
+    前瞻資本支出指引的畫面資料。
+
+    為什麼這一區比下方的實績重要
+    ----------------------------
+    這一頁的論點是「AI 資本支出把科技巨頭從淨買方變成淨賣方，推高長端供給」。
+    那個故事的主角是**接下來要花多少**，不是上一季花了多少。而前瞻指引
+    不在任何申報欄位裡——它是法說會上用自然語言講的，所以只能手動維護
+    （理由見 config/rates.yaml 的說明）。
+
+    對照組是實績的年化值（最新一季 × 4）。年化是粗的——資本支出有季節性，
+    第四季通常最重——所以畫面上要標明它是年化推估，不能當成「今年實際花了多少」。
+    """
+    if not cfg or not cfg.get("enabled"):
+        return {"available": False}
+    comps = [c for c in (cfg.get("companies") or [])
+             if (c.get("high") or 0) > 0 or (c.get("low") or 0) > 0]
+    if not comps:
+        return {"available": False}
+
+    lo = sum(float(c.get("low") or c.get("high") or 0) for c in comps)
+    hi = sum(float(c.get("high") or c.get("low") or 0) for c in comps)
+    # 沒給指引的公司要列出來，否則合計看起來像是全部五家的總和
+    missing = [c.get("name", "") for c in (cfg.get("companies") or [])
+               if not ((c.get("high") or 0) > 0 or (c.get("low") or 0) > 0)]
+
+    rows = []
+    for c in comps:
+        a = float(c.get("low") or c.get("high") or 0)
+        b = float(c.get("high") or c.get("low") or 0)
+        rows.append({
+            "name": c.get("name", ""),
+            "value": (f"{a * 10:,.0f} 億美元" if abs(a - b) < 1e-9
+                      else f"{a * 10:,.0f}–{b * 10:,.0f} 億美元"),
+            "note": c.get("note", ""),
+        })
+    rows.sort(key=lambda r: -float(
+        next(c.get("high") or c.get("low") or 0
+             for c in comps if c.get("name") == r["name"])))
+
+    # 年化實績：最新一季 × 4。只有在抓得到實績時才做這個對照。
+    run_rate = (hs.total_capex or 0) * 4
+    ratio = ((hi + lo) / 2 / run_rate) if run_rate else None
+
+    return {
+        "available": True,
+        "year": cfg.get("year", ""),
+        "as_of": cfg.get("as_of", ""),
+        "source": cfg.get("source", ""),
+        "rows": rows,
+        "n": len(rows),
+        "missing": "、".join(x for x in missing if x),
+        "total_display": (f"{lo * 10:,.0f} 億美元" if abs(hi - lo) < 1e-9
+                          else f"{lo * 10:,.0f}–{hi * 10:,.0f} 億美元"),
+        "run_rate_display": (f"{run_rate * 10:,.0f} 億美元" if run_rate else ""),
+        "ratio_display": (f"{ratio:.1f} 倍" if ratio else ""),
+        "notable": bool(ratio and ratio >= GUIDANCE_NOTE_X),
+    }
+
+
 # ===========================================================================
 # 情境合成（P4）
 # ===========================================================================
@@ -1880,6 +1984,8 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                          (cfg.get("ig_market") or {}).get("quarterly_issuance"))
     # 近期發債申報：補季報 45–135 天的時效缺口。刻意不進供給壓力分數。
     offerings = _hs_cfg.get("offerings") or []
+    # 財報新聞稿：補實績從「季末後 40 天」到「約 3 週」的缺口。同樣不計分。
+    earnings = _hs_cfg.get("earnings") or []
     ig_oas = value_at(series.get("BAMLC0A0CM") or [])
     qt = rt.fed_holdings_pace(series)
     press = rt.supply_pressure(curve, debt, hs, ig_oas, qt_monthly=qt)
@@ -2091,6 +2197,8 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                   if debt.real_growth is not None else "")),
         "hs_stats": hs_stats,
         "offerings": _offerings_block(offerings, hs),
+        "earnings": _earnings_block(earnings),
+        "guidance": _guidance_block(cfg.get("capex_guidance") or {}, hs),
         "credit_stats": credit_stats,
         "credit_chart": credit_chart,
         "key_metrics": {

@@ -78,11 +78,28 @@ DEBT_FORMS = {"424B2", "424B5"}
 # 成為一筆，那種情況通常是銀行貸款、定期貸款或私募，本來就不會有 424B。
 DEBT_8K_ITEMS = ("2.03",)
 
+# 8-K 項目 2.02「營運成果與財務狀況」＝季度財報新聞稿。
+# 這是「這一季的數字什麼時候公布」唯一穩定的標記。
+EARNINGS_8K_ITEMS = ("2.02",)
+
 # 同一家公司、金額相同、日期相差在這個範圍內 → 視為同一筆交易。
 # 定價日與 8-K 申報日之間隔四個營業日，遇連假可能拉到七八天，取十天有餘裕。
 DEDUP_DAYS = 10
 # 只看最近這麼多天的申報。超過這個範圍的多半已經反映在最新一季的財報裡。
 RECENT_DAYS = 120
+# 財報新聞稿要看得比發債遠一點：一季約 91 天，抓 200 天才保證
+# 不論執行日落在季週期的哪個位置，都至少涵蓋兩次公布。
+EARNINGS_DAYS = 200
+# 新聞稿日期比 XBRL 期末日晚超過這麼多天 → 它講的是**下一季**，
+# 也就是下方表格還沒更新到的那一季。
+#
+# 為什麼是 60：一季約 91 天，而新聞稿約在季末後 20–30 天。所以
+#「同一季的新聞稿」落在 +20～+30，「下一季的新聞稿」落在 +111～+121。
+# 60 天正好在兩群中間，兩邊都有 30 天以上的餘裕。
+#
+# 為什麼用「相對公司自己的期末日」而不是曆季：微軟的會計季末是 6 月底、
+# 甲骨文是 5 月底，用曆季推會把這兩家一路判錯。
+EARNINGS_AHEAD_DAYS = 60
 
 # SEC 要求帶可聯絡的 User-Agent，否則會擋。
 # 可用環境變數覆寫成自己的信箱（SEC 的使用規範建議這麼做）。
@@ -126,6 +143,9 @@ class SecClient:
             "Accept-Encoding": "gzip, deflate",
         })
         self.failed: list[tuple[str, str]] = []
+        # submissions 端點的回應每家好幾 MB，而發債與財報新聞稿讀的是同一份。
+        # 依 cik 存一次，避免同一次執行抓兩遍。
+        self._subs: dict[int, list[dict]] = {}
 
     # ------------------------------------------------------------------
     def concept(self, cik: int, tag: str) -> dict | None:
@@ -192,15 +212,17 @@ class SecClient:
         return None
 
     # ------------------------------------------------------------------
-    def debt_filings(self, cik: int, days: int = RECENT_DAYS) -> list[dict]:
+    def recent_filings(self, cik: int, days: int = RECENT_DAYS) -> list[dict]:
         """
-        近期的發債相關申報。回傳 [{form, date, items, doc_url, accession}]，時間降冪。
+        近期的**所有**申報，正規化成 [{form, date, items, doc_url, accession, desc}]。
 
-        為什麼需要這個
+        為什麼獨立出來
         --------------
-        XBRL 只到 10-Q，而 10-Q 是季末後約 45 天才申報——一筆七月的發債
-        最久要等到十一月才會出現在數字裡。但發債本身當天就要申報：
-        424B2／424B5 是債券發行文件本身，8-K 項目 2.03 是「產生直接財務義務」。
+        發債（424B／8-K 2.03）與財報新聞稿（8-K 2.02）讀的是同一個
+        submissions 端點。這個檔案每家有好幾 MB，一次執行為了兩種用途
+        抓兩次，等於把 SEC 的請求量與執行時間都乘二——而且兩次之間
+        還可能拿到不一致的清單。所以抓一次、依 cik 存在記憶體裡，
+        兩邊各自篩自己要的表格類型。
 
         防禦性寫法
         ----------
@@ -209,6 +231,12 @@ class SecClient:
         「解析不出來」處理：記錄並回傳空清單，畫面上該區塊就不顯示。
         寧可少一個區塊，也不要憑對資料結構的假設印東西出去。
         """
+        cached = self._subs.get(cik)
+        if cached is not None:
+            return [r for r in cached
+                    if r["date"] >= (clock.today()
+                                     - dt.timedelta(days=days)).isoformat()]
+
         js = self._json(SUBMISSIONS_URL.format(cik=cik), f"SEC submissions {cik}")
         if not js:
             return []
@@ -216,8 +244,9 @@ class SecClient:
         forms = recent.get("form")
         dates = recent.get("filingDate")
         if not isinstance(forms, list) or not isinstance(dates, list):
-            log.warning("SEC submissions 的欄位與預期不符（CIK %s），略過發債申報", cik)
+            log.warning("SEC submissions 的欄位與預期不符（CIK %s），略過近期申報", cik)
             self.failed.append((f"SEC submissions {cik}", "欄位結構與預期不符"))
+            self._subs[cik] = []
             return []
 
         items = recent.get("items") or []
@@ -228,18 +257,13 @@ class SecClient:
         def _at(arr, i):
             return arr[i] if isinstance(arr, list) and i < len(arr) else ""
 
-        cutoff = (clock.today() - dt.timedelta(days=days)).isoformat()
-        out = []
+        # 快取存的是「這個端點回傳的全部」，篩選日期在回傳時才做——
+        # 兩個呼叫端的 days 不一樣（發債看 120 天、財報看 200 天），
+        # 用最寬的存起來才不會第二個呼叫端拿到被前一個截短的清單。
+        rows = []
         for i, form in enumerate(forms):
             date = _at(dates, i)
-            if not date or date < cutoff:
-                continue
-            it = _at(items, i) or ""
-            if form in DEBT_FORMS:
-                kind = "offering"
-            elif form.startswith("8-K") and any(x in it for x in DEBT_8K_ITEMS):
-                kind = "event"
-            else:
+            if not date:
                 continue
             acc = _at(accs, i)
             doc = _at(docs, i)
@@ -247,11 +271,58 @@ class SecClient:
             if acc and doc:
                 url = ARCHIVE_DOC.format(cik=cik, acc_nodash=acc.replace("-", ""),
                                          doc=doc)
-            out.append({"form": form, "date": date, "items": it,
-                        "accession": acc, "doc_url": url,
-                        "desc": _at(descs, i), "kind": kind})
-        out.sort(key=lambda x: x["date"], reverse=True)
+            rows.append({"form": form, "date": date, "items": _at(items, i) or "",
+                         "accession": acc, "doc_url": url,
+                         "desc": _at(descs, i)})
+        rows.sort(key=lambda x: x["date"], reverse=True)
+        self._subs[cik] = rows
+        cutoff = (clock.today() - dt.timedelta(days=days)).isoformat()
+        return [r for r in rows if r["date"] >= cutoff]
+
+    # ------------------------------------------------------------------
+    def debt_filings(self, cik: int, days: int = RECENT_DAYS) -> list[dict]:
+        """
+        近期的發債相關申報，時間降冪。
+
+        為什麼需要這個
+        --------------
+        XBRL 只到 10-Q，而 10-Q 是季末後約 45 天才申報——一筆七月的發債
+        最久要等到十一月才會出現在數字裡。但發債本身當天就要申報：
+        424B2／424B5 是債券發行文件本身，8-K 項目 2.03 是「產生直接財務義務」。
+        """
+        out = []
+        for r in self.recent_filings(cik, days):
+            if r["form"] in DEBT_FORMS:
+                kind = "offering"
+            elif (r["form"].startswith("8-K")
+                  and any(x in r["items"] for x in DEBT_8K_ITEMS)):
+                kind = "event"
+            else:
+                continue
+            out.append({**r, "kind": kind})
         return out
+
+    # ------------------------------------------------------------------
+    def earnings_filings(self, cik: int,
+                         days: int = EARNINGS_DAYS) -> list[dict]:
+        """
+        近期的財報新聞稿申報（8-K 項目 2.02），時間降冪。
+
+        補的是**實績的時效缺口**：10-Q 的 XBRL 是季末後約 40 天才申報，
+        而財報新聞稿約三週就出來——中間那兩週，這一頁的表格顯示的還是
+        上一季，讀者卻已經在新聞上看到新一季的資本支出了。
+
+        只取「什麼時候公布的」與原文連結，**刻意不解析裡面的數字**：
+        新聞稿是非結構化文字，各家的口徑（GAAP／non-GAAP、是否含融資租賃）
+        寫法都不同，硬解會拿到一個不知道是什麼的數字混進表格；
+        而兩週後 XBRL 就會給出經審核、標記明確的版本。
+
+        表格類型只認 8-K／8-K/A。項目 2.02 是「營運成果與財務狀況」，
+        季度財報新聞稿一律走這一項，是這件事唯一穩定的標記。
+        """
+        return [r for r in self.recent_filings(cik, days)
+                if r["form"].startswith("8-K")
+                and any(x in r["items"] for x in EARNINGS_8K_ITEMS)]
 
     # ------------------------------------------------------------------
     def cover_info(self, doc_url: str) -> dict:
@@ -674,6 +745,55 @@ def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
                  RECENT_DAYS, raw_n, n_prelim, n_deals,
                  sum(1 for x in out
                      if x["amount"] is not None and not x.get("preliminary")))
+    return out
+
+
+def fetch_recent_earnings(cfg: dict,
+                          client: SecClient | None = None) -> list[dict]:
+    """
+    各家**最近一次財報新聞稿**的申報日與原文連結。
+
+    回傳 [{name, ticker, date, doc_url, form, period_end, ahead, lag}]，時間降冪。
+
+    這一段補的是實績的時效缺口：10-Q 的 XBRL 是季末後約 40 天才申報，
+    新聞稿約三週——中間那兩週表格顯示的還是上一季。
+
+    `ahead` 是這一段唯一的判斷：新聞稿的日期比同一家 XBRL 的期末日晚
+    超過 EARNINGS_AHEAD_DAYS 天 → 它講的是下方表格還沒有的那一季。
+    這個判斷只用兩個日期，不碰新聞稿的內容——**內容一個字都不解析**
+    （理由見 earnings_filings 的說明）。
+
+    每家只取最近一筆：更早的那些對應的季度早就進 XBRL 了，列出來只是雜訊。
+    """
+    client = client or SecClient()
+    out: list[dict] = []
+    for c in cfg.get("companies") or []:
+        cik, name = c.get("cik"), c.get("name", c.get("ticker", "?"))
+        if not cik:
+            continue
+        rows = client.earnings_filings(int(cik))
+        if not rows:
+            continue
+        f = rows[0]                                  # 已經是時間降冪
+        pe = c.get("period_end") or ""
+        lag = _days_apart(f["date"], pe) if pe else None
+        out.append({
+            "name": name, "ticker": c.get("ticker", ""),
+            "date": f["date"], "form": f["form"], "items": f["items"],
+            "doc_url": f["doc_url"], "accession": f["accession"],
+            "period_end": pe,
+            "lag": lag,
+            # 日期比較只在新聞稿**晚於**期末日時才有意義。
+            # _days_apart 取絕對值，所以要另外確認方向：新聞稿早於期末日
+            # 是不可能的（那代表期末日抓錯），這時一律不宣稱領先。
+            "ahead": bool(pe and f["date"] > pe
+                          and lag is not None and lag > EARNINGS_AHEAD_DAYS),
+        })
+    out.sort(key=lambda x: x["date"], reverse=True)
+    if out:
+        log.info("SEC 財報新聞稿：%d 家有 8-K 2.02，其中 %d 家已公布"
+                 "下方季報數字尚未涵蓋的一季",
+                 len(out), sum(1 for x in out if x["ahead"]))
     return out
 
 

@@ -39,10 +39,24 @@ def rates_body(d: dict) -> str:
                if sp.priced else "價格已經反映多少")
     _dg = d.get("debt_gap") or {}
     _debt_sum = (f'財政缺口 {_dg["value"]}　·　{debt_title}' if _dg else debt_title)
-    _hs_sum = ((f'資本支出佔營運現金流 {hs.capex_to_ocf:.0f}%　·　{hs_title}'
-                if hs.capex_to_ocf is not None else hs_title)
-               + (f'　·　近 120 天 {d["offerings"]["count"]} 筆發債交易'
-                  if (d.get("offerings") or {}).get("available") else ""))
+    # 收合摘要把「前瞻」放在最前面：整卡的主詞是接下來要花多少，
+    # 佔比與發債都是那個承諾的後果。
+    #
+    # 摘要有 45 字的上限（test_sections 釘住），所以加了指引就要讓出位置：
+    # 讓的是發債筆數——它在卡片展開後有自己的區塊，而「承諾要花多少
+    # vs 現金流撐不撐得住」這一組對照，收合時看不到就沒別的地方看得到。
+    _gd = d.get("guidance") or {}
+    _off_av = bool((d.get("offerings") or {}).get("available"))
+    _hs_ratio = (f'佔營運現金流 {hs.capex_to_ocf:.0f}%'
+                 if hs.capex_to_ocf is not None else "")
+    if _gd.get("available"):
+        _hs_sum = (f'{_gd["year"]} 年計畫 {_gd["total_display"]}'
+                   + (f'　·　{_hs_ratio}' if _hs_ratio else f'　·　{hs_title}'))
+    else:
+        _hs_sum = ((f'資本支出{_hs_ratio}　·　{hs_title}'
+                    if _hs_ratio else hs_title)
+                   + (f'　·　近 120 天 {d["offerings"]["count"]} 筆發債交易'
+                      if _off_av else ""))
 
     def _cmoves(items) -> str:
         return "".join(
@@ -172,6 +186,76 @@ def rates_body(d: dict) -> str:
     # 這是時效補丁：季報最久落後 135 天，發債當天就要申報。
     # 放在科技巨頭卡的最上方，因為它直接影響「下方那些季報數字
     # 下一期會往哪邊走」——不先講，讀者會以為 83% 是最新狀態。
+    # ---- 前瞻資本支出指引 ----
+    # 放在科技巨頭卡的最上方，位置比實績還前面：這一頁的論點是
+    #「AI 資本支出推高長端供給」，那個故事的主角是接下來要花多少，
+    # 不是上一季花了多少。實績是驗證，指引是主詞。
+    gd = d.get("guidance") or {}
+    guidance_html = ""
+    if gd.get("available"):
+        _grows = "".join(
+            f'<tr><td>{esc(r["name"])}</td><td>{esc(r["value"])}</td>'
+            f'<td class="muted-cell">{esc(r["note"])}</td></tr>'
+            for r in gd["rows"])
+        _cmp = ""
+        if gd.get("ratio_display"):
+            _cmp = (f'，是最新一季年化實績（{esc(gd["run_rate_display"])}）的 '
+                    f'{esc(gd["ratio_display"])}')
+        _miss = (f'{esc(gd["missing"])} 未提供年度指引，不在合計內。'
+                 if gd.get("missing") else "")
+        guidance_html = f"""<div class="warnbox"
+         style="border-left-color:var(--critical);margin:0 0 16px">
+      <b>{esc(str(gd['year']))} 年資本支出計畫：{gd['n']} 家合計
+        {esc(gd['total_display'])}</b>{_cmp}<br>
+      {_miss}下方的季報是<b>已經花掉的</b>；這一區是<b>還沒花、但已經承諾的</b>——
+      推高長端供給的是後者。
+      <details class="f-more" style="margin-top:10px"><summary>各家指引</summary>
+        <div class="tscroll" style="margin-top:10px"><table>
+          <thead><tr><th>公司</th><th>{esc(str(gd['year']))} 年指引</th>
+            <th>備註</th></tr></thead>
+          <tbody>{_grows}</tbody></table></div>
+        <p class="hint" style="margin-top:10px">
+          <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
+          它是法說會與新聞稿裡用自然語言講的（「approximately」
+          「in the range of」），每家寫法不同、每季還會改。
+          硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
+          更新於 {esc(gd['as_of'])}　·　{esc(gd['source'])}</p>
+      </details>
+    </div>"""
+
+    # ---- 財報新聞稿的時效 ----
+    # 只在「新聞稿已經公布、但下方表格還沒更新到那一季」時出現。
+    # 兩者同季時這一區不顯示——沒有落差就沒有話要講。
+    ea = d.get("earnings") or {}
+    earnings_html = ""
+    if ea.get("available") and ea.get("ahead_n"):
+        _erows = "".join(
+            f'<tr><td>{esc(r["name"])}</td>'
+            f'<td class="muted-cell">{esc(r["date"])}</td>'
+            f'<td class="muted-cell">'
+            + ("下方表格尚未涵蓋" if r["ahead"] else esc(r["lag_display"]))
+            + '</td><td class="muted-cell">'
+            + (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">'
+               f'8-K</a>' if r["url"] else "—")
+            + '</td></tr>'
+            for r in ea["rows"])
+        earnings_html = f"""<div class="warnbox" style="margin:0 0 16px">
+      <b>{esc(ea['ahead_names'])} 已公布新一季財報，下方的表格還沒更新到那一季</b><br>
+      財報新聞稿約在季末後三週申報，10-Q 的結構化數字要再等兩週左右。
+      這一頁的表格只用 10-Q 的原始標記，所以會慢那兩週。
+      <details class="f-more" style="margin-top:10px"><summary>各家最近一次公布</summary>
+        <div class="tscroll" style="margin-top:10px"><table>
+          <thead><tr><th>公司</th><th>公布日</th><th>對照下方表格</th>
+            <th>原文</th></tr></thead>
+          <tbody>{_erows}</tbody></table></div>
+        <p class="hint" style="margin-top:10px">
+          <b>只取日期與連結，不解析新聞稿裡的數字</b>：新聞稿是非結構化文字，
+          各家的口徑（是否含融資租賃、GAAP 或 non-GAAP）寫法都不同，
+          硬解會拿到一個不知道是什麼的數字混進表格。兩週後 XBRL 就會給出
+          經審核、標記明確的版本——寧可慢兩週，不要一個來路不明的數字。</p>
+      </details>
+    </div>"""
+
     off = d.get("offerings") or {}
     offerings_html = ""
     if off.get("available"):
@@ -359,7 +443,10 @@ def rates_body(d: dict) -> str:
   <div class="card">
     <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">供給端細節二：科技巨頭</h2>
     <p class="hint">關鍵不是資本支出的金額，是<b>融資方式</b>——
-      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。</p>
+      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。
+      先看承諾要花多少，再看現金流撐不撐得住。</p>
+    {guidance_html}
+    {earnings_html}
     {offerings_html}
     {hs_head_html}
     <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
@@ -443,6 +530,25 @@ def rates_body(d: dict) -> str:
         解析不到就標「待確認」，<b>不用推估值填補</b>，也不計入合計。<br>
         這些交易<b>不進</b>供給壓力分數：分數維持由經審核的季報數字決定，
         否則同一筆發債下一季會被算第二次，歷史可比性也會斷掉。</dd>
+      <dt>資本支出指引</dt>
+      <dd>各公司在法說會上對<b>整年</b>資本支出的公開承諾，跟下方表格的
+        「上一季實際花掉的」是兩件事。長端供給壓力來自還沒花的那一段——
+        承諾要花而現金流不夠，差額就得到債市籌。<br>
+        這幾個數字<b>不在任何申報欄位裡</b>，是用自然語言講的
+        （「approximately」「in the range of」），所以由人工季更，
+        來源與更新日標在指引區塊裡。沒有指引的公司會單獨列出，
+        不會被默默算成零。<br>
+        跟實績的對照用的是<b>最新一季 × 4</b> 的年化推估。資本支出有季節性
+        （第四季通常最重），所以這個倍數是量級參考，不是精確的年對年。</dd>
+      <dt>財報新聞稿的時效</dt>
+      <dd>財報新聞稿（8-K 項目 2.02）約在季末後三週申報，10-Q 的結構化
+        數字（XBRL）要再等兩週左右。下方表格只用 10-Q 的原始標記，
+        所以中間那兩週會落後一季。<br>
+        這一區只取<b>公布日期與原文連結</b>，<b>不解析新聞稿裡的數字</b>：
+        新聞稿是非結構化文字，各家口徑不同，硬解會拿到一個不知道是什麼的
+        數字混進表格。判斷「新聞稿是不是講下一季」只比對兩個日期——
+        新聞稿日期比該公司自己的季末日晚 60 天以上就是下一季
+        （一季約 91 天、新聞稿約季末後 20–30 天，60 天在兩群中間）。</dd>
     </dl>
     </details>
   </div>

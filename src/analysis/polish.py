@@ -182,9 +182,13 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
         return out
 
     # ---- 呼叫 ----
+    # 供應商可以回 (文字, 實際用的模型)：Gemini 在模型被汰換時會自己換一個，
+    # 而畫面與執行紀錄要標的是**真的用了哪一個**，不是設定裡寫的那一個。
     try:
         post = _post or _POST[provider]
         text = post(key, model, out["text"])
+        if isinstance(text, tuple):
+            text, model = text[0], (text[1] or model)
     except Exception as e:                         # noqa: BLE001
         log.warning("整體情勢潤稿失敗（%s），改用組裝版", e)
         return out
@@ -226,12 +230,92 @@ def _post_anthropic(key: str, model: str, source_text: str) -> str:
     return r.json()["content"][0]["text"]
 
 
-def _post_gemini(key: str, model: str, source_text: str) -> str:
+GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
+
+# 挑替代模型時要避開的：這些是別種用途的模型，名字裡有 gemini 但不會改寫文字。
+_AVOID = ("embedding", "aqa", "image", "vision", "tts", "audio", "live",
+          "translate", "veo", "imagen", "omni", "learnlm")
+_VER = re.compile(r"gemini-(\d+(?:\.\d+)?)")
+
+
+def _family(low: str) -> int:
+    """
+    用途分組，數字小的優先：flash → flash-lite → pro → 其他。
+
+    順序的理由是**失敗方式**，不是價格。這個任務有硬性格式要求
+    （長度、不准新增數字、結尾必須是「重點：」），做不到就被 validate 擋下，
+    畫面退回組裝版——也就是使用者現在看到的那個結果。所以寧可用
+    正常的 flash 而不是 lite。pro 排最後是因為免費額度最緊，
+    而這裡只是改寫 150 個字，用不到。
+
+    分組要明寫不能用子字串比對：「flash」是「flash-lite」的子字串，
+    照順序找第一個命中的話，flash-lite 會被歸成 flash。
+    """
+    if "flash-lite" in low:
+        return 1
+    if "flash" in low:
+        return 0
+    if "pro" in low:
+        return 2
+    return 3
+
+
+def _gemini_models(key: str) -> list[str]:
+    """
+    問這把金鑰**實際上**能用哪些模型。回傳去掉 "models/" 前綴的名稱。
+
+    這支存在的理由：Google 會汰換模型，而汰換掉的模型回的是 404
+    「models/X is not found for API version v1beta」——那個訊息看起來
+    像是網址寫錯，實際上是「你這把金鑰沒有這個模型」。差別很重要，
+    因為前者要改程式、後者只要換個模型名。
+    """
+    try:
+        r = requests.get(f"{GEMINI_BASE}/models", timeout=TIMEOUT,
+                         headers={"x-goog-api-key": key})
+        r.raise_for_status()
+        out = []
+        for m in (r.json().get("models") or []):
+            name = (m.get("name") or "").split("/")[-1]
+            if name and "generateContent" in (m.get("supportedGenerationMethods")
+                                              or []):
+                out.append(name)
+        return out
+    except Exception as e:                         # noqa: BLE001
+        log.warning("查詢可用模型失敗（%s）", e)
+        return []
+
+
+def _gemini_pick(names: list[str], exclude: str = "") -> str:
+    """
+    從可用清單裡挑一個來改寫。挑不到就回空字串（呼叫端會退回組裝版）。
+
+    排序：先照用途分組（見 _family），同組內正式版優先於 preview，
+    再來版本號大的優先。**不做語意判斷**——這裡只是在幾個等價的
+    選項裡挑一個，挑錯了也只是文風差一點，數字仍然被防護欄鎖著。
+    """
+    def rank(n: str):
+        low = n.lower()
+        ver = _VER.search(low)
+        return (_family(low), 1 if "preview" in low or "exp" in low else 0,
+                -float(ver.group(1)) if ver else 0.0, n)
+
+    cands = [n for n in names
+             if n.lower().startswith("gemini")
+             and n != exclude
+             and not any(a in n.lower() for a in _AVOID)]
+    return sorted(cands, key=rank)[0] if cands else ""
+
+
+def _gemini_call(key: str, model: str, source_text: str) -> str:
     # 金鑰放 header 不放網址：放網址會跟著出現在錯誤訊息與代理的存取紀錄裡。
+    cfg = {"temperature": 0, "maxOutputTokens": 800}
     # thinkingBudget 設 0：這種改寫不需要推理鏈，關掉比較快也比較省額度。
+    # 只對 gemini-2.x 送——這個欄位在後續世代改過形狀，送過去會被擋成 400。
+    # 沒送也只是慢一點，不影響結果。
+    if model.startswith("gemini-2"):
+        cfg["thinkingConfig"] = {"thinkingBudget": 0}
     r = requests.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{model}:generateContent",
+        f"{GEMINI_BASE}/models/{model}:generateContent",
         timeout=TIMEOUT, headers={
             "x-goog-api-key": key,
             "content-type": "application/json",
@@ -239,13 +323,38 @@ def _post_gemini(key: str, model: str, source_text: str) -> str:
             "system_instruction": {"parts": [{"text": SYSTEM}]},
             "contents": [{"role": "user",
                           "parts": [{"text": source_text}]}],
-            "generationConfig": {"temperature": 0,
-                                 "maxOutputTokens": 800,
-                                 "thinkingConfig": {"thinkingBudget": 0}},
+            "generationConfig": cfg,
         })
     r.raise_for_status()
     parts = r.json()["candidates"][0]["content"]["parts"]
     return "".join(p.get("text", "") for p in parts)
+
+
+def _post_gemini(key: str, model: str, source_text: str):
+    """
+    回傳改寫後的文字，或 (文字, 實際用的模型)。
+
+    404 代表「這把金鑰沒有這個模型」，不是網址寫錯。模型會被汰換，
+    而汰換掉的那天這一區會安靜地消失——所以這裡自己問一次可用清單、
+    換一個再試，並把清單寫進執行紀錄，讓下次要設 BRIEF_MODEL 時
+    有名字可以抄，不必去猜。
+    """
+    try:
+        return _gemini_call(key, model, source_text)
+    except requests.HTTPError as e:
+        resp = getattr(e, "response", None)
+        if resp is None or resp.status_code != 404:
+            raise
+        names = _gemini_models(key)
+        if not names:
+            raise
+        alt = _gemini_pick(names, exclude=model)
+        log.warning("Gemini 沒有 %s 這個模型。這把金鑰可用的有：%s",
+                    model, "、".join(names[:12]) + ("…" if len(names) > 12 else ""))
+        if not alt:
+            raise
+        log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成想用的名字）", alt)
+        return _gemini_call(key, alt, source_text), alt
 
 
 _POST = {"gemini": _post_gemini, "anthropic": _post_anthropic}

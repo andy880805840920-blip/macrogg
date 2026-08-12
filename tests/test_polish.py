@@ -193,6 +193,109 @@ r = polish.maybe_polish(assembled(), c6, env={},
 check("㉜ 沒金鑰但快取還在 → 沿用潤稿版",
       r["source"] == "model-cache")
 
+
+# ---------------------------------------------------------------------------
+# ④ 模型被汰換：404 要能自己換一個，不是安靜地少一區
+#
+# 這是實際發生過的：gemini-2.5-flash 回 404
+#「models/… is not found for API version v1beta」。那句話看起來像網址寫錯，
+# 實際上是「這把金鑰沒有這個模型」——模型會汰換，而汰換的那天首頁的
+# 整體情勢就悄悄變回組裝版，沒有人會發現。
+# ---------------------------------------------------------------------------
+AVAIL = ["gemini-3.6-flash", "gemini-2.5-flash-lite", "gemini-3.1-pro-preview",
+         "gemini-2.5-pro", "text-embedding-004", "gemini-3.1-flash-tts-preview",
+         "imagen-4.0-generate", "gemini-3-flash-preview"]
+
+check("㉝ 挑到正式版的 flash（不挑 preview、不挑別種用途）",
+      polish._gemini_pick(AVAIL) == "gemini-3.6-flash",
+      polish._gemini_pick(AVAIL))
+# flash 是 flash-lite 的子字串：分組寫錯的話 lite 會被歸成 flash 而勝出。
+# 這個任務有硬性格式要求，做不到就退回組裝版——寧可用正常的 flash。
+check("㉝b flash 勝過 flash-lite（子字串不能誤判）",
+      polish._gemini_pick(["gemini-3.6-flash-lite", "gemini-2.5-flash"])
+      == "gemini-2.5-flash",
+      polish._gemini_pick(["gemini-3.6-flash-lite", "gemini-2.5-flash"]))
+check("㉝c flash-lite 勝過 pro",
+      polish._gemini_pick(["gemini-2.5-pro", "gemini-2.5-flash-lite"])
+      == "gemini-2.5-flash-lite")
+check("㉞ 排除掉的那個不會被挑回來",
+      polish._gemini_pick(["gemini-2.5-flash"], exclude="gemini-2.5-flash") == "")
+check("㉟ 沒有 flash 時退而求其次用 pro",
+      polish._gemini_pick(["gemini-2.5-pro", "text-embedding-004"])
+      == "gemini-2.5-pro")
+check("㊱ 同組內版本大的優先",
+      polish._gemini_pick(["gemini-2.5-flash", "gemini-3.6-flash"])
+      == "gemini-3.6-flash")
+check("㊲ 清單全是別種用途 → 挑不到（回空，退組裝版）",
+      polish._gemini_pick(["text-embedding-004", "imagen-4.0-generate"]) == "")
+for bad in ("tts", "image", "embedding", "live", "vision"):
+    check(f"㊳ 排除 {bad} 類模型",
+          polish._gemini_pick([f"gemini-3.1-{bad}-x"]) == "")
+
+
+class Resp:
+    def __init__(self, code): self.status_code = code
+
+
+def http404():
+    e = polish.requests.HTTPError("404 Client Error: Not Found")
+    e.response = Resp(404)
+    return e
+
+
+# 404 → 問清單 → 換一個重試 → 成功，而且回傳的是**實際用的**模型名
+tried = []
+
+
+def fake_call(key, model, text):
+    tried.append(model)
+    if model == "gemini-2.5-flash":
+        raise http404()
+    return GOOD
+
+
+polish._gemini_call = fake_call
+polish._gemini_models = lambda key: AVAIL
+r = polish._post_gemini("k", "gemini-2.5-flash", SRC)
+check("㊴ 404 → 換模型重試", isinstance(r, tuple) and r[0] == GOOD
+      and r[1] == "gemini-3.6-flash", str(r if not isinstance(r, tuple) else r[1]))
+check("㊵ 真的試了兩個模型", tried == ["gemini-2.5-flash", "gemini-3.6-flash"],
+      str(tried))
+
+# 換過的模型名要進結果（畫面與執行紀錄要標真的用了哪一個）
+r = polish.maybe_polish(assembled(SRC + "換模型測試"), tmp / "c7.json",
+                        env={"GEMINI_API_KEY": "g1"},
+                        _post=lambda k, m, t: (GOOD, "gemini-3.6-flash"))
+check("㊶ 實際用的模型進結果",
+      r["source"] == "model" and r["model"] == "gemini-3.6-flash", str(r))
+check("㊷ 也寫進快取",
+      json.loads((tmp / "c7.json").read_text())["model"] == "gemini-3.6-flash")
+
+# 查不到清單 → 原本的 404 照樣往上拋（退組裝版），不能假裝成功
+polish._gemini_models = lambda key: []
+try:
+    polish._post_gemini("k", "gemini-2.5-flash", SRC)
+    hit = False
+except polish.requests.HTTPError:
+    hit = True
+check("㊸ 查不到清單 → 拋回原本的錯（退組裝版）", hit)
+
+# 404 以外的錯不要亂換模型——換了只會多燒一次額度
+def boom500(key, model, text):
+    e = polish.requests.HTTPError("500")
+    e.response = Resp(500)
+    raise e
+
+
+polish._gemini_call = boom500
+polish._gemini_models = lambda key: AVAIL
+try:
+    polish._post_gemini("k", "gemini-2.5-flash", SRC)
+    hit = False
+except polish.requests.HTTPError:
+    hit = True
+check("㊹ 500 不觸發換模型", hit)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
