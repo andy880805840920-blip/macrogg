@@ -716,6 +716,64 @@ check("120 目標下限貼著原長（是改寫不是摘要）",
       polish._target_range("中" * 125, 21)[0] >= 115,
       str(polish._target_range("中" * 125, 21)))
 
+
+# ---------------------------------------------------------------------------
+# ⑬ 推理吃光額度 → 換一個「預設不推理」的模型
+#
+# 實際發生的完整鏈條：
+#   ① BRIEF_MODEL=gemini-flash-latest
+#   ② 送 thinkingBudget:0 → 400 INVALID_ARGUMENT（新世代不接受關閉推理）
+#   ③ 退回不帶欄位重送 → 推理吃光 8000 token → finishReason=MAX_TOKENS
+#   ④ 截斷檢查攔下 → 退回組裝版
+# 加大額度沒有用（只是讓它想更久），唯一的解法是換一個預設不開推理的模型。
+# ---------------------------------------------------------------------------
+AVAIL2 = ["gemini-3.6-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite",
+          "gemini-flash-latest", "gemini-flash-lite-latest", "gemini-2.5-pro"]
+
+check("121 截斷後挑明確版本的 lite（不挑別名）",
+      polish._gemini_pick(AVAIL2, exclude="gemini-flash-latest",
+                          prefer_lite=True) == "gemini-2.5-flash-lite",
+      polish._gemini_pick(AVAIL2, exclude="gemini-flash-latest", prefer_lite=True))
+check("122 別名排最後（別名指向的正是我們要避開的最新版）",
+      polish._gemini_pick(["gemini-flash-lite-latest", "gemini-2.5-flash-lite"],
+                          prefer_lite=True) == "gemini-2.5-flash-lite")
+check("123 沒有 lite 就退而求其次",
+      polish._gemini_pick(["gemini-2.5-flash", "gemini-2.5-pro"],
+                          prefer_lite=True) == "gemini-2.5-flash")
+check("124 一般情況不受影響（仍偏好較新的 flash）",
+      polish._gemini_pick(AVAIL2, exclude="gemini-flash-latest")
+      == "gemini-3.6-flash")
+
+# 截斷是專屬例外，才能只針對它換模型
+check("125 截斷用專屬例外", issubclass(polish.TruncatedError, RuntimeError))
+
+tried2 = []
+
+
+def trunc_then_ok(key, model, text, system=None, **kw):
+    tried2.append(model)
+    if model == "gemini-flash-latest":
+        raise polish.TruncatedError("回覆被截斷（finishReason=MAX_TOKENS）")
+    return GOOD[:GOOD.index("重點：")]
+
+
+polish._gemini_call = trunc_then_ok
+polish._gemini_models = lambda key: AVAIL2
+res = polish._post_gemini("k", "gemini-flash-latest", "本文")
+check("126 截斷 → 自動換成不推理的模型重試",
+      isinstance(res, tuple) and res[1] == "gemini-2.5-flash-lite", str(res))
+check("127 真的試了兩個模型",
+      tried2 == ["gemini-flash-latest", "gemini-2.5-flash-lite"], str(tried2))
+
+# 挑不到替代品 → 把原本的截斷錯誤拋出去，不能假裝成功
+polish._gemini_models = lambda key: []
+try:
+    polish._post_gemini("k", "gemini-flash-latest", "本文")
+    hit = False
+except polish.TruncatedError:
+    hit = True
+check("128 挑不到替代品 → 拋回原本的錯", hit)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

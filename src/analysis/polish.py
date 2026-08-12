@@ -80,6 +80,16 @@ RETRY_AFTER_MAX = 30
 # 測試用的注入點：不要真的睡。
 _SLEEP = time.sleep
 
+
+class TruncatedError(RuntimeError):
+    """
+    回覆寫到一半就斷了（推理吃光了輸出額度）。
+
+    要跟其他失敗分開，因為它的處置完全不同：這不是「再試一次就會好」，
+    而是「這個模型在這個額度下寫不完」——唯一有效的處置是換一個
+    預設不開推理的模型。用一般的 RuntimeError 就沒辦法只針對它動作。
+    """
+
 # 輸出額度。這段文字本身只要 300 token 上下，但**推理用掉的 token 也算在
 # 這個上限裡**——額度給太緊，推理模型會把它花光然後回一個空字串
 #（finishReason: MAX_TOKENS）。給寬一點不會多花錢：計費看實際用量，
@@ -581,19 +591,34 @@ def _gemini_models(key: str) -> list[str]:
         return []
 
 
-def _gemini_pick(names: list[str], exclude: str = "") -> str:
+def _gemini_pick(names: list[str], exclude: str = "",
+                 prefer_lite: bool = False) -> str:
     """
     從可用清單裡挑一個來改寫。挑不到就回空字串（呼叫端會退回組裝版）。
 
     排序：先照用途分組（見 _family），同組內正式版優先於 preview，
     再來版本號大的優先。**不做語意判斷**——這裡只是在幾個等價的
     選項裡挑一個，挑錯了也只是文風差一點，數字仍然被防護欄鎖著。
+
+    `prefer_lite` 是**被推理吃光額度之後**的那條路：lite 系列預設不開推理，
+    所以整個輸出額度都拿來寫字。這時候「文風好一點」已經不重要了——
+    重要的是拿到一段寫得完的文字。同理，版本要**由舊到新**：
+    舊世代（2.x）能用 thinkingBudget 明確關掉推理，新世代反而不行。
     """
     def rank(n: str):
         low = n.lower()
         ver = _VER.search(low)
-        return (_family(low), 1 if "preview" in low or "exp" in low else 0,
-                -float(ver.group(1)) if ver else 0.0, n)
+        has_ver = ver is not None
+        v = float(ver.group(1)) if has_ver else 0.0
+        fam = _family(low)
+        if prefer_lite:
+            # lite 排最前面，然後**版本由舊到新**：舊世代能用 thinkingBudget
+            # 明確關掉推理，新世代反而不行。
+            # 沒有版本號的別名（gemini-flash-lite-latest）要排在最後——
+            # 別名指向的是**最新**的那一個，正是我們在避開的那一種。
+            return (0 if "lite" in low else 1, fam,
+                    v if has_ver else 99.0, n)
+        return (fam, 1 if "preview" in low or "exp" in low else 0, -v, n)
 
     cands = [n for n in names
              if n.lower().startswith("gemini")
@@ -669,9 +694,23 @@ def _gemini_call(key: str, model: str, source_text: str,
     # 一路通過驗證印上了畫面：讀者看到的是「…下次會議」後面直接沒了。
     # 有明確的截斷訊號就當失敗，讓上層帶著理由重試。
     if finish.upper() in ("MAX_TOKENS", "LENGTH"):
-        raise RuntimeError(
+        raise TruncatedError(
             f"回覆被截斷（finishReason={finish}，可能是推理用掉了輸出額度）")
     return text
+
+
+def _alt_model(key: str, model: str, prefer_lite: bool = False) -> str:
+    """
+    問一次可用清單、挑一個替代模型。挑不到回空字串（呼叫端會把原本的錯拋出去）。
+
+    清單一併寫進執行紀錄：下次要設 BRIEF_MODEL 時有名字可以抄，不必去猜。
+    """
+    names = _gemini_models(key)
+    if not names:
+        return ""
+    log.warning("這把金鑰可用的模型：%s",
+                "、".join(names[:12]) + ("…" if len(names) > 12 else ""))
+    return _gemini_pick(names, exclude=model, prefer_lite=prefer_lite)
 
 
 def _post_gemini(key: str, model: str, source_text: str,
@@ -686,16 +725,22 @@ def _post_gemini(key: str, model: str, source_text: str,
     """
     try:
         return _gemini_call(key, model, source_text, system)
+    except TruncatedError as e:
+        # 推理吃光了輸出額度。這一家的新世代模型**不接受**關閉推理
+        #（thinkingBudget 被退成 400 INVALID_ARGUMENT），所以加大額度也
+        # 只是讓它想更久——換一個「預設就不推理」的模型才是解法。
+        # lite 系列正是這種：整個額度都拿來寫字。
+        alt = _alt_model(key, model, prefer_lite=True)
+        if not alt:
+            raise
+        log.warning("%s 的推理吃光了輸出額度（%s）。改用預設不推理的 %s 重試"
+                    "（要固定的話把 BRIEF_MODEL 設成它）", model, e, alt)
+        return _gemini_call(key, alt, source_text, system), alt
     except requests.HTTPError as e:
         resp = getattr(e, "response", None)
         if resp is None or resp.status_code != 404:
             raise
-        names = _gemini_models(key)
-        if not names:
-            raise
-        alt = _gemini_pick(names, exclude=model)
-        log.warning("Gemini 沒有 %s 這個模型。這把金鑰可用的有：%s",
-                    model, "、".join(names[:12]) + ("…" if len(names) > 12 else ""))
+        alt = _alt_model(key, model)
         if not alt:
             raise
         log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成想用的名字）", alt)
