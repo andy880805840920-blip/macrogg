@@ -1040,11 +1040,45 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   font-weight:700;color:var(--text-primary)}
 @media(min-width:760px){.brief-key{font-size:15.5px}}
 
-/* ---------- 「這一格是怎麼判出來的」 ----------
+/* ---------- 兩條軸的判定依據 ----------
+   分兩層：**結論常駐、算式收合**。
+   讀者的問題是「為什麼就業算弱」，那句話必須永遠看得到；
+   只有要自己驗算的人才需要展開看權重、加總與門檻出處。
+
+   先前整塊包在一個 .f-more 裡（12.5px 灰字），跟旁邊的圖例說明
+   同字級同顏色同位置，掃過去只會被歸類成註腳——做了跟沒做一樣。 */
+/* 兩條軸各自成一個框、之間留 8px：先前共用一個外框、中間只隔一條 1px 的
+   分隔線，兩個展開列的觸控盒因此只差 1px（版面稽核抓到的）——
+   想點「通膨」很容易點到「就業」。 */
+.axg{margin-top:16px}
+.ax{margin:8px 0 0;padding:0;border:1px solid var(--border);
+  border-radius:10px;background:var(--surface-1)}
+.ax:first-child{margin-top:0}
+.ax>summary{list-style:none;cursor:pointer;padding:11px 34px 11px 13px;
+  display:grid;grid-template-columns:auto auto 1fr;gap:3px 9px;
+  align-items:baseline;position:relative;font-weight:400}
+.ax>summary::-webkit-details-marker{display:none}
+.ax>summary:hover{background:var(--surface-2)}
+.ax>summary::after{content:"";position:absolute;right:14px;top:calc(50% - 4px);
+  width:7px;height:7px;border-right:1.5px solid var(--muted);
+  border-bottom:1.5px solid var(--muted);transform:rotate(45deg);
+  transform-origin:70% 70%;transition:transform .15s ease}
+.ax[open]>summary::after{transform:rotate(-135deg)}
+.ax-k{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.ax-v{font-size:15px;font-weight:700;color:var(--text-primary);
+  white-space:nowrap}
+/* 理由句在窄螢幕上換到第二行、跨滿整列：跟軸名擠同一行會只剩十幾個字寬 */
+.ax-lead{font-size:12.5px;color:var(--text-secondary);line-height:1.65;
+  grid-column:1/-1;word-break:keep-all;overflow-wrap:break-word}
+@media(min-width:760px){
+  .ax>summary{align-items:center}
+  .ax-lead{grid-column:3;line-height:1.5}
+}
+.ax-body{padding:0 13px 13px}
+
+/* ---------- 算式（展開後） ----------
    刻意做成算式而不是散文：讀者要能自己驗算，尤其是門檻——
    那是整頁權重最大（跨過去整張部位表就換掉）、先前卻完全沒有交代的東西。 */
-.wx{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
-  padding:13px 14px;margin-top:10px}
 .wx-h{font-size:13.5px;font-weight:700;margin-bottom:9px}
 .wx-r{display:grid;grid-template-columns:1fr auto auto;gap:4px 10px;
   align-items:baseline;font-size:12.5px;color:var(--text-secondary);padding:3px 0}
@@ -1141,7 +1175,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-12 16:38（台北）</div>
+  <div class="sub">最後更新 2026-08-12 17:11（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
