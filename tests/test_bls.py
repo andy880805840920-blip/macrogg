@@ -228,6 +228,46 @@ check("㉛ 速報值在總述裡標出來", "7 月（速報）" in brief_text(Tr
 check("㉜ 正式值不標", "（速報）" not in brief_text(False)
       and "7 月失業率" in brief_text(False))
 
+
+# ---------------------------------------------------------------------------
+# ⑦ 年增率的口徑：季調 vs 未季調
+#
+# 實際被使用者抓到的錯：畫面印 7 月 CPI 年增 3.5%／核心 2.8%，
+# 而 BLS 新聞稿寫的是 3.4%／2.5%。六月同樣高 0.2 個百分點——
+# 系統性偏高，不是雜訊。
+#
+# 原因是年增率拿**季調**指數去算，而 BLS 公布的年增率是用**未季調**算的。
+# 分工應該是：月增率／年化用季調（月與月之間要剔除季節性才可比），
+# 年增率用未季調（相隔十二個月，季節性自己抵消，而且不會被回溯修正）。
+# ---------------------------------------------------------------------------
+from src.analysis.inflation import _yoy_nsa           # noqa: E402
+
+
+def idx(*vals):
+    return [{"date": f"2025-{i + 1:02d}-01" if i < 12 else f"2026-{i - 11:02d}-01",
+             "value": v} for i, v in enumerate(vals)]
+
+
+NSA = idx(*([100.0] * 12 + [103.4]))                  # 年增 3.4%
+SA = idx(*([100.0] * 12 + [103.5]))                   # 年增 3.5%
+
+check("㉝ 有未季調就用未季調（跟 BLS 口徑一致）",
+      abs(_yoy_nsa(NSA, SA) - 3.4) < 1e-9, str(_yoy_nsa(NSA, SA)))
+check("㉞ 沒有未季調才退回季調（少 0.1 好過整個消失）",
+      abs(_yoy_nsa([], SA) - 3.5) < 1e-9)
+check("㉟ 兩個都沒有 → None，不硬掰",
+      _yoy_nsa([], []) is None)
+check("㊱ 未季調資料不足時也退回季調",
+      abs(_yoy_nsa(idx(100.0, 101.0), SA) - 3.5) < 1e-9)
+
+# 未季調兩條必須跟其他 CPI 序列同組推進，否則會出現
+# 「七月的月增率配六月的年增率」
+check("㊲ 未季調在 CPI 那一組裡",
+      "CUUR0000SA0" in bls.GROUPS["cpi"]
+      and "CUUR0000SA0L1E" in bls.GROUPS["cpi"])
+check("㊳ 而且走得了快速通道（CUUR 前綴直接沿用）",
+      bls._bls_id("CUUR0000SA0") == "CUUR0000SA0")
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

@@ -413,6 +413,10 @@ def compare(state: dict) -> ChangeSet:
             _lean = ("" if not _up else
                      (_up if delta > 0 else _invert(_up)))
             cs.metric_moves.append({
+                # 哪一個模組。整體總述要用它挑出「這次剛發布的那個模組」
+                # 的變動來寫摘要——非發布日的模組不該被算進「本次更新」。
+                "module": mod,
+                "key": key,
                 "label": meta.get("label", key),
                 "from": old, "to": new, "delta": delta,
                 "unit": meta.get("unit", ""),

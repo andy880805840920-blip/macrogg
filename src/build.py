@@ -696,11 +696,14 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     # 只用手動填入的預期，不退回模型外推（見 surprise.evaluate 的 allow_model）。
     exp = ((consensus or {}).get("expectations") or {}).get(data_month) or {}
     cpi_surprises = [
-        sp.evaluate("CPI 年增率", yoy_series(headline),
+        sp.evaluate("CPI 年增率",
+                    yoy_series(series.get("CUUR0000SA0") or headline),
                     exp.get("CPIAUCSL_YOY"),
                     "manual" if exp.get("CPIAUCSL_YOY") is not None else "none",
                     unit="%", higher_is_better=False, allow_model=False),
-        sp.evaluate("核心 CPI 年增率", yoy_series(series.get("CPILFESL", [])),
+        sp.evaluate("核心 CPI 年增率",
+                    yoy_series(series.get("CUUR0000SA0L1E")
+                               or series.get("CPILFESL", [])),
                     exp.get("CPILFESL_YOY"),
                     "manual" if exp.get("CPILFESL_YOY") is not None else "none",
                     unit="%", higher_is_better=False, allow_model=False),
@@ -723,12 +726,16 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     tilt = _tilt(flags)
 
     # ---- KPI ----
-    def rate_spark(sid, kind="yoy"):
+    def rate_spark(sid, kind="yoy", fallback=None):
         """
         走勢縮圖畫的是「變化率」，不是指數水準。
         指數水準只會一路往上，畫出來是一條斜線，沒有資訊量。
+
+        `fallback` 給年增率用：優先未季調，抓不到才退回季調——
+        跟卡片上的大數字走同一套規則（見 inflation._yoy_nsa），
+        否則會出現「3.4% 的數字配 3.5% 的線」。
         """
-        rows = series.get(sid, [])
+        rows = series.get(sid, []) or (series.get(fallback, []) if fallback else [])
         if not rows:
             return []
         r = yoy_series(rows) if kind == "yoy" else annualized_series(rows, 3)
@@ -742,14 +749,18 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     kpi = {
         "headline_display": _pct(summ.headline_yoy),
         "headline_sub": ((f"近三個月年化 {_pct(annualized(headline, 3))}"
-                          + (f"　·　離 2% 目標 {summ.headline_yoy - PCE_TARGET:+.1f} 個百分點"
+                          + (f"　·　高於 2% {summ.headline_yoy - PCE_TARGET:+.1f} 個百分點"
                              if summ.headline_yoy is not None else ""))
                          if headline else ""),
         "headline_plain": (
             f"你買的東西平均比一年前貴 {summ.headline_yoy:.1f}%。"
             "這個數字包含食物和能源，所以起伏會比較大。"
+            "聯準會的 2% 目標指的是核心 PCE，CPI 沒有官方目標，"
+            "而且結構上通常比 PCE 高 0.3 個百分點左右。"
             if summ.headline_yoy is not None else "—"),
-        "headline_spark": rate_spark("CPIAUCSL"),
+        # 年增率一律用未季調（跟大數字同一個口徑，見 inflation._yoy_nsa）。
+        # 混用的話卡片上的 3.4% 會配一條 3.5% 的走勢線，看起來像資料錯亂。
+        "headline_spark": rate_spark("CUUR0000SA0", fallback="CPIAUCSL"),
 
         "core_display": _pct(summ.core_yoy),
         # 四張 KPI 的副標統一成「短期動能 · 離目標」兩段，每張都回答
@@ -757,13 +768,13 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         # （一張講三月年化、一張講三月＋六月＋圖說、一張講目標、一張講密大），
         # 讀者每讀一張就要重新找節奏。
         "core_sub": (f"近三個月年化 {_pct(summ.core_3m)}　·　"
-                     + (f"離 2% 目標 {summ.core_yoy - PCE_TARGET:+.1f} 個百分點"
+                     + (f"高於 2% {summ.core_yoy - PCE_TARGET:+.1f} 個百分點"
                         if summ.core_yoy is not None else "")),
         "core_plain": (
             f"剔除波動大的食物與能源後，物價一年漲 {summ.core_yoy:.1f}%。"
             "聯準會看趨勢時主要看這一類數字。"
             if summ.core_yoy is not None else "—"),
-        "core_spark": rate_spark("CPILFESL"),
+        "core_spark": rate_spark("CUUR0000SA0L1E", fallback="CPILFESL"),
         "core_flag": (f"三個月年化 {summ.core_3m:.1f}%，動能"
                       + ("放緩" if (summ.core_3m or 9) < (summ.core_yoy or 0) else "回升")
                       if summ.core_3m is not None and summ.core_yoy is not None else None),
@@ -998,9 +1009,13 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "exp": (series.get("T5YIFR") or [{}])[-1].get("date", ""),
         },
         "mini": {
-            "headline": charts.mini_series(yoy_series(series.get("CPIAUCSL", [])),
+            "headline": charts.mini_series(
+                yoy_series(series.get("CUUR0000SA0")
+                           or series.get("CPIAUCSL", [])),
                                            unit="%", fmt=lambda v: f"{v:.1f}"),
-            "core": charts.mini_series(yoy_series(series.get("CPILFESL", [])),
+            "core": charts.mini_series(
+                yoy_series(series.get("CUUR0000SA0L1E")
+                           or series.get("CPILFESL", [])),
                                        unit="%", fmt=lambda v: f"{v:.1f}"),
             "pce": charts.mini_series(yoy_series(series.get("PCEPILFE", [])),
                                       unit="%", fmt=lambda v: f"{v:.1f}"),

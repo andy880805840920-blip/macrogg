@@ -70,7 +70,8 @@ check("④ markdown 擋下",
 check("⑤ 換行擋下", polish.validate(GOOD.replace("。核心", "。\n核心"), SRC) != "")
 check("⑥ 重點句前綴不見 → 擋下",
       "重點" in polish.validate(GOOD.replace("重點：", "總結來說，"), SRC))
-check("⑦ 太長擋下", polish.validate(GOOD + "多餘的話" * 40, SRC) != "")
+check("⑦ 太長擋下（上限是防呆，不是編輯限制）",
+      polish.validate(GOOD + "多餘的話" * 200, SRC) != "")
 check("⑧ 太短擋下", polish.validate("重點：太短。", SRC) != "")
 check("⑨ 數字變少沒關係（模型可以省略）",
       polish.validate(GOOD.replace("、3 票主張升息", ""), SRC) == "")
@@ -646,7 +647,7 @@ check("105 前綴變成結構上保證，不靠模型配合",
 # 字數上限要先扣掉重點句的長度，否則接回去就超出護欄。
 # 用一段夠長的本文，讓上限由 MAX_CJK 決定而不是由「原長 +10」決定——
 # 那才是 reserve 真正起作用的情況。
-_LONG = "中" * 200
+_LONG = "中" * 480
 lo_r, hi_r = polish._target_range(_LONG, polish.cjk_len(TAIL))
 lo_n, hi_n = polish._target_range(_LONG, 0)
 check("106 有 reserve 時上限更嚴", hi_r < hi_n, f"{hi_r} vs {hi_n}")
@@ -716,7 +717,13 @@ check("117 兩次都截斷 → 退回組裝版", r["source"] == "assembled")
 check("118 半截的文字不會寫進快取", not (tmp / "d4.json").exists())
 
 # 護欄放寬之後，完整的長版本才進得來
-check("119 上限放寬到 260", polish.MAX_CJK == 260)
+check("119 上限只是防呆，放得很寬", polish.MAX_CJK >= 400)
+check("119b config 可以覆寫上限",
+      polish._max_cjk({"max_chars": 300}) == 300
+      and polish._max_cjk({}) == polish.MAX_CJK
+      and polish._max_cjk({"max_chars": "壞掉"}) == polish.MAX_CJK)
+check("119c 覆寫值太小會被忽略（不能小於下限）",
+      polish._max_cjk({"max_chars": 10}) == polish.MAX_CJK)
 check("120 目標下限貼著原長（是改寫不是摘要）",
       polish._target_range("中" * 125, 21)[0] >= 115,
       str(polish._target_range("中" * 125, 21)))

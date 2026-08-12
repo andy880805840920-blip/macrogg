@@ -257,12 +257,33 @@ def inflation_bands(s: "InflationSummary") -> dict:
                     f"{n:.2f}%")}
 
 
+def _yoy_nsa(nsa: list, sa: list) -> float | None:
+    """
+    年增率：優先用未季調，抓不到才退回季調。
+
+    為什麼分開：**月增率與年增率該用不同的序列。**
+      月增率／年化 → 季調。月與月之間本來就要剔除季節性才可比。
+      年增率       → 未季調。前後相隔十二個月，季節性自己抵消掉了；
+                     而且 BLS 公布的那個數字就是這樣算的。
+
+    還有一個實務理由：季調指數在原始發布後最長五年內都可能因為季節因子
+    重估而被回溯修改，未季調則永遠不動。一個會事後變動的年增率，
+    跟「這個月漲了多少」這種歷史事實放在一起會很奇怪。
+    """
+    v = yoy(nsa)
+    return v if v is not None else yoy(sa)
+
+
 def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> InflationSummary:
     s = InflationSummary()
     g = series.get
 
-    s.headline_yoy = yoy(g("CPIAUCSL", []))
-    s.core_yoy = yoy(g("CPILFESL", []))
+    # 年增率一律用**未季調**：BLS 新聞稿上的「年增 3.4%」就是這樣算的。
+    # 用季調算會系統性地差 0.1–0.3 個百分點，畫面上就跟所有媒體對不上。
+    # 抓不到未季調時退回季調——少 0.2 個百分點，總比整個數字消失好，
+    # 但那是退路不是常態。
+    s.headline_yoy = _yoy_nsa(g("CUUR0000SA0", []), g("CPIAUCSL", []))
+    s.core_yoy = _yoy_nsa(g("CUUR0000SA0L1E", []), g("CPILFESL", []))
     s.core_mom = mom_pct(g("CPILFESL", []))
     s.core_3m = annualized(g("CPILFESL", []), 3)
     s.core_6m = annualized(g("CPILFESL", []), 6)

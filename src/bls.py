@@ -119,7 +119,10 @@ MAP = {
 #
 # 規則是：原本就同步的那幾條，要嘛一起推進，要嘛一條都不動。
 GROUPS = {
+    # 未季調兩條也在同一份新聞稿裡，而且年增率就是用它們算的——
+    # 沒有一起推進的話，畫面上會出現「七月的月增率配六月的年增率」。
     "cpi": ["CPIAUCSL", "CPILFESL", "CPIUFDSL", "CPIENGSL",
+            "CUUR0000SA0", "CUUR0000SA0L1E",
             "CUSR0000SACL1E", "CUSR0000SAH1", "CUSR0000SASLE",
             "CUSR0000SEHA", "CUSR0000SEHC"],
     "jobs": ["PAYEMS", "USPRIV", "USGOVT", "UNRATE", "U6RATE", "CIVPART",

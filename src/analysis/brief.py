@@ -53,13 +53,18 @@ JOIN = ""
 # 量的是**中文字數**，不是字串長度：數字、百分號、PCE／GDP／AI 這些
 # 拉丁字母在視覺上佔的寬度與閱讀負擔都跟漢字不同，用 len() 量會被它們灌水
 #（同一段話 len 是 238、中文字只有 154）。
-# 組裝版目標 160–180 字。上限放到 260 是留給**潤稿版**的空間：
-# 先前上限 190，跟組裝版的實際長度（179）只差 11 字，等於逼著模型在
-# 「把六段事實都講完」與「不超過上限」之間二選一——實測的結果是它選了
-# 砍掉最後一段，畫面上出現一句話講到一半的總述。
-# 護欄的用途是擋住失控，不是逼稿子變短；真正在控制長度的是提示詞裡的
-# 目標範圍（見 polish._target_range），護欄只負責攔住離譜的輸出。
-MIN_CJK, MAX_CJK = 90, 260
+# 上限已經**不再是編輯上的限制**，只是防呆。
+#
+# 一路調過來的過程說明了為什麼：190 → 260 → 現在 500。每次調高都是因為
+# 上限逼著模型在「把事實講完」與「不超過字數」之間二選一，而它每次都選
+# 砍內容——出現過講到一半的總述、也出現過為了縮短就把整句重點句刪掉。
+# 護欄的用途是攔住失控（某個分支寫出幾千字的鬼東西），不是逼稿子變短。
+#
+# 真正在控制長度的是提示詞裡的目標範圍（見 polish._target_range），
+# 而那個範圍是從組裝版的實際長度算出來的——資料多就長一點，資料少就短
+# 一點，本來就不該由一個寫死的數字決定。
+# 想改的話 config/brief.yaml 的 max_chars 可以覆寫。
+MIN_CJK, MAX_CJK = 90, 500
 
 
 def _pct(v, d=1):
@@ -185,6 +190,77 @@ def _pick_signal(flags, covered=_COVERED) -> str:
         if head:
             return head
     return ""
+
+
+# 「本次更新」最多講幾個數字。兩個剛好：一個是頭條、一個是佐證。
+# 三個以上就變成流水帳，而讀者要的是「這次的重點是什麼」。
+_NEW_MAX = 2
+
+
+def _fmt_move(m: dict) -> str:
+    """一條數字變動 → 「核心 CPI 年增 2.5%（上月 2.6%）」。"""
+    unit = m.get("unit", "")
+    to, frm = m.get("to"), m.get("from")
+    if to is None or frm is None:
+        return ""
+    return f'{m.get("label", "")} {to:.1f}{unit}（上月 {frm:.1f}{unit}）'
+
+
+def _whats_new(ctxs: dict) -> str:
+    """
+    開場前的一到兩句：**這一次新拿到的資料說了什麼。**
+
+    為什麼要有：這一段每天都會重新產生，但多數日子的內容一樣——因為沒有
+    新資料。讀者無從分辨「今天的數字是新的」與「今天只是把昨天那份重印
+    一次」，而那正是他打開網站最想先知道的一件事。
+
+    但光講「新資料已納入」沒有價值——那是流水帳，不是摘要。所以這裡要
+    講**新的那份數據本身**：頭條數字是多少、比上一期高還是低、方向是什麼。
+    材料全部來自 changes 模組已經算好的 metric_moves（跟「跟上期比什麼變了」
+    那張卡同一組來源），只挑**這次剛發布的那個模組**的變動——非發布日的
+    模組不該被算進「本次更新」。
+
+    判斷「有沒有新資料」完全機械：這次的資料期別跟上一次執行存下的期別
+    相比，有推進才算。沒有上次的紀錄（第一次跑）也不宣稱是新的。
+    """
+    prev = ctxs.get("_prev_months") or {}
+    if not prev:
+        return ""
+
+    fresh = []                                     # [(模組鍵, 中文名, 期別字串)]
+    for key, name in (("labor", "就業"), ("inflation", "物價")):
+        ctx = ctxs.get(key) or {}
+        cur, was = ctx.get("data_month", ""), prev.get(key, "")
+        if cur and was and cur > was:
+            m = _month(cur)
+            tag = "（速報）" if ctx.get("provisional") else ""
+            fresh.append((key, name, f"{m}{tag}" if m else ""))
+    if not fresh:
+        return ""
+
+    changes = ctxs.get("changes")
+    moves = list(getattr(changes, "metric_moves", None) or [])
+    keys = {k for k, _, _ in fresh}
+    mine = [m for m in moves if m.get("module") in keys]
+    # 動得最多的排前面：這一次真正的重點是變化幅度最大的那一個，
+    # 不是清單裡剛好排第一的那一個。
+    mine.sort(key=lambda m: -abs(m.get("delta") or 0))
+
+    head = "、".join(f"{n} {p}" if p else n for _, n, p in fresh)
+    nums = [x for x in (_fmt_move(m) for m in mine[:_NEW_MAX]) if x]
+    if not nums:
+        # 有新資料但沒有任何指標動超過門檻——那本身就是資訊。
+        return f"本次更新：{head}的新數據出爐，各項指標變動都在雜訊範圍內。"
+
+    # 方向：這幾個變動整體偏哪一邊。用 changes 已經判好的 lean，
+    # 不自己重算——重算會跟「跟上期比什麼變了」那張卡對不上。
+    lean = [m.get("lean") for m in mine[:_NEW_MAX]]
+    tail = ""
+    if lean and all(x == "dovish" for x in lean if x):
+        tail = "，方向偏降息"
+    elif lean and all(x == "hawkish" for x in lean if x):
+        tail = "，方向偏升息"
+    return f"本次更新：{head}，{'；'.join(nums)}{tail}。"
 
 
 # ---------------------------------------------------------------------------
@@ -425,6 +501,7 @@ def compose(ctxs: dict) -> dict:
         fom_txt = "面對這個組合，" + fom_txt
 
     parts = [
+        ("whatsnew", _whats_new(ctxs)),
         ("direction", _direction(sc, dirs)),
         ("labor", lab_txt),
         ("inflation", inf_txt),

@@ -582,6 +582,14 @@ def main() -> int:
         log.info("局部重跑（--only %s）：跳過變化比對與快照存檔", args.only)
     else:
         prev_state = chg.load_previous(STATE_FILE)
+        # 「這一次多了什麼資料」——拿上一次執行存下的期別跟這次比。
+        # 這是唯一能回答這個問題的地方：changes 模組比的是「跟上一期比
+        # 數字怎麼變」，而這裡要的是「這一次執行**新拿到**了哪一份資料」。
+        # 兩者不一樣：非發布日跑起來，前者有內容（跟上期比）、後者是空的。
+        _prev_months = {
+            k: ((((prev_state or {}).get("modules") or {}).get(k) or {})
+                .get("current") or {}).get("month", "")
+            for k in ("labor", "inflation")}
         cur_snap = chg.snapshot(ctxs)
         # 只有資料期別真的變了才輪替基準——同一期別的重跑會更新 current，
         # 但不會把 previous 往前推。這樣「7 月就業報告帶來的變化」
@@ -597,6 +605,8 @@ def main() -> int:
                      f"（前一格：{_tn['from']}）" if _tn.get("from") else "")
         if ctxs["changes"].bases:
             log.info("對照基準：%s", chg.basis_text(ctxs["changes"]))
+
+        ctxs["_prev_months"] = _prev_months
 
     # ---- 首頁的整體總述：規則組裝 → （選配）模型潤稿 ----
     # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。

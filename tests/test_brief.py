@@ -333,6 +333,76 @@ check("53 headline 是空的就跳過",
 check("54 長度仍在護欄內",
       brief.MIN_CJK <= b3["chars"] <= brief.MAX_CJK, f'{b3["chars"]} 字')
 
+
+# ---------------------------------------------------------------------------
+# ⑧ 「本次更新」：回答「今天有沒有新東西」
+#
+# 這一段每天都會重新產生，但多數日子內容一樣——因為沒有新資料。
+# 讀者無從分辨「今天的數字是新的」與「今天只是把昨天那份重印一次」。
+# 跟「跟上期比什麼變了」不是同一件事：那個在非發布日照樣有內容，
+# 這一句在非發布日就該是空的。
+# ---------------------------------------------------------------------------
+class MV:                      # 假的 ChangeSet
+    def __init__(self, moves):
+        self.metric_moves = moves
+
+
+def mv(mod, label, frm, to, lean="dovish"):
+    return {"module": mod, "label": label, "from": frm, "to": to,
+            "delta": to - frm, "unit": "%", "lean": lean}
+
+
+INF_MOVES = [mv("inflation", "核心 CPI 年增", 2.6, 2.5),
+             mv("inflation", "CPI 年增", 3.5, 3.4),
+             mv("labor", "失業率", 4.0, 4.1)]
+
+
+def wn(prev, cur="2026-07", prov=False, moves=INF_MOVES):
+    c = ctx_with(month=cur)
+    c["_prev_months"] = prev
+    c["changes"] = MV(list(moves))
+    c["inflation"]["provisional"] = prov
+    c["labor"]["provisional"] = prov
+    return brief.compose(c)["parts"][0]["text"]
+
+
+OLD = {"labor": "2026-07", "inflation": "2026-06"}
+s = wn(OLD)
+check("55 講的是新數據本身，不是「已納入」",
+      "已納入" not in s and "2.5%" in s, s)
+check("56 帶出上一期的數字才看得出方向", "上月 2.6%" in s, s)
+check("57 期別沒動 → 整句不出現（非發布日不說「本次更新」）",
+      wn({"labor": "2026-07", "inflation": "2026-07"}) != s
+      and "本次更新" not in brief.compose(
+          {**ctx_with(), "_prev_months": {"labor": "2026-07",
+                                          "inflation": "2026-07"},
+           "changes": MV(INF_MOVES)})["text"])
+check("58 只挑這次剛發布的模組（就業沒更新就不講失業率）",
+      "失業率" not in s, s)
+check("59 沒有上次的紀錄 → 不宣稱是新的（第一次跑）",
+      "本次更新" not in wn({}))
+check("60 速報值也標出來", "（速報）" in wn(OLD, prov=True))
+check("61 這一句排在最前面",
+      brief.compose({**ctx_with(), "_prev_months": OLD,
+                     "changes": MV(INF_MOVES)})["parts"][0]["key"] == "whatsnew")
+check("62 動最多的排前面（重點不是清單順序）",
+      wn(OLD, moves=[mv("inflation", "小動", 2.0, 2.05),
+                     mv("inflation", "大動", 3.0, 3.8)]).index("大動")
+      < wn(OLD, moves=[mv("inflation", "小動", 2.0, 2.05),
+                       mv("inflation", "大動", 3.0, 3.8)]).index("小動"))
+check("63 最多只講兩個數字（三個以上變流水帳）",
+      wn(OLD).count("上月") <= 2)
+check("64 同向才講方向",
+      "方向偏降息" in wn(OLD)
+      and "方向偏" not in wn(OLD, moves=[
+          mv("inflation", "甲", 2.0, 2.5, "hawkish"),
+          mv("inflation", "乙", 3.0, 2.5, "dovish")]))
+check("65 有新資料但都沒動 → 講「變動都在雜訊範圍內」",
+      "雜訊範圍" in wn(OLD, moves=[]))
+
+# 上限放寬之後仍然有防呆
+check("66 上限只是防呆，放得很寬", brief.MAX_CJK >= 400)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

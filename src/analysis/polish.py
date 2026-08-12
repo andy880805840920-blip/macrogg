@@ -97,10 +97,20 @@ class TruncatedError(RuntimeError):
 MAX_OUT = 8000
 
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 6
+PROMPT_VERSION = 8
 
 
-def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
+def _max_cjk(cfg: dict | None = None) -> int:
+    """字數上限。config/brief.yaml 可覆寫；那裡是防呆值不是編輯限制。"""
+    try:
+        v = int((cfg or {}).get("max_chars") or 0)
+    except (TypeError, ValueError):
+        v = 0
+    return v if v > MIN_CJK else MAX_CJK
+
+
+def _target_range(source: str, reserve: int = 0,
+                  cap: int | None = None) -> tuple[int, int]:
     """
     要求的字數範圍，**由這一次要改寫的段落長度算出來**，不是寫死的。
 
@@ -114,13 +124,13 @@ def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
     就把重點句整句刪掉了。
     """
     n = cjk_len(source)
+    top = cap if cap is not None else MAX_CJK
     # 下限貼著原長（-10）：這一段的工作是**改寫**不是**摘要**，
-    # 少於原長就代表有事實被丟掉。上限給 +45 的餘裕，讓句子有空間寫順，
-    # 但仍受 MAX_CJK 扣掉 reserve 之後的硬上限約束。
+    # 少於原長就代表有事實被丟掉。上限給 +45 的餘裕，讓句子有空間寫順。
     lo = max(MIN_CJK - reserve, n - 10)
-    hi = min(MAX_CJK - reserve - 5, n + 45)
+    hi = min(top - reserve - 5, n + 45)
     if hi <= lo:                                   # 極端情況下不要給出反向區間
-        lo, hi = max(1, MIN_CJK - reserve), max(2, MAX_CJK - reserve - 5)
+        lo, hi = max(1, MIN_CJK - reserve), max(2, top - reserve - 5)
     return lo, hi
 
 
@@ -137,7 +147,7 @@ DEFAULT_TEMPERATURE = 0.45
 
 
 def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
-    lo, hi = _target_range(source, reserve)
+    lo, hi = _target_range(source, reserve, _max_cjk(cfg))
     cfg = cfg or {}
     style = (cfg.get("style") or DEFAULT_STYLE).strip()
     extra = (cfg.get("extra") or "").strip()
@@ -151,6 +161,10 @@ def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
         "不要寫「約兩週」這類原文沒有的量。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
+        "2c. 開頭若有「本次更新：…」那一句，**保留在最前面且不得改動任何"
+        "數字**。它摘要的是這一次剛發布的數據，跟後面的整體分析是兩回事，"
+        "不要跟下一句合併，也不要把它挪到後面。措辭可以順一點，"
+        "但「上月 X%」這種對照必須留著——沒有對照就看不出方向。\n"
         "2b. **時序不得改動**：原文的資料期別（例如「7 月失業率」「7 月核心 "
         "PCE」）必須原樣保留在同一個數字旁邊，不可刪除、不可搬到別處、"
         "不可合併成一句。也**不要**用「本月」「當前」「最新」「目前」"
@@ -280,7 +294,7 @@ def looks_truncated(body: str) -> bool:
     return bool(s) and s[-1] not in _END
 
 
-def validate(out: str, source: str) -> str:
+def validate(out: str, source: str, cap: int | None = None) -> str:
     """
     防護欄一。回傳空字串＝通過；否則回傳失敗原因（進執行紀錄）。
 
@@ -301,8 +315,9 @@ def validate(out: str, source: str) -> str:
     if "重點：" not in out:
         return "重點句的前綴不見了"
     n = cjk_len(out)
-    if not (MIN_CJK <= n <= MAX_CJK):
-        return f"長度 {n} 字，超出 {MIN_CJK}–{MAX_CJK}"
+    top = cap or MAX_CJK
+    if not (MIN_CJK <= n <= top):
+        return f"長度 {n} 字，超出 {MIN_CJK}–{top}"
     return ""
 
 
@@ -483,7 +498,7 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
         # 但它就是不能印上畫面。
         reason = ("輸出看起來被截斷（結尾不是完整的句子）"
                   if looks_truncated(body_out)
-                  else validate(text, out["text"]))
+                  else validate(text, out["text"], _max_cjk(cfg)))
         if not reason:
             break
         if attempt == 1:
