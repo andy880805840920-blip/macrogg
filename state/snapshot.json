@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-12T23:59:34+08:00",
+  "at": "2026-08-13T00:15:09+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -154,28 +154,25 @@
         "flags": [
           "cpi_cooling",
           "above_target",
-          "shelter_drag",
           "oil_up",
           "supercore_cool"
         ],
         "flag_titles": {
           "cpi_cooling": "近三月年化低於年增率 0.4 個百分點以上",
           "above_target": "核心 PCE 顯著高於目標",
-          "shelter_drag": "住房落後項推升整體讀數",
           "oil_up": "油價上行，未來一至兩月推升總體 CPI",
           "supercore_cool": "核心服務除住房回落至正常區間"
         },
         "flag_leans": {
           "cpi_cooling": "dovish",
           "above_target": "hawkish",
-          "shelter_drag": "dovish",
           "oil_up": "hawkish",
           "supercore_cool": "dovish"
         },
         "metrics": {
           "core_cpi_yoy": {
             "label": "核心 CPI 年增",
-            "value": 2.786747157096725,
+            "value": 2.6705119927884935,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -322,7 +319,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-08-12T23:59:34+08:00",
+      "at": "2026-08-13T00:15:09+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|fomc:2026-07-29",
       "name": "停滯性通膨：通膨優先",
       "regime": "inflation",
