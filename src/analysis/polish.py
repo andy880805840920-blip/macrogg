@@ -97,7 +97,7 @@ class TruncatedError(RuntimeError):
 MAX_OUT = 8000
 
 # 提示詞改版時要讓快取失效，否則舊快取會一直蓋住新行為
-PROMPT_VERSION = 5
+PROMPT_VERSION = 6
 
 
 def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
@@ -151,6 +151,11 @@ def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
         "不要寫「約兩週」這類原文沒有的量。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
+        "2b. **時序不得改動**：原文的資料期別（例如「7 月失業率」「7 月核心 "
+        "PCE」）必須原樣保留在同一個數字旁邊，不可刪除、不可搬到別處、"
+        "不可合併成一句。也**不要**用「本月」「當前」「最新」「目前」"
+        "這類詞去描述這些數字——它們是已公布的上一期資料，不是當下的狀態。"
+        "「上次會議（7/29）」是會議日期，不是資料期別，兩者不可混為一談。\n"
         f"3. 長度大約 {lo} 到 {hi} 個中文字，**不要超過 {hi} 字**。"
         "不要逐字計數、不要在輸出裡標註字數或字元位置、"
         "也不要提到這個範圍本身。\n"
@@ -662,24 +667,28 @@ def _thinking(model: str) -> dict:
     """
     這一次呼叫要怎麼關掉推理鏈。回傳要併進 generationConfig 的欄位。
 
-    為什麼一定要關：**推理用掉的 token 算在 maxOutputTokens 裡**。
-    推理模型如果把額度花在想，回來的 candidate 會是
-    `finishReason: MAX_TOKENS` 而且**一個字都沒有**——不是報錯，是空字串。
-    這種失敗最難查，因為看起來像模型「不想回答」。
+    為什麼要關：**推理用掉的 token 算在 maxOutputTokens 裡**。推理模型
+    把額度花在想，回來的 candidate 會是 finishReason: MAX_TOKENS，
+    文字空的或只寫到一半。
 
-    2.x 用 thinkingConfig.thinkingBudget（0 ＝ 關），實測有效。
+    **2.x 才送。** thinkingConfig.thinkingBudget 在 2.x 實測有效。
 
-    3.x 以後**不送任何欄位**。文件上寫的是 thinking_level，但 v1beta 的
-    generateContent 實際回的是：
+    **3.x 與別名一律不送**，因為兩個欄位都被拒絕過，各有一次直接證據：
 
-        400 Invalid JSON payload received.
-        Unknown name "thinkingLevel" at 'generation_config'
+        thinkingLevel   → 400 Unknown name "thinkingLevel"
+        thinkingBudget  → 400 Request contains an invalid argument
 
-    camelCase 與 snake_case 在 proto JSON 是等價的，所以這不是大小寫問題，
-    是這個 API 版本根本沒有這個欄位。既然關不掉，就改用 MAX_OUT 給足額度
-    讓推理跟輸出都放得下——那才是真正在防「回一個空字串」的那道保險。
-    每次都先送一次註定失敗的 400 只是白花一個來回。
+    我一度改成「一律送，反正 400 有退路」——結果是**每一次執行都先送一個
+    註定失敗的請求**，log 裡固定出現一段 400 的錯誤訊息，白花一個來回。
+    退路是給意外用的，不是給已知會失敗的情況用的。
+
+    3.x 關不掉推理，改用三道防線頂著：MAX_OUT 給足額度、截斷檢查
+    （looks_truncated／finishReason），以及真的截斷時換成預設不推理的
+    lite 模型。
     """
+    m = _VER.search(model.lower())
+    if not m or float(m.group(1)) >= 3:
+        return {}
     return {"thinkingConfig": {"thinkingBudget": 0}}
 
 

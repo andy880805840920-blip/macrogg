@@ -128,13 +128,77 @@ def _direction(sc, dirs: list) -> str:
 
 
 # ---------------------------------------------------------------------------
+# 期別與訊號：兩件跟「時序」有關的事
+# ---------------------------------------------------------------------------
+def _month(data_month: str) -> str:
+    """
+    "2026-07" → "7 月"。空的就回空字串（不要編一個月份出來）。
+
+    為什麼一定要標：這一段的數字全部是**上一期已公布**的資料，而不是當下。
+    7 月的就業報告是 8 月才公布的——不標期別的話，讀者（以及潤稿模型
+    加上去的「目前」「雖然」）都會把它讀成即時數據。
+    模組卡上雖然有「2026-07 資料」，但總述常常被單獨閱讀或轉貼出去，
+    那個標籤跟不過來。
+    """
+    s = (data_month or "").strip()
+    if len(s) < 7 or "-" not in s:
+        return ""
+    try:
+        return f"{int(s.split('-')[1])} 月"
+    except (ValueError, IndexError):
+        return ""
+
+
+# 這些訊號講的事情，手寫的句子裡已經講過了——再挑一次就是同一件事說兩遍。
+# 對照的是 _labor()／_inflation() 實際會寫出來的內容：
+#   核心 PCE 相對門檻   → above_target／at_target／below_target
+#   三個月年化 vs 年增   → cpi_reheating／cpi_cooling
+#   核心服務除住房的黏性 → supercore_*
+_COVERED = {
+    "above_target", "at_target", "below_target",
+    "cpi_reheating", "cpi_cooling",
+    "supercore_hot", "supercore_cool", "supercore_reaccel",
+}
+
+
+def _pick_signal(flags, covered=_COVERED) -> str:
+    """
+    從該模組的訊號裡挑**一條**併進總述，回傳 headline；挑不到回空字串。
+
+    為什麼要動態挑，不寫死清單：哪一條訊號重要**每一期都不一樣**。
+    這一期是「前兩月大幅下修」，下一期可能是「失業率下降源於勞動力退出」，
+    再下一期可能兩條都沒觸發。寫死等於把某一期的狀況當成常態。
+
+    挑選規則完全是機械的：
+      ① flags 進來時已依嚴重度排序（alert → watch → info），取第一條
+      ② 跳過 _COVERED——那些手寫句子已經講過了
+      ③ 只取 headline（規則引擎寫好的白話結論），不自己造句
+
+    只挑一條：這一段的字數有限，而第二嚴重的那條通常跟第一條同向，
+    加了是重複而不是資訊。
+    """
+    for f in flags or []:
+        key = getattr(f, "key", "")
+        if key in covered:
+            continue
+        head = (getattr(f, "headline", "") or "").strip()
+        if head:
+            return head
+    return ""
+
+
+# ---------------------------------------------------------------------------
 # ② 就業
 # ---------------------------------------------------------------------------
-def _labor(ax: dict | None) -> str:
+def _labor(ax: dict | None, month: str = "", signal: str = "") -> str:
     """
-    就業：水準（失業率相對 FOMC 認定的充分就業區間）＋ 動能（Sahm／損益兩平）。
+    就業：水準（失業率相對 FOMC 認定的充分就業區間）＋ 動能（Sahm／損益兩平）
+    ＋ 這一期最嚴重的一條訊號。
 
     分支順序跟 scenario.classify_labor 一致，畫面上的敘述才不會跟格位打架。
+
+    `month`（例如「7 月」）標在失業率前面。**必須標**：7 月的就業報告是
+    8 月才公布的，不標的話讀者會把它讀成即時數據。
     """
     if not ax:
         return ""
@@ -143,40 +207,49 @@ def _labor(ax: dict | None) -> str:
     if u is None:
         return ""
     us = _pct(u)
+    m = f"{month}" if month else ""
+    sig = f"；{signal}" if signal else ""
     if ax.get("sahm_triggered"):
-        return f"就業已在快速轉弱：失業率 {us}，Sahm 法則觸發衰退門檻。"
+        return f"就業已在快速轉弱：{m}失業率 {us}，Sahm 法則觸發衰退門檻{sig}。"
     if lo is None or hi is None:
-        return f"就業方面，失業率 {us}。"
+        return f"就業方面，{m}失業率 {us}{sig}。"
 
     n3, bk = ax.get("nfp_3m"), ax.get("breakeven")
-    pair = (f"三月均非農 {_wan(n3)}低於損益兩平的 {_wan(bk).replace(' 萬人', ' 萬')}"
+    # 「三月均非農」在中文裡會被讀成「三月」（March）——這一段的數字是
+    # 近三個月的平均，不是某個月份。寫成「近三個月平均」才沒有歧義；
+    # 手上這份是 7 月數據，讀成 March 等於差了四個月。
+    pair = (f"近三個月平均非農 {_wan(n3)}低於損益兩平的 "
+            f"{_wan(bk).replace(' 萬人', ' 萬')}"
             if n3 is not None and bk is not None else "")
     if u > hi:
-        return f"失業率 {us} 已高於聯準會認定的充分就業上緣 {_pct(hi)}。"
+        return (f"{m}失業率 {us} 已高於聯準會認定的充分就業上緣 "
+                f"{_pct(hi)}{sig}。")
     if ax.get("below_breakeven") and pair:
-        return (f"失業率 {us} 仍算充分就業，但{pair}，撐不住現有失業率。")
+        return f"{m}失業率 {us} 仍算充分就業，但{pair}，撐不住現有失業率{sig}。"
     if u < lo:
-        return f"失業率 {us} 低於充分就業下緣 {_pct(lo)}，勞動市場仍緊。"
-    return f"失業率 {us} 落在充分就業區間 {_pct(lo)}–{_pct(hi)} 之內。"
+        return f"{m}失業率 {us} 低於充分就業下緣 {_pct(lo)}，勞動市場仍緊{sig}。"
+    return f"{m}失業率 {us} 落在充分就業區間 {_pct(lo)}–{_pct(hi)} 之內{sig}。"
 
 
 # ---------------------------------------------------------------------------
 # ③ 通膨
 # ---------------------------------------------------------------------------
-def _inflation(s, bands: dict | None, state: str) -> str:
-    """通膨：水準相對門檻 ＋ 動能（三月年化 vs 年增）＋ 核心服務的黏性。"""
+def _inflation(s, bands: dict | None, state: str,
+               month: str = "", signal: str = "") -> str:
+    """通膨：水準相對門檻 ＋ 動能（三個月年化 vs 年增）＋ 黏性 ＋ 一條訊號。"""
     if s is None or getattr(s, "pce_core_yoy", None) is None:
         return ""
     yoy, m3 = s.pce_core_yoy, getattr(s, "pce_core_3m", None)
-    head = f"核心 PCE {_pct(yoy)}"
+    head = f"{month}核心 PCE {_pct(yoy)}" if month else f"核心 PCE {_pct(yoy)}"
     mo = ""
     if m3 is not None:
+        # 「三月年化」同樣會被讀成 March。講的是最近三個月換算成年率。
         if m3 > yoy + 0.2:
-            mo = f"、三月年化 {_pct(m3)} 仍在加速"
+            mo = f"、三個月年化 {_pct(m3)} 仍在加速"
         elif m3 < yoy - 0.2:
-            mo = f"、三月年化 {_pct(m3)} 已在放緩"
+            mo = f"、三個月年化 {_pct(m3)} 已在放緩"
         else:
-            mo = f"、三月年化 {_pct(m3)} 持平"
+            mo = f"、三個月年化 {_pct(m3)} 持平"
 
     # 水準只講「相對門檻在哪一側」，不重印門檻數字——門檻在情境頁的
     # 「這一格是怎麼判出來的」有完整交代，這裡重印一次只是佔字數。
@@ -188,7 +261,8 @@ def _inflation(s, bands: dict | None, state: str) -> str:
     if st:
         sticky = (f"；核心服務除住房{'連' if st > 0 else '已連'} {abs(st)} "
                   "個月高於目標")
-    return head + mo + lvl + sticky + "。"
+    sig = f"；{signal}" if signal else ""
+    return head + mo + lvl + sticky + sig + "。"
 
 
 # ---------------------------------------------------------------------------
@@ -198,8 +272,11 @@ def _fomc(f: dict | None) -> str:
     """最近一次會議做了什麼、有沒有人反對、下次什麼時候。"""
     if not f or f.get("empty"):
         return ""
+    # 「7/29 會議」跟同一段裡的「7 月失業率」都長得像七月，但一個是
+    # **會議日期**、一個是**資料期別**。加「上次」兩個字就分得開了。
     _d = (f.get("latest_date") or "")
-    date = f"{int(_d[5:7])}/{int(_d[8:10])} 會議" if len(_d) >= 10 else "最近一次會議"
+    date = (f"上次會議（{int(_d[5:7])}/{int(_d[8:10])}）"
+            if len(_d) >= 10 else "最近一次會議")
     act = (f.get("obj_parts") or {}).get("action_label") or "維持不變"
     vote = f.get("vote") or {}
     dis = vote.get("dissents") or []
@@ -323,10 +400,20 @@ def compose(ctxs: dict) -> dict:
         _s = (fom.get("shift") or {}).get("direction")
         dirs.append(("聯準會", _s))
 
-    lab_txt = _labor((lab or {}).get("axis"))
+    # 期別與訊號都從模組**已經算好的結果**取，這一層不做任何判斷。
+    # 訊號每一期都不一樣，所以是動態挑（見 _pick_signal），不是寫死清單。
+    def _mon(ctx):
+        """期別；若是 BLS 速報值就標出來——來源不同，讀者有權知道。"""
+        m = _month((ctx or {}).get("data_month", ""))
+        return f"{m}（速報）" if m and (ctx or {}).get("provisional") else m
+
+    lab_txt = _labor((lab or {}).get("axis"), _mon(lab),
+                     _pick_signal((lab or {}).get("flags")))
     inf_txt = _inflation((inf or {}).get("summary"),
                          (inf or {}).get("bands"),
-                         getattr(sc, "infl_state", "") if sc else "")
+                         getattr(sc, "infl_state", "") if sc else "",
+                         _mon(inf),
+                         _pick_signal((inf or {}).get("flags")))
     # 轉折詞：就業與通膨指向相反（弱 × 高）時補一個「另一頭」，
     # 讀者才不會把兩句當成同方向的並列。同向時不加——加了反而誤導。
     if (lab_txt and inf_txt and sc is not None

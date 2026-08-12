@@ -241,7 +241,9 @@ def home_body(ctxs: dict) -> str:
         _d = lab["tilt"]["tilt"]
         dirs.append(("就業", _d))
         cards.append(_module_card(
-            "/labor/", "勞動市場", f"{lab['data_month']} 資料",
+            "/labor/", "勞動市場",
+            f"{lab['data_month']} 資料"
+            + ("（速報）" if lab.get("provisional") else ""),
             k["nfp_display"], f"失業率 {k['u3_display']}",
             "看修正追蹤、行業增減與健康檢查", direction=_d))
     else:
@@ -253,7 +255,9 @@ def home_body(ctxs: dict) -> str:
         _d = inf["tilt"]["tilt"]
         dirs.append(("物價", _d))
         cards.append(_module_card(
-            "/inflation/", "通膨", f"{inf['data_month']} 資料",
+            "/inflation/", "通膨",
+            f"{inf['data_month']} 資料"
+            + ("（速報）" if inf.get("provisional") else ""),
             k["core_display"], f"核心 PCE {k['pce_display']}",
             "看分項貢獻、住房落後與能源傳導", direction=_d))
     else:

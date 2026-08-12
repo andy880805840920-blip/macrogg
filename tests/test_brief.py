@@ -182,8 +182,11 @@ check("⑲ 動能放緩講放緩", "放緩" in inf_text(Summ(3.0, 2.4), "高"))
 check("⑳ 動能持平講持平", "持平" in inf_text(Summ(3.0, 3.0), "高"))
 check("㉑ 回到目標時不講「仍高於」",
       "仍高於" not in inf_text(Summ(2.0, 2.0, 0), "低"))
+# 比對的是黏性那一句的特徵字串。先前用「個月」，但動能那一句改成
+# 「三個月年化」之後也含「個月」——太寬的比對會誤判。
 check("㉒ 沒有黏性資料就不提黏性",
-      "個月" not in inf_text(Summ(3.0, 3.6, 0), "高"))
+      "個月高於目標" not in inf_text(Summ(3.0, 3.6, 0), "高"),
+      inf_text(Summ(3.0, 3.6, 0), "高"))
 
 # 共識度：三方一致 vs 分歧，用詞要不同
 def dir_text(l, i, f):
@@ -247,6 +250,88 @@ c2 = brief.compose(ctxs(scenario={"scenario": S(labor="強", infl="高",
                                                 lean="hawkish")}))
 inf2 = next(p["text"] for p in c2["parts"] if p["key"] == "inflation")
 check("㊲ 同向時不加轉折詞", not inf2.startswith("另一頭"), inf2[:14])
+
+
+# ---------------------------------------------------------------------------
+# ⑥ 時序：資料期別與「三月」的歧義
+#
+# 兩個真實的問題：
+#   ① 「三月均非農」「三月年化」在中文裡會被讀成 March。原意是
+#      「近三個月平均」「三個月年化」——手上是 7 月數據，讀成 March
+#      等於差了四個月。
+#   ② 總述完全沒提資料期別。7 月的就業報告是 8 月才公布的，不標的話
+#      讀者（以及潤稿模型加上去的「目前」）都會把它當成即時數據。
+# ---------------------------------------------------------------------------
+class F:                       # 假的 Flag
+    def __init__(self, key, headline, severity="alert"):
+        self.key, self.headline, self.severity = key, headline, severity
+
+
+def ctx_with(month="2026-07", lab_flags=(), inf_flags=()):
+    c = ctxs()
+    c["labor"] = {"axis": AX, "tilt": {}, "data_month": month,
+                  "flags": list(lab_flags)}
+    c["inflation"] = {"summary": Summ(), "bands": {"high": 2.5, "low": 2.25},
+                      "tilt": {}, "data_month": month, "flags": list(inf_flags)}
+    return c
+
+
+b = brief.compose(ctx_with())
+check("㊳ 不再出現會被讀成 March 的「三月均」",
+      "三月均" not in b["text"] and "三月年化" not in b["text"], b["text"][:80])
+check("㊴ 改成沒有歧義的說法",
+      "近三個月平均非農" in b["text"] and "三個月年化" in b["text"])
+check("㊵ 就業標出資料期別", "7 月失業率" in b["text"], b["text"][30:60])
+check("㊶ 通膨也標出資料期別", "7 月核心 PCE" in b["text"])
+check("㊷ 會議日期跟資料期別分得開",
+      "上次會議（7/29）" in b["text"], b["text"][-120:-60])
+
+# 期別缺失時不要編一個出來
+b2 = brief.compose(ctx_with(month=""))
+check("㊸ 沒有期別就不標（不編一個月份）",
+      "失業率" in b2["text"] and "月失業率" not in b2["text"])
+check("㊹ 壞掉的期別字串不會爆",
+      brief._month("2026") == "" and brief._month("") == ""
+      and brief._month("bad-xx") == "")
+check("㊺ 正常的期別轉得對", brief._month("2026-07") == "7 月"
+      and brief._month("2026-12") == "12 月")
+
+
+# ---------------------------------------------------------------------------
+# ⑦ 訊號：每一期挑的不一樣，所以要動態挑不能寫死
+# ---------------------------------------------------------------------------
+b3 = brief.compose(ctx_with(
+    lab_flags=[F("revision_swamps", "前兩月大幅下修，實質動能弱於初值")],
+    inf_flags=[F("expect_unanchored", "長期通膨預期偏離目標")]))
+check("㊻ 就業訊號併進總述", "前兩月大幅下修" in b3["text"])
+check("㊼ 通膨訊號併進總述", "長期通膨預期偏離目標" in b3["text"])
+
+# 換一期 → 換一條訊號，程式不必改
+b4 = brief.compose(ctx_with(
+    lab_flags=[F("bad_decline", "失業率下降源於勞動力退出，而非就業增加")]))
+check("㊽ 換一期就換一條（不是寫死的）",
+      "勞動力退出" in b4["text"] and "前兩月大幅下修" not in b4["text"])
+
+# 已經講過的事不要再挑一次
+b5 = brief.compose(ctx_with(
+    inf_flags=[F("supercore_hot", "核心服務除住房仍高於目標區間"),
+               F("expect_unanchored", "長期通膨預期偏離目標")]))
+check("㊾ 跳過手寫句子已經講過的訊號",
+      "長期通膨預期偏離目標" in b5["text"]
+      and "仍高於目標區間" not in b5["text"], b5["text"][-160:-80])
+check("㊿ 依嚴重度取第一條（flags 進來就排好了）",
+      brief._pick_signal([F("narrow_growth", "甲"), F("bad_decline", "乙")])
+      == "甲")
+check("51 全部都被講過 → 不硬加",
+      brief._pick_signal([F("above_target", "甲"), F("cpi_cooling", "乙")]) == "")
+check("52 沒有訊號 → 不硬加",
+      brief._pick_signal([]) == "" and brief._pick_signal(None) == "")
+check("53 headline 是空的就跳過",
+      brief._pick_signal([F("x", "  "), F("y", "乙")]) == "乙")
+
+# 加了期別與訊號之後仍在護欄內
+check("54 長度仍在護欄內",
+      brief.MIN_CJK <= b3["chars"] <= brief.MAX_CJK, f'{b3["chars"]} 字')
 
 print()
 print("全部通過" if ok else "有失敗")

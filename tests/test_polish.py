@@ -441,14 +441,19 @@ check("73 提示詞帶的是算出來的範圍",
 check("74 gemini-2.x 用 thinkingBudget",
       polish._thinking("gemini-2.5-flash") == {"thinkingConfig":
                                                {"thinkingBudget": 0}})
-# 推理一律試著關掉：thinkingBudget 是 v1beta 認得的欄位（2.5 實測有效），
-# 3.x 不確定認不認得——但 400 會自動退回不帶欄位重送，所以「試了不吃虧」。
-# 反過來不送才有實害：推理會吃掉 maxOutputTokens，回一段寫到一半的文字。
-check("75 一律送 thinkingBudget（400 有退路）",
-      polish._thinking("gemini-3.6-flash")
+# 3.x 與別名不送推理欄位：thinkingLevel 與 thinkingBudget 都被 400 拒絕過，
+# 各有一次直接證據。「一律送、反正 400 有退路」的代價是**每次執行**都先送
+# 一個註定失敗的請求，log 裡固定出現一段錯誤訊息，白花一個來回。
+# 退路是給意外用的，不是給已知會失敗的情況用的。
+check("75 3.x 不送推理欄位（已知會被 400 拒絕）",
+      polish._thinking("gemini-3.6-flash") == {})
+check("76 別名也不送（別名指向的是最新世代）",
+      polish._thinking("gemini-flash-latest") == {})
+check("76b 2.x 照送（實測有效）",
+      polish._thinking("gemini-2.5-flash")
       == {"thinkingConfig": {"thinkingBudget": 0}})
-check("76 別名模型也一樣（認不出版本不代表不用關）",
-      polish._thinking("gemini-flash-latest")
+check("76c lite 也是看版本不是看名字",
+      polish._thinking("gemini-2.5-flash-lite")
       == {"thinkingConfig": {"thinkingBudget": 0}})
 check("77 輸出額度夠大，不會被推理吃光", polish.MAX_OUT >= 2000)
 

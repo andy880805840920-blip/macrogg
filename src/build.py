@@ -44,6 +44,10 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     payems = series.get("PAYEMS", [])
     nfp_changes = diff_series(payems)
     data_month = payems[-1]["date"][:7] if payems else "—"
+    # 最新一期是不是 BLS 速報值（FRED 還沒同步）。畫面上要標——
+    # 讀者有權知道這個數字的來源跟其他期不同，而且下一次執行會被
+    # FRED 的正式值取代。
+    provisional = bool(payems and payems[-1].get("provisional"))
 
     # ---------------- 修正追蹤 ----------------
     rev = revisions.RevisionResult(series_id="PAYEMS")
@@ -312,6 +316,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Employment Situation"),
         "data_month": data_month,
+        "provisional": provisional,
         "generated_at": clock.stamp(),
         "offline": offline,
         "failed": failed,
@@ -683,6 +688,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     comp_meta = cfg.get("cpi_components") or []
     headline = series.get("CPIAUCSL", [])
     data_month = headline[-1]["date"][:7] if headline else "—"
+    provisional = bool(headline and headline[-1].get("provisional"))
 
     summ = infl_an.summarize(series, comp_meta)
 
@@ -942,6 +948,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "release_name": (cfg.get("meta") or {}).get("release_name", "CPI"),
         "weights_vintage": (cfg.get("meta") or {}).get("weights_vintage", ""),
         "data_month": data_month,
+        "provisional": provisional,
         "generated_at": clock.stamp(),
         "offline": offline,
         "failed": failed,

@@ -169,6 +169,28 @@ def gather_fred(offline: bool, ids: list[str], module: str,
     run_id = store.start_run(note=module)
 
     series = fetch_all(client, ids, start=HISTORY_START)
+
+    # BLS 快速通道：CPI 與就業報告都是 BLS 08:30 發布，而 FRED 是轉載，
+    # 當天可能要等好幾個小時才同步（實測 8/12 的 7 月 CPI，兩小時後
+    # FRED 仍停在 6 月）。這裡在 FRED 的結果上補最新的那幾期，
+    # 每一點都標 provisional，畫面上會標成速報值。
+    #
+    # 對帳失敗或同組只更新一部分時整組不採用——寧可跟 FRED 一樣慢，
+    # 也不要接一條來源不明或期別對不齊的數字。
+    if module in ("labor", "inflation"):
+        try:
+            from src import bls
+            bls_res = bls.merge(series)
+        except Exception as e:                     # noqa: BLE001
+            # 快速通道壞掉**絕對不能**讓整個模組跟著壞——它只是提早幾小時，
+            # 不是必要條件。任何例外都吞掉，安靜地退回純 FRED 的結果。
+            log.warning("BLS 快速通道失敗（%s），全部改用 FRED", e)
+            bls_res = None
+        if bls_res and bls_res.get("added"):
+            log.info("%s 模組：%d 條序列採用 BLS 速報值（%s）",
+                     module, len(bls_res["added"]),
+                     ", ".join(sorted(bls_res["added"]))[:80])
+
     for sid, rows in series.items():
         if rows:
             store.write(run_id, sid, rows)
