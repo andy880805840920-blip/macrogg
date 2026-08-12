@@ -831,6 +831,103 @@ r = polish.maybe_polish(parted(), c_tone, env={"GEMINI_API_KEY": "g"},
                         _post=lambda k, m, t, s=None, tp=None: GOOD[:GOOD.index("重點：")])
 check("138 換溫度 → 快取也要失效", r["source"] == "model")
 
+
+# ---------------------------------------------------------------------------
+# ⑮ 清單裡有 ≠ 叫得動：退路必須能接著往下走
+#
+# 實測到的整條鏈：
+#   gemini-flash-latest   → 429 兩次（重試接上）→ 推理吃光額度、回覆被截斷
+#   → 退路挑 gemini-2.5-flash-lite → **404**（清單裡有，但叫不動）
+#   → 沒有第三步 → 整段退回組裝版
+# 換過去的模型自己也會失敗，所以退路不能只有一層。
+# ---------------------------------------------------------------------------
+polish._DEAD.clear()
+LIST = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-flash-latest",
+        "gemini-flash-lite-latest", "gemini-2.5-flash-lite",
+        "gemini-3-flash-preview"]
+
+
+def http_err(code):
+    e = polish.requests.HTTPError(f"{code}")
+    e.response = Resp(code)
+    return e
+
+
+seq = []
+
+
+def chain(key, model, text, system=None, temperature=None, **kw):
+    seq.append(model)
+    if model == "gemini-flash-latest":
+        raise polish.TruncatedError("回覆被截斷（finishReason=MAX_TOKENS）")
+    if model == "gemini-2.5-flash-lite":
+        raise http_err(404)
+    return GOOD[:GOOD.index("重點：")]
+
+
+polish._gemini_call = chain
+polish._gemini_models = lambda key: LIST
+res = polish._post_gemini("k", "gemini-flash-latest", "本文")
+check("139 截斷 → 換 lite → 那個 404 → 再換一個，最後成功",
+      isinstance(res, tuple) and res[1] == "gemini-flash-lite-latest", str(res))
+check("140 三個模型依序試過",
+      seq == ["gemini-flash-latest", "gemini-2.5-flash-lite",
+              "gemini-flash-lite-latest"], str(seq))
+check("141 404 的模型被記起來", "gemini-2.5-flash-lite" in polish._DEAD)
+
+# 記起來之後就不會再挑到它
+seq2 = []
+
+
+def chain2(key, model, text, system=None, temperature=None, **kw):
+    seq2.append(model)
+    if model == "gemini-flash-latest":
+        raise polish.TruncatedError("截斷")
+    return GOOD[:GOOD.index("重點：")]
+
+
+polish._gemini_call = chain2
+polish._post_gemini("k", "gemini-flash-latest", "本文")
+check("142 死掉的模型不再被挑中（省一次額度）",
+      "gemini-2.5-flash-lite" not in seq2, str(seq2))
+
+# 換模型救不了的錯要直接往上拋，不能白燒額度
+polish._DEAD.clear()
+for name, code in [("143 400 不換模型", 400), ("144 401 不換模型", 401),
+                   ("145 429 不換模型（限流換誰都一樣）", 429)]:
+    calls = []
+
+    def only_once(key, model, text, system=None, temperature=None, _c=calls,
+                  _code=code, **kw):
+        _c.append(model)
+        raise http_err(_code)
+
+    polish._gemini_call = only_once
+    try:
+        polish._post_gemini("k", "gemini-flash-latest", "本文")
+        hit = False
+    except polish.requests.HTTPError:
+        hit = True
+    check(name, hit and len(calls) == 1, f"{len(calls)} 次呼叫")
+
+# 上限：不能無限換下去
+polish._DEAD.clear()
+many = []
+
+
+def always_404(key, model, text, system=None, temperature=None, **kw):
+    many.append(model)
+    raise http_err(404)
+
+
+polish._gemini_call = always_404
+try:
+    polish._post_gemini("k", "gemini-flash-latest", "本文")
+except polish.requests.HTTPError:
+    pass
+check("146 換模型有上限", len(many) <= polish.MAX_MODEL_TRIES, f"{len(many)} 次")
+polish._DEAD.clear()
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

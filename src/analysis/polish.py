@@ -627,8 +627,7 @@ def _gemini_models(key: str) -> list[str]:
         return []
 
 
-def _gemini_pick(names: list[str], exclude: str = "",
-                 prefer_lite: bool = False) -> str:
+def _gemini_pick(names: list[str], exclude=(), prefer_lite: bool = False) -> str:
     """
     從可用清單裡挑一個來改寫。挑不到就回空字串（呼叫端會退回組裝版）。
 
@@ -656,9 +655,10 @@ def _gemini_pick(names: list[str], exclude: str = "",
                     v if has_ver else 99.0, n)
         return (fam, 1 if "preview" in low or "exp" in low else 0, -v, n)
 
+    skip = {exclude} if isinstance(exclude, str) else set(exclude or ())
     cands = [n for n in names
              if n.lower().startswith("gemini")
-             and n != exclude
+             and n not in skip
              and not any(a in n.lower() for a in _AVOID)]
     return sorted(cands, key=rank)[0] if cands else ""
 
@@ -742,18 +742,34 @@ def _gemini_call(key: str, model: str, source_text: str,
     return text
 
 
-def _alt_model(key: str, model: str, prefer_lite: bool = False) -> str:
-    """
-    問一次可用清單、挑一個替代模型。挑不到回空字串（呼叫端會把原本的錯拋出去）。
+# 這一次執行裡已經確定叫不動的模型（404）。
+#
+# ⚠️ **清單裡有 ≠ 叫得動。** `GET /models` 會列出這把金鑰「看得到」的模型，
+# 但其中一部分打 generateContent 會回 404。實測到的：
+#   gemini-2.5-flash、gemini-2.5-flash-lite  → 清單裡有，呼叫回 404
+#   gemini-flash-latest                      → 叫得動
+# 不記起來的話，每次退路都會再挑中同一個死掉的名字、再浪費一次呼叫，
+# 而免費額度本來就緊（這次還撞到 429）。
+_DEAD: set[str] = set()
 
-    清單一併寫進執行紀錄：下次要設 BRIEF_MODEL 時有名字可以抄，不必去猜。
+# 最多換幾個模型。三個夠了：第一個是設定的，後面兩個是退路。
+# 再多只是在額度快用完的時候繼續燒。
+MAX_MODEL_TRIES = 3
+
+
+def _alt_model(key: str, exclude, prefer_lite: bool = False) -> str:
+    """
+    問可用清單、挑一個沒試過也沒死掉的替代模型。挑不到回空字串。
+
+    清單一併寫進執行紀錄：下次要設 BRIEF_MODEL 時有名字可以抄。
     """
     names = _gemini_models(key)
     if not names:
         return ""
+    skip = set(exclude) | _DEAD
     log.warning("這把金鑰可用的模型：%s",
                 "、".join(names[:12]) + ("…" if len(names) > 12 else ""))
-    return _gemini_pick(names, exclude=model, prefer_lite=prefer_lite)
+    return _gemini_pick(names, exclude=skip, prefer_lite=prefer_lite)
 
 
 def _post_gemini(key: str, model: str, source_text: str,
@@ -761,36 +777,43 @@ def _post_gemini(key: str, model: str, source_text: str,
     """
     回傳改寫後的文字，或 (文字, 實際用的模型)。
 
-    404 代表「這把金鑰沒有這個模型」，不是網址寫錯。模型會被汰換，
-    而汰換掉的那天這一區會安靜地消失——所以這裡自己問一次可用清單、
-    換一個再試，並把清單寫進執行紀錄，讓下次要設 BRIEF_MODEL 時
-    有名字可以抄，不必去猜。
+    **依序試幾個模型**，而不是「失敗就換一個、再失敗就放棄」。理由是實測
+    到的那條鏈：設定的模型推理吃光額度 → 換一個 lite → 那個 lite 回 404
+    → 整段沒了。換過去的模型自己也會失敗，所以退路必須能接著往下走。
+
+    兩種失敗換模型的方式不一樣：
+      404          這把金鑰叫不動它。記進 _DEAD，之後不再挑到。
+      回覆被截斷    模型能用但推理吃光額度。改挑「預設不推理」的 lite。
+    其餘的錯（400 參數錯、401 金鑰錯、429 限流）換模型沒有意義，直接往上拋。
     """
-    try:
-        return _gemini_call(key, model, source_text, system,
-                            temperature=temperature)
-    except TruncatedError as e:
-        # 推理吃光了輸出額度。這一家的新世代模型**不接受**關閉推理
-        #（thinkingBudget 被退成 400 INVALID_ARGUMENT），所以加大額度也
-        # 只是讓它想更久——換一個「預設就不推理」的模型才是解法。
-        # lite 系列正是這種：整個額度都拿來寫字。
-        alt = _alt_model(key, model, prefer_lite=True)
+    tried: list[str] = []
+    cur, prefer_lite = model, False
+    last_exc: Exception | None = None
+
+    for _ in range(MAX_MODEL_TRIES):
+        tried.append(cur)
+        try:
+            out = _gemini_call(key, cur, source_text, system,
+                               temperature=temperature)
+            return (out, cur) if cur != model else out
+        except TruncatedError as e:
+            last_exc, prefer_lite = e, True
+            log.warning("%s 的推理吃光了輸出額度（%s）", cur, e)
+        except requests.HTTPError as e:
+            resp = getattr(e, "response", None)
+            if resp is None or resp.status_code != 404:
+                raise
+            _DEAD.add(cur)
+            last_exc = e
+            log.warning("這把金鑰叫不動 %s（404），之後不再挑它", cur)
+
+        alt = _alt_model(key, tried, prefer_lite=prefer_lite)
         if not alt:
-            raise
-        log.warning("%s 的推理吃光了輸出額度（%s）。改用預設不推理的 %s 重試"
-                    "（要固定的話把 BRIEF_MODEL 設成它）", model, e, alt)
-        return _gemini_call(key, alt, source_text, system,
-                            temperature=temperature), alt
-    except requests.HTTPError as e:
-        resp = getattr(e, "response", None)
-        if resp is None or resp.status_code != 404:
-            raise
-        alt = _alt_model(key, model)
-        if not alt:
-            raise
-        log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成想用的名字）", alt)
-        return _gemini_call(key, alt, source_text, system,
-                            temperature=temperature), alt
+            break
+        log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成它）", alt)
+        cur = alt
+
+    raise last_exc if last_exc else RuntimeError("Gemini 沒有可用的模型")
 
 
 _POST = {"gemini": _post_gemini, "anthropic": _post_anthropic}
