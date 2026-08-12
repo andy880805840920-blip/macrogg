@@ -104,7 +104,7 @@ check("⑬ 離線 → 組裝版", r["source"] == "assembled")
 calls = []
 
 
-def fake_post(key, model, text, system=None):
+def fake_post(key, model, text, system=None, temperature=None):
     calls.append(model)
     return GOOD
 
@@ -124,17 +124,17 @@ check("⑰ 事實沒變 → 沿用快取、不呼叫 API",
 
 # 事實變了 → 重新生成
 r = polish.maybe_polish(assembled(SRC.replace("4.1%", "4.4%")), cache,
-                        env=env, _post=lambda k, m, t, s=None: GOOD.replace("4.1%", "4.4%"))
+                        env=env, _post=lambda k, m, t, s=None, tp=None: GOOD.replace("4.1%", "4.4%"))
 check("⑱ 事實變了 → 重新生成", r["source"] == "model")
 
 # 模型換了 → 快取失效（雜湊含模型名）
 r = polish.maybe_polish(assembled(), cache,
                         env={**env, "BRIEF_MODEL": "claude-x"},
-                        _post=lambda k, m, t, s=None: GOOD)
+                        _post=lambda k, m, t, s=None, tp=None: GOOD)
 check("⑲ 換模型 → 快取失效重生成", r["source"] == "model")
 
 # API 例外 → 組裝版
-def boom(key, model, text, system=None):
+def boom(key, model, text, system=None, temperature=None):
     raise RuntimeError("connection reset")
 
 
@@ -145,7 +145,7 @@ check("⑳ API 掛掉 → 組裝版", r["source"] == "assembled")
 # 驗證沒過 → 組裝版、不寫快取
 c3 = tmp / "c3.json"
 r = polish.maybe_polish(assembled(), c3, env=env,
-                        _post=lambda k, m, t, s=None: GOOD.replace("83%", "93%"))
+                        _post=lambda k, m, t, s=None, tp=None: GOOD.replace("83%", "93%"))
 check("㉑ 驗證沒過 → 組裝版", r["source"] == "assembled")
 check("㉒ 驗證沒過不寫快取（壞結果不能被沿用）", not c3.exists())
 
@@ -171,7 +171,7 @@ check("㉗ 都沒設 → 空字串",
 gcalls = []
 r = polish.maybe_polish(assembled(SRC + "再改一下"), tmp / "c4.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t2, s=None: (gcalls.append((k, m)), GOOD)[1])
+                        _post=lambda k, m, t2, s=None, tp=None: (gcalls.append((k, m)), GOOD)[1])
 check("㉘ Gemini 路徑用 Gemini 的預設模型",
       r["source"] == "model"
       and gcalls == [("g1", polish.PROVIDERS["gemini"]["model"])],
@@ -183,16 +183,16 @@ check("㉙ 結果帶模型名（進執行紀錄）",
 mcalls = []
 polish.maybe_polish(assembled(SRC + "再改兩下"), tmp / "c5.json",
                     env={"GEMINI_API_KEY": "g1", "BRIEF_MODEL": "gemini-2.5-pro"},
-                    _post=lambda k, m, t2, s=None: (mcalls.append(m), GOOD)[1])
+                    _post=lambda k, m, t2, s=None, tp=None: (mcalls.append(m), GOOD)[1])
 check("㉚ BRIEF_MODEL 覆寫生效", mcalls == ["gemini-2.5-pro"], str(mcalls))
 
 # 換供應商 → 快取失效（雜湊含供應商）：同一份事實不能拿 A 家的快取
 # 冒充 B 家的結果——兩家的文風不同，換供應商本來就該重生
 c6 = tmp / "c6.json"
 polish.maybe_polish(assembled(), c6, env={"GEMINI_API_KEY": "g1"},
-                    _post=lambda k, m, t2, s=None: GOOD)
+                    _post=lambda k, m, t2, s=None, tp=None: GOOD)
 r = polish.maybe_polish(assembled(), c6, env={"ANTHROPIC_API_KEY": "a1"},
-                        _post=lambda k, m, t2, s=None: GOOD)
+                        _post=lambda k, m, t2, s=None, tp=None: GOOD)
 check("㉛ 換供應商 → 快取失效重生成", r["source"] == "model")
 
 # 金鑰失效但事實沒變 → 沿用舊快取（不是跳回組裝版）
@@ -255,7 +255,7 @@ def http404():
 tried = []
 
 
-def fake_call(key, model, text, system=None):
+def fake_call(key, model, text, system=None, temperature=None):
     tried.append(model)
     if model == "gemini-2.5-flash":
         raise http404()
@@ -273,7 +273,7 @@ check("㊵ 真的試了兩個模型", tried == ["gemini-2.5-flash", "gemini-3.6-
 # 換過的模型名要進結果（畫面與執行紀錄要標真的用了哪一個）
 r = polish.maybe_polish(assembled(SRC + "換模型測試"), tmp / "c7.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t, s=None: (GOOD, "gemini-3.6-flash"))
+                        _post=lambda k, m, t, s=None, tp=None: (GOOD, "gemini-3.6-flash"))
 check("㊶ 實際用的模型進結果",
       r["source"] == "model" and r["model"] == "gemini-3.6-flash", str(r))
 check("㊷ 也寫進快取",
@@ -289,7 +289,7 @@ except polish.requests.HTTPError:
 check("㊸ 查不到清單 → 拋回原本的錯（退組裝版）", hit)
 
 # 404 以外的錯不要亂換模型——換了只會多燒一次額度
-def boom500(key, model, text, system=None):
+def boom500(key, model, text, system=None, temperature=None):
     e = polish.requests.HTTPError("500")
     e.response = Resp(500)
     raise e
@@ -318,7 +318,7 @@ BAD = GOOD.replace("重點：", "總結來說，")     # 前綴不見（實際�
 seq = []
 
 
-def flaky(key, model, text, system=None):
+def flaky(key, model, text, system=None, temperature=None):
     seq.append(text)
     return BAD if len(seq) == 1 else GOOD
 
@@ -335,7 +335,7 @@ check("㊼ 第一次的輸入沒有多餘的附註", "被退回" not in seq[0])
 seq2 = []
 r = polish.maybe_polish(assembled(SRC + "重試上限測試"), tmp / "c9.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t, s=None: (seq2.append(t), BAD)[1])
+                        _post=lambda k, m, t, s=None, tp=None: (seq2.append(t), BAD)[1])
 check("㊽ 重試後仍沒過 → 組裝版", r["source"] == "assembled")
 check("㊾ 重試只有一次（共兩個呼叫）", len(seq2) == 2, f"{len(seq2)} 次")
 check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
@@ -344,7 +344,7 @@ check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
 seq3 = []
 
 
-def then_boom(key, model, text, system=None):
+def then_boom(key, model, text, system=None, temperature=None):
     seq3.append(text)
     if len(seq3) == 1:
         return BAD
@@ -390,7 +390,7 @@ check("60 清理不動內容裡的數字與文字",
 # 端到端：模型把重點加粗 → 清掉後通過，不再退回組裝版
 r = polish.maybe_polish(assembled(SRC + "粗體測試"), tmp / "c11.json",
                         env={"GEMINI_API_KEY": "g1"},
-                        _post=lambda k, m, t, s=None: GOOD.replace("重點：", "**重點**："))
+                        _post=lambda k, m, t, s=None, tp=None: GOOD.replace("重點：", "**重點**："))
 check("61 加粗的改寫最後仍是模型版",
       r["source"] == "model" and "**" not in r["text"], r["source"])
 check("62 存進畫面的文字沒有殘留星號", "*" not in r["text"])
@@ -620,7 +620,7 @@ def parted():
 seen = []
 
 
-def spy(key, model, text, system=None):
+def spy(key, model, text, system=None, temperature=None):
     """回一段長度合格、但**刻意不寫重點句**的改寫。"""
     seen.append((text, system))
     return GOOD[:GOOD.index("重點：")]
@@ -688,7 +688,7 @@ check("114 空字串不算截斷（那是另一條檢查在管）",
 half = []
 
 
-def half_post(key, model, text, system=None):
+def half_post(key, model, text, system=None, temperature=None):
     half.append(text)
     if len(half) == 1:
         return "聯準會把通膨擺在前面，內部分歧，下次會議"      # 沒有結尾標點
@@ -705,7 +705,7 @@ check("116 重試後的完整版才會被採用",
 half2 = []
 r = polish.maybe_polish(parted(), tmp / "d4.json",
                         env={"GEMINI_API_KEY": "g"},
-                        _post=lambda k, m, t, s=None: (
+                        _post=lambda k, m, t, s=None, tp=None: (
                             half2.append(1), "講到一半就沒了")[1])
 check("117 兩次都截斷 → 退回組裝版", r["source"] == "assembled")
 check("118 半截的文字不會寫進快取", not (tmp / "d4.json").exists())
@@ -750,7 +750,7 @@ check("125 截斷用專屬例外", issubclass(polish.TruncatedError, RuntimeErro
 tried2 = []
 
 
-def trunc_then_ok(key, model, text, system=None, **kw):
+def trunc_then_ok(key, model, text, system=None, temperature=None, **kw):
     tried2.append(model)
     if model == "gemini-flash-latest":
         raise polish.TruncatedError("回覆被截斷（finishReason=MAX_TOKENS）")
@@ -773,6 +773,58 @@ try:
 except polish.TruncatedError:
     hit = True
 check("128 挑不到替代品 → 拋回原本的錯", hit)
+
+
+# ---------------------------------------------------------------------------
+# ⑭ config/brief.yaml：不必動程式就能調口氣
+#
+# 使用者的回饋是「潤了跟沒潤一樣」。主因是 temperature 設 0——那幾乎是
+# 逐字照抄組裝版。這一段釘住的是「調得動」而且「調了會生效」：
+# 語氣要進雜湊，否則改完 config 卻沿用舊快取，畫面完全不變。
+# ---------------------------------------------------------------------------
+check("129 預設溫度不是 0（0 幾乎等於照抄）",
+      polish.DEFAULT_TEMPERATURE > 0, str(polish.DEFAULT_TEMPERATURE))
+check("130 自訂語氣會進提示詞",
+      "像交易員" in polish._system("中" * 120, 21, {"style": "像交易員的口頭摘要。"}))
+check("131 額外指令會進提示詞",
+      "第一句就講結論" in polish._system("中" * 120, 21,
+                                          {"extra": "第一句就講結論。"}))
+check("132 沒設 extra 時用預設（要求重組句子，不要逐句對應）",
+      "不要逐句對應原文" in polish._system("中" * 120, 21, {}))
+check("133 extra 設成空字串 → 真的不加",
+      "其他要求" not in polish._system("中" * 120, 21, {"extra": ""}))
+
+# 溫度要真的傳到供應商那一層
+tcalls = []
+polish.maybe_polish(parted(), tmp / "e1.json", env={"GEMINI_API_KEY": "g"},
+                    cfg={"temperature": 0.7},
+                    _post=lambda k, m, t, s=None, tp=None: (
+                        tcalls.append(tp), GOOD[:GOOD.index("重點：")])[1])
+check("134 溫度傳得到供應商", tcalls == [0.7], str(tcalls))
+
+# enabled: false → 完全不呼叫
+r = polish.maybe_polish(parted(), tmp / "e2.json", env={"GEMINI_API_KEY": "g"},
+                        cfg={"enabled": False}, _post=boom)
+check("135 config 關掉 → 直接用組裝版、不呼叫",
+      r["source"] == "assembled")
+
+# 改了語氣 → 快取要失效，否則畫面不會變、使用者以為設定沒生效
+c_tone = tmp / "e3.json"
+polish.maybe_polish(parted(), c_tone, env={"GEMINI_API_KEY": "g"},
+                    cfg={"style": "甲"},
+                    _post=lambda k, m, t, s=None, tp=None: GOOD[:GOOD.index("重點：")])
+r = polish.maybe_polish(parted(), c_tone, env={"GEMINI_API_KEY": "g"},
+                        cfg={"style": "甲"},
+                        _post=lambda k, m, t, s=None, tp=None: GOOD[:GOOD.index("重點：")])
+check("136 語氣沒變 → 沿用快取", r["source"] == "model-cache")
+r = polish.maybe_polish(parted(), c_tone, env={"GEMINI_API_KEY": "g"},
+                        cfg={"style": "乙"},
+                        _post=lambda k, m, t, s=None, tp=None: GOOD[:GOOD.index("重點：")])
+check("137 換語氣 → 快取失效重生成", r["source"] == "model")
+r = polish.maybe_polish(parted(), c_tone, env={"GEMINI_API_KEY": "g"},
+                        cfg={"style": "乙", "temperature": 0.9},
+                        _post=lambda k, m, t, s=None, tp=None: GOOD[:GOOD.index("重點：")])
+check("138 換溫度 → 快取也要失效", r["source"] == "model")
 
 print()
 print("全部通過" if ok else "有失敗")

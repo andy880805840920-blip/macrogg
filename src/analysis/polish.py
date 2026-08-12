@@ -124,12 +124,28 @@ def _target_range(source: str, reserve: int = 0) -> tuple[int, int]:
     return lo, hi
 
 
-def _system(source: str, reserve: int = 0) -> str:
+# 語氣與額外指令的預設值。config/brief.yaml 可以覆寫——
+# 那個檔案存在的理由就是「不必動程式就能調口氣」。
+DEFAULT_STYLE = ("語氣像法人晨會的口頭摘要——專業但不堆術語，"
+                 "句與句之間要有自然的承接。")
+DEFAULT_EXTRA = ("不要逐句對應原文：可以合併句子、調換順序、改變斷句方式，"
+                 "讓整段讀起來像一氣呵成寫出來的，而不是把幾段話接在一起。")
+# 取樣溫度。0 幾乎是逐字照抄，也就是「潤了跟沒潤一樣」的主因；
+# 往上調會重新斷句與重組結構。調高的代價只是偶爾被防護欄擋下重試，
+# 不是錯誤的數字——數字鎖定是機械檢查，跟溫度無關。
+DEFAULT_TEMPERATURE = 0.45
+
+
+def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
     lo, hi = _target_range(source, reserve)
+    cfg = cfg or {}
+    style = (cfg.get("style") or DEFAULT_STYLE).strip()
+    extra = (cfg.get("extra") or "").strip()
+    if cfg.get("extra") is None:                   # 完全沒設定才用預設
+        extra = DEFAULT_EXTRA
     return (
         "你是財經媒體的資深編輯。使用者會給你一段由程式組裝的美國總經情勢總述。"
-        "把它改寫成一段連貫、自然的繁體中文散文，語氣像法人晨會的口頭摘要——"
-        "專業但不堆術語，句與句之間要有自然的承接。\n"
+        f"把它改寫成一段連貫、自然的繁體中文散文。{style}\n"
         "硬性規則：\n"
         "1. 不得新增、刪除或改動任何數字與百分比。輸出中的每個數字都必須"
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
@@ -144,6 +160,7 @@ def _system(source: str, reserve: int = 0) -> str:
         "不要有括號編號或任何註記。\n"
         "6. 直接輸出改寫後的文字，開頭不要有「以下是」「好的」這類引言，"
         "結尾不要有任何說明。"
+        + (f"\n其他要求：{extra}" if extra else "")
     )
 
 
@@ -353,7 +370,7 @@ def _pick_provider(env) -> tuple[str, str]:
 
 
 def maybe_polish(assembled: dict, cache_path, offline: bool = False,
-                 env: dict | None = None,
+                 env: dict | None = None, cfg: dict | None = None,
                  _post=None) -> dict:
     """
     回傳 {"text", "chars", "source", "model"}，
@@ -362,6 +379,11 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     env 與 _post 參數是給測試用的（不碰真的環境變數、不打真的 API）。
     """
     env = os.environ if env is None else env
+    cfg = cfg or {}
+    if cfg.get("enabled") is False:                # config 明確關掉
+        return {"text": assembled.get("text", ""),
+                "chars": assembled.get("chars", 0),
+                "source": "assembled", "model": ""}
     out = {"text": assembled.get("text", ""),
            "chars": assembled.get("chars", 0),
            "source": "assembled", "model": ""}
@@ -377,8 +399,13 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     # 沒有那一行）。三種的畫面與 log 先前長得一模一樣。
     log.info("整體情勢潤稿設定：%s", config_note(env))
     parts = assembled.get("parts") or []
+    # 語氣也進雜湊：改了 config/brief.yaml 的 style／extra／temperature
+    # 卻沿用舊快取的話，畫面完全不會變，使用者會以為設定沒生效。
+    tone = json.dumps([cfg.get("style"), cfg.get("extra"),
+                       cfg.get("temperature")],
+                      ensure_ascii=False, sort_keys=True)
     facts_h = _hash(parts, "")                     # 只看事實
-    h = _hash(parts, f"{provider}:{model}")        # 事實＋供應商＋模型
+    h = _hash(parts, f"{provider}:{model}:{tone}")  # 事實＋供應商＋模型＋語氣
 
     # ---- 防護欄二：事實沒變就沿用 ----
     # 兩層命中條件：
@@ -416,7 +443,7 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     if not body:                                   # 只有重點句時沒東西好改寫
         return out
     reserve = cjk_len(tail)
-    sys_prompt = _system(body, reserve)
+    sys_prompt = _system(body, reserve, cfg)
 
     # ---- 呼叫 ----
     # 供應商可以回 (文字, 實際用的模型)：Gemini 在模型被汰換時會自己換一個，
@@ -436,7 +463,8 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
                 f"特別注意不得超過字數上限、"
                 f"不得新增任何原文沒有的數字。）")
         try:
-            res = post(key, model, body + note, sys_prompt)
+            res = post(key, model, body + note, sys_prompt,
+                       cfg.get("temperature"))
         except Exception as e:                     # noqa: BLE001
             log.warning("整體情勢潤稿失敗（%s），改用組裝版", e)
             return out
@@ -477,7 +505,8 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
 
 
 def _post_anthropic(key: str, model: str, source_text: str,
-                    system: str | None = None) -> str:
+                    system: str | None = None,
+                    temperature: float | None = None) -> str:
     r = _http("POST", "https://api.anthropic.com/v1/messages",
               label=f"Anthropic {model}", headers={
                           "x-api-key": key,
@@ -486,7 +515,9 @@ def _post_anthropic(key: str, model: str, source_text: str,
                       }, json={
                           "model": model,
                           "max_tokens": MAX_OUT,
-                          "temperature": 0,
+                          "temperature": (DEFAULT_TEMPERATURE
+                                          if temperature is None
+                                          else temperature),
                           "system": system or _system(source_text),
                           "messages": [{"role": "user",
                                         "content": source_text}],
@@ -653,9 +684,12 @@ def _thinking(model: str) -> dict:
 
 
 def _gemini_call(key: str, model: str, source_text: str,
-                 system: str | None = None, think: bool = True) -> str:
+                 system: str | None = None, think: bool = True,
+                 temperature: float | None = None) -> str:
     # 金鑰放 header 不放網址：放網址會跟著出現在錯誤訊息與代理的存取紀錄裡。
-    cfg = {"temperature": 0, "maxOutputTokens": MAX_OUT}
+    cfg = {"temperature": (DEFAULT_TEMPERATURE if temperature is None
+                           else temperature),
+           "maxOutputTokens": MAX_OUT}
     if think:
         cfg.update(_thinking(model))
     r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent",
@@ -674,7 +708,7 @@ def _gemini_call(key: str, model: str, source_text: str,
     if r.status_code == 400 and think and _thinking(model):
         log.warning("Gemini 退回設定（%s），改成不指定推理層級再試一次",
                     r.text[:120])
-        return _gemini_call(key, model, source_text, system, think=False)
+        return _gemini_call(key, model, source_text, system, False, temperature)
     r.raise_for_status()
 
     js = r.json()
@@ -714,7 +748,7 @@ def _alt_model(key: str, model: str, prefer_lite: bool = False) -> str:
 
 
 def _post_gemini(key: str, model: str, source_text: str,
-                 system: str | None = None):
+                 system: str | None = None, temperature: float | None = None):
     """
     回傳改寫後的文字，或 (文字, 實際用的模型)。
 
@@ -724,7 +758,8 @@ def _post_gemini(key: str, model: str, source_text: str,
     有名字可以抄，不必去猜。
     """
     try:
-        return _gemini_call(key, model, source_text, system)
+        return _gemini_call(key, model, source_text, system,
+                            temperature=temperature)
     except TruncatedError as e:
         # 推理吃光了輸出額度。這一家的新世代模型**不接受**關閉推理
         #（thinkingBudget 被退成 400 INVALID_ARGUMENT），所以加大額度也
@@ -735,7 +770,8 @@ def _post_gemini(key: str, model: str, source_text: str,
             raise
         log.warning("%s 的推理吃光了輸出額度（%s）。改用預設不推理的 %s 重試"
                     "（要固定的話把 BRIEF_MODEL 設成它）", model, e, alt)
-        return _gemini_call(key, alt, source_text, system), alt
+        return _gemini_call(key, alt, source_text, system,
+                            temperature=temperature), alt
     except requests.HTTPError as e:
         resp = getattr(e, "response", None)
         if resp is None or resp.status_code != 404:
@@ -744,7 +780,8 @@ def _post_gemini(key: str, model: str, source_text: str,
         if not alt:
             raise
         log.warning("改用 %s 重試（要固定的話把 BRIEF_MODEL 設成想用的名字）", alt)
-        return _gemini_call(key, alt, source_text, system), alt
+        return _gemini_call(key, alt, source_text, system,
+                            temperature=temperature), alt
 
 
 _POST = {"gemini": _post_gemini, "anthropic": _post_anthropic}

@@ -580,8 +580,12 @@ def main() -> int:
     # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。
     _brief = brief_mod.compose(ctxs)
     if _brief["text"]:
+        # 語氣、溫度、開關都在 config/brief.yaml，改完 commit 就生效，
+        # 不必動程式。檔案不在也不會壞，走內建預設值。
+        _bcfg = (load_config("brief.yaml") or {}).get("polish") or {}
         ctxs["_brief"] = polish.maybe_polish(
-            _brief, STATE_FILE.parent / "brief.json", offline=args.offline)
+            _brief, STATE_FILE.parent / "brief.json", offline=args.offline,
+            cfg=_bcfg)
         _bm = ctxs["_brief"].get("model") or ""
         log.info("整體情勢：%s%s（%d 中文字）",
                  {"model": "模型潤稿（新生成）",
