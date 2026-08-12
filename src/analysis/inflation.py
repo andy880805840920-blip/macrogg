@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .core import annualized, yoy, mom_pct, value_at
+from .core import annualized, annualized_series, yoy, mom_pct, value_at
 from .attribution import Contribution, AttributionResult
 
 
@@ -129,9 +129,20 @@ class InflationSummary:
     headline_yoy: float | None = None
     core_yoy: float | None = None
     core_mom: float | None = None
-    core_3m: float | None = None      # 三個月年化
+    core_3m: float | None = None      # 核心 CPI 三個月年化
     core_6m: float | None = None
+    # ---- 核心服務的黏性 ----
+    # 只有一個時間尺度是不夠的：「三月年化 4.7%」本身不告訴你在加速還是
+    # 減速。12m / 6m / 3m 並排才看得出方向，而方向才是降息時間表的關鍵。
+    supercore_12m: float | None = None
+    supercore_6m: float | None = None
     supercore_3m: float | None = None
+    supercore_streak: int = 0          # 三月年化連續高於門檻的月數
+    supercore_dir: str = ""            # accel / decel / flat
+    pce_supercore_12m: float | None = None
+    pce_supercore_6m: float | None = None
+    pce_supercore_3m: float | None = None
+    flex_cpi: float | None = None      # 彈性核心 CPI（黏性的對照組）
     shelter_3m: float | None = None
     core_goods_yoy: float | None = None
     ex_shelter_yoy: float | None = None
@@ -147,6 +158,51 @@ class InflationSummary:
     extras: dict = field(default_factory=dict)
 
 
+# 「黏著」的門檻。2% 是目標，但月度資料的雜訊讓 2.0 太容易被穿越；
+# 取 2.5 是為了讓「連續 N 個月高於門檻」這個數字代表真的卡住，
+# 而不是在目標附近正常擺盪。
+STICKY_THRESHOLD = 2.5
+
+
+def _streak_above(rows: list[dict], months: int, threshold: float) -> int:
+    """
+    三月年化連續高於門檻幾個月。
+
+    黏性的定義就是「該降的降不下來」，而「卡了多久」是它最直接的量度——
+    比水準本身更能回答「降息時間表要不要往後推」。從最新一期往回數，
+    一碰到低於門檻就停。
+    """
+    ann = annualized_series(rows, months)
+    n = 0
+    for r in reversed(ann):
+        if r["value"] is None or r["value"] <= threshold:
+            break
+        n += 1
+    # 數到底都沒有掉下去 → 回傳負數，讓上層知道這是「至少 N 個月」。
+    # 抓取範圍是 config 的 fetch start 決定的，數到頭不代表真的只有這麼久，
+    # 不標出來會把「至少 64」寫成「剛好 64」。
+    return -n if ann and n == len(ann) else n
+
+
+def _direction(v12: float | None, v6: float | None, v3: float | None) -> str:
+    """
+    動能階梯的方向。看的是短天期相對長天期，不是單期的漲跌。
+
+    12m → 6m → 3m 一路往下 ＝ 穩定減速；一路往上 ＝ 重新加速。
+    門檻 0.3 個百分點是為了濾掉月度雜訊：差距比這個小的時候，
+    講「在減速」會是過度解讀。
+    """
+    if v3 is None or v12 is None:
+        return ""
+    gap = v3 - v12
+    mid_ok = v6 is None or (v6 - v12) * gap >= 0     # 6m 沒有跟 3m 反向
+    if gap < -0.3 and mid_ok:
+        return "decel"
+    if gap > 0.3 and mid_ok:
+        return "accel"
+    return "flat"
+
+
 def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> InflationSummary:
     s = InflationSummary()
     g = series.get
@@ -156,7 +212,17 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.core_mom = mom_pct(g("CPILFESL", []))
     s.core_3m = annualized(g("CPILFESL", []), 3)
     s.core_6m = annualized(g("CPILFESL", []), 6)
-    s.supercore_3m = annualized(g("CUSR0000SASLE", []), 3)
+    _sc = g("CUSR0000SASLE", [])
+    s.supercore_12m = annualized(_sc, 12)
+    s.supercore_6m = annualized(_sc, 6)
+    s.supercore_3m = annualized(_sc, 3)
+    s.supercore_streak = _streak_above(_sc, 3, STICKY_THRESHOLD)
+    s.supercore_dir = _direction(s.supercore_12m, s.supercore_6m, s.supercore_3m)
+
+    _pcesc = g("IA001260M", [])
+    s.pce_supercore_12m = annualized(_pcesc, 12)
+    s.pce_supercore_6m = annualized(_pcesc, 6)
+    s.pce_supercore_3m = annualized(_pcesc, 3)
     s.shelter_3m = annualized(g("CUSR0000SAH1", []), 3)
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
@@ -165,6 +231,7 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.median_cpi = value_at(g("MEDCPIM159SFRBCLE", []))
     s.trimmed_cpi = value_at(g("TRMMEANCPIM159SFRBCLE", []))
     s.sticky_cpi = value_at(g("CORESTICKM159SFRBATL", []))
+    s.flex_cpi = value_at(g("COREFLEXCPIM159SFRBATL", []))
     s.expect_5y5y = value_at(g("T5YIFR", []))
     s.expect_1y = value_at(g("MICH", []))
     s.gas = value_at(g("GASREGW", []))

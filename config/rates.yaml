@@ -27,6 +27,17 @@ yields:
   - id: DGS30
     label: 30 年期
     enabled: true
+  # 政策利率區間的上下緣。放在這一組是因為長端模組本來就會抓這一批日頻序列，
+  # 而 FOMC 頁需要它來算「市場定價 vs 聯準會」。
+  # 先前這兩個數字是人工填在 config/fomc.yaml，忘記更新一次降息（25 個基點）
+  # 就會讓判定平移 0.25 個百分點——足以把「偏降息」翻成「偏向再緊縮」，
+  # 而且畫面上完全看不出來。改成自動抓，config 那份只當抓不到時的後備。
+  - id: DFEDTARU
+    label: 政策利率上緣
+    enabled: true
+  - id: DFEDTARL
+    label: 政策利率下緣
+    enabled: true
   - id: DGS3MO
     label: 3 個月期
     enabled: true

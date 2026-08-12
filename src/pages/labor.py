@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 from .. import charts, fmt
+from ..analysis import attribution
 from ..site import esc
 
 STATUS_ICON = {"good": "●", "warning": "▲", "critical": "■", "unknown": "○"}
@@ -224,11 +225,19 @@ def offline_banner(real_modules: list | None = None) -> str:
     real = "、".join(real_modules or [])
     series_note = (f"{real} 的時間序列為正式執行存下的真實資料快照；其餘"
                    if real else "時間序列")
-    return ('<div class="banner"><b>離線示範模式</b>　'
+    # 收合成一行。展開時在 390px 下高 134px，佔掉 16% 的首屏，
+    # 而且每一頁一字不差——讀者第二頁就不會再讀它了，但它照樣把
+    # 第一張卡推到摺線以下（rates 頁只露出 7px）。
+    # 該講的重點（「這是示範數字，不可引用」）留在收合的那一行，
+    # 細節與範圍在展開裡。
+    return ('<details class="banner"><summary><b>離線示範模式</b>　'
+            '數字為示範序列，不可引用</summary>'
+            '<div class="banner-body">'
             '聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；'
             f'{series_note}為程式生成的示範序列（統計特性接近真實，'
             '但個別數值非實際發布值），不可用於研究引用。'
-            '正式執行（不加 --offline）一律使用即時資料。</div>')
+            '正式執行（不加 --offline）一律使用即時資料。'
+            '</div></details>')
 
 
 # ---------------------------------------------------------------------------
@@ -339,6 +348,19 @@ def labor_body(d: dict) -> str:
     if dec:
         e, l = dec["employment_effect"], dec["laborforce_effect"]
         span = max(abs(e), abs(l)) or 1
+        # 「兩項相加＝總變動」只是一階近似，而且總變動取自四捨五入到小數
+        # 一位的 UNRATE、兩個效果取自未四捨五入的 CE16OV／CLF16OV。
+        # 誤差大到看得出來時要講，不然這一列會被當成算錯。
+        _r = dec.get("residual") or 0.0
+        _resid = (f'　<span class="dc-resid">（近似誤差 {_r:+.2f}）</span>'
+                  if abs(_r) >= attribution.RESID_SHOW else "")
+        # 統計顯著性：UNRATE 只到小數一位，0.1 個百分點在 BLS 自己的標準下
+        # 不可分辨於零。不標的話讀者會把雜訊當成訊號。
+        _signif = ("" if dec.get("significant", True) else
+                   f'<div class="dc-signif">本月變動 '
+                   f"{abs(dec['delta_rate']):.1f} 個百分點，低於 "
+                   f"{dec.get('signif_threshold', 0.2):.1f} 的統計顯著門檻"
+                   "——方向可看，強度別當真。</div>")
         dec_html = f"""<div class="dsum">
   <div class="dsum-main" style="color:{dec['verdict_color']}">{esc(dec['verdict_text'])}</div>
   <div class="dsum-sub">失業率 {d['kpi']['u3_display']}　·
@@ -362,7 +384,8 @@ def labor_body(d: dict) -> str:
        標成「在找工作的人」會被讀成失業人數，兩者差了將近四倍。 -->
   <div class="dc-note">{'推高' if l >= 0 else '壓低'}失業率　·　勞動力（有工作＋正在找工作）{esc(fmt.wan(dec['delta_labor_force']))}
     　·　其中失業人數 {esc(fmt.wan(dec['delta_unemployed']))}</div>
-  <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點</div>
+  <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點{_resid}</div>
+  {_signif}
 </div>
 <p class="hint" style="margin:14px 0 0">
   失業率只算「還在找工作」的人。放棄找工作的人變多時失業率會下降，

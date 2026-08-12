@@ -10,9 +10,8 @@
 
 from __future__ import annotations
 
-import datetime as dt
 
-from . import charts, fmt
+from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
                        inflation as infl_an, rules_inflation, fomc_text,
                        scenario, breakeven as be, surprise as sp,
@@ -300,7 +299,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Employment Situation"),
         "data_month": data_month,
-        "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generated_at": clock.stamp(),
         "offline": offline,
         "failed": failed,
         "kpi": kpi,
@@ -824,10 +823,14 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
 
     # ---- 趨勢型指標 ----
     trend_rows, _trend_vals = [], []
+    # 黏性核心 CPI 不在這裡：它問的是「價格多久調整一次」（慣性），
+    # 中位數與截尾平均問的是「多少項目在漲」（廣度）——兩個不同的問題。
+    # 一個經濟體可以廣度低但黏性高（漲的項目不多，但都是很少調價的），
+    # 那對聯準會反而更難處理，混在同一區會被讀成「還好」。
+    # 黏性移到專屬的「核心服務的黏性」那一區，跟彈性核心 CPI 對照。
     for sid, label, note in [
         ("MEDCPIM159SFRBCLE", "中位數 CPI", "取漲幅正中間的項目，不受極端值影響"),
         ("TRMMEANCPIM159SFRBCLE", "截尾平均 CPI", "剔除漲跌最極端的項目後平均"),
-        ("CORESTICKM159SFRBATL", "黏性核心 CPI", "只看價格很少調整的項目，代表通膨慣性"),
     ]:
         v = value_at(series.get(sid, []))
         if v is not None:
@@ -911,7 +914,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "release_name": (cfg.get("meta") or {}).get("release_name", "CPI"),
         "weights_vintage": (cfg.get("meta") or {}).get("weights_vintage", ""),
         "data_month": data_month,
-        "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generated_at": clock.stamp(),
         "offline": offline,
         "failed": failed,
         "summary": summ,
@@ -939,6 +942,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         },
         "surprises": _surprise_block(cpi_surprises),
         "trend_rows": trend_rows,
+        "stickiness": _stickiness_block(summ),
         "trend_verdict": trend_verdict,
         "energy_stats": energy_stats,
         "energy_headline": energy_headline,
@@ -987,6 +991,116 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                         "threshold": 0.03, "up_is": "hawkish"},
         },
     }
+
+
+DIR_TEXT = {
+    "accel": ("重新加速", "hawkish"),
+    "decel": ("穩定減速", "dovish"),
+    "flat": ("卡在原地", "hawkish"),
+}
+
+
+def _ladder(v12, v6, v3, label: str) -> list[dict]:
+    """12m / 6m / 3m 年化並排。單一數字看不出方向，這三個並排才看得出。"""
+    return [
+        {"label": f"{label}　近 12 個月", "value": _pct(v12, 2)},
+        {"label": f"{label}　近 6 個月年化", "value": _pct(v6, 2)},
+        {"label": f"{label}　近 3 個月年化", "value": _pct(v3, 2)},
+    ]
+
+
+def _stickiness_block(summ) -> dict:
+    """
+    核心服務的黏性 — 降息時間表卡最久的那一塊。
+
+    為什麼要獨立一區
+    ----------------
+    先前只有一個數字（三月年化）與一條純水準的規則（>4% 警戒）。
+    那回答的是「現在多高」，不是「降不降得下來」——而後者才是
+    這一塊真正的問題。3.9% 且在加速，跟 4.1% 且在減速，
+    前者其實比較該擔心，但純水準的門檻只會報後者。
+
+    三個角度
+    --------
+    ① 動能階梯（12m / 6m / 3m）：方向。聯準會官員講話時引用的就是這個形式。
+    ② 卡了幾個月：黏性最直接的量度——「該降的降不下來」有多久了。
+    ③ 黏性 vs 彈性（Atlanta Fed）：彈性項先反應、黏性項最後才動。
+       兩者收斂，這一輪通膨才算走完；差距還大就代表路還沒走完。
+
+    CPI 與 PCE 並列：聯準會的目標是核心 PCE，兩者權重差很多
+    （醫療在 PCE 裡權重大得多），背離時要以 PCE 那一側為準。
+    """
+    if summ.supercore_3m is None:
+        return {}
+    label, lean = DIR_TEXT.get(summ.supercore_dir, ("方向不明", "neutral"))
+
+    # 結論句：方向 ＋ 卡了多久 ＋ 對降息時間表的意思
+    if summ.supercore_dir == "decel":
+        verdict = (f"核心服務**{label}**——3 個月年化低於 12 個月，"
+                   "通膨的慣性正在鬆動。這是降息時間表往前挪的必要條件。")
+    elif summ.supercore_dir == "accel":
+        verdict = (f"核心服務**{label}**——3 個月年化高於 12 個月。"
+                   "這一塊的成本主體是人力，重新加速代表降息時間表要往後推。")
+    else:
+        verdict = (f"核心服務**{label}**——長短天期的年化差不多，"
+                   "既沒有進一步惡化，也看不到回落的跡象。")
+    _n = summ.supercore_streak
+    if _n:
+        _at_least = "至少" if _n < 0 else ""
+        verdict += f"三個月年化已經連續{_at_least} {abs(_n)} 個月高於 2.5%。"
+
+    stats = _ladder(summ.supercore_12m, summ.supercore_6m, summ.supercore_3m, "CPI")
+    if summ.pce_supercore_3m is not None:
+        stats += _ladder(summ.pce_supercore_12m, summ.pce_supercore_6m,
+                         summ.pce_supercore_3m, "PCE")
+
+    # 兩邊背離時要講：聯準會看的是 PCE 那一側
+    diverge = ""
+    if (summ.pce_supercore_3m is not None and summ.supercore_3m is not None):
+        gap = summ.supercore_3m - summ.pce_supercore_3m
+        if abs(gap) > 0.5:
+            hi, lo = ("CPI", "PCE") if gap > 0 else ("PCE", "CPI")
+            diverge = (f"{hi} 版比 {lo} 版高 {abs(gap):.2f} 個百分點。"
+                       "兩者的權重差很多——醫療在 PCE 裡權重大得多，"
+                       "因為它含雇主付的部分。**聯準會的目標是核心 PCE，"
+                       "背離時以 PCE 那一側為準。**")
+
+    # 黏性 vs 彈性
+    sf = {}
+    if summ.sticky_cpi is not None and summ.flex_cpi is not None:
+        g = summ.sticky_cpi - summ.flex_cpi
+        if g > 1.5:
+            note = ("彈性項已經降完、黏性項還卡著——這是這一輪通膨的典型形態。"
+                    "剩下的路要靠黏性項自己慢慢走，而它們一年才調一次價。")
+            kind = "hawkish"
+        elif g > 0.5:
+            note = "兩者仍有差距，黏性項還沒跟上彈性項的回落。"
+            kind = "neutral"
+        elif g < -0.5:
+            note = ("彈性項高於黏性項——通常代表新的價格衝擊正在進來"
+                    "（能源、關稅、供應鏈），而不是舊的通膨還沒走完。")
+            kind = "hawkish"
+        else:
+            note = "兩者已經收斂，代表這一輪通膨大致走完了。"
+            kind = "dovish"
+        sf = {"sticky": summ.sticky_cpi, "flex": summ.flex_cpi,
+              "gap": g, "note": note, "kind": kind,
+              "stats": [
+                  {"label": "黏性核心 CPI", "value": _pct(summ.sticky_cpi, 1),
+                   "note": "價格很少調整的項目（房租、保險、醫療）"},
+                  {"label": "彈性核心 CPI", "value": _pct(summ.flex_cpi, 1),
+                   "note": "價格調整很快的項目（機票、二手車、旅館）"},
+                  {"label": "差距", "value": f"{g:+.1f} 個百分點",
+                   "color": ("var(--serious)" if g > 1.5 else "inherit"),
+                   "note": "收斂才代表這一輪走完"},
+              ]}
+
+    return {"stats": stats, "verdict": verdict, "lean": lean,
+            "dir_label": label, "streak": abs(summ.supercore_streak),
+            "diverge": diverge, "sticky_flex": sf,
+            "sum": (f"3 個月年化 {summ.supercore_3m:.2f}%　·　{label}"
+                    + (f"　·　已卡{'至少' if _n < 0 else ''} {abs(_n)} 個月"
+                       if _n else ""))}
 
 
 def _pct(v, digits=1):
@@ -1071,7 +1185,7 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
     next_meeting = {}
     if upcoming:
         nxt = upcoming[0]
-        days = (nxt - dt.date.today()).days
+        days = (nxt - clock.today()).days
         next_meeting = {
             "date": nxt.isoformat(),
             "days": days,
@@ -1085,8 +1199,20 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
     # 它跟目前政策利率中值的差，就是市場定價的政策路徑方向。
     # 這是粗略代理，不是會議層級的機率——畫面上會講清楚。
     market = {}
-    _lo, _hi = rate_cfg.get("lower"), rate_cfg.get("upper")
-    _d2 = value_at((rates_series or {}).get("DGS2") or [])
+    # 政策利率區間**優先取 FRED**（DFEDTARL／DFEDTARU），抓不到才退回 config。
+    #
+    # 為什麼要改成自動：這兩個數字先前只由人工填在 config/fomc.yaml，而操作手冊
+    # 寫的是「只用於畫面顯示」——但它其實在下面算 gap，直接決定「市場定價偏降息
+    # 還是偏向再緊縮」這個判定。忘記更新一次降息（25 個基點）就會讓 gap 平移
+    # 0.25 個百分點，足以把結論翻成反的，而畫面上完全看不出來。這是整份專案裡
+    # 唯一一個「漏更新會默默給出反向結論」的手動項，所以優先自動化。
+    _rs = rates_series or {}
+    _lo = value_at(_rs.get("DFEDTARL") or [])
+    _hi = value_at(_rs.get("DFEDTARU") or [])
+    rate_auto = _lo is not None and _hi is not None
+    if not rate_auto:
+        _lo, _hi = rate_cfg.get("lower"), rate_cfg.get("upper")
+    _d2 = value_at(_rs.get("DGS2") or [])
     if _lo is not None and _hi is not None and _d2 is not None:
         mid = (_lo + _hi) / 2
         gap = _d2 - mid
@@ -1149,12 +1275,15 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
         "offline": offline,
         "failed": failed,
         "latest_date": latest.date,
-        "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generated_at": clock.stamp(),
         "shift": fomc_text.shift(docs),
         "regime": fomc_text.regime_change(docs),
         "vote": latest.vote,
-        "rate_range": (f"{rate_cfg.get('lower', 0):.2f}–{rate_cfg.get('upper', 0):.2f}%"
-                       if rate_cfg else "—"),
+        "rate_range": (f"{_lo:.2f}–{_hi:.2f}%"
+                       if _lo is not None and _hi is not None else "—"),
+        # 畫面要標出這個區間是自動抓的還是 config 的後備值——
+        # 後備值可能已經過時，而讀者無從分辨。
+        "rate_auto": rate_auto,
         "next_meeting": next_meeting,
         "market": market,
         "dissent_ctx": dissent_ctx,
@@ -1215,9 +1344,20 @@ def _vote_cell(vote: dict) -> str:
     return " ".join(parts)
 
 
+# 合計金額的合理性上限：解析出的近 120 天總額，相對最新一季申報發債的倍數。
+#
+# 為什麼要有：這類封面解析一定還會有沒想到的失敗模式。實際發生過的一次是
+# 把貨架註冊額度（$40,000,000,000）當成單筆交易讀進來，近 120 天的合計
+# 因此灌到季報申報值的 406%——而畫面照樣自信地印出來。
+#
+# 120 天約當 1.3 季，發債又是機會式的（挑市場好的時候一次發），
+# 所以 3 倍已經很寬鬆；超過就幾乎確定是解析出錯，不是真的發那麼多。
+OFFERING_SANITY_X = 3.0
+
+
 def _offerings_block(offerings: list, hs) -> dict:
     """
-    近期發債申報的畫面資料。
+    近期發債交易的畫面資料。
 
     這一段的用途是**時效**，不是計分：季報最久落後 135 天，
     而發債當天就要申報。所以它回答的是「下一期的數字會往哪邊走」，
@@ -1227,42 +1367,61 @@ def _offerings_block(offerings: list, hs) -> dict:
     if not offerings:
         return {"available": False}
 
+    # 預估版不算交易：它是同一筆的前身，通常兩三天內就會有定價版。
+    # 仍然列在明細裡並標示——「有一筆正在路上」對供給面本身就是資訊。
+    deals = [o for o in offerings if not o.get("preliminary")]
+    prelim_n = len(offerings) - len(deals)
+
     # 合計只由**已確認金額**構成。沒解析到金額的仍然列出來——
     # 讀者知道「有一筆但金額還沒讀到」比完全看不到有用——但不進合計，
     # 也不用推估值補；一個錯的發債金額比沒有金額糟得多。
-    known = [o for o in offerings if o.get("amount") is not None]
-    unknown_n = len(offerings) - len(known)
+    known = [o for o in deals if o.get("amount") is not None]
+    unknown_n = len(deals) - len(known)
     total = sum(o["amount"] for o in known)
 
     # 跟最新一季的申報值比，讀者才知道這批新申報的量級
     ref = hs.total_issued or 0
     ratio = (total / ref * 100) if ref and total else None
 
+    # 合理性檢查：解析結果跟季報數字差太多時，寧可不報金額。
+    # 這一段的價值在時效（比季報早三個月看到），沒有金額仍然成立；
+    # 但報一個錯了四倍的合計，會直接毀掉整頁的可信度。
+    insane = bool(ref and total > ref * OFFERING_SANITY_X)
+
     rows = []
     for o in offerings:
+        is_prelim = bool(o.get("preliminary"))
         pending = o.get("amount") is None
-        amt = ("金額待確認" if pending
-               else f'{o["amount"] * 10:,.0f} 億美元')
+        if is_prelim:
+            amt = "尚未定價"
+        elif pending:
+            amt = "金額待確認"
+        else:
+            amt = f'{o["amount"] * 10:,.0f} 億美元'
         # 表格類型對投資人沒有意義，翻成在講什麼。
-        # 只剩兩類：424B 是發行文件本身，8-K 2.03 是配不到 424B 的舉債
-        #（銀行貸款、定期貸款、私募）。
-        kind = {"424B2": "公開發行", "424B5": "公開發行",
-                "8-K": "舉債公告"}.get(o["form"], o["form"])
+        kind = ("預估版" if is_prelim else
+                {"424B2": "公開發行", "424B5": "公開發行",
+                 "8-K": "舉債公告"}.get(o["form"], o["form"]))
         rows.append({"name": o["name"], "date": o["date"], "form": o["form"],
-                     "kind": kind, "amount": amt, "pending": pending,
+                     "kind": kind, "amount": amt,
+                     "pending": pending or is_prelim,
+                     "preliminary": is_prelim,
+                     "merged": o.get("merged", 1),
                      "url": o.get("doc_url", ""),
                      "items": o.get("items", "")})
 
-    latest = offerings[0]["date"]
     return {
         "available": True,
         "rows": rows,
-        "count": len(offerings),
+        "count": len(deals),
+        "prelim_n": prelim_n,
         "known_n": len(known),
         "unknown_n": unknown_n,
+        "insane": insane,
+        "show_amount": bool(total) and not insane,
         "total_display": (f"{total * 10:,.0f} 億美元" if total else "—"),
         "ratio_display": (f"{ratio:.0f}%" if ratio is not None else ""),
-        "latest": latest,
+        "latest": offerings[0]["date"],
         "ref_display": f"{ref * 10:,.0f} 億美元" if ref else "—",
     }
 
@@ -1316,7 +1475,10 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
     infl = None
     if infl_ctx:
         s = infl_ctx["summary"]
-        infl = {"core_pce_yoy": s.pce_core_yoy, "core_3m": s.core_3m,
+        # 動能項一定要用**核心 PCE** 的三月年化（不是核心 CPI 的）。
+        # 兩者長期差 0.3–0.5 個百分點，混用會讓九宮格的通膨軸固定偏鷹。
+        # 見 scenario.classify_inflation 的說明。
+        infl = {"core_pce_yoy": s.pce_core_yoy, "core_pce_3m": s.pce_core_3m,
                 "flags": infl_ctx["flags"]}
     fomc = None
     if fomc_ctx and not fomc_ctx.get("empty"):
@@ -1390,7 +1552,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 情境頁那張「尚未接入」的空卡就是為了這個留的位置。
         "market": (fomc_ctx or {}).get("market") or {},
         "as_of": "　·　".join(parts) or "—",
-        "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generated_at": clock.stamp(),
     }
 
 
@@ -1481,9 +1643,16 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
     stats = [
         {"label": "平均時薪年增", "value": f"{p.wage_latest:.2f}%"},
         {"label": "核心服務除住房年增", "value": f"{p.supercore_latest:.2f}%"},
+        # 顏色只回答「要不要擔心」，不是照正負號塗。
+        # 兩個極端**都是**上行風險，只是機制不同：
+        #   gap > +0.8  服務業漲價已經超過人力成本，還有薪資以外的推力，
+        #               薪資降溫也壓不下來
+        #   gap < -0.8  人力成本上升還沒轉嫁到售價，企業後續調價就會補漲
+        # 先前 gap < -0.8 塗的是 --series-1（全站的鴿派／利多色），
+        # 而旁邊的判定文字同時說「服務業通膨有上行的風險」——
+        # 同一格數字，顏色跟註解說相反的話。只有 aligned 才是良性的。
         {"label": "差距", "value": f"{p.gap:+.2f} 個百分點",
-         "color": ("var(--serious)" if p.gap > 0.8 else
-                   ("var(--series-1)" if p.gap < -0.8 else "inherit")),
+         "color": ("var(--serious)" if abs(p.gap) > 0.8 else "inherit"),
          "note": title},
     ]
     # 相關性是負的時候，「領先 6 個月」不該掛在最上面當結論——
@@ -1734,7 +1903,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Rates"),
         "as_of": as_of,
-        "generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generated_at": clock.stamp(),
         "offline": offline,
         "failed": failed,
         "curve": curve,

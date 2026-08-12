@@ -114,6 +114,24 @@ if (OUT / "labor" / "index.html").exists():
         ids = re.findall(r'href="#([^"]+)"', anchors[0]) if anchors else []
         missing = [i for i in ids if f'id="{i}"' not in h]
         check(f"⑲ {name}：錨點都指得到", not missing, str(missing))
+        # 錨點列預設是隱藏的（height:0），由 JS 在展開三個卡區時才顯示。
+        # 外框 .anav 少了的話 CSS 全部失效，那一列會變成常駐的裸連結——
+        # 而且兩側的漸層是畫在外框上的，沒有外框就會用 mask 挖穿背景。
+        check(f"⑳ {name}：錨點列有外框 .anav",
+              '<div class="anav"><nav class="anchors">' in h)
+        # 附錄類不該佔導覽的格子：讀者不會特地跳去看名詞解釋
+        labs = re.findall(r'>([^<]+)</a>', anchors[0]) if anchors else []
+        bad = [x for x in labs if x.startswith(("名詞解釋", "判讀說明"))]
+        check(f"㉑ {name}：導覽不列附錄", not bad, str(bad))
+        # 收合摘要裡「數字 ＋ 單位」與「標籤 ＋ 數字」之間要是不斷行空白。
+        # 這一列是拿來掃視的，斷成「時薪年增 ⏎ 3.2%」讀者就得往下跳一行
+        # 才確認得了數字——那正是收合設計要省掉的動作。
+        sums = re.findall(r'<span class="sect-sum">(.*?)</span>', h, re.S)
+        bad_gap = [s for s in sums
+                   if re.search(r'[\d%）)] [\u4e00-\u9fff]', s)
+                   or re.search(r'[\u4e00-\u9fff：] [+\-\d]', s)]
+        check(f"㉒ {name}：摘要的數字與單位不分家", not bad_gap,
+              str(bad_gap[:2]))
 else:
     print("（output/ 尚未產生，跳過實際頁面的檢查）")
 

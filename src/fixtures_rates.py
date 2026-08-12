@@ -13,6 +13,8 @@ from __future__ import annotations
 import random
 import datetime as dt
 
+from . import clock
+
 random.seed(20260815)
 
 END = dt.date(2026, 8, 7)
@@ -59,6 +61,12 @@ def build() -> dict[str, list[dict]]:
     s["DGS5"] = _walk(d, 4.18, 0.0016, 0.026)
     s["DGS10"] = _walk(d, 4.69, 0.0028, 0.030)
     s["DGS30"] = _walk(d, 5.21, 0.0038, 0.032)
+
+    # ---- 政策利率區間 ----
+    # 常數序列（真實的 DFEDTARU／DFEDTARL 也是階梯狀的常數）。
+    # 值對齊 config/fomc.yaml 的後備值，離線畫面才會跟示範的聲明一致。
+    s["DFEDTARU"] = [{"date": dd, "value": 3.75} for dd in d]
+    s["DFEDTARL"] = [{"date": dd, "value": 3.50} for dd in d]
 
     # ---- 實質利率與通膨補償 ----
     s["DFII5"] = _walk(d, 1.62, 0.0009, 0.022)
@@ -169,23 +177,39 @@ def offerings() -> list[dict]:
     離線模式的發債素材，形狀與 sec.fetch_recent_offerings 的**輸入**一致
     （也就是尚未去重的原始申報），最後一樣走 dedupe_deals。
 
-    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意鋪三種情況，
+    正式執行時由 EDGAR 的 submissions 端點即時取得。這裡刻意鋪五種情況，
     讓畫面與去重邏輯的每一條路徑都會被走到：
-      ① Alphabet — 424B2 有金額，四天後同一筆再發一份 8-K 2.03（要被合併）
+      ① Alphabet — 先一份預估版 424B2（封面沒有定價、金額 None），三天後
+                   定價版 424B2 有金額，再四天後同一筆的 8-K 2.03。
+                   三份申報要收斂成**一筆**交易。
       ② Oracle   — 424B5 有金額，沒有對應的 8-K（單純的公開發行）
       ③ Meta     — 只有 8-K 2.03、配不到任何 424B（銀行貸款那一類，要獨立列）
                    而且金額解析不到，走「金額待確認」那條路徑
+      ④ Microsoft— 昨天才申報的預估版，還沒有定價版 → 走「尚未定價」那條
+                   路徑：列在明細裡但不計入筆數與合計
+      ⑤ Amazon   — 同一筆的兩個幣別分開申報（相隔一天、金額不同），
+                   要併成一筆並把兩個金額相加
     """
     import datetime as dt
     from .sec import dedupe_deals
-    today = dt.date.today()
+    today = clock.today()
 
     def d(days_ago: int) -> str:
         return (today - dt.timedelta(days=days_ago)).isoformat()
 
     raw = [
+        # 預估版：封面寫 Subject to Completion，定價欄是空的 → 沒有金額。
+        # 三天後的定價版會把它吃掉，畫面上不該看到這一份。
+        {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
+         "date": d(9), "items": "", "kind": "offering", "amount": None,
+         "preliminary": True,
+         "accession": "0001652044-26-000088",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
+                    "000165204426000088/d424b2-prelim.htm",
+         "desc": "424B2"},
         {"name": "Alphabet", "ticker": "GOOGL", "form": "424B2",
          "date": d(6), "items": "", "kind": "offering", "amount": 12.5,
+         "preliminary": False,
          "accession": "0001652044-26-000090",
          "doc_url": "https://www.sec.gov/Archives/edgar/data/1652044/"
                     "000165204426000090/d424b2.htm",
@@ -205,9 +229,33 @@ def offerings() -> list[dict]:
          "desc": "8-K"},
         {"name": "Oracle", "ticker": "ORCL", "form": "424B5",
          "date": d(41), "items": "", "kind": "offering", "amount": 18.0,
+         "preliminary": False,
          "accession": "0001341439-26-000031",
          "doc_url": "https://www.sec.gov/Archives/edgar/data/1341439/"
                     "000134143926000031/d424b5.htm",
          "desc": "424B5"},
+        # 昨天申報、還沒定價 → 明細列「尚未定價」，不計入筆數與合計
+        {"name": "Microsoft", "ticker": "MSFT", "form": "424B5",
+         "date": d(1), "items": "", "kind": "offering", "amount": None,
+         "preliminary": True,
+         "accession": "0000789019-26-000042",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/789019/"
+                    "000078901926000042/d424b5-prelim.htm",
+         "desc": "424B5"},
+        # 同一筆交易的美元券與歐元券分兩份申報 → 併成一筆、金額相加
+        {"name": "Amazon", "ticker": "AMZN", "form": "424B2",
+         "date": d(33), "items": "", "kind": "offering", "amount": 9.0,
+         "preliminary": False,
+         "accession": "0001018724-26-000071",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1018724/"
+                    "000101872426000071/d424b2-usd.htm",
+         "desc": "424B2"},
+        {"name": "Amazon", "ticker": "AMZN", "form": "424B2",
+         "date": d(32), "items": "", "kind": "offering", "amount": 3.5,
+         "preliminary": False,
+         "accession": "0001018724-26-000072",
+         "doc_url": "https://www.sec.gov/Archives/edgar/data/1018724/"
+                    "000101872426000072/d424b2-eur.htm",
+         "desc": "424B2"},
     ]
     return dedupe_deals(raw)

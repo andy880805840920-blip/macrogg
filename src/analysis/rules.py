@@ -63,6 +63,17 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
         return None
 
     v = d.get("verdict")
+    # 統計顯著性：UNRATE 只到小數一位，0.1 個百分點的變動在 BLS 自己的標準下
+    # 不可分辨於零。方向照樣講，但**不能用 alert 級的口氣講**——
+    # alert 在鷹鴿淨值裡權重 2.0，兩條就能翻動九宮格的列。
+    sig = d.get("significant", True)
+    sev = (lambda s: s if sig else "info")
+    thr = d.get("signif_threshold", 0.2)
+    noise = ("" if sig else
+             f"（不過這個月只動了 {abs(d['delta_rate']):.1f} 個百分點，"
+             f"低於 {thr:.1f} 個百分點的統計顯著門檻，"
+             "方向可以參考，強度不要當真。）")
+
     if v == "bad_decline":
         # bad_decline 只保證「勞動力退出主導」，就業本身可能增也可能減——
         # 文案必須跟著正負號走，不能一律寫「有工作的人少了」。
@@ -75,13 +86,14 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             emp_clause = ""
         return Flag(
             key="bad_decline",
-            severity="alert",
+            severity=sev("alert"),
             headline="失業率下降源於勞動力退出，而非就業增加",
             detail=(
                 f"失業率下降 {abs(d['delta_rate']):.2f} 個百分點，表面上是好消息。"
                 f"{emp_clause}"
                 f"同時有 {fmt.wan_abs(d['delta_labor_force'])}乾脆放棄找工作、退出職場。"
                 "放棄找工作的人不會被算成失業，所以失業率反而被壓低了。"
+                + noise
             ),
             lean="dovish",
             impact="就業市場實際在轉弱",
@@ -94,6 +106,7 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             detail=(
                 f"有工作的人增加 {fmt.wan_abs(d['delta_employed'])}，"
                 f"失業率因此下降 {abs(d['delta_rate']):.2f} 個百分點。這是健康的下降。"
+                + noise
             ),
             lean="hawkish",
             impact="就業穩健，聯準會沒有急著降息的理由",
@@ -101,12 +114,13 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
     if v == "bad_rise":
         return Flag(
             key="bad_rise",
-            severity="alert",
+            severity=sev("alert"),
             headline="失業率上升源於就業減少",
             detail=(
                 f"有工作的人減少 {fmt.wan_abs(d['delta_employed'])}，"
                 f"失業人數增加 {fmt.wan_abs(d['delta_unemployed'])}。"
                 "不是因為找工作的人變多，而是實際的工作機會在減少。"
+                + noise
             ),
             lean="dovish",
             impact="工作機會實際在減少",
@@ -119,6 +133,7 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             detail=(
                 f"投入職場的人增加 {fmt.wan_abs(d['delta_labor_force'])}，"
                 "新加入的人還沒馬上找到工作，所以失業率上升。這通常不是壞事。"
+                + noise
             ),
             lean="neutral",
             impact="不必過度解讀",

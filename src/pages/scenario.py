@@ -135,16 +135,17 @@ PRESSURE_LABEL = {"high": "偏高", "moderate": "中性", "low": "偏低"}
 
 
 def _rates_line(r: dict | None) -> str:
-    """長端供給壓力：刻意不併入九宮格，因為它決定的是曲線形狀而非政策方向。"""
+    """
+    長端供給壓力：刻意不併入九宮格，因為它決定的是曲線形狀而非政策方向。
+
+    這裡**只留結論**。先前把長端頁的三個分項（含「每月減持約 37 十億美元
+    公債…」這種說明句）整段逐字搬過來，等於同一份拆解在兩頁各印一次；
+    從首頁走到這裡的讀者，得先讀完兩段看過的東西才走得到真正的新內容
+    （部位對照、市場定價對照）。分項屬於長端頁，這裡給連結就好。
+    """
     if not r:
         return ""
     cls = {"high": "hawkish", "low": "dovish"}.get(r["level"], "balanced")
-    parts = "".join(
-        f'<div class="cmove"><div>{esc(p["label"])}</div>'
-        f'<div class="cm-delta {"up" if p["score"] > 0 else "down"}">{p["score"]:+.2f}</div>'
-        f'<div class="cm-val">{esc(p["detail"])}</div></div>'
-        for p in r["parts"]
-    )
     return f"""
 <div class="grid">
   <div class="card">
@@ -157,10 +158,8 @@ def _rates_line(r: dict | None) -> str:
       <div class="v-why">{esc(r['curve_desc'])}</div>
       <div class="v-count">{esc(r['desc'])}</div>
     </div>
-    <p class="hint" style="margin-top:18px">壓力分數的來源：</p>
-    <div class="cmoves" style="border-top:none;padding-top:0">{parts}</div>
-    <div class="src">完整拆解、殖利率曲線、政府債務動態與科技巨頭發債請見
-      <a href="/rates/">長端與債務</a>頁。</div>
+    <div class="src">三項分數的逐項拆解與債務動態見
+      <a href="/rates/#priced">長端與債務</a>頁。</div>
   </div>
 </div>
 """
@@ -321,7 +320,8 @@ def scenario_body(d: dict) -> str:
     <h2 id="drivers" data-sum="{esc(_drv_sum)}">主要驅動因素</h2>
     <p class="hint">依嚴重度排序。</p>
     {drivers_html or '<div class="empty">尚無資料</div>'}
-    <div class="src">完整清單請見勞動市場頁與通膨頁。</div>
+    <div class="src">逐條的計算依據與資料來源：<a href="/labor/#signals">勞動市場</a>
+      　·　<a href="/inflation/#signals">通膨</a></div>
   </div>
 
   <div class="card">
@@ -369,8 +369,9 @@ def scenario_body(d: dict) -> str:
         不能直接讀成純粹的政策路徑預期。要看逐次會議的隱含機率，
         得用聯邦資金期貨。</dd>
       <dt>為什麼不給機率</dt>
-      <dd>機率市場早就定價了，複述它沒有附加價值。給明確的門檻與目前的距離
-        比較誠實，也更能直接拿來盯。</dd>
+      <dd>機率市場早就定價了，複述它沒有附加價值。有價值的是指出
+        「我算出來偏鴿，但市場定價偏鷹」這類具體的分歧，以及明確的門檻
+        與目前的距離——那比較誠實，也更能直接拿來盯。</dd>
       <dt>重心怎麼判定</dt>
       <dd>聲明裡的制式風險句（±2）、聲明對現況的描述
         （±1，「通膨仍高於目標」／「勞動市場已轉弱」，講現況不是講風險，弱一級）、
@@ -380,10 +381,6 @@ def scenario_body(d: dict) -> str:
         每一條加分項都有方向相反的對應項，兩側對稱——
         不對稱會變成常數偏誤（「通膨仍偏高」幾乎每次都在）。
         全部是固定的片語比對，不用模型，每次執行結果一致。</dd>
-      <dt>為什麼不給機率</dt>
-      <dd>市場已經有現成的機率報價了，複述它沒有附加價值。
-        有價值的是指出「我算出來偏鴿，但市場定價偏鷹，差異來自市場低估了修正值」
-        這類具體的分歧。</dd>
       <dt>格子會怎麼移動</dt>
       <dd>通常是一次移動一格，而且往往是通膨先動、就業後動。
         跳格（例如從「按兵不動」直接到「衰退式降息」）多半發生在有外生衝擊時。</dd>
@@ -417,7 +414,7 @@ def scenario_body(d: dict) -> str:
 
 def scenario_footer(d: dict) -> str:
     return (
-        "情境分類由固定規則產生：勞動綜合分數 × 核心 PCE 與三月年化的加權水準，"
+        "情境分類由固定規則產生：勞動綜合分數 × 核心 PCE 的年增率與三月年化加權後的水準，"
         "決定落在九宮格的哪一格；聯準會的重心（聲明制式句、反對票、記者會表態）"
         "決定用哪一張九宮格。全部是確定性規則，不含模型生成內容。<br>"
         "長端供給壓力另行計算，不併入九宮格——它影響的是曲線形狀，不是政策方向。<br>"

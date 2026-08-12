@@ -191,6 +191,14 @@ def attribute_payrolls(
     )
 
 
+# 失業率月變動的顯著性門檻（百分點）。BLS 的標準：0.2 個百分點才在
+# 90% 信賴水準下顯著。低於這個值的變動不該產出 alert 級的結論。
+SIGNIF_PP = 0.2
+# 分解殘差超過這個值就在畫面上標出來——再小的話讀者看不出差別，
+# 標了只是雜訊。
+RESID_SHOW = 0.03
+
+
 def attribute_unemployment_rate(
     unrate_rows: list[dict],
     employed_rows: list[dict],
@@ -218,6 +226,20 @@ def attribute_unemployment_rate(
 
     employed_rows 要用家庭調查就業（CE16OV），與失業率同一份調查，
     不能混用機構調查（PAYEMS），否則分解無法閉合。
+
+    統計顯著性
+    ----------
+    UNRATE 只公布到小數一位，所以 `d_rate` 永遠是 0.1 的倍數。
+    先前的判定門檻是 |Δu| > 0.02——那實際上等於「只要不是完全持平就下判定」。
+
+    但 BLS 自己的標準是：失業率的月變動要 **0.2 個百分點**才在 90% 信賴水準下
+    顯著（家庭調查的樣本約六萬戶，CE16OV 月變動的標準誤約 ±30 萬人）。
+    拿一個統計上不可分辨於零的 0.1 個百分點去產出 alert 級的結論，
+    再經由旗標的鷹鴿淨值（權重 2.0）翻動九宮格的列，是這個系統裡
+    訊噪比最差的一條路徑。
+
+    所以這裡照樣回傳方向（方向本身仍有參考價值），但另外標出
+    `significant`，讓規則層決定要不要降級。
     """
     if len(unrate_rows) < 2 or len(employed_rows) < 2 or len(labor_force_rows) < 2:
         return {}
@@ -236,6 +258,7 @@ def attribute_unemployment_rate(
     laborforce_effect = (E_prev / L_prev) * dL / L_prev * 100
 
     # ---- 判定 ----
+    # 方向的門檻仍用 0.02（只是「不是完全持平」），但另外算顯著性。
     verdict = "neutral"
     if d_rate < -0.02:
         # 下降：看主要驅動力是就業增加，還是勞動力萎縮
@@ -260,7 +283,13 @@ def attribute_unemployment_rate(
         "delta_unemployed": dU,
         "delta_labor_force": dL,
         "verdict": verdict,
-        "residual": d_rate - (employment_effect + laborforce_effect),   # 近似誤差
+        "significant": abs(d_rate) >= SIGNIF_PP,
+        "signif_threshold": SIGNIF_PP,
+        # 近似誤差。Δu ≈ −ΔE/L + (E/L)(ΔL/L) 是一階近似，而且 d_rate 取自
+        # 四捨五入到小數一位的 UNRATE、兩個效果取自未四捨五入的 CE16OV／CLF16OV，
+        # 所以兩邊本來就不會完全相等。畫面宣稱「兩項相加＝總變動」，
+        # 誤差大到會被看出來時要標示。
+        "residual": d_rate - (employment_effect + laborforce_effect),
     }
 
 

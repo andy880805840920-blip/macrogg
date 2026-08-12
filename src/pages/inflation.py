@@ -70,6 +70,58 @@ def _target_axis(tg: dict) -> str:
 </div>"""
 
 
+def _sticky_card(k: dict | None) -> str:
+    """
+    核心服務的黏性。排在關鍵訊號之後，因為它是降息時間表的主要阻力——
+    這一塊不鬆，前面所有的好消息都換不到降息。
+
+    主軸是**方向**不是水準：3.9% 且在加速，比 4.1% 且在減速更該擔心。
+    所以動能階梯（12m/6m/3m）放在最上面，水準只是它的其中一格。
+    """
+    if not k:
+        return ""
+    _v = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
+                 for i, s in enumerate(k["verdict"].split("**")))
+    sf = k.get("sticky_flex") or {}
+    sf_html = ""
+    if sf:
+        sf_html = f"""
+    <h3>黏性 vs 彈性</h3>
+    <p class="hint">彈性項先反應、黏性項最後才動，<b>兩者收斂才算走完</b>。</p>
+    <div class="stat-row">{_stats(sf['stats'])}</div>
+    <div class="impact {sf['kind']}" style="margin-top:12px">{esc(sf['note'])}</div>"""
+
+    _dv = ""
+    if k.get("diverge"):
+        _d = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
+                     for i, s in enumerate(k["diverge"].split("**")))
+        _dv = f'<div class="caveat" style="margin-top:12px">{_d}</div>'
+
+    return f"""<div class="grid">
+  <div class="card">
+    <h2 id="sticky" data-sum="{esc(k['sum'])}">核心服務的黏性</h2>
+    <p class="hint">降息時間表卡最久的一塊。看的是<b>方向</b>不是水準。</p>
+    <div class="impact {k['lean']}" style="margin-bottom:14px">{_v}</div>
+    <div class="stat-row">{_stats(k['stats'])}</div>
+    {_dv}
+    {sf_html}
+    <details class="f-more"><summary>為什麼看三個時間尺度、為什麼是 2.5%</summary>
+      <div class="f-detail">
+        單一個數字看不出方向。12 個月是趨勢、3 個月是當下，
+        <b>短天期低於長天期就是在減速</b>，反過來就是重新加速——
+        聯準會官員談這一塊時引用的也是這個形式。差距小於 0.3 個百分點時
+        一律當「卡在原地」，因為月度資料的雜訊就有這個量級。<br>
+        「連續幾個月高於 2.5%」用的是三個月年化。門檻不取 2%（目標值）
+        是因為月度雜訊會讓它頻繁穿越，數字會失去意義；2.5% 才代表真的卡住，
+        而不是在目標附近正常擺盪。<br>
+        這一塊的成本主體是人力，所以它跟薪資直接連動——
+        往下捲的<a href="#passthrough">薪資到服務業通膨的傳導</a>是同一條線的上游。
+      </div>
+    </details>
+  </div>
+</div>"""
+
+
 def _verdict_card(d: dict) -> str:
     flags = d["flags"]
     tilt = d["tilt"]
@@ -255,6 +307,8 @@ def inflation_body(d: dict) -> str:
   </div>
 </div>
 
+{_sticky_card(d.get('stickiness'))}
+
 <div class="grid">
   <div class="card">
     <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
@@ -323,7 +377,7 @@ def inflation_body(d: dict) -> str:
     <div class="stat-row">{_stats(d['energy_stats'])}</div>
     {energy_head}
     <p class="hint" style="margin:12px 0 0">{esc(d.get('energy_core_note', ''))}
-      <b>除非久到推高通膨預期</b>，油價不會直接改變利率決策。</p>
+      <b>除非久到推高通膨預期</b>，油價不改變利率決策。</p>
 
     <h3 style="margin-top:20px">WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
     <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>

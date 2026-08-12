@@ -269,19 +269,27 @@ def classify_labor(score: float | None, tilt: dict | None) -> tuple[str, str]:
 
 
 def classify_inflation(core_pce_yoy: float | None,
-                       core_3m: float | None) -> str:
+                       core_pce_3m: float | None) -> str:
     """
     以核心 PCE 相對 2% 目標為主軸，再用三個月年化的動能修正。
 
     只看年增率會太遲鈍（被一年前的基期拖住），
     只看三個月年化又太吵，所以兩個一起看。
+
+    ⚠️ 兩項都必須是**核心 PCE**，不能一個 PCE 一個 CPI。
+    先前動能項送進來的是核心 CPI 的三月年化，而核心 CPI 長期比核心 PCE
+    高 0.3–0.5 個百分點（住房權重差一倍、醫療口徑不同）。
+    混起來的水準因此有約 +0.15 個百分點的**常數偏誤，方向固定往鷹**，
+    而這裡的門檻只差 0.6 個百分點——足以把通膨從「中」推成「高」，
+    配上就業「弱」，格子就從「轉向降息」跳成「停滯性通膨」，
+    整張部位表跟著換掉。同一個指標的水準與動能才可以相加。
     """
     if core_pce_yoy is None:
         return "中"
     level = core_pce_yoy
-    if core_3m is not None:
+    if core_pce_3m is not None:
         # 動能與水準各半，讓轉折早一點反映
-        level = 0.6 * core_pce_yoy + 0.4 * core_3m
+        level = 0.6 * core_pce_yoy + 0.4 * core_pce_3m
     if level < 2.3:
         return "低"
     if level > 2.9:
@@ -294,7 +302,7 @@ def synthesise(labor: dict | None, inflation: dict | None,
                fomc: dict | None = None) -> Scenario:
     """
     labor     : {"score": float, "tilt": dict, "flags": [...]}
-    inflation : {"core_pce_yoy": float, "core_3m": float, "flags": [...]}
+    inflation : {"core_pce_yoy": float, "core_pce_3m": float, "flags": [...]}
     fomc      : {"direction": str, "label": str, "delta": float}
     任何一項為 None 就標記為「資料不完整」，並在畫面上明示。
     """
@@ -309,7 +317,7 @@ def synthesise(labor: dict | None, inflation: dict | None,
     l_state, l_basis = classify_labor((labor or {}).get("score"),
                                       (labor or {}).get("tilt"))
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
-                                 (inflation or {}).get("core_3m"))
+                                 (inflation or {}).get("core_pce_3m"))
 
     # ---- 依聯準會目前的重心選一張九宮格 ----
     # 不再「先用固定格子再事後改寫」。格子裡寫什麼就是結論。
@@ -409,7 +417,7 @@ def _triggers(labor: dict | None, inflation: dict | None,
                                binding=(binding == "就業")))
 
     pce = (inflation or {}).get("core_pce_yoy")
-    c3 = (inflation or {}).get("core_3m")
+    c3 = (inflation or {}).get("core_pce_3m")
     if pce is not None:
         blended = 0.6 * pce + 0.4 * c3 if c3 is not None else pce
         if i_state != "低":

@@ -96,22 +96,46 @@ def r_shelter_lag(ctx) -> Flag | None:
 # ---------------------------------------------------------------------------
 @rule
 def r_supercore(ctx) -> Flag | None:
+    """
+    水準與**方向**要一起看。
+
+    先前只有純水準門檻（>4% 警戒、<3% 正常），於是「3.9% 而且在加速」
+    不會報，「4.1% 而且在減速」會報——但前者才是比較該擔心的那一個。
+    降息時間表看的是這一塊降不降得下來，不是它此刻停在哪個數字。
+    """
     s = ctx.s
     if s.supercore_3m is None:
         return None
+    _n = abs(s.supercore_streak)
+    _stuck = (f"三個月年化已連續{'至少' if s.supercore_streak < 0 else ''} "
+              f"{_n} 個月高於 2.5%。" if _n else "")
+    _base = (f"剔除住房後的核心服務，近三個月年化 {s.supercore_3m:.1f}%"
+             f"（近 12 個月 {s.supercore_12m:.1f}%）。"
+             if s.supercore_12m is not None
+             else f"剔除住房後的核心服務，近三個月年化 {s.supercore_3m:.1f}%。")
+
     if s.supercore_3m > 4.0:
         return Flag(
             "supercore_hot", "alert", "核心服務除住房仍高於目標區間",
-            f"剔除住房後的核心服務，近三個月年化 {s.supercore_3m:.1f}%。"
-            "這一塊的成本主要是人力，所以跟薪資直接連動——"
-            "只要它降不下來，聯準會就很難確定通膨真的受控。",
+            _base + _stuck
+            + "這一塊的成本主要是人力，所以跟薪資直接連動——"
+              "只要它降不下來，聯準會就很難確定通膨真的受控。",
             "hawkish", "聯準會最在意的一塊還沒降溫",
+        )
+    # 新增的一條：水準還沒到警戒，但方向轉為加速。
+    # 這是「降息時間表要往後推」最早出現的訊號。
+    if s.supercore_dir == "accel" and s.supercore_3m >= 2.5:
+        return Flag(
+            "supercore_reaccel", "watch", "核心服務重新加速",
+            _base + "短天期已經高於長天期，代表這一塊的回落停住了。"
+            + _stuck + "水準還沒到警戒區，但方向轉了——"
+                       "降息時間表最先反映的是方向，不是水準。",
+            "hawkish", "通膨最黏的一塊回落停住",
         )
     if s.supercore_3m < 3.0:
         return Flag(
             "supercore_cool", "info", "核心服務除住房回落至正常區間",
-            f"剔除住房後的核心服務，近三個月年化 {s.supercore_3m:.1f}%。"
-            "這一塊跟薪資連動最深，降下來代表通膨的慣性正在減弱。",
+            _base + "這一塊跟薪資連動最深，降下來代表通膨的慣性正在減弱。",
             "dovish", "通膨的慣性正在減弱",
         )
     return None
@@ -164,7 +188,11 @@ def r_expectations(ctx) -> Flag | None:
             "expect_low", "info", "長期通膨預期錨定良好",
             f"五年後起算五年的通膨預期為 {s.expect_5y5y:.2f}%，錨定良好。"
             "代表市場相信聯準會最終能把通膨帶回目標。",
-            "dovish", "預期錨定良好，降息壓力較小",
+            # impact 先前寫「降息壓力較小」——那是鷹派的意思，跟 lean=dovish 相反。
+            # 邏輯是：預期錨定得住，聯準會就不必為了守信用而硬撐高利率，
+            # 反而**多了降息的空間**。lean 會計入鷹鴿淨值、句子會印在首頁的
+            # 訊號列上，兩者指向相反時讀者只會覺得儀表板在自相矛盾。
+            "dovish", "預期錨得住，聯準會有降息的空間",
         )
     return None
 
@@ -234,6 +262,18 @@ def r_target_gap(ctx) -> Flag | None:
     if s.pce_core_yoy is None:
         return None
     gap = s.pce_core_yoy - 2.0
+    # 低於目標要單獨講。先前這裡只有 `gap <= 0.3` 一條分支，沒有擋負值——
+    # 核心 PCE 跌到 1.5% 時畫面會印「距離目標只剩 −0.5 個百分點」，
+    # 而且結論寫成「已接近目標」。低於目標不是「接近」，那是**另一種**
+    # 降息理由（而且比接近目標更強），對債券部位的意涵也不同。
+    if gap < -0.2:
+        return Flag(
+            "below_target", "info", "核心 PCE 已低於 2% 目標",
+            f"核心 PCE 年增 {s.pce_core_yoy:.1f}%，低於目標 {abs(gap):.1f} 個百分點。"
+            "通膨低於目標時，維持現在的政策利率等於實質利率被動走高——"
+            "這本身就是收緊，是降息的理由。",
+            "dovish", "通膨低於目標，維持不動等於被動收緊",
+        )
     if gap <= 0.3:
         return Flag(
             "at_target", "info", "核心 PCE 已接近 2% 目標",

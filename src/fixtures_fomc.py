@@ -29,6 +29,8 @@ FOMC 的離線示範資料（P3）。
 
 from __future__ import annotations
 
+from . import clock
+
 # ---------------------------------------------------------------------------
 # 真實聲明原文（逐字）
 # ---------------------------------------------------------------------------
@@ -308,5 +310,5 @@ _UPCOMING = ["2026-09-16", "2026-10-28", "2026-12-09"]
 def upcoming() -> list:
     """離線模式的未來會議日期。只回傳今天之後的場次。"""
     import datetime as dt
-    today = dt.date.today()
+    today = clock.today()
     return [d for d in (dt.date.fromisoformat(x) for x in _UPCOMING) if d > today]

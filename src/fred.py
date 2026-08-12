@@ -20,6 +20,8 @@ from typing import Any
 
 import requests
 
+from . import clock
+
 log = logging.getLogger(__name__)
 
 FRED_BASE = "https://api.stlouisfed.org/fred"
@@ -221,7 +223,7 @@ class FredClient:
 
         release_id：就業報告 50、CPI 10（見 RELEASE_IDS）。
         """
-        after = after or dt.date.today()
+        after = after or clock.today()
         try:
             data = self._get("release/dates", {
                 "release_id": release_id,

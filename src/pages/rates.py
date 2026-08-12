@@ -189,20 +189,34 @@ def rates_body(d: dict) -> str:
         # 筆數與金額分開講：「5 筆交易、其中 4 筆已確認金額」比
         #「5 筆申報、合計 X（另有 1 筆無法解析）」好讀，而且不會讓人
         # 把合計誤讀成全部。
-        _known = (f"{off['known_n']} 筆已確認金額，合計 "
-                  f"{esc(off['total_display'])}")
-        _unknown = (f"；另 {off['unknown_n']} 筆金額待確認"
-                    if off["unknown_n"] else "")
-        _ratio = (f"，相當於最新一季申報發債（{esc(off['ref_display'])}）的 "
-                  f"{off['ratio_display']}" if off.get("ratio_display") else "")
+        if off.get("insane"):
+            # 解析結果跟季報數字差太多 → 寧可不報金額。這一段的價值在時效，
+            # 沒有金額仍然成立；報一個錯了好幾倍的合計會毀掉整頁的可信度。
+            _known = ("金額暫不顯示：解析出的合計與季報申報值差距過大，"
+                      "多半是封面解析出錯。逐筆的原文連結仍可查")
+            _ratio = _unknown = ""
+        else:
+            _known = (f"{off['known_n']} 筆已確認金額，合計 "
+                      f"{esc(off['total_display'])}")
+            _unknown = (f"；另 {off['unknown_n']} 筆金額待確認"
+                        if off["unknown_n"] else "")
+            _ratio = (f"，相當於最新一季申報發債（{esc(off['ref_display'])}）的 "
+                      f"{off['ratio_display']}" if off.get("ratio_display") else "")
+        # 預估版不算交易，但要講出來——「還有幾筆正在路上」對供給面是資訊
+        _prelim = (f"另有 {off['prelim_n']} 筆已宣布、尚未定價。"
+                   if off.get("prelim_n") else "")
         offerings_html = f"""<div class="warnbox" style="margin:0 0 16px">
       <b>近 120 天有 {off['count']} 筆發債交易，尚未反映在下方的季報數字裡</b><br>
-      {_known}{_ratio}{_unknown}。最近一筆在 {esc(off['latest'])}。
+      {_known}{_ratio}{_unknown}。{_prelim}最近一筆在 {esc(off['latest'])}。
       <details class="f-more" style="margin-top:10px"><summary>逐筆明細</summary>
         <div class="tscroll" style="margin-top:10px"><table>
           <thead><tr><th>公司</th><th>日期</th><th>類型</th>
             <th>金額</th><th>原文</th></tr></thead>
           <tbody>{_rows}</tbody></table></div>
+        <p class="hint" style="margin-top:10px">
+          <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
+          預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
+          同一筆會被數兩次。已經有對應定價版的預估版直接不列。</p>
       </details>
     </div>"""
 
@@ -417,9 +431,16 @@ def rates_body(d: dict) -> str:
       <dd>來源是 SEC EDGAR 的申報清單，只收 424B2／424B5（定價當日的債券發行
         說明書）與配不到說明書的 8-K 項目 2.03（銀行貸款、私募這一類）。
         FWP 是行銷用的條款表、一筆債會發好幾份，424B3 多半是再售登記、
-        公司沒拿到新錢，兩者都不計入。同一家公司十天內同金額的申報視為同一筆交易。
-        金額由說明書封面解析，解析不到就標「待確認」——<b>不用推估值填補</b>，
-        也不計入合計。<br>
+        公司沒拿到新錢，兩者都不計入。<br>
+        同一家公司十天以內的申報視為<b>同一筆交易</b>——一筆債會先出預估版、
+        再出定價版，多幣別還會分開申報，不合併的話同一筆會被數兩三次。
+        合併後的金額是群組內<b>相異</b>金額的總和：多幣別分券要相加，
+        但同一個數字重複出現（重新申報、預估與定價金額相同）只算一次。<br>
+        金額由說明書封面解析，只認「$金額 ＋ 票息 ＋ Notes due 年份」這種
+        分券寫法並加總；<b>刻意不取封面上最大的數字</b>——那個往往是
+        貨架註冊額度（"up to $40,000,000,000"），不是這一筆的規模，
+        而且同一個額度在每份文件上都會再被讀成一筆新交易。
+        解析不到就標「待確認」，<b>不用推估值填補</b>，也不計入合計。<br>
         這些交易<b>不進</b>供給壓力分數：分數維持由經審核的季報數字決定，
         否則同一筆發債下一季會被算第二次，歷史可比性也會斷掉。</dd>
     </dl>

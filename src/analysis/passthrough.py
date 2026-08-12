@@ -40,7 +40,7 @@ class Passthrough:
     corr_note: str = ""                   # 相關係數符號的解讀
     wage_latest: float | None = None
     supercore_latest: float | None = None
-    gap: float | None = None             # 薪資年增 − supercore 年化
+    gap: float | None = None             # supercore 年增 − 薪資年增（正＝服務業漲得比薪資快）
     verdict: str = "unknown"
     series: list = field(default_factory=list)        # 疊圖用
     note: str = ""
@@ -118,13 +118,12 @@ def analyse(wage_yoy: list[dict], supercore_yoy: list[dict],
         # 符號要講清楚。負相關代表「薪資高的時期對應 supercore 低」，
         # 那是在**反駁**薪資推升服務業通膨的機制，不是佐證它。
         if p.best_corr < -0.3:
+            # 這段話很重要但先前寫得太長（142 字），擋在閱讀動線上。
+            # 該講的只有兩件事：符號是反的、原因是共同趨勢。
             p.corr_note = (
-                "注意相關係數是負的：在這段樣本裡，薪資年增較高的月份，"
-                f"{p.best_lag} 個月後的服務業通膨反而較低。"
-                "這與「薪資推升服務業通膨」的方向相反，"
-                "不能拿來佐證傳導機制。樣本只涵蓋通膨自高點回落的這一段，"
-                "兩條線同時下行但速度不同，就足以做出這種負相關——"
-                "把它讀成因果會得到錯誤的結論。")
+                f"相關係數是負的：薪資高的月份，{p.best_lag} 個月後的服務業通膨"
+                "反而較低，方向與「薪資推升通膨」相反。樣本只涵蓋通膨自高點"
+                "回落這一段，兩條線同時下行就足以做出負相關——不能當因果讀。")
         elif abs(p.best_corr) < 0.3:
             p.corr_note = ("相關係數接近零，這段樣本看不出穩定的領先落後關係，"
                            "下方的領先期數不宜當作預測依據。")

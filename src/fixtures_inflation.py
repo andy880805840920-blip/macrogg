@@ -75,6 +75,13 @@ def build() -> dict[str, list[dict]]:
     s["CUSR0000SAH1"] = _index(d, 350.9, 4.2, noise=0.02, recent_pct=3.1)  # 住房（緩降）
     s["CUSR0000SASLE"] = _index(d, 405.9, 3.6, noise=0.03, recent_pct=4.4)  # supercore
 
+    # ---- PCE 版的 supercore（服務除能源與住房，鏈式價格指數）----
+    # 設得比 CPI 版低約一個百分點：兩者的權重差很多（醫療在 PCE 裡
+    # 權重大得多，而醫療服務這一輪漲得比其他服務項溫和），
+    # 實務上 PCE supercore 幾乎都低於 CPI supercore。
+    # 離線畫面要走到「兩者背離」那條分支，這個差距是刻意留的。
+    s["IA001260M"] = _index(d, 133.5, 3.1, noise=0.02, recent_pct=3.5)
+
     # ---- 住房細項 ----
     s["CUSR0000SEHA"] = _index(d, 401.8, 3.9, noise=0.02, recent_pct=2.9)
     s["CUSR0000SEHC"] = _index(d, 398.3, 4.1, noise=0.02, recent_pct=3.0)
@@ -83,6 +90,9 @@ def build() -> dict[str, list[dict]]:
     s["MEDCPIM159SFRBCLE"] = _flat(d, 3.5, drift=-1.0, noise=0.09)
     s["TRMMEANCPIM159SFRBCLE"] = _flat(d, 3.3, drift=-0.9, noise=0.08)
     s["CORESTICKM159SFRBATL"] = _flat(d, 3.6, drift=-0.8, noise=0.07)
+    # 彈性項刻意設得比黏性項低很多：這是這一輪通膨的典型形態——
+    # 反應快的部分已經降完，黏的那一半還卡著。兩者的差距就是還沒走完的路。
+    s["COREFLEXCPIM159SFRBATL"] = _flat(d, 1.9, drift=-2.6, noise=0.22)
 
     # ---- 通膨預期 ----
     # 長期預期已經有點鬆動，這是聯準會最緊張的地方

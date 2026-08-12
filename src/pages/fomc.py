@@ -209,7 +209,11 @@ def fomc_body(d: dict) -> str:
     kpis = [_kpi_card(
         "政策利率目標區間", d.get("rate_range", "—"),
         f"本次{_act}" if _act else "",
-        "聯準會直接設定的短期利率區間。所有其他利率都以它為起點。")]
+        "聯準會直接設定的短期利率區間。所有其他利率都以它為起點。"
+        + ("" if d.get("rate_auto") else
+           "　⚠️ 本次沒有取得 FRED 的 DFEDTARL／DFEDTARU，改用設定檔的後備值。"
+           "期間若有調整過利率，這個區間與下方「市場定價 vs 聯準會」的"
+           "判定都可能已經過時。"))]
 
     _sup = vote.get("stated_support")
     _dis = vote.get("dissents") or []

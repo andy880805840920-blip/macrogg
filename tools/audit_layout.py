@@ -31,12 +31,21 @@ WIDTHS = [int(a) for a in sys.argv[1:]] or [360, 390, 760, 1040, 1280]
 # 這裡取 44 當目標值、40 當硬性下限，因為有些純文字連結撐到 44 會破壞行距。
 TAP_MIN = 40
 
+# 兩個觸控目標之間的最小間距。WCAG 2.5.8 是用「24px 直徑的圓不能重疊」表述的，
+# 換算成相鄰元素的邊界距離，8px 是實務上常用的下限。
+#
+# 為什麼高度過關還要驗間距：兩個都 44px 高、但只隔 1px 的按鈕一樣按不準。
+# 實測抓到 .f-more>summary 用 `padding:13px 0;margin:-7px 0` 把觸控盒撐得比
+# 視覺盒大 7px，於是兩個「看起來隔了 14px」的元素實際只差 0.9px；
+# 存檔頁的兩個月份連結則只隔 1.0px。這兩種都是眼睛看不出來的。
+TAP_GAP_MIN = 8
+
 # 量測用的 JS。回傳一包純資料，Python 這邊只負責判讀與排版，
 # 這樣新增檢查時不必來回改兩邊的結構。
 PROBE = r"""
 () => {
   const vw = document.documentElement.clientWidth;
-  const out = {overflow: [], tap: [], ratio: [], clipped: []};
+  const out = {overflow: [], tap: [], ratio: [], clipped: [], gap: []};
 
   const label = el => {
     const cls = (el.className || "").toString().trim().split(/\s+/)
@@ -91,6 +100,40 @@ PROBE = r"""
     }
   }
 
+  // ②b 觸控目標之間的間距。高度夠但貼在一起同樣按不準。
+  {
+    const boxes = [];
+    for (const el of document.querySelectorAll("a, button, summary, label")) {
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) continue;
+      if (getComputedStyle(el).display === "none") continue;
+      if (inSentence(el)) continue;
+      // 同一個橫捲列裡的相鄰項目不算：它們本來就緊鄰排列，
+      // 而且是同一組操作，點錯的代價低（換一頁 vs 收合掉一整張卡）。
+      if (el.closest("nav")) continue;
+      boxes.push({el, r, card: el.closest(".card")});
+    }
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i].r, b = boxes[j].r;
+        if (boxes[i].el.contains(boxes[j].el) ||
+            boxes[j].el.contains(boxes[i].el)) continue;
+        // 只比**同一張卡裡**的：跨卡的兩個展開列中間隔著卡片邊界與底色，
+        // 那是很強的視覺分隔，而且展開全部之後才會貼在一起——
+        // 讀者實際看到的預設狀態並沒有那個問題。
+        if (boxes[i].card !== boxes[j].card) continue;
+        // 只比垂直方向真的相鄰、而且水平有重疊的一組
+        const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        if (overlapX <= 0) continue;
+        const gapY = (a.top < b.top) ? b.top - a.bottom : a.top - b.bottom;
+        if (gapY < 0 || gapY >= %(gap)d) continue;
+        out.gap.push({a: label(boxes[i].el), b: label(boxes[j].el),
+                      gap: +gapY.toFixed(1),
+                      text: (boxes[i].el.textContent || "").trim().slice(0, 22)});
+      }
+    }
+  }
+
   // ③ 同一組卡片高度差太多（齊高造成的空白）
   // 九宮格要只比 .scell——它的 children 還包含軸標籤，那本來就矮。
   const groups = [[".lights", null], [".stat-row", null], [".cons-row", null],
@@ -120,7 +163,7 @@ PROBE = r"""
   }
   return out;
 }
-""" % {"tap": TAP_MIN}
+""" % {"tap": TAP_MIN, "gap": TAP_GAP_MIN}
 
 
 def serve(directory: pathlib.Path):
@@ -181,6 +224,14 @@ def main() -> int:
                             seen.add(k)
                             hits.append(f"觸控 {t['h']}px  {t['el']}  "
                                         f"{t['text']}")
+                        seen2 = set()
+                        for g in r["gap"]:
+                            k = (g["a"], g["b"], g["gap"])
+                            if k in seen2:
+                                continue
+                            seen2.add(k)
+                            hits.append(f"間距 {g['gap']}px  {g['a']} ↔ "
+                                        f"{g['b']}  {g['text']}")
                     for g in r["ratio"]:
                         hits.append(f"高度差 {g['ratio']}×  {g['el']}  "
                                     f"{g['lo']}→{g['hi']}px")

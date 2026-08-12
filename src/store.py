@@ -20,8 +20,9 @@ from __future__ import annotations
 
 import json
 import sqlite3
-import datetime as dt
 from pathlib import Path
+
+from . import clock
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS observations (
@@ -64,7 +65,7 @@ class Store:
     def start_run(self, note: str = "") -> int:
         cur = self.conn.execute(
             "INSERT INTO runs (run_at, note) VALUES (?, ?)",
-            (dt.datetime.now().isoformat(timespec="seconds"), note),
+            (clock.iso(), note),
         )
         self.conn.commit()
         return int(cur.lastrowid)
@@ -79,7 +80,7 @@ class Store:
     # ------------------------------------------------------------------
     def write(self, run_id: int, series_id: str, rows: list[dict]) -> None:
         """同時寫入最新值與本次快照。"""
-        now = dt.datetime.now().isoformat(timespec="seconds")
+        now = clock.iso()
         self.conn.executemany(
             "INSERT INTO observations (series_id, obs_date, value, updated_at) "
             "VALUES (?, ?, ?, ?) "

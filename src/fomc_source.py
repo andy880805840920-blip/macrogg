@@ -32,6 +32,8 @@ from dataclasses import dataclass, field
 
 import requests
 
+from . import clock
+
 log = logging.getLogger(__name__)
 
 BASE = "https://www.federalreserve.gov"
@@ -152,10 +154,10 @@ class FomcSource:
                 cutoff = dt.date.fromisoformat(start)
             except ValueError:
                 log.warning("fetch.start 格式錯誤（%s），改用 years_back", start)
-                cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
+                cutoff = clock.today() - dt.timedelta(days=365 * years_back)
         else:
-            cutoff = dt.date.today() - dt.timedelta(days=365 * years_back)
-        return sorted({d for d in dates if cutoff <= d <= dt.date.today()})
+            cutoff = clock.today() - dt.timedelta(days=365 * years_back)
+        return sorted({d for d in dates if cutoff <= d <= clock.today()})
 
     # ------------------------------------------------------------------
     _MONTHS = {m: i for i, m in enumerate(
@@ -186,7 +188,7 @@ class FomcSource:
         text = re.sub(r"&nbsp;?", " ", text)
         text = re.sub(r"\s+", " ", text)
 
-        today = dt.date.today()
+        today = clock.today()
         out: list[dt.date] = []
         # 以「YYYY FOMC Meetings」切出各年度區塊，年份才不會張冠李戴
         blocks = list(re.finditer(r"(20\d{2})\s+FOMC\s+Meetings", text, re.I))
@@ -223,7 +225,7 @@ class FomcSource:
 
     @staticmethod
     def _guess_dates(years_back: int) -> list[dt.date]:
-        out, this_year = [], dt.date.today().year
+        out, this_year = [], clock.today().year
         for y in range(this_year - years_back, this_year + 1):
             for mth, day in [(1, 29), (3, 19), (5, 7), (6, 18),
                              (7, 30), (9, 17), (11, 5), (12, 17)]:

@@ -27,14 +27,13 @@ import sys
 import json
 import logging
 import argparse
-import datetime as dt
 from pathlib import Path
 
 import yaml
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src import site, build                                       # noqa: E402
+from src import site, build, clock                                # noqa: E402
 from src.analysis import changes as chg                           # noqa: E402
 from src.analysis import freshness                                # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
@@ -91,7 +90,7 @@ def series_ids(cfg: dict, groups: tuple[str, ...]) -> tuple[list, dict, dict]:
 
 LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
                 "claims", "reference", "special_series", "industries")
-INFL_GROUPS = ("headline", "cpi_components", "shelter_detail",
+INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
                "trend_measures", "energy", "expectations")
 RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt")
 
@@ -112,7 +111,7 @@ def save_real_fixtures(module: str, series: dict, vintages: dict) -> None:
     """把這次抓到的真實資料存成離線素材。"""
     FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
-        "saved_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "saved_at": clock.iso(),
         "module": module,
         "series": series,
         "vintages": vintages or {},
@@ -387,7 +386,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     write("index.html", site.page(
         "美國總經儀表板", "/", home_page.home_body(ctxs),
-        subtitle=f"最後更新 {dt.datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        subtitle=f"最後更新 {clock.stamp()}",
         footer=("資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。"
                 "所有量化判定由固定規則產生，每次執行結果一致。<br>"
                 "本站僅為數據整理，不構成投資建議。"),
@@ -540,10 +539,22 @@ def main() -> int:
         ctxs["changes"] = None
         log.info("局部重跑（--only %s）：跳過變化比對與快照存檔", args.only)
     else:
-        prev_snap = chg.load_previous(STATE_FILE)
+        prev_state = chg.load_previous(STATE_FILE)
         cur_snap = chg.snapshot(ctxs)
-        ctxs["changes"] = chg.compare(cur_snap, prev_snap)
+        # 只有資料期別真的變了才輪替基準——同一期別的重跑會更新 current，
+        # 但不會把 previous 往前推。這樣「7 月就業報告帶來的變化」
+        # 會一直留到 8 月報告出來，而不是隔天就熄掉。
+        cur_state = chg.roll(prev_state, cur_snap)
+        ctxs["changes"] = chg.compare(cur_state)
+        # 「這一格待了幾期」——首頁的結論卡自己引出來的問題
+        ctxs["_tenure"] = chg.tenure(cur_state)
         log.info("變化摘要：%s", ctxs["changes"].headline)
+        _tn = ctxs["_tenure"]
+        if _tn:
+            log.info("情境已維持 %d 期%s", _tn["periods"],
+                     f"（前一格：{_tn['from']}）" if _tn.get("from") else "")
+        if ctxs["changes"].bases:
+            log.info("對照基準：%s", chg.basis_text(ctxs["changes"]))
 
     ctxs["_real_modules"] = REAL_MODULES
     # 離線模式的示範資料日期是寫死的，一定會被判成停更——那不是訊息，
@@ -558,7 +569,7 @@ def main() -> int:
                               for s in ctxs["_stale"]))
     written = write_site(ctxs, args.offline, only=args.only)
     if not args.only:
-        chg.save(STATE_FILE, cur_snap)
+        chg.save(STATE_FILE, cur_state)
     log.info("已產出 %d 個頁面至 %s", len(written), OUT_DIR)
     if all_failed:
         log.warning("有 %d 個資料來源抓取失敗，詳見頁面底部清單", len(all_failed))
@@ -570,7 +581,7 @@ def main() -> int:
         log.info("局部重跑（--only %s）：跳過 latest.json，避免覆蓋成殘缺狀態",
                  args.only)
     elif args.json:
-        out = {"generated_at": dt.datetime.now().isoformat(timespec="seconds")}
+        out = {"generated_at": clock.iso()}
         if ctxs.get("labor"):
             l = ctxs["labor"]
             out["labor"] = {"month": l["data_month"], "score": l["score"]["score"],

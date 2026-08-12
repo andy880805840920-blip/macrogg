@@ -39,6 +39,8 @@ import datetime as dt
 
 import requests
 
+from . import clock
+
 log = logging.getLogger(__name__)
 
 CONCEPT_URL = ("https://data.sec.gov/api/xbrl/companyconcept/"
@@ -226,7 +228,7 @@ class SecClient:
         def _at(arr, i):
             return arr[i] if isinstance(arr, list) and i < len(arr) else ""
 
-        cutoff = (dt.date.today() - dt.timedelta(days=days)).isoformat()
+        cutoff = (clock.today() - dt.timedelta(days=days)).isoformat()
         out = []
         for i, form in enumerate(forms):
             date = _at(dates, i)
@@ -252,41 +254,63 @@ class SecClient:
         return out
 
     # ------------------------------------------------------------------
-    def offering_amount(self, doc_url: str) -> float | None:
+    def cover_info(self, doc_url: str) -> dict:
         """
-        從公開說明書補充的封面抓總發行金額（回傳十億美元）。
+        讀說明書封面，回傳 {"amount": 十億美元|None, "preliminary": bool}。
 
-        封面的格式大致是「$3,000,000,000 / 4.125% Notes due 2035」或
-        「aggregate principal amount of $2,500,000,000」。這裡只認
-        **十億等級以上**的美元數字並取最大的一個——封面上還會有票息、
-        年份、每股價格等其他數字，取最大值可以避開它們。
+        ── 為什麼要分辨預估版 ────────────────────────────────
+        424B2／424B5 **同時涵蓋預估版與定價版**，光看表格號分不出來。
+        實測過的真實文件：一份檔名 `preliminary-prospectus-suppl.htm`
+        的文件，表格號就是 424B2。
 
-        解析不出來就回 None。這個數字只是輔助，抓不到就只列事件，
-        絕不用猜的補上——一個錯的發債金額比沒有金額糟得多。
+        分辨的依據是 Rule 430B／430C 強制要求的封面法定用語：
+
+            「The information in this preliminary prospectus supplement
+              is not complete and may be changed」
+            「Subject to Completion, Dated <日期>」
+
+        定價版沒有這段。這兩句的字面高度固定（大小寫不一定），
+        是目前唯一穩定的判別方式。
+
+        不分辨的後果：同一筆債會被算兩次（宣布日一份、定價日一份），
+        而且預估版的封面定價表格是**空的**，解析器抓不到金額就回 None，
+        於是畫面上出現一堆「金額待確認」——那些其實不是抓取失敗，
+        是它們本來就還沒有金額。
+
+        ── 為什麼金額改成加總 tranche ────────────────────────
+        先前的做法是「封面上 1 億～2000 億之間取最大值」。但封面上最大的
+        數字往往是**貨架註冊額度**（"up to $40,000,000,000 of debt
+        securities"），不是這一筆的規模。實際跑出來的症狀：Alphabet 在
+        相隔兩個月的兩份文件上各被讀出一次「400 億」——同一個數字出現兩次，
+        那不是兩筆交易，是同一個貨架額度被讀了兩次。近 120 天的合計因此
+        灌到季報申報值的四倍。
+
+        改成只認標準的分券格式並加總：
+
+            $1,000,000,000  4.125% Notes due 2029
+            $1,500,000,000  4.500% Notes due 2032
+
+        抓不到就回 None——**不退回取最大值**。一個錯的發債金額比沒有金額
+        糟得多，而「取最大值」正是錯得最有系統的那一種。
         """
         if not doc_url:
-            return None
+            return {"amount": None, "preliminary": False}
         try:
             r = self.session.get(doc_url, timeout=TIMEOUT)
             r.raise_for_status()
             time.sleep(THROTTLE)
         except Exception as e:                     # noqa: BLE001
             self.failed.append(("SEC 說明書封面", str(e)))
-            return None
-        # 只看前 40000 字元：封面在最前面，往後全是條款細節，
-        # 裡面的數字（票息計算例、面額）會干擾判斷
+            return {"amount": None, "preliminary": False}
+        # 只看前 40000 字元：封面在最前面，往後全是條款細節
         text = re.sub(r"<[^>]+>", " ", r.text[:40000])
         text = html_mod.unescape(text)
-        best = None
-        for m in re.finditer(r"\$\s?([\d,]{11,})", text):
-            try:
-                v = float(m.group(1).replace(",", ""))
-            except ValueError:
-                continue
-            # 合理範圍：1 億～2000 億美元。超出就不是發行金額
-            if 1e8 <= v <= 2e11 and (best is None or v > best):
-                best = v
-        return best / 1e9 if best else None
+        return {"amount": parse_offering_amount(text),
+                "preliminary": is_preliminary(text)}
+
+    def offering_amount(self, doc_url: str) -> float | None:
+        """只要金額時的薄包裝。保留是為了不讓呼叫端都得改成讀 dict。"""
+        return self.cover_info(doc_url)["amount"]
 
 
 # ---------------------------------------------------------------------------
@@ -427,7 +451,7 @@ def fetch_hyperscalers(cfg: dict,
         # 陳舊防線：財報最慢一季一次，超過 200 天沒更新代表抓到的是
         # 停用標記的歷史資料（或公司停止申報），寧可退回手動值也不要
         # 讓九年前的數字混進來假裝是最新一季。
-        stale_days = (dt.date.today()
+        stale_days = (clock.today()
                       - dt.date.fromisoformat(got["_end"])).days
         if stale_days > 200:
             log.warning("%s 抓到的最新一季是 %s（%d 天前），太舊，改用手動值",
@@ -465,55 +489,147 @@ def _days_apart(a: str, b: str) -> int | None:
         return None
 
 
+# 預估版的法定用語（Rule 430B／430C）。大小寫不一，實測看過全大寫與句首大寫。
+# 兩句任一命中就算預估版——正式定價版兩句都不會有。
+_PRELIM_RE = re.compile(
+    r"subject\s+to\s+completion"
+    r"|information\s+in\s+this\s+preliminary\s+prospectus"
+    r"|not\s+complete\s+and\s+may\s+be\s+changed",
+    re.I)
+
+# 分券格式：金額 ＋（票息／浮動）＋ Notes/Debentures/Bonds due YYYY。
+# 中間允許 80 字元的雜訊（"aggregate principal amount of"、"Senior"、
+# 空白與換行），但不允許再出現一個 $——不然會從貨架額度一路跨到分券那一行。
+_TRANCHE_RE = re.compile(
+    r"\$\s?([\d,]{11,})(?:(?!\$)[^\n]){0,80}?"
+    r"(?:Notes|Debentures|Bonds)\s+due\s+20\d\d",
+    re.I)
+
+# 沒有分券格式時的備案：明講 aggregate principal amount 的那個數字。
+_AGG_RE = re.compile(r"\$\s?([\d,]{11,})\s+aggregate\s+principal\s+amount",
+                     re.I)
+
+AMOUNT_MIN, AMOUNT_MAX = 1e8, 2e11        # 1 億～2000 億美元
+
+
+def is_preliminary(cover_text: str) -> bool:
+    """封面是不是預估版（尚未定價）。"""
+    return bool(_PRELIM_RE.search(cover_text or ""))
+
+
+def _amounts(pattern, text) -> list[float]:
+    out = []
+    for m in pattern.finditer(text):
+        try:
+            v = float(m.group(1).replace(",", ""))
+        except ValueError:
+            continue
+        if AMOUNT_MIN <= v <= AMOUNT_MAX:
+            out.append(v)
+    return out
+
+
+def parse_offering_amount(cover_text: str) -> float | None:
+    """
+    從封面文字解析這一筆的發行總額（十億美元）。
+
+    先找分券格式並**加總**；一筆多年期或多幣別的交易，封面會逐券列出，
+    加起來才是這一筆的規模。找不到分券才退回 aggregate principal amount
+    那一種寫法，並取最大的一個。
+
+    兩種都找不到就回 None。**刻意不退回「封面最大的數字」**——
+    那個備案會抓到貨架註冊額度，而且錯得很有系統（同一個額度每次都被讀成
+    一筆新的交易），比沒有數字糟得多。
+
+    分券與 aggregate 不相加：封面常常兩者都寫（先講總額再逐券列），
+    相加會直接翻倍。
+    """
+    text = cover_text or ""
+    tranches = _amounts(_TRANCHE_RE, text)
+    if tranches:
+        return sum(tranches) / 1e9
+    agg = _amounts(_AGG_RE, text)
+    if agg:
+        return max(agg) / 1e9
+    return None
+
+
 def dedupe_deals(rows: list[dict]) -> list[dict]:
     """
     把「申報」收斂成「交易」。
 
     為什麼要做
     ----------
-    一筆公開發行通常會產生兩份申報：424B（定價當日）與 8-K 2.03
-    （四個營業日內）。兩份都列出來，畫面上會看到同一筆債出現兩次，
-    金額合計也會直接翻倍——而那個合計正是這一段唯一有交易意涵的數字。
+    同一筆債會產生**三到四份**申報：預估版 424B（宣布日）、定價版 424B
+    （定價日）、8-K 2.03（四個營業日內），多幣別的話再加一份。
+    全部列出來的話，同一筆債會被算三次，而金額合計正是這一段唯一有
+    交易意涵的數字——實際跑出來灌到季報申報值的四倍。
 
     規則
     ----
-    1. 424B 是主體。同一家公司、金額相同、日期相差 DEDUP_DAYS 天以內的
-       424B 只留最早那一筆（定價日才是交易發生的日子）。
-    2. 8-K 2.03 只在**配不到任何 424B** 時才成為獨立的一筆。配對條件放寬到
-       只看公司與日期距離，因為 8-K 沒有可解析的金額可以比對。
-       配不到的通常是銀行貸款、定期貸款或私募——那些本來就不發 424B，
-       是真的該獨立列出的交易。
-
-    金額為 None 的 424B 仍然參與去重（同公司、同日期範圍、兩邊都沒金額
-    視為同一筆），否則封面解析失敗的那幾筆會逃過去重。
+    1. **預估版不算一筆交易。** 它是同一筆的前身，通常兩三天內就會有
+       定價版。仍然保留在明細裡並標示，因為「有一筆正在路上」對供給面
+       本身就是資訊。
+    2. 同一家公司、日期相差 DEDUP_DAYS 天以內的定價版 424B **視為同一筆
+       交易**——不再要求金額相同。先前要求同金額，結果預估版（金額 None
+       或貨架額度）跟定價版（真實金額）配不起來，兩份都被留下。
+    3. 一筆交易的金額 ＝ 群組內**相異**金額的總和。相異是必要的：
+       多幣別 tranche 分開申報要相加，但同一個數字重複出現
+       （重新申報、預估與定價金額相同）不能算兩次。
+    4. 8-K 2.03 只在**配不到任何 424B** 時才成為獨立的一筆。
+       配不到的通常是銀行貸款、定期貸款或私募——那些本來就不發 424B。
     """
     offerings = [r for r in rows if r.get("kind") == "offering"]
     events = [r for r in rows if r.get("kind") != "offering"]
 
-    # ---- ① 424B 之間去重 ----
-    offerings.sort(key=lambda r: r["date"])          # 由舊到新，保留最早的
-    kept: list[dict] = []
-    for r in offerings:
-        dup = False
-        for k in kept:
-            if k["name"] != r["name"]:
-                continue
-            gap = _days_apart(k["date"], r["date"])
-            if gap is None or gap > DEDUP_DAYS:
-                continue
-            if k.get("amount") == r.get("amount"):   # 兩邊都 None 也算相同
-                dup = True
-                break
-        if not dup:
-            kept.append(r)
+    # ---- ① 預估版：不成為交易，但留在明細 ----
+    prelim = [r for r in offerings if r.get("preliminary")]
+    priced = [r for r in offerings if not r.get("preliminary")]
 
-    # ---- ② 8-K 2.03：配不到 424B 才留 ----
+    # ---- ② 定價版：同公司、時間相近 → 併成一筆交易 ----
+    priced.sort(key=lambda r: r["date"])          # 由舊到新
+    groups: list[list[dict]] = []
+    for r in priced:
+        for g in groups:
+            if g[0]["name"] != r["name"]:
+                continue
+            gap = _days_apart(g[-1]["date"], r["date"])
+            if gap is not None and gap <= DEDUP_DAYS:
+                g.append(r)
+                break
+        else:
+            groups.append([r])
+
+    kept: list[dict] = []
+    for g in groups:
+        # 代表這一筆的是**最後一份**申報：定價版比宣布版晚，
+        # 而最後一份的日期才是交易真正完成的日子。
+        lead = dict(g[-1])
+        amts = []
+        for r in g:
+            a = r.get("amount")
+            if a is not None and a not in amts:
+                amts.append(a)
+        lead["amount"] = sum(amts) if amts else None
+        lead["merged"] = len(g)
+        kept.append(lead)
+
+    # ---- ③ 8-K 2.03：配不到 424B 才留 ----
     for e in events:
         if any(k["name"] == e["name"]
                and (_days_apart(k["date"], e["date"]) or 999) <= DEDUP_DAYS
                for k in kept):
             continue                                  # 同一筆交易，已由 424B 代表
         kept.append(e)
+
+    # ---- ④ 預估版接回明細，但標記成不計數 ----
+    for r in prelim:
+        # 已經有對應的定價版就不必再列——那只是同一筆的前身
+        if any(k["name"] == r["name"]
+               and (_days_apart(k["date"], r["date"]) or 999) <= DEDUP_DAYS
+               for k in kept):
+            continue
+        kept.append({**r, "amount": None})
 
     kept.sort(key=lambda r: r["date"], reverse=True)
     return kept
@@ -540,19 +656,24 @@ def fetch_recent_offerings(cfg: dict, client: SecClient | None = None,
         if not cik:
             continue
         for f in client.debt_filings(int(cik)):
-            amt = None
-            # 只對「發行文件本身」解析金額。8-K 是事件通知，
-            # 封面沒有標準化的金額欄位，硬解會抓到不相干的數字。
+            amt, prelim = None, False
+            # 只對「發行文件本身」讀封面。8-K 是事件通知，
+            # 沒有標準化的金額欄位，硬解會抓到不相干的數字。
             if parse_amount and f["kind"] == "offering":
-                amt = client.offering_amount(f["doc_url"])
+                info = client.cover_info(f["doc_url"])
+                amt, prelim = info["amount"], info["preliminary"]
             out.append({**f, "name": name, "ticker": c.get("ticker", ""),
-                        "amount": amt})
+                        "amount": amt, "preliminary": prelim})
     raw_n = len(out)
+    n_prelim = sum(1 for x in out if x.get("preliminary"))
     out = dedupe_deals(out)
+    n_deals = sum(1 for x in out if not x.get("preliminary"))
     if out or raw_n:
-        log.info("SEC 發債：近 %d 天 %d 份申報 → %d 筆交易（%d 筆有金額）",
-                 RECENT_DAYS, raw_n, len(out),
-                 sum(1 for x in out if x["amount"] is not None))
+        log.info("SEC 發債：近 %d 天 %d 份申報（其中 %d 份是預估版）"
+                 " → %d 筆交易（%d 筆有金額）",
+                 RECENT_DAYS, raw_n, n_prelim, n_deals,
+                 sum(1 for x in out
+                     if x["amount"] is not None and not x.get("preliminary")))
     return out
 
 

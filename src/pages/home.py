@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import datetime as dt
 
+from .. import clock
+
 from ..site import esc, next_first_friday, next_cpi_release
 from ..analysis import changes as chg_mod
 
@@ -55,30 +57,6 @@ def _module_card(href, name, when, value, note, more,
 </a>"""
 
 
-VINTAGE_LABEL = {"labor": "就業報告", "inflation": " CPI", "fomc": "聲明"}
-
-
-def _vintage_text(v: dict) -> str:
-    """把資料版本寫成人看得懂的一行：「7 月就業報告　·　7 月 CPI　·　7/29 聲明」。"""
-    if not v:
-        return ""
-    out = []
-    for key in ("labor", "inflation", "fomc"):
-        raw = v.get(key)
-        if not raw:
-            continue
-        if key == "fomc":                       # YYYY-MM-DD
-            parts = raw.split("-")
-            out.append(f"{int(parts[1])}/{int(parts[2])} 聲明"
-                       if len(parts) == 3 else f"{raw} 聲明")
-        else:                                   # YYYY-MM
-            m = raw.split("-")
-            out.append(f"{int(m[1])} 月{VINTAGE_LABEL[key]}"
-                       if len(m) == 2 else f"{raw} {VINTAGE_LABEL[key]}")
-    # 「7 月 CPI」的空格：中文接英文縮寫要留白，否則會黏成「7 月CPI」
-    return "　·　".join(out)
-
-
 def _change_card(cs) -> str:
     """
     本期變化摘要——對每期都追的人，這裡的邊際資訊量最高。
@@ -92,8 +70,11 @@ def _change_card(cs) -> str:
        「利升息」、藍色同時代表「已解除」與「利降息」，於是
        「已解除（藍）… 利升息（橘）」一列裡兩個顏色互相打架。
        新觸發／已解除改用 ＋／− 符號，不佔顏色。
-    ③ **對照的是資料版本，不是執行時間。** 排程每天跑、資料一個月出一次，
-       「對照 08-11 05:01」會讓人以為核心 CPI 在一小時內掉了半個百分點。
+    ③ **對照的是每個模組自己的上一期發布，而且結果會留到下一次發布。**
+       先前的比較視窗只有 24 小時：發布當天亮、隔天快照被覆蓋就熄了，
+       讀者在發布後第三天打開網站等於完全錯過。而且三個模組的節奏不同
+       （就業每月第一個週五、CPI 每月中、FOMC 每 6–8 週），
+       共用一個「上期」本來就對不齊。
     """
     if cs is None:
         return ""
@@ -104,21 +85,22 @@ def _change_card(cs) -> str:
                 '下次有新資料時，這裡會列出情境移動、訊號的增減與關鍵數字的變化。'
                 '</div></div>')
 
-    prev_v = _vintage_text(cs.prev_vintage)
-    base = f"對照 {prev_v}" if prev_v else f"對照 {cs.prev_at}"
+    base = chg_mod.basis_text(cs)
 
-    # 資料月份沒變 ＝ 這次執行只是重新產生同一份頁面。與其顯示一堆
-    # 因為重跑而產生的微小差異，不如直接講「沒有新資料」。
+    # 「這是幾天前的事」要講。內容會一直留到下一次發布，所以讀者可能是在
+    # 發布後第 10 天看到這張卡——不標的話會誤以為是今天的新聞。
+    age = ""
+    if cs.days_since is not None:
+        age = ("今天發布" if cs.days_since <= 0 else
+               f"{cs.days_since} 天前發布")
+
+    # 真的什麼都沒變才走這一條（同一期資料重新產生、或兩期之間確實無異動）。
     quiet = (not cs.scenario_moved and not cs.new_flags
              and not cs.resolved_flags and not cs.metric_moves)
-    if quiet or not cs.data_changed:
-        # 沒有新資料時，訊息本身已經把資料版本講完了，右邊不必再重複一次。
-        if not cs.data_changed:
-            msg, tailchip = f"自 {prev_v or cs.prev_at} 以來沒有新資料發布", ""
-        else:
-            msg, tailchip = cs.headline, f'<span class="ctitle">{esc(base)}</span>'
+    if quiet:
         return (f'<div class="chg quiet"><span class="ctitle">本期變化</span>'
-                f'<span>{esc(msg)}</span>{tailchip}</div>')
+                f'<span>{esc(cs.headline)}</span>'
+                f'<span class="ctitle">{esc(base)}</span></div>')
 
     # ---- 訊號變化：按方向分兩欄 ----
     def _row(f: dict) -> str:
@@ -182,10 +164,12 @@ def _change_card(cs) -> str:
         tail.append(f"勞動綜合分數 {cs.labor_score_delta:+.2f}")
     if cs.persisting:
         tail.append(f"{cs.persisting} 項訊號延續")
-    tail.append(base)
+    if base:
+        tail.append(base)
 
     return f"""<div class="chg{' moved' if cs.scenario_moved else ''}">
   <div class="chead">{esc(cs.headline)}</div>
+  {f'<div class="cage">{esc(age)}</div>' if age else ''}
   {net_html}{items_html}{moves_html}
   <div class="src" style="margin-top:12px">{esc('　·　'.join(tail))}</div>
 </div>"""
@@ -269,7 +253,14 @@ def home_body(ctxs: dict) -> str:
     # ---------------- 模組入口（四張）----------------
     # 情境合成那張刪掉：它跟頁面最上方的結論卡是同一個內容
     #（同樣的名稱、同樣的就業×通膨定位、同樣的政策傾向），
-    # 整段重複一次只是讓讀者多捲一個螢幕。導覽列仍然進得去。
+    # 整段重複一次只是讓讀者多捲一個螢幕。
+    #
+    # 但「刪掉卡片」不等於「刪掉入口」——先前連結一起沒了，首頁 body 內
+    # 通往情境頁的連結變成 0 條（labor×2、inflation×2、fomc×1、rates×1、
+    # scenario×0），只剩導覽列上那四個字。而讀者剛在首頁看過同一段結論，
+    # 理性推論是「我已經看過了」，於是全站唯一寫著「該怎麼擺部位」的那張表
+    # 沒有人會走到。改成在結論卡底部放一條 CTA，並直接 deep link 到
+    # #positioning——site.py 的 openTarget() 會自動展開那張收合卡。
     cards = []
     dirs = []          # 三個政策模組的方向，給結論卡的一致度用
     curve_dir = None   # 長端另計：曲線形狀不是政策方向，不進票數
@@ -343,6 +334,22 @@ def home_body(ctxs: dict) -> str:
                           f'{esc("、".join(sc.incomplete))}。')
         # 九宮格已改成「一個體制一張」，格名本身就是結論，
         # 不再需要「已依重心修正」這種事後補述。但適用哪一張要講出來。
+        # 首頁只給描述的**第一句**，完整那段留在情境頁。
+        # 兩頁逐字相同的話，讀者從首頁走過去會覺得「我已經看過了」，
+        # 而首頁的工作是「現在是什麼」，情境頁才是「為什麼、所以要怎麼擺」。
+        # 每一格的第一句都寫得可以單獨成立（例如「兩個使命指向相反，
+        # 而委員會把通膨擺在前面。」），所以切第一個句號是安全的。
+        # 「已維持 N 期」：只有累積到兩期以上才講得出來，所以會空一陣子。
+        # 這是刻意的——編一個「已維持 1 期」出來只是廢話。
+        _tn = ctxs.get("_tenure") or {}
+        _ten_html = ""
+        if _tn.get("periods", 0) >= 2:
+            _frm = (f"　·　上次移動來自「{esc(_tn['from'])}」"
+                    if _tn.get("from") else "")
+            _ten_html = (f'<div class="v-tenure">這一格已維持 '
+                         f'{_tn["periods"]} 期{_frm}</div>')
+        _why = (sc.description or "").split("。")[0]
+        _why = (_why + "。") if _why else (sc.description or "")
         _rl = esc((sc.focus or {}).get("label", ""))
         ovr = (f'<br>適用的九宮格：{_rl}'
                + ('（本次判不出重心，暫用兩邊並重的對照）'
@@ -351,13 +358,16 @@ def home_body(ctxs: dict) -> str:
         hero = f"""<div class="verdict {lean_cls}">
   <div class="v-eyebrow">{esc((scn or {}).get('as_of', ''))}　·　目前情境</div>
   <div class="v-main">{esc(sc.name)}</div>
-  <div class="v-why">{esc(sc.description)}</div>
+  <div class="v-why">{esc(_why)}</div>
   <div class="v-count">
     定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
     政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}{ovr}
     {('<br>' + incomplete) if incomplete else ''}
   </div>
   {_consensus_row(dirs, curve_dir)}
+  {_ten_html}
+  <a class="v-cta" href="/scenario/#positioning">這個判斷怎麼來的、對應什麼部位
+    <span>九宮格定位　·　三種重心下會變成什麼　·　固定收益部位對照</span></a>
 </div>"""
     else:
         hero = ('<div class="verdict balanced"><div class="v-main">尚無資料</div>'
@@ -404,7 +414,7 @@ def home_body(ctxs: dict) -> str:
     # ---------------- 接下來要盯什麼 ----------------
     # 三個倒數。就業報告與 CPI 是慣例推估，FOMC 是官方行事曆解析的實際日期，
     # 三者的可信度不同，所以標示要分開講。
-    today = dt.date.today()
+    today = clock.today()
     counts = []
     # 官方行事曆優先。FRED 的 release/dates 是 BLS 自己報給 FRED 的排程，
     # 遇到聯邦假日挪動時它會跟著動，慣例推估不會——一年總有幾次不一樣，
@@ -461,11 +471,31 @@ def home_body(ctxs: dict) -> str:
 
     change_html = _change_card(ctxs.get("changes"))
 
+    # ---- 收合摘要 ----
+    # 首頁先前是全站**預設最長**的頁（390px 下 4026px），卻是唯一沒有收合的頁——
+    # 整站的閱讀模型在入口那一頁不成立。改成跟內容頁一樣：只留關鍵訊號展開，
+    # 其餘收合並在標題列帶一句結論。
+    _flag_sum = flags_sub
+    _trig_sum = "資料不足"
+    if sc and sc.triggers:
+        _b0 = ([x for x in sc.triggers if getattr(x, "binding", False)]
+               or sc.triggers[:1])[0]
+        _trig_sum = (f"{_b0.label}：{'已觸發' if _b0.met else _b0.distance}")
+    if counts:
+        _trig_sum += f"　·　最近一次發布 {(counts[0]['date'] - today).days} 天後"
+    _chg = ctxs.get("changes")
+    _chg_sum = ("尚無可比對的上期" if not (_chg and _chg.has_previous)
+                else (chg_mod.net_line(_chg) or "訊號組成與上期相同"))
+
+    # 模組入口移到結論卡正下方。先前排在整頁最後，390px 下讀者要捲過
+    # 4000px 才看得到——首頁的主要功能之一是「往哪走」，那個功能被埋在最底下。
     return f"""{hero}
+
+<div class="grid g4">{"".join(cards)}</div>
 
 <div class="grid">
   <div class="card">
-    <h2>本期關鍵訊號</h2>
+    <h2 id="signals" data-open="1" data-sum="{esc(_flag_sum)}">本期關鍵訊號</h2>
     <p class="hint">{esc(flags_sub)}</p>
     {flags_html}
   </div>
@@ -473,27 +503,23 @@ def home_body(ctxs: dict) -> str:
 
 <div class="grid g2">
   <div class="card">
-    <h2>接下來要盯什麼</h2>
+    <h2 id="watch" data-sum="{esc(_trig_sum)}">接下來要盯什麼</h2>
     {trig_html or '<div class="empty">資料不足，無法計算觸發距離</div>'}
     <h3 style="margin-top:20px">下次更新</h3>
     <div class="cds">{counts_html}</div>
   </div>
 
   <div class="card">
-    <h2>跟上期比，什麼變了</h2>
+    <h2 id="changed" data-sum="{esc(_chg_sum)}">跟上期比，什麼變了</h2>
     {change_html or '<div class="empty">尚無可比對的上期資料</div>'}
   </div>
 </div>
-
-<div class="grid g4">{"".join(cards)}</div>
 
 <div class="card" style="margin-top:13px">
   <div class="src" style="border-top:none;padding-top:0">
     資料月份：{esc((lab or {}).get('data_month', '—'))}（就業）　·　
     {esc((inf or {}).get('data_month', '—'))}（物價）　·　
-    {esc((fom or {}).get('latest_date', '—'))}（聲明）。
-    {esc((lab or {}).get('jolts_lag_text', 'JOLTS 較就業報告落後數個月'))}。
-    每天自動重新產生。
+    {esc((fom or {}).get('latest_date', '—'))}（聲明）。每天自動重新產生。
   </div>
 </div>"""
 

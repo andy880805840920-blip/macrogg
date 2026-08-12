@@ -17,11 +17,11 @@
     python tests/test_change_direction.py
 """
 import sys
-import re
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-from src.analysis import changes as chg  # noqa: E402
+from src.analysis import changes as chg
+from src import clock  # noqa: E402
 from src.pages import home  # noqa: E402
 
 ok = True
@@ -34,26 +34,46 @@ def check(name: str, cond: bool, detail: str = "") -> None:
 
 
 def snap(flags: dict, metrics: dict | None = None, month: str = "2026-07") -> dict:
-    """flags: {key: lean}"""
+    """一份平面快照。flags: {key: lean}"""
     return {
-        "at": f"{month}-05T13:45:00",
-        "vintage": {"labor": month},
         "labor": {
+            "vintage": month, "released": clock.today().isoformat(),
             "month": month, "score": 0.0, "tilt": "neutral",
             "flags": list(flags),
             "flag_titles": {k: f"訊號{k}" for k in flags},
             "flag_leans": dict(flags),
             "metrics": metrics or {},
         },
-        "scenario": {"name": "按兵不動", "grid_name": "按兵不動",
+        "scenario": {"vintage": f"labor:{month}", "released": "2026-07-05",
+                     "name": "按兵不動", "grid_name": "按兵不動",
                      "regime": "balanced", "labor": "中", "inflation": "中"},
     }
+
+
+def compare(cur: dict, prev: dict) -> "chg.ChangeSet":
+    """
+    把兩份平面快照包成 compare() 要的狀態結構。
+
+    正式流程是 roll() 依「資料期別」決定要不要輪替；這裡是單元測試，
+    直接指定 current 與 previous 比較好讀，也比較不會因為 roll() 的
+    輪替規則改動而連坐失敗。
+    """
+    mods = {}
+    for k in set(cur) | set(prev):
+        e = {}
+        if cur.get(k):
+            e["current"] = cur[k]
+        if prev.get(k):
+            e["previous"] = prev[k]
+        if e:
+            mods[k] = e
+    return chg.compare({"at": "2026-08-05T13:45:00", "modules": mods})
 
 
 # ---------------------------------------------------------------------------
 # ① 解除鷹派訊號 ＝ 鴿派的變化
 # ---------------------------------------------------------------------------
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish", "h": "hawkish"},
+cs = compare(snap({"a": "dovish"}), snap({"a": "dovish", "h": "hawkish"},
                                              month="2026-06"))
 check("① 解除的鷹派訊號算鴿派變化",
       cs.resolved_flags[0]["change_lean"] == "dovish",
@@ -61,17 +81,17 @@ check("① 解除的鷹派訊號算鴿派變化",
 check("② 訊號自己的方向仍然保留",
       cs.resolved_flags[0]["lean"] == "hawkish")
 
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish", "d": "dovish"},
+cs = compare(snap({"a": "dovish"}), snap({"a": "dovish", "d": "dovish"},
                                              month="2026-06"))
 check("③ 解除的鴿派訊號算鷹派變化",
       cs.resolved_flags[0]["change_lean"] == "hawkish")
 
-cs = chg.compare(snap({"a": "dovish", "h": "hawkish"}), snap({"a": "dovish"},
+cs = compare(snap({"a": "dovish", "h": "hawkish"}), snap({"a": "dovish"},
                                                              month="2026-06"))
 check("④ 新觸發的訊號方向不變",
       cs.new_flags[0]["change_lean"] == "hawkish")
 
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish", "n": "neutral"},
+cs = compare(snap({"a": "dovish"}), snap({"a": "dovish", "n": "neutral"},
                                              month="2026-06"))
 check("⑤ 中性訊號解除仍是中性",
       cs.resolved_flags[0]["change_lean"] == "neutral")
@@ -84,17 +104,17 @@ check("⑤ 中性訊號解除仍是中性",
 prev = snap({"x1": "hawkish", "x2": "dovish", "x3": "hawkish", "x4": "hawkish"},
             month="2026-06")
 cur = snap({"n1": "hawkish", "n2": "dovish", "n3": "dovish"})
-cs = chg.compare(cur, prev)
+cs = compare(cur, prev)
 check("⑥ 淨方向：5 鴿 2 鷹 → 偏鴿",
       (cs.n_dovish, cs.n_hawkish, cs.net_lean) == (5, 2, "dovish"),
       f"{cs.n_dovish} 鴿 / {cs.n_hawkish} 鷹 / {cs.net_lean}")
 check("⑦ 淨結論寫得出來", "降息" in chg.net_line(cs), chg.net_line(cs))
 
-cs = chg.compare(snap({"n": "hawkish"}), snap({"o": "hawkish"}, month="2026-06"))
+cs = compare(snap({"n": "hawkish"}), snap({"o": "hawkish"}, month="2026-06"))
 check("⑧ 一鷹一鴿 → 打平", cs.net_lean == "mixed",
       f"{cs.n_dovish}/{cs.n_hawkish}/{cs.net_lean}")
 
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish"}, month="2026-06"))
+cs = compare(snap({"a": "dovish"}), snap({"a": "dovish"}, month="2026-06"))
 check("⑨ 沒有變化 → 沒有淨結論", chg.net_line(cs) == "")
 
 
@@ -108,7 +128,7 @@ def mv(key, label, old, new, up_is):
     c = snap({"a": "dovish"}, {key: {"label": label, "value": new,
                                      "unit": "%", "threshold": 0.01,
                                      "up_is": up_is}})
-    return chg.compare(c, p).metric_moves[0]
+    return compare(c, p).metric_moves[0]
 
 check("⑩ 核心 CPI 下降 → 偏降息",
       mv("cpi", "核心 CPI", 3.8, 3.3, "hawkish")["lean"] == "dovish")
@@ -124,25 +144,22 @@ check("⑬ 失業率上升 → 偏降息",
 # ---------------------------------------------------------------------------
 # ④ 對照基準是資料版本，不是執行時間
 # ---------------------------------------------------------------------------
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish"}, month="2026-06"))
-check("⑭ 資料月份不同 → 認得出有新資料", cs.data_changed)
-cs = chg.compare(snap({"a": "dovish"}), snap({"a": "dovish"}))
-check("⑮ 資料月份相同 → 認得出沒有新資料", not cs.data_changed)
-
-html = home._change_card(cs)
-check("⑯ 沒有新資料時直說", "沒有新資料發布" in html,
-      re.sub(r"<[^>]+>", " ", html).strip()[:60])
-check("⑰ 不再拿執行時間當基準", "13:45" not in html)
+cs = compare(snap({"a": "dovish"}), snap({"a": "dovish"}, month="2026-06"))
+check("⑭ 有 previous 就算得出基準", cs.bases and cs.bases[0]["from"] == "6 月",
+      str(cs.bases))
+check("⑮ 基準文字是資料期別", chg.basis_text(cs) == "就業 7 月（對照 6 月）",
+      chg.basis_text(cs))
+check("⑯ 不再拿執行時間當基準", "13:45" not in home._change_card(cs))
 
 # 新觸發一條鷹派 ＋ 解除一條鷹派 → 一鷹一鴿，兩欄都要出現。
 # （注意不能用「新觸發鷹派 ＋ 解除鴿派」：那兩條的變化方向都是鷹，只會有一欄。）
-cs = chg.compare(snap({"n": "hawkish"}), snap({"o": "hawkish"}, month="2026-06"))
+cs = compare(snap({"n": "hawkish"}), snap({"o": "hawkish"}, month="2026-06"))
 html = home._change_card(cs)
-check("⑱ 有新資料時標出資料版本", "6 月就業報告" in html)
-check("⑲ 分成方向欄",
+check("⑰ 畫面上標出對照期別", "對照 6 月" in html)
+check("⑱ 分成方向欄",
       'class="ccol hawkish"' in html and 'class="ccol dovish"' in html)
 # ＋／− 不能帶顏色類別：顏色留給方向，一個元件不能同時表達兩件事
-check("⑳ 增減標記不上色",
+check("⑲ 增減標記不上色",
       'citem new' not in html and 'citem gone' not in html)
 
 print()

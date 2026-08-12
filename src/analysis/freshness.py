@@ -24,6 +24,8 @@ from __future__ import annotations
 
 import datetime as dt
 
+from .. import clock
+
 # series_id → (中文名, 頻率)
 # 只列「過期會讓頁面結論失效」的核心序列。參照用、背景用的序列不列，
 # 那些即使舊一點也不影響任何一句結論，列進來只會製造雜訊。
@@ -57,7 +59,7 @@ def check(series: dict[str, list[dict]], today: dt.date | None = None) -> list[d
     沒有資料的序列**不算過期**——那是抓取失敗，已經由 failed 清單負責，
     在這裡再報一次會讓同一件事在畫面上出現兩遍。
     """
-    today = today or dt.date.today()
+    today = today or clock.today()
     stale = []
     for sid, (label, freq) in WATCH.items():
         rows = series.get(sid) or []
