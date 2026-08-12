@@ -673,6 +673,83 @@ check("110 只有重點句 → 不呼叫、直接回組裝版",
 
 
 # ---------------------------------------------------------------------------
+# ⑪b 「本次更新」那一句也不交給模型
+#
+# 實際發生過的：CPI 發布日，組裝版寫的是「本次更新：物價 7 月，CPI 年增
+# 3.4%（上月 3.5%）」，畫面上出現的卻是「本次更新：7 月核心 PCE 3.3%、
+# 三個月年化 2.9%」——模型把下一段的通膨敘述整句抄過來冠上「本次更新」。
+#
+# **數字鎖定攔不到**：3.3 與 2.9 本來就在原文的通膨段裡，逐一比對全部合法。
+# 鎖定管的是「有沒有憑空冒出的數字」，不是「數字有沒有出現在對的句子裡」。
+# 提示詞當時就寫著「保留在最前面且不得改動任何數字」，模型照樣改了——
+# 能用結構保證的事就不該靠提示詞。
+# ---------------------------------------------------------------------------
+HEAD = "本次更新：物價 7 月，CPI 年增 3.4%（上月 3.5%）。"
+
+
+def headed(head=HEAD):
+    whole = head + BODY + TAIL
+    return {"text": whole, "chars": polish.cjk_len(whole),
+            "parts": [{"key": "whatsnew", "text": head,
+                       "chars": polish.cjk_len(head)},
+                      {"key": "direction", "text": BODY,
+                       "chars": polish.cjk_len(BODY)},
+                      {"key": "takeaway", "text": TAIL,
+                       "chars": polish.cjk_len(TAIL)}]}
+
+
+seen2 = []
+
+
+def spy2(key, model, text, system=None, temperature=None):
+    seen2.append((text, system))
+    return GOOD[:GOOD.index("重點：")]
+
+
+r = polish.maybe_polish(headed(), tmp / "d3.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=spy2)
+check("110b 送給模型的內容不含「本次更新」那一句",
+      "本次更新" not in seen2[0][0], seen2[0][0][:40])
+check("110c 那一句原封不動接回最前面",
+      r["text"].startswith(HEAD), r["text"][:50])
+check("110d 前後兩句都在，中間才是模型寫的",
+      r["text"].startswith(HEAD) and r["text"].endswith(TAIL)
+      and r["source"] == "model")
+check("110e 提示詞明講不要自己寫那一句",
+      "不要自己寫那一句" in seen2[0][1])
+_res = polish.cjk_len(HEAD) + polish.cjk_len(TAIL)
+check("110f 字數上限把前後兩句都扣掉了",
+      f"不要超過 {polish._target_range(BODY, _res)[1]} 字" in seen2[0][1])
+
+
+# 模型自己編一句「本次更新」→ 退回。這是關鍵的一項：它抄的數字全部合法，
+# validate 一道都攔不住，只能靠「這句話根本不該由模型寫出來」這個事實。
+# 抄的是**原文裡真的有的**數字（核心 PCE 那一段），所以數字鎖定必定放行。
+# 真實案例抄的是 3.3%／2.9%，這份 fixture 對應的是 3.0%／3.6%。
+_FAKE = "本次更新：核心 PCE 3.0%、三月年化 3.6%。"
+
+
+def spy_invent(key, model, text, system=None, temperature=None):
+    # 抄的是原文裡真實存在的數字，數字鎖定必定放行
+    return _FAKE + GOOD[:GOOD.index("重點：")]
+
+
+r = polish.maybe_polish(headed(), tmp / "d4.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=spy_invent)
+check("110g 模型自己寫「本次更新」→ 退回組裝版",
+      r["source"] == "assembled", r["text"][:40])
+check("110h 而且數字鎖定確實攔不住（所以才需要這道檢查）",
+      "數字" not in polish.validate(_FAKE + GOOD[:GOOD.index("重點：")] + TAIL,
+                                   headed()["text"]))
+
+# 沒有「本次更新」那一句時（非發布日）一切照舊
+r = polish.maybe_polish(headed(head=""), tmp / "d5.json",
+                        env={"GEMINI_API_KEY": "g"}, _post=spy2)
+check("110i 沒有那一句時不受影響",
+      r["source"] == "model" and not r["text"].startswith("本次更新"))
+
+
+# ---------------------------------------------------------------------------
 # ⑫ 截斷：三道防護欄檢查的是「有沒有亂寫」，不是「有沒有寫完」
 #
 # 實際印上畫面的那一次：

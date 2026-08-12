@@ -161,10 +161,12 @@ def _system(source: str, reserve: int = 0, cfg: dict | None = None) -> str:
         "出現在原文裡。特別注意：不要自己換算、不要補上年份或期數、"
         "不要寫「約兩週」這類原文沒有的量。\n"
         "2. 不得加入原文沒有的事實、預測或建議；每段事實的方向與結論不得改變。\n"
-        "2c. 開頭若有「本次更新：…」那一句，**保留在最前面且不得改動任何"
-        "數字**。它摘要的是這一次剛發布的數據，跟後面的整體分析是兩回事，"
-        "不要跟下一句合併，也不要把它挪到後面。措辭可以順一點，"
-        "但「上月 X%」這種對照必須留著——沒有對照就看不出方向。\n"
+        # 先前這裡有一條 2c：「開頭若有『本次更新：…』那一句，保留在最前面
+        # 且不得改動任何數字」。拿掉了——那句話現在根本不會出現在模型看到的
+        # 原文裡（見 maybe_polish 的說明）。留著只會讓模型以為自己該寫一句。
+        "2c. 這段話前面可能會再接一句由程式產生的「本次更新：…」新數據摘要，"
+        "**你不必也不要自己寫那一句**，也不要在開頭補上任何引言——"
+        "從第一段事實直接寫起。\n"
         "2b. **時序不得改動**：原文的資料期別（例如「7 月失業率」「7 月核心 "
         "PCE」）必須原樣保留在同一個數字旁邊，不可刪除、不可搬到別處、"
         "不可合併成一句。也**不要**用「本月」「當前」「最新」「目前」"
@@ -458,11 +460,29 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
     # 拆開之後：模型只改寫事實段落，重點句由我們原封不動接回去。
     # 少一個限制、而且「重點：」前綴變成**結構上保證存在**，不再靠
     # 模型配合。字數上限也先把重點句的長度扣掉（見 _target_range 的 reserve）。
+    #
+    # ---- 「本次更新」那一句也不交給模型 ----
+    #
+    # 同樣的道理，而且是踩過才學到的：先前只在提示詞裡寫「保留在最前面且
+    # 不得改動任何數字」，模型照樣把它改寫掉了。實際發生的是——CPI 發布日，
+    # 組裝版寫的是「本次更新：物價 7 月，CPI 年增 3.4%（上月 3.5%）」，
+    # 畫面上出現的卻是「本次更新：7 月核心 PCE 3.3%、三個月年化 2.9%」，
+    # 也就是把下一段的通膨敘述整句抄過來。
+    #
+    # **數字鎖定攔不到這種改寫**：3.3 與 2.9 本來就出現在原文的通膨段裡，
+    # 逐一比對每個數字都合法。鎖定檢查的是「有沒有憑空冒出的數字」，
+    # 不是「這個數字有沒有出現在對的句子裡」——後者它結構上就查不了。
+    #
+    # 所以規則層級要換：**能用結構保證的事，不要靠提示詞請模型配合。**
+    # 這句話百分之百由規則決定（哪個模組剛發布、哪幾個指標、動了多少），
+    # 交給模型只有下檔沒有上檔。抽掉之後提示詞也少一條，剩下的更好遵守。
+    head = next((p["text"] for p in parts if p.get("key") == "whatsnew"), "")
     tail = next((p["text"] for p in parts if p.get("key") == "takeaway"), "")
-    body = "".join(p["text"] for p in parts if p.get("key") != "takeaway")
-    if not body:                                   # 只有重點句時沒東西好改寫
+    body = "".join(p["text"] for p in parts
+                   if p.get("key") not in ("whatsnew", "takeaway"))
+    if not body:                                   # 只剩前後兩句時沒東西好改寫
         return out
-    reserve = cjk_len(tail)
+    reserve = cjk_len(head) + cjk_len(tail)
     sys_prompt = _system(body, reserve, cfg)
 
     # ---- 呼叫 ----
@@ -491,13 +511,18 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
         if isinstance(res, tuple):
             res, model = res[0], (res[1] or model)
         body_out = _sanitize(res)
-        # 重點句原封不動接回去——模型沒看過它，也就改不壞它
-        text = body_out + tail
+        # 前後兩句原封不動接回去——模型沒看過它們，也就改不壞
+        text = head + body_out + tail
         # 先問「有沒有寫完」，再問「有沒有寫對」。順序有意義：截斷的輸出
         # 常常長度合格、數字也全部合法，validate 一道都攔不住，
         # 但它就是不能印上畫面。
         reason = ("輸出看起來被截斷（結尾不是完整的句子）"
                   if looks_truncated(body_out)
+                  # 模型看不到這句話，寫得出來就是自己編的——多半是把
+                  # 後面某一段抄過來冠上「本次更新」，而那些數字全部
+                  # 合法，validate 攔不住。
+                  else "自己寫了「本次更新」那一句（那一句不該由模型產生）"
+                  if "本次更新" in body_out
                   else validate(text, out["text"], _max_cjk(cfg)))
         if not reason:
             break
