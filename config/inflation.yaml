@@ -12,7 +12,9 @@
 
 meta:
   release_name: "Consumer Price Index"
-  weights_vintage: "2026 年 1 月（近似值，待對照 BLS 表格校準）"
+  # BLS relative importance 表（2024 權重）。四大類合計 100.001，是精確的切法。
+  #   https://www.bls.gov/cpi/tables/relative-importance/2025.htm
+  weights_vintage: "2025 年 12 月（BLS relative importance，2024 權重）"
 
 # ---------------------------------------------------------------------------
 # 一、主軸指標
@@ -40,6 +42,16 @@ headline:
   #
   # 季調指數在原始發布後最長五年內都可能因為季節因子重估而被改，
   # 未季調則不會動——這也是 BLS 建議「調整用途一律用未季調」的理由。
+  # 剔除住房後的整體 CPI。**官方指數，不是自己反推的。**
+  #
+  # 先前是用「(總漲幅 − 住房貢獻) ÷ (1 − 住房權重)」反推。那個做法不對：
+  # ex-shelter 是把住房整個拿掉之後**重新聚合**出來的指數，不是原指數減掉
+  # 一塊。用相減去反推等於假設 CPI 是各分項的簡單加權和，而 BLS 的聚合是
+  # 分層鏈式的，兩者不等價。
+  - id: CUSR0000SA0L2
+    label: CPI 除住房
+    enabled: true
+    note: All Items Less Shelter（季調）。剔除住房後的整體 CPI，官方指數
   - id: CPIAUCNS
     label: CPI 總體（未季調）
     enabled: true
@@ -75,20 +87,20 @@ headline:
 cpi_components:
   - id: CPIUFDSL
     label: 食物
-    weight: 13.6
+    weight: 13.698
     group: food_energy
   - id: CPIENGSL
     label: 能源
-    weight: 6.2
+    weight: 6.383
     group: food_energy
   - id: CUSR0000SACL1E
     label: 核心商品
-    weight: 18.4
+    weight: 19.176
     group: core_goods
     note: 剔除食物與能源的商品。二手車、家具、服飾等
   - id: CUSR0000SAH1
     label: 住房
-    weight: 35.4
+    weight: 35.625
     group: core_services
     laggy: true
     note: 含房租與自有住宅設算租金。落後市場租金約 12 個月
@@ -104,7 +116,7 @@ cpi_components:
   # supercore_derive 加權相減推出來，id 用 CPISUPERCORE。
   - id: CPISUPERCORE
     label: 其他核心服務
-    weight: 26.4
+    weight: 25.119
     group: core_services
     supercore: true
     derived: true                  # 不要去 FRED 抓，這條是算出來的
@@ -116,9 +128,9 @@ cpi_components:
 # 否則分項貢獻加總會對不上總漲幅。
 supercore_derive:
   core_services: CUSR0000SASLE     # Services less energy services（含住房）
-  core_services_weight: 61.8
+  core_services_weight: 60.744
   shelter: CUSR0000SAH1
-  shelter_weight: 35.4
+  shelter_weight: 35.625
 
 # ---------------------------------------------------------------------------
 # 三、住房細項（用來判斷住房項的落後程度）

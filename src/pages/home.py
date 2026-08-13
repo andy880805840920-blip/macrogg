@@ -137,14 +137,26 @@ def _change_card(cs) -> str:
         net_html = f'<div class="cnet {cs.net_lean}">{_n}</div>'
 
     # ---- 數字變化：收進摺疊 ----
+    # **全部列出來，不截斷。**
+    #
+    # 先前是 `cs.metric_moves[:8]`，但標題寫的是 `len(cs.metric_moves)`——
+    # 於是標題說「10 項」、底下只畫 8 條。使用者數得出來，而數不對的第一
+    # 反應是「這區的數字有問題」，連帶懷疑其他還對的數字。
+    # 這一區本來就收在摺疊裡，長度不是問題；靜靜砍掉兩條才是問題。
+    _LEAN_TAG = {"hawkish": "利升息", "dovish": "利降息"}
     moves = []
-    for m in cs.metric_moves[:8]:
+    for m in cs.metric_moves:
         # 顏色是「這個變動對利率的意思」，不是「數字漲了還是跌了」。
+        # 但**顏色不該是唯一的載體**：紅綠對色覺障礙的讀者沒有資訊，
+        # 對其他人也要先讀完下面那段說明才知道紅色代表什麼。直接寫字。
         cls = m.get("lean") or "flat"
         dunit = m.get("delta_unit") or m.get("unit", "")
+        tag = _LEAN_TAG.get(m.get("lean"), "")
         moves.append(
             f'<div class="cmove"><div>{esc(m["label"])}</div>'
-            f'<div class="cm-delta {cls}">{m["delta"]:+.2f}{esc(dunit)}</div>'
+            f'<div class="cm-delta {cls}">'
+            + (f'<span class="cm-tag">{esc(tag)}</span>' if tag else "")
+            + f'{m["delta"]:+.2f}{esc(dunit)}</div>'
             f'<div class="cm-val">{m["from"]:,.2f} → {m["to"]:,.2f}{esc(m["unit"])}</div>'
             f"</div>")
     moves_html = ""
@@ -154,7 +166,7 @@ def _change_card(cs) -> str:
             f'（{len(cs.metric_moves)} 項）</summary>'
             f'<div class="cmoves">{"".join(moves)}</div>'
             f'<p class="hint" style="margin:10px 0 0">'
-            f'顏色是這個變動<b>對利率的意思</b>，不是數字漲跌。'
+            f'「利升息／利降息」講的是這個變動<b>對利率的意思</b>，不是數字漲跌。'
             f'兩者不一定同向——損益兩平就業增速變高，代表同樣的非農其實'
             f'更弱，數字往上但方向偏降息。</p>'
             f'</details>')
@@ -205,11 +217,24 @@ def _brief_card(ctxs: dict) -> str:
     if "重點：" in txt:
         txt, _, key = txt.rpartition("重點：")
         key_html = f'<p class="brief-key">重點：{esc(key.strip())}</p>'
+
+    # 「本次更新：⋯⋯」拆成獨立一段。
+    #
+    # 它跟後面那段回答的**不是同一個問題**：前者是「這一次新拿到什麼」、
+    # 後者是「整體現在是什麼狀況」。黏在同一段裡，讀者要讀到第三個句號才
+    # 分得出來哪裡結束——而多數日子根本沒有前者，段落的開頭就變成兩種樣子。
+    # 拆開之後，有新資料的日子第一眼就看得到，沒有的日子也不會少一塊。
+    new_html = ""
+    if txt.lstrip().startswith("本次更新："):
+        _first, _sep, _rest = txt.partition("。")
+        if _sep and _rest.strip():
+            new_html = f'<p class="brief-new">{esc(_first.strip())}。</p>'
+            txt = _rest
     return f"""
 <div class="grid">
   <div class="card brief">
     <div class="brief-k">整體情勢</div>
-    <p class="brief-t">{esc(txt.strip())}</p>
+    {new_html}<p class="brief-t">{esc(txt.strip())}</p>
     {key_html}
   </div>
 </div>"""
@@ -338,8 +363,6 @@ def home_body(ctxs: dict) -> str:
     就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·　{esc(LEAN_TEXT.get(sc.lean, ''))}{ovr}
     {('<br>' + incomplete) if incomplete else ''}
   </div>
-  <a class="v-cta" href="/scenario/#positioning">這個判斷怎麼來的、對應什麼部位
-    <span>九宮格定位　·　三種重心下會變成什麼　·　固定收益部位對照</span></a>
 </div>"""
     else:
         hero = ('<div class="verdict balanced"><div class="v-main">尚無資料</div>'
@@ -470,9 +493,26 @@ def home_body(ctxs: dict) -> str:
 
     # 模組入口移到結論卡正下方。先前排在整頁最後，390px 下讀者要捲過
     # 4000px 才看得到——首頁的主要功能之一是「往哪走」，那個功能被埋在最底下。
+    # 「跟上期比」緊接在整體情勢之後。
+    #
+    # 先前它排在整頁最後——390px 下位在 2657／2877px，也就是**要捲到 92% 深度**
+    # 才看得到。而這一區的價值恰恰對「每期都追的人」最高：對他們來說
+    # 「現在是什麼狀態」上期已經看過了，邊際資訊很低，真正的資訊在**變化**。
+    # 把全站邊際資訊量最高的一塊放在最底下，等於預設沒有人是回訪者。
+    #
+    # 現在的順序回答的是讀者依序會問的三件事：
+    #   現在是什麼情境（結論卡）→ 為什麼（整體情勢）→ 跟上次比變了什麼
+    #   → 有哪些訊號 → 接下來盯什麼 → 各模組細節
     return f"""{hero}
 
 {_brief_card(ctxs)}
+
+<div class="grid">
+  <div class="card">
+    <h2 id="changed" data-sum="{esc(_chg_sum)}">跟上期比，什麼變了</h2>
+    {change_html or '<div class="empty">尚無可比對的上期資料</div>'}
+  </div>
+</div>
 
 <div class="grid g4">{"".join(cards)}</div>
 
@@ -484,17 +524,12 @@ def home_body(ctxs: dict) -> str:
   </div>
 </div>
 
-<div class="grid g2">
+<div class="grid">
   <div class="card">
     <h2 id="watch" data-sum="{esc(_trig_sum)}">接下來要盯什麼</h2>
     {trig_html or '<div class="empty">資料不足，無法計算觸發距離</div>'}
     <h3 style="margin-top:20px">下次更新</h3>
     <div class="cds">{counts_html}</div>
-  </div>
-
-  <div class="card">
-    <h2 id="changed" data-sum="{esc(_chg_sum)}">跟上期比，什麼變了</h2>
-    {change_html or '<div class="empty">尚無可比對的上期資料</div>'}
   </div>
 </div>
 """

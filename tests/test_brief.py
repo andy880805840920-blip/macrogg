@@ -467,6 +467,18 @@ check("71 門檻缺漏時退回比原始幅度，不丟例外",
            "from": 2.8, "to": 2.5, "delta": -0.3, "unit": "%",
            "lean": "dovish"}]))
 
+# 期別的寫法：「就業 7 月、物價 7 月」是資料庫的講法，不是人的講法
+s_w = wn({"labor": "2026-07", "inflation": "2026-07"},
+         moves=[_BIG_LABOR, _CPI])
+check("72 期別寫成「7 月就業報告與 7 月 CPI」",
+      "7 月就業報告與 7 月 CPI" in s_w, s_w[:40])
+check("73 舊寫法不再出現", "就業 7 月" not in s_w and "物價 7 月" not in s_w)
+check("74 只有一個模組時不加連接詞",
+      "與" not in wn({"inflation": "2026-07"}, moves=[_CPI]).split("，")[0],
+      wn({"inflation": "2026-07"}, moves=[_CPI])[:30])
+check("75 第一個句號之後才是整體情勢（畫面靠它拆段）",
+      s_w.count("。") == 1 and s_w.endswith("。"), s_w[-30:])
+
 check("66 上限只是防呆，放得很寬", brief.MAX_CJK >= 400)
 
 print()

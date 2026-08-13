@@ -271,6 +271,10 @@ def _why_axes(w: dict) -> str:
             + '<div class="wx-thr">' + esc(inf["level"]) + "　" + cmp_txt
             + "　門檻 " + thr + "</div>"
             + '<div class="wx-src">門檻出處：' + esc(src) + warn + "</div>"
+            # 推估說明放在展開之後、門檻出處旁邊——它跟門檻出處是同一類東西
+            #（「這個數字怎麼來的」），不該擠進第一眼那一句。
+            + ('<div class="wx-src">' + esc(inf["note"]) + "</div>"
+               if inf.get("note") else "")
             + tilt_note + "</div></details>")
         order.append(("inflation", blocks.pop()))
 

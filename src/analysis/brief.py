@@ -256,7 +256,10 @@ def _whats_new(ctxs: dict) -> str:
         ctx = ctxs.get(key) or {}
         m = _month(month)
         tag = "（速報）" if ctx.get("provisional") else ""
-        fresh.append((key, name, f"{m}{tag}" if m else ""))
+        # 「就業 7 月、物價 7 月」是資料庫的講法，不是人的講法。
+        # 寫成「7 月就業報告」「7 月 CPI」——月份在前、講的是哪一份報告。
+        label = {"labor": "就業報告", "inflation": " CPI"}[key]
+        fresh.append((key, name, f"{m}{label}{tag}" if m else label.strip()))
     if not fresh:
         return ""
 
@@ -303,7 +306,7 @@ def _whats_new(ctxs: dict) -> str:
     picked.sort(key=lambda m: -_mag(m))            # 名單定了再照幅度排序
     picked = picked[:_NEW_MAX]
 
-    head = "、".join(f"{n} {p}" if p else n for _, n, p in fresh)
+    head = "與 ".join(p for _, _, p in fresh)
     nums = [x for x in (_fmt_move(m) for m in picked) if x]
     if not nums:
         # 有新資料但沒有任何指標動超過門檻——那本身就是資訊。

@@ -195,6 +195,135 @@ check("⑳ 五個分項的權重合計 100（切法互斥且不留缺口）",
       abs(sum(float(c["weight"]) for c in comps) - 100) < 0.05,
       f'{sum(float(c["weight"]) for c in comps)}')
 
+# ---------------------------------------------------------------------------
+# ⑤ 加總不等於官方漲幅是**方法上的必然**，不是計算錯誤
+#
+# BLS 的 CPI 是分層鏈式聚合、權重在期間內本身也會動，所以
+# 「單一時點權重 × 累計變化」的加總本來就不必等於官方漲幅。
+#
+# 用**官方權重與官方指數**驗一次（BLS 2025-12 relative importance，
+# FRED 2026-04→07 實際值）：估算合計 +0.17pp、實際 +0.12%，仍差 0.05。
+# 權重、指數、時間窗全部正確——所以那個差額不能被呈現成錯誤。
+# ---------------------------------------------------------------------------
+REAL = {                                   # 2026-04 → 2026-07 的實際指數值
+    "CPIAUCSL": (332.407, 332.813),
+    "CPIUFDSL": (348.349, 349.881),
+    "CPIENGSL": (325.978, 314.553),
+    "CUSR0000SACL1E": (167.767, 167.762),
+    "CUSR0000SAH1": (426.642, 429.095),
+    "CUSR0000SASLE": (443.154, 445.616),
+    "CUSR0000SA0L2": (299.165, 298.793),   # All Items Less Shelter（官方）
+}
+
+
+def _span(a, b):
+    return [{"date": "2026-04-01", "value": a}, {"date": "2026-05-01", "value": a},
+            {"date": "2026-06-01", "value": a}, {"date": "2026-07-01", "value": b}]
+
+
+import yaml as _yaml                                   # noqa: E402
+_cfg = _yaml.safe_load(
+    (pathlib.Path(__file__).parent.parent / "config" / "inflation.yaml")
+    .read_text(encoding="utf-8"))
+_meta, _sd = _cfg["cpi_components"], _cfg["supercore_derive"]
+_S = {k: _span(*v) for k, v in REAL.items()}
+_S["CPISUPERCORE"] = ia.derive_supercore(
+    _S["CUSR0000SASLE"], _S["CUSR0000SAH1"],
+    _sd["core_services_weight"], _sd["shelter_weight"])
+_att = ia.attribute_cpi({k: v for k, v in [("x", 0)]} and _S["CPIAUCSL"],
+                        {m["id"]: _S[m["id"]] for m in _meta if m["id"] in _S},
+                        _meta, months=3, ex_shelter_rows=_S["CUSR0000SA0L2"])
+_by = {c.label: c.value for c in _att.contributions}
+
+check("㉑ 實際三個月漲幅 +0.12%", abs(_att.total - 0.122) < 0.002,
+      f"{_att.total:+.3f}%")
+for _lab, _want in [("住房", 0.205), ("食物", 0.060), ("核心商品", -0.001),
+                    ("能源", -0.224), ("其他核心服務", 0.133)]:
+    check(f"㉒ {_lab} 估算貢獻 {_want:+.2f}pp",
+          abs(_by.get(_lab, 99) - _want) < 0.003, f"{_by.get(_lab, 0):+.3f}pp")
+
+_sum = sum(_att.contributions and [c.value for c in _att.contributions] or [0])
+check("㉓ 估算淨貢獻約 +0.17pp", abs(_sum - 0.173) < 0.005, f"{_sum:+.3f}pp")
+check("㉔ 用官方權重仍然差約 0.05——那是方法差異，不是錯誤",
+      0.02 < abs(_att.total - _sum) < 0.10,
+      f"實際 {_att.total:+.3f}％、估算 {_sum:+.3f}pp、差 {_att.total - _sum:+.3f}")
+
+# 剔除住房：用官方指數，不是反推
+check("㉕ 剔除住房後用官方 All Items Less Shelter 指數",
+      _att.aggregates["ex_shelter_derived"] is False
+      and abs(_att.aggregates["ex_shelter"] + 0.124) < 0.003,
+      f'{_att.aggregates["ex_shelter"]:+.3f}%')
+_noidx = ia.attribute_cpi(_S["CPIAUCSL"],
+                          {m["id"]: _S[m["id"]] for m in _meta if m["id"] in _S},
+                          _meta, months=3)
+check("㉖ 抓不到官方指數才退回反推，而且標記出來",
+      _noidx.aggregates["ex_shelter_derived"] is True)
+# 反推值跟官方值是**兩個不同的量**，不是同一個東西的兩種算法。
+# 這個月它們剛好只差 0.004（−0.128 vs −0.124）——而那正是這個錯誤活這麼久的
+# 原因：平常看起來一模一樣。要釘住的是「它們不保證相等」，不是「差很多」。
+check("㉗ 反推值與官方值不是同一個數（只是這個月剛好接近）",
+      _noidx.aggregates["ex_shelter"] != _att.aggregates["ex_shelter"],
+      f'反推 {_noidx.aggregates["ex_shelter"]:+.3f}％、'
+      f'官方 {_att.aggregates["ex_shelter"]:+.3f}％')
+# 住房漲幅拉開時兩者就會分家：反推假設 CPI 是分項的簡單加權和。
+_far = {k: v for k, v in _S.items()}
+_far["CUSR0000SAH1"] = _span(426.642, 426.642 * 1.03)      # 住房三個月漲 3%
+_far["CPISUPERCORE"] = ia.derive_supercore(
+    _far["CUSR0000SASLE"], _far["CUSR0000SAH1"],
+    _sd["core_services_weight"], _sd["shelter_weight"])
+_a1 = ia.attribute_cpi(_far["CPIAUCSL"],
+                       {m["id"]: _far[m["id"]] for m in _meta if m["id"] in _far},
+                       _meta, months=3, ex_shelter_rows=_far["CUSR0000SA0L2"])
+_a2 = ia.attribute_cpi(_far["CPIAUCSL"],
+                       {m["id"]: _far[m["id"]] for m in _meta if m["id"] in _far},
+                       _meta, months=3)
+check("㉗b 住房拉開時兩者明顯分家（官方指數不受住房影響）",
+      abs(_a1.aggregates["ex_shelter"] - _a2.aggregates["ex_shelter"]) > 0.5,
+      f'官方 {_a1.aggregates["ex_shelter"]:+.3f}％、'
+      f'反推 {_a2.aggregates["ex_shelter"]:+.3f}％')
+
+# 權重必須是官方值
+_w = {m["label"]: float(m["weight"]) for m in _meta}
+for _lab, _want in [("食物", 13.698), ("能源", 6.383), ("核心商品", 19.176),
+                    ("住房", 35.625), ("其他核心服務", 25.119)]:
+    check(f"㉘ {_lab} 用官方 relative importance {_want}",
+          abs(_w.get(_lab, 0) - _want) < 1e-9, str(_w.get(_lab)))
+check("㉙ 能源用的是季調指數且走 index-to-index（不是 MoM 相加）",
+      any(m["id"] == "CPIENGSL" for m in _meta))
+check("㉚ 剔除住房的官方指數有進 config",
+      "CUSR0000SA0L2" in (_cfg.get("headline") and
+                          [x["id"] for x in _cfg["headline"]] or []))
+
+# 離線素材也要有，否則離線會偷偷走反推那條路
+from src import fixtures_inflation                     # noqa: E402
+check("㉛ 離線素材含官方 ex-shelter 指數",
+      bool(fixtures_inflation.build().get("CUSR0000SA0L2")))
+
+# 來源序列有缺口時不可以把兩個月的變化當成一個月
+# （CUSR0000SASLE 的 2025-10 在 FRED 上就是空值）
+def _m(vals, start=1):
+    return [{"date": f"2026-{m:02d}-01", "value": float(v)}
+            for m, v in zip(range(start, start + len(vals)), vals)]
+
+
+_cs, _sh = _m([100, 101, 102, 103]), _m([100, 100, 100, 100])
+_full = ia.derive_supercore(_cs, _sh, 61.8, 35.4)
+_gapd = ia.derive_supercore([x for x in _cs if x["date"] != "2026-02-01"],
+                            [x for x in _sh if x["date"] != "2026-02-01"],
+                            61.8, 35.4)
+check("㉜ 缺口那一步當成 0，不是併成一個大漲幅",
+      abs(_gapd[1]["value"] - _gapd[0]["value"]) < 1e-9,
+      f'{_gapd[0]["value"]:.3f} → {_gapd[1]["value"]:.3f}')
+check("㉝ 而且缺口之後照樣接得下去",
+      len(_gapd) == 3 and _gapd[-1]["value"] > _gapd[0]["value"])
+check("㉞ 沒有缺口時逐月串起來（對照組）",
+      len(_full) == 4 and _full[-1]["value"] > _full[-2]["value"],
+      f'{_full[-1]["value"]:.3f}')
+# 併成一個月的話 2→4 月會是兩倍漲幅——這是先前的行為
+check("㉟ 缺口不會被算成兩倍漲幅",
+      _gapd[-1]["value"] < _full[2]["value"] + 1e-9,
+      f'{_gapd[-1]["value"]:.3f} vs {_full[2]["value"]:.3f}')
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

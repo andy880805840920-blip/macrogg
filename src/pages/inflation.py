@@ -229,9 +229,17 @@ def inflation_body(d: dict) -> str:
                  if surp else "")
 
     # ---- 分項貢獻的分解條 ----
-    # 跟失業率變動分解同一套：總數在上、分項在下、標明相加等於總數。
-    # 「漲幅（%）」與「貢獻（個百分點）」是兩種東西，先前四格等權並排，
-    # 讀者分不出哪個是總數、哪個是其中一塊。
+    #
+    # 這裡**沒有等號，也不算差額**。
+    #
+    # 先前寫的是「三塊相加 ＝ +0.05（實際漲幅 +0.12 個百分點）」，再配一段
+    # 「權重過期或四捨五入會讓兩邊對不上」。那個框法把讀者的注意力整個
+    # 帶到「為什麼加不起來」，而那是錯的問題——BLS 的 CPI 是分層鏈式聚合、
+    # 權重在期間內本身也會動，所以「單一時點權重 × 累計變化」的加總本來就
+    # 不必等於官方漲幅。用官方權重驗過：估算合計 +0.17pp、實際 +0.12%，
+    # 仍差 0.05。那是方法差異，不是計算錯誤。
+    #
+    # 這一區要回答的是：**哪些類別在推升 CPI、哪些在壓低。**
     parts = att.get("parts") or []
     parts_html = ""
     if parts:
@@ -242,26 +250,11 @@ def inflation_body(d: dict) -> str:
             f'<div class="dc-bar"><span class="dc-zero"></span>'
             f'<i style="{"left" if x["value"] >= 0 else "right"}:50%;'
             f'width:{abs(x["value"]) / span * 50:.1f}%"></i></div>'
-            f'<div class="dc-val">{x["value"]:+.2f}</div></div>'
+            f'<div class="dc-val">{x["value"]:+.2f}pp</div></div>'
             f'<div class="dc-note">{esc(x["note"])}</div>'
             for x in parts
         )
-        # 三塊是**由下而上加**出來的，所以它跟實際的 CPI 漲幅可能對不上。
-        # 先前這裡寫死「三塊相加 ＝ 總漲幅」，而第三塊自己就是倒推的差額，
-        # 所以那個等號永遠成立——包括算錯的時候。現在等號只在真的相等時寫，
-        # 對不上就把兩個數字並排列出來，差額另外用一段話解釋。
-        _sum = att.get("parts_sum", att.get("total", 0))
-        _rc = att.get("recon_note") or ""
-        total_line = (
-            f'三塊相加　＝　{_sum:+.2f}　（實際漲幅 {att.get("total", 0):+.2f} 個百分點）'
-            if _rc else
-            f'三塊相加　＝　總漲幅 {att.get("total", 0):+.2f} 個百分點')
-        parts_html = (
-            f'<div class="dcomp">{rows}'
-            f'<div class="dc-total">{esc(total_line)}</div></div>')
-        if _rc:
-            parts_html += ('<div class="warnbox" style="margin-top:12px">'
-                           f'{esc(_rc)}</div>')
+        parts_html = f'<div class="dcomp">{rows}</div>'
 
     # 「剔除住房後比含住房高」每期都可能出現，而且每次都會被讀成算錯。
     # 它其實是重要訊息（住房在把整體往下拉），所以直接寫成一句話。
@@ -345,9 +338,10 @@ def inflation_body(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="contrib" data-sum="{esc(_att_sum)}">分項貢獻分解</h2>
-    <p class="hint">近三個月的<b>累計</b>漲幅拆成各塊的貢獻
-      （上方 KPI 卡是同一件事的年率）。</p>
+    <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
+      估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
     <div class="stat-row">{_stats(att['stats'])}</div>
+    <p class="hint" style="margin-top:-4px">兩者採不同計算口徑，不需完全相等。</p>
     {parts_html}
     {shelter_html}
     <details data-m-collapse><summary>各類別明細</summary>
@@ -356,11 +350,17 @@ def inflation_body(d: dict) -> str:
       <span><i style="background:var(--pos)"></i>推升物價</span>
       <span><i style="background:var(--neg)"></i>壓低物價</span>
       <span><i style="background:var(--muted-bar)"></i>落後項（住房）</span>
-      <span>單位：個百分點</span>
+      <span>單位：個百分點（pp）</span>
     </div>
     <p class="hint" style="margin-top:14px">
-      貢獻＝該類別佔物價籃子的比重 × 它自己的漲幅。所以住房只要漲一點點，
-      因為它佔了三分之一以上的權重，對整體的影響就很大。</p>
+      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別期間價格變化。
+      住房占 CPI 權重超過三分之一，因此即使漲幅不大，
+      也可能對整體 CPI 產生明顯影響。</p>
+    <p class="hint" style="margin-top:10px">
+      分項貢獻為依 BLS Relative Importance 與各分類價格變化所做的
+      <b>近似估算</b>，用於觀察不同類別對通膨的方向與相對影響。由於 CPI
+      官方指數採用動態權重與分層聚合方法，估算貢獻加總不一定會與實際
+      CPI 漲幅完全相等。</p>
     </details>
   </div>
 </div>

@@ -36,14 +36,34 @@ def attribute_cpi(
     component_rows: dict[str, list[dict]],
     component_meta: list[dict],
     months: int = 1,
+    ex_shelter_rows: list[dict] | None = None,
 ) -> AttributionResult:
     """
-    把 CPI 的變化拆成各分項的貢獻（單位：百分點）。
+    把 CPI 的變化拆成各分項的**近似**貢獻（單位：個百分點 pp）。
 
-    months=1  → 月變動的分項貢獻
-    months=3  → 近三個月的分項貢獻（雜訊較低，建議主看這個）
+    months=1  → 月變動；months=3 → 近三個月（雜訊較低，建議主看這個）
 
-    貢獻(百分點) = 該分項權重(%) / 100 × 該分項變化率(%)
+        估算貢獻(pp) ≈ 該分項的 BLS relative importance(%) / 100
+                       × 該分項的期間累計變化率(%)
+
+    ⚠️ **「近似」兩個字是重點，不是客套。**
+
+    BLS 的 CPI 不是「單一時點權重 × 累計變化」加總出來的——它是分層鏈式
+    聚合，權重在期間內本身也會動。所以
+
+        sum(各類別估算貢獻)  ≠  headline CPI 的累計變化
+
+    是**方法上的必然，不是計算錯誤**。實測：換上官方的 relative importance
+    （2025 年 12 月表）之後，2026-04→07 的估算合計是 +0.17pp、實際是
+    +0.12%，仍差 0.05——權重、指數、時間窗全部正確的情況下。
+
+    這個差額仍然算在 `unexplained` 裡供程式端診斷，但**不該呈現成
+    「兩邊對不上」**：那會讓讀者以為模型算錯，而真正該看的是「哪些類別在
+    推升、哪些在壓低」。
+
+    `ex_shelter_rows` 是官方的「All Items Less Shelter」指數。給了就用它算
+    剔除住房後的漲幅——那才是正確做法。ex-shelter 是把住房拿掉後**重新
+    聚合**的指數，不能用「總數減住房貢獻再除以剩餘權重」反推出來。
     """
     total = _pct_change(headline_rows, months)
     if total is None:
@@ -89,15 +109,24 @@ def attribute_cpi(
         if meta_by_id.get(c.key, {}).get("group") == "food_energy"
     )
 
-    # 「剔除住房後」是一個**通膨率**，不是貢獻度：拿掉住房的貢獻之後，
-    # 還要除以剩餘權重重新正規化，否則會低估約等於住房權重的比例（~35%）。
-    # 下方的 ex_shelter_yoy（年增率版本）已經是這樣算的，這裡比照辦理。
     shelter_w = sum(
         float(meta_by_id.get(c.key, {}).get("weight", 0))
         for c in contribs if meta_by_id.get(c.key, {}).get("laggy")
     )
-    ex_shelter = ((total - shelter) / (1 - shelter_w / 100)
-                  if shelter_w < 100 else None)
+    # 「剔除住房後」用**官方的 All Items Less Shelter 指數**算。
+    #
+    # 先前是拿「(總漲幅 − 住房貢獻) ÷ (1 − 住房權重)」反推。那等於假設
+    # CPI 是各分項的簡單加權和，而 ex-shelter 其實是把住房整個拿掉之後
+    # **重新聚合**出來的指數——兩者不等價，反推出來的數字沒有對應的官方值。
+    #
+    # 抓不到官方指數才退回反推，並且標記出來（`ex_shelter_derived`），
+    # 因為那是退路不是常態。
+    ex_shelter = _pct_change(ex_shelter_rows or [], months)
+    ex_shelter_derived = False
+    if ex_shelter is None:
+        ex_shelter_derived = True
+        ex_shelter = ((total - shelter) / (1 - shelter_w / 100)
+                      if shelter_w < 100 else None)
 
     return AttributionResult(
         total=total,
@@ -109,6 +138,7 @@ def attribute_cpi(
             "shelter": shelter,
             "food_energy": food_energy,
             "ex_shelter": ex_shelter,
+            "ex_shelter_derived": ex_shelter_derived,
             # 住房權重（%）。畫面上要用它把住房的「貢獻」還原成
             # 住房自己的漲幅，才能跟非住房的漲幅並排比較。
             "shelter_weight": shelter_w,
@@ -233,13 +263,27 @@ def derive_supercore(core_services: list[dict], shelter: list[dict],
         return []
 
     out = [{"date": pairs[0][0], "value": base}]
-    for (_, cs0, sh0), (d1, cs1, sh1) in zip(pairs, pairs[1:]):
+    skipped = 0
+    for (d0, cs0, sh0), (d1, cs1, sh1) in zip(pairs, pairs[1:]):
         if not cs0 or not sh0:
             break
+        # **只接相鄰的月份。** FRED 的來源序列會有缺漏（實例：CUSR0000SASLE
+        # 的 2025-10 是空值），而缺一個月的話 d0→d1 其實是兩個月的變化，
+        # 當成一個月串進指數會憑空多出一段漲幅——那個指數看起來完全正常，
+        # 只是每一期都偏掉。寧可斷開重新起算，也不要接一段假的變化。
+        if _shift_months(d1, 1) != d0:
+            skipped += 1
+            out.append({"date": d1, "value": out[-1]["value"]})
+            continue
         r_cs = (cs1 / cs0 - 1) * 100
         r_sh = (sh1 / sh0 - 1) * 100
         r_ex = (w_cs * r_cs - w_sh * r_sh) / w_ex
         out.append({"date": d1, "value": out[-1]["value"] * (1 + r_ex / 100)})
+    if skipped:
+        log.warning("核心服務除住房：來源序列有 %d 個月不連續，那幾個月的變化"
+                    "當成 0 處理（缺口前後不能直接相減）。檢查 %s 與 %s 在 "
+                    "FRED 上是不是有空值。", skipped, "CUSR0000SASLE",
+                    "CUSR0000SAH1")
     return out
 
 

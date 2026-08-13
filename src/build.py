@@ -27,12 +27,6 @@ log = logging.getLogger(__name__)
 
 CHART_START = "2025-01-01"
 
-# 分項貢獻加總與實際 CPI 漲幅容許差多少（個百分點）才算「對得上」。
-#
-# 不能設 0：權重是四捨五入到小數一位的相對重要性，分項與總數又各自季調，
-# 天生就對不到完全相等。設 0.03 是因為畫面顯示到小數兩位——差到第二位
-# 看得出來時才值得講，再小的差額講了只會變成每期都在的雜訊。
-RECON_TOLERANCE = 0.03
 
 
 # ---------------------------------------------------------------------------
@@ -834,7 +828,11 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     # ---- 分項貢獻（看三個月，單月雜訊太大）----
     comp_rows = {m["id"]: series.get(m["id"], []) for m in comp_meta
                  if series.get(m["id"])}
-    att = infl_an.attribute_cpi(headline, comp_rows, comp_meta, months=3)
+    att = infl_an.attribute_cpi(
+        headline, comp_rows, comp_meta, months=3,
+        # 官方的 All Items Less Shelter 指數。剔除住房後的漲幅要用它算，
+        # 不是拿總數減住房貢獻去反推——見 attribute_cpi 的說明。
+        ex_shelter_rows=series.get("CUSR0000SA0L2", []))
 
     # ---- 燈號 ----
     computed = infl_an.light_values(series, summ)
@@ -969,43 +967,51 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         {"label": "食物與能源", "value": _food_energy, "note": "波動大，核心已剔除"},
         {"label": "其他所有項目", "value": _rest, "note": "核心裡的非住房部分"},
     ]
-    # 對帳：三塊由下而上加起來，跟實際的 CPI 漲幅差多少。
+    # 估算合計。**這不是拿來跟實際漲幅對帳的。**
     #
-    # 這個差額**永遠不會剛好是零**（權重是四捨五入到小數一位的相對重要性、
-    # 分項與總數各自季調），所以門檻不能設 0。設 0.03 個百分點的理由是
-    # 畫面顯示到小數兩位——差到第二位看得出來的時候才值得講。
+    # 先前這裡算一個 residual、超過門檻就在畫面上寫「三塊相加是 X，跟實際
+    # 的 Y 差 Z，權重過期或四捨五入會讓兩邊對不上」。那個框法是錯的：
     #
-    # 為什麼一定要顯示：這個差額就是「權重該校準了」的訊號，而權重是
-    # OPERATIONS 裡那件「一年一次、最容易忘記」的手動工作。不顯示的話，
-    # 它會一直錯下去而畫面永遠正常——先前正是如此。
-    _recon = att.total - (_shelter + _food_energy + _rest)
-    recon_note = ""
-    if abs(_recon) >= RECON_TOLERANCE:
-        recon_note = (
-            f"三塊相加是 {_shelter + _food_energy + _rest:+.2f}，"
-            f"跟實際的 {att.total:+.2f} 差 {_recon:+.2f} 個百分點。"
-            "分項貢獻用的是 BLS 相對重要性權重，權重過期或四捨五入都會讓"
-            "兩邊對不上——差距持續在 0.05 以上就該去對照 BLS 的最新權重表"
-            "（config/inflation.yaml 的 weight）。")
-        log.warning("分項貢獻對不上總漲幅：明細 %+.3f、實際 %+.3f、差 %+.3f 個"
-                    "百分點。檢查 config/inflation.yaml 的 weight 是否過期。",
-                    _shelter + _food_energy + _rest, att.total, _recon)
+    #   BLS 的 CPI 不是「單一時點權重 × 累計變化」加總出來的，它是分層
+    #   鏈式聚合、權重在期間內本身也會動。所以估算合計 ≠ 實際漲幅是
+    #   **方法上的必然**，不是計算錯誤，也不主要來自四捨五入。
+    #
+    # 實測佐證：換上官方 relative importance（BLS 2025 年 12 月表）之後，
+    # 2026-04→07 的估算合計 +0.17pp、實際 +0.12%，仍差 0.05——權重、指數、
+    # 時間窗全部正確。把它寫成「對不上」只會讓讀者以為模型算錯，
+    # 而這一區真正要回答的是「哪些類別在推升、哪些在壓低」。
+    #
+    # 差額仍然留在 att.unexplained 供程式端診斷，也仍然印進執行紀錄
+    # （debug 用），但**不進畫面**。
+    _sum_est = _shelter + _food_energy + _rest
+    log.debug("分項估算合計 %+.3f pp、實際三個月漲幅 %+.3f%%、差 %+.3f"
+              "（近似法的必然差異，非錯誤）",
+              _sum_est, att.total, att.total - _sum_est)
     att_stats = [
-        # 這裡是三個月的**累計**漲幅，不是年化——attribute_cpi 走的是
+        # 左右兩格是**兩種不同口徑的東西**，刻意不放等號、不算差額。
+        # 下方會有一句小字講清楚它們不需要相等。
+        {"label": "估算分項淨貢獻", "value": f"{_sum_est:+.2f}pp",
+         "note": "四大類的估算貢獻加總"},
+        # 三個月的**累計**漲幅，不是年化——attribute_cpi 走的是
         # _pct_change（cur/old − 1），沒有做 **4。標成「年化」會跟同一頁
-        # KPI 卡上的「近三個月年化 4.2%」打架（1.0103⁴ = 1.042，同一件事的兩種口徑）。
-        {"label": "近三個月累計漲幅", "value": f"{att.total:+.2f}%",
+        # KPI 卡的「近三個月年化」打架（1.0012⁴ 才是年率）。
+        {"label": "實際 CPI 三個月漲幅", "value": f"{att.total:+.2f}%",
          "note": f"換算年率約 {((1 + att.total / 100) ** 4 - 1) * 100:+.1f}%"},
         {"label": "剔除住房後",
          "value": (f"{agg['ex_shelter']:+.2f}%"
                    if agg.get("ex_shelter") is not None else "—"),
          "color": ("var(--good)"
                    if (agg.get("ex_shelter") or 9) < 0.6 else "inherit"),
-         "note": "已按剩餘權重換算回通膨率"},
+         "note": ("官方 All Items Less Shelter 指數"
+                  if not agg.get("ex_shelter_derived")
+                  else "抓不到官方指數，由權重反推（僅供參考）")},
     ]
-    # 「剔除住房後比含住房高」是每期都可能出現、而且每次都會被誤讀成
-    # 算錯的一件事。它的意思是住房正在把整體往下拉——那是重要訊息，
-    # 不是錯誤，所以直接寫成一句話。
+    # 剔除住房後跟含住房比，哪一邊高。這句話每期都可能出現，而且每次都會
+    # 被誤讀成算錯——它其實是這一區最有價值的一句話：**價格壓力集中在哪裡。**
+    #
+    # 措辭刻意不做預測。先前寫「這一塊之後會自然回落」——住房項落後市場
+    # 租金是事實，但「一定會回落」是預測，而這個專案的原則是只講已算出來的
+    # 判定。落後性只保證「反映得慢」，不保證方向。
     shelter_note = ""
     _ex = agg.get("ex_shelter")
     if _ex is not None and att.total is not None:
@@ -1013,17 +1019,18 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         _srate = (_shelter / (_sw / 100)) if _sw else None
         if _ex > att.total + 0.02:
             shelter_note = (
-                f"剔除住房後（{_ex:+.2f}%）比含住房（{att.total:+.2f}%）**高**，"
+                f"剔除住房後（約 {_ex:+.2f}%）**高於**整體 CPI（{att.total:+.2f}%），"
                 "代表住房正在把整體通膨往下拉"
                 + (f"——住房自己只漲 {_srate:+.2f}%，低於非住房的 {_ex:+.2f}%。"
                    if _srate is not None else "。")
-                + "住房佔籃子三分之一以上，而它的算法落後市場行情約一年，"
-                "所以這條下拉力量還會延續一段時間。")
+                + "由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，"
+                "後續仍需觀察這條下拉力量是否延續。")
         elif _ex < att.total - 0.02:
             shelter_note = (
-                f"剔除住房後（{_ex:+.2f}%）比含住房（{att.total:+.2f}%）**低**，"
-                "代表目前的通膨有一部分是住房撐起來的。"
-                "住房的算法落後市場行情約一年，這一塊之後會自然回落。")
+                f"剔除住房後（約 {_ex:+.2f}%）**低於**整體 CPI（{att.total:+.2f}%），"
+                "代表近三個月的價格壓力主要集中在住房。"
+                "由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，"
+                "後續仍需觀察住房通膨是否持續降溫。")
 
     # ---- 趨勢型指標 ----
     trend_rows, _trend_vals = [], []
@@ -1132,14 +1139,13 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "lights": lights,
         "attribution": {
             "stats": att_stats,
-            # 長條上的單位省略「個百分點」——每一列都寫一次會把標籤擠掉，
-            # 圖例已經標明單位了
-            "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f}"),
+            # 單位一律標 pp（個百分點），跟「漲幅 %」在視覺上分開——
+            # 兩者混寫是這一區最容易產生的誤讀：+0.20% 跟 +0.20pp
+            # 是完全不同的兩件事。
+            "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f}pp"),
             "parts": infl_parts,
             "total": att.total,
-            "parts_sum": _shelter + _food_energy + _rest,
-            "recon": _recon,
-            "recon_note": recon_note,
+            "parts_sum": _sum_est,
             "shelter_note": shelter_note,
         },
         # 離目標多遠：整個通膨頁唯一的硬錨，放進結論卡
@@ -1961,18 +1967,25 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
         # 九宮格落在哪一格，而九宮格決定整張固定收益部位對照表——
         # 一個影響部位的數字不能讓讀者以為它是 BEA 公布的官方值。
         _est = "（推估）" if infl.get("pce_estimated") else ""
+        # lead 是**常駐的一句話**，只講「這一格是怎麼判出來的」。
+        #
+        # 先前把整段推估的說明（BEA 什麼時候發、為什麼要換算、CPI 跟 PCE 差
+        # 多少）直接接在後面，於是一張本來一行的卡變成七行，整個九宮格區塊
+        # 讀起來像一團字。那段說明有價值，但它回答的是「推估怎麼來的」，
+        # 屬於展開之後的內容，不屬於第一眼。
         _lead = (f"核心 PCE {_pct(yoy_v)}{_est} 與三月年化 {_pct(m3)} 加權後 "
                  f"{lvl:.2f}%，{_cmp}"
                  if lvl is not None else "資料不足")
-        if infl.get("pce_estimated"):
-            _lead += ("。核心 PCE 這個月還沒公布（BEA 月底才發），"
-                      "上面那個值是用已公布的核心 CPI 換算成 PCE 口徑推估的——"
-                      "換算而不是直接代入，是因為門檻錨在 FOMC 的 PCE 預測，"
-                      "而核心 CPI 結構上比核心 PCE 高 0.3 個百分點左右。"
-                      "PCE 一公布就會換回實際值")
+        _est_note = ("核心 PCE 這個月還沒公布（BEA 月底才發），上面那個值是用"
+                     "已公布的核心 CPI 換算成 PCE 口徑推估的。換算而不是直接"
+                     "代入，是因為門檻錨在 FOMC 的 PCE 預測，而核心 CPI 結構上"
+                     "比核心 PCE 高 0.3 個百分點左右。PCE 一公布就換回實際值。"
+                     if infl.get("pce_estimated") else "")
         out["inflation"] = {
             "state": sc.infl_state,
             "lead": _lead,
+            # 展開後才顯示，見上面的說明
+            "note": _est_note,
             "rows": [
                 {"label": "核心 PCE 年增率（水準）", "value": _pct(yoy_v), "w": "×0.6"},
                 {"label": "核心 PCE 三月年化（動能）", "value": _pct(m3), "w": "×0.4"},
@@ -2227,8 +2240,19 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
     ahe = labor_series.get("CES0500000003") or []
     sc = infl_series.get("CPISUPERCORE") or []
     if not ahe or not sc:
+        # **講清楚缺的是哪一條。** 先前只寫「缺其中一項」，於是這一區空掉時
+        # 沒有任何線索可以追——而核心服務除住房是**推導出來的**（見
+        # inflation.derive_supercore），它會空掉的原因是上游的兩條之一
+        # 沒抓到，而不是這一區自己的問題。
+        _miss = []
+        if not ahe:
+            _miss.append("平均時薪（CES0500000003）")
+        if not sc:
+            _miss.append("核心服務除住房（由 CUSR0000SASLE 減 CUSR0000SAH1 "
+                         "推導，兩條缺一就推不出來）")
+        log.warning("薪資傳導分析缺資料：%s", "、".join(_miss))
         return {"available": False,
-                "reason": "需要同時有薪資與核心服務除住房的資料，目前缺其中一項。"}
+                "reason": "缺少：" + "、".join(_miss) + "。"}
 
     w = yoy_series(ahe)
     s = yoy_series(sc)

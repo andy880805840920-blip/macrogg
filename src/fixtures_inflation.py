@@ -85,6 +85,12 @@ def build() -> dict[str, list[dict]]:
     # 核心商品由負轉正——關稅推升的商品通膨，聯準會最棘手的一塊
     s["CUSR0000SACL1E"] = _index(d, 161.4, -0.2, noise=0.05, recent_pct=2.6)
     s["CUSR0000SAH1"] = _index(d, 350.9, 4.2, noise=0.02, recent_pct=3.1)  # 住房（緩降）
+    # 剔除住房後的官方指數（All Items Less Shelter）。
+    # 一定要放進 fixture：少了它，離線模式會走「抓不到官方指數 → 由權重
+    # 反推」那條退路，於是正式環境用官方指數、離線預覽用反推值，
+    # 兩邊算出來的數字不一樣而且沒有任何提示。
+    # fixture 跟現實不一樣的地方，就是測不到的地方。
+    s["CUSR0000SA0L2"] = _index(d, 297.2, 2.4, noise=0.03, recent_pct=1.9)
     s["CUSR0000SASLE"] = _index(d, 405.9, 3.6, noise=0.03, recent_pct=4.4)  # supercore
 
     # ---- PCE 版的 supercore（服務除能源與住房，鏈式價格指數）----
