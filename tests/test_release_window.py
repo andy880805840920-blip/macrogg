@@ -116,6 +116,35 @@ check("⑫ 沒有 data_month 的模組直接跳過",
       run_with(OLD_JUNE, T0, ctxs={"labor": {}, "inflation": {}})[0] == {},
       "")
 
+# ⑥ 狀態檔遺失之後不可以謊報
+#
+# 使用者抓到的：就業報告 8/7 就發布了，8/13 的畫面卻還寫「本次更新：就業 7 月」。
+# 原因是狀態檔重建過：
+#   第 1 次跑　沒有舊紀錄 → 寫 first_seen=現在（那次靠 old.get(key) 擋掉）
+#   第 2 次跑　rec.month 已經等於 month → 沿用那個 first_seen
+#             → 它在 72 小時內 → 兩個模組同時被標成「本次更新」
+# 擋掉的方式是記 `advanced`：這個 first_seen 是不是真的看到期別往前推。
+out, after = run_with(None, T0)
+check("⑭ 重建後的第一次：記下來但標 advanced=False",
+      out == {} and after["labor"]["advanced"] is False, str(after["labor"]))
+out2, after2 = run_with(after, dt.datetime(2026, 8, 12, 10, 0, 0))
+check("⑮ 重建後的第二次仍然不算新（先前這裡會謊報）",
+      out2 == {}, str(out2))
+check("⑯ 而且 advanced 沿用下去，不會自己變成 True",
+      after2["labor"]["advanced"] is False, str(after2["labor"]))
+out3, after3 = run_with(after2, dt.datetime(2026, 9, 5, 9, 0, 0),
+                        ctxs={"labor": {"data_month": "2026-08"},
+                              "inflation": {"data_month": "2026-08"}})
+check("⑰ 真的換期別時才標 advanced=True，並且算新",
+      out3 == {"labor": "2026-08", "inflation": "2026-08"}
+      and after3["labor"]["advanced"] is True, str(out3))
+
+# 舊格式（沒有 advanced 欄位）要沿用舊行為，不能因為升級就整批消失
+_legacy = {"labor": {"month": "2026-07", "first_seen": "2026-08-12T08:00:00"},
+           "inflation": {"month": "2026-07", "first_seen": "2026-08-12T08:00:00"}}
+check("⑱ 舊格式的紀錄當成 advanced 處理（升級不會少講一次）",
+      run_with(_legacy, T0)[0] == {"labor": "2026-07", "inflation": "2026-07"})
+
 check("⑬ 視窗是 72 小時", run.FRESH_HOURS == 72)
 
 print()

@@ -347,9 +347,10 @@ class MV:                      # 假的 ChangeSet
         self.metric_moves = moves
 
 
-def mv(mod, key, label, frm, to, lean="dovish"):
+def mv(mod, key, label, frm, to, lean="dovish", unit="%", threshold=0.05):
     return {"module": mod, "key": key, "label": label, "from": frm, "to": to,
-            "delta": to - frm, "unit": "%", "lean": lean}
+            "delta": to - frm, "unit": unit, "threshold": threshold,
+            "lean": lean}
 
 
 INF_MOVES = [mv("inflation", "core_cpi_yoy", "核心 CPI 年增", 2.6, 2.5),
@@ -426,6 +427,46 @@ check("65e 頭條 CPI 講得出來",
       "CPI 年增 3.4%" in wn(NEW, moves=_HEAD), wn(NEW, moves=_HEAD))
 
 # 上限放寬之後仍然有防呆
+# ---------------------------------------------------------------------------
+# 跨指標排序：先換成同一把尺，再比大小
+#
+# 使用者抓到的：CPI 剛出爐，開頭句卻寫「非農三個月均 2.0 萬人（上月 7.7
+# 萬人）；非農就業月變動 −2.3 萬人」——兩條都是就業，通膨一個字都沒有。
+#
+# 原因是排序直接比原始變動量，而那些量的單位不一樣：
+#     非農三個月均　5.7（萬人）　>　核心 CPI 年增　0.33（個百分點）
+# 所以只要就業同時是新的，通膨就**永遠**擠不進去。
+#
+# 改成除以各自的雜訊門檻（「動了幾倍的雜訊」）才能跨指標比。
+# ---------------------------------------------------------------------------
+_BIG_LABOR = mv("labor", "nfp_3m", "非農三個月均", 7.7, 2.0,
+                unit="萬人", threshold=1)          # 5.7 倍雜訊
+_BIG_LABOR2 = mv("labor", "nfp", "非農就業月變動", 2.0, -2.3,
+                 unit="萬人", threshold=1)         # 4.3 倍雜訊
+_CPI = mv("inflation", "core_cpi_yoy", "核心 CPI 年增", 2.81, 2.48,
+          threshold=0.05)                          # 6.6 倍雜訊
+
+BOTH = {"labor": "2026-07", "inflation": "2026-07"}
+s_both = wn(BOTH, moves=[_BIG_LABOR, _BIG_LABOR2, _CPI])
+check("67 換算過的幅度才是排序依據（CPI 動 6.6 倍雜訊 > 非農 5.7 倍）",
+      s_both.index("核心 CPI") < s_both.index("非農"), s_both)
+check("68 兩個模組都剛發布 → 每邊至少講一個",
+      "核心 CPI" in s_both and "非農" in s_both, s_both)
+check("69 不會兩個名額都被同一個模組吃掉",
+      s_both.count("非農") == 1, s_both)
+
+# 只有一個模組是新的時候，兩個名額本來就該都給它
+s_one = wn({"labor": "2026-07"}, moves=[_BIG_LABOR, _BIG_LABOR2, _CPI])
+check("70 只有就業是新的 → 兩個名額都給就業，不硬塞通膨",
+      "核心 CPI" not in s_one and s_one.count("非農") == 2, s_one)
+
+# 沒有門檻的舊資料不能讓排序爆掉
+check("71 門檻缺漏時退回比原始幅度，不丟例外",
+      "本次更新" in wn(BOTH, moves=[
+          {"module": "inflation", "key": "core_cpi_yoy", "label": "甲",
+           "from": 2.8, "to": 2.5, "delta": -0.3, "unit": "%",
+           "lean": "dovish"}]))
+
 check("66 上限只是防呆，放得很寬", brief.MAX_CJK >= 400)
 
 print()

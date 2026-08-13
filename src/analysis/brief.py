@@ -266,19 +266,53 @@ def _whats_new(ctxs: dict) -> str:
     mine = [m for m in moves
             if m.get("module") in keys
             and m.get("key") in _RELEASE_KEYS.get(m.get("module"), set())]
-    # 動得最多的排前面：這一次真正的重點是變化幅度最大的那一個，
-    # 不是清單裡剛好排第一的那一個。
-    mine.sort(key=lambda m: -abs(m.get("delta") or 0))
+    # ---- 排序：動得最多的排前面，但「多」要先換成同一把尺 ----
+    #
+    # 先前是 `sort(key=lambda m: -abs(m["delta"]))`——**直接比原始變動量，
+    # 而那些量的單位不一樣**。非農以「萬人」計、CPI 以「個百分點」計，
+    # 於是 5.7（萬人）永遠大於 0.33（個百分點），**就業一旦同時是新的，
+    # 通膨就永遠擠不進去**。使用者剛看完 CPI 出爐，開頭句寫的卻是兩條非農。
+    #
+    # 換算的尺用每個指標自己的 `threshold`（雜訊門檻）——那本來就是
+    # 按各自單位訂的，改用「動了幾倍的雜訊」就能跨指標比：
+    #
+    #     非農三個月均　5.7 萬人 ÷ 1 萬人　　　＝ 5.7 倍
+    #     核心 CPI 年增　0.33 個百分點 ÷ 0.05　＝ 6.6 倍　← 這才是重點
+    def _mag(m):
+        thr = m.get("threshold") or 0
+        d = abs(m.get("delta") or 0)
+        return d / thr if thr else d
+
+    mine.sort(key=lambda m: -_mag(m))
+
+    # ---- 每個剛發布的模組至少講一個 ----
+    #
+    # 光排序還不夠：兩個模組同時是新的時候，前兩名仍可能都來自同一邊。
+    # 讀者剛在新聞上看到 CPI，開頭句卻整句在講就業——那不是摘要，是漏報。
+    # 所以先從每個模組各取它自己的第一名，再按幅度填滿剩下的名額。
+    picked, seen_mod = [], set()
+    for m in mine:
+        if m.get("module") not in seen_mod:
+            picked.append(m)
+            seen_mod.add(m.get("module"))
+    for m in mine:
+        if len(picked) >= _NEW_MAX:
+            break
+        if m not in picked:
+            picked.append(m)
+    picked.sort(key=lambda m: -_mag(m))            # 名單定了再照幅度排序
+    picked = picked[:_NEW_MAX]
 
     head = "、".join(f"{n} {p}" if p else n for _, n, p in fresh)
-    nums = [x for x in (_fmt_move(m) for m in mine[:_NEW_MAX]) if x]
+    nums = [x for x in (_fmt_move(m) for m in picked) if x]
     if not nums:
         # 有新資料但沒有任何指標動超過門檻——那本身就是資訊。
         return f"本次更新：{head}的新數據出爐，各項指標變動都在雜訊範圍內。"
 
     # 方向：這幾個變動整體偏哪一邊。用 changes 已經判好的 lean，
     # 不自己重算——重算會跟「跟上期比什麼變了」那張卡對不上。
-    lean = [m.get("lean") for m in mine[:_NEW_MAX]]
+    # 用 picked 不是 mine——方向要對應**畫面上真的寫出來的那幾個**。
+    lean = [m.get("lean") for m in picked]
     tail = ""
     if lean and all(x == "dovish" for x in lean if x):
         tail = "，方向偏降息"

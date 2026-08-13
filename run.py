@@ -258,14 +258,29 @@ def _fresh_releases(ctxs: dict) -> dict:
         if rec.get("month") == month and rec.get("first_seen"):
             state[key] = rec                       # 沿用第一次看到的時間
         else:
-            state[key] = {"month": month, "first_seen": clock.iso()}
+            # `advanced` 記的是「這個 first_seen 是不是真的看到期別往前推」。
+            #
+            # 沒有這個旗標的話，**狀態檔一掉就會謊報**：第一次跑寫下
+            # first_seen=現在（那次不算新，靠 old.get(key) 擋掉），
+            # 但第二次跑起 rec.month 就等於 month 了，於是沿用那個
+            # first_seen——而它在 72 小時內，兩個模組同時被標成「本次更新」。
+            # 使用者看到的正是這個：就業報告 8/7 就發了，8/13 還寫著
+            # 「本次更新：就業 7 月」。
+            state[key] = {"month": month, "first_seen": clock.iso(),
+                          "advanced": bool(rec.get("month"))}
         try:
             seen = dt.datetime.fromisoformat(state[key]["first_seen"])
             fresh = (now - seen).total_seconds() <= FRESH_HOURS * 3600
         except (ValueError, TypeError):
             fresh = False
-        # 第一次跑（本來就沒有紀錄）不算新——否則每次換機器都會宣稱「本次更新」
-        if fresh and old.get(key):
+        # 只有「真的看到期別往前推」那一次記下的時間才算數。
+        # 第一次跑、換機器、狀態檔遺失都不算——寧可少講一次，
+        # 也不要在資料其實是一週前發布的時候寫「本次更新」。
+        # 預設 True 是給**舊格式的紀錄**用的：這個旗標是後來才加的，
+        # 沿用下來的舊紀錄沒有它。舊版程式能寫出那筆紀錄就代表期別看過了，
+        # 當成 advanced 處理是對的。新寫的紀錄一定會明確帶這個欄位，
+        # 所以「狀態檔遺失後重建」那條路徑不會被這個預設值放行。
+        if fresh and state[key].get("advanced", True):
             out[key] = month
 
     try:

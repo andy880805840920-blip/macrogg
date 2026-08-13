@@ -475,6 +475,11 @@ def compare(state: dict) -> ChangeSet:
                 "unit": meta.get("unit", ""),
                 # 水準與變化量的單位不同：率的變化是「個百分點」
                 "delta_unit": meta.get("delta_unit", meta.get("unit", "")),
+                # 這個指標的雜訊門檻。帶出來是給**跨指標排序**用的：
+                # 「非農動了 5.7 萬人」跟「核心 CPI 動了 0.33 個百分點」
+                # 沒辦法直接比大小（單位不同），但都可以問「動了幾倍的雜訊」。
+                # 見 brief._whats_new。
+                "threshold": meta.get("threshold", 0) or 0,
                 "lean": _lean,
             })
 
