@@ -5,6 +5,7 @@ from __future__ import annotations
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _light_card, _flag_row, _stats
+from . import compact_full, state_chip
 
 
 VERDICT_COPY = {
@@ -180,7 +181,7 @@ def _passthrough(p) -> str:
 </details>"""
 
 
-def inflation_body(d: dict) -> str:
+def _inflation_body_full(d: dict) -> str:
     k = d["kpi"]
     mini = d.get("mini", {})
     a = d.get("asof", {})
@@ -437,7 +438,7 @@ def inflation_body(d: dict) -> str:
       <dd>剔除食物與能源後的 CPI。這兩項波動太大，剔除後比較看得出趨勢。</dd>
       <dt>PCE / 核心 PCE</dt>
       <dd>另一套物價指數，涵蓋範圍比 CPI 廣，也會反映消費者的替代行為。
-        <b>聯準會的 2% 目標指的是核心 PCE，不是 CPI。</b></dd>
+        <b>聯準會的 2% 長期目標以總體 PCE 衡量；核心 PCE 用來看基礎趨勢。</b></dd>
       <dt>核心服務除住房</dt>
       <dd>英文常稱 supercore。這一塊的成本主要是人力，所以跟薪資直接連動，
         是聯準會判斷通膨是否真的受控的關鍵。</dd>
@@ -455,6 +456,46 @@ def inflation_body(d: dict) -> str:
   </div>
 </div>
 """
+
+
+def inflation_body(d: dict) -> str:
+    """決策優先：首卡串起 PPI → CPI → PCE，其餘完整保留在單一收合。"""
+    s, a = d["summary"], d.get("asof", {})
+    def pv(v):
+        return f"{v:.1f}%" if v is not None else "—"
+    def move(short, long):
+        if short is None or long is None:
+            return "資料不足"
+        return "升溫" if short > long + .2 else ("降溫" if short < long - .2 else "持平")
+    pce_move = move(s.pce_core_3m, s.pce_core_yoy)
+    ppi_move = move(s.ppi_core_3m, s.ppi_core_yoy)
+    title = f"基礎通膨{pce_move}；PPI 上游壓力{ppi_move}"
+    metrics = "".join([
+        state_chip("總體 CPI｜民眾體感", pv(s.headline_yoy), "含食物與能源"),
+        state_chip("核心 CPI｜消費端趨勢", pv(s.core_yoy), f"3M 年化 {pv(s.core_3m)}"),
+        state_chip("總體 PCE｜Fed 2% 目標", pv(s.pce_headline_yoy), f"3M 年化 {pv(s.pce_headline_3m)}"),
+        state_chip("核心 PCE｜九宮格水準", pv(s.pce_core_yoy), f"動能 {pce_move}",
+                   "hawkish" if pce_move == "升溫" else "dovish" if pce_move == "降溫" else "neutral"),
+    ])
+    chain = f'''<div class="grid-flow">
+      <div class="flow-box"><strong>PPI｜企業上游</strong><div class="flow-values">
+        總體 {pv(s.ppi_headline_yoy)} · 核心 {pv(s.ppi_core_yoy)} · 3M {pv(s.ppi_core_3m)}<br>
+        只判斷成本壓力，不直接移動九宮格。</div></div><div class="flow-arrow">→</div>
+      <div class="flow-box"><strong>CPI｜消費者價格</strong><div class="flow-values">
+        總體 {pv(s.headline_yoy)} · 核心 {pv(s.core_yoy)} · 3M {pv(s.core_3m)}<br>
+        最早確認消費端轉折與分項來源。</div></div><div class="flow-arrow">→</div>
+      <div class="flow-box"><strong>PCE｜政策口徑</strong><div class="flow-values">
+        總體 {pv(s.pce_headline_yoy)} · 核心 {pv(s.pce_core_yoy)} · 3M {pv(s.pce_core_3m)}<br>
+        核心年增決定格位；三個月年化只決定方向。</div></div></div>'''
+    tags = (f'<div class="data-line"><span class="data-tag">CPI {(a.get("cpi") or "—")[:7]}</span>'
+            f'<span class="data-tag">PPI {(a.get("ppi") or "—")[:7]}</span>'
+            f'<span class="data-tag">PCE {(a.get("pce") or "—")[:7]}</span>'
+            '<span class="data-tag">口徑：年增率；動能：近 3 個月年化</span></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Inflation now</div>'
+            f'<h2 class="focus-title">{esc(title)}</h2><p class="focus-sub">'
+            '先看核心 PCE 的格位與方向，再用 CPI 拆消費端、PPI 看上游風險；三者不混成單一分數。</p>'
+            f'<div class="focus-grid">{metrics}</div>{chain}{tags}</div></div>')
+    return hero + compact_full(_inflation_body_full(d), "完整通膨拆解")
 
 
 def inflation_footer(d: dict) -> str:

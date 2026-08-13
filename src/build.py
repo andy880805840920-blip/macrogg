@@ -162,7 +162,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     # ---------------- 損益兩平就業增速 ----------------
     # 沒有這條線，非農的絕對數字無法解讀
     bkev = be.estimate(series.get("CNP16OV", []), series.get("CIVPART", []),
-                       payems, series.get("CE16OV", []))
+                       payems, series.get("CE16OV", []), series.get("UNRATE", []))
 
     # ---------------- 意外值 ----------------
     exp_month = payems[-1]["date"][:7] if payems else ""
@@ -420,7 +420,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "sahm_triggered": (_sahm_value(lights) or 0) >= SAHM_TRIGGER,
             "nfp_3m": bkev.nfp_3m,
             "breakeven": bkev.monthly,
-            "below_breakeven": (bkev.gap is not None and bkev.gap < 0),
+            "below_breakeven": (bkev.verdict == "below"),
         },
         "claims": _claims_block(series),
         "unemp_structure": _unemp_structure(series),
@@ -623,17 +623,15 @@ def _unemp_structure(series: dict) -> dict:
     這一整組（七條 LNS 序列 ＋ 長期失業）先前一直有抓、卻沒有任何地方讀，
     等於白抓；而它回答的問題在這一頁其他地方也沒有人回答。
 
-    分母用「合計」而不是總失業人數：CPS 的失業原因分類不完全互斥，
-    幾條加起來跟 UNEMPLOY 對不齊，用總數當分母會讓佔比加總不等於 100%。
+    採 BLS A-11 的四個互斥大類。不能把 Job Losers 總項與永久失業、
+    暫時解雇等子項放在一起，否則同一個人會被重複計算。
     """
     parts = [
-        ("LNS13023621", "永久性失業", "bad",
-         "被裁掉、沒有回聘承諾。需求端真的在收縮時，先漲的是這一條。"),
-        ("LNS13026638", "暫時解雇", "bad",
-         "有回聘承諾。通常反映的是短期的產能調整，不是結構性收縮。"),
-        ("LNS13023653", "自願離職", "good",
+        ("LNS13023621", "失去工作／臨時工作結束", "bad",
+         "包含失去工作與臨時工作結束，是 BLS A-11 的互斥大類。"),
+        ("LNS13023705", "自願離職", "good",
          "主動辭職還沒找到下一份。這條要上升，人得對再就業有信心。"),
-        ("LNS13023705", "重新進入", "good",
+        ("LNS13023557", "重新進入", "good",
          "離開勞動力之後又回來找工作。景氣把人吸回來時會增加。"),
         ("LNS13023569", "新進入", "good",
          "第一次找工作。人口與畢業季的影響大於景氣。"),
@@ -702,7 +700,14 @@ def _ustar_gap(u3: list, nrou: list) -> dict:
     注意 u* 是**季頻的模型估計值**，而且會被回溯修正；
     它不是觀測值，所以缺口只當方向參考，不拿去下門檻式的結論。
     """
-    u_now, ustar_now = value_at(u3), value_at(nrou)
+    u_now = value_at(u3)
+    # NROU 同時含當期與十年後的 CBO 預測。value_at(nrou) 會拿到序列尾端，
+    # 因而曾把 2036 年的預測值當成 2026 年現值。要以失業率的資料日期為
+    # 截止點，取不晚於該日的最近一季。
+    u_date = u3[-1]["date"] if u3 else ""
+    eligible = [r for r in nrou if r.get("date", "") <= u_date]
+    ustar_row = eligible[-1] if eligible else None
+    ustar_now = ustar_row.get("value") if ustar_row else None
     if u_now is None or ustar_now is None:
         return {}
     gap = u_now - ustar_now
@@ -717,7 +722,7 @@ def _ustar_gap(u3: list, nrou: list) -> dict:
     return {
         "u": u_now, "ustar": ustar_now, "gap": gap, "state": state,
         "note": note,
-        "as_of": (nrou[-1]["date"] if nrou else ""),
+        "as_of": (ustar_row["date"] if ustar_row else ""),
         "display": f"{gap:+.2f} 個百分點",
         "color": ("var(--critical)" if gap > 0.5 else
                   "var(--warning)" if gap < -0.5 else "inherit"),
@@ -740,6 +745,7 @@ def _breakeven_block(b) -> dict:
                  ("var(--good)" if (b.gap or 0) > tol else "var(--text-primary)"))
     inputs = (f"每月人口成長 {fmt.wan(b.pop_growth)}"
               + (f"　·　參與率 {b.participation:.1f}%" if b.participation else "")
+              + (f"　·　失業率 {b.unemployment:.1f}%" if b.unemployment is not None else "")
               + f"　·　判定容差 ±{tol/10:,.1f} 萬人")
     chart = ""
     if b.series:
@@ -759,8 +765,8 @@ def _breakeven_block(b) -> dict:
 # ===========================================================================
 # 通膨模組（P2）
 # ===========================================================================
-# 聯準會的目標是核心 PCE 年增 2%。這是整個通膨頁唯一的硬錨——
-# 其他數字都要回答「離這個目標還有多遠、往哪邊走」。
+# 聯準會的 2% 長期目標以總體 PCE 衡量；核心 PCE 用來辨識基礎趨勢。
+# 這裡的 2% 也作為核心序列的比較基準，但不把核心 PCE 誤稱為官方目標定義。
 PCE_TARGET = 2.0
 
 
@@ -875,8 +881,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "headline_plain": (
             f"你買的東西平均比一年前貴 {summ.headline_yoy:.1f}%。"
             "這個數字包含食物和能源，所以起伏會比較大。"
-            "聯準會的 2% 目標指的是核心 PCE，CPI 沒有官方目標，"
-            "而且結構上通常比 PCE 高 0.3 個百分點左右。"
+            "聯準會的 2% 長期目標以總體 PCE 衡量；CPI 沒有官方目標。"
+            "兩者涵蓋範圍與權重不同，不能直接互換。"
             if summ.headline_yoy is not None else "—"),
         # 年增率一律用未季調（跟大數字同一個口徑，見 inflation._yoy_nsa）。
         # 混用的話卡片上的 3.4% 會配一條 3.5% 的走勢線，看起來像資料錯亂。
@@ -904,14 +910,14 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         # 這一張是聯準會真正盯的指標，副標維持同一組結構
         "pce_sub": ((f"近三個月年化 {_pct(summ.pce_core_3m)}　·　"
                      if summ.pce_core_3m is not None else "")
-                    + (f"離 2% 目標 {summ.pce_core_yoy - PCE_TARGET:+.1f} 個百分點"
+                    + (f"相對 2% 基準 {summ.pce_core_yoy - PCE_TARGET:+.1f} 個百分點"
                        if summ.pce_core_yoy is not None else "")),
         "pce_plain": (
             f"核心 PCE 年增 {summ.pce_core_yoy:.1f}%。"
-            "聯準會講的 2% 目標指的就是這個指標，不是 CPI。"
+            "這是基礎通膨趨勢指標；官方 2% 長期目標以總體 PCE 衡量。"
             if summ.pce_core_yoy is not None else "—"),
         "pce_spark": rate_spark("PCEPILFE"),
-        "pce_flag": (("已接近目標" if summ.pce_core_yoy - 2 <= 0.3 else "仍高於目標")
+        "pce_flag": (("已接近 2% 基準" if summ.pce_core_yoy - 2 <= 0.3 else "仍高於 2% 基準")
                      if summ.pce_core_yoy is not None else None),
         "pce_flag_kind": ("pos" if (summ.pce_core_yoy or 9) - 2 <= 0.3 else "neg"),
 
@@ -941,6 +947,13 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
 
     agg = att.aggregates
     _cm = {m["id"]: m for m in comp_meta}
+    _coverage = float(agg.get("coverage_weight") or 0)
+    _expected = float(agg.get("expected_weight") or 0)
+    _missing = list(agg.get("missing_labels") or [])
+    _complete = bool(_expected and _coverage >= _expected - 0.1)
+    if not _complete:
+        log.warning("CPI 分項歸因僅涵蓋 %.1f%%；缺少：%s", _coverage,
+                    "、".join(_missing) or "未辨識分項")
     # 漲幅（%）與貢獻（個百分點）是兩種東西，先前四格等權並排、
     # 長得一模一樣，讀者分不出哪個是總數哪個是其中一塊。
     # 改成「總數在上、三塊分項在下、相加等於總數」的分解結構。
@@ -965,7 +978,10 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     infl_parts = [
         {"label": "住房", "value": _shelter, "note": "算法落後市場行情約一年"},
         {"label": "食物與能源", "value": _food_energy, "note": "波動大，核心已剔除"},
-        {"label": "其他所有項目", "value": _rest, "note": "核心裡的非住房部分"},
+        {"label": ("其他所有項目" if _complete else "其他已取得項目"),
+         "value": _rest,
+         "note": ("核心裡的非住房部分" if _complete else
+                  "資料不完整；缺少" + ("、".join(_missing) or "部分分項"))},
     ]
     # 估算合計。**這不是拿來跟實際漲幅對帳的。**
     #
@@ -987,11 +1003,16 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     log.debug("分項估算合計 %+.3f pp、實際三個月漲幅 %+.3f%%、差 %+.3f"
               "（近似法的必然差異，非錯誤）",
               _sum_est, att.total, att.total - _sum_est)
-    att_stats = [
-        # 左右兩格是**兩種不同口徑的東西**，刻意不放等號、不算差額。
-        # 下方會有一句小字講清楚它們不需要相等。
+    _estimate_stat = (
         {"label": "估算分項淨貢獻", "value": f"{_sum_est:+.2f}pp",
-         "note": "四大類的估算貢獻加總"},
+         "note": "五大類的近似貢獻加總"}
+        if _complete else
+        {"label": "分項估算覆蓋率", "value": f"{_coverage:.1f}%",
+         "color": "var(--warning)",
+         "note": ("缺少" + ("、".join(_missing) or "部分分項")
+                  + "，資料不完整，暫不顯示淨貢獻合計")})
+    att_stats = [
+        _estimate_stat,
         # 三個月的**累計**漲幅，不是年化——attribute_cpi 走的是
         # _pct_change（cur/old − 1），沒有做 **4。標成「年化」會跟同一頁
         # KPI 卡的「近三個月年化」打架（1.0012⁴ 才是年率）。
@@ -1172,6 +1193,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "passthrough": pass_block,
         "asof": {
             "cpi": headline[-1]["date"] if headline else "",
+            "ppi": (series.get("PPIFIS") or [{}])[-1].get("date", ""),
             "pce": (series.get("PCEPILFE") or [{}])[-1].get("date", ""),
             "oil": (series.get("DCOILWTICO") or [{}])[-1].get("date", ""),
             "exp": (series.get("T5YIFR") or [{}])[-1].get("date", ""),
@@ -1229,6 +1251,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         # 不然每一期都會標成「高於目標」而失去資訊。
         # 核心 PCE 的即時推估。PCE 已經跟上時 estimated=False，畫面照舊。
         "pce_nowcast": _pce_nowcast,
+        "pce_actual_month": ((series.get("PCEPILFE") or [{}])[-1].get("date", "")[:7]),
+
         "kpi_lean": {
             "headline": _kpi_leans(
                 summ.headline_yoy, 2.3, summ.headline_yoy,
@@ -1948,7 +1972,7 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
     if infl:
         b = infl.get("bands") or {}
         yoy_v, m3 = infl.get("core_pce_yoy"), infl.get("core_pce_3m")
-        lvl = scenario.blended_inflation(yoy_v, m3)
+        lvl = yoy_v
         tilt = (infl_ctx or {}).get("tilt") or {}
         src = ("FOMC 對 {y} 年的核心 PCE 預測中位數（{lo:.1f}–{hi:.1f}% 中央趨勢）"
                .format(y=b.get("next_year"), lo=b.get("next_lo") or 0,
@@ -1965,6 +1989,9 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
                     f'落在門檻 {b.get("low", 2.30):.2f}–{b.get("high", 2.90):.2f}% 之間')
         # PCE 還沒公布、用 CPI 推估時**一定要講出來**。這個數字會決定
         # 九宮格落在哪一格，而九宮格決定整張固定收益部位對照表——
+        _actual_month = infl.get("pce_actual_month") or ""
+        _actual_tag = f"（{_actual_month} 實際）" if infl.get("pce_estimated") and _actual_month else ""
+
         # 一個影響部位的數字不能讓讀者以為它是 BEA 公布的官方值。
         _est = "（推估）" if infl.get("pce_estimated") else ""
         # lead 是**常駐的一句話**，只講「這一格是怎麼判出來的」。
@@ -1973,13 +2000,13 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
         # 多少）直接接在後面，於是一張本來一行的卡變成七行，整個九宮格區塊
         # 讀起來像一團字。那段說明有價值，但它回答的是「推估怎麼來的」，
         # 屬於展開之後的內容，不屬於第一眼。
-        _lead = (f"核心 PCE {_pct(yoy_v)}{_est} 與三月年化 {_pct(m3)} 加權後 "
-                 f"{lvl:.2f}%，{_cmp}"
+        _lead = (f"核心 PCE 年增 {_pct(yoy_v)}{_est} 決定格位；短期動能 "
+                 f"{_pct(m3)}{_actual_tag} 另列，{_cmp}"
                  if lvl is not None else "資料不足")
         _est_note = ("核心 PCE 這個月還沒公布（BEA 月底才發），上面那個值是用"
                      "已公布的核心 CPI 換算成 PCE 口徑推估的。換算而不是直接"
-                     "代入，是因為門檻錨在 FOMC 的 PCE 預測，而核心 CPI 結構上"
-                     "比核心 PCE 高 0.3 個百分點左右。PCE 一公布就換回實際值。"
+                     "代入，是因為門檻錨在 FOMC 的 PCE 預測；換算採近期 CPI 與"
+                     "PCE 的實際差距，不假設固定正負方向。PCE 公布後就換回實際值。"
                      if infl.get("pce_estimated") else "")
         out["inflation"] = {
             "state": sc.infl_state,
@@ -1987,8 +2014,8 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
             # 展開後才顯示，見上面的說明
             "note": _est_note,
             "rows": [
-                {"label": "核心 PCE 年增率（水準）", "value": _pct(yoy_v), "w": "×0.6"},
-                {"label": "核心 PCE 三月年化（動能）", "value": _pct(m3), "w": "×0.4"},
+                {"label": "核心 PCE 年增率（決定格位）", "value": _pct(yoy_v), "w": "水準"},
+                {"label": "核心 PCE 三個月年化（只決定方向）" + _actual_tag, "value": _pct(m3), "w": "動能"},
             ],
             "level": (f"{lvl:.2f}%" if lvl is not None else "—"),
             "low": f'{b.get("low", 2.30):.2f}%',
@@ -2086,9 +2113,13 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         _pce_for_grid = (_nc.get("value") if _nc.get("estimated")
                          else s.pce_core_yoy)
         infl = {"core_pce_yoy": _pce_for_grid, "core_pce_3m": s.pce_core_3m,
+                "core_cpi_yoy": s.core_yoy, "core_cpi_3m": s.core_3m,
+                "headline_ppi_yoy": s.ppi_headline_yoy,
+                "core_ppi_yoy": s.ppi_core_yoy, "core_ppi_3m": s.ppi_core_3m,
                 "bands": infl_ctx.get("bands") or {},
                 "pce_estimated": bool(_nc.get("estimated")),
-                "flags": infl_ctx["flags"]}
+                "flags": infl_ctx["flags"],
+                "pce_actual_month": infl_ctx.get("pce_actual_month", "")}
     fomc = None
     if fomc_ctx and not fomc_ctx.get("empty"):
         # 反應函數要一起帶進情境：同一格在通膨優先與就業優先下結論可能相反
@@ -2449,10 +2480,13 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     ]
     debt_gap = {}
     if debt.pb_gap is not None:
+        _gap_note = ("實際基本盈餘低於穩定水準；負值是需要補上的財政缺口"
+                     if debt.pb_gap < 0 else
+                     "實際基本盈餘高於穩定水準；正值是本模型下的財政緩衝")
         debt_gap = {
             "value": f"{debt.pb_gap:+.2f}% GDP",
             "color": ("var(--critical)" if debt.pb_gap < -0.5 else "var(--good)"),
-            "note": "實際與穩定水準的差距＝財政問題的規模",
+            "note": _gap_note,
         }
     # 債務比是季資料，一年才四筆，min_points 放寬一點才有形狀。
     # 這也代表實際起點可能早於 CHART_START，所以期間要標出來。

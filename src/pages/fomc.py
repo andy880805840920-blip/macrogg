@@ -7,6 +7,7 @@ import re
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _stats
+from . import compact_full, state_chip
 
 
 # 「鷹／鴿」是聯準會語境的標準詞，這頁保留，但首次出現一律加註方向——
@@ -88,7 +89,7 @@ def _votes(vote: dict) -> str:
     return f'<div class="votes">{"".join(chips)}</div>'
 
 
-def fomc_body(d: dict) -> str:
+def _fomc_body_full(d: dict) -> str:
     sh = d.get("shift") or {}
     direction = sh.get("direction", "neutral")
     title, why = DIR_COPY.get(direction, DIR_COPY["neutral"])
@@ -566,6 +567,44 @@ def fomc_body(d: dict) -> str:
   </div>
 </div>
 """
+
+
+def fomc_body(d: dict) -> str:
+    """FOMC 首卡先交代結論、決策、投票、文本變化與下次會議。"""
+    sh = d.get("shift") or {}
+    direction = sh.get("direction", "neutral")
+    title, why = DIR_COPY.get(direction, DIR_COPY["neutral"])
+    vote = d.get("vote") or {}
+    diss = vote.get("dissents") or []
+    hikes = sum(1 for x in diss if x.get("direction") == "hike")
+    cuts = sum(1 for x in diss if x.get("direction") == "cut")
+    vote_text = "全票通過" if not diss else f"{len(diss)} 票反對（升息 {hikes}／降息 {cuts}）"
+    action = (d.get("obj_parts") or {}).get("action_label") or "政策行動未辨識"
+    focus = d.get("focus") or {}
+    pair = d.get("diff_pair") or (None, d.get("latest_date"))
+    nm = d.get("next_meeting") or {}
+    next_text = (f'{nm.get("date", "")}｜{nm.get("days")} 天後'
+                 if nm.get("days") is not None else "日期待更新")
+    metrics = "".join([
+        state_chip("會議結論", {"hawkish":"偏鷹","dovish":"偏鴿","neutral":"中性"}.get(direction, "中性"),
+                   f"客觀分數 {sh.get('objective', 0):+.2f}", direction),
+        state_chip("政策決定", action, d.get("rate_range", "—")),
+        state_chip("投票結構", vote_text, "反對方向比反對票數更重要"),
+        state_chip("目前重心", focus.get("label", "無法判定"), "只改九宮格政策解讀"),
+    ])
+    diff_note = (f"本次 {d.get('latest_date', '—')} 對照 {pair[0] or '—'}："
+                 f"改動 {d.get('changed_count', 0)} 處")
+    logic = (f'<div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b>'
+             f'<span>{esc(d.get("obj_detail", "沒有明確政策行動變化"))}</span></div>'
+             f'<div class="logic-step"><b>聲明文本比對</b><span>{esc(diff_note)}；只比較正式會議聲明。</span></div>'
+             f'<div class="logic-step"><b>下次會議</b><span>{esc(next_text)}</span></div></div>')
+    tags = (f'<div class="data-line"><span class="data-tag">聲明 {esc(d.get("latest_date", "—"))}</span>'
+            f'<span class="data-tag">措辭分數 {sh.get("tone", 0):+.2f}（輔助，不覆寫客觀訊號）</span>'
+            '<span class="data-tag">AI 不參與計分與逐句差異</span></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div>'
+            f'<h2 class="focus-title">{esc(title)}</h2><p class="focus-sub">{esc(why)}</p>'
+            f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
+    return hero + compact_full(_fomc_body_full(d), "逐句文本比對、歷次分數與完整依據")
 
 
 def fomc_footer(d: dict) -> str:

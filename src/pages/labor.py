@@ -14,6 +14,7 @@ from .. import charts, fmt
 from ..analysis import attribution
 from ..site import esc
 
+from . import compact_full, state_chip
 STATUS_ICON = {"good": "●", "warning": "▲", "critical": "■", "unknown": "○"}
 STATUS_TEXT = {"good": "正常", "warning": "留意", "critical": "警戒", "unknown": "無資料"}
 SEV_ICON = {"alert": "■", "watch": "▲", "info": "●"}
@@ -335,7 +336,7 @@ def _verdict_card(d: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-def labor_body(d: dict) -> str:
+def _labor_body_full(d: dict) -> str:
     k = d["kpi"]
     mini = d.get("mini", {})
     asof = (d.get("asof", {}).get("labor") or "")[:7]
@@ -664,6 +665,48 @@ def labor_body(d: dict) -> str:
 
 {failed_html}
 """
+
+
+def labor_body(d: dict) -> str:
+    """就業頁首卡固定回答：格位、方向、非農、失業率與下一格門檻。"""
+    ax, k = d.get("axis") or {}, d.get("kpi") or {}
+    u, lo, hi = ax.get("unrate"), ax.get("u_lo"), ax.get("u_hi")
+    if ax.get("sahm_triggered"):
+        state, basis = "弱", "Sahm 法則已觸發"
+    elif None not in (u, lo, hi):
+        state = "弱" if u > hi else ("強" if u < lo else "中")
+        basis = f"失業率 {u:.1f}% 對照 FOMC 長期區間 {lo:.1f}–{hi:.1f}%"
+    else:
+        state, basis = "資料不足", "缺少失業率或 FOMC 長期區間"
+    momentum = "轉弱" if (ax.get("below_breakeven") or ax.get("sahm_triggered")) else "持平"
+    n3, bk = ax.get("nfp_3m"), ax.get("breakeven")
+    gap = (n3 - bk) if n3 is not None and bk is not None else None
+    if state == "中" and hi is not None and u is not None:
+        trigger = f"失業率高於 {hi:.1f}% 轉弱（距離 {hi-u:.1f}pp）"
+    elif state == "強" and lo is not None:
+        trigger = f"失業率升回 {lo:.1f}% 以上離開強區"
+    else:
+        trigger = "持續確認失業率與 Sahm 法則"
+    kind = "dovish" if state == "弱" or momentum == "轉弱" else "hawkish" if state == "強" else "neutral"
+    metrics = "".join([
+        state_chip("就業格位", state, basis, kind),
+        state_chip("移動方向", momentum, "不直接改變當前格位", kind),
+        state_chip("非農就業｜最新", k.get("nfp_display", "—"), k.get("nfp_sub", "")),
+        state_chip("失業率 U-3", k.get("u3_display", "—"), k.get("u3_sub", "")),
+    ])
+    gap_txt = f"{gap/10:+.1f} 萬人" if gap is not None else "—"
+    logic = (f'<div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>{esc(basis)}</span></div>'
+             f'<div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：{gap_txt}；低於即轉弱。</span></div>'
+             f'<div class="logic-step"><b>下一格觸發</b><span>{esc(trigger)}</span></div></div>')
+    a = d.get("asof") or {}
+    tags = (f'<div class="data-line"><span class="data-tag">就業報告 {esc(d.get("data_month", "—"))}</span>'
+            f'<span class="data-tag">初領失業金 {(a.get("claims") or "—")[:10]}</span>'
+            f'<span class="data-tag">JOLTS {(a.get("jolts") or "—")[:7]}</span></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
+            f'<h2 class="focus-title">就業水準{state}，動能{momentum}</h2>'
+            '<p class="focus-sub">格位只看失業率相對 FOMC 長期區間；非農、損益兩平、失業金與 JOLTS 用來判斷移動方向。</p>'
+            f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
+    return hero + compact_full(_labor_body_full(d), "完整就業拆解")
 
 
 def labor_footer(d: dict) -> str:

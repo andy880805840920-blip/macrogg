@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from ..site import esc
 from .labor import _light_card, _stats
+from . import compact_full, state_chip
 
 
-def rates_body(d: dict) -> str:
+def _rates_body_full(d: dict) -> str:
     sp = d["pressure"]
     title, why = d["pressure_text"]
     lean_cls = {"high": "hawkish", "low": "dovish"}.get(sp.level, "balanced")
@@ -434,14 +435,14 @@ def rates_body(d: dict) -> str:
   {pressure_axis}
   <div class="v-count">
     這一頁看的是<b>長端</b>。前面三個模組決定政策利率的方向，
-    但 30 年期殖利率由債券供給與期限溢酬決定，聯準會控制不了。
+    但 30 年期殖利率還受債券供給與期限溢酬影響，並非只由政策利率決定。
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
     <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率為什麼在這裡</h2>
-    <p class="hint"><b>只有期限溢酬那一段聯準會降息壓不下來</b>——這一頁在追那一段。</p>
+    <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     {decomp_head_html}
     <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
     <p class="hint" style="margin-top:14px">{esc(d['decomp_note'])}</p>
@@ -453,9 +454,9 @@ def rates_body(d: dict) -> str:
         <dt>通膨補償上升</dt>
         <dd>市場預期通膨走高。這是聯準會的責任範圍，會提高升息的可能性。</dd>
         <dt>期限溢酬上升</dt>
-        <dd>既不是預期通膨也不是預期成長，純粹是投資人要求更多補償
-          才願意持有長債——通常來自供給過多或財政疑慮。
-          <b>這一種聯準會降息也壓不下來。</b></dd>
+        <dd>是投資人持有長債要求的額外補償，可能反映利率、通膨與模型不確定性，
+          也可能受到債券供給與財政疑慮影響。
+          <b>它不一定會隨聯準會降息同步下降。</b></dd>
         <dt>三段為什麼不能相加</dt>
         <dd>名目殖利率 ＝ 實質利率 ＋ 通膨補償，這兩段是完整的拆解。
           期限溢酬是<b>另一個角度</b>的拆解，衡量的是投資人持有長債要求的
@@ -639,6 +640,51 @@ def rates_body(d: dict) -> str:
   </div>
 </div>
 """
+
+
+def rates_body(d: dict) -> str:
+    """長端首卡把政府財政與 Hyperscalers 的現金流、CapEx、發債放在同一尺度。"""
+    sp, debt, hs = d["pressure"], d["debt"], d["hyperscalers"]
+    title, why = d.get("pressure_text", ("供給壓力資料不足", ""))
+    level_text = {"high":"偏高","moderate":"中等","low":"偏低"}.get(sp.level, "資料不足")
+    curve = d.get("curve")
+    y10 = (curve.levels.get("10Y") if curve else None)
+    supply = d.get("supply_side") or {}
+    def pct(v, signed=False):
+        if v is None:
+            return "—"
+        return f"{v:+.1f}%" if signed else f"{v:.1f}%"
+    fiscal_note = ("缺口：基本盈餘低於穩定債務比所需水準" if (debt.pb_gap or 0) < 0
+                   else "緩衝：基本盈餘高於穩定債務比所需水準")
+    metrics = "".join([
+        state_chip("長端供給壓力", level_text, f"綜合分數 {sp.score:+.2f}", "watch" if sp.level == "high" else "neutral"),
+        state_chip("10 年期殖利率", f"{y10:.2f}%" if y10 is not None else "—", f"資料日 {d.get('as_of', '—')}"),
+        state_chip("美國財政赤字", pct(abs(debt.deficit_gdp) if debt.deficit_gdp is not None else None),
+                   "佔 GDP；年度債券供給主體", "watch"),
+        state_chip("財政穩定差", pct(debt.pb_gap, True), fiscal_note,
+                   "watch" if (debt.pb_gap or 0) < 0 else "neutral"),
+    ])
+    hs_span = hs.period_span or hs.as_of or "期別待更新"
+    flow = (f'<div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong>'
+            f'<div class="flow-values">{esc(supply.get("gov_display", "—"))}<br>{esc(supply.get("gov_note", ""))}</div></div>'
+            '<div class="flow-arrow">＋</div>'
+            f'<div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">'
+            f'CapEx {hs.total_capex*10:,.0f} 億美元 · OCF {hs.total_ocf*10:,.0f} 億美元<br>'
+            f'CapEx / OCF {pct(hs.capex_to_ocf)} · 簡化 FCF 為負 {hs.n_cash_negative}/{len(hs.companies)} 家</div></div>'
+            '<div class="flow-arrow">→</div>'
+            f'<div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">'
+            f'單季 {hs.total_issued*10:,.0f} 億美元 · 年化 {esc(supply.get("hs_display", "—"))}<br>'
+            f'政府赤字規模比 {esc(supply.get("ratio_display", "—"))}</div></div></div>')
+    logic = (f'<div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div>'
+             f'<div class="logic-step"><b>目前結論</b><span>{esc(why)}</span></div>'
+             '<div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div>')
+    tags = (f'<div class="data-line"><span class="data-tag">利率 {esc(d.get("as_of", "—"))}</span>'
+            f'<span class="data-tag">公司期末 {esc(hs_span)}</span>'
+            f'<span class="data-tag">SEC 實際資料 {hs.n_from_sec}/{len(hs.companies)} 家</span></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div>'
+            f'<h2 class="focus-title">長端供給壓力{level_text}｜{esc(title)}</h2><p class="focus-sub">{esc(why)}</p>'
+            f'<div class="focus-grid">{metrics}</div>{flow}{logic}{tags}</div></div>')
+    return hero + compact_full(_rates_body_full(d), "財政、發債、現金流與利率完整拆解")
 
 
 def rates_footer(d: dict) -> str:

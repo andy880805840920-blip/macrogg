@@ -179,11 +179,9 @@ def build() -> dict[str, list[dict]]:
     # ---- 失業結構 ----
     s["LNS13023621"] = _series(d, _interp_recent(
         d, {"2026-07-01": 2050.0, "2026-06-01": 2010.0}, early=2900, noise=35))
-    s["LNS13026638"] = _series(d, _interp_recent(
-        d, {"2026-07-01": 870.0, "2026-06-01": 905.0}, early=1500, noise=30))
-    s["LNS13023653"] = _series(d, _interp_recent(
-        d, {"2026-07-01": 640.0}, early=800, noise=25))
     s["LNS13023705"] = _series(d, _interp_recent(
+        d, {"2026-07-01": 790.0}, early=900, noise=25))
+    s["LNS13023557"] = _series(d, _interp_recent(
         d, {"2026-07-01": 2350.0}, early=2600, noise=40))
     s["LNS13023569"] = _series(d, _interp_recent(
         d, {"2026-07-01": 720.0}, early=650, noise=25))

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..site import esc
+from . import compact_full, state_chip
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
 
@@ -265,7 +266,7 @@ def _why_axes(w: dict) -> str:
 
         blocks.append(
             _axis_head("通膨", state, inf.get("lead", "")) + rows
-            + '<div class="wx-r wx-sum"><span class="wx-k">加權後的水準</span>'
+            + '<div class="wx-r wx-sum"><span class="wx-k">格位判定值</span>'
             '<span class="wx-w"></span><span class="wx-v">'
             + esc(inf["level"]) + "</span></div>"
             + '<div class="wx-thr">' + esc(inf["level"]) + "　" + cmp_txt
@@ -296,8 +297,9 @@ def _why_axes(w: dict) -> str:
             + '<div class="wx-src" style="margin-top:8px">' + basis_txt
             + "三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是"
             "委員彼此的分歧程度）、Sahm 法則的 0.50、以及由人口成長推導出來的"
-            "損益兩平——沒有一個是本站選的數字。動能只往「弱」推，"
-            "因為就業轉強沒有對應的公認規則，寧可不推也不自己發明一條。</div>"
+            "損益兩平。前兩者是外部標準；損益兩平的 12 個月回看期與不確定性"
+            "容差是本站的方法選擇，已在就業頁揭露。損益兩平與其他月頻指標只判斷"
+            "移動方向，不會改寫當前格位。</div>"
             + _mismatch_note("就業", lab["state"], lab.get("tilt"),
                              lab.get("net"), "失業率離充分就業多遠")
             + "</div></details>")
@@ -309,7 +311,7 @@ def _why_axes(w: dict) -> str:
             + "</div>")
 
 
-def scenario_body(d: dict) -> str:
+def _scenario_body_full(d: dict) -> str:
     sc = d["scenario"]
     _why_html = _why_axes(d.get("why") or {})
 
@@ -532,7 +534,7 @@ def scenario_body(d: dict) -> str:
         跳格（例如從「按兵不動」直接到「衰退式降息」）多半發生在有外生衝擊時。</dd>
       <dt>長端為什麼不進九宮格</dt>
       <dd>九宮格回答的是「聯準會會不會動、往哪動」，那是政策利率。
-        30 年期殖利率則由債券供給、財政狀況與期限溢酬決定，聯準會控制不了。
+        30 年期殖利率還受債券供給、財政狀況與期限溢酬影響，並非只由政策利率決定。
         把兩者合成一個分數，會讓「降息但長端不降」這種最關鍵的組合消失，
         所以它獨立列在上方。</dd>
       <dt>殖利率曲線變陡／變平</dt>
@@ -558,10 +560,45 @@ def scenario_body(d: dict) -> str:
 """
 
 
+def scenario_body(d: dict) -> str:
+    """總覽的核心：九宮格、移動方向、政策傾向與下一個觸發同屏。"""
+    sc = d["scenario"]
+    lean = LEAN_TEXT.get(sc.lean, "中性")
+    regime = next((m["label"] for m in d.get("regime_meta", []) if m.get("current")), "兩邊並重")
+    trig = next((t for t in sc.triggers if t.binding), None)
+    if trig is None:
+        trig = next((t for t in sc.triggers if not t.met), None)
+    trigger_text = f"{trig.label}：{trig.distance}" if trig else "目前沒有可計算門檻"
+    metrics = "".join([
+        state_chip("就業格位", sc.labor_state, f"方向 {sc.labor_momentum}",
+                   "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else "neutral"),
+        state_chip("通膨格位", sc.infl_state, f"方向 {sc.infl_momentum}",
+                   "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else "neutral"),
+        state_chip("政策傾向", lean, sc.name,
+                   "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
+        state_chip("FOMC 反應體制", regime, "只改政策解讀，不改兩軸資料"),
+    ])
+    rates = d.get("rates_line") or {}
+    overlay = (f"長端供給壓力：{rates.get('title', '資料不足')}；{rates.get('curve_title', '')}"
+               if rates else "長端供給資料不足")
+    logic = (f'<div class="logic-strip"><div class="logic-step"><b>當前位置</b>'
+             f'<span>就業 {sc.labor_state} × 通膨 {sc.infl_state}＝{esc(sc.name)}</span></div>'
+             f'<div class="logic-step"><b>下一個轉格條件</b><span>{esc(trigger_text)}</span></div>'
+             f'<div class="logic-step"><b>格外覆蓋層</b><span>{esc(overlay)}</span></div></div>')
+    notes = (f'<div class="data-line"><span class="data-tag">{esc(d.get("as_of", "—"))}</span>'
+             '<span class="data-tag">格位＝水準；箭頭＝動能；兩者不得混算</span>'
+             '<span class="data-tag">PPI、財政、AI 發債不直接移格</span></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Macro regime</div>'
+            f'<h2 class="focus-title">{esc(sc.name)}｜{lean}</h2><p class="focus-sub">{esc(sc.description)}</p>'
+            f'<div class="focus-grid">{metrics}</div>{logic}{_grid_tabs(d, sc)}{notes}</div></div>')
+    return hero + compact_full(_scenario_body_full(d), "九宮格依據、部位與完整方法")
+
+
 def scenario_footer(d: dict) -> str:
     return (
-        "情境分類由固定規則產生：勞動綜合分數 × 核心 PCE 的年增率與三月年化加權後的水準，"
-        "決定落在九宮格的哪一格；聯準會的重心（聲明制式句、反對票、記者會表態）"
+        "情境分類由固定規則產生：失業率相對 FOMC 長期區間決定就業格位，"
+        "核心 PCE 年增決定通膨格位；短期指標只決定移動方向。聯準會的重心"
+        "（聲明制式句、反對票、記者會表態）"
         "決定用哪一張九宮格。全部是確定性規則，不含模型生成內容。<br>"
         "長端供給壓力另行計算，不併入九宮格——它影響的是曲線形狀，不是政策方向。<br>"
         "本頁僅為分析框架，不構成投資建議。"

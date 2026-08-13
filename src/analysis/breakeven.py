@@ -9,15 +9,16 @@
     若每月新增勞動力 2 萬人   → +2 萬代表供需大致平衡
 
 換句話說，**同一個數字在不同的勞動供給環境下意義完全相反**。
-2025 年後移民政策收緊，勞動供給成長大幅放慢，這個門檻從過去的
-10–15 萬掉到可能只剩 0–5 萬——不校準就會系統性高估勞動市場的疲弱程度。
+勞動供給成長會隨人口與移民流量改變，因此門檻也會隨時間移動；
+不校準就可能高估或低估勞動市場的疲弱程度。
 
 計算方式
 --------
-    每月損益兩平 ≈ Δ工作年齡人口 × 勞動參與率 × 機構調查／家庭調查就業比
+    每月損益兩平 ≈ Δ工作年齡人口 × 勞動參與率 × (1 − 失業率)
+                     × 機構調查／家庭調查就業比
 
-前兩項決定「每個月新增多少人想工作」，第三項把家庭調查的口徑
-換算成非農（機構調查）的口徑——兩者統計範圍不同，直接比會有偏誤。
+前三項決定「維持失業率不變需要新增多少就業」，最後一項把家庭調查的
+口徑換算成非農（機構調查）口徑——兩者統計範圍不同，直接比會有偏誤。
 
 ⚠️ 三個必須注意的地方
   1. 人口序列（CNP16OV）每年一月會做人口普查控制調整，出現不連續的跳點。
@@ -40,6 +41,7 @@ class Breakeven:
     monthly: float | None = None          # 每月損益兩平就業（千人）
     pop_growth: float | None = None       # 每月工作年齡人口成長（千人）
     participation: float | None = None    # 使用的參與率（%）
+    unemployment: float | None = None     # 使用的失業率（%）
     ces_cps_ratio: float | None = None    # 機構／家庭調查就業比
     nfp_3m: float | None = None           # 非農近三個月平均
     gap: float | None = None              # 非農 − 損益兩平
@@ -51,6 +53,7 @@ class Breakeven:
 
 def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
              payems_rows: list[dict], cps_emp_rows: list[dict],
+             unrate_rows: list[dict] | None = None,
              lookback: int = 12) -> Breakeven:
     """
     pop_rows     : CNP16OV  工作年齡人口（千人）
@@ -79,6 +82,10 @@ def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
     recent_lfpr = [r["value"] for r in lfpr_rows[-3:]]
     b.participation = sum(recent_lfpr) / len(recent_lfpr)
 
+    recent_unrate = [r["value"] for r in (unrate_rows or [])[-3:]]
+    if recent_unrate:
+        b.unemployment = sum(recent_unrate) / len(recent_unrate)
+
     # ---- 3. 兩份調查的口徑換算 ----
     if payems_rows and cps_emp_rows:
         p, c = payems_rows[-1]["value"], cps_emp_rows[-1]["value"]
@@ -86,7 +93,9 @@ def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
     else:
         b.ces_cps_ratio = 1.0
 
-    b.monthly = b.pop_growth * (b.participation / 100) * b.ces_cps_ratio
+    employment_rate = 1 - (b.unemployment or 0) / 100
+    b.monthly = (b.pop_growth * (b.participation / 100) * employment_rate
+                 * b.ces_cps_ratio)
 
     # ---- 4. 對照實際的非農三個月平均 ----
     if len(payems_rows) > 4:
@@ -110,21 +119,25 @@ def estimate(pop_rows: list[dict], lfpr_rows: list[dict],
             b.verdict = "balanced"
 
     # ---- 5. 逐月序列，供畫圖 ----
-    b.series = _series(deltas, lfpr_rows, b.ces_cps_ratio, lookback)
+    b.series = _series(deltas, lfpr_rows, unrate_rows or [],
+                       b.ces_cps_ratio, lookback)
 
     _tol_txt = (f"判定容差 ±{b.tolerance/10:,.1f} 萬人（取損益兩平的一半與 "
                 f"2.5 萬人的較大者，因為同樣的月增在供給環境不同時意義不同）。"
                 if b.tolerance else "")
     b.note = (f"以近 {lookback} 個月平均人口成長 {b.pop_growth/10:,.1f} 萬人／月、"
-              f"參與率 {b.participation:.1f}% 估計。{_tol_txt}"
+              f"參與率 {b.participation:.1f}%"
+              + (f"、失業率 {b.unemployment:.1f}%" if b.unemployment is not None else "")
+              + f"估計。{_tol_txt}"
               "此為推估值，非官方公布數字。")
     return b
 
 
-def _series(pop_deltas: list[dict], lfpr_rows: list[dict],
+def _series(pop_deltas: list[dict], lfpr_rows: list[dict], unrate_rows: list[dict],
             ratio: float, lookback: int) -> list[dict]:
     """逐月的損益兩平估計（滾動 N 個月平均的人口成長 × 當期參與率）。"""
     lfpr_map = {r["date"]: r["value"] for r in lfpr_rows}
+    unrate_map = {r["date"]: r["value"] for r in unrate_rows}
     out = []
     for i in range(lookback, len(pop_deltas)):
         window = pop_deltas[i - lookback:i]
@@ -133,7 +146,8 @@ def _series(pop_deltas: list[dict], lfpr_rows: list[dict],
         lf = lfpr_map.get(d)
         if lf is None:
             continue
-        out.append({"date": d, "value": avg * (lf / 100) * ratio})
+        employment_rate = 1 - unrate_map.get(d, 0) / 100
+        out.append({"date": d, "value": avg * (lf / 100) * employment_rate * ratio})
     return out
 
 

@@ -65,7 +65,7 @@ real_and_breakeven:
     enabled: true
   - id: T5YIFR
     label: 5年後5年期通膨預期
-    enabled: true
+    enabled: false
 
 # ---------------------------------------------------------------------------
 # 三、期限溢酬
@@ -169,7 +169,7 @@ debt:
     label: 月度財政赤字
     unit: millions
     frequency: monthly
-    enabled: true
+    enabled: false
     note: 尚未接上分析（待辦：月度赤字的季節性與年度赤字的對照）
   # 聯準會持有的公債（週頻，百萬美元）。縮表是第三個供給來源：
   # 到期不續作的部分，等於改由私人市場吸收，效果跟財政部多發債一樣。

@@ -12,18 +12,18 @@
 .viz-root{
   color-scheme:light;
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
-  --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#6b6a64;
+  --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#5f5e59;
   --grid:#e3e2db; --baseline:#c3c2b7; --border:rgba(11,11,11,0.13);
   /* 文字用的藍與橘要壓深一點：#2a78d6 在卡片底色上只有 3.97:1，
      而「展開…」這種連結、燈號狀態字全都用它。圖表線條另外留一組亮色，
      線條屬於圖形元素，門檻是 3:1，不必跟著壓深。 */
-  --series-1:#266dc2; --series-2:#c25529;
+  --series-1:#1f5fae; --series-2:#a94420;
   --line-1:#2a78d6; --line-2:#eb6834;
   --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
   /* --warning 從 #936400 再壓深一級：它在白底上是 5.17，剛好過關，
      但疊在有色底（例如 .k-surp 的紅色淡底）上只剩 4.39，掉到 AA 以下。
      文字色要能在**任何**卡片底色上都成立，不能只看白底。 */
-  --good:#077c07; --warning:#8a5e00; --serious:#ae5229; --critical:#c22f2f;
+  --good:#077c07; --warning:#7a5100; --serious:#93401f; --critical:#b82828;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
 }
@@ -387,6 +387,7 @@ td a[target="_blank"],.src a[target="_blank"]{
    ≥1040px 四欄時仍然齊高：那裡卡片小、齊高才看得出是一組。 */
 .lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
   align-items:start}
+@media(max-width:430px){.light{min-height:148px}}
 @media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr);
   align-items:stretch}}
 .light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
@@ -459,8 +460,8 @@ td a[target="_blank"],.src a[target="_blank"]{
 .impact{display:inline-block;font-size:12.5px;font-weight:700;border-radius:7px;
   padding:5px 10px;margin-top:10px;line-height:1.5}
 /* 帶底色的小標籤要另外壓深：在自己的淡底上，一般文字色只有 4.3–4.4:1 */
-.impact.dovish{background:var(--tint-dov);color:#2469ba}
-.impact.hawkish{background:var(--tint-haw);color:#a44d27}
+.impact.dovish{background:var(--tint-dov);color:#1d579e}
+.impact.hawkish{background:var(--tint-haw);color:#8d3b1b}
 .impact.neutral{background:var(--surface-2);color:var(--muted)}
 
 /* 說明收合起來之後，「依據」這個開關要小、要低調——
@@ -656,8 +657,8 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* 模組卡的方向章 */
 .m-dir{display:inline-block;margin-left:9px;font-size:11.5px;font-weight:700;
   padding:2px 7px;border-radius:6px;vertical-align:3px;background:var(--surface-2)}
-.m-dir.hawkish{color:#a44d27;background:var(--tint-haw)}
-.m-dir.dovish{color:#2469ba;background:var(--tint-dov)}
+.m-dir.hawkish{color:#8d3b1b;background:var(--tint-haw)}
+.m-dir.dovish{color:#1d579e;background:var(--tint-dov)}
 .m-dir.neutral{color:var(--muted)}
 
 .modcard{display:block;text-decoration:none;color:inherit;
@@ -1168,6 +1169,45 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   nav.anchors a{padding:13px 0}
 }
 .card h2{scroll-margin-top:60px}
+/* ---------- decision-first redesign ---------- */
+.focus-card{position:relative;overflow:hidden;background:var(--surface-1);border-top:3px solid var(--series-1);padding:20px}
+.focus-card:before{display:none}
+.focus-eyebrow{font-size:11px;font-weight:800;letter-spacing:.11em;color:var(--series-1);text-transform:uppercase;margin-bottom:7px}
+.focus-title{font-size:26px;line-height:1.28;margin:0;max-width:820px;letter-spacing:-.02em}
+.focus-sub{color:var(--text-secondary);font-size:14px;line-height:1.65;margin:8px 0 0;max-width:880px}
+.focus-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:18px}
+@media(min-width:760px){.focus-card{padding:24px 26px}.focus-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.focus-metric{min-width:0;padding:12px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface-1);display:flex;flex-direction:column;gap:3px}
+.focus-metric>span{font-size:11.5px;color:var(--muted)}
+.focus-metric>b{font-size:19px;line-height:1.25;font-variant-numeric:tabular-nums}
+.focus-metric>small{font-size:11.5px;color:var(--text-secondary);line-height:1.4}
+.focus-metric.hawkish{border-left:3px solid var(--critical)}
+.focus-metric.dovish{border-left:3px solid var(--good)}
+.focus-metric.watch{border-left:3px solid var(--warning)}
+.logic-strip{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+@media(min-width:760px){.logic-strip{grid-template-columns:repeat(3,1fr)}}
+.logic-step{padding:12px 14px;border-radius:9px;background:var(--surface-2);border:1px solid var(--border)}
+.logic-step b{display:block;font-size:13px;margin-bottom:3px}
+.logic-step span{font-size:12px;color:var(--muted);line-height:1.45}
+.deep-dive>h2{margin-bottom:0}
+.full-detail{margin-top:12px;border:1px solid var(--border);border-radius:9px}
+.full-detail>summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:700;color:var(--text-secondary)}
+.full-detail-body{padding:0 10px 12px}
+.full-detail-body>.grid{margin-top:10px}
+.full-detail-body .card{box-shadow:none;background:var(--surface-2)}
+.full-detail-body h3{font-size:15px;margin:0 0 8px}
+.full-detail-body .verdict{margin-top:10px}
+.data-line{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.data-tag[href]{min-height:40px;display:inline-flex;align-items:center;
+  text-decoration:none;color:var(--series-1);font-weight:700}
+.data-tag{font-size:11.5px;padding:5px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary)}
+.flow-arrow{display:none}
+@media(min-width:760px){.flow-arrow{display:block;align-self:center;color:var(--muted);font-weight:800}}
+.grid-flow{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px}
+@media(min-width:760px){.grid-flow{grid-template-columns:1fr auto 1fr auto 1fr}}
+.flow-box{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface-1)}
+.flow-box strong{font-size:15px}
+.flow-values{font-size:13px;margin-top:7px;line-height:1.6;color:var(--text-secondary)}
 
 /* ---------- 意外值 ---------- */
 .surp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
@@ -1198,7 +1238,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">存檔</a></h1>
-  <div class="sub">共 3 期</div>
+  <div class="sub">共 2 期</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/" class="on">存檔</a></nav></div>
@@ -1210,7 +1250,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
     之後的每日執行不會覆蓋它。因為 BLS 與 BEA 會持續回頭修正歷史數字，
     留下的才是發布當下的原始版本——日後可以回頭查
     「當時我們看到的是什麼」，以及後來被改了多少。</p>
-  <ul class="archive-list"><li><a href="/archive/labor-2026-07/"><span>就業報告　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-07/"><span>物價數據　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-06/"><span>物價數據　2026-06</span><span class="a-meta">開啟</span></a></li></ul>
+  <ul class="archive-list"><li><a href="/archive/labor-2026-07/"><span>就業報告　2026-07</span><span class="a-meta">開啟</span></a></li><li><a href="/archive/inflation-2026-07/"><span>物價數據　2026-07</span><span class="a-meta">開啟</span></a></li></ul>
 </div>
 
 <footer>官方會持續修正歷史數字，這裡保留每個資料月份第一次產出時的完整頁面。</footer>

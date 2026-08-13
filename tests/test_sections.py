@@ -106,8 +106,10 @@ if (OUT / "labor" / "index.html").exists():
             r'<summary><h2 id="[^"]+">.*?</h2>'
             r'(<span class="sect-sum">.*?</span>)?</summary>', h, re.S)
         no_sum = sum(1 for s in summaries if not s)
-        check(f"⑯ {name}：卡區數與展開數", n >= 5 and n_open == 1,
-              f"{n} 區、展開 {n_open} 區")
+        check(f"⑯ {name}：decision-first 且主卡不收合",
+              h.count('<div class="card focus-card">') == 1
+              and h.count('<details class="full-detail"') == 1 and n <= 2,
+              f"完整分析 {h.count('<details class=full-detail')}、舊卡區 {n}")
         check(f"⑰ {name}：每張都有收合摘要", no_sum == 0,
               f"{no_sum} 張沒有摘要")
         check(f"⑱ {name}：details 成對",
@@ -121,8 +123,8 @@ if (OUT / "labor" / "index.html").exists():
         # 錨點列預設是隱藏的（height:0），由 JS 在展開三個卡區時才顯示。
         # 外框 .anav 少了的話 CSS 全部失效，那一列會變成常駐的裸連結——
         # 而且兩側的漸層是畫在外框上的，沒有外框就會用 mask 挖穿背景。
-        check(f"⑳ {name}：錨點列有外框 .anav",
-              '<div class="anav"><nav class="anchors">' in h)
+        check(f"⑳ {name}：有錨點時才顯示外框 .anav",
+              not anchors or '<div class="anav"><nav class="anchors">' in h)
         # 附錄類不該佔導覽的格子：讀者不會特地跳去看名詞解釋
         labs = re.findall(r'>([^<]+)</a>', anchors[0]) if anchors else []
         bad = [x for x in labs if x.startswith(("名詞解釋", "判讀說明"))]
@@ -160,15 +162,16 @@ if (OUT / "labor" / "index.html").exists():
     check("㉗ scenario：理由句帶具體數字",
           all(re.search(r"\d", x[2]) for x in heads),
           str([x[2][:24] for x in heads]))
-    # 算式收在裡面（要驗算的人才展開），且預設是收合的
-    check("㉘ scenario：算式收合在裡面",
-          h.count('<details class="ax">') == 2
-          and '<details class="ax" open' not in h)
+    # 兩軸依據要保留，但新版不允許「展開後還要再展開」。
+    check("㉘ scenario：軸依據保留但不再巢狀收合",
+          h.count('<details class="ax">') == 0
+          and h.count('<span class="ax-k">') == 2)
 
     # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
     h = (OUT / "index.html").read_text(encoding="utf-8")
     hs = _sums(h)
-    check("㉙ index：三張卡都有摘要", len(hs) == 3, f"{len(hs)} 條")
+    check("㉙ index：總覽首卡含四個決策欄位",
+          h.count('<div class="card focus-card">') == 1 and h.count('class="focus-metric') >= 4)
     check("㉚ index：摘要沒有殘留 markdown",
           not [s for s in hs if "**" in s], str(hs)[:90])
     # 摘要是拿來掃視的。超過 40 字在 390px 下會折成三行，而且多半代表

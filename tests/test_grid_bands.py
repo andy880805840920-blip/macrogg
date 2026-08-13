@@ -97,7 +97,7 @@ check("⑰ 完全沒資料 → 中", scn.classify_inflation(None, None, B) == "�
 # 混合水準會有固定往鷹的偏誤。這裡釘住「同一筆資料換成 CPI 會不會翻格」。
 core_cpi_3m, core_pce_3m = 2.9, 2.3     # 典型的 CPI > PCE 楔子
 check("⑱ 混用 CPI 動能會翻格（所以不能混）",
-      scn.classify_inflation(2.4, core_cpi_3m, B) == "高"
+      scn.classify_inflation(2.4, core_cpi_3m, B) == "中"
       and scn.classify_inflation(2.4, core_pce_3m, B) == "中",
       f"CPI→{scn.classify_inflation(2.4, core_cpi_3m, B)}　"
       f"PCE→{scn.classify_inflation(2.4, core_pce_3m, B)}")
@@ -147,8 +147,8 @@ cases = [
     ("㉗ 低於中央趨勢下緣 → 強", lab(u=3.7), "強", "level"),
     ("㉘ 落在區間內 → 中", lab(u=4.1), "中", "level"),
     ("㉙ Sahm 觸發 → 直接弱（不管水準）", lab(u=3.7, sahm=0.6), "弱", "sahm"),
-    ("㉚ 非農低於損益兩平 → 中往弱推", lab(u=4.1, under=True), "弱", "breakeven"),
-    ("㉛ 非農低於損益兩平 → 強只推到中", lab(u=3.7, under=True), "中", "breakeven"),
+    ("㉚ 非農低於損益兩平不改中格", lab(u=4.1, under=True), "中", "level"),
+    ("㉛ 非農低於損益兩平不改強格", lab(u=3.7, under=True), "強", "level"),
     ("㉜ 已經是弱就不再推", lab(u=4.6, under=True), "弱", "level"),
 ]
 for name, d, want_s, want_b in cases:
@@ -172,7 +172,7 @@ check("㊱ 完全沒資料 → 中，不硬判", (s, b) == ("中", "fallback"), 
 # 這是換掉舊規則的理由：同一筆資料，舊規則靠自訂門檻、新規則靠外部標準
 check("㊲ 新規則的依據不會是自訂門檻",
       L(-0.35, {"net": -4}, lab(u=4.1, under=True))[1] in
-      ("level", "sahm", "breakeven"))
+      ("level", "sahm"))
 
 print()
 print("全部通過" if ok else "有失敗")

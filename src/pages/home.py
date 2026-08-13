@@ -12,6 +12,7 @@ import datetime as dt
 from .. import clock
 
 from ..site import esc, next_first_friday, next_cpi_release
+from . import compact_full, state_chip
 from ..analysis import changes as chg_mod
 from ..analysis import brief as brief_mod
 
@@ -240,7 +241,7 @@ def _brief_card(ctxs: dict) -> str:
 </div>"""
 
 
-def home_body(ctxs: dict) -> str:
+def _home_body_full(ctxs: dict) -> str:
     lab = ctxs.get("labor")
     inf = ctxs.get("inflation")
     fom = ctxs.get("fomc")
@@ -533,6 +534,47 @@ def home_body(ctxs: dict) -> str:
   </div>
 </div>
 """
+
+
+def home_body(ctxs: dict) -> str:
+    """首頁只回答：現在在哪、往哪走、為什麼、什麼會改變。"""
+    sd = ctxs.get("scenario") or {}
+    sc = sd.get("scenario")
+    if sc is None:
+        return _home_body_full(ctxs)
+    fom = ctxs.get("fomc") or {}
+    shift = fom.get("shift") or {}
+    rt = ctxs.get("rates") or {}
+    pressure = rt.get("pressure")
+    p_level = getattr(pressure, "level", "") if pressure else ""
+    p_text = {"high": "偏高", "moderate": "中等", "low": "偏低"}.get(p_level, "資料不足")
+    f_dir = shift.get("direction", "neutral")
+    f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
+    lean = LEAN_TEXT.get(sc.lean, "中性")
+    trig = next((t for t in sc.triggers if t.binding), None)
+    if trig is None:
+        trig = next((t for t in sc.triggers if not t.met), None)
+    trigger = f"{trig.label}：{trig.distance}" if trig else "尚無可計算門檻"
+    metrics = "".join([
+        state_chip("九宮格位置", f"{sc.labor_state} × {sc.infl_state}", sc.name,
+                   "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
+        state_chip("兩軸方向", f"{sc.labor_momentum} / {sc.infl_momentum}", "就業 / 通膨"),
+        state_chip("FOMC 會議結論", f_text, shift.get("label", ""), f_dir),
+        state_chip("長端供給壓力", p_text, "財政＋Hyperscalers；不進九宮格", "watch" if p_level == "high" else "neutral"),
+    ])
+    parts = brief_mod.compose(ctxs).get("parts", [])
+    wanted = [p for p in parts if p.get("key") in ("labor", "inflation", "fomc", "supply")][:3]
+    reasons = "".join(f'<div class="logic-step"><b>{esc({"labor":"就業","inflation":"通膨","fomc":"FOMC","supply":"長端"}.get(p["key"], p["key"]))}</b>'
+                      f'<span>{esc(p["text"])}</span></div>' for p in wanted)
+    logic = (f'<div class="logic-strip">{reasons}</div>' if reasons else "")
+    tags = (f'<div class="data-line"><span class="data-tag">{esc(sd.get("as_of", "—"))}</span>'
+            f'<span class="data-tag">下一格：{esc(trigger)}</span>'
+            '<a class="data-tag" href="/scenario/">開啟完整九宮格 →</a></div>')
+    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Investment dashboard</div>'
+            f'<h2 class="focus-title">{esc(sc.name)}｜{esc(lean)}</h2>'
+            f'<p class="focus-sub">{esc(sc.description)} 首頁結論由固定規則產生，AI 不改格位、不改數值。</p>'
+            f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
+    return hero + compact_full(_home_body_full(ctxs), "各模組摘要、變化與追蹤清單")
 
 
 def home_footer(ctxs: dict) -> str:

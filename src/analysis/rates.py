@@ -93,7 +93,7 @@ class DebtState:
     gap_divergence: str = ""                  # 兩個缺口方向不一致時的說明
     stabilizing_pb: float | None = None       # 穩定債務比所需的基本盈餘（% GDP）
     actual_pb: float | None = None            # 實際基本盈餘（% GDP）
-    pb_gap: float | None = None               # 差距＝問題的規模
+    pb_gap: float | None = None               # 實際減穩定水準；負值才是缺口
     verdict: str = "unknown"
     note: str = ""
 
@@ -441,16 +441,23 @@ def supply_pressure(curve: CurveState, debt: DebtState,
     if debt.pb_gap is not None:
         v = min(max(-debt.pb_gap * 0.5, -2.0), 2.0)
         total += v
-        sp.parts.append({"label": "政府財政缺口",
-                         "detail": f"基本盈餘較穩定水準低 {abs(debt.pb_gap):.1f}% GDP，"
-                                   "需要持續淨發行公債",
+        if debt.pb_gap < 0:
+            label = "政府財政缺口"
+            detail = (f"基本盈餘較穩定水準低 {abs(debt.pb_gap):.1f}% GDP，"
+                      "增加公債供給壓力")
+        else:
+            label = "政府財政緩衝"
+            detail = (f"基本盈餘較穩定水準高 {debt.pb_gap:.1f}% GDP，"
+                      "在本模型中降低公債供給壓力")
+        sp.parts.append({"label": label,
+                         "detail": detail,
                          "score": v})
     if hs.capex_to_ocf is not None:
         v = (hs.capex_to_ocf - 70) / 25
         total += v
         sp.parts.append({"label": "科技巨頭融資缺口",
                          "detail": f"資本支出佔營運現金流 {hs.capex_to_ocf:.0f}%，"
-                                   "超過 100% 就必須舉債",
+                                   "超過 100% 時需動用現金、出售資產或外部融資",
                          "score": v})
     # 聯準會縮表：第三個供給來源，先前完全沒有進來。
     #

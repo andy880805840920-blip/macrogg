@@ -37,7 +37,7 @@ headline:
     short: 政府
     unit: thousands
     transform: diff
-    enabled: true
+    enabled: false
     note: 尚未接上分析；行業分解用的是 industries 那一組的 CES9091/9092/9093
   - id: UNRATE
     label: 失業率 U-3
@@ -108,20 +108,15 @@ headline:
 # ---------------------------------------------------------------------------
 unemployment_structure:
   - id: LNS13023621
-    label: 永久性失業者
+    label: 失去工作或臨時工作結束
     unit: thousands
     invert: true
     enabled: true
-  - id: LNS13026638
-    label: 暫時解雇
-    unit: thousands
-    invert: true
-    enabled: true
-  - id: LNS13023653
+  - id: LNS13023705
     label: 自願離職者
     unit: thousands
     enabled: true
-  - id: LNS13023705
+  - id: LNS13023557
     label: 重新進入勞動力
     unit: thousands
     enabled: true
@@ -143,12 +138,12 @@ unemployment_structure:
     label: 因經濟因素兼職
     unit: thousands
     invert: true
-    enabled: true
+    enabled: false
     note: 尚未接上分析（待辦：這是 U-6 與 U-3 差距的主要來源，隱性閒置）
   - id: LNS12026619
     label: 多重工作者
     unit: thousands
-    enabled: true
+    enabled: false
     note: 尚未接上分析（待辦：多重工作者上升常伴隨實質所得壓力）
 
 # ---------------------------------------------------------------------------

@@ -93,6 +93,13 @@ def attribute_cpi(
         for c in contribs:
             c.share = c.value / total * 100
 
+    present_ids = {c.key for c in contribs}
+    coverage_weight = sum(float(meta_by_id.get(c.key, {}).get("weight", 0))
+                          for c in contribs)
+    expected_weight = sum(float(m.get("weight", 0)) for m in component_meta)
+    missing_labels = [m.get("label", m["id"]) for m in component_meta
+                      if m["id"] not in present_ids and float(m.get("weight", 0)) > 0]
+
     explained = sum(c.value for c in contribs)
     core_services = sum(
         c.value for c in contribs
@@ -133,6 +140,9 @@ def attribute_cpi(
         contributions=sorted(contribs, key=lambda c: c.value, reverse=True),
         aggregates={
             "explained": explained,
+            "coverage_weight": coverage_weight,
+            "expected_weight": expected_weight,
+            "missing_labels": missing_labels,
             "core_services": core_services,
             "supercore": supercore,
             "shelter": shelter,
@@ -199,8 +209,16 @@ class InflationSummary:
     shelter_3m: float | None = None
     core_goods_yoy: float | None = None
     ex_shelter_yoy: float | None = None
+    pce_headline_yoy: float | None = None
+    pce_headline_3m: float | None = None
     pce_core_yoy: float | None = None
     pce_core_3m: float | None = None   # 核心 PCE 三個月年化（KPI 副標的短期動能）
+    ppi_headline_yoy: float | None = None
+    ppi_headline_mom: float | None = None
+    ppi_headline_3m: float | None = None
+    ppi_core_yoy: float | None = None
+    ppi_core_mom: float | None = None
+    ppi_core_3m: float | None = None
     median_cpi: float | None = None
     trimmed_cpi: float | None = None
     sticky_cpi: float | None = None
@@ -523,8 +541,16 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.pce_supercore_3m = annualized(_pcesc, 3)
     s.shelter_3m = annualized(g("CUSR0000SAH1", []), 3)
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
+    s.pce_headline_yoy = yoy(g("PCEPI", []))
+    s.pce_headline_3m = annualized(g("PCEPI", []), 3)
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
     s.pce_core_3m = annualized(g("PCEPILFE", []), 3)
+    s.ppi_headline_yoy = yoy(g("PPIFIS", []))
+    s.ppi_headline_mom = mom_pct(g("PPIFIS", []))
+    s.ppi_headline_3m = annualized(g("PPIFIS", []), 3)
+    s.ppi_core_yoy = yoy(g("PPIFES", []))
+    s.ppi_core_mom = mom_pct(g("PPIFES", []))
+    s.ppi_core_3m = annualized(g("PPIFES", []), 3)
 
     # ---- FOMC 經濟預測摘要（SEP）----
     # 年頻序列，觀測日就是被預測的那一年（2027-01-01 的值＝對 2027 年的預測）。

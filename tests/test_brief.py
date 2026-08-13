@@ -157,7 +157,7 @@ for name, ax, want in cases:
     check(name, want in txt, txt)
 
 # 敘述與格位不能互相打架：同一份資料餵給兩邊，結論要對得上
-for ax, want_state in [(AX, "弱"),
+for ax, want_state in [(AX, "中"),
                        ({**AX, "unrate": 4.6, "below_breakeven": False}, "弱"),
                        ({**AX, "below_breakeven": False}, "中"),
                        ({**AX, "unrate": 3.7, "below_breakeven": False}, "強")]:

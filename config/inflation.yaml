@@ -61,23 +61,22 @@ headline:
     enabled: true
     note: 同上
   - id: PCEPI
-    label: PCE 物價指數
-    enabled: false      # 整體 PCE 沒有任何地方讀它；政策目標是核心 PCE（下一條）
+    label: 總體 PCE
+    enabled: true
+    note: Fed 的 2% 長期目標以總體 PCE 年增衡量；短期波動較大
   - id: PCEPILFE
     label: 核心 PCE
     enabled: true
-    note: Fed 的政策目標就是這一項，2% 指的是它
-  # PPI 兩條目前**有抓、但沒有任何分析讀它**。留著是因為它是 CPI 的
-  # 上游（生產者端的漲價會在數月後傳到消費者端），值得補一段傳導分析——
-  # 那是待辦，不是浪費。要關掉省 API 呼叫的話改成 false 即可。
+    note: 剔除食物與能源；用來辨識基礎通膨趨勢，也是九宮格通膨水準軸
+  # PPI 是企業端上游壓力，只參與「通膨動能」，不直接改變九宮格格位。
   - id: PPIFIS
-    label: PPI 最終需求
+    label: 總體 PPI（最終需求）
     enabled: true
-    note: 尚未接上分析（待辦：PPI → CPI 的上游傳導）
+    note: BLS 最終需求總指數；觀察企業端成本與售價壓力
   - id: PPIFES
-    label: 核心 PPI
+    label: 核心 PPI（最終需求剔除食物與能源）
     enabled: true
-    note: 尚未接上分析（待辦：PPI → CPI 的上游傳導）
+    note: 不含食物與能源，但仍含貿易服務；不可寫成剔除食物、能源與貿易服務
 
 # ---------------------------------------------------------------------------
 # 二、CPI 分項 — 貢獻度分解的原料
@@ -141,11 +140,11 @@ shelter_detail:
   # OER 的落後比市場租金長得多，混在一起看會低估落後期數。
   - id: CUSR0000SEHA
     label: 主要住所租金
-    enabled: true
+    enabled: false
     note: 尚未接上分析（待辦：租金與 OER 分別看落後期數）
   - id: CUSR0000SEHC
     label: 自有住宅設算租金 (OER)
-    enabled: true
+    enabled: false
     note: 尚未接上分析（同上）
 
 # ---------------------------------------------------------------------------
@@ -250,7 +249,7 @@ expectations:
     enabled: true
   - id: EXPINF1YR
     label: Cleveland Fed 1 年預期
-    enabled: true
+    enabled: false
     note: 尚未接上分析（待辦：與密大 1 年預期並列，家戶調查 vs 模型）
   - id: T5YIE
     label: 5 年損益兩平通膨率

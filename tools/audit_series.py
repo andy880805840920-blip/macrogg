@@ -53,7 +53,7 @@ def main() -> int:
     from src import build, fixtures, fixtures_inflation, fixtures_rates
 
     def cfg(n):
-        return yaml.safe_load((ROOT / "config" / n).read_text())
+        return yaml.safe_load((ROOT / "config" / n).read_text(encoding="utf-8"))
 
     total_unused = 0
     consensus = cfg("consensus.yaml")
@@ -67,6 +67,9 @@ def main() -> int:
     groups = [("勞動", set(ids), s_lab.read)]
 
     # 通膨（薪資序列是從勞動那邊傳過去的，也要用會記錄的字典）
+    # USPRIV 只用於 ALFRED vintage 修正追蹤，不經 series dict 讀取。
+    s_lab.read.add("USPRIV")
+
     c = cfg("inflation.yaml")
     ids, labels, inv = R.series_ids(c, R.INFL_GROUPS)
     s_inf = Tracked(fixtures_inflation.build())

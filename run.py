@@ -37,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src import site, build, clock                                # noqa: E402
 from src.analysis import changes as chg                           # noqa: E402
 from src.analysis import freshness                                # noqa: E402
+from src.analysis import series_quality                             # noqa: E402
 from src.analysis import brief as brief_mod                        # noqa: E402
 from src.analysis import polish                                    # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
@@ -643,6 +644,23 @@ def main() -> int:
         if not ctxs["fomc"].get("empty"):
             log.info("聯準會文本完成：%d 份聲明，最新 %s",
                      len(statements), ctxs["fomc"]["latest_date"])
+
+    # ---- 時間序列完整性閘門 ----
+    # 發布前阻擋日期錯序、重複日期、空值與被誤當成實際值的未來資料。
+    # SEP 與 CBO 本來就是預測路徑，明列白名單，不與實際發布序列混用。
+    _forecast_ids = {
+        "NROU", "UNRATECTLLR", "UNRATECTHLR", "UNRATEMDLR",
+        "PCECTPIMDLR", "JCXFEMD", "JCXFECTH", "JCXFECTL",
+    }
+    _series_issues = series_quality.audit_bundle(
+        all_series, today=clock.today(), forecast_ids=_forecast_ids)
+    ctxs["_series_issues"] = _series_issues
+    if _series_issues:
+        for _iss in _series_issues[:12]:
+            log.error("時間序列 %s/%s：%s", _iss.series_id, _iss.kind, _iss.detail)
+        log.error("時間序列完整性檢查失敗，共 %d 項；停止發布", len(_series_issues))
+        return 2
+    log.info("時間序列完整性：%d 條序列全部通過", len(all_series))
 
     # ---- 情境合成（缺件也會產出，但畫面上會明示缺哪一塊）----
     ctxs["scenario"] = build.build_scenario_context(

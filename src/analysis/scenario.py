@@ -228,6 +228,8 @@ class Scenario:
     name: str
     description: str
     lean: str
+    labor_momentum: str = "持平"
+    infl_momentum: str = "持平"
     positioning: dict = field(default_factory=dict)
     triggers: list[Trigger] = field(default_factory=list)
     drivers: list[str] = field(default_factory=list)
@@ -314,9 +316,39 @@ def classify_labor(score: float | None, tilt: dict | None,
     # ---- ② 動能：只往「弱」推 ----
     if lab.get("sahm_triggered"):
         return "弱", "sahm"
-    if lab.get("below_breakeven") and state != "弱":
-        return ("中" if state == "強" else "弱"), "breakeven"
     return state, basis
+
+
+def classify_labor_momentum(lab: dict | None) -> str:
+    """方向與格位分開：非農低於損益兩平代表轉弱，不直接移動格位。"""
+    lab = lab or {}
+    if lab.get("sahm_triggered") or lab.get("below_breakeven"):
+        return "轉弱"
+    tilt = (lab.get("tilt") or {}).get("tilt")
+    if tilt == "hawkish" and lab.get("nfp_3m") is not None:
+        return "轉強"
+    return "持平"
+
+
+def classify_inflation_momentum(infl: dict | None) -> str:
+    """核心 PCE、核心 CPI、核心 PPI 至少兩者同向才確認升溫或降溫。"""
+    infl = infl or {}
+    pairs = [
+        (infl.get("core_pce_3m"), infl.get("core_pce_yoy")),
+        (infl.get("core_cpi_3m"), infl.get("core_cpi_yoy")),
+        (infl.get("core_ppi_3m"), infl.get("core_ppi_yoy")),
+    ]
+    votes = []
+    for short, long in pairs:
+        if short is None or long is None:
+            continue
+        votes.append(1 if short > long + 0.2 else (-1 if short < long - 0.2 else 0))
+    score = sum(votes)
+    if len(votes) >= 2 and score >= 2:
+        return "升溫"
+    if len(votes) >= 2 and score <= -2:
+        return "降溫"
+    return "持平"
 
 
 def blended_inflation(core_pce_yoy: float | None,
@@ -351,7 +383,7 @@ def classify_inflation(core_pce_yoy: float | None,
     配上就業「弱」，格子就從「轉向降息」跳成「停滯性通膨」，
     整張部位表跟著換掉。同一個指標的水準與動能才可以相加。
     """
-    level = blended_inflation(core_pce_yoy, core_pce_3m)
+    level = core_pce_yoy
     if level is None:
         return "中"
     b = bands or {}
@@ -383,10 +415,12 @@ def synthesise(labor: dict | None, inflation: dict | None,
     l_state, l_basis = classify_labor((labor or {}).get("score"),
                                       (labor or {}).get("tilt"),
                                       labor)
+    l_momentum = classify_labor_momentum(labor)
     _bands = (inflation or {}).get("bands") or {}
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
                                  (inflation or {}).get("core_pce_3m"),
                                  _bands)
+    i_momentum = classify_inflation_momentum(inflation)
 
     # ---- 依聯準會目前的重心選一張九宮格 ----
     # 不再「先用固定格子再事後改寫」。格子裡寫什麼就是結論。
@@ -407,7 +441,8 @@ def synthesise(labor: dict | None, inflation: dict | None,
             "就業" if regime == "employment" else "兩者")
     focus_note = REGIME_RULE.get(regime, "")
 
-    sc = Scenario(labor_state=l_state, infl_state=i_state, name=name,
+    sc = Scenario(labor_state=l_state, infl_state=i_state,
+                  labor_momentum=l_momentum, infl_momentum=i_momentum, name=name,
                   description=desc, lean=lean,
                   positioning=dict(POSITIONING.get(name, {})),
                   incomplete=incomplete,
@@ -519,19 +554,18 @@ def _triggers(labor: dict | None, inflation: dict | None,
                                    f"還差 {gap:.2f}", gap <= 0,
                                    binding=(binding == "就業")))
 
-    blended = blended_inflation((inflation or {}).get("core_pce_yoy"),
-                                (inflation or {}).get("core_pce_3m"))
-    if blended is not None:
+    level = (inflation or {}).get("core_pce_yoy")
+    if level is not None:
         b = (inflation or {}).get("bands") or {}
         lo, hi = b.get("low", 2.30), b.get("high", 2.90)
         if i_state != "低":
-            gap = blended - lo
-            out.append(Trigger("通膨轉「低」", f"綜合通膨水準 {blended:.2f}%",
+            gap = level - lo
+            out.append(Trigger("通膨轉「低」", f"核心 PCE 年增 {level:.2f}%",
                                f"需低於 {lo:.2f}%", f"還差 {gap:.2f} 個百分點",
                                gap <= 0, binding=(binding == "通膨")))
         if i_state != "高":
-            gap = hi - blended
-            out.append(Trigger("通膨轉「高」", f"綜合通膨水準 {blended:.2f}%",
+            gap = hi - level
+            out.append(Trigger("通膨轉「高」", f"核心 PCE 年增 {level:.2f}%",
                                f"需高於 {hi:.2f}%", f"還差 {gap:.2f} 個百分點",
                                gap <= 0, binding=(binding == "通膨")))
     return out

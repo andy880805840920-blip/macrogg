@@ -12,18 +12,18 @@
 .viz-root{
   color-scheme:light;
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
-  --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#6b6a64;
+  --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#5f5e59;
   --grid:#e3e2db; --baseline:#c3c2b7; --border:rgba(11,11,11,0.13);
   /* 文字用的藍與橘要壓深一點：#2a78d6 在卡片底色上只有 3.97:1，
      而「展開…」這種連結、燈號狀態字全都用它。圖表線條另外留一組亮色，
      線條屬於圖形元素，門檻是 3:1，不必跟著壓深。 */
-  --series-1:#266dc2; --series-2:#c25529;
+  --series-1:#1f5fae; --series-2:#a94420;
   --line-1:#2a78d6; --line-2:#eb6834;
   --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
   /* --warning 從 #936400 再壓深一級：它在白底上是 5.17，剛好過關，
      但疊在有色底（例如 .k-surp 的紅色淡底）上只剩 4.39，掉到 AA 以下。
      文字色要能在**任何**卡片底色上都成立，不能只看白底。 */
-  --good:#077c07; --warning:#8a5e00; --serious:#ae5229; --critical:#c22f2f;
+  --good:#077c07; --warning:#7a5100; --serious:#93401f; --critical:#b82828;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
 }
@@ -387,6 +387,7 @@ td a[target="_blank"],.src a[target="_blank"]{
    ≥1040px 四欄時仍然齊高：那裡卡片小、齊高才看得出是一組。 */
 .lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
   align-items:start}
+@media(max-width:430px){.light{min-height:148px}}
 @media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr);
   align-items:stretch}}
 .light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
@@ -459,8 +460,8 @@ td a[target="_blank"],.src a[target="_blank"]{
 .impact{display:inline-block;font-size:12.5px;font-weight:700;border-radius:7px;
   padding:5px 10px;margin-top:10px;line-height:1.5}
 /* 帶底色的小標籤要另外壓深：在自己的淡底上，一般文字色只有 4.3–4.4:1 */
-.impact.dovish{background:var(--tint-dov);color:#2469ba}
-.impact.hawkish{background:var(--tint-haw);color:#a44d27}
+.impact.dovish{background:var(--tint-dov);color:#1d579e}
+.impact.hawkish{background:var(--tint-haw);color:#8d3b1b}
 .impact.neutral{background:var(--surface-2);color:var(--muted)}
 
 /* 說明收合起來之後，「依據」這個開關要小、要低調——
@@ -656,8 +657,8 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* 模組卡的方向章 */
 .m-dir{display:inline-block;margin-left:9px;font-size:11.5px;font-weight:700;
   padding:2px 7px;border-radius:6px;vertical-align:3px;background:var(--surface-2)}
-.m-dir.hawkish{color:#a44d27;background:var(--tint-haw)}
-.m-dir.dovish{color:#2469ba;background:var(--tint-dov)}
+.m-dir.hawkish{color:#8d3b1b;background:var(--tint-haw)}
+.m-dir.dovish{color:#1d579e;background:var(--tint-dov)}
 .m-dir.neutral{color:var(--muted)}
 
 .modcard{display:block;text-decoration:none;color:inherit;
@@ -1168,6 +1169,45 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   nav.anchors a{padding:13px 0}
 }
 .card h2{scroll-margin-top:60px}
+/* ---------- decision-first redesign ---------- */
+.focus-card{position:relative;overflow:hidden;background:var(--surface-1);border-top:3px solid var(--series-1);padding:20px}
+.focus-card:before{display:none}
+.focus-eyebrow{font-size:11px;font-weight:800;letter-spacing:.11em;color:var(--series-1);text-transform:uppercase;margin-bottom:7px}
+.focus-title{font-size:26px;line-height:1.28;margin:0;max-width:820px;letter-spacing:-.02em}
+.focus-sub{color:var(--text-secondary);font-size:14px;line-height:1.65;margin:8px 0 0;max-width:880px}
+.focus-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:18px}
+@media(min-width:760px){.focus-card{padding:24px 26px}.focus-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.focus-metric{min-width:0;padding:12px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface-1);display:flex;flex-direction:column;gap:3px}
+.focus-metric>span{font-size:11.5px;color:var(--muted)}
+.focus-metric>b{font-size:19px;line-height:1.25;font-variant-numeric:tabular-nums}
+.focus-metric>small{font-size:11.5px;color:var(--text-secondary);line-height:1.4}
+.focus-metric.hawkish{border-left:3px solid var(--critical)}
+.focus-metric.dovish{border-left:3px solid var(--good)}
+.focus-metric.watch{border-left:3px solid var(--warning)}
+.logic-strip{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+@media(min-width:760px){.logic-strip{grid-template-columns:repeat(3,1fr)}}
+.logic-step{padding:12px 14px;border-radius:9px;background:var(--surface-2);border:1px solid var(--border)}
+.logic-step b{display:block;font-size:13px;margin-bottom:3px}
+.logic-step span{font-size:12px;color:var(--muted);line-height:1.45}
+.deep-dive>h2{margin-bottom:0}
+.full-detail{margin-top:12px;border:1px solid var(--border);border-radius:9px}
+.full-detail>summary{cursor:pointer;padding:13px 15px;font-size:13px;font-weight:700;color:var(--text-secondary)}
+.full-detail-body{padding:0 10px 12px}
+.full-detail-body>.grid{margin-top:10px}
+.full-detail-body .card{box-shadow:none;background:var(--surface-2)}
+.full-detail-body h3{font-size:15px;margin:0 0 8px}
+.full-detail-body .verdict{margin-top:10px}
+.data-line{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.data-tag[href]{min-height:40px;display:inline-flex;align-items:center;
+  text-decoration:none;color:var(--series-1);font-weight:700}
+.data-tag{font-size:11.5px;padding:5px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary)}
+.flow-arrow{display:none}
+@media(min-width:760px){.flow-arrow{display:block;align-self:center;color:var(--muted);font-weight:800}}
+.grid-flow{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px}
+@media(min-width:760px){.grid-flow{grid-template-columns:1fr auto 1fr auto 1fr}}
+.flow-box{padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--surface-1)}
+.flow-box strong{font-size:15px}
+.flow-values{font-size:13px;margin-top:7px;line-height:1.6;color:var(--text-secondary)}
 
 /* ---------- 意外值 ---------- */
 .surp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
@@ -1198,18 +1238,18 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-13 12:12（台北）</div>
+  <div class="sub">最後更新 2026-08-13 18:10（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
+<details class="banner"><summary><b>離線示範模式</b>　數字為示範序列，不可引用</summary><div class="banner-body">聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；時間序列為程式生成的示範序列（統計特性接近真實，但個別數值非實際發布值），不可用於研究引用。正式執行（不加 --offline）一律使用即時資料。</div></details>
 
-<div class="anav"><nav class="anchors"><a href="#changed">跟上期比，什麼變了</a><a href="#signals">本期關鍵訊號</a><a href="#watch">接下來要盯什麼</a></nav></div>
-<div class="verdict hawkish">
-  <div class="v-eyebrow">目前情境　·　已維持 2 期</div>
-  <div class="v-main">停滯性通膨：通膨優先</div>
-  <div class="v-why">兩個使命指向相反，而委員會把通膨擺在前面。</div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Investment dashboard</div><h2 class="focus-title">傾向緊縮｜利升息</h2><p class="focus-sub">通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。 首頁結論由固定規則產生，AI 不改格位、不改數值。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>九宮格位置</span><b>中 × 高</b><small>傾向緊縮</small></div><div class="focus-metric neutral"><span>兩軸方向</span><b>持平 / 升溫</b><small>就業 / 通膨</small></div><div class="focus-metric hawkish"><span>FOMC 會議結論</span><b>偏鷹</b><small>偏鷹</small></div><div class="focus-metric watch"><span>長端供給壓力</span><b>偏高</b><small>財政＋Hyperscalers；不進九宮格</small></div></div><div class="logic-strip"><div class="logic-step"><b>就業</b><span>7 月失業率 4.1% 落在充分就業區間 4.0%–4.3% 之內；前兩月大幅下修，實質動能弱於初值。</span></div><div class="logic-step"><b>通膨</b><span>6 月核心 PCE 3.0%、三個月年化 3.5% 仍在加速，仍高於聯準會對明年的預測；核心服務除住房連 6 個月高於目標；長期通膨預期偏離目標。</span></div><div class="logic-step"><b>FOMC</b><span>面對這個組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。</span></div></div><div class="data-line"><span class="data-tag">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-07</span><span class="data-tag">下一格：通膨轉「低」：還差 0.89 個百分點</span><a class="data-tag" href="/scenario/">開啟完整九宮格 →</a></div></div></div><div class="grid"><div class="card deep-dive"><h2 id="details" data-sum="數據拆解、圖表、方法與資料來源">各模組摘要、變化與追蹤清單</h2><p class="hint">首卡只放決策需要的重點；全部細項仍保留在這裡。</p><details class="full-detail" data-m-collapse><summary>展開完整內容</summary><div class="full-detail-body"><div class="verdict hawkish">
+  <div class="v-eyebrow">目前情境</div>
+  <div class="v-main">傾向緊縮</div>
+  <div class="v-why">通膨還高，而就業還沒弱到需要救。</div>
   <div class="v-count">
-    就業弱　×　通膨高　·　利升息　·　九宮格：通膨優先
+    就業中　×　通膨高　·　利升息　·　九宮格：通膨優先
     
   </div>
 </div>
@@ -1218,21 +1258,16 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 <div class="grid">
   <div class="card brief">
     <div class="brief-k">整體情勢</div>
-    <p class="brief-new">本次更新：7 月就業報告與 7 月 CPI，核心 CPI 三月年化 1.6%（上月 2.3%）；非農三個月均 2.0萬人（上月 7.7萬人），方向偏降息。</p><p class="brief-t">聯準會把通膨擺在首位，內部三方裡一方偏升息、一方偏降息，方向分歧。7 月失業率 4.1% 雖屬充分就業，但近三個月平均非農 +2.0 萬人低於損益兩平的 +10.2 萬，支撐不住現有失業率，且前兩月大幅下修反映實質動能弱於初值。物價方面，6 月核心 PCE 3.3%、三個月年化 2.9% 雖在放緩，受住房落後項推升整體讀數，仍高於對明年的預測。對此組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。長端大致跟著政策走，財政缺口 1.9% GDP 與 AI 資本支出佔營運現金流 97% 則同推長端供給。</p>
-    <p class="brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.57 個百分點）；升息風險未消。</p>
+    <p class="brief-t">聯準會把通膨擺在前面；三方裡兩方偏升息、一方偏降息，方向分歧。7 月失業率 4.1% 落在充分就業區間 4.0%–4.3% 之內；前兩月大幅下修，實質動能弱於初值。6 月核心 PCE 3.0%、三個月年化 3.5% 仍在加速，仍高於聯準會對明年的預測；核心服務除住房連 6 個月高於目標；長期通膨預期偏離目標。面對這個組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。財政缺口 1.3% GDP 與 AI 資本支出佔營運現金流 83%，同推長端供給，降息也壓不下長端。</p>
+    <p class="brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.89 個百分點）；升息風險未消。</p>
   </div>
 </div>
 
-<div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <details class="card sect"><summary><h2 id="changed">跟上期比，什麼變了</h2><span class="sect-sum">本期整體往降息的方向移動：1 項偏降息、0 項偏升息</span></summary><div class="sect-body">
-    <div class="chg">
-  <div class="chead">情境仍是「停滯性通膨：通膨優先」，但訊號組成有變</div>
-  <div class="cage">1 天前發布</div>
-  <div class="cnet dovish">本期整體往<b>降息</b>的方向移動：1 項偏降息、0 項偏升息</div><div class="ccols"><div class="ccol dovish"><div class="ccol-h">偏降息的變化<span class="ccol-n">1</span></div><div class="citem"><span class="cmark" title="上期有、本期不再成立">－</span><span class="ctext">油價上行，未來一至兩月推升總體 CPI</span><span class="cmod">物價</span></div></div></div><div class="clegend">＋ 本期新出現　　－ 上期有、本期不再成立</div><details class="f-more"><summary>關鍵數字的變動（10 項）</summary><div class="cmoves"><div class="cmove"><div>非農就業月變動</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-4.30萬人</div><div class="cm-val">2.00 → -2.30萬人</div></div><div class="cmove"><div>非農三個月均</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-5.70萬人</div><div class="cm-val">7.70 → 2.00萬人</div></div><div class="cmove"><div>失業率</div><div class="cm-delta hawkish"><span class="cm-tag">利升息</span>-0.10 個百分點</div><div class="cm-val">4.20 → 4.10%</div></div><div class="cmove"><div>勞動參與率</div><div class="cm-delta hawkish"><span class="cm-tag">利升息</span>-0.10 個百分點</div><div class="cm-val">61.50 → 61.40%</div></div><div class="cmove"><div>平均時薪年增</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.26 個百分點</div><div class="cm-val">3.41 → 3.15%</div></div><div class="cmove"><div>CPI 年增</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.17 個百分點</div><div class="cm-val">3.53 → 3.36%</div></div><div class="cmove"><div>核心 CPI 年增</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.12 個百分點</div><div class="cm-val">2.59 → 2.48%</div></div><div class="cmove"><div>核心 CPI 三月年化</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.65 個百分點</div><div class="cm-val">2.29 → 1.64%</div></div><div class="cmove"><div>核心 PCE 年增</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.14 個百分點</div><div class="cm-val">3.42 → 3.29%</div></div><div class="cmove"><div>長期通膨預期</div><div class="cm-delta dovish"><span class="cm-tag">利降息</span>-0.03 個百分點</div><div class="cm-val">2.31 → 2.28%</div></div></div><p class="hint" style="margin:10px 0 0">「利升息／利降息」講的是這個變動<b>對利率的意思</b>，不是數字漲跌。兩者不一定同向——損益兩平就業增速變高，代表同樣的非農其實更弱，數字往上但方向偏降息。</p></details>
-  <div class="src" style="margin-top:12px">7 項訊號延續　·　就業 7 月（對照 ）　·　物價 7 月（對照 6 月）</div>
-</div>
-  </div></details>
+  <div class="card">
+    <h3 id="changed" data-sum="尚無可比對的上期">跟上期比，什麼變了</h3>
+    <div class="chg"><div class="chead">這是第一次執行，還沒有可以比對的上期資料。</div><div class="v-count" style="border-top:none;padding-top:8px">下次有新資料時，這裡會列出情境移動、訊號的增減與關鍵數字的變化。</div></div>
+  </div>
 </div>
 
 <div class="grid g4"><a class="modcard" href="/labor/">
@@ -1244,8 +1279,8 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 </a><a class="modcard" href="/inflation/">
   <div class="m-top"><span class="m-name">通膨</span>
     <span class="m-when">2026-07 資料</span></div>
-  <div class="m-value">2.5%<span class="m-dir neutral">方向不明</span></div>
-  <div class="m-note">核心 PCE 3.3%</div>
+  <div class="m-value">3.0%<span class="m-dir hawkish">利升息</span></div>
+  <div class="m-note">核心 PCE 3.0%</div>
   <div class="m-more">看分項貢獻、住房落後與能源傳導 →</div>
 </a><a class="modcard" href="/fomc/">
   <div class="m-top"><span class="m-name">聯準會文本</span>
@@ -1255,27 +1290,29 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   <div class="m-more">看聲明逐句比對與目前重心 →</div>
 </a><a class="modcard" href="/rates/">
   <div class="m-top"><span class="m-name">長端與債務</span>
-    <span class="m-when">2026-08-11 資料</span></div>
-  <div class="m-value">5.24%<span class="m-dir neutral">中性</span></div>
-  <div class="m-note">30 年期　·　供給壓力中性</div>
+    <span class="m-when">2026-08-07 資料</span></div>
+  <div class="m-value">5.21%<span class="m-dir hawkish">利升息</span></div>
+  <div class="m-note">30 年期　·　供給壓力偏高</div>
   <div class="m-more">看曲線拆解、債務動態與科技巨頭發債 →</div>
 </a></div>
 
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="signals">本期關鍵訊號</h2><span class="sect-sum">7 項　·　前兩月大幅下修，實質動能弱於初值</span></summary><div class="sect-body">
-    <p class="hint">來自就業與物價兩個模組的規則引擎，共 7 條：5 條利降息、1 條利升息、1 條中性。依嚴重度排序。</p>
-    <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">近三月年化低於年增率 0.4 個百分點以上<span class="f-tag">物價</span></div><div class="impact dovish">利降息　通膨降溫的證據</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">住房落後項推升整體讀數<span class="f-tag">物價</span></div><div class="impact dovish">利降息　實際通膨比表面低</div></div></div><div class="flag info"><span class="f-icon">●</span><div><div class="f-head">失業率下降源於勞動力退出，而非就業增加<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業市場實際在轉弱</div></div></div><div class="src">另有 1 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
-  </div></details>
+  <div class="card">
+    <h3 id="signals" data-open="1" data-sum="11 項　·　前兩月大幅下修，實質動能弱於初值">本期關鍵訊號</h3>
+    <p class="hint">來自就業與物價兩個模組的規則引擎，共 11 條：4 條利降息、6 條利升息、1 條中性。依嚴重度排序。</p>
+    <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">近三月年化高於年增率 0.4 個百分點以上<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨動能回升</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心服務除住房仍高於目標區間<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　聯準會最在意的一塊還沒降溫</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">長期通膨預期偏離目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　預期脫錨是聯準會的紅線</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="src">另有 5 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
+  </div>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="watch">接下來要盯什麼</h2><span class="sect-sum">通膨轉「低」：還差 0.57 個百分點　·　最近一次發布 22 天後</span></summary><div class="sect-body">
-    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸才是目前的約束條件。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.57 個百分點</div><div class="wt-n">目前 綜合通膨水準 2.82%　·　需低於 2.25%</div></div>
+  <div class="card">
+    <h3 id="watch" data-sum="通膨轉「低」：還差 0.89 個百分點　·　最近一次發布 22 天後">接下來要盯什麼</h3>
+    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸才是目前的約束條件。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.89 個百分點</div><div class="wt-n">目前 核心 PCE 年增 3.14%　·　需低於 2.25%</div></div>
     <h3 style="margin-top:20px">下次更新</h3>
-    <div class="cds"><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">22 天後</div><div class="cd-n">2026-09-04　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">29 天後</div><div class="cd-n">2026-09-11　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">34 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
-  </div></details>
+    <div class="cds"><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">22 天後</div><div class="cd-n">2026-09-04　·　依「次月第一個週五」慣例推估</div></div><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">32 天後</div><div class="cd-n">2026-09-14　·　依「次月第 12 天前後」慣例推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">34 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
+  </div>
 </div>
-
+</div></details></div></div>
 
 <footer>資料月份：<span class="nb">2026-07</span>（就業）　·　<span class="nb">2026-07</span>（物價）　·　<span class="nb">2026-07-29</span>（聲明）。每天自動重新產生。<br>資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。所有量化判定由固定規則產生，每次執行結果一致。<br>本站僅為數據整理，不構成投資建議。</footer>
 

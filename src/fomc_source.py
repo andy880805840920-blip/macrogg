@@ -260,11 +260,13 @@ class FomcSource:
                 log.warning("%s 引言寫 %d 張反對票，但解析出 %d 位反對者",
                             d, vote.stated_dissent, len(vote.dissents))
 
-        # 內容健全性檢查：聲明一定會提到委員會與目標區間。
-        # 兩者都沒有，代表抓到的根本不是聲明（版面改版、抓到錯的頁面），
-        # 這時寧可判定失敗，也不要把導覽選單之類的東西當成聲明拿去比對。
+        # 內容健全性檢查：真正的政策聲明一定會提到政策工具或政策行動。
+        # 只檢查 Committee 不夠，行事曆頁也會連到長期策略框架公告；那類公告
+        # 曾被誤算成一次 FOMC 利率會議，污染歷史次數與文字長度基準。
         low = policy.lower()
-        if "committee" not in low and "target range" not in low:
+        policy_markers = ("target range", "federal funds rate",
+                          "monetary policy action")
+        if not any(marker in low for marker in policy_markers):
             log.warning("%s 抓到的內容不像聲明（缺 Committee／target range），跳過", d)
             self.failed.append((STATEMENT_URL.format(ymd=d.strftime("%Y%m%d")),
                                 "內容不像聲明，可能是頁面改版"))

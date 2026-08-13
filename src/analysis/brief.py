@@ -480,10 +480,15 @@ def _supply(rt: dict | None) -> str:
     pb = getattr(debt, "pb_gap", None) if debt else None
 
     bits = []
-    if pb is not None:
+    if pb is not None and pb < 0:
         bits.append(f"財政缺口 {abs(pb):.1f}% GDP")
     if ratio is not None:
         bits.append(f"AI 資本支出佔營運現金流 {ratio:.0f}%")
+    if pb is not None and pb >= 0:
+        buffer = f"財政緩衝 {pb:.1f}% GDP 降低部分供給壓力"
+        if bits:
+            return f"{buffer}；但{' 與 '.join(bits)}仍推升長端供給，{tail}。"
+        return f"{buffer}，{tail}。"
     if bits:
         return f"{' 與 '.join(bits)}，同推長端供給，{tail}。"
     return f"長端供給壓力{'偏高' if p.level == 'high' else '不高'}，{tail}。"
