@@ -256,16 +256,6 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
    它是首頁唯一通往「該怎麼擺部位」的路，而讀者剛看完同一段結論，
    一條灰色小字連結不足以說服他「後面還有沒看過的東西」。
    副標明講後面有什麼是首頁沒有的。 */
-.v-cta{display:block;margin-top:14px;padding:12px 38px 12px 14px;
-  border:1px solid var(--border);border-radius:9px;background:var(--surface-2);
-  color:var(--text-primary);text-decoration:none;font-size:13.5px;
-  font-weight:700;position:relative;line-height:1.5}
-.v-cta span{display:block;font-size:12px;font-weight:400;color:var(--muted);
-  margin-top:4px}
-.v-cta::after{content:"";position:absolute;right:16px;top:calc(50% - 4px);
-  width:7px;height:7px;border-top:1.5px solid var(--muted);
-  border-right:1.5px solid var(--muted);transform:rotate(45deg)}
-.v-cta:hover{border-color:var(--text-secondary)}
 
 /* ---------- KPI ---------- */
 .kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
@@ -1012,6 +1002,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .cmove:last-child{border-bottom:none}
 .cmove .cm-val{font-variant-numeric:tabular-nums;color:var(--text-secondary)}
 .cmove .cm-delta{font-weight:700;font-variant-numeric:tabular-nums}
+/* 「利升息／利降息」寫成字。顏色不該是唯一的載體——對色覺障礙的讀者
+   紅綠等於沒有資訊，對其他人也要先讀完下方說明才知道紅色代表什麼。 */
+.cmove .cm-tag{font-size:11.5px;font-weight:600;margin-right:6px;
+  padding:2px 6px;border-radius:5px;background:var(--surface-2);
+  white-space:nowrap;vertical-align:1px}
 /* 顏色是「這個變動對利率的意思」，不是數字漲跌 */
 .cmove .cm-delta.hawkish{color:var(--serious)}
 .cmove .cm-delta.dovish{color:var(--series-1)}
@@ -1059,6 +1054,11 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 @media(min-width:760px){.brief-t{font-size:15.5px}}
 /* 重點句：整段的結論（下一步是升是降、解鎖條件），獨立一行加粗，
    掃視的人只讀這一行也帶得走東西。 */
+/* 「本次更新」獨立一段：它回答的是「這一次新拿到什麼」，跟下一段的
+   「整體現在是什麼狀況」不是同一個問題。多數日子這一段不存在。 */
+.brief-new{margin:0 0 12px;padding:10px 12px;border-radius:9px;
+  background:var(--surface-2);font-size:14.5px;line-height:1.8;
+  color:var(--text-primary)}
 .brief-key{font-size:15px;line-height:1.9;margin:10px 0 0;max-width:34em;
   font-weight:700;color:var(--text-primary)}
 @media(min-width:760px){.brief-key{font-size:15.5px}}
@@ -1198,7 +1198,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">通膨</a></h1>
-  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-13 10:06（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-13 12:11（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1293,23 +1293,30 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="contrib">分項貢獻分解</h2><span class="sect-sum">近三個月累計漲幅 +0.12%　·　剔除住房後 -0.13%</span></summary><div class="sect-body">
-    <p class="hint">近三個月的<b>累計</b>漲幅拆成各塊的貢獻
-      （上方 KPI 卡是同一件事的年率）。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">近三個月累計漲幅</div><div class="s-value" style="color:inherit">+0.12%</div><div class="s-note">換算年率約 +0.5%</div></div><div class="stat"><div class="s-label">剔除住房後</div><div class="s-value" style="color:var(--good)">-0.13%</div><div class="s-note">已按剩餘權重換算回通膨率</div></div></div>
-    <div class="dcomp"><div class="dc-row"><div class="dc-name">住房</div><div class="dc-bar"><span class="dc-zero"></span><i style="left:50%;width:50.0%"></i></div><div class="dc-val">+0.20</div></div><div class="dc-note">算法落後市場行情約一年</div><div class="dc-row"><div class="dc-name">食物與能源</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:38.7%"></i></div><div class="dc-val">-0.16</div></div><div class="dc-note">波動大，核心已剔除</div><div class="dc-row"><div class="dc-name">其他所有項目</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:0.1%"></i></div><div class="dc-val">-0.00</div></div><div class="dc-note">核心裡的非住房部分</div><div class="dc-total">三塊相加　＝　+0.05　（實際漲幅 +0.12 個百分點）</div></div><div class="warnbox" style="margin-top:12px">三塊相加是 +0.05，跟實際的 +0.12 差 +0.08 個百分點。分項貢獻用的是 BLS 相對重要性權重，權重過期或四捨五入都會讓兩邊對不上——差距持續在 0.05 以上就該去對照 BLS 的最新權重表（config/inflation.yaml 的 weight）。</div>
-    <div class="warnbox" style="margin-top:16px">剔除住房後（-0.13%）比含住房（+0.12%）<b>低</b>，代表目前的通膨有一部分是住房撐起來的。住房的算法落後市場行情約一年，這一塊之後會自然回落。</div>
+  <details class="card sect"><summary><h2 id="contrib">分項貢獻分解</h2><span class="sect-sum">估算分項淨貢獻 +0.04pp　·　實際 CPI 三個月漲幅 +0.12%</span></summary><div class="sect-body">
+    <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
+      估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
+    <div class="stat-row"><div class="stat"><div class="s-label">估算分項淨貢獻</div><div class="s-value" style="color:inherit">+0.04pp</div><div class="s-note">四大類的估算貢獻加總</div></div><div class="stat"><div class="s-label">實際 CPI 三個月漲幅</div><div class="s-value" style="color:inherit">+0.12%</div><div class="s-note">換算年率約 +0.5%</div></div><div class="stat"><div class="s-label">剔除住房後</div><div class="s-value" style="color:var(--good)">-0.12%</div><div class="s-note">官方 All Items Less Shelter 指數</div></div></div>
+    <p class="hint" style="margin-top:-4px">兩者採不同計算口徑，不需完全相等。</p>
+    <div class="dcomp"><div class="dc-row"><div class="dc-name">住房</div><div class="dc-bar"><span class="dc-zero"></span><i style="left:50%;width:50.0%"></i></div><div class="dc-val">+0.20pp</div></div><div class="dc-note">算法落後市場行情約一年</div><div class="dc-row"><div class="dc-name">食物與能源</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:39.9%"></i></div><div class="dc-val">-0.16pp</div></div><div class="dc-note">波動大，核心已剔除</div><div class="dc-row"><div class="dc-name">其他所有項目</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:0.1%"></i></div><div class="dc-val">-0.00pp</div></div><div class="dc-note">核心裡的非住房部分</div></div>
+    <div class="warnbox" style="margin-top:16px">剔除住房後（約 -0.12%）<b>低於</b>整體 CPI（+0.12%），代表近三個月的價格壓力主要集中在住房。由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，後續仍需觀察住房通膨是否持續降溫。</div>
     <details data-m-collapse><summary>各類別明細</summary>
-    <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="住房｜貢獻 +0.20 個百分點"><div class="dlabel">住房<span class="dnote">落後項</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:46.83%"></span></div><div class="dval pos">+0.20</div></div><div class="drow" data-tip="食物｜貢獻 +0.06 個百分點"><div class="dlabel">食物</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:13.76%"></span></div><div class="dval pos">+0.06</div></div><div class="drow" data-tip="核心商品｜貢獻 -0.00 個百分點"><div class="dlabel">核心商品</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:0.13%"></span></div><div class="dval neg">-0.00</div></div><div class="drow" data-tip="能源｜貢獻 -0.22 個百分點"><div class="dlabel">能源</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:50.00%"></span></div><div class="dval neg">-0.22</div></div></div></div>
+    <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="住房｜貢獻 +0.20 個百分點"><div class="dlabel">住房<span class="dnote">落後項</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:45.78%"></span></div><div class="dval pos">+0.20pp</div></div><div class="drow" data-tip="食物｜貢獻 +0.06 個百分點"><div class="dlabel">食物</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:13.46%"></span></div><div class="dval pos">+0.06pp</div></div><div class="drow" data-tip="核心商品｜貢獻 -0.00 個百分點"><div class="dlabel">核心商品</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:0.13%"></span></div><div class="dval neg">-0.00pp</div></div><div class="drow" data-tip="能源｜貢獻 -0.22 個百分點"><div class="dlabel">能源</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:50.00%"></span></div><div class="dval neg">-0.22pp</div></div></div></div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>推升物價</span>
       <span><i style="background:var(--neg)"></i>壓低物價</span>
       <span><i style="background:var(--muted-bar)"></i>落後項（住房）</span>
-      <span>單位：個百分點</span>
+      <span>單位：個百分點（pp）</span>
     </div>
     <p class="hint" style="margin-top:14px">
-      貢獻＝該類別佔物價籃子的比重 × 它自己的漲幅。所以住房只要漲一點點，
-      因為它佔了三分之一以上的權重，對整體的影響就很大。</p>
+      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別期間價格變化。
+      住房占 CPI 權重超過三分之一，因此即使漲幅不大，
+      也可能對整體 CPI 產生明顯影響。</p>
+    <p class="hint" style="margin-top:10px">
+      分項貢獻為依 BLS Relative Importance 與各分類價格變化所做的
+      <b>近似估算</b>，用於觀察不同類別對通膨的方向與相對影響。由於 CPI
+      官方指數採用動態權重與分層聚合方法，估算貢獻加總不一定會與實際
+      CPI 漲幅完全相等。</p>
     </details>
   </div></details>
 </div>
@@ -1338,7 +1345,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   <details class="card sect"><summary><h2 id="passthrough">薪資到服務業通膨的傳導</h2><span class="sect-sum">資料不足</span></summary><div class="sect-body">
     <p class="hint">這一塊的成本主體是人力。
       <b>薪資走向會在數月後反映到這裡，是通膨黏性的核心機制。</b></p>
-    <div class="warnbox"><b>尚無法估計</b><br>需要同時有薪資與核心服務除住房的資料，目前缺其中一項。</div>
+    <div class="warnbox"><b>尚無法估計</b><br>缺少：核心服務除住房（由 CUSR0000SASLE 減 CUSR0000SAH1 推導，兩條缺一就推不出來）。</div>
   </div></details>
 </div>
 
@@ -1448,7 +1455,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 </div>
 
 
-<footer>資料來源：美國勞工統計局（BLS）、經濟分析局（BEA）、克里夫蘭聯準銀行與亞特蘭大聯準銀行，經 FRED 取得。<br>CPI 權重版本：2026 年 1 月（近似值，待對照 BLS 表格校準）　·　權重每年一月由 BLS 更新，需同步校準。<br>本頁僅為數據整理，不構成投資建議。</footer>
+<footer>資料來源：美國勞工統計局（BLS）、經濟分析局（BEA）、克里夫蘭聯準銀行與亞特蘭大聯準銀行，經 FRED 取得。<br>CPI 權重版本：2025 年 12 月（BLS relative importance，2024 權重）　·　權重每年一月由 BLS 更新，需同步校準。<br>本頁僅為數據整理，不構成投資建議。</footer>
 
 </div>
 <div id="tip"></div>
