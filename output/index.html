@@ -1231,6 +1231,237 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .sbadge2.inline{background:var(--surface-2);color:var(--muted)}
 .sbox .szn{font-size:11px;color:var(--muted);margin-top:5px;
   font-variant-numeric:tabular-nums}
+/* ---------- 總覽頁 v2：五區、單層收合 ---------- */
+.home-dashboard{margin-top:14px}
+.home-hero{position:relative;overflow:hidden;background:var(--surface-1);
+  border:1px solid var(--border);border-top:4px solid var(--series-1);
+  border-radius:16px;padding:20px 17px;box-shadow:var(--shadow)}
+.home-hero.hawkish{border-top-color:var(--series-2)}
+.home-hero.dovish{border-top-color:var(--series-1)}
+.home-hero-top{display:flex;flex-direction:column;gap:14px}
+.home-kicker,.home-zone-num{font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted)}
+.home-hero h2{font-size:29px;line-height:1.18;letter-spacing:-.025em;margin:5px 0 0}
+.home-verdict{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-radius:10px;padding:10px 12px;background:var(--surface-2)}
+.home-verdict span{font-size:14px;font-weight:700}
+.home-verdict b{font-size:13px;color:var(--muted)}
+.home-verdict.hawkish{background:var(--tint-haw)}
+.home-verdict.dovish{background:var(--tint-dov)}
+.home-narrative{margin-top:20px;padding-top:18px;border-top:1px solid var(--grid)}
+.home-brief-label{display:flex;flex-direction:column;gap:3px;font-size:12px;
+  font-weight:800;letter-spacing:.06em;color:var(--text-secondary)}
+.home-brief-label span{font-size:10.5px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.home-brief-text{max-width:47em;font-size:15px;line-height:1.9;margin:10px 0 0;
+  color:var(--text-primary)}
+.home-brief-key{max-width:47em;font-size:14px;line-height:1.7;font-weight:700;
+  margin:12px 0 0;padding-left:12px;border-left:3px solid var(--series-1)}
+.home-brief-empty{color:var(--muted);margin:8px 0 0}
+.home-brief-more{margin:6px 0 0;padding:0;border:0}
+.home-brief-more>summary{display:inline-flex;min-height:42px;align-items:center;
+  padding:8px 0;color:var(--series-1)}
+.home-brief-more>summary::after{content:" ＋"}
+.home-brief-more[open]>summary::after{content:" －"}
+.home-brief-more p{max-width:47em;font-size:15px;line-height:1.9;margin:2px 0 0}
+.home-status-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  margin-top:18px;border:1px solid var(--grid);border-radius:11px;overflow:hidden}
+.home-status-rail>div{min-width:0;padding:10px 11px;background:var(--surface-2);
+  border-right:1px solid var(--grid);border-bottom:1px solid var(--grid)}
+.home-status-rail>div:nth-child(2n){border-right:0}
+.home-status-rail>div:nth-last-child(-n+2){border-bottom:0}
+.home-status-rail span{display:block;font-size:10.5px;color:var(--muted)}
+.home-status-rail b{display:block;margin-top:2px;font-size:13.5px;white-space:nowrap}
+
+.home-zone{margin-top:16px;padding:19px 17px;background:var(--surface-1);
+  border:1px solid var(--border);border-radius:14px}
+.home-zone-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  margin-bottom:15px}
+.home-zone-head>div{min-width:0}
+.home-zone-head h2{font-size:18px;line-height:1.25;margin:3px 0 0}
+.home-zone-head p{font-size:11.5px;color:var(--muted);margin:3px 0 0;text-align:right}
+.home-primary-link,.home-inline-link{display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;color:var(--series-1);font-size:13px;font-weight:700;text-decoration:none}
+.home-primary-link{flex-shrink:0;margin-top:-6px}
+
+.home-transition{background:var(--surface-2)}
+.home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.home-cell-now,.home-cell-next{padding:13px 14px;border-radius:10px;
+  background:var(--surface-1);border:1px solid var(--border)}
+.home-cell-now>span,.home-cell-next>span{display:block;font-size:10.5px;color:var(--muted)}
+.home-cell-now b,.home-cell-next b{display:block;font-size:17px;line-height:1.35;margin-top:3px}
+.home-cell-now small,.home-cell-next small{display:block;font-size:11.5px;color:var(--muted);margin-top:4px}
+.home-cell-now{border-left:3px solid var(--series-1)}
+.home-cell-next{border-left:3px solid var(--warning)}
+.home-transition-arrow{display:none}
+.home-trigger-detail{display:flex;flex-wrap:wrap;gap:6px}
+.home-trigger-detail span{font-size:11.5px;padding:5px 8px;border-radius:999px;
+  background:var(--surface-1);border:1px solid var(--border);color:var(--text-secondary)}
+.home-dates{margin-top:12px;padding-top:10px;border-top:1px solid var(--grid);
+  font-size:11px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.home-module-list{border-top:1px solid var(--grid)}
+details.home-module{margin:0;padding:0;border:0;border-bottom:1px solid var(--grid);
+  background:transparent}
+details.home-module[open]{padding-bottom:0}
+.home-module>summary{position:relative;display:grid;grid-template-columns:1fr auto;
+  gap:5px 10px;align-items:center;min-height:76px;padding:13px 34px 13px 2px;color:var(--text-primary)}
+.home-module>summary::after{content:"＋";position:absolute;right:3px;top:19px;
+  color:var(--muted);font-size:17px;font-weight:400}
+.home-module[open]>summary::after{content:"－"}
+.home-module-name{font-size:15px;font-weight:800}
+.home-status{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;
+  background:var(--surface-2);white-space:nowrap}
+.home-status.hawkish{color:var(--serious);background:var(--tint-haw)}
+.home-status.dovish{color:var(--series-1);background:var(--tint-dov)}
+.home-module-summary{grid-column:1/-1;font-size:12.5px;font-weight:400;
+  line-height:1.55;color:var(--text-secondary)}
+.home-module-toggle{display:none}
+.home-module-body{padding:0 2px 14px}
+.home-module-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;padding:11px;border-radius:10px;background:var(--surface-2)}
+.home-module-stats>div{min-width:0}
+.home-module-stats span{display:block;font-size:10.5px;color:var(--muted)}
+.home-module-stats b{display:block;margin-top:2px;font-size:14px;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.home-inline-link{margin-top:4px}
+
+.home-change-list{display:grid;gap:0;border-top:1px solid var(--grid)}
+.home-change{display:grid;grid-template-columns:8px minmax(0,1fr);gap:0 10px;
+  padding:13px 2px;border-bottom:1px solid var(--grid)}
+.home-change-dot{width:7px;height:7px;border-radius:50%;margin-top:8px;background:var(--muted-bar)}
+.home-change-dot.hawkish{background:var(--series-2)}
+.home-change-dot.dovish{background:var(--series-1)}
+.home-change>div{display:flex;flex-direction:column;min-width:0}
+.home-change b{font-size:13.5px}
+.home-change span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.home-change p{grid-column:2;font-size:12.5px;line-height:1.5;color:var(--text-secondary);margin:5px 0 0}
+.home-empty{padding:20px 2px;color:var(--muted);font-size:13px}
+
+.home-data-status{display:grid;grid-template-columns:1fr;gap:8px;background:transparent;
+  border-style:dashed;box-shadow:none}
+.home-data-status .home-zone-head{margin:0}
+.home-data-status>div:not(.home-zone-head){display:flex;gap:9px;align-items:center}
+.home-data-status>div:not(.home-zone-head) b{font-size:12px;color:var(--good)}
+.home-data-status>div:not(.home-zone-head) span{font-size:12px;color:var(--muted)}
+.home-data-status>p{font-size:12px;color:var(--muted);margin:0}
+
+.home-footer{display:grid;grid-template-columns:1fr;gap:16px;padding-top:18px;
+  border-top:1px solid var(--baseline)}
+.home-footer>div{display:flex;flex-direction:column;gap:3px}
+.home-footer b{font-size:12px;color:var(--text-secondary)}
+.home-footer span{font-size:11.5px;line-height:1.65;color:var(--muted)}
+.home-footer a{color:var(--series-1);text-decoration:none}
+
+@media(min-width:760px){
+  .home-dashboard{margin-top:18px}
+  .home-hero{padding:27px 29px}
+  .home-hero-top{flex-direction:row;align-items:flex-start;justify-content:space-between}
+  .home-hero h2{font-size:36px}
+  .home-verdict{min-width:230px}
+  .home-narrative{margin-top:24px;padding-top:21px}
+  .home-brief-label{flex-direction:row;align-items:baseline;gap:10px}
+  .home-brief-text,.home-brief-more p{font-size:15.5px}
+  .home-status-rail{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .home-status-rail>div{padding:12px 14px;border-bottom:0}
+  .home-status-rail>div:nth-child(2n){border-right:1px solid var(--grid)}
+  .home-status-rail>div:last-child{border-right:0}
+  .home-status-rail b{font-size:14px}
+  .home-zone{margin-top:18px;padding:22px 25px}
+  .home-zone-head{align-items:center}
+  .home-zone-head h2{font-size:20px}
+  .home-transition-grid{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);
+    align-items:stretch}
+  .home-transition-arrow{display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:19px}
+  .home-trigger-detail{grid-column:3}
+  .home-cell-now,.home-cell-next{padding:15px 17px}
+  .home-cell-now b,.home-cell-next b{font-size:19px}
+  .home-module>summary{grid-template-columns:110px 105px minmax(0,1fr) 44px;
+    gap:14px;min-height:68px;padding:12px 2px}
+  .home-module>summary::after{display:none}
+  .home-module-summary{grid-column:auto;font-size:13px}
+  .home-module-toggle{display:block;text-align:right;font-size:12px;color:var(--series-1)}
+  .home-module-stats{grid-template-columns:repeat(4,minmax(0,1fr));padding:13px 15px}
+  .home-change{grid-template-columns:8px minmax(180px,.75fr) minmax(0,1fr);
+    align-items:start;column-gap:12px}
+  .home-change p{grid-column:3;margin:0;font-size:13px}
+  .home-data-status{grid-template-columns:auto auto minmax(0,1fr);align-items:center}
+  .home-data-status .home-zone-head{min-width:150px}
+  .home-footer{grid-template-columns:1.15fr .85fr;gap:40px}
+}
+@media(max-width:430px){
+  .home-zone-head{flex-direction:column;gap:7px}
+  .home-zone-head p{text-align:left;margin:0}
+  .home-primary-link{margin:0}
+  .home-hero h2{font-size:26px}
+}
+@media(max-width:759px){
+  details.home-module+details.home-module{margin-top:7px}
+}
+
+/* ---------- 內容頁 v3：主卡精簡、主題單層收合 ---------- */
+.focus-card{padding:18px 17px;border-radius:15px;border-top-width:4px}
+.focus-title{font-size:25px;line-height:1.25}
+.focus-sub{max-width:52em;line-height:1.65;margin-top:7px}
+.focus-grid{grid-template-columns:1fr;gap:0;margin-top:17px;
+  border-top:1px solid var(--grid);border-bottom:1px solid var(--grid)}
+.focus-metric{display:grid;grid-template-columns:minmax(94px,.7fr) minmax(0,1fr);
+  gap:2px 12px;align-items:start;padding:11px 4px;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid);background:transparent}
+.focus-metric:last-child{border-bottom:0}
+.focus-metric>span{grid-column:1;grid-row:1/3;padding-top:2px}
+.focus-metric>b{grid-column:2;font-size:17px;overflow-wrap:anywhere}
+.focus-metric>small{grid-column:2;line-height:1.45}
+.focus-metric.hawkish,.focus-metric.dovish,.focus-metric.watch{border-left:0}
+.focus-metric.hawkish{box-shadow:inset 3px 0 0 var(--critical)}
+.focus-metric.dovish{box-shadow:inset 3px 0 0 var(--good)}
+.focus-metric.watch{box-shadow:inset 3px 0 0 var(--warning)}
+
+.focus-evidence{margin:14px 0 0;padding:0;border-top:1px solid var(--grid)}
+.focus-evidence>summary{display:flex;align-items:center;min-height:44px;padding:9px 0;
+  font-size:12.5px;color:var(--series-1)}
+.focus-evidence>summary::after{content:" ＋";margin-left:3px}
+.focus-evidence[open]>summary::after{content:" －"}
+.focus-evidence-body{padding:0 0 5px}
+.focus-evidence .logic-strip{margin-top:0;gap:0}
+.focus-evidence .logic-step{padding:10px 2px;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid);background:transparent}
+.focus-evidence .logic-step:last-child{border-bottom:0}
+.focus-evidence .grid-flow{margin-top:0}
+.focus-evidence .flow-box{background:var(--surface-2);box-shadow:none}
+
+.focus-card .data-line{margin-top:10px;padding-top:9px;border-top:1px solid var(--grid);
+  gap:3px 12px}
+.focus-card .data-tag{padding:2px 0;border:0;border-radius:0;background:transparent;
+  color:var(--muted)}
+.focus-card .data-tag[href]{min-height:40px}
+
+/* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+.legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
+.legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
+.sect-body .card{box-shadow:none}
+.sect-body .legacy-detail .card{border:0;background:transparent;padding-left:0;padding-right:0}
+.sect-tools{margin-top:14px}
+
+@media(min-width:760px){
+  .focus-card{padding:25px 27px}
+  .focus-title{font-size:29px}
+  .focus-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .focus-metric{display:flex;flex-direction:column;gap:3px;padding:12px 15px;
+    border-bottom:0;border-right:1px solid var(--grid)}
+  .focus-metric:last-child{border-right:0}
+  .focus-metric>span,.focus-metric>b,.focus-metric>small{display:block}
+  .focus-metric>b{font-size:19px}
+  .focus-evidence .logic-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .focus-evidence .logic-step{padding:11px 14px;border-bottom:0;border-right:1px solid var(--grid)}
+  .focus-evidence .logic-step:last-child{border-right:0}
+}
+@media(max-width:759px){
+  .focus-card+.sect-tools{margin-top:10px}
+  details.card.sect+details.card.sect{margin-top:9px}
+  .sect>summary{padding:14px 14px;min-height:64px}
+  .sect-body{padding:0 14px 16px}
+}
 </style>
 </head>
 <body>
@@ -1238,91 +1469,66 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-13 18:20（台北）</div>
+  <div class="sub">最後更新 2026-08-13 19:19（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
+<div class="anav"><nav class="anchors"><a href="#home-now">就業中性 × 通膨偏高</a><a href="#home-grid">九宮格與下一格</a><a href="#home-modules">四大模組摘要</a><a href="#home-changes">本期變化與市場含義</a><a href="#home-data">資料狀態</a></nav></div>
 
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Investment dashboard</div><h2 class="focus-title">傾向緊縮｜利升息</h2><p class="focus-sub">通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。 首頁結論由固定規則產生，AI 不改格位、不改數值。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>九宮格位置</span><b>中 × 高</b><small>傾向緊縮</small></div><div class="focus-metric neutral"><span>兩軸方向</span><b>轉弱 / 降溫</b><small>就業 / 通膨</small></div><div class="focus-metric hawkish"><span>FOMC 會議結論</span><b>偏鷹</b><small>偏鷹</small></div><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>財政＋Hyperscalers；不進九宮格</small></div></div><div class="logic-strip"><div class="logic-step"><b>就業</b><span>7 月失業率 4.1% 仍算充分就業，但近三個月平均非農 +2.0 萬人低於損益兩平的 +9.8 萬，撐不住現有失業率；前兩月大幅下修，實質動能弱於初值。</span></div><div class="logic-step"><b>通膨</b><span>6 月核心 PCE 3.3%、三個月年化 2.9% 已在放緩，仍高於聯準會對明年的預測；住房落後項推升整體讀數。</span></div><div class="logic-step"><b>FOMC</b><span>面對這個組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。</span></div></div><div class="data-line"><span class="data-tag">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-11</span><span class="data-tag">下一格：通膨轉「低」：還差 0.52 個百分點</span><a class="data-tag" href="/scenario/">開啟完整九宮格 →</a></div></div></div><div class="grid"><div class="card deep-dive"><h2 id="details" data-sum="數據拆解、圖表、方法與資料來源">各模組摘要、變化與追蹤清單</h2><p class="hint">首卡只放決策需要的重點；全部細項仍保留在這裡。</p><details class="full-detail" data-m-collapse><summary>展開完整內容</summary><div class="full-detail-body"><div class="verdict hawkish">
-  <div class="v-eyebrow">目前情境</div>
-  <div class="v-main">傾向緊縮</div>
-  <div class="v-why">通膨還高，而就業還沒弱到需要救。</div>
-  <div class="v-count">
-    就業中　×　通膨高　·　利升息　·　九宮格：通膨優先
-    
-  </div>
-</div>
+<main class="home-dashboard">
+  <section class="home-hero hawkish" aria-labelledby="home-now">
+    <div class="home-hero-top">
+      <div><div class="home-kicker">目前情境</div>
+        <h2 id="home-now">就業中性 × 通膨偏高</h2></div>
+      <div class="home-verdict hawkish"><span>傾向緊縮</span><b>利升息</b></div>
+    </div>
+    <div class="home-narrative"><div class="home-brief-label">整體情勢<span>規則摘要｜數據與方向由規則鎖定</span></div><p class="home-brief-text">聯準會把通膨擺在前面；三方裡一方偏升息、一方偏降息，方向分歧。7 月失業率 4.1% 仍算充分就業，但近三個月平均非農 +2.0 萬人低於損益兩平的 +9.8 萬，撐不住現有失業率；前兩月大幅下修，實質動能弱於初值。6 月核心 PCE 3.3%、三個月年化 2.9% 已在放緩，仍高於聯準會對明年的預測；住房落後項推升整體讀數。面對這個組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。財政緩衝 1.9% GDP 降低部分供給壓力；但AI 資本支出佔營運現金流 97%仍推升長端供給，長端大致跟著政策走。</p><p class="home-brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.52 個百分點）；升息風險未消。</p></div>
+    <div class="home-status-rail"><div><span>就業</span><b>中性｜轉弱</b></div><div><span>通膨</span><b>偏高｜降溫</b></div><div><span>FOMC</span><b>偏鷹</b></div><div><span>長端壓力</span><b>中性</b></div></div>
+  </section>
 
+  <section class="home-zone home-transition" aria-labelledby="home-grid">
+    <div class="home-zone-head"><div><span class="home-zone-num">02</span>
+      <h2 id="home-grid">九宮格與下一格</h2></div>
+      <a class="home-primary-link" href="/scenario/">查看完整九宮格 →</a></div>
+    <div class="home-transition-grid">
+      <div class="home-cell-now"><span>目前位置</span><b>傾向緊縮</b><small>就業中性 × 通膨偏高</small></div>
+      <div class="home-transition-arrow" aria-hidden="true">→</div>
+      <div class="home-cell-next"><span>可能下一格</span><b>預防性降息</b><small>通膨轉「低」：還差 0.52 個百分點</small></div>
+      <div class="home-trigger-detail"><span>核心 PCE 年增 2.77%</span><span>需低於 2.25%</span></div>
+    </div>
+    <div class="home-dates">資料期別：就業 2026-07｜CPI 2026-07｜PPI 2026-06｜PCE 2026-06｜FOMC 2026-07-29</div>
+  </section>
 
-<div class="grid">
-  <div class="card brief">
-    <div class="brief-k">整體情勢</div>
-    <p class="brief-t">聯準會把通膨擺在前面；三方裡一方偏升息、一方偏降息，方向分歧。7 月失業率 4.1% 仍算充分就業，但近三個月平均非農 +2.0 萬人低於損益兩平的 +9.8 萬，撐不住現有失業率；前兩月大幅下修，實質動能弱於初值。6 月核心 PCE 3.3%、三個月年化 2.9% 已在放緩，仍高於聯準會對明年的預測；住房落後項推升整體讀數。面對這個組合，上次會議（7/29）維持不變、3 票主張升息，下次會議 34 天後。財政緩衝 1.9% GDP 降低部分供給壓力；但AI 資本支出佔營運現金流 97%仍推升長端供給，長端大致跟著政策走。</p>
-    <p class="brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.52 個百分點）；升息風險未消。</p>
-  </div>
-</div>
+  <section class="home-zone" aria-labelledby="home-modules">
+    <div class="home-zone-head"><div><span class="home-zone-num">03</span>
+      <h2 id="home-modules">四大模組摘要</h2></div><p>點選一列查看核心數字</p></div>
+    <div class="home-module-list"><details class="home-module"><summary><span class="home-module-name">就業</span><span class="home-status neutral">中性｜轉弱</span><span class="home-module-summary">非農 -2.3 萬人、失業率 4.1%；九宮格就業軸為「中性」。</span><span class="home-module-toggle">查看</span></summary><div class="home-module-body"><div class="home-module-stats"><div><span>非農新增</span><b>-2.3 萬人</b></div><div><span>失業率</span><b>4.1%</b></div><div><span>平均時薪年增</span><b>3.2%</b></div><div><span>資料期別</span><b>2026-07</b></div></div><a class="home-inline-link" href="/labor/">前往完整分析 →</a></div></details><details class="home-module"><summary><span class="home-module-name">通膨</span><span class="home-status hawkish">偏高｜降溫</span><span class="home-module-summary">CPI 3.4%、核心 CPI 2.5%、核心 PCE 3.3%。</span><span class="home-module-toggle">查看</span></summary><div class="home-module-body"><div class="home-module-stats"><div><span>總體 CPI</span><b>3.4%</b></div><div><span>核心 CPI</span><b>2.5%</b></div><div><span>PPI／核心 PPI</span><b>5.5%／4.7%</b></div><div><span>核心 PCE</span><b>3.3%</b></div></div><a class="home-inline-link" href="/inflation/">前往完整分析 →</a></div></details><details class="home-module"><summary><span class="home-module-name">FOMC</span><span class="home-status hawkish">偏鷹</span><span class="home-module-summary">政策利率 3.50–3.75%；本次聲明改動 1 處。</span><span class="home-module-toggle">查看</span></summary><div class="home-module-body"><div class="home-module-stats"><div><span>政策利率</span><b>3.50–3.75%</b></div><div><span>客觀訊號</span><b>+6.00</b></div><div><span>聲明改動</span><b>1 處</b></div><div><span>會議日期</span><b>2026-07-29</b></div></div><a class="home-inline-link" href="/fomc/">前往完整分析 →</a></div></details><details class="home-module"><summary><span class="home-module-name">財政與長端</span><span class="home-status neutral">中性</span><span class="home-module-summary">10 年期 4.70%、30 年期 5.24%；供給壓力中性。</span><span class="home-module-toggle">查看</span></summary><div class="home-module-body"><div class="home-module-stats"><div><span>10 年期</span><b>4.70%</b></div><div><span>30 年期</span><b>5.24%</b></div><div><span>期限溢酬</span><b>0.83%</b></div><div><span>資料截止</span><b>2026-08-11</b></div></div><a class="home-inline-link" href="/rates/">前往完整分析 →</a></div></details></div>
+  </section>
 
-<div class="grid">
-  <div class="card">
-    <h3 id="changed" data-sum="尚無可比對的上期">跟上期比，什麼變了</h3>
-    <div class="chg"><div class="chead">這是第一次執行，還沒有可以比對的上期資料。</div><div class="v-count" style="border-top:none;padding-top:8px">下次有新資料時，這裡會列出情境移動、訊號的增減與關鍵數字的變化。</div></div>
-  </div>
-</div>
+  <section class="home-zone" aria-labelledby="home-changes">
+    <div class="home-zone-head"><div><span class="home-zone-num">04</span>
+      <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
+    <div class="home-change-list"><div class="home-empty">尚無可比對的上期資料；下一次更新後會顯示本期差異。</div></div>
+  </section>
 
-<div class="grid g4"><a class="modcard" href="/labor/">
-  <div class="m-top"><span class="m-name">勞動市場</span>
-    <span class="m-when">2026-07 資料</span></div>
-  <div class="m-value">-2.3 萬人<span class="m-dir dovish">利降息</span></div>
-  <div class="m-note">失業率 4.1%</div>
-  <div class="m-more">看修正追蹤、行業增減與健康檢查 →</div>
-</a><a class="modcard" href="/inflation/">
-  <div class="m-top"><span class="m-name">通膨</span>
-    <span class="m-when">2026-07 資料</span></div>
-  <div class="m-value">2.5%<span class="m-dir neutral">方向不明</span></div>
-  <div class="m-note">核心 PCE 3.3%</div>
-  <div class="m-more">看分項貢獻、住房落後與能源傳導 →</div>
-</a><a class="modcard" href="/fomc/">
-  <div class="m-top"><span class="m-name">聯準會文本</span>
-    <span class="m-when">2026-07-29 聲明</span></div>
-  <div class="m-value">+6.00<span class="m-dir hawkish">利升息</span></div>
-  <div class="m-note">本次 1 處改動</div>
-  <div class="m-more">看聲明逐句比對與目前重心 →</div>
-</a><a class="modcard" href="/rates/">
-  <div class="m-top"><span class="m-name">長端與債務</span>
-    <span class="m-when">2026-08-11 資料</span></div>
-  <div class="m-value">5.24%<span class="m-dir neutral">中性</span></div>
-  <div class="m-note">30 年期　·　供給壓力中性</div>
-  <div class="m-more">看曲線拆解、債務動態與科技巨頭發債 →</div>
-</a></div>
+  <section class="home-zone home-data-status" aria-labelledby="home-data">
+    <div class="home-zone-head"><div><span class="home-zone-num">05</span>
+      <h2 id="home-data">資料狀態</h2></div></div>
+    <div><b>自動更新</b><span>就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-11</span></div>
+    <p>情勢摘要最多 500 字；九宮格、數字與方向不由 AI 決定。</p>
+  </section>
+</main>
 
-<div class="grid">
-  <div class="card">
-    <h3 id="signals" data-open="1" data-sum="7 項　·　前兩月大幅下修，實質動能弱於初值">本期關鍵訊號</h3>
-    <p class="hint">來自就業與物價兩個模組的規則引擎，共 7 條：5 條利降息、1 條利升息、1 條中性。依嚴重度排序。</p>
-    <div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">前兩月大幅下修，實質動能弱於初值<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業動能比初值顯示的更弱</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">近三月年化低於年增率 0.4 個百分點以上<span class="f-tag">物價</span></div><div class="impact dovish">利降息　通膨降溫的證據</div></div></div><div class="flag alert"><span class="f-icon">■</span><div><div class="f-head">核心 PCE 顯著高於目標<span class="f-tag">物價</span></div><div class="impact hawkish">利升息　通膨仍是降息的阻力</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">初值近一年呈系統性下修<span class="f-tag">就業</span></div><div class="impact dovish">利降息　初值應打折看待</div></div></div><div class="flag watch"><span class="f-icon">▲</span><div><div class="f-head">住房落後項推升整體讀數<span class="f-tag">物價</span></div><div class="impact dovish">利降息　實際通膨比表面低</div></div></div><div class="flag info"><span class="f-icon">●</span><div><div class="f-head">失業率下降源於勞動力退出，而非就業增加<span class="f-tag">就業</span></div><div class="impact dovish">利降息　就業市場實際在轉弱</div></div></div><div class="src">另有 1 項，見<a href="/labor/">勞動市場</a>與<a href="/inflation/">通膨</a>頁</div>
-  </div>
-</div>
-
-<div class="grid">
-  <div class="card">
-    <h3 id="watch" data-sum="通膨轉「低」：還差 0.52 個百分點　·　最近一次發布 22 天後">接下來要盯什麼</h3>
-    <p class="hint" style="margin:0 0 12px">情境要換一格，還差多少。　標「關鍵」的那一軸才是目前的約束條件。</p><div class="wt"><div class="wt-k">通膨轉「低」<span class="tbind">關鍵</span></div><div class="wt-v">還差 0.52 個百分點</div><div class="wt-n">目前 核心 PCE 年增 2.77%　·　需低於 2.25%</div></div>
-    <h3 style="margin-top:20px">下次更新</h3>
-    <div class="cds"><div class="cd"><div class="cd-k">下次就業報告</div><div class="cd-d">22 天後</div><div class="cd-n">2026-09-04　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 CPI</div><div class="cd-d">29 天後</div><div class="cd-n">2026-09-11　·　取自 FRED 的官方發布行事曆，非推估</div></div><div class="cd"><div class="cd-k">下次 FOMC 會議</div><div class="cd-d">34 天後</div><div class="cd-n">2026-09-16　·　取自聯準會官方行事曆，非推估</div></div></div>
-  </div>
-</div>
-</div></details></div></div>
-
-<footer>資料月份：<span class="nb">2026-07</span>（就業）　·　<span class="nb">2026-07</span>（物價）　·　<span class="nb">2026-07-29</span>（聲明）。每天自動重新產生。<br>資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。所有量化判定由固定規則產生，每次執行結果一致。<br>本站僅為數據整理，不構成投資建議。</footer>
+<footer><div class="home-footer"><div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span><span>就業 <span class="nb">2026-07</span>｜物價 <span class="nb">2026-07</span>｜FOMC <span class="nb">2026-07-29</span></span></div><div><b>使用說明</b><span>本網站提供總體資料整理與情境判讀，不構成投資建議。</span><span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div></div></footer>
 
 </div>
 <div id="tip"></div>
 <script>
 (function(){
-  // 手機上預設收合標記為 data-m-collapse 的區塊，把首屏壓短
+  // 手機只常駐主卡結論；下方主題全部先收合，避免進頁就落入長內容。
   if(window.innerWidth < 760){
-    document.querySelectorAll('details[data-m-collapse]').forEach(function(d){
+    document.querySelectorAll('details[data-m-collapse], details.card.sect').forEach(function(d){
       d.removeAttribute('open');
     });
   }

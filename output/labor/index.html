@@ -1231,6 +1231,237 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .sbadge2.inline{background:var(--surface-2);color:var(--muted)}
 .sbox .szn{font-size:11px;color:var(--muted);margin-top:5px;
   font-variant-numeric:tabular-nums}
+/* ---------- 總覽頁 v2：五區、單層收合 ---------- */
+.home-dashboard{margin-top:14px}
+.home-hero{position:relative;overflow:hidden;background:var(--surface-1);
+  border:1px solid var(--border);border-top:4px solid var(--series-1);
+  border-radius:16px;padding:20px 17px;box-shadow:var(--shadow)}
+.home-hero.hawkish{border-top-color:var(--series-2)}
+.home-hero.dovish{border-top-color:var(--series-1)}
+.home-hero-top{display:flex;flex-direction:column;gap:14px}
+.home-kicker,.home-zone-num{font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted)}
+.home-hero h2{font-size:29px;line-height:1.18;letter-spacing:-.025em;margin:5px 0 0}
+.home-verdict{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-radius:10px;padding:10px 12px;background:var(--surface-2)}
+.home-verdict span{font-size:14px;font-weight:700}
+.home-verdict b{font-size:13px;color:var(--muted)}
+.home-verdict.hawkish{background:var(--tint-haw)}
+.home-verdict.dovish{background:var(--tint-dov)}
+.home-narrative{margin-top:20px;padding-top:18px;border-top:1px solid var(--grid)}
+.home-brief-label{display:flex;flex-direction:column;gap:3px;font-size:12px;
+  font-weight:800;letter-spacing:.06em;color:var(--text-secondary)}
+.home-brief-label span{font-size:10.5px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.home-brief-text{max-width:47em;font-size:15px;line-height:1.9;margin:10px 0 0;
+  color:var(--text-primary)}
+.home-brief-key{max-width:47em;font-size:14px;line-height:1.7;font-weight:700;
+  margin:12px 0 0;padding-left:12px;border-left:3px solid var(--series-1)}
+.home-brief-empty{color:var(--muted);margin:8px 0 0}
+.home-brief-more{margin:6px 0 0;padding:0;border:0}
+.home-brief-more>summary{display:inline-flex;min-height:42px;align-items:center;
+  padding:8px 0;color:var(--series-1)}
+.home-brief-more>summary::after{content:" ＋"}
+.home-brief-more[open]>summary::after{content:" －"}
+.home-brief-more p{max-width:47em;font-size:15px;line-height:1.9;margin:2px 0 0}
+.home-status-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  margin-top:18px;border:1px solid var(--grid);border-radius:11px;overflow:hidden}
+.home-status-rail>div{min-width:0;padding:10px 11px;background:var(--surface-2);
+  border-right:1px solid var(--grid);border-bottom:1px solid var(--grid)}
+.home-status-rail>div:nth-child(2n){border-right:0}
+.home-status-rail>div:nth-last-child(-n+2){border-bottom:0}
+.home-status-rail span{display:block;font-size:10.5px;color:var(--muted)}
+.home-status-rail b{display:block;margin-top:2px;font-size:13.5px;white-space:nowrap}
+
+.home-zone{margin-top:16px;padding:19px 17px;background:var(--surface-1);
+  border:1px solid var(--border);border-radius:14px}
+.home-zone-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  margin-bottom:15px}
+.home-zone-head>div{min-width:0}
+.home-zone-head h2{font-size:18px;line-height:1.25;margin:3px 0 0}
+.home-zone-head p{font-size:11.5px;color:var(--muted);margin:3px 0 0;text-align:right}
+.home-primary-link,.home-inline-link{display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;color:var(--series-1);font-size:13px;font-weight:700;text-decoration:none}
+.home-primary-link{flex-shrink:0;margin-top:-6px}
+
+.home-transition{background:var(--surface-2)}
+.home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.home-cell-now,.home-cell-next{padding:13px 14px;border-radius:10px;
+  background:var(--surface-1);border:1px solid var(--border)}
+.home-cell-now>span,.home-cell-next>span{display:block;font-size:10.5px;color:var(--muted)}
+.home-cell-now b,.home-cell-next b{display:block;font-size:17px;line-height:1.35;margin-top:3px}
+.home-cell-now small,.home-cell-next small{display:block;font-size:11.5px;color:var(--muted);margin-top:4px}
+.home-cell-now{border-left:3px solid var(--series-1)}
+.home-cell-next{border-left:3px solid var(--warning)}
+.home-transition-arrow{display:none}
+.home-trigger-detail{display:flex;flex-wrap:wrap;gap:6px}
+.home-trigger-detail span{font-size:11.5px;padding:5px 8px;border-radius:999px;
+  background:var(--surface-1);border:1px solid var(--border);color:var(--text-secondary)}
+.home-dates{margin-top:12px;padding-top:10px;border-top:1px solid var(--grid);
+  font-size:11px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.home-module-list{border-top:1px solid var(--grid)}
+details.home-module{margin:0;padding:0;border:0;border-bottom:1px solid var(--grid);
+  background:transparent}
+details.home-module[open]{padding-bottom:0}
+.home-module>summary{position:relative;display:grid;grid-template-columns:1fr auto;
+  gap:5px 10px;align-items:center;min-height:76px;padding:13px 34px 13px 2px;color:var(--text-primary)}
+.home-module>summary::after{content:"＋";position:absolute;right:3px;top:19px;
+  color:var(--muted);font-size:17px;font-weight:400}
+.home-module[open]>summary::after{content:"－"}
+.home-module-name{font-size:15px;font-weight:800}
+.home-status{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;
+  background:var(--surface-2);white-space:nowrap}
+.home-status.hawkish{color:var(--serious);background:var(--tint-haw)}
+.home-status.dovish{color:var(--series-1);background:var(--tint-dov)}
+.home-module-summary{grid-column:1/-1;font-size:12.5px;font-weight:400;
+  line-height:1.55;color:var(--text-secondary)}
+.home-module-toggle{display:none}
+.home-module-body{padding:0 2px 14px}
+.home-module-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;padding:11px;border-radius:10px;background:var(--surface-2)}
+.home-module-stats>div{min-width:0}
+.home-module-stats span{display:block;font-size:10.5px;color:var(--muted)}
+.home-module-stats b{display:block;margin-top:2px;font-size:14px;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.home-inline-link{margin-top:4px}
+
+.home-change-list{display:grid;gap:0;border-top:1px solid var(--grid)}
+.home-change{display:grid;grid-template-columns:8px minmax(0,1fr);gap:0 10px;
+  padding:13px 2px;border-bottom:1px solid var(--grid)}
+.home-change-dot{width:7px;height:7px;border-radius:50%;margin-top:8px;background:var(--muted-bar)}
+.home-change-dot.hawkish{background:var(--series-2)}
+.home-change-dot.dovish{background:var(--series-1)}
+.home-change>div{display:flex;flex-direction:column;min-width:0}
+.home-change b{font-size:13.5px}
+.home-change span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.home-change p{grid-column:2;font-size:12.5px;line-height:1.5;color:var(--text-secondary);margin:5px 0 0}
+.home-empty{padding:20px 2px;color:var(--muted);font-size:13px}
+
+.home-data-status{display:grid;grid-template-columns:1fr;gap:8px;background:transparent;
+  border-style:dashed;box-shadow:none}
+.home-data-status .home-zone-head{margin:0}
+.home-data-status>div:not(.home-zone-head){display:flex;gap:9px;align-items:center}
+.home-data-status>div:not(.home-zone-head) b{font-size:12px;color:var(--good)}
+.home-data-status>div:not(.home-zone-head) span{font-size:12px;color:var(--muted)}
+.home-data-status>p{font-size:12px;color:var(--muted);margin:0}
+
+.home-footer{display:grid;grid-template-columns:1fr;gap:16px;padding-top:18px;
+  border-top:1px solid var(--baseline)}
+.home-footer>div{display:flex;flex-direction:column;gap:3px}
+.home-footer b{font-size:12px;color:var(--text-secondary)}
+.home-footer span{font-size:11.5px;line-height:1.65;color:var(--muted)}
+.home-footer a{color:var(--series-1);text-decoration:none}
+
+@media(min-width:760px){
+  .home-dashboard{margin-top:18px}
+  .home-hero{padding:27px 29px}
+  .home-hero-top{flex-direction:row;align-items:flex-start;justify-content:space-between}
+  .home-hero h2{font-size:36px}
+  .home-verdict{min-width:230px}
+  .home-narrative{margin-top:24px;padding-top:21px}
+  .home-brief-label{flex-direction:row;align-items:baseline;gap:10px}
+  .home-brief-text,.home-brief-more p{font-size:15.5px}
+  .home-status-rail{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .home-status-rail>div{padding:12px 14px;border-bottom:0}
+  .home-status-rail>div:nth-child(2n){border-right:1px solid var(--grid)}
+  .home-status-rail>div:last-child{border-right:0}
+  .home-status-rail b{font-size:14px}
+  .home-zone{margin-top:18px;padding:22px 25px}
+  .home-zone-head{align-items:center}
+  .home-zone-head h2{font-size:20px}
+  .home-transition-grid{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);
+    align-items:stretch}
+  .home-transition-arrow{display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:19px}
+  .home-trigger-detail{grid-column:3}
+  .home-cell-now,.home-cell-next{padding:15px 17px}
+  .home-cell-now b,.home-cell-next b{font-size:19px}
+  .home-module>summary{grid-template-columns:110px 105px minmax(0,1fr) 44px;
+    gap:14px;min-height:68px;padding:12px 2px}
+  .home-module>summary::after{display:none}
+  .home-module-summary{grid-column:auto;font-size:13px}
+  .home-module-toggle{display:block;text-align:right;font-size:12px;color:var(--series-1)}
+  .home-module-stats{grid-template-columns:repeat(4,minmax(0,1fr));padding:13px 15px}
+  .home-change{grid-template-columns:8px minmax(180px,.75fr) minmax(0,1fr);
+    align-items:start;column-gap:12px}
+  .home-change p{grid-column:3;margin:0;font-size:13px}
+  .home-data-status{grid-template-columns:auto auto minmax(0,1fr);align-items:center}
+  .home-data-status .home-zone-head{min-width:150px}
+  .home-footer{grid-template-columns:1.15fr .85fr;gap:40px}
+}
+@media(max-width:430px){
+  .home-zone-head{flex-direction:column;gap:7px}
+  .home-zone-head p{text-align:left;margin:0}
+  .home-primary-link{margin:0}
+  .home-hero h2{font-size:26px}
+}
+@media(max-width:759px){
+  details.home-module+details.home-module{margin-top:7px}
+}
+
+/* ---------- 內容頁 v3：主卡精簡、主題單層收合 ---------- */
+.focus-card{padding:18px 17px;border-radius:15px;border-top-width:4px}
+.focus-title{font-size:25px;line-height:1.25}
+.focus-sub{max-width:52em;line-height:1.65;margin-top:7px}
+.focus-grid{grid-template-columns:1fr;gap:0;margin-top:17px;
+  border-top:1px solid var(--grid);border-bottom:1px solid var(--grid)}
+.focus-metric{display:grid;grid-template-columns:minmax(94px,.7fr) minmax(0,1fr);
+  gap:2px 12px;align-items:start;padding:11px 4px;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid);background:transparent}
+.focus-metric:last-child{border-bottom:0}
+.focus-metric>span{grid-column:1;grid-row:1/3;padding-top:2px}
+.focus-metric>b{grid-column:2;font-size:17px;overflow-wrap:anywhere}
+.focus-metric>small{grid-column:2;line-height:1.45}
+.focus-metric.hawkish,.focus-metric.dovish,.focus-metric.watch{border-left:0}
+.focus-metric.hawkish{box-shadow:inset 3px 0 0 var(--critical)}
+.focus-metric.dovish{box-shadow:inset 3px 0 0 var(--good)}
+.focus-metric.watch{box-shadow:inset 3px 0 0 var(--warning)}
+
+.focus-evidence{margin:14px 0 0;padding:0;border-top:1px solid var(--grid)}
+.focus-evidence>summary{display:flex;align-items:center;min-height:44px;padding:9px 0;
+  font-size:12.5px;color:var(--series-1)}
+.focus-evidence>summary::after{content:" ＋";margin-left:3px}
+.focus-evidence[open]>summary::after{content:" －"}
+.focus-evidence-body{padding:0 0 5px}
+.focus-evidence .logic-strip{margin-top:0;gap:0}
+.focus-evidence .logic-step{padding:10px 2px;border:0;border-radius:0;
+  border-bottom:1px solid var(--grid);background:transparent}
+.focus-evidence .logic-step:last-child{border-bottom:0}
+.focus-evidence .grid-flow{margin-top:0}
+.focus-evidence .flow-box{background:var(--surface-2);box-shadow:none}
+
+.focus-card .data-line{margin-top:10px;padding-top:9px;border-top:1px solid var(--grid);
+  gap:3px 12px}
+.focus-card .data-tag{padding:2px 0;border:0;border-radius:0;background:transparent;
+  color:var(--muted)}
+.focus-card .data-tag[href]{min-height:40px}
+
+/* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+.legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
+.legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
+.sect-body .card{box-shadow:none}
+.sect-body .legacy-detail .card{border:0;background:transparent;padding-left:0;padding-right:0}
+.sect-tools{margin-top:14px}
+
+@media(min-width:760px){
+  .focus-card{padding:25px 27px}
+  .focus-title{font-size:29px}
+  .focus-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .focus-metric{display:flex;flex-direction:column;gap:3px;padding:12px 15px;
+    border-bottom:0;border-right:1px solid var(--grid)}
+  .focus-metric:last-child{border-right:0}
+  .focus-metric>span,.focus-metric>b,.focus-metric>small{display:block}
+  .focus-metric>b{font-size:19px}
+  .focus-evidence .logic-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .focus-evidence .logic-step{padding:11px 14px;border-bottom:0;border-right:1px solid var(--grid)}
+  .focus-evidence .logic-step:last-child{border-right:0}
+}
+@media(max-width:759px){
+  .focus-card+.sect-tools{margin-top:10px}
+  details.card.sect+details.card.sect{margin-top:9px}
+  .sect>summary{padding:14px 14px;min-height:64px}
+  .sect-body{padding:0 14px 16px}
+}
 </style>
 </head>
 <body>
@@ -1238,38 +1469,18 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">勞動市場</a></h1>
-  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-13 18:19（台北）</div>
+  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-13 19:18（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/" class="on">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
+<div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#unrate">失業率變動分解</a><a href="#breakeven">損益兩平就業增速</a><a href="#claims">每週失業金申請</a><a href="#industry">行業別貢獻分解</a><a href="#revision">歷史數據修正</a><a href="#lights">關鍵指標檢核</a><a href="#score">綜合強弱指數</a></nav></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div><h2 class="focus-title">就業中性，動能轉弱</h2><p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p><div class="focus-grid"><div class="focus-metric dovish"><span>就業格位</span><b>中</b><small>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</small></div><div class="focus-metric dovish"><span>移動方向</span><b>轉弱</b><small>不直接改變當前格位</small></div><div class="focus-metric neutral"><span>非農就業｜最新</span><b>-2.3 萬人</b><small>近三個月平均 +2.0 萬人　·　近一年平均 +2.6 萬人</small></div><div class="focus-metric neutral"><span>失業率 U-3</span><b>4.1%</b><small>較上月 -0.1 個百分點　·　含低度就業 7.9%</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</span></div><div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：-7.8 萬人；低於即轉弱。</span></div><div class="logic-step"><b>下一格觸發</b><span>失業率高於 4.3% 轉弱（距離 0.2pp）</span></div></div></div></details><div class="data-line"><span class="data-tag">就業報告 2026-07</span><span class="data-tag">初領失業金 2026-07-25</span><span class="data-tag">JOLTS 2026-06</span></div></div></div>
 
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div><h2 class="focus-title">就業水準中，動能轉弱</h2><p class="focus-sub">格位只看失業率相對 FOMC 長期區間；非農、損益兩平、失業金與 JOLTS 用來判斷移動方向。</p><div class="focus-grid"><div class="focus-metric dovish"><span>就業格位</span><b>中</b><small>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</small></div><div class="focus-metric dovish"><span>移動方向</span><b>轉弱</b><small>不直接改變當前格位</small></div><div class="focus-metric neutral"><span>非農就業｜最新</span><b>-2.3 萬人</b><small>近三個月平均 +2.0 萬人　·　近一年平均 +2.6 萬人</small></div><div class="focus-metric neutral"><span>失業率 U-3</span><b>4.1%</b><small>較上月 -0.1 個百分點　·　含低度就業 7.9%</small></div></div><div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</span></div><div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：-7.8 萬人；低於即轉弱。</span></div><div class="logic-step"><b>下一格觸發</b><span>失業率高於 4.3% 轉弱（距離 0.2pp）</span></div></div><div class="data-line"><span class="data-tag">就業報告 2026-07</span><span class="data-tag">初領失業金 2026-07-25</span><span class="data-tag">JOLTS 2026-06</span></div></div></div><div class="grid"><div class="card deep-dive"><h2 id="details" data-sum="數據拆解、圖表、方法與資料來源">完整就業拆解</h2><p class="hint">首卡只放決策需要的重點；全部細項仍保留在這裡。</p><details class="full-detail" data-m-collapse><summary>展開完整內容</summary><div class="full-detail-body">
-<div class="verdict dovish">
-  <div class="v-eyebrow">2026-07 就業報告　·　一句話結論</div>
-  <div class="v-main">就業面：利降息</div>
-  <div class="v-why">最主要的訊號是：前兩月大幅下修，實質動能弱於初值。轉弱訊號多於轉強。勞動市場走軟提高聯準會降息的正當性，對債券價格偏正面，但同時代表經濟動能流失。</div>
-  <div class="sax compact">
-  <div class="sax-head">
-    <span class="sax-label">綜合強弱指數</span>
-    <span class="sax-val" style="color:var(--critical)">-0.33</span>
-    <span class="sax-delta">　·　較上月 +0.24</span>
-  </div>
-  <div class="score-bar">
-    <i style="left:43.40364272429614%;width:6.596357275703859%;background:var(--critical)"></i>
-    <span class="score-mid"></span>
-  </div>
-  <div class="sax-scale"><span>−2.5 疲弱</span><span>0 持平</span><span>+2.5 強勁</span></div>
-</div>
-  <div class="v-count">
-    本次共 4 項訊號：3 項利降息、0 項利升息、1 項中性。
-    上面那句講的是<b>本期變化的方向</b>。就業的<b>強弱水準</b>（落在九宮格哪一列）與跟通膨合併之後的結論，見<a href="/scenario/#grid">情境合成</a>頁——水準弱但本期方向不明，兩者可以同時成立。
-  </div>
-</div>
 
+<div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <div class="card">
-    <h3 id="signals" data-open="1" data-sum="4 項　·　前兩月大幅下修，實質動能弱於初值">本期關鍵訊號</h3>
+  <details class="card sect" open><summary><h2 id="signals">本期關鍵訊號</h2><span class="sect-sum">4 項　·　前兩月大幅下修，實質動能弱於初值</span></summary><div class="sect-body">
     <p class="hint">點「依據」看支撐的數字。</p>
     <div class="flag alert">
   <span class="f-icon">■</span>
@@ -1308,12 +1519,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
       <div class="f-detail">每月錄取的人約佔總就業的 3.4%、被裁員的約 1.1%，兩個都在低檔。對已經有工作的人來說相對安全，但正在找工作的人會非常辛苦。</div></div>
   </div>
 </div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid">
-  <div class="card">
-    <h3 id="kpi" data-sum="非農 -2.3 萬人　·　失業率 4.1%　·　時薪年增 3.2%">關鍵數字</h3>
+  <details class="card sect"><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">非農 -2.3 萬人　·　失業率 4.1%　·　時薪年增 3.2%</span></summary><div class="sect-body">
     <div class="grid g4 inner"><div class="card kpi">
   <div class="k-label">非農就業月變動<span class="asof">2026-07</span></div>
   <div class="k-value">-2.3 萬人</div>
@@ -1336,12 +1546,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   <div class="k-plain">16 歲以上的人裡，有 61.4% 在工作或正在找工作，其餘是退休、就學或已放棄找工作。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,3.0 9.7,5.3 16.4,5.3 23.1,3.0 29.8,7.7 36.5,10.0 43.2,12.3 49.9,10.0 56.6,5.3 63.4,5.3 70.1,7.7 76.8,14.7 83.5,17.0 90.2,19.3 96.9,21.7 103.6,21.7 110.3,28.7 117.0,31.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="31.0" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">61.9</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">61.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">61.8</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">61.5</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">61.4</div><div class="mdate">7月</div></div></div></div>
 </div></div>
     <div class="kpi-foot warn"><b>＊預期值目前來自時間序列模型，不是市場共識。</b>它回答的是「若照歷史規律外推應該是多少」，算出來的意外值是相對歷史規律的意外，不是相對市場定價的意外，兩者的交易意涵不同。</div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid g2">
-  <div class="card">
-    <h3 id="unrate" data-sum="失業率 -0.10 個百分點　·　勞動力退出所致">失業率變動分解</h3>
+  <details class="card sect"><summary><h2 id="unrate">失業率變動分解</h2><span class="sect-sum">失業率 -0.10 個百分點　·　勞動力退出所致</span></summary><div class="sect-body">
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
     <div class="dsum">
   <div class="dsum-main" style="color:var(--critical)">勞動力退出所致</div>
@@ -1399,10 +1608,9 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
     重點看的是<b>變化</b>不是水準——永久性失業長期就是最大的一塊，
     「它佔四成」不是訊息，「它是今年增加最多的一塊」才是。</p>
 </div>
-  </div>
+  </div></details>
 
-  <div class="card">
-    <h3 id="breakeven" data-sum="缺口 -7.8 萬人　·　低於損益兩平">損益兩平就業增速</h3>
+  <details class="card sect"><summary><h2 id="breakeven">損益兩平就業增速</h2><span class="sect-sum">缺口 -7.8 萬人　·　低於損益兩平</span></summary><div class="sect-body">
     <p class="hint">維持失業率不變，每個月需要新增多少工作。
       沒有這條基準線，非農的絕對數字無法解讀。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">實際：非農三個月均</div><div class="s-value" style="color:inherit">+2.0 萬人</div></div><div class="stat"><div class="s-label">需要：損益兩平</div><div class="s-value" style="color:inherit">+9.8 萬人</div><div class="s-note">維持失業率不變所需的每月就業增加</div></div></div>
@@ -1426,11 +1634,10 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
           此為推估值，非官方公布數字。</dd>
       </dl>
   </div>
-</div>
+</div></details>
 
 <div class="grid">
-  <div class="card">
-    <h3 id="claims" data-sum="初領：四週移動平均 19.9 萬人　·　續領：最新一週 180.1 萬人">每週失業金申請</h3>
+  <details class="card sect"><summary><h2 id="claims">每週失業金申請</h2><span class="sect-sum">初領：四週移動平均 19.9 萬人　·　續領：最新一週 180.1 萬人</span></summary><div class="sect-body">
     <p class="hint">這一頁唯一的週頻資料，資料截至 2026-08-01。
       就業報告一個月才出一次、JOLTS 還要再落後一到兩個月——
       兩次就業報告之間，只有這一條會更新。</p>
@@ -1455,12 +1662,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
         持續期間不會——兩條一起往上，再就業變難才算被獨立確認。
       </div>
     </div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid">
-  <div class="card">
-    <h3 id="industry" data-sum="全體合計 -2.3 萬人　·　扣掉醫療與政府 +0.7 萬人">行業別貢獻分解</h3>
+  <details class="card sect"><summary><h2 id="industry">行業別貢獻分解</h2><span class="sect-sum">全體合計 -2.3 萬人　·　扣掉醫療與政府 +0.7 萬人</span></summary><div class="sect-body">
     <p class="hint">增減最大的各五個行業，加上任何「相對自己過去表現異常」的行業。
       灰色是醫療、社福與各級政府，用人較不受景氣影響。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">全體合計</div><div class="s-value" style="color:inherit">-2.3 萬人</div></div><div class="stat"><div class="s-label">扣掉醫療與政府</div><div class="s-value" style="color:var(--good)">+0.7 萬人</div><div class="s-note">跟景氣連動的部分</div></div><div class="stat"><div class="s-label">有增加人力的行業</div><div class="s-value" style="color:inherit">11 / 17 個</div><div class="s-note">佔 65%</div></div><div class="stat"><div class="s-label">其中：地方政府教育</div><div class="s-value" style="color:var(--warning)">-5.0 萬人</div><div class="s-note">學期結束的季節性因素，不一定代表真的裁員</div></div></div>
@@ -1485,12 +1691,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
         「自身變動幅度」＝該行業的月變動相對自己就業規模的百分比，
         用來比較不同規模的行業誰動得比較劇烈。</p>
     </div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid">
-  <div class="card">
-    <h3 id="revision" data-sum="前兩月合計修正 -10.3 萬人">歷史數據修正</h3>
+  <details class="card sect"><summary><h2 id="revision">歷史數據修正</h2><span class="sect-sum">前兩月合計修正 -10.3 萬人</span></summary><div class="sect-body">
     <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
       修正幅度常常比當月的變動還大。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">前兩月合計修正</div><div class="s-value" style="color:var(--critical)">-10.3 萬人</div><div class="s-note">相對上次發布；相對初值累計 -14.6 萬人</div></div><div class="stat"><div class="s-label">近三個月平均新增</div><div class="s-value" style="color:inherit">+2.0 萬人</div><div class="s-note">若沒有這次修正，應為 +5.4 萬人</div></div><div class="stat"><div class="s-label">近一年修正傾向</div><div class="s-value" style="color:var(--warning)">-0.9 萬人/月</div><div class="s-note">初值偏樂觀，應打折看待</div></div></div>
@@ -1499,12 +1704,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
       <p class="hint" style="margin-top:10px">
         「修正」欄是相對初次公布的累計差異，與上方 BLS 口徑（相對上次發布）不同。</p>
     </div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid">
-  <div class="card">
-    <h3 id="lights" data-sum="1 項警戒、3 項留意、4 項正常">關鍵指標檢核</h3>
+  <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">1 項警戒、3 項留意、4 項正常</span></summary><div class="sect-body">
     <p class="hint">八項關鍵指標的當期狀態。</p>
     <div class="legacy-detail"><h4>八項指標</h4>
       <div class="lights" style="margin-top:12px"><div class="light good">
@@ -1557,12 +1761,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   <div class="l-desc">想要全職卻只能打零工、或想工作卻沒在積極找的人有多少</div>
 </div></div>
     </div>
-  </div>
+  </div></details>
 </div>
 
 <div class="grid g2">
-  <div class="card">
-    <h3 id="score" data-sum="-0.33　·　較上期 +0.24">綜合強弱指數</h3>
+  <details class="card sect"><summary><h2 id="score">綜合強弱指數</h2><span class="sect-sum">-0.33　·　較上期 +0.24</span></summary><div class="sect-body">
     <p class="hint">最上方那條分數軸的組成明細。
       把主要指標換算成同一個尺度後加權合成，正數代表比自身歷史平均強。</p>
     <div class="sax">
@@ -1592,10 +1795,9 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
       <p class="hint" style="margin:10px 0 8px">資料月份 2026-06（較就業報告落後 1 個月）</p>
       <table><thead><tr><th>指標</th><th>最新值</th><th>較上月</th></tr></thead>
       <tbody><tr><td>職缺數</td><td>735.9 萬個</td><td>-17.8 萬個</td></tr><tr><td>招聘率</td><td>3.4%</td><td>+0.10 個百分點</td></tr><tr><td>離職率 (quits)</td><td>2.0%</td><td>持平</td></tr><tr><td>裁員率</td><td>1.1%</td><td>持平</td></tr></tbody></table></div>
-  </div>
+  </div></details>
 
-  <div class="card">
-    <h3 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h3>
+  <details class="card sect"><summary><h2 id="glossary">名詞解釋</h2><span class="sect-sum">這一頁出現的專有名詞</span></summary><div class="sect-body">
         <dl class="gloss">
       <dt>非農就業人數</dt>
       <dd>美國政府向企業調查得出的就業人數，不含農業。最受市場關注的就業指標。</dd>
@@ -1617,12 +1819,12 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
       <dd>指這項數據會讓聯準會傾向升息或降息。就業轉弱通常利降息，
         就業與薪資過熱則利升息。</dd>
     </dl>
-    </div>
+    </div></details>
   </div>
 </div>
 
 
-</div></details></div></div>
+
 
 <footer>資料來源：美國勞工統計局（BLS）與勞工部（DOL），經 FRED 取得，數字為修正後的最新版本。<br>修正追蹤來源：ALFRED 官方歷史版本　·　所有判定由固定規則產生，每次執行結果一致。<br>本頁僅為數據整理，不構成投資建議。</footer>
 
@@ -1630,9 +1832,9 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 <div id="tip"></div>
 <script>
 (function(){
-  // 手機上預設收合標記為 data-m-collapse 的區塊，把首屏壓短
+  // 手機只常駐主卡結論；下方主題全部先收合，避免進頁就落入長內容。
   if(window.innerWidth < 760){
-    document.querySelectorAll('details[data-m-collapse]').forEach(function(d){
+    document.querySelectorAll('details[data-m-collapse], details.card.sect').forEach(function(d){
       d.removeAttribute('open');
     });
   }
