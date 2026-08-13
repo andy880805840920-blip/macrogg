@@ -80,6 +80,10 @@ def series_ids(cfg: dict, groups: tuple[str, ...]) -> tuple[list, dict, dict]:
         for item in cfg.get(g) or []:
             if item.get("enabled") is False:
                 continue
+            # 推導序列（例如核心服務除住房）不在 FRED 上，去抓只會多一筆
+            # 失敗紀錄。它仍然留在 meta 裡供貢獻分解使用，值由 build 算出來。
+            if item.get("derived"):
+                continue
             ids.append(item["id"])
             labels[item["id"]] = item.get("label", item["id"])
             inverts[item["id"]] = bool(item.get("invert"))

@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import logging
 
 from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
@@ -22,7 +23,81 @@ from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
 
 # 全站圖表的顯示起點。資料本身可能抓得更早（統計量需要），
 # 但畫出來的一律從這裡開始，讓所有圖表的時間軸一致。
+log = logging.getLogger(__name__)
+
 CHART_START = "2025-01-01"
+
+# 分項貢獻加總與實際 CPI 漲幅容許差多少（個百分點）才算「對得上」。
+#
+# 不能設 0：權重是四捨五入到小數一位的相對重要性，分項與總數又各自季調，
+# 天生就對不到完全相等。設 0.03 是因為畫面顯示到小數兩位——差到第二位
+# 看得出來時才值得講，再小的差額講了只會變成每期都在的雜訊。
+RECON_TOLERANCE = 0.03
+
+
+# ---------------------------------------------------------------------------
+# 「上一期」的重算工具
+#
+# 都長成「把序列的最後一筆砍掉，再用完全相同的函式算一次」。
+# 重點在**同一條程式路徑**：只要跟本期共用同一個函式，口徑就一定一致，
+# 不會出現「本期用新演算法、上期用舊演算法」那種假變動。
+# ---------------------------------------------------------------------------
+def _kpi_leans(level: float | None, target: float | None,
+               cur: float | None, prev: float | None,
+               up_is: str = "hawkish", band: float = 0.05,
+               level_word: tuple[str, str, str] = ("高於目標", "接近目標",
+                                                   "低於目標")) -> list:
+    """
+    一張 KPI 卡的兩個鷹鴿標籤：**水準**一個、**本期變化**一個。
+
+    為什麼一定要分開：同一張卡可以同時是「仍高於目標」（利升息）與
+    「本期在降」（利降息），兩件事都成立。擠進一個標籤就得二選一，
+    而選哪一個都會讓另一半的資訊消失——讀者看到「利降息」會以為已經沒事，
+    看到「利升息」又看不出正在改善。
+
+    `band` 是變化的雜訊門檻：小於它一律當持平，不標方向。月度資料本來
+    就有這個量級的雜訊，標了只是每期在紅綠之間跳。
+    """
+    out = []
+    if level is not None and target is not None:
+        gap = level - target
+        if abs(gap) <= 0.25:
+            out.append((f"水準：{level_word[1]}", "neutral"))
+        elif gap > 0:
+            out.append((f"水準：{level_word[0]}",
+                        up_is if up_is else "hawkish"))
+        else:
+            out.append((f"水準：{level_word[2]}",
+                        _invert_lean(up_is)))
+    if cur is not None and prev is not None:
+        d = cur - prev
+        if abs(d) < band:
+            out.append(("本期：持平", "neutral"))
+        else:
+            word = "上升" if d > 0 else "下降"
+            kind = up_is if d > 0 else _invert_lean(up_is)
+            out.append((f"本期：{word} {abs(d):.2f}", kind))
+    return out
+
+
+def _invert_lean(k: str) -> str:
+    return {"hawkish": "dovish", "dovish": "hawkish"}.get(k, "neutral")
+
+
+def _prev_yoy(series: dict, sid: str):
+    rows = series.get(sid) or []
+    return yoy(rows[:-1]) if len(rows) > 13 else None
+
+
+def _prev_yoy_nsa(series: dict, nsa_id: str, sa_id: str):
+    """年增率優先用未季調，抓不到才退季調——跟本期的 _yoy_nsa 同一套規則。"""
+    v = _prev_yoy(series, nsa_id)
+    return v if v is not None else _prev_yoy(series, sa_id)
+
+
+def _prev_ann(series: dict, sid: str, months: int):
+    rows = series.get(sid) or []
+    return annualized(rows[:-1], months) if len(rows) > months + 1 else None
 
 
 # Sahm 法則的觸發門檻。出自 Claudia Sahm 的原始論文（失業率三月移動平均
@@ -122,6 +197,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     nfp_now = value_at(nfp_changes, 0)
     ma3 = moving_avg(nfp_changes, 3)
     ma12 = moving_avg(nfp_changes, 12)
+    # 上一期的同一個數字，用同一個函式再算一次（見 key_metrics_prev）
+    _nfp_prev = value_at(nfp_changes, 1)
+    _ma3_prev = moving_avg(nfp_changes[:-1], 3) if len(nfp_changes) > 3 else None
     u3 = series.get("UNRATE", [])
     lfpr = series.get("CIVPART", [])
     ahe = series.get("CES0500000003", [])
@@ -393,26 +471,37 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         # 變高其實是偏鴿的（同樣的非農代表更弱的就業），跟核心 CPI 上升
         # 剛好相反，卻會被標成同一個顏色。
         "key_metrics": {
-            "nfp": {"label": "非農就業月變動",
+            "nfp": {"label": "非農就業月變動", "en": "Nonfarm Payrolls, m/m",
                     "value": None if nfp_now is None else nfp_now / 10,
                     "unit": "萬人", "threshold": 1, "up_is": "hawkish"},
-            "nfp_3m": {"label": "非農三個月均",
+            "nfp_3m": {"label": "非農三個月均", "en": "Payrolls, 3-mo avg",
                        "value": None if ma3 is None else ma3 / 10,
                        "unit": "萬人", "threshold": 1, "up_is": "hawkish"},
-            "u3": {"label": "失業率", "value": value_at(u3),
+            "u3": {"label": "失業率", "en": "Unemployment Rate (U-3)", "value": value_at(u3),
                    "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
                    "up_is": "dovish"},
             # 參與率上升＝勞動供給增加＝薪資壓力減輕
-            "lfpr": {"label": "勞動參與率", "value": value_at(lfpr),
+            "lfpr": {"label": "勞動參與率", "en": "Labor Force Participation", "value": value_at(lfpr),
                      "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
                      "up_is": "dovish"},
-            "ahe_yoy": {"label": "平均時薪年增", "value": ahe_yoy,
+            "ahe_yoy": {"label": "平均時薪年增", "en": "Avg Hourly Earnings, y/y", "value": ahe_yoy,
                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
                         "up_is": "hawkish"},
             # 門檻變高 → 同樣的非農代表更弱的就業 → 偏鴿
-            "breakeven": {"label": "損益兩平就業增速",
+            "breakeven": {"label": "損益兩平就業增速", "en": "Breakeven Payrolls",
                           "value": None if bkev.monthly is None else bkev.monthly / 10,
                           "unit": "萬人", "threshold": 0.5, "up_is": "dovish"},
+        },
+        # 見通膨模組同名欄位的說明：計算方法換版那一期的比較基準。
+        # 損益兩平就業增速沒放進來——它是好幾條序列合成的，重算一次要把
+        # 整個 breakeven 模組再跑一遍，成本跟收益不成比例。缺的那一項
+        # 在換版那一期不顯示變動，其餘照舊。
+        "key_metrics_prev": {
+            "nfp": {"value": None if _nfp_prev is None else _nfp_prev / 10},
+            "nfp_3m": {"value": (None if _ma3_prev is None else _ma3_prev / 10)},
+            "u3": {"value": value_at(u3, 1)},
+            "lfpr": {"value": value_at(lfpr, 1)},
+            "ahe_yoy": {"value": _prev_yoy(series, "CES0500000003")},
         },
     }
 
@@ -690,7 +779,40 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     data_month = headline[-1]["date"][:7] if headline else "—"
     provisional = bool(headline and headline[-1].get("provisional"))
 
+    # ---- 推導「核心服務除住房」----
+    # 一定要在 summarize 之前：KPI 卡、黏性連續月數、薪資傳導分析全都讀它。
+    # 推不出來時就讓它是空的——下游每一處都已經有「缺資料就不顯示」的分支，
+    # 這比塞一條口徑錯誤的序列進去安全得多（那正是先前的問題：
+    # 用含住房的核心服務去講「除掉住房還是很黏」）。
+    _sd = cfg.get("supercore_derive") or {}
+    if _sd:
+        _der = infl_an.derive_supercore(
+            series.get(_sd.get("core_services", ""), []),
+            series.get(_sd.get("shelter", ""), []),
+            float(_sd.get("core_services_weight") or 0),
+            float(_sd.get("shelter_weight") or 0))
+        if _der:
+            series["CPISUPERCORE"] = _der
+            log.info("核心服務除住房：%s 減 %s 推導出 %d 個月",
+                     _sd.get("core_services"), _sd.get("shelter"), len(_der))
+        else:
+            log.warning("核心服務除住房推導失敗——檢查 config 的 supercore_derive。"
+                        "這次的 supercore KPI 與黏性訊號會缺值。")
+
     summ = infl_an.summarize(series, comp_meta)
+
+    # ---- 核心 PCE 的即時推估 ----
+    # 九宮格的通膨軸吃這個。PCE 落後 CPI 兩週，不補的話每個月都有一段
+    # 時間九宮格用的是一個月前的世界。換算成 PCE 口徑再送，門檻才對得上。
+    _pce_nowcast = infl_an.nowcast_core_pce(
+        series.get("PCEPILFE", []),
+        series.get("CPILFENS") or series.get("CPILFESL", []))
+    if _pce_nowcast.get("estimated"):
+        log.info("核心 PCE %s 尚未公布，用 %s 的核心 CPI 推估 %.2f%%"
+                 "（近 %d 個月 CPI−PCE 平均差 %.2f 個百分點）",
+                 _pce_nowcast["asof"][:7], _pce_nowcast["source_month"][:7],
+                 _pce_nowcast["value"], infl_an.NOWCAST_GAP_MONTHS,
+                 _pce_nowcast["gap"])
 
     # ---- 意外值 ----
     # 只用手動填入的預期，不退回模型外推（見 surprise.evaluate 的 allow_model）。
@@ -820,17 +942,54 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                       "muted": True, "note": "多項加總"})
 
     agg = att.aggregates
+    _cm = {m["id"]: m for m in comp_meta}
     # 漲幅（%）與貢獻（個百分點）是兩種東西，先前四格等權並排、
     # 長得一模一樣，讀者分不出哪個是總數哪個是其中一塊。
     # 改成「總數在上、三塊分項在下、相加等於總數」的分解結構。
     _shelter = agg.get("shelter", 0) or 0
     _food_energy = agg.get("food_energy", 0) or 0
-    _rest = att.total - _shelter - _food_energy
+    # 「其他所有項目」**由下而上加**，不是拿總數倒推。
+    #
+    # 先前寫的是 `att.total - _shelter - _food_energy`，那讓這三塊**永遠**
+    # 加得回總數——因為第三塊就是差額本身。代價是對帳誤差被默默吸收掉，
+    # 而同一個畫面下方的「各類別明細」是真的由下而上算的，於是出現：
+    #     上面　其他所有項目 +0.08
+    #     下面　其他核心服務 +0.15、核心商品 −0.00
+    # 同一件事兩個數字、差 0.07，五條明細加起來 +0.19 卻寫著總漲幅 +0.12。
+    # 使用者看得到，程式看不到。
+    #
+    # **加得起來不等於算得對。** 改成由下而上之後三塊可能加不回總數，
+    # 那個差額本身就是要給人看的東西——見下面的 recon。
+    _rest = sum(c.value for c in att.contributions
+                if (_cm.get(c.key, {}).get("group") in ("core_services",
+                                                        "core_goods")
+                    and not _cm.get(c.key, {}).get("laggy")))
     infl_parts = [
         {"label": "住房", "value": _shelter, "note": "算法落後市場行情約一年"},
         {"label": "食物與能源", "value": _food_energy, "note": "波動大，核心已剔除"},
         {"label": "其他所有項目", "value": _rest, "note": "核心裡的非住房部分"},
     ]
+    # 對帳：三塊由下而上加起來，跟實際的 CPI 漲幅差多少。
+    #
+    # 這個差額**永遠不會剛好是零**（權重是四捨五入到小數一位的相對重要性、
+    # 分項與總數各自季調），所以門檻不能設 0。設 0.03 個百分點的理由是
+    # 畫面顯示到小數兩位——差到第二位看得出來的時候才值得講。
+    #
+    # 為什麼一定要顯示：這個差額就是「權重該校準了」的訊號，而權重是
+    # OPERATIONS 裡那件「一年一次、最容易忘記」的手動工作。不顯示的話，
+    # 它會一直錯下去而畫面永遠正常——先前正是如此。
+    _recon = att.total - (_shelter + _food_energy + _rest)
+    recon_note = ""
+    if abs(_recon) >= RECON_TOLERANCE:
+        recon_note = (
+            f"三塊相加是 {_shelter + _food_energy + _rest:+.2f}，"
+            f"跟實際的 {att.total:+.2f} 差 {_recon:+.2f} 個百分點。"
+            "分項貢獻用的是 BLS 相對重要性權重，權重過期或四捨五入都會讓"
+            "兩邊對不上——差距持續在 0.05 以上就該去對照 BLS 的最新權重表"
+            "（config/inflation.yaml 的 weight）。")
+        log.warning("分項貢獻對不上總漲幅：明細 %+.3f、實際 %+.3f、差 %+.3f 個"
+                    "百分點。檢查 config/inflation.yaml 的 weight 是否過期。",
+                    _shelter + _food_energy + _rest, att.total, _recon)
     att_stats = [
         # 這裡是三個月的**累計**漲幅，不是年化——attribute_cpi 走的是
         # _pct_change（cur/old − 1），沒有做 **4。標成「年化」會跟同一頁
@@ -978,6 +1137,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f}"),
             "parts": infl_parts,
             "total": att.total,
+            "parts_sum": _shelter + _food_energy + _rest,
+            "recon": _recon,
+            "recon_note": recon_note,
             "shelter_note": shelter_note,
         },
         # 離目標多遠：整個通膨頁唯一的硬錨，放進結論卡
@@ -1030,24 +1192,64 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             # 頭條 CPI 排第一。CPI 發布日新聞標題上的那個數字就是它——
             # 先前這裡只有核心，結果 CPI 出爐當天的「本次更新」講得出核心、
             # 講不出讀者真正在找的那一個。
-            "cpi_yoy": {"label": "CPI 年增", "value": summ.headline_yoy,
+            "cpi_yoy": {"label": "CPI 年增", "en": "Headline CPI, y/y", "value": summ.headline_yoy,
                         "unit": "%", "delta_unit": " 個百分點",
                         "threshold": 0.05, "up_is": "hawkish"},
-            "core_cpi_yoy": {"label": "核心 CPI 年增", "value": summ.core_yoy,
+            "core_cpi_yoy": {"label": "核心 CPI 年增", "en": "Core CPI, y/y", "value": summ.core_yoy,
                              "unit": "%", "delta_unit": " 個百分點",
                              "threshold": 0.05, "up_is": "hawkish"},
-            "core_cpi_3m": {"label": "核心 CPI 三月年化", "value": summ.core_3m,
+            "core_cpi_3m": {"label": "核心 CPI 三月年化", "en": "Core CPI, 3-mo ann.", "value": summ.core_3m,
                             "unit": "%", "delta_unit": " 個百分點",
                             "threshold": 0.1, "up_is": "hawkish"},
-            "core_pce": {"label": "核心 PCE 年增", "value": summ.pce_core_yoy,
+            "core_pce": {"label": "核心 PCE 年增", "en": "Core PCE, y/y", "value": summ.pce_core_yoy,
                          "unit": "%", "delta_unit": " 個百分點",
                          "threshold": 0.05, "up_is": "hawkish"},
-            "supercore": {"label": "核心服務除住房", "value": summ.supercore_3m,
+            "supercore": {"label": "核心服務除住房", "en": "Supercore (core svcs ex-shelter), 3-mo ann.", "value": summ.supercore_3m,
                           "unit": "%", "delta_unit": " 個百分點",
                           "threshold": 0.1, "up_is": "hawkish"},
-            "exp5y5y": {"label": "長期通膨預期", "value": summ.expect_5y5y,
+            "exp5y5y": {"label": "長期通膨預期", "en": "5y5y Inflation Breakeven", "value": summ.expect_5y5y,
                         "unit": "%", "delta_unit": " 個百分點",
                         "threshold": 0.03, "up_is": "hawkish"},
+        },
+        # 用**現行程式**回頭算的上一期。只有在計算方法換版時才會被拿去當
+        # 比較基準（見 changes.METHOD_VERSION）——那一期快照裡存的是舊程式
+        # 算的值，直接相減會把口徑差異報成真實變動。
+        #
+        # 一律用「序列砍掉最後一筆再算一次」，跟本期走完全相同的程式路徑，
+        # 兩邊口徑才保證一致。
+        # KPI 卡上的鷹鴿標籤：水準一個、本期變化一個。
+        # 門檻用 2%——但要講清楚那是**核心 PCE 的**目標；CPI 沒有官方目標，
+        # 結構上又比 PCE 高 0.3 個百分點左右，所以 CPI 那兩張用 2.3 當參考線，
+        # 不然每一期都會標成「高於目標」而失去資訊。
+        # 核心 PCE 的即時推估。PCE 已經跟上時 estimated=False，畫面照舊。
+        "pce_nowcast": _pce_nowcast,
+        "kpi_lean": {
+            "headline": _kpi_leans(
+                summ.headline_yoy, 2.3, summ.headline_yoy,
+                _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL"),
+                level_word=("高於 PCE 目標對應水準", "接近目標對應水準",
+                            "低於目標對應水準")),
+            "core": _kpi_leans(
+                summ.core_yoy, 2.3, summ.core_yoy,
+                _prev_yoy_nsa(series, "CPILFENS", "CPILFESL"),
+                level_word=("高於 PCE 目標對應水準", "接近目標對應水準",
+                            "低於目標對應水準")),
+            "pce": _kpi_leans(summ.pce_core_yoy, PCE_TARGET, summ.pce_core_yoy,
+                              _prev_yoy(series, "PCEPILFE")),
+            "exp": _kpi_leans(summ.expect_5y5y, 2.3, summ.expect_5y5y,
+                              value_at(series.get("T5YIFR", []), 1),
+                              band=0.03,
+                              level_word=("偏離目標偏高", "與目標一致",
+                                          "偏離目標偏低")),
+        },
+        "key_metrics_prev": {
+            "cpi_yoy": {"value": _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL")},
+            "core_cpi_yoy": {"value": _prev_yoy_nsa(series, "CPILFENS",
+                                                    "CPILFESL")},
+            "core_cpi_3m": {"value": _prev_ann(series, "CPILFESL", 3)},
+            "core_pce": {"value": _prev_yoy(series, "PCEPILFE")},
+            "supercore": {"value": _prev_ann(series, "CPISUPERCORE", 3)},
+            "exp5y5y": {"value": value_at(series.get("T5YIFR", []), 1)},
         },
     }
 
@@ -1425,8 +1627,13 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
 
     金額以**原幣為主、美元為輔**。原幣是說明書封面上白紙黑字的那個數字，
     美元是我們用某一天的匯率換算出來的衍生值——把換算值當主角，等於讓
-    一個會隨匯率漂動的數字蓋掉一個歷史事實。畫面上兩個都給，並標出
-    匯率與匯率日期，讓人能自己重算。
+    一個會隨匯率漂動的數字蓋掉一個歷史事實。畫面上兩個都給。
+
+    美元等值一律用**該筆定價日當天**的匯率（假日往前取最近一個交易日），
+    不是今天的。發行人在定價那天就把金額鎖住了；用今天的匯率會讓一筆已經
+    完成的發行每天早上都變一個數字，而且合計拿去除季報申報值（歷史值）
+    就變成兩個口徑相除。匯率與日期不逐列重印——規則寫在頁面註腳講一次，
+    每一列都對得回去。只有匯率取自跟定價日差七天以上的日期時才單獨標。
     """
     from .analysis import fx as fxmod
 
@@ -1450,7 +1657,10 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
     for o in deals:
         if o.get("principal") is None:
             continue
-        conv = fxmod.to_usd(o["principal"], o.get("currency", ""), fx)
+        # 匯率用**這一筆的定價日**，不是今天。合計因此是「當時實際募到多少
+        # 美元」，跟下面拿來比的季報申報值同一個口徑，而且不會每天飄。
+        conv = fxmod.to_usd(o["principal"], o.get("currency", ""), fx,
+                            on=o.get("date", ""))
         if conv["usd"] is None:
             no_fx += 1
         else:
@@ -1489,11 +1699,20 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
             native = "金額待確認"
         else:
             native = fxmod.fmt_native(principal, ccy)
-            conv = fxmod.to_usd(principal, ccy, fx)
+            conv = fxmod.to_usd(principal, ccy, fx, on=o.get("date", ""))
             if ccy != "USD" and conv["usd"] is not None:
-                usd_note = (f'約 US${conv["usd"] / 1e8:,.0f} 億'
-                            f'（匯率 {conv["rate"]:.4g}'
-                            + (f"，{conv['date']}" if conv["date"] else "") + "）")
+                # 只寫金額，不寫匯率與日期。
+                #
+                # 那串「（匯率 0.7177，2026-08-07）」原本是為了讓人能自己
+                # 重算，但它**每一列重複一次**，而換成定價日匯率之後每一列
+                # 的日期還都不一樣，只會更亂。規則改成在下方註腳講一次：
+                # 「美元等值一律用該筆定價日當天的匯率換算」——規則講清楚了，
+                # 任何一列都自己對得回去，不必每列重印。
+                usd_note = f'約 US${conv["usd"] / 1e8:,.0f} 億'
+                # 例外：匯率取自跟定價日差很遠的日期（資料有缺口）。
+                # **有問題的才註記，正常的不需要**——註記的價值來自它稀有。
+                if conv.get("stale"):
+                    usd_note += f'（匯率取自 {conv["date"]}）'
 
         kind = ("預估版" if is_prelim else
                 _SEC_LABEL.get(sec_kind) if not counts else "債券發行")
@@ -1516,9 +1735,28 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
     ccy_note = "、".join(f"{c} {n} 筆" for c, n in
                         sorted(by_ccy.items(), key=lambda kv: -kv[1]))
 
+    # ---- 明細只留債券 ----
+    #
+    # 這一區回答的是**長端供給**：科技巨頭發了多少債，跟財政赤字一起
+    # 壓在殖利率曲線的長端上。股票發行、ATM 增發、循環信用額度都不進債市，
+    # 對這個問題沒有貢獻。
+    #
+    # 先前把它們也列出來（標「不計入發債」），本意是「讓你看到我看過、
+    # 而且知道我為什麼排除」。實際效果相反：七筆非債券混在十幾列裡，
+    # 「金額」欄一半寫著「不計入發債」，讀者要自己一列一列篩才找得到
+    # 真正的債券——**為了證明沒有遺漏，反而讓主線更難讀。**
+    #
+    # 所以改成：明細只留債券（含已宣布未定價的預估版——那也是要來的供給），
+    # 非債券的那幾件仍然在上方的摘要句裡交代筆數與種類。
+    # 「我看過但排除了」這件事用一句話講，不用十列。
+    bond_rows = [r for r in rows
+                 if r.get("counts") or r.get("preliminary")]
+
     return {
         "available": True,
-        "rows": rows,
+        "rows": bond_rows,
+        # 被排除的那幾件仍然要能講出「有幾件、是什麼」，摘要句靠它。
+        "excluded_n": len(rows) - len(bond_rows),
         "count": len(deals),
         "prelim_n": prelim_n,
         "other_n": other_n,
@@ -1719,9 +1957,19 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
                 "低": f'低於門檻 {b.get("low", 2.30):.2f}%'}.get(
                     sc.infl_state,
                     f'落在門檻 {b.get("low", 2.30):.2f}–{b.get("high", 2.90):.2f}% 之間')
-        _lead = (f"核心 PCE {_pct(yoy_v)} 與三月年化 {_pct(m3)} 加權後 "
+        # PCE 還沒公布、用 CPI 推估時**一定要講出來**。這個數字會決定
+        # 九宮格落在哪一格，而九宮格決定整張固定收益部位對照表——
+        # 一個影響部位的數字不能讓讀者以為它是 BEA 公布的官方值。
+        _est = "（推估）" if infl.get("pce_estimated") else ""
+        _lead = (f"核心 PCE {_pct(yoy_v)}{_est} 與三月年化 {_pct(m3)} 加權後 "
                  f"{lvl:.2f}%，{_cmp}"
                  if lvl is not None else "資料不足")
+        if infl.get("pce_estimated"):
+            _lead += ("。核心 PCE 這個月還沒公布（BEA 月底才發），"
+                      "上面那個值是用已公布的核心 CPI 換算成 PCE 口徑推估的——"
+                      "換算而不是直接代入，是因為門檻錨在 FOMC 的 PCE 預測，"
+                      "而核心 CPI 結構上比核心 PCE 高 0.3 個百分點左右。"
+                      "PCE 一公布就會換回實際值")
         out["inflation"] = {
             "state": sc.infl_state,
             "lead": _lead,
@@ -1815,8 +2063,18 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 動能項一定要用**核心 PCE** 的三月年化（不是核心 CPI 的）。
         # 兩者長期差 0.3–0.5 個百分點，混用會讓九宮格的通膨軸固定偏鷹。
         # 見 scenario.classify_inflation 的說明。
-        infl = {"core_pce_yoy": s.pce_core_yoy, "core_pce_3m": s.pce_core_3m,
+        # PCE 還沒公布時用 CPI 推估補上（見 inflation.nowcast_core_pce）。
+        #
+        # 使用者的批評：「九宮格高中低不能只用 PCE，因為 PCE 是落後指標。」
+        # 對——CPI 月中發、PCE 月底發，每個月都有兩週九宮格活在一個月前。
+        # 但也不能直接把 CPI 塞進來比：門檻錨在 SEP，而 SEP 預測的是 PCE。
+        # 所以先把 CPI **換算成 PCE 口徑**再送進原本的判定，兩邊口徑一致。
+        _nc = infl_ctx.get("pce_nowcast") or {}
+        _pce_for_grid = (_nc.get("value") if _nc.get("estimated")
+                         else s.pce_core_yoy)
+        infl = {"core_pce_yoy": _pce_for_grid, "core_pce_3m": s.pce_core_3m,
                 "bands": infl_ctx.get("bands") or {},
+                "pce_estimated": bool(_nc.get("estimated")),
                 "flags": infl_ctx["flags"]}
     fomc = None
     if fomc_ctx and not fomc_ctx.get("empty"):
@@ -1967,7 +2225,7 @@ def _surprise_block(items) -> dict:
 def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
     """薪資 → 服務業通膨的傳導。缺任一邊就回傳空區塊，畫面上會說明原因。"""
     ahe = labor_series.get("CES0500000003") or []
-    sc = infl_series.get("CUSR0000SASLE") or []
+    sc = infl_series.get("CPISUPERCORE") or []
     if not ahe or not sc:
         return {"available": False,
                 "reason": "需要同時有薪資與核心服務除住房的資料，目前缺其中一項。"}

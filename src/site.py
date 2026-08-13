@@ -304,7 +304,17 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
    26px，一頁上就有四種同字級同字重的東西完全平手——沒有主從等於沒有層級，
    讀者不知道該先看哪個。手機上把這三個降一級，讓結論那一句穩穩壓過去。 */
 @media(max-width:400px){.kpi .k-value{font-size:24px}}
+/* 英文為主、中文降成副標：對照 BLS 新聞稿與英文報導時，中文譯名對不起來。 */
+.kpi .k-label-zh{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
 .kpi .k-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+/* 鷹鴿標籤。水準與變化各一個——同一張卡可以「仍高於目標」又「本期在降」，
+   兩件事都成立，擠成一個標籤只會互相矛盾。刻意做得比 k-flag 小且不搶眼：
+   它是註記不是結論，結論在情境頁。 */
+.kpi .k-leans{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.kpi .k-lean{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;
+  background:var(--surface-2);color:var(--text-secondary);white-space:nowrap}
+.kpi .k-lean.hawkish{color:var(--critical)}
+.kpi .k-lean.dovish{color:var(--good)}
 .kpi .k-plain{font-size:13.5px;color:var(--text-primary);margin-top:11px;
   line-height:1.75;background:var(--surface-2);border-radius:9px;padding:10px 12px}
 .kpi .k-flag{font-size:12.5px;margin-top:9px;padding:5px 10px;border-radius:7px;

@@ -211,6 +211,53 @@ check("㉚ 日圓也一樣", fxmod.fmt_native(576.5e9, "JPY") == "¥5,765 億",
 
 
 # ---------------------------------------------------------------------------
+# ④b 匯率要用**定價日**當天的，不是最新的
+#
+# 使用者抓到的：一筆七月定價的加幣債，括號裡寫「匯率 0.7177，2026-08-07」。
+# 每一列的日期都一樣，因為 rates() 只留最新一筆、其餘整條丟掉。
+#
+# 錯在哪：發行人在定價那天就把金額鎖住了。用今天的匯率去標一筆已完成的
+# 發行，等於讓那個數字**每天早上都變**，而變動的原因跟債券市場無關；
+# 合計再拿去除季報申報值（歷史值），就是兩個口徑放進同一個比例。
+# ---------------------------------------------------------------------------
+HIST = {"DEXCAUS": [                      # 加幣／美元，越大代表加幣越弱
+    {"date": "2026-05-01", "value": 1.4000},
+    {"date": "2026-07-10", "value": 1.3450},   # 週五
+    # 7/11–7/12 是週末，沒有報價
+    {"date": "2026-08-07", "value": 1.3720},
+]}
+h = fxmod.rates(HIST)
+check("㉛ rates() 留下整條歷史，不是只有最後一筆",
+      len(h["CAD"]["series"]) == 3, str(len(h["CAD"]["series"])))
+
+may = fxmod.to_usd(14e9, "CAD", h, on="2026-05-20")
+aug = fxmod.to_usd(14e9, "CAD", h, on="2026-08-07")
+check("㉜ 不同定價日換出不同金額（先前每一筆都一樣）",
+      abs(may["usd"] - aug["usd"]) > 1e8,
+      f'5月 {may["usd"]/1e8:,.1f} 億、8月 {aug["usd"]/1e8:,.1f} 億')
+check("㉝ 五月那筆用的是五月的匯率", may["date"] == "2026-05-01", may["date"])
+check("㉞ 定價日碰到週末 → 往前取最近一個交易日",
+      fxmod.to_usd(14e9, "CAD", h, on="2026-07-12")["date"] == "2026-07-10")
+check("㉟ 而且不算 stale（差兩天是正常的週末）",
+      fxmod.to_usd(14e9, "CAD", h, on="2026-07-12")["stale"] is False)
+check("㊱ 差超過七天才標 stale（資料真的有缺口）",
+      fxmod.to_usd(14e9, "CAD", h, on="2026-06-15")["stale"] is True,
+      fxmod.to_usd(14e9, "CAD", h, on="2026-06-15")["date"])
+check("㊲ 定價日早於抓取起點 → 用最新的，但一定標出來",
+      fxmod.to_usd(14e9, "CAD", h, on="2024-01-01")["stale"] is True)
+check("㊳ 不給定價日就維持原行為（用最新的）",
+      fxmod.to_usd(14e9, "CAD", h)["date"] == "2026-08-07")
+check("㊴ 美元不受影響（本來就 1.0，也不該標日期）",
+      fxmod.to_usd(25e9, "USD", h, on="2026-05-20")["date"] == "")
+
+# 同一筆交易連跑兩次結果要一樣——「數字每天變」正是先前的問題
+check("㊵ 定價日固定 → 換算結果固定（不會每天飄）",
+      fxmod.to_usd(14e9, "CAD", h, on="2026-05-20")["usd"]
+      == fxmod.to_usd(14e9, "CAD", h, on="2026-05-20")["usd"])
+
+
+
+# ---------------------------------------------------------------------------
 # ⑤ 筆數：算的是交易，不是申報
 # ---------------------------------------------------------------------------
 def flt(name, day, ccy, amounts, form="424B2", prelim=False, security="bond"):
@@ -252,7 +299,62 @@ rows = sec.dedupe_deals([flt("Oracle", 5, "", [], security="equity"),
                          flt("Meta", 6, "USD", [25e9])])
 check("㉟ 股票發行不進筆數",
       [r["name"] for r in rows if r.get("counts")] == ["Meta"])
-check("㊱ 但仍然列在明細裡（可以點原文核對）", len(rows) == 2)
+check("㊱ dedupe 這一層仍然把它帶出來（分類是分類，顯示是顯示）",
+      len(rows) == 2)
+
+
+# ---------------------------------------------------------------------------
+# 明細只列債券
+#
+# 這一區問的是**長端供給**，而股票發行、ATM 增發、循環信用額度都不進債市。
+# 先前把它們也列進明細（標「不計入發債」），本意是證明「我看過也知道為什麼
+# 排除」。實際效果相反：七筆非債券混在十幾列裡、金額欄一半寫著「不計入
+# 發債」，讀者要一列一列篩才找得到真正的債券。
+#
+# 分成兩層才對：`dedupe_deals` 照樣把所有申報帶出來（分類的完整性要保留），
+# **顯示層**只留債券，被排除的用一句話交代筆數。
+# ---------------------------------------------------------------------------
+from src import build                                   # noqa: E402
+
+_mixed = sec.dedupe_deals([
+    flt("Meta", 6, "USD", [25e9]),                       # 債券
+    flt("Oracle", 5, "", [], security="equity"),         # 股票
+    flt("Alphabet", 4, "", [], security="other"),        # 貸款額度
+    flt("Microsoft", 8, "USD", [], prelim=True),         # 已宣布未定價
+])
+
+
+class _HS:
+    total_issued = 50.0
+
+
+blk = build._offerings_block(_mixed, _HS(), {})
+kinds = [r["kind"] for r in blk["rows"]]
+check("㊳ 明細只留債券（含已宣布未定價的）",
+      set(kinds) <= {"債券發行", "預估版"}, str(kinds))
+check("㊴ 股票與其他融資不出現在明細裡",
+      "股票發行" not in kinds and "其他融資" not in kinds, str(kinds))
+check("㊵ 已宣布未定價的留著——那也是要來的供給", "預估版" in kinds, str(kinds))
+check("㊶ 被排除的筆數仍然算得出來（摘要句要講）",
+      blk.get("excluded_n") == 2, str(blk.get("excluded_n")))
+check("㊷ other_n 沒有被動到（摘要句用它）",
+      blk.get("other_n") == 2, str(blk.get("other_n")))
+check("㊸ 金額合計不受影響（本來就只算債券）",
+      blk.get("show_amount") is True and "億美元" in blk.get("total_display", ""),
+      blk.get("total_display", ""))
+# 顯示層：美元等值只寫金額，匯率與日期規則寫在註腳講一次
+# 第三個參數是**原始 FRED 序列**，不是 rates() 的輸出
+_blk_fx = build._offerings_block(
+    sec.dedupe_deals([flt("Amazon", 11, "CAD", [14e9])]), _HS(), HIST)
+_note = _blk_fx["rows"][0]["usd_note"]
+check("㊺ 美元等值只寫金額，不重印匯率與日期",
+      _note.startswith("約 US$") and "匯率" not in _note, _note)
+check("㊻ 換算走的是定價日的匯率（8/11 的債用 8/07 最近一個交易日）",
+      "約 US$102 億" == _note, _note)
+
+check("㊹ 明細裡不再有「不計入發債」這種佔位字串",
+      all(r["amount"] != "不計入發債" for r in blk["rows"]),
+      str([r["amount"] for r in blk["rows"]]))
 
 # 孤兒預估版：列出但不計數
 rows = sec.dedupe_deals([flt("Microsoft", 8, "USD", [], prelim=True)])

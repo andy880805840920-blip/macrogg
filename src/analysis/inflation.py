@@ -17,7 +17,9 @@ log = logging.getLogger(__name__)
 
 from dataclasses import dataclass, field
 
-from .core import annualized, annualized_series, yoy, mom_pct, value_at
+from .core import (annualized, annualized_series, yoy, yoy_series, mom_pct,
+                   value_at,
+                   _shift_months, _at_date)
 from .attribution import Contribution, AttributionResult
 from .. import clock
 
@@ -117,11 +119,27 @@ def attribute_cpi(
 
 
 def _pct_change(rows: list[dict], months: int) -> float | None:
-    """近 N 個月的累計變化率（%）。months=1 就是月變動。"""
+    """
+    近 N 個月的累計變化率（%）。months=1 就是月變動。
+
+    **除數用日期找，不是往前數 N 列。** 這跟 v73 修好的 `yoy()` 是同一個
+    bug，只是當時漏了這一支：`rows[-1-months]` 數的是**列**，序列只要少一個
+    月或多一筆重複，往前數三列就不是三個月前。
+
+    這不是假設性的問題——`CUSR0000SASLE` 在 2025-10 就有一個缺漏值
+    （FRED 上是「.」）。今天它落在四個月之外所以沒出事，但它會隨著時間
+    往回滑進任何一個回看視窗，而出事的樣子是「數字看起來很正常，只是
+    多算了一個月」——沒有任何東西會報錯。
+
+    找不到正好 N 個月前那一筆時才退回數列數，並且只在那個日期真的不存在時。
+    """
     if len(rows) <= months:
         return None
-    cur, old = rows[-1]["value"], rows[-1 - months]["value"]
-    if old == 0:
+    cur = rows[-1]["value"]
+    old = _at_date(rows, _shift_months(rows[-1]["date"], months))
+    if old is None:
+        old = rows[-1 - months]["value"]
+    if not old:
         return None
     return (cur / old - 1) * 100
 
@@ -167,6 +185,134 @@ class InflationSummary:
     sep_next_hi: float | None = None      # 同上，中央趨勢上緣
     sep_next_year: int | None = None      # 「明年」是哪一年
     extras: dict = field(default_factory=dict)
+
+
+# ---------------------------------------------------------------------------
+# 核心服務除住房（supercore）——**沒有現成序列，只能自己推**
+# ---------------------------------------------------------------------------
+# 這一段是為了修一個安靜了很久的口徑錯誤。
+#
+# 先前全站的「核心服務除住房」直接用 `CUSR0000SASLE`，而那條序列在 FRED 上的
+# 正式名稱是 **Services Less Energy Services**——也就是**全部**核心服務，
+# **含住房**，權重約 61.8%，不是除掉住房之後的 26.4%。
+#
+# 為什麼一直沒被發現：住房佔核心服務的 57%，所以兩條線長得很像、方向幾乎
+# 一致，圖表看起來完全正常。但被它影響的三個地方講的都是結論：
+#   ① 分項貢獻裡的「其他核心服務」
+#   ② KPI 卡與黏性訊號（「已連 N 個月高於目標」）
+#   ③ 首頁整體情勢那句「核心服務除住房已連 64 個月高於目標」
+# ——那句話講的其實是含住房的核心服務，而住房正是它最黏的那一塊。
+# 換句話說，**用來證明「除掉住房還是很黏」的那個數字，裡面有住房。**
+#
+# BLS 沒有發布「核心服務除住房」的指數（`SASL2RS` 是「服務除房租」，
+# 含能源服務，會跟能源那一格重複計算），所以只能推。推法就是加權相減，
+# 跟 `ex_shelter_yoy` 已經在用的公式同一條：
+#
+#     r_除住房 = (w_核心服務 × r_核心服務 − w_住房 × r_住房) / w_除住房
+#
+# 再把逐月的變化率串成指數，下游的年增率、年化、連續月數就都能照用。
+def derive_supercore(core_services: list[dict], shelter: list[dict],
+                     w_cs: float, w_sh: float,
+                     base: float = 100.0) -> list[dict]:
+    """
+    用加權相減推出「核心服務除住房」的指數序列。
+
+    兩條輸入序列**按日期對齊**，任一邊缺當月就從那裡截斷——寧可短一點，
+    也不要把兩個不同月份的變化相減（那會產生一個看起來正常的假數字）。
+
+    回傳 [{"date", "value"}]，指數基期是輸入序列第一個共同月份 = `base`。
+    水準本身沒有意義（它不是官方指數），有意義的是它的**變化率**。
+    """
+    w_ex = w_cs - w_sh
+    if w_ex <= 0 or w_cs <= 0:
+        return []
+    by_sh = {r["date"]: r["value"] for r in shelter}
+    pairs = [(r["date"], r["value"], by_sh[r["date"]])
+             for r in core_services if r["date"] in by_sh]
+    if len(pairs) < 2:
+        return []
+
+    out = [{"date": pairs[0][0], "value": base}]
+    for (_, cs0, sh0), (d1, cs1, sh1) in zip(pairs, pairs[1:]):
+        if not cs0 or not sh0:
+            break
+        r_cs = (cs1 / cs0 - 1) * 100
+        r_sh = (sh1 / sh0 - 1) * 100
+        r_ex = (w_cs * r_cs - w_sh * r_sh) / w_ex
+        out.append({"date": d1, "value": out[-1]["value"] * (1 + r_ex / 100)})
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 核心 PCE 的即時推估：用最新的 CPI 補上還沒公布的那個月
+# ---------------------------------------------------------------------------
+# 使用者的批評：「九宮格高中低不能只用 PCE，因為 PCE 是落後指標。」
+#
+# 具體有多落後：CPI 是 BLS 月中發、核心 PCE 是 BEA 月底發，中間差兩週。
+# 所以每個月都有一段時間，畫面上有 7 月 CPI 但九宮格用的是 6 月 PCE——
+# **九宮格活在一個月前的世界**，而那兩週正好是市場對通膨反應最大的時候。
+#
+# 為什麼不能直接把 CPI 塞進去比
+# ----------------------------
+# 九宮格的高／中／低門檻錨在 FOMC 自己的 SEP 預測，而 **SEP 預測的是核心
+# PCE**。核心 CPI 結構上比核心 PCE 高 0.3–0.5 個百分點（住房權重差一倍、
+# 醫療口徑不同），直接送進去等於把門檻無故收緊那麼多——`classify_inflation`
+# 的說明裡已經記著這個坑被踩過一次。
+#
+# 做法：**先把 CPI 換算成 PCE 口徑**，再送進原本的判定。
+#
+#     推估的核心 PCE 年增 = 最新的核心 CPI 年增 − 近 N 個月兩者的平均差距
+#
+# 差距用滾動平均而不是寫死的 0.3：兩者的落差本身會隨住房與醫療的相對
+# 走勢變動，寫死一個常數只是把偏誤換個地方藏。
+#
+# 這只是**補上還沒公布的那一個月**。PCE 一公布就用實際值，推估值退場；
+# 而且推估期間畫面上會明講「這是用 CPI 推估的」——一個影響部位表的數字
+# 不能讓讀者以為它是官方公布值。
+NOWCAST_GAP_MONTHS = 12
+
+
+def nowcast_core_pce(pce_rows: list[dict], cpi_rows: list[dict],
+                     months: int = NOWCAST_GAP_MONTHS) -> dict:
+    """
+    PCE 落後 CPI 時，用 CPI 推估最新一期的核心 PCE 年增率。
+
+    回傳 {"value", "estimated", "gap", "asof", "source_month"}：
+      estimated=False  → PCE 已經跟上，value 就是實際值，其餘欄位僅供參考
+      estimated=True   → value 是推估值，asof 是被推估的那個月
+
+    任何一邊資料不足就回實際值並且 estimated=False——**寧可用舊的真實
+    數字，也不要用一個算不出信賴度的推估值**。
+    """
+    out = {"value": None, "estimated": False, "gap": None,
+           "asof": "", "source_month": ""}
+    if not pce_rows:
+        return out
+    out["value"] = yoy(pce_rows)
+    out["asof"] = pce_rows[-1]["date"]
+    if not cpi_rows or len(cpi_rows) <= 12 or len(pce_rows) <= 12:
+        return out
+    # CPI 沒有比 PCE 新 → 沒有東西好補
+    if cpi_rows[-1]["date"] <= pce_rows[-1]["date"]:
+        return out
+
+    # 兩者在**重疊月份**上的年增率差距，取最近 months 個月的平均。
+    py = {r["date"]: r["value"] for r in yoy_series(pce_rows)}
+    cy = {r["date"]: r["value"] for r in yoy_series(cpi_rows)}
+    common = sorted(d for d in py if d in cy
+                    and py[d] is not None and cy[d] is not None)
+    if len(common) < 6:                            # 樣本太少，不推估
+        return out
+    recent = common[-months:]
+    gap = sum(cy[d] - py[d] for d in recent) / len(recent)
+
+    latest_cpi = cy.get(cpi_rows[-1]["date"])
+    if latest_cpi is None:
+        return out
+    out.update({"value": latest_cpi - gap, "estimated": True, "gap": gap,
+                "asof": cpi_rows[-1]["date"],
+                "source_month": cpi_rows[-1]["date"]})
+    return out
 
 
 # 「黏著」的門檻。2% 是目標，但月度資料的雜訊讓 2.0 太容易被穿越；
@@ -320,7 +466,7 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.core_mom = mom_pct(g("CPILFESL", []))
     s.core_3m = annualized(g("CPILFESL", []), 3)
     s.core_6m = annualized(g("CPILFESL", []), 6)
-    _sc = g("CUSR0000SASLE", [])
+    _sc = g("CPISUPERCORE", [])
     s.supercore_12m = annualized(_sc, 12)
     s.supercore_6m = annualized(_sc, 6)
     s.supercore_3m = annualized(_sc, 3)
@@ -395,7 +541,7 @@ def light_values(series: dict[str, list[dict]], summ: InflationSummary) -> dict[
         prev = annualized(core[:-1], 3) if len(core) > 4 else None
         put("core_cpi_3m", summ.core_3m, prev, f"{summ.core_3m:.1f}%")
 
-    sc = series.get("CUSR0000SASLE", [])
+    sc = series.get("CPISUPERCORE", [])
     if summ.supercore_3m is not None:
         prev = annualized(sc[:-1], 3) if len(sc) > 4 else None
         put("supercore_3m", summ.supercore_3m, prev, f"{summ.supercore_3m:.1f}%")

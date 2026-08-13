@@ -20,6 +20,30 @@ from pathlib import Path
 from .. import clock
 
 
+# 關鍵數字的**計算方法版本**。改了任何一個 key_metrics 的算法就要 +1。
+#
+# 為什麼需要這個東西
+# ------------------
+# 快照存的是「算完的數字」，不是原始序列。所以計算方法一改，下一期的
+# 變化卡就會拿**舊程式算的上期**去減**新程式算的本期**，把口徑差異
+# 報成真實變動。
+#
+# 實際發生過：v73 修好年增率的除數之後，畫面上出現
+#
+#     核心 CPI 年增　2.81 → 2.48　（−0.33 個百分點）
+#
+# 而同一頁的走勢列（每次重算）寫著 6 月是 2.6——同一個月份兩個數字。
+# 那 −0.33 裡面大部分是「我改了程式」，不是物價變了。核心服務除住房
+# 甚至寫成 3.35 → 2.24，一個月掉 1.11 個百分點。
+#
+# 這種錯**只錯一期然後自己好**，所以最難抓：等你發現的時候它已經消失了。
+#
+# 處置：版本對不上時改用 `metrics_prev`——由**現行程式**回頭算的上一期。
+# 平常（版本相同）維持「跟你上次看到的比」，資料修正照樣看得到；
+# 只有改程式的那一期會切換基準，而那正是唯一需要切換的時候。
+METHOD_VERSION = 2
+
+
 @dataclass
 class ChangeSet:
     has_previous: bool = False
@@ -37,6 +61,9 @@ class ChangeSet:
     infl_tilt_to: str = ""
     metric_moves: list = field(default_factory=list)     # [{label, from, to, delta}]
     regime_changed: bool = False    # 聯準會的重心（哪個使命優先）翻轉
+    # 這一期的關鍵數字換過計算方法（見 METHOD_VERSION）。畫面上要講出來：
+    # 基準跟平常不一樣，讀者才不會把它跟「上次你看到的」混為一談。
+    method_changed: bool = False
     headline: str = ""
     # 對照的是哪一版**資料**，不是哪一次執行。排程每天跑、資料一個月出一次，
     # 用執行時間當基準會讓「對照今天早上 05:01」這種毫無意義的字串出現在
@@ -73,6 +100,11 @@ def snapshot(ctxs: dict) -> dict:
             "flag_titles": {f.key: f.headline for f in lab["flags"]},
             "flag_leans": {f.key: f.lean for f in lab["flags"]},
             "metrics": lab.get("key_metrics", {}),
+            # 這幾個數字是**用哪一版程式算的**。見 METHOD_VERSION。
+            "method": METHOD_VERSION,
+            # 用現行程式回頭算的「上一期」。方法版本對不上時拿它當基準，
+            # 這樣改完程式的那一期不會把口徑差異報成真實變動。
+            "metrics_prev": lab.get("key_metrics_prev", {}),
         }
     inf = ctxs.get("inflation")
     if inf:
@@ -85,6 +117,8 @@ def snapshot(ctxs: dict) -> dict:
             "flag_titles": {f.key: f.headline for f in inf["flags"]},
             "flag_leans": {f.key: f.lean for f in inf["flags"]},
             "metrics": inf.get("key_metrics", {}),
+            "method": METHOD_VERSION,
+            "metrics_prev": inf.get("key_metrics_prev", {}),
         }
     fom = ctxs.get("fomc")
     if fom and not fom.get("empty"):
@@ -395,7 +429,26 @@ def compare(state: dict) -> ChangeSet:
         p, c = prev.get(mod), cur.get(mod)
         if not (p and c):
             continue
-        pm, cm = p.get("metrics") or {}, c.get("metrics") or {}
+        # 上期的基準要用哪一份：見 METHOD_VERSION 的說明。
+        #
+        # 版本相同（正常情況）→ 用快照裡存的那一份，也就是「你上次真的
+        # 看到的數字」。BLS 下修前兩月時，那個修正**看得到**，而那是訊號。
+        #
+        # 版本不同（我改了計算方法）→ 快照裡那份是舊程式算的，拿來相減
+        # 得到的是口徑差異不是真實變動。改用 metrics_prev：由現行程式
+        # 回頭算的上一期，兩邊口徑一致。
+        pm = p.get("metrics") or {}
+        if p.get("method") != c.get("method"):
+            _recomputed = c.get("metrics_prev") or {}
+            if _recomputed:
+                pm = _recomputed
+                cs.method_changed = True
+            else:
+                # 連重算的那一份都沒有 → 寧可這期不比，也不要報一個
+                # 「其中大半是程式改動」的變動量出去。
+                cs.method_changed = True
+                continue
+        cm = c.get("metrics") or {}
         for key, meta in cm.items():
             if key not in pm:
                 continue

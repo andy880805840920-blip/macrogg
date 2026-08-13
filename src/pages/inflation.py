@@ -184,6 +184,7 @@ def inflation_body(d: dict) -> str:
     k = d["kpi"]
     mini = d.get("mini", {})
     a = d.get("asof", {})
+    lean = d.get("kpi_lean", {})
     # 意外值併進卡片。通膨沒有模型推估的後備，所以沒填預期時
     # surp 是空的，卡片上就完全不會出現這一行（見 consensus.yaml 的說明）。
     surp = (d.get("surprises") or {}).get("inline") or {}
@@ -191,19 +192,23 @@ def inflation_body(d: dict) -> str:
         _kpi_card("CPI 年增率", k["headline_display"], k["headline_sub"],
                   k["headline_plain"], charts.sparkline(k["headline_spark"]),
                   mini=mini.get("headline", ""), asof=(a.get("cpi") or "")[:7],
-                  surprise=surp.get("headline")),
+                  surprise=surp.get("headline"),
+                  en="Headline CPI, y/y", leans=lean.get("headline", ())),
         _kpi_card("核心 CPI 年增率", k["core_display"], k["core_sub"],
                   k["core_plain"], charts.sparkline(k["core_spark"]),
                   k.get("core_flag"), k.get("core_flag_kind", ""),
                   mini=mini.get("core", ""), asof=(a.get("cpi") or "")[:7],
-                  surprise=surp.get("core")),
+                  surprise=surp.get("core"),
+                  en="Core CPI, y/y", leans=lean.get("core", ())),
         _kpi_card("核心 PCE 年增率", k["pce_display"], k["pce_sub"],
                   k["pce_plain"], charts.sparkline(k["pce_spark"]),
                   k.get("pce_flag"), k.get("pce_flag_kind", ""),
-                  mini=mini.get("pce", ""), asof=(a.get("pce") or "")[:7]),
+                  mini=mini.get("pce", ""), asof=(a.get("pce") or "")[:7],
+                  en="Core PCE, y/y", leans=lean.get("pce", ())),
         _kpi_card("5年後5年期通膨預期", k["exp_display"], k["exp_sub"],
                   k["exp_plain"], charts.sparkline(k["exp_spark"]),
-                  mini=mini.get("exp", ""), asof=(a.get("exp") or "")[:7]),
+                  mini=mini.get("exp", ""), asof=(a.get("exp") or "")[:7],
+                  en="5y5y Inflation Breakeven", leans=lean.get("exp", ())),
     ])
 
     flags_html = "".join(_flag_row(f) for f in d["flags"]) or \
@@ -241,10 +246,22 @@ def inflation_body(d: dict) -> str:
             f'<div class="dc-note">{esc(x["note"])}</div>'
             for x in parts
         )
+        # 三塊是**由下而上加**出來的，所以它跟實際的 CPI 漲幅可能對不上。
+        # 先前這裡寫死「三塊相加 ＝ 總漲幅」，而第三塊自己就是倒推的差額，
+        # 所以那個等號永遠成立——包括算錯的時候。現在等號只在真的相等時寫，
+        # 對不上就把兩個數字並排列出來，差額另外用一段話解釋。
+        _sum = att.get("parts_sum", att.get("total", 0))
+        _rc = att.get("recon_note") or ""
+        total_line = (
+            f'三塊相加　＝　{_sum:+.2f}　（實際漲幅 {att.get("total", 0):+.2f} 個百分點）'
+            if _rc else
+            f'三塊相加　＝　總漲幅 {att.get("total", 0):+.2f} 個百分點')
         parts_html = (
             f'<div class="dcomp">{rows}'
-            f'<div class="dc-total">三塊相加　＝　總漲幅 '
-            f'{att.get("total", 0):+.2f} 個百分點</div></div>')
+            f'<div class="dc-total">{esc(total_line)}</div></div>')
+        if _rc:
+            parts_html += ('<div class="warnbox" style="margin-top:12px">'
+                           f'{esc(_rc)}</div>')
 
     # 「剔除住房後比含住房高」每期都可能出現，而且每次都會被讀成算錯。
     # 它其實是重要訊息（住房在把整體往下拉），所以直接寫成一句話。

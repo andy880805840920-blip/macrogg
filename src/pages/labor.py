@@ -43,15 +43,34 @@ def _surprise_line(s: dict | None) -> str:
 
 
 def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
-              mini="", asof="", surprise=None) -> str:
+              mini="", asof="", surprise=None, en="", leans=()) -> str:
+    """
+    一張關鍵數字卡。
+
+    `en` 是**主標題**、中文降成副標。使用者的原話：「你用中文寫我會不知道
+    誰是誰」——對照 BLS 新聞稿或英文報導時，「核心服務除住房」跟 supercore
+    對不起來，而這一頁的用途正是拿來對照的。
+
+    `leans` 是 [(文字, hawkish/dovish/neutral)]，**水準與變化分開兩個標籤**：
+    同一張卡可以同時是「仍高於目標」（利升息）與「本期在降」（利降息），
+    兩件事都成立，擠進一個標籤只會互相打架。
+    """
     flag_html = f'<div class="k-flag {flag_kind}">{esc(flag)}</div>' if flag else ""
     plain_html = f'<div class="k-plain">{esc(plain)}</div>' if plain else ""
     asof_html = f'<span class="asof">{esc(asof)}</span>' if asof else ""
+    head = esc(en or label)
+    sub_label = f'<div class="k-label-zh">{esc(label)}</div>' if en else ""
+    lean_html = ""
+    _ls = [(t, k) for t, k in (leans or ()) if t]
+    if _ls:
+        lean_html = ('<div class="k-leans">' + "".join(
+            f'<span class="k-lean {k}">{esc(t)}</span>' for t, k in _ls)
+            + "</div>")
     return f"""<div class="card kpi">
-  <div class="k-label">{esc(label)}{asof_html}</div>
-  <div class="k-value">{esc(value)}</div>
+  <div class="k-label">{head}{asof_html}</div>
+  {sub_label}<div class="k-value">{esc(value)}</div>
   <div class="k-sub">{esc(sub)}</div>
-  {_surprise_line(surprise)}{plain_html}{flag_html}{spark_html}{mini}
+  {lean_html}{_surprise_line(surprise)}{plain_html}{flag_html}{spark_html}{mini}
 </div>"""
 
 

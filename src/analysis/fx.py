@@ -73,27 +73,85 @@ def _latest(rows: list) -> tuple[float | None, str]:
     return None, ""
 
 
-def rates(series: dict) -> dict:
-    """
-    回傳 {幣別: {"rate": 一單位外幣值多少美元, "date": 匯率日期}}。
-
-    美元固定是 1.0，日期留空——它不是換算來的，標日期反而誤導。
-    抓不到的幣別直接不出現在結果裡，呼叫端就會知道「這一筆換算不了」，
-    而不是拿到一個看起來正常的錯數字。
-    """
-    out = {"USD": {"rate": 1.0, "date": ""}}
-    for ccy, (sid, direction) in SERIES.items():
-        val, date = _latest(series.get(sid) or [])
-        if val is None:
-            continue
-        out[ccy] = {"rate": (val if direction == "direct" else 1.0 / val),
-                    "date": date}
+def _clean(rows: list, direction: str) -> list:
+    """整條序列 → [{"date", "rate"}]，rate 一律是「一單位外幣值多少美元」。"""
+    out = []
+    for r in rows or []:
+        try:
+            f = float(r.get("value"))
+        except (TypeError, ValueError):
+            continue                               # 假日是空值，跳過
+        if f > 0:
+            out.append({"date": r.get("date", ""),
+                        "rate": f if direction == "direct" else 1.0 / f})
     return out
 
 
-def to_usd(amount: float, currency: str, fx: dict) -> dict:
+def rates(series: dict) -> dict:
     """
-    換算成美元。回傳 {"usd", "rate", "date"}；換不了時 usd 是 None。
+    回傳 {幣別: {"rate": 最新匯率, "date": 最新的日期, "series": 整條歷史}}。
+
+    **`series` 是整條歷史，不是只有最後一筆。** 先前這裡只留最新值、
+    其餘整條丟掉，於是 `to_usd()` 手上根本沒有別的日期可選——每一筆發債
+    都用同一個匯率換算，畫面上每一列的括號印的都是同一個日期。
+
+    那個行為錯在哪：一筆五月定價的日圓債，發行人當天就把金額鎖住了。
+    拿八月的匯率去標它，等於在回答「這筆已經完成的發行今天值多少」——
+    沒有人問這個，而且**那個數字每天早上都會變**，變動的原因跟債券市場
+    毫無關係。合計也因此變成「按今日匯率重估的歷史發行」，
+    再拿去跟季報申報值（歷史值）相除，就是兩個口徑放進同一個比例。
+
+    美元固定 1.0、日期留空——它不是換算來的，標日期反而誤導。
+    抓不到的幣別直接不出現，呼叫端就知道「這一筆換算不了」，
+    而不是拿到一個看起來正常的錯數字。
+    """
+    out = {"USD": {"rate": 1.0, "date": "", "series": []}}
+    for ccy, (sid, direction) in SERIES.items():
+        rows = _clean(series.get(sid) or [], direction)
+        if not rows:
+            continue
+        out[ccy] = {"rate": rows[-1]["rate"], "date": rows[-1]["date"],
+                    "series": rows}
+    return out
+
+
+# 定價日往前找匯率時，最多容許差幾天。
+#
+# 正常只會差 1–3 天（週末與國定假日）。超過就代表資料真的有缺口，
+# 那一列要單獨標出來——**換算用的日期跟事件日期差很遠**這件事讀者有權知道，
+# 不能混在其他正常的列裡假裝一樣。
+STALE_DAYS = 7
+
+
+def _on_or_before(rows: list, date: str) -> dict | None:
+    """`date` 當天或之前最近的一筆。FRED 匯率只有交易日，週末要往前找。"""
+    hit = None
+    for r in rows:
+        if r["date"] <= date:
+            hit = r
+        else:
+            break                                  # 序列本來就是排好的
+    return hit
+
+
+def _days_between(a: str, b: str):
+    try:
+        import datetime as _dt
+        return abs((_dt.date.fromisoformat(a) - _dt.date.fromisoformat(b)).days)
+    except (ValueError, TypeError):
+        return None
+
+
+def to_usd(amount: float, currency: str, fx: dict, on: str = "") -> dict:
+    """
+    換算成美元。回傳 {"usd", "rate", "date", "stale"}；換不了時 usd 是 None。
+
+    `on` 是**事件發生的日期**（發債的定價日）。給了就用那一天當天或之前
+    最近一個交易日的匯率——那才是發行人當時實際鎖住的金額，而且它不會
+    每天變。不給就用最新的（其他呼叫端維持原行為）。
+
+    `stale=True` 代表找到的匯率日期跟 `on` 差超過 STALE_DAYS 天，
+    也就是資料真的有缺口，畫面上要單獨標那一列。
 
     換不了就回 None，**不要用「大概 1 比 1」之類的假設補**——
     一個錯的美元金額比沒有美元金額糟得多，而原幣金額本來就還在，
@@ -101,8 +159,19 @@ def to_usd(amount: float, currency: str, fx: dict) -> dict:
     """
     r = fx.get(currency)
     if not r or amount is None:
-        return {"usd": None, "rate": None, "date": ""}
-    return {"usd": amount * r["rate"], "rate": r["rate"], "date": r["date"]}
+        return {"usd": None, "rate": None, "date": "", "stale": False}
+
+    rate, date, stale = r["rate"], r["date"], False
+    if on and currency != "USD":
+        hit = _on_or_before(r.get("series") or [], on)
+        if hit:
+            rate, date = hit["rate"], hit["date"]
+            d = _days_between(date, on)
+            stale = d is not None and d > STALE_DAYS
+        else:
+            # 定價日比抓取起點還早 → 只能用最新的，而且一定要標出來
+            stale = True
+    return {"usd": amount * rate, "rate": rate, "date": date, "stale": stale}
 
 
 # 畫面上的原幣記號。以原幣為主、美元為輔，是因為原幣才是說明書上

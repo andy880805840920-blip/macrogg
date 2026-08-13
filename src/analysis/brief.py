@@ -335,12 +335,31 @@ def _labor(ax: dict | None, month: str = "", signal: str = "") -> str:
 # ③ 通膨
 # ---------------------------------------------------------------------------
 def _inflation(s, bands: dict | None, state: str,
-               month: str = "", signal: str = "") -> str:
-    """通膨：水準相對門檻 ＋ 動能（三個月年化 vs 年增）＋ 黏性 ＋ 一條訊號。"""
+               month: str = "", signal: str = "",
+               pce_month: str = "") -> str:
+    """
+    通膨：水準相對門檻 ＋ 動能（三個月年化 vs 年增）＋ 黏性 ＋ 一條訊號。
+
+    **`month` 與 `pce_month` 不是同一件事，這一段的第一個數字用的是後者。**
+
+    使用者抓到的：整體情勢寫「7 月核心 PCE 3.3%」，但核心 PCE 的 7 月數字
+    要 8 月底才由 BEA 公布，當時最新的是 6 月。原因是這裡只收一個
+    `month`——那是**通膨模組的 data_month，也就是 CPI 的期別**——然後套給
+    整段裡的每一個數字。
+
+    通膨模組裡不同來源的節奏差很多：CPI 月中（BLS）、核心 PCE 月底（BEA）、
+    通膨預期每日、油價每週。拿一個期別去標整段，只要講的不是 CPI 就會標錯，
+    而**標錯的樣子看起來完全正常**——「7 月核心 PCE」讀起來一點問題都沒有，
+    除非你剛好知道它還沒公布。
+
+    正確的期別 build 早就算好放在 ctx 的 `asof` 裡（KPI 卡也在用），
+    這裡只是沒接上。規則很簡單：**誰的數字就標誰的期別。**
+    """
     if s is None or getattr(s, "pce_core_yoy", None) is None:
         return ""
     yoy, m3 = s.pce_core_yoy, getattr(s, "pce_core_3m", None)
-    head = f"{month}核心 PCE {_pct(yoy)}" if month else f"核心 PCE {_pct(yoy)}"
+    pm = pce_month or month
+    head = f"{pm}核心 PCE {_pct(yoy)}" if pm else f"核心 PCE {_pct(yoy)}"
     mo = ""
     if m3 is not None:
         # 「三月年化」同樣會被讀成 March。講的是最近三個月換算成年率。
@@ -509,11 +528,16 @@ def compose(ctxs: dict) -> dict:
 
     lab_txt = _labor((lab or {}).get("axis"), _mon(lab),
                      _pick_signal((lab or {}).get("flags")))
+    # 核心 PCE 的期別跟這個模組的 data_month（＝CPI）不是同一個：
+    # CPI 月中由 BLS 發，核心 PCE 月底由 BEA 發，中間差兩週。
+    # 8/13 的畫面上有 7 月 CPI，但核心 PCE 最新只到 6 月。
+    _pce_mon = _month(((inf or {}).get("asof") or {}).get("pce", ""))
     inf_txt = _inflation((inf or {}).get("summary"),
                          (inf or {}).get("bands"),
                          getattr(sc, "infl_state", "") if sc else "",
                          _mon(inf),
-                         _pick_signal((inf or {}).get("flags")))
+                         _pick_signal((inf or {}).get("flags")),
+                         pce_month=_pce_mon)
     # 轉折詞：就業與通膨指向相反（弱 × 高）時補一個「另一頭」，
     # 讀者才不會把兩句當成同方向的並列。同向時不加——加了反而誤導。
     if (lab_txt and inf_txt and sc is not None

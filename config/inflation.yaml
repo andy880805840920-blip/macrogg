@@ -92,12 +92,33 @@ cpi_components:
     group: core_services
     laggy: true
     note: 含房租與自有住宅設算租金。落後市場租金約 12 個月
-  - id: CUSR0000SASLE
+  # ⚠️ 這一格用的是**推導序列**，不是 FRED 上現成的某一條。
+  #
+  # 先前這裡填 CUSR0000SASLE，但那條在 FRED 上的正式名稱是
+  # 「Services Less Energy Services」——**全部核心服務，含住房**，
+  # 權重約 61.8%，不是除掉住房之後的 26.4%。填在這裡等於拿「含住房的
+  # 核心服務漲幅」去乘「除住房的權重」，兩邊口徑對不上。
+  #
+  # BLS 沒有發布「核心服務除住房」的指數（SASL2RS 是「服務除房租」，
+  # 含能源服務，會跟上面的能源那一格重複計算），所以由下面的
+  # supercore_derive 加權相減推出來，id 用 CPISUPERCORE。
+  - id: CPISUPERCORE
     label: 其他核心服務
     weight: 26.4
     group: core_services
     supercore: true
-    note: 核心服務除住房，即 supercore。Fed 溝通的重心
+    derived: true                  # 不要去 FRED 抓，這條是算出來的
+    note: 核心服務除住房，即 supercore。由核心服務減住房推導
+
+# 推導「核心服務除住房」用的原料與權重。
+#     r_除住房 =（w_核心服務 × r_核心服務 − w_住房 × r_住房）/（w_核心服務 − w_住房）
+# 兩個權重相減必須等於上面 CPISUPERCORE 的 weight（61.8 − 35.4 = 26.4），
+# 否則分項貢獻加總會對不上總漲幅。
+supercore_derive:
+  core_services: CUSR0000SASLE     # Services less energy services（含住房）
+  core_services_weight: 61.8
+  shelter: CUSR0000SAH1
+  shelter_weight: 35.4
 
 # ---------------------------------------------------------------------------
 # 三、住房細項（用來判斷住房項的落後程度）

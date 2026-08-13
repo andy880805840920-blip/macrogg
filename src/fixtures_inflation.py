@@ -67,8 +67,15 @@ def build() -> dict[str, list[dict]]:
     # 「這兩條不是同一個數字」，否則這個口徑差異在離線時完全看不出來。
     s["CPIAUCNS"] = _index(d, 324.1, 2.9, noise=0.04, recent_pct=3.8)
     s["CPILFENS"] = _index(d, 330.9, 2.9, noise=0.03, recent_pct=3.5)
-    s["PCEPI"] = _index(d, 131.1, 2.6, noise=0.03, recent_pct=3.7)
-    s["PCEPILFE"] = _index(d, 132.2, 2.7, noise=0.02, recent_pct=3.6)
+    # PCE 兩條**刻意比 CPI 少一個月**。
+    #
+    # 這不是懶得補資料，是要讓離線預覽長得跟正式環境一樣：CPI 月中由 BLS
+    # 發布、核心 PCE 月底由 BEA 發布，所以每個月都有兩週的時間，畫面上是
+    # 「7 月 CPI ＋ 6 月核心 PCE」。先前 fixture 讓兩者同月，於是
+    # 「整體情勢把 CPI 的期別套到 PCE 上」這個 bug 在離線模式下**完全看不到**，
+    # 一路上線才被使用者抓到。fixture 跟現實不一樣的地方，就是測不到的地方。
+    s["PCEPI"] = _index(d, 131.1, 2.6, noise=0.03, recent_pct=3.7)[:-1]
+    s["PCEPILFE"] = _index(d, 132.2, 2.7, noise=0.02, recent_pct=3.6)[:-1]
     s["PPIFIS"] = _index(d, 149.6, 2.4, noise=0.06, recent_pct=3.4)
     s["PPIFES"] = _index(d, 147.0, 2.7, noise=0.05, recent_pct=3.3)
 
