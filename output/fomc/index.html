@@ -275,7 +275,17 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
    26px，一頁上就有四種同字級同字重的東西完全平手——沒有主從等於沒有層級，
    讀者不知道該先看哪個。手機上把這三個降一級，讓結論那一句穩穩壓過去。 */
 @media(max-width:400px){.kpi .k-value{font-size:24px}}
+/* 英文為主、中文降成副標：對照 BLS 新聞稿與英文報導時，中文譯名對不起來。 */
+.kpi .k-label-zh{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
 .kpi .k-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+/* 鷹鴿標籤。水準與變化各一個——同一張卡可以「仍高於目標」又「本期在降」，
+   兩件事都成立，擠成一個標籤只會互相矛盾。刻意做得比 k-flag 小且不搶眼：
+   它是註記不是結論，結論在情境頁。 */
+.kpi .k-leans{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.kpi .k-lean{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;
+  background:var(--surface-2);color:var(--text-secondary);white-space:nowrap}
+.kpi .k-lean.hawkish{color:var(--critical)}
+.kpi .k-lean.dovish{color:var(--good)}
 .kpi .k-plain{font-size:13.5px;color:var(--text-primary);margin-top:11px;
   line-height:1.75;background:var(--surface-2);border-radius:9px;padding:10px 12px}
 .kpi .k-flag{font-size:12.5px;margin-top:9px;padding:5px 10px;border-radius:7px;
@@ -1188,7 +1198,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 
 <header class="top">
   <h1><a class="h1-home" href="/">聯準會文本</a></h1>
-  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-13 02:38（台北）</div>
+  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-13 09:49（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1277,12 +1287,12 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="market">市場定價 vs 聯準會</h2><span class="sect-sum">差距 +0.62 個百分點　·　與本次判讀一致</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="market">市場定價 vs 聯準會</h2><span class="sect-sum">差距 +0.59 個百分點　·　與本次判讀一致</span></summary><div class="sect-body">
     <p class="hint">2 年期殖利率跟政策利率中值的差，就是市場定價的政策路徑方向。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">2 年期公債殖利率</div><div class="s-value" style="color:inherit">4.25%</div></div><div class="stat"><div class="s-label">政策利率中值</div><div class="s-value" style="color:inherit">3.62%</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="s-label">2 年期公債殖利率</div><div class="s-value" style="color:inherit">4.22%</div></div><div class="stat"><div class="s-label">政策利率中值</div><div class="s-value" style="color:inherit">3.62%</div></div></div>
     <div class="bkgap" style="color:var(--serious)">
       <span class="bk-label">差距</span>
-      <span class="bk-val">+0.62 個百分點</span>
+      <span class="bk-val">+0.59 個百分點</span>
     </div>
     <div class="verdict hawkish" style="margin-top:14px">
       <div class="v-main" style="font-size:19px">市場定價未來兩年的平均政策利率高於現在——偏向再緊縮</div>
