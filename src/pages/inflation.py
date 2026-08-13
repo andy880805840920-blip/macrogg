@@ -5,7 +5,7 @@ from __future__ import annotations
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _light_card, _flag_row, _stats
-from . import compact_full, state_chip
+from . import compact_full, focus_evidence, state_chip
 
 
 VERDICT_COPY = {
@@ -469,7 +469,7 @@ def inflation_body(d: dict) -> str:
         return "升溫" if short > long + .2 else ("降溫" if short < long - .2 else "持平")
     pce_move = move(s.pce_core_3m, s.pce_core_yoy)
     ppi_move = move(s.ppi_core_3m, s.ppi_core_yoy)
-    title = f"基礎通膨{pce_move}；PPI 上游壓力{ppi_move}"
+    title = f"核心 PCE {pce_move}，PPI 壓力{ppi_move}"
     metrics = "".join([
         state_chip("總體 CPI｜民眾體感", pv(s.headline_yoy), "含食物與能源"),
         state_chip("核心 CPI｜消費端趨勢", pv(s.core_yoy), f"3M 年化 {pv(s.core_3m)}"),
@@ -487,6 +487,7 @@ def inflation_body(d: dict) -> str:
       <div class="flow-box"><strong>PCE｜政策口徑</strong><div class="flow-values">
         總體 {pv(s.pce_headline_yoy)} · 核心 {pv(s.pce_core_yoy)} · 3M {pv(s.pce_core_3m)}<br>
         核心年增決定格位；三個月年化只決定方向。</div></div></div>'''
+    chain = focus_evidence(chain, "查看 PPI、CPI、PCE 傳導")
     tags = (f'<div class="data-line"><span class="data-tag">CPI {(a.get("cpi") or "—")[:7]}</span>'
             f'<span class="data-tag">PPI {(a.get("ppi") or "—")[:7]}</span>'
             f'<span class="data-tag">PCE {(a.get("pce") or "—")[:7]}</span>'

@@ -106,10 +106,12 @@ if (OUT / "labor" / "index.html").exists():
             r'<summary><h2 id="[^"]+">.*?</h2>'
             r'(<span class="sect-sum">.*?</span>)?</summary>', h, re.S)
         no_sum = sum(1 for s in summaries if not s)
-        check(f"⑯ {name}：decision-first 且主卡不收合",
+        check(f"⑯ {name}：主卡不收合、下方主題各自單層收合",
               h.count('<div class="card focus-card">') == 1
-              and h.count('<details class="full-detail"') == 1 and n <= 2,
-              f"完整分析 {h.count('<details class=full-detail')}、舊卡區 {n}")
+              and h.count('<details class="full-detail"') == 0
+              and h.count('<details class="focus-evidence">') == 1
+              and n >= 7,
+              f"主題卡 {n}、舊完整外殼 {h.count('full-detail')}")
         check(f"⑰ {name}：每張都有收合摘要", no_sum == 0,
               f"{no_sum} 張沒有摘要")
         check(f"⑱ {name}：details 成對",
@@ -156,7 +158,8 @@ if (OUT / "labor" / "index.html").exists():
           [x[0] for x in heads] == ["就業", "通膨"], str([x[0] for x in heads]))
     check("㉖ scenario：判定值與情境卡一致",
           all(x[1] for x in heads)
-          and f'就業{heads[0][1]}　×　通膨{heads[1][1]}' in h,
+          and f'<span>就業格位</span><b>{heads[0][1]}</b>' in h
+          and f'<span>通膨格位</span><b>{heads[1][1]}</b>' in h,
           str([x[1] for x in heads]))
     # 理由句要帶得出數字——只寫「因為就業弱」等於沒解釋
     check("㉗ scenario：理由句帶具體數字",
@@ -171,7 +174,13 @@ if (OUT / "labor" / "index.html").exists():
     h = (OUT / "index.html").read_text(encoding="utf-8")
     hs = _sums(h)
     check("㉙ index：總覽首卡含四個決策欄位",
-          h.count('<div class="card focus-card">') == 1 and h.count('class="focus-metric') >= 4)
+          h.count('<section class="home-hero') == 1
+          and h.count('<div class="home-status-rail">') == 1)
+    check("㉙b index：五區順序完整",
+          all(f'id="{sid}"' in h for sid in
+              ("home-now", "home-grid", "home-modules", "home-changes", "home-data")))
+    check("㉙c index：四個模組只有一層收合",
+          h.count('<details class="home-module">') == 4)
     check("㉚ index：摘要沒有殘留 markdown",
           not [s for s in hs if "**" in s], str(hs)[:90])
     # 摘要是拿來掃視的。超過 40 字在 390px 下會折成三行，而且多半代表

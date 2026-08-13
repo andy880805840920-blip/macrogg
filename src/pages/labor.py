@@ -14,7 +14,7 @@ from .. import charts, fmt
 from ..analysis import attribution
 from ..site import esc
 
-from . import compact_full, state_chip
+from . import compact_full, focus_evidence, state_chip
 STATUS_ICON = {"good": "●", "warning": "▲", "critical": "■", "unknown": "○"}
 STATUS_TEXT = {"good": "正常", "warning": "留意", "critical": "警戒", "unknown": "無資料"}
 SEV_ICON = {"alert": "■", "watch": "▲", "info": "●"}
@@ -688,6 +688,7 @@ def labor_body(d: dict) -> str:
     else:
         trigger = "持續確認失業率與 Sahm 法則"
     kind = "dovish" if state == "弱" or momentum == "轉弱" else "hawkish" if state == "強" else "neutral"
+    state_text = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(state, state)
     metrics = "".join([
         state_chip("就業格位", state, basis, kind),
         state_chip("移動方向", momentum, "不直接改變當前格位", kind),
@@ -698,13 +699,14 @@ def labor_body(d: dict) -> str:
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>{esc(basis)}</span></div>'
              f'<div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：{gap_txt}；低於即轉弱。</span></div>'
              f'<div class="logic-step"><b>下一格觸發</b><span>{esc(trigger)}</span></div></div>')
+    logic = focus_evidence(logic)
     a = d.get("asof") or {}
     tags = (f'<div class="data-line"><span class="data-tag">就業報告 {esc(d.get("data_month", "—"))}</span>'
             f'<span class="data-tag">初領失業金 {(a.get("claims") or "—")[:10]}</span>'
             f'<span class="data-tag">JOLTS {(a.get("jolts") or "—")[:7]}</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
-            f'<h2 class="focus-title">就業水準{state}，動能{momentum}</h2>'
-            '<p class="focus-sub">格位只看失業率相對 FOMC 長期區間；非農、損益兩平、失業金與 JOLTS 用來判斷移動方向。</p>'
+            f'<h2 class="focus-title">就業{state_text}，動能{momentum}</h2>'
+            '<p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p>'
             f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
     return hero + compact_full(_labor_body_full(d), "完整就業拆解")
 

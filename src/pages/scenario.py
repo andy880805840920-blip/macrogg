@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from ..site import esc
-from . import compact_full, state_chip
+from . import compact_full, focus_evidence, state_chip
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
 
@@ -564,6 +564,9 @@ def scenario_body(d: dict) -> str:
     """總覽的核心：九宮格、移動方向、政策傾向與下一個觸發同屏。"""
     sc = d["scenario"]
     lean = LEAN_TEXT.get(sc.lean, "中性")
+    labor_text = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
+    infl_text = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
+    desc = (sc.description or "").split("。")[0]
     regime = next((m["label"] for m in d.get("regime_meta", []) if m.get("current")), "兩邊並重")
     trig = next((t for t in sc.triggers if t.binding), None)
     if trig is None:
@@ -585,12 +588,13 @@ def scenario_body(d: dict) -> str:
              f'<span>就業 {sc.labor_state} × 通膨 {sc.infl_state}＝{esc(sc.name)}</span></div>'
              f'<div class="logic-step"><b>下一個轉格條件</b><span>{esc(trigger_text)}</span></div>'
              f'<div class="logic-step"><b>格外覆蓋層</b><span>{esc(overlay)}</span></div></div>')
+    logic = focus_evidence(logic)
     notes = (f'<div class="data-line"><span class="data-tag">{esc(d.get("as_of", "—"))}</span>'
              '<span class="data-tag">格位＝水準；箭頭＝動能；兩者不得混算</span>'
              '<span class="data-tag">PPI、財政、AI 發債不直接移格</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Macro regime</div>'
-            f'<h2 class="focus-title">{esc(sc.name)}｜{lean}</h2><p class="focus-sub">{esc(sc.description)}</p>'
-            f'<div class="focus-grid">{metrics}</div>{logic}{_grid_tabs(d, sc)}{notes}</div></div>')
+            f'<h2 class="focus-title">就業{labor_text} × 通膨{infl_text}</h2><p class="focus-sub">{esc(sc.name)}｜{lean}。{esc(desc)}。</p>'
+            f'<div class="focus-grid">{metrics}</div>{logic}{notes}</div></div>')
     return hero + compact_full(_scenario_body_full(d), "九宮格依據、部位與完整方法")
 
 

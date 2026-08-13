@@ -7,7 +7,7 @@ import re
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _stats
-from . import compact_full, state_chip
+from . import compact_full, focus_evidence, state_chip
 
 
 # 「鷹／鴿」是聯準會語境的標準詞，這頁保留，但首次出現一律加註方向——
@@ -574,6 +574,8 @@ def fomc_body(d: dict) -> str:
     sh = d.get("shift") or {}
     direction = sh.get("direction", "neutral")
     title, why = DIR_COPY.get(direction, DIR_COPY["neutral"])
+    title = {"hawkish": "FOMC 偏鷹", "dovish": "FOMC 偏鴿", "neutral": "FOMC 中性"}.get(direction, "FOMC 中性")
+    why = why.split("。")[0] + "。" if why else ""
     vote = d.get("vote") or {}
     diss = vote.get("dissents") or []
     hikes = sum(1 for x in diss if x.get("direction") == "hike")
@@ -598,6 +600,7 @@ def fomc_body(d: dict) -> str:
              f'<span>{esc(d.get("obj_detail", "沒有明確政策行動變化"))}</span></div>'
              f'<div class="logic-step"><b>聲明文本比對</b><span>{esc(diff_note)}；只比較正式會議聲明。</span></div>'
              f'<div class="logic-step"><b>下次會議</b><span>{esc(next_text)}</span></div></div>')
+    logic = focus_evidence(logic)
     tags = (f'<div class="data-line"><span class="data-tag">聲明 {esc(d.get("latest_date", "—"))}</span>'
             f'<span class="data-tag">措辭分數 {sh.get("tone", 0):+.2f}（輔助，不覆寫客觀訊號）</span>'
             '<span class="data-tag">AI 不參與計分與逐句差異</span></div>')

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ..site import esc
 from .labor import _light_card, _stats
-from . import compact_full, state_chip
+from . import compact_full, focus_evidence, state_chip
 
 
 def _rates_body_full(d: dict) -> str:
@@ -646,6 +646,7 @@ def rates_body(d: dict) -> str:
     """長端首卡把政府財政與 Hyperscalers 的現金流、CapEx、發債放在同一尺度。"""
     sp, debt, hs = d["pressure"], d["debt"], d["hyperscalers"]
     title, why = d.get("pressure_text", ("供給壓力資料不足", ""))
+    why_short = why.split("。")[0] + "。" if why else ""
     level_text = {"high":"偏高","moderate":"中等","low":"偏低"}.get(sp.level, "資料不足")
     curve = d.get("curve")
     y10 = (curve.levels.get("10Y") if curve else None)
@@ -678,12 +679,13 @@ def rates_body(d: dict) -> str:
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div>'
              f'<div class="logic-step"><b>目前結論</b><span>{esc(why)}</span></div>'
              '<div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div>')
+    evidence = focus_evidence(flow + logic, "查看供給傳導與判斷依據")
     tags = (f'<div class="data-line"><span class="data-tag">利率 {esc(d.get("as_of", "—"))}</span>'
             f'<span class="data-tag">公司期末 {esc(hs_span)}</span>'
             f'<span class="data-tag">SEC 實際資料 {hs.n_from_sec}/{len(hs.companies)} 家</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div>'
-            f'<h2 class="focus-title">長端供給壓力{level_text}｜{esc(title)}</h2><p class="focus-sub">{esc(why)}</p>'
-            f'<div class="focus-grid">{metrics}</div>{flow}{logic}{tags}</div></div>')
+            f'<h2 class="focus-title">長端供給壓力{level_text}</h2><p class="focus-sub">{esc(why_short)}</p>'
+            f'<div class="focus-grid">{metrics}</div>{evidence}{tags}</div></div>')
     return hero + compact_full(_rates_body_full(d), "財政、發債、現金流與利率完整拆解")
 
 

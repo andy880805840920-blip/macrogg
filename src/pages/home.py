@@ -15,6 +15,7 @@ from ..site import esc, next_first_friday, next_cpi_release
 from . import compact_full, state_chip
 from ..analysis import changes as chg_mod
 from ..analysis import brief as brief_mod
+from ..analysis import scenario as scenario_mod
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -536,7 +537,7 @@ def _home_body_full(ctxs: dict) -> str:
 """
 
 
-def home_body(ctxs: dict) -> str:
+def _home_body_legacy(ctxs: dict) -> str:
     """首頁只回答：現在在哪、往哪走、為什麼、什麼會改變。"""
     sd = ctxs.get("scenario") or {}
     sc = sd.get("scenario")
@@ -597,6 +598,240 @@ def home_footer(ctxs: dict) -> str:
         "資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。"
         "所有量化判定由固定規則產生，每次執行結果一致。<br>"
         "本站僅為數據整理，不構成投資建議。")
+def _fmt_pct(value, digits: int = 1) -> str:
+    return "—" if value is None else f"{value:.{digits}f}%"
+
+
+def _brief_content(ctxs: dict) -> str:
+    """主卡內的整體情勢；長文只收合一次，重點句永遠可見。"""
+    b = ctxs.get("_brief") or brief_mod.compose(ctxs)
+    text = (b.get("text") or "").strip()
+    if not text:
+        return '<p class="home-brief-empty">目前沒有足夠資料產生整體情勢。</p>'
+
+    key = ""
+    if "重點：" in text:
+        text, _, key = text.rpartition("重點：")
+        key = key.strip()
+
+    source = b.get("source", "assembled")
+    source_label = ("AI 文字整理｜數據與方向由規則鎖定"
+                    if source in ("model", "cache") else
+                    "規則摘要｜數據與方向由規則鎖定")
+
+    lead, rest = text.strip(), ""
+    if brief_mod.cjk_len(lead) > 280:
+        chunks = [x.strip() + "。" for x in lead.split("。") if x.strip()]
+        shown = []
+        while chunks and brief_mod.cjk_len("".join(shown + chunks[:1])) <= 250:
+            shown.append(chunks.pop(0))
+        if not shown and chunks:
+            shown.append(chunks.pop(0))
+        lead, rest = "".join(shown), "".join(chunks)
+
+    more = (f'<details class="home-brief-more"><summary>展開完整分析</summary>'
+            f'<p>{esc(rest)}</p></details>' if rest else "")
+    key_html = f'<p class="home-brief-key">重點：{esc(key)}</p>' if key else ""
+    return (f'<div class="home-brief-label">整體情勢<span>{esc(source_label)}</span></div>'
+            f'<p class="home-brief-text">{esc(lead)}</p>{more}{key_html}')
+
+
+def _next_cell(sc, trigger) -> tuple[str, str]:
+    """把既有相鄰格門檻翻成可讀的下一格名稱，不創造第二套判斷。"""
+    if trigger is None:
+        return "資料不足", "尚無可計算門檻"
+    labor, inflation = sc.labor_state, sc.infl_state
+    for value in ("弱", "中", "強"):
+        if ((trigger.label.startswith("就業") or trigger.label.startswith("勞動"))
+                and f"「{value}」" in trigger.label):
+            labor = value
+    for value in ("低", "中", "高"):
+        if trigger.label.startswith("通膨") and f"「{value}」" in trigger.label:
+            inflation = value
+    cell = scenario_mod.grid_for(sc.regime).get((labor, inflation))
+    name = cell[0] if cell else f"{labor} × {inflation}"
+    return name, f"{trigger.label}：{'已觸發' if trigger.met else trigger.distance}"
+
+
+def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
+                 p_text: str, p_level: str) -> str:
+    lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
+    fom, rates = ctxs.get("fomc") or {}, ctxs.get("rates") or {}
+    lk, ik = lab.get("kpi") or {}, inf.get("kpi") or {}
+    isum = inf.get("summary")
+    curve = rates.get("curve")
+    levels = getattr(curve, "levels", {}) if curve else {}
+    term = getattr(curve, "term_premium", None) if curve else None
+    objective = (fom.get("shift") or {}).get("objective")
+    labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
+    infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
+
+    ppi_head = _fmt_pct(getattr(isum, "ppi_headline_yoy", None))
+    ppi_core = _fmt_pct(getattr(isum, "ppi_core_yoy", None))
+    rows = [
+        ("/labor/", "就業", f"{labor_label}｜{sc.labor_momentum}",
+         "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else "neutral",
+         f"非農 {lk.get('nfp_display', '—')}、失業率 {lk.get('u3_display', '—')}；九宮格就業軸為「{labor_label}」。",
+         [("非農新增", lk.get("nfp_display", "—")), ("失業率", lk.get("u3_display", "—")),
+          ("平均時薪年增", lk.get("ahe_display", "—")), ("資料期別", lab.get("data_month", "—"))]),
+        ("/inflation/", "通膨", f"{infl_label}｜{sc.infl_momentum}",
+         "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else "neutral",
+         f"CPI {ik.get('headline_display', '—')}、核心 CPI {ik.get('core_display', '—')}、核心 PCE {ik.get('pce_display', '—')}。",
+         [("總體 CPI", ik.get("headline_display", "—")), ("核心 CPI", ik.get("core_display", "—")),
+          ("PPI／核心 PPI", f"{ppi_head}／{ppi_core}"), ("核心 PCE", ik.get("pce_display", "—"))]),
+        ("/fomc/", "FOMC", f_text, f_dir,
+         f"政策利率 {fom.get('rate_range', '—')}；本次聲明改動 {fom.get('changed_count', 0)} 處。",
+         [("政策利率", fom.get("rate_range", "—")),
+          ("客觀訊號", "—" if objective is None else f"{objective:+.2f}"),
+          ("聲明改動", f"{fom.get('changed_count', 0)} 處"), ("會議日期", fom.get("latest_date", "—"))]),
+        ("/rates/", "財政與長端", p_text,
+         "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
+         f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；供給壓力{p_text}。",
+         [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("30 年期", _fmt_pct(levels.get("30Y"), 2)),
+          ("期限溢酬", _fmt_pct(term, 2)), ("資料截止", rates.get("as_of", "—"))]),
+    ]
+    out = []
+    for href, name, status, tone, summary, metrics in rows:
+        stats = "".join(f'<div><span>{esc(k)}</span><b>{esc(v)}</b></div>' for k, v in metrics)
+        out.append(
+            f'<details class="home-module"><summary><span class="home-module-name">{esc(name)}</span>'
+            f'<span class="home-status {tone}">{esc(status)}</span>'
+            f'<span class="home-module-summary">{esc(summary)}</span>'
+            f'<span class="home-module-toggle">查看</span></summary>'
+            f'<div class="home-module-body"><div class="home-module-stats">{stats}</div>'
+            f'<a class="home-inline-link" href="{href}">前往完整分析 →</a></div></details>')
+    return "".join(out)
+
+
+def _change_rows(cs) -> str:
+    if not cs or not cs.has_previous:
+        return '<div class="home-empty">尚無可比對的上期資料；下一次更新後會顯示本期差異。</div>'
+    rows = []
+    if cs.scenario_moved:
+        rows.append(("九宮格位置改變", cs.headline,
+                     "重新檢視政策方向與相鄰格門檻", "neutral"))
+    for flag in (cs.new_flags + cs.resolved_flags):
+        lean = flag.get("change_lean") or "neutral"
+        effect = {"hawkish": "提高維持高利率的約束",
+                  "dovish": "增加政策寬鬆空間"}.get(lean, "目前不改變政策方向")
+        verb = "新增" if flag.get("kind") == "new" else "解除"
+        rows.append((f"{verb}｜{flag.get('module', '訊號')}",
+                     flag.get("title", "—"), effect, lean))
+    for move in cs.metric_moves:
+        lean = move.get("lean") or "neutral"
+        unit = move.get("unit", "")
+        value = f"{move.get('from', 0):,.2f}{unit} → {move.get('to', 0):,.2f}{unit}"
+        effect = {"hawkish": "方向偏向利率維持較高",
+                  "dovish": "方向偏向增加降息空間"}.get(lean, "政策含義大致中性")
+        rows.append((move.get("label", "數據變化"), value, effect, lean))
+    if not rows:
+        return '<div class="home-empty">主要訊號與上期相同，九宮格位置沒有改變。</div>'
+    return "".join(
+        f'<div class="home-change"><span class="home-change-dot {esc(tone)}"></span>'
+        f'<div><b>{esc(title)}</b><span>{esc(value)}</span></div><p>{esc(effect)}</p></div>'
+        for title, value, effect, tone in rows[:4])
+
+
+def home_body(ctxs: dict) -> str:
+    """總覽固定五區：先結論，再門檻、模組、變化與資料狀態。"""
+    sd = ctxs.get("scenario") or {}
+    sc = sd.get("scenario")
+    if sc is None:
+        return _home_body_full(ctxs)
+
+    lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
+    fom, rates = ctxs.get("fomc") or {}, ctxs.get("rates") or {}
+    shift = fom.get("shift") or {}
+    f_dir = shift.get("direction", "neutral")
+    f_text = {"hawkish": "偏鷹", "dovish": "偏鴿",
+              "neutral": "中性"}.get(f_dir, "資料不足")
+    pressure = rates.get("pressure")
+    p_level = getattr(pressure, "level", "") if pressure else ""
+    p_text = {"high": "偏高", "moderate": "中性",
+              "low": "偏低"}.get(p_level, "資料不足")
+    lean = LEAN_TEXT.get(sc.lean, "中性")
+    labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
+    infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
+
+    trigger = next((t for t in sc.triggers if t.binding and not t.met), None)
+    if trigger is None:
+        trigger = next((t for t in sc.triggers if not t.met), None)
+    next_name, trigger_text = _next_cell(sc, trigger)
+    trigger_detail = (f'<span>{esc(trigger.current)}</span><span>{esc(trigger.threshold)}</span>'
+                      if trigger else "")
+
+    status = "".join([
+        f'<div><span>就業</span><b>{esc(labor_label)}｜{esc(sc.labor_momentum)}</b></div>',
+        f'<div><span>通膨</span><b>{esc(infl_label)}｜{esc(sc.infl_momentum)}</b></div>',
+        f'<div><span>FOMC</span><b>{esc(f_text)}</b></div>',
+        f'<div><span>長端壓力</span><b>{esc(p_text)}</b></div>',
+    ])
+    asof = inf.get("asof") or {}
+    dates = "｜".join([
+        f"就業 {lab.get('data_month', '—')}", f"CPI {(asof.get('cpi') or '—')[:7]}",
+        f"PPI {(asof.get('ppi') or '—')[:7]}", f"PCE {(asof.get('pce') or '—')[:7]}",
+        f"FOMC {fom.get('latest_date', '—')}",
+    ])
+
+    return f"""
+<main class="home-dashboard">
+  <section class="home-hero {esc(sc.lean)}" aria-labelledby="home-now">
+    <div class="home-hero-top">
+      <div><div class="home-kicker">目前情境</div>
+        <h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2></div>
+      <div class="home-verdict {esc(sc.lean)}"><span>{esc(sc.name)}</span><b>{esc(lean)}</b></div>
+    </div>
+    <div class="home-narrative">{_brief_content(ctxs)}</div>
+    <div class="home-status-rail">{status}</div>
+  </section>
+
+  <section class="home-zone home-transition" aria-labelledby="home-grid">
+    <div class="home-zone-head"><div><span class="home-zone-num">02</span>
+      <h2 id="home-grid">九宮格與下一格</h2></div>
+      <a class="home-primary-link" href="/scenario/">查看完整九宮格 →</a></div>
+    <div class="home-transition-grid">
+      <div class="home-cell-now"><span>目前位置</span><b>{esc(sc.name)}</b><small>就業{esc(labor_label)} × 通膨{esc(infl_label)}</small></div>
+      <div class="home-transition-arrow" aria-hidden="true">→</div>
+      <div class="home-cell-next"><span>可能下一格</span><b>{esc(next_name)}</b><small>{esc(trigger_text)}</small></div>
+      <div class="home-trigger-detail">{trigger_detail}</div>
+    </div>
+    <div class="home-dates">資料期別：{esc(dates)}</div>
+  </section>
+
+  <section class="home-zone" aria-labelledby="home-modules">
+    <div class="home-zone-head"><div><span class="home-zone-num">03</span>
+      <h2 id="home-modules">四大模組摘要</h2></div><p>點選一列查看核心數字</p></div>
+    <div class="home-module-list">{_module_rows(ctxs, sc, f_text, f_dir, p_text, p_level)}</div>
+  </section>
+
+  <section class="home-zone" aria-labelledby="home-changes">
+    <div class="home-zone-head"><div><span class="home-zone-num">04</span>
+      <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
+    <div class="home-change-list">{_change_rows(ctxs.get('changes'))}</div>
+  </section>
+
+  <section class="home-zone home-data-status" aria-labelledby="home-data">
+    <div class="home-zone-head"><div><span class="home-zone-num">05</span>
+      <h2 id="home-data">資料狀態</h2></div></div>
+    <div><b>自動更新</b><span>{esc(sd.get('as_of', '—'))}</span></div>
+    <p>情勢摘要最多 500 字；九宮格、數字與方向不由 AI 決定。</p>
+  </section>
+</main>"""
+
+
+def home_footer(ctxs: dict) -> str:
+    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
+
+    def _d(value: str) -> str:
+        return f'<span class="nb">{esc(value)}</span>'
+
+    return (
+        '<div class="home-footer">'
+        '<div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span>'
+        f'<span>就業 {_d((lab or {}).get("data_month", "—"))}｜物價 {_d((inf or {}).get("data_month", "—"))}｜FOMC {_d((fom or {}).get("latest_date", "—"))}</span></div>'
+        '<div><b>使用說明</b><span>本網站提供總體資料整理與情境判讀，不構成投資建議。</span>'
+        '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'
+        '</div>')
 
 def archive_body(entries: list[dict]) -> str:
     if not entries:
