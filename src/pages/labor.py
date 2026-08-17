@@ -35,18 +35,30 @@ def _surprise_line(s: dict | None) -> str:
     if not s:
         return ""
     z = f'<span class="ks-z">{esc(s["z"])}</span>' if s.get("z") else ""
+    # 模型推估不能只用一顆「＊」標——視覺上跟市場共識一模一樣，
+    # 註腳又在整區最底下。直接把標籤換成「歷史規律推估」，
+    # 讀者第一眼就知道這不是市場預期。
     star = '<span class="ks-star" title="模型推估">＊</span>' if s.get("is_model") else ""
+    exp_label = "歷史規律推估" if s.get("is_model") else "預期"
     return (f'<div class="k-surp {s["kind"]}">'
-            f'<span class="ks-exp">預期 {s["expected"]}{star}</span>'
+            f'<span class="ks-exp">{exp_label} {s["expected"]}{star}</span>'
             f'<span class="ks-sep">·</span>'
             f'<span class="ks-diff">意外 {s["diff"]}</span>'
             f'<span class="ks-verdict">{esc(s["verdict"])}</span>{z}</div>')
 
 
 def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
-              mini="", asof="", surprise=None, en="", leans=()) -> str:
+              mini="", asof="", surprise=None, en="", leans=(), fresh=False) -> str:
     """
-    一張關鍵數字卡。
+    一張關鍵數字卡。**常駐固定三層**，其餘收合——跟全站的閱讀模型一致：
+
+        第一層　標題（英文為主、中文副標）＋大數字
+        第二層　一列 chips（水準／變化標籤與徽章合成同一種樣式）
+        第三層　一句白話解讀
+
+    先前的九層（標籤、預期比較、白話句、徽章、走勢表各自一種視覺）
+    讓每張卡都要重新學一次「哪行是重點」；比較行、迷你走勢與預期明細
+    現在收進「近 5 期與比較基準」，要驗算才點，內容一樣不少。
 
     `en` 是**主標題**、中文降成副標。使用者的原話：「你用中文寫我會不知道
     誰是誰」——對照 BLS 新聞稿或英文報導時，「核心服務除住房」跟 supercore
@@ -55,38 +67,49 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
     `leans` 是 [(文字, hawkish/dovish/neutral)]，**水準與變化分開兩個標籤**：
     同一張卡可以同時是「仍高於目標」（利升息）與「本期在降」（利降息），
     兩件事都成立，擠進一個標籤只會互相打架。
+
+    `fresh`＝這個模組的資料在 72 小時內首次出現。發布日當下，「與預期差
+    多少」正是市場在反應的數字，所以整行常駐；過了 72 小時它變成歷史，
+    自動退進收合層。沿用整站既有的 72 小時新鮮度機制，不另立規則。
     """
-    flag_html = f'<div class="k-flag {flag_kind}">{esc(flag)}</div>' if flag else ""
     plain_html = f'<div class="k-plain">{esc(plain)}</div>' if plain else ""
     asof_html = f'<span class="asof">{esc(asof)}</span>' if asof else ""
     head = esc(en or label)
     sub_label = f'<div class="k-label-zh">{esc(label)}</div>' if en else ""
-    lean_html = ""
-    _ls = [(t, k) for t, k in (leans or ()) if t]
-    if _ls:
-        lean_html = ('<div class="k-leans">' + "".join(
-            f'<span class="k-lean {k}">{esc(t)}</span>' for t, k in _ls)
-            + "</div>")
+    chips = [(t, k) for t, k in (leans or ()) if t]
+    if flag:
+        chips.append((flag, flag_kind or "info"))
+    chips_html = ('<div class="k-chips">' + "".join(
+        f'<span class="k-chip {k}">{esc(t)}</span>' for t, k in chips)
+        + '</div>') if chips else ""
+    surp_now = _surprise_line(surprise) if fresh else ""
+    more_bits = (f'<div class="k-sub">{esc(sub)}</div>' if sub else "") \
+        + ("" if fresh else _surprise_line(surprise)) + spark_html + mini
+    more_html = (f'<details class="k-more"><summary>近 5 期與比較基準</summary>'
+                 f'<div class="k-more-body">{more_bits}</div></details>'
+                 if more_bits.strip() else "")
     return f"""<div class="card kpi">
   <div class="k-label">{head}{asof_html}</div>
   {sub_label}<div class="k-value">{esc(value)}</div>
-  <div class="k-sub">{esc(sub)}</div>
-  {lean_html}{_surprise_line(surprise)}{plain_html}{flag_html}{spark_html}{mini}
+  {chips_html}{surp_now}{plain_html}{more_html}
 </div>"""
 
 
-def _light_card(lt) -> str:
+def _light_card(lt, href: str = "") -> str:
     arrow = {"up": "↑", "down": "↓", "flat": "→"}[lt.delta_dir]
     strip = charts.status_strip(getattr(lt, "history", []) or [])
     # 說明文收進展開層。格子高低不一的原因就是各格說明長度不同——
     # 名稱／數值／狀態／歷史條是固定四行，說明移走之後自然等高。
+    # href＝這顆燈的「主場」卡區——同一個數字的完整脈絡在那裡；
+    # 燈只負責狀態，想深入的人一跳就到，不用自己找。
+    link = (f'<a class="l-link" href="{href}">完整脈絡 →</a>' if href else "")
     return f"""<div class="light {lt.status}">
   <div class="l-top"><span class="l-icon">{STATUS_ICON[lt.status]}</span>{esc(lt.label)}</div>
   <div class="l-value">{esc(lt.display)} <span style="font-size:13px;color:var(--muted)">{arrow}</span></div>
   <div class="l-state">{STATUS_TEXT[lt.status]}</div>
   {strip}
   <details class="l-more"><summary>這在量什麼</summary>
-    <div class="l-desc">{esc(lt.desc)}</div></details>
+    <div class="l-desc">{esc(lt.desc)}{link}</div></details>
 </div>"""
 
 
@@ -155,25 +178,23 @@ def _ustar_row(u: dict | None) -> str:
     失業缺口 u − u*。放在失業率變動分解下面，因為它回答的是
     上面那段分解沒有回答的問題：「這個水準本身算緊還是鬆」。
     分解講的是**變化**的成因，缺口講的是**水準**的位置，兩件事。
+
+    常駐只留一行（缺口值＋鬆緊判定）——先前整塊展開（標題列＋兩行
+    說明＋再一個收合），跟上面的分解棒搶版面，正是「內容混亂」的來源。
+    數字出處與 u* 的限制收進展開層，要驗算才點。
     """
     if not u:
         return ""
-    return f"""<div class="ugap">
-  <div class="ug-top">
-    <span class="ug-label">失業缺口 u − u*</span>
-    <span class="ug-val" style="color:{u['color']}">{esc(u['display'])}</span>
-    <span class="ug-state">{esc(u['state'])}</span>
-  </div>
-  <div class="ug-note">目前失業率 {u['u']:.1f}%　·
-    自然失業率 u* {u['ustar']:.2f}%（CBO 估計，{esc(u['as_of'])}）。
-    {esc(u['note'])}</div>
-  <details class="f-more"><summary>u* 是什麼、為什麼只當方向參考</summary>
-    <div class="f-detail">u* 是「不會讓通膨加速的失業率」，由 CBO 用模型估計，
-      季頻發布而且會被回溯修正——它不是觀測值。所以這裡只用它判斷
-      鬆／緊的方向，不拿來設門檻。缺口在 ±0.2 個百分點以內一律當中性，
-      因為 u* 本身的估計誤差就有這個量級。</div>
-  </details>
-</div>"""
+    return f"""<details class="f-more">
+  <summary>失業缺口 u − u*　<b style="color:{u['color']}">{esc(u['display'])}</b>　·　{esc(u['state'])}</summary>
+  <div class="f-detail">目前失業率 {u['u']:.1f}%　·　自然失業率 u* {u['ustar']:.2f}%
+    （CBO 估計，{esc(u['as_of'])}）。{esc(u['note'])}<br>
+    上面的分解講的是這個月<b>變化</b>的成因；這一行講的是<b>水準</b>——
+    現在的失業率離「不會讓通膨加速的水準」多遠。<br>
+    u* 由 CBO 用模型估計，季頻發布而且會被回溯修正——它不是觀測值。
+    所以這裡只用它判斷鬆／緊的方向，不拿來設門檻。缺口在 ±0.2 個百分點
+    以內一律當中性，因為 u* 本身的估計誤差就有這個量級。</div>
+</details>"""
 
 
 def _structure_block(u: dict | None) -> str:
@@ -349,32 +370,42 @@ def _labor_body_full(d: dict) -> str:
     mini = d.get("mini", {})
     asof = (d.get("asof", {}).get("labor") or "")[:7]
     surp_inline = (d.get("surprises") or {}).get("inline") or {}
+    _fresh = bool(d.get("is_fresh"))
     kpis = "".join([
         _kpi_card("非農就業月變動", k["nfp_display"], k["nfp_sub"], k.get("nfp_plain"),
                   charts.sparkline(k["nfp_spark"], zero_line=True),
                   k.get("nfp_flag"), k.get("nfp_flag_kind", ""),
                   mini=mini.get("nfp", ""), asof=asof,
-                  surprise=surp_inline.get("nfp")),
+                  surprise=surp_inline.get("nfp"), fresh=_fresh),
         _kpi_card("失業率 U-3", k["u3_display"], k["u3_sub"], k.get("u3_plain"),
                   charts.sparkline(k["u3_spark"]),
                   k.get("u3_flag"), k.get("u3_flag_kind", ""),
                   mini=mini.get("u3", ""), asof=asof,
-                  surprise=surp_inline.get("u3")),
+                  surprise=surp_inline.get("u3"), fresh=_fresh),
         _kpi_card("平均時薪年增率", k["ahe_display"], k["ahe_sub"], k.get("ahe_plain"),
                   charts.sparkline(k["ahe_spark"]),
                   k.get("ahe_flag"), k.get("ahe_flag_kind", ""),
-                  mini=mini.get("ahe", ""), asof=asof),
+                  mini=mini.get("ahe", ""), asof=asof, fresh=_fresh),
         _kpi_card("勞動參與率", k["lfpr_display"], k["lfpr_sub"],
                   k.get("lfpr_plain"), charts.sparkline(k["lfpr_spark"]),
                   k.get("lfpr_flag"), k.get("lfpr_flag_kind", ""),
-                  mini=mini.get("lfpr", ""), asof=asof),
+                  mini=mini.get("lfpr", ""), asof=asof, fresh=_fresh),
     ])
 
     rev, att, dec, sc = d["revision"], d["attribution"], d["decomp"], d["score"]
 
     flags_html = "".join(_flag_row(f) for f in d["flags"]) or \
         '<div class="empty">本次沒有觸發任何訊號</div>'
-    lights_html = "".join(_light_card(l) for l in d["lights"])
+    # 每顆燈連回它的「主場」卡區——燈只給狀態，完整脈絡在那裡。
+    # 用標籤關鍵字對照，config 改標籤時對不到就只是不顯示連結，不會壞。
+    _anchor_map = [("衰退警訊", "#unrate"), ("職缺", "#kpi"),
+                   ("離職率", "#kpi"), ("裁員率", "#kpi"),
+                   ("失業補助", "#claims"), ("新增工作", "#kpi"),
+                   ("壯年就業", "#kpi"), ("隱藏性失業", "#kpi")]
+
+    def _anchor(label: str) -> str:
+        return next((a for k, a in _anchor_map if k in label), "")
+    lights_html = "".join(_light_card(l, _anchor(l.label)) for l in d["lights"])
 
     # ---- 失業率為什麼變 ----
     # 版面邏輯：結論在上（判定＋總變動），拆解在下（兩項相加＝總變動）。
@@ -392,11 +423,12 @@ def _labor_body_full(d: dict) -> str:
                   if abs(_r) >= attribution.RESID_SHOW else "")
         # 統計顯著性：UNRATE 只到小數一位，0.1 個百分點在 BLS 自己的標準下
         # 不可分辨於零。不標的話讀者會把雜訊當成訊號。
+        # 一般性的「±0.1 屬雜訊」原則已寫在 teach 層；這裡只在本月
+        # 真的低於門檻時標一行短的，不重複整段解釋。
         _signif = ("" if dec.get("significant", True) else
                    f'<div class="dc-signif">本月變動 '
-                   f"{abs(dec['delta_rate']):.1f} 個百分點，低於 "
-                   f"{dec.get('signif_threshold', 0.2):.1f} 的統計顯著門檻"
-                   "——方向可看，強度別當真。</div>")
+                   f"{abs(dec['delta_rate']):.1f}，低於顯著門檻 "
+                   f"{dec.get('signif_threshold', 0.2):.1f}——屬雜訊範圍。</div>")
         dec_html = f"""<div class="dsum">
   <div class="dsum-main" style="color:{dec['verdict_color']}">{esc(dec['verdict_text'])}</div>
   <div class="dsum-sub">失業率 {d['kpi']['u3_display']}　·
@@ -422,11 +454,7 @@ def _labor_body_full(d: dict) -> str:
     　·　其中失業人數 {esc(fmt.wan(dec['delta_unemployed']))}</div>
   <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點{_resid}</div>
   {_signif}
-</div>
-<p class="hint" style="margin:14px 0 0">
-  失業率只算「還在找工作」的人。放棄找工作的人變多時失業率會下降，
-  但那不代表就業變好——上面兩列就是把這兩種原因拆開。
-</p>"""
+</div>"""
 
     # ---- 折疊區的表格 ----
     jolts_rows = "".join(
@@ -519,7 +547,7 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
-    <p class="hint">點「依據」看支撐的數字。</p>
+    <p class="hint">這個月<b>新發生</b>的事；目前的整體狀態看下方「關鍵指標檢核」。點「依據」看支撐的數字。</p>
     {flags_html}
   </div>
 </div>
@@ -529,6 +557,10 @@ def _labor_body_full(d: dict) -> str:
     <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
     <div class="grid g4 inner">{kpis}</div>
     {_surprise_footnote(d.get('surprises'))}
+    <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
+      <p class="hint" style="margin:10px 0 8px">{esc(d['jolts_note'])}</p>
+      <table><thead><tr><th>指標</th><th>最新值</th><th>較上月</th></tr></thead>
+      <tbody>{jolts_rows}</tbody></table></details>
   </div>
 </div>
 
@@ -538,8 +570,8 @@ def _labor_body_full(d: dict) -> str:
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
     {teach(
         "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
-        "失業率下降不一定是好消息。如果是因為大家放棄找工作而退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
-        "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。")}
+        "失業率只算「還在找工作」的人，所以下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
+        "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
     {dec_html}
     {_ustar_row(d.get('ustar'))}
     {_structure_block(d.get('unemp_structure'))}
@@ -587,7 +619,7 @@ def _labor_body_full(d: dict) -> str:
     {teach(
         "這個月新增（或減少）的就業，是哪幾個行業貢獻的。",
         "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。",
-        "先看增與減集中在誰身上，再看有沒有掛「異常」標籤的行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
+        "先看增與減集中在誰身上，再看圖下方有沒有標 ▲ 的異常行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
     <div class="stat-row">{_stats(att['stats'])}</div>
     {gross_note}
     <details data-m-collapse><summary>增減幅前幾名（圖）</summary>
@@ -633,29 +665,17 @@ def _labor_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
-    <p class="hint">八項關鍵指標的當期狀態。</p>
+    <h2 id="lights" data-sum="{esc(_light_sum)}　·　{esc(_score_sum)}">關鍵指標檢核與綜合強弱</h2>
+    <p class="hint">目前的整體狀態（不限本月）：先數紅燈，再看最下方加權出來的一個總分。</p>
     {teach(
-        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線。",
-        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。",
-        "數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。")}
+        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線；最下方再把它們換算成同一把尺、加權平均成一個總分。",
+        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。指標會互相矛盾時（非農弱但職缺強），總分強迫所有指標表態，給一個唯一的方向。",
+        "先數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。總分看正負與連續趨勢就好——連續幾期往下掉比單期的絕對值重要；格位判定仍以失業率為準。")}
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
-  </div>
-</div>
-
-<div class="grid g2">
-  <div class="card">
-    <h2 id="score" data-sum="{esc(_score_sum)}">綜合強弱指數</h2>
-    <p class="hint">把主要就業指標換算成同一把尺再加權平均。
-      0 代表跟自己的歷史平均一樣，正數偏強、負數偏弱，多數時間落在 −2 到 +2 之間。</p>
-    {teach(
-        "非農用「萬人」、失業率用「%」、職缺用「比率」，單位全都不同，沒辦法直接平均。先把每個指標換算成「離自己平常水準有多遠」，就能加在一起變成一個總分。",
-        "單一指標會互相矛盾（非農弱但職缺強），總分強迫所有指標表態，給你一個唯一的方向。",
-        "看正負與趨勢就夠：連續幾期往下掉比單期的絕對值重要。分數只是輔助，格位判定仍以失業率為準。")}
     {_score_axis(sc)}
-    <details data-m-collapse><summary>各指標貢獻明細</summary>
+    <details data-m-collapse><summary>總分的各指標貢獻明細</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>
           <th>貢獻</th><th>樣本月數</th></tr></thead>
@@ -667,12 +687,10 @@ def _labor_body_full(d: dict) -> str:
         所以「樣本月數」逐列標出，不同列的分數不完全可比。{esc(short_note)}
         權重目前為暫定值，僅供輔助判讀。</p>
     </details>
-    <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
-      <p class="hint" style="margin:10px 0 8px">{esc(d['jolts_note'])}</p>
-      <table><thead><tr><th>指標</th><th>最新值</th><th>較上月</th></tr></thead>
-      <tbody>{jolts_rows}</tbody></table></details>
   </div>
+</div>
 
+<div class="grid">
   <div class="card">
     <h2 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h2>
         <dl class="gloss">
@@ -760,7 +778,11 @@ def labor_body(d: dict) -> str:
             + (f'（{esc(_rel[5:].replace("-", "/"))} 發布）' if _rel else "")
             + '</span>'
             f'<span class="data-tag">初領失業金（統計週至 {(a.get("claims") or "—")[:10]}）</span>'
-            f'<span class="data-tag">JOLTS {(a.get("jolts") or "—")[:7]}</span></div>')
+            f'<span class="data-tag">JOLTS {(a.get("jolts") or "—")[:7]}</span>'
+            + (f'<span class="data-tag next">下次就業報告 '
+               f'{esc(d["next_release"][5:].replace("-", "/"))}</span>'
+               if d.get("next_release") else "")
+            + '</div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
             f'<h2 class="focus-title">就業{state_text}，動能{momentum}</h2>'
             '<p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p>'

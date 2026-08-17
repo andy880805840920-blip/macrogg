@@ -552,9 +552,7 @@ def _home_body_legacy(ctxs: dict) -> str:
     f_dir = shift.get("direction", "neutral")
     f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
     lean = LEAN_TEXT.get(sc.lean, "中性")
-    trig = next((t for t in sc.triggers if t.binding), None)
-    if trig is None:
-        trig = next((t for t in sc.triggers if not t.met), None)
+    trig, _ = _pick_next_trigger(sc)
     trigger = f"{trig.label}：{trig.distance}" if trig else "尚無可計算門檻"
     metrics = "".join([
         state_chip("九宮格位置", f"{sc.labor_state} × {sc.infl_state}", sc.name,
@@ -634,6 +632,28 @@ def _brief_content(ctxs: dict) -> str:
     key_html = f'<p class="home-brief-key">重點：{esc(key)}</p>' if key else ""
     return (f'<div class="home-brief-label">整體情勢<span>{esc(source_label)}</span></div>'
             f'<p class="home-brief-text">{esc(lead)}</p>{more}{key_html}')
+
+
+def _pick_next_trigger(sc):
+    """
+    「可能下一格」只能從**相鄰格**的條件裡挑，取距離最近的那條。
+
+    先前這裡優先拿 binding（政策解鎖）條件——它可能指向對角另一端，
+    首頁就出現「傾向緊縮(中×高) → 預防性降息(中×低)」這種一次跳兩格
+    的畫面。政策解鎖回答的是另一個問題（方向要翻還缺什麼），另行回傳。
+    與 pages/scenario.py 的挑選規則一致。
+    """
+    import re as _re
+
+    def _gapv(x):
+        m = _re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "")
+        return abs(float(m.group(0))) if m else 9e9
+
+    adj = [x for x in sc.triggers if getattr(x, "adjacent", True) and not x.met]
+    trig = min(adj, key=_gapv) if adj else None
+    unlock = next((x for x in sc.triggers
+                   if x.binding and not getattr(x, "adjacent", True)), None)
+    return trig, unlock
 
 
 def _next_cell(sc, trigger) -> tuple[str, str]:
@@ -732,8 +752,78 @@ def _change_rows(cs) -> str:
         for title, value, effect, tone in rows[:4])
 
 
+def _watch_rows(ctxs: dict, sc) -> str:
+    """
+    「接下來看什麼」——未來兩三週會發布的數據，各配一句「它會動什麼」。
+
+    這一區取代原本的「資料狀態」：那一區只有一行更新時間（跟頁尾重複），
+    而整個網站最欠的正是**前瞻**——讀者看完知道「現在是傾向緊縮」，
+    卻不知道下一個可能改變判定的時刻是哪一天。日期優先取官方行事曆
+    （FRED 或 config/releases_calendar.yaml），拿不到官方日期的項目
+    退回可推導的慣例；「會動什麼」直接引用既有的觸發門檻，不新增判斷規則。
+    """
+    today = clock.today()
+    lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
+    fom = ctxs.get("fomc") or {}
+
+    def _d(v):
+        try:
+            return dt.date.fromisoformat(v)
+        except (TypeError, ValueError):
+            return None
+
+    def _trig_near(prefix: str) -> str:
+        if not (sc and sc.triggers):
+            return ""
+        cand = [t for t in sc.triggers
+                if t.label.startswith(prefix) and not t.met]
+        if not cand:
+            return ""
+        import re as _re
+
+        def _gap(x):
+            m = _re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "")
+            return abs(float(m.group(0))) if m else 9e9
+        t = min(cand, key=_gap)
+        return f"最近的門檻：{t.label}（{t.distance}）"
+
+    events = []
+    # 每週失業金：DOL 固定週四發布，可推導
+    _thu = today + dt.timedelta(days=((3 - today.weekday()) % 7 or 7))
+    events.append((_thu, "每週失業金申請", "每週四",
+                   "兩次就業報告之間唯一會更新的數據；重點盯續領人數有沒有一路往上爬。"))
+    _emp = _d(lab.get("next_release")) or next_first_friday()
+    events.append((_emp, "就業報告", "官方行事曆" if lab.get("next_release") else "慣例推估",
+                   _trig_near("就業轉") or "失業率決定就業格位，非農與時薪決定方向。"))
+    _cpi = _d(inf.get("next_cpi")) or next_cpi_release()
+    events.append((_cpi, "CPI", "官方行事曆" if inf.get("next_cpi") else "慣例推估",
+                   "先更新通膨軸的推估值與動能。" + _trig_near("通膨轉")))
+    _ppi = _d(inf.get("next_ppi"))
+    if _ppi:
+        events.append((_ppi, "PPI", "官方行事曆",
+                       "更新上游成本壓力，也是核心 PCE 推估的原料之一。"))
+    _pce = _d(inf.get("next_pce"))
+    if _pce:
+        events.append((_pce, "PCE", "官方行事曆",
+                       "推估值換回實際值，通膨格位以實際值重新判定。"))
+    _nm = _d(((fom.get("next_meeting")) or {}).get("date"))
+    if _nm:
+        _fl = ((fom.get("focus")) or {}).get("label", "")
+        events.append((_nm, "FOMC 會議", "官方行事曆",
+                       "聲明與投票可能改變重心" + (f"（目前：{_fl}）" if _fl else "")
+                       + "——重心一翻，同一格的結論就不同。"))
+    events = sorted([e for e in events if e[0] and e[0] >= today],
+                    key=lambda e: e[0])[:6]
+    return "".join(
+        f'<div class="hn-row"><div class="hn-date"><b>{e[0].strftime("%m/%d")}</b>'
+        f'<span>{(e[0] - today).days} 天後</span></div>'
+        f'<div class="hn-main"><b>{esc(e[1])}</b><span>{esc(e[3])}</span></div>'
+        f'<div class="hn-src">{esc(e[2])}</div></div>'
+        for e in events)
+
+
 def home_body(ctxs: dict) -> str:
-    """總覽固定五區：先結論，再門檻、模組、變化與資料狀態。"""
+    """總覽固定五區：先結論，再門檻、模組、變化與接下來看什麼。"""
     sd = ctxs.get("scenario") or {}
     sc = sd.get("scenario")
     if sc is None:
@@ -753,12 +843,14 @@ def home_body(ctxs: dict) -> str:
     labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
 
-    trigger = next((t for t in sc.triggers if t.binding and not t.met), None)
-    if trigger is None:
-        trigger = next((t for t in sc.triggers if not t.met), None)
+    trigger, unlock = _pick_next_trigger(sc)
     next_name, trigger_text = _next_cell(sc, trigger)
     trigger_detail = (f'<span>{esc(trigger.current)}</span><span>{esc(trigger.threshold)}</span>'
                       if trigger else "")
+    unlock_html = (
+        f'<div class="home-trigger-unlock"><span>政策解鎖</span>'
+        f'{esc(unlock.label)}：{esc("已觸發" if unlock.met else unlock.distance)}</div>'
+        if unlock else "")
 
     status = "".join([
         f'<div><span>就業</span><b>{esc(labor_label)}｜{esc(sc.labor_momentum)}</b></div>',
@@ -794,7 +886,7 @@ def home_body(ctxs: dict) -> str:
       <div class="home-transition-arrow" aria-hidden="true">→</div>
       <div class="home-cell-next"><span>可能下一格</span><b>{esc(next_name)}</b><small>{esc(trigger_text)}</small></div>
       <div class="home-trigger-detail">{trigger_detail}</div>
-    </div>
+    </div>{unlock_html}
     <div class="home-dates">資料期別：{esc(dates)}</div>
   </section>
 
@@ -810,11 +902,11 @@ def home_body(ctxs: dict) -> str:
     <div class="home-change-list">{_change_rows(ctxs.get('changes'))}</div>
   </section>
 
-  <section class="home-zone home-data-status" aria-labelledby="home-data">
+  <section class="home-zone" aria-labelledby="home-next">
     <div class="home-zone-head"><div><span class="home-zone-num">05</span>
-      <h2 id="home-data">資料狀態</h2></div></div>
-    <div><b>自動更新</b><span>{esc(sd.get('as_of', '—'))}</span></div>
-    <p>情勢摘要最多 500 字；九宮格、數字與方向不由 AI 決定。</p>
+      <h2 id="home-next">接下來看什麼</h2></div><p>未來幾週的發布日與它會動什麼</p></div>
+    <div class="home-next-list">{_watch_rows(ctxs, sc)}</div>
+    <div class="home-next-foot">自動更新：{esc(sd.get('as_of', '—'))}</div>
   </section>
 </main>"""
 
@@ -829,7 +921,7 @@ def home_footer(ctxs: dict) -> str:
         '<div class="home-footer">'
         '<div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span>'
         f'<span>就業 {_d((lab or {}).get("data_month", "—"))}｜物價 {_d((inf or {}).get("data_month", "—"))}｜FOMC {_d((fom or {}).get("latest_date", "—"))}</span></div>'
-        '<div><b>使用說明</b><span>本網站提供總體資料整理與情境判讀，不構成投資建議。</span>'
+        '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'
         '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'
         '</div>')
 

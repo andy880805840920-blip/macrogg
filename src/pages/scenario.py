@@ -36,10 +36,18 @@ def _grid(cells) -> str:
                              f'<span class="sn-qual">{esc(_qual)}</span>')
             else:
                 name_html = esc(_n)
+            # 說明文只在「目前位置」那格常駐；其餘八格收成「說明」一點。
+            # 一張格子九段說明、三張頁籤共 27 段，手機上一格三行文字
+            # 把整張表撐得非常長——非目前格的說明是參考資料，點了再看。
+            if c["current"]:
+                desc_html = f'<div class="sdesc">{esc(c["desc"])}</div>'
+            else:
+                desc_html = (f'<details class="sdd"><summary>說明</summary>'
+                             f'<div class="sdesc">{esc(c["desc"])}</div></details>')
             rows.append(
                 f'<div class="scell {c["lean"]}{cls}">'
                 f'<div class="sname">{name_html}</div>'
-                f'<div class="sdesc">{esc(c["desc"])}</div>{badge}</div>'
+                f'{desc_html}{badge}</div>'
             )
     return f'<div class="sgrid">{head}{"".join(rows)}</div>'
 
@@ -102,28 +110,17 @@ def _grid_tabs(d: dict, sc) -> str:
                     "所以這一格的結論帶著一個額外的風險，要跟數據本身一起盯。")
     else:
         cmp_head = "重心翻轉也不影響這一格"
-        cmp_note = ("兩個使命指向同一邊，所以不管誰優先，結論都一樣。"
-                    "這是好消息——少一個需要擔心的變數。"
-                    "下面三列是同一格在三種體制下的結論，可以核對。")
+        cmp_note = ("兩個使命指向同一邊，所以不管誰優先，結論都一樣——"
+                    "少一個需要擔心的變數。下面三列可以核對。")
 
-    # **只直接顯示目前重心那一張**。另外兩張回答的是「重心若翻轉會怎樣」
-    # ——那是進階的反事實問題，收進摺疊；先前三張全在流裡（分頁籤），
-    # 加上規則說明與假設標註，整卡 27 格的文字量，使用者的原話是「太混亂」。
-    cur_m = next((m for m in metas if m["current"]), metas[0])
-    cur_panel = (f'<p class="hint" style="margin:0 0 12px">'
-                 f'<b>{esc(cur_m["label"])}的規則：</b>{esc(cur_m["rule"])}</p>'
-                 f'{_grid(grids[cur_m["key"]])}')
-    alt_panels = "".join(
-        f'<div class="rt-hypo" style="margin-top:12px">這是<b>假設</b>聯準會改以'
-        f'{esc(m["label"])}時的對照，不是目前的判定。</div>'
-        f'<p class="hint" style="margin:8px 0 10px"><b>{esc(m["label"])}的規則：</b>'
-        f'{esc(m["rule"])}</p>{_grid(grids[m["key"]])}'
-        for m in metas if not m["current"])
-    return (cur_panel
+    # 上方三個情境頁籤（純 CSS radio），預設選中目前偵測到的重心，
+    # 一次只顯示一張格子；「重心若翻轉這一格會變成什麼」的三列對照
+    # 仍收在下方的摺疊列，答案直接寫在摺疊列上。
+    return (f'<div class="rtabs">{"".join(tabs)}'
+            f'<div class="rpanels">{"".join(panels)}</div></div>'
             + f'<details class="f-more rcmp-box"><summary>{esc(cmp_head)}</summary>'
             f'<p class="hint" style="margin:10px 0 10px">{cmp_note}</p>'
-            f'{cur_row}'
-            f'{alt_panels}</details>')
+            f'{cur_row}</details>')
 
 
 def _triggers(trigs) -> str:
@@ -159,7 +156,10 @@ def _triggers(trigs) -> str:
         "方向真正的解鎖條件——在通膨優先的重心下，就業再弱也要等通膨"
         "回到「低」才換得到降息，所以兩者可能不是同一條。",
         "平常只要盯「關鍵」那條的距離有沒有在縮小；「下一格」的距離"
-        "則告訴你畫面上的格子最快會往哪邊動。"))
+        "則告訴你畫面上的格子最快會往哪邊動。注意口徑：通膨門檻的判定值"
+        "是「綜合水準」＝0.6×年增＋0.4×三月年化（轉格要看得夠早，所以把"
+        "動能一起計入）；上方格位判定只用年增。兩個數字不同是口徑不同，"
+        "不是算錯。"))
     return "".join(out)
 
 
@@ -369,11 +369,47 @@ def _four_steps(d: dict, sc, focus: dict) -> str:
         f'<span class="step-t">{esc(txt)}</span>'
         f'<span class="step-r">{esc(res)}</span></div>'
         for k, txt, res in rows)
-    return (f'<div class="steps">{body}</div>'
+
+    # ②步的展開層：PCE 還沒公布時，通膨水準用的是推估值——推估怎麼算、
+    # 為什麼選這個方法，應該呈現在「格子怎麼算」的這裡（它是②步的一部分），
+    # 不是 PPI 卡。PPI 卡只講上游數據本身，留一行連過來。
+    nc = d.get("pce_nowcast") or {}
+    nc_html = ""
+    if nc.get("estimated") and nc.get("value") is not None:
+        _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
+        # 收合列只放短名（放全稱會變成「（差距法（核心 CPI − …））」的
+        # 雙層括號）；全稱寫在展開後的第一句。
+        method_short = ("成分法" if nc.get("method") == "components" else "差距法")
+        method_full = ("成分法＝CPI＋PPI 逐項加權"
+                       if nc.get("method") == "components"
+                       else "差距法＝核心 CPI 減去兩者的歷史平均差距")
+        comp_rows = "".join(
+            f'<tr><td>{esc(c["label"])}{"（用最新一期頂上）" if c.get("lagged") else ""}</td>'
+            f'<td>{c["weight"]:.1f}%</td>'
+            f'<td>{c["yoy"]:+.2f}%</td></tr>'
+            for c in (nc.get("components") or []) if c.get("yoy") is not None)
+        comp_tbl = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
+                    f'<th>權重</th><th>年增</th></tr></thead>'
+                    f'<tbody>{comp_rows}</tbody></table>' if comp_rows else "")
+        nc_html = f"""<details class="f-more">
+      <summary>②的水準是推估值：核心 PCE {esc(f'{nc["value"]:.2f}%')}（{esc(method_short)}）</summary>
+      <div class="f-detail">
+        本期採用<b>{esc(method_full)}</b>。
+        PCE 比 CPI 晚兩週公布，空窗期用 CPI 與 PPI 先推——
+        PCE 的醫療與金融服務項本來就取自 PPI，所以推得出來。
+        兩種方法各自回測近 {nc.get("n_backtest") or "—"} 期、比較平均誤差，
+        <b>本期採誤差較小的那個</b>：成分法 {esc(f"±{_mc:.3f}" if _mc is not None else "不可用")}、
+        差距法 {esc(f"±{_mg:.3f}" if _mg is not None else "不可用")} 個百分點。
+        方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
+        {comp_tbl}
+      </div>
+    </details>"""
+
+    return (f'<div class="steps">{body}</div>{nc_html}'
             + teach(
         "格子的位置不是主觀判斷，是四步固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
         "看得懂這四步，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
-        "每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。"))
+        "每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。口徑提醒：②的格位只用**年增率**判；下方「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），所以兩處的數字會不一樣——口徑不同，不是算錯。"))
 
 
 def _scenario_body_full(d: dict) -> str:
@@ -539,8 +575,9 @@ def _scenario_body_full(d: dict) -> str:
     <h2 id="drivers" data-sum="{esc(_drv_sum)}">主要驅動因素</h2>
     <p class="hint">依嚴重度排序。</p>
     {drivers_html or '<div class="empty">尚無資料</div>'}
-    <div class="src">逐條的計算依據與資料來源：<a href="/labor/#signals">勞動市場</a>
-      　·　<a href="/inflation/#signals">通膨</a></div>
+    <p class="hint" style="margin:12px 0 0">每一條的完整依據在來源頁：
+      <a href="/labor/#signals">勞動市場的本期關鍵訊號</a>　·
+      <a href="/inflation/#signals">通膨的本期關鍵訊號</a></p>
   </div>
 
   <div class="card">
@@ -555,8 +592,7 @@ def _scenario_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="positioning" data-sum="{esc(_pos_sum)}">固定收益部位對照</h2>
     <p class="hint">方向性參考，不是進出場訊號。</p>
-    <dl class="gloss poslist">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
-    <div class="src">本頁為分析框架，不構成投資建議。</div>
+    <dl class="poslist">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
   </div>
 
   <div class="card">
@@ -569,7 +605,7 @@ def _scenario_body_full(d: dict) -> str:
 {_rates_line(d.get('rates_line'))}
 <div class="grid">
   <div class="card">
-    <h2 id="howto" data-sum="三張格子的規則、重心怎麼判定、名詞解釋">判讀說明</h2>
+    <h2 id="howto" data-sum="三張格子的規則、重心怎麼判定、格子怎麼移動">判讀說明</h2>
         <dl class="gloss">
       <dt>為什麼有三張九宮格</dt>
       <dd>聯準會有兩個使命，而它們有時指向相反的方向——就業弱要降息、
@@ -582,11 +618,6 @@ def _scenario_body_full(d: dict) -> str:
         右下角（就業弱、通膨高）是停滯性通膨，兩個目標互相打架，
         聯準會最難處理，也是三張格子差最多的那一格。
         上排（就業強）不論通膨高低都不急著降息，差別只在要不要往緊縮走。</dd>
-      <dt>2 年期為什麼能當市場定價的代理</dt>
-      <dd>2 年期殖利率約等於市場預期的「未來兩年平均政策利率」。
-        這是<b>粗略</b>代理而不是會議層級的機率——它同時含有期限溢酬，
-        不能直接讀成純粹的政策路徑預期。要看逐次會議的隱含機率，
-        得用聯邦資金期貨。</dd>
       <dt>為什麼不給機率</dt>
       <dd>機率市場早就定價了，複述它沒有附加價值。有價值的是指出
         「我算出來偏鴿，但市場定價偏鷹」這類具體的分歧，以及明確的門檻
@@ -608,6 +639,20 @@ def _scenario_body_full(d: dict) -> str:
         30 年期殖利率還受債券供給、財政狀況與期限溢酬影響，並非只由政策利率決定。
         把兩者合成一個分數，會讓「降息但長端不降」這種最關鍵的組合消失，
         所以它獨立列在上方。</dd>
+      <dt>文本的角色</dt>
+      <dd>聯準會的客觀訊號（政策行動、反對票、聲明裡的風險用語）用來校準，
+        不是決定格子的位置。這裡刻意不採用措辭語氣分數——語氣會隨主席文風
+        改變，主席換人時分數會整段位移，不能用來加減信心。
+        當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
+        或反過來——他們還沒承認數據已經轉向。</dd>
+    </dl>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h2>
+        <dl class="gloss">
       <dt>殖利率曲線變陡／變平</dt>
       <dd>「變陡」是短天期利率降得比長天期多，通常出現在降息初期；
         「變平」是短天期被推高或長天期被壓低，通常出現在升息或景氣疑慮升高時。</dd>
@@ -619,12 +664,6 @@ def _scenario_body_full(d: dict) -> str:
       <dt>公司債利差</dt>
       <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的風險補償。
         景氣轉差時利差走闊，公司債價格相對承壓。</dd>
-      <dt>文本的角色</dt>
-      <dd>聯準會的客觀訊號（政策行動、反對票、聲明裡的風險用語）用來校準，
-        不是決定格子的位置。這裡刻意不採用措辭語氣分數——語氣會隨主席文風
-        改變，主席換人時分數會整段位移，不能用來加減信心。
-        當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
-        或反過來——他們還沒承認數據已經轉向。</dd>
     </dl>
   </div>
 </div>
@@ -663,7 +702,9 @@ def scenario_body(d: dict) -> str:
         state_chip("FOMC 反應體制", regime, "只改政策解讀，不改兩軸資料"),
     ])
     rates = d.get("rates_line") or {}
-    overlay = (f"長端供給壓力：{rates.get('title', '資料不足')}；{rates.get('curve_title', '')}"
+    # title 本身就是「長端供給壓力：偏高」的完整句，前面不能再冠一次
+    # 「長端供給壓力：」——先前畫面出現「長端供給壓力：長端供給壓力：偏高」。
+    overlay = (f"{rates.get('title', '長端供給壓力：資料不足')}；{rates.get('curve_title', '')}"
                if rates else "長端供給資料不足")
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>當前位置</b>'
              f'<span>就業 {sc.labor_state} × 通膨 {sc.infl_state}＝{esc(sc.name)}</span></div>'

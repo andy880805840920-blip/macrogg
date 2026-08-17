@@ -212,9 +212,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         if ma3 is not None:
             plain_nfp += (f"近三個月平均每月{'增加' if ma3 >= 0 else '減少'}"
                           f" {fmt.wan_abs(ma3)}。")
+    # 「放棄找工作的人不算」的道理主場在分解卡 teach 與名詞解釋
     plain_u3 = ("—" if u3_now is None else
-                f"每 100 個有在找工作的人裡，約 {u3_now:.1f} 人還沒找到。"
-                "已經放棄找工作的人不算在這個數字裡。")
+                f"每 100 個有在找工作的人裡，約 {u3_now:.1f} 人還沒找到。")
     plain_ahe = ("—" if ahe_yoy is None else
                  f"薪水一年漲 {ahe_yoy:.1f}%，目前平均每小時 "
                  f"{ahe_now:,.2f} 美元。" if ahe_now else f"薪水一年漲 {ahe_yoy:.1f}%。")
@@ -320,8 +320,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "value": c.value,
         "muted": c.noncyclical,
         "notable": c.notable,
-        # 「異常」的原因要直接寫在標籤旁，不能只放在 hover 提示裡——
-        # 手機沒有 hover，點下去什麼都不會發生。
+        # 「異常」的理由會集中呈現在圖表下方的註腳（列上只留 ▲ 標記），
+        # 一樣是常駐文字——手機沒有 hover 也讀得到。
         "notable_why": (_notable_plain(c) if c.notable else None),
         "note": ("不受景氣影響" if c.noncyclical else None),
         "tip": (f"{c.label}｜{fmt.wan(c.value)}"
@@ -923,10 +923,10 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                              if summ.headline_yoy is not None else ""))
                          if headline else ""),
         "headline_plain": (
+            # 「2% 目標以 PCE 衡量、兩者不能互換」是方法註解，主場在
+            # 名詞解釋——白話句只講這個數字本身。
             f"你買的東西平均比一年前貴 {summ.headline_yoy:.1f}%。"
             "這個數字包含食物和能源，所以起伏會比較大。"
-            "聯準會的 2% 長期目標以總體 PCE 衡量；CPI 沒有官方目標。"
-            "兩者涵蓋範圍與權重不同，不能直接互換。"
             if summ.headline_yoy is not None else "—"),
         # 年增率一律用未季調（跟大數字同一個口徑，見 inflation._yoy_nsa）。
         # 混用的話卡片上的 3.4% 會配一條 3.5% 的走勢線，看起來像資料錯亂。
@@ -1088,14 +1088,14 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                 "代表住房正在把整體通膨往下拉"
                 + (f"——住房自己只漲 {_srate:+.2f}%，低於非住房的 {_ex:+.2f}%。"
                    if _srate is not None else "。")
-                + "由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，"
-                "後續仍需觀察這條下拉力量是否延續。")
+                + "住房項落後市場租金約一年，這條下拉力量是可預期的——"
+                "下次 CPI 盯住房分項有沒有繼續低於非住房。")
         elif _ex < att.total - 0.02:
             shelter_note = (
                 f"剔除住房後（約 {_ex:+.2f}%）**低於**整體 CPI（{att.total:+.2f}%），"
                 "代表近三個月的價格壓力主要集中在住房。"
-                "由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，"
-                "後續仍需觀察住房通膨是否持續降溫。")
+                "住房項落後市場租金約一年——下次 CPI 盯住房分項"
+                "有沒有跟上市場租金已經降溫的方向。")
 
     # ---- 趨勢型指標 ----
     trend_rows, _trend_vals = [], []
@@ -1388,8 +1388,8 @@ def _stickiness_block(summ) -> dict:
         verdict = (f"核心服務**{label}**——3 個月年化低於 12 個月，"
                    "通膨的慣性正在鬆動。這是降息時間表往前挪的必要條件。")
     elif summ.supercore_dir == "accel":
-        verdict = (f"核心服務**{label}**——3 個月年化高於 12 個月。"
-                   "這一塊的成本主體是人力，重新加速代表降息時間表要往後推。")
+        verdict = (f"核心服務**{label}**——3 個月年化高於 12 個月，"
+                   "降息時間表要往後推。")
     else:
         verdict = (f"核心服務**{label}**——長短天期的年化差不多，"
                    "既沒有進一步惡化，也看不到回落的跡象。")
@@ -1462,8 +1462,8 @@ def _expect_plain(v):
     if v is None:
         return base
     if v > 2.60:
-        return (base + f"目前 {v:.2f}%，明顯高於聯準會 2% 的目標。"
-                "預期一旦往上跑，通膨容易自我實現，這是聯準會最緊張的事。")
+        # 「預期會自我實現」的道理主場在名詞解釋，這裡只講數字的位置
+        return base + f"目前 {v:.2f}%，明顯高於聯準會 2% 的目標。"
     if v < 2.20:
         return base + f"目前 {v:.2f}%，甚至低於目標，代表市場對通膨完全不擔心。"
     return base + f"目前 {v:.2f}%，貼近目標，代表預期錨定良好。"
@@ -2250,6 +2250,10 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 市場定價：由 FOMC 模組算好（2 年期殖利率 vs 政策利率中值）。
         # 情境頁那張「尚未接入」的空卡就是為了這個留的位置。
         "market": (fomc_ctx or {}).get("market") or {},
+        # 核心 PCE 推估的完整方法（成分表、兩種方法的回測誤差）帶給情境頁：
+        # 它是四步卡②步的一部分——九宮格的通膨水準就是用這個值判的，
+        # 計算過程應該呈現在「格子怎麼算」的地方，不是 PPI 卡。
+        "pce_nowcast": (infl_ctx or {}).get("pce_nowcast") or {},
         "as_of": "　·　".join(parts) or "—",
         "generated_at": clock.stamp(),
     }

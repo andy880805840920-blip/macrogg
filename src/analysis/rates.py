@@ -475,11 +475,13 @@ def supply_pressure(curve: CurveState, debt: DebtState,
         # 正值（擴表）給負分：那代表聯準會正在幫忙吸收供給。
         v = min(max(-qt_monthly / 50.0, -2.0), 2.0)
         total += v
+        # 內部單位是十億美元；顯示換算成「億」——中文讀者的量詞是
+        # 億，「37 十億美元」這種混用單位沒人讀得懂。
         if qt_monthly < -5:
-            detail = (f"每月減持約 {abs(qt_monthly):.0f} 十億美元公債，"
+            detail = (f"每月減持約 {abs(qt_monthly) * 10:,.0f} 億美元公債，"
                       "這些量得由私人市場接手")
         elif qt_monthly > 5:
-            detail = (f"每月增持約 {qt_monthly:.0f} 十億美元公債，"
+            detail = (f"每月增持約 {qt_monthly * 10:,.0f} 億美元公債，"
                       "聯準會正在幫忙吸收供給")
         else:
             detail = "持有量大致持平，對供給既沒有額外推力也沒有幫助"

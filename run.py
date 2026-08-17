@@ -375,6 +375,40 @@ def fetch_release_dates() -> dict:
     return out
 
 
+def release_next(releases: dict, calendar: dict) -> dict:
+    """
+    每個指標「今天以後最近的一個發布日」，格式 {key: "YYYY-MM-DD"}。
+
+    優先序：FRED 官方行事曆（就業報告、CPI）→ 手動行事曆
+    （config/releases_calendar.yaml，PPI／PCE 只有這個來源）。
+    全部過期或缺檔就不給——頁面端自己有慣例推估的後備，
+    這裡絕不用猜的日期冒充官方日期。
+    """
+    import datetime as _dt
+    today = clock.today()
+    out: dict = {}
+    for key in ("employment", "cpi", "ppi", "pce"):
+        raw = (releases or {}).get(key)
+        if raw:
+            try:
+                if _dt.date.fromisoformat(raw) >= today:
+                    out[key] = raw
+                    continue
+            except ValueError:
+                pass
+        best = None
+        for _ref, d in ((calendar or {}).get(key) or {}).items():
+            try:
+                dd = _dt.date.fromisoformat(str(d))
+            except ValueError:
+                continue
+            if dd >= today and (best is None or dd < best):
+                best = dd
+        if best:
+            out[key] = best.isoformat()
+    return out
+
+
 def gather_fomc(offline: bool, fetch_cfg: dict):
     """回傳 (statements, upcoming, failed)"""
     if offline:
@@ -699,6 +733,11 @@ def main() -> int:
             log.info("對照基準：%s", chg.basis_text(ctxs["changes"]))
 
         ctxs["_fresh"] = _fresh_releases(ctxs)
+        # KPI 卡的「與預期比較」只在資料 72 小時內常駐（發布日當下那正是
+        # 市場在反應的數字），之後自動退進收合層——旗標帶給頁面端。
+        for _k in ("labor", "inflation"):
+            if ctxs.get(_k) is not None:
+                ctxs[_k]["is_fresh"] = _k in ctxs["_fresh"]
 
     # ---- 首頁的整體總述：規則組裝 → （選配）模型潤稿 ----
     # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。
@@ -724,6 +763,19 @@ def main() -> int:
     # 官方發布行事曆：能問到就用官方的，問不到才退回慣例推估。
     # 離線模式不打 API（也沒有 key），一律走慣例。
     ctxs["_releases"] = {} if args.offline else fetch_release_dates()
+    # 手動維護的官方行事曆（config/releases_calendar.yaml）：
+    # PPI／PCE 的唯一日期來源，也是 FRED 行事曆問不到時的後備。
+    # 離線模式也載——日期是靜態檔案，不打任何 API。
+    ctxs["_calendar"] = load_config("releases_calendar.yaml")
+    # 各分頁 hero 的「下一次更新」：優先 FRED 官方行事曆，其次手動行事曆。
+    # 挑「今天以後最近的一筆」，全部過期就不標（分頁自己有慣例推估後備）。
+    _next = release_next(ctxs["_releases"], ctxs["_calendar"])
+    if ctxs.get("labor") is not None and _next.get("employment"):
+        ctxs["labor"]["next_release"] = _next["employment"]
+    if ctxs.get("inflation") is not None:
+        for _k in ("cpi", "ppi", "pce"):
+            if _next.get(_k):
+                ctxs["inflation"][f"next_{_k}"] = _next[_k]
     ctxs["_stale"] = [] if args.offline else freshness.check(all_series)
     if ctxs["_stale"]:
         log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),

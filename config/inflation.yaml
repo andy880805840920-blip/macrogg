@@ -328,7 +328,7 @@ regime_lights:
   # 兩個不同的數字擺在一起卻只有一個標了口徑，看起來像互相矛盾。
   - key: supercore_3m
     label: 核心服務除住房（三月年化）
-    desc: Fed 最在意的一塊。多為人力成本，跟薪資直接連動。
+    desc: Fed 最在意的一塊，降息時間表看它降不降得下來。
       這裡是近三個月換算成年率，與下方傳導區的年增率是同一條序列的兩種口徑
     direction: higher_is_worse
     green_below: 3.0

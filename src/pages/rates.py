@@ -116,12 +116,12 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="supply" data-sum="{esc(_sup_sum)}">誰在發債</h2>
+    <p class="hint">政府、科技巨頭與聯準會縮表，
+      <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
     {teach(
         "最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。",
         "債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。",
         "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。")}
-    <p class="hint">政府、科技巨頭與聯準會縮表，
-      <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
     <div class="stat-row">
       <div class="stat"><div class="s-label">政府：年度赤字</div>
         <div class="s-value">{esc(ss['gov_display'])}</div>
@@ -458,11 +458,11 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率為什麼在這裡</h2>
+    <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     {teach(
         "把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。",
         "長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。",
         "看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。")}
-    <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     {decomp_head_html}
     <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
     <p class="hint" style="margin-top:14px">{esc(d['decomp_note'])}</p>
@@ -489,11 +489,11 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid g2">
   <div class="card">
     <h2 id="demand" data-sum="{esc(_dem_sum)}">買盤吃不吃得下</h2>
+    <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
     {teach(
         "供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。",
         "同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。",
         "看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。")}
-    <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
     {demand_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
     <div style="margin-top:16px">{d['credit_chart']}</div>
@@ -515,11 +515,11 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="debt" data-sum="{esc(_debt_sum)}">供給端細節一：政府財政</h2>
+    <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
         "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。")}
-    <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
     <div class="stat-row">{_stats(d['debt_stats'])}</div>
     <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
       <b>{esc(debt_title)}</b><br>{esc(debt_desc)}
@@ -551,12 +551,12 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">供給端細節二：科技巨頭</h2>
+    <p class="hint">關鍵不是金額，是<b>融資方式</b>——
+      這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
     {teach(
         "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
         "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
         "盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。")}
-    <p class="hint">關鍵不是金額，是<b>融資方式</b>——
-      這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
     {guidance_html}
     {hs_head_html}
     <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
@@ -593,11 +593,11 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid g2">
   <div class="card">
     <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
+    <p class="hint">{light_summary}</p>
     {teach(
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",
         "紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。")}
-    <p class="hint">{light_summary}</p>
     <details data-m-collapse open><summary>逐項展開</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>

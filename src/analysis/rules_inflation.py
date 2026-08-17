@@ -117,9 +117,10 @@ def r_supercore(ctx) -> Flag | None:
     if s.supercore_3m > 4.0:
         return Flag(
             "supercore_hot", "alert", "核心服務除住房仍高於目標區間",
+            # 「成本是人力、跟薪資連動」的道理主場在黏性卡的教學層，
+            # 依據只留數字與判斷。
             _base + _stuck
-            + "這一塊的成本主要是人力，所以跟薪資直接連動——"
-              "只要它降不下來，聯準會就很難確定通膨真的受控。",
+            + "只要這一塊降不下來，聯準會就很難確定通膨真的受控。",
             "hawkish", "聯準會最在意的一塊還沒降溫",
         )
     # 新增的一條：水準還沒到警戒，但方向轉為加速。
@@ -135,7 +136,7 @@ def r_supercore(ctx) -> Flag | None:
     if s.supercore_3m < 3.0:
         return Flag(
             "supercore_cool", "info", "核心服務除住房回落至正常區間",
-            _base + "這一塊跟薪資連動最深，降下來代表通膨的慣性正在減弱。",
+            _base + "降下來代表通膨的慣性正在減弱。",
             "dovish", "通膨的慣性正在減弱",
         )
     return None
@@ -178,9 +179,9 @@ def r_expectations(ctx) -> Flag | None:
     if s.expect_5y5y > 2.60:
         return Flag(
             "expect_unanchored", "alert", "長期通膨預期偏離目標",
-            f"五年後起算五年的通膨預期來到 {s.expect_5y5y:.2f}%。"
-            "這是聯準會最怕的情況——一旦大家「相信」通膨會一直高，"
-            "就會反映在定價與薪資談判上，通膨會自我實現。",
+            # 「預期自我實現」的完整道理在名詞解釋；依據講數字與含義。
+            f"五年後起算五年的通膨預期來到 {s.expect_5y5y:.2f}%，"
+            "高於 2% 目標——市場開始不相信通膨會回到目標。",
             "hawkish", "預期脫錨是聯準會的紅線",
         )
     if s.expect_5y5y < 2.20:

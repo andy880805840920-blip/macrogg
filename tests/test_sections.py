@@ -179,9 +179,11 @@ if (OUT / "labor" / "index.html").exists():
     check("㉙ index：總覽首卡含四個決策欄位",
           h.count('<section class="home-hero') == 1
           and h.count('<div class="home-status-rail">') == 1)
+    # 第 05 區由「資料狀態」改為「接下來看什麼」（home-data → home-next）：
+    # 前者只有一行更新時間（跟頁尾重複），後者是未來發布日＋觸發提示。
     check("㉙b index：五區順序完整",
           all(f'id="{sid}"' in h for sid in
-              ("home-now", "home-grid", "home-modules", "home-changes", "home-data")))
+              ("home-now", "home-grid", "home-modules", "home-changes", "home-next")))
     check("㉙c index：四個模組只有一層收合",
           h.count('<details class="home-module">') == 4)
     check("㉚ index：摘要沒有殘留 markdown",

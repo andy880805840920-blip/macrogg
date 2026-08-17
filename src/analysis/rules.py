@@ -69,10 +69,10 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
     sig = d.get("significant", True)
     sev = (lambda s: s if sig else "info")
     thr = d.get("signif_threshold", 0.2)
+    # 完整的顯著性說明主場在「失業率變動分解」卡，這裡只留半句
     noise = ("" if sig else
-             f"（不過這個月只動了 {abs(d['delta_rate']):.1f} 個百分點，"
-             f"低於 {thr:.1f} 個百分點的統計顯著門檻，"
-             "方向可以參考，強度不要當真。）")
+             f"（{abs(d['delta_rate']):.1f} 個百分點低於顯著門檻"
+             f" {thr:.1f}，強度別當真。）")
 
     if v == "bad_decline":
         # bad_decline 只保證「勞動力退出主導」，就業本身可能增也可能減——
@@ -91,9 +91,9 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             detail=(
                 f"失業率下降 {abs(d['delta_rate']):.2f} 個百分點，表面上是好消息。"
                 f"{emp_clause}"
-                f"同時有 {fmt.wan_abs(d['delta_labor_force'])}乾脆放棄找工作、退出職場。"
-                "放棄找工作的人不會被算成失業，所以失業率反而被壓低了。"
-                + noise
+                f"同時有 {fmt.wan_abs(d['delta_labor_force'])}乾脆放棄找工作、"
+                "退出職場——失業率是被這批人壓低的，"
+                "完整拆解見下方「失業率變動分解」。" + noise
             ),
             lean="dovish",
             impact="就業市場實際在轉弱",
@@ -161,8 +161,8 @@ def r_revision_swamps(ctx: RuleContext) -> Flag | None:
                 f"政府這次把前兩個月的就業人數合計往下修了 "
                 f"{fmt.wan_abs(rev.two_month_net)}，比本月的變動量還大。"
                 f"把修正算進去後，近三個月平均每月新增從 "
-                f"{fmt.wan(rev.ma3_before_revision)}掉到 {fmt.wan(rev.ma3_now)}。"
-                "就業數據第一次公布時是估算值，之後兩個月會用更完整的資料重算。"
+                f"{fmt.wan(rev.ma3_before_revision)}掉到 {fmt.wan(rev.ma3_now)}"
+                "——為什麼會修正，見下方「歷史數據修正」卡。"
             ),
             lean="dovish",
             impact="就業動能比初值顯示的更弱",

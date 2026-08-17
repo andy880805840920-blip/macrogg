@@ -80,6 +80,7 @@ def diverging_bars(items: Sequence[dict], fmt=None) -> str:
     maxabs = max(abs(r["value"]) for r in rows) or 1
 
     out = ['<div class="dbars">']
+    footnotes: list[tuple[str, str]] = []
     for r in rows:
         v = r["value"]
         pos = v >= 0
@@ -88,11 +89,12 @@ def diverging_bars(items: Sequence[dict], fmt=None) -> str:
         style = (f"left:50%;width:{pctw:.2f}%" if pos
                  else f"right:50%;width:{pctw:.2f}%")
         tip = r.get("tip") or f'{r["label"]}｜{fmt(v)}'
-        # 「值得注意」要把理由一起寫出來。只掛一個標籤、理由藏在 hover 提示裡，
-        # 在手機上等於沒有理由——那裡沒有 hover，點下去不會有任何反應。
-        tag = (f'<span class="dtag">異常<b>{_esc(r["notable_why"])}</b></span>'
-               if r.get("notable") and r.get("notable_why")
-               else ('<span class="dtag">異常</span>' if r.get("notable") else ""))
+        # 異常的完整說明不放在列上——長條旁塞一整句會把圖擠亂。
+        # 列上只留 ▲ 小標記，完整理由集中寫在圖表下方的註腳區
+        #（一樣是常駐文字，手機沒有 hover 也看得到）。
+        tag = '<span class="dtag" title="異常">▲</span>' if r.get("notable") else ""
+        if r.get("notable"):
+            footnotes.append((r["label"], r.get("notable_why") or ""))
         note = f'<span class="dnote">{_esc(r["note"])}</span>' if r.get("note") else ""
 
         out.append(
@@ -104,6 +106,12 @@ def diverging_bars(items: Sequence[dict], fmt=None) -> str:
             f"</div>"
         )
     out.append("</div>")
+    if footnotes:
+        lines = "".join(
+            f'<div class="dfoot-line"><span class="dfoot-mark">▲</span>'
+            f'<b>{_esc(label)}</b>{("：" + _esc(why)) if why else ""}</div>'
+            for label, why in footnotes)
+        out.append(f'<div class="dfoot">{lines}</div>')
     return "".join(out)
 
 
