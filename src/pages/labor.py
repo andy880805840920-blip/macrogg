@@ -14,7 +14,7 @@ from .. import charts, fmt
 from ..analysis import attribution
 from ..site import esc
 
-from . import compact_full, focus_evidence, state_chip
+from . import compact_full, focus_evidence, state_chip, teach
 STATUS_ICON = {"good": "●", "warning": "▲", "critical": "■", "unknown": "○"}
 STATUS_TEXT = {"good": "正常", "warning": "留意", "critical": "警戒", "unknown": "無資料"}
 SEV_ICON = {"alert": "■", "watch": "▲", "info": "●"}
@@ -78,12 +78,15 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
 def _light_card(lt) -> str:
     arrow = {"up": "↑", "down": "↓", "flat": "→"}[lt.delta_dir]
     strip = charts.status_strip(getattr(lt, "history", []) or [])
+    # 說明文收進展開層。格子高低不一的原因就是各格說明長度不同——
+    # 名稱／數值／狀態／歷史條是固定四行，說明移走之後自然等高。
     return f"""<div class="light {lt.status}">
   <div class="l-top"><span class="l-icon">{STATUS_ICON[lt.status]}</span>{esc(lt.label)}</div>
   <div class="l-value">{esc(lt.display)} <span style="font-size:13px;color:var(--muted)">{arrow}</span></div>
   <div class="l-state">{STATUS_TEXT[lt.status]}</div>
   {strip}
-  <div class="l-desc">{esc(lt.desc)}</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">{esc(lt.desc)}</div></details>
 </div>"""
 
 
@@ -99,13 +102,16 @@ def _flag_row(f) -> str:
     if f.impact:
         impact = (f'<div class="impact {f.lean}">'
                   f'{esc(LEAN_TEXT.get(f.lean, ""))}　{esc(f.impact)}</div>')
+    # 「依據」預設收合，**只有 alert 級維持展開**——它是這一頁的頭條，
+    # 其餘的第一輪只需要「有哪幾件事、各自往哪邊」。
+    _open = " open" if f.severity == "alert" else ""
     return f"""<div class="flag {f.severity}">
   <span class="f-icon">{SEV_ICON.get(f.severity,'●')}</span>
   <div>
     <div class="f-head">{esc(f.headline)}
       <span class="f-tag">{SEV_TEXT.get(f.severity,'')}</span></div>
     {impact}
-    <details class="f-more"><summary>依據</summary>
+    <details class="f-more"{_open}><summary>依據</summary>
       <div class="f-detail">{esc(f.detail)}</div></details>
   </div>
 </div>"""
@@ -209,15 +215,17 @@ def _claims_card(c: dict | None) -> str:
     return f"""<div class="grid">
   <div class="card">
     <h2 id="claims" data-sum="{esc(c['stats'][0]['label'])} {esc(c['stats'][0]['value'])}　·　{esc(c['stats'][1]['label'])} {esc(c['stats'][1]['value'])}">每週失業金申請</h2>
-    <p class="hint">這一頁唯一的週頻資料，資料截至 {esc(c['as_of'])}。
-      就業報告一個月才出一次、JOLTS 還要再落後一到兩個月——
-      兩次就業報告之間，只有這一條會更新。</p>
+    <p class="hint">這一頁唯一的週頻資料：{esc(c.get('released') or '—')} 發布、
+      統計週至 {esc(c['as_of'])}。兩次就業報告之間，只有這一條會更新。</p>
     <div class="stat-row">{_stats(c['stats'])}</div>
     <div class="impact {lean_cls}" style="margin-top:14px">{esc(c['verdict'])}</div>
     <div style="margin-top:16px">{c['chart']}</div>
     <p class="hint" style="margin-top:8px">續領失業金人數（近兩年，單位萬人）</p>
     <details class="f-more"><summary>初領與續領差在哪、為什麼看四週平均</summary>
       <div class="f-detail">
+        <b>日期先講清楚</b>：這一區標的是「統計週的結束日」不是發布日——
+        8/13（四）發布的，就是「週結至 8/8」那一筆。看到日期比新聞早五天，
+        不是資料沒更新，是同一筆。<br>
         <b>初領</b>是這週<b>新</b>失去工作的人，衡量的是裁員的速度；
         <b>續領</b>是還在領補助的人，衡量的是再就業的難度。
         兩者可以背離：裁員沒增加、但續領一直往上爬，代表「沒什麼人被裁，
@@ -499,8 +507,11 @@ def _labor_body_full(d: dict) -> str:
         f'{_n} 項{_lab}' for _k, _lab in
         (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
          ("unknown", "無資料")) if (_n := _lt.get(_k)))
-    _score_sum = (f'{sc["score"]:+.2f}　·　較上期 {sc["delta"]:+.2f}'
-                  if sc.get("delta") is not None else f'{sc["score"]:+.2f}')
+    # 收合摘要要用人話。「+0.13 · 較上期 +0.02」對一般讀者是密碼——
+    # 先講判定（強／中性／弱），數字降級成括號裡的佐證。
+    _sv = sc["score"]
+    _sw = "偏強" if _sv > 0.45 else ("偏弱" if _sv < -0.45 else "中性")
+    _score_sum = (f'綜合判定：就業{_sw}（{_sv:+.2f}，0 為歷史平均）')
 
     return f"""
 {_verdict_card(d)}
@@ -525,6 +536,10 @@ def _labor_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="unrate" data-sum="{esc(_dec_sum)}">失業率變動分解</h2>
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
+    {teach(
+        "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
+        "失業率下降不一定是好消息。如果是因為大家放棄找工作而退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
+        "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。")}
     {dec_html}
     {_ustar_row(d.get('ustar'))}
     {_structure_block(d.get('unemp_structure'))}
@@ -534,6 +549,10 @@ def _labor_body_full(d: dict) -> str:
     <h2 id="breakeven" data-sum="{esc(_bk_sum)}">損益兩平就業增速</h2>
     <p class="hint">維持失業率不變，每個月需要新增多少工作。
       沒有這條基準線，非農的絕對數字無法解讀。</p>
+    {teach(
+        "美國每個月人口都在成長，所以就業也要跟著增加，失業率才不會上升。這一區算的就是那條「及格線」。",
+        "新聞說「非農新增 5 萬人」，到底算好還是壞？沒有及格線就答不出來。及格線會隨人口與移民政策改變，前幾年是 10–15 萬，現在低得多。",
+        "非農高於及格線＝就業市場在變強；低於＝表面有新增、其實撐不住現在的失業率，失業率之後會慢慢上升。")}
     <div class="stat-row">{_stats(d['breakeven']['stats'])}</div>
     <div class="bkgap" style="color:{d['breakeven']['gap_color']}">
       <span class="bk-label">缺口</span>
@@ -554,6 +573,7 @@ def _labor_body_full(d: dict) -> str:
         <dd>人口序列每年一月做普查控制調整會出現跳點，計算時已排除一月。
           此為推估值，非官方公布數字。</dd>
       </dl>
+    </details>
   </div>
 </div>
 
@@ -562,11 +582,15 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="industry" data-sum="{esc(_att_sum)}">行業別貢獻分解</h2>
-    <p class="hint">增減最大的各五個行業，加上任何「相對自己過去表現異常」的行業。
-      灰色是醫療、社福與各級政府，用人較不受景氣影響。</p>
+    <p class="hint">只列增減最大的各三個與變動異常的行業；
+      完整 {att['total_count']} 個行業收在下方表格。</p>
+    {teach(
+        "這個月新增（或減少）的就業，是哪幾個行業貢獻的。",
+        "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。",
+        "先看增與減集中在誰身上，再看有沒有掛「異常」標籤的行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
     <div class="stat-row">{_stats(att['stats'])}</div>
     {gross_note}
-    <details data-m-collapse open><summary>行業別明細</summary>
+    <details data-m-collapse><summary>增減幅前幾名（圖）</summary>
     <div style="margin-top:14px">{att['bars']}</div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>增加</span>
@@ -594,6 +618,10 @@ def _labor_body_full(d: dict) -> str:
     <h2 id="revision" data-sum="{esc(_rev_sum)}">歷史數據修正</h2>
     <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
       修正幅度常常比當月的變動還大。</p>
+    {teach(
+        "之前公布的就業數字，事後被改了多少。",
+        "市場只對「第一次公布」的數字有反應，但那是估算值。如果初值總是被往下修，代表你在新聞上看到的就業一直比真實情況好——這正是判斷「數據可不可信」的地方。",
+        "看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。")}
     <div class="stat-row">{_stats(rev['stats'])}</div>
     <details data-m-collapse><summary>逐月修正明細</summary>
       {rev['table']}
@@ -607,6 +635,10 @@ def _labor_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
     <p class="hint">八項關鍵指標的當期狀態。</p>
+    {teach(
+        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線。",
+        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。",
+        "數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。")}
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
@@ -616,19 +648,24 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid g2">
   <div class="card">
     <h2 id="score" data-sum="{esc(_score_sum)}">綜合強弱指數</h2>
-    <p class="hint">最上方那條分數軸的組成明細。
-      把主要指標換算成同一個尺度後加權合成，正數代表比自身歷史平均強。</p>
+    <p class="hint">把主要就業指標換算成同一把尺再加權平均。
+      0 代表跟自己的歷史平均一樣，正數偏強、負數偏弱，多數時間落在 −2 到 +2 之間。</p>
+    {teach(
+        "非農用「萬人」、失業率用「%」、職缺用「比率」，單位全都不同，沒辦法直接平均。先把每個指標換算成「離自己平常水準有多遠」，就能加在一起變成一個總分。",
+        "單一指標會互相矛盾（非農弱但職缺強），總分強迫所有指標表態，給你一個唯一的方向。",
+        "看正負與趨勢就夠：連續幾期往下掉比單期的絕對值重要。分數只是輔助，格位判定仍以失業率為準。")}
     {_score_axis(sc)}
-    <details data-m-collapse open><summary>各指標貢獻明細</summary>
+    <details data-m-collapse><summary>各指標貢獻明細</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>
           <th>貢獻</th><th>樣本月數</th></tr></thead>
         <tbody>{score_items}</tbody></table></div>
       <p class="hint" style="margin-top:10px">
-        標準分數＝目前值比同一條序列自己的平均高或低幾個標準差，
-        已調整方向讓「正值＝就業強」。{esc(win_note)}，
-        所以「樣本月數」那一欄逐列標出，不同列的分數不完全可比。{esc(short_note)}
-        權重目前為暫定值。</p>
+        「標準分數」的意思：這個指標現在離自己的平常水準有多遠、
+        以自己平常的波動幅度為單位——+1 代表比平均高出一個「平常的波動」，
+        數字越大越不尋常。方向已統一成「正值＝就業強」。{esc(win_note)}，
+        所以「樣本月數」逐列標出，不同列的分數不完全可比。{esc(short_note)}
+        權重目前為暫定值，僅供輔助判讀。</p>
     </details>
     <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
       <p class="hint" style="margin:10px 0 8px">{esc(d['jolts_note'])}</p>
@@ -659,12 +696,29 @@ def _labor_body_full(d: dict) -> str:
       <dd>指這項數據會讓聯準會傾向升息或降息。就業轉弱通常利降息，
         就業與薪資過熱則利升息。</dd>
     </dl>
-    </details>
   </div>
 </div>
 
 {failed_html}
 """
+
+
+def _jobs_release_date(month: str) -> str:
+    """
+    就業報告的例行發布日＝資料月份**次月的第一個週五**。可推導，所以標。
+
+    CPI／PPI／PCE 的發布日是 BLS／BEA 每年排的日曆、沒有公式，那幾個
+    刻意不標——與其引入一份每年要手動更新的日曆，不如只標推得出來的。
+    偶爾因假期挪動一天，所以文案寫「發布」不寫星期幾。
+    """
+    try:
+        import datetime as _dt
+        y, m = int(month[:4]), int(month[5:7])
+        y, m = (y + 1, 1) if m == 12 else (y, m + 1)
+        d1 = _dt.date(y, m, 1)
+        return (d1 + _dt.timedelta(days=(4 - d1.weekday()) % 7)).isoformat()
+    except (ValueError, TypeError, IndexError):
+        return ""
 
 
 def labor_body(d: dict) -> str:
@@ -701,8 +755,11 @@ def labor_body(d: dict) -> str:
              f'<div class="logic-step"><b>下一格觸發</b><span>{esc(trigger)}</span></div></div>')
     logic = focus_evidence(logic)
     a = d.get("asof") or {}
-    tags = (f'<div class="data-line"><span class="data-tag">就業報告 {esc(d.get("data_month", "—"))}</span>'
-            f'<span class="data-tag">初領失業金 {(a.get("claims") or "—")[:10]}</span>'
+    _rel = _jobs_release_date(d.get("data_month", ""))
+    tags = (f'<div class="data-line"><span class="data-tag">就業報告 {esc(d.get("data_month", "—"))}'
+            + (f'（{esc(_rel[5:].replace("-", "/"))} 發布）' if _rel else "")
+            + '</span>'
+            f'<span class="data-tag">初領失業金（統計週至 {(a.get("claims") or "—")[:10]}）</span>'
             f'<span class="data-tag">JOLTS {(a.get("jolts") or "—")[:7]}</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
             f'<h2 class="focus-title">就業{state_text}，動能{momentum}</h2>'

@@ -77,6 +77,11 @@ def build() -> dict[str, list[dict]]:
     s["PCEPI"] = _index(d, 131.1, 2.6, noise=0.03, recent_pct=3.7)[:-1]
     s["PCEPILFE"] = _index(d, 132.2, 2.7, noise=0.02, recent_pct=3.6)[:-1]
     s["PPIFIS"] = _index(d, 149.6, 2.4, noise=0.06, recent_pct=3.4)
+    # PPI 成分序列（成分法推估的原料）。診所刻意少一個月，
+    # 讓「落後成分用最新年增頂上」那條路徑在離線模式也走得到。
+    s["PCU622110622110"] = _index(d, 253.3, 2.6, noise=0.04, recent_pct=2.2)
+    s["PCU621111621111"] = _index(d, 162.7, 1.8, noise=0.04, recent_pct=1.5)[:-1]
+    s["PCU5239205239201"] = _index(d, 627.8, 6.0, noise=0.30, recent_pct=4.0)
     s["PPIFES"] = _index(d, 147.0, 2.7, noise=0.05, recent_pct=3.3)
 
     # ---- CPI 分項 ----

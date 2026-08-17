@@ -81,6 +81,9 @@ def curve_state(s: dict[str, list[dict]]) -> CurveState:
 @dataclass
 class DebtState:
     debt_gdp: float | None = None
+    # 債務佔 GDP 的資料期別（季頻、財政部＋BEA，發布落後一至兩季）。
+    # 這張卡先前完全沒標日期——讀者會把一個上上季的比率當成當下的。
+    debt_gdp_asof: str = ""
     deficit_gdp: float | None = None
     interest_gdp: float | None = None
     interest_to_revenue: float | None = None
@@ -111,13 +114,14 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
     """
     d = DebtState()
     debt = s.get("GFDEBTN") or []          # 百萬美元
-    debt_gdp = s.get("GFDEGDQ188S") or []  # %
+    debt_gdp = s.get("GFDEGDQ188S") or []  # %（季頻，落後一至兩季）
     interest = s.get("A091RC1Q027SBEA") or []   # 十億，年率
     receipts = s.get("FGRECPT") or []
     outlays = s.get("FGEXPND") or []
     gdp = s.get("GDP") or []               # 十億，年率
 
     d.debt_gdp = value_at(debt_gdp)
+    d.debt_gdp_asof = (debt_gdp[-1]["date"] if debt_gdp else "")
 
     if interest and gdp:
         d.interest_gdp = value_at(interest) / value_at(gdp) * 100

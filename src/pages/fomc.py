@@ -7,7 +7,7 @@ import re
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _stats
-from . import compact_full, focus_evidence, state_chip
+from . import compact_full, focus_evidence, state_chip, teach
 
 
 # 「鷹／鴿」是聯準會語境的標準詞，這頁保留，但首次出現一律加註方向——
@@ -293,6 +293,10 @@ def _fomc_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="market" data-sum="{esc(_mkt_sum)}">市場定價 vs 聯準會</h2>
+    {teach(
+        "債券市場用真金白銀押的利率路徑，跟聯準會自己的說法差多少。",
+        "兩者常常不一致：市場押得比聯準會鴿，代表投資人不信它撐得住；押得更鷹則相反。這個落差本身就是交易機會與風險所在。",
+        "落差大的方向，就是之後「有一方要認錯」的方向——不是市場修正定價，就是聯準會改口。")}
     <p class="hint">2 年期殖利率跟政策利率中值的差，就是市場定價的政策路徑方向。</p>
     <div class="stat-row">{_stats([
         {"label": "2 年期公債殖利率", "value": f"{mkt['dgs2']:.2f}%"},
@@ -440,6 +444,10 @@ def _fomc_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="score" data-open="1" data-sum="{esc(_sc_sum)}">政策訊號評分</h2>
+    {teach(
+        "把聯準會這次「做了什麼、說了什麼」拆成幾個可以打分的訊號：政策行動、反對票、聲明的風險用語、記者會措辭。",
+        "聯準會不會直接說「我們下次要降息」，方向藏在做與說的細節裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。",
+        "分數的正負代表偏升息／偏降息。先看硬訊號（行動、反對票），措辭分數只當佐證——語氣會隨主席的文風漂移。")}
     <p class="hint">兩個分數刻意不合成——<b>背離本身就是訊號</b>。</p>
     {dual}
     {warn}{diverge}
@@ -461,6 +469,10 @@ def _fomc_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="focus" data-sum="{_focus_sum}">聯準會目前的重心</h2>
+    {teach(
+        "聯準會有兩個任務：穩物價、顧就業。兩者衝突時，判斷它現在把哪一個擺在前面。",
+        "同樣的數據，重心不同結論就相反：就業轉弱時，「就業優先」會降息救經濟，「通膨優先」卻會按住不動。不知道重心，就沒辦法從數據推政策。",
+        "重心翻轉的訊號比數據本身更重要——聲明裡風險描述的順序、記者會被追問時先護哪一邊，都是線索。")}
     <p class="hint">同一份就業數據，在「通膨優先」與「就業優先」下會導向相反的決定。</p>
     <div class="dbox {focus_cls}" style="margin-top:4px">
       <div class="dtitle">目前重心</div>
@@ -475,6 +487,10 @@ def _fomc_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="diff" data-sum="{esc(_diff_sum)}">聲明逐句比對</h2>
+    {teach(
+        "這次的會後聲明跟上一次逐句對照，改了哪幾個字。",
+        "聲明是逐字斟酌的文件，一個形容詞的增刪都是刻意的。市場的劇烈反應常常不是因為做了什麼，而是因為改了哪句話。",
+        "刪掉鷹派措辭＝往鴿派挪，反之亦然。沒改的句子也是資訊——代表委員會不想讓你改變預期。")}
     <p class="hint">「舊 → 新」並排，只標實際改動的字。
       橘色刪除線是拿掉的字，藍色是新增的字。</p>
     {stability_html}

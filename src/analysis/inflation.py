@@ -377,6 +377,165 @@ def nowcast_core_pce(pce_rows: list[dict], cpi_rows: list[dict],
     return out
 
 
+# ---------------------------------------------------------------------------
+# 核心 PCE 成分法推估（CPI ＋ PPI → PCE）
+# ---------------------------------------------------------------------------
+# 華爾街月中就把月底的核心 PCE 算出來，靠的是：PCE 的原料月中已經到齊——
+# 大部分取自 CPI，醫療與金融服務取自 PPI（PCE 的醫療量全部給付、CPI 只量
+# 自付額，所以那塊必須用 PPI）。這裡把同一套邏輯做成**確定性版本**：
+#
+#     組合年增(月) = Σ 權重ᵢ × 成分ᵢ的年增(月)
+#     推估(月)     = 組合年增(月) − 偏誤(月)
+#     偏誤(月)     = 前 12 個月「組合年增 − 實際核心 PCE 年增」的平均
+#
+# 偏誤校正是這個方法站得住的關鍵：權重是近似值、成分涵蓋不完整、
+# 基金管理費隨股市大幅波動——這些系統性誤差在時間上是緩慢的，
+# 用滾動平均扣掉之後，剩下的才是「這個月的新資訊」。
+#
+# **兩種方法同時回測、用誤差小的那個**（見 choose_nowcast）：成分法
+# 對「CPI 與 PCE 分家」的月份較準（那正是差距法的盲區），但如果它的
+# 回測誤差反而比差距法大，程式會自動退回差距法並在畫面上寫明——
+# 方法的選擇本身也是確定性的，不是拍腦袋。
+
+
+def _yoy_by_date(rows: list[dict]) -> dict:
+    return {r["date"]: r["value"] for r in yoy_series(rows)
+            if r.get("value") is not None}
+
+
+def nowcast_core_pce_components(series: dict, comps: list[dict],
+                                backtest_months: int = 18) -> dict:
+    """
+    成分法推估。回傳：
+      {"value", "estimated", "asof", "mae", "components": [...], "n_backtest"}
+    成分資料不足以組出目標月時回 value=None（呼叫端退回差距法）。
+    """
+    out = {"value": None, "estimated": False, "asof": "", "mae": None,
+           "components": [], "n_backtest": 0}
+    pce = series.get("PCEPILFE") or []
+    cpi = series.get("CPILFESL") or []
+    if not pce or not cpi:
+        return out
+    target = cpi[-1]["date"]
+    out["asof"] = target
+    if pce[-1]["date"] >= target:                  # PCE 已跟上，不必推
+        return out
+
+    actual = _yoy_by_date(pce)
+    comp_yoy: list[tuple[dict, dict]] = []         # (成分設定, {date: yoy})
+    for c in comps:
+        ids = c.get("ids") or []
+        blend = c.get("blend") or [1.0 / len(ids)] * len(ids) if ids else []
+        maps = [_yoy_by_date(series.get(i) or []) for i in ids]
+        if not maps or any(not m for m in maps):
+            return out                             # 缺整條成分 → 組不出來
+        merged: dict = {}
+        for d in maps[0]:
+            if all(d in m for m in maps):
+                merged[d] = sum(w * m[d] for w, m in zip(blend, maps))
+        comp_yoy.append((c, merged))
+
+    def composite(date: str, allow_latest: bool = False):
+        total, est = 0.0, []
+        for c, m in comp_yoy:
+            v = m.get(date)
+            if v is None and allow_latest and m:
+                # 落後的成分（例如診所 PPI 慢一個月）用它最新一期的年增頂上。
+                # 年增率月與月之間動得慢，這個近似的誤差遠小於整組棄用。
+                last = max(m)
+                v = m[last]
+                est.append(c["label"])
+            if v is None:
+                return None, est
+            total += float(c["weight"]) / 100.0 * v
+        return total, est
+
+    # ---- 偏誤與回測：只用目標月**之前**的實際值，不偷看未來 ----
+    months = sorted(actual)
+    bias_win = [m for m in months if m < target][-12:]
+    pairs = []
+    for m in bias_win:
+        comp, _ = composite(m)
+        if comp is not None:
+            pairs.append(comp - actual[m])
+    if len(pairs) < 6:                             # 校正樣本太少，不可信
+        return out
+    bias = sum(pairs) / len(pairs)
+
+    errs = []
+    for m in [x for x in months if x < target][-backtest_months:]:
+        prior = [x for x in months if x < m][-12:]
+        diffs = []
+        for pm in prior:
+            comp, _ = composite(pm)
+            if comp is not None:
+                diffs.append(comp - actual[pm])
+        comp_m, _ = composite(m)
+        if comp_m is None or len(diffs) < 6:
+            continue
+        errs.append(abs((comp_m - sum(diffs) / len(diffs)) - actual[m]))
+    if errs:
+        out["mae"] = sum(errs) / len(errs)
+        out["n_backtest"] = len(errs)
+
+    comp_t, est_labels = composite(target, allow_latest=True)
+    if comp_t is None:
+        return out
+    out["value"] = comp_t - bias
+    out["estimated"] = True
+    out["components"] = [
+        {"label": c["label"], "weight": float(c["weight"]),
+         "yoy": (m.get(target) if m.get(target) is not None
+                 else (m[max(m)] if m else None)),
+         "lagged": c["label"] in est_labels}
+        for c, m in comp_yoy]
+    return out
+
+
+def backtest_gap_method(series: dict, backtest_months: int = 18):
+    """差距法（CPI 年增 − 歷史平均差距）的回測誤差，跟成分法同一把尺。"""
+    pce = _yoy_by_date(series.get("PCEPILFE") or [])
+    cpi = _yoy_by_date(series.get("CPILFENS") or series.get("CPILFESL") or [])
+    months = sorted(m for m in pce if m in cpi)
+    errs = []
+    for m in months[-backtest_months:]:
+        prior = [x for x in months if x < m][-12:]
+        if len(prior) < 6:
+            continue
+        gap = sum(cpi[x] - pce[x] for x in prior) / len(prior)
+        errs.append(abs((cpi[m] - gap) - pce[m]))
+    return (sum(errs) / len(errs), len(errs)) if errs else (None, 0)
+
+
+def choose_nowcast(series: dict, cfg: dict) -> dict:
+    """
+    兩種推估法回測互比，**用誤差小的那個**。回傳附上兩邊的誤差與選擇原因，
+    畫面要印出來——方法的選擇是規則決定的，讀者有權驗證。
+    """
+    nc_cfg = (cfg or {}).get("pce_nowcast") or {}
+    comps = nc_cfg.get("components") or []
+    n_bt = int(nc_cfg.get("backtest_months") or 18)
+
+    gap_nc = nowcast_core_pce(series.get("PCEPILFE", []),
+                              series.get("CPILFENS")
+                              or series.get("CPILFESL", []))
+    gap_mae, gap_n = backtest_gap_method(series, n_bt)
+
+    comp_nc = (nowcast_core_pce_components(series, comps, n_bt)
+               if comps else {"value": None, "estimated": False, "mae": None})
+
+    use_comp = (comp_nc.get("estimated")
+                and comp_nc.get("mae") is not None and gap_mae is not None
+                and comp_nc["mae"] <= gap_mae)
+    chosen = comp_nc if use_comp else gap_nc
+    return {**chosen,
+            "method": ("components" if use_comp else "gap"),
+            "mae_components": comp_nc.get("mae"),
+            "mae_gap": gap_mae,
+            "n_backtest": comp_nc.get("n_backtest") or gap_n,
+            "components": comp_nc.get("components") or []}
+
+
 # 「黏著」的門檻。2% 是目標，但月度資料的雜訊讓 2.0 太容易被穿越；
 # 取 2.5 是為了讓「連續 N 個月高於門檻」這個數字代表真的卡住，
 # 而不是在目標附近正常擺盪。

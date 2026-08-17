@@ -174,6 +174,56 @@ check("㊲ 新規則的依據不會是自訂門檻",
       L(-0.35, {"net": -4}, lab(u=4.1, under=True))[1] in
       ("level", "sahm"))
 
+# ---------------------------------------------------------------------------
+# 轉格條件必須指向**相鄰格**
+#
+# 使用者抓到的：目前在「通膨高」，畫面卻寫「下一個轉格條件：通膨轉『低』」。
+# 相鄰格是「中」——先前的寫法只會產生轉「低」／轉「高」，沒有轉「中」，
+# 站在兩端時給的一律是跳過中間的門檻，距離被高估一整格。
+# ---------------------------------------------------------------------------
+from src.analysis import scenario as _scn
+
+_LAB = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3}
+_INF = {"core_pce_yoy": 3.39, "core_pce_3m": 3.1,
+        "bands": {"low": 2.50, "high": 2.90}}
+_tr = _scn._triggers(_LAB, _INF, "中", "高", "通膨")
+_by = {x.label: x for x in _tr}
+
+check("㊵ 在「高」時有轉「中」的條件（相鄰格）",
+      "通膨轉「中」" in _by and _by["通膨轉「中」"].adjacent)
+check("㊶ 轉「中」的門檻是 high 帶（2.90），不是 low 帶",
+      "2.90" in _by["通膨轉「中」"].threshold, _by["通膨轉「中」"].threshold)
+check("㊷ 轉「低」仍在，但標成非相鄰（政策解鎖）",
+      "通膨轉「低」" in _by and not _by["通膨轉「低」"].adjacent)
+check("㊸ 解鎖條件掛「關鍵」、相鄰條件不掛",
+      _by["通膨轉「低」"].binding and not _by["通膨轉「中」"].binding)
+check("㊹ 通膨軸用加權水準（跟格位判定同口徑），不是原始年增率",
+      "3.27" in _by["通膨轉「中」"].current
+      or "3.28" in _by["通膨轉「中」"].current,
+      _by["通膨轉「中」"].current)
+
+# 就業在「中」：兩邊都是相鄰格
+check("㊺ 就業在「中」時轉強／轉弱都是相鄰",
+      _by["就業轉「弱」"].adjacent and _by["就業轉「強」"].adjacent)
+
+# 就業在「弱」：相鄰是「中」（需低於上緣），不是直達「強」
+_tr2 = _scn._triggers({"unrate": 4.5, "u_lo": 4.0, "u_hi": 4.3}, _INF,
+                      "弱", "高", "通膨")
+_by2 = {x.label: x for x in _tr2}
+check("㊻ 就業在「弱」時相鄰格是「中」（需低於 4.3）",
+      "就業轉「中」" in _by2 and "4.3" in _by2["就業轉「中」"].threshold
+      and _by2["就業轉「中」"].adjacent)
+check("㊼ 直達「強」標成非相鄰",
+      "就業轉「強」" in _by2 and not _by2["就業轉「強」"].adjacent)
+
+# 通膨在「低」：解鎖（重新緊縮風險）是轉「高」
+_tr3 = _scn._triggers(_LAB, {"core_pce_yoy": 1.9, "core_pce_3m": 1.8,
+                             "bands": {"low": 2.50, "high": 2.90}},
+                      "中", "低", "通膨")
+_by3 = {x.label: x for x in _tr3}
+check("㊽ 在「低」時相鄰是「中」、非相鄰是「高」",
+      _by3["通膨轉「中」"].adjacent and not _by3["通膨轉「高」"].adjacent)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

@@ -5,7 +5,7 @@ from __future__ import annotations
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _light_card, _flag_row, _stats
-from . import compact_full, focus_evidence, state_chip
+from . import compact_full, focus_evidence, state_chip, teach
 
 
 VERDICT_COPY = {
@@ -109,6 +109,10 @@ def _sticky_card(k: dict | None) -> str:
     return f"""<div class="grid">
   <div class="card">
     <h2 id="sticky" data-sum="{esc(k['sum'])}">核心服務的黏性</h2>
+    {teach(
+        "服務類（剔除住房）的物價還在以多快的速度上漲、已經連續多久降不下來。",
+        "商品價格漲了會回落，服務價格漲了很難回頭——它的成本主要是人的薪水，而薪水幾乎不會降。這一塊不鬆，聯準會就不敢降息，所以它是降息時間表卡最久的關卡。",
+        "先看方向（在加速還是減速），再看連續高於門檻的月數——月數越多代表卡得越久，別只看單月數字。")}
     <p class="hint">降息時間表卡最久的一塊。看的是<b>方向</b>不是水準。</p>
     <div class="impact {k['lean']}" style="margin-bottom:14px">{_v}</div>
     <div class="stat-row">{_stats(k['stats'])}</div>
@@ -336,9 +340,15 @@ def _inflation_body_full(d: dict) -> str:
   </div>
 </div>
 
+{_ppi_card(d.get('ppi'))}
+
 <div class="grid">
   <div class="card">
     <h2 id="contrib" data-sum="{esc(_att_sum)}">分項貢獻分解</h2>
+    {teach(
+        "過去三個月物價的漲幅，是住房、食物、能源還是其他項目造成的。",
+        "「CPI 漲 3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。",
+        "看哪幾塊是正的（在推升）、哪幾塊是負的（在壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。")}
     <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
       估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
     <div class="stat-row">{_stats(att['stats'])}</div>
@@ -369,6 +379,10 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="trend" data-sum="{_trend_sum}">是全面在漲，還是少數項目？</h2>
+    {teach(
+        "把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。",
+        "同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。",
+        "中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。")}
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     {trend_html}
     <details data-m-collapse><summary>三個指標的定義與數值</summary>
@@ -390,6 +404,10 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="passthrough" data-sum="{_pt_sum}">薪資到服務業通膨的傳導</h2>
+    {teach(
+        "薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。",
+        "服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。",
+        "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。")}
     <p class="hint">這一塊的成本主體是人力。
       <b>薪資走向會在數月後反映到這裡，是通膨黏性的核心機制。</b></p>
     {_passthrough(d.get('passthrough'))}
@@ -399,6 +417,10 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="energy" data-sum="{esc(_en_sum)}">能源價格與傳導</h2>
+    {teach(
+        "油價最近的變動，以及它大概會在一到兩個月後對總體 CPI 造成多大影響。",
+        "能源只佔 CPI 約 6%，但波動極大，常常是單月 CPI 意外的主因。先知道油價動了多少，下個月 CPI 出爐時就不會被表面數字嚇到。",
+        "油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。")}
     <p class="hint">「已經發生但還沒反映到數據裡」的部分。</p>
     <div class="stat-row">{_stats(d['energy_stats'])}</div>
     {energy_head}
@@ -421,6 +443,10 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
+    {teach(
+        "八個通膨相關指標逐一對照警戒線，紅黃綠一眼掃完。",
+        "單一指標會騙人（基期效應能讓年增率忽高忽低），一排一起看才知道壓力是全面的還是個別的。",
+        "數紅燈，並注意紅燈集中在哪一類——集中在服務類比集中在能源類嚴重得多。")}
     <p class="hint">八項關鍵指標的當期狀態。</p>
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
@@ -456,6 +482,75 @@ def _inflation_body_full(d: dict) -> str:
   </div>
 </div>
 """
+
+
+def _ppi_card(pp: dict | None) -> str:
+    """
+    生產者物價 PPI——上游價格，也是核心 PCE 成分法推估的原料之一。
+
+    這張卡回答兩個問題：上游的成本壓力有多大（會不會在一兩季後變成
+    CPI）、以及「PCE 還沒公布時我們是怎麼推的」——推估方法、兩種方法的
+    回測誤差、本期採用哪一種，全部攤開給讀者驗證。
+    """
+    if not pp or pp.get("core_yoy") is None:
+        return ""
+    def pv(v, d=1):
+        return f"{v:+.1f}%" if v is not None else "—"
+    gap = pp.get("gap_vs_cpi")
+    gap_note = ""
+    if gap is not None:
+        gap_note = ("出廠價漲得比零售價快，企業還沒把成本轉嫁完，"
+                    "未來幾季 CPI 有上行壓力。" if gap > 0.3 else
+                    ("出廠價漲得比零售價慢，企業利潤在吸收成本，"
+                     "下游漲價壓力較小。" if gap < -0.3 else
+                     "上下游漲幅相當，管線裡沒有明顯的未轉嫁壓力。"))
+    stats = _stats([
+        {"label": "核心 PPI 年增", "value": pv(pp["core_yoy"]),
+         "note": f'三月年化 {pv(pp.get("core_3m"))}'},
+        {"label": "總體 PPI 年增", "value": pv(pp.get("headline_yoy")),
+         "note": "含食物與能源"},
+        {"label": "PPI − CPI 差距", "value": (f'{gap:+.1f} 個百分點'
+                                             if gap is not None else "—"),
+         "note": "正值＝上游漲得比下游快"},
+    ])
+
+    nc = pp.get("nowcast") or {}
+    nc_html = ""
+    if nc.get("estimated"):
+        _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
+        method = ("成分法（CPI＋PPI 逐項加權）" if nc.get("method") == "components"
+                  else "差距法（核心 CPI − 兩者的歷史平均差距）")
+        rows = "".join(
+            f'<tr><td>{esc(c["label"])}{"（用最新一期頂上）" if c.get("lagged") else ""}</td>'
+            f'<td>{c["weight"]:.1f}%</td>'
+            f'<td>{c["yoy"]:+.2f}%</td></tr>'
+            for c in (nc.get("components") or []) if c.get("yoy") is not None)
+        comp_tbl = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
+                    f'<th>權重</th><th>年增</th></tr></thead>'
+                    f'<tbody>{rows}</tbody></table>' if rows else "")
+        nc_html = f"""
+    <details class="f-more"><summary>本期核心 PCE 推估：{esc(f'{nc["value"]:.2f}%')}（{esc(method)}）</summary>
+      <div class="f-detail">
+        兩種方法各自回測近 {nc.get("n_backtest") or "—"} 期、比較平均誤差，
+        **本期採誤差較小的那個**：成分法 {esc(f"±{_mc:.3f}" if _mc is not None else "不可用")}、
+        差距法 {esc(f"±{_mg:.3f}" if _mg is not None else "不可用")} 個百分點。
+        方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
+        {comp_tbl}
+      </div>
+    </details>"""
+
+    return f"""<div class="grid">
+  <div class="card">
+    <h2 id="ppi" data-sum="核心 PPI {esc(pv(pp['core_yoy']))}　·　PPI−CPI {esc(f'{gap:+.1f}pp' if gap is not None else '—')}">生產者物價 PPI（上游）</h2>
+    <p class="hint">企業的出廠價。資料至 {esc((pp.get('asof') or '—')[:7])}。{esc(gap_note)}</p>
+    {teach(
+        "企業賣給下游的價格（出廠價）漲了多少。CPI 是你我付的零售價，PPI 是它的上游。",
+        "物價的傳導有順序：出廠價先動、幾個月後零售價跟上。PPI 還有一個特殊角色——PCE 的醫療與金融服務項直接取自 PPI（PCE 量的是含保險給付的全部費用，CPI 只量自付額），所以月底的 PCE 月中就能推出來。",
+        "看 PPI−CPI 差距：正值代表企業還沒轉嫁完、未來 CPI 有上行壓力；也順便看下方的推估卡——本站的核心 PCE 推估值就是從 CPI 與 PPI 組出來的。")}
+    <div class="stat-row">{stats}</div>
+    {nc_html}
+  </div>
+</div>"""
 
 
 def inflation_body(d: dict) -> str:

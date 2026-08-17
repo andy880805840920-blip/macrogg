@@ -149,6 +149,82 @@ check("⑳ 推估值明顯低於直接代入 CPI（否則門檻等於被無故�
       nc["value"] < _raw_cpi_yoy - 0.1,
       f'推估 {nc["value"]:.3f}% vs 直接代入 {_raw_cpi_yoy}%')
 
+# ---------------------------------------------------------------------------
+# ④ 成分法推估（CPI＋PPI → 核心 PCE）
+# ---------------------------------------------------------------------------
+def idx(vals, y=2023, m=1):
+    out = []
+    for v in vals:
+        out.append({"date": f"{y:04d}-{m:02d}-01", "value": float(v)})
+        m += 1
+        if m > 12: y, m = y + 1, 1
+    return out
+
+
+def growing(n, annual, base=100.0, last_extra=0.0):
+    rows = []
+    v = base
+    for i in range(n):
+        rows.append(v)
+        v *= (1 + annual / 100) ** (1 / 12)
+    rows[-1] *= (1 + last_extra / 100)
+    return rows
+
+
+N = 40
+COMPS = [
+    {"label": "核心商品", "ids": ["G"], "weight": 25.0},
+    {"label": "住房", "ids": ["H"], "weight": 17.5},
+    {"label": "醫療服務", "ids": ["MED1", "MED2"], "blend": [0.6, 0.4],
+     "weight": 17.0},
+    {"label": "金融服務", "ids": ["FIN"], "weight": 8.0},
+    {"label": "其他核心服務", "ids": ["S"], "weight": 32.5},
+]
+S = {k: idx(growing(N, a)) for k, a in
+     [("G", 0.5), ("H", 4.0), ("MED1", 2.5), ("MED2", 2.0),
+      ("FIN", 6.0), ("S", 3.5)]}
+S["CPILFESL"] = idx(growing(N, 3.0))
+# PCE 比組合固定低 0.3（偏誤校正要吸收的就是這種系統差），少一個月
+S["PCEPILFE"] = idx(growing(N, 2.6))[:-1]
+
+nc = ia.nowcast_core_pce_components(S, COMPS, backtest_months=12)
+check("㉑ 成分法推得出目標月", nc["estimated"] is True and nc["value"] is not None,
+      str(nc["value"]))
+check("㉒ 偏誤校正把系統差吸收掉（推估貼近實際的 2.6 而不是組合的原始值）",
+      nc["value"] is not None and abs(nc["value"] - 2.6) < 0.35,
+      f'{nc["value"]:.3f}')
+check("㉓ 回測誤差算得出來", nc["mae"] is not None and nc["n_backtest"] >= 6,
+      f'±{nc["mae"]:.4f}（{nc["n_backtest"]} 期）')
+check("㉔ 成分明細帶權重與年增", len(nc["components"]) == 5
+      and all(c["yoy"] is not None for c in nc["components"]))
+
+# 落後的成分（診所慢一個月）用最新一期頂上，並標出來
+S2 = dict(S); S2["MED2"] = S["MED2"][:-1]
+nc2 = ia.nowcast_core_pce_components(S2, COMPS, backtest_months=12)
+check("㉕ 成分落後一個月 → 用最新年增頂上、整組照樣推得出",
+      nc2["estimated"] is True, str(nc2["value"]))
+check("㉖ 而且標出是哪個成分在用舊值",
+      any(c["lagged"] for c in nc2["components"]))
+
+# 缺一整條成分 → 誠實放棄（回 None），讓 chooser 退回差距法
+S3 = dict(S); S3.pop("FIN")
+check("㉗ 缺整條成分 → 不硬湊，回 None",
+      ia.nowcast_core_pce_components(S3, COMPS)["value"] is None)
+
+# chooser：規則選誤差小的，選擇透明
+cfg = {"pce_nowcast": {"backtest_months": 12, "components": COMPS}}
+ch = ia.choose_nowcast(S, cfg)
+check("㉘ chooser 回傳兩邊的回測誤差（畫面要印）",
+      "mae_components" in ch and "mae_gap" in ch)
+check("㉙ 選擇與誤差一致：誤差小的那個被採用",
+      (ch["method"] == "components") == (
+          ch["mae_components"] is not None and ch["mae_gap"] is not None
+          and ch["mae_components"] <= ch["mae_gap"]),
+      f'{ch["method"]}：成分 {ch["mae_components"]}、差距 {ch["mae_gap"]}')
+check("㉚ PCE 已跟上時不推估",
+      ia.choose_nowcast({**S, "PCEPILFE": idx(growing(N, 2.6))}, cfg)
+      .get("estimated") is not True)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

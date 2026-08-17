@@ -125,6 +125,10 @@ PROBE = r"""
         // 只比垂直方向真的相鄰、而且水平有重疊的一組
         const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
         if (overlapX <= 0) continue;
+        // 兩個目標都已達最小觸控高度時不再要求間距——間距是給「小目標」
+        // 的補償（WCAG 2.5.8 的邏輯：夠大或夠開，二擇一）。資料表逐列的
+        // 連結靠負 margin 撐到 40px+，行與行相貼是表格的正常形態。
+        if (a.height >= %(tap)d && b.height >= %(tap)d) continue;
         const gapY = (a.top < b.top) ? b.top - a.bottom : a.top - b.bottom;
         if (gapY < 0 || gapY >= %(gap)d) continue;
         out.gap.push({a: label(boxes[i].el), b: label(boxes[j].el),

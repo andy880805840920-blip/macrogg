@@ -289,19 +289,43 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     ]
 
     # ---------------- 貢獻度卡片 ----------------
-    shown, other_sum, other_n = att.display_set(n=5)
+    # 預設只露重點：增最多 3 個＋減最多 3 個＋任何異常的行業。
+    # 先前是 5＋5，一張圖十幾條，使用者的原話是「圖表很亂」——
+    # 完整的 17 個行業在下方的收合表格裡，一個都不會少。
+    shown, other_sum, other_n = att.display_set(n=3)
+
+    def _notable_plain(c) -> str:
+        """
+        把「相對自身歷史 −2.5 個標準差」翻成人話——**用排名，不用倍數**。
+
+        第一版翻成「跌幅是自己平常波動的 2.5 倍」，使用者仍然覺得怪：
+        「平常波動的 N 倍」還是在描述統計量，只是換了字。排名不一樣，
+        它不需要任何前置概念：「近 5 年來最大單月減幅」小學生都懂，
+        而且可以拿歷史資料逐月驗證。判定門檻不變（仍是 z-score），
+        改的只是說法。
+        """
+        word = "增幅" if c.value >= 0 else "減幅"
+        win = c.rank_window or 0
+        span = (f"近 {win // 12} 年" if win >= 24 else f"近 {win} 個月")
+        if c.rank == 1:
+            return f"{span}最大單月{word}"
+        if c.rank is not None and c.rank <= 5:
+            return f"{word}在{span}裡排第 {c.rank} 大"
+        # 排名算不出來（樣本不足）才退回倍數說法
+        return (f"{word}遠超出自己平常的起伏（約 {abs(c.zscore):.1f} 倍）"
+                if c.zscore is not None else "變動異常大")
+
     wf_items = [{
         "label": c.label,
         "value": c.value,
         "muted": c.noncyclical,
         "notable": c.notable,
-        # 「值得注意」的原因要直接寫在標籤旁，不能只放在 hover 提示裡——
+        # 「異常」的原因要直接寫在標籤旁，不能只放在 hover 提示裡——
         # 手機沒有 hover，點下去什麼都不會發生。
-        "notable_why": (f"相對自身歷史 {c.zscore:+.1f} 個標準差"
-                        if c.notable and c.zscore is not None else None),
+        "notable_why": (_notable_plain(c) if c.notable else None),
         "note": ("不受景氣影響" if c.noncyclical else None),
         "tip": (f"{c.label}｜{fmt.wan(c.value)}"
-                + (f"｜相對自身歷史 {c.zscore:+.1f} 個標準差" if c.zscore is not None else "")),
+                + (f"｜{_notable_plain(c)}" if c.notable else "")),
     } for c in shown]
     if other_n:
         wf_items.append({"label": f"其他 {other_n} 個行業", "value": other_sum,
@@ -500,6 +524,16 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     }
 
 
+def _claims_release_date(week_end: str) -> str:
+    """統計週（結至週六）的例行發布日＝次週四。回傳 ISO 日期，壞輸入回空。"""
+    try:
+        import datetime as _dt
+        d = _dt.date.fromisoformat(week_end[:10])
+    except (ValueError, TypeError):
+        return ""
+    return (d + _dt.timedelta(days=5)).isoformat()
+
+
 def _claims_block(series: dict) -> dict:
     """
     每週失業金申請。
@@ -598,6 +632,11 @@ def _claims_block(series: dict) -> dict:
         "lean": lean,
         "ma_source": ma_source,
         "as_of": ic[-1]["date"],
+        # 統計週結束日（週六）＋5 天＝下週四的發布日。畫面上兩個日期都要標：
+        # 使用者拿「發布日」對新聞（8/13 出爐），頁面卻只標「統計週至 8/8」，
+        # 就會以為資料沒更新——其實是同一筆。假期偶爾會讓 DOL 提前或延後
+        # 一天發布，所以寫「發布」不寫死星期四。
+        "released": _claims_release_date(ic[-1]["date"]),
         "ic_rank": ic_rank, "cc_rank": cc_rank,
         # 圖畫續領：它比初領平滑，而且是「再就業難度」這條主線的載體
         "chart": charts.line_chart(
@@ -804,15 +843,20 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     # ---- 核心 PCE 的即時推估 ----
     # 九宮格的通膨軸吃這個。PCE 落後 CPI 兩週，不補的話每個月都有一段
     # 時間九宮格用的是一個月前的世界。換算成 PCE 口徑再送，門檻才對得上。
-    _pce_nowcast = infl_an.nowcast_core_pce(
-        series.get("PCEPILFE", []),
-        series.get("CPILFENS") or series.get("CPILFESL", []))
+    # 成分法（CPI＋PPI）與差距法同時回測，用誤差小的那個——選擇是規則
+    # 決定的，兩邊的誤差都會印出來、也會顯示在 PPI 卡上供驗證。
+    _pce_nowcast = infl_an.choose_nowcast(series, cfg)
     if _pce_nowcast.get("estimated"):
-        log.info("核心 PCE %s 尚未公布，用 %s 的核心 CPI 推估 %.2f%%"
-                 "（近 %d 個月 CPI−PCE 平均差 %.2f 個百分點）",
-                 _pce_nowcast["asof"][:7], _pce_nowcast["source_month"][:7],
-                 _pce_nowcast["value"], infl_an.NOWCAST_GAP_MONTHS,
-                 _pce_nowcast["gap"])
+        _m1 = _pce_nowcast.get("mae_components")
+        _m2 = _pce_nowcast.get("mae_gap")
+        log.info("核心 PCE %s 尚未公布，%s推估 %.2f%%"
+                 "（回測誤差：成分法 %s、差距法 %s，採誤差較小者）",
+                 _pce_nowcast["asof"][:7],
+                 "成分法（CPI＋PPI）" if _pce_nowcast.get("method") == "components"
+                 else "差距法（CPI−歷史差距）",
+                 _pce_nowcast["value"],
+                 f"±{_m1:.3f}" if _m1 is not None else "不可用",
+                 f"±{_m2:.3f}" if _m2 is not None else "不可用")
 
     # ---- 意外值 ----
     # 只用手動填入的預期，不退回模型外推（見 surprise.evaluate 的 allow_model）。
@@ -1251,6 +1295,20 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         # 不然每一期都會標成「高於目標」而失去資訊。
         # 核心 PCE 的即時推估。PCE 已經跟上時 estimated=False，畫面照舊。
         "pce_nowcast": _pce_nowcast,
+        # PPI 卡的資料。上游價格＋與 CPI 的差距＋推估方法的透明資訊。
+        "ppi": {
+            "headline_yoy": summ.ppi_headline_yoy,
+            "headline_3m": summ.ppi_headline_3m,
+            "core_yoy": summ.ppi_core_yoy,
+            "core_3m": summ.ppi_core_3m,
+            # 出廠價漲得比零售價快 → 企業還沒轉嫁完，未來 CPI 有上行壓力；
+            # 反過來是企業利潤在吸收成本。
+            "gap_vs_cpi": (summ.ppi_core_yoy - summ.core_yoy
+                           if summ.ppi_core_yoy is not None
+                           and summ.core_yoy is not None else None),
+            "asof": (series.get("PPIFIS") or [{}])[-1].get("date", ""),
+            "nowcast": _pce_nowcast,
+        },
         "pce_actual_month": ((series.get("PCEPILFE") or [{}])[-1].get("date", "")[:7]),
 
         "kpi_lean": {
@@ -2448,8 +2506,13 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
 
     # ---- 債務 ----
     debt_stats = [
+        # 期別要標：季頻資料落後一至兩季，不標的話讀者會把上上季的比率
+        # 當成當下的。用「YYYY QN」的寫法，跟科技巨頭的「公司期末」一致。
         {"label": "債務佔 GDP", "value": (f"{debt.debt_gdp:.0f}%"
-                                          if debt.debt_gdp else "—")},
+                                          if debt.debt_gdp else "—"),
+         "note": (f"資料至 {debt.debt_gdp_asof[:4]} Q"
+                  f"{(int(debt.debt_gdp_asof[5:7]) + 2) // 3}"
+                  if debt.debt_gdp_asof else "")},
         {"label": "利息佔稅收", "value": (f"{debt.interest_to_revenue:.1f}%"
                                           if debt.interest_to_revenue else "—"),
          "color": ("var(--critical)" if (debt.interest_to_revenue or 0) > 20

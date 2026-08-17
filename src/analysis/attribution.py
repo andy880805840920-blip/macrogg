@@ -33,6 +33,12 @@ class Contribution:
     #       但相對它自己的常態已經是極端值，那才是真正的訊號。
     zscore: float | None = None
     notable: bool = False
+    # 「異常」翻成人話用的兩個欄位：這次的變動幅度在自己近 N 個月裡
+    # 排第幾大、樣本共幾個月。標籤寫「近 5 年來最大單月減幅」比
+    # 「−2.5 個標準差」或「平常波動的 2.5 倍」都直觀——排名不需要
+    # 任何統計概念，而且讀者可以自己去對歷史資料驗證。
+    rank: int | None = None
+    rank_window: int | None = None
 
 
 @dataclass
@@ -108,6 +114,27 @@ def _own_history_zscore(rows: list[dict], idx_from_end: int = 0) -> float | None
     return (current - mean) / sd
 
 
+def _own_history_rank(rows: list[dict], idx_from_end: int = 0):
+    """
+    這個行業「本月變動的絕對幅度」在它自己近 N 個月裡排第幾大。
+
+    回傳 (排名, 樣本月數)；資料不足回 (None, None)。
+    排名含本月自己：「排第 1」＝近 N 個月裡最大的一次變動。
+    用絕對值比，因為要抓的是「動得不尋常地大」，不分方向——
+    方向由變動值本身的正負表達。
+    """
+    changes = []
+    for i in range(1, len(rows)):
+        changes.append(rows[i]["value"] - rows[i - 1]["value"])
+    if len(changes) < 13:
+        return None, None
+    end = len(changes) - idx_from_end
+    current = changes[end - 1]
+    window = changes[max(0, end - NOTABLE_LOOKBACK - 1): end]
+    rank = sorted((abs(v) for v in window), reverse=True).index(abs(current)) + 1
+    return rank, len(window)
+
+
 def attribute_payrolls(
     total_rows: list[dict],
     industry_rows: dict[str, list[dict]],
@@ -134,6 +161,7 @@ def attribute_payrolls(
             continue
         m = meta_by_id.get(sid, {})
         z = _own_history_zscore(rows, idx_from_end)
+        rank, rank_win = _own_history_rank(rows, idx_from_end)
         contribs.append(
             Contribution(
                 key=sid,
@@ -143,6 +171,8 @@ def attribute_payrolls(
                 order=m.get("order", 999),
                 zscore=z,
                 notable=(z is not None and abs(z) >= NOTABLE_Z),
+                rank=rank,
+                rank_window=rank_win,
             )
         )
 

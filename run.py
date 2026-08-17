@@ -99,7 +99,9 @@ def series_ids(cfg: dict, groups: tuple[str, ...]) -> tuple[list, dict, dict]:
 LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
                 "claims", "reference", "special_series", "industries")
 INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
-               "trend_measures", "energy", "expectations", "sep")
+               "trend_measures", "energy", "expectations", "sep",
+               # PPI 成分：PPI 卡與核心 PCE 成分法推估的原料
+               "ppi_components")
 RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt",
                 # 匯率：只為了把海外發債的原幣金額換算成美元等值。
                 # 少了這一組，非美元的發債仍然會列出原幣金額，

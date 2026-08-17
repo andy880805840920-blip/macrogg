@@ -165,10 +165,13 @@ if (OUT / "labor" / "index.html").exists():
     check("㉗ scenario：理由句帶具體數字",
           all(re.search(r"\d", x[2]) for x in heads),
           str([x[2][:24] for x in heads]))
-    # 兩軸依據要保留，但新版不允許「展開後還要再展開」。
-    check("㉘ scenario：軸依據保留但不再巢狀收合",
-          h.count('<details class="ax">') == 0
-          and h.count('<span class="ax-k">') == 2)
+    # 兩軸依據保留。設計原則已改：全站固定三層（卡區 → 白話內容 →
+    # 依據／方法收合），所以軸的算式**允許**巢狀收合——但判定與一句話
+    # 理由必須留在 summary 上常駐，收合的只能是算式。
+    check("㉘ scenario：軸算式收合、判定常駐",
+          h.count('<details class="ax">') == 2
+          and h.count('<span class="ax-k">') == 2
+          and h.count('<span class="ax-lead">') == 2)
 
     # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
     h = (OUT / "index.html").read_text(encoding="utf-8")

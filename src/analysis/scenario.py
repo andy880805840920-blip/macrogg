@@ -219,6 +219,10 @@ class Trigger:
     distance: str
     met: bool = False
     binding: bool = False       # 這一軸是不是目前的政策約束條件
+    # 觸發後到的是不是**相鄰**的格子。九宮格的「下一格」只能用相鄰的
+    # 條件；非相鄰的（例如從「高」直達「低」）是政策解鎖條件，
+    # 兩者混在一起就會出現「下一格跳了兩格」的畫面。
+    adjacent: bool = True
 
 
 @dataclass
@@ -517,29 +521,55 @@ def synthesise(labor: dict | None, inflation: dict | None,
 def _triggers(labor: dict | None, inflation: dict | None,
               l_state: str, i_state: str, binding: str = "") -> list[Trigger]:
     """
-    各軸離下一格還有多遠。
+    各軸離**相鄰的下一格**還有多遠，加上政策解鎖條件。
 
-    binding 指出目前哪一軸才是政策的約束條件——在通膨優先的體制下，
-    勞動那幾條就算全部觸發，也不會單獨改變政策方向。標示出來，
-    讀者才知道該盯哪一條。
+    使用者抓到的 bug：目前在「通膨高」，畫面卻寫「下一個轉格條件：
+    通膨轉『低』，還差 0.89 個百分點」。相鄰格是「中」不是「低」——
+    先前的寫法只會產生轉「低」與轉「高」兩種條件，**沒有轉「中」**，
+    站在兩端時給的一律是跳過中間、直達另一端的門檻，距離被高估整整一格。
+
+    現在每一軸最多兩條：
+      · 相鄰格條件（adjacent=True）——九宮格的「下一格」用它
+      · 跨到另一端的條件（adjacent=False）——只在它是政策解鎖條件時有意義
+        （通膨優先時，降息解鎖的是通膨回到「低」，那本來就不是相鄰格）
+
+    binding 指出目前哪一軸才是政策的約束條件。binding 標籤只掛在
+    **指向另一端**的那條（政策要翻向需要的條件）；相鄰格條件是
+    「格子會先動到哪」，兩者回答不同的問題，畫面上分開標。
+
+    通膨軸用**加權後的綜合水準**（0.6×年增＋0.4×三月年化），跟格位判定
+    同一個口徑——先前這裡用原始年增率，「還差 X」跟軸卡上顯示的
+    「加權後 Y%」對不起來，讀者拿計算機驗算會失敗。
     """
     out: list[Trigger] = []
 
-    # 就業軸的門檻＝FOMC 對長期失業率的中央趨勢。用失業率而不是綜合分數，
-    # 讀者才盯得動——「還差 0.2 個百分點」是可以拿去對新聞的東西，
-    # 「綜合分數還差 0.80」不是。
+    # ---- 就業軸：門檻＝FOMC 對長期失業率的中央趨勢 ----
     lab = labor or {}
     u, lo, hi = lab.get("unrate"), lab.get("u_lo"), lab.get("u_hi")
     if u is not None and lo is not None and hi is not None:
         cur = f"失業率 {u:.1f}%"
-        if l_state != "弱":
+        _b = (binding == "就業")
+        if l_state == "強":
+            out.append(Trigger("就業轉「中」", cur, f"需高於 {lo:.1f}%",
+                               f"還差 {lo - u:.1f} 個百分點", u >= lo,
+                               binding=False, adjacent=True))
             out.append(Trigger("就業轉「弱」", cur, f"需高於 {hi:.1f}%",
                                f"還差 {hi - u:.1f} 個百分點", u > hi,
-                               binding=(binding == "就業")))
-        if l_state != "強":
+                               binding=_b, adjacent=False))
+        elif l_state == "弱":
+            out.append(Trigger("就業轉「中」", cur, f"需低於 {hi:.1f}%",
+                               f"還差 {u - hi:.1f} 個百分點", u <= hi,
+                               binding=False, adjacent=True))
             out.append(Trigger("就業轉「強」", cur, f"需低於 {lo:.1f}%",
                                f"還差 {u - lo:.1f} 個百分點", u < lo,
-                               binding=(binding == "就業")))
+                               binding=_b, adjacent=False))
+        else:                                      # 中：兩邊都是相鄰格
+            out.append(Trigger("就業轉「弱」", cur, f"需高於 {hi:.1f}%",
+                               f"還差 {hi - u:.1f} 個百分點", u > hi,
+                               binding=_b, adjacent=True))
+            out.append(Trigger("就業轉「強」", cur, f"需低於 {lo:.1f}%",
+                               f"還差 {u - lo:.1f} 個百分點", u < lo,
+                               binding=_b, adjacent=True))
     else:
         score = lab.get("score")
         if score is not None:
@@ -554,20 +584,35 @@ def _triggers(labor: dict | None, inflation: dict | None,
                                    f"還差 {gap:.2f}", gap <= 0,
                                    binding=(binding == "就業")))
 
-    level = (inflation or {}).get("core_pce_yoy")
+    # ---- 通膨軸：跟格位判定同口徑的加權水準 ----
+    infl = inflation or {}
+    level = blended_inflation(infl.get("core_pce_yoy"), infl.get("core_pce_3m"))
     if level is not None:
-        b = (inflation or {}).get("bands") or {}
+        b = infl.get("bands") or {}
         lo, hi = b.get("low", 2.30), b.get("high", 2.90)
-        if i_state != "低":
-            gap = level - lo
-            out.append(Trigger("通膨轉「低」", f"核心 PCE 年增 {level:.2f}%",
-                               f"需低於 {lo:.2f}%", f"還差 {gap:.2f} 個百分點",
-                               gap <= 0, binding=(binding == "通膨")))
-        if i_state != "高":
-            gap = hi - level
-            out.append(Trigger("通膨轉「高」", f"核心 PCE 年增 {level:.2f}%",
-                               f"需高於 {hi:.2f}%", f"還差 {gap:.2f} 個百分點",
-                               gap <= 0, binding=(binding == "通膨")))
+        cur = f"綜合通膨水準 {level:.2f}%"
+        _b = (binding == "通膨")
+        if i_state == "高":
+            out.append(Trigger("通膨轉「中」", cur, f"需低於 {hi:.2f}%",
+                               f"還差 {level - hi:.2f} 個百分點", level <= hi,
+                               binding=False, adjacent=True))
+            out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
+                               f"還差 {level - lo:.2f} 個百分點", level < lo,
+                               binding=_b, adjacent=False))
+        elif i_state == "低":
+            out.append(Trigger("通膨轉「中」", cur, f"需高於 {lo:.2f}%",
+                               f"還差 {lo - level:.2f} 個百分點", level >= lo,
+                               binding=False, adjacent=True))
+            out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
+                               f"還差 {hi - level:.2f} 個百分點", level > hi,
+                               binding=_b, adjacent=False))
+        else:                                      # 中：兩邊都是相鄰格
+            out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
+                               f"還差 {level - lo:.2f} 個百分點", level < lo,
+                               binding=_b, adjacent=True))
+            out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
+                               f"還差 {hi - level:.2f} 個百分點", level > hi,
+                               binding=_b, adjacent=True))
     return out
 
 
