@@ -268,25 +268,35 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
 /* 英文為主、中文降成副標：對照 BLS 新聞稿與英文報導時，中文譯名對不起來。 */
 .kpi .k-label-zh{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
 .kpi .k-sub{font-size:12.5px;color:var(--muted);margin-top:6px}
-/* 鷹鴿標籤。水準與變化各一個——同一張卡可以「仍高於目標」又「本期在降」，
-   兩件事都成立，擠成一個標籤只會互相矛盾。刻意做得比 k-flag 小且不搶眼：
-   它是註記不是結論，結論在情境頁。 */
-.kpi .k-leans{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-.kpi .k-lean{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;
-  background:var(--surface-2);color:var(--text-secondary);white-space:nowrap}
-.kpi .k-lean.hawkish{color:var(--critical)}
-.kpi .k-lean.dovish{color:var(--good)}
+/* chips 列：水準／變化標籤與徽章（動能、修正、成因）合成**同一種樣式**。
+   先前 k-lean、k-flag、意外行各一種視覺，每張卡都要重新學一次
+   「哪行是重點」；統一之後掃一列就知道方向。水準與變化仍各一顆——
+   同一張卡可以「仍高於目標」又「本期在降」，兩件事都成立，
+   擠成一個標籤只會互相矛盾。 */
+.kpi .k-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.kpi .k-chip{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px;
+  background:var(--surface-2);color:var(--text-secondary)}
+.kpi .k-chip.hawkish,.kpi .k-chip.neg{color:var(--critical)}
+.kpi .k-chip.dovish,.kpi .k-chip.pos{color:var(--good)}
+.kpi .k-chip.watch{color:var(--warning)}
 .kpi .k-plain{font-size:13.5px;color:var(--text-primary);margin-top:11px;
   line-height:1.75;background:var(--surface-2);border-radius:9px;padding:10px 12px}
-.kpi .k-flag{font-size:12.5px;margin-top:9px;padding:5px 10px;border-radius:7px;
-  display:inline-block;background:var(--surface-2);color:var(--text-secondary);
-  font-weight:600}
-.kpi .k-flag.neg{color:var(--critical)} .kpi .k-flag.pos{color:var(--good)}
-/* 四張 KPI 卡被拉成同高，但卡內是普通區塊流，走勢圖與數值列因此
-   停在各自不同的位置，一列看過去參差不齊。把卡片改成直向 flex、
-   走勢圖以上推到頂，四張卡的圖與數值列就落在同一條線上。 */
+/* 收合層：近 5 期走勢、比較行、（非發布日的）預期比較。
+   跟「依據」同視覺，要驗算才點。summary 上下 12px 把觸控高撐過 40px。 */
+.kpi .k-more{margin:2px 0 0;border:0;background:transparent}
+.kpi .k-more>summary{cursor:pointer;list-style:none;font-size:12.5px;
+  font-weight:500;color:var(--muted);padding:12px 0}
+.kpi .k-more>summary:hover{color:var(--series-1)}
+.kpi .k-more>summary::-webkit-details-marker{display:none}
+.kpi .k-more>summary::before{content:"▸ "}
+.kpi .k-more[open]>summary::before{content:"▾ "}
+.kpi .k-more-body{padding-bottom:8px}
+.kpi .k-more-body .k-sub{margin-top:2px}
+/* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
+   展開點會落在同一條線上，一列看過去才整齊。 */
 .kpi{display:flex;flex-direction:column}
-.spark{margin-top:auto;padding-top:11px;display:block;width:100%;height:34px}
+.kpi .k-more{margin-top:auto}
+.spark{padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
 .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;
@@ -358,13 +368,15 @@ td a[target="_blank"],.src a[target="_blank"]{
 .drow:hover{background:var(--surface-2)}
 .dlabel{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
 @media(min-width:760px){.dlabel{font-size:13.5px}}
-/* 標籤帶理由：理由用一般字重接在後面，讓「值得注意」不再是一個
-   點下去沒反應的空標籤。窄螢幕上讓它掉到下一行，不要擠壓行業名稱。 */
-.dtag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--warning);
-  border:1px solid var(--warning);border-radius:4px;padding:0 4px;margin-left:4px;
-  vertical-align:1px}
-.dtag b{font-weight:400;margin-left:4px;color:var(--text-secondary)}
-@media(max-width:520px){.dtag{display:block;margin:3px 0 0;width:fit-content}}
+/* 異常標示：列上只放一個 ▲ 小標記（整句理由掛在長條旁會把圖擠亂），
+   完整理由集中在圖下方的 .dfoot 註腳——手機沒有 hover 也讀得到。 */
+.dtag{display:inline-block;font-size:10px;font-weight:700;color:var(--warning);
+  margin-left:5px;vertical-align:1px}
+.dfoot{margin-top:10px;padding-top:8px;border-top:1px dashed var(--grid)}
+.dfoot-line{font-size:11.5px;line-height:1.7;color:var(--text-secondary);
+  margin:3px 0}
+.dfoot-line b{font-weight:600}
+.dfoot-mark{color:var(--warning);font-size:10px;font-weight:700;margin-right:5px}
 .dnote{display:block;font-size:11.5px;color:var(--muted)}
 .dtrack{position:relative;height:15px}
 .dzero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
@@ -702,10 +714,10 @@ td a[target="_blank"],.src a[target="_blank"]{
 .archive-list .a-meta{color:var(--muted);font-size:12.5px}
 
 /* ---------- 名詞解釋 ---------- */
-.gloss{margin:6px 0 0}
-.gloss dt{font-weight:700;font-size:13.5px;margin-top:13px}
-.gloss dt:first-child{margin-top:0}
-.gloss dd{margin:3px 0 0;color:var(--text-secondary);font-size:13px;line-height:1.75}
+.gloss,.poslist{margin:6px 0 0}
+.gloss dt,.poslist dt{font-weight:700;font-size:13.5px;margin-top:13px}
+.gloss dt:first-child,.poslist dt:first-child{margin-top:0}
+.gloss dd,.poslist dd{margin:3px 0 0;color:var(--text-secondary);font-size:13px;line-height:1.75}
 @media(min-width:760px){
   .gloss{display:grid;grid-template-columns:130px 1fr;gap:11px 18px}
   .gloss dt{margin-top:0} .gloss dd{margin-top:0}
@@ -862,7 +874,7 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .sgrid .axis{color:var(--muted);font-size:12px;display:flex;align-items:center;
   justify-content:center;padding:4px 3px;text-align:center}
 .sgrid .axis.row{writing-mode:horizontal-tb;min-width:40px}
-/* 手機上 .sdesc 是隱藏的，min-height 若還留著桌機的高度，
+/* 手機上格子高度以內容為準（說明收合），min-height 若還留著桌機的高度，
    九格會各空掉六成，白白多出四百多 px 的捲動。 */
 .scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
   padding:9px 8px;min-height:0}
@@ -872,10 +884,19 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .scell .sn-qual{display:block;font-size:11px;font-weight:600;
   color:var(--text-secondary);line-height:1.35;margin-top:1px}
 .scell.on .sn-qual{color:inherit}
-.scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;
-  display:none}
+/* 說明文只在「目前位置」那格常駐；其餘八格收成一顆「說明」，點了才展開
+   （.sdd）。先前手機為了省高度把說明整批藏掉，現在收合式反而讓手機
+   也看得到——想看哪格點哪格。summary 上下 12px 把觸控高撐過 40px。 */
+.scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+.sdd{margin:0;border:0;background:transparent}
+.sdd>summary{cursor:pointer;list-style:none;display:inline-block;
+  font-size:11px;font-weight:600;color:var(--muted);padding:12px 0}
+.sdd>summary::-webkit-details-marker{display:none}
+.sdd>summary::after{content:"▸";margin-left:3px;font-size:9px}
+.sdd[open]>summary::after{content:"▾"}
+.sdd .sdesc{margin-top:0}
 @media(min-width:760px){.scell{padding:12px 11px;min-height:96px}
-  .scell .sname{font-size:13.5px}.scell .sdesc{display:block}}
+  .scell .sname{font-size:13.5px}}
 /* 會隨體制改變的三格：右上角一個小記號。
    其餘六格不管誰優先都一樣，讀者不必為它們擔心重心翻轉。 */
 .scell.conflict{position:relative}
@@ -1329,6 +1350,11 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-trigger-detail{display:flex;flex-wrap:wrap;gap:6px}
 .home-trigger-detail span{font-size:11.5px;padding:5px 8px;border-radius:999px;
   background:var(--surface-1);border:1px solid var(--border);color:var(--text-secondary)}
+.home-trigger-unlock{margin-top:10px;font-size:11.5px;line-height:1.7;
+  color:var(--text-secondary)}
+.home-trigger-unlock>span{display:inline-block;font-size:10px;padding:2px 7px;
+  margin-right:7px;border-radius:999px;border:1px solid var(--border);
+  color:var(--muted);vertical-align:1px}
 .home-dates{margin-top:12px;padding-top:10px;border-top:1px solid var(--grid);
   font-size:11px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums}
 
@@ -1370,13 +1396,25 @@ details.home-module[open]{padding-bottom:0}
 .home-change p{grid-column:2;font-size:12.5px;line-height:1.5;color:var(--text-secondary);margin:5px 0 0}
 .home-empty{padding:20px 2px;color:var(--muted);font-size:13px}
 
-.home-data-status{display:grid;grid-template-columns:1fr;gap:8px;background:transparent;
-  border-style:dashed;box-shadow:none}
-.home-data-status .home-zone-head{margin:0}
-.home-data-status>div:not(.home-zone-head){display:flex;gap:9px;align-items:center}
-.home-data-status>div:not(.home-zone-head) b{font-size:12px;color:var(--good)}
-.home-data-status>div:not(.home-zone-head) span{font-size:12px;color:var(--muted)}
-.home-data-status>p{font-size:12px;color:var(--muted);margin:0}
+/* 接下來看什麼：發布日倒數 ＋「它會動什麼」。
+   日期欄固定寬、tabular-nums，六列掃下來像一張行事曆。 */
+.home-next-list{border-top:1px solid var(--grid)}
+.hn-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:2px 14px;
+  padding:12px 2px;border-bottom:1px solid var(--grid)}
+.hn-date b{display:block;font-size:15px;font-weight:700;
+  font-variant-numeric:tabular-nums}
+.hn-date span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px;
+  white-space:nowrap}
+.hn-main b{display:block;font-size:13.5px}
+.hn-main span{display:block;font-size:12px;line-height:1.65;
+  color:var(--text-secondary);margin-top:3px}
+.hn-src{grid-column:2;font-size:10.5px;color:var(--muted)}
+@media(min-width:760px){
+  .hn-row{grid-template-columns:74px minmax(0,1fr) auto;align-items:start}
+  .hn-src{grid-column:auto;padding-top:3px}
+}
+.home-next-foot{margin-top:12px;font-size:11.5px;line-height:1.7;color:var(--muted)}
+.data-tag.next{border-color:var(--series-1);color:var(--series-1)}
 
 .home-footer{display:grid;grid-template-columns:1fr;gap:16px;padding-top:18px;
   border-top:1px solid var(--baseline)}
@@ -1418,8 +1456,6 @@ details.home-module[open]{padding-bottom:0}
   .home-change{grid-template-columns:8px minmax(180px,.75fr) minmax(0,1fr);
     align-items:start;column-gap:12px}
   .home-change p{grid-column:3;margin:0;font-size:13px}
-  .home-data-status{grid-template-columns:auto auto minmax(0,1fr);align-items:center}
-  .home-data-status .home-zone-head{min-width:150px}
   .home-footer{grid-template-columns:1.15fr .85fr;gap:40px}
 }
 @media(max-width:430px){
@@ -1473,19 +1509,26 @@ details.home-module[open]{padding-bottom:0}
 /* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
    每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
    一個是教你怎麼讀，一個是給你驗算。 */
-.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
-  background:var(--surface-2)}
-.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
-  font-weight:600;color:var(--text-secondary)}
+/* 收合時只是一行提示——跟「依據」（.f-more）同字級、同高度、同位置感，
+   卡片的比例才不會被一個大盒子撐歪；全站每張卡都長一樣。
+   展開後內容才進到虛線盒（教學內容跟證據層還是要分得出來）。
+   summary 上下 padding 12px：17px 行高 + 24px ＝ 41px，滿足 40px 觸控高。 */
+.teach{margin:0 0 4px;border:0;border-radius:0;background:transparent}
+.teach>summary{cursor:pointer;list-style:none;padding:12px 0;font-size:12.5px;
+  font-weight:500;color:var(--muted)}
+.teach>summary:hover{color:var(--series-1)}
 .teach>summary::-webkit-details-marker{display:none}
 .teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
-  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface-2);
   border:1px solid var(--grid);margin-right:7px;font-size:11px}
-.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
-  color:var(--text-primary)}
+.teach-body{margin:2px 0 12px;padding:8px 12px;border:1px dashed var(--grid);
+  border-radius:9px;background:var(--surface-2);
+  font-size:12.5px;line-height:1.8;color:var(--text-primary)}
 .teach-body p{margin:6px 0}
 /* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
    說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.l-link{display:inline-block;margin-top:4px;padding:12px 0;font-size:12px;
+  font-weight:600;color:var(--series-1);text-decoration:none}
 .lights{align-items:stretch}
 .light{display:flex;flex-direction:column}
 .light .l-more{margin-top:auto;padding-top:8px}
