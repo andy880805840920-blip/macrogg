@@ -914,6 +914,39 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+/* 資料時效條：把「財報已出未入表」「近期發債」這類狀態合併成短列。
+   先前是三四個 warnbox 疊在一起，單卡常駐 845 字——每個框單獨都有理由，
+   疊起來就是一堵牆。 */
+.tlines{margin-top:14px;border:1px solid var(--border);border-radius:10px;
+  padding:4px 12px 8px}
+.tlines-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin:8px 0 2px}
+.tline{margin:0;border:none;border-top:1px solid var(--grid);border-radius:0;
+  padding:0}
+.tline:first-of-type{border-top:none}
+.tline>summary{padding:9px 0;margin:4px 0;font-size:13px;color:var(--text-primary)}
+/* 稽核量的是元素盒之間的距離：相鄰的可點元素要留 8px 以上，
+   padding 只放大目標、不拉開距離，所以間隔要用 margin 給。 */
+/* 表格列裡的連結沿用全站的負 margin 觸控放大（td a 那條規則），
+   這裡**不要**再動 td 內距——縮小內距會讓原本「觸控區彼此重疊、
+   稽核視為同一組」的連結變成相距 0.2px 的兩個目標。
+   要給的是表格與下一個 summary 之間的距離。 */
+.tline .tscroll{margin-bottom:12px}
+.tline .f-detail{padding-bottom:8px}
+/* 四步計算卡：每步一行、行末是結果。取代散在四處的計算說明。 */
+.steps{margin:14px 0 2px;border:1px solid var(--border);border-radius:10px;
+  overflow:hidden}
+.step{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:baseline;
+  padding:10px 13px;border-top:1px solid var(--grid);font-size:13.5px}
+.step:first-child{border-top:none}
+.step-k{font-weight:700;color:var(--text-secondary);font-size:12.5px;white-space:nowrap}
+.step-t{color:var(--text-primary);line-height:1.6}
+.step-r{font-weight:700;white-space:nowrap}
+@media(max-width:520px){.step{grid-template-columns:78px 1fr}
+  .step-r{grid-column:2;justify-self:end}}
+.trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
+  margin-left:7px;vertical-align:1px}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1437,6 +1470,30 @@ details.home-module[open]{padding-bottom:0}
 .focus-card .data-tag[href]{min-height:40px}
 
 /* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+/* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
+   每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
+   一個是教你怎麼讀，一個是給你驗算。 */
+.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
+  background:var(--surface-2)}
+.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
+  font-weight:600;color:var(--text-secondary)}
+.teach>summary::-webkit-details-marker{display:none}
+.teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  border:1px solid var(--grid);margin-right:7px;font-size:11px}
+.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
+  color:var(--text-primary)}
+.teach-body p{margin:6px 0}
+/* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
+   說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.lights{align-items:stretch}
+.light{display:flex;flex-direction:column}
+.light .l-more{margin-top:auto;padding-top:8px}
+.light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
+  color:var(--muted)}
+.light .l-more>summary::-webkit-details-marker{display:none}
+.light .l-more>summary::after{content:"▾";margin-left:4px}
+.light .l-more[open]>summary::after{content:"▴"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1469,11 +1526,11 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-13　·　更新於 2026-08-16 22:02（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-13　·　更新於 2026-08-17 18:14（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 76 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 77 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
 <div class="anav"><nav class="anchors"><a href="#decomp">長端利率為什麼在這裡</a><a href="#supply">誰在發債</a><a href="#demand">買盤吃不吃得下</a><a href="#priced">壓力已經反映多少</a><a href="#debt">供給端細節一：政府財政</a><a href="#hyperscalers">供給端細節二：科技巨頭</a><a href="#lights">關鍵指標檢核</a></nav></div>
 <div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div><h2 class="focus-title">長端供給壓力中等</h2><p class="focus-sub">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</p><div class="focus-grid"><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>綜合分數 -0.42</small></div><div class="focus-metric neutral"><span>10 年期殖利率</span><b>4.63%</b><small>資料日 2026-08-13</small></div><div class="focus-metric watch"><span>美國財政赤字</span><b>5.8%</b><small>佔 GDP；年度債券供給主體</small></div><div class="focus-metric neutral"><span>財政穩定差</span><b>+1.9%</b><small>緩衝：基本盈餘高於穩定債務比所需水準</small></div></div><details class="focus-evidence"><summary>查看供給傳導與判斷依據</summary><div class="focus-evidence-body"><div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong><div class="flow-values">1.89 兆美元<br>財政赤字 5.8% GDP，需靠淨發行公債填補</div></div><div class="flow-arrow">＋</div><div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">CapEx 1,815 億美元 · OCF 1,864 億美元<br>CapEx / OCF 97.4% · 簡化 FCF 為負 3/5 家</div></div><div class="flow-arrow">→</div><div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">單季 450 億美元 · 年化 1,801 億美元<br>政府赤字規模比 10%</div></div></div><div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div><div class="logic-step"><b>目前結論</b><span>供給與需求大致平衡，長端主要跟隨政策利率預期移動。</span></div><div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div></div></details><div class="data-line"><span class="data-tag">利率 2026-08-13</span><span class="data-tag">公司期末 2026-05-31～2026-06-30</span><span class="data-tag">SEC 實際資料 5/5 家</span></div></div></div>
 
@@ -1481,11 +1538,12 @@ details.home-module[open]{padding-bottom:0}
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
   <details class="card sect" open><summary><h2 id="decomp">長端利率為什麼在這裡</h2><span class="sect-sum">名目 10 年期 4.63%　·　其中期限溢酬 +0.83%</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。</p><p><b>為什麼重要：</b>長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。</p><p><b>怎麼判讀：</b>看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。</p></div></details>
     <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">名目 10 年期 4.63%　其中期限溢酬</span><span class="bk-val">+0.83%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">近三個月 +12 基點</span></div>
     <div class="stat-row" style="margin-top:18px"><div class="stat"><div class="s-label">實質利率</div><div class="s-value" style="color:inherit">2.39%</div><div class="s-note">抗通膨債券殖利率。反映預期的實質報酬</div></div><div class="stat"><div class="s-label">通膨補償</div><div class="s-value" style="color:inherit">2.27%</div><div class="s-note">市場定價的平均通膨。這一段是聯準會的責任範圍</div></div></div>
     <p class="hint" style="margin-top:14px">期限溢酬與上面兩項有重疊，不可直接相加。</p>
-    <div class="legacy-detail"><h4>三種上升的意義有什麼不同</h4>
+    <details data-m-collapse><summary>三種上升的意義有什麼不同</summary>
       <dl class="gloss" style="margin-top:10px">
         <dt>實質利率上升</dt>
         <dd>市場預期實質成長或資金需求增強。對股市未必是壞事，
@@ -1502,11 +1560,12 @@ details.home-module[open]{padding-bottom:0}
           額外補償，跟前兩段有重疊。三個數字加起來不會等於名目殖利率，
           也不該這樣用。</dd>
       </dl>
-  </div>
-</div></details>
+  </div></details>
+</div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="supply">誰在發債</h2><span class="sect-sum">政府年赤字 1.89 兆美元　·　科技巨頭年化 1,801 億美元</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。</p><p><b>為什麼重要：</b>債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。</p><p><b>怎麼判讀：</b>把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。</p></div></details>
     <p class="hint">政府、科技巨頭與聯準會縮表，
       <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
     <div class="stat-row">
@@ -1526,6 +1585,7 @@ details.home-module[open]{padding-bottom:0}
 </div>
 <div class="grid g2">
   <details class="card sect"><summary><h2 id="demand">買盤吃不吃得下</h2><span class="sect-sum">投資級利差 0.79%　·　收斂，買盤積極</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。</p><p><b>為什麼重要：</b>同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。</p><p><b>怎麼判讀：</b>看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。</p></div></details>
     <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
     <div class="verdict balanced" style="margin-top:4px"><div class="v-main" style="font-size:19px">收斂，買盤積極</div><div class="v-why" style="margin-top:8px">投資級利差 0.79%。利差是買方要求的風險補償。它<b>還沒走闊</b>——代表目前的新增供給仍被吸收得掉；一旦走闊，就是買盤開始吃不下的第一個訊號。</div></div>
     <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">投資級利差</div><div class="s-value" style="color:inherit">0.79%</div><div class="s-note">近一個月 +0 基點</div></div><div class="stat"><div class="s-label">BBB 級利差</div><div class="s-value" style="color:inherit">0.98%</div><div class="s-note">近一個月 +1 基點</div></div><div class="stat"><div class="s-label">高收益利差</div><div class="s-value" style="color:inherit">2.71%</div><div class="s-note">近一個月 -1 基點</div></div></div>
@@ -1536,25 +1596,26 @@ details.home-module[open]{padding-bottom:0}
     <p class="hint">市場已經替這些壓力定了多少價。</p>
     <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>期限溢酬</div><div class="cm-delta up">+0.85</div><div class="cm-val">+0.83%（中性參考 0.40%）</div></div><div class="cmove"><div>30 年減 10 年利差</div><div class="cm-delta down">-0.04</div><div class="cm-val">+0.58%（中性參考 0.60%）</div></div></div><p class="hint" style="margin-top:12px">已反映分數 +0.81　·　供給壓力分數 -0.42<br>價格反映的壓力大於供給面實際的程度——期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。</p>
     <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">10Y 期</div><div class="s-value" style="color:inherit">4.63%</div><div class="s-note">近一個月 +5 基點</div></div><div class="stat"><div class="s-label">30Y 期</div><div class="s-value" style="color:inherit">5.21%</div><div class="s-note">近一個月 +13 基點</div></div></div>
-    <div class="legacy-detail"><h4>其他天期</h4>
+    <details data-m-collapse><summary>其他天期</summary>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">3M 期</div><div class="s-value" style="color:inherit">3.87%</div><div class="s-note">近一個月 +3 基點</div></div><div class="stat"><div class="s-label">2Y 期</div><div class="s-value" style="color:inherit">4.15%</div><div class="s-note">近一個月 -3 基點</div></div><div class="stat"><div class="s-label">5Y 期</div><div class="s-value" style="color:inherit">4.32%</div><div class="s-note">近一個月 +1 基點</div></div></div>
       <p class="hint" style="margin-top:12px">短天期由政策利率預期決定，
         見<a href="/fomc/">聯準會文本</a>頁。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="debt">供給端細節一：政府財政</h2><span class="sect-sum">財政缺口 +1.85% GDP　·　債務比大致穩定</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。</p><p><b>為什麼重要：</b>財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。</p><p><b>怎麼判讀：</b>盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。</p></div></details>
     <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
-    <div class="stat-row"><div class="stat"><div class="s-label">債務佔 GDP</div><div class="s-value" style="color:inherit">123%</div></div><div class="stat"><div class="s-label">利息佔稅收</div><div class="s-value" style="color:var(--critical)">21.2%</div><div class="s-note">每收 100 元稅拿去付利息的比例</div></div><div class="stat"><div class="s-label">當前缺口：有效利率 減 名目成長</div><div class="s-value" style="color:var(--good)">-3.33%</div><div class="s-note">有效利率 3.19% － 名目成長 6.53%。大於零時債務會自我累積</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="s-label">債務佔 GDP</div><div class="s-value" style="color:inherit">123%</div><div class="s-note">資料至 2026 Q1</div></div><div class="stat"><div class="s-label">利息佔稅收</div><div class="s-value" style="color:var(--critical)">21.2%</div><div class="s-note">每收 100 元稅拿去付利息的比例</div></div><div class="stat"><div class="s-label">當前缺口：有效利率 減 名目成長</div><div class="s-value" style="color:var(--good)">-3.33%</div><div class="s-note">有效利率 3.19% － 名目成長 6.53%。大於零時債務會自我累積</div></div></div>
     <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
       <b>債務比大致穩定</b><br>目前的基本盈餘足以抵消利息負擔與成長的落差。
     </div>
     <div class="bkgap" style="color:var(--good)"><span class="bk-label">財政缺口</span><span class="bk-val">+1.85% GDP</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">實際基本盈餘高於穩定水準；正值是本模型下的財政緩衝</span></div>
     <h3 style="margin-top:18px">聯邦債務佔 GDP 比（2024 年 10 月以來）</h3>
     <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" style="height:150px" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5 600,150" fill="var(--line-2)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5" fill="none" stroke="var(--line-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">122.59%</span><span class="glab" style="top:calc(90.3% + 4px)">118.78%</span><span class="ldot" style="left:100.00%;top:9.68%;background:var(--line-2)"></span></div><div class="lxaxis"><span>2024-10-01</span><span><b>122.59%</b>　2026-01-01</span></div></div>
-    <div class="legacy-detail"><h4>財政損益兩平的算法</h4>
+    <details data-m-collapse><summary>財政損益兩平的算法</summary>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">穩定債務所需的基本盈餘</div><div class="s-value" style="color:inherit">-3.84% GDP</div></div><div class="stat"><div class="s-label">實際基本盈餘</div><div class="s-value" style="color:inherit">-1.98% GDP</div></div></div>
       <dl class="gloss" style="margin-top:14px">
         <dt>公式</dt>
@@ -1569,40 +1630,43 @@ details.home-module[open]{padding-bottom:0}
       <p class="hint" style="margin-top:10px">穩定所需的基本盈餘 ≈ 債務比 × (有效利率 − 名目成長) ÷ (1 + 名目成長)。基本盈餘是排除利息支出後的財政餘額——利息是過去累積的結果，把它排除才看得出當期財政的實際狀況。</p>
       <p class="hint" style="margin-top:12px">兩個缺口方向不同：當前缺口用的是已發行債務的平均利率（存量），前瞻缺口用的是市場現在的實質利率（增量）。前瞻的那個為正，代表壓力還在後面——舊債每到期換成新利率，存量利率就往市場利率靠攏一步。</p>
       <p class="hint" style="margin-top:8px">r 減 g 的成長率用實質 GDP 年增 2.1%</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="hyperscalers">供給端細節二：科技巨頭</h2><span class="sect-sum">2026 年計畫 6,900–7,200 億美元　·　佔營運現金流 97%</span></summary><div class="sect-body">
-    <p class="hint">關鍵不是資本支出的金額，是<b>融資方式</b>——
-      這幾家從<b>買方</b>變成<b>賣方</b>的轉折點。
-      先看承諾要花多少，再看現金流撐不撐得住。</p>
-    <div class="warnbox"
-         style="border-left-color:var(--critical);margin:0 0 16px">
-      <b>2026 年資本支出計畫：4 家合計
-        6,900–7,200 億美元</b>，是最新一季年化實績（7,262 億美元）的 1.0 倍<br>
-      Oracle 未提供年度指引，不在合計內。下方的季報是<b>已經花掉的</b>；這一區是<b>還沒花、但已經承諾的</b>——
-      推高長端供給的是後者。
-      <div class="legacy-detail"><h4>各家指引</h4>
-        <div class="tscroll" style="margin-top:10px"><table>
-          <thead><tr><th>公司</th><th>2026 年指引</th>
-            <th>備註</th></tr></thead>
-          <tbody><tr><td>Amazon</td><td>2,000 億美元</td><td class="muted-cell"></td></tr><tr><td>Microsoft</td><td>1,900 億美元</td><td class="muted-cell">含約 250 億美元的零組件漲價</td></tr><tr><td>Alphabet</td><td>1,750–1,850 億美元</td><td class="muted-cell"></td></tr><tr><td>Meta</td><td>1,250–1,450 億美元</td><td class="muted-cell"></td></tr></tbody></table></div>
-        <p class="hint" style="margin-top:10px">
-          <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
-          它是法說會與新聞稿裡用自然語言講的（「approximately」
-          「in the range of」），每家寫法不同、每季還會改。
-          硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
-          更新於 2026-04-29　·　各公司法說會與財報新聞稿</p>
-      </div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。</p><p><b>為什麼重要：</b>這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。</p><p><b>怎麼判讀：</b>盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。</p></div></details>
+    <p class="hint">關鍵不是金額，是<b>融資方式</b>——
+      這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
+    <h3 style="margin-top:4px">2026 年資本支出計畫
+      <span class="asof">指引更新於 2026-04-29</span></h3>
+    <p class="hint" style="margin:4px 0 10px">合計 <b>6,900–7,200 億美元</b>　·　年化實績的 1.0 倍。
+      這一區是<b>還沒花、但已經承諾的</b>；下方的季報是已經花掉的——
+      推高長端供給的是前者。</p>
+    <div class="focus-grid"><div class="focus-metric"><span>Amazon</span><b>2,000</b><small>億美元</small></div><div class="focus-metric"><span>Microsoft</span><b>1,900</b><small>億美元</small></div><div class="focus-metric"><span>Alphabet</span><b>1,750–1,850</b><small>億美元</small></div><div class="focus-metric"><span>Meta</span><b>1,250–1,450</b><small>億美元</small></div></div>
+    <details class="f-more"><summary>備註與資料來源</summary>
+      <div class="f-detail"><ul style="margin:8px 0;padding-left:18px">
+        <li><b>Microsoft</b>：含約 250 億美元的零組件漲價</li><li><b>Oracle</b>：未提供年度指引，不在合計內。</li></ul>
+        <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
+        它是法說會與新聞稿裡用自然語言講的（「approximately」
+        「in the range of」），每家寫法不同、每季還會改。
+        硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
+        更新於 2026-04-29　·　各公司法說會與財報新聞稿</div>
+    </details>
+    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">資本支出佔營運現金流</span><span class="bk-val">97%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金支應不了這一季的資本支出</span></div>
+    <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
+      <b>正在轉向舉債支應</b><br>合計資本支出已達同期營運現金流的 97%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。
     </div>
-    
-    <div class="warnbox" style="margin:0 0 16px">
-      <b>近 120 天有 7 筆已定價的債券發行，尚未反映在下方的季報數字裡</b><br>
+    <div class="tlines">
+      <div class="tlines-k">資料時效</div>
+      
+      <details class="f-more tline"><summary>
+      <b>近 120 天 7 筆已定價發債</b>，合計 1,055 億美元（季報的 234%），尚未入下方季報</summary>
+      <div class="f-detail">
       7 筆已確認金額，合計 1,055 億美元，相當於最新一季申報發債（450 億美元）的 234%。幣別分布：USD 3 筆、CAD 2 筆、JPY 1 筆、EUR 1 筆。另有 4 筆已宣布、尚未定價。另有 7 件非債券的融資申報（股票發行、ATM 增發或貸款額度），不進債市，明細不列。最近一筆在
-      2026-08-07。
-      <div class="legacy-detail"><h4>逐筆債券明細</h4>
+      2026-08-07。</div>
+      <details class="f-more" style="margin-top:6px"><summary>逐筆債券明細</summary>
         <div class="tscroll" style="margin-top:10px"><table>
           <thead><tr><th>公司</th><th>日期</th><th>類型</th>
             <th>金額（原幣）</th><th>原文</th></tr></thead>
@@ -1633,13 +1697,10 @@ details.home-module[open]{padding-bottom:0}
           <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
           融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
           市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
-      </div>
+      </details>
+    </details>
     </div>
-    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">資本支出佔營運現金流</span><span class="bk-val">97%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金支應不了這一季的資本支出</span></div>
-    <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
-      <b>正在轉向舉債支應</b><br>合計資本支出已達同期營運現金流的 97%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。
-    </div>
-    <div class="legacy-detail"><h4>五家公司的明細</h4>
+    <details data-m-collapse><summary>五家公司的明細</summary>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">資本支出合計</div><div class="s-value" style="color:inherit">1,815 億美元</div><div class="s-note">年增 +88%（對去年同季）</div></div><div class="stat"><div class="s-label">佔營運現金流</div><div class="s-value" style="color:var(--serious)">97%</div><div class="s-note">合計 ÷ 合計，非五家平均</div></div><div class="stat"><div class="s-label">單季發債合計（期末 2026-05-31～2026-06-30）</div><div class="s-value" style="color:inherit">450 億美元</div><div class="s-note">分子為五家不同會計期別之和</div></div><div class="stat"><div class="s-label">簡化口徑自由現金流為負</div><div class="s-value" style="color:inherit">3 / 5 家</div><div class="s-note">營運現金流 − 現金資本支出 &lt; 0</div></div></div>
       <div class="tscroll" style="margin-top:16px">
         <table>
@@ -1657,65 +1718,74 @@ details.home-module[open]{padding-bottom:0}
         誰擴張得比較猛　·　所有百分比都由左邊的原始金額算出來，
         沒有手填的百分比</div>
       <div class="src">資料來源：SEC EDGAR 的 XBRL 申報（10-Q／10-K 現金流量表原始標記）　·　<a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000789019&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Microsoft</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001652044&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Alphabet</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001018724&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Amazon</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001326801&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Meta</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001341439&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Oracle</a>　·　2026-05-31～2026-06-30　·　5 / 5 家取自 SEC</div>
-    </div>
+    </details>
     
   </div></details>
 </div>
 
 <div class="grid g2">
   <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">8 項：1 項警戒、4 項留意、3 項正常</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>長端市場的幾個壓力指標逐一對照警戒線。</p><p><b>為什麼重要：</b>單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。</p><p><b>怎麼判讀：</b>紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。</p></div></details>
     <p class="hint">8 項指標：1 項警戒、4 項留意、3 項正常。</p>
-    <div class="legacy-detail"><h4>逐項展開</h4>
+    <details data-m-collapse open><summary>逐項展開</summary>
       <div class="lights" style="margin-top:12px"><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>期限溢酬</div>
   <div class="l-value">+0.83% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">留意</div>
   
-  <div class="l-desc">投資人持有長債要求的額外補償。上升代表市場不想抱長債</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">投資人持有長債要求的額外補償。上升代表市場不想抱長債</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>10 年減 2 年</div>
   <div class="l-value">+0.48% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
-  <div class="l-desc">曲線斜率。負值（倒掛）歷史上是衰退的領先訊號</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">曲線斜率。負值（倒掛）歷史上是衰退的領先訊號</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>30 年減 10 年</div>
   <div class="l-value">+0.58% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">長端斜率。走陡通常反映供給壓力或財政疑慮</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">長端斜率。走陡通常反映供給壓力或財政疑慮</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>10 年期實質利率</div>
   <div class="l-value">2.39% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
-  <div class="l-desc">剔除通膨補償後的真實資金成本。高於潛在成長率會壓抑投資</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">剔除通膨補償後的真實資金成本。高於潛在成長率會壓抑投資</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>10 年通膨損益兩平</div>
   <div class="l-value">2.27% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">市場對未來十年平均通膨的定價</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">市場對未來十年平均通膨的定價</div></details>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>利息佔稅收比重</div>
   <div class="l-value">21.2% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">警戒</div>
   
-  <div class="l-desc">每收 100 元稅有多少拿去付利息。超過 20% 通常被視為警戒</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">每收 100 元稅有多少拿去付利息。超過 20% 通常被視為警戒</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>前瞻缺口 r 減 g</div>
   <div class="l-value">+0.29% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
-  <div class="l-desc">市場現在的實質利率減實質 GDP 成長。看的是「舊債換成今天的利率之後」 會不會自我累積；表格裡的當前缺口用的是已發行債務的平均利率，兩者不同</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">市場現在的實質利率減實質 GDP 成長。看的是「舊債換成今天的利率之後」 會不會自我累積；表格裡的當前缺口用的是已發行債務的平均利率，兩者不同</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>投資級利差</div>
   <div class="l-value">0.79% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">投資級公司債相對公債的風險補償。走闊代表企業融資成本上升</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">投資級公司債相對公債的風險補償。走闊代表企業融資成本上升</div></details>
 </div></div>
-    </div>
+    </details>
   </div></details>
 
   <details class="card sect"><summary><h2 id="glossary">名詞解釋</h2><span class="sect-sum">這一頁出現的專有名詞與計算方式</span></summary><div class="sect-body">
@@ -1788,8 +1858,8 @@ details.home-module[open]{padding-bottom:0}
         新聞稿日期比該公司自己的季末日晚 60 天以上就是下一季
         （一季約 91 天、新聞稿約季末後 20–30 天，60 天在兩群中間）。</dd>
     </dl>
-    </div></details>
-  </div>
+    </details>
+  </div></details>
 </div>
 
 

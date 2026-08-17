@@ -914,6 +914,39 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+/* 資料時效條：把「財報已出未入表」「近期發債」這類狀態合併成短列。
+   先前是三四個 warnbox 疊在一起，單卡常駐 845 字——每個框單獨都有理由，
+   疊起來就是一堵牆。 */
+.tlines{margin-top:14px;border:1px solid var(--border);border-radius:10px;
+  padding:4px 12px 8px}
+.tlines-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin:8px 0 2px}
+.tline{margin:0;border:none;border-top:1px solid var(--grid);border-radius:0;
+  padding:0}
+.tline:first-of-type{border-top:none}
+.tline>summary{padding:9px 0;margin:4px 0;font-size:13px;color:var(--text-primary)}
+/* 稽核量的是元素盒之間的距離：相鄰的可點元素要留 8px 以上，
+   padding 只放大目標、不拉開距離，所以間隔要用 margin 給。 */
+/* 表格列裡的連結沿用全站的負 margin 觸控放大（td a 那條規則），
+   這裡**不要**再動 td 內距——縮小內距會讓原本「觸控區彼此重疊、
+   稽核視為同一組」的連結變成相距 0.2px 的兩個目標。
+   要給的是表格與下一個 summary 之間的距離。 */
+.tline .tscroll{margin-bottom:12px}
+.tline .f-detail{padding-bottom:8px}
+/* 四步計算卡：每步一行、行末是結果。取代散在四處的計算說明。 */
+.steps{margin:14px 0 2px;border:1px solid var(--border);border-radius:10px;
+  overflow:hidden}
+.step{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:baseline;
+  padding:10px 13px;border-top:1px solid var(--grid);font-size:13.5px}
+.step:first-child{border-top:none}
+.step-k{font-weight:700;color:var(--text-secondary);font-size:12.5px;white-space:nowrap}
+.step-t{color:var(--text-primary);line-height:1.6}
+.step-r{font-weight:700;white-space:nowrap}
+@media(max-width:520px){.step{grid-template-columns:78px 1fr}
+  .step-r{grid-column:2;justify-self:end}}
+.trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
+  margin-left:7px;vertical-align:1px}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1437,6 +1470,30 @@ details.home-module[open]{padding-bottom:0}
 .focus-card .data-tag[href]{min-height:40px}
 
 /* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+/* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
+   每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
+   一個是教你怎麼讀，一個是給你驗算。 */
+.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
+  background:var(--surface-2)}
+.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
+  font-weight:600;color:var(--text-secondary)}
+.teach>summary::-webkit-details-marker{display:none}
+.teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  border:1px solid var(--grid);margin-right:7px;font-size:11px}
+.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
+  color:var(--text-primary)}
+.teach-body p{margin:6px 0}
+/* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
+   說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.lights{align-items:stretch}
+.light{display:flex;flex-direction:column}
+.light .l-more{margin-top:auto;padding-top:8px}
+.light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
+  color:var(--muted)}
+.light .l-more>summary::-webkit-details-marker{display:none}
+.light .l-more>summary::after{content:"▾";margin-left:4px}
+.light .l-more[open]>summary::after{content:"▴"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1469,18 +1526,19 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">聯準會文本</a></h1>
-  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-16 22:02（台北）</div>
+  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-17 18:14（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 76 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 77 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
 <div class="anav"><nav class="anchors"><a href="#score">政策訊號評分</a><a href="#kpi">關鍵數字</a><a href="#focus">聯準會目前的重心</a><a href="#market">市場定價 vs 聯準會</a><a href="#diff">聲明逐句比對</a><a href="#trend">歷次分數</a><a href="#presser">記者會</a><a href="#phrases">措辭的支撐材料</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +6.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>維持不變</b><small>3.50–3.75%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>3 票反對（升息 3／降息 0）</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次維持利率不變；反對票：贊成升息 3 票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-07-29 對照 2026-06-17：改動 1 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-09-16｜31 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-07-29</span><span class="data-tag">措辭分數 +5.22（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +6.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>維持不變</b><small>3.50–3.75%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>3 票反對（升息 3／降息 0）</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次維持利率不變；反對票：贊成升息 3 票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-07-29 對照 2026-06-17：改動 1 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-09-16｜30 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-07-29</span><span class="data-tag">措辭分數 +5.22（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
   <details class="card sect" open><summary><h2 id="score">政策訊號評分</h2><span class="sect-sum">客觀訊號 +6.00　·　措辭 +5.22</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把聯準會這次「做了什麼、說了什麼」拆成幾個可以打分的訊號：政策行動、反對票、聲明的風險用語、記者會措辭。</p><p><b>為什麼重要：</b>聯準會不會直接說「我們下次要降息」，方向藏在做與說的細節裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。</p><p><b>怎麼判讀：</b>分數的正負代表偏升息／偏降息。先看硬訊號（行動、反對票），措辭分數只當佐證——語氣會隨主席的文風漂移。</p></div></details>
     <p class="hint">兩個分數刻意不合成——<b>背離本身就是訊號</b>。</p>
     <div class="dbox primary hawkish">
   <div class="dtitle">客觀訊號分數（主要依據）</div>
@@ -1502,11 +1560,11 @@ details.home-module[open]{padding-bottom:0}
   <span class="tone-note">同一刻度。跨主席不可比，只當輔助。</span>
 </div>
     <div class="warnbox"><b>偵測到溝通方式改變</b><br>這次聲明比近四次平均短了 35%。篇幅或用語體例大幅改變，通常代表溝通方式改變，而不是立場轉變——此時措辭分數與前幾次不可比，請以客觀訊號分數為準。</div>
-    <div class="legacy-detail"><h4>本次投票明細</h4>
+    <details data-m-collapse><summary>本次投票明細</summary>
       <div style="margin-top:12px"><div class="votes"><span class="vchip hike">Beth M. Hammack　贊成升息</span><span class="vchip hike">Neel Kashkari　贊成升息</span><span class="vchip hike">Lorie K. Logan　贊成升息</span></div></div>
       <p class="hint" style="margin-top:12px">反對票是客觀事實、權重最高；
         措辭會隨主席個人偏好變動。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
@@ -1529,7 +1587,7 @@ details.home-module[open]{padding-bottom:0}
   <div class="k-plain">政策行動、反對票與聲明點名的風險方向合計。正數＝偏升息方向，負數＝偏降息方向。</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><line x1="3" y1="17.0" x2="117" y2="17.0" stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2"/><polyline points="3.0,17.0 12.5,17.0 22.0,17.0 31.5,17.0 41.0,26.3 50.5,31.0 60.0,31.0 69.5,31.0 79.0,26.3 88.5,21.7 98.0,21.7 107.5,17.0 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg>
 </div><div class="card kpi">
   <div class="k-label">下次會議</div>
-  <div class="k-value">31 天後</div>
+  <div class="k-value">30 天後</div>
   <div class="k-sub">2026-09-16</div>
   <div class="k-plain">在那之前，這份聲明就是委員會的官方立場——距離下次會議越遠，它主導市場的時間越長。</div><div class="k-flag ">之後：2026-10-28</div>
 </div></div>
@@ -1538,6 +1596,7 @@ details.home-module[open]{padding-bottom:0}
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="focus">聯準會目前的重心</h2><span class="sect-sum">通膨優先</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>聯準會有兩個任務：穩物價、顧就業。兩者衝突時，判斷它現在把哪一個擺在前面。</p><p><b>為什麼重要：</b>同樣的數據，重心不同結論就相反：就業轉弱時，「就業優先」會降息救經濟，「通膨優先」卻會按住不動。不知道重心，就沒辦法從數據推政策。</p><p><b>怎麼判讀：</b>重心翻轉的訊號比數據本身更重要——聲明裡風險描述的順序、記者會被追問時先護哪一邊，都是線索。</p></div></details>
     <p class="hint">同一份就業數據，在「通膨優先」與「就業優先」下會導向相反的決定。</p>
     <div class="dbox hawkish" style="margin-top:4px">
       <div class="dtitle">目前重心</div>
@@ -1551,6 +1610,7 @@ details.home-module[open]{padding-bottom:0}
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="market">市場定價 vs 聯準會</h2><span class="sect-sum">差距 +0.53 個百分點　·　與本次判讀一致</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>債券市場用真金白銀押的利率路徑，跟聯準會自己的說法差多少。</p><p><b>為什麼重要：</b>兩者常常不一致：市場押得比聯準會鴿，代表投資人不信它撐得住；押得更鷹則相反。這個落差本身就是交易機會與風險所在。</p><p><b>怎麼判讀：</b>落差大的方向，就是之後「有一方要認錯」的方向——不是市場修正定價，就是聯準會改口。</p></div></details>
     <p class="hint">2 年期殖利率跟政策利率中值的差，就是市場定價的政策路徑方向。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">2 年期公債殖利率</div><div class="s-value" style="color:inherit">4.15%</div></div><div class="stat"><div class="s-label">政策利率中值</div><div class="s-value" style="color:inherit">3.62%</div></div></div>
     <div class="bkgap" style="color:var(--serious)">
@@ -1566,12 +1626,13 @@ details.home-module[open]{padding-bottom:0}
 </div>
 <div class="grid">
   <details class="card sect"><summary><h2 id="diff">聲明逐句比對</h2><span class="sect-sum">1 處改動（對照 2026-06-17）</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>這次的會後聲明跟上一次逐句對照，改了哪幾個字。</p><p><b>為什麼重要：</b>聲明是逐字斟酌的文件，一個形容詞的增刪都是刻意的。市場的劇烈反應常常不是因為做了什麼，而是因為改了哪句話。</p><p><b>怎麼判讀：</b>刪掉鷹派措辭＝往鴿派挪，反之亦然。沒改的句子也是資訊——代表委員會不想讓你改變預期。</p></div></details>
     <p class="hint">「舊 → 新」並排，只標實際改動的字。
       橘色刪除線是拿掉的字，藍色是新增的字。</p>
     <div class="verdict neutral" style="margin:0 0 16px"><div class="v-main" style="font-size:19px">聲明只改了 1 處</div><div class="v-why" style="margin-top:8px">改動極少，代表立場高度穩定——真正的轉向通常會伴隨多處措辭調整。在這種情況下，那少數幾處改動反而值得逐字看。</div></div>
     <div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee <mark class='mo'>reaffirmed</mark> its policy of maintaining ample reserves in the banking system.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee <mark class='mn'>is continuing</mark> its policy of maintaining ample reserves in the banking system.</div></div>
-    <div class="legacy-detail"><h4>含未改動段落的全文</h4>
-      <div style="margin-top:10px"><div class="dsame">The Committee decided to maintain the target range for the federal funds rate at 3-1/2 to 3-3/4 percent, in support of the Federal Reserve&#x27;s dual mandate.</div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee <mark class='mo'>reaffirmed</mark> its policy of maintaining ample reserves in the banking system.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee <mark class='mn'>is continuing</mark> its policy of maintaining ample reserves in the banking system.</div></div><div class="dsame">Economic activity is expanding at a solid pace despite elevated uncertainty that owes, in part, to the conflict in the Middle East.</div><div class="dsame">Productivity growth and capital investment are strong.</div><div class="dsame">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="dsame">Inflation remains elevated relative to the Committee&#x27;s 2 percent goal, in part reflecting supply shocks that have driven price increases in certain sectors, including energy.</div><div class="dsame">The Committee will deliver price stability.</div></div></div>
+    <details data-m-collapse><summary>含未改動段落的全文</summary>
+      <div style="margin-top:10px"><div class="dsame">The Committee decided to maintain the target range for the federal funds rate at 3-1/2 to 3-3/4 percent, in support of the Federal Reserve&#x27;s dual mandate.</div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee <mark class='mo'>reaffirmed</mark> its policy of maintaining ample reserves in the banking system.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee <mark class='mn'>is continuing</mark> its policy of maintaining ample reserves in the banking system.</div></div><div class="dsame">Economic activity is expanding at a solid pace despite elevated uncertainty that owes, in part, to the conflict in the Middle East.</div><div class="dsame">Productivity growth and capital investment are strong.</div><div class="dsame">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="dsame">Inflation remains elevated relative to the Committee&#x27;s 2 percent goal, in part reflecting supply shocks that have driven price increases in certain sectors, including energy.</div><div class="dsame">The Committee will deliver price stability.</div></div></details>
     <div class="src">比對對象：2026-06-17 → 2026-07-29 的聲明。本次共取得 13 份聲明。原文為英文。</div>
   </div></details>
 </div>
@@ -1606,31 +1667,31 @@ details.home-module[open]{padding-bottom:0}
     <p class="hint">開場聲明優先（那是準備稿），不足才從問答補。</p>
     <h3>通膨</h3><div class="pline">Inflation remains elevated relative to the Committee’s 2 percent goal.</div><div class="pline">You’ve heard this before, but we will deliver price stability.</div><h3>就業</h3><div class="pline">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="pline">These differ in their sources—do they also differ in their effects on output and employment?</div><h3>利率路徑</h3><div class="pline">Today, as you know, our Committee decided to vote by a 9-to-3 vote to maintain the target range for the federal funds rate at 3½ to 3¾ percent.</div><div class="pline">But if the Committee didn’t change its policy rate, what happened?</div><h3>資產負債表</h3><div class="pline">The Committee is continuing its policy of making ample reserves in the banking system.</div><div class="pline">If, as the Fed has long held, interest rate policy should be its primary monetary policy instrument, how much accommodation are we getting from the balance sheet?</div>
 
-    <div class="legacy-detail"><h4>措辭分數是這幾句貢獻的</h4>
+    <details data-m-collapse><summary>措辭分數是這幾句貢獻的</summary>
       <p class="hint" style="margin:10px 0 8px">
         藍色是鷹派詞、橘色是鴿派詞，括號內為權重。
         分數 ＝ 命中詞加權後除以每百字，所以長度不同的逐字稿仍可比。　這裡只列權重最高的 5 句（全文共 9 句命中，這幾句佔總權重約 63%），所以逐句加總不會剛好等於分數。</p>
       <div class="drow2"><div class="dnew">So they’re gauging themselves the—how <mark class="mn">restrictive</mark> the Treasury curve should be.</div><div class="dlabel2" style="margin:7px 0 0">restrictive（鷹 3.0）</div></div><div class="drow2"><div class="dnew">Inflation <mark class="mn">remains elevated</mark> relative to the Committee’s 2 percent goal.</div><div class="dlabel2" style="margin:7px 0 0">remains elevated（鷹 2.5）</div></div><div class="drow2"><div class="dnew">Rates bring inflation down by <mark class="mo">cooling</mark> demand.</div><div class="dlabel2" style="margin:7px 0 0">cooling（鴿 2.5）</div></div><div class="drow2"><div class="dnew">The Committee remains <mark class="mn">resolute</mark>.</div><div class="dlabel2" style="margin:7px 0 0">resolute（鷹 2.0）</div></div><div class="drow2"><div class="dnew">If inflation continues to be <mark class="mn">elevated</mark> through the forecast period, interest rates could well be part of that solution.</div><div class="dlabel2" style="margin:7px 0 0">elevated（鷹 2.0）</div></div>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="phrases">措辭的支撐材料</h2><span class="sect-sum">熱力圖與詞典命中明細，本頁結論不依賴這一區</span></summary><div class="sect-body">
     <p class="hint">措辭分數的原始材料。<b>本頁的結論不依賴這一區</b>。</p>
-    <div class="legacy-detail"><h4>關鍵措辭追蹤（熱力圖）</h4>
+    <details data-m-collapse><summary>關鍵措辭追蹤（熱力圖）</summary>
       <p class="hint" style="margin:10px 0 0">追蹤固定一組措辭在每次聲明中出現的次數，
         數的是字面出現次數，顏色越深代表出現越多次。
         <b>整排突然變空白，通常代表體例改變而非立場轉變</b>。</p>
-      <div style="margin-top:12px"><div class="heatwrap"><table class="heat"><thead><tr><th class="rowhead"></th><th>25-01</th><th>25-03</th><th>25-05</th><th>25-06</th><th>25-07</th><th>25-09</th><th>25-10</th><th>25-12</th><th>26-01</th><th>26-03</th><th>26-04</th><th>26-06</th><th>26-07</th></tr></thead><tbody><tr><th class="rowhead">balance of risks</th><td class="h1" data-tip="balance of risks｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-07-30｜出現 1 次">1</td><td class="h2" data-tip="balance of risks｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-12-10｜出現 2 次">2</td><td class="h1" data-tip="balance of risks｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="balance of risks｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">downside risks to employment</th><td class="h0" data-tip="downside risks to employment｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-07-30｜出現 0 次"></td><td class="h1" data-tip="downside risks to employment｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-12-10｜出現 1 次">1</td><td class="h0" data-tip="downside risks to employment｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-04-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">solid</th><td class="h0" data-tip="solid｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-07-30｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-09-17｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-10-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-12-10｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-04-29｜出現 0 次"></td><td class="h1" data-tip="solid｜2026-06-17｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-07-29｜出現 1 次">1</td></tr><tr><th class="rowhead">elevated</th><td class="h0" data-tip="elevated｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-05-07｜出現 0 次"></td><td class="h1" data-tip="elevated｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-03-18｜出現 1 次">1</td><td class="h0" data-tip="elevated｜2026-04-29｜出現 0 次"></td><td class="h2" data-tip="elevated｜2026-06-17｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-07-29｜出現 2 次">2</td></tr><tr><th class="rowhead">maximum employment</th><td class="h2" data-tip="maximum employment｜2025-01-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-03-19｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-05-07｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-06-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-07-30｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-12-10｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-01-28｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-03-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-04-29｜出現 2 次">2</td><td class="h0" data-tip="maximum employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">2 percent objective</th><td class="h1" data-tip="2 percent objective｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="2 percent objective｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">carefully assess</th><td class="h1" data-tip="carefully assess｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="carefully assess｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-07-29｜出現 0 次"></td></tr></tbody></table></div></div></div>
-    <div class="legacy-detail"><h4>詞典命中明細</h4>
+      <div style="margin-top:12px"><div class="heatwrap"><table class="heat"><thead><tr><th class="rowhead"></th><th>25-01</th><th>25-03</th><th>25-05</th><th>25-06</th><th>25-07</th><th>25-09</th><th>25-10</th><th>25-12</th><th>26-01</th><th>26-03</th><th>26-04</th><th>26-06</th><th>26-07</th></tr></thead><tbody><tr><th class="rowhead">balance of risks</th><td class="h1" data-tip="balance of risks｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-07-30｜出現 1 次">1</td><td class="h2" data-tip="balance of risks｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-12-10｜出現 2 次">2</td><td class="h1" data-tip="balance of risks｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="balance of risks｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">downside risks to employment</th><td class="h0" data-tip="downside risks to employment｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-07-30｜出現 0 次"></td><td class="h1" data-tip="downside risks to employment｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-12-10｜出現 1 次">1</td><td class="h0" data-tip="downside risks to employment｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-04-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">solid</th><td class="h0" data-tip="solid｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-07-30｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-09-17｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-10-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-12-10｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-04-29｜出現 0 次"></td><td class="h1" data-tip="solid｜2026-06-17｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-07-29｜出現 1 次">1</td></tr><tr><th class="rowhead">elevated</th><td class="h0" data-tip="elevated｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-05-07｜出現 0 次"></td><td class="h1" data-tip="elevated｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-03-18｜出現 1 次">1</td><td class="h0" data-tip="elevated｜2026-04-29｜出現 0 次"></td><td class="h2" data-tip="elevated｜2026-06-17｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-07-29｜出現 2 次">2</td></tr><tr><th class="rowhead">maximum employment</th><td class="h2" data-tip="maximum employment｜2025-01-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-03-19｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-05-07｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-06-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-07-30｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-12-10｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-01-28｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-03-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-04-29｜出現 2 次">2</td><td class="h0" data-tip="maximum employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">2 percent objective</th><td class="h1" data-tip="2 percent objective｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="2 percent objective｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-07-29｜出現 0 次"></td></tr><tr><th class="rowhead">carefully assess</th><td class="h1" data-tip="carefully assess｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="carefully assess｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-07-29｜出現 0 次"></td></tr></tbody></table></div></div></details>
+    <details data-m-collapse><summary>詞典命中明細</summary>
       <p class="hint" style="margin:10px 0 0">這裡的次數<b>可能少於上方熱力圖</b>，
         兩者算法不同：熱力圖數的是該字面在全文出現幾次；計分為了避免重複扣分，
         同一段文字只算一次、長詞優先——「remains elevated」命中之後，
         裡面的「elevated」就不會再被算一遍。</p>
       <table style="margin-top:10px">
         <thead><tr><th>用語</th><th>方向</th><th>次數</th></tr></thead>
-        <tbody><tr><td>remains elevated</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr><tr><td>solid pace</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr><tr><td>elevated</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr></tbody></table></div>
+        <tbody><tr><td>remains elevated</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr><tr><td>solid pace</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr><tr><td>elevated</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr></tbody></table></details>
   </div></details>
 </div>
 

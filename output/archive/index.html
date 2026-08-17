@@ -914,6 +914,39 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+/* 資料時效條：把「財報已出未入表」「近期發債」這類狀態合併成短列。
+   先前是三四個 warnbox 疊在一起，單卡常駐 845 字——每個框單獨都有理由，
+   疊起來就是一堵牆。 */
+.tlines{margin-top:14px;border:1px solid var(--border);border-radius:10px;
+  padding:4px 12px 8px}
+.tlines-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin:8px 0 2px}
+.tline{margin:0;border:none;border-top:1px solid var(--grid);border-radius:0;
+  padding:0}
+.tline:first-of-type{border-top:none}
+.tline>summary{padding:9px 0;margin:4px 0;font-size:13px;color:var(--text-primary)}
+/* 稽核量的是元素盒之間的距離：相鄰的可點元素要留 8px 以上，
+   padding 只放大目標、不拉開距離，所以間隔要用 margin 給。 */
+/* 表格列裡的連結沿用全站的負 margin 觸控放大（td a 那條規則），
+   這裡**不要**再動 td 內距——縮小內距會讓原本「觸控區彼此重疊、
+   稽核視為同一組」的連結變成相距 0.2px 的兩個目標。
+   要給的是表格與下一個 summary 之間的距離。 */
+.tline .tscroll{margin-bottom:12px}
+.tline .f-detail{padding-bottom:8px}
+/* 四步計算卡：每步一行、行末是結果。取代散在四處的計算說明。 */
+.steps{margin:14px 0 2px;border:1px solid var(--border);border-radius:10px;
+  overflow:hidden}
+.step{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:baseline;
+  padding:10px 13px;border-top:1px solid var(--grid);font-size:13.5px}
+.step:first-child{border-top:none}
+.step-k{font-weight:700;color:var(--text-secondary);font-size:12.5px;white-space:nowrap}
+.step-t{color:var(--text-primary);line-height:1.6}
+.step-r{font-weight:700;white-space:nowrap}
+@media(max-width:520px){.step{grid-template-columns:78px 1fr}
+  .step-r{grid-column:2;justify-self:end}}
+.trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
+  margin-left:7px;vertical-align:1px}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1437,6 +1470,30 @@ details.home-module[open]{padding-bottom:0}
 .focus-card .data-tag[href]{min-height:40px}
 
 /* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+/* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
+   每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
+   一個是教你怎麼讀，一個是給你驗算。 */
+.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
+  background:var(--surface-2)}
+.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
+  font-weight:600;color:var(--text-secondary)}
+.teach>summary::-webkit-details-marker{display:none}
+.teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  border:1px solid var(--grid);margin-right:7px;font-size:11px}
+.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
+  color:var(--text-primary)}
+.teach-body p{margin:6px 0}
+/* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
+   說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.lights{align-items:stretch}
+.light{display:flex;flex-direction:column}
+.light .l-more{margin-top:auto;padding-top:8px}
+.light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
+  color:var(--muted)}
+.light .l-more>summary::-webkit-details-marker{display:none}
+.light .l-more>summary::after{content:"▾";margin-left:4px}
+.light .l-more[open]>summary::after{content:"▴"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}

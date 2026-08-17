@@ -914,6 +914,39 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+/* 資料時效條：把「財報已出未入表」「近期發債」這類狀態合併成短列。
+   先前是三四個 warnbox 疊在一起，單卡常駐 845 字——每個框單獨都有理由，
+   疊起來就是一堵牆。 */
+.tlines{margin-top:14px;border:1px solid var(--border);border-radius:10px;
+  padding:4px 12px 8px}
+.tlines-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin:8px 0 2px}
+.tline{margin:0;border:none;border-top:1px solid var(--grid);border-radius:0;
+  padding:0}
+.tline:first-of-type{border-top:none}
+.tline>summary{padding:9px 0;margin:4px 0;font-size:13px;color:var(--text-primary)}
+/* 稽核量的是元素盒之間的距離：相鄰的可點元素要留 8px 以上，
+   padding 只放大目標、不拉開距離，所以間隔要用 margin 給。 */
+/* 表格列裡的連結沿用全站的負 margin 觸控放大（td a 那條規則），
+   這裡**不要**再動 td 內距——縮小內距會讓原本「觸控區彼此重疊、
+   稽核視為同一組」的連結變成相距 0.2px 的兩個目標。
+   要給的是表格與下一個 summary 之間的距離。 */
+.tline .tscroll{margin-bottom:12px}
+.tline .f-detail{padding-bottom:8px}
+/* 四步計算卡：每步一行、行末是結果。取代散在四處的計算說明。 */
+.steps{margin:14px 0 2px;border:1px solid var(--border);border-radius:10px;
+  overflow:hidden}
+.step{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:baseline;
+  padding:10px 13px;border-top:1px solid var(--grid);font-size:13.5px}
+.step:first-child{border-top:none}
+.step-k{font-weight:700;color:var(--text-secondary);font-size:12.5px;white-space:nowrap}
+.step-t{color:var(--text-primary);line-height:1.6}
+.step-r{font-weight:700;white-space:nowrap}
+@media(max-width:520px){.step{grid-template-columns:78px 1fr}
+  .step-r{grid-column:2;justify-self:end}}
+.trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
+  margin-left:7px;vertical-align:1px}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1437,6 +1470,30 @@ details.home-module[open]{padding-bottom:0}
 .focus-card .data-tag[href]{min-height:40px}
 
 /* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+/* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
+   每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
+   一個是教你怎麼讀，一個是給你驗算。 */
+.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
+  background:var(--surface-2)}
+.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
+  font-weight:600;color:var(--text-secondary)}
+.teach>summary::-webkit-details-marker{display:none}
+.teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  border:1px solid var(--grid);margin-right:7px;font-size:11px}
+.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
+  color:var(--text-primary)}
+.teach-body p{margin:6px 0}
+/* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
+   說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.lights{align-items:stretch}
+.light{display:flex;flex-direction:column}
+.light .l-more{margin-top:auto;padding-top:8px}
+.light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
+  color:var(--muted)}
+.light .l-more>summary::-webkit-details-marker{display:none}
+.light .l-more>summary::after{content:"▾";margin-left:4px}
+.light .l-more[open]>summary::after{content:"▴"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1469,13 +1526,13 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">勞動市場</a></h1>
-  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-16 22:01（台北）</div>
+  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-17 18:14（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/" class="on">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 76 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 77 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
 <div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#unrate">失業率變動分解</a><a href="#breakeven">損益兩平就業增速</a><a href="#claims">每週失業金申請</a><a href="#industry">行業別貢獻分解</a><a href="#revision">歷史數據修正</a><a href="#lights">關鍵指標檢核</a><a href="#score">綜合強弱指數</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div><h2 class="focus-title">就業中性，動能轉弱</h2><p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p><div class="focus-grid"><div class="focus-metric dovish"><span>就業格位</span><b>中</b><small>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</small></div><div class="focus-metric dovish"><span>移動方向</span><b>轉弱</b><small>不直接改變當前格位</small></div><div class="focus-metric neutral"><span>非農就業｜最新</span><b>-2.3 萬人</b><small>近三個月平均 +2.0 萬人　·　近一年平均 +2.6 萬人</small></div><div class="focus-metric neutral"><span>失業率 U-3</span><b>4.1%</b><small>較上月 -0.1 個百分點　·　含低度就業 7.9%</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</span></div><div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：-7.8 萬人；低於即轉弱。</span></div><div class="logic-step"><b>下一格觸發</b><span>失業率高於 4.3% 轉弱（距離 0.2pp）</span></div></div></div></details><div class="data-line"><span class="data-tag">就業報告 2026-07</span><span class="data-tag">初領失業金 2026-08-01</span><span class="data-tag">JOLTS 2026-06</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div><h2 class="focus-title">就業中性，動能轉弱</h2><p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p><div class="focus-grid"><div class="focus-metric dovish"><span>就業格位</span><b>中</b><small>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</small></div><div class="focus-metric dovish"><span>移動方向</span><b>轉弱</b><small>不直接改變當前格位</small></div><div class="focus-metric neutral"><span>非農就業｜最新</span><b>-2.3 萬人</b><small>近三個月平均 +2.0 萬人　·　近一年平均 +2.6 萬人</small></div><div class="focus-metric neutral"><span>失業率 U-3</span><b>4.1%</b><small>較上月 -0.1 個百分點　·　含低度就業 7.9%</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>失業率 4.1% 對照 FOMC 長期區間 4.0–4.3%</span></div><div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：-7.8 萬人；低於即轉弱。</span></div><div class="logic-step"><b>下一格觸發</b><span>失業率高於 4.3% 轉弱（距離 0.2pp）</span></div></div></div></details><div class="data-line"><span class="data-tag">就業報告 2026-07（08/07 發布）</span><span class="data-tag">初領失業金（統計週至 2026-08-01）</span><span class="data-tag">JOLTS 2026-06</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
@@ -1488,8 +1545,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">前兩月大幅下修，實質動能弱於初值
       <span class="f-tag">重要</span></div>
     <div class="impact dovish">利降息　就業動能比初值顯示的更弱</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">政府這次把前兩個月的就業人數合計往下修了 10.3 萬人，比本月的變動量還大。把修正算進去後，近三個月平均每月新增從 +5.4 萬人掉到 +2.0 萬人。就業數據第一次公布時是估算值，之後兩個月會用更完整的資料重算。</div></div>
+    <details class="f-more" open><summary>依據</summary>
+      <div class="f-detail">政府這次把前兩個月的就業人數合計往下修了 10.3 萬人，比本月的變動量還大。把修正算進去後，近三個月平均每月新增從 +5.4 萬人掉到 +2.0 萬人。就業數據第一次公布時是估算值，之後兩個月會用更完整的資料重算。</div></details>
   </div>
 </div><div class="flag watch">
   <span class="f-icon">▲</span>
@@ -1497,8 +1554,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">初值近一年呈系統性下修
       <span class="f-tag">留意</span></div>
     <div class="impact dovish">利降息　初值應打折看待</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">過去 12 個月，每個月的就業人數平均事後被往下修 0.9 萬人。看到剛公布的數字時，要記得它之後很可能被調降。</div></div>
+    <details class="f-more"><summary>依據</summary>
+      <div class="f-detail">過去 12 個月，每個月的就業人數平均事後被往下修 0.9 萬人。看到剛公布的數字時，要記得它之後很可能被調降。</div></details>
   </div>
 </div><div class="flag info">
   <span class="f-icon">●</span>
@@ -1506,8 +1563,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">失業率下降源於勞動力退出，而非就業增加
       <span class="f-tag">參考</span></div>
     <div class="impact dovish">利降息　就業市場實際在轉弱</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。（不過這個月只動了 0.1 個百分點，低於 0.2 個百分點的統計顯著門檻，方向可以參考，強度不要當真。）</div></div>
+    <details class="f-more"><summary>依據</summary>
+      <div class="f-detail">失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場。放棄找工作的人不會被算成失業，所以失業率反而被壓低了。（不過這個月只動了 0.1 個百分點，低於 0.2 個百分點的統計顯著門檻，方向可以參考，強度不要當真。）</div></details>
   </div>
 </div><div class="flag info">
   <span class="f-icon">●</span>
@@ -1515,8 +1572,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">低招聘、低裁員格局延續
       <span class="f-tag">參考</span></div>
     <div class="impact neutral">中性　就業市場凍結，短期影響有限</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">每月錄取的人約佔總就業的 3.4%、被裁員的約 1.1%，兩個都在低檔。對已經有工作的人來說相對安全，但正在找工作的人會非常辛苦。</div></div>
+    <details class="f-more"><summary>依據</summary>
+      <div class="f-detail">每月錄取的人約佔總就業的 3.4%、被裁員的約 1.1%，兩個都在低檔。對已經有工作的人來說相對安全，但正在找工作的人會非常辛苦。</div></details>
   </div>
 </div>
   </div></details>
@@ -1552,6 +1609,7 @@ details.home-module[open]{padding-bottom:0}
 <div class="grid g2">
   <details class="card sect"><summary><h2 id="unrate">失業率變動分解</h2><span class="sect-sum">失業率 -0.10 個百分點　·　勞動力退出所致</span></summary><div class="sect-body">
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。</p><p><b>為什麼重要：</b>失業率下降不一定是好消息。如果是因為大家放棄找工作而退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。</p><p><b>怎麼判讀：</b>看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。</p></div></details>
     <div class="dsum">
   <div class="dsum-main" style="color:var(--critical)">勞動力退出所致</div>
   <div class="dsum-sub">失業率 4.1%　·
@@ -1591,14 +1649,14 @@ details.home-module[open]{padding-bottom:0}
   <div class="ug-note">目前失業率 4.1%　·
     自然失業率 u* 4.39%（CBO 估計，2026-07-01）。
     失業率低於自然失業率，勞動市場仍偏緊、薪資壓力偏上行。</div>
-  <div class="legacy-detail"><h4>u* 是什麼、為什麼只當方向參考</h4>
+  <details class="f-more"><summary>u* 是什麼、為什麼只當方向參考</summary>
     <div class="f-detail">u* 是「不會讓通膨加速的失業率」，由 CBO 用模型估計，
       季頻發布而且會被回溯修正——它不是觀測值。所以這裡只用它判斷
       鬆／緊的方向，不拿來設門檻。缺口在 ±0.2 個百分點以內一律當中性，
       因為 u* 本身的估計誤差就有這個量級。</div>
-  </div>
+  </details>
 </div>
-    <div class="legacy-detail"><h4>失業結構：這些人是怎麼變成失業的</h4>
+    <details class="f-more ustruct"><summary>失業結構：這些人是怎麼變成失業的</summary>
   <div class="impact neutral" style="margin-top:10px">各類別的變化互相抵消，結構沒有明顯方向。</div>
   <div class="ustr-list"><div class="ustr bad"><div class="us-name">失去工作／臨時工作結束</div><div class="us-bar"><i style="width:47.4%"></i></div><div class="us-val">330.9 萬人<span class="us-share">47%</span></div><div class="us-yoy">較一年前 +0.3 萬人</div><div class="us-note">包含失去工作與臨時工作結束，是 BLS A-11 的互斥大類。</div></div><div class="ustr good"><div class="us-name">自願離職</div><div class="us-bar"><i style="width:11.4%"></i></div><div class="us-val">79.3 萬人<span class="us-share">11%</span></div><div class="us-yoy">較一年前 -3.2 萬人</div><div class="us-note">主動辭職還沒找到下一份。這條要上升，人得對再就業有信心。</div></div><div class="ustr good"><div class="us-name">重新進入</div><div class="us-bar"><i style="width:30.4%"></i></div><div class="us-val">212.3 萬人<span class="us-share">30%</span></div><div class="us-yoy">較一年前 -3.7 萬人</div><div class="us-note">離開勞動力之後又回來找工作。景氣把人吸回來時會增加。</div></div><div class="ustr good"><div class="us-name">新進入</div><div class="us-bar"><i style="width:10.9%"></i></div><div class="us-val">76.1 萬人<span class="us-share">11%</span></div><div class="us-yoy">較一年前 +3.8 萬人</div><div class="us-note">第一次找工作。人口與畢業季的影響大於景氣。</div></div></div>
   <p class="hint" style="margin-top:10px">
@@ -1607,12 +1665,13 @@ details.home-module[open]{padding-bottom:0}
     因為 CPS 的失業原因分類不完全互斥，用總數會讓佔比加不到 100%。
     重點看的是<b>變化</b>不是水準——永久性失業長期就是最大的一塊，
     「它佔四成」不是訊息，「它是今年增加最多的一塊」才是。</p>
-</div>
+</details>
   </div></details>
 
   <details class="card sect"><summary><h2 id="breakeven">損益兩平就業增速</h2><span class="sect-sum">缺口 -7.8 萬人　·　低於損益兩平</span></summary><div class="sect-body">
     <p class="hint">維持失業率不變，每個月需要新增多少工作。
       沒有這條基準線，非農的絕對數字無法解讀。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>美國每個月人口都在成長，所以就業也要跟著增加，失業率才不會上升。這一區算的就是那條「及格線」。</p><p><b>為什麼重要：</b>新聞說「非農新增 5 萬人」，到底算好還是壞？沒有及格線就答不出來。及格線會隨人口與移民政策改變，前幾年是 10–15 萬，現在低得多。</p><p><b>怎麼判讀：</b>非農高於及格線＝就業市場在變強；低於＝表面有新增、其實撐不住現在的失業率，失業率之後會慢慢上升。</p></div></details>
     <div class="stat-row"><div class="stat"><div class="s-label">實際：非農三個月均</div><div class="s-value" style="color:inherit">+2.0 萬人</div></div><div class="stat"><div class="s-label">需要：損益兩平</div><div class="s-value" style="color:inherit">+9.8 萬人</div><div class="s-note">維持失業率不變所需的每月就業增加</div></div></div>
     <div class="bkgap" style="color:var(--critical)">
       <span class="bk-label">缺口</span>
@@ -1621,7 +1680,7 @@ details.home-module[open]{padding-bottom:0}
     </div>
     <p class="hint" style="margin:12px 0 0">就業成長跟不上勞動供給，失業率有上行壓力</p>
     <div style="margin-top:14px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" style="height:150px" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,80.3 40.0,82.3 80.0,79.8 120.0,82.3 160.0,80.2 200.0,77.5 240.0,73.6 280.0,69.3 320.0,66.3 360.0,14.5 400.0,26.5 440.0,50.6 480.0,75.2 520.0,93.6 560.0,117.7 600.0,135.5 600,150" fill="var(--line-2)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,80.3 40.0,82.3 80.0,79.8 120.0,82.3 160.0,80.2 200.0,77.5 240.0,73.6 280.0,69.3 320.0,66.3 360.0,14.5 400.0,26.5 440.0,50.6 480.0,75.2 520.0,93.6 560.0,117.7 600.0,135.5" fill="none" stroke="var(--line-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">12.2 萬人</span><span class="glab" style="top:calc(90.3% + 4px)">10.1 萬人</span><span class="ldot" style="left:100.00%;top:90.32%;background:var(--line-2)"></span></div><div class="lxaxis"><span>2025-02-01</span><span><b>10.1 萬人</b>　2026-07-01</span></div></div></div>
-    <div class="legacy-detail"><h4>計算方式與注意事項</h4>
+    <details data-m-collapse><summary>計算方式與注意事項</summary>
       <p class="hint" style="margin:10px 0 0">計算依據：每月人口成長 +17.0 萬人　·　參與率 61.6%　·　失業率 4.2%　·　判定容差 ±4.9 萬人</p>
       <dl class="gloss" style="margin-top:10px">
         <dt>計算式</dt>
@@ -1633,20 +1692,23 @@ details.home-module[open]{padding-bottom:0}
         <dd>人口序列每年一月做普查控制調整會出現跳點，計算時已排除一月。
           此為推估值，非官方公布數字。</dd>
       </dl>
-  </div>
-</div></details>
+    </details>
+  </div></details>
+</div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="claims">每週失業金申請</h2><span class="sect-sum">初領：四週移動平均 19.9 萬人　·　續領：最新一週 177.7 萬人</span></summary><div class="sect-body">
-    <p class="hint">這一頁唯一的週頻資料，資料截至 2026-08-08。
-      就業報告一個月才出一次、JOLTS 還要再落後一到兩個月——
-      兩次就業報告之間，只有這一條會更新。</p>
+    <p class="hint">這一頁唯一的週頻資料：2026-08-13 發布、
+      統計週至 2026-08-08。兩次就業報告之間，只有這一條會更新。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">初領：四週移動平均</div><div class="s-value" style="color:inherit">19.9 萬人</div><div class="s-note">較四週前 -7.3%</div></div><div class="stat"><div class="s-label">續領：最新一週</div><div class="s-value" style="color:inherit">177.7 萬人</div><div class="s-note">較四週前 -1.2%</div></div><div class="stat"><div class="s-label">失業持續期間中位數</div><div class="s-value" style="color:inherit">10.5 週</div><div class="s-note">較一年前 +0.4 週</div></div></div>
     <div class="impact hawkish" style="margin-top:14px">初領與續領都在近一年低位，勞動市場仍然緊。</div>
     <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" style="height:130px" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,67.8 5.8,64.2 11.7,71.9 17.5,72.9 23.3,83.2 29.1,80.1 35.0,83.2 40.8,66.3 46.6,60.7 52.4,54.0 58.3,68.8 64.1,57.1 69.9,60.1 75.7,51.4 81.6,51.4 87.4,62.2 93.2,65.8 99.0,62.7 104.9,54.5 110.7,79.1 116.5,61.2 122.3,70.4 128.2,49.4 134.0,68.3 139.8,57.1 145.6,75.5 151.5,64.2 157.3,70.9 163.1,50.4 168.9,66.8 174.8,57.1 180.6,69.3 186.4,50.4 192.2,69.3 198.1,57.1 203.9,75.5 209.7,41.7 215.5,57.1 221.4,53.0 227.2,50.4 233.0,36.1 238.8,46.8 244.7,20.8 250.5,26.9 256.3,14.1 262.1,17.2 268.0,18.2 273.8,19.7 279.6,23.8 285.4,26.4 291.3,12.6 297.1,23.3 302.9,15.6 308.7,23.3 314.6,25.9 320.4,31.0 326.2,32.0 332.0,36.6 337.9,34.1 343.7,30.0 349.5,30.5 355.3,20.8 361.2,17.7 367.0,13.1 372.8,21.3 378.6,19.7 384.5,22.8 390.3,28.4 396.1,47.9 401.9,51.4 407.8,39.7 413.6,65.3 419.4,44.8 425.2,57.6 431.1,62.7 436.9,84.2 442.7,74.5 448.5,65.8 454.4,62.7 460.2,82.1 466.0,59.6 471.8,71.9 477.7,69.9 483.5,87.8 489.3,79.6 495.1,102.6 501.0,91.3 506.8,91.8 512.6,108.2 518.4,117.4 524.3,108.2 530.1,110.8 535.9,103.6 541.7,110.8 547.6,103.1 553.4,95.9 559.2,89.8 565.0,92.9 570.9,85.2 576.7,97.0 582.5,101.6 588.3,107.7 594.2,96.5 600.0,107.7 600,130" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,67.8 5.8,64.2 11.7,71.9 17.5,72.9 23.3,83.2 29.1,80.1 35.0,83.2 40.8,66.3 46.6,60.7 52.4,54.0 58.3,68.8 64.1,57.1 69.9,60.1 75.7,51.4 81.6,51.4 87.4,62.2 93.2,65.8 99.0,62.7 104.9,54.5 110.7,79.1 116.5,61.2 122.3,70.4 128.2,49.4 134.0,68.3 139.8,57.1 145.6,75.5 151.5,64.2 157.3,70.9 163.1,50.4 168.9,66.8 174.8,57.1 180.6,69.3 186.4,50.4 192.2,69.3 198.1,57.1 203.9,75.5 209.7,41.7 215.5,57.1 221.4,53.0 227.2,50.4 233.0,36.1 238.8,46.8 244.7,20.8 250.5,26.9 256.3,14.1 262.1,17.2 268.0,18.2 273.8,19.7 279.6,23.8 285.4,26.4 291.3,12.6 297.1,23.3 302.9,15.6 308.7,23.3 314.6,25.9 320.4,31.0 326.2,32.0 332.0,36.6 337.9,34.1 343.7,30.0 349.5,30.5 355.3,20.8 361.2,17.7 367.0,13.1 372.8,21.3 378.6,19.7 384.5,22.8 390.3,28.4 396.1,47.9 401.9,51.4 407.8,39.7 413.6,65.3 419.4,44.8 425.2,57.6 431.1,62.7 436.9,84.2 442.7,74.5 448.5,65.8 454.4,62.7 460.2,82.1 466.0,59.6 471.8,71.9 477.7,69.9 483.5,87.8 489.3,79.6 495.1,102.6 501.0,91.3 506.8,91.8 512.6,108.2 518.4,117.4 524.3,108.2 530.1,110.8 535.9,103.6 541.7,110.8 547.6,103.1 553.4,95.9 559.2,89.8 565.0,92.9 570.9,85.2 576.7,97.0 582.5,101.6 588.3,107.7 594.2,96.5 600.0,107.7" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">196.3 萬人</span><span class="glab" style="top:calc(90.3% + 4px)">175.8 萬人</span><span class="ldot" style="left:100.00%;top:82.85%;background:var(--series-1)"></span></div><div class="lxaxis"><span>2024-08-10</span><span><b>177.7 萬人</b>　2026-08-01</span></div></div></div>
     <p class="hint" style="margin-top:8px">續領失業金人數（近兩年，單位萬人）</p>
-    <div class="legacy-detail"><h4>初領與續領差在哪、為什麼看四週平均</h4>
+    <details class="f-more"><summary>初領與續領差在哪、為什麼看四週平均</summary>
       <div class="f-detail">
+        <b>日期先講清楚</b>：這一區標的是「統計週的結束日」不是發布日——
+        8/13（四）發布的，就是「週結至 8/8」那一筆。看到日期比新聞早五天，
+        不是資料沒更新，是同一筆。<br>
         <b>初領</b>是這週<b>新</b>失去工作的人，衡量的是裁員的速度；
         <b>續領</b>是還在領補助的人，衡量的是再就業的難度。
         兩者可以背離：裁員沒增加、但續領一直往上爬，代表「沒什麼人被裁，
@@ -1661,26 +1723,27 @@ details.home-module[open]{padding-bottom:0}
         它講「多久」。續領人數會被勞動力規模與補助資格變動影響，
         持續期間不會——兩條一起往上，再就業變難才算被獨立確認。
       </div>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="industry">行業別貢獻分解</h2><span class="sect-sum">全體合計 -2.3 萬人　·　扣掉醫療與政府 +0.7 萬人</span></summary><div class="sect-body">
-    <p class="hint">增減最大的各五個行業，加上任何「相對自己過去表現異常」的行業。
-      灰色是醫療、社福與各級政府，用人較不受景氣影響。</p>
+    <p class="hint">只列增減最大的各三個與變動異常的行業；
+      完整 17 個行業收在下方表格。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>這個月新增（或減少）的就業，是哪幾個行業貢獻的。</p><p><b>為什麼重要：</b>同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。</p><p><b>怎麼判讀：</b>先看增與減集中在誰身上，再看有沒有掛「異常」標籤的行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。</p></div></details>
     <div class="stat-row"><div class="stat"><div class="s-label">全體合計</div><div class="s-value" style="color:inherit">-2.3 萬人</div></div><div class="stat"><div class="s-label">扣掉醫療與政府</div><div class="s-value" style="color:var(--good)">+0.7 萬人</div><div class="s-note">跟景氣連動的部分</div></div><div class="stat"><div class="s-label">有增加人力的行業</div><div class="s-value" style="color:inherit">11 / 17 個</div><div class="s-note">佔 65%</div></div><div class="stat"><div class="s-label">其中：地方政府教育</div><div class="s-value" style="color:var(--warning)">-5.0 萬人</div><div class="s-note">學期結束的季節性因素，不一定代表真的裁員</div></div></div>
     <div class="warnbox" style="margin:0 0 14px"><b>淨額小，是因為增減互相抵消</b><br>本月有 +11.3 萬人 的增加與 -13.5 萬人 的減少。「這個月沒什麼事」與「兩邊都在大幅變動但互相抵消」，對政策的意涵完全不同。</div>
-    <div class="legacy-detail"><h4>行業別明細</h4>
-    <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="醫療與社福｜+2.3 萬人｜相對自身歷史 -1.3 個標準差"><div class="dlabel">醫療與社福<span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:19.82%"></span></div><div class="dval pos">+2.3 萬人</div></div><div class="drow" data-tip="營建｜+2.2 萬人｜相對自身歷史 +1.0 個標準差"><div class="dlabel">營建</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:19.30%"></span></div><div class="dval pos">+2.2 萬人</div></div><div class="drow" data-tip="專業與商業服務｜+1.8 萬人｜相對自身歷史 +0.8 個標準差"><div class="dlabel">專業與商業服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:15.79%"></span></div><div class="dval pos">+1.8 萬人</div></div><div class="drow" data-tip="資訊｜+1.1 萬人｜相對自身歷史 +2.2 個標準差"><div class="dlabel">資訊<span class="dtag">值得注意<b>相對自身歷史 +2.2 個標準差</b></span></div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:9.65%"></span></div><div class="dval pos">+1.1 萬人</div></div><div class="drow" data-tip="運輸倉儲｜+1.0 萬人｜相對自身歷史 +0.5 個標準差"><div class="dlabel">運輸倉儲</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:8.51%"></span></div><div class="dval pos">+1.0 萬人</div></div><div class="drow" data-tip="聯邦政府｜-0.3 萬人｜相對自身歷史 +0.3 個標準差"><div class="dlabel">聯邦政府<span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="right:50%;width:2.63%"></span></div><div class="dval neg">-0.3 萬人</div></div><div class="drow" data-tip="金融活動｜-1.4 萬人｜相對自身歷史 -1.0 個標準差"><div class="dlabel">金融活動</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:12.28%"></span></div><div class="dval neg">-1.4 萬人</div></div><div class="drow" data-tip="零售｜-1.9 萬人｜相對自身歷史 -0.9 個標準差"><div class="dlabel">零售</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:17.02%"></span></div><div class="dval neg">-1.9 萬人</div></div><div class="drow" data-tip="休閒與住宿餐飲｜-4.0 萬人｜相對自身歷史 -1.9 個標準差"><div class="dlabel">休閒與住宿餐飲<span class="dtag">值得注意<b>相對自身歷史 -1.9 個標準差</b></span></div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:35.09%"></span></div><div class="dval neg">-4.0 萬人</div></div><div class="drow" data-tip="地方政府｜-5.7 萬人｜相對自身歷史 -5.1 個標準差"><div class="dlabel">地方政府<span class="dtag">值得注意<b>相對自身歷史 -5.1 個標準差</b></span><span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="right:50%;width:50.00%"></span></div><div class="dval neg">-5.7 萬人</div></div><div class="drow" data-tip="其餘 7 個行業合計 +2.7 萬人"><div class="dlabel">其他 7 個行業<span class="dnote">多個行業加總</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:23.86%"></span></div><div class="dval pos">+2.7 萬人</div></div></div></div>
+    <details data-m-collapse><summary>增減幅前幾名（圖）</summary>
+    <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="醫療與社福｜+2.3 萬人"><div class="dlabel">醫療與社福<span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:19.82%"></span></div><div class="dval pos">+2.3 萬人</div></div><div class="drow" data-tip="營建｜+2.2 萬人"><div class="dlabel">營建</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:19.30%"></span></div><div class="dval pos">+2.2 萬人</div></div><div class="drow" data-tip="專業與商業服務｜+1.8 萬人"><div class="dlabel">專業與商業服務</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:15.79%"></span></div><div class="dval pos">+1.8 萬人</div></div><div class="drow" data-tip="資訊｜+1.1 萬人｜增幅遠超出自己平常的起伏（約 2.2 倍）"><div class="dlabel">資訊<span class="dtag">異常<b>增幅遠超出自己平常的起伏（約 2.2 倍）</b></span></div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:9.65%"></span></div><div class="dval pos">+1.1 萬人</div></div><div class="drow" data-tip="零售｜-1.9 萬人"><div class="dlabel">零售</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:17.02%"></span></div><div class="dval neg">-1.9 萬人</div></div><div class="drow" data-tip="休閒與住宿餐飲｜-4.0 萬人｜減幅在近 2 年裡排第 5 大"><div class="dlabel">休閒與住宿餐飲<span class="dtag">異常<b>減幅在近 2 年裡排第 5 大</b></span></div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:35.09%"></span></div><div class="dval neg">-4.0 萬人</div></div><div class="drow" data-tip="地方政府｜-5.7 萬人｜近 2 年最大單月減幅"><div class="dlabel">地方政府<span class="dtag">異常<b>近 2 年最大單月減幅</b></span><span class="dnote">不受景氣影響</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="right:50%;width:50.00%"></span></div><div class="dval neg">-5.7 萬人</div></div><div class="drow" data-tip="其餘 10 個行業合計 +2.0 萬人"><div class="dlabel">其他 10 個行業<span class="dnote">多個行業加總</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:17.46%"></span></div><div class="dval pos">+2.0 萬人</div></div></div></div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>增加</span>
       <span><i style="background:var(--neg)"></i>減少</span>
       <span><i style="background:var(--muted-bar)"></i>不受景氣影響／加總列</span>
       <span>單位：萬人</span>
     </div>
-    </div>
-    <div class="legacy-detail"><h4>全部 17 個行業</h4>
+    </details>
+    <details data-m-collapse><summary>全部 17 個行業</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>行業</th><th>增減（萬人）</th><th>同向佔比</th><th>自身變動</th></tr></thead>
         <tbody><tr><td>醫療與社福</td><td class="pos">+2.3 </td><td class="muted-cell">20%</td><td class="muted-cell">+0.09%</td></tr><tr><td>營建</td><td class="pos">+2.2 </td><td class="muted-cell">20%</td><td class="muted-cell">+0.26%</td></tr><tr><td>專業與商業服務</td><td class="pos">+1.8 </td><td class="muted-cell">16%</td><td class="muted-cell">+0.08%</td></tr><tr><td>資訊</td><td class="pos">+1.1 </td><td class="muted-cell">10%</td><td class="muted-cell">+0.40%</td></tr><tr><td>運輸倉儲</td><td class="pos">+1.0 </td><td class="muted-cell">9%</td><td class="muted-cell">+0.15%</td></tr><tr><td>其他服務</td><td class="pos">+0.9 </td><td class="muted-cell">8%</td><td class="muted-cell">+0.15%</td></tr><tr><td>州政府</td><td class="pos">+0.7 </td><td class="muted-cell">6%</td><td class="muted-cell">+0.13%</td></tr><tr><td>製造業</td><td class="pos">+0.5 </td><td class="muted-cell">4%</td><td class="muted-cell">+0.04%</td></tr><tr><td>批發</td><td class="pos">+0.5 </td><td class="muted-cell">4%</td><td class="muted-cell">+0.08%</td></tr><tr><td>民間教育</td><td class="pos">+0.3 </td><td class="muted-cell">2%</td><td class="muted-cell">+0.07%</td></tr><tr><td>公用事業</td><td class="pos">+0.1 </td><td class="muted-cell">1%</td><td class="muted-cell">+0.12%</td></tr><tr><td>礦業與伐木</td><td class="neg">-0.2 </td><td class="muted-cell">1%</td><td class="muted-cell">-0.33%</td></tr><tr><td>聯邦政府</td><td class="neg">-0.3 </td><td class="muted-cell">2%</td><td class="muted-cell">-0.11%</td></tr><tr><td>金融活動</td><td class="neg">-1.4 </td><td class="muted-cell">10%</td><td class="muted-cell">-0.15%</td></tr><tr><td>零售</td><td class="neg">-1.9 </td><td class="muted-cell">14%</td><td class="muted-cell">-0.13%</td></tr><tr><td>休閒與住宿餐飲</td><td class="neg">-4.0 </td><td class="muted-cell">30%</td><td class="muted-cell">-0.24%</td></tr><tr><td>地方政府</td><td class="neg">-5.7 </td><td class="muted-cell">42%</td><td class="muted-cell">-0.38%</td></tr></tbody></table></div>
@@ -1690,7 +1753,7 @@ details.home-module[open]{padding-bottom:0}
         −165%、+204% 這種讀不出意義的數字。
         「自身變動幅度」＝該行業的月變動相對自己就業規模的百分比，
         用來比較不同規模的行業誰動得比較劇烈。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
@@ -1698,76 +1761,87 @@ details.home-module[open]{padding-bottom:0}
   <details class="card sect"><summary><h2 id="revision">歷史數據修正</h2><span class="sect-sum">前兩月合計修正 -10.3 萬人</span></summary><div class="sect-body">
     <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
       修正幅度常常比當月的變動還大。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>之前公布的就業數字，事後被改了多少。</p><p><b>為什麼重要：</b>市場只對「第一次公布」的數字有反應，但那是估算值。如果初值總是被往下修，代表你在新聞上看到的就業一直比真實情況好——這正是判斷「數據可不可信」的地方。</p><p><b>怎麼判讀：</b>看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。</p></div></details>
     <div class="stat-row"><div class="stat"><div class="s-label">前兩月合計修正</div><div class="s-value" style="color:var(--critical)">-10.3 萬人</div><div class="s-note">相對上次發布；相對初值累計 -14.6 萬人</div></div><div class="stat"><div class="s-label">近三個月平均新增</div><div class="s-value" style="color:inherit">+2.0 萬人</div><div class="s-note">若沒有這次修正，應為 +5.4 萬人</div></div><div class="stat"><div class="s-label">近一年修正傾向</div><div class="s-value" style="color:var(--warning)">-0.9 萬人/月</div><div class="s-note">初值偏樂觀，應打折看待</div></div></div>
-    <div class="legacy-detail"><h4>逐月修正明細</h4>
+    <details data-m-collapse><summary>逐月修正明細</summary>
       <table class="revtab"><thead><tr><th>月份</th><th>初次公布</th><th>目前</th><th>修正</th></tr></thead><tbody><tr><td>2026-01</td><td class="muted-cell">+126,000</td><td>+160,000</td><td class="pos" style="font-weight:700">+34,000</td></tr><tr><td>2026-02</td><td class="muted-cell">-92,000</td><td>-156,000</td><td class="neg" style="font-weight:700">-64,000</td></tr><tr><td>2026-03</td><td class="muted-cell">+178,000</td><td>+214,000</td><td class="pos" style="font-weight:700">+36,000</td></tr><tr><td>2026-04</td><td class="muted-cell">+115,000</td><td>+148,000</td><td class="pos" style="font-weight:700">+33,000</td></tr><tr><td>2026-05</td><td class="muted-cell">+172,000</td><td>+63,000</td><td class="neg" style="font-weight:700">-109,000</td></tr><tr><td>2026-06</td><td class="muted-cell">+57,000</td><td>+20,000</td><td class="neg" style="font-weight:700">-37,000</td></tr><tr><td>2026-07</td><td class="muted-cell">-23,000</td><td>-23,000</td><td class="muted-cell">未修正</td></tr></tbody></table>
       <p class="hint" style="margin-top:10px">
         「修正」欄是相對初次公布的累計差異，與上方 BLS 口徑（相對上次發布）不同。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">1 項警戒、3 項留意、4 項正常</span></summary><div class="sect-body">
     <p class="hint">八項關鍵指標的當期狀態。</p>
-    <div class="legacy-detail"><h4>八項指標</h4>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線。</p><p><b>為什麼重要：</b>單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。</p><p><b>怎麼判讀：</b>數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。</p></div></details>
+    <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>衰退警訊</div>
   <div class="l-value">+0.00 <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">正常</div>
   <div class="sstrip"><span class="sq good" data-tip="2025-07-01｜+0.17"></span><span class="sq good" data-tip="2025-08-01｜+0.13"></span><span class="sq good" data-tip="2025-09-01｜+0.23"></span><span class="sq warning" data-tip="2025-11-01｜+0.30"></span><span class="sq warning" data-tip="2025-12-01｜+0.33"></span><span class="sq warning" data-tip="2026-01-01｜+0.30"></span><span class="sq good" data-tip="2026-02-01｜+0.27"></span><span class="sq good" data-tip="2026-03-01｜+0.23"></span><span class="sq good" data-tip="2026-04-01｜+0.20"></span><span class="sq good" data-tip="2026-05-01｜+0.10"></span><span class="sq good" data-tip="2026-06-01｜+0.07"></span><span class="sq good" data-tip="2026-07-01｜+0.00"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">失業率近三月平均比過去一年最低點高多少。歷史上超過 0.5 都已進入衰退</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">失業率近三月平均比過去一年最低點高多少。歷史上超過 0.5 都已進入衰退</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>職缺 vs 失業人數</div>
   <div class="l-value">1.04 <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">正常</div>
   <div class="sstrip"><span class="sq good" data-tip="2025-06-01｜1.02"></span><span class="sq warning" data-tip="2025-07-01｜0.97"></span><span class="sq warning" data-tip="2025-08-01｜0.94"></span><span class="sq warning" data-tip="2025-09-01｜0.94"></span><span class="sq warning" data-tip="2025-11-01｜0.88"></span><span class="sq warning" data-tip="2025-12-01｜0.87"></span><span class="sq warning" data-tip="2026-01-01｜0.98"></span><span class="sq warning" data-tip="2026-02-01｜0.91"></span><span class="sq warning" data-tip="2026-03-01｜0.95"></span><span class="sq good" data-tip="2026-04-01｜1.03"></span><span class="sq good" data-tip="2026-05-01｜1.03"></span><span class="sq good" data-tip="2026-06-01｜1.04"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">每一個失業的人平均對應到幾個職缺。低於 1 代表工作機會不夠分</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">每一個失業的人平均對應到幾個職缺。低於 1 代表工作機會不夠分</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>主動離職率</div>
   <div class="l-value">2.0% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   <div class="sstrip"><span class="sq warning" data-tip="2025-07-01｜2.0%"></span><span class="sq warning" data-tip="2025-08-01｜2.0%"></span><span class="sq warning" data-tip="2025-09-01｜1.9%"></span><span class="sq warning" data-tip="2025-10-01｜1.9%"></span><span class="sq warning" data-tip="2025-11-01｜2.0%"></span><span class="sq warning" data-tip="2025-12-01｜2.0%"></span><span class="sq warning" data-tip="2026-01-01｜2.0%"></span><span class="sq warning" data-tip="2026-02-01｜1.9%"></span><span class="sq warning" data-tip="2026-03-01｜2.0%"></span><span class="sq warning" data-tip="2026-04-01｜1.9%"></span><span class="sq warning" data-tip="2026-05-01｜2.0%"></span><span class="sq warning" data-tip="2026-06-01｜2.0%"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">自己辭職的人佔比。敢辭職代表對找到新工作有信心，是勞工信心的溫度計</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">自己辭職的人佔比。敢辭職代表對找到新工作有信心，是勞工信心的溫度計</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>裁員率</div>
   <div class="l-value">1.1% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   <div class="sstrip"><span class="sq good" data-tip="2025-07-01｜1.1%"></span><span class="sq warning" data-tip="2025-08-01｜1.2%"></span><span class="sq good" data-tip="2025-09-01｜1.1%"></span><span class="sq warning" data-tip="2025-10-01｜1.2%"></span><span class="sq good" data-tip="2025-11-01｜1.0%"></span><span class="sq good" data-tip="2025-12-01｜1.1%"></span><span class="sq good" data-tip="2026-01-01｜1.0%"></span><span class="sq good" data-tip="2026-02-01｜1.1%"></span><span class="sq warning" data-tip="2026-03-01｜1.2%"></span><span class="sq good" data-tip="2026-04-01｜1.0%"></span><span class="sq good" data-tip="2026-05-01｜1.1%"></span><span class="sq good" data-tip="2026-06-01｜1.1%"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">每月被裁員的人佔總就業的比例。愈高代表企業愈想縮編</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">每月被裁員的人佔總就業的比例。愈高代表企業愈想縮編</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>還在領失業補助</div>
   <div class="l-value">178 萬人 <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">正常</div>
   <div class="sstrip"><span class="sq good" data-tip="2026-05-16｜178 萬人"></span><span class="sq good" data-tip="2026-05-23｜177 萬人"></span><span class="sq good" data-tip="2026-05-30｜179 萬人"></span><span class="sq good" data-tip="2026-06-06｜180 萬人"></span><span class="sq good" data-tip="2026-06-13｜181 萬人"></span><span class="sq good" data-tip="2026-06-20｜181 萬人"></span><span class="sq good" data-tip="2026-06-27｜182 萬人"></span><span class="sq good" data-tip="2026-07-04｜180 萬人"></span><span class="sq good" data-tip="2026-07-11｜179 萬人"></span><span class="sq good" data-tip="2026-07-18｜178 萬人"></span><span class="sq good" data-tip="2026-07-25｜180 萬人"></span><span class="sq good" data-tip="2026-08-01｜178 萬人"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">持續領失業給付的人數。愈多代表失業後愈難找到下一份工作</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">持續領失業給付的人數。愈多代表失業後愈難找到下一份工作</div></details>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>近三月平均新增工作</div>
   <div class="l-value">+2.0 萬人 <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">警戒</div>
   <div class="sstrip"><span class="sq critical" data-tip="2025-08-01｜-0.9 萬人"></span><span class="sq critical" data-tip="2025-09-01｜+2.3 萬人"></span><span class="sq critical" data-tip="2025-10-01｜-4.5 萬人"></span><span class="sq critical" data-tip="2025-11-01｜-0.8 萬人"></span><span class="sq critical" data-tip="2025-12-01｜-3.9 萬人"></span><span class="sq warning" data-tip="2026-01-01｜+6.1 萬人"></span><span class="sq critical" data-tip="2026-02-01｜-0.4 萬人"></span><span class="sq warning" data-tip="2026-03-01｜+7.3 萬人"></span><span class="sq warning" data-tip="2026-04-01｜+6.9 萬人"></span><span class="sq good" data-tip="2026-05-01｜+14.2 萬人"></span><span class="sq warning" data-tip="2026-06-01｜+7.7 萬人"></span><span class="sq critical" data-tip="2026-07-01｜+2.0 萬人"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">平均每個月多出多少工作。單月數字波動大，看三個月平均比較準</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">平均每個月多出多少工作。單月數字波動大，看三個月平均比較準</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>壯年就業比例</div>
   <div class="l-value">80.4% <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">留意</div>
   <div class="sstrip"><span class="sq warning" data-tip="2025-07-01｜80.4%"></span><span class="sq good" data-tip="2025-08-01｜80.7%"></span><span class="sq good" data-tip="2025-09-01｜80.7%"></span><span class="sq good" data-tip="2025-11-01｜80.6%"></span><span class="sq good" data-tip="2025-12-01｜80.7%"></span><span class="sq good" data-tip="2026-01-01｜80.8%"></span><span class="sq good" data-tip="2026-02-01｜80.7%"></span><span class="sq good" data-tip="2026-03-01｜80.7%"></span><span class="sq good" data-tip="2026-04-01｜80.7%"></span><span class="sq good" data-tip="2026-05-01｜80.8%"></span><span class="sq warning" data-tip="2026-06-01｜80.2%"></span><span class="sq warning" data-tip="2026-07-01｜80.4%"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">25 到 54 歲有工作的比例。排除退休與就學的干擾，最能反映真實就業狀況</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">25 到 54 歲有工作的比例。排除退休與就學的干擾，最能反映真實就業狀況</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>隱藏性失業</div>
   <div class="l-value">3.80 個百分點 <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">留意</div>
   <div class="sstrip"><span class="sq warning" data-tip="2025-07-01｜3.60pp"></span><span class="sq warning" data-tip="2025-08-01｜3.80pp"></span><span class="sq warning" data-tip="2025-09-01｜3.70pp"></span><span class="sq critical" data-tip="2025-11-01｜4.20pp"></span><span class="sq critical" data-tip="2025-12-01｜4.00pp"></span><span class="sq warning" data-tip="2026-01-01｜3.80pp"></span><span class="sq warning" data-tip="2026-02-01｜3.50pp"></span><span class="sq warning" data-tip="2026-03-01｜3.70pp"></span><span class="sq warning" data-tip="2026-04-01｜3.90pp"></span><span class="sq warning" data-tip="2026-05-01｜3.80pp"></span><span class="sq warning" data-tip="2026-06-01｜3.70pp"></span><span class="sq warning" data-tip="2026-07-01｜3.80pp"></span></div><div class="sstrip-note">近 12 期</div>
-  <div class="l-desc">想要全職卻只能打零工、或想工作卻沒在積極找的人有多少</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">想要全職卻只能打零工、或想工作卻沒在積極找的人有多少</div></details>
 </div></div>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid g2">
-  <details class="card sect"><summary><h2 id="score">綜合強弱指數</h2><span class="sect-sum">-0.34　·　較上期 +0.14</span></summary><div class="sect-body">
-    <p class="hint">最上方那條分數軸的組成明細。
-      把主要指標換算成同一個尺度後加權合成，正數代表比自身歷史平均強。</p>
+  <details class="card sect"><summary><h2 id="score">綜合強弱指數</h2><span class="sect-sum">綜合判定：就業中性（-0.34，0 為歷史平均）</span></summary><div class="sect-body">
+    <p class="hint">把主要就業指標換算成同一把尺再加權平均。
+      0 代表跟自己的歷史平均一樣，正數偏強、負數偏弱，多數時間落在 −2 到 +2 之間。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>非農用「萬人」、失業率用「%」、職缺用「比率」，單位全都不同，沒辦法直接平均。先把每個指標換算成「離自己平常水準有多遠」，就能加在一起變成一個總分。</p><p><b>為什麼重要：</b>單一指標會互相矛盾（非農弱但職缺強），總分強迫所有指標表態，給你一個唯一的方向。</p><p><b>怎麼判讀：</b>看正負與趨勢就夠：連續幾期往下掉比單期的絕對值重要。分數只是輔助，格位判定仍以失業率為準。</p></div></details>
     <div class="sax">
   <div class="sax-head">
     <span class="sax-label">綜合強弱指數</span>
@@ -1780,21 +1854,22 @@ details.home-module[open]{padding-bottom:0}
   </div>
   <div class="sax-scale"><span>−2.5 疲弱</span><span>0 持平</span><span>+2.5 強勁</span></div>
 </div>
-    <div class="legacy-detail"><h4>各指標貢獻明細</h4>
+    <details data-m-collapse><summary>各指標貢獻明細</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>
           <th>貢獻</th><th>樣本月數</th></tr></thead>
         <tbody><tr><td>非農就業總數</td><td>-1.13</td><td class="muted-cell">1.0</td><td class="neg">-1.13</td><td class="muted-cell">42</td></tr><tr><td>續領失業金</td><td>+1.38</td><td class="muted-cell">0.8</td><td class="pos">+1.11</td><td class="muted-cell">14</td></tr><tr><td>黃金年齡就業人口比 (25-54)</td><td>-1.57</td><td class="muted-cell">0.6</td><td class="neg">-0.94</td><td class="muted-cell">42</td></tr><tr><td>離職率 (quits)</td><td>-0.68</td><td class="muted-cell">0.8</td><td class="neg">-0.54</td><td class="muted-cell">42</td></tr><tr><td>初次申請失業金</td><td>+0.72</td><td class="muted-cell">0.4</td><td class="pos">+0.29</td><td class="muted-cell">14</td></tr><tr><td>失業率 U-3</td><td>-0.28</td><td class="muted-cell">1.0</td><td class="neg">-0.28</td><td class="muted-cell">42</td></tr><tr><td>廣義失業率 U-6</td><td>-0.68</td><td class="muted-cell">0.4</td><td class="neg">-0.27</td><td class="muted-cell">42</td></tr><tr><td>裁員率</td><td>-0.26</td><td class="muted-cell">0.6</td><td class="neg">-0.15</td><td class="muted-cell">42</td></tr></tbody></table></div>
       <p class="hint" style="margin-top:10px">
-        標準分數＝目前值比同一條序列自己的平均高或低幾個標準差，
-        已調整方向讓「正值＝就業強」。各列的樣本期數介於 14 到 42 個月之間，
-        所以「樣本月數」那一欄逐列標出，不同列的分數不完全可比。　週頻序列（申請失業金）換算成月之後樣本較短，那兩列的分數波動會比其他列大。
-        權重目前為暫定值。</p>
-    </div>
-    <div class="legacy-detail"><h4>JOLTS 職缺與人力流動</h4>
+        「標準分數」的意思：這個指標現在離自己的平常水準有多遠、
+        以自己平常的波動幅度為單位——+1 代表比平均高出一個「平常的波動」，
+        數字越大越不尋常。方向已統一成「正值＝就業強」。各列的樣本期數介於 14 到 42 個月之間，
+        所以「樣本月數」逐列標出，不同列的分數不完全可比。　週頻序列（申請失業金）換算成月之後樣本較短，那兩列的分數波動會比其他列大。
+        權重目前為暫定值，僅供輔助判讀。</p>
+    </details>
+    <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
       <p class="hint" style="margin:10px 0 8px">資料月份 2026-06（較就業報告落後 1 個月）</p>
       <table><thead><tr><th>指標</th><th>最新值</th><th>較上月</th></tr></thead>
-      <tbody><tr><td>職缺數</td><td>735.9 萬個</td><td>-17.8 萬個</td></tr><tr><td>招聘率</td><td>3.4%</td><td>+0.10 個百分點</td></tr><tr><td>離職率 (quits)</td><td>2.0%</td><td>持平</td></tr><tr><td>裁員率</td><td>1.1%</td><td>持平</td></tr></tbody></table></div>
+      <tbody><tr><td>職缺數</td><td>735.9 萬個</td><td>-17.8 萬個</td></tr><tr><td>招聘率</td><td>3.4%</td><td>+0.10 個百分點</td></tr><tr><td>離職率 (quits)</td><td>2.0%</td><td>持平</td></tr><tr><td>裁員率</td><td>1.1%</td><td>持平</td></tr></tbody></table></details>
   </div></details>
 
   <details class="card sect"><summary><h2 id="glossary">名詞解釋</h2><span class="sect-sum">這一頁出現的專有名詞</span></summary><div class="sect-body">
@@ -1819,8 +1894,7 @@ details.home-module[open]{padding-bottom:0}
       <dd>指這項數據會讓聯準會傾向升息或降息。就業轉弱通常利降息，
         就業與薪資過熱則利升息。</dd>
     </dl>
-    </div></details>
-  </div>
+  </div></details>
 </div>
 
 

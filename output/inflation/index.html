@@ -914,6 +914,39 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tdist{font-variant-numeric:tabular-nums;color:var(--text-secondary);
   white-space:nowrap}
 .trig.met .tdist{color:var(--critical);font-weight:700}
+/* 資料時效條：把「財報已出未入表」「近期發債」這類狀態合併成短列。
+   先前是三四個 warnbox 疊在一起，單卡常駐 845 字——每個框單獨都有理由，
+   疊起來就是一堵牆。 */
+.tlines{margin-top:14px;border:1px solid var(--border);border-radius:10px;
+  padding:4px 12px 8px}
+.tlines-k{font-size:11.5px;font-weight:700;color:var(--muted);
+  letter-spacing:.05em;margin:8px 0 2px}
+.tline{margin:0;border:none;border-top:1px solid var(--grid);border-radius:0;
+  padding:0}
+.tline:first-of-type{border-top:none}
+.tline>summary{padding:9px 0;margin:4px 0;font-size:13px;color:var(--text-primary)}
+/* 稽核量的是元素盒之間的距離：相鄰的可點元素要留 8px 以上，
+   padding 只放大目標、不拉開距離，所以間隔要用 margin 給。 */
+/* 表格列裡的連結沿用全站的負 margin 觸控放大（td a 那條規則），
+   這裡**不要**再動 td 內距——縮小內距會讓原本「觸控區彼此重疊、
+   稽核視為同一組」的連結變成相距 0.2px 的兩個目標。
+   要給的是表格與下一個 summary 之間的距離。 */
+.tline .tscroll{margin-bottom:12px}
+.tline .f-detail{padding-bottom:8px}
+/* 四步計算卡：每步一行、行末是結果。取代散在四處的計算說明。 */
+.steps{margin:14px 0 2px;border:1px solid var(--border);border-radius:10px;
+  overflow:hidden}
+.step{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:baseline;
+  padding:10px 13px;border-top:1px solid var(--grid);font-size:13.5px}
+.step:first-child{border-top:none}
+.step-k{font-weight:700;color:var(--text-secondary);font-size:12.5px;white-space:nowrap}
+.step-t{color:var(--text-primary);line-height:1.6}
+.step-r{font-weight:700;white-space:nowrap}
+@media(max-width:520px){.step{grid-template-columns:78px 1fr}
+  .step-r{grid-column:2;justify-self:end}}
+.trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
+  margin-left:7px;vertical-align:1px}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1437,6 +1470,30 @@ details.home-module[open]{padding-bottom:0}
 .focus-card .data-tag[href]{min-height:40px}
 
 /* 下方每個主題就是唯一可操作的收合層；內部舊細節只做靜態分隔。 */
+/* 教學層：「這在看什麼？」。全站固定樣式與位置——讀者看熟了就知道
+   每一區都有地方可以學。刻意用不同底色跟證據層（f-more）區分：
+   一個是教你怎麼讀，一個是給你驗算。 */
+.teach{margin:12px 0 0;border:1px dashed var(--grid);border-radius:9px;
+  background:var(--surface-2)}
+.teach>summary{cursor:pointer;list-style:none;padding:13px 12px;font-size:12.5px;
+  font-weight:600;color:var(--text-secondary)}
+.teach>summary::-webkit-details-marker{display:none}
+.teach>summary::before{content:"？";display:inline-block;width:17px;height:17px;
+  line-height:17px;text-align:center;border-radius:50%;background:var(--surface);
+  border:1px solid var(--grid);margin-right:7px;font-size:11px}
+.teach-body{padding:2px 12px 10px;font-size:13px;line-height:1.8;
+  color:var(--text-primary)}
+.teach-body p{margin:6px 0}
+/* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
+   說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
+.lights{align-items:stretch}
+.light{display:flex;flex-direction:column}
+.light .l-more{margin-top:auto;padding-top:8px}
+.light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
+  color:var(--muted)}
+.light .l-more>summary::-webkit-details-marker{display:none}
+.light .l-more>summary::after{content:"▾";margin-left:4px}
+.light .l-more[open]>summary::after{content:"▴"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1469,12 +1526,12 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">通膨</a></h1>
-  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-16 22:01（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-17 18:14（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 76 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
-<div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#contrib">分項貢獻分解</a><a href="#trend">是全面在漲，還是少數項目？</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#energy">能源價格與傳導</a><a href="#lights">關鍵指標檢核</a></nav></div>
+<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 77 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+<div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#ppi">生產者物價 PPI（上游）</a><a href="#contrib">分項貢獻分解</a><a href="#trend">是全面在漲，還是少數項目？</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#energy">能源價格與傳導</a><a href="#lights">關鍵指標檢核</a></nav></div>
 <div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Inflation now</div><h2 class="focus-title">核心 PCE 降溫，PPI 壓力降溫</h2><p class="focus-sub">先看核心 PCE 的格位與方向，再用 CPI 拆消費端、PPI 看上游風險；三者不混成單一分數。</p><div class="focus-grid"><div class="focus-metric neutral"><span>總體 CPI｜民眾體感</span><b>3.4%</b><small>含食物與能源</small></div><div class="focus-metric neutral"><span>核心 CPI｜消費端趨勢</span><b>2.5%</b><small>3M 年化 1.6%</small></div><div class="focus-metric neutral"><span>總體 PCE｜Fed 2% 目標</span><b>3.7%</b><small>3M 年化 3.1%</small></div><div class="focus-metric dovish"><span>核心 PCE｜九宮格水準</span><b>3.3%</b><small>動能 降溫</small></div></div><details class="focus-evidence"><summary>查看 PPI、CPI、PCE 傳導</summary><div class="focus-evidence-body"><div class="grid-flow">
       <div class="flow-box"><strong>PPI｜企業上游</strong><div class="flow-values">
         總體 4.7% · 核心 4.2% · 3M 2.2%<br>
@@ -1497,8 +1554,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">近三月年化低於年增率 0.4 個百分點以上
       <span class="f-tag">重要</span></div>
     <div class="impact dovish">利降息　通膨降溫的證據</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">核心 CPI 年增 2.5%，但把最近三個月的漲勢換算成年率只有 1.6%，低了 0.8 個百分點。年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。</div></div>
+    <details class="f-more" open><summary>依據</summary>
+      <div class="f-detail">核心 CPI 年增 2.5%，但把最近三個月的漲勢換算成年率只有 1.6%，低了 0.8 個百分點。年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。</div></details>
   </div>
 </div><div class="flag alert">
   <span class="f-icon">■</span>
@@ -1506,8 +1563,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">核心 PCE 顯著高於目標
       <span class="f-tag">重要</span></div>
     <div class="impact hawkish">利升息　通膨仍是降息的阻力</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">核心 PCE 年增 3.3%，高出目標 1.3 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。</div></div>
+    <details class="f-more" open><summary>依據</summary>
+      <div class="f-detail">核心 PCE 年增 3.3%，高出目標 1.3 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。</div></details>
   </div>
 </div><div class="flag watch">
   <span class="f-icon">▲</span>
@@ -1515,8 +1572,8 @@ details.home-module[open]{padding-bottom:0}
     <div class="f-head">住房落後項推升整體讀數
       <span class="f-tag">留意</span></div>
     <div class="impact dovish">利降息　實際通膨比表面低</div>
-    <div class="legacy-detail"><h4>依據</h4>
-      <div class="f-detail">核心 CPI 年增 2.5%，但把住房剔除後只有 1.9%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。</div></div>
+    <details class="f-more"><summary>依據</summary>
+      <div class="f-detail">核心 CPI 年增 2.5%，但把住房剔除後只有 1.9%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。</div></details>
   </div>
 </div>
   </div></details>
@@ -1552,14 +1609,33 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid">
+  <details class="card sect"><summary><h2 id="ppi">生產者物價 PPI（上游）</h2><span class="sect-sum">核心 PPI +4.2%　·　PPI−CPI +1.7pp</span></summary><div class="sect-body">
+    <p class="hint">企業的出廠價。資料至 2026-07。出廠價漲得比零售價快，企業還沒把成本轉嫁完，未來幾季 CPI 有上行壓力。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>企業賣給下游的價格（出廠價）漲了多少。CPI 是你我付的零售價，PPI 是它的上游。</p><p><b>為什麼重要：</b>物價的傳導有順序：出廠價先動、幾個月後零售價跟上。PPI 還有一個特殊角色——PCE 的醫療與金融服務項直接取自 PPI（PCE 量的是含保險給付的全部費用，CPI 只量自付額），所以月底的 PCE 月中就能推出來。</p><p><b>怎麼判讀：</b>看 PPI−CPI 差距：正值代表企業還沒轉嫁完、未來 CPI 有上行壓力；也順便看下方的推估卡——本站的核心 PCE 推估值就是從 CPI 與 PPI 組出來的。</p></div></details>
+    <div class="stat-row"><div class="stat"><div class="s-label">核心 PPI 年增</div><div class="s-value" style="color:inherit">+4.2%</div><div class="s-note">三月年化 +2.2%</div></div><div class="stat"><div class="s-label">總體 PPI 年增</div><div class="s-value" style="color:inherit">+4.7%</div><div class="s-note">含食物與能源</div></div><div class="stat"><div class="s-label">PPI − CPI 差距</div><div class="s-value" style="color:inherit">+1.7 個百分點</div><div class="s-note">正值＝上游漲得比下游快</div></div></div>
+    
+    <details class="f-more"><summary>本期核心 PCE 推估：2.77%（差距法（核心 CPI − 兩者的歷史平均差距））</summary>
+      <div class="f-detail">
+        兩種方法各自回測近 18 期、比較平均誤差，
+        **本期採誤差較小的那個**：成分法 不可用、
+        差距法 ±0.333 個百分點。
+        方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
+        
+      </div>
+    </details>
+  </div></details>
+</div>
+
+<div class="grid">
   <details class="card sect"><summary><h2 id="contrib">分項貢獻分解</h2><span class="sect-sum">分項估算覆蓋率 74.9%　·　實際 CPI 三個月漲幅 +0.12%</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>過去三個月物價的漲幅，是住房、食物、能源還是其他項目造成的。</p><p><b>為什麼重要：</b>「CPI 漲 3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。</p><p><b>怎麼判讀：</b>看哪幾塊是正的（在推升）、哪幾塊是負的（在壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。</p></div></details>
     <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
       估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">分項估算覆蓋率</div><div class="s-value" style="color:var(--warning)">74.9%</div><div class="s-note">缺少其他核心服務，資料不完整，暫不顯示淨貢獻合計</div></div><div class="stat"><div class="s-label">實際 CPI 三個月漲幅</div><div class="s-value" style="color:inherit">+0.12%</div><div class="s-note">換算年率約 +0.5%</div></div><div class="stat"><div class="s-label">剔除住房後</div><div class="s-value" style="color:var(--good)">-0.12%</div><div class="s-note">官方 All Items Less Shelter 指數</div></div></div>
     <p class="hint" style="margin-top:-4px">兩者採不同計算口徑，不需完全相等。</p>
     <div class="dcomp"><div class="dc-row"><div class="dc-name">住房</div><div class="dc-bar"><span class="dc-zero"></span><i style="left:50%;width:50.0%"></i></div><div class="dc-val">+0.20pp</div></div><div class="dc-note">算法落後市場行情約一年</div><div class="dc-row"><div class="dc-name">食物與能源</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:39.9%"></i></div><div class="dc-val">-0.16pp</div></div><div class="dc-note">波動大，核心已剔除</div><div class="dc-row"><div class="dc-name">其他已取得項目</div><div class="dc-bar"><span class="dc-zero"></span><i style="right:50%;width:0.1%"></i></div><div class="dc-val">-0.00pp</div></div><div class="dc-note">資料不完整；缺少其他核心服務</div></div>
     <div class="warnbox" style="margin-top:16px">剔除住房後（約 -0.12%）<b>低於</b>整體 CPI（+0.12%），代表近三個月的價格壓力主要集中在住房。由於 CPI 住房項目對市場租金變化的反映具有明顯落後性，後續仍需觀察住房通膨是否持續降溫。</div>
-    <div class="legacy-detail"><h4>各類別明細</h4>
+    <details data-m-collapse><summary>各類別明細</summary>
     <div style="margin-top:14px"><div class="dbars"><div class="drow" data-tip="住房｜貢獻 +0.20 個百分點"><div class="dlabel">住房<span class="dnote">落後項</span></div><div class="dtrack"><span class="dzero"></span><span class="dfill muted" style="left:50%;width:45.78%"></span></div><div class="dval pos">+0.20pp</div></div><div class="drow" data-tip="食物｜貢獻 +0.06 個百分點"><div class="dlabel">食物</div><div class="dtrack"><span class="dzero"></span><span class="dfill pos" style="left:50%;width:13.46%"></span></div><div class="dval pos">+0.06pp</div></div><div class="drow" data-tip="核心商品｜貢獻 -0.00 個百分點"><div class="dlabel">核心商品</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:0.13%"></span></div><div class="dval neg">-0.00pp</div></div><div class="drow" data-tip="能源｜貢獻 -0.22 個百分點"><div class="dlabel">能源</div><div class="dtrack"><span class="dzero"></span><span class="dfill neg" style="right:50%;width:50.00%"></span></div><div class="dval neg">-0.22pp</div></div></div></div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>推升物價</span>
@@ -1576,15 +1652,16 @@ details.home-module[open]{padding-bottom:0}
       <b>近似估算</b>，用於觀察不同類別對通膨的方向與相對影響。由於 CPI
       官方指數採用動態權重與分層聚合方法，估算貢獻加總不一定會與實際
       CPI 漲幅完全相等。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="trend">是全面在漲，還是少數項目？</h2><span class="sect-sum">價格上漲是全面性的</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。</p><p><b>為什麼重要：</b>同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。</p><p><b>怎麼判讀：</b>中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。</p></div></details>
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     <div class="verdict hawkish" style="margin-top:4px"><div class="v-main" style="font-size:20px">價格上漲是全面性的</div><div class="v-why" style="margin-top:8px">剔除極端值後的三個指標都貼著核心 CPI（2.6–2.7% vs 核心 2.5%），代表這波不是少數項目暴漲拉高平均，而是普遍在漲。全面性的通膨比較黏，單靠某幾項回落解決不了。</div></div>
-    <div class="legacy-detail"><h4>三個指標的定義與數值</h4>
+    <details data-m-collapse><summary>三個指標的定義與數值</summary>
       <table class="lefty" style="margin-top:10px">
         <thead><tr><th>指標</th><th>目前</th><th>算法</th></tr></thead>
         <tbody><tr><td>中位數 CPI</td><td>2.7%</td><td class="muted-cell">取漲幅正中間的項目，不受極端值影響</td></tr><tr><td>截尾平均 CPI</td><td>2.6%</td><td class="muted-cell">剔除漲跌最極端的項目後平均</td></tr></tbody></table>
@@ -1597,11 +1674,12 @@ details.home-module[open]{padding-bottom:0}
         <dd>只看價格很少調整的項目（例如房租、保險）。這些代表通膨的慣性，
           一旦漲上去就很難降下來。</dd>
       </dl>
-  </div>
-</div></details>
+  </div></details>
+</div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="passthrough">薪資到服務業通膨的傳導</h2><span class="sect-sum">資料不足</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。</p><p><b>為什麼重要：</b>服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。</p><p><b>怎麼判讀：</b>兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。</p></div></details>
     <p class="hint">這一塊的成本主體是人力。
       <b>薪資走向會在數月後反映到這裡，是通膨黏性的核心機制。</b></p>
     <div class="warnbox"><b>尚無法估計</b><br>缺少：核心服務除住房（由 CUSR0000SASLE 減 CUSR0000SAH1 推導，兩條缺一就推不出來）。</div>
@@ -1610,6 +1688,7 @@ details.home-module[open]{padding-bottom:0}
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="energy">能源價格與傳導</h2><span class="sect-sum">原油近一個月 +7.0%　·　零售汽油 4.01 美元／加侖</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>油價最近的變動，以及它大概會在一到兩個月後對總體 CPI 造成多大影響。</p><p><b>為什麼重要：</b>能源只佔 CPI 約 6%，但波動極大，常常是單月 CPI 意外的主因。先知道油價動了多少，下個月 CPI 出爐時就不會被表面數字嚇到。</p><p><b>怎麼判讀：</b>油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。</p></div></details>
     <p class="hint">「已經發生但還沒反映到數據裡」的部分。</p>
     <div class="stat-row"><div class="stat"><div class="s-label">原油近一個月</div><div class="s-value" style="color:var(--serious)">+7.0%</div><div class="s-note">領先加油站價格約 2–4 週</div></div><div class="stat"><div class="s-label">零售汽油</div><div class="s-value" style="color:inherit">4.01 美元／加侖</div></div></div>
     <div class="bkgap" style="color:var(--serious)"><span class="bk-label">對總體 CPI 的估計影響</span><span class="bk-val">+0.17 個百分點</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">以能源佔比 6.2% 與傳導係數 0.4 粗估</span></div>
@@ -1620,69 +1699,78 @@ details.home-module[open]{padding-bottom:0}
     <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>
     <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" style="height:150px" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,97.9 1.5,96.2 3.0,96.9 4.5,95.5 6.0,97.5 7.5,90.8 9.0,86.1 10.5,88.9 12.0,83.8 13.5,86.6 15.0,88.2 16.5,91.8 18.0,93.2 19.5,95.4 21.1,95.5 22.6,98.5 24.1,97.2 25.6,99.7 27.1,99.4 28.6,99.9 30.1,98.5 31.6,99.5 33.1,102.9 34.6,103.7 36.1,103.0 37.6,100.1 39.1,98.2 40.6,102.2 42.1,102.3 43.6,103.6 45.1,101.2 46.6,100.4 48.1,99.8 49.6,104.2 51.1,103.5 52.6,107.4 54.1,108.0 55.6,104.4 57.1,105.8 58.6,108.5 60.2,108.8 61.7,112.7 63.2,112.6 64.7,111.2 66.2,113.2 67.7,112.8 69.2,110.5 70.7,112.2 72.2,111.0 73.7,110.1 75.2,110.8 76.7,111.0 78.2,108.7 79.7,108.7 81.2,106.8 82.7,106.8 84.2,105.6 85.7,105.1 87.2,106.2 88.7,101.9 90.2,102.4 91.7,101.4 93.2,111.0 94.7,121.2 96.2,124.0 97.7,126.1 99.2,120.8 100.8,125.0 102.3,122.2 103.8,122.1 105.3,122.6 106.8,120.3 108.3,115.8 109.8,119.0 111.3,116.7 112.8,120.8 114.3,118.9 115.8,118.3 117.3,119.4 118.8,122.4 120.3,127.1 121.8,124.9 123.3,126.8 124.8,129.2 126.3,125.3 127.8,127.3 129.3,123.6 130.8,121.3 132.3,119.4 133.8,115.8 135.3,117.0 136.8,120.0 138.3,118.3 139.8,118.0 141.4,118.0 142.9,120.2 144.4,120.9 145.9,120.2 147.4,122.9 148.9,121.0 150.4,122.8 151.9,123.2 153.4,119.5 154.9,117.8 156.4,118.9 157.9,117.9 159.4,115.3 160.9,113.9 162.4,114.6 163.9,107.9 165.4,108.3 166.9,97.8 168.4,100.5 169.9,94.2 171.4,93.7 172.9,94.0 174.4,107.0 175.9,115.0 177.4,113.9 178.9,113.0 180.5,112.5 182.0,113.3 183.5,112.6 185.0,108.4 186.5,109.5 188.0,107.4 189.5,106.6 191.0,106.5 192.5,110.2 194.0,106.5 195.5,109.4 197.0,110.3 198.5,111.6 200.0,108.2 201.5,108.7 203.0,109.0 204.5,110.7 206.0,113.8 207.5,111.5 209.0,113.1 210.5,110.2 212.0,105.1 213.5,103.5 215.0,105.0 216.5,109.0 218.0,111.2 219.5,113.5 221.1,115.2 222.6,116.1 224.1,116.1 225.6,115.9 227.1,117.5 228.6,118.6 230.1,115.9 231.6,118.4 233.1,116.9 234.6,119.2 236.1,117.6 237.6,116.8 239.1,117.8 240.6,115.6 242.1,118.8 243.6,117.0 245.1,116.0 246.6,117.2 248.1,114.0 249.6,117.2 251.1,118.4 252.6,121.6 254.1,120.8 255.6,120.1 257.1,118.0 258.6,120.6 260.2,120.0 261.7,118.7 263.2,116.2 264.7,117.1 266.2,118.2 267.7,120.0 269.2,120.0 270.7,118.5 272.2,115.1 273.7,114.9 275.2,112.9 276.7,117.4 278.2,119.7 279.7,120.9 281.2,123.5 282.7,122.8 284.2,121.1 285.7,121.0 287.2,119.3 288.7,121.3 290.2,126.7 291.7,127.1 293.2,128.0 294.7,129.7 296.2,129.6 297.7,129.6 299.2,128.9 300.8,127.6 302.3,121.2 303.8,121.5 305.3,121.8 306.8,124.2 308.3,123.6 309.8,123.4 311.3,122.6 312.8,122.5 314.3,123.3 315.8,125.3 317.3,125.7 318.8,125.1 320.3,124.2 321.8,127.6 323.3,127.1 324.8,124.4 326.3,124.8 327.8,123.1 329.3,125.6 330.8,126.0 332.3,128.5 333.8,128.0 335.3,129.7 336.8,128.6 338.3,129.1 339.8,127.2 341.4,128.6 342.9,128.0 344.4,126.5 345.9,125.7 347.4,128.1 348.9,129.4 350.4,128.9 351.9,130.7 353.4,131.0 354.9,132.4 356.4,135.5 357.9,134.2 359.4,133.9 360.9,132.7 362.4,129.9 363.9,129.1 365.4,128.8 366.9,133.1 368.4,130.5 369.9,130.7 371.4,131.8 372.9,131.9 374.4,130.0 375.9,132.4 377.4,134.3 378.9,130.8 380.5,128.3 382.0,127.4 383.5,124.4 385.0,122.4 386.5,127.9 388.0,127.4 389.5,125.5 391.0,125.4 392.5,127.7 394.0,124.7 395.5,125.2 397.0,122.0 398.5,120.5 400.0,116.4 401.5,117.0 403.0,122.9 404.5,120.8 406.0,116.8 407.5,120.2 409.0,118.4 410.5,116.9 412.0,117.6 413.5,116.3 415.0,119.9 416.5,119.9 418.0,121.0 419.5,115.3 421.1,112.5 422.6,112.5 424.1,113.1 425.6,114.7 427.1,115.3 428.6,115.7 430.1,111.9 431.6,103.4 433.1,96.5 434.6,96.3 436.1,83.4 437.6,63.2 439.1,55.3 440.6,77.7 442.1,71.3 443.6,53.3 445.1,47.4 446.6,57.9 448.1,52.5 449.6,52.3 451.1,52.3 452.6,47.0 454.1,66.2 455.6,58.3 457.1,61.7 458.6,52.2 460.2,41.8 461.7,34.7 463.2,38.5 464.7,40.5 466.2,17.3 467.7,15.7 469.2,14.5 470.7,52.2 472.2,45.1 473.7,47.7 475.2,42.9 476.7,58.5 478.2,58.6 479.7,51.6 481.2,73.2 482.7,62.6 484.2,57.3 485.7,55.1 487.2,45.8 488.7,47.6 490.2,44.6 491.7,37.3 493.2,22.9 494.7,26.7 496.2,33.3 497.7,24.4 499.2,32.8 500.8,46.9 502.3,47.7 503.8,46.7 505.3,41.1 506.8,32.5 508.3,35.1 509.8,34.8 511.3,26.0 512.8,19.3 514.3,19.6 515.8,40.9 517.3,43.9 518.8,43.6 520.3,49.2 521.8,60.0 523.3,59.4 524.8,62.4 526.3,52.6 527.8,49.5 529.3,44.8 530.8,50.8 532.3,56.0 533.8,54.6 535.3,60.9 536.8,57.3 538.3,61.6 539.8,67.6 541.4,75.7 542.9,85.7 544.4,83.9 545.9,84.5 547.4,87.4 548.9,96.3 550.4,102.8 551.9,100.2 553.4,105.1 554.9,101.9 556.4,104.6 557.9,106.2 559.4,106.3 560.9,106.5 562.4,102.6 563.9,96.4 565.4,99.3 566.9,100.7 568.4,86.9 569.9,84.3 571.4,83.8 572.9,85.2 574.4,78.2 575.9,76.3 577.4,72.9 578.9,69.6 580.5,58.5 582.0,61.2 583.5,76.6 585.0,83.4 586.5,72.8 588.0,74.7 589.5,72.6 591.0,81.2 592.5,90.7 594.0,91.8 595.5,87.5 597.0,85.7 598.5,77.6 600.0,75.5 600,150" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="568.4" y1="0" x2="568.4" y2="150" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="0.0,97.9 1.5,96.2 3.0,96.9 4.5,95.5 6.0,97.5 7.5,90.8 9.0,86.1 10.5,88.9 12.0,83.8 13.5,86.6 15.0,88.2 16.5,91.8 18.0,93.2 19.5,95.4 21.1,95.5 22.6,98.5 24.1,97.2 25.6,99.7 27.1,99.4 28.6,99.9 30.1,98.5 31.6,99.5 33.1,102.9 34.6,103.7 36.1,103.0 37.6,100.1 39.1,98.2 40.6,102.2 42.1,102.3 43.6,103.6 45.1,101.2 46.6,100.4 48.1,99.8 49.6,104.2 51.1,103.5 52.6,107.4 54.1,108.0 55.6,104.4 57.1,105.8 58.6,108.5 60.2,108.8 61.7,112.7 63.2,112.6 64.7,111.2 66.2,113.2 67.7,112.8 69.2,110.5 70.7,112.2 72.2,111.0 73.7,110.1 75.2,110.8 76.7,111.0 78.2,108.7 79.7,108.7 81.2,106.8 82.7,106.8 84.2,105.6 85.7,105.1 87.2,106.2 88.7,101.9 90.2,102.4 91.7,101.4 93.2,111.0 94.7,121.2 96.2,124.0 97.7,126.1 99.2,120.8 100.8,125.0 102.3,122.2 103.8,122.1 105.3,122.6 106.8,120.3 108.3,115.8 109.8,119.0 111.3,116.7 112.8,120.8 114.3,118.9 115.8,118.3 117.3,119.4 118.8,122.4 120.3,127.1 121.8,124.9 123.3,126.8 124.8,129.2 126.3,125.3 127.8,127.3 129.3,123.6 130.8,121.3 132.3,119.4 133.8,115.8 135.3,117.0 136.8,120.0 138.3,118.3 139.8,118.0 141.4,118.0 142.9,120.2 144.4,120.9 145.9,120.2 147.4,122.9 148.9,121.0 150.4,122.8 151.9,123.2 153.4,119.5 154.9,117.8 156.4,118.9 157.9,117.9 159.4,115.3 160.9,113.9 162.4,114.6 163.9,107.9 165.4,108.3 166.9,97.8 168.4,100.5 169.9,94.2 171.4,93.7 172.9,94.0 174.4,107.0 175.9,115.0 177.4,113.9 178.9,113.0 180.5,112.5 182.0,113.3 183.5,112.6 185.0,108.4 186.5,109.5 188.0,107.4 189.5,106.6 191.0,106.5 192.5,110.2 194.0,106.5 195.5,109.4 197.0,110.3 198.5,111.6 200.0,108.2 201.5,108.7 203.0,109.0 204.5,110.7 206.0,113.8 207.5,111.5 209.0,113.1 210.5,110.2 212.0,105.1 213.5,103.5 215.0,105.0 216.5,109.0 218.0,111.2 219.5,113.5 221.1,115.2 222.6,116.1 224.1,116.1 225.6,115.9 227.1,117.5 228.6,118.6 230.1,115.9 231.6,118.4 233.1,116.9 234.6,119.2 236.1,117.6 237.6,116.8 239.1,117.8 240.6,115.6 242.1,118.8 243.6,117.0 245.1,116.0 246.6,117.2 248.1,114.0 249.6,117.2 251.1,118.4 252.6,121.6 254.1,120.8 255.6,120.1 257.1,118.0 258.6,120.6 260.2,120.0 261.7,118.7 263.2,116.2 264.7,117.1 266.2,118.2 267.7,120.0 269.2,120.0 270.7,118.5 272.2,115.1 273.7,114.9 275.2,112.9 276.7,117.4 278.2,119.7 279.7,120.9 281.2,123.5 282.7,122.8 284.2,121.1 285.7,121.0 287.2,119.3 288.7,121.3 290.2,126.7 291.7,127.1 293.2,128.0 294.7,129.7 296.2,129.6 297.7,129.6 299.2,128.9 300.8,127.6 302.3,121.2 303.8,121.5 305.3,121.8 306.8,124.2 308.3,123.6 309.8,123.4 311.3,122.6 312.8,122.5 314.3,123.3 315.8,125.3 317.3,125.7 318.8,125.1 320.3,124.2 321.8,127.6 323.3,127.1 324.8,124.4 326.3,124.8 327.8,123.1 329.3,125.6 330.8,126.0 332.3,128.5 333.8,128.0 335.3,129.7 336.8,128.6 338.3,129.1 339.8,127.2 341.4,128.6 342.9,128.0 344.4,126.5 345.9,125.7 347.4,128.1 348.9,129.4 350.4,128.9 351.9,130.7 353.4,131.0 354.9,132.4 356.4,135.5 357.9,134.2 359.4,133.9 360.9,132.7 362.4,129.9 363.9,129.1 365.4,128.8 366.9,133.1 368.4,130.5 369.9,130.7 371.4,131.8 372.9,131.9 374.4,130.0 375.9,132.4 377.4,134.3 378.9,130.8 380.5,128.3 382.0,127.4 383.5,124.4 385.0,122.4 386.5,127.9 388.0,127.4 389.5,125.5 391.0,125.4 392.5,127.7 394.0,124.7 395.5,125.2 397.0,122.0 398.5,120.5 400.0,116.4 401.5,117.0 403.0,122.9 404.5,120.8 406.0,116.8 407.5,120.2 409.0,118.4 410.5,116.9 412.0,117.6 413.5,116.3 415.0,119.9 416.5,119.9 418.0,121.0 419.5,115.3 421.1,112.5 422.6,112.5 424.1,113.1 425.6,114.7 427.1,115.3 428.6,115.7 430.1,111.9 431.6,103.4 433.1,96.5 434.6,96.3 436.1,83.4 437.6,63.2 439.1,55.3 440.6,77.7 442.1,71.3 443.6,53.3 445.1,47.4 446.6,57.9 448.1,52.5 449.6,52.3 451.1,52.3 452.6,47.0 454.1,66.2 455.6,58.3 457.1,61.7 458.6,52.2 460.2,41.8 461.7,34.7 463.2,38.5 464.7,40.5 466.2,17.3 467.7,15.7 469.2,14.5 470.7,52.2 472.2,45.1 473.7,47.7 475.2,42.9 476.7,58.5 478.2,58.6 479.7,51.6 481.2,73.2 482.7,62.6 484.2,57.3 485.7,55.1 487.2,45.8 488.7,47.6 490.2,44.6 491.7,37.3 493.2,22.9 494.7,26.7 496.2,33.3 497.7,24.4 499.2,32.8 500.8,46.9 502.3,47.7 503.8,46.7 505.3,41.1 506.8,32.5 508.3,35.1 509.8,34.8 511.3,26.0 512.8,19.3 514.3,19.6 515.8,40.9 517.3,43.9 518.8,43.6 520.3,49.2 521.8,60.0 523.3,59.4 524.8,62.4 526.3,52.6 527.8,49.5 529.3,44.8 530.8,50.8 532.3,56.0 533.8,54.6 535.3,60.9 536.8,57.3 538.3,61.6 539.8,67.6 541.4,75.7 542.9,85.7 544.4,83.9 545.9,84.5 547.4,87.4 548.9,96.3 550.4,102.8 551.9,100.2 553.4,105.1 554.9,101.9 556.4,104.6 557.9,106.2 559.4,106.3 560.9,106.5 562.4,102.6 563.9,96.4 565.4,99.3 566.9,100.7 568.4,86.9 569.9,84.3 571.4,83.8 572.9,85.2 574.4,78.2 575.9,76.3 577.4,72.9 578.9,69.6 580.5,58.5 582.0,61.2 583.5,76.6 585.0,83.4 586.5,72.8 588.0,74.7 589.5,72.6 591.0,81.2 592.5,90.7 594.0,91.8 595.5,87.5 597.0,85.7 598.5,77.6 600.0,75.5" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">114.58 美元</span><span class="glab" style="top:calc(90.3% + 4px)">55.44 美元</span><span class="lmark" style="left:88.0%">一個月前</span><span class="ldot" style="left:100.00%;top:50.33%;background:var(--series-1)"></span></div><div class="lxaxis"><span>2025-01-02</span><span><b>84.77 美元</b>　2026-08-11</span></div></div>
 
-    <div class="legacy-detail"><h4>零售汽油價格（2025 年 1 月以來）</h4>
+    <details data-m-collapse><summary>零售汽油價格（2025 年 1 月以來）</summary>
       <div style="margin-top:12px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" style="height:130px" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,101.1 7.2,101.3 14.5,97.3 21.7,97.7 28.9,99.0 36.1,96.2 43.4,94.9 50.6,96.3 57.8,99.2 65.1,99.8 72.3,100.4 79.5,97.0 86.7,94.1 94.0,89.2 101.2,93.7 108.4,95.4 115.7,95.9 122.9,95.0 130.1,96.6 137.3,93.4 144.6,94.2 151.8,96.2 159.0,97.4 166.3,95.5 173.5,91.0 180.7,94.0 188.0,96.3 195.2,96.0 202.4,96.6 209.6,96.5 216.9,95.4 224.1,96.8 231.3,96.3 238.6,95.0 245.8,93.2 253.0,92.3 260.2,93.7 267.5,93.4 274.7,96.8 281.9,96.4 289.2,100.2 296.4,102.8 303.6,101.8 310.8,102.8 318.1,100.5 325.3,100.2 332.5,100.2 339.8,104.9 347.0,107.6 354.2,110.4 361.4,113.6 368.7,115.5 375.9,116.4 383.1,117.4 390.4,115.8 397.6,112.9 404.8,112.1 412.0,109.9 419.3,108.6 426.5,107.8 433.7,103.0 441.0,73.4 448.2,60.1 455.4,45.4 462.7,43.6 469.9,35.7 477.1,35.5 484.3,40.4 491.6,35.5 498.8,15.5 506.0,12.6 513.3,13.2 520.5,14.1 527.7,24.5 534.9,34.1 542.2,39.9 549.4,48.3 556.6,53.3 563.9,56.6 571.1,51.9 578.3,43.0 585.5,37.2 592.8,38.2 600.0,42.7 600,130" fill="var(--line-2)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="571.1" y1="0" x2="571.1" y2="130" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="0.0,101.1 7.2,101.3 14.5,97.3 21.7,97.7 28.9,99.0 36.1,96.2 43.4,94.9 50.6,96.3 57.8,99.2 65.1,99.8 72.3,100.4 79.5,97.0 86.7,94.1 94.0,89.2 101.2,93.7 108.4,95.4 115.7,95.9 122.9,95.0 130.1,96.6 137.3,93.4 144.6,94.2 151.8,96.2 159.0,97.4 166.3,95.5 173.5,91.0 180.7,94.0 188.0,96.3 195.2,96.0 202.4,96.6 209.6,96.5 216.9,95.4 224.1,96.8 231.3,96.3 238.6,95.0 245.8,93.2 253.0,92.3 260.2,93.7 267.5,93.4 274.7,96.8 281.9,96.4 289.2,100.2 296.4,102.8 303.6,101.8 310.8,102.8 318.1,100.5 325.3,100.2 332.5,100.2 339.8,104.9 347.0,107.6 354.2,110.4 361.4,113.6 368.7,115.5 375.9,116.4 383.1,117.4 390.4,115.8 397.6,112.9 404.8,112.1 412.0,109.9 419.3,108.6 426.5,107.8 433.7,103.0 441.0,73.4 448.2,60.1 455.4,45.4 462.7,43.6 469.9,35.7 477.1,35.5 484.3,40.4 491.6,35.5 498.8,15.5 506.0,12.6 513.3,13.2 520.5,14.1 527.7,24.5 534.9,34.1 542.2,39.9 549.4,48.3 556.6,53.3 563.9,56.6 571.1,51.9 578.3,43.0 585.5,37.2 592.8,38.2 600.0,42.7" fill="none" stroke="var(--line-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">4.50 美元</span><span class="glab" style="top:calc(90.3% + 4px)">2.78 美元</span><span class="lmark" style="left:88.0%">一個月前</span><span class="ldot" style="left:100.00%;top:32.83%;background:var(--line-2)"></span></div><div class="lxaxis"><span>2025-01-06</span><span><b>4.01 美元</b>　2026-08-10</span></div></div></div>
       <p class="hint" style="margin-top:10px">
         汽油是 CPI 能源項裡權重最大的一塊，也是消費者最有感的價格。
         它落後原油約兩到四週。</p>
-    </div>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">2 項警戒、1 項留意、4 項正常、1 項無資料</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>八個通膨相關指標逐一對照警戒線，紅黃綠一眼掃完。</p><p><b>為什麼重要：</b>單一指標會騙人（基期效應能讓年增率忽高忽低），一排一起看才知道壓力是全面的還是個別的。</p><p><b>怎麼判讀：</b>數紅燈，並注意紅燈集中在哪一類——集中在服務類比集中在能源類嚴重得多。</p></div></details>
     <p class="hint">八項關鍵指標的當期狀態。</p>
-    <div class="legacy-detail"><h4>八項指標</h4>
+    <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>核心 CPI 三月年化</div>
   <div class="l-value">1.6% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">近三個月的漲勢換算成年率。比年增率更早看出轉折</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">近三個月的漲勢換算成年率。比年增率更早看出轉折</div></details>
 </div><div class="light unknown">
   <div class="l-top"><span class="l-icon">○</span>核心服務除住房（三月年化）</div>
   <div class="l-value">— <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">無資料</div>
   
-  <div class="l-desc">Fed 最在意的一塊。多為人力成本，跟薪資直接連動。 這裡是近三個月換算成年率，與下方傳導區的年增率是同一條序列的兩種口徑</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">Fed 最在意的一塊。多為人力成本，跟薪資直接連動。 這裡是近三個月換算成年率，與下方傳導區的年增率是同一條序列的兩種口徑</div></details>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>核心 PCE 年增</div>
   <div class="l-value">3.3% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">警戒</div>
   
-  <div class="l-desc">Fed 的政策目標，2% 指的就是這個數字</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">Fed 的政策目標，2% 指的就是這個數字</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>中位數 CPI</div>
   <div class="l-value">2.7% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">剔除極端項目後的通膨趨勢</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">剔除極端項目後的通膨趨勢</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>核心除住房</div>
   <div class="l-value">1.9% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">住房項落後市場租金約一年，剔除後更接近當下的實際通膨</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">住房項落後市場租金約一年，剔除後更接近當下的實際通膨</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>長期通膨預期</div>
   <div class="l-value">2.30% <span style="font-size:13px;color:var(--muted)">↑</span></div>
   <div class="l-state">正常</div>
   
-  <div class="l-desc">市場對五年後起算五年的通膨定價。脫錨是 Fed 最怕的事</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">市場對五年後起算五年的通膨定價。脫錨是 Fed 最怕的事</div></details>
 </div><div class="light critical">
   <div class="l-top"><span class="l-icon">■</span>汽油價格</div>
   <div class="l-value">4.01 美元 <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">警戒</div>
   
-  <div class="l-desc">油價會在兩到四週後反映到 CPI 能源項</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">油價會在兩到四週後反映到 CPI 能源項</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>核心商品年增</div>
   <div class="l-value">+0.8% <span style="font-size:13px;color:var(--muted)">↓</span></div>
   <div class="l-state">留意</div>
   
-  <div class="l-desc">商品通膨。受關稅與供應鏈影響最直接</div>
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc">商品通膨。受關稅與供應鏈影響最直接</div></details>
 </div></div>
-    </div>
+    </details>
   </div></details>
 </div>
 
@@ -1709,8 +1797,8 @@ details.home-module[open]{padding-bottom:0}
       <dd>市場或民眾認為未來通膨會是多少。一旦大家「相信」通膨會一直高，
         就會反映在定價和薪資談判上，通膨會自我實現——這是聯準會最怕的事。</dd>
     </dl>
-    </div></details>
-  </div>
+    </details>
+  </div></details>
 </div>
 
 
