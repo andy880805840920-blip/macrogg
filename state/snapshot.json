@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-18T02:04:35+08:00",
+  "at": "2026-08-18T22:17:58+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -169,7 +169,7 @@
           "exp5y5y": {
             "label": "長期通膨預期",
             "en": "5y5y Inflation Breakeven",
-            "value": 2.3,
+            "value": 2.31,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -194,7 +194,7 @@
             "value": null
           },
           "exp5y5y": {
-            "value": 2.27
+            "value": 2.3
           }
         }
       }
@@ -222,7 +222,7 @@
   },
   "history": [
     {
-      "at": "2026-08-18T02:04:35+08:00",
+      "at": "2026-08-18T22:17:58+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",
