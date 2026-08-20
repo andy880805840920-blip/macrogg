@@ -1,12 +1,12 @@
 {
-  "at": "2026-08-20T02:00:09+08:00",
+  "at": "2026-08-20T22:22:11+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-07",
         "released": "2026-08-13",
         "month": "2026-07",
-        "score": -0.3429515424739621,
+        "score": -0.3785620886116188,
         "tilt": "dovish",
         "flags": [
           "revision_swamps",
@@ -169,7 +169,7 @@
           "exp5y5y": {
             "label": "長期通膨預期",
             "en": "5y5y Inflation Breakeven",
-            "value": 2.33,
+            "value": 2.32,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -194,7 +194,7 @@
             "value": null
           },
           "exp5y5y": {
-            "value": 2.31
+            "value": 2.33
           }
         }
       }
@@ -222,7 +222,7 @@
   },
   "history": [
     {
-      "at": "2026-08-20T02:00:09+08:00",
+      "at": "2026-08-20T22:22:11+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",
