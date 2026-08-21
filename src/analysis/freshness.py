@@ -40,7 +40,11 @@ WATCH: dict[str, tuple[str, str, str]] = {
     "CCSA": ("續領失業金", "weekly", "labor"),
     "CPIAUCSL": ("CPI", "monthly", "inflation"),
     "CPILFESL": ("核心 CPI", "monthly", "inflation"),
-    "PCEPILFE": ("核心 PCE", "monthly", "inflation"),
+    # PCE 的發布比 CPI 慢半個月：六月數據七月底才出、七月數據要等八月底。
+    # 最新觀測的「資料月起始日」離下一次發布最多約 88 天，用一般 monthly
+    # 的 75 天會在每個月下旬固定誤報（Actions 上實際發生過：81 天被當成
+    # 停止更新，其實只是還沒到發布日）。
+    "PCEPILFE": ("核心 PCE", "monthly_slow", "inflation"),
     "DGS10": ("10 年期公債", "daily", "rates"),
     "DGS30": ("30 年期公債", "daily", "rates"),
 }
@@ -50,6 +54,7 @@ TOLERANCE = {
     "daily": 12,        # 連假 ＋ 週末，再加一點緩衝
     "weekly": 21,       # 正常落後約 5–12 天
     "monthly": 75,      # 資料月結束後約兩週發布 → 正常落後 30–45 天
+    "monthly_slow": 100,  # 月底發布的月頻（PCE）：正常落後可達 ~88 天
     "quarterly": 165,
 }
 

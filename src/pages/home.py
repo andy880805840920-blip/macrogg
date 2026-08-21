@@ -833,22 +833,30 @@ def _focus_strip(f: dict | None) -> str:
     fw = f.get("fedwatch") or {}
     if fw.get("pct") is not None:
         d = fw.get("delta_pp")
-        dtxt = (f"{d:+.1f} pp" if d is not None else
-                ("擷取異常，沿用前值" if fw.get("suspect") else "—"))
+        if fw.get("stale_from"):
+            # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
+            # 不讓一次 429 就把整顆 chip 打回「—」。
+            dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
+        else:
+            dtxt = (f"{d:+.1f} pp" if d is not None else
+                    ("擷取異常，沿用前值" if fw.get("suspect") else "—"))
         cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
         chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
                      f'<b>{fw["pct"]:.0f}%</b>'
                      f'<i class="{cls}">{esc(dtxt)}</i></div>')
     else:
         chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
-                     '<b>—</b><i></i></div>')
+                     '<b>—</b><i>本次擷取失敗</i></div>')
     text = (f'<p class="fs-text">{esc(f.get("text") or "")}</p>'
             if f.get("text") else "")
     links = ""
     if f.get("links"):
         rows = "".join(
             f'<div class="fs-link"><a href="{esc(x["link"])}" rel="noopener">'
-            f'{esc(x["title"])}</a></div>' for x in f["links"])
+            f'{esc(x["title"])}</a>'
+            + (f'<span class="fs-src">{esc(x["source"])}</span>'
+               if x.get("source") else "")
+            + '</div>' for x in f["links"])
         links = (f'<details class="f-more"><summary>來源標題</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
     note = ("殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點"

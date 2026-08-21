@@ -117,16 +117,44 @@ def fetch_headlines(keywords: list[str], hours: int = 30,
     return out
 
 
+def _norm_title(t: str) -> str:
+    """去掉尾巴的「 - 來源」、標點與空白，留下可比對的核心字串。"""
+    t = re.sub(r"\s*[-–—|]\s*[^-–—|]{1,30}$", "", t)
+    return re.sub(r"[\s，。、！？：；「」『』()（）\[\]【】,.:;!?'\"]+", "", t)
+
+
+def _sim(a: str, b: str) -> float:
+    """字元二元組的 Jaccard 相似度（0–1）。中文不需要斷詞，二元組就夠。"""
+    if len(a) < 2 or len(b) < 2:
+        return 1.0 if a == b else 0.0
+    A = {a[i:i + 2] for i in range(len(a) - 1)}
+    B = {b[i:i + 2] for i in range(len(b) - 1)}
+    return len(A & B) / max(1, len(A | B))
+
+
 def pick_fallback(headlines: list[dict], keywords: list[str],
                   n: int = 3) -> list[dict]:
     """
     沒有 AI 時的確定性挑選：關鍵字命中數多者優先。
     輸入已按時間新→舊排好，穩定排序讓同分者維持新的在前。
+
+    挑的時候擋掉「同一件事的另一種寫法」：fetch 端的去重是完全比對
+    （去尾巴後前 40 字），同一則新聞在不同媒體的標題只要改幾個字就會
+    穿過去——實際發生過「來源標題選到兩則一樣的新聞」。這裡再用
+    字元二元組相似度把 >0.55 的視為重複，跳過選下一則。
     """
     def _hits(h):
         t = h["title"]
         return sum(1 for kw in keywords for w in kw.split() if w in t)
-    return sorted(headlines, key=_hits, reverse=True)[:n]
+    picked = []
+    for h in sorted(headlines, key=_hits, reverse=True):
+        cand = _norm_title(h["title"])
+        if any(_sim(cand, _norm_title(p["title"])) > 0.55 for p in picked):
+            continue
+        picked.append(h)
+        if len(picked) >= n:
+            break
+    return picked
 
 
 # ---------------------------------------------------------------------------
@@ -258,11 +286,25 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         pct = fetch_fedwatch(env)
         prev = fw_old.get("pct")
         suspect = False
-        if pct is not None and prev is not None and abs(pct - prev) > 20:
-            log.warning("FedWatch 單日跳動 %.0f→%.0f，視為擷取錯誤沿用前值",
-                        prev, pct)
-            pct, suspect = prev, True
-        if pct is not None:
+        if pct is None and prev is not None:
+            # 本次擷取失敗（429、斷線…）但手上有近幾天的值 → 沿用並標明，
+            # 不要讓一次限流就把整顆 chip 打回「—」。超過 4 天就太舊，
+            # 寧可顯示「—」也不要掛一個一週前的機率。state 的 date 不動，
+            # 下一次執行還會再試。
+            try:
+                _age = (dt.date.fromisoformat(today)
+                        - dt.date.fromisoformat(fw_old.get("date", ""))).days
+            except (ValueError, TypeError):
+                _age = 99
+            if _age <= 4:
+                out["fedwatch"] = {"pct": prev, "delta_pp": None,
+                                   "suspect": False,
+                                   "stale_from": fw_old.get("date")}
+        elif pct is not None:
+            if prev is not None and abs(pct - prev) > 20:
+                log.warning("FedWatch 單日跳動 %.0f→%.0f，視為擷取錯誤沿用前值",
+                            prev, pct)
+                pct, suspect = prev, True
             delta = (round(pct - prev, 1)
                      if (prev is not None and not suspect
                          and fw_old.get("date") != today) else None)
@@ -271,8 +313,19 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             state["fedwatch"] = {"pct": pct, "date": today,
                                  "delta_pp": delta, "suspect": suspect}
 
-    # ---- 焦點段：RSS 爬標題 → 同一批標題只呼叫一次 → 驗證 → 退回 ----
+    # ---- 焦點段：RSS 爬標題 → 來源白名單 → 同一批標題只呼叫一次 → 驗證 → 退回 ----
     heads = fetch_headlines(keywords)
+    # 來源白名單（config 的 sources）：只留 source 含指定字串的標題。
+    # 全部沒命中時退回不過濾並記 log——寧可來源雜一點，也不要整段消失。
+    _srcs = [str(s).lower() for s in (cfg.get("sources") or []) if s]
+    if heads and _srcs:
+        _hits = [h for h in heads
+                 if any(w in (h.get("source") or "").lower() for w in _srcs)]
+        if _hits:
+            heads = _hits
+        else:
+            log.warning("市場焦點：來源白名單 %s 沒命中任何標題，退回全部來源",
+                        _srcs)
     if heads:
         top = pick_fallback(heads, keywords, n=6)
         h = hashlib.sha256("|".join(x["title"] for x in top)
@@ -282,7 +335,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             out["links"] = state.get("links") or []
         else:
             text, src = summarize(top, cap, env)
-            links = [{"title": x["title"], "link": x["link"],
+            # 顯示用的標題把尾巴的「 - 來源」去掉——旁邊已經另掛來源小標，
+            # 留著會變成「…- Yahoo奇摩財經　Yahoo奇摩財經」連講兩次。
+            links = [{"title": re.sub(r"\s*[-–—|]\s*[^-–—|]{1,30}$", "",
+                                      x["title"]).strip() or x["title"],
+                      "link": x["link"],
                       "source": x["source"]} for x in top[:3]]
             if text:
                 out["text"], out["text_source"] = text, src
