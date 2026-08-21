@@ -1405,14 +1405,26 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
 .focus-strip{padding:14px 16px}
 .fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
-.fs-chips{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:8px}
-.fs-chip span{display:block;font-size:11px;color:var(--muted)}
+/* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
+   最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
+.fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
+.fs-chip{padding:2px 22px 2px 0;margin-right:22px;
+  border-right:1px solid var(--grid)}
+.fs-chip:last-child{border-right:0;margin-right:0;padding-right:0}
+/* 手機會換行：換行後行尾的分隔線會懸空，乾脆整個拿掉、只留間距 */
+@media(max-width:759px){
+  .fs-chip{border-right:0;padding-right:0;margin-right:20px}}
+.fs-chip span{display:block;font-size:11px;color:var(--muted);margin-bottom:1px}
 .fs-chip b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .fs-chip i{font-style:normal;font-size:11.5px;margin-left:6px;color:var(--muted)}
 .fs-chip i.up{color:var(--critical)}
 .fs-chip i.dn{color:var(--good)}
+.fs-src{font-size:10.5px;color:var(--muted);margin-left:7px;white-space:nowrap}
+/* 焦點段給一個淺色底框：跟上方數字 chips 分成兩個視覺層，
+   一眼分得出「數字」與「敘述」——先前兩者直接疊在一起。 */
 .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:10px 0 0;max-width:47em}
+  margin:12px 0 0;max-width:47em;background:var(--surface-2);
+  border-radius:9px;padding:10px 13px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
@@ -1657,11 +1669,11 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">通膨</a></h1>
-  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-21 19:59（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-21 20:21（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<details class="banner stale"><summary><b>⚠ 資料停止更新</b>：核心 PCE——結論仍照最後一筆資料算，點開看明細</summary><div class="banner-body">核心 PCE（最新 2026-06-01，已 81 天沒有新資料）。在來源恢復之前，這些數字不代表當前狀況。</div></details>
+
 <div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#ppi">生產者物價 PPI（上游）</a><a href="#contrib">分項貢獻分解</a><a href="#trend">是全面在漲，還是少數項目？</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#energy">能源價格與傳導</a><a href="#lights">關鍵指標檢核</a></nav></div>
 <div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Inflation now</div><h2 class="focus-title">核心 PCE 降溫，PPI 壓力降溫</h2><p class="focus-sub">先看核心 PCE 的格位與方向，再用 CPI 拆消費端、PPI 看上游風險；三者不混成單一分數。</p><div class="focus-grid"><div class="focus-metric neutral"><span>總體 CPI｜民眾體感</span><b>3.4%</b><small>含食物與能源</small></div><div class="focus-metric neutral"><span>核心 CPI｜消費端趨勢</span><b>2.5%</b><small>3M 年化 1.6%</small></div><div class="focus-metric neutral"><span>總體 PCE｜Fed 2% 目標</span><b>3.7%</b><small>3M 年化 3.1%</small></div><div class="focus-metric dovish"><span>核心 PCE｜九宮格水準</span><b>3.3%</b><small>動能 降溫</small></div></div><details class="focus-evidence"><summary>查看 PPI、CPI、PCE 傳導</summary><div class="focus-evidence-body"><div class="grid-flow">
       <div class="flow-box"><strong>PPI｜企業上游</strong><div class="flow-values">

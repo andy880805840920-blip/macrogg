@@ -1405,14 +1405,26 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
 .focus-strip{padding:14px 16px}
 .fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
-.fs-chips{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:8px}
-.fs-chip span{display:block;font-size:11px;color:var(--muted)}
+/* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
+   最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
+.fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
+.fs-chip{padding:2px 22px 2px 0;margin-right:22px;
+  border-right:1px solid var(--grid)}
+.fs-chip:last-child{border-right:0;margin-right:0;padding-right:0}
+/* 手機會換行：換行後行尾的分隔線會懸空，乾脆整個拿掉、只留間距 */
+@media(max-width:759px){
+  .fs-chip{border-right:0;padding-right:0;margin-right:20px}}
+.fs-chip span{display:block;font-size:11px;color:var(--muted);margin-bottom:1px}
 .fs-chip b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .fs-chip i{font-style:normal;font-size:11.5px;margin-left:6px;color:var(--muted)}
 .fs-chip i.up{color:var(--critical)}
 .fs-chip i.dn{color:var(--good)}
+.fs-src{font-size:10.5px;color:var(--muted);margin-left:7px;white-space:nowrap}
+/* 焦點段給一個淺色底框：跟上方數字 chips 分成兩個視覺層，
+   一眼分得出「數字」與「敘述」——先前兩者直接疊在一起。 */
 .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:10px 0 0;max-width:47em}
+  margin:12px 0 0;max-width:47em;background:var(--surface-2);
+  border-radius:9px;padding:10px 13px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
@@ -1657,22 +1669,22 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-21 20:02（台北）</div>
+  <div class="sub">最後更新 2026-08-21 20:23（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<details class="banner stale"><summary><b>⚠ 資料停止更新</b>：核心 PCE——結論仍照最後一筆資料算，點開看明細</summary><div class="banner-body">核心 PCE（最新 2026-06-01，已 81 天沒有新資料）。在來源恢復之前，這些數字不代表當前狀況。</div></details>
+
 <div class="anav"><nav class="anchors"><a href="#home-now">就業中性 × 通膨偏高</a><a href="#home-grid">九宮格與下一格</a><a href="#home-modules">四大模組摘要</a><a href="#home-changes">本期變化與市場含義</a><a href="#home-next">接下來看什麼</a></nav></div>
 
 <main class="home-dashboard">
-  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點</div><div class="fs-chips"><div class="fs-chip"><span>10 年期</span><b>4.65%</b><i class="dn">-6 基點</i></div><div class="fs-chip"><span>30 年期</span><b>5.19%</b><i class="dn">-9 基點</i></div><div class="fs-chip"><span>2026 年底升息一碼機率</span><b>—</b><i></i></div></div><p class="fs-text">美債殖利率全面反彈並迅速彈升，面對救市失靈的說法，財長貝森特淡定稱殖利率回升只是「雜音」，並預告將繼續加倍回購以壓低美債殖利率。</p><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisgNBVV95cUxQdTdlc2RlWVBvQU9MczlEbnRNSnRZc3Rha3VYNXB5OGRsbk5Id0YyWTlDNXFvQUwxdXRoSVhnQkpoRHQzY3lEWUNMai0yNXdkaUxqVVJUeGJSRVV4N2VRTlZGV3VFTXJWQzRCNzRJdGtJbmhxQXNkX2JjSTNrU3BhQjJDYjVlNFdob05qNkRpMEc0N3RXQzZXV3ItRzd2QU56bGIydmY1SXBJOXdHRDU2UElINHhaVzVSNzVnVW9xQTlVaUVvel9nMXRMX1J3Q0tJYkI0MGtINkcycjlIWENLaWduTjBrb1Z2UkFWSEJmV1h6cEM3RmtMTE43YWRISG5nUnA0ZzhwdElOQjE5eTdtRm8zVWk2SkRtSjBzTUpkX3FXQWNkN0ZMdFBxR1hiUUJjY3dJUXprdExhcEtPVExkdFdJYVBELTN0ZUR2THhwUDNpTGpxS2FOOWNwc0FiVnVXR1dRMVl4UDJGVlozUGRMbXowaW80SUNBQ2hZckdJekVfeWh4UWcwUmpHX0cyaHgzM2Qxa0N1NEN6MjRBOWtKRnFhWUo4bWVoVlgyUzFpbng3Zw?oc=5" rel="noopener">一周市場回顧：中國經濟全面放緩；貝森特壓美債殖利率；美韓軍演縮減 - Yahoo 財經</a></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBTLXJjdkpmRUpiS3dCRGFwU25mY1NYYlNzQVc2N245WEZManlsbmpwdkpNdkVTU0hnbGwyNklkZ3JGQWNVeFJramRMS3dhTXdPOVNacDVLUUhrUGVWaWJsV1hwWDZqMkx2OGlWQkpxMUt6eUFvSGl1Umg3QUpXUk0?oc=5" rel="noopener">美債殖利率又回升 財長貝森特預告：將繼續加倍回購 | 太報 - LINE TODAY</a></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5MMjNDUWNFZHVrMXpMXzlidkloMDF6a1lHeTlSaW10WUdFOU1pd3Q1QmcxWkJhYmJscWhVNkVsQWhWTnV5eDlYN3FGMXdrTVh6VDk2SmlWODhKZ0VR?oc=5" rel="noopener">美債殖利率又回升 財長貝森特預告：將繼續加倍回購| 國際焦點 - 太報 TaiSounds</a></div></div></details><div class="fs-note">殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點　·　焦點由 AI 整理自新聞標題</div></section>
+  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點</div><div class="fs-chips"><div class="fs-chip"><span>10 年期</span><b>4.65%</b><i class="dn">-6 基點</i></div><div class="fs-chip"><span>30 年期</span><b>5.19%</b><i class="dn">-9 基點</i></div><div class="fs-chip"><span>2026 年底升息一碼機率</span><b>—</b><i>本次擷取失敗</i></div></div><p class="fs-text">針對9月是否升息，專家透露聯準會悄悄買進特定標的，並指美債殖利率關乎升息必要性。此外，市場回顧提及貝森特壓美債殖利率；另一方面，美債殖利率飆升與沃爾瑪財測不如預期，亦引發道瓊指數重挫逾700點。</p><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisgNBVV95cUxQdTdlc2RlWVBvQU9MczlEbnRNSnRZc3Rha3VYNXB5OGRsbk5Id0YyWTlDNXFvQUwxdXRoSVhnQkpoRHQzY3lEWUNMai0yNXdkaUxqVVJUeGJSRVV4N2VRTlZGV3VFTXJWQzRCNzRJdGtJbmhxQXNkX2JjSTNrU3BhQjJDYjVlNFdob05qNkRpMEc0N3RXQzZXV3ItRzd2QU56bGIydmY1SXBJOXdHRDU2UElINHhaVzVSNzVnVW9xQTlVaUVvel9nMXRMX1J3Q0tJYkI0MGtINkcycjlIWENLaWduTjBrb1Z2UkFWSEJmV1h6cEM3RmtMTE43YWRISG5nUnA0ZzhwdElOQjE5eTdtRm8zVWk2SkRtSjBzTUpkX3FXQWNkN0ZMdFBxR1hiUUJjY3dJUXprdExhcEtPVExkdFdJYVBELTN0ZUR2THhwUDNpTGpxS2FOOWNwc0FiVnVXR1dRMVl4UDJGVlozUGRMbXowaW80SUNBQ2hZckdJekVfeWh4UWcwUmpHX0cyaHgzM2Qxa0N1NEN6MjRBOWtKRnFhWUo4bWVoVlgyUzFpbng3Zw?oc=5" rel="noopener">一周市場回顧：中國經濟全面放緩；貝森特壓美債殖利率；美韓軍演縮減</a><span class="fs-src">Yahoo 財經</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMitANBVV95cUxQMXNVcTYtTjZKM1hsdlVZSlozbjdyb2hMUmFTdm1KVDZyaWNJUkZmc3lYOWczek9XWWV2RG43MEQ1c2JWVndkUmo3V0U4STNaVFc2OC00WmdpVEdrZW1sdUVDV1BqanZCTUZVM0tWZmNfUlN1MTdZVzBpZGFpWFd0WUl1TGQ1bzhaU3F5cTJNRDctX0V0elpYNlBHeW5QbEROX01TSFFkRkNJOGZsUWgzMkdlVGg5b0hESjBCTDM1WFhoWnVBb0FYbUVKZ3RLeHd0bU5pZ3o4TzJ6WktHbE9QeWFrMTdXZ0xMQW5hRVhBMW1iRW5zdG5kenZ1SEwyLUF6bXJNSHFDa1dMV1p4ay1GVGs2c2lBTXBUNHQwamExVUhiZVNHejRwTGI5aEl5TDNUS3N4aTVrb01CanBuQXV3VlRDV0FWTkhCT0poQzRBS1R1ZVJXSVA4RHlwcjRxZEZzVDA1WDdxNUlmcW1YN1I0V2V6bndSWkRIUzJyYWdHRllxbFc1cUxDTXhuV05xbWFLeU1YY3c2RGkxNEx0X29QeVhhMmJFZlRob1VrVG5SOTJEQnhJ?oc=5" rel="noopener">9月將升息？專家曝「聯準會悄悄買進這標的」：美債殖利率關乎升息必要性</a><span class="fs-src">Yahoo新聞</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMi_AJBVV95cUxPSE5fVnlMeko0UEtlbGhsd1BjWU94YlFvTXhWbmo0azd2QWlSVG9IUGxWRE5vTTkwMHIybjBqMEN4Tmlvb2Z2bERzU3ZnbkNNMm5QMmVsQ1EzTkx6NkpVS3djcmVFSW5BcHZTS2xkZk9YUnc3YzNMeHZnQU1ITC1kTzd5Z3hhS244MzJ0dXV0Z3VHeUt3Nl9ISk43LXpPdzFUR1U3akRfQm9ZZFJQWEt4c3pFWUl3YlFLWlU1WVZPUS1NODRTcEJLS001VG9iRUppaDNYZlhCeWwxQlNxcnZZX1FpM3N0VTlnM28wMTVmaV9pOHNFcmZDNWVxUndLSTBmR0RQWndqYk5RQUxCbDlGX1B5VHNTZTR5UXdnQlJsN1BwQ1dNdFRwMWJPV1FnU1RYUmJVdS0zV2pqSWpPYkxvRHZ4R0pUcUdjMVpabFVKd3ozNl9iY2RSc0NBUlBxYXBuT2t1aXFDNGo4ejdsQUJtTmF2WDU2SU1PYU5EWQ?oc=5" rel="noopener">美債殖利率反彈黃金微跌 金礦股逆勢上漲凸顯財政疑慮</a><span class="fs-src">Yahoo股市</span></div></div></details><div class="fs-note">殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點　·　焦點由 AI 整理自新聞標題</div></section>
   <section class="home-hero hawkish" aria-labelledby="home-now">
     <div class="home-hero-top">
       <div><div class="home-kicker">目前情境</div>
         <h2 id="home-now">就業中性 × 通膨偏高</h2></div>
       <div class="home-verdict hawkish"><span>傾向緊縮</span><b>利升息</b></div>
     </div>
-    <div class="home-narrative"><div class="home-brief-label">整體情勢<span>AI 文字整理｜數據與方向由規則鎖定</span></div><p class="home-brief-text">聯準會決策以通膨為先，三方裡一方偏升息、一方偏降息，內部方向分歧。7 月失業率 4.1% 雖處充分就業，但前兩月大幅下修反映動能弱於初值，近三個月平均非農 +2.0 萬人亦低於損益兩平的 +9.8 萬，撐不住現有失業率。物價端受住房落後項推升，7 月 CPI 年增 3.4%、核心 2.5%，上游核心 PPI 4.2%；6 月核心 PCE 3.3%、三個月年化 2.9% 雖在放緩，仍高於聯準會對明年的預測。上次會議（7/29）維持不變且有 3 票主張升息，下次會議 26 天後召開。財政緩衝 1.9% GDP 降低部分供給壓力，但 AI 資本支出佔營運現金流 97% 仍推升長端供給，長端大致跟著政策走。</p><p class="home-brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.57 個百分點）；升息風險未消。</p></div>
+    <div class="home-narrative"><div class="home-brief-label">整體情勢<span>規則摘要｜數據與方向由規則鎖定</span></div><p class="home-brief-text">聯準會決策以通膨為先，三方裡一方偏升息、一方偏降息，內部方向分歧。7 月失業率 4.1% 雖處充分就業，但前兩月大幅下修反映動能弱於初值，近三個月平均非農 +2.0 萬人亦低於損益兩平的 +9.8 萬，撐不住現有失業率。物價端受住房落後項推升，7 月 CPI 年增 3.4%、核心 2.5%，上游核心 PPI 4.2%；6 月核心 PCE 3.3%、三個月年化 2.9% 雖在放緩，仍高於聯準會對明年的預測。上次會議（7/29）維持不變且有 3 票主張升息，下次會議 26 天後召開。財政緩衝 1.9% GDP 降低部分供給壓力，但 AI 資本支出佔營運現金流 97% 仍推升長端供給，長端大致跟著政策走。</p><p class="home-brief-key">重點：降息還遠，解鎖條件是通膨轉「低」（還差 0.57 個百分點）；升息風險未消。</p></div>
     <div class="home-status-rail"><div><span>就業</span><b>中性｜轉弱</b></div><div><span>通膨</span><b>偏高｜降溫</b></div><div><span>FOMC</span><b>偏鷹</b></div><div><span>長端壓力</span><b>中性</b></div></div>
   </section>
 
@@ -1698,7 +1710,7 @@ details.home-module[open]{padding-bottom:0}
   <section class="home-zone" aria-labelledby="home-changes">
     <div class="home-zone-head"><div><span class="home-zone-num">04</span>
       <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
-    <div class="home-change-list"><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜物價</b><span>住房通膨的降溫已成既定路徑</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot hawkish"></span><div><b>新增｜物價</b><span>上游漲價還沒轉嫁完</span></div><p>提高維持高利率的約束</p></div><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜物價</b><span>短期預期偏高，但長期仍錨定</span></div><p>目前不改變政策方向</p></div></div>
+    <div class="home-change-list"><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜物價</b><span>住房通膨的降溫已成既定路徑</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜物價</b><span>短期預期偏高，但長期仍錨定</span></div><p>目前不改變政策方向</p></div><div class="home-change"><span class="home-change-dot hawkish"></span><div><b>新增｜物價</b><span>上游漲價還沒轉嫁完</span></div><p>提高維持高利率的約束</p></div></div>
   </section>
 
   <section class="home-zone" aria-labelledby="home-next">
