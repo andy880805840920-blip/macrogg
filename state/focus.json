@@ -1,21 +1,21 @@
 {
- "hash": "38b26e3dfff74e62",
- "text": "貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場；美國正走日本老路？貝森特救美債恐犧牲美元 專家警告川普政府正在玩火；美股震盪期創高後恐崩盤？專家談美債布局：長天期沒賺，不如押0050或高股息",
+ "hash": "3ff9a9b9575f464b",
+ "text": "美國財政部將提前回購長天期美債規模提高一倍，美元跌至三個月低點。布魯金斯學會資深研究員 Brooks 警告川普政府玩火；渣打銀行指出此舉難解龐大財政赤字。交易員正等待 Fed 主席華許（Kevin Warsh）月底在傑克森霍爾央行年會發表演說。此外，美債規模已突破 40 兆美元，伊朗戰爭引起的能源短缺亦持續推升運輸成本。",
  "links": [
-  {
-   "title": "貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場",
-   "link": "https://tw.stock.yahoo.com/news/%E8%B2%9D%E6%A3%AE%E7%89%B9%E7%9A%84%E5%BD%88%E8%97%A5%E5%A4%A0%E7%94%A8%E5%97%8E-%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E5%86%8D%E9%A3%86%E6%81%90%E9%80%BCfed%E9%80%B2%E5%A0%B4-124003459.html",
-   "source": "Yahoo奇摩股市"
-  },
   {
    "title": "美國正走日本老路？貝森特救美債恐犧牲美元 專家警告川普政府正在玩火",
    "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E6%AD%A3%E8%B5%B0%E6%97%A5%E6%9C%AC%E8%80%81%E8%B7%AF-%E8%B2%9D%E6%A3%AE%E7%89%B9%E6%95%91%E7%BE%8E%E5%82%B5%E6%81%90%E7%8A%A7%E7%89%B2%E7%BE%8E%E5%85%83-%E5%B0%88%E5%AE%B6%E8%AD%A6%E5%91%8A%E5%B7%9D%E6%99%AE%E6%94%BF%E5%BA%9C%E6%AD%A3%E5%9C%A8%E7%8E%A9%E7%81%AB-131030802.html",
    "source": "Yahoo奇摩股市"
   },
   {
-   "title": "美股震盪期創高後恐崩盤？專家談美債布局：長天期沒賺，不如押0050或高股息",
-   "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E9%9C%87%E7%9B%AA%E6%9C%9F%E5%89%B5%E9%AB%98%E5%BE%8C%E6%81%90%E5%B4%A9%E7%9B%A4-%E5%B0%88%E5%AE%B6%E8%AB%87%E7%BE%8E%E5%82%B5%E5%B8%83%E5%B1%80-%E9%95%B7%E5%A4%A9%E6%9C%9F%E6%B2%92%E8%B3%BA-%E4%B8%8D%E5%A6%82%E6%8A%BC0050%E6%88%96%E9%AB%98%E8%82%A1%E6%81%AF-144217692.html",
+   "title": "美債市場回穩　美股三大指數開盤走高",
+   "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E5%B8%82%E5%A0%B4%E5%9B%9E%E7%A9%A9-%E7%BE%8E%E8%82%A1%E4%B8%89%E5%A4%A7%E6%8C%87%E6%95%B8%E9%96%8B%E7%9B%A4%E8%B5%B0%E9%AB%98-141634406.html",
    "source": "Yahoo奇摩新聞"
+  },
+  {
+   "title": "川普緩和美國物價　宣布30萬噸進口牛絞肉90天免關稅",
+   "link": "https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE%E7%B7%A9%E5%92%8C%E7%BE%8E%E5%9C%8B%E7%89%A9%E5%83%B9-%E5%AE%A3%E5%B8%8330%E8%90%AC%E5%99%B8%E9%80%B2%E5%8F%A3%E7%89%9B%E7%B5%9E%E8%82%8990%E5%A4%A9%E5%85%8D%E9%97%9C%E7%A8%85-134816553.html",
+   "source": "Yahoo奇摩股市"
   }
  ],
  "fedwatch": {
@@ -26,5 +26,5 @@
   "src": "futures",
   "implied": 3.89
  },
- "text_source": "headlines"
+ "text_source": "model-content"
 }

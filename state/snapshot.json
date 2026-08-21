@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-22T00:06:36+08:00",
+  "at": "2026-08-22T00:33:13+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -104,13 +104,14 @@
         "vintage": "2026-07|2026-06",
         "released": "2026-08-21",
         "month": "2026-07",
-        "tilt": "balanced",
+        "tilt": "dovish",
         "flags": [
           "cpi_cooling",
           "above_target",
           "shelter_drag",
           "ppi_pipeline",
           "shelter_turn",
+          "supercore_cool",
           "expect_anchored"
         ],
         "flag_titles": {
@@ -119,6 +120,7 @@
           "shelter_drag": "住房落後項推升整體讀數",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
           "shelter_turn": "住房通膨的降溫已成既定路徑",
+          "supercore_cool": "核心服務除住房回落至正常區間",
           "expect_anchored": "短期預期偏高，但長期仍錨定"
         },
         "flag_leans": {
@@ -127,6 +129,7 @@
           "shelter_drag": "dovish",
           "ppi_pipeline": "hawkish",
           "shelter_turn": "dovish",
+          "supercore_cool": "dovish",
           "expect_anchored": "neutral"
         },
         "metrics": {
@@ -169,7 +172,7 @@
           "supercore": {
             "label": "核心服務除住房",
             "en": "Supercore (core svcs ex-shelter), 3-mo ann.",
-            "value": null,
+            "value": 2.1279494076635874,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.1,
@@ -191,7 +194,7 @@
             "value": 3.42157564194292
           },
           "supercore": {
-            "value": null
+            "value": 2.0983424790244287
           },
           "exp5y5y": {
             "value": 2.32
@@ -468,7 +471,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-08-22T00:06:36+08:00",
+      "at": "2026-08-22T00:33:13+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|2026-06|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",

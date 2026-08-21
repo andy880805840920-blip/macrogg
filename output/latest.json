@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-22T00:08:36+08:00",
+  "generated_at": "2026-08-22T00:38:25+08:00",
   "labor": {
     "month": "2026-07",
     "score": -0.3785620886116188,
@@ -47,10 +47,10 @@
   "inflation": {
     "month": "2026-07",
     "tilt": {
-      "dovish": 4.0,
+      "dovish": 4.5,
       "hawkish": 3.0,
-      "net": -1.0,
-      "tilt": "balanced"
+      "net": -1.5,
+      "tilt": "dovish"
     },
     "flags": [
       {
@@ -92,6 +92,14 @@
         "detail": "住房項年增 3.4%，但近三個月年化只有 2.3%。住房是 CPI 權重最大的一塊、又落後市場租金約一年——短期動能明顯低於年增率，代表未來幾個月的住房讀數會照著新簽租金往下走。",
         "lean": "dovish",
         "impact": "權重最大的一塊有既定的下行慣性"
+      },
+      {
+        "key": "supercore_cool",
+        "severity": "info",
+        "headline": "核心服務除住房回落至正常區間",
+        "detail": "剔除住房後的核心服務，近三個月年化 2.1%（近 12 個月 2.6%）。降下來代表通膨的慣性正在減弱。",
+        "lean": "dovish",
+        "impact": "通膨的慣性正在減弱"
       },
       {
         "key": "expect_anchored",
