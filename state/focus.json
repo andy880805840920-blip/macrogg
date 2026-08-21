@@ -1,6 +1,6 @@
 {
- "hash": "ae3b22187a191a96",
- "text": "貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場；美國正走日本老路？貝森特救美債恐犧牲美元 專家警告川普政府正在玩火；川普緩和美國物價　宣布30萬噸進口牛絞肉90天免關稅",
+ "hash": "d9d5e46427fabdba",
+ "text": "美國財政部長貝森特擴大長債回購以壓低美債殖利率，引發債券市場震盪與削弱美元的擔憂，專家警告川普政府正在玩火。市場質疑財政部措施難以扭轉局勢，若工具耗盡恐逼聯準會介入，投資人正密切關注 Fed 主席華許即將發表的演說。",
  "links": [
   {
    "title": "貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場",
@@ -13,9 +13,9 @@
    "source": "Yahoo奇摩股市"
   },
   {
-   "title": "川普緩和美國物價　宣布30萬噸進口牛絞肉90天免關稅",
-   "link": "https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE%E7%B7%A9%E5%92%8C%E7%BE%8E%E5%9C%8B%E7%89%A9%E5%83%B9-%E5%AE%A3%E5%B8%8330%E8%90%AC%E5%99%B8%E9%80%B2%E5%8F%A3%E7%89%9B%E7%B5%9E%E8%82%8990%E5%A4%A9%E5%85%8D%E9%97%9C%E7%A8%85-134816553.html",
-   "source": "Yahoo奇摩股市"
+   "title": "聯電Q3毛利率上看36%！法人上修今明年獲利　八大公股卻砍逾2.5千張、提款2.9億元",
+   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E9%9B%BBq3%E6%AF%9B%E5%88%A9%E7%8E%87%E4%B8%8A%E7%9C%8B36-%E6%B3%95%E4%BA%BA%E4%B8%8A%E4%BF%AE%E4%BB%8A%E6%98%8E%E5%B9%B4%E7%8D%B2%E5%88%A9-%E5%85%AB%E5%A4%A7%E5%85%AC%E8%82%A1%E5%8D%BB%E7%A0%8D%E9%80%BE2-5%E5%8D%83%E5%BC%B5-%E6%8F%90%E6%AC%BE2-143000150.html",
+   "source": "Yahoo奇摩新聞"
   }
  ],
  "fedwatch": {
@@ -25,5 +25,5 @@
   "suspect": false,
   "src": "futures"
  },
- "text_source": "headlines"
+ "text_source": "model-content"
 }
