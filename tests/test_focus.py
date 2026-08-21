@@ -105,19 +105,25 @@ _FWCFG = {"fedwatch_contract": "ZQF27.CBT",
 
 
 class _FakeYq:
-    def __init__(self, px):
+    """五日收盤有正常波動（倒數第二天差半個 tick）的合約報價。"""
+
+    def __init__(self, px, closes=None):
         self._px = px
+        self._closes = closes if closes is not None else [px - 0.005, px]
 
     def raise_for_status(self):
         pass
 
     def json(self):
-        return {"chart": {"result": [{"meta": {"regularMarketPrice": self._px}}]}}
+        return {"chart": {"result": [{
+            "meta": {"regularMarketPrice": self._px},
+            "indicators": {"quote": [{"close": self._closes}]}}]}}
 
 
-def _yq2(anchor_px, far_px):
+def _yq2(anchor_px, far_px, far_closes=None):
     """兩張合約各給一個價：URL 含 ZQQ26 給當月價、其餘給遠月價。"""
-    return lambda u: _FakeYq(anchor_px if "ZQQ26" in u else far_px)
+    return lambda u: (_FakeYq(anchor_px) if "ZQQ26" in u
+                      else _FakeYq(far_px, far_closes))
 
 
 # 當月 96.375 → 隱含 3.625%（＝中點，閘門通過）；遠月 96.31 → 3.69%；
@@ -151,6 +157,36 @@ check("⑦j 當月合約代號自動滾",
       ft._anchor_symbol(dt.date(2026, 8, 21)) == "ZQQ26.CBT"
       and ft._anchor_symbol(dt.date(2026, 12, 3)) == "ZQZ26.CBT"
       and ft._anchor_symbol(dt.date(2027, 1, 5)) == "ZQF27.CBT")
+
+# ⑦q 停滯偵測（+0.0 pp 事故的回歸）：遠月收盤連續五天一模一樣＝報價
+# 鏈死掉，整批不採用；只有一筆收盤、或只剩最新成交價也一樣
+check("⑦q 遠月收盤五天不動 → 判報價死掉不採用",
+      ft.fedwatch_from_futures(
+          _RATES, _FWCFG,
+          _get=_yq2(96.375, 96.00, far_closes=[96.00] * 5)) is None)
+check("⑦r 遠月只有一筆收盤 → 不採用",
+      ft.fedwatch_from_futures(
+          _RATES, _FWCFG,
+          _get=_yq2(96.375, 96.31, far_closes=[None, None, 96.31])) is None)
+check("⑦s 遠月無收盤只剩最新成交價 → 不採用（陳舊成交）",
+      ft.fedwatch_from_futures(
+          _RATES, _FWCFG, _get=_yq2(96.375, 96.31, far_closes=[])) is None)
+# 當月被實際利率釘住、平盤正常——停滯偵測不適用於它
+check("⑦t 當月平盤不影響（檢查只針對遠月）",
+      ft.fedwatch_from_futures(
+          _RATES, _FWCFG,
+          _get=lambda u: (_FakeYq(96.375, closes=[96.375] * 5)
+                          if "ZQQ26" in u else _FakeYq(96.31)))[0] == 26.0)
+
+# ⑦u 交叉檢核：期貨與官方差逾 25pp → 期貨端判壞、改用官方值
+check("⑦u 差逾 25pp 改用官方值",
+      ft._pick_fw((100.0, 4.00), 20.0) == (20.0, "atlanta", None))
+check("⑦v 差距在範圍內 → 用期貨（附隱含）",
+      ft._pick_fw((26.0, 3.69), 30.0) == (26.0, "futures", 3.69))
+check("⑦w 期貨掛了 → 官方值",
+      ft._pick_fw(None, 31.0) == (31.0, "atlanta", None))
+check("⑦x 兩邊都沒有 → 退 AI 層",
+      ft._pick_fw(None, None) == (None, "", None))
 
 # ⑦k Atlanta Fed 第二層：沒設取值路徑時只偵察不猜數字；設了才啟用
 class _FakeAt:

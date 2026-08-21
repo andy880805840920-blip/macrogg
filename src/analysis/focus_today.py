@@ -545,7 +545,8 @@ def _last_value(rows) -> float | None:
     return rows[-1]["value"] if rows else None
 
 
-def fetch_zq_implied(symbol: str, _get=None) -> float | None:
+def fetch_zq_implied(symbol: str, _get=None,
+                     require_movement: bool = False) -> float | None:
     """
     抓一檔聯邦基金期貨，回傳隱含利率（100 − 價格）。
 
@@ -555,8 +556,12 @@ def fetch_zq_implied(symbol: str, _get=None) -> float | None:
     機率顯示 100% 的事故，最可疑的就是這裡。日收盤是交易所每天標記的
     結算價，沒有成交也會更新。
 
-    另外驗報價的新鮮度：最後一筆有效收盤如果不是近五個交易日內的
-    （range=5d 抓回來卻整排 null），一樣不採用。
+    `require_movement`（給**遠月**合約用）：五天的收盤必須「有在動」。
+    正常的遠月結算價每天被交易所重新標記，多少會動一兩個 tick；
+    連續五天一模一樣、或五天裡湊不出兩筆有效收盤，代表這張合約的
+    報價鏈是死的——這正是 100% 事故最後一型的長相（畫面上連續多日
+    +0.0 pp）。當月合約**不能**開這個檢查：它被已實現的實際利率釘住，
+    平盤好幾天是正常的。
     """
     get = _get or (lambda url: requests.get(
         url, timeout=TIMEOUT,
@@ -569,9 +574,22 @@ def fetch_zq_implied(symbol: str, _get=None) -> float | None:
             return None
         closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
                   .get("close") or [])
-        px = next((c for c in reversed(closes) if c is not None), None)
+        valid = [c for c in closes if c is not None]
+        px = valid[-1] if valid else None
         src = "5 日收盤"
+        if require_movement:
+            if len(valid) < 2:
+                log.warning("聯邦基金期貨 %s 近五日只有 %d 筆結算價，"
+                            "報價鏈疑似死掉，不採用", symbol, len(valid))
+                return None
+            if len(set(valid)) == 1:
+                log.warning("聯邦基金期貨 %s 近五日結算價五天一模一樣"
+                            "（%.4f），報價鏈疑似死掉，不採用",
+                            symbol, valid[0])
+                return None
         if px is None:
+            if require_movement:
+                return None
             px = (res[0].get("meta") or {}).get("regularMarketPrice")
             src = "最新成交價（近五日無收盤，可能偏舊）"
         if px is None:
@@ -644,7 +662,10 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
         return None
 
     sym = (cfg or {}).get("fedwatch_contract") or DEFAULT_ZQ
-    implied = fetch_zq_implied(sym, _get)
+    # 遠月開「有在動」檢查：連續五天收盤一模一樣＝報價死掉（+0.0 pp
+    # 事故的長相），比任何價位門檻都可靠。當月不開（被實際利率釘住，
+    # 平盤正常）。
+    implied = fetch_zq_implied(sym, _get, require_movement=True)
     if implied is None:
         return None
     # 遠月自己的防護（跟閘門互補：閘門驗的是報價鏈，這裡驗的是這一張）：
@@ -704,10 +725,23 @@ def fetch_atlanta_fedwatch(cfg: dict | None = None, _get=None) -> float | None:
         return None
     if not path:
         ct = (getattr(r, "headers", {}) or {}).get("Content-Type", "?")
-        head = (getattr(r, "text", "") or "")[:300].replace("\n", " ")
-        log.info("Atlanta Fed 偵察：%s → %s；開頭：%s ……（對照這段把 "
-                 "atlanta_json_path 填進 config/focus.yaml 後啟用）",
-                 url, ct, head)
+        text = getattr(r, "text", "") or ""
+        # 資料端點藏在頁面的 script 裡（開發沙盒的抓取工具看不到那層，
+        # 只有真的連得上的機器看得到完整原始碼）——把原始碼裡所有像
+        # 資料端點的 URL 挖出來寫進 log，這一行就是啟用的依據。
+        cands = re.findall(
+            r'["\']((?:https?://[^"\']+|/[^"\']+)?'
+            r'(?:api|API|[Cc]hart|[Dd]ata|GetChart|\.json|\.csv|\.xlsx)'
+            r'[^"\']*)["\']', text)
+        uniq = []
+        for c in cands:
+            if c not in uniq and len(c) > 5:
+                uniq.append(c)
+        log.info("Atlanta Fed 偵察：%s → %s；候選資料端點 %d 個：%s；"
+                 "開頭：%s ……（把正確端點填進 atlanta_mpt_url、取值路徑"
+                 "填進 atlanta_json_path 後啟用）",
+                 url, ct, len(uniq), "、".join(uniq[:12]) or "（沒找到）",
+                 text[:200].replace("\n", " "))
         return None
     try:
         node = r.json()
@@ -769,6 +803,27 @@ def fetch_fedwatch(env=None) -> float | None:
     except Exception as e:                         # noqa: BLE001
         log.warning("FedWatch 擷取失敗（%s）", e)
         return None
+
+
+def _pick_fw(fw, at):
+    """
+    期貨自算與 Atlanta Fed 官方值的**交叉檢核**。回傳 (pct, src, implied)。
+
+    兩邊都有值且差超過 25 個百分點 → 期貨端有問題（兩個獨立來源同時
+    錯的機率遠低於期貨報價鏈單邊死掉），改用官方值。這比任何單邊
+    防護都可靠——防護欄只能驗「合不合理」，交叉檢核驗的是「對不對」。
+    只有一邊有值就用那邊；都沒有回 (None, "", None) 讓呼叫端退 AI 層。
+    """
+    if fw is not None and at is not None and abs(fw[0] - at) > 25:
+        log.warning("FedWatch 交叉檢核：期貨自算 %.1f%% 與官方 %.1f%% "
+                    "差逾 25pp，判定期貨端報價有問題，改用官方值",
+                    fw[0], at)
+        return at, "atlanta", None
+    if fw is not None:
+        return fw[0], "futures", fw[1]
+    if at is not None:
+        return at, "atlanta", None
+    return None, "", None
 
 
 def _jump_suspect(pct: float, prev, src: str) -> bool:
@@ -841,18 +896,16 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                            "src": fw_old.get("src", ""),
                            "implied": fw_old.get("implied")}
     else:
-        # 來源鏈：期貨價差（自算、自驗）→ Atlanta Fed（官方機率）→
-        # Gemini 擷取 → 沿用前值
+        # 來源鏈：期貨價差（自算、自驗）×交叉檢核× Atlanta Fed（官方）
+        # → Gemini 擷取 → 沿用前值。
+        # Atlanta 每次都打：已啟用時當交叉檢核的裁判與備援；
+        # 未啟用（沒設 atlanta_json_path）時做偵察、把端點候選寫進 log。
         _fw = fedwatch_from_futures(rates_series, cfg)
-        fw_src, implied = "futures", None
-        if _fw is not None:
-            pct, implied = _fw
-        else:
-            pct = fetch_atlanta_fedwatch(cfg)
-            fw_src = "atlanta"
-            if pct is None:
-                pct = fetch_fedwatch(env)
-                fw_src = "ai"
+        _at = fetch_atlanta_fedwatch(cfg)
+        pct, fw_src, implied = _pick_fw(_fw, _at)
+        if pct is None:
+            pct = fetch_fedwatch(env)
+            fw_src = "ai"
         prev = fw_old.get("pct")
         suspect = False
         if pct is None and prev is not None:
