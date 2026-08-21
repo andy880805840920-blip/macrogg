@@ -58,14 +58,24 @@ jobs:
       - name: 安裝依賴
         run: pip install -r requirements.txt
 
-      # SQLite 內含每次抓取的快照（修正追蹤的後備來源）。
+      # SQLite 內含每次抓取的快照（修正追蹤的後備來源，也是
+      # 「FRED 這一次抓不到就沿用上次的值」的後備資料）。
       # 只放進 Actions 快取、不 commit 進 repo，避免二進位檔把 repo 撐大。
+      #
+      # ⚠️ 要快取**整個 data/**，不是只有 labor.db——先前只快取 labor.db，
+      # 於是 inflation.db、rates.db 每次執行都從零開始，快照後備在
+      # 通膨與長端模組上等於不存在：CUSR0000SASLE 一抓失敗，
+      # 核心服務除住房推導不出來，supercore KPI 與黏性訊號整串缺值。
+      # restore-keys 保留舊的 labor-db- 前綴，改版後第一次執行
+      # 仍接得回既有的勞動資料庫。
       - name: 還原資料庫快取
         uses: actions/cache@v5
         with:
-          path: data/labor.db
-          key: labor-db-${{ github.run_id }}
-          restore-keys: labor-db-
+          path: data
+          key: dashboard-db-${{ github.run_id }}
+          restore-keys: |
+            dashboard-db-
+            labor-db-
 
       - name: 產生頁面
         env:
