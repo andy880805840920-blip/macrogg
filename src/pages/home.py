@@ -875,7 +875,9 @@ def _focus_strip(f: dict | None) -> str:
     if fw.get("pct") is None:
         _fw_note = ""
     elif fw.get("src") == "futures":
-        _fw_note = "　·　機率：由聯邦基金期貨反推（FedWatch 同款算法，延遲報價）"
+        _fw_note = "　·　機率：由聯邦基金期貨價差反推（FedWatch 同款算法，延遲報價）"
+    elif fw.get("src") == "atlanta":
+        _fw_note = "　·　機率：亞特蘭大聯準銀行 Market Probability Tracker"
     else:
         _fw_note = "　·　機率：CME FedWatch，AI 擷取僅供參考"
     # 殖利率的來源標示跟著實際來源走：Yahoo 即時（±bp 對昨收）或 FRED 昨收

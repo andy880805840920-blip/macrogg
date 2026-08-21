@@ -8,11 +8,20 @@
 
 enabled: true
 
-# FedWatch 機率第一層（期貨自算）用的合約。
+# FedWatch 機率第一層（期貨自算，雙合約法）用的遠月合約。
 # ZQF27＝2027 年 1 月的 30 天期聯邦基金期貨：1 月沒有 FOMC 會議，
 # 整月平均利率 ≈ 2026 年 12 月會議之後的利率。
 # 年度往前滾時改這裡（例如要看 2027 年底就改 ZQF28.CBT）。
+# 「當月合約」（品質閘門＋價差基準）由程式按月份自動推，逐月自動滾；
+# 要固定時才設 fedwatch_anchor_contract（例：ZQQ26.CBT）。
 fedwatch_contract: ZQF27.CBT
+
+# FedWatch 機率第二層：亞特蘭大聯準銀行 Market Probability Tracker（官方）。
+# 資料端點格式尚未實跑驗證：atlanta_json_path 沒填時每次執行只做偵察
+# （把回應形狀印進 log）然後退下一層，不猜數字。對照 log 把取值路徑
+# 填進來後才啟用（例：["probabilities", "hike25"]）。
+# atlanta_mpt_url: https://www.atlantafed.org/cenfis/market-probability-tracker
+# atlanta_json_path: []
 
 # 焦點段的中文字數上限（AI 的輸出超過會被擋下、退回列標題）。
 # 120 只夠把標題換句話說；要塞得下「內文才有的細節」（金額、時間點、

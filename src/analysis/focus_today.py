@@ -335,6 +335,62 @@ _FOCUS_CONTENT_SYSTEM = (
     "繁體中文；直接輸出那一段文字，不要任何前言。")
 
 
+def _post_gemini_hardy(key: str, model: str, src_text: str,
+                       system: str, temperature: float = 0.3):
+    """
+    焦點段專用的 Gemini 呼叫鏈——**拚到底**的容錯政策，只住在這個檔案。
+
+    跟整體情勢潤稿的 `polish._post_gemini` 刻意分家（使用者的要求：
+    潤稿還原原本行為、不共用容錯層）：潤稿有規則組裝版可退，失敗
+    立刻退回最划算；焦點段沒有退路（退了就是列標題），所以這裡
+    404／截斷／5xx／timeout／429 全部換模型再試——
+      404          記進 polish._DEAD（整把金鑰共用的黑名單，這是事實
+                   不是政策：叫不動就是叫不動）
+      回覆被截斷    改挑預設不推理的 lite
+      5xx／timeout 單一模型容量池擠爆，換一顆（實測：flash-latest
+                   連吃 503 時其他模型正常）
+      429          免費層配額**逐模型**計（各自一桶 RPM／RPD），
+                   這顆見底不代表別顆也是（實測：等完 35＋70 秒仍
+                   連三個 429，換桶才有用）
+    只有 400（參數錯）與 401（金鑰錯）直接往上拋——換誰都一樣。
+    積木（_gemini_call、_alt_model）沿用 polish 的：那些是工具，
+    政策在這裡。
+    """
+    from . import polish as _pl
+    tried: list[str] = []
+    cur, prefer_lite = model, False
+    last_exc: Exception | None = None
+    for _ in range(_pl.MAX_MODEL_TRIES):
+        tried.append(cur)
+        try:
+            return _pl._gemini_call(key, cur, src_text, system,
+                                    think=False, temperature=temperature)
+        except _pl.TruncatedError as e:
+            last_exc, prefer_lite = e, True
+            log.warning("市場焦點：%s 回覆被截斷（%s）", cur, e)
+        except requests.HTTPError as e:
+            resp = getattr(e, "response", None)
+            code = resp.status_code if resp is not None else 0
+            if code in (400, 401):
+                raise
+            last_exc = e
+            if code == 404:
+                _pl._DEAD.add(cur)
+            log.warning("市場焦點：%s 失敗（HTTP %d），換一顆模型再試",
+                        cur, code)
+        except requests.RequestException as e:
+            # 連線層（timeout、斷線）＝過載到不回應，跟 5xx 同一件事。
+            # 注意順序：HTTPError 是 RequestException 的子類，這個分支
+            # 必須排在後面，否則 400／401 全被當成連線失敗。
+            last_exc = e
+            log.warning("市場焦點：%s 連線失敗（%s），換一顆模型再試", cur, e)
+        alt = _pl._alt_model(key, tried, prefer_lite=prefer_lite)
+        if not alt:
+            break
+        cur = alt
+    raise last_exc if last_exc else RuntimeError("Gemini 沒有可用的模型")
+
+
 def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     """
     焦點段的 AI 呼叫：Gemini 多模型鏈 → **Anthropic 備援**。
@@ -343,12 +399,12 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     為什麼要跨供應商：整體情勢的潤稿看起來「從不失敗」，其實是它的
     事實雜湊快取讓它一個月只打十幾次 API、非發布日根本不呼叫；
     焦點段的新聞每次執行都不一樣，一天要打三次——曝險是它的幾十倍。
-    呼叫鏈本身兩邊已經同一套（多模型、5xx／timeout／429 都換模型），
-    剩下的差距就是退路的深度：Gemini 整把金鑰見底時（實測：flash-latest
-    連吃三個 429 退回列標題），workflow 裡本來就配好的 ANTHROPIC_API_KEY
-    要能接手。數字鎖等防護欄在呼叫端外面，對兩家一視同仁。
+    Gemini 這一層走焦點專用的 _post_gemini_hardy（拚到底的換模型政策，
+    跟潤稿分家）；它整把金鑰見底時（實測：flash-latest 連吃三個 429
+    退回列標題），workflow 裡本來就配好的 ANTHROPIC_API_KEY 接手。
+    數字鎖等防護欄在呼叫端外面，對兩家一視同仁。
     """
-    from .polish import _post_gemini, _post_anthropic, PROVIDERS
+    from .polish import _post_anthropic, PROVIDERS
     import os
     env = env or os.environ
     g_key = (env.get("GEMINI_API_KEY") or "").strip()
@@ -359,9 +415,8 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     if g_key:
         model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
         try:
-            out = _post_gemini(g_key, model, src_text, system=system,
-                               temperature=0.3, think=False)
-            return (out[0] if isinstance(out, tuple) else out).strip(), ""
+            out = _post_gemini_hardy(g_key, model, src_text, system)
+            return (out or "").strip(), ""
         except Exception as e:                     # noqa: BLE001
             errs.append(f"Gemini：{e}")
             if a_key:
@@ -539,13 +594,34 @@ def fetch_zq_implied(symbol: str, _get=None) -> float | None:
         return None
 
 
+_MONTH_CODES = "FGHJKMNQUVXZ"                      # 期貨月份代碼：F=1月…Z=12月
+
+
+def _anchor_symbol(today: dt.date) -> str:
+    """當月聯邦基金期貨的代號（例：2026-08 → ZQQ26.CBT）。逐月自動滾。"""
+    return f"ZQ{_MONTH_CODES[today.month - 1]}{today.year % 100:02d}.CBT"
+
+
 def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
                           _get=None) -> float | None:
     """
-    升息一碼機率 ＝ (期貨隱含利率 − 目前目標區間中點) ÷ 0.25，鎖 0–100。
+    升息一碼機率 ＝ (遠月隱含利率 − **當月隱含利率**) ÷ 0.25，鎖 0–100。
 
-    目標區間直接取 FRED 的 DFEDTARL／DFEDTARU（rates 模組本來就有抓），
-    不另外手填——手填的利率漏更新一次，機率就整個平移。
+    **雙合約法**（FedWatch／WIRP 的實際做法），取代先前的「遠月 − FRED
+    目標中點」。改的原因是 100% 事故的第二型：遠月報價陳舊但「錯得不夠
+    離譜」（隱含落在中點＋0.25 到＋0.40 之間），單合約法的所有門檻都
+    分不出真假。雙合約法補上兩件單合約法做不到的事：
+
+      ① **資料品質閘門**——當月合約的答案是已知的（當月平均利率 ≈
+         目前的實際利率），它的隱含若偏離 FRED 目標中點超過 0.15 個
+         百分點，代表 Yahoo 的 ZQ 報價鏈整條有問題（陳舊、錯商品），
+         遠月再合理也整批不採用、退備援。
+      ② **基差自動消掉**——期貨隱含的是有效聯邦資金利率（EFFR），
+         它通常不在目標區間正中間；兩張合約相減，這個系統性偏差
+         兩邊一樣大，直接抵銷。
+
+    目標區間仍取 FRED 的 DFEDTARL／DFEDTARU（rates 模組本來就有抓），
+    但現在只當閘門的比對基準，不再進機率算式。
     """
     rs = rates_series or {}
     lo = _last_value(rs.get("DFEDTARL"))
@@ -554,30 +630,101 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
         log.warning("FedWatch 自算：抓不到目標區間（DFEDTARL/U），跳過")
         return None
     mid = (lo + hi) / 2
+
+    anchor_sym = ((cfg or {}).get("fedwatch_anchor_contract")
+                  or _anchor_symbol(clock.today()))
+    anchor = fetch_zq_implied(anchor_sym, _get)
+    if anchor is None:
+        return None
+    # 品質閘門：當月合約答案已知，對不上就是報價鏈壞了
+    if abs(anchor - mid) > 0.15:
+        log.warning("FedWatch 自算：當月合約 %s 隱含 %.2f%% 偏離目標中點 "
+                    "%.3f%% 超過 0.15，判定 Yahoo 報價鏈品質不佳，"
+                    "整批不採用", anchor_sym, anchor, mid)
+        return None
+
     sym = (cfg or {}).get("fedwatch_contract") or DEFAULT_ZQ
     implied = fetch_zq_implied(sym, _get)
     if implied is None:
         return None
-    # 壞報價防護，兩層：
-    #   ① 偏離中點 >1.5 個百分點——多半是合約寫錯年份或抓錯商品
-    #   ② 隱含利率高於「中點＋0.40」——等於市場已完整定價超過一碼半的
-    #      升息。在目前的環境那幾乎必然是**遠月合約的陳舊報價**
-    #      （100% 事故的最可疑成因），而不是真的定價；寧可退回備援。
-    #      往下不設同樣的檻：偏降息只會把機率鎖在 0，那是正確行為。
-    if abs(implied - mid) > 1.5:
-        log.warning("FedWatch 自算：隱含利率 %.2f%% 偏離中點 %.2f%% 過大，不採用",
-                    implied, mid)
+    # 遠月自己的防護（跟閘門互補：閘門驗的是報價鏈，這裡驗的是這一張）：
+    #   ① 價差 >1.5 個百分點——多半是合約寫錯年份或抓錯商品
+    #   ② 遠月高於當月＋0.40——市場完整定價超過一碼半的升息，在目前的
+    #      環境幾乎必然是遠月的陳舊報價；寧可退備援。
+    #      往下不設檻：偏降息只會把機率鎖在 0，那是正確行為。
+    if abs(implied - anchor) > 1.5:
+        log.warning("FedWatch 自算：遠月隱含 %.2f%% 與當月 %.2f%% 價差過大，"
+                    "不採用", implied, anchor)
         return None
-    if implied > mid + 0.40:
-        log.warning("FedWatch 自算：隱含 %.2f%% 超過中點＋0.40（%.2f%%），"
-                    "疑為陳舊報價，不採用", implied, mid)
+    if implied > anchor + 0.40:
+        log.warning("FedWatch 自算：遠月隱含 %.2f%% 超過當月＋0.40（%.2f%%），"
+                    "疑為陳舊報價，不採用", implied, anchor)
         return None
-    pct = round(max(0.0, min(100.0, (implied - mid) / 0.25 * 100)), 1)
-    log.info("FedWatch 自算：隱含 %.3f%% − 中點 %.3f%% → 升息一碼機率 %.1f%%",
-             implied, mid, pct)
+    pct = round(max(0.0, min(100.0, (implied - anchor) / 0.25 * 100)), 1)
+    log.info("FedWatch 自算：遠月 %s 隱含 %.3f%% − 當月 %s 隱含 %.3f%% "
+             "→ 升息一碼機率 %.1f%%（目標中點 %.3f%%，閘門通過）",
+             sym, implied, anchor_sym, anchor, pct, mid)
     # 把隱含利率一起帶回去：chip 上會標「隱含 X.XX%」，讓讀者（和我們）
     # 能一眼驗算，不會再出現「100% 但沒人知道為什麼」的黑箱。
     return pct, implied
+
+
+# ---------------------------------------------------------------------------
+# FedWatch 第二層：亞特蘭大聯準銀行 Market Probability Tracker（官方）
+# ---------------------------------------------------------------------------
+ATLANTA_URL = "https://www.atlantafed.org/cenfis/market-probability-tracker"
+
+
+def fetch_atlanta_fedwatch(cfg: dict | None = None, _get=None) -> float | None:
+    """
+    官方的市場隱含機率（SOFR 選擇權反推）。README 規劃清單裡的那一項。
+
+    資料端點的格式**還沒在 Actions 上實跑驗證過**（開發沙盒連不到
+    atlantafed.org），所以這一版走「先偵察、後啟用」：
+
+      沒設 atlanta_json_path 時——抓回應、把形狀寫進 log（content-type、
+      開頭 300 字元），一律回 None 退下一層。log 就是下一步適配格式的
+      依據。**不做模糊猜測**：對著未知格式用鍵名關鍵字亂抽一個數字，
+      跟編造沒有兩樣。
+
+      設了 atlanta_json_path（例：["probabilities", "hike25"]）之後——
+      照路徑取值，0–1 自動換算成百分比，超出 0–100 不採用。
+    """
+    cfg = cfg or {}
+    url = cfg.get("atlanta_mpt_url") or ATLANTA_URL
+    path = cfg.get("atlanta_json_path") or []
+    get = _get or (lambda u: requests.get(
+        u, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    try:
+        r = get(url)
+        r.raise_for_status()
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Atlanta Fed 機率抓取失敗（%s）", e)
+        return None
+    if not path:
+        ct = (getattr(r, "headers", {}) or {}).get("Content-Type", "?")
+        head = (getattr(r, "text", "") or "")[:300].replace("\n", " ")
+        log.info("Atlanta Fed 偵察：%s → %s；開頭：%s ……（對照這段把 "
+                 "atlanta_json_path 填進 config/focus.yaml 後啟用）",
+                 url, ct, head)
+        return None
+    try:
+        node = r.json()
+        for k in path:
+            node = node[int(k)] if isinstance(node, list) else node[k]
+        pct = float(node)
+        if 0.0 <= pct <= 1.0:
+            pct *= 100.0                           # 0–1 機率換算成百分比
+        if not 0.0 <= pct <= 100.0:
+            log.warning("Atlanta Fed 機率 %.2f 超出 0–100，不採用", pct)
+            return None
+        pct = round(pct, 1)
+        log.info("Atlanta Fed 機率：%s → %.1f%%", "/".join(map(str, path)), pct)
+        return pct
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Atlanta Fed 機率解析失敗（路徑 %s：%s）", path, e)
+        return None
 
 
 _FW_PROMPT = (
@@ -694,13 +841,18 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                            "src": fw_old.get("src", ""),
                            "implied": fw_old.get("implied")}
     else:
+        # 來源鏈：期貨價差（自算、自驗）→ Atlanta Fed（官方機率）→
+        # Gemini 擷取 → 沿用前值
         _fw = fedwatch_from_futures(rates_series, cfg)
         fw_src, implied = "futures", None
-        if _fw is None:
-            pct = fetch_fedwatch(env)
-            fw_src = "ai"
-        else:
+        if _fw is not None:
             pct, implied = _fw
+        else:
+            pct = fetch_atlanta_fedwatch(cfg)
+            fw_src = "atlanta"
+            if pct is None:
+                pct = fetch_fedwatch(env)
+                fw_src = "ai"
         prev = fw_old.get("pct")
         suspect = False
         if pct is None and prev is not None:

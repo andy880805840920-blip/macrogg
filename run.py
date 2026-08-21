@@ -625,7 +625,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         log.info("首次執行即使用 --only：仍產生首頁與存檔頁，避免全站連結失效")
 
     write("index.html", site.page(
-        "美國總經儀表板", "/", home_page.home_body(ctxs),
+        site.SITE_NAME, "/", home_page.home_body(ctxs),
         subtitle=f"最後更新 {clock.stamp()}",
         footer=home_page.home_footer(ctxs),
         banner=_banner(None)))

@@ -884,13 +884,14 @@ def _post_gemini(key: str, model: str, source_text: str,
     到的那條鏈：設定的模型推理吃光額度 → 換一個 lite → 那個 lite 回 404
     → 整段沒了。換過去的模型自己也會失敗，所以退路必須能接著往下走。
 
-    幾種失敗換模型的方式不一樣：
+    兩種失敗換模型的方式不一樣：
       404          這把金鑰叫不動它。記進 _DEAD，之後不再挑到。
       回覆被截斷    模型能用但推理吃光額度。改挑「預設不推理」的 lite。
-      5xx／timeout 單一模型的容量池擠爆。換一顆，不記 _DEAD。
-      429          免費層配額**逐模型**計，這顆的桶見底不代表別顆也是。
-                   換一顆，不記 _DEAD。
-    剩下的錯（400 參數錯、401 金鑰錯）換模型沒有意義，直接往上拋。
+    其餘的錯（400 參數錯、401 金鑰錯、429 限流、5xx 過載、timeout）
+    一律直接往上拋——**潤稿有組裝版可退**，立刻退回比等待與換模型划算，
+    也不會把使用者設定的模型悄悄換掉。需要拚到底的容錯（5xx／429／
+    timeout 都換模型、跨供應商備援）只有焦點段需要（它沒有組裝版可退），
+    那套政策住在 focus_today 自己的呼叫鏈裡，刻意不放這裡。
     """
     tried: list[str] = []
     cur, prefer_lite = model, False
@@ -912,35 +913,8 @@ def _post_gemini(key: str, model: str, source_text: str,
                 _DEAD.add(cur)
                 last_exc = e
                 log.warning("這把金鑰叫不動 %s（404），之後不再挑它", cur)
-            elif code in (500, 502, 503, 504):
-                # 過載／伺服器故障是**單一模型容量池**的問題（Actions 上
-                # 實測：flash-latest 連吃三個 503 的同時，其他模型正常）。
-                # _http 的短重試已經試過了，換一顆通常立刻通。
-                # 不記進 _DEAD——過載是暫時的，下次執行它多半又活了。
-                last_exc = e
-                log.warning("%s 過載（HTTP %d），換一顆模型再試", cur, code)
-            elif code == 429:
-                # 限流也換模型。先前的假設是「限流是整把金鑰的事，換誰都
-                # 一樣」——**錯了**：Gemini 免費層的配額是**逐模型**計的
-                # （每顆模型各自一桶 RPM／RPD）。Actions 上實測：
-                # flash-latest 等完 35＋70 秒還是連吃三個 429，整段退回
-                # 列標題——同一時間其他模型的配額桶是滿的。
-                # _http 已經按 Retry-After／35／70 秒等過同一顆模型，
-                # 還是 429 就代表這顆的桶見底（多半是每日額度），
-                # 該換桶了。一樣不記 _DEAD——明天額度會回來。
-                last_exc = e
-                log.warning("%s 限流（HTTP 429），換一顆模型再試", cur)
             else:
                 raise
-        except requests.RequestException as e:
-            # 連線層失敗（read timeout、斷線）＝「過載到不回應」——跟 5xx
-            # 是同一件事的兩種面貌（Actions 上實測：flash-latest 先 timeout
-            # 45 秒、重試吃 503）。_http 的短重試打的還是同一個擠爆的容量
-            # 池，多半還是 timeout；換一顆模型才是換池子。一樣不記 _DEAD。
-            # 注意順序：HTTPError 是 RequestException 的子類，這個分支
-            # 必須排在 HTTPError 之後，否則 404／400 全被當成連線失敗。
-            last_exc = e
-            log.warning("%s 連線失敗（%s），換一顆模型再試", cur, e)
 
         alt = _alt_model(key, tried, prefer_lite=prefer_lite)
         if not alt:

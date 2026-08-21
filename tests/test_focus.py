@@ -97,9 +97,11 @@ check("⑥b 沒命中時退回全部（邏輯）",
       ([h for h in [{"title": "C", "source": "路透"}]
         if any(w in h["source"].lower() for w in _srcs)] or hs3) == hs3)
 
-# ⑦ FedWatch 期貨自算：FedWatch／WIRP 同款公式
+# ⑦ FedWatch 期貨自算：**雙合約法**（遠月 − 當月價差；FedWatch／WIRP 同款）
 _RATES = {"DFEDTARL": [{"date": "2026-08-20", "value": 3.50}],
           "DFEDTARU": [{"date": "2026-08-20", "value": 3.75}]}
+_FWCFG = {"fedwatch_contract": "ZQF27.CBT",
+          "fedwatch_anchor_contract": "ZQQ26.CBT"}
 
 
 class _FakeYq:
@@ -113,25 +115,68 @@ class _FakeYq:
         return {"chart": {"result": [{"meta": {"regularMarketPrice": self._px}}]}}
 
 
-# 期貨價 96.31 → 隱含 3.69%；中點 3.625 → (3.69−3.625)/0.25 = 26%
-r = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.31))
-check("⑦ 期貨自算：96.31 → 26%（附隱含利率）",
+def _yq2(anchor_px, far_px):
+    """兩張合約各給一個價：URL 含 ZQQ26 給當月價、其餘給遠月價。"""
+    return lambda u: _FakeYq(anchor_px if "ZQQ26" in u else far_px)
+
+
+# 當月 96.375 → 隱含 3.625%（＝中點，閘門通過）；遠月 96.31 → 3.69%；
+# 價差 0.065 ÷ 0.25 = 26%
+r = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.31))
+check("⑦ 雙合約：價差 0.065 → 26%（附遠月隱含）",
       r is not None and abs(r[0] - 26.0) < 0.5 and abs(r[1] - 3.69) < 0.001, r)
-# 隱含低於中點（市場偏降息）→ 機率鎖在 0，不會出現負數
-r = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.60))
+# 遠月低於當月（市場偏降息）→ 機率鎖在 0，不會出現負數
+r = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.60))
 check("⑦b 偏降息時鎖 0", r is not None and r[0] == 0.0, r)
 # 報價離譜（抓錯商品）→ 不採用
 check("⑦c 報價超出 90–100 不採用",
-      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(85.0)) is None)
-# 隱含利率偏離中點 >1.5pp（合約年份寫錯）→ 不採用
-check("⑦d 偏離中點過大不採用",
-      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(94.0)) is None)
-# 抓不到目標區間 → 不硬算
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 85.0)) is None)
+# 價差 >1.5pp（合約年份寫錯）→ 不採用
+check("⑦d 價差過大不採用",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 94.0)) is None)
+# 抓不到目標區間 → 閘門沒有比對基準，不硬算
 check("⑦e 缺目標區間回 None",
-      ft.fedwatch_from_futures({}, {}, _get=lambda u: _FakeYq(96.31)) is None)
-# 100% 事故的回歸：隱含超過中點＋0.40（疑為遠月陳舊報價）→ 不採用退備援
-check("⑦f 隱含 4.10%（中點＋0.475）視為陳舊報價",
-      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(95.90)) is None)
+      ft.fedwatch_from_futures({}, _FWCFG, _get=_yq2(96.375, 96.31)) is None)
+# 100% 事故第一型的回歸：遠月超過當月＋0.40（陳舊報價）→ 不採用退備援
+check("⑦f 遠月隱含 4.10%（當月＋0.475）視為陳舊報價",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 95.90)) is None)
+# 100% 事故第二型的回歸：遠月「錯得不夠離譜」（隱含 4.00%，落在舊門檻
+# 之內）——當月合約的品質閘門要能整批擋下
+check("⑦h 當月隱含偏離中點 >0.15 → 報價鏈判壞、整批不採用",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.00, 96.00)) is None)
+check("⑦i 當月抓不到 → 無法驗證，不硬算",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(85.0, 96.31)) is None)
+# 當月合約代號按月份自動推
+check("⑦j 當月合約代號自動滾",
+      ft._anchor_symbol(dt.date(2026, 8, 21)) == "ZQQ26.CBT"
+      and ft._anchor_symbol(dt.date(2026, 12, 3)) == "ZQZ26.CBT"
+      and ft._anchor_symbol(dt.date(2027, 1, 5)) == "ZQF27.CBT")
+
+# ⑦k Atlanta Fed 第二層：沒設取值路徑時只偵察不猜數字；設了才啟用
+class _FakeAt:
+    def __init__(self, payload):
+        self._p = payload
+        self.headers = {"Content-Type": "application/json"}
+        self.text = str(payload)
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self._p
+
+
+_AT = {"probabilities": {"hike25": 0.26, "cut25": 0.31}}
+check("⑦k 沒設路徑 → 偵察後回 None（不猜數字）",
+      ft.fetch_atlanta_fedwatch({}, _get=lambda u: _FakeAt(_AT)) is None)
+check("⑦l 設了路徑 → 取值並把 0–1 換算成百分比",
+      ft.fetch_atlanta_fedwatch(
+          {"atlanta_json_path": ["probabilities", "hike25"]},
+          _get=lambda u: _FakeAt(_AT)) == 26.0)
+check("⑦m 超出 0–100 不採用",
+      ft.fetch_atlanta_fedwatch(
+          {"atlanta_json_path": ["probabilities", "hike25"]},
+          _get=lambda u: _FakeAt({"probabilities": {"hike25": 260}})) is None)
 
 
 # ⑦g 價格優先取日收盤（結算價），不是可能陳舊的「最新成交價」
@@ -148,13 +193,13 @@ class _FakeYq2:
 check("⑦g 優先用日收盤而非陳舊成交價",
       ft.fetch_zq_implied("ZQF27.CBT", _get=lambda u: _FakeYq2()) == 3.69)
 
-# ⑦h 跳動防護欄只防 AI 擷取：期貨自算的大變動是資訊（或正確值在取代
+# ⑦n 跳動防護欄只防 AI 擷取：期貨自算的大變動是資訊（或正確值在取代
 # 事故留下的壞前值），擋下的話 100% 會永遠取代不掉
-check("⑦h 期貨自算 22% vs 前值 100% → 接受新值",
+check("⑦n 期貨自算 22% vs 前值 100% → 接受新值",
       not ft._jump_suspect(22.0, 100.0, "futures"))
-check("⑦i AI 擷取 22% vs 前值 100% → 視為擷取錯誤",
+check("⑦o AI 擷取 22% vs 前值 100% → 視為擷取錯誤",
       ft._jump_suspect(22.0, 100.0, "ai"))
-check("⑦j 沒有前值就沒有跳動可言",
+check("⑦p 沒有前值就沒有跳動可言",
       not ft._jump_suspect(22.0, None, "ai"))
 
 # ⑧ Yahoo 即時殖利率：×10 慣例規範化、±bp 對昨收、異常值不採用
@@ -281,14 +326,14 @@ _pl._gemini_call = _orig_gc
 
 # ⑫ 跨供應商備援：Gemini 整條鏈死掉（例：整把金鑰的模型全數 429）時，
 # 設了 ANTHROPIC_API_KEY 就換 Anthropic 接手，數字鎖照樣把關
-_orig_pg, _orig_pa = _pl._post_gemini, _pl._post_anthropic
+_orig_pg, _orig_pa = ft._post_gemini_hardy, _pl._post_anthropic
 
 
 def _pg_boom(*a, **k):
     raise RuntimeError("全模型 429")
 
 
-_pl._post_gemini = _pg_boom
+ft._post_gemini_hardy = _pg_boom
 _pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
                        "財政部調整發債結構，市場關注十年期殖利率。")
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
@@ -310,7 +355,67 @@ _pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"ANTHROPIC_API_KEY": "A"})
 check("⑫d 只有 Anthropic 金鑰也能產出", t != "" and s == "model-content", s)
-_pl._post_gemini, _pl._post_anthropic = _orig_pg, _orig_pa
+ft._post_gemini_hardy, _pl._post_anthropic = _orig_pg, _orig_pa
+
+# ⑬ 焦點專用呼叫鏈 _post_gemini_hardy：429／5xx／timeout 都換模型再試。
+# 潤稿的 polish._post_gemini 已還原成「這些錯直接退組裝版」（見
+# test_polish 145／147）——拚到底的政策只住在焦點這條鏈裡。
+_LIST = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-flash-lite-latest"]
+_orig_gm, _orig_gc2 = _pl._gemini_models, _pl._gemini_call
+_pl._gemini_models = lambda key: _LIST
+
+
+def _he(code):
+    e = _pl.requests.HTTPError(str(code))
+
+    class _R:
+        status_code = code
+        headers = {}
+    e.response = _R()
+    return e
+
+
+def _mk_chain(fails):
+    seq = []
+
+    def call(key, model, text, system=None, think=True, temperature=None):
+        seq.append(model)
+        if model in fails:
+            raise fails[model]
+        return "好文"
+    return call, seq
+
+
+for _name, _exc in [("⑬ 429 換一顆模型接著跑（配額逐模型計）", _he(429)),
+                    ("⑬b 503 換一顆模型", _he(503)),
+                    ("⑬c timeout 換一顆模型",
+                     _pl.requests.ConnectionError("Read timed out"))]:
+    _pl._DEAD.clear()
+    _call, _seq = _mk_chain({"gemini-flash-latest": _exc})
+    _pl._gemini_call = _call
+    _out = ft._post_gemini_hardy("k", "gemini-flash-latest", "文", "sys")
+    check(_name, _out == "好文" and len(_seq) == 2, str(_seq))
+
+# 400（參數錯）不換——換誰都一樣，直接往上拋
+_pl._DEAD.clear()
+_call, _seq = _mk_chain({"gemini-flash-latest": _he(400)})
+_pl._gemini_call = _call
+try:
+    ft._post_gemini_hardy("k", "gemini-flash-latest", "文", "sys")
+    _hit = False
+except _pl.requests.HTTPError:
+    _hit = True
+check("⑬d 400 直接往上拋、只呼叫一次", _hit and len(_seq) == 1, str(_seq))
+
+# 404 換模型並記黑名單（叫不動是事實，記下來省之後的額度）
+_pl._DEAD.clear()
+_call, _seq = _mk_chain({"gemini-flash-latest": _he(404)})
+_pl._gemini_call = _call
+_out = ft._post_gemini_hardy("k", "gemini-flash-latest", "文", "sys")
+check("⑬e 404 換模型且記黑名單",
+      _out == "好文" and "gemini-flash-latest" in _pl._DEAD, str(_seq))
+_pl._DEAD.clear()
+_pl._gemini_models, _pl._gemini_call = _orig_gm, _orig_gc2
 
 print()
 print("全部通過" if ok else "有失敗")

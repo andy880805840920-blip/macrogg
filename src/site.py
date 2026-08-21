@@ -15,6 +15,11 @@ import datetime as dt
 
 from . import clock
 
+# 站名與標語。站名進每一頁的 <title> 後綴與首頁大標；
+# 標語只出現在首頁大標下方一行（小副標）。
+SITE_NAME = "MACRO GG"
+TAGLINE = "明天過後，帶你看總經"
+
 # 導覽列定義：(路徑, 名稱, 是否已完成)
 NAV = [
     ("/", "總覽", True),
@@ -92,6 +97,10 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 .h1-home{color:inherit;text-decoration:none;display:inline-block;
   padding:6px 0;margin:-6px 0}
 .h1-home:hover{color:var(--series-1)}
+/* 首頁站名下的一句標語。比 .sub 醒目一階（它是品牌的一部分，不是
+   中繼資料），但遠小於 h1——「MACRO GG」是大標、這句是小副標。 */
+.tagline{color:var(--text-secondary);font-size:14px;font-weight:600;
+  margin-top:3px;line-height:1.55}
 .sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.55}
 
 
@@ -2188,6 +2197,12 @@ def page(title: str, active: str, body: str, subtitle: str = "",
     # 屬性順序也可能改變，用轉換前的原文抓最穩。
     anchors = _anchor_nav(body)
     body = _insert_tools(_collapse_sections(body))
+    # <title>：分頁是「頁名｜站名」；首頁不要「MACRO GG｜MACRO GG」，
+    # 用標語當後綴。
+    doc_title = (f"{SITE_NAME}｜{TAGLINE}" if title == SITE_NAME
+                 else f"{title}｜{SITE_NAME}")
+    tagline = (f'<div class="tagline">{TAGLINE}</div>'
+               if active == "/" else "")
     return f"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -2195,7 +2210,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="color-scheme" content="light">
-<title>{esc(title)}｜美國總經儀表板</title>
+<title>{esc(doc_title)}</title>
 <style>{CSS}</style>
 {_SPECULATION}
 </head>
@@ -2204,6 +2219,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 
 <header class="top">
   <h1>{_h1(title, active)}</h1>
+  {tagline}
   <div class="sub">{subtitle}</div>
 </header>
 
