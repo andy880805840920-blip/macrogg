@@ -97,6 +97,32 @@ def series_ids(cfg: dict, groups: tuple[str, ...]) -> tuple[list, dict, dict]:
     return out, labels, inverts
 
 
+def infl_series_ids(cfg: dict) -> tuple[list, dict, dict]:
+    """
+    通膨模組的抓取清單 ＝ 各 group 的序列 ＋ **推導原料**。
+
+    supercore_derive 的兩條原料不屬於任何 group，而 series_ids 只掃
+    group——這正是 Actions 上「核心服務除住房推導失敗」**每一次**都出現
+    的根因：當初把九宮格那格從 CUSR0000SASLE 換成推導序列 CPISUPERCORE
+    （derived: true，正確地不去抓）時，原料 SASLE 也從 cpi_components
+    移走了，從此沒有任何地方把它放進抓取清單。線上每次執行 series 裡
+    都沒有它 → 推導必失敗 → supercore KPI、黏性訊號、薪資傳導、
+    核心 PCE 成分法整串連鎖缺值。更陰的是**離線模式的示範資料有這條**，
+    本機怎麼跑都是好的，只有線上壞——看起來就像隨機的抓取失敗。
+    住房（CUSR0000SAH1）本來就在 cpi_components 裡，去重後不會抓兩次。
+    """
+    ids, labels, inverts = series_ids(cfg, INFL_GROUPS)
+    sd = cfg.get("supercore_derive") or {}
+    for key, lab in (("core_services", "核心服務含住房（推導原料）"),
+                     ("shelter", "住房（推導原料）")):
+        sid = sd.get(key)
+        if sid and sid not in ids:
+            ids.append(sid)
+            labels[sid] = lab
+            inverts[sid] = False
+    return ids, labels, inverts
+
+
 LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
                 "claims", "reference", "special_series", "industries")
 INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
@@ -680,7 +706,7 @@ def main() -> int:
     if want("inflation"):
         cfg = load_config("inflation.yaml")
         if cfg:
-            ids, labels, inverts = series_ids(cfg, INFL_GROUPS)
+            ids, labels, inverts = infl_series_ids(cfg)
             log.info("通膨模組：%d 個序列", len(ids))
             series, _, failed = gather_fred(args.offline, ids, "inflation")
             all_series.update(series)
