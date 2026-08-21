@@ -539,6 +539,12 @@ YQ_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
 # 的機率就改 ZQF28.CBT）。
 DEFAULT_ZQ = "ZQF27.CBT"
 
+# FedWatch 的算法版本。state 的當日快取只在版本一致時沿用——
+# 修了算法之後當天的下一次執行就重算，不必等到隔天。
+# 1＝單合約 vs FRED 中點；2＝雙合約價差＋品質閘門；
+# 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核
+FW_METHOD = 3
+
 
 def _last_value(rows) -> float | None:
     rows = [r for r in (rows or []) if r.get("value") is not None]
@@ -887,9 +893,15 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     today = clock.today().isoformat()
 
     # ---- FedWatch：一天最多算一次；跳動 >20pp 視為擷取錯誤沿用前值 ----
-    # 來源三層：期貨自算 → Gemini 擷取 → 沿用前值（見模組說明）。
+    # 來源鏈：期貨自算 ×交叉檢核× Atlanta Fed → Gemini 擷取 → 沿用前值。
+    #
+    # 「一天最多算一次」要跟**算法版本**綁在一起：修了算法、當天稍晚的
+    # 排程卻沿用早上用舊算法算的值，修正要到隔天才生效——100% 事故
+    # 實際發生過「修完 push、下一次執行畫面還是 100%」正是這個原因。
+    # state 記下算出該值的方法版本，不一致就當天重算。
     fw_old = state.get("fedwatch") or {}
-    if fw_old.get("date") == today and fw_old.get("pct") is not None:
+    if (fw_old.get("date") == today and fw_old.get("pct") is not None
+            and fw_old.get("method") == FW_METHOD):
         out["fedwatch"] = {"pct": fw_old["pct"],
                            "delta_pp": fw_old.get("delta_pp"),
                            "suspect": bool(fw_old.get("suspect")),
@@ -918,7 +930,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                         - dt.date.fromisoformat(fw_old.get("date", ""))).days
             except (ValueError, TypeError):
                 _age = 99
-            if _age <= 4:
+            # 舊算法算出來的值不沿用：100% 事故的值掛著「沿用」標籤
+            # 多活四天，比顯示「—」更糟。
+            if _age <= 4 and fw_old.get("method") == FW_METHOD:
                 out["fedwatch"] = {"pct": prev, "delta_pp": None,
                                    "suspect": False,
                                    "src": fw_old.get("src", ""),
@@ -945,7 +959,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                "implied": implied}
             state["fedwatch"] = {"pct": pct, "date": today,
                                  "delta_pp": delta, "suspect": suspect,
-                                 "src": fw_src, "implied": implied}
+                                 "src": fw_src, "implied": implied,
+                                 "method": FW_METHOD}
 
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →
     #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----
