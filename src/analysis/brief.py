@@ -205,11 +205,24 @@ _NEW_MAX = 2
 #
 # 所以用允許清單而不是排除清單：沒列到的一律不算「本次新增」。
 # 寧可少講一項，也不要把別的發布日的數字冠上「本次」。
-_RELEASE_KEYS = {
-    "labor": {"nfp", "nfp_3m", "u3", "lfpr", "ahe_yoy"},
-    # cpi_yoy 排在前面只是為了讀起來順；真正的排序是按變動幅度。
-    # 這裡**不能**放 core_pce（BEA 月底發布）與 exp5y5y（每日）。
-    "inflation": {"cpi_yoy", "core_cpi_yoy", "core_cpi_3m", "supercore"},
+# 每一種發布：對應變化引擎的哪個單位、准講哪些指標、報告名稱怎麼寫。
+# 內容白名單的用意：CPI 日不講 PCE（那是月底另一份發布）、
+# 就業報告日不講失業金（那是每週四自己的一份）。
+_RELEASES = {
+    "labor": {"module": "labor", "label": "就業報告",
+              "keys": {"nfp", "nfp_3m", "u3", "lfpr", "ahe_yoy"}},
+    "inflation": {"module": "inflation", "label": " CPI",
+                  "keys": {"cpi_yoy", "core_cpi_yoy", "core_cpi_3m",
+                           "supercore"}},
+    # PCE 由 BEA 月底發布：推估值換成實際值、九宮格通膨軸重判——
+    # 對讀者是一個月裡最值得知道的更新之一
+    "pce": {"module": "inflation", "label": " PCE", "keys": {"core_pce"}},
+    "claims": {"module": "claims", "label": " 失業金申請",
+               "keys": {"ic_ma", "cc"}},
+    "jolts": {"module": "jolts", "label": " JOLTS",
+              "keys": {"openings", "quits", "layoffs", "hires"}},
+    # FOMC 沒有數字指標，句子另組（見 _whats_new 的 fomc 段）
+    "fomc": {"module": "fomc", "label": " FOMC 會議", "keys": set()},
 }
 
 
@@ -219,7 +232,9 @@ def _fmt_move(m: dict) -> str:
     to, frm = m.get("to"), m.get("from")
     if to is None or frm is None:
         return ""
-    return f'{m.get("label", "")} {to:.1f}{unit}（上月 {frm:.1f}{unit}）'
+    # 對照基準的量詞跟著單位的節奏走：失業金與市場是週輪替
+    prev = "上週" if m.get("module") in ("claims", "market") else "上月"
+    return f'{m.get("label", "")} {to:.1f}{unit}（{prev} {frm:.1f}{unit}）'
 
 
 def _whats_new(ctxs: dict) -> str:
@@ -248,27 +263,46 @@ def _whats_new(ctxs: dict) -> str:
     if not fresh_months:
         return ""
 
-    fresh = []                                     # [(模組鍵, 中文名, 期別字串)]
-    for key, name in (("labor", "就業"), ("inflation", "物價")):
-        month = fresh_months.get(key)
-        if not month:
+    def _vint(key: str, raw: str) -> str:
+        """期別 → 人話：月份「7 月」、週「週結 8/15」、會議日「7/29」。"""
+        raw = raw or ""
+        parts = raw.split("-")
+        try:
+            if len(parts) == 3:
+                d = f"{int(parts[1])}/{int(parts[2])}"
+                return f"週結 {d}" if key == "claims" else d
+            if len(parts) == 2:
+                return _month(raw)
+        except ValueError:
+            pass
+        return raw
+
+    fresh = []                                     # [(發布鍵, 期別字串)]
+    for key, cfg_r in _RELEASES.items():
+        vint = fresh_months.get(key)
+        if not vint:
             continue
-        ctx = ctxs.get(key) or {}
-        m = _month(month)
-        tag = "（速報）" if ctx.get("provisional") else ""
-        # 「就業 7 月、物價 7 月」是資料庫的講法，不是人的講法。
-        # 寫成「7 月就業報告」「7 月 CPI」——月份在前、講的是哪一份報告。
-        label = {"labor": "就業報告", "inflation": " CPI"}[key]
-        fresh.append((key, name, f"{m}{label}{tag}" if m else label.strip()))
+        tag = ""
+        if key in ("labor", "inflation"):
+            tag = ("（速報）" if (ctxs.get(key) or {}).get("provisional")
+                   else "")
+        m = _vint(key, vint)
+        label = cfg_r["label"]
+        fresh.append((key, f"{m}{label}{tag}" if m else label.strip()))
     if not fresh:
         return ""
 
     changes = ctxs.get("changes")
     moves = list(getattr(changes, "metric_moves", None) or [])
-    keys = {k for k, _, _ in fresh}
+    # 每一種發布只准講自己的指標：發布鍵 → (變化引擎單位, 白名單)。
+    # 同一單位可能對到兩種發布（CPI 與 PCE 都在 inflation），
+    # 白名單就是把它們分開的東西。
+    _allowed = set()
+    for key, _ in fresh:
+        r = _RELEASES[key]
+        _allowed |= {(r["module"], k) for k in r["keys"]}
     mine = [m for m in moves
-            if m.get("module") in keys
-            and m.get("key") in _RELEASE_KEYS.get(m.get("module"), set())]
+            if (m.get("module"), m.get("key")) in _allowed]
     # ---- 排序：動得最多的排前面，但「多」要先換成同一把尺 ----
     #
     # 先前是 `sort(key=lambda m: -abs(m["delta"]))`——**直接比原始變動量，
@@ -293,21 +327,33 @@ def _whats_new(ctxs: dict) -> str:
     # 光排序還不夠：兩個模組同時是新的時候，前兩名仍可能都來自同一邊。
     # 讀者剛在新聞上看到 CPI，開頭句卻整句在講就業——那不是摘要，是漏報。
     # 所以先從每個模組各取它自己的第一名，再按幅度填滿剩下的名額。
+    # 名額：平常 2 個；同一天有三種以上發布時放寬到「每種至少一個」
+    #（先前固定 2 會讓第三種發布被擠掉，變成漏報）。
+    _limit = max(_NEW_MAX, len(fresh))
     picked, seen_mod = [], set()
     for m in mine:
         if m.get("module") not in seen_mod:
             picked.append(m)
             seen_mod.add(m.get("module"))
     for m in mine:
-        if len(picked) >= _NEW_MAX:
+        if len(picked) >= _limit:
             break
         if m not in picked:
             picked.append(m)
     picked.sort(key=lambda m: -_mag(m))            # 名單定了再照幅度排序
-    picked = picked[:_NEW_MAX]
+    picked = picked[:_limit]
 
-    head = "與 ".join(p for _, _, p in fresh)
+    head = "與 ".join(p for _, p in fresh)
     nums = [x for x in (_fmt_move(m) for m in picked) if x]
+    # FOMC 沒有數字指標，句子從 ctx 另組：做了什麼＋客觀訊號分數
+    if any(k == "fomc" for k, _ in fresh):
+        fom = ctxs.get("fomc") or {}
+        _act = ((fom.get("obj_parts") or {}).get("action_label") or "")
+        _obj = (fom.get("shift") or {}).get("objective")
+        _ftxt = (f"本次{_act}" if _act else "聲明與投票已更新")
+        if _obj is not None:
+            _ftxt += f"、客觀訊號 {_obj:+.2f}"
+        nums.insert(0, _ftxt)
     if not nums:
         # 有新資料但沒有任何指標動超過門檻——那本身就是資訊。
         return f"本次更新：{head}的新數據出爐，各項指標變動都在雜訊範圍內。"
@@ -396,7 +442,21 @@ def _inflation(s, bands: dict | None, state: str,
         return ""
     yoy, m3 = s.pce_core_yoy, getattr(s, "pce_core_3m", None)
     pm = pce_month or month
-    head = f"{pm}核心 PCE {_pct(yoy)}" if pm else f"核心 PCE {_pct(yoy)}"
+    # 照傳導順序把整條鏈講完：CPI（含核心）→ 上游核心 PPI → PCE。
+    # 先前只講 PCE——那是九宮格在用的數字，但 CPI 才是新聞當天
+    # 讀者在對的數字，PPI 是它的上游，三者缺兩個等於敘事鏈斷頭。
+    cpi, core = getattr(s, "headline_yoy", None), getattr(s, "core_yoy", None)
+    ppi = getattr(s, "ppi_core_yoy", None)
+    chain = ""
+    if cpi is not None:
+        chain = (f"{month} CPI 年增 {_pct(cpi)}" if month
+                 else f"CPI 年增 {_pct(cpi)}")
+        if core is not None:
+            chain += f"（核心 {_pct(core)}）"
+        if ppi is not None:
+            chain += f"、上游核心 PPI {_pct(ppi)}"
+        chain += "；"
+    head = chain + (f"{pm}核心 PCE {_pct(yoy)}" if pm else f"核心 PCE {_pct(yoy)}")
     mo = ""
     if m3 is not None:
         # 「三月年化」同樣會被讀成 March。講的是最近三個月換算成年率。

@@ -210,6 +210,8 @@ def _fomc_body_full(d: dict) -> str:
     # 「較上次」「高於近 4 次平均」這類比較走 sub（收進「近 5 期與比較基準」）
     # ——跟勞動、通膨頁的 KPI 卡同一套讀法。
     _act = (d.get("obj_parts") or {}).get("action_label") or ""
+    # en 主標：跟勞動、通膨頁的 KPI 卡同一套長相（英文為主、中文副標），
+    # 對照聯準會聲明與英文報導用。
     kpis = [_kpi_card(
         "政策利率目標區間", d.get("rate_range", "—"),
         "",
@@ -218,7 +220,8 @@ def _fomc_body_full(d: dict) -> str:
            "　⚠️ 本次沒有取得 FRED 的 DFEDTARL／DFEDTARU，改用設定檔的後備值。"
            "期間若有調整過利率，這個區間與下方「市場定價 vs 聯準會」的"
            "判定都可能已經過時。"),
-        flag=(f"本次{_act}" if _act else None))]
+        flag=(f"本次{_act}" if _act else None),
+        en="Fed Funds Target Range")]
 
     _sup = vote.get("stated_support")
     _dis = vote.get("dissents") or []
@@ -242,7 +245,7 @@ def _fomc_body_full(d: dict) -> str:
             esc(dctx.get("note", "")) if dctx else "",
             # 「白紙黑字、權重最高」的道理主場在頁尾判讀說明
             "委員用投票表達不同意——先看票數，再看每張票主張的方向。",
-            flag=_flag, flag_kind=_fk))
+            flag=_flag, flag_kind=_fk, en="FOMC Vote"))
 
     # 客觀訊號給一條歷次走勢：五次會議的分數是現成的，
     # 光看 +6.00 不知道這是常態還是跳動
@@ -252,7 +255,8 @@ def _fomc_body_full(d: dict) -> str:
         f"較上次 {sh.get('objective_delta', 0):+.2f}",
         "政策行動、反對票與聲明點名的風險方向合計。"
         "正數＝偏升息方向，負數＝偏降息方向。",
-        spark_html=(charts.sparkline(_hist, zero_line=True) if len(_hist) > 1 else "")))
+        spark_html=(charts.sparkline(_hist, zero_line=True) if len(_hist) > 1 else ""),
+        en="Objective Signal Score"))
 
     if nm:
         # 會議日期是這張卡最重要的資訊，不能收合——放 chips 常駐。
@@ -261,11 +265,12 @@ def _fomc_body_full(d: dict) -> str:
             (f'之後：{nm["later"][0]}' if nm.get("later") else ""),
             "在那之前，這份聲明就是委員會的官方立場——"
             "距離下次會議越遠，它主導市場的時間越長。",
-            flag=nm["sub"]))
+            flag=nm["sub"], en="Next Meeting"))
     elif mkt:
         kpis.append(_kpi_card(
             "市場定價 vs 現在", mkt["display"], "2 年期公債殖利率減政策利率中值",
-            mkt["text"] + "。這是粗略代理，不是會議層級的機率。"))
+            mkt["text"] + "。這是粗略代理，不是會議層級的機率。",
+            en="Market Pricing vs Now"))
 
     kpi_html = "".join(kpis)
 
@@ -465,7 +470,7 @@ def _fomc_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="kpi" data-sum="{_kpi_sum}">關鍵數字</h2>
+    <h2 id="kpi" data-open="1" data-sum="{_kpi_sum}">關鍵數字</h2>
     <div class="grid g4 inner">{kpi_html}</div>
   </div>
 </div>

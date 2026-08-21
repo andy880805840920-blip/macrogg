@@ -29,18 +29,20 @@ from .. import clock
 # series_id → (中文名, 頻率)
 # 只列「過期會讓頁面結論失效」的核心序列。參照用、背景用的序列不列，
 # 那些即使舊一點也不影響任何一句結論，列進來只會製造雜訊。
-WATCH: dict[str, tuple[str, str]] = {
-    "PAYEMS": ("非農就業", "monthly"),
-    "UNRATE": ("失業率", "monthly"),
-    "CE16OV": ("家庭調查就業", "monthly"),
-    "CIVPART": ("勞動參與率", "monthly"),
-    "ICSA": ("初領失業金", "weekly"),
-    "CCSA": ("續領失業金", "weekly"),
-    "CPIAUCSL": ("CPI", "monthly"),
-    "CPILFESL": ("核心 CPI", "monthly"),
-    "PCEPILFE": ("核心 PCE", "monthly"),
-    "DGS10": ("10 年期公債", "daily"),
-    "DGS30": ("30 年期公債", "daily"),
+# 第三欄＝這條序列影響哪個模組的結論。停更警告只掛在**相關的那一頁**
+# （加上首頁）——停更的是 DGS30 時，勞動頁的讀者不需要看到它。
+WATCH: dict[str, tuple[str, str, str]] = {
+    "PAYEMS": ("非農就業", "monthly", "labor"),
+    "UNRATE": ("失業率", "monthly", "labor"),
+    "CE16OV": ("家庭調查就業", "monthly", "labor"),
+    "CIVPART": ("勞動參與率", "monthly", "labor"),
+    "ICSA": ("初領失業金", "weekly", "labor"),
+    "CCSA": ("續領失業金", "weekly", "labor"),
+    "CPIAUCSL": ("CPI", "monthly", "inflation"),
+    "CPILFESL": ("核心 CPI", "monthly", "inflation"),
+    "PCEPILFE": ("核心 PCE", "monthly", "inflation"),
+    "DGS10": ("10 年期公債", "daily", "rates"),
+    "DGS30": ("30 年期公債", "daily", "rates"),
 }
 
 # 頻率 → 容忍幾天沒有新資料。已經把發布時差算進去。
@@ -61,7 +63,7 @@ def check(series: dict[str, list[dict]], today: dt.date | None = None) -> list[d
     """
     today = today or clock.today()
     stale = []
-    for sid, (label, freq) in WATCH.items():
+    for sid, (label, freq, module) in WATCH.items():
         rows = series.get(sid) or []
         if not rows:
             continue
@@ -73,20 +75,34 @@ def check(series: dict[str, list[dict]], today: dt.date | None = None) -> list[d
         days = (today - last).days
         if days > tol:
             stale.append({"id": sid, "label": label, "freq": freq,
-                          "last": last.isoformat(), "days": days,
-                          "tolerance": tol})
+                          "module": module, "last": last.isoformat(),
+                          "days": days, "tolerance": tol})
     stale.sort(key=lambda x: x["days"] - x["tolerance"], reverse=True)
     return stale
 
 
-def banner_html(stale: list[dict], esc) -> str:
-    """過期警告條。沒有過期就回傳空字串，不佔版面。"""
+def banner_html(stale: list[dict], esc, page: str | None = None) -> str:
+    """
+    過期警告條。沒有過期就回傳空字串，不佔版面。
+
+    page 指定這是哪個模組的頁面：只顯示**影響該頁結論**的序列，
+    其他模組的停更不出現（那是別頁的事）。page=None＝首頁（入口），
+    任何模組停更都顯示。fomc／scenario 等頁不呼叫就不會有。
+
+    版面收成一行 summary（跟離線免責同樣的處理）：警告要看得到，
+    但不該每一頁都用一整塊展開的框把第一張卡推到摺線以下。
+    """
+    if page is not None:
+        stale = [s for s in stale if s.get("module") == page]
     if not stale:
         return ""
     items = "、".join(
         f"{esc(s['label'])}（最新 {esc(s['last'])}，已 {s['days']} 天沒有新資料）"
         for s in stale[:4])
     more = f"，另有 {len(stale) - 4} 條" if len(stale) > 4 else ""
-    return (f'<div class="banner"><b>⚠ 有資料序列停止更新</b>：{items}{more}。'
-            f'頁面上的結論仍然是照最後一筆資料算的——'
-            f'在來源恢復之前，這些數字不代表當前狀況。</div>')
+    head = "、".join(esc(s["label"]) for s in stale[:2]) + (
+        f" 等 {len(stale)} 條" if len(stale) > 2 else "")
+    return (f'<details class="banner stale"><summary><b>⚠ 資料停止更新</b>'
+            f'：{head}——結論仍照最後一筆資料算，點開看明細</summary>'
+            f'<div class="banner-body">{items}{more}。'
+            f'在來源恢復之前，這些數字不代表當前狀況。</div></details>')

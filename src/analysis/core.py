@@ -97,12 +97,22 @@ def mom_pct(rows: Sequence[dict]) -> float | None:
 
 
 def annualized(rows: Sequence[dict], months: int) -> float | None:
-    """近 N 個月的年化變動率（%）。"""
+    """
+    近 N 個月的年化變動率（%）。
+
+    除數跟 yoy() 一樣**用日期找，不是往前數 N 列**：序列多一筆或少一筆
+    觀測時，數列數會整個偏一格，而結果看起來完全正常——yoy() 就真的
+    發生過（核心 CPI 印成 2.7%、官方是 2.5%）。所有動能數字（核心 3M、
+    黏性階梯、住房 3M、PPI 3M）都流經這裡，值得同一套防護。
+    找不到正好 N 個月前那一筆（週頻、日頻）才退回數列數。
+    """
     if len(rows) <= months:
         return None
     cur = rows[-1]["value"]
-    old = rows[-1 - months]["value"]
-    if old <= 0:
+    old = _at_date(rows, _shift_months(rows[-1]["date"], months))
+    if old is None:
+        old = rows[-1 - months]["value"]
+    if old is None or old <= 0:
         return None
     return ((cur / old) ** (12 / months) - 1) * 100
 
@@ -196,11 +206,14 @@ def yoy_series(rows: Sequence[dict], periods: int = 12) -> list[dict]:
 
 
 def annualized_series(rows: Sequence[dict], months: int = 3) -> list[dict]:
-    """近 N 個月年化的序列，比年增率更早反映轉折。"""
+    """近 N 個月年化的序列，比年增率更早反映轉折。除數用日期找（理由見 annualized()）。"""
+    by_date = {r["date"]: r["value"] for r in rows}
     out = []
     for i in range(months, len(rows)):
-        old = rows[i - months]["value"]
-        if old > 0:
+        old = by_date.get(_shift_months(rows[i]["date"], months))
+        if old is None:
+            old = rows[i - months]["value"]
+        if old and old > 0:
             out.append({"date": rows[i]["date"],
                         "value": ((rows[i]["value"] / old) ** (12 / months) - 1) * 100})
     return out

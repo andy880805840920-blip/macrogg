@@ -29,11 +29,21 @@ def check(name: str, cond: bool, detail: str = "") -> None:
 
 
 def idx(monthly_pct: list[float], start: float = 100.0) -> list[dict]:
-    """由「每月漲幅（%）」生出指數序列。最舊的在前面。"""
+    """
+    由「每月漲幅（%）」生出指數序列。最舊的在前面。
+
+    日期要跨年遞增、不能重複：annualized() 的除數是用日期找的
+    （防「多一筆少一筆整條偏移」），同一個日期出現兩次會讓對月
+    對到錯的那一筆——真實的月頻序列不會有重複月份，fixture 也不准有。
+    """
     out, v = [], start
-    for i, m in enumerate(monthly_pct):
-        v *= (1 + m / 100)
-        out.append({"date": f"2021-{i % 12 + 1:02d}-01", "value": round(v, 4)})
+    y, m = 2021, 1
+    for pct in monthly_pct:
+        v *= (1 + pct / 100)
+        out.append({"date": f"{y:04d}-{m:02d}-01", "value": round(v, 4)})
+        m += 1
+        if m > 12:
+            m, y = 1, y + 1
     return out
 
 
@@ -88,8 +98,13 @@ b = build._stickiness_block(S())
 check("⑪ 加速時判為偏鷹", b["lean"] == "hawkish", b["lean"])
 check("⑫ 摺疊摘要帶方向與月數",
       "重新加速" in b["sum"] and "至少" in b["sum"], b["sum"])
-check("⑬ 階梯是六格（CPI 三格＋PCE 三格）", len(b["stats"]) == 6,
-      str(len(b["stats"])))
+# 階梯改為每個指數一列（12→6→3 附箭頭）：手機兩欄折行不再把
+# CPI 與 PCE 混在同一列。驗兩列各帶齊三個值。
+check("⑬ 階梯是兩列（CPI＋PCE），各帶 12/6/3",
+      len(b["ladders"]) == 2 and all(
+          r["v12"] is not None and r["v6"] is not None and r["v3"] is not None
+          for r in b["ladders"]),
+      str([r["label"] for r in b["ladders"]]))
 check("⑭ CPI 高於 PCE 超過 0.5 → 講背離並指向 PCE",
       "以核心 PCE 為準" in b["diverge"] or "PCE 那一側為準" in b["diverge"],
       b["diverge"][:40])

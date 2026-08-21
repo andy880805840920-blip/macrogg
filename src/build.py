@@ -263,6 +263,63 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "lfpr_flag_kind": "",
     }
 
+    # ---------------- KPI 的水準／本期 chips ----------------
+    # 跟通膨頁的 KPI 卡同一套兩枚制：「水準」對一個外部錨、「本期」看變化。
+    # 全部規則判定，錨都是頁面上已經在用的既有標準，不另立新門檻：
+    #   非農　　水準對損益兩平線（bkev.verdict）；動能比三月均對一年均（±2 萬人）
+    #   失業率　水準對 FOMC 長期區間（高於＝轉弱利降息）；本期較上月（±0.05pp）
+    #   時薪　　水準對 3% 通膨相容線（±0.25pp，同通膨頁的中性帶）；本期較上月年增（±0.1pp）
+    #   參與率　沒有外部錨，只標本期；方向的鷹鴿意義不單一（下降既可能是
+    #   　　　　高齡化也可能是氣餒），一律中性
+    _u_lo = value_at(series.get("UNRATECTLLR", []))
+    _u_hi = value_at(series.get("UNRATECTHLR", []))
+    _nl = []
+    if bkev.verdict == "above":
+        _nl.append(("水準：高於損益兩平線", "hawkish"))
+    elif bkev.verdict == "below":
+        _nl.append(("水準：低於損益兩平線", "dovish"))
+    elif bkev.verdict == "balanced":
+        _nl.append(("水準：接近損益兩平線", "neutral"))
+    if ma3 is not None and ma12 is not None:
+        _dm = ma3 - ma12                     # 千人
+        if abs(_dm) < 20:
+            _nl.append(("本期：動能持平", "neutral"))
+        else:
+            _nl.append((f"本期：動能{'轉強' if _dm > 0 else '轉弱'}",
+                        "hawkish" if _dm > 0 else "dovish"))
+    _ul = []
+    if u3_now is not None and _u_lo and _u_hi:
+        if u3_now > _u_hi:
+            _ul.append(("水準：高於 FOMC 長期區間", "dovish"))
+        elif u3_now < _u_lo:
+            _ul.append(("水準：低於長期區間（偏緊）", "hawkish"))
+        else:
+            _ul.append(("水準：FOMC 長期區間內", "neutral"))
+    _du3 = diff(u3)
+    if _du3 is not None:
+        _ul.append(("本期：持平", "neutral") if abs(_du3) < 0.05 else
+                   (f"本期：{'上升' if _du3 > 0 else '下降'} {abs(_du3):.1f}",
+                    "dovish" if _du3 > 0 else "hawkish"))
+    _al = []
+    if ahe_yoy is not None:
+        _ga = ahe_yoy - 3.0
+        _al.append(("水準：接近 2% 通膨相容區", "neutral") if abs(_ga) <= 0.25
+                   else (("水準：高於 2% 通膨相容區", "hawkish") if _ga > 0
+                         else ("水準：低於通膨相容區", "dovish")))
+    _pa = yoy(ahe[:-1]) if len(ahe) > 13 else None
+    if ahe_yoy is not None and _pa is not None:
+        _da = ahe_yoy - _pa
+        _al.append(("本期：持平", "neutral") if abs(_da) < 0.1 else
+                   (f"本期：{'上升' if _da > 0 else '下降'} {abs(_da):.1f}",
+                    "hawkish" if _da > 0 else "dovish"))
+    _dlf = diff(lfpr)
+    kpi_lean = {
+        "nfp": tuple(_nl), "u3": tuple(_ul), "ahe": tuple(_al),
+        "lfpr": ((("本期：持平" if abs(_dlf) < 0.05 else
+                   f"本期：{'上升' if _dlf > 0 else '下降'} {abs(_dlf):.1f}"),
+                  "neutral"),) if _dlf is not None else (),
+    }
+
     # ---------------- 修正卡片 ----------------
     rev_rows = [{"label": r.obs_date[:7], "original": r.original, "current": r.current}
                 for r in rev.recent[-7:]]
@@ -395,6 +452,10 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             dfmt = "持平" if abs(dd) < 0.005 else f"{dd:+.2f} 個百分點"
         jolts_rows.append({"label": labels.get(sid, sid), "value": vfmt, "chg": dfmt})
 
+    # 給變化引擎的原始值：JOLTS 是獨立的比較單位（期別＝資料月份），
+    # 它比就業報告晚一個月發布、落在兩次報告的空窗期，值得自己報變化。
+    jolts_raw = {sid: value_at(series.get(sid) or [])
+                 for sid in ("JTSJOL", "JTSHIR", "JTSQUR", "JTSLDR")}
     jolts_date = series.get("JTSJOL", [{}])[-1].get("date", "")[:7] if series.get("JTSJOL") else "—"
     # 落後幾期要算出來，不能寫死「約兩個月」——旁邊就印著兩個資料月份，
     # 讀者一眼就能對照，寫死的那句話有一半的時候是錯的。
@@ -447,6 +508,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "below_breakeven": (bkev.verdict == "below"),
         },
         "claims": _claims_block(series),
+        "kpi_lean": kpi_lean,
         "unemp_structure": _unemp_structure(series),
         "lights": lights,
         "flags": flags,
@@ -461,6 +523,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                              "window": i.window,
                              "contribution": i.contribution} for i in score.items]},
         "jolts": jolts_rows,
+        "jolts_raw": jolts_raw,
+        "jolts_month": jolts_date if jolts_date != "—" else "",
         "jolts_note": f"資料月份 {jolts_date}（{jolts_lag_text}）",
         # 首頁也要用算出來的，不能各自寫死——先前首頁寫「約兩個月」、
         # 這裡算出來是 1 個月，同一份資料兩種說法
@@ -585,18 +649,35 @@ def _claims_block(series: dict) -> dict:
         window = [r["value"] for r in rows[-n:]]
         return round(sum(1 for x in window if x < v) / len(window) * 100)
 
+    # 最新單週也要擺出來——新聞報的「實際／預估／前值」全是**單週**口徑，
+    # 卡上只有四週平均時，讀者拿新聞來對第一反應是「網站錯了」。
+    # 兩個並排、標明誰是判讀依據，順便教「為什麼兩個數字不一樣」。
+    ic_now = value_at(ic)
     stats = [
         {"label": "初領：四週移動平均", "value": fmt.persons_to_wan(ic_ma, digits=1)
          if ic_ma else "—",
+         # 註解要短：手機兩欄下長註解會被折成「本站判／讀用這條」
          "note": (f"較四週前 {(ic_ma - ic_ma_prev) / ic_ma_prev * 100:+.1f}%"
-                  if ic_ma and ic_ma_prev else "")},
+                  if ic_ma and ic_ma_prev else "") + "，判讀用這條"},
+        {"label": "初領：最新單週", "value": fmt.persons_to_wan(ic_now, digits=1)
+         if ic_now else "—",
+         "note": "新聞用口徑，雜訊大、會回修"},
+        # 續領（CCSA）的統計週天生比初領晚一週發布——卡片上方的
+        # 「統計週至」標的是初領那一週，不標清楚的話，讀者對照圖表
+        # 下緣的日期會以為續領沒更新。照實際資料標，不寫死。
         {"label": "續領：最新一週", "value": fmt.persons_to_wan(cc_now, digits=1)
          if cc_now else "—",
-         "note": (f"較四週前 {(cc_now - cc_prev) / cc_prev * 100:+.1f}%"
-                  if cc_now and cc_prev else "")},
+         "note": ((f"較四週前 {(cc_now - cc_prev) / cc_prev * 100:+.1f}%"
+                   if cc_now and cc_prev else "")
+                  + ("，統計週比初領早一週"
+                     if cc and ic and cc[-1]["date"] < ic[-1]["date"] else ""))},
     ]
 
     ic_rank, cc_rank = pct_rank(ic, ic_ma), pct_rank(cc, cc_now)
+    # 給變化引擎的機器可讀欄位：失業金是獨立的比較單位（期別＝統計週），
+    # formatted 的 stats 不適合拿來相減，這裡放原始值。
+    machine = {"week": ic[-1]["date"], "ic_ma": ic_ma,
+               "ic_now": ic_now, "cc": cc_now}
     verdict, lean = "—", "neutral"
     if ic_rank is not None and cc_rank is not None:
         if cc_rank >= 80 and ic_rank < 60:
@@ -612,7 +693,8 @@ def _claims_block(series: dict) -> dict:
             lean = "hawkish"
         else:
             verdict = (f"初領位在近一年的第 {ic_rank} 百分位、"
-                       f"續領第 {cc_rank} 百分位，都還在區間內。")
+                       f"續領第 {cc_rank} 百分位（0 最低、100 最高），"
+                       f"都還在區間內。")
 
     # 失業持續期間中位數：申請件數講的是「多少人」，這條講的是「多久」。
     # 續領人數會被勞動力規模與補助資格變動影響，持續期間不會——
@@ -632,6 +714,7 @@ def _claims_block(series: dict) -> dict:
         "lean": lean,
         "ma_source": ma_source,
         "as_of": ic[-1]["date"],
+        "machine": machine,
         # 統計週結束日（週六）＋5 天＝下週四的發布日。畫面上兩個日期都要標：
         # 使用者拿「發布日」對新聞（8/13 出爐），頁面卻只標「統計週至 8/8」，
         # 就會以為資料沒更新——其實是同一筆。假期偶爾會讓 DOL 提前或延後
@@ -1146,8 +1229,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
     energy_stats = []
     if summ.oil_1m is not None:
         energy_stats.append({
-            # 一位小數：整數會讓下方「以能源佔比 6.2% 與傳導係數 0.4 粗估」
-            # 這句話算不回同一個答案，也會讓「>8% 才觸發旗標」看起來像壞掉
+            # 一位小數：整數會讓下方「能源佔 CPI 6.2%、約四成傳到零售」的
+            # 粗估算不回同一個答案，也會讓「>8% 才觸發旗標」看起來像壞掉
             "label": "原油近一個月", "value": f"{summ.oil_1m:+.1f}%",
             "color": ("var(--serious)" if summ.oil_1m > 0 else "var(--series-1)"),
             "note": "領先加油站價格約 2–4 週"})
@@ -1165,7 +1248,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "value": f"{est:+.2f} 個百分點",
             "color": ("var(--serious)" if est > 0.05 else
                       ("var(--series-1)" if est < -0.05 else "var(--text-primary)")),
-            "note": "以能源佔比 6.2% 與傳導係數 0.4 粗估",
+            "note": "粗估：能源佔 CPI 6.2%，油價變動約四成會傳到零售價",
         }
 
     # 油價與汽油走勢圖：油價領先加油站價格 2–4 週，這段落差就是「已發生但還沒進 CPI」
@@ -1279,9 +1362,6 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "supercore": {"label": "核心服務除住房", "en": "Supercore (core svcs ex-shelter), 3-mo ann.", "value": summ.supercore_3m,
                           "unit": "%", "delta_unit": " 個百分點",
                           "threshold": 0.1, "up_is": "hawkish"},
-            "exp5y5y": {"label": "長期通膨預期", "en": "5y5y Inflation Breakeven", "value": summ.expect_5y5y,
-                        "unit": "%", "delta_unit": " 個百分點",
-                        "threshold": 0.03, "up_is": "hawkish"},
         },
         # 用**現行程式**回頭算的上一期。只有在計算方法換版時才會被拿去當
         # 比較基準（見 changes.METHOD_VERSION）——那一期快照裡存的是舊程式
@@ -1327,8 +1407,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "exp": _kpi_leans(summ.expect_5y5y, 2.3, summ.expect_5y5y,
                               value_at(series.get("T5YIFR", []), 1),
                               band=0.03,
-                              level_word=("偏離目標偏高", "與目標一致",
-                                          "偏離目標偏低")),
+                              level_word=("高於 2% 目標", "與目標一致",
+                                          "低於 2% 目標")),
         },
         "key_metrics_prev": {
             "cpi_yoy": {"value": _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL")},
@@ -1349,13 +1429,15 @@ DIR_TEXT = {
 }
 
 
-def _ladder(v12, v6, v3, label: str) -> list[dict]:
-    """12m / 6m / 3m 年化並排。單一數字看不出方向，這三個並排才看得出。"""
-    return [
-        {"label": f"{label}　近 12 個月", "value": _pct(v12, 2)},
-        {"label": f"{label}　近 6 個月年化", "value": _pct(v6, 2)},
-        {"label": f"{label}　近 3 個月年化", "value": _pct(v3, 2)},
-    ]
+def _ladder(v12, v6, v3, label: str) -> dict:
+    """
+    12m / 6m / 3m 年化的「動能階梯」原始值。
+
+    先前攤成六格 stat：手機兩欄折行後變成 (CPI12, CPI6)／(CPI3, PCE12)／
+    (PCE6, PCE3)——第二列起 CPI 與 PCE 混在同一行，階梯讀法完全消失。
+    改成每個指數一列（12 → 6 → 3 附箭頭），桌機手機同一個結構。
+    """
+    return {"label": label, "v12": v12, "v6": v6, "v3": v3}
 
 
 def _stickiness_block(summ) -> dict:
@@ -1398,10 +1480,11 @@ def _stickiness_block(summ) -> dict:
         _at_least = "至少" if _n < 0 else ""
         verdict += f"三個月年化已經連續{_at_least} {abs(_n)} 個月高於 2.5%。"
 
-    stats = _ladder(summ.supercore_12m, summ.supercore_6m, summ.supercore_3m, "CPI")
+    ladders = [_ladder(summ.supercore_12m, summ.supercore_6m,
+                       summ.supercore_3m, "CPI")]
     if summ.pce_supercore_3m is not None:
-        stats += _ladder(summ.pce_supercore_12m, summ.pce_supercore_6m,
-                         summ.pce_supercore_3m, "PCE")
+        ladders.append(_ladder(summ.pce_supercore_12m, summ.pce_supercore_6m,
+                               summ.pce_supercore_3m, "PCE"))
 
     # 兩邊背離時要講：聯準會看的是 PCE 那一側
     diverge = ""
@@ -1444,7 +1527,7 @@ def _stickiness_block(summ) -> dict:
                    "note": "收斂才代表這一輪走完"},
               ]}
 
-    return {"stats": stats, "verdict": verdict, "lean": lean,
+    return {"ladders": ladders, "verdict": verdict, "lean": lean,
             "dir_label": label, "streak": abs(summ.supercore_streak),
             "diverge": diverge, "sticky_flex": sf,
             "sum": (f"3 個月年化 {summ.supercore_3m:.2f}%　·　{label}"
@@ -2401,7 +2484,8 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
             "value": f"{e_now:.2f}%",
             "color": "var(--serious)" if _div else "inherit",
             "note": ("與平均時薪背離超過 0.7 個百分點，以 ECI 為準"
-                     if _div else "固定職業權重，沒有組成偏誤")})
+                     if _div else
+                     "固定職業權重——不受「低薪職位消失、平均被拉高」干擾")})
     _pass_rows = since([{"date": r["date"], "value": r["wage"]} for r in p.series],
                        CHART_START, 12)
     _sc_rows = since([{"date": r["date"], "value": r["supercore"]} for r in p.series],
@@ -2420,6 +2504,9 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
             "sc_chart": sc_chart, "lag_rows": lag_rows, "note": p.note,
             "corr_note": p.corr_note,
             "best_lag": p.best_lag, "best_corr": p.best_corr,
+            # verdict 原樣帶給頁面層：結論框的傾向由它決定，
+            # 不讓頁面層去解析標題文字反推。
+            "verdict": p.verdict,
             "verdict_title": title, "verdict_desc": desc}
 
 
@@ -2644,6 +2731,13 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         "release_name": (cfg.get("meta") or {}).get("release_name", "Rates"),
         "as_of": as_of,
         "generated_at": clock.stamp(),
+        # 給變化引擎的市場價格原始值（週輪替的比較單位）
+        "market_raw": {
+            "dgs10": value_at(series.get("DGS10") or []),
+            "dgs30": value_at(series.get("DGS30") or []),
+            "term_premium": curve.term_premium,
+            "ig_spread": value_at(series.get("BAMLC0A0CM") or []),
+        },
         "offline": offline,
         "failed": failed,
         "curve": curve,

@@ -418,6 +418,164 @@ def r_sahm(ctx: RuleContext) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
+# 10. 續領／初領背離＋再就業指標（新聞看不到、但最早轉弱的形態）
+# ---------------------------------------------------------------------------
+@rule
+def r_claims_divergence(ctx: RuleContext) -> Flag | None:
+    """
+    初領還在低段、續領已在高段：沒什麼人被裁，但被裁的人找不到下一份。
+    這是勞動市場轉弱最早出現的形態之一，只看初領完全看不到。
+    位置用近一年的百分位——申請件數的絕對水準隨勞動力規模漂移，
+    水準本身不可比。
+    """
+    ic, cc = ctx.series.get("ICSA", []), ctx.series.get("CCSA", [])
+    if len(ic) < 52 or len(cc) < 52:
+        return None
+
+    def _rank(rows):
+        window = [r["value"] for r in rows[-52:]]
+        return sum(1 for x in window if x < rows[-1]["value"]) / len(window) * 100
+    ic_rank, cc_rank = _rank(ic), _rank(cc)
+    if cc_rank >= 80 and ic_rank < 60:
+        return Flag(
+            key="claims_divergence", severity="watch",
+            headline="裁員未加速，但被裁的人找不到工作",
+            detail=(
+                f"初領失業金位在近一年的第 {ic_rank:.0f} 百分位（不高），"
+                f"續領卻在第 {cc_rank:.0f} 百分位的高段。"
+                "新失業的人沒變多、領補助的人卻一直沒減少——"
+                "代表被裁的人遲遲找不到下一份工作。"
+            ),
+            lean="dovish", impact="再就業難度上升，先於失業率反映",
+        )
+    return None
+
+
+@rule
+def r_duration_high(ctx: RuleContext) -> Flag | None:
+    """失業持續期間中位數創近一年新高：申請件數講「多少人」，這條講「多久」。"""
+    med = ctx.series.get("UEMPMED", [])
+    if len(med) < 13:
+        return None
+    cur = med[-1]["value"]
+    prior = [r["value"] for r in med[-13:-1]]
+    if cur >= max(prior) and cur > min(prior):
+        return Flag(
+            key="duration_high", severity="watch",
+            headline="失業持續期間創近一年新高",
+            detail=(
+                f"失業者找到下一份工作的中位數時間來到 {cur:.1f} 週，"
+                "是近一年最長。它不受勞動力規模與補助資格影響，"
+                "跟續領人數是兩個獨立的角度——同時變差，再就業變難才算確認。"
+            ),
+            lean="dovish", impact="再就業所需時間拉長",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 11. 壯年就業比與隱藏性失業（失業率之外的水溫計）
+# ---------------------------------------------------------------------------
+@rule
+def r_prime_age_slide(ctx: RuleContext) -> Flag | None:
+    epop = ctx.series.get("LNS12300060", [])
+    if len(epop) < 4:
+        return None
+    v = [r["value"] for r in epop[-4:]]
+    # 連三個月不升、且累計下滑至少 0.2 個百分點（資料只到小數一位，
+    # 門檻要壓過捨入雜訊）
+    if v[0] - v[3] >= 0.2 and v[0] >= v[1] >= v[2] >= v[3]:
+        return Flag(
+            key="prime_age_slide", severity="watch",
+            headline="壯年就業比例連續三個月下滑",
+            detail=(
+                f"25–54 歲有工作的比例從 {v[0]:.1f}% 滑到 {v[3]:.1f}%。"
+                "這個比例剔除了退休與就學的干擾，是失業率之外最乾淨的"
+                "就業水溫計——失業率可以因為錯的原因好看，它比較難。"
+            ),
+            lean="dovish", impact="核心族群的就業正在轉弱",
+        )
+    return None
+
+
+@rule
+def r_u6_gap_widening(ctx: RuleContext) -> Flag | None:
+    u6, u3 = ctx.series.get("U6RATE", []), ctx.series.get("UNRATE", [])
+    if len(u6) < 7 or len(u3) < 7:
+        return None
+    gap_now = u6[-1]["value"] - u3[-1]["value"]
+    gap_then = u6[-7]["value"] - u3[-7]["value"]
+    if gap_now - gap_then >= 0.3:
+        return Flag(
+            key="u6_gap_widening", severity="watch",
+            headline="隱藏性失業半年來明顯擴大",
+            detail=(
+                f"廣義失業率（含想全職只能兼職、想工作但沒在找的人）與"
+                f"失業率的差距，半年內從 {gap_then:.1f} 擴大到 {gap_now:.1f} "
+                "個百分點。表面失業率還好看，底下的低度就業已經在增加。"
+            ),
+            lean="dovish", impact="表面失業率低估了實際的鬆動",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 12. 兩條領先型金絲雀：派遣與工時（先於裁員反映）
+# ---------------------------------------------------------------------------
+@rule
+def r_temp_help(ctx: RuleContext) -> Flag | None:
+    """
+    臨時支援服務就業。企業縮編的順序是：先不續派遣、再砍工時、最後才裁
+    正職——派遣年增轉負歷史上領先整體就業轉弱兩三季。
+    只在「轉負而且還在惡化」時報：長期小幅為負的常態不佔版面。
+    """
+    th = ctx.series.get("TEMPHELPS", [])
+    if len(th) < 16:
+        return None
+
+    def _yoy(back=0):
+        cur, base = th[-1 - back]["value"], th[-13 - back]["value"]
+        return (cur / base - 1) * 100 if base else None
+    y_now, y_prev = _yoy(0), _yoy(3)
+    if y_now is None or y_prev is None:
+        return None
+    if y_now < 0 and y_now < y_prev:
+        return Flag(
+            key="temp_help_falling", severity="watch",
+            headline="派遣就業年減且仍在惡化",
+            detail=(
+                f"臨時支援服務就業年減 {abs(y_now):.1f}%（三個月前年減 "
+                f"{abs(y_prev):.1f}%）。企業縮編會先不續派遣、最後才裁正職，"
+                "所以這條歷史上領先整體就業轉弱好幾個季度。"
+            ),
+            lean="dovish", impact="裁員週期的前導指標在惡化",
+        )
+    return None
+
+
+@rule
+def r_factory_hours(ctx: RuleContext) -> Flag | None:
+    """製造業平均週工時：裁人之前先砍工時。近三月均明顯低於近一年均才報。"""
+    wh = ctx.series.get("AWHMAN", [])
+    if len(wh) < 12:
+        return None
+    ma3 = sum(r["value"] for r in wh[-3:]) / 3
+    ma12 = sum(r["value"] for r in wh[-12:]) / 12
+    if ma12 - ma3 >= 0.2:
+        return Flag(
+            key="factory_hours_cut", severity="watch",
+            headline="製造業週工時被砍",
+            detail=(
+                f"製造業平均週工時近三個月平均 {ma3:.1f} 小時，低於近一年"
+                f"平均的 {ma12:.1f} 小時。企業需求轉弱時會先減班、再裁員——"
+                "工時是裁員的前導。"
+            ),
+            lean="dovish", impact="工時先於裁員反映需求轉弱",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
 def run_rules(ctx: RuleContext) -> list[Flag]:
     order = {"alert": 0, "watch": 1, "info": 2}
     flags = [f for f in (r(ctx) for r in RULES) if f is not None]

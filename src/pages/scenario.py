@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..site import esc
+from ..analysis import scenario as scenario_mod
 from . import compact_full, focus_evidence, state_chip, teach
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
@@ -36,23 +37,19 @@ def _grid(cells) -> str:
                              f'<span class="sn-qual">{esc(_qual)}</span>')
             else:
                 name_html = esc(_n)
-            # 說明文只在「目前位置」那格常駐；其餘八格收成「說明」一點。
-            # 一張格子九段說明、三張頁籤共 27 段，手機上一格三行文字
-            # 把整張表撐得非常長——非目前格的說明是參考資料，點了再看。
-            if c["current"]:
-                desc_html = f'<div class="sdesc">{esc(c["desc"])}</div>'
-            else:
-                desc_html = (f'<details class="sdd"><summary>說明</summary>'
-                             f'<div class="sdesc">{esc(c["desc"])}</div></details>')
+            # 格子裡**只有格名**。逐格的一句說明收在卡尾「九格各代表什麼」，
+            # 目前格的說明則以頁首結論卡為主場——先前目前格常駐一段、
+            # 其餘八格各藏一個收合，三張頁籤共 24 個收合＋一段跟頁首
+            # 一字不差的重複文，正是這張卡「排版混亂」的最大來源。
             rows.append(
                 f'<div class="scell {c["lean"]}{cls}">'
                 f'<div class="sname">{name_html}</div>'
-                f'{desc_html}{badge}</div>'
+                f'{badge}</div>'
             )
     return f'<div class="sgrid">{head}{"".join(rows)}</div>'
 
 
-def _grid_tabs(d: dict, sc) -> str:
+def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
     """
     三張九宮格＋切換。純 CSS（radio + 相鄰選擇器），不依賴 JS。
 
@@ -61,11 +58,14 @@ def _grid_tabs(d: dict, sc) -> str:
     這一頁最有價值的反事實問題是「如果聯準會的重心翻轉，我這一格會變成什麼」。
     只顯示當前那張的話，讀者看不到答案；三張並排又會讓相同的六格重複三次。
     頁籤讓預設就是目前偵測到的體制，想看別的自己切。
+
+    回傳 (格子區 html, 翻轉對照的收合列標題, 翻轉對照的內容)——
+    對照內容不再自帶 details 外框，由卡尾與「重心怎麼判定」併成同一個收合。
     """
     metas = d.get("regime_meta") or []
     grids = d.get("grids") or {}
     if not metas or not grids:
-        return _grid(d.get("cells") or [])
+        return _grid(d.get("cells") or []), "", ""
 
     tabs, panels = [], []
     for i, m in enumerate(metas):
@@ -114,16 +114,36 @@ def _grid_tabs(d: dict, sc) -> str:
                     "少一個需要擔心的變數。下面三列可以核對。")
 
     # 上方三個情境頁籤（純 CSS radio），預設選中目前偵測到的重心，
-    # 一次只顯示一張格子；「重心若翻轉這一格會變成什麼」的三列對照
-    # 仍收在下方的摺疊列，答案直接寫在摺疊列上。
-    return (f'<div class="rtabs">{"".join(tabs)}'
-            f'<div class="rpanels">{"".join(panels)}</div></div>'
-            + f'<details class="f-more rcmp-box"><summary>{esc(cmp_head)}</summary>'
-            f'<p class="hint" style="margin:10px 0 10px">{cmp_note}</p>'
-            f'{cur_row}</details>')
+    # 一次只顯示一張格子。翻轉對照的三列不再自帶收合框——
+    # 它跟「重心怎麼判定」是同一個主題，由卡尾併成一個收合。
+    grid_html = (f'<div class="rtabs">{"".join(tabs)}'
+                 f'<div class="rpanels">{"".join(panels)}</div></div>')
+    cmp_body = (f'<p class="hint" style="margin:10px 0 10px">{cmp_note}</p>'
+                f'{cur_row}')
+    return grid_html, cmp_head, cmp_body
 
 
-def _triggers(trigs) -> str:
+def _cell_gloss(cells) -> str:
+    """九格各代表什麼——逐格一句，依格子順序（左上到右下）。"""
+    if not cells:
+        return ""
+    items = []
+    for row in cells:
+        for c in row:
+            mark = "◆" if c.get("conflict") else ""
+            cur = "（目前位置）" if c.get("current") else ""
+            items.append(
+                f'<dt>就業{esc(c["labor"])} × 通膨{esc(c["infl"])}：'
+                f'{esc(c["name"])}{mark}{cur}</dt>'
+                f'<dd>{esc(c["desc"])}</dd>')
+    return ('<details class="f-more"><summary>九格各代表什麼</summary>'
+            '<p class="hint" style="margin:10px 0 0">依目前重心的那張格子；'
+            '標 ◆ 的三格在其他重心下名稱與結論會不同（切上方頁籤看）。</p>'
+            f'<dl class="gloss" style="margin-top:10px">{"".join(items)}</dl>'
+            '</details>')
+
+
+def _triggers(trigs, drift=None) -> str:
     if not trigs:
         return '<div class="empty">資料不足，無法計算觸發距離</div>'
     out = []
@@ -138,6 +158,11 @@ def _triggers(trigs) -> str:
         tags = ""
         if getattr(t, "adjacent", True):
             tags += '<span class="tadj">下一格</span>'
+        # 跟該軸數據漂移方向一致的門檻標「動能指向」——
+        # 「可能下一格」就是從這些條裡挑距離最近的。
+        if (drift and getattr(t, "direction", "") and not t.met
+                and (drift.get(t.axis) or (None,))[0] == t.direction):
+            tags += '<span class="tdir">動能指向</span>'
         if getattr(t, "binding", False):
             tags += '<span class="tbind">關鍵</span>'
         out.append(
@@ -155,8 +180,9 @@ def _triggers(trigs) -> str:
         "「下一格」是相鄰的格子，門檻一到格子就先移過去；「關鍵」是政策"
         "方向真正的解鎖條件——在通膨優先的重心下，就業再弱也要等通膨"
         "回到「低」才換得到降息，所以兩者可能不是同一條。",
-        "平常只要盯「關鍵」那條的距離有沒有在縮小；「下一格」的距離"
-        "則告訴你畫面上的格子最快會往哪邊動。注意口徑：通膨門檻的判定值"
+        "「動能指向」標在跟當期數據方向一致的門檻上——「可能下一格」"
+        "就是從這些條裡挑距離最近的；離得近但方向相反的門檻不會被當成預測。"
+        "平常只要盯「關鍵」那條的距離有沒有在縮小。注意口徑：通膨門檻的判定值"
         "是「綜合水準」＝0.6×年增＋0.4×三月年化（轉格要看得夠早，所以把"
         "動能一起計入）；上方格位判定只用年增。兩個數字不同是口徑不同，"
         "不是算錯。"))
@@ -370,31 +396,43 @@ def _four_steps(d: dict, sc, focus: dict) -> str:
         f'<span class="step-r">{esc(res)}</span></div>'
         for k, txt, res in rows)
 
-    # ②步的展開層：PCE 還沒公布時，通膨水準用的是推估值——推估怎麼算、
-    # 為什麼選這個方法，應該呈現在「格子怎麼算」的這裡（它是②步的一部分），
-    # 不是 PPI 卡。PPI 卡只講上游數據本身，留一行連過來。
+    # ②的 PCE 推估不在這裡呈現——它併進卡尾「完整算式與門檻出處」收合
+    # （見 _nc_bits），推估值仍寫在那個收合的標題列上。
+    # teach 也不放在這裡——它屬於整張「九宮格定位」卡的卡尾。
+    return f'<div class="steps">{body}</div>'
+
+
+def _nc_bits(d: dict) -> tuple[str, str]:
+    """
+    ②步的 PCE 推估。回傳 (收合列的後綴, 展開層的內容區塊)。
+
+    PCE 還沒公布時，通膨水準用的是推估值——推估怎麼算、為什麼選這個方法，
+    屬於「格子怎麼算」的細節，所以併進「完整算式與門檻出處」那一個收合，
+    不再自成一個（一張卡近 30 個收合正是先前混亂的來源）。
+    推估值本身寫在收合列上，不點開也看得到。
+    """
     nc = d.get("pce_nowcast") or {}
-    nc_html = ""
-    if nc.get("estimated") and nc.get("value") is not None:
-        _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
-        # 收合列只放短名（放全稱會變成「（差距法（核心 CPI − …））」的
-        # 雙層括號）；全稱寫在展開後的第一句。
-        method_short = ("成分法" if nc.get("method") == "components" else "差距法")
-        method_full = ("成分法＝CPI＋PPI 逐項加權"
-                       if nc.get("method") == "components"
-                       else "差距法＝核心 CPI 減去兩者的歷史平均差距")
-        comp_rows = "".join(
-            f'<tr><td>{esc(c["label"])}{"（用最新一期頂上）" if c.get("lagged") else ""}</td>'
-            f'<td>{c["weight"]:.1f}%</td>'
-            f'<td>{c["yoy"]:+.2f}%</td></tr>'
-            for c in (nc.get("components") or []) if c.get("yoy") is not None)
-        comp_tbl = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
-                    f'<th>權重</th><th>年增</th></tr></thead>'
-                    f'<tbody>{comp_rows}</tbody></table>' if comp_rows else "")
-        nc_html = f"""<details class="f-more">
-      <summary>②的水準是推估值：核心 PCE {esc(f'{nc["value"]:.2f}%')}（{esc(method_short)}）</summary>
-      <div class="f-detail">
-        本期採用<b>{esc(method_full)}</b>。
+    if not (nc.get("estimated") and nc.get("value") is not None):
+        return "", ""
+    _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
+    # 標題列只放短名（放全稱會變成「（差距法（核心 CPI − …））」的
+    # 雙層括號）；全稱寫在展開後的第一句。
+    method_short = ("成分法" if nc.get("method") == "components" else "差距法")
+    method_full = ("成分法＝CPI＋PPI 逐項加權"
+                   if nc.get("method") == "components"
+                   else "差距法＝核心 CPI 減去兩者的歷史平均差距")
+    comp_rows = "".join(
+        f'<tr><td>{esc(c["label"])}{"（用最新一期頂上）" if c.get("lagged") else ""}</td>'
+        f'<td>{c["weight"]:.1f}%</td>'
+        f'<td>{c["yoy"]:+.2f}%</td></tr>'
+        for c in (nc.get("components") or []) if c.get("yoy") is not None)
+    comp_tbl = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
+                f'<th>權重</th><th>年增</th></tr></thead>'
+                f'<tbody>{comp_rows}</tbody></table>' if comp_rows else "")
+    _ncv = f'{nc["value"]:.2f}%'
+    suffix = f'；含核心 PCE 推估 {_ncv}（{method_short}）'
+    detail = f"""<div class="f-detail" style="margin-bottom:10px">
+        <b>②的通膨水準是推估值</b>：本期採用<b>{esc(method_full)}</b>。
         PCE 比 CPI 晚兩週公布，空窗期用 CPI 與 PPI 先推——
         PCE 的醫療與金融服務項本來就取自 PPI，所以推得出來。
         兩種方法各自回測近 {nc.get("n_backtest") or "—"} 期、比較平均誤差，
@@ -402,14 +440,8 @@ def _four_steps(d: dict, sc, focus: dict) -> str:
         差距法 {esc(f"±{_mg:.3f}" if _mg is not None else "不可用")} 個百分點。
         方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
         {comp_tbl}
-      </div>
-    </details>"""
-
-    return (f'<div class="steps">{body}</div>{nc_html}'
-            + teach(
-        "格子的位置不是主觀判斷，是四步固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
-        "看得懂這四步，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
-        "每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。口徑提醒：②的格位只用**年增率**判；下方「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），所以兩處的數字會不一樣——口徑不同，不是算錯。"))
+      </div>"""
+    return suffix, detail
 
 
 def _scenario_body_full(d: dict) -> str:
@@ -457,7 +489,8 @@ def _scenario_body_full(d: dict) -> str:
     fomc_note = (f'<div class="v-why" style="margin-top:14px">{esc(sc.fomc_note)}</div>'
                  if sc.fomc_note else "")
 
-    grid_tabs = _grid_tabs(d, sc)
+    grid_html, cmp_head, cmp_body = _grid_tabs(d, sc)
+    nc_suffix, nc_detail = _nc_bits(d)
 
     # 收合摘要：一律取這一區已經算出來的結論。
     _grid_sum = (f'就業{sc.labor_state} × 通膨{sc.infl_state}　·　{sc.name}'
@@ -490,8 +523,12 @@ def _scenario_body_full(d: dict) -> str:
         _agree_html = "".join(
             (f"<b>{esc(s)}</b>" if i % 2 else esc(s))
             for i, s in enumerate(_agree.split("**")))
-        _cls = {"hawkish": "hawkish", "dovish": "dovish"}.get(mk["lean"], "balanced")
-        market_html = f"""<div class="stat-row" style="margin-top:0">
+        _cls = {"hawkish": "hawkish", "dovish": "dovish"}.get(mk["lean"], "neutral")
+        _ag_short = ("兩邊指向同一個方向，這個判讀已經反映在價格裡"
+                     if mk["agree"] else
+                     "兩邊分歧——不是市場之後要修正，就是判讀漏看了市場看到的東西")
+        market_html = f"""<div class="impact {_cls}">{esc(mk['text'])}。{esc(_ag_short)}。</div>
+    <div class="stat-row" style="margin-top:14px">
       <div class="stat"><div class="s-label">市場定價的政策路徑</div>
         <div class="s-value">{mk['display']}</div>
         <div class="s-note">2 年期公債殖利率減政策利率中值</div></div>
@@ -499,14 +536,12 @@ def _scenario_body_full(d: dict) -> str:
         <div class="s-value" style="font-size:17px">{esc(LEAN_TEXT.get(sc.lean, '—'))}</div>
         <div class="s-note">目前這張九宮格給出的方向</div></div>
     </div>
-    <div class="verdict {_cls}" style="margin-top:14px">
-      <div class="v-main" style="font-size:19px">{esc(mk['text'])}</div>
-      <div class="v-why" style="margin-top:8px">{_agree_html}</div>
-    </div>
     {teach(
         "債券市場用真金白銀押出來的政策方向，跟本頁九宮格的判讀並排對照。",
         "兩者常常不一致——那個落差本身就是資訊：不是市場之後要修正定價，就是聯準會要改口。",
-        "這裡用 2 年期殖利率減政策利率當代理，是粗略估計、不是會議層級的機率，差距小於 0.15 個百分點時不要過度解讀。")}"""
+        "這裡用 2 年期殖利率減政策利率當代理，是粗略估計、不是會議層級的機率，差距小於 0.15 個百分點時不要過度解讀。")}
+    <details class="f-more"><summary>一致／分歧各代表什麼</summary>
+      <div class="f-detail">{_agree_html}</div></details>"""
     else:
         market_html = ('<div class="soonbox" style="margin-top:0;padding:26px 18px;'
                        'box-shadow:none;border-style:dashed"><h3>資料不足</h3>'
@@ -514,25 +549,30 @@ def _scenario_body_full(d: dict) -> str:
                        '目前缺其中一項。</p></div>')
 
     # ---- 反應函數：聯準會目前把哪一邊擺在前面 ----
+    # 先前這裡有一個「目前重心」大 verdict 框——資訊與頁首結論卡、
+    # 四步的③步、頁籤上方的規則行三重重複，整個刪除。
+    # 「判定依據」與「重心若翻轉會怎樣」是同一個主題，併成卡尾一個收合，
+    # 翻轉的答案仍寫在收合列上。
     focus = sc.focus or {}
-    focus_cls = {"inflation": "hawkish", "employment": "dovish"}.get(
-        focus.get("focus", ""), "balanced")
-    focus_ev = ""
+    _fc_parts = []
     if focus.get("evidence"):
         # 只留這一次真正的判定依據。「來源為聲明制式句與投票紀錄，不用模型」
-        # 是方法論、每一期都一樣，已經寫在頁尾的判讀說明裡——
-        # 留在這裡等於每次都在證據旁邊把同一句話再講一遍。
-        focus_ev = ('<details class="f-more"><summary>重心的判定依據</summary>'
-                    '<div class="f-detail">'
-                    + esc("、".join(focus["evidence"])) + "</div></details>")
-    # 判不出重心時要明講：訊號互相抵銷 ≠ 聯準會真的兩邊並重
+        # 是方法論、每一期都一樣，已經寫在頁尾的判讀說明裡。
+        _fc_parts.append('<div class="f-detail"><b>本期判定依據</b>：'
+                         + esc("、".join(focus["evidence"])) + '</div>')
+    if cmp_body:
+        _fc_parts.append(cmp_body)
+    _fc_sum = "重心怎麼判定" + (f"；{cmp_head}" if cmp_head else "")
+    focus_collapse = (f'<details class="f-more"><summary>{esc(_fc_sum)}</summary>'
+                      + "".join(_fc_parts) + '</details>') if _fc_parts else ""
+    # 判不出重心時要明講：訊號互相抵銷 ≠ 聯準會真的兩邊並重。
+    # 降成四步下方的一行警語（原本佔著大框的一角）。
     assumed_note = ""
     if getattr(sc, "regime_assumed", False):
-        assumed_note = ('<div class="caveat"><b>本次判不出重心</b><br>'
+        assumed_note = ('<div class="caveat"><b>本次判不出重心</b>——'
                         '聲明、投票與記者會的訊號互相抵銷，也沒有明確說'
                         '「兩邊風險大致平衡」。下面暫用「兩邊並重」那一張對照，'
-                        '但那是<b>不知道</b>，不是<b>真的並重</b>——'
-                        '兩者的意義不同，判讀時要打折。</div>')
+                        '但那是<b>不知道</b>，不是<b>真的並重</b>，判讀時要打折。</div>')
 
     return f"""
 <div class="verdict {sc.lean}">
@@ -551,23 +591,25 @@ def _scenario_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="grid" data-open="1" data-sum="{esc(_grid_sum)}">九宮格定位</h2>
-    <p class="hint">就業 × 通膨。格子由下方四步算出，門檻全部錨在外部標準。</p>
-    <div class="verdict {focus_cls}" style="margin:0 0 18px">
-      <div class="v-eyebrow">目前重心（決定用哪一張格子）</div>
-      <div class="v-main" style="font-size:22px">{esc(focus.get('label', '無法判定'))}</div>
-      <div class="v-why">{esc(focus.get('note', ''))}</div>
-      {assumed_note}
-    </div>
-    {focus_ev}
+    <p class="hint">就業 × 通膨。格子由下方四步算出，門檻全部錨在外部標準；
+      目前格的完整說明見頁首結論卡。</p>
     {_four_steps(d, sc, focus)}
-    {grid_tabs}
-    <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）</summary>
-      {_why_html}
-    </details>
+    {assumed_note}
+    {grid_html}
     <p class="hint" style="margin-top:16px">
       <span class="lg-on">反白粗框</span>＝目前位置　·
       <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
     </p>
+    {teach(
+        "格子的位置不是主觀判斷，是四步固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
+        "看得懂這四步，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
+        "每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。口徑提醒：②的格位只用**年增率**判；下方「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），所以兩處的數字會不一樣——口徑不同，不是算錯。")}
+    <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）{esc(nc_suffix)}</summary>
+      {nc_detail}
+      {_why_html}
+    </details>
+    {focus_collapse}
+    {_cell_gloss(d.get('cells'))}
   </div>
 </div>
 <div class="grid g2">
@@ -584,7 +626,7 @@ def _scenario_body_full(d: dict) -> str:
     <h2 id="triggers" data-sum="{esc(_trig_sum)}">情境轉換門檻</h2>
     <p class="hint">{binding_hint}</p>
     {basis_note}
-    {_triggers(sc.triggers)}
+    {_triggers(sc.triggers, sc.drift)}
   </div>
 </div>
 
@@ -606,6 +648,9 @@ def _scenario_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="howto" data-sum="三張格子的規則、重心怎麼判定、格子怎麼移動">判讀說明</h2>
+    <p class="hint">這一頁的規則書：三張格子怎麼來、重心怎麼判、格子怎麼移。
+      內容不隨數據變動，<b>看過一次就夠</b>——所以預設收起來。</p>
+    <details class="f-more"><summary>展開完整說明（七個問答）</summary>
         <dl class="gloss">
       <dt>為什麼有三張九宮格</dt>
       <dd>聯準會有兩個使命，而它們有時指向相反的方向——就業弱要降息、
@@ -646,6 +691,7 @@ def _scenario_body_full(d: dict) -> str:
         當客觀訊號與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
         或反過來——他們還沒承認數據已經轉向。</dd>
     </dl>
+    </details>
   </div>
 </div>
 
@@ -678,19 +724,20 @@ def scenario_body(d: dict) -> str:
     infl_text = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
     desc = (sc.description or "").split("。")[0]
     regime = next((m["label"] for m in d.get("regime_meta", []) if m.get("current")), "兩邊並重")
-    # 「下一個轉格條件」只能用**相鄰格**的條件。先前拿 binding 的那條來填，
-    # 而 binding（政策解鎖）可能指向對角另一端——畫面就變成「下一格直接
-    # 跳兩格」。兩個問題分開答：格子會先動到哪（相鄰、取距離最近的）、
-    # 政策要翻向還缺什麼（解鎖條件）。
-    def _gapv(x):
-        import re as _re
-        m = _re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "")
-        return abs(float(m.group(0))) if m else 9e9
-    _adj = [x for x in sc.triggers if getattr(x, "adjacent", True) and not x.met]
-    trig = min(_adj, key=_gapv) if _adj else None
-    trigger_text = f"{trig.label}：{trig.distance}" if trig else "目前沒有可計算門檻"
-    _unlock = next((x for x in sc.triggers
-                    if x.binding and not getattr(x, "adjacent", True)), None)
+    # 「下一個轉格條件」用共用的 pick_next（analysis.scenario）：
+    # 方向優先、距離其次——只挑跟數據漂移方向一致的相鄰門檻；
+    # 兩軸都不朝相鄰門檻時誠實寫「傾向不動」。首頁同一個函式。
+    _nx = scenario_mod.pick_next(sc)
+    trig, _unlock = _nx["trigger"], _nx["unlock"]
+    if _nx["mode"] == "hold":
+        trigger_text = (f"短期傾向原地不動（{_nx['reason']}）"
+                        + (f"；參考門檻：{trig.label}：{trig.distance}" if trig else ""))
+    elif trig:
+        trigger_text = f"{trig.label}：{trig.distance}"
+        if _nx["mode"] == "directional" and _nx.get("reason"):
+            trigger_text += f"（依據：{_nx['reason']}）"
+    else:
+        trigger_text = "目前沒有可計算門檻"
     unlock_text = (f"{_unlock.label}：{_unlock.distance}" if _unlock else "")
     metrics = "".join([
         state_chip("就業格位", sc.labor_state, f"方向 {sc.labor_momentum}",

@@ -197,6 +197,53 @@ if (OUT / "labor" / "index.html").exists():
 else:
     print("（output/ 尚未產生，跳過實際頁面的檢查）")
 
+# ---------------------------------------------------------------------------
+# 巢狀結構必須嚴格配對（div/details/dl…）
+#
+# 使用者抓到的：通膨與長端頁「最下方的警語位置怪異」。根因是模板裡
+# 一個 <details> 忘了關、另一張卡多了一個 </details>——開閉的**總數**
+# 剛好相等，所以數數量的檢查抓不到；瀏覽器自動修復後，頁尾被擠進
+# 錯誤的層級。這裡改用堆疊檢查「關閉順序」，這類錯誤一律現形。
+# ---------------------------------------------------------------------------
+from html.parser import HTMLParser as _HP
+
+_TRACK = {"div", "details", "dl", "section", "main", "footer", "table"}
+
+
+class _Nest(_HP):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack, self.problems = [], []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in _TRACK:
+            self.stack.append(tag)
+
+    def handle_endtag(self, tag):
+        if tag not in _TRACK:
+            return
+        if self.stack and self.stack[-1] == tag:
+            self.stack.pop()
+        elif tag in self.stack:
+            self.problems.append(f"</{tag}> 關閉時仍有未關的 "
+                                 f"{self.stack[self.stack.index(tag)+1:]}")
+            while self.stack and self.stack[-1] != tag:
+                self.stack.pop()
+            if self.stack:
+                self.stack.pop()
+        else:
+            self.problems.append(f"沒配對的 </{tag}>")
+
+
+for _p in ("", "labor/", "inflation/", "fomc/", "rates/", "scenario/"):
+    _h = (OUT / _p / "index.html").read_text(encoding="utf-8")
+    _b = _h[_h.find("<body"):_h.find("<script")]
+    _c = _Nest()
+    _c.feed(_b)
+    check(f"㉜ {_p or 'index'}：div/details 巢狀嚴格配對",
+          not _c.problems and not _c.stack,
+          str(_c.problems[:2]) + (f" 未關閉:{_c.stack}" if _c.stack else ""))
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

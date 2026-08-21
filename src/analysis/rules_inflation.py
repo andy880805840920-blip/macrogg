@@ -293,6 +293,111 @@ def r_target_gap(ctx) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
+# 9. PPI 管線壓力（敘事鏈的上游終於有自己的訊號）
+# ---------------------------------------------------------------------------
+@rule
+def r_ppi_pipeline(ctx) -> Flag | None:
+    s = ctx.s
+    if s.ppi_core_yoy is None or s.core_yoy is None:
+        return None
+    gap = s.ppi_core_yoy - s.core_yoy
+    if gap >= 0.5:
+        return Flag(
+            "ppi_pipeline", "watch", "上游漲價還沒轉嫁完",
+            f"核心 PPI 年增 {s.ppi_core_yoy:.1f}%，比核心 CPI 高 "
+            f"{gap:.1f} 個百分點。出廠價漲得比零售價快，代表企業手上"
+            "還有一段成本沒轉嫁——未來幾季 CPI 有既定的上行壓力。",
+            "hawkish", "上游管線裡還有未轉嫁的漲價",
+        )
+    if gap <= -0.5:
+        return Flag(
+            "ppi_relief", "info", "上游價格壓力明顯消退",
+            f"核心 PPI 年增 {s.ppi_core_yoy:.1f}%，比核心 CPI 低 "
+            f"{abs(gap):.1f} 個百分點。上游先降、零售價之後跟上，"
+            "是消費端通膨續降的前置條件。",
+            "dovish", "管線裡的壓力在消退",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 10. 黏性項開始鬆動（轉折才報，卡住的狀態由黏性卡負責講）
+# ---------------------------------------------------------------------------
+@rule
+def r_sticky_easing(ctx) -> Flag | None:
+    s = ctx.s
+    rows = ctx.series.get("CORESTICKM159SFRBATL", [])
+    if (s.sticky_cpi is None or s.flex_cpi is None or len(rows) < 7
+            or rows[-7]["value"] is None):
+        return None
+    six_ago = rows[-7]["value"]
+    # 彈性項已降完（差距仍大）、而黏性項半年內實質回落——慣性開始解
+    if (s.sticky_cpi - s.flex_cpi >= 1.0
+            and six_ago - s.sticky_cpi >= 0.3):
+        return Flag(
+            "sticky_easing", "info", "最頑固的黏性項開始鬆動",
+            f"很少調價的項目（房租、保險這類）年增從半年前的 "
+            f"{six_ago:.1f}% 降到 {s.sticky_cpi:.1f}%。這一塊一年才調一次價、"
+            "降得最慢——它開始回落，代表通膨的慣性真的在解，"
+            "不只是波動大的項目在跌。",
+            "dovish", "通膨慣性正在減弱",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 11. 住房動能轉折（落後項開始跟上市場租金）
+# ---------------------------------------------------------------------------
+@rule
+def r_shelter_turn(ctx) -> Flag | None:
+    s = ctx.s
+    rows = ctx.series.get("CUSR0000SAH1", [])
+    if s.shelter_3m is None or len(rows) < 13:
+        return None
+    base = rows[-13]["value"]
+    if not base:
+        return None
+    shelter_yoy = (rows[-1]["value"] / base - 1) * 100
+    if shelter_yoy - s.shelter_3m >= 0.5:
+        return Flag(
+            "shelter_turn", "watch", "住房通膨的降溫已成既定路徑",
+            f"住房項年增 {shelter_yoy:.1f}%，但近三個月年化只有 "
+            f"{s.shelter_3m:.1f}%。住房是 CPI 權重最大的一塊、又落後市場"
+            "租金約一年——短期動能明顯低於年增率，代表未來幾個月的"
+            "住房讀數會照著新簽租金往下走。",
+            "dovish", "權重最大的一塊有既定的下行慣性",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 12. 短長期通膨預期的組合（只看 5y5y 會漏掉的訊號）
+# ---------------------------------------------------------------------------
+@rule
+def r_expect_combo(ctx) -> Flag | None:
+    s = ctx.s
+    if s.expect_1y is None or s.expect_5y5y is None:
+        return None
+    if s.expect_1y >= 3.5 and s.expect_5y5y > 2.60:
+        return Flag(
+            "expect_both_high", "watch", "短期與長期通膨預期同步偏高",
+            f"密大 1 年期通膨預期 {s.expect_1y:.1f}%、市場的五年後五年"
+            f"預期 {s.expect_5y5y:.2f}%——兩個一起高才危險：短期高但長期"
+            "錨定代表大家相信是暫時的；兩個都高代表這個信任在流失。",
+            "hawkish", "預期脫錨的風險在累積",
+        )
+    if s.expect_1y >= 3.5 and s.expect_5y5y <= 2.40:
+        return Flag(
+            "expect_anchored", "info", "短期預期偏高，但長期仍錨定",
+            f"密大 1 年期預期 {s.expect_1y:.1f}% 偏高，但五年後五年只有 "
+            f"{s.expect_5y5y:.2f}%——市場把眼前的物價壓力讀成暫時性，"
+            "還相信聯準會最終會把通膨帶回目標。",
+            "neutral", "市場仍給聯準會信任票",
+        )
+    return None
+
+
+# ---------------------------------------------------------------------------
 def run_rules(ctx) -> list[Flag]:
     order = {"alert": 0, "watch": 1, "info": 2}
     flags = [f for f in (r(ctx) for r in RULES) if f is not None]

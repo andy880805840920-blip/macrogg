@@ -333,6 +333,14 @@ special_series:
   - id: CES9093161101
     label: 地方政府教育
     enabled: true
+  # 兩條領先型「金絲雀」：企業縮編先砍派遣、先砍工時，之後才裁正職。
+  # 只給規則引擎的訊號用，不進 KPI 卡。
+  - id: TEMPHELPS
+    label: 臨時支援服務就業
+    enabled: true
+  - id: AWHMAN
+    label: 製造業平均週工時
+    enabled: true
 
 # ---------------------------------------------------------------------------
 # 八、Regime 紅綠燈門檻

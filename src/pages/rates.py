@@ -25,6 +25,20 @@ def _rates_body_full(d: dict) -> str:
                      + "、".join(f"{n} 項{lab}" for k, lab in _order
                                  if (n := _lc.get(k)))
                      + "。") if d["lights"] else ""
+    # 檢核卡的一句結論：只由紅黃燈數量推出，跟勞動頁的檢核卡同一套做法。
+    _crit, _warn = _lc.get("critical", 0), _lc.get("warning", 0)
+    if _crit:
+        _li_lean = "hawkish"
+        _li_txt = "供給端的壓力已經反映在市場指標上，不只是算出來的。"
+    elif _warn:
+        _li_lean = "neutral"
+        _li_txt = "壓力在累積，但還沒有越線。"
+    else:
+        _li_lean = "neutral"
+        _li_txt = "長端目前沒有額外的供給警訊。"
+    lights_impact = (f'<div class="impact {_li_lean}">'
+                     f'{esc(light_summary.rstrip("。"))}——{esc(_li_txt)}</div>'
+                     if d["lights"] else "")
 
     # 收合摘要：一律取這一區已經算出來的結論。
     _dh = d.get("decomp_head") or {}
@@ -99,6 +113,28 @@ def _rates_body_full(d: dict) -> str:
         f'color:var(--muted)">{esc(dh["change"])}</span></div>'
         if dh else "")
 
+    # 這張卡自己的一句結論。門檻沿用 decomp_head 的配色邏輯（0.6／0.2），
+    # 不另立一套標準——同一個數字不能在同一張卡上被兩套門檻評價。
+    _cv = d.get("curve")
+    _tp = getattr(_cv, "term_premium", None) if _cv is not None else None
+    decomp_impact = ""
+    if _tp is not None:
+        _chg = f"（{dh['change']}）" if dh.get("change") else ""
+        if _tp > 0.6:
+            decomp_impact = (
+                f'<div class="impact hawkish">期限溢酬 {_tp:+.2f}%{esc(_chg)}，'
+                f'高於 0.40% 的中性參考——市場對長期持債要求的補償偏高，'
+                f'這一段降息壓不下來。</div>')
+        elif _tp < 0.2:
+            decomp_impact = (
+                f'<div class="impact dovish">期限溢酬 {_tp:+.2f}%{esc(_chg)}，'
+                f'低於中性參考——長端目前沒有要求額外補償，'
+                f'利率主要跟著政策預期走。</div>')
+        else:
+            decomp_impact = (
+                f'<div class="impact neutral">期限溢酬 {_tp:+.2f}%{esc(_chg)}，'
+                f'在中性區間——供給壓力存在，但市場還沒要求明顯的額外補償。</div>')
+
     # ---- 供給端：政府 vs 科技巨頭 ----
     # 這張卡是整頁的關鍵連結。沒有它，債務動態與科技巨頭就只是
     # 剛好被放在同一頁的兩個主題。
@@ -116,13 +152,10 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="supply" data-sum="{esc(_sup_sum)}">誰在發債</h2>
-    <p class="hint">政府、科技巨頭與聯準會縮表，
+    <p class="hint">政府、科技巨頭與聯準會縮表（到期的公債不再買回去），
       <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
-    {teach(
-        "最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。",
-        "債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。",
-        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。")}
-    <div class="stat-row">
+    {f'<div class="impact {lean_cls}">{_sum_html}</div>' if _sum else ''}
+    <div class="stat-row" style="margin-top:14px">
       <div class="stat"><div class="s-label">政府：年度赤字</div>
         <div class="s-value">{esc(ss['gov_display'])}</div>
         <div class="s-note">{esc(ss['gov_note'])}</div></div>
@@ -134,21 +167,25 @@ def _rates_body_full(d: dict) -> str:
       f'<span class="bk-label">科技巨頭相對政府的規模</span>'
       f'<span class="bk-val">{esc(ss["ratio_display"])}</span></div>')
      if ss.get('ratio_display') else ''}
-    <p class="hint" style="margin-top:14px">{_sum_html}</p>
     <p class="hint" style="margin-top:12px">壓力分數的{esc(_n_parts)}個來源：</p>
     <div class="cmoves" style="border-top:none;padding-top:0">{parts}</div>
+    {teach(
+        "最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。",
+        "債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。",
+        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。")}
     <div class="src">單位：億美元。年化＝單季 × 4，只用來比較量級。</div>
   </div>
 </div>"""
 
     # ---- 需求端 ----
     dem = (sp.demand or [{}])[0]
-    demand_html = ""
+    demand_html = demand_more = ""
     if dem:
-        # 說明文字要跟著判定走。先前寫死「它沒有走闊」，
-        # 一旦利差真的走闊，同一張卡就會出現
-        # 「走闊，買方開始要求更高補償…它沒有走闊」這種自相矛盾。
-        if dem.get("tight"):
+        # 一句結論用統一的 .impact 框；「為什麼利差是溫度計」的完整說明
+        # 收進卡尾展開——說明文字要跟著判定走。先前寫死「它沒有走闊」，
+        # 一旦利差真的走闊，同一張卡就會出現自相矛盾。
+        _tight = bool(dem.get("tight"))
+        if _tight:
             _why = ("利差是買方要求的風險補償。它<b>已經走闊</b>——"
                     "買方開始要求更高的補償才願意接下新供給，"
                     "這是需求端吃不下的第一個訊號。供給若沒有同步收斂，"
@@ -158,35 +195,41 @@ def _rates_body_full(d: dict) -> str:
                     "代表目前的新增供給仍被吸收得掉；"
                     "一旦走闊，就是買盤開始吃不下的第一個訊號。")
         demand_html = (
-            f'<div class="verdict {"hawkish" if dem.get("tight") else "balanced"}"'
-            f' style="margin-top:4px">'
-            f'<div class="v-main" style="font-size:19px">{esc(dem["detail"])}</div>'
-            f'<div class="v-why" style="margin-top:8px">'
-            f'{esc(dem["label"])} {esc(dem["value"])}。{_why}</div></div>')
+            f'<div class="impact {"hawkish" if _tight else "neutral"}">'
+            f'{esc(dem["label"])} {esc(dem["value"])}——{esc(dem["detail"])}。</div>')
+        demand_more = (
+            '<details class="f-more"><summary>利差為什麼是買方的溫度計</summary>'
+            f'<div class="f-detail">{_why}</div></details>')
 
     # ---- 已反映多少 ----
-    priced_html = (
-        f'<div class="cmoves" style="border-top:none;padding-top:0">'
-        f'{_cmoves(sp.priced)}</div>'
-        f'<p class="hint" style="margin-top:12px">'
-        f'已反映分數 {sp.priced_score:+.2f}　·　供給壓力分數 {sp.score:+.2f}<br>'
-        f'{esc(sp.gap_note)}</p>'
-        if sp.priced else "")
+    # 一句結論直接用 gap_note（原因與結果的落差判定），傾向由同一個
+    # 差值推出：門檻 ±0.8 跟 analysis/rates.py 產生 gap_note 的門檻一致。
+    priced_html = ""
+    if sp.priced:
+        _gap = sp.score - sp.priced_score
+        _pl = "hawkish" if _gap > 0.8 else ("dovish" if _gap < -0.8 else "neutral")
+        priced_html = (
+            f'<div class="impact {_pl}">{esc(sp.gap_note)}</div>'
+            f'<div class="bkgap" style="color:var(--text-primary)">'
+            f'<span class="bk-label">供給壓力分數 {sp.score:+.2f}　vs　已反映分數</span>'
+            f'<span class="bk-val">{sp.priced_score:+.2f}</span></div>'
+            f'<div class="cmoves" style="border-top:none;padding-top:0">'
+            f'{_cmoves(sp.priced)}</div>')
 
-    # ---- 科技巨頭的頭條數字 ----
+    # ---- 科技巨頭的頭條數字：一句結論框 ----
+    # 傾向沿用 hs.verdict 的判定；分段門檻（100／70）跟 hs_verdict() 一致。
+    # 完整敘述（hs_desc）收進「五家公司的明細」，常駐只留一句。
     _ratio = hs.capex_to_ocf
-    hs_head_html = ""
+    _hs_lean = ("hawkish" if getattr(hs, "verdict", "") == "debt_funded"
+                else "neutral")
+    hs_impact = ""
     if _ratio is not None:
-        _c = ("var(--critical)" if _ratio > 100 else
-              ("var(--serious)" if _ratio > 80 else "var(--text-primary)"))
-        hs_head_html = (
-            f'<div class="bkgap" style="color:{_c};margin-top:4px;'
-            f'padding-top:0;border-top:none">'
-            f'<span class="bk-label">資本支出佔營運現金流</span>'
-            f'<span class="bk-val">{_ratio:.0f}%</span>'
-            f'<span class="bk-verdict" style="font-weight:400;font-size:12.5px;'
-            f'color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金'
-            f'支應不了這一季的資本支出</span></div>')
+        _tail = ("，超過本業賺進來的現金——缺口靠發債補，長端供給壓力持續。"
+                 if _ratio > 100 else
+                 ("，逼近本業現金能支應的上限。" if _ratio > 70 else
+                  "，本業現金仍蓋得住，對債市的供給壓力有限。"))
+        hs_impact = (f'<div class="impact {_hs_lean}">{esc(hs_title)}——'
+                     f'合計資本支出已達同期營運現金流的 {_ratio:.0f}%{_tail}</div>')
 
     # ---- 近期發債申報 ----
     # 這是時效補丁：季報最久落後 135 天，發債當天就要申報。
@@ -218,9 +261,8 @@ def _rates_body_full(d: dict) -> str:
                     f'不在合計內。</li>' if gd.get("missing") else "")
         guidance_html = f"""<h3 style="margin-top:4px">{esc(str(gd['year']))} 年資本支出計畫
       <span class="asof">指引更新於 {esc(gd['as_of'])}</span></h3>
-    <p class="hint" style="margin:4px 0 10px">合計 <b>{esc(gd['total_display'])}</b>{_cmp}。
-      這一區是<b>還沒花、但已經承諾的</b>；下方的季報是已經花掉的——
-      推高長端供給的是前者。</p>
+    <p class="hint" style="margin:4px 0 10px">合計 <b>{esc(gd['total_display'])}</b>{_cmp}
+      ——<b>還沒花、但已經承諾的錢</b>；推高長端供給的是這個。</p>
     <div class="focus-grid">{chips}</div>
     <details class="f-more"><summary>備註與資料來源</summary>
       <div class="f-detail"><ul style="margin:8px 0;padding-left:18px">
@@ -369,15 +411,18 @@ def _rates_body_full(d: dict) -> str:
       </details>
     </details>"""
 
-    # ---- 財政缺口 ----
+    # ---- 財政：一句結論＋缺口併進 stat-row ----
+    # 傾向直接沿用 debt.verdict 的判定（widening／drifting／stable），
+    # 不在頁面層另算一套。widening 對長端是升壓＝hawkish；其餘中性。
     dg = d.get("debt_gap") or {}
-    debt_gap_html = (
-        f'<div class="bkgap" style="color:{dg["color"]}">'
-        f'<span class="bk-label">財政缺口</span>'
-        f'<span class="bk-val">{esc(dg["value"])}</span>'
-        f'<span class="bk-verdict" style="font-weight:400;font-size:12.5px;'
-        f'color:var(--muted)">{esc(dg["note"])}</span></div>'
-        if dg else "")
+    _debt_lean = ("hawkish" if getattr(d.get("debt"), "verdict", "") == "widening"
+                  else "neutral")
+    debt_impact = (f'<div class="impact {_debt_lean}">{esc(debt_title)}——'
+                   f'{esc(debt_desc)}</div>') if debt_desc else ""
+    _debt_stats = list(d["debt_stats"])
+    if dg:
+        _debt_stats.append({"label": "財政缺口", "value": dg["value"],
+                            "color": dg["color"], "note": dg["note"]})
 
     def _hs_row(c: dict) -> str:
         yoy_txt = "—" if c.get("capex_yoy") is None else f'{c["capex_yoy"]:+.0f}%'
@@ -458,15 +503,16 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率為什麼在這裡</h2>
-    <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
+    <p class="hint"><b>期限溢酬（持有長債多要求的補償）不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
+    {decomp_impact}
+    {decomp_head_html}
+    <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
     {teach(
         "把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。",
         "長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。",
         "看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。")}
-    {decomp_head_html}
-    <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
-    <p class="hint" style="margin-top:14px">{esc(d['decomp_note'])}</p>
     <details data-m-collapse><summary>三種上升的意義有什麼不同</summary>
+      <p class="hint" style="margin:10px 0 0">{esc(d['decomp_note'])}</p>
       <dl class="gloss" style="margin-top:10px">
         <dt>實質利率上升</dt>
         <dd>市場預期實質成長或資金需求增強。對股市未必是壞事，
@@ -483,6 +529,7 @@ def _rates_body_full(d: dict) -> str:
           額外補償，跟前兩段有重疊。三個數字加起來不會等於名目殖利率，
           也不該這樣用。</dd>
       </dl>
+    </details>
   </div>
 </div>
 {supply_html}
@@ -490,13 +537,14 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="demand" data-sum="{esc(_dem_sum)}">買盤吃不吃得下</h2>
     <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
+    {demand_html}
+    <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
+    <div style="margin-top:16px">{d['credit_chart']}</div>
     {teach(
         "供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。",
         "同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。",
         "看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。")}
-    {demand_html}
-    <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
-    <div style="margin-top:16px">{d['credit_chart']}</div>
+    {demand_more}
   </div>
 
   <div class="card">
@@ -504,6 +552,10 @@ def _rates_body_full(d: dict) -> str:
     <p class="hint">市場已經替這些壓力定了多少價。</p>
     {priced_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['curve_stats'])}</div>
+    {teach(
+        "把「供給面算出來的壓力」跟「市場價格已經反映的壓力」放在同一把尺上比。",
+        "壓力大不代表利率會漲——市場早就定價完的利空，落地時反而不動。會動的是「還沒被反映」的那一段，所以兩個分數的差距比各自的水準重要。",
+        "差距超過 ±0.8 才有意義：供給分數高於已反映＝上行風險還在後面；已反映高於供給＝價格可能超前，供給不再惡化就有回落空間。")}
     <details data-m-collapse><summary>其他天期</summary>
       <div class="stat-row" style="margin-top:12px">{_stats(d['curve_short'])}</div>
       <p class="hint" style="margin-top:12px">短天期由政策利率預期決定，
@@ -516,25 +568,25 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="debt" data-sum="{esc(_debt_sum)}">供給端細節一：政府財政</h2>
     <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
+    {debt_impact}
+    <div class="stat-row" style="margin-top:14px">{_stats(_debt_stats)}</div>
+    <h3 style="margin-top:18px">聯邦債務佔 GDP 比（{esc(d.get('debt_span', ''))}）</h3>
+    {d['debt_chart']}
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
         "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。")}
-    <div class="stat-row">{_stats(d['debt_stats'])}</div>
-    <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
-      <b>{esc(debt_title)}</b><br>{esc(debt_desc)}
-    </div>
-    {debt_gap_html}
-    <h3 style="margin-top:18px">聯邦債務佔 GDP 比（{esc(d.get('debt_span', ''))}）</h3>
-    {d['debt_chart']}
     <details data-m-collapse><summary>財政損益兩平的算法</summary>
       <div class="stat-row" style="margin-top:12px">{_stats(d['debt_steps'])}</div>
       <dl class="gloss" style="margin-top:14px">
         <dt>公式</dt>
         <dd>穩定所需的基本盈餘 ≈ 債務比 × (有效利率 − 名目成長) ÷ (1 + 名目成長)</dd>
         <dt>基本盈餘</dt>
-        <dd>排除利息支出後的財政餘額。利息是過去累積的結果，
-          把它排除才看得出當期財政的實際狀況。</dd>
+        <dd>排除利息支出後的財政餘額（也就是「不算利息的話，政府是賺是賠」）。
+          利息是過去累積的結果，把它排除才看得出當期財政的實際狀況。</dd>
+        <dt>有效利率</dt>
+        <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。
+          新債換舊債時它會慢慢往市場利率靠攏，所以升息的痛是分好幾年到的。</dd>
         <dt>為什麼利率高於成長很危險</dt>
         <dd>當有效利率超過名目成長，利息負擔的成長速度會超過稅基，
           債務比就會自我累積——即使財政收支平衡也一樣。</dd>
@@ -553,21 +605,19 @@ def _rates_body_full(d: dict) -> str:
     <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">供給端細節二：科技巨頭</h2>
     <p class="hint">關鍵不是金額，是<b>融資方式</b>——
       這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
-    {teach(
-        "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
-        "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
-        "盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。")}
+    {hs_impact}
     {guidance_html}
-    {hs_head_html}
-    <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
-      <b>{esc(hs_title)}</b><br>{esc(hs_desc)}
-    </div>
     <div class="tlines">
       <div class="tlines-k">資料時效</div>
       {earnings_html}
       {offerings_html}
     </div>
+    {teach(
+        "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
+        "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
+        "盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。")}
     <details data-m-collapse><summary>五家公司的明細</summary>
+      <p class="hint" style="margin:10px 0 0">{esc(hs_desc)}</p>
       <div class="stat-row" style="margin-top:12px">{_stats(d['hs_stats'])}</div>
       <div class="tscroll" style="margin-top:16px">
         <table>
@@ -593,14 +643,15 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid g2">
   <div class="card">
     <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
-    <p class="hint">{light_summary}</p>
+    <p class="hint">目前的整體狀態（不限本月）：逐項對照警戒線。</p>
+    {lights_impact}
+    <details data-m-collapse open><summary>逐項展開</summary>
+      <div class="lights" style="margin-top:12px">{lights_html}</div>
+    </details>
     {teach(
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",
         "紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。")}
-    <details data-m-collapse open><summary>逐項展開</summary>
-      <div class="lights" style="margin-top:12px">{lights_html}</div>
-    </details>
   </div>
 
   <div class="card">
@@ -622,6 +673,9 @@ def _rates_body_full(d: dict) -> str:
         仍然自我累積。</dd>
       <dt>利差（OAS）</dt>
       <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的信用風險補償。</dd>
+      <dt>基點</dt>
+      <dd>利率的最小慣用單位：1 基點＝0.01 個百分點。
+        「升 25 個基點」就是升 0.25%，也就是「一碼」。</dd>
       <dt>存續期間需求</dt>
       <dd>市場願意買進長天期債券的總量。政府與企業發債競爭的就是這一池資金，
         供給超過需求時長端殖利率就會被推高。</dd>
@@ -674,7 +728,6 @@ def _rates_body_full(d: dict) -> str:
         新聞稿日期比該公司自己的季末日晚 60 天以上就是下一季
         （一季約 91 天、新聞稿約季末後 20–30 天，60 天在兩群中間）。</dd>
     </dl>
-    </details>
   </div>
 </div>
 """

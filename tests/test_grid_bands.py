@@ -224,6 +224,56 @@ _by3 = {x.label: x for x in _tr3}
 check("㊽ 在「低」時相鄰是「中」、非相鄰是「高」",
       _by3["通膨轉「中」"].adjacent and not _by3["通膨轉「高」"].adjacent)
 
+# ---------------------------------------------------------------------------
+# 「可能下一格」：方向優先、距離其次（pick_next）
+#
+# 使用者抓到的：失業率 4.1% 離轉「強」的 4.0 比離轉「弱」的 4.3 近，
+# 舊規則（純距離）說下一格是升息壓力——但非農轉負、連續下修、訊號
+# 淨偏降息，數據明明朝弱走。「近」不等於「會到」。
+# ---------------------------------------------------------------------------
+def _mk_sc(labor, infl, l_state, i_state):
+    sc = _scn.Scenario(labor_state=l_state, infl_state=i_state,
+                       name="x", description="", lean="neutral")
+    sc.triggers = _scn._triggers(labor, infl, l_state, i_state, "通膨")
+    sc.drift = _scn.axis_drift(labor, infl)
+    return sc
+
+# 情境一：就業訊號淨偏弱（tilt dovish）＋通膨升溫 → 挑轉「弱」，
+# 即使轉「強」距離較近（0.1 vs 0.2）
+_lab_w = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3,
+          "tilt": {"tilt": "dovish"}}
+_inf_up = {"core_pce_yoy": 3.39, "core_pce_3m": 3.55,
+           "core_cpi_yoy": 3.0, "core_cpi_3m": 3.5,
+           "core_ppi_yoy": 3.4, "core_ppi_3m": 3.9,
+           "bands": {"low": 2.50, "high": 2.90}}
+_r = _scn.pick_next(_mk_sc(_lab_w, _inf_up, "中", "高"))
+check("㊾ 訊號淨偏弱 → 下一格挑轉「弱」，不挑距離較近的轉「強」",
+      _r["mode"] == "directional" and _r["trigger"].label == "就業轉「弱」",
+      f'{_r["mode"]}/{_r["trigger"].label if _r["trigger"] else None}')
+check("㊾b 理由講得出來", bool(_r["reason"]), _r["reason"])
+check("㊾c 政策解鎖照舊另列", _r["unlock"] is not None
+      and _r["unlock"].label == "通膨轉「低」")
+
+# 情境二：兩軸方向都中性 → 退回距離最近
+_lab_n = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3,
+          "tilt": {"tilt": "balanced"}}
+_inf_flat = {"core_pce_yoy": 3.39, "core_pce_3m": 3.4,
+             "core_cpi_yoy": 3.0, "core_cpi_3m": 3.05,
+             "core_ppi_yoy": 3.4, "core_ppi_3m": 3.42,
+             "bands": {"low": 2.50, "high": 2.90}}
+_r2 = _scn.pick_next(_mk_sc(_lab_n, _inf_flat, "中", "高"))
+check("㊿ 兩軸中性 → 退回距離最近（轉「強」0.1）",
+      _r2["mode"] == "nearest" and _r2["trigger"].label == "就業轉「強」",
+      f'{_r2["mode"]}/{_r2["trigger"].label if _r2["trigger"] else None}')
+
+# 情境三：就業偏強（在「強」還更強）＋通膨升溫（在「高」還在升）
+# → 沒有任何相鄰門檻在數據行進方向上 → 傾向不動
+_lab_s = {"unrate": 3.8, "u_lo": 4.0, "u_hi": 4.3,
+          "tilt": {"tilt": "hawkish"}, "nfp_3m": 20}
+_r3 = _scn.pick_next(_mk_sc(_lab_s, _inf_up, "強", "高"))
+check("51 兩軸都在遠離門檻 → mode=hold（短期傾向不動）",
+      _r3["mode"] == "hold", _r3["mode"])
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

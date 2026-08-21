@@ -108,8 +108,12 @@ def snapshot(ctxs: dict) -> dict:
         }
     inf = ctxs.get("inflation")
     if inf:
+        # 期別＝CPI 月份＋PCE 月份的複合：通膨模組一個月有兩次發布
+        # （CPI 月中、PCE 月底），只綁 CPI 的話，PCE 把推估值換成實際值
+        # 的那一刻不會輪替基準——而那個數字正是九宮格通膨軸在用的。
+        _pce_m = ((inf.get("asof") or {}).get("pce") or "")[:7]
         mods["inflation"] = {
-            "vintage": inf["data_month"],
+            "vintage": inf["data_month"] + (f"|{_pce_m}" if _pce_m else ""),
             "released": today,
             "month": inf["data_month"],
             "tilt": inf["tilt"]["tilt"],
@@ -129,6 +133,100 @@ def snapshot(ctxs: dict) -> dict:
             "focus_label": (fom.get("focus") or {}).get("label", ""),
             "objective": (fom.get("shift") or {}).get("objective"),
         }
+    # ---- 每週失業金：唯一的週頻資料，期別＝統計週結束日 ----
+    _cl = ((lab or {}).get("claims") or {}).get("machine") or {}
+    if _cl.get("week"):
+        def _wan(v):
+            return None if v is None else v / 1e4
+        mods["claims"] = {
+            "vintage": _cl["week"], "released": today,
+            "flags": [], "flag_titles": {}, "flag_leans": {},
+            "metrics": {
+                "ic_ma": {"label": "初領失業金（四週平均）",
+                          "value": _wan(_cl.get("ic_ma")), "unit": "萬人",
+                          "threshold": 0.5, "up_is": "dovish"},
+                "ic_now": {"label": "初領失業金（單週）",
+                           "value": _wan(_cl.get("ic_now")), "unit": "萬人",
+                           "threshold": 1.0, "up_is": "dovish"},
+                "cc": {"label": "續領失業金",
+                       "value": _wan(_cl.get("cc")), "unit": "萬人",
+                       "threshold": 1.5, "up_is": "dovish"},
+            },
+            "method": METHOD_VERSION, "metrics_prev": {},
+        }
+
+    # ---- JOLTS：比就業報告晚一個月，落在空窗期，自己一個期別 ----
+    _jr = (lab or {}).get("jolts_raw") or {}
+    if lab and lab.get("jolts_month"):
+        mods["jolts"] = {
+            "vintage": lab["jolts_month"], "released": today,
+            "flags": [], "flag_titles": {}, "flag_leans": {},
+            "metrics": {
+                "openings": {"label": "職缺數",
+                             "value": (None if _jr.get("JTSJOL") is None
+                                       else _jr["JTSJOL"] / 10),
+                             "unit": "萬個", "threshold": 5,
+                             "up_is": "hawkish"},
+                "hires": {"label": "招聘率", "value": _jr.get("JTSHIR"),
+                          "unit": "%", "delta_unit": " 個百分點",
+                          "threshold": 0.05, "up_is": "hawkish"},
+                "quits": {"label": "離職率", "value": _jr.get("JTSQUR"),
+                          "unit": "%", "delta_unit": " 個百分點",
+                          "threshold": 0.05, "up_is": "hawkish"},
+                "layoffs": {"label": "裁員率", "value": _jr.get("JTSLDR"),
+                            "unit": "%", "delta_unit": " 個百分點",
+                            "threshold": 0.05, "up_is": "dovish"},
+            },
+            "method": METHOD_VERSION, "metrics_prev": {},
+        }
+
+    # ---- 市場價格：日頻資料按「週」輪替基準（逐日比會全是雜訊）；
+    #      供給壓力等級做成旗標，翻轉時走既有的新增/解除機制即時報 ----
+    rts = ctxs.get("rates")
+    if rts and rts.get("as_of"):
+        try:
+            _iso = dt.date.fromisoformat(rts["as_of"]).isocalendar()
+            _week = f"{_iso[0]}-W{_iso[1]:02d}"
+        except (ValueError, TypeError):
+            _week = rts["as_of"][:10]
+        _mr = rts.get("market_raw") or {}
+        _lv = getattr(rts.get("pressure"), "level", "") or ""
+        # 只有偏高/偏低掛旗標；中性不掛——翻回中性時畫面上會出現
+        # 「－ 偏高不再成立」（方向自動反轉成偏降息），一列就講完，
+        # 不需要再多一列「＋ 中性」的廢話。
+        _LV_TITLE = {"high": "長端供給壓力偏高", "low": "長端供給壓力偏低"}
+        _LV_LEAN = {"high": "hawkish", "low": "dovish"}
+        _exp = getattr((ctxs.get("inflation") or {}).get("summary"),
+                       "expect_5y5y", None)
+        mods["market"] = {
+            "vintage": _week, "released": today,
+            "flags": ([f"pressure_{_lv}"] if _lv in _LV_TITLE else []),
+            "flag_titles": ({f"pressure_{_lv}": _LV_TITLE[_lv]}
+                            if _lv in _LV_TITLE else {}),
+            "flag_leans": ({f"pressure_{_lv}": _LV_LEAN.get(_lv, "")}
+                           if _lv in _LV_TITLE else {}),
+            "metrics": {
+                "dgs10": {"label": "10 年期殖利率", "value": _mr.get("dgs10"),
+                          "unit": "%", "delta_unit": " 個百分點",
+                          "threshold": 0.08, "up_is": "hawkish"},
+                "dgs30": {"label": "30 年期殖利率", "value": _mr.get("dgs30"),
+                          "unit": "%", "delta_unit": " 個百分點",
+                          "threshold": 0.08, "up_is": "hawkish"},
+                "tp": {"label": "期限溢酬", "value": _mr.get("term_premium"),
+                       "unit": "%", "delta_unit": " 個百分點",
+                       "threshold": 0.08, "up_is": "hawkish"},
+                "ig": {"label": "投資級利差", "value": _mr.get("ig_spread"),
+                       "unit": "%", "delta_unit": " 個百分點",
+                       "threshold": 0.05, "up_is": ""},
+                # 通膨預期是日頻市場價格，放這裡週頻追蹤——
+                # 留在通膨模組會被 CPI 月份鎖住，一個月才比一次
+                "exp5y5y": {"label": "長期通膨預期", "value": _exp,
+                            "unit": "%", "delta_unit": " 個百分點",
+                            "threshold": 0.03, "up_is": "hawkish"},
+            },
+            "method": METHOD_VERSION, "metrics_prev": {},
+        }
+
     scn = ctxs.get("scenario")
     if scn:
         sc = scn["scenario"]
@@ -310,7 +408,8 @@ def _invert(lean: str) -> str:
     return {"hawkish": "dovish", "dovish": "hawkish"}.get(lean, lean)
 
 
-MODULE_LABEL = {"labor": "就業", "inflation": "物價", "fomc": "聯準會"}
+MODULE_LABEL = {"labor": "就業", "inflation": "物價", "fomc": "聯準會",
+                "claims": "失業金", "jolts": "JOLTS", "market": "市場"}
 
 
 def _side(state: dict, which: str) -> dict:
@@ -320,8 +419,17 @@ def _side(state: dict, which: str) -> dict:
 
 
 def _vintage_label(mod: str, raw: str) -> str:
-    """2026-07 → 7 月；2026-07-29 → 7/29。"""
-    parts = (raw or "").split("-")
+    """2026-07 → 7 月；2026-07-29 → 7/29；複合與週別另處理。"""
+    raw = raw or ""
+    if "|" in raw:                        # 通膨的複合期別：CPI 月份|PCE 月份
+        a, b = raw.split("|", 1)
+        return f"{_vintage_label(mod, a)}（PCE {_vintage_label(mod, b)}）"
+    if "W" in raw:                        # 市場單位的週別：2026-W34
+        try:
+            return f"第 {int(raw.split('W')[1])} 週"
+        except (ValueError, IndexError):
+            return raw
+    parts = raw.split("-")
     try:
         if len(parts) == 3:
             return f"{int(parts[1])}/{int(parts[2])}"
@@ -352,7 +460,7 @@ def compare(state: dict) -> ChangeSet:
 
     # ---- 每個模組各自的對照基準 ----
     today = clock.today()
-    for mod in ("labor", "inflation", "fomc"):
+    for mod in ("labor", "inflation", "fomc", "claims", "jolts", "market"):
         c, p = cur.get(mod), prev.get(mod)
         if not (c and p):
             continue
@@ -390,12 +498,12 @@ def compare(state: dict) -> ChangeSet:
                              and "regime" in ps)
 
     # ---- 訊號的新增與消失 ----
-    for mod in ("labor", "inflation"):
+    for mod in ("labor", "inflation", "market"):
         p, c = prev.get(mod), cur.get(mod)
         if not (p and c):
             continue
         pk, ck = set(p.get("flags", [])), set(c.get("flags", []))
-        label = "就業" if mod == "labor" else "物價"
+        label = MODULE_LABEL.get(mod, mod)
         for k in ck - pk:
             _lean = c.get("flag_leans", {}).get(k, "")
             cs.new_flags.append({"module": label, "kind": "new",
@@ -425,7 +533,7 @@ def compare(state: dict) -> ChangeSet:
         cs.infl_tilt_to = cur["inflation"]["tilt"]
 
     # ---- 關鍵數字的移動 ----
-    for mod in ("labor", "inflation"):
+    for mod in ("labor", "inflation", "claims", "jolts", "market"):
         p, c = prev.get(mod), cur.get(mod)
         if not (p and c):
             continue

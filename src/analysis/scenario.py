@@ -223,6 +223,11 @@ class Trigger:
     # 條件；非相鄰的（例如從「高」直達「低」）是政策解鎖條件，
     # 兩者混在一起就會出現「下一格跳了兩格」的畫面。
     adjacent: bool = True
+    # 這條門檻屬於哪一軸、往哪個方向（給「可能下一格」的方向過濾用）：
+    #   axis      "labor" / "inflation"
+    #   direction 就業軸 "weaker"/"stronger"；通膨軸 "down"/"up"
+    axis: str = ""
+    direction: str = ""
 
 
 @dataclass
@@ -248,6 +253,9 @@ class Scenario:
     regime_assumed: bool = False                # True = 判不出重心，暫用「兩邊並重」
     labor_basis: str = "score"                  # 就業格位是靠分數還是旗標定的
     labor_basis_note: str = ""                  # 靠旗標定案時的說明
+    # 各軸目前的數據漂移方向（axis_drift 的結果）。只給「可能下一格」
+    # 的挑選用，不參與格位判定。
+    drift: dict = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -515,7 +523,88 @@ def synthesise(labor: dict | None, inflation: dict | None,
 
     # ---- 跨入相鄰格的觸發條件 ----
     sc.triggers = _triggers(labor, inflation, l_state, i_state, binding)
+    sc.drift = axis_drift(labor, inflation)
     return sc
+
+
+def axis_drift(labor: dict | None, inflation: dict | None) -> dict:
+    """
+    各軸目前的**數據漂移方向**——只給「可能下一格」的挑選用，不動格位。
+
+    跟 classify_*_momentum 的差別：momentum 是格位層級的正式判定，
+    容差內一律「持平」；這裡回答的是更軟的問題「數據正往哪邊漂」，
+    所以就業軸把訊號引擎的淨方向也算進來——非農轉負、連續下修這些
+    訊號會把 tilt 推成 dovish，即使損益兩平缺口還在容差內。
+    使用者的原話就是這個情況：「以目前數據來看就業是轉弱的，
+    沒有理由下一個可能是轉強」。
+
+    回傳 {"labor": (dir, why) | None, "inflation": (dir, why) | None}，
+    dir 用與 Trigger.direction 相同的詞彙。
+    """
+    lab = labor or {}
+    l = None
+    if lab.get("sahm_triggered"):
+        l = ("weaker", "Sahm 法則已觸發")
+    elif lab.get("below_breakeven"):
+        l = ("weaker", "非農三月均低於損益兩平")
+    else:
+        _t = (lab.get("tilt") or {}).get("tilt")
+        if _t == "dovish":
+            l = ("weaker", "本期就業訊號淨偏弱")
+        elif _t == "hawkish":
+            l = ("stronger", "本期就業訊號淨偏強")
+    im = classify_inflation_momentum(inflation)
+    i = None
+    if im == "升溫":
+        i = ("up", "通膨動能升溫")
+    elif im == "降溫":
+        i = ("down", "通膨動能降溫")
+    return {"labor": l, "inflation": i}
+
+
+def pick_next(sc) -> dict:
+    """
+    「可能下一格」的挑選：**方向優先、距離其次**。
+
+    先前只挑「距離最近的相鄰門檻」，是無方向的——失業率 4.1% 離
+    轉「強」的 4.0 比離轉「弱」的 4.3 近，畫面就說下一格是升息壓力，
+    但當期數據（非農轉負、連續下修、訊號淨偏降息）明明朝弱走。
+    「近」不等於「會到」：門檻在哪是位置，數據往哪走才是方向。
+
+    規則（全部確定性）：
+      ① 只保留與該軸漂移方向**一致**的相鄰未觸發門檻，取距離最近的
+      ② 兩軸都在漂移、但都不朝任何相鄰門檻 → mode="hold"
+        （短期傾向不動），最近門檻降級為參考
+      ③ 兩軸方向都判不出來 → 退回距離最近（mode="nearest"）
+
+    回傳 {"trigger", "unlock", "mode", "reason"}；
+    unlock＝政策解鎖條件（binding 且非相鄰），與方向無關、照舊另列。
+    """
+    import re as _re
+
+    def _gap(t) -> float:
+        m = _re.search(r"[-+]?\d+(?:\.\d+)?", t.distance or "")
+        return abs(float(m.group(0))) if m else 9e9
+
+    adj = [t for t in sc.triggers if t.adjacent and not t.met]
+    unlock = next((t for t in sc.triggers
+                   if t.binding and not t.adjacent), None)
+    drift = sc.drift or {}
+    aligned = [t for t in adj
+               if t.direction and (drift.get(t.axis) or (None,))[0] == t.direction]
+    if aligned:
+        t = min(aligned, key=_gap)
+        why = (drift.get(t.axis) or ("", ""))[1]
+        return {"trigger": t, "unlock": unlock,
+                "mode": "directional", "reason": why}
+    near = min(adj, key=_gap) if adj else None
+    if any(drift.get(a) for a in ("labor", "inflation")):
+        whys = "、".join((drift[a] or ("", ""))[1]
+                         for a in ("labor", "inflation") if drift.get(a))
+        return {"trigger": near, "unlock": unlock, "mode": "hold",
+                "reason": whys}
+    return {"trigger": near, "unlock": unlock, "mode": "nearest",
+            "reason": "兩軸方向中性，取距離最近的門檻"}
 
 
 def _triggers(labor: dict | None, inflation: dict | None,
@@ -552,24 +641,30 @@ def _triggers(labor: dict | None, inflation: dict | None,
         if l_state == "強":
             out.append(Trigger("就業轉「中」", cur, f"需高於 {lo:.1f}%",
                                f"還差 {lo - u:.1f} 個百分點", u >= lo,
-                               binding=False, adjacent=True))
+                               binding=False, adjacent=True,
+                               axis="labor", direction="weaker"))
             out.append(Trigger("就業轉「弱」", cur, f"需高於 {hi:.1f}%",
                                f"還差 {hi - u:.1f} 個百分點", u > hi,
-                               binding=_b, adjacent=False))
+                               binding=_b, adjacent=False,
+                               axis="labor", direction="weaker"))
         elif l_state == "弱":
             out.append(Trigger("就業轉「中」", cur, f"需低於 {hi:.1f}%",
                                f"還差 {u - hi:.1f} 個百分點", u <= hi,
-                               binding=False, adjacent=True))
+                               binding=False, adjacent=True,
+                               axis="labor", direction="stronger"))
             out.append(Trigger("就業轉「強」", cur, f"需低於 {lo:.1f}%",
                                f"還差 {u - lo:.1f} 個百分點", u < lo,
-                               binding=_b, adjacent=False))
+                               binding=_b, adjacent=False,
+                               axis="labor", direction="stronger"))
         else:                                      # 中：兩邊都是相鄰格
             out.append(Trigger("就業轉「弱」", cur, f"需高於 {hi:.1f}%",
                                f"還差 {hi - u:.1f} 個百分點", u > hi,
-                               binding=_b, adjacent=True))
+                               binding=_b, adjacent=True,
+                               axis="labor", direction="weaker"))
             out.append(Trigger("就業轉「強」", cur, f"需低於 {lo:.1f}%",
                                f"還差 {u - lo:.1f} 個百分點", u < lo,
-                               binding=_b, adjacent=True))
+                               binding=_b, adjacent=True,
+                               axis="labor", direction="stronger"))
     else:
         score = lab.get("score")
         if score is not None:
@@ -582,7 +677,9 @@ def _triggers(labor: dict | None, inflation: dict | None,
                     continue
                 out.append(Trigger(label, f"綜合分數 {score:+.2f}", thr,
                                    f"還差 {gap:.2f}", gap <= 0,
-                                   binding=(binding == "就業")))
+                                   binding=(binding == "就業"), axis="labor",
+                                   direction=("weaker" if label.endswith("「弱」")
+                                              else "stronger")))
 
     # ---- 通膨軸：跟格位判定同口徑的加權水準 ----
     infl = inflation or {}
@@ -595,24 +692,30 @@ def _triggers(labor: dict | None, inflation: dict | None,
         if i_state == "高":
             out.append(Trigger("通膨轉「中」", cur, f"需低於 {hi:.2f}%",
                                f"還差 {level - hi:.2f} 個百分點", level <= hi,
-                               binding=False, adjacent=True))
+                               binding=False, adjacent=True,
+                               axis="inflation", direction="down"))
             out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
                                f"還差 {level - lo:.2f} 個百分點", level < lo,
-                               binding=_b, adjacent=False))
+                               binding=_b, adjacent=False,
+                               axis="inflation", direction="down"))
         elif i_state == "低":
             out.append(Trigger("通膨轉「中」", cur, f"需高於 {lo:.2f}%",
                                f"還差 {lo - level:.2f} 個百分點", level >= lo,
-                               binding=False, adjacent=True))
+                               binding=False, adjacent=True,
+                               axis="inflation", direction="up"))
             out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
                                f"還差 {hi - level:.2f} 個百分點", level > hi,
-                               binding=_b, adjacent=False))
+                               binding=_b, adjacent=False,
+                               axis="inflation", direction="up"))
         else:                                      # 中：兩邊都是相鄰格
             out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
                                f"還差 {level - lo:.2f} 個百分點", level < lo,
-                               binding=_b, adjacent=True))
+                               binding=_b, adjacent=True,
+                               axis="inflation", direction="down"))
             out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
                                f"還差 {hi - level:.2f} 個百分點", level > hi,
-                               binding=_b, adjacent=True))
+                               binding=_b, adjacent=True,
+                               axis="inflation", direction="up"))
     return out
 
 

@@ -79,6 +79,36 @@ def _target_axis(tg: dict) -> str:
 </div>"""
 
 
+def _ladder_rows(rows) -> str:
+    """
+    動能階梯：每個指數一列「12 → 6 → 3 個月年化」。
+
+    最右（最新的 3 個月年化）字級大一號，並依「對 12 個月的差距」上色：
+    門檻 ±0.3 跟黏性卡本身「差距小於 0.3 一律當卡在原地」同一套，
+    不另立標準。
+    """
+    def pv(v):
+        return f"{v:.2f}%" if v is not None else "—"
+    out = []
+    for r in rows or []:
+        cls = ""
+        if r.get("v3") is not None and r.get("v12") is not None:
+            _d = r["v3"] - r["v12"]
+            cls = " accel" if _d > 0.3 else (" decel" if _d < -0.3 else "")
+        out.append(
+            f'<div class="ld-row"><span class="ld-k">{esc(r["label"])}</span>'
+            f'<span class="ld-v">{esc(pv(r.get("v12")))}</span>'
+            f'<span class="ld-a">→</span>'
+            f'<span class="ld-v">{esc(pv(r.get("v6")))}</span>'
+            f'<span class="ld-a">→</span>'
+            f'<span class="ld-v last{cls}">{esc(pv(r.get("v3")))}</span></div>')
+    if not out:
+        return ""
+    return (f'<div class="ladder">{"".join(out)}'
+            '<div class="ld-cap">近 12 → 6 → 3 個月年化；越靠右越新，'
+            '右邊高於左邊＝在加速（±0.3 內視為持平）</div></div>')
+
+
 def _sticky_card(k: dict | None) -> str:
     """
     核心服務的黏性。排在關鍵訊號之後，因為它是降息時間表的主要阻力——
@@ -91,14 +121,17 @@ def _sticky_card(k: dict | None) -> str:
         return ""
     _v = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
                  for i, s in enumerate(k["verdict"].split("**")))
+    # 黏性 vs 彈性收進展開層：常駐兩個結論框＋兩排數字，正是「同一張卡
+    # 要重新學兩次哪行是重點」的排版問題。它的結論寫在收合列上。
     sf = k.get("sticky_flex") or {}
     sf_html = ""
     if sf:
         sf_html = f"""
-    <h3>黏性 vs 彈性</h3>
-    <p class="hint">彈性項先反應、黏性項最後才動，<b>兩者收斂才算走完</b>。</p>
-    <div class="stat-row">{_stats(sf['stats'])}</div>
-    <div class="impact {sf['kind']}" style="margin-top:12px">{esc(sf['note'])}</div>"""
+    <details data-m-collapse><summary>黏性 vs 彈性：{esc(sf['note'])}</summary>
+      <p class="hint" style="margin:10px 0 0">彈性項先反應、黏性項最後才動，
+        <b>兩者收斂才算走完</b>。</p>
+      <div class="stat-row" style="margin-top:10px">{_stats(sf['stats'])}</div>
+    </details>"""
 
     # CPI 版與 PCE 版背離的解釋是方法說明（權重差在哪、以哪邊為準），
     # 常駐會擋在數字前面——收進下方「為什麼看三個時間尺度」的方法層。
@@ -112,12 +145,12 @@ def _sticky_card(k: dict | None) -> str:
   <div class="card">
     <h2 id="sticky" data-sum="{esc(k['sum'])}">核心服務的黏性</h2>
     <p class="hint">降息時間表卡最久的一塊。看的是<b>方向</b>不是水準。</p>
+    <div class="impact {k['lean']}" style="margin-bottom:14px">{_v}</div>
+    {_ladder_rows(k.get('ladders'))}
     {teach(
         "服務類（剔除住房）的物價還在以多快的速度上漲、已經連續多久降不下來。",
         "商品價格漲了會回落，服務價格漲了很難回頭——它的成本主要是人的薪水，而薪水幾乎不會降。這一塊不鬆，聯準會就不敢降息，所以它是降息時間表卡最久的關卡。",
         "先看方向（在加速還是減速），再看連續高於門檻的月數——月數越多代表卡得越久，別只看單月數字。")}
-    <div class="impact {k['lean']}" style="margin-bottom:14px">{_v}</div>
-    <div class="stat-row">{_stats(k['stats'])}</div>
     {sf_html}
     <details class="f-more"><summary>為什麼看三個時間尺度、為什麼是 2.5%</summary>
       <div class="f-detail">
@@ -163,14 +196,18 @@ def _passthrough(p) -> str:
     # 這一段是在說上面那個判定的分析基礎不成立，不是平行的第二個結論。
     # 先前兩個警示框同等視覺重量地並排，讀者不知道該信哪一個。
     # 改成縮排掛在結論框底下，明確是「但書」。
-    corr_warn = (f'<div class="caveat"><b>但這段樣本不支持這個機制</b><br>'
-                 f'{esc(p["corr_note"])}</div>'
+    # 但書的結論寫在收合列上，統計細節點開才看——它是「要驗算才需要」
+    # 的層級，常駐一整段會把方法論擋在數字前面。
+    corr_warn = (f'<details class="f-more"><summary>但書：這段樣本不支持'
+                 f'「薪資推升通膨」的機制</summary>'
+                 f'<div class="f-detail">{esc(p["corr_note"])}</div></details>'
                  if p.get("corr_note") else "")
-    return f"""<div class="stat-row">{_stats(p['stats'])}</div>
-<div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
-  <b>{esc(p['verdict_title'])}</b><br>{esc(p['verdict_desc'])}
-  {corr_warn}
-</div>
+    # 結論框的傾向沿用 analysis/passthrough.py 的 verdict：
+    # 兩個背離方向都是上行風險（機制不同），只有同步才是良性。
+    _pt_lean = {"supercore_above": "hawkish", "wage_above": "hawkish",
+                "aligned": "neutral"}.get(p.get("verdict", ""), "neutral")
+    return f"""<div class="impact {_pt_lean}">{esc(p['verdict_title'])}——{esc(p['verdict_desc'])}</div>
+<div class="stat-row" style="margin-top:14px">{_stats(p['stats'])}</div>
 <h3>平均時薪年增率</h3>
 {p['wage_chart']}
 <h3>核心服務除住房年增率</h3>
@@ -178,12 +215,17 @@ def _passthrough(p) -> str:
 <p class="hint" style="margin-top:14px">
   兩條線分開畫，不用雙軸——不同尺度硬放同一張圖會製造出實際上不存在的關係。
 </p>
+{teach(
+    "薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。",
+    "服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。",
+    "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。")}
 <details data-m-collapse><summary>領先落後的相關性</summary>
   <table style="margin-top:10px">
     <thead><tr><th>薪資領先期數</th><th>相關係數</th></tr></thead>
     <tbody>{p['lag_rows']}</tbody></table>
   <p class="hint" style="margin-top:10px">{esc(p['note'])}</p>
-</details>"""
+</details>
+{corr_warn}"""
 
 
 def _inflation_body_full(d: dict) -> str:
@@ -283,14 +325,17 @@ def _inflation_body_full(d: dict) -> str:
         rendered = "".join(
             (f"<b>{esc(seg)}</b>" if i % 2 else esc(seg))
             for i, seg in enumerate(parts_txt))
-        shelter_html = f'<div class="warnbox" style="margin-top:16px">{rendered}</div>'
+        # 它是這張卡的結論，不是警告——用統一的 .impact 框
+        shelter_html = f'<div class="impact neutral">{rendered}</div>'
 
     # ---- 趨勢指標的結論 ----
+    # 用統一的 .impact 框，不用大型 verdict 框——每頁只有頁首一個大結論框，
+    # 卡內的結論全站都是同一種樣式。
     tv = d.get("trend_verdict") or {}
+    _tvk = {"hawkish": "hawkish", "dovish": "dovish"}.get(
+        (tv or {}).get("kind", ""), "neutral")
     trend_html = (
-        f'<div class="verdict {tv["kind"]}" style="margin-top:4px">'
-        f'<div class="v-main" style="font-size:20px">{esc(tv["title"])}</div>'
-        f'<div class="v-why" style="margin-top:8px">{esc(tv["desc"])}</div></div>'
+        f'<div class="impact {_tvk}">{esc(tv["title"])}——{esc(tv["desc"])}</div>'
         if tv else '<div class="empty">資料不足</div>')
 
     # ---- 能源對總體的估計影響 ----
@@ -330,6 +375,16 @@ def _inflation_body_full(d: dict) -> str:
         f'{_n} 項{_lab}' for _key, _lab in
         (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
          ("unknown", "無資料")) if (_n := _lt.get(_key)))
+    # 檢核卡的一句結論：只由紅黃燈數量推出，跟勞動、長端頁同一套做法。
+    _lt_crit, _lt_warn = _lt.get("critical", 0), _lt.get("warning", 0)
+    if _lt_crit:
+        _lt_lean, _lt_txt = "hawkish", "通膨壓力已越過警戒線，注意集中在哪一類。"
+    elif _lt_warn:
+        _lt_lean, _lt_txt = "neutral", "沒有警戒，但有指標貼近門檻，方向要盯。"
+    else:
+        _lt_lean, _lt_txt = "neutral", "各項都在警戒線內。"
+    _lights_impact = (f'<div class="impact {_lt_lean}">{esc(_light_sum)}'
+                      f'——{esc(_lt_txt)}</div>' if d["lights"] else "")
 
     return f"""
 {_verdict_card(d)}
@@ -344,7 +399,7 @@ def _inflation_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
+    <h2 id="kpi" data-open="1" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
     <div class="grid g4 inner">{kpis}</div>
     {surp_foot}
   </div>
@@ -359,14 +414,13 @@ def _inflation_body_full(d: dict) -> str:
     <h2 id="contrib" data-sum="{esc(_att_sum)}">分項貢獻分解</h2>
     <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
       估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
+    {shelter_html}
+    <div class="stat-row" style="margin-top:14px">{_stats(att['stats'])}</div>
+    {parts_html}
     {teach(
         "過去三個月物價的漲幅，是住房、食物、能源還是其他項目造成的。",
         "「CPI 漲 3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。",
         "看哪幾塊是正的（在推升）、哪幾塊是負的（在壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。")}
-    <div class="stat-row">{_stats(att['stats'])}</div>
-    <p class="hint" style="margin-top:-4px">兩者採不同計算口徑，不需完全相等。</p>
-    {parts_html}
-    {shelter_html}
     <details data-m-collapse><summary>各類別明細</summary>
     <div style="margin-top:14px">{att['bars']}</div>
     <div class="dlegend">
@@ -376,14 +430,10 @@ def _inflation_body_full(d: dict) -> str:
       <span>單位：個百分點（pp）</span>
     </div>
     <p class="hint" style="margin-top:14px">
-      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別期間價格變化。
-      住房占 CPI 權重超過三分之一，因此即使漲幅不大，
-      也可能對整體 CPI 產生明顯影響。</p>
-    <p class="hint" style="margin-top:10px">
-      分項貢獻為依 BLS Relative Importance 與各分類價格變化所做的
-      <b>近似估算</b>，用於觀察不同類別對通膨的方向與相對影響。由於 CPI
-      官方指數採用動態權重與分層聚合方法，估算貢獻加總不一定會與實際
-      CPI 漲幅完全相等。</p>
+      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別期間價格變化，
+      是<b>近似估算</b>，用來看方向與相對大小；官方 CPI 採動態權重與
+      分層聚合，所以分項加總不必等於官方漲幅。
+      住房占 CPI 權重超過三分之一，即使漲幅不大也會明顯影響整體。</p>
     </details>
   </div>
 </div>
@@ -392,11 +442,11 @@ def _inflation_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="trend" data-sum="{_trend_sum}">是全面在漲，還是少數項目？</h2>
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
+    {trend_html}
     {teach(
         "把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。",
         "同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。",
         "中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。")}
-    {trend_html}
     <details data-m-collapse><summary>三個指標的定義與數值</summary>
       <table class="lefty" style="margin-top:10px">
         <thead><tr><th>指標</th><th>目前</th><th>算法</th></tr></thead>
@@ -410,6 +460,7 @@ def _inflation_body_full(d: dict) -> str:
         <dd>只看價格很少調整的項目（例如房租、保險）。這些代表通膨的慣性，
           一旦漲上去就很難降下來。</dd>
       </dl>
+    </details>
   </div>
 </div>
 
@@ -418,10 +469,6 @@ def _inflation_body_full(d: dict) -> str:
     <h2 id="passthrough" data-sum="{_pt_sum}">薪資到服務業通膨的傳導</h2>
     <p class="hint"><b>薪資走向會在數月後反映到服務類物價</b>，
       是通膨黏性的核心機制。</p>
-    {teach(
-        "薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。",
-        "服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。",
-        "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。")}
     {_passthrough(d.get('passthrough'))}
   </div>
 </div>
@@ -430,19 +477,17 @@ def _inflation_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="energy" data-sum="{esc(_en_sum)}">能源價格與傳導</h2>
     <p class="hint">「已經發生但還沒反映到數據裡」的部分。</p>
+    <div class="impact neutral">{esc(d.get('energy_core_note', ''))}
+      <b>除非久到推高通膨預期</b>，油價不改變利率決策。</div>
+    <div class="stat-row" style="margin-top:14px">{_stats(d['energy_stats'])}</div>
+    {energy_head}
+    <h3 style="margin-top:20px">WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
+    <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>
+    {d.get('oil_chart', '')}
     {teach(
         "油價最近的變動，以及它大概會在一到兩個月後對總體 CPI 造成多大影響。",
         "能源只佔 CPI 約 6%，但波動極大，常常是單月 CPI 意外的主因。先知道油價動了多少，下個月 CPI 出爐時就不會被表面數字嚇到。",
         "油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。")}
-    <div class="stat-row">{_stats(d['energy_stats'])}</div>
-    {energy_head}
-    <p class="hint" style="margin:12px 0 0">{esc(d.get('energy_core_note', ''))}
-      <b>除非久到推高通膨預期</b>，油價不改變利率決策。</p>
-
-    <h3 style="margin-top:20px">WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
-    <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>
-    {d.get('oil_chart', '')}
-
     <details data-m-collapse><summary>零售汽油價格（{esc(d.get('gas_span', ''))}）</summary>
       <div style="margin-top:12px">{d.get('gas_chart', '')}</div>
       <p class="hint" style="margin-top:10px">
@@ -455,14 +500,15 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
-    <p class="hint">八項關鍵指標的當期狀態。</p>
+    <p class="hint">八項關鍵指標的當期狀態（不限本月）。</p>
+    {_lights_impact}
+    <details data-m-collapse open><summary>八項指標</summary>
+      <div class="lights" style="margin-top:12px">{lights_html}</div>
+    </details>
     {teach(
         "八個通膨相關指標逐一對照警戒線，紅黃綠一眼掃完。",
         "單一指標會騙人（基期效應能讓年增率忽高忽低），一排一起看才知道壓力是全面的還是個別的。",
         "數紅燈，並注意紅燈集中在哪一類——集中在服務類比集中在能源類嚴重得多。")}
-    <details data-m-collapse open><summary>八項指標</summary>
-      <div class="lights" style="margin-top:12px">{lights_html}</div>
-    </details>
   </div>
 </div>
 
@@ -490,7 +536,6 @@ def _inflation_body_full(d: dict) -> str:
       <dd>市場或民眾認為未來通膨會是多少。一旦大家「相信」通膨會一直高，
         就會反映在定價和薪資談判上，通膨會自我實現——這是聯準會最怕的事。</dd>
     </dl>
-    </details>
   </div>
 </div>
 """
@@ -510,13 +555,16 @@ def _ppi_card(pp: dict | None) -> str:
     def pv(v, d=1):
         return f"{v:+.1f}%" if v is not None else "—"
     gap = pp.get("gap_vs_cpi")
-    gap_note = ""
+    gap_note, _gap_impact = "", ""
     if gap is not None:
         gap_note = ("出廠價漲得比零售價快，企業還沒把成本轉嫁完，"
                     "未來幾季 CPI 有上行壓力。" if gap > 0.3 else
                     ("出廠價漲得比零售價慢，企業利潤在吸收成本，"
                      "下游漲價壓力較小。" if gap < -0.3 else
                      "上下游漲幅相當，管線裡沒有明顯的未轉嫁壓力。"))
+        _gl = ("hawkish" if gap > 0.3 else
+               "dovish" if gap < -0.3 else "neutral")
+        _gap_impact = f'<div class="impact {_gl}">{esc(gap_note)}</div>'
     stats = _stats([
         {"label": "核心 PPI 年增", "value": pv(pp["core_yoy"]),
          "note": f'三月年化 {pv(pp.get("core_3m"))}'},
@@ -539,13 +587,14 @@ def _ppi_card(pp: dict | None) -> str:
     return f"""<div class="grid">
   <div class="card">
     <h2 id="ppi" data-sum="核心 PPI {esc(pv(pp['core_yoy']))}　·　PPI−CPI {esc(f'{gap:+.1f}pp' if gap is not None else '—')}">生產者物價 PPI（上游）</h2>
-    <p class="hint">企業的出廠價。資料至 {esc((pp.get('asof') or '—')[:7])}。{esc(gap_note)}</p>
+    <p class="hint">企業的出廠價。資料至 {esc((pp.get('asof') or '—')[:7])}。</p>
+    {_gap_impact}
+    <div class="stat-row" style="margin-top:14px">{stats}</div>
+    {nc_html}
     {teach(
         "企業賣給下游的價格（出廠價）漲了多少。CPI 是你我付的零售價，PPI 是它的上游。",
         "物價的傳導有順序：出廠價先動、幾個月後零售價跟上。PPI 還有一個特殊角色——PCE 的醫療與金融服務項直接取自 PPI（PCE 量的是含保險給付的全部費用，CPI 只量自付額），所以月底的 PCE 月中就能推出來。",
         "看 PPI−CPI 差距：正值代表企業還沒轉嫁完、未來 CPI 有上行壓力。本站的核心 PCE 推估值就是從 CPI 與 PPI 組出來的，計算過程在情境頁的「這一格怎麼算」。")}
-    <div class="stat-row">{stats}</div>
-    {nc_html}
   </div>
 </div>"""
 

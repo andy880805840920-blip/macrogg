@@ -125,9 +125,10 @@ def _flag_row(f) -> str:
     if f.impact:
         impact = (f'<div class="impact {f.lean}">'
                   f'{esc(LEAN_TEXT.get(f.lean, ""))}　{esc(f.impact)}</div>')
-    # 「依據」預設收合，**只有 alert 級維持展開**——它是這一頁的頭條，
-    # 其餘的第一輪只需要「有哪幾件事、各自往哪邊」。
-    _open = " open" if f.severity == "alert" else ""
+    # 「依據」一律預設收合（含 alert 級）。先前 alert 的依據自動展開，
+    # 理由是「頭條省一次點擊」——但實際效果是整張卡第一眼就是一段長文，
+    # 「有哪幾件事、各自往哪邊」的掃讀節奏反而被打斷。
+    _open = ""
     return f"""<div class="flag {f.severity}">
   <span class="f-icon">{SEV_ICON.get(f.severity,'●')}</span>
   <div>
@@ -185,15 +186,22 @@ def _ustar_row(u: dict | None) -> str:
     """
     if not u:
         return ""
+    gap = u['u'] - u['ustar']
+    # 收合列直接用人話回答：不寫 u−u*、不寫「緊」這種單字術語
+    _pos = ("低" if gap < 0 else "高")
+    _state_txt = {"緊": "勞動市場仍偏緊，薪資有上行壓力",
+                  "鬆": "勞動市場已偏鬆",
+                  "中性": "大致在合理水準"}.get(u['state'], u['state'])
     return f"""<details class="f-more">
-  <summary>失業缺口 u − u*　<b style="color:{u['color']}">{esc(u['display'])}</b>　·　{esc(u['state'])}</summary>
-  <div class="f-detail">目前失業率 {u['u']:.1f}%　·　自然失業率 u* {u['ustar']:.2f}%
-    （CBO 估計，{esc(u['as_of'])}）。{esc(u['note'])}<br>
-    上面的分解講的是這個月<b>變化</b>的成因；這一行講的是<b>水準</b>——
-    現在的失業率離「不會讓通膨加速的水準」多遠。<br>
-    u* 由 CBO 用模型估計，季頻發布而且會被回溯修正——它不是觀測值。
-    所以這裡只用它判斷鬆／緊的方向，不拿來設門檻。缺口在 ±0.2 個百分點
-    以內一律當中性，因為 u* 本身的估計誤差就有這個量級。</div>
+  <summary>現在的失業率算高還是低？　比「不推升通膨的水準」{_pos}
+    <b style="color:{u['color']}">{abs(gap):.1f} 個百分點</b>——{esc(_state_txt)}</summary>
+  <div class="f-detail">經濟學家估計，美國失業率若低於約 {u['ustar']:.1f}%，
+    勞動市場就緊到會推升薪資與通膨。目前 {u['u']:.1f}%，比那條線{_pos}
+    {abs(gap):.1f} 個百分點——工作比「剛好」的狀態更{'好' if gap < 0 else '難'}找，
+    對聯準會是{'偏升息' if gap < 0 else '偏降息'}的背景。<br>
+    這條線（CBO 估計的自然失業率，{esc(u['as_of'])}）一季更新一次、會回頭修正，
+    估計誤差本身就有 ±0.2 個百分點——所以差距在 ±0.2 以內一律當中性，
+    也不拿它設任何門檻。</div>
 </details>"""
 
 
@@ -204,24 +212,23 @@ def _structure_block(u: dict | None) -> str:
     """
     if not u:
         return ""
+    # 瘦身：每列只留「名稱＋橫條＋人數＋較一年前」。逐類的一句說明與
+    # 佔比數字都砍掉——五類 × 五個元素是這張卡先前「第二套圖表系統」
+    # 的來源；分母怎麼選的方法論整段刪除（那是寫給自己的辯護）。
     rows = "".join(
         f'<div class="ustr {r["kind"]}">'
         f'<div class="us-name">{esc(r["label"])}</div>'
         f'<div class="us-bar"><i style="width:{r["share"]:.1f}%"></i></div>'
-        f'<div class="us-val">{esc(r["display"])}'
-        f'<span class="us-share">{r["share"]:.0f}%</span></div>'
-        f'<div class="us-yoy">較一年前 {esc(r["yoy_display"])}</div>'
-        f'<div class="us-note">{esc(r["note"])}</div></div>'
+        f'<div class="us-val">{esc(r["display"])}</div>'
+        f'<div class="us-yoy">較一年前 {esc(r["yoy_display"])}</div></div>'
         for r in u["rows"])
-    return f"""<details class="f-more ustruct"><summary>失業結構：這些人是怎麼變成失業的</summary>
-  <div class="impact {u['lean']}" style="margin-top:10px">{esc(u['verdict'])}</div>
-  <div class="ustr-list">{rows}</div>
-  <p class="hint" style="margin-top:10px">
-    {esc(u.get('lt_note', ''))}
-    橫條的長度是佔五個類別合計的比例。分母用合計而不是總失業人數，
-    因為 CPS 的失業原因分類不完全互斥，用總數會讓佔比加不到 100%。
-    重點看的是<b>變化</b>不是水準——永久性失業長期就是最大的一塊，
-    「它佔四成」不是訊息，「它是今年增加最多的一塊」才是。</p>
+    # 結論直接寫在收合列上，點開前就知道答案
+    _v = (u.get("verdict") or "").rstrip("。")
+    return f"""<details class="f-more ustruct"><summary>失業的人是怎麼變成失業的　·　{esc(_v)}</summary>
+  <div class="ustr-list" style="margin-top:12px">{rows}</div>
+  <p class="hint" style="margin-top:10px">{esc(u.get('lt_note', ''))}
+    橫條＝佔各類合計的比例。重點看<b>較一年前的變化</b>，不是誰最大——
+    「失去工作」長期本來就是最大的一塊。</p>
 </details>"""
 
 
@@ -235,18 +242,24 @@ def _claims_card(c: dict | None) -> str:
     lean_cls = c.get("lean", "neutral")
     return f"""<div class="grid">
   <div class="card">
-    <h2 id="claims" data-sum="{esc(c['stats'][0]['label'])} {esc(c['stats'][0]['value'])}　·　{esc(c['stats'][1]['label'])} {esc(c['stats'][1]['value'])}">每週失業金申請</h2>
-    <p class="hint">這一頁唯一的週頻資料：{esc(c.get('released') or '—')} 發布、
-      統計週至 {esc(c['as_of'])}。兩次就業報告之間，只有這一條會更新。</p>
-    <div class="stat-row">{_stats(c['stats'])}</div>
-    <div class="impact {lean_cls}" style="margin-top:14px">{esc(c['verdict'])}</div>
+    <h2 id="claims" data-sum="{esc(c['stats'][1]['label'])} {esc(c['stats'][1]['value'])}　·　{esc(c['stats'][2]['label'])} {esc(c['stats'][2]['value'])}">每週失業金申請</h2>
+    <p class="hint">這一頁唯一的週頻資料：<span class="nb">{esc(c.get('released') or '—')} 發布</span>、
+      <span class="nb">統計週至 {esc(c['as_of'])}</span>。</p>
+    <div class="impact {lean_cls}">{esc(c['verdict'])}</div>
+    <div class="stat-row" style="margin-top:14px">{_stats(c['stats'])}</div>
     <div style="margin-top:16px">{c['chart']}</div>
     <p class="hint" style="margin-top:8px">續領失業金人數（近兩年，單位萬人）</p>
+    {teach(
+        "每週有多少人新申請失業補助（初領）、多少人還在領（續領）。",
+        "這是兩次就業報告之間唯一會更新的勞動數據。初領量的是裁員的速度、續領量的是再就業的難度——兩者可以背離，而背離是勞動市場轉弱最早的形態。",
+        "別逐週反應：看四週平均與近一年的百分位。續領一直爬而初領沒動，就是「沒人被裁，但被裁的找不到下一份工作」。")}
     <details class="f-more"><summary>初領與續領差在哪、為什麼看四週平均</summary>
       <div class="f-detail">
         <b>日期先講清楚</b>：這一區標的是「統計週的結束日」不是發布日——
         8/13（四）發布的，就是「週結至 8/8」那一筆。看到日期比新聞早五天，
         不是資料沒更新，是同一筆。<br>
+        新聞報的「實際／預估／前值」全是<b>單週</b>口徑——對應卡上
+        「最新單週」那格；本站的判讀一律用四週平均。<br>
         <b>初領</b>是這週<b>新</b>失去工作的人，衡量的是裁員的速度；
         <b>續領</b>是還在領補助的人，衡量的是再就業的難度。
         兩者可以背離：裁員沒增加、但續領一直往上爬，代表「沒什麼人被裁，
@@ -371,25 +384,33 @@ def _labor_body_full(d: dict) -> str:
     asof = (d.get("asof", {}).get("labor") or "")[:7]
     surp_inline = (d.get("surprises") or {}).get("inline") or {}
     _fresh = bool(d.get("is_fresh"))
+    lean = d.get("kpi_lean", {})
     kpis = "".join([
+        # en 主標＋水準／本期 chips：跟通膨頁的 KPI 卡同一套長相。
+        # 英文為主是為了對照 BLS 新聞稿與英文報導（使用者的原話：
+        # 「你用中文寫我會不知道誰是誰」）。
         _kpi_card("非農就業月變動", k["nfp_display"], k["nfp_sub"], k.get("nfp_plain"),
                   charts.sparkline(k["nfp_spark"], zero_line=True),
                   k.get("nfp_flag"), k.get("nfp_flag_kind", ""),
                   mini=mini.get("nfp", ""), asof=asof,
-                  surprise=surp_inline.get("nfp"), fresh=_fresh),
+                  surprise=surp_inline.get("nfp"), fresh=_fresh,
+                  en="Nonfarm Payrolls, m/m", leans=lean.get("nfp", ())),
         _kpi_card("失業率 U-3", k["u3_display"], k["u3_sub"], k.get("u3_plain"),
                   charts.sparkline(k["u3_spark"]),
                   k.get("u3_flag"), k.get("u3_flag_kind", ""),
                   mini=mini.get("u3", ""), asof=asof,
-                  surprise=surp_inline.get("u3"), fresh=_fresh),
+                  surprise=surp_inline.get("u3"), fresh=_fresh,
+                  en="Unemployment Rate U-3", leans=lean.get("u3", ())),
         _kpi_card("平均時薪年增率", k["ahe_display"], k["ahe_sub"], k.get("ahe_plain"),
                   charts.sparkline(k["ahe_spark"]),
                   k.get("ahe_flag"), k.get("ahe_flag_kind", ""),
-                  mini=mini.get("ahe", ""), asof=asof, fresh=_fresh),
+                  mini=mini.get("ahe", ""), asof=asof, fresh=_fresh,
+                  en="Avg Hourly Earnings, y/y", leans=lean.get("ahe", ())),
         _kpi_card("勞動參與率", k["lfpr_display"], k["lfpr_sub"],
                   k.get("lfpr_plain"), charts.sparkline(k["lfpr_spark"]),
                   k.get("lfpr_flag"), k.get("lfpr_flag_kind", ""),
-                  mini=mini.get("lfpr", ""), asof=asof, fresh=_fresh),
+                  mini=mini.get("lfpr", ""), asof=asof, fresh=_fresh,
+                  en="Labor Force Participation", leans=lean.get("lfpr", ())),
     ])
 
     rev, att, dec, sc = d["revision"], d["attribution"], d["decomp"], d["score"]
@@ -423,37 +444,51 @@ def _labor_body_full(d: dict) -> str:
                   if abs(_r) >= attribution.RESID_SHOW else "")
         # 統計顯著性：UNRATE 只到小數一位，0.1 個百分點在 BLS 自己的標準下
         # 不可分辨於零。不標的話讀者會把雜訊當成訊號。
-        # 一般性的「±0.1 屬雜訊」原則已寫在 teach 層；這裡只在本月
-        # 真的低於門檻時標一行短的，不重複整段解釋。
-        _signif = ("" if dec.get("significant", True) else
-                   f'<div class="dc-signif">本月變動 '
-                   f"{abs(dec['delta_rate']):.1f}，低於顯著門檻 "
-                   f"{dec.get('signif_threshold', 0.2):.1f}——屬雜訊範圍。</div>")
-        dec_html = f"""<div class="dsum">
-  <div class="dsum-main" style="color:{dec['verdict_color']}">{esc(dec['verdict_text'])}</div>
-  <div class="dsum-sub">失業率 {d['kpi']['u3_display']}　·
-    較上月 {dec['delta_rate']:+.2f} 個百分點</div>
-</div>
+        # 結論統一走 .impact 色框（六張卡同一種「一句結論」視覺），
+        # 顯著性註記併進結論句尾，不再自己一個小灰塊。
+        _dlean = {"bad_decline": "dovish", "bad_rise": "dovish",
+                  "good_decline": "hawkish"}.get(dec.get("verdict"), "neutral")
+        # 結論寫成完整的一句人話（方向＋主因＋雜訊註記），
+        # 取代先前乾巴巴的「勞動力變動：勞動力退出所致」。
+        _dr = dec['delta_rate']
+        _dir_word = "下降" if _dr < 0 else ("上升" if _dr > 0 else "持平")
+        _lf_wan = fmt.wan_abs(dec['delta_labor_force'])
+        _emp_wan = fmt.wan_abs(dec['delta_employed'])
+        _cause = {
+            "bad_decline": f"主因是 {_lf_wan}退出職場、不再找工作——不是就業變好",
+            "good_decline": f"主因是就業增加 {_emp_wan}——是真實的改善",
+            "bad_rise": f"主因是有工作的人減少 {_emp_wan}",
+            "supply_rise": f"主因是 {_lf_wan}投入找工作（分母變大），不代表就業惡化",
+        }.get(dec.get("verdict"), "兩股力量大致抵消")
+        _impact_txt = (f"這個月失業率{_dir_word} {abs(_dr):.2f} 個百分點，{_cause}"
+                       + ("（幅度在雜訊範圍內，強度別當真）"
+                          if not dec.get("significant", True) else "") + "。")
+        # 分解列的標籤直接講事實，不用「就業效果／勞動力效果」的課本詞；
+        # 「其中失業人數」「近似誤差」這類補充退出常駐版面。
+        _emp_label = (f"有工作的人{'少了' if dec['delta_employed'] < 0 else '多了'} "
+                      f"{_emp_wan}")
+        _lf_label = (f"{_lf_wan}"
+                     + ("退出職場、不再找工作" if dec['delta_labor_force'] < 0
+                        else "投入找工作"))
+        dec_html = f"""<div class="impact {_dlean}">{esc(_impact_txt)}</div>
+<div class="stat-row" style="margin:14px 0 0">{_stats([
+    {"label": "失業率 U-3", "value": d['kpi']['u3_display']},
+    {"label": "較上月", "value": f"{dec['delta_rate']:+.2f} 個百分點"}])}</div>
 <div class="dcomp">
+  <div class="dc-cap">本月的變動怎麼來的</div>
   <div class="dc-row">
-    <div class="dc-name">就業效果</div>
+    <div class="dc-name">{esc(_emp_label)}</div>
     <div class="dc-bar"><span class="dc-zero"></span>
       <i style="{'left' if e >= 0 else 'right'}:50%;width:{abs(e)/span*50:.1f}%"></i></div>
-    <div class="dc-val">{e:+.2f}</div>
+    <div class="dc-val">{e:+.2f}<span>{'推高' if e >= 0 else '壓低'}</span></div>
   </div>
-  <div class="dc-note">{'推高' if e >= 0 else '壓低'}失業率　·　有工作的人 {esc(fmt.wan(dec['delta_employed']))}</div>
   <div class="dc-row">
-    <div class="dc-name">勞動力效果</div>
+    <div class="dc-name">{esc(_lf_label)}</div>
     <div class="dc-bar"><span class="dc-zero"></span>
       <i style="{'left' if l >= 0 else 'right'}:50%;width:{abs(l)/span*50:.1f}%"></i></div>
-    <div class="dc-val">{l:+.2f}</div>
+    <div class="dc-val">{l:+.2f}<span>{'推高' if l >= 0 else '壓低'}</span></div>
   </div>
-  <!-- 這一列是「勞動力」（有工作＋正在找工作）的變動，不是失業人數。
-       標成「在找工作的人」會被讀成失業人數，兩者差了將近四倍。 -->
-  <div class="dc-note">{'推高' if l >= 0 else '壓低'}失業率　·　勞動力（有工作＋正在找工作）{esc(fmt.wan(dec['delta_labor_force']))}
-    　·　其中失業人數 {esc(fmt.wan(dec['delta_unemployed']))}</div>
-  <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點{_resid}</div>
-  {_signif}
+  <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點（就是本月的變動）{_resid}</div>
 </div>"""
 
     # ---- 折疊區的表格 ----
@@ -479,13 +514,13 @@ def _labor_body_full(d: dict) -> str:
         _resid_txt = (f'；行業明細合計 {esc(fmt.wan(_g["explained"]))}，'
                       f'與全體合計的差 {esc(fmt.wan(_resid))} 來自未單獨列出的行業'
                       if abs(_resid) >= 5 else "")
+        # 這句就是這張卡的結論——用統一的 .impact 框，不再用警告框
+        #（warnbox 保留給真正的資料異常）。
         gross_note = (
-            '<div class="warnbox" style="margin:0 0 14px">'
-            '<b>淨額小，是因為增減互相抵消</b><br>'
-            f'本月有 {esc(fmt.wan(_g["positive"]))} 的增加與 '
-            f'{esc(fmt.wan(_g["negative"]))} 的減少{_resid_txt}。'
-            '「這個月沒什麼事」與「兩邊都在大幅變動但互相抵消」，'
-            '對政策的意涵完全不同。</div>')
+            '<div class="impact neutral">'
+            f'淨額小，是增減互相抵消：本月 {esc(fmt.wan(_g["positive"]))} 的增加'
+            f'被 {esc(fmt.wan(_g["negative"]))} 的減少蓋過{_resid_txt}。'
+            '「沒什麼事」與「大幅變動但互相抵消」，對政策的意涵完全不同。</div>')
     # 每一列的樣本期數不一樣（週資料換算成月之後只有十幾個月，
     # 月資料是 60 個月）。用 min() 一句話蓋掉全部，會把六列 5 年期的
     # z-score 說成 14 個月——差 4 倍多。所以逐列標出來。
@@ -524,10 +559,24 @@ def _labor_body_full(d: dict) -> str:
                 + (f'　·　{k["u3_flag"]}' if k.get("u3_flag") else ""))
     _bk = d["breakeven"]
     _bk_sum = f'缺口 {_bk["gap_display"]}　·　{_bk["verdict_label"]}'
+    # 結論框的方向色：缺口紅（撐不住失業率）＝偏弱、綠＝偏強
+    _bk_lean = {"var(--critical)": "dovish",
+                "var(--good)": "hawkish"}.get(_bk.get("gap_color"), "neutral")
     _att_sum = "　·　".join(f'{s["label"]} {s["value"]}'
                            for s in att["stats"][:2])
     _rev_sum = next((f'{s["label"]} {s["value"]}' for s in rev["stats"]
                      if s["value"] not in ("—", "")), "本次無修正資料")
+    # 修正卡的一句結論：拿「近一年修正傾向」那格組出來（它就是這卡的重點）。
+    _rev_bias = next((s for s in rev["stats"] if "傾向" in s.get("label", "")), None)
+    if _rev_bias and _rev_bias.get("value") not in ("—", ""):
+        _rb_lean = ("dovish" if str(_rev_bias["value"]).startswith("-")
+                    else "hawkish" if str(_rev_bias["value"]).startswith("+")
+                    else "neutral")
+        _rev_impact = (f'<div class="impact {_rb_lean}">'
+                       f'{esc(_rev_bias["label"])} {esc(_rev_bias["value"])}'
+                       f'——{esc(_rev_bias.get("note") or "")}</div>')
+    else:
+        _rev_impact = ""
     _lt = {}
     for _l in d["lights"]:
         _lt[_l.status] = _lt.get(_l.status, 0) + 1
@@ -540,6 +589,7 @@ def _labor_body_full(d: dict) -> str:
     _sv = sc["score"]
     _sw = "偏強" if _sv > 0.45 else ("偏弱" if _sv < -0.45 else "中性")
     _score_sum = (f'綜合判定：就業{_sw}（{_sv:+.2f}，0 為歷史平均）')
+    _sw_lean = {"偏強": "hawkish", "偏弱": "dovish"}.get(_sw, "neutral")
 
     return f"""
 {_verdict_card(d)}
@@ -554,7 +604,7 @@ def _labor_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="kpi" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
+    <h2 id="kpi" data-open="1" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
     <div class="grid g4 inner">{kpis}</div>
     {_surprise_footnote(d.get('surprises'))}
     <details data-m-collapse><summary>JOLTS 職缺與人力流動</summary>
@@ -568,31 +618,27 @@ def _labor_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="unrate" data-sum="{esc(_dec_sum)}">失業率變動分解</h2>
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
+    {dec_html}
+    {_ustar_row(d.get('ustar'))}
     {teach(
         "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
         "失業率只算「還在找工作」的人，所以下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
         "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
-    {dec_html}
-    {_ustar_row(d.get('ustar'))}
     {_structure_block(d.get('unemp_structure'))}
   </div>
 
   <div class="card">
     <h2 id="breakeven" data-sum="{esc(_bk_sum)}">損益兩平就業增速</h2>
-    <p class="hint">維持失業率不變，每個月需要新增多少工作。
-      沒有這條基準線，非農的絕對數字無法解讀。</p>
+    <p class="hint">維持失業率不變，每個月需要新增多少工作——非農的「及格線」。</p>
+    <div class="impact {_bk_lean}">缺口 {esc(d['breakeven']['gap_display'])}　·　{esc(d['breakeven']['verdict_label'])}。{esc(d['breakeven']['verdict_note'])}</div>
+    <div class="stat-row" style="margin-top:14px">{_stats(d['breakeven']['stats'] + [
+        {"label": "缺口", "value": d['breakeven']['gap_display'],
+         "color": d['breakeven']['gap_color']}])}</div>
+    <div style="margin-top:14px">{d['breakeven']['chart']}</div>
     {teach(
         "美國每個月人口都在成長，所以就業也要跟著增加，失業率才不會上升。這一區算的就是那條「及格線」。",
         "新聞說「非農新增 5 萬人」，到底算好還是壞？沒有及格線就答不出來。及格線會隨人口與移民政策改變，前幾年是 10–15 萬，現在低得多。",
         "非農高於及格線＝就業市場在變強；低於＝表面有新增、其實撐不住現在的失業率，失業率之後會慢慢上升。")}
-    <div class="stat-row">{_stats(d['breakeven']['stats'])}</div>
-    <div class="bkgap" style="color:{d['breakeven']['gap_color']}">
-      <span class="bk-label">缺口</span>
-      <span class="bk-val">{d['breakeven']['gap_display']}</span>
-      <span class="bk-verdict">{esc(d['breakeven']['verdict_label'])}</span>
-    </div>
-    <p class="hint" style="margin:12px 0 0">{esc(d['breakeven']['verdict_note'])}</p>
-    <div style="margin-top:14px">{d['breakeven']['chart']}</div>
     <details data-m-collapse><summary>計算方式與注意事項</summary>
       <p class="hint" style="margin:10px 0 0">計算依據：{esc(d['breakeven']['inputs'])}</p>
       <dl class="gloss" style="margin-top:10px">
@@ -616,13 +662,8 @@ def _labor_body_full(d: dict) -> str:
     <h2 id="industry" data-sum="{esc(_att_sum)}">行業別貢獻分解</h2>
     <p class="hint">只列增減最大的各三個與變動異常的行業；
       完整 {att['total_count']} 個行業收在下方表格。</p>
-    {teach(
-        "這個月新增（或減少）的就業，是哪幾個行業貢獻的。",
-        "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。",
-        "先看增與減集中在誰身上，再看圖下方有沒有標 ▲ 的異常行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
-    <div class="stat-row">{_stats(att['stats'])}</div>
     {gross_note}
-    <details data-m-collapse><summary>增減幅前幾名（圖）</summary>
+    <div class="stat-row" style="margin-top:14px">{_stats(att['stats'])}</div>
     <div style="margin-top:14px">{att['bars']}</div>
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>增加</span>
@@ -630,7 +671,10 @@ def _labor_body_full(d: dict) -> str:
       <span><i style="background:var(--muted-bar)"></i>不受景氣影響／加總列</span>
       <span>單位：萬人</span>
     </div>
-    </details>
+    {teach(
+        "這個月新增（或減少）的就業，是哪幾個行業貢獻的。",
+        "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。",
+        "先看增與減集中在誰身上，再看圖下方有沒有標 ▲ 的異常行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
     <details data-m-collapse><summary>全部 {att['total_count']} 個行業</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>行業</th><th>增減（萬人）</th><th>同向佔比</th><th>自身變動</th></tr></thead>
@@ -648,13 +692,13 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="revision" data-sum="{esc(_rev_sum)}">歷史數據修正</h2>
-    <p class="hint">就業數字第一次公布是估算值，之後兩個月會用更完整的資料重算。
-      修正幅度常常比當月的變動還大。</p>
+    <p class="hint">初次公布是估算值，之後兩個月會用更完整的資料重算。</p>
+    {_rev_impact}
+    <div class="stat-row" style="margin-top:14px">{_stats(rev['stats'])}</div>
     {teach(
         "之前公布的就業數字，事後被改了多少。",
         "市場只對「第一次公布」的數字有反應，但那是估算值。如果初值總是被往下修，代表你在新聞上看到的就業一直比真實情況好——這正是判斷「數據可不可信」的地方。",
         "看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。")}
-    <div class="stat-row">{_stats(rev['stats'])}</div>
     <details data-m-collapse><summary>逐月修正明細</summary>
       {rev['table']}
       <p class="hint" style="margin-top:10px">
@@ -666,15 +710,16 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(_light_sum)}　·　{esc(_score_sum)}">關鍵指標檢核與綜合強弱</h2>
-    <p class="hint">目前的整體狀態（不限本月）：先數紅燈，再看最下方加權出來的一個總分。</p>
-    {teach(
-        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線；最下方再把它們換算成同一把尺、加權平均成一個總分。",
-        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。指標會互相矛盾時（非農弱但職缺強），總分強迫所有指標表態，給一個唯一的方向。",
-        "先數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。總分看正負與連續趨勢就好——連續幾期往下掉比單期的絕對值重要；格位判定仍以失業率為準。")}
+    <p class="hint">目前的整體狀態（不限本月）：先數紅燈，再看加權出來的一個總分。</p>
+    <div class="impact {_sw_lean}">{esc(_score_sum)}　·　{esc(_light_sum)}</div>
     <details data-m-collapse open><summary>八項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
     {_score_axis(sc)}
+    {teach(
+        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線；再把它們換算成同一把尺、加權平均成一個總分。",
+        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。指標會互相矛盾時（非農弱但職缺強），總分強迫所有指標表態，給一個唯一的方向。",
+        "先數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。總分看正負與連續趨勢就好——連續幾期往下掉比單期的絕對值重要；格位判定仍以失業率為準。")}
     <details data-m-collapse><summary>總分的各指標貢獻明細</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>

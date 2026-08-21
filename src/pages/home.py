@@ -552,8 +552,10 @@ def _home_body_legacy(ctxs: dict) -> str:
     f_dir = shift.get("direction", "neutral")
     f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
     lean = LEAN_TEXT.get(sc.lean, "中性")
-    trig, _ = _pick_next_trigger(sc)
-    trigger = f"{trig.label}：{trig.distance}" if trig else "尚無可計算門檻"
+    _nx = _pick_next_trigger(sc)
+    trig = _nx["trigger"]
+    trigger = ("短期傾向原地不動" if _nx["mode"] == "hold" else
+               f"{trig.label}：{trig.distance}" if trig else "尚無可計算門檻")
     metrics = "".join([
         state_chip("九宮格位置", f"{sc.labor_state} × {sc.infl_state}", sc.name,
                    "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
@@ -636,24 +638,12 @@ def _brief_content(ctxs: dict) -> str:
 
 def _pick_next_trigger(sc):
     """
-    「可能下一格」只能從**相鄰格**的條件裡挑，取距離最近的那條。
-
-    先前這裡優先拿 binding（政策解鎖）條件——它可能指向對角另一端，
-    首頁就出現「傾向緊縮(中×高) → 預防性降息(中×低)」這種一次跳兩格
-    的畫面。政策解鎖回答的是另一個問題（方向要翻還缺什麼），另行回傳。
-    與 pages/scenario.py 的挑選規則一致。
+    「可能下一格」的挑選。規則本體在 analysis.scenario.pick_next——
+    方向優先、距離其次：先前純看距離時，失業率 4.1% 離轉「強」的 4.0
+    比離轉「弱」的 4.3 近，畫面說下一格是升息壓力，但數據明明朝弱走。
+    首頁與情境頁共用同一個函式，兩頁不會再各挑各的。
     """
-    import re as _re
-
-    def _gapv(x):
-        m = _re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "")
-        return abs(float(m.group(0))) if m else 9e9
-
-    adj = [x for x in sc.triggers if getattr(x, "adjacent", True) and not x.met]
-    trig = min(adj, key=_gapv) if adj else None
-    unlock = next((x for x in sc.triggers
-                   if x.binding and not getattr(x, "adjacent", True)), None)
-    return trig, unlock
+    return scenario_mod.pick_next(sc)
 
 
 def _next_cell(sc, trigger) -> tuple[str, str]:
@@ -822,6 +812,56 @@ def _watch_rows(ctxs: dict, sc) -> str:
         for e in events)
 
 
+def _focus_strip(f: dict | None) -> str:
+    """
+    今日市場焦點：hero 之上的窄條。三顆數字（10Y/30Y/FedWatch）＋一段焦點。
+
+    數字的來源分兩級並在畫面上標清楚：殖利率是 FRED 的官方序列（規則）；
+    FedWatch 機率是 AI 搜尋擷取（僅供參考）。焦點段由 AI 整理自新聞標題，
+    AI 掛掉時這裡收到的已是「直接列標題」的退回版，照樣能顯示。
+    """
+    if not f:
+        return ""
+    chips = []
+    for y in f.get("yields") or []:
+        d = y.get("delta_bp")
+        cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
+        dtxt = f"{d:+d} 基點" if d is not None else "—"
+        chips.append(f'<div class="fs-chip"><span>{esc(y["label"])}</span>'
+                     f'<b>{y["value"]:.2f}%</b>'
+                     f'<i class="{cls}">{esc(dtxt)}</i></div>')
+    fw = f.get("fedwatch") or {}
+    if fw.get("pct") is not None:
+        d = fw.get("delta_pp")
+        dtxt = (f"{d:+.1f} pp" if d is not None else
+                ("擷取異常，沿用前值" if fw.get("suspect") else "—"))
+        cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
+        chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
+                     f'<b>{fw["pct"]:.0f}%</b>'
+                     f'<i class="{cls}">{esc(dtxt)}</i></div>')
+    else:
+        chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
+                     '<b>—</b><i></i></div>')
+    text = (f'<p class="fs-text">{esc(f.get("text") or "")}</p>'
+            if f.get("text") else "")
+    links = ""
+    if f.get("links"):
+        rows = "".join(
+            f'<div class="fs-link"><a href="{esc(x["link"])}" rel="noopener">'
+            f'{esc(x["title"])}</a></div>' for x in f["links"])
+        links = (f'<details class="f-more"><summary>來源標題</summary>'
+                 f'<div class="f-detail">{rows}</div></details>')
+    note = ("殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點"
+            + ("　·　機率：CME FedWatch，AI 擷取僅供參考"
+               if fw.get("pct") is not None else "")
+            + ("　·　焦點由 AI 整理自新聞標題"
+               if f.get("text_source") in ("model", "cache") else ""))
+    return (f'<section class="home-zone focus-strip" aria-label="今日市場焦點">'
+            f'<div class="fs-head">今日市場焦點</div>'
+            f'<div class="fs-chips">{"".join(chips)}</div>'
+            f'{text}{links}<div class="fs-note">{esc(note)}</div></section>')
+
+
 def home_body(ctxs: dict) -> str:
     """總覽固定五區：先結論，再門檻、模組、變化與接下來看什麼。"""
     sd = ctxs.get("scenario") or {}
@@ -843,9 +883,20 @@ def home_body(ctxs: dict) -> str:
     labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
 
-    trigger, unlock = _pick_next_trigger(sc)
-    next_name, trigger_text = _next_cell(sc, trigger)
-    trigger_detail = (f'<span>{esc(trigger.current)}</span><span>{esc(trigger.threshold)}</span>'
+    _nx = _pick_next_trigger(sc)
+    trigger, unlock = _nx["trigger"], _nx["unlock"]
+    if _nx["mode"] == "hold":
+        # 兩軸都在漂移、但都不朝相鄰門檻：誠實說「傾向不動」，
+        # 最近的門檻降級成參考，不冒充預測。
+        next_name = "傾向原地不動"
+        trigger_text = f"{_nx['reason']}——目前都不朝相鄰門檻走"
+    else:
+        next_name, trigger_text = _next_cell(sc, trigger)
+        if _nx["mode"] == "directional" and _nx.get("reason"):
+            trigger_text += f"（依據：{_nx['reason']}）"
+    _ref = "參考門檻：" if _nx["mode"] == "hold" else ""
+    trigger_detail = (f'<span>{esc(_ref)}{esc(trigger.label)}　{esc(trigger.current)}</span>'
+                      f'<span>{esc(trigger.threshold)}</span>'
                       if trigger else "")
     unlock_html = (
         f'<div class="home-trigger-unlock"><span>政策解鎖</span>'
@@ -867,6 +918,7 @@ def home_body(ctxs: dict) -> str:
 
     return f"""
 <main class="home-dashboard">
+  {_focus_strip(ctxs.get('_focus'))}
   <section class="home-hero {esc(sc.lean)}" aria-labelledby="home-now">
     <div class="home-hero-top">
       <div><div class="home-kicker">目前情境</div>

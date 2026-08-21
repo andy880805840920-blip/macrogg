@@ -40,6 +40,7 @@ from src.analysis import freshness                                # noqa: E402
 from src.analysis import series_quality                             # noqa: E402
 from src.analysis import brief as brief_mod                        # noqa: E402
 from src.analysis import polish                                    # noqa: E402
+from src.analysis import focus_today                               # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
 from src.pages import scenario as scen_page                       # noqa: E402
@@ -250,8 +251,20 @@ def _fresh_releases(ctxs: dict) -> dict:
         old = {}
 
     out, state = {}, {}
-    for key in ("labor", "inflation"):
-        month = (ctxs.get(key) or {}).get("data_month", "")
+    lab, inf, fom = (ctxs.get("labor") or {}, ctxs.get("inflation") or {},
+                     ctxs.get("fomc") or {})
+    # 六種發布各自的期別。先前只認就業報告與 CPI，於是「本次更新」
+    # 一個月只出現六天；PCE（月底）、失業金（每週四）、JOLTS（月中）、
+    # FOMC（會後）都是讀者打開網站想先知道的新東西。
+    sources = {
+        "labor": lab.get("data_month", ""),
+        "inflation": inf.get("data_month", ""),
+        "pce": ((inf.get("asof") or {}).get("pce") or "")[:7],
+        "claims": ((lab.get("claims") or {}).get("machine") or {}).get("week", ""),
+        "jolts": lab.get("jolts_month", ""),
+        "fomc": (fom.get("latest_date", "") if not fom.get("empty") else ""),
+    }
+    for key, month in sources.items():
         if not month:
             continue
         rec = old.get(key)
@@ -467,10 +480,13 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     banner = (labor_page.offline_banner(ctxs.get("_real_modules") or [])
               if offline else "")
-    # 停更警告接在離線警告後面（兩者可以同時成立，但實務上不會）。
-    # 這個要放在每一頁，不能只放勞動頁——停更的可能是 DGS30，
-    # 而看長端頁的人不會先去勞動頁確認資料還新不新。
-    banner += freshness.banner_html(ctxs.get("_stale") or [], site.esc)
+    # 停更警告只掛在**相關的那一頁**＋首頁，而且收成一行——
+    # 先前是每一頁都放一整塊展開的框，停更的是 DGS30 時，
+    # 勞動頁的讀者也被迫看一塊跟本頁結論無關的警告。
+    _stale = ctxs.get("_stale") or []
+
+    def _banner(page: str | None = None) -> str:
+        return banner + freshness.banner_html(_stale, site.esc, page)
     lab, inf, fom, scn = (ctxs.get("labor"), ctxs.get("inflation"),
                           ctxs.get("fomc"), ctxs.get("scenario"))
     if only:
@@ -482,7 +498,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             "勞動市場", "/labor/", labor_page.labor_body(lab),
             subtitle=(f"{lab['release_name']}　·　資料月份 {lab['data_month']}"
                       f"　·　更新於 {lab['generated_at']}"),
-            footer=labor_page.labor_footer(lab), banner=banner)
+            footer=labor_page.labor_footer(lab), banner=_banner("labor"))
         write("labor/index.html", html)
         archive(f"archive/labor-{lab['data_month']}/index.html", html)
 
@@ -492,7 +508,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             "通膨", "/inflation/", infl_page.inflation_body(inf),
             subtitle=(f"{inf['release_name']}　·　資料月份 {inf['data_month']}"
                       f"　·　更新於 {inf['generated_at']}"),
-            footer=infl_page.inflation_footer(inf), banner=banner)
+            footer=infl_page.inflation_footer(inf), banner=_banner("inflation"))
         write("inflation/index.html", html)
         archive(f"archive/inflation-{inf['data_month']}/index.html", html)
     elif not only or not (OUT_DIR / "inflation/index.html").exists():
@@ -504,7 +520,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         write("fomc/index.html", site.page(
             "聯準會文本", "/fomc/", fomc_page.fomc_body(fom),
             subtitle=(f"最新聲明 {fom['latest_date']}　·　更新於 {fom['generated_at']}"),
-            footer=fomc_page.fomc_footer(fom), banner=banner))
+            footer=fomc_page.fomc_footer(fom), banner=_banner("fomc")))
     elif not only or not (OUT_DIR / "fomc/index.html").exists():
         write("fomc/index.html", site.soon_page(
             "聯準會文本", "/fomc/",
@@ -523,7 +539,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             "長端與債務", "/rates/", rates_page.rates_body(rts),
             subtitle=(f"{rts['release_name']}　·　資料截止 {rts['as_of']}"
                       f"　·　更新於 {rts['generated_at']}"),
-            footer=rates_page.rates_footer(rts), banner=banner))
+            footer=rates_page.rates_footer(rts), banner=_banner("rates")))
 
     # ---- 情境合成 ----
     if not scn and not (OUT_DIR / "scenario/index.html").exists():
@@ -534,7 +550,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         write("scenario/index.html", site.page(
             "情境合成", "/scenario/", scen_page.scenario_body(scn),
             subtitle=f"{scn['as_of']}　·　更新於 {scn['generated_at']}",
-            footer=scen_page.scenario_footer(scn), banner=banner))
+            footer=scen_page.scenario_footer(scn), banner=_banner("scenario")))
 
     # ---- 首頁與全站頁 ----
     # 局部重跑原則上不動這些頁（避免用殘缺 context 產生降級結論），
@@ -549,7 +565,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         "美國總經儀表板", "/", home_page.home_body(ctxs),
         subtitle=f"最後更新 {clock.stamp()}",
         footer=home_page.home_footer(ctxs),
-        banner=banner))
+        banner=_banner(None)))
 
     # ---- 存檔 ----
     entries = []
@@ -776,6 +792,14 @@ def main() -> int:
         for _k in ("cpi", "ppi", "pce"):
             if _next.get(_k):
                 ctxs["inflation"][f"next_{_k}"] = _next[_k]
+    # 今日市場焦點（首頁 hero 之上的窄條）。任何一步失敗都不擋主流程。
+    try:
+        ctxs["_focus"] = focus_today.build(
+            rates_series, args.offline, load_config("focus.yaml"),
+            STATE_FILE.parent / "focus.json")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
+        ctxs["_focus"] = None
     ctxs["_stale"] = [] if args.offline else freshness.check(all_series)
     if ctxs["_stale"]:
         log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),

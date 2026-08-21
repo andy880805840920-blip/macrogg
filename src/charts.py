@@ -251,8 +251,11 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
     return (
         f'<div class="lwrap">'
         f'<div class="lplot">{svg}{glabs}{mark_labels}{end_dot}</div>'
+        # 下緣右側寫成一個詞組「最新 值（日期）」：先前是「粗體值　日期」
+        # 兩個 token 並排，手機上跟左側的起日看起來像一行擠了三個數字。
         f'<div class="lxaxis"><span>{_esc(pts[0]["date"])}</span>'
-        f'<span><b>{pts[-1]["value"]:,.{digits}f}{_esc(unit)}</b>　{_esc(pts[-1]["date"])}</span>'
+        f'<span class="nb">最新 <b>{pts[-1]["value"]:,.{digits}f}{_esc(unit)}</b>'
+        f'（{_esc(pts[-1]["date"])}）</span>'
         f"</div></div>"
     )
 
