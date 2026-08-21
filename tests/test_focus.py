@@ -180,13 +180,18 @@ check("⑦t 當月平盤不影響（檢查只針對遠月）",
 
 # ⑦u 交叉檢核：期貨與官方差逾 25pp → 期貨端判壞、改用官方值
 check("⑦u 差逾 25pp 改用官方值",
-      ft._pick_fw((100.0, 4.00), 20.0) == (20.0, "atlanta", None))
-check("⑦v 差距在範圍內 → 用期貨（附隱含）",
-      ft._pick_fw((26.0, 3.69), 30.0) == (26.0, "futures", 3.69))
+      ft._pick_fw((100.0, 4.00, 37.5), 20.0) == (20.0, "atlanta", None, None))
+check("⑦v 差距在範圍內 → 用期貨（附隱含與價差）",
+      ft._pick_fw((26.0, 3.69, 6.5), 30.0) == (26.0, "futures", 3.69, 6.5))
 check("⑦w 期貨掛了 → 官方值",
-      ft._pick_fw(None, 31.0) == (31.0, "atlanta", None))
+      ft._pick_fw(None, 31.0) == (31.0, "atlanta", None, None))
 check("⑦x 兩邊都沒有 → 退 AI 層",
-      ft._pick_fw(None, None) == (None, "", None))
+      ft._pick_fw(None, None) == (None, "", None, None))
+
+# ⑦y 定價達一碼以上：機率鎖 100，但價差照實帶回（首頁改講事實用）
+_ry = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.115))
+check("⑦y 價差 26bp → 機率 100＋spread_bp 26",
+      _ry is not None and _ry[0] == 100.0 and abs(_ry[2] - 26.0) < 0.1, _ry)
 
 # ⑦k Atlanta Fed 第二層：沒設取值路徑時只偵察不猜數字；設了才啟用
 class _FakeAt:

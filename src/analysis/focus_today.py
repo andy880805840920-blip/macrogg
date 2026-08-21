@@ -688,12 +688,16 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
                     "疑為陳舊報價，不採用", implied, anchor)
         return None
     pct = round(max(0.0, min(100.0, (implied - anchor) / 0.25 * 100)), 1)
+    spread_bp = round((implied - anchor) * 100, 1)
     log.info("FedWatch 自算：遠月 %s 隱含 %.3f%% − 當月 %s 隱含 %.3f%% "
-             "→ 升息一碼機率 %.1f%%（目標中點 %.3f%%，閘門通過）",
-             sym, implied, anchor_sym, anchor, pct, mid)
-    # 把隱含利率一起帶回去：chip 上會標「隱含 X.XX%」，讓讀者（和我們）
-    # 能一眼驗算，不會再出現「100% 但沒人知道為什麼」的黑箱。
-    return pct, implied
+             "→ 升息一碼機率 %.1f%%（價差 %+.1f bps，目標中點 %.3f%%，"
+             "閘門通過）",
+             sym, implied, anchor_sym, anchor, pct, spread_bp, mid)
+    # 把隱含利率與價差一起帶回去：chip 上要能驗算；價差 ≥25bp（機率被
+    # 鎖在 100%）時首頁改講事實——「預期升 26bp」不等於「100% 確定升
+    # 一碼」，它可能是「六成升一碼＋兩成升兩碼」的組合，線性公式分不出
+    # 來，掛 100% 會被讀成確定事件。
+    return pct, implied, spread_bp
 
 
 # ---------------------------------------------------------------------------
@@ -737,17 +741,27 @@ def fetch_atlanta_fedwatch(cfg: dict | None = None, _get=None) -> float | None:
         # 資料端點的 URL 挖出來寫進 log，這一行就是啟用的依據。
         cands = re.findall(
             r'["\']((?:https?://[^"\']+|/[^"\']+)?'
-            r'(?:api|API|[Cc]hart|[Dd]ata|GetChart|\.json|\.csv|\.xlsx)'
+            r'(?:api|API|[Cc]hart|[Dd]ata|GetChart|feed|Feed|documents'
+            r'|\.json|\.csv|\.xlsx|\.js)'
             r'[^"\']*)["\']', text)
+        # 圖檔與樣式是雜訊（第一輪偵察 71 個候選裡前 12 個全是
+        # highcharts 的圖示，真正的資料連結被擠出 log）——先剔除，
+        # 再把「像資料檔」的排前面。
+        _noise = (".png", ".svg", ".jpg", ".jpeg", ".gif", ".css",
+                  ".woff", ".woff2", ".ico")
         uniq = []
         for c in cands:
-            if c not in uniq and len(c) > 5:
+            cl = c.lower()
+            if (c.startswith(("/", "http")) and c not in uniq
+                    and not any(cl.endswith(n) or n + "?" in cl
+                                for n in _noise)):
                 uniq.append(c)
-        log.info("Atlanta Fed 偵察：%s → %s；候選資料端點 %d 個：%s；"
-                 "開頭：%s ……（把正確端點填進 atlanta_mpt_url、取值路徑"
+        _prio = (".xlsx", ".csv", ".json", "api", "feed", "documents")
+        uniq.sort(key=lambda c: (not any(p in c.lower() for p in _prio)))
+        log.info("Atlanta Fed 偵察：%s → %s；候選資料端點 %d 個：%s"
+                 "（把正確端點填進 atlanta_mpt_url、取值路徑"
                  "填進 atlanta_json_path 後啟用）",
-                 url, ct, len(uniq), "、".join(uniq[:12]) or "（沒找到）",
-                 text[:200].replace("\n", " "))
+                 url, ct, len(uniq), "、".join(uniq[:25]) or "（沒找到）")
         return None
     try:
         node = r.json()
@@ -813,23 +827,24 @@ def fetch_fedwatch(env=None) -> float | None:
 
 def _pick_fw(fw, at):
     """
-    期貨自算與 Atlanta Fed 官方值的**交叉檢核**。回傳 (pct, src, implied)。
+    期貨自算與 Atlanta Fed 官方值的**交叉檢核**。
+    回傳 (pct, src, implied, spread_bp)。
 
     兩邊都有值且差超過 25 個百分點 → 期貨端有問題（兩個獨立來源同時
     錯的機率遠低於期貨報價鏈單邊死掉），改用官方值。這比任何單邊
     防護都可靠——防護欄只能驗「合不合理」，交叉檢核驗的是「對不對」。
-    只有一邊有值就用那邊；都沒有回 (None, "", None) 讓呼叫端退 AI 層。
+    只有一邊有值就用那邊；都沒有回全 None 讓呼叫端退 AI 層。
     """
     if fw is not None and at is not None and abs(fw[0] - at) > 25:
         log.warning("FedWatch 交叉檢核：期貨自算 %.1f%% 與官方 %.1f%% "
                     "差逾 25pp，判定期貨端報價有問題，改用官方值",
                     fw[0], at)
-        return at, "atlanta", None
+        return at, "atlanta", None, None
     if fw is not None:
-        return fw[0], "futures", fw[1]
+        return fw[0], "futures", fw[1], fw[2]
     if at is not None:
-        return at, "atlanta", None
-    return None, "", None
+        return at, "atlanta", None, None
+    return None, "", None, None
 
 
 def _jump_suspect(pct: float, prev, src: str) -> bool:
@@ -906,7 +921,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                            "delta_pp": fw_old.get("delta_pp"),
                            "suspect": bool(fw_old.get("suspect")),
                            "src": fw_old.get("src", ""),
-                           "implied": fw_old.get("implied")}
+                           "implied": fw_old.get("implied"),
+                           "spread_bp": fw_old.get("spread_bp")}
     else:
         # 來源鏈：期貨價差（自算、自驗）×交叉檢核× Atlanta Fed（官方）
         # → Gemini 擷取 → 沿用前值。
@@ -914,7 +930,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         # 未啟用（沒設 atlanta_json_path）時做偵察、把端點候選寫進 log。
         _fw = fedwatch_from_futures(rates_series, cfg)
         _at = fetch_atlanta_fedwatch(cfg)
-        pct, fw_src, implied = _pick_fw(_fw, _at)
+        pct, fw_src, implied, spread_bp = _pick_fw(_fw, _at)
         if pct is None:
             pct = fetch_fedwatch(env)
             fw_src = "ai"
@@ -937,6 +953,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                    "suspect": False,
                                    "src": fw_old.get("src", ""),
                                    "implied": fw_old.get("implied"),
+                                   "spread_bp": fw_old.get("spread_bp"),
                                    "stale_from": fw_old.get("date")}
         elif pct is not None:
             if _jump_suspect(pct, prev, fw_src):
@@ -956,10 +973,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 delta = None
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
                                "suspect": suspect, "src": fw_src,
-                               "implied": implied}
+                               "implied": implied, "spread_bp": spread_bp}
             state["fedwatch"] = {"pct": pct, "date": today,
                                  "delta_pp": delta, "suspect": suspect,
                                  "src": fw_src, "implied": implied,
+                                 "spread_bp": spread_bp,
                                  "method": FW_METHOD}
 
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →

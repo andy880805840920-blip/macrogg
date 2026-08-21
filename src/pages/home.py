@@ -831,7 +831,16 @@ def _focus_strip(f: dict | None) -> str:
                      f'<b>{y["value"]:.2f}%</b>'
                      f'<i class="{cls}">{esc(dtxt)}</i></div>')
     fw = f.get("fedwatch") or {}
-    if fw.get("pct") is not None:
+    _sp = fw.get("spread_bp")
+    if (fw.get("pct") is not None and fw.get("src") == "futures"
+            and fw["pct"] >= 100 and _sp is not None):
+        # 市場定價已達一碼以上：「100%」是線性公式的極限值，不是真的
+        # 百分之百確定（預期 +26bp 可能是「六成升一碼＋兩成升兩碼」的
+        # 組合）。機率講不清楚的時候改講事實：定價了多少個 bp。
+        chips.append('<div class="fs-chip"><span>2026 年底市場定價</span>'
+                     f'<b>+{_sp:.0f} bps</b>'
+                     '<i>已完整定價升息一碼（機率算式達上限）</i></div>')
+    elif fw.get("pct") is not None:
         d = fw.get("delta_pp")
         if fw.get("stale_from"):
             # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
