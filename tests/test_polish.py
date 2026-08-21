@@ -1057,9 +1057,9 @@ check("142 死掉的模型不再被挑中（省一次額度）",
       "gemini-2.5-flash-lite" not in seq2, str(seq2))
 
 # 換模型救不了的錯要直接往上拋，不能白燒額度
+# （429 不在此列：免費層配額逐模型計，換一顆常常就通——見 150）
 polish._DEAD.clear()
-for name, code in [("143 400 不換模型", 400), ("144 401 不換模型", 401),
-                   ("145 429 不換模型（限流換誰都一樣）", 429)]:
+for name, code in [("143 400 不換模型", 400), ("144 401 不換模型", 401)]:
     calls = []
 
     def only_once(key, model, text, system=None, temperature=None, _c=calls,
@@ -1091,6 +1091,90 @@ try:
 except polish.requests.HTTPError:
     pass
 check("146 換模型有上限", len(many) <= polish.MAX_MODEL_TRIES, f"{len(many)} 次")
+polish._DEAD.clear()
+
+# ---------------------------------------------------------------------------
+# ⑯ 連線層失敗（read timeout、斷線）也要換模型
+#
+# 實測到的鏈：flash-latest 等 45 秒不回應（timeout）→ 短重試吃 503 →
+# 試滿三次後丟出的是**連線層例外**，不是 HTTPError——先前的換模型
+# 分支接不到它，整段直接放棄退回組裝版。過載到不回應與回 503 是
+# 同一件事的兩種面貌，處理方式必須一樣：換一顆模型、不記黑名單。
+# ---------------------------------------------------------------------------
+seq3 = []
+
+
+def chain3(key, model, text, system=None, temperature=None, **kw):
+    seq3.append(model)
+    if model == "gemini-flash-latest":
+        raise polish.requests.ConnectionError(
+            "HTTPSConnectionPool: Read timed out. (read timeout=45)")
+    return GOOD[:GOOD.index("重點：")]
+
+
+polish._gemini_call = chain3
+res3 = polish._post_gemini("k", "gemini-flash-latest", "本文")
+check("147 timeout → 換一顆模型接著跑，最後成功",
+      isinstance(res3, tuple) and len(seq3) == 2, str(seq3))
+check("148 timeout 的模型不記黑名單（過載是暫時的）",
+      "gemini-flash-latest" not in polish._DEAD)
+
+# 但 HTTPError 的處理不能被新分支搶走：400 還是要直接往上拋
+only = []
+
+
+def chain4(key, model, text, system=None, temperature=None, **kw):
+    only.append(model)
+    raise http_err(400)
+
+
+polish._gemini_call = chain4
+try:
+    polish._post_gemini("k", "gemini-flash-latest", "本文")
+    _hit400 = False
+except polish.requests.HTTPError:
+    _hit400 = True
+check("149 400 仍直接往上拋（不被連線層分支吃掉）",
+      _hit400 and len(only) == 1, f"{len(only)} 次呼叫")
+polish._DEAD.clear()
+
+# 429 要換模型：免費層配額**逐模型**計（每顆各一桶 RPM／RPD）。
+# 實測的死法：flash-latest 等完 35＋70 秒仍連吃 429，整段退回列標題——
+# 同一時間其他模型的桶是滿的，換一顆就通。
+seq4 = []
+
+
+def chain5(key, model, text, system=None, temperature=None, **kw):
+    seq4.append(model)
+    if model == "gemini-flash-latest":
+        raise http_err(429)
+    return GOOD[:GOOD.index("重點：")]
+
+
+polish._gemini_call = chain5
+res4 = polish._post_gemini("k", "gemini-flash-latest", "本文")
+check("150 429 → 換一顆模型接著跑（配額逐模型計）",
+      isinstance(res4, tuple) and len(seq4) == 2, str(seq4))
+check("151 429 的模型不記黑名單（額度會回來）",
+      "gemini-flash-latest" not in polish._DEAD)
+
+# 全部模型都 429（整把金鑰見底）→ 試滿上限後把 429 往上拋
+allq = []
+
+
+def chain6(key, model, text, system=None, temperature=None, **kw):
+    allq.append(model)
+    raise http_err(429)
+
+
+polish._gemini_call = chain6
+try:
+    polish._post_gemini("k", "gemini-flash-latest", "本文")
+    _hit429 = False
+except polish.requests.HTTPError:
+    _hit429 = True
+check("152 全模型限流 → 試滿上限後往上拋",
+      _hit429 and len(allq) == polish.MAX_MODEL_TRIES, f"{len(allq)} 次")
 polish._DEAD.clear()
 
 print()

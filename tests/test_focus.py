@@ -148,6 +148,15 @@ class _FakeYq2:
 check("⑦g 優先用日收盤而非陳舊成交價",
       ft.fetch_zq_implied("ZQF27.CBT", _get=lambda u: _FakeYq2()) == 3.69)
 
+# ⑦h 跳動防護欄只防 AI 擷取：期貨自算的大變動是資訊（或正確值在取代
+# 事故留下的壞前值），擋下的話 100% 會永遠取代不掉
+check("⑦h 期貨自算 22% vs 前值 100% → 接受新值",
+      not ft._jump_suspect(22.0, 100.0, "futures"))
+check("⑦i AI 擷取 22% vs 前值 100% → 視為擷取錯誤",
+      ft._jump_suspect(22.0, 100.0, "ai"))
+check("⑦j 沒有前值就沒有跳動可言",
+      not ft._jump_suspect(22.0, None, "ai"))
+
 # ⑧ Yahoo 即時殖利率：×10 慣例規範化、±bp 對昨收、異常值不採用
 class _FakeYt:
     def __init__(self, cur, prev, ts=1787300000):
@@ -185,6 +194,54 @@ fh = ft.fetch_feed_headlines(["https://tw.news.yahoo.com/rss/finance"],
 check("⑨ feed 只留關鍵字命中", len(fh) == 1 and "川普" in fh[0]["title"], fh)
 check("⑨b 來源標籤由 feed 推得", fh and fh[0]["source"] == "Yahoo奇摩新聞")
 
+# ⑨c 假朋友：「毛利率」含「利率」但講的是公司財報，不能放進來
+#（實際發生過：「聯電Q3毛利率上看36%」被關鍵字「利率」選進市場焦點）
+_FF_XML = """<rss><channel>
+<item><title>聯電Q3毛利率上看36%！法人上修今明年獲利</title>
+  <link>http://u</link><pubDate>{new}</pubDate></item>
+<item><title>Fed 官員談利率路徑，市場關注</title>
+  <link>http://v</link><pubDate>{new}</pubDate></item>
+</channel></rss>""".format(new=_new)
+ff = ft.fetch_feed_headlines(["https://tw.news.yahoo.com/rss/finance"],
+                             ["Fed 利率"], _get=lambda u: _Fake(_FF_XML))
+check("⑨c 「毛利率」不算命中「利率」", len(ff) == 1 and "毛利率" not in ff[0]["title"],
+      [x["title"][:14] for x in ff])
+check("⑨d 「殖利率」不受假朋友過濾影響（本來就要抓）",
+      ft._kw_text("美債殖利率走高") == "美債殖利率走高"
+      and "利率" not in ft._kw_text("聯電毛利率上看36%"))
+check("⑨e 排序的命中數同一套規則",
+      ft.pick_fallback([{"title": "聯電Q3毛利率上看36%", "link": "", "source": "",
+                         "at": now.isoformat()},
+                        {"title": "Fed 官員談利率路徑", "link": "", "source": "",
+                         "at": (now - dt.timedelta(hours=1)).isoformat()}],
+                       ["Fed 利率"], n=1)[0]["title"].startswith("Fed"))
+
+# ⑨f 排除關鍵字：真的含關鍵字、但不是總經新聞的標題要整條剔除
+#（實際發生過：「專家談美債布局：不如押0050或高股息」——含「美債」，
+#  但那是台股 ETF 理財文）
+_EXC = ["0050", "高股息", "ETF", "台股"]
+_EX_XML = """<rss><channel>
+<item><title>美股震盪期創高後恐崩盤？專家談美債布局：長天期沒賺，不如押0050或高股息</title>
+  <link>http://w</link><pubDate>{new}</pubDate></item>
+<item><title>美債殖利率走高，市場關注財政部標售</title>
+  <link>http://x</link><pubDate>{new}</pubDate></item>
+</channel></rss>""".format(new=_new)
+fe = ft.fetch_feed_headlines(["https://tw.news.yahoo.com/rss/finance"],
+                             ["美債 殖利率"], _get=lambda u: _Fake(_EX_XML),
+                             exclude=_EXC)
+check("⑨f feed 層剔除排除詞", len(fe) == 1 and "0050" not in fe[0]["title"],
+      [x["title"][:16] for x in fe])
+check("⑨g 挑選層也剔除（標題模式不經過 feed 過濾）",
+      all("0050" not in x["title"] for x in ft.pick_fallback(
+          [{"title": "專家談美債布局：不如押0050或高股息", "link": "",
+            "source": "", "at": now.isoformat()},
+           {"title": "美債殖利率走高，市場關注財政部標售", "link": "",
+            "source": "", "at": (now - dt.timedelta(hours=1)).isoformat()}],
+          ["美債 殖利率"], n=2, exclude=_EXC)))
+check("⑨h 沒設排除清單時行為不變",
+      not ft._excluded("專家談美債布局", None)
+      and ft._excluded("不如押0050或高股息", _EXC))
+
 # ⑩ 內文擷取：砍 script、抽 <p>、太短回空
 _PAGE = ("<html><script>var x='這段程式碼不是內文'+'不該被抽出來的長字串"
          + "Ｘ" * 200 + "';</script><body>"
@@ -221,6 +278,39 @@ t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
 check("⑪b 編造數字被擋", t == "" and "沒有的數字" in s, s)
 _pl._gemini_call = _orig_gc
+
+# ⑫ 跨供應商備援：Gemini 整條鏈死掉（例：整把金鑰的模型全數 429）時，
+# 設了 ANTHROPIC_API_KEY 就換 Anthropic 接手，數字鎖照樣把關
+_orig_pg, _orig_pa = _pl._post_gemini, _pl._post_anthropic
+
+
+def _pg_boom(*a, **k):
+    raise RuntimeError("全模型 429")
+
+
+_pl._post_gemini = _pg_boom
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+                       "財政部調整發債結構，市場關注十年期殖利率。")
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120,
+                            {"GEMINI_API_KEY": "F", "ANTHROPIC_API_KEY": "A"})
+check("⑫ Gemini 全滅 → Anthropic 備援接手", t != "" and s == "model-content", s)
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
+check("⑫b 沒有備援金鑰就照舊失敗", t == "" and "Gemini" in s, s)
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+                       "市場預期年底利率降至 2.75%。")
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120,
+                            {"GEMINI_API_KEY": "F", "ANTHROPIC_API_KEY": "A"})
+check("⑫c 備援的輸出一樣要過數字鎖", t == "" and "沒有的數字" in s, s)
+# 只有 Anthropic 金鑰（沒有 Gemini）也能跑
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+                       "財政部調整發債結構，市場關注十年期殖利率。")
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120, {"ANTHROPIC_API_KEY": "A"})
+check("⑫d 只有 Anthropic 金鑰也能產出", t != "" and s == "model-content", s)
+_pl._post_gemini, _pl._post_anthropic = _orig_pg, _orig_pa
 
 print()
 print("全部通過" if ok else "有失敗")

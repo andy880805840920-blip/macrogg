@@ -856,6 +856,9 @@ def _focus_strip(f: dict | None) -> str:
                      '<b>—</b><i>本次擷取失敗</i></div>')
     text = (f'<p class="fs-text">{esc(f.get("text") or "")}</p>'
             if f.get("text") else "")
+    # 列標題模式：AI 摘要不可用，標題清單就是內容——收合預設打開，
+    # 不再另外把標題串成一段假摘要（同一批字印兩次）。
+    _headline_mode = (f.get("text_source") == "headlines")
     links = ""
     if f.get("links"):
         rows = "".join(
@@ -864,7 +867,8 @@ def _focus_strip(f: dict | None) -> str:
             + (f'<span class="fs-src">{esc(x["source"])}</span>'
                if x.get("source") else "")
             + '</div>' for x in f["links"])
-        links = (f'<details class="f-more"><summary>來源標題</summary>'
+        links = (f'<details class="f-more"{" open" if _headline_mode else ""}>'
+                 f'<summary>來源標題</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
     # 機率的來源標示跟著實際走的那一層：期貨自算是可驗算的規則、
     # AI 擷取只是備援——兩者的可信度不同，不能共用同一句話。
@@ -884,6 +888,8 @@ def _focus_strip(f: dict | None) -> str:
         _t_note = "　·　焦點由 AI 摘要自新聞內文，只取關鍵字相關內容"
     elif _ts in ("model", "cache"):
         _t_note = "　·　焦點由 AI 整理自新聞標題"
+    elif _ts == "headlines":
+        _t_note = "　·　本次 AI 摘要不可用，僅列原始標題（下次執行會再試）"
     else:
         _t_note = ""
     note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note + _t_note)

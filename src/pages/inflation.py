@@ -310,7 +310,9 @@ def _inflation_body_full(d: dict) -> str:
             f'<i style="{"left" if x["value"] >= 0 else "right"}:50%;'
             f'width:{abs(x["value"]) / span * 50:.1f}%"></i></div>'
             f'<div class="dc-val">{x["value"]:+.2f}pp</div></div>'
-            f'<div class="dc-note">{esc(x["note"])}</div>'
+            # 沒有說明的類別不留空行——五條各掛一行說明會把卡撐成十行
+            + (f'<div class="dc-note">{esc(x["note"])}</div>'
+               if x.get("note") else "")
             for x in parts
         )
         parts_html = f'<div class="dcomp">{rows}</div>'
@@ -357,8 +359,13 @@ def _inflation_body_full(d: dict) -> str:
     _k = d["kpi"]
     _kpi_sum = (f'CPI {_k["headline_display"]}　·　核心 {_k["core_display"]}'
                 f'　·　核心 PCE {_k["pce_display"]}')
-    _att_sum = "　·　".join(f'{s["label"]} {s["value"]}'
-                           for s in d["attribution"]["stats"][:2])
+    # 收合摘要改成一句結論（主要推力是誰），不再重印兩個統計數字——
+    # 那兩個數字展開後 stat-row 裡就有，印在標題列等於同一數字出現兩次。
+    _att_parts = d["attribution"].get("parts") or []
+    _att_sum = (f'主要推力：{_att_parts[0]["label"]} '
+                f'{_att_parts[0]["value"]:+.2f}pp' if _att_parts
+                else "、".join(f'{s["label"]} {s["value"]}'
+                               for s in d["attribution"]["stats"][:1]))
     # trend_verdict 是 dict（title/desc/kind），不是字串——直接 esc() 會把
     # 整個 dict 的 repr 印到標題列上。
     _tv = d.get("trend_verdict") or {}
@@ -412,25 +419,20 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="contrib" data-sum="{esc(_att_sum)}">分項貢獻分解</h2>
-    <p class="hint">近三個月哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
-      估算貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
+    <p class="hint"><b>本月</b>哪些類別在<b>推升</b> CPI、哪些在<b>壓低</b>。
+      單月分項會被一次性項目帶著跑（能源單月 ±5% 很常見），
+      趨勢看「關鍵數字」的三個月年化。
+      貢獻的單位是<b>個百分點（pp）</b>，跟價格漲幅的 % 不是同一件事。</p>
     {shelter_html}
     <div class="stat-row" style="margin-top:14px">{_stats(att['stats'])}</div>
     {parts_html}
     {teach(
-        "過去三個月物價的漲幅，是住房、食物、能源還是其他項目造成的。",
-        "「CPI 漲 3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。",
-        "看哪幾塊是正的（在推升）、哪幾塊是負的（在壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。")}
-    <details data-m-collapse><summary>各類別明細</summary>
-    <div style="margin-top:14px">{att['bars']}</div>
-    <div class="dlegend">
-      <span><i style="background:var(--pos)"></i>推升物價</span>
-      <span><i style="background:var(--neg)"></i>壓低物價</span>
-      <span><i style="background:var(--muted-bar)"></i>落後項（住房）</span>
-      <span>單位：個百分點（pp）</span>
-    </div>
-    <p class="hint" style="margin-top:14px">
-      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別期間價格變化，
+        "這個月物價的漲幅，是住房、食物、能源還是其他項目造成的。",
+        "「CPI 漲 0.3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。",
+        "看哪幾條在零線右邊（推升）、哪幾條在左邊（壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。")}
+    <details data-m-collapse><summary>估算方法</summary>
+    <p class="hint" style="margin-top:10px">
+      估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別本月價格變化，
       是<b>近似估算</b>，用來看方向與相對大小；官方 CPI 採動態權重與
       分層聚合，所以分項加總不必等於官方漲幅。
       住房占 CPI 權重超過三分之一，即使漲幅不大也會明顯影響整體。</p>

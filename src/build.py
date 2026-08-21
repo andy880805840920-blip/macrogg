@@ -957,11 +957,15 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                     unit="%", higher_is_better=False, allow_model=False),
     ]
 
-    # ---- 分項貢獻（看三個月，單月雜訊太大）----
+    # ---- 分項貢獻（看單月）----
+    # 先前看三個月累計（理由：單月雜訊大）。改回單月的理由更強：
+    # CPI 發布日市場講的就是「這個月 0.3%，主要是誰」，三個月累計把當月
+    # 新資訊稀釋掉三分之二；「趨勢」由同頁 KPI 的三個月年化負責，
+    # 這張卡不必重講一次。單月雜訊由文字說明承擔（能源單月常 ±5%）。
     comp_rows = {m["id"]: series.get(m["id"], []) for m in comp_meta
                  if series.get(m["id"])}
     att = infl_an.attribute_cpi(
-        headline, comp_rows, comp_meta, months=3,
+        headline, comp_rows, comp_meta, months=1,
         # 官方的 All Items Less Shelter 指數。剔除住房後的漲幅要用它算，
         # 不是拿總數減住房貢獻去反推——見 attribute_cpi 的說明。
         ex_shelter_rows=series.get("CUSR0000SA0L2", []))
@@ -1057,22 +1061,16 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "exp_spark": level_spark("T5YIFR"),
     }
 
-    # ---- 分項長條 ----
+    # ---- 分解條（單一層，五類）----
+    #
+    # 先前這張卡給了**同一個分解的兩層**：卡面三塊（住房／食物能源／其他）
+    # ＋收合裡五類明細長條——三塊只是五類的粗分（食物能源＝能源＋食物），
+    # 住房 +0.27pp 兩邊各印一次，全展開後十來個統計數字疊在一起。
+    # 使用者的原話：「整個展開後 數字很多很混亂」。
+    # 現在只留五類這一層，直接放卡面；收合裡只剩估算方法說明。
     shown, other_sum, other_n = att.display_set(n=5)
-    items = [{
-        "label": c.label,
-        "value": c.value,
-        "muted": c.noncyclical,
-        "notable": c.notable,
-        "note": ("落後項" if c.noncyclical else None),
-        "tip": f"{c.label}｜貢獻 {c.value:+.2f} 個百分點",
-    } for c in shown]
-    if other_n:
-        items.append({"label": f"其他 {other_n} 項", "value": other_sum,
-                      "muted": True, "note": "多項加總"})
 
     agg = att.aggregates
-    _cm = {m["id"]: m for m in comp_meta}
     _coverage = float(agg.get("coverage_weight") or 0)
     _expected = float(agg.get("expected_weight") or 0)
     _missing = list(agg.get("missing_labels") or [])
@@ -1081,78 +1079,39 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         log.warning("CPI 分項歸因僅涵蓋 %.1f%%；缺少：%s", _coverage,
                     "、".join(_missing) or "未辨識分項")
     # 漲幅（%）與貢獻（個百分點）是兩種東西，先前四格等權並排、
-    # 長得一模一樣，讀者分不出哪個是總數哪個是其中一塊。
-    # 改成「總數在上、三塊分項在下、相加等於總數」的分解結構。
+    # 分解條直接用五類（display_set 已依貢獻大小排好）。
+    # 「其他 N 項」桶照收（目前 comp_meta 剛好五類，不會出現）。
+    # 逐條的說明只留住房的落後性——其餘的說明會把五條撐成十行，
+    # 而「數字太多太亂」正是這次要修的問題。
     _shelter = agg.get("shelter", 0) or 0
-    _food_energy = agg.get("food_energy", 0) or 0
-    # 「其他所有項目」**由下而上加**，不是拿總數倒推。
-    #
-    # 先前寫的是 `att.total - _shelter - _food_energy`，那讓這三塊**永遠**
-    # 加得回總數——因為第三塊就是差額本身。代價是對帳誤差被默默吸收掉，
-    # 而同一個畫面下方的「各類別明細」是真的由下而上算的，於是出現：
-    #     上面　其他所有項目 +0.08
-    #     下面　其他核心服務 +0.15、核心商品 −0.00
-    # 同一件事兩個數字、差 0.07，五條明細加起來 +0.19 卻寫著總漲幅 +0.12。
-    # 使用者看得到，程式看不到。
-    #
-    # **加得起來不等於算得對。** 改成由下而上之後三塊可能加不回總數，
-    # 那個差額本身就是要給人看的東西——見下面的 recon。
-    _rest = sum(c.value for c in att.contributions
-                if (_cm.get(c.key, {}).get("group") in ("core_services",
-                                                        "core_goods")
-                    and not _cm.get(c.key, {}).get("laggy")))
     infl_parts = [
-        {"label": "住房", "value": _shelter, "note": "算法落後市場行情約一年"},
-        {"label": "食物與能源", "value": _food_energy, "note": "波動大，核心已剔除"},
-        {"label": ("其他所有項目" if _complete else "其他已取得項目"),
-         "value": _rest,
-         "note": ("核心裡的非住房部分" if _complete else
-                  "資料不完整；缺少" + ("、".join(_missing) or "部分分項"))},
-    ]
-    # 估算合計。**這不是拿來跟實際漲幅對帳的。**
-    #
-    # 先前這裡算一個 residual、超過門檻就在畫面上寫「三塊相加是 X，跟實際
-    # 的 Y 差 Z，權重過期或四捨五入會讓兩邊對不上」。那個框法是錯的：
-    #
-    #   BLS 的 CPI 不是「單一時點權重 × 累計變化」加總出來的，它是分層
-    #   鏈式聚合、權重在期間內本身也會動。所以估算合計 ≠ 實際漲幅是
-    #   **方法上的必然**，不是計算錯誤，也不主要來自四捨五入。
-    #
-    # 實測佐證：換上官方 relative importance（BLS 2025 年 12 月表）之後，
-    # 2026-04→07 的估算合計 +0.17pp、實際 +0.12%，仍差 0.05——權重、指數、
-    # 時間窗全部正確。把它寫成「對不上」只會讓讀者以為模型算錯，
-    # 而這一區真正要回答的是「哪些類別在推升、哪些在壓低」。
-    #
-    # 差額仍然留在 att.unexplained 供程式端診斷，也仍然印進執行紀錄
-    # （debug 用），但**不進畫面**。
-    _sum_est = _shelter + _food_energy + _rest
-    log.debug("分項估算合計 %+.3f pp、實際三個月漲幅 %+.3f%%、差 %+.3f"
-              "（近似法的必然差異，非錯誤）",
-              _sum_est, att.total, att.total - _sum_est)
-    _estimate_stat = (
-        {"label": "估算分項淨貢獻", "value": f"{_sum_est:+.2f}pp",
-         "note": "五大類的近似貢獻加總"}
-        if _complete else
-        {"label": "分項估算覆蓋率", "value": f"{_coverage:.1f}%",
-         "color": "var(--warning)",
-         "note": ("缺少" + ("、".join(_missing) or "部分分項")
-                  + "，資料不完整，暫不顯示淨貢獻合計")})
+        {"label": c.label, "value": c.value,
+         "note": ("算法落後市場行情約一年" if c.noncyclical else "")}
+        for c in shown]
+    if other_n:
+        infl_parts.append({"label": f"其他 {other_n} 項", "value": other_sum,
+                           "note": "多項加總"})
+    # 「估算分項淨貢獻」那一格整個拿掉：它只是內部合計，擺在實際漲幅
+    # 旁邊就是在誘導對帳，而估算合計 ≠ 官方漲幅是方法上的必然
+    # （BLS 是分層鏈式聚合、權重期間內會動），不是錯誤。差額留在
+    # att.unexplained 供程式端診斷，不進畫面。
+    # 「換算年率」也拿掉——趨勢與年率由同頁 KPI 的三個月年化負責。
     att_stats = [
-        _estimate_stat,
-        # 三個月的**累計**漲幅，不是年化——attribute_cpi 走的是
-        # _pct_change（cur/old − 1），沒有做 **4。標成「年化」會跟同一頁
-        # KPI 卡的「近三個月年化」打架（1.0012⁴ 才是年率）。
-        {"label": "實際 CPI 三個月漲幅", "value": f"{att.total:+.2f}%",
-         "note": f"換算年率約 {((1 + att.total / 100) ** 4 - 1) * 100:+.1f}%"},
+        {"label": "CPI 月漲幅", "value": f"{att.total:+.2f}%",
+         "note": "較上月，季調"},
         {"label": "剔除住房後",
          "value": (f"{agg['ex_shelter']:+.2f}%"
                    if agg.get("ex_shelter") is not None else "—"),
-         "color": ("var(--good)"
-                   if (agg.get("ex_shelter") or 9) < 0.6 else "inherit"),
          "note": ("官方 All Items Less Shelter 指數"
                   if not agg.get("ex_shelter_derived")
                   else "抓不到官方指數，由權重反推（僅供參考）")},
     ]
+    if not _complete:
+        att_stats.append(
+            {"label": "分項估算覆蓋率", "value": f"{_coverage:.1f}%",
+             "color": "var(--warning)",
+             "note": "缺少" + ("、".join(_missing) or "部分分項")
+                     + "，分解條不完整"})
     # 剔除住房後跟含住房比，哪一邊高。這句話每期都可能出現，而且每次都會
     # 被誤讀成算錯——它其實是這一區最有價值的一句話：**價格壓力集中在哪裡。**
     #
@@ -1175,7 +1134,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         elif _ex < att.total - 0.02:
             shelter_note = (
                 f"剔除住房後（約 {_ex:+.2f}%）**低於**整體 CPI（{att.total:+.2f}%），"
-                "代表近三個月的價格壓力主要集中在住房。"
+                "代表本月的價格壓力主要集中在住房。"
                 "住房項落後市場租金約一年——下次 CPI 盯住房分項"
                 "有沒有跟上市場租金已經降溫的方向。")
 
@@ -1289,10 +1248,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             # 單位一律標 pp（個百分點），跟「漲幅 %」在視覺上分開——
             # 兩者混寫是這一區最容易產生的誤讀：+0.20% 跟 +0.20pp
             # 是完全不同的兩件事。
-            "bars": charts.diverging_bars(items, fmt=lambda v: f"{v:+.2f}pp"),
             "parts": infl_parts,
             "total": att.total,
-            "parts_sum": _sum_est,
             "shelter_note": shelter_note,
         },
         # 離目標多遠：整個通膨頁唯一的硬錨，放進結論卡

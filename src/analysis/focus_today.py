@@ -204,8 +204,35 @@ def _feed_label(url: str) -> str:
     return re.sub(r"^https?://([^/]+).*$", r"\1", url)
 
 
+# 關鍵字比對的「假朋友」：包含關鍵字字串、但講的是別的東西的詞。
+# 實例：關鍵字「利率」把「聯電Q3毛利率上看36%」放進了市場焦點。
+# 比對前先把這些詞從標題裡拿掉，剩下的字串還有命中才算數。
+# 「殖利率」不在此列——它本來就是要抓的東西，被「利率」多算一次也無妨。
+_FALSE_FRIENDS = ("毛利率", "淨利率", "獲利率", "中獎率")
+
+
+def _kw_text(title: str) -> str:
+    """關鍵字比對用的標題：先拿掉假朋友，再比對。"""
+    for ff in _FALSE_FRIENDS:
+        title = title.replace(ff, "")
+    return title
+
+
+def _excluded(title: str, exclude: list[str] | None) -> bool:
+    """
+    排除清單：標題命中任一排除詞就整條剔除。
+
+    擋的是正向關鍵字擋不掉的東西——**真的含關鍵字、但不是總經新聞**。
+    實例：「專家談美債布局：長天期沒賺，不如押0050或高股息」確實含
+    「美債」，但那是台股 ETF 理財文。清單在 config 的 exclude_keywords，
+    看到新的雜訊詞直接往裡加，不用改程式。
+    """
+    return any(x and str(x) in title for x in (exclude or []))
+
+
 def fetch_feed_headlines(feeds: list[str], keywords: list[str],
-                         hours: int = 30, _get=None) -> list[dict]:
+                         hours: int = 30, _get=None,
+                         exclude: list[str] | None = None) -> list[dict]:
     """
     直接吃 Yahoo 的 RSS，只留**標題命中任一關鍵字詞**的項目。
     單一 feed 失敗就跳過；全部失敗回空列表，由呼叫端退回 Google News。
@@ -230,7 +257,9 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
             pub = item.findtext("pubDate") or ""
             if not title or not link:
                 continue
-            if not any(w in title for w in words):
+            if not any(w in _kw_text(title) for w in words):
+                continue
+            if _excluded(title, exclude):
                 continue
             try:
                 at = parsedate_to_datetime(pub)
@@ -280,41 +309,86 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
         if sum(len(p) for p in paras) >= cap:
             break
     body = "\n".join(paras)[:cap]
-    return body if cjk_len(body) >= 100 or len(body) >= 300 else ""
+    if cjk_len(body) >= 100 or len(body) >= 300:
+        return body
+    # 抽不出足夠內文的原因寫進 log：頁面抓得到（沒進上面的 except）但
+    # <p> 太少，通常是影音頁、改版、或被導去同意頁——跟「被擋」是不同
+    # 的修法，不留紀錄就只能猜。
+    log.info("市場焦點：內文太薄不採用（%s：HTML %d 字元、抽出 %d 段 %d 字）",
+             url[:60], len(page), len(paras), cjk_len(body))
+    return ""
 
 
+# 「優先寫內文才有的資訊」是這段 prompt 的重點：來源標題本來就列在
+# 焦點段下方，摘要若只是把標題改寫串接，等於同一件事講兩次
+#（實際發生過，使用者的原話：「上方的摘要還是在摘要新聞標題而不是內文」）。
+# 數字防護欄（_digits_ok）對內文驗證，所以具體數字可以放心要求。
 _FOCUS_CONTENT_SYSTEM = (
     "你是財經編輯。輸入是幾篇新聞的標題與內文節錄。"
     "只挑與這些關鍵字相關的內容：{kws}。"
-    "寫成一段不超過 {cap} 個中文字的市場焦點。規則："
+    "寫成一段不超過 {cap} 個中文字的市場焦點，"
+    "優先寫**內文才有、標題沒有**的具體資訊：金額與規模、時間點、"
+    "人名與職稱、機構名、關鍵引述。不要改寫或串接標題——"
+    "讀者看得到標題，你的價值在標題以外的細節。規則："
     "只能使用內文已有的資訊，不得補充內文以外的事實或數字；"
     "與關鍵字無關的內容一律不寫；不做預測、不下投資結論；"
     "繁體中文；直接輸出那一段文字，不要任何前言。")
 
 
+def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
+    """
+    焦點段的 AI 呼叫：Gemini 多模型鏈 → **Anthropic 備援**。
+    回傳 (文字, 失敗原因)；成功時原因是空字串。
+
+    為什麼要跨供應商：整體情勢的潤稿看起來「從不失敗」，其實是它的
+    事實雜湊快取讓它一個月只打十幾次 API、非發布日根本不呼叫；
+    焦點段的新聞每次執行都不一樣，一天要打三次——曝險是它的幾十倍。
+    呼叫鏈本身兩邊已經同一套（多模型、5xx／timeout／429 都換模型），
+    剩下的差距就是退路的深度：Gemini 整把金鑰見底時（實測：flash-latest
+    連吃三個 429 退回列標題），workflow 裡本來就配好的 ANTHROPIC_API_KEY
+    要能接手。數字鎖等防護欄在呼叫端外面，對兩家一視同仁。
+    """
+    from .polish import _post_gemini, _post_anthropic, PROVIDERS
+    import os
+    env = env or os.environ
+    g_key = (env.get("GEMINI_API_KEY") or "").strip()
+    a_key = (env.get("ANTHROPIC_API_KEY") or "").strip()
+    if not g_key and not a_key:
+        return "", "沒有 AI 金鑰"
+    errs = []
+    if g_key:
+        model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
+        try:
+            out = _post_gemini(g_key, model, src_text, system=system,
+                               temperature=0.3, think=False)
+            return (out[0] if isinstance(out, tuple) else out).strip(), ""
+        except Exception as e:                     # noqa: BLE001
+            errs.append(f"Gemini：{e}")
+            if a_key:
+                log.warning("市場焦點：Gemini 整條鏈失敗（%s），"
+                            "改用 Anthropic 備援", e)
+    if a_key:
+        try:
+            out = _post_anthropic(a_key, PROVIDERS["anthropic"]["model"],
+                                  src_text, system=system, temperature=0.3)
+            return (out or "").strip(), ""
+        except Exception as e:                     # noqa: BLE001
+            errs.append(f"Anthropic：{e}")
+    return "", "呼叫失敗（" + "；".join(errs) + "）"
+
+
 def summarize_content(articles: list[dict], keywords: list[str],
                       cap: int, env=None) -> tuple[str, str]:
     """從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。"""
-    # 同 summarize()：走多模型鏈，單一模型過載時換一顆接著跑。
-    from .polish import _pick_provider, _post_gemini
-    import os
-    env = env or os.environ
-    provider, key = _pick_provider(env)
-    if provider != "gemini" or not key:
-        return "", "沒有 Gemini 金鑰"
     src_text = "\n\n".join(
         f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}"
         for a in articles)
-    model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
-    try:
-        out = _post_gemini(
-            key, model, src_text,
-            system=_FOCUS_CONTENT_SYSTEM.format(
-                kws="、".join(keywords), cap=cap),
-            temperature=0.3, think=False)
-        text = (out[0] if isinstance(out, tuple) else out).strip()
-    except Exception as e:                         # noqa: BLE001
-        return "", f"呼叫失敗（{e}）"
+    text, err = _call_ai(
+        src_text,
+        _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords), cap=cap),
+        env)
+    if err:
+        return "", err
     if not text or cjk_len(text) > cap + 40:
         return "", f"長度不合格（{cjk_len(text)} 字）"
     # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
@@ -339,7 +413,7 @@ def _sim(a: str, b: str) -> float:
 
 
 def pick_fallback(headlines: list[dict], keywords: list[str],
-                  n: int = 3) -> list[dict]:
+                  n: int = 3, exclude: list[str] | None = None) -> list[dict]:
     """
     沒有 AI 時的確定性挑選：關鍵字命中數多者優先。
     輸入已按時間新→舊排好，穩定排序讓同分者維持新的在前。
@@ -350,10 +424,14 @@ def pick_fallback(headlines: list[dict], keywords: list[str],
     字元二元組相似度把 >0.55 的視為重複，跳過選下一則。
     """
     def _hits(h):
-        t = h["title"]
+        t = _kw_text(h["title"])
         return sum(1 for kw in keywords for w in kw.split() if w in t)
     picked = []
     for h in sorted(headlines, key=_hits, reverse=True):
+        # 排除詞在挑選層也擋一次：Google News 標題模式不經過 feed 的
+        # 過濾，只在這裡把關
+        if _excluded(h["title"], exclude):
+            continue
         cand = _norm_title(h["title"])
         if any(_sim(cand, _norm_title(p["title"])) > 0.55 for p in picked):
             continue
@@ -384,25 +462,11 @@ def _digits_ok(text: str, source: str) -> bool:
 
 def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
     """回傳 (焦點段, 來源標記)。失敗回 ("", 原因)。"""
-    # 走 _post_gemini 的多模型鏈，不直接打單一模型：Actions 上實測
-    # flash-latest 過載吃 503 時，潤稿（走鏈）活著、焦點（直打）死透——
-    # 同一次執行、同一把金鑰，差別只在有沒有退路。
-    from .polish import _pick_provider, _post_gemini
-    import os
-    env = env or os.environ
-    provider, key = _pick_provider(env)
-    if provider != "gemini" or not key:
-        return "", "沒有 Gemini 金鑰"
     lines = "\n".join(f"- [{h['source'] or '—'}] {h['title']}"
                       for h in headlines[:24])
-    model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
-    try:
-        out = _post_gemini(key, model, lines,
-                           system=_FOCUS_SYSTEM.format(cap=cap),
-                           temperature=0.3, think=False)
-        text = (out[0] if isinstance(out, tuple) else out).strip()
-    except Exception as e:                         # noqa: BLE001
-        return "", f"呼叫失敗（{e}）"
+    text, err = _call_ai(lines, _FOCUS_SYSTEM.format(cap=cap), env)
+    if err:
+        return "", err
     if not text or cjk_len(text) > cap + 40:
         return "", f"長度不合格（{cjk_len(text)} 字）"
     if not _digits_ok(text, lines):
@@ -560,6 +624,21 @@ def fetch_fedwatch(env=None) -> float | None:
         return None
 
 
+def _jump_suspect(pct: float, prev, src: str) -> bool:
+    """
+    「單日跳動 >20pp 視為擷取錯誤」這條防護欄要不要啟動。
+
+    **只防 AI 擷取**。期貨自算是確定性算式，而且有自己的防護欄
+    （報價 90–100、偏離中點 ±1.5、中點＋0.40 陳舊報價、優先結算價），
+    通過那些檢查之後算出來的大變動是**資訊**，不是錯誤。
+    更關鍵的是：對期貨值也啟動這條的話，一次事故留下的壞前值
+    （實例：陳舊報價造成的 100%）會永遠取代不掉——正確的 22% 與
+    壞掉的 100% 差 78pp，每一次都被這條擋下、每一次都「沿用前值」，
+    畫面就永遠卡在 100%。
+    """
+    return src != "futures" and prev is not None and abs(pct - prev) > 20
+
+
 # ---------------------------------------------------------------------------
 # 主流程
 # ---------------------------------------------------------------------------
@@ -641,7 +720,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                    "implied": fw_old.get("implied"),
                                    "stale_from": fw_old.get("date")}
         elif pct is not None:
-            if prev is not None and abs(pct - prev) > 20:
+            if _jump_suspect(pct, prev, fw_src):
                 log.warning("FedWatch 單日跳動 %.0f→%.0f，視為擷取錯誤沿用前值",
                             prev, pct)
                 pct, suspect = prev, True
@@ -649,6 +728,13 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             delta = (round(pct - prev, 1)
                      if (prev is not None and not suspect
                          and fw_old.get("date") != today) else None)
+            if delta is not None and abs(delta) > 20:
+                # 差這麼多通常是「正確值取代了事故留下的壞前值」——
+                # 這是改基準，不是市場一天動了幾十個百分點。
+                # 掛「-78.0 pp」只會嚇人，不標日變動、讓 chip 顯示隱含利率。
+                log.info("FedWatch %.0f%% 與前值 %.0f%% 差 %.0fpp，"
+                         "視為改基準，不標日變動", pct, prev, abs(delta))
+                delta = None
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
                                "suspect": suspect, "src": fw_src,
                                "implied": implied}
@@ -659,7 +745,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →
     #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----
     feeds = cfg.get("feeds") or DEFAULT_FEEDS
-    heads = fetch_feed_headlines(feeds, keywords)
+    exclude = cfg.get("exclude_keywords") or []
+    heads = fetch_feed_headlines(feeds, keywords, exclude=exclude)
     mode = "content"
     if not heads:
         log.warning("市場焦點：Yahoo RSS 無命中或全部失敗，退回 Google News 標題模式")
@@ -677,7 +764,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                             _srcs)
         mode = "title"
     if heads:
-        top = pick_fallback(heads, keywords, n=6)
+        top = pick_fallback(heads, keywords, n=6, exclude=exclude)
         h = hashlib.sha256((mode + "|" + "|".join(x["title"] for x in top))
                            .encode("utf-8")).hexdigest()[:16]
         if state.get("hash") == h and state.get("text"):
@@ -697,6 +784,12 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                         arts.append({"title": x["title"], "body": body,
                                      "source": x.get("source", "")})
                 if arts:
+                    # 抓到多少內文寫進 log：頁面只標「摘要自內文」，
+                    # 摘要品質有疑慮時要能回頭查是不是內文本身太薄。
+                    log.info("市場焦點：內文擷取 %d／%d 篇（%s）",
+                             len(arts), min(len(top), 3),
+                             "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
+                                       for a in arts))
                     text, src = summarize_content(arts, keywords, cap, env)
                     if not text:
                         log.warning("市場焦點：內文摘要退回標題模式（%s）", src)
@@ -713,9 +806,13 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             if text:
                 out["text"], out["text_source"] = text, src
             else:
+                # 第三層退路（列標題）不再把標題串成一段假摘要——
+                # 下方「來源標題」本來就列著同樣三條，串起來等於同一批字
+                # 印兩次（畫面上實際發生過）。text 留空，由首頁改成
+                # 直接攤開標題清單並註明「本次 AI 摘要不可用」。
+                # text 留空也讓快取不生效，下一次執行會再試 AI。
                 log.warning("市場焦點：AI 段落退回列標題（%s）", src)
-                out["text"] = "；".join(
-                    f"{x['title']}" for x in links) or ""
+                out["text"] = ""
                 out["text_source"] = "headlines"
             out["links"] = links
             state.update({"hash": h, "text": out["text"], "links": links,

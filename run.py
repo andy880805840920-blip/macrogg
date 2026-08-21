@@ -150,6 +150,40 @@ def _load_real_fixtures(module: str):
         return None
 
 
+def _restore_from_snapshot(series: dict, store, failed: list) -> list[str]:
+    """
+    快照後備：抓取（含 fetch_all 的打撈段）之後還是空手的序列，
+    退回本機 SQLite 裡上一次成功抓到的值。
+
+    為什麼需要第三層防線：限流已經用抓取節奏＋補抓擋掉大半，但 FRED
+    偶爾整條序列短暫回空、或整站短暫掛掉——而缺一條原料的代價是下游
+    連鎖缺值。實例：CUSR0000SASLE 缺了，「核心服務除住房」推導不出來，
+    supercore KPI、黏性訊號、核心 PCE 成分法整串跟著空。
+    沿用上次的值不是造假：值本來就是同一條官方序列上次的版本，
+    freshness 照觀測日期照常判停更，頁尾的失敗清單也會標明是沿用。
+
+    回傳沿用了哪些序列 id；同時把 failed 裡對應的訊息補上沿用標記。
+    """
+    restored: list[str] = []
+    for sid, rows in series.items():
+        if rows:
+            continue
+        try:
+            prev = store.series(sid)
+        except Exception:                          # noqa: BLE001
+            prev = []
+        if prev:
+            series[sid] = prev
+            restored.append(sid)
+    if restored:
+        rs = set(restored)
+        failed[:] = [(s, m + "（已沿用上次執行的本機快照）") if s in rs
+                     else (s, m) for s, m in failed]
+        log.warning("有 %d 條序列本次抓不到，沿用本機快照：%s",
+                    len(restored), "、".join(restored))
+    return restored
+
+
 def gather_fred(offline: bool, ids: list[str], module: str,
                 vintage_ids: tuple[str, ...] = ()):
     """回傳 (series, vintages, failed)"""
@@ -178,6 +212,9 @@ def gather_fred(offline: bool, ids: list[str], module: str,
     run_id = store.start_run(note=module)
 
     series = fetch_all(client, ids, start=HISTORY_START)
+    # 補抓之後還缺的，退回上次執行的本機快照（沿用的不再寫回 store，
+    # 免得把舊資料誤記成「這一次抓到的」）。
+    _restored = set(_restore_from_snapshot(series, store, client.failed))
 
     # BLS 快速通道：CPI 與就業報告都是 BLS 08:30 發布，而 FRED 是轉載，
     # 當天可能要等好幾個小時才同步（實測 8/12 的 7 月 CPI，兩小時後
@@ -201,7 +238,7 @@ def gather_fred(offline: bool, ids: list[str], module: str,
                      ", ".join(sorted(bls_res["added"]))[:80])
 
     for sid, rows in series.items():
-        if rows:
+        if rows and sid not in _restored:
             store.write(run_id, sid, rows)
 
     vintages: dict = {}
