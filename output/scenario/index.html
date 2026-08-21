@@ -128,7 +128,9 @@ details.banner[open]>summary::after{content:"▴"}
 .grid>*{min-width:0}
 @media(min-width:760px){
   .grid{gap:14px;margin-top:14px}
-  .g2{grid-template-columns:repeat(2,1fr)}
+  /* 並排卡各自貼頂：兩張卡內容量不同時，不再互相拉成等高、
+     讓短的那張底部拖一段空白（跟 KPI 內層卡同一個道理）。 */
+  .g2{grid-template-columns:repeat(2,1fr);align-items:start}
   .g4{grid-template-columns:repeat(2,1fr)}
   /* 模組卡有五張。四欄會排成 4+1，最後一張孤零零的；三欄的 3+2 比較穩。 */
   .g5{grid-template-columns:repeat(2,1fr)}
@@ -201,9 +203,17 @@ details.banner[open]>summary::after{content:"▴"}
 .grid.inner>.card:first-child{padding-top:4px}
 @media(min-width:760px){
   .grid.inner{gap:0 22px}
-  .grid.inner>.card{padding:15px 0}
-  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
-     視覺上剛好變成欄與欄之間的水平分隔 */
+  /* 桌機並排時：
+     ① padding 統一——first/last-child 的手機特例（4px／2px）在四欄
+        並排下會讓第一張標題高 15px、第四張的收合列低 21px（實測）。
+     ② 卡片各自貼頂（align-items:start）＝展開「近 5 期」時只有那張卡
+        往下長，其他三張不動；先前整列被拉成等高，沒開的卡的置底
+        收合列會掉到被撐高的列底，跟內容之間空一大段。
+     ③ 底線拿掉——欄與欄之間有間距就夠，橫線在四欄下反而像表格框。 */
+  .grid.inner{align-items:start}
+  .grid.inner>.card{padding:6px 0 10px;border-bottom:none}
+  .grid.inner>.card:first-child{padding-top:6px}
+  .grid.inner>.card:last-child{padding-bottom:10px}
 }
 
 /* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
@@ -293,10 +303,20 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
-/* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
-   展開點會落在同一條線上，一列看過去才整齊。 */
+/* 卡片直向 flex。手機（堆疊）收合列跟著內容走即可；
+   桌機的對齊改用「各層固定最小高度」（見下方 @media 區塊），
+   不再用「拉成同高＋收合列釘底」——那一套在展開任何一張的
+   「近 5 期」時，會把沒開的卡的收合列釘到被撐高的列底，
+   跟內容之間空出一大段（使用者實測回報的「展開方式怪異」）。 */
 .kpi{display:flex;flex-direction:column}
-.kpi .k-more{margin-top:auto}
+@media(min-width:760px){
+  /* 各層保留固定空間：標題（含期別章，至多兩行）、chips（至多兩列）、
+     白話句（至多三行）。四張卡的每一層落在同一條水平線，
+     「近 5 期」列收合時自然對齊，不必靠等高硬拉。 */
+  .kpi .k-label{min-height:46px}
+  .kpi .k-chips{min-height:56px;align-content:flex-start}
+  .kpi .k-plain{min-height:92px}   /* 三行白話句的高度；兩行的卡框內留白 */
+}
 .spark{padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
@@ -805,6 +825,23 @@ summary::-webkit-details-marker{display:none}
    .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
    （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
+
+/* ---------- 換頁動線 ---------- */
+/* MPA 換頁改成交叉淡入（View Transitions）：支援的瀏覽器不再白屏閃一下。
+   使用者關掉動態效果時停用。 */
+@view-transition{navigation:auto}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),
+  ::view-transition-new(*){animation:none!important}}
+/* 頁尾的上一頁／下一頁 */
+.pagenav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.pagenav a{display:flex;flex-direction:column;gap:3px;padding:13px 16px;
+  min-width:130px;max-width:48%;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface-1);text-decoration:none;font-size:11.5px;
+  color:var(--muted)}
+.pagenav a b{font-size:14px;color:var(--text-primary)}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav .pn-next{margin-left:auto;text-align:right;align-items:flex-end}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
 /* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
@@ -1403,8 +1440,15 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link{flex-shrink:0;margin-top:-6px}
 
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
-.focus-strip{padding:14px 16px}
-.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+/* 升格成強調卡：頂部主題色帶＋放大的標題（帶日期）＋與下方 hero 拉開。
+   先前是一條 11px 灰標題的窄 strip，跟目前情境黏在一起、掃過去會漏看。 */
+.focus-strip{position:relative;padding:16px 18px 15px;margin-bottom:26px;
+  overflow:hidden}
+.focus-strip::before{content:"";position:absolute;left:0;right:0;top:0;
+  height:3px;background:var(--series-1)}
+.fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
+  color:var(--text-primary)}
+.fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1663,13 +1707,16 @@ details.home-module[open]{padding-bottom:0}
   .sect-body{padding:0 14px 16px}
 }
 </style>
+<script type="speculationrules">
+{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+</script>
 </head>
 <body>
 <div class="viz-root">
 
 <header class="top">
   <h1><a class="h1-home" href="/">情境合成</a></h1>
-  <div class="sub">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-19　·　更新於 2026-08-21 20:21（台北）</div>
+  <div class="sub">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-19　·　更新於 2026-08-21 21:56（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/" class="on">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1681,31 +1728,19 @@ details.home-module[open]{padding-bottom:0}
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
   <details class="card sect" open><summary><h2 id="grid">九宮格定位</h2><span class="sect-sum">就業中 × 通膨高　·　傾向緊縮　·　利升息</span></summary><div class="sect-body">
-    <p class="hint">就業 × 通膨。格子由下方四步算出，門檻全部錨在外部標準；
-      目前格的完整說明見頁首結論卡。</p>
-    <div class="steps"><div class="step"><span class="step-k">① 就業格位</span><span class="step-t">失業率 4.1% 落在充分就業區間 4.0–4.3% 之內，動能也沒有轉弱</span><span class="step-r">中</span></div><div class="step"><span class="step-k">② 通膨格位</span><span class="step-t">核心 PCE 年增 2.8%（推估） 決定格位；短期動能 2.9%（2026-06 實際） 另列，高於門檻 2.50%</span><span class="step-r">高</span></div><div class="step"><span class="step-k">③ 目前重心</span><span class="step-t">委員會目前把通膨擺在前面</span><span class="step-r">通膨優先</span></div><div class="step"><span class="step-k">④ 交叉定位</span><span class="step-t">就業中 × 通膨高，在通膨優先下</span><span class="step-r">傾向緊縮</span></div></div>
+    <p class="hint">就業 × 通膨交叉定位；算法與門檻出處見卡尾「完整算式」。</p>
     
     <div class="rtabs"><input type="radio" name="regime" id="rg-inflation" checked class="rtab-in"><label for="rg-inflation" class="rtab">通膨優先<span class="rt-now">目前</span></label><input type="radio" name="regime" id="rg-employment" class="rtab-in"><label for="rg-employment" class="rtab">就業優先</label><input type="radio" name="regime" id="rg-balanced" class="rtab-in"><label for="rg-balanced" class="rtab">兩邊並重</label><div class="rpanels"><div class="rpanel"><p class="hint" style="margin:0 0 12px"><b>通膨優先的規則：</b>通膨沒回到目標附近之前，就業轉弱不會單獨換來降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div></div><div class="scell neutral"><div class="sname">小心觀望</div></div><div class="scell hawkish"><div class="sname">升息壓力</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div></div><div class="scell neutral"><div class="sname">按兵不動</div></div><div class="scell hawkish on conflict"><div class="sname">傾向緊縮</div><div class="sbadge">目前位置</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div></div><div class="scell neutral conflict"><div class="sname">降息受阻</div></div><div class="scell hawkish conflict"><div class="sname">停滯性通膨<span class="sn-qual">通膨優先</span></div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以就業優先時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>就業優先的規則：</b>勞動市場的惡化是決定性的；通膨略高於目標不會阻止降息。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div></div><div class="scell neutral"><div class="sname">小心觀望</div></div><div class="scell hawkish"><div class="sname">升息壓力</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div></div><div class="scell neutral"><div class="sname">按兵不動</div></div><div class="scell neutral on conflict"><div class="sname">忍受通膨</div><div class="sbadge">目前位置</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div></div><div class="scell dovish conflict"><div class="sname">轉向降息</div></div><div class="scell dovish conflict"><div class="sname">停滯性通膨<span class="sn-qual">救就業</span></div></div></div></div><div class="rpanel"><div class="rt-hypo">這是<b>假設</b>聯準會改以兩邊並重時的對照，不是目前的判定。</div><p class="hint" style="margin:0 0 12px"><b>兩邊並重的規則：</b>沒有優先順序。哪一邊先出現極端值，哪一邊就主導。</p><div class="sgrid"><div class="axis"></div><div class="axis">通膨低</div><div class="axis">通膨中</div><div class="axis">通膨高</div><div class="axis row">就業強</div><div class="scell neutral"><div class="sname">溫和成長</div></div><div class="scell neutral"><div class="sname">小心觀望</div></div><div class="scell hawkish"><div class="sname">升息壓力</div></div><div class="axis row">就業中</div><div class="scell dovish"><div class="sname">預防性降息</div></div><div class="scell neutral"><div class="sname">按兵不動</div></div><div class="scell hawkish on conflict"><div class="sname">兩難</div><div class="sbadge">目前位置</div></div><div class="axis row">就業弱</div><div class="scell dovish"><div class="sname">衰退式降息</div></div><div class="scell dovish conflict"><div class="sname">轉向降息</div></div><div class="scell neutral conflict"><div class="sname">兩難僵局</div></div></div></div></div></div>
     <p class="hint" style="margin-top:16px">
       <span class="lg-on">反白粗框</span>＝目前位置　·
-      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
+      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格不隨重心變）
     </p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>格子的位置不是主觀判斷，是四步固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。</p><p><b>為什麼重要：</b>看得懂這四步，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。</p><p><b>怎麼判讀：</b>每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。口徑提醒：②的格位只用**年增率**判；下方「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），所以兩處的數字會不一樣——口徑不同，不是算錯。</p></div></details>
     <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）；含核心 PCE 推估 2.77%（差距法）</summary>
-      <div class="f-detail" style="margin-bottom:10px">
-        <b>②的通膨水準是推估值</b>：本期採用<b>差距法＝核心 CPI 減去兩者的歷史平均差距</b>。
-        PCE 比 CPI 晚兩週公布，空窗期用 CPI 與 PPI 先推——
-        PCE 的醫療與金融服務項本來就取自 PPI，所以推得出來。
-        兩種方法各自回測近 18 期、比較平均誤差，
-        <b>本期採誤差較小的那個</b>：成分法 不可用、
-        差距法 ±0.333 個百分點。
-        方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
-        
-      </div>
-      <div class="axg"><details class="ax"><summary><span class="ax-k">就業</span><span class="ax-v">中</span><span class="ax-lead">失業率 4.1% 落在充分就業區間 4.0–4.3% 之內，動能也沒有轉弱</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">失業率（水準）</span><span class="wx-w">落在區間內</span><span class="wx-v">4.1%</span></div><div class="wx-r"><span class="wx-k">FOMC 長期失業率　中央趨勢</span><span class="wx-w">門檻</span><span class="wx-v">4.0–4.3%</span></div><div class="wx-r"><span class="wx-k">Sahm 法則（動能）</span><span class="wx-w">門檻 0.50</span><span class="wx-v">+0.00</span></div><div class="wx-r"><span class="wx-k">三月均非農　vs　損益兩平（動能）</span><span class="wx-w">低於</span><span class="wx-v">+2.0 / +9.8 萬人</span></div><div class="wx-src" style="margin-top:8px">由<b>水準</b>定案：失業率相對 FOMC 自己對長期失業率的判斷；三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是委員彼此的分歧程度）、Sahm 法則的 0.50、以及由人口成長推導出來的損益兩平。前兩者是外部標準；損益兩平的 12 個月回看期與不確定性容差是本站的方法選擇，已在就業頁揭露。損益兩平與其他月頻指標只判斷移動方向，不會改寫當前格位。</div></div></details><details class="ax"><summary><span class="ax-k">通膨</span><span class="ax-v">高</span><span class="ax-lead">核心 PCE 年增 2.8%（推估） 決定格位；短期動能 2.9%（2026-06 實際） 另列，高於門檻 2.50%</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">核心 PCE 年增率（決定格位）</span><span class="wx-w">水準</span><span class="wx-v">2.8%</span></div><div class="wx-r"><span class="wx-k">核心 PCE 三個月年化（只決定方向）（2026-06 實際）</span><span class="wx-w">動能</span><span class="wx-v">2.9%</span></div><div class="wx-r wx-sum"><span class="wx-k">格位判定值</span><span class="wx-w"></span><span class="wx-v">2.77%</span></div><div class="wx-thr">2.77%　＞　門檻 2.50%</div><div class="wx-src">門檻出處：FOMC 對 2027 年的核心 PCE 預測中位數（2.3–2.6% 中央趨勢）</div><div class="wx-src">核心 PCE 這個月還沒公布（BEA 月底才發），上面那個值是用已公布的核心 CPI 換算成 PCE 口徑推估的。換算而不是直接代入，是因為門檻錨在 FOMC 的 PCE 預測；換算採近期 CPI 與PCE 的實際差距，不假設固定正負方向。PCE 公布後就換回實際值。</div><div class="wx-note"><b>為什麼通膨頁寫「通膨面：本期方向不明」、這裡卻是「高」</b>：兩者問的不是同一件事。通膨頁的結論看的是<b>本期新訊號的方向</b>（旗標鷹鴿淨值 -1.0）；這一軸看的是<b>水準</b>——離 2% 目標多遠。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div></div></details></div>
+      <div class="axg"><details class="ax"><summary><span class="ax-k">就業</span><span class="ax-v">中</span><span class="ax-lead">失業率 4.1% 落在充分就業區間 4.0–4.3% 之內，動能也沒有轉弱</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">失業率（水準）</span><span class="wx-w">落在區間內</span><span class="wx-v">4.1%</span></div><div class="wx-r"><span class="wx-k">FOMC 長期失業率　中央趨勢</span><span class="wx-w">門檻</span><span class="wx-v">4.0–4.3%</span></div><div class="wx-r"><span class="wx-k">Sahm 法則（動能）</span><span class="wx-w">門檻 0.50</span><span class="wx-v">+0.00</span></div><div class="wx-r"><span class="wx-k">三月均非農　vs　損益兩平（動能）</span><span class="wx-w">低於</span><span class="wx-v">+2.0 / +9.8 萬人</span></div><div class="wx-src" style="margin-top:8px">由<b>水準</b>定案：失業率相對 FOMC 的長期失業率判斷。</div><div class="wx-src">門檻出處：FOMC 長期失業率（SEP 中央趨勢）　·　Sahm 0.50（原論文）　·　損益兩平（人口成長推導）</div></div></details><details class="ax"><summary><span class="ax-k">通膨</span><span class="ax-v">高</span><span class="ax-lead">核心 PCE 年增 2.8%（推估） 決定格位；短期動能 2.9%（2026-06 實際） 另列，高於門檻 2.50%</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">核心 PCE 年增率（決定格位）</span><span class="wx-w">水準</span><span class="wx-v">2.8%</span></div><div class="wx-r"><span class="wx-k">核心 PCE 三個月年化（只決定方向）（2026-06 實際）</span><span class="wx-w">動能</span><span class="wx-v">2.9%</span></div><div class="wx-r wx-sum"><span class="wx-k">格位判定值</span><span class="wx-w"></span><span class="wx-v">2.77%</span></div><div class="wx-thr">2.77%　＞　門檻 2.50%</div><div class="wx-src">門檻出處：FOMC 對 2027 年的核心 PCE 預測中位數（2.3–2.6% 中央趨勢）</div><div class="wx-src" style="margin-top:8px"><b>推估值怎麼算</b>：PCE 比 CPI 晚兩週公布，空窗期用 CPI／PPI 先推，公布即換回實際值。回測近 18 期，取誤差小的：成分法 不可用、差距法 ±0.333 個百分點——本期用<b>差距法</b>。</div><div class="wx-thr">核心 CPI 年增 2.48%　−　兩者近 12 個月平均差距 -0.29 個百分點　＝　推估核心 PCE <b>2.77%</b></div><div class="wx-note"><b>為什麼通膨頁寫「通膨面：本期方向不明」、這裡卻是「高」</b>：兩者問的不是同一件事。通膨頁的結論看的是<b>本期新訊號的方向</b>（旗標鷹鴿淨值 -1.0）；這一軸看的是<b>水準</b>——離 2% 目標多遠。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div></div></details></div>
     </details>
     <details class="f-more"><summary>重心怎麼判定；重心若翻轉，這一格會變成「忍受通膨」或「兩難」</summary><div class="f-detail"><b>本期判定依據</b>：聲明描述通膨仍高於目標、3 張反對票主張升息、記者會 7 處表態以物價穩定為優先</div><p class="hint" style="margin:10px 0 10px">下面三列是同一格在三種體制下的結論。重心是由聲明、投票與記者會判定的，會隨會議改變——所以這一格的結論帶著一個額外的風險，要跟數據本身一起盯。</p><div class="rcmp on"><div class="rcmp-k">通膨優先</div><div class="rcmp-v hawkish">傾向緊縮</div><div class="rcmp-l">利升息</div></div><div class="rcmp"><div class="rcmp-k">就業優先</div><div class="rcmp-v neutral">忍受通膨</div><div class="rcmp-l">中性</div></div><div class="rcmp"><div class="rcmp-k">兩邊並重</div><div class="rcmp-v hawkish">兩難</div><div class="rcmp-l">利升息</div></div></details>
     <details class="f-more"><summary>九格各代表什麼</summary><p class="hint" style="margin:10px 0 0">依目前重心的那張格子；標 ◆ 的三格在其他重心下名稱與結論會不同（切上方頁籤看）。</p><dl class="gloss" style="margin-top:10px"><dt>就業強 × 通膨低：溫和成長</dt><dd>就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</dd><dt>就業強 × 通膨中：小心觀望</dt><dd>就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</dd><dt>就業強 × 通膨高：升息壓力</dt><dd>經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</dd><dt>就業中 × 通膨低：預防性降息</dt><dd>通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</dd><dt>就業中 × 通膨中：按兵不動</dt><dd>兩邊都不極端，這份數據不足以改變方向。</dd><dt>就業中 × 通膨高：傾向緊縮◆（目前位置）</dt><dd>通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。</dd><dt>就業弱 × 通膨低：衰退式降息</dt><dd>就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</dd><dt>就業弱 × 通膨中：降息受阻◆</dt><dd>就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</dd><dt>就業弱 × 通膨高：停滯性通膨：通膨優先◆</dt><dd>兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</dd></dl></details>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>格子的位置不是主觀判斷，是固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。</p><p><b>為什麼重要：</b>看得懂這套算法，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。</p><p><b>怎麼判讀：</b>細節（權重、門檻出處、PCE 推估算式）都在上方「完整算式」裡，數字全部可以驗算。口徑提醒：格位只用**年增率**判；「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），兩處數字不一樣是口徑不同，不是算錯。</p></div></details>
   </div></details>
 </div>
 <div class="grid g2">
@@ -1831,6 +1866,7 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 
+<nav class="pagenav" aria-label="前後頁"><a class="pn-prev" href="/rates/">← 上一頁<b>長端與債務</b></a><a class="pn-next" href="/archive/">下一頁 →<b>存檔</b></a></nav>
 <footer>情境分類由固定規則產生：失業率相對 FOMC 長期區間決定就業格位，核心 PCE 年增決定通膨格位；短期指標只決定移動方向。聯準會的重心（聲明制式句、反對票、記者會表態）決定用哪一張九宮格。全部是確定性規則，不含模型生成內容。<br>長端供給壓力另行計算，不併入九宮格——它影響的是曲線形狀，不是政策方向。<br>本頁僅為分析框架，不構成投資建議。</footer>
 
 </div>
@@ -1881,14 +1917,37 @@ details.home-module[open]{padding-bottom:0}
     });
   });
 
-  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
-  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 預載後備：不支援 Speculation Rules 的瀏覽器（Firefox／舊 Safari）
+  // 改用「滑過（或手指按下）站內連結就 prefetch」——點下去時 HTML
+  // 已經在快取裡。同一頁只抓一次。
+  if(!HTMLScriptElement.supports || !HTMLScriptElement.supports('speculationrules')){
+    var _pf = {};
+    function prefetch(href){
+      if(!href || _pf[href]) return;
+      _pf[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch'; l.href = href;
+      document.head.appendChild(l);
+    }
+    document.querySelectorAll('a[href^="/"]').forEach(function(a){
+      var h = a.getAttribute('href').split('#')[0];
+      if(!h || h === location.pathname) return;
+      a.addEventListener('mouseenter', function(){ prefetch(h); }, {once:true});
+      a.addEventListener('touchstart', function(){ prefetch(h); },
+                         {once:true, passive:true});
+    });
+  }
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
+  // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
+  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');
     if(ds.length < 2) return;
     ds.forEach(function(d){
       d.addEventListener('toggle', function(){
+        if(window.innerWidth < 760) return;
         ds.forEach(function(o){
           if(o !== d && o.open !== d.open) o.open = d.open;
         });

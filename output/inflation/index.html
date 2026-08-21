@@ -128,7 +128,9 @@ details.banner[open]>summary::after{content:"▴"}
 .grid>*{min-width:0}
 @media(min-width:760px){
   .grid{gap:14px;margin-top:14px}
-  .g2{grid-template-columns:repeat(2,1fr)}
+  /* 並排卡各自貼頂：兩張卡內容量不同時，不再互相拉成等高、
+     讓短的那張底部拖一段空白（跟 KPI 內層卡同一個道理）。 */
+  .g2{grid-template-columns:repeat(2,1fr);align-items:start}
   .g4{grid-template-columns:repeat(2,1fr)}
   /* 模組卡有五張。四欄會排成 4+1，最後一張孤零零的；三欄的 3+2 比較穩。 */
   .g5{grid-template-columns:repeat(2,1fr)}
@@ -201,9 +203,17 @@ details.banner[open]>summary::after{content:"▴"}
 .grid.inner>.card:first-child{padding-top:4px}
 @media(min-width:760px){
   .grid.inner{gap:0 22px}
-  .grid.inner>.card{padding:15px 0}
-  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
-     視覺上剛好變成欄與欄之間的水平分隔 */
+  /* 桌機並排時：
+     ① padding 統一——first/last-child 的手機特例（4px／2px）在四欄
+        並排下會讓第一張標題高 15px、第四張的收合列低 21px（實測）。
+     ② 卡片各自貼頂（align-items:start）＝展開「近 5 期」時只有那張卡
+        往下長，其他三張不動；先前整列被拉成等高，沒開的卡的置底
+        收合列會掉到被撐高的列底，跟內容之間空一大段。
+     ③ 底線拿掉——欄與欄之間有間距就夠，橫線在四欄下反而像表格框。 */
+  .grid.inner{align-items:start}
+  .grid.inner>.card{padding:6px 0 10px;border-bottom:none}
+  .grid.inner>.card:first-child{padding-top:6px}
+  .grid.inner>.card:last-child{padding-bottom:10px}
 }
 
 /* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
@@ -293,10 +303,20 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
-/* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
-   展開點會落在同一條線上，一列看過去才整齊。 */
+/* 卡片直向 flex。手機（堆疊）收合列跟著內容走即可；
+   桌機的對齊改用「各層固定最小高度」（見下方 @media 區塊），
+   不再用「拉成同高＋收合列釘底」——那一套在展開任何一張的
+   「近 5 期」時，會把沒開的卡的收合列釘到被撐高的列底，
+   跟內容之間空出一大段（使用者實測回報的「展開方式怪異」）。 */
 .kpi{display:flex;flex-direction:column}
-.kpi .k-more{margin-top:auto}
+@media(min-width:760px){
+  /* 各層保留固定空間：標題（含期別章，至多兩行）、chips（至多兩列）、
+     白話句（至多三行）。四張卡的每一層落在同一條水平線，
+     「近 5 期」列收合時自然對齊，不必靠等高硬拉。 */
+  .kpi .k-label{min-height:46px}
+  .kpi .k-chips{min-height:56px;align-content:flex-start}
+  .kpi .k-plain{min-height:92px}   /* 三行白話句的高度；兩行的卡框內留白 */
+}
 .spark{padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
@@ -805,6 +825,23 @@ summary::-webkit-details-marker{display:none}
    .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
    （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
+
+/* ---------- 換頁動線 ---------- */
+/* MPA 換頁改成交叉淡入（View Transitions）：支援的瀏覽器不再白屏閃一下。
+   使用者關掉動態效果時停用。 */
+@view-transition{navigation:auto}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),
+  ::view-transition-new(*){animation:none!important}}
+/* 頁尾的上一頁／下一頁 */
+.pagenav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.pagenav a{display:flex;flex-direction:column;gap:3px;padding:13px 16px;
+  min-width:130px;max-width:48%;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface-1);text-decoration:none;font-size:11.5px;
+  color:var(--muted)}
+.pagenav a b{font-size:14px;color:var(--text-primary)}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav .pn-next{margin-left:auto;text-align:right;align-items:flex-end}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
 /* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
@@ -1403,8 +1440,15 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link{flex-shrink:0;margin-top:-6px}
 
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
-.focus-strip{padding:14px 16px}
-.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+/* 升格成強調卡：頂部主題色帶＋放大的標題（帶日期）＋與下方 hero 拉開。
+   先前是一條 11px 灰標題的窄 strip，跟目前情境黏在一起、掃過去會漏看。 */
+.focus-strip{position:relative;padding:16px 18px 15px;margin-bottom:26px;
+  overflow:hidden}
+.focus-strip::before{content:"";position:absolute;left:0;right:0;top:0;
+  height:3px;background:var(--series-1)}
+.fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
+  color:var(--text-primary)}
+.fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1663,18 +1707,21 @@ details.home-module[open]{padding-bottom:0}
   .sect-body{padding:0 14px 16px}
 }
 </style>
+<script type="speculationrules">
+{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+</script>
 </head>
 <body>
 <div class="viz-root">
 
 <header class="top">
   <h1><a class="h1-home" href="/">通膨</a></h1>
-  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-21 20:21（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-21 21:55（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
-<div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#ppi">生產者物價 PPI（上游）</a><a href="#contrib">分項貢獻分解</a><a href="#trend">是全面在漲，還是少數項目？</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#energy">能源價格與傳導</a><a href="#lights">關鍵指標檢核</a></nav></div>
+<div class="anav"><nav class="anchors"><a href="#signals">本期關鍵訊號</a><a href="#kpi">關鍵數字</a><a href="#ppi">生產者物價 PPI（上游）</a><a href="#contrib">分項貢獻分解</a><a href="#trend">通膨廣度：中位數與截尾平均</a><a href="#passthrough">薪資到服務業通膨的傳導</a><a href="#energy">能源價格與傳導</a><a href="#lights">關鍵指標檢核</a></nav></div>
 <div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Inflation now</div><h2 class="focus-title">核心 PCE 降溫，PPI 壓力降溫</h2><p class="focus-sub">先看核心 PCE 的格位與方向，再用 CPI 拆消費端、PPI 看上游風險；三者不混成單一分數。</p><div class="focus-grid"><div class="focus-metric neutral"><span>總體 CPI｜民眾體感</span><b>3.4%</b><small>含食物與能源</small></div><div class="focus-metric neutral"><span>核心 CPI｜消費端趨勢</span><b>2.5%</b><small>3M 年化 1.6%</small></div><div class="focus-metric neutral"><span>總體 PCE｜Fed 2% 目標</span><b>3.7%</b><small>3M 年化 3.1%</small></div><div class="focus-metric dovish"><span>核心 PCE｜九宮格水準</span><b>3.3%</b><small>動能 降溫</small></div></div><details class="focus-evidence"><summary>查看 PPI、CPI、PCE 傳導</summary><div class="focus-evidence-body"><div class="grid-flow">
       <div class="flow-box"><strong>PPI｜企業上游</strong><div class="flow-values">
         總體 4.7% · 核心 4.2% · 3M 2.2%<br>
@@ -1754,15 +1801,15 @@ details.home-module[open]{padding-bottom:0}
     <div class="grid g4 inner"><div class="card kpi">
   <div class="k-label">Headline CPI, y/y<span class="asof">2026-07</span></div>
   <div class="k-label-zh">CPI 年增率</div><div class="k-value">3.4%</div>
-  <div class="k-chips"><span class="k-chip hawkish">水準：高於 PCE 目標對應水準</span><span class="k-chip dovish">本期：下降 0.17</span></div><div class="k-plain">你買的東西平均比一年前貴 3.4%。這個數字包含食物和能源，所以起伏會比較大。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 0.5%　·　高於 2% +1.4 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,21.0 9.7,23.6 16.4,29.9 23.1,31.0 29.8,30.4 36.5,25.8 43.2,25.3 49.9,22.3 56.6,20.9 63.4,24.9 70.1,25.7 76.8,29.9 83.5,29.5 90.2,17.3 96.9,9.3 103.6,3.0 110.3,13.4 117.0,15.8" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="15.8" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.3</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">3.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.2</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.5</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.4</div><div class="mdate">7月</div></div></div></div></div></details>
+  <div class="k-chips"><span class="k-chip hawkish">水準：高於目標對應水準</span><span class="k-chip dovish">本期：-0.17</span></div><div class="k-plain">你買的東西平均比一年前貴 3.4%。這個數字包含食物和能源，所以起伏會比較大。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 0.5%　·　高於 2% +1.4 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,21.0 9.7,23.6 16.4,29.9 23.1,31.0 29.8,30.4 36.5,25.8 43.2,25.3 49.9,22.3 56.6,20.9 63.4,24.9 70.1,25.7 76.8,29.9 83.5,29.5 90.2,17.3 96.9,9.3 103.6,3.0 110.3,13.4 117.0,15.8" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="15.8" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.3</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">3.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.2</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.5</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.4</div><div class="mdate">7月</div></div></div></div></div></details>
 </div><div class="card kpi">
   <div class="k-label">Core CPI, y/y<span class="asof">2026-07</span></div>
   <div class="k-label-zh">核心 CPI 年增率</div><div class="k-value">2.5%</div>
-  <div class="k-chips"><span class="k-chip neutral">水準：接近目標對應水準</span><span class="k-chip dovish">本期：下降 0.12</span><span class="k-chip pos">三個月年化 1.6%，動能放緩</span></div><div class="k-plain">剔除波動大的食物與能源後，物價一年漲 2.5%。聯準會看趨勢時主要看這一類數字。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 1.6%　·　高於 2% +0.5 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,3.0 9.7,7.9 16.4,19.4 23.1,19.7 29.8,19.5 36.5,14.3 43.2,9.9 49.9,8.2 56.6,11.4 63.4,24.8 70.1,24.6 76.8,29.4 83.5,31.0 90.2,26.2 96.9,20.7 103.6,17.2 110.3,26.2 117.0,30.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="30.2" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">2.6</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">2.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">2.9</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">2.6</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">2.5</div><div class="mdate">7月</div></div></div></div></div></details>
+  <div class="k-chips"><span class="k-chip neutral">水準：接近目標對應水準</span><span class="k-chip dovish">本期：-0.12</span><span class="k-chip pos">三個月年化 1.6%，動能放緩</span></div><div class="k-plain">剔除波動大的食物與能源後，物價一年漲 2.5%。聯準會看趨勢時主要看這一類數字。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 1.6%　·　高於 2% +0.5 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,3.0 9.7,7.9 16.4,19.4 23.1,19.7 29.8,19.5 36.5,14.3 43.2,9.9 49.9,8.2 56.6,11.4 63.4,24.8 70.1,24.6 76.8,29.4 83.5,31.0 90.2,26.2 96.9,20.7 103.6,17.2 110.3,26.2 117.0,30.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="30.2" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">2.6</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">2.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">2.9</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">2.6</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">2.5</div><div class="mdate">7月</div></div></div></div></div></details>
 </div><div class="card kpi">
   <div class="k-label">Core PCE, y/y<span class="asof">2026-06</span></div>
   <div class="k-label-zh">核心 PCE 年增率</div><div class="k-value">3.3%</div>
-  <div class="k-chips"><span class="k-chip hawkish">水準：高於目標</span><span class="k-chip dovish">本期：下降 0.14</span><span class="k-chip neg">仍高於 2% 基準</span></div><div class="k-plain">核心 PCE 年增 3.3%。這是基礎通膨趨勢指標；官方 2% 長期目標以總體 PCE 衡量。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 2.9%　·　相對 2% 基準 +1.3 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,25.3 9.7,18.7 16.4,29.1 23.1,31.0 29.8,25.1 36.5,24.3 43.2,22.4 49.9,20.7 56.6,23.7 63.4,26.2 70.1,23.6 76.8,18.6 83.5,14.0 90.2,15.9 96.9,8.8 103.6,6.7 110.3,3.0 117.0,7.7" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="7.7" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.0</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">3.3</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.3</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.4</div><div class="mdate">5月</div></div><div class="mcell last"><div class="mval">3.3</div><div class="mdate">6月</div></div></div></div></div></details>
+  <div class="k-chips"><span class="k-chip hawkish">水準：高於目標</span><span class="k-chip dovish">本期：-0.14</span><span class="k-chip neg">仍高於 2% 基準</span></div><div class="k-plain">核心 PCE 年增 3.3%。這是基礎通膨趨勢指標；官方 2% 長期目標以總體 PCE 衡量。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 2.9%　·　相對 2% 基準 +1.3 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,25.3 9.7,18.7 16.4,29.1 23.1,31.0 29.8,25.1 36.5,24.3 43.2,22.4 49.9,20.7 56.6,23.7 63.4,26.2 70.1,23.6 76.8,18.6 83.5,14.0 90.2,15.9 96.9,8.8 103.6,6.7 110.3,3.0 117.0,7.7" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="7.7" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.0</div><div class="mdate">26年2月</div></div><div class="mcell"><div class="mval">3.3</div><div class="mdate">3月</div></div><div class="mcell"><div class="mval">3.3</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">3.4</div><div class="mdate">5月</div></div><div class="mcell last"><div class="mval">3.3</div><div class="mdate">6月</div></div></div></div></div></details>
 </div><div class="card kpi">
   <div class="k-label">5y5y Inflation Breakeven<span class="asof">2026-08</span></div>
   <div class="k-label-zh">5年後5年期通膨預期</div><div class="k-value">2.34%</div>
@@ -1810,7 +1857,7 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="trend">是全面在漲，還是少數項目？</h2><span class="sect-sum">價格上漲是全面性的</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="trend">通膨廣度：中位數與截尾平均</h2><span class="sect-sum">價格上漲是全面性的</span></summary><div class="sect-body">
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     <div class="impact hawkish">價格上漲是全面性的——剔除極端值後的三個指標都貼著核心 CPI（2.6–2.7% vs 核心 2.5%），代表這波不是少數項目暴漲拉高平均，而是普遍在漲。全面性的通膨比較黏，單靠某幾項回落解決不了。</div>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。</p><p><b>為什麼重要：</b>同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。</p><p><b>怎麼判讀：</b>中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。</p></div></details>
@@ -1953,6 +2000,7 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 
+<nav class="pagenav" aria-label="前後頁"><a class="pn-prev" href="/labor/">← 上一頁<b>勞動市場</b></a><a class="pn-next" href="/fomc/">下一頁 →<b>聯準會文本</b></a></nav>
 <footer>資料來源：美國勞工統計局（BLS）、經濟分析局（BEA）、克里夫蘭聯準銀行與亞特蘭大聯準銀行，經 FRED 取得。<br>CPI 權重版本：2025 年 12 月（BLS relative importance，2024 權重）　·　權重每年一月由 BLS 更新，需同步校準。<br>本頁僅為數據整理，不構成投資建議。</footer>
 
 </div>
@@ -2003,14 +2051,37 @@ details.home-module[open]{padding-bottom:0}
     });
   });
 
-  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
-  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 預載後備：不支援 Speculation Rules 的瀏覽器（Firefox／舊 Safari）
+  // 改用「滑過（或手指按下）站內連結就 prefetch」——點下去時 HTML
+  // 已經在快取裡。同一頁只抓一次。
+  if(!HTMLScriptElement.supports || !HTMLScriptElement.supports('speculationrules')){
+    var _pf = {};
+    function prefetch(href){
+      if(!href || _pf[href]) return;
+      _pf[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch'; l.href = href;
+      document.head.appendChild(l);
+    }
+    document.querySelectorAll('a[href^="/"]').forEach(function(a){
+      var h = a.getAttribute('href').split('#')[0];
+      if(!h || h === location.pathname) return;
+      a.addEventListener('mouseenter', function(){ prefetch(h); }, {once:true});
+      a.addEventListener('touchstart', function(){ prefetch(h); },
+                         {once:true, passive:true});
+    });
+  }
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
+  // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
+  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');
     if(ds.length < 2) return;
     ds.forEach(function(d){
       d.addEventListener('toggle', function(){
+        if(window.innerWidth < 760) return;
         ds.forEach(function(o){
           if(o !== d && o.open !== d.open) o.open = d.open;
         });

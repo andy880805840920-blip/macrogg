@@ -128,7 +128,9 @@ details.banner[open]>summary::after{content:"▴"}
 .grid>*{min-width:0}
 @media(min-width:760px){
   .grid{gap:14px;margin-top:14px}
-  .g2{grid-template-columns:repeat(2,1fr)}
+  /* 並排卡各自貼頂：兩張卡內容量不同時，不再互相拉成等高、
+     讓短的那張底部拖一段空白（跟 KPI 內層卡同一個道理）。 */
+  .g2{grid-template-columns:repeat(2,1fr);align-items:start}
   .g4{grid-template-columns:repeat(2,1fr)}
   /* 模組卡有五張。四欄會排成 4+1，最後一張孤零零的；三欄的 3+2 比較穩。 */
   .g5{grid-template-columns:repeat(2,1fr)}
@@ -201,9 +203,17 @@ details.banner[open]>summary::after{content:"▴"}
 .grid.inner>.card:first-child{padding-top:4px}
 @media(min-width:760px){
   .grid.inner{gap:0 22px}
-  .grid.inner>.card{padding:15px 0}
-  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
-     視覺上剛好變成欄與欄之間的水平分隔 */
+  /* 桌機並排時：
+     ① padding 統一——first/last-child 的手機特例（4px／2px）在四欄
+        並排下會讓第一張標題高 15px、第四張的收合列低 21px（實測）。
+     ② 卡片各自貼頂（align-items:start）＝展開「近 5 期」時只有那張卡
+        往下長，其他三張不動；先前整列被拉成等高，沒開的卡的置底
+        收合列會掉到被撐高的列底，跟內容之間空一大段。
+     ③ 底線拿掉——欄與欄之間有間距就夠，橫線在四欄下反而像表格框。 */
+  .grid.inner{align-items:start}
+  .grid.inner>.card{padding:6px 0 10px;border-bottom:none}
+  .grid.inner>.card:first-child{padding-top:6px}
+  .grid.inner>.card:last-child{padding-bottom:10px}
 }
 
 /* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
@@ -293,10 +303,20 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
-/* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
-   展開點會落在同一條線上，一列看過去才整齊。 */
+/* 卡片直向 flex。手機（堆疊）收合列跟著內容走即可；
+   桌機的對齊改用「各層固定最小高度」（見下方 @media 區塊），
+   不再用「拉成同高＋收合列釘底」——那一套在展開任何一張的
+   「近 5 期」時，會把沒開的卡的收合列釘到被撐高的列底，
+   跟內容之間空出一大段（使用者實測回報的「展開方式怪異」）。 */
 .kpi{display:flex;flex-direction:column}
-.kpi .k-more{margin-top:auto}
+@media(min-width:760px){
+  /* 各層保留固定空間：標題（含期別章，至多兩行）、chips（至多兩列）、
+     白話句（至多三行）。四張卡的每一層落在同一條水平線，
+     「近 5 期」列收合時自然對齊，不必靠等高硬拉。 */
+  .kpi .k-label{min-height:46px}
+  .kpi .k-chips{min-height:56px;align-content:flex-start}
+  .kpi .k-plain{min-height:92px}   /* 三行白話句的高度；兩行的卡框內留白 */
+}
 .spark{padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
@@ -805,6 +825,23 @@ summary::-webkit-details-marker{display:none}
    .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
    （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
+
+/* ---------- 換頁動線 ---------- */
+/* MPA 換頁改成交叉淡入（View Transitions）：支援的瀏覽器不再白屏閃一下。
+   使用者關掉動態效果時停用。 */
+@view-transition{navigation:auto}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),
+  ::view-transition-new(*){animation:none!important}}
+/* 頁尾的上一頁／下一頁 */
+.pagenav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.pagenav a{display:flex;flex-direction:column;gap:3px;padding:13px 16px;
+  min-width:130px;max-width:48%;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface-1);text-decoration:none;font-size:11.5px;
+  color:var(--muted)}
+.pagenav a b{font-size:14px;color:var(--text-primary)}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav .pn-next{margin-left:auto;text-align:right;align-items:flex-end}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
 /* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
@@ -1403,8 +1440,15 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link{flex-shrink:0;margin-top:-6px}
 
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
-.focus-strip{padding:14px 16px}
-.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+/* 升格成強調卡：頂部主題色帶＋放大的標題（帶日期）＋與下方 hero 拉開。
+   先前是一條 11px 灰標題的窄 strip，跟目前情境黏在一起、掃過去會漏看。 */
+.focus-strip{position:relative;padding:16px 18px 15px;margin-bottom:26px;
+  overflow:hidden}
+.focus-strip::before{content:"";position:absolute;left:0;right:0;top:0;
+  height:3px;background:var(--series-1)}
+.fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
+  color:var(--text-primary)}
+.fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1663,13 +1707,16 @@ details.home-module[open]{padding-bottom:0}
   .sect-body{padding:0 14px 16px}
 }
 </style>
+<script type="speculationrules">
+{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+</script>
 </head>
 <body>
 <div class="viz-root">
 
 <header class="top">
   <h1>美國總經儀表板</h1>
-  <div class="sub">最後更新 2026-08-21 20:23（台北）</div>
+  <div class="sub">最後更新 2026-08-21 21:58（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1677,7 +1724,7 @@ details.home-module[open]{padding-bottom:0}
 <div class="anav"><nav class="anchors"><a href="#home-now">就業中性 × 通膨偏高</a><a href="#home-grid">九宮格與下一格</a><a href="#home-modules">四大模組摘要</a><a href="#home-changes">本期變化與市場含義</a><a href="#home-next">接下來看什麼</a></nav></div>
 
 <main class="home-dashboard">
-  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點</div><div class="fs-chips"><div class="fs-chip"><span>10 年期</span><b>4.65%</b><i class="dn">-6 基點</i></div><div class="fs-chip"><span>30 年期</span><b>5.19%</b><i class="dn">-9 基點</i></div><div class="fs-chip"><span>2026 年底升息一碼機率</span><b>—</b><i>本次擷取失敗</i></div></div><p class="fs-text">針對9月是否升息，專家透露聯準會悄悄買進特定標的，並指美債殖利率關乎升息必要性。此外，市場回顧提及貝森特壓美債殖利率；另一方面，美債殖利率飆升與沃爾瑪財測不如預期，亦引發道瓊指數重挫逾700點。</p><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisgNBVV95cUxQdTdlc2RlWVBvQU9MczlEbnRNSnRZc3Rha3VYNXB5OGRsbk5Id0YyWTlDNXFvQUwxdXRoSVhnQkpoRHQzY3lEWUNMai0yNXdkaUxqVVJUeGJSRVV4N2VRTlZGV3VFTXJWQzRCNzRJdGtJbmhxQXNkX2JjSTNrU3BhQjJDYjVlNFdob05qNkRpMEc0N3RXQzZXV3ItRzd2QU56bGIydmY1SXBJOXdHRDU2UElINHhaVzVSNzVnVW9xQTlVaUVvel9nMXRMX1J3Q0tJYkI0MGtINkcycjlIWENLaWduTjBrb1Z2UkFWSEJmV1h6cEM3RmtMTE43YWRISG5nUnA0ZzhwdElOQjE5eTdtRm8zVWk2SkRtSjBzTUpkX3FXQWNkN0ZMdFBxR1hiUUJjY3dJUXprdExhcEtPVExkdFdJYVBELTN0ZUR2THhwUDNpTGpxS2FOOWNwc0FiVnVXR1dRMVl4UDJGVlozUGRMbXowaW80SUNBQ2hZckdJekVfeWh4UWcwUmpHX0cyaHgzM2Qxa0N1NEN6MjRBOWtKRnFhWUo4bWVoVlgyUzFpbng3Zw?oc=5" rel="noopener">一周市場回顧：中國經濟全面放緩；貝森特壓美債殖利率；美韓軍演縮減</a><span class="fs-src">Yahoo 財經</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMitANBVV95cUxQMXNVcTYtTjZKM1hsdlVZSlozbjdyb2hMUmFTdm1KVDZyaWNJUkZmc3lYOWczek9XWWV2RG43MEQ1c2JWVndkUmo3V0U4STNaVFc2OC00WmdpVEdrZW1sdUVDV1BqanZCTUZVM0tWZmNfUlN1MTdZVzBpZGFpWFd0WUl1TGQ1bzhaU3F5cTJNRDctX0V0elpYNlBHeW5QbEROX01TSFFkRkNJOGZsUWgzMkdlVGg5b0hESjBCTDM1WFhoWnVBb0FYbUVKZ3RLeHd0bU5pZ3o4TzJ6WktHbE9QeWFrMTdXZ0xMQW5hRVhBMW1iRW5zdG5kenZ1SEwyLUF6bXJNSHFDa1dMV1p4ay1GVGs2c2lBTXBUNHQwamExVUhiZVNHejRwTGI5aEl5TDNUS3N4aTVrb01CanBuQXV3VlRDV0FWTkhCT0poQzRBS1R1ZVJXSVA4RHlwcjRxZEZzVDA1WDdxNUlmcW1YN1I0V2V6bndSWkRIUzJyYWdHRllxbFc1cUxDTXhuV05xbWFLeU1YY3c2RGkxNEx0X29QeVhhMmJFZlRob1VrVG5SOTJEQnhJ?oc=5" rel="noopener">9月將升息？專家曝「聯準會悄悄買進這標的」：美債殖利率關乎升息必要性</a><span class="fs-src">Yahoo新聞</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMi_AJBVV95cUxPSE5fVnlMeko0UEtlbGhsd1BjWU94YlFvTXhWbmo0azd2QWlSVG9IUGxWRE5vTTkwMHIybjBqMEN4Tmlvb2Z2bERzU3ZnbkNNMm5QMmVsQ1EzTkx6NkpVS3djcmVFSW5BcHZTS2xkZk9YUnc3YzNMeHZnQU1ITC1kTzd5Z3hhS244MzJ0dXV0Z3VHeUt3Nl9ISk43LXpPdzFUR1U3akRfQm9ZZFJQWEt4c3pFWUl3YlFLWlU1WVZPUS1NODRTcEJLS001VG9iRUppaDNYZlhCeWwxQlNxcnZZX1FpM3N0VTlnM28wMTVmaV9pOHNFcmZDNWVxUndLSTBmR0RQWndqYk5RQUxCbDlGX1B5VHNTZTR5UXdnQlJsN1BwQ1dNdFRwMWJPV1FnU1RYUmJVdS0zV2pqSWpPYkxvRHZ4R0pUcUdjMVpabFVKd3ozNl9iY2RSc0NBUlBxYXBuT2t1aXFDNGo4ejdsQUJtTmF2WDU2SU1PYU5EWQ?oc=5" rel="noopener">美債殖利率反彈黃金微跌 金礦股逆勢上漲凸顯財政疑慮</a><span class="fs-src">Yahoo股市</span></div></div></details><div class="fs-note">殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點　·　焦點由 AI 整理自新聞標題</div></section>
+  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點<span class="fs-date">2026-08-21</span></div><div class="fs-chips"><div class="fs-chip"><span>10 年期</span><b>4.72%</b><i class="dn">-1 bps</i></div><div class="fs-chip"><span>30 年期</span><b>5.26%</b><i class="dn">-5 bps</i></div><div class="fs-chip"><span>2026 年底升息一碼機率</span><b>100%</b><i class="">—</i></div></div><p class="fs-text">貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場；美國政府債務首破40兆美元 川普引人口普查數據質疑選舉公正性；美國牛肉貴到吃不消！川普推90天關稅優惠 開放30萬噸進口</p><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://tw.stock.yahoo.com/news/%E8%B2%9D%E6%A3%AE%E7%89%B9%E7%9A%84%E5%BD%88%E8%97%A5%E5%A4%A0%E7%94%A8%E5%97%8E-%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E5%86%8D%E9%A3%86%E6%81%90%E9%80%BCfed%E9%80%B2%E5%A0%B4-124003459.html" rel="noopener">貝森特的彈藥夠用嗎？美債殖利率再飆恐逼Fed進場</a><span class="fs-src">Yahoo奇摩股市</span></div><div class="fs-link"><a href="https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E6%94%BF%E5%BA%9C%E5%82%B5%E5%8B%99%E9%A6%96%E7%A0%B440%E5%85%86%E7%BE%8E%E5%85%83-%E5%B7%9D%E6%99%AE%E5%BC%95%E4%BA%BA%E5%8F%A3%E6%99%AE%E6%9F%A5%E6%95%B8%E6%93%9A%E8%B3%AA%E7%96%91%E9%81%B8%E8%88%89%E5%85%AC%E6%AD%A3%E6%80%A7-121729779.html" rel="noopener">美國政府債務首破40兆美元 川普引人口普查數據質疑選舉公正性</a><span class="fs-src">Yahoo奇摩股市</span></div><div class="fs-link"><a href="https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E7%89%9B%E8%82%89%E8%B2%B4%E5%88%B0%E5%90%83%E4%B8%8D%E6%B6%88-%E5%B7%9D%E6%99%AE%E6%8E%A890%E5%A4%A9%E9%97%9C%E7%A8%85%E5%84%AA%E6%83%A0-%E9%96%8B%E6%94%BE30%E8%90%AC%E5%99%B8%E9%80%B2%E5%8F%A3-120009715.html" rel="noopener">美國牛肉貴到吃不消！川普推90天關稅優惠 開放30萬噸進口</a><span class="fs-src">Yahoo奇摩股市</span></div></div></details><div class="fs-note">殖利率：Yahoo 報價（延遲約 15 分鐘），變動對前一交易日收盤　·　1 bp＝0.01 個百分點　·　機率：由聯邦基金期貨反推（FedWatch 同款算法，延遲報價）</div></section>
   <section class="home-hero hawkish" aria-labelledby="home-now">
     <div class="home-hero-top">
       <div><div class="home-kicker">目前情境</div>
@@ -1710,7 +1757,7 @@ details.home-module[open]{padding-bottom:0}
   <section class="home-zone" aria-labelledby="home-changes">
     <div class="home-zone-head"><div><span class="home-zone-num">04</span>
       <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
-    <div class="home-change-list"><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜物價</b><span>住房通膨的降溫已成既定路徑</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜物價</b><span>短期預期偏高，但長期仍錨定</span></div><p>目前不改變政策方向</p></div><div class="home-change"><span class="home-change-dot hawkish"></span><div><b>新增｜物價</b><span>上游漲價還沒轉嫁完</span></div><p>提高維持高利率的約束</p></div></div>
+    <div class="home-change-list"><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜物價</b><span>短期預期偏高，但長期仍錨定</span></div><p>目前不改變政策方向</p></div><div class="home-change"><span class="home-change-dot hawkish"></span><div><b>新增｜物價</b><span>上游漲價還沒轉嫁完</span></div><p>提高維持高利率的約束</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜物價</b><span>住房通膨的降溫已成既定路徑</span></div><p>增加政策寬鬆空間</p></div></div>
   </section>
 
   <section class="home-zone" aria-labelledby="home-next">
@@ -1721,6 +1768,7 @@ details.home-module[open]{padding-bottom:0}
   </section>
 </main>
 
+<nav class="pagenav" aria-label="前後頁"><a class="pn-next" href="/labor/">下一頁 →<b>勞動市場</b></a></nav>
 <footer><div class="home-footer"><div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span><span>就業 <span class="nb">2026-07</span>｜物價 <span class="nb">2026-07</span>｜FOMC <span class="nb">2026-07-29</span></span></div><div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span><span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div></div></footer>
 
 </div>
@@ -1771,14 +1819,37 @@ details.home-module[open]{padding-bottom:0}
     });
   });
 
-  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
-  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 預載後備：不支援 Speculation Rules 的瀏覽器（Firefox／舊 Safari）
+  // 改用「滑過（或手指按下）站內連結就 prefetch」——點下去時 HTML
+  // 已經在快取裡。同一頁只抓一次。
+  if(!HTMLScriptElement.supports || !HTMLScriptElement.supports('speculationrules')){
+    var _pf = {};
+    function prefetch(href){
+      if(!href || _pf[href]) return;
+      _pf[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch'; l.href = href;
+      document.head.appendChild(l);
+    }
+    document.querySelectorAll('a[href^="/"]').forEach(function(a){
+      var h = a.getAttribute('href').split('#')[0];
+      if(!h || h === location.pathname) return;
+      a.addEventListener('mouseenter', function(){ prefetch(h); }, {once:true});
+      a.addEventListener('touchstart', function(){ prefetch(h); },
+                         {once:true, passive:true});
+    });
+  }
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
+  // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
+  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');
     if(ds.length < 2) return;
     ds.forEach(function(d){
       d.addEventListener('toggle', function(){
+        if(window.innerWidth < 760) return;
         ds.forEach(function(o){
           if(o !== d && o.open !== d.open) o.open = d.open;
         });
