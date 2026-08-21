@@ -113,11 +113,10 @@ details.banner>summary{padding:11px 34px 11px 14px;font-size:13px;
   color:var(--text-secondary);line-height:1.6;position:relative;
   list-style:none;font-weight:400}
 details.banner>summary::-webkit-details-marker{display:none}
-details.banner>summary::after{content:"";position:absolute;right:15px;
-  top:calc(50% - 3px);width:7px;height:7px;border-right:1.5px solid var(--muted);
-  border-bottom:1.5px solid var(--muted);transform:rotate(45deg);
-  transform-origin:70% 70%;transition:transform .15s ease}
-details.banner[open]>summary::after{transform:rotate(-135deg)}
+/* 卡片級收合統一用右側 ▾/▴（跟 .sect 同一家族），不再自畫旋轉箭頭 */
+details.banner>summary::after{content:"▾";position:absolute;right:15px;
+  top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted)}
+details.banner[open]>summary::after{content:"▴"}
 .banner-body{padding:0 14px 12px;font-size:13px;line-height:1.7;
   color:var(--text-secondary)}
 
@@ -288,8 +287,10 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
   font-weight:500;color:var(--muted);padding:12px 0}
 .kpi .k-more>summary:hover{color:var(--series-1)}
 .kpi .k-more>summary::-webkit-details-marker{display:none}
-.kpi .k-more>summary::before{content:"▸ "}
-.kpi .k-more[open]>summary::before{content:"▾ "}
+.kpi .k-more>summary{padding-left:15px;text-indent:-15px}
+.kpi .k-more>summary::before{content:"▸";display:inline-block;width:15px;
+  text-indent:0}
+.kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
 /* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
@@ -347,6 +348,18 @@ td a[target="_blank"],.src a[target="_blank"]{
    另一個可點的 summary。不留的話兩個觸控目標會靠到 7px 以內。 */
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
   margin-bottom:6px}
+/* 橫捲表格的邊緣漸層：跟主選單同一套「還有更多」提示。
+   .tscroll／.heatwrap 由 JS 包一層 .twrap，漸層畫在不捲動的外框上——
+   熱力圖與寬表格在手機上被裁切時，先前沒有任何「還可以左右滑」的跡象，
+   看起來像表格只有那幾欄。 */
+.twrap{position:relative}
+.twrap::before,.twrap::after{content:"";position:absolute;top:0;bottom:0;
+  width:26px;pointer-events:none;opacity:0;transition:opacity .15s ease;z-index:1}
+.twrap::before{left:0;background:linear-gradient(90deg,var(--surface-1),transparent)}
+.twrap::after{right:0;background:linear-gradient(270deg,var(--surface-1),transparent)}
+.twrap.fl::before{opacity:1}
+.twrap.fr::after{opacity:1}
+@media(prefers-reduced-motion:reduce){.twrap::before,.twrap::after{transition:none}}
 /* 寫死 min-width 會讓明明放得下的表格也被迫捲動。改成「內容多寬就多寬，
    至少填滿容器」：塞得下就不捲，塞不下才捲。 */
 .tscroll>table{width:max-content;min-width:100%}
@@ -358,12 +371,14 @@ td a[target="_blank"],.src a[target="_blank"]{
 .drow{display:grid;grid-template-columns:96px 1fr 76px;align-items:center;
   gap:8px;padding:4px 0;border-radius:6px}
 @media(min-width:760px){.drow{grid-template-columns:150px 1fr 92px;gap:12px}}
-/* 窄螢幕上把行業名稱移到自己一行：96px 的欄寬塞不下「值得注意｜相對自身
-   歷史 −2.5 個標準差」，會被折成四行、把整列撐高。名稱獨立一行之後，
-   長條也順便變寬，方向更好判讀。 */
+/* 窄螢幕：名稱＋數值同一行（左右對齊）、長條整寬第二行。
+   先前名稱獨立一行、下一行「長條＋數值」——長條從中央零軸浮在半空、
+   數值在另一個角落，名稱／色條／數字三層錯位。 */
 @media(max-width:520px){
-  .drow{grid-template-columns:1fr 72px;row-gap:3px;padding:7px 0}
-  .dlabel{grid-column:1 / -1}
+  .drow{grid-template-columns:minmax(0,1fr) auto;row-gap:5px;padding:8px 0}
+  .dlabel{grid-column:1;grid-row:1}
+  .dval{grid-column:2;grid-row:1}
+  .dtrack{grid-column:1 / -1;grid-row:2}
 }
 .drow:hover{background:var(--surface-2)}
 .dlabel{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
@@ -498,8 +513,25 @@ td a[target="_blank"],.src a[target="_blank"]{
    畫面瞬間跳掉一大段而讀者不知道發生什麼事。
    負 margin 只留上方（那一側沒有相鄰的可點元素），下方改用正常間距。 */
 .f-more>summary{font-size:12.5px;font-weight:500;color:var(--muted);
-  padding:13px 0 11px;margin:0}
+  padding:13px 0 11px;margin:0;list-style:none}
 .f-more>summary:hover{color:var(--series-1)}
+/* 展開列的統一記號：前置 ▸（展開時 ▾）、主色。使用者的原話是
+   「展開的視覺很不明確」——收合列先前只是一行灰字，跟普通註記
+   長得一樣。記號放前面比尾巴的小箭頭醒目，且全站同一套。 */
+.f-more>summary::-webkit-details-marker,
+details[data-m-collapse]>summary::-webkit-details-marker{display:none}
+.f-more>summary::after,details[data-m-collapse]>summary::after{content:""}
+/* 懸掛縮排：▸ 佔固定 17px，折行後的第二行對齊記號之後的文字。
+   沒有這個的話，寫在收合列上的長結論折行時第二行會頂到最左，
+   看起來像一段內文而不是可點的列。 */
+.f-more>summary,details[data-m-collapse]>summary{
+  padding-left:17px;text-indent:-17px}
+.f-more>summary::before,details[data-m-collapse]>summary::before{
+  content:"▸";display:inline-block;width:17px;margin-right:0;text-indent:0;
+  font-size:10px;color:var(--series-1)}
+.f-more[open]>summary::before,details[data-m-collapse][open]>summary::before{
+  content:"▾"}
+details[data-m-collapse]>summary{list-style:none}
 .f-more .f-detail{margin-top:2px}
 
 /* ---------- 分數條 ---------- */
@@ -546,10 +578,46 @@ td a[target="_blank"],.src a[target="_blank"]{
 .dsum-main{font-size:22px;font-weight:700;line-height:1.35}
 .dsum-sub{font-size:13px;color:var(--text-secondary);margin-top:5px}
 .dcomp{margin-top:14px}
-.dc-row{display:grid;grid-template-columns:84px 1fr 62px;align-items:center;
-  gap:9px;margin-top:9px}
-@media(min-width:760px){.dc-row{grid-template-columns:96px 1fr 70px;gap:12px}}
-.dc-name{font-size:12.5px;color:var(--text-secondary)}
+.dc-cap{font-size:12px;font-weight:600;color:var(--text-secondary);
+  margin-top:2px}
+/* 動能階梯：每個指數一列「12 → 6 → 3 個月年化」。
+   取代先前的六格 stat——手機兩欄折行會把 CPI 與 PCE 混在同一列。 */
+.ladder{margin-top:14px}
+.ld-row{display:flex;align-items:baseline;gap:9px;padding:8px 0;
+  border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+.ld-row:last-of-type{border-bottom:0}
+.ld-k{min-width:34px;font-size:12.5px;color:var(--muted);font-weight:600}
+.ld-v{font-size:16.5px;font-weight:700;color:var(--text-secondary)}
+.ld-a{color:var(--muted);font-size:11px}
+.ld-v.last{font-size:19px;color:var(--text-primary)}
+.ld-v.last.accel{color:var(--serious)}
+.ld-v.last.decel{color:var(--series-1)}
+.ld-cap{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.6}
+/* 320px 級的窄機：字級不縮的話最右的 3 個月年化會被裁到卡片外——
+   偏偏那是字級最大、最重要的一個數字。 */
+@media(max-width:374px){
+  .ld-row{gap:5px}
+  .ld-k{min-width:26px;font-size:11.5px}
+  .ld-v{font-size:14px}
+  .ld-v.last{font-size:16px}
+  .ld-a{font-size:10px}
+}
+
+.dc-row{display:grid;grid-template-columns:minmax(0,1.4fr) 1fr 74px;
+  align-items:center;gap:9px;margin-top:10px}
+@media(min-width:760px){.dc-row{gap:12px}}
+/* 手機：名稱＋數字同一行（左右對齊）、長條整寬第二行。
+   先前三欄硬擠 390px：名稱把「55.5 萬人」折成兩行、長條從畫面中央
+   浮在半空、數字靠最右——三個元素各在各的位置。 */
+@media(max-width:759px){
+  .dc-row{grid-template-columns:minmax(0,1fr) auto;row-gap:7px}
+  .dc-name{grid-column:1;grid-row:1}
+  .dc-val{grid-column:2;grid-row:1}
+  .dc-bar{grid-column:1 / -1;grid-row:2}
+}
+.dc-name{font-size:12.5px;color:var(--text-secondary);line-height:1.5}
+.dc-val span{display:block;font-size:10.5px;font-weight:500;
+  color:var(--muted)}
 .dc-bar{position:relative;height:15px}
 .dc-zero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
   background:var(--baseline)}
@@ -730,8 +798,12 @@ details[open]{padding-bottom:2px}
 summary{font-size:13.5px;color:var(--series-1);cursor:pointer;font-weight:600;
   list-style:none;padding:12px 0}
 summary::-webkit-details-marker{display:none}
-summary::after{content:" ▾";font-size:11px}
-details[open]>summary::after{content:" ▴"}
+/* 全域的「結尾 ▾/▴」規則已刪除：它跟各收合家族自己的記號疊在一起，
+   開啟狀態時（details[open] 權重較高）還會蓋過抑制規則，造成
+   「▾ 標題 ▴」頭尾雙箭頭。現在每一種收合都有自己的記號：
+   卡片級 .sect＝右上 ▾/▴、卡內 .f-more／data-m-collapse／.k-more／
+   .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
+   （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
@@ -856,8 +928,7 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   background:var(--surface-2);border-left:2px solid var(--warning);
   border-radius:0 8px 8px 0;padding:9px 12px;margin:0 0 12px}
 
-/* 目前這一格在三種體制下分別是什麼 */
-.rcmp-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+/* 目前這一格在三種體制下分別是什麼（在「重心怎麼判定」收合內） */
 .rcmp{display:grid;grid-template-columns:76px 1fr auto;align-items:center;
   gap:10px;padding:8px 10px;border-radius:8px}
 .rcmp.on{background:var(--surface-2)}
@@ -874,28 +945,18 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .sgrid .axis{color:var(--muted);font-size:12px;display:flex;align-items:center;
   justify-content:center;padding:4px 3px;text-align:center}
 .sgrid .axis.row{writing-mode:horizontal-tb;min-width:40px}
-/* 手機上格子高度以內容為準（說明收合），min-height 若還留著桌機的高度，
-   九格會各空掉六成，白白多出四百多 px 的捲動。 */
+/* 格子裡只有格名（＋徽章與 ◆）：說明全部收在卡尾「九格各代表什麼」。
+   高度以內容為準——九格等高靠 grid 的隱性拉伸，不用 min-height 硬撐。 */
 .scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
-  padding:9px 8px;min-height:0}
+  padding:10px 8px;min-height:0;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start}
 .scell .sname{font-size:12.5px;font-weight:700;line-height:1.4}
 /* 複合情境名的限定語（「：通膨優先」）：小一級、獨立一行。
    主情境與「哪一邊優先」是兩層資訊，同一級字時會被讀成一個長字串。 */
 .scell .sn-qual{display:block;font-size:11px;font-weight:600;
   color:var(--text-secondary);line-height:1.35;margin-top:1px}
 .scell.on .sn-qual{color:inherit}
-/* 說明文只在「目前位置」那格常駐；其餘八格收成一顆「說明」，點了才展開
-   （.sdd）。先前手機為了省高度把說明整批藏掉，現在收合式反而讓手機
-   也看得到——想看哪格點哪格。summary 上下 12px 把觸控高撐過 40px。 */
-.scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-.sdd{margin:0;border:0;background:transparent}
-.sdd>summary{cursor:pointer;list-style:none;display:inline-block;
-  font-size:11px;font-weight:600;color:var(--muted);padding:12px 0}
-.sdd>summary::-webkit-details-marker{display:none}
-.sdd>summary::after{content:"▸";margin-left:3px;font-size:9px}
-.sdd[open]>summary::after{content:"▾"}
-.sdd .sdesc{margin-top:0}
-@media(min-width:760px){.scell{padding:12px 11px;min-height:96px}
+@media(min-width:760px){.scell{padding:14px 11px}
   .scell .sname{font-size:13.5px}}
 /* 會隨體制改變的三格：右上角一個小記號。
    其餘六格不管誰優先都一樣，讀者不必為它們擔心重心翻轉。 */
@@ -968,6 +1029,10 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
   border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
   margin-left:7px;vertical-align:1px}
+/* 動能指向：當期數據正朝這條門檻走——「可能下一格」從這些條裡挑。 */
+.trig .tdir{font-size:10.5px;font-weight:700;color:var(--good);
+  border:1px solid var(--good);border-radius:5px;padding:1px 5px;
+  margin-left:6px;vertical-align:1px;white-space:nowrap}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1137,11 +1202,9 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   align-items:baseline;position:relative;font-weight:400}
 .ax>summary::-webkit-details-marker{display:none}
 .ax>summary:hover{background:var(--surface-2)}
-.ax>summary::after{content:"";position:absolute;right:14px;top:calc(50% - 4px);
-  width:7px;height:7px;border-right:1.5px solid var(--muted);
-  border-bottom:1.5px solid var(--muted);transform:rotate(45deg);
-  transform-origin:70% 70%;transition:transform .15s ease}
-.ax[open]>summary::after{transform:rotate(-135deg)}
+.ax>summary::after{content:"▾";position:absolute;right:14px;top:50%;
+  transform:translateY(-50%);font-size:11px;color:var(--muted)}
+.ax[open]>summary::after{content:"▴"}
 .ax-k{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
 .ax-v{font-size:15px;font-weight:700;color:var(--text-primary);
   white-space:nowrap}
@@ -1314,8 +1377,10 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-brief-more{margin:6px 0 0;padding:0;border:0}
 .home-brief-more>summary{display:inline-flex;min-height:42px;align-items:center;
   padding:8px 0;color:var(--series-1)}
-.home-brief-more>summary::after{content:" ＋"}
-.home-brief-more[open]>summary::after{content:" －"}
+/* 卡內收合統一「開頭 ▸/▾」家族 */
+.home-brief-more>summary::before{content:"▸";margin-right:6px;font-size:10px}
+.home-brief-more[open]>summary::before{content:"▾"}
+.home-brief-more>summary::after{content:""}
 .home-brief-more p{max-width:47em;font-size:15px;line-height:1.9;margin:2px 0 0}
 .home-status-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   margin-top:18px;border:1px solid var(--grid);border-radius:11px;overflow:hidden}
@@ -1336,6 +1401,22 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link,.home-inline-link{display:inline-flex;align-items:center;justify-content:center;
   min-height:44px;color:var(--series-1);font-size:13px;font-weight:700;text-decoration:none}
 .home-primary-link{flex-shrink:0;margin-top:-6px}
+
+/* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
+.focus-strip{padding:14px 16px}
+.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.fs-chips{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:8px}
+.fs-chip span{display:block;font-size:11px;color:var(--muted)}
+.fs-chip b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.fs-chip i{font-style:normal;font-size:11.5px;margin-left:6px;color:var(--muted)}
+.fs-chip i.up{color:var(--critical)}
+.fs-chip i.dn{color:var(--good)}
+.fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
+  margin:10px 0 0;max-width:47em}
+.fs-link{padding:4px 0}
+.fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
+  display:inline-block;padding:8px 0;line-height:1.5}
+.fs-note{margin-top:8px;font-size:10.5px;color:var(--muted);line-height:1.6}
 
 .home-transition{background:var(--surface-2)}
 .home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
@@ -1364,9 +1445,10 @@ details.home-module{margin:0;padding:0;border:0;border-bottom:1px solid var(--gr
 details.home-module[open]{padding-bottom:0}
 .home-module>summary{position:relative;display:grid;grid-template-columns:1fr auto;
   gap:5px 10px;align-items:center;min-height:76px;padding:13px 34px 13px 2px;color:var(--text-primary)}
-.home-module>summary::after{content:"＋";position:absolute;right:3px;top:19px;
-  color:var(--muted);font-size:17px;font-weight:400}
-.home-module[open]>summary::after{content:"－"}
+/* 模組列是卡片級收合：右側 ▾/▴，跟分頁的 .sect 同一家族 */
+.home-module>summary::after{content:"▾";position:absolute;right:3px;top:22px;
+  color:var(--muted);font-size:12px}
+.home-module[open]>summary::after{content:"▴"}
 .home-module-name{font-size:15px;font-weight:800}
 .home-status{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;
   background:var(--surface-2);white-space:nowrap}
@@ -1489,8 +1571,10 @@ details.home-module[open]{padding-bottom:0}
 .focus-evidence{margin:14px 0 0;padding:0;border-top:1px solid var(--grid)}
 .focus-evidence>summary{display:flex;align-items:center;min-height:44px;padding:9px 0;
   font-size:12.5px;color:var(--series-1)}
-.focus-evidence>summary::after{content:" ＋";margin-left:3px}
-.focus-evidence[open]>summary::after{content:" －"}
+/* 卡內收合統一「開頭 ▸/▾」家族 */
+.focus-evidence>summary::before{content:"▸";margin-right:6px;font-size:10px}
+.focus-evidence[open]>summary::before{content:"▾"}
+.focus-evidence>summary::after{content:""}
 .focus-evidence-body{padding:0 0 5px}
 .focus-evidence .logic-strip{margin-top:0;gap:0}
 .focus-evidence .logic-step{padding:10px 2px;border:0;border-radius:0;
@@ -1535,8 +1619,12 @@ details.home-module[open]{padding-bottom:0}
 .light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
   color:var(--muted)}
 .light .l-more>summary::-webkit-details-marker{display:none}
-.light .l-more>summary::after{content:"▾";margin-left:4px}
-.light .l-more[open]>summary::after{content:"▴"}
+/* 燈卡的收合改用全站統一的「開頭 ▸/▾」——先前是結尾 ▾，
+   跟其他卡內收合方向相反。 */
+.light .l-more>summary{padding-left:13px;text-indent:-13px}
+.light .l-more>summary::before{content:"▸";display:inline-block;width:13px;
+  text-indent:0;font-size:9px;color:var(--series-1)}
+.light .l-more[open]>summary::before{content:"▾"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1569,24 +1657,25 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-18　·　更新於 2026-08-21 02:04（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-19　·　更新於 2026-08-21 20:01（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 81 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+
 <div class="anav"><nav class="anchors"><a href="#decomp">長端利率為什麼在這裡</a><a href="#supply">誰在發債</a><a href="#demand">買盤吃不吃得下</a><a href="#priced">壓力已經反映多少</a><a href="#debt">供給端細節一：政府財政</a><a href="#hyperscalers">供給端細節二：科技巨頭</a><a href="#lights">關鍵指標檢核</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div><h2 class="focus-title">長端供給壓力中等</h2><p class="focus-sub">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</p><div class="focus-grid"><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>綜合分數 -0.42</small></div><div class="focus-metric neutral"><span>10 年期殖利率</span><b>4.71%</b><small>資料日 2026-08-18</small></div><div class="focus-metric watch"><span>美國財政赤字</span><b>5.8%</b><small>佔 GDP；年度債券供給主體</small></div><div class="focus-metric neutral"><span>財政穩定差</span><b>+1.9%</b><small>緩衝：基本盈餘高於穩定債務比所需水準</small></div></div><details class="focus-evidence"><summary>查看供給傳導與判斷依據</summary><div class="focus-evidence-body"><div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong><div class="flow-values">1.89 兆美元<br>財政赤字 5.8% GDP，需靠淨發行公債填補</div></div><div class="flow-arrow">＋</div><div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">CapEx 1,815 億美元 · OCF 1,864 億美元<br>CapEx / OCF 97.4% · 簡化 FCF 為負 3/5 家</div></div><div class="flow-arrow">→</div><div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">單季 450 億美元 · 年化 1,801 億美元<br>政府赤字規模比 10%</div></div></div><div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div><div class="logic-step"><b>目前結論</b><span>供給與需求大致平衡，長端主要跟隨政策利率預期移動。</span></div><div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div></div></details><div class="data-line"><span class="data-tag">利率 2026-08-18</span><span class="data-tag">公司期末 2026-05-31～2026-06-30</span><span class="data-tag">SEC 實際資料 5/5 家</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div><h2 class="focus-title">長端供給壓力中等</h2><p class="focus-sub">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</p><div class="focus-grid"><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>綜合分數 -0.39</small></div><div class="focus-metric neutral"><span>10 年期殖利率</span><b>4.65%</b><small>資料日 2026-08-19</small></div><div class="focus-metric watch"><span>美國財政赤字</span><b>5.8%</b><small>佔 GDP；年度債券供給主體</small></div><div class="focus-metric neutral"><span>財政穩定差</span><b>+1.9%</b><small>緩衝：基本盈餘高於穩定債務比所需水準</small></div></div><details class="focus-evidence"><summary>查看供給傳導與判斷依據</summary><div class="focus-evidence-body"><div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong><div class="flow-values">1.89 兆美元<br>財政赤字 5.8% GDP，需靠淨發行公債填補</div></div><div class="flow-arrow">＋</div><div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">CapEx 1,815 億美元 · OCF 1,864 億美元<br>CapEx / OCF 97.4% · 簡化 FCF 為負 3/5 家</div></div><div class="flow-arrow">→</div><div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">單季 450 億美元 · 年化 1,801 億美元<br>政府赤字規模比 10%</div></div></div><div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div><div class="logic-step"><b>目前結論</b><span>供給與需求大致平衡，長端主要跟隨政策利率預期移動。</span></div><div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div></div></details><div class="data-line"><span class="data-tag">利率 2026-08-19</span><span class="data-tag">公司期末 2026-05-31～2026-06-30</span><span class="data-tag">SEC 實際資料 5/5 家</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="decomp">長端利率為什麼在這裡</h2><span class="sect-sum">名目 10 年期 4.71%　·　其中期限溢酬 +0.84%</span></summary><div class="sect-body">
-    <p class="hint"><b>期限溢酬不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
+  <details class="card sect" open><summary><h2 id="decomp">長端利率為什麼在這裡</h2><span class="sect-sum">名目 10 年期 4.65%　·　其中期限溢酬 +0.84%</span></summary><div class="sect-body">
+    <p class="hint"><b>期限溢酬（持有長債多要求的補償）不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
+    <div class="impact hawkish">期限溢酬 +0.84%（近三個月 +8 基點），高於 0.40% 的中性參考——市場對長期持債要求的補償偏高，這一段降息壓不下來。</div>
+    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">名目 10 年期 4.65%　其中期限溢酬</span><span class="bk-val">+0.84%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">近三個月 +8 基點</span></div>
+    <div class="stat-row" style="margin-top:18px"><div class="stat"><div class="s-label">實質利率</div><div class="s-value" style="color:inherit">2.35%</div><div class="s-note">抗通膨債券殖利率。反映預期的實質報酬</div></div><div class="stat"><div class="s-label">通膨補償</div><div class="s-value" style="color:inherit">2.34%</div><div class="s-note">市場定價的平均通膨。這一段是聯準會的責任範圍</div></div></div>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。</p><p><b>為什麼重要：</b>長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。</p><p><b>怎麼判讀：</b>看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。</p></div></details>
-    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">名目 10 年期 4.71%　其中期限溢酬</span><span class="bk-val">+0.84%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">近三個月 +8 基點</span></div>
-    <div class="stat-row" style="margin-top:18px"><div class="stat"><div class="s-label">實質利率</div><div class="s-value" style="color:inherit">2.41%</div><div class="s-note">抗通膨債券殖利率。反映預期的實質報酬</div></div><div class="stat"><div class="s-label">通膨補償</div><div class="s-value" style="color:inherit">2.30%</div><div class="s-note">市場定價的平均通膨。這一段是聯準會的責任範圍</div></div></div>
-    <p class="hint" style="margin-top:14px">期限溢酬與上面兩項有重疊，不可直接相加。</p>
     <details data-m-collapse><summary>三種上升的意義有什麼不同</summary>
+      <p class="hint" style="margin:10px 0 0">期限溢酬與上面兩項有重疊，不可直接相加。</p>
       <dl class="gloss" style="margin-top:10px">
         <dt>實質利率上升</dt>
         <dd>市場預期實質成長或資金需求增強。對股市未必是壞事，
@@ -1603,15 +1692,16 @@ details.home-module[open]{padding-bottom:0}
           額外補償，跟前兩段有重疊。三個數字加起來不會等於名目殖利率，
           也不該這樣用。</dd>
       </dl>
+    </details>
   </div></details>
 </div>
 
 <div class="grid">
   <details class="card sect"><summary><h2 id="supply">誰在發債</h2><span class="sect-sum">政府年赤字 1.89 兆美元　·　科技巨頭年化 1,801 億美元</span></summary><div class="sect-body">
-    <p class="hint">政府、科技巨頭與聯準會縮表，
+    <p class="hint">政府、科技巨頭與聯準會縮表（到期的公債不再買回去），
       <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。</p><p><b>為什麼重要：</b>債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。</p><p><b>怎麼判讀：</b>把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。</p></div></details>
-    <div class="stat-row">
+    <div class="impact balanced">科技巨頭的發債規模約是政府年赤字的 10%，而且是<b>新增</b>的供給——這幾家過去是淨買方，現在轉成淨賣方。</div>
+    <div class="stat-row" style="margin-top:14px">
       <div class="stat"><div class="s-label">政府：年度赤字</div>
         <div class="s-value">1.89 兆美元</div>
         <div class="s-note">財政赤字 5.8% GDP，需靠淨發行公債填補</div></div>
@@ -1620,27 +1710,29 @@ details.home-module[open]{padding-bottom:0}
         <div class="s-note">單季 450 億美元年化（期末 2026-05-31～2026-06-30）</div></div>
     </div>
     <div class="bkgap" style="color:var(--text-primary)"><span class="bk-label">科技巨頭相對政府的規模</span><span class="bk-val">10%</span></div>
-    <p class="hint" style="margin-top:14px">科技巨頭的發債規模約是政府年赤字的 10%，而且是<b>新增</b>的供給——這幾家過去是淨買方，現在轉成淨賣方。</p>
     <p class="hint" style="margin-top:12px">壓力分數的三個來源：</p>
-    <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>科技巨頭融資缺口</div><div class="cm-delta up">+1.10</div><div class="cm-val">資本支出佔營運現金流 97%，超過 100% 時需動用現金、出售資產或外部融資</div></div><div class="cmove"><div>政府財政緩衝</div><div class="cm-delta down">-0.93</div><div class="cm-val">基本盈餘較穩定水準高 1.9% GDP，在本模型中降低公債供給壓力</div></div><div class="cmove"><div>聯準會縮表</div><div class="cm-delta down">-0.59</div><div class="cm-val">每月增持約 294 億美元公債，聯準會正在幫忙吸收供給</div></div></div>
+    <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>科技巨頭融資缺口</div><div class="cm-delta up">+1.10</div><div class="cm-val">資本支出佔營運現金流 97%，超過 100% 時需動用現金、出售資產或外部融資</div></div><div class="cmove"><div>政府財政緩衝</div><div class="cm-delta down">-0.93</div><div class="cm-val">基本盈餘較穩定水準高 1.9% GDP，在本模型中降低公債供給壓力</div></div><div class="cmove"><div>聯準會縮表</div><div class="cm-delta down">-0.56</div><div class="cm-val">每月增持約 282 億美元公債，聯準會正在幫忙吸收供給</div></div></div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。</p><p><b>為什麼重要：</b>債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。</p><p><b>怎麼判讀：</b>把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。</p></div></details>
     <div class="src">單位：億美元。年化＝單季 × 4，只用來比較量級。</div>
   </div></details>
 </div>
 <div class="grid g2">
   <details class="card sect"><summary><h2 id="demand">買盤吃不吃得下</h2><span class="sect-sum">投資級利差 0.81%　·　收斂，買盤積極</span></summary><div class="sect-body">
     <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。</p><p><b>為什麼重要：</b>同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。</p><p><b>怎麼判讀：</b>看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。</p></div></details>
-    <div class="verdict balanced" style="margin-top:4px"><div class="v-main" style="font-size:19px">收斂，買盤積極</div><div class="v-why" style="margin-top:8px">投資級利差 0.81%。利差是買方要求的風險補償。它<b>還沒走闊</b>——代表目前的新增供給仍被吸收得掉；一旦走闊，就是買盤開始吃不下的第一個訊號。</div></div>
+    <div class="impact neutral">投資級利差 0.81%——收斂，買盤積極。</div>
     <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">投資級利差</div><div class="s-value" style="color:inherit">0.81%</div><div class="s-note">近一個月 +3 基點</div></div><div class="stat"><div class="s-label">BBB 級利差</div><div class="s-value" style="color:inherit">1.00%</div><div class="s-note">近一個月 +3 基點</div></div><div class="stat"><div class="s-label">高收益利差</div><div class="s-value" style="color:inherit">2.73%</div><div class="s-note">近一個月 +4 基點</div></div></div>
-    <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 140" preserveAspectRatio="none" style="height:140px" role="img" aria-label="時間序列走勢"><polygon points="0,140 0.0,102.9 1.4,102.9 2.8,100.6 4.2,100.6 5.6,102.9 7.0,102.9 8.4,102.9 9.8,100.6 11.2,100.6 12.6,102.9 14.1,102.9 15.5,105.3 16.9,105.3 18.3,105.3 19.7,107.6 21.1,110.0 22.5,110.0 23.9,107.6 25.3,107.6 26.7,107.6 28.1,107.6 29.5,105.3 30.9,102.9 32.3,105.3 33.7,102.9 35.1,100.6 36.5,100.6 37.9,100.6 39.3,102.9 40.7,107.6 42.2,107.6 43.6,110.0 45.0,110.0 46.4,112.3 47.8,112.3 49.2,110.0 50.6,107.6 52.0,107.6 53.4,100.6 54.8,100.6 56.2,98.2 57.6,91.2 59.0,88.8 60.4,88.8 61.8,93.5 63.2,91.2 64.6,88.8 66.0,84.1 67.4,77.1 68.9,72.4 70.3,70.0 71.7,77.1 73.1,79.4 74.5,79.4 75.9,84.1 77.3,84.1 78.7,81.8 80.1,86.5 81.5,86.5 82.9,84.1 84.3,84.1 85.7,77.1 87.1,70.0 88.5,67.6 89.9,72.4 91.3,48.8 92.7,30.0 94.1,15.9 95.6,20.6 97.0,13.5 98.4,20.6 99.8,20.6 101.2,27.7 102.6,30.0 104.0,32.4 105.4,37.1 106.8,34.7 108.2,37.1 109.6,44.1 111.0,48.8 112.4,53.5 113.8,53.5 115.2,48.8 116.6,41.8 118.0,41.8 119.4,48.8 120.8,51.2 122.2,51.2 123.7,51.2 125.1,58.2 126.5,58.2 127.9,70.0 129.3,77.1 130.7,79.4 132.1,77.1 133.5,79.4 134.9,81.8 136.3,86.5 137.7,84.1 139.1,81.8 140.5,79.4 141.9,79.4 143.3,84.1 144.7,86.5 146.1,86.5 147.5,84.1 148.9,81.8 150.4,84.1 151.8,88.8 153.2,88.8 154.6,88.8 156.0,93.5 157.4,93.5 158.8,93.5 160.2,93.5 161.6,91.2 163.0,91.2 164.4,93.5 165.8,91.2 167.2,91.2 168.6,91.2 170.0,91.2 171.4,88.8 172.8,91.2 174.2,91.2 175.6,88.8 177.0,91.2 178.5,95.9 179.9,100.6 181.3,102.9 182.7,110.0 184.1,110.0 185.5,107.6 186.9,105.3 188.3,102.9 189.7,102.9 191.1,102.9 192.5,105.3 193.9,107.6 195.3,107.6 196.7,110.0 198.1,110.0 199.5,110.0 200.9,107.6 202.3,112.3 203.7,112.3 205.2,114.7 206.6,114.7 208.0,112.3 209.4,114.7 210.8,112.3 212.2,105.3 213.6,105.3 215.0,105.3 216.4,107.6 217.8,110.0 219.2,110.0 220.6,110.0 222.0,112.3 223.4,114.7 224.8,117.0 226.2,121.7 227.6,121.7 229.0,119.4 230.4,117.0 231.9,117.0 233.3,117.0 234.7,119.4 236.1,114.7 237.5,114.7 238.9,112.3 240.3,110.0 241.7,107.6 243.1,107.6 244.5,105.3 245.9,107.6 247.3,112.3 248.7,112.3 250.1,110.0 251.5,110.0 252.9,112.3 254.3,114.7 255.7,117.0 257.1,121.7 258.5,119.4 260.0,119.4 261.4,121.7 262.8,124.1 264.2,124.1 265.6,121.7 267.0,121.7 268.4,119.4 269.8,121.7 271.2,121.7 272.6,119.4 274.0,119.4 275.4,121.7 276.8,121.7 278.2,124.1 279.6,121.7 281.0,121.7 282.4,117.0 283.8,107.6 285.2,107.6 286.7,107.6 288.1,114.7 289.5,110.0 290.9,110.0 292.3,112.3 293.7,112.3 295.1,110.0 296.5,114.7 297.9,117.0 299.3,119.4 300.7,119.4 302.1,121.7 303.5,117.0 304.9,110.0 306.3,102.9 307.7,102.9 309.1,107.6 310.5,105.3 311.9,100.6 313.3,105.3 314.8,105.3 316.2,102.9 317.6,100.6 319.0,102.9 320.4,100.6 321.8,98.2 323.2,100.6 324.6,98.2 326.0,95.9 327.4,98.2 328.8,100.6 330.2,105.3 331.6,105.3 333.0,105.3 334.4,105.3 335.8,105.3 337.2,107.6 338.6,107.6 340.0,110.0 341.5,112.3 342.9,114.7 344.3,112.3 345.7,114.7 347.1,114.7 348.5,110.0 349.9,110.0 351.3,107.6 352.7,107.6 354.1,107.6 355.5,110.0 356.9,110.0 358.3,112.3 359.7,112.3 361.1,112.3 362.5,112.3 363.9,112.3 365.3,112.3 366.7,112.3 368.1,112.3 369.6,112.3 371.0,112.3 372.4,112.3 373.8,114.7 375.2,114.7 376.6,117.0 378.0,117.0 379.4,119.4 380.8,121.7 382.2,121.7 383.6,121.7 385.0,124.1 386.4,126.5 387.8,126.5 389.2,124.1 390.6,126.5 392.0,126.5 393.4,124.1 394.8,124.1 396.3,121.7 397.7,124.1 399.1,124.1 400.5,121.7 401.9,119.4 403.3,119.4 404.7,119.4 406.1,117.0 407.5,117.0 408.9,114.7 410.3,112.3 411.7,112.3 413.1,110.0 414.5,114.7 415.9,112.3 417.3,114.7 418.7,110.0 420.1,107.6 421.5,110.0 423.0,105.3 424.4,98.2 425.8,95.9 427.2,98.2 428.6,100.6 430.0,105.3 431.4,105.3 432.8,100.6 434.2,98.2 435.6,100.6 437.0,91.2 438.4,84.1 439.8,79.4 441.2,77.1 442.6,81.8 444.0,84.1 445.4,86.5 446.8,91.2 448.2,91.2 449.6,93.5 451.1,93.5 452.5,91.2 453.9,84.1 455.3,79.4 456.7,86.5 458.1,93.5 459.5,95.9 460.9,95.9 462.3,98.2 463.7,95.9 465.1,102.9 466.5,102.9 467.9,105.3 469.3,105.3 470.7,107.6 472.1,110.0 473.5,107.6 474.9,110.0 476.3,107.6 477.8,110.0 479.2,112.3 480.6,110.0 482.0,110.0 483.4,107.6 484.8,107.6 486.2,107.6 487.6,107.6 489.0,107.6 490.4,110.0 491.8,112.3 493.2,114.7 494.6,112.3 496.0,112.3 497.4,114.7 498.8,117.0 500.2,119.4 501.6,119.4 503.0,121.7 504.4,121.7 505.9,119.4 507.3,121.7 508.7,121.7 510.1,124.1 511.5,124.1 512.9,124.1 514.3,124.1 515.7,126.5 517.1,126.5 518.5,124.1 519.9,126.5 521.3,124.1 522.7,124.1 524.1,124.1 525.5,124.1 526.9,121.7 528.3,121.7 529.7,121.7 531.1,121.7 532.6,124.1 534.0,126.5 535.4,121.7 536.8,124.1 538.2,124.1 539.6,124.1 541.0,124.1 542.4,124.1 543.8,121.7 545.2,119.4 546.6,117.0 548.0,119.4 549.4,119.4 550.8,119.4 552.2,121.7 553.6,121.7 555.0,121.7 556.4,119.4 557.8,119.4 559.3,119.4 560.7,117.0 562.1,114.7 563.5,112.3 564.9,112.3 566.3,114.7 567.7,112.3 569.1,114.7 570.5,114.7 571.9,114.7 573.3,112.3 574.7,110.0 576.1,107.6 577.5,107.6 578.9,107.6 580.3,110.0 581.7,112.3 583.1,114.7 584.5,114.7 585.9,114.7 587.4,114.7 588.8,114.7 590.2,114.7 591.6,112.3 593.0,112.3 594.4,112.3 595.8,110.0 597.2,107.6 598.6,105.3 600.0,107.6 600,140" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="13.5" x2="600" y2="13.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="126.5" x2="600" y2="126.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,102.9 1.4,102.9 2.8,100.6 4.2,100.6 5.6,102.9 7.0,102.9 8.4,102.9 9.8,100.6 11.2,100.6 12.6,102.9 14.1,102.9 15.5,105.3 16.9,105.3 18.3,105.3 19.7,107.6 21.1,110.0 22.5,110.0 23.9,107.6 25.3,107.6 26.7,107.6 28.1,107.6 29.5,105.3 30.9,102.9 32.3,105.3 33.7,102.9 35.1,100.6 36.5,100.6 37.9,100.6 39.3,102.9 40.7,107.6 42.2,107.6 43.6,110.0 45.0,110.0 46.4,112.3 47.8,112.3 49.2,110.0 50.6,107.6 52.0,107.6 53.4,100.6 54.8,100.6 56.2,98.2 57.6,91.2 59.0,88.8 60.4,88.8 61.8,93.5 63.2,91.2 64.6,88.8 66.0,84.1 67.4,77.1 68.9,72.4 70.3,70.0 71.7,77.1 73.1,79.4 74.5,79.4 75.9,84.1 77.3,84.1 78.7,81.8 80.1,86.5 81.5,86.5 82.9,84.1 84.3,84.1 85.7,77.1 87.1,70.0 88.5,67.6 89.9,72.4 91.3,48.8 92.7,30.0 94.1,15.9 95.6,20.6 97.0,13.5 98.4,20.6 99.8,20.6 101.2,27.7 102.6,30.0 104.0,32.4 105.4,37.1 106.8,34.7 108.2,37.1 109.6,44.1 111.0,48.8 112.4,53.5 113.8,53.5 115.2,48.8 116.6,41.8 118.0,41.8 119.4,48.8 120.8,51.2 122.2,51.2 123.7,51.2 125.1,58.2 126.5,58.2 127.9,70.0 129.3,77.1 130.7,79.4 132.1,77.1 133.5,79.4 134.9,81.8 136.3,86.5 137.7,84.1 139.1,81.8 140.5,79.4 141.9,79.4 143.3,84.1 144.7,86.5 146.1,86.5 147.5,84.1 148.9,81.8 150.4,84.1 151.8,88.8 153.2,88.8 154.6,88.8 156.0,93.5 157.4,93.5 158.8,93.5 160.2,93.5 161.6,91.2 163.0,91.2 164.4,93.5 165.8,91.2 167.2,91.2 168.6,91.2 170.0,91.2 171.4,88.8 172.8,91.2 174.2,91.2 175.6,88.8 177.0,91.2 178.5,95.9 179.9,100.6 181.3,102.9 182.7,110.0 184.1,110.0 185.5,107.6 186.9,105.3 188.3,102.9 189.7,102.9 191.1,102.9 192.5,105.3 193.9,107.6 195.3,107.6 196.7,110.0 198.1,110.0 199.5,110.0 200.9,107.6 202.3,112.3 203.7,112.3 205.2,114.7 206.6,114.7 208.0,112.3 209.4,114.7 210.8,112.3 212.2,105.3 213.6,105.3 215.0,105.3 216.4,107.6 217.8,110.0 219.2,110.0 220.6,110.0 222.0,112.3 223.4,114.7 224.8,117.0 226.2,121.7 227.6,121.7 229.0,119.4 230.4,117.0 231.9,117.0 233.3,117.0 234.7,119.4 236.1,114.7 237.5,114.7 238.9,112.3 240.3,110.0 241.7,107.6 243.1,107.6 244.5,105.3 245.9,107.6 247.3,112.3 248.7,112.3 250.1,110.0 251.5,110.0 252.9,112.3 254.3,114.7 255.7,117.0 257.1,121.7 258.5,119.4 260.0,119.4 261.4,121.7 262.8,124.1 264.2,124.1 265.6,121.7 267.0,121.7 268.4,119.4 269.8,121.7 271.2,121.7 272.6,119.4 274.0,119.4 275.4,121.7 276.8,121.7 278.2,124.1 279.6,121.7 281.0,121.7 282.4,117.0 283.8,107.6 285.2,107.6 286.7,107.6 288.1,114.7 289.5,110.0 290.9,110.0 292.3,112.3 293.7,112.3 295.1,110.0 296.5,114.7 297.9,117.0 299.3,119.4 300.7,119.4 302.1,121.7 303.5,117.0 304.9,110.0 306.3,102.9 307.7,102.9 309.1,107.6 310.5,105.3 311.9,100.6 313.3,105.3 314.8,105.3 316.2,102.9 317.6,100.6 319.0,102.9 320.4,100.6 321.8,98.2 323.2,100.6 324.6,98.2 326.0,95.9 327.4,98.2 328.8,100.6 330.2,105.3 331.6,105.3 333.0,105.3 334.4,105.3 335.8,105.3 337.2,107.6 338.6,107.6 340.0,110.0 341.5,112.3 342.9,114.7 344.3,112.3 345.7,114.7 347.1,114.7 348.5,110.0 349.9,110.0 351.3,107.6 352.7,107.6 354.1,107.6 355.5,110.0 356.9,110.0 358.3,112.3 359.7,112.3 361.1,112.3 362.5,112.3 363.9,112.3 365.3,112.3 366.7,112.3 368.1,112.3 369.6,112.3 371.0,112.3 372.4,112.3 373.8,114.7 375.2,114.7 376.6,117.0 378.0,117.0 379.4,119.4 380.8,121.7 382.2,121.7 383.6,121.7 385.0,124.1 386.4,126.5 387.8,126.5 389.2,124.1 390.6,126.5 392.0,126.5 393.4,124.1 394.8,124.1 396.3,121.7 397.7,124.1 399.1,124.1 400.5,121.7 401.9,119.4 403.3,119.4 404.7,119.4 406.1,117.0 407.5,117.0 408.9,114.7 410.3,112.3 411.7,112.3 413.1,110.0 414.5,114.7 415.9,112.3 417.3,114.7 418.7,110.0 420.1,107.6 421.5,110.0 423.0,105.3 424.4,98.2 425.8,95.9 427.2,98.2 428.6,100.6 430.0,105.3 431.4,105.3 432.8,100.6 434.2,98.2 435.6,100.6 437.0,91.2 438.4,84.1 439.8,79.4 441.2,77.1 442.6,81.8 444.0,84.1 445.4,86.5 446.8,91.2 448.2,91.2 449.6,93.5 451.1,93.5 452.5,91.2 453.9,84.1 455.3,79.4 456.7,86.5 458.1,93.5 459.5,95.9 460.9,95.9 462.3,98.2 463.7,95.9 465.1,102.9 466.5,102.9 467.9,105.3 469.3,105.3 470.7,107.6 472.1,110.0 473.5,107.6 474.9,110.0 476.3,107.6 477.8,110.0 479.2,112.3 480.6,110.0 482.0,110.0 483.4,107.6 484.8,107.6 486.2,107.6 487.6,107.6 489.0,107.6 490.4,110.0 491.8,112.3 493.2,114.7 494.6,112.3 496.0,112.3 497.4,114.7 498.8,117.0 500.2,119.4 501.6,119.4 503.0,121.7 504.4,121.7 505.9,119.4 507.3,121.7 508.7,121.7 510.1,124.1 511.5,124.1 512.9,124.1 514.3,124.1 515.7,126.5 517.1,126.5 518.5,124.1 519.9,126.5 521.3,124.1 522.7,124.1 524.1,124.1 525.5,124.1 526.9,121.7 528.3,121.7 529.7,121.7 531.1,121.7 532.6,124.1 534.0,126.5 535.4,121.7 536.8,124.1 538.2,124.1 539.6,124.1 541.0,124.1 542.4,124.1 543.8,121.7 545.2,119.4 546.6,117.0 548.0,119.4 549.4,119.4 550.8,119.4 552.2,121.7 553.6,121.7 555.0,121.7 556.4,119.4 557.8,119.4 559.3,119.4 560.7,117.0 562.1,114.7 563.5,112.3 564.9,112.3 566.3,114.7 567.7,112.3 569.1,114.7 570.5,114.7 571.9,114.7 573.3,112.3 574.7,110.0 576.1,107.6 577.5,107.6 578.9,107.6 580.3,110.0 581.7,112.3 583.1,114.7 584.5,114.7 585.9,114.7 587.4,114.7 588.8,114.7 590.2,114.7 591.6,112.3 593.0,112.3 594.4,112.3 595.8,110.0 597.2,107.6 598.6,105.3 600.0,107.6" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">1.21%</span><span class="glab" style="top:calc(90.3% + 4px)">0.73%</span><span class="ldot" style="left:100.00%;top:76.88%;background:var(--series-1)"></span></div><div class="lxaxis"><span>2025-01-02</span><span><b>0.81%</b>　2026-08-19</span></div></div></div>
+    <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 140" preserveAspectRatio="none" style="height:140px" role="img" aria-label="時間序列走勢"><polygon points="0,140 0.0,102.9 1.4,102.9 2.8,100.6 4.2,100.6 5.6,102.9 7.0,102.9 8.4,102.9 9.8,100.6 11.2,100.6 12.6,102.9 14.1,102.9 15.5,105.3 16.9,105.3 18.3,105.3 19.7,107.6 21.1,110.0 22.5,110.0 23.9,107.6 25.3,107.6 26.7,107.6 28.1,107.6 29.5,105.3 30.9,102.9 32.3,105.3 33.7,102.9 35.1,100.6 36.5,100.6 37.9,100.6 39.3,102.9 40.7,107.6 42.2,107.6 43.6,110.0 45.0,110.0 46.4,112.3 47.8,112.3 49.2,110.0 50.6,107.6 52.0,107.6 53.4,100.6 54.8,100.6 56.2,98.2 57.6,91.2 59.0,88.8 60.4,88.8 61.8,93.5 63.2,91.2 64.6,88.8 66.0,84.1 67.4,77.1 68.9,72.4 70.3,70.0 71.7,77.1 73.1,79.4 74.5,79.4 75.9,84.1 77.3,84.1 78.7,81.8 80.1,86.5 81.5,86.5 82.9,84.1 84.3,84.1 85.7,77.1 87.1,70.0 88.5,67.6 89.9,72.4 91.3,48.8 92.7,30.0 94.1,15.9 95.6,20.6 97.0,13.5 98.4,20.6 99.8,20.6 101.2,27.7 102.6,30.0 104.0,32.4 105.4,37.1 106.8,34.7 108.2,37.1 109.6,44.1 111.0,48.8 112.4,53.5 113.8,53.5 115.2,48.8 116.6,41.8 118.0,41.8 119.4,48.8 120.8,51.2 122.2,51.2 123.7,51.2 125.1,58.2 126.5,58.2 127.9,70.0 129.3,77.1 130.7,79.4 132.1,77.1 133.5,79.4 134.9,81.8 136.3,86.5 137.7,84.1 139.1,81.8 140.5,79.4 141.9,79.4 143.3,84.1 144.7,86.5 146.1,86.5 147.5,84.1 148.9,81.8 150.4,84.1 151.8,88.8 153.2,88.8 154.6,88.8 156.0,93.5 157.4,93.5 158.8,93.5 160.2,93.5 161.6,91.2 163.0,91.2 164.4,93.5 165.8,91.2 167.2,91.2 168.6,91.2 170.0,91.2 171.4,88.8 172.8,91.2 174.2,91.2 175.6,88.8 177.0,91.2 178.5,95.9 179.9,100.6 181.3,102.9 182.7,110.0 184.1,110.0 185.5,107.6 186.9,105.3 188.3,102.9 189.7,102.9 191.1,102.9 192.5,105.3 193.9,107.6 195.3,107.6 196.7,110.0 198.1,110.0 199.5,110.0 200.9,107.6 202.3,112.3 203.7,112.3 205.2,114.7 206.6,114.7 208.0,112.3 209.4,114.7 210.8,112.3 212.2,105.3 213.6,105.3 215.0,105.3 216.4,107.6 217.8,110.0 219.2,110.0 220.6,110.0 222.0,112.3 223.4,114.7 224.8,117.0 226.2,121.7 227.6,121.7 229.0,119.4 230.4,117.0 231.9,117.0 233.3,117.0 234.7,119.4 236.1,114.7 237.5,114.7 238.9,112.3 240.3,110.0 241.7,107.6 243.1,107.6 244.5,105.3 245.9,107.6 247.3,112.3 248.7,112.3 250.1,110.0 251.5,110.0 252.9,112.3 254.3,114.7 255.7,117.0 257.1,121.7 258.5,119.4 260.0,119.4 261.4,121.7 262.8,124.1 264.2,124.1 265.6,121.7 267.0,121.7 268.4,119.4 269.8,121.7 271.2,121.7 272.6,119.4 274.0,119.4 275.4,121.7 276.8,121.7 278.2,124.1 279.6,121.7 281.0,121.7 282.4,117.0 283.8,107.6 285.2,107.6 286.7,107.6 288.1,114.7 289.5,110.0 290.9,110.0 292.3,112.3 293.7,112.3 295.1,110.0 296.5,114.7 297.9,117.0 299.3,119.4 300.7,119.4 302.1,121.7 303.5,117.0 304.9,110.0 306.3,102.9 307.7,102.9 309.1,107.6 310.5,105.3 311.9,100.6 313.3,105.3 314.8,105.3 316.2,102.9 317.6,100.6 319.0,102.9 320.4,100.6 321.8,98.2 323.2,100.6 324.6,98.2 326.0,95.9 327.4,98.2 328.8,100.6 330.2,105.3 331.6,105.3 333.0,105.3 334.4,105.3 335.8,105.3 337.2,107.6 338.6,107.6 340.0,110.0 341.5,112.3 342.9,114.7 344.3,112.3 345.7,114.7 347.1,114.7 348.5,110.0 349.9,110.0 351.3,107.6 352.7,107.6 354.1,107.6 355.5,110.0 356.9,110.0 358.3,112.3 359.7,112.3 361.1,112.3 362.5,112.3 363.9,112.3 365.3,112.3 366.7,112.3 368.1,112.3 369.6,112.3 371.0,112.3 372.4,112.3 373.8,114.7 375.2,114.7 376.6,117.0 378.0,117.0 379.4,119.4 380.8,121.7 382.2,121.7 383.6,121.7 385.0,124.1 386.4,126.5 387.8,126.5 389.2,124.1 390.6,126.5 392.0,126.5 393.4,124.1 394.8,124.1 396.3,121.7 397.7,124.1 399.1,124.1 400.5,121.7 401.9,119.4 403.3,119.4 404.7,119.4 406.1,117.0 407.5,117.0 408.9,114.7 410.3,112.3 411.7,112.3 413.1,110.0 414.5,114.7 415.9,112.3 417.3,114.7 418.7,110.0 420.1,107.6 421.5,110.0 423.0,105.3 424.4,98.2 425.8,95.9 427.2,98.2 428.6,100.6 430.0,105.3 431.4,105.3 432.8,100.6 434.2,98.2 435.6,100.6 437.0,91.2 438.4,84.1 439.8,79.4 441.2,77.1 442.6,81.8 444.0,84.1 445.4,86.5 446.8,91.2 448.2,91.2 449.6,93.5 451.1,93.5 452.5,91.2 453.9,84.1 455.3,79.4 456.7,86.5 458.1,93.5 459.5,95.9 460.9,95.9 462.3,98.2 463.7,95.9 465.1,102.9 466.5,102.9 467.9,105.3 469.3,105.3 470.7,107.6 472.1,110.0 473.5,107.6 474.9,110.0 476.3,107.6 477.8,110.0 479.2,112.3 480.6,110.0 482.0,110.0 483.4,107.6 484.8,107.6 486.2,107.6 487.6,107.6 489.0,107.6 490.4,110.0 491.8,112.3 493.2,114.7 494.6,112.3 496.0,112.3 497.4,114.7 498.8,117.0 500.2,119.4 501.6,119.4 503.0,121.7 504.4,121.7 505.9,119.4 507.3,121.7 508.7,121.7 510.1,124.1 511.5,124.1 512.9,124.1 514.3,124.1 515.7,126.5 517.1,126.5 518.5,124.1 519.9,126.5 521.3,124.1 522.7,124.1 524.1,124.1 525.5,124.1 526.9,121.7 528.3,121.7 529.7,121.7 531.1,121.7 532.6,124.1 534.0,126.5 535.4,121.7 536.8,124.1 538.2,124.1 539.6,124.1 541.0,124.1 542.4,124.1 543.8,121.7 545.2,119.4 546.6,117.0 548.0,119.4 549.4,119.4 550.8,119.4 552.2,121.7 553.6,121.7 555.0,121.7 556.4,119.4 557.8,119.4 559.3,119.4 560.7,117.0 562.1,114.7 563.5,112.3 564.9,112.3 566.3,114.7 567.7,112.3 569.1,114.7 570.5,114.7 571.9,114.7 573.3,112.3 574.7,110.0 576.1,107.6 577.5,107.6 578.9,107.6 580.3,110.0 581.7,112.3 583.1,114.7 584.5,114.7 585.9,114.7 587.4,114.7 588.8,114.7 590.2,114.7 591.6,112.3 593.0,112.3 594.4,112.3 595.8,110.0 597.2,107.6 598.6,105.3 600.0,107.6 600,140" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="13.5" x2="600" y2="13.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="126.5" x2="600" y2="126.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,102.9 1.4,102.9 2.8,100.6 4.2,100.6 5.6,102.9 7.0,102.9 8.4,102.9 9.8,100.6 11.2,100.6 12.6,102.9 14.1,102.9 15.5,105.3 16.9,105.3 18.3,105.3 19.7,107.6 21.1,110.0 22.5,110.0 23.9,107.6 25.3,107.6 26.7,107.6 28.1,107.6 29.5,105.3 30.9,102.9 32.3,105.3 33.7,102.9 35.1,100.6 36.5,100.6 37.9,100.6 39.3,102.9 40.7,107.6 42.2,107.6 43.6,110.0 45.0,110.0 46.4,112.3 47.8,112.3 49.2,110.0 50.6,107.6 52.0,107.6 53.4,100.6 54.8,100.6 56.2,98.2 57.6,91.2 59.0,88.8 60.4,88.8 61.8,93.5 63.2,91.2 64.6,88.8 66.0,84.1 67.4,77.1 68.9,72.4 70.3,70.0 71.7,77.1 73.1,79.4 74.5,79.4 75.9,84.1 77.3,84.1 78.7,81.8 80.1,86.5 81.5,86.5 82.9,84.1 84.3,84.1 85.7,77.1 87.1,70.0 88.5,67.6 89.9,72.4 91.3,48.8 92.7,30.0 94.1,15.9 95.6,20.6 97.0,13.5 98.4,20.6 99.8,20.6 101.2,27.7 102.6,30.0 104.0,32.4 105.4,37.1 106.8,34.7 108.2,37.1 109.6,44.1 111.0,48.8 112.4,53.5 113.8,53.5 115.2,48.8 116.6,41.8 118.0,41.8 119.4,48.8 120.8,51.2 122.2,51.2 123.7,51.2 125.1,58.2 126.5,58.2 127.9,70.0 129.3,77.1 130.7,79.4 132.1,77.1 133.5,79.4 134.9,81.8 136.3,86.5 137.7,84.1 139.1,81.8 140.5,79.4 141.9,79.4 143.3,84.1 144.7,86.5 146.1,86.5 147.5,84.1 148.9,81.8 150.4,84.1 151.8,88.8 153.2,88.8 154.6,88.8 156.0,93.5 157.4,93.5 158.8,93.5 160.2,93.5 161.6,91.2 163.0,91.2 164.4,93.5 165.8,91.2 167.2,91.2 168.6,91.2 170.0,91.2 171.4,88.8 172.8,91.2 174.2,91.2 175.6,88.8 177.0,91.2 178.5,95.9 179.9,100.6 181.3,102.9 182.7,110.0 184.1,110.0 185.5,107.6 186.9,105.3 188.3,102.9 189.7,102.9 191.1,102.9 192.5,105.3 193.9,107.6 195.3,107.6 196.7,110.0 198.1,110.0 199.5,110.0 200.9,107.6 202.3,112.3 203.7,112.3 205.2,114.7 206.6,114.7 208.0,112.3 209.4,114.7 210.8,112.3 212.2,105.3 213.6,105.3 215.0,105.3 216.4,107.6 217.8,110.0 219.2,110.0 220.6,110.0 222.0,112.3 223.4,114.7 224.8,117.0 226.2,121.7 227.6,121.7 229.0,119.4 230.4,117.0 231.9,117.0 233.3,117.0 234.7,119.4 236.1,114.7 237.5,114.7 238.9,112.3 240.3,110.0 241.7,107.6 243.1,107.6 244.5,105.3 245.9,107.6 247.3,112.3 248.7,112.3 250.1,110.0 251.5,110.0 252.9,112.3 254.3,114.7 255.7,117.0 257.1,121.7 258.5,119.4 260.0,119.4 261.4,121.7 262.8,124.1 264.2,124.1 265.6,121.7 267.0,121.7 268.4,119.4 269.8,121.7 271.2,121.7 272.6,119.4 274.0,119.4 275.4,121.7 276.8,121.7 278.2,124.1 279.6,121.7 281.0,121.7 282.4,117.0 283.8,107.6 285.2,107.6 286.7,107.6 288.1,114.7 289.5,110.0 290.9,110.0 292.3,112.3 293.7,112.3 295.1,110.0 296.5,114.7 297.9,117.0 299.3,119.4 300.7,119.4 302.1,121.7 303.5,117.0 304.9,110.0 306.3,102.9 307.7,102.9 309.1,107.6 310.5,105.3 311.9,100.6 313.3,105.3 314.8,105.3 316.2,102.9 317.6,100.6 319.0,102.9 320.4,100.6 321.8,98.2 323.2,100.6 324.6,98.2 326.0,95.9 327.4,98.2 328.8,100.6 330.2,105.3 331.6,105.3 333.0,105.3 334.4,105.3 335.8,105.3 337.2,107.6 338.6,107.6 340.0,110.0 341.5,112.3 342.9,114.7 344.3,112.3 345.7,114.7 347.1,114.7 348.5,110.0 349.9,110.0 351.3,107.6 352.7,107.6 354.1,107.6 355.5,110.0 356.9,110.0 358.3,112.3 359.7,112.3 361.1,112.3 362.5,112.3 363.9,112.3 365.3,112.3 366.7,112.3 368.1,112.3 369.6,112.3 371.0,112.3 372.4,112.3 373.8,114.7 375.2,114.7 376.6,117.0 378.0,117.0 379.4,119.4 380.8,121.7 382.2,121.7 383.6,121.7 385.0,124.1 386.4,126.5 387.8,126.5 389.2,124.1 390.6,126.5 392.0,126.5 393.4,124.1 394.8,124.1 396.3,121.7 397.7,124.1 399.1,124.1 400.5,121.7 401.9,119.4 403.3,119.4 404.7,119.4 406.1,117.0 407.5,117.0 408.9,114.7 410.3,112.3 411.7,112.3 413.1,110.0 414.5,114.7 415.9,112.3 417.3,114.7 418.7,110.0 420.1,107.6 421.5,110.0 423.0,105.3 424.4,98.2 425.8,95.9 427.2,98.2 428.6,100.6 430.0,105.3 431.4,105.3 432.8,100.6 434.2,98.2 435.6,100.6 437.0,91.2 438.4,84.1 439.8,79.4 441.2,77.1 442.6,81.8 444.0,84.1 445.4,86.5 446.8,91.2 448.2,91.2 449.6,93.5 451.1,93.5 452.5,91.2 453.9,84.1 455.3,79.4 456.7,86.5 458.1,93.5 459.5,95.9 460.9,95.9 462.3,98.2 463.7,95.9 465.1,102.9 466.5,102.9 467.9,105.3 469.3,105.3 470.7,107.6 472.1,110.0 473.5,107.6 474.9,110.0 476.3,107.6 477.8,110.0 479.2,112.3 480.6,110.0 482.0,110.0 483.4,107.6 484.8,107.6 486.2,107.6 487.6,107.6 489.0,107.6 490.4,110.0 491.8,112.3 493.2,114.7 494.6,112.3 496.0,112.3 497.4,114.7 498.8,117.0 500.2,119.4 501.6,119.4 503.0,121.7 504.4,121.7 505.9,119.4 507.3,121.7 508.7,121.7 510.1,124.1 511.5,124.1 512.9,124.1 514.3,124.1 515.7,126.5 517.1,126.5 518.5,124.1 519.9,126.5 521.3,124.1 522.7,124.1 524.1,124.1 525.5,124.1 526.9,121.7 528.3,121.7 529.7,121.7 531.1,121.7 532.6,124.1 534.0,126.5 535.4,121.7 536.8,124.1 538.2,124.1 539.6,124.1 541.0,124.1 542.4,124.1 543.8,121.7 545.2,119.4 546.6,117.0 548.0,119.4 549.4,119.4 550.8,119.4 552.2,121.7 553.6,121.7 555.0,121.7 556.4,119.4 557.8,119.4 559.3,119.4 560.7,117.0 562.1,114.7 563.5,112.3 564.9,112.3 566.3,114.7 567.7,112.3 569.1,114.7 570.5,114.7 571.9,114.7 573.3,112.3 574.7,110.0 576.1,107.6 577.5,107.6 578.9,107.6 580.3,110.0 581.7,112.3 583.1,114.7 584.5,114.7 585.9,114.7 587.4,114.7 588.8,114.7 590.2,114.7 591.6,112.3 593.0,112.3 594.4,112.3 595.8,110.0 597.2,107.6 598.6,105.3 600.0,107.6" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">1.21%</span><span class="glab" style="top:calc(90.3% + 4px)">0.73%</span><span class="ldot" style="left:100.00%;top:76.88%;background:var(--series-1)"></span></div><div class="lxaxis"><span>2025-01-02</span><span class="nb">最新 <b>0.81%</b>（2026-08-19）</span></div></div></div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。</p><p><b>為什麼重要：</b>同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。</p><p><b>怎麼判讀：</b>看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。</p></div></details>
+    <details class="f-more"><summary>利差為什麼是買方的溫度計</summary><div class="f-detail">利差是買方要求的風險補償。它<b>還沒走闊</b>——代表目前的新增供給仍被吸收得掉；一旦走闊，就是買盤開始吃不下的第一個訊號。</div></details>
   </div></details>
 
-  <details class="card sect"><summary><h2 id="priced">壓力已經反映多少</h2><span class="sect-sum">已反映 +0.82　·　供給壓力 -0.42</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="priced">壓力已經反映多少</h2><span class="sect-sum">已反映 +0.76　·　供給壓力 -0.39</span></summary><div class="sect-body">
     <p class="hint">市場已經替這些壓力定了多少價。</p>
-    <div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>期限溢酬</div><div class="cm-delta up">+0.88</div><div class="cm-val">+0.84%（中性參考 0.40%）</div></div><div class="cmove"><div>30 年減 10 年利差</div><div class="cm-delta down">-0.06</div><div class="cm-val">+0.57%（中性參考 0.60%）</div></div></div><p class="hint" style="margin-top:12px">已反映分數 +0.82　·　供給壓力分數 -0.42<br>價格反映的壓力大於供給面實際的程度——期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。</p>
-    <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">10Y 期</div><div class="s-value" style="color:inherit">4.71%</div><div class="s-note">近一個月 +16 基點</div></div><div class="stat"><div class="s-label">30Y 期</div><div class="s-value" style="color:inherit">5.28%</div><div class="s-note">近一個月 +22 基點</div></div></div>
+    <div class="impact dovish">價格反映的壓力大於供給面實際的程度——期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。</div><div class="bkgap" style="color:var(--text-primary)"><span class="bk-label">供給壓力分數 -0.39　vs　已反映分數</span><span class="bk-val">+0.76</span></div><div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>期限溢酬</div><div class="cm-delta up">+0.88</div><div class="cm-val">+0.84%（中性參考 0.40%）</div></div><div class="cmove"><div>30 年減 10 年利差</div><div class="cm-delta down">-0.12</div><div class="cm-val">+0.54%（中性參考 0.60%）</div></div></div>
+    <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">10Y 期</div><div class="s-value" style="color:inherit">4.65%</div><div class="s-note">近一個月 +5 基點</div></div><div class="stat"><div class="s-label">30Y 期</div><div class="s-value" style="color:inherit">5.19%</div><div class="s-note">近一個月 +8 基點</div></div></div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把「供給面算出來的壓力」跟「市場價格已經反映的壓力」放在同一把尺上比。</p><p><b>為什麼重要：</b>壓力大不代表利率會漲——市場早就定價完的利空，落地時反而不動。會動的是「還沒被反映」的那一段，所以兩個分數的差距比各自的水準重要。</p><p><b>怎麼判讀：</b>差距超過 ±0.8 才有意義：供給分數高於已反映＝上行風險還在後面；已反映高於供給＝價格可能超前，供給不再惡化就有回落空間。</p></div></details>
     <details data-m-collapse><summary>其他天期</summary>
-      <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">3M 期</div><div class="s-value" style="color:inherit">3.86%</div><div class="s-note">近一個月 +1 基點</div></div><div class="stat"><div class="s-label">2Y 期</div><div class="s-value" style="color:inherit">4.19%</div><div class="s-note">近一個月 +1 基點</div></div><div class="stat"><div class="s-label">5Y 期</div><div class="s-value" style="color:inherit">4.37%</div><div class="s-note">近一個月 +9 基點</div></div></div>
+      <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">3M 期</div><div class="s-value" style="color:inherit">3.86%</div><div class="s-note">近一個月 +0 基點</div></div><div class="stat"><div class="s-label">2Y 期</div><div class="s-value" style="color:inherit">4.19%</div><div class="s-note">近一個月 -2 基點</div></div><div class="stat"><div class="s-label">5Y 期</div><div class="s-value" style="color:inherit">4.35%</div><div class="s-note">近一個月 +2 基點</div></div></div>
       <p class="hint" style="margin-top:12px">短天期由政策利率預期決定，
         見<a href="/fomc/">聯準會文本</a>頁。</p>
     </details>
@@ -1650,22 +1742,22 @@ details.home-module[open]{padding-bottom:0}
 <div class="grid">
   <details class="card sect"><summary><h2 id="debt">供給端細節一：政府財政</h2><span class="sect-sum">財政缺口 +1.85% GDP　·　債務比大致穩定</span></summary><div class="sect-body">
     <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。</p><p><b>為什麼重要：</b>財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。</p><p><b>怎麼判讀：</b>盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。</p></div></details>
-    <div class="stat-row"><div class="stat"><div class="s-label">債務佔 GDP</div><div class="s-value" style="color:inherit">123%</div><div class="s-note">資料至 2026 Q1</div></div><div class="stat"><div class="s-label">利息佔稅收</div><div class="s-value" style="color:var(--critical)">21.2%</div><div class="s-note">每收 100 元稅拿去付利息的比例</div></div><div class="stat"><div class="s-label">當前缺口：有效利率 減 名目成長</div><div class="s-value" style="color:var(--good)">-3.33%</div><div class="s-note">有效利率 3.19% － 名目成長 6.53%。大於零時債務會自我累積</div></div></div>
-    <div class="warnbox" style="border-left-color:var(--series-1);margin-top:16px">
-      <b>債務比大致穩定</b><br>目前的基本盈餘足以抵消利息負擔與成長的落差。
-    </div>
-    <div class="bkgap" style="color:var(--good)"><span class="bk-label">財政缺口</span><span class="bk-val">+1.85% GDP</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">實際基本盈餘高於穩定水準；正值是本模型下的財政緩衝</span></div>
+    <div class="impact neutral">債務比大致穩定——目前的基本盈餘足以抵消利息負擔與成長的落差。</div>
+    <div class="stat-row" style="margin-top:14px"><div class="stat"><div class="s-label">債務佔 GDP</div><div class="s-value" style="color:inherit">123%</div><div class="s-note">資料至 2026 Q1</div></div><div class="stat"><div class="s-label">利息佔稅收</div><div class="s-value" style="color:var(--critical)">21.2%</div><div class="s-note">每收 100 元稅拿去付利息的比例</div></div><div class="stat"><div class="s-label">當前缺口：有效利率 減 名目成長</div><div class="s-value" style="color:var(--good)">-3.33%</div><div class="s-note">有效利率 3.19% － 名目成長 6.53%。大於零時債務會自我累積</div></div><div class="stat"><div class="s-label">財政缺口</div><div class="s-value" style="color:var(--good)">+1.85% GDP</div><div class="s-note">實際基本盈餘高於穩定水準；正值是本模型下的財政緩衝</div></div></div>
     <h3 style="margin-top:18px">聯邦債務佔 GDP 比（2024 年 10 月以來）</h3>
-    <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" style="height:150px" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5 600,150" fill="var(--line-2)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5" fill="none" stroke="var(--line-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">122.59%</span><span class="glab" style="top:calc(90.3% + 4px)">118.78%</span><span class="ldot" style="left:100.00%;top:9.68%;background:var(--line-2)"></span></div><div class="lxaxis"><span>2024-10-01</span><span><b>122.59%</b>　2026-01-01</span></div></div>
+    <div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 150" preserveAspectRatio="none" style="height:150px" role="img" aria-label="時間序列走勢"><polygon points="0,150 0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5 600,150" fill="var(--line-2)" opacity="0.09"/><line x1="0" y1="14.5" x2="600" y2="14.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="135.5" x2="600" y2="135.5" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,51.2 120.0,79.5 240.0,135.5 360.0,64.2 480.0,15.3 600.0,14.5" fill="none" stroke="var(--line-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">122.59%</span><span class="glab" style="top:calc(90.3% + 4px)">118.78%</span><span class="ldot" style="left:100.00%;top:9.68%;background:var(--line-2)"></span></div><div class="lxaxis"><span>2024-10-01</span><span class="nb">最新 <b>122.59%</b>（2026-01-01）</span></div></div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。</p><p><b>為什麼重要：</b>財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。</p><p><b>怎麼判讀：</b>盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。</p></div></details>
     <details data-m-collapse><summary>財政損益兩平的算法</summary>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">穩定債務所需的基本盈餘</div><div class="s-value" style="color:inherit">-3.84% GDP</div></div><div class="stat"><div class="s-label">實際基本盈餘</div><div class="s-value" style="color:inherit">-1.98% GDP</div></div></div>
       <dl class="gloss" style="margin-top:14px">
         <dt>公式</dt>
         <dd>穩定所需的基本盈餘 ≈ 債務比 × (有效利率 − 名目成長) ÷ (1 + 名目成長)</dd>
         <dt>基本盈餘</dt>
-        <dd>排除利息支出後的財政餘額。利息是過去累積的結果，
-          把它排除才看得出當期財政的實際狀況。</dd>
+        <dd>排除利息支出後的財政餘額（也就是「不算利息的話，政府是賺是賠」）。
+          利息是過去累積的結果，把它排除才看得出當期財政的實際狀況。</dd>
+        <dt>有效利率</dt>
+        <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。
+          新債換舊債時它會慢慢往市場利率靠攏，所以升息的痛是分好幾年到的。</dd>
         <dt>為什麼利率高於成長很危險</dt>
         <dd>當有效利率超過名目成長，利息負擔的成長速度會超過稅基，
           債務比就會自我累積——即使財政收支平衡也一樣。</dd>
@@ -1681,12 +1773,11 @@ details.home-module[open]{padding-bottom:0}
   <details class="card sect"><summary><h2 id="hyperscalers">供給端細節二：科技巨頭</h2><span class="sect-sum">2026 年計畫 6,900–7,200 億美元　·　佔營運現金流 97%</span></summary><div class="sect-body">
     <p class="hint">關鍵不是金額，是<b>融資方式</b>——
       這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。</p><p><b>為什麼重要：</b>這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。</p><p><b>怎麼判讀：</b>盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。</p></div></details>
+    <div class="impact hawkish">正在轉向舉債支應——合計資本支出已達同期營運現金流的 97%，逼近本業現金能支應的上限。</div>
     <h3 style="margin-top:4px">2026 年資本支出計畫
       <span class="asof">指引更新於 2026-04-29</span></h3>
-    <p class="hint" style="margin:4px 0 10px">合計 <b>6,900–7,200 億美元</b>　·　年化實績的 1.0 倍。
-      這一區是<b>還沒花、但已經承諾的</b>；下方的季報是已經花掉的——
-      推高長端供給的是前者。</p>
+    <p class="hint" style="margin:4px 0 10px">合計 <b>6,900–7,200 億美元</b>　·　年化實績的 1.0 倍
+      ——<b>還沒花、但已經承諾的錢</b>；推高長端供給的是這個。</p>
     <div class="focus-grid"><div class="focus-metric"><span>Amazon</span><b>2,000</b><small>億美元</small></div><div class="focus-metric"><span>Microsoft</span><b>1,900</b><small>億美元</small></div><div class="focus-metric"><span>Alphabet</span><b>1,750–1,850</b><small>億美元</small></div><div class="focus-metric"><span>Meta</span><b>1,250–1,450</b><small>億美元</small></div></div>
     <details class="f-more"><summary>備註與資料來源</summary>
       <div class="f-detail"><ul style="margin:8px 0;padding-left:18px">
@@ -1697,10 +1788,6 @@ details.home-module[open]{padding-bottom:0}
         硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
         更新於 2026-04-29　·　各公司法說會與財報新聞稿</div>
     </details>
-    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">資本支出佔營運現金流</span><span class="bk-val">97%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">合計 ÷ 合計。超過 100% 代表本業現金支應不了這一季的資本支出</span></div>
-    <div class="warnbox" style="border-left-color:var(--serious);margin-top:16px">
-      <b>正在轉向舉債支應</b><br>合計資本支出已達同期營運現金流的 97%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。
-    </div>
     <div class="tlines">
       <div class="tlines-k">資料時效</div>
       
@@ -1743,7 +1830,9 @@ details.home-module[open]{padding-bottom:0}
       </details>
     </details>
     </div>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。</p><p><b>為什麼重要：</b>這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。</p><p><b>怎麼判讀：</b>盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。</p></div></details>
     <details data-m-collapse><summary>五家公司的明細</summary>
+      <p class="hint" style="margin:10px 0 0">合計資本支出已達同期營運現金流的 97%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。</p>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">資本支出合計</div><div class="s-value" style="color:inherit">1,815 億美元</div><div class="s-note">年增 +88%（對去年同季）</div></div><div class="stat"><div class="s-label">佔營運現金流</div><div class="s-value" style="color:var(--serious)">97%</div><div class="s-note">合計 ÷ 合計，非五家平均</div></div><div class="stat"><div class="s-label">單季發債合計（期末 2026-05-31～2026-06-30）</div><div class="s-value" style="color:inherit">450 億美元</div><div class="s-note">分子為五家不同會計期別之和</div></div><div class="stat"><div class="s-label">簡化口徑自由現金流為負</div><div class="s-value" style="color:inherit">3 / 5 家</div><div class="s-note">營運現金流 − 現金資本支出 &lt; 0</div></div></div>
       <div class="tscroll" style="margin-top:16px">
         <table>
@@ -1767,9 +1856,9 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid g2">
-  <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">8 項：2 項警戒、2 項留意、4 項正常</span></summary><div class="sect-body">
-    <p class="hint">8 項指標：2 項警戒、2 項留意、4 項正常。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>長端市場的幾個壓力指標逐一對照警戒線。</p><p><b>為什麼重要：</b>單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。</p><p><b>怎麼判讀：</b>紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。</p></div></details>
+  <details class="card sect"><summary><h2 id="lights">關鍵指標檢核</h2><span class="sect-sum">8 項：1 項警戒、4 項留意、3 項正常</span></summary><div class="sect-body">
+    <p class="hint">目前的整體狀態（不限本月）：逐項對照警戒線。</p>
+    <div class="impact hawkish">8 項指標：1 項警戒、4 項留意、3 項正常——供給端的壓力已經反映在市場指標上，不只是算出來的。</div>
     <details data-m-collapse open><summary>逐項展開</summary>
       <div class="lights" style="margin-top:12px"><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>期限溢酬</div>
@@ -1778,30 +1867,30 @@ details.home-module[open]{padding-bottom:0}
   
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">投資人持有長債要求的額外補償。上升代表市場不想抱長債</div></details>
-</div><div class="light good">
-  <div class="l-top"><span class="l-icon">●</span>10 年減 2 年</div>
-  <div class="l-value">+0.52% <span style="font-size:13px;color:var(--muted)">→</span></div>
-  <div class="l-state">正常</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>10 年減 2 年</div>
+  <div class="l-value">+0.46% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-state">留意</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">曲線斜率。負值（倒掛）歷史上是衰退的領先訊號</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>30 年減 10 年</div>
-  <div class="l-value">+0.57% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">+0.54% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">長端斜率。走陡通常反映供給壓力或財政疑慮</div></details>
-</div><div class="light critical">
-  <div class="l-top"><span class="l-icon">■</span>10 年期實質利率</div>
-  <div class="l-value">2.41% <span style="font-size:13px;color:var(--muted)">→</span></div>
-  <div class="l-state">警戒</div>
+</div><div class="light warning">
+  <div class="l-top"><span class="l-icon">▲</span>10 年期實質利率</div>
+  <div class="l-value">2.35% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-state">留意</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">剔除通膨補償後的真實資金成本。高於潛在成長率會壓抑投資</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>10 年通膨損益兩平</div>
-  <div class="l-value">2.30% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">2.34% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
@@ -1815,7 +1904,7 @@ details.home-module[open]{padding-bottom:0}
     <div class="l-desc">每收 100 元稅有多少拿去付利息。超過 20% 通常被視為警戒</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>前瞻缺口 r 減 g</div>
-  <div class="l-value">+0.31% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">+0.25% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
@@ -1829,6 +1918,7 @@ details.home-module[open]{padding-bottom:0}
     <div class="l-desc">投資級公司債相對公債的風險補償。走闊代表企業融資成本上升</div></details>
 </div></div>
     </details>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>長端市場的幾個壓力指標逐一對照警戒線。</p><p><b>為什麼重要：</b>單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。</p><p><b>怎麼判讀：</b>紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。</p></div></details>
   </div></details>
 
   <details class="card sect"><summary><h2 id="glossary">名詞解釋</h2><span class="sect-sum">這一頁出現的專有名詞與計算方式</span></summary><div class="sect-body">
@@ -1849,6 +1939,9 @@ details.home-module[open]{padding-bottom:0}
         仍然自我累積。</dd>
       <dt>利差（OAS）</dt>
       <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的信用風險補償。</dd>
+      <dt>基點</dt>
+      <dd>利率的最小慣用單位：1 基點＝0.01 個百分點。
+        「升 25 個基點」就是升 0.25%，也就是「一碼」。</dd>
       <dt>存續期間需求</dt>
       <dd>市場願意買進長天期債券的總量。政府與企業發債競爭的就是這一池資金，
         供給超過需求時長端殖利率就會被推高。</dd>
@@ -1901,7 +1994,6 @@ details.home-module[open]{padding-bottom:0}
         新聞稿日期比該公司自己的季末日晚 60 天以上就是下一季
         （一季約 91 天、新聞稿約季末後 20–30 天，60 天在兩群中間）。</dd>
     </dl>
-    </details>
   </div></details>
 </div>
 
@@ -1955,6 +2047,21 @@ details.home-module[open]{padding-bottom:0}
       d.open = false; delete d.dataset.wasClosed;
     });
   });
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
+  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
+  document.querySelectorAll('.grid.g2').forEach(function(g){
+    var ds = g.querySelectorAll(':scope > details.sect');
+    if(ds.length < 2) return;
+    ds.forEach(function(d){
+      d.addEventListener('toggle', function(){
+        ds.forEach(function(o){
+          if(o !== d && o.open !== d.open) o.open = d.open;
+        });
+      });
+    });
+  });
   // 橫捲列兩側的漸層。外框掛 .fl/.fr，內層負責捲動。
   // 沒有這個提示的話橫捲列就是硬切一刀，讀者會以為「只有這幾項」——
   // 主選單在 360px 下有 32% 在視窗外，那 32% 裡包含「總覽」。
@@ -1985,6 +2092,24 @@ details.home-module[open]{padding-bottom:0}
     }
     upd();
   });
+
+  // 橫捲表格（.tscroll／熱力圖）掛上同一套邊緣漸層。
+  // 表格大多藏在收合層裡，收著的時候量不到寬度——所以任何 details
+  // 開合時全部重算一次（toggle 不冒泡，用捕獲階段在 document 上接）。
+  var tupds=[];
+  document.querySelectorAll('.tscroll, .heatwrap').forEach(function(box){
+    var wrap=document.createElement('div');
+    wrap.className='twrap';
+    box.parentNode.insertBefore(wrap,box);
+    wrap.appendChild(box);
+    tupds.push(edgeFades(wrap,box));
+  });
+  tupds.forEach(function(u){u();});
+  if(tupds.length){
+    document.addEventListener('toggle', function(){
+      tupds.forEach(function(u){u();});
+    }, true);
+  }
 
   // ---- 頁內錨點導覽 ----
   // 三件事：什麼時候出現、兩側的漸層、現在在哪一段。

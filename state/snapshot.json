@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-21T02:04:59+08:00",
+  "at": "2026-08-21T20:01:19+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -101,6 +101,104 @@
     },
     "inflation": {
       "current": {
+        "vintage": "2026-07|2026-06",
+        "released": "2026-08-21",
+        "month": "2026-07",
+        "tilt": "balanced",
+        "flags": [
+          "cpi_cooling",
+          "above_target",
+          "shelter_drag",
+          "ppi_pipeline",
+          "shelter_turn",
+          "expect_anchored"
+        ],
+        "flag_titles": {
+          "cpi_cooling": "近三月年化低於年增率 0.4 個百分點以上",
+          "above_target": "核心 PCE 顯著高於目標",
+          "shelter_drag": "住房落後項推升整體讀數",
+          "ppi_pipeline": "上游漲價還沒轉嫁完",
+          "shelter_turn": "住房通膨的降溫已成既定路徑",
+          "expect_anchored": "短期預期偏高，但長期仍錨定"
+        },
+        "flag_leans": {
+          "cpi_cooling": "dovish",
+          "above_target": "hawkish",
+          "shelter_drag": "dovish",
+          "ppi_pipeline": "hawkish",
+          "shelter_turn": "dovish",
+          "expect_anchored": "neutral"
+        },
+        "metrics": {
+          "cpi_yoy": {
+            "label": "CPI 年增",
+            "en": "Headline CPI, y/y",
+            "value": 3.364825041479902,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "core_cpi_yoy": {
+            "label": "核心 CPI 年增",
+            "en": "Core CPI, y/y",
+            "value": 2.4782661559973107,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "core_cpi_3m": {
+            "label": "核心 CPI 三月年化",
+            "en": "Core CPI, 3-mo ann.",
+            "value": 1.6389659249104849,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.1,
+            "up_is": "hawkish"
+          },
+          "core_pce": {
+            "label": "核心 PCE 年增",
+            "en": "Core PCE, y/y",
+            "value": 3.286526430967074,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "supercore": {
+            "label": "核心服務除住房",
+            "en": "Supercore (core svcs ex-shelter), 3-mo ann.",
+            "value": null,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.1,
+            "up_is": "hawkish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {
+          "cpi_yoy": {
+            "value": 3.5314250637863864
+          },
+          "core_cpi_yoy": {
+            "value": 2.594072431813488
+          },
+          "core_cpi_3m": {
+            "value": 2.2937962755186003
+          },
+          "core_pce": {
+            "value": 3.42157564194292
+          },
+          "supercore": {
+            "value": null
+          },
+          "exp5y5y": {
+            "value": 2.32
+          }
+        }
+      },
+      "previous": {
         "vintage": "2026-07",
         "released": "2026-08-13",
         "month": "2026-07",
@@ -208,8 +306,148 @@
         "objective": 6.0
       }
     },
+    "claims": {
+      "current": {
+        "vintage": "2026-08-15",
+        "released": "2026-08-21",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "ic_ma": {
+            "label": "初領失業金（四週平均）",
+            "value": 20.4,
+            "unit": "萬人",
+            "threshold": 0.5,
+            "up_is": "dovish"
+          },
+          "ic_now": {
+            "label": "初領失業金（單週）",
+            "value": 20.6,
+            "unit": "萬人",
+            "threshold": 1.0,
+            "up_is": "dovish"
+          },
+          "cc": {
+            "label": "續領失業金",
+            "value": 179.9,
+            "unit": "萬人",
+            "threshold": 1.5,
+            "up_is": "dovish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      }
+    },
+    "jolts": {
+      "current": {
+        "vintage": "2026-06",
+        "released": "2026-08-21",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "openings": {
+            "label": "職缺數",
+            "value": 735.9,
+            "unit": "萬個",
+            "threshold": 5,
+            "up_is": "hawkish"
+          },
+          "hires": {
+            "label": "招聘率",
+            "value": 3.4,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "quits": {
+            "label": "離職率",
+            "value": 2.0,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "layoffs": {
+            "label": "裁員率",
+            "value": 1.1,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "dovish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      }
+    },
+    "market": {
+      "current": {
+        "vintage": "2026-W34",
+        "released": "2026-08-21",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "dgs10": {
+            "label": "10 年期殖利率",
+            "value": 4.65,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "dgs30": {
+            "label": "30 年期殖利率",
+            "value": 5.19,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "tp": {
+            "label": "期限溢酬",
+            "value": 0.8393,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "ig": {
+            "label": "投資級利差",
+            "value": 0.81,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": ""
+          },
+          "exp5y5y": {
+            "label": "長期通膨預期",
+            "value": 2.34,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.03,
+            "up_is": "hawkish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      }
+    },
     "scenario": {
       "current": {
+        "vintage": "labor:2026-07|inflation:2026-07|2026-06|fomc:2026-07-29",
+        "released": "2026-08-21",
+        "name": "傾向緊縮",
+        "grid_name": "傾向緊縮",
+        "regime": "inflation",
+        "labor": "中",
+        "inflation": "高"
+      },
+      "previous": {
         "vintage": "labor:2026-07|inflation:2026-07|fomc:2026-07-29",
         "released": "2026-08-13",
         "name": "傾向緊縮",
@@ -224,6 +462,14 @@
     {
       "at": "2026-08-21T02:04:59+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|fomc:2026-07-29",
+      "name": "傾向緊縮",
+      "regime": "inflation",
+      "labor": "中",
+      "inflation": "高"
+    },
+    {
+      "at": "2026-08-21T20:01:19+08:00",
+      "vintage": "labor:2026-07|inflation:2026-07|2026-06|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",
       "labor": "中",

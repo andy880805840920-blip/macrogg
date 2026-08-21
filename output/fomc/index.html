@@ -113,11 +113,10 @@ details.banner>summary{padding:11px 34px 11px 14px;font-size:13px;
   color:var(--text-secondary);line-height:1.6;position:relative;
   list-style:none;font-weight:400}
 details.banner>summary::-webkit-details-marker{display:none}
-details.banner>summary::after{content:"";position:absolute;right:15px;
-  top:calc(50% - 3px);width:7px;height:7px;border-right:1.5px solid var(--muted);
-  border-bottom:1.5px solid var(--muted);transform:rotate(45deg);
-  transform-origin:70% 70%;transition:transform .15s ease}
-details.banner[open]>summary::after{transform:rotate(-135deg)}
+/* 卡片級收合統一用右側 ▾/▴（跟 .sect 同一家族），不再自畫旋轉箭頭 */
+details.banner>summary::after{content:"▾";position:absolute;right:15px;
+  top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted)}
+details.banner[open]>summary::after{content:"▴"}
 .banner-body{padding:0 14px 12px;font-size:13px;line-height:1.7;
   color:var(--text-secondary)}
 
@@ -288,8 +287,10 @@ details.banner[open]>summary::after{transform:rotate(-135deg)}
   font-weight:500;color:var(--muted);padding:12px 0}
 .kpi .k-more>summary:hover{color:var(--series-1)}
 .kpi .k-more>summary::-webkit-details-marker{display:none}
-.kpi .k-more>summary::before{content:"▸ "}
-.kpi .k-more[open]>summary::before{content:"▾ "}
+.kpi .k-more>summary{padding-left:15px;text-indent:-15px}
+.kpi .k-more>summary::before{content:"▸";display:inline-block;width:15px;
+  text-indent:0}
+.kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
 /* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
@@ -347,6 +348,18 @@ td a[target="_blank"],.src a[target="_blank"]{
    另一個可點的 summary。不留的話兩個觸控目標會靠到 7px 以內。 */
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
   margin-bottom:6px}
+/* 橫捲表格的邊緣漸層：跟主選單同一套「還有更多」提示。
+   .tscroll／.heatwrap 由 JS 包一層 .twrap，漸層畫在不捲動的外框上——
+   熱力圖與寬表格在手機上被裁切時，先前沒有任何「還可以左右滑」的跡象，
+   看起來像表格只有那幾欄。 */
+.twrap{position:relative}
+.twrap::before,.twrap::after{content:"";position:absolute;top:0;bottom:0;
+  width:26px;pointer-events:none;opacity:0;transition:opacity .15s ease;z-index:1}
+.twrap::before{left:0;background:linear-gradient(90deg,var(--surface-1),transparent)}
+.twrap::after{right:0;background:linear-gradient(270deg,var(--surface-1),transparent)}
+.twrap.fl::before{opacity:1}
+.twrap.fr::after{opacity:1}
+@media(prefers-reduced-motion:reduce){.twrap::before,.twrap::after{transition:none}}
 /* 寫死 min-width 會讓明明放得下的表格也被迫捲動。改成「內容多寬就多寬，
    至少填滿容器」：塞得下就不捲，塞不下才捲。 */
 .tscroll>table{width:max-content;min-width:100%}
@@ -358,12 +371,14 @@ td a[target="_blank"],.src a[target="_blank"]{
 .drow{display:grid;grid-template-columns:96px 1fr 76px;align-items:center;
   gap:8px;padding:4px 0;border-radius:6px}
 @media(min-width:760px){.drow{grid-template-columns:150px 1fr 92px;gap:12px}}
-/* 窄螢幕上把行業名稱移到自己一行：96px 的欄寬塞不下「值得注意｜相對自身
-   歷史 −2.5 個標準差」，會被折成四行、把整列撐高。名稱獨立一行之後，
-   長條也順便變寬，方向更好判讀。 */
+/* 窄螢幕：名稱＋數值同一行（左右對齊）、長條整寬第二行。
+   先前名稱獨立一行、下一行「長條＋數值」——長條從中央零軸浮在半空、
+   數值在另一個角落，名稱／色條／數字三層錯位。 */
 @media(max-width:520px){
-  .drow{grid-template-columns:1fr 72px;row-gap:3px;padding:7px 0}
-  .dlabel{grid-column:1 / -1}
+  .drow{grid-template-columns:minmax(0,1fr) auto;row-gap:5px;padding:8px 0}
+  .dlabel{grid-column:1;grid-row:1}
+  .dval{grid-column:2;grid-row:1}
+  .dtrack{grid-column:1 / -1;grid-row:2}
 }
 .drow:hover{background:var(--surface-2)}
 .dlabel{font-size:12.5px;color:var(--text-secondary);line-height:1.35}
@@ -498,8 +513,25 @@ td a[target="_blank"],.src a[target="_blank"]{
    畫面瞬間跳掉一大段而讀者不知道發生什麼事。
    負 margin 只留上方（那一側沒有相鄰的可點元素），下方改用正常間距。 */
 .f-more>summary{font-size:12.5px;font-weight:500;color:var(--muted);
-  padding:13px 0 11px;margin:0}
+  padding:13px 0 11px;margin:0;list-style:none}
 .f-more>summary:hover{color:var(--series-1)}
+/* 展開列的統一記號：前置 ▸（展開時 ▾）、主色。使用者的原話是
+   「展開的視覺很不明確」——收合列先前只是一行灰字，跟普通註記
+   長得一樣。記號放前面比尾巴的小箭頭醒目，且全站同一套。 */
+.f-more>summary::-webkit-details-marker,
+details[data-m-collapse]>summary::-webkit-details-marker{display:none}
+.f-more>summary::after,details[data-m-collapse]>summary::after{content:""}
+/* 懸掛縮排：▸ 佔固定 17px，折行後的第二行對齊記號之後的文字。
+   沒有這個的話，寫在收合列上的長結論折行時第二行會頂到最左，
+   看起來像一段內文而不是可點的列。 */
+.f-more>summary,details[data-m-collapse]>summary{
+  padding-left:17px;text-indent:-17px}
+.f-more>summary::before,details[data-m-collapse]>summary::before{
+  content:"▸";display:inline-block;width:17px;margin-right:0;text-indent:0;
+  font-size:10px;color:var(--series-1)}
+.f-more[open]>summary::before,details[data-m-collapse][open]>summary::before{
+  content:"▾"}
+details[data-m-collapse]>summary{list-style:none}
 .f-more .f-detail{margin-top:2px}
 
 /* ---------- 分數條 ---------- */
@@ -546,10 +578,46 @@ td a[target="_blank"],.src a[target="_blank"]{
 .dsum-main{font-size:22px;font-weight:700;line-height:1.35}
 .dsum-sub{font-size:13px;color:var(--text-secondary);margin-top:5px}
 .dcomp{margin-top:14px}
-.dc-row{display:grid;grid-template-columns:84px 1fr 62px;align-items:center;
-  gap:9px;margin-top:9px}
-@media(min-width:760px){.dc-row{grid-template-columns:96px 1fr 70px;gap:12px}}
-.dc-name{font-size:12.5px;color:var(--text-secondary)}
+.dc-cap{font-size:12px;font-weight:600;color:var(--text-secondary);
+  margin-top:2px}
+/* 動能階梯：每個指數一列「12 → 6 → 3 個月年化」。
+   取代先前的六格 stat——手機兩欄折行會把 CPI 與 PCE 混在同一列。 */
+.ladder{margin-top:14px}
+.ld-row{display:flex;align-items:baseline;gap:9px;padding:8px 0;
+  border-bottom:1px solid var(--grid);font-variant-numeric:tabular-nums}
+.ld-row:last-of-type{border-bottom:0}
+.ld-k{min-width:34px;font-size:12.5px;color:var(--muted);font-weight:600}
+.ld-v{font-size:16.5px;font-weight:700;color:var(--text-secondary)}
+.ld-a{color:var(--muted);font-size:11px}
+.ld-v.last{font-size:19px;color:var(--text-primary)}
+.ld-v.last.accel{color:var(--serious)}
+.ld-v.last.decel{color:var(--series-1)}
+.ld-cap{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.6}
+/* 320px 級的窄機：字級不縮的話最右的 3 個月年化會被裁到卡片外——
+   偏偏那是字級最大、最重要的一個數字。 */
+@media(max-width:374px){
+  .ld-row{gap:5px}
+  .ld-k{min-width:26px;font-size:11.5px}
+  .ld-v{font-size:14px}
+  .ld-v.last{font-size:16px}
+  .ld-a{font-size:10px}
+}
+
+.dc-row{display:grid;grid-template-columns:minmax(0,1.4fr) 1fr 74px;
+  align-items:center;gap:9px;margin-top:10px}
+@media(min-width:760px){.dc-row{gap:12px}}
+/* 手機：名稱＋數字同一行（左右對齊）、長條整寬第二行。
+   先前三欄硬擠 390px：名稱把「55.5 萬人」折成兩行、長條從畫面中央
+   浮在半空、數字靠最右——三個元素各在各的位置。 */
+@media(max-width:759px){
+  .dc-row{grid-template-columns:minmax(0,1fr) auto;row-gap:7px}
+  .dc-name{grid-column:1;grid-row:1}
+  .dc-val{grid-column:2;grid-row:1}
+  .dc-bar{grid-column:1 / -1;grid-row:2}
+}
+.dc-name{font-size:12.5px;color:var(--text-secondary);line-height:1.5}
+.dc-val span{display:block;font-size:10.5px;font-weight:500;
+  color:var(--muted)}
 .dc-bar{position:relative;height:15px}
 .dc-zero{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;
   background:var(--baseline)}
@@ -730,8 +798,12 @@ details[open]{padding-bottom:2px}
 summary{font-size:13.5px;color:var(--series-1);cursor:pointer;font-weight:600;
   list-style:none;padding:12px 0}
 summary::-webkit-details-marker{display:none}
-summary::after{content:" ▾";font-size:11px}
-details[open]>summary::after{content:" ▴"}
+/* 全域的「結尾 ▾/▴」規則已刪除：它跟各收合家族自己的記號疊在一起，
+   開啟狀態時（details[open] 權重較高）還會蓋過抑制規則，造成
+   「▾ 標題 ▴」頭尾雙箭頭。現在每一種收合都有自己的記號：
+   卡片級 .sect＝右上 ▾/▴、卡內 .f-more／data-m-collapse／.k-more／
+   .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
+   （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
@@ -856,8 +928,7 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   background:var(--surface-2);border-left:2px solid var(--warning);
   border-radius:0 8px 8px 0;padding:9px 12px;margin:0 0 12px}
 
-/* 目前這一格在三種體制下分別是什麼 */
-.rcmp-box{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+/* 目前這一格在三種體制下分別是什麼（在「重心怎麼判定」收合內） */
 .rcmp{display:grid;grid-template-columns:76px 1fr auto;align-items:center;
   gap:10px;padding:8px 10px;border-radius:8px}
 .rcmp.on{background:var(--surface-2)}
@@ -874,28 +945,18 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .sgrid .axis{color:var(--muted);font-size:12px;display:flex;align-items:center;
   justify-content:center;padding:4px 3px;text-align:center}
 .sgrid .axis.row{writing-mode:horizontal-tb;min-width:40px}
-/* 手機上格子高度以內容為準（說明收合），min-height 若還留著桌機的高度，
-   九格會各空掉六成，白白多出四百多 px 的捲動。 */
+/* 格子裡只有格名（＋徽章與 ◆）：說明全部收在卡尾「九格各代表什麼」。
+   高度以內容為準——九格等高靠 grid 的隱性拉伸，不用 min-height 硬撐。 */
 .scell{background:var(--surface-2);border:1px solid transparent;border-radius:9px;
-  padding:9px 8px;min-height:0}
+  padding:10px 8px;min-height:0;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start}
 .scell .sname{font-size:12.5px;font-weight:700;line-height:1.4}
 /* 複合情境名的限定語（「：通膨優先」）：小一級、獨立一行。
    主情境與「哪一邊優先」是兩層資訊，同一級字時會被讀成一個長字串。 */
 .scell .sn-qual{display:block;font-size:11px;font-weight:600;
   color:var(--text-secondary);line-height:1.35;margin-top:1px}
 .scell.on .sn-qual{color:inherit}
-/* 說明文只在「目前位置」那格常駐；其餘八格收成一顆「說明」，點了才展開
-   （.sdd）。先前手機為了省高度把說明整批藏掉，現在收合式反而讓手機
-   也看得到——想看哪格點哪格。summary 上下 12px 把觸控高撐過 40px。 */
-.scell .sdesc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-.sdd{margin:0;border:0;background:transparent}
-.sdd>summary{cursor:pointer;list-style:none;display:inline-block;
-  font-size:11px;font-weight:600;color:var(--muted);padding:12px 0}
-.sdd>summary::-webkit-details-marker{display:none}
-.sdd>summary::after{content:"▸";margin-left:3px;font-size:9px}
-.sdd[open]>summary::after{content:"▾"}
-.sdd .sdesc{margin-top:0}
-@media(min-width:760px){.scell{padding:12px 11px;min-height:96px}
+@media(min-width:760px){.scell{padding:14px 11px}
   .scell .sname{font-size:13.5px}}
 /* 會隨體制改變的三格：右上角一個小記號。
    其餘六格不管誰優先都一樣，讀者不必為它們擔心重心翻轉。 */
@@ -968,6 +1029,10 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .trig .tadj{font-size:10.5px;font-weight:700;color:var(--series-1);
   border:1px solid var(--series-1);border-radius:5px;padding:1px 5px;
   margin-left:7px;vertical-align:1px}
+/* 動能指向：當期數據正朝這條門檻走——「可能下一格」從這些條裡挑。 */
+.trig .tdir{font-size:10.5px;font-weight:700;color:var(--good);
+  border:1px solid var(--good);border-radius:5px;padding:1px 5px;
+  margin-left:6px;vertical-align:1px;white-space:nowrap}
 .trig .tbind{font-size:10.5px;font-weight:700;color:var(--warning);
   border:1px solid var(--warning);border-radius:4px;padding:0 5px;margin-left:6px;
   vertical-align:1px;white-space:nowrap}
@@ -1137,11 +1202,9 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   align-items:baseline;position:relative;font-weight:400}
 .ax>summary::-webkit-details-marker{display:none}
 .ax>summary:hover{background:var(--surface-2)}
-.ax>summary::after{content:"";position:absolute;right:14px;top:calc(50% - 4px);
-  width:7px;height:7px;border-right:1.5px solid var(--muted);
-  border-bottom:1.5px solid var(--muted);transform:rotate(45deg);
-  transform-origin:70% 70%;transition:transform .15s ease}
-.ax[open]>summary::after{transform:rotate(-135deg)}
+.ax>summary::after{content:"▾";position:absolute;right:14px;top:50%;
+  transform:translateY(-50%);font-size:11px;color:var(--muted)}
+.ax[open]>summary::after{content:"▴"}
 .ax-k{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap}
 .ax-v{font-size:15px;font-weight:700;color:var(--text-primary);
   white-space:nowrap}
@@ -1314,8 +1377,10 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-brief-more{margin:6px 0 0;padding:0;border:0}
 .home-brief-more>summary{display:inline-flex;min-height:42px;align-items:center;
   padding:8px 0;color:var(--series-1)}
-.home-brief-more>summary::after{content:" ＋"}
-.home-brief-more[open]>summary::after{content:" －"}
+/* 卡內收合統一「開頭 ▸/▾」家族 */
+.home-brief-more>summary::before{content:"▸";margin-right:6px;font-size:10px}
+.home-brief-more[open]>summary::before{content:"▾"}
+.home-brief-more>summary::after{content:""}
 .home-brief-more p{max-width:47em;font-size:15px;line-height:1.9;margin:2px 0 0}
 .home-status-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   margin-top:18px;border:1px solid var(--grid);border-radius:11px;overflow:hidden}
@@ -1336,6 +1401,22 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link,.home-inline-link{display:inline-flex;align-items:center;justify-content:center;
   min-height:44px;color:var(--series-1);font-size:13px;font-weight:700;text-decoration:none}
 .home-primary-link{flex-shrink:0;margin-top:-6px}
+
+/* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
+.focus-strip{padding:14px 16px}
+.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.fs-chips{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:8px}
+.fs-chip span{display:block;font-size:11px;color:var(--muted)}
+.fs-chip b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.fs-chip i{font-style:normal;font-size:11.5px;margin-left:6px;color:var(--muted)}
+.fs-chip i.up{color:var(--critical)}
+.fs-chip i.dn{color:var(--good)}
+.fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
+  margin:10px 0 0;max-width:47em}
+.fs-link{padding:4px 0}
+.fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
+  display:inline-block;padding:8px 0;line-height:1.5}
+.fs-note{margin-top:8px;font-size:10.5px;color:var(--muted);line-height:1.6}
 
 .home-transition{background:var(--surface-2)}
 .home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
@@ -1364,9 +1445,10 @@ details.home-module{margin:0;padding:0;border:0;border-bottom:1px solid var(--gr
 details.home-module[open]{padding-bottom:0}
 .home-module>summary{position:relative;display:grid;grid-template-columns:1fr auto;
   gap:5px 10px;align-items:center;min-height:76px;padding:13px 34px 13px 2px;color:var(--text-primary)}
-.home-module>summary::after{content:"＋";position:absolute;right:3px;top:19px;
-  color:var(--muted);font-size:17px;font-weight:400}
-.home-module[open]>summary::after{content:"－"}
+/* 模組列是卡片級收合：右側 ▾/▴，跟分頁的 .sect 同一家族 */
+.home-module>summary::after{content:"▾";position:absolute;right:3px;top:22px;
+  color:var(--muted);font-size:12px}
+.home-module[open]>summary::after{content:"▴"}
 .home-module-name{font-size:15px;font-weight:800}
 .home-status{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;
   background:var(--surface-2);white-space:nowrap}
@@ -1489,8 +1571,10 @@ details.home-module[open]{padding-bottom:0}
 .focus-evidence{margin:14px 0 0;padding:0;border-top:1px solid var(--grid)}
 .focus-evidence>summary{display:flex;align-items:center;min-height:44px;padding:9px 0;
   font-size:12.5px;color:var(--series-1)}
-.focus-evidence>summary::after{content:" ＋";margin-left:3px}
-.focus-evidence[open]>summary::after{content:" －"}
+/* 卡內收合統一「開頭 ▸/▾」家族 */
+.focus-evidence>summary::before{content:"▸";margin-right:6px;font-size:10px}
+.focus-evidence[open]>summary::before{content:"▾"}
+.focus-evidence>summary::after{content:""}
 .focus-evidence-body{padding:0 0 5px}
 .focus-evidence .logic-strip{margin-top:0;gap:0}
 .focus-evidence .logic-step{padding:10px 2px;border:0;border-radius:0;
@@ -1535,8 +1619,12 @@ details.home-module[open]{padding-bottom:0}
 .light .l-more>summary{cursor:pointer;list-style:none;font-size:12px;
   color:var(--muted)}
 .light .l-more>summary::-webkit-details-marker{display:none}
-.light .l-more>summary::after{content:"▾";margin-left:4px}
-.light .l-more[open]>summary::after{content:"▴"}
+/* 燈卡的收合改用全站統一的「開頭 ▸/▾」——先前是結尾 ▾，
+   跟其他卡內收合方向相反。 */
+.light .l-more>summary{padding-left:13px;text-indent:-13px}
+.light .l-more>summary::before{content:"▸";display:inline-block;width:13px;
+  text-indent:0;font-size:9px;color:var(--series-1)}
+.light .l-more[open]>summary::before{content:"▾"}
 .legacy-detail{margin-top:15px;padding-top:14px;border-top:1px solid var(--grid)}
 .legacy-detail>h4{font-size:13px;margin:0 0 9px;color:var(--text-secondary)}
 .sect-body .card{box-shadow:none}
@@ -1569,11 +1657,11 @@ details.home-module[open]{padding-bottom:0}
 
 <header class="top">
   <h1><a class="h1-home" href="/">聯準會文本</a></h1>
-  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-21 02:04（台北）</div>
+  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-21 20:01（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-<div class="banner"><b>⚠ 有資料序列停止更新</b>：核心 PCE（最新 2026-06-01，已 81 天沒有新資料）。頁面上的結論仍然是照最後一筆資料算的——在來源恢復之前，這些數字不代表當前狀況。</div>
+
 <div class="anav"><nav class="anchors"><a href="#score">政策訊號評分</a><a href="#kpi">關鍵數字</a><a href="#focus">聯準會目前的重心</a><a href="#market">市場定價 vs 聯準會</a><a href="#diff">聲明逐句比對</a><a href="#trend">歷次分數</a><a href="#presser">記者會</a><a href="#phrases">措辭的支撐材料</a></nav></div>
 <div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +6.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>維持不變</b><small>3.50–3.75%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>3 票反對（升息 3／降息 0）</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次維持利率不變；反對票：贊成升息 3 票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-07-29 對照 2026-06-17：改動 1 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-09-16｜26 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-07-29</span><span class="data-tag">措辭分數 +5.22（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
 
@@ -1610,22 +1698,22 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">2026-07-29 聲明　·　改動 1 處　·　客觀訊號 +6.00</span></summary><div class="sect-body">
+  <details class="card sect" open><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">2026-07-29 聲明　·　改動 1 處　·　客觀訊號 +6.00</span></summary><div class="sect-body">
     <div class="grid g4 inner"><div class="card kpi">
-  <div class="k-label">政策利率目標區間</div>
-  <div class="k-value">3.50–3.75%</div>
+  <div class="k-label">Fed Funds Target Range</div>
+  <div class="k-label-zh">政策利率目標區間</div><div class="k-value">3.50–3.75%</div>
   <div class="k-chips"><span class="k-chip info">本次維持不變</span></div><div class="k-plain">聯準會直接設定的短期利率區間。所有其他利率都以它為起點。</div>
 </div><div class="card kpi">
-  <div class="k-label">本次投票</div>
-  <div class="k-value">9 比 3</div>
+  <div class="k-label">FOMC Vote</div>
+  <div class="k-label-zh">本次投票</div><div class="k-value">9 比 3</div>
   <div class="k-chips"><span class="k-chip neg">3 票全主張升息</span></div><div class="k-plain">委員用投票表達不同意——先看票數，再看每張票主張的方向。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">高於近 12 次的平均 1.3 票</div></div></details>
 </div><div class="card kpi">
-  <div class="k-label">客觀訊號分數</div>
-  <div class="k-value">+6.00</div>
+  <div class="k-label">Objective Signal Score</div>
+  <div class="k-label-zh">客觀訊號分數</div><div class="k-value">+6.00</div>
   <div class="k-plain">政策行動、反對票與聲明點名的風險方向合計。正數＝偏升息方向，負數＝偏降息方向。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">較上次 +6.00</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><line x1="3" y1="17.0" x2="117" y2="17.0" stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2"/><polyline points="3.0,17.0 12.5,17.0 22.0,17.0 31.5,17.0 41.0,26.3 50.5,31.0 60.0,31.0 69.5,31.0 79.0,26.3 88.5,21.7 98.0,21.7 107.5,17.0 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg></div></details>
 </div><div class="card kpi">
-  <div class="k-label">下次會議</div>
-  <div class="k-value">26 天後</div>
+  <div class="k-label">Next Meeting</div>
+  <div class="k-label-zh">下次會議</div><div class="k-value">26 天後</div>
   <div class="k-chips"><span class="k-chip info">2026-09-16</span></div><div class="k-plain">在那之前，這份聲明就是委員會的官方立場——距離下次會議越遠，它主導市場的時間越長。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">之後：2026-10-28</div></div></details>
 </div></div>
   </div></details>
@@ -1824,6 +1912,21 @@ details.home-module[open]{padding-bottom:0}
       d.open = false; delete d.dataset.wasClosed;
     });
   });
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
+  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
+  document.querySelectorAll('.grid.g2').forEach(function(g){
+    var ds = g.querySelectorAll(':scope > details.sect');
+    if(ds.length < 2) return;
+    ds.forEach(function(d){
+      d.addEventListener('toggle', function(){
+        ds.forEach(function(o){
+          if(o !== d && o.open !== d.open) o.open = d.open;
+        });
+      });
+    });
+  });
   // 橫捲列兩側的漸層。外框掛 .fl/.fr，內層負責捲動。
   // 沒有這個提示的話橫捲列就是硬切一刀，讀者會以為「只有這幾項」——
   // 主選單在 360px 下有 32% 在視窗外，那 32% 裡包含「總覽」。
@@ -1854,6 +1957,24 @@ details.home-module[open]{padding-bottom:0}
     }
     upd();
   });
+
+  // 橫捲表格（.tscroll／熱力圖）掛上同一套邊緣漸層。
+  // 表格大多藏在收合層裡，收著的時候量不到寬度——所以任何 details
+  // 開合時全部重算一次（toggle 不冒泡，用捕獲階段在 document 上接）。
+  var tupds=[];
+  document.querySelectorAll('.tscroll, .heatwrap').forEach(function(box){
+    var wrap=document.createElement('div');
+    wrap.className='twrap';
+    box.parentNode.insertBefore(wrap,box);
+    wrap.appendChild(box);
+    tupds.push(edgeFades(wrap,box));
+  });
+  tupds.forEach(function(u){u();});
+  if(tupds.length){
+    document.addEventListener('toggle', function(){
+      tupds.forEach(function(u){u();});
+    }, true);
+  }
 
   // ---- 頁內錨點導覽 ----
   // 三件事：什麼時候出現、兩側的漸層、現在在哪一段。
