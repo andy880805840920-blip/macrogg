@@ -21,10 +21,11 @@
  "fedwatch": {
   "pct": 100.0,
   "date": "2026-08-22",
-  "delta_pp": 0.0,
+  "delta_pp": null,
   "suspect": false,
   "src": "futures",
-  "implied": 3.89
+  "implied": 3.89,
+  "method": 3
  },
  "text_source": "model-content"
 }
