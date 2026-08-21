@@ -410,11 +410,16 @@ def nowcast_core_pce_components(series: dict, comps: list[dict],
       {"value", "estimated", "asof", "mae", "components": [...], "n_backtest"}
     成分資料不足以組出目標月時回 value=None（呼叫端退回差距法）。
     """
+    # reason：成分法不可用時的**原因**，一路帶到畫面。先前只寫在 log，
+    # 讀者對著頁面只看得到「成分法 不可用」四個字，會以為 PPI 被拿掉了
+    # （使用者的原話：「那 PPI 的角色去哪裡了」）——其實多半是某條
+    # 成分序列當次抓失敗。原因寫在畫面上，就不必對照 log 猜。
     out = {"value": None, "estimated": False, "asof": "", "mae": None,
-           "components": [], "n_backtest": 0}
+           "components": [], "n_backtest": 0, "reason": ""}
     pce = series.get("PCEPILFE") or []
     cpi = series.get("CPILFESL") or []
     if not pce or not cpi:
+        out["reason"] = "缺核心 PCE／核心 CPI 序列"
         return out
     target = cpi[-1]["date"]
     out["asof"] = target
@@ -428,6 +433,7 @@ def nowcast_core_pce_components(series: dict, comps: list[dict],
         blend = c.get("blend") or [1.0 / len(ids)] * len(ids) if ids else []
         maps = [_yoy_by_date(series.get(i) or []) for i in ids]
         if not maps or any(not m for m in maps):
+            out["reason"] = f"缺：{c.get('label') or '、'.join(ids)}"
             return out                             # 缺整條成分 → 組不出來
         merged: dict = {}
         for d in maps[0]:
@@ -446,7 +452,9 @@ def nowcast_core_pce_components(series: dict, comps: list[dict],
                 v = m[last]
                 est.append(c["label"])
             if v is None:
-                return None, est
+                # 第二個回傳值在失敗時改帶「是哪個成分缺料」，
+                # 呼叫端拿去組 reason；成功時維持「用舊值的成分」清單。
+                return None, [c.get("label", "？")]
             total += float(c["weight"]) / 100.0 * v
         return total, est
 
@@ -459,6 +467,7 @@ def nowcast_core_pce_components(series: dict, comps: list[dict],
         if comp is not None:
             pairs.append(comp - actual[m])
     if len(pairs) < 6:                             # 校正樣本太少，不可信
+        out["reason"] = "偏誤校正樣本不足（有效月份少於 6）"
         return out
     bias = sum(pairs) / len(pairs)
 
@@ -480,6 +489,7 @@ def nowcast_core_pce_components(series: dict, comps: list[dict],
 
     comp_t, est_labels = composite(target, allow_latest=True)
     if comp_t is None:
+        out["reason"] = f"目標月缺：{'、'.join(est_labels) or '成分資料'}"
         return out
     out["value"] = comp_t - bias
     out["estimated"] = True
@@ -522,7 +532,8 @@ def choose_nowcast(series: dict, cfg: dict) -> dict:
     gap_mae, gap_n = backtest_gap_method(series, n_bt)
 
     comp_nc = (nowcast_core_pce_components(series, comps, n_bt)
-               if comps else {"value": None, "estimated": False, "mae": None})
+               if comps else {"value": None, "estimated": False, "mae": None,
+                              "reason": "未設定成分"})
 
     use_comp = (comp_nc.get("estimated")
                 and comp_nc.get("mae") is not None and gap_mae is not None
@@ -532,6 +543,9 @@ def choose_nowcast(series: dict, cfg: dict) -> dict:
             "method": ("components" if use_comp else "gap"),
             "mae_components": comp_nc.get("mae"),
             "mae_gap": gap_mae,
+            # 成分法沒被採用時，把「為什麼」帶給畫面。回測誤差比較大而
+            # 落選的情況 reason 是空的——那種情況誤差比較那行已經自解釋。
+            "comp_reason": ("" if use_comp else comp_nc.get("reason") or ""),
             "n_backtest": comp_nc.get("n_backtest") or gap_n,
             "components": comp_nc.get("components") or []}
 

@@ -875,7 +875,8 @@ def _alt_model(key: str, exclude, prefer_lite: bool = False) -> str:
 
 
 def _post_gemini(key: str, model: str, source_text: str,
-                 system: str | None = None, temperature: float | None = None):
+                 system: str | None = None, temperature: float | None = None,
+                 think: bool = True):
     """
     回傳改寫後的文字，或 (文字, 實際用的模型)。
 
@@ -896,18 +897,27 @@ def _post_gemini(key: str, model: str, source_text: str,
         tried.append(cur)
         try:
             out = _gemini_call(key, cur, source_text, system,
-                               temperature=temperature)
+                               think=think, temperature=temperature)
             return (out, cur) if cur != model else out
         except TruncatedError as e:
             last_exc, prefer_lite = e, True
             log.warning("%s 的推理吃光了輸出額度（%s）", cur, e)
         except requests.HTTPError as e:
             resp = getattr(e, "response", None)
-            if resp is None or resp.status_code != 404:
+            code = resp.status_code if resp is not None else 0
+            if code == 404:
+                _DEAD.add(cur)
+                last_exc = e
+                log.warning("這把金鑰叫不動 %s（404），之後不再挑它", cur)
+            elif code in (500, 502, 503, 504):
+                # 過載／伺服器故障是**單一模型容量池**的問題（Actions 上
+                # 實測：flash-latest 連吃三個 503 的同時，其他模型正常）。
+                # _http 的短重試已經試過了，換一顆通常立刻通。
+                # 不記進 _DEAD——過載是暫時的，下次執行它多半又活了。
+                last_exc = e
+                log.warning("%s 過載（HTTP %d），換一顆模型再試", cur, code)
+            else:
                 raise
-            _DEAD.add(cur)
-            last_exc = e
-            log.warning("這把金鑰叫不動 %s（404），之後不再挑它", cur)
 
         alt = _alt_model(key, tried, prefer_lite=prefer_lite)
         if not alt:

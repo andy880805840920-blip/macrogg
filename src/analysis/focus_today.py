@@ -295,7 +295,8 @@ _FOCUS_CONTENT_SYSTEM = (
 def summarize_content(articles: list[dict], keywords: list[str],
                       cap: int, env=None) -> tuple[str, str]:
     """從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。"""
-    from .polish import _pick_provider, _gemini_call
+    # 同 summarize()：走多模型鏈，單一模型過載時換一顆接著跑。
+    from .polish import _pick_provider, _post_gemini
     import os
     env = env or os.environ
     provider, key = _pick_provider(env)
@@ -306,11 +307,12 @@ def summarize_content(articles: list[dict], keywords: list[str],
         for a in articles)
     model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
     try:
-        text = _gemini_call(
+        out = _post_gemini(
             key, model, src_text,
             system=_FOCUS_CONTENT_SYSTEM.format(
                 kws="、".join(keywords), cap=cap),
-            think=False, temperature=0.3).strip()
+            temperature=0.3, think=False)
+        text = (out[0] if isinstance(out, tuple) else out).strip()
     except Exception as e:                         # noqa: BLE001
         return "", f"呼叫失敗（{e}）"
     if not text or cjk_len(text) > cap + 40:
@@ -382,7 +384,10 @@ def _digits_ok(text: str, source: str) -> bool:
 
 def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
     """回傳 (焦點段, 來源標記)。失敗回 ("", 原因)。"""
-    from .polish import _pick_provider, _gemini_call
+    # 走 _post_gemini 的多模型鏈，不直接打單一模型：Actions 上實測
+    # flash-latest 過載吃 503 時，潤稿（走鏈）活著、焦點（直打）死透——
+    # 同一次執行、同一把金鑰，差別只在有沒有退路。
+    from .polish import _pick_provider, _post_gemini
     import os
     env = env or os.environ
     provider, key = _pick_provider(env)
@@ -392,9 +397,10 @@ def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
                       for h in headlines[:24])
     model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
     try:
-        text = _gemini_call(key, model, lines,
-                            system=_FOCUS_SYSTEM.format(cap=cap),
-                            think=False, temperature=0.3).strip()
+        out = _post_gemini(key, model, lines,
+                           system=_FOCUS_SYSTEM.format(cap=cap),
+                           temperature=0.3, think=False)
+        text = (out[0] if isinstance(out, tuple) else out).strip()
     except Exception as e:                         # noqa: BLE001
         return "", f"呼叫失敗（{e}）"
     if not text or cjk_len(text) > cap + 40:
@@ -421,7 +427,18 @@ def _last_value(rows) -> float | None:
 
 
 def fetch_zq_implied(symbol: str, _get=None) -> float | None:
-    """抓一檔聯邦基金期貨的最新價，回傳隱含利率（100 − 價格）。"""
+    """
+    抓一檔聯邦基金期貨，回傳隱含利率（100 − 價格）。
+
+    價格**優先取近五個交易日的最後一筆日收盤（結算價）**，不是
+    regularMarketPrice：遠月的 ZQ 合約流動性很低，「最新成交價」可能是
+    幾個月前的一筆舊成交，直接用會把隱含利率整個帶偏——實際發生過
+    機率顯示 100% 的事故，最可疑的就是這裡。日收盤是交易所每天標記的
+    結算價，沒有成交也會更新。
+
+    另外驗報價的新鮮度：最後一筆有效收盤如果不是近五個交易日內的
+    （range=5d 抓回來卻整排 null），一樣不採用。
+    """
     get = _get or (lambda url: requests.get(
         url, timeout=TIMEOUT,
         headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
@@ -429,12 +446,15 @@ def fetch_zq_implied(symbol: str, _get=None) -> float | None:
         r = get(YQ_URL.format(sym=quote(symbol)))
         r.raise_for_status()
         res = (r.json().get("chart") or {}).get("result") or []
-        meta = (res[0].get("meta") or {}) if res else {}
-        px = meta.get("regularMarketPrice")
-        if px is None and res:
-            closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
-                      .get("close") or [])
-            px = next((c for c in reversed(closes) if c is not None), None)
+        if not res:
+            return None
+        closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
+                  .get("close") or [])
+        px = next((c for c in reversed(closes) if c is not None), None)
+        src = "5 日收盤"
+        if px is None:
+            px = (res[0].get("meta") or {}).get("regularMarketPrice")
+            src = "最新成交價（近五日無收盤，可能偏舊）"
         if px is None:
             return None
         px = float(px)
@@ -444,7 +464,12 @@ def fetch_zq_implied(symbol: str, _get=None) -> float | None:
             log.warning("聯邦基金期貨 %s 報價 %.2f 超出合理範圍，不採用",
                         symbol, px)
             return None
-        return round(100.0 - px, 4)
+        implied = round(100.0 - px, 4)
+        # 算術全部進 log：畫面上只有一個百分比，出錯時（100% 事故）
+        # 沒有這一行就無從回推是哪一步壞掉。
+        log.info("聯邦基金期貨 %s：價格 %.4f（%s）→ 隱含利率 %.3f%%",
+                 symbol, px, src, implied)
+        return implied
     except Exception as e:                         # noqa: BLE001
         log.warning("聯邦基金期貨報價抓取失敗（%s：%s）", symbol, e)
         return None
@@ -469,13 +494,26 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
     implied = fetch_zq_implied(sym, _get)
     if implied is None:
         return None
-    # 隱含利率偏離目前中點超過 1.5 個百分點，多半是合約寫錯年份
-    # 或抓到壞報價——六碼的跳動不會在一夜之間發生。
+    # 壞報價防護，兩層：
+    #   ① 偏離中點 >1.5 個百分點——多半是合約寫錯年份或抓錯商品
+    #   ② 隱含利率高於「中點＋0.40」——等於市場已完整定價超過一碼半的
+    #      升息。在目前的環境那幾乎必然是**遠月合約的陳舊報價**
+    #      （100% 事故的最可疑成因），而不是真的定價；寧可退回備援。
+    #      往下不設同樣的檻：偏降息只會把機率鎖在 0，那是正確行為。
     if abs(implied - mid) > 1.5:
         log.warning("FedWatch 自算：隱含利率 %.2f%% 偏離中點 %.2f%% 過大，不採用",
                     implied, mid)
         return None
-    return round(max(0.0, min(100.0, (implied - mid) / 0.25 * 100)), 1)
+    if implied > mid + 0.40:
+        log.warning("FedWatch 自算：隱含 %.2f%% 超過中點＋0.40（%.2f%%），"
+                    "疑為陳舊報價，不採用", implied, mid)
+        return None
+    pct = round(max(0.0, min(100.0, (implied - mid) / 0.25 * 100)), 1)
+    log.info("FedWatch 自算：隱含 %.3f%% − 中點 %.3f%% → 升息一碼機率 %.1f%%",
+             implied, mid, pct)
+    # 把隱含利率一起帶回去：chip 上會標「隱含 X.XX%」，讓讀者（和我們）
+    # 能一眼驗算，不會再出現「100% 但沒人知道為什麼」的黑箱。
+    return pct, implied
 
 
 _FW_PROMPT = (
@@ -574,13 +612,16 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         out["fedwatch"] = {"pct": fw_old["pct"],
                            "delta_pp": fw_old.get("delta_pp"),
                            "suspect": bool(fw_old.get("suspect")),
-                           "src": fw_old.get("src", "")}
+                           "src": fw_old.get("src", ""),
+                           "implied": fw_old.get("implied")}
     else:
-        pct = fedwatch_from_futures(rates_series, cfg)
-        fw_src = "futures"
-        if pct is None:
+        _fw = fedwatch_from_futures(rates_series, cfg)
+        fw_src, implied = "futures", None
+        if _fw is None:
             pct = fetch_fedwatch(env)
             fw_src = "ai"
+        else:
+            pct, implied = _fw
         prev = fw_old.get("pct")
         suspect = False
         if pct is None and prev is not None:
@@ -597,6 +638,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 out["fedwatch"] = {"pct": prev, "delta_pp": None,
                                    "suspect": False,
                                    "src": fw_old.get("src", ""),
+                                   "implied": fw_old.get("implied"),
                                    "stale_from": fw_old.get("date")}
         elif pct is not None:
             if prev is not None and abs(pct - prev) > 20:
@@ -608,10 +650,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                      if (prev is not None and not suspect
                          and fw_old.get("date") != today) else None)
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
-                               "suspect": suspect, "src": fw_src}
+                               "suspect": suspect, "src": fw_src,
+                               "implied": implied}
             state["fedwatch"] = {"pct": pct, "date": today,
                                  "delta_pp": delta, "suspect": suspect,
-                                 "src": fw_src}
+                                 "src": fw_src, "implied": implied}
 
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →
     #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----

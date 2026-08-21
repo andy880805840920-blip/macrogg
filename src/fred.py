@@ -62,8 +62,11 @@ class FredClient:
         for attempt in range(MAX_RETRIES):
             try:
                 r = self.session.get(url, params=params, timeout=DEFAULT_TIMEOUT)
-                if r.status_code == 429:          # 觸發限流，等久一點再試
-                    time.sleep(RETRY_BACKOFF * (attempt + 2))
+                if r.status_code == 429:
+                    # 觸發限流。FRED 的窗口是「每分鐘」——等 4～8 秒
+                    # 多半還在同一個窗口裡再撞一次（Actions 上實測），
+                    # 直接等 20／40 秒讓窗口翻頁。
+                    time.sleep(20 * (attempt + 1))
                     continue
                 # FRED 對「key 無效」回的是 400，不是 401。這種錯誤重試沒有意義，
                 # 而且若照一般失敗處理，56 個序列會各噴一次同樣的訊息，
@@ -251,11 +254,38 @@ RELEASE_IDS = {
 }
 
 
+# 抓取節奏。FRED 免費金鑰的限制是**每分鐘 120 次**；先前的 0.12 秒
+# 一條換算約 500 次／分，前面幾十條順利、跑到中段開始被 429 擋，
+# 哪幾條死是隨機的——Actions 上實際發生過 CUSR0000SASLE 被擋，
+# supercore KPI、黏性訊號、薪資傳導、歸因覆蓋率整串連鎖倒下。
+# 0.55 秒 ≈ 109 次／分，穩壓在限制下；整次執行多花約一分鐘，
+# 換來全部序列穩定到手。
+PACE_SECONDS = 0.55
+
+
 def fetch_all(client: FredClient, series_ids: list[str], start: str) -> dict[str, list[dict]]:
     """批次抓取，逐一容錯。回傳 {series_id: observations}"""
     out: dict[str, list[dict]] = {}
     for i, sid in enumerate(series_ids, 1):
         out[sid] = client.observations_safe(sid, start=start)
         log.info("[%d/%d] %s — %d 筆", i, len(series_ids), sid, len(out[sid]))
-        time.sleep(0.12)      # 對 FRED 客氣一點
+        time.sleep(PACE_SECONDS)
+    # 打撈段：還是有失敗的話，等限流窗口過去再逐條補抓一次。
+    # 一條序列缺值的代價是整組下游指標連鎖缺值，值得多等這 20 秒。
+    misses = [sid for sid, rows in out.items() if not rows]
+    if misses:
+        log.warning("有 %d 條序列第一輪抓失敗，20 秒後補抓：%s",
+                    len(misses), "、".join(misses))
+        time.sleep(20)
+        salvaged = []
+        for sid in misses:
+            rows = client.observations_safe(sid, start=start)
+            if rows:
+                out[sid] = rows
+                salvaged.append(sid)
+                # 打撈成功就把第一輪記下的失敗撤掉，頁尾清單不再誤報
+                client.failed = [f for f in client.failed if f[0] != sid]
+            time.sleep(PACE_SECONDS)
+        if salvaged:
+            log.info("補抓成功 %d 條：%s", len(salvaged), "、".join(salvaged))
     return out

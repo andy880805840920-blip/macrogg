@@ -837,9 +837,16 @@ def _focus_strip(f: dict | None) -> str:
             # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
             # 不讓一次 429 就把整顆 chip 打回「—」。
             dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
+        elif d is not None:
+            dtxt = f"{d:+.1f} pp"
+        elif fw.get("suspect"):
+            dtxt = "擷取異常，沿用前值"
+        elif fw.get("src") == "futures" and fw.get("implied") is not None:
+            # 期貨自算時把隱含利率標出來：讀者（和我們）能直接驗算
+            # (隱含 − 中點) ÷ 0.25，不會再有「100% 但不知道為什麼」的黑箱
+            dtxt = f"期貨隱含 {fw['implied']:.2f}%"
         else:
-            dtxt = (f"{d:+.1f} pp" if d is not None else
-                    ("擷取異常，沿用前值" if fw.get("suspect") else "—"))
+            dtxt = "—"
         cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
         chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
                      f'<b>{fw["pct"]:.0f}%</b>'

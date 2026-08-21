@@ -391,9 +391,16 @@ def _nc_calc(nc: dict) -> str:
     v = nc["value"]
     _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
     picked = "成分法" if nc.get("method") == "components" else "差距法"
+    # 成分法本期沒被採用而且有具體原因（多半是某條成分序列當次抓失敗）
+    # 時，把原因印在畫面上——否則讀者只看到「不可用」，會以為
+    # CPI＋PPI 那套被拿掉了，得去翻 log 才知道發生什麼事。
+    _cr = (nc.get("comp_reason") or "") if picked == "差距法" else ""
+    comp_part = f"±{_mc:.3f}" if _mc is not None else "本期不可用"
+    if _cr:
+        comp_part += f"（{esc(_cr)}）"
     mae_line = (
         f'回測近 {nc.get("n_backtest") or "—"} 期，取誤差小的：'
-        f'成分法 {f"±{_mc:.3f}" if _mc is not None else "不可用"}、'
+        f'成分法 {comp_part}、'
         f'差距法 {f"±{_mg:.3f}" if _mg is not None else "不可用"} 個百分點'
         f'——本期用<b>{picked}</b>。')
     if nc.get("method") == "components":

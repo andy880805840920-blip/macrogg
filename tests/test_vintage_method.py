@@ -208,8 +208,16 @@ check("㉖ 而且標出是哪個成分在用舊值",
 
 # 缺一整條成分 → 誠實放棄（回 None），讓 chooser 退回差距法
 S3 = dict(S); S3.pop("FIN")
-check("㉗ 缺整條成分 → 不硬湊，回 None",
-      ia.nowcast_core_pce_components(S3, COMPS)["value"] is None)
+nc3 = ia.nowcast_core_pce_components(S3, COMPS)
+check("㉗ 缺整條成分 → 不硬湊，回 None", nc3["value"] is None)
+check("㉗b 而且講出缺的是哪個成分（畫面要印的原因）",
+      "金融服務" in nc3.get("reason", ""), nc3.get("reason"))
+# chooser 退回差距法時，原因要跟著帶出去
+ch3 = ia.choose_nowcast(S3, {"pce_nowcast": {"backtest_months": 12,
+                                             "components": COMPS}})
+check("㉗c chooser 帶出成分法不可用的原因",
+      ch3["method"] == "gap" and "金融服務" in ch3.get("comp_reason", ""),
+      ch3.get("comp_reason"))
 
 # chooser：規則選誤差小的，選擇透明
 cfg = {"pce_nowcast": {"backtest_months": 12, "components": COMPS}}

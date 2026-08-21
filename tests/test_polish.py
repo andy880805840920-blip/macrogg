@@ -105,7 +105,7 @@ check("⑬ 離線 → 組裝版", r["source"] == "assembled")
 calls = []
 
 
-def fake_post(key, model, text, system=None, temperature=None):
+def fake_post(key, model, text, system=None, temperature=None, **kw):
     calls.append(model)
     return GOOD
 
@@ -135,7 +135,7 @@ r = polish.maybe_polish(assembled(), cache,
 check("⑲ 換模型 → 快取失效重生成", r["source"] == "model")
 
 # API 例外 → 組裝版
-def boom(key, model, text, system=None, temperature=None):
+def boom(key, model, text, system=None, temperature=None, **kw):
     raise RuntimeError("connection reset")
 
 
@@ -256,7 +256,7 @@ def http404():
 tried = []
 
 
-def fake_call(key, model, text, system=None, temperature=None):
+def fake_call(key, model, text, system=None, temperature=None, **kw):
     tried.append(model)
     if model == "gemini-2.5-flash":
         raise http404()
@@ -290,7 +290,7 @@ except polish.requests.HTTPError:
 check("㊸ 查不到清單 → 拋回原本的錯（退組裝版）", hit)
 
 # 404 以外的錯不要亂換模型——換了只會多燒一次額度
-def boom500(key, model, text, system=None, temperature=None):
+def boom500(key, model, text, system=None, temperature=None, **kw):
     e = polish.requests.HTTPError("500")
     e.response = Resp(500)
     raise e
@@ -319,7 +319,7 @@ BAD = GOOD.replace("重點：", "總結來說，")     # 前綴不見（實際�
 seq = []
 
 
-def flaky(key, model, text, system=None, temperature=None):
+def flaky(key, model, text, system=None, temperature=None, **kw):
     seq.append(text)
     return BAD if len(seq) == 1 else GOOD
 
@@ -345,7 +345,7 @@ check("㊿ 壞結果沒有寫進快取", not (tmp / "c9.json").exists())
 seq3 = []
 
 
-def then_boom(key, model, text, system=None, temperature=None):
+def then_boom(key, model, text, system=None, temperature=None, **kw):
     seq3.append(text)
     if len(seq3) == 1:
         return BAD
@@ -651,7 +651,7 @@ def parted():
 seen = []
 
 
-def spy(key, model, text, system=None, temperature=None):
+def spy(key, model, text, system=None, temperature=None, **kw):
     """回一段長度合格、但**刻意不寫重點句**的改寫。"""
     seen.append((text, system))
     return GOOD[:GOOD.index("重點：")]
@@ -726,7 +726,7 @@ def headed(head=HEAD):
 seen2 = []
 
 
-def spy2(key, model, text, system=None, temperature=None):
+def spy2(key, model, text, system=None, temperature=None, **kw):
     seen2.append((text, system))
     return GOOD[:GOOD.index("重點：")]
 
@@ -754,7 +754,7 @@ check("110f 字數上限把前後兩句都扣掉了",
 _FAKE = "本次更新：核心 PCE 3.0%、三月年化 3.6%。"
 
 
-def spy_invent(key, model, text, system=None, temperature=None):
+def spy_invent(key, model, text, system=None, temperature=None, **kw):
     # 抄的是原文裡真實存在的數字，數字鎖定必定放行
     return _FAKE + GOOD[:GOOD.index("重點：")]
 
@@ -852,7 +852,7 @@ check("114 空字串不算截斷（那是另一條檢查在管）",
 half = []
 
 
-def half_post(key, model, text, system=None, temperature=None):
+def half_post(key, model, text, system=None, temperature=None, **kw):
     half.append(text)
     if len(half) == 1:
         return "聯準會把通膨擺在前面，內部分歧，下次會議"      # 沒有結尾標點

@@ -114,11 +114,12 @@ class _FakeYq:
 
 
 # 期貨價 96.31 → 隱含 3.69%；中點 3.625 → (3.69−3.625)/0.25 = 26%
-p = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.31))
-check("⑦ 期貨自算：96.31 → 26%", p is not None and abs(p - 26.0) < 0.5, p)
+r = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.31))
+check("⑦ 期貨自算：96.31 → 26%（附隱含利率）",
+      r is not None and abs(r[0] - 26.0) < 0.5 and abs(r[1] - 3.69) < 0.001, r)
 # 隱含低於中點（市場偏降息）→ 機率鎖在 0，不會出現負數
-p = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.60))
-check("⑦b 偏降息時鎖 0", p == 0.0, p)
+r = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.60))
+check("⑦b 偏降息時鎖 0", r is not None and r[0] == 0.0, r)
 # 報價離譜（抓錯商品）→ 不採用
 check("⑦c 報價超出 90–100 不採用",
       ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(85.0)) is None)
@@ -128,6 +129,24 @@ check("⑦d 偏離中點過大不採用",
 # 抓不到目標區間 → 不硬算
 check("⑦e 缺目標區間回 None",
       ft.fedwatch_from_futures({}, {}, _get=lambda u: _FakeYq(96.31)) is None)
+# 100% 事故的回歸：隱含超過中點＋0.40（疑為遠月陳舊報價）→ 不採用退備援
+check("⑦f 隱含 4.10%（中點＋0.475）視為陳舊報價",
+      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(95.90)) is None)
+
+
+# ⑦g 價格優先取日收盤（結算價），不是可能陳舊的「最新成交價」
+class _FakeYq2:
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return {"chart": {"result": [{
+            "meta": {"regularMarketPrice": 95.90},          # 陳舊成交
+            "indicators": {"quote": [{"close": [96.30, None, 96.31]}]}}]}}
+
+
+check("⑦g 優先用日收盤而非陳舊成交價",
+      ft.fetch_zq_implied("ZQF27.CBT", _get=lambda u: _FakeYq2()) == 3.69)
 
 # ⑧ Yahoo 即時殖利率：×10 慣例規範化、±bp 對昨收、異常值不採用
 class _FakeYt:
