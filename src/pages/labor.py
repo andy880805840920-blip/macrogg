@@ -79,9 +79,11 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
     chips = [(t, k) for t, k in (leans or ()) if t]
     if flag:
         chips.append((flag, flag_kind or "info"))
+    # 沒有 chips 也要輸出空容器：桌機用「各層固定最小高度」對齊四張卡，
+    # 少了這一層，該卡的白話句會浮高、跟旁邊的卡對不齊。
     chips_html = ('<div class="k-chips">' + "".join(
         f'<span class="k-chip {k}">{esc(t)}</span>' for t, k in chips)
-        + '</div>') if chips else ""
+        + '</div>') if chips else '<div class="k-chips"></div>'
     surp_now = _surprise_line(surprise) if fresh else ""
     more_bits = (f'<div class="k-sub">{esc(sub)}</div>' if sub else "") \
         + ("" if fresh else _surprise_line(surprise)) + spark_html + mini

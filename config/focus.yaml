@@ -8,6 +8,12 @@
 
 enabled: true
 
+# FedWatch 機率第一層（期貨自算）用的合約。
+# ZQF27＝2027 年 1 月的 30 天期聯邦基金期貨：1 月沒有 FOMC 會議，
+# 整月平均利率 ≈ 2026 年 12 月會議之後的利率。
+# 年度往前滾時改這裡（例如要看 2027 年底就改 ZQF28.CBT）。
+fedwatch_contract: ZQF27.CBT
+
 # 焦點段的中文字數上限（AI 的輸出超過會被擋下、退回列標題）
 max_chars: 120
 
@@ -21,9 +27,16 @@ keywords:
   - 債券市場
   - 美伊
 
-# 來源白名單：只留 source 名稱含這些字串的標題（不分大小寫）。
-# 「yahoo」同時涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。
-# 全部沒命中時會退回不過濾（log 會記一行），寧可來源雜一點也不讓整段消失。
-# 想恢復全部來源就把這一段刪掉或留空。
+# Yahoo 自家的 RSS（直達文章頁，AI 讀「內文」摘關鍵字相關重點）。
+# 逐一嘗試、失敗跳過；全部失敗才退回下方的 Google News 標題模式。
+# Yahoo 改版換網址時改這裡就好，不用動程式。
+feeds:
+  - https://tw.news.yahoo.com/rss/finance
+  - https://tw.stock.yahoo.com/rss?category=news
+  - https://finance.yahoo.com/news/rssindex
+
+# 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
+# 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。
+# 全部沒命中時退回不過濾，寧可來源雜一點也不讓整段消失。
 sources:
   - yahoo

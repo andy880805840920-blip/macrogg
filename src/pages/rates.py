@@ -151,7 +151,7 @@ def _rates_body_full(d: dict) -> str:
         supply_html = f"""
 <div class="grid">
   <div class="card">
-    <h2 id="supply" data-sum="{esc(_sup_sum)}">誰在發債</h2>
+    <h2 id="supply" data-sum="{esc(_sup_sum)}">債券供給：政府與科技巨頭</h2>
     <p class="hint">政府、科技巨頭與聯準會縮表（到期的公債不再買回去），
       <b>三個來源競爭的是同一批固定收益買盤</b>。</p>
     {f'<div class="impact {lean_cls}">{_sum_html}</div>' if _sum else ''}
@@ -502,7 +502,7 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率為什麼在這裡</h2>
+    <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
     <p class="hint"><b>期限溢酬（持有長債多要求的補償）不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     {decomp_impact}
     {decomp_head_html}
@@ -535,7 +535,7 @@ def _rates_body_full(d: dict) -> str:
 {supply_html}
 <div class="grid g2">
   <div class="card">
-    <h2 id="demand" data-sum="{esc(_dem_sum)}">買盤吃不吃得下</h2>
+    <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
     <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
     {demand_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
@@ -548,7 +548,7 @@ def _rates_body_full(d: dict) -> str:
   </div>
 
   <div class="card">
-    <h2 id="priced" data-sum="{esc(_pr_sum)}">壓力已經反映多少</h2>
+    <h2 id="priced" data-sum="{esc(_pr_sum)}">供給壓力 vs 市場定價</h2>
     <p class="hint">市場已經替這些壓力定了多少價。</p>
     {priced_html}
     <div class="stat-row" style="margin-top:16px">{_stats(d['curve_stats'])}</div>
@@ -673,8 +673,8 @@ def _rates_body_full(d: dict) -> str:
         仍然自我累積。</dd>
       <dt>利差（OAS）</dt>
       <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的信用風險補償。</dd>
-      <dt>基點</dt>
-      <dd>利率的最小慣用單位：1 基點＝0.01 個百分點。
+      <dt>基點（bps）</dt>
+      <dd>利率的最小慣用單位，英文縮寫 bp／bps：1 bp＝0.01 個百分點。
         「升 25 個基點」就是升 0.25%，也就是「一碼」。</dd>
       <dt>存續期間需求</dt>
       <dd>市場願意買進長天期債券的總量。政府與企業發債競爭的就是這一池資金，
@@ -687,7 +687,7 @@ def _rates_body_full(d: dict) -> str:
       <dt>供給壓力分數怎麼算</dt>
       <dd>只由供給來源構成（政府財政缺口、科技巨頭融資缺口、聯準會縮表）。
         期限溢酬與 30 年減 10 年斜率是被這些供給推高的<b>價格</b>、不是原因，
-        算進同一個分數等於重複計算，所以改列成「壓力已經反映多少」。
+        算進同一個分數等於重複計算，所以改列成「供給壓力 vs 市場定價」。
         兩者背離時（壓力大但價格還沒反映），那個落差本身就是訊號。</dd>
       <dt>科技巨頭的年化發債</dt>
       <dd>把單季發債乘以四。發債是機會式的（挑市場條件好的時候一次發）、

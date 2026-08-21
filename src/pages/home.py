@@ -826,7 +826,7 @@ def _focus_strip(f: dict | None) -> str:
     for y in f.get("yields") or []:
         d = y.get("delta_bp")
         cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
-        dtxt = f"{d:+d} 基點" if d is not None else "—"
+        dtxt = f"{d:+d} bps" if d is not None else "—"
         chips.append(f'<div class="fs-chip"><span>{esc(y["label"])}</span>'
                      f'<b>{y["value"]:.2f}%</b>'
                      f'<i class="{cls}">{esc(dtxt)}</i></div>')
@@ -859,13 +859,32 @@ def _focus_strip(f: dict | None) -> str:
             + '</div>' for x in f["links"])
         links = (f'<details class="f-more"><summary>來源標題</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
-    note = ("殖利率：FRED（前一交易日收盤）　·　1 基點＝0.01 個百分點"
-            + ("　·　機率：CME FedWatch，AI 擷取僅供參考"
-               if fw.get("pct") is not None else "")
-            + ("　·　焦點由 AI 整理自新聞標題"
-               if f.get("text_source") in ("model", "cache") else ""))
-    return (f'<section class="home-zone focus-strip" aria-label="今日市場焦點">'
-            f'<div class="fs-head">今日市場焦點</div>'
+    # 機率的來源標示跟著實際走的那一層：期貨自算是可驗算的規則、
+    # AI 擷取只是備援——兩者的可信度不同，不能共用同一句話。
+    if fw.get("pct") is None:
+        _fw_note = ""
+    elif fw.get("src") == "futures":
+        _fw_note = "　·　機率：由聯邦基金期貨反推（FedWatch 同款算法，延遲報價）"
+    else:
+        _fw_note = "　·　機率：CME FedWatch，AI 擷取僅供參考"
+    # 殖利率的來源標示跟著實際來源走：Yahoo 即時（±bp 對昨收）或 FRED 昨收
+    _y_live = any(y.get("live") for y in (f.get("yields") or []))
+    _y_note = ("殖利率：Yahoo 報價（延遲約 15 分鐘），變動對前一交易日收盤"
+               if _y_live else "殖利率：FRED（前一交易日收盤）")
+    # 焦點段的來源標示分兩種：內文摘要（新版主線）與標題整理（退回）
+    _ts = f.get("text_source") or ""
+    if _ts == "model-content" or (_ts == "cache" and f.get("cached_mode") == "content"):
+        _t_note = "　·　焦點由 AI 摘要自新聞內文，只取關鍵字相關內容"
+    elif _ts in ("model", "cache"):
+        _t_note = "　·　焦點由 AI 整理自新聞標題"
+    else:
+        _t_note = ""
+    note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note + _t_note)
+    _date = esc((f.get("generated") or "")[:10])
+    return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
+            '<div class="fs-head">今日市場焦點'
+            + (f'<span class="fs-date">{_date}</span>' if _date else "")
+            + '</div>'
             f'<div class="fs-chips">{"".join(chips)}</div>'
             f'{text}{links}<div class="fs-note">{esc(note)}</div></section>')
 

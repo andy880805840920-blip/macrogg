@@ -157,7 +157,9 @@ details.banner[open]>summary::after{content:"▴"}
 .grid>*{min-width:0}
 @media(min-width:760px){
   .grid{gap:14px;margin-top:14px}
-  .g2{grid-template-columns:repeat(2,1fr)}
+  /* 並排卡各自貼頂：兩張卡內容量不同時，不再互相拉成等高、
+     讓短的那張底部拖一段空白（跟 KPI 內層卡同一個道理）。 */
+  .g2{grid-template-columns:repeat(2,1fr);align-items:start}
   .g4{grid-template-columns:repeat(2,1fr)}
   /* 模組卡有五張。四欄會排成 4+1，最後一張孤零零的；三欄的 3+2 比較穩。 */
   .g5{grid-template-columns:repeat(2,1fr)}
@@ -230,9 +232,17 @@ details.banner[open]>summary::after{content:"▴"}
 .grid.inner>.card:first-child{padding-top:4px}
 @media(min-width:760px){
   .grid.inner{gap:0 22px}
-  .grid.inner>.card{padding:15px 0}
-  /* 兩欄以上時底線只留在真正的最後一列會很難算，統一保留，
-     視覺上剛好變成欄與欄之間的水平分隔 */
+  /* 桌機並排時：
+     ① padding 統一——first/last-child 的手機特例（4px／2px）在四欄
+        並排下會讓第一張標題高 15px、第四張的收合列低 21px（實測）。
+     ② 卡片各自貼頂（align-items:start）＝展開「近 5 期」時只有那張卡
+        往下長，其他三張不動；先前整列被拉成等高，沒開的卡的置底
+        收合列會掉到被撐高的列底，跟內容之間空一大段。
+     ③ 底線拿掉——欄與欄之間有間距就夠，橫線在四欄下反而像表格框。 */
+  .grid.inner{align-items:start}
+  .grid.inner>.card{padding:6px 0 10px;border-bottom:none}
+  .grid.inner>.card:first-child{padding-top:6px}
+  .grid.inner>.card:last-child{padding-bottom:10px}
 }
 
 /* 展開全部／收合全部。收合狀態下瀏覽器的 Ctrl+F 找不到內文
@@ -322,10 +332,20 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-more[open]>summary::before{content:"▾"}
 .kpi .k-more-body{padding-bottom:8px}
 .kpi .k-more-body .k-sub{margin-top:2px}
-/* 卡片改直向 flex、收合列推到底：四張 KPI 卡被拉成同高時，
-   展開點會落在同一條線上，一列看過去才整齊。 */
+/* 卡片直向 flex。手機（堆疊）收合列跟著內容走即可；
+   桌機的對齊改用「各層固定最小高度」（見下方 @media 區塊），
+   不再用「拉成同高＋收合列釘底」——那一套在展開任何一張的
+   「近 5 期」時，會把沒開的卡的收合列釘到被撐高的列底，
+   跟內容之間空出一大段（使用者實測回報的「展開方式怪異」）。 */
 .kpi{display:flex;flex-direction:column}
-.kpi .k-more{margin-top:auto}
+@media(min-width:760px){
+  /* 各層保留固定空間：標題（含期別章，至多兩行）、chips（至多兩列）、
+     白話句（至多三行）。四張卡的每一層落在同一條水平線，
+     「近 5 期」列收合時自然對齊，不必靠等高硬拉。 */
+  .kpi .k-label{min-height:46px}
+  .kpi .k-chips{min-height:56px;align-content:flex-start}
+  .kpi .k-plain{min-height:92px}   /* 三行白話句的高度；兩行的卡框內留白 */
+}
 .spark{padding-top:11px;display:block;width:100%;height:34px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
@@ -834,6 +854,23 @@ summary::-webkit-details-marker{display:none}
    .l-more＝開頭 ▸/▾、teach＝？圓章、首頁模組＝＋/－。
    （目前全站的收合元素都有自己的類別，所以不需要全域後備。） */
 details.plain{border-top:none;padding-top:0}
+
+/* ---------- 換頁動線 ---------- */
+/* MPA 換頁改成交叉淡入（View Transitions）：支援的瀏覽器不再白屏閃一下。
+   使用者關掉動態效果時停用。 */
+@view-transition{navigation:auto}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),
+  ::view-transition-new(*){animation:none!important}}
+/* 頁尾的上一頁／下一頁 */
+.pagenav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.pagenav a{display:flex;flex-direction:column;gap:3px;padding:13px 16px;
+  min-width:130px;max-width:48%;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface-1);text-decoration:none;font-size:11.5px;
+  color:var(--muted)}
+.pagenav a b{font-size:14px;color:var(--text-primary)}
+.pagenav a:hover{background:var(--surface-2)}
+.pagenav .pn-next{margin-left:auto;text-align:right;align-items:flex-end}
 
 .empty{font-size:13px;color:var(--muted);padding:22px 0;text-align:center}
 /* 不斷行的小工具。日期預設會在連字號處斷成「2026-⏎07-29」，
@@ -1432,8 +1469,15 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .home-primary-link{flex-shrink:0;margin-top:-6px}
 
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
-.focus-strip{padding:14px 16px}
-.fs-head{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+/* 升格成強調卡：頂部主題色帶＋放大的標題（帶日期）＋與下方 hero 拉開。
+   先前是一條 11px 灰標題的窄 strip，跟目前情境黏在一起、掃過去會漏看。 */
+.focus-strip{position:relative;padding:16px 18px 15px;margin-bottom:26px;
+  overflow:hidden}
+.focus-strip::before{content:"";position:absolute;left:0;right:0;top:0;
+  height:3px;background:var(--series-1)}
+.fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
+  color:var(--text-primary)}
+.fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1739,14 +1783,37 @@ JS = """
     });
   });
 
-  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著。
-  // 各自獨立時常出現「左邊很長、右邊一小條」的高度落差。
+  // 預載後備：不支援 Speculation Rules 的瀏覽器（Firefox／舊 Safari）
+  // 改用「滑過（或手指按下）站內連結就 prefetch」——點下去時 HTML
+  // 已經在快取裡。同一頁只抓一次。
+  if(!HTMLScriptElement.supports || !HTMLScriptElement.supports('speculationrules')){
+    var _pf = {};
+    function prefetch(href){
+      if(!href || _pf[href]) return;
+      _pf[href] = 1;
+      var l = document.createElement('link');
+      l.rel = 'prefetch'; l.href = href;
+      document.head.appendChild(l);
+    }
+    document.querySelectorAll('a[href^="/"]').forEach(function(a){
+      var h = a.getAttribute('href').split('#')[0];
+      if(!h || h === location.pathname) return;
+      a.addEventListener('mouseenter', function(){ prefetch(h); }, {once:true});
+      a.addEventListener('touchstart', function(){ prefetch(h); },
+                         {once:true, passive:true});
+    });
+  }
+
+  // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
+  // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
+  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');
     if(ds.length < 2) return;
     ds.forEach(function(d){
       d.addEventListener('toggle', function(){
+        if(window.innerWidth < %%BP%%) return;
         ds.forEach(function(o){
           if(o !== d && o.open !== d.open) o.open = d.open;
         });
@@ -2082,6 +2149,38 @@ def _insert_tools(body: str) -> str:
     return body[:at] + _TOOLS + "\n" + body[at:]
 
 
+def _page_prevnext(active: str) -> str:
+    """
+    頁尾的上一頁／下一頁：照 NAV 的閱讀順序接前後頁。
+    讀完一頁的人在頁面底部，要換頁得捲回頂端——這兩顆連結
+    讓「逐頁讀完」的動線自然接下去。
+    """
+    paths = [(p, label) for p, label, on in NAV if on]
+    idx = next((i for i, (p, _) in enumerate(paths) if p == active), None)
+    if idx is None:
+        return ""
+    prev_html = next_html = ""
+    if idx > 0:
+        p, label = paths[idx - 1]
+        prev_html = (f'<a class="pn-prev" href="{esc(p)}">'
+                     f'← 上一頁<b>{esc(label)}</b></a>')
+    if idx < len(paths) - 1:
+        p, label = paths[idx + 1]
+        next_html = (f'<a class="pn-next" href="{esc(p)}">'
+                     f'下一頁 →<b>{esc(label)}</b></a>')
+    if not (prev_html or next_html):
+        return ""
+    return f'<nav class="pagenav" aria-label="前後頁">{prev_html}{next_html}</nav>'
+
+
+# 換頁預渲染（Speculation Rules）：滑鼠移到站內連結（手機為按下瞬間）
+# 就在背景把那一頁抓好、渲染好，點下去幾乎零延遲。宣告式 JSON，
+# Chrome／Edge 原生支援，其他瀏覽器安全忽略。
+_SPECULATION = """<script type="speculationrules">
+{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
+</script>"""
+
+
 def page(title: str, active: str, body: str, subtitle: str = "",
          footer: str = "", banner: str = "") -> str:
     """組出一個完整的自足 HTML 頁面。"""
@@ -2098,6 +2197,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 <meta name="color-scheme" content="light">
 <title>{esc(title)}｜美國總經儀表板</title>
 <style>{CSS}</style>
+{_SPECULATION}
 </head>
 <body>
 <div class="viz-root">
@@ -2112,6 +2212,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 {anchors}
 {body}
 
+{_page_prevnext(active)}
 <footer>{footer}</footer>
 
 </div>

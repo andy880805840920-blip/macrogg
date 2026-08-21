@@ -68,9 +68,8 @@ def _kpi_leans(level: float | None, target: float | None,
         if abs(d) < band:
             out.append(("本期：持平", "neutral"))
         else:
-            word = "上升" if d > 0 else "下降"
             kind = up_is if d > 0 else _invert_lean(up_is)
-            out.append((f"本期：{word} {abs(d):.2f}", kind))
+            out.append((f"本期：{'+' if d > 0 else '-'}{abs(d):.2f}", kind))
     return out
 
 
@@ -298,7 +297,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     _du3 = diff(u3)
     if _du3 is not None:
         _ul.append(("本期：持平", "neutral") if abs(_du3) < 0.05 else
-                   (f"本期：{'上升' if _du3 > 0 else '下降'} {abs(_du3):.1f}",
+                   (f"本期：{'+' if _du3 > 0 else '-'}{abs(_du3):.1f}",
                     "dovish" if _du3 > 0 else "hawkish"))
     _al = []
     if ahe_yoy is not None:
@@ -310,13 +309,13 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     if ahe_yoy is not None and _pa is not None:
         _da = ahe_yoy - _pa
         _al.append(("本期：持平", "neutral") if abs(_da) < 0.1 else
-                   (f"本期：{'上升' if _da > 0 else '下降'} {abs(_da):.1f}",
+                   (f"本期：{'+' if _da > 0 else '-'}{abs(_da):.1f}",
                     "hawkish" if _da > 0 else "dovish"))
     _dlf = diff(lfpr)
     kpi_lean = {
         "nfp": tuple(_nl), "u3": tuple(_ul), "ahe": tuple(_al),
         "lfpr": ((("本期：持平" if abs(_dlf) < 0.05 else
-                   f"本期：{'上升' if _dlf > 0 else '下降'} {abs(_dlf):.1f}"),
+                   f"本期：{'+' if _dlf > 0 else '-'}{abs(_dlf):.1f}"),
                   "neutral"),) if _dlf is not None else (),
     }
 
@@ -1395,12 +1394,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "headline": _kpi_leans(
                 summ.headline_yoy, 2.3, summ.headline_yoy,
                 _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL"),
-                level_word=("高於 PCE 目標對應水準", "接近目標對應水準",
+                level_word=("高於目標對應水準", "接近目標對應水準",
                             "低於目標對應水準")),
             "core": _kpi_leans(
                 summ.core_yoy, 2.3, summ.core_yoy,
                 _prev_yoy_nsa(series, "CPILFENS", "CPILFESL"),
-                level_word=("高於 PCE 目標對應水準", "接近目標對應水準",
+                level_word=("高於目標對應水準", "接近目標對應水準",
                             "低於目標對應水準")),
             "pce": _kpi_leans(summ.pce_core_yoy, PCE_TARGET, summ.pce_core_yoy,
                               _prev_yoy(series, "PCEPILFE")),
@@ -2563,9 +2562,9 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     _LONG = ("10Y", "30Y")
     def _tenor(k, v):
         return {"label": f"{k} 期", "value": f"{v:.2f}%",
-                "note": (f"近一個月 {curve.changes_1m[k]*100:+.0f} 基點"
+                "note": (f"近一個月 {curve.changes_1m[k]*100:+.0f} bps"
                          if k in curve.changes_1m else "")}
-    # 30−10 斜率不放這裡：它已經在「壓力已經反映多少」那一區列過，
+    # 30−10 斜率不放這裡：它已經在「供給壓力 vs 市場定價」那一區列過，
     # 同一張卡裡出現兩次會被當成兩個不同的東西。
     curve_stats = [_tenor(k, v) for k, v in curve.levels.items() if k in _LONG]
     curve_short = [_tenor(k, v) for k, v in curve.levels.items() if k not in _LONG]
@@ -2591,7 +2590,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             "color": ("var(--serious)" if curve.term_premium > 0.6 else
                       ("var(--series-1)" if curve.term_premium < 0.2 else
                        "var(--text-primary)")),
-            "change": (f"近三個月 {curve.tp_change_3m*100:+.0f} 基點"
+            "change": (f"近三個月 {curve.tp_change_3m*100:+.0f} bps"
                        if curve.tp_change_3m is not None else ""),
         }
 
@@ -2721,7 +2720,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             dv = (rows[-1]["value"] - rows[-23]["value"]) if len(rows) > 23 else None
             credit_stats.append({
                 "label": label, "value": f"{rows[-1]['value']:.2f}%",
-                "note": (f"近一個月 {dv*100:+.0f} 基點" if dv is not None else "")})
+                "note": (f"近一個月 {dv*100:+.0f} bps" if dv is not None else "")})
     credit_chart = charts.line_chart(
         since(series.get("BAMLC0A0CM") or [], CHART_START, 40), unit="%", height=140)
 

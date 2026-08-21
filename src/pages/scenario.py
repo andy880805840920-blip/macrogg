@@ -276,7 +276,7 @@ def _axis_head(axis: str, state: str, lead: str) -> str:
             '<div class="ax-body">')
 
 
-def _why_axes(w: dict) -> str:
+def _why_axes(w: dict, nc: dict | None = None) -> str:
     """
     「為什麼落在這一格」——兩條軸的算式、輸入值與門檻出處。
 
@@ -329,10 +329,9 @@ def _why_axes(w: dict) -> str:
             + '<div class="wx-thr">' + esc(inf["level"]) + "　" + cmp_txt
             + "　門檻 " + thr + "</div>"
             + '<div class="wx-src">門檻出處：' + esc(src) + warn + "</div>"
-            # 推估說明放在展開之後、門檻出處旁邊——它跟門檻出處是同一類東西
-            #（「這個數字怎麼來的」），不該擠進第一眼那一句。
-            + ('<div class="wx-src">' + esc(inf["note"]) + "</div>"
-               if inf.get("note") else "")
+            # 推估的完整計算放在這裡——點開「通膨」就要看得到 3.14% 怎麼來，
+            # 不必再去別的地方找（使用者實測回報過找不到）。
+            + _nc_calc(nc or {})
             + tilt_note + "</div></details>")
         order.append(("inflation", blocks.pop()))
 
@@ -342,21 +341,21 @@ def _why_axes(w: dict) -> str:
             + '</span><span class="wx-w">' + esc(r["w"])
             + '</span><span class="wx-v">' + esc(r["value"]) + "</span></div>"
             for r in lab.get("rows") or [])
+        # 說明壓到兩行：定案依據一行＋門檻出處一行。先前還有一段約 110 字
+        # 的方法論（回看期、容差、誰不改寫格位…），那些在就業頁已完整揭露，
+        # 這裡逐字重印只是把算式擠到讀者找不到（使用者的原話：太冗長）。
         basis_txt = {
-            "level": "由<b>水準</b>定案：失業率相對 FOMC 自己對長期失業率的判斷；",
-            "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）；",
+            "level": "由<b>水準</b>定案：失業率相對 FOMC 的長期失業率判斷。",
+            "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）。",
             "breakeven": "水準上不算弱，但<b>三月均非農低於損益兩平</b>——"
-                         "就業增速已經撐不住目前的失業率，所以往「弱」推一格；",
-            "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則；",
+                         "就業增速撐不住目前的失業率，往「弱」推一格。",
+            "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則。",
         }.get(lab.get("basis"), "")
         blocks.append(
             _axis_head("就業", lab["state"], lab.get("lead", "")) + rows
-            + '<div class="wx-src" style="margin-top:8px">' + basis_txt
-            + "三條依據都是外部標準：FOMC 的長期失業率判斷（中央趨勢的寬度就是"
-            "委員彼此的分歧程度）、Sahm 法則的 0.50、以及由人口成長推導出來的"
-            "損益兩平。前兩者是外部標準；損益兩平的 12 個月回看期與不確定性"
-            "容差是本站的方法選擇，已在就業頁揭露。損益兩平與其他月頻指標只判斷"
-            "移動方向，不會改寫當前格位。</div>"
+            + '<div class="wx-src" style="margin-top:8px">' + basis_txt + '</div>'
+            + '<div class="wx-src">門檻出處：FOMC 長期失業率（SEP 中央趨勢）'
+              '　·　Sahm 0.50（原論文）　·　損益兩平（人口成長推導）</div>'
             + _mismatch_note("就業", lab["state"], lab.get("tilt"),
                              lab.get("net"), "失業率離充分就業多遠")
             + "</div></details>")
@@ -368,85 +367,67 @@ def _why_axes(w: dict) -> str:
             + "</div>")
 
 
-def _four_steps(d: dict, sc, focus: dict) -> str:
-    """
-    「這一格是怎麼算出來的」——固定四步，每步一行、行末就是結果。
-
-    先前這條計算鏈散在四個地方（hero 的邏輯條、兩條軸的算式、門檻出處、
-    重心說明），讀者要自己拼。其實它只有四步，值得用一張固定結構的卡
-    一次講完；細節（權重理由、門檻出處、推估方法）收在下方的算式層。
-    """
-    w = d.get("why") or {}
-    lab, inf = w.get("labor") or {}, w.get("inflation") or {}
-    rows = []
-    if lab.get("lead"):
-        rows.append(("① 就業格位", lab["lead"], lab.get("state", "")))
-    if inf.get("lead"):
-        # lead 可能帶著推估的長註，四步卡只留第一句；完整版在算式層
-        rows.append(("② 通膨格位", inf["lead"].split("。")[0], inf.get("state", "")))
-    if focus.get("label"):
-        rows.append(("③ 目前重心", focus.get("note", "").split("。")[0] or "由聲明、反對票與記者會判定",
-                     focus["label"]))
-    rows.append(("④ 交叉定位",
-                 f"就業{sc.labor_state} × 通膨{sc.infl_state}，在{focus.get('label', '目前重心')}下",
-                 sc.name))
-    body = "".join(
-        f'<div class="step"><span class="step-k">{esc(k)}</span>'
-        f'<span class="step-t">{esc(txt)}</span>'
-        f'<span class="step-r">{esc(res)}</span></div>'
-        for k, txt, res in rows)
-
-    # ②的 PCE 推估不在這裡呈現——它併進卡尾「完整算式與門檻出處」收合
-    # （見 _nc_bits），推估值仍寫在那個收合的標題列上。
-    # teach 也不放在這裡——它屬於整張「九宮格定位」卡的卡尾。
-    return f'<div class="steps">{body}</div>'
-
-
-def _nc_bits(d: dict) -> tuple[str, str]:
-    """
-    ②步的 PCE 推估。回傳 (收合列的後綴, 展開層的內容區塊)。
-
-    PCE 還沒公布時，通膨水準用的是推估值——推估怎麼算、為什麼選這個方法，
-    屬於「格子怎麼算」的細節，所以併進「完整算式與門檻出處」那一個收合，
-    不再自成一個（一張卡近 30 個收合正是先前混亂的來源）。
-    推估值本身寫在收合列上，不點開也看得到。
-    """
+def _nc_suffix(d: dict) -> str:
+    """「完整算式」收合列的推估後綴——推估值不點開也看得到。"""
     nc = d.get("pce_nowcast") or {}
     if not (nc.get("estimated") and nc.get("value") is not None):
-        return "", ""
-    _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
-    # 標題列只放短名（放全稱會變成「（差距法（核心 CPI − …））」的
-    # 雙層括號）；全稱寫在展開後的第一句。
+        return ""
     method_short = ("成分法" if nc.get("method") == "components" else "差距法")
-    method_full = ("成分法＝CPI＋PPI 逐項加權"
-                   if nc.get("method") == "components"
-                   else "差距法＝核心 CPI 減去兩者的歷史平均差距")
-    comp_rows = "".join(
-        f'<tr><td>{esc(c["label"])}{"（用最新一期頂上）" if c.get("lagged") else ""}</td>'
-        f'<td>{c["weight"]:.1f}%</td>'
-        f'<td>{c["yoy"]:+.2f}%</td></tr>'
-        for c in (nc.get("components") or []) if c.get("yoy") is not None)
-    comp_tbl = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
-                f'<th>權重</th><th>年增</th></tr></thead>'
-                f'<tbody>{comp_rows}</tbody></table>' if comp_rows else "")
-    _ncv = f'{nc["value"]:.2f}%'
-    suffix = f'；含核心 PCE 推估 {_ncv}（{method_short}）'
-    detail = f"""<div class="f-detail" style="margin-bottom:10px">
-        <b>②的通膨水準是推估值</b>：本期採用<b>{esc(method_full)}</b>。
-        PCE 比 CPI 晚兩週公布，空窗期用 CPI 與 PPI 先推——
-        PCE 的醫療與金融服務項本來就取自 PPI，所以推得出來。
-        兩種方法各自回測近 {nc.get("n_backtest") or "—"} 期、比較平均誤差，
-        <b>本期採誤差較小的那個</b>：成分法 {esc(f"±{_mc:.3f}" if _mc is not None else "不可用")}、
-        差距法 {esc(f"±{_mg:.3f}" if _mg is not None else "不可用")} 個百分點。
-        方法的選擇是規則決定的，每次執行可重現。PCE 一公布就換回實際值。
-        {comp_tbl}
-      </div>"""
-    return suffix, detail
+    return f'；含核心 PCE 推估 {nc["value"]:.2f}%（{method_short}）'
+
+
+def _nc_calc(nc: dict) -> str:
+    """
+    推估值的**實際計算**——放在通膨軸的展開裡（使用者的原話：
+    「通膨展開後沒有實際列出怎麼算出推估值」）。
+
+    差距法印出整條算式（核心 CPI − 平均差距 ＝ 推估值），
+    成分法在成分表加「貢獻」欄與「加權合計」列——表格自己就是算式。
+    說明壓到重點：為什麼能推一句、回測比較一行；「規則決定、可重現」
+    這類每期都一樣的話不再印。
+    """
+    if not (nc.get("estimated") and nc.get("value") is not None):
+        return ""
+    v = nc["value"]
+    _mc, _mg = nc.get("mae_components"), nc.get("mae_gap")
+    picked = "成分法" if nc.get("method") == "components" else "差距法"
+    mae_line = (
+        f'回測近 {nc.get("n_backtest") or "—"} 期，取誤差小的：'
+        f'成分法 {f"±{_mc:.3f}" if _mc is not None else "不可用"}、'
+        f'差距法 {f"±{_mg:.3f}" if _mg is not None else "不可用"} 個百分點'
+        f'——本期用<b>{picked}</b>。')
+    if nc.get("method") == "components":
+        rows = [c for c in (nc.get("components") or [])
+                if c.get("yoy") is not None]
+        comp_rows = "".join(
+            f'<tr><td>{esc(c["label"])}'
+            + ("（用最新一期頂上）" if c.get("lagged") else "")
+            + f'</td><td>{c["weight"]:.1f}%</td>'
+            f'<td>{c["yoy"]:+.2f}%</td>'
+            f'<td>{c["weight"] * c["yoy"] / 100:+.2f}</td></tr>'
+            for c in rows)
+        calc = (f'<table style="margin-top:8px"><thead><tr><th>成分</th>'
+                f'<th>權重</th><th>年增</th><th>貢獻</th></tr></thead>'
+                f'<tbody>{comp_rows}'
+                f'<tr><td><b>加權合計 ＝ 推估核心 PCE</b></td><td></td><td></td>'
+                f'<td><b>{v:.2f}%</b></td></tr></tbody></table>')
+    else:
+        gap = nc.get("gap")
+        if gap is not None:
+            cpi = v + gap
+            calc = (f'<div class="wx-thr">核心 CPI 年增 {cpi:.2f}%　−　'
+                    f'兩者近 12 個月平均差距 {gap:+.2f} 個百分點　＝　'
+                    f'推估核心 PCE <b>{v:.2f}%</b></div>')
+        else:
+            calc = f'<div class="wx-thr">推估核心 PCE ＝ {v:.2f}%</div>'
+    return ('<div class="wx-src" style="margin-top:8px"><b>推估值怎麼算</b>：'
+            'PCE 比 CPI 晚兩週公布，空窗期用 CPI／PPI 先推，公布即換回實際值。'
+            + mae_line + '</div>' + calc)
 
 
 def _scenario_body_full(d: dict) -> str:
     sc = d["scenario"]
-    _why_html = _why_axes(d.get("why") or {})
+    _why_html = _why_axes(d.get("why") or {}, d.get("pce_nowcast") or {})
 
     incomplete = ""
     if sc.incomplete:
@@ -490,7 +471,7 @@ def _scenario_body_full(d: dict) -> str:
                  if sc.fomc_note else "")
 
     grid_html, cmp_head, cmp_body = _grid_tabs(d, sc)
-    nc_suffix, nc_detail = _nc_bits(d)
+    nc_suffix = _nc_suffix(d)
 
     # 收合摘要：一律取這一區已經算出來的結論。
     _grid_sum = (f'就業{sc.labor_state} × 通膨{sc.infl_state}　·　{sc.name}'
@@ -591,25 +572,22 @@ def _scenario_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="grid" data-open="1" data-sum="{esc(_grid_sum)}">九宮格定位</h2>
-    <p class="hint">就業 × 通膨。格子由下方四步算出，門檻全部錨在外部標準；
-      目前格的完整說明見頁首結論卡。</p>
-    {_four_steps(d, sc, focus)}
+    <p class="hint">就業 × 通膨交叉定位；算法與門檻出處見卡尾「完整算式」。</p>
     {assumed_note}
     {grid_html}
     <p class="hint" style="margin-top:16px">
       <span class="lg-on">反白粗框</span>＝目前位置　·
-      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格三種體制都一樣）
+      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格不隨重心變）
     </p>
-    {teach(
-        "格子的位置不是主觀判斷，是四步固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
-        "看得懂這四步，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
-        "每一步的細節（權重、門檻出處、PCE 推估方法）都在下方「完整算式」裡，數字全部可以驗算。口徑提醒：②的格位只用**年增率**判；下方「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），所以兩處的數字會不一樣——口徑不同，不是算錯。")}
     <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）{esc(nc_suffix)}</summary>
-      {nc_detail}
       {_why_html}
     </details>
     {focus_collapse}
     {_cell_gloss(d.get('cells'))}
+    {teach(
+        "格子的位置不是主觀判斷，是固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
+        "看得懂這套算法，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
+        "細節（權重、門檻出處、PCE 推估算式）都在上方「完整算式」裡，數字全部可以驗算。口徑提醒：格位只用**年增率**判；「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），兩處數字不一樣是口徑不同，不是算錯。")}
   </div>
 </div>
 <div class="grid g2">

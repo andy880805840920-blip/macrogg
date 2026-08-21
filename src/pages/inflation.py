@@ -440,7 +440,7 @@ def _inflation_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="trend" data-sum="{_trend_sum}">是全面在漲，還是少數項目？</h2>
+    <h2 id="trend" data-sum="{_trend_sum}">通膨廣度：中位數與截尾平均</h2>
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     {trend_html}
     {teach(

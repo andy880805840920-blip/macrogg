@@ -97,6 +97,112 @@ check("⑥b 沒命中時退回全部（邏輯）",
       ([h for h in [{"title": "C", "source": "路透"}]
         if any(w in h["source"].lower() for w in _srcs)] or hs3) == hs3)
 
+# ⑦ FedWatch 期貨自算：FedWatch／WIRP 同款公式
+_RATES = {"DFEDTARL": [{"date": "2026-08-20", "value": 3.50}],
+          "DFEDTARU": [{"date": "2026-08-20", "value": 3.75}]}
+
+
+class _FakeYq:
+    def __init__(self, px):
+        self._px = px
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return {"chart": {"result": [{"meta": {"regularMarketPrice": self._px}}]}}
+
+
+# 期貨價 96.31 → 隱含 3.69%；中點 3.625 → (3.69−3.625)/0.25 = 26%
+p = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.31))
+check("⑦ 期貨自算：96.31 → 26%", p is not None and abs(p - 26.0) < 0.5, p)
+# 隱含低於中點（市場偏降息）→ 機率鎖在 0，不會出現負數
+p = ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(96.60))
+check("⑦b 偏降息時鎖 0", p == 0.0, p)
+# 報價離譜（抓錯商品）→ 不採用
+check("⑦c 報價超出 90–100 不採用",
+      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(85.0)) is None)
+# 隱含利率偏離中點 >1.5pp（合約年份寫錯）→ 不採用
+check("⑦d 偏離中點過大不採用",
+      ft.fedwatch_from_futures(_RATES, {}, _get=lambda u: _FakeYq(94.0)) is None)
+# 抓不到目標區間 → 不硬算
+check("⑦e 缺目標區間回 None",
+      ft.fedwatch_from_futures({}, {}, _get=lambda u: _FakeYq(96.31)) is None)
+
+# ⑧ Yahoo 即時殖利率：×10 慣例規範化、±bp 對昨收、異常值不採用
+class _FakeYt:
+    def __init__(self, cur, prev, ts=1787300000):
+        self._m = {"regularMarketPrice": cur, "chartPreviousClose": prev,
+                   "regularMarketTime": ts}
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return {"chart": {"result": [{"meta": self._m}]}}
+
+
+# CBOE ×10 慣例：42.83／42.61 → 4.28%、+2 bp
+c = ft.fetch_yahoo_yield("^TNX", "10 年期", _get=lambda u: _FakeYt(42.83, 42.61))
+check("⑧ ×10 慣例規範化＋對昨收", c is not None and c["value"] == 4.28
+      and c["delta_bp"] == 2 and c["live"], c)
+# 直接百分比格式也吃得下
+c = ft.fetch_yahoo_yield("^TNX", "10 年期", _get=lambda u: _FakeYt(4.28, 4.26))
+check("⑧b 百分比格式", c is not None and c["value"] == 4.28 and c["delta_bp"] == 2)
+# 異常值（負利率、爆表）不採用 → 呼叫端退回 FRED
+check("⑧c 異常值不採用",
+      ft.fetch_yahoo_yield("^TNX", "x", _get=lambda u: _FakeYt(0.02, 0.02)) is None)
+
+# ⑨ Yahoo feed：只留標題命中關鍵字的項目、來源標籤由 feed 推得
+_FEED_XML = """<rss><channel>
+<item><title>川普再批聯準會，殖利率走高</title><link>http://a</link>
+  <pubDate>{new}</pubDate></item>
+<item><title>台股收盤上漲三百點</title><link>http://b</link>
+  <pubDate>{new}</pubDate></item>
+</channel></rss>""".format(new=_new)
+fh = ft.fetch_feed_headlines(["https://tw.news.yahoo.com/rss/finance"],
+                             ["川普 聯準會"],
+                             _get=lambda u: _Fake(_FEED_XML))
+check("⑨ feed 只留關鍵字命中", len(fh) == 1 and "川普" in fh[0]["title"], fh)
+check("⑨b 來源標籤由 feed 推得", fh and fh[0]["source"] == "Yahoo奇摩新聞")
+
+# ⑩ 內文擷取：砍 script、抽 <p>、太短回空
+_PAGE = ("<html><script>var x='這段程式碼不是內文'+'不該被抽出來的長字串"
+         + "Ｘ" * 200 + "';</script><body>"
+         + "<p>導覽列</p>"
+         + "<p>" + "美國財政部宣布調整發債結構，市場關注十年期殖利率走勢。" * 6 + "</p>"
+         + "<p>" + "聯準會官員表示通膨仍高於目標，九月會議前進入噤聲期。" * 5 + "</p>"
+         + "</body></html>")
+
+
+class _FakePage:
+    def __init__(self, t):
+        self.text = t
+
+    def raise_for_status(self):
+        pass
+
+
+body = ft.fetch_article_text("http://a", _get=lambda u: _FakePage(_PAGE))
+check("⑩ 內文抽出且不含程式碼", "發債結構" in body and "程式碼" not in body
+      and "導覽列" not in body, body[:40])
+check("⑩b 太短的頁面回空",
+      ft.fetch_article_text("http://a",
+                            _get=lambda u: _FakePage("<p>只有一句話而已</p>")) == "")
+
+# ⑪ 內文摘要的數字鎖：輸出的數字必須出現在內文裡
+from src.analysis import polish as _pl
+_orig_gc = _pl._gemini_call
+_pl._gemini_call = lambda *a, **k: "財政部調整發債結構，市場關注十年期殖利率。"
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
+check("⑪ 內文摘要通過", t != "" and s == "model-content", s)
+_pl._gemini_call = lambda *a, **k: "市場預期年底利率降至 2.75%。"
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
+check("⑪b 編造數字被擋", t == "" and "沒有的數字" in s, s)
+_pl._gemini_call = _orig_gc
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

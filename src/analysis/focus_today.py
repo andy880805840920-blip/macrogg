@@ -3,16 +3,29 @@
 
 三顆數字＋一段焦點文字：
   10 年期／30 年期殖利率（FRED，較前一交易日的變動）
-  2026 年底升息一碼機率（CME FedWatch，由 Gemini 搜尋擷取——見下）
+  2026 年底升息一碼機率（聯邦基金期貨自算——見下）
   市場焦點一段（Google News RSS 爬標題，Gemini 只挑重點寫敘述）
 
 分工原則（跟潤稿層同一套哲學）
 ------------------------------
-事實由爬蟲拿、AI 只整理敘述。唯一的例外是 FedWatch 機率：CME 沒有
-免費 API、網頁是 JS 動態的，直接爬既脆弱又有條款問題，所以這個數字
-由 Gemini 開搜尋接地去擷取——**這違反「AI 不碰數字」的全站原則**，
-因此配三道防護欄（0–100 範圍、單日跳動 >20pp 視為擷取錯誤沿用前值、
-失敗顯示「—」不編造），畫面上明標「AI 擷取，僅供參考」。
+事實由爬蟲拿、AI 只整理敘述。
+
+FedWatch 機率的三層來源（依序退回）
+----------------------------------
+FedWatch 與 Bloomberg WIRP 都不是原始資料——兩者都是從 CME 的
+30 天期聯邦基金期貨（ZQ）價格反推的。所以第一層直接用同一套算法自算：
+
+  ① **期貨自算**：Yahoo Finance 延遲報價抓 2027 年 1 月合約（1 月沒有
+     FOMC 會議，整月平均利率 ≈ 12 月會議之後的利率，繞開「會期跨月
+     加權」）。隱含利率＝100 − 價格；
+     升息一碼機率＝(隱含利率 − 目前目標區間中點) ÷ 0.25，鎖 0–100。
+     數字是可驗算的規則，不再是 AI 抄的。
+  ② **Gemini 搜尋擷取**（僅在①失敗時）：這違反「AI 不碰數字」原則，
+     所以只當備援，畫面明標「AI 擷取，僅供參考」。
+  ③ **沿用前值**（≤4 天）：兩層都失敗時沿用快取並標明日期。
+
+共用防護欄：合理範圍檢查、單日跳動 >20pp 視為擷取錯誤沿用前值、
+每日快取（一天最多算一次）、失敗顯示「—」不編造。
 
 焦點段的防護欄
 --------------
@@ -54,7 +67,7 @@ DEFAULT_KEYWORDS = [
 
 
 # ---------------------------------------------------------------------------
-# 殖利率：FRED 序列的最新值與較前一交易日的變動（基點）
+# 殖利率：優先 Yahoo 即時報價（±bp 對昨收），失敗退回 FRED（隔日）
 # ---------------------------------------------------------------------------
 def _yield_chip(rows: list, label: str) -> dict | None:
     rows = [r for r in (rows or []) if r.get("value") is not None]
@@ -64,6 +77,57 @@ def _yield_chip(rows: list, label: str) -> dict | None:
     return {"label": label, "value": last["value"],
             "delta_bp": round((last["value"] - prev["value"]) * 100),
             "date": last.get("date", "")}
+
+
+# CBOE 的殖利率指數：^TNX＝10 年期、^TYX＝30 年期。
+# 慣例是「殖利率 ×10」（49.8 ＝ 4.98%），但 Yahoo 顯示上兩種格式都出現過
+# ——所以拿到值之後做規範化（>20 就除以 10）再做合理範圍檢查。
+YIELD_SYMBOLS = (("^TNX", "10 年期"), ("^TYX", "30 年期"))
+
+
+def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
+    """
+    即時殖利率 chip：目前報價（延遲約 15 分鐘）與較前一交易日收盤的變動。
+
+    FRED 的日頻序列要隔一個交易日才有值——首頁的「今日」焦點條掛著
+    昨天的數字不太對勁。抓不到（Yahoo 擋 IP、格式變了）就回 None，
+    由呼叫端退回 FRED 版 chip，小字會標明來源。
+    """
+    get = _get or (lambda url: requests.get(
+        url, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    try:
+        r = get(YQ_URL.format(sym=quote(symbol)))
+        r.raise_for_status()
+        res = (r.json().get("chart") or {}).get("result") or []
+        meta = (res[0].get("meta") or {}) if res else {}
+        cur = meta.get("regularMarketPrice")
+        prev = meta.get("chartPreviousClose")
+        if prev is None:
+            prev = meta.get("previousClose")
+        ts = meta.get("regularMarketTime")
+        if cur is None or prev is None:
+            return None
+        cur, prev = float(cur), float(prev)
+        if cur > 20.0:                    # ×10 慣例 → 換算回百分比
+            cur, prev = cur / 10.0, prev / 10.0
+        if not (0.1 <= cur <= 15.0 and 0.1 <= prev <= 15.0):
+            log.warning("Yahoo 殖利率 %s 數值異常（%.2f／%.2f），不採用",
+                        symbol, cur, prev)
+            return None
+        date = ""
+        if ts:
+            try:
+                date = dt.datetime.fromtimestamp(
+                    int(ts), dt.timezone.utc).date().isoformat()
+            except (ValueError, TypeError, OSError):
+                date = ""
+        return {"label": label, "value": round(cur, 2),
+                "delta_bp": round((cur - prev) * 100),
+                "date": date, "live": True}
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Yahoo 殖利率 %s 抓取失敗（%s），退回 FRED", symbol, e)
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +179,146 @@ def fetch_headlines(keywords: list[str], hours: int = 30,
                         "at": at.isoformat(), "kw": kw})
     out.sort(key=lambda x: x["at"], reverse=True)
     return out
+
+
+# ---------------------------------------------------------------------------
+# Yahoo 自家 RSS（直達文章頁）＋內文擷取
+# ---------------------------------------------------------------------------
+# 不經 Google News 的理由：它的連結是自家轉址頁，解回原始文章網址的方法
+# 脆弱且常變；Yahoo 的 RSS 連結直達文章頁，內文抓得到，AI 才有東西摘。
+# feed 網址放 config（feeds:），Yahoo 改版時不用改程式。
+DEFAULT_FEEDS = [
+    "https://tw.news.yahoo.com/rss/finance",
+    "https://tw.stock.yahoo.com/rss?category=news",
+    "https://finance.yahoo.com/news/rssindex",
+]
+_FEED_LABEL = (("tw.news.yahoo", "Yahoo奇摩新聞"),
+               ("tw.stock.yahoo", "Yahoo奇摩股市"),
+               ("finance.yahoo", "Yahoo Finance"))
+
+
+def _feed_label(url: str) -> str:
+    for key, label in _FEED_LABEL:
+        if key in url:
+            return label
+    return re.sub(r"^https?://([^/]+).*$", r"\1", url)
+
+
+def fetch_feed_headlines(feeds: list[str], keywords: list[str],
+                         hours: int = 30, _get=None) -> list[dict]:
+    """
+    直接吃 Yahoo 的 RSS，只留**標題命中任一關鍵字詞**的項目。
+    單一 feed 失敗就跳過；全部失敗回空列表，由呼叫端退回 Google News。
+    """
+    get = _get or (lambda url: requests.get(
+        url, timeout=TIMEOUT, headers={"User-Agent": "macro-dashboard/1.0"}))
+    words = [w for kw in keywords for w in str(kw).split() if w]
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
+    out, seen = [], set()
+    for feed in feeds:
+        try:
+            r = get(feed)
+            r.raise_for_status()
+            root = ET.fromstring(r.content)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("市場焦點：feed %s 抓取失敗（%s）", feed, e)
+            continue
+        label = _feed_label(feed)
+        for item in root.iter("item"):
+            title = (item.findtext("title") or "").strip()
+            link = (item.findtext("link") or "").strip()
+            pub = item.findtext("pubDate") or ""
+            if not title or not link:
+                continue
+            if not any(w in title for w in words):
+                continue
+            try:
+                at = parsedate_to_datetime(pub)
+                if at.tzinfo is None:
+                    at = at.replace(tzinfo=dt.timezone.utc)
+            except (ValueError, TypeError):
+                continue
+            if at < cutoff:
+                continue
+            key = re.sub(r"\s+", "", _norm_title(title))[:40]
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"title": title, "link": link, "source": label,
+                        "at": at.isoformat(), "kw": ""})
+    out.sort(key=lambda x: x["at"], reverse=True)
+    return out
+
+
+def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
+    """
+    抓文章頁、抽出正文（<p> 段落）。Yahoo 新聞頁的正文是伺服器渲染的，
+    requests 就抓得到。抽不出足夠文字（<100 字）回空字串——改版、擋爬、
+    影音頁都會走到這裡，由呼叫端退回標題模式。
+    """
+    import html as _html
+    get = _get or (lambda u: requests.get(
+        u, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    try:
+        r = get(url)
+        r.raise_for_status()
+        page = r.text
+    except Exception as e:                         # noqa: BLE001
+        log.warning("市場焦點：文章抓取失敗（%s：%s）", url[:60], e)
+        return ""
+    # 先砍 script/style 再抽 <p>：Yahoo 頁面的 JSON 資料塊裡也有長字串，
+    # 不砍會把程式碼當成內文。
+    page = re.sub(r"<(script|style)[^>]*>.*?</\1>", "", page,
+                  flags=re.S | re.I)
+    paras = []
+    for m in re.finditer(r"<p[^>]*>(.*?)</p>", page, re.S | re.I):
+        t = _html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))
+        t = re.sub(r"\s+", " ", t).strip()
+        if len(t) >= 20:                           # 導覽、版權列都比這短
+            paras.append(t)
+        if sum(len(p) for p in paras) >= cap:
+            break
+    body = "\n".join(paras)[:cap]
+    return body if cjk_len(body) >= 100 or len(body) >= 300 else ""
+
+
+_FOCUS_CONTENT_SYSTEM = (
+    "你是財經編輯。輸入是幾篇新聞的標題與內文節錄。"
+    "只挑與這些關鍵字相關的內容：{kws}。"
+    "寫成一段不超過 {cap} 個中文字的市場焦點。規則："
+    "只能使用內文已有的資訊，不得補充內文以外的事實或數字；"
+    "與關鍵字無關的內容一律不寫；不做預測、不下投資結論；"
+    "繁體中文；直接輸出那一段文字，不要任何前言。")
+
+
+def summarize_content(articles: list[dict], keywords: list[str],
+                      cap: int, env=None) -> tuple[str, str]:
+    """從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。"""
+    from .polish import _pick_provider, _gemini_call
+    import os
+    env = env or os.environ
+    provider, key = _pick_provider(env)
+    if provider != "gemini" or not key:
+        return "", "沒有 Gemini 金鑰"
+    src_text = "\n\n".join(
+        f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}"
+        for a in articles)
+    model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
+    try:
+        text = _gemini_call(
+            key, model, src_text,
+            system=_FOCUS_CONTENT_SYSTEM.format(
+                kws="、".join(keywords), cap=cap),
+            think=False, temperature=0.3).strip()
+    except Exception as e:                         # noqa: BLE001
+        return "", f"呼叫失敗（{e}）"
+    if not text or cjk_len(text) > cap + 40:
+        return "", f"長度不合格（{cjk_len(text)} 字）"
+    # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
+    if not _digits_ok(text, src_text):
+        return "", "輸出出現內文裡沒有的數字"
+    return text, "model-content"
 
 
 def _norm_title(t: str) -> str:
@@ -200,6 +404,80 @@ def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
     return text, "model"
 
 
+# ---------------------------------------------------------------------------
+# FedWatch 第一層：聯邦基金期貨自算（FedWatch／WIRP 的同款方法）
+# ---------------------------------------------------------------------------
+YQ_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+          "?range=5d&interval=1d")
+# 2027 年 1 月合約：1 月沒有 FOMC 會議，整月均價 ≈ 12 月會後的利率。
+# 年度往前滾時到 config/focus.yaml 改 fedwatch_contract（例如 2027 年底
+# 的機率就改 ZQF28.CBT）。
+DEFAULT_ZQ = "ZQF27.CBT"
+
+
+def _last_value(rows) -> float | None:
+    rows = [r for r in (rows or []) if r.get("value") is not None]
+    return rows[-1]["value"] if rows else None
+
+
+def fetch_zq_implied(symbol: str, _get=None) -> float | None:
+    """抓一檔聯邦基金期貨的最新價，回傳隱含利率（100 − 價格）。"""
+    get = _get or (lambda url: requests.get(
+        url, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    try:
+        r = get(YQ_URL.format(sym=quote(symbol)))
+        r.raise_for_status()
+        res = (r.json().get("chart") or {}).get("result") or []
+        meta = (res[0].get("meta") or {}) if res else {}
+        px = meta.get("regularMarketPrice")
+        if px is None and res:
+            closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
+                      .get("close") or [])
+            px = next((c for c in reversed(closes) if c is not None), None)
+        if px is None:
+            return None
+        px = float(px)
+        # 期貨價 ＝ 100 − 利率：合理價位在 90–100 之間。
+        # 落在外面代表抓到錯的商品或壞報價，寧可不算。
+        if not 90.0 <= px <= 100.0:
+            log.warning("聯邦基金期貨 %s 報價 %.2f 超出合理範圍，不採用",
+                        symbol, px)
+            return None
+        return round(100.0 - px, 4)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("聯邦基金期貨報價抓取失敗（%s：%s）", symbol, e)
+        return None
+
+
+def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
+                          _get=None) -> float | None:
+    """
+    升息一碼機率 ＝ (期貨隱含利率 − 目前目標區間中點) ÷ 0.25，鎖 0–100。
+
+    目標區間直接取 FRED 的 DFEDTARL／DFEDTARU（rates 模組本來就有抓），
+    不另外手填——手填的利率漏更新一次，機率就整個平移。
+    """
+    rs = rates_series or {}
+    lo = _last_value(rs.get("DFEDTARL"))
+    hi = _last_value(rs.get("DFEDTARU"))
+    if lo is None or hi is None:
+        log.warning("FedWatch 自算：抓不到目標區間（DFEDTARL/U），跳過")
+        return None
+    mid = (lo + hi) / 2
+    sym = (cfg or {}).get("fedwatch_contract") or DEFAULT_ZQ
+    implied = fetch_zq_implied(sym, _get)
+    if implied is None:
+        return None
+    # 隱含利率偏離目前中點超過 1.5 個百分點，多半是合約寫錯年份
+    # 或抓到壞報價——六碼的跳動不會在一夜之間發生。
+    if abs(implied - mid) > 1.5:
+        log.warning("FedWatch 自算：隱含利率 %.2f%% 偏離中點 %.2f%% 過大，不採用",
+                    implied, mid)
+        return None
+    return round(max(0.0, min(100.0, (implied - mid) / 0.25 * 100)), 1)
+
+
 _FW_PROMPT = (
     "用 Google 搜尋查 CME FedWatch 工具目前對 2026 年 12 月 FOMC 會議的"
     "利率機率分布，找出「較目前利率區間**升息 25 個基點（一碼）**」的機率。"
@@ -268,6 +546,19 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         out["text_source"] = "offline"
         return out
 
+    # ---- 殖利率升級成即時：Yahoo 逐檔試，抓不到的那檔退回 FRED ----
+    _fred = {"10 年期": (rates_series or {}).get("DGS10"),
+             "30 年期": (rates_series or {}).get("DGS30")}
+    _fresh = []
+    for _sym, _label in YIELD_SYMBOLS:
+        c = (fetch_yahoo_yield(_sym, _label)
+             or _yield_chip(_fred.get(_label), _label))
+        if c:
+            _fresh.append(c)
+    if _fresh:
+        out["yields"] = _fresh
+        out["asof"] = _fresh[0].get("date", "")
+
     try:
         state = json.loads(state_path.read_text(encoding="utf-8"))
     except Exception:                              # noqa: BLE001
@@ -276,14 +567,20 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         state = {}
     today = clock.today().isoformat()
 
-    # ---- FedWatch：一天最多擷取一次；跳動 >20pp 視為擷取錯誤沿用前值 ----
+    # ---- FedWatch：一天最多算一次；跳動 >20pp 視為擷取錯誤沿用前值 ----
+    # 來源三層：期貨自算 → Gemini 擷取 → 沿用前值（見模組說明）。
     fw_old = state.get("fedwatch") or {}
     if fw_old.get("date") == today and fw_old.get("pct") is not None:
         out["fedwatch"] = {"pct": fw_old["pct"],
                            "delta_pp": fw_old.get("delta_pp"),
-                           "suspect": bool(fw_old.get("suspect"))}
+                           "suspect": bool(fw_old.get("suspect")),
+                           "src": fw_old.get("src", "")}
     else:
-        pct = fetch_fedwatch(env)
+        pct = fedwatch_from_futures(rates_series, cfg)
+        fw_src = "futures"
+        if pct is None:
+            pct = fetch_fedwatch(env)
+            fw_src = "ai"
         prev = fw_old.get("pct")
         suspect = False
         if pct is None and prev is not None:
@@ -299,42 +596,71 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             if _age <= 4:
                 out["fedwatch"] = {"pct": prev, "delta_pp": None,
                                    "suspect": False,
+                                   "src": fw_old.get("src", ""),
                                    "stale_from": fw_old.get("date")}
         elif pct is not None:
             if prev is not None and abs(pct - prev) > 20:
                 log.warning("FedWatch 單日跳動 %.0f→%.0f，視為擷取錯誤沿用前值",
                             prev, pct)
                 pct, suspect = prev, True
+                fw_src = fw_old.get("src", fw_src)
             delta = (round(pct - prev, 1)
                      if (prev is not None and not suspect
                          and fw_old.get("date") != today) else None)
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
-                               "suspect": suspect}
+                               "suspect": suspect, "src": fw_src}
             state["fedwatch"] = {"pct": pct, "date": today,
-                                 "delta_pp": delta, "suspect": suspect}
+                                 "delta_pp": delta, "suspect": suspect,
+                                 "src": fw_src}
 
-    # ---- 焦點段：RSS 爬標題 → 來源白名單 → 同一批標題只呼叫一次 → 驗證 → 退回 ----
-    heads = fetch_headlines(keywords)
-    # 來源白名單（config 的 sources）：只留 source 含指定字串的標題。
-    # 全部沒命中時退回不過濾並記 log——寧可來源雜一點，也不要整段消失。
-    _srcs = [str(s).lower() for s in (cfg.get("sources") or []) if s]
-    if heads and _srcs:
-        _hits = [h for h in heads
-                 if any(w in (h.get("source") or "").lower() for w in _srcs)]
-        if _hits:
-            heads = _hits
-        else:
-            log.warning("市場焦點：來源白名單 %s 沒命中任何標題，退回全部來源",
-                        _srcs)
+    # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →
+    #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----
+    feeds = cfg.get("feeds") or DEFAULT_FEEDS
+    heads = fetch_feed_headlines(feeds, keywords)
+    mode = "content"
+    if not heads:
+        log.warning("市場焦點：Yahoo RSS 無命中或全部失敗，退回 Google News 標題模式")
+        heads = fetch_headlines(keywords)
+        # 來源白名單（config 的 sources）只在標題模式有意義——
+        # Yahoo feed 本身就只有 Yahoo。全部沒命中時退回不過濾。
+        _srcs = [str(s).lower() for s in (cfg.get("sources") or []) if s]
+        if heads and _srcs:
+            _hits = [h for h in heads
+                     if any(w in (h.get("source") or "").lower() for w in _srcs)]
+            if _hits:
+                heads = _hits
+            else:
+                log.warning("市場焦點：來源白名單 %s 沒命中任何標題，退回全部來源",
+                            _srcs)
+        mode = "title"
     if heads:
         top = pick_fallback(heads, keywords, n=6)
-        h = hashlib.sha256("|".join(x["title"] for x in top)
+        h = hashlib.sha256((mode + "|" + "|".join(x["title"] for x in top))
                            .encode("utf-8")).hexdigest()[:16]
         if state.get("hash") == h and state.get("text"):
-            out["text"], out["text_source"] = state["text"], "cache"
+            out["text"] = state["text"]
+            out["text_source"] = "cache"
+            out["cached_mode"] = ("content"
+                                  if state.get("text_source") == "model-content"
+                                  else "title")
             out["links"] = state.get("links") or []
         else:
-            text, src = summarize(top, cap, env)
+            text, src = "", ""
+            if mode == "content":
+                arts = []
+                for x in top[:3]:
+                    body = fetch_article_text(x["link"])
+                    if body:
+                        arts.append({"title": x["title"], "body": body,
+                                     "source": x.get("source", "")})
+                if arts:
+                    text, src = summarize_content(arts, keywords, cap, env)
+                    if not text:
+                        log.warning("市場焦點：內文摘要退回標題模式（%s）", src)
+                else:
+                    log.warning("市場焦點：內文全部抓不到，改用標題摘要")
+            if not text:
+                text, src = summarize(top, cap, env)
             # 顯示用的標題把尾巴的「 - 來源」去掉——旁邊已經另掛來源小標，
             # 留著會變成「…- Yahoo奇摩財經　Yahoo奇摩財經」連講兩次。
             links = [{"title": re.sub(r"\s*[-–—|]\s*[^-–—|]{1,30}$", "",
@@ -349,7 +675,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                     f"{x['title']}" for x in links) or ""
                 out["text_source"] = "headlines"
             out["links"] = links
-            state.update({"hash": h, "text": out["text"], "links": links})
+            state.update({"hash": h, "text": out["text"], "links": links,
+                          "text_source": out["text_source"]})
     else:
         log.warning("市場焦點：沒有抓到任何標題")
 
