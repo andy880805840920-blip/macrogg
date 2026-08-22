@@ -97,11 +97,66 @@ check("⑥b 沒命中時退回全部（邏輯）",
       ([h for h in [{"title": "C", "source": "路透"}]
         if any(w in h["source"].lower() for w in _srcs)] or hs3) == hs3)
 
-# ⑦ FedWatch 期貨自算：**雙合約法**（遠月 − 當月價差；FedWatch／WIRP 同款）
+# ⑦ FedWatch：WIRP 同款**逐會議**算法（使用者提供的規格＋驗收 unit test）
+_FOMC26 = ["2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
+           "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-09"]
+
+# —— 驗收 unit test：Nov 96.215＋Dec 96.140 → Dec +25bp ≈ 42.27% ——
+_c = ft.calculate_meeting_probability(
+    {"2026-11": 96.215, "2026-12": 96.140}, _FOMC26, "2026-12-09")
+check("⑦ 驗收：Dec +25bp 機率 ≈ 42.27%",
+      _c is not None and abs(_c["pct"] - 42.27) < 0.01, _c and _c["pct"])
+check("⑦a2 中間值：Dec_Start=Nov_Avg=3.785、Dec_End=3.8906818",
+      abs(_c["months"]["2026-12"]["start"] - 3.785) < 1e-6
+      and abs(_c["months"]["2026-12"]["end"] - 3.8906818) < 1e-4,
+      _c["months"]["2026-12"])
+check("⑦a3 中間值：move=10.568bp、N=9 M=22 D=31",
+      abs(_c["move_bp"] - 10.56818) < 0.001
+      and _c["months"]["2026-12"]["N"] == 9
+      and _c["months"]["2026-12"]["M"] == 22
+      and _c["months"]["2026-12"]["D"] == 31)
+check("⑦a4 outcome 拆解：0bp 57.7%／+25bp 42.3%",
+      abs(_c["outcomes"][0] - 0.5773) < 0.001
+      and abs(_c["outcomes"][25] - 0.4227) < 0.001, _c["outcomes"])
+
+# 超過一碼：move=31bp → +25bp 76%／+50bp 24%，顯示 % 不封頂（124%）
+_c2 = ft.calculate_meeting_probability(
+    {"2026-11": 96.215, "2026-12": 95.995}, _FOMC26, "2026-12-09")
+check("⑦b 31bp → P(+25)=76%、P(+50)=24%、顯示 124%（不 clamp）",
+      _c2 is not None and abs(_c2["move_bp"] - 31.0) < 0.05
+      and abs(_c2["outcomes"][25] - 0.76) < 0.01
+      and abs(_c2["outcomes"][50] - 0.24) < 0.01
+      and abs(_c2["pct"] - 124.0) < 0.2, _c2 and _c2["outcomes"])
+
+# 降息：move=−18bp → P(−25)=72%、P(0)=28%、顯示 −72%
+_c3 = ft.calculate_meeting_probability(
+    {"2026-11": 96.215, "2026-12": 96.342742}, _FOMC26, "2026-12-09")
+check("⑦c −18bp → P(−25)=72%、P(0)=28%、pct=−72",
+      _c3 is not None and abs(_c3["move_bp"] + 18.0) < 0.01
+      and abs(_c3["outcomes"][-25] - 0.72) < 0.005
+      and abs(_c3["outcomes"][0] - 0.28) < 0.005
+      and abs(_c3["pct"] + 72.0) < 0.1, _c3 and _c3["outcomes"])
+
+# 跨月反推鏈：假設 11/05 也有會議（10 月沒有）→ 錨月退到 10 月，
+# Nov End 由日曆日加權反推、接成 Dec Start
+_c4 = ft.calculate_meeting_probability(
+    {"2026-10": 96.215, "2026-11": 96.20, "2026-12": 96.14},
+    ["2026-11-05", "2026-12-09"], "2026-12-09")
+check("⑦d 連續會議月往回找錨月並逐月反推",
+      _c4 is not None and _c4["anchor"] == "2026-10"
+      and abs(_c4["months"]["2026-11"]["end"] - 3.803) < 0.001
+      and abs(_c4["pct"] - 32.13) < 0.05, _c4 and _c4["pct"])
+
+# 缺月份報價 → 誠實回 None
+check("⑦e 缺月份不硬算",
+      ft.calculate_meeting_probability({"2026-12": 96.14}, _FOMC26,
+                                       "2026-12-09") is None)
+
+# —— 抓取層 fedwatch_from_futures：合約自動推＋健康檢查＋停滯偵測 ——
 _RATES = {"DFEDTARL": [{"date": "2026-08-20", "value": 3.50}],
           "DFEDTARU": [{"date": "2026-08-20", "value": 3.75}]}
-_FWCFG = {"fedwatch_contract": "ZQF27.CBT",
-          "fedwatch_anchor_contract": "ZQQ26.CBT"}
+_FWCFG = {"fedwatch_meeting": "2026-12-09", "fomc_dates": _FOMC26,
+          "fedwatch_health_contract": "ZQQ26.CBT"}
 
 
 class _FakeYq:
@@ -120,78 +175,62 @@ class _FakeYq:
             "indicators": {"quote": [{"close": self._closes}]}}]}}
 
 
-def _yq2(anchor_px, far_px, far_closes=None):
-    """兩張合約各給一個價：URL 含 ZQQ26 給當月價、其餘給遠月價。"""
-    return lambda u: (_FakeYq(anchor_px) if "ZQQ26" in u
-                      else _FakeYq(far_px, far_closes))
+def _yq3(health=96.375, nov=96.215, dec=96.140, nov_closes=None):
+    """三張合約各給價：ZQQ26 健康檢查、ZQX26＝11 月、ZQZ26＝12 月。"""
+    def get(u):
+        if "ZQQ26" in u:
+            return _FakeYq(health)
+        if "ZQX26" in u:
+            return _FakeYq(nov, nov_closes)
+        return _FakeYq(dec)
+    return get
 
 
-# 當月 96.375 → 隱含 3.625%（＝中點，閘門通過）；遠月 96.31 → 3.69%；
-# 價差 0.065 ÷ 0.25 = 26%
-r = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.31))
-check("⑦ 雙合約：價差 0.065 → 26%（附遠月隱含）",
-      r is not None and abs(r[0] - 26.0) < 0.5 and abs(r[1] - 3.69) < 0.001, r)
-# 遠月低於當月（市場偏降息）→ 機率鎖在 0，不會出現負數
-r = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.60))
-check("⑦b 偏降息時鎖 0", r is not None and r[0] == 0.0, r)
-# 報價離譜（抓錯商品）→ 不採用
-check("⑦c 報價超出 90–100 不採用",
-      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 85.0)) is None)
-# 價差 >1.5pp（合約年份寫錯）→ 不採用
-check("⑦d 價差過大不採用",
-      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 94.0)) is None)
-# 抓不到目標區間 → 閘門沒有比對基準，不硬算
-check("⑦e 缺目標區間回 None",
-      ft.fedwatch_from_futures({}, _FWCFG, _get=_yq2(96.375, 96.31)) is None)
-# 100% 事故第一型的回歸：遠月超過當月＋0.40（陳舊報價）→ 不採用退備援
-check("⑦f 遠月隱含 4.10%（當月＋0.475）視為陳舊報價",
-      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 95.90)) is None)
-# 100% 事故第二型的回歸：遠月「錯得不夠離譜」（隱含 4.00%，落在舊門檻
-# 之內）——當月合約的品質閘門要能整批擋下
-check("⑦h 當月隱含偏離中點 >0.15 → 報價鏈判壞、整批不採用",
-      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.00, 96.00)) is None)
-check("⑦i 當月抓不到 → 無法驗證，不硬算",
-      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(85.0, 96.31)) is None)
-# 當月合約代號按月份自動推
-check("⑦j 當月合約代號自動滾",
-      ft._anchor_symbol(dt.date(2026, 8, 21)) == "ZQQ26.CBT"
-      and ft._anchor_symbol(dt.date(2026, 12, 3)) == "ZQZ26.CBT"
-      and ft._anchor_symbol(dt.date(2027, 1, 5)) == "ZQF27.CBT")
+# 健康 96.375 → 3.625%（＝FRED 中點，通過）；Nov/Dec 用驗收價
+r = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq3())
+check("⑦f 抓取層整合：自動推 ZQX26/ZQZ26 → 42.27%",
+      r is not None and abs(r["pct"] - 42.27) < 0.01
+      and abs(r["move_bp"] - 10.568) < 0.01
+      and r["meeting"] == "2026-12-09", r and r["pct"])
+check("⑦g2 缺目標區間 → 不硬算",
+      ft.fedwatch_from_futures({}, _FWCFG, _get=_yq3()) is None)
+check("⑦h 健康檢查：當月隱含偏離中點 >0.15 → 報價鏈判壞、整批不採用",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq3(health=96.00)) is None)
+check("⑦i 健康合約抓不到 → 無法驗證，不硬算",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq3(health=85.0)) is None)
+check("⑦j 合約代號自動滾（含健康合約按月推）",
+      ft._zq_symbol("2026-11") == "ZQX26.CBT"
+      and ft._zq_symbol("2026-12") == "ZQZ26.CBT"
+      and ft._zq_symbol("2027-01") == "ZQF27.CBT"
+      and ft._anchor_symbol(dt.date(2026, 8, 21)) == "ZQQ26.CBT")
 
-# ⑦q 停滯偵測（+0.0 pp 事故的回歸）：遠月收盤連續五天一模一樣＝報價
-# 鏈死掉，整批不採用；只有一筆收盤、或只剩最新成交價也一樣
-check("⑦q 遠月收盤五天不動 → 判報價死掉不採用",
+# 停滯偵測（+0.0 pp 事故的回歸）：會議相關合約五天收盤一模一樣＝報價
+# 死掉，整批不採用；健康合約平盤不受影響（⑦f 的 closes 本來就會動）
+check("⑦q 合約收盤五天不動 → 判報價死掉不採用",
+      ft.fedwatch_from_futures(
+          _RATES, _FWCFG, _get=_yq3(nov_closes=[96.215] * 5)) is None)
+check("⑦r 合約只有一筆收盤 → 不採用",
       ft.fedwatch_from_futures(
           _RATES, _FWCFG,
-          _get=_yq2(96.375, 96.00, far_closes=[96.00] * 5)) is None)
-check("⑦r 遠月只有一筆收盤 → 不採用",
-      ft.fedwatch_from_futures(
-          _RATES, _FWCFG,
-          _get=_yq2(96.375, 96.31, far_closes=[None, None, 96.31])) is None)
-check("⑦s 遠月無收盤只剩最新成交價 → 不採用（陳舊成交）",
-      ft.fedwatch_from_futures(
-          _RATES, _FWCFG, _get=_yq2(96.375, 96.31, far_closes=[])) is None)
-# 當月被實際利率釘住、平盤正常——停滯偵測不適用於它
-check("⑦t 當月平盤不影響（檢查只針對遠月）",
-      ft.fedwatch_from_futures(
-          _RATES, _FWCFG,
-          _get=lambda u: (_FakeYq(96.375, closes=[96.375] * 5)
-                          if "ZQQ26" in u else _FakeYq(96.31)))[0] == 26.0)
+          _get=_yq3(nov_closes=[None, None, 96.215])) is None)
+# 月份間價差過大（抓錯合約／年份）→ 不採用
+check("⑦s 月份間隱含差 >1.5pp → 不採用",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq3(nov=94.0)) is None)
+# 單場會議 |move|>100bp → 壞資料
+check("⑦t 單場會議定價超過四碼 → 判壞資料",
+      ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq3(dec=95.0)) is None)
 
 # ⑦u 交叉檢核：期貨與官方差逾 25pp → 期貨端判壞、改用官方值
+_FWD = {"pct": 42.27, "move_bp": 10.568, "meeting": "2026-12-09"}
 check("⑦u 差逾 25pp 改用官方值",
-      ft._pick_fw((100.0, 4.00, 37.5), 20.0) == (20.0, "atlanta", None, None))
-check("⑦v 差距在範圍內 → 用期貨（附隱含與價差）",
-      ft._pick_fw((26.0, 3.69, 6.5), 30.0) == (26.0, "futures", 3.69, 6.5))
-check("⑦w 期貨掛了 → 官方值",
-      ft._pick_fw(None, 31.0) == (31.0, "atlanta", None, None))
-check("⑦x 兩邊都沒有 → 退 AI 層",
-      ft._pick_fw(None, None) == (None, "", None, None))
-
-# ⑦y 定價達一碼以上：機率鎖 100，但價差照實帶回（首頁改講事實用）
-_ry = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq2(96.375, 96.115))
-check("⑦y 價差 26bp → 機率 100＋spread_bp 26",
-      _ry is not None and _ry[0] == 100.0 and abs(_ry[2] - 26.0) < 0.1, _ry)
+      ft._pick_fw({"pct": 124.0, "move_bp": 31.0}, 40.0)
+      == (40.0, "atlanta", None))
+check("⑦v 差距在範圍內 → 用期貨（附明細）",
+      ft._pick_fw(_FWD, 45.0) == (42.27, "futures", _FWD))
+check("⑦w 期貨掛了 → 官方值", ft._pick_fw(None, 31.0) == (31.0, "atlanta", None))
+check("⑦x 兩邊都沒有 → 退 AI 層", ft._pick_fw(None, None) == (None, "", None))
+check("⑦y 降息定價（pct 負）與官方比對取絕對值",
+      ft._pick_fw({"pct": -30.0, "move_bp": -7.5}, 20.0)[1] == "futures")
 
 # ⑦k Atlanta Fed 第二層：沒設取值路徑時只偵察不猜數字；設了才啟用
 class _FakeAt:

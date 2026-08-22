@@ -41,8 +41,10 @@ from __future__ import annotations
 
 import re
 import json
+import math
 import hashlib
 import logging
+import calendar
 import datetime as dt
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
@@ -534,16 +536,15 @@ def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
 # ---------------------------------------------------------------------------
 YQ_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
           "?range=5d&interval=1d")
-# 2027 年 1 月合約：1 月沒有 FOMC 會議，整月均價 ≈ 12 月會後的利率。
-# 年度往前滾時到 config/focus.yaml 改 fedwatch_contract（例如 2027 年底
-# 的機率就改 ZQF28.CBT）。
-DEFAULT_ZQ = "ZQF27.CBT"
+# 預設目標會議（config 的 fedwatch_meeting 蓋掉它；一年更新一次）
+DEFAULT_MEETING = "2026-12-09"
 
 # FedWatch 的算法版本。state 的當日快取只在版本一致時沿用——
 # 修了算法之後當天的下一次執行就重算，不必等到隔天。
 # 1＝單合約 vs FRED 中點；2＝雙合約價差＋品質閘門；
-# 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核
-FW_METHOD = 3
+# 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核；
+# 4＝WIRP 逐會議法（日曆日加權、不封頂、正負＝升降息）
+FW_METHOD = 4
 
 
 def _last_value(rows) -> float | None:
@@ -626,26 +627,118 @@ def _anchor_symbol(today: dt.date) -> str:
     return f"ZQ{_MONTH_CODES[today.month - 1]}{today.year % 100:02d}.CBT"
 
 
-def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
-                          _get=None) -> float | None:
+def _zq_symbol(month: str) -> str:
+    """月份鍵（"2026-11"）→ 合約代號（ZQX26.CBT）。"""
+    y, m = int(month[:4]), int(month[5:7])
+    return f"ZQ{_MONTH_CODES[m - 1]}{y % 100:02d}.CBT"
+
+
+def _prev_month(month: str) -> str:
+    y, m = int(month[:4]), int(month[5:7])
+    return f"{y - 1:04d}-12" if m == 1 else f"{y:04d}-{m - 1:02d}"
+
+
+def calculate_meeting_probability(futures_prices: dict, fomc_dates: list,
+                                  target: str) -> dict | None:
     """
-    升息一碼機率 ＝ (遠月隱含利率 − **當月隱含利率**) ÷ 0.25，鎖 0–100。
+    WIRP 同款的**逐會議**隱含機率。輸入：
 
-    **雙合約法**（FedWatch／WIRP 的實際做法），取代先前的「遠月 − FRED
-    目標中點」。改的原因是 100% 事故的第二型：遠月報價陳舊但「錯得不夠
-    離譜」（隱含落在中點＋0.25 到＋0.40 之間），單合約法的所有門檻都
-    分不出真假。雙合約法補上兩件單合約法做不到的事：
+        futures_prices  {"2026-11": 96.215, "2026-12": 96.140, ...}
+        fomc_dates      ["2026-01-28", ..., "2026-12-09"]（決策日）
+        target          目標會議決策日（"2026-12-09"）
 
-      ① **資料品質閘門**——當月合約的答案是已知的（當月平均利率 ≈
-         目前的實際利率），它的隱含若偏離 FRED 目標中點超過 0.15 個
-         百分點，代表 Yahoo 的 ZQ 報價鏈整條有問題（陳舊、錯商品），
-         遠月再合理也整批不採用、退備援。
-      ② **基差自動消掉**——期貨隱含的是有效聯邦資金利率（EFFR），
-         它通常不在目標區間正中間；兩張合約相減，這個系統性偏差
-         兩邊一樣大，直接抵銷。
+    算法（與使用者提供的規格逐條對應）：
+      1. 月平均隱含 EFFR ＝ 100 − 期貨價
+      2. 無 FOMC 月是錨：End(T−1) ＝ Avg(T) ＝ Start(T+1)
+      3. 有 FOMC 的月份按日曆日加權：Avg ＝ (N×Start ＋ M×End)/D，
+         N＝月初到會議日（含當天）、M＝其餘天數、D＝N＋M＝當月天數
+      4. 從錨月往後逐月反推 Start/End，一路推到目標會議月
+      5. ExpectedMoveBps ＝ (End − Start) × 100
+      6–8. moves ＝ bps/25；拆成相鄰兩個 25bp outcome：
+         P(floor×25) ＝ 1−fraction、P((floor+1)×25) ＝ fraction。
+         **不 clamp**；顯示用的單一 % ＝ moves × 100（WIRP 慣例，
+         可以超過 100，代表定價超過一碼）。
+      9. Unit test（tests/test_focus.py）：Nov 96.215＋Dec 96.140
+         必須得到 Dec +25bp ≈ 42.27%。
 
-    目標區間仍取 FRED 的 DFEDTARL／DFEDTARU（rates 模組本來就有抓），
-    但現在只當閘門的比對基準，不再進機率算式。
+    回傳 dict 含每一步中間值（price/avg/start/end/N/M/D、move_bp、
+    moves、outcomes、pct），全部進 log 供逐項對 Bloomberg WIRP。
+    資料不足（缺月份、找不到錨）回 None。
+    """
+    if not futures_prices or not target:
+        return None
+    meets = {str(d)[:7]: str(d) for d in fomc_dates}
+    meets[str(target)[:7]] = str(target)           # 目標一定是會議月
+    avg = {str(m): round(100.0 - float(p), 6)
+           for m, p in futures_prices.items()}
+
+    tm = str(target)[:7]
+    chain = [tm]                                   # 目標月（含）往回到錨月
+    m, hops = _prev_month(tm), 0
+    while m in meets and hops < 6:                 # 連續會議月往回走
+        chain.append(m)
+        m, hops = _prev_month(m), hops + 1
+    anchor = m                                     # 第一個無會議月
+    if hops >= 6:
+        log.warning("FedWatch 計算：往回 6 個月找不到無會議月，放棄")
+        return None
+    needed = [anchor] + list(reversed(chain))      # 錨月 → … → 目標月
+    if any(mo not in avg for mo in needed):
+        log.warning("FedWatch 計算：缺月份報價（需要 %s，有 %s）",
+                    "、".join(needed), "、".join(sorted(avg)))
+        return None
+
+    months: dict = {anchor: {"price": futures_prices.get(anchor),
+                             "avg": avg[anchor], "role": "anchor",
+                             "start": avg[anchor], "end": avg[anchor]}}
+    start = avg[anchor]                            # Start(錨月+1) ＝ Avg(錨月)
+    end = start
+    for mo in needed[1:]:
+        d = dt.date.fromisoformat(meets[mo])
+        days = calendar.monthrange(d.year, d.month)[1]
+        n, m_days = d.day, days - d.day
+        if m_days <= 0:                            # 月底最後一天開會，反推無解
+            log.warning("FedWatch 計算：%s 的會議在月底最後一天，無法反推", mo)
+            return None
+        end = (days * avg[mo] - n * start) / m_days
+        months[mo] = {"price": futures_prices.get(mo), "avg": avg[mo],
+                      "role": "meeting", "meeting": meets[mo],
+                      "D": days, "N": n, "M": m_days,
+                      "start": round(start, 6), "end": round(end, 6)}
+        start_next = end                           # Start(下月) ＝ End(本月)
+        if mo != tm:
+            start = start_next
+    move_bp = (end - months[tm]["start"]) * 100
+    moves = move_bp / 25.0
+    lower = math.floor(moves)
+    fraction = moves - lower
+    outcomes = {lower * 25: round(1 - fraction, 4),
+                (lower + 1) * 25: round(fraction, 4)}
+    return {"pct": round(moves * 100, 2),          # WIRP 慣例：不封頂的單一 %
+            "move_bp": round(move_bp, 3),
+            "moves": round(moves, 4),
+            "outcomes": outcomes,
+            "anchor": anchor, "meeting": str(target),
+            "months": months}
+
+
+def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
+                          _get=None) -> dict | None:
+    """
+    第一層：WIRP 同款逐會議算法（見 calculate_meeting_probability）。
+
+    這一層負責把「抓哪些合約」接到算法上：
+      · 報價鏈健康檢查——當月合約的答案已知（當月平均 ≈ 目前實際
+        利率），隱含偏離 FRED 目標中點 >0.15 就判整條 Yahoo 報價鏈
+        壞掉、整批退備援。
+      · 由 fedwatch_meeting 與 fomc_dates 推出需要的月份（目標會議月
+        ＋往回到第一個無會議月），合約代號自動生成（ZQZ26、ZQX26…），
+        每張都過停滯偵測（五天收盤一模一樣＝報價死掉）。
+      · 相鄰月份 sanity（>1.5 個百分點＝抓錯商品或年份）與單場會議
+        |move|>100bp（四碼）的壞資料檻。
+
+    成功回傳 calculate_meeting_probability 的完整 dict（pct 帶正負：
+    正＝升息、負＝降息，依 WIRP 慣例**不封頂**），失敗回 None 退備援。
     """
     rs = rates_series or {}
     lo = _last_value(rs.get("DFEDTARL"))
@@ -655,49 +748,76 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
         return None
     mid = (lo + hi) / 2
 
-    anchor_sym = ((cfg or {}).get("fedwatch_anchor_contract")
+    health_sym = ((cfg or {}).get("fedwatch_health_contract")
                   or _anchor_symbol(clock.today()))
-    anchor = fetch_zq_implied(anchor_sym, _get)
-    if anchor is None:
+    cur = fetch_zq_implied(health_sym, _get)
+    if cur is None:
         return None
-    # 品質閘門：當月合約答案已知，對不上就是報價鏈壞了
-    if abs(anchor - mid) > 0.15:
+    if abs(cur - mid) > 0.15:
         log.warning("FedWatch 自算：當月合約 %s 隱含 %.2f%% 偏離目標中點 "
                     "%.3f%% 超過 0.15，判定 Yahoo 報價鏈品質不佳，"
-                    "整批不採用", anchor_sym, anchor, mid)
+                    "整批不採用", health_sym, cur, mid)
         return None
 
-    sym = (cfg or {}).get("fedwatch_contract") or DEFAULT_ZQ
-    # 遠月開「有在動」檢查：連續五天收盤一模一樣＝報價死掉（+0.0 pp
-    # 事故的長相），比任何價位門檻都可靠。當月不開（被實際利率釘住，
-    # 平盤正常）。
-    implied = fetch_zq_implied(sym, _get, require_movement=True)
-    if implied is None:
+    target = str((cfg or {}).get("fedwatch_meeting") or DEFAULT_MEETING)
+    fomc_dates = [str(x) for x in ((cfg or {}).get("fomc_dates") or [])]
+    if target not in fomc_dates:
+        fomc_dates.append(target)
+    meets = {d[:7] for d in fomc_dates}
+    tm = target[:7]
+    need = [tm]
+    m, hops = _prev_month(tm), 0
+    while m in meets and hops < 6:
+        need.append(m)
+        m, hops = _prev_month(m), hops + 1
+    need.append(m)                                 # 錨月（無會議）
+    if hops >= 6:
+        log.warning("FedWatch 自算：往回 6 個月找不到無會議月，跳過")
         return None
-    # 遠月自己的防護（跟閘門互補：閘門驗的是報價鏈，這裡驗的是這一張）：
-    #   ① 價差 >1.5 個百分點——多半是合約寫錯年份或抓錯商品
-    #   ② 遠月高於當月＋0.40——市場完整定價超過一碼半的升息，在目前的
-    #      環境幾乎必然是遠月的陳舊報價；寧可退備援。
-    #      往下不設檻：偏降息只會把機率鎖在 0，那是正確行為。
-    if abs(implied - anchor) > 1.5:
-        log.warning("FedWatch 自算：遠月隱含 %.2f%% 與當月 %.2f%% 價差過大，"
-                    "不採用", implied, anchor)
+
+    prices = {}
+    for mo in sorted(need):
+        sym = _zq_symbol(mo)
+        # 每張合約都開「有在動」檢查：連續五天收盤一模一樣＝報價死掉
+        #（+0.0 pp 事故的長相），比任何價位門檻都可靠
+        imp = fetch_zq_implied(sym, _get, require_movement=True)
+        if imp is None:
+            return None
+        prices[mo] = round(100.0 - imp, 4)
+    avgs = sorted(100.0 - p for p in prices.values())
+    if avgs[-1] - avgs[0] > 1.5:
+        log.warning("FedWatch 自算：月份間隱含利率相差 %.2f 個百分點，"
+                    "疑為抓錯合約，不採用", avgs[-1] - avgs[0])
         return None
-    if implied > anchor + 0.40:
-        log.warning("FedWatch 自算：遠月隱含 %.2f%% 超過當月＋0.40（%.2f%%），"
-                    "疑為陳舊報價，不採用", implied, anchor)
+
+    calc = calculate_meeting_probability(prices, fomc_dates, target)
+    if calc is None:
         return None
-    pct = round(max(0.0, min(100.0, (implied - anchor) / 0.25 * 100)), 1)
-    spread_bp = round((implied - anchor) * 100, 1)
-    log.info("FedWatch 自算：遠月 %s 隱含 %.3f%% − 當月 %s 隱含 %.3f%% "
-             "→ 升息一碼機率 %.1f%%（價差 %+.1f bps，目標中點 %.3f%%，"
-             "閘門通過）",
-             sym, implied, anchor_sym, anchor, pct, spread_bp, mid)
-    # 把隱含利率與價差一起帶回去：chip 上要能驗算；價差 ≥25bp（機率被
-    # 鎖在 100%）時首頁改講事實——「預期升 26bp」不等於「100% 確定升
-    # 一碼」，它可能是「六成升一碼＋兩成升兩碼」的組合，線性公式分不出
-    # 來，掛 100% 會被讀成確定事件。
-    return pct, implied, spread_bp
+    if abs(calc["move_bp"]) > 100:
+        log.warning("FedWatch 自算：單場會議隱含變動 %.1f bp（超過四碼），"
+                    "判為壞資料，不採用", calc["move_bp"])
+        return None
+    # 十步中間值全部進 log，供逐項對 Bloomberg WIRP
+    for mo in sorted(calc["months"]):
+        info = calc["months"][mo]
+        if info["role"] == "anchor":
+            log.info("FedWatch %s（錨月，無會議）：價格 %s → 月均 %.4f%%",
+                     mo, info["price"], info["avg"])
+        else:
+            log.info("FedWatch %s（會議 %s，D=%d N=%d M=%d)：價格 %s → "
+                     "月均 %.4f%%，Start %.4f%% → End %.4f%%",
+                     mo, info["meeting"], info["D"], info["N"], info["M"],
+                     info["price"], info["avg"], info["start"], info["end"])
+    log.info("FedWatch 自算（WIRP 法）：%s 會議隱含變動 %+.3f bp ＝ "
+             "%.4f 碼 → %s一碼機率 %.2f%%（outcome 拆解 %s；"
+             "健康檢查 %s 隱含 %.3f%% vs 中點 %.3f%% 通過）",
+             target, calc["move_bp"], calc["moves"],
+             "升息" if calc["move_bp"] >= 0 else "降息",
+             abs(calc["pct"]),
+             "、".join(f"{k:+d}bp {v*100:.1f}%"
+                       for k, v in sorted(calc["outcomes"].items())),
+             health_sym, cur, mid)
+    return calc
 
 
 # ---------------------------------------------------------------------------
@@ -828,23 +948,24 @@ def fetch_fedwatch(env=None) -> float | None:
 def _pick_fw(fw, at):
     """
     期貨自算與 Atlanta Fed 官方值的**交叉檢核**。
-    回傳 (pct, src, implied, spread_bp)。
+    回傳 (pct, src, 期貨算法明細或 None)。期貨的 pct 帶正負
+    （負＝降息定價），與官方值（升息機率）比對時取絕對值。
 
     兩邊都有值且差超過 25 個百分點 → 期貨端有問題（兩個獨立來源同時
     錯的機率遠低於期貨報價鏈單邊死掉），改用官方值。這比任何單邊
     防護都可靠——防護欄只能驗「合不合理」，交叉檢核驗的是「對不對」。
     只有一邊有值就用那邊；都沒有回全 None 讓呼叫端退 AI 層。
     """
-    if fw is not None and at is not None and abs(fw[0] - at) > 25:
+    if fw is not None and at is not None and abs(abs(fw["pct"]) - at) > 25:
         log.warning("FedWatch 交叉檢核：期貨自算 %.1f%% 與官方 %.1f%% "
                     "差逾 25pp，判定期貨端報價有問題，改用官方值",
-                    fw[0], at)
-        return at, "atlanta", None, None
+                    fw["pct"], at)
+        return at, "atlanta", None
     if fw is not None:
-        return fw[0], "futures", fw[1], fw[2]
+        return fw["pct"], "futures", fw
     if at is not None:
-        return at, "atlanta", None, None
-    return None, "", None, None
+        return at, "atlanta", None
+    return None, "", None
 
 
 def _jump_suspect(pct: float, prev, src: str) -> bool:
@@ -915,14 +1036,17 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     # 實際發生過「修完 push、下一次執行畫面還是 100%」正是這個原因。
     # state 記下算出該值的方法版本，不一致就當天重算。
     fw_old = state.get("fedwatch") or {}
+    # 目標會議的顯示標籤（「12 月」）——三層來源共用，chip 標題用
+    _meet = str(cfg.get("fedwatch_meeting") or DEFAULT_MEETING)
+    _meet_label = f"{int(_meet[5:7])} 月"
     if (fw_old.get("date") == today and fw_old.get("pct") is not None
             and fw_old.get("method") == FW_METHOD):
         out["fedwatch"] = {"pct": fw_old["pct"],
                            "delta_pp": fw_old.get("delta_pp"),
                            "suspect": bool(fw_old.get("suspect")),
                            "src": fw_old.get("src", ""),
-                           "implied": fw_old.get("implied"),
-                           "spread_bp": fw_old.get("spread_bp")}
+                           "move_bp": fw_old.get("move_bp"),
+                           "meeting_label": _meet_label}
     else:
         # 來源鏈：期貨價差（自算、自驗）×交叉檢核× Atlanta Fed（官方）
         # → Gemini 擷取 → 沿用前值。
@@ -930,7 +1054,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         # 未啟用（沒設 atlanta_json_path）時做偵察、把端點候選寫進 log。
         _fw = fedwatch_from_futures(rates_series, cfg)
         _at = fetch_atlanta_fedwatch(cfg)
-        pct, fw_src, implied, spread_bp = _pick_fw(_fw, _at)
+        pct, fw_src, _detail = _pick_fw(_fw, _at)
+        move_bp = (_detail or {}).get("move_bp")
         if pct is None:
             pct = fetch_fedwatch(env)
             fw_src = "ai"
@@ -952,8 +1077,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 out["fedwatch"] = {"pct": prev, "delta_pp": None,
                                    "suspect": False,
                                    "src": fw_old.get("src", ""),
-                                   "implied": fw_old.get("implied"),
-                                   "spread_bp": fw_old.get("spread_bp"),
+                                   "move_bp": fw_old.get("move_bp"),
+                                   "meeting_label": _meet_label,
                                    "stale_from": fw_old.get("date")}
         elif pct is not None:
             if _jump_suspect(pct, prev, fw_src):
@@ -973,11 +1098,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 delta = None
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
                                "suspect": suspect, "src": fw_src,
-                               "implied": implied, "spread_bp": spread_bp}
+                               "move_bp": move_bp,
+                               "meeting_label": _meet_label}
             state["fedwatch"] = {"pct": pct, "date": today,
                                  "delta_pp": delta, "suspect": suspect,
-                                 "src": fw_src, "implied": implied,
-                                 "spread_bp": spread_bp,
+                                 "src": fw_src, "move_bp": move_bp,
                                  "method": FW_METHOD}
 
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →

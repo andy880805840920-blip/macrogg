@@ -8,13 +8,27 @@
 
 enabled: true
 
-# FedWatch 機率第一層（期貨自算，雙合約法）用的遠月合約。
-# ZQF27＝2027 年 1 月的 30 天期聯邦基金期貨：1 月沒有 FOMC 會議，
-# 整月平均利率 ≈ 2026 年 12 月會議之後的利率。
-# 年度往前滾時改這裡（例如要看 2027 年底就改 ZQF28.CBT）。
-# 「當月合約」（品質閘門＋價差基準）由程式按月份自動推，逐月自動滾；
-# 要固定時才設 fedwatch_anchor_contract（例：ZQQ26.CBT）。
-fedwatch_contract: ZQF27.CBT
+# FedWatch 機率第一層：WIRP 同款**逐會議**算法（期貨自算）。
+# 目標會議的決策日填這裡；需要的合約（會議月＋往回到第一個無會議月）
+# 由程式自動推（例：12/09 會議 → ZQZ26 ＋ ZQX26），不用手填合約代號。
+# 會議結束後把這裡改成下一場要盯的會議。
+fedwatch_meeting: 2026-12-09
+
+# 該年度的 FOMC 決策日（兩天會議的第二天）。每年一月照官方行事曆
+# 更新一次：https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+# 算法靠它分辨「哪個月沒有會議」（錨月）與日曆日加權的 N/M/D。
+fomc_dates:
+  - 2026-01-28
+  - 2026-03-18
+  - 2026-04-29
+  - 2026-06-17
+  - 2026-07-29
+  - 2026-09-16
+  - 2026-10-28
+  - 2026-12-09
+
+# 報價鏈健康檢查用的「當月合約」由程式按月份自動推，逐月自動滾；
+# 要固定時才設 fedwatch_health_contract（例：ZQQ26.CBT）。
 
 # FedWatch 機率第二層：亞特蘭大聯準銀行 Market Probability Tracker（官方）。
 # 資料端點格式尚未實跑驗證：atlanta_json_path 沒填時每次執行只做偵察

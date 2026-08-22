@@ -831,37 +831,40 @@ def _focus_strip(f: dict | None) -> str:
                      f'<b>{y["value"]:.2f}%</b>'
                      f'<i class="{cls}">{esc(dtxt)}</i></div>')
     fw = f.get("fedwatch") or {}
-    _sp = fw.get("spread_bp")
-    if (fw.get("pct") is not None and fw.get("src") == "futures"
-            and fw["pct"] >= 100 and _sp is not None):
-        # 市場定價已達一碼以上：「100%」是線性公式的極限值，不是真的
-        # 百分之百確定（預期 +26bp 可能是「六成升一碼＋兩成升兩碼」的
-        # 組合）。機率講不清楚的時候改講事實：定價了多少個 bp。
-        chips.append('<div class="fs-chip"><span>2026 年底市場定價</span>'
-                     f'<b>+{_sp:.0f} bps</b>'
-                     '<i>已完整定價升息一碼（機率算式達上限）</i></div>')
-    elif fw.get("pct") is not None:
+    _ml = fw.get("meeting_label") or "12 月"
+    if fw.get("pct") is not None:
+        # WIRP 口徑：單一 %、不封頂；pct 帶正負（負＝市場定價降息），
+        # 標籤跟著方向走、數字取絕對值。
+        _pv = fw["pct"]
+        _dir = "降息" if _pv < 0 else "升息"
+        _label = f"{_ml} FOMC {_dir}一碼機率"
         d = fw.get("delta_pp")
+        _mb = fw.get("move_bp")
         if fw.get("stale_from"):
             # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
             # 不讓一次 429 就把整顆 chip 打回「—」。
             dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
+        elif abs(_pv) > 100:
+            # 超過 100%＝市場定價超過一碼（WIRP 慣例照印），小字講明
+            dtxt = (f"已定價超過一碼（隱含 {_mb:+.1f} bp）"
+                    if _mb is not None else "已定價超過一碼")
         elif d is not None:
             dtxt = f"{d:+.1f} pp"
         elif fw.get("suspect"):
             dtxt = "擷取異常，沿用前值"
-        elif fw.get("src") == "futures" and fw.get("implied") is not None:
-            # 期貨自算時把隱含利率標出來：讀者（和我們）能直接驗算
-            # (隱含 − 中點) ÷ 0.25，不會再有「100% 但不知道為什麼」的黑箱
-            dtxt = f"期貨隱含 {fw['implied']:.2f}%"
+        elif fw.get("src") == "futures" and _mb is not None:
+            # 期貨自算時把隱含變動標出來：讀者（和我們）能直接驗算
+            # move ÷ 25，不會再有「一個機率但不知道為什麼」的黑箱
+            dtxt = f"隱含 {_mb:+.1f} bp"
         else:
             dtxt = "—"
         cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
-        chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
-                     f'<b>{fw["pct"]:.0f}%</b>'
+        chips.append(f'<div class="fs-chip"><span>{esc(_label)}</span>'
+                     f'<b>{abs(_pv):.1f}%</b>'
                      f'<i class="{cls}">{esc(dtxt)}</i></div>')
     else:
-        chips.append('<div class="fs-chip"><span>2026 年底升息一碼機率</span>'
+        chips.append(f'<div class="fs-chip"><span>{esc(_ml)} FOMC '
+                     '升息一碼機率</span>'
                      '<b>—</b><i>本次擷取失敗</i></div>')
     text = (f'<p class="fs-text">{esc(f.get("text") or "")}</p>'
             if f.get("text") else "")
@@ -884,7 +887,7 @@ def _focus_strip(f: dict | None) -> str:
     if fw.get("pct") is None:
         _fw_note = ""
     elif fw.get("src") == "futures":
-        _fw_note = "　·　機率：由聯邦基金期貨價差反推（FedWatch 同款算法，延遲報價）"
+        _fw_note = "　·　機率：由聯邦基金期貨逐會議反推（WIRP 同款算法，延遲報價）"
     elif fw.get("src") == "atlanta":
         _fw_note = "　·　機率：亞特蘭大聯準銀行 Market Probability Tracker"
     else:
