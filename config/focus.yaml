@@ -79,6 +79,12 @@ feeds:
   - https://tw.news.yahoo.com/rss/finance
   - https://tw.stock.yahoo.com/rss?category=news
   - https://finance.yahoo.com/news/rssindex
+  # 標題級來源：RSS 公開、內文有付費牆——貢獻標題與連結進標題池，
+  # 內文抓不到會被長度檢查自動跳過，不影響其他來源。
+  # ⚠️ 這裡有設定就會蓋掉程式內建的預設清單，所以 FT／WSJ 要列在這裡
+  #（曾因只列三條 Yahoo 而讓 FT／WSJ 靜默失效）。
+  - https://www.ft.com/rss/home
+  - https://feeds.a.dj.com/rss/RSSMarketsMain.xml
 
 # 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
 # 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。

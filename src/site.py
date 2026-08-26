@@ -28,21 +28,15 @@ _TR_HOST = SITE_HOST.replace("-", "--").replace(".", "-") + ".translate.goog"
 
 def _lang_btn(active: str) -> str:
     """
-    右上角的小小 EN 鈕。瀏覽器不開放用程式觸發內建翻譯，所以按鈕
-    只能做兩件事：連去 Google 翻譯代理（開新分頁翻當前頁），以及
-    提示內建翻譯怎麼開。代理需要 Google 伺服器抓得到頁面——若
-    robots.txt 全站禁抓，代理會失敗，提示就是後備。
+    右上角的小小 EN 鈕：**直接**同分頁跳 Google 翻譯代理版（翻譯完的
+    頁面上方有 Google 自帶的「顯示原文」列，切回不用我們做）。
+    代理需要 Google 伺服器抓得到頁面——robots.txt 已配合放寬
+    （run.py），頁面上的 noindex meta 保留、照樣不進搜尋索引。
     """
     url = (f"https://{_TR_HOST}{active}"
            "?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en")
-    return (
-        '<details class="lang"><summary translate="no">EN</summary>'
-        '<div class="lang-pop">'
-        f'<a href="{url}" target="_blank" rel="noopener">'
-        'English（Google 翻譯，開新分頁）</a>'
-        '<span>若打不開，用瀏覽器內建翻譯：Chrome 右鍵或網址列選單→'
-        '「翻譯」；iPhone Safari 網址列左側選單→「翻譯網頁」。</span>'
-        '</div></details>')
+    return (f'<a class="lang-btn" translate="no" href="{url}" '
+            'rel="noopener" title="English">EN</a>')
 
 # 導覽列定義：(路徑, 名稱, 是否已完成)
 NAV = [
@@ -115,24 +109,14 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 /* ---------- 右上角的 EN 鈕（原生 details 小浮層）----------
    桌機手機都收在頁首右上；手機把觸控目標拉到 44px（稽核下限）。 */
 .top{position:relative;padding-right:52px}
-.lang{position:absolute;top:0;right:0}
-.lang>summary{cursor:pointer;list-style:none;display:inline-flex;
+.lang-btn{position:absolute;top:0;right:0;display:inline-flex;
   align-items:center;justify-content:center;padding:3px 10px;
   font-size:11.5px;font-weight:700;letter-spacing:.06em;
   color:var(--muted);border:1px solid var(--border);border-radius:4px;
-  user-select:none}
-.lang>summary::-webkit-details-marker{display:none}
-.lang[open]>summary{color:var(--text-primary);
-  border-color:var(--text-primary)}
-.lang-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:50;
-  background:var(--surface-1);border:1px solid var(--border);
-  border-radius:8px;padding:10px 12px;width:min(78vw,300px);
-  box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:12px;line-height:1.7}
-.lang-pop a{display:flex;align-items:center;min-height:44px;
-  font-weight:700}
-.lang-pop span{color:var(--muted);display:block}
+  text-decoration:none}
+.lang-btn:hover{color:var(--text-primary);border-color:var(--text-primary)}
 @media(max-width:759px){
-  .lang>summary{min-height:44px;box-sizing:border-box}}
+  .lang-btn{min-height:44px;box-sizing:border-box}}
 /* 標題兼「回首頁」。不加底線也不變色——它首先是標題，其次才是連結；
    染成連結色會讓每一頁的第一個視覺焦點變成一條藍字。 */
 /* 觸控高度：h1 本身只有 28px。上下各給 6px 的 padding 撐到 40px，
@@ -1565,6 +1549,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   border-top:1px solid var(--grid);cursor:pointer;white-space:nowrap}
 .fs-pick-panel label:first-child{border-top:none}
 .fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
+.fs-pick-panel label:has(input:disabled){opacity:.4;cursor:default}
 .fs-pick-note{font-size:11px;color:var(--muted);margin-top:6px;
   border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
 @media(max-width:759px){
@@ -1576,13 +1561,14 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
     box-shadow:none}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
-.fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
-.fs-chip{padding:2px 22px 2px 0;margin-right:22px;
-  border-right:1px solid var(--grid)}
-.fs-chip:last-child{border-right:0;margin-right:0;padding-right:0}
-/* 手機會換行：換行後行尾的分隔線會懸空，乾脆整個拿掉、只留間距 */
+/* 固定四格網格：桌機一行四格、手機 2×2。格位天天一樣，選什麼放什麼，
+   不再隨勾選數量換行漂移。分隔線在網格版取消（隱藏的 chip 仍在 DOM，
+   nth-child 對不準「可見的第一格」，畫了只會斷在怪地方）。 */
+.fs-chips{display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px 18px;margin-top:8px}
+.fs-chip{padding:2px 0;min-width:0}
 @media(max-width:759px){
-  .fs-chip{border-right:0;padding-right:0;margin-right:20px}}
+  .fs-chips{grid-template-columns:repeat(2,1fr)}}
 .fs-chip span{display:block;font-size:11px;color:var(--muted);margin-bottom:1px}
 .fs-chip b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .fs-chip i{font-style:normal;font-size:11.5px;margin-left:6px;color:var(--muted)}

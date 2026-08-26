@@ -206,7 +206,8 @@ QUOTE_SPECS = {
 }
 
 # 預設顯示組（使用者未自選、關 JS、初次造訪都用這組）。
-DEFAULT_CHIPS = ("dgs2", "dgs10", "fedwatch")
+# 固定四格版面，預設就湊滿四顆；30 年期入列因為長端是本站主軸。
+DEFAULT_CHIPS = ("dgs2", "dgs10", "dgs30", "fedwatch")
 
 
 def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
@@ -320,14 +321,30 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     """
     rs, liq = rates_series or {}, liq_series or {}
     chips: list[dict] = []
-    # ---- 天期利率：10Y／30Y 優先用已升級的即時 chip，其餘 FRED 收盤 ----
+    # ---- 天期利率：全部先試 Yahoo 即時，抓不到退 FRED 收盤 ----
+    # 10Y／30Y 用已升級的即時 chip（同一次抓取，不重打）；3M／5Y 用
+    # CBOE 殖利率指數（^IRX／^FVX，×10 慣例由 fetch_yahoo_yield 規範化）；
+    # 2Y 是 Yahoo 唯一沒有指數的天期，改用 CME 微型殖利率期貨 2YY=F
+    #（直接報殖利率、與現貨通常差幾個 bp，但流動性偶爾薄）——所以
+    # 每檔即時值都過「與 FRED 收盤差逾 0.6 個百分點就不採用」的防呆，
+    # 跟 10Y／30Y 的升級規則同一條。
     fresh = {c["label"]: c for c in (fresh_yields or [])}
-    for cid, sid, label in (("dgs3mo", "DGS3MO", "3 個月"),
-                            ("dgs2", "DGS2", "2 年期"),
-                            ("dgs5", "DGS5", "5 年期"),
-                            ("dgs10", "DGS10", "10 年期"),
-                            ("dgs30", "DGS30", "30 年期")):
+    for cid, sid, label, live_sym in (
+            ("dgs3mo", "DGS3MO", "3 個月", "^IRX"),
+            ("dgs2", "DGS2", "2 年期", "2YY=F"),
+            ("dgs5", "DGS5", "5 年期", "^FVX"),
+            ("dgs10", "DGS10", "10 年期", None),
+            ("dgs30", "DGS30", "30 年期", None)):
         fc = fresh.get(label)
+        if fc is None and live_sym and not offline:
+            fc = fetch_yahoo_yield(live_sym, label, _get=_get)
+            fred_last, _, _ = _last2(rs.get(sid))
+            if (fc and fred_last is not None
+                    and abs(fc["value"] - fred_last) > LIVE_JUMP_CAP):
+                log.warning("殖利率即時 %s（%s）%.2f 與 FRED 收盤 %.2f 差逾 "
+                            "%.2f 個百分點，不採用退收盤", live_sym, label,
+                            fc["value"], fred_last, LIVE_JUMP_CAP)
+                fc = None
         if fc:
             db = fc.get("delta_bp")
             cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
@@ -668,15 +685,14 @@ def _post_gemini_hardy(key: str, model: str, src_text: str,
 
 def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     """
-    焦點段的 AI 呼叫：Gemini 多模型鏈 → **Anthropic 備援**。
+    焦點段的 AI 呼叫：**Anthropic 主力** → Gemini 多模型鏈備援。
     回傳 (文字, 失敗原因)；成功時原因是空字串。
 
-    為什麼要跨供應商：整體情勢的潤稿看起來「從不失敗」，其實是它的
-    事實雜湊快取讓它一個月只打十幾次 API、非發布日根本不呼叫；
-    焦點段的新聞每次執行都不一樣，一天要打三次——曝險是它的幾十倍。
-    Gemini 這一層走焦點專用的 _post_gemini_hardy（拚到底的換模型政策，
-    跟潤稿分家）；它整把金鑰見底時（實測：flash-latest 連吃三個 429
-    退回列標題），workflow 裡本來就配好的 ANTHROPIC_API_KEY 接手。
+    為什麼 Anthropic 排前面：使用者已儲值付費額度，限流餘裕遠大於
+    Gemini 的免費額度（實測 flash-latest 連吃三個 429 退回列標題）。
+    為什麼仍要跨供應商：焦點段的新聞每次執行都不一樣，一天要打三次，
+    曝險是整體情勢潤稿的幾十倍——單一供應商的任何故障都會直接上畫面。
+    Gemini 備援走焦點專用的 _post_gemini_hardy（拚到底的換模型政策）。
     數字鎖等防護欄在呼叫端外面，對兩家一視同仁。
     """
     from .polish import _post_anthropic, PROVIDERS
@@ -687,16 +703,6 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     if not g_key and not a_key:
         return "", "沒有 AI 金鑰"
     errs = []
-    if g_key:
-        model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
-        try:
-            out = _post_gemini_hardy(g_key, model, src_text, system)
-            return (out or "").strip(), ""
-        except Exception as e:                     # noqa: BLE001
-            errs.append(f"Gemini：{e}")
-            if a_key:
-                log.warning("市場焦點：Gemini 整條鏈失敗（%s），"
-                            "改用 Anthropic 備援", e)
     if a_key:
         try:
             out = _post_anthropic(a_key, PROVIDERS["anthropic"]["model"],
@@ -704,6 +710,16 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
             return (out or "").strip(), ""
         except Exception as e:                     # noqa: BLE001
             errs.append(f"Anthropic：{e}")
+            if g_key:
+                log.warning("市場焦點：Anthropic 失敗（%s），"
+                            "改用 Gemini 備援", e)
+    if g_key:
+        model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
+        try:
+            out = _post_gemini_hardy(g_key, model, src_text, system)
+            return (out or "").strip(), ""
+        except Exception as e:                     # noqa: BLE001
+            errs.append(f"Gemini：{e}")
     return "", "呼叫失敗（" + "；".join(errs) + "）"
 
 
@@ -826,7 +842,8 @@ def _last_value(rows) -> float | None:
 
 
 def fetch_zq_implied(symbol: str, _get=None,
-                     require_movement: bool = False) -> float | None:
+                     require_movement: bool = False,
+                     with_prev: bool = False):
     """
     抓一檔聯邦基金期貨，回傳隱含利率（100 − 價格）。
 
@@ -851,45 +868,53 @@ def fetch_zq_implied(symbol: str, _get=None,
         r.raise_for_status()
         res = (r.json().get("chart") or {}).get("result") or []
         if not res:
-            return None
+            return (None, None) if with_prev else None
         closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
                   .get("close") or [])
         valid = [c for c in closes if c is not None]
         px = valid[-1] if valid else None
+        # 前一個交易日的收盤：chip 的 ± 要「收盤對收盤」，跟其他
+        # 指標同一個口徑（with_prev=True 時回傳 (最新, 前一日)）。
+        px_prev = valid[-2] if len(valid) > 1 else None
         src = "5 日收盤"
         if require_movement:
             if len(valid) < 2:
                 log.warning("聯邦基金期貨 %s 近五日只有 %d 筆結算價，"
                             "報價鏈疑似死掉，不採用", symbol, len(valid))
-                return None
+                return (None, None) if with_prev else None
             if len(set(valid)) == 1:
                 log.warning("聯邦基金期貨 %s 近五日結算價五天一模一樣"
                             "（%.4f），報價鏈疑似死掉，不採用",
                             symbol, valid[0])
-                return None
+                return (None, None) if with_prev else None
         if px is None:
             if require_movement:
-                return None
+                return (None, None) if with_prev else None
             px = (res[0].get("meta") or {}).get("regularMarketPrice")
             src = "最新成交價（近五日無收盤，可能偏舊）"
         if px is None:
-            return None
+            return (None, None) if with_prev else None
         px = float(px)
         # 期貨價 ＝ 100 − 利率：合理價位在 90–100 之間。
         # 落在外面代表抓到錯的商品或壞報價，寧可不算。
         if not 90.0 <= px <= 100.0:
             log.warning("聯邦基金期貨 %s 報價 %.2f 超出合理範圍，不採用",
                         symbol, px)
-            return None
+            return (None, None) if with_prev else None
         implied = round(100.0 - px, 4)
         # 算術全部進 log：畫面上只有一個百分比，出錯時（100% 事故）
         # 沒有這一行就無從回推是哪一步壞掉。
         log.info("聯邦基金期貨 %s：價格 %.4f（%s）→ 隱含利率 %.3f%%",
                  symbol, px, src, implied)
+        if with_prev:
+            prev_ok = (px_prev is not None
+                       and 90.0 <= float(px_prev) <= 100.0)
+            return implied, (round(100.0 - float(px_prev), 4)
+                             if prev_ok else None)
         return implied
     except Exception as e:                         # noqa: BLE001
         log.warning("聯邦基金期貨報價抓取失敗（%s：%s）", symbol, e)
-        return None
+        return (None, None) if with_prev else None
 
 
 _MONTH_CODES = "FGHJKMNQUVXZ"                      # 期貨月份代碼：F=1月…Z=12月
@@ -1048,15 +1073,18 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
         log.warning("FedWatch 自算：往回 6 個月找不到無會議月，跳過")
         return None
 
-    prices = {}
+    prices, prices_prev = {}, {}
     for mo in sorted(need):
         sym = _zq_symbol(mo)
         # 每張合約都開「有在動」檢查：連續五天收盤一模一樣＝報價死掉
         #（+0.0 pp 事故的長相），比任何價位門檻都可靠
-        imp = fetch_zq_implied(sym, _get, require_movement=True)
+        imp, imp_prev = fetch_zq_implied(sym, _get, require_movement=True,
+                                         with_prev=True)
         if imp is None:
             return None
         prices[mo] = round(100.0 - imp, 4)
+        if imp_prev is not None:
+            prices_prev[mo] = round(100.0 - imp_prev, 4)
     avgs = sorted(100.0 - p for p in prices.values())
     if avgs[-1] - avgs[0] > 1.5:
         log.warning("FedWatch 自算：月份間隱含利率相差 %.2f 個百分點，"
@@ -1066,6 +1094,16 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
     calc = calculate_meeting_probability(prices, fomc_dates, target)
     if calc is None:
         return None
+    # chip 的 ± 改成真正的「收盤對收盤」：用每檔合約前一交易日的收盤
+    # 再算一次機率，兩者相減。不再依賴 state 的歷史——週末沒有新收盤
+    # 就顯示「週五 vs 週四」的變動，不會再掛 +0.0；擷取失敗或改版本
+    # 也不會污染 ±。湊不齊前一日收盤（新合約上市第一天）就不標。
+    calc["delta_pp"] = None
+    if set(prices_prev) == set(prices):
+        calc_prev = calculate_meeting_probability(prices_prev, fomc_dates,
+                                                  target)
+        if calc_prev is not None:
+            calc["delta_pp"] = round(calc["pct"] - calc_prev["pct"], 1)
     if abs(calc["move_bp"]) > 100:
         log.warning("FedWatch 自算：單場會議隱含變動 %.1f bp（超過四碼），"
                     "判為壞資料，不採用", calc["move_bp"])
@@ -1362,16 +1400,24 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                             prev, pct)
                 pct, suspect = prev, True
                 fw_src = fw_old.get("src", fw_src)
-            delta = (round(pct - prev, 1)
-                     if (prev is not None and not suspect
-                         and fw_old.get("date") != today) else None)
-            if delta is not None and abs(delta) > 20:
-                # 差這麼多通常是「正確值取代了事故留下的壞前值」——
-                # 這是改基準，不是市場一天動了幾十個百分點。
-                # 掛「-78.0 pp」只會嚇人，不標日變動、讓 chip 顯示隱含利率。
-                log.info("FedWatch %.0f%% 與前值 %.0f%% 差 %.0fpp，"
-                         "視為改基準，不標日變動", pct, prev, abs(delta))
-                delta = None
+            if fw_src == "futures" and (_detail or {}).get(
+                    "delta_pp") is not None:
+                # 期貨路徑的 ± 是同一次執行裡「收盤對收盤」算出來的
+                #（見 fedwatch_from_futures），跟其他 chip 同口徑，
+                # 不經 state、也不需要 20pp 的改基準防護欄。
+                delta = _detail["delta_pp"]
+            else:
+                delta = (round(pct - prev, 1)
+                         if (prev is not None and not suspect
+                             and fw_old.get("date") != today) else None)
+                if delta is not None and abs(delta) > 20:
+                    # 差這麼多通常是「正確值取代了事故留下的壞前值」——
+                    # 這是改基準，不是市場一天動了幾十個百分點。
+                    # 掛「-78.0 pp」只會嚇人，不標日變動、
+                    # 讓 chip 顯示隱含利率。
+                    log.info("FedWatch %.0f%% 與前值 %.0f%% 差 %.0fpp，"
+                             "視為改基準，不標日變動", pct, prev, abs(delta))
+                    delta = None
             out["fedwatch"] = {"pct": pct, "delta_pp": delta,
                                "suspect": suspect, "src": fw_src,
                                "move_bp": move_bp,

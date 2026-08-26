@@ -890,26 +890,29 @@ def _focus_strip(f: dict | None) -> str:
             f'<label><input type="checkbox" data-pick="{cid}"'
             + (" checked" if on else "") + f'>{esc(lb)}</label>'
             for cid, lb, on in opts)
-        picker = ('<details class="fs-pick"><summary>自訂</summary>'
+        picker = ('<details class="fs-pick"><summary>選擇</summary>'
                   '<div class="fs-pick-panel">' + rows +
                   '<div class="fs-pick-note"><span class="fs-count">已選 '
-                  f'{len(defaults)} 顆</span>　·　選擇存在此裝置</div>'
+                  f'{len(defaults)}／4</span>　·　選擇存在此裝置</div>'
                   '</div></details>')
         # 原生 JS，無相依：讀 localStorage → 套用顯示 → 勾選時存回。
+        # 上限四顆（固定四格版面）：勾滿後其餘選項停用，要換先取消一顆。
         # 全部取消時退回預設組——空清單沒有意義，畫面也不能空。
-        script = ('<script>(function(){var K="fsChips";'
+        script = ('<script>(function(){var K="fsChips";var M=4;'
                   'var D=' + _json.dumps(defaults) + ';'
                   'var box=document.querySelector(".fs-chips");if(!box)return;'
                   'var ps=Array.prototype.slice.call('
                   'document.querySelectorAll(".fs-pick [data-pick]"));'
-                  'function ap(sel){Array.prototype.forEach.call('
+                  'function ap(sel){sel=sel.slice(0,M);'
+                  'Array.prototype.forEach.call('
                   'box.querySelectorAll("[data-chip]"),function(ch){'
                   'ch.classList.toggle("fs-off",'
                   'sel.indexOf(ch.getAttribute("data-chip"))<0);});'
-                  'ps.forEach(function(p){p.checked='
-                  'sel.indexOf(p.getAttribute("data-pick"))>=0;});'
+                  'ps.forEach(function(p){var id=p.getAttribute("data-pick");'
+                  'p.checked=sel.indexOf(id)>=0;'
+                  'p.disabled=(!p.checked&&sel.length>=M);});'
                   'var n=document.querySelector(".fs-count");'
-                  'if(n)n.textContent="已選 "+sel.length+" 顆";}'
+                  'if(n)n.textContent="已選 "+sel.length+"／"+M;}'
                   'var sel=null;'
                   'try{sel=JSON.parse(localStorage.getItem(K)||"null");}'
                   'catch(e){}'
@@ -917,7 +920,7 @@ def _focus_strip(f: dict | None) -> str:
                   'ps.forEach(function(p){p.addEventListener("change",'
                   'function(){var s=[];ps.forEach(function(q){'
                   'if(q.checked)s.push(q.getAttribute("data-pick"));});'
-                  'if(!s.length)s=D;'
+                  'if(!s.length)s=D;s=s.slice(0,M);'
                   'try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}'
                   'ap(s);});});})();</script>')
     else:

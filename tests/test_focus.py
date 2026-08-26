@@ -204,6 +204,36 @@ check("⑦j 合約代號自動滾（含健康合約按月推）",
       and ft._zq_symbol("2027-01") == "ZQF27.CBT"
       and ft._anchor_symbol(dt.date(2026, 8, 21)) == "ZQQ26.CBT")
 
+# ⑦f2 chip 的 ± 是「收盤對收盤」：同一次執行用前一日收盤再算一次機率
+# 相減，不依賴 state 歷史。12 月合約前一日 96.155、當日 96.140（跌了
+# 1.5 tick、多定價一點升息）——期望值直接用同一顆算法對兩組價位
+# 算出來比（測的是接線，不重複手算）。
+def _yq_cc(u):
+    if "ZQQ26" in u:
+        return _FakeYq(96.375)
+    if "ZQX26" in u:
+        return _FakeYq(96.215, [96.220, 96.215])
+    return _FakeYq(96.140, [96.155, 96.140])
+
+
+# 11 月無會議＝錨月，抓的合約是 ZQX26（11 月）＋ZQZ26（12 月）
+_fd = [str(x) for x in _FWCFG["fomc_dates"]]
+_cur = {"2026-11": 96.215, "2026-12": 96.140}
+_prv = {"2026-11": 96.220, "2026-12": 96.155}
+_want_d = round(
+    ft.calculate_meeting_probability(_cur, _fd, "2026-12-09")["pct"]
+    - ft.calculate_meeting_probability(_prv, _fd, "2026-12-09")["pct"], 1)
+_r2 = ft.fedwatch_from_futures(_RATES, _FWCFG, _get=_yq_cc)
+check("⑦f2 delta_pp＝收盤對收盤（同算法兩組價位相減、非零）",
+      _r2 is not None and _r2.get("delta_pp") == _want_d and _want_d != 0,
+      (_r2 and _r2.get("delta_pp"), _want_d))
+check("⑦f3 前一日收盤壞值（出範圍）→ delta 不標、機率照算",
+      (lambda r: r is not None and r.get("delta_pp") is None
+       and abs(r["pct"] - 42.27) < 0.01)(
+          ft.fedwatch_from_futures(
+              _RATES, _FWCFG,
+              _get=_yq3(nov_closes=[96.220, 85.0, 96.215]))))
+
 # 停滯偵測（+0.0 pp 事故的回歸）：會議相關合約五天收盤一模一樣＝報價
 # 死掉，整批不採用；健康合約平盤不受影響（⑦f 的 closes 本來就會動）
 check("⑦q 合約收盤五天不動 → 判報價死掉不採用",
@@ -458,8 +488,8 @@ t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
 check("⑪b 編造數字被擋", t == "" and "沒有的數字" in s, s)
 _pl._gemini_call = _orig_gc
 
-# ⑫ 跨供應商備援：Gemini 整條鏈死掉（例：整把金鑰的模型全數 429）時，
-# 設了 ANTHROPIC_API_KEY 就換 Anthropic 接手，數字鎖照樣把關
+# ⑫ 跨供應商：Anthropic 主力（兩把都設時先走它），Gemini 備援。
+# 這批測試把 Gemini 炸掉：主力正常時根本輪不到它，數字鎖照樣把關
 _orig_pg, _orig_pa = ft._post_gemini_hardy, _pl._post_anthropic
 
 
@@ -473,7 +503,8 @@ _pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120,
                             {"GEMINI_API_KEY": "F", "ANTHROPIC_API_KEY": "A"})
-check("⑫ Gemini 全滅 → Anthropic 備援接手", t != "" and s == "model-content", s)
+check("⑫ 兩把都設 → Anthropic 主力產出（Gemini 掛著也沒差）",
+      t != "" and s == "model-content", s)
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
 check("⑫b 沒有備援金鑰就照舊失敗", t == "" and "Gemini" in s, s)
@@ -489,6 +520,17 @@ _pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"ANTHROPIC_API_KEY": "A"})
 check("⑫d 只有 Anthropic 金鑰也能產出", t != "" and s == "model-content", s)
+# 主力掛掉 → Gemini 備援接手
+def _pa_boom(*a, **k):
+    raise RuntimeError("HTTP 529")
+_pl._post_anthropic = _pa_boom
+ft._post_gemini_hardy = (lambda key, model, text, system=None:
+                         "財政部調整發債結構，市場關注十年期殖利率。")
+t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                            ["美國財政部"], 120,
+                            {"GEMINI_API_KEY": "F", "ANTHROPIC_API_KEY": "A"})
+check("⑫e Anthropic 掛掉 → Gemini 備援接手",
+      t != "" and s == "model-content", s)
 ft._post_gemini_hardy, _pl._post_anthropic = _orig_pg, _orig_pa
 
 # ⑬ 焦點專用呼叫鏈 _post_gemini_hardy：429／5xx／timeout 都換模型再試。
@@ -623,8 +665,9 @@ check("⑮ 目錄 14 顆、順序固定",
                "sofr", "sofr_iorb", "onrrp", "srf",
                "wti", "brent", "vix", "move"], _ids)
 _by = {c["id"]: c for c in cat}
-check("⑮b 預設組＝2Y＋10Y＋機率",
-      [c["id"] for c in cat if c.get("on")] == ["dgs2", "dgs10", "fedwatch"])
+check("⑮b 預設組＝2Y＋10Y＋30Y＋機率（固定四格湊滿）",
+      [c["id"] for c in cat if c.get("on")]
+      == ["dgs2", "dgs10", "dgs30", "fedwatch"])
 check("⑮c 利差配對不拿晚於 SOFR 日的 IORB（3.60−3.65＝−5 bp）",
       _by["sofr_iorb"]["value"] == "-5 bp", _by["sofr_iorb"])
 check("⑮d 利差變動對前一日（−5 −（−3）＝−2 bp）",
@@ -663,15 +706,16 @@ _F = {"yields": [], "links": [], "fedwatch": None, "text": "x",
 _hs = _home._focus_strip(_F)
 import re as _re
 _vis = _re.findall(r'<div class="fs-chip" data-chip="([^"]+)"', _hs)
-check("⑯ 預設只顯示 2Y／10Y／機率", _vis == ["dgs2", "dgs10", "fedwatch"],
-      _vis)
-check("⑯b 其餘 11 顆帶 .fs-off 隱藏但都在 HTML",
-      _hs.count("fs-off") >= 11 and _hs.count("data-chip=") == 14)
-check("⑯c 勾選面板 14 個選項＋已選數＋裝置說明",
-      _hs.count("data-pick=") == 14 and "已選 3 顆" in _hs
+check("⑯ 預設顯示四顆（2Y／10Y／30Y／機率）",
+      _vis == ["dgs2", "dgs10", "dgs30", "fedwatch"], _vis)
+check("⑯b 其餘 10 顆帶 .fs-off 隱藏但都在 HTML",
+      _hs.count("fs-off") >= 10 and _hs.count("data-chip=") == 14)
+check("⑯c 勾選面板 14 個選項＋已選數（上限 4）＋裝置說明",
+      _hs.count("data-pick=") == 14 and "已選 4／4" in _hs
       and "選擇存在此裝置" in _hs)
-check("⑯d 內嵌 JS 帶預設組、localStorage 鍵",
-      'var D=["dgs2", "dgs10", "fedwatch"]' in _hs and "localStorage" in _hs)
+check("⑯d 內嵌 JS 帶預設組、上限與 localStorage 鍵",
+      'var D=["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
+      and "var M=4" in _hs and "localStorage" in _hs)
 _hs2 = _home._focus_strip({"yields": [
     {"label": "10 年期", "value": 4.66, "delta_bp": -4, "date": "2026-08-26"}],
     "links": [], "fedwatch": None, "text": "", "text_source": "",

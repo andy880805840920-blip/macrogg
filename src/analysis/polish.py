@@ -381,9 +381,10 @@ def _load_cache(path) -> dict:
         return {}
 
 
-# 支援的供應商。兩把金鑰都設時照這個順序取——Gemini 排前面因為有免費額度。
+# 支援的供應商。兩把金鑰都設時照這個順序取——Anthropic 排前面
+#（使用者已儲值付費額度、限流餘裕大；Gemini 免費額度常 429，退居備援）。
 # 「用哪一家」是使用者設金鑰時的選擇，不是程式的判斷。
-PROVIDER_ORDER = ("gemini", "anthropic")
+PROVIDER_ORDER = ("anthropic", "gemini")
 PROVIDERS = {
     "gemini": {
         "env": ("GEMINI_API_KEY", "GOOGLE_API_KEY"),

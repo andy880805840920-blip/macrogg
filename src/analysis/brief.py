@@ -516,22 +516,22 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
     cuts = sum(1 for d in dis if isinstance(d, dict)
                and d.get("direction") == "cut")
 
+    # 長度紀律（使用者的批評：太冗長）：一句主張＋一個條件就夠。
+    # 「再加速則升息機率上升」這類跟前半句同義的補述一律不寫。
     if lean == "hawkish":
         tail = "；委員會內已有升息主張" if hikes else ""
         if binding != "就業" and pace is not None:
-            _run = (f"已連續 {hot} 個月高於" if hot >= 2 else "仍高於")
-            return ("重點：目前的問題是升不升息、不是何時降息——關鍵在通膨："
-                    f"核心 CPI 月步速{_run} 0.2% 的目標步速"
-                    f"（近三月平均 {pace:.2f}%）；三個月平均回到 0.2 以下，"
-                    f"升息壓力解除；再加速則升息機率上升{tail}。")
+            _run = (f"連 {hot} 個月高於" if hot >= 2 else "仍高於")
+            return ("重點：問題是升不升息、不是何時降息——核心 CPI 月步速"
+                    f"{_run} 0.2%（近三月 {pace:.2f}%）。"
+                    f"回到 0.2 以下壓力解除{tail}。")
         return f"重點：政策風險偏向升息{cond}{tail}。"
     if lean == "dovish":
-        tail = "；委員會內部已有人主張先動" if cuts else ""
+        tail = "；委員會內已有人主張先動" if cuts else ""
         return f"重點：討論的是降息時點{cond}{tail}。"
     if pace is not None:
-        return ("重點：短期最可能按兵不動，下一步由通膨表態——月步速"
-                "連續三個月回到 0.2% 以下偏降息、重新加速偏升息"
-                f"（目前近三月平均 {pace:.2f}%）。")
+        return ("重點：最可能按兵不動，下一步看通膨——月步速回到 0.2% 以下"
+                f"偏降息、再加速偏升息（近三月 {pace:.2f}%）。")
     return f"重點：按兵不動的可能性最高{cond}。"
 
 
@@ -678,6 +678,13 @@ def generate(ctxs: dict, assembled: dict, cache_path, offline: bool = False,
         return out
     model = ((env.get("BRIEF_MODEL") or "").strip()
              or _pl.PROVIDERS[provider]["model"])
+    # BRIEF_MODEL 指定的是別家的模型時忽略之——Anthropic 接主力後，
+    # 殘留的 gemini-flash-latest 變數會把 Gemini 模型名丟給 Anthropic API
+    #（必噴 404、整段退組裝），這種錯不該由使用者的舊設定觸發。
+    if provider == "anthropic" and model.startswith("gemini"):
+        model = _pl.PROVIDERS[provider]["model"]
+    elif provider == "gemini" and model.startswith("claude"):
+        model = _pl.PROVIDERS[provider]["model"]
 
     # 首尾兩句不經過模型，從組裝版原樣取
     _p = {x["key"]: x["text"] for x in assembled.get("parts", [])}

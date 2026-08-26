@@ -650,7 +650,11 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         subtitle=f"共 {len(entries)} 期",
         footer="官方會持續修正歷史數字，這裡保留每個資料月份第一次產出時的完整頁面。"))
 
-    write("robots.txt", "User-agent: *\nDisallow: /\n")
+    # 允許抓取（原本是全站 Disallow）：右上角的 EN 鈕走 Google 翻譯
+    # 代理，Google 伺服器要抓得到頁面才能翻。不想被搜尋收錄的部分由
+    # 每頁的 <meta name="robots" content="noindex"> 繼續把關——
+    # 抓得到但不收錄。
+    write("robots.txt", "User-agent: *\nDisallow:\n")
     return written
 
 

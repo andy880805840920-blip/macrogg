@@ -163,9 +163,9 @@ check("㉔ 只設 Gemini 金鑰 → 用 Gemini",
       polish._pick_provider({"GEMINI_API_KEY": "g1"}) == ("gemini", "g1"))
 check("㉕ GOOGLE_API_KEY 也認得",
       polish._pick_provider({"GOOGLE_API_KEY": "g2"}) == ("gemini", "g2"))
-check("㉖ 兩把都設 → Gemini 優先（免費）",
+check("㉖ 兩把都設 → Anthropic 優先（付費額度限流少）",
       polish._pick_provider({"GEMINI_API_KEY": "g",
-                             "ANTHROPIC_API_KEY": "a"})[0] == "gemini")
+                             "ANTHROPIC_API_KEY": "a"})[0] == "anthropic")
 check("㉗ 都沒設 → 空字串",
       polish._pick_provider({}) == ("", ""))
 
