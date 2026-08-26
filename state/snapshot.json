@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-26T22:28:45+08:00",
+  "at": "2026-08-27T00:06:53+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -69,14 +69,6 @@
             "delta_unit": " 個百分點",
             "threshold": 0.05,
             "up_is": "hawkish"
-          },
-          "breakeven": {
-            "label": "損益兩平就業增速",
-            "en": "Breakeven Payrolls",
-            "value": 9.80710354889678,
-            "unit": "萬人",
-            "threshold": 0.5,
-            "up_is": "dovish"
           }
         },
         "method": 2,
@@ -151,6 +143,15 @@
             "threshold": 0.05,
             "up_is": "hawkish"
           },
+          "core_cpi_mom": {
+            "label": "核心 CPI 月增",
+            "en": "Core CPI, m/m",
+            "value": 0.2154345141564873,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
           "core_cpi_3m": {
             "label": "核心 CPI 三月年化",
             "en": "Core CPI, 3-mo ann.",
@@ -183,6 +184,9 @@
         "metrics_prev": {
           "cpi_yoy": {
             "value": 3.5314250637863864
+          },
+          "core_cpi_mom": {
+            "value": -0.016660666843182348
           },
           "core_cpi_yoy": {
             "value": 2.594072431813488
@@ -400,7 +404,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.7,
+            "value": 4.66,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -408,7 +412,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.23,
+            "value": 5.18,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -533,7 +537,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-08-26T22:28:45+08:00",
+      "at": "2026-08-27T00:06:53+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",

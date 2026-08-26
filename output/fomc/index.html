@@ -54,6 +54,27 @@ body{margin:0;background:var(--page);
 /* ---------- 頁首 ---------- */
 h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 @media(min-width:760px){h1{font-size:23px}}
+/* ---------- 右上角的 EN 鈕（原生 details 小浮層）----------
+   桌機手機都收在頁首右上；手機把觸控目標拉到 44px（稽核下限）。 */
+.top{position:relative;padding-right:52px}
+.lang{position:absolute;top:0;right:0}
+.lang>summary{cursor:pointer;list-style:none;display:inline-flex;
+  align-items:center;justify-content:center;padding:3px 10px;
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  color:var(--muted);border:1px solid var(--border);border-radius:4px;
+  user-select:none}
+.lang>summary::-webkit-details-marker{display:none}
+.lang[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.lang-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:50;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;width:min(78vw,300px);
+  box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:12px;line-height:1.7}
+.lang-pop a{display:flex;align-items:center;min-height:44px;
+  font-weight:700}
+.lang-pop span{color:var(--muted);display:block}
+@media(max-width:759px){
+  .lang>summary{min-height:44px;box-sizing:border-box}}
 /* 標題兼「回首頁」。不加底線也不變色——它首先是標題，其次才是連結；
    染成連結色會讓每一頁的第一個視覺焦點變成一條藍字。 */
 /* 觸控高度：h1 本身只有 28px。上下各給 6px 的 padding 撐到 40px，
@@ -274,7 +295,7 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
 .kpi .k-value{font-size:26px;font-weight:700;line-height:1.2;margin-top:5px}
 @media(min-width:760px){.kpi .k-value{font-size:30px}}
-/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、損益兩平缺口若也留在
+/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、結論值列若也留在
    26px，一頁上就有四種同字級同字重的東西完全平手——沒有主從等於沒有層級，
    讀者不知道該先看哪個。手機上把這三個降一級，讓結論那一句穩穩壓過去。 */
 @media(max-width:400px){.kpi .k-value{font-size:24px}}
@@ -711,7 +732,8 @@ details[data-m-collapse]>summary{list-style:none}
 /* 文字欄位靠右讀起來很彆扭。這個類別讓最後一欄（說明）改回靠左。 */
 .lefty td:last-child,.lefty th:last-child{text-align:left}
 
-/* 損益兩平的缺口：這是整張卡的結論，要比兩個輸入值大 */
+/* 結論值列（原為損益兩平卡，該卡已移除；能源影響等處仍沿用此版式）：
+   結論要比輸入值大 */
 .bkgap{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
   margin-top:14px;padding-top:13px;border-top:1px solid var(--grid)}
 .bk-label{font-size:12.5px;color:var(--muted)}
@@ -1210,6 +1232,14 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .brief{background:var(--surface-1)}
 .brief-k{font-size:11.5px;font-weight:700;color:var(--muted);
   letter-spacing:.08em;margin-bottom:9px}
+/* 三則 bullet 版式：模組名粗體＋豎線，行距鬆一點供掃讀 */
+.brief-src{font-size:11.5px;font-weight:500;color:var(--muted);
+  margin-left:10px;letter-spacing:0}
+.brief-list{list-style:none;margin:10px 0 0;padding:0}
+.brief-list li{font-size:14px;line-height:1.85;color:var(--text-primary);
+  padding:7px 0;border-top:1px solid var(--grid)}
+.brief-list li:first-child{border-top:none;padding-top:2px}
+.brief-list li b{font-weight:700}
 .brief-t{font-size:15px;line-height:2;margin:0;max-width:34em;
   color:var(--text-primary)}
 @media(min-width:760px){.brief-t{font-size:15.5px}}
@@ -1453,6 +1483,39 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
   color:var(--text-primary)}
 .fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
+/* ---------- 焦點條的自選 chip ----------
+   目錄 14 顆全在 HTML 裡，預設組以外掛 .fs-off 隱藏；「自訂」是原生
+   details 元素：桌機浮層、手機（759px 以下）改全寬面板往下推——浮層在
+   手機上會超出視窗或被手指擋住。勾選列拉到 44px 以上符合觸控目標。 */
+.fs-off{display:none}
+.fs-when{display:block;font-size:10px;color:var(--muted);margin-top:1px;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.fs-pick{position:relative;display:inline-block;margin-left:10px;
+  font-weight:400;vertical-align:1px}
+.fs-pick>summary{cursor:pointer;font-size:11.5px;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:2px 9px;
+  list-style:none;display:inline-block;user-select:none}
+.fs-pick>summary::-webkit-details-marker{display:none}
+.fs-pick[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:4px 14px 10px;min-width:230px;
+  box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.fs-pick-panel label{display:flex;align-items:center;gap:9px;
+  min-height:44px;font-size:13px;color:var(--text-primary);
+  border-top:1px solid var(--grid);cursor:pointer;white-space:nowrap}
+.fs-pick-panel label:first-child{border-top:none}
+.fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
+.fs-pick-note{font-size:11px;color:var(--muted);margin-top:6px;
+  border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
+@media(max-width:759px){
+  .fs-pick{position:static}
+  /* 手機的觸控目標：按鈕本體拉到 44px 高（稽核的下限），視覺大小不變 */
+  .fs-pick>summary{display:inline-flex;align-items:center;min-height:44px;
+    box-sizing:border-box;padding:2px 12px}
+  .fs-pick-panel{position:static;margin-top:8px;width:100%;min-width:0;
+    box-shadow:none}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1470,9 +1533,13 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-src{font-size:10.5px;color:var(--muted);margin-left:7px;white-space:nowrap}
 /* 焦點段給一個淺色底框：跟上方數字 chips 分成兩個視覺層，
    一眼分得出「數字」與「敘述」——先前兩者直接疊在一起。 */
-.fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:12px 0 0;max-width:47em;background:var(--surface-2);
-  border-radius:9px;padding:10px 13px}
+/* 論述容器：底色框只包一次，段落在框內分段——每段各自一個框
+   會把一篇報導切成三塊碎片 */
+.fs-body{margin:12px 0 0;max-width:47em;background:var(--surface-2);
+  border-radius:9px;padding:11px 13px}
+.fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
+  margin:0}
+.fs-body .fs-text+.fs-text{margin-top:9px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
@@ -1719,15 +1786,16 @@ details.home-module[open]{padding-bottom:0}
 <div class="viz-root">
 
 <header class="top">
+  <details class="lang"><summary translate="no">EN</summary><div class="lang-pop"><a href="https://macrogg-netlify-app.translate.goog/fomc/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" target="_blank" rel="noopener">English（Google 翻譯，開新分頁）</a><span>若打不開，用瀏覽器內建翻譯：Chrome 右鍵或網址列選單→「翻譯」；iPhone Safari 網址列左側選單→「翻譯網頁」。</span></div></details>
   <h1><a class="h1-home" href="/">聯準會文本</a></h1>
   
-  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-26 22:28（台北）</div>
+  <div class="sub">最新聲明 2026-07-29　·　更新於 2026-08-27 00:06（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
 <div class="anav"><nav class="anchors"><a href="#score">政策訊號評分</a><a href="#kpi">關鍵數字</a><a href="#focus">聯準會目前的重心</a><a href="#market">市場定價 vs 聯準會</a><a href="#diff">聲明逐句比對</a><a href="#trend">歷次分數</a><a href="#presser">記者會</a><a href="#phrases">措辭的支撐材料</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +6.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>維持不變</b><small>3.50–3.75%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>3 票反對（升息 3／降息 0）</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次維持利率不變；反對票：贊成升息 3 票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-07-29 對照 2026-06-17：改動 1 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-09-16｜21 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-07-29</span><span class="data-tag">措辭分數 +5.22（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +6.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>維持不變</b><small>3.50–3.75%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>3 票反對（升息 3／降息 0）</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次維持利率不變；反對票：贊成升息 3 票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-07-29 對照 2026-06-17：改動 1 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-09-16｜20 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-07-29</span><span class="data-tag">措辭分數 +5.22（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
@@ -1777,7 +1845,7 @@ details.home-module[open]{padding-bottom:0}
   <div class="k-chips"></div><div class="k-plain">政策行動、反對票與聲明點名的風險方向合計。正數＝偏升息方向，負數＝偏降息方向。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">較上次 +6.00</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><line x1="3" y1="17.0" x2="117" y2="17.0" stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2"/><polyline points="3.0,17.0 12.5,17.0 22.0,17.0 31.5,17.0 41.0,26.3 50.5,31.0 60.0,31.0 69.5,31.0 79.0,26.3 88.5,21.7 98.0,21.7 107.5,17.0 117.0,3.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="3.0" r="2.5" fill="var(--series-1)"/></svg></div></details>
 </div><div class="card kpi">
   <div class="k-label">Next Meeting</div>
-  <div class="k-label-zh">下次會議</div><div class="k-value">21 天後</div>
+  <div class="k-label-zh">下次會議</div><div class="k-value">20 天後</div>
   <div class="k-chips"><span class="k-chip info">2026-09-16</span></div><div class="k-plain">在那之前，這份聲明就是委員會的官方立場——距離下次會議越遠，它主導市場的時間越長。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">之後：2026-10-28</div></div></details>
 </div></div>
   </div></details>
@@ -2001,7 +2069,7 @@ details.home-module[open]{padding-bottom:0}
 
   // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
   // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
-  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
+  // 「點左卡卻把並排的右卡也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');

@@ -54,6 +54,27 @@ body{margin:0;background:var(--page);
 /* ---------- 頁首 ---------- */
 h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 @media(min-width:760px){h1{font-size:23px}}
+/* ---------- 右上角的 EN 鈕（原生 details 小浮層）----------
+   桌機手機都收在頁首右上；手機把觸控目標拉到 44px（稽核下限）。 */
+.top{position:relative;padding-right:52px}
+.lang{position:absolute;top:0;right:0}
+.lang>summary{cursor:pointer;list-style:none;display:inline-flex;
+  align-items:center;justify-content:center;padding:3px 10px;
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  color:var(--muted);border:1px solid var(--border);border-radius:4px;
+  user-select:none}
+.lang>summary::-webkit-details-marker{display:none}
+.lang[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.lang-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:50;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;width:min(78vw,300px);
+  box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:12px;line-height:1.7}
+.lang-pop a{display:flex;align-items:center;min-height:44px;
+  font-weight:700}
+.lang-pop span{color:var(--muted);display:block}
+@media(max-width:759px){
+  .lang>summary{min-height:44px;box-sizing:border-box}}
 /* 標題兼「回首頁」。不加底線也不變色——它首先是標題，其次才是連結；
    染成連結色會讓每一頁的第一個視覺焦點變成一條藍字。 */
 /* 觸控高度：h1 本身只有 28px。上下各給 6px 的 padding 撐到 40px，
@@ -274,7 +295,7 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
 .kpi .k-value{font-size:26px;font-weight:700;line-height:1.2;margin-top:5px}
 @media(min-width:760px){.kpi .k-value{font-size:30px}}
-/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、損益兩平缺口若也留在
+/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、結論值列若也留在
    26px，一頁上就有四種同字級同字重的東西完全平手——沒有主從等於沒有層級，
    讀者不知道該先看哪個。手機上把這三個降一級，讓結論那一句穩穩壓過去。 */
 @media(max-width:400px){.kpi .k-value{font-size:24px}}
@@ -711,7 +732,8 @@ details[data-m-collapse]>summary{list-style:none}
 /* 文字欄位靠右讀起來很彆扭。這個類別讓最後一欄（說明）改回靠左。 */
 .lefty td:last-child,.lefty th:last-child{text-align:left}
 
-/* 損益兩平的缺口：這是整張卡的結論，要比兩個輸入值大 */
+/* 結論值列（原為損益兩平卡，該卡已移除；能源影響等處仍沿用此版式）：
+   結論要比輸入值大 */
 .bkgap{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
   margin-top:14px;padding-top:13px;border-top:1px solid var(--grid)}
 .bk-label{font-size:12.5px;color:var(--muted)}
@@ -1210,6 +1232,14 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .brief{background:var(--surface-1)}
 .brief-k{font-size:11.5px;font-weight:700;color:var(--muted);
   letter-spacing:.08em;margin-bottom:9px}
+/* 三則 bullet 版式：模組名粗體＋豎線，行距鬆一點供掃讀 */
+.brief-src{font-size:11.5px;font-weight:500;color:var(--muted);
+  margin-left:10px;letter-spacing:0}
+.brief-list{list-style:none;margin:10px 0 0;padding:0}
+.brief-list li{font-size:14px;line-height:1.85;color:var(--text-primary);
+  padding:7px 0;border-top:1px solid var(--grid)}
+.brief-list li:first-child{border-top:none;padding-top:2px}
+.brief-list li b{font-weight:700}
 .brief-t{font-size:15px;line-height:2;margin:0;max-width:34em;
   color:var(--text-primary)}
 @media(min-width:760px){.brief-t{font-size:15.5px}}
@@ -1453,6 +1483,39 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
   color:var(--text-primary)}
 .fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
+/* ---------- 焦點條的自選 chip ----------
+   目錄 14 顆全在 HTML 裡，預設組以外掛 .fs-off 隱藏；「自訂」是原生
+   details 元素：桌機浮層、手機（759px 以下）改全寬面板往下推——浮層在
+   手機上會超出視窗或被手指擋住。勾選列拉到 44px 以上符合觸控目標。 */
+.fs-off{display:none}
+.fs-when{display:block;font-size:10px;color:var(--muted);margin-top:1px;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.fs-pick{position:relative;display:inline-block;margin-left:10px;
+  font-weight:400;vertical-align:1px}
+.fs-pick>summary{cursor:pointer;font-size:11.5px;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:2px 9px;
+  list-style:none;display:inline-block;user-select:none}
+.fs-pick>summary::-webkit-details-marker{display:none}
+.fs-pick[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:4px 14px 10px;min-width:230px;
+  box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.fs-pick-panel label{display:flex;align-items:center;gap:9px;
+  min-height:44px;font-size:13px;color:var(--text-primary);
+  border-top:1px solid var(--grid);cursor:pointer;white-space:nowrap}
+.fs-pick-panel label:first-child{border-top:none}
+.fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
+.fs-pick-note{font-size:11px;color:var(--muted);margin-top:6px;
+  border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
+@media(max-width:759px){
+  .fs-pick{position:static}
+  /* 手機的觸控目標：按鈕本體拉到 44px 高（稽核的下限），視覺大小不變 */
+  .fs-pick>summary{display:inline-flex;align-items:center;min-height:44px;
+    box-sizing:border-box;padding:2px 12px}
+  .fs-pick-panel{position:static;margin-top:8px;width:100%;min-width:0;
+    box-shadow:none}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1470,9 +1533,13 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-src{font-size:10.5px;color:var(--muted);margin-left:7px;white-space:nowrap}
 /* 焦點段給一個淺色底框：跟上方數字 chips 分成兩個視覺層，
    一眼分得出「數字」與「敘述」——先前兩者直接疊在一起。 */
-.fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:12px 0 0;max-width:47em;background:var(--surface-2);
-  border-radius:9px;padding:10px 13px}
+/* 論述容器：底色框只包一次，段落在框內分段——每段各自一個框
+   會把一篇報導切成三塊碎片 */
+.fs-body{margin:12px 0 0;max-width:47em;background:var(--surface-2);
+  border-radius:9px;padding:11px 13px}
+.fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
+  margin:0}
+.fs-body .fs-text+.fs-text{margin-top:9px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
@@ -1719,23 +1786,24 @@ details.home-module[open]{padding-bottom:0}
 <div class="viz-root">
 
 <header class="top">
+  <details class="lang"><summary translate="no">EN</summary><div class="lang-pop"><a href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" target="_blank" rel="noopener">English（Google 翻譯，開新分頁）</a><span>若打不開，用瀏覽器內建翻譯：Chrome 右鍵或網址列選單→「翻譯」；iPhone Safari 網址列左側選單→「翻譯網頁」。</span></div></details>
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
   
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-24　·　更新於 2026-08-26 22:28（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-26　·　更新於 2026-08-27 00:06（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
 
 <div class="anav"><nav class="anchors"><a href="#decomp">長端利率的組成</a><a href="#supply">債券供給：政府與科技巨頭</a><a href="#demand">債券需求：信用利差</a><a href="#priced">供給壓力 vs 市場定價</a><a href="#debt">供給端細節一：政府財政</a><a href="#hyperscalers">供給端細節二：科技巨頭</a><a href="#lights">關鍵指標檢核</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div><h2 class="focus-title">長端供給壓力中等</h2><p class="focus-sub">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</p><div class="focus-grid"><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>綜合分數 -0.58</small></div><div class="focus-metric neutral"><span>10 年期殖利率</span><b>4.70%</b><small>資料日 2026-08-24</small></div><div class="focus-metric watch"><span>美國財政赤字</span><b>5.5%</b><small>佔 GDP；年度債券供給主體</small></div><div class="focus-metric neutral"><span>財政穩定差</span><b>+2.2%</b><small>緩衝：基本盈餘高於穩定債務比所需水準</small></div></div><details class="focus-evidence"><summary>查看供給傳導與判斷依據</summary><div class="focus-evidence-body"><div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong><div class="flow-values">1.78 兆美元<br>財政赤字 5.5% GDP，需靠淨發行公債填補</div></div><div class="flow-arrow">＋</div><div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">CapEx 1,815 億美元 · OCF 1,864 億美元<br>CapEx / OCF 97.4% · 簡化 FCF 為負 3/5 家</div></div><div class="flow-arrow">→</div><div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">單季 450 億美元 · 年化 1,801 億美元<br>政府赤字規模比 10%</div></div></div><div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div><div class="logic-step"><b>目前結論</b><span>供給與需求大致平衡，長端主要跟隨政策利率預期移動。</span></div><div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div></div></details><div class="data-line"><span class="data-tag">利率 2026-08-24</span><span class="data-tag">公司期末 2026-05-31～2026-06-30</span><span class="data-tag">SEC 實際資料 5/5 家</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div><h2 class="focus-title">長端供給壓力中等</h2><p class="focus-sub">供給與需求大致平衡，長端主要跟隨政策利率預期移動。</p><div class="focus-grid"><div class="focus-metric neutral"><span>長端供給壓力</span><b>中等</b><small>綜合分數 -0.58</small></div><div class="focus-metric neutral"><span>10 年期殖利率</span><b>4.66%</b><small>盤中報價 2026-08-26（延遲約 15 分鐘）</small></div><div class="focus-metric watch"><span>美國財政赤字</span><b>5.5%</b><small>佔 GDP；年度債券供給主體</small></div><div class="focus-metric neutral"><span>財政穩定差</span><b>+2.2%</b><small>緩衝：基本盈餘高於穩定債務比所需水準</small></div></div><details class="focus-evidence"><summary>查看供給傳導與判斷依據</summary><div class="focus-evidence-body"><div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong><div class="flow-values">1.78 兆美元<br>財政赤字 5.5% GDP，需靠淨發行公債填補</div></div><div class="flow-arrow">＋</div><div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">CapEx 1,815 億美元 · OCF 1,864 億美元<br>CapEx / OCF 97.4% · 簡化 FCF 為負 3/5 家</div></div><div class="flow-arrow">→</div><div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">單季 450 億美元 · 年化 1,801 億美元<br>政府赤字規模比 10%</div></div></div><div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div><div class="logic-step"><b>目前結論</b><span>供給與需求大致平衡，長端主要跟隨政策利率預期移動。</span></div><div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div></div></details><div class="data-line"><span class="data-tag">利率 2026-08-26（盤中）</span><span class="data-tag">公司期末 2026-05-31～2026-06-30</span><span class="data-tag">SEC 實際資料 5/5 家</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="decomp">長端利率的組成</h2><span class="sect-sum">名目 10 年期 4.70%　·　其中期限溢酬 +0.87%</span></summary><div class="sect-body">
+  <details class="card sect" open><summary><h2 id="decomp">長端利率的組成</h2><span class="sect-sum">名目 10 年期 4.66%　·　其中期限溢酬 +0.87%</span></summary><div class="sect-body">
     <p class="hint"><b>期限溢酬（持有長債多要求的補償）不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
     <div class="impact hawkish">期限溢酬 +0.87%（近三個月 +4 bps），高於 0.40% 的中性參考——市場對長期持債要求的補償偏高，這一段降息壓不下來。</div>
-    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">名目 10 年期 4.70%　其中期限溢酬</span><span class="bk-val">+0.87%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">近三個月 +4 bps</span></div>
+    <div class="bkgap" style="color:var(--serious);margin-top:4px;padding-top:0;border-top:none"><span class="bk-label">名目 10 年期 4.66%　其中期限溢酬</span><span class="bk-val">+0.87%</span><span class="bk-verdict" style="font-weight:400;font-size:12.5px;color:var(--muted)">近三個月 +4 bps</span></div>
     <div class="stat-row" style="margin-top:18px"><div class="stat"><div class="s-label">實質利率</div><div class="s-value" style="color:inherit">2.38%</div><div class="s-note">抗通膨債券殖利率。反映預期的實質報酬</div></div><div class="stat"><div class="s-label">通膨補償</div><div class="s-value" style="color:inherit">2.32%</div><div class="s-note">市場定價的平均通膨。這一段是聯準會的責任範圍</div></div></div>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。</p><p><b>為什麼重要：</b>長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。</p><p><b>怎麼判讀：</b>看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。</p></div></details>
     <details data-m-collapse><summary>三種上升的意義有什麼不同</summary>
@@ -1790,10 +1858,10 @@ details.home-module[open]{padding-bottom:0}
     <details class="f-more"><summary>利差為什麼是買方的溫度計</summary><div class="f-detail">利差是買方要求的風險補償。它<b>還沒走闊</b>——代表目前的新增供給仍被吸收得掉；一旦走闊，就是買盤開始吃不下的第一個訊號。</div></details>
   </div></details>
 
-  <details class="card sect"><summary><h2 id="priced">供給壓力 vs 市場定價</h2><span class="sect-sum">已反映 +0.80　·　供給壓力 -0.58</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="priced">供給壓力 vs 市場定價</h2><span class="sect-sum">已反映 +0.78　·　供給壓力 -0.58</span></summary><div class="sect-body">
     <p class="hint">市場已經替這些壓力定了多少價。</p>
-    <div class="impact dovish">價格反映的壓力大於供給面實際的程度——期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。</div><div class="bkgap" style="color:var(--text-primary)"><span class="bk-label">供給壓力分數 -0.58　vs　已反映分數</span><span class="bk-val">+0.80</span></div><div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>期限溢酬</div><div class="cm-delta up">+0.94</div><div class="cm-val">+0.87%（中性參考 0.40%）</div></div><div class="cmove"><div>30 年減 10 年利差</div><div class="cm-delta down">-0.14</div><div class="cm-val">+0.53%（中性參考 0.60%）</div></div></div>
-    <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">10Y 期</div><div class="s-value" style="color:inherit">4.70%</div><div class="s-note">近一個月 -1 bps</div></div><div class="stat"><div class="s-label">30Y 期</div><div class="s-value" style="color:inherit">5.23%</div><div class="s-note">近一個月 +6 bps</div></div></div>
+    <div class="impact dovish">價格反映的壓力大於供給面實際的程度——期限溢酬可能已經超前，供給若沒有繼續惡化，長端有回落空間。</div><div class="bkgap" style="color:var(--text-primary)"><span class="bk-label">供給壓力分數 -0.58　vs　已反映分數</span><span class="bk-val">+0.78</span></div><div class="cmoves" style="border-top:none;padding-top:0"><div class="cmove"><div>期限溢酬</div><div class="cm-delta up">+0.94</div><div class="cm-val">+0.87%（中性參考 0.40%）</div></div><div class="cmove"><div>30 年減 10 年利差</div><div class="cm-delta down">-0.16</div><div class="cm-val">+0.52%（中性參考 0.60%）</div></div></div>
+    <div class="stat-row" style="margin-top:16px"><div class="stat"><div class="s-label">10Y 期</div><div class="s-value" style="color:inherit">4.66%</div><div class="s-note">近一個月 -3 bps</div></div><div class="stat"><div class="s-label">30Y 期</div><div class="s-value" style="color:inherit">5.18%</div><div class="s-note">近一個月 +2 bps</div></div></div>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把「供給面算出來的壓力」跟「市場價格已經反映的壓力」放在同一把尺上比。</p><p><b>為什麼重要：</b>壓力大不代表利率會漲——市場早就定價完的利空，落地時反而不動。會動的是「還沒被反映」的那一段，所以兩個分數的差距比各自的水準重要。</p><p><b>怎麼判讀：</b>差距超過 ±0.8 才有意義：供給分數高於已反映＝上行風險還在後面；已反映高於供給＝價格可能超前，供給不再惡化就有回落空間。</p></div></details>
     <details data-m-collapse><summary>其他天期</summary>
       <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">3M 期</div><div class="s-value" style="color:inherit">3.87%</div><div class="s-note">近一個月 -8 bps</div></div><div class="stat"><div class="s-label">2Y 期</div><div class="s-value" style="color:inherit">4.24%</div><div class="s-note">近一個月 -13 bps</div></div><div class="stat"><div class="s-label">5Y 期</div><div class="s-value" style="color:inherit">4.41%</div><div class="s-note">近一個月 -5 bps</div></div></div>
@@ -1933,14 +2001,14 @@ details.home-module[open]{padding-bottom:0}
     <div class="l-desc">投資人持有長債要求的額外補償。上升代表市場不想抱長債</div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>10 年減 2 年</div>
-  <div class="l-value">+0.46% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">+0.42% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">曲線斜率。負值（倒掛）歷史上是衰退的領先訊號</div></details>
 </div><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>30 年減 10 年</div>
-  <div class="l-value">+0.53% <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">+0.52% <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">正常</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
@@ -2063,7 +2131,7 @@ details.home-module[open]{padding-bottom:0}
 
 
 <nav class="pagenav" aria-label="前後頁"><a class="pn-prev" href="/fomc/">← 上一頁<b>聯準會文本</b></a><a class="pn-next" href="/scenario/">下一頁 →<b>情境合成</b></a></nav>
-<footer>資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數）。<br>科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，每季財報一申報就會自動更新。<br>本頁僅為數據整理，不構成投資建議。</footer>
+<footer>資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數）。<br>10 年期與 30 年期的最新一筆為盤中即時報價（Yahoo Finance，延遲約 15 分鐘），其餘皆為 FRED 收盤。<br>科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，每季財報一申報就會自動更新。<br>本頁僅為數據整理，不構成投資建議。</footer>
 
 </div>
 <div id="tip"></div>
@@ -2136,7 +2204,7 @@ details.home-module[open]{padding-bottom:0}
 
   // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
   // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
-  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
+  // 「點左卡卻把並排的右卡也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');

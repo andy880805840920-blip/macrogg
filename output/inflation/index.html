@@ -54,6 +54,27 @@ body{margin:0;background:var(--page);
 /* ---------- 頁首 ---------- */
 h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 @media(min-width:760px){h1{font-size:23px}}
+/* ---------- 右上角的 EN 鈕（原生 details 小浮層）----------
+   桌機手機都收在頁首右上；手機把觸控目標拉到 44px（稽核下限）。 */
+.top{position:relative;padding-right:52px}
+.lang{position:absolute;top:0;right:0}
+.lang>summary{cursor:pointer;list-style:none;display:inline-flex;
+  align-items:center;justify-content:center;padding:3px 10px;
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  color:var(--muted);border:1px solid var(--border);border-radius:4px;
+  user-select:none}
+.lang>summary::-webkit-details-marker{display:none}
+.lang[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.lang-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:50;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;width:min(78vw,300px);
+  box-shadow:0 6px 24px rgba(0,0,0,.35);font-size:12px;line-height:1.7}
+.lang-pop a{display:flex;align-items:center;min-height:44px;
+  font-weight:700}
+.lang-pop span{color:var(--muted);display:block}
+@media(max-width:759px){
+  .lang>summary{min-height:44px;box-sizing:border-box}}
 /* 標題兼「回首頁」。不加底線也不變色——它首先是標題，其次才是連結；
    染成連結色會讓每一頁的第一個視覺焦點變成一條藍字。 */
 /* 觸控高度：h1 本身只有 28px。上下各給 6px 的 padding 撐到 40px，
@@ -274,7 +295,7 @@ details.banner[open]>summary::after{content:"▴"}
 .kpi .k-label{font-size:13px;color:var(--text-secondary);font-weight:600}
 .kpi .k-value{font-size:26px;font-weight:700;line-height:1.2;margin-top:5px}
 @media(min-width:760px){.kpi .k-value{font-size:30px}}
-/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、損益兩平缺口若也留在
+/* ≤400px 時 .v-main 會降到 26px。KPI 數字、分數軸、結論值列若也留在
    26px，一頁上就有四種同字級同字重的東西完全平手——沒有主從等於沒有層級，
    讀者不知道該先看哪個。手機上把這三個降一級，讓結論那一句穩穩壓過去。 */
 @media(max-width:400px){.kpi .k-value{font-size:24px}}
@@ -711,7 +732,8 @@ details[data-m-collapse]>summary{list-style:none}
 /* 文字欄位靠右讀起來很彆扭。這個類別讓最後一欄（說明）改回靠左。 */
 .lefty td:last-child,.lefty th:last-child{text-align:left}
 
-/* 損益兩平的缺口：這是整張卡的結論，要比兩個輸入值大 */
+/* 結論值列（原為損益兩平卡，該卡已移除；能源影響等處仍沿用此版式）：
+   結論要比輸入值大 */
 .bkgap{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
   margin-top:14px;padding-top:13px;border-top:1px solid var(--grid)}
 .bk-label{font-size:12.5px;color:var(--muted)}
@@ -1210,6 +1232,14 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
 .brief{background:var(--surface-1)}
 .brief-k{font-size:11.5px;font-weight:700;color:var(--muted);
   letter-spacing:.08em;margin-bottom:9px}
+/* 三則 bullet 版式：模組名粗體＋豎線，行距鬆一點供掃讀 */
+.brief-src{font-size:11.5px;font-weight:500;color:var(--muted);
+  margin-left:10px;letter-spacing:0}
+.brief-list{list-style:none;margin:10px 0 0;padding:0}
+.brief-list li{font-size:14px;line-height:1.85;color:var(--text-primary);
+  padding:7px 0;border-top:1px solid var(--grid)}
+.brief-list li:first-child{border-top:none;padding-top:2px}
+.brief-list li b{font-weight:700}
 .brief-t{font-size:15px;line-height:2;margin:0;max-width:34em;
   color:var(--text-primary)}
 @media(min-width:760px){.brief-t{font-size:15.5px}}
@@ -1453,6 +1483,39 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
   color:var(--text-primary)}
 .fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
+/* ---------- 焦點條的自選 chip ----------
+   目錄 14 顆全在 HTML 裡，預設組以外掛 .fs-off 隱藏；「自訂」是原生
+   details 元素：桌機浮層、手機（759px 以下）改全寬面板往下推——浮層在
+   手機上會超出視窗或被手指擋住。勾選列拉到 44px 以上符合觸控目標。 */
+.fs-off{display:none}
+.fs-when{display:block;font-size:10px;color:var(--muted);margin-top:1px;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.fs-pick{position:relative;display:inline-block;margin-left:10px;
+  font-weight:400;vertical-align:1px}
+.fs-pick>summary{cursor:pointer;font-size:11.5px;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:2px 9px;
+  list-style:none;display:inline-block;user-select:none}
+.fs-pick>summary::-webkit-details-marker{display:none}
+.fs-pick[open]>summary{color:var(--text-primary);
+  border-color:var(--text-primary)}
+.fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:8px;padding:4px 14px 10px;min-width:230px;
+  box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.fs-pick-panel label{display:flex;align-items:center;gap:9px;
+  min-height:44px;font-size:13px;color:var(--text-primary);
+  border-top:1px solid var(--grid);cursor:pointer;white-space:nowrap}
+.fs-pick-panel label:first-child{border-top:none}
+.fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
+.fs-pick-note{font-size:11px;color:var(--muted);margin-top:6px;
+  border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
+@media(max-width:759px){
+  .fs-pick{position:static}
+  /* 手機的觸控目標：按鈕本體拉到 44px 高（稽核的下限），視覺大小不變 */
+  .fs-pick>summary{display:inline-flex;align-items:center;min-height:44px;
+    box-sizing:border-box;padding:2px 12px}
+  .fs-pick-panel{position:static;margin-top:8px;width:100%;min-width:0;
+    box-shadow:none}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 .fs-chips{display:flex;flex-wrap:wrap;gap:8px 0;margin-top:8px}
@@ -1470,9 +1533,13 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-src{font-size:10.5px;color:var(--muted);margin-left:7px;white-space:nowrap}
 /* 焦點段給一個淺色底框：跟上方數字 chips 分成兩個視覺層，
    一眼分得出「數字」與「敘述」——先前兩者直接疊在一起。 */
-.fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:12px 0 0;max-width:47em;background:var(--surface-2);
-  border-radius:9px;padding:10px 13px}
+/* 論述容器：底色框只包一次，段落在框內分段——每段各自一個框
+   會把一篇報導切成三塊碎片 */
+.fs-body{margin:12px 0 0;max-width:47em;background:var(--surface-2);
+  border-radius:9px;padding:11px 13px}
+.fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
+  margin:0}
+.fs-body .fs-text+.fs-text{margin-top:9px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
@@ -1719,9 +1786,10 @@ details.home-module[open]{padding-bottom:0}
 <div class="viz-root">
 
 <header class="top">
+  <details class="lang"><summary translate="no">EN</summary><div class="lang-pop"><a href="https://macrogg-netlify-app.translate.goog/inflation/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" target="_blank" rel="noopener">English（Google 翻譯，開新分頁）</a><span>若打不開，用瀏覽器內建翻譯：Chrome 右鍵或網址列選單→「翻譯」；iPhone Safari 網址列左側選單→「翻譯網頁」。</span></div></details>
   <h1><a class="h1-home" href="/">通膨</a></h1>
   
-  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-26 22:27（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-07　·　更新於 2026-08-27 00:05（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1736,7 +1804,7 @@ details.home-module[open]{padding-bottom:0}
         最早確認消費端轉折與分項來源。</div></div><div class="flow-arrow">→</div>
       <div class="flow-box"><strong>PCE｜政策口徑</strong><div class="flow-values">
         總體 3.7% · 核心 3.3% · 3M 3.0%<br>
-        核心年增決定格位；三個月年化只決定方向。</div></div></div></div></details><div class="data-line"><span class="data-tag">CPI 2026-07</span><span class="data-tag">PPI 2026-07</span><span class="data-tag">PCE 2026-07</span><span class="data-tag">口徑：年增率；動能：近 3 個月年化</span><span class="data-tag next">下次 CPI 09/11</span><span class="data-tag next">下次 PCE 08/26</span></div></div></div>
+        核心年增決定格位；方向由核心 CPI 月步速（0.2 準則）決定。</div></div></div></div></details><div class="data-line"><span class="data-tag">CPI 2026-07</span><span class="data-tag">PPI 2026-07</span><span class="data-tag">PCE 2026-07</span><span class="data-tag">CPI 口徑：月增（季調）；動能：月步速對 0.2</span><span class="data-tag next">下次 CPI 09/11</span><span class="data-tag next">下次 PCE 10/06</span></div></div></div>
 
 
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
@@ -1811,15 +1879,15 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">CPI 3.4%　·　核心 2.5%　·　核心 PCE 3.3%</span></summary><div class="sect-body">
+  <details class="card sect" open><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">CPI 月增 +0.1%　·　核心月增 +0.2%　·　核心 PCE 年增 3.3%</span></summary><div class="sect-body">
     <div class="grid g4 inner"><div class="card kpi">
-  <div class="k-label">Headline CPI, y/y<span class="asof">2026-07</span></div>
-  <div class="k-label-zh">CPI 年增率</div><div class="k-value">3.4%</div>
-  <div class="k-chips"><span class="k-chip hawkish">水準：高於目標對應水準</span><span class="k-chip dovish">本期：-0.17</span></div><div class="k-plain">你買的東西平均比一年前貴 3.4%。這個數字包含食物和能源，所以起伏會比較大。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 0.5%　·　高於 2% +1.4 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,21.0 9.7,23.6 16.4,29.9 23.1,31.0 29.8,30.4 36.5,25.8 43.2,25.3 49.9,22.3 56.6,20.9 63.4,24.9 70.1,25.7 76.8,29.9 83.5,29.5 90.2,17.3 96.9,9.3 103.6,3.0 110.3,13.4 117.0,15.8" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="15.8" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.3</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">3.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.2</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.5</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.4</div><div class="mdate">7月</div></div></div></div></div></details>
+  <div class="k-label">Headline CPI, m/m<span class="asof">2026-07</span></div>
+  <div class="k-label-zh">CPI 月增率</div><div class="k-value">+0.1%</div>
+  <div class="k-chips"><span class="k-chip hawkish">水準：高於目標對應水準</span><span class="k-chip dovish">本期：月增 +0.1%，低於目標步速</span></div><div class="k-plain">物價平均比上個月貴 0.1%（季調）。這個數字包含食物和能源，單月起伏大，方向要看核心。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">年增 3.4%（未季調）　·　高於 2% +1.4 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,12.5 10.1,16.9 17.2,21.1 24.4,18.3 31.5,19.7 38.6,16.3 45.8,16.8 52.9,14.2 60.0,15.4 67.1,15.3 74.2,18.1 81.4,16.0 88.5,3.0 95.6,7.9 102.8,11.5 109.9,31.0 117.0,20.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="20.2" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">3.3</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">3.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">4.2</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">3.5</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">3.4</div><div class="mdate">7月</div></div></div></div></div></details>
 </div><div class="card kpi">
-  <div class="k-label">Core CPI, y/y<span class="asof">2026-07</span></div>
-  <div class="k-label-zh">核心 CPI 年增率</div><div class="k-value">2.5%</div>
-  <div class="k-chips"><span class="k-chip neutral">水準：接近目標對應水準</span><span class="k-chip dovish">本期：-0.12</span><span class="k-chip pos">三個月年化 1.6%，動能放緩</span></div><div class="k-plain">剔除波動大的食物與能源後，物價一年漲 2.5%。聯準會看趨勢時主要看這一類數字。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">近三個月年化 1.6%　·　高於 2% +0.5 個百分點</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,3.0 9.7,7.9 16.4,19.4 23.1,19.7 29.8,19.5 36.5,14.3 43.2,9.9 49.9,8.2 56.6,11.4 63.4,24.8 70.1,24.6 76.8,29.4 83.5,31.0 90.2,26.2 96.9,20.7 103.6,17.2 110.3,26.2 117.0,30.2" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="30.2" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">2.6</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">2.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">2.9</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">2.6</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">2.5</div><div class="mdate">7月</div></div></div></div></div></details>
+  <div class="k-label">Core CPI, m/m<span class="asof">2026-07</span></div>
+  <div class="k-label-zh">核心 CPI 月增率</div><div class="k-value">+0.2%</div>
+  <div class="k-chips"><span class="k-chip neutral">水準：接近目標對應水準</span><span class="k-chip neutral">本期：月增 +0.2%，符合目標步速 0.2</span><span class="k-chip pos">近三月平均月增 0.14%，符合目標步速</span></div><div class="k-plain">剔除波動大的食物與能源後，物價比上個月漲 0.2%。已連續 3 個月落在 0.2% 的目標步速內。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">年增 2.5%　·　近三個月平均月增 0.14%（目標步速 0.2）</div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none" role="img" aria-hidden="true"><polyline points="3.0,3.0 10.1,13.9 17.2,25.6 24.4,14.9 31.5,21.7 38.6,15.2 45.8,10.2 52.9,10.4 60.0,16.2 67.1,15.2 74.2,11.3 81.4,16.3 88.5,17.6 95.6,6.2 102.8,16.8 109.9,31.0 117.0,16.3" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><circle cx="117.0" cy="16.3" r="2.5" fill="var(--series-1)"/></svg><div class="mwrap"><div class="munit">單位：%</div><div class="mseries"><div class="mcell"><div class="mval">2.6</div><div class="mdate">26年3月</div></div><div class="mcell"><div class="mval">2.8</div><div class="mdate">4月</div></div><div class="mcell"><div class="mval">2.9</div><div class="mdate">5月</div></div><div class="mcell"><div class="mval">2.6</div><div class="mdate">6月</div></div><div class="mcell last"><div class="mval">2.5</div><div class="mdate">7月</div></div></div></div></div></details>
 </div><div class="card kpi">
   <div class="k-label">Core PCE, y/y<span class="asof">2026-07</span></div>
   <div class="k-label-zh">核心 PCE 年增率</div><div class="k-value">3.3%</div>
@@ -2125,7 +2193,7 @@ details.home-module[open]{padding-bottom:0}
 
   // 並排卡同步：同一列 g2 裡的兩張卡，一張開合、另一張跟著——
   // **只在桌機**。手機上 g2 是上下堆疊、不存在高度落差，同步反而變成
-  // 「點失業率分解卻把損益兩平也拉開」的怪行為（使用者實際回報過）。
+  // 「點左卡卻把並排的右卡也拉開」的怪行為（使用者實際回報過）。
   // 用「狀態不同才改」當終止條件，避免 toggle 事件互相觸發成迴圈。
   document.querySelectorAll('.grid.g2').forEach(function(g){
     var ds = g.querySelectorAll(':scope > details.sect');
