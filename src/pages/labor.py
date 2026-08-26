@@ -559,11 +559,6 @@ def _labor_body_full(d: dict) -> str:
                 f'　·　時薪年增 {k["ahe_display"]}')
     _dec_sum = (f'失業率 {dec.get("delta_rate", 0):+.2f} 個百分點'
                 + (f'　·　{k["u3_flag"]}' if k.get("u3_flag") else ""))
-    _bk = d["breakeven"]
-    _bk_sum = f'缺口 {_bk["gap_display"]}　·　{_bk["verdict_label"]}'
-    # 結論框的方向色：缺口紅（撐不住失業率）＝偏弱、綠＝偏強
-    _bk_lean = {"var(--critical)": "dovish",
-                "var(--good)": "hawkish"}.get(_bk.get("gap_color"), "neutral")
     _att_sum = "　·　".join(f'{s["label"]} {s["value"]}'
                            for s in att["stats"][:2])
     _rev_sum = next((f'{s["label"]} {s["value"]}' for s in rev["stats"]
@@ -616,7 +611,7 @@ def _labor_body_full(d: dict) -> str:
   </div>
 </div>
 
-<div class="grid g2">
+<div class="grid">
   <div class="card">
     <h2 id="unrate" data-sum="{esc(_dec_sum)}">失業率變動分解</h2>
     <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
@@ -627,33 +622,6 @@ def _labor_body_full(d: dict) -> str:
         "失業率只算「還在找工作」的人，所以下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
         "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
     {_structure_block(d.get('unemp_structure'))}
-  </div>
-
-  <div class="card">
-    <h2 id="breakeven" data-sum="{esc(_bk_sum)}">損益兩平就業增速</h2>
-    <p class="hint">維持失業率不變，每個月需要新增多少工作——非農的「及格線」。</p>
-    <div class="impact {_bk_lean}">缺口 {esc(d['breakeven']['gap_display'])}　·　{esc(d['breakeven']['verdict_label'])}。{esc(d['breakeven']['verdict_note'])}</div>
-    <div class="stat-row" style="margin-top:14px">{_stats(d['breakeven']['stats'] + [
-        {"label": "缺口", "value": d['breakeven']['gap_display'],
-         "color": d['breakeven']['gap_color']}])}</div>
-    <div style="margin-top:14px">{d['breakeven']['chart']}</div>
-    {teach(
-        "美國每個月人口都在成長，所以就業也要跟著增加，失業率才不會上升。這一區算的就是那條「及格線」。",
-        "新聞說「非農新增 5 萬人」，到底算好還是壞？沒有及格線就答不出來。及格線會隨人口與移民政策改變，前幾年是 10–15 萬，現在低得多。",
-        "非農高於及格線＝就業市場在變強；低於＝表面有新增、其實撐不住現在的失業率，失業率之後會慢慢上升。")}
-    <details data-m-collapse><summary>計算方式與注意事項</summary>
-      <p class="hint" style="margin:10px 0 0">計算依據：{esc(d['breakeven']['inputs'])}</p>
-      <dl class="gloss" style="margin-top:10px">
-        <dt>計算式</dt>
-        <dd>每月損益兩平 ≈ 工作年齡人口月增 × 勞動參與率 × 機構調查／家庭調查就業比。</dd>
-        <dt>為什麼會變動</dt>
-        <dd>主要來自人口成長與移民政策。2025 年後移民收緊，勞動供給成長放慢，
-          這個門檻從過去的 10–15 萬降到目前的水準。</dd>
-        <dt>注意事項</dt>
-        <dd>人口序列每年一月做普查控制調整會出現跳點，計算時已排除一月。
-          此為推估值，非官方公布數字。</dd>
-      </dl>
-    </details>
   </div>
 </div>
 
@@ -797,9 +765,8 @@ def labor_body(d: dict) -> str:
         basis = f"失業率 {u:.1f}% 對照 FOMC 長期區間 {lo:.1f}–{hi:.1f}%"
     else:
         state, basis = "資料不足", "缺少失業率或 FOMC 長期區間"
-    momentum = "轉弱" if (ax.get("below_breakeven") or ax.get("sahm_triggered")) else "持平"
-    n3, bk = ax.get("nfp_3m"), ax.get("breakeven")
-    gap = (n3 - bk) if n3 is not None and bk is not None else None
+    momentum = "轉弱" if (ax.get("u3_rising") or ax.get("sahm_triggered")) else "持平"
+    _rise = ax.get("sahm")
     if state == "中" and hi is not None and u is not None:
         trigger = f"失業率高於 {hi:.1f}% 轉弱（距離 {hi-u:.1f}pp）"
     elif state == "強" and lo is not None:
@@ -814,9 +781,9 @@ def labor_body(d: dict) -> str:
         state_chip("非農就業｜最新", k.get("nfp_display", "—"), k.get("nfp_sub", "")),
         state_chip("失業率 U-3", k.get("u3_display", "—"), k.get("u3_sub", "")),
     ])
-    gap_txt = f"{gap/10:+.1f} 萬人" if gap is not None else "—"
+    _rise_txt = f"{_rise:+.2f} 個百分點" if _rise is not None else "—"
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>{esc(basis)}</span></div>'
-             f'<div class="logic-step"><b>方向怎麼定</b><span>近 3 個月非農減損益兩平：{gap_txt}；低於即轉弱。</span></div>'
+             f'<div class="logic-step"><b>方向怎麼定</b><span>失業率較近一年低點回升：{_rise_txt}；達 0.20（本站門檻）即轉弱、0.50（Sahm）為衰退訊號。</span></div>'
              f'<div class="logic-step"><b>下一格觸發</b><span>{esc(trigger)}</span></div></div>')
     logic = focus_evidence(logic)
     a = d.get("asof") or {}
@@ -832,7 +799,7 @@ def labor_body(d: dict) -> str:
             + '</div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
             f'<h2 class="focus-title">就業{state_text}，動能{momentum}</h2>'
-            '<p class="focus-sub">失業率決定格位；非農、失業金與 JOLTS 用來判斷移動方向。</p>'
+            '<p class="focus-sub">失業率的水準決定格位；失業率的回升速度決定移動方向。</p>'
             f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
     return hero + compact_full(_labor_body_full(d), "完整就業拆解")
 

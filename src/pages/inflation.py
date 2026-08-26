@@ -238,17 +238,17 @@ def _inflation_body_full(d: dict) -> str:
     surp = (d.get("surprises") or {}).get("inline") or {}
     _fresh = bool(d.get("is_fresh"))
     kpis = "".join([
-        _kpi_card("CPI 年增率", k["headline_display"], k["headline_sub"],
+        _kpi_card("CPI 月增率", k["headline_display"], k["headline_sub"],
                   k["headline_plain"], charts.sparkline(k["headline_spark"]),
                   mini=mini.get("headline", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("headline"), fresh=_fresh,
-                  en="Headline CPI, y/y", leans=lean.get("headline", ())),
-        _kpi_card("核心 CPI 年增率", k["core_display"], k["core_sub"],
+                  en="Headline CPI, m/m", leans=lean.get("headline", ())),
+        _kpi_card("核心 CPI 月增率", k["core_display"], k["core_sub"],
                   k["core_plain"], charts.sparkline(k["core_spark"]),
                   k.get("core_flag"), k.get("core_flag_kind", ""),
                   mini=mini.get("core", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("core"), fresh=_fresh,
-                  en="Core CPI, y/y", leans=lean.get("core", ())),
+                  en="Core CPI, m/m", leans=lean.get("core", ())),
         _kpi_card("核心 PCE 年增率", k["pce_display"], k["pce_sub"],
                   k["pce_plain"], charts.sparkline(k["pce_spark"]),
                   k.get("pce_flag"), k.get("pce_flag_kind", ""),
@@ -357,8 +357,8 @@ def _inflation_body_full(d: dict) -> str:
     _sig_sum = (f'{len(d["flags"])} 項　·　{_top.headline}' if _top
                 else "本次沒有觸發任何訊號")
     _k = d["kpi"]
-    _kpi_sum = (f'CPI {_k["headline_display"]}　·　核心 {_k["core_display"]}'
-                f'　·　核心 PCE {_k["pce_display"]}')
+    _kpi_sum = (f'CPI 月增 {_k["headline_display"]}　·　核心月增 {_k["core_display"]}'
+                f'　·　核心 PCE 年增 {_k["pce_display"]}')
     # 收合摘要改成一句結論（主要推力是誰），不再重印兩個統計數字——
     # 那兩個數字展開後 stat-row 裡就有，印在標題列等於同一數字出現兩次。
     _att_parts = d["attribution"].get("parts") or []
@@ -629,7 +629,7 @@ def inflation_body(d: dict) -> str:
         最早確認消費端轉折與分項來源。</div></div><div class="flow-arrow">→</div>
       <div class="flow-box"><strong>PCE｜政策口徑</strong><div class="flow-values">
         總體 {pv(s.pce_headline_yoy)} · 核心 {pv(s.pce_core_yoy)} · 3M {pv(s.pce_core_3m)}<br>
-        核心年增決定格位；三個月年化只決定方向。</div></div></div>'''
+        核心年增決定格位；方向由核心 CPI 月步速（0.2 準則）決定。</div></div></div>'''
     chain = focus_evidence(chain, "查看 PPI、CPI、PCE 傳導")
     def _next_tag(key: str, label: str) -> str:
         v = d.get(f"next_{key}")
@@ -638,7 +638,7 @@ def inflation_body(d: dict) -> str:
     tags = (f'<div class="data-line"><span class="data-tag">CPI {(a.get("cpi") or "—")[:7]}</span>'
             f'<span class="data-tag">PPI {(a.get("ppi") or "—")[:7]}</span>'
             f'<span class="data-tag">PCE {(a.get("pce") or "—")[:7]}</span>'
-            '<span class="data-tag">口徑：年增率；動能：近 3 個月年化</span>'
+            '<span class="data-tag">CPI 口徑：月增（季調）；動能：月步速對 0.2</span>'
             + _next_tag("cpi", "CPI") + _next_tag("pce", "PCE") + '</div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Inflation now</div>'
             f'<h2 class="focus-title">{esc(title)}</h2><p class="focus-sub">'

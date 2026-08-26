@@ -306,6 +306,60 @@ check("⑧b 百分比格式", c is not None and c["value"] == 4.28 and c["delta_
 check("⑧c 異常值不採用",
       ft.fetch_yahoo_yield("^TNX", "x", _get=lambda u: _FakeYt(0.02, 0.02)) is None)
 
+# ⑧d–⑧h 長端序列升級成即時：all-or-nothing、跳動上限、同日不疊
+import datetime as _dt
+
+_TS = int(_dt.datetime(2026, 8, 26, 14, 0,
+                       tzinfo=_dt.timezone.utc).timestamp())
+
+
+def _mk_series():
+    return {"DGS10": [{"date": "2026-08-21", "value": 4.68},
+                      {"date": "2026-08-24", "value": 4.70}],
+            "DGS30": [{"date": "2026-08-21", "value": 5.20},
+                      {"date": "2026-08-24", "value": 5.23}]}
+
+
+def _yget(quotes):
+    def get(url):
+        for sym, (cur, prev) in quotes.items():
+            if sym in url:
+                return _FakeYt(cur, prev, ts=_TS)
+        raise RuntimeError("no quote")
+    return get
+
+
+_s = _mk_series()
+_msg = ft.upgrade_yields_live(_s, _get=_yget(
+    {"%5ETNX": (46.6, 47.0), "%5ETYX": (51.9, 52.3)}))
+check("⑧d 兩檔都成功 → 各附加一列 live",
+      len(_msg) == 2 and _s["DGS10"][-1] == {"date": "2026-08-26",
+                                             "value": 4.66, "live": True}
+      and _s["DGS30"][-1]["value"] == 5.19, (_msg, _s["DGS10"][-1]))
+
+from src.analysis import rates as _rt
+_cv = _rt.curve_state(_s)
+check("⑧e 升級後 curve_state 用即時值、30−10 斜率同日一致",
+      _cv.levels["10Y"] == 4.66 and _cv.levels["30Y"] == 5.19
+      and abs(_cv.slope_30_10 - 0.53) < 1e-9, _cv.levels)
+
+_s = _mk_series()
+_msg = ft.upgrade_yields_live(_s, _get=_yget({"%5ETNX": (46.6, 47.0)}))
+check("⑧f 只有一檔成功 → 整組放棄（all-or-nothing）",
+      _msg == [] and len(_s["DGS10"]) == 2 and len(_s["DGS30"]) == 2)
+
+_s = _mk_series()
+_msg = ft.upgrade_yields_live(_s, _get=_yget(
+    {"%5ETNX": (54.0, 47.0), "%5ETYX": (51.9, 52.3)}))
+check("⑧g 與收盤差逾 0.6 個百分點 → 判定報價鏈出錯、整組放棄",
+      _msg == [] and len(_s["DGS10"]) == 2)
+
+_s = _mk_series()
+_s["DGS10"][-1]["date"] = _s["DGS30"][-1]["date"] = "2026-08-26"
+_msg = ft.upgrade_yields_live(_s, _get=_yget(
+    {"%5ETNX": (46.6, 47.0), "%5ETYX": (51.9, 52.3)}))
+check("⑧h FRED 收盤已是同日 → 不疊", _msg == [] and len(_s["DGS10"]) == 2)
+
 # ⑨ Yahoo feed：只留標題命中關鍵字的項目、來源標籤由 feed 推得
 _FEED_XML = """<rss><channel>
 <item><title>川普再批聯準會，殖利率走高</title><link>http://a</link>
@@ -496,6 +550,134 @@ check("⑬e 404 換模型且記黑名單",
       _out == "好文" and "gemini-flash-latest" in _pl._DEAD, str(_seq))
 _pl._DEAD.clear()
 _pl._gemini_models, _pl._gemini_call = _orig_gm, _orig_gc2
+
+# ⑭ 全文重新論述：英文來源、分段渲染、來源標籤
+check("⑭ 英文關鍵詞不分大小寫", ft._kw_hit("Fed", "FED signals rate pause")
+      and ft._kw_hit("yields", "Treasury Yields climb")
+      and not ft._kw_hit("Fed", "confused market 里的中文"))
+check("⑭b 中文詞照原樣比對", ft._kw_hit("美債", "美債殖利率走高")
+      and not ft._kw_hit("美債", "美國股市上漲"))
+check("⑭c FT／WSJ 的來源標籤", ft._feed_label("https://www.ft.com/rss/home")
+      == "Financial Times"
+      and ft._feed_label("https://feeds.a.dj.com/rss/RSSMarketsMain.xml")
+      == "Wall Street Journal")
+
+# 英文標題經 feed 過濾要進得來
+_EN_XML = """<rss><channel>
+<item><title>Fed officials split on rate path as yields climb</title>
+  <link>http://e</link><pubDate>{new}</pubDate></item>
+<item><title>Local sports team wins championship</title>
+  <link>http://f</link><pubDate>{new}</pubDate></item>
+</channel></rss>""".format(new=_new)
+fe2 = ft.fetch_feed_headlines(["https://www.ft.com/rss/home"],
+                              ["Fed rate", "Treasury yields"],
+                              _get=lambda u: _Fake(_EN_XML))
+check("⑭d 英文標題命中關鍵字進標題池", len(fe2) == 1
+      and fe2[0]["source"] == "Financial Times", fe2)
+
+# 分段輸出被完整保留（首頁逐段包 <p>，見 home._focus_strip）
+_orig_gc2 = _pl._gemini_call
+_pl._gemini_call = (lambda *a, **k:
+                    "財政部調整發債結構，市場關注十年期殖利率。\n\n"
+                    "聯準會官員表示通膨仍高於目標，九月會議前進入噤聲期。")
+t14, s14 = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
+                                ["美國財政部"], 400, {"GEMINI_API_KEY": "F"})
+check("⑭e 分段的論述通過驗證且保留換行",
+      s14 == "model-content" and "\n" in t14, repr(t14[:40]))
+_pl._gemini_call = _orig_gc2
+
+from src.pages import home as _home
+_h = _home._focus_strip({"yields": [], "links": [], "fedwatch": None,
+                         "text": "第一段。\n\n第二段。",
+                         "text_source": "model-content"})
+check("⑭f 首頁逐段渲染（兩個 <p> 一個容器框）",
+      _h.count('class="fs-text"') == 2 and _h.count('fs-body') == 1)
+
+# ⑮ 自選 chip 目錄：14 顆、預設組、SRF 零值、利差配對、範圍檢查、渲染
+LIQ = {
+    "SOFR": [{"date": "2026-08-24", "value": 3.62},
+             {"date": "2026-08-25", "value": 3.60}],
+    "IORB": [{"date": "2026-08-01", "value": 3.65},
+             # 晚於 SOFR 最新日的值不能拿來配（期別倒掛）
+             {"date": "2026-08-26", "value": 3.40}],
+    "RRPONTSYD": [{"date": "2026-08-24", "value": 0.9},
+                  {"date": "2026-08-25", "value": 0.4}],
+    "RPONTSYD": [{"date": "2026-08-25", "value": 0.0}],
+    "DCOILWTICO": [{"date": "2026-08-18", "value": 90.1},
+                   {"date": "2026-08-19", "value": 91.3}],
+    "DCOILBRENTEU": [{"date": "2026-08-19", "value": 95.3}],
+    "VIXCLS": [{"date": "2026-08-24", "value": 16.9},
+               {"date": "2026-08-25", "value": 17.4}],
+}
+RS = {"DGS3MO": [{"date": "2026-08-24", "value": 3.71},
+                 {"date": "2026-08-25", "value": 3.72}],
+      "DGS2": [{"date": "2026-08-25", "value": 3.83}],
+      "DGS5": [{"date": "2026-08-25", "value": 4.18}],
+      "DGS10": [{"date": "2026-08-25", "value": 4.70}],
+      "DGS30": [{"date": "2026-08-25", "value": 5.23}]}
+
+cat = ft.build_catalog(RS, LIQ, [], offline=True)
+_ids = [c["id"] for c in cat]
+check("⑮ 目錄 14 顆、順序固定",
+      _ids == ["dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "fedwatch",
+               "sofr", "sofr_iorb", "onrrp", "srf",
+               "wti", "brent", "vix", "move"], _ids)
+_by = {c["id"]: c for c in cat}
+check("⑮b 預設組＝2Y＋10Y＋機率",
+      [c["id"] for c in cat if c.get("on")] == ["dgs2", "dgs10", "fedwatch"])
+check("⑮c 利差配對不拿晚於 SOFR 日的 IORB（3.60−3.65＝−5 bp）",
+      _by["sofr_iorb"]["value"] == "-5 bp", _by["sofr_iorb"])
+check("⑮d 利差變動對前一日（−5 −（−3）＝−2 bp）",
+      _by["sofr_iorb"]["delta"] == "-2 bp" and _by["sofr_iorb"]["dir"] == "dn")
+check("⑮e SRF 零值顯示「未動用」、不上色",
+      _by["srf"]["value"] == "0（未動用）" and _by["srf"]["dir"] == "")
+check("⑮f ON RRP 換算成億美元（0.4 十億 → 4 億）",
+      _by["onrrp"]["value"] == "4 億美元"
+      and _by["onrrp"]["delta"] == "-5 億")
+check("⑮g 離線退 FRED 後備（WTI 有值、MOVE 標擷取失敗）",
+      _by["wti"]["value"] == "91.3 美元"
+      and _by["move"]["value"] == "—"
+      and _by["move"]["delta"] == "本次擷取失敗")
+check("⑮h 小字只有日期（月-日）", _by["sofr"]["date"] == "08-25"
+      and _by["dgs2"]["date"] == "08-25")
+
+# SRF 非零 → 轉警示色並標金額
+_liq2 = dict(LIQ)
+_liq2["RPONTSYD"] = [{"date": "2026-08-24", "value": 0.0},
+                     {"date": "2026-08-25", "value": 2.5}]
+_c2 = {c["id"]: c for c in ft.build_catalog(RS, _liq2, [], offline=True)}
+check("⑮i SRF 非零 → 25 億美元、警示色",
+      _c2["srf"]["value"] == "25.0 億美元" and _c2["srf"]["dir"] == "up")
+
+# 泛用報價的範圍檢查（VIX 200 不合理 → None 退後備）
+check("⑮j fetch_yahoo_quote 範圍檢查",
+      ft.fetch_yahoo_quote("^VIX", 5, 100,
+                           _get=lambda u: _FakeYt(200.0, 190.0)) is None
+      and ft.fetch_yahoo_quote("^VIX", 5, 100,
+                               _get=lambda u: _FakeYt(17.4, 16.9))["value"]
+      == 17.4)
+
+# ⑯ 首頁渲染：預設顯示、隱藏 chip 也在 HTML、勾選面板與 JS
+_F = {"yields": [], "links": [], "fedwatch": None, "text": "x",
+      "text_source": "offline", "generated": "2026-08-26", "chips": cat}
+_hs = _home._focus_strip(_F)
+import re as _re
+_vis = _re.findall(r'<div class="fs-chip" data-chip="([^"]+)"', _hs)
+check("⑯ 預設只顯示 2Y／10Y／機率", _vis == ["dgs2", "dgs10", "fedwatch"],
+      _vis)
+check("⑯b 其餘 11 顆帶 .fs-off 隱藏但都在 HTML",
+      _hs.count("fs-off") >= 11 and _hs.count("data-chip=") == 14)
+check("⑯c 勾選面板 14 個選項＋已選數＋裝置說明",
+      _hs.count("data-pick=") == 14 and "已選 3 顆" in _hs
+      and "選擇存在此裝置" in _hs)
+check("⑯d 內嵌 JS 帶預設組、localStorage 鍵",
+      'var D=["dgs2", "dgs10", "fedwatch"]' in _hs and "localStorage" in _hs)
+_hs2 = _home._focus_strip({"yields": [
+    {"label": "10 年期", "value": 4.66, "delta_bp": -4, "date": "2026-08-26"}],
+    "links": [], "fedwatch": None, "text": "", "text_source": "",
+    "generated": "2026-08-26", "chips": []})
+check("⑯e 目錄空 → 舊版三顆後備（無勾選面板）",
+      "fs-pick" not in _hs2 and _hs2.count("fs-chip") >= 2)
 
 print()
 print("全部通過" if ok else "有失敗")

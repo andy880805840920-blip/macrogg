@@ -98,6 +98,15 @@ def main() -> int:
     build.build_fomc_context(stmts, cf.get("policy_rate") or {}, [], True,
                              upcoming=upcoming, rates_series=s_rt)
 
+    # 流動性：全組只供焦點條的 chip 目錄讀，跑一次目錄組裝即可。
+    c = cfg("liquidity.yaml")
+    ids, labels, inv = R.series_ids(c, ("series",))
+    from src import fixtures_liquidity
+    from src.analysis import focus_today as ft
+    s_liq = Tracked(fixtures_liquidity.build())
+    ft.build_catalog(s_rt, s_liq, [], offline=True)
+    groups.append(("流動性", set(ids), s_liq.read))
+
     # 勞動那組要在通膨跑完之後才結算：ECI 是在通膨模組裡被讀的。
     # 長端那組同理，要等聯準會文本跑完。
     groups[0] = ("勞動", groups[0][1], s_lab.read)

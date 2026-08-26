@@ -94,7 +94,6 @@ MAP = {
     "UNEMPLOY": "LNS13000000",         # 失業人數
     "CLF16OV": "LNS11000000",          # 勞動力
     "CE16OV": "LNS12000000",           # 就業人數（家庭調查）
-    "CNP16OV": "LNS10000000",          # 民間非機構人口
     "UEMP27OV": "LNS13008636",         # 失業 27 週以上
     "UEMPMED": "LNS13008275",          # 失業週數中位數
     "AHETPI": "CES0500000008",         # 生產與非管理職時薪
@@ -129,7 +128,7 @@ GROUPS = {
             "CUSR0000SACL1E", "CUSR0000SAH1", "CUSR0000SASLE",
             "CUSR0000SEHA", "CUSR0000SEHC"],
     "jobs": ["PAYEMS", "USPRIV", "USGOVT", "UNRATE", "U6RATE", "CIVPART",
-             "UNEMPLOY", "CLF16OV", "CE16OV", "CNP16OV", "UEMP27OV",
+             "UNEMPLOY", "CLF16OV", "CE16OV", "UEMP27OV",
              "UEMPMED", "AHETPI", "CES0500000003",
              "USMINE", "USCONS", "MANEMP", "USWTRADE", "USTRADE",
              "USINFO", "USFIRE", "USPBS", "USLAH", "USSERV"],

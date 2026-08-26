@@ -15,7 +15,7 @@ import logging
 from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
                        inflation as infl_an, rules_inflation, fomc_text,
-                       scenario, breakeven as be, surprise as sp,
+                       scenario, surprise as sp,
                        passthrough as pt)
 from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
                            annualized, yoy_series, annualized_series,
@@ -158,11 +158,6 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         series.get("CES0500000003", []), series.get("AHETPI", [])
     )
 
-    # ---------------- 損益兩平就業增速 ----------------
-    # 沒有這條線，非農的絕對數字無法解讀
-    bkev = be.estimate(series.get("CNP16OV", []), series.get("CIVPART", []),
-                       payems, series.get("CE16OV", []), series.get("UNRATE", []))
-
     # ---------------- 意外值 ----------------
     exp_month = payems[-1]["date"][:7] if payems else ""
     exp = ((consensus or {}).get("expectations") or {}).get(exp_month) or {}
@@ -265,7 +260,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     # ---------------- KPI 的水準／本期 chips ----------------
     # 跟通膨頁的 KPI 卡同一套兩枚制：「水準」對一個外部錨、「本期」看變化。
     # 全部規則判定，錨都是頁面上已經在用的既有標準，不另立新門檻：
-    #   非農　　水準對損益兩平線（bkev.verdict）；動能比三月均對一年均（±2 萬人）
+    #   非農　　只標動能（三月均對一年均 ±2 萬人）。原本的水準章對
+    #   　　　　損益兩平線——那套已整組移除（改直接量失業率的回升）
     #   失業率　水準對 FOMC 長期區間（高於＝轉弱利降息）；本期較上月（±0.05pp）
     #   時薪　　水準對 3% 通膨相容線（±0.25pp，同通膨頁的中性帶）；本期較上月年增（±0.1pp）
     #   參與率　沒有外部錨，只標本期；方向的鷹鴿意義不單一（下降既可能是
@@ -273,12 +269,6 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     _u_lo = value_at(series.get("UNRATECTLLR", []))
     _u_hi = value_at(series.get("UNRATECTHLR", []))
     _nl = []
-    if bkev.verdict == "above":
-        _nl.append(("水準：高於損益兩平線", "hawkish"))
-    elif bkev.verdict == "below":
-        _nl.append(("水準：低於損益兩平線", "dovish"))
-    elif bkev.verdict == "balanced":
-        _nl.append(("水準：接近損益兩平線", "neutral"))
     if ma3 is not None and ma12 is not None:
         _dm = ma3 - ma12                     # 千人
         if abs(_dm) < 20:
@@ -491,10 +481,13 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                         "total_count": n_ind},
         "decomp": dec,
         "ustar": _ustar_gap(u3, series.get("NROU", [])),
-        # 九宮格就業軸的判定材料。全部是外部標準：
+        # 九宮格就業軸的判定材料：
         #   u_lo/u_hi  FOMC 對長期失業率的中央趨勢（＝聯準會認定的充分就業）
-        #   sahm       Sahm 法則（原始論文的 0.50 門檻）
-        #   breakeven  三月均非農 vs 損益兩平（由人口成長推導，不是選的門檻）
+        #   sahm       Sahm 指標值與 0.50 觸發（原始論文門檻）
+        #   u3_rising  同一個 Sahm 指標對 0.20 的「溫和惡化」水位——
+        #              0.20 是本站判斷不是外部標準，畫面會標示。
+        #              它取代損益兩平（已移除）：直接量失業率有沒有在升，
+        #              不再靠人口假設去預測。
         "axis": {
             "unrate": value_at(u3),
             "u_lo": value_at(series.get("UNRATECTLLR", [])),
@@ -502,9 +495,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "u_mid": value_at(series.get("UNRATEMDLR", [])),
             "sahm": _sahm_value(lights),
             "sahm_triggered": (_sahm_value(lights) or 0) >= SAHM_TRIGGER,
-            "nfp_3m": bkev.nfp_3m,
-            "breakeven": bkev.monthly,
-            "below_breakeven": (bkev.verdict == "below"),
+            "u3_rising": (_sahm_value(lights) or 0) >= scenario.MILD_SAHM,
+            "nfp_3m": ma3,
         },
         "claims": _claims_block(series),
         "kpi_lean": kpi_lean,
@@ -528,7 +520,6 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         # 首頁也要用算出來的，不能各自寫死——先前首頁寫「約兩個月」、
         # 這裡算出來是 1 個月，同一份資料兩種說法
         "jolts_lag_text": f"JOLTS {jolts_lag_text}",
-        "breakeven": _breakeven_block(bkev),
         "surprises": _surprise_block(surprises),
         "asof": {
             "labor": payems[-1]["date"] if payems else "",
@@ -548,9 +539,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         },
         # 給「本期變化摘要」比對用。人數一律以「萬人」呈現，與全站口徑一致。
         # up_is：這個指標**往上**代表偏鷹還是偏鴿。首頁的「本期變化」用它
-        # 決定變動要標成什麼顏色——用漲跌上色會出錯，例如損益兩平就業增速
-        # 變高其實是偏鴿的（同樣的非農代表更弱的就業），跟核心 CPI 上升
-        # 剛好相反，卻會被標成同一個顏色。
+        # 決定變動要標成什麼顏色——用漲跌上色會出錯，例如失業率與參與率
+        # 上升都是「數字變高」，對利率的意思卻一個偏鴿一個也偏鴿、
+        # 跟時薪年增上升（偏鷹）相反，不能共用同一個顏色規則。
         "key_metrics": {
             "nfp": {"label": "非農就業月變動", "en": "Nonfarm Payrolls, m/m",
                     "value": None if nfp_now is None else nfp_now / 10,
@@ -568,10 +559,6 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "ahe_yoy": {"label": "平均時薪年增", "en": "Avg Hourly Earnings, y/y", "value": ahe_yoy,
                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
                         "up_is": "hawkish"},
-            # 門檻變高 → 同樣的非農代表更弱的就業 → 偏鴿
-            "breakeven": {"label": "損益兩平就業增速", "en": "Breakeven Payrolls",
-                          "value": None if bkev.monthly is None else bkev.monthly / 10,
-                          "unit": "萬人", "threshold": 0.5, "up_is": "dovish"},
         },
         # 見通膨模組同名欄位的說明：計算方法換版那一期的比較基準。
         # 損益兩平就業增速沒放進來——它是好幾條序列合成的，重算一次要把
@@ -850,39 +837,6 @@ def _ustar_gap(u3: list, nrou: list) -> dict:
     }
 
 
-def _breakeven_block(b) -> dict:
-    """損益兩平就業增速的畫面資料。"""
-    label, note = be.VERDICT_TEXT.get(b.verdict, ("—", ""))
-    # 缺口是這張卡的結論，人口成長與參與率只是算它的輸入。
-    # 四格等大並排時，缺口排第三、輸入值佔掉一樣的版面，
-    # 讀者的視線會先落在跟結論無關的數字上。
-    stats = [
-        {"label": "實際：非農三個月均", "value": fmt.wan(b.nfp_3m)},
-        {"label": "需要：損益兩平", "value": fmt.wan(b.monthly),
-         "note": "維持失業率不變所需的每月就業增加"},
-    ]
-    tol = b.tolerance or 25.0
-    gap_color = ("var(--critical)" if (b.gap or 0) < -tol else
-                 ("var(--good)" if (b.gap or 0) > tol else "var(--text-primary)"))
-    inputs = (f"每月人口成長 {fmt.wan(b.pop_growth)}"
-              + (f"　·　參與率 {b.participation:.1f}%" if b.participation else "")
-              + (f"　·　失業率 {b.unemployment:.1f}%" if b.unemployment is not None else "")
-              + f"　·　判定容差 ±{tol/10:,.1f} 萬人")
-    chart = ""
-    if b.series:
-        # 圖表單位要跟上方數字一致（萬人），否則讀者要自己換算
-        merged = [{"date": r["date"], "value": r["value"] / 10}
-                  for r in since(b.series, CHART_START, 12)]
-        # 萬人的全站慣例是一位小數（fmt.wan），圖上標籤跟著用
-        chart = charts.line_chart(merged, unit=" 萬人", height=150,
-                                  color="var(--line-2)", digits=1)
-    return {"stats": stats, "chart": chart, "note": b.note,
-            "verdict": b.verdict, "verdict_label": label, "verdict_note": note,
-            "gap_display": fmt.wan(b.gap), "gap_color": gap_color,
-            "inputs": inputs,
-            "monthly": b.monthly, "gap": b.gap}
-
-
 # ===========================================================================
 # 通膨模組（P2）
 # ===========================================================================
@@ -994,7 +948,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         rows = series.get(sid, []) or (series.get(fallback, []) if fallback else [])
         if not rows:
             return []
-        r = yoy_series(rows) if kind == "yoy" else annualized_series(rows, 3)
+        r = (yoy_series(rows) if kind == "yoy"
+             else infl_an.mom_series(rows) if kind == "mom"
+             else annualized_series(rows, 3))
         return [x["value"] for x in since(r, CHART_START, 12)]
 
     def level_spark(sid):
@@ -1002,39 +958,64 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         rows = series.get(sid, [])
         return [x["value"] for x in since(rows, CHART_START, 20)]
 
+    # ---- 月步速（0.2 準則）----
+    # 主數字改月增（使用者指定：市場與官員實務上盯的是「連續 0.2 的
+    # 月增」）。**一律用季調序列**（口徑的坑：年增用未季調、月增用季調，
+    # 見 docs/pitfalls）。年增降級成「水準」依據，仍在副標與 chips。
+    _hl_mom = value_at(infl_an.mom_series(headline) or []) if headline else None
+    _core_sa = series.get("CPILFESL", [])
+    _core_mom = value_at(infl_an.mom_series(_core_sa) or []) if _core_sa else None
+    _core_pace3 = infl_an.monthly_pace(_core_sa) if _core_sa else None
+    _core_streak = infl_an.pace_streak(_core_sa) if _core_sa else 0
+    _core_hot = infl_an.pace_hot_streak(_core_sa) if _core_sa else 0
+
+    def _pace_chip(mom):
+        """本期 chip：月增對 0.2 目標步速。半進位一位小數（BLS 口徑）。"""
+        if mom is None:
+            return None
+        r = infl_an.round1(mom)
+        if r <= 0.1:
+            return (f"本期：月增 {r:+.1f}%，低於目標步速", "dovish")
+        if r <= infl_an.PACE_TARGET:
+            return (f"本期：月增 {r:+.1f}%，符合目標步速 0.2", "neutral")
+        if r < infl_an.PACE_HOT:
+            return (f"本期：月增 {r:+.1f}%，略高於目標步速", "hawkish")
+        return (f"本期：月增 {r:+.1f}%，遠高於目標步速", "hawkish")
+
     kpi = {
-        "headline_display": _pct(summ.headline_yoy),
-        "headline_sub": ((f"近三個月年化 {_pct(annualized(headline, 3))}"
+        "headline_display": (f"{_hl_mom:+.1f}%" if _hl_mom is not None else "—"),
+        "headline_sub": ((f"年增 {_pct(summ.headline_yoy)}（未季調）"
                           + (f"　·　高於 2% {summ.headline_yoy - PCE_TARGET:+.1f} 個百分點"
                              if summ.headline_yoy is not None else ""))
                          if headline else ""),
         "headline_plain": (
-            # 「2% 目標以 PCE 衡量、兩者不能互換」是方法註解，主場在
-            # 名詞解釋——白話句只講這個數字本身。
-            f"你買的東西平均比一年前貴 {summ.headline_yoy:.1f}%。"
-            "這個數字包含食物和能源，所以起伏會比較大。"
-            if summ.headline_yoy is not None else "—"),
-        # 年增率一律用未季調（跟大數字同一個口徑，見 inflation._yoy_nsa）。
-        # 混用的話卡片上的 3.4% 會配一條 3.5% 的走勢線，看起來像資料錯亂。
-        "headline_spark": rate_spark("CPIAUCNS", fallback="CPIAUCSL"),
+            f"物價平均比上個月貴 {_hl_mom:.1f}%（季調）。"
+            "這個數字包含食物和能源，單月起伏大，方向要看核心。"
+            if _hl_mom is not None else "—"),
+        # 主數字是月增（季調），走勢線跟著用季調月增——口徑一致
+        "headline_spark": rate_spark("CPIAUCSL", kind="mom"),
 
-        "core_display": _pct(summ.core_yoy),
+        "core_display": (f"{_core_mom:+.1f}%" if _core_mom is not None else "—"),
         # 四張 KPI 的副標統一成「短期動能 · 離目標」兩段，每張都回答
         # 同一組問題：現在跑多快、離 2% 還差多遠。原本四張各講各的
         # （一張講三月年化、一張講三月＋六月＋圖說、一張講目標、一張講密大），
         # 讀者每讀一張就要重新找節奏。
-        "core_sub": (f"近三個月年化 {_pct(summ.core_3m)}　·　"
-                     + (f"高於 2% {summ.core_yoy - PCE_TARGET:+.1f} 個百分點"
-                        if summ.core_yoy is not None else "")),
+        "core_sub": ((f"年增 {_pct(summ.core_yoy)}　·　"
+                      f"近三個月平均月增 {_core_pace3:.2f}%（目標步速 0.2）"
+                      if _core_pace3 is not None else f"年增 {_pct(summ.core_yoy)}")),
         "core_plain": (
-            f"剔除波動大的食物與能源後，物價一年漲 {summ.core_yoy:.1f}%。"
-            "聯準會看趨勢時主要看這一類數字。"
-            if summ.core_yoy is not None else "—"),
-        "core_spark": rate_spark("CPILFENS", fallback="CPILFESL"),
-        "core_flag": (f"三個月年化 {summ.core_3m:.1f}%，動能"
-                      + ("放緩" if (summ.core_3m or 9) < (summ.core_yoy or 0) else "回升")
-                      if summ.core_3m is not None and summ.core_yoy is not None else None),
-        "core_flag_kind": ("pos" if (summ.core_3m or 9) < (summ.core_yoy or 0) else "neg"),
+            f"剔除波動大的食物與能源後，物價比上個月漲 {_core_mom:.1f}%。"
+            + (f"已連續 {_core_streak} 個月落在 0.2% 的目標步速內。"
+               if _core_streak >= 2 else
+               "聯準會等的是連續多個月 0.2% 的目標步速。")
+            if _core_mom is not None else "—"),
+        "core_spark": rate_spark("CPILFESL", kind="mom"),
+        "core_flag": ((f"近三月平均月增 {_core_pace3:.2f}%，"
+                       + ("符合目標步速" if _core_pace3 <= infl_an.PACE_TARGET
+                          else ("遠高於目標步速" if _core_pace3 >= infl_an.PACE_HOT
+                                else "高於目標步速")))
+                      if _core_pace3 is not None else None),
+        "core_flag_kind": ("pos" if (_core_pace3 or 9) <= infl_an.PACE_TARGET else "neg"),
 
         "pce_display": _pct(summ.pce_core_yoy),
         # 這一張是聯準會真正盯的指標，副標維持同一組結構
@@ -1236,6 +1217,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "offline": offline,
         "failed": failed,
         "summary": summ,
+        # 九宮格動能層與重點句用的月步速（核心 CPI，季調）
+        "core_pace3": _core_pace3,
+        "core_pace_hot": _core_hot,
         # 九宮格通膨軸的兩條門檻。放在通膨 context 裡是因為它需要的
         # SEP 序列由這個模組抓；情境層直接取用，不必再算一次。
         "bands": infl_an.inflation_bands(summ),
@@ -1309,6 +1293,11 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "core_cpi_yoy": {"label": "核心 CPI 年增", "en": "Core CPI, y/y", "value": summ.core_yoy,
                              "unit": "%", "delta_unit": " 個百分點",
                              "threshold": 0.05, "up_is": "hawkish"},
+            # KPI 主數字換月增後，「本次更新」與本期變化也要講得出月增
+            "core_cpi_mom": {"label": "核心 CPI 月增", "en": "Core CPI, m/m",
+                             "value": _core_mom,
+                             "unit": "%", "delta_unit": " 個百分點",
+                             "threshold": 0.05, "up_is": "hawkish"},
             "core_cpi_3m": {"label": "核心 CPI 三月年化", "en": "Core CPI, 3-mo ann.", "value": summ.core_3m,
                             "unit": "%", "delta_unit": " 個百分點",
                             "threshold": 0.1, "up_is": "hawkish"},
@@ -1347,17 +1336,20 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         },
         "pce_actual_month": ((series.get("PCEPILFE") or [{}])[-1].get("date", "")[:7]),
 
+        # headline／core 的「水準」章仍看年增對 2.3（2% 目標的 CPI 對應
+        # 水準）；「本期」章改成**月增對 0.2 目標步速**（主數字換月增後，
+        # 兩章才對得上同一張卡）。
         "kpi_lean": {
-            "headline": _kpi_leans(
-                summ.headline_yoy, 2.3, summ.headline_yoy,
-                _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL"),
+            "headline": (_kpi_leans(
+                summ.headline_yoy, 2.3, None, None,
                 level_word=("高於目標對應水準", "接近目標對應水準",
-                            "低於目標對應水準")),
-            "core": _kpi_leans(
-                summ.core_yoy, 2.3, summ.core_yoy,
-                _prev_yoy_nsa(series, "CPILFENS", "CPILFESL"),
+                            "低於目標對應水準"))
+                + ([_pace_chip(_hl_mom)] if _pace_chip(_hl_mom) else [])),
+            "core": (_kpi_leans(
+                summ.core_yoy, 2.3, None, None,
                 level_word=("高於目標對應水準", "接近目標對應水準",
-                            "低於目標對應水準")),
+                            "低於目標對應水準"))
+                + ([_pace_chip(_core_mom)] if _pace_chip(_core_mom) else [])),
             "pce": _kpi_leans(summ.pce_core_yoy, PCE_TARGET, summ.pce_core_yoy,
                               _prev_yoy(series, "PCEPILFE")),
             "exp": _kpi_leans(summ.expect_5y5y, 2.3, summ.expect_5y5y,
@@ -1368,6 +1360,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         },
         "key_metrics_prev": {
             "cpi_yoy": {"value": _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL")},
+            "core_cpi_mom": {"value": value_at(
+                infl_an.mom_series(series.get("CPILFESL", [])) or [], 1)},
             "core_cpi_yoy": {"value": _prev_yoy_nsa(series, "CPILFENS",
                                                     "CPILFESL")},
             "core_cpi_3m": {"value": _prev_ann(series, "CPILFESL", 3)},
@@ -2143,11 +2137,12 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
         if sahm is not None:
             rows.append({"label": "Sahm 法則（動能）", "value": f"{sahm:+.2f}",
                          "w": "觸發" if labor.get("sahm_triggered") else "門檻 0.50"})
-        n3, bk = labor.get("nfp_3m"), labor.get("breakeven")
-        if n3 is not None and bk is not None:
-            rows.append({"label": "三月均非農　vs　損益兩平（動能）",
-                         "value": f"{n3/10:+.1f} / {bk/10:+.1f} 萬人",
-                         "w": "低於" if labor.get("below_breakeven") else "高於"})
+            # 同一個指標的「溫和惡化」水位（取代已移除的損益兩平）。
+            # 0.20 不是外部標準，標示為本站門檻。
+            rows.append({"label": "失業率回升幅度（動能）",
+                         "value": f"{sahm:+.2f} 個百分點",
+                         "w": ("已回升" if labor.get("u3_rising")
+                               else "本站門檻 0.20")})
         # 常駐的一句話。分支順序必須跟 scenario.classify_labor 一致，
         # 否則會出現「摘要說水準正常、格位說弱」而沒有解釋的情況。
         _basis = sc.labor_basis
@@ -2155,11 +2150,6 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
             _lead = (f"Sahm 法則 {labor.get('sahm'):+.2f} 觸發衰退門檻"
                      "（0.50），勞動市場正在快速惡化"
                      if labor.get("sahm") is not None else "Sahm 法則已觸發")
-        elif _basis == "breakeven":
-            _lead = (f"失業率 {u:.1f}% 仍在充分就業區間，但三月均非農 "
-                     f"{n3 / 10:+.1f} 萬低於損益兩平 {bk / 10:+.1f} 萬，"
-                     "增速撐不住現有失業率"
-                     if None not in (u, n3, bk) else "非農低於損益兩平")
         elif _basis == "fallback":
             _lead = (f"沒有取得 FOMC 的長期失業率預測，改用後備門檻："
                      f"綜合分數 {labor.get('score', 0):+.2f}（±0.45）"
@@ -2209,7 +2199,11 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         _nc = infl_ctx.get("pce_nowcast") or {}
         _pce_for_grid = (_nc.get("value") if _nc.get("estimated")
                          else s.pce_core_yoy)
+        # 動能改用核心 CPI 的**月步速**（0.2 準則，使用者指定）：
+        # 用季調指數重算近三月平均月增。轉格距離（blended）仍用 PCE
+        # 年增＋三月年化——那條門檻錨在 SEP，口徑不能混。
         infl = {"core_pce_yoy": _pce_for_grid, "core_pce_3m": s.pce_core_3m,
+                "core_cpi_pace3": infl_ctx.get("core_pace3"),
                 "core_cpi_yoy": s.core_yoy, "core_cpi_3m": s.core_3m,
                 "headline_ppi_yoy": s.ppi_headline_yoy,
                 "core_ppi_yoy": s.ppi_core_yoy, "core_ppi_3m": s.ppi_core_3m,
@@ -2681,11 +2675,15 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     credit_chart = charts.line_chart(
         since(series.get("BAMLC0A0CM") or [], CHART_START, 40), unit="%", height=140)
 
-    as_of = (series.get("DGS10") or [{}])[-1].get("date", "")
+    _last10 = (series.get("DGS10") or [{}])[-1]
+    as_of = _last10.get("date", "")
 
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Rates"),
         "as_of": as_of,
+        # 最後一列是 Yahoo 即時報價（非 FRED 收盤）時為 True——
+        # 頁面上要標「盤中報價」，不能讓讀者以為是官方收盤。
+        "as_of_live": bool(_last10.get("live")),
         "generated_at": clock.stamp(),
         # 給變化引擎的市場價格原始值（週輪替的比較單位）
         "market_raw": {

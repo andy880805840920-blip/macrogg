@@ -94,14 +94,6 @@ headline:
     unit: thousands
     transform: diff
     enabled: true
-  - id: CNP16OV
-    label: 工作年齡人口
-    unit: thousands
-    transform: level
-    enabled: true
-    note: >
-      估算損益兩平就業增速用。注意每年一月會做人口普查控制調整，
-      出現不連續跳點，計算時已排除一月的變動。
 
 # ---------------------------------------------------------------------------
 # 二、失業結構（判斷失業率變化是「好的」還是「壞的」）

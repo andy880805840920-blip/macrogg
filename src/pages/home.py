@@ -169,8 +169,8 @@ def _change_card(cs) -> str:
             f'<div class="cmoves">{"".join(moves)}</div>'
             f'<p class="hint" style="margin:10px 0 0">'
             f'「利升息／利降息」講的是這個變動<b>對利率的意思</b>，不是數字漲跌。'
-            f'兩者不一定同向——損益兩平就業增速變高，代表同樣的非農其實'
-            f'更弱，數字往上但方向偏降息。</p>'
+            f'兩者不一定同向——例如勞動參與率上升是數字變高，'
+            f'但勞動供給增加會減輕薪資壓力，方向偏降息。</p>'
             f'</details>')
 
     tail = []
@@ -196,47 +196,52 @@ def _chip(k: str, d: str, extra: str = "") -> str:
             f'{esc(DIR_CHIP.get(d, ("—", ""))[0])}</span></div>')
 
 
+def _brief_pieces(text: str):
+    """把整體情勢的行式文本拆成（本次更新、三則 bullet、其餘行、重點句）。
+    組裝版與 AI 生成版共用同一種行式結構，這裡不用分辨來源。"""
+    whatsnew, takeaway, bullets, rest = "", "", [], []
+    for ln in [x.strip() for x in (text or "").splitlines() if x.strip()]:
+        if ln.startswith("本次更新："):
+            whatsnew = ln
+        elif ln.startswith("重點："):
+            takeaway = ln[len("重點："):].strip()
+        else:
+            for lb in ("勞動市場", "通膨", "聯準會"):
+                if ln.startswith(lb + "："):
+                    bullets.append((lb, ln[len(lb) + 1:].strip()))
+                    break
+            else:
+                rest.append(ln)
+    return whatsnew, bullets, rest, takeaway
+
+
 def _brief_card(ctxs: dict) -> str:
     """
-    整體總述：一段約 150 字的散文，把五個模組的結論串成一件事。
-
-    為什麼放在結論卡正下方：結論卡回答「現在是什麼情境」，總述回答
-    「為什麼、各方向的細節是什麼」。讀者的下一個問題就是後者，
-    中間不該再隔著四張模組入口卡。
-
-    共識列（三個色塊 ＋ 一句話 ＋ 長端）先前佔掉結論卡的一半（358／711px），
-    卻只顯示十幾個字，而且跟定位列講同一件事。它回答的是「各模組同不同意」，
-    現在併進總述的第一句。
+    整體情勢：本次更新（規則）→ 三則 bullet（AI 依判定包生成，
+    數字鎖／方向鎖／結構鎖把關；後備為規則組裝）→ 重點句（規則、
+    三態模板）。bullet 各自成塊，取代先前的連寫散文——
+    使用者的原話：用三個 bullet point 方便閱讀。
     """
     b = ctxs.get("_brief") or brief_mod.compose(ctxs)
     txt = b.get("text") or ""
     if not txt:
         return ""
-    # 重點句拆成獨立一行加粗。它是整段的結論（下一步是升還是降、
-    # 解鎖條件是什麼），埋在段尾會被掃視略過。「重點：」前綴由
-    # polish.validate 強制保留，所以這個拆法對組裝版與潤稿版都成立。
-    key_html = ""
-    if "重點：" in txt:
-        txt, _, key = txt.rpartition("重點：")
-        key_html = f'<p class="brief-key">重點：{esc(key.strip())}</p>'
-
-    # 「本次更新：⋯⋯」拆成獨立一段。
-    #
-    # 它跟後面那段回答的**不是同一個問題**：前者是「這一次新拿到什麼」、
-    # 後者是「整體現在是什麼狀況」。黏在同一段裡，讀者要讀到第三個句號才
-    # 分得出來哪裡結束——而多數日子根本沒有前者，段落的開頭就變成兩種樣子。
-    # 拆開之後，有新資料的日子第一眼就看得到，沒有的日子也不會少一塊。
-    new_html = ""
-    if txt.lstrip().startswith("本次更新："):
-        _first, _sep, _rest = txt.partition("。")
-        if _sep and _rest.strip():
-            new_html = f'<p class="brief-new">{esc(_first.strip())}。</p>'
-            txt = _rest
+    whatsnew, bullets, rest, takeaway = _brief_pieces(txt)
+    new_html = (f'<p class="brief-new">{esc(whatsnew)}</p>' if whatsnew else "")
+    body_html = ('<ul class="brief-list">'
+                 + "".join(f'<li><b>{esc(lb)}</b>｜{esc(tx)}</li>'
+                           for lb, tx in bullets) + '</ul>') if bullets else ""
+    rest_html = "".join(f'<p class="brief-t">{esc(x)}</p>' for x in rest)
+    key_html = (f'<p class="brief-key">重點：{esc(takeaway)}</p>'
+                if takeaway else "")
+    src = {"generated": "AI 依規則判定生成｜方向經驗證、數字出自判定資料",
+           "model-cache": "AI 依規則判定生成（沿用快取）",
+           }.get(b.get("source"), "規則組裝｜數據與方向由規則鎖定")
     return f"""
 <div class="grid">
   <div class="card brief">
-    <div class="brief-k">整體情勢</div>
-    {new_html}<p class="brief-t">{esc(txt.strip())}</p>
+    <div class="brief-k">整體情勢<span class="brief-src">{esc(src)}</span></div>
+    {new_html}{body_html}{rest_html}
     {key_html}
   </div>
 </div>"""
@@ -603,37 +608,27 @@ def _fmt_pct(value, digits: int = 1) -> str:
 
 
 def _brief_content(ctxs: dict) -> str:
-    """主卡內的整體情勢；長文只收合一次，重點句永遠可見。"""
+    """主卡內的整體情勢：跟 _brief_card 同一套行式結構，bullet 版式。"""
     b = ctxs.get("_brief") or brief_mod.compose(ctxs)
     text = (b.get("text") or "").strip()
     if not text:
         return '<p class="home-brief-empty">目前沒有足夠資料產生整體情勢。</p>'
-
-    key = ""
-    if "重點：" in text:
-        text, _, key = text.rpartition("重點：")
-        key = key.strip()
+    whatsnew, bullets, rest, takeaway = _brief_pieces(text)
 
     source = b.get("source", "assembled")
-    source_label = ("AI 文字整理｜數據與方向由規則鎖定"
-                    if source in ("model", "cache") else
+    source_label = ("AI 依規則判定生成｜方向經驗證"
+                    if source in ("generated", "model-cache") else
                     "規則摘要｜數據與方向由規則鎖定")
-
-    lead, rest = text.strip(), ""
-    if brief_mod.cjk_len(lead) > 280:
-        chunks = [x.strip() + "。" for x in lead.split("。") if x.strip()]
-        shown = []
-        while chunks and brief_mod.cjk_len("".join(shown + chunks[:1])) <= 250:
-            shown.append(chunks.pop(0))
-        if not shown and chunks:
-            shown.append(chunks.pop(0))
-        lead, rest = "".join(shown), "".join(chunks)
-
-    more = (f'<details class="home-brief-more"><summary>展開完整分析</summary>'
-            f'<p>{esc(rest)}</p></details>' if rest else "")
-    key_html = f'<p class="home-brief-key">重點：{esc(key)}</p>' if key else ""
+    new_html = (f'<p class="brief-new">{esc(whatsnew)}</p>' if whatsnew else "")
+    body_html = ('<ul class="brief-list">'
+                 + "".join(f'<li><b>{esc(lb)}</b>｜{esc(tx)}</li>'
+                           for lb, tx in bullets) + '</ul>') if bullets else ""
+    rest_html = "".join(f'<p class="home-brief-text">{esc(x)}</p>'
+                        for x in rest)
+    key_html = (f'<p class="home-brief-key">重點：{esc(takeaway)}</p>'
+                if takeaway else "")
     return (f'<div class="home-brief-label">整體情勢<span>{esc(source_label)}</span></div>'
-            f'<p class="home-brief-text">{esc(lead)}</p>{more}{key_html}')
+            f'{new_html}{body_html}{rest_html}{key_html}')
 
 
 def _pick_next_trigger(sc):
@@ -698,7 +693,9 @@ def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
          "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
          f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；供給壓力{p_text}。",
          [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("30 年期", _fmt_pct(levels.get("30Y"), 2)),
-          ("期限溢酬", _fmt_pct(term, 2)), ("資料截止", rates.get("as_of", "—"))]),
+          ("期限溢酬", _fmt_pct(term, 2)),
+          ("資料截止", (f"{rates.get('as_of', '—')}（盤中）"
+                        if rates.get("as_of_live") else rates.get("as_of", "—")))]),
     ]
     out = []
     for href, name, status, tone, summary, metrics in rows:
@@ -812,62 +809,134 @@ def _watch_rows(ctxs: dict, sc) -> str:
         for e in events)
 
 
+def _fw_chip_html(f: dict, off: str = "") -> str:
+    """FedWatch 機率 chip 的完整標記（分層來源的小字邏輯都在這）。"""
+    fw = (f or {}).get("fedwatch") or {}
+    _ml = fw.get("meeting_label") or "12 月"
+    _when = (fw.get("date") or "")[5:]
+    _when_html = f'<small class="fs-when">{esc(_when)}</small>' if _when else ""
+    if fw.get("pct") is None:
+        return (f'<div class="fs-chip{off}" data-chip="fedwatch">'
+                f'<span>{esc(_ml)} FOMC 升息一碼機率</span>'
+                '<b>—</b><i>本次擷取失敗</i></div>')
+    # WIRP 口徑：單一 %、不封頂；pct 帶正負（負＝市場定價降息），
+    # 標籤跟著方向走、數字取絕對值。
+    _pv = fw["pct"]
+    _dir = "降息" if _pv < 0 else "升息"
+    _label = f"{_ml} FOMC {_dir}一碼機率"
+    d = fw.get("delta_pp")
+    _mb = fw.get("move_bp")
+    if fw.get("stale_from"):
+        # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
+        # 不讓一次 429 就把整顆 chip 打回「—」。
+        dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
+    elif abs(_pv) > 100:
+        # 超過 100%＝市場定價超過一碼（WIRP 慣例照印），小字講明
+        dtxt = (f"已定價超過一碼（隱含 {_mb:+.1f} bp）"
+                if _mb is not None else "已定價超過一碼")
+    elif d is not None:
+        dtxt = f"{d:+.1f} pp"
+    elif fw.get("suspect"):
+        dtxt = "擷取異常，沿用前值"
+    elif fw.get("src") == "futures" and _mb is not None:
+        # 期貨自算時把隱含變動標出來：讀者（和我們）能直接驗算
+        # move ÷ 25，不會再有「一個機率但不知道為什麼」的黑箱
+        dtxt = f"隱含 {_mb:+.1f} bp"
+    else:
+        dtxt = "—"
+    cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
+    return (f'<div class="fs-chip{off}" data-chip="fedwatch">'
+            f'<span>{esc(_label)}</span>'
+            f'<b>{abs(_pv):.1f}%</b>'
+            f'<i class="{cls}">{esc(dtxt)}</i>{_when_html}</div>')
+
+
 def _focus_strip(f: dict | None) -> str:
     """
-    今日市場焦點：hero 之上的窄條。三顆數字（10Y/30Y/FedWatch）＋一段焦點。
+    今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
 
-    數字的來源分兩級並在畫面上標清楚：殖利率是 FRED 的官方序列（規則）；
-    FedWatch 機率是 AI 搜尋擷取（僅供參考）。焦點段由 AI 整理自新聞標題，
-    AI 掛掉時這裡收到的已是「直接列標題」的退回版，照樣能顯示。
+    目錄共 14 顆（各天期利率、FedWatch 機率、SOFR／利差／ON RRP／SRF、
+    油價、VIX／MOVE），**全部**渲染進 HTML；預設只顯示 2Y＋10Y＋機率，
+    其餘掛 .fs-off 隱藏。「自訂」勾選面板＋幾行原生 JS 切換顯示、
+    localStorage 記住選擇——關 JS 或初次造訪就是預設組，畫面不會壞。
+    每顆 chip 的小字只放資料日；一句話說明集中在頁尾（手機沒有 hover）。
     """
     if not f:
         return ""
-    chips = []
-    for y in f.get("yields") or []:
-        d = y.get("delta_bp")
-        cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
-        dtxt = f"{d:+d} bps" if d is not None else "—"
-        chips.append(f'<div class="fs-chip"><span>{esc(y["label"])}</span>'
-                     f'<b>{y["value"]:.2f}%</b>'
-                     f'<i class="{cls}">{esc(dtxt)}</i></div>')
+    import json as _json
     fw = f.get("fedwatch") or {}
     _ml = fw.get("meeting_label") or "12 月"
-    if fw.get("pct") is not None:
-        # WIRP 口徑：單一 %、不封頂；pct 帶正負（負＝市場定價降息），
-        # 標籤跟著方向走、數字取絕對值。
-        _pv = fw["pct"]
-        _dir = "降息" if _pv < 0 else "升息"
-        _label = f"{_ml} FOMC {_dir}一碼機率"
-        d = fw.get("delta_pp")
-        _mb = fw.get("move_bp")
-        if fw.get("stale_from"):
-            # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
-            # 不讓一次 429 就把整顆 chip 打回「—」。
-            dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
-        elif abs(_pv) > 100:
-            # 超過 100%＝市場定價超過一碼（WIRP 慣例照印），小字講明
-            dtxt = (f"已定價超過一碼（隱含 {_mb:+.1f} bp）"
-                    if _mb is not None else "已定價超過一碼")
-        elif d is not None:
-            dtxt = f"{d:+.1f} pp"
-        elif fw.get("suspect"):
-            dtxt = "擷取異常，沿用前值"
-        elif fw.get("src") == "futures" and _mb is not None:
-            # 期貨自算時把隱含變動標出來：讀者（和我們）能直接驗算
-            # move ÷ 25，不會再有「一個機率但不知道為什麼」的黑箱
-            dtxt = f"隱含 {_mb:+.1f} bp"
-        else:
-            dtxt = "—"
-        cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
-        chips.append(f'<div class="fs-chip"><span>{esc(_label)}</span>'
-                     f'<b>{abs(_pv):.1f}%</b>'
-                     f'<i class="{cls}">{esc(dtxt)}</i></div>')
+    cat = f.get("chips") or []
+    picker = script = ""
+    if cat:
+        chips, defaults, opts = [], [], []
+        for c in cat:
+            off = "" if c.get("on") else " fs-off"
+            if c.get("on"):
+                defaults.append(c["id"])
+            if c.get("special") == "fedwatch":
+                chips.append(_fw_chip_html(f, off))
+                opts.append(("fedwatch", f"{_ml} FOMC 升降息機率", c.get("on")))
+                continue
+            when = (f'<small class="fs-when">{esc(c["date"])}</small>'
+                    if c.get("date") else "")
+            delta = (f'<i class="{c["dir"]}">{esc(c["delta"])}</i>'
+                     if c.get("delta") else "")
+            chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}">'
+                         f'<span>{esc(c["label"])}</span>'
+                         f'<b>{esc(c["value"])}</b>{delta}{when}</div>')
+            opts.append((c["id"], c["label"], c.get("on")))
+        rows = "".join(
+            f'<label><input type="checkbox" data-pick="{cid}"'
+            + (" checked" if on else "") + f'>{esc(lb)}</label>'
+            for cid, lb, on in opts)
+        picker = ('<details class="fs-pick"><summary>自訂</summary>'
+                  '<div class="fs-pick-panel">' + rows +
+                  '<div class="fs-pick-note"><span class="fs-count">已選 '
+                  f'{len(defaults)} 顆</span>　·　選擇存在此裝置</div>'
+                  '</div></details>')
+        # 原生 JS，無相依：讀 localStorage → 套用顯示 → 勾選時存回。
+        # 全部取消時退回預設組——空清單沒有意義，畫面也不能空。
+        script = ('<script>(function(){var K="fsChips";'
+                  'var D=' + _json.dumps(defaults) + ';'
+                  'var box=document.querySelector(".fs-chips");if(!box)return;'
+                  'var ps=Array.prototype.slice.call('
+                  'document.querySelectorAll(".fs-pick [data-pick]"));'
+                  'function ap(sel){Array.prototype.forEach.call('
+                  'box.querySelectorAll("[data-chip]"),function(ch){'
+                  'ch.classList.toggle("fs-off",'
+                  'sel.indexOf(ch.getAttribute("data-chip"))<0);});'
+                  'ps.forEach(function(p){p.checked='
+                  'sel.indexOf(p.getAttribute("data-pick"))>=0;});'
+                  'var n=document.querySelector(".fs-count");'
+                  'if(n)n.textContent="已選 "+sel.length+" 顆";}'
+                  'var sel=null;'
+                  'try{sel=JSON.parse(localStorage.getItem(K)||"null");}'
+                  'catch(e){}'
+                  'if(!(sel instanceof Array)||!sel.length)sel=D;ap(sel);'
+                  'ps.forEach(function(p){p.addEventListener("change",'
+                  'function(){var s=[];ps.forEach(function(q){'
+                  'if(q.checked)s.push(q.getAttribute("data-pick"));});'
+                  'if(!s.length)s=D;'
+                  'try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}'
+                  'ap(s);});});})();</script>')
     else:
-        chips.append(f'<div class="fs-chip"><span>{esc(_ml)} FOMC '
-                     '升息一碼機率</span>'
-                     '<b>—</b><i>本次擷取失敗</i></div>')
-    text = (f'<p class="fs-text">{esc(f.get("text") or "")}</p>'
-            if f.get("text") else "")
+        # 目錄組裝失敗的後備：照舊三顆（10Y／30Y／機率），行為與舊版一致。
+        chips = []
+        for y in f.get("yields") or []:
+            d = y.get("delta_bp")
+            cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
+            dtxt = f"{d:+d} bps" if d is not None else "—"
+            chips.append(f'<div class="fs-chip"><span>{esc(y["label"])}</span>'
+                         f'<b>{y["value"]:.2f}%</b>'
+                         f'<i class="{cls}">{esc(dtxt)}</i></div>')
+        chips.append(_fw_chip_html(f))
+    # 論述是分段的（AI 依指示用空行分段）——逐段包 <p>，不能整坨塞進
+    # 一個段落（esc 會把換行吃掉，三段變成一大塊，正是這次要修的問題）
+    _paras = [s.strip() for s in (f.get("text") or "").split("\n") if s.strip()]
+    text = ('<div class="fs-body">'
+            + "".join(f'<p class="fs-text">{esc(s)}</p>' for s in _paras)
+            + '</div>') if _paras else ""
     # 列標題模式：AI 摘要不可用，標題清單就是內容——收合預設打開，
     # 不再另外把標題串成一段假摘要（同一批字印兩次）。
     _headline_mode = (f.get("text_source") == "headlines")
@@ -899,21 +968,25 @@ def _focus_strip(f: dict | None) -> str:
     # 焦點段的來源標示分兩種：內文摘要（新版主線）與標題整理（退回）
     _ts = f.get("text_source") or ""
     if _ts == "model-content" or (_ts == "cache" and f.get("cached_mode") == "content"):
-        _t_note = "　·　焦點由 AI 摘要自新聞內文，只取關鍵字相關內容"
+        _t_note = "　·　焦點由 AI 綜合多篇報導改寫（非逐句摘要），只取關鍵字相關內容，數字均出自原文"
     elif _ts in ("model", "cache"):
         _t_note = "　·　焦點由 AI 整理自新聞標題"
     elif _ts == "headlines":
         _t_note = "　·　本次 AI 摘要不可用，僅列原始標題（下次執行會再試）"
     else:
         _t_note = ""
-    note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note + _t_note)
+    _cat_note = ("　·　流動性、油價與波動率：FRED／Yahoo（每顆 chip 的"
+                 "小字＝資料日；指標說明見頁尾）" if cat else "")
+    note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note
+            + _cat_note + _t_note)
     _date = esc((f.get("generated") or "")[:10])
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
             '<div class="fs-head">今日市場焦點'
             + (f'<span class="fs-date">{_date}</span>' if _date else "")
-            + '</div>'
+            + picker + '</div>'
             f'<div class="fs-chips">{"".join(chips)}</div>'
-            f'{text}{links}<div class="fs-note">{esc(note)}</div></section>')
+            f'{text}{links}<div class="fs-note">{esc(note)}</div>'
+            + script + '</section>')
 
 
 def home_body(ctxs: dict) -> str:
@@ -1027,6 +1100,13 @@ def home_footer(ctxs: dict) -> str:
         '<div class="home-footer">'
         '<div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span>'
         f'<span>就業 {_d((lab or {}).get("data_month", "—"))}｜物價 {_d((inf or {}).get("data_month", "—"))}｜FOMC {_d((fom or {}).get("latest_date", "—"))}</span></div>'
+        '<div><b>焦點條指標</b><span>SOFR＝銀行間隔夜擔保資金的實際成交利率；'
+        'SOFR−IORB＝資金價格與聯準會地板利率的距離，轉正代表準備金趨緊'
+        '（2019 年 9 月回購市場事件即此訊號先爆）；ON RRP＝貨幣基金停泊在'
+        '聯準會的隔夜資金，是體系多餘現金的緩衝池，接近零代表 QT 開始直接'
+        '抽銀行準備金；SRF＝聯準會常備回購機制的動用量，0 是常態、'
+        '非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。'
+        '變動一律對前一個交易日收盤。</span></div>'
         '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'
         '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'
         '</div>')

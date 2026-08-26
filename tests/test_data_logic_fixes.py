@@ -4,7 +4,7 @@ import pathlib
 import sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 from src import build
-from src.analysis import breakeven, inflation, rates
+from src.analysis import inflation, rates
 from src.fomc_source import FomcSource
 
 ok = True
@@ -43,16 +43,6 @@ labels = {r["label"] for r in us["rows"]}
 check("③ 失業原因使用四個互斥大類", len(us["rows"]) == 4, str(labels))
 check("④ 失業原因占比加總 100%", abs(sum(r["share"] for r in us["rows"]) - 100) < 1e-9)
 check("⑤ 正確使用 Reentrants 序列", "重新進入" in labels)
-
-# 維持失業率不變時，就業需求要乘上 (1-u)。
-pop = rows([1000 + 100 * i for i in range(16)])
-lfpr = rows([100] * 16)
-payems = rows([1000 + 10 * i for i in range(16)])
-cps = rows([1000 + 10 * i for i in range(16)])
-unrate = rows([10] * 16)
-be = breakeven.estimate(pop, lfpr, payems, cps, unrate, lookback=6)
-check("⑥ 損益平衡公式含就業率因子", abs(be.monthly - 90) < 1e-9, str(be.monthly))
-check("⑦ 方法說明揭露失業率", "失業率 10.0%" in be.note, be.note)
 
 # CPI 分項缺資料時要回報覆蓋率。
 meta = [

@@ -132,6 +132,261 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
         return None
 
 
+# DGS 序列升級成即時時，單日跳動的合理上限（百分點）。
+# 近年最劇烈的單日波動也在 0.3 以內；超過 0.6 幾乎必是報價鏈出錯
+#（×10 慣例沒換算到、抓錯商品），寧可退回收盤值也不上壞數字。
+LIVE_JUMP_CAP = 0.60
+
+# FRED 序列 ↔ Yahoo 即時代號的對照（與 YIELD_SYMBOLS 同一組標的）。
+LIVE_SERIES = (("^TNX", "DGS10", "10 年期"), ("^TYX", "DGS30", "30 年期"))
+
+
+def upgrade_yields_live(series: dict, _get=None) -> list[str]:
+    """
+    把 DGS10／DGS30 的最新值升級成即時報價：在 FRED 序列**尾端附加一列**
+    （標 ``live: True``），讓長端頁與首頁長端區跟焦點條顯示同一個數字。
+
+    為什麼是附加而不是取代：FRED 的 H.15 收盤要隔一至兩個交易日才出來，
+    焦點條早就改用 Yahoo 即時了，結果同一個 10 年期在首頁上緣是今天的
+    數字、長端區卻是兩天前的收盤——同站兩個數字，讀者只會當成錯字。
+
+    規則（確定性，全在這裡）：
+    ① **兩檔都成功才升級**。只升 10Y 不升 30Y 的話，30−10 斜率會拿
+       今天的 10Y 減兩天前的 30Y，錯得比不升級還多——all-or-nothing。
+    ② 即時日期必須**晚於** FRED 最後一列（同日代表收盤已出，不必疊）。
+    ③ 與最後收盤差超過 LIVE_JUMP_CAP 個百分點視為報價鏈出錯，整組放棄。
+    ④ 失敗只記 log，畫面安靜退回收盤值——即時是加分，不是必要條件。
+
+    快照與資料庫不受影響：store 在 gather 階段已寫完，這裡改的是
+    記憶體裡的序列。回傳升級說明字串列表（空＝沒升級），給呼叫端記 log。
+    """
+    pend, out = [], []
+    for sym, sid, label in LIVE_SERIES:
+        rows = series.get(sid) or []
+        last = rows[-1] if rows else {}
+        if last.get("value") is None:
+            log.warning("殖利率即時升級：%s 沒有 FRED 底稿，整組放棄", sid)
+            return []
+        chip = fetch_yahoo_yield(sym, label, _get=_get)
+        if not chip or not chip.get("date"):
+            log.warning("殖利率即時升級：%s 抓不到即時報價，整組放棄", sym)
+            return []
+        if chip["date"] <= str(last.get("date") or ""):
+            log.info("殖利率即時升級：%s 的 FRED 收盤已是 %s，不必疊",
+                     sid, last.get("date"))
+            return []
+        if abs(chip["value"] - last["value"]) > LIVE_JUMP_CAP:
+            log.warning("殖利率即時升級：%s 即時 %.2f 與收盤 %.2f 差逾 "
+                        "%.2f 個百分點，判定報價鏈出錯，整組放棄",
+                        sym, chip["value"], last["value"], LIVE_JUMP_CAP)
+            return []
+        pend.append((rows, {"date": chip["date"], "value": chip["value"],
+                            "live": True}))
+        out.append(f"{label} {chip['value']:.2f}%（{chip['date']}）")
+    for rows, row in pend:
+        rows.append(row)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 自選 chip 目錄：各天期利率、流動性、油價、波動率
+# ---------------------------------------------------------------------------
+# Yahoo 即時報價的規格：代號、顯示名、合理範圍、單位、FRED 後備序列。
+# 範圍是防呆（抓錯商品、格式變了），不是預測——超出就整顆退回 FRED 後備。
+# MOVE 是唯一沒有 FRED 後備的（ICE 授權），Yahoo 掛掉只能標「擷取失敗」。
+QUOTE_SPECS = {
+    "wti":   {"sym": "CL=F",  "label": "WTI 原油",   "lo": 10.0, "hi": 300.0,
+              "unit": " 美元", "fred": "DCOILWTICO"},
+    "brent": {"sym": "BZ=F",  "label": "Brent 原油", "lo": 10.0, "hi": 300.0,
+              "unit": " 美元", "fred": "DCOILBRENTEU"},
+    "vix":   {"sym": "^VIX",  "label": "VIX",        "lo": 5.0,  "hi": 100.0,
+              "unit": "",      "fred": "VIXCLS"},
+    "move":  {"sym": "^MOVE", "label": "MOVE",       "lo": 30.0, "hi": 300.0,
+              "unit": "",      "fred": None},
+}
+
+# 預設顯示組（使用者未自選、關 JS、初次造訪都用這組）。
+DEFAULT_CHIPS = ("dgs2", "dgs10", "fedwatch")
+
+
+def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
+                      _get=None) -> dict | None:
+    """
+    泛用即時報價（油價、VIX、MOVE）：目前價與前一交易日收盤。
+
+    跟 fetch_yahoo_yield 同一個端點與解析，但沒有殖利率的 ×10 慣例——
+    合理範圍由呼叫端按商品給。抓不到或超出範圍回 None，退 FRED 後備。
+    """
+    get = _get or (lambda url: requests.get(
+        url, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    try:
+        r = get(YQ_URL.format(sym=quote(symbol)))
+        r.raise_for_status()
+        res = (r.json().get("chart") or {}).get("result") or []
+        meta = (res[0].get("meta") or {}) if res else {}
+        cur = meta.get("regularMarketPrice")
+        prev = meta.get("chartPreviousClose")
+        if prev is None:
+            prev = meta.get("previousClose")
+        ts = meta.get("regularMarketTime")
+        if cur is None or prev is None:
+            return None
+        cur, prev = float(cur), float(prev)
+        if not (lo <= cur <= hi and lo <= prev <= hi):
+            log.warning("Yahoo 報價 %s 超出合理範圍（%.2f／%.2f），不採用",
+                        symbol, cur, prev)
+            return None
+        date = ""
+        if ts:
+            try:
+                date = dt.datetime.fromtimestamp(
+                    int(ts), dt.timezone.utc).date().isoformat()
+            except (ValueError, TypeError, OSError):
+                date = ""
+        return {"value": cur, "prev": prev, "date": date, "live": True}
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Yahoo 報價 %s 抓取失敗（%s）", symbol, e)
+        return None
+
+
+def _last2(rows) -> tuple:
+    """FRED 序列的（最新值, 前一值, 最新日期），略過空值。"""
+    rows = [r for r in (rows or []) if r.get("value") is not None]
+    if not rows:
+        return None, None, ""
+    prev = rows[-2]["value"] if len(rows) > 1 else None
+    return rows[-1]["value"], prev, str(rows[-1].get("date") or "")
+
+
+def _at_or_before(rows, date: str):
+    """不晚於 `date` 的最後一個值（IORB 配 SOFR 用——期別不能倒掛）。"""
+    best = None
+    for r in rows or []:
+        if r.get("value") is None:
+            continue
+        if str(r.get("date") or "") <= date:
+            best = r["value"]
+        else:
+            break
+    return best
+
+
+def _mk(cid, label, value, delta, direction, date, on=False):
+    return {"id": cid, "label": label, "value": value, "delta": delta,
+            "dir": direction, "date": date[5:] if len(date) >= 10 else date,
+            "on": cid in DEFAULT_CHIPS or on}
+
+
+def _pct_chip(cid, label, rows):
+    """百分比序列（天期利率、SOFR）：值 x.xx%、變動 ±bp 對前一日。"""
+    v, p, d = _last2(rows)
+    if v is None:
+        return _mk(cid, label, "—", "缺資料", "", "")
+    db = None if p is None else round((v - p) * 100)
+    cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
+    return _mk(cid, label, f"{v:.2f}%",
+               f"{db:+d} bp" if db is not None else "—", cls, d)
+
+
+def _level_chip(cid, spec, liq, offline, _get=None):
+    """即時報價 chip（油價、VIX、MOVE）：Yahoo 主、FRED 後備。"""
+    if not offline:
+        q = fetch_yahoo_quote(spec["sym"], spec["lo"], spec["hi"], _get=_get)
+        if q:
+            dv = q["value"] - q["prev"]
+            cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
+            return _mk(cid, spec["label"], f"{q['value']:.1f}{spec['unit']}",
+                       f"{dv:+.1f}", cls, q["date"])
+    rows = (liq or {}).get(spec["fred"]) if spec.get("fred") else None
+    v, p, d = _last2(rows)
+    if v is None:
+        return _mk(cid, spec["label"], "—", "本次擷取失敗", "", "")
+    dv = None if p is None else v - p
+    cls = "up" if (dv or 0) > 0 else ("dn" if (dv or 0) < 0 else "")
+    return _mk(cid, spec["label"], f"{v:.1f}{spec['unit']}",
+               f"{dv:+.1f}" if dv is not None else "—", cls, d)
+
+
+def build_catalog(rates_series: dict | None, liq_series: dict | None,
+                  fresh_yields: list | None, offline: bool,
+                  _get=None) -> list[dict]:
+    """
+    焦點條的完整 chip 目錄（14 顆）。每顆：id、短標籤、顯示值、
+    對前一日收盤的變動、方向色、資料日（月-日）、是否預設顯示。
+
+    fedwatch 是佔位（special）：機率 chip 的分層來源標示已經在
+    pages/home.py 有一套完整邏輯，目錄只負責排位置，不重刻一份。
+    """
+    rs, liq = rates_series or {}, liq_series or {}
+    chips: list[dict] = []
+    # ---- 天期利率：10Y／30Y 優先用已升級的即時 chip，其餘 FRED 收盤 ----
+    fresh = {c["label"]: c for c in (fresh_yields or [])}
+    for cid, sid, label in (("dgs3mo", "DGS3MO", "3 個月"),
+                            ("dgs2", "DGS2", "2 年期"),
+                            ("dgs5", "DGS5", "5 年期"),
+                            ("dgs10", "DGS10", "10 年期"),
+                            ("dgs30", "DGS30", "30 年期")):
+        fc = fresh.get(label)
+        if fc:
+            db = fc.get("delta_bp")
+            cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
+            chips.append(_mk(cid, label, f"{fc['value']:.2f}%",
+                             f"{db:+d} bp" if db is not None else "—",
+                             cls, fc.get("date") or ""))
+        else:
+            chips.append(_pct_chip(cid, label, rs.get(sid)))
+    chips.append({"id": "fedwatch", "special": "fedwatch",
+                  "on": "fedwatch" in DEFAULT_CHIPS})
+    # ---- 流動性 ----
+    chips.append(_pct_chip("sofr", "SOFR", liq.get("SOFR")))
+    # SOFR−IORB：資金價格對地板的距離。IORB 取「不晚於 SOFR 日」的值，
+    # 期別不倒掛；轉正＝準備金趨緊（2019-09 回購事件即此訊號先爆）。
+    sv, _, sd = _last2(liq.get("SOFR"))
+    iv = _at_or_before(liq.get("IORB"), sd) if sv is not None else None
+    if sv is not None and iv is not None:
+        spread = (sv - iv) * 100
+        srows = [r for r in (liq.get("SOFR") or [])
+                 if r.get("value") is not None]
+        d_disp, cls = "—", ""
+        if len(srows) > 1:
+            s2, d2 = srows[-2]["value"], str(srows[-2].get("date") or "")
+            i2 = _at_or_before(liq.get("IORB"), d2)
+            if i2 is not None:
+                dd = spread - (s2 - i2) * 100
+                d_disp = f"{dd:+.0f} bp"
+                cls = "up" if dd > 0 else ("dn" if dd < 0 else "")
+        chips.append(_mk("sofr_iorb", "SOFR−IORB", f"{spread:+.0f} bp",
+                         d_disp, cls, sd))
+    else:
+        chips.append(_mk("sofr_iorb", "SOFR−IORB", "—", "缺資料", "", ""))
+    # ON RRP：FRED 單位是十億美元 → 顯示成億美元（×10）。
+    v, p, d = _last2(liq.get("RRPONTSYD"))
+    if v is not None:
+        dv = None if p is None else (v - p) * 10
+        cls = "up" if (dv or 0) > 0 else ("dn" if (dv or 0) < 0 else "")
+        chips.append(_mk("onrrp", "ON RRP", f"{v * 10:,.0f} 億美元",
+                         f"{dv:+,.0f} 億" if dv is not None else "—", cls, d))
+    else:
+        chips.append(_mk("onrrp", "ON RRP", "—", "缺資料", "", ""))
+    # SRF（隔夜回購動用）：零是常態也是資訊——體系不缺錢；非零轉警示色。
+    v, p, d = _last2(liq.get("RPONTSYD"))
+    if v is None:
+        chips.append(_mk("srf", "SRF 動用", "—", "缺資料", "", ""))
+    elif v < 0.05:                       # 五千萬美元以下視為未動用
+        chips.append(_mk("srf", "SRF 動用", "0（未動用）", "", "", d))
+    else:
+        dv = None if p is None else (v - p) * 10
+        chips.append(_mk("srf", "SRF 動用", f"{v * 10:,.1f} 億美元",
+                         f"{dv:+,.1f} 億" if dv is not None else "—",
+                         "up", d))
+    # ---- 即時報價：油價與波動率 ----
+    for cid in ("wti", "brent", "vix", "move"):
+        chips.append(_level_chip(cid, QUOTE_SPECS[cid], liq, offline,
+                                 _get=_get))
+    return chips
+
+
 # ---------------------------------------------------------------------------
 # 新聞標題：Google News RSS
 # ---------------------------------------------------------------------------
@@ -193,10 +448,18 @@ DEFAULT_FEEDS = [
     "https://tw.news.yahoo.com/rss/finance",
     "https://tw.stock.yahoo.com/rss?category=news",
     "https://finance.yahoo.com/news/rssindex",
+    # 標題級來源：RSS 公開、內文有付費牆——貢獻標題與連結進標題池，
+    # 內文抓不到會被長度檢查擋下、自動跳過（logged），不影響其他來源。
+    # 路透／彭博的全文走 Yahoo 轉載的通訊社稿（上面三條已涵蓋）。
+    "https://www.ft.com/rss/home",
+    "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
 ]
 _FEED_LABEL = (("tw.news.yahoo", "Yahoo奇摩新聞"),
                ("tw.stock.yahoo", "Yahoo奇摩股市"),
-               ("finance.yahoo", "Yahoo Finance"))
+               ("finance.yahoo", "Yahoo Finance"),
+               ("ft.com", "Financial Times"),
+               ("dj.com", "Wall Street Journal"),
+               ("dowjones", "Wall Street Journal"))
 
 
 def _feed_label(url: str) -> str:
@@ -218,6 +481,14 @@ def _kw_text(title: str) -> str:
     for ff in _FALSE_FRIENDS:
         title = title.replace(ff, "")
     return title
+
+
+def _kw_hit(word: str, title: str) -> bool:
+    """單一關鍵詞是否命中。英文詞不分大小寫（FT/WSJ 的標題是英文，
+    「Fed」「fed」「FED」都要算）；中文照原樣子字串比對。"""
+    if word.isascii():
+        return word.lower() in title.lower()
+    return word in title
 
 
 def _excluded(title: str, exclude: list[str] | None) -> bool:
@@ -259,7 +530,7 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
             pub = item.findtext("pubDate") or ""
             if not title or not link:
                 continue
-            if not any(w in _kw_text(title) for w in words):
+            if not any(_kw_hit(w, _kw_text(title)) for w in words):
                 continue
             if _excluded(title, exclude):
                 continue
@@ -326,15 +597,17 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
 #（實際發生過，使用者的原話：「上方的摘要還是在摘要新聞標題而不是內文」）。
 # 數字防護欄（_digits_ok）對內文驗證，所以具體數字可以放心要求。
 _FOCUS_CONTENT_SYSTEM = (
-    "你是財經編輯。輸入是幾篇新聞的標題與內文節錄。"
-    "只挑與這些關鍵字相關的內容：{kws}。"
-    "寫成一段不超過 {cap} 個中文字的市場焦點，"
-    "優先寫**內文才有、標題沒有**的具體資訊：金額與規模、時間點、"
-    "人名與職稱、機構名、關鍵引述。不要改寫或串接標題——"
-    "讀者看得到標題，你的價值在標題以外的細節。規則："
+    "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合）。"
+    "只取與這些關鍵字相關的內容：{kws}。"
+    "讀完全部內文後，**重新綜合改寫成一篇連貫的報導**，不是逐篇摘要："
+    "把各篇的資訊整合成同一條敘事線，分成 2 到 3 個段落，"
+    "段落之間用一個空行分隔，每段 80 到 150 個中文字，總長不超過 {cap} 字。"
+    "優先寫內文才有、標題沒有的具體資訊：金額與規模、時間點、"
+    "人名與職稱、機構名、關鍵引述。硬性規則："
     "只能使用內文已有的資訊，不得補充內文以外的事實或數字；"
-    "與關鍵字無關的內容一律不寫；不做預測、不下投資結論；"
-    "繁體中文；直接輸出那一段文字，不要任何前言。")
+    "不得自行推論來源沒有寫的因果關係；不做預測、不下投資結論；"
+    "與關鍵字無關的內容一律不寫；繁體中文；"
+    "直接輸出報導本文，不要標題、不要前言。")
 
 
 def _post_gemini_hardy(key: str, model: str, src_text: str,
@@ -482,7 +755,7 @@ def pick_fallback(headlines: list[dict], keywords: list[str],
     """
     def _hits(h):
         t = _kw_text(h["title"])
-        return sum(1 for kw in keywords for w in kw.split() if w in t)
+        return sum(1 for kw in keywords for w in kw.split() if _kw_hit(w, t))
     picked = []
     for h in sorted(headlines, key=_hits, reverse=True):
         # 排除詞在挑選層也擋一次：Google News 標題模式不經過 feed 的
@@ -987,7 +1260,7 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 # 主流程
 # ---------------------------------------------------------------------------
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
-          state_path: Path, env=None) -> dict:
+          state_path: Path, env=None, liq_series: dict | None = None) -> dict:
     cfg = cfg or {}
     keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
     cap = int(cfg.get("max_chars") or 120)
@@ -999,12 +1272,15 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     out = {"yields": yields,
            "asof": (yields[0]["date"] if yields else ""),
            "fedwatch": None, "text": "", "text_source": "",
-           "links": [], "generated": clock.today().isoformat()}
+           "links": [], "generated": clock.today().isoformat(),
+           "chips": []}
 
     if offline or cfg.get("enabled") is False:
         out["text"] = ("離線示範模式：不抓取新聞，正式執行時這裡是"
                        "當天的市場焦點一段。")
         out["text_source"] = "offline"
+        out["chips"] = build_catalog(rates_series, liq_series, yields,
+                                     offline=True)
         return out
 
     # ---- 殖利率升級成即時：Yahoo 逐檔試，抓不到的那檔退回 FRED ----
@@ -1141,7 +1417,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             text, src = "", ""
             if mode == "content":
                 arts = []
-                for x in top[:3]:
+                for x in top[:6]:
                     body = fetch_article_text(x["link"])
                     if body:
                         arts.append({"title": x["title"], "body": body,
@@ -1150,7 +1426,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                     # 抓到多少內文寫進 log：頁面只標「摘要自內文」，
                     # 摘要品質有疑慮時要能回頭查是不是內文本身太薄。
                     log.info("市場焦點：內文擷取 %d／%d 篇（%s）",
-                             len(arts), min(len(top), 3),
+                             len(arts), min(len(top), 6),
                              "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
                                        for a in arts))
                     text, src = summarize_content(arts, keywords, cap, env)
@@ -1189,4 +1465,12 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                               encoding="utf-8")
     except Exception as e:                         # noqa: BLE001
         log.warning("市場焦點狀態寫入失敗（%s）", e)
+    # 自選 chip 目錄：任何一顆出錯都不該拖垮整條（目錄失敗退回預設三顆的
+    # 舊行為——home 端對空目錄有後備渲染）。
+    try:
+        out["chips"] = build_catalog(rates_series, liq_series,
+                                     out["yields"], offline=False)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("chip 目錄組裝失敗（%s），退回預設呈現", e)
+        out["chips"] = []
     return out

@@ -1,0 +1,41 @@
+# ============================================================================
+# 流動性序列群組
+#
+# 目前供首頁「今日市場焦點」的自選 chip 目錄使用；未來的流動性頁
+# 直接沿用這一組，不必搬家。全部日頻、全部 FRED。
+#
+# 即時報價（油價、VIX、MOVE）不在這裡——它們走 Yahoo，設定在程式裡
+# （src/analysis/focus_today.py 的 QUOTE_SPECS）。這裡的油價與 VIX
+# 是 Yahoo 掛掉時的 FRED 後備（EIA 轉載會落後數天，畫面會標資料日）。
+# ============================================================================
+
+meta:
+  release_name: "Liquidity"
+
+series:
+  - id: SOFR
+    label: SOFR（擔保隔夜融資利率）
+    enabled: true
+  - id: IORB
+    label: 準備金利率（IORB）
+    enabled: true
+  # ON RRP：貨幣基金停泊在聯準會的隔夜逆回購量——體系多餘現金的緩衝池。
+  - id: RRPONTSYD
+    label: ON RRP 餘額
+    enabled: true
+  # 隔夜回購操作（含 SRF 動用）。FRED 沒有獨立的 SRF 序列；
+  # 2021 年 7 月起日常隔夜回購即透過常備回購機制（SRF）進行，
+  # 這條就是市場慣用的動用量指標。多數日子接近零——零本身就是資訊。
+  - id: RPONTSYD
+    label: 隔夜回購動用（SRF）
+    enabled: true
+  # ---- Yahoo 即時報價的 FRED 後備（EIA／CBOE 轉載，落後數天）----
+  - id: DCOILWTICO
+    label: WTI 原油（FRED 後備）
+    enabled: true
+  - id: DCOILBRENTEU
+    label: Brent 原油（FRED 後備）
+    enabled: true
+  - id: VIXCLS
+    label: VIX（FRED 後備）
+    enabled: true

@@ -576,6 +576,72 @@ def _streak_above(rows: list[dict], months: int, threshold: float) -> int:
     return -n if ann and n == len(ann) else n
 
 
+# ---------------------------------------------------------------------------
+# 月步速（0.2 準則）
+#
+# 市場與聯準會官員實務上的「回到目標」判準：核心 CPI 連續多個月月增
+# 0.2%。0.2 的出處可以推導——2% PCE 目標 ÷ 12 ≈ 0.165%/月，加上 CPI
+# 對 PCE 慣常高出的 0.3–0.4 個百分點年差（≈0.03%/月），核心 CPI 的
+# 目標步速 ≈ 0.2%/月（年化 2.4%）。0.3 則明顯過快（年化 3.6%）。
+# 判定用未捨入的三個月平均對這兩條門檻，中間留 0.2–0.3 的緩衝帶，
+# 避免在單一門檻上月月翻面。
+# ---------------------------------------------------------------------------
+PACE_TARGET, PACE_HOT = 0.20, 0.30
+
+
+def round1(x: float) -> float:
+    """半進位到一位小數（跟 BLS 新聞稿口徑一致）。
+
+    不能用內建 round()：Python 是銀行家捨入，0.25 會捨成 0.2、
+    0.35 捨成 0.4——同一個「.5」兩種方向，對門檻判定是災難。"""
+    import math as _m
+    return _m.floor(x * 10 + 0.5) / 10 if x >= 0 else -_m.floor(-x * 10 + 0.5) / 10
+
+
+def mom_series(rows: list[dict]) -> list[dict]:
+    """逐月月增（%），**只接相鄰月份**——缺月的兩端不相減
+    （跟 derive_supercore 同一個道理：缺口前後直接相減會生出假變化）。"""
+    out = []
+    for a, b in zip(rows, rows[1:]):
+        if _shift_months(b["date"], 1) != a["date"] or not a["value"]:
+            continue
+        out.append({"date": b["date"],
+                    "value": (b["value"] / a["value"] - 1) * 100})
+    return out
+
+
+def monthly_pace(rows: list[dict], months: int = 3) -> float | None:
+    """近 N 個月的平均月增（%）。資料不足回 None。
+
+    數學上等價於 N 月年化除以 12（幾何近似），但單位是「月步速」——
+    可以直接對 0.2 的準則，讀者也能在新聞裡對上同一個數字。"""
+    ms = mom_series(rows)
+    if len(ms) < months:
+        return None
+    tail = [r["value"] for r in ms[-months:]]
+    return sum(tail) / months
+
+
+def pace_streak(rows: list[dict]) -> int:
+    """連續幾個月月增（半進位一位小數後）≤ 0.2。從最新一期往回數。"""
+    n = 0
+    for r in reversed(mom_series(rows)):
+        if round1(r["value"]) > PACE_TARGET:
+            break
+        n += 1
+    return n
+
+
+def pace_hot_streak(rows: list[dict]) -> int:
+    """連續幾個月月增（半進位一位小數後）> 0.2。給「卡了多久」的敘述用。"""
+    n = 0
+    for r in reversed(mom_series(rows)):
+        if round1(r["value"]) <= PACE_TARGET:
+            break
+        n += 1
+    return n
+
+
 def _direction(v12: float | None, v6: float | None, v3: float | None) -> str:
     """
     動能階梯的方向。看的是短天期相對長天期，不是單期的漲跌。

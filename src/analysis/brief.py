@@ -46,7 +46,7 @@ def cjk_len(s: str) -> int:
     return len(_CJK.findall(s or ""))
 
 # 各段之間不加空格：中文句號本身就是分隔，加了反而鬆散。
-JOIN = ""
+JOIN = "\n"
 
 # 長度護欄。低於下限多半是模組缺資料（那是真的，不該補字）；
 # 超過上限就是某個分支寫太長，測試會擋下來。
@@ -95,41 +95,6 @@ _REGIME_LEAD = {
     "employment": "聯準會把就業擺在前面",
     "balanced": "聯準會兩個使命並重",
 }
-
-
-def _direction(sc, dirs: list) -> str:
-    """
-    政策方向 ＋ 三個模組的共識度。
-
-    共識度先前是結論卡上的三個色塊加一句話，佔掉半張卡卻只顯示 12 個字；
-    它回答的是「各模組同不同意」，本來就屬於總述的第一句。
-    """
-    if sc is None:
-        return ""
-    lead = _REGIME_LEAD.get(getattr(sc, "regime", ""), "")
-    if not lead:
-        return ""
-    n_haw = sum(1 for _, d in dirs if d == "hawkish")
-    n_dov = sum(1 for _, d in dirs if d == "dovish")
-    n = len(dirs)
-    # 有模組判不出方向時，「N 個裡 M 個」會少掉一塊、讀者會自己去補那個差額。
-    # 直接講清楚剩下的是中性。
-    if n < 2 or not (n_haw or n_dov):
-        tail = "。"
-    elif n_haw and n_dov:
-        # 多數那一邊先講。「三方裡兩方偏降息、一方偏升息」讀起來是先給結論，
-        # 固定把升息排前面則會變成先給少數派，方向感是反的。
-        a, b = (("升", n_haw), ("降", n_dov))
-        if n_dov > n_haw:
-            a, b = (("降", n_dov), ("升", n_haw))
-        tail = (f"；{_cn(n)}方裡{_cn(a[1])}方偏{a[0]}息、"
-                f"{_cn(b[1])}方偏{b[0]}息，方向分歧。")
-    elif n_haw == n or n_dov == n:
-        tail = f"；{_cn(n)}方一致偏{'升' if n_haw else '降'}息。"
-    else:
-        tail = (f"；{_cn(n)}方裡{_cn(max(n_haw, n_dov))}方偏"
-                f"{'升' if n_haw else '降'}息、其餘中性。")
-    return lead + tail
 
 
 # ---------------------------------------------------------------------------
@@ -397,18 +362,14 @@ def _labor(ax: dict | None, month: str = "", signal: str = "") -> str:
     if lo is None or hi is None:
         return f"就業方面，{m}失業率 {us}{sig}。"
 
-    n3, bk = ax.get("nfp_3m"), ax.get("breakeven")
-    # 「三月均非農」在中文裡會被讀成「三月」（March）——這一段的數字是
-    # 近三個月的平均，不是某個月份。寫成「近三個月平均」才沒有歧義；
-    # 手上這份是 7 月數據，讀成 March 等於差了四個月。
-    pair = (f"近三個月平均非農 {_wan(n3)}低於損益兩平的 "
-            f"{_wan(bk).replace(' 萬人', ' 萬')}"
-            if n3 is not None and bk is not None else "")
+    _rise = ax.get("sahm")
+    pair = (f"失業率已較近一年低點回升 {_rise:.2f} 個百分點"
+            if _rise is not None else "失業率已開始回升")
     if u > hi:
         return (f"{m}失業率 {us} 已高於聯準會認定的充分就業上緣 "
                 f"{_pct(hi)}{sig}。")
-    if ax.get("below_breakeven") and pair:
-        return f"{m}失業率 {us} 仍算充分就業，但{pair}，撐不住現有失業率{sig}。"
+    if ax.get("u3_rising"):
+        return f"{m}失業率 {us} 仍算充分就業，但{pair}，惡化已經開始{sig}。"
     if u < lo:
         return f"{m}失業率 {us} 低於充分就業下緣 {_pct(lo)}，勞動市場仍緊{sig}。"
     return f"{m}失業率 {us} 落在充分就業區間 {_pct(lo)}–{_pct(hi)} 之內{sig}。"
@@ -518,64 +479,30 @@ _PRESSURE_TAIL = {
 }
 
 
-def _supply(rt: dict | None) -> str:
-    """
-    財政與 AI：兩者都指向同一件事——長端的債券供給。
-
-    政府發公債、AI 資本支出迫使科技巨頭從淨買方變成淨賣方，兩者搶的是
-    同一池存續期間需求。所以這一段的結論不是「財政如何」「AI 如何」，
-    而是「長端會不會跟著政策走」——那才是對債券部位有意義的問題。
-    """
-    if not rt:
-        return ""
-    p = rt.get("pressure")
-    if p is None:
-        return ""
-    tail = _PRESSURE_TAIL.get(getattr(p, "level", ""), "")
-    if not tail:
-        return ""
-    hs = rt.get("hyperscalers")
-    ratio = getattr(hs, "capex_to_ocf", None) if hs else None
-    debt = rt.get("debt")
-    pb = getattr(debt, "pb_gap", None) if debt else None
-
-    bits = []
-    if pb is not None and pb < 0:
-        bits.append(f"財政缺口 {abs(pb):.1f}% GDP")
-    if ratio is not None:
-        bits.append(f"AI 資本支出佔營運現金流 {ratio:.0f}%")
-    if pb is not None and pb >= 0:
-        buffer = f"財政緩衝 {pb:.1f}% GDP 降低部分供給壓力"
-        if bits:
-            return f"{buffer}；但{' 與 '.join(bits)}仍推升長端供給，{tail}。"
-        return f"{buffer}，{tail}。"
-    if bits:
-        return f"{' 與 '.join(bits)}，同推長端供給，{tail}。"
-    return f"長端供給壓力{'偏高' if p.level == 'high' else '不高'}，{tail}。"
-
-
 # ---------------------------------------------------------------------------
 # ⑥ 重點句：升降息的可能性、以及什麼會改變它
 # ---------------------------------------------------------------------------
-def _takeaway(sc, fom: dict | None) -> str:
+def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
     """
-    收尾的一句話：**下一步是升還是降、解鎖條件是什麼**。
+    收尾的一句話。先問對問題，再講條件——使用者的批評：舊模板永遠圍繞
+    「降息還遠不遠」，但目前市場真正辯論的是「要不要升息」，而且綁住
+    政策的是通膨；重點句卻在講降息的解鎖條件，問錯了問題。
 
-    材料全部是已經算好的判定：九宮格的政策傾向（lean）、「情境轉換門檻」
-    裡標成關鍵的那一條觸發條件、以及反對票的方向。沒有新的判斷——
-    這句只是把散在三張卡的東西收成一句。
-
-    找不到關鍵觸發條件時退而用第一條未觸發的；連觸發條件都沒有時，
-    句子照樣成立（只講方向，不講條件）。
+    三態由九宮格的政策傾向（lean）決定問題框架；重心軸由 scenario 的
+    binding（約束條件在哪一軸）動態選定，不寫死通膨——哪天就業惡化成為
+    關鍵約束，這句話會自動轉向就業。句中的數字全部取自已算好的月步速
+    判定，跟九宮格同一套口徑。
     """
     if sc is None:
         return ""
     lean = getattr(sc, "lean", "") or ""
+    binding = getattr(sc, "binding", "") or ""
+    pace = (inf or {}).get("core_pace3")
+    hot = (inf or {}).get("core_pace_hot") or 0
     trigs = getattr(sc, "triggers", None) or []
     trig = next((x for x in trigs if getattr(x, "binding", False)), None)
     if trig is None:
         trig = next((x for x in trigs if not getattr(x, "met", False)), None)
-
     cond = ""
     if trig is not None:
         if getattr(trig, "met", False):
@@ -590,39 +517,245 @@ def _takeaway(sc, fom: dict | None) -> str:
                and d.get("direction") == "cut")
 
     if lean == "hawkish":
-        tail = "；升息風險未消" if hikes else ""
-        return f"重點：降息還遠{cond}{tail}。"
+        tail = "；委員會內已有升息主張" if hikes else ""
+        if binding != "就業" and pace is not None:
+            _run = (f"已連續 {hot} 個月高於" if hot >= 2 else "仍高於")
+            return ("重點：目前的問題是升不升息、不是何時降息——關鍵在通膨："
+                    f"核心 CPI 月步速{_run} 0.2% 的目標步速"
+                    f"（近三月平均 {pace:.2f}%）；三個月平均回到 0.2 以下，"
+                    f"升息壓力解除；再加速則升息機率上升{tail}。")
+        return f"重點：政策風險偏向升息{cond}{tail}。"
     if lean == "dovish":
         tail = "；委員會內部已有人主張先動" if cuts else ""
-        return f"重點：下一步以降息為主{cond}{tail}。"
+        return f"重點：討論的是降息時點{cond}{tail}。"
+    if pace is not None:
+        return ("重點：短期最可能按兵不動，下一步由通膨表態——月步速"
+                "連續三個月回到 0.2% 以下偏降息、重新加速偏升息"
+                f"（目前近三月平均 {pace:.2f}%）。")
     return f"重點：按兵不動的可能性最高{cond}。"
+
+
+# ---------------------------------------------------------------------------
+# AI 生成層：讀三模組的「判定包」，生成三則 bullet
+#
+# 這是對「模型只改寫、不生成」原則的一次**有意識的**放寬（使用者指定：
+# 不要先放固定內容再潤稿，改由 AI 讀判定後生成）。放寬的是「誰寫字」，
+# 不放寬的是「誰下判斷」與「誰驗收」：
+#   供料　　餵給模型的不是原始序列，是規則引擎已算好的格位／方向／
+#   　　　　訊號／關鍵數字（judgment_pack）——模型看不到判定以外的世界
+#   數字鎖　輸出裡的每個數字必須出現在判定包裡，一個不准新編
+#   方向鎖　模型必須在文末自報方向，與九宮格的規則判定不符整篇作廢
+#   結構鎖　恰好三行、以固定前綴開頭，缺一行整篇作廢
+#   後備　　任何一道沒過退回 compose() 的規則組裝版，畫面永不開天窗
+# 「本次更新」與「重點句」不經過模型：前者是機械判定，後者是全段
+# 最不能錯的一句（三態模板見 _takeaway）。
+# ---------------------------------------------------------------------------
+import logging as _logging
+log = _logging.getLogger(__name__)
+
+_GEN_PROMPT_VERSION = "g1"
+_GEN_LABELS = ("勞動市場", "通膨", "聯準會")
+_GEN_SYSTEM = (
+    "你是總經分析師。輸入是三個模組由固定規則算出的判定與關鍵數字。"
+    "把它們改寫成三則易讀的重點。格式硬性規定：恰好輸出三行，"
+    "分別以「勞動市場：」「通膨：」「聯準會：」開頭，每行一到兩句、"
+    "40 到 80 個中文字；最後另起一行輸出「方向：」加上輸入標明的政策傾向"
+    "（利升息／利降息／中性，照抄輸入，不得自行改判）。內容規則："
+    "只能使用輸入已有的資訊；最多引用兩三個關鍵數字，其餘用文字描述；"
+    "不得推論輸入沒有寫的因果；不做預測、不下投資結論；"
+    "不要條列符號、不要粗體記號、不要前言。繁體中文。")
+_LEAN_ZH = {"hawkish": "利升息", "dovish": "利降息",
+            "neutral": "中性", "balanced": "中性"}
+
+
+def judgment_pack(ctxs: dict) -> dict | None:
+    """把三模組的規則判定整理成給模型讀的文字包。缺情境回 None。"""
+    scn = ctxs.get("scenario") or {}
+    sc = scn.get("scenario")
+    if sc is None:
+        return None
+    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
+    lines = [f"政策傾向（規則判定，必須照抄到「方向：」行）："
+             f"{_LEAN_ZH.get(getattr(sc, 'lean', ''), '中性')}",
+             f"情境：{getattr(sc, 'name', '')}"]
+
+    def _flags(ctx, n=2):
+        fs = (ctx or {}).get("flags") or []
+        return "；".join(f.headline for f in fs[:n])
+
+    ax = (lab or {}).get("axis") or {}
+    if lab:
+        lines.append(
+            "【勞動市場】格位："
+            + f"{getattr(sc, 'labor_state', '—')}（失業率 {ax.get('unrate')}%，"
+            + f"FOMC 長期區間 {ax.get('u_lo')}–{ax.get('u_hi')}%）；"
+            + f"動能：{getattr(sc, 'labor_momentum', '—')}"
+            + f"（失業率較近一年低點回升 {ax.get('sahm')} 個百分點）；"
+            + f"近三個月平均非農 {round((ax.get('nfp_3m') or 0) / 10, 1)} 萬人；"
+            + f"本期訊號：{_flags(lab) or '無'}")
+    if inf:
+        s = inf.get("summary")
+        lines.append(
+            "【通膨】格位："
+            + f"{getattr(sc, 'infl_state', '—')}（核心 PCE 年增 "
+            + f"{getattr(s, 'pce_core_yoy', None)}%）；"
+            + f"核心 CPI 月步速：近三月平均 {inf.get('core_pace3')}%"
+            + f"（目標步速 0.2%，已連續 {inf.get('core_pace_hot') or 0} 個月高於）；"
+            + f"核心 CPI 年增 {getattr(s, 'core_yoy', None)}%；"
+            + f"本期訊號：{_flags(inf) or '無'}")
+    if fom and not fom.get("empty"):
+        _sh = (fom.get("shift") or {}).get("direction") or "—"
+        _fl = ((fom.get("focus")) or {}).get("label", "")
+        dis = ((fom.get("vote") or {}).get("dissents")) or []
+        _h = sum(1 for d in dis if isinstance(d, dict)
+                 and d.get("direction") == "hike")
+        lines.append(
+            f"【聯準會】最近一次聲明措辭方向：{_sh}；目前重心：{_fl or '—'}；"
+            + (f"反對票：{_h} 票主張升息；" if _h else "")
+            + f"本期訊號：{_flags(fom) or '無'}")
+    return {"text": "\n".join(lines),
+            "lean": _LEAN_ZH.get(getattr(sc, "lean", ""), "中性")}
+
+
+def _gen_digits_ok(text: str, source: str) -> bool:
+    """數字鎖：輸出的每一串數字都必須出現在判定包裡。"""
+    import re as _re
+    src = _re.sub(r"[\s,，]", "", source)
+    for num in _re.findall(r"\d+(?:\.\d+)?", text.replace(",", "")):
+        if num not in src:
+            return False
+    return True
+
+
+def _parse_generated(text: str, want_lean: str):
+    """三行結構＋方向鎖。回傳 (bullets, 錯誤原因)。"""
+    lines = [x.strip() for x in text.splitlines() if x.strip()]
+    got = {}
+    direction = ""
+    for ln in lines:
+        if ln.startswith("方向："):
+            direction = ln[3:].strip().rstrip("。")
+            continue
+        for lb in _GEN_LABELS:
+            if ln.startswith(lb + "：") or ln.startswith(lb + ":"):
+                if lb in got:
+                    return None, f"「{lb}」出現了兩次"
+                got[lb] = ln.split("：", 1)[-1].split(":", 1)[-1].strip()
+    missing = [lb for lb in _GEN_LABELS if lb not in got]
+    if missing:
+        return None, "缺了「" + "、".join(missing) + "」那一行"
+    for lb, body in got.items():
+        n = cjk_len(body)
+        if not 15 <= n <= 110:
+            return None, f"「{lb}」長度 {n} 字超出 15–110 的範圍"
+    if not direction:
+        return None, "缺少文末的「方向：」標記行"
+    if direction != want_lean:
+        return None, f"方向標記「{direction}」與規則判定「{want_lean}」不符"
+    return [(lb, got[lb]) for lb in _GEN_LABELS], ""
+
+
+def generate(ctxs: dict, assembled: dict, cache_path, offline: bool = False,
+             env: dict | None = None, cfg: dict | None = None,
+             _post=None) -> dict:
+    """AI 生成整體情勢三則。失敗一律退回組裝版（assembled）。"""
+    import os
+    import json as _json
+    import hashlib as _hl
+    from . import polish as _pl
+
+    out = {"text": assembled.get("text", ""),
+           "chars": assembled.get("chars", 0),
+           "source": "assembled", "model": ""}
+    if offline or not out["text"] or (cfg or {}).get("enabled") is False:
+        return out
+    pack = judgment_pack(ctxs)
+    if pack is None:
+        return out
+    env = os.environ if env is None else env
+    provider, key = _pl._pick_provider(env)
+    if not provider:
+        return out
+    model = ((env.get("BRIEF_MODEL") or "").strip()
+             or _pl.PROVIDERS[provider]["model"])
+
+    # 首尾兩句不經過模型，從組裝版原樣取
+    _p = {x["key"]: x["text"] for x in assembled.get("parts", [])}
+    head, tail = _p.get("whatsnew", ""), _p.get("takeaway", "")
+
+    facts_h = _hl.sha256((pack["text"] + _GEN_PROMPT_VERSION + head + tail)
+                         .encode("utf-8")).hexdigest()[:16]
+    try:
+        cache = _json.loads(cache_path.read_text(encoding="utf-8"))
+    except Exception:                              # noqa: BLE001
+        cache = {}
+    if cache.get("gen_hash") == facts_h and cache.get("gen_text"):
+        return {"text": cache["gen_text"], "chars": cjk_len(cache["gen_text"]),
+                "source": "model-cache", "model": cache.get("model", model)}
+
+    post = _post or _pl._POST[provider]
+    reason, bullets = "", None
+    for attempt in (1, 2):
+        note = ("" if not reason else
+                f"\n\n（上一次的輸出被退回，原因：{reason}。"
+                "請重新輸出並逐條遵守格式與內容的硬性規定。）")
+        try:
+            res = post(key, model, pack["text"] + note, _GEN_SYSTEM,
+                       (cfg or {}).get("temperature"))
+        except Exception as e:                     # noqa: BLE001
+            log.warning("整體情勢 AI 生成失敗（%s），改用組裝版", e)
+            return out
+        if isinstance(res, tuple):
+            res, model = res[0], (res[1] or model)
+        # 逐行清理：_sanitize 會把所有空白（含換行）折成單一空格，
+        # 但這裡的三行結構就靠換行分隔——整段餵進去等於自毀格式。
+        res = "\n".join(_pl._sanitize(ln) for ln in (res or "").splitlines()
+                        if ln.strip())
+        if not _gen_digits_ok(res, pack["text"]):
+            reason = "輸出出現判定包裡沒有的數字"
+        else:
+            bullets, reason = _parse_generated(res, pack["lean"])
+        if bullets:
+            break
+        if attempt == 1:
+            log.warning("整體情勢 AI 生成未通過驗證（%s），帶原因重試一次",
+                        reason)
+    if not bullets:
+        log.warning("整體情勢 AI 生成重試後仍未通過驗證（%s），改用組裝版",
+                    reason)
+        return out
+
+    text = JOIN.join([x for x in
+                      ([head] + [f"{lb}：{body}" for lb, body in bullets]
+                       + [tail]) if x])
+    try:
+        cache.update({"gen_hash": facts_h, "gen_text": text, "model": model})
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(_json.dumps(cache, ensure_ascii=False, indent=1),
+                              encoding="utf-8")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("整體情勢生成快取寫入失敗（%s），本次結果仍使用", e)
+    return {"text": text, "chars": cjk_len(text),
+            "source": "generated", "model": model}
 
 
 # ---------------------------------------------------------------------------
 def compose(ctxs: dict) -> dict:
     """
-    回傳 {"text", "chars", "parts"}。任何一段缺資料就跳過，其餘照樣成立。
+    規則組裝版（AI 生成的**後備**，也是離線／無金鑰時的正式輸出）。
 
-    parts 一併回傳是為了測試與除錯：哪一段太長、哪一段沒出現，
-    看 parts 比看拼好的字串快。
+    版式：本次更新（一行）→ 三個 bullet（勞動市場／通膨／聯準會，
+    各一行、行內以「模組名：」開頭）→ 重點句（一行）。長端供給段
+    已整段移除（使用者指定：總結只讀三大部分；長端的完整故事在長端頁）；
+    共識開場句與「另一頭」「面對這個組合」等轉折詞也一併拿掉——
+    bullet 各自成塊，不需要行文的黏著劑。
+
+    回傳 {"text", "chars", "parts"}。任何一段缺資料就跳過，其餘照樣成立。
     """
     scn = ctxs.get("scenario") or {}
     sc = scn.get("scenario")
-    lab, inf, fom, rt = (ctxs.get("labor"), ctxs.get("inflation"),
-                         ctxs.get("fomc"), ctxs.get("rates"))
+    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
 
-    # 各模組的方向：跟首頁共識列同一組來源，數字才不會兩處對不上
-    dirs = []
-    if lab:
-        dirs.append(("就業", (lab.get("tilt") or {}).get("tilt")))
-    if inf:
-        dirs.append(("物價", (inf.get("tilt") or {}).get("tilt")))
-    if fom and not fom.get("empty"):
-        _s = (fom.get("shift") or {}).get("direction")
-        dirs.append(("聯準會", _s))
-
-    # 期別與訊號都從模組**已經算好的結果**取，這一層不做任何判斷。
-    # 訊號每一期都不一樣，所以是動態挑（見 _pick_signal），不是寫死清單。
     def _mon(ctx):
         """期別；若是 BLS 速報值就標出來——來源不同，讀者有權知道。"""
         m = _month((ctx or {}).get("data_month", ""))
@@ -630,9 +763,6 @@ def compose(ctxs: dict) -> dict:
 
     lab_txt = _labor((lab or {}).get("axis"), _mon(lab),
                      _pick_signal((lab or {}).get("flags")))
-    # 核心 PCE 的期別跟這個模組的 data_month（＝CPI）不是同一個：
-    # CPI 月中由 BLS 發，核心 PCE 月底由 BEA 發，中間差兩週。
-    # 8/13 的畫面上有 7 月 CPI，但核心 PCE 最新只到 6 月。
     _pce_mon = _month(((inf or {}).get("asof") or {}).get("pce", ""))
     inf_txt = _inflation((inf or {}).get("summary"),
                          (inf or {}).get("bands"),
@@ -640,24 +770,14 @@ def compose(ctxs: dict) -> dict:
                          _mon(inf),
                          _pick_signal((inf or {}).get("flags")),
                          pce_month=_pce_mon)
-    # 轉折詞：就業與通膨指向相反（弱 × 高）時補一個「另一頭」，
-    # 讀者才不會把兩句當成同方向的並列。同向時不加——加了反而誤導。
-    if (lab_txt and inf_txt and sc is not None
-            and getattr(sc, "labor_state", "") == "弱"
-            and getattr(sc, "infl_state", "") == "高"):
-        inf_txt = "另一頭，" + inf_txt
     fom_txt = _fomc(fom)
-    if fom_txt and lab_txt and inf_txt:
-        fom_txt = "面對這個組合，" + fom_txt
 
     parts = [
         ("whatsnew", _whats_new(ctxs)),
-        ("direction", _direction(sc, dirs)),
-        ("labor", lab_txt),
-        ("inflation", inf_txt),
-        ("fomc", fom_txt),
-        ("supply", _supply(rt)),
-        ("takeaway", _takeaway(sc, fom)),
+        ("labor", f"勞動市場：{lab_txt}" if lab_txt else ""),
+        ("inflation", f"通膨：{inf_txt}" if inf_txt else ""),
+        ("fomc", f"聯準會：{fom_txt}" if fom_txt else ""),
+        ("takeaway", _takeaway(sc, fom, inf)),
     ]
     kept = [(k, v) for k, v in parts if v]
     text = JOIN.join(v for _, v in kept)

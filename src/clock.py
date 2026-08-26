@@ -58,6 +58,69 @@ def stamp() -> str:
     return now().strftime("%Y-%m-%d %H:%M") + TZ_LABEL
 
 
+# ---------------------------------------------------------------------------
+# 紐約與倫敦時間（首頁「最後更新」用）
+#
+# 這兩個時區**有夏令時間**，不能像台北一樣寫死偏移。但也不用 zoneinfo
+# （精簡容器常缺 tzdata，缺了就是執行期爆炸）——改用規則自己算：
+#   美國：3 月第二個週日 02:00 當地（＝07:00 UTC）起 EDT（−4），
+#         11 月第一個週日 02:00 當地（＝06:00 UTC）回 EST（−5）
+#   英國：3 月最後一個週日 01:00 UTC 起 BST（+1），
+#         10 月最後一個週日 01:00 UTC 回 GMT（0）
+# 這兩條規則分別由 2005 年美國能源政策法與歐盟指令固定，是常數不是資料。
+# ---------------------------------------------------------------------------
+def _nth_weekday(year: int, month: int, weekday: int, n: int) -> dt.date:
+    """某月第 n 個星期 X（weekday：一＝0…日＝6）。"""
+    first = dt.date(year, month, 1)
+    off = (weekday - first.weekday()) % 7
+    return first + dt.timedelta(days=off + 7 * (n - 1))
+
+
+def _last_weekday(year: int, month: int, weekday: int) -> dt.date:
+    last = (dt.date(year, 12, 31) if month == 12
+            else dt.date(year, month + 1, 1) - dt.timedelta(days=1))
+    return last - dt.timedelta(days=(last.weekday() - weekday) % 7)
+
+
+def ny_offset(t_utc: dt.datetime) -> int:
+    """紐約對 UTC 的偏移（−4 夏令／−5 冬令）。輸入須為 UTC aware。"""
+    y = t_utc.year
+    start = dt.datetime(y, 3, _nth_weekday(y, 3, 6, 2).day, 7,
+                        tzinfo=dt.timezone.utc)
+    end = dt.datetime(y, 11, _nth_weekday(y, 11, 6, 1).day, 6,
+                      tzinfo=dt.timezone.utc)
+    return -4 if start <= t_utc < end else -5
+
+
+def london_offset(t_utc: dt.datetime) -> int:
+    """倫敦對 UTC 的偏移（+1 夏令／0 冬令）。輸入須為 UTC aware。"""
+    y = t_utc.year
+    start = dt.datetime(y, 3, _last_weekday(y, 3, 6).day, 1,
+                        tzinfo=dt.timezone.utc)
+    end = dt.datetime(y, 10, _last_weekday(y, 10, 6).day, 1,
+                      tzinfo=dt.timezone.utc)
+    return 1 if start <= t_utc < end else 0
+
+
+def world_stamp(t_utc: dt.datetime | None = None) -> str:
+    """
+    三地時間戳：`2026-08-22 01:44（台北）　·　08-21 13:44（紐約）　·
+    08-21 18:44（倫敦）`。
+
+    紐約／倫敦的日期跟台北不同天時（台北清晨對美國是前一天下午）
+    才標月-日，同一天只標時分——三組完整日期排在一起反而難掃。
+    `t_utc` 參數是給測試用的（固定時刻驗算夏令切換）。
+    """
+    t = t_utc or now().astimezone(dt.timezone.utc)
+    tpe = t.astimezone(TAIPEI)
+    parts = [tpe.strftime("%Y-%m-%d %H:%M") + TZ_LABEL]
+    for label, off in (("紐約", ny_offset(t)), ("倫敦", london_offset(t))):
+        loc = t + dt.timedelta(hours=off)
+        fmt = "%H:%M" if loc.date() == tpe.date() else "%m-%d %H:%M"
+        parts.append(loc.strftime(fmt) + f"（{label}）")
+    return "　·　".join(parts)
+
+
 def iso() -> str:
     """機器讀的時間戳，含 UTC 偏移：`2026-08-11T22:46:03+08:00`。
 

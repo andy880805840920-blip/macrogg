@@ -39,7 +39,6 @@ from src.analysis import changes as chg                           # noqa: E402
 from src.analysis import freshness                                # noqa: E402
 from src.analysis import series_quality                             # noqa: E402
 from src.analysis import brief as brief_mod                        # noqa: E402
-from src.analysis import polish                                    # noqa: E402
 from src.analysis import focus_today                               # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
@@ -227,6 +226,9 @@ def gather_fred(offline: bool, ids: list[str], module: str,
         if module == "rates":
             from src import fixtures_rates
             return fixtures_rates.build(), {}, []
+        if module == "liquidity":
+            from src import fixtures_liquidity
+            return fixtures_liquidity.build(), {}, []
         from src import fixtures_inflation
         return fixtures_inflation.build(), {}, []
 
@@ -626,7 +628,9 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     write("index.html", site.page(
         site.SITE_NAME, "/", home_page.home_body(ctxs),
-        subtitle=f"最後更新 {clock.stamp()}",
+        # 三地時間：讀者看台北，數據的主場在紐約、歐洲盤在倫敦——
+        # 夏令規則在 clock.py 裡自算，不依賴 tzdata
+        subtitle=f"最後更新 {clock.world_stamp()}",
         footer=home_page.home_footer(ctxs),
         banner=_banner(None)))
 
@@ -730,10 +734,36 @@ def main() -> int:
             # 科技巨頭的財報改由 SEC EDGAR 自動擷取，就地覆寫 cfg
             failed = failed + gather_hyperscalers(cfg, args.offline)
             all_failed += failed
+            # 10Y／30Y 升級成即時報價（跟首頁焦點條同一來源），
+            # 讓長端頁不再掛著比焦點條舊一兩天的收盤——同站同數字。
+            # 失敗就安靜用 FRED 收盤，規則在 upgrade_yields_live 裡。
+            if not args.offline:
+                _live = focus_today.upgrade_yields_live(series)
+                if _live:
+                    log.info("長端殖利率升級為即時：%s", "、".join(_live))
             ctxs["rates"] = build.build_rates_context(
                 cfg, series, failed, args.offline)
             p = ctxs["rates"]["pressure"]
             log.info("長端模組完成：供給壓力 %s（分數 %+.2f）", p.level, p.score)
+
+    # ---- 流動性群組（SOFR／IORB／ON RRP／SRF＋油價與 VIX 的 FRED 後備）----
+    # 供焦點條的自選 chip 目錄；未來的流動性頁沿用同一組。
+    # 放在完整性閘門之前，讓新序列一樣受日期／重複／未來值的檢查。
+    # 抓不到不擋主流程，缺哪條哪顆 chip 標缺。
+    liq_series: dict = {}
+    _liq_cfg = load_config("liquidity.yaml")
+    if _liq_cfg:
+        try:
+            _lids, _, _ = series_ids(_liq_cfg, ("series",))
+            log.info("流動性群組：%d 個序列", len(_lids))
+            liq_series, _, _lfail = gather_fred(args.offline, _lids,
+                                                "liquidity")
+            all_series.update(liq_series)
+            if _lfail:
+                log.warning("流動性群組缺 %d 條：%s",
+                            len(_lfail), "、".join(_lfail))
+        except Exception as e:                     # noqa: BLE001
+            log.warning("流動性群組抓取失敗（%s），相關 chip 本次標缺", e)
 
     # ---- 聯準會文本 ----
     if want("fomc"):
@@ -822,16 +852,17 @@ def main() -> int:
     # 潤稿只在事實變了才呼叫 API；沒設金鑰或離線一律用組裝版。
     _brief = brief_mod.compose(ctxs)
     if _brief["text"]:
-        # 語氣、溫度、開關都在 config/brief.yaml，改完 commit 就生效，
-        # 不必動程式。檔案不在也不會壞，走內建預設值。
+        # 三則 bullet 改由 AI 讀「判定包」生成（數字鎖＋方向鎖＋結構鎖，
+        # 任何一道沒過退回規則組裝版）；「本次更新」與重點句仍為規則產生。
+        # 溫度等設定在 config/brief.yaml 的 polish 段，沿用同一組。
         _bcfg = (load_config("brief.yaml") or {}).get("polish") or {}
-        ctxs["_brief"] = polish.maybe_polish(
-            _brief, STATE_FILE.parent / "brief.json", offline=args.offline,
-            cfg=_bcfg)
+        ctxs["_brief"] = brief_mod.generate(
+            ctxs, _brief, STATE_FILE.parent / "brief.json",
+            offline=args.offline, cfg=_bcfg)
         _bm = ctxs["_brief"].get("model") or ""
         log.info("整體情勢：%s%s（%d 中文字）",
-                 {"model": "模型潤稿（新生成）",
-                  "model-cache": "模型潤稿（沿用快取）",
+                 {"generated": "AI 生成（三鎖驗證通過）",
+                  "model-cache": "AI 生成（沿用快取）",
                   "assembled": "規則組裝"}[ctxs["_brief"]["source"]],
                  f"，{_bm}" if _bm else "",
                  ctxs["_brief"]["chars"])
@@ -859,7 +890,7 @@ def main() -> int:
     try:
         ctxs["_focus"] = focus_today.build(
             rates_series, args.offline, load_config("focus.yaml"),
-            STATE_FILE.parent / "focus.json")
+            STATE_FILE.parent / "focus.json", liq_series=liq_series)
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None

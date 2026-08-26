@@ -750,7 +750,9 @@ def rates_body(d: dict) -> str:
                    else "緩衝：基本盈餘高於穩定債務比所需水準")
     metrics = "".join([
         state_chip("長端供給壓力", level_text, f"綜合分數 {sp.score:+.2f}", "watch" if sp.level == "high" else "neutral"),
-        state_chip("10 年期殖利率", f"{y10:.2f}%" if y10 is not None else "—", f"資料日 {d.get('as_of', '—')}"),
+        state_chip("10 年期殖利率", f"{y10:.2f}%" if y10 is not None else "—",
+                   (f"盤中報價 {d.get('as_of', '—')}（延遲約 15 分鐘）"
+                    if d.get("as_of_live") else f"資料日 {d.get('as_of', '—')}")),
         state_chip("美國財政赤字", pct(abs(debt.deficit_gdp) if debt.deficit_gdp is not None else None),
                    "佔 GDP；年度債券供給主體", "watch"),
         state_chip("財政穩定差", pct(debt.pb_gap, True), fiscal_note,
@@ -771,7 +773,9 @@ def rates_body(d: dict) -> str:
              f'<div class="logic-step"><b>目前結論</b><span>{esc(why)}</span></div>'
              '<div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div>')
     evidence = focus_evidence(flow + logic, "查看供給傳導與判斷依據")
-    tags = (f'<div class="data-line"><span class="data-tag">利率 {esc(d.get("as_of", "—"))}</span>'
+    _asof_tag = (f'{d.get("as_of", "—")}（盤中）' if d.get("as_of_live")
+                 else d.get("as_of", "—"))
+    tags = (f'<div class="data-line"><span class="data-tag">利率 {esc(_asof_tag)}</span>'
             f'<span class="data-tag">公司期末 {esc(hs_span)}</span>'
             f'<span class="data-tag">SEC 實際資料 {hs.n_from_sec}/{len(hs.companies)} 家</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div>'
@@ -781,8 +785,12 @@ def rates_body(d: dict) -> str:
 
 
 def rates_footer(d: dict) -> str:
+    _live = ("10 年期與 30 年期的最新一筆為盤中即時報價"
+             "（Yahoo Finance，延遲約 15 分鐘），其餘皆為 FRED 收盤。<br>"
+             if d.get("as_of_live") else "")
     return (
         "資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數）。<br>"
+        + _live +
         "科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，"
         "每季財報一申報就會自動更新。<br>"
         "本頁僅為數據整理，不構成投資建議。"

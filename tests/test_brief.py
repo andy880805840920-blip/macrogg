@@ -56,9 +56,8 @@ class Summ:                    # 假的 InflationSummary
         self.supercore_streak = streak
 
 
-AX = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3, "sahm": 0.13,
-      "sahm_triggered": False, "nfp_3m": 20.0, "breakeven": 43.0,
-      "below_breakeven": True}
+AX = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3, "sahm": 0.25,
+      "sahm_triggered": False, "nfp_3m": 20.0, "u3_rising": True}
 
 FOM = {"latest_date": "2026-07-29", "obj_parts": {"action_label": "維持不變"},
        "vote": {"dissents": [{"direction": "hike"}] * 3},
@@ -99,7 +98,9 @@ def ctxs(**over):
 b = brief.compose(ctxs())
 print("　　", b["text"])
 print()
-check("① 六段都在（含重點句）", len(b["parts"]) == 6,
+check("① 四段都在（三 bullet ＋重點句；長端與共識句已移除）",
+      [p["key"] for p in b["parts"]]
+      == ["labor", "inflation", "fomc", "takeaway"],
       str([p["key"] for p in b["parts"]]))
 check("② 長度在護欄內（中文字）",
       brief.MIN_CJK <= b["chars"] <= brief.MAX_CJK,
@@ -108,8 +109,8 @@ check("③ 量的是中文字不是字串長度", b["chars"] < b["raw_len"],
       f'中文 {b["chars"]} / 長度 {b["raw_len"]}')
 check("④ 沒有殘留的模板記號",
       "{" not in b["text"] and "None" not in b["text"] and "**" not in b["text"])
-check("⑤ 五件事都提到了",
-      all(k in b["text"] for k in ("失業率", "核心 PCE", "會議", "長端")),
+check("⑤ 三大部分都提到了（bullet 前綴齊）",
+      all(k in b["text"] for k in ("勞動市場：", "通膨：", "聯準會：")),
       b["text"][:60])
 check("⑤b 結尾是重點句", b["text"].rstrip().endswith("。")
       and b["parts"][-1]["key"] == "takeaway"
@@ -120,18 +121,20 @@ check("⑤b 結尾是重點句", b["text"].rstrip().endswith("。")
 # ---------------------------------------------------------------------------
 # ② 缺資料：那一段消失，其餘照樣成立
 # ---------------------------------------------------------------------------
-for name, key in [("⑥ 沒有就業資料", "labor"), ("⑦ 沒有通膨資料", "inflation"),
-                  ("⑧ 沒有聯準會資料", "fomc"), ("⑨ 沒有長端資料", "rates")]:
+for name, key, want in [("⑥ 沒有就業資料", "labor", 3),
+                        ("⑦ 沒有通膨資料", "inflation", 3),
+                        ("⑧ 沒有聯準會資料", "fomc", 3),
+                        ("⑨ 長端資料與總述無關（已移除）", "rates", 4)]:
     c = ctxs(); c[key] = None
     r = brief.compose(c)
-    check(name, len(r["parts"]) == 5 and r["text"] and "資料不足" not in r["text"],
-          f'{len(r["parts"])} 段')
+    check(name, len(r["parts"]) == want and r["text"]
+          and "資料不足" not in r["text"], f'{len(r["parts"])} 段')
 
 check("⑩ 完全沒有資料 → 空字串，不硬湊",
       brief.compose({})["text"] == "")
-check("⑪ 只有情境 → 開場句與重點句",
+check("⑪ 只有情境 → 只剩重點句",
       [p["key"] for p in brief.compose({"scenario": {"scenario": S()}})["parts"]]
-      == ["direction", "takeaway"])
+      == ["takeaway"])
 
 
 # ---------------------------------------------------------------------------
@@ -144,13 +147,13 @@ def lab_text(ax):
 
 cases = [
     ("⑫ 高於上緣 → 講「高於充分就業上緣」",
-     {**AX, "unrate": 4.6, "below_breakeven": False}, "高於"),
+     {**AX, "unrate": 4.6, "u3_rising": False}, "高於"),
     ("⑬ Sahm 觸發 → 講快速轉弱", {**AX, "sahm_triggered": True}, "Sahm"),
-    ("⑭ 低於損益兩平 → 講撐不住", AX, "撐不住"),
+    ("⑭ 失業率開始回升 → 講惡化已經開始", AX, "惡化已經開始"),
     ("⑮ 都正常 → 講落在區間內",
-     {**AX, "below_breakeven": False}, "落在"),
+     {**AX, "u3_rising": False}, "落在"),
     ("⑯ 低於下緣 → 講仍緊",
-     {**AX, "unrate": 3.7, "below_breakeven": False}, "仍緊"),
+     {**AX, "unrate": 3.7, "u3_rising": False}, "仍緊"),
 ]
 for name, ax, want in cases:
     txt = lab_text(ax)
@@ -158,9 +161,9 @@ for name, ax, want in cases:
 
 # 敘述與格位不能互相打架：同一份資料餵給兩邊，結論要對得上
 for ax, want_state in [(AX, "中"),
-                       ({**AX, "unrate": 4.6, "below_breakeven": False}, "弱"),
-                       ({**AX, "below_breakeven": False}, "中"),
-                       ({**AX, "unrate": 3.7, "below_breakeven": False}, "強")]:
+                       ({**AX, "unrate": 4.6, "u3_rising": False}, "弱"),
+                       ({**AX, "u3_rising": False}, "中"),
+                       ({**AX, "unrate": 3.7, "u3_rising": False}, "強")]:
     st, _ = scn.classify_labor(None, None, ax)
     check(f"⑰ 格位 {want_state} 時敘述不矛盾", st == want_state,
           f"格位 {st}、敘述「{lab_text(ax)[:24]}」")
@@ -189,25 +192,16 @@ check("㉒ 沒有黏性資料就不提黏性",
       inf_text(Summ(3.0, 3.6, 0), "高"))
 
 # 共識度：三方一致 vs 分歧，用詞要不同
-def dir_text(l, i, f):
-    c = ctxs(labor={"axis": AX, "tilt": {"tilt": l}},
-             inflation={"summary": Summ(), "bands": {}, "tilt": {"tilt": i}},
-             fomc={**FOM, "shift": {"direction": f}})
-    return brief.compose(c)["parts"][0]["text"]
-
-
 def fomc_text(f):
     return next(p["text"] for p in brief.compose(ctxs(fomc=f))["parts"]
                 if p["key"] == "fomc")
 
 
-check("㉓ 三方一致", "一致" in dir_text("hawkish", "hawkish", "hawkish"))
-check("㉔ 方向分歧", "分歧" in dir_text("dovish", "hawkish", "hawkish"))
-check("㉕ 有中性的那一方要交代",
-      "中性" in dir_text("balanced", "hawkish", "hawkish"),
-      dir_text("balanced", "hawkish", "hawkish"))
-check("㉖ 用中文數字（「兩方」不是「2 方」）",
-      "兩方" in dir_text("dovish", "hawkish", "hawkish"))
+# ㉓–㉖（共識開場句）已隨 bullet 版式移除：三 bullet 各自表述方向，
+# 開場句沒有位子；一致度資訊由重點句與首頁方向章承擔。
+check("㉓ 共識句已移除（不殘留 direction 段）",
+      not hasattr(brief, "_direction")
+      and all(p["key"] != "direction" for p in brief.compose(ctxs())["parts"]))
 
 # 反對票的方向欄位是 hike／cut，不是 hawkish／dovish——寫錯會變成「3 票反對」
 f_cut = {**FOM, "vote": {"dissents": [{"direction": "cut"}] * 2}}
@@ -220,36 +214,35 @@ check("㉘ 沒有反對票 → 全票通過", "全票通過" in fomc_text(f_none
 # ---------------------------------------------------------------------------
 # ⑤ 重點句：升降息的可能性與解鎖條件
 # ---------------------------------------------------------------------------
-def take(sc, fom=FOM):
-    return brief._takeaway(sc, fom)
+def take(sc, fom=FOM, inf=None):
+    return brief._takeaway(sc, fom, inf)
 
 
-check("㉙ 偏鷹 → 降息還遠＋解鎖條件",
-      all(k in take(S()) for k in ("降息還遠", "通膨轉「低」", "1.02")),
-      take(S()))
-check("㉚ 偏鷹＋升息反對票 → 提升息風險",
-      "升息風險未消" in take(S()), take(S()))
-check("㉛ 偏鷹但無反對票 → 不硬掰升息風險",
-      "升息風險" not in take(S(), {**FOM, "vote": {"dissents": []}}))
-check("㉜ 偏鴿 → 下一步以降息為主",
-      "下一步以降息為主" in take(S(lean="dovish")))
-check("㉝ 中性 → 按兵不動",
-      "按兵不動" in take(S(lean="neutral")))
+_INF_PACE = {"core_pace3": 0.3, "core_pace_hot": 4}
+check("㉙ 偏鷹＋通膨重心 → 問「升不升息」、講月步速",
+      all(k in take(S(), FOM, _INF_PACE)
+          for k in ("升不升息", "0.2%", "0.30", "連續 4 個月")),
+      take(S(), FOM, _INF_PACE))
+check("㉚ 偏鷹＋升息反對票 → 提委員會內的升息主張",
+      "升息主張" in take(S(), FOM, _INF_PACE))
+check("㉛ 偏鷹但無反對票 → 不硬掰升息主張",
+      "升息主張" not in take(S(), {**FOM, "vote": {"dissents": []}},
+                             _INF_PACE))
+check("㉛b 偏鷹但缺月步速 → 退回一般句（升息風險＋條件）",
+      take(S()).startswith("重點：政策風險偏向升息"), take(S()))
+check("㉜ 偏鴿 → 問的是降息時點",
+      "降息時點" in take(S(lean="dovish")))
+check("㉝ 中性＋月步速 → 按兵不動、由通膨表態",
+      all(k in take(S(lean="neutral"), FOM, _INF_PACE)
+          for k in ("按兵不動", "通膨表態", "0.30")),
+      take(S(lean="neutral"), FOM, _INF_PACE))
 check("㉞ 條件已達成要講出來",
-      "已經達成" in take(S(triggers=[T("通膨轉「低」", "", met=True)])),
-      take(S(triggers=[T("通膨轉「低」", "", met=True)])))
+      "已經達成" in take(S(lean="dovish",
+                           triggers=[T("通膨轉「低」", "", met=True)])),
+      take(S(lean="dovish", triggers=[T("通膨轉「低」", "", met=True)])))
 check("㉟ 沒有觸發條件句子照樣成立",
-      take(S(triggers=[])).startswith("重點：降息還遠"),
+      take(S(triggers=[])).startswith("重點：政策風險偏向升息"),
       take(S(triggers=[])))
-
-# 轉折詞：弱 × 高才加「另一頭」，同向不加
-c1 = brief.compose(ctxs())
-inf1 = next(p["text"] for p in c1["parts"] if p["key"] == "inflation")
-check("㊱ 弱×高 → 通膨段帶「另一頭」", inf1.startswith("另一頭"), inf1[:14])
-c2 = brief.compose(ctxs(scenario={"scenario": S(labor="強", infl="高",
-                                                lean="hawkish")}))
-inf2 = next(p["text"] for p in c2["parts"] if p["key"] == "inflation")
-check("㊲ 同向時不加轉折詞", not inf2.startswith("另一頭"), inf2[:14])
 
 
 # ---------------------------------------------------------------------------
@@ -279,8 +272,8 @@ def ctx_with(month="2026-07", lab_flags=(), inf_flags=()):
 b = brief.compose(ctx_with())
 check("㊳ 不再出現會被讀成 March 的「三月均」",
       "三月均" not in b["text"] and "三月年化" not in b["text"], b["text"][:80])
-check("㊴ 改成沒有歧義的說法",
-      "近三個月平均非農" in b["text"] and "三個月年化" in b["text"])
+check("㊴ 改成沒有歧義的說法（三月不當 March 用）",
+      "三個月年化" in b["text"] and "三月均" not in b["text"])
 check("㊵ 就業標出資料期別", "7 月失業率" in b["text"], b["text"][30:60])
 check("㊶ 通膨也標出資料期別", "7 月核心 PCE" in b["text"])
 check("㊷ 會議日期跟資料期別分得開",

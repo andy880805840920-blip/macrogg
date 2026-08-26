@@ -262,6 +262,12 @@ class Scenario:
 # 分數與旗標淨值的舊門檻。只在拿不到 FOMC 長期失業率時才用得到——
 # 這兩個數字是這個專案自己選的，沒有外部依據，用到時畫面上會標示。
 FALLBACK_SCORE, FALLBACK_NET = 0.45, 3
+# 就業「溫和惡化」門檻：Sahm 同款算式（失業率三月均較近一年低點的
+# 回升幅度），但 0.20 不是外部標準——0.50 才是原論文的衰退門檻，
+# 0.20 只是「開始惡化」的水位，屬本站判斷，畫面上會標示。
+# 它取代了損益兩平就業增速（已整組移除）：損益兩平要靠人口與移民
+# 假設去「預測」失業率會不會升，這條直接量「有沒有在升」。
+MILD_SAHM = 0.20
 
 
 def classify_labor(score: float | None, tilt: dict | None,
@@ -332,9 +338,9 @@ def classify_labor(score: float | None, tilt: dict | None,
 
 
 def classify_labor_momentum(lab: dict | None) -> str:
-    """方向與格位分開：非農低於損益兩平代表轉弱，不直接移動格位。"""
+    """方向與格位分開：失業率開始回升代表轉弱，不直接移動格位。"""
     lab = lab or {}
-    if lab.get("sahm_triggered") or lab.get("below_breakeven"):
+    if lab.get("sahm_triggered") or lab.get("u3_rising"):
         return "轉弱"
     tilt = (lab.get("tilt") or {}).get("tilt")
     if tilt == "hawkish" and lab.get("nfp_3m") is not None:
@@ -343,22 +349,23 @@ def classify_labor_momentum(lab: dict | None) -> str:
 
 
 def classify_inflation_momentum(infl: dict | None) -> str:
-    """核心 PCE、核心 CPI、核心 PPI 至少兩者同向才確認升溫或降溫。"""
-    infl = infl or {}
-    pairs = [
-        (infl.get("core_pce_3m"), infl.get("core_pce_yoy")),
-        (infl.get("core_cpi_3m"), infl.get("core_cpi_yoy")),
-        (infl.get("core_ppi_3m"), infl.get("core_ppi_yoy")),
-    ]
-    votes = []
-    for short, long in pairs:
-        if short is None or long is None:
-            continue
-        votes.append(1 if short > long + 0.2 else (-1 if short < long - 0.2 else 0))
-    score = sum(votes)
-    if len(votes) >= 2 and score >= 2:
+    """
+    月步速判定（0.2 準則，使用者指定）：核心 CPI 近三個月平均月增
+    ≤0.2%＝降溫（符合 2% 目標換算的月步速）、≥0.3%＝升溫（年化 3.6%，
+    明顯過快）、之間＝持平。門檻推導見 inflation.PACE_TARGET 的說明。
+
+    取捨要記錄：先前是 PCE／CPI／PPI 三對「短期 vs 年增」的 2/3 投票
+    ——廣度確認換來了穩健，但讀者對不上市場語言。改成單一指標的月步速
+    後，穩健性靠三個月平均（單月雜訊已平滑）與 0.2–0.3 的緩衝帶承擔；
+    判定用**未捨入**的平均值，避免在單一門檻上月月翻面。
+    """
+    from .inflation import PACE_TARGET, PACE_HOT
+    pace = (infl or {}).get("core_cpi_pace3")
+    if pace is None:
+        return "持平"
+    if pace >= PACE_HOT:
         return "升溫"
-    if len(votes) >= 2 and score <= -2:
+    if pace <= PACE_TARGET:
         return "降溫"
     return "持平"
 
@@ -472,14 +479,6 @@ def synthesise(labor: dict | None, inflation: dict | None,
             "以上）把它推過去的：那條規則量的是惡化的速度，不是水準。"
             if _u is not None and _lo is not None else
             "就業格位由 Sahm 法則觸發定案。")
-    elif l_basis == "breakeven":
-        sc.labor_basis_note = (
-            f"就業格位往「弱」推了一格。失業率 {_u:.1f}% 還在 FOMC 長期判斷的 "
-            f"{_lo:.1f}–{_hi:.1f}% 之內（水準上不算弱），但三個月平均非農"
-            "低於損益兩平就業增速——也就是就業增加的速度已經撐不住目前的"
-            "失業率。損益兩平是由人口成長推導出來的，不是選的門檻。"
-            if _u is not None and _lo is not None else
-            "就業格位因非農低於損益兩平而往「弱」推一格。")
     elif l_basis == "fallback":
         _net = (_lab.get("tilt") or {}).get("net", 0)
         _sc = _lab.get("score")
@@ -545,8 +544,8 @@ def axis_drift(labor: dict | None, inflation: dict | None) -> dict:
     l = None
     if lab.get("sahm_triggered"):
         l = ("weaker", "Sahm 法則已觸發")
-    elif lab.get("below_breakeven"):
-        l = ("weaker", "非農三月均低於損益兩平")
+    elif lab.get("u3_rising"):
+        l = ("weaker", "失業率已較近一年低點回升逾 0.2 個百分點")
     else:
         _t = (lab.get("tilt") or {}).get("tilt")
         if _t == "dovish":

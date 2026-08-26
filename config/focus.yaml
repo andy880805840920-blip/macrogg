@@ -38,9 +38,9 @@ fomc_dates:
 # atlanta_json_path: []
 
 # 焦點段的中文字數上限（AI 的輸出超過會被擋下、退回列標題）。
-# 120 只夠把標題換句話說；要塞得下「內文才有的細節」（金額、時間點、
-# 引述），至少要 160 上下。
-max_chars: 160
+# 現在是「讀完全部命中文章後重新論述」的 2–3 段報導，400 字上下；
+# 要回到短摘要就調小這裡。
+max_chars: 400
 
 keywords:
   - 川普 聯準會
@@ -51,6 +51,13 @@ keywords:
   - 美債 殖利率
   - 債券市場
   - 美伊
+  # 英文組（FT／WSJ 的 feed 是英文標題；比對不分大小寫）
+  - Fed rate
+  - Treasury yields
+  - Bessent
+  - FOMC
+  - Powell Warsh
+  - bond market
 
 # 排除關鍵字：標題命中任一個就整條剔除。
 # 擋的是正向關鍵字擋不掉的內容——**真的含關鍵字、但不是總經新聞**。
@@ -78,3 +85,9 @@ feeds:
 # 全部沒命中時退回不過濾，寧可來源雜一點也不讓整段消失。
 sources:
   - yahoo
+  - reuters
+  - bloomberg
+  - wsj
+  - wall street journal
+  - financial times
+  - ft

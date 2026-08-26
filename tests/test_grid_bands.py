@@ -137,7 +137,7 @@ check("㉕ 沒有 tilt 不會爆", _mismatch_note("通膨", "高", None, None, "
 def lab(u=4.1, lo=4.0, hi=4.3, sahm=0.13, under=False, score=-0.35, net=-4):
     return {"unrate": u, "u_lo": lo, "u_hi": hi,
             "sahm": sahm, "sahm_triggered": sahm >= 0.50,
-            "below_breakeven": under,
+            "u3_rising": under or sahm >= 0.20,
             "score": score, "tilt": {"net": net}}
 
 

@@ -347,15 +347,14 @@ def _why_axes(w: dict, nc: dict | None = None) -> str:
         basis_txt = {
             "level": "由<b>水準</b>定案：失業率相對 FOMC 的長期失業率判斷。",
             "sahm": "由 <b>Sahm 法則</b>定案（門檻出自原始論文，不是本站選的）。",
-            "breakeven": "水準上不算弱，但<b>三月均非農低於損益兩平</b>——"
-                         "就業增速撐不住目前的失業率，往「弱」推一格。",
             "fallback": "⚠️ 沒有取得 FOMC 的長期失業率預測，改用後備規則。",
         }.get(lab.get("basis"), "")
         blocks.append(
             _axis_head("就業", lab["state"], lab.get("lead", "")) + rows
             + '<div class="wx-src" style="margin-top:8px">' + basis_txt + '</div>'
             + '<div class="wx-src">門檻出處：FOMC 長期失業率（SEP 中央趨勢）'
-              '　·　Sahm 0.50（原論文）　·　損益兩平（人口成長推導）</div>'
+              '　·　Sahm 0.50（原論文）　·　溫和惡化 0.20（本站門檻，'
+              'Sahm 同款算式）</div>'
             + _mismatch_note("就業", lab["state"], lab.get("tilt"),
                              lab.get("net"), "失業率離充分就業多遠")
             + "</div></details>")
