@@ -85,6 +85,12 @@ feeds:
   #（曾因只列三條 Yahoo 而讓 FT／WSJ 靜默失效）。
   - https://www.ft.com/rss/home
   - https://feeds.a.dj.com/rss/RSSMarketsMain.xml
+  # 路透與彭博沒有公開 RSS（路透 2020 年關閉、彭博從未開放），
+  # 改走 Google News 的搜尋型 feed 限定來源＋主題。預期是**標題級**
+  # 貢獻（彭博硬付費牆、路透偶爾放行）；兩家的通訊社稿全文本來就經
+  # Yahoo 轉載進來，這兩條補的是原始出處的標題視角與來源多樣性。
+  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
 # 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
 # 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。

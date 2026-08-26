@@ -30,7 +30,8 @@ GitHub repo → Settings → Secrets → 新增下列**其中一把**金鑰：
     GEMINI_API_KEY      Google AI Studio 的金鑰（有免費額度），用 Gemini
     ANTHROPIC_API_KEY   Anthropic 的金鑰，用 Claude Haiku
 
-兩把都設時優先用 Gemini（免費）。沒設就永遠走組裝版，什麼都不會壞。
+兩把都設時優先用 Anthropic（付費額度、限流餘裕大），Gemini 當備援。
+沒設就永遠走組裝版，什麼都不會壞。
 模型可用環境變數 `BRIEF_MODEL` 覆寫。事實沒變不重新生成，
 所以就算用付費金鑰，一個月的費用也以分計。
 
@@ -63,22 +64,19 @@ TIMEOUT = 45
 # 什麼無關，過幾秒再送一次多半就成功了。不重試等於讓一次幾秒的伺服器抖動
 # 決定首頁那一段的樣子。
 #
-# 只重試這幾個狀態碼：
-#   429  被限流（免費額度的尖峰時段很常見）
-#   500 / 502 / 503 / 504  伺服器端的暫時故障
-# 其餘一律不重試——400／401／403／404 再送幾次都是同樣的結果，
-# 只是白花額度。
-RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
+# 只重試 500／502／503／504（伺服器端的暫時故障）。
+# 400／401／403／404 再送幾次都是同樣的結果，只是白花額度。
+# ⚠️ 429 也刻意**不在**重試名單裡：限流是額度問題，同一顆模型幾秒後
+# 再撞必然還是 429——正確的動作是立刻讓路（焦點段的鏈會換下一顆模型、
+# 跨供應商會換另一家），不是原地等。先前 Gemini 當主力時這裡有一組
+# 35／70 秒的 429 專屬退避，一次失敗最多乾等近兩分鐘；Anthropic 接主力
+# 後 Gemini 只是備援，備援的美德是快速讓路。
+RETRY_STATUS = frozenset({500, 502, 503, 504})
 MAX_TRIES = 3
 # 退避秒數。刻意短：這是每天跑一次的排程，不值得為了一段選配的敘述
 # 卡住整個 workflow；三次試完還是不行就用組裝版，明天再說。
 BACKOFF = (3, 9)
-# 429 另外給一組長的：免費層的限流以「每分鐘」計，3 秒後重試必然
-# 再撞同一堵牆（Actions 上實際發生過：兩次重試全吃 429 然後放棄）。
-# 一次執行最多三個 Gemini 呼叫（潤稿、焦點段、FedWatch）擠在同一分鐘，
-# 多等半分鐘錯開窗口，比直接放棄划算。
-BACKOFF_429 = (35, 70)
-# 429 會帶 Retry-After。照它給的等，但設上限——伺服器偶爾會回幾百秒，
+# Retry-After 照伺服器給的等，但設上限——偶爾會回幾百秒，
 # 那已經超過「值得為這一段等」的範圍了。
 RETRY_AFTER_MAX = 90
 
@@ -653,10 +651,8 @@ def _http(method: str, url: str, *, label: str, **kw):
             resp, last_exc = None, e
         if attempt == MAX_TRIES - 1:
             break
-        _sched = (BACKOFF_429 if resp is not None and resp.status_code == 429
-                  else BACKOFF)
         wait = (_retry_after(resp) if resp is not None else 0.0) \
-            or _sched[min(attempt, len(_sched) - 1)]
+            or BACKOFF[min(attempt, len(BACKOFF) - 1)]
         why = (f"HTTP {resp.status_code}" if resp is not None else last_exc)
         log.warning("%s 暫時失敗（%s），%.0f 秒後重試（第 %d／%d 次）",
                     label, why, wait, attempt + 2, MAX_TRIES)

@@ -476,7 +476,10 @@ _FEED_LABEL = (("tw.news.yahoo", "Yahoo奇摩新聞"),
                ("finance.yahoo", "Yahoo Finance"),
                ("ft.com", "Financial Times"),
                ("dj.com", "Wall Street Journal"),
-               ("dowjones", "Wall Street Journal"))
+               ("dowjones", "Wall Street Journal"),
+               # Google News 搜尋型 feed：網址裡的 site: 限定就是來源
+               ("reuters", "Reuters"),
+               ("bloomberg", "Bloomberg"))
 
 
 def _feed_label(url: str) -> str:
@@ -703,10 +706,18 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     if not g_key and not a_key:
         return "", "沒有 AI 金鑰"
     errs = []
+    if not a_key and g_key:
+        # 主力缺席要說話：沒設 ANTHROPIC_API_KEY（或 Secret 名字打錯，
+        # Actions 會傳**空字串**進來）時，看起來就像「沒有優先用
+        # Anthropic」——其實是根本沒有它的金鑰。
+        log.warning("市場焦點：未設 ANTHROPIC_API_KEY（主力），"
+                    "本次直接走 Gemini 備援")
     if a_key:
         try:
             out = _post_anthropic(a_key, PROVIDERS["anthropic"]["model"],
                                   src_text, system=system, temperature=0.3)
+            log.info("市場焦點：Anthropic（%s）產出",
+                     PROVIDERS["anthropic"]["model"])
             return (out or "").strip(), ""
         except Exception as e:                     # noqa: BLE001
             errs.append(f"Anthropic：{e}")
@@ -717,6 +728,7 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
         model = (env.get("BRIEF_MODEL") or "").strip() or "gemini-flash-latest"
         try:
             out = _post_gemini_hardy(g_key, model, src_text, system)
+            log.info("市場焦點：Gemini（%s）產出", model)
             return (out or "").strip(), ""
         except Exception as e:                     # noqa: BLE001
             errs.append(f"Gemini：{e}")
