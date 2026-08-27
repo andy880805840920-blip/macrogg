@@ -1491,11 +1491,16 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .fs-pick{position:relative;display:inline-block;margin-left:10px;
   font-weight:400;vertical-align:1px}
-.fs-pick>summary{cursor:pointer;font-size:11.5px;color:var(--muted);
-  border:1px solid var(--border);border-radius:4px;padding:2px 9px;
-  list-style:none;display:inline-block;user-select:none}
+/* 熱區與外觀拆開：summary 本體是透明熱區（手機撐到 44px 過觸控稽核），
+   看得見的小按鈕畫在內層 .fs-pick-btn——先前把 summary 整顆撐高，
+   邊框方塊比標題還高一截，上下框線像懸浮的怪線（使用者回報過）。 */
+.fs-pick>summary{cursor:pointer;list-style:none;display:inline-flex;
+  align-items:center;user-select:none;padding:0;border:0;background:none}
 .fs-pick>summary::-webkit-details-marker{display:none}
-.fs-pick[open]>summary{color:var(--text-primary);
+.fs-pick-btn{font-size:11.5px;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:2px 9px;
+  display:inline-block;line-height:1.5}
+.fs-pick[open] .fs-pick-btn{color:var(--text-primary);
   border-color:var(--text-primary)}
 .fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
   background:var(--surface-1);border:1px solid var(--border);
@@ -1511,9 +1516,8 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
 @media(max-width:759px){
   .fs-pick{position:static}
-  /* 手機的觸控目標：按鈕本體拉到 44px 高（稽核的下限），視覺大小不變 */
-  .fs-pick>summary{display:inline-flex;align-items:center;min-height:44px;
-    box-sizing:border-box;padding:2px 12px}
+  /* 手機的觸控目標：熱區（summary）拉到 44px，外觀（.fs-pick-btn）不變 */
+  .fs-pick>summary{min-height:44px;box-sizing:border-box}
   .fs-pick-panel{position:static;margin-top:8px;width:100%;min-width:0;
     box-shadow:none}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
@@ -1539,7 +1543,8 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-body{margin:12px 0 0;max-width:47em;background:var(--surface-2);
   border-radius:9px;padding:11px 13px}
 .fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
-  margin:0}
+  margin:0;
+  text-align:justify}
 .fs-body .fs-text+.fs-text{margin-top:9px}
 .fs-link{padding:4px 0}
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
@@ -1790,7 +1795,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1><a class="h1-home" href="/">長端與債務</a></h1>
   
-  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-26　·　更新於 2026-08-27 09:30（台北）</div>
+  <div class="sub">Rates & Debt Supply　·　資料截止 2026-08-26　·　更新於 2026-08-27 10:07（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/" class="on">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
