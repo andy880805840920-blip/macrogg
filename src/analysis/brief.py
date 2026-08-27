@@ -128,6 +128,12 @@ _COVERED = {
     "above_target", "at_target", "below_target",
     "cpi_reheating", "cpi_cooling",
     "supercore_hot", "supercore_cool", "supercore_reaccel",
+    # 月步速訊號：重點句（_takeaway）已經在講 0.2 準則，組裝版再挑
+    # 這幾條就是同一件事同段講兩次
+    "pace_hot", "pace_above", "pace_ontrack",
+    # 失業率回升／Sahm 家族：勞動手寫句已涵蓋（「惡化已經開始」
+    # ／「快速轉弱」），挑了必重複
+    "u3_rising", "sahm_trigger", "sahm_approaching",
 }
 
 
@@ -556,8 +562,10 @@ log = _logging.getLogger(__name__)
 _GEN_PROMPT_VERSION = "g1"
 _GEN_LABELS = ("勞動市場", "通膨", "聯準會")
 _GEN_SYSTEM = (
-    "你是總經分析師。輸入是三個模組由固定規則算出的判定與關鍵數字。"
-    "把它們改寫成三則易讀的重點。格式硬性規定：恰好輸出三行，"
+    "你是總經分析師。輸入是三個模組由固定規則算出的判定與關鍵訊號。"
+    "把它們改寫成三則易讀的重點：**勞動市場與通膨兩則以各自的"
+    "「關鍵訊號」為敘事主體**（訊號已按重要度排序，前面的優先），"
+    "格位與數字用來佐證、不逐項羅列。格式硬性規定：恰好輸出三行，"
     "分別以「勞動市場：」「通膨：」「聯準會：」開頭，每行一到兩句、"
     "40 到 80 個中文字；最後另起一行輸出「方向：」加上輸入標明的政策傾向"
     "（利升息／利降息／中性，照抄輸入，不得自行改判）。內容規則："
@@ -568,8 +576,24 @@ _LEAN_ZH = {"hawkish": "利升息", "dovish": "利降息",
             "neutral": "中性", "balanced": "中性"}
 
 
+def _n2(v):
+    """
+    判定包專用的數字格式：**最多小數點後兩位**，尾端多餘的零去掉
+    （3.10→3.1、3.00→3）。判定包給模型讀的是「判定結果」，不是計算
+    中間值的全精度——先前直接內插原始浮點數（3.0483870967…），
+    配上「數字原樣照抄」的規定，模型就忠實地把整串尾巴搬上畫面。
+    """
+    if v is None:
+        return "—"
+    try:
+        return f"{round(float(v), 2):g}"
+    except (TypeError, ValueError):
+        return str(v)
+
+
 def judgment_pack(ctxs: dict) -> dict | None:
-    """把三模組的規則判定整理成給模型讀的文字包。缺情境回 None。"""
+    """把三模組的規則判定整理成給模型讀的文字包。缺情境回 None。
+    所有數值經 _n2 收斂到兩位小數——模型只能照抄乾淨的數字。"""
     scn = ctxs.get("scenario") or {}
     sc = scn.get("scenario")
     if sc is None:
@@ -579,30 +603,30 @@ def judgment_pack(ctxs: dict) -> dict | None:
              f"{_LEAN_ZH.get(getattr(sc, 'lean', ''), '中性')}",
              f"情境：{getattr(sc, 'name', '')}"]
 
-    def _flags(ctx, n=2):
+    def _flags(ctx, n=3):
+        """嚴重度排序的前 n 條訊號 headline（規則引擎已寫好的白話結論）。"""
         fs = (ctx or {}).get("flags") or []
         return "；".join(f.headline for f in fs[:n])
 
+    # 勞動與通膨兩段**以關鍵訊號為主體**：headline 是規則引擎按分級
+    # 標準（重要／留意／參考）排好的白話結論，格位只當狀態標籤。
+    # 具體數字由訊號承載——格位行不再帶括號數字，同一件事在包裡
+    # 出現兩次，模型就會寫兩次（實際發生過）。
     ax = (lab or {}).get("axis") or {}
     if lab:
         lines.append(
             "【勞動市場】格位："
-            + f"{getattr(sc, 'labor_state', '—')}（失業率 {ax.get('unrate')}%，"
-            + f"FOMC 長期區間 {ax.get('u_lo')}–{ax.get('u_hi')}%）；"
-            + f"動能：{getattr(sc, 'labor_momentum', '—')}"
-            + f"（失業率較近一年低點回升 {ax.get('sahm')} 個百分點）；"
-            + f"近三個月平均非農 {round((ax.get('nfp_3m') or 0) / 10, 1)} 萬人；"
-            + f"本期訊號：{_flags(lab) or '無'}")
+            + f"{getattr(sc, 'labor_state', '—')}"
+            + f"（失業率 {_n2(ax.get('unrate'))}%）；"
+            + f"動能：{getattr(sc, 'labor_momentum', '—')}；"
+            + f"關鍵訊號：{_flags(lab) or '無'}")
     if inf:
         s = inf.get("summary")
         lines.append(
             "【通膨】格位："
             + f"{getattr(sc, 'infl_state', '—')}（核心 PCE 年增 "
-            + f"{getattr(s, 'pce_core_yoy', None)}%）；"
-            + f"核心 CPI 月步速：近三月平均 {inf.get('core_pace3')}%"
-            + f"（目標步速 0.2%，已連續 {inf.get('core_pace_hot') or 0} 個月高於）；"
-            + f"核心 CPI 年增 {getattr(s, 'core_yoy', None)}%；"
-            + f"本期訊號：{_flags(inf) or '無'}")
+            + f"{_n2(getattr(s, 'pce_core_yoy', None))}%）；"
+            + f"關鍵訊號：{_flags(inf) or '無'}")
     if fom and not fom.get("empty"):
         _sh = (fom.get("shift") or {}).get("direction") or "—"
         _fl = ((fom.get("focus")) or {}).get("label", "")

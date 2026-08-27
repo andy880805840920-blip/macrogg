@@ -630,7 +630,11 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         site.SITE_NAME, "/", home_page.home_body(ctxs),
         # 三地時間：讀者看台北，數據的主場在紐約、歐洲盤在倫敦——
         # 夏令規則在 clock.py 裡自算，不依賴 tzdata
-        subtitle=f"最後更新 {clock.world_stamp()}",
+        # 手機一行的配套：時間戳包在 .ws（手機縮字級），前綴「最後更新」
+        # 在窄幅改顯示短版「更新」——內容不變、只是省下三個漢字寬。
+        subtitle=('<span class="ws"><span class="ws-long">最後更新</span>'
+                  '<span class="ws-short">更新</span> '
+                  f'{clock.world_stamp()}</span>'),
         footer=home_page.home_footer(ctxs),
         banner=_banner(None)))
 

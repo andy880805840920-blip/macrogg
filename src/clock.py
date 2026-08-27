@@ -104,21 +104,26 @@ def london_offset(t_utc: dt.datetime) -> int:
 
 def world_stamp(t_utc: dt.datetime | None = None) -> str:
     """
-    三地時間戳：`2026-08-22 01:44（台北）　·　08-21 13:44（紐約）　·
-    08-21 18:44（倫敦）`。
+    三地時間戳（精簡版）：`08-27 01:44 台北｜08-26 13:44 紐約｜
+    08-26 18:44 倫敦`。
 
+    格式刻意瘦：年份不帶（「最後更新」要傳達的是新鮮度，存檔頁才需要
+    完整日期）、城市名不加括號、分隔用「｜」——手機 390px 要一行放得下，
+    全配版四十多個字元必然折成兩行（實際被嫌過）。
     紐約／倫敦的日期跟台北不同天時（台北清晨對美國是前一天下午）
-    才標月-日，同一天只標時分——三組完整日期排在一起反而難掃。
+    才標月-日，同一天只標時分——三組日期排在一起反而難掃。
     `t_utc` 參數是給測試用的（固定時刻驗算夏令切換）。
     """
     t = t_utc or now().astimezone(dt.timezone.utc)
     tpe = t.astimezone(TAIPEI)
-    parts = [tpe.strftime("%Y-%m-%d %H:%M") + TZ_LABEL]
+    parts = [tpe.strftime("%m-%d %H:%M") + " 台北"]
     for label, off in (("紐約", ny_offset(t)), ("倫敦", london_offset(t))):
         loc = t + dt.timedelta(hours=off)
         fmt = "%H:%M" if loc.date() == tpe.date() else "%m-%d %H:%M"
-        parts.append(loc.strftime(fmt) + f"（{label}）")
-    return "　·　".join(parts)
+        parts.append(loc.strftime(fmt) + f" {label}")
+    # 分隔用半形中點：全形「｜」一顆就佔一個漢字寬，手機 390px 實測
+    # 就差那十幾個像素折行——分隔符是裝飾，不值得一個漢字的寬度。
+    return "·".join(parts)
 
 
 def iso() -> str:

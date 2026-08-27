@@ -295,10 +295,17 @@ def _pct_chip(cid, label, rows):
 
 def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
     """即時報價 chip（油價、VIX、MOVE）：Yahoo 主、FRED 後備。
-    _pre 是呼叫端並行預抓的結果（避免逐顆串行等逾時）。"""
+    _pre 是呼叫端並行預抓的結果（避免逐顆串行等逾時）。
+    日期新者勝：報價日不比 FRED 後備新（stale 成交）就退後備。"""
     if not offline:
         q = _pre if _pre is not None else fetch_yahoo_quote(
             spec["sym"], spec["lo"], spec["hi"], _get=_get)
+        _, _, _fd = _last2((liq or {}).get(spec["fred"])
+                           if spec.get("fred") else None)
+        if q and _fd and str(q.get("date") or "") <= _fd:
+            log.info("即時報價 %s 報價日 %s 不比 FRED %s 新，退後備",
+                     spec["sym"], q.get("date"), _fd)
+            q = None
         if q:
             dv = q["value"] - q["prev"]
             cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
@@ -348,12 +355,22 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
         fc = fresh.get(label)
         if fc is None and live_sym and not offline:
             fc = _live_t.get(cid)
-            fred_last, _, _ = _last2(rs.get(sid))
+            fred_last, _, fred_date = _last2(rs.get(sid))
             if (fc and fred_last is not None
                     and abs(fc["value"] - fred_last) > LIVE_JUMP_CAP):
                 log.warning("殖利率即時 %s（%s）%.2f 與 FRED 收盤 %.2f 差逾 "
                             "%.2f 個百分點，不採用退收盤", live_sym, label,
                             fc["value"], fred_last, LIVE_JUMP_CAP)
+                fc = None
+            # 日期新者勝：微型合約（2YY=F）成交稀疏，Yahoo 的「最新價」
+            # 可能是六週前的最後一筆成交（實例：2Y 顯示 7/15）——
+            # 即時報價必須**晚於** FRED 最後收盤日才有資格上場，
+            # 否則收盤反而比較新。跟 10Y/30Y 升級層同一條規則。
+            if (fc and fred_date
+                    and str(fc.get("date") or "") <= fred_date):
+                log.info("殖利率即時 %s（%s）報價日 %s 不比 FRED 收盤 %s 新"
+                         "（合約成交稀疏），退回收盤", live_sym, label,
+                         fc.get("date"), fred_date)
                 fc = None
         if fc:
             db = fc.get("delta_bp")

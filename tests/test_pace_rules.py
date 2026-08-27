@@ -71,6 +71,52 @@ check("⑥c 都沒有＋訊號偏強 → 轉強",
 check("⑥d 溫和門檻常數存在且低於 Sahm 觸發",
       0 < scn.MILD_SAHM < 0.50)
 
+# ⑦ 軸心級訊號：失業率回升階梯（rules.r_sahm）與月步速訊號（r_pace）
+from types import SimpleNamespace as NS
+from src.analysis import rules as R                       # noqa: E402
+from src.analysis import rules_inflation as RI            # noqa: E402
+
+
+def sahm_flag(v):
+    ctx = R.RuleContext(lights=[NS(key="sahm", value=v)])
+    return R.RULES[0](ctx)                                # r_sahm 註冊在第 0 位
+
+
+check("⑦ 0.25 → u3_rising（留意）、數字＝紅綠燈值",
+      (lambda f: f is not None and f.key == "u3_rising"
+       and f.severity == "watch" and "0.25" in f.headline)(sahm_flag(0.25)))
+check("⑦b 0.32 → 接近門檻（原有階梯不變）",
+      sahm_flag(0.32).key == "sahm_approaching")
+check("⑦c 0.55 → 觸發（alert）", sahm_flag(0.55).severity == "alert")
+check("⑦d 0.15 → 未達本站門檻，無訊號", sahm_flag(0.15) is None)
+check("⑦e 軸心規則註冊在最前（同級排序才會排第一）",
+      R.RULES[0].__name__ == "r_sahm"
+      and RI.RULES[0].__name__ == "r_pace")
+
+
+def pace_flag(vals):
+    ctx = NS(series={"CPILFESL": idx(vals)}, s=None, att=None, lights=[])
+    return RI.RULES[0](ctx)
+
+
+# 連 6 個月 +0.3% → pace_hot（重要）
+check("⑦f 連 6 個月以上超標 → 重要級（8 期資料＝連 7 個月）",
+      (lambda f: f is not None and f.key == "pace_hot"
+       and f.severity == "alert" and "7 個月" in f.headline)(
+          pace_flag([100 * 1.003 ** i for i in range(8)])))
+# 連 3 個月 +0.3%（之前守著）→ pace_above（留意）
+check("⑦g 連 3 個月超標 → 留意級",
+      (lambda f: f is not None and f.key == "pace_above"
+       and f.severity == "watch")(
+          pace_flag([100.0, 100.1, 100.2, 100.3,
+                     100.6, 100.9, 101.2])))
+# 連 3 個月守住 ≤0.2 → 降溫參考訊號
+check("⑦h 連 3 個月守住 → 參考級降溫訊號",
+      (lambda f: f is not None and f.key == "pace_ontrack"
+       and f.severity == "info")(
+          pace_flag([100.0, 100.5, 100.65, 100.8, 100.95])))
+check("⑦i 資料不足 → 無訊號", pace_flag([100.0, 100.2]) is None)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

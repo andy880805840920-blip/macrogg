@@ -13,6 +13,15 @@
   * detail 補上數字，並解釋這個數字為什麼重要
   * impact 直接講對利率的意義（利升息／利降息），不要讓讀者自己推
 專有名詞若非用不可，就在同一句話裡解釋掉。
+
+嚴重度分級標準（新規則照這個寫，不要憑語感）
+--------------------------------------------
+嚴重度回答的是「**這對現在的判定多重要**」，不是「這個詞聽起來多可怕」：
+  alert（重要） 已經改變、或正在改變九宮格判定的事實
+  watch（留意） 朝門檻移動，持續下去會改變判定
+  info （參考） 幫助理解的脈絡，不影響判定
+同級之內的顯示順序＝規則的註冊順序，所以**軸心級的規則要排在最前面**
+（先前「本期最重要的事沉在參考級」正是靜態分級＋註冊順序造成的）。
 """
 
 from __future__ import annotations
@@ -21,6 +30,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from .core import value_at
+from .scenario import MILD_SAHM
 from .. import fmt
 
 
@@ -51,6 +61,46 @@ RULES: list[Callable[[RuleContext], Flag | None]] = []
 def rule(fn):
     RULES.append(fn)
     return fn
+
+
+# ---------------------------------------------------------------------------
+# 0. 衰退警訊（軸心級：註冊在最前，同級排序才會排第一）
+# ---------------------------------------------------------------------------
+@rule
+def r_sahm(ctx: RuleContext) -> Flag | None:
+    for lt in ctx.lights:
+        if lt.key == "sahm" and lt.value is not None:
+            if lt.value >= 0.50:
+                return Flag(
+                    "sahm_trigger", "alert", "Sahm 法則已觸發衰退門檻",
+                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
+                    f"目前 +{lt.value:.2f}，超過 0.50 的門檻。"
+                    "歷史上每次超過這個門檻，美國都已經進入衰退。",
+                    "dovish", "歷史上每次觸發都對應到衰退",
+                )
+            if lt.value >= 0.30:
+                return Flag(
+                    "sahm_approaching", "watch", "Sahm 法則接近觸發門檻",
+                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
+                    f"目前 +{lt.value:.2f}，距離 0.50 的警戒門檻還有 {0.50-lt.value:.2f}。"
+                    "歷史上超過門檻時，美國都已經進入衰退。",
+                    "dovish", "尚未觸發，但方向偏弱",
+                )
+            # 0.20–0.30：溫和回升。九宮格的就業動能正是用這個門檻
+            # （MILD_SAHM，本站門檻）判成「轉弱」——判定已經被它改變，
+            # 訊號清單卻一直沒有這件事，本期最重要的故事反而缺席。
+            # 數字直接讀同一顆紅綠燈的值，跟軸判定**必然**一致。
+            if lt.value >= MILD_SAHM:
+                return Flag(
+                    "u3_rising", "watch",
+                    f"失業率已較近一年低點回升 {lt.value:.2f} 個百分點",
+                    f"失業率的近三個月平均比過去一年的最低點高 {lt.value:.2f} "
+                    f"個百分點（本站門檻 {MILD_SAHM:.2f}）。幅度尚溫和"
+                    f"（Sahm 衰退門檻是 0.50），但方向已經轉向——"
+                    "九宮格的就業動能因此判為轉弱。",
+                    "dovish", "就業動能的惡化已經開始",
+                )
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -389,32 +439,6 @@ def r_wage_composition(ctx: RuleContext) -> Flag | None:
         lean="hawkish",
         impact="薪資推動的通膨壓力比表面大",
     )
-
-
-# ---------------------------------------------------------------------------
-# 9. 衰退警訊
-# ---------------------------------------------------------------------------
-@rule
-def r_sahm(ctx: RuleContext) -> Flag | None:
-    for lt in ctx.lights:
-        if lt.key == "sahm" and lt.value is not None:
-            if lt.value >= 0.50:
-                return Flag(
-                    "sahm_trigger", "alert", "Sahm 法則已觸發衰退門檻",
-                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
-                    f"目前 +{lt.value:.2f}，超過 0.50 的門檻。"
-                    "歷史上每次超過這個門檻，美國都已經進入衰退。",
-                    "dovish", "歷史上每次觸發都對應到衰退",
-                )
-            if lt.value >= 0.30:
-                return Flag(
-                    "sahm_approaching", "watch", "Sahm 法則接近觸發門檻",
-                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
-                    f"目前 +{lt.value:.2f}，距離 0.50 的警戒門檻還有 {0.50-lt.value:.2f}。"
-                    "歷史上超過門檻時，美國都已經進入衰退。",
-                    "dovish", "尚未觸發，但方向偏弱",
-                )
-    return None
 
 
 # ---------------------------------------------------------------------------

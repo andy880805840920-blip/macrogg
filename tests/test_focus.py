@@ -799,6 +799,33 @@ check("⑰g RSS 官方摘要進 summary 欄位",
       len(_fh17) == 1 and "Officials debate" in _fh17[0].get("summary", ""),
       _fh17 and _fh17[0].get("summary", "")[:40])
 
+# ⑱ 日期新者勝：稀疏合約的舊成交不得冒充即時（2Y 顯示 7/15 的回歸）
+_RS18 = {"DGS3MO": [{"date": "2026-08-25", "value": 3.72}],
+         "DGS2": [{"date": "2026-08-24", "value": 3.83},
+                  {"date": "2026-08-25", "value": 3.84}],
+         "DGS5": [{"date": "2026-08-25", "value": 4.18}],
+         "DGS10": [{"date": "2026-08-25", "value": 4.70}],
+         "DGS30": [{"date": "2026-08-25", "value": 5.23}]}
+_TS_OLD = int(_dt.datetime(2026, 7, 15, 14, 0,
+                           tzinfo=_dt.timezone.utc).timestamp())
+_TS_NEW = int(_dt.datetime(2026, 8, 26, 14, 0,
+                           tzinfo=_dt.timezone.utc).timestamp())
+
+
+def _yg18(u):
+    if "2YY" in u:                       # 2YY=F 最後成交停在 7/15
+        return _FakeYt(3.80, 3.79, ts=_TS_OLD)
+    return _FakeYt(41.8, 41.6, ts=_TS_NEW)
+
+
+_c18 = {c["id"]: c for c in ft.build_catalog(_RS18, LIQ, [], offline=False,
+                                             _get=_yg18)}
+check("⑱ 2YY=F 舊成交（7/15）→ 退回 FRED 收盤與其日期",
+      _c18["dgs2"]["value"] == "3.84%" and _c18["dgs2"]["date"] == "08-25",
+      _c18["dgs2"])
+check("⑱b 報價日較新的天期照常採用即時",
+      _c18["dgs3mo"]["date"] == "08-26", _c18["dgs3mo"])
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
