@@ -40,10 +40,13 @@ _html = home._brief_card({"_brief": {"text": _TXT, "chars": 100,
 check("③ 三個 li ＋粗體標籤", _html.count("<li>") == 3
       and "<b>勞動市場</b>" in _html)
 check("③b 重點句獨立一行", 'class="brief-key"' in _html)
-check("③c 來源標示：AI 生成要講出驗證", "方向經驗證" in _html)
+# 來源標籤已移除（使用者指定）：卡片上不再標「AI 依規則判定生成」
+# ／「規則組裝」，誠實性由頁尾「使用說明」承擔。釘住它不再出現。
+check("③c 卡片不再帶來源標籤", "方向經驗證" not in _html
+      and "brief-src" not in _html)
 _html2 = home._brief_card({"_brief": {"text": _TXT, "chars": 100,
                                       "source": "assembled", "model": ""}})
-check("③d 組裝版標示規則組裝", "規則組裝" in _html2)
+check("③d 組裝版同樣無標籤（兩態版面一致）", "規則組裝" not in _html2)
 
 # ④ 沒有 bullet 前綴的舊格式文字仍能渲染（不會整卡消失）
 _OLD = "就業與通膨的舊式連寫散文，一整段。\n重點：按兵不動。"

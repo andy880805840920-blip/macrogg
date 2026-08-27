@@ -234,13 +234,10 @@ def _brief_card(ctxs: dict) -> str:
     rest_html = "".join(f'<p class="brief-t">{esc(x)}</p>' for x in rest)
     key_html = (f'<p class="brief-key">重點：{esc(takeaway)}</p>'
                 if takeaway else "")
-    src = {"generated": "AI 依規則判定生成｜方向經驗證、數字出自判定資料",
-           "model-cache": "AI 依規則判定生成（沿用快取）",
-           }.get(b.get("source"), "規則組裝｜數據與方向由規則鎖定")
     return f"""
 <div class="grid">
   <div class="card brief">
-    <div class="brief-k">整體情勢<span class="brief-src">{esc(src)}</span></div>
+    <div class="brief-k">整體情勢</div>
     {new_html}{body_html}{rest_html}
     {key_html}
   </div>
@@ -615,10 +612,6 @@ def _brief_content(ctxs: dict) -> str:
         return '<p class="home-brief-empty">目前沒有足夠資料產生整體情勢。</p>'
     whatsnew, bullets, rest, takeaway = _brief_pieces(text)
 
-    source = b.get("source", "assembled")
-    source_label = ("AI 依規則判定生成｜方向經驗證"
-                    if source in ("generated", "model-cache") else
-                    "規則摘要｜數據與方向由規則鎖定")
     new_html = (f'<p class="brief-new">{esc(whatsnew)}</p>' if whatsnew else "")
     body_html = ('<ul class="brief-list">'
                  + "".join(f'<li><b>{esc(lb)}</b>｜{esc(tx)}</li>'
@@ -627,7 +620,7 @@ def _brief_content(ctxs: dict) -> str:
                         for x in rest)
     key_html = (f'<p class="home-brief-key">重點：{esc(takeaway)}</p>'
                 if takeaway else "")
-    return (f'<div class="home-brief-label">整體情勢<span>{esc(source_label)}</span></div>'
+    return ('<div class="home-brief-label">整體情勢</div>'
             f'{new_html}{body_html}{rest_html}{key_html}')
 
 
@@ -957,32 +950,21 @@ def _focus_strip(f: dict | None) -> str:
                  f'<div class="f-detail">{rows}</div></details>')
     # 機率的來源標示跟著實際走的那一層：期貨自算是可驗算的規則、
     # AI 擷取只是備援——兩者的可信度不同，不能共用同一句話。
-    if fw.get("pct") is None:
-        _fw_note = ""
-    elif fw.get("src") == "futures":
-        _fw_note = "　·　機率：由聯邦基金期貨逐會議反推（WIRP 同款算法，延遲報價）"
-    elif fw.get("src") == "atlanta":
-        _fw_note = "　·　機率：亞特蘭大聯準銀行 Market Probability Tracker"
-    else:
-        _fw_note = "　·　機率：CME FedWatch，AI 擷取僅供參考"
-    # 殖利率的來源標示跟著實際來源走：Yahoo 即時（±bp 對昨收）或 FRED 昨收
-    _y_live = any(y.get("live") for y in (f.get("yields") or []))
-    _y_note = ("殖利率：Yahoo 報價（延遲約 15 分鐘），變動對前一交易日收盤"
-               if _y_live else "殖利率：FRED（前一交易日收盤）")
-    # 焦點段的來源標示分兩種：內文摘要（新版主線）與標題整理（退回）
+    # 來源列壓成一短行（先前膨脹到近三行被使用者嫌冗長）——
+    # 完整說明（WIRP 算法、延遲報價、各指標一句話解釋）住在頁尾的
+    # 「焦點條指標」收合區，這裡只留最低限度的標示與指路。
     _ts = f.get("text_source") or ""
-    if _ts == "model-content" or (_ts == "cache" and f.get("cached_mode") == "content"):
-        _t_note = "　·　焦點由 AI 綜合多篇報導改寫（非逐句摘要），只取關鍵字相關內容，數字均出自原文"
-    elif _ts in ("model", "cache"):
-        _t_note = "　·　焦點由 AI 整理自新聞標題"
-    elif _ts == "headlines":
-        _t_note = "　·　本次 AI 摘要不可用，僅列原始標題（下次執行會再試）"
+    if _ts == "headlines":
+        _t_note = "・本次 AI 摘要不可用，僅列原始標題"
+    elif _ts in ("model", "cache", "model-content"):
+        _t_note = "・焦點由 AI 綜合報導改寫"
     else:
         _t_note = ""
-    _cat_note = ("　·　流動性、油價與波動率：FRED／Yahoo（每顆 chip 的"
-                 "小字＝資料日；指標說明見頁尾）" if cat else "")
-    note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note
-            + _cat_note + _t_note)
+    _fw_note = ("・機率由期貨反推" if fw.get("src") == "futures"
+                else "・機率：官方值" if fw.get("src") == "atlanta"
+                else "")
+    note = ("資料：FRED／Yahoo（chip 小字＝資料日）" + _fw_note + _t_note
+            + "｜指標與方法說明見頁尾")
     # 標題旁不再放日期：頂部「更新」行有完整時間、每顆 chip 有各自
     # 資料日——同一個資訊第三份是冗餘（使用者指定移除）。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
@@ -1104,13 +1086,22 @@ def home_footer(ctxs: dict) -> str:
         '<div class="home-footer">'
         '<div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span>'
         f'<span>就業 {_d((lab or {}).get("data_month", "—"))}｜物價 {_d((inf or {}).get("data_month", "—"))}｜FOMC {_d((fom or {}).get("latest_date", "—"))}</span></div>'
-        '<div><b>焦點條指標</b><span>SOFR＝銀行間隔夜擔保資金的實際成交利率；'
+        '<details class="foot-fold"><summary>焦點條指標與資料來源說明</summary>'
+        '<div class="foot-fold-body">'
+        '<span>SOFR＝銀行間隔夜擔保資金的實際成交利率；'
         'SOFR−IORB＝資金價格與聯準會地板利率的距離，轉正代表準備金趨緊'
         '（2019 年 9 月回購市場事件即此訊號先爆）；ON RRP＝貨幣基金停泊在'
         '聯準會的隔夜資金，是體系多餘現金的緩衝池，接近零代表 QT 開始直接'
         '抽銀行準備金；SRF＝聯準會常備回購機制的動用量，0 是常態、'
-        '非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。'
-        '變動一律對前一個交易日收盤。</span></div>'
+        '非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。</span>'
+        '<span>來源分層：殖利率與油價／波動率以 Yahoo 即時報價為主'
+        '（延遲約 15 分鐘）、抓不到退回 FRED 收盤，每顆 chip 的小字＝'
+        '該筆資料的日期；變動一律對前一個交易日收盤，1 bp＝0.01 個百分點。'
+        '升降息機率由聯邦基金期貨逐會議反推（WIRP 同款算法，延遲報價），'
+        '與亞特蘭大聯準銀行官方值交叉檢核。焦點段由 AI 讀取多篇報導後'
+        '綜合改寫（非逐句摘要），數字均出自原文並經機械驗證；'
+        '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span>'
+        '</div></details>'
         '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'
         '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'
         '</div>')

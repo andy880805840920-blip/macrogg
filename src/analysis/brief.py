@@ -504,7 +504,6 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
     lean = getattr(sc, "lean", "") or ""
     binding = getattr(sc, "binding", "") or ""
     pace = (inf or {}).get("core_pace3")
-    hot = (inf or {}).get("core_pace_hot") or 0
     trigs = getattr(sc, "triggers", None) or []
     trig = next((x for x in trigs if getattr(x, "binding", False)), None)
     if trig is None:
@@ -522,22 +521,22 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
     cuts = sum(1 for d in dis if isinstance(d, dict)
                and d.get("direction") == "cut")
 
-    # 長度紀律（使用者的批評：太冗長）：一句主張＋一個條件就夠。
-    # 「再加速則升息機率上升」這類跟前半句同義的補述一律不寫。
+    # 長度紀律：一句主張＋一個條件就夠。**數字不在這裡複述**——
+    # 通膨 bullet 已以關鍵訊號為主體講「連 N 個月高於 0.2%（近三月
+    # X%）」，重點句再帶一次數字就是同段講兩遍（使用者抓到過）。
+    # 重點句只負責：問題框架、解鎖條件、委員會動態。
     if lean == "hawkish":
         tail = "；委員會內已有升息主張" if hikes else ""
         if binding != "就業" and pace is not None:
-            _run = (f"連 {hot} 個月高於" if hot >= 2 else "仍高於")
-            return ("重點：問題是升不升息、不是何時降息——核心 CPI 月步速"
-                    f"{_run} 0.2%（近三月 {pace:.2f}%）。"
-                    f"回到 0.2 以下壓力解除{tail}。")
+            return ("重點：問題是升不升息、不是何時降息——關鍵在通膨"
+                    f"月步速；回到 0.2% 以下壓力解除{tail}。")
         return f"重點：政策風險偏向升息{cond}{tail}。"
     if lean == "dovish":
         tail = "；委員會內已有人主張先動" if cuts else ""
         return f"重點：討論的是降息時點{cond}{tail}。"
     if pace is not None:
-        return ("重點：最可能按兵不動，下一步看通膨——月步速回到 0.2% 以下"
-                f"偏降息、再加速偏升息（近三月 {pace:.2f}%）。")
+        return ("重點：最可能按兵不動，下一步看通膨——月步速回到 0.2% "
+                "以下偏降息、再加速偏升息。")
     return f"重點：按兵不動的可能性最高{cond}。"
 
 

@@ -219,9 +219,12 @@ def take(sc, fom=FOM, inf=None):
 
 
 _INF_PACE = {"core_pace3": 0.3, "core_pace_hot": 4}
-check("㉙ 偏鷹＋通膨重心 → 問「升不升息」、講月步速",
-      all(k in take(S(), FOM, _INF_PACE)
-          for k in ("升不升息", "0.2%", "0.30", "連 4 個月")),
+# 重點句不再複述數字（通膨 bullet 以訊號為主體後，「連 N 個月／
+# 近三月 X%」由 bullet 承載，重點句只留問題框架＋解鎖條件）
+check("㉙ 偏鷹＋通膨重心 → 問「升不升息」、指向月步速但不複述數字",
+      (lambda t: "升不升息" in t and "月步速" in t and "0.2%" in t
+       and "0.30" not in t and "連 4 個月" not in t)(
+          take(S(), FOM, _INF_PACE)),
       take(S(), FOM, _INF_PACE))
 # 使用者的批評：重點句太冗長。瘦身後最長分支釘在 70 中文字以內，
 # 同義補述（「再加速則升息機率上升」）不准回來。
@@ -237,9 +240,9 @@ check("㉛b 偏鷹但缺月步速 → 退回一般句（升息風險＋條件）
       take(S()).startswith("重點：政策風險偏向升息"), take(S()))
 check("㉜ 偏鴿 → 問的是降息時點",
       "降息時點" in take(S(lean="dovish")))
-check("㉝ 中性＋月步速 → 按兵不動、下一步看通膨",
-      all(k in take(S(lean="neutral"), FOM, _INF_PACE)
-          for k in ("按兵不動", "看通膨", "0.30")),
+check("㉝ 中性＋月步速 → 按兵不動、下一步看通膨（同樣不複述數字）",
+      (lambda t: "按兵不動" in t and "看通膨" in t and "0.30" not in t)(
+          take(S(lean="neutral"), FOM, _INF_PACE)),
       take(S(lean="neutral"), FOM, _INF_PACE))
 check("㉞ 條件已達成要講出來",
       "已經達成" in take(S(lean="dovish",
