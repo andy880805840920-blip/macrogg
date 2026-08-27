@@ -1502,24 +1502,40 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   display:inline-block;line-height:1.5}
 .fs-pick[open] .fs-pick-btn{color:var(--text-primary);
   border-color:var(--text-primary)}
+/* 面板改網格：桌機三欄的寬長方形、手機兩欄近正方形——14 個選項
+   排成一條長列要滾很久（使用者嫌）。分隔線取消：網格下橫線會斷在
+   半路，行距就是分隔。 */
 .fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
   background:var(--surface-1);border:1px solid var(--border);
-  border-radius:8px;padding:4px 14px 10px;min-width:230px;
+  border-radius:8px;padding:8px 14px 10px;width:440px;
+  display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px;
   box-shadow:0 6px 24px rgba(0,0,0,.35)}
-.fs-pick-panel label{display:flex;align-items:center;gap:9px;
+.fs-pick-panel label{display:flex;align-items:center;gap:8px;
   min-height:44px;font-size:13px;color:var(--text-primary);
-  border-top:1px solid var(--grid);cursor:pointer;white-space:nowrap}
-.fs-pick-panel label:first-child{border-top:none}
+  cursor:pointer;white-space:nowrap}
 .fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
 .fs-pick-panel label:has(input:disabled){opacity:.4;cursor:default}
-.fs-pick-note{font-size:11px;color:var(--muted);margin-top:6px;
-  border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap}
+.fs-pick-note{font-size:11px;color:var(--muted);margin-top:2px;
+  border-top:1px solid var(--grid);padding-top:8px;white-space:nowrap;
+  grid-column:1/-1}
+/* 頁尾的收合說明區：預設收起只露一行，展開才見完整指標與來源說明 */
+.foot-fold>summary{cursor:pointer;list-style:none;font-weight:700;
+  color:var(--muted);font-size:12px;user-select:none;padding:4px 0}
+.foot-fold>summary::before{content:"▸ ";font-weight:400}
+.foot-fold[open]>summary::before{content:"▾ "}
+.foot-fold>summary::-webkit-details-marker{display:none}
+.foot-fold-body span{display:block;margin-top:6px;line-height:1.8}
 @media(max-width:759px){
   .fs-pick{position:static}
   /* 手機的觸控目標：熱區（summary）拉到 44px，外觀（.fs-pick-btn）不變 */
   .fs-pick>summary{min-height:44px;box-sizing:border-box}
   .fs-pick-panel{position:static;margin-top:8px;width:100%;min-width:0;
-    box-shadow:none}}
+    box-shadow:none;grid-template-columns:repeat(2,1fr);column-gap:10px}
+  /* 窄欄容不下 nowrap 的長標籤（「12 月 FOMC 升降息機率」）——
+     手機允許換行、字縮一號；備註行同理 */
+  .fs-pick-panel label{white-space:normal;font-size:12px;line-height:1.4}
+  .fs-pick-note{white-space:normal}
+  .foot-fold>summary{display:flex;align-items:center;min-height:44px}}
 /* chips 之間用細分隔線取代純留白：三顆數字各自成柱、視線好對位；
    最後一顆不畫線。手機換行時分隔線自動消失（border 在左側）。 */
 /* 固定四格網格：桌機一行四格、手機 2×2。格位天天一樣，選什麼放什麼，
@@ -1795,7 +1811,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/labor/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1><a class="h1-home" href="/">勞動市場</a></h1>
   
-  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-27 10:06（台北）</div>
+  <div class="sub">Employment Situation　·　資料月份 2026-07　·　更新於 2026-08-27 10:26（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/" class="on">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
