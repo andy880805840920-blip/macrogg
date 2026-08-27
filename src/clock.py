@@ -121,9 +121,9 @@ def world_stamp(t_utc: dt.datetime | None = None) -> str:
         loc = t + dt.timedelta(hours=off)
         fmt = "%H:%M" if loc.date() == tpe.date() else "%m-%d %H:%M"
         parts.append(loc.strftime(fmt) + f" {label}")
-    # 分隔用半形中點：全形「｜」一顆就佔一個漢字寬，手機 390px 實測
-    # 就差那十幾個像素折行——分隔符是裝飾，不值得一個漢字的寬度。
-    return "·".join(parts)
+    # 分隔用全形「｜」：視覺上比「·」清楚（使用者指定）。寬度顧慮已
+    # 解除——手機縮字＋「更新」短前綴之後，360px 實測仍是一行。
+    return "｜".join(parts)
 
 
 def iso() -> str:

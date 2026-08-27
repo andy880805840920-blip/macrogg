@@ -890,7 +890,8 @@ def _focus_strip(f: dict | None) -> str:
             f'<label><input type="checkbox" data-pick="{cid}"'
             + (" checked" if on else "") + f'>{esc(lb)}</label>'
             for cid, lb, on in opts)
-        picker = ('<details class="fs-pick"><summary>選擇</summary>'
+        picker = ('<details class="fs-pick"><summary>'
+                  '<span class="fs-pick-btn">選擇</span></summary>'
                   '<div class="fs-pick-panel">' + rows +
                   '<div class="fs-pick-note"><span class="fs-count">已選 '
                   f'{len(defaults)}／4</span>　·　選擇存在此裝置</div>'
@@ -982,10 +983,10 @@ def _focus_strip(f: dict | None) -> str:
                  "小字＝資料日；指標說明見頁尾）" if cat else "")
     note = (_y_note + "　·　1 bp＝0.01 個百分點" + _fw_note
             + _cat_note + _t_note)
-    _date = esc((f.get("generated") or "")[:10])
+    # 標題旁不再放日期：頂部「更新」行有完整時間、每顆 chip 有各自
+    # 資料日——同一個資訊第三份是冗餘（使用者指定移除）。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
             '<div class="fs-head">今日市場焦點'
-            + (f'<span class="fs-date">{_date}</span>' if _date else "")
             + picker + '</div>'
             f'<div class="fs-chips">{"".join(chips)}</div>'
             f'{text}{links}<div class="fs-note">{esc(note)}</div>'

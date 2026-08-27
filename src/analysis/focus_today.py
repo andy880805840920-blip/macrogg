@@ -852,14 +852,17 @@ def summarize_content(articles: list[dict], keywords: list[str],
                          for b in briefs))
     if not articles and not briefs:
         return "", "沒有任何材料"
+    # cap 是硬上限（沒有暗許寬限——先前 +40 讓「設 250」實際放行 290）。
+    # 提示詞要求的目標取 cap−30：模型自然寫在硬上限之內，少退件。
     text, err = _call_ai(
         src_text,
-        _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords), cap=cap),
+        _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
+                                     cap=max(120, cap - 30)),
         env)
     if err:
         return "", err
-    if not text or cjk_len(text) > cap + 40:
-        return "", f"長度不合格（{cjk_len(text)} 字）"
+    if not text or cjk_len(text) > cap:
+        return "", f"長度不合格（{cjk_len(text)} 字，上限 {cap}）"
     # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
     if not _digits_ok(text, src_text):
         return "", "輸出出現內文裡沒有的數字"

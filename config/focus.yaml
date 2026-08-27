@@ -37,10 +37,10 @@ fomc_dates:
 # atlanta_mpt_url: https://www.atlantafed.org/cenfis/market-probability-tracker
 # atlanta_json_path: []
 
-# 焦點段的中文字數上限（AI 的輸出超過會被擋下、退回列標題）。
-# 「讀完全部命中文章後重新論述」的 2–3 段報導；使用者指定 250 字內，
-# 提示詞的每段字數指引（60–110）跟著這個數字配。
-max_chars: 250
+# 焦點段的中文字數**硬上限**（cjk_len 只數中文字；超過就退回重試，
+# 不再有先前 +40 的暗許寬限——250 的設定實際放行到 290，被使用者抓到）。
+# 提示詞給模型的目標會自動取這個數字減 30，留緩衝、少退件。
+max_chars: 300
 
 keywords:
   - 川普 聯準會
