@@ -1,11 +1,11 @@
 {
- "hash": "7c3a9749efa191dd",
- "text": "美國財政部長貝森特推動的美債干預政策，正將美國財政部與聯準會置於潛在衝突之中。貝森特的舉措引發市場關注，投資人正密切觀察聯準會主席凱文·華許（Kevin Warsh）在傑克森霍爾全球央行年會上的立場。華許上任後改變溝通策略，放棄傳統的前瞻指引，主張交易員應自行解讀市場訊號，但此舉反而加劇市場迷霧。\n\n華許在7月會議後暗示，美債殖利率上升已收緊金融情勢，可能降低聯準會升息的必要性，但通膨仍遠高於2%目標，引發投資人對其抗通膨可信度的質疑。自華許5月接掌聯準會以來，美國10年期公債殖利率累計上升8個基點，30年期殖利率攀升10個基點。部分投資人認同債市已替聯準會完成部分緊縮工作，DWS美洲固定收益主管卡特朗博內指出，債市已大幅收緊金融情勢，降低決策官員透過升息抑制需求的必要性。\n\n儘管非農就業人數下降、物價漲勢放緩，顯示經濟暫無立即過熱風險，市場對升息的押注仍在增加。芝商所FedWatch工具顯示，交易員預估聯準會下月升息的機率已從一周前的33%升至40%。投資人本周將緊盯傑克森霍爾年會，希望華許說明在長天期美債殖利率已自行收緊金融環境的情況下，聯準會是否仍有必要升息。",
+ "hash": "3af9760f83b80c9d",
+ "text": "美國公債殖利率近期上升，市場對聯準會政策路徑的預期仍存變數。投資人密切關注聯準會主席沃什（Warsh）的政策立場，期待在傑克森洞會議上獲得更多clarity。同時，財政部長貝森特（Bessent）提出的「國債扭轉操作」（Treasury Twist）策略引發華爾街廣泛討論，市場正在推演美國政府借貸策略可能出現的轉變。貝森特的政策傾向似乎對債券市場產生支撐作用，投資人對聯準會利率路徑與財政政策互動的關注度持續升溫。",
  "links": [
   {
-   "title": "Bessent’s bond intervention puts US Treasury on collision course with Fed",
-   "link": "https://www.ft.com/content/a50df99b-0621-44ea-a7c7-c9c685e2eba1?syn-25a6b1a6=1",
-   "source": "Financial Times"
+   "title": "Fed Chair Warsh in Focus After Schnabel Signals ECB Rate Hike",
+   "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQYUhCeDdnUVp3cVRnWDJuNFMwQWhhdU5oZ0UyNXB3WEtaWWlzOWJsZWVJdjhNSmx1ZU5sT2FHanRjZWlOYjVwYUlvY0drbnlLdDlQXzV5TU9lNExyV2JZQS1uM1h5WDZqcE1xb2hhU0ZvMHprVnlWeHl0S3JkRE5tQmJ6RE5pRHpuVHFZRGF1dFlsb2FueFZQTmVjNUEzSXhkSnlvQlNadjl1dnJkYXZyclVrOXQ2aVJ1YmhzTVVTVnV1dw?oc=5",
+   "source": "Bloomberg"
   },
   {
    "title": "Treasury Yields Rise as Data Keep Fed Bets in Play: Markets Wrap",
@@ -13,9 +13,9 @@
    "source": "Bloomberg"
   },
   {
-   "title": "The ‘Bessent Put’ Might Actually Be Working for the Bond Market",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPSWJqMW9UM3BXQ0RhNUpaVmRjTDFLeVU3YXdaLWROUE5hWm5xcXhYdU9YOC1iaDlGTHJocG1PLWlqR3FPS0dFeEdQQmg4a2pBaFNVU29hZ3I4WFF4UUF0MGZhQmtYbmpqUWg1czJ3eDh2U2NyN2h6b1pGTGROenRtcjJhWk8yTE85a0ktUlFXdGVhbm04RnZMUnlTVHAwQ0ZydF9qUUloVGJ1aHgxSlJVQjJpRXl6Zw?oc=5",
-   "source": "Bloomberg"
+   "title": "Anxious investors hope for clarity on Warsh's Fed plan at Jackson Hole",
+   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQNWZ3MGJLTko3T21vNS15UFBYZkktczAwVEwtNGV6WDEyN1MyTXpZMzhPVG9qYU5SdDVzMUYwWUVFcUh4VDlWY1F0TzF0dUkzWEtjcml1eGppZThOUV9TNE5lWjBic0FtX3BLTmdSeUJVamhNSm80eGI2T3EtazQyaGJlZ2p4YldqNHE2a0NDYXg4LTdLbjVpT2RHV2x4cW5pVGN5eWZUNA?oc=5",
+   "source": "Reuters"
   }
  ],
  "fedwatch": {
@@ -27,5 +27,5 @@
   "move_bp": 11.273,
   "method": 4
  },
- "text_source": "model-content"
+ "text_source": "model"
 }
