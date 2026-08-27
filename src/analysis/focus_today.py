@@ -50,6 +50,7 @@ import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote
+import html as _html
 
 import requests
 
@@ -58,7 +59,9 @@ from .brief import cjk_len
 
 log = logging.getLogger(__name__)
 
-TIMEOUT = 20
+# 逾時 8 秒：報價與 RSS 端點正常都在一兩秒內回應，撐到逾時的幾乎都是
+# 被限流或被擋——20 秒只是把「注定失敗」拖長。8 秒已含網路抖動的餘裕。
+TIMEOUT = 8
 RSS_URL = ("https://news.google.com/rss/search?q={q}"
            "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant")
 
@@ -290,10 +293,12 @@ def _pct_chip(cid, label, rows):
                f"{db:+d} bp" if db is not None else "—", cls, d)
 
 
-def _level_chip(cid, spec, liq, offline, _get=None):
-    """即時報價 chip（油價、VIX、MOVE）：Yahoo 主、FRED 後備。"""
+def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
+    """即時報價 chip（油價、VIX、MOVE）：Yahoo 主、FRED 後備。
+    _pre 是呼叫端並行預抓的結果（避免逐顆串行等逾時）。"""
     if not offline:
-        q = fetch_yahoo_quote(spec["sym"], spec["lo"], spec["hi"], _get=_get)
+        q = _pre if _pre is not None else fetch_yahoo_quote(
+            spec["sym"], spec["lo"], spec["hi"], _get=_get)
         if q:
             dv = q["value"] - q["prev"]
             cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
@@ -329,15 +334,20 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     # 每檔即時值都過「與 FRED 收盤差逾 0.6 個百分點就不採用」的防呆，
     # 跟 10Y／30Y 的升級規則同一條。
     fresh = {c["label"]: c for c in (fresh_yields or [])}
-    for cid, sid, label, live_sym in (
-            ("dgs3mo", "DGS3MO", "3 個月", "^IRX"),
-            ("dgs2", "DGS2", "2 年期", "2YY=F"),
-            ("dgs5", "DGS5", "5 年期", "^FVX"),
-            ("dgs10", "DGS10", "10 年期", None),
-            ("dgs30", "DGS30", "30 年期", None)):
+    _tenors = (("dgs3mo", "DGS3MO", "3 個月", "^IRX"),
+               ("dgs2", "DGS2", "2 年期", "2YY=F"),
+               ("dgs5", "DGS5", "5 年期", "^FVX"),
+               ("dgs10", "DGS10", "10 年期", None),
+               ("dgs30", "DGS30", "30 年期", None))
+    # 需要補抓的天期一次並行打（跟油價／波動率那批同一個小工具）
+    _to_fetch = [(cid, label, sym) for cid, _, label, sym in _tenors
+                 if sym and not offline and fresh.get(label) is None]
+    _live_t = dict(zip((c for c, _, _ in _to_fetch), _pmap(
+        lambda t: fetch_yahoo_yield(t[2], t[1], _get=_get), _to_fetch)))
+    for cid, sid, label, live_sym in _tenors:
         fc = fresh.get(label)
         if fc is None and live_sym and not offline:
-            fc = fetch_yahoo_yield(live_sym, label, _get=_get)
+            fc = _live_t.get(cid)
             fred_last, _, _ = _last2(rs.get(sid))
             if (fc and fred_last is not None
                     and abs(fc["value"] - fred_last) > LIVE_JUMP_CAP):
@@ -397,10 +407,15 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
         chips.append(_mk("srf", "SRF 動用", f"{v * 10:,.1f} 億美元",
                          f"{dv:+,.1f} 億" if dv is not None else "—",
                          "up", d))
-    # ---- 即時報價：油價與波動率 ----
-    for cid in ("wti", "brent", "vix", "move"):
+    # ---- 即時報價：油價與波動率（並行）----
+    _qids = ("wti", "brent", "vix", "move")
+    _quotes = dict(zip(_qids, _pmap(
+        lambda c: None if offline else fetch_yahoo_quote(
+            QUOTE_SPECS[c]["sym"], QUOTE_SPECS[c]["lo"],
+            QUOTE_SPECS[c]["hi"], _get=_get), _qids)))
+    for cid in _qids:
         chips.append(_level_chip(cid, QUOTE_SPECS[cid], liq, offline,
-                                 _get=_get))
+                                 _get=_get, _pre=_quotes.get(cid)))
     return chips
 
 
@@ -480,6 +495,57 @@ _FEED_LABEL = (("tw.news.yahoo", "Yahoo奇摩新聞"),
                # Google News 搜尋型 feed：網址裡的 site: 限定就是來源
                ("reuters", "Reuters"),
                ("bloomberg", "Bloomberg"))
+
+
+# 內文注定抓不到的網域：Google News 是 JS 轉址中介頁（沒有 <p> 正文，
+# 抓一百次都是 0 段）、FT／WSJ 是付費牆。這些來源走「標題快訊」層——
+# 標題＋RSS 官方摘要直接進材料包，不佔內文名額、不浪費抓取時間。
+_HEADLINE_ONLY = ("news.google.com", "ft.com", "wsj.com", "dj.com")
+
+
+def _headline_only(link: str) -> bool:
+    return any(h in (link or "") for h in _HEADLINE_ONLY)
+
+
+def _pmap(fn, items, workers: int = 6) -> list:
+    """
+    小型並行工具：對 items 逐一跑 fn，回傳**順序不變**的結果列表。
+    抓報價與內文全是獨立的 I/O 等待，串行是之前整輪變慢的主因之一。
+    單一項目丟例外就記 None——呼叫端本來就要處理抓不到的情況。
+    """
+    if len(items) <= 1:
+        out = []
+        for x in items:
+            try:
+                out.append(fn(x))
+            except Exception:                      # noqa: BLE001
+                out.append(None)
+        return out
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=min(workers, len(items))) as ex:
+        futs = [ex.submit(fn, x) for x in items]
+        out = []
+        for f in futs:
+            try:
+                out.append(f.result())
+            except Exception:                      # noqa: BLE001
+                out.append(None)
+        return out
+
+
+def _chip_from_live_rows(rows, label: str) -> dict | None:
+    """
+    長端模組已把 Yahoo 即時值附加進 DGS 序列（最後一列帶 live 標記）時，
+    直接用那筆資料做 chip——同一次執行不再重打 Yahoo（先前 ^TNX／^TYX
+    被抓了兩次）。變動照樣是對前一列（FRED 收盤）。
+    """
+    rows = [r for r in (rows or []) if r.get("value") is not None]
+    if not rows or not rows[-1].get("live") or len(rows) < 2:
+        return None
+    last, prev = rows[-1], rows[-2]
+    return {"label": label, "value": round(float(last["value"]), 2),
+            "delta_bp": round((last["value"] - prev["value"]) * 100),
+            "date": str(last.get("date") or ""), "live": True}
 
 
 def _feed_label(url: str) -> str:
@@ -566,8 +632,16 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
             if key in seen:
                 continue
             seen.add(key)
+            # RSS 的官方摘要（FT／WSJ 的 description 是出版社自己寫的
+            # 一兩句話，合法免費）：付費牆來源靠它補一點實質內容。
+            desc = _html.unescape(re.sub(
+                r"<[^>]+>", " ", item.findtext("description") or ""))
+            desc = re.sub(r"\s+", " ", desc).strip()[:240]
+            if desc and _sim(_norm_title(desc), _norm_title(title)) > 0.7:
+                desc = ""                          # 摘要只是標題重印就不留
             out.append({"title": title, "link": link, "source": label,
-                        "at": at.isoformat(), "kw": ""})
+                        "at": at.isoformat(), "kw": "",
+                        "summary": desc if len(desc) >= 30 else ""})
     out.sort(key=lambda x: x["at"], reverse=True)
     return out
 
@@ -617,14 +691,17 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
 #（實際發生過，使用者的原話：「上方的摘要還是在摘要新聞標題而不是內文」）。
 # 數字防護欄（_digits_ok）對內文驗證，所以具體數字可以放心要求。
 _FOCUS_CONTENT_SYSTEM = (
-    "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合）。"
+    "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合），"
+    "後面可能另有一節「標題快訊」——那些只有標題與官方摘要、沒有內文。"
     "只取與這些關鍵字相關的內容：{kws}。"
-    "讀完全部內文後，**重新綜合改寫成一篇連貫的報導**，不是逐篇摘要："
+    "讀完全部材料後，**重新綜合改寫成一篇連貫的報導**，不是逐篇摘要："
     "把各篇的資訊整合成同一條敘事線，分成 2 到 3 個段落，"
-    "段落之間用一個空行分隔，每段 80 到 150 個中文字，總長不超過 {cap} 字。"
+    "段落之間用一個空行分隔，每段 60 到 110 個中文字，總長不超過 {cap} 字。"
     "優先寫內文才有、標題沒有的具體資訊：金額與規模、時間點、"
     "人名與職稱、機構名、關鍵引述。硬性規則："
-    "只能使用內文已有的資訊，不得補充內文以外的事實或數字；"
+    "只能使用材料已有的資訊，不得補充材料以外的事實或數字；"
+    "「標題快訊」只能轉述其標題與摘要**字面上有的事**，不得展開細節、"
+    "不得推測其內文，引用時帶來源（例如「路透報導稱…」）；"
     "不得自行推論來源沒有寫的因果關係；不做預測、不下投資結論；"
     "與關鍵字無關的內容一律不寫；繁體中文；"
     "直接輸出報導本文，不要標題、不要前言。")
@@ -736,11 +813,28 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
 
 
 def summarize_content(articles: list[dict], keywords: list[str],
-                      cap: int, env=None) -> tuple[str, str]:
-    """從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。"""
+                      cap: int, env=None,
+                      briefs: list[dict] | None = None) -> tuple[str, str]:
+    """
+    從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。
+
+    briefs 是「標題快訊」層：付費牆來源（路透、彭博、FT、WSJ）的標題＋
+    RSS 官方摘要。它們進材料包供模型織進論述，但提示詞硬性規定只能
+    轉述字面——標題只有十幾個字，模型對著標題腦補是這一層最大的風險。
+    數字鎖的驗證範圍涵蓋「全文＋快訊」的合併文字。
+    """
     src_text = "\n\n".join(
         f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}"
         for a in articles)
+    if briefs:
+        src_text += ("\n\n=== 標題快訊（只有標題與官方摘要，沒有內文）"
+                     "===\n"
+                     + "\n".join(
+                         f"【{b.get('source') or '—'}】{b['title']}"
+                         + (f"——{b['summary']}" if b.get("summary") else "")
+                         for b in briefs))
+    if not articles and not briefs:
+        return "", "沒有任何材料"
     text, err = _call_ai(
         src_text,
         _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords), cap=cap),
@@ -1086,12 +1180,13 @@ def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
         return None
 
     prices, prices_prev = {}, {}
-    for mo in sorted(need):
-        sym = _zq_symbol(mo)
-        # 每張合約都開「有在動」檢查：連續五天收盤一模一樣＝報價死掉
-        #（+0.0 pp 事故的長相），比任何價位門檻都可靠
-        imp, imp_prev = fetch_zq_implied(sym, _get, require_movement=True,
-                                         with_prev=True)
+    _mos = sorted(need)
+    # 各合約獨立，並行抓；每張都開「有在動」檢查：連續五天收盤一模一樣
+    # ＝報價死掉（+0.0 pp 事故的長相），比任何價位門檻都可靠
+    _res = _pmap(lambda mo: fetch_zq_implied(
+        _zq_symbol(mo), _get, require_movement=True, with_prev=True), _mos)
+    for mo, r in zip(_mos, _res):
+        imp, imp_prev = r if isinstance(r, tuple) else (None, None)
         if imp is None:
             return None
         prices[mo] = round(100.0 - imp, 4)
@@ -1333,12 +1428,20 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                      offline=True)
         return out
 
-    # ---- 殖利率升級成即時：Yahoo 逐檔試，抓不到的那檔退回 FRED ----
+    # ---- 殖利率即時 chip：優先重用長端模組已升級的序列（帶 live 標記
+    # 的最後一列），同一次執行不再重打 Yahoo；沒升級到的才逐檔補抓，
+    # 抓不到退回 FRED 收盤。補抓的兩檔並行。 ----
     _fred = {"10 年期": (rates_series or {}).get("DGS10"),
              "30 年期": (rates_series or {}).get("DGS30")}
+    _sym_of = dict((lb, sym) for sym, lb in YIELD_SYMBOLS)
+    _reused = {lb: _chip_from_live_rows(_fred.get(lb), lb)
+               for _, lb in YIELD_SYMBOLS}
+    _need = [lb for _, lb in YIELD_SYMBOLS if not _reused.get(lb)]
+    _fetched = dict(zip(_need, _pmap(
+        lambda lb: fetch_yahoo_yield(_sym_of[lb], lb), _need)))
     _fresh = []
-    for _sym, _label in YIELD_SYMBOLS:
-        c = (fetch_yahoo_yield(_sym, _label)
+    for _, _label in YIELD_SYMBOLS:
+        c = (_reused.get(_label) or _fetched.get(_label)
              or _yield_chip(_fred.get(_label), _label))
         if c:
             _fresh.append(c)
@@ -1462,7 +1565,17 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         mode = "title"
     if heads:
         top = pick_fallback(heads, keywords, n=6, exclude=exclude)
-        h = hashlib.sha256((mode + "|" + "|".join(x["title"] for x in top))
+        # 兩層材料：內文名額只給抓得到正文的來源（Google News 是 JS
+        # 轉址中介頁、FT／WSJ 是付費牆——先前佔掉名額又必然 0 段）；
+        # 付費牆來源改走「標題快訊」層：標題＋RSS 官方摘要直接進材料包。
+        body_cand = pick_fallback([x for x in heads
+                                   if not _headline_only(x["link"])],
+                                  keywords, n=6, exclude=exclude)
+        briefs = pick_fallback([x for x in heads
+                                if _headline_only(x["link"])],
+                               keywords, n=4, exclude=exclude)
+        h = hashlib.sha256((mode + "|" + "|".join(
+            x["title"] for x in (top + body_cand + briefs)))
                            .encode("utf-8")).hexdigest()[:16]
         if state.get("hash") == h and state.get("text"):
             out["text"] = state["text"]
@@ -1474,20 +1587,21 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         else:
             text, src = "", ""
             if mode == "content":
-                arts = []
-                for x in top[:6]:
-                    body = fetch_article_text(x["link"])
-                    if body:
-                        arts.append({"title": x["title"], "body": body,
-                                     "source": x.get("source", "")})
-                if arts:
+                # 內文並行抓（各篇獨立的 I/O 等待，串行是慢的主因之一）
+                _bodies = _pmap(lambda x: fetch_article_text(x["link"]),
+                                body_cand)
+                arts = [{"title": x["title"], "body": b,
+                         "source": x.get("source", "")}
+                        for x, b in zip(body_cand, _bodies) if b]
+                if arts or briefs:
                     # 抓到多少內文寫進 log：頁面只標「摘要自內文」，
                     # 摘要品質有疑慮時要能回頭查是不是內文本身太薄。
-                    log.info("市場焦點：內文擷取 %d／%d 篇（%s）",
-                             len(arts), min(len(top), 6),
+                    log.info("市場焦點：內文擷取 %d／%d 篇＋標題快訊 %d 則"
+                             "（%s）", len(arts), len(body_cand), len(briefs),
                              "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
                                        for a in arts))
-                    text, src = summarize_content(arts, keywords, cap, env)
+                    text, src = summarize_content(arts, keywords, cap, env,
+                                                  briefs=briefs)
                     if not text:
                         log.warning("市場焦點：內文摘要退回標題模式（%s）", src)
                 else:

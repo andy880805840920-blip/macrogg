@@ -592,12 +592,14 @@ try:
         hit = True
     check("92 全部連線失敗 → 丟出例外", hit)
 
-    # 429 照 Retry-After 等，但要有上限
+    # 429 不重試、不等：限流是額度問題，正確動作是立刻讓路換模型／
+    # 換供應商（先前的 35／70 秒退避是 Gemini 當主力時的設計，已退役）
     slept.clear()
-    polish.requests.request = lambda m, u, **kw: (
-        FakeResp(429, {"Retry-After": "5"}) if len(slept) < 1 else FakeResp(200))
-    polish._http("POST", "https://x", label="測試")
-    check("93 429 照 Retry-After 等", slept == [5.0], str(slept))
+    polish.requests.request = lambda m, u, **kw: FakeResp(
+        429, {"Retry-After": "5"})
+    _r429 = polish._http("POST", "https://x", label="測試")
+    check("93 429 立即回傳不重試不等待",
+          _r429.status_code == 429 and slept == [], str(slept))
     check("94 Retry-After 有上限（伺服器亂給不能照單全收）",
           polish._retry_after(FakeResp(429, {"Retry-After": "9999"})) == 0.0)
     check("95 沒有 Retry-After 就用固定退避",

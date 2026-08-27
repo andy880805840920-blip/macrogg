@@ -561,7 +561,7 @@ _GEN_SYSTEM = (
     "分別以「勞動市場：」「通膨：」「聯準會：」開頭，每行一到兩句、"
     "40 到 80 個中文字；最後另起一行輸出「方向：」加上輸入標明的政策傾向"
     "（利升息／利降息／中性，照抄輸入，不得自行改判）。內容規則："
-    "只能使用輸入已有的資訊；最多引用兩三個關鍵數字，其餘用文字描述；"
+    "只能使用輸入已有的資訊；最多引用兩三個關鍵數字，其餘用文字描述；引用的數字必須照輸入的寫法**原樣照抄**（含小數位數與百分號），不得換算、不得改寫格式、不得自行補年份或日期；"
     "不得推論輸入沒有寫的因果；不做預測、不下投資結論；"
     "不要條列符號、不要粗體記號、不要前言。繁體中文。")
 _LEAN_ZH = {"hawkish": "利升息", "dovish": "利降息",
@@ -617,14 +617,39 @@ def judgment_pack(ctxs: dict) -> dict | None:
             "lean": _LEAN_ZH.get(getattr(sc, "lean", ""), "中性")}
 
 
-def _gen_digits_ok(text: str, source: str) -> bool:
-    """數字鎖：輸出的每一串數字都必須出現在判定包裡。"""
+def _gen_digit_issues(text: str, source: str) -> tuple[list, list]:
+    """
+    數字鎖（放寬檔位二）。回傳 (違規清單, 放行清單)。
+
+    兩個放寬，嚴格度的核心不變：
+    ① **數值比對取代字面比對**——判定包寫 0.2、模型寫 0.20 是同一個
+       數字（潤稿層在「+2.0 萬 → +2 萬」上踩過一模一樣的坑，解法照抄）。
+    ② **小整數（0–99、無小數點、後面不是 %）放行**——日期、天數、
+       票數這類計數是誤殺主因、錯了也傷不了判讀；但**帶小數點或帶 %
+       的數字仍然硬鎖**（比率與水準值，錯一個就是讀者會引用的錯數字），
+       「42%」這種整數比率也算硬鎖。放行的照樣記 log 供事後檢查。
+    """
     import re as _re
-    src = _re.sub(r"[\s,，]", "", source)
-    for num in _re.findall(r"\d+(?:\.\d+)?", text.replace(",", "")):
-        if num not in src:
-            return False
-    return True
+
+    def _norm(tok: str) -> str:
+        try:
+            return repr(float(tok))
+        except ValueError:
+            return tok
+
+    src = {_norm(t) for t in _re.findall(r"\d+(?:\.\d+)?",
+                                         (source or "").replace(",", ""))}
+    bad, waived = [], []
+    for m in _re.finditer(r"(\d+(?:\.\d+)?)(%?)",
+                          (text or "").replace(",", "")):
+        tok, pct = m.group(1), m.group(2)
+        if _norm(tok) in src:
+            continue
+        if "." not in tok and not pct and int(tok) <= 99:
+            waived.append(tok)
+        else:
+            bad.append(tok + pct)
+    return bad, waived
 
 
 def _parse_generated(text: str, want_lean: str):
@@ -718,8 +743,14 @@ def generate(ctxs: dict, assembled: dict, cache_path, offline: bool = False,
         # 但這裡的三行結構就靠換行分隔——整段餵進去等於自毀格式。
         res = "\n".join(_pl._sanitize(ln) for ln in (res or "").splitlines()
                         if ln.strip())
-        if not _gen_digits_ok(res, pack["text"]):
-            reason = "輸出出現判定包裡沒有的數字"
+        _bad, _waived = _gen_digit_issues(res, pack["text"])
+        if _waived:
+            log.info("整體情勢生成：放行判定包外的小整數（%s）——"
+                     "計數／日期類，僅記錄供檢查", "、".join(_waived))
+        if _bad:
+            reason = ("輸出出現判定包裡沒有的數字（"
+                      + "、".join(_bad) + "）")
+            log.warning("整體情勢生成被退回的輸出開頭：%s…", res[:80])
         else:
             bullets, reason = _parse_generated(res, pack["lean"])
         if bullets:

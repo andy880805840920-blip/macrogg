@@ -104,6 +104,32 @@ pk = brief.judgment_pack(CTX)
 check("⑧ 判定包含政策傾向與三模組", pk["lean"] == "利升息"
       and all(k in pk["text"] for k in ("【勞動市場】", "【通膨】", "【聯準會】")))
 
+# ⑨ 數字鎖檔位二：等值寫法放行、小整數放行、比率仍硬鎖、理由列數字
+_b, _w = brief._gen_digit_issues("核心 CPI 月步速 0.20%、失業率 4.1%",
+                                 "月步速 0.2%；失業率 4.1%")
+check("⑨ 等值寫法（0.20 vs 0.2）放行", _b == [] and _w == [], (_b, _w))
+_b, _w = brief._gen_digit_issues("委員會 3 票、21 天後開會",
+                                 "反對票與會期")
+check("⑨b 小整數（計數／日期）放行但記錄",
+      _b == [] and set(_w) == {"3", "21"}, (_b, _w))
+_b, _w = brief._gen_digit_issues("失業率 4.3%、機率 42%",
+                                 "失業率 4.1%")
+check("⑨c 包外的比率仍硬鎖（含整數％）",
+      set(_b) == {"4.3%", "42%"}, _b)
+
+# ⑨d 走完整 generate：0.20 的寫法不再整篇作廢
+GOOD20 = GOOD.replace("0.2%", "0.20%")
+r9 = gen(GOOD20, _tmp / "t2.json")
+check("⑨d 生成層：等值寫法通過三鎖 → generated",
+      r9["source"] == "generated", r9["source"])
+# ⑨e 真正的新比率仍退組裝，且理由帶具體數字
+calls9 = []
+BAD9 = GOOD.replace("4.1%", "5.5%")
+r9e = gen([BAD9, BAD9], _tmp / "t3.json", calls9)
+check("⑨e 新比率退組裝、重試提示帶具體數字",
+      r9e["source"] == "assembled" and "5.5" in calls9[1], 
+      calls9[1][-60:] if len(calls9) > 1 else calls9)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

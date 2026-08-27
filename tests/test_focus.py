@@ -723,6 +723,82 @@ _hs2 = _home._focus_strip({"yields": [
 check("⑯e 目錄空 → 舊版三顆後備（無勾選面板）",
       "fs-pick" not in _hs2 and _hs2.count("fs-chip") >= 2)
 
+# ⑰ 兩層材料與抓取提速的配套
+check("⑰ 付費牆／轉址網域判定",
+      ft._headline_only("https://news.google.com/rss/articles/x")
+      and ft._headline_only("https://www.ft.com/content/abc")
+      and not ft._headline_only("https://finance.yahoo.com/news/x"))
+
+_rows_live = [{"date": "2026-08-26", "value": 4.70},
+              {"date": "2026-08-27", "value": 4.66, "live": True}]
+_c17 = ft._chip_from_live_rows(_rows_live, "10 年期")
+check("⑰b 已升級的序列直接做 chip（不重打 Yahoo）",
+      _c17 == {"label": "10 年期", "value": 4.66, "delta_bp": -4,
+               "date": "2026-08-27", "live": True}, _c17)
+check("⑰c 沒有 live 標記 → 回 None（照舊走抓取）",
+      ft._chip_from_live_rows([{"date": "d", "value": 4.7}], "x") is None)
+
+# 標題快訊進材料包＋數字鎖涵蓋快訊文字
+_orig_ca = ft._call_ai
+_seen_src = {}
+def _ca17(src, system, env=None):
+    _seen_src["src"] = src
+    return "路透報導稱聯準會官員關注殖利率走勢，會後再評估。", ""
+ft._call_ai = _ca17
+_t17, _s17 = ft.summarize_content(
+    [{"title": "殖利率上行", "body": "十年期殖利率走高，市場關注。",
+      "source": "Yahoo Finance"}],
+    ["殖利率"], 250,
+    briefs=[{"title": "Fed seen holding rates", "source": "Reuters",
+             "summary": "Officials signal patience on policy."}])
+check("⑰d 標題快訊進材料包（帶來源與分節標記）",
+      _s17 == "model-content" and "標題快訊" in _seen_src["src"]
+      and "Reuters" in _seen_src["src"]
+      and "Officials signal patience" in _seen_src["src"], _s17)
+ft._call_ai = (lambda src, system, env=None:
+               ("彭博稱目標利率 5.25%。", ""))
+_t17e, _s17e = ft.summarize_content(
+    [{"title": "t", "body": "內文沒有那個數字。", "source": "y"}],
+    ["利率"], 250,
+    briefs=[{"title": "Fed rate at 3.75%", "source": "Bloomberg",
+             "summary": ""}])
+check("⑰e 數字鎖涵蓋快訊：快訊沒有的數字照樣擋",
+      _t17e == "" and "沒有的數字" in _s17e, _s17e)
+ft._call_ai = (lambda src, system, env=None:
+               ("彭博報導稱聯準會維持利率於 3.75% 不變，市場靜待後續。", ""))
+_t17f, _s17f = ft.summarize_content(
+    [{"title": "t", "body": "內文一段。", "source": "y"}],
+    ["利率"], 250,
+    briefs=[{"title": "Fed rate at 3.75%", "source": "Bloomberg",
+             "summary": ""}])
+check("⑰f 快訊裡有的數字可以用", _s17f == "model-content", _s17f)
+ft._call_ai = _orig_ca
+
+# RSS description → summary 欄位（FT/WSJ 的官方摘要）
+_FEED17 = b"""<rss><channel>
+<item><title>Fed weighs Treasury yields path</title>
+<link>https://www.ft.com/content/x1</link>
+<pubDate>%s</pubDate>
+<description>Officials debate the outlook for U.S. Treasury yields
+as inflation stays firm across sectors.</description></item>
+</channel></rss>""" % (
+    __import__("email.utils", fromlist=["x"]).format_datetime(
+        __import__("datetime").datetime.now(
+            __import__("datetime").timezone.utc)).encode())
+
+
+class _FR17:
+    content = _FEED17
+    def raise_for_status(self):
+        pass
+
+
+_fh17 = ft.fetch_feed_headlines(["https://www.ft.com/rss/home"],
+                                ["Treasury yields"], _get=lambda u: _FR17())
+check("⑰g RSS 官方摘要進 summary 欄位",
+      len(_fh17) == 1 and "Officials debate" in _fh17[0].get("summary", ""),
+      _fh17 and _fh17[0].get("summary", "")[:40])
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
