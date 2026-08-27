@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-27T08:14:57+08:00",
+  "at": "2026-08-27T09:31:06+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -103,6 +103,7 @@
           "shelter_drag",
           "ppi_pipeline",
           "shelter_turn",
+          "pace_ontrack",
           "supercore_cool",
           "expect_anchored"
         ],
@@ -112,6 +113,7 @@
           "shelter_drag": "住房落後項推升整體讀數",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
           "shelter_turn": "住房通膨的降溫已成既定路徑",
+          "pace_ontrack": "核心 CPI 月步速已連續 3 個月守在 0.2% 以下",
           "supercore_cool": "核心服務除住房回落至正常區間",
           "expect_anchored": "短期預期偏高，但長期仍錨定"
         },
@@ -121,6 +123,7 @@
           "shelter_drag": "dovish",
           "ppi_pipeline": "hawkish",
           "shelter_turn": "dovish",
+          "pace_ontrack": "dovish",
           "supercore_cool": "dovish",
           "expect_anchored": "neutral"
         },
@@ -537,7 +540,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-08-27T08:14:57+08:00",
+      "at": "2026-08-27T09:31:06+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",

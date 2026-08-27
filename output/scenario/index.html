@@ -1466,13 +1466,22 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 今日市場焦點：hero 之上的窄條。chips 一列掃完，焦點段一段就好。 */
 /* 升格成強調卡：頂部主題色帶＋放大的標題（帶日期）＋與下方 hero 拉開。
    先前是一條 11px 灰標題的窄 strip，跟目前情境黏在一起、掃過去會漏看。 */
+/* ⚠️ 這裡不能 overflow:hidden：「選擇」勾選面板是絕對定位浮層，
+   會被整個剪掉——桌機點了看起來像沒反應（實際發生過）。
+   頂部色條用 border-top 畫：3px 的 ::before 疊圓角會被垂直方向夾成
+   一條兩端漸縮的怪線（也實際發生過），border-top 沿圓角自然轉彎。 */
 .focus-strip{position:relative;padding:16px 18px 15px;margin-bottom:26px;
-  overflow:hidden}
-.focus-strip::before{content:"";position:absolute;left:0;right:0;top:0;
-  height:3px;background:var(--series-1)}
+  border-top:3px solid var(--series-1)}
 .fs-head{font-size:15px;font-weight:800;letter-spacing:.02em;
   color:var(--text-primary)}
 .fs-date{margin-left:9px;font-size:11.5px;font-weight:500;color:var(--muted)}
+/* 三地時間戳：手機縮一號字＋前綴改短版才塞得進一行（360px 實測）。
+   320px 這種古董寬度仍會折行——為它再縮就小到讀不了，不遷就。 */
+.ws-short{display:none}
+@media(max-width:759px){
+  .sub .ws{font-size:10.5px;letter-spacing:0}
+  .ws-long{display:none}
+  .ws-short{display:inline}}
 /* ---------- 焦點條的自選 chip ----------
    目錄 14 顆全在 HTML 裡，預設組以外掛 .fs-off 隱藏；「自訂」是原生
    details 元素：桌機浮層、手機（759px 以下）改全寬面板往下推——浮層在
@@ -1781,7 +1790,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/scenario/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1><a class="h1-home" href="/">情境合成</a></h1>
   
-  <div class="sub">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-26　·　更新於 2026-08-27 08:14（台北）</div>
+  <div class="sub">就業 2026-07　·　物價 2026-07　·　聲明 2026-07-29　·　利率 2026-08-26　·　更新於 2026-08-27 09:31（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/" class="on">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1801,7 +1810,7 @@ details.home-module[open]{padding-bottom:0}
       <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格不隨重心變）
     </p>
     <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）</summary>
-      <div class="axg"><details class="ax"><summary><span class="ax-k">就業</span><span class="ax-v">中</span><span class="ax-lead">失業率 4.1% 落在充分就業區間 4.0–4.3% 之內，動能也沒有轉弱</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">失業率（水準）</span><span class="wx-w">落在區間內</span><span class="wx-v">4.1%</span></div><div class="wx-r"><span class="wx-k">FOMC 長期失業率　中央趨勢</span><span class="wx-w">門檻</span><span class="wx-v">4.0–4.3%</span></div><div class="wx-r"><span class="wx-k">Sahm 法則（動能）</span><span class="wx-w">門檻 0.50</span><span class="wx-v">+0.00</span></div><div class="wx-r"><span class="wx-k">失業率回升幅度（動能）</span><span class="wx-w">本站門檻 0.20</span><span class="wx-v">+0.00 個百分點</span></div><div class="wx-src" style="margin-top:8px">由<b>水準</b>定案：失業率相對 FOMC 的長期失業率判斷。</div><div class="wx-src">門檻出處：FOMC 長期失業率（SEP 中央趨勢）　·　Sahm 0.50（原論文）　·　溫和惡化 0.20（本站門檻，Sahm 同款算式）</div></div></details><details class="ax"><summary><span class="ax-k">通膨</span><span class="ax-v">高</span><span class="ax-lead">核心 PCE 年增 3.3% 決定格位；短期動能 3.0% 另列，高於門檻 2.50%</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">核心 PCE 年增率（決定格位）</span><span class="wx-w">水準</span><span class="wx-v">3.3%</span></div><div class="wx-r"><span class="wx-k">核心 PCE 三個月年化（只決定方向）</span><span class="wx-w">動能</span><span class="wx-v">3.0%</span></div><div class="wx-r wx-sum"><span class="wx-k">格位判定值</span><span class="wx-w"></span><span class="wx-v">3.34%</span></div><div class="wx-thr">3.34%　＞　門檻 2.50%</div><div class="wx-src">門檻出處：FOMC 對 2027 年的核心 PCE 預測中位數（2.3–2.6% 中央趨勢）</div><div class="wx-note"><b>為什麼通膨頁寫「通膨面：利降息」、這裡卻是「高」</b>：兩者問的不是同一件事。通膨頁的結論看的是<b>本期新訊號的方向</b>（旗標鷹鴿淨值 -1.5）；這一軸看的是<b>水準</b>——離 2% 目標多遠。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div></div></details></div>
+      <div class="axg"><details class="ax"><summary><span class="ax-k">就業</span><span class="ax-v">中</span><span class="ax-lead">失業率 4.1% 落在充分就業區間 4.0–4.3% 之內，動能也沒有轉弱</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">失業率（水準）</span><span class="wx-w">落在區間內</span><span class="wx-v">4.1%</span></div><div class="wx-r"><span class="wx-k">FOMC 長期失業率　中央趨勢</span><span class="wx-w">門檻</span><span class="wx-v">4.0–4.3%</span></div><div class="wx-r"><span class="wx-k">Sahm 法則（動能）</span><span class="wx-w">門檻 0.50</span><span class="wx-v">+0.00</span></div><div class="wx-r"><span class="wx-k">失業率回升幅度（動能）</span><span class="wx-w">本站門檻 0.20</span><span class="wx-v">+0.00 個百分點</span></div><div class="wx-src" style="margin-top:8px">由<b>水準</b>定案：失業率相對 FOMC 的長期失業率判斷。</div><div class="wx-src">門檻出處：FOMC 長期失業率（SEP 中央趨勢）　·　Sahm 0.50（原論文）　·　溫和惡化 0.20（本站門檻，Sahm 同款算式）</div></div></details><details class="ax"><summary><span class="ax-k">通膨</span><span class="ax-v">高</span><span class="ax-lead">核心 PCE 年增 3.3% 決定格位；短期動能 3.0% 另列，高於門檻 2.50%</span></summary><div class="ax-body"><div class="wx-r"><span class="wx-k">核心 PCE 年增率（決定格位）</span><span class="wx-w">水準</span><span class="wx-v">3.3%</span></div><div class="wx-r"><span class="wx-k">核心 PCE 三個月年化（只決定方向）</span><span class="wx-w">動能</span><span class="wx-v">3.0%</span></div><div class="wx-r wx-sum"><span class="wx-k">格位判定值</span><span class="wx-w"></span><span class="wx-v">3.34%</span></div><div class="wx-thr">3.34%　＞　門檻 2.50%</div><div class="wx-src">門檻出處：FOMC 對 2027 年的核心 PCE 預測中位數（2.3–2.6% 中央趨勢）</div><div class="wx-note"><b>為什麼通膨頁寫「通膨面：利降息」、這裡卻是「高」</b>：兩者問的不是同一件事。通膨頁的結論看的是<b>本期新訊號的方向</b>（旗標鷹鴿淨值 -2.0）；這一軸看的是<b>水準</b>——離 2% 目標多遠。水準已經在那裡，但這個月沒有新的推力，兩者可以同時成立。</div></div></details></div>
     </details>
     <details class="f-more"><summary>重心怎麼判定；重心若翻轉，這一格會變成「忍受通膨」或「兩難」</summary><div class="f-detail"><b>本期判定依據</b>：聲明描述通膨仍高於目標、3 張反對票主張升息、記者會 7 處表態以物價穩定為優先</div><p class="hint" style="margin:10px 0 10px">下面三列是同一格在三種體制下的結論。重心是由聲明、投票與記者會判定的，會隨會議改變——所以這一格的結論帶著一個額外的風險，要跟數據本身一起盯。</p><div class="rcmp on"><div class="rcmp-k">通膨優先</div><div class="rcmp-v hawkish">傾向緊縮</div><div class="rcmp-l">利升息</div></div><div class="rcmp"><div class="rcmp-k">就業優先</div><div class="rcmp-v neutral">忍受通膨</div><div class="rcmp-l">中性</div></div><div class="rcmp"><div class="rcmp-k">兩邊並重</div><div class="rcmp-v hawkish">兩難</div><div class="rcmp-l">利升息</div></div></details>
     <details class="f-more"><summary>九格各代表什麼</summary><p class="hint" style="margin:10px 0 0">依目前重心的那張格子；標 ◆ 的三格在其他重心下名稱與結論會不同（切上方頁籤看）。</p><dl class="gloss" style="margin-top:10px"><dt>就業強 × 通膨低：溫和成長</dt><dd>就業穩、通膨低。聯準會沒有壓力，可以慢慢來。</dd><dt>就業強 × 通膨中：小心觀望</dt><dd>就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。</dd><dt>就業強 × 通膨高：升息壓力</dt><dd>經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。</dd><dt>就業中 × 通膨低：預防性降息</dt><dd>通膨已受控，就業開始鬆動。聯準會有空間先降息保險。</dd><dt>就業中 × 通膨中：按兵不動</dt><dd>兩邊都不極端，這份數據不足以改變方向。</dd><dt>就業中 × 通膨高：傾向緊縮◆（目前位置）</dt><dd>通膨還高，而就業還沒弱到需要救。在通膨優先的體制下，這一格是明確的緊縮方向。</dd><dt>就業弱 × 通膨低：衰退式降息</dt><dd>就業明顯轉弱、通膨不是問題。兩個使命同向指向寬鬆。</dd><dt>就業弱 × 通膨中：降息受阻◆</dt><dd>就業轉弱本身指向降息，但通膨還沒回到目標附近。在通膨優先的體制下，就業轉弱不會單獨換來降息——是「想降但還不能降」，不是真的要降。</dd><dt>就業弱 × 通膨高：停滯性通膨：通膨優先◆</dt><dd>兩個使命指向相反，而委員會把通膨擺在前面。降息會助長通膨，所以就算就業繼續惡化，寬鬆也要等通膨先降下來。</dd></dl></details>
@@ -1938,6 +1947,17 @@ details.home-module[open]{padding-bottom:0}
 <div id="tip"></div>
 <script>
 (function(){
+  // ---- 翻譯代理上的返回鈕 ----
+  // 在 translate.goog（Google 翻譯代理）上瀏覽時，右上角的 EN 鈕
+  // 改成「中」、連回原站同一頁——Google 自帶的「顯示原文」列不一定
+  // 出現（手機常沒有），沒有這顆就回不來（使用者實際回報過）。
+  var lb = document.querySelector('.lang-btn');
+  if (lb && location.hostname.indexOf('translate.goog') >= 0) {
+    lb.textContent = '中';
+    lb.setAttribute('title', '切回中文原文');
+    lb.href = 'https://macrogg.netlify.app' + location.pathname;
+  }
+
   // 手機只常駐主卡結論；下方主題全部先收合，避免進頁就落入長內容。
   if(window.innerWidth < 760){
     document.querySelectorAll('details[data-m-collapse], details.card.sect').forEach(function(d){
