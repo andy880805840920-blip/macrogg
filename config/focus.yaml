@@ -42,6 +42,7 @@ fomc_dates:
 # 提示詞給模型的目標會自動取這個數字減 30，留緩衝、少退件。
 max_chars: 300
 
+# 主級關鍵字：命中一次計 2 分（挑選排序用）。政策與利率核心。
 keywords:
   - 川普 聯準會
   - Fed 利率
@@ -51,13 +52,73 @@ keywords:
   - 美債 殖利率
   - 債券市場
   - 美伊
-  # 英文組（FT／WSJ 的 feed 是英文標題；比對不分大小寫）
+  - 降息
+  - 升息
+  - 殖利率曲線
+  - 公債標售
+  # 英文組（FT／WSJ／Google News 的 feed 是英文標題；比對不分大小寫）
   - Fed rate
   - Treasury yields
   - Bessent
   - FOMC
   - Powell Warsh
   - bond market
+  - rate cut
+  - rate hike
+  - yield curve
+  - Treasury auction
+
+# 次級關鍵字：命中一次計 1 分——債市生態系與 AI 資本週期，
+# 只在主線新聞不足時自然上位，不搶聯準會頭條的位置。
+keywords_secondary:
+  - 信用利差
+  - 公司債
+  - 回購市場
+  - 債務上限
+  - 信評調降
+  - 日債
+  - 晶片戰爭
+  - 晶片關稅
+  - AI 資本支出
+  - AI 發債
+  - credit spreads
+  - corporate bond
+  - repo market
+  - debt ceiling
+  - downgrade
+  - JGB
+  - chip war
+  - chip tariffs
+  - AI capex
+  - AI bond
+
+# 後設偵測：AI 輸出含任一詞組＝在評論材料而不是寫新聞（實際發生過：
+# 整篇「材料相關內容極為有限…無法按要求綜合改寫」上了線）。
+# 命中→帶原因重試一次，再命中→退列標題模式。只收詞組不收單詞，
+# 免得誤殺真新聞（「伊朗無法出口」的「無法」是正常句）。
+meta_markers:
+  - 提供的材料
+  - 材料中
+  - 材料主要
+  - 材料缺乏
+  - 根據材料
+  - 僅能提取
+  - 相關內容極為有限
+  - 相關資訊有限
+  - 關鍵字
+  - 按要求
+  - 綜合改寫
+  - 無法按
+  - 不足以
+  - 標題快訊
+  - 內文細節
+  - 可供轉述
+  - 以下是
+  - 以下為
+  - 根據您
+  - 綜上所述
+  - 需要注意的是
+  - 總結來說
 
 # 排除關鍵字：標題命中任一個就整條剔除。
 # 擋的是正向關鍵字擋不掉的內容——**真的含關鍵字、但不是總經新聞**。
@@ -89,8 +150,8 @@ feeds:
   # 改走 Google News 的搜尋型 feed 限定來源＋主題。預期是**標題級**
   # 貢獻（彭博硬付費牆、路透偶爾放行）；兩家的通訊社稿全文本來就經
   # Yahoo 轉載進來，這兩條補的是原始出處的標題視角與來源多樣性。
-  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell)%20when:2d&hl=en-US&gl=US&ceid=US:en
-  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell%20OR%20yield%20OR%20auction%20OR%20bond)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell%20OR%20yield%20OR%20auction%20OR%20bond)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
 # 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
 # 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。

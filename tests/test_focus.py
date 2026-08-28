@@ -826,6 +826,52 @@ check("⑱ 2YY=F 舊成交（7/15）→ 退回 FRED 收盤與其日期",
 check("⑱b 報價日較新的天期照常採用即時",
       _c18["dgs3mo"]["date"] == "08-26", _c18["dgs3mo"])
 
+# ⑲ 後設偵測、排版清理、關鍵字分級
+_META_TXT = ("提供的材料中，與指定關鍵字相關的內容極為有限。"
+             "**由於材料缺乏，無法按要求綜合改寫成連貫的財經報導。**")
+check("⑲ 後設字眼命中（實際事故的原文）",
+      len(ft._meta_hits(_META_TXT)) >= 3, ft._meta_hits(_META_TXT)[:4])
+check("⑲b 真新聞不誤殺（「無法」「材料」單獨出現不算）",
+      ft._meta_hits("伊朗無法出口原油，半導體材料股大跌。") == [])
+check("⑲c 排版清理去掉粗體、保留分段",
+      ft._tidy_focus("**重點**一段。\n\n第二段。")
+      == "重點一段。\n\n第二段。")
+
+# meta 命中 → 帶原因重試；第二次乾淨 → 過
+_orig_ca19 = ft._call_ai
+_calls19 = []
+def _ca19(src, system, env=None):
+    _calls19.append(src)
+    if len(_calls19) == 1:
+        return _META_TXT, ""
+    return "財政部宣布對伊朗實施制裁，債券市場靜待聯準會下一步。", ""
+ft._call_ai = _ca19
+_t19, _s19 = ft.summarize_content(
+    [{"title": "t", "body": "財政部對伊朗制裁，債券市場觀望聯準會。",
+      "source": "y"}], ["聯準會"], 300)
+check("⑲d meta 命中重試一次、第二次乾淨 → 過",
+      _s19 == "model-content" and len(_calls19) == 2
+      and "被退回" in _calls19[1], _s19)
+# 兩次都 meta → 退回（列標題模式的原因）
+_calls19.clear()
+ft._call_ai = (lambda src, system, env=None: (_META_TXT, ""))
+_t19e, _s19e = ft.summarize_content(
+    [{"title": "t", "body": "內文一段。", "source": "y"}], ["聯準會"], 300)
+check("⑲e 兩次都後設 → 退回列標題", _t19e == "" and "後設" in _s19e, _s19e)
+ft._call_ai = _orig_ca19
+
+# 分級計分：次級命中要排在主級命中之後
+_H = [{"title": "AI 資本支出暴增帶動發債", "link": "l1", "source": "y",
+       "at": "2026-08-27T01:00:00+00:00", "kw": ""},
+      {"title": "聯準會官員談降息路徑", "link": "l2", "source": "y",
+       "at": "2026-08-27T00:00:00+00:00", "kw": ""}]
+_picked = ft.pick_fallback(_H, ["聯準會 降息"], n=2,
+                           secondary=["AI 資本支出", "發債"])
+check("⑲f 主級（聯準會）排在次級（AI 資本支出）前面",
+      _picked[0]["link"] == "l2", [x["link"] for x in _picked])
+check("⑲g 次級仍會入選（不是排除，只是排後）",
+      len(_picked) == 2 and _picked[1]["link"] == "l1")
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

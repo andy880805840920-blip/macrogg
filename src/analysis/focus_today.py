@@ -720,8 +720,11 @@ _FOCUS_CONTENT_SYSTEM = (
     "「標題快訊」只能轉述其標題與摘要**字面上有的事**，不得展開細節、"
     "不得推測其內文，引用時帶來源（例如「路透報導稱…」）；"
     "不得自行推論來源沒有寫的因果關係；不做預測、不下投資結論；"
-    "與關鍵字無關的內容一律不寫；繁體中文；"
-    "直接輸出報導本文，不要標題、不要前言。")
+    "與上列主題無關的內容一律不寫；繁體中文。"
+    "**絕對禁止評論材料本身**：不要說明材料的多寡、品質或相關性，"
+    "不要解釋你的處理過程，不要出現「材料」「關鍵字」「無法按要求」"
+    "這類字眼——相關內容少就把確實有的寫成短報導，一段也可以，"
+    "寧短勿虛。直接輸出報導本文，不要標題、不要前言、不要粗體記號。")
 
 
 def _post_gemini_hardy(key: str, model: str, src_text: str,
@@ -829,9 +832,35 @@ def _call_ai(src_text: str, system: str, env=None) -> tuple[str, str]:
     return "", "呼叫失敗（" + "；".join(errs) + "）"
 
 
+# 後設偵測的預設清單（config 的 meta_markers 可覆寫）：這些詞組出現＝
+# 模型在評論材料而不是寫新聞。實際事故：整篇「提供的材料中相關內容
+# 極為有限…無法按要求綜合改寫」帶著粗體記號直接上線——長度、數字、
+# 段落三道檢查都真心誠意地放行了，缺的就是「這是不是新聞」這一道。
+DEFAULT_META_MARKERS = (
+    "提供的材料", "材料中", "材料主要", "材料缺乏", "根據材料", "僅能提取",
+    "相關內容極為有限", "相關資訊有限", "關鍵字", "按要求", "綜合改寫",
+    "無法按", "不足以", "標題快訊", "內文細節", "可供轉述",
+    "以下是", "以下為", "根據您", "綜上所述", "需要注意的是", "總結來說")
+
+
+def _meta_hits(text: str, markers=None) -> list[str]:
+    """回傳命中的後設詞組（空＝乾淨）。只比詞組不比單詞，
+    「伊朗無法出口」的「無法」不會誤殺。"""
+    return [m for m in (markers or DEFAULT_META_MARKERS) if m in (text or "")]
+
+
+def _tidy_focus(text: str) -> str:
+    """焦點段的排版清理：逐段去掉 markdown 記號（粗體實際上過線）。
+    段落結構（空行）保留——首頁靠它分段渲染。"""
+    from . import polish as _pl
+    return "\n".join(_pl._sanitize(ln) if ln.strip() else ""
+                      for ln in (text or "").splitlines())
+
+
 def summarize_content(articles: list[dict], keywords: list[str],
                       cap: int, env=None,
-                      briefs: list[dict] | None = None) -> tuple[str, str]:
+                      briefs: list[dict] | None = None,
+                      meta_markers=None) -> tuple[str, str]:
     """
     從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。
 
@@ -854,19 +883,30 @@ def summarize_content(articles: list[dict], keywords: list[str],
         return "", "沒有任何材料"
     # cap 是硬上限（沒有暗許寬限——先前 +40 讓「設 250」實際放行 290）。
     # 提示詞要求的目標取 cap−30：模型自然寫在硬上限之內，少退件。
-    text, err = _call_ai(
-        src_text,
-        _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
-                                     cap=max(120, cap - 30)),
-        env)
-    if err:
-        return "", err
-    if not text or cjk_len(text) > cap:
-        return "", f"長度不合格（{cjk_len(text)} 字，上限 {cap}）"
-    # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
-    if not _digits_ok(text, src_text):
-        return "", "輸出出現內文裡沒有的數字"
-    return text, "model-content"
+    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
+                                          cap=max(120, cap - 30))
+    note = ""
+    for _attempt in (1, 2):
+        text, err = _call_ai(src_text + note, system, env)
+        if err:
+            return "", err
+        text = _tidy_focus(text)
+        _meta = _meta_hits(text, meta_markers)
+        if _meta:
+            # 模型在評論材料而不是寫新聞 → 帶原因重試一次
+            log.warning("市場焦點：輸出含後設字眼（%s），退回重試",
+                        "、".join(_meta[:4]))
+            note = ("\n\n（上一次的輸出在評論材料本身，被退回。"
+                    "請直接輸出報導本文：不要解釋材料的多寡或你的處理"
+                    "過程；材料少就短寫，一段也可以，寧短勿虛。）")
+            continue
+        if not text or cjk_len(text) > cap:
+            return "", f"長度不合格（{cjk_len(text)} 字，上限 {cap}）"
+        # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
+        if not _digits_ok(text, src_text):
+            return "", "輸出出現內文裡沒有的數字"
+        return text, "model-content"
+    return "", "輸出反覆評論材料本身（後設字眼）"
 
 
 def _norm_title(t: str) -> str:
@@ -885,7 +925,8 @@ def _sim(a: str, b: str) -> float:
 
 
 def pick_fallback(headlines: list[dict], keywords: list[str],
-                  n: int = 3, exclude: list[str] | None = None) -> list[dict]:
+                  n: int = 3, exclude: list[str] | None = None,
+                  secondary: list[str] | None = None) -> list[dict]:
     """
     沒有 AI 時的確定性挑選：關鍵字命中數多者優先。
     輸入已按時間新→舊排好，穩定排序讓同分者維持新的在前。
@@ -896,8 +937,13 @@ def pick_fallback(headlines: list[dict], keywords: list[str],
     字元二元組相似度把 >0.55 的視為重複，跳過選下一則。
     """
     def _hits(h):
+        """主級關鍵字一次 2 分、次級 1 分——債市生態系與 AI 資本週期
+        的次級主題只在主線不足時上位，不搶聯準會頭條的位置。"""
         t = _kw_text(h["title"])
-        return sum(1 for kw in keywords for w in kw.split() if _kw_hit(w, t))
+        return (2 * sum(1 for kw in keywords
+                        for w in kw.split() if _kw_hit(w, t))
+                + sum(1 for kw in (secondary or [])
+                      for w in kw.split() if _kw_hit(w, t)))
     picked = []
     for h in sorted(headlines, key=_hits, reverse=True):
         # 排除詞在挑選層也擋一次：Google News 標題模式不經過 feed 的
@@ -1566,7 +1612,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----
     feeds = cfg.get("feeds") or DEFAULT_FEEDS
     exclude = cfg.get("exclude_keywords") or []
-    heads = fetch_feed_headlines(feeds, keywords, exclude=exclude)
+    kw2 = [str(k) for k in (cfg.get("keywords_secondary") or []) if k]
+    meta_markers = ([str(m) for m in cfg.get("meta_markers") if m]
+                    if cfg.get("meta_markers") else None)
+    # feed 過濾要認得兩級關鍵字（次級只是排序權重低，不是不收）
+    heads = fetch_feed_headlines(feeds, keywords + kw2, exclude=exclude)
     mode = "content"
     if not heads:
         log.warning("市場焦點：Yahoo RSS 無命中或全部失敗，退回 Google News 標題模式")
@@ -1584,16 +1634,19 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                             _srcs)
         mode = "title"
     if heads:
-        top = pick_fallback(heads, keywords, n=6, exclude=exclude)
+        top = pick_fallback(heads, keywords, n=6, exclude=exclude,
+                            secondary=kw2)
         # 兩層材料：內文名額只給抓得到正文的來源（Google News 是 JS
         # 轉址中介頁、FT／WSJ 是付費牆——先前佔掉名額又必然 0 段）；
         # 付費牆來源改走「標題快訊」層：標題＋RSS 官方摘要直接進材料包。
         body_cand = pick_fallback([x for x in heads
                                    if not _headline_only(x["link"])],
-                                  keywords, n=6, exclude=exclude)
+                                  keywords, n=6, exclude=exclude,
+                                  secondary=kw2)
         briefs = pick_fallback([x for x in heads
                                 if _headline_only(x["link"])],
-                               keywords, n=4, exclude=exclude)
+                               keywords, n=4, exclude=exclude,
+                               secondary=kw2)
         h = hashlib.sha256((mode + "|" + "|".join(
             x["title"] for x in (top + body_cand + briefs)))
                            .encode("utf-8")).hexdigest()[:16]
@@ -1613,6 +1666,25 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 arts = [{"title": x["title"], "body": b,
                          "source": x.get("source", "")}
                         for x, b in zip(body_cand, _bodies) if b]
+                if len(arts) < 3:
+                    # 材料太薄不放棄：第二輪把時間窗放寬到 60 小時、
+                    # 候選從排名往後遞補再抓一批（使用者指定：先繼續爬，
+                    # 第二輪還是不夠才「寫僅有的訊息」）。
+                    log.info("市場焦點：內文只有 %d 篇，第二輪擴大"
+                             "時間窗（60 小時）再爬", len(arts))
+                    heads2 = fetch_feed_headlines(feeds, keywords + kw2,
+                                                  hours=60, exclude=exclude)
+                    _got = {x["link"] for x in body_cand}
+                    cand2 = [x for x in pick_fallback(
+                        [h for h in heads2
+                         if not _headline_only(h["link"])],
+                        keywords, n=12, exclude=exclude, secondary=kw2)
+                        if x["link"] not in _got][:6]
+                    _b2 = _pmap(lambda x: fetch_article_text(x["link"]),
+                                cand2)
+                    arts += [{"title": x["title"], "body": b,
+                              "source": x.get("source", "")}
+                             for x, b in zip(cand2, _b2) if b]
                 if arts or briefs:
                     # 抓到多少內文寫進 log：頁面只標「摘要自內文」，
                     # 摘要品質有疑慮時要能回頭查是不是內文本身太薄。
@@ -1621,7 +1693,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                              "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
                                        for a in arts))
                     text, src = summarize_content(arts, keywords, cap, env,
-                                                  briefs=briefs)
+                                                  briefs=briefs,
+                                                  meta_markers=meta_markers)
                     if not text:
                         log.warning("市場焦點：內文摘要退回標題模式（%s）", src)
                 else:
