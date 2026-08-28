@@ -1,16 +1,16 @@
 {
- "hash": "d6e42d4bc11e425e",
- "text": "提供的材料中，與指定關鍵字（川普、聯準會、Fed、Kevin Warsh、美國財政部、貝森特、美債、殖利率、債券市場、美伊等）相關的內容極為有限。材料主要涉及川普的地緣政治舉措（安大略湖改名、晶片關稅）與美伊能源外交，而非財經核心議題。\n\n根據材料中確實存在的相關資訊，僅能提取以下內容：\n\n美國財政部長貝森特表示，美國周一宣布對伊朗實施「史上最嚴厲的制裁」，這些經濟措施有助於降低未來再次發動大規模軍事行動的必要性。川普政府已向各方表明無意恢復6月與伊朗達成的諒解備忘錄框架，使外交斡旋面臨更大阻力。\n\n標題快訊提及Fed的Warsh在傑克森霍爾面臨挑戰，需判斷通膨是否仍為問題，但無內文細節可供轉述。\n\n**由於材料缺乏足夠的聯準會政策、利率決策、美債殖利率、債券市場動向等核心財經內容，無法按要求綜合改寫成連貫的財經報導。**",
+ "hash": "a8c9513c317b9d93",
+ "text": "美國公債市場面臨多重變數。通膨數據持續支撐聯準會升息預期，推動公債殖利率上升。與此同時，財政部長貝森特提出的「國債轉換」策略引發華爾街對美國借貸策略可能轉變的廣泛討論。市場並關注聯準會與財政部之間可能出現的「政策體制轉變」，有分析認為這可能帶動公債反彈。此外，聯準會官員柯林斯表示利率水準仍具溫和限制性，反映出對貨幣政策立場的不同評估。這些因素共同影響投資人對聯準會升息路徑的判斷，進而牽動公債市場走向。",
  "links": [
   {
-   "title": "Live Q&A: What’s at Stake For Fed’s Warsh at Jackson Hole",
-   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxObXZGMi05V1lxUTlRVXdWVEJ4bnJTRmxBaUVMTGNRSmtPbDUwMk9ucUlLeV93QmVCWlZyaFBnbzQtYVh6cXlfTk9uRVk1Q1Q1YkZmWDhpeXlXYzJXeWc1b0VNUWRVQ1FYbDJra2VTcmU0UWQ5cEpQN3pNSWZSWEpFQzN3UkdvQThaOXJtczA5TXNWYkxud2lwX1NGWDVVRGxzQVk0NGV1SUJ4Zw?oc=5",
+   "title": "Bond Yields Climb as Inflation Data Keeps Fed Hike Bets Alive",
+   "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOZXg2VlFpS1RaeEdpMU5HMVlOSlY0aU5zcGtacUpnNm1iaC12MGtSZEowT3ZZa1NwdERjWkp0b3FDNDlYczBzMXg5ZnZqWWZUTldDV0lkVVJvdXJqS0IwYVZ6QXVvU3NUVHpTWGlyM0NQaFE1MVJlMk9ZdmQ0NFkxM01fNm9aZ25DSmducHlxLUdORmZuamI3WWdYQmF6ZnB2SUhRV0xnN1BGRTlCalBEaEln?oc=5",
    "source": "Bloomberg"
   },
   {
-   "title": "Nasdaq, S&P 500 lifted by Nvidia's forecast; investors eye speech by Fed's Warsh",
-   "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPQjFsZE5oMDdHNmpjOTd5V0dmUHItLXFIbzQyblhZQ3Bfa0tGcmFDM3ZHS2ZJRlJEZzhDMXk2b2syeVRZNndVNzZvSnNVSnRFalZXUXJhUm5aZGVUVHVSZVQ0VzllN09IcWtOZENfRmV5eW9fOGU3Mi1JN1VNWGJ4RE1aY0gycWJfRjRrLXpzTmdoSXlSMW9vVHVtdTNJVmdhS0tXT2FwS2dGbGM2?oc=5",
-   "source": "Reuters"
+   "title": "Bessent’s ‘Treasury Twist’ Has Wall Street War-Gaming a Shift in Borrowing Strategy",
+   "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOSWJrMDNwa0lmRU9fTUVhdVZiemw3Uml6OGNqdGJVbDRCQ20tLVFMQ0VRYVh0MGdwdXF1ZEM0cXphNzljUVNDSGNZVWoteTgxaEJ3eklQYUdqUDY3XzBUckhBMVdpQm02VXRZZWtsMjFKc1I3VDBZQk92ZDF3VV84WklUejJNbkMweUhRcUg4Nk5jLUJ2VW1KLUluODFsbEJPNnZmdV9WVDJVcy01OTJtVERNVHBwdUFRVUZpN283WU0?oc=5",
+   "source": "Bloomberg"
   },
   {
    "title": "Fed-Treasury ‘Regime Change’ May Fuel Bond Rally, Citrini Says",
@@ -27,5 +27,5 @@
   "move_bp": 11.977,
   "method": 4
  },
- "text_source": "model-content"
+ "text_source": "model"
 }
