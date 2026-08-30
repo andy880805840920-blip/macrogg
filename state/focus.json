@@ -1,6 +1,6 @@
 {
- "hash": "7057f244ef5a3228",
- "text": "聯準會政策前景成為市場焦點。美國財政部長貝森特面臨G20外交考驗，同時應對關稅、伊朗戰爭及債券市場動盪等多重挑戰。沃什的言論引發市場對聯準會升息預期上升，導致海灣股市下跌。儘管特朗普盟友主張聯準會應維持利率不變，但最新就業報告似乎支持沃什對勞動力市場的看法。債券殖利率上升已對G7國家造成實質影響，增加了數百億美元的債務成本負擔。",
+ "hash": "54ffa2ddf90896fc",
+ "text": "美伊戰爭引發全球公債殖利率飆升，衝擊各國融資成本。根據英國金融時報分析，自2月戰爭爆發以來，七大工業國集團（G7）因殖利率上揚，主權債務融資成本額外增加160億美元。若殖利率持續走高，預計到2027年第一季末，這些國家需多付約340億美元的融資成本。美國承擔最大部分，目前估計增加了106億美元，若殖利率揚升持續至2027年第一季末，美國額外的利息料將進一步增至217億美元。\n\n近幾週美國公債殖利率急遽攀升，主因投資人愈發擔憂美國公共債務持續增加，以及政策制定者是否有能力抑制川普對伊朗開戰所引發的通膨壓力。美國財政部長貝森特透過加碼購買長天期公債試圖壓低殖利率，但美國公債利率仍未下滑。受到荷莫茲海峽關閉引發的能源供應危機，英國、義大利、德國及日本等能源進口大國國債殖利率也隨之推升。路透報導稱，美國財政部長貝森特面臨G20外交考驗，須應對關稅、伊朗戰爭與債券市場動盪等多重挑戰。",
  "links": [
   {
    "title": "Gulf stocks fall as Fed rate-hike bets rise after Warsh remarks",
@@ -13,8 +13,8 @@
    "source": "Reuters"
   },
   {
-   "title": "Watch Trump Ally Says Fed Should Hold Rates Steady",
-   "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQRWVSZXFucmRMTWk0aDB3MmFVeVJYQ0hhYkxFOEZBdnJKbF85aWFRUXZLQVBvMmRrMzlDN2pDR2hpQUpHMVo1XzNyXzVTVHVRUHBOM0IyeEQwZlZMTFhMSDBtX3dlTGR4d19LVDg0TUlzTWpBdG95a2E3eHE0V05QcmJzeC1kc0lNak5DbUF2ZldRS3VRUHB6cFczaXlnUWdC?oc=5",
+   "title": "Trump Ally Says Fed Should Hold Rates Steady",
+   "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPS2Z2UnR1QlU3a25USEV4UGJXWG81VW5RZkU1bzhyOGhVVlBsMHFrWVZEOGhHMFpDdzFBTVEwdEFrNUI3d2pLRnBORms1bFZQZTNxMEpWWnB6V3F0c0pTMzcxYVNSOTkwYkpIMEJ2c0dEc3g3WFBBakFxUFdjenlaeElNZzVXYkNQMUhlYmVSZGtYU3d4eEJTRS12RldOdFhHNnNsVlJob2Q4S3VwZ1hRUDZSemRwR0F1SE1hZjZ3?oc=5",
    "source": "Bloomberg"
   }
  ],
@@ -27,5 +27,5 @@
   "move_bp": 16.205,
   "method": 4
  },
- "text_source": "model"
+ "text_source": "model-content"
 }
