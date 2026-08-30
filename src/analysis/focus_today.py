@@ -857,6 +857,41 @@ def _tidy_focus(text: str) -> str:
                       for ln in (text or "").splitlines())
 
 
+# 長度有兩個數字，分工清楚：
+#   cap（config 的 max_chars，目前 300）  **提示詞要求的目標**
+#   cap × HARD_MULT（450）               **硬底線**
+# 300 到 450 之間直接採用、不重試——為了幾十個字重新生成一次，
+# 換來的通常是另一篇差不多長的稿子，白花一次 API 呼叫。
+# 超過 450 才帶著字數重寫一次；重寫後仍然超過就**裁切**到底線之內
+# （以整段為單位，不切斷句子），不會因為長度退回列標題。
+HARD_MULT = 1.5
+
+
+def _trim_to(text: str, limit: int) -> str:
+    """
+    把文字裁到 limit 個中文字以內。優先砍**整段**（句子不被切斷）；
+    連第一段都超長時，退而求其次砍到最後一個句末標點。
+    只刪不改——留下的每個數字仍然出自原文，數字鎖的結論不受影響。
+    """
+    if cjk_len(text) <= limit:
+        return text
+    paras = [p for p in (text or "").split("\n") if p.strip()]
+    kept: list[str] = []
+    for para in paras:
+        if cjk_len("".join(kept) + para) > limit:
+            break
+        kept.append(para)
+    if kept:
+        return "\n".join(kept)
+    out = ""
+    for ch in (paras[0] if paras else text):
+        if cjk_len(out + ch) > limit:
+            break
+        out += ch
+    cut = max(out.rfind(c) for c in "。！？")
+    return out[:cut + 1] if cut > 0 else out
+
+
 def summarize_content(articles: list[dict], keywords: list[str],
                       cap: int, env=None,
                       briefs: list[dict] | None = None,
@@ -881,16 +916,23 @@ def summarize_content(articles: list[dict], keywords: list[str],
                          for b in briefs))
     if not articles and not briefs:
         return "", "沒有任何材料"
-    # cap 是硬上限（沒有暗許寬限——先前 +40 讓「設 250」實際放行 290）。
-    # 提示詞要求的目標取 cap−30：模型自然寫在硬上限之內，少退件。
-    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
-                                          cap=max(120, cap - 30))
+    # 提示詞要求的就是 cap 本身（300 字以內）。
+    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords), cap=cap)
+    # 長度**永遠不會**讓這一段退回列標題（使用者指定）。分工：
+    #   ≤ cap（300）      合格
+    #   cap–hard（–450）  直接採用，不重試——為了幾十個字重新生成，
+    #                     換來的通常是另一篇差不多長的稿子，白花一次呼叫
+    #   > hard（450）     帶著字數重寫一次；仍然超過就裁切到底線之內
+    hard = int(cap * HARD_MULT)
+    best = ""
     note = ""
     for _attempt in (1, 2):
         text, err = _call_ai(src_text + note, system, env)
         if err:
             return "", err
         text = _tidy_focus(text)
+        if not text:
+            return "", "輸出是空的"
         _meta = _meta_hits(text, meta_markers)
         if _meta:
             # 模型在評論材料而不是寫新聞 → 帶原因重試一次
@@ -900,12 +942,32 @@ def summarize_content(articles: list[dict], keywords: list[str],
                     "請直接輸出報導本文：不要解釋材料的多寡或你的處理"
                     "過程；材料少就短寫，一段也可以，寧短勿虛。）")
             continue
-        if not text or cjk_len(text) > cap:
-            return "", f"長度不合格（{cjk_len(text)} 字，上限 {cap}）"
         # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
+        # ——這一條是**正確性**防護欄，跟長度不同層級，照樣一票否決。
         if not _digits_ok(text, src_text):
             return "", "輸出出現內文裡沒有的數字"
-        return text, "model-content"
+        _n = cjk_len(text)
+        if _n <= hard:
+            if _n > cap:
+                log.info("市場焦點：輸出 %d 字（目標 %d、底線 %d），"
+                         "在底線內直接採用", _n, cap, hard)
+            return text, "model-content"
+        # 超過底線：留著當備案（兩次都超過時用比較短的那一份），重寫一次
+        if not best or _n < cjk_len(best):
+            best = text
+        if _attempt == 1:
+            log.warning("市場焦點：輸出 %d 字超過底線 %d，帶字數重寫一次",
+                        _n, hard)
+            note = (f"\n\n（上一次的輸出是 {_n} 個中文字，太長了。"
+                    f"請重寫成 {cap} 字以內：捨掉次要細節，不要刪掉主線。）")
+
+    if best:
+        # 兩次都超過底線：裁切到底線之內（以整段為單位，句子不切斷），
+        # 仍然採用——內容已通過後設檢查與數字鎖，退回列標題更糟。
+        _cut = _trim_to(best, hard)
+        log.warning("市場焦點：兩次都超過底線（%d 字），裁切到 %d 字後採用",
+                    cjk_len(best), cjk_len(_cut))
+        return _cut, "model-content"
     return "", "輸出反覆評論材料本身（後設字眼）"
 
 

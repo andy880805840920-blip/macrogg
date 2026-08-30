@@ -872,6 +872,67 @@ check("⑲f 主級（聯準會）排在次級（AI 資本支出）前面",
 check("⑲g 次級仍會入選（不是排除，只是排後）",
       len(_picked) == 2 and _picked[1]["link"] == "l1")
 
+# ⑳ 長度永遠不讓焦點段退回列標題：300 目標／450 底線（測試用 100／150）
+_ART20 = [{"title": "t", "body": "十年期殖利率走高，市場關注聯準會。",
+           "source": "Yahoo Finance"}]
+_U = "殖利率走高，市場關注聯準會的後續動作與財政部發債計畫。"      # 25 字
+
+
+def _run20(replies, cap=100):
+    """replies 依序回傳；回傳 (結果, 來源標記, 送出的提示詞列表)。"""
+    seen = []
+
+    def _ca(src, system, env=None):
+        seen.append((src, system))
+        return replies[min(len(seen) - 1, len(replies) - 1)], ""
+
+    _orig = ft._call_ai
+    ft._call_ai = _ca
+    try:
+        t, sr = ft.summarize_content(_ART20, ["殖利率"], cap)
+    finally:
+        ft._call_ai = _orig
+    return t, sr, seen
+
+
+# 100–150 之間：直接採用，**不重試**（只呼叫一次）
+_t20, _s20, _seen20 = _run20([_U * 5])                      # 125 字
+check("⑳ 超過目標但在底線內 → 直接採用，不重新生成",
+      _s20 == "model-content" and ft.cjk_len(_t20) == 125
+      and len(_seen20) == 1, (_s20, len(_seen20)))
+check("⑳b 提示詞要求的是目標值本身（100，不是 100−30）",
+      "不超過 100 字" in _seen20[0][1], _seen20[0][1][-60:])
+
+# 超過底線 → 帶字數重寫一次；第二次合格就用第二次
+_t20c, _s20c, _seen20c = _run20([_U * 8, _U * 4])           # 200 → 100
+check("⑳c 超過底線 → 重寫一次，用第二次的結果",
+      _s20c == "model-content" and ft.cjk_len(_t20c) == 100
+      and len(_seen20c) == 2 and "太長了" in _seen20c[1][0], len(_seen20c))
+
+# 兩次都超過底線 → 裁切到底線之內，仍然採用（絕不退回列標題）
+_LONG = "\n".join([_U * 2] * 4)                             # 4 段 × 50＝200
+_t20d, _s20d, _ = _run20([_LONG, _LONG])
+check("⑳d 兩次都超過底線 → 裁切後採用，不退回列標題",
+      _s20d == "model-content" and ft.cjk_len(_t20d) <= 150
+      and _t20d != "", (_s20d, ft.cjk_len(_t20d) if _t20d else 0))
+check("⑳e 裁切以整段為單位，句子沒有被切斷",
+      _t20d.endswith("。") and _t20d.count("\n") == 2
+      and ft.cjk_len(_t20d) == 150, ft.cjk_len(_t20d))
+
+# 裁切函式本身：連第一段都超長時退而砍到最後一個句末標點
+_one = "第一句很長。第二句也不短。第三句收尾。"
+check("⑳f 單段超長 → 砍到最後一個句末標點",
+      ft._trim_to(_one, 12).endswith("。")
+      and ft.cjk_len(ft._trim_to(_one, 12)) <= 12,
+      ft._trim_to(_one, 12))
+check("⑳g 沒超過就原樣不動", ft._trim_to(_one, 999) == _one)
+
+# 正確性防護欄不受影響：數字鎖仍然一票否決（跟長度不同層級）
+_t20h, _s20h, _seen20h = _run20(["殖利率升到 9.99%，市場關注。"] * 2)
+check("⑳h 數字鎖仍是一票否決（不重試、不採用）",
+      _t20h == "" and "沒有的數字" in _s20h and len(_seen20h) == 1, _s20h)
+check("⑳i 底線倍數常數存在且合理", 1.0 < ft.HARD_MULT <= 2.0)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
