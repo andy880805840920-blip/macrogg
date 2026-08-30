@@ -800,13 +800,28 @@ def main() -> int:
 
     # ---- 時間序列完整性閘門 ----
     # 發布前阻擋日期錯序、重複日期、空值與被誤當成實際值的未來資料。
-    # SEP 與 CBO 本來就是預測路徑，明列白名單，不與實際發布序列混用。
+    # 未來日期分三類（完整說明見 series_quality 的模組註解）：
+    #   一般序列  零容忍——台北時區比美國早半天以上，正常不可能超前
+    #   預測路徑  SEP／CBO 本來就是未來值，無上限放行
+    #   行政利率  聯準會直接訂定、生效前就已知，FRED 會照實往前貼
     _forecast_ids = {
         "NROU", "UNRATECTLLR", "UNRATECTHLR", "UNRATEMDLR",
         "PCECTPIMDLR", "JCXFEMD", "JCXFECTH", "JCXFECTL",
     }
-    _series_issues = series_quality.audit_bundle(
-        all_series, today=clock.today(), forecast_ids=_forecast_ids)
+    # 行政設定利率：IORB 與政策利率區間上下緣。
+    # 實例（這串白名單的由來）：2026-08-28 週五，FRED 就貼出了 08-31
+    # 週一的 IORB，於是週五到週日的每一次排程都撞上「未來資料」、
+    # 整站停止發布。這類序列允許超前，但仍有 7 天上限（見常數）。
+    _administered_ids = {"IORB", "DFEDTARU", "DFEDTARL"}
+    _all_issues = series_quality.audit_bundle(
+        all_series, today=clock.today(), forecast_ids=_forecast_ids,
+        administered_ids=_administered_ids)
+    # 超前但在容許內的只記錄不擋——log 說得出「為什麼有未來日期」，
+    # 免得日後看到 IORB 掛著明天的日期又要重新查一次。
+    for _iss in _all_issues:
+        if _iss.severity != "error":
+            log.info("時間序列 %s：%s", _iss.series_id, _iss.detail)
+    _series_issues = series_quality.errors(_all_issues)
     ctxs["_series_issues"] = _series_issues
     if _series_issues:
         for _iss in _series_issues[:12]:
