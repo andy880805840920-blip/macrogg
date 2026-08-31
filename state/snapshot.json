@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-31T01:49:08+08:00",
+  "at": "2026-09-01T03:43:27+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -431,15 +431,15 @@
     },
     "market": {
       "current": {
-        "vintage": "2026-W35",
-        "released": "2026-08-26",
+        "vintage": "2026-W36",
+        "released": "2026-09-01",
         "flags": [],
         "flag_titles": {},
         "flag_leans": {},
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.72,
+            "value": 4.76,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -447,7 +447,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.21,
+            "value": 5.25,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -482,15 +482,15 @@
         "metrics_prev": {}
       },
       "previous": {
-        "vintage": "2026-W34",
-        "released": "2026-08-21",
+        "vintage": "2026-W35",
+        "released": "2026-08-26",
         "flags": [],
         "flag_titles": {},
         "flag_leans": {},
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.74,
+            "value": 4.72,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -498,7 +498,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.27,
+            "value": 5.21,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -506,7 +506,7 @@
           },
           "tp": {
             "label": "期限溢酬",
-            "value": 0.8393,
+            "value": 0.8682,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -514,7 +514,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.81,
+            "value": 0.79,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -572,7 +572,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-08-31T01:49:08+08:00",
+      "at": "2026-09-01T03:43:27+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",
