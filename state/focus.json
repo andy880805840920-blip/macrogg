@@ -1,6 +1,6 @@
 {
- "hash": "6108a8d4cfbe90cc",
- "text": "美國10年期公債殖利率周一突破4.75%，創2025年1月以來最高水準。美伊衝突升溫推升油價至每桶85美元以上，加劇市場對通膨與聯準會升息的擔憂。美債拋售潮蔓延至5年期與30年期，其中5年期殖利率同樣升至2025年初以來最高。美國財政部本月稍早宣布擴大長天期公債回購規模以支撐債券價格，惟市場對升息預期仍持續升溫。\n\n聯準會主席華許上周五在傑克森霍爾全球央行年會發表演說後，市場明顯提高升息押注。華許表示目前金融環境並不具有限制性，並將利率形容為Fed實現政策使命的「主要工具」。根據彭博彙整的交換市場數據，交易員目前預估Fed下月升息的機率約為60%，遠高於華許演說前的34%。被視為「Fed傳聲筒」的《華爾街日報》記者指出，華許演說悄悄改變9月利率決策的門檻，Fed如今可能需要看到足夠疲弱的通膨數據才有理由按兵不動。巴克萊與法國興業銀行等機構已調整預測，轉而預期Fed將在9月及12月各升息一次。\n\n9月11日公布的8月消費者物價指數將成為9月15至16日利率會議前的關鍵考驗。若8月通膨再次降溫，可能與前兩個月構成更明確的改善趨勢，為Fed按兵不動提供依據；反之若CPI表現強勁，將削弱通膨正朝2%目標回落的說法，恐重新引發市場對華許是否有意願採取行動的懷疑。",
+ "hash": "084f75f49c563c2b",
+ "text": "美國聯準會內部對政策方向出現明顯分歧。Fed理事巴爾於9月1日表示，若通膨未能充分降溫，他將支持果斷升息，並警告物價漲勢持續高於2%目標逾5年，可能使更廣泛的通膨壓力逐漸根深柢固。巴爾指出整體物價年增3.7%，核心通膨率為3.3%，雙雙高於目標。同時，Fed主席Kevin Warsh上周在傑克森霍爾全球央行年會警告通膨並未明顯降溫，相關談話被市場廣泛解讀為偏向升息。芝商所FedWatch工具顯示，交易員預估Fed本月升息機率約66%。\n\n美國經濟數據呈現混合訊號。8月製造業連續第8個月擴張，ISM製造業指數由7月的55.6降至54.6，標普全球PMI則持平於53.9，但新訂單指數由56.7降至53.7創3月以來最低。7月職缺數增加至727.1萬個，職缺率升至4.4%，但企業招聘人數減少27.8萬人至505.4萬人，裁員人數則降至166.6萬人創1月以來最低。標普全球經濟學家指出，企業累積庫存支撐生產，但8月產出與新訂單成長均已放緩。\n\n通膨壓力持續來自多方面。中東戰爭已持續6個月，美國與以色列對伊朗的衝突加劇原有的關稅、能源及供應鏈壓力。美國10年期公債殖利率升至2025年1月中旬以來最高。製造業供應商交貨指數由58.9升至59.3，顯示供應鏈延誤仍未緩解，原物料價格居高不下。",
  "links": [
   {
    "title": "Emerging-Market Stocks Fall as Warsh Stokes Fed Rate-Hike Bets",
@@ -13,15 +13,15 @@
    "source": "Bloomberg"
   },
   {
-   "title": "Barclays sees two more Fed rate hikes this year after Warsh speech",
-   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQcjVHcjZWTGVra3FoZ29XVXdDS05fZlh6S3ZwZHdzb2Z1bHo1Tm12NUNBZWZxN21sTG5hYkdfVVA5VmlBMm5xOERKNXJYZDJURkI2Yk5Lb1JNZFFyNEJVZUdKSjhtdFZtbm5MdHJfN3cwN1FTUzRlUkJwUWxnWjlqLVVpdHZrQkRnaUx0Y1oyZlQ1VzY0LUhmRlI5d2RKbU9lQWVZUC0xTG81QjljYzRwdDRQRndsY3FXZWdR?oc=5",
-   "source": "Reuters"
+   "title": "Gold Holds Decline as Mideast Flare-Up Raises Fed Rate-Hike Bets",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOTEEwaGlXdWhKUE9qYmdGV3hZLWl0dk9VOGtxTm1rUldkMW15UVFFM1VBYVRYZXJwNnpqY0NZb05KcG54dUFhWDJRMDVhT1cwZTBBb1B5U2RLUG4tb0ZNai1kcmZwRmdidE1pZ3ZQbjNWejloaGtDQk9OeFZlTGJ2SXZ5dlB1dVVTZ3Rtdzk4Ui1qVkR6RU1SXzJQVk96N0RPb1dYSy1paFRsMFlnQmY2RTdKUXI2UQ?oc=5",
+   "source": "Bloomberg"
   }
  ],
  "fedwatch": {
   "pct": 59.18,
-  "date": "2026-09-01",
-  "delta_pp": -5.6,
+  "date": "2026-09-02",
+  "delta_pp": 0.0,
   "suspect": false,
   "src": "futures",
   "move_bp": 14.795,
