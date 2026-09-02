@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-02T04:11:27+08:00",
+  "at": "2026-09-03T01:25:26+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -99,11 +99,12 @@
         "vintage": "2026-07|2026-07",
         "released": "2026-08-26",
         "month": "2026-07",
-        "tilt": "dovish",
+        "tilt": "balanced",
         "flags": [
           "cpi_cooling",
           "above_target",
           "shelter_drag",
+          "oil_up",
           "ppi_pipeline",
           "shelter_turn",
           "pace_ontrack",
@@ -114,6 +115,7 @@
           "cpi_cooling": "近三月年化低於年增率 0.4 個百分點以上",
           "above_target": "核心 PCE 顯著高於目標",
           "shelter_drag": "住房落後項推升整體讀數",
+          "oil_up": "油價上行，未來一至兩月推升總體 CPI",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
           "shelter_turn": "住房通膨的降溫已成既定路徑",
           "pace_ontrack": "核心 CPI 月步速已連續 3 個月守在 0.2% 以下",
@@ -124,6 +126,7 @@
           "cpi_cooling": "dovish",
           "above_target": "hawkish",
           "shelter_drag": "dovish",
+          "oil_up": "hawkish",
           "ppi_pipeline": "hawkish",
           "shelter_turn": "dovish",
           "pace_ontrack": "dovish",
@@ -207,7 +210,7 @@
             "value": 2.0983424790244287
           },
           "exp5y5y": {
-            "value": 2.32
+            "value": 2.31
           }
         }
       },
@@ -508,7 +511,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.8,
+            "value": 0.81,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -516,7 +519,7 @@
           },
           "exp5y5y": {
             "label": "長期通膨預期",
-            "value": 2.31,
+            "value": 2.33,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -617,7 +620,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-09-02T04:11:27+08:00",
+      "at": "2026-09-03T01:25:26+08:00",
       "vintage": "labor:2026-07|inflation:2026-07|2026-07|fomc:2026-07-29",
       "name": "傾向緊縮",
       "regime": "inflation",
