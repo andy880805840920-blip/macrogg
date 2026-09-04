@@ -1,31 +1,15 @@
 {
-  "generated_at": "2026-09-04T04:10:28+08:00",
+  "generated_at": "2026-09-05T01:08:39+08:00",
   "labor": {
-    "month": "2026-07",
-    "score": -0.2848997365925772,
+    "month": "2026-08",
+    "score": 0.05671308354859643,
     "tilt": {
-      "dovish": 4.5,
-      "hawkish": 0,
-      "net": -4.5,
-      "tilt": "dovish"
+      "dovish": 1.0,
+      "hawkish": 1.0,
+      "net": 0.0,
+      "tilt": "balanced"
     },
     "flags": [
-      {
-        "key": "revision_swamps",
-        "severity": "alert",
-        "headline": "前兩月大幅下修，實質動能弱於初值",
-        "detail": "政府這次把前兩個月的就業人數合計往下修了 10.3 萬人，比本月的變動量還大。把修正算進去後，近三個月平均每月新增從 +5.4 萬人掉到 +2.0 萬人——為什麼會修正，見下方「歷史數據修正」卡。",
-        "lean": "dovish",
-        "impact": "就業動能比初值顯示的更弱"
-      },
-      {
-        "key": "revision_bias_down",
-        "severity": "watch",
-        "headline": "初值近一年呈系統性下修",
-        "detail": "過去 12 個月，每個月的就業人數平均事後被往下修 0.9 萬人。看到剛公布的數字時，要記得它之後很可能被調降。",
-        "lean": "dovish",
-        "impact": "初值應打折看待"
-      },
       {
         "key": "openings_vs_hiring",
         "severity": "watch",
@@ -35,12 +19,12 @@
         "impact": "求職者實際更難找到工作"
       },
       {
-        "key": "bad_decline",
-        "severity": "info",
-        "headline": "失業率下降源於勞動力退出，而非就業增加",
-        "detail": "失業率下降 0.10 個百分點，表面上是好消息。但真正有工作的人其實少了 8.7 萬人，同時有 26.4 萬人乾脆放棄找工作、退出職場——失業率是被這批人壓低的，完整拆解見下方「失業率變動分解」。（0.1 個百分點低於顯著門檻 0.2，強度別當真。）",
-        "lean": "dovish",
-        "impact": "就業市場實際在轉弱"
+        "key": "wage_understated",
+        "severity": "watch",
+        "headline": "非管理職薪資增速高於總體",
+        "detail": "整體平均時薪年增 3.09%，但基層員工（不含主管）達 3.30%。基層薪資是服務業成本的主要來源，漲得比整體快，代表薪資推動的通膨壓力比整體數字顯示的更大。",
+        "lean": "hawkish",
+        "impact": "薪資推動的通膨壓力比表面大"
       },
       {
         "key": "low_hire_low_fire",
