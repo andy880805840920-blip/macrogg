@@ -1,6 +1,6 @@
 {
- "hash": "5d3be3f06a87e068",
- "text": "美國10年期公債殖利率過去6個月累計上升約75個基點，近期徘徊在4.8%附近，創川普第二任期以來最高。聯邦預算與貿易逆差急升、聯準會似乎未積極處理通膨，以及財政部干預市場等因素，都讓美債開始帶有信用風險色彩。安聯投資長兼首席經濟學家Ludovic Subran表示，投資人自然會要求美國支付更高的借款價格，這是「純粹的經濟考量」。美國預計將在2027年冬末至年中觸及41.1兆美元債務上限，更加重了投資人對財政風險的重視。\n\n美國8月非農就業人數增加16.2萬人，遠超市場預期的5.6萬人，7月數據也上修為增加2.1萬人。強勁報告公布後，市場提高聯準會本月升息預期，與川普要求降息的立場形成鮮明對比。川普在Truth Social發文強調，經濟成長不會造成通膨，並主張美國經濟成長率應達到15%至20%。他警告聯準會若不降息，美國將停止與存在貿易逆差的國家進行貿易，並要求新任Fed主席華許（Kevin Warsh）「聰明一點」。\n\n美國財政部將提高部分長期公債回購規模，希望改善市場流動性。然而，投資人仍在評估華許將如何處理高於2%目標的通膨，殖利率因而難以明顯回落。路透報導稱，花旗集團已延後聯準會降息預測至2027年。推升殖利率的政治與財政因素暫時沒有消退跡象。",
+ "hash": "8e5d996e994ca28d",
+ "text": "美債殖利率近期飆升至多年高點，引發聯準會與華爾街對其成因的激烈分歧。美國10年期公債殖利率本周升至4.814%，創2023年11月以來最高；30年期公債殖利率則報5.12%。紐約聯準銀行總裁威廉斯表示，殖利率上升主要反映美國經濟強勁，人工智慧、資料中心及科技領域的大規模投資推升融資成本，而非通膨補償因素。Fed主席華許同樣主張長天期債券殖利率上升源於經濟強勁，指出過去四季企業資本投資成長9%，消費支出保持韌性。\n\n然而交易員描繪出更令人不安的景象，將殖利率上升歸因於頑固通膨、能源價格飆漲及政府債務膨脹交織而成的劇烈風暴。中東軍事攻擊再起帶動油價突破每桶95美元，加劇市場對通膨的疑慮。美國財長貝森特在周五專訪中表示，一旦伊朗衝突落幕，油價最低可能暴跌至每桶40美元，並使近期攀抵多年高點的債券殖利率回落。貝森特指出，利率與油價的相關性已達前所未見的高點，伊朗衝突終將結束，屆時利率與整體通膨的飆升情勢都會降溫。",
  "links": [
   {
    "title": "Strong job gains signal Fed hike as Trump levels new rate-cut demand",
@@ -8,23 +8,23 @@
    "source": "Reuters"
   },
   {
-   "title": "Stocks Fall as Jobs Fuel Bets Fed Will Raise Rates: Markets Wrap",
-   "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQaktoYVRBb3N2SC1rN2s4X05rbWgtWE0xeFRDak9DOXV5Zlppd2Rsbml6bXJObVNkNjJuS1I4UzdxUG5XV1pqd3JPUUFxUWUzU1E1TmlSeVdZeFNzN3NNVjVPVE5qYmZHYUppMFdfVG1aV2NscTlvTnQyNGJyTDA5QUJNLUF3U1l0dmJ0d2ZPcFVtbV9a?oc=5",
-   "source": "Bloomberg"
-  },
-  {
    "title": "Trump Demands Fed Lower Rates, Reviving Pressure Campaign",
    "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQM0NWMHh6eHU1Tk5zUF9VUXloY0NBQTlJVmZxSU8wUXVWZWs5c0sta0drTTNzT3hWNXdQTWxCX1pXUmV3bkYyN29obldYdS12MGk2cVBNX3B4X2VpQWZmS0JHTzZRWWFIVkJLUGxjdDVsSENBTTBrV2NwV3V3QlpCOVVXb2VPNkJtNldaWFJ1SjZVQ19zNDVINzZJVTNOTkw2RGppN0x4V2ZNNTA?oc=5",
    "source": "Bloomberg"
+  },
+  {
+   "title": "Citigroup delays Fed rate-cut forecast to 2027 after strong U.S. jobs report",
+   "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQQnlBSDN4T3YxTDREQ3A2YnFhZ1lUN2E2dm1tZmxjb0tLaHFLUlFSN3NOdERlUFM0ZjBXZUhYOU54T2tKeU5saXBLWjk3dDZxTHl0ZXIxem40LU80bVE1V1ZwYVdUalhtMmVtSGtpRVFCX3F5NVpuUWlOR3o3UDZjcVBVd3N1SFBoR2NIT040R3VGX2xzZm91cVZEQ1JndFFoT3JqdzZWWl9PR2s0OGp2RWVsUUJteGM?oc=5",
+   "source": "Reuters"
   }
  ],
  "fedwatch": {
-  "pct": 50.73,
-  "date": "2026-09-05",
-  "delta_pp": -2.8,
+  "pct": 53.55,
+  "date": "2026-09-06",
+  "delta_pp": 0.0,
   "suspect": false,
   "src": "futures",
-  "move_bp": 12.682,
+  "move_bp": 13.386,
   "method": 4
  },
  "text_source": "model-content"
