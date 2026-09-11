@@ -5,9 +5,9 @@
   "advanced": true
  },
  "inflation": {
-  "month": "2026-07",
-  "first_seen": "2026-08-13T16:28:36+08:00",
-  "advanced": false
+  "month": "2026-08",
+  "first_seen": "2026-09-12T01:17:10+08:00",
+  "advanced": true
  },
  "pce": {
   "month": "2026-07",
