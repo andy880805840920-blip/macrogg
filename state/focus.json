@@ -1,6 +1,6 @@
 {
- "hash": "09188f07499923da",
- "text": "美國8月核心消費者物價指數月增0.3%，高於預期的0.2%，其中無線電話服務價格單月大漲5.9%，創紀錄新高。這份數據加大了聯準會主席凱文·華許在下周9月15至16日政策會議支持升息的壓力。聯邦基金期貨顯示，市場預估Fed升息機率由周四的70%躍升至85%以上，多家機構經濟學家也轉而預測Fed將調高利率。華許8月底在傑克森霍爾全球央行年會表示，若新數據無法讓官員確信通膨朝2%目標前進，Fed「仍有工作要做」。\n\n長期美債殖利率同步攀升，成為市場關注焦點。瑞銀警示，資本供需格局改變，AI投資熱潮與政府債券發行形成競爭，壓低債券需求。8月30年期美國公債殖利率曾突破5.3%，創2007年以來新高。瑞銀指出，儘管殖利率可能已接近本輪週期高點，但由於政治層面缺乏大幅整頓財政的意願，加上AI投資持續，投資者應逐漸適應5%以上的30年期美債殖利率。殖利率上升將壓縮科技股本益比、增加企業融資成本，並提升債券吸引力，影響資金流向。",
+ "hash": "92ddb930d6384138",
+ "text": "美國通膨持續升溫，市場對聯準會升息預期大幅升高。美國8月消費者物價指數年增率為3.4%、月增0.4%，核心CPI年增率為2.4%，高於市場預期。根據芝商所FedWatch工具，市場預期聯準會下週升息機率已從一週前的59%飆升至87%。油價本週再漲9%，通膨壓力短期內仍難緩解，加上8月就業報告表現強勁，進一步增加升息預期。\n\n債券市場已提前反映升息預期。10年期美國公債殖利率從6月底的4.4%升至接近5%，2年期殖利率也出現相近升幅，30年期美債殖利率週四收在5.36%，創2004年6月以來最高。儘管分析師連續21週上調企業獲利預期，但美股自6月以來整體幾乎原地踏步，標普500指數本週下跌約0.7%，那斯達克下跌0.5%，道瓊下挫1.4%。\n\n不過部分學者認為聯準會可能按兵不動。亞太商工總會執行長邱達生指出，雖然CPI略高於預期，但勞動市場仍具韌性，近日通膨升溫主要來自能源價格上漲。若聯準會此時升息，等於在能源衝擊外再加貨幣緊縮，增加經濟過度降溫風險。邱達生認為，在通膨預期未明顯失控前，聯準會可先觀察一段時間。若聯準會升息1碼，台灣央行緊接著可能跟著升息半碼。",
  "links": [
   {
    "title": "Wall St Week Ahead Investors brace for possible rate hike at uncertain Fed meeting",
@@ -13,18 +13,18 @@
    "source": "Reuters"
   },
   {
-   "title": "Bond yields hit multi-year highs as traders brace for new ECB rate-hike cycle",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOdFpuTDFaWjFEOW82UlRWWm1NY0RjNkdBZS1EOWFvb21UbkxZUWxZN3ZwZEJ2R25wZC1ZVEF1WmkzNFVXN3VUNVdpSXk3RGUyTmNtRUh1VDFEMnFMNDN2ekpnSzdWTzFNUkh2ZUdMcngta1lzVm1jb1VNZnR6cjhVUEkzQi1kUzREY2FXbGd5eGtCWEJ3YzRGRFJXdF9BVm1MQVRCN2dPcDQ3aE42a1hZVUQxR1JRZw?oc=5",
-   "source": "Reuters"
+   "title": "Warsh Faces Intensifying Pressure to Raise Rates After Hot CPI",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQSlA0Sl9sSUFuNjJhanlXWXcxMlNNRENsaEtlRVZvMW5TX3VGb182NW50R2steXkwaDBINzhaWFdjYXI5M3drazl4UGJMOTlzQ0RXTnJXeG45eHROSjNwR1o5d0lmUVQtVnVaN3ZhdzBkd3JUTWFHODEtSEdzbEFlNmVOVy1QOHlLRk9uRmZRdUs0ekg4c3hocE5uNzdXSXc1NDduWmUyVGVPM2Z3SzAzY3lzQ1ZsMl9tQnR3QnJyRVZfN0NR?oc=5",
+   "source": "Bloomberg"
   }
  ],
  "fedwatch": {
-  "pct": 64.82,
-  "date": "2026-09-12",
-  "delta_pp": -2.8,
+  "pct": 67.64,
+  "date": "2026-09-13",
+  "delta_pp": 0.0,
   "suspect": false,
   "src": "futures",
-  "move_bp": 16.205,
+  "move_bp": 16.909,
   "method": 4
  },
  "text_source": "model-content"
