@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-17T01:47:17+08:00",
+  "at": "2026-09-17T04:29:39+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -418,6 +418,13 @@
     },
     "fomc": {
       "current": {
+        "vintage": "2026-09-16",
+        "released": "2026-09-16",
+        "focus": "inflation",
+        "focus_label": "通膨優先",
+        "objective": 3.0
+      },
+      "previous": {
         "vintage": "2026-07-29",
         "released": "2026-07-29",
         "focus": "inflation",
@@ -587,7 +594,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.95,
+            "value": 5.01,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -595,7 +602,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.33,
+            "value": 5.35,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -683,8 +690,8 @@
     },
     "scenario": {
       "current": {
-        "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-07-29",
-        "released": "2026-09-12",
+        "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-09-16",
+        "released": "2026-09-17",
         "name": "傾向緊縮",
         "grid_name": "傾向緊縮",
         "regime": "inflation",
@@ -692,8 +699,8 @@
         "inflation": "高"
       },
       "previous": {
-        "vintage": "labor:2026-08|inflation:2026-07|2026-07|fomc:2026-07-29",
-        "released": "2026-09-05",
+        "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-07-29",
+        "released": "2026-09-12",
         "name": "傾向緊縮",
         "grid_name": "傾向緊縮",
         "regime": "inflation",
@@ -738,6 +745,14 @@
     {
       "at": "2026-09-17T01:47:17+08:00",
       "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-07-29",
+      "name": "傾向緊縮",
+      "regime": "inflation",
+      "labor": "中",
+      "inflation": "高"
+    },
+    {
+      "at": "2026-09-17T04:29:39+08:00",
+      "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
       "labor": "中",
