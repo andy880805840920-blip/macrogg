@@ -1,26 +1,26 @@
 {
- "hash": "d3b002747b99f47c",
- "text": "美國債券市場近日波動劇烈，殖利率上漲超過5個基點，逼近近20年高點。受聯準會鷹派言論與強於預期的經濟數據影響，美債殖利率從高檔回落，但仍維持高位。路透報導稱，聯準會官員對升息態度分歧，Paulson表示可能需要進一步溫和升息，Williams則認為今年再升息一次是合理的。\n\n美伊談判傳出進展，荷姆茲海峽重啟露出曙光，帶動油價回落。西德州原油11月期貨下跌1.34%至每桶93.29美元，布倫特原油在每桶105美元附近震盪。美中同意將貿易休戰延長兩個月，多項消息緩解市場緊張情緒。\n\n美股主要指數週五小幅走高，道瓊工業指數上漲0.3%，標普500指數上漲0.12%，納斯達克綜合指數上漲0.22%，費半指數強漲1.36%。科技股中，阿卡邁科技宣布與Anthropic達成多年期協議後股價飆漲逾14%。",
+ "hash": "609671ddfc75227b",
+ "text": "美國總統川普日前宣示設立「AI沙皇」職位，預估人工智慧可為美國GDP貢獻25%。台灣金融培訓協會理事長林昌興指出，AI競賽已進入第三年，美中兩大陣營走向不同的商業與技術路線。美國擁有全球最強晶片硬體與軟體開發能力，傾向採用閉源模型向大型企業收取高額授權費；中國則採開放式開源模型搶佔市場，且因前幾年大舉建設大西北風力、水力與電力基礎設施，電價比美國便宜五成，具有成本優勢。\n\nAI基礎設施競爭也在升級。邁威爾科技高層指出，隨著推論模型帶動記憶體需求快速攀升，傳統銅基互連逐漸接近效能極限，光學互連與記憶體擴充技術將成為下一階段AI算力擴張的重要因素。推論時運算興起使KV快取需求在過去九個月增加約十倍，單一機架已難以提供足夠容量，AI系統必須將互連規模由目前約144個XPU擴大至下一階段約576個XPU。分析機構估計，2025年至2030年間全球資料中心基礎設施累計資本支出規模可能達4兆至5兆美元。",
  "links": [
   {
-   "title": "EXCLUSIVE: Hungary rate cut still possible this year if euro plan gains traction, deputy governor says",
-   "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOWWswY1pFbldqNUtfcGJSWmRtNTBsb1pRTlZKV21kak9uekxqa1JRZHF1NDVqS0JxdkxoSGlBcVlWVThoUHJRa2x1em80TVNqdHBsalZ2OWlZZElqMk9fUEh2UEZfWEVFX1hkU21mbERGQ3lSVC1DT05TZ3REUmQ4aVhoZzBLSEhlaE91UnBlVGN2UVkySnlEWVJYSjRaQWNCMkNDbDU4TnNqMG1xVDljUF9QUTVTYWl4WWdHX29B?oc=5",
-   "source": "Reuters"
-  },
-  {
-   "title": "Fed’s Paulson Says Further Modest Rate Hikes May Be Needed",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPT1ZEWUdmV2FqckxNNjdMXzRRYmlsWnAzc204YmpEdG5kTnpkdkhrWllpdjhzQVdWaFVxR28zWjNPN2pBN0hGYTNqa2UwWVBQWlItVGdXaF9abnd4c2NVSGNzX01ER3A1ekRxQUo2NG1yTVVPaVo4aXZxVWhWOWNkc0RrX0RFYnZnakcxZTBuWWJlM1o1cGdoR3NwcTY0T0lEc1VqNEZxV1lJMzlndjJFdTBwQQ?oc=5",
+   "title": "Fed’s Hammack Says Yields Reflect Growth, US Debt and Rate Path",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPRFFCWVctVERUd29HdG92LVRibFlZVzVrYjlDM2JxSThCRmd5WTkzRGlINE5TZTNUeUUyTnNpUDdtYXRZUVNkZElpUlBYbEYxRzZZYzFYeUwtdEwwNklfR1JHcG5ERG5DWWt5MTFyN2daSjQ1T01yRFVTSXY1WlM3X3hqLUpCd1RHbTRZSnZhcktfeEl0TzJVRmlaakkzQ1hjUzNXRVBFZl9DMHd5MTViTFE3bw?oc=5",
    "source": "Bloomberg"
   },
   {
-   "title": "Fed's Williams says it is reasonable to see another US rate hike this year",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYkdqZ3lLWVItQUduVDZkZW45dEhCcmIwUEM4QlZFSVoxN0QxVEl0NTk4MmtqYVktY3JjNGFGOGZSaVRNMDJFX1QzTXRjYnVkWm0yQUFlU1hWRTNsbXRlY0pIa3RGWEtkamtjdUhERE1qLVlsQTgyNjBGSzA0ZXFLS29pQXM3QTBOTHZuYXRZT2paWlBPWk90eFM3NzFBRnBTZFZaVGF3cFA0V3lCY1I5T09FQWVhdw?oc=5",
+   "title": "Fed's Hammack worried inflation expectations could deteriorate",
+   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNSWE0MWtmVVUxc09heVZ5Qkc0UWdCLVZneTRFdnJqMnNPQkJYMlg5Z01jMUdTeFI1b1U0c3NJekxKUVBoeXVXLTQxUGtGMjdMQUlQZVUxQUpNS3VaWjhicXZ3Tm5ObVhUaU5sTFRleVlxWGtJSTBXM19XMEEzeklXNHZWNU5yMjFDcWFLSm9rRF90V3RSemhyWmlwRjcweVgxelRhZnlreDhkdw?oc=5",
+   "source": "Reuters"
+  },
+  {
+   "title": "Fed's Hammack says bond yield surge not about lost inflation confidence",
+   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNcjhLcGd6RE8wdTJ6VTJSMktnNVFUeHliWGtEVFo2UU5vbVZBbElLU3FVMUhqTnYtSXpCN2Q0aU1mLVVjeFF2T1NuYVpHaGZfbnl4bEhJenFqdlJyN1EyeDFoSmpVSWZGajVodWRRUVV1WWhPQ1FKYmNYN0hOMllnMVBmd1FoVUdVX0pabVhXWHdFVUt6SEtkMUE4R1NQeHhpNmdObG4wVlJFc1JkaU1ESG1tcXZNMXJD?oc=5",
    "source": "Reuters"
   }
  ],
  "fedwatch": {
   "pct": 81.73,
-  "date": "2026-09-26",
+  "date": "2026-09-27",
   "delta_pp": 0.0,
   "suspect": false,
   "src": "futures",
