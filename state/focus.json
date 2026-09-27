@@ -1,26 +1,26 @@
 {
- "hash": "609671ddfc75227b",
- "text": "美國總統川普日前宣示設立「AI沙皇」職位，預估人工智慧可為美國GDP貢獻25%。台灣金融培訓協會理事長林昌興指出，AI競賽已進入第三年，美中兩大陣營走向不同的商業與技術路線。美國擁有全球最強晶片硬體與軟體開發能力，傾向採用閉源模型向大型企業收取高額授權費；中國則採開放式開源模型搶佔市場，且因前幾年大舉建設大西北風力、水力與電力基礎設施，電價比美國便宜五成，具有成本優勢。\n\nAI基礎設施競爭也在升級。邁威爾科技高層指出，隨著推論模型帶動記憶體需求快速攀升，傳統銅基互連逐漸接近效能極限，光學互連與記憶體擴充技術將成為下一階段AI算力擴張的重要因素。推論時運算興起使KV快取需求在過去九個月增加約十倍，單一機架已難以提供足夠容量，AI系統必須將互連規模由目前約144個XPU擴大至下一階段約576個XPU。分析機構估計，2025年至2030年間全球資料中心基礎設施累計資本支出規模可能達4兆至5兆美元。",
+ "hash": "f99244a30e7d49eb",
+ "text": "美國10年期公債殖利率升至5.2%，反映市場對經濟前景的樂觀預期。富蘭克林投顧指出，本周美股觀察重點包括聯準會官員對經濟、就業、通膨與利率的看法，以及第2季GDP終值、9月消費者信心、ISM製造業指數、非農就業報告等經濟數據。此外，中東局勢與油價波動、川普政府關稅政策也將影響市場走向。\n\nBloomberg報導指出，利率市場恐懼指標正對公司債發出警訊，新興市場投資人也因美債殖利率飆升而迴避風險最高的債券。美國房貸利率重新升至7%水準，反映債券市場的廣泛調整。",
  "links": [
   {
-   "title": "Fed’s Hammack Says Yields Reflect Growth, US Debt and Rate Path",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPRFFCWVctVERUd29HdG92LVRibFlZVzVrYjlDM2JxSThCRmd5WTkzRGlINE5TZTNUeUUyTnNpUDdtYXRZUVNkZElpUlBYbEYxRzZZYzFYeUwtdEwwNklfR1JHcG5ERG5DWWt5MTFyN2daSjQ1T01yRFVTSXY1WlM3X3hqLUpCd1RHbTRZSnZhcktfeEl0TzJVRmlaakkzQ1hjUzNXRVBFZl9DMHd5MTViTFE3bw?oc=5",
+   "title": "Rate Market Fear Gauge Is Warning for Corporate Bonds",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxORXh6NW1EMEtxUzFTQS1OZVRKRUVVaWlHZ1lwMXNGRVFwMTFrVkkxd1FKakd4VGtKZlVzdElFdlBzWjRzNEtIbFpPelVOSDJSX3llcHRBZkNvVzdyVUlxMzJHX3pXVGdGaXhLT1c2R3RYYlY1TFB2TnB0b19QM3dKMXJ3bjNNamkxZE1KSHByTUp1TFFtbno4eDlVVEF2YzBjbEZ4ZE0xNHIyMXc1N3BPOWltZw?oc=5",
    "source": "Bloomberg"
   },
   {
-   "title": "Fed's Hammack worried inflation expectations could deteriorate",
-   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNSWE0MWtmVVUxc09heVZ5Qkc0UWdCLVZneTRFdnJqMnNPQkJYMlg5Z01jMUdTeFI1b1U0c3NJekxKUVBoeXVXLTQxUGtGMjdMQUlQZVUxQUpNS3VaWjhicXZ3Tm5ObVhUaU5sTFRleVlxWGtJSTBXM19XMEEzeklXNHZWNU5yMjFDcWFLSm9rRF90V3RSemhyWmlwRjcweVgxelRhZnlreDhkdw?oc=5",
-   "source": "Reuters"
+   "title": "Corporate America embraces cheaper ‘open’ AI models",
+   "link": "https://www.ft.com/content/d9de4776-1fc9-4f2b-aaaf-9961c35d8acd?syn-25a6b1a6=1",
+   "source": "Financial Times"
   },
   {
-   "title": "Fed's Hammack says bond yield surge not about lost inflation confidence",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNcjhLcGd6RE8wdTJ6VTJSMktnNVFUeHliWGtEVFo2UU5vbVZBbElLU3FVMUhqTnYtSXpCN2Q0aU1mLVVjeFF2T1NuYVpHaGZfbnl4bEhJenFqdlJyN1EyeDFoSmpVSWZGajVodWRRUVV1WWhPQ1FKYmNYN0hOMllnMVBmd1FoVUdVX0pabVhXWHdFVUt6SEtkMUE4R1NQeHhpNmdObG4wVlJFc1JkaU1ESG1tcXZNMXJD?oc=5",
-   "source": "Reuters"
+   "title": "Emerging Market Investors Shun Riskiest Bonds as US Yields Soar",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQMXVzamIwSmlSREV5QTJmRU9Ga1pFRWw0OXNWUkNwT0hJUkZOR3M0UlVTLW5xMm10RVNhUlhqclZXRGJIRTY3TFM5N3ZFX3RFSnI3dlZ6YmVaMzFxR0VmYUQzb2JnRmg1a290T3huS2xlUXV3d3d2T3RtM1ZXTUx0M0xvT1RJbkE4LUc0a0U4LXlDSW4wNmJhNDFsZzJ4WWF0dVlYdXlzeTlaRWVndl9UdV9lcmM?oc=5",
+   "source": "Bloomberg"
   }
  ],
  "fedwatch": {
   "pct": 81.73,
-  "date": "2026-09-27",
+  "date": "2026-09-28",
   "delta_pp": 0.0,
   "suspect": false,
   "src": "futures",
