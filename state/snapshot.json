@@ -1,25 +1,22 @@
 {
-  "at": "2026-09-29T04:17:09+08:00",
+  "at": "2026-09-30T02:54:37+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-08",
         "released": "2026-09-05",
         "month": "2026-08",
-        "score": 0.19134352525427625,
+        "score": 0.19785603686838818,
         "tilt": "balanced",
         "flags": [
-          "openings_vs_hiring",
           "wage_understated",
           "low_hire_low_fire"
         ],
         "flag_titles": {
-          "openings_vs_hiring": "職缺增加但招聘率同步下降",
           "wage_understated": "非管理職薪資增速高於總體",
           "low_hire_low_fire": "低招聘、低裁員格局延續"
         },
         "flag_leans": {
-          "openings_vs_hiring": "dovish",
           "wage_understated": "hawkish",
           "low_hire_low_fire": "neutral"
         },
@@ -292,7 +289,7 @@
             "value": 2.1279494076635874
           },
           "exp5y5y": {
-            "value": 2.33
+            "value": 2.34
           }
         }
       },
@@ -500,6 +497,48 @@
     },
     "jolts": {
       "current": {
+        "vintage": "2026-08",
+        "released": "2026-09-30",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "openings": {
+            "label": "職缺數",
+            "value": 707.9,
+            "unit": "萬個",
+            "threshold": 5,
+            "up_is": "hawkish"
+          },
+          "hires": {
+            "label": "招聘率",
+            "value": 3.3,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "quits": {
+            "label": "離職率",
+            "value": 1.9,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          },
+          "layoffs": {
+            "label": "裁員率",
+            "value": 1.0,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "dovish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      },
+      "previous": {
         "vintage": "2026-07",
         "released": "2026-09-02",
         "flags": [],
@@ -540,48 +579,6 @@
         },
         "method": 2,
         "metrics_prev": {}
-      },
-      "previous": {
-        "vintage": "2026-06",
-        "released": "2026-08-21",
-        "flags": [],
-        "flag_titles": {},
-        "flag_leans": {},
-        "metrics": {
-          "openings": {
-            "label": "職缺數",
-            "value": 735.9,
-            "unit": "萬個",
-            "threshold": 5,
-            "up_is": "hawkish"
-          },
-          "hires": {
-            "label": "招聘率",
-            "value": 3.4,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "hawkish"
-          },
-          "quits": {
-            "label": "離職率",
-            "value": 2.0,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "hawkish"
-          },
-          "layoffs": {
-            "label": "裁員率",
-            "value": 1.1,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "dovish"
-          }
-        },
-        "method": 2,
-        "metrics_prev": {}
       }
     },
     "market": {
@@ -594,7 +591,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.24,
+            "value": 5.25,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -602,7 +599,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.56,
+            "value": 5.59,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -618,7 +615,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.81,
+            "value": 0.83,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -626,7 +623,7 @@
           },
           "exp5y5y": {
             "label": "長期通膨預期",
-            "value": 2.34,
+            "value": 2.35,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -751,7 +748,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-09-29T04:17:09+08:00",
+      "at": "2026-09-30T02:54:37+08:00",
       "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
