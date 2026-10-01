@@ -1,12 +1,12 @@
 {
-  "at": "2026-10-01T02:37:20+08:00",
+  "at": "2026-10-02T03:04:59+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-08",
         "released": "2026-09-05",
         "month": "2026-08",
-        "score": 0.19785603686838818,
+        "score": 0.21622057167542785,
         "tilt": "balanced",
         "flags": [
           "wage_understated",
@@ -289,7 +289,7 @@
             "value": 2.1279494076635874
           },
           "exp5y5y": {
-            "value": 2.35
+            "value": 2.36
           }
         }
       },
@@ -428,6 +428,38 @@
     },
     "claims": {
       "current": {
+        "vintage": "2026-09-26",
+        "released": "2026-10-02",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "ic_ma": {
+            "label": "初領失業金（四週平均）",
+            "value": 20.0,
+            "unit": "萬人",
+            "threshold": 0.5,
+            "up_is": "dovish"
+          },
+          "ic_now": {
+            "label": "初領失業金（單週）",
+            "value": 19.7,
+            "unit": "萬人",
+            "threshold": 1.0,
+            "up_is": "dovish"
+          },
+          "cc": {
+            "label": "續領失業金",
+            "value": 170.1,
+            "unit": "萬人",
+            "threshold": 1.5,
+            "up_is": "dovish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      },
+      "previous": {
         "vintage": "2026-09-19",
         "released": "2026-09-25",
         "flags": [],
@@ -451,38 +483,6 @@
           "cc": {
             "label": "續領失業金",
             "value": 171.9,
-            "unit": "萬人",
-            "threshold": 1.5,
-            "up_is": "dovish"
-          }
-        },
-        "method": 2,
-        "metrics_prev": {}
-      },
-      "previous": {
-        "vintage": "2026-09-12",
-        "released": "2026-09-18",
-        "flags": [],
-        "flag_titles": {},
-        "flag_leans": {},
-        "metrics": {
-          "ic_ma": {
-            "label": "初領失業金（四週平均）",
-            "value": 20.325,
-            "unit": "萬人",
-            "threshold": 0.5,
-            "up_is": "dovish"
-          },
-          "ic_now": {
-            "label": "初領失業金（單週）",
-            "value": 19.6,
-            "unit": "萬人",
-            "threshold": 1.0,
-            "up_is": "dovish"
-          },
-          "cc": {
-            "label": "續領失業金",
-            "value": 173.0,
             "unit": "萬人",
             "threshold": 1.5,
             "up_is": "dovish"
@@ -588,7 +588,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.29,
+            "value": 5.24,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -596,7 +596,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.64,
+            "value": 5.61,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -753,7 +753,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-01T02:37:20+08:00",
+      "at": "2026-10-02T03:04:59+08:00",
       "vintage": "labor:2026-08|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
