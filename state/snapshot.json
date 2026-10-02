@@ -1,8 +1,99 @@
 {
-  "at": "2026-10-02T03:04:59+08:00",
+  "at": "2026-10-02T23:25:00+08:00",
   "modules": {
     "labor": {
       "current": {
+        "vintage": "2026-09",
+        "released": "2026-10-02",
+        "month": "2026-09",
+        "score": 0.14077895619330832,
+        "tilt": "dovish",
+        "flags": [
+          "revision_swamps",
+          "revision_bias_down",
+          "wage_understated",
+          "supply_rise",
+          "low_hire_low_fire"
+        ],
+        "flag_titles": {
+          "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
+          "revision_bias_down": "初值近一年呈系統性下修",
+          "wage_understated": "非管理職薪資增速高於總體",
+          "supply_rise": "失業率上升源於勞動力擴張",
+          "low_hire_low_fire": "低招聘、低裁員格局延續"
+        },
+        "flag_leans": {
+          "revision_swamps": "dovish",
+          "revision_bias_down": "dovish",
+          "wage_understated": "hawkish",
+          "supply_rise": "neutral",
+          "low_hire_low_fire": "neutral"
+        },
+        "metrics": {
+          "nfp": {
+            "label": "非農就業月變動",
+            "en": "Nonfarm Payrolls, m/m",
+            "value": 2.9,
+            "unit": "萬人",
+            "threshold": 1,
+            "up_is": "hawkish"
+          },
+          "nfp_3m": {
+            "label": "非農三個月均",
+            "en": "Payrolls, 3-mo avg",
+            "value": 5.066666666666666,
+            "unit": "萬人",
+            "threshold": 1,
+            "up_is": "hawkish"
+          },
+          "u3": {
+            "label": "失業率",
+            "en": "Unemployment Rate (U-3)",
+            "value": 4.2,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "dovish"
+          },
+          "lfpr": {
+            "label": "勞動參與率",
+            "en": "Labor Force Participation",
+            "value": 61.8,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "dovish"
+          },
+          "ahe_yoy": {
+            "label": "平均時薪年增",
+            "en": "Avg Hourly Earnings, y/y",
+            "value": 3.0245231607629375,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": "hawkish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {
+          "nfp": {
+            "value": 13.3
+          },
+          "nfp_3m": {
+            "value": 5.133333333333334
+          },
+          "u3": {
+            "value": 4.1
+          },
+          "lfpr": {
+            "value": 61.6
+          },
+          "ahe_yoy": {
+            "value": 3.1130529765155623
+          }
+        }
+      },
+      "previous": {
         "vintage": "2026-08",
         "released": "2026-09-05",
         "month": "2026-08",
@@ -81,97 +172,6 @@
           },
           "ahe_yoy": {
             "value": 3.2355360570331726
-          }
-        }
-      },
-      "previous": {
-        "vintage": "2026-07",
-        "released": "2026-08-13",
-        "month": "2026-07",
-        "score": -0.2848997365925772,
-        "tilt": "dovish",
-        "flags": [
-          "revision_swamps",
-          "revision_bias_down",
-          "openings_vs_hiring",
-          "bad_decline",
-          "low_hire_low_fire"
-        ],
-        "flag_titles": {
-          "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
-          "revision_bias_down": "初值近一年呈系統性下修",
-          "openings_vs_hiring": "職缺增加但招聘率同步下降",
-          "bad_decline": "失業率下降源於勞動力退出，而非就業增加",
-          "low_hire_low_fire": "低招聘、低裁員格局延續"
-        },
-        "flag_leans": {
-          "revision_swamps": "dovish",
-          "revision_bias_down": "dovish",
-          "openings_vs_hiring": "dovish",
-          "bad_decline": "dovish",
-          "low_hire_low_fire": "neutral"
-        },
-        "metrics": {
-          "nfp": {
-            "label": "非農就業月變動",
-            "en": "Nonfarm Payrolls, m/m",
-            "value": -2.3,
-            "unit": "萬人",
-            "threshold": 1,
-            "up_is": "hawkish"
-          },
-          "nfp_3m": {
-            "label": "非農三個月均",
-            "en": "Payrolls, 3-mo avg",
-            "value": 2.0,
-            "unit": "萬人",
-            "threshold": 1,
-            "up_is": "hawkish"
-          },
-          "u3": {
-            "label": "失業率",
-            "en": "Unemployment Rate (U-3)",
-            "value": 4.1,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "dovish"
-          },
-          "lfpr": {
-            "label": "勞動參與率",
-            "en": "Labor Force Participation",
-            "value": 61.4,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "dovish"
-          },
-          "ahe_yoy": {
-            "label": "平均時薪年增",
-            "en": "Avg Hourly Earnings, y/y",
-            "value": 3.153276665752669,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": "hawkish"
-          }
-        },
-        "method": 2,
-        "metrics_prev": {
-          "nfp": {
-            "value": 2.0
-          },
-          "nfp_3m": {
-            "value": 7.7
-          },
-          "u3": {
-            "value": 4.2
-          },
-          "lfpr": {
-            "value": 61.5
-          },
-          "ahe_yoy": {
-            "value": 3.4103410341034257
           }
         }
       }
@@ -588,7 +588,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.24,
+            "value": 5.25,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -612,7 +612,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.84,
+            "value": 0.86,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -684,8 +684,8 @@
     },
     "scenario": {
       "current": {
-        "vintage": "labor:2026-08|inflation:2026-08|2026-08|fomc:2026-09-16",
-        "released": "2026-10-01",
+        "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
+        "released": "2026-10-02",
         "name": "傾向緊縮",
         "grid_name": "傾向緊縮",
         "regime": "inflation",
@@ -693,8 +693,8 @@
         "inflation": "高"
       },
       "previous": {
-        "vintage": "labor:2026-08|inflation:2026-08|2026-07|fomc:2026-09-16",
-        "released": "2026-09-17",
+        "vintage": "labor:2026-08|inflation:2026-08|2026-08|fomc:2026-09-16",
+        "released": "2026-10-01",
         "name": "傾向緊縮",
         "grid_name": "傾向緊縮",
         "regime": "inflation",
@@ -755,6 +755,14 @@
     {
       "at": "2026-10-02T03:04:59+08:00",
       "vintage": "labor:2026-08|inflation:2026-08|2026-08|fomc:2026-09-16",
+      "name": "傾向緊縮",
+      "regime": "inflation",
+      "labor": "中",
+      "inflation": "高"
+    },
+    {
+      "at": "2026-10-02T23:25:00+08:00",
+      "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
       "labor": "中",
