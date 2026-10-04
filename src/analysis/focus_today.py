@@ -869,6 +869,29 @@ _FOCUS_CONTENT_SYSTEM = (
     "前言、不要粗體記號。")
 
 
+# 版式 A 的內文模式。主軸優先寫彭博／路透的事件：它們多半只有標題（付費牆），
+# 但 Yahoo 等來源常轉載同一則通訊社稿的全文——同一件事的細節從那裡補。
+_FOCUS_CONTENT_SYSTEM_A = (
+    "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合），"
+    "後面可能另有一節「標題快訊」——那些只有標題與官方摘要、沒有內文；"
+    "標【Bloomberg】【Reuters】的是彭博與路透。只取與這些主題相關的內容："
+    "{kws}。讀完全部材料後輸出：第一行是**主軸**，一段話、{main} 個中文字"
+    "以內，把今天最重要的一件事講完整——發生了什麼、為什麼、市場或官員怎麼"
+    "解讀它對利率與聯準會的意義（只寫材料裡有人講過的解讀）。主軸優先選彭博"
+    "或路透報導的事件；其他有內文的報導若談同一件事，用它們補細節，同一件事"
+    "的多篇報導要合併成一段來寫。接著 {ns} 行**補充**，每行一件其他的事、"
+    "{supp} 個中文字以內；補充也必須直接跟上述主題有關，只是文中順帶提到某個"
+    "詞的不算。**每一行都必須有具體事實**——誰、做了什麼、數字或時間至少要"
+    "有一項；不要寫「成為市場焦點」「備受關注」這類空泛的話。硬性規則："
+    "只能使用材料已有的資訊，不得補充材料以外的事實或數字；「標題快訊」只能"
+    "轉述其標題與摘要**字面上有的事**，不得展開細節、不得推測其內文，引用時"
+    "帶來源（例如「路透報導稱…」）；不得自行推論來源沒有寫的因果關係；不做"
+    "預測、不下投資結論；繁體中文。**絕對禁止評論材料本身**：不要說明材料的"
+    "多寡、品質或相關性，不要出現「材料」「關鍵字」這類字眼——補充只夠寫一則"
+    "就只寫一則。直接輸出，每行一段，不要編號、不要符號開頭、不要「主軸」"
+    "「補充」這類標籤、不要粗體記號、不要任何前言。")
+
+
 def _post_gemini_hardy(key: str, model: str, src_text: str,
                        system: str, temperature: float = 0.3):
     """
@@ -1005,6 +1028,23 @@ def _tidy_focus(text: str) -> str:
 # ——長度永遠不會讓焦點段退回列標題（使用者指定）。
 HARD_MULT = 1.5
 DEFAULT_ITEMS, DEFAULT_ITEM_CHARS = 3, 100
+# 版式 A（2026-10 使用者定案）：一段主軸＋兩則補充。
+#   主軸：把當天最大的一件事講完整（發生什麼→為什麼→對利率／聯準會的意義），
+#         MAIN_CHARS 字以內
+#   補充：其他事件，每則 SUPP_CHARS 字以內
+# 先前的「3 則 × 100 字」實際跑起來變成一篇文章一則、各自重述標題，
+# 使用者嫌「只是列標題、不扎實」；一整段 300 字又嫌長——A 是折衷。
+DEFAULT_MAIN_CHARS, DEFAULT_SUPP_ITEMS, DEFAULT_SUPP_CHARS = 200, 2, 80
+
+
+def focus_caps(cfg: dict | None) -> list[int]:
+    """每一行的字數上限：[主軸, 補充, 補充]（config 的 main_chars／supp_items／supp_chars）。"""
+    cfg = cfg or {}
+    main = int(cfg.get("main_chars") or DEFAULT_MAIN_CHARS)
+    n = int(cfg.get("supp_items") if cfg.get("supp_items") is not None
+            else DEFAULT_SUPP_ITEMS)
+    supp = int(cfg.get("supp_chars") or DEFAULT_SUPP_CHARS)
+    return [main] + [supp] * n
 
 # 空話清單：命中兩個以上就帶原因重寫一次（第二次照樣採用——這是文風
 # 問題，不是正確性問題，不值得為它退回列標題）。使用者嫌「AI 總結有點
@@ -1015,7 +1055,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f4-items"
+FOCUS_PROMPT_VERSION = "f5-main"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1048,8 +1088,10 @@ def _trim_to(text: str, limit: int) -> str:
 
 
 # 行首的編號與項目符號：模型常常不聽「不要編號」。
+# 版式 A 另外會冒出「主軸：」「補充：」這種標籤，一起拿掉。
 _ITEM_LEAD = re.compile(r"^\s*(?:[・•●▪◆◇■□\-–—*]|\d{1,2}[.、)）]|"
-                        r"[（(]\d{1,2}[)）]|[一二三四五六七八九十][、.])\s*")
+                        r"[（(]\d{1,2}[)）]|[一二三四五六七八九十][、.]|"
+                        r"(?:主軸|補充\d?)\s*[:：])\s*")
 
 
 def _split_items(text: str, n: int) -> list[str]:
@@ -1062,9 +1104,10 @@ def _split_items(text: str, n: int) -> list[str]:
     return items[:n]
 
 
-def _generate_items(src_text: str, system: str, env, *, item_cap: int,
-                    n_items: int, meta_markers=None,
-                    vague_markers=None) -> tuple[str, str]:
+def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
+                    n_items: int = 0, meta_markers=None,
+                    vague_markers=None, caps: list[int] | None = None
+                    ) -> tuple[str, str]:
     """
     共用的生成＋驗證核心（內文模式與標題模式都走這裡）。
     回傳 (多則重點以換行連接, "")；失敗回 ("", 原因)。
@@ -1074,7 +1117,13 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int,
       數字鎖     正確性防護欄 → 一票否決、不重試
       長度／空話 文風問題 → 重寫一次，仍不理想就裁切後照樣採用
     """
-    hard = int(item_cap * HARD_MULT)
+    # caps：每一行各自的字數上限（版式 A：[主軸, 補充, 補充]）；沒給就是
+    # 舊版的 N 則等長。硬底線一律是上限 × HARD_MULT。
+    caps = list(caps) if caps else [item_cap] * n_items
+    n_items = len(caps)
+    hards = [int(c * HARD_MULT) for c in caps]
+    _cap_txt = (f"每則 {caps[0]} 字以內" if len(set(caps)) == 1 else
+                f"第一行主軸 {caps[0]} 字以內、其餘每則 {caps[1]} 字以內")
     vague_markers = vague_markers or DEFAULT_VAGUE_MARKERS
     best: list[str] = []
     note = ""
@@ -1096,25 +1145,28 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int,
             continue
         if not _digits_ok(joined, src_text):
             return "", "輸出出現材料裡沒有的數字"
-        long_ = [i + 1 for i, it in enumerate(items) if cjk_len(it) > hard]
+        long_ = [i + 1 for i, it in enumerate(items) if cjk_len(it) > hards[i]]
         vague = _meta_hits(joined, vague_markers)
         if attempt == 1 and (long_ or len(vague) >= 2):
             best = items
             why = []
-            if long_:
+            if long_ and len(set(hards)) == 1:
                 why.append("第 " + "、".join(map(str, long_))
-                           + f" 則超過 {hard} 字")
+                           + f" 則超過 {hards[0]} 字")
+            elif long_:
+                why.append("、".join(f"第 {i} 行超過 {hards[i - 1]} 字"
+                                     for i in long_))
             if len(vague) >= 2:
                 why.append("用了空泛的套話（" + "、".join(vague[:3]) + "）")
             log.warning("市場焦點：%s，帶原因重寫一次", "；".join(why))
             note = (f"\n\n（上一次的輸出被退回：{'；'.join(why)}。請重寫："
-                    f"每則 {item_cap} 字以內，講具體的事——誰、做了什麼、"
+                    f"{_cap_txt}，講具體的事——誰、做了什麼、"
                     "數字或時間——不要套話。）")
             continue
-        return "\n".join(_trim_to(it, hard) for it in items), ""
+        return "\n".join(_trim_to(it, hards[i]) for i, it in enumerate(items)), ""
     if best:
         log.warning("市場焦點：重寫後仍不合格，採用第一版並裁切超長的則")
-        return "\n".join(_trim_to(it, hard) for it in best), ""
+        return "\n".join(_trim_to(it, hards[i]) for i, it in enumerate(best)), ""
     return "", "輸出反覆評論材料本身（後設字眼）"
 
 
@@ -1122,9 +1174,10 @@ def summarize_content(articles: list[dict], keywords: list[str],
                       item_cap: int = DEFAULT_ITEM_CHARS, env=None,
                       briefs: list[dict] | None = None,
                       meta_markers=None, n_items: int = DEFAULT_ITEMS,
-                      vague_markers=None) -> tuple[str, str]:
+                      vague_markers=None, caps: list[int] | None = None
+                      ) -> tuple[str, str]:
     """
-    讀文章內文寫成 N 則重點。回傳 (重點, "model-content")；失敗回 ("", 原因)。
+    讀文章內文寫成重點。caps 有給＝版式 A（一段主軸＋補充），否則 N 則等長。回傳 (重點, "model-content")；失敗回 ("", 原因)。
 
     briefs 是「標題快訊」層：付費牆來源（路透、彭博、FT、WSJ）的標題＋
     RSS 官方摘要。它們進材料包供模型織進重點，但提示詞硬性規定只能
@@ -1143,11 +1196,16 @@ def summarize_content(articles: list[dict], keywords: list[str],
                          f"【{b.get('source') or '—'}】{b['title']}"
                          + (f"——{b['summary']}" if b.get("summary") else "")
                          for b in briefs))
-    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
-                                          cap=item_cap, n=n_items)
+    if caps:
+        system = _FOCUS_CONTENT_SYSTEM_A.format(
+            kws="、".join(keywords), main=caps[0], supp=caps[1] if len(caps) > 1 else 0,
+            ns=len(caps) - 1)
+    else:
+        system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
+                                              cap=item_cap, n=n_items)
     text, err = _generate_items(src_text, system, env, item_cap=item_cap,
                                 n_items=n_items, meta_markers=meta_markers,
-                                vague_markers=vague_markers)
+                                vague_markers=vague_markers, caps=caps)
     return (text, "model-content") if text else ("", err)
 
 
@@ -1168,7 +1226,9 @@ def _sim(a: str, b: str) -> float:
 
 # 來源權重：通訊社與財經專業媒體、官方發布 > 一般入口轉載。
 # 比對的是 feed 標籤（_feed_label）與 Google News 標題尾巴的媒體名。
-SOURCE_WEIGHT = (("reuters", 1.5), ("bloomberg", 1.5), ("wall street", 1.5),
+# 彭博、路透優先（2026-10 使用者指定）：權重 3，比其他專業媒體高一倍，
+# 相同主題、相同時效時一定排在前面。
+SOURCE_WEIGHT = (("reuters", 3.0), ("bloomberg", 3.0), ("wall street", 1.5),
                  ("financial times", 1.5), ("cnbc", 1.5),
                  ("federal reserve", 1.5), ("yahoo finance", 0.5))
 
@@ -1228,7 +1288,7 @@ def rank_score(h: dict, keywords, secondary=None, *, heat=None, now=None,
       主題    主級關鍵字一次 2 分、次級 1 分
       熱度    同一個主題詞被 N 家不同來源報導 → 加 min(N−1, 3) 分
       時效    12 小時內 +2、24 小時內 +1.5、48 小時內 +0.5
-      來源    通訊社、財經專業媒體、官方發布 +1.5；Yahoo Finance +0.5
+      來源    彭博、路透 +3；其他財經專業媒體、官方發布 +1.5；Yahoo Finance +0.5
       發布日  當天有 FOMC／CPI／非農等發布、標題又提到它 → +2
     """
     t = _kw_text(h.get("title") or "")
@@ -1303,6 +1363,20 @@ _FOCUS_SYSTEM = (
     "不要任何前言。")
 
 
+# 版式 A 的標題模式（只有標題＋官方摘要時）。主軸寫不厚是材料限制，
+# 規則不放寬：仍只能轉述標題與摘要字面上有的事。
+_FOCUS_SYSTEM_A = (
+    "你是財經編輯。輸入是新聞標題清單（有些附官方摘要），標【Bloomberg】"
+    "【Reuters】的是彭博與路透。挑出對「美國公債殖利率與聯準會政策」最重要"
+    "的事，輸出：第一行是主軸，一段話、{main} 個中文字以內，講今天最重要的"
+    "那件事——優先選彭博或路透報導的事件，同一件事有多則標題時合併來寫；"
+    "接著 {ns} 行補充，每行一件其他的事、{supp} 個中文字以內。每一行都要有"
+    "具體的事（誰、做了什麼），不要空話。只能使用標題與摘要裡已有的資訊，"
+    "不得補充以外的事實或數字；不做預測、不下投資結論；繁體中文。補充只夠"
+    "寫一則就只寫一則。直接輸出，每行一段，不要編號、不要符號開頭、不要"
+    "「主軸」「補充」這類標籤、不要任何前言。")
+
+
 def _digits_ok(text: str, source: str) -> bool:
     """輸出裡的每一串數字都必須出現在來源標題裡（防 AI 編數字）。"""
     src = re.sub(r"[\s,，]", "", source)
@@ -1314,17 +1388,22 @@ def _digits_ok(text: str, source: str) -> bool:
 
 def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
               env=None, n_items: int = DEFAULT_ITEMS, meta_markers=None,
-              vague_markers=None) -> tuple[str, str]:
+              vague_markers=None, caps: list[int] | None = None
+              ) -> tuple[str, str]:
     """標題模式：只有標題（＋官方摘要）可用時寫成 N 則重點。
     回傳 (重點, "model")；失敗回 ("", 原因)。"""
     lines = "\n".join(
         f"- [{h.get('source') or '—'}] {h['title']}"
         + (f"——{h['summary']}" if h.get("summary") else "")
         for h in headlines[:24])
+    system = (_FOCUS_SYSTEM_A.format(main=caps[0],
+                                     supp=caps[1] if len(caps) > 1 else 0,
+                                     ns=len(caps) - 1)
+              if caps else _FOCUS_SYSTEM.format(cap=item_cap, n=n_items))
     text, err = _generate_items(
-        lines, _FOCUS_SYSTEM.format(cap=item_cap, n=n_items), env,
+        lines, system, env,
         item_cap=item_cap, n_items=n_items, meta_markers=meta_markers,
-        vague_markers=vague_markers)
+        vague_markers=vague_markers, caps=caps)
     return (text, "model") if text else ("", err)
 
 
@@ -2086,6 +2165,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
     n_items = int(cfg.get("items") or DEFAULT_ITEMS)
     item_cap = int(cfg.get("item_chars") or DEFAULT_ITEM_CHARS)
+    # 版式 A：一段主軸＋補充（每行各自的字數上限）
+    caps = focus_caps(cfg)
 
     yields = [c for c in (
         _yield_chip((rates_series or {}).get("DGS10"), "10 年期"),
@@ -2216,9 +2297,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         body_cand = pick_fallback([x for x in heads
                                    if not _headline_only(x["link"])],
                                   keywords, n=6, **_rk)
+        # 標題快訊名額 6：彭博、路透多半只有標題，名額太少會被擠掉，
+        # 而主軸要優先寫它們報導的事件
         briefs = pick_fallback([x for x in heads
                                 if _headline_only(x["link"])],
-                               keywords, n=4, **_rk)
+                               keywords, n=6, **_rk)
         h = hashlib.sha256((FOCUS_PROMPT_VERSION + "|" + mode + "|" + "|".join(
             x["title"] for x in (top + body_cand + briefs)))
                            .encode("utf-8")).hexdigest()[:16]
@@ -2231,6 +2314,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                   if state.get("text_source") == "model-content"
                                   else "title")
             out["links"] = state.get("links") or []
+            out["layout"] = state.get("layout", "")
             # 快取命中要出聲：先前這條路徑一行 log 都不印，整個新聞區在
             # Actions log 上完全隱形，看起來就像「完全沒有跑」。
             log.info("市場焦點：入選標題與上次相同，沿用 %.1f 小時前的內容"
@@ -2243,7 +2327,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                          "重新生成", CACHE_TTL_HOURS)
             text, src = "", ""
             _gen = dict(n_items=n_items, meta_markers=meta_markers,
-                        vague_markers=vague_markers)
+                        vague_markers=vague_markers, caps=caps)
             if mode == "content":
                 # 內文並行抓（各篇獨立的 I/O 等待，串行是慢的主因之一）
                 _bodies = _pmap(lambda x: fetch_article_text(x["link"]),
@@ -2297,8 +2381,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                       "source": x["source"]} for x in top[:3]]
             if text:
                 out["text"], out["text_source"] = text, src
-                log.info("市場焦點：產出 %d 則重點（%s）",
-                         len(text.splitlines()),
+                out["layout"] = "main"
+                log.info("市場焦點：產出主軸＋%d 則補充（%s）",
+                         len(text.splitlines()) - 1,
                          "內文" if src == "model-content" else "標題")
             else:
                 # 第三層退路（列標題）不再把標題串成一段假摘要——
@@ -2312,6 +2397,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             out["links"] = links
             state.update({"hash": h, "text": out["text"], "links": links,
                           "text_source": out["text_source"],
+                          "layout": out.get("layout", ""),
                           "at": _now.isoformat()})
     else:
         log.warning("市場焦點：沒有抓到任何標題")

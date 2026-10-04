@@ -469,7 +469,6 @@ def _labor_body_full(d: dict) -> str:
     dec_html = '<div class="empty">資料不足</div>'
     if dec:
         e, l = dec["employment_effect"], dec["laborforce_effect"]
-        span = max(abs(e), abs(l)) or 1
         # 「兩項相加＝總變動」只是一階近似，而且總變動取自四捨五入到小數
         # 一位的 UNRATE、兩個效果取自未四捨五入的 CE16OV／CLF16OV。
         # 誤差大到看得出來時要講，不然這一列會被當成算錯。
@@ -494,35 +493,47 @@ def _labor_body_full(d: dict) -> str:
             "bad_rise": f"主因是有工作的人減少 {_emp_wan}",
             "supply_rise": f"主因是 {_lf_wan}投入找工作（分母變大），不代表就業惡化",
         }.get(dec.get("verdict"), "兩股力量大致抵消")
-        _impact_txt = (f"這個月失業率{_dir_word} {abs(_dr):.2f} 個百分點，{_cause}"
-                       + ("（幅度在雜訊範圍內，強度別當真）"
-                          if not dec.get("significant", True) else "") + "。")
-        # 分解列的標籤直接講事實，不用「就業效果／勞動力效果」的課本詞；
-        # 「其中失業人數」「近似誤差」這類補充退出常駐版面。
+        # 2026-10 改版（使用者：「很醜、很不容易看」）：
+        #   ① 最上面一行就回答「從多少變成多少」（上月 → 本月），雜訊註記變成小標籤
+        #   ② 一句結論
+        #   ③ 兩股力量畫在同一條零軸上：推高失業率往右（橘）、壓低往左（藍），
+        #      最後一列是合計（深色）——三條長條同一個比例尺，一眼看出誰大
+        #   先前兩條都是灰色、合計只是一行字，看不出方向也看不出加總關係。
+        _u_now = d["axis"].get("unrate") if d.get("axis") else None
+        _u_prev = (_u_now - _dr) if _u_now is not None else None
+        _cause_short = _cause.split("——")[0]
         _emp_label = (f"有工作的人{'少了' if dec['delta_employed'] < 0 else '多了'} "
                       f"{_emp_wan}")
         _lf_label = (f"{_lf_wan}"
-                     + ("退出職場、不再找工作" if dec['delta_labor_force'] < 0
+                     + ("退出勞動力、不再找工作" if dec['delta_labor_force'] < 0
                         else "投入找工作"))
-        dec_html = f"""<div class="impact {_dlean}">{esc(_impact_txt)}</div>
-<div class="stat-row" style="margin:14px 0 0">{_stats([
-    {"label": "失業率 U-3", "value": d['kpi']['u3_display']},
-    {"label": "較上月", "value": f"{dec['delta_rate']:+.2f} 個百分點"}])}</div>
-<div class="dcomp">
-  <div class="dc-cap">本月的變動怎麼來的</div>
-  <div class="dc-row">
-    <div class="dc-name">{esc(_emp_label)}</div>
-    <div class="dc-bar"><span class="dc-zero"></span>
-      <i style="{'left' if e >= 0 else 'right'}:50%;width:{abs(e)/span*50:.1f}%"></i></div>
-    <div class="dc-val">{e:+.2f}<span>{'推高' if e >= 0 else '壓低'}</span></div>
-  </div>
-  <div class="dc-row">
-    <div class="dc-name">{esc(_lf_label)}</div>
-    <div class="dc-bar"><span class="dc-zero"></span>
-      <i style="{'left' if l >= 0 else 'right'}:50%;width:{abs(l)/span*50:.1f}%"></i></div>
-    <div class="dc-val">{l:+.2f}<span>{'推高' if l >= 0 else '壓低'}</span></div>
-  </div>
-  <div class="dc-total">兩項相加　＝　{dec['delta_rate']:+.2f} 個百分點（就是本月的變動）{_resid}</div>
+        _span = max(abs(e), abs(l), abs(_dr)) or 1
+
+        def _ubar(v, kind):
+            w = abs(v) / _span * 50
+            side = "left" if v >= 0 else "right"
+            return (f'<div class="ub-bar"><span class="ub-zero"></span>'
+                    f'<i class="{kind}" style="{side}:50%;width:{w:.1f}%"></i></div>')
+
+        def _urow(label, sub, v, kind, total=False):
+            return (f'<div class="ub-row{" total" if total else ""}">'
+                    f'<div class="ub-name">{esc(label)}<span>{esc(sub)}</span></div>'
+                    f'{_ubar(v, kind)}'
+                    f'<div class="ub-val">{v:+.2f}</div></div>')
+        _noise = ('<span class="ub-tag">幅度在雜訊範圍內</span>'
+                  if not dec.get("significant", True) else "")
+        _head = (f'<div class="ub-head"><span class="ub-from">{_u_prev:.1f}%</span>'
+                 f'<span class="ub-arrow">→</span><b>{_u_now:.1f}%</b>'
+                 f'<span class="ub-d">{_dr:+.1f} 個百分點</span>{_noise}</div>'
+                 if _u_now is not None else "")
+        dec_html = f"""{_head}
+<div class="impact {_dlean}">{esc(f"失業率{_dir_word}，{_cause_short}" + ("——" + _cause.split("——")[1] if "——" in _cause else "") + "。")}</div>
+<div class="ubridge">
+  <div class="ub-axis"><span>← 壓低失業率</span><span>推高失業率 →</span></div>
+  {_urow(_emp_label, "就業增減的影響", e, "up" if e >= 0 else "dn")}
+  {_urow(_lf_label, "勞動力增減的影響", l, "up" if l >= 0 else "dn")}
+  {_urow("合計", "＝本月失業率的變動（個百分點）", _dr, "tot", total=True)}
+  {('<div class="ub-note">' + _resid.strip() + '</div>') if _resid else ""}
 </div>"""
 
     # ---- 折疊區的表格 ----
@@ -577,17 +588,49 @@ def _labor_body_full(d: dict) -> str:
                            for s in att["stats"][:2])
     _rev_sum = next((f'{s["label"]} {s["value"]}' for s in rev["stats"]
                      if s["value"] not in ("—", "")), "本次無修正資料")
-    # 修正卡的一句結論：拿「近一年修正傾向」那格組出來（它就是這卡的重點）。
-    _rev_bias = next((s for s in rev["stats"] if "月度修正" in s.get("label", "")), None)
-    if _rev_bias and _rev_bias.get("value") not in ("—", ""):
-        _rb_lean = ("dovish" if str(_rev_bias["value"]).startswith("-")
-                    else "hawkish" if str(_rev_bias["value"]).startswith("+")
-                    else "neutral")
-        _rev_impact = (f'<div class="impact {_rb_lean}">'
-                       f'{esc(_rev_bias["label"])} {esc(_rev_bias["value"])}'
-                       f'——{esc(_rev_bias.get("note") or "")}</div>')
-    else:
-        _rev_impact = ""
+    # 修正卡（2026-10 改版）：
+    #   ① 一句結論講「這次」改了什麼——那是這份報告新發生的事
+    #   ② 三格數字：這次修正、近 12 次月度修正平均、年度基準修正
+    #   ③ 逐月「初值 → 目前」常駐顯示，每月一條修正長條（往下修紅、往上修藍）
+    #   先前結論句跟數字格重複講月度修正，逐月明細又收在折疊表格裡看不到。
+    _rows = [r for r in (rev.get("rows") or []) if r.get("current") is not None]
+    _tm = rev.get("two_month_net")
+    _rev_impact = ""
+    if _tm is not None and len(_rows) >= 3:
+        _m = "、".join(f"{int(r['label'][5:7])} 月" for r in _rows[-3:-1])
+        _latest = _rows[-1]["current"]
+        _cmp = (f"，比 {int(_rows[-1]['label'][5:7])} 月本身的變動（{fmt.wan(_latest)}）還大"
+                if abs(_tm) > abs(_latest) else "")
+        _word = "往下修" if _tm < 0 else ("往上修" if _tm > 0 else "沒有修正")
+        _rev_impact = (f'<div class="impact {"dovish" if _tm < 0 else "hawkish" if _tm > 0 else "neutral"}">'
+                       f'這次把 {_m}合計{_word} {esc(fmt.wan_abs(_tm))}{esc(_cmp)}。</div>'
+                       if abs(_tm) >= 0.5 else
+                       '<div class="impact neutral">這次沒有修正前兩個月的數字。</div>')
+    _rv_rows = ""
+    if _rows:
+        _nets = [(r["current"] - r["original"]) if r.get("original") is not None else None
+                 for r in _rows]
+        _rspan = max([abs(x) for x in _nets if x is not None] or [1]) or 1
+        for r, n in zip(_rows, _nets):
+            _mo = f"{r['label'][:4]} 年 {int(r['label'][5:7])} 月"
+            _o = fmt.wan(r["original"]) if r.get("original") is not None else "—"
+            _sub = f"初值 {_o} → 目前 {fmt.wan(r['current'])}"
+            if n is None or abs(n) < 0.5:
+                _bar = '<div class="ub-bar"><span class="ub-zero"></span></div>'
+                _val = '<div class="ub-val rv-none">未修正</div>'
+            else:
+                w = abs(n) / _rspan * 50
+                side = "left" if n >= 0 else "right"
+                _bar = (f'<div class="ub-bar"><span class="ub-zero"></span>'
+                        f'<i class="{"rvup" if n >= 0 else "rvdn"}" style="{side}:50%;width:{w:.1f}%"></i></div>')
+                _val = f'<div class="ub-val">{esc(fmt.wan(n))}</div>'
+            _rv_rows += (f'<div class="ub-row"><div class="ub-name">{esc(_mo)}'
+                         f'<span>{esc(_sub)}</span></div>{_bar}{_val}</div>')
+    _rev_visual = (f'<div class="ubridge rv"><div class="ub-axis"><span>← 往下修</span>'
+                   f'<span>往上修 →</span></div>{_rv_rows}'
+                   '<div class="ub-note" style="text-align:left">右欄＝目前的數字減初次公布'
+                   '（累計修正）；上方「這次修正」是相對上一份報告的版本'
+                   '（BLS 新聞稿口徑），兩者可能不同。</div></div>') if _rv_rows else ""
     _lt = {}
     for _l in d["lights"]:
         _lt[_l.status] = _lt.get(_l.status, 0) + 1
@@ -606,7 +649,6 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
-    <p class="hint">這個月<b>新發生</b>的事，依「改變頭條數字的解讀 → 趨勢轉折 → 結構背景」排列；目前的整體狀態看下方「關鍵指標檢核」。點「依據」看支撐的數字。</p>
     {flow_html}
     {flags_html}
   </div>
@@ -627,14 +669,13 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="unrate" data-sum="{esc(_dec_sum)}">失業率變動分解</h2>
-    <p class="hint">同樣的下降幅度，成因不同則意義相反。</p>
     {dec_html}
     {_ustar_row(d.get('ustar'))}
+    {_structure_block(d.get('unemp_structure'))}
     {teach(
         "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
         "放棄找工作的人不算在勞動力裡，所以失業率下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
         "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
-    {_structure_block(d.get('unemp_structure'))}
   </div>
 </div>
 
@@ -673,18 +714,14 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="revision" data-sum="{esc(_rev_sum)}">歷史數據修正</h2>
-    <p class="hint">初次公布是估算值，之後兩個月會用更完整的資料重算。</p>
+    <p class="hint">初次公布是估算值，之後兩個月會用更完整的資料重算；每年 2 月再用失業保險的申報資料校正一次（年度基準修正）。</p>
     {_rev_impact}
     <div class="stat-row" style="margin-top:14px">{_stats(rev['stats'])}</div>
+    {_rev_visual}
     {teach(
         "之前公布的就業數字，事後被改了多少。",
         "市場只對「第一次公布」的數字有反應，但那是估算值。如果初值總是被往下修，代表你在新聞上看到的就業一直比真實情況好——這正是判斷「數據可不可信」的地方。",
         "看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。")}
-    <details data-m-collapse><summary>逐月修正明細</summary>
-      {rev['table']}
-      <p class="hint" style="margin-top:10px">
-        「修正」欄是相對初次公布的累計差異，與上方 BLS 口徑（相對上次發布）不同。</p>
-    </details>
   </div>
 </div>
 

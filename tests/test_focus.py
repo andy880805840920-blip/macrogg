@@ -1205,6 +1205,55 @@ _c29 = ft._level_chip("dji", ft.QUOTE_SPECS["dji"], {}, False,
 check("㉙ 指數 chip：整數、漲跌與漲跌幅",
       _c29["value"] == "46,123" and _c29["delta"] == "+123（+0.27%）", _c29)
 
+# ㉚ 版式 A：一段主軸＋兩則補充（2026-10 使用者定案）
+check("㉚ 預設字數：主軸 200、補充 2 則 × 80", ft.focus_caps({}) == [200, 80, 80])
+check("㉚b config 可覆寫", ft.focus_caps({"main_chars": 180, "supp_items": 1,
+                                       "supp_chars": 60}) == [180, 60])
+
+
+def _runA(replies):
+    seen = []
+
+    def _ca(src, system, env=None):
+        seen.append((src, system))
+        return replies[min(len(seen) - 1, len(replies) - 1)], ""
+    _orig = ft._call_ai
+    ft._call_ai = _ca
+    try:
+        t, sr = ft.summarize_content(_ART20, ["殖利率"], caps=[200, 80, 80])
+    finally:
+        ft._call_ai = _orig
+    return t, sr, seen
+
+
+_ma = _U * 8                                                  # 200 字主軸
+_ta, _sa, _seena = _runA(["主軸：" + _ma + "\n補充：" + _U * 3 + "\n" + _U * 2])
+check("㉚c 主軸提示詞：要求彭博／路透優先、同一件事合併",
+      "主軸" in _seena[0][1] and "彭博" in _seena[0][1] and "合併" in _seena[0][1])
+check("㉚d 「主軸：」「補充：」標籤被拿掉、三行都在",
+      _ta.splitlines()[0] == _ma and len(_ta.splitlines()) == 3
+      and not _ta.splitlines()[1].startswith("補充"), _ta[:40])
+_tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U,   # 補充 150 字 > 120
+                          _ma + "\n" + _U * 3 + "\n" + _U])
+check("㉚e 補充超過 80×1.5＝120 字 → 帶原因重寫（訊息標出是第 2 行）",
+      len(_seenb) == 2 and "第 2 行超過 120 字" in _seenb[1][0], _seenb[-1][0][-80:])
+_tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U])               # 主軸 275 字（底線 300 內）
+check("㉚f 主軸在底線內 → 直接採用、只補一則也可以",
+      len(_seenc) == 1 and len(_tc.splitlines()) == 2)
+
+# ㉛ 彭博、路透優先
+_bb = {"title": "Fed officials weigh rate path", "source": "Bloomberg"}
+_cn = {"title": "Fed officials weigh rate path", "source": "CNBC"}
+check("㉛ 同一標題：彭博的來源分數高於 CNBC",
+      ft._src_weight(_bb) > ft._src_weight(_cn) and ft._src_weight(_bb) == 3.0)
+
+# ㉜ 首頁：版式 A 的渲染
+_hA = _home._focus_strip({"chips": [], "text": "主軸一段\n補充甲\n補充乙",
+                          "layout": "main", "fedwatch": None,
+                          "text_source": "model-content", "links": []})
+check("㉜ 主軸是一個段落、補充是兩則清單",
+      '<p class="fs-main">主軸一段</p>' in _hA and _hA.count('<li class="fs-text">') == 2)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

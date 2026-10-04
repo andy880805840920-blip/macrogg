@@ -914,9 +914,18 @@ def _focus_strip(f: dict | None) -> str:
     # 焦點是 N 則重點（一行一則）——逐則包 <li>，不能整坨塞進一個段落
     # （esc 會把換行吃掉，幾則變成一大塊）。
     _paras = [s.strip() for s in (f.get("text") or "").split("\n") if s.strip()]
-    text = ('<ul class="fs-body fs-list">'
-            + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
-            + '</ul>') if _paras else ""
+    if _paras and f.get("layout") == "main":
+        # 版式 A：第一行是主軸（一段話），其餘是補充（逐則 <li>）
+        text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>'
+                '<p class="fs-main">' + esc(_paras[0]) + '</p>'
+                + ('<ul class="fs-list">'
+                   + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras[1:])
+                   + '</ul>' if _paras[1:] else "")
+                + '</div>')
+    else:
+        text = ('<ul class="fs-body fs-list">'
+                + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
+                + '</ul>') if _paras else ""
     # 列標題模式：AI 摘要不可用，標題清單就是內容——收合預設打開，
     # 不再另外把標題串成一段假摘要（同一批字印兩次）。
     _headline_mode = (f.get("text_source") == "headlines")
@@ -946,15 +955,31 @@ def _focus_strip(f: dict | None) -> str:
     _fw_note = ("・機率由期貨反推" if fw.get("src") == "futures"
                 else "・機率：官方值" if fw.get("src") == "atlanta"
                 else "")
-    note = ("資料：FRED／Yahoo（chip 小字＝資料日）" + _fw_note + _t_note
+    note = ("數據：FRED／Yahoo（小字＝資料日）" + _fw_note + _t_note
             + "｜指標與方法說明見頁尾")
-    # 標題旁不再放日期：頂部「更新」行有完整時間、每顆 chip 有各自
-    # 資料日——同一個資訊第三份是冗餘（使用者指定移除）。
+    # 品牌列（2026-10）：這一區是使用者每天截圖發社群的部分——截出去的圖
+    # 要自己說得清楚「誰做的、哪一天、新聞從哪來」，不能靠頁面其他地方。
+    # 標題旁仍不放日期（使用者先前指定移除），時間放在這一列。
+    _srcs = []
+    for x in f.get("links") or []:
+        s = (x.get("source") or "").strip()
+        if s and s not in _srcs:
+            _srcs.append(s)
+    from ..site import SITE_NAME, TAGLINE
+    brand = ('<div class="fs-brand"><span class="fs-brand-name">'
+             f'<b>{esc(SITE_NAME)}</b>{esc(TAGLINE)}</span>'
+             f'<span class="fs-brand-meta">{esc(clock.stamp())}'
+             + (f'　·　新聞：{esc("、".join(_srcs[:3]))}' if _srcs else "")
+             + '</span></div>')
+    # 桌機兩欄：左邊 2×2 數據磚、右邊新聞——截圖是一張緊湊的橫幅；
+    # 手機上下堆疊。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
             '<div class="fs-head">今日市場焦點'
             + picker + '</div>'
+            '<div class="fs-grid">'
             f'<div class="fs-chips">{"".join(chips)}</div>'
-            f'{text}{links}<div class="fs-note">{esc(note)}</div>'
+            f'<div class="fs-news">{text}{links}</div></div>'
+            f'{brand}<div class="fs-note">{esc(note)}</div>'
             + script + '</section>')
 
 
@@ -1087,8 +1112,10 @@ def home_footer(ctxs: dict) -> str:
         '「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場'
         '（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；'
         '台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），'
-        '變動對該盤參考價。焦點的三則重點由 AI 讀取多篇報導後寫成，'
-        '排序依跨來源熱度、時效、來源與發布日，數字均出自原文並經機械驗證；'
+        '變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：第一段是當天最重要的'
+        '一件事（優先採彭博、路透報導的事件，同一件事的多篇報導合併來寫），'
+        '下面兩則補充其他事件；排序依跨來源熱度、時效、來源與發布日，'
+        '數字均出自原文並經機械驗證；'
         '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span>'
         '</div></details>'
         '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'

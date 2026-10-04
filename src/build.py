@@ -359,7 +359,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     rev_rows = [{"label": r.obs_date[:7], "original": r.original, "current": r.current}
                 for r in rev.recent[-7:]]
     rev_stats = [
-        {"label": "前兩月合計修正",
+        {"label": "這次修正（前兩月合計）",
          "value": fmt.wan(rev.two_month_net),
          "color": "var(--critical)" if (rev.two_month_net or 0) < 0 else "var(--good)",
          "note": ("相對上次發布"
@@ -367,10 +367,6 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                      if rev.cumulative_net is not None
                      and abs((rev.cumulative_net or 0) - (rev.two_month_net or 0)) > 1
                      else ""))},
-        {"label": "近三個月平均新增",
-         "value": fmt.wan(rev.ma3_now),
-         "note": (f"若沒有這次修正，應為 {fmt.wan(rev.ma3_before_revision)}"
-                  if rev.ma3_before_revision is not None else "")},
         {"label": "近 12 次月度修正（平均）",
          "value": (f"{fmt.wan(rev.bias_12m)}/月" if rev.bias_12m is not None else "—"),
          "color": "var(--warning)" if rev.bias_direction == "systematically_down" else "inherit",
@@ -533,6 +529,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "kpi": kpi,
         "revision": {"stats": rev_stats,
                      "table": charts.revision_table(rev_rows, fmt=fmt.people),
+                     "rows": rev_rows,
+                     "two_month_net": rev.two_month_net,
                      "source_note": source_note},
         "attribution": {"stats": att_stats,
                         "groups": att_groups,
