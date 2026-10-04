@@ -623,6 +623,49 @@ details[data-m-collapse]>summary{list-style:none}
 .dsum{padding-bottom:14px;border-bottom:1px solid var(--grid)}
 .dsum-main{font-size:22px;font-weight:700;line-height:1.35}
 .dsum-sub{font-size:13px;color:var(--text-secondary);margin-top:5px}
+/* 失業率變動分解（2026-10 改版）：上月→本月、一條零軸上的推高／壓低、合計 */
+.ub-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;
+  margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.ub-from{font-size:20px;font-weight:600;color:var(--muted)}
+.ub-arrow{font-size:18px;color:var(--muted)}
+.ub-head b{font-size:30px;font-weight:800;color:var(--text-primary)}
+.ub-d{font-size:14px;font-weight:700;color:var(--text-secondary)}
+.ub-tag{font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);
+  border-radius:5px;padding:2px 7px}
+.ubridge{margin-top:16px}
+.ub-axis{display:flex;justify-content:space-between;font-size:11px;
+  color:var(--muted);padding:0 0 6px;margin-left:calc(38% + 12px);margin-right:62px}
+.ub-row{display:grid;grid-template-columns:38% 1fr 50px;gap:12px;align-items:center;
+  padding:9px 0;border-top:1px solid var(--grid)}
+.ub-row.total{border-top:1.5px solid var(--text-secondary)}
+.ub-name{font-size:13.5px;font-weight:600;color:var(--text-primary);line-height:1.45}
+.ub-name span{display:block;font-size:11.5px;font-weight:400;color:var(--muted)}
+.ub-bar{position:relative;height:18px}
+.ub-zero{position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:var(--baseline)}
+.ub-bar i{position:absolute;top:0;bottom:0;border-radius:3px;min-width:2px}
+.ub-bar i.up{background:var(--serious)}
+.ub-bar i.dn{background:var(--series-1)}
+.ub-bar i.tot{background:var(--text-secondary)}
+.ub-val{font-size:15px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.ub-row.total .ub-val{font-size:16px}
+.ub-note{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:right}
+@media(max-width:759px){
+  .ub-axis{margin-left:0;margin-right:58px}
+  .ub-row{grid-template-columns:1fr 50px;row-gap:6px}
+  .ub-name{grid-column:1 / -1}
+  .ub-bar{grid-column:1}
+  .ub-val{grid-column:2}
+}
+.ub-bar i.rvdn{background:var(--neg)}
+.ub-bar i.rvup{background:var(--pos)}
+.ub-val.rv-none{font-size:12px;font-weight:500;color:var(--muted)}
+.ubridge.rv .ub-row{padding:7px 0;grid-template-columns:38% 1fr 84px}
+.ubridge.rv .ub-axis{margin-right:96px}
+.ub-val{white-space:nowrap}
+@media(max-width:759px){
+  .ubridge.rv .ub-row{grid-template-columns:1fr 84px}
+  .ubridge.rv .ub-axis{margin-right:92px}
+}
 .dcomp{margin-top:14px}
 .dc-cap{font-size:12px;font-weight:600;color:var(--text-secondary);
   margin-top:2px}
@@ -1516,14 +1559,17 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 面板改網格：桌機三欄的寬長方形、手機兩欄近正方形——14 個選項
    排成一條長列要滾很久（使用者嫌）。分隔線取消：網格下橫線會斷在
    半路，行距就是分隔。 */
+/* 寬度跟著內容撐開（Windows 中文字型比較寬，固定 440px 時長標籤會撐出
+   白框——使用者回報過），上限是視窗寬；真的放不下時標籤允許換行。 */
 .fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
   background:var(--surface-1);border:1px solid var(--border);
-  border-radius:8px;padding:8px 14px 10px;width:440px;
-  display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px;
+  border-radius:8px;padding:8px 14px 10px;width:max-content;min-width:440px;
+  max-width:calc(100vw - 48px);box-sizing:border-box;
+  display:grid;grid-template-columns:repeat(3,auto);column-gap:18px;
   box-shadow:0 6px 24px rgba(0,0,0,.35)}
 .fs-pick-panel label{display:flex;align-items:center;gap:8px;
   min-height:44px;font-size:13px;color:var(--text-primary);
-  cursor:pointer;white-space:nowrap}
+  cursor:pointer;white-space:normal;line-height:1.35}
 .fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
 .fs-pick-panel label:has(input:disabled){opacity:.4;cursor:default}
 .fs-pick-note{font-size:11px;color:var(--muted);margin-top:2px;
@@ -1572,6 +1618,10 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 3 則重點：一則一行、左側小圓點，則與則之間留白——掃一眼就看得出
    今天有幾件事（先前是兩三段散文，被嫌太長又太籠統）。 */
 .fs-list{list-style:none}
+/* 版式 A：主軸一段＋補充清單（補充清單嵌在同一個底色框裡） */
+.fs-main{margin:0;font-size:14px;line-height:1.85;color:var(--text-primary)}
+.fs-body .fs-list{margin:10px 0 0;padding:10px 0 0;
+  border-top:1px solid var(--grid)}
 .fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
   margin:0;position:relative;padding-left:14px}
 /* 不用 justify：中英數混排的短行會把中文字距硬撐開（手機實測） */
@@ -1582,6 +1632,51 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
 .fs-note{margin-top:8px;font-size:10.5px;color:var(--muted);line-height:1.6}
+
+/* ---------- 焦點條 2026-10 改版：截圖友善 ----------
+   使用者每天把這一區截圖發社群，所以它要像一張獨立的圖卡：
+   桌機兩欄（左：2×2 數據磚；右：新聞），手機上下堆疊；
+   數字是有底色的磚（標籤→數值→變動→資料日四層），新聞框不再限寬，
+   最底下一條品牌列（站名、標語、更新時間、新聞來源）。 */
+.fs-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+@media(min-width:900px){
+  .fs-grid{grid-template-columns:minmax(300px,36%) 1fr;align-items:stretch}}
+.focus-strip .fs-chips{grid-template-columns:repeat(2,1fr);gap:8px;margin:0;
+  grid-auto-rows:1fr;align-content:stretch}
+/* 「選擇」是 details：全站 details 預設有上框線＋上邊距，套到這顆小按鈕上
+   就是標題上方那條莫名的短線（截圖裡很明顯）——這裡全部歸零 */
+.focus-strip .fs-pick,.focus-strip .fs-pick[open]{margin-top:0;border-top:0;
+  padding-top:0;padding-bottom:0}
+.focus-strip .fs-head{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.focus-strip .fs-chip{background:var(--surface-2);border-radius:10px;
+  padding:10px 12px 9px;display:flex;flex-direction:column;min-height:82px;
+  box-sizing:border-box}
+.focus-strip .fs-chip.fs-off{display:none}
+.focus-strip .fs-chip span{font-size:11.5px;color:var(--text-secondary);
+  margin-bottom:3px;line-height:1.35}
+.focus-strip .fs-chip b{font-size:21px;font-weight:800;line-height:1.2;
+  letter-spacing:-.01em}
+.focus-strip .fs-chip i{margin-left:0;margin-top:2px;font-size:12px;
+  font-weight:600;line-height:1.35}
+.focus-strip .fs-chip .fs-when{margin-top:4px}
+/* 桌機：磚被拉到跟新聞框同高，內容垂直置中、數字放大一號 */
+@media(min-width:900px){
+  .focus-strip .fs-chip{justify-content:center;padding:12px 14px}
+  .focus-strip .fs-chip b{font-size:25px}
+  .focus-strip .fs-chip i{font-size:12.5px}}
+.fs-news{min-width:0;display:flex;flex-direction:column}
+.fs-news .fs-body{margin:0;max-width:none;flex:1;padding:13px 15px}
+.fs-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;
+  color:var(--series-1);margin-bottom:4px}
+.fs-news .fs-main{font-size:14.5px;line-height:1.85}
+.fs-brand{display:flex;justify-content:space-between;align-items:baseline;
+  flex-wrap:wrap;gap:2px 12px;margin-top:12px;padding-top:9px;
+  border-top:1px solid var(--grid)}
+.fs-brand-name{font-size:11.5px;color:var(--text-secondary)}
+.fs-brand-name b{font-size:13px;font-weight:800;letter-spacing:.04em;
+  color:var(--text-primary);margin-right:8px}
+.fs-brand-meta{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.focus-strip .fs-note{margin-top:4px}
 
 .home-transition{background:var(--surface-2)}
 .home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
@@ -1835,7 +1930,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/scenario/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1><a class="h1-home" href="/">情境合成</a></h1>
   
-  <div class="sub">就業 2026-09　·　物價 2026-08　·　聲明 2026-09-16　·　利率 2026-10-02　·　更新於 2026-10-05 00:30（台北）</div>
+  <div class="sub">就業 2026-09　·　物價 2026-08　·　聲明 2026-09-16　·　利率 2026-10-02　·　更新於 2026-10-05 01:08（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/" class="on">情境合成</a><a href="/archive/">存檔</a></nav></div>

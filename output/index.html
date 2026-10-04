@@ -623,6 +623,49 @@ details[data-m-collapse]>summary{list-style:none}
 .dsum{padding-bottom:14px;border-bottom:1px solid var(--grid)}
 .dsum-main{font-size:22px;font-weight:700;line-height:1.35}
 .dsum-sub{font-size:13px;color:var(--text-secondary);margin-top:5px}
+/* 失業率變動分解（2026-10 改版）：上月→本月、一條零軸上的推高／壓低、合計 */
+.ub-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;
+  margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.ub-from{font-size:20px;font-weight:600;color:var(--muted)}
+.ub-arrow{font-size:18px;color:var(--muted)}
+.ub-head b{font-size:30px;font-weight:800;color:var(--text-primary)}
+.ub-d{font-size:14px;font-weight:700;color:var(--text-secondary)}
+.ub-tag{font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--border);
+  border-radius:5px;padding:2px 7px}
+.ubridge{margin-top:16px}
+.ub-axis{display:flex;justify-content:space-between;font-size:11px;
+  color:var(--muted);padding:0 0 6px;margin-left:calc(38% + 12px);margin-right:62px}
+.ub-row{display:grid;grid-template-columns:38% 1fr 50px;gap:12px;align-items:center;
+  padding:9px 0;border-top:1px solid var(--grid)}
+.ub-row.total{border-top:1.5px solid var(--text-secondary)}
+.ub-name{font-size:13.5px;font-weight:600;color:var(--text-primary);line-height:1.45}
+.ub-name span{display:block;font-size:11.5px;font-weight:400;color:var(--muted)}
+.ub-bar{position:relative;height:18px}
+.ub-zero{position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:var(--baseline)}
+.ub-bar i{position:absolute;top:0;bottom:0;border-radius:3px;min-width:2px}
+.ub-bar i.up{background:var(--serious)}
+.ub-bar i.dn{background:var(--series-1)}
+.ub-bar i.tot{background:var(--text-secondary)}
+.ub-val{font-size:15px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.ub-row.total .ub-val{font-size:16px}
+.ub-note{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:right}
+@media(max-width:759px){
+  .ub-axis{margin-left:0;margin-right:58px}
+  .ub-row{grid-template-columns:1fr 50px;row-gap:6px}
+  .ub-name{grid-column:1 / -1}
+  .ub-bar{grid-column:1}
+  .ub-val{grid-column:2}
+}
+.ub-bar i.rvdn{background:var(--neg)}
+.ub-bar i.rvup{background:var(--pos)}
+.ub-val.rv-none{font-size:12px;font-weight:500;color:var(--muted)}
+.ubridge.rv .ub-row{padding:7px 0;grid-template-columns:38% 1fr 84px}
+.ubridge.rv .ub-axis{margin-right:96px}
+.ub-val{white-space:nowrap}
+@media(max-width:759px){
+  .ubridge.rv .ub-row{grid-template-columns:1fr 84px}
+  .ubridge.rv .ub-axis{margin-right:92px}
+}
 .dcomp{margin-top:14px}
 .dc-cap{font-size:12px;font-weight:600;color:var(--text-secondary);
   margin-top:2px}
@@ -1516,14 +1559,17 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 面板改網格：桌機三欄的寬長方形、手機兩欄近正方形——14 個選項
    排成一條長列要滾很久（使用者嫌）。分隔線取消：網格下橫線會斷在
    半路，行距就是分隔。 */
+/* 寬度跟著內容撐開（Windows 中文字型比較寬，固定 440px 時長標籤會撐出
+   白框——使用者回報過），上限是視窗寬；真的放不下時標籤允許換行。 */
 .fs-pick-panel{position:absolute;left:0;top:calc(100% + 6px);z-index:40;
   background:var(--surface-1);border:1px solid var(--border);
-  border-radius:8px;padding:8px 14px 10px;width:440px;
-  display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px;
+  border-radius:8px;padding:8px 14px 10px;width:max-content;min-width:440px;
+  max-width:calc(100vw - 48px);box-sizing:border-box;
+  display:grid;grid-template-columns:repeat(3,auto);column-gap:18px;
   box-shadow:0 6px 24px rgba(0,0,0,.35)}
 .fs-pick-panel label{display:flex;align-items:center;gap:8px;
   min-height:44px;font-size:13px;color:var(--text-primary);
-  cursor:pointer;white-space:nowrap}
+  cursor:pointer;white-space:normal;line-height:1.35}
 .fs-pick-panel input{width:15px;height:15px;accent-color:var(--series-1)}
 .fs-pick-panel label:has(input:disabled){opacity:.4;cursor:default}
 .fs-pick-note{font-size:11px;color:var(--muted);margin-top:2px;
@@ -1572,6 +1618,10 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 /* 3 則重點：一則一行、左側小圓點，則與則之間留白——掃一眼就看得出
    今天有幾件事（先前是兩三段散文，被嫌太長又太籠統）。 */
 .fs-list{list-style:none}
+/* 版式 A：主軸一段＋補充清單（補充清單嵌在同一個底色框裡） */
+.fs-main{margin:0;font-size:14px;line-height:1.85;color:var(--text-primary)}
+.fs-body .fs-list{margin:10px 0 0;padding:10px 0 0;
+  border-top:1px solid var(--grid)}
 .fs-body .fs-text{font-size:13.5px;line-height:1.8;color:var(--text-primary);
   margin:0;position:relative;padding-left:14px}
 /* 不用 justify：中英數混排的短行會把中文字距硬撐開（手機實測） */
@@ -1582,6 +1632,51 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-link a{color:var(--series-1);text-decoration:none;font-size:12.5px;
   display:inline-block;padding:8px 0;line-height:1.5}
 .fs-note{margin-top:8px;font-size:10.5px;color:var(--muted);line-height:1.6}
+
+/* ---------- 焦點條 2026-10 改版：截圖友善 ----------
+   使用者每天把這一區截圖發社群，所以它要像一張獨立的圖卡：
+   桌機兩欄（左：2×2 數據磚；右：新聞），手機上下堆疊；
+   數字是有底色的磚（標籤→數值→變動→資料日四層），新聞框不再限寬，
+   最底下一條品牌列（站名、標語、更新時間、新聞來源）。 */
+.fs-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+@media(min-width:900px){
+  .fs-grid{grid-template-columns:minmax(300px,36%) 1fr;align-items:stretch}}
+.focus-strip .fs-chips{grid-template-columns:repeat(2,1fr);gap:8px;margin:0;
+  grid-auto-rows:1fr;align-content:stretch}
+/* 「選擇」是 details：全站 details 預設有上框線＋上邊距，套到這顆小按鈕上
+   就是標題上方那條莫名的短線（截圖裡很明顯）——這裡全部歸零 */
+.focus-strip .fs-pick,.focus-strip .fs-pick[open]{margin-top:0;border-top:0;
+  padding-top:0;padding-bottom:0}
+.focus-strip .fs-head{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.focus-strip .fs-chip{background:var(--surface-2);border-radius:10px;
+  padding:10px 12px 9px;display:flex;flex-direction:column;min-height:82px;
+  box-sizing:border-box}
+.focus-strip .fs-chip.fs-off{display:none}
+.focus-strip .fs-chip span{font-size:11.5px;color:var(--text-secondary);
+  margin-bottom:3px;line-height:1.35}
+.focus-strip .fs-chip b{font-size:21px;font-weight:800;line-height:1.2;
+  letter-spacing:-.01em}
+.focus-strip .fs-chip i{margin-left:0;margin-top:2px;font-size:12px;
+  font-weight:600;line-height:1.35}
+.focus-strip .fs-chip .fs-when{margin-top:4px}
+/* 桌機：磚被拉到跟新聞框同高，內容垂直置中、數字放大一號 */
+@media(min-width:900px){
+  .focus-strip .fs-chip{justify-content:center;padding:12px 14px}
+  .focus-strip .fs-chip b{font-size:25px}
+  .focus-strip .fs-chip i{font-size:12.5px}}
+.fs-news{min-width:0;display:flex;flex-direction:column}
+.fs-news .fs-body{margin:0;max-width:none;flex:1;padding:13px 15px}
+.fs-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;
+  color:var(--series-1);margin-bottom:4px}
+.fs-news .fs-main{font-size:14.5px;line-height:1.85}
+.fs-brand{display:flex;justify-content:space-between;align-items:baseline;
+  flex-wrap:wrap;gap:2px 12px;margin-top:12px;padding-top:9px;
+  border-top:1px solid var(--grid)}
+.fs-brand-name{font-size:11.5px;color:var(--text-secondary)}
+.fs-brand-name b{font-size:13px;font-weight:800;letter-spacing:.04em;
+  color:var(--text-primary);margin-right:8px}
+.fs-brand-meta{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.focus-strip .fs-note{margin-top:4px}
 
 .home-transition{background:var(--surface-2)}
 .home-transition-grid{display:grid;grid-template-columns:1fr;gap:8px}
@@ -1835,7 +1930,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1>MACRO GG</h1>
   <div class="tagline">明天過後，帶你看總經</div>
-  <div class="sub"><span class="ws"><span class="ws-long">最後更新</span><span class="ws-short">更新</span> 10-05 00:30 台北｜10-04 12:30 紐約｜10-04 17:30 倫敦</span></div>
+  <div class="sub"><span class="ws"><span class="ws-long">最後更新</span><span class="ws-short">更新</span> 10-05 01:08 台北｜10-04 13:08 紐約｜10-04 18:08 倫敦</span></div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/" class="on">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
@@ -1843,7 +1938,7 @@ details.home-module[open]{padding-bottom:0}
 <div class="anav"><nav class="anchors"><a href="#home-now">就業中性 × 通膨偏高</a><a href="#home-grid">九宮格與下一格</a><a href="#home-modules">四大模組摘要</a><a href="#home-changes">本期變化與市場含義</a><a href="#home-next">接下來看什麼</a></nav></div>
 
 <main class="home-dashboard">
-  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點<details class="fs-pick"><summary><span class="fs-pick-btn">選擇</span></summary><div class="fs-pick-panel"><label><input type="checkbox" data-pick="dgs3mo">3 個月</label><label><input type="checkbox" data-pick="dgs2" checked>2 年期</label><label><input type="checkbox" data-pick="dgs5">5 年期</label><label><input type="checkbox" data-pick="dgs10" checked>10 年期</label><label><input type="checkbox" data-pick="dgs30" checked>30 年期</label><label><input type="checkbox" data-pick="fedwatch" checked>10 月 FOMC（10/28）</label><label><input type="checkbox" data-pick="fw_dec">12 月 FOMC 單場幅度</label><label><input type="checkbox" data-pick="fw_cum">至 12 月 FOMC 累計</label><label><input type="checkbox" data-pick="sofr">SOFR</label><label><input type="checkbox" data-pick="sofr_iorb">SOFR−IORB</label><label><input type="checkbox" data-pick="onrrp">ON RRP</label><label><input type="checkbox" data-pick="srf">SRF 動用</label><label><input type="checkbox" data-pick="wti">WTI 原油</label><label><input type="checkbox" data-pick="brent">Brent 原油</label><label><input type="checkbox" data-pick="vix">VIX</label><label><input type="checkbox" data-pick="move">MOVE</label><label><input type="checkbox" data-pick="dji">道瓊指數</label><label><input type="checkbox" data-pick="sox">費城半導體</label><label><input type="checkbox" data-pick="txf">台指期</label><div class="fs-pick-note"><span class="fs-count">已選 4／4</span>　·　選擇存在此裝置</div></div></details></div><div class="fs-chips"><div class="fs-chip fs-off" data-chip="dgs3mo" data-d="2026-10-02"><span>3 個月</span><b>3.99%</b><i class="up">+1 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs2" data-d="2026-10-01"><span>2 年期</span><b>4.78%</b><i class="dn">-10 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="dgs5" data-d="2026-10-02"><span>5 年期</span><b>5.05%</b><i class="up">+5 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs10" data-d="2026-10-02"><span>10 年期</span><b>5.28%</b><i class="up">+4 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs30" data-d="2026-10-02"><span>30 年期</span><b>5.63%</b><i class="up">+2 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="fedwatch" data-d="2026-10-05"><span>10 月 FOMC（10/28）</span><b>維持 78%</b><i class="dn">升一碼 22%（前日 24%）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="fw_dec" data-d="2026-10-05"><span>12 月 FOMC 單場幅度</span><b>+20.4 bp</b><i class="up">約 +0.8 碼（前日 +18.3 bp）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="fw_cum" data-d="2026-10-05"><span>至 12 月 FOMC 累計</span><b>+26.0 bp</b><i class="up">約 +1.0 碼（前日 +24.4 bp）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="sofr" data-d="2026-10-01"><span>SOFR</span><b>3.87%</b><i class="dn">-3 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="sofr_iorb" data-d="2026-10-01"><span>SOFR−IORB</span><b>-3 bp</b><i class="dn">-3 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="onrrp" data-d="2026-10-02"><span>ON RRP</span><b>15 億美元</b><i class="up">+12 億</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="srf" data-d="2026-10-02"><span>SRF 動用</span><b>0（未動用）</b><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="wti" data-d="2026-10-02"><span>WTI 原油</span><b>91.1 美元</b><i class="dn">-1.8</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="brent" data-d="2026-10-02"><span>Brent 原油</span><b>102.2 美元</b><i class="dn">-0.1</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="vix" data-d="2026-10-02"><span>VIX</span><b>15.3</b><i class="dn">-1.1</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="move" data-d="2026-10-02"><span>MOVE</span><b>107.3</b><i class="dn">-0.8</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="dji" data-d="2026-10-02"><span>道瓊指數</span><b>51,177</b><i class="up">+250（+0.49%）</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="sox" data-d="2026-10-02"><span>費城半導體</span><b>13,137</b><i class="up">+308（+2.40%）</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="txf" data-d="2026-10-02"><span>台指期</span><b>48,476</b><i class="up">+122（+0.25%）</i><small class="fs-when">日盤 10-02</small></div></div><ul class="fs-body fs-list"><li class="fs-text">美債10年期殖利率升至5.3%以上，Edward Jones執行長Penny Pennington認為強勁經濟成長與AI投資熱情仍支撐美股多頭，亞特蘭大聯準銀行預測美國第三季經濟成長率達3.7%。</li><li class="fs-text">台灣金融三業前8月稅前盈餘達1兆1,702.35億元，年增93.7%，已超越2024年全年1兆588億元的歷史新高，其中銀行業貢獻5,378.1億元、保險業3,807億元、證期投信業2,517.25億元。</li><li class="fs-text">Bloomberg報導指美國財政部長貝森特(Bessent)淡化對殖利率上升與AI泡沫的擔憂。</li></ul><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQQzRmSFg4Q0luSklSQVBZVHBXcmg0WjZUaUJrTldHbW1BMmpnLVY0ckZqTDJQX1JueGFPYUdUX1JMQzhNWTZadlZYMlc1Y0FpLW1rY0VDcWctb0RhX0FFaFZBZmFyZ2NiaGdndmFXUmpZWVVMNFhpclc2X1BNOUh2bXhEdDhQRWQxQnpLelF1a0dGNXJJSl82LV9mdUppalc5ektuMEItWElkNEZIMHdfbg?oc=5" rel="noopener">Trump Aide Hassett Says Powell Should ‘Move On’ From Fed Board</a><span class="fs-src">Bloomberg</span></div><div class="fs-link"><a href="https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E9%A3%86%E7%A0%B45-3-%E4%BB%8D%E4%B8%8D%E6%80%95-edward-jones%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%9C%8B%E5%A5%BD%E7%BE%8E%E8%82%A1-131005472.html" rel="noopener">美債殖利率飆破5.3%仍不怕！Edward Jones執行長看好美股：AI與經濟成長撐多頭</a><span class="fs-src">Yahoo奇摩股市</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxNaThxNHd6Y1VVQWVGeExyUGRBa3hubktXaVNpQVFlVzhQaUh3UjFNWWdXMVo3b203NFllZmRUU0VwcG9FUjNHNE9jQy1meS1kMENnSDdYVlNMTkRWTGcweEdZVzIwYUthZzk3YlY2QTVSWjRfX2swRktOb1dwRFNjekJ5RVdSOXU2ek1ud2J2cWstRG5JYUpQNnZNcmhMSUFlNTlaS1NsSnJKZXBxOXVTUy1R?oc=5" rel="noopener">Bessent Downplays Worries on Rising Yields, AI Bubble Concerns</a><span class="fs-src">Bloomberg</span></div></div></details><div class="fs-note">資料：FRED／Yahoo（chip 小字＝資料日）・機率由期貨反推・焦點由 AI 綜合報導改寫｜指標與方法說明見頁尾</div><script>(function(){var K="fsChips";var M=4;var D=["dgs2", "dgs10", "dgs30", "fedwatch"];var box=document.querySelector(".fs-chips");if(!box)return;var ps=Array.prototype.slice.call(document.querySelectorAll(".fs-pick [data-pick]"));function ap(sel){sel=sel.slice(0,M);Array.prototype.forEach.call(box.querySelectorAll("[data-chip]"),function(ch){ch.classList.toggle("fs-off",sel.indexOf(ch.getAttribute("data-chip"))<0);});ps.forEach(function(p){var id=p.getAttribute("data-pick");p.checked=sel.indexOf(id)>=0;p.disabled=(!p.checked&&sel.length>=M);});var n=document.querySelector(".fs-count");if(n)n.textContent="已選 "+sel.length+"／"+M;}var sel=null;try{sel=JSON.parse(localStorage.getItem(K)||"null");}catch(e){}if(!(sel instanceof Array)||!sel.length)sel=D;ap(sel);ps.forEach(function(p){p.addEventListener("change",function(){var s=[];ps.forEach(function(q){if(q.checked)s.push(q.getAttribute("data-pick"));});if(!s.length)s=D;s=s.slice(0,M);try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}ap(s);});});})();</script><script>(function(){var box=document.querySelector(".fs-chips");if(!box||!window.fetch)return;var N=0,M=240,last=0;function z(n){return(n<10?"0":"")+n;}function hm(ts){var d=new Date((ts+28800)*1000);return z(d.getUTCHours())+":"+z(d.getUTCMinutes());}function g(n){return Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}function fmt(q){var dv=q.v-q.p,dir=dv>0?"up":(dv<0?"dn":"");if(q.k==="pct"){var b=Math.round(dv*100);return[q.v.toFixed(2)+"%",(b>=0?"+":"")+b+" bp",b>0?"up":(b<0?"dn":"")];}if(q.k==="idx"){var pc=q.p?dv/q.p*100:0,r=Math.round(dv);return[g(q.v),(r<0?"-":"+")+g(dv)+"（"+(pc>=0?"+":"")+pc.toFixed(2)+"%）",dir];}var s=dv.toFixed(1);return[q.v.toFixed(1)+(q.u||""),(s.charAt(0)==="-"?"":"+")+s,dir];}function ap(r){var now=r.t||Date.now()/1000;Object.keys(r.q||{}).forEach(function(id){var q=r.q[id];var ch=box.querySelector('[data-chip="'+id+'"]');if(!ch)return;var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;var b=ch.querySelector("b"),i=ch.querySelector("i"),w=ch.querySelector(".fs-when");if(q.k==="pct"&&b){var o=parseFloat(b.textContent);if(isFinite(o)&&Math.abs(q.v-o)>0.6)return;}var f=fmt(q);if(b)b.textContent=f[0];if(!i){i=document.createElement("i");ch.insertBefore(i,w);}i.textContent=f[1];i.className=f[2];if(!w){w=document.createElement("small");w.className="fs-when";ch.appendChild(w);}w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts)):((q.s?q.s+" ":"")+q.d.slice(5));ch.setAttribute("data-d",q.d);});}function tk(){if(document.visibilityState!=="visible"||N>=M)return;N++;last=Date.now();fetch("/api/quotes").then(function(r){return r.ok?r.json():null;}).then(function(r){if(r)ap(r);}).catch(function(){});}tk();setInterval(tk,60000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&Date.now()-last>60000)tk();});})();</script></section>
+  <section class="home-zone focus-strip" aria-label="今日市場焦點"><div class="fs-head">今日市場焦點<details class="fs-pick"><summary><span class="fs-pick-btn">選擇</span></summary><div class="fs-pick-panel"><label><input type="checkbox" data-pick="dgs3mo">3 個月</label><label><input type="checkbox" data-pick="dgs2" checked>2 年期</label><label><input type="checkbox" data-pick="dgs5">5 年期</label><label><input type="checkbox" data-pick="dgs10" checked>10 年期</label><label><input type="checkbox" data-pick="dgs30" checked>30 年期</label><label><input type="checkbox" data-pick="fedwatch" checked>10 月 FOMC（10/28）</label><label><input type="checkbox" data-pick="fw_dec">12 月 FOMC 單場幅度</label><label><input type="checkbox" data-pick="fw_cum">至 12 月 FOMC 累計</label><label><input type="checkbox" data-pick="sofr">SOFR</label><label><input type="checkbox" data-pick="sofr_iorb">SOFR−IORB</label><label><input type="checkbox" data-pick="onrrp">ON RRP</label><label><input type="checkbox" data-pick="srf">SRF 動用</label><label><input type="checkbox" data-pick="wti">WTI 原油</label><label><input type="checkbox" data-pick="brent">Brent 原油</label><label><input type="checkbox" data-pick="vix">VIX</label><label><input type="checkbox" data-pick="move">MOVE</label><label><input type="checkbox" data-pick="dji">道瓊指數</label><label><input type="checkbox" data-pick="sox">費城半導體</label><label><input type="checkbox" data-pick="txf">台指期</label><div class="fs-pick-note"><span class="fs-count">已選 4／4</span>　·　選擇存在此裝置</div></div></details></div><div class="fs-grid"><div class="fs-chips"><div class="fs-chip fs-off" data-chip="dgs3mo" data-d="2026-10-02"><span>3 個月</span><b>3.99%</b><i class="up">+1 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs2" data-d="2026-10-01"><span>2 年期</span><b>4.78%</b><i class="dn">-10 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="dgs5" data-d="2026-10-02"><span>5 年期</span><b>5.05%</b><i class="up">+5 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs10" data-d="2026-10-02"><span>10 年期</span><b>5.28%</b><i class="up">+4 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="dgs30" data-d="2026-10-02"><span>30 年期</span><b>5.63%</b><i class="up">+2 bp</i><small class="fs-when">10-02</small></div><div class="fs-chip" data-chip="fedwatch" data-d="2026-10-05"><span>10 月 FOMC（10/28）</span><b>維持 78%</b><i class="dn">升一碼 22%（前日 24%）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="fw_dec" data-d="2026-10-05"><span>12 月 FOMC 單場幅度</span><b>+20.4 bp</b><i class="up">約 +0.8 碼（前日 +18.3 bp）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="fw_cum" data-d="2026-10-05"><span>至 12 月 FOMC 累計</span><b>+26.0 bp</b><i class="up">約 +1.0 碼（前日 +24.4 bp）</i><small class="fs-when">10-05</small></div><div class="fs-chip fs-off" data-chip="sofr" data-d="2026-10-01"><span>SOFR</span><b>3.87%</b><i class="dn">-3 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="sofr_iorb" data-d="2026-10-01"><span>SOFR−IORB</span><b>-3 bp</b><i class="dn">-3 bp</i><small class="fs-when">10-01</small></div><div class="fs-chip fs-off" data-chip="onrrp" data-d="2026-10-02"><span>ON RRP</span><b>15 億美元</b><i class="up">+12 億</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="srf" data-d="2026-10-02"><span>SRF 動用</span><b>0（未動用）</b><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="wti" data-d="2026-10-02"><span>WTI 原油</span><b>91.1 美元</b><i class="dn">-1.8</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="brent" data-d="2026-10-02"><span>Brent 原油</span><b>102.2 美元</b><i class="dn">-0.1</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="vix" data-d="2026-10-02"><span>VIX</span><b>15.3</b><i class="dn">-1.1</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="move" data-d="2026-10-02"><span>MOVE</span><b>107.3</b><i class="dn">-0.8</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="dji" data-d="2026-10-02"><span>道瓊指數</span><b>51,177</b><i class="up">+250（+0.49%）</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="sox" data-d="2026-10-02"><span>費城半導體</span><b>13,137</b><i class="up">+308（+2.40%）</i><small class="fs-when">10-02</small></div><div class="fs-chip fs-off" data-chip="txf" data-d="2026-10-02"><span>台指期</span><b>48,476</b><i class="up">+122（+0.25%）</i><small class="fs-when">日盤 10-02</small></div></div><div class="fs-news"><div class="fs-body"><div class="fs-kicker">今日主軸</div><p class="fs-main">美國10年期公債殖利率升至5.3%以上，市場原擔心將對股價造成壓力，但Edward Jones執行長Pennington認為多頭行情仍由強勁經濟成長與AI投資熱情支撐，指出美國第三季經濟成長率預期達3.7%、企業獲利表現強勁，市場正「攀越憂慮之牆」；Bloomberg報導貝森特淡化對殖利率上升與AI泡沫的擔憂。</p><ul class="fs-list"><li class="fs-text">Bloomberg報導川普幕僚哈塞特表示鮑威爾應該「離開」聯準會董事會。</li><li class="fs-text">日本半導體設備供應商8月銷售額達5,450億日元，按日元計年增50%，Bernstein報告指出半導體設備正迎「黃金時代」，AI智能體應用擴大對GPU、CPU與記憶體的運算需求。</li></ul></div><details class="f-more"><summary>來源標題</summary><div class="f-detail"><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQQzRmSFg4Q0luSklSQVBZVHBXcmg0WjZUaUJrTldHbW1BMmpnLVY0ckZqTDJQX1JueGFPYUdUX1JMQzhNWTZadlZYMlc1Y0FpLW1rY0VDcWctb0RhX0FFaFZBZmFyZ2NiaGdndmFXUmpZWVVMNFhpclc2X1BNOUh2bXhEdDhQRWQxQnpLelF1a0dGNXJJSl82LV9mdUppalc5ektuMEItWElkNEZIMHdfbg?oc=5" rel="noopener">Trump Aide Hassett Says Powell Should ‘Move On’ From Fed Board</a><span class="fs-src">Bloomberg</span></div><div class="fs-link"><a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxNaThxNHd6Y1VVQWVGeExyUGRBa3hubktXaVNpQVFlVzhQaUh3UjFNWWdXMVo3b203NFllZmRUU0VwcG9FUjNHNE9jQy1meS1kMENnSDdYVlNMTkRWTGcweEdZVzIwYUthZzk3YlY2QTVSWjRfX2swRktOb1dwRFNjekJ5RVdSOXU2ek1ud2J2cWstRG5JYUpQNnZNcmhMSUFlNTlaS1NsSnJKZXBxOXVTUy1R?oc=5" rel="noopener">Bessent Downplays Worries on Rising Yields, AI Bubble Concerns</a><span class="fs-src">Bloomberg</span></div><div class="fs-link"><a href="https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E9%A3%86%E7%A0%B45-3-%E4%BB%8D%E4%B8%8D%E6%80%95-edward-jones%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%9C%8B%E5%A5%BD%E7%BE%8E%E8%82%A1-131005472.html" rel="noopener">美債殖利率飆破5.3%仍不怕！Edward Jones執行長看好美股：AI與經濟成長撐多頭</a><span class="fs-src">Yahoo奇摩股市</span></div></div></details></div></div><div class="fs-brand"><span class="fs-brand-name"><b>MACRO GG</b>明天過後，帶你看總經</span><span class="fs-brand-meta">2026-10-05 01:08（台北）　·　新聞：Bloomberg、Yahoo奇摩股市</span></div><div class="fs-note">數據：FRED／Yahoo（小字＝資料日）・機率由期貨反推・焦點由 AI 綜合報導改寫｜指標與方法說明見頁尾</div><script>(function(){var K="fsChips";var M=4;var D=["dgs2", "dgs10", "dgs30", "fedwatch"];var box=document.querySelector(".fs-chips");if(!box)return;var ps=Array.prototype.slice.call(document.querySelectorAll(".fs-pick [data-pick]"));function ap(sel){sel=sel.slice(0,M);Array.prototype.forEach.call(box.querySelectorAll("[data-chip]"),function(ch){ch.classList.toggle("fs-off",sel.indexOf(ch.getAttribute("data-chip"))<0);});ps.forEach(function(p){var id=p.getAttribute("data-pick");p.checked=sel.indexOf(id)>=0;p.disabled=(!p.checked&&sel.length>=M);});var n=document.querySelector(".fs-count");if(n)n.textContent="已選 "+sel.length+"／"+M;}var sel=null;try{sel=JSON.parse(localStorage.getItem(K)||"null");}catch(e){}if(!(sel instanceof Array)||!sel.length)sel=D;ap(sel);ps.forEach(function(p){p.addEventListener("change",function(){var s=[];ps.forEach(function(q){if(q.checked)s.push(q.getAttribute("data-pick"));});if(!s.length)s=D;s=s.slice(0,M);try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}ap(s);});});})();</script><script>(function(){var box=document.querySelector(".fs-chips");if(!box||!window.fetch)return;var N=0,M=240,last=0;function z(n){return(n<10?"0":"")+n;}function hm(ts){var d=new Date((ts+28800)*1000);return z(d.getUTCHours())+":"+z(d.getUTCMinutes());}function g(n){return Math.round(Math.abs(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}function fmt(q){var dv=q.v-q.p,dir=dv>0?"up":(dv<0?"dn":"");if(q.k==="pct"){var b=Math.round(dv*100);return[q.v.toFixed(2)+"%",(b>=0?"+":"")+b+" bp",b>0?"up":(b<0?"dn":"")];}if(q.k==="idx"){var pc=q.p?dv/q.p*100:0,r=Math.round(dv);return[g(q.v),(r<0?"-":"+")+g(dv)+"（"+(pc>=0?"+":"")+pc.toFixed(2)+"%）",dir];}var s=dv.toFixed(1);return[q.v.toFixed(1)+(q.u||""),(s.charAt(0)==="-"?"":"+")+s,dir];}function ap(r){var now=r.t||Date.now()/1000;Object.keys(r.q||{}).forEach(function(id){var q=r.q[id];var ch=box.querySelector('[data-chip="'+id+'"]');if(!ch)return;var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;var b=ch.querySelector("b"),i=ch.querySelector("i"),w=ch.querySelector(".fs-when");if(q.k==="pct"&&b){var o=parseFloat(b.textContent);if(isFinite(o)&&Math.abs(q.v-o)>0.6)return;}var f=fmt(q);if(b)b.textContent=f[0];if(!i){i=document.createElement("i");ch.insertBefore(i,w);}i.textContent=f[1];i.className=f[2];if(!w){w=document.createElement("small");w.className="fs-when";ch.appendChild(w);}w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts)):((q.s?q.s+" ":"")+q.d.slice(5));ch.setAttribute("data-d",q.d);});}function tk(){if(document.visibilityState!=="visible"||N>=M)return;N++;last=Date.now();fetch("/api/quotes").then(function(r){return r.ok?r.json():null;}).then(function(r){if(r)ap(r);}).catch(function(){});}tk();setInterval(tk,60000);document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&Date.now()-last>60000)tk();});})();</script></section>
   <section class="home-hero hawkish" aria-labelledby="home-now">
     <div class="home-hero-top">
       <div><div class="home-kicker">目前情境</div>
@@ -1876,7 +1971,7 @@ details.home-module[open]{padding-bottom:0}
   <section class="home-zone" aria-labelledby="home-changes">
     <div class="home-zone-head"><div><span class="home-zone-num">04</span>
       <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
-    <div class="home-change-list"><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>近 12 次月度修正平均往下修</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>前兩月大幅下修，實質動能弱於初值</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜就業</b><span>失業率上升源於勞動力擴張</span></div><p>目前不改變政策方向</p></div></div>
+    <div class="home-change-list"><div class="home-change"><span class="home-change-dot neutral"></span><div><b>新增｜就業</b><span>失業率上升源於勞動力擴張</span></div><p>目前不改變政策方向</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>近 12 次月度修正平均往下修</span></div><p>增加政策寬鬆空間</p></div><div class="home-change"><span class="home-change-dot dovish"></span><div><b>新增｜就業</b><span>前兩月大幅下修，實質動能弱於初值</span></div><p>增加政策寬鬆空間</p></div></div>
   </section>
 
   <section class="home-zone" aria-labelledby="home-next">
@@ -1888,7 +1983,7 @@ details.home-module[open]{padding-bottom:0}
 </main>
 
 <nav class="pagenav" aria-label="前後頁"><a class="pn-next" href="/labor/">下一頁 →<b>勞動市場</b></a></nav>
-<footer><div class="home-footer"><div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span><span>就業 <span class="nb">2026-09</span>｜物價 <span class="nb">2026-08</span>｜FOMC <span class="nb">2026-09-16</span></span></div><details class="foot-fold"><summary>焦點條指標與資料來源說明</summary><div class="foot-fold-body"><span>SOFR＝銀行間隔夜擔保資金的實際成交利率；SOFR−IORB＝資金價格與聯準會地板利率的距離，轉正代表準備金趨緊（2019 年 9 月回購市場事件即此訊號先爆）；ON RRP＝貨幣基金停泊在聯準會的隔夜資金，是體系多餘現金的緩衝池，接近零代表 QT 開始直接抽銀行準備金；SRF＝聯準會常備回購機制的動用量，0 是常態、非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。</span><span>來源分層：殖利率與油價／波動率以 Yahoo 即時報價為主（延遲約 15 分鐘）、抓不到退回 FRED 收盤，每顆 chip 的小字＝該筆資料的日期；變動一律對前一個交易日收盤，1 bp＝0.01 個百分點。開著首頁時，殖利率、油價、波動率、道瓊、費半與台指期每分鐘自動更新，小字改為「盤中・延遲 HH:MM」（台灣時間）；休市時維持收盤值。升降息由聯邦基金期貨從目前利率逐場往前推（WIRP 同款算法，延遲報價）：「下次會議」列機率最高的兩個結果（單場推算只會切成相鄰兩種）；「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），變動對該盤參考價。焦點的三則重點由 AI 讀取多篇報導後寫成，排序依跨來源熱度、時效、來源與發布日，數字均出自原文並經機械驗證；付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span></div></details><div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span><span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div></div></footer>
+<footer><div class="home-footer"><div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span><span>就業 <span class="nb">2026-09</span>｜物價 <span class="nb">2026-08</span>｜FOMC <span class="nb">2026-09-16</span></span></div><details class="foot-fold"><summary>焦點條指標與資料來源說明</summary><div class="foot-fold-body"><span>SOFR＝銀行間隔夜擔保資金的實際成交利率；SOFR−IORB＝資金價格與聯準會地板利率的距離，轉正代表準備金趨緊（2019 年 9 月回購市場事件即此訊號先爆）；ON RRP＝貨幣基金停泊在聯準會的隔夜資金，是體系多餘現金的緩衝池，接近零代表 QT 開始直接抽銀行準備金；SRF＝聯準會常備回購機制的動用量，0 是常態、非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。</span><span>來源分層：殖利率與油價／波動率以 Yahoo 即時報價為主（延遲約 15 分鐘）、抓不到退回 FRED 收盤，每顆 chip 的小字＝該筆資料的日期；變動一律對前一個交易日收盤，1 bp＝0.01 個百分點。開著首頁時，殖利率、油價、波動率、道瓊、費半與台指期每分鐘自動更新，小字改為「盤中・延遲 HH:MM」（台灣時間）；休市時維持收盤值。升降息由聯邦基金期貨從目前利率逐場往前推（WIRP 同款算法，延遲報價）：「下次會議」列機率最高的兩個結果（單場推算只會切成相鄰兩種）；「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：第一段是當天最重要的一件事（優先採彭博、路透報導的事件，同一件事的多篇報導合併來寫），下面兩則補充其他事件；排序依跨來源熱度、時效、來源與發布日，數字均出自原文並經機械驗證；付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span></div></details><div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span><span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div></div></footer>
 
 </div>
 <div id="tip"></div>
