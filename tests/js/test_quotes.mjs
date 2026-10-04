@@ -33,13 +33,22 @@ check("②c 油價帶單位", q && q.u === " 美元" && q.p === 90.1, q);
 q = await yahoo("dji", SPECS.dji, async () => { throw new Error("timeout"); });
 check("②d 例外 → null", q === null);
 
-const tx = (d, t, last, ref) => ({ RtData: { QuoteList: [
-  { SymbolID: "TXFK6-F", CDate: d, CTime: t, CLastPrice: last, CRefPrice: ref }] } });
+// 照真實回應的樣子：第一筆是現貨列（TXF-S／TXF-P）；夜盤 CDate＝開盤那天
+const tx = (sp, fu, d, t, last, ref) => ({ RtData: { QuoteList: [
+  { SymbolID: sp, CDate: d, CTime: t, CLastPrice: "23,999", CRefPrice: "23,900" },
+  { SymbolID: fu, CDate: d, CTime: t, CLastPrice: last, CRefPrice: ref }] } });
 q = await txf(async (url, opt) => ({ ok: true, json: async () =>
-  JSON.parse(opt.body).MarketType === "0" ? tx("20261002", "134500", "23,100", "23,000")
-                                          : tx("20261003", "045959", "23,250", "23,100") }));
-check("③ 台指期取較新的夜盤", q && q.s === "夜盤" && q.v === 23250 && q.p === 23100 && q.d === "2026-10-03", q);
+  JSON.parse(opt.body).MarketType === "0"
+    ? tx("TXF-S", "TXFK6-F", "20261002", "134500", "23,100", "23,000")
+    : tx("TXF-P", "TXFK6-M", "20261002", "045959", "23,250", "23,100") }));
+check("③ 台指期取較新的夜盤（CDate 10/02 04:59 → 實際 10/03）",
+      q && q.s === "夜盤" && q.v === 23250 && q.p === 23100 && q.d === "2026-10-03", q);
 check("③b 台北時間換 UTC", q && new Date(q.ts * 1000).toISOString() === "2026-10-02T20:59:59.000Z", q && q.ts);
+q = await txf(async (url, opt) => ({ ok: true, json: async () =>
+  JSON.parse(opt.body).MarketType === "0"
+    ? tx("TXF-S", "TXFK6-F", "20261005", "100000", "23,400", "23,250")
+    : tx("TXF-P", "TXFK6-M", "20261002", "045959", "23,250", "23,100") }));
+check("③c 日盤進行中取日盤、而且是期貨不是現貨列", q && q.s === "日盤" && q.v === 23400, q);
 
 const all = await collect(fake({ "^TNX": ch(res(4.28, [4.2, 4.26, 4.28], 0)) }));
 check("④ collect 只回抓得到的", Object.keys(all).join() === "dgs10", Object.keys(all));

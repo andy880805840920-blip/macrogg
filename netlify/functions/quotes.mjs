@@ -92,6 +92,10 @@ export async function yahoo(id, spec, f = fetch) {
 
 // 台指期：日盤（MarketType 0）與夜盤（1）各問一次，取時間較新的那一盤。
 // 期交所行情頁背後的端點，非官方 API——改版就安靜失敗。
+// 兩個坑（跟 Python 端 fetch_txf 同一套修法）：
+//   ① 清單第一筆是「臺指現貨」（TXF-S／TXF-P）——只認期貨代號（TXFJ6-F）
+//   ② 夜盤的 CDate 是開盤那天；時間早於 15:00 的是隔天凌晨，要加一天
+const TXF_FUT = /^TXF[A-Z]\d-[A-Z]$/;
 export async function txf(f = fetch) {
   let best = null;
   for (const [mkt, s] of [["0", "日盤"], ["1", "夜盤"]]) {
@@ -107,17 +111,18 @@ export async function txf(f = fetch) {
       });
       if (!r.ok) continue;
       const rows = ((await r.json()).RtData || {}).QuoteList || [];
-      const row = rows.find((x) => String(x.SymbolID || "").startsWith("TXF") &&
-        num(x.CLastPrice) && num(x.CRefPrice) &&
-        num(x.CLastPrice) >= TXF_RANGE[0] && num(x.CLastPrice) <= TXF_RANGE[1]);
+      const row = rows.find((x) => TXF_FUT.test(String(x.SymbolID || "")));   // 近月
       if (!row) continue;
+      const v = num(row.CLastPrice), p = num(row.CRefPrice);
+      if (!v || !p || v < TXF_RANGE[0] || v > TXF_RANGE[1]) continue;
       const d = String(row.CDate || ""), t = String(row.CTime || "").padStart(6, "0");
-      if (d.length !== 8) continue;
-      // CDate／CTime 是台北時間
-      const ts = Date.UTC(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6, 8),
+      if (!/^\d{8}$/.test(d) || !/^\d{6}$/.test(t)) continue;
+      const night = mkt === "1" && t < "150000";
+      // CDate／CTime 是台北時間（UTC+8）
+      const ts = Date.UTC(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6, 8) + (night ? 1 : 0),
                           +t.slice(0, 2) - 8, +t.slice(2, 4), +t.slice(4, 6)) / 1000;
-      const cand = { v: num(row.CLastPrice), p: num(row.CRefPrice), ts, s,
-                     d: `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`, k: "idx" };
+      const day = new Date((ts + 8 * 3600) * 1000).toISOString().slice(0, 10);
+      const cand = { v, p, ts, s, d: day, k: "idx" };
       if (!best || cand.ts > best.ts) best = cand;
     } catch { /* 下一盤 */ }
   }

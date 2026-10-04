@@ -365,9 +365,17 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
 
 # 台指期：期交所行情頁背後使用的資料端點（**非官方 API**，可能改版）。
 # 日盤（MarketType 0：08:45–13:45）與夜盤（1：15:00–次日 05:00）各問一次，
-# 取時間較新的那一盤——使用者要的是「全天」的台指期，不只夜盤。
+# 取時間較新的那一盤——使用者要的是「全天」的台指期，不只日盤。
+#
+# 兩個實測過的坑（2026-10-05，對著真實回應修的）：
+#   ① 清單第一筆是「臺指現貨」（TXF-S／TXF-P），不是期貨——只認
+#      TXF＋月份碼＋年尾數（TXFJ6-F、TXFJ6-M）這種期貨代號，取第一筆＝近月。
+#   ② 夜盤的 CDate 是**開盤那天**：週五 15:00 開的夜盤，週六 04:59 的成交
+#      CDate 仍是週五。直接拿 CDate＋CTime 比，夜盤永遠輸給同一天 13:45 的
+#      日盤（畫面上只看得到日盤）。夜盤時間早於 15:00 的要把日期加一天。
 TXF_URL = "https://mis.taifex.com.tw/futures/api/getQuoteList"
 TXF_RANGE = (5000.0, 80000.0)
+_TXF_FUT = re.compile(r"^TXF[A-Z]\d-[A-Z]$")
 
 
 def _num(x):
@@ -378,9 +386,22 @@ def _num(x):
         return None
 
 
+def _txf_when(cdate: str, ctime: str, night: bool):
+    """期交所的 CDate／CTime（台北時間）→ 實際的 (YYYY-MM-DD, HHMMSS)。"""
+    import datetime as _dt
+    d = str(cdate or "")
+    t = str(ctime or "").zfill(6)
+    if len(d) != 8 or not d.isdigit() or not t.isdigit():
+        return None
+    day = _dt.date(int(d[:4]), int(d[4:6]), int(d[6:8]))
+    if night and t < "150000":                     # 夜盤跨午夜：隔天凌晨
+        day += _dt.timedelta(days=1)
+    return day.isoformat(), t
+
+
 def fetch_txf(_get_post=None) -> dict | None:
     """
-    回傳 {value, prev, date, session, symbol}；失敗回 None。
+    回傳 {value, prev, date, time, session, symbol}；失敗回 None。
     prev 是該盤的參考價（日盤＝前一日結算、夜盤＝當日日盤結算）。
     回應格式若對不上，會把第一筆的欄位名稱寫進 log——端點改版時一眼
     看得出來要改哪裡。
@@ -401,29 +422,23 @@ def fetch_txf(_get_post=None) -> dict | None:
         except Exception as e:                     # noqa: BLE001
             log.warning("台指期（%s）抓取失敗（%s）", session, e)
             continue
-        q = None
-        for row in rows:
-            sym = str(row.get("SymbolID") or "")
-            last = _num(row.get("CLastPrice"))
-            ref = _num(row.get("CRefPrice"))
-            if (sym.startswith("TXF") and last and ref
-                    and TXF_RANGE[0] <= last <= TXF_RANGE[1]):
-                q = (row, last, ref)
-                break                              # 第一筆＝近月合約
-        if q is None:
+        # 近月＝第一筆期貨代號（清單依到期月排序；現貨列不算）
+        row = next((x for x in rows
+                    if _TXF_FUT.match(str(x.get("SymbolID") or ""))), None)
+        last = _num((row or {}).get("CLastPrice"))
+        ref = _num((row or {}).get("CRefPrice"))
+        when = row and _txf_when(row.get("CDate"), row.get("CTime"), mkt == "1")
+        if not (row and last and ref and when
+                and TXF_RANGE[0] <= last <= TXF_RANGE[1]):
             log.warning("台指期（%s）回應裡找不到可用的近月報價（第一筆欄位："
                         "%s）", session, ", ".join(list(rows[0])[:12])
                         if rows else "無資料")
             continue
-        row, last, ref = q
-        d, t = str(row.get("CDate") or ""), str(row.get("CTime") or "")
-        stamp = (f"{d[:4]}-{d[4:6]}-{d[6:8]}" if len(d) == 8 else "")
-        key = d + t.zfill(6)
-        cand = {"value": last, "prev": ref, "date": stamp,
-                "time": f"{t.zfill(6)[:2]}:{t.zfill(6)[2:4]}" if t else "",
-                "session": session, "symbol": str(row.get("SymbolID")),
-                "_key": key}
-        if best is None or key > best["_key"]:
+        day, tm = when
+        cand = {"value": last, "prev": ref, "date": day,
+                "time": f"{tm[:2]}:{tm[2:4]}", "session": session,
+                "symbol": str(row.get("SymbolID")), "_key": day + tm}
+        if best is None or cand["_key"] > best["_key"]:
             best = cand
     if best:
         best.pop("_key", None)
@@ -875,21 +890,24 @@ _FOCUS_CONTENT_SYSTEM_A = (
     "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合），"
     "後面可能另有一節「標題快訊」——那些只有標題與官方摘要、沒有內文；"
     "標【Bloomberg】【Reuters】的是彭博與路透。只取與這些主題相關的內容："
-    "{kws}。讀完全部材料後輸出：第一行是**主軸**，一段話、{main} 個中文字"
-    "以內，把今天最重要的一件事講完整——發生了什麼、為什麼、市場或官員怎麼"
-    "解讀它對利率與聯準會的意義（只寫材料裡有人講過的解讀）。主軸優先選彭博"
-    "或路透報導的事件；其他有內文的報導若談同一件事，用它們補細節，同一件事"
-    "的多篇報導要合併成一段來寫。接著 {ns} 行**補充**，每行一件其他的事、"
-    "{supp} 個中文字以內；補充也必須直接跟上述主題有關，只是文中順帶提到某個"
-    "詞的不算。**每一行都必須有具體事實**——誰、做了什麼、數字或時間至少要"
-    "有一項；不要寫「成為市場焦點」「備受關注」這類空泛的話。硬性規則："
+    "{kws}。讀完全部材料後依下面的格式輸出。\n"
+    "【主軸】{min}–{main} 個中文字，可以分 2–3 段（每段一行）。挑今天最重要、"
+    "彼此相關的三則報導（優先彭博、路透；同一件事的多篇報導合併），綜合成一篇"
+    "完整的論述，依序講清楚：①發生了什麼（誰、做了什麼、數字）②為什麼（背景"
+    "與原因）③對利率或聯準會代表什麼（只寫材料裡官員、分析師或市場講過的"
+    "解讀）。不要三則各講一句拼起來，要講成一個有因果脈絡的故事。\n"
+    "【補充】{ns} 行，每行一件**主軸以外**的其他事件、{supp} 個中文字以內。"
+    "不能只重述標題：每行都要寫出發生了什麼，再加一個具體細節（數字、時間、"
+    "誰說的或原因）。補充也必須直接跟上述主題有關，只是文中順帶提到某個詞的"
+    "不算。不要寫「成為市場焦點」「備受關注」這類空泛的話。硬性規則："
     "只能使用材料已有的資訊，不得補充材料以外的事實或數字；「標題快訊」只能"
     "轉述其標題與摘要**字面上有的事**，不得展開細節、不得推測其內文，引用時"
     "帶來源（例如「路透報導稱…」）；不得自行推論來源沒有寫的因果關係；不做"
     "預測、不下投資結論；繁體中文。**絕對禁止評論材料本身**：不要說明材料的"
     "多寡、品質或相關性，不要出現「材料」「關鍵字」這類字眼——補充只夠寫一則"
-    "就只寫一則。直接輸出，每行一段，不要編號、不要符號開頭、不要「主軸」"
-    "「補充」這類標籤、不要粗體記號、不要任何前言。")
+    "就只寫一則。輸出格式：第一行單獨寫「【主軸】」，接著主軸的各段（每段"
+    "一行）；然後單獨一行寫「【補充】」，接著每則補充一行。不要編號、不要"
+    "符號開頭、不要粗體記號、不要任何前言。")
 
 
 def _post_gemini_hardy(key: str, model: str, src_text: str,
@@ -1034,7 +1052,18 @@ DEFAULT_ITEMS, DEFAULT_ITEM_CHARS = 3, 100
 #   補充：其他事件，每則 SUPP_CHARS 字以內
 # 先前的「3 則 × 100 字」實際跑起來變成一篇文章一則、各自重述標題，
 # 使用者嫌「只是列標題、不扎實」；一整段 300 字又嫌長——A 是折衷。
-DEFAULT_MAIN_CHARS, DEFAULT_SUPP_ITEMS, DEFAULT_SUPP_CHARS = 200, 2, 80
+# 2026-10-05 使用者再定案：主軸 200–250 字、可分段，把三則相關報導綜合論述
+# 講完整（發生什麼→為什麼→對利率／聯準會代表什麼）；補充每則 80 字內、
+# 不能只列標題。
+DEFAULT_MAIN_CHARS, DEFAULT_SUPP_ITEMS, DEFAULT_SUPP_CHARS = 250, 2, 80
+DEFAULT_MAIN_MIN, DEFAULT_SUPP_MIN = 200, 40
+# 版式 A 的硬底線比舊版緊（使用者給的是明確區間，不是大約）：
+# 主軸上限 ×1.1（275 字）、補充 ×1.25（100 字）；下限 ×0.9 才算「太短」。
+HARD_MULT_MAIN, HARD_MULT_SUPP, SHORT_TOL = 1.1, 1.25, 0.9
+# 主軸的段落在內部用這個字元串起來（整段文字仍是「一行一則」的格式，
+# 快取與 log 都不用改）；首頁渲染時再拆回段落。
+MAIN_PARA = "¶"
+MAX_MAIN_PARAS = 3
 
 
 def focus_caps(cfg: dict | None) -> list[int]:
@@ -1046,6 +1075,23 @@ def focus_caps(cfg: dict | None) -> list[int]:
     supp = int(cfg.get("supp_chars") or DEFAULT_SUPP_CHARS)
     return [main] + [supp] * n
 
+
+def focus_mins(cfg: dict | None) -> list[int]:
+    """每一行的字數下限：[主軸, 補充…]（config 的 main_min／supp_min）。"""
+    cfg = cfg or {}
+    n = len(focus_caps(cfg)) - 1
+    main = int(cfg.get("main_min") if cfg.get("main_min") is not None
+               else DEFAULT_MAIN_MIN)
+    supp = int(cfg.get("supp_min") if cfg.get("supp_min") is not None
+               else DEFAULT_SUPP_MIN)
+    return [main] + [supp] * n
+
+
+def focus_hards(caps: list[int]) -> list[int]:
+    """版式 A 的硬底線：主軸 ×1.1、補充 ×1.25。"""
+    return ([int(caps[0] * HARD_MULT_MAIN)]
+            + [int(c * HARD_MULT_SUPP) for c in caps[1:]])
+
 # 空話清單：命中兩個以上就帶原因重寫一次（第二次照樣採用——這是文風
 # 問題，不是正確性問題，不值得為它退回列標題）。使用者嫌「AI 總結有點
 # 籠統」，實際線上那段正是「成為市場焦點」「面臨多重挑戰」這種寫法。
@@ -1055,7 +1101,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f5-main"
+FOCUS_PROMPT_VERSION = "f6-main3"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1104,9 +1150,58 @@ def _split_items(text: str, n: int) -> list[str]:
     return items[:n]
 
 
+_TAG_MAIN = re.compile(r"^\s*(?:【\s*主軸\s*】|\[\s*主軸\s*\]|主軸\s*[:：])\s*")
+_TAG_SUPP = re.compile(r"^\s*(?:【\s*補充\s*\d?\s*】|\[\s*補充\s*\]|補充\s*\d?\s*[:：])\s*")
+
+
+def _split_main(text: str, n_supp: int) -> list[str]:
+    """
+    版式 A 的切分：回傳 [主軸, 補充…]，主軸的各段以 MAIN_PARA 串成一則。
+
+    模型照格式時靠「【主軸】」「【補充】」兩個標記分節；沒照格式（沒有
+    任何標記）時，最後 n_supp 行當補充、前面的都是主軸的段落——
+    只剩一兩行就是「第一行主軸、其餘補充」，跟舊版一樣。
+    """
+    lines = [ln for ln in (text or "").splitlines() if ln.strip()]
+    main: list[str] = []
+    supp: list[str] = []
+    sec = ""
+    tagged = any(_TAG_MAIN.match(ln) or _TAG_SUPP.match(ln) for ln in lines)
+    for ln in lines:
+        if _TAG_MAIN.match(ln):
+            sec, ln = "main", _TAG_MAIN.sub("", ln)
+        elif _TAG_SUPP.match(ln):
+            sec, ln = "supp", _TAG_SUPP.sub("", ln)
+        ln = _ITEM_LEAD.sub("", ln).strip()
+        if not ln:
+            continue
+        if not tagged:
+            main.append(ln)
+        elif sec == "supp":
+            supp.append(ln)
+        else:
+            main.append(ln)                        # 標記前的文字也算主軸
+    if not tagged and len(main) > 1:
+        k = max(1, len(main) - n_supp)
+        main, supp = main[:k], main[k:]
+    if not main and supp:
+        main, supp = supp[:1], supp[1:]
+    if len(main) > MAX_MAIN_PARAS:                 # 段太多：後面併進最後一段
+        main = main[:MAX_MAIN_PARAS - 1] + ["".join(main[MAX_MAIN_PARAS - 1:])]
+    if len(supp) > n_supp:
+        log.info("市場焦點：模型寫了 %d 則補充，只留前 %d 則", len(supp), n_supp)
+    return ([MAIN_PARA.join(main)] if main else []) + supp[:n_supp]
+
+
+def _trim_item(text: str, limit: int) -> str:
+    """_trim_to 的段落版：主軸的段落（MAIN_PARA）當成換行來裁，裁完再串回。"""
+    return _trim_to(text.replace(MAIN_PARA, "\n"), limit).replace("\n", MAIN_PARA)
+
+
 def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
                     n_items: int = 0, meta_markers=None,
-                    vague_markers=None, caps: list[int] | None = None
+                    vague_markers=None, caps: list[int] | None = None,
+                    mins: list[int] | None = None
                     ) -> tuple[str, str]:
     """
     共用的生成＋驗證核心（內文模式與標題模式都走這裡）。
@@ -1119,11 +1214,15 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
     """
     # caps：每一行各自的字數上限（版式 A：[主軸, 補充, 補充]）；沒給就是
     # 舊版的 N 則等長。硬底線一律是上限 × HARD_MULT。
+    layout_a = bool(caps)
     caps = list(caps) if caps else [item_cap] * n_items
     n_items = len(caps)
-    hards = [int(c * HARD_MULT) for c in caps]
-    _cap_txt = (f"每則 {caps[0]} 字以內" if len(set(caps)) == 1 else
-                f"第一行主軸 {caps[0]} 字以內、其餘每則 {caps[1]} 字以內")
+    hards = (focus_hards(caps) if layout_a else [int(c * HARD_MULT) for c in caps])
+    mins = list(mins or [])
+    _cap_txt = (f"每則 {caps[0]} 字以內" if not layout_a else
+                (f"主軸 {mins[0]}–{caps[0]} 字（可分段）" if mins and mins[0]
+                 else f"主軸 {caps[0]} 字以內（可分段）")
+                + f"、每則補充 {caps[1] if len(caps) > 1 else 0} 字以內")
     vague_markers = vague_markers or DEFAULT_VAGUE_MARKERS
     best: list[str] = []
     note = ""
@@ -1131,7 +1230,8 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
         text, err = _call_ai(src_text + note, system, env)
         if err:
             return "", err
-        items = _split_items(_tidy_focus(text), n_items)
+        items = (_split_main(_tidy_focus(text), n_items - 1) if layout_a
+                 else _split_items(_tidy_focus(text), n_items))
         if not items:
             return "", "輸出是空的"
         joined = "\n".join(items)
@@ -1146,8 +1246,12 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
         if not _digits_ok(joined, src_text):
             return "", "輸出出現材料裡沒有的數字"
         long_ = [i + 1 for i, it in enumerate(items) if cjk_len(it) > hards[i]]
+        # 太短（版式 A 才檢查）：主軸撐不到下限＝沒講完整；補充太短＝在列標題
+        short_ = [i + 1 for i, it in enumerate(items)
+                  if i < len(mins) and mins[i]
+                  and cjk_len(it) < int(mins[i] * SHORT_TOL)]
         vague = _meta_hits(joined, vague_markers)
-        if attempt == 1 and (long_ or len(vague) >= 2):
+        if attempt == 1 and (long_ or short_ or len(vague) >= 2):
             best = items
             why = []
             if long_ and len(set(hards)) == 1:
@@ -1156,6 +1260,12 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
             elif long_:
                 why.append("、".join(f"第 {i} 行超過 {hards[i - 1]} 字"
                                      for i in long_))
+            for i in short_:
+                n_ = cjk_len(items[i - 1])
+                why.append(f"主軸只有 {n_} 字，沒有把事情講完整（要 "
+                           f"{mins[0]}–{caps[0]} 字）" if i == 1 else
+                           f"第 {i} 行只有 {n_} 字，像在列標題（要寫出發生"
+                           "了什麼再加一個具體細節）")
             if len(vague) >= 2:
                 why.append("用了空泛的套話（" + "、".join(vague[:3]) + "）")
             log.warning("市場焦點：%s，帶原因重寫一次", "；".join(why))
@@ -1163,10 +1273,13 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
                     f"{_cap_txt}，講具體的事——誰、做了什麼、"
                     "數字或時間——不要套話。）")
             continue
-        return "\n".join(_trim_to(it, hards[i]) for i, it in enumerate(items)), ""
+        if short_:
+            log.warning("市場焦點：重寫後仍偏短（第 %s 行），照樣採用",
+                        "、".join(map(str, short_)))
+        return "\n".join(_trim_item(it, hards[i]) for i, it in enumerate(items)), ""
     if best:
         log.warning("市場焦點：重寫後仍不合格，採用第一版並裁切超長的則")
-        return "\n".join(_trim_to(it, hards[i]) for i, it in enumerate(best)), ""
+        return "\n".join(_trim_item(it, hards[i]) for i, it in enumerate(best)), ""
     return "", "輸出反覆評論材料本身（後設字眼）"
 
 
@@ -1174,7 +1287,8 @@ def summarize_content(articles: list[dict], keywords: list[str],
                       item_cap: int = DEFAULT_ITEM_CHARS, env=None,
                       briefs: list[dict] | None = None,
                       meta_markers=None, n_items: int = DEFAULT_ITEMS,
-                      vague_markers=None, caps: list[int] | None = None
+                      vague_markers=None, caps: list[int] | None = None,
+                      mins: list[int] | None = None
                       ) -> tuple[str, str]:
     """
     讀文章內文寫成重點。caps 有給＝版式 A（一段主軸＋補充），否則 N 則等長。回傳 (重點, "model-content")；失敗回 ("", 原因)。
@@ -1197,15 +1311,17 @@ def summarize_content(articles: list[dict], keywords: list[str],
                          + (f"——{b['summary']}" if b.get("summary") else "")
                          for b in briefs))
     if caps:
+        _mins = list(mins) if mins else [DEFAULT_MAIN_MIN]
         system = _FOCUS_CONTENT_SYSTEM_A.format(
             kws="、".join(keywords), main=caps[0], supp=caps[1] if len(caps) > 1 else 0,
-            ns=len(caps) - 1)
+            ns=len(caps) - 1, min=_mins[0])
     else:
         system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
                                               cap=item_cap, n=n_items)
     text, err = _generate_items(src_text, system, env, item_cap=item_cap,
                                 n_items=n_items, meta_markers=meta_markers,
-                                vague_markers=vague_markers, caps=caps)
+                                vague_markers=vague_markers, caps=caps,
+                                mins=mins)
     return (text, "model-content") if text else ("", err)
 
 
@@ -1368,13 +1484,15 @@ _FOCUS_SYSTEM = (
 _FOCUS_SYSTEM_A = (
     "你是財經編輯。輸入是新聞標題清單（有些附官方摘要），標【Bloomberg】"
     "【Reuters】的是彭博與路透。挑出對「美國公債殖利率與聯準會政策」最重要"
-    "的事，輸出：第一行是主軸，一段話、{main} 個中文字以內，講今天最重要的"
-    "那件事——優先選彭博或路透報導的事件，同一件事有多則標題時合併來寫；"
-    "接著 {ns} 行補充，每行一件其他的事、{supp} 個中文字以內。每一行都要有"
-    "具體的事（誰、做了什麼），不要空話。只能使用標題與摘要裡已有的資訊，"
-    "不得補充以外的事實或數字；不做預測、不下投資結論；繁體中文。補充只夠"
-    "寫一則就只寫一則。直接輸出，每行一段，不要編號、不要符號開頭、不要"
-    "「主軸」「補充」這類標籤、不要任何前言。")
+    "的事，輸出：【主軸】{main} 個中文字以內，可分 2–3 段（每段一行），把"
+    "今天最重要、彼此相關的幾則標題綜合起來講——發生什麼、為什麼、對利率或"
+    "聯準會代表什麼（只寫標題與摘要裡有的）；優先選彭博或路透報導的事件，"
+    "同一件事有多則標題時合併來寫。【補充】{ns} 行，每行一件主軸以外的事、"
+    "{supp} 個中文字以內，要寫出發生了什麼，不要只重述標題。不要空話。只能"
+    "使用標題與摘要裡已有的資訊，不得補充以外的事實或數字；不做預測、不下"
+    "投資結論；繁體中文。補充只夠寫一則就只寫一則。輸出格式：第一行單獨寫"
+    "「【主軸】」，接著主軸各段（每段一行）；然後單獨一行寫「【補充】」，"
+    "接著每則補充一行。不要編號、不要符號開頭、不要任何前言。")
 
 
 def _digits_ok(text: str, source: str) -> bool:
@@ -1388,7 +1506,8 @@ def _digits_ok(text: str, source: str) -> bool:
 
 def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
               env=None, n_items: int = DEFAULT_ITEMS, meta_markers=None,
-              vague_markers=None, caps: list[int] | None = None
+              vague_markers=None, caps: list[int] | None = None,
+              mins: list[int] | None = None
               ) -> tuple[str, str]:
     """標題模式：只有標題（＋官方摘要）可用時寫成 N 則重點。
     回傳 (重點, "model")；失敗回 ("", 原因)。"""
@@ -2167,6 +2286,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     item_cap = int(cfg.get("item_chars") or DEFAULT_ITEM_CHARS)
     # 版式 A：一段主軸＋補充（每行各自的字數上限）
     caps = focus_caps(cfg)
+    mins = focus_mins(cfg)
 
     yields = [c for c in (
         _yield_chip((rates_series or {}).get("DGS10"), "10 年期"),
@@ -2362,7 +2482,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                              "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
                                        for a in arts))
                     text, src = summarize_content(arts, keywords, item_cap,
-                                                  env, briefs=briefs, **_gen)
+                                                  env, briefs=briefs, mins=mins,
+                                                  **_gen)
                     if not text:
                         log.warning("市場焦點：內文重點退回標題模式（%s）", src)
                 else:

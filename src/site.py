@@ -1721,6 +1721,7 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .fs-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;
   color:var(--series-1);margin-bottom:4px}
 .fs-news .fs-main{font-size:14.5px;line-height:1.85}
+.fs-main+.fs-main{margin-top:8px}
 .fs-brand{display:flex;justify-content:space-between;align-items:baseline;
   flex-wrap:wrap;gap:2px 12px;margin-top:12px;padding-top:9px;
   border-top:1px solid var(--grid)}

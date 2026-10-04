@@ -1175,18 +1175,41 @@ class _PR:
 
 def _post28(url, body):
     if body["MarketType"] == "0":
-        return _PR([{"SymbolID": "TXFJ6-F", "CLastPrice": "23,450",
+        return _PR([{"SymbolID": "TXF-S", "CLastPrice": "23,111",   # 現貨列
+                     "CRefPrice": "23,000", "CDate": "20261002",
+                     "CTime": "133315"},
+                    {"SymbolID": "TXFJ6-F", "CLastPrice": "23,450",
                      "CRefPrice": "23,300", "CDate": "20261002",
                      "CTime": "134500"}])
-    return _PR([{"SymbolID": "TXFJ6-M", "CLastPrice": "23500",
-                 "CRefPrice": "23450", "CDate": "20261003",
-                 "CTime": "050000"}])
+    # 夜盤的 CDate 是開盤那天（10/02），04:59 實際是 10/03 凌晨；
+    # 第一筆是現貨列（TXF-P，沒有成交價）——兩者都照真實回應的樣子
+    return _PR([{"SymbolID": "TXF-P", "CLastPrice": "", "CRefPrice": "23450",
+                 "CDate": "20261002", "CTime": ""},
+                {"SymbolID": "TXFJ6-M", "CLastPrice": "23500",
+                 "CRefPrice": "23450", "CDate": "20261002",
+                 "CTime": "045958"}])
 
 
 _q28 = ft.fetch_txf(_get_post=_post28)
-check("㉘ 取較新的夜盤（10/03 05:00）",
+check("㉘ 取較新的夜盤（CDate 10/02＋04:59 → 實際 10/03 凌晨，比日盤 13:45 新）",
       _q28 and _q28["session"] == "夜盤" and _q28["value"] == 23500
-      and _q28["prev"] == 23450, _q28)
+      and _q28["prev"] == 23450 and _q28["date"] == "2026-10-03", _q28)
+
+
+def _post28d(url, body):                    # 日盤進行中：日盤比昨夜的夜盤新
+    if body["MarketType"] == "0":
+        return _PR([{"SymbolID": "TXF-S", "CLastPrice": "23,111",
+                     "CRefPrice": "23,000", "CDate": "20261005", "CTime": "100000"},
+                    {"SymbolID": "TXFJ6-F", "CLastPrice": "23,600",
+                     "CRefPrice": "23,450", "CDate": "20261005", "CTime": "100000"}])
+    return _PR([{"SymbolID": "TXFJ6-M", "CLastPrice": "23500",
+                 "CRefPrice": "23450", "CDate": "20261002", "CTime": "045958"}])
+
+
+_q28x = ft.fetch_txf(_get_post=_post28d)
+check("㉘x 日盤進行中 → 取日盤，而且是期貨（不是現貨列 TXF-S）",
+      _q28x and _q28x["session"] == "日盤" and _q28x["value"] == 23600
+      and _q28x["symbol"] == "TXFJ6-F", _q28x)
 _c28 = ft._txf_chip(_q28)
 check("㉘b chip：整數報價、漲跌與漲跌幅、盤別＋日期",
       _c28["value"] == "23,500" and _c28["delta"].startswith("+50")
@@ -1206,7 +1229,8 @@ check("㉙ 指數 chip：整數、漲跌與漲跌幅",
       _c29["value"] == "46,123" and _c29["delta"] == "+123（+0.27%）", _c29)
 
 # ㉚ 版式 A：一段主軸＋兩則補充（2026-10 使用者定案）
-check("㉚ 預設字數：主軸 200、補充 2 則 × 80", ft.focus_caps({}) == [200, 80, 80])
+check("㉚ 預設字數：主軸 250（下限 200）、補充 2 則 × 80（下限 40）",
+      ft.focus_caps({}) == [250, 80, 80] and ft.focus_mins({}) == [200, 40, 40])
 check("㉚b config 可覆寫", ft.focus_caps({"main_chars": 180, "supp_items": 1,
                                        "supp_chars": 60}) == [180, 60])
 
@@ -1220,7 +1244,8 @@ def _runA(replies):
     _orig = ft._call_ai
     ft._call_ai = _ca
     try:
-        t, sr = ft.summarize_content(_ART20, ["殖利率"], caps=[200, 80, 80])
+        t, sr = ft.summarize_content(_ART20, ["殖利率"], caps=[250, 80, 80],
+                                     mins=[200, 40, 40])
     finally:
         ft._call_ai = _orig
     return t, sr, seen
@@ -1233,13 +1258,33 @@ check("㉚c 主軸提示詞：要求彭博／路透優先、同一件事合併",
 check("㉚d 「主軸：」「補充：」標籤被拿掉、三行都在",
       _ta.splitlines()[0] == _ma and len(_ta.splitlines()) == 3
       and not _ta.splitlines()[1].startswith("補充"), _ta[:40])
-_tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U,   # 補充 150 字 > 120
-                          _ma + "\n" + _U * 3 + "\n" + _U])
-check("㉚e 補充超過 80×1.5＝120 字 → 帶原因重寫（訊息標出是第 2 行）",
-      len(_seenb) == 2 and "第 2 行超過 120 字" in _seenb[1][0], _seenb[-1][0][-80:])
-_tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U])               # 主軸 275 字（底線 300 內）
+_tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U * 2,   # 補充 150 字 > 100
+                          _ma + "\n" + _U * 3 + "\n" + _U * 2])
+check("㉚e 補充超過 80×1.25＝100 字 → 帶原因重寫（訊息標出是第 2 行）",
+      len(_seenb) == 2 and "第 2 行超過 100 字" in _seenb[1][0], _seenb[-1][0][-80:])
+_tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U * 2])           # 主軸 275 字（底線 275）
 check("㉚f 主軸在底線內 → 直接採用、只補一則也可以",
       len(_seenc) == 1 and len(_tc.splitlines()) == 2)
+# 2026-10-05：主軸 200–250 字、可分段；補充不能只列標題
+_td, _, _seend = _runA(["【主軸】\n" + _U * 4 + "\n" + _U * 4 + "\n【補充】\n"
+                        + _U * 2 + "\n" + _U * 2])
+check("㉚g 主軸分兩段 → 以 ¶ 串成第一行、補充兩則",
+      len(_seend) == 1 and _td.splitlines()[0] == _U * 4 + "¶" + _U * 4
+      and len(_td.splitlines()) == 3, _td[:60])
+_te, _, _seene = _runA([_U * 4 + "\n" + _U * 2, _ma + "\n" + _U * 2])
+check("㉚h 主軸只有 100 字 → 帶原因重寫（沒講完整）",
+      len(_seene) == 2 and "主軸只有 100 字" in _seene[1][0]
+      and _te.splitlines()[0] == _ma, _seene[-1][0][-90:])
+_tf, _, _seenf = _runA([_ma + "\n聯準會宣布降息\n" + _U * 2,
+                        _ma + "\n" + _U * 2 + "\n" + _U * 2])
+check("㉚i 補充只有幾個字（像標題）→ 帶原因重寫",
+      len(_seenf) == 2 and "像在列標題" in _seenf[1][0], _seenf[-1][0][-90:])
+_tg, _, _ = _runA([_U * 4 + "\n" + _U * 4 + "\n" + _U * 2 + "\n" + _U * 2])
+check("㉚j 沒寫標記：最後兩行是補充、前面都是主軸的段落",
+      _tg.splitlines()[0] == _U * 4 + "¶" + _U * 4 and len(_tg.splitlines()) == 3)
+check("㉚k 提示詞寫明 200–250 字、可分段、三則綜合、不能只重述標題",
+      "200–250" in _seena[0][1] and "分 2–3 段" in _seena[0][1]
+      and "三則" in _seena[0][1] and "不能只重述標題" in _seena[0][1])
 
 # ㉛ 彭博、路透優先
 _bb = {"title": "Fed officials weigh rate path", "source": "Bloomberg"}
@@ -1253,6 +1298,12 @@ _hA = _home._focus_strip({"chips": [], "text": "主軸一段\n補充甲\n補充�
                           "text_source": "model-content", "links": []})
 check("㉜ 主軸是一個段落、補充是兩則清單",
       '<p class="fs-main">主軸一段</p>' in _hA and _hA.count('<li class="fs-text">') == 2)
+_hB = _home._focus_strip({"chips": [], "text": "第一段¶第二段\n補充甲\n補充乙",
+                          "layout": "main", "fedwatch": None,
+                          "text_source": "model-content", "links": []})
+check("㉜b 主軸分段 → 兩個 fs-main 段落、畫面上沒有 ¶",
+      '<p class="fs-main">第一段</p><p class="fs-main">第二段</p>' in _hB
+      and "¶" not in _hB)
 
 print()
 print("全部通過" if ok else "有失敗")

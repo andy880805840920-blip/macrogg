@@ -916,8 +916,10 @@ def _focus_strip(f: dict | None) -> str:
     _paras = [s.strip() for s in (f.get("text") or "").split("\n") if s.strip()]
     if _paras and f.get("layout") == "main":
         # 版式 A：第一行是主軸（一段話），其餘是補充（逐則 <li>）
+        # 主軸可分 2–3 段（內部以 ¶ 串成一行，見 focus_today.MAIN_PARA）
+        _mp = [s.strip() for s in _paras[0].split("¶") if s.strip()]
         text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>'
-                '<p class="fs-main">' + esc(_paras[0]) + '</p>'
+                + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)
                 + ('<ul class="fs-list">'
                    + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras[1:])
                    + '</ul>' if _paras[1:] else "")
@@ -1112,9 +1114,9 @@ def home_footer(ctxs: dict) -> str:
         '「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場'
         '（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；'
         '台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），'
-        '變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：第一段是當天最重要的'
-        '一件事（優先採彭博、路透報導的事件，同一件事的多篇報導合併來寫），'
-        '下面兩則補充其他事件；排序依跨來源熱度、時效、來源與發布日，'
+        '變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：「今日主軸」把當天最'
+        '重要、彼此相關的幾則報導（優先採彭博、路透）綜合成 200–250 字的論述'
+        '——發生什麼、為什麼、對利率或聯準會代表什麼；下面兩則補充其他事件；排序依跨來源熱度、時效、來源與發布日，'
         '數字均出自原文並經機械驗證；'
         '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span>'
         '</div></details>'
