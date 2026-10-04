@@ -660,10 +660,11 @@ RS = {"DGS3MO": [{"date": "2026-08-24", "value": 3.71},
 
 cat = ft.build_catalog(RS, LIQ, [], offline=True)
 _ids = [c["id"] for c in cat]
-check("⑮ 目錄 14 顆、順序固定",
-      _ids == ["dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "fedwatch",
+check("⑮ 目錄 19 顆、順序固定（升降息三顆＋道瓊／費半／台指期）",
+      _ids == ["dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30",
+               "fedwatch", "fw_dec", "fw_cum",
                "sofr", "sofr_iorb", "onrrp", "srf",
-               "wti", "brent", "vix", "move"], _ids)
+               "wti", "brent", "vix", "move", "dji", "sox", "txf"], _ids)
 _by = {c["id"]: c for c in cat}
 check("⑮b 預設組＝2Y＋10Y＋30Y＋機率（固定四格湊滿）",
       [c["id"] for c in cat if c.get("on")]
@@ -708,10 +709,11 @@ import re as _re
 _vis = _re.findall(r'<div class="fs-chip" data-chip="([^"]+)"', _hs)
 check("⑯ 預設顯示四顆（2Y／10Y／30Y／機率）",
       _vis == ["dgs2", "dgs10", "dgs30", "fedwatch"], _vis)
-check("⑯b 其餘 10 顆帶 .fs-off 隱藏但都在 HTML",
-      _hs.count("fs-off") >= 10 and _hs.count("data-chip=") == 14)
-check("⑯c 勾選面板 14 個選項＋已選數（上限 4）＋裝置說明",
-      _hs.count("data-pick=") == 14 and "已選 4／4" in _hs
+check("⑯b 其餘 15 顆帶 .fs-off 隱藏但都在 HTML",
+      _hs.count("fs-off") >= 15
+      and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 19)
+check("⑯c 勾選面板 19 個選項＋已選數（上限 4）＋裝置說明",
+      _hs.count("data-pick=") == 19 and "已選 4／4" in _hs
       and "選擇存在此裝置" in _hs)
 check("⑯d 內嵌 JS 帶預設組、上限與 localStorage 鍵",
       'var D=["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
@@ -872,14 +874,15 @@ check("⑲f 主級（聯準會）排在次級（AI 資本支出）前面",
 check("⑲g 次級仍會入選（不是排除，只是排後）",
       len(_picked) == 2 and _picked[1]["link"] == "l1")
 
-# ⑳ 長度永遠不讓焦點段退回列標題：300 目標／450 底線（測試用 100／150）
+# ⑳ 版式：N 則 × 每則 item_cap 字；長度永遠不讓焦點段退回列標題
+#   （測試用每則 100 字、底線 150）
 _ART20 = [{"title": "t", "body": "十年期殖利率走高，市場關注聯準會。",
            "source": "Yahoo Finance"}]
 _U = "殖利率走高，市場關注聯準會的後續動作與財政部發債計畫。"      # 25 字
 
 
-def _run20(replies, cap=100):
-    """replies 依序回傳；回傳 (結果, 來源標記, 送出的提示詞列表)。"""
+def _run20(replies, item_cap=100, n=3, fn="content", heads=None):
+    """replies 依序回傳；回傳 (結果, 來源標記, 送出的 (提示詞, system) 列表)。"""
     seen = []
 
     def _ca(src, system, env=None):
@@ -889,49 +892,318 @@ def _run20(replies, cap=100):
     _orig = ft._call_ai
     ft._call_ai = _ca
     try:
-        t, sr = ft.summarize_content(_ART20, ["殖利率"], cap)
+        if fn == "content":
+            t, sr = ft.summarize_content(_ART20, ["殖利率"], item_cap,
+                                         n_items=n)
+        else:
+            t, sr = ft.summarize(heads or [{"title": _U, "source": "y"}],
+                                 item_cap, n_items=n)
     finally:
         ft._call_ai = _orig
     return t, sr, seen
 
 
-# 100–150 之間：直接採用，**不重試**（只呼叫一次）
-_t20, _s20, _seen20 = _run20([_U * 5])                      # 125 字
-check("⑳ 超過目標但在底線內 → 直接採用，不重新生成",
+_t20, _s20, _seen20 = _run20([_U * 5])                      # 一則 125 字
+check("⑳ 單則超過目標但在底線內 → 直接採用，不重新生成",
       _s20 == "model-content" and ft.cjk_len(_t20) == 125
       and len(_seen20) == 1, (_s20, len(_seen20)))
-check("⑳b 提示詞要求的是目標值本身（100，不是 100−30）",
-      "不超過 100 字" in _seen20[0][1], _seen20[0][1][-60:])
+check("⑳b 提示詞寫的是則數與每則字數（3 則、100 字）",
+      "3 則重點" in _seen20[0][1] and "100 個中文字以內" in _seen20[0][1],
+      _seen20[0][1][:80])
 
-# 超過底線 → 帶字數重寫一次；第二次合格就用第二次
 _t20c, _s20c, _seen20c = _run20([_U * 8, _U * 4])           # 200 → 100
-check("⑳c 超過底線 → 重寫一次，用第二次的結果",
+check("⑳c 單則超過底線 → 帶原因重寫一次，用第二次的結果",
       _s20c == "model-content" and ft.cjk_len(_t20c) == 100
-      and len(_seen20c) == 2 and "太長了" in _seen20c[1][0], len(_seen20c))
+      and len(_seen20c) == 2 and "超過 150 字" in _seen20c[1][0],
+      len(_seen20c))
 
-# 兩次都超過底線 → 裁切到底線之內，仍然採用（絕不退回列標題）
-_LONG = "\n".join([_U * 2] * 4)                             # 4 段 × 50＝200
+_LONG = "\n".join([_U * 8] * 3)                              # 3 則 × 200 字
 _t20d, _s20d, _ = _run20([_LONG, _LONG])
-check("⑳d 兩次都超過底線 → 裁切後採用，不退回列標題",
-      _s20d == "model-content" and ft.cjk_len(_t20d) <= 150
-      and _t20d != "", (_s20d, ft.cjk_len(_t20d) if _t20d else 0))
-check("⑳e 裁切以整段為單位，句子沒有被切斷",
-      _t20d.endswith("。") and _t20d.count("\n") == 2
-      and ft.cjk_len(_t20d) == 150, ft.cjk_len(_t20d))
+check("⑳d 重寫後仍超過 → 每則裁到底線內採用，不退回列標題",
+      _s20d == "model-content" and len(_t20d.splitlines()) == 3
+      and all(ft.cjk_len(x) <= 150 for x in _t20d.splitlines()),
+      [ft.cjk_len(x) for x in _t20d.splitlines()])
+check("⑳e 裁切在句末，句子沒有被切斷",
+      all(x.endswith("。") for x in _t20d.splitlines()))
 
-# 裁切函式本身：連第一段都超長時退而砍到最後一個句末標點
 _one = "第一句很長。第二句也不短。第三句收尾。"
 check("⑳f 單段超長 → 砍到最後一個句末標點",
       ft._trim_to(_one, 12).endswith("。")
-      and ft.cjk_len(ft._trim_to(_one, 12)) <= 12,
-      ft._trim_to(_one, 12))
+      and ft.cjk_len(ft._trim_to(_one, 12)) <= 12, ft._trim_to(_one, 12))
 check("⑳g 沒超過就原樣不動", ft._trim_to(_one, 999) == _one)
 
-# 正確性防護欄不受影響：數字鎖仍然一票否決（跟長度不同層級）
 _t20h, _s20h, _seen20h = _run20(["殖利率升到 9.99%，市場關注。"] * 2)
 check("⑳h 數字鎖仍是一票否決（不重試、不採用）",
       _t20h == "" and "沒有的數字" in _s20h and len(_seen20h) == 1, _s20h)
 check("⑳i 底線倍數常數存在且合理", 1.0 < ft.HARD_MULT <= 2.0)
+
+# ㉑ 則數切分：去編號與符號、超過 N 則只留前 N
+check("㉑ 去掉行首編號與符號",
+      ft._split_items("1. 甲事件。\n・乙事件。\n（3）丙事件。", 3)
+      == ["甲事件。", "乙事件。", "丙事件。"])
+check("㉑b 超過 3 則只留前 3 則",
+      len(ft._split_items("\n".join("事件%d。" % i for i in range(5)), 3))
+      == 3)
+_t21c, _s21c, _ = _run20(["甲事件。\n乙事件。"])
+check("㉑c 材料只夠兩則 → 寫兩則就好，照樣採用",
+      _s21c == "model-content" and len(_t21c.splitlines()) == 2)
+
+# ㉒ 空話：命中兩個以上 → 帶原因重寫一次；重寫後還是空話照樣採用
+_VAGUE = "聯準會政策成為市場焦點，面臨多重挑戰。"
+_GOOD = "財政部宣布擴大十年期公債標售規模。"
+_t22, _s22, _seen22 = _run20([_VAGUE, _GOOD])
+check("㉒ 空話 → 重寫一次，採用具體的第二版",
+      _t22 == _GOOD and len(_seen22) == 2 and "套話" in _seen22[1][0],
+      _t22)
+_t22b, _s22b, _seen22b = _run20([_VAGUE, _VAGUE])
+check("㉒b 重寫後仍是空話 → 照樣採用（文風不值得退回列標題）",
+      _s22b == "model-content" and _t22b == _VAGUE and len(_seen22b) == 2)
+_t22c, _, _seen22c = _run20(["聯準會議息結果成為市場焦點。"])
+check("㉒c 只命中一個不算（不誤殺）", len(_seen22c) == 1)
+
+# 標題模式也走同一套（含官方摘要進材料）
+_t22d, _s22d, _seen22d = _run20(
+    ["財政部長談公債標售。"], fn="title",
+    heads=[{"title": "Bessent on Treasury auctions", "source": "CNBC",
+            "summary": "Treasury Secretary discussed upcoming auctions."}])
+check("㉒d 標題模式：3 則版式、摘要進材料",
+      _s22d == "model" and "Treasury Secretary discussed" in _seen22d[0][0]
+      and "3 則重點" in _seen22d[0][1], _s22d)
+
+# ㉓ 排序：跨源熱度、時效、來源權重、發布日加分
+import datetime as _dt23
+_NOW = _dt23.datetime(2026, 10, 4, 12, tzinfo=_dt23.timezone.utc)
+
+
+def _h23(t, src, hrs):
+    return {"title": t, "source": src, "link": t,
+            "at": (_NOW - _dt23.timedelta(hours=hrs)).isoformat()}
+
+
+_pool = [_h23("Fed holds rates", "CNBC", 3),
+         _h23("Fed officials split", "Reuters", 4),
+         _h23("Fed minutes due", "Yahoo Finance", 5),
+         _h23("Treasury auction tails", "Yahoo奇摩新聞", 3)]
+_heat = ft._heat_map(_pool, ["Fed", "Treasury"])
+check("㉓ 熱度＝提到同一主題詞的不同來源數", _heat == {"Fed": 3, "Treasury": 1},
+      _heat)
+_a = ft.rank_score(_pool[0], ["Fed", "Treasury"], heat=_heat, now=_NOW)
+_b = ft.rank_score(_pool[3], ["Fed", "Treasury"], heat=_heat, now=_NOW)
+check("㉓b 大家都在報的（Fed，3 家）排在單一來源的前面", _a > _b, (_a, _b))
+_old = ft.rank_score(_h23("Fed holds rates", "CNBC", 60), ["Fed"], now=_NOW)
+_new = ft.rank_score(_h23("Fed holds rates", "CNBC", 3), ["Fed"], now=_NOW)
+check("㉓c 時效：新的分數較高", _new > _old, (_new, _old))
+check("㉓d 來源權重：通訊社／財經媒體 > 一般轉載",
+      ft.rank_score(_h23("Fed", "Reuters", 3), ["Fed"], now=_NOW)
+      > ft.rank_score(_h23("Fed", "Yahoo奇摩新聞", 3), ["Fed"], now=_NOW))
+check("㉓e 發布日加分：CPI 當天提到 CPI 的新聞 +2",
+      ft.rank_score(_h23("CPI rises", "CNBC", 3), ["Fed"], now=_NOW,
+                    events=["cpi"])
+      - ft.rank_score(_h23("CPI rises", "CNBC", 3), ["Fed"], now=_NOW)
+      == 2.0)
+_today = _dt23.date(2026, 10, 15)
+check("㉓f 今天／前一天的發布都算（台灣早上對應美國前一天）",
+      ft._todays_events({"cpi": "2026-10-14", "employment": "2026-11-06"},
+                        {}, _today) == ["cpi"])
+check("㉓g FOMC 會議日直接讀 config",
+      ft._todays_events({}, {"fomc_dates": ["2026-10-28"]},
+                        _dt23.date(2026, 10, 29)) == ["fomc"])
+
+# ㉔ build 的快取：命中要出聲、超過 12 小時強制重生、沒內文直接標題模式
+import json as _json24
+import tempfile as _tf24
+import logging as _lg24
+
+_saved = {k: getattr(ft, k) for k in (
+    "fetch_yahoo_yield", "fedwatch_from_futures", "fetch_atlanta_fedwatch",
+    "fetch_fedwatch", "fetch_feed_headlines", "fetch_article_text",
+    "fetch_headlines", "build_catalog", "_call_ai")}
+_calls24 = []
+_body24 = {"v": "財政部宣布擴大十年期公債標售，規模創今年新高。" * 4}
+ft.fetch_yahoo_yield = lambda *a, **k: None
+ft.fedwatch_from_futures = lambda *a, **k: None
+ft.fetch_atlanta_fedwatch = lambda *a, **k: None
+ft.fetch_fedwatch = lambda *a, **k: None
+ft.fetch_headlines = lambda *a, **k: []
+ft.build_catalog = lambda *a, **k: []
+ft.fetch_feed_headlines = lambda *a, **k: [
+    {"title": "Treasury auction expands", "link": "https://x/1",
+     "source": "CNBC", "at": _dt23.datetime.now(_dt23.timezone.utc).isoformat(),
+     "summary": ""}]
+ft.fetch_article_text = lambda url, *a, **k: _body24["v"]
+
+
+def _ca24(src, system, env=None):
+    _calls24.append(system)
+    return "財政部宣布擴大十年期公債標售。", ""
+
+
+ft._call_ai = _ca24
+
+
+class _Cap(_lg24.Handler):
+    def __init__(self):
+        super().__init__()
+        self.msgs = []
+
+    def emit(self, r):
+        self.msgs.append(r.getMessage())
+
+
+_cap = _Cap()
+ft.log.addHandler(_cap)
+_lvl24 = ft.log.level
+ft.log.setLevel(_lg24.INFO)            # 快取命中那行是 INFO
+try:
+    _sp = __import__("pathlib").Path(_tf24.mkdtemp()) / "focus.json"
+    _cfg24 = {"keywords": ["Treasury"], "feeds": ["https://x/rss"]}
+    _o1 = ft.build({}, False, _cfg24, _sp, env={})
+    _n1 = len(_calls24)
+    _o2 = ft.build({}, False, _cfg24, _sp, env={})
+    check("㉔ 標題沒變、未滿 12 小時 → 沿用快取、不呼叫 AI",
+          _o2["text_source"] == "cache" and len(_calls24) == _n1, _o2["text_source"])
+    check("㉔b 快取命中會印 log（先前完全隱形）",
+          any("沿用" in m for m in _cap.msgs), _cap.msgs[-3:])
+    _st = _json24.loads(_sp.read_text(encoding="utf-8"))
+    _st["at"] = (_dt23.datetime.now(_dt23.timezone.utc)
+                 - _dt23.timedelta(hours=13)).isoformat()
+    _sp.write_text(_json24.dumps(_st, ensure_ascii=False), encoding="utf-8")
+    _o3 = ft.build({}, False, _cfg24, _sp, env={})
+    check("㉔c 超過 12 小時 → 即使標題沒變也重新生成",
+          _o3["text_source"] == "model-content" and len(_calls24) > _n1,
+          _o3["text_source"])
+    # 沒有任何內文 → 直接走標題模式（不先試內文模式）
+    _body24["v"] = ""
+    _sp2 = __import__("pathlib").Path(_tf24.mkdtemp()) / "focus.json"
+    _calls24.clear()
+    _o4 = ft.build({}, False, _cfg24, _sp2, env={})
+    check("㉔d 沒抓到內文 → 直接用標題寫重點（只呼叫一次、標題模式）",
+          _o4["text_source"] == "model" and len(_calls24) == 1
+          and "標題清單" in _calls24[0], (_o4["text_source"], len(_calls24)))
+finally:
+    for _k, _v in _saved.items():
+        setattr(ft, _k, _v)
+    ft.log.removeHandler(_cap)
+    ft.log.setLevel(_lvl24)
+
+# ㉕ 首頁：重點以清單呈現（ul／li）
+_h25 = _home._focus_strip({"yields": [], "links": [], "fedwatch": None,
+                           "text": "甲事件。\n乙事件。\n丙事件。",
+                           "text_source": "model-content"})
+check("㉕ 三則重點渲染成清單",
+      _h25.count('<li class="fs-text">') == 3 and '<ul class="fs-body' in _h25)
+
+# ㉖ 升降息：從目前利率逐場往前推（下次會議＋12 月單場＋累計）
+import datetime as _dt26
+_FOMC = ["2026-01-28", "2026-03-18", "2026-04-29", "2026-06-17",
+         "2026-07-29", "2026-09-16", "2026-10-28", "2026-12-09"]
+# WIRP 驗收：今天在 11 月（11 月沒有會議）→ 起點＝11 月平均，
+# 12 月會議照加權反推，必須仍是 42.27%
+_p26 = ft.meeting_path({"2026-11": 96.215, "2026-12": 96.140}, _FOMC,
+                       "2026-12-09", _dt26.date(2026, 11, 5))
+_dec = _p26["meetings"][-1]
+check("㉖ WIRP 驗收不變：12 月 +25bp ≈ 42.27%",
+      abs(dict(_dec["outcomes"])[25] * 100 - 42.27) < 0.01
+      and abs(_dec["move_bp"] - 10.568) < 0.01, _dec)
+check("㉖b 起點取無會議月（11 月）合約", "2026-11" in _p26["r0_src"])
+
+# 10 月（下次會議 10/28）：舊算法往回找到已到期的 8、9 月合約而算不出來；
+# 前推版用 10 月＋11 月合約反推起點
+_p26b = ft.meeting_path({"2026-10": 96.375, "2026-11": 96.215,
+                         "2026-12": 96.140}, _FOMC, "2026-12-09",
+                        _dt26.date(2026, 10, 4))
+_oct, _dec2 = _p26b["meetings"]
+_r0 = (31 * 3.625 - 3 * 3.785) / 28
+check("㉖c 起點由 10 月與 11 月合約反推",
+      abs(_p26b["r0"] - _r0) < 1e-4 and "反推" in _p26b["r0_src"],
+      _p26b["r0"])
+check("㉖d 10 月會後利率＝11 月平均（11 月沒有會議）",
+      abs(_oct["end"] - 3.785) < 1e-6 and "2026-11 合約" in _oct["how"])
+check("㉖e 10 月隱含變動與兩個結果",
+      abs(_oct["move_bp"] - (3.785 - _r0) * 100) < 1e-3
+      and [b for b, _ in _oct["outcomes"]] == [25, 0], _oct["outcomes"])
+check("㉖f 12 月單場與 WIRP 驗收一致",
+      abs(_dec2["move_bp"] - 10.568) < 0.01)
+check("㉖g 至 12 月累計＝12 月會後利率－起點",
+      abs(_p26b["cum_bp"] - (_dec2["end"] - _r0) * 100) < 1e-3,
+      _p26b["cum_bp"])
+check("㉖h 2027 日程不在 config → 1 月視為未知，12 月走加權反推",
+      "加權" in _dec2["how"])
+check("㉖i 沒有今天之後的會議 → None",
+      ft.meeting_path({"2026-12": 96.0}, _FOMC, "2026-12-09",
+                      _dt26.date(2026, 12, 20)) is None)
+
+check("㉗ 結果命名", [ft.outcome_name(x) for x in (0, 25, 50, -25, -50)]
+      == ["維持", "升一碼", "升兩碼", "降一碼", "降兩碼"])
+_fw27 = {"src": "futures", "date": "2026-10-04",
+         "next": _oct, "horizon": _dec2, "cum_bp": _p26b["cum_bp"],
+         "prev": {"next": {**_oct, "outcomes": [[25, 0.60], [0, 0.40]],
+                           "move_bp": 15.0},
+                  "horizon": {**_dec2, "move_bp": 8.0}, "cum_bp": 23.0}}
+_c27 = {c["id"]: c for c in ft.fw_chips(_fw27)}
+check("㉗b 下次會議：機率最高的兩個結果＋前日",
+      _c27["fedwatch"]["label"] == "10 月 FOMC（10/28）"
+      and _c27["fedwatch"]["value"].startswith("升一碼")
+      and "維持" in _c27["fedwatch"]["delta"]
+      and "前日 40%" in _c27["fedwatch"]["delta"], _c27["fedwatch"])
+check("㉗c 12 月單場幅度（bp＋約幾碼＋前日）",
+      _c27["fw_dec"]["value"] == "+10.6 bp"
+      and "約 +0.4 碼" in _c27["fw_dec"]["delta"]
+      and "前日 +8.0 bp" in _c27["fw_dec"]["delta"]
+      and _c27["fw_dec"]["dir"] == "up", _c27["fw_dec"])
+check("㉗d 至 12 月累計",
+      _c27["fw_cum"]["label"] == "至 12 月 FOMC 累計"
+      and _c27["fw_cum"]["value"] == f"{_p26b['cum_bp']:+.1f} bp",
+      _c27["fw_cum"])
+check("㉗e 沒資料 → 三顆都標擷取失敗",
+      [c["value"] for c in ft.fw_chips(None)] == ["—", "—", "—"])
+_c27s = ft.fw_chips({**_fw27, "stale_from": "2026-10-02"})
+check("㉗f 沿用舊值時小字標明沿用日期", _c27s[0]["date"] == "沿用 10-02",
+      _c27s[0]["date"])
+
+# ㉘ 台指期：日盤與夜盤取時間較新的那一盤
+class _PR:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return {"RtCode": "0", "RtData": {"QuoteList": self._rows}}
+
+
+def _post28(url, body):
+    if body["MarketType"] == "0":
+        return _PR([{"SymbolID": "TXFJ6-F", "CLastPrice": "23,450",
+                     "CRefPrice": "23,300", "CDate": "20261002",
+                     "CTime": "134500"}])
+    return _PR([{"SymbolID": "TXFJ6-M", "CLastPrice": "23500",
+                 "CRefPrice": "23450", "CDate": "20261003",
+                 "CTime": "050000"}])
+
+
+_q28 = ft.fetch_txf(_get_post=_post28)
+check("㉘ 取較新的夜盤（10/03 05:00）",
+      _q28 and _q28["session"] == "夜盤" and _q28["value"] == 23500
+      and _q28["prev"] == 23450, _q28)
+_c28 = ft._txf_chip(_q28)
+check("㉘b chip：整數報價、漲跌與漲跌幅、盤別＋日期",
+      _c28["value"] == "23,500" and _c28["delta"].startswith("+50")
+      and _c28["date"] == "夜盤 10-03", _c28)
+check("㉘c 回應對不上 → None（不硬塞數字）",
+      ft.fetch_txf(_get_post=lambda u, b: _PR([{"Foo": 1}])) is None)
+check("㉘d 報價超出合理範圍 → 不採用",
+      ft.fetch_txf(_get_post=lambda u, b: _PR([
+          {"SymbolID": "TXFJ6-F", "CLastPrice": "12", "CRefPrice": "11",
+           "CDate": "20261002", "CTime": "134500"}])) is None)
+
+# ㉙ 道瓊／費半：整數＋漲跌幅
+_c29 = ft._level_chip("dji", ft.QUOTE_SPECS["dji"], {}, False,
+                      _pre={"value": 46123.4, "prev": 46000.0,
+                            "date": "2026-10-02", "live": True})
+check("㉙ 指數 chip：整數、漲跌與漲跌幅",
+      _c29["value"] == "46,123" and _c29["delta"] == "+123（+0.27%）", _c29)
 
 print()
 print("全部通過" if ok else "有失敗")

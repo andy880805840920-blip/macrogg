@@ -59,38 +59,49 @@ check("⑤c 0.32 → 升溫",
 check("⑤d 缺資料 → 持平（不硬判）",
       scn.classify_inflation_momentum({}) == "持平")
 
-# ⑥ 就業動能：損益兩平已移除，改「失業率回升」（Sahm 同款算式對 0.20）
-check("⑥ 失業率回升 → 轉弱",
-      scn.classify_labor_momentum({"u3_rising": True}) == "轉弱")
-check("⑥b Sahm 觸發 → 轉弱",
-      scn.classify_labor_momentum({"sahm_triggered": True}) == "轉弱")
+# ⑥ 就業動能：改看失去工作者比重（取代 Sahm／失業率回升）
+check("⑥ 失去工作者留意 → 轉弱",
+      scn.classify_labor_momentum({"jl_watch": True}) == "轉弱")
+check("⑥b 失去工作者警戒 → 轉弱",
+      scn.classify_labor_momentum({"jl_alert": True}) == "轉弱")
 check("⑥c 都沒有＋訊號偏強 → 轉強",
       scn.classify_labor_momentum(
-          {"u3_rising": False, "sahm_triggered": False,
+          {"jl_watch": False, "jl_alert": False,
            "tilt": {"tilt": "hawkish"}, "nfp_3m": 20.0}) == "轉強")
-check("⑥d 溫和門檻常數存在且低於 Sahm 觸發",
-      0 < scn.MILD_SAHM < 0.50)
 
-# ⑦ 軸心級訊號：失業率回升階梯（rules.r_sahm）與月步速訊號（r_pace）
+# ⑦ 軸心級訊號：失去工作者比重（rules.r_job_losers）與月步速訊號（r_pace）
 from types import SimpleNamespace as NS
 from src.analysis import rules as R                       # noqa: E402
 from src.analysis import rules_inflation as RI            # noqa: E402
+from src.analysis import job_losers as JL                 # noqa: E402
 
 
-def sahm_flag(v):
-    ctx = R.RuleContext(lights=[NS(key="sahm", value=v)])
-    return R.RULES[0](ctx)                                # r_sahm 註冊在第 0 位
+def jl_rows(tail, n=80, base=45.0):
+    """n 個月平穩（±0.3 交錯）後接上 tail。"""
+    vals = [base + (0.3 if i % 2 else -0.3) for i in range(n)] + list(tail)
+    out = []
+    for i, v in enumerate(vals):
+        y, m = 2018 + i // 12, i % 12 + 1
+        out.append({"date": f"{y}-{m:02d}-01", "value": v})
+    return out
 
 
-check("⑦ 0.25 → u3_rising（留意）、數字＝紅綠燈值",
-      (lambda f: f is not None and f.key == "u3_rising"
-       and f.severity == "watch" and "0.25" in f.headline)(sahm_flag(0.25)))
-check("⑦b 0.32 → 接近門檻（原有階梯不變）",
-      sahm_flag(0.32).key == "sahm_approaching")
-check("⑦c 0.55 → 觸發（alert）", sahm_flag(0.55).severity == "alert")
-check("⑦d 0.15 → 未達本站門檻，無訊號", sahm_flag(0.15) is None)
+def jl_flag(tail):
+    ctx = R.RuleContext(series={JL.SERIES_ID: jl_rows(tail)})
+    return R.RULES[0](ctx)                                # r_job_losers 註冊在第 0 位
+
+
+check("⑦ 比重升 1.5pp（z 高、幅度未達 3）→ 留意",
+      (lambda f: f is not None and f.key == "jl_watch"
+       and f.severity == "watch")(jl_flag([46.5, 46.5, 46.5])))
+check("⑦b 比重升 5pp 連 2 個月 ≥3 → 警戒（alert）",
+      (lambda f: f is not None and f.key == "jl_alert"
+       and f.severity == "alert")(jl_flag([50.0, 50.0, 50.0])))
+check("⑦c 平穩 → 無訊號", jl_flag([45.3, 44.7]) is None)
+check("⑦d 只升 1 個月（還沒連 2 個月）不算警戒",
+      JL.signals(jl_rows([50.0, 50.0]))["state"] != "critical")
 check("⑦e 軸心規則註冊在最前（同級排序才會排第一）",
-      R.RULES[0].__name__ == "r_sahm"
+      R.RULES[0].__name__ == "r_job_losers"
       and RI.RULES[0].__name__ == "r_pace")
 
 

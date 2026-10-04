@@ -134,10 +134,9 @@ check("㉕ 沒有 tilt 不會爆", _mismatch_note("通膨", "高", None, None, "
 # 低於當時多數的自然失業率估計——降息的理由是惡化的速度，不是水準。
 # 純水準規則會完全錯過那一段，所以動能修正不能省。
 # ---------------------------------------------------------------------------
-def lab(u=4.1, lo=4.0, hi=4.3, sahm=0.13, under=False, score=-0.35, net=-4):
+def lab(u=4.1, lo=4.0, hi=4.3, alert=False, under=False, score=-0.35, net=-4):
     return {"unrate": u, "u_lo": lo, "u_hi": hi,
-            "sahm": sahm, "sahm_triggered": sahm >= 0.50,
-            "u3_rising": under or sahm >= 0.20,
+            "jl_alert": alert, "jl_watch": alert or under, "jl_rise": 3.4 if alert else 0.5,
             "score": score, "tilt": {"net": net}}
 
 
@@ -146,7 +145,10 @@ cases = [
     ("㉖ 高於中央趨勢上緣 → 弱", lab(u=4.6), "弱", "level"),
     ("㉗ 低於中央趨勢下緣 → 強", lab(u=3.7), "強", "level"),
     ("㉘ 落在區間內 → 中", lab(u=4.1), "中", "level"),
-    ("㉙ Sahm 觸發 → 直接弱（不管水準）", lab(u=3.7, sahm=0.6), "弱", "sahm"),
+    ("㉙ 失去工作者警戒：強 → 往弱推一格成中", lab(u=3.7, alert=True), "中", "job_losers"),
+    ("㉙b 失去工作者警戒：中 → 弱", lab(u=4.1, alert=True), "弱", "job_losers"),
+    ("㉙c 已經是弱就不再推（依據仍是水準）", lab(u=4.6, alert=True), "弱", "level"),
+    ("㉙d 只有留意（z）不動格位", lab(u=4.1, under=True), "中", "level"),
     ("㉚ 非農低於損益兩平不改中格", lab(u=4.1, under=True), "中", "level"),
     ("㉛ 非農低於損益兩平不改強格", lab(u=3.7, under=True), "強", "level"),
     ("㉜ 已經是弱就不再推", lab(u=4.6, under=True), "弱", "level"),

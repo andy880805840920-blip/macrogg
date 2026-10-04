@@ -16,10 +16,10 @@ from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
                        inflation as infl_an, rules_inflation, fomc_text,
                        scenario, surprise as sp,
-                       passthrough as pt)
+                       passthrough as pt, job_losers)
 from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
                            annualized, yoy_series, annualized_series,
-                           since, span_label)
+                           since, span_label, since_year_start)
 
 # 全站圖表的顯示起點。資料本身可能抓得更早（統計量需要），
 # 但畫出來的一律從這裡開始，讓所有圖表的時間軸一致。
@@ -93,17 +93,47 @@ def _prev_ann(series: dict, sid: str, months: int):
     return annualized(rows[:-1], months) if len(rows) > months + 1 else None
 
 
-# Sahm 法則的觸發門檻。出自 Claudia Sahm 的原始論文（失業率三月移動平均
-# 比過去十二個月的最低值高 0.50 個百分點以上），不是這個專案選的。
-SAHM_TRIGGER = 0.50
-
-
-def _sahm_value(lights) -> float | None:
-    """紅綠燈清單裡的 Sahm 值。lights 是 Light 物件的 list，不是 dict。"""
-    for lt in lights or []:
-        if getattr(lt, "key", None) == "sahm":
-            return getattr(lt, "value", None)
+def _real_wage(ahe: list, cpi: list) -> dict | None:
+    """
+    實質薪資年增率＝(1＋時薪年增)／(1＋CPI-U 年增)−1。用兩者都有的最新月份
+    ——就業報告比同月 CPI 早約一週發布，所以常常只能算到上個月，會標月份。
+    用 CPI-U 跟 BLS 自己的 Real Earnings 新聞稿同一個平減指數。
+    """
+    a = {r["date"][:7]: r["value"] for r in ahe if r.get("value") is not None}
+    c = {r["date"][:7]: r["value"] for r in cpi if r.get("value") is not None}
+    for m in sorted(set(a) & set(c), reverse=True):
+        y, mo = int(m[:4]), m[5:7]
+        b = f"{y - 1}-{mo}"
+        if b in a and b in c and a[b] and c[b]:
+            w = (a[m] / a[b] - 1) * 100
+            p_ = (c[m] / c[b] - 1) * 100
+            return {"month": m, "nominal": w, "cpi": p_,
+                    "real": ((1 + w / 100) / (1 + p_ / 100) - 1) * 100}
     return None
+
+
+def _jl_axis(jl: dict) -> dict:
+    s = (jl or {}).get("signals") or {}
+    st = s.get("state")
+    return {"jl_share": s.get("share"), "jl_rise": s.get("rise"),
+            "jl_z": s.get("z"), "jl_state": st, "jl_date": s.get("date"),
+            "jl_alert": st == "critical",
+            "jl_watch": st in ("warning", "critical")}
+
+
+def _job_losers_block(series: dict) -> dict:
+    """
+    失去工作者比重：當期訊號＋歷次衰退對照＋誤報紀錄（全部即時重算）。
+    取代 Sahm 法則（2024-07 觸發後沒有衰退）。規則見 analysis/job_losers。
+    """
+    rows = series.get(job_losers.SERIES_ID) or []
+    sig = job_losers.signals(rows)
+    if not sig:
+        return {}
+    return {"signals": sig,
+            "recessions": job_losers.recession_table(rows),
+            "false_alarms": job_losers.false_alarms(rows),
+            "first": (rows[0]["date"][:7] if rows else "")}
 
 
 def build_labor_context(cfg: dict, series: dict, vintages: dict,
@@ -165,11 +195,13 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     surprises = [
         sp.evaluate("非農就業月變動", nfp_chg_series, exp.get("PAYEMS"),
                     "manual" if exp.get("PAYEMS") is not None else "none",
-                    unit=" 千人", higher_is_better=True),
+                    unit=" 千人", higher_is_better=True, allow_model=False),
         sp.evaluate("失業率", series.get("UNRATE", []), exp.get("UNRATE"),
                     "manual" if exp.get("UNRATE") is not None else "none",
-                    unit="%", higher_is_better=False),
+                    unit="%", higher_is_better=False, allow_model=False),
     ]
+    # allow_model=False：沒填市場共識就不顯示意外值（2026-10 使用者指定：
+    # 非農不宜用「歷史規律推估」——那不是市場預期，意外值讀不出交易意涵）
 
     # ---------------- 燈號與分數 ----------------
     lights = regime.build_lights(series, cfg.get("regime_lights") or [])
@@ -177,7 +209,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
 
     # ---------------- 規則引擎 ----------------
     ctx = rules.RuleContext(series=series, attribution=att, unrate_decomp=dec,
-                            revisions=rev, wage_comp=wage, lights=lights)
+                            revisions=rev, wage_comp=wage, lights=lights,
+                            benchmark=cfg.get("benchmark_revision") or {},
+                            today=clock.today())
     flags = rules.run_rules(ctx)
     tilt = rules.lean_balance(flags)
 
@@ -197,6 +231,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     u3_now = value_at(u3)
     lfpr_now = value_at(lfpr)
     ahe_now = value_at(ahe)
+    # 民間／政府拆分：民間是下方行業分解的總結，也是景氣連動的那一塊
+    _priv = value_at(diff_series(series.get("USPRIV", [])))
+    _gov = (nfp_now - _priv) if (nfp_now is not None and _priv is not None) else None
     plain_nfp = "—"
     if nfp_now is not None:
         verb = "增加" if nfp_now >= 0 else "減少"
@@ -207,43 +244,52 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             plain_nfp += (f"近三個月平均每月{'增加' if ma3 >= 0 else '減少'}"
                           f" {fmt.wan_abs(ma3)}。")
     # 「放棄找工作的人不算」的道理主場在分解卡 teach 與名詞解釋
+    # 分母是「勞動力」＝有工作的人＋正在找工作的人（先前寫成「有在找
+    # 工作的人」是錯的——那只是分子的那一群）。
     plain_u3 = ("—" if u3_now is None else
-                f"每 100 個有在找工作的人裡，約 {u3_now:.1f} 人還沒找到。")
+                f"每 100 個勞動力（有工作或正在找工作的人）裡，約 {u3_now:.1f} 人"
+                "沒有工作、正在找。")
+    _real = _real_wage(ahe, series.get("CPIAUCSL", []))
     plain_ahe = ("—" if ahe_yoy is None else
                  f"薪水一年漲 {ahe_yoy:.1f}%，目前平均每小時 "
                  f"{ahe_now:,.2f} 美元。" if ahe_now else f"薪水一年漲 {ahe_yoy:.1f}%。")
+    if _real and ahe_yoy is not None:
+        plain_ahe += (f"扣掉物價上漲後，{int(_real['month'][5:7])} 月的實質薪資一年"
+                      f"{'增加' if _real['real'] >= 0 else '減少'} {abs(_real['real']):.1f}%。")
     plain_lfpr = ("—" if lfpr_now is None else
                   f"16 歲以上的人裡，有 {lfpr_now:.1f}% 在工作或正在找工作，"
                   "其餘是退休、就學或已放棄找工作。")
 
     kpi = {
         "nfp_display": fmt.wan(nfp_now),
-        "nfp_sub": (f"近三個月平均 {fmt.wan(ma3)}　·　近一年平均 {fmt.wan(ma12)}"
-                    if ma3 is not None and ma12 is not None else ""),
+        "nfp_sub": (f"民間 {fmt.wan(_priv)}　·　政府 {fmt.wan(_gov)}"
+                    if _priv is not None and _gov is not None else
+                    (f"近三個月平均 {fmt.wan(ma3)}" if ma3 is not None else "")),
+        "nfp_priv": _priv, "nfp_gov": _gov,
         "nfp_plain": plain_nfp,
         "u3_plain": plain_u3,
         "ahe_plain": plain_ahe,
         "lfpr_plain": plain_lfpr,
-        "nfp_spark": [r["value"] for r in
-                      since(nfp_changes, CHART_START, 12)],
+        # KPI 小圖一律近 12 個月（最後 5 期墊底色，對應下方「近 5 期」數值列）
+        "nfp_spark": [r["value"] for r in nfp_changes[-12:]],
         "nfp_flag": (f"前兩月合計修正 {fmt.wan(rev.two_month_net)}"
                      if rev.two_month_net is not None else None),
         "nfp_flag_kind": ("neg" if (rev.two_month_net or 0) < 0 else "pos"),
 
         "u3_display": f"{value_at(u3):.1f}%" if u3 else "—",
-        "u3_sub": (f"較上月 {diff(u3):+.1f} 個百分點"
-                   f"　·　含低度就業 {value_at(series.get('U6RATE', [])):.1f}%"
-                   if u3 and series.get("U6RATE") else ""),
-        "u3_spark": [r["value"] for r in since(u3, CHART_START, 12)],
+        "u3_sub": (f"較上月 {diff(u3):+.1f} 個百分點" if len(u3) > 1 else ""),
+        "u3_spark": [r["value"] for r in u3[-12:]],
         "u3_flag": dec.get("verdict_text") if dec else None,
         "u3_flag_kind": ("neg" if dec.get("verdict") in ("bad_decline", "bad_rise") else "pos") if dec else "",
 
         "ahe_display": f"{ahe_yoy:.1f}%" if ahe_yoy is not None else "—",
-        "ahe_sub": (f"基層員工 {wage['yoy_production']:.1f}%　·　"
-                    f"差距 {wage['gap']:+.2f} 個百分點" if wage else ""),
+        "ahe_sub": "　·　".join(x for x in (
+            (f"實質 {_real['real']:+.1f}%（{int(_real['month'][5:7])} 月，CPI-U 平減）"
+             if _real else ""),
+            (f"基層員工 {wage['yoy_production']:.1f}%" if wage else "")) if x),
+        "ahe_real": _real,
         # 平均時薪是水準值（美元），直接畫是一條斜線 → 改畫年增率
-        "ahe_spark": [r["value"] for r in
-                      since(yoy_series(ahe), CHART_START, 12)],
+        "ahe_spark": [r["value"] for r in yoy_series(ahe)[-12:]],
         "ahe_flag": ("組成效果推高總體時薪" if wage.get("composition_bias") == "overstated"
                      else ("基層薪資壓力較大" if wage.get("composition_bias") == "understated" else None)),
         "ahe_flag_kind": "neg" if wage.get("composition_bias") == "overstated" else "",
@@ -252,7 +298,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
         "lfpr_sub": (f"較上月 {diff(lfpr):+.1f} 個百分點　·　"
                      f"25-54 歲 {value_at(series.get('LNS11300060', [])):.1f}%"
                      if lfpr and series.get("LNS11300060") else ""),
-        "lfpr_spark": [r["value"] for r in since(lfpr, CHART_START, 12)],
+        "lfpr_spark": [r["value"] for r in lfpr[-12:]],
         "lfpr_flag": None,
         "lfpr_flag_kind": "",
     }
@@ -325,7 +371,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
          "value": fmt.wan(rev.ma3_now),
          "note": (f"若沒有這次修正，應為 {fmt.wan(rev.ma3_before_revision)}"
                   if rev.ma3_before_revision is not None else "")},
-        {"label": "近一年修正傾向",
+        {"label": "近 12 次月度修正（平均）",
          "value": (f"{fmt.wan(rev.bias_12m)}/月" if rev.bias_12m is not None else "—"),
          "color": "var(--warning)" if rev.bias_direction == "systematically_down" else "inherit",
          "note": {"systematically_down": "初值偏樂觀，應打折看待",
@@ -334,22 +380,27 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                   "unknown": "資料不足"}[rev.bias_direction]},
     ]
 
+    # 年度基準修正（手動維護，見 config 的 benchmark_revision）。
+    # 月度修正跟年度基準修正是兩件事，並排列出、各自標期間。
+    _bm = cfg.get("benchmark_revision") or {}
+    if _bm.get("total") is not None:
+        rev_stats.append({
+            "label": f"年度基準修正（{_bm.get('status', '初估')}）",
+            "value": fmt.wan(_bm["total"]),
+            "color": "var(--warning)" if _bm["total"] < 0 else "inherit",
+            "note": (f"涵蓋 {_bm.get('period', '')}；"
+                     f"{_bm.get('final', '')}正式併入")})
+
     # ---------------- 貢獻度卡片 ----------------
-    # 預設只露重點：增最多 3 個＋減最多 3 個＋任何異常的行業。
-    # 先前是 5＋5，一張圖十幾條，使用者的原話是「圖表很亂」——
-    # 完整的 17 個行業在下方的收合表格裡，一個都不會少。
-    shown, other_sum, other_n = att.display_set(n=3)
-
+    # 2026-10 改版（使用者：「圖表有點難以理解」）。先前一張圖混了三種東西：
+    # 增減的行業、灰色的「不受景氣影響」、灰色的「其他 N 個加總」，而且
+    # 明細加總（−5.2 萬）跟全體（−2.3 萬）對不起來。改成兩組各自加總：
+    #   景氣敏感行業：增最多 3＋減最多 3＋異常的，其餘併「其他」，
+    #                 再加一列「明細沒涵蓋的部分」——這一組加總＝全體扣掉醫療與政府
+    #   醫療與政府　：全部列出（家數少）
+    # 兩組相加＝全體合計，畫面上寫成一條算式。顏色只表示增減，分組靠標題。
     def _notable_plain(c) -> str:
-        """
-        把「相對自身歷史 −2.5 個標準差」翻成人話——**用排名，不用倍數**。
-
-        第一版翻成「跌幅是自己平常波動的 2.5 倍」，使用者仍然覺得怪：
-        「平常波動的 N 倍」還是在描述統計量，只是換了字。排名不一樣，
-        它不需要任何前置概念：「近 5 年來最大單月減幅」小學生都懂，
-        而且可以拿歷史資料逐月驗證。判定門檻不變（仍是 z-score），
-        改的只是說法。
-        """
+        """「相對自身歷史 −2.5 個標準差」翻成排名的人話（近 5 年最大單月減幅）。"""
         word = "增幅" if c.value >= 0 else "減幅"
         win = c.rank_window or 0
         span = (f"近 {win // 12} 年" if win >= 24 else f"近 {win} 個月")
@@ -357,59 +408,70 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             return f"{span}最大單月{word}"
         if c.rank is not None and c.rank <= 5:
             return f"{word}在{span}裡排第 {c.rank} 大"
-        # 排名算不出來（樣本不足）才退回倍數說法
         return (f"{word}遠超出自己平常的起伏（約 {abs(c.zscore):.1f} 倍）"
                 if c.zscore is not None else "變動異常大")
 
-    wf_items = [{
-        "label": c.label,
-        "value": c.value,
-        "muted": c.noncyclical,
-        "notable": c.notable,
-        # 「異常」的理由會集中呈現在圖表下方的註腳（列上只留 ▲ 標記），
-        # 一樣是常駐文字——手機沒有 hover 也讀得到。
-        "notable_why": (_notable_plain(c) if c.notable else None),
-        "note": ("不受景氣影響" if c.noncyclical else None),
-        "tip": (f"{c.label}｜{fmt.wan(c.value)}"
-                + (f"｜{_notable_plain(c)}" if c.notable else "")),
-    } for c in shown]
-    if other_n:
-        wf_items.append({"label": f"其他 {other_n} 個行業", "value": other_sum,
-                         "muted": True, "note": "多個行業加總",
-                         "tip": f"其餘 {other_n} 個行業合計 {fmt.wan(other_sum)}"})
+    def _bar(c) -> dict:
+        return {"label": c.label, "value": c.value, "notable": c.notable,
+                "notable_why": (_notable_plain(c) if c.notable else None),
+                "tip": (f"{c.label}｜{fmt.wan(c.value)}"
+                        + (f"｜{_notable_plain(c)}" if c.notable else ""))}
+
+    _cyc = sorted([c for c in att.contributions if not c.noncyclical],
+                  key=lambda c: c.value, reverse=True)
+    _non = sorted([c for c in att.contributions if c.noncyclical],
+                  key=lambda c: c.value, reverse=True)
+    _keep = {c.key for c in _cyc[:3]} | {c.key for c in _cyc[-3:]} | \
+        {c.key for c in _cyc if c.notable}
+    _cyc_items = [_bar(c) for c in _cyc if c.key in _keep]
+    _rest = [c for c in _cyc if c.key not in _keep]
+    if _rest:
+        _cyc_items.append({"label": f"其他 {len(_rest)} 個行業",
+                           "value": sum(c.value for c in _rest),
+                           "tip": "、".join(f"{c.label} {fmt.wan(c.value)}" for c in _rest)})
+    if abs(att.unexplained) >= 1:
+        _cyc_items.append({"label": "明細沒涵蓋的部分", "value": att.unexplained,
+                           "tip": "全體合計減去各行業明細的差額"})
+    _fmt_bar = (lambda v: fmt.wan(v, digits=1))
+    att_groups = [
+        {"title": "景氣敏感行業", "sum": att.aggregates.get("cyclical", 0),
+         "bars": charts.diverging_bars(_cyc_items, fmt=_fmt_bar)},
+        {"title": "醫療與政府（不太受景氣影響）",
+         "sum": att.aggregates.get("noncyclical", 0),
+         "bars": charts.diverging_bars([_bar(c) for c in _non], fmt=_fmt_bar)},
+    ]
     agg = att.aggregates
     n_ind = len(att.contributions)
     att_stats = [
-        {"label": "全體合計", "value": fmt.wan(att.total)},
-        {"label": "扣掉醫療與政府",
+        {"label": "全體合計", "value": fmt.wan(att.total),
+         "note": "＝景氣敏感行業＋醫療與政府"},
+        {"label": "景氣敏感行業",
          "value": fmt.wan(agg.get("cyclical", 0)),
          "color": "var(--critical)" if agg.get("cyclical", 0) < 0 else "var(--good)",
-         "note": "跟景氣連動的部分"},
+         "note": "全體扣掉醫療與政府"},
+        {"label": "醫療與政府", "value": fmt.wan(agg.get("noncyclical", 0)),
+         "note": "不太受景氣影響"},
         {"label": "有增加人力的行業",
          "value": f"{round(agg.get('breadth', 0)*n_ind/100)} / {n_ind} 個",
          "note": f"佔 {agg.get('breadth', 0):.0f}%"},
     ]
     # 地方政府教育單獨列出：它是地方政府的子項（已含在上面，不重複計入瀑布圖），
     # 但 7 月的季節性爭議就在這裡，值得單獨標示。
+    # 只在變動大（逾 2.5 萬）時才講，改成圖下的一句話，不再佔一格統計
     lge = series.get("CES9093161101", [])
+    lge_note = ""
     if lge:
         lge_d = diff(lge)
-        if lge_d is not None:
-            att_stats.append({
-                "label": "其中：地方政府教育",
-                "value": fmt.wan(lge_d),
-                "color": "var(--warning)" if abs(lge_d) > 25 else "inherit",
-                "note": "學期結束的季節性因素，不一定代表真的裁員",
-            })
+        if lge_d is not None and abs(lge_d) > 25:
+            lge_note = (f"地方政府裡的教育單位 {fmt.wan(lge_d)}：學期起訖的季節性因素"
+                        "常讓這一項單月大幅波動，不一定代表真的裁員或擴編。")
     # 「佔總變動」改成「佔同向總額」：淨額只有 −2.3 萬時，用淨額當分母會
     # 讓正貢獻算出 −165%、最大的減項算出 +204%，所以原本整欄關掉、
     # 十七列都印同一句「總變動過小，比例失真」。改用同向總額當分母之後
     # 數字永遠成立，而且直接講出這個月真正的樣子：增減兩邊都很大、互相抵消。
     att_table = [
         {"label": c.label, "value": c.value,
-         # 只寫百分比。方向由左邊「增減」欄的正負決定，
-         # 再寫一次「佔增加的／佔減少的」會把欄寬撐爆、在手機上被截掉。
-         "share": (f"{c.gross_share:.0f}%" if c.gross_share is not None else "—"),
+         "group": "醫療與政府" if c.noncyclical else "景氣敏感",
          "own": (f"{c.own_pct:+.2f}%" if c.own_pct is not None else "—")}
         for c in att.contributions
     ]
@@ -459,6 +521,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     jolts_lag_text = (f"較就業報告落後 {_lag} 個月" if _lag and _lag > 0
                       else "與就業報告同月份")
 
+    _jl = _job_losers_block(series)
+
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Employment Situation"),
         "data_month": data_month,
@@ -471,38 +535,36 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
                      "table": charts.revision_table(rev_rows, fmt=fmt.people),
                      "source_note": source_note},
         "attribution": {"stats": att_stats,
-                        # 長條的單位跟卡片上方的「全體合計 −2.3 萬人」一致。
-                        # 先前長條寫「-47,000」、卡片寫「-2.3 萬人」，
-                        # 同一張卡裡兩種單位，讀者要自己換算。
-                        "bars": charts.diverging_bars(
-                            wf_items, fmt=lambda v: fmt.wan(v, digits=1)),
+                        "groups": att_groups,
+                        "lge_note": lge_note,
                         "table": att_table,
                         "gross": att_gross,
                         "total_count": n_ind},
         "decomp": dec,
-        "ustar": _ustar_gap(u3, series.get("NROU", [])),
+        "ustar": _ustar_gap(u3, series.get("UNRATEMDLR", []),
+                            series.get("UNRATECTLLR", []),
+                            series.get("UNRATECTHLR", [])),
         # 九宮格就業軸的判定材料：
         #   u_lo/u_hi  FOMC 對長期失業率的中央趨勢（＝聯準會認定的充分就業）
-        #   sahm       Sahm 指標值與 0.50 觸發（原始論文門檻）
-        #   u3_rising  同一個 Sahm 指標對 0.20 的「溫和惡化」水位——
-        #              0.20 是本站判斷不是外部標準，畫面會標示。
-        #              它取代損益兩平（已移除）：直接量失業率有沒有在升，
-        #              不再靠人口假設去預測。
+        #   jl_*       失去工作者比重（取代 Sahm）：
+        #              jl_watch＝3 個月變化 z≥1.5（留意，移動方向轉弱）
+        #              jl_alert＝較一年低點上升 ≥3pp 連 2 個月（警戒，格位往弱推一格）
+        #              門檻由 1967 起回測選出，屬本站判斷，畫面會標示。
         "axis": {
             "unrate": value_at(u3),
             "u_lo": value_at(series.get("UNRATECTLLR", [])),
             "u_hi": value_at(series.get("UNRATECTHLR", [])),
             "u_mid": value_at(series.get("UNRATEMDLR", [])),
-            "sahm": _sahm_value(lights),
-            "sahm_triggered": (_sahm_value(lights) or 0) >= SAHM_TRIGGER,
-            "u3_rising": (_sahm_value(lights) or 0) >= scenario.MILD_SAHM,
+            **_jl_axis(_jl),
             "nfp_3m": ma3,
         },
+        "job_losers": _jl,
         "claims": _claims_block(series),
         "kpi_lean": kpi_lean,
         "unemp_structure": _unemp_structure(series),
         "lights": lights,
         "flags": flags,
+        "flow": rules.flow_summary(series),
         "tilt": tilt,
         "score": {"score": score.score, "delta": score.delta,
                   "window": score.window,
@@ -708,10 +770,14 @@ def _claims_block(series: dict) -> dict:
         "released": _claims_release_date(ic[-1]["date"]),
         "ic_rank": ic_rank, "cc_rank": cc_rank,
         # 圖畫續領：它比初領平滑，而且是「再就業難度」這條主線的載體
+        # 只畫今年以來（使用者指定，2026-10）；年初不足 8 週時往前補到 8 週，
+        # 免得一月只有一兩個點畫不成線
         "chart": charts.line_chart(
             [{"date": r["date"], "value": r["value"] / 10000}
-             for r in cc[-104:]],
+             for r in since_year_start(cc, min_points=8)],
             unit=" 萬人", height=130, digits=1),
+        "chart_span": ("今年以來" if len([r for r in cc if r["date"][:4] == cc[-1]["date"][:4]]) >= 8
+                       else "近 8 週"),
     }
 
 
@@ -744,40 +810,59 @@ def _unemp_structure(series: dict) -> dict:
         ("LNS13023569", "新進入", "good",
          "第一次找工作。人口與畢業季的影響大於景氣。"),
     ]
-    rows, total = [], 0.0
+    # 比重用 BLS 官方的「佔失業人口百分比」序列（跟失去工作者訊號同一條，
+    # 頁面上同一個比例只有一個數字）。人數會被勞動力規模帶著走——勞動力
+    # 縮小時各類人數都會下降——所以變化以「比重較一年前幾個百分點」為主。
+    share_ids = {"LNS13023621": "LNS13023622", "LNS13023705": "LNS13023706",
+                 "LNS13023557": "LNS13023558", "LNS13023569": "LNS13023570"}
+    rows = []
     for sid, label, kind, note in parts:
         rows_s = series.get(sid) or []
-        if len(rows_s) < 13:
+        sh = series.get(share_ids[sid]) or []
+        if len(rows_s) < 13 or len(sh) < 13:
             continue
         cur, yr = value_at(rows_s), value_at(rows_s, 12)
-        if cur is None:
+        s_now, s_yr = value_at(sh), value_at(sh, 12)
+        if cur is None or s_now is None:
             continue
-        total += cur
-        rows.append({"label": label, "kind": kind, "note": note,
-                     "value": cur,
+        rows.append({"label": label, "kind": kind, "note": note, "sid": share_ids[sid],
+                     "value": cur, "share": s_now,
+                     "share_yoy": (s_now - s_yr) if s_yr is not None else None,
                      "yoy": (cur - yr) if yr is not None else None})
-    if len(rows) < 4 or not total:
+    if len(rows) < 4:
         return {}
     for r in rows:
-        r["share"] = r["value"] / total * 100
         r["display"] = fmt.persons_to_wan(r["value"] * 1000, digits=1)
         r["yoy_display"] = ("—" if r["yoy"] is None
                             else fmt.wan(r["yoy"], digits=1))
+        r["share_yoy_display"] = ("—" if r["share_yoy"] is None
+                                  else f"{r['share_yoy']:+.1f} 個百分點")
 
     # 結論看的是**變化**不是水準：永久性失業長期就是最大的一塊，
     # 「它佔四成」本身不是訊息，「它是這一年增加最多的一塊」才是。
-    bad_d = sum(r["yoy"] or 0 for r in rows if r["kind"] == "bad")
-    good_d = sum(r["yoy"] or 0 for r in rows if r["kind"] == "good")
-    if bad_d > 0 and bad_d > abs(good_d):
-        verdict, lean = ("這一年的增量主要來自被裁掉的人——需求端在收縮，"
-                         "是「壞」的失業率上升。"), "dovish"
-    elif good_d > 0 and good_d > abs(bad_d):
-        verdict, lean = ("這一年的增量主要來自重新進入與自願離職——"
-                         "人是被景氣吸引回來找工作的，是「好」的失業率上升。"), "hawkish"
-    elif bad_d < 0 and abs(bad_d) > abs(good_d):
-        verdict, lean = "被裁掉的人減少，失業結構在改善。", "hawkish"
+    # 結論看「失去工作者比重」一年變了幾個百分點（±1 為本站門檻：比重的
+    # 月雜訊約 ±1，一年下來超過才算結構真的變了）。
+    _jl = next((r for r in rows if r["kind"] == "bad"), None)
+    _d = (_jl or {}).get("share_yoy")
+    if _d is not None and _d >= 1:
+        verdict, lean = (f"失業的人裡被裁員的比重比一年前高 {_d:.1f} 個百分點——"
+                         "需求端在收縮，是「壞」的失業。"), "dovish"
+    elif _d is not None and _d <= -1:
+        verdict, lean = (f"失業的人裡被裁員的比重比一年前低 {abs(_d):.1f} 個百分點，"
+                         "失業結構在改善。"), "hawkish"
     else:
-        verdict, lean = "各類別的變化互相抵消，結構沒有明顯方向。", "neutral"
+        verdict, lean = "失業的組成跟一年前差不多，結構沒有明顯變化。", "neutral"
+
+    # 比重的時間軸（2025 起，使用者指定只看近期）
+    _cut = "2025"
+    _chart = charts.stacked_shares(
+        [{"label": lb, "color": col,
+          "points": [r for r in (series.get(sid) or []) if str(r["date"]) >= _cut]}
+         for lb, col, sid in (("新進入", "var(--muted-bar)", "LNS13023570"),
+                              ("重新進入", "var(--series-1)", "LNS13023558"),
+                              ("自願離職", "var(--good)", "LNS13023706"),
+                              ("失去工作", "var(--neg)", "LNS13023622"))],
+        shade=[(a, b) for a, b in job_losers.RECESSIONS if b >= _cut])
 
     long_term = series.get("UEMP27OV") or []
     lt_note = ""
@@ -787,54 +872,34 @@ def _unemp_structure(series: dict) -> dict:
             lt_note = (f"長期失業（27 週以上）{fmt.persons_to_wan(lt_cur * 1000, digits=1)}"
                        + (f"，較一年前 {fmt.wan(lt_cur - lt_yr, digits=1)}"
                           if lt_yr is not None else "") + "。")
-    return {"rows": rows, "verdict": verdict, "lean": lean, "lt_note": lt_note}
+    return {"rows": rows, "verdict": verdict, "lean": lean, "lt_note": lt_note,
+            "chart": _chart}
 
 
-def _ustar_gap(u3: list, nrou: list) -> dict:
+def _ustar_gap(u3: list, mid: list, lo: list, hi: list) -> dict:
     """
-    失業缺口 u − u*：目前失業率離「不會加速通膨的失業率」多遠。
+    失業缺口：目前失業率離 FOMC 認定的「長期充分就業失業率」多遠。
 
-    為什麼值得單獨列一行
-    --------------------
-    「失業率 4.3%」本身沒有基準，讀者無從判斷那是緊還是鬆。
-    u* 是 CBO 對長期自然失業率的估計，兩者相減才有方向：
-      u < u*  → 勞動市場仍偏緊，薪資壓力偏上行 → 對聯準會是通膨那一側的理由
-      u > u*  → 已經出現閒置，通常伴隨就業下行風險
-    這也是聯準會自己在談雙重使命時的參照框架。
-
-    NROU 本來就有抓（config/indicators.yaml 的 reference 段），
-    但一直沒有任何地方讀它——量測到的東西沒被用上，等於白抓。
-
-    注意 u* 是**季頻的模型估計值**，而且會被回溯修正；
-    它不是觀測值，所以缺口只當方向參考，不拿去下門檻式的結論。
+    基準統一用 SEP（2026-10 使用者指定）：先前這裡用 CBO 的自然失業率，
+    而格位用 FOMC 的中央趨勢——同一頁兩條基準、數字還不一樣（4.4 vs 4.2），
+    讀者無從判斷該信哪一條。聯準會是照它自己的估計行動，所以都用 SEP。
+    SEP 一年公布四次（3、6、9、12 月的會議），中央趨勢是委員意見的分歧範圍，
+    落在範圍內就是「中性」，跟九宮格的格位判定同一個口徑。
     """
-    u_now = value_at(u3)
-    # NROU 同時含當期與十年後的 CBO 預測。value_at(nrou) 會拿到序列尾端，
-    # 因而曾把 2036 年的預測值當成 2026 年現值。要以失業率的資料日期為
-    # 截止點，取不晚於該日的最近一季。
-    u_date = u3[-1]["date"] if u3 else ""
-    eligible = [r for r in nrou if r.get("date", "") <= u_date]
-    ustar_row = eligible[-1] if eligible else None
-    ustar_now = ustar_row.get("value") if ustar_row else None
-    if u_now is None or ustar_now is None:
+    u_now, m, l_, h = value_at(u3), value_at(mid), value_at(lo), value_at(hi)
+    if None in (u_now, m, l_, h):
         return {}
-    gap = u_now - ustar_now
-    # ±0.2 個百分點以內視為「差不多在 u* 上」：u* 的估計誤差本來就有這個量級，
-    # 比它小的缺口拿來講鬆緊是過度解讀。
-    if gap > 0.2:
-        state, note = "鬆", "失業率高於自然失業率，勞動市場已經出現閒置。"
-    elif gap < -0.2:
-        state, note = "緊", "失業率低於自然失業率，勞動市場仍偏緊、薪資壓力偏上行。"
+    gap = u_now - m
+    if u_now > h:
+        state, note = "鬆", "失業率高於 FOMC 認定的充分就業範圍，勞動市場已經出現閒置。"
+    elif u_now < l_:
+        state, note = "緊", "失業率低於 FOMC 認定的充分就業範圍，勞動市場偏緊、薪資壓力偏上行。"
     else:
-        state, note = "中性", "失業率大致就在自然失業率上，兩邊都不構成壓力。"
-    return {
-        "u": u_now, "ustar": ustar_now, "gap": gap, "state": state,
-        "note": note,
-        "as_of": (ustar_row["date"] if ustar_row else ""),
-        "display": f"{gap:+.2f} 個百分點",
-        "color": ("var(--critical)" if gap > 0.5 else
-                  "var(--warning)" if gap < -0.5 else "inherit"),
-    }
+        state, note = "中性", "失業率落在 FOMC 認定的充分就業範圍內，兩邊都不構成壓力。"
+    return {"u": u_now, "ustar": m, "lo": l_, "hi": h, "gap": gap,
+            "state": state, "note": note,
+            "as_of": (mid[-1]["date"] if mid else ""),
+            "display": f"{gap:+.1f} 個百分點"}
 
 
 # ===========================================================================
@@ -2133,23 +2198,27 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
                          "value": f"{u:.1f}%", "w": lvl})
             rows.append({"label": "FOMC 長期失業率　中央趨勢",
                          "value": f"{lo:.1f}–{hi:.1f}%", "w": "門檻"})
-        sahm = labor.get("sahm")
-        if sahm is not None:
-            rows.append({"label": "Sahm 法則（動能）", "value": f"{sahm:+.2f}",
-                         "w": "觸發" if labor.get("sahm_triggered") else "門檻 0.50"})
-            # 同一個指標的「溫和惡化」水位（取代已移除的損益兩平）。
-            # 0.20 不是外部標準，標示為本站門檻。
-            rows.append({"label": "失業率回升幅度（動能）",
-                         "value": f"{sahm:+.2f} 個百分點",
-                         "w": ("已回升" if labor.get("u3_rising")
-                               else "本站門檻 0.20")})
+        _rise, _z = labor.get("jl_rise"), labor.get("jl_z")
+        if _rise is not None:
+            rows.append({"label": "失去工作者比重　較一年低點（警戒）",
+                         "value": f"{_rise:+.1f} 個百分點",
+                         "w": ("警戒：格位往弱推一格" if labor.get("jl_alert")
+                               else f"本站門檻 {job_losers.RISE_ALERT:.0f}，連 "
+                                    f"{job_losers.RISE_PERSIST} 個月")})
+        if _z is not None:
+            rows.append({"label": "失去工作者比重　3 個月變化 z 值（留意）",
+                         "value": f"{_z:+.2f}",
+                         "w": ("留意：方向轉弱" if (labor.get("jl_watch")
+                                               and not labor.get("jl_alert"))
+                               else f"本站門檻 {job_losers.Z_WATCH}")})
         # 常駐的一句話。分支順序必須跟 scenario.classify_labor 一致，
         # 否則會出現「摘要說水準正常、格位說弱」而沒有解釋的情況。
         _basis = sc.labor_basis
-        if _basis == "sahm":
-            _lead = (f"Sahm 法則 {labor.get('sahm'):+.2f} 觸發衰退門檻"
-                     "（0.50），勞動市場正在快速惡化"
-                     if labor.get("sahm") is not None else "Sahm 法則已觸發")
+        if _basis == "job_losers":
+            _lead = (f"失業率 {u:.1f}% 本身落在「{sc.labor_level}」，但失去工作者比重"
+                     f"較一年低點上升 {labor.get('jl_rise') or 0:.1f} 個百分點、"
+                     "連續兩個月達警戒，格位往弱推一格"
+                     if u is not None else "失去工作者比重達警戒，格位往弱推一格")
         elif _basis == "fallback":
             _lead = (f"沒有取得 FOMC 的長期失業率預測，改用後備門檻："
                      f"綜合分數 {labor.get('score', 0):+.2f}（±0.45）"

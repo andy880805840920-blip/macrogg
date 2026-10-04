@@ -37,16 +37,28 @@ fomc_dates:
 # atlanta_mpt_url: https://www.atlantafed.org/cenfis/market-probability-tracker
 # atlanta_json_path: []
 
-# 焦點段的中文字數目標（cjk_len 只數中文字）。這個數字**原樣寫進提示詞**
-# ——「總長不超過 300 字」。
+# 焦點段的版式：N 則重點、每則 item_chars 個中文字以內（使用者指定
+# 3 則、每則 100 字）。數字原樣寫進提示詞。
 #
-# 長度永遠不會讓焦點段退回列標題。實際行為（程式端的 HARD_MULT＝1.5）：
-#   ≤ 300      合格
-#   300–450    直接採用、不重試（為了幾十個字重新生成，換來的通常是
-#              另一篇差不多長的稿子，白花一次 API 呼叫）
-#   > 450      帶著字數重寫一次；仍然超過就裁切到 450 之內（以整段
-#              為單位、句子不切斷）後採用
-max_chars: 300
+# 長度永遠不會讓焦點段退回列標題。每則的硬底線＝item_chars × 1.5
+#（150 字）：底線內直接採用；超過就帶原因重寫一次，仍超過就把那一則
+# 裁到底線之內（句子不切斷）後採用。
+items: 3
+item_chars: 100
+
+# 空話清單：一次輸出命中兩個以上就帶原因重寫一次（第二次照樣採用——
+# 這是文風問題，不是正確性問題）。看到新的套話直接往這裡加。
+vague_markers:
+  - 成為市場焦點
+  - 備受關注
+  - 引發市場關注
+  - 引發關注
+  - 多重挑戰
+  - 值得關注
+  - 市場密切關注
+  - 持續升溫
+  - 不容忽視
+  - 牽動市場
 
 # 主級關鍵字：命中一次計 2 分（挑選排序用）。政策與利率核心。
 keywords:
@@ -143,6 +155,24 @@ exclude_keywords:
 # 逐一嘗試、失敗跳過；全部失敗才退回下方的 Google News 標題模式。
 # Yahoo 改版換網址時改這裡就好，不用動程式。
 feeds:
+  # ── 總經主力：真的在報美國總經、而且內文抓得到 ──
+  # 先前只靠 Yahoo，實測內容早就不是總經新聞（台股兩條滿版台股個股、
+  # 英文那條滿版加密貨幣與個股），篩選再好也挑不出東西。
+  # 每條 feed 每次執行都會在 log 記「取得 N 則、入選 M 則」，哪條沒用
+  # 一看就知道；抓不到的只記警告然後跳過，不影響其他來源。
+  # CNBC：Economy、Finance 兩個版
+  - https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258
+  - https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664
+  # 聯準會官方：貨幣政策新聞稿與演講。主題本來就專屬，all: true 表示
+  # 不用關鍵字過濾（演講標題常是「Speech by Governor X」，一個關鍵字都不含）。
+  - url: https://www.federalreserve.gov/feeds/press_monetary.xml
+    all: true
+  - url: https://www.federalreserve.gov/feeds/speeches.xml
+    all: true
+  # Yahoo Finance 的十年期殖利率個別新聞：主題專屬、內文可讀
+  - url: https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5ETNX&region=US&lang=en-US
+    all: true
+  # ── 原有來源 ──
   - https://tw.news.yahoo.com/rss/finance
   - https://tw.stock.yahoo.com/rss?category=news
   - https://finance.yahoo.com/news/rssindex

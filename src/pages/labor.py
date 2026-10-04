@@ -11,7 +11,7 @@
 from __future__ import annotations
 
 from .. import charts, fmt
-from ..analysis import attribution
+from ..analysis import attribution, regime, rules, scenario as _scn, job_losers as _jlm
 from ..site import esc
 
 from . import compact_full, focus_evidence, state_chip, teach
@@ -162,9 +162,9 @@ def _surprise_footnote(sb) -> str:
     縮成一行之後更容易被誤讀，所以在 KPI 區下方留一句完整說明。
     """
     if not sb or not sb.get("has_any"):
-        return ('<div class="kpi-foot warn">尚未填入市場預期。'
-                '在 config/consensus.yaml 填入發布前的市場預期後，'
-                '非農與失業率卡片就會顯示與預期的差距。</div>')
+        # 沒填市場共識就不顯示意外值，也不放提示（2026-10：不再用時間序列
+        # 模型冒充預期，卡片上只講實際數字）
+        return ""
     if sb.get("model_only"):
         return ('<div class="kpi-foot warn">'
                 '<b>＊預期值目前來自時間序列模型，不是市場共識。</b>'
@@ -189,21 +189,14 @@ def _ustar_row(u: dict | None) -> str:
     if not u:
         return ""
     gap = u['u'] - u['ustar']
-    # 收合列直接用人話回答：不寫 u−u*、不寫「緊」這種單字術語
     _pos = ("低" if gap < 0 else "高")
-    _state_txt = {"緊": "勞動市場仍偏緊，薪資有上行壓力",
+    _state_txt = {"緊": "勞動市場偏緊，薪資有上行壓力",
                   "鬆": "勞動市場已偏鬆",
-                  "中性": "大致在合理水準"}.get(u['state'], u['state'])
+                  "中性": "落在充分就業範圍內"}.get(u['state'], u['state'])
     return f"""<details class="f-more">
-  <summary>現在的失業率算高還是低？　比「不推升通膨的水準」{_pos}
-    <b style="color:{u['color']}">{abs(gap):.1f} 個百分點</b>——{esc(_state_txt)}</summary>
-  <div class="f-detail">經濟學家估計，美國失業率若低於約 {u['ustar']:.1f}%，
-    勞動市場就緊到會推升薪資與通膨。目前 {u['u']:.1f}%，比那條線{_pos}
-    {abs(gap):.1f} 個百分點——工作比「剛好」的狀態更{'好' if gap < 0 else '難'}找，
-    對聯準會是{'偏升息' if gap < 0 else '偏降息'}的背景。<br>
-    這條線（CBO 估計的自然失業率，{esc(u['as_of'])}）一季更新一次、會回頭修正，
-    估計誤差本身就有 ±0.2 個百分點——所以差距在 ±0.2 以內一律當中性，
-    也不拿它設任何門檻。</div>
+  <summary>現在的失業率算高還是低？　比 FOMC 認定的充分就業{_pos}
+    <b>{abs(gap):.1f} 個百分點</b>——{esc(_state_txt)}</summary>
+  <div class="f-detail">聯準會每季在經濟預測（SEP）裡寫下委員們心中的「長期充分就業失業率」：中位數 {u['ustar']:.1f}%，多數委員落在 {u['lo']:.1f}–{u['hi']:.1f}%（中央趨勢，{esc(u['as_of'])} 那一次的預測）。失業率低於這個範圍，勞動市場緊到會推升薪資與通膨；高於這個範圍，代表已經出現閒置。目前 {u['u']:.1f}%。就業格位用的就是這個範圍——同一頁只用這一條基準。</div>
 </details>"""
 
 
@@ -221,16 +214,17 @@ def _structure_block(u: dict | None) -> str:
         f'<div class="ustr {r["kind"]}">'
         f'<div class="us-name">{esc(r["label"])}</div>'
         f'<div class="us-bar"><i style="width:{r["share"]:.1f}%"></i></div>'
-        f'<div class="us-val">{esc(r["display"])}</div>'
-        f'<div class="us-yoy">較一年前 {esc(r["yoy_display"])}</div></div>'
+        f'<div class="us-val">{r["share"]:.1f}%</div>'
+        f'<div class="us-yoy">比重較一年前 <b>{esc(r["share_yoy_display"])}</b>'
+        f'　·　人數 {esc(r["display"])}（較一年前 {esc(r["yoy_display"])}）</div></div>'
         for r in u["rows"])
     # 結論直接寫在收合列上，點開前就知道答案
     _v = (u.get("verdict") or "").rstrip("。")
     return f"""<details class="f-more ustruct"><summary>失業的人是怎麼變成失業的　·　{esc(_v)}</summary>
   <div class="ustr-list" style="margin-top:12px">{rows}</div>
-  <p class="hint" style="margin-top:10px">{esc(u.get('lt_note', ''))}
-    橫條＝佔各類合計的比例。重點看<b>較一年前的變化</b>，不是誰最大——
-    「失去工作」長期本來就是最大的一塊。</p>
+  <p class="hint" style="margin-top:10px">橫條與百分比＝佔全部失業人口的比例（BLS 官方序列）。重點看<b>比重較一年前的變化</b>：人數會跟著勞動力規模一起變——勞動力縮小時每一類人數都會下降——比例才看得出結構有沒有變。{esc(u.get('lt_note', ''))}</p>
+  <div style="margin-top:14px">{u.get('chart', '')}</div>
+  <p class="hint" style="margin-top:6px">各類失業原因的比重（2025 年起，四類加總＝100%）。</p>四類加總＝100%；深色陰影＝衰退期間）。</p>
 </details>"""
 
 
@@ -250,7 +244,7 @@ def _claims_card(c: dict | None) -> str:
     <div class="impact {lean_cls}">{esc(c['verdict'])}</div>
     <div class="stat-row" style="margin-top:14px">{_stats(c['stats'])}</div>
     <div style="margin-top:16px">{c['chart']}</div>
-    <p class="hint" style="margin-top:8px">續領失業金人數（近兩年，單位萬人）</p>
+    <p class="hint" style="margin-top:8px">續領失業金人數（{esc(c.get('chart_span', '今年以來'))}，單位萬人）</p>
     {teach(
         "每週有多少人新申請失業補助（初領）、多少人還在領（續領）。",
         "這是兩次就業報告之間唯一會更新的勞動數據。初領量的是裁員的速度、續領量的是再就業的難度——兩者可以背離，而背離是勞動市場轉弱最早的形態。",
@@ -326,33 +320,59 @@ VERDICT_COPY = {
 }
 
 
-def _score_axis(sc: dict, compact: bool = False) -> str:
-    """
-    綜合強弱指數的刻度條。
+def _lead_txt(n) -> str:
+    if n is None:
+        return "未亮"
+    if n < 0:
+        return f"起點前 {-n} 個月"
+    if n == 0:
+        return "起點當月"
+    return f"起點後 {n} 個月"
 
-    這條軸原本只在頁面最底下出現，但它是整頁唯一一個「把所有指標壓成
-    一個可比數字」的東西——讀者要先知道現在幾分，才有辦法判斷底下每一項
-    的輕重。所以結論卡直接帶一份，明細留在原位。
+
+def _jl_block(jl: dict | None) -> str:
     """
-    pct = max(0, min(100, (sc["score"] + 2.5) / 5 * 100))
-    color = "var(--good)" if sc["score"] > 0 else "var(--critical)"
-    left = min(50, pct) if sc["score"] < 0 else 50
-    width = abs(pct - 50)
-    delta = ("" if sc.get("delta") is None
-             else f'　·　較上月 {sc["delta"]:+.2f}')
-    cls = " compact" if compact else ""
-    return f"""<div class="sax{cls}">
-  <div class="sax-head">
-    <span class="sax-label">綜合強弱指數</span>
-    <span class="sax-val" style="color:{color}">{sc['score']:+.2f}</span>
-    <span class="sax-delta">{esc(delta)}</span>
-  </div>
-  <div class="score-bar">
-    <i style="left:{left}%;width:{width}%;background:{color}"></i>
-    <span class="score-mid"></span>
-  </div>
-  <div class="sax-scale"><span>−2.5 疲弱</span><span>0 持平</span><span>+2.5 強勁</span></div>
-</div>"""
+    失去工作者比重：歷次衰退對照（即時用同一條序列重算）。
+    使用者的要求：衰退警訊要「對比過往每一次衰退」。
+    """
+    if not jl or not jl.get("signals"):
+        return ""
+    s = jl["signals"]
+    rows = []
+    for r in jl.get("recessions") or []:
+        note = "" if r["independent"] else "（緊接 1980 年衰退，無法獨立檢驗）"
+        watch = "樣本不足" if r.get("watch_na") else _lead_txt(r["watch_lead"])
+        rows.append(
+            f'<tr><td>{esc(r["peak"])}{esc(note)}</td>'
+            f'<td>{r["low"]:.1f}% → {r["high"]:.1f}%</td>'
+            f'<td>+{r["rise"]:.1f}</td>'
+            f'<td>{esc(watch)}</td><td>{esc(_lead_txt(r["alert_lead"]))}</td></tr>')
+    rise, z = s.get("rise"), s.get("z")
+    rows.append(
+        f'<tr class="cur"><td><b>現在（{esc(s["date"])}）</b></td>'
+        f'<td>{s["share"]:.1f}%</td>'
+        f'<td>{"—" if rise is None else f"{rise:+.1f}"}</td>'
+        f'<td>z {"—" if z is None else f"{z:+.2f}"}</td>'
+        f'<td>{esc(STATUS_TEXT.get(s["state"], ""))}</td></tr>')
+    fa = jl.get("false_alarms") or {}
+    _w, _a = fa.get("watch") or [], fa.get("alert") or []
+    fa_txt = (f"非衰退期間的誤報：留意 {len(_w)} 次（{'、'.join(x[:4] for x in _w) or '無'}）；"
+              f"警戒 {len(_a)} 次（{'、'.join(_a) or '無'}）。")
+    return f"""<details id="jl" data-m-collapse open><summary>失去工作者比重：歷次衰退對照</summary>
+  <p class="hint" style="margin:10px 0 8px">比重＝失業的人當中，被裁員、約滿沒續的比例。
+    「上升」欄是衰退前後比重（三個月平均）從低點到高點的幅度；兩個亮燈欄是這兩條規則
+    第一次亮的時間，對照衰退起點（NBER 景氣高峰月）。</p>
+  <div class="tscroll"><table>
+    <thead><tr><th>衰退起點</th><th>比重：低點 → 高點</th><th>上升（個百分點）</th>
+      <th>留意亮燈</th><th>警戒亮燈</th></tr></thead>
+    <tbody>{"".join(rows)}</tbody></table></div>
+  <p class="hint" style="margin-top:10px">留意＝比重近 3 個月的變化，是過去 60 個月平常波動的
+    {_jlm.Z_WATCH} 倍標準差以上（早，但雜訊多）；警戒＝比重三個月平均較過去一年最低點上升
+    {_jlm.RISE_ALERT:.0f} 個百分點以上、連 {_jlm.RISE_PERSIST} 個月（晚一些，但很少誤報），
+    達到時九宮格的就業格位往弱推一格。{esc(fa_txt)}
+    兩個門檻都是本站以 {esc(jl.get("first") or "")} 起的資料回測選定，不是外部標準。
+    對照組：Sahm 法則（失業率版）同期每次都在衰退開始後才觸發，且在 2024 年 7 月誤報。</p>
+</details>"""
 
 
 def _verdict_card(d: dict) -> str:
@@ -364,14 +384,13 @@ def _verdict_card(d: dict) -> str:
     n_haw = sum(1 for f in flags if f.lean == "hawkish")
     n_neu = len(flags) - n_dov - n_haw
 
-    top = next((f for f in flags if f.severity == "alert"), flags[0] if flags else None)
+    top = flags[0] if flags else None          # 已按層級排好
     lead = f"最主要的訊號是：{top.headline}。" if top else ""
 
     return f"""<div class="verdict {tilt['tilt']}">
   <div class="v-eyebrow">{esc(d['data_month'])} 就業報告　·　一句話結論</div>
   <div class="v-main">{esc(title)}</div>
   <div class="v-why">{esc(lead)}{esc(why)}</div>
-  {_score_axis(d['score'], compact=True)}
   <div class="v-count">
     本次共 {len(flags)} 項訊號：{n_dov} 項利降息、{n_haw} 項利升息、{n_neu} 項中性。
     {AXIS_NOTE}
@@ -415,16 +434,29 @@ def _labor_body_full(d: dict) -> str:
                   en="Labor Force Participation", leans=lean.get("lfpr", ())),
     ])
 
-    rev, att, dec, sc = d["revision"], d["attribution"], d["decomp"], d["score"]
+    rev, att, dec = d["revision"], d["attribution"], d["decomp"]
 
-    flags_html = "".join(_flag_row(f) for f in d["flags"]) or \
-        '<div class="empty">本次沒有觸發任何訊號</div>'
+    # 分層呈現（rules.TIERS）：先講改變頭條解讀的，再講趨勢轉折，最後是背景。
+    # 每層一個小標；同層內已由 run_rules 按嚴重度與強度排好。
+    _parts, _cur = [], None
+    for f in d["flags"]:
+        if f.tier != _cur:
+            _cur = f.tier
+            _parts.append(f'<div class="sig-tier">{esc(rules.TIERS.get(f.tier, ""))}</div>')
+        _parts.append(_flag_row(f))
+    flags_html = "".join(_parts) or '<div class="empty">本次沒有觸發任何訊號</div>'
+    _fl = d.get("flow")
+    flow_html = (
+        f'<div class="sig-sum"><b>本期總結：{esc(_fl["name"])}</b>'
+        f'<span>{esc(_fl["meaning"])}。招聘率 {_fl["hires"]:.1f}%、裁員率 '
+        f'{_fl["layoffs"]:.1f}%（JOLTS {esc(_fl["month"])}；疫情前 2015–2019 平均 '
+        f'{_fl["base_h"]:.1f}%、{_fl["base_l"]:.1f}%，差距 0.1 個百分點以內算正常）。'
+        '</span></div>') if _fl else ""
     # 每顆燈連回它的「主場」卡區——燈只給狀態，完整脈絡在那裡。
     # 用標籤關鍵字對照，config 改標籤時對不到就只是不顯示連結，不會壞。
-    _anchor_map = [("衰退警訊", "#unrate"), ("職缺", "#kpi"),
+    _anchor_map = [("失去工作者", "#jl"), ("職缺", "#kpi"),
                    ("離職率", "#kpi"), ("裁員率", "#kpi"),
-                   ("失業補助", "#claims"), ("新增工作", "#kpi"),
-                   ("壯年就業", "#kpi"), ("隱藏性失業", "#kpi")]
+                   ("失業補助", "#claims"), ("壯年就業", "#kpi")]
 
     def _anchor(label: str) -> str:
         return next((a for k, a in _anchor_map if k in label), "")
@@ -500,11 +532,15 @@ def _labor_body_full(d: dict) -> str:
     )
     att_rows = "".join(
         f'<tr><td>{esc(r["label"])}</td>'
+        f'<td class="muted-cell">{esc(r["group"])}</td>'
         f'<td class="{"pos" if r["value"]>=0 else "neg"}">{esc(fmt.wan(r["value"], unit=""))}</td>'
-        f'<td class="muted-cell">{esc(r["share"])}</td>'
         f'<td class="muted-cell">{esc(r["own"])}</td></tr>'
         for r in att["table"]
     )
+    # 兩組各自一張長條（加總寫在上方的統計列，這裡不再重複）
+    groups_html = "".join(
+        f'<div class="att-grp"><div class="att-ghead">{esc(g["title"])}</div>{g["bars"]}</div>'
+        for g in (att.get("groups") or []))
     # 淨額遠小於毛額時要明講。「總變動 −2.3 萬」單看像是這個月沒事，
     # 實際上是 +5.9 萬的增加被 −11.1 萬的減少蓋過去——那才是重點。
     _g = att.get("gross") or {}
@@ -512,10 +548,7 @@ def _labor_body_full(d: dict) -> str:
     if _g.get("offsetting"):
         # 明細加總不等於總數（行業別未涵蓋全部非農），差額要一起講出來，
         # 否則讀者拿畫面上的兩個數字相減會對不上「全體合計」。
-        _resid = _g.get("unexplained") or 0
-        _resid_txt = (f'；行業明細合計 {esc(fmt.wan(_g["explained"]))}，'
-                      f'與全體合計的差 {esc(fmt.wan(_resid))} 來自未單獨列出的行業'
-                      if abs(_resid) >= 5 else "")
+        _resid_txt = ""
         # 這句就是這張卡的結論——用統一的 .impact 框，不再用警告框
         #（warnbox 保留給真正的資料異常）。
         gross_note = (
@@ -523,24 +556,6 @@ def _labor_body_full(d: dict) -> str:
             f'淨額小，是增減互相抵消：本月 {esc(fmt.wan(_g["positive"]))} 的增加'
             f'被 {esc(fmt.wan(_g["negative"]))} 的減少蓋過{_resid_txt}。'
             '「沒什麼事」與「大幅變動但互相抵消」，對政策的意涵完全不同。</div>')
-    # 每一列的樣本期數不一樣（週資料換算成月之後只有十幾個月，
-    # 月資料是 60 個月）。用 min() 一句話蓋掉全部，會把六列 5 年期的
-    # z-score 說成 14 個月——差 4 倍多。所以逐列標出來。
-    score_items = "".join(
-        # 欄序：窄螢幕上表格要橫向捲，被推出畫面的應該是最不重要的那欄，
-        # 所以「樣本月數」放最後，貢獻留在看得到的位置
-        f'<tr><td>{esc(i["label"])}</td><td>{i["z"]:+.2f}</td>'
-        f'<td class="muted-cell">{i["weight"]:.1f}</td>'
-        f'<td class="{"pos" if i["contribution"]>=0 else "neg"}">{i["contribution"]:+.2f}</td>'
-        f'<td class="muted-cell">{i.get("window") or "—"}</td></tr>'
-        for i in sc["items"]
-    )
-    _wins = [i.get("window") or 0 for i in sc["items"] if i.get("window")]
-    win_note = (f"各列的樣本期數介於 {min(_wins)} 到 {max(_wins)} 個月之間"
-                if _wins and min(_wins) != max(_wins)
-                else (f"各列都以近 {_wins[0]} 個月為樣本" if _wins else ""))
-    short_note = ("　週頻序列（申請失業金）換算成月之後樣本較短，"
-                  "那兩列的分數波動會比其他列大。" if _wins and min(_wins) < 24 else "")
     failed_html = ""
     if d.get("failed"):
         items = "".join(f"<li>{esc(a)} — {esc(b)}</li>" for a, b in d["failed"])
@@ -551,8 +566,7 @@ def _labor_body_full(d: dict) -> str:
 
     # 收合摘要：最嚴重的那一條訊號。收合狀態下這是讀者判斷
     # 「要不要點開」的唯一依據——只寫標題的話得逐一點開才知道哪張有事。
-    _top = next((f for f in d["flags"] if f.severity == "alert"),
-                (d["flags"] or [None])[0])
+    _top = (d["flags"] or [None])[0]          # 已按層級排好，第一條就是最該先看的
     _sig_sum = (f'{len(d["flags"])} 項　·　{_top.headline}' if _top
                 else "本次沒有觸發任何訊號")
     _kpi_sum = (f'非農 {k["nfp_display"]}　·　失業率 {k["u3_display"]}'
@@ -564,7 +578,7 @@ def _labor_body_full(d: dict) -> str:
     _rev_sum = next((f'{s["label"]} {s["value"]}' for s in rev["stats"]
                      if s["value"] not in ("—", "")), "本次無修正資料")
     # 修正卡的一句結論：拿「近一年修正傾向」那格組出來（它就是這卡的重點）。
-    _rev_bias = next((s for s in rev["stats"] if "傾向" in s.get("label", "")), None)
+    _rev_bias = next((s for s in rev["stats"] if "月度修正" in s.get("label", "")), None)
     if _rev_bias and _rev_bias.get("value") not in ("—", ""):
         _rb_lean = ("dovish" if str(_rev_bias["value"]).startswith("-")
                     else "hawkish" if str(_rev_bias["value"]).startswith("+")
@@ -581,12 +595,10 @@ def _labor_body_full(d: dict) -> str:
         f'{_n} 項{_lab}' for _k, _lab in
         (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
          ("unknown", "無資料")) if (_n := _lt.get(_k)))
-    # 收合摘要要用人話。「+0.13 · 較上期 +0.02」對一般讀者是密碼——
-    # 先講判定（強／中性／弱），數字降級成括號裡的佐證。
-    _sv = sc["score"]
-    _sw = "偏強" if _sv > 0.45 else ("偏弱" if _sv < -0.45 else "中性")
-    _score_sum = (f'綜合判定：就業{_sw}（{_sv:+.2f}，0 為歷史平均）')
-    _sw_lean = {"偏強": "hawkish", "偏弱": "dovish"}.get(_sw, "neutral")
+    # 綜合判定：數燈號，不算分數（規則見 regime.verdict）
+    _vd = regime.verdict(d["lights"])
+    _score_sum = f'綜合判定：{_vd["label"]}（{_vd["reason"]}）'
+    _sw_lean = _vd["lean"]
 
     return f"""
 {_verdict_card(d)}
@@ -594,7 +606,8 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
-    <p class="hint">這個月<b>新發生</b>的事；目前的整體狀態看下方「關鍵指標檢核」。點「依據」看支撐的數字。</p>
+    <p class="hint">這個月<b>新發生</b>的事，依「改變頭條數字的解讀 → 趨勢轉折 → 結構背景」排列；目前的整體狀態看下方「關鍵指標檢核」。點「依據」看支撐的數字。</p>
+    {flow_html}
     {flags_html}
   </div>
 </div>
@@ -619,7 +632,7 @@ def _labor_body_full(d: dict) -> str:
     {_ustar_row(d.get('ustar'))}
     {teach(
         "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
-        "失業率只算「還在找工作」的人，所以下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
+        "放棄找工作的人不算在勞動力裡，所以失業率下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
         "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
     {_structure_block(d.get('unemp_structure'))}
   </div>
@@ -630,30 +643,28 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="industry" data-sum="{esc(_att_sum)}">行業別貢獻分解</h2>
-    <p class="hint">只列增減最大的各三個與變動異常的行業；
-      完整 {att['total_count']} 個行業收在下方表格。</p>
+    <p class="hint">分兩組看：景氣敏感行業列出增減最大的各三個與變動異常的，
+      醫療與政府全部列出；完整 {att['total_count']} 個行業收在下方表格。</p>
     {gross_note}
     <div class="stat-row" style="margin-top:14px">{_stats(att['stats'])}</div>
-    <div style="margin-top:14px">{att['bars']}</div>
+    {groups_html}
     <div class="dlegend">
       <span><i style="background:var(--pos)"></i>增加</span>
       <span><i style="background:var(--neg)"></i>減少</span>
-      <span><i style="background:var(--muted-bar)"></i>不受景氣影響／加總列</span>
+      <span>▲＝相對自己的歷史異常大</span>
       <span>單位：萬人</span>
     </div>
+    {f'<p class="hint" style="margin-top:8px">{esc(att["lge_note"])}</p>' if att.get("lge_note") else ""}
     {teach(
-        "這個月新增（或減少）的就業，是哪幾個行業貢獻的。",
-        "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個行業，意義完全不同——前者跟景氣無關，後者代表整體經濟在擴張。",
-        "先看增與減集中在誰身上，再看圖下方有沒有標 ▲ 的異常行業——那代表它這次的變動比自己平常的波動大很多，通常是產業出事或政策轉向的訊號。")}
+        "這個月新增（或減少）的就業，來自哪些行業。",
+        "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個民間行業，意義完全不同——醫療與政府長期都在增加、跟景氣關係不大，民間的景氣敏感行業才反映整體經濟。",
+        "先看上面那條算式：景氣敏感行業是增是減。再看哪幾個行業在帶頭，以及有沒有標 ▲ 的——那代表它這次的變動比自己平常大很多，通常是產業出事或政策轉向的訊號。")}
     <details data-m-collapse><summary>全部 {att['total_count']} 個行業</summary>
       <div class="tscroll" style="margin-top:10px"><table>
-        <thead><tr><th>行業</th><th>增減（萬人）</th><th>同向佔比</th><th>自身變動</th></tr></thead>
+        <thead><tr><th>行業</th><th>類別</th><th>增減（萬人）</th><th>自身變動</th></tr></thead>
         <tbody>{att_rows}</tbody></table></div>
       <p class="hint" style="margin-top:10px">
-        「同向佔比」＝這個行業佔<b>同方向</b>總額的比例：增加的行業除以全部增加合計、
-        減少的行業除以全部減少合計。不用淨變動當分母，因為淨額接近零時會算出
-        −165%、+204% 這種讀不出意義的數字。
-        「自身變動幅度」＝該行業的月變動相對自己就業規模的百分比，
+        「自身變動」＝該行業這個月的增減，佔它自己就業規模的百分比，
         用來比較不同規模的行業誰動得比較劇烈。</p>
     </details>
   </div>
@@ -680,28 +691,18 @@ def _labor_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(_light_sum)}　·　{esc(_score_sum)}">關鍵指標檢核與綜合強弱</h2>
-    <p class="hint">目前的整體狀態（不限本月）：先數紅燈，再看加權出來的一個總分。</p>
+    <p class="hint">目前的整體狀態（不限本月）：逐項對照警戒線，再數燈號下結論。</p>
     <div class="impact {_sw_lean}">{esc(_score_sum)}　·　{esc(_light_sum)}</div>
-    <details data-m-collapse open><summary>八項指標</summary>
+    <details data-m-collapse open><summary>{len(d["lights"])} 項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
-    {_score_axis(sc)}
+    <p class="hint" style="margin-top:10px">判定規則：{esc(regime.VERDICT_RULE)}
+      結論只講趨勢健康度；格位（強／中／弱）仍由失業率水準決定。</p>
+    {_jl_block(d.get("job_losers"))}
     {teach(
-        "八個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線；再把它們換算成同一把尺、加權平均成一個總分。",
-        "單一指標常常騙人（失業率可以因為錯的原因下降），但八個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。指標會互相矛盾時（非農弱但職缺強），總分強迫所有指標表態，給一個唯一的方向。",
-        "先數紅燈：0–1 個警戒是正常雜訊；三個以上同時亮，歷史上多半已接近轉折。總分看正負與連續趨勢就好——連續幾期往下掉比單期的絕對值重要；格位判定仍以失業率為準。")}
-    <details data-m-collapse><summary>總分的各指標貢獻明細</summary>
-      <div class="tscroll" style="margin-top:10px"><table>
-        <thead><tr><th>指標</th><th>標準分數</th><th>權重</th>
-          <th>貢獻</th><th>樣本月數</th></tr></thead>
-        <tbody>{score_items}</tbody></table></div>
-      <p class="hint" style="margin-top:10px">
-        「標準分數」的意思：這個指標現在離自己的平常水準有多遠、
-        以自己平常的波動幅度為單位——+1 代表比平均高出一個「平常的波動」，
-        數字越大越不尋常。方向已統一成「正值＝就業強」。{esc(win_note)}，
-        所以「樣本月數」逐列標出，不同列的分數不完全可比。{esc(short_note)}
-        權重目前為暫定值，僅供輔助判讀。</p>
-    </details>
+        "幾個歷史上最能提早反映就業轉折的指標，逐一對照它們的警戒線，再數有幾個亮燈。",
+        "單一指標常常騙人（失業率可以因為錯的原因下降），但幾個一起看就很難全部同時騙你。這也是聯準會自己的做法——看儀表板，不看單一數字。",
+        "先看失去工作者比重：它是衰退最典型的型態（被裁員的人快速變多）。再數其他燈：零星一兩個留意是正常雜訊，好幾個同時亮才代表轉折。")}
   </div>
 </div>
 
@@ -712,7 +713,8 @@ def _labor_body_full(d: dict) -> str:
       <dt>非農就業人數</dt>
       <dd>美國政府向企業調查得出的就業人數，不含農業。最受市場關注的就業指標。</dd>
       <dt>失業率</dt>
-      <dd>在「有在找工作的人」當中，找不到工作的比例。已經放棄找工作的人不算在內。</dd>
+      <dd>勞動力（有工作的人＋正在找工作的人）當中，沒有工作、正在找工作的人佔的比例。
+        已經放棄找工作的人不在勞動力裡，分子分母都不算。</dd>
       <dt>勞動參與率</dt>
       <dd>16 歲以上人口中，有在工作或正在找工作的比例。退休、就學、放棄找工作的人不算。</dd>
       <dt>JOLTS</dt>
@@ -758,21 +760,30 @@ def labor_body(d: dict) -> str:
     """就業頁首卡固定回答：格位、方向、非農、失業率與下一格門檻。"""
     ax, k = d.get("axis") or {}, d.get("kpi") or {}
     u, lo, hi = ax.get("unrate"), ax.get("u_lo"), ax.get("u_hi")
-    if ax.get("sahm_triggered"):
-        state, basis = "弱", "Sahm 法則已觸發"
-    elif None not in (u, lo, hi):
-        state = "弱" if u > hi else ("強" if u < lo else "中")
-        basis = f"失業率 {u:.1f}% 對照 FOMC 長期區間 {lo:.1f}–{hi:.1f}%"
-    else:
+    # 格位與方向直接呼叫九宮格同一套函式——先前這裡自己重寫一份判斷，
+    # 兩邊各改各的就會出現「就業頁說中、九宮格說弱」。
+    level = _scn.labor_level(ax)
+    if level is None:
         state, basis = "資料不足", "缺少失業率或 FOMC 長期區間"
-    momentum = "轉弱" if (ax.get("u3_rising") or ax.get("sahm_triggered")) else "持平"
-    _rise = ax.get("sahm")
-    if state == "中" and hi is not None and u is not None:
-        trigger = f"失業率高於 {hi:.1f}% 轉弱（距離 {hi-u:.1f}pp）"
-    elif state == "強" and lo is not None:
-        trigger = f"失業率升回 {lo:.1f}% 以上離開強區"
     else:
-        trigger = "持續確認失業率與 Sahm 法則"
+        state, _bk = _scn.classify_labor(None, None, ax)
+        basis = f"失業率 {u:.1f}% 對照 FOMC 長期區間 {lo:.1f}–{hi:.1f}%"
+        if _bk == "job_losers":
+            basis += f"（水準為「{level}」，失去工作者比重警戒往弱推一格）"
+    momentum = _scn.classify_labor_momentum(ax)
+    share, rise, z = ax.get("jl_share"), ax.get("jl_rise"), ax.get("jl_z")
+    _jl_note = "　或失去工作者比重達警戒"
+    if level is not None and state != level:
+        trigger = (f"失去工作者比重回到較一年低點 {_jlm.RISE_ALERT:.0f} 個百分點以內，"
+                   f"回到「{level}」（目前 {rise or 0:+.1f}）")
+    elif state == "中" and hi is not None and u is not None:
+        trigger = f"失業率高於 {hi:.1f}% 轉弱（距離 {hi-u:.1f}pp）{_jl_note}"
+    elif state == "強" and lo is not None:
+        trigger = f"失業率升回 {lo:.1f}% 以上離開強區{_jl_note}"
+    elif state == "弱" and hi is not None and u is not None:
+        trigger = f"失業率回到 {hi:.1f}% 以下轉回「中」（距離 {u-hi:.1f}pp）"
+    else:
+        trigger = "等待失業率與 FOMC 長期區間資料"
     kind = "dovish" if state == "弱" or momentum == "轉弱" else "hawkish" if state == "強" else "neutral"
     state_text = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(state, state)
     metrics = "".join([
@@ -781,9 +792,17 @@ def labor_body(d: dict) -> str:
         state_chip("非農就業｜最新", k.get("nfp_display", "—"), k.get("nfp_sub", "")),
         state_chip("失業率 U-3", k.get("u3_display", "—"), k.get("u3_sub", "")),
     ])
-    _rise_txt = f"{_rise:+.2f} 個百分點" if _rise is not None else "—"
+    if share is not None:
+        _dir = (f"失去工作者佔失業人口 {share:.1f}%：3 個月變化 z 值 "
+                + ("—" if z is None else f"{z:+.1f}")
+                + f"（≥{_jlm.Z_WATCH} 留意＝方向轉弱）；較一年低點 "
+                + ("—" if rise is None else f"{rise:+.1f} 個百分點")
+                + f"（連 {_jlm.RISE_PERSIST} 個月 ≥{_jlm.RISE_ALERT:.0f} 警戒＝格位往弱推一格）。"
+                "門檻為本站回測選定，見下方歷次衰退對照。")
+    else:
+        _dir = "缺少失去工作者比重資料。"
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>水準怎麼定</b><span>{esc(basis)}</span></div>'
-             f'<div class="logic-step"><b>方向怎麼定</b><span>失業率較近一年低點回升：{_rise_txt}；達 0.20（本站門檻）即轉弱、0.50（Sahm）為衰退訊號。</span></div>'
+             f'<div class="logic-step"><b>方向怎麼定</b><span>{esc(_dir)}</span></div>'
              f'<div class="logic-step"><b>下一格觸發</b><span>{esc(trigger)}</span></div></div>')
     logic = focus_evidence(logic)
     a = d.get("asof") or {}
@@ -799,7 +818,7 @@ def labor_body(d: dict) -> str:
             + '</div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Labor now</div>'
             f'<h2 class="focus-title">就業{state_text}，動能{momentum}</h2>'
-            '<p class="focus-sub">失業率的水準決定格位；失業率的回升速度決定移動方向。</p>'
+            '<p class="focus-sub">失業率的水準決定格位；失業者中被裁員的比重升多快，決定移動方向。</p>'
             f'<div class="focus-grid">{metrics}</div>{logic}{tags}</div></div>')
     return hero + compact_full(_labor_body_full(d), "完整就業拆解")
 

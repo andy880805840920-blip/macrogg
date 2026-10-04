@@ -131,9 +131,9 @@ _COVERED = {
     # 月步速訊號：重點句（_takeaway）已經在講 0.2 準則，組裝版再挑
     # 這幾條就是同一件事同段講兩次
     "pace_hot", "pace_above", "pace_ontrack",
-    # 失業率回升／Sahm 家族：勞動手寫句已涵蓋（「惡化已經開始」
-    # ／「快速轉弱」），挑了必重複
-    "u3_rising", "sahm_trigger", "sahm_approaching",
+    # 失去工作者比重家族：勞動手寫句已涵蓋（「惡化的早期訊號」
+    # ／「往弱推一格」），挑了必重複
+    "jl_watch", "jl_alert",
 }
 
 
@@ -146,7 +146,7 @@ def _pick_signal(flags, covered=_COVERED) -> str:
     再下一期可能兩條都沒觸發。寫死等於把某一期的狀況當成常態。
 
     挑選規則完全是機械的：
-      ① flags 進來時已依嚴重度排序（alert → watch → info），取第一條
+      ① flags 進來時已排好序（就業：層級→嚴重度→強度；通膨：嚴重度），取第一條
       ② 跳過 _COVERED——那些手寫句子已經講過了
       ③ 只取 headline（規則引擎寫好的白話結論），不自己造句
 
@@ -346,7 +346,7 @@ def _whats_new(ctxs: dict) -> str:
 # ---------------------------------------------------------------------------
 def _labor(ax: dict | None, month: str = "", signal: str = "") -> str:
     """
-    就業：水準（失業率相對 FOMC 認定的充分就業區間）＋ 動能（Sahm／損益兩平）
+    就業：水準（失業率相對 FOMC 認定的充分就業區間）＋ 動能（失去工作者比重）
     ＋ 這一期最嚴重的一條訊號。
 
     分支順序跟 scenario.classify_labor 一致，畫面上的敘述才不會跟格位打架。
@@ -363,19 +363,18 @@ def _labor(ax: dict | None, month: str = "", signal: str = "") -> str:
     us = _pct(u)
     m = f"{month}" if month else ""
     sig = f"；{signal}" if signal else ""
-    if ax.get("sahm_triggered"):
-        return f"就業已在快速轉弱：{m}失業率 {us}，Sahm 法則觸發衰退門檻{sig}。"
+    _rise = ax.get("jl_rise")
+    if ax.get("jl_alert"):
+        return (f"就業已在快速轉弱：{m}失業率 {us}，失業者中被裁員的比重較一年"
+                f"低點上升 {_rise or 0:.1f} 個百分點、達衰退型態的警戒{sig}。")
     if lo is None or hi is None:
         return f"就業方面，{m}失業率 {us}{sig}。"
-
-    _rise = ax.get("sahm")
-    pair = (f"失業率已較近一年低點回升 {_rise:.2f} 個百分點"
-            if _rise is not None else "失業率已開始回升")
     if u > hi:
         return (f"{m}失業率 {us} 已高於聯準會認定的充分就業上緣 "
                 f"{_pct(hi)}{sig}。")
-    if ax.get("u3_rising"):
-        return f"{m}失業率 {us} 仍算充分就業，但{pair}，惡化已經開始{sig}。"
+    if ax.get("jl_watch"):
+        return (f"{m}失業率 {us} 仍算充分就業，但失業者中被裁員的比重異常上升，"
+                f"是惡化的早期訊號{sig}。")
     if u < lo:
         return f"{m}失業率 {us} 低於充分就業下緣 {_pct(lo)}，勞動市場仍緊{sig}。"
     return f"{m}失業率 {us} 落在充分就業區間 {_pct(lo)}–{_pct(hi)} 之內{sig}。"

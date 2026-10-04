@@ -214,7 +214,7 @@ class _S:
 
 
 AX = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3, "nfp_3m": 20.0,
-      "sahm": 0.25, "u3_rising": True, "sahm_triggered": False}
+      "jl_rise": 0.25, "u3_rising": True, "sahm_triggered": False}
 
 
 def brief_text(prov):

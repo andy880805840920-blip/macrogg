@@ -19,14 +19,14 @@ def check(name, cond, detail=""):
 SC = NS(lean="hawkish", name="通膨主導", binding="通膨", triggers=[],
         labor_state="中", infl_state="高", labor_momentum="轉弱")
 # 判定包現在以訊號為主體：數字活在訊號 headline 裡（跟正式管線一致——
-# 規則引擎的 u3_rising／pace_above 訊號就長這樣）
+# 規則引擎的 jl_watch／pace_above 訊號就長這樣）
 FLG_LAB = [NS(headline="失業率已較近一年低點回升 0.25 個百分點")]
 FLG_INF = [NS(headline="核心 CPI 月步速已連續 4 個月高於 0.2% 的目標步速")]
 FLG = [NS(headline="核心服務黏性仍高")]
 CTX = {
     "scenario": {"scenario": SC},
     "labor": {"axis": {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3,
-                       "sahm": 0.25, "nfp_3m": 200.0}, "flags": FLG_LAB},
+                       "jl_rise": 0.25, "nfp_3m": 200.0}, "flags": FLG_LAB},
     "inflation": {"summary": NS(pce_core_yoy=2.8, core_yoy=2.5),
                   "core_pace3": 0.3, "core_pace_hot": 4, "flags": FLG_INF},
     "fomc": {"empty": False, "shift": {"direction": "hawkish"},
@@ -139,7 +139,7 @@ from types import SimpleNamespace as _NS10
 _CTX10 = {
     "scenario": {"scenario": SC},
     "labor": {"axis": {"unrate": 4.1333333, "u_lo": 4.0, "u_hi": 4.3,
-                       "sahm": 0.2533333, "nfp_3m": 200.0},
+                       "jl_rise": 0.2533333, "nfp_3m": 200.0},
               "flags": FLG_LAB},
     "inflation": {"summary": _NS10(pce_core_yoy=3.0483870967,
                                    core_yoy=2.4838709677),

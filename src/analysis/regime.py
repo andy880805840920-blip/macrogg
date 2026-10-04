@@ -12,8 +12,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .core import (sahm_rule, moving_avg, value_at, zscore,
-                   zscore_window, diff_series)
+from .core import value_at, zscore, zscore_window, diff_series
+from . import job_losers
 from .. import fmt
 
 
@@ -35,7 +35,8 @@ class Light:
 
 
 def _classify(value: float | None, cfg: dict) -> str:
-    if value is None:
+    if value is None or cfg.get("direction") == "custom":
+        # custom：狀態由計算端直接給（失去工作者比重是兩條規則合判）
         return "unknown"
     if cfg["direction"] == "higher_is_worse":
         if "green_below" in cfg and value < cfg["green_below"]:
@@ -53,14 +54,12 @@ def _classify(value: float | None, cfg: dict) -> str:
 
 # 各燈號歷史值的顯示格式，須與 _compute_light_values 的 display 格式一致
 _HISTORY_LABEL_FMT = {
-    "sahm": lambda v: f"{v:+.2f}",
+    "job_losers": lambda v: f"較一年低點 {v:+.1f}pp",
     "vu_ratio": lambda v: f"{v:.2f}",
     "quits_rate": lambda v: f"{v:.1f}%",
     "layoff_rate": lambda v: f"{v:.1f}%",
     "prime_epop": lambda v: f"{v:.1f}%",
     "continuing_claims": lambda v: fmt.persons_to_wan(v, digits=0),
-    "nfp_3m_avg": lambda v: fmt.wan(v),
-    "u6_u3_gap": lambda v: f"{v:.2f}pp",
 }
 
 
@@ -73,8 +72,10 @@ def build_lights(series: dict[str, list[dict]], light_cfgs: list[dict],
 
     for cfg in light_cfgs:
         key = cfg["key"]
-        val, prev, display = computed.get(key, (None, None, "—"))
-        status = _classify(val, cfg)
+        got = computed.get(key, (None, None, "—"))
+        val, prev, display = got[:3]
+        # 第四欄（若有）＝計算端直接給的狀態，蓋過門檻分類
+        status = got[3] if len(got) > 3 and got[3] else _classify(val, cfg)
         if val is not None and prev is not None:
             delta = val - prev
             direction = "up" if delta > 1e-9 else ("down" if delta < -1e-9 else "flat")
@@ -85,9 +86,10 @@ def build_lights(series: dict[str, list[dict]], light_cfgs: list[dict],
         # 「1917000.00」，讀者會以 10 倍、100 倍的錯誤尺度解讀。
         label_fmt = _HISTORY_LABEL_FMT.get(key, lambda v: f"{v:.2f}")
         hist = [
-            {"date": h["date"], "status": _classify(h["value"], cfg),
+            {"date": h["date"],
+             "status": h.get("state") or _classify(h["value"], cfg),
              "label": label_fmt(h["value"])}
-            for h in (histories.get(key) or [])
+            for h in (histories.get(key) or []) if h.get("value") is not None
         ]
         out.append(
             Light(key=key, label=cfg["label"], desc=cfg.get("desc", ""),
@@ -106,14 +108,9 @@ def light_histories(s: dict[str, list[dict]], n: int = 12) -> dict[str, list[dic
     """
     out: dict[str, list[dict]] = {}
 
-    unrate = s.get("UNRATE", [])
-    if len(unrate) > 16:
-        out["sahm"] = [
-            {"date": unrate[-(n - i)]["date"],
-             "value": sahm_rule(unrate[:len(unrate) - (n - 1 - i)])}
-            for i in range(n)
-        ]
-        out["sahm"] = [h for h in out["sahm"] if h["value"] is not None]
+    jl = job_losers.signals(s.get(job_losers.SERIES_ID, []), n_hist=n)
+    if jl:
+        out["job_losers"] = jl["history"]
 
     jol, unemp = s.get("JTSJOL", []), s.get("UNEMPLOY", [])
     if jol and unemp:
@@ -128,24 +125,6 @@ def light_histories(s: dict[str, list[dict]], n: int = 12) -> dict[str, list[dic
         if rows:
             out[key] = [{"date": r["date"], "value": r["value"]} for r in rows[-n:]]
 
-    payems = s.get("PAYEMS", [])
-    if len(payems) > n + 4:
-        ch = diff_series(payems)
-        out["nfp_3m"] = []
-        out["nfp_3m_avg"] = [
-            {"date": ch[i]["date"],
-             "value": sum(c["value"] for c in ch[i - 2:i + 1]) / 3}
-            for i in range(len(ch) - n, len(ch))
-        ]
-        out.pop("nfp_3m")
-
-    u3, u6 = s.get("UNRATE", []), s.get("U6RATE", [])
-    if u3 and u6:
-        m3 = {r["date"]: r["value"] for r in u3}
-        pairs = [{"date": r["date"], "value": r["value"] - m3[r["date"]]}
-                 for r in u6 if r["date"] in m3]
-        out["u6_u3_gap"] = pairs[-n:]
-
     return out
 
 
@@ -153,12 +132,11 @@ def _compute_light_values(s: dict[str, list[dict]]) -> dict[str, tuple]:
     """把原始序列換算成各燈號要用的數值。回傳 {key: (現值, 前值, 顯示字串)}"""
     out: dict[str, tuple] = {}
 
-    # --- Sahm Rule ---
-    unrate = s.get("UNRATE", [])
-    if unrate:
-        cur = sahm_rule(unrate)
-        prev = sahm_rule(unrate[:-1]) if len(unrate) > 14 else None
-        out["sahm"] = (cur, prev, f"{cur:+.2f}" if cur is not None else "—")
+    # --- 失去工作者比重（兩條規則合判，狀態直接給）---
+    jl = job_losers.signals(s.get(job_losers.SERIES_ID, []))
+    if jl and jl.get("rise") is not None:
+        out["job_losers"] = (jl["rise"], jl.get("prev_rise"),
+                             f"{jl['rise']:+.1f} 個百分點", jl["state"])
 
     # --- V/U ratio（JOLTS 落後就業報告，要對齊到同一個月）---
     jol, unemp = s.get("JTSJOL", []), s.get("UNEMPLOY", [])
@@ -189,29 +167,44 @@ def _compute_light_values(s: dict[str, list[dict]]) -> dict[str, tuple]:
         out["continuing_claims"] = (cur, prev,
                                    fmt.persons_to_wan(cur, digits=0) if cur else "—")
 
-    # --- 非農三個月均值 ---
-    payems = s.get("PAYEMS", [])
-    if len(payems) > 4:
-        ch = diff_series(payems)
-        cur = moving_avg(ch, 3)
-        prev = moving_avg(ch[:-1], 3)
-        out["nfp_3m_avg"] = (cur, prev, fmt.wan(cur))
-
-    # --- U-6 與 U-3 的差距 ---
-    u3, u6 = s.get("UNRATE", []), s.get("U6RATE", [])
-    if u3 and u6:
-        m3 = {r["date"]: r["value"] for r in u3}
-        pairs = [(r["date"], r["value"] - m3[r["date"]]) for r in u6 if r["date"] in m3]
-        if pairs:
-            cur = pairs[-1][1]
-            prev = pairs[-2][1] if len(pairs) > 1 else None
-            out["u6_u3_gap"] = (cur, prev, f"{cur:.2f} 個百分點")
-
     return out
 
 
 # ---------------------------------------------------------------------------
+# 綜合判定：數燈號，不算分數（2026-10 使用者定案）
+# ---------------------------------------------------------------------------
+# 先前是 z 分數加權成一個總分，但權重沒有依據、分數本身也讀不出意義。
+# 改成三種結論，字眼刻意跟格位的「強／中／弱」不同——格位講水準，
+# 這裡講趨勢健康度，兩套詞彙才不會在同一頁打架。
+# 張數門檻是本站判斷（不是外部標準），畫面上標明。
+VERDICT_RULE = ("明確轉弱＝失去工作者比重警戒，或 3 項以上警戒；"
+                "轉弱跡象＝任 1 項警戒，或 3 項以上留意；其餘為穩定。"
+                "張數門檻為本站判斷。")
+
+
+def verdict(lights: list[Light]) -> dict:
+    """回傳 {label, lean, reason, counts}。lean 給色框用。"""
+    n = {"critical": 0, "warning": 0, "good": 0, "unknown": 0}
+    for lt in lights or []:
+        n[lt.status] = n.get(lt.status, 0) + 1
+    jl = next((lt for lt in lights or [] if lt.key == "job_losers"), None)
+    if jl is not None and jl.status == "critical":
+        label, why = "明確轉弱", "失去工作者比重達警戒"
+    elif n["critical"] >= 3:
+        label, why = "明確轉弱", f"{n['critical']} 項警戒"
+    elif n["critical"] >= 1:
+        label, why = "轉弱跡象", f"{n['critical']} 項警戒"
+    elif n["warning"] >= 3:
+        label, why = "轉弱跡象", f"{n['warning']} 項留意"
+    else:
+        label, why = "穩定", "沒有警戒、留意少於 3 項"
+    lean = {"明確轉弱": "dovish", "轉弱跡象": "dovish"}.get(label, "neutral")
+    return {"label": label, "lean": lean, "reason": why, "counts": n}
+
+
+# ---------------------------------------------------------------------------
 # 綜合評分 — 每個指標的 z-score 加權相加，並保留逐項貢獻
+# 畫面上已不顯示（見上方 verdict）；只留給「拿不到 SEP 時」的格位後備規則。
 # ---------------------------------------------------------------------------
 
 # P3 之後這組權重會改由「歷史迴歸對利率定價的解釋力」校準。
@@ -227,7 +220,6 @@ DEFAULT_WEIGHTS = {
     "LNS12300060": 0.6,
     "JTSLDR": 0.6,
     "ICSA": 0.4,
-    "U6RATE": 0.4,
 }
 
 

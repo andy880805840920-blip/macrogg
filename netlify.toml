@@ -27,3 +27,11 @@
   for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# 盤中報價中繼（首頁焦點條每 60 秒問一次 /api/quotes）。
+# 函式本身用 Netlify CDN 的 durable 快取 60 秒，不論多少人同時開著首頁，
+# 每分鐘最多實際執行一次。沒有任何相依套件，不需要 package.json。
+# 函式路徑在 quotes.mjs 的 `export const config = { path: "/api/quotes" }`。
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

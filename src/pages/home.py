@@ -580,26 +580,6 @@ def _home_body_legacy(ctxs: dict) -> str:
     return hero + compact_full(_home_body_full(ctxs), "各模組摘要、變化與追蹤清單")
 
 
-def home_footer(ctxs: dict) -> str:
-    """
-    首頁頁尾。
-
-    資料月份先前是頁面最後一張卡——一個只裝了一行灰色小字的空盒子，
-    下面緊接著同樣是灰色小字的頁尾，兩塊疊在一起看起來像排版壞掉。
-    那一行本來就是頁尾性質的資訊，直接併進來。
-    """
-    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
-    def _d(v: str) -> str:
-        return f'<span class="nb">{esc(v)}</span>'
-
-    return (
-        f"資料月份：{_d((lab or {}).get('data_month', '—'))}（就業）　·　"
-        f"{_d((inf or {}).get('data_month', '—'))}（物價）　·　"
-        f"{_d((fom or {}).get('latest_date', '—'))}（聲明）。"
-        "每天自動重新產生。<br>"
-        "資料來源：FRED（BLS、BEA、DOL 原始資料）與 federalreserve.gov。"
-        "所有量化判定由固定規則產生，每次執行結果一致。<br>"
-        "本站僅為數據整理，不構成投資建議。")
 def _fmt_pct(value, digits: int = 1) -> str:
     return "—" if value is None else f"{value:.{digits}f}%"
 
@@ -734,7 +714,8 @@ def _change_rows(cs) -> str:
 
 def _watch_rows(ctxs: dict, sc) -> str:
     """
-    「接下來看什麼」——未來兩三週會發布的數據，各配一句「它會動什麼」。
+    「接下來看什麼」——本週＋下週會發布的數據（台灣時間），標影響高／中，
+    各配一句「它會動什麼」。日期、時間、分級規則在 analysis/watch_calendar。
 
     這一區取代原本的「資料狀態」：那一區只有一行更新時間（跟頁尾重複），
     而整個網站最欠的正是**前瞻**——讀者看完知道「現在是傾向緊縮」，
@@ -743,14 +724,7 @@ def _watch_rows(ctxs: dict, sc) -> str:
     退回可推導的慣例；「會動什麼」直接引用既有的觸發門檻，不新增判斷規則。
     """
     today = clock.today()
-    lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
     fom = ctxs.get("fomc") or {}
-
-    def _d(v):
-        try:
-            return dt.date.fromisoformat(v)
-        except (TypeError, ValueError):
-            return None
 
     def _trig_near(prefix: str) -> str:
         if not (sc and sc.triggers):
@@ -767,89 +741,102 @@ def _watch_rows(ctxs: dict, sc) -> str:
         t = min(cand, key=_gap)
         return f"最近的門檻：{t.label}（{t.distance}）"
 
-    events = []
-    # 每週失業金：DOL 固定週四發布，可推導
-    _thu = today + dt.timedelta(days=((3 - today.weekday()) % 7 or 7))
-    events.append((_thu, "每週失業金申請", "每週四",
-                   "兩次就業報告之間唯一會更新的數據；重點盯續領人數有沒有一路往上爬。"))
-    _emp = _d(lab.get("next_release")) or next_first_friday()
-    events.append((_emp, "就業報告", "官方行事曆" if lab.get("next_release") else "慣例推估",
-                   _trig_near("就業轉") or "失業率決定就業格位，非農與時薪決定方向。"))
-    _cpi = _d(inf.get("next_cpi")) or next_cpi_release()
-    events.append((_cpi, "CPI", "官方行事曆" if inf.get("next_cpi") else "慣例推估",
-                   "先更新通膨軸的推估值與動能。" + _trig_near("通膨轉")))
-    _ppi = _d(inf.get("next_ppi"))
-    if _ppi:
-        events.append((_ppi, "PPI", "官方行事曆",
-                       "更新上游成本壓力，也是核心 PCE 推估的原料之一。"))
-    _pce = _d(inf.get("next_pce"))
-    if _pce:
-        events.append((_pce, "PCE", "官方行事曆",
-                       "推估值換回實際值，通膨格位以實際值重新判定。"))
-    _nm = _d(((fom.get("next_meeting")) or {}).get("date"))
-    if _nm:
-        _fl = ((fom.get("focus")) or {}).get("label", "")
-        events.append((_nm, "FOMC 會議", "官方行事曆",
-                       "聲明與投票可能改變重心" + (f"（目前：{_fl}）" if _fl else "")
-                       + "——重心一翻，同一格的結論就不同。"))
-    events = sorted([e for e in events if e[0] and e[0] >= today],
-                    key=lambda e: e[0])[:6]
-    return "".join(
-        f'<div class="hn-row"><div class="hn-date"><b>{e[0].strftime("%m/%d")}</b>'
-        f'<span>{(e[0] - today).days} 天後</span></div>'
-        f'<div class="hn-main"><b>{esc(e[1])}</b><span>{esc(e[3])}</span></div>'
-        f'<div class="hn-src">{esc(e[2])}</div></div>'
-        for e in events)
+    from ..analysis import watch_calendar as wc
+    _fl = ((fom.get("focus")) or {}).get("label", "")
+    rows = wc.watch_rows(
+        ctxs.get("_schedule") or wc.merge_schedule(
+            {}, ctxs.get("_calendar") or {}, {}, today),
+        fomc_next=((fom.get("next_meeting")) or {}).get("date"),
+        fomc_desc=("聲明與投票可能改變重心" + (f"（目前：{_fl}）" if _fl else "")
+                   + "——重心一翻，同一格的結論就不同。"),
+        trig={"employment": _trig_near("就業轉"), "cpi": _trig_near("通膨轉")})
+    if not rows:
+        return '<p class="home-empty">本週與下週沒有排定的重要發布。</p>'
+    out, grp = [], None
+    for e in rows:
+        if e["group"] != grp:
+            grp = e["group"]
+            out.append(f'<div class="hn-group">{grp}</div>')
+        imp = wc.IMPACT_LABEL[e["impact"]]
+        desc = f'<span>{esc(e["desc"])}</span>' if e["desc"] else ""
+        out.append(
+            f'<div class="hn-row"><div class="hn-date"><b>{e["label"]}</b>'
+            f'<span>{esc(e["when"])}</span></div>'
+            f'<div class="hn-main"><b>{esc(e["name"])}'
+            f'<em class="hn-imp {e["impact"]}">{imp}</em></b>{desc}</div>'
+            f'<div class="hn-src">{esc(e["src"])}</div></div>')
+    return "".join(out)
 
 
 def _fw_chip_html(f: dict, off: str = "") -> str:
-    """FedWatch 機率 chip 的完整標記（分層來源的小字邏輯都在這）。"""
-    fw = (f or {}).get("fedwatch") or {}
-    _ml = fw.get("meeting_label") or "12 月"
-    _when = (fw.get("date") or "")[5:]
-    _when_html = f'<small class="fs-when">{esc(_when)}</small>' if _when else ""
-    if fw.get("pct") is None:
-        return (f'<div class="fs-chip{off}" data-chip="fedwatch">'
-                f'<span>{esc(_ml)} FOMC 升息一碼機率</span>'
-                '<b>—</b><i>本次擷取失敗</i></div>')
-    # WIRP 口徑：單一 %、不封頂；pct 帶正負（負＝市場定價降息），
-    # 標籤跟著方向走、數字取絕對值。
-    _pv = fw["pct"]
-    _dir = "降息" if _pv < 0 else "升息"
-    _label = f"{_ml} FOMC {_dir}一碼機率"
-    d = fw.get("delta_pp")
-    _mb = fw.get("move_bp")
-    if fw.get("stale_from"):
-        # 本次擷取失敗（限流、斷線）沿用近幾天的值——標明日期，
-        # 不讓一次 429 就把整顆 chip 打回「—」。
-        dtxt = f"沿用 {fw['stale_from'][5:].replace('-', '/')}"
-    elif abs(_pv) > 100:
-        # 超過 100%＝市場定價超過一碼（WIRP 慣例照印），小字講明
-        dtxt = (f"已定價超過一碼（隱含 {_mb:+.1f} bp）"
-                if _mb is not None else "已定價超過一碼")
-    elif d is not None:
-        dtxt = f"{d:+.1f} pp"
-    elif fw.get("suspect"):
-        dtxt = "擷取異常，沿用前值"
-    elif fw.get("src") == "futures" and _mb is not None:
-        # 期貨自算時把隱含變動標出來：讀者（和我們）能直接驗算
-        # move ÷ 25，不會再有「一個機率但不知道為什麼」的黑箱
-        dtxt = f"隱含 {_mb:+.1f} bp"
-    else:
-        dtxt = "—"
-    cls = "up" if (d or 0) > 0 else ("dn" if (d or 0) < 0 else "")
+    """下次 FOMC 機率 chip（目錄組裝失敗時的後備呈現用）。
+    內容與目錄裡的 fedwatch chip 同一套（focus_today.fw_chips）。"""
+    from ..analysis.focus_today import fw_chips
+    c = fw_chips((f or {}).get("fedwatch"))[0]
+    when = (f'<small class="fs-when">{esc(c["date"])}</small>'
+            if c.get("date") else "")
     return (f'<div class="fs-chip{off}" data-chip="fedwatch">'
-            f'<span>{esc(_label)}</span>'
-            f'<b>{abs(_pv):.1f}%</b>'
-            f'<i class="{cls}">{esc(dtxt)}</i>{_when_html}</div>')
+            f'<span>{esc(c["label"])}</span><b>{esc(c["value"])}</b>'
+            f'<i class="{c["dir"]}">{esc(c["delta"])}</i>{when}</div>')
+
+
+# 盤中報價：開著首頁時每 60 秒問一次 /api/quotes（netlify/functions/
+# quotes.mjs），只在分頁看得見時問。規則（與建置端同一套）：
+#   · 日期新者勝：報價日早於 chip 的資料日（data-d）就不動
+#   · 45 分鐘內的報價才標「盤中・延遲 HH:MM」（台灣時間）；更舊的
+#     （休市）只有在比 chip 新時才更新，小字回到「月-日」
+#   · 殖利率與畫面上的值差逾 0.6 個百分點視為報價鏈出錯，不動
+#   · 失敗一律安靜，畫面保留建置時的數字；每次載入最多問 240 次（4 小時）
+# 格式化對應 focus_today 的 _pct_chip／_level_chip／_txf_chip。
+_LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
+            'if(!box||!window.fetch)return;var N=0,M=240,last=0;'
+            'function z(n){return(n<10?"0":"")+n;}'
+            'function hm(ts){var d=new Date((ts+28800)*1000);'
+            'return z(d.getUTCHours())+":"+z(d.getUTCMinutes());}'
+            'function g(n){return Math.round(Math.abs(n)).toString()'
+            '.replace(/\\B(?=(\\d{3})+(?!\\d))/g,",");}'
+            'function fmt(q){var dv=q.v-q.p,dir=dv>0?"up":(dv<0?"dn":"");'
+            'if(q.k==="pct"){var b=Math.round(dv*100);'
+            'return[q.v.toFixed(2)+"%",(b>=0?"+":"")+b+" bp",'
+            'b>0?"up":(b<0?"dn":"")];}'
+            'if(q.k==="idx"){var pc=q.p?dv/q.p*100:0,r=Math.round(dv);'
+            'return[g(q.v),(r<0?"-":"+")+g(dv)+"（"+(pc>=0?"+":"")'
+            '+pc.toFixed(2)+"%）",dir];}'
+            'var s=dv.toFixed(1);return[q.v.toFixed(1)+(q.u||""),'
+            '(s.charAt(0)==="-"?"":"+")+s,dir];}'
+            'function ap(r){var now=r.t||Date.now()/1000;'
+            'Object.keys(r.q||{}).forEach(function(id){var q=r.q[id];'
+            'var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(!ch)return;'
+            'var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;'
+            'var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;'
+            'var b=ch.querySelector("b"),i=ch.querySelector("i"),'
+            'w=ch.querySelector(".fs-when");'
+            'if(q.k==="pct"&&b){var o=parseFloat(b.textContent);'
+            'if(isFinite(o)&&Math.abs(q.v-o)>0.6)return;}'
+            'var f=fmt(q);if(b)b.textContent=f[0];'
+            'if(!i){i=document.createElement("i");ch.insertBefore(i,w);}'
+            'i.textContent=f[1];i.className=f[2];'
+            'if(!w){w=document.createElement("small");w.className="fs-when";'
+            'ch.appendChild(w);}'
+            'w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts))'
+            ':((q.s?q.s+" ":"")+q.d.slice(5));'
+            'ch.setAttribute("data-d",q.d);});}'
+            'function tk(){if(document.visibilityState!=="visible"||N>=M)return;'
+            'N++;last=Date.now();fetch("/api/quotes").then(function(r){'
+            'return r.ok?r.json():null;}).then(function(r){if(r)ap(r);})'
+            '.catch(function(){});}'
+            'tk();setInterval(tk,60000);'
+            'document.addEventListener("visibilitychange",function(){'
+            'if(document.visibilityState==="visible"&&Date.now()-last>60000)tk();});'
+            '})();</script>')
 
 
 def _focus_strip(f: dict | None) -> str:
     """
     今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
 
-    目錄共 14 顆（各天期利率、FedWatch 機率、SOFR／利差／ON RRP／SRF、
-    油價、VIX／MOVE），**全部**渲染進 HTML；預設只顯示 2Y＋10Y＋機率，
+    目錄共 19 顆（各天期利率、升降息三顆、SOFR／利差／ON RRP／SRF、
+    油價、VIX／MOVE、道瓊／費半／台指期），**全部**渲染進 HTML；預設只顯示 2Y＋10Y＋30Y＋機率，
     其餘掛 .fs-off 隱藏。「自訂」勾選面板＋幾行原生 JS 切換顯示、
     localStorage 記住選擇——關 JS 或初次造訪就是預設組，畫面不會壞。
     每顆 chip 的小字只放資料日；一句話說明集中在頁尾（手機沒有 hover）。
@@ -858,7 +845,6 @@ def _focus_strip(f: dict | None) -> str:
         return ""
     import json as _json
     fw = f.get("fedwatch") or {}
-    _ml = fw.get("meeting_label") or "12 月"
     cat = f.get("chips") or []
     picker = script = ""
     if cat:
@@ -867,15 +853,12 @@ def _focus_strip(f: dict | None) -> str:
             off = "" if c.get("on") else " fs-off"
             if c.get("on"):
                 defaults.append(c["id"])
-            if c.get("special") == "fedwatch":
-                chips.append(_fw_chip_html(f, off))
-                opts.append(("fedwatch", f"{_ml} FOMC 升降息機率", c.get("on")))
-                continue
             when = (f'<small class="fs-when">{esc(c["date"])}</small>'
                     if c.get("date") else "")
             delta = (f'<i class="{c["dir"]}">{esc(c["delta"])}</i>'
                      if c.get("delta") else "")
-            chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}">'
+            chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}"'
+                         f' data-d="{esc(c.get("iso") or "")}">'
                          f'<span>{esc(c["label"])}</span>'
                          f'<b>{esc(c["value"])}</b>{delta}{when}</div>')
             opts.append((c["id"], c["label"], c.get("on")))
@@ -916,7 +899,7 @@ def _focus_strip(f: dict | None) -> str:
                   'if(q.checked)s.push(q.getAttribute("data-pick"));});'
                   'if(!s.length)s=D;s=s.slice(0,M);'
                   'try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}'
-                  'ap(s);});});})();</script>')
+                  'ap(s);});});})();</script>' + _LIVE_JS)
     else:
         # 目錄組裝失敗的後備：照舊三顆（10Y／30Y／機率），行為與舊版一致。
         chips = []
@@ -928,12 +911,12 @@ def _focus_strip(f: dict | None) -> str:
                          f'<b>{y["value"]:.2f}%</b>'
                          f'<i class="{cls}">{esc(dtxt)}</i></div>')
         chips.append(_fw_chip_html(f))
-    # 論述是分段的（AI 依指示用空行分段）——逐段包 <p>，不能整坨塞進
-    # 一個段落（esc 會把換行吃掉，三段變成一大塊，正是這次要修的問題）
+    # 焦點是 N 則重點（一行一則）——逐則包 <li>，不能整坨塞進一個段落
+    # （esc 會把換行吃掉，幾則變成一大塊）。
     _paras = [s.strip() for s in (f.get("text") or "").split("\n") if s.strip()]
-    text = ('<div class="fs-body">'
-            + "".join(f'<p class="fs-text">{esc(s)}</p>' for s in _paras)
-            + '</div>') if _paras else ""
+    text = ('<ul class="fs-body fs-list">'
+            + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
+            + '</ul>') if _paras else ""
     # 列標題模式：AI 摘要不可用，標題清單就是內容——收合預設打開，
     # 不再另外把標題串成一段假摘要（同一批字印兩次）。
     _headline_mode = (f.get("text_source") == "headlines")
@@ -1069,9 +1052,9 @@ def home_body(ctxs: dict) -> str:
 
   <section class="home-zone" aria-labelledby="home-next">
     <div class="home-zone-head"><div><span class="home-zone-num">05</span>
-      <h2 id="home-next">接下來看什麼</h2></div><p>未來幾週的發布日與它會動什麼</p></div>
+      <h2 id="home-next">接下來看什麼</h2></div><p>本週與下週的發布（台灣時間）與它會動什麼</p></div>
     <div class="home-next-list">{_watch_rows(ctxs, sc)}</div>
-    <div class="home-next-foot">自動更新：{esc(sd.get('as_of', '—'))}</div>
+    <div class="home-next-foot">影響：高＝發布後會直接重判本站九宮格的格位；中＝更新個別訊號或市場常有反應，但不直接改格位。已發布的場次自動移除。<br>自動更新：{esc(sd.get('as_of', '—'))}</div>
   </section>
 </main>"""
 
@@ -1097,9 +1080,15 @@ def home_footer(ctxs: dict) -> str:
         '<span>來源分層：殖利率與油價／波動率以 Yahoo 即時報價為主'
         '（延遲約 15 分鐘）、抓不到退回 FRED 收盤，每顆 chip 的小字＝'
         '該筆資料的日期；變動一律對前一個交易日收盤，1 bp＝0.01 個百分點。'
-        '升降息機率由聯邦基金期貨逐會議反推（WIRP 同款算法，延遲報價），'
-        '與亞特蘭大聯準銀行官方值交叉檢核。焦點段由 AI 讀取多篇報導後'
-        '綜合改寫（非逐句摘要），數字均出自原文並經機械驗證；'
+        '開著首頁時，殖利率、油價、波動率、道瓊、費半與台指期每分鐘自動'
+        '更新，小字改為「盤中・延遲 HH:MM」（台灣時間）；休市時維持收盤值。'
+        '升降息由聯邦基金期貨從目前利率逐場往前推（WIRP 同款算法，延遲報價）：'
+        '「下次會議」列機率最高的兩個結果（單場推算只會切成相鄰兩種）；'
+        '「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場'
+        '（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；'
+        '台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），'
+        '變動對該盤參考價。焦點的三則重點由 AI 讀取多篇報導後寫成，'
+        '排序依跨來源熱度、時效、來源與發布日，數字均出自原文並經機械驗證；'
         '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span>'
         '</div></details>'
         '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'

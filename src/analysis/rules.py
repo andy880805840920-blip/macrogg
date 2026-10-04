@@ -30,7 +30,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from .core import value_at
-from .scenario import MILD_SAHM
+from . import job_losers as _jl
 from .. import fmt
 
 
@@ -42,6 +42,39 @@ class Flag:
     detail: str            # 數字與解釋
     lean: str = "neutral"  # hawkish=利升息 / dovish=利降息 / neutral
     impact: str = ""       # 對利率的意義，一句話
+    # 排序用（2026-10 改版）：tier＝訊號的層級（見 TIERS），strength＝
+    # 超過門檻多少倍（同層同級時大的排前面；沒有自然門檻的規則維持 1）
+    tier: int = 0
+    strength: float = 1.0
+
+
+# ---------------------------------------------------------------------------
+# 訊號分層：排序先看「這條訊號改變的是什麼」，再看嚴重度。
+# ---------------------------------------------------------------------------
+# 先前只按各規則自己標的嚴重度排，結果「失業率下降其實是勞動力退出」
+# 因為幅度在雜訊內被降成參考、排在最後——但它直接推翻了頭條數字的解讀，
+# 是讀者最需要先知道的事（使用者指出）。
+#   1 改變頭條數字的解讀：頭條（非農、失業率）本身要重讀
+#   2 趨勢轉折：就業可能正在轉向的證據
+#   3 結構背景：值得知道、但不改變判讀方向
+# 「低招聘、低裁員」這種描述型態的不算訊號，改成卡片最上面的一句總結
+#（flow_summary）。
+TIERS = {1: "改變頭條數字的解讀", 2: "趨勢轉折", 3: "結構背景"}
+# 第一層內部的固定先後：失業率的成因拆解最先（格位就是用失業率定的，
+# 頭條失業率要不要重讀是整頁最優先的事——使用者指定放最前面），
+# 再來是非農的修正、兩份調查分歧、年度基準修正。
+TIER1_ORDER = ["bad_decline", "bad_rise", "good_decline", "supply_rise",
+               "revision_swamps", "survey_divergence", "benchmark_revision"]
+TIER_OF = {
+    "bad_decline": 1, "good_decline": 1, "bad_rise": 1, "supply_rise": 1,
+    "revision_swamps": 1, "survey_divergence": 1, "benchmark_revision": 1,
+    "jl_alert": 2, "jl_watch": 2, "continuing_claims_high": 2,
+    "claims_divergence": 2, "duration_high": 2, "narrow_growth": 2,
+    "cyclical_negative": 2, "openings_vs_hiring": 2, "prime_age_slide": 2,
+    "temp_help_falling": 2, "factory_hours_cut": 2,
+    "revision_bias_down": 3, "revision_bias_up": 3, "wage_overstated": 3,
+    "wage_understated": 3,
+}
 
 
 @dataclass
@@ -53,6 +86,8 @@ class RuleContext:
     revisions: object | None = None
     wage_comp: dict = field(default_factory=dict)
     lights: list = field(default_factory=list)
+    benchmark: dict = field(default_factory=dict)   # config 的年度基準修正
+    today: object = None                             # datetime.date；測試可注入
 
 
 RULES: list[Callable[[RuleContext], Flag | None]] = []
@@ -67,40 +102,42 @@ def rule(fn):
 # 0. 衰退警訊（軸心級：註冊在最前，同級排序才會排第一）
 # ---------------------------------------------------------------------------
 @rule
-def r_sahm(ctx: RuleContext) -> Flag | None:
-    for lt in ctx.lights:
-        if lt.key == "sahm" and lt.value is not None:
-            if lt.value >= 0.50:
-                return Flag(
-                    "sahm_trigger", "alert", "Sahm 法則已觸發衰退門檻",
-                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
-                    f"目前 +{lt.value:.2f}，超過 0.50 的門檻。"
-                    "歷史上每次超過這個門檻，美國都已經進入衰退。",
-                    "dovish", "歷史上每次觸發都對應到衰退",
-                )
-            if lt.value >= 0.30:
-                return Flag(
-                    "sahm_approaching", "watch", "Sahm 法則接近觸發門檻",
-                    f"這個指標看的是「失業率的近三個月平均，比過去一年的最低點高多少」。"
-                    f"目前 +{lt.value:.2f}，距離 0.50 的警戒門檻還有 {0.50-lt.value:.2f}。"
-                    "歷史上超過門檻時，美國都已經進入衰退。",
-                    "dovish", "尚未觸發，但方向偏弱",
-                )
-            # 0.20–0.30：溫和回升。九宮格的就業動能正是用這個門檻
-            # （MILD_SAHM，本站門檻）判成「轉弱」——判定已經被它改變，
-            # 訊號清單卻一直沒有這件事，本期最重要的故事反而缺席。
-            # 數字直接讀同一顆紅綠燈的值，跟軸判定**必然**一致。
-            if lt.value >= MILD_SAHM:
-                return Flag(
-                    "u3_rising", "watch",
-                    f"失業率已較近一年低點回升 {lt.value:.2f} 個百分點",
-                    f"失業率的近三個月平均比過去一年的最低點高 {lt.value:.2f} "
-                    f"個百分點（本站門檻 {MILD_SAHM:.2f}）。幅度尚溫和"
-                    f"（Sahm 衰退門檻是 0.50），但方向已經轉向——"
-                    "九宮格的就業動能因此判為轉弱。",
-                    "dovish", "就業動能的惡化已經開始",
-                )
+def r_job_losers(ctx: RuleContext) -> Flag | None:
+    """
+    失去工作者比重（取代 Sahm 法則）。數字直接讀同一顆燈的狀態，
+    跟九宮格的格位／方向判定**必然**一致。
+    """
+    s = _jl.signals(ctx.series.get(_jl.SERIES_ID, []))
+    if not s or s.get("rise") is None:
+        return None
+    share, rise, z = s["share"], s["rise"], s.get("z")
+    if s["state"] == "critical":
+        return Flag(
+            "jl_alert", "alert", "被裁員的失業者比重急升，達衰退型態的警戒",
+            f"失業的人裡，失去工作（被裁員、約滿沒續）的佔 {share:.1f}%。"
+            f"這個比重的三個月平均比過去一年最低點高 {rise:.1f} 個百分點，"
+            f"已連續 {_jl.RISE_PERSIST} 個月超過 {_jl.RISE_ALERT:.0f} 個百分點"
+            "（本站門檻，1967 年起回測：每次衰退都在起點前後 4 個月內達到，"
+            "非衰退期誤報 2 次）。九宮格的就業格位因此往弱推一格。",
+            "dovish", "歷史上達到這個幅度時多已進入衰退",
+            strength=rise / _jl.RISE_ALERT,
+        )
+    if s["state"] == "warning":
+        return Flag(
+            "jl_watch", "watch", "被裁員的失業者比重異常上升",
+            f"失業的人裡，失去工作的佔 {share:.1f}%。這個比重近三個月的變化"
+            f"是過去五年平常波動的 {z:.1f} 倍標準差（本站門檻 {_jl.Z_WATCH}）。"
+            "回測裡這條常在衰退前 5–9 個月就亮，但約十年也會誤報一次——"
+            "九宮格的就業方向因此判為轉弱，格位不動。",
+            "dovish", "就業惡化的早期訊號",
+            strength=(z or 0) / _jl.Z_WATCH,
+        )
     return None
+
+
+# 家庭調查就業人數單月變動的 90% 信賴區間（千人）。出自 BLS 就業報告的
+# 技術說明（Technical Note：household survey employment change ±600,000）。
+HH_CI = 600
 
 
 # ---------------------------------------------------------------------------
@@ -124,6 +161,14 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
              f"（{abs(d['delta_rate']):.1f} 個百分點低於顯著門檻"
              f" {thr:.1f}，強度別當真。）")
 
+    # 家庭調查（失業率、就業人數、勞動力的來源）是抽樣調查：就業人數單月
+    # 變動的 90% 信賴區間約 ±60 萬人（BLS 就業報告技術說明）。拆解的兩塊
+    # 都落在這個範圍內時要講，否則讀者會把抽樣誤差當成幾十萬人真的離場。
+    _hh = max(abs(d.get("delta_employed") or 0), abs(d.get("delta_labor_force") or 0))
+    hh_note = ("" if _hh >= HH_CI else
+               f"家庭調查是抽樣調查，就業人數單月變動的 90% 信賴區間約 ±{HH_CI // 10} 萬人，"
+               "這次的幅度在誤差範圍內——方向值得留意，連續幾個月同方向才算確認。")
+
     if v == "bad_decline":
         # bad_decline 只保證「勞動力退出主導」，就業本身可能增也可能減——
         # 文案必須跟著正負號走，不能一律寫「有工作的人少了」。
@@ -143,10 +188,11 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
                 f"{emp_clause}"
                 f"同時有 {fmt.wan_abs(d['delta_labor_force'])}乾脆放棄找工作、"
                 "退出職場——失業率是被這批人壓低的，"
-                "完整拆解見下方「失業率變動分解」。" + noise
+                "完整拆解見下方「失業率變動分解」。" + noise + hh_note
             ),
             lean="dovish",
             impact="就業市場實際在轉弱",
+            strength=_hh / HH_CI,
         )
     if v == "good_decline":
         return Flag(
@@ -156,7 +202,7 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             detail=(
                 f"有工作的人增加 {fmt.wan_abs(d['delta_employed'])}，"
                 f"失業率因此下降 {abs(d['delta_rate']):.2f} 個百分點。這是健康的下降。"
-                + noise
+                + noise + hh_note
             ),
             lean="hawkish",
             impact="就業穩健，聯準會沒有急著降息的理由",
@@ -170,7 +216,7 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
                 f"有工作的人減少 {fmt.wan_abs(d['delta_employed'])}，"
                 f"失業人數增加 {fmt.wan_abs(d['delta_unemployed'])}。"
                 "不是因為找工作的人變多，而是實際的工作機會在減少。"
-                + noise
+                + noise + hh_note
             ),
             lean="dovish",
             impact="工作機會實際在減少",
@@ -183,7 +229,7 @@ def r_bad_decline(ctx: RuleContext) -> Flag | None:
             detail=(
                 f"投入職場的人增加 {fmt.wan_abs(d['delta_labor_force'])}，"
                 "新加入的人還沒馬上找到工作，所以失業率上升。這通常不是壞事。"
-                + noise
+                + noise + hh_note
             ),
             lean="neutral",
             impact="不必過度解讀",
@@ -216,6 +262,7 @@ def r_revision_swamps(ctx: RuleContext) -> Flag | None:
             ),
             lean="dovish",
             impact="就業動能比初值顯示的更弱",
+            strength=abs(rev.two_month_net) / max(abs(latest), 1),
         )
     return None
 
@@ -229,11 +276,13 @@ def r_revision_bias(ctx: RuleContext) -> Flag | None:
         return Flag(
             key="revision_bias_down",
             severity="watch",
-            headline="初值近一年呈系統性下修",
+            headline="近 12 次月度修正平均往下修",
             detail=(
-                f"過去 12 個月，每個月的就業人數平均事後被往下修 "
-                f"{fmt.wan_abs(rev.bias_12m)}。"
+                f"每份就業報告公布後，接下來兩個月都會再修一次。近 12 個月份的"
+                f"初值到現在的版本，平均每個月被往下修 {fmt.wan_abs(rev.bias_12m)}。"
                 "看到剛公布的數字時，要記得它之後很可能被調降。"
+                "（這是每月的例行修正，跟每年一次、用失業保險稅籍資料校正的"
+                "「年度基準修正」是兩件事。）"
             ),
             lean="dovish",
             impact="初值應打折看待",
@@ -242,14 +291,58 @@ def r_revision_bias(ctx: RuleContext) -> Flag | None:
         return Flag(
             key="revision_bias_up",
             severity="watch",
-            headline="初值近一年呈系統性上修",
+            headline="近 12 次月度修正平均往上修",
             detail=(
-                f"過去 12 個月，每個月平均事後被往上修 {fmt.wan_abs(rev.bias_12m)}。"
+                f"近 12 個月份的初值到現在的版本，平均每個月被往上修 "
+                f"{fmt.wan_abs(rev.bias_12m)}（每月例行修正，不是年度基準修正）。"
             ),
             lean="hawkish",
             impact="實際就業可能比初值更強",
         )
     return None
+
+
+# 年度基準修正在公布後多久內算「本期新發生的事」（之後只留在修正卡）
+BENCHMARK_NEWS_DAYS = 75
+
+
+@rule
+def r_benchmark(ctx: RuleContext) -> Flag | None:
+    """
+    年度基準修正（CES benchmark）：每年用失業保險稅籍資料（QCEW）把
+    3 月的就業水準校正一次。BLS 每年 8–9 月先公布初估、隔年 2 月隨 1 月
+    就業報告正式併入，修正幅度依 BLS 慣例攤進前一年 4 月到當年 3 月。
+    FRED 沒有這個數字，值由 config/indicators.yaml 的 benchmark_revision 手動維護。
+    """
+    import datetime as _dt
+    b = ctx.benchmark or {}
+    try:
+        pub = _dt.date.fromisoformat(str(b.get("published")))
+    except (TypeError, ValueError):
+        return None
+    today = ctx.today or _dt.date.today()
+    if not (0 <= (today - pub).days <= BENCHMARK_NEWS_DAYS):
+        return None
+    total = b.get("total")
+    if total is None:
+        return None
+    priv = b.get("private")
+    pct = b.get("pct")
+    return Flag(
+        key="benchmark_revision", severity="watch",
+        headline=(f"年度基準修正初估 {fmt.wan(total)}，"
+                  f"涵蓋 {b.get('period', '')}"),
+        detail=(f"BLS 在 {pub.month} 月 {pub.day} 日公布 {b.get('reference', '')} 的基準修正初估："
+                f"非農就業 {fmt.wan(total)}"
+                + (f"（{pct:+.1f}%）" if pct is not None else "")
+                + (f"，其中民間 {fmt.wan(priv)}" if priv is not None else "")
+                + f"。修正幅度會攤進 {b.get('period', '')} 各月，"
+                f"正式數字在 {b.get('final', '')} 併入，在那之前目前公布的數字都還沒反映。"),
+        lean="dovish" if total < 0 else ("hawkish" if total > 0 else "neutral"),
+        impact=("過去一年的就業比目前數字顯示的少" if total < 0
+                else "過去一年的就業比目前數字顯示的多"),
+        strength=abs(total) / 100,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -353,29 +446,49 @@ def r_openings_vs_hiring(ctx: RuleContext) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
-# 6. 低招聘低裁員
+# 6. 人力流動型態（卡片最上面的一句總結，不是訊號）
 # ---------------------------------------------------------------------------
-@rule
-def r_low_hire_low_fire(ctx: RuleContext) -> Flag | None:
-    hir, ld = ctx.series.get("JTSHIR", []), ctx.series.get("JTSLDR", [])
-    if not hir or not ld:
-        return None
+# 基準：疫情前 2015–2019 的平均，從同一條序列即時算（不寫死）。
+# JOLTS 的比率只公布到小數一位，差距在 0.1 個百分點以內視為「正常」。
+FLOW_BASE = ("2015-01", "2019-12")
+FLOW_BAND = 0.1
+_FLOW_MEANING = {
+    ("低", "低"): "就業市場凍結：已經有工作的人相對安全，正在找工作的人很辛苦",
+    ("低", "正常"): "企業放慢招人，但裁員還沒增加",
+    ("低", "高"): "招人少、裁人多——典型的收縮型態",
+    ("正常", "低"): "招人照常、很少裁員，勞動市場穩健",
+    ("高", "低"): "招人積極、很少裁員，勞動市場偏熱",
+    ("正常", "正常"): "人力流動接近疫情前的常態",
+    ("高", "正常"): "招人積極、裁員正常，勞動市場偏熱",
+    ("正常", "高"): "裁員增加、招人沒有跟著增加，留意轉弱",
+    ("高", "高"): "一邊裁一邊招，產業在重新配置",
+}
+
+
+def _base_avg(rows, lo=FLOW_BASE[0], hi=FLOW_BASE[1]):
+    v = [r["value"] for r in rows if lo <= str(r["date"])[:7] <= hi
+         and r.get("value") is not None]
+    return sum(v) / len(v) if len(v) >= 48 else None
+
+
+def flow_summary(series: dict) -> dict | None:
+    """
+    招聘率與裁員率相對疫情前的位置 → 一句總結（例如「低招聘、低裁員」）。
+    回傳 {name, meaning, hires, layoffs, base_h, base_l, month}；資料不足回 None。
+    """
+    hir, ld = series.get("JTSHIR", []), series.get("JTSLDR", [])
     h, l = value_at(hir), value_at(ld)
-    if h is None or l is None:
+    bh, bl = _base_avg(hir), _base_avg(ld)
+    if None in (h, l, bh, bl):
         return None
-    if h < 3.5 and l < 1.2:
-        return Flag(
-            key="low_hire_low_fire",
-            severity="info",
-            headline="低招聘、低裁員格局延續",
-            detail=(
-                f"每月錄取的人約佔總就業的 {h:.1f}%、被裁員的約 {l:.1f}%，兩個都在低檔。"
-                "對已經有工作的人來說相對安全，但正在找工作的人會非常辛苦。"
-            ),
-            lean="neutral",
-            impact="就業市場凍結，短期影響有限",
-        )
-    return None
+
+    def lvl(x, b):
+        return "低" if x < b - FLOW_BAND else ("高" if x > b + FLOW_BAND else "正常")
+    H, L = lvl(h, bh), lvl(l, bl)
+    name = f"{'招聘' + H if H == '正常' else H + '招聘'}、{'裁員' + L if L == '正常' else L + '裁員'}"
+    return {"name": name, "meaning": _FLOW_MEANING[(H, L)],
+            "hires": h, "layoffs": l, "base_h": bh, "base_l": bl,
+            "month": str(hir[-1]["date"])[:7]}
 
 
 # ---------------------------------------------------------------------------
@@ -498,7 +611,7 @@ def r_duration_high(ctx: RuleContext) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
-# 11. 壯年就業比與隱藏性失業（失業率之外的水溫計）
+# 11. 壯年就業比（失業率之外的水溫計）
 # ---------------------------------------------------------------------------
 @rule
 def r_prime_age_slide(ctx: RuleContext) -> Flag | None:
@@ -518,27 +631,6 @@ def r_prime_age_slide(ctx: RuleContext) -> Flag | None:
                 "就業水溫計——失業率可以因為錯的原因好看，它比較難。"
             ),
             lean="dovish", impact="核心族群的就業正在轉弱",
-        )
-    return None
-
-
-@rule
-def r_u6_gap_widening(ctx: RuleContext) -> Flag | None:
-    u6, u3 = ctx.series.get("U6RATE", []), ctx.series.get("UNRATE", [])
-    if len(u6) < 7 or len(u3) < 7:
-        return None
-    gap_now = u6[-1]["value"] - u3[-1]["value"]
-    gap_then = u6[-7]["value"] - u3[-7]["value"]
-    if gap_now - gap_then >= 0.3:
-        return Flag(
-            key="u6_gap_widening", severity="watch",
-            headline="隱藏性失業半年來明顯擴大",
-            detail=(
-                f"廣義失業率（含想全職只能兼職、想工作但沒在找的人）與"
-                f"失業率的差距，半年內從 {gap_then:.1f} 擴大到 {gap_now:.1f} "
-                "個百分點。表面失業率還好看，底下的低度就業已經在增加。"
-            ),
-            lean="dovish", impact="表面失業率低估了實際的鬆動",
         )
     return None
 
@@ -601,9 +693,20 @@ def r_factory_hours(ctx: RuleContext) -> Flag | None:
 
 # ---------------------------------------------------------------------------
 def run_rules(ctx: RuleContext) -> list[Flag]:
+    """
+    排序：層級（TIERS）→ 第一層的固定先後（TIER1_ORDER）→ 嚴重度 → 強度。
+    嚴重度仍照各規則自己判（它決定鷹鴿淨值的權重），層級只管先後。
+    """
     order = {"alert": 0, "watch": 1, "info": 2}
     flags = [f for f in (r(ctx) for r in RULES) if f is not None]
-    flags.sort(key=lambda f: order.get(f.severity, 9))
+    for f in flags:
+        if not f.tier:
+            f.tier = TIER_OF.get(f.key, 3)
+    def _prio(f):
+        return (TIER1_ORDER.index(f.key) if f.tier == 1 and f.key in TIER1_ORDER
+                else len(TIER1_ORDER))
+    flags.sort(key=lambda f: (f.tier, _prio(f), order.get(f.severity, 9),
+                              -f.strength))
     return flags
 
 

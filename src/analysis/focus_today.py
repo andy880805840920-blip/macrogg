@@ -84,6 +84,40 @@ def _yield_chip(rows: list, label: str) -> dict | None:
             "date": last.get("date", "")}
 
 
+def _yahoo_prev_close(res0: dict) -> float | None:
+    """
+    前一交易日收盤：從日線自己找，不信 chartPreviousClose——那是「圖表
+    區間開始前」的收盤，range=5d 時可能是五天前，變動就變成五日變動。
+    最後一根若就是今天這根（同一天，或收盤價等於目前價——期貨夜盤的
+    日線日期會跟成交時間對不上），昨收是倒數第二根；否則是最後一根。
+    沒有日線才退 previousClose → chartPreviousClose。
+    與 netlify/functions/quotes.mjs 的 prevClose 同一條規則。
+    """
+    meta = res0.get("meta") or {}
+    ts = res0.get("timestamp") or []
+    q = ((res0.get("indicators") or {}).get("quote") or [{}])[0] or {}
+    cl = q.get("close") or []
+    bars = [(t, c) for t, c in zip(ts, cl) if t is not None and c is not None]
+    cur, rmt = meta.get("regularMarketPrice"), meta.get("regularMarketTime")
+    if bars and rmt is not None and cur is not None:
+        off = int(meta.get("gmtoffset") or 0)
+
+        def _day(x):
+            return (int(x) + off) // 86400
+        last = bars[-1]
+        is_cur = (_day(last[0]) == _day(rmt)
+                  or abs(float(last[1]) - float(cur))
+                  <= 1e-9 * max(1.0, abs(float(cur))))
+        if not is_cur:
+            return float(last[1])
+        if len(bars) >= 2:
+            return float(bars[-2][1])
+    for k in ("previousClose", "chartPreviousClose"):
+        if meta.get(k) is not None:
+            return float(meta[k])
+    return None
+
+
 # CBOE 的殖利率指數：^TNX＝10 年期、^TYX＝30 年期。
 # 慣例是「殖利率 ×10」（49.8 ＝ 4.98%），但 Yahoo 顯示上兩種格式都出現過
 # ——所以拿到值之後做規範化（>20 就除以 10）再做合理範圍檢查。
@@ -107,9 +141,7 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
         res = (r.json().get("chart") or {}).get("result") or []
         meta = (res[0].get("meta") or {}) if res else {}
         cur = meta.get("regularMarketPrice")
-        prev = meta.get("chartPreviousClose")
-        if prev is None:
-            prev = meta.get("previousClose")
+        prev = _yahoo_prev_close(res[0]) if res else None
         ts = meta.get("regularMarketTime")
         if cur is None or prev is None:
             return None
@@ -206,6 +238,11 @@ QUOTE_SPECS = {
               "unit": "",      "fred": "VIXCLS"},
     "move":  {"sym": "^MOVE", "label": "MOVE",       "lo": 30.0, "hi": 300.0,
               "unit": "",      "fred": None},
+    # 股市：道瓊、費城半導體（沒有 FRED 後備；整數顯示＋漲跌幅）
+    "dji":   {"sym": "^DJI",  "label": "道瓊指數",   "lo": 10000.0,
+              "hi": 100000.0, "unit": "", "fred": None, "fmt": "index"},
+    "sox":   {"sym": "^SOX",  "label": "費城半導體", "lo": 500.0,
+              "hi": 30000.0, "unit": "", "fred": None, "fmt": "index"},
 }
 
 # 預設顯示組（使用者未自選、關 JS、初次造訪都用這組）。
@@ -230,9 +267,7 @@ def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
         res = (r.json().get("chart") or {}).get("result") or []
         meta = (res[0].get("meta") or {}) if res else {}
         cur = meta.get("regularMarketPrice")
-        prev = meta.get("chartPreviousClose")
-        if prev is None:
-            prev = meta.get("previousClose")
+        prev = _yahoo_prev_close(res[0]) if res else None
         ts = meta.get("regularMarketTime")
         if cur is None or prev is None:
             return None
@@ -276,9 +311,12 @@ def _at_or_before(rows, date: str):
     return best
 
 
-def _mk(cid, label, value, delta, direction, date, on=False):
+def _mk(cid, label, value, delta, direction, date, on=False, iso=""):
+    _iso = len(date) >= 10 and date[4] == "-" and date[7] == "-"
+    # iso：完整資料日，給前端盤中報價判斷「誰比較新」（畫面上只顯示月-日）
     return {"id": cid, "label": label, "value": value, "delta": delta,
-            "dir": direction, "date": date[5:] if len(date) >= 10 else date,
+            "dir": direction, "date": date[5:] if _iso else date,
+            "iso": date[:10] if _iso else iso,
             "on": cid in DEFAULT_CHIPS or on}
 
 
@@ -309,6 +347,10 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
         if q:
             dv = q["value"] - q["prev"]
             cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
+            if spec.get("fmt") == "index":
+                pct = dv / q["prev"] * 100 if q["prev"] else 0.0
+                return _mk(cid, spec["label"], f"{q['value']:,.0f}",
+                           f"{dv:+,.0f}（{pct:+.2f}%）", cls, q["date"])
             return _mk(cid, spec["label"], f"{q['value']:.1f}{spec['unit']}",
                        f"{dv:+.1f}", cls, q["date"])
     rows = (liq or {}).get(spec["fred"]) if spec.get("fred") else None
@@ -321,9 +363,89 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
                f"{dv:+.1f}" if dv is not None else "—", cls, d)
 
 
+# 台指期：期交所行情頁背後使用的資料端點（**非官方 API**，可能改版）。
+# 日盤（MarketType 0：08:45–13:45）與夜盤（1：15:00–次日 05:00）各問一次，
+# 取時間較新的那一盤——使用者要的是「全天」的台指期，不只夜盤。
+TXF_URL = "https://mis.taifex.com.tw/futures/api/getQuoteList"
+TXF_RANGE = (5000.0, 80000.0)
+
+
+def _num(x):
+    try:
+        v = float(str(x).replace(",", ""))
+        return v if v == v else None
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_txf(_get_post=None) -> dict | None:
+    """
+    回傳 {value, prev, date, session, symbol}；失敗回 None。
+    prev 是該盤的參考價（日盤＝前一日結算、夜盤＝當日日盤結算）。
+    回應格式若對不上，會把第一筆的欄位名稱寫進 log——端點改版時一眼
+    看得出來要改哪裡。
+    """
+    post = _get_post or (lambda url, body: requests.post(
+        url, json=body, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)",
+                 "Referer": "https://mis.taifex.com.tw/futures/"}))
+    best = None
+    for mkt, session in (("0", "日盤"), ("1", "夜盤")):
+        body = {"MarketType": mkt, "SymbolType": "F", "KindID": "1",
+                "CID": "TXF", "ExpireMonth": "", "RowSize": "全部",
+                "PageNo": "", "SortColumn": "", "AscDesc": "A"}
+        try:
+            r = post(TXF_URL, body)
+            r.raise_for_status()
+            rows = ((r.json() or {}).get("RtData") or {}).get("QuoteList") or []
+        except Exception as e:                     # noqa: BLE001
+            log.warning("台指期（%s）抓取失敗（%s）", session, e)
+            continue
+        q = None
+        for row in rows:
+            sym = str(row.get("SymbolID") or "")
+            last = _num(row.get("CLastPrice"))
+            ref = _num(row.get("CRefPrice"))
+            if (sym.startswith("TXF") and last and ref
+                    and TXF_RANGE[0] <= last <= TXF_RANGE[1]):
+                q = (row, last, ref)
+                break                              # 第一筆＝近月合約
+        if q is None:
+            log.warning("台指期（%s）回應裡找不到可用的近月報價（第一筆欄位："
+                        "%s）", session, ", ".join(list(rows[0])[:12])
+                        if rows else "無資料")
+            continue
+        row, last, ref = q
+        d, t = str(row.get("CDate") or ""), str(row.get("CTime") or "")
+        stamp = (f"{d[:4]}-{d[4:6]}-{d[6:8]}" if len(d) == 8 else "")
+        key = d + t.zfill(6)
+        cand = {"value": last, "prev": ref, "date": stamp,
+                "time": f"{t.zfill(6)[:2]}:{t.zfill(6)[2:4]}" if t else "",
+                "session": session, "symbol": str(row.get("SymbolID")),
+                "_key": key}
+        if best is None or key > best["_key"]:
+            best = cand
+    if best:
+        best.pop("_key", None)
+    return best
+
+
+def _txf_chip(q: dict | None) -> dict:
+    if not q:
+        return _mk("txf", "台指期", "—", "本次擷取失敗", "", "")
+    dv = q["value"] - q["prev"]
+    pct = dv / q["prev"] * 100 if q["prev"] else 0.0
+    cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
+    when = q["session"] + (f" {q['date'][5:]}" if q.get("date") else "")
+    return _mk("txf", "台指期", f"{q['value']:,.0f}",
+               f"{dv:+,.0f}（{pct:+.2f}%）", cls, when,
+               iso=q.get("date") or "")
+
+
 def build_catalog(rates_series: dict | None, liq_series: dict | None,
                   fresh_yields: list | None, offline: bool,
-                  _get=None) -> list[dict]:
+                  _get=None, fw: dict | None = None,
+                  _post=None) -> list[dict]:
     """
     焦點條的完整 chip 目錄（14 顆）。每顆：id、短標籤、顯示值、
     對前一日收盤的變動、方向色、資料日（月-日）、是否預設顯示。
@@ -380,8 +502,10 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                              cls, fc.get("date") or ""))
         else:
             chips.append(_pct_chip(cid, label, rs.get(sid)))
-    chips.append({"id": "fedwatch", "special": "fedwatch",
-                  "on": "fedwatch" in DEFAULT_CHIPS})
+    # 升降息：下次會議機率＋目標會議單場＋累計（三顆一般 chip）
+    for _c in fw_chips(fw):
+        _c["on"] = _c["id"] in DEFAULT_CHIPS
+        chips.append(_c)
     # ---- 流動性 ----
     chips.append(_pct_chip("sofr", "SOFR", liq.get("SOFR")))
     # SOFR−IORB：資金價格對地板的距離。IORB 取「不晚於 SOFR 日」的值，
@@ -425,7 +549,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                          f"{dv:+,.1f} 億" if dv is not None else "—",
                          "up", d))
     # ---- 即時報價：油價與波動率（並行）----
-    _qids = ("wti", "brent", "vix", "move")
+    _qids = ("wti", "brent", "vix", "move", "dji", "sox")
     _quotes = dict(zip(_qids, _pmap(
         lambda c: None if offline else fetch_yahoo_quote(
             QUOTE_SPECS[c]["sym"], QUOTE_SPECS[c]["lo"],
@@ -433,6 +557,10 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     for cid in _qids:
         chips.append(_level_chip(cid, QUOTE_SPECS[cid], liq, offline,
                                  _get=_get, _pre=_quotes.get(cid)))
+    # 台指期（日盤＋夜盤取較新的那一盤）
+    # 測試注入了 _get（GET 假物件）卻沒給 _post 時不打真網路
+    _txf_live = not offline and (_post is not None or _get is None)
+    chips.append(_txf_chip(fetch_txf(_get_post=_post) if _txf_live else None))
     return chips
 
 
@@ -511,7 +639,10 @@ _FEED_LABEL = (("tw.news.yahoo", "Yahoo奇摩新聞"),
                ("dowjones", "Wall Street Journal"),
                # Google News 搜尋型 feed：網址裡的 site: 限定就是來源
                ("reuters", "Reuters"),
-               ("bloomberg", "Bloomberg"))
+               ("bloomberg", "Bloomberg"),
+               ("cnbc.com", "CNBC"),
+               ("federalreserve.gov", "Federal Reserve"),
+               ("feeds.finance.yahoo", "Yahoo Finance"))
 
 
 # 內文注定抓不到的網域：Google News 是 JS 轉址中介頁（沒有 <p> 正文，
@@ -606,12 +737,18 @@ def _excluded(title: str, exclude: list[str] | None) -> bool:
     return any(x and str(x) in title for x in (exclude or []))
 
 
-def fetch_feed_headlines(feeds: list[str], keywords: list[str],
+def fetch_feed_headlines(feeds: list, keywords: list[str],
                          hours: int = 30, _get=None,
                          exclude: list[str] | None = None) -> list[dict]:
     """
-    直接吃 Yahoo 的 RSS，只留**標題命中任一關鍵字詞**的項目。
-    單一 feed 失敗就跳過；全部失敗回空列表，由呼叫端退回 Google News。
+    吃 RSS，只留**標題命中任一關鍵字詞**的項目。單一 feed 失敗就跳過。
+
+    feeds 的每一項可以是網址字串，或 {url: ..., all: true}——all 的 feed
+    本身就是主題專屬（聯準會新聞稿、演講、十年期殖利率新聞），不再用
+    關鍵字過濾（演講標題常是「Speech by Governor X」，一個關鍵字都不含）。
+
+    每條 feed 都記一行「取得 N 則、命中 M 則」：先前 Yahoo 那幾條 feed
+    內容早就不是總經新聞了（滿版台股個股、加密貨幣），卻一直沒人發現。
     """
     get = _get or (lambda url: requests.get(
         url, timeout=TIMEOUT, headers={"User-Agent": "macro-dashboard/1.0"}))
@@ -619,21 +756,26 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
     cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
     out, seen = [], set()
     for feed in feeds:
+        url = feed if isinstance(feed, str) else str(feed.get("url") or "")
+        take_all = (not isinstance(feed, str)) and bool(feed.get("all"))
         try:
-            r = get(feed)
+            r = get(url)
             r.raise_for_status()
             root = ET.fromstring(r.content)
         except Exception as e:                     # noqa: BLE001
-            log.warning("市場焦點：feed %s 抓取失敗（%s）", feed, e)
+            log.warning("市場焦點：feed %s 抓取失敗（%s）", url, e)
             continue
-        label = _feed_label(feed)
+        label = _feed_label(url)
+        n_all = n_hit = 0
         for item in root.iter("item"):
             title = (item.findtext("title") or "").strip()
             link = (item.findtext("link") or "").strip()
             pub = item.findtext("pubDate") or ""
             if not title or not link:
                 continue
-            if not any(_kw_hit(w, _kw_text(title)) for w in words):
+            n_all += 1
+            if not take_all and not any(_kw_hit(w, _kw_text(title))
+                                        for w in words):
                 continue
             if _excluded(title, exclude):
                 continue
@@ -649,7 +791,8 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
             if key in seen:
                 continue
             seen.add(key)
-            # RSS 的官方摘要（FT／WSJ 的 description 是出版社自己寫的
+            n_hit += 1
+            # RSS 的官方摘要（FT／WSJ／CNBC 的 description 是出版社自己寫的
             # 一兩句話，合法免費）：付費牆來源靠它補一點實質內容。
             desc = _html.unescape(re.sub(
                 r"<[^>]+>", " ", item.findtext("description") or ""))
@@ -659,9 +802,9 @@ def fetch_feed_headlines(feeds: list[str], keywords: list[str],
             out.append({"title": title, "link": link, "source": label,
                         "at": at.isoformat(), "kw": "",
                         "summary": desc if len(desc) >= 30 else ""})
+        log.info("市場焦點：feed %s 取得 %d 則、入選 %d 則", label, n_all, n_hit)
     out.sort(key=lambda x: x["at"], reverse=True)
     return out
-
 
 def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
     """
@@ -710,21 +853,20 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
 _FOCUS_CONTENT_SYSTEM = (
     "你是財經記者。輸入是幾篇新聞的標題與內文節錄（可能中英文混合），"
     "後面可能另有一節「標題快訊」——那些只有標題與官方摘要、沒有內文。"
-    "只取與這些關鍵字相關的內容：{kws}。"
-    "讀完全部材料後，**重新綜合改寫成一篇連貫的報導**，不是逐篇摘要："
-    "把各篇的資訊整合成同一條敘事線，分成 2 到 3 個段落，"
-    "段落之間用一個空行分隔，每段 60 到 110 個中文字，總長不超過 {cap} 字。"
-    "優先寫內文才有、標題沒有的具體資訊：金額與規模、時間點、"
-    "人名與職稱、機構名、關鍵引述。硬性規則："
-    "只能使用材料已有的資訊，不得補充材料以外的事實或數字；"
-    "「標題快訊」只能轉述其標題與摘要**字面上有的事**，不得展開細節、"
-    "不得推測其內文，引用時帶來源（例如「路透報導稱…」）；"
-    "不得自行推論來源沒有寫的因果關係；不做預測、不下投資結論；"
-    "與上列主題無關的內容一律不寫；繁體中文。"
-    "**絕對禁止評論材料本身**：不要說明材料的多寡、品質或相關性，"
-    "不要解釋你的處理過程，不要出現「材料」「關鍵字」「無法按要求」"
-    "這類字眼——相關內容少就把確實有的寫成短報導，一段也可以，"
-    "寧短勿虛。直接輸出報導本文，不要標題、不要前言、不要粗體記號。")
+    "只取與這些主題相關的內容：{kws}。"
+    "讀完全部材料後，挑出今天最重要的 {n} 件事，寫成 {n} 則重點："
+    "每則一行、只講一件事、{cap} 個中文字以內；依重要性排序，最重要的"
+    "放第一則。**每一則都必須有具體事實**——誰、做了什麼、數字或時間"
+    "至少要有一項；不要寫「成為市場焦點」「備受關注」「面臨多重挑戰」"
+    "這類空泛的話。硬性規則：只能使用材料已有的資訊，不得補充材料以外"
+    "的事實或數字；「標題快訊」只能轉述其標題與摘要**字面上有的事**，"
+    "不得展開細節、不得推測其內文，引用時帶來源（例如「路透報導稱…」）；"
+    "不得自行推論來源沒有寫的因果關係；不做預測、不下投資結論；繁體中文。"
+    "**絕對禁止評論材料本身**：不要說明材料的多寡、品質或相關性，不要"
+    "解釋你的處理過程，不要出現「材料」「關鍵字」「無法按要求」這類字眼"
+    "——材料只夠寫一兩則就只寫一兩則，寧缺勿濫。"
+    "直接輸出那幾則重點，每則一行，不要編號、不要符號開頭、不要標題或"
+    "前言、不要粗體記號。")
 
 
 def _post_gemini_hardy(key: str, model: str, src_text: str,
@@ -857,14 +999,27 @@ def _tidy_focus(text: str) -> str:
                       for ln in (text or "").splitlines())
 
 
-# 長度有兩個數字，分工清楚：
-#   cap（config 的 max_chars，目前 300）  **提示詞要求的目標**
-#   cap × HARD_MULT（450）               **硬底線**
-# 300 到 450 之間直接採用、不重試——為了幾十個字重新生成一次，
-# 換來的通常是另一篇差不多長的稿子，白花一次 API 呼叫。
-# 超過 450 才帶著字數重寫一次；重寫後仍然超過就**裁切**到底線之內
-# （以整段為單位，不切斷句子），不會因為長度退回列標題。
+# 版式：N 則重點、每則 item_cap 字（config 的 items／item_chars，
+# 預設 3 則 × 100 字）。每則的硬底線＝item_cap × HARD_MULT（150 字）：
+# 底線內直接採用；超過才帶原因重寫一次，仍超過就把那一則裁到底線之內
+# ——長度永遠不會讓焦點段退回列標題（使用者指定）。
 HARD_MULT = 1.5
+DEFAULT_ITEMS, DEFAULT_ITEM_CHARS = 3, 100
+
+# 空話清單：命中兩個以上就帶原因重寫一次（第二次照樣採用——這是文風
+# 問題，不是正確性問題，不值得為它退回列標題）。使用者嫌「AI 總結有點
+# 籠統」，實際線上那段正是「成為市場焦點」「面臨多重挑戰」這種寫法。
+DEFAULT_VAGUE_MARKERS = (
+    "成為市場焦點", "備受關注", "引發市場關注", "引發關注", "多重挑戰",
+    "值得關注", "市場密切關注", "持續升溫", "不容忽視", "牽動市場")
+
+# 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
+# 否則舊版的三段散文會一直被沿用到標題換掉為止。
+FOCUS_PROMPT_VERSION = "f4-items"
+
+# 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
+# ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
+CACHE_TTL_HOURS = 12
 
 
 def _trim_to(text: str, limit: int) -> str:
@@ -892,18 +1047,92 @@ def _trim_to(text: str, limit: int) -> str:
     return out[:cut + 1] if cut > 0 else out
 
 
-def summarize_content(articles: list[dict], keywords: list[str],
-                      cap: int, env=None,
-                      briefs: list[dict] | None = None,
-                      meta_markers=None) -> tuple[str, str]:
+# 行首的編號與項目符號：模型常常不聽「不要編號」。
+_ITEM_LEAD = re.compile(r"^\s*(?:[・•●▪◆◇■□\-–—*]|\d{1,2}[.、)）]|"
+                        r"[（(]\d{1,2}[)）]|[一二三四五六七八九十][、.])\s*")
+
+
+def _split_items(text: str, n: int) -> list[str]:
+    """一行一則；去掉行首編號與符號；超過 n 則只留前 n 則。"""
+    items = [_ITEM_LEAD.sub("", ln).strip()
+             for ln in (text or "").splitlines()]
+    items = [x for x in items if x]
+    if len(items) > n:
+        log.info("市場焦點：模型寫了 %d 則，只留前 %d 則", len(items), n)
+    return items[:n]
+
+
+def _generate_items(src_text: str, system: str, env, *, item_cap: int,
+                    n_items: int, meta_markers=None,
+                    vague_markers=None) -> tuple[str, str]:
     """
-    從文章內文摘關鍵字相關的重點。回傳 (焦點段, 來源標記)；失敗回 ("", 原因)。
+    共用的生成＋驗證核心（內文模式與標題模式都走這裡）。
+    回傳 (多則重點以換行連接, "")；失敗回 ("", 原因)。
+
+    驗證分三個層級，處置各不相同：
+      後設字眼   模型在評論材料而不是寫新聞 → 重試一次，再犯就失敗
+      數字鎖     正確性防護欄 → 一票否決、不重試
+      長度／空話 文風問題 → 重寫一次，仍不理想就裁切後照樣採用
+    """
+    hard = int(item_cap * HARD_MULT)
+    vague_markers = vague_markers or DEFAULT_VAGUE_MARKERS
+    best: list[str] = []
+    note = ""
+    for attempt in (1, 2):
+        text, err = _call_ai(src_text + note, system, env)
+        if err:
+            return "", err
+        items = _split_items(_tidy_focus(text), n_items)
+        if not items:
+            return "", "輸出是空的"
+        joined = "\n".join(items)
+        meta = _meta_hits(joined, meta_markers)
+        if meta:
+            log.warning("市場焦點：輸出含後設字眼（%s），退回重試",
+                        "、".join(meta[:4]))
+            note = ("\n\n（上一次的輸出在評論材料本身，被退回。請直接輸出"
+                    "重點：不要解釋材料的多寡或你的處理過程；材料只夠寫"
+                    "一兩則就只寫一兩則。）")
+            continue
+        if not _digits_ok(joined, src_text):
+            return "", "輸出出現材料裡沒有的數字"
+        long_ = [i + 1 for i, it in enumerate(items) if cjk_len(it) > hard]
+        vague = _meta_hits(joined, vague_markers)
+        if attempt == 1 and (long_ or len(vague) >= 2):
+            best = items
+            why = []
+            if long_:
+                why.append("第 " + "、".join(map(str, long_))
+                           + f" 則超過 {hard} 字")
+            if len(vague) >= 2:
+                why.append("用了空泛的套話（" + "、".join(vague[:3]) + "）")
+            log.warning("市場焦點：%s，帶原因重寫一次", "；".join(why))
+            note = (f"\n\n（上一次的輸出被退回：{'；'.join(why)}。請重寫："
+                    f"每則 {item_cap} 字以內，講具體的事——誰、做了什麼、"
+                    "數字或時間——不要套話。）")
+            continue
+        return "\n".join(_trim_to(it, hard) for it in items), ""
+    if best:
+        log.warning("市場焦點：重寫後仍不合格，採用第一版並裁切超長的則")
+        return "\n".join(_trim_to(it, hard) for it in best), ""
+    return "", "輸出反覆評論材料本身（後設字眼）"
+
+
+def summarize_content(articles: list[dict], keywords: list[str],
+                      item_cap: int = DEFAULT_ITEM_CHARS, env=None,
+                      briefs: list[dict] | None = None,
+                      meta_markers=None, n_items: int = DEFAULT_ITEMS,
+                      vague_markers=None) -> tuple[str, str]:
+    """
+    讀文章內文寫成 N 則重點。回傳 (重點, "model-content")；失敗回 ("", 原因)。
 
     briefs 是「標題快訊」層：付費牆來源（路透、彭博、FT、WSJ）的標題＋
-    RSS 官方摘要。它們進材料包供模型織進論述，但提示詞硬性規定只能
+    RSS 官方摘要。它們進材料包供模型織進重點，但提示詞硬性規定只能
     轉述字面——標題只有十幾個字，模型對著標題腦補是這一層最大的風險。
     數字鎖的驗證範圍涵蓋「全文＋快訊」的合併文字。
     """
+    if not articles and not briefs:
+        return "", "沒有任何材料"
     src_text = "\n\n".join(
         f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}"
         for a in articles)
@@ -914,61 +1143,12 @@ def summarize_content(articles: list[dict], keywords: list[str],
                          f"【{b.get('source') or '—'}】{b['title']}"
                          + (f"——{b['summary']}" if b.get("summary") else "")
                          for b in briefs))
-    if not articles and not briefs:
-        return "", "沒有任何材料"
-    # 提示詞要求的就是 cap 本身（300 字以內）。
-    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords), cap=cap)
-    # 長度**永遠不會**讓這一段退回列標題（使用者指定）。分工：
-    #   ≤ cap（300）      合格
-    #   cap–hard（–450）  直接採用，不重試——為了幾十個字重新生成，
-    #                     換來的通常是另一篇差不多長的稿子，白花一次呼叫
-    #   > hard（450）     帶著字數重寫一次；仍然超過就裁切到底線之內
-    hard = int(cap * HARD_MULT)
-    best = ""
-    note = ""
-    for _attempt in (1, 2):
-        text, err = _call_ai(src_text + note, system, env)
-        if err:
-            return "", err
-        text = _tidy_focus(text)
-        if not text:
-            return "", "輸出是空的"
-        _meta = _meta_hits(text, meta_markers)
-        if _meta:
-            # 模型在評論材料而不是寫新聞 → 帶原因重試一次
-            log.warning("市場焦點：輸出含後設字眼（%s），退回重試",
-                        "、".join(_meta[:4]))
-            note = ("\n\n（上一次的輸出在評論材料本身，被退回。"
-                    "請直接輸出報導本文：不要解釋材料的多寡或你的處理"
-                    "過程；材料少就短寫，一段也可以，寧短勿虛。）")
-            continue
-        # 數字鎖對「內文」驗：輸出的每一串數字都必須出現在輸入的內文裡
-        # ——這一條是**正確性**防護欄，跟長度不同層級，照樣一票否決。
-        if not _digits_ok(text, src_text):
-            return "", "輸出出現內文裡沒有的數字"
-        _n = cjk_len(text)
-        if _n <= hard:
-            if _n > cap:
-                log.info("市場焦點：輸出 %d 字（目標 %d、底線 %d），"
-                         "在底線內直接採用", _n, cap, hard)
-            return text, "model-content"
-        # 超過底線：留著當備案（兩次都超過時用比較短的那一份），重寫一次
-        if not best or _n < cjk_len(best):
-            best = text
-        if _attempt == 1:
-            log.warning("市場焦點：輸出 %d 字超過底線 %d，帶字數重寫一次",
-                        _n, hard)
-            note = (f"\n\n（上一次的輸出是 {_n} 個中文字，太長了。"
-                    f"請重寫成 {cap} 字以內：捨掉次要細節，不要刪掉主線。）")
-
-    if best:
-        # 兩次都超過底線：裁切到底線之內（以整段為單位，句子不切斷），
-        # 仍然採用——內容已通過後設檢查與數字鎖，退回列標題更糟。
-        _cut = _trim_to(best, hard)
-        log.warning("市場焦點：兩次都超過底線（%d 字），裁切到 %d 字後採用",
-                    cjk_len(best), cjk_len(_cut))
-        return _cut, "model-content"
-    return "", "輸出反覆評論材料本身（後設字眼）"
+    system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
+                                          cap=item_cap, n=n_items)
+    text, err = _generate_items(src_text, system, env, item_cap=item_cap,
+                                n_items=n_items, meta_markers=meta_markers,
+                                vague_markers=vague_markers)
+    return (text, "model-content") if text else ("", err)
 
 
 def _norm_title(t: str) -> str:
@@ -986,28 +1166,116 @@ def _sim(a: str, b: str) -> float:
     return len(A & B) / max(1, len(A | B))
 
 
+# 來源權重：通訊社與財經專業媒體、官方發布 > 一般入口轉載。
+# 比對的是 feed 標籤（_feed_label）與 Google News 標題尾巴的媒體名。
+SOURCE_WEIGHT = (("reuters", 1.5), ("bloomberg", 1.5), ("wall street", 1.5),
+                 ("financial times", 1.5), ("cnbc", 1.5),
+                 ("federal reserve", 1.5), ("yahoo finance", 0.5))
+
+# 發布日加分：當天（或前一天，台灣早上那次對應美國前一天）有這類
+# 發布時，標題提到它的新聞加分——FOMC、CPI、非農當天，大家看的就是那件事。
+EVENT_WORDS = {
+    "fomc": ("FOMC", "聯準會", "Fed", "Powell", "利率決策", "rate decision"),
+    "cpi": ("CPI", "通膨", "inflation", "消費者物價"),
+    "employment": ("非農", "就業", "payrolls", "jobs report", "unemployment"),
+    "pce": ("PCE",),
+    "ppi": ("PPI",),
+    "jolts": ("JOLTS", "職缺"),
+    "gdp": ("GDP", "經濟成長"),
+    "retail": ("零售銷售", "retail sales"),
+    "claims": ("初領", "失業金", "jobless claims"),
+    "umich": ("密大", "密西根", "consumer sentiment"),
+    "auction_10y": ("10 年期公債標售", "10-year auction", "10-year note auction"),
+    "auction_30y": ("30 年期公債標售", "30-year auction", "30-year bond auction"),
+}
+
+
+def _src_weight(h: dict) -> float:
+    s = f"{h.get('source') or ''} {h.get('title') or ''}".lower()
+    return max([w for k, w in SOURCE_WEIGHT if k in s] or [0.0])
+
+
+def _age_hours(h: dict, now: dt.datetime) -> float | None:
+    try:
+        at = dt.datetime.fromisoformat(str(h.get("at")))
+        if at.tzinfo is None:
+            at = at.replace(tzinfo=dt.timezone.utc)
+        return (now - at).total_seconds() / 3600
+    except (TypeError, ValueError):
+        return None
+
+
+def _kw_words(kws) -> list[str]:
+    return [w for kw in (kws or []) for w in str(kw).split() if w]
+
+
+def _heat_map(pool: list[dict], words: list[str]) -> dict:
+    """每個關鍵字詞被幾家**不同來源**的標題提到——大家都在報的主題。"""
+    seen: dict = {}
+    for h in pool:
+        t = _kw_text(h.get("title") or "")
+        src = (h.get("source") or "").lower()
+        for w in words:
+            if _kw_hit(w, t):
+                seen.setdefault(w, set()).add(src)
+    return {w: len(v) for w, v in seen.items()}
+
+
+def rank_score(h: dict, keywords, secondary=None, *, heat=None, now=None,
+               events=None) -> float:
+    """
+    一則標題的重要性分數，全部確定性規則（看得到、測得到）：
+      主題    主級關鍵字一次 2 分、次級 1 分
+      熱度    同一個主題詞被 N 家不同來源報導 → 加 min(N−1, 3) 分
+      時效    12 小時內 +2、24 小時內 +1.5、48 小時內 +0.5
+      來源    通訊社、財經專業媒體、官方發布 +1.5；Yahoo Finance +0.5
+      發布日  當天有 FOMC／CPI／非農等發布、標題又提到它 → +2
+    """
+    t = _kw_text(h.get("title") or "")
+    p_words, s_words = _kw_words(keywords), _kw_words(secondary)
+    hit_p = [w for w in p_words if _kw_hit(w, t)]
+    hit_s = [w for w in s_words if _kw_hit(w, t)]
+    score = 2.0 * len(hit_p) + 1.0 * len(hit_s)
+    if heat:
+        n = max([heat.get(w, 0) for w in hit_p + hit_s] or [0])
+        score += min(max(n - 1, 0), 3)
+    if now is not None:
+        age = _age_hours(h, now)
+        if age is not None:
+            score += (2.0 if age <= 12 else 1.5 if age <= 24
+                      else 0.5 if age <= 48 else 0.0)
+    score += _src_weight(h)
+    for kind in (events or ()):
+        if any(_kw_hit(w, t) for w in EVENT_WORDS.get(kind, ())):
+            score += 2.0
+            break
+    return score
+
+
 def pick_fallback(headlines: list[dict], keywords: list[str],
                   n: int = 3, exclude: list[str] | None = None,
-                  secondary: list[str] | None = None) -> list[dict]:
+                  secondary: list[str] | None = None, *,
+                  pool: list[dict] | None = None, now=None,
+                  events=None) -> list[dict]:
     """
-    沒有 AI 時的確定性挑選：關鍵字命中數多者優先。
-    輸入已按時間新→舊排好，穩定排序讓同分者維持新的在前。
+    依 rank_score 挑前 n 則（同分維持輸入順序，也就是新的在前）。
+
+    pool 是算「熱度」用的完整標題池（預設＝headlines 本身）——內文候選
+    與標題快訊是兩個子集合，熱度要拿全部標題算才準。
 
     挑的時候擋掉「同一件事的另一種寫法」：fetch 端的去重是完全比對
     （去尾巴後前 40 字），同一則新聞在不同媒體的標題只要改幾個字就會
     穿過去——實際發生過「來源標題選到兩則一樣的新聞」。這裡再用
     字元二元組相似度把 >0.55 的視為重複，跳過選下一則。
     """
-    def _hits(h):
-        """主級關鍵字一次 2 分、次級 1 分——債市生態系與 AI 資本週期
-        的次級主題只在主線不足時上位，不搶聯準會頭條的位置。"""
-        t = _kw_text(h["title"])
-        return (2 * sum(1 for kw in keywords
-                        for w in kw.split() if _kw_hit(w, t))
-                + sum(1 for kw in (secondary or [])
-                      for w in kw.split() if _kw_hit(w, t)))
+    heat = _heat_map(pool if pool is not None else headlines,
+                     _kw_words(keywords) + _kw_words(secondary))
+    ranked = sorted(headlines, reverse=True,
+                    key=lambda h: rank_score(h, keywords, secondary,
+                                             heat=heat, now=now,
+                                             events=events))
     picked = []
-    for h in sorted(headlines, key=_hits, reverse=True):
+    for h in ranked:
         # 排除詞在挑選層也擋一次：Google News 標題模式不經過 feed 的
         # 過濾，只在這裡把關
         if _excluded(h["title"], exclude):
@@ -1025,10 +1293,14 @@ def pick_fallback(headlines: list[dict], keywords: list[str],
 # Gemini：焦點段（無接地）與 FedWatch 擷取（搜尋接地）
 # ---------------------------------------------------------------------------
 _FOCUS_SYSTEM = (
-    "你是財經編輯。從輸入的新聞標題清單挑出對「美國公債殖利率與聯準會政策」"
-    "最重要的一到三則，寫成一段不超過 {cap} 個中文字的市場焦點。規則："
-    "只能使用標題裡已有的資訊，不得補充任何標題以外的事實或數字；"
-    "不做預測、不下投資結論；繁體中文；直接輸出那一段文字，不要任何前言。")
+    "你是財經編輯。輸入是新聞標題清單（有些附官方摘要）。挑出對"
+    "「美國公債殖利率與聯準會政策」最重要的 {n} 件事，寫成 {n} 則重點："
+    "每則一行、只講一件事、{cap} 個中文字以內，最重要的放第一則；"
+    "每則要寫出具體的事（誰、做了什麼），不要寫「成為市場焦點」「備受"
+    "關注」這類空話。只能使用標題與摘要裡已有的資訊，不得補充任何以外"
+    "的事實或數字；不做預測、不下投資結論；繁體中文。標題只夠寫一兩則"
+    "就只寫一兩則。直接輸出那幾則，每則一行，不要編號、不要符號開頭、"
+    "不要任何前言。")
 
 
 def _digits_ok(text: str, source: str) -> bool:
@@ -1040,18 +1312,20 @@ def _digits_ok(text: str, source: str) -> bool:
     return True
 
 
-def summarize(headlines: list[dict], cap: int, env=None) -> tuple[str, str]:
-    """回傳 (焦點段, 來源標記)。失敗回 ("", 原因)。"""
-    lines = "\n".join(f"- [{h['source'] or '—'}] {h['title']}"
-                      for h in headlines[:24])
-    text, err = _call_ai(lines, _FOCUS_SYSTEM.format(cap=cap), env)
-    if err:
-        return "", err
-    if not text or cjk_len(text) > cap + 40:
-        return "", f"長度不合格（{cjk_len(text)} 字）"
-    if not _digits_ok(text, lines):
-        return "", "輸出出現標題裡沒有的數字"
-    return text, "model"
+def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
+              env=None, n_items: int = DEFAULT_ITEMS, meta_markers=None,
+              vague_markers=None) -> tuple[str, str]:
+    """標題模式：只有標題（＋官方摘要）可用時寫成 N 則重點。
+    回傳 (重點, "model")；失敗回 ("", 原因)。"""
+    lines = "\n".join(
+        f"- [{h.get('source') or '—'}] {h['title']}"
+        + (f"——{h['summary']}" if h.get("summary") else "")
+        for h in headlines[:24])
+    text, err = _generate_items(
+        lines, _FOCUS_SYSTEM.format(cap=item_cap, n=n_items), env,
+        item_cap=item_cap, n_items=n_items, meta_markers=meta_markers,
+        vague_markers=vague_markers)
+    return (text, "model") if text else ("", err)
 
 
 # ---------------------------------------------------------------------------
@@ -1067,7 +1341,7 @@ DEFAULT_MEETING = "2026-12-09"
 # 1＝單合約 vs FRED 中點；2＝雙合約價差＋品質閘門；
 # 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核；
 # 4＝WIRP 逐會議法（日曆日加權、不封頂、正負＝升降息）
-FW_METHOD = 4
+FW_METHOD = 5
 
 
 def _last_value(rows) -> float | None:
@@ -1252,6 +1526,257 @@ def calculate_meeting_probability(futures_prices: dict, fomc_dates: list,
             "outcomes": outcomes,
             "anchor": anchor, "meeting": str(target),
             "months": months}
+
+
+def _next_month(month: str) -> str:
+    y, m = int(month[:4]), int(month[5:7])
+    return f"{y + 1:04d}-01" if m == 12 else f"{y:04d}-{m + 1:02d}"
+
+
+def _split_outcomes(move_bp: float) -> list:
+    """把隱含變動拆成相鄰兩個 25bp 結果，回傳 [[bp, 機率], …]（機率大的在前）。
+    存成清單而不是 dict：要寫進 state 的 JSON，dict 的整數鍵會被轉成字串。"""
+    moves = move_bp / 25.0
+    lower = math.floor(moves)
+    frac = moves - lower
+    out = [[int(lower * 25), round(1 - frac, 4)],
+           [int((lower + 1) * 25), round(frac, 4)]]
+    return sorted(out, key=lambda x: -x[1])
+
+
+def meeting_path(futures_prices: dict, fomc_dates: list, horizon: str,
+                 today: dt.date, fallback_rate: float | None = None
+                 ) -> dict | None:
+    """
+    從**目前的利率**往後，逐場推出每一次會議的隱含利率（今天到 horizon）。
+
+    為什麼要有這一版：舊算法（calculate_meeting_probability）從目標會議
+    往回找「沒開會的月份」當起點——目標換成下一次會議（10/28）時，往回
+    是 9 月（9/16 開會）、再往回是 8 月，而 8、9 月的合約都已經到期，
+    報價被停滯偵測擋下，整個算不出來。這一版改成往前推：
+
+      起點 r0（目前利率）依序取：
+        ① 今天到第一場會議之間、沒開會的月份合約（整個月都是現行利率）
+        ② 第一場會議月與「下個月」合約反推：下個月沒開會，它的平均
+           就是會後利率 End；Avg(會議月)＝(N×r0＋M×End)/D → 解 r0
+        ③ 都沒有就用目標區間中點（呼叫端傳入）
+      每一場會議的會後利率 End 依序取：
+        ① 下個月沒開會、又有合約 → End＝下個月平均（最穩：不受月底會議
+           「M 很小、反推放大雜訊」的影響）
+        ② 否則照日曆日加權反推：End＝(D×Avg−N×Start)/M
+      下一場的 Start＝這一場的 End。
+
+    「下個月沒開會」只在 config 有那一年的會議日程時才算數——2027 年的
+    日期還沒填進 config 時，1 月視為未知，12 月會議改走加權反推。
+
+    回傳 {r0, r0_src, meetings: [{date, start, end, move_bp, outcomes, how}],
+    cum_bp}；資料不足回 None。
+    """
+    avg = {str(m): 100.0 - float(p) for m, p in (futures_prices or {}).items()}
+    dates = sorted({str(d)[:10] for d in (fomc_dates or [])} | {str(horizon)})
+    meet_months = {d[:7] for d in dates}
+    years = {d[:4] for d in dates}
+
+    def no_meeting(m: str) -> bool:
+        return m[:4] in years and m not in meet_months
+
+    upcoming = [d for d in dates if today.isoformat() <= d <= str(horizon)]
+    if not upcoming:
+        return None
+    m1 = upcoming[0][:7]
+    d1 = dt.date.fromisoformat(upcoming[0])
+    days1 = calendar.monthrange(d1.year, d1.month)[1]
+
+    r0, r0_src = None, ""
+    x, cands = today.isoformat()[:7], []
+    while x < m1:
+        if no_meeting(x) and x in avg:
+            cands.append(x)
+        x = _next_month(x)
+    if cands:
+        r0, r0_src = avg[cands[-1]], f"{cands[-1]} 合約（當月沒有會議）"
+    elif (no_meeting(_next_month(m1)) and _next_month(m1) in avg
+          and m1 in avg and d1.day > 0):
+        nx = _next_month(m1)
+        r0 = (days1 * avg[m1] - (days1 - d1.day) * avg[nx]) / d1.day
+        r0_src = f"{m1} 與 {nx} 合約反推"
+    elif fallback_rate is not None:
+        r0, r0_src = float(fallback_rate), "目標區間中點"
+    else:
+        return None
+
+    meetings, start = [], r0
+    for d in upcoming:
+        mo, dd = d[:7], dt.date.fromisoformat(d)
+        days = calendar.monthrange(dd.year, dd.month)[1]
+        n, m_days = dd.day, days - dd.day
+        nx = _next_month(mo)
+        if no_meeting(nx) and nx in avg:
+            end, how = avg[nx], f"{nx} 合約平均"
+        elif mo in avg and m_days > 0:
+            end = (days * avg[mo] - n * start) / m_days
+            how = f"{mo} 合約日曆日加權反推（N={n}、M={m_days}）"
+        else:
+            log.warning("FedWatch 前推：%s 的會議缺報價或在月底，無法推算", d)
+            return None
+        move = (end - start) * 100
+        meetings.append({"date": d, "start": round(start, 6),
+                         "end": round(end, 6), "move_bp": round(move, 3),
+                         "outcomes": _split_outcomes(move), "how": how})
+        start = end
+    return {"r0": round(r0, 6), "r0_src": r0_src, "meetings": meetings,
+            "cum_bp": round((meetings[-1]["end"] - r0) * 100, 3)}
+
+
+def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
+                  today: dt.date | None = None) -> dict | None:
+    """
+    下一次會議的機率＋目標會議（horizon，預設 12 月）的單場與累計幅度。
+
+    抓取：今天所在月份到 horizon 月份的每一張聯邦基金期貨（並行）。
+    當月合約兼健康檢查——它被已實現的利率釘住，隱含偏離 FRED 目標
+    中點 >0.15 就判整條報價鏈壞掉、整批不採用；其他合約要「有在動」
+    （五天收盤一模一樣＝報價死掉）。月份間差 >1.5 個百分點或單場
+    |move|>100bp 一律判壞資料。
+
+    同一次執行再用每張合約**前一日收盤**算一次，供 chip 標「前日」——
+    跟其他 chip 一樣是收盤對收盤。
+    """
+    cfg = cfg or {}
+    today = today or clock.today()
+    rs = rates_series or {}
+    lo, hi = _last_value(rs.get("DFEDTARL")), _last_value(rs.get("DFEDTARU"))
+    if lo is None or hi is None:
+        log.warning("FedWatch 前推：抓不到目標區間（DFEDTARL/U），跳過")
+        return None
+    mid = (lo + hi) / 2
+    fomc = [str(x)[:10] for x in (cfg.get("fomc_dates") or [])]
+    horizon = str(cfg.get("fedwatch_meeting") or DEFAULT_MEETING)
+    if horizon < today.isoformat():
+        later = [d for d in fomc if d >= today.isoformat()]
+        if not later:
+            log.warning("FedWatch 前推：config 沒有今天之後的 FOMC 日期，"
+                        "請在 config/focus.yaml 補上明年的會議日")
+            return None
+        horizon = later[-1]
+    months, mo = [], today.isoformat()[:7]
+    while mo <= horizon[:7]:
+        months.append(mo)
+        mo = _next_month(mo)
+    cur_m = months[0]
+    res = _pmap(lambda m: fetch_zq_implied(
+        _zq_symbol(m), _get, require_movement=(m != cur_m), with_prev=True),
+        months)
+    prices, prices_prev = {}, {}
+    for m, r in zip(months, res):
+        imp, imp_prev = r if isinstance(r, tuple) else (None, None)
+        if imp is None:
+            log.warning("FedWatch 前推：%s 合約報價不可用，整批不採用",
+                        _zq_symbol(m))
+            return None
+        prices[m] = round(100.0 - imp, 4)
+        if imp_prev is not None:
+            prices_prev[m] = round(100.0 - imp_prev, 4)
+    if abs((100.0 - prices[cur_m]) - mid) > 0.15:
+        log.warning("FedWatch 前推：當月合約隱含 %.3f%% 偏離目標中點 %.3f%% "
+                    "超過 0.15，判定報價鏈品質不佳，整批不採用",
+                    100.0 - prices[cur_m], mid)
+        return None
+    imps = sorted(100.0 - p for p in prices.values())
+    if imps[-1] - imps[0] > 1.5:
+        log.warning("FedWatch 前推：月份間隱含利率相差 %.2f 個百分點，"
+                    "疑為抓錯合約，不採用", imps[-1] - imps[0])
+        return None
+    path = meeting_path(prices, fomc, horizon, today, fallback_rate=mid)
+    if path is None:
+        return None
+    if any(abs(m["move_bp"]) > 100 for m in path["meetings"]):
+        log.warning("FedWatch 前推：有單場會議隱含變動超過四碼，判為壞資料")
+        return None
+    prev = None
+    if set(prices_prev) == set(prices):
+        prev = meeting_path(prices_prev, fomc, horizon, today,
+                            fallback_rate=mid)
+    for m in path["meetings"]:
+        log.info("FedWatch 前推：%s 會議 Start %.4f → End %.4f，隱含 %+.2f bp"
+                 "（%s）", m["date"], m["start"], m["end"], m["move_bp"],
+                 m["how"])
+    log.info("FedWatch 前推：起點 %.4f%%（%s）；至 %s 累計 %+.2f bp",
+             path["r0"], path["r0_src"], horizon, path["cum_bp"])
+    return {"src": "futures", "date": today.isoformat(),
+            "next": path["meetings"][0], "horizon": path["meetings"][-1],
+            "cum_bp": path["cum_bp"], "r0": path["r0"],
+            "r0_src": path["r0_src"],
+            "prev": ({"next": prev["meetings"][0],
+                      "horizon": prev["meetings"][-1],
+                      "cum_bp": prev["cum_bp"]} if prev else None)}
+
+
+_CN_N = {1: "一", 2: "兩", 3: "三", 4: "四"}
+
+
+def outcome_name(bp: int) -> str:
+    """0 → 維持；+25 → 升一碼；−50 → 降兩碼。"""
+    if bp == 0:
+        return "維持"
+    n = abs(int(bp)) // 25
+    return ("升" if bp > 0 else "降") + _CN_N.get(n, str(n)) + "碼"
+
+
+def fw_chips(fw: dict | None) -> list[dict]:
+    """
+    三顆升降息 chip（給目錄用的一般 chip 格式）：
+      fedwatch  下次會議：機率最高的兩個結果（單場推算只會切成相鄰兩種，
+                第三種在這個方法下是 0%，不硬湊）
+      fw_dec    目標會議（12 月）單場的隱含幅度
+      fw_cum    從現在到目標會議（含）的累計隱含幅度
+    """
+    def _md(d):
+        return f"{int(d[5:7])}/{int(d[8:10])}"
+
+    if not fw or not fw.get("next"):
+        return [_mk("fedwatch", "下次 FOMC 機率", "—", "本次擷取失敗", "", ""),
+                _mk("fw_dec", "目標會議單場幅度", "—", "本次擷取失敗", "", ""),
+                _mk("fw_cum", "累計升降息幅度", "—", "本次擷取失敗", "", "")]
+    nxt, hz, prev = fw["next"], fw["horizon"], fw.get("prev") or {}
+    when = (f"沿用 {fw['stale_from'][5:]}" if fw.get("stale_from")
+            else str(fw.get("date") or ""))
+    nm, hm = int(nxt["date"][5:7]), int(hz["date"][5:7])
+    o = [x for x in nxt["outcomes"] if x[1] >= 0.005] or nxt["outcomes"][:1]
+    top = f"{outcome_name(o[0][0])} {o[0][1] * 100:.0f}%"
+    if len(o) > 1:
+        second = f"{outcome_name(o[1][0])} {o[1][1] * 100:.0f}%"
+        p_prev = dict((b, p) for b, p in (prev.get("next") or {}).get(
+            "outcomes", []))
+        if o[1][0] in p_prev:
+            second += f"（前日 {p_prev[o[1][0]] * 100:.0f}%）"
+    else:
+        second = "市場幾乎完全定價"
+    # 方向色：升息那一側的機率變大＝偏鷹（紅），跟殖利率上升同色
+    d_cls = ""
+    if prev.get("next"):
+        d_mv = nxt["move_bp"] - prev["next"]["move_bp"]
+        d_cls = "up" if d_mv > 0.05 else ("dn" if d_mv < -0.05 else "")
+
+    def _amt(cur, old):
+        txt = f"約 {cur / 25:+.1f} 碼"
+        if old is not None:
+            txt += f"（前日 {old:+.1f} bp）"
+        cls = ("" if old is None else "up" if cur - old > 0.05
+               else "dn" if cur - old < -0.05 else "")
+        return txt, cls
+
+    dec_txt, dec_cls = _amt(hz["move_bp"], (prev.get("horizon") or {}).get(
+        "move_bp"))
+    cum_txt, cum_cls = _amt(fw["cum_bp"], prev.get("cum_bp"))
+    return [
+        _mk("fedwatch", f"{nm} 月 FOMC（{_md(nxt['date'])}）", top, second,
+            d_cls, when, on=True),
+        _mk("fw_dec", f"{hm} 月 FOMC 單場幅度", f"{hz['move_bp']:+.1f} bp",
+            dec_txt, dec_cls, when),
+        _mk("fw_cum", f"至 {hm} 月 FOMC 累計", f"{fw['cum_bp']:+.1f} bp",
+            cum_txt, cum_cls, when),
+    ]
 
 
 def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
@@ -1532,11 +2057,35 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 # ---------------------------------------------------------------------------
 # 主流程
 # ---------------------------------------------------------------------------
+def _todays_events(events: dict | None, cfg: dict | None,
+                   today: dt.date) -> list[str]:
+    """
+    今天（或前一天）有哪些發布事件。前一天也算：台灣早上 07:00 那次
+    對應的是美國前一天的發布（CPI 美東 08:30＝台灣當晚，隔天早上才是
+    第一次完整的收盤後執行）。events 是 {種類: [ISO 日期, …]}；FOMC
+    會議日直接讀 config 的 fomc_dates（會後聲明在美東下午兩點，同理）。
+    """
+    days = {today.isoformat(), (today - dt.timedelta(days=1)).isoformat()}
+    out = []
+    for kind, dates in (events or {}).items():
+        if isinstance(dates, str):
+            dates = [dates]
+        if any(str(d)[:10] in days for d in (dates or [])):
+            out.append(kind)
+    if "fomc" not in out and any(
+            str(d)[:10] in days for d in ((cfg or {}).get("fomc_dates") or [])):
+        out.append("fomc")
+    return out
+
+
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
-          state_path: Path, env=None, liq_series: dict | None = None) -> dict:
+          state_path: Path, env=None, liq_series: dict | None = None,
+          events: dict | None = None) -> dict:
     cfg = cfg or {}
     keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
-    cap = int(cfg.get("max_chars") or 120)
+    # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
+    n_items = int(cfg.get("items") or DEFAULT_ITEMS)
+    item_cap = int(cfg.get("item_chars") or DEFAULT_ITEM_CHARS)
 
     yields = [c for c in (
         _yield_chip((rates_series or {}).get("DGS10"), "10 年期"),
@@ -1593,82 +2142,37 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     # 實際發生過「修完 push、下一次執行畫面還是 100%」正是這個原因。
     # state 記下算出該值的方法版本，不一致就當天重算。
     fw_old = state.get("fedwatch") or {}
-    # 目標會議的顯示標籤（「12 月」）——三層來源共用，chip 標題用
-    _meet = str(cfg.get("fedwatch_meeting") or DEFAULT_MEETING)
-    _meet_label = f"{int(_meet[5:7])} 月"
-    if (fw_old.get("date") == today and fw_old.get("pct") is not None
-            and fw_old.get("method") == FW_METHOD):
-        out["fedwatch"] = {"pct": fw_old["pct"],
-                           "delta_pp": fw_old.get("delta_pp"),
-                           "suspect": bool(fw_old.get("suspect")),
-                           "src": fw_old.get("src", ""),
-                           "move_bp": fw_old.get("move_bp"),
-                           "meeting_label": _meet_label}
+    if (fw_old.get("date") == today and fw_old.get("method") == FW_METHOD
+            and fw_old.get("path")):
+        out["fedwatch"] = fw_old["path"]
     else:
-        # 來源鏈：期貨價差（自算、自驗）×交叉檢核× Atlanta Fed（官方）
-        # → Gemini 擷取 → 沿用前值。
-        # Atlanta 每次都打：已啟用時當交叉檢核的裁判與備援；
-        # 未啟用（沒設 atlanta_json_path）時做偵察、把端點候選寫進 log。
-        _fw = fedwatch_from_futures(rates_series, cfg)
+        # 期貨逐會議前推（下次會議機率＋目標會議單場與累計幅度）。
+        # Atlanta Fed 照舊每次打一次：未設定端點時只做偵察、把候選網址
+        # 寫進 log；設定後當交叉檢核（差逾 25pp 記警告）。
+        _path = fedwatch_path(rates_series, cfg)
         _at = fetch_atlanta_fedwatch(cfg)
-        pct, fw_src, _detail = _pick_fw(_fw, _at)
-        move_bp = (_detail or {}).get("move_bp")
-        if pct is None:
-            pct = fetch_fedwatch(env)
-            fw_src = "ai"
-        prev = fw_old.get("pct")
-        suspect = False
-        if pct is None and prev is not None:
-            # 本次擷取失敗（429、斷線…）但手上有近幾天的值 → 沿用並標明，
-            # 不要讓一次限流就把整顆 chip 打回「—」。超過 4 天就太舊，
-            # 寧可顯示「—」也不要掛一個一週前的機率。state 的 date 不動，
-            # 下一次執行還會再試。
+        if _path is not None and _at is not None:
+            _hz_up = sum(p for b, p in _path["horizon"]["outcomes"] if b > 0)
+            if abs(_hz_up * 100 - _at) > 25:
+                log.warning("FedWatch 交叉檢核：期貨推算 %.0f%% 與亞特蘭大"
+                            "聯準銀行 %.0f%% 差逾 25pp", _hz_up * 100, _at)
+        if _path is not None:
+            out["fedwatch"] = _path
+            state["fedwatch"] = {"date": today, "method": FW_METHOD,
+                                 "path": _path}
+        elif fw_old.get("path") and fw_old.get("method") == FW_METHOD:
+            # 本次擷取失敗（限流、斷線）但手上有近幾天的值 → 沿用並標明；
+            # 超過 4 天就太舊，寧可顯示「—」。舊算法的值一律不沿用。
             try:
                 _age = (dt.date.fromisoformat(today)
                         - dt.date.fromisoformat(fw_old.get("date", ""))).days
             except (ValueError, TypeError):
                 _age = 99
-            # 舊算法算出來的值不沿用：100% 事故的值掛著「沿用」標籤
-            # 多活四天，比顯示「—」更糟。
-            if _age <= 4 and fw_old.get("method") == FW_METHOD:
-                out["fedwatch"] = {"pct": prev, "delta_pp": None,
-                                   "suspect": False,
-                                   "src": fw_old.get("src", ""),
-                                   "move_bp": fw_old.get("move_bp"),
-                                   "meeting_label": _meet_label,
+            if _age <= 4:
+                out["fedwatch"] = {**fw_old["path"],
                                    "stale_from": fw_old.get("date")}
-        elif pct is not None:
-            if _jump_suspect(pct, prev, fw_src):
-                log.warning("FedWatch 單日跳動 %.0f→%.0f，視為擷取錯誤沿用前值",
-                            prev, pct)
-                pct, suspect = prev, True
-                fw_src = fw_old.get("src", fw_src)
-            if fw_src == "futures" and (_detail or {}).get(
-                    "delta_pp") is not None:
-                # 期貨路徑的 ± 是同一次執行裡「收盤對收盤」算出來的
-                #（見 fedwatch_from_futures），跟其他 chip 同口徑，
-                # 不經 state、也不需要 20pp 的改基準防護欄。
-                delta = _detail["delta_pp"]
-            else:
-                delta = (round(pct - prev, 1)
-                         if (prev is not None and not suspect
-                             and fw_old.get("date") != today) else None)
-                if delta is not None and abs(delta) > 20:
-                    # 差這麼多通常是「正確值取代了事故留下的壞前值」——
-                    # 這是改基準，不是市場一天動了幾十個百分點。
-                    # 掛「-78.0 pp」只會嚇人，不標日變動、
-                    # 讓 chip 顯示隱含利率。
-                    log.info("FedWatch %.0f%% 與前值 %.0f%% 差 %.0fpp，"
-                             "視為改基準，不標日變動", pct, prev, abs(delta))
-                    delta = None
-            out["fedwatch"] = {"pct": pct, "delta_pp": delta,
-                               "suspect": suspect, "src": fw_src,
-                               "move_bp": move_bp,
-                               "meeting_label": _meet_label}
-            state["fedwatch"] = {"pct": pct, "date": today,
-                                 "delta_pp": delta, "suspect": suspect,
-                                 "src": fw_src, "move_bp": move_bp,
-                                 "method": FW_METHOD}
+                log.warning("FedWatch：本次推算失敗，沿用 %s 的結果",
+                            fw_old.get("date"))
 
     # ---- 焦點段（三層）：Yahoo RSS＋內文摘要 → Google News 標題摘要 →
     #      列標題。同一批文章只呼叫一次 AI（雜湊快取）。 ----
@@ -1677,6 +2181,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     kw2 = [str(k) for k in (cfg.get("keywords_secondary") or []) if k]
     meta_markers = ([str(m) for m in cfg.get("meta_markers") if m]
                     if cfg.get("meta_markers") else None)
+    vague_markers = ([str(m) for m in cfg.get("vague_markers") if m]
+                     if cfg.get("vague_markers") else None)
     # feed 過濾要認得兩級關鍵字（次級只是排序權重低，不是不收）
     heads = fetch_feed_headlines(feeds, keywords + kw2, exclude=exclude)
     mode = "content"
@@ -1696,31 +2202,48 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                             _srcs)
         mode = "title"
     if heads:
-        top = pick_fallback(heads, keywords, n=6, exclude=exclude,
-                            secondary=kw2)
+        _now = dt.datetime.now(dt.timezone.utc)
+        _ev = _todays_events(events, cfg, clock.today())
+        if _ev:
+            log.info("市場焦點：今天的發布事件 %s，相關新聞排序加分",
+                     "、".join(_ev))
+        _rk = dict(exclude=exclude, secondary=kw2, pool=heads, now=_now,
+                   events=_ev)
+        top = pick_fallback(heads, keywords, n=6, **_rk)
         # 兩層材料：內文名額只給抓得到正文的來源（Google News 是 JS
         # 轉址中介頁、FT／WSJ 是付費牆——先前佔掉名額又必然 0 段）；
         # 付費牆來源改走「標題快訊」層：標題＋RSS 官方摘要直接進材料包。
         body_cand = pick_fallback([x for x in heads
                                    if not _headline_only(x["link"])],
-                                  keywords, n=6, exclude=exclude,
-                                  secondary=kw2)
+                                  keywords, n=6, **_rk)
         briefs = pick_fallback([x for x in heads
                                 if _headline_only(x["link"])],
-                               keywords, n=4, exclude=exclude,
-                               secondary=kw2)
-        h = hashlib.sha256((mode + "|" + "|".join(
+                               keywords, n=4, **_rk)
+        h = hashlib.sha256((FOCUS_PROMPT_VERSION + "|" + mode + "|" + "|".join(
             x["title"] for x in (top + body_cand + briefs)))
                            .encode("utf-8")).hexdigest()[:16]
-        if state.get("hash") == h and state.get("text"):
+        _age = _age_hours({"at": state.get("at")}, _now)
+        _fresh = _age is not None and _age < CACHE_TTL_HOURS
+        if state.get("hash") == h and state.get("text") and _fresh:
             out["text"] = state["text"]
             out["text_source"] = "cache"
             out["cached_mode"] = ("content"
                                   if state.get("text_source") == "model-content"
                                   else "title")
             out["links"] = state.get("links") or []
+            # 快取命中要出聲：先前這條路徑一行 log 都不印，整個新聞區在
+            # Actions log 上完全隱形，看起來就像「完全沒有跑」。
+            log.info("市場焦點：入選標題與上次相同，沿用 %.1f 小時前的內容"
+                     "（%s；超過 %d 小時會強制重新生成）", _age,
+                     "內文重點" if out["cached_mode"] == "content"
+                     else "標題重點", CACHE_TTL_HOURS)
         else:
+            if state.get("hash") == h and state.get("text"):
+                log.info("市場焦點：入選標題沒變，但內容已超過 %d 小時，"
+                         "重新生成", CACHE_TTL_HOURS)
             text, src = "", ""
+            _gen = dict(n_items=n_items, meta_markers=meta_markers,
+                        vague_markers=vague_markers)
             if mode == "content":
                 # 內文並行抓（各篇獨立的 I/O 等待，串行是慢的主因之一）
                 _bodies = _pmap(lambda x: fetch_article_text(x["link"]),
@@ -1738,31 +2261,34 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                                   hours=60, exclude=exclude)
                     _got = {x["link"] for x in body_cand}
                     cand2 = [x for x in pick_fallback(
-                        [h for h in heads2
-                         if not _headline_only(h["link"])],
-                        keywords, n=12, exclude=exclude, secondary=kw2)
+                        [h2 for h2 in heads2
+                         if not _headline_only(h2["link"])],
+                        keywords, n=12, **{**_rk, "pool": heads2})
                         if x["link"] not in _got][:6]
                     _b2 = _pmap(lambda x: fetch_article_text(x["link"]),
                                 cand2)
                     arts += [{"title": x["title"], "body": b,
                               "source": x.get("source", "")}
                              for x, b in zip(cand2, _b2) if b]
-                if arts or briefs:
-                    # 抓到多少內文寫進 log：頁面只標「摘要自內文」，
-                    # 摘要品質有疑慮時要能回頭查是不是內文本身太薄。
-                    log.info("市場焦點：內文擷取 %d／%d 篇＋標題快訊 %d 則"
-                             "（%s）", len(arts), len(body_cand), len(briefs),
+                if arts:
+                    # 抓到多少內文寫進 log：摘要品質有疑慮時要能回頭查
+                    # 是不是內文本身太薄。
+                    log.info("市場焦點：內文擷取 %d 篇＋標題快訊 %d 則"
+                             "（%s）", len(arts), len(briefs),
                              "、".join(f"{a['title'][:12]}…{len(a['body'])}字"
                                        for a in arts))
-                    text, src = summarize_content(arts, keywords, cap, env,
-                                                  briefs=briefs,
-                                                  meta_markers=meta_markers)
+                    text, src = summarize_content(arts, keywords, item_cap,
+                                                  env, briefs=briefs, **_gen)
                     if not text:
-                        log.warning("市場焦點：內文摘要退回標題模式（%s）", src)
+                        log.warning("市場焦點：內文重點退回標題模式（%s）", src)
                 else:
-                    log.warning("市場焦點：內文全部抓不到，改用標題摘要")
+                    # 一篇內文都沒有：直接走標題模式。先前仍會硬試「內文
+                    # 重點」，只剩快訊時模型最容易開始評論材料、被後設
+                    # 偵測退回，白花一到兩次 API 呼叫。
+                    log.warning("市場焦點：沒有抓到任何內文，直接用標題"
+                                "（含官方摘要）寫重點")
             if not text:
-                text, src = summarize(top, cap, env)
+                text, src = summarize(top, item_cap, env, **_gen)
             # 顯示用的標題把尾巴的「 - 來源」去掉——旁邊已經另掛來源小標，
             # 留著會變成「…- Yahoo奇摩財經　Yahoo奇摩財經」連講兩次。
             links = [{"title": re.sub(r"\s*[-–—|]\s*[^-–—|]{1,30}$", "",
@@ -1771,18 +2297,22 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                       "source": x["source"]} for x in top[:3]]
             if text:
                 out["text"], out["text_source"] = text, src
+                log.info("市場焦點：產出 %d 則重點（%s）",
+                         len(text.splitlines()),
+                         "內文" if src == "model-content" else "標題")
             else:
                 # 第三層退路（列標題）不再把標題串成一段假摘要——
                 # 下方「來源標題」本來就列著同樣三條，串起來等於同一批字
                 # 印兩次（畫面上實際發生過）。text 留空，由首頁改成
                 # 直接攤開標題清單並註明「本次 AI 摘要不可用」。
                 # text 留空也讓快取不生效，下一次執行會再試 AI。
-                log.warning("市場焦點：AI 段落退回列標題（%s）", src)
+                log.warning("市場焦點：AI 重點退回列標題（%s）", src)
                 out["text"] = ""
                 out["text_source"] = "headlines"
             out["links"] = links
             state.update({"hash": h, "text": out["text"], "links": links,
-                          "text_source": out["text_source"]})
+                          "text_source": out["text_source"],
+                          "at": _now.isoformat()})
     else:
         log.warning("市場焦點：沒有抓到任何標題")
 
@@ -1796,7 +2326,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     # 舊行為——home 端對空目錄有後備渲染）。
     try:
         out["chips"] = build_catalog(rates_series, liq_series,
-                                     out["yields"], offline=False)
+                                     out["yields"], offline=False,
+                                     fw=out.get("fedwatch"))
     except Exception as e:                         # noqa: BLE001
         log.warning("chip 目錄組裝失敗（%s），退回預設呈現", e)
         out["chips"] = []

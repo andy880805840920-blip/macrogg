@@ -244,13 +244,43 @@ class FredClient:
             log.warning("release %s 的行事曆抓取失敗：%s", release_id, e)
         return None
 
+    def release_dates(self, release_id: int, start: dt.date,
+                      limit: int = 12) -> list[dt.date]:
+        """
+        某個 release 從 start（含）起的發布日清單。首頁「接下來看什麼」要
+        本週＋下週的**所有**場次（失業金每週一次），焦點區還要知道
+        「昨天剛發布什麼」，所以從今天往前幾天開始問。失敗回 []。
+        """
+        try:
+            data = self._get("release/dates", {
+                "release_id": release_id,
+                "realtime_start": start.isoformat(),
+                "include_release_dates_with_no_data": "true",
+                "sort_order": "asc",
+                "limit": limit,
+            })
+            return [d for d in (dt.date.fromisoformat(r["date"])
+                                for r in data.get("release_dates") or [])
+                    if d >= start]
+        except Exception as e:                    # noqa: BLE001
+            log.warning("release %s 的行事曆抓取失敗：%s", release_id, e)
+            return []
+
 
 # FRED release id。改這裡之前先用
 #   https://api.stlouisfed.org/fred/releases?api_key=…&file_type=json
 # 確認 id 沒有變。
+# 2026-10-04 逐一在 fred.stlouisfed.org/release?rid=… 核對過名稱。
 RELEASE_IDS = {
     "employment": 50,      # Employment Situation（就業報告）
     "cpi": 10,             # Consumer Price Index
+    "ppi": 46,             # Producer Price Index
+    "pce": 54,             # Personal Income and Outlays（PCE 物價在這份）
+    "gdp": 53,             # Gross Domestic Product
+    "retail": 9,           # Advance Monthly Sales for Retail and Food Services
+    "claims": 180,         # Unemployment Insurance Weekly Claims Report
+    "jolts": 192,          # Job Openings and Labor Turnover Survey
+    "umich": 91,           # Surveys of Consumers（密大，FRED 只列終值日）
 }
 
 
@@ -263,11 +293,14 @@ RELEASE_IDS = {
 PACE_SECONDS = 0.55
 
 
-def fetch_all(client: FredClient, series_ids: list[str], start: str) -> dict[str, list[dict]]:
-    """批次抓取，逐一容錯。回傳 {series_id: observations}"""
+def fetch_all(client: FredClient, series_ids: list[str], start: str,
+              starts: dict[str, str] | None = None) -> dict[str, list[dict]]:
+    """批次抓取，逐一容錯。回傳 {series_id: observations}
+    starts：個別序列的起始日（需要長歷史的序列），其餘用 start。"""
+    starts = starts or {}
     out: dict[str, list[dict]] = {}
     for i, sid in enumerate(series_ids, 1):
-        out[sid] = client.observations_safe(sid, start=start)
+        out[sid] = client.observations_safe(sid, start=starts.get(sid, start))
         log.info("[%d/%d] %s — %d 筆", i, len(series_ids), sid, len(out[sid]))
         time.sleep(PACE_SECONDS)
     # 打撈段：還是有失敗的話，等限流窗口過去再逐條補抓一次。
@@ -279,7 +312,7 @@ def fetch_all(client: FredClient, series_ids: list[str], start: str) -> dict[str
         time.sleep(20)
         salvaged = []
         for sid in misses:
-            rows = client.observations_safe(sid, start=start)
+            rows = client.observations_safe(sid, start=starts.get(sid, start))
             if rows:
                 out[sid] = rows
                 salvaged.append(sid)

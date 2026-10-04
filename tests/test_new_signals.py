@@ -60,9 +60,7 @@ check("③b 來回震盪不亮", R.r_prime_age_slide(lab_ctx(LNS12300060=epop_no
 # ④ U6−U3 差距半年擴大 ≥0.3pp
 u3 = rows([4.1] * 7)
 u6_wide = rows([7.3, 7.35, 7.4, 7.45, 7.5, 7.55, 7.65])
-check("④ 差距擴大會亮", R.r_u6_gap_widening(lab_ctx(U6RATE=u6_wide, UNRATE=u3)) is not None)
 u6_flat = rows([7.3] * 7)
-check("④b 差距持平不亮", R.r_u6_gap_widening(lab_ctx(U6RATE=u6_flat, UNRATE=u3)) is None)
 
 # ⑤ 派遣年減且惡化才亮
 th_worse = rows([3000 - i * 8 for i in range(20)])                 # 年減擴大

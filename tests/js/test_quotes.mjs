@@ -1,0 +1,47 @@
+// netlify/functions/quotes.mjs 的離線測試（node tests/js/test_quotes.mjs）
+import { prevClose, yahoo, txf, collect, SPECS } from "../../netlify/functions/quotes.mjs";
+let ok = true;
+const check = (n, c, d = "") => { console.log((c ? "通過 " : "失敗 ") + n, c ? "" : JSON.stringify(d)); ok = ok && !!c; };
+const DAY = 86400, OFF = -14400;
+const t0 = 1791000000 - (1791000000 % DAY);          // 某天 00:00 UTC
+const res = (cur, closes, rmtDay, extra = {}) => ({
+  meta: { regularMarketPrice: cur, regularMarketTime: t0 + rmtDay * DAY + 15 * 3600, gmtoffset: OFF,
+          chartPreviousClose: 1, ...extra },
+  timestamp: closes.map((_, i) => t0 + (i - closes.length + 1) * DAY + 13.5 * 3600),
+  indicators: { quote: [{ close: closes }] } });
+// 盤中：最後一根是今天 → 昨收＝倒數第二根（不是 chartPreviousClose）
+check("① 盤中昨收＝倒數第二根", prevClose(res(4.30, [4.1, 4.2, 4.25, 4.30], 0)) === 4.25);
+// 今天還沒有日線（最後一根是昨天、收盤≠現價）→ 昨收＝最後一根
+check("①b 今天尚無日線 → 最後一根", prevClose(res(4.31, [4.1, 4.2, 4.25], 1)) === 4.25);
+// 期貨夜盤：日期對不上但最後一根收盤＝現價 → 那根就是今天
+check("①c 收盤等於現價視為當日這根", prevClose(res(4.25, [4.1, 4.2, 4.25], 1)) === 4.2);
+check("①d 沒有日線 → previousClose", prevClose({ meta: { regularMarketPrice: 5, regularMarketTime: 1, previousClose: 4.9, chartPreviousClose: 1 } }) === 4.9);
+
+const fake = (map) => async (url, opt) => {
+  const hit = Object.entries(map).find(([k]) => url.includes(encodeURIComponent(k)) || url.includes(k));
+  if (!hit) return { ok: false };
+  const body = typeof hit[1] === "function" ? hit[1](opt) : hit[1];
+  return { ok: true, json: async () => body };
+};
+const ch = (r) => ({ chart: { result: [r] } });
+let q = await yahoo("dgs10", SPECS.dgs10, fake({ "^TNX": ch(res(42.8, [42.0, 42.6, 42.8], 0)) }));
+check("② ×10 慣例換算", q && Math.abs(q.v - 4.28) < 1e-9 && Math.abs(q.p - 4.26) < 1e-9 && q.k === "pct", q);
+q = await yahoo("vix", SPECS.vix, fake({ "^VIX": ch(res(200, [190, 200], 0)) }));
+check("②b 超出範圍不回", q === null);
+q = await yahoo("wti", SPECS.wti, fake({ "CL=F": ch(res(91.3, [90.1, 91.3], 0)) }));
+check("②c 油價帶單位", q && q.u === " 美元" && q.p === 90.1, q);
+q = await yahoo("dji", SPECS.dji, async () => { throw new Error("timeout"); });
+check("②d 例外 → null", q === null);
+
+const tx = (d, t, last, ref) => ({ RtData: { QuoteList: [
+  { SymbolID: "TXFK6-F", CDate: d, CTime: t, CLastPrice: last, CRefPrice: ref }] } });
+q = await txf(async (url, opt) => ({ ok: true, json: async () =>
+  JSON.parse(opt.body).MarketType === "0" ? tx("20261002", "134500", "23,100", "23,000")
+                                          : tx("20261003", "045959", "23,250", "23,100") }));
+check("③ 台指期取較新的夜盤", q && q.s === "夜盤" && q.v === 23250 && q.p === 23100 && q.d === "2026-10-03", q);
+check("③b 台北時間換 UTC", q && new Date(q.ts * 1000).toISOString() === "2026-10-02T20:59:59.000Z", q && q.ts);
+
+const all = await collect(fake({ "^TNX": ch(res(4.28, [4.2, 4.26, 4.28], 0)) }));
+check("④ collect 只回抓得到的", Object.keys(all).join() === "dgs10", Object.keys(all));
+console.log(ok ? "\n全部通過" : "\n有失敗");
+process.exit(ok ? 0 : 1);

@@ -27,8 +27,19 @@ def _esc(s) -> str:
 # ---------------------------------------------------------------------------
 # 走勢縮圖（單一序列，無文字，維持 SVG）
 # ---------------------------------------------------------------------------
-def sparkline(values: Sequence[float], width: int = 120, height: int = 34,
-              color: str = "var(--series-1)", zero_line: bool = False) -> str:
+def sparkline(values: Sequence[float], width: int = 120, height: int = 64,
+              color: str = "var(--series-1)", zero_line: bool = False,
+              mark_last: int = 5) -> str:
+    """
+    KPI 卡的小走勢圖。
+
+    2026-10 改版（使用者：「近 5 期的圖表太扁平、趨勢不明顯」）：
+      · 高度 34 → 64px，y 軸只縮放到顯示區間的高低點（不含零軸，除非指定）
+      · mark_last：把最後 N 期（下方「近 5 期」數值列對應的那幾期）
+        墊一塊淡底，一眼對得上下面的數字
+      · 終點圓點改用零長度線段＋圓頭：SVG 用 preserveAspectRatio="none"
+        拉伸時，circle 會被壓成橢圓，線段的圓頭不會
+    """
     vals = [v for v in values if v is not None]
     if len(vals) < 2:
         return ""
@@ -36,29 +47,39 @@ def sparkline(values: Sequence[float], width: int = 120, height: int = 34,
     if zero_line:
         lo, hi = min(lo, 0), max(hi, 0)
     rng = (hi - lo) or 1
-    pad = 3
+    pad = 4
     w, h = width - pad * 2, height - pad * 2
+
+    def X(i):
+        return pad + (i / (len(vals) - 1)) * w
 
     pts = []
     for i, v in enumerate(vals):
-        x = pad + (i / (len(vals) - 1)) * w
         y = pad + (1 - (v - lo) / rng) * h
-        pts.append(f"{x:.1f},{y:.1f}")
+        pts.append((X(i), y))
 
     zero_svg = ""
     if zero_line and lo < 0 < hi:
         zy = pad + (1 - (0 - lo) / rng) * h
         zero_svg = (f'<line x1="{pad}" y1="{zy:.1f}" x2="{pad+w}" y2="{zy:.1f}" '
-                    f'stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2"/>')
+                    f'stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2" '
+                    f'vector-effect="non-scaling-stroke"/>')
+    band = ""
+    if mark_last and len(vals) > mark_last:
+        bx = X(len(vals) - mark_last) - (w / (len(vals) - 1)) / 2
+        band = (f'<rect x="{bx:.1f}" y="0" width="{width - bx:.1f}" height="{height}" '
+                f'fill="var(--surface-2)"/>')
 
-    last_x, last_y = pts[-1].split(",")
+    lx, ly = pts[-1]
+    poly = " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
     return (
         f'<svg class="spark" viewBox="0 0 {width} {height}" preserveAspectRatio="none" '
-        f'role="img" aria-hidden="true">{zero_svg}'
-        f'<polyline points="{" ".join(pts)}" fill="none" stroke="{color}" '
+        f'role="img" aria-hidden="true">{band}{zero_svg}'
+        f'<polyline points="{poly}" fill="none" stroke="{color}" '
         f'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
         f'vector-effect="non-scaling-stroke"/>'
-        f'<circle cx="{last_x}" cy="{last_y}" r="2.5" fill="{color}"/></svg>'
+        f'<line x1="{lx:.1f}" y1="{ly:.1f}" x2="{lx:.1f}" y2="{ly:.1f}" stroke="{color}" '
+        f'stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>'
     )
 
 
@@ -258,6 +279,56 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
         f'（{_esc(pts[-1]["date"])}）</span>'
         f"</div></div>"
     )
+
+
+def stacked_shares(layers: Sequence[dict], shade: Sequence[tuple] = (),
+                   height: int = 170) -> str:
+    """
+    百分比堆疊面積圖（各層加總≈100%）。
+
+    layers：[{label, color, points:[{date, value}]}]，由下往上疊；
+    只取所有層都有值的日期。shade：[(起 YYYY-MM, 迄 YYYY-MM)] 畫衰退陰影。
+    跟 line_chart 一樣，文字全部放在 SVG 外（手機上不會縮到讀不清）。
+    """
+    maps = [{str(p["date"])[:7]: p["value"] for p in L["points"]
+             if p.get("value") is not None} for L in layers]
+    dates = sorted(set.intersection(*(set(m) for m in maps))) if maps else []
+    if len(dates) < 2:
+        return '<div class="empty">資料不足</div>'
+    W, H, n = 600, height, len(dates)
+
+    def x(i):
+        return i / (n - 1) * W
+    tot = [sum(m[d] for m in maps) or 100 for d in dates]
+    cum = [0.0] * n
+    polys = []
+    for L, m in zip(layers, maps):
+        lower = cum[:]
+        cum = [c + m[d] / t * 100 for c, d, t in zip(cum, dates, tot)]
+        top = " ".join(f"{x(i):.1f},{(1 - cum[i] / 100) * H:.1f}" for i in range(n))
+        bot = " ".join(f"{x(i):.1f},{(1 - lower[i] / 100) * H:.1f}"
+                       for i in reversed(range(n)))
+        polys.append(f'<polygon points="{top} {bot}" fill="{L["color"]}" '
+                     f'opacity="0.78"/>')
+    sh = ""
+    for a, b in shade:
+        ia = next((i for i, d in enumerate(dates) if d >= a), None)
+        ib = next((i for i, d in reversed(list(enumerate(dates))) if d <= b), None)
+        if ia is None or ib is None or ib < ia:
+            continue
+        sh += (f'<rect x="{x(ia):.1f}" y="0" width="{max(x(ib) - x(ia), 3):.1f}" '
+               f'height="{H}" fill="var(--text-primary)" opacity="0.12"/>')
+    svg = (f'<svg class="lchart" viewBox="0 0 {W} {H}" preserveAspectRatio="none" '
+           f'style="height:{H}px" role="img" aria-label="失業原因比重走勢">'
+           f'{"".join(polys)}{sh}</svg>')
+    last = {L["label"]: m[dates[-1]] for L, m in zip(layers, maps)}
+    legend = "".join(
+        f'<span><i style="background:{L["color"]}"></i>{_esc(L["label"])} '
+        f'<b>{last[L["label"]]:.1f}%</b></span>' for L in reversed(list(layers)))
+    return (f'<div class="lwrap"><div class="lplot">{svg}</div>'
+            f'<div class="lxaxis"><span>{_esc(dates[0])}</span>'
+            f'<span>{_esc(dates[-1])}</span></div>'
+            f'<div class="dlegend">{legend}</div></div>')
 
 
 # ---------------------------------------------------------------------------

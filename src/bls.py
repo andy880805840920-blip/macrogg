@@ -9,7 +9,7 @@ BLS 的原始檔匯進自己的資料庫才會出現在 API 上。實測到的�
     2026-08-12 08:30 ET   BLS 發布 7 月 CPI
     2026-08-12 10:35 ET   FRED 的 CPILFESL 仍停在 6 月（最後更新 7/14）
 
-而排程是 09:45 ET 執行——比 FRED 當天的同步還早。也就是說發布當天
+而發布當天的排程是台灣 22:45（美東 10:45 夏令／09:45 冬令）——比 FRED 當天的同步還早。也就是說發布當天
 那一版網站抓不到剛出爐的數字，要等隔天。這一層就是為了補上那幾個小時。
 
 設計原則：FRED 仍然是真相來源
@@ -127,7 +127,7 @@ GROUPS = {
             "CPIAUCNS", "CPILFENS",
             "CUSR0000SACL1E", "CUSR0000SAH1", "CUSR0000SASLE",
             "CUSR0000SEHA", "CUSR0000SEHC"],
-    "jobs": ["PAYEMS", "USPRIV", "USGOVT", "UNRATE", "U6RATE", "CIVPART",
+    "jobs": ["PAYEMS", "USPRIV", "USGOVT", "UNRATE", "CIVPART",
              "UNEMPLOY", "CLF16OV", "CE16OV", "UEMP27OV",
              "UEMPMED", "AHETPI", "CES0500000003",
              "USMINE", "USCONS", "MANEMP", "USWTRADE", "USTRADE",

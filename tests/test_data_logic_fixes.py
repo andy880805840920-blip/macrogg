@@ -20,16 +20,16 @@ def rows(values, start_year=2025):
         out.append({"date": f"{y:04d}-{m:02d}-01", "value": value})
     return out
 
-# NROU 尾端包含遠期預測，只能取不晚於當期失業率的最近季度。
-u = [{"date": "2026-07-01", "value": 4.1}]
-nrou = [
-    {"date": "2026-04-01", "value": 4.40},
-    {"date": "2026-07-01", "value": 4.39},
-    {"date": "2036-10-01", "value": 4.16},
-]
-ug = build._ustar_gap(u, nrou)
-check("① 自然失業率不會抓到 2036 預測", ug["as_of"] == "2026-07-01", str(ug))
-check("② 當期失業缺口判為偏緊", ug["state"] == "緊", str(ug))
+# 失業率基準統一用 FOMC 的 SEP（2026-10：CBO 的自然失業率不再用）
+u = [{"date": "2026-06-01", "value": 4.2}, {"date": "2026-07-01", "value": 3.9}]
+mid = [{"date": "2026-06-17", "value": 4.2}]
+lo_ = [{"date": "2026-06-17", "value": 4.0}]
+hi_ = [{"date": "2026-06-17", "value": 4.3}]
+ug = build._ustar_gap(u, mid, lo_, hi_)
+check("① 基準取 SEP 中位數與中央趨勢", ug["ustar"] == 4.2 and ug["lo"] == 4.0
+      and ug["as_of"] == "2026-06-17", str(ug))
+check("② 低於中央趨勢下緣判為偏緊（跟格位同口徑）", ug["state"] == "緊", str(ug))
+check("②b 缺 SEP 就不顯示", build._ustar_gap(u, [], lo_, hi_) == {})
 
 # A-11 四個大類互斥；不得再使用永久／暫時解雇子項重複加總。
 series = {
@@ -37,11 +37,21 @@ series = {
     "LNS13023705": rows([800] * 13),
     "LNS13023557": rows([2000] * 13),
     "LNS13023569": rows([700] * 13),
+    # 比重用 BLS 官方序列（跟失去工作者訊號同一條）
+    "LNS13023622": rows([46.0] * 12 + [46.2]),
+    "LNS13023706": rows([12.3] * 13),
+    "LNS13023558": rows([30.8] * 13),
+    "LNS13023570": rows([10.9] * 12 + [10.7]),
 }
 us = build._unemp_structure(series)
 labels = {r["label"] for r in us["rows"]}
 check("③ 失業原因使用四個互斥大類", len(us["rows"]) == 4, str(labels))
 check("④ 失業原因占比加總 100%", abs(sum(r["share"] for r in us["rows"]) - 100) < 1e-9)
+check("④b 比重一年變化用個百分點表示",
+      next(r for r in us["rows"] if r["kind"] == "bad")["share_yoy_display"]
+      == "+0.2 個百分點")
+check("④c 比重一年變化不到 1 個百分點 → 結構沒有明顯變化", "沒有明顯變化" in us["verdict"])
+check("④d 失業結構附時間軸圖", "<svg" in us["chart"])
 check("⑤ 正確使用 Reentrants 序列", "重新進入" in labels)
 
 # CPI 分項缺資料時要回報覆蓋率。

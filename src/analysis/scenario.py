@@ -253,6 +253,7 @@ class Scenario:
     regime_assumed: bool = False                # True = 判不出重心，暫用「兩邊並重」
     labor_basis: str = "score"                  # 就業格位是靠分數還是旗標定的
     labor_basis_note: str = ""                  # 靠旗標定案時的說明
+    labor_level: str = ""                       # 只看水準的格位（被動能推格時與 labor_state 不同）
     # 各軸目前的數據漂移方向（axis_drift 的結果）。只給「可能下一格」
     # 的挑選用，不參與格位判定。
     drift: dict = field(default_factory=dict)
@@ -262,12 +263,11 @@ class Scenario:
 # 分數與旗標淨值的舊門檻。只在拿不到 FOMC 長期失業率時才用得到——
 # 這兩個數字是這個專案自己選的，沒有外部依據，用到時畫面上會標示。
 FALLBACK_SCORE, FALLBACK_NET = 0.45, 3
-# 就業「溫和惡化」門檻：Sahm 同款算式（失業率三月均較近一年低點的
-# 回升幅度），但 0.20 不是外部標準——0.50 才是原論文的衰退門檻，
-# 0.20 只是「開始惡化」的水位，屬本站判斷，畫面上會標示。
-# 它取代了損益兩平就業增速（已整組移除）：損益兩平要靠人口與移民
-# 假設去「預測」失業率會不會升，這條直接量「有沒有在升」。
-MILD_SAHM = 0.20
+# 就業的動能訊號改用失去工作者比重（取代 Sahm 法則，2026-10）：
+#   留意（jl_watch）→ 移動方向「轉弱」
+#   警戒（jl_alert）→ 格位往弱推一格
+# 門檻與回測見 analysis/job_losers.py。
+_WEAKER = {"強": "中", "中": "弱", "弱": "弱"}
 
 
 def classify_labor(score: float | None, tilt: dict | None,
@@ -291,13 +291,13 @@ def classify_labor(score: float | None, tilt: dict | None,
     ----
     只看水準會犯一個大錯：聯準會 2024 年 9 月降息 2 碼時，失業率約 4.2%，
     **低於**當時多數的自然失業率估計——它降息的理由不是水準，是惡化的速度。
-    所以加兩條同樣有外部依據的動能條件：
 
-      · **Sahm 法則觸發**（失業率三月均比過去一年最低點高 0.50 個百分點以上）
-        → 直接判「弱」。門檻出自 Sahm 的原始論文，FRED 另有 SAHMREALTIME。
-      · **三個月平均非農 < 損益兩平就業增速** → 往「弱」推一格。
-        損益兩平是由人口成長 × 參與率 × 機構／家庭調查比推導出來的，
-        不是選的門檻；低於它在定義上就是「撐不住目前的失業率」。
+    惡化速度改看**失去工作者佔失業人口比重**（先前是 Sahm 法則；Sahm 在
+    2024-07 觸發後沒有衰退——失業率會因勞動力增加而上升，不全是裁員）：
+
+      · 警戒（比重較一年低點上升 ≥3 個百分點、連 2 個月）→ 格位往弱推一格。
+        回測 1967 起：每次衰退都在起點前後 4 個月內亮，誤報 2 次；
+        Sahm 同期誤報 3 次且都晚於衰退起點。門檻屬本站判斷。
 
     動能只往一個方向推。往「強」推需要對稱的證據，而就業轉強沒有
     對應的公認規則——寧可不推，也不要自己發明一條。
@@ -331,16 +331,25 @@ def classify_labor(score: float | None, tilt: dict | None,
     else:
         state, basis = "中", "level"
 
-    # ---- ② 動能：只往「弱」推 ----
-    if lab.get("sahm_triggered"):
-        return "弱", "sahm"
+    # ---- ② 動能：只往「弱」推一格 ----
+    if lab.get("jl_alert") and state != "弱":
+        return _WEAKER[state], "job_losers"
     return state, basis
 
 
-def classify_labor_momentum(lab: dict | None) -> str:
-    """方向與格位分開：失業率開始回升代表轉弱，不直接移動格位。"""
+def labor_level(lab: dict | None) -> str | None:
+    """只看水準的格位（沒有動能修正）。給「被推了一格」時的說明用。"""
     lab = lab or {}
-    if lab.get("sahm_triggered") or lab.get("u3_rising"):
+    u, lo, hi = lab.get("unrate"), lab.get("u_lo"), lab.get("u_hi")
+    if u is None or lo is None or hi is None:
+        return None
+    return "弱" if u > hi else ("強" if u < lo else "中")
+
+
+def classify_labor_momentum(lab: dict | None) -> str:
+    """方向與格位分開：失去工作者比重開始異常上升代表轉弱，不直接移動格位。"""
+    lab = lab or {}
+    if lab.get("jl_watch") or lab.get("jl_alert"):
         return "轉弱"
     tilt = (lab.get("tilt") or {}).get("tilt")
     if tilt == "hawkish" and lab.get("nfp_3m") is not None:
@@ -471,14 +480,16 @@ def synthesise(labor: dict | None, inflation: dict | None,
 
     _lab = labor or {}
     _u, _lo, _hi = _lab.get("unrate"), _lab.get("u_lo"), _lab.get("u_hi")
-    if l_basis == "sahm":
+    sc.labor_level = labor_level(labor) or l_state
+    if l_basis == "job_losers":
         sc.labor_basis_note = (
-            f"就業格位定在「弱」不是靠失業率的水準——失業率 {_u:.1f}% "
-            f"還在 FOMC 長期判斷的 {_lo:.1f}–{_hi:.1f}% 之內。"
-            "是 Sahm 法則觸發（失業率三月均比過去一年最低點高 0.50 個百分點"
-            "以上）把它推過去的：那條規則量的是惡化的速度，不是水準。"
+            f"就業格位定在「{l_state}」不是靠失業率的水準——失業率 {_u:.1f}% "
+            f"對照 FOMC 長期判斷 {_lo:.1f}–{_hi:.1f}% 是「{sc.labor_level}」。"
+            "是失去工作者比重較一年低點上升 "
+            f"{_lab.get('jl_rise') or 0:.1f} 個百分點、連續兩個月達警戒（本站門檻 3），"
+            "把它往弱推了一格：失業的人裡被裁員的比重快速膨脹，是衰退的典型型態。"
             if _u is not None and _lo is not None else
-            "就業格位由 Sahm 法則觸發定案。")
+            "就業格位因失去工作者比重達警戒，往弱推一格。")
     elif l_basis == "fallback":
         _net = (_lab.get("tilt") or {}).get("net", 0)
         _sc = _lab.get("score")
@@ -542,10 +553,10 @@ def axis_drift(labor: dict | None, inflation: dict | None) -> dict:
     """
     lab = labor or {}
     l = None
-    if lab.get("sahm_triggered"):
-        l = ("weaker", "Sahm 法則已觸發")
-    elif lab.get("u3_rising"):
-        l = ("weaker", "失業率已較近一年低點回升逾 0.2 個百分點")
+    if lab.get("jl_alert"):
+        l = ("weaker", "失去工作者比重達警戒")
+    elif lab.get("jl_watch"):
+        l = ("weaker", "失去工作者比重異常上升")
     else:
         _t = (lab.get("tilt") or {}).get("tilt")
         if _t == "dovish":
@@ -634,7 +645,26 @@ def _triggers(labor: dict | None, inflation: dict | None,
     # ---- 就業軸：門檻＝FOMC 對長期失業率的中央趨勢 ----
     lab = labor or {}
     u, lo, hi = lab.get("unrate"), lab.get("u_lo"), lab.get("u_hi")
-    if u is not None and lo is not None and hi is not None:
+    _lvl = labor_level(lab)
+    if (u is not None and lo is not None and hi is not None
+            and lab.get("jl_alert") and _lvl and _lvl != l_state):
+        # 格位是被失去工作者警戒推過來的：回得去的條件是警戒解除，
+        # 再往弱走的條件是水準本身往弱走一格（推格會疊上去）。
+        from .job_losers import RISE_ALERT
+        _r = lab.get("jl_rise") or 0.0
+        out.append(Trigger(f"就業轉「{_lvl}」",
+                           f"失去工作者比重較一年低點 {_r:+.1f} 個百分點",
+                           f"需回到 {RISE_ALERT:.0f} 個百分點以下",
+                           f"還差 {max(_r - RISE_ALERT, 0):.1f} 個百分點", False,
+                           binding=False, adjacent=True,
+                           axis="labor", direction="stronger"))
+        if l_state == "中":                       # 水準「強」被推成「中」
+            out.append(Trigger("就業轉「弱」", f"失業率 {u:.1f}%",
+                               f"需高於或等於 {lo:.1f}%",
+                               f"還差 {max(lo - u, 0):.1f} 個百分點", u >= lo,
+                               binding=(binding == "就業"), adjacent=True,
+                               axis="labor", direction="weaker"))
+    elif u is not None and lo is not None and hi is not None:
         cur = f"失業率 {u:.1f}%"
         _b = (binding == "就業")
         if l_state == "強":

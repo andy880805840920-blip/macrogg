@@ -53,10 +53,15 @@ OUT_DIR = ROOT / "output"
 # 快照要進 git，這樣 GitHub Actions 上跑也比得出「跟上期的差異」
 STATE_FILE = ROOT / "state" / "snapshot.json"
 # 抓取起點。圖表只畫 2025 之後（見 build.CHART_START），但統計量
-# （z-score、年增率、Sahm 法則）需要更長的歷史才有意義，所以抓得比畫的早。
+# （z-score、年增率）需要更長的歷史才有意義，所以抓得比畫的早。
 # 2023 起約三年，足夠讓 z-score 有 36 個月的分母；再往前拉對這套
 # 「近期體制」的判讀沒有增益，只是拖慢抓取。
 HISTORY_START = "2023-01-01"
+# 需要完整歷史的序列（其他一律從 HISTORY_START 起抓）：
+#   LNS13023622 失去工作者比重——z 值要 60 個月窗口、歷次衰退對照要 1967 起
+#   JTSHIR／JTSLDR 招聘率、裁員率——人力流動總結要對照疫情前 2015–2019 平均
+LONG_HISTORY = {"LNS13023622": "1967-01-01",
+                "JTSHIR": "2015-01-01", "JTSLDR": "2015-01-01"}
 SAVE_FIXTURES = False
 REAL_MODULES: list[str] = []
 FOMC_YEARS_BACK = 4
@@ -239,7 +244,7 @@ def gather_fred(offline: bool, ids: list[str], module: str,
     store = Store(ROOT / "data" / f"{module}.db")
     run_id = store.start_run(note=module)
 
-    series = fetch_all(client, ids, start=HISTORY_START)
+    series = fetch_all(client, ids, start=HISTORY_START, starts=LONG_HISTORY)
     # 補抓之後還缺的，退回上次執行的本機快照（沿用的不再寫回 store，
     # 免得把舊資料誤記成「這一次抓到的」）。
     _restored = set(_restore_from_snapshot(series, store, client.failed))
@@ -441,15 +446,20 @@ def fetch_release_dates() -> dict:
     except Exception as e:                        # noqa: BLE001
         log.warning("發布行事曆：無法建立 FRED 連線（%s），改用慣例推估", e)
         return {}
+    import datetime as _dt
+    start = clock.today() - _dt.timedelta(days=3)
     out = {}
+    # 回傳 {key: [ISO…]}：從三天前起的所有場次（首頁要本週＋下週全部、
+    # 焦點區要知道昨天剛發布什麼）。
     for key, rid in RELEASE_IDS.items():
-        d = client.next_release(rid)
-        if d:
-            out[key] = d.isoformat()
+        ds = client.release_dates(rid, start)
+        if ds:
+            out[key] = [d.isoformat() for d in ds]
     if out:
-        log.info("發布行事曆：%s", "、".join(f"{k} {v}" for k, v in out.items()))
+        log.info("發布行事曆：%s", "、".join(
+            f"{k} {','.join(v[:3])}" for k, v in out.items()))
     else:
-        log.warning("發布行事曆：一個都沒問到，改用慣例推估")
+        log.warning("發布行事曆：一個都沒問到，改用手動行事曆／慣例推估")
     return out
 
 
@@ -467,6 +477,8 @@ def release_next(releases: dict, calendar: dict) -> dict:
     out: dict = {}
     for key in ("employment", "cpi", "ppi", "pce"):
         raw = (releases or {}).get(key)
+        if isinstance(raw, list):          # fetch_release_dates 的新格式
+            raw = next((d for d in raw if d >= today.isoformat()), None)
         if raw:
             try:
                 if _dt.date.fromisoformat(raw) >= today:
@@ -895,11 +907,21 @@ def main() -> int:
     # 只會讓每次看離線頁的人以為真的出事了。
     # 官方發布行事曆：能問到就用官方的，問不到才退回慣例推估。
     # 離線模式不打 API（也沒有 key），一律走慣例。
-    ctxs["_releases"] = {} if args.offline else fetch_release_dates()
+    _rel_all = {} if args.offline else fetch_release_dates()
+    # 各分頁倒數沿用舊格式 {key: 下一個 ISO}
+    _tdy = clock.today().isoformat()
+    ctxs["_releases"] = {k: d for k, d in (
+        (k, next((x for x in v if x >= _tdy), None))
+        for k, v in _rel_all.items()) if d}
     # 手動維護的官方行事曆（config/releases_calendar.yaml）：
     # PPI／PCE 的唯一日期來源，也是 FRED 行事曆問不到時的後備。
     # 離線模式也載——日期是靜態檔案，不打任何 API。
     ctxs["_calendar"] = load_config("releases_calendar.yaml")
+    # 首頁「接下來看什麼」：九種數據＋公債標售的本週／下週行事曆
+    from src.analysis import watch_calendar
+    ctxs["_schedule"] = watch_calendar.merge_schedule(
+        _rel_all, ctxs["_calendar"],
+        {} if args.offline else watch_calendar.fetch_auctions())
     # 各分頁 hero 的「下一次更新」：優先 FRED 官方行事曆，其次手動行事曆。
     # 挑「今天以後最近的一筆」，全部過期就不標（分頁自己有慣例推估後備）。
     _next = release_next(ctxs["_releases"], ctxs["_calendar"])
@@ -913,7 +935,9 @@ def main() -> int:
     try:
         ctxs["_focus"] = focus_today.build(
             rates_series, args.offline, load_config("focus.yaml"),
-            STATE_FILE.parent / "focus.json", liq_series=liq_series)
+            STATE_FILE.parent / "focus.json", liq_series=liq_series,
+            # 今天／昨天有哪些發布：發布當天相關新聞加分
+            events=watch_calendar.event_dates(ctxs["_schedule"]))
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None

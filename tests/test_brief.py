@@ -56,8 +56,8 @@ class Summ:                    # 假的 InflationSummary
         self.supercore_streak = streak
 
 
-AX = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3, "sahm": 0.25,
-      "sahm_triggered": False, "nfp_3m": 20.0, "u3_rising": True}
+AX = {"unrate": 4.1, "u_lo": 4.0, "u_hi": 4.3, "jl_rise": 1.2, "jl_z": 1.8,
+      "jl_alert": False, "nfp_3m": 20.0, "jl_watch": True}
 
 FOM = {"latest_date": "2026-07-29", "obj_parts": {"action_label": "維持不變"},
        "vote": {"dissents": [{"direction": "hike"}] * 3},
@@ -147,13 +147,14 @@ def lab_text(ax):
 
 cases = [
     ("⑫ 高於上緣 → 講「高於充分就業上緣」",
-     {**AX, "unrate": 4.6, "u3_rising": False}, "高於"),
-    ("⑬ Sahm 觸發 → 講快速轉弱", {**AX, "sahm_triggered": True}, "Sahm"),
-    ("⑭ 失業率開始回升 → 講惡化已經開始", AX, "惡化已經開始"),
+     {**AX, "unrate": 4.6, "jl_watch": False}, "高於"),
+    ("⑬ 失去工作者警戒 → 講快速轉弱", {**AX, "jl_alert": True, "jl_rise": 3.4},
+     "警戒"),
+    ("⑭ 失去工作者留意 → 講早期訊號", AX, "早期訊號"),
     ("⑮ 都正常 → 講落在區間內",
-     {**AX, "u3_rising": False}, "落在"),
+     {**AX, "jl_watch": False}, "落在"),
     ("⑯ 低於下緣 → 講仍緊",
-     {**AX, "unrate": 3.7, "u3_rising": False}, "仍緊"),
+     {**AX, "unrate": 3.7, "jl_watch": False}, "仍緊"),
 ]
 for name, ax, want in cases:
     txt = lab_text(ax)
@@ -161,9 +162,9 @@ for name, ax, want in cases:
 
 # 敘述與格位不能互相打架：同一份資料餵給兩邊，結論要對得上
 for ax, want_state in [(AX, "中"),
-                       ({**AX, "unrate": 4.6, "u3_rising": False}, "弱"),
-                       ({**AX, "u3_rising": False}, "中"),
-                       ({**AX, "unrate": 3.7, "u3_rising": False}, "強")]:
+                       ({**AX, "unrate": 4.6, "jl_watch": False}, "弱"),
+                       ({**AX, "jl_watch": False}, "中"),
+                       ({**AX, "unrate": 3.7, "jl_watch": False}, "強")]:
     st, _ = scn.classify_labor(None, None, ax)
     check(f"⑰ 格位 {want_state} 時敘述不矛盾", st == want_state,
           f"格位 {st}、敘述「{lab_text(ax)[:24]}」")
