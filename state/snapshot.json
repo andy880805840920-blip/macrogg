@@ -1,33 +1,33 @@
 {
-  "at": "2026-10-04T01:40:25+08:00",
+  "at": "2026-10-05T00:30:31+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-09",
         "released": "2026-10-02",
         "month": "2026-09",
-        "score": 0.14077895619330832,
+        "score": 0.09234386181407878,
         "tilt": "dovish",
         "flags": [
-          "revision_swamps",
-          "revision_bias_down",
-          "wage_understated",
           "supply_rise",
-          "low_hire_low_fire"
+          "revision_swamps",
+          "benchmark_revision",
+          "revision_bias_down",
+          "wage_understated"
         ],
         "flag_titles": {
-          "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
-          "revision_bias_down": "初值近一年呈系統性下修",
-          "wage_understated": "非管理職薪資增速高於總體",
           "supply_rise": "失業率上升源於勞動力擴張",
-          "low_hire_low_fire": "低招聘、低裁員格局延續"
+          "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
+          "benchmark_revision": "年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3",
+          "revision_bias_down": "近 12 次月度修正平均往下修",
+          "wage_understated": "非管理職薪資增速高於總體"
         },
         "flag_leans": {
-          "revision_swamps": "dovish",
-          "revision_bias_down": "dovish",
-          "wage_understated": "hawkish",
           "supply_rise": "neutral",
-          "low_hire_low_fire": "neutral"
+          "revision_swamps": "dovish",
+          "benchmark_revision": "dovish",
+          "revision_bias_down": "dovish",
+          "wage_understated": "hawkish"
         },
         "metrics": {
           "nfp": {
@@ -761,7 +761,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-04T01:40:25+08:00",
+      "at": "2026-10-05T00:30:31+08:00",
       "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
