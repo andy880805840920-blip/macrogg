@@ -5,11 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="color-scheme" content="light">
-<title>聯準會文本｜MACRO GG</title>
+<title>聯準會｜MACRO GG</title>
+<meta name="description" content="聯準會：最新決議、投票、點陣圖、市場定價、會議紀要與官員發言。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MACRO GG">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="聯準會｜MACRO GG">
+<meta property="og:description" content="聯準會：最新決議、投票、點陣圖、市場定價、會議紀要與官員發言。">
+<meta property="og:url" content="https://macrogg.netlify.app/fomc/">
+<meta property="og:image" content="https://macrogg.netlify.app/brand/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MACRO GG 明天過後，帶你看總經">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="聯準會｜MACRO GG">
+<meta name="twitter:description" content="聯準會：最新決議、投票、點陣圖、市場定價、會議紀要與官員發言。">
+<meta name="twitter:image" content="https://macrogg.netlify.app/brand/og.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-title" content="MACRO GG">
+<meta name="application-name" content="MACRO GG">
+<link rel="preload" href="/brand/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 *{box-sizing:border-box}
-/* 單一淺色主題。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。 */
-.viz-root{
+/* 單一淺色主題。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。
+   變數也掛在 :root：品牌頁首與置頂主選單在 .viz-root 外面，不掛的話
+   --muted／--border 在那裡全是空值（EN 鈕的框線就是這樣消失的）。 */
+:root,.viz-root{
   color-scheme:light;
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
   --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#5f5e59;
@@ -35,13 +60,13 @@ html{-webkit-text-size-adjust:100%}
    並額外加一點字距作為保險。 */
 h1,h2,h3,.v-main,.f-head,.m-name,.l-top,.k-label,.gloss dt,
 .verdict .v-main,strong,b{letter-spacing:.035em}
-body{margin:0;background:var(--page);
+body{margin:0;background:#fff;
   /* CJK 家族一定要點名，而且要用含 "CJK" 的完整家族名。
      只寫 system-ui / sans-serif 時，瀏覽器逐字回退找到的是 Regular 字面，
      粗體只好用「合成粗體」——筆畫塗寬但前進距離不變，中文就疊在一起。
      點名 "Noto Sans CJK TC" 之後會取到真正的 Bold 字面。
      順序：iOS/macOS 走 PingFang，Windows 走微軟正黑，Android/Linux 走 Noto。 */
-  font-family:system-ui,-apple-system,"Segoe UI Variable","Segoe UI",
+  font-family:"Montserrat",system-ui,-apple-system,"Segoe UI Variable","Segoe UI",
     "PingFang TC","PingFang SC","Hiragino Sans CNS","Microsoft JhengHei",
     "Noto Sans CJK TC","Noto Sans CJK SC","Noto Sans TC",sans-serif;
   color:var(--text-primary);-webkit-font-smoothing:antialiased;
@@ -82,37 +107,90 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 
 
 /* ---------- 導覽列：手機上單行可左右滑 ---------- */
-/* 主選單。外框（.snav）負責背景、邊框與兩側漸層，內層（nav.site）只負責橫捲。
-   為什麼要拆兩層：漸層必須畫在背景之上，用 mask 做會把邊框跟背景一起挖掉。
-
-   為什麼一定要有漸層：360px 下 scrollWidth 是 526px，**32%（166px）在視窗外**，
-   而且右邊是硬切、沒有任何提示。更糟的是在長端與情境頁上，
-   「把目前這一頁捲進視野」的邏輯會把 scrollLeft 推到 166——於是
-   「總覽、勞動市場、通膨」全部滑到左邊看不見，讀者想回首頁會以為沒有路，
-   只好按瀏覽器上一頁或直接離站。這是全站唯一會讓人卡住到離開的問題。 */
-.snav{position:relative;margin:12px 0 0;background:var(--surface-1);
-  border:1px solid var(--border);border-radius:11px;padding:4px;
-  box-shadow:var(--shadow)}
-nav.site{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none}
-nav.site::-webkit-scrollbar{display:none}
-.snav::before,.snav::after{content:"";position:absolute;top:1px;bottom:1px;
-  width:34px;pointer-events:none;opacity:0;transition:opacity .15s ease}
-.snav::before{left:1px;border-radius:10px 0 0 10px;
-  background:linear-gradient(90deg,var(--surface-1) 34%,transparent)}
-.snav::after{right:1px;border-radius:0 10px 10px 0;
-  background:linear-gradient(270deg,var(--surface-1) 34%,transparent)}
-.snav.fl::before{opacity:1}
-.snav.fr::after{opacity:1}
-@media(prefers-reduced-motion:reduce){.snav::before,.snav::after{transition:none}}
-/* 導覽是全站最常按的東西，觸控目標要有 44px（先前 36.9px）。 */
-nav.site a{font-size:13.5px;color:var(--text-secondary);text-decoration:none;
-  padding:14px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0;
-  line-height:1.2}
-nav.site a:hover{background:var(--surface-2);color:var(--text-primary)}
-nav.site a.on{background:var(--surface-2);color:var(--text-primary);font-weight:700}
-nav.site a.soon{color:var(--muted)}
-nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
+/* ---------- 品牌頁首與主選單（2026-10 改版）----------
+   · 頁首：白底全寬，LOGO（向量檔）＋三地最後更新時間＋EN。照常捲走。
+   · 主選單：接在頁首下方的全寬白條，**永遠置頂**。底邊是「地平線」，
+     目前分頁的正下方升起一顆日出橘的半圓太陽，換頁時從上一頁滑過來。
+     頁首捲走後細條左側淡入 GG 標記（回首頁）。
+   · 日出橘只用在品牌元素（LOGO、太陽），不用在數據——紅綠藍已經有意思。 */
+@font-face{font-family:"Montserrat";font-style:normal;font-weight:400 800;font-display:swap;
+  src:url(/brand/montserrat-latin.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,
+    U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--brand-navy:#12233B;--brand-orange:#E67143;--navh:52px}
+.brandwrap{background:#fff;border-bottom:1px solid rgba(18,35,59,.07)}
+.brandbar{max-width:1120px;margin:0 auto;padding:16px 20px 18px;display:flex;
+  align-items:center;gap:18px;box-sizing:border-box}
+.brand{display:block;line-height:0;flex:none}
+.brand img{display:block;max-width:none}
+.brand .logo-full{height:62px;width:auto}
+.brand .logo-compact{display:none;height:30px;width:auto}
+.upd{margin-left:auto;display:grid;grid-template-columns:auto repeat(3,auto);
+  align-items:end;column-gap:22px}
+.upd-k{font-size:11.5px;color:var(--muted);letter-spacing:.04em;padding-bottom:3px}
+.upd-d{display:none}
+.upd-c{display:grid;line-height:1.15}
+.upd-c span{font-size:11.5px;color:var(--muted)}
+.upd-c b{font-weight:700;font-size:19px;color:var(--brand-navy);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.upd-c i{font-style:normal;font-size:11px;color:#8a8983;font-variant-numeric:tabular-nums}
+.brandbar .lang-btn{position:static;align-self:flex-start;margin-left:6px;
+  border-color:rgba(18,35,59,.25);color:var(--brand-navy)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.bnav{position:sticky;top:0;z-index:20;background:#fff;
+  border-bottom:1px solid rgba(18,35,59,.16);transition:box-shadow .2s ease}
+.bnav.stuck{box-shadow:0 8px 14px -12px rgba(18,35,59,.35)}
+.bnav-in{position:relative;max-width:1120px;margin:0 auto;padding:0 20px;display:flex;
+  align-items:stretch;height:var(--navh);box-sizing:border-box}
+.bnav-mark{display:flex;align-items:center;flex:none;width:0;opacity:0;overflow:hidden;
+  transition:width .22s ease,opacity .22s ease,margin .22s ease}
+.bnav-mark img{height:24px;width:auto;display:block;max-width:none}
+.bnav.stuck .bnav-mark{width:56px;opacity:1;margin-right:10px}
+.bnav-tabs{position:relative;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.bnav-tabs::-webkit-scrollbar{display:none}
+.bnav-track{position:relative;display:flex;height:100%;width:max-content}
+.bnav-track a{display:flex;align-items:center;padding:0 16px;font-size:14.5px;
+  letter-spacing:.02em;color:var(--muted);text-decoration:none;white-space:nowrap}
+.bnav-track a:first-child{padding-left:2px}
+.bnav-track a:hover{color:var(--brand-navy)}
+.bnav-track a.on{color:var(--brand-navy);font-weight:700}
+.bnav-track a.soon{color:var(--baseline)}
+.bnav-sun{position:absolute;bottom:0;left:-40px;width:20px;height:10px;margin-left:-10px;
+  border-radius:20px 20px 0 0;background:var(--brand-orange);pointer-events:none;
+  transition:left .32s cubic-bezier(.3,.7,.2,1)}
+.bnav-glow{position:absolute;bottom:-1px;left:-200px;height:2px;width:240px;margin-left:-120px;
+  pointer-events:none;background:linear-gradient(90deg,transparent,rgba(230,113,67,.75),transparent);
+  transition:left .32s cubic-bezier(.3,.7,.2,1)}
+@media(prefers-reduced-motion:reduce){.bnav-sun,.bnav-glow,.bnav-mark{transition:none}}
+.bnav-fade{position:absolute;top:0;bottom:1px;width:30px;pointer-events:none;opacity:0;
+  transition:opacity .15s}
+.bnav-fade.l{left:0;background:linear-gradient(90deg,#fff 30%,transparent)}
+.bnav-fade.r{right:0;background:linear-gradient(270deg,#fff 30%,transparent)}
+.bnav.fl .bnav-fade.l,.bnav.fr .bnav-fade.r{opacity:1}
+.pagehead{margin:4px 0 2px}
+.pagehead h1{color:var(--brand-navy)}
+@media(max-width:759px){
+  :root{--navh:46px}
+  .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px}
+  .brand .logo-full{display:none}
+  .brand .logo-compact{display:block}
+  .brandbar .lang-btn{margin-left:auto;align-self:center}
+  .upd{order:3;width:100%;margin-left:0;grid-template-columns:auto 1fr 1fr 1fr;
+    column-gap:8px;align-items:baseline;border-top:1px dashed rgba(18,35,59,.15);padding-top:7px}
+  .upd-k{padding:0;font-size:11px}
+  .upd-d{display:inline;font-size:11px;color:#8a8983;margin-left:4px}
+  .upd-c{display:block;white-space:nowrap}
+  .upd-c span{font-size:11px;margin-right:4px}
+  .upd-c b{font-size:14.5px}
+  .upd-c i{display:none}
+  .bnav-in{padding:0 0 0 14px}
+  .bnav-track a{padding:0 12px;font-size:14px}
+  .bnav-track a:last-child{padding-right:18px}
+  .bnav.stuck .bnav-mark{width:44px;margin-right:4px}
+  .bnav-mark img{height:20px}
+}
 
 /* 兩種 banner 共用外觀，但行為不同：
    · div.banner   資料停止更新的警告——**要處理**的事，一律展開
@@ -242,13 +320,15 @@ details.banner[open]>summary::after{content:"▴"}
 .sect-tools button:focus-visible{outline:2px solid var(--series-1);
   outline-offset:2px}
 
+/* 置頂的主選單（＋章節列）會蓋住跳轉目標的上緣，讓出空間 */
+[id],.sect{scroll-margin-top:calc(var(--navh) + 58px)}
 /* 錨點跳過來的那一區給一個外框，否則展開之後看不出跳到哪一張 */
 .sect:target>summary{box-shadow:0 0 0 2px var(--series-1) inset}
 
 /* 列印／存成 PDF 時全部展開。JS 另有 beforeprint 保險——
    新版 Chrome 用 content-visibility 實作收合，純 CSS 不一定壓得過。 */
 @media print{
-  .sect-tools,.snav,.anav{display:none}
+  .sect-tools,.bnav,.anav,.lang-btn{display:none}
   .sect>summary::after,.sect-sum{display:none}
   details>*:not(summary){display:block!important}
 }
@@ -733,8 +813,7 @@ details[data-m-collapse]>summary{list-style:none}
 .dc-signif{margin-top:7px;font-size:11.5px;line-height:1.6;text-align:right;
   color:var(--warning)}
 
-/* 措辭分數降為副：一行橫排，不再跟客觀訊號並列成兩個等大的方塊。
-   這一頁的結論明說「以客觀訊號為準」，版面權重要跟著。 */
+/* 一行橫排的輔助數值列（聯準會頁 2026-10 起不再使用，樣式保留） */
 .tone-row{display:grid;grid-template-columns:auto auto 1fr;align-items:baseline;
   gap:6px 10px;margin-top:12px;padding:12px 14px;border-radius:10px;
   background:var(--surface-2)}
@@ -960,9 +1039,7 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   border:1px solid var(--border)}
 .dbox.primary{border-color:var(--text-primary);border-width:1.5px}
 .dbox .dtitle{font-size:12.5px;color:var(--text-secondary);font-weight:600}
-/* 客觀訊號分數。先前 30px 是整個 FOMC 頁最大的字——比「本次會議：偏鷹」
-   還大。但它是一個 −8～+8 的內部刻度、沒有自然單位，讀者得先理解那個尺度
-   才知道 +6.00 是什麼意思；而結論那三個字不用。降到不超過 .v-main。 */
+/* 大數字不超過 .v-main：結論文字永遠比數字醒目。 */
 .dbox .dscore{font-size:25px;font-weight:700;margin-top:7px;line-height:1.15;
   font-variant-numeric:tabular-nums}
 @media(max-width:400px){.dbox .dscore{font-size:23px}}
@@ -1365,22 +1442,23 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
    分成外框（.anav，負責背景與貼頂）與內層（nav.anchors，負責橫捲）兩層：
    兩側的漸層必須畫在**背景之上、文字之上**。用 mask 做的話會把背景一起
    挖掉，變成看得到底下的內文從縫裡穿過去。 */
-.anav{position:sticky;top:0;z-index:8;background:var(--page);
+.anav{position:sticky;top:var(--navh);z-index:19;background:#fff;
+  box-shadow:0 0 0 100vmax #fff;clip-path:inset(0 -100vmax -14px -100vmax);
   height:0;padding:0;opacity:0;pointer-events:none;transform:translateY(-4px);
   /* 只淡入、**不做高度動畫**：高度一次到位，JS 才能用一次 scrollBy
      精準補掉版面被推下去的距離。高度慢慢長的話得逐格補，
      那會跟讀者自己的捲動打架。 */
   transition:opacity .18s ease,transform .18s ease}
 .anav.on{height:47px;padding:5px 0 6px;opacity:1;transform:none;
-  pointer-events:auto;box-shadow:0 6px 8px -6px rgba(0,0,0,.10)}
+  pointer-events:auto;border-bottom:1px solid rgba(18,35,59,.10)}
 @media(prefers-reduced-motion:reduce){.anav{transition:none}}
 /* 兩側還有內容時給一層漸層。舊版在手機上把 1021px 的內容塞進 362px 的視窗，
    右邊硬切、沒有任何提示——實際上讀者只看得到前三項，
    而且會以為就只有那三項。 */
 .anav::before,.anav::after{content:"";position:absolute;top:0;bottom:0;width:28px;
   pointer-events:none;opacity:0;transition:opacity .15s ease}
-.anav::before{left:0;background:linear-gradient(90deg,var(--page),transparent)}
-.anav::after{right:0;background:linear-gradient(270deg,var(--page),transparent)}
+.anav::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.anav::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
 .anav.fl::before{opacity:1}
 .anav.fr::after{opacity:1}
 nav.anchors{display:flex;height:100%;align-items:center;
@@ -1395,8 +1473,8 @@ nav.anchors a::after{content:"";position:absolute;right:-9px;top:calc(50% - 1px)
 nav.anchors a:last-child{margin-right:0}
 nav.anchors a:last-child::after{display:none}
 nav.anchors a:hover{color:var(--text-primary)}
-nav.anchors a.on{color:var(--text-primary);font-weight:700;
-  border-bottom-color:var(--series-1)}
+nav.anchors a.on{color:var(--brand-navy);font-weight:700;
+  border-bottom-color:var(--brand-navy)}
 /* 手機上把觸控高度撐到 40px（版面稽核的硬性下限）。
    桌機不需要，維持緊湊——這一列的重點就是視覺重量要低。 */
 @media(max-width:430px){
@@ -1727,6 +1805,84 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .el-how>summary::-webkit-details-marker{display:none}
 .el-how>summary::after{content:" ▾"}.el-how[open]>summary::after{content:" ▴"}
 .el-how p{margin:0 0 4px;line-height:1.75}
+
+/* ---------- 聯準會頁（2026-10）：事實清單、時間軸、委員、點陣圖、紀要 ---------- */
+.ai-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;
+  padding:1px 5px;margin-right:6px;border-radius:4px;border:1px solid var(--border);
+  color:var(--muted);vertical-align:1px}
+.fx-ai{margin-top:6px;font-size:13px;line-height:1.65;color:var(--text-secondary)}
+.fx-list{border-top:1px solid var(--grid);margin-top:6px}
+.fx-row{display:grid;grid-template-columns:minmax(96px,.55fr) minmax(0,2fr) auto;gap:4px 14px;
+  align-items:start;padding:11px 2px;border-bottom:1px solid var(--grid)}
+.fx-k{font-size:12.5px;color:var(--muted);padding-top:2px}
+.fx-v{font-size:14px;line-height:1.6}
+.fx-v small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.fx-dir{font-size:12px;font-weight:700;white-space:nowrap;padding-top:2px;color:var(--muted)}
+.fx-dir.hawkish,.fx-act.hawkish{color:var(--critical)}
+.fx-dir.dovish,.fx-act.dovish{color:var(--good)}
+.fx-bo{display:inline-block;font-size:13px;font-weight:600;padding:6px 10px;border-radius:8px;
+  background:var(--surface-2);margin:2px 0 10px}
+.fx-bo.in{background:var(--tint-haw);color:var(--serious)}
+.fx-tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--grid)}
+.fx-tl li{position:relative;display:grid;grid-template-columns:52px auto minmax(0,1fr);gap:2px 10px;
+  padding:7px 0 7px 14px;font-size:13.5px;line-height:1.55}
+.fx-tl li::before{content:"";position:absolute;left:-6px;top:13px;width:10px;height:10px;
+  border-radius:50%;background:var(--surface-1);border:2px solid var(--baseline)}
+.fx-tl li.tl-key::before{background:var(--series-1);border-color:var(--series-1)}
+.fx-tl li.tl-key b{color:var(--series-1)}
+.fx-tl .tl-d{font-variant-numeric:tabular-nums;color:var(--muted)}
+.fx-tl .tl-b{color:var(--text-secondary)}
+.fx-people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-bottom:6px}
+.fx-p,.fx-sp{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--surface-1)}
+.fx-pn{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.fx-pn b{font-size:14.5px}
+.fx-pn span{font-size:12px;color:var(--muted)}
+.fx-tag{display:inline-block;margin-top:6px;font-size:11.5px;padding:2px 7px;border-radius:6px;
+  border:1px solid var(--border);color:var(--muted)}
+.fx-tag.hawkish{border-color:var(--critical);color:var(--critical)}
+.fx-tag.dovish{border-color:var(--good);color:var(--good)}
+.fx-pnote{font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.55}
+.fx-lead{font-size:14.5px;line-height:1.7;margin:4px 0 10px}
+.fx-dotwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fx-dots{width:100%;max-width:900px;height:auto;display:block;margin:4px 0}
+.fx-tier3{margin:10px 0 0}
+@media (max-width:640px){.fx-dots{min-width:620px}}
+.fx-dec td,.fx-dec th{text-align:left}
+.fx-dots circle{fill:var(--series-1);opacity:.85}
+.fx-dots .g{stroke:var(--grid);stroke-width:1}
+.fx-dots .now{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+.fx-dots .med{stroke:var(--critical);stroke-width:2.5}
+.fx-dots text{fill:var(--muted);font-size:11px}
+.fx-dots .yl{text-anchor:end}.fx-dots .xl{text-anchor:middle;font-size:12px}
+.fx-dots .nl{text-anchor:end;font-size:10.5px}
+.fx-sep td,.fx-sep th{text-align:right;white-space:nowrap}
+.fx-sep th.rowhead{text-align:left}
+.fx-sep td small{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
+.fx-sep td small.up{color:var(--critical)}.fx-sep td small.dn{color:var(--good)}
+.fx-q,.fx-ev,.fx-cond{list-style:none;margin:0 0 6px;padding:0}
+.fx-q li,.fx-ev li,.fx-cond li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;
+  padding:8px 0;border-bottom:1px solid var(--grid);font-size:13.5px;line-height:1.6}
+.q-lv{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;
+  background:var(--surface-2);color:var(--text-secondary);align-self:start}
+.q-lv.r0,.q-lv.r1,.q-lv.r2{background:var(--series-1);color:#fff}
+.q-lv.r3{background:var(--tint-dov);color:var(--series-1)}
+.q-en{color:var(--text-secondary);font-size:13px}
+.fx-ev .fx-tag{margin-top:2px;align-self:start}
+.fx-cond .cmark{font-weight:700;color:var(--muted)}
+.fx-cond li.met .cmark{color:var(--good)}
+.fx-cond small{display:block;color:var(--muted);font-size:12px}
+.fx-sps{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.sp-i{font-size:13px;line-height:1.55;margin-top:6px}
+.sp-i a{color:inherit}
+.sp-k{font-size:10.5px;font-weight:700;color:var(--muted);margin-right:6px}
+.sp-d{display:block;font-size:11.5px;color:var(--muted)}
+@media (max-width:640px){
+  .fx-row{grid-template-columns:minmax(0,1fr) auto}
+  .fx-k{grid-column:1/-1;padding-top:0}
+  .fx-tl li{grid-template-columns:44px minmax(0,1fr)}
+  .fx-tl .tl-b{grid-column:2}
+  .fx-people,.fx-sps{grid-template-columns:1fr}
+}
 .el-card .home-zone-head{flex-direction:row;align-items:flex-start}
 .el-card .home-primary-link{font-size:12.5px;min-height:36px;margin-top:-4px;white-space:nowrap}
 /* ---- 各州地圖（可收合）---- */
@@ -2072,46 +2228,21 @@ details.home-module[open]{padding-bottom:0}
 </script>
 </head>
 <body>
+<!-- 更新於 2026-10-05 23:05（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/05</span></span><div class="upd-c"><span>台北</span><b>23:05</b><i>10/05</i></div><div class="upd-c"><span>紐約</span><b>11:05</b><i>10/05</i></div><div class="upd-c"><span>倫敦</span><b>16:05</b><i>10/05</i></div></div><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/fomc/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on" aria-current="page">聯準會</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
+<div class="pagehead"><h1>聯準會</h1><div class="sub">最新決議 2026-09-16</div></div>
 
-<header class="top">
-  <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/fomc/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
-  <h1><a class="h1-home" href="/">聯準會文本</a></h1>
-  
-  <div class="sub">最新聲明 2026-09-16　·　更新於 2026-10-05 19:46（台北）</div>
-</header>
-
-<div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
-
-<div class="anav"><nav class="anchors"><a href="#score">政策訊號評分</a><a href="#kpi">關鍵數字</a><a href="#focus">聯準會目前的重心</a><a href="#market">市場定價 vs 聯準會</a><a href="#diff">聲明逐句比對</a><a href="#trend">歷次分數</a><a href="#presser">記者會</a><a href="#phrases">措辭的支撐材料</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC decision</div><h2 class="focus-title">FOMC 偏鷹</h2><p class="focus-sub">客觀訊號指向緊縮——政策行動、反對票或聲明點名的風險方向指向更高的利率。</p><div class="focus-grid"><div class="focus-metric hawkish"><span>會議結論</span><b>偏鷹</b><small>客觀分數 +3.00</small></div><div class="focus-metric neutral"><span>政策決定</span><b>升息</b><small>3.75–4.00%</small></div><div class="focus-metric neutral"><span>投票結構</span><b>全票通過</b><small>反對方向比反對票數更重要</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>只改九宮格政策解讀</small></div></div><details class="focus-evidence"><summary>查看判斷依據</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>客觀訊號｜主要依據</b><span>本次升息；全體一致，沒有反對票；聲明未明確點名風險方向</span></div><div class="logic-step"><b>聲明文本比對</b><span>本次 2026-09-16 對照 2026-07-29：改動 7 處；只比較正式會議聲明。</span></div><div class="logic-step"><b>下次會議</b><span>2026-10-28｜23 天後</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-09-16</span><span class="data-tag">措辭分數 +7.02（輔助，不覆寫客觀訊號）</span><span class="data-tag">AI 不參與計分與逐句差異</span></div></div></div>
-
-
+<div class="anav"><nav class="anchors"><a href="#signals">政策訊號</a><a href="#next">下次會議與靜默期</a><a href="#people">投票委員與官員</a><a href="#sep">點陣圖與經濟預測（SEP）</a><a href="#market">市場路徑 vs 點陣圖</a><a href="#diff">聲明逐句比對</a><a href="#minutes">會議紀要：與會者怎麼分布</a><a href="#speeches">官員最新發言</a><a href="#presser">記者會：主席怎麼說</a><a href="#focus">目前重心與轉向條件</a><a href="#trend">歷次決議</a></nav></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC 決議｜2026-09-16 會議</div><h2 class="focus-title">升息一碼至 3.75–4.00%</h2><p class="focus-sub">投票 12:0，全體一致。前次 7/29：維持不變，3 票主張升息。<br>下次會議 10/27–28（23 天後）　·　靜默期 10/17 起（12 天後）</p><div class="focus-grid"><div class="focus-metric hawkish"><span>政策方向</span><b>偏升息</b><small>只看決議與反對票</small></div><div class="focus-metric neutral"><span>點陣圖（2026 年底）</span><b>4.1%</b><small>16 人預期再升、2 人不動</small></div><div class="focus-metric neutral"><span>市場（2026 年底）</span><b>4.15%</b><small>市場路徑與點陣圖大致一致</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>聲明制式句、反對票、主席表態</small></div></div><details class="focus-evidence"><summary>看決議原文與標示規則</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>聲明原文</b><span>The Committee decided to raise the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent, in support of the Federal Reserve&#x27;s dual mandate.</span></div><div class="logic-step"><b>投票</b><span>12:0，全體一致</span></div><div class="logic-step"><b>政策方向怎麼標</b><span>有升息就是偏升息、有降息就是偏降息；維持不變時看反對票主張的方向。不加權、不打分數。</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-09-16</span><span class="data-tag">利率區間取自 FRED</span><span class="data-tag">不打分數；AI 只用於中文說明（已標示）</span></div></div></div>
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="score">政策訊號評分</h2><span class="sect-sum">客觀訊號 +3.00　·　措辭 +7.02</span></summary><div class="sect-body">
-    <p class="hint">兩個分數刻意不合成——<b>背離本身就是訊號</b>。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把聯準會這次「做了什麼、說了什麼」拆成幾個可以打分的訊號：政策行動、反對票、聲明的風險用語、記者會措辭。</p><p><b>為什麼重要：</b>聯準會不會直接說「我們下次要降息」，方向藏在做與說的細節裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。</p><p><b>怎麼判讀：</b>分數的正負代表偏升息／偏降息。先看硬訊號（行動、反對票），措辭分數只當佐證——語氣會隨主席的文風漂移。</p></div></details>
-    <div class="dbox primary hawkish">
-  <div class="dtitle">客觀訊號分數（主要依據）</div>
-  <div class="dscore">+3.00</div>
-  <div class="dlab">偏鷹
-    <span style="font-weight:400;color:var(--muted)">
-    　較上次 -3.00</span></div>
-  <div class="score-bar" style="margin:14px 0 6px">
-    <i style="left:50.0%;width:18.8%;
-      background:var(--serious)"></i><span class="score-mid"></span>
-  </div>
-  <div class="sax-scale"><span>−8 偏降息</span><span>0 中性</span><span>+8 偏升息</span></div>
-  <div class="dnote" style="margin-top:10px">本次升息；全體一致，沒有反對票；聲明未明確點名風險方向</div>
-</div>
-<div class="tone-row hawkish stale">
-  <span class="tone-label">措辭分數（輔助）<span class="tone-flag">本次不可靠</span></span>
-  <span class="tone-val">+7.02</span>
-  <span class="tone-delta">較上次 +1.80</span>
-  <span class="tone-note">同一刻度。跨主席不可比，只當輔助。</span>
-</div>
-    <div class="warnbox"><b>偵測到溝通方式改變</b><br>這次聲明比近四次平均短了 28%。篇幅或用語體例大幅改變，通常代表溝通方式改變，而不是立場轉變——此時措辭分數與前幾次不可比，請以客觀訊號分數為準。</div>
+  <details class="card sect" open><summary><h2 id="signals">政策訊號</h2><span class="sect-sum">升息一碼，全體一致　·　點陣圖：年底前再升約 1 碼　·　市場：與點陣圖大致一致</span></summary><div class="sect-body">
+    <p class="hint">每一列是一件文件裡的事實，各自指向一個方向。<b>不加總、不打分數</b>——
+      先看它們是不是指向同一邊。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把聯準會這次「做了什麼、誰不同意、自己預期什麼、市場信不信」拆成幾件可以核對的事實。</p><p><b>為什麼重要：</b>聯準會不會直接說「我們下次要升息」，方向藏在決議、反對票與點陣圖裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。</p><p><b>怎麼判讀：</b>幾列都指向同一邊，方向就很清楚；互相矛盾時，矛盾本身就是重點（例如委員會說還要升、市場卻不太信）。</p></div></details>
+    <div class="fx-list"><div class="fx-row"><div class="fx-k">政策行動</div><div class="fx-v">升息一碼，目標區間 3.75–4.00%</div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">反對票</div><div class="fx-v">12:0，全體一致<small>反對票要看主張的方向，不是只看張數</small></div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">聲明的風險用語</div><div class="fx-v">沒有點名風險方向（Warsh 任內的聲明不再寫這一句）</div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">點陣圖（2026 年底）vs 現在</div><div class="fx-v">中位數 4.1%，比現行中點高約 1 碼——委員會自己預期 2026 年底前還要再升<small>16 人高於現在、2 人持平、0 人低於現在</small></div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">市場路徑 vs 點陣圖</div><div class="fx-v">市場路徑與點陣圖大致一致<small>期貨推算 2026 年底 4.15%，點陣圖 4.125%</small></div><div class="fx-dir neutral">— 中性</div></div></div>
     <details data-m-collapse><summary>本次投票明細</summary>
       <div style="margin-top:12px"><div class="votes"><span class="vchip">全體一致，沒有反對票</span></div></div>
     </details>
@@ -2119,173 +2250,113 @@ details.home-module[open]{padding-bottom:0}
 </div>
 
 <div class="grid">
-  <details class="card sect" open><summary><h2 id="kpi">關鍵數字</h2><span class="sect-sum">2026-09-16 聲明　·　改動 7 處　·　客觀訊號 +3.00</span></summary><div class="sect-body">
-    <div class="grid g4 inner"><div class="card kpi">
-  <div class="k-label">Fed Funds Target Range</div>
-  <div class="k-label-zh">政策利率目標區間</div><div class="k-value">3.75–4.00%</div>
-  <div class="k-chips"><span class="k-chip info">本次升息</span></div><div class="k-plain">聯準會直接設定的短期利率區間。所有其他利率都以它為起點。</div>
-</div><div class="card kpi">
-  <div class="k-label">FOMC Vote</div>
-  <div class="k-label-zh">本次投票</div><div class="k-value">12 比 0</div>
-  <div class="k-chips"><span class="k-chip pos">全體一致</span></div><div class="k-plain">委員用投票表達不同意——先看票數，再看每張票主張的方向。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">本次全體一致，近期少見的完全共識</div></div></details>
-</div><div class="card kpi">
-  <div class="k-label">Objective Signal Score</div>
-  <div class="k-label-zh">客觀訊號分數</div><div class="k-value">+3.00</div>
-  <div class="k-chips"></div><div class="k-plain">政策行動、反對票與聲明點名的風險方向合計。正數＝偏升息方向，負數＝偏降息方向。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">較上次 -3.00</div><svg class="spark" viewBox="0 0 120 64" preserveAspectRatio="none" role="img" aria-hidden="true"><rect x="77.2" y="0" width="42.8" height="64" fill="var(--surface-2)"/><line x1="4" y1="32.0" x2="116" y2="32.0" stroke="var(--baseline)" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/><polyline points="4.0,32.0 12.6,32.0 21.2,32.0 29.8,32.0 38.5,50.7 47.1,60.0 55.7,60.0 64.3,60.0 72.9,50.7 81.5,41.3 90.2,41.3 98.8,32.0 107.4,4.0 116.0,18.0" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><line x1="116.0" y1="18.0" x2="116.0" y2="18.0" stroke="var(--series-1)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></div></details>
-</div><div class="card kpi">
-  <div class="k-label">Next Meeting</div>
-  <div class="k-label-zh">下次會議</div><div class="k-value">23 天後</div>
-  <div class="k-chips"><span class="k-chip info">2026-10-28</span></div><div class="k-plain">在那之前，這份聲明就是委員會的官方立場——距離下次會議越遠，它主導市場的時間越長。</div><details class="k-more"><summary>近 5 期與比較基準</summary><div class="k-more-body"><div class="k-sub">之後：2026-12-09</div></div></details>
-</div></div>
+  <details class="card sect"><summary><h2 id="next">下次會議與靜默期</h2><span class="sect-sum">10/27–28（23 天後）　·　靜默期 10/17 起（12 天後）</span></summary><div class="sect-body">
+    <p class="hint">靜默期從會議開始前的第二個週六起，到會後隔天結束。這段期間官員不公開談政策，
+      所以靜默期前的最後幾場演講特別受注意。</p>
+    <div class="fx-bo before">靜默期 10/17 起（12 天後）</div><ol class="fx-tl"><li class="tl-ev"><span class="tl-d">10/6</span><b>演講</b><span class="tl-b">Vice Chair for Supervision Michelle W. Bowman　Modernizing Regulation and Supervision</span></li><li class="tl-ev"><span class="tl-d">10/7</span><b>會議紀要</b><span class="tl-b">上次會議的紀要公布</span></li><li class="tl-ev"><span class="tl-d">10/8</span><b>演講</b><span class="tl-b">Governor Christopher J. Waller　Economic Outlook</span></li><li class="tl-ev"><span class="tl-d">10/14</span><b>褐皮書</b><span class="tl-b">12 個地區的經濟現況報告</span></li><li class="tl-key"><span class="tl-d">10/17</span><b>靜默期開始</b><span class="tl-b">官員不再公開談貨幣政策，直到會後隔天</span></li><li class="tl-key"><span class="tl-d">10/28</span><b>FOMC 會議</b><span class="tl-b">10/27–28，美東 14:00 公布決議（台北隔天 02:00）</span></li><li class="tl-ev"><span class="tl-d">10/29</span><b>靜默期結束</b><span class="tl-b">會後隔天起，官員恢復公開發言</span></li></ol><p class="hint" style="margin-top:10px">之後的會議：12/9、1/27、3/17</p><p class="src">理事的演講與作證取自聯準會官網行事曆；地方聯儲總裁的行程沒有統一的官方來源，這裡不列（他們的近期發言見「官員最新發言」）。</p>
   </div></details>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="focus">聯準會目前的重心</h2><span class="sect-sum">通膨優先</span></summary><div class="sect-body">
-    <p class="hint">同一份就業數據，在「通膨優先」與「就業優先」下會導向相反的決定。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>聯準會有兩個任務：穩物價、顧就業。兩者衝突時，判斷它現在把哪一個擺在前面。</p><p><b>為什麼重要：</b>同樣的數據，重心不同結論就相反：就業轉弱時，「就業優先」會降息救經濟，「通膨優先」卻會按住不動。不知道重心，就沒辦法從數據推政策。</p><p><b>怎麼判讀：</b>重心翻轉的訊號比數據本身更重要——聲明裡風險描述的順序、記者會被追問時先護哪一邊，都是線索。</p></div></details>
-    <div class="dbox hawkish" style="margin-top:4px">
-      <div class="dtitle">目前重心</div>
-      <div class="dlab" style="font-size:19px;margin-top:6px">通膨優先</div>
-      <div class="dnote">委員會目前把通膨擺在前面。這種體制下，就業轉弱不會單獨換來降息——要等通膨先回到目標附近，寬鬆才會啟動。</div>
-    </div>
-    <div class="src" style="border-top:none;padding-top:10px">判定依據：聲明描述通膨仍高於目標、記者會 2 處表態以物價穩定為優先</div>
-    <div class="src">只用聲明制式句與投票紀錄，不用模型。</div>
+  <details class="card sect"><summary><h2 id="people">投票委員與官員</h2><span class="sect-sum">今年 12 位投票委員　·　依發言份量分三層</span></summary><div class="sect-body">
+    <div class="sig-tier">第一層｜主席</div><p class="hint" style="margin:2px 0 8px">主持會議、記者會由他回答。他的話最直接影響市場對下一步的預期。</p><div class="fx-people"><div class="fx-p"><div class="fx-pn"><b>Kevin Warsh</b><span>主席</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span><div class="fx-pnote">2026 年 5 月接任主席；上任後聲明大幅縮短、取消前瞻指引</div></div></div><div class="sig-tier">第二層｜兩位副主席</div><p class="hint" style="margin:2px 0 8px">紐約聯儲總裁是 FOMC 常任副主席、理事會副主席是主席的副手，兩人的發言通常被當成委員會主流看法。</p><div class="fx-people"><div class="fx-p"><div class="fx-pn"><b>Philip N. Jefferson</b><span>理事會副主席</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>John C. Williams</b><span>紐約聯儲總裁（FOMC 副主席）</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span><div class="fx-pnote">紐約聯儲總裁是 FOMC 的常任副主席，市場通常把他的發言當成委員會共識的風向</div></div></div><details data-m-collapse open class="fx-tier3"><summary>第三層｜其他投票委員（9 位）</summary><p class="hint" style="margin:2px 0 8px">近 12 個月沒投過反對票的委員，是決定多數落在哪一邊的人——他們的立場改變，比已經表態的委員更有資訊量。</p><div class="fx-people"><div class="fx-p"><div class="fx-pn"><b>Beth M. Hammack</b><span>克里夫蘭聯儲總裁</span></div><span class="fx-tag hawkish">近 12 個月反對：1 次主張升息、1 次反對聲明加入寬鬆傾向</span></div><div class="fx-p"><div class="fx-pn"><b>Neel Kashkari</b><span>明尼亞波利斯聯儲總裁</span></div><span class="fx-tag hawkish">近 12 個月反對：1 次主張升息、1 次反對聲明加入寬鬆傾向</span></div><div class="fx-p"><div class="fx-pn"><b>Lorie K. Logan</b><span>達拉斯聯儲總裁</span></div><span class="fx-tag hawkish">近 12 個月反對：1 次主張升息、1 次反對聲明加入寬鬆傾向</span></div><div class="fx-p"><div class="fx-pn"><b>Christopher J. Waller</b><span>理事</span></div><span class="fx-tag dovish">近 12 個月反對：1 次主張降息</span></div><div class="fx-p"><div class="fx-pn"><b>Michael S. Barr</b><span>理事</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Michelle W. Bowman</b><span>監管副主席</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Lisa D. Cook</b><span>理事</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Anna Paulson</b><span>費城聯儲總裁</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Jerome H. Powell</b><span>理事</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span><div class="fx-pnote">前任主席（2018–2026），卸任主席後仍留任理事</div></div></div></details><details data-m-collapse><summary>候補委員（今年不投票）5 位</summary><p class="hint" style="margin:10px 0 8px">候補委員參加會議、參與討論，也交點陣圖，只是今年沒有投票權。</p><div class="fx-people"><div class="fx-p"><div class="fx-pn"><b>Thomas I. Barkin</b><span>里奇蒙聯儲總裁</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Mary C. Daly</b><span>舊金山聯儲總裁</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Austan D. Goolsbee</b><span>芝加哥聯儲總裁</span></div><span class="fx-tag neutral">近 12 個月反對：1 次主張維持</span></div><div class="fx-p"><div class="fx-pn"><b>Sushmita Shukla</b><span>紐約聯儲第一副總裁</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div><div class="fx-p"><div class="fx-pn"><b>Cheryl Venable</b><span>亞特蘭大聯儲代理總裁</span></div><span class="fx-tag neutral">近 12 個月未投反對票</span></div></div></details><details data-m-collapse><summary>FOMC 是怎麼組成的</summary><div class="teach-body" style="margin-top:10px"><p>聯邦公開市場委員會（FOMC）今年有 12 票：理事會的 7 位理事，加上 5 位地方聯儲總裁。紐約聯儲總裁每年都投票，另外 4 席由其餘 11 家地方聯儲輪流（2027 年輪到芝加哥、里奇蒙、亞特蘭大、舊金山）。</p><p>一年開 8 次會。3、6、9、12 月的會議會另外公布經濟預測摘要（SEP）與點陣圖；每次會後三週公布會議紀要。完整逐字稿依規定延後五年公開。</p><p>鷹派／鴿派這裡只用<b>已表態的事實</b>標示（近 12 個月的反對票）。點陣圖是匿名的，對不上人名，所以不拿來替個人貼標籤。</p></div></details>
   </div></details>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="market">市場定價 vs 聯準會</h2><span class="sect-sum">差距 +0.91 個百分點　·　與本次判讀一致</span></summary><div class="sect-body">
-    <p class="hint">2 年期殖利率跟政策利率中值的差，就是市場定價的政策路徑方向。</p>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>債券市場用真金白銀押的利率路徑，跟聯準會自己的說法差多少。</p><p><b>為什麼重要：</b>兩者常常不一致：市場押得比聯準會鴿，代表投資人不信它撐得住；押得更鷹則相反。這個落差本身就是交易機會與風險所在。</p><p><b>怎麼判讀：</b>落差大的方向，就是之後「有一方要認錯」的方向——不是市場修正定價，就是聯準會改口。</p></div></details>
-    <div class="stat-row"><div class="stat"><div class="s-label">2 年期公債殖利率</div><div class="s-value" style="color:inherit">4.78%</div></div><div class="stat"><div class="s-label">政策利率中值</div><div class="s-value" style="color:inherit">3.88%</div></div></div>
-    <div class="bkgap" style="color:var(--serious)">
-      <span class="bk-label">差距</span>
-      <span class="bk-val">+0.91 個百分點</span>
-    </div>
-    <div class="verdict hawkish" style="margin-top:14px">
-      <div class="v-main" style="font-size:19px">市場定價未來兩年的平均政策利率高於現在——偏向再緊縮</div>
-      <div class="v-why" style="margin-top:8px">與本次的客觀訊號方向一致——市場也讀到了同一件事。</div>
-    </div>
-    <div class="src">粗略代理，不是會議層級的降息機率（見判讀說明）。</div>
+  <details class="card sect"><summary><h2 id="sep">點陣圖與經濟預測（SEP）</h2><span class="sect-sum">2026 年底中位數 4.1%　·　16 人預期再升</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>每季一次（3、6、9、12 月的會議），每位與會者寫下自己預期的利率、成長、失業率與通膨。</p><p><b>為什麼重要：</b>這是委員會自己公布的預期路徑。中位數比現行利率高，代表多數人認為還要再升；比現行低則是預期降息。</p><p><b>怎麼判讀：</b>看兩件事：中位數跟上一季比往哪移、點的分布有多散。點越散，委員會內部分歧越大，路徑越不確定。</p></div></details>
+    <p class="fx-lead">2026 年底中位數 <b>4.1%</b>（6 月 3.8%）：16 人預期還要再升、2 人預期不動、0 人預期降。</p><div class="fx-dotwrap"><svg class="fx-dots" viewBox="0 0 900 340" role="img" aria-label="點陣圖：每位與會者對年底政策利率的預測"><line x1="46" x2="892" y1="264.3" y2="264.3" class="g"/><text x="40" y="268.3" class="yl">3.00</text><line x1="46" x2="892" y1="222.6" y2="222.6" class="g"/><text x="40" y="226.6" class="yl">3.25</text><line x1="46" x2="892" y1="180.9" y2="180.9" class="g"/><text x="40" y="184.9" class="yl">3.50</text><line x1="46" x2="892" y1="139.1" y2="139.1" class="g"/><text x="40" y="143.1" class="yl">3.75</text><line x1="46" x2="892" y1="97.4" y2="97.4" class="g"/><text x="40" y="101.4" class="yl">4.00</text><line x1="46" x2="892" y1="55.7" y2="55.7" class="g"/><text x="40" y="59.7" class="yl">4.25</text><line x1="46" x2="892" y1="14.0" y2="14.0" class="g"/><text x="40" y="18.0" class="yl">4.50</text><line x1="46" x2="892" y1="118.3" y2="118.3" class="now"/><circle cx="116.3" cy="34.9" r="4"/><circle cx="125.8" cy="34.9" r="4"/><circle cx="135.3" cy="34.9" r="4"/><circle cx="144.8" cy="34.9" r="4"/><circle cx="78.3" cy="76.6" r="4"/><circle cx="87.8" cy="76.6" r="4"/><circle cx="97.3" cy="76.6" r="4"/><circle cx="106.8" cy="76.6" r="4"/><circle cx="116.3" cy="76.6" r="4"/><circle cx="125.8" cy="76.6" r="4"/><circle cx="135.3" cy="76.6" r="4"/><circle cx="144.8" cy="76.6" r="4"/><circle cx="154.3" cy="76.6" r="4"/><circle cx="163.8" cy="76.6" r="4"/><circle cx="173.3" cy="76.6" r="4"/><circle cx="182.8" cy="76.6" r="4"/><circle cx="125.8" cy="118.3" r="4"/><circle cx="135.3" cy="118.3" r="4"/><line x1="59.5" x2="201.7" y1="80.7" y2="80.7" class="med"/><text x="130.6" y="328" class="xl">2026</text><circle cx="266.5" cy="34.9" r="4"/><circle cx="276.0" cy="34.9" r="4"/><circle cx="285.5" cy="34.9" r="4"/><circle cx="295.0" cy="34.9" r="4"/><circle cx="304.5" cy="34.9" r="4"/><circle cx="314.0" cy="34.9" r="4"/><circle cx="323.5" cy="34.9" r="4"/><circle cx="333.0" cy="34.9" r="4"/><circle cx="276.0" cy="76.6" r="4"/><circle cx="285.5" cy="76.6" r="4"/><circle cx="295.0" cy="76.6" r="4"/><circle cx="304.5" cy="76.6" r="4"/><circle cx="314.0" cy="76.6" r="4"/><circle cx="323.5" cy="76.6" r="4"/><circle cx="290.3" cy="160.0" r="4"/><circle cx="299.8" cy="160.0" r="4"/><circle cx="309.3" cy="160.0" r="4"/><circle cx="299.8" cy="243.4" r="4"/><line x1="228.7" x2="370.9" y1="80.7" y2="80.7" class="med"/><text x="299.8" y="328" class="xl">2027</text><circle cx="454.8" cy="76.6" r="4"/><circle cx="464.2" cy="76.6" r="4"/><circle cx="473.8" cy="76.6" r="4"/><circle cx="483.2" cy="76.6" r="4"/><circle cx="450.0" cy="118.3" r="4"/><circle cx="459.5" cy="118.3" r="4"/><circle cx="469.0" cy="118.3" r="4"/><circle cx="478.5" cy="118.3" r="4"/><circle cx="488.0" cy="118.3" r="4"/><circle cx="459.5" cy="160.0" r="4"/><circle cx="469.0" cy="160.0" r="4"/><circle cx="478.5" cy="160.0" r="4"/><circle cx="469.0" cy="201.7" r="4"/><circle cx="454.8" cy="243.4" r="4"/><circle cx="464.2" cy="243.4" r="4"/><circle cx="473.8" cy="243.4" r="4"/><circle cx="483.2" cy="243.4" r="4"/><line x1="397.9" x2="540.1" y1="114.1" y2="114.1" class="med"/><text x="469.0" y="328" class="xl">2028</text><circle cx="628.7" cy="118.3" r="4"/><circle cx="638.2" cy="118.3" r="4"/><circle cx="647.7" cy="118.3" r="4"/><circle cx="609.7" cy="160.0" r="4"/><circle cx="619.2" cy="160.0" r="4"/><circle cx="628.7" cy="160.0" r="4"/><circle cx="638.2" cy="160.0" r="4"/><circle cx="647.7" cy="160.0" r="4"/><circle cx="657.2" cy="160.0" r="4"/><circle cx="666.7" cy="160.0" r="4"/><circle cx="633.4" cy="201.7" r="4"/><circle cx="642.9" cy="201.7" r="4"/><circle cx="623.9" cy="243.4" r="4"/><circle cx="633.4" cy="243.4" r="4"/><circle cx="642.9" cy="243.4" r="4"/><circle cx="652.4" cy="243.4" r="4"/><circle cx="638.2" cy="285.1" r="4"/><line x1="567.1" x2="709.3" y1="164.2" y2="164.2" class="med"/><text x="638.2" y="328" class="xl">2029</text><circle cx="802.6" cy="118.3" r="4"/><circle cx="812.1" cy="118.3" r="4"/><circle cx="807.4" cy="139.1" r="4"/><circle cx="802.6" cy="160.0" r="4"/><circle cx="812.1" cy="160.0" r="4"/><circle cx="802.6" cy="180.9" r="4"/><circle cx="812.1" cy="180.9" r="4"/><circle cx="807.4" cy="201.7" r="4"/><circle cx="802.6" cy="222.6" r="4"/><circle cx="812.1" cy="222.6" r="4"/><circle cx="807.4" cy="243.4" r="4"/><circle cx="783.6" cy="264.3" r="4"/><circle cx="793.1" cy="264.3" r="4"/><circle cx="802.6" cy="264.3" r="4"/><circle cx="812.1" cy="264.3" r="4"/><circle cx="821.6" cy="264.3" r="4"/><circle cx="831.1" cy="264.3" r="4"/><circle cx="807.4" cy="285.1" r="4"/><line x1="736.3" x2="878.5" y1="230.9" y2="230.9" class="med"/><text x="807.4" y="328" class="xl">長期</text></svg></div><p class="hint" style="margin:4px 0 14px">每個點是一位與會者（理事＋地方聯儲總裁，含今年不投票的人）認為適當的年底利率中點；紅色橫線是中位數，虛線是現行利率中點（3.875%）。</p><p class="fx-lead" style="margin-top:0">核心 PCE 預測：2026 年 3.4% → 2027 年 2.5% → 2028 年 2.2%。</p><div class="tscroll"><table class="fx-sep"><thead><tr><th></th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>長期</th></tr></thead><tbody><tr><th class="rowhead">實質 GDP 成長</th><td><b>2.3</b><small class="up">▲ 6 月 2.2</small></td><td><b>2.4</b><small class="up">▲ 6 月 2.3</small></td><td><b>2.2</b><small>持平</small></td><td><b>2.1</b></td><td><b>2.0</b><small>持平</small></td></tr><tr><th class="rowhead">失業率</th><td><b>4.1</b><small class="dn">▼ 6 月 4.3</small></td><td><b>4.1</b><small class="dn">▼ 6 月 4.3</small></td><td><b>4.1</b><small class="dn">▼ 6 月 4.2</small></td><td><b>4.1</b></td><td><b>4.2</b><small>持平</small></td></tr><tr><th class="rowhead">PCE 通膨</th><td><b>3.7</b><small class="up">▲ 6 月 3.6</small></td><td><b>2.3</b><small>持平</small></td><td><b>2.1</b><small class="up">▲ 6 月 2.0</small></td><td><b>2.0</b></td><td><b>2.0</b><small>持平</small></td></tr><tr><th class="rowhead">核心 PCE 通膨</th><td><b>3.4</b><small class="up">▲ 6 月 3.3</small></td><td><b>2.5</b><small>持平</small></td><td><b>2.2</b><small class="up">▲ 6 月 2.1</small></td><td><b>2.0</b></td><td>—</td></tr><tr><th class="rowhead">聯邦資金利率</th><td><b>4.1</b><small class="up">▲ 6 月 3.8</small></td><td><b>4.1</b><small class="up">▲ 6 月 3.6</small></td><td><b>3.9</b><small class="up">▲ 6 月 3.4</small></td><td><b>3.6</b></td><td><b>3.2</b><small class="up">▲ 6 月 3.1</small></td></tr></tbody></table></div><div class="src">2026-09-16 經濟預測摘要（SEP）表 1 與圖 2；▲▼ 對照上一季的中位數。數值為第四季對第四季的變動（失業率為第四季平均）。</div>
   </div></details>
 </div>
+
+<div class="grid">
+  <details class="card sect"><summary><h2 id="market">市場路徑 vs 點陣圖</h2><span class="sect-sum">市場路徑與點陣圖大致一致</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>聯邦基金期貨推算的每一場會議後的利率，對照點陣圖的年底中位數。</p><p><b>為什麼重要：</b>期貨是真金白銀押的利率路徑。它跟點陣圖不一致，代表市場不完全相信委員會的預期。</p><p><b>怎麼判讀：</b>落差的方向就是之後「有一方要修正」的方向——不是市場改押，就是聯準會改口。</p></div></details>
+    <div class="tscroll"><table><thead><tr><th>會議</th><th>會後隱含利率</th><th>單場隱含變動</th><th>機率最高的結果</th></tr></thead><tbody><tr><td>10/28</td><td>3.94%</td><td>+6 bp</td><td>維持 77%、升一碼 23%</td></tr><tr><td>12/9</td><td>4.15%</td><td>+21 bp</td><td>升一碼 85%、維持 15%</td></tr></tbody></table></div><div class="verdict neutral" style="margin-top:14px"><div class="v-main" style="font-size:18px">市場路徑與點陣圖大致一致</div><div class="v-why" style="margin-top:6px">2026 年底：期貨推算 4.15%，點陣圖中位數 4.125%，差 +2 bp。</div></div><p class="src">聯邦基金期貨逐場推算（2026-10-05），與首頁 FedWatch chip 同一套算法；短天期內與 OIS 定價等價。期貨只推到今年最後一場會議，明年以後只看點陣圖。</p><p class="src">參考：2 年期公債殖利率 4.78%，比政策利率中點高 +0.91 個百分點。2 年期含期限溢酬，不能直接讀成政策路徑，只列為參考。</p>
+  </div></details>
+</div>
+
 <div class="grid">
   <details class="card sect"><summary><h2 id="diff">聲明逐句比對</h2><span class="sect-sum">7 處改動（對照 2026-07-29）</span></summary><div class="sect-body">
-    <p class="hint">「舊 → 新」並排，只標實際改動的字。
-      橘色刪除線是拿掉的字，藍色是新增的字。</p>
+    <p class="hint">「舊 → 新」並排，只標實際改動的字。橘色刪除線是拿掉的字，藍色是新增的字。
+      每處改動下方標「AI」的是中文說明。</p>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>這次的會後聲明跟上一次逐句對照，改了哪幾個字。</p><p><b>為什麼重要：</b>聲明是逐字斟酌的文件，一個形容詞的增刪都是刻意的。市場的劇烈反應常常不是因為做了什麼，而是因為改了哪句話。</p><p><b>怎麼判讀：</b>刪掉鷹派措辭＝往鴿派挪，反之亦然。沒改的句子也是資訊——代表委員會不想讓你改變預期。</p></div></details>
     <div class="verdict hawkish" style="margin:0 0 16px"><div class="v-main" style="font-size:19px">聲明改了 7 處</div><div class="v-why" style="margin-top:8px">改動不少。多處同時調整通常代表委員會正在重新描述經濟狀況或政策方向，值得逐句比對。</div></div>
-    <div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee decided to <mark class='mo'>maintain</mark> the target range for the federal funds rate <mark class='mo'>at 3-1/2</mark> to 3-3/4 percent, in support of the Federal Reserve&#x27;s dual mandate.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee decided to <mark class='mn'>raise</mark> the target range for the federal funds rate <mark class='mn'>by 1/4 percentage point</mark> to 3-3/4 <mark class='mn'>to 4</mark> percent, in support of the Federal Reserve&#x27;s dual mandate.</div></div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Economic activity is expanding at a solid <mark class='mo'>pace despite elevated uncertainty that owes, in part, to the conflict in the Middle East.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Economic activity is expanding at a solid <mark class='mn'>pace.</mark></div></div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Productivity growth and capital investment <mark class='mo'>are strong.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Productivity growth <mark class='mn'>is strong,</mark> and capital investment <mark class='mn'>is robust.</mark></div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">While uncertainty remains elevated owing, in part, to geopolitical developments, domestic spending has been resilient.</div></div><div class="drow2 removed"><div class="dlabel2">整句刪除</div><div class="dold">Inflation remains elevated relative to the Committee&#x27;s 2 percent goal, in part reflecting supply shocks that have driven price increases in certain sectors, including energy.</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Inflation remains elevated.</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Today&#x27;s policy action will support a timelier return to the Committee&#x27;s 2 percent goal.</div></div>
+    <div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee decided to <mark class='mo'>maintain</mark> the target range for the federal funds rate <mark class='mo'>at 3-1/2</mark> to 3-3/4 percent, in support of the Federal Reserve&#x27;s dual mandate.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee decided to <mark class='mn'>raise</mark> the target range for the federal funds rate <mark class='mn'>by 1/4 percentage point</mark> to 3-3/4 <mark class='mn'>to 4</mark> percent, in support of the Federal Reserve&#x27;s dual mandate.</div></div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Economic activity is expanding at a solid <mark class='mo'>pace despite elevated uncertainty that owes, in part, to the conflict in the Middle East.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Economic activity is expanding at a solid <mark class='mn'>pace.</mark></div><div class="fx-ai"><span class="ai-tag">AI</span>移除了對中東衝突造成經濟不確定性的提及，簡化經濟活動描述。</div></div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Productivity growth and capital investment <mark class='mo'>are strong.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Productivity growth <mark class='mn'>is strong,</mark> and capital investment <mark class='mn'>is robust.</mark></div><div class="fx-ai"><span class="ai-tag">AI</span>將資本投資的措辭從「強勁」改為「穩健」，表述更為精確。</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">While uncertainty remains elevated owing, in part, to geopolitical developments, domestic spending has been resilient.</div><div class="fx-ai"><span class="ai-tag">AI</span>新增說明地緣政治風險仍存在，但國內支出保持韌性的內容。</div></div><div class="drow2 removed"><div class="dlabel2">整句刪除</div><div class="dold">Inflation remains elevated relative to the Committee&#x27;s 2 percent goal, in part reflecting supply shocks that have driven price increases in certain sectors, including energy.</div><div class="fx-ai"><span class="ai-tag">AI</span>刪除了關於通膨反映供給衝擊與能源價格上升的具體原因說明。</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Inflation remains elevated.</div><div class="fx-ai"><span class="ai-tag">AI</span>簡化通膨敘述，直接指出通膨仍處高位，移除與目標值的比較。</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Today&#x27;s policy action will support a timelier return to the Committee&#x27;s 2 percent goal.</div><div class="fx-ai"><span class="ai-tag">AI</span>新增說明本次政策調整將有助於更及時地回到2%通膨目標。</div></div>
     <details data-m-collapse><summary>含未改動段落的全文</summary>
       <div style="margin-top:10px"><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">The Committee decided to <mark class='mo'>maintain</mark> the target range for the federal funds rate <mark class='mo'>at 3-1/2</mark> to 3-3/4 percent, in support of the Federal Reserve&#x27;s dual mandate.</div><div class="darrow">↓ 改為</div><div class="dnew">The Committee decided to <mark class='mn'>raise</mark> the target range for the federal funds rate <mark class='mn'>by 1/4 percentage point</mark> to 3-3/4 <mark class='mn'>to 4</mark> percent, in support of the Federal Reserve&#x27;s dual mandate.</div></div><div class="dsame">The Committee is continuing its policy of maintaining ample reserves in the banking system.</div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Economic activity is expanding at a solid <mark class='mo'>pace despite elevated uncertainty that owes, in part, to the conflict in the Middle East.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Economic activity is expanding at a solid <mark class='mn'>pace.</mark></div></div><div class="drow2 changed"><div class="dlabel2">改寫</div><div class="dold">Productivity growth and capital investment <mark class='mo'>are strong.</mark></div><div class="darrow">↓ 改為</div><div class="dnew">Productivity growth <mark class='mn'>is strong,</mark> and capital investment <mark class='mn'>is robust.</mark></div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">While uncertainty remains elevated owing, in part, to geopolitical developments, domestic spending has been resilient.</div></div><div class="dsame">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="drow2 removed"><div class="dlabel2">整句刪除</div><div class="dold">Inflation remains elevated relative to the Committee&#x27;s 2 percent goal, in part reflecting supply shocks that have driven price increases in certain sectors, including energy.</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Inflation remains elevated.</div></div><div class="drow2 added"><div class="dlabel2">整句新增</div><div class="dnew">Today&#x27;s policy action will support a timelier return to the Committee&#x27;s 2 percent goal.</div></div><div class="dsame">The Committee will deliver price stability.</div></div></details>
+    <details data-m-collapse><summary>關鍵措辭追蹤（熱力圖）</summary>
+      <p class="hint" style="margin:10px 0 0">固定一組措辭在每次聲明中出現的次數（字面次數，不計分）。
+        <b>整排突然變空白，通常代表體例改變而非立場轉變</b>——Warsh 上任後聲明大幅縮短就是例子。</p>
+      <div style="margin-top:12px"><div class="heatwrap"><table class="heat"><thead><tr><th class="rowhead"></th><th>25-01</th><th>25-03</th><th>25-05</th><th>25-06</th><th>25-07</th><th>25-09</th><th>25-10</th><th>25-12</th><th>26-01</th><th>26-03</th><th>26-04</th><th>26-06</th><th>26-07</th><th>26-09</th></tr></thead><tbody><tr><th class="rowhead">balance of risks</th><td class="h1" data-tip="balance of risks｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-07-30｜出現 1 次">1</td><td class="h2" data-tip="balance of risks｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-12-10｜出現 2 次">2</td><td class="h1" data-tip="balance of risks｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="balance of risks｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">downside risks to employment</th><td class="h0" data-tip="downside risks to employment｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-07-30｜出現 0 次"></td><td class="h1" data-tip="downside risks to employment｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-12-10｜出現 1 次">1</td><td class="h0" data-tip="downside risks to employment｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-04-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">solid</th><td class="h0" data-tip="solid｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-07-30｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-09-17｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-10-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-12-10｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-04-29｜出現 0 次"></td><td class="h1" data-tip="solid｜2026-06-17｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-07-29｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-09-16｜出現 1 次">1</td></tr><tr><th class="rowhead">elevated</th><td class="h0" data-tip="elevated｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-05-07｜出現 0 次"></td><td class="h1" data-tip="elevated｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-03-18｜出現 1 次">1</td><td class="h0" data-tip="elevated｜2026-04-29｜出現 0 次"></td><td class="h2" data-tip="elevated｜2026-06-17｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-07-29｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-09-16｜出現 2 次">2</td></tr><tr><th class="rowhead">maximum employment</th><td class="h2" data-tip="maximum employment｜2025-01-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-03-19｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-05-07｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-06-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-07-30｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-12-10｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-01-28｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-03-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-04-29｜出現 2 次">2</td><td class="h0" data-tip="maximum employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">2 percent objective</th><td class="h1" data-tip="2 percent objective｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="2 percent objective｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">carefully assess</th><td class="h1" data-tip="carefully assess｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="carefully assess｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-09-16｜出現 0 次"></td></tr></tbody></table></div></div></details>
     <div class="src">比對對象：2026-07-29 → 2026-09-16 的聲明。本次共取得 14 份聲明。原文為英文。</div>
   </div></details>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="trend">歷次分數</h2><span class="sect-sum">近 14 次會議的分數與反對票</span></summary><div class="sect-body">
-    <p class="hint">刻度相同：0＝中性、正＝偏升息、負＝偏降息。
-      <b>措辭分數跨主席不可比</b>。</p>
-    <div class="tscroll" style="margin-top:12px"><table>
-      <thead><tr><th>會議日期</th><th>客觀訊號</th><th>措辭</th>
-        <th>字數</th><th>反對票</th></tr></thead>
-      <tbody><tr><td>2026-09-16</td><td>+3.00</td><td class="muted-cell">+7.02</td><td class="muted-cell">114</td><td><span class="muted-cell">一致</span></td></tr><tr><td>2026-07-29</td><td>+6.00</td><td class="muted-cell">+5.22</td><td class="muted-cell">115</td><td><span style="color:var(--serious)">3 鷹</span></td></tr><tr><td>2026-06-17</td><td>0.00</td><td class="muted-cell">+5.26</td><td class="muted-cell">114</td><td><span class="muted-cell">一致</span></td></tr><tr><td>2026-04-29</td><td>-2.00</td><td class="muted-cell">+1.00</td><td class="muted-cell">200</td><td><span style="color:var(--series-1)">1 鴿</span> <span class="muted-cell">3 維持</span></td></tr><tr><td>2026-03-18</td><td>-2.00</td><td class="muted-cell">+2.21</td><td class="muted-cell">204</td><td><span style="color:var(--series-1)">1 鴿</span></td></tr><tr><td>2026-01-28</td><td>-4.00</td><td class="muted-cell">+2.37</td><td class="muted-cell">190</td><td><span style="color:var(--series-1)">2 鴿</span></td></tr><tr><td>2025-12-10</td><td>-6.00</td><td class="muted-cell">+0.00</td><td class="muted-cell">248</td><td><span style="color:var(--series-1)">1 鴿</span> <span class="muted-cell">2 維持</span></td></tr><tr><td>2025-10-29</td><td>-6.00</td><td class="muted-cell">+0.66</td><td class="muted-cell">226</td><td><span style="color:var(--series-1)">1 鴿</span> <span class="muted-cell">1 維持</span></td></tr><tr><td>2025-09-17</td><td>-6.00</td><td class="muted-cell">+0.66</td><td class="muted-cell">226</td><td><span style="color:var(--series-1)">1 鴿</span></td></tr><tr><td>2025-07-30</td><td>-4.00</td><td class="muted-cell">+2.17</td><td class="muted-cell">207</td><td><span style="color:var(--series-1)">2 鴿</span></td></tr><tr><td>2025-06-18</td><td>0.00</td><td class="muted-cell">+2.14</td><td class="muted-cell">210</td><td><span class="muted-cell">一致</span></td></tr><tr><td>2025-05-07</td><td>0.00</td><td class="muted-cell">+0.91</td><td class="muted-cell">221</td><td><span class="muted-cell">一致</span></td></tr><tr><td>2025-03-19</td><td>0.00</td><td class="muted-cell">+0.78</td><td class="muted-cell">255</td><td><span class="muted-cell">1 維持</span></td></tr><tr><td>2025-01-29</td><td>0.00</td><td class="muted-cell">+0.90</td><td class="muted-cell">223</td><td><span class="muted-cell">一致</span></td></tr></tbody></table></div>
-    <p class="hint" style="margin-top:14px">反對票脈絡：本次 0 票，本次全體一致，近期少見的完全共識（依序為 0、1、0、0、2、1、2、3、2、1、4、0、3、0 票）。反對票數本身沒有方向——方向要看每張票主張的是升息還是降息，見上方的投票明細。</p>
+  <details class="card sect"><summary><h2 id="minutes">會議紀要：與會者怎麼分布</h2><span class="sect-sum">7/29 會議（8/19 公布）　·　下一份 10/7</span></summary><div class="sect-body">
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>會後三週公布的會議紀要，記錄與會者討論了什麼、各種看法有多少人支持。</p><p><b>為什麼重要：</b>聲明只有百來字，紀要有好幾千字。聯準會描述「有多少人」用的是固定量詞（most、many、several、a few），所以可以看出某個觀點是主流還是少數。</p><p><b>怎麼判讀：</b>看政策路徑那一組：「許多與會者認為可能需要緊縮」跟「少數與會者認為」，對下一次會議的意義完全不同。</p></div></details>
+    <p class="fx-lead">7/29 會議的紀要（8/19 公布）。只列與會者討論段落裡帶量詞的句子，每個主題取量詞最大的幾句。</p><p class="hint">下一份紀要：10/7 美東 14:00 公布（台北隔天 02:00），之後自動更新。</p><h3>政策路徑</h3><ul class="fx-q"><li><span class="q-lv r2">多數</span><div><div class="q-en">In their consideration of monetary policy at this meeting, most participants supported maintaining the current target range for the federal funds rate.</div><div class="fx-ai"><span class="ai-tag">AI</span>多數與會者支持維持聯邦基金利率目標區間不變。</div></div></li><li><span class="q-lv r3">許多</span><div><div class="q-en">Many participants assessed that policy tightening would likely be necessary if inflation did not decline.</div><div class="fx-ai"><span class="ai-tag">AI</span>許多與會者認為，若通膨未下降，可能需要進一步升息。</div></div></li><li><span class="q-lv r3">許多</span><div><div class="q-en">Several participants referred to earlier Committee discussions of these issues, and many participants reaffirmed that the primary means of adjusting the stance of monetary policy should be through changes in the target range for the federal funds rate.</div><div class="fx-ai"><span class="ai-tag">AI</span>數位與會者提及委員會先前討論，許多與會者重申應主要透過調整聯邦基金利率來調整貨幣政策立場。</div></div></li></ul><h3>通膨</h3><ul class="fx-q"><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants acknowledged that inflation remained elevated.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者承認通膨仍處高位。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants assessed that market- and survey-based indicators of medium- and longer-term inflation expectations remained at levels consistent with the Committee&#x27;s 2 percent objective.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者評估市場與調查型中長期通膨預期指標與委員會2%目標相符。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants judged that their inflation outlooks were highly uncertain and that inflation risks were skewed to the upside.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者判斷通膨前景高度不確定，通膨風險偏向上升。</div></div></li></ul><h3>就業</h3><ul class="fx-q"><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants assessed that labor market conditions were stable, with labor demand and supply in balance.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者評估勞動市場狀況穩定，勞動供需平衡。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants also noted that payroll employment gains had strengthened this year and appeared roughly consistent with recent labor force growth and that indicators such as layoffs, unemployment insurance claims, and hiring had remained low and stable.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者指出薪資就業成長今年已加強，與近期勞動力成長大致相符，裁員、失業保險申請與招聘等指標保持低位穩定。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants generally expected labor market conditions to remain stable in the near term, with the unemployment rate staying close to current levels.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者普遍預期近期勞動市場保持穩定，失業率維持在目前水準附近。</div></div></li></ul><h3>經濟活動</h3><ul class="fx-q"><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants generally observed that economic activity had continued to expand at a solid pace, despite elevated uncertainty, supported by strong business investment and resilient consumer spending.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者普遍觀察到經濟活動持續以穩健步伐擴張，儘管不確定性高，但受強勁企業投資與韌性消費支撐。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants noted that the strength in business investment remained concentrated in AI-related expenditures.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者指出企業投資成長主要集中在人工智慧相關支出。</div></div></li><li><span class="q-lv r0">普遍</span><div><div class="q-en">Participants observed that consumer spending had strengthened recently.</div><div class="fx-ai"><span class="ai-tag">AI</span>與會者觀察到消費支出近期已加強。</div></div></li></ul><h3>金融情勢</h3><ul class="fx-q"><li><span class="q-lv r5">部分</span><div><div class="q-en">In their discussion of financial stability, some participants focused on vulnerabilities associated with the financing of the rapid buildout of AI-related infrastructure.</div><div class="fx-ai"><span class="ai-tag">AI</span>部分與會者在討論金融穩定時，聚焦於人工智慧基礎設施快速建設融資的脆弱性。</div></div></li><li><span class="q-lv r6">少數</span><div><div class="q-en">A few participants highlighted the increased degree to which capital spending in the AI sector was being financed by borrowing, including credit provided by nonbank investors or regional banks.</div><div class="fx-ai"><span class="ai-tag">AI</span>少數與會者強調人工智慧部門資本支出越來越多由借貸融資，包括非銀行投資者或區域銀行提供的信貸。</div></div></li><li><span class="q-lv r7">兩位</span><div><div class="q-en">In commenting on the private credit sector, a couple of participants noted that activity had slowed recently and that developments in private credit warranted close monitoring.</div><div class="fx-ai"><span class="ai-tag">AI</span>少數與會者評論私募信貸部門時指出，近期活動已放緩，私募信貸發展值得密切關注。</div></div></li></ul><h3>資產負債表</h3><ul class="fx-q"><li><span class="q-lv r2">多數</span><div><div class="q-en">Most participants commented on balance sheet policy.</div><div class="fx-ai"><span class="ai-tag">AI</span>多數與會者就資產負債表政策發表評論。</div></div></li><li><span class="q-lv r7">兩位</span><div><div class="q-en">A couple of participants considered an intermeeting incident involving a disruption to transaction settlements and noted that the Federal Reserve&#x27;s ample-reserves regime had helped maintain the orderly functioning of money markets in the face of this disruption.</div><div class="fx-ai"><span class="ai-tag">AI</span>少數與會者提及交易結算中斷事件，指出聯準會充足準備金制度有助於在此干擾下維持貨幣市場有序運作。</div></div></li></ul><p class="src">原文：<a href="https://www.federalreserve.gov/monetarypolicy/fomcminutes20260729.htm" target="_blank" rel="noopener">federalreserve.gov 會議紀要</a>。量詞依聯準會慣例：全體／幾乎全體 ＞ 多數 ＞ 許多 ＞ 數位 ＞ 部分 ＞ 少數 ＞ 兩位 ＞ 一位；「普遍」＝原文沒加量詞的「Participants ...」。</p>
   </div></details>
 </div>
 
 <div class="grid">
-
-  <details class="card sect"><summary><h2 id="presser">記者會</h2><span class="sect-sum">措辭分數 +0.49　·　逐字稿原句與主題摘要</span></summary><div class="sect-body">
-    <p class="hint">市場的實際反應常常來自這裡，而不是聲明本身。以下是逐字稿原句。</p>
-    <div class="stat-row">
-      <div class="stat"><div class="s-label">記者會措辭分數</div>
-        <div class="s-value">+0.49</div>
-        <div class="s-note">與聲明用同一套詞典</div></div>
-      <div class="stat"><div class="s-label">逐字稿長度</div>
-        <div class="s-value">4,627 字</div>
-        <div class="s-note">開場 4,627 ·
-          問答 0</div></div>
-    </div>
-
-    <h3 style="margin-top:20px">各主題怎麼說</h3>
-    <p class="hint">開場聲明優先（那是準備稿），不足才從問答補。</p>
-    <h3>通膨</h3><div class="pline">Today’s policy action will support a timelier return to the Committee’s 2 percent goal.</div><div class="pline">This Committee will deliver price stability.</div><h3>就業</h3><div class="pline">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="pline">New hiring, private-sector earnings, business capital investment—each of these markers has improved in recent months and is pointing in a good direction.</div><h3>利率路徑</h3><div class="pline">In the meeting just concluded, the FOMC decided to raise the target range for the federal funds rate by a ¼ percentage point to 3¾ to 4 percent, in support of the Federal Reserve’s dual mandate.</div><div class="pline">And, as I said at the policy symposium in Jackson Hole, I would be hard pressed to describe broad financial conditions as restrictive.</div><h3>資產負債表</h3><div class="pline">The Committee is continuing its policy of maintaining ample reserves in the banking system.</div>
-
-    <details data-m-collapse><summary>措辭分數是這幾句貢獻的</summary>
-      <p class="hint" style="margin:10px 0 8px">
-        藍色是鷹派詞、橘色是鴿派詞，括號內為權重。
-        分數 ＝ 命中詞加權後除以每百字，所以長度不同的逐字稿仍可比。　這裡只列權重最高的 5 句（全文共 11 句命中，這幾句佔總權重約 59%），所以逐句加總不會剛好等於分數。</p>
-      <div class="drow2"><div class="dnew">And, as I said at the policy symposium in Jackson Hole, I would be hard pressed to describe broad financial conditions as <mark class="mn">restrictive</mark>.</div><div class="dlabel2" style="margin:7px 0 0">restrictive（鷹 3.0）</div></div><div class="drow2"><div class="dnew">Are interest rates now at a level that you would describe as <mark class="mn">restrictive</mark> or not?</div><div class="dlabel2" style="margin:7px 0 0">restrictive（鷹 3.0）</div></div><div class="drow2"><div class="dnew">I’ve described previously I found it difficult to describe financial conditions as <mark class="mn">restrictive</mark>.</div><div class="dlabel2" style="margin:7px 0 0">restrictive（鷹 3.0）</div></div><div class="drow2"><div class="dnew">Previously, most Fed officials have described the rate as modestly <mark class="mn">restrictive</mark>.</div><div class="dlabel2" style="margin:7px 0 0">restrictive（鷹 3.0）</div></div><div class="drow2"><div class="dnew">While uncertainty <mark class="mn">remains elevated</mark>—owing, in part, to geopolitical developments—domestic spending has been resilient.</div><div class="dlabel2" style="margin:7px 0 0">remains elevated（鷹 2.5）</div></div>
-    </details>
+  <details class="card sect"><summary><h2 id="speeches">官員最新發言</h2><span class="sect-sum">投票委員近期的演講與報導</span></summary><div class="sect-body">
+    <div class="fx-sps"><div class="fx-sp"><div class="fx-pn"><b>Kevin Warsh</b><span>主席</span></div><div class="fx-ai"><span class="ai-tag">AI</span>支持升息，稱此舉移除了部分寬鬆政策，暗示可能需要進一步升息。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxOT0xRWmJHbWRVcWlWRC1kV0YzQ1h5SmVMZE1WX3J3Y25Ta2JLV2tzdURFSjlIbzU5NFRsS3JPQ3FvSjFwbUt4X1pBdGZBNm4xU1VXMTVaOVlWUVNTLWlYczBTMHBaYzllazJzUVhDZE5zNkdjVGRSTjhfbVhDeHNzckMyV0o5WEV6dlpDTlBPR1dqYURCQ2c?oc=5" target="_blank" rel="noopener">Fed Chair Kevin Warsh Just Used 5 Words to Describe the Fed&#x27;s First Rate Hike Since 2023, Saying The Fed &quot;Removed A Dose of Accommodation.&quot; Should Investors Brace for More Hikes This Year?</a><span class="sp-d">Yahoo Finance　10/4</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxQZ3p3eEhTcmJqUy04M3Y5OG93M19zNTF2c09yZ1hGZkI1Y2pvZzZQOFZDODUzNUQ1VDUxVzFvZ2hMWXBZWk1FS3JqWG9MUkU0Y01YVU1mZnRFLV9TcWg5b3pPc2RWVFdRajZyaU4xeGZlalpaZTF6Y3hRcUNuVDZBVHVzVkFmOUJpel9TbVRTQWJpbW5OcklkYnBOWU16YXI3bjZvZWUtcTFhUS0yM1E?oc=5" target="_blank" rel="noopener">Trump Says Warsh Should Have Voted Against Fed’s Rate Hike</a><span class="sp-d">bloomberg.com　10/1</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Philip N. Jefferson</b><span>理事會副主席</span></div><div class="fx-ai"><span class="ai-tag">AI</span>近期標題未談利率。</div><div class="sp-i"><span class="sp-k">官方演講</span><a href="https://www.federalreserve.gov/newsevents/speech/jefferson20261001a.htm" target="_blank" rel="noopener">The U.S. Economy and Monetary Policy</a><span class="sp-d">10/1</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxNNzdXc0I0T3ptRUhYaUFLWVBHT01aekpiV0tOWHNpVFNtOWlNamFLNzIxNkluWWFYMWVjVURwMEZVeDNGNGJZbG1pb1poSG1YSTFISWtoclpmYkxROFpzOGRjX1p4bjI3ZGlJTXo4cTdUTHZfeFhnSVlfeEJYbUliNTd5ZnhGSDVLby1laW1TZ05iS2JKRVJPazBhRW1sOXZ2SWNZcjAzcHFsRWVnc2ZKWEpqWERsMEdoSU9ZZFlqeVRPaGZTYUd3WG9yblFra3B3aTYxdFk2cU5sbXU2cnB1MEcwR2Y1aXN5YUJKbzkyWE8?oc=5" target="_blank" rel="noopener">Rate Hike Bets Have Substantially Dropped As Fed&#x27;s Jefferson And Williams&#x27; Speeches Grant Confidence</a><span class="sp-d">TradingView　10/2</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMi9gFBVV95cUxNUjRsRzF6V0pJcDloRDVKVkN4MzUxV0ZXMFQtWFdEa29pZXVyZzRlbkR0a18xbUx5YkNMc3hRUEwwbUp6dnRicUUxbUZZYTRSbnhWMG5XQktVNlN1UEppdFEtb01qZkp2UUpmdGVDVDNkckhMSzh5WUhZSEZGNlFUZE5JcURnNkFjb0hLTHhRRFl5ckkwRUE4b2pXcmU2T252MjVPeWNrVVkxMEJOOWV4X29aUkVXVDNfYjlrZFF0dTVqUV82QWxnMFQtSDBMMkE4aW5MNmxjTmpmRl9fWHQ0M2RrTW5mWkhRUzJ0ZDVvVGZpLUtxUlE?oc=5" target="_blank" rel="noopener">Rate Hike Bets Have Substantially Dropped As Fed&#x27;s Jefferson And Williams&#x27; Speeches Grant Confidence</a><span class="sp-d">Stocktwits　10/2</span></div></div><div class="fx-sp"><div class="fx-pn"><b>John C. Williams</b><span>紐約聯儲總裁（FOMC 副主席）</span></div><div class="fx-ai"><span class="ai-tag">AI</span>傾向暫停升息，認為無需急於採取行動。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxPUlJqZW8zbmpLc2tYN0lzcHhDaEdoNHp3cHBmVjVnSF9GVElVTmV4NkZpeklLTVNfTHRCZ1pUX3FpOGE5ckoxbllKX3hwQ19CMjBkMi0yRmpGeDZoRWxpa0owNlVScDktSjlIOUxsaWxORUx0T3QzSm9pelRxd2xwSU4xQlBMYllsNkJjUFRka2oyQi0xVkZyTVdwZi1Hald0NWdNTTlLMlJVUm82YmFtUE1VV2NYTWVWX1E?oc=5" target="_blank" rel="noopener">Fed’s Williams Hints Next Rate Increase Can Wait</a><span class="sp-d">WSJ　9/29</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMi1gFBVV95cUxQNUJmakxERkREYTlvZHJsejNSc1JCSUNyU0prdUNCRjRKZi02YzlST1piazVpRF9OaHp5UFFicTdwdHVDLU02TUxwX00tQUNGZkZKNU5yZDZzaWZfX1hUQnVtd2F2d1FqaVBuREFrTnQtODFxc3hEaFJxY0tJdVF6NUJTUUZ3b1V3OVllNWVoRXo0VmJZYjdlbENiNGM0NTlkd2ZHazdKY1pfbzdpOUZSLVRLb1c2Yjl5bUVPMnp4eE56dTVwODZMZXdyZ1p2MFgyY2w4cmJR?oc=5" target="_blank" rel="noopener">&#x27;No need for urgency&#x27;: New York Fed&#x27;s Williams squashes notion of an October rate hike</a><span class="sp-d">Yahoo Finance　9/29</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Beth M. Hammack</b><span>克里夫蘭聯儲總裁</span></div><div class="fx-ai"><span class="ai-tag">AI</span>認為有時間評估下一步利率決策，關注企業通膨心態。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxPVHJFM2QzVG9ITlJleEVRT0dBQ0RmOWxRODRkTXlmX1UyWlZnY2VlZlB6bEVEQVJpelBIRUpsbEdxX0Z1RWtSTkJ0TFBZSUhCdXZOOG9iOFZGUk5PbFoxRW5HMFQ3WUxmY0Jib0tiUHhNa01hMlM0VnZ2Zm5JSWExYUU1LTloYTBFamU5cHJOYkcwbmpZNzlB?oc=5" target="_blank" rel="noopener">Fed’s Hammack says there is time to weigh next rate move</a><span class="sp-d">Yahoo Finance　10/3</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMihAFBVV95cUxQSHhnMFBSZWVfaGZORkl2b0ttX0dwdlVDNzdPR1Y3Y1NHTzFBZV9rQ2pyOXlmQS1BYVM1bDhYTkEzR0U4dHFjMmw0LVh2VjBtLUlTTVZqTGJQN1R2N3BYUTdqeTdnLVM3aDZXcEZuN0g1ODFIWGFvZVBYZVlKdXR0b3FvVlg?oc=5" target="_blank" rel="noopener">Fed’s Hammack Says ‘Inflationary Mindset’ Among Businesses May Prolong High Prices</a><span class="sp-d">Barron&#x27;s　10/3</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Neel Kashkari</b><span>明尼亞波利斯聯儲總裁</span></div><div class="fx-ai"><span class="ai-tag">AI</span>預期還需升息，但對是否立即行動感到不確定。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMirgFBVV95cUxQS1FONGU2V3pLdVdjRHNndjBCZXNtOEtrWWNVUXhpdmtxZHYxa2xRMjNmM3FHQ0ZwQlRwb1VFajNRRk84MWRjSFY0UnVNM2ZUdktSY05vQjU0Rk1QMjJZd3JqanZHT0tSOEVNRkNzZEg3RGtOTWdsSWpxTzdUd3djUmFSYjNtbHZvVWdPMHE1U05ubTlmcENhRGJvajlVNHctTjVZLWNadndUNkc4YXc?oc=5" target="_blank" rel="noopener">Fed&#x27;s Kashkari expects more rate hikes, unsure on need to act this month</a><span class="sp-d">Reuters　10/1</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMisgFBVV95cUxOWXNIUTJYYnFySjNseUI0TkwzWXhVbVlkSUhnQVdfMm9DM1l6SlUwLXVCdnRZdW1DRXUtSDVkV3Vaal92NU56bVFFSHBial9HNjJIZ2pEWi1MQWlCVzVnV3NCUkt2RWpaeE13LWdON0pmU2RkbGFBck50d25peVhodm9ZZHhvc1piTFRhMG1hV3ZwUWRQTndqZVdzNUVvYWsxYVQ3Yk1sUEk2bUlTaVBrWDhB?oc=5" target="_blank" rel="noopener">Fed’s Kashkari Says He Doesn’t Know How High Rates Must Go</a><span class="sp-d">bloomberg.com　10/1</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Lorie K. Logan</b><span>達拉斯聯儲總裁</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxQZG00bXJMQlowczhZeHhvR0FrczJ5VklPenZXRkJUdzRsVUg4d2VDNXk3U3dTczRhc1pOZnpVTGZkNEktYmx3X0xOOFdpWFBjVlpyVm11UzhvdXdwXzBjLXc5Q0FLbl8yUGNySllVSVRtVS0xMFFQcUNWYmFORjFUNW9ISEl0REZEbkRkZzV5c1V2Ym1fT0QzVA?oc=5" target="_blank" rel="noopener">Dallas Fed’s Logan Says Interest Rates Need to Be Half Percent Higher</a><span class="sp-d">Barron&#x27;s　10/4</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMisAFBVV95cUxNYnlDY194NEJMQ28xWnRVNDJWcXZnMW1mdzhqazd0MU5sWWN2ZkpYMTAyTnRXM1R6VE1oTUFYUnNJNEM2TXdDemEzdEw4QXJhS0g2SzRJUmR5NFpJNGl4d0EwWXFidXBKNU1sYllZRDBEQ3lUS3VIS1NPRWZaWEV0U2J2c0tOT3dzOEx0aHQzZnZpUllRQ3pBWmkxcFBxNDFOdlM2WmNYVjNVT2daUERiYQ?oc=5" target="_blank" rel="noopener">Fed’s Logan Wants More Hikes, But Says Bond Moves Could Help</a><span class="sp-d">bloomberg.com　10/2</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Christopher J. Waller</b><span>理事</span></div><div class="sp-i muted">近期沒有談利率的演講或報導</div></div><div class="fx-sp"><div class="fx-pn"><b>Michael S. Barr</b><span>理事</span></div><div class="fx-ai"><span class="ai-tag">AI</span>認為可能需要進一步升息以抑制通膨。</div><div class="sp-i"><span class="sp-k">官方演講</span><a href="https://www.federalreserve.gov/newsevents/speech/barr20260929a.htm" target="_blank" rel="noopener">Economic Conditions and Monetary Policy</a><span class="sp-d">9/29</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPUU04NkZPeXNza0hOMkYxOE9kZGNqTmhVVUd6WUtpbjJHeGJrajZDS0c1SjJHdVJ2dzdUcXE3Wmpjc3JaVE9FZXZVT2VRbGtjdDZncmd6NjM2Q25UNzVXb3F4ZHA4Nl8wUHYteDNERkFsQXJyUVZHMHdHM0d0Q016ckJvSXdsTjIyalYyZnFKc1QtaHd4bWlhY1RzOUIwckhXeUF4RVdyZkh0R2xj?oc=5" target="_blank" rel="noopener">Watch US Economy: Fed’s Barr Says Further Policy Adjustments Likely Needed to Tame Inflation</a><span class="sp-d">bloomberg.com　9/29</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQQ2tvOUg3dUNQeEhEaG1qNE90TVBSM2FmdGVFMWJlZ3FjSVFkYjRrV0MtMVpsWWl5QzBpeDAzclcwLWdvM29kaTBRMUxELVAtczBiMzJicEJyUUMxM1hCejJFQzJLWXVGSEh6LVZYU2FhYVJjOFM0RkMzM19za1JvRU5qdGV4dEpaTmp4VFNlNU9QamNSd3k2VC1VWW91YS1FT1d6dFdwSFZHY0U?oc=5" target="_blank" rel="noopener">Fed&#x27;s Barr says more rate hikes likely to be needed to curb inflation</a><span class="sp-d">Reuters　9/29</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Michelle W. Bowman</b><span>監管副主席</span></div><div class="fx-ai"><span class="ai-tag">AI</span>認為今年無迫切需要調整利率。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMirwFBVV95cUxOUHFnWkoySjB6WllLU3dPamR5SkRzM2ctbVFfVjQ0VEM2ZTFJSGVabzBsTlh1WDRQTXU4SzRpdHFlSXlGbEU5cEJWcHlWTG1Galh0dVBzU2ZQTzMycVZqbUVucXpZbUFuNjRjR2FGQ2RudlNYNU9qNjB5bWZRQXY2ZmtBRkxGZXpvdXMxWFlEdXBqWWhUd0I3M0dvWEx1TktjQnJ1NXVib2lWT0ZCN2dr?oc=5" target="_blank" rel="noopener">Watch Bowman Sees No Urgent Need for Fed Rate Moves This Year</a><span class="sp-d">bloomberg.com　10/1</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE1YbDhqY0JxN1paX3ZxRFFCbUNmaWpNWVRrX1M0VXI2d2J3djZtMHV3T2lRTWUwYjRuT2p2alFvM2VyTFNpdXlDYWpySFp4dmMxcWhQdmM3U2hiR3AyWU5aN25TUURiNF84ejNycW1jaHdxRWhLbDVSZnNIZFc?oc=5" target="_blank" rel="noopener">Bowman Sees No Urgent Need for Fed Rate Moves This Year</a><span class="sp-d">Yahoo Finance　10/1</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Lisa D. Cook</b><span>理事</span></div><div class="fx-ai"><span class="ai-tag">AI</span>近期標題未談利率。</div><div class="sp-i"><span class="sp-k">官方演講</span><a href="https://www.federalreserve.gov/newsevents/speech/cook20260928a.htm" target="_blank" rel="noopener">An Update on AI and the Economy</a><span class="sp-d">9/28</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxNZzVCZTRNdm1fakFodDBMbUpPVWhOa2x1LUxJazB0cmhWbFd4cmhOVm5iS2hteGxhZEVhSzIwOHc4cV9wc2JMXzBnRXhKQWRfRjRHYktsQTJJZHliT3ZZalU1UVUtUFlDR1JBdVl1eFM5Ym1LLTRCMGh4ZXpZZXNHVWNzOXpJeDMxTkE?oc=5" target="_blank" rel="noopener">Fed’s Cook Sees AI Buildout as a Major Inflation Risk in 2027</a><span class="sp-d">Barron&#x27;s　10/1</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMimgFBVV95cUxNWjEwemh2MVI4YUZkZkF5NHFtS2NySlFYUlRoMXMxWjJJQWxiS3lZdWs4ZHhPVnRiWFVrZVZtaXh5WTdCdzhKcFFPVzNselpqUlQzVFd3SnRVYnNldnRLUEQtMGpqaEotdUZNUVBucTBRejdBVTZZalZSR3dtLUkzcHJKYkpsT2E1MlVrY21zRFllanRqY1pwc0Fn?oc=5" target="_blank" rel="noopener">Fed&#x27;s Cook sees AI inflationary push as a top 2027 risk</a><span class="sp-d">Reuters　10/1</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Anna Paulson</b><span>費城聯儲總裁</span></div><div class="fx-ai"><span class="ai-tag">AI</span>認為可能需要進一步溫和升息以抑制通膨。</div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNc2ZQLXlEOFY2Q2ZQR3lnMDc4T1RaM0hjZkZPdHFuSFl4THJHWWl1a1MxTWotc2pzVnFNQ3Vyb2VkZ29Qc2N6akZxanRUeFBGLXRZell2QVhHX0VxVFlxaGNYZlFvOXlNRWJOb05POTkwLThKZER0QXEtT1pVcHRrYml5cUVJczZFWG1kcEFXZkUtazQ0MEx0bHVITlZkRXJMYmtSeVRRaENHeGZpY2JSYTdDQUwtcXNGeDFHZE9n0gHDAUFVX3lxTFB2UEZMZGszZ1M5SFRXRkM5Q0lmLVJ4TDUwVEVDN20zVnBGSkYzdUFHSFlOaEo5d1ZRdVFNWVdNMXgyc0l5WWVCMUZidEhPSWVwdXdaaVVKNlFVN1ZPOWVhUGdMWnNVZ245UEVyaTFYel8yYWNuc003YWtQbzJ1aDY5ZVhDZG5hZW1lQVd6VGNXdkhXTDZySWR3TEF4b2FQbllQS1l5dUxjWFNGQVFFWkxzTDl2dHBGT0hZMUpMSGtKNnFabw?oc=5" target="_blank" rel="noopener">Philadelphia Fed&#x27;s Anna Paulson says &#x27;modest&#x27; rate moves likely ahead to tame inflation</a><span class="sp-d">CNBC　9/24</span></div><div class="sp-i"><span class="sp-k">新聞</span><a href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPT1ZEWUdmV2FqckxNNjdMXzRRYmlsWnAzc204YmpEdG5kTnpkdkhrWllpdjhzQVdWaFVxR28zWjNPN2pBN0hGYTNqa2UwWVBQWlItVGdXaF9abnd4c2NVSGNzX01ER3A1ekRxQUo2NG1yTVVPaVo4aXZxVWhWOWNkc0RrX0RFYnZnakcxZTBuWWJlM1o1cGdoR3NwcTY0T0lEc1VqNEZxV1lJMzlndjJFdTBwQQ?oc=5" target="_blank" rel="noopener">Fed’s Paulson Says Further Modest Rate Hikes May Be Needed</a><span class="sp-d">bloomberg.com　9/24</span></div></div><div class="fx-sp"><div class="fx-pn"><b>Jerome H. Powell</b><span>理事</span></div><div class="sp-i muted">近期沒有談利率的演講或報導</div></div></div><p class="src">理事的演講取自聯準會官方 RSS（近 30 天）；新聞為 Google News 近 14 天的標題（依新聞，非官方）。標「AI」的一句話是根據這些標題整理，只當導讀。</p>
   </div></details>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="phrases">措辭的支撐材料</h2><span class="sect-sum">熱力圖與詞典命中明細，本頁結論不依賴這一區</span></summary><div class="sect-body">
-    <p class="hint">措辭分數的原始材料。<b>本頁的結論不依賴這一區</b>。</p>
-    <details data-m-collapse><summary>關鍵措辭追蹤（熱力圖）</summary>
-      <p class="hint" style="margin:10px 0 0">追蹤固定一組措辭在每次聲明中出現的次數，
-        數的是字面出現次數，顏色越深代表出現越多次。
-        <b>整排突然變空白，通常代表體例改變而非立場轉變</b>。</p>
-      <div style="margin-top:12px"><div class="heatwrap"><table class="heat"><thead><tr><th class="rowhead"></th><th>25-01</th><th>25-03</th><th>25-05</th><th>25-06</th><th>25-07</th><th>25-09</th><th>25-10</th><th>25-12</th><th>26-01</th><th>26-03</th><th>26-04</th><th>26-06</th><th>26-07</th><th>26-09</th></tr></thead><tbody><tr><th class="rowhead">balance of risks</th><td class="h1" data-tip="balance of risks｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2025-07-30｜出現 1 次">1</td><td class="h2" data-tip="balance of risks｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="balance of risks｜2025-12-10｜出現 2 次">2</td><td class="h1" data-tip="balance of risks｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="balance of risks｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="balance of risks｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="balance of risks｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">downside risks to employment</th><td class="h0" data-tip="downside risks to employment｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2025-07-30｜出現 0 次"></td><td class="h1" data-tip="downside risks to employment｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="downside risks to employment｜2025-12-10｜出現 1 次">1</td><td class="h0" data-tip="downside risks to employment｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-04-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="downside risks to employment｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">solid</th><td class="h0" data-tip="solid｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-05-07｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-06-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-07-30｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-09-17｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-10-29｜出現 0 次"></td><td class="h0" data-tip="solid｜2025-12-10｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-01-28｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-03-18｜出現 0 次"></td><td class="h0" data-tip="solid｜2026-04-29｜出現 0 次"></td><td class="h1" data-tip="solid｜2026-06-17｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-07-29｜出現 1 次">1</td><td class="h1" data-tip="solid｜2026-09-16｜出現 1 次">1</td></tr><tr><th class="rowhead">elevated</th><td class="h0" data-tip="elevated｜2025-01-29｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-03-19｜出現 0 次"></td><td class="h0" data-tip="elevated｜2025-05-07｜出現 0 次"></td><td class="h1" data-tip="elevated｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="elevated｜2026-03-18｜出現 1 次">1</td><td class="h0" data-tip="elevated｜2026-04-29｜出現 0 次"></td><td class="h2" data-tip="elevated｜2026-06-17｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-07-29｜出現 2 次">2</td><td class="h2" data-tip="elevated｜2026-09-16｜出現 2 次">2</td></tr><tr><th class="rowhead">maximum employment</th><td class="h2" data-tip="maximum employment｜2025-01-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-03-19｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-05-07｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-06-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-07-30｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-09-17｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-10-29｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2025-12-10｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-01-28｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-03-18｜出現 2 次">2</td><td class="h2" data-tip="maximum employment｜2026-04-29｜出現 2 次">2</td><td class="h0" data-tip="maximum employment｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="maximum employment｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">2 percent objective</th><td class="h1" data-tip="2 percent objective｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="2 percent objective｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="2 percent objective｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="2 percent objective｜2026-09-16｜出現 0 次"></td></tr><tr><th class="rowhead">carefully assess</th><td class="h1" data-tip="carefully assess｜2025-01-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-03-19｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-05-07｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-06-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-07-30｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-09-17｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-10-29｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2025-12-10｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-01-28｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-03-18｜出現 1 次">1</td><td class="h1" data-tip="carefully assess｜2026-04-29｜出現 1 次">1</td><td class="h0" data-tip="carefully assess｜2026-06-17｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-07-29｜出現 0 次"></td><td class="h0" data-tip="carefully assess｜2026-09-16｜出現 0 次"></td></tr></tbody></table></div></div></details>
-    <details data-m-collapse><summary>詞典命中明細</summary>
-      <p class="hint" style="margin:10px 0 0">這裡的次數<b>可能少於上方熱力圖</b>
-        ——兩者算法不同，原因見頁尾判讀說明。</p>
-      <table style="margin-top:10px">
-        <thead><tr><th>用語</th><th>方向</th><th>次數</th></tr></thead>
-        <tbody><tr><td>remains elevated</td><td style="color:var(--serious)">鷹派</td><td>2</td></tr><tr><td>solid pace</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr><tr><td>robust</td><td style="color:var(--serious)">鷹派</td><td>1</td></tr></tbody></table></details>
+  <details class="card sect"><summary><h2 id="presser">記者會：主席怎麼說</h2><span class="sect-sum">主席原句，4 個主題</span></summary><div class="sect-body">
+    <p class="hint">市場的實際反應常常來自這裡，而不是聲明本身。</p>
+    <div class="stat-row"><div class="stat"><div class="s-label">主席開場</div><div class="s-value">924 字</div></div><div class="stat"><div class="s-label">主席回答</div><div class="s-value">2,326 字</div><div class="s-note">共 18 則提問</div></div></div><p class="hint" style="margin-top:14px">只摘<b>主席本人</b>的原句，記者的提問不算；開場（準備稿）優先，不足才從回答補。不改寫、不計分。</p><h3>通膨</h3><div class="pline">Today’s policy action will support a timelier return to the Committee’s 2 percent goal.</div><div class="pline">This Committee will deliver price stability.</div><h3>就業</h3><div class="pline">Job gains have kept pace with the workforce, and the unemployment rate has changed little.</div><div class="pline">New hiring, private-sector earnings, business capital investment—each of these markers has improved in recent months and is pointing in a good direction.</div><h3>利率路徑</h3><div class="pline">In the meeting just concluded, the FOMC decided to raise the target range for the federal funds rate by a ¼ percentage point to 3¾ to 4 percent, in support of the Federal Reserve’s dual mandate.</div><div class="pline">And, as I said at the policy symposium in Jackson Hole, I would be hard pressed to describe broad financial conditions as restrictive.</div><h3>資產負債表</h3><div class="pline">The Committee is continuing its policy of maintaining ample reserves in the banking system.</div>
   </div></details>
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="howto">判讀說明</h2><span class="sect-sum">計分方式、名詞與注意事項</span></summary><div class="sect-body">
-        <dl class="gloss">
-      <dt>客觀訊號分數怎麼算</dt>
-      <dd>政策行動 ±3、每張反對票 ±2、聲明點名的風險方向 ±1，範圍 −8～+8。
-        三項都是白紙黑字的事實，不受主席的溝通風格影響，所以跨主席可比。
-        措辭分數則是依每百字的加權詞頻計算，只當輔助。</dd>
-      <dt>2 年期為什麼能當市場定價的代理</dt>
-      <dd>2 年期殖利率約等於市場預期的「未來兩年平均政策利率」，它跟目前
-        政策利率中值的差就是市場定價的方向。但這是<b>粗略代理</b>而非會議
-        層級的機率——2 年期同時含有期限溢酬，不能直接讀成純粹的政策路徑預期。
-        要看逐次會議的隱含機率，得用聯邦資金期貨或亞特蘭大聯準銀行的
-        Market Probability Tracker。</dd>
-      <dt>措辭分數為什麼跨主席不可比</dt>
-      <dd>計分詞典是照 Powell 時代的聲明體例校準的。主席換人、聲明體例改變，
-        同樣的立場會得到不同的分數。比較時請以同一位主席任內的區間為準；
-        客觀訊號分數（政策行動＋反對票＋風險方向）則不受影響，可以跨主席比。</dd>
-      <dt>熱力圖與詞典命中的次數為什麼不一樣</dt>
-      <dd>兩者算法不同。熱力圖數的是該字面在全文出現幾次；計分為了避免重複
-        扣分，同一段文字只算一次、長詞優先——「remains elevated」命中之後，
-        裡面的「elevated」就不會再被算一遍。所以命中明細的次數會少於熱力圖。</dd>
-      <dt>記者會的句子是怎麼抽的</dt>
-      <dd>依主題（通膨／就業／利率路徑／資產負債表）從逐字稿抽原句，
-        開場聲明優先——那是準備稿，比即席問答精確。不做改寫也不用模型，
-        每次執行抽到的句子完全一致。</dd>
+  <details class="card sect"><summary><h2 id="focus">目前重心與轉向條件</h2><span class="sect-sum">通膨優先</span></summary><div class="sect-body">
+    <p class="hint">同一份就業數據，在「通膨優先」與「就業優先」下會導向相反的決定。</p>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>聯準會有兩個任務：穩物價、顧就業。兩者衝突時，判斷它現在把哪一個擺在前面。</p><p><b>為什麼重要：</b>同樣的數據，重心不同結論就相反：就業轉弱時，「就業優先」會降息，「通膨優先」卻會按住不動。</p><p><b>怎麼判讀：</b>重心翻轉的訊號比數據本身更重要——下面列出轉向需要的條件，每個月可以自己核對。</p></div></details>
+    <div class="dbox hawkish" style="margin-top:4px"><div class="dtitle">目前重心</div><div class="dlab" style="font-size:19px;margin-top:6px">通膨優先</div><div class="dnote">委員會目前把通膨擺在前面。這種體制下，就業轉弱不會單獨換來降息——要等通膨先回到目標附近，寬鬆才會啟動。</div></div><h3>判定依據（逐條）</h3><ul class="fx-ev"><li><span class="fx-tag hawkish">通膨側</span><div><b>聲明描述通膨仍高於目標</b><div class="q-en">“Inflation remains elevated.”</div></div></li><li><span class="fx-tag hawkish">通膨側</span><div><b>記者會 2 處表態以物價穩定為優先</b><div class="q-en">“This Committee will deliver price stability.”</div></div></li></ul><h3>什麼情況會轉向兩邊並重或就業優先</h3><ul class="fx-cond"><li class=""><span class="cmark">○</span><div><b>核心 PCE 連兩個月「穩定降溫」（通膨頁的三分法判定）</b><small>目前：黏著不降</small></div></li><li class="met"><span class="cmark">✓</span><div><b>失業率高於 SEP 2026 年底預測 4.1%</b><small>目前：4.2%</small></div></li><li class=""><span class="cmark">○</span><div><b>SEP 核心 PCE 路徑下修（目前 2026 年 3.4% → 2027 年 2.5%）</b><small>下一份 SEP 才會更新</small></div></li></ul><p class="hint">三個條件都取自現成的判定：通膨頁的三分法、勞動頁的失業率、最新一份 SEP。全部打勾不代表一定轉向，但沒有一項成立時，轉向的機會很低。</p><div class="src">判定只用聲明制式句、反對票與主席在記者會的明確表態，不用模型。</div>
+  </div></details>
+</div>
+
+<div class="grid">
+  <details class="card sect"><summary><h2 id="trend">歷次決議</h2><span class="sect-sum">近 14 次會議的決議與反對票</span></summary><div class="sect-body">
+    <div class="tscroll"><table class="fx-dec"><thead><tr><th>會議</th><th>決議</th><th>目標區間</th><th>票數</th><th>反對票</th></tr></thead><tbody><tr><td>2026-09-16</td><td class="fx-act hawkish">升息一碼</td><td>3.75–4.00%</td><td>12:0</td><td>全體一致</td></tr><tr><td>2026-07-29</td><td class="fx-act ">維持不變</td><td>3.50–3.75%</td><td>9:3</td><td>3 票主張升息</td></tr><tr><td>2026-06-17</td><td class="fx-act ">維持不變</td><td>3.50–3.75%</td><td>12:0</td><td>全體一致</td></tr><tr><td>2026-04-29</td><td class="fx-act ">維持不變</td><td>3.50–3.75%</td><td>8:4</td><td>1 票主張降息、3 票反對聲明加入寬鬆傾向</td></tr><tr><td>2026-03-18</td><td class="fx-act ">維持不變</td><td>3.50–3.75%</td><td>11:1</td><td>1 票主張降息</td></tr><tr><td>2026-01-28</td><td class="fx-act ">維持不變</td><td>3.50–3.75%</td><td>10:2</td><td>2 票主張降息</td></tr><tr><td>2025-12-10</td><td class="fx-act dovish">降息一碼</td><td>3.50–3.75%</td><td>9:3</td><td>1 票主張降息、2 票主張維持</td></tr><tr><td>2025-10-29</td><td class="fx-act dovish">降息一碼</td><td>3.75–4.00%</td><td>10:2</td><td>1 票主張降息、1 票主張維持</td></tr><tr><td>2025-09-17</td><td class="fx-act dovish">降息一碼</td><td>4.00–4.25%</td><td>11:1</td><td>1 票主張降息</td></tr><tr><td>2025-07-30</td><td class="fx-act ">維持不變</td><td>4.25–4.50%</td><td>9:2</td><td>2 票主張降息</td></tr><tr><td>2025-06-18</td><td class="fx-act ">維持不變</td><td>4.25–4.50%</td><td>12:0</td><td>全體一致</td></tr><tr><td>2025-05-07</td><td class="fx-act ">維持不變</td><td>4.25–4.50%</td><td>11:0</td><td>全體一致</td></tr><tr><td>2025-03-19</td><td class="fx-act ">維持不變</td><td>4.25–4.50%</td><td>11:1</td><td>1 票反對資產負債表的做法</td></tr><tr><td>2025-01-29</td><td class="fx-act ">維持不變</td><td>4.25–4.50%</td><td>12:0</td><td>全體一致</td></tr></tbody></table></div>
+  </div></details>
+</div>
+
+<div class="grid">
+  <details class="card sect"><summary><h2 id="howto">判讀說明</h2><span class="sect-sum">資料來源、名詞與注意事項</span></summary><div class="sect-body">
+    <dl class="gloss">
+      <dt>為什麼這一頁沒有分數</dt>
+      <dd>先前的「客觀訊號分數」（政策行動 ±3、反對票 ±2、風險句 ±1）權重沒有外部依據，
+        而且只看過去；「措辭分數」與「記者會分數」是鷹鴿詞頻，在只剩百來字的聲明、
+        以及夾著記者提問的逐字稿上沒有意義。現在每一區只放文件裡的事實，方向自己判斷。</dd>
+      <dt>政策方向的標籤怎麼來</dt>
+      <dd>首頁與情境合成頁的「偏升息／偏降息」只看實際決議：有升息就是偏升息、有降息就是偏降息；
+        維持不變時，看反對票主張的方向。不加權、不合成數字。</dd>
+      <dt>為什麼市場定價用期貨、不用 2 年期</dt>
+      <dd>2 年期殖利率含期限溢酬，不能直接讀成政策路徑。聯邦基金期貨逐場推出每一場會議後的利率，
+        短天期內與 OIS 定價等價。期貨只推到今年最後一場會議。</dd>
       <dt>反對票最重要</dt>
-      <dd>反對票是白紙黑字的事實，不會因為主席換人或文風改變而失真。
-        每張反對票的方向都寫在聲明裡，比任何措辭都清楚。</dd>
+      <dd>反對票是白紙黑字的事實，不會因為主席換人或文風改變而失真。</dd>
       <dt>刪掉的字要小心解讀</dt>
-      <dd>聯準會拿掉一個措辭，可能是立場改變，也可能只是主席不想再給指引。
-        兩者意思完全不同——所以系統會偵測「大量措辭同時消失」並示警。</dd>
-      <dt>分數是相對的</dt>
-      <dd>絕對值沒有意義，看的是變化方向與幅度。詞典一旦調整，
-        歷史分數必須整批重算。</dd>
+      <dd>聯準會拿掉一個措辭，可能是立場改變，也可能只是主席不想再給指引。</dd>
+      <dt>AI 用在哪裡</dt>
+      <dd>只有三處，畫面上都標「AI」：聲明改動的中文說明、會議紀要的中文翻譯、官員新聞標題的
+        一句話整理。AI 只讀原文，輸出的數字必須在原文找得到，否則不顯示。</dd>
       <dt>文本會落後數據</dt>
-      <dd>聲明一年只有八次，中間可能已有兩三份就業與物價報告。
-        文本用來校準數據判讀，不是取代它。</dd>
-      <dt>為什麼沒有完整逐字稿</dt>
-      <dd>會議的完整逐字稿依規定延後五年公布，所以這裡分析的是
-        會後聲明、投票紀錄與記者會。</dd>
+      <dd>聲明一年只有八次，中間可能已有兩三份就業與物價報告。文本用來校準數據判讀，不是取代它。</dd>
     </dl>
   </div></details>
 </div>
 
 
 <nav class="pagenav" aria-label="前後頁"><a class="pn-prev" href="/inflation/">← 上一頁<b>通膨</b></a><a class="pn-next" href="/rates/">下一頁 →<b>長端與債務</b></a></nav>
-<footer>資料來源：美國聯準會（federalreserve.gov）會後聲明、投票紀錄、與記者會逐字稿。<br>會議日期取自聯準會行事曆頁；2 年期公債殖利率取自 FRED。<br>完整會議逐字稿依規定延後五年公布。政策利率區間需在 config/fomc.yaml 手動更新（每次利率決議後）；其餘資料皆自動擷取。<br>計分與詞頻皆為確定性規則，不含模型生成內容。</footer>
+<footer>資料來源：美國聯準會（federalreserve.gov）會後聲明、投票紀錄、記者會逐字稿、經濟預測摘要（SEP）、會議紀要、委員名單、官方演講 RSS 與行事曆；聯邦基金期貨（CME，經 Yahoo Finance）；地方聯儲總裁近期發言取自 Google News 標題。<br>政策利率區間依序取自 FRED、最新聲明本文、設定檔後備值，皆自動處理。完整會議逐字稿依規定延後五年公布。<br>本頁不打分數。AI 只用於聲明改動說明、紀要翻譯與新聞整理三處，均已標示。</footer>
 
 </div>
 <div id="tip"></div>
@@ -2397,22 +2468,43 @@ details.home-module[open]{padding-bottom:0}
     return upd;
   }
 
-  // 主選單在窄螢幕上是橫向捲動的。目前所在的那一頁若排在後面，
-  // 進站時會停在可視範圍外——讀者看不到自己在哪，也不知道還有別的分頁。
-  // 把它捲進視野（只捲導覽列自己，不動整頁）。
-  document.querySelectorAll('.snav').forEach(function(wrap){
-    var nav=wrap.querySelector('nav.site'); if(!nav)return;
-    var upd=edgeFades(wrap,nav);
-    // **最小移動**，不置中。置中會把前面幾項推出視窗——在長端與情境頁上
-    // scrollLeft 被推到 166～196，「總覽、勞動市場、通膨」全部滑到左邊看不見。
-    // 只要讓目前這一頁露出來就好，左邊能留多少留多少。
-    var cur=nav.querySelector('a.on');
-    if(cur && nav.scrollWidth>nav.clientWidth){
-      var right=cur.offsetLeft+cur.offsetWidth+8-nav.clientWidth;
-      if(right>0)nav.scrollLeft=right;
+  // ---- 主選單（置頂細條）----
+  // ① 太陽放到目前分頁正下方；換頁時從上一頁的分頁滑過來
+  //   （上一頁記在 sessionStorage，沒有就直接出現在定點）。
+  // ② 窄螢幕橫捲：目前分頁若在可視範圍外，**最小移動**捲進來——不置中，
+  //   置中會把「總覽」推出左邊，讀者以為回不了首頁。
+  // ③ 頁首捲走後加 .stuck：陰影＋左側淡入 GG 標記。
+  (function(){
+    var bar=document.querySelector('.bnav'); if(!bar)return;
+    var tabs=bar.querySelector('.bnav-tabs'), track=bar.querySelector('.bnav-track');
+    var sun=bar.querySelector('.bnav-sun'), glow=bar.querySelector('.bnav-glow');
+    var on=track.querySelector('a.on');
+    function place(a){ if(!a)return; var x=a.offsetLeft+a.offsetWidth/2;
+      sun.style.left=x+'px'; glow.style.left=x+'px'; }
+    var prev=null; try{prev=sessionStorage.getItem('gg-sun');}catch(e){}
+    var old=prev&&track.querySelector('a[href="'+prev+'"]');
+    if(on&&old&&old!==on&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      sun.style.transition=glow.style.transition='none'; place(old);
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        sun.style.transition=glow.style.transition=''; place(on); }); });
+    } else place(on);
+    try{ if(on)sessionStorage.setItem('gg-sun',on.getAttribute('href')); }catch(e){}
+    if(on&&tabs.scrollWidth>tabs.clientWidth){
+      var right=on.offsetLeft+on.offsetWidth+8-tabs.clientWidth;
+      if(right>0)tabs.scrollLeft=right;
     }
-    upd();
-  });
+    var upd=edgeFades(bar,tabs); upd();
+    // 字型（Montserrat）晚一步載入時分頁寬度會變，太陽要跟著重放
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){place(on);upd();});
+    window.addEventListener('resize',function(){place(on);});
+    var head=document.querySelector('.brandwrap');
+    if(head&&'IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        bar.classList.toggle('stuck',!es[0].isIntersecting);
+        setTimeout(upd,240);
+      },{threshold:0}).observe(head);
+    }
+  })();
 
   // 橫捲表格（.tscroll／熱力圖）掛上同一套邊緣漸層。
   // 表格大多藏在收合層裡，收著的時候量不到寬度——所以任何 details
