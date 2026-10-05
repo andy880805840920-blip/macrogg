@@ -1,6 +1,6 @@
 {
- "hash": "6b6c10d463f6e079",
- "text": "美債長期殖利率持續上升成為全球股債市場最大挑戰。儘管美國8月核心PCE物價指數年增率為3.0%符合預期、非農就業增幅低於預期，提供聯準會更多評估升息空間，但長端殖利率上行壓力未減，拖累整體風險性資產走勢。紐約聯準會主席威廉斯指出聯準會無急迫性採取政策行動，仍有時間蒐集更多訊息。¶儘管殖利率上揚，企業對AI相關投資維持積極，AI資本支出週期持續帶動企業獲利成長，加上總體經濟展現韌性，為股市提供基本面支撐。富達國際建議透過跨區域、跨產業及多元資產配置提升抗波動能力，以應對長天期公債殖利率走高的挑戰。\n路透報導稱，儘管債券殖利率飆升，各國央行仍表示黃金保留其關鍵儲備地位，未因殖利率上升而改變對黃金的看法。\n彭博報導指出，美伊衝突持續僵持背景下，油價小幅回落，但在風險性資產普遍下挫的環境中，美元再次走強。",
+ "hash": "1893923976caf108",
+ "text": "美債長天期殖利率持續上升成為全球股債市場最大挑戰。儘管美國8月核心PCE物價指數年增率為3.0%符合預期、非農就業增幅低於預期，短端利率保持穩定，但長端殖利率上行壓力未減，拖累整體風險性資產走勢。紐約聯準會主席威廉斯指出聯準會無急迫性採取政策行動，仍有時間蒐集更多訊息，為聯準會評估升息幅度與時程提供更多空間。儘管殖利率上揚，企業對AI相關投資維持積極，AI資本支出週期持續帶動企業獲利成長，加上總體經濟展現韌性，預期第4季企業財報將為股市提供基本面支撐。\n路透報導稱，儘管債券殖利率飆升，各國央行官員表示黃金仍保有關鍵儲備地位，反映央行對黃金長期價值的信心未因近期市場波動而改變。\n彭博報導指出，巴西選舉進入第二輪投票，美國財政部長貝森特淡化對殖利率與AI相關擔憂，顯示政策制定者對當前市場狀況的態度相對平靜。",
  "links": [
   {
    "title": "Gold retains key reserve status despite surging bond yields, central bankers say",
@@ -137,15 +137,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-05T16:48:00.849989+00:00",
+ "at": "2026-10-05T17:07:30.626529+00:00",
  "layout": "main",
  "topics": {
-  "hash": "d8dbc73d24919c7e",
+  "hash": "733f87cde0ec7737",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "川普幕僚要求鮑威爾離開聯準會主席職位，路透報導稱灣岸股市因聯準會升息預期消退而上漲，加拿大股市期貨因投資人調降升息預期而持平。",
+    "text": "川普幕僚呼籲鮑威爾離開聯準會董事會，路透報導稱海灣股市因能源紓解與升息預期減弱而小幅上揚，加拿大股市期貨持平，市場對聯準會升息預期下降。",
     "links": [
      {
       "title": "Trump Aide Hassett Says Powell Should ‘Move On’ From Fed Board",
@@ -162,7 +162,7 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率逼近20年高點，政府每收5美元稅收就有1美元用於償還國債利息，華府可能動用聯準會壓制長期殖利率，但干預程度愈深推升通膨風險愈高，債券持有人可能付出代價。",
+    "text": "美債長期殖利率逼近20年高點，政府龐大赤字迫使持續發債，美國每年利息支出約1兆美元，阿波羅全球管理首席經濟學家指出每收5美元稅收就有1美元用於償債，若情勢惡化聯準會可能需重啟「扭轉操作」壓低長期殖利率。",
     "links": [
      {
       "title": "Watch BMO's Davis Says 30-Year Treasury Yields Will Hit 6%",
@@ -170,8 +170,8 @@
       "source": "Bloomberg"
      },
      {
-      "title": "Watch Why Treasuries Are ‘Risky’ Again",
-      "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNbWQteUxQYmZFUFVveHphZUVmcVgzaDVyNVZaMTcza1lKOENkVTFOclVuM0N0ZEdjTFBWc2VzbFBrODg5aExPWlBwZkI5VmdGTFpweG5zbmVtbGxfQkttalBoRmcwN0lRREsxM3QyVmpjY1N3UkxjMkt2Si1ESExfOUdfb1BFUVhOVmxNd3JB?oc=5",
+      "title": "New Hazard for Treasuries Hides in Bond Futures’ Fine Print",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOZkkzRE8yckxoMGc3Sm5oNXR2YURxUzFncnBsV3RZdldfZy1PMzdLRllBc0tRbjl4ZmhiYzZZS3NCRUJnQVVuYzJWUldUUU5ZSkFoWURzUWhMUXR3X21aNklCelNTdFJESGN1TDRKQTJaTUltOFNONXA2NERMSHpaTjlGZTVMWHF2Nkw1Rm9YMXNHUnUydnpTZEVsY01yUW5uekYwMU91QnlvMnJoQ1E?oc=5",
       "source": "Bloomberg"
      }
     ]
@@ -179,7 +179,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "摩根士丹利指出美國資料中心電力短缺日益嚴重可能拖慢AI部署，衝擊記憶體與光學零組件供應商，但輝達與博通因掌握晶片部署規劃且業務拓展至不同地區，相對較能抵禦影響。",
+    "text": "摩根士丹利指出美國資料中心電力短缺日益嚴重可能拖慢AI部署，輝達與博通相對較能抵禦影響，但記憶體、光學等零組件供應商面臨庫存失衡風險。",
     "links": [
      {
       "title": "S&P 500 up, Nasdaq at record high as megacap tech stocks rise",
@@ -187,7 +187,7 @@
       "source": "Reuters"
      },
      {
-      "title": "Stock market today: S&P 500 and Nasdaq rise, Dow slips amid bond market caution",
+      "title": "Stock market today: Dow, S&P 500, Nasdaq rise as investors shrug off bond market caution",
       "link": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-5-dow-sp-500-nasdaq-treasury-bond-081220790.html?.tsrc=rss",
       "source": "Yahoo Finance"
      }
@@ -196,24 +196,24 @@
    {
     "id": "semi",
     "label": "半導體",
-    "text": "馬斯克透露正與台積電討論參與德州晶片製造計畫Terafab，英特爾周一盤前跌逾4%，台積電台股上漲約3%，馬斯克強調台積電若供應晶片可能是補充英特爾產能。",
+    "text": "馬斯克透露正與台積電討論參與德州晶片製造計畫Terafab，英特爾盤中跌逾2%至116.66美元，台積電ADR漲逾1%至477.86美元，Oppenheimer分析師指台積電製程可能取代英特爾14A製程角色。",
     "links": [
      {
       "title": "Qualcomm Licenses Patents on Huawei’s LogicFolding Chip Tech",
       "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOaWpQZndsUS1QSlBNUnlLRzVHbDZtVGdRSldxZ0hKa01Nb2VCRFUxeEd5eVdSdVBHcmNPTjYwaXR2NmxZdk45aEVyS2pINGFNUmlBVXJnTTdhVDRMcWFwQkJta2o1QVhtQWxUY2Jod09DQkcyLXJMX2pEQ05HWEUzbHdzbm12QWctbVAzTG12ZEludm10LWNjTkFsRjFONDcxNmNhQm14TEpocFE1UzVNeA?oc=5",
-      "source": "bloomberg"
+      "source": "Bloomberg"
      },
      {
       "title": "Nvidia Partner Hon Hai Beats Sales Estimates Due to AI Frenzy",
       "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNVzlNa1VEX2xXMTVORThGeXAyQVQ1ZTh3VlY4VFZYVzVzVUVlQ3Q1OEo2THN6Ym40MUEtRmJfX19xbFREMHkwQ3U5QmFhbUs4ckRhM3J3VXhvMEhWUWRKRTZlOWdwSm1nOEZhOU9JS0JmbU80by1CdWk0dG5YTkZobmt6MUtFc2VqQ3hwekVJMFc0NGdsRGZUR1dDb2tiTnFyXzJXTkN4MDNmMVdWTDFOUWJ3?oc=5",
-      "source": "bloomberg"
+      "source": "Bloomberg"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤衝破5萬點大關報50,052點，受惠美股科技股反彈與電子盤止穩，台股權值股領軍盤中大漲1294點創歷史收盤新高49,712.04點。",
+    "text": "台指期夜盤衝破5萬點大關報50,052點，台股日盤創歷史收盤新高49,712.04點，漲幅1236.30點，受惠美股科技股反彈與電子盤止穩。",
     "links": [
      {
       "title": "快訊／明天台股漲勢穩了？ 台指期夜盤「衝破5萬大關」",
@@ -226,25 +226,8 @@
       "source": "TVBS新聞網"
      }
     ]
-   },
-   {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "美國期中選舉前就業市場動能較弱呈現不同形式的充分就業；民主黨可望在期中選舉後奪回眾議院多數；川普若當選可能成為史上最不可預測的跛腳鴨。",
-    "links": [
-     {
-      "title": "US goes into midterm elections with a less dynamic form of full employment",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQeHRpSTNzOExhV21lU2IydlhvYmtYLVRxZl84YUV4eWJYdlVlRnpaTXR6d3c0dFZxVEFPOW9oU2V4NUctUDNkQTJyaWM4TXYtTU95WFRHakJqbWI1VU5fUmxzY3JsUl9raUVtYnV1MDQydXJsSlh0WncwMGl6cXZFejZJLVVoUExNci1QQWR6MUtueHhDTzNzeGp2UVJhSjh1NEVfWHBESEVLOENIcVlKNndVVXg?oc=5",
-      "source": "Reuters"
-     },
-     {
-      "title": "美期中選舉倒數共和黨選情低迷 民主黨可望奪回眾議院多數｜20261005 8點新世界",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5rVU80MWhZXzVhQldNRk84SDVMX3hybFRmNnI3dVVfaXpWY0RmcmVvRjRDWElJejI5QkRVMUt3LWdtUmxpYmpvNEJhWQ?oc=5",
-      "source": "你的公共電視"
-     }
-    ]
    }
   ],
-  "at": "2026-10-05T16:48:05.593850+00:00"
+  "at": "2026-10-05T17:07:36.871068+00:00"
  }
 }
