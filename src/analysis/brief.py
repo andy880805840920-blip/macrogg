@@ -316,14 +316,13 @@ def _whats_new(ctxs: dict) -> str:
 
     head = "與 ".join(p for _, p in fresh)
     nums = [x for x in (_fmt_move(m) for m in picked) if x]
-    # FOMC 沒有數字指標，句子從 ctx 另組：做了什麼＋客觀訊號分數
+    # FOMC 沒有數字指標，句子從 ctx 另組：做了什麼＋反對票（事實，不出分數）
     if any(k == "fomc" for k, _ in fresh):
         fom = ctxs.get("fomc") or {}
+        _lab = (fom.get("shift") or {}).get("decision_label") or ""
         _act = ((fom.get("obj_parts") or {}).get("action_label") or "")
-        _obj = (fom.get("shift") or {}).get("objective")
-        _ftxt = (f"本次{_act}" if _act else "聲明與投票已更新")
-        if _obj is not None:
-            _ftxt += f"、客觀訊號 {_obj:+.2f}"
+        _ftxt = (f"本次{_lab}" if _lab else
+                 (f"本次{_act}" if _act else "聲明與投票已更新"))
         nums.insert(0, _ftxt)
     if not nums:
         # 有新資料但沒有任何指標動超過門檻——那本身就是資訊。
@@ -626,13 +625,14 @@ def judgment_pack(ctxs: dict) -> dict | None:
             + f"{_n2(getattr(s, 'pce_core_yoy', None))}%）；"
             + f"關鍵訊號：{_flags(inf) or '無'}")
     if fom and not fom.get("empty"):
-        _sh = (fom.get("shift") or {}).get("direction") or "—"
+        _sh = ((fom.get("shift") or {}).get("decision_label")
+               or (fom.get("shift") or {}).get("direction") or "—")
         _fl = ((fom.get("focus")) or {}).get("label", "")
         dis = ((fom.get("vote") or {}).get("dissents")) or []
         _h = sum(1 for d in dis if isinstance(d, dict)
                  and d.get("direction") == "hike")
         lines.append(
-            f"【聯準會】最近一次聲明措辭方向：{_sh}；目前重心：{_fl or '—'}；"
+            f"【聯準會】最近一次決議：{_sh}；目前重心：{_fl or '—'}；"
             + (f"反對票：{_h} 票主張升息；" if _h else "")
             + f"本期訊號：{_flags(fom) or '無'}")
     return {"text": "\n".join(lines),

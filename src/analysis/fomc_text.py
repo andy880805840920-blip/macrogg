@@ -1,21 +1,22 @@
 """
 FOMC 文本與投票分析（P3）。
 
-設計原則
---------
-**計分與詞頻走純規則，不交給模型。**
-
-兩個分數並列，刻意不合成
+設計原則（2026-10 改版）
 ------------------------
-  1. 客觀訊號分數：政策行動 + 反對票 + 聲明自述的風險方向
-  2. 措辭分數：聲明用語的鷹鴿詞典計分
+**這一頁不發明分數。** 先前有兩個分數：「客觀訊號分數」（政策行動 ±3、
+反對票 ±2、風險句 ±1）與鷹鴿詞典的「措辭分數」——前者的權重沒有外部依據、
+只看過去；後者在 Warsh 只剩百來字的聲明上沒有意義，用在記者會時還會把
+記者的提問與否定句一起算進去。兩個都拿掉。
 
-合成會掩蓋最有價值的資訊——**兩者背離時，背離本身就是訊號**。
-2026 年 7 月正是如此：措辭因為主席刻意縮短聲明而讀起來偏鴿，
-但三張贊成升息的反對票指向偏鷹，市場也照後者走。
+現在這個模組只輸出**文件裡的事實**：
+  * 決議（升／降／維持、幅度、新區間）與投票（票數、反對者與方向）
+  * 聲明逐句比對與固定措辭的出現次數（熱力圖，數的是字面次數，不是評分）
+  * 記者會：依說話者切開，只摘主席本人的原句
+  * 「反應函數」（detect_focus）：委員會目前把雙重使命的哪一邊擺在前面，
+    依據逐條列出（聲明制式句、反對票、主席的明確表態）
 
-另外輸出「反應函數」（detect_focus）：委員會目前把雙重使命的哪一邊
-擺在前面。九宮格需要這個才不會假設權重永遠固定。
+政策方向的文字標籤由 fomc_extra.policy_direction() 產生：先看政策行動，
+維持不變時看反對票主張的方向。不加權、不合成數字。
 
 ⚠️ 完整逐字稿依聯準會規定延後五年公布，故此處處理的是
    會後聲明、投票紀錄與記者會逐字稿。
@@ -29,26 +30,8 @@ from dataclasses import dataclass, field
 
 
 # ---------------------------------------------------------------------------
-# 鷹鴿詞典（僅用於「措辭分數」，權重已降為輔助）
+# 固定追蹤的措辭（熱力圖：數字面出現次數，不計分）
 # ---------------------------------------------------------------------------
-HAWKISH = {
-    "restrictive": 3.0, "elevated": 2.0, "further tightening": 3.0,
-    "additional firming": 3.0, "remains elevated": 2.5,
-    "upside risks to inflation": 3.0, "not appropriate to reduce": 3.0,
-    "greater confidence": 1.5, "strongly committed": 2.0, "resolute": 2.0,
-    "solid pace": 1.5, "robust": 1.5, "tight labor market": 2.0,
-    "for some time": 1.5, "additional policy tightening": 3.0,
-    "patience": 2.0, "patient": 2.0,
-}
-
-DOVISH = {
-    "moderated": 2.0, "softened": 2.5, "eased": 2.0,
-    "downside risks to employment": 3.0, "slowed": 2.0, "declined": 1.5,
-    "closer to": 1.5, "made further progress": 2.0,
-    "reduce the target range": 3.0, "less restrictive": 3.0,
-    "cooling": 2.5, "weakened": 2.5, "gradually": 1.0, "balanced": 1.0,
-}
-
 TRACKED_PHRASES = [
     "restrictive", "data dependent", "balance of risks",
     "downside risks to employment", "upside risks to inflation",
@@ -58,75 +41,54 @@ TRACKED_PHRASES = [
 ]
 
 
+
 @dataclass
 class DocAnalysis:
     date: str
     kind: str = "statement"
     word_count: int = 0
-    tone_score: float = 0.0          # 措辭分數（詞典）
-    objective_score: float = 0.0     # 客觀訊號分數（政策行動 + 反對票 + 風險方向）
-    obj_parts: dict = field(default_factory=dict)
-    hawk_hits: dict = field(default_factory=dict)
-    dove_hits: dict = field(default_factory=dict)
     phrases: dict = field(default_factory=dict)
     vote: dict = field(default_factory=dict)
-    focus: dict = field(default_factory=dict)   # 反應函數：目前重心在哪一邊
+    decision: dict = field(default_factory=dict)  # {action, move_bp, lower, upper}
+    focus: dict = field(default_factory=dict)     # 反應函數：目前重心在哪一邊
     has_presser: bool = False
-    presser_score: float | None = None
-    text: str = ""            # 全小寫，供計分與詞頻比對
+    text: str = ""            # 全小寫，供詞頻比對
     text_display: str = ""    # 保留原始大小寫，供逐句比對顯示
 
 
 def analyse(doc: dict) -> DocAnalysis:
     """doc: {date, text, vote?, presser?}"""
+    from .fomc_extra import parse_decision
     clean = _normalise(doc.get("text", ""))
-    words = len(clean.split())
-
-    hawk_hits, dove_hits = _count_tones(clean)
-    denom = max(words, 1) / 100
-    tone = (sum(HAWKISH[k] * v for k, v in hawk_hits.items())
-            - sum(DOVISH[k] * v for k, v in dove_hits.items())) / denom
-
-    vote = doc.get("vote") or {}
     raw_text = doc.get("text", "")
-    obj, parts = objective_score(vote, raw_text)
+    vote = doc.get("vote") or {}
     presser = doc.get("presser")
-    # 記者會一併納入重心判定。主席在 Q&A 裡的表態往往比制式聲明直接得多，
-    # 先前完全沒讀，等於漏掉這一頁最明確的訊號來源。
-    focus = detect_focus(raw_text, vote, presser)
-
-    p_score = None
-    if presser:
-        pc = _normalise(presser)
-        pd = max(len(pc.split()), 1) / 100
-        ph, pv = _count_tones(pc)
-        p_score = (sum(HAWKISH[k] * v for k, v in ph.items())
-                   - sum(DOVISH[k] * v for k, v in pv.items())) / pd
-
+    # 記者會只讀**主席本人**說的話。整份逐字稿裡有一半是記者的提問——
+    # 「Are interest rates now ... restrictive?」不是聯準會的表態。
+    chair = chair_text(presser) if presser else ""
+    focus = detect_focus(raw_text, vote, chair or None)
     return DocAnalysis(
-        date=doc["date"], word_count=words,
-        tone_score=round(tone, 3), objective_score=round(obj, 3),
-        obj_parts=parts, hawk_hits=hawk_hits, dove_hits=dove_hits,
+        date=doc["date"], word_count=len(clean.split()),
         phrases={p: _wb_count(clean, p) for p in TRACKED_PHRASES},
-        vote=vote, focus=focus, has_presser=bool(presser),
-        presser_score=None if p_score is None else round(p_score, 3),
-        text=clean,
-        # 逐句比對是給人讀的，不能用計分用的小寫版本——
+        vote=vote, decision=parse_decision(raw_text), focus=focus,
+        has_presser=bool(presser), text=clean,
+        # 逐句比對是給人讀的，不能用比對用的小寫版本——
         # 否則畫面上會出現 "the federal open market committee" 這種怪句子。
-        text_display=re.sub(r"\s+", " ", doc.get("text", "")).strip(),
+        text_display=re.sub(r"\s+", " ", raw_text).strip(),
     )
 
 
+
 # 政策行動：聲明自己會寫「decided to maintain / raise / lower the target range」。
-# 這是文件裡的事實陳述，不是語氣判讀，所以歸在客觀訊號。
+# 這是文件裡的事實陳述，不是語氣判讀。
 _ACTION_RE = [
     ("hike", re.compile(r"decided to (?:raise|increase)\s+the target range", re.I)),
     ("cut", re.compile(r"decided to (?:lower|reduce|decrease)\s+the target range", re.I)),
     ("hold", re.compile(r"decided to (?:maintain|keep)\s+the target range", re.I)),
 ]
 
-# 聲明自述的風險方向。這是委員會自己點名「我擔心哪一邊」，
-# 與詞典計分不同——它是明確的制式句，不是用字習慣。
+# 聲明自述的風險方向。這是委員會自己點名「我擔心哪一邊」——
+# 明確的制式句，不是用字習慣。
 _RISK_INFL = re.compile(r"upside risks? to inflation", re.I)
 _RISK_EMPL = re.compile(r"downside risks? to (?:employment|the labor market)", re.I)
 # 實際句型是 "the risks to achieving its employment and inflation goals
@@ -198,78 +160,6 @@ def policy_action(text: str) -> str | None:
     return None
 
 
-def objective_score(vote: dict, text: str = "") -> tuple[float, dict]:
-    """
-    客觀訊號分數。正＝偏鷹（利升息）、負＝偏鴿（利降息）。
-
-    三個成分，都是「文件裡的事實」而不是用字習慣：
-
-      政策行動   升息 +3、降息 −3、不變 0
-                 委員會實際做了什麼，權重最高。
-      反對票     每張贊成升息的反對票 +2、贊成降息 −2。
-                 反對票是投票紀錄，不受主席的措辭風格影響。
-      風險方向   聲明點名「通膨上行風險」+1、「就業下行風險」−1。
-                 這是制式句，與詞典計分的用字習慣不同。
-
-    （點陣圖成分已移除：聯準會在 Warsh 任內縮減預測公布，
-      這個輸入不再穩定存在，留著會讓分數的可比性時有時無。）
-    """
-    parts: dict = {}
-    total = 0.0
-
-    act = policy_action(text or "")
-    act_score = {"hike": 3.0, "cut": -3.0, "hold": 0.0}.get(act, 0.0)
-    parts["action"] = act_score
-    parts["action_detail"] = {
-        "hike": "本次升息", "cut": "本次降息", "hold": "本次維持利率不變",
-    }.get(act, "無法從聲明判定政策行動")
-    # KPI 卡的副標要短，另外給一個不含「本次」兩字的版本
-    parts["action_label"] = {
-        "hike": "升息", "cut": "降息", "hold": "維持不變",
-    }.get(act, "")
-    total += act_score
-
-    ds = vote.get("dissents") or []
-    hawk = sum(1 for d in ds if d.get("direction") == "hike")
-    dove = sum(1 for d in ds if d.get("direction") == "cut")
-    other = len(ds) - hawk - dove          # 主張維持或方向無法判定
-    stated = vote.get("stated_dissent")
-    parts["dissent"] = 2.0 * (hawk - dove)
-    if hawk or dove or other:
-        bits = []
-        if hawk:
-            bits.append(f"贊成升息 {hawk} 票")
-        if dove:
-            bits.append(f"贊成降息 {dove} 票")
-        if other:
-            bits.append(f"主張維持不變 {other} 票")
-        parts["dissent_detail"] = "反對票：" + "、".join(bits)
-    elif stated:
-        # 引言載明有反對票、名單卻解析不出來——這不是一致通過，
-        # 寫成「全體一致」是把解析失敗謊報成事實
-        parts["dissent_detail"] = (f"聲明載明 {stated} 張反對票，"
-                                   "但反對者名單解析失敗，方向未計入分數")
-    else:
-        parts["dissent_detail"] = "全體一致，沒有反對票"
-    total += parts["dissent"]
-
-    risk = 0.0
-    bits = []
-    if _RISK_INFL.search(text or ""):
-        risk += 1.0
-        bits.append("聲明點名通膨上行風險")
-    if _RISK_EMPL.search(text or ""):
-        risk -= 1.0
-        bits.append("聲明點名就業下行風險")
-    if not bits and _RISK_BAL.search(text or ""):
-        bits.append("聲明稱風險大致平衡")
-    parts["risk"] = risk
-    parts["risk_detail"] = "、".join(bits) or "聲明未明確點名風險方向"
-    total += risk
-
-    parts["has_signal"] = bool(act or ds or stated or bits)
-    return total, parts
-
 
 # ---------------------------------------------------------------------------
 # 記者會摘要
@@ -313,9 +203,7 @@ def _sentences_of(text: str, min_len: int = 40) -> list[str]:
     切句。縮寫句點先以占位符保護，切完再還原。
 
     min_len 預設 40 是給「主題摘句」用的——太短的句子（"Thank you."）
-    當摘要沒有意義。但**分數來源句不能套這個門檻**：計分是對全文做的，
-    短句一樣會命中詞典。丟掉短句會讓畫面上列出的句子加總小於實際分數，
-    而那一區的存在意義正是「分數可以被回推」。
+    當摘要沒有意義。會議紀要的量詞句用 0（短句一樣是一個觀點）。
     """
     protected = _ABBR_DOT.sub(lambda m: m.group(1) + "\x00", text)
     parts = re.split(r"(?<=[.!?])\s+(?=[A-Z])", protected)
@@ -323,40 +211,89 @@ def _sentences_of(text: str, min_len: int = 40) -> list[str]:
             for p in parts if len(p.strip()) > min_len]
 
 
+# 逐字稿的說話者標籤：「CHAIRMAN WARSH.」「NICK TIMIRAOS.」「MICHELLE SMITH.」
+# 至少兩個全大寫字，才不會把「AI.」「FOMC.」這種句尾縮寫當成換人說話。
+_SPEAKER = re.compile(
+    r"(?<![A-Za-z’'])((?:[A-Z][A-Z’'\-]+)(?:\s+[A-Z][A-Z’'\-]+){1,3})\.\s")
+_CHAIR = re.compile(r"^(?:CHAIR(?:MAN|WOMAN)?|VICE CHAIR)\b")
+# 每頁頁首：「Page 3 of 15 September 16, 2026 Chairman Warsh’s Press Conference FINAL」
+_PAGE_HDR = re.compile(
+    r"Page \d+ of \d+\s+[A-Z][a-z]+ \d{1,2}, \d{4}\s+Chair(?:man|woman)? [A-Z][a-z]+[’']s "
+    r"Press Conference\s+(?:FINAL|PRELIMINARY)", re.I)
+
+
+def presser_turns(text: str) -> list[tuple[str, str]]:
+    """依說話者切開逐字稿：[(說話者, 這段話)]。切不出來回空清單。"""
+    t = _PAGE_HDR.sub(" ", text or "")
+    t = re.sub(r"\s+", " ", t)
+    ms = list(_SPEAKER.finditer(t))
+    out = []
+    for i, m in enumerate(ms):
+        end = ms[i + 1].start() if i + 1 < len(ms) else len(t)
+        out.append((m.group(1).strip(), t[m.end():end].strip()))
+    return out
+
+
 def split_presser(text: str) -> tuple[str, str]:
-    """把逐字稿切成 (開場聲明, 問答)。找不到分界就整份當開場。"""
-    low = text.lower()
+    """
+    把逐字稿切成 (開場聲明, 之後的問答全文)。
+
+    先依說話者切：開場＝第一位非主席說話者（通常是主持人 MICHELLE SMITH）
+    出現之前，主席說的那一段。先前只靠「I look forward to your questions」
+    這類結尾句——Warsh 2026-09 改說「I'll take a few of your questions」，
+    沒對到，整份逐字稿（含記者提問）都被當成開場。說話者標籤找不到時
+    才退回結尾句比對。
+    """
+    turns = presser_turns(text)
+    if turns and any(not _CHAIR.match(sp) for sp, _ in turns):
+        k = next(i for i, (sp, _) in enumerate(turns) if not _CHAIR.match(sp))
+        opening = " ".join(x for _, x in turns[:k])
+        qa = " ".join(f"{sp}. {x}" for sp, x in turns[k:])
+        return opening.strip(), qa.strip()
+    low = (text or "").lower()
     for pat in _QA_MARKERS:
         m = re.search(pat, low)
         if m:
             return text[:m.end()].strip(), text[m.end():].strip()
-    return text, ""
+    return text or "", ""
+
+
+def chair_text(text: str) -> str:
+    """只留主席本人說的話（開場＋每一則回答）。切不出說話者時回傳原文。"""
+    turns = presser_turns(text)
+    if not turns:
+        return text or ""
+    return " ".join(x for sp, x in turns if _CHAIR.match(sp))
 
 
 def summarise_presser(text: str, per_topic: int = 2) -> dict:
     """
-    記者會逐字稿的確定性摘要。
+    記者會逐字稿的確定性摘要：依主題（通膨／就業／利率路徑／資產負債表）
+    抽主席本人的原句，開場聲明優先（那是準備稿），不足再從主席的回答補。
+    不用模型、不改寫、不計分。
 
-    做兩件事，都不用模型、每次跑結果一致：
-
-      1. 依主題（通膨／就業／利率路徑／資產負債表）抽出含關鍵詞的句子，
-         開場聲明優先——那是準備稿，比即席問答精確。
-      2. 列出「命中計分詞典」的句子，並標出命中的詞。
-         這一段的作用是讓記者會措辭分數**可追溯**：分數是這些句子貢獻的。
-
-    回傳 {"opening_len", "qa_len", "topics": [{name, sentences}], "score_lines": [...]}
+    回傳 {opening_len, qa_len（主席回答的字數）, questions（提問則數）,
+          topics: [{name, sentences}]}
     """
     if not text:
-        return {"topics": [], "score_lines": [], "opening_len": 0, "qa_len": 0}
-
-    opening, qa = split_presser(text)
-    open_s, qa_s = _sentences_of(opening), _sentences_of(qa)
+        return {"topics": [], "opening_len": 0, "qa_len": 0, "questions": 0}
+    turns = presser_turns(text)
+    if turns and any(not _CHAIR.match(sp) for sp, _ in turns):
+        k = next(i for i, (sp, _) in enumerate(turns) if not _CHAIR.match(sp))
+        opening = " ".join(x for _, x in turns[:k])
+        answers = " ".join(x for sp, x in turns[k:] if _CHAIR.match(sp))
+        # 主持人只點名（「Richard.」），不算提問
+        questions = sum(1 for sp, x in turns[k:]
+                        if not _CHAIR.match(sp) and len(x.split()) > 6)
+    else:
+        opening, _qa = split_presser(text)
+        answers, questions = "", 0
+    open_s, qa_s = _sentences_of(opening), _sentences_of(answers)
 
     topics = []
     used: set[str] = set()
     for name, keys in PRESSER_TOPICS:
         picked = []
-        # 開場先挑，不夠再從問答補
         for pool in (open_s, qa_s):
             for s in pool:
                 if len(picked) >= per_topic:
@@ -369,39 +306,8 @@ def summarise_presser(text: str, per_topic: int = 2) -> dict:
                 break
         if picked:
             topics.append({"name": name, "sentences": picked})
-
-    # 分數來源：命中詞典、且權重最高的幾句。
-    # 必須用 _count_tones（與計分同一套），它會處理重疊——
-    # 否則畫面上會同時列出 "restrictive" 與 "less restrictive"，
-    # 讀者照著加總會得到跟分數對不起來的數字。
-    # 用不設長度門檻的切句結果，否則像 "The Committee remains resolute."
-    # 這種 31 個字元、卻帶 2.0 權重的句子會被丟掉，
-    # 畫面上加得出來的分數就只剩實際分數的一半。
-    score_pool = _sentences_of(opening, 0) + _sentences_of(qa, 0)
-    score_lines = []
-    for s in score_pool:
-        h_hits, d_hits = _count_tones(s.lower())
-        hits = ([{"term": k, "weight": HAWKISH[k], "tag": "hawk"} for k in h_hits]
-                + [{"term": k, "weight": DOVISH[k], "tag": "dove"} for k in d_hits])
-        if hits:
-            # 淨貢獻的絕對值大者優先——那才是真正推動分數的句子
-            net = (sum(HAWKISH[k] * v for k, v in h_hits.items())
-                   - sum(DOVISH[k] * v for k, v in d_hits.items()))
-            score_lines.append({"text": s, "hits": hits, "top": abs(net),
-                                "net": net})
-    score_lines.sort(key=lambda x: -x["top"])
-
-    # 只列前五句時要講清楚列了幾句、佔多少——
-    # 不然讀者把畫面上的數字加起來對不上總分，會以為分數算錯了。
-    shown = score_lines[:5]
-    total_abs = sum(x["top"] for x in score_lines) or 0.0
-    shown_abs = sum(x["top"] for x in shown)
-    coverage = (shown_abs / total_abs * 100) if total_abs else 100.0
-
-    return {"topics": topics, "score_lines": shown,
-            "score_lines_total": len(score_lines),
-            "score_lines_coverage": round(coverage),
-            "opening_len": len(opening.split()), "qa_len": len(qa.split())}
+    return {"topics": topics, "opening_len": len(opening.split()),
+            "qa_len": len(answers.split()), "questions": questions}
 
 
 # ---------------------------------------------------------------------------
@@ -513,8 +419,24 @@ def detect_focus(text: str, vote: dict | None = None,
         focus = "unknown"
 
     label, note = FOCUS_TEXT[focus]
+    # 逐條依據＋原句，讓讀者自己核對每一條指向哪一邊（畫面逐條列出）
+    def _quote(rx, src):
+        return next((x for x in _sentences_of(src or "", 0) if rx.search(x)), "")
+    _q = {"通膨上行風險": (_RISK_INFL, text), "就業下行風險": (_RISK_EMPL, text),
+          "通膨仍高於目標": (_INFL_ABOVE, text), "勞動市場已轉弱": (_EMPL_SOFT, text),
+          "以物價穩定為優先": (_PRESSER_INFL, presser),
+          "以勞動市場為優先": (_PRESSER_EMPL, presser),
+          "風險大致平衡": (_RISK_BAL, text)}
+    items = []
+    for e in evidence:
+        side = ("balanced" if "平衡" in e else
+                "inflation" if any(k in e for k in ("通膨", "升息", "物價")) else
+                "employment")
+        rx_src = next((v for k, v in _q.items() if k in e), None)
+        items.append({"text": e, "side": side,
+                      "quote": _quote(*rx_src) if rx_src else ""})
     return {"focus": focus, "label": label, "note": note,
-            "score": score, "evidence": evidence,
+            "score": score, "evidence": evidence, "items": items,
             "used_presser": bool(presser)}
 
 
@@ -533,83 +455,6 @@ def _wb_count(text: str, phrase: str) -> int:
     """
     return len(re.findall(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])", text))
 
-
-def _count_tones(text: str) -> tuple[dict, dict]:
-    """
-    同時計算鷹派與鴿派詞的命中次數，回傳 (hawk_hits, dove_hits)。
-
-    兩個詞典必須一起處理，並讓長詞優先、吃掉命中的區段：
-      * "remains elevated"（2.5 分）命中後，其中的 "elevated"（2 分）
-        不能再算一次——否則一個片語被計成 4.5 分
-      * 鴿派的 "less restrictive" 命中後，其中的鷹派詞 "restrictive"
-        不能再反向抵銷——否則明確轉鴿的句子會被計成中性
-    """
-    entries = ([(k, "h") for k in HAWKISH] + [(k, "d") for k in DOVISH])
-    entries.sort(key=lambda e: len(e[0]), reverse=True)
-
-    consumed: list[tuple[int, int]] = []
-    hawk: dict[str, int] = {}
-    dove: dict[str, int] = {}
-    for phrase, tag in entries:
-        pat = re.compile(r"(?<![a-z])" + re.escape(phrase) + r"(?![a-z])")
-        n = 0
-        for m in pat.finditer(text):
-            if any(s < m.end() and m.start() < e for s, e in consumed):
-                continue                      # 已被更長的片語吃掉
-            consumed.append((m.start(), m.end()))
-            n += 1
-        if n:
-            (hawk if tag == "h" else dove)[phrase] = n
-    return hawk, dove
-
-
-# ---------------------------------------------------------------------------
-# 溝通制度變化偵測
-# ---------------------------------------------------------------------------
-def _regime_note(shrink: float, vanished: list) -> str:
-    """依實際觸發的條件產生說明，不預設是哪一種。"""
-    bits = []
-    if shrink > 0.25:
-        bits.append(f"這次聲明比近四次平均短了 {shrink*100:.0f}%")
-    if len(vanished) >= 4:
-        bits.append(f"有 {len(vanished)} 個既有措辭整個消失")
-    reason = "、".join(bits) or "偵測到體例變化"
-    return (f"{reason}。篇幅或用語體例大幅改變，通常代表溝通方式改變，"
-            "而不是立場轉變——此時措辭分數與前幾次不可比，"
-            "請以客觀訊號分數為準。")
-
-
-def regime_change(docs: list) -> dict:
-    """
-    偵測「主席換人或溝通方式改變」造成的斷點。
-
-    為什麼需要：措辭分數假設聲明的寫法穩定。當主席刻意縮短聲明、
-    刪掉前瞻指引時，大量鷹派樣板句一起消失，詞典會誤判成轉鴿。
-    這時應該**停用措辭分數並示警**，而不是輸出一個假的讀數。
-    """
-    ds = sorted(docs, key=lambda d: d.date)
-    if len(ds) < 3:
-        return {"detected": False}
-
-    cur, prev = ds[-1], ds[-2]
-    base = sum(d.word_count for d in ds[-5:-1]) / max(len(ds[-5:-1]), 1)
-    shrink = 1 - (cur.word_count / base) if base else 0
-
-    vanished = [p for p in TRACKED_PHRASES
-                if prev.phrases.get(p, 0) > 0 and cur.phrases.get(p, 0) == 0]
-
-    detected = shrink > 0.25 or len(vanished) >= 4
-    return {
-        "detected": detected,
-        "shrink_pct": shrink * 100,
-        "word_count": cur.word_count,
-        "baseline": round(base),
-        "vanished": vanished,
-        # 文案必須跟**實際觸發的那個條件**一致。原本不論如何都寫
-        # 「大量措辭同時消失」，於是會出現「有 0 個既有措辭整個消失。
-        # 大量措辭同時消失通常代表…」這種自我否定的句子。
-        "note": _regime_note(shrink, vanished) if detected else "",
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -724,33 +569,21 @@ def phrase_matrix(docs: list) -> dict:
 
 
 def shift(docs: list) -> dict:
-    """最近兩次的變化，兩個分數分開報。"""
+    """
+    最近一次會議的政策方向（文字標籤，取代舊的分數）。
+    九宮格、首頁、每日摘要都讀這裡的 direction 與 label。
+    """
+    from .fomc_extra import policy_direction, DIR_ZH
     ds = sorted(docs, key=lambda d: d.date)
-    if len(ds) < 2:
+    if not ds:
         return {}
-    cur, prev = ds[-1], ds[-2]
-    d_obj = cur.objective_score - prev.objective_score
-    d_tone = cur.tone_score - prev.tone_score
-
-    def lab(v, dv):
-        if v > 1.0:
-            return "偏鷹"
-        if v < -1.0:
-            return "偏鴿"
-        return "中性"
-
-    diverge = (cur.objective_score > 1.0 and cur.tone_score < -1.0) or \
-              (cur.objective_score < -1.0 and cur.tone_score > 1.0)
-
-    return {
-        "cur_date": cur.date, "prev_date": prev.date,
-        "objective": cur.objective_score, "objective_delta": d_obj,
-        "objective_label": lab(cur.objective_score, d_obj),
-        "tone": cur.tone_score, "tone_delta": d_tone,
-        "tone_label": lab(cur.tone_score, d_tone),
-        "diverge": diverge,
-        # 對外的「方向」一律以客觀訊號為準
-        "direction": ("hawkish" if cur.objective_score > 1.0
-                      else ("dovish" if cur.objective_score < -1.0 else "neutral")),
-        "label": lab(cur.objective_score, d_obj),
-    }
+    cur = ds[-1]
+    prev = ds[-2] if len(ds) > 1 else None
+    direction, label = policy_direction(cur.decision, cur.vote)
+    out = {"cur_date": cur.date, "direction": direction,
+           "label": DIR_ZH[direction], "decision_label": label}
+    if prev is not None:
+        pdir, plab = policy_direction(prev.decision, prev.vote)
+        out.update({"prev_date": prev.date, "prev_direction": pdir,
+                    "prev_decision_label": plab})
+    return out

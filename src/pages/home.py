@@ -296,19 +296,22 @@ def _home_body_full(ctxs: dict) -> str:
 
     if fom and not fom.get("empty"):
         shift = fom.get("shift", {})
-        # 對外一律報「客觀訊號分數」（政策行動 + 反對票 + 風險方向）。
-        # 措辭分數只是輔助，而且在溝通方式改變時會被停用——
-        # 首頁若顯示措辭分數，會出現「+0.00 偏鷹」這種自相矛盾的卡片。
+        # 2026-10 起不再有任何合成分數：大數字是政策利率區間，
+        # 副標是這次的決議與反對票（文件裡的事實），再加靜默期倒數——
+        # 靜默期間官員不公開談政策，讀者知道就不會一直等消息。
         _d = shift.get("direction", "")
         dirs.append(("聯準會", _d))
+        _nm = fom.get("next_meeting") or {}
+        _note = shift.get("decision_label") or f"本次 {fom['changed_count']} 處改動"
+        if _nm.get("blackout_text"):
+            _note += f"　·　{_nm['blackout_text']}"
         cards.append(_module_card(
-            "/fomc/", "聯準會文本", f"{fom['latest_date']} 聲明",
-            f"{shift.get('objective', 0):+.2f}",
-            f"本次 {fom['changed_count']} 處改動",
-            "看聲明逐句比對與目前重心", direction=_d))
+            "/fomc/", "聯準會", f"{fom['latest_date']} 決議",
+            fom.get("rate_range", "—"), _note,
+            "看點陣圖、委員發言與聲明逐句比對", direction=_d))
     else:
         cards.append(_module_card("/fomc/", "聯準會文本", "建置中", "—",
-                                  "聲明紅線比對、措辭熱力圖、鷹鴿計分", "P3",
+                                  "決議、點陣圖、聲明逐句比對", "P3",
                                   pending=True))
 
     rat = ctxs.get("rates")
@@ -563,7 +566,7 @@ def _home_body_legacy(ctxs: dict) -> str:
         state_chip("九宮格位置", f"{sc.labor_state} × {sc.infl_state}", sc.name,
                    "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
         state_chip("兩軸方向", f"{sc.labor_momentum} / {sc.infl_momentum}", "就業 / 通膨"),
-        state_chip("FOMC 會議結論", f_text, shift.get("label", ""), f_dir),
+        state_chip("FOMC 會議結論", f_text, shift.get("decision_label", ""), f_dir),
         state_chip("長端供給壓力", p_text, "財政＋Hyperscalers；不進九宮格", "watch" if p_level == "high" else "neutral"),
     ])
     parts = brief_mod.compose(ctxs).get("parts", [])
@@ -641,7 +644,8 @@ def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
     curve = rates.get("curve")
     levels = getattr(curve, "levels", {}) if curve else {}
     term = getattr(curve, "term_premium", None) if curve else None
-    objective = (fom.get("shift") or {}).get("objective")
+    _fsh = fom.get("shift") or {}
+    _fnm = fom.get("next_meeting") or {}
     labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
 
@@ -659,10 +663,17 @@ def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
          [("總體 CPI", ik.get("headline_display", "—")), ("核心 CPI", ik.get("core_display", "—")),
           ("PPI／核心 PPI", f"{ppi_head}／{ppi_core}"), ("核心 PCE", ik.get("pce_display", "—"))]),
         ("/fomc/", "FOMC", f_text, f_dir,
-         f"政策利率 {fom.get('rate_range', '—')}；本次聲明改動 {fom.get('changed_count', 0)} 處。",
+         (f"政策利率 {fom.get('rate_range', '—')}；{fom.get('latest_date', '')} "
+          f"{_fsh.get('decision_label', '')}。"
+          + (f"下次會議 {_fnm['span']}，{_fnm['blackout_text']}。"
+             if _fnm.get("blackout_text") else "")),
          [("政策利率", fom.get("rate_range", "—")),
-          ("客觀訊號", "—" if objective is None else f"{objective:+.2f}"),
-          ("聲明改動", f"{fom.get('changed_count', 0)} 處"), ("會議日期", fom.get("latest_date", "—"))]),
+          ("本次決議", _fsh.get("decision_label") or "—"),
+          ("下次會議", (f"{_fnm.get('span') or _fnm.get('date', '')}（{_fnm['days']} 天後）"
+                       if _fnm.get("days") is not None else "—")),
+          ("靜默期", (("進行中" if _fnm.get("blackout_status") == "in"
+                      else f"{int(_fnm['blackout_start'][5:7])}/{int(_fnm['blackout_start'][8:])} 起")
+                     if _fnm.get("blackout_start") else "—"))]),
         ("/rates/", "財政與長端", p_text,
          "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
          f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；供給壓力{p_text}。",

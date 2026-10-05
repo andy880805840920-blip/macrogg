@@ -10,7 +10,9 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import logging
+import re
 
 from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
@@ -1695,9 +1697,21 @@ def _lights_from(computed: dict, cfgs: list) -> list:
 def build_fomc_context(statements: list[dict], rate_cfg: dict,
                        failed: list, offline: bool,
                        upcoming: list | None = None,
-                       rates_series: dict | None = None) -> dict:
+                       rates_series: dict | None = None,
+                       extras: dict | None = None,
+                       ai_cache=None) -> dict:
+    """
+    聯準會頁的 context（2026-10 改版：不再有任何合成分數）。
+
+    extras 來自 FomcSource.extras()／fixtures：spans（會議起訖）、sep、
+    minutes、roster、board_titles、speeches、events、news、official_notes。
+    缺哪一項，畫面就少哪一區，其餘照常。
+    """
+    from .analysis import fomc_extra as fx
     if not statements:
         return {"empty": True, "offline": offline, "failed": failed}
+    extras = extras or {}
+    today = clock.today()
 
     docs = [fomc_text.analyse(st) for st in statements]
     docs.sort(key=lambda d: d.date)
@@ -1710,101 +1724,78 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
 
     from .pages.fomc import _diff_block, _heatmap
 
-    score_rows = "".join(
-        f'<tr><td>{d.date}</td>'
-        f'<td>{"0.00" if abs(d.objective_score) < 1e-9 else format(d.objective_score, "+.2f")}</td>'
-        f'<td class="muted-cell">{d.tone_score:+.2f}</td>'
-        f'<td class="muted-cell">{d.word_count}</td>'
-        f'<td>{_vote_cell(d.vote)}</td></tr>'
-        for d in reversed(docs)
-    )
-
-    hits = []
-    for k, v in sorted(latest.hawk_hits.items(), key=lambda x: -x[1]):
-        hits.append(f'<tr><td>{k}</td><td style="color:var(--serious)">鷹派</td>'
-                    f'<td>{v}</td></tr>')
-    for k, v in sorted(latest.dove_hits.items(), key=lambda x: -x[1]):
-        hits.append(f'<tr><td>{k}</td><td style="color:var(--series-1)">鴿派</td>'
-                    f'<td>{v}</td></tr>')
-
     presser = statements[-1].get("presser")
-    obj = latest.obj_parts
 
-    # ---- 下次會議 ----
-    # 「距離下次會議還有幾天」決定了這份聲明還會主導市場多久，
-    # 是這一頁最該有的一個數字。解析失敗時整區不顯示（見 upcoming_meetings）。
-    next_meeting = {}
-    if upcoming:
-        nxt = upcoming[0]
-        days = (nxt - clock.today()).days
-        next_meeting = {
-            "date": nxt.isoformat(),
-            "days": days,
-            "display": f"{days} 天後",
-            "sub": nxt.strftime("%Y-%m-%d"),
-            "later": [d.isoformat() for d in upcoming[1:]],
-        }
+    # ---- 歷次決議（取代「歷次分數」）----
+    # 只有文件裡的事實：決議、區間、票數、反對方向。新的在上。
+    decisions = []
+    for d in docs:
+        dec = dict(d.decision)
+        vs = fx.vote_summary(d.vote)
+        decisions.append({
+            "date": d.date, "action": dec.get("action"),
+            "move": fx.move_label(dec.get("action"), dec.get("move_bp")),
+            "range": fx.range_text(dec.get("lower"), dec.get("upper")),
+            "votes": (f"{vs['n_for']}:{vs['n_against']}" if vs["n_for"] is not None
+                      else (f"{vs['n_against']} 票反對" if vs["n_against"] else "—")),
+            "dissent": vs["short"], "dissent_names": vs["names"],
+            "words": d.word_count})
+    decisions.reverse()
 
-    # ---- 市場定價 vs 聯準會 ----
-    # 2 年期公債殖利率 ≈ 市場預期未來兩年的平均政策利率。
-    # 它跟目前政策利率中值的差，就是市場定價的政策路徑方向。
-    # 這是粗略代理，不是會議層級的機率——畫面上會講清楚。
-    market = {}
-    # 政策利率區間**優先取 FRED**（DFEDTARL／DFEDTARU），抓不到才退回 config。
-    #
-    # 為什麼要改成自動：這兩個數字先前只由人工填在 config/fomc.yaml，而操作手冊
-    # 寫的是「只用於畫面顯示」——但它其實在下面算 gap，直接決定「市場定價偏降息
-    # 還是偏向再緊縮」這個判定。忘記更新一次降息（25 個基點）就會讓 gap 平移
-    # 0.25 個百分點，足以把結論翻成反的，而畫面上完全看不出來。這是整份專案裡
-    # 唯一一個「漏更新會默默給出反向結論」的手動項，所以優先自動化。
+    # ---- 下次會議與靜默期 ----
+    # 「距離下次會議還有幾天」決定了這份聲明還會主導市場多久；靜默期開始後
+    # 官員不再公開談政策——兩個日期一起看。起訖日優先用行事曆解析的
+    # spans；只有結束日時，照聯準會慣例假設兩天會議（第一天＝前一天）。
+    spans = extras.get("spans") or [
+        (x - dt.timedelta(days=1), x) for x in (upcoming or [])]
+    next_meeting = fx.next_meeting_info(spans, today)
+    events = extras.get("events") or []
+    agenda = []
+    if next_meeting:
+        _bo = dt.date.fromisoformat(next_meeting["blackout_start"])
+        agenda = fx.upcoming_events(events, today, _bo - dt.timedelta(days=1))
+
+    # ---- 政策利率區間：FRED → 聲明本文 → 設定檔 ----
+    # FRED（DFEDTARL／DFEDTARU）最即時；抓不到時退回**最新聲明本文**寫的
+    # 新區間（「to 3-3/4 to 4 percent」）——那是決議本身，不會過時。
+    # 設定檔只剩最後一道後備。先前設定檔是唯一後備，而它停在 3.50–3.75%，
+    # 9/16 升息後只要 FRED 斷一次，整頁就會印出錯的區間。
     _rs = rates_series or {}
     _lo = value_at(_rs.get("DFEDTARL") or [])
     _hi = value_at(_rs.get("DFEDTARU") or [])
-    rate_auto = _lo is not None and _hi is not None
-    if not rate_auto:
+    rate_src = "fred"
+    # FRED 的最後一筆若還停在會議當天以前，代表新區間（會後隔天生效）
+    # 還沒貼上去——這時聲明本文才是最新的事實。
+    _fred_last = ((_rs.get("DFEDTARU") or [{}])[-1] or {}).get("date", "")
+    _stale = bool(_fred_last) and _fred_last <= latest.date
+    if (_lo is None or _hi is None or _stale) and latest.decision.get("lower") is not None:
+        _lo, _hi = latest.decision.get("lower"), latest.decision.get("upper")
+        rate_src = "statement"
+    if _lo is None or _hi is None:
         _lo, _hi = rate_cfg.get("lower"), rate_cfg.get("upper")
-    _d2 = value_at(_rs.get("DGS2") or [])
-    if _lo is not None and _hi is not None and _d2 is not None:
-        mid = (_lo + _hi) / 2
-        gap = _d2 - mid
-        if gap > 0.15:
-            lean, txt = "hawkish", "市場定價未來兩年的平均政策利率高於現在——偏向再緊縮"
-        elif gap < -0.15:
-            lean, txt = "dovish", "市場定價未來兩年的平均政策利率低於現在——偏向降息"
-        else:
-            lean, txt = "neutral", "市場定價未來兩年的平均政策利率與現在相當——沒有明顯方向"
-        # 判讀與市場一致與否，本身就是有價值的資訊
-        obj_dir = ("hawkish" if latest.objective_score > 1.0
-                   else ("dovish" if latest.objective_score < -1.0 else "neutral"))
-        market = {
-            "dgs2": _d2, "mid": mid, "gap": gap, "lean": lean, "text": txt,
-            "display": f"{gap:+.2f} 個百分點",
-            "agree": (lean == obj_dir),
-            "obj_dir": obj_dir,
-        }
+        rate_src = "config"
+    mid = (_lo + _hi) / 2 if _lo is not None and _hi is not None else None
 
-    # ---- 反對票的歷史脈絡 ----
-    # 「本次 3 票」單看沒有意義，要知道這在近期算不算多。
-    _dis = [len((d.vote or {}).get("dissents") or []) for d in docs]
-    dissent_ctx = {}
-    if len(_dis) >= 3:
-        cur, hist = _dis[-1], _dis[:-1]
-        avg = sum(hist) / len(hist)
-        if cur > max(hist):
-            note = f"是這 {len(_dis)} 次會議裡最多的一次"
-        elif cur == 0:
-            note = "本次全體一致，近期少見的完全共識" if avg >= 1 else "本次全體一致"
-        elif cur > avg + 0.5:
-            note = f"高於近 {len(hist)} 次的平均 {avg:.1f} 票"
-        elif cur < avg - 0.5:
-            note = f"低於近 {len(hist)} 次的平均 {avg:.1f} 票"
-        else:
-            note = f"與近 {len(hist)} 次的平均 {avg:.1f} 票相當，不算特別"
-        dissent_ctx = {"current": cur, "avg": avg, "note": note,
-                       "history": _dis}
+    # ---- 2 年期：只留註腳 ----
+    # 2 年期殖利率含期限溢酬，不能直接當政策路徑；市場定價改用聯邦基金
+    # 期貨逐場推算（run.py 在焦點條算完後把 fw 接進來，見 market_vs_dots）。
+    _d2 = value_at(_rs.get("DGS2") or [])
+    dgs2 = {"value": _d2, "gap": (_d2 - mid) if (_d2 is not None and mid is not None) else None}
+
+    # ---- 聲明點名的風險方向（事實清單的一列）----
+    _t = latest.text_display
+    if fomc_text._RISK_INFL.search(_t) and fomc_text._RISK_EMPL.search(_t):
+        risk = ("neutral", "同時點名通膨上行與就業下行風險")
+    elif fomc_text._RISK_INFL.search(_t):
+        risk = ("hawkish", "點名「通膨上行風險」")
+    elif fomc_text._RISK_EMPL.search(_t):
+        risk = ("dovish", "點名「就業下行風險」")
+    elif fomc_text._RISK_BAL.search(_t):
+        risk = ("neutral", "稱風險大致平衡")
+    else:
+        risk = ("neutral", "沒有點名風險方向（Warsh 任內的聲明不再寫這一句）")
 
     # ---- 聲明的穩定度 ----
-    # 「只改了 1 句」本身是強訊號（立場穩定），先前只在卡片底部一行小字帶過。
     stability = {}
     if prev is not None:
         n_changed = len(changed)
@@ -1821,33 +1812,71 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
                          "desc": "改動不少。多處同時調整通常代表委員會正在"
                                  "重新描述經濟狀況或政策方向，值得逐句比對。"}
 
+    # ---- 委員、發言、會議紀要 ----
+    officials = fx.build_officials(extras.get("roster"), extras.get("board_titles") or {},
+                                   docs, today, extras.get("official_notes"))
+    feed = extras.get("speeches") or []
+    news = extras.get("news") or {}
+    # 只留談經濟與貨幣政策的：理事的監管演講（eSLR、支付）跟利率路徑無關，
+    # 沒談利率的新聞標題（政治口水、「Waller 行情」之類）也不列
+    _pol = re.compile(r"econom|monetary|policy|inflation|outlook|labor|rates?\b|prices",
+                      re.I)
+    for o in officials:
+        o["speeches"] = [x for x in feed if x["surname"] == o["surname"]
+                         and x["date"] >= (today - dt.timedelta(days=30)).isoformat()
+                         and _pol.search(x["title"])][:1]
+        o["news"] = [n for n in (news.get(o["surname"]) or []) if n.get("policy")][:2]
+    minutes = extras.get("minutes")
+    minutes_groups = fx.minutes_by_topic(minutes["rows"]) if minutes else []
+    _mrows = [r for _, rs in minutes_groups for r in rs]
+    _next_min = next((e for e in fx.upcoming_events(
+        events, today, today + dt.timedelta(days=60)) if e["kind"] == "會議紀要"), None)
+
+    # ---- AI 中文說明（標明 AI；失敗就只顯示原文）----
+    ai = fx.ai_notes(fx.ai_payload(changed, _mrows, officials), ai_cache, offline)
+    for i, r in enumerate(_mrows):
+        r["zh"] = ai.get(f"m{i}", "")
+    for o in officials:
+        o["gist"] = ai.get(f"o_{o['surname']}", "")
+    diff_notes = [ai.get(f"d{i}", "") for i in range(len(changed))]
+
+    sh = fomc_text.shift(docs)
     return {
         "empty": False,
         "offline": offline,
         "failed": failed,
         "latest_date": latest.date,
         "generated_at": clock.stamp(),
-        "shift": fomc_text.shift(docs),
-        "regime": fomc_text.regime_change(docs),
+        "shift": sh,
+        "decision": latest.decision,
+        "decision_label": fx.move_label(latest.decision.get("action"),
+                                        latest.decision.get("move_bp")),
         "vote": latest.vote,
-        "rate_range": (f"{_lo:.2f}–{_hi:.2f}%"
-                       if _lo is not None and _hi is not None else "—"),
-        # 畫面要標出這個區間是自動抓的還是 config 的後備值——
-        # 後備值可能已經過時，而讀者無從分辨。
-        "rate_auto": rate_auto,
+        "vote_summary": fx.vote_summary(latest.vote),
+        "decisions": decisions,
+        "rate_range": fx.range_text(_lo, _hi),
+        "rate_mid": mid,
+        # 畫面要標出這個區間的來源——後備值可能已經過時，讀者無從分辨
+        "rate_src": rate_src,
+        "rate_auto": rate_src == "fred",
         "next_meeting": next_meeting,
-        "market": market,
-        "dissent_ctx": dissent_ctx,
+        "agenda": agenda,
+        "dgs2": dgs2,
+        "risk": risk,
         "stability": stability,
-        "obj_detail": "；".join(x for x in (obj.get("action_detail"),
-                                           obj.get("dissent_detail"),
-                                           obj.get("risk_detail")) if x),
-        "obj_has_signal": obj.get("has_signal", False),
-        "obj_parts": obj,
-        # 歷次客觀訊號分數，給 KPI 卡的走勢縮圖用
-        "objective_history": [x.objective_score for x in docs],
+        "obj_parts": {"action_label": fx.move_label(latest.decision.get("action"),
+                                                    latest.decision.get("move_bp"))
+                      if latest.decision.get("action") else ""},
         "focus": latest.focus,
-        "diff_html": _diff_block(changed),
+        "sep": extras.get("sep"),
+        "minutes": ({**{k: v for k, v in minutes.items() if k != "rows"},
+                     "groups": minutes_groups} if minutes else None),
+        "minutes_next": _next_min,
+        "officials": officials,
+        "ai_used": bool(ai),
+        "diff_rows": changed,
+        "diff_notes": diff_notes,
+        "diff_html": _diff_block(changed, notes=diff_notes),
         "diff_full_html": _diff_block(rows, show_same=True),
         "changed_count": len(changed),
         # 比對的是哪兩份要寫清楚——抓漏一份時比對對象會默默換掉，
@@ -1855,13 +1884,8 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
         "diff_pair": (prev.date if prev else None, latest.date),
         "fetched_dates": [x.date for x in docs],
         "heatmap_html": _heatmap(fomc_text.phrase_matrix(docs)),
-        "score_rows": score_rows,
-        "hits_rows": "".join(hits) or '<tr><td colspan="3">本次沒有命中任何詞典用語</td></tr>',
         "presser_available": bool(presser),
         "presser_reason": statements[-1].get("presser_error") or "pending",
-        "presser_score": latest.presser_score or 0,
-        # 逐字稿不再切前 N 個字——那沒有資訊價值。改成依主題抽句，
-        # 外加「分數來源句」讓記者會措辭分數可追溯。
         "presser_summary": fomc_text.summarise_presser(presser or ""),
         "docs": docs,
     }
@@ -1871,28 +1895,6 @@ def _stat(label, value, color="inherit", note=""):
     n = f'<div class="s-note">{note}</div>' if note else ""
     return (f'<div class="stat"><div class="s-label">{label}</div>'
             f'<div class="s-value" style="color:{color}">{value}</div>{n}</div>')
-
-
-def _vote_cell(vote: dict) -> str:
-    ds = vote.get("dissents") or []
-    if not ds:
-        # 引言載明有反對票但名單解析失敗 → 顯示票數並示警，不能寫「一致」
-        stated = vote.get("stated_dissent")
-        if stated:
-            return (f'<span style="color:var(--warning)">{stated} 反對'
-                    f'（未解析）</span>')
-        return '<span class="muted-cell">一致</span>'
-    h = sum(1 for x in ds if x["direction"] == "hike")
-    c = sum(1 for x in ds if x["direction"] == "cut")
-    other = len(ds) - h - c        # 主張維持不變（或方向無法判定）的反對票
-    parts = []
-    if h:
-        parts.append(f'<span style="color:var(--serious)">{h} 鷹</span>')
-    if c:
-        parts.append(f'<span style="color:var(--series-1)">{c} 鴿</span>')
-    if other:
-        parts.append(f'<span class="muted-cell">{other} 維持</span>')
-    return " ".join(parts)
 
 
 # 合計金額的合理性上限：解析出的近 120 天總額，相對最新一季申報發債的倍數。

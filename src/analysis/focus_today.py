@@ -1551,7 +1551,8 @@ DEFAULT_MEETING = "2026-12-09"
 # 1＝單合約 vs FRED 中點；2＝雙合約價差＋品質閘門；
 # 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核；
 # 4＝WIRP 逐會議法（日曆日加權、不封頂、正負＝升降息）
-FW_METHOD = 5
+# 6＝回傳值多帶逐場 meetings（聯準會頁用），算法同 5
+FW_METHOD = 6
 
 
 def _last_value(rows) -> float | None:
@@ -1914,6 +1915,8 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
     log.info("FedWatch 前推：起點 %.4f%%（%s）；至 %s 累計 %+.2f bp",
              path["r0"], path["r0_src"], horizon, path["cum_bp"])
     return {"src": "futures", "date": today.isoformat(),
+            # 逐場全列：聯準會頁的「市場路徑 vs 點陣圖」要每一場的會後利率
+            "meetings": path["meetings"],
             "next": path["meetings"][0], "horizon": path["meetings"][-1],
             "cum_bp": path["cum_bp"], "r0": path["r0"],
             "r0_src": path["r0_src"],

@@ -44,13 +44,20 @@ STATEMENT_URL = BASE + "/newsevents/pressreleases/monetary{ymd}a.htm"
 MINUTES_URL = BASE + "/monetarypolicy/fomcminutes{ymd}.htm"
 PRESSER_URL = BASE + "/mediacenter/files/FOMCpresconf{ymd}.pdf"
 CALENDAR_URL = BASE + "/monetarypolicy/fomccalendars.htm"
+SEP_URL = BASE + "/monetarypolicy/fomcprojtabl{ymd}.htm"
+ROSTER_URL = BASE + "/monetarypolicy/fomc.htm"
+BOARD_URL = BASE + "/aboutthefed/bios/board/default.htm"
+SPEECH_FEED_URL = BASE + "/feeds/speeches.xml"
+FED_CALENDAR_JSON = BASE + "/json/calendar.json"
+NEWS_URL = ("https://news.google.com/rss/search?q={q}"
+            "&hl=en-US&gl=US&ceid=US:en")
 
 # 投票段落的起點。
 #
 # 不能只找 "Voting for"：2026 年 6 月起（Warsh 上任後）聲明改版，
 # 一致通過時不再列出贊成名單，有反對票時**只寫 "Voting against ..."**。
 # 只認 "Voting for" 會讓這種聲明整段抓不到投票，反對票被讀成「一致」，
-# 客觀訊號分數因此歸零——那正好是這份儀表板最重要的訊號。
+# 政策方向也跟著讀錯——反對票正是這份儀表板最重要的訊號。
 # 所以改成比對「最早出現的任一種寫法」。
 VOTE_RE = re.compile(r"Voting\s+(?:for|against)\b", re.I)
 
@@ -102,6 +109,13 @@ class FomcSource:
         self.session = session or requests.Session()
         self.session.headers.update({"User-Agent": "macro-dashboard/1.0"})
         self.failed: list[tuple[str, str]] = []
+        self._cal: str | None = None
+
+    def calendar_html(self) -> str:
+        """行事曆頁一次執行只抓一次（會議日期、未來會議、SEP、紀要都從這頁來）。"""
+        if self._cal is None:
+            self._cal = self._get(CALENDAR_URL) or ""
+        return self._cal
 
     # ------------------------------------------------------------------
     def _get(self, url: str, binary: bool = False):
@@ -134,10 +148,10 @@ class FomcSource:
         取會議日期。start（YYYY-MM-DD）優先於 years_back。
 
         行事曆頁其實內嵌列出 2021–2027 年，所以起點設多早就會抓多早。
-        抓太早的代價不只是速度：措辭分數跨主席本來就不可比，
-        擺一堆不可比的歷史點在趨勢圖上只會製造雜訊。
+        抓太早的代價主要是速度（每份聲明一個請求）；「歷次決議」表與
+        近 12 個月的反對票紀錄，從 2025 年起就夠用。
         """
-        html = self._get(CALENDAR_URL)
+        html = self.calendar_html()
         dates: list[dt.date] = []
         if html:
             for m in re.finditer(r"monetary(\d{8})a\.htm", html):
@@ -180,7 +194,23 @@ class FomcSource:
         解析失敗或結果不合理時回傳空清單，畫面上該區塊就不顯示——
         寧可少一個數字，也不要印一個錯的會議日期出去。
         """
-        html = self._get(CALENDAR_URL)
+        spans = self.upcoming_spans(n)
+        return [b for _, b in spans]
+
+    def upcoming_spans(self, n: int = 3) -> list[tuple[dt.date, dt.date]]:
+        """接下來 n 場會議的 (第一天, 最後一天)。靜默期要用第一天推算。"""
+        today = clock.today()
+        out = [(a, b) for a, b in self.calendar_spans() if b > today]
+        # 合理性檢查：下一場會議不可能在半年之後（一年開八次，間隔約 6–8 週）。
+        # 抓到離譜的東西就整組丟掉，不要印出去。
+        if not out or (out[0][1] - today).days > 180:
+            log.warning("未來會議日期解析結果不合理，略過此區塊")
+            return []
+        return out[:n]
+
+    def calendar_spans(self) -> list[tuple[dt.date, dt.date]]:
+        """行事曆表格上每一場會議的 (第一天, 最後一天)，含已開過的。"""
+        html = self.calendar_html()
         if not html:
             return []
         # 去標籤後只看文字，這樣官網改 class 或版型不會直接讓解析失效
@@ -188,40 +218,40 @@ class FomcSource:
         text = re.sub(r"&nbsp;?", " ", text)
         text = re.sub(r"\s+", " ", text)
 
-        today = clock.today()
-        out: list[dt.date] = []
+        out: list[tuple[dt.date, dt.date]] = []
+        months = "|".join(self._MONTHS)
         # 以「YYYY FOMC Meetings」切出各年度區塊，年份才不會張冠李戴
         blocks = list(re.finditer(r"(20\d{2})\s+FOMC\s+Meetings", text, re.I))
         for i, m in enumerate(blocks):
             year = int(m.group(1))
             seg = text[m.end(): blocks[i + 1].start() if i + 1 < len(blocks) else len(text)]
-            # 「January 26-27」「March 16-17*」「June 8-9」；跨月的
-            # 「April 28-May 1」型式取後面那個月日，由第二個分支處理
+            # 「January 26-27」「March 16-17*」；跨月的「April 28-May 1」型式
+            # 取後面那個月日（第二個分支）。「Note: A two-day meeting is
+            # scheduled for January 25-26, 2028」是明年的預告，不屬於這一年，
+            # 先從區塊裡切掉。
+            seg = re.split(r"\bNote:", seg)[0]
+            # 紀要的「(Released August 19, 2026)」與表決紀錄的
+            # 「August 22 (notation vote)」都長得像單日會議，先拿掉
+            seg = re.sub(r"\(Released[^)]*\)", " ", seg)
+            seg = re.sub(r"\b(?:" + months + r")\s+\d{1,2}\s*\(notation vote\)", " ", seg)
             for mm in re.finditer(
-                    r"\b(" + "|".join(self._MONTHS) + r")\b\s*"
-                    r"(?:(\d{1,2})\s*[-–]\s*(?:(" + "|".join(self._MONTHS) + r")\s*)?"
+                    r"\b(" + months + r")\b\s*"
+                    r"(?:(\d{1,2})\s*[-–]\s*(?:(" + months + r")\s*)?"
                     r"(\d{1,2})|(\d{1,2}))\*?", seg):
                 mon = self._MONTHS[mm.group(1)]
-                if mm.group(5):                       # 單日
-                    day = int(mm.group(5))
-                elif mm.group(3):                     # 跨月，取後面那個月
-                    mon, day = self._MONTHS[mm.group(3)], int(mm.group(4))
-                else:                                  # 同月的日期範圍，取後緣
-                    day = int(mm.group(4))
                 try:
-                    d = dt.date(year, mon, day)
+                    if mm.group(5):                       # 單日（含電話會議）
+                        a = b = dt.date(year, mon, int(mm.group(5)))
+                    elif mm.group(3):                     # 跨月
+                        a = dt.date(year, mon, int(mm.group(2)))
+                        b = dt.date(year, self._MONTHS[mm.group(3)], int(mm.group(4)))
+                    else:                                  # 同月的日期範圍
+                        a = dt.date(year, mon, int(mm.group(2)))
+                        b = dt.date(year, mon, int(mm.group(4)))
                 except ValueError:
                     continue
-                if d > today:
-                    out.append(d)
-
-        out = sorted(set(out))
-        # 合理性檢查：下一場會議不可能在一年之後（一年開八次，間隔約 6–8 週）。
-        # 抓到離譜的東西就整組丟掉，不要印出去。
-        if not out or (out[0] - today).days > 180:
-            log.warning("未來會議日期解析結果不合理，略過此區塊")
-            return []
-        return out[:n]
+                out.append((a, b))
+        return sorted(set(out), key=lambda x: x[1])
 
     @staticmethod
     def _guess_dates(years_back: int) -> list[dt.date]:
@@ -331,6 +361,83 @@ class FomcSource:
             out.append(st)
             time.sleep(0.4)
         return out
+
+
+    # ------------------------------------------------------------------
+    # 聯準會頁的事實層（2026-10）：SEP／點陣圖、會議紀要、委員名單、
+    # 官員演講與行程。每一項各自失敗、各自缺席，不擋主流程。
+    # ------------------------------------------------------------------
+    def extras(self) -> dict:
+        from .analysis import fomc_extra as fx
+        today = clock.today()
+        cal = self.calendar_html()
+        out: dict = {"spans": self.upcoming_spans(4)}
+
+        # SEP：行事曆頁上「今天以前」最新的一份網頁版預測
+        idx = [d for d in fx.sep_index(cal) if d <= today.strftime("%Y%m%d")]
+        if idx:
+            ymd = idx[-1]
+            h = self._get(SEP_URL.format(ymd=ymd))
+            sep = fx.parse_sep(h or "", f"{ymd[:4]}-{ymd[4:6]}-{ymd[6:]}")
+            if sep:
+                out["sep"] = sep
+                log.info("SEP：%s（%s 年底利率中位數 %s）", sep["date"],
+                         sep["years"][0], sep["vars"]["ffr"]["median"][0])
+            else:
+                log.warning("SEP 網頁版解析失敗（%s），點陣圖本次不顯示", ymd)
+
+        # 會議紀要：已公布的最新一份
+        mi = fx.minutes_index(cal)
+        if mi:
+            last = mi[-1]
+            h = self._get(last["url"])
+            parsed = fx.parse_minutes(h or "")
+            if parsed:
+                out["minutes"] = {**last, **parsed}
+                log.info("會議紀要：%s 會議（%s 公布），量詞句 %d 則",
+                         last["meeting"], last["released"], len(parsed["rows"]))
+            else:
+                log.warning("會議紀要解析失敗（%s）", last["url"])
+
+        # 委員名單與理事職稱
+        roster = fx.parse_roster(self._get(ROSTER_URL) or "")
+        if roster:
+            out["roster"] = roster
+            out["board_titles"] = fx.parse_board_titles(self._get(BOARD_URL) or "")
+        else:
+            log.warning("FOMC 委員名單解析失敗，委員區本次不顯示")
+
+        out["speeches"] = fx.parse_speech_feed(self._get(SPEECH_FEED_URL) or "")
+        out["events"] = fx.parse_calendar_json(self._get(FED_CALENDAR_JSON) or "")
+        return out
+
+    def news(self, officials: list, days: int = 14) -> dict:
+        """
+        官員的近期新聞標題（Google News RSS）：{姓: [{title, source, date, url}]}。
+        只查投票委員。地方總裁沒有統一的官方演講來源，這是唯一的管道；
+        失敗就不顯示，不記進「資料來源失敗」清單（不是官方資料）。
+        """
+        from concurrent.futures import ThreadPoolExecutor
+        from urllib.parse import quote_plus
+        from .analysis import fomc_extra as fx
+
+        def one(o):
+            parts = o["name"].split()
+            q_name = f"{parts[0]} {parts[-1]}" if len(parts) > 1 else o["name"]
+            url = NEWS_URL.format(q=quote_plus(f'"{q_name}" Fed when:{days}d'))
+            try:
+                r = self.session.get(url, timeout=15,
+                                     headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"})
+                if r.status_code != 200:
+                    return o["surname"], []
+                return o["surname"], fx.parse_news_rss(r.text, o["surname"])
+            except Exception as e:                    # noqa: BLE001
+                log.info("官員新聞抓取失敗（%s）：%s", o["surname"], e)
+                return o["surname"], []
+
+        targets = [o for o in officials if o.get("voter")]
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            return {k: v for k, v in ex.map(one, targets) if v}
 
 
 # ---------------------------------------------------------------------------
@@ -516,13 +623,28 @@ def _dissenters(body: str) -> list[dict]:
 
 def _direction(chunk: str) -> str:
     low = chunk.lower()
+    # 2025-03 Waller：「supported no change for the federal funds target range
+    # but preferred to continue the current pace of decline in securities
+    # holdings」——反對的是資產負債表，不是利率。要先擋，否則會被讀成「維持」。
+    # 2026-04 Hammack 等三位：「supported maintaining the target range ... but did
+    # not support inclusion of an easing bias in the statement」——同意利率決定、
+    # 反對的是聲明措辭。這類「支持 X，但 Y」先分出來，不能當成「主張維持」。
+    if re.search(r"supported (?:maintaining|no change|the (?:decision|action))", low) \
+            and re.search(r"\bbut\b", low):
+        if re.search(r"securities holdings|balance sheet|runoff", low):
+            return "balance_sheet"
+        if re.search(r"easing bias", low):
+            return "no_easing_bias"
+        return "unknown"
     if re.search(r"\b(raise|raising|increase|increasing|higher)\b", low):
         return "hike"
     if re.search(r"\b(lower|lowering|reduce|reducing|decrease|cut)\b", low):
         return "cut"
     # 「preferred to maintain the target range」— 在委員會行動時主張按兵不動。
     # 不辨識這種寫法的話，這張反對票會變成 unknown，畫面上整格空白。
-    if re.search(r"\b(maintain|maintaining|keep|keeping|unchanged|pause)\b", low):
+    # 「preferred no change to the target range」（2025-10、2025-12 的 Schmid、
+    # Goolsbee）先前漏掉，被讀成 unknown
+    if re.search(r"\b(maintain|maintaining|keep|keeping|unchanged|pause)\b|no change", low):
         return "hold"
     return "unknown"
 

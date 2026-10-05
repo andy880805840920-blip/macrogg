@@ -7,20 +7,19 @@ FOMC 的離線示範資料（P3）。
     來源：/newsevents/pressreleases/monetary{YYYYMMDD}a.htm
           /mediacenter/files/FOMCpresconf20260729.pdf
 
-為什麼選這五次會議
+為什麼選這六次會議
 ------------------
-2026-01 → 2026-07 剛好跨過一次主席交接（Powell → Warsh，2026-05），
+2026-01 → 2026-09 剛好跨過一次主席交接（Powell → Warsh，2026-05），
 所以同一組資料就能示範這個模組所有的機制：
 
   * **格式改版**：1/3/4 月是 Powell 時代的長篇格式（前瞻指引、風險平衡
-    措辭俱全）；6/7 月是 Warsh 上任後的短篇格式，前瞻指引被移除，
-    票數改寫在開頭引言。逐句比對與「溝通制度變化偵測」都靠這個落差。
+    措辭俱全）；6/7/9 月是 Warsh 上任後的短篇格式，前瞻指引被移除，
+    票數改寫在開頭引言。逐句比對與熱力圖的「整排變空白」都靠這個落差。
   * **各種反對票寫法**：3 月是單一反對者、1 月是兩位同向、
-    4 月是四位反對但**方向不同**（Miran 主張降息，另三位主張維持不變）、
-    7 月是三位同向且聲明只寫 "Voting against"（沒有贊成名單）。
-    投票解析的每一條分支都被這組資料涵蓋。
-  * **分數背離**：7 月措辭讀起來不鷹，但三張升息反對票讓客觀訊號 +6，
-    正是「兩個分數刻意不合成」的實例。
+    4 月是四位反對但**反對的事情不同**（Miran 主張降息，另三位同意維持、
+    但反對聲明加入寬鬆傾向）、7 月是三位同向且聲明只寫 "Voting against"
+    （沒有贊成名單）。投票解析的每一條分支都被這組資料涵蓋。
+  * **決議**：9 月升息一碼、全體一致（「升息＋區間」的解析與頂部決議卡）。
 
 注意：`text` 欄位存的是**政策段落＋引言**的原始樣子，
 擷取流程（extract_text → split_statement → 去引言）由 build() 重現，
@@ -189,6 +188,25 @@ STATEMENTS = [
             "for the federal funds rate by 1/4 percentage point at this meeting."
         ),
     },
+    {
+        # 9 月：升息一碼、全體一致；刪掉「通膨部分來自供給衝擊」那一句
+        "date": "2026-09-16",
+        "text": (
+            "The Federal Open Market Committee approved the following statement for "
+            "release by a 12 – 0 vote: "
+            "The Committee decided to raise the target range for the federal funds rate "
+            "by 1/4 percentage point to 3-3/4 to 4 percent, in support of the Federal "
+            "Reserve's dual mandate. The Committee is continuing its policy of maintaining "
+            "ample reserves in the banking system. Economic activity is expanding at a "
+            "solid pace. While uncertainty remains elevated owing, in part, to geopolitical "
+            "developments, domestic spending has been resilient. Productivity growth is "
+            "strong, and capital investment is robust. Job gains have kept pace with the "
+            "workforce, and the unemployment rate has changed little. Inflation remains "
+            "elevated. Today's policy action will support a timelier return to the "
+            "Committee's 2 percent goal. The Committee will deliver price stability."
+        ),
+        "vote_text": "",
+    },
 ]
 
 
@@ -270,6 +288,43 @@ PRESSER_20260729 = (
 )
 
 
+# 2026-09-16 記者會（官方 PDF 節錄，逐字；含主持人點名與記者提問，
+# 用來驗證「只摘主席本人的話」）
+PRESSER_20260916 = (
+    "CHAIRMAN WARSH. Good day. In the meeting just concluded, the FOMC decided to raise "
+    "the target range for the federal funds rate by a ¼ percentage point to 3¾ to 4 "
+    "percent, in support of the Federal Reserve’s dual mandate. The Committee is "
+    "continuing its policy of maintaining ample reserves in the banking system. As noted "
+    "in the policy statement, released just a short while ago, economic activity is "
+    "expanding at a solid pace. Job gains have kept pace with the workforce, and the "
+    "unemployment rate has changed little. But inflation remains elevated. Today’s policy "
+    "action will support a timelier return to the Committee’s 2 percent goal. This "
+    "Committee will deliver price stability. Now I’ll get into some further detail. Our "
+    "decision comes at a time when the American economy appears to be strengthening. "
+    "New hiring, private-sector earnings, business capital investment—each of these "
+    "markers has improved in recent months and is pointing in a good direction. And, as I "
+    "said at the policy symposium in Jackson Hole, I would be hard pressed to describe "
+    "broad financial conditions as restrictive. This view was widely shared by the "
+    "Committee. So we removed a dose of accommodation. And, with that, I’ll take a few of "
+    "your questions. "
+    "MICHELLE SMITH. Richard. "
+    "RICHARD ESCOBEDO. Thank you. Chair Warsh, thank you for doing this. I’m Richard "
+    "Escobedo with CBS. You know, a ¼ point rate hike does not reopen the Strait of "
+    "Hormuz. And so I wonder how you think these smaller rate hikes will be effective "
+    "when it can’t necessarily address the energy supply side of inflationary pressures. "
+    "CHAIRMAN WARSH. It’s a—it’s a—it’s a good question, Richard. We cannot affect any "
+    "individual price, whether it be oil prices, whether it be foodstuffs at the grocery "
+    "store. But what we can do, and will do, is ensure that any change in relative prices "
+    "don’t broaden out, don’t have second- and third-order effects in the economy. "
+    "That’s what we’re tasked to do, and that’s what we will do. "
+    "MICHELLE SMITH. Colby. "
+    "COLBY SMITH. Thank you. Colby Smith from the New York Times. When the Fed starts "
+    "raising rates, it generally follows with a sequence of hikes. Is there anything "
+    "different in today’s assessment of the economic conditions that would suggest that "
+    "the typical pattern does not apply?"
+)
+
+
 def build() -> list[dict]:
     """
     回傳與 fomc_source.collect() 相同結構的資料。
@@ -297,6 +352,9 @@ def build() -> list[dict]:
         if s["date"] == "2026-07-29":
             d["presser"] = PRESSER_20260729
             d["presser_error"] = None
+        if s["date"] == "2026-09-16":
+            d["presser"] = PRESSER_20260916
+            d["presser_error"] = None
         out.append(d)
     return out
 
@@ -304,7 +362,7 @@ def build() -> list[dict]:
 # 官方行事曆上 2026 年最後三場（已對照 federalreserve.gov 的行事曆頁）。
 # 正式執行時由 FomcSource.upcoming_meetings() 直接解析行事曆，
 # 這裡只是離線模式的對應素材，讓兩條路徑產出同樣形狀的資料。
-_UPCOMING = ["2026-09-16", "2026-10-28", "2026-12-09"]
+_UPCOMING = ["2026-10-28", "2026-12-09", "2027-01-27"]
 
 
 def upcoming() -> list:
@@ -312,3 +370,125 @@ def upcoming() -> list:
     import datetime as dt
     today = clock.today()
     return [d for d in (dt.date.fromisoformat(x) for x in _UPCOMING) if d > today]
+
+
+# ---------------------------------------------------------------------------
+# 事實層（2026-10）：全部取自 federalreserve.gov 的真實內容
+# ---------------------------------------------------------------------------
+# 2026-09-16 SEP 表 1（中位數；prev＝6 月）與圖 2（點陣圖）
+SEP_20260916 = {
+    "date": "2026-09-16",
+    "years": ["2026", "2027", "2028", "2029", "Longer run"],
+    "prev_label": "June",
+    "vars": {
+        "gdp": {"median": [2.3, 2.4, 2.2, 2.1, 2.0], "prev": [2.2, 2.3, 2.2, None, 2.0],
+                "ct": ["2.2–2.4", "2.2–2.6", "2.1–2.3", "2.0–2.2", "2.0–2.2"], "range": []},
+        "unrate": {"median": [4.1, 4.1, 4.1, 4.1, 4.2], "prev": [4.3, 4.3, 4.2, None, 4.2],
+                   "ct": ["4.1–4.2", "4.0–4.2", "4.0–4.2", "4.0–4.3", "4.0–4.3"], "range": []},
+        "pce": {"median": [3.7, 2.3, 2.1, 2.0, 2.0], "prev": [3.6, 2.3, 2.0, None, 2.0],
+                "ct": ["3.5–3.7", "2.2–2.5", "2.0–2.2", "2.0", "2.0"], "range": []},
+        "core_pce": {"median": [3.4, 2.5, 2.2, 2.0, None], "prev": [3.3, 2.5, 2.1, None, None],
+                     "ct": ["3.3–3.4", "2.3–2.6", "2.0–2.2", "2.0", ""], "range": []},
+        "ffr": {"median": [4.1, 4.1, 3.9, 3.6, 3.2], "prev": [3.8, 3.6, 3.4, None, 3.1],
+                "ct": ["4.1–4.4", "3.6–4.4", "3.1–4.1", "3.1–3.6", "3.0–3.6"], "range": []},
+    },
+    "dots": {
+        "years": ["2026", "2027", "2028", "2029", "Longer run"],
+        "rows": [(4.375, [4, 8, 0, 0, 0]), (4.125, [12, 6, 4, 0, 0]),
+                 (3.875, [2, 0, 5, 3, 2]), (3.75, [0, 0, 0, 0, 1]),
+                 (3.625, [0, 3, 3, 7, 2]), (3.5, [0, 0, 0, 0, 2]),
+                 (3.375, [0, 0, 1, 2, 1]), (3.25, [0, 0, 0, 0, 2]),
+                 (3.125, [0, 1, 4, 4, 1]), (3.0, [0, 0, 0, 0, 6]),
+                 (2.875, [0, 0, 0, 1, 1])],
+        "n": [18, 18, 17, 17, 18],
+    },
+}
+
+# 2026-07-29 會議紀要（8/19 公布）的量詞句，逐字
+MINUTES_ROWS = [
+    {"topic": "政策路徑", "rank": 2, "level": "多數",
+     "text": "In their consideration of monetary policy at this meeting, most participants "
+             "supported maintaining the current target range for the federal funds rate."},
+    {"topic": "政策路徑", "rank": 3, "level": "許多",
+     "text": "Many participants assessed that policy tightening would likely be necessary if "
+             "inflation did not decline."},
+    {"topic": "通膨", "rank": 0, "level": "普遍",
+     "text": "Participants acknowledged that inflation remained elevated."},
+    {"topic": "通膨", "rank": 3, "level": "許多",
+     "text": "Most participants anticipated that inflation would step down over the rest of "
+             "the year as the effects of tariffs and earlier energy price increases wane, but "
+             "many participants noted the possibility that inflation might be more "
+             "persistently elevated."},
+    {"topic": "就業", "rank": 0, "level": "普遍",
+     "text": "Participants assessed that labor market conditions were stable, with labor "
+             "demand and supply in balance."},
+    {"topic": "金融情勢", "rank": 5, "level": "部分",
+     "text": "In their discussion of financial stability, some participants focused on "
+             "vulnerabilities associated with the financing of the rapid buildout of "
+             "AI-related infrastructure."},
+]
+
+_ROSTER = {
+    "year": 2026,
+    "members": [
+        {"name": "Kevin Warsh", "affil": "Board of Governors", "extra": "Chairman"},
+        {"name": "John C. Williams", "affil": "New York", "extra": "Vice Chair"},
+        {"name": "Michael S. Barr", "affil": "Board of Governors", "extra": ""},
+        {"name": "Michelle W. Bowman", "affil": "Board of Governors", "extra": ""},
+        {"name": "Lisa D. Cook", "affil": "Board of Governors", "extra": ""},
+        {"name": "Beth M. Hammack", "affil": "Cleveland", "extra": ""},
+        {"name": "Philip N. Jefferson", "affil": "Board of Governors", "extra": ""},
+        {"name": "Neel Kashkari", "affil": "Minneapolis", "extra": ""},
+        {"name": "Lorie K. Logan", "affil": "Dallas", "extra": ""},
+        {"name": "Anna Paulson", "affil": "Philadelphia", "extra": ""},
+        {"name": "Jerome H. Powell", "affil": "Board of Governors", "extra": ""},
+        {"name": "Christopher J. Waller", "affil": "Board of Governors", "extra": ""},
+    ],
+    "alternates": [
+        {"name": "Thomas I. Barkin", "affil": "Richmond", "extra": ""},
+        {"name": "Mary C. Daly", "affil": "San Francisco", "extra": ""},
+        {"name": "Austan D. Goolsbee", "affil": "Chicago", "extra": ""},
+        {"name": "Sushmita Shukla", "affil": "New York", "extra": "First Vice President"},
+        {"name": "Cheryl Venable", "affil": "Atlanta", "extra": "Interim President"},
+    ],
+}
+
+_SPEECHES = [
+    {"surname": "Jefferson", "title": "The U.S. Economy and Monetary Policy",
+     "date": "2026-10-01", "kind": "Speech",
+     "url": "https://www.federalreserve.gov/newsevents/speech/jefferson20261001a.htm"},
+    {"surname": "Barr", "title": "Economic Conditions and Monetary Policy",
+     "date": "2026-09-29", "kind": "Speech",
+     "url": "https://www.federalreserve.gov/newsevents/speech/barr20260929a.htm"},
+]
+
+_EVENTS = [
+    {"date": "2026-10-07", "type": "FOMC", "title": "FOMC Minutes", "desc": "", "time": "2:00 p.m."},
+    {"date": "2026-10-08", "type": "Speeches", "title": "Speech - Governor Christopher J. Waller",
+     "desc": "Economic Outlook", "time": "4:30 a.m."},
+    {"date": "2026-10-14", "type": "Beige", "title": "Beige Book", "desc": "", "time": "2:00 p.m."},
+]
+
+_NEWS = {
+    "Logan": [{"title": "Fed’s Logan Wants More Hikes, But Says Bond Moves Could Help",
+               "source": "Bloomberg.com", "date": "2026-10-02", "url": "", "policy": True}],
+    "Kashkari": [{"title": "Fed's Kashkari expects more rate hikes, unsure on need to act this month",
+                  "source": "reuters.com", "date": "2026-10-01", "url": "", "policy": True}],
+}
+
+
+def extras() -> dict:
+    """與 FomcSource.extras() 同形狀（離線示範）。"""
+    import datetime as dt
+    today = clock.today()
+    spans = [(dt.date.fromisoformat(x) - dt.timedelta(days=1), dt.date.fromisoformat(x))
+             for x in _UPCOMING]
+    spans = [(a, b) for a, b in spans if b > today]
+    return {"spans": spans, "sep": SEP_20260916,
+            "minutes": {"meeting": "2026-07-29", "released": "2026-08-19",
+                        "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260729.htm",
+                        "rows": MINUTES_ROWS, "words": 1933},
+            "roster": _ROSTER,
+            "board_titles": {"Warsh": "Chairman", "Jefferson": "Vice Chair",
+                             "Bowman": "Vice Chair for Supervision"},
+            "speeches": _SPEECHES, "events": _EVENTS, "news": _NEWS}

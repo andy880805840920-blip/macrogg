@@ -131,7 +131,7 @@ def snapshot(ctxs: dict) -> dict:
             "released": fom["latest_date"],   # 聲明的發布日就是會議日
             "focus": (fom.get("focus") or {}).get("focus", ""),
             "focus_label": (fom.get("focus") or {}).get("label", ""),
-            "objective": (fom.get("shift") or {}).get("objective"),
+            "decision": (fom.get("shift") or {}).get("decision_label"),
         }
     # ---- 每週失業金：唯一的週頻資料，期別＝統計週結束日 ----
     _cl = ((lab or {}).get("claims") or {}).get("machine") or {}
