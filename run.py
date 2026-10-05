@@ -502,12 +502,15 @@ def release_next(releases: dict, calendar: dict) -> dict:
     return out
 
 
-def gather_fomc(offline: bool, fetch_cfg: dict):
-    """回傳 (statements, upcoming, failed)"""
+def gather_fomc(offline: bool, fetch_cfg: dict, notes: dict | None = None):
+    """回傳 (statements, upcoming, failed, extras)"""
     if offline:
         from src import fixtures_fomc
-        return fixtures_fomc.build(), fixtures_fomc.upcoming(), []
+        ex = fixtures_fomc.extras()
+        ex["official_notes"] = notes or {}
+        return fixtures_fomc.build(), fixtures_fomc.upcoming(), [], ex
     from src.fomc_source import FomcSource
+    from src.analysis import fomc_extra
     src = FomcSource()
     statements = src.collect(fetch_cfg.get("years_back", FOMC_YEARS_BACK),
                              with_presser=fetch_cfg.get("with_presser", True),
@@ -519,7 +522,20 @@ def gather_fomc(offline: bool, fetch_cfg: dict):
     if upcoming:
         log.info("下次會議 %s（另有 %d 場已排定）",
                  upcoming[0].isoformat(), len(upcoming) - 1)
-    return statements, upcoming, src.failed
+    # 事實層：SEP／點陣圖、會議紀要、委員名單、演講與行程、官員新聞。
+    # 任何一項失敗只少一區，不擋主流程。
+    extras: dict = {"official_notes": notes or {}}
+    try:
+        extras.update(src.extras())
+        if fetch_cfg.get("official_news", True) and extras.get("roster"):
+            _offs = fomc_extra.build_officials(
+                extras["roster"], extras.get("board_titles") or {},
+                statements, clock.today())
+            extras["news"] = src.news(_offs)
+            log.info("官員新聞：%d 位投票委員有近期標題", len(extras["news"]))
+    except Exception as e:                         # noqa: BLE001
+        log.warning("聯準會頁事實層抓取失敗（%s），相關區塊本次不顯示", e)
+    return statements, upcoming, src.failed, extras
 
 
 # ---------------------------------------------------------------------------
@@ -576,8 +592,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     if lab:
         html = site.page(
             "勞動市場", "/labor/", labor_page.labor_body(lab),
-            subtitle=(f"{lab['release_name']}　·　資料月份 {lab['data_month']}"
-                      f"　·　更新於 {lab['generated_at']}"),
+            subtitle=(f"{lab['release_name']}　·　資料月份 {lab['data_month']}"),
             footer=labor_page.labor_footer(lab), banner=_banner("labor"))
         write("labor/index.html", html)
         archive(f"archive/labor-{lab['data_month']}/index.html", html)
@@ -586,8 +601,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     if inf:
         html = site.page(
             "通膨", "/inflation/", infl_page.inflation_body(inf),
-            subtitle=(f"{inf['release_name']}　·　資料月份 {inf['data_month']}"
-                      f"　·　更新於 {inf['generated_at']}"),
+            subtitle=(f"{inf['release_name']}　·　資料月份 {inf['data_month']}"),
             footer=infl_page.inflation_footer(inf), banner=_banner("inflation"))
         write("inflation/index.html", html)
         archive(f"archive/inflation-{inf['data_month']}/index.html", html)
@@ -598,12 +612,12 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     # ---- 聯準會文本 ----
     if fom and not fom.get("empty"):
         write("fomc/index.html", site.page(
-            "聯準會文本", "/fomc/", fomc_page.fomc_body(fom),
-            subtitle=(f"最新聲明 {fom['latest_date']}　·　更新於 {fom['generated_at']}"),
+            "聯準會", "/fomc/", fomc_page.fomc_body(fom),
+            subtitle=f"最新決議 {fom['latest_date']}",
             footer=fomc_page.fomc_footer(fom), banner=_banner("fomc")))
     elif not only or not (OUT_DIR / "fomc/index.html").exists():
         write("fomc/index.html", site.soon_page(
-            "聯準會文本", "/fomc/",
+            "聯準會", "/fomc/",
             "尚未取得任何聲明文本。正式執行時會從 federalreserve.gov 抓取近四年的會後聲明。",
             "P3"))
 
@@ -617,8 +631,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     if rts:
         write("rates/index.html", site.page(
             "長端與債務", "/rates/", rates_page.rates_body(rts),
-            subtitle=(f"{rts['release_name']}　·　資料截止 {rts['as_of']}"
-                      f"　·　更新於 {rts['generated_at']}"),
+            subtitle=(f"{rts['release_name']}　·　資料截止 {rts['as_of']}"),
             footer=rates_page.rates_footer(rts), banner=_banner("rates")))
 
     # ---- 情境合成 ----
@@ -629,7 +642,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
     if scn:
         write("scenario/index.html", site.page(
             "情境合成", "/scenario/", scen_page.scenario_body(scn),
-            subtitle=f"{scn['as_of']}　·　更新於 {scn['generated_at']}",
+            subtitle=f"{scn['as_of']}",
             footer=scen_page.scenario_footer(scn), banner=_banner("scenario")))
 
     # ---- 首頁與全站頁 ----
@@ -643,13 +656,7 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
 
     write("index.html", site.page(
         site.SITE_NAME, "/", home_page.home_body(ctxs),
-        # 三地時間：讀者看台北，數據的主場在紐約、歐洲盤在倫敦——
-        # 夏令規則在 clock.py 裡自算，不依賴 tzdata
-        # 手機一行的配套：時間戳包在 .ws（手機縮字級），前綴「最後更新」
-        # 在窄幅改顯示短版「更新」——內容不變、只是省下三個漢字寬。
-        subtitle=('<span class="ws"><span class="ws-long">最後更新</span>'
-                  '<span class="ws-short">更新</span> '
-                  f'{clock.world_stamp()}</span>'),
+        # 三地「最後更新」時間在全站頁首（site._brand_header），這裡不重複。
         footer=home_page.home_footer(ctxs),
         banner=_banner(None)))
 
@@ -668,6 +675,32 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         "存檔", "/archive/", home_page.archive_body(entries),
         subtitle=f"共 {len(entries)} 期",
         footer="官方會持續修正歷史數字，這裡保留每個資料月份第一次產出時的完整頁面。"))
+
+    # 品牌素材：LOGO、字型、連結縮圖、桌面 App 圖示。原檔在 assets/brand/，
+    # 每次產出照抄一份（檔案很小），output/ 就永遠是完整可部署的狀態。
+    _brand = ROOT / "assets" / "brand"
+    if _brand.exists():
+        import shutil
+        (OUT_DIR / "brand").mkdir(parents=True, exist_ok=True)
+        for f in _brand.iterdir():
+            if f.is_file():
+                shutil.copyfile(f, OUT_DIR / "brand" / f.name)
+        # iOS 與部分瀏覽器會直接去根目錄找這兩個檔名
+        for f in ("favicon.ico", "apple-touch-icon.png"):
+            if (_brand / f).exists():
+                shutil.copyfile(_brand / f, OUT_DIR / f)
+        # 加到手機主畫面時的名稱、圖示與底色
+        write("site.webmanifest", json.dumps({
+            "name": f"{site.SITE_NAME}｜{site.TAGLINE}",
+            "short_name": site.SITE_NAME,
+            "start_url": "/", "scope": "/", "display": "standalone",
+            "background_color": "#ffffff", "theme_color": "#ffffff",
+            "icons": [
+                {"src": "/brand/icon-192.png", "sizes": "192x192", "type": "image/png"},
+                {"src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png"},
+                {"src": "/brand/icon-maskable-512.png", "sizes": "512x512",
+                 "type": "image/png", "purpose": "maskable"},
+            ]}, ensure_ascii=False, indent=1))
 
     # 允許抓取（原本是全站 Disallow）：右上角的 EN 鈕走 Google 翻譯
     # 代理，Google 伺服器要抓得到頁面才能翻。不想被搜尋收錄的部分由
@@ -807,12 +840,14 @@ def main() -> int:
         else:
             log.info("聯準會文本：抓取近 %d 年的會後聲明與投票紀錄",
                      fetch_cfg.get("years_back", FOMC_YEARS_BACK))
-        statements, upcoming, failed = gather_fomc(args.offline, fetch_cfg)
+        statements, upcoming, failed, fextras = gather_fomc(
+            args.offline, fetch_cfg, fcfg.get("official_notes") or {})
         all_failed += failed
         ctxs["fomc"] = build.build_fomc_context(
             statements, fcfg.get("policy_rate") or {},
             failed, args.offline, upcoming=upcoming,
-            rates_series=rates_series)
+            rates_series=rates_series, extras=fextras,
+            ai_cache=STATE_FILE.parent / "fomc_ai.json")
         if not ctxs["fomc"].get("empty"):
             log.info("聯準會文本完成：%d 份聲明，最新 %s",
                      len(statements), ctxs["fomc"]["latest_date"])
@@ -959,6 +994,21 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None
+    # 聯準會頁：期貨路徑（焦點條剛算好的 fw）對照點陣圖，以及「目前重心」
+    # 的轉向條件（要用到通膨頁的三分法與勞動頁的失業率，所以在這裡接）。
+    _fom = ctxs.get("fomc")
+    if _fom and not _fom.get("empty"):
+        from src.analysis import fomc_extra as _fx
+        _fw = (ctxs.get("_focus") or {}).get("fedwatch")
+        _fom["mvd"] = _fx.market_vs_dots(_fw, _fom.get("sep"), _fom.get("rate_mid"))
+        _u3 = ((((ctxs.get("labor") or {}).get("key_metrics") or {}).get("u3")
+                or {}).get("value"))
+        _fom["shift_conds"] = _fx.shift_conditions(
+            _fom.get("focus"), (ctxs.get("inflation") or {}).get("verdict3"),
+            _u3, _fom.get("sep"))
+        _fom["xref"] = {"unrate": _u3,
+                        "unrate_month": (ctxs.get("labor") or {}).get("data_month"),
+                        "infl_verdict": (ctxs.get("inflation") or {}).get("verdict3")}
     ctxs["_stale"] = [] if args.offline else freshness.check(all_series)
     if ctxs["_stale"]:
         log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),

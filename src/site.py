@@ -41,9 +41,9 @@ def _lang_btn(active: str) -> str:
 # 導覽列定義：(路徑, 名稱, 是否已完成)
 NAV = [
     ("/", "總覽", True),
-    ("/labor/", "勞動市場", True),
+    ("/labor/", "就業", True),
     ("/inflation/", "通膨", True),
-    ("/fomc/", "聯準會文本", True),
+    ("/fomc/", "聯準會", True),
     ("/rates/", "長端與債務", True),
     ("/scenario/", "情境合成", True),
     ("/archive/", "存檔", True),
@@ -60,8 +60,10 @@ def esc(s) -> str:
 
 CSS = """
 *{box-sizing:border-box}
-/* 單一淺色主題。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。 */
-.viz-root{
+/* 單一淺色主題。圖表繪製表面固定為 --surface-1（卡片），配色依此驗證。
+   變數也掛在 :root：品牌頁首與置頂主選單在 .viz-root 外面，不掛的話
+   --muted／--border 在那裡全是空值（EN 鈕的框線就是這樣消失的）。 */
+:root,.viz-root{
   color-scheme:light;
   --page:#eeede9; --surface-1:#fcfcfb; --surface-2:#f3f3f0;
   --text-primary:#0b0b0b; --text-secondary:#45443f; --muted:#5f5e59;
@@ -87,13 +89,13 @@ html{-webkit-text-size-adjust:100%}
    並額外加一點字距作為保險。 */
 h1,h2,h3,.v-main,.f-head,.m-name,.l-top,.k-label,.gloss dt,
 .verdict .v-main,strong,b{letter-spacing:.035em}
-body{margin:0;background:var(--page);
+body{margin:0;background:#fff;
   /* CJK 家族一定要點名，而且要用含 "CJK" 的完整家族名。
      只寫 system-ui / sans-serif 時，瀏覽器逐字回退找到的是 Regular 字面，
      粗體只好用「合成粗體」——筆畫塗寬但前進距離不變，中文就疊在一起。
      點名 "Noto Sans CJK TC" 之後會取到真正的 Bold 字面。
      順序：iOS/macOS 走 PingFang，Windows 走微軟正黑，Android/Linux 走 Noto。 */
-  font-family:system-ui,-apple-system,"Segoe UI Variable","Segoe UI",
+  font-family:"Montserrat",system-ui,-apple-system,"Segoe UI Variable","Segoe UI",
     "PingFang TC","PingFang SC","Hiragino Sans CNS","Microsoft JhengHei",
     "Noto Sans CJK TC","Noto Sans CJK SC","Noto Sans TC",sans-serif;
   color:var(--text-primary);-webkit-font-smoothing:antialiased;
@@ -134,37 +136,90 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 
 
 /* ---------- 導覽列：手機上單行可左右滑 ---------- */
-/* 主選單。外框（.snav）負責背景、邊框與兩側漸層，內層（nav.site）只負責橫捲。
-   為什麼要拆兩層：漸層必須畫在背景之上，用 mask 做會把邊框跟背景一起挖掉。
-
-   為什麼一定要有漸層：360px 下 scrollWidth 是 526px，**32%（166px）在視窗外**，
-   而且右邊是硬切、沒有任何提示。更糟的是在長端與情境頁上，
-   「把目前這一頁捲進視野」的邏輯會把 scrollLeft 推到 166——於是
-   「總覽、勞動市場、通膨」全部滑到左邊看不見，讀者想回首頁會以為沒有路，
-   只好按瀏覽器上一頁或直接離站。這是全站唯一會讓人卡住到離開的問題。 */
-.snav{position:relative;margin:12px 0 0;background:var(--surface-1);
-  border:1px solid var(--border);border-radius:11px;padding:4px;
-  box-shadow:var(--shadow)}
-nav.site{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none}
-nav.site::-webkit-scrollbar{display:none}
-.snav::before,.snav::after{content:"";position:absolute;top:1px;bottom:1px;
-  width:34px;pointer-events:none;opacity:0;transition:opacity .15s ease}
-.snav::before{left:1px;border-radius:10px 0 0 10px;
-  background:linear-gradient(90deg,var(--surface-1) 34%,transparent)}
-.snav::after{right:1px;border-radius:0 10px 10px 0;
-  background:linear-gradient(270deg,var(--surface-1) 34%,transparent)}
-.snav.fl::before{opacity:1}
-.snav.fr::after{opacity:1}
-@media(prefers-reduced-motion:reduce){.snav::before,.snav::after{transition:none}}
-/* 導覽是全站最常按的東西，觸控目標要有 44px（先前 36.9px）。 */
-nav.site a{font-size:13.5px;color:var(--text-secondary);text-decoration:none;
-  padding:14px 13px;border-radius:8px;white-space:nowrap;flex-shrink:0;
-  line-height:1.2}
-nav.site a:hover{background:var(--surface-2);color:var(--text-primary)}
-nav.site a.on{background:var(--surface-2);color:var(--text-primary);font-weight:700}
-nav.site a.soon{color:var(--muted)}
-nav.site a.soon::after{content:"·建置中";font-size:10px;margin-left:3px}
+/* ---------- 品牌頁首與主選單（2026-10 改版）----------
+   · 頁首：白底全寬，LOGO（向量檔）＋三地最後更新時間＋EN。照常捲走。
+   · 主選單：接在頁首下方的全寬白條，**永遠置頂**。底邊是「地平線」，
+     目前分頁的正下方升起一顆日出橘的半圓太陽，換頁時從上一頁滑過來。
+     頁首捲走後細條左側淡入 GG 標記（回首頁）。
+   · 日出橘只用在品牌元素（LOGO、太陽），不用在數據——紅綠藍已經有意思。 */
+@font-face{font-family:"Montserrat";font-style:normal;font-weight:400 800;font-display:swap;
+  src:url(/brand/montserrat-latin.woff2) format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,
+    U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--brand-navy:#12233B;--brand-orange:#E67143;--navh:52px}
+.brandwrap{background:#fff;border-bottom:1px solid rgba(18,35,59,.07)}
+.brandbar{max-width:1120px;margin:0 auto;padding:16px 20px 18px;display:flex;
+  align-items:center;gap:18px;box-sizing:border-box}
+.brand{display:block;line-height:0;flex:none}
+.brand img{display:block;max-width:none}
+.brand .logo-full{height:62px;width:auto}
+.brand .logo-compact{display:none;height:30px;width:auto}
+.upd{margin-left:auto;display:grid;grid-template-columns:auto repeat(3,auto);
+  align-items:end;column-gap:22px}
+.upd-k{font-size:11.5px;color:var(--muted);letter-spacing:.04em;padding-bottom:3px}
+.upd-d{display:none}
+.upd-c{display:grid;line-height:1.15}
+.upd-c span{font-size:11.5px;color:var(--muted)}
+.upd-c b{font-weight:700;font-size:19px;color:var(--brand-navy);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.upd-c i{font-style:normal;font-size:11px;color:#8a8983;font-variant-numeric:tabular-nums}
+.brandbar .lang-btn{position:static;align-self:flex-start;margin-left:6px;
+  border-color:rgba(18,35,59,.25);color:var(--brand-navy)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.bnav{position:sticky;top:0;z-index:20;background:#fff;
+  border-bottom:1px solid rgba(18,35,59,.16);transition:box-shadow .2s ease}
+.bnav.stuck{box-shadow:0 8px 14px -12px rgba(18,35,59,.35)}
+.bnav-in{position:relative;max-width:1120px;margin:0 auto;padding:0 20px;display:flex;
+  align-items:stretch;height:var(--navh);box-sizing:border-box}
+.bnav-mark{display:flex;align-items:center;flex:none;width:0;opacity:0;overflow:hidden;
+  transition:width .22s ease,opacity .22s ease,margin .22s ease}
+.bnav-mark img{height:24px;width:auto;display:block;max-width:none}
+.bnav.stuck .bnav-mark{width:56px;opacity:1;margin-right:10px}
+.bnav-tabs{position:relative;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.bnav-tabs::-webkit-scrollbar{display:none}
+.bnav-track{position:relative;display:flex;height:100%;width:max-content}
+.bnav-track a{display:flex;align-items:center;padding:0 16px;font-size:14.5px;
+  letter-spacing:.02em;color:var(--muted);text-decoration:none;white-space:nowrap}
+.bnav-track a:first-child{padding-left:2px}
+.bnav-track a:hover{color:var(--brand-navy)}
+.bnav-track a.on{color:var(--brand-navy);font-weight:700}
+.bnav-track a.soon{color:var(--baseline)}
+.bnav-sun{position:absolute;bottom:0;left:-40px;width:20px;height:10px;margin-left:-10px;
+  border-radius:20px 20px 0 0;background:var(--brand-orange);pointer-events:none;
+  transition:left .32s cubic-bezier(.3,.7,.2,1)}
+.bnav-glow{position:absolute;bottom:-1px;left:-200px;height:2px;width:240px;margin-left:-120px;
+  pointer-events:none;background:linear-gradient(90deg,transparent,rgba(230,113,67,.75),transparent);
+  transition:left .32s cubic-bezier(.3,.7,.2,1)}
+@media(prefers-reduced-motion:reduce){.bnav-sun,.bnav-glow,.bnav-mark{transition:none}}
+.bnav-fade{position:absolute;top:0;bottom:1px;width:30px;pointer-events:none;opacity:0;
+  transition:opacity .15s}
+.bnav-fade.l{left:0;background:linear-gradient(90deg,#fff 30%,transparent)}
+.bnav-fade.r{right:0;background:linear-gradient(270deg,#fff 30%,transparent)}
+.bnav.fl .bnav-fade.l,.bnav.fr .bnav-fade.r{opacity:1}
+.pagehead{margin:4px 0 2px}
+.pagehead h1{color:var(--brand-navy)}
+@media(max-width:759px){
+  :root{--navh:46px}
+  .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px}
+  .brand .logo-full{display:none}
+  .brand .logo-compact{display:block}
+  .brandbar .lang-btn{margin-left:auto;align-self:center}
+  .upd{order:3;width:100%;margin-left:0;grid-template-columns:auto 1fr 1fr 1fr;
+    column-gap:8px;align-items:baseline;border-top:1px dashed rgba(18,35,59,.15);padding-top:7px}
+  .upd-k{padding:0;font-size:11px}
+  .upd-d{display:inline;font-size:11px;color:#8a8983;margin-left:4px}
+  .upd-c{display:block;white-space:nowrap}
+  .upd-c span{font-size:11px;margin-right:4px}
+  .upd-c b{font-size:14.5px}
+  .upd-c i{display:none}
+  .bnav-in{padding:0 0 0 14px}
+  .bnav-track a{padding:0 12px;font-size:14px}
+  .bnav-track a:last-child{padding-right:18px}
+  .bnav.stuck .bnav-mark{width:44px;margin-right:4px}
+  .bnav-mark img{height:20px}
+}
 
 /* 兩種 banner 共用外觀，但行為不同：
    · div.banner   資料停止更新的警告——**要處理**的事，一律展開
@@ -294,13 +349,15 @@ details.banner[open]>summary::after{content:"▴"}
 .sect-tools button:focus-visible{outline:2px solid var(--series-1);
   outline-offset:2px}
 
+/* 置頂的主選單（＋章節列）會蓋住跳轉目標的上緣，讓出空間 */
+[id],.sect{scroll-margin-top:calc(var(--navh) + 58px)}
 /* 錨點跳過來的那一區給一個外框，否則展開之後看不出跳到哪一張 */
 .sect:target>summary{box-shadow:0 0 0 2px var(--series-1) inset}
 
 /* 列印／存成 PDF 時全部展開。JS 另有 beforeprint 保險——
    新版 Chrome 用 content-visibility 實作收合，純 CSS 不一定壓得過。 */
 @media print{
-  .sect-tools,.snav,.anav{display:none}
+  .sect-tools,.bnav,.anav,.lang-btn{display:none}
   .sect>summary::after,.sect-sum{display:none}
   details>*:not(summary){display:block!important}
 }
@@ -785,8 +842,7 @@ details[data-m-collapse]>summary{list-style:none}
 .dc-signif{margin-top:7px;font-size:11.5px;line-height:1.6;text-align:right;
   color:var(--warning)}
 
-/* 措辭分數降為副：一行橫排，不再跟客觀訊號並列成兩個等大的方塊。
-   這一頁的結論明說「以客觀訊號為準」，版面權重要跟著。 */
+/* 一行橫排的輔助數值列（聯準會頁 2026-10 起不再使用，樣式保留） */
 .tone-row{display:grid;grid-template-columns:auto auto 1fr;align-items:baseline;
   gap:6px 10px;margin-top:12px;padding:12px 14px;border-radius:10px;
   background:var(--surface-2)}
@@ -1012,9 +1068,7 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
   border:1px solid var(--border)}
 .dbox.primary{border-color:var(--text-primary);border-width:1.5px}
 .dbox .dtitle{font-size:12.5px;color:var(--text-secondary);font-weight:600}
-/* 客觀訊號分數。先前 30px 是整個 FOMC 頁最大的字——比「本次會議：偏鷹」
-   還大。但它是一個 −8～+8 的內部刻度、沒有自然單位，讀者得先理解那個尺度
-   才知道 +6.00 是什麼意思；而結論那三個字不用。降到不超過 .v-main。 */
+/* 大數字不超過 .v-main：結論文字永遠比數字醒目。 */
 .dbox .dscore{font-size:25px;font-weight:700;margin-top:7px;line-height:1.15;
   font-variant-numeric:tabular-nums}
 @media(max-width:400px){.dbox .dscore{font-size:23px}}
@@ -1417,22 +1471,23 @@ mark.mn{background:rgba(42,120,214,.22);color:var(--text-primary);
    分成外框（.anav，負責背景與貼頂）與內層（nav.anchors，負責橫捲）兩層：
    兩側的漸層必須畫在**背景之上、文字之上**。用 mask 做的話會把背景一起
    挖掉，變成看得到底下的內文從縫裡穿過去。 */
-.anav{position:sticky;top:0;z-index:8;background:var(--page);
+.anav{position:sticky;top:var(--navh);z-index:19;background:#fff;
+  box-shadow:0 0 0 100vmax #fff;clip-path:inset(0 -100vmax -14px -100vmax);
   height:0;padding:0;opacity:0;pointer-events:none;transform:translateY(-4px);
   /* 只淡入、**不做高度動畫**：高度一次到位，JS 才能用一次 scrollBy
      精準補掉版面被推下去的距離。高度慢慢長的話得逐格補，
      那會跟讀者自己的捲動打架。 */
   transition:opacity .18s ease,transform .18s ease}
 .anav.on{height:47px;padding:5px 0 6px;opacity:1;transform:none;
-  pointer-events:auto;box-shadow:0 6px 8px -6px rgba(0,0,0,.10)}
+  pointer-events:auto;border-bottom:1px solid rgba(18,35,59,.10)}
 @media(prefers-reduced-motion:reduce){.anav{transition:none}}
 /* 兩側還有內容時給一層漸層。舊版在手機上把 1021px 的內容塞進 362px 的視窗，
    右邊硬切、沒有任何提示——實際上讀者只看得到前三項，
    而且會以為就只有那三項。 */
 .anav::before,.anav::after{content:"";position:absolute;top:0;bottom:0;width:28px;
   pointer-events:none;opacity:0;transition:opacity .15s ease}
-.anav::before{left:0;background:linear-gradient(90deg,var(--page),transparent)}
-.anav::after{right:0;background:linear-gradient(270deg,var(--page),transparent)}
+.anav::before{left:0;background:linear-gradient(90deg,#fff,transparent)}
+.anav::after{right:0;background:linear-gradient(270deg,#fff,transparent)}
 .anav.fl::before{opacity:1}
 .anav.fr::after{opacity:1}
 nav.anchors{display:flex;height:100%;align-items:center;
@@ -1447,8 +1502,8 @@ nav.anchors a::after{content:"";position:absolute;right:-9px;top:calc(50% - 1px)
 nav.anchors a:last-child{margin-right:0}
 nav.anchors a:last-child::after{display:none}
 nav.anchors a:hover{color:var(--text-primary)}
-nav.anchors a.on{color:var(--text-primary);font-weight:700;
-  border-bottom-color:var(--series-1)}
+nav.anchors a.on{color:var(--brand-navy);font-weight:700;
+  border-bottom-color:var(--brand-navy)}
 /* 手機上把觸控高度撐到 40px（版面稽核的硬性下限）。
    桌機不需要，維持緊湊——這一列的重點就是視覺重量要低。 */
 @media(max-width:430px){
@@ -1779,6 +1834,84 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
 .el-how>summary::-webkit-details-marker{display:none}
 .el-how>summary::after{content:" ▾"}.el-how[open]>summary::after{content:" ▴"}
 .el-how p{margin:0 0 4px;line-height:1.75}
+
+/* ---------- 聯準會頁（2026-10）：事實清單、時間軸、委員、點陣圖、紀要 ---------- */
+.ai-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;
+  padding:1px 5px;margin-right:6px;border-radius:4px;border:1px solid var(--border);
+  color:var(--muted);vertical-align:1px}
+.fx-ai{margin-top:6px;font-size:13px;line-height:1.65;color:var(--text-secondary)}
+.fx-list{border-top:1px solid var(--grid);margin-top:6px}
+.fx-row{display:grid;grid-template-columns:minmax(96px,.55fr) minmax(0,2fr) auto;gap:4px 14px;
+  align-items:start;padding:11px 2px;border-bottom:1px solid var(--grid)}
+.fx-k{font-size:12.5px;color:var(--muted);padding-top:2px}
+.fx-v{font-size:14px;line-height:1.6}
+.fx-v small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.fx-dir{font-size:12px;font-weight:700;white-space:nowrap;padding-top:2px;color:var(--muted)}
+.fx-dir.hawkish,.fx-act.hawkish{color:var(--critical)}
+.fx-dir.dovish,.fx-act.dovish{color:var(--good)}
+.fx-bo{display:inline-block;font-size:13px;font-weight:600;padding:6px 10px;border-radius:8px;
+  background:var(--surface-2);margin:2px 0 10px}
+.fx-bo.in{background:var(--tint-haw);color:var(--serious)}
+.fx-tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--grid)}
+.fx-tl li{position:relative;display:grid;grid-template-columns:52px auto minmax(0,1fr);gap:2px 10px;
+  padding:7px 0 7px 14px;font-size:13.5px;line-height:1.55}
+.fx-tl li::before{content:"";position:absolute;left:-6px;top:13px;width:10px;height:10px;
+  border-radius:50%;background:var(--surface-1);border:2px solid var(--baseline)}
+.fx-tl li.tl-key::before{background:var(--series-1);border-color:var(--series-1)}
+.fx-tl li.tl-key b{color:var(--series-1)}
+.fx-tl .tl-d{font-variant-numeric:tabular-nums;color:var(--muted)}
+.fx-tl .tl-b{color:var(--text-secondary)}
+.fx-people{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-bottom:6px}
+.fx-p,.fx-sp{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--surface-1)}
+.fx-pn{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.fx-pn b{font-size:14.5px}
+.fx-pn span{font-size:12px;color:var(--muted)}
+.fx-tag{display:inline-block;margin-top:6px;font-size:11.5px;padding:2px 7px;border-radius:6px;
+  border:1px solid var(--border);color:var(--muted)}
+.fx-tag.hawkish{border-color:var(--critical);color:var(--critical)}
+.fx-tag.dovish{border-color:var(--good);color:var(--good)}
+.fx-pnote{font-size:12px;color:var(--text-secondary);margin-top:6px;line-height:1.55}
+.fx-lead{font-size:14.5px;line-height:1.7;margin:4px 0 10px}
+.fx-dotwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fx-dots{width:100%;max-width:900px;height:auto;display:block;margin:4px 0}
+.fx-tier3{margin:10px 0 0}
+@media (max-width:640px){.fx-dots{min-width:620px}}
+.fx-dec td,.fx-dec th{text-align:left}
+.fx-dots circle{fill:var(--series-1);opacity:.85}
+.fx-dots .g{stroke:var(--grid);stroke-width:1}
+.fx-dots .now{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+.fx-dots .med{stroke:var(--critical);stroke-width:2.5}
+.fx-dots text{fill:var(--muted);font-size:11px}
+.fx-dots .yl{text-anchor:end}.fx-dots .xl{text-anchor:middle;font-size:12px}
+.fx-dots .nl{text-anchor:end;font-size:10.5px}
+.fx-sep td,.fx-sep th{text-align:right;white-space:nowrap}
+.fx-sep th.rowhead{text-align:left}
+.fx-sep td small{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
+.fx-sep td small.up{color:var(--critical)}.fx-sep td small.dn{color:var(--good)}
+.fx-q,.fx-ev,.fx-cond{list-style:none;margin:0 0 6px;padding:0}
+.fx-q li,.fx-ev li,.fx-cond li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;
+  padding:8px 0;border-bottom:1px solid var(--grid);font-size:13.5px;line-height:1.6}
+.q-lv{font-size:11.5px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;
+  background:var(--surface-2);color:var(--text-secondary);align-self:start}
+.q-lv.r0,.q-lv.r1,.q-lv.r2{background:var(--series-1);color:#fff}
+.q-lv.r3{background:var(--tint-dov);color:var(--series-1)}
+.q-en{color:var(--text-secondary);font-size:13px}
+.fx-ev .fx-tag{margin-top:2px;align-self:start}
+.fx-cond .cmark{font-weight:700;color:var(--muted)}
+.fx-cond li.met .cmark{color:var(--good)}
+.fx-cond small{display:block;color:var(--muted);font-size:12px}
+.fx-sps{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.sp-i{font-size:13px;line-height:1.55;margin-top:6px}
+.sp-i a{color:inherit}
+.sp-k{font-size:10.5px;font-weight:700;color:var(--muted);margin-right:6px}
+.sp-d{display:block;font-size:11.5px;color:var(--muted)}
+@media (max-width:640px){
+  .fx-row{grid-template-columns:minmax(0,1fr) auto}
+  .fx-k{grid-column:1/-1;padding-top:0}
+  .fx-tl li{grid-template-columns:44px minmax(0,1fr)}
+  .fx-tl .tl-b{grid-column:2}
+  .fx-people,.fx-sps{grid-template-columns:1fr}
+}
 .el-card .home-zone-head{flex-direction:row;align-items:flex-start}
 .el-card .home-primary-link{font-size:12.5px;min-height:36px;margin-top:-4px;white-space:nowrap}
 /* ---- 各州地圖（可收合）---- */
@@ -2228,22 +2361,43 @@ JS = """
     return upd;
   }
 
-  // 主選單在窄螢幕上是橫向捲動的。目前所在的那一頁若排在後面，
-  // 進站時會停在可視範圍外——讀者看不到自己在哪，也不知道還有別的分頁。
-  // 把它捲進視野（只捲導覽列自己，不動整頁）。
-  document.querySelectorAll('.snav').forEach(function(wrap){
-    var nav=wrap.querySelector('nav.site'); if(!nav)return;
-    var upd=edgeFades(wrap,nav);
-    // **最小移動**，不置中。置中會把前面幾項推出視窗——在長端與情境頁上
-    // scrollLeft 被推到 166～196，「總覽、勞動市場、通膨」全部滑到左邊看不見。
-    // 只要讓目前這一頁露出來就好，左邊能留多少留多少。
-    var cur=nav.querySelector('a.on');
-    if(cur && nav.scrollWidth>nav.clientWidth){
-      var right=cur.offsetLeft+cur.offsetWidth+8-nav.clientWidth;
-      if(right>0)nav.scrollLeft=right;
+  // ---- 主選單（置頂細條）----
+  // ① 太陽放到目前分頁正下方；換頁時從上一頁的分頁滑過來
+  //   （上一頁記在 sessionStorage，沒有就直接出現在定點）。
+  // ② 窄螢幕橫捲：目前分頁若在可視範圍外，**最小移動**捲進來——不置中，
+  //   置中會把「總覽」推出左邊，讀者以為回不了首頁。
+  // ③ 頁首捲走後加 .stuck：陰影＋左側淡入 GG 標記。
+  (function(){
+    var bar=document.querySelector('.bnav'); if(!bar)return;
+    var tabs=bar.querySelector('.bnav-tabs'), track=bar.querySelector('.bnav-track');
+    var sun=bar.querySelector('.bnav-sun'), glow=bar.querySelector('.bnav-glow');
+    var on=track.querySelector('a.on');
+    function place(a){ if(!a)return; var x=a.offsetLeft+a.offsetWidth/2;
+      sun.style.left=x+'px'; glow.style.left=x+'px'; }
+    var prev=null; try{prev=sessionStorage.getItem('gg-sun');}catch(e){}
+    var old=prev&&track.querySelector('a[href="'+prev+'"]');
+    if(on&&old&&old!==on&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      sun.style.transition=glow.style.transition='none'; place(old);
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        sun.style.transition=glow.style.transition=''; place(on); }); });
+    } else place(on);
+    try{ if(on)sessionStorage.setItem('gg-sun',on.getAttribute('href')); }catch(e){}
+    if(on&&tabs.scrollWidth>tabs.clientWidth){
+      var right=on.offsetLeft+on.offsetWidth+8-tabs.clientWidth;
+      if(right>0)tabs.scrollLeft=right;
     }
-    upd();
-  });
+    var upd=edgeFades(bar,tabs); upd();
+    // 字型（Montserrat）晚一步載入時分頁寬度會變，太陽要跟著重放
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){place(on);upd();});
+    window.addEventListener('resize',function(){place(on);});
+    var head=document.querySelector('.brandwrap');
+    if(head&&'IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        bar.classList.toggle('stuck',!es[0].isIntersecting);
+        setTimeout(upd,240);
+      },{threshold:0}).observe(head);
+    }
+  })();
 
   // 橫捲表格（.tscroll／熱力圖）掛上同一套邊緣漸層。
   // 表格大多藏在收合層裡，收著的時候量不到寬度——所以任何 details
@@ -2380,21 +2534,8 @@ JS = """
 """.replace("%%BP%%", str(MOBILE_BREAKPOINT)).replace("%%HOST%%", SITE_HOST)
 
 
-def _h1(title: str, active: str) -> str:
-    """
-    分頁的標題同時當「回首頁」用。
-
-    主選單在 360px 下有 32% 在視窗外，而在長端與情境頁上「把目前這一頁捲進
-    視野」會把「總覽」推到左邊看不見的地方。橫捲列的寬度不夠是硬限制
-    （七個項目 518px，視窗只有 322px），但「怎麼回首頁」不該因此變成死路——
-    點站名回首頁是網站的通用慣例，補這一條的成本是一個 <a>。
-    """
-    if active == "/":
-        return esc(title)
-    return f'<a class="h1-home" href="/">{esc(title)}</a>'
-
-
 def _nav(active: str) -> str:
+    """置頂主選單：GG 標記（捲動後淡入）＋分頁＋地平線上的太陽。"""
     out = []
     for path, name, done in NAV:
         cls = []
@@ -2403,8 +2544,34 @@ def _nav(active: str) -> str:
         if not done:
             cls.append("soon")
         c = f' class="{" ".join(cls)}"' if cls else ""
-        out.append(f'<a href="{path}"{c}>{esc(name)}</a>')
-    return f'<div class="snav"><nav class="site">{"".join(out)}</nav></div>'
+        cur = ' aria-current="page"' if path == active else ""
+        out.append(f'<a href="{path}"{c}{cur}>{esc(name)}</a>')
+    return ('<nav class="bnav" aria-label="主選單"><div class="bnav-in">'
+            '<a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1">'
+            '<img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a>'
+            f'<div class="bnav-tabs"><div class="bnav-track">{"".join(out)}'
+            '<span class="bnav-glow"></span><span class="bnav-sun"></span></div></div>'
+            '<span class="bnav-fade l"></span><span class="bnav-fade r"></span>'
+            '</div></nav>')
+
+
+def _brand_header(active: str) -> str:
+    """
+    白底品牌頁首：LOGO（完整版／手機精簡版）＋三地最後更新時間＋EN。
+    時間取「產出這一頁的時刻」——同一次執行的每一頁都一樣。
+    """
+    times = clock.world_times()
+    cells = "".join(f'<div class="upd-c"><span>{c}</span><b>{hm}</b><i>{md}</i></div>'
+                    for c, hm, md in times)
+    return (f'<div class="brandwrap"><header class="brandbar">'
+            f'<a class="brand" href="/" aria-label="{SITE_NAME} 首頁">'
+            f'<img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" '
+            f'alt="{SITE_NAME} {TAGLINE}">'
+            f'<img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" '
+            f'alt="{SITE_NAME}"></a>'
+            f'<div class="upd"><span class="upd-k">最後更新<span class="upd-d">{times[0][2]}</span>'
+            f'</span>{cells}</div>'
+            f'{_lang_btn(active)}</header></div>')
 
 
 # 附錄類的卡區：翻到底自然會看到，不會有人特地跳過去。
@@ -2575,6 +2742,48 @@ _SPECULATION = """<script type="speculationrules">
 </script>"""
 
 
+# 連結預覽（LINE／FB／Threads／Discord）的描述。沒列到的頁面用站的總描述。
+PAGE_DESC = {
+    "/": "美國總經儀表板：就業、通膨、聯準會、長端利率，每天自動更新，一頁看懂利率往哪走。",
+    "/labor/": "美國就業報告拆解：非農、失業率、薪資與勞動參與，判斷就業是轉強還是轉弱。",
+    "/inflation/": "美國通膨拆解：CPI、PCE、PPI 與超級核心服務，看通膨是升溫、黏著還是降溫。",
+    "/fomc/": "聯準會：最新決議、投票、點陣圖、市場定價、會議紀要與官員發言。",
+    "/rates/": "長端利率與債務：殖利率曲線、期限溢酬、財政與科技巨頭發債。",
+    "/scenario/": "情境合成：就業 × 通膨的九宮格，判斷聯準會下一步。",
+    "/archive/": "每個資料月份第一次產出時的完整頁面存檔。",
+}
+OG_IMAGE = f"https://{SITE_HOST}/brand/og.jpg"
+BRAND_NAVY = "#12233B"
+
+
+def _head_meta(doc_title: str, active: str) -> str:
+    desc = PAGE_DESC.get(active, PAGE_DESC["/"])
+    url = f"https://{SITE_HOST}{active}"
+    return f"""<meta name="description" content="{esc(desc)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{SITE_NAME}">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="{esc(doc_title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{SITE_NAME} {TAGLINE}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(doc_title)}">
+<meta name="twitter:description" content="{esc(desc)}">
+<meta name="twitter:image" content="{OG_IMAGE}">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-title" content="{SITE_NAME}">
+<meta name="application-name" content="{SITE_NAME}">
+<link rel="preload" href="/brand/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>"""
+
+
 def page(title: str, active: str, body: str, subtitle: str = "",
          footer: str = "", banner: str = "") -> str:
     """組出一個完整的自足 HTML 頁面。"""
@@ -2586,8 +2795,16 @@ def page(title: str, active: str, body: str, subtitle: str = "",
     # 用標語當後綴。
     doc_title = (f"{SITE_NAME}｜{TAGLINE}" if title == SITE_NAME
                  else f"{title}｜{SITE_NAME}")
-    tagline = (f'<div class="tagline">{TAGLINE}</div>'
-               if active == "/" else "")
+    # 頁名與資料期別：首頁由 LOGO 擔任標題（h1 只給螢幕閱讀器）；
+    # 內頁的頁名放在導覽列下方。最後更新時間統一在頁首，不在這裡重複。
+    if active == "/":
+        pagehead = f'<h1 class="sr-only">{SITE_NAME}｜{TAGLINE}</h1>'
+        if subtitle:
+            pagehead += f'<div class="sub home-sub">{subtitle}</div>'
+    else:
+        pagehead = (f'<div class="pagehead"><h1>{esc(title)}</h1>'
+                    + (f'<div class="sub">{subtitle}</div>' if subtitle else "")
+                    + '</div>')
     return f"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -2596,20 +2813,16 @@ def page(title: str, active: str, body: str, subtitle: str = "",
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="color-scheme" content="light">
 <title>{esc(doc_title)}</title>
+{_head_meta(doc_title, active)}
 <style>{CSS}</style>
 {_SPECULATION}
 </head>
 <body>
-<div class="viz-root">
-
-<header class="top">
-  {_lang_btn(active)}
-  <h1>{_h1(title, active)}</h1>
-  {tagline}
-  <div class="sub">{subtitle}</div>
-</header>
-
+<!-- 更新於 {clock.stamp()} -->
+{_brand_header(active)}
 {_nav(active)}
+<div class="viz-root">
+{pagehead}
 {banner}
 {anchors}
 {body}

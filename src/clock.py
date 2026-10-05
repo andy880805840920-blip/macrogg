@@ -126,6 +126,18 @@ def world_stamp(t_utc: dt.datetime | None = None) -> str:
     return "｜".join(parts)
 
 
+def world_times(t_utc: dt.datetime | None = None) -> list[tuple[str, str, str]]:
+    """
+    頁首的三地「最後更新」：[(城市, "HH:MM", "MM/DD")]，順序台北、紐約、倫敦。
+    每一地都附自己的日期——台北清晨時紐約還在前一天，只給一個日期會誤導。
+    """
+    t = t_utc or now().astimezone(dt.timezone.utc)
+    out = [("台北", t.astimezone(TAIPEI))]
+    for label, off in (("紐約", ny_offset(t)), ("倫敦", london_offset(t))):
+        out.append((label, (t + dt.timedelta(hours=off)).replace(tzinfo=None)))
+    return [(c, x.strftime("%H:%M"), x.strftime("%m/%d")) for c, x in out]
+
+
 def iso() -> str:
     """機器讀的時間戳，含 UTC 偏移：`2026-08-11T22:46:03+08:00`。
 
