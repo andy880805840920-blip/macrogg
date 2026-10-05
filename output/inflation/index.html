@@ -1670,6 +1670,150 @@ nav.anchors a.on{color:var(--text-primary);font-weight:700;
   color:var(--series-1);margin-bottom:4px}
 .fs-news .fs-main{font-size:14.5px;line-height:1.85}
 .fs-main+.fs-main{margin-top:8px}
+/* 補充依讀者選的前兩個指標換主題（2026-10）：行首的主題標籤 */
+.fs-tag{display:inline-block;margin-right:6px;padding:0 6px;border-radius:5px;
+  background:#e6eef8;color:var(--series-1);font-size:11.5px;font-weight:700;
+  line-height:1.7;vertical-align:1px;white-space:nowrap}
+/* ---------- 期中選舉預測卡（Polymarket） ---------- */
+:root{--el-dem:#2f6db5;--el-rep:#c2413a;--el-mix:#8a7fb8;--el-mix2:#b9a6d6;--el-oth:#b8b7af}
+.el-card a{color:inherit;text-decoration:none}
+.el-rows{display:grid;gap:8px}
+.el-row{display:grid;grid-template-columns:62px minmax(0,1fr) auto 96px;gap:12px;
+  align-items:center;padding:10px 12px;border-radius:10px;background:var(--surface-2)}
+.el-row:hover,.el-race:hover,.el-bal:hover{outline:1px solid var(--border)}
+.el-name{font-size:13.5px;font-weight:800}
+.el-bar,.el-stack,.el-mini{display:flex;height:10px;border-radius:5px;overflow:hidden;
+  background:var(--grid,#e3e2dd)}
+.el-bar i,.el-stack i,.el-mini i{display:block;height:100%}
+.el-card i.dem,.el-sw.dem{background:var(--el-dem)}
+.el-card i.rep,.el-sw.rep{background:var(--el-rep)}
+.el-card i.mix,.el-sw.mix{background:var(--el-mix)}
+.el-card i.mix2,.el-sw.mix2{background:var(--el-mix2)}
+.el-card i.oth,.el-sw.oth{background:var(--el-oth)}
+.el-val{text-align:right;min-width:0}
+.el-val b{display:block;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.el-card b.dem{color:var(--el-dem)}.el-card b.rep{color:var(--el-rep)}
+.el-val small{display:flex;justify-content:flex-end;gap:8px;font-size:11.5px;
+  color:var(--muted);white-space:nowrap}
+.el-spark{display:block}
+.el-miss{grid-column:2/-1;font-size:12.5px;color:var(--muted)}
+.el-sub{display:block;margin:16px 0 8px;font-size:12px;font-weight:800;color:var(--muted);
+  letter-spacing:.04em}
+.el-bal{display:block}
+.el-stack{height:14px;border-radius:7px}
+.el-legend{list-style:none;margin:8px 0 0;padding:0;display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px}
+.el-legend li{display:flex;align-items:center;gap:7px;font-size:12.5px;min-width:0}
+.el-legend b{margin-left:auto;font-variant-numeric:tabular-nums}
+.el-sw{flex:none;width:10px;height:10px;border-radius:3px}
+.el-races{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.el-race{display:block;padding:10px 11px;border-radius:10px;background:var(--surface-2);min-width:0}
+.el-state{display:block;font-size:11.5px;color:var(--muted);font-weight:700}
+.el-race b{display:block;margin-top:2px;font-size:17px;line-height:1.3;
+  font-variant-numeric:tabular-nums}
+.el-race small{display:block;font-size:11.5px;color:var(--muted);line-height:1.45;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.el-race small.el-nm{color:var(--text-secondary)}
+.el-race .el-mini{margin-top:7px}
+.el-mini{height:6px;border-radius:3px}
+.el-note{margin:12px 0 0;font-size:11.5px;line-height:1.7;color:var(--muted)}
+/* 全站的 details 有上框線與內距（收合區塊用）——這裡是行內的小說明，歸零 */
+.el-how{margin:0;padding:0;border-top:0;font-size:11.5px;color:var(--muted)}
+.el-how>summary{display:inline-flex;align-items:center;min-height:32px;cursor:pointer;
+  color:var(--series-1);font-weight:700;list-style:none}
+.el-how>summary::-webkit-details-marker{display:none}
+.el-how>summary::after{content:" ▾"}.el-how[open]>summary::after{content:" ▴"}
+.el-how p{margin:0 0 4px;line-height:1.75}
+.el-card .home-zone-head{flex-direction:row;align-items:flex-start}
+.el-card .home-primary-link{font-size:12.5px;min-height:36px;margin-top:-4px;white-space:nowrap}
+/* ---- 各州地圖（可收合）---- */
+.c-D-safe{--f:#1d4e94}.c-D-likely{--f:#4f7fc6}.c-D-lean{--f:#a7c2e8}
+.c-R-safe{--f:#b0261f}.c-R-likely{--f:#dc5d52}.c-R-lean{--f:#f2aba3}
+.c-I-safe{--f:#5e4b8b}.c-I-likely{--f:#8a77b8}.c-I-lean{--f:#c3b7dd}
+.c-U-safe,.c-U-likely,.c-U-lean{--f:#9a9a94}
+.c-toss{--f:#e3cf8f}.c-off{--f:#e9e8e3}.c-na{--f:#f8f7f3}
+.el-map{margin-top:14px;border-top:1px solid var(--border);padding-top:4px}
+.el-map>summary{display:flex;align-items:center;gap:8px 10px;min-height:44px;cursor:pointer;
+  list-style:none;flex-wrap:wrap;padding:6px 0}
+.el-map>summary::-webkit-details-marker{display:none}
+.el-map-t{font-size:14px;font-weight:800}
+.el-map-s{display:flex;flex-wrap:wrap;gap:6px}
+.el-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;
+  background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--text-secondary);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.el-card .vd{color:var(--el-dem)}.el-card .vr{color:var(--el-rep)}
+.el-map-c{margin-left:auto;font-size:12px;font-weight:700;color:var(--series-1);
+  border:1px solid var(--border);border-radius:999px;padding:3px 12px}
+.el-map-c::before{content:"展開 ▾"}
+.el-map[open] .el-map-c::before{content:"收合 ▴"}
+.el-map-body{padding:6px 0 4px}
+.el-tabs{display:flex;gap:6px;margin-bottom:12px}
+.el-tab{font:inherit;font-size:13px;font-weight:700;padding:6px 16px;min-height:36px;
+  border-radius:999px;border:1px solid var(--border);background:var(--surface-1);
+  color:var(--text-secondary);cursor:pointer}
+.el-tab[aria-selected="true"]{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+.el-score{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.el-sc b{display:block;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.el-sc span{display:block;font-size:12px;font-weight:700;margin-top:3px}
+.el-sc.dem{color:var(--el-dem)}.el-sc.rep{color:var(--el-rep);text-align:right}
+.el-sbar{position:relative;display:flex;height:16px;border-radius:8px;background:var(--grid)}
+.el-sbar>i{display:block;height:100%}
+.el-sbar>i:first-child{border-radius:8px 0 0 8px}.el-sbar>i:last-of-type{border-radius:0 8px 8px 0}
+.el-sbar i.dem{background:var(--el-dem)}.el-sbar i.rep{background:var(--el-rep)}
+.el-sbar i.ind{background:var(--el-mix)}
+.el-maj{position:absolute;top:-5px;bottom:-5px;width:0;border-left:2px dashed var(--text-primary)}
+.el-maj span{position:absolute;top:-17px;left:-24px;width:48px;text-align:center;
+  font-size:10.5px;font-weight:700;color:var(--text-secondary);font-style:normal}
+.el-sc-ind{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
+.el-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.el-st{padding:8px 10px;border-radius:9px;background:var(--surface-2);min-width:0}
+.el-st>span{display:block;font-size:11px;color:var(--muted);line-height:1.4}
+.el-st b{display:block;margin-top:2px;font-size:15px;font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.el-st b small{margin-left:6px;font-size:11px;font-weight:600;color:var(--muted)}
+.el-say{margin:12px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--text-primary);
+  font-size:14px;line-height:1.75;font-weight:600}
+.el-mapwrap{margin-top:12px}
+.el-svg{display:block;width:100%;height:auto}
+.el-svg .st{fill:var(--f);stroke:#fff;stroke-width:.8;cursor:pointer}
+.el-svg .st.c-na{stroke:#b8b7af;stroke-dasharray:3 2}
+.el-svg .st:hover,.el-svg .sb:hover .st{stroke:var(--text-primary);stroke-width:1.6}
+.el-svg .lb{font-size:11px;font-weight:700;fill:#2b2b2b;text-anchor:middle;pointer-events:none}
+.el-svg .lb-w{fill:#fff}
+.el-info{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;min-height:40px;
+  margin-top:8px;padding:8px 12px;border-radius:9px;background:var(--surface-2);
+  font-size:12.5px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.el-info b,.el-info span{flex-basis:100%}
+.el-info b{font-size:13.5px;color:var(--text-primary)}
+.el-info a{color:var(--series-1);font-weight:700}
+.el-lg{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;
+  font-size:11.5px;color:var(--muted)}
+.el-lg li{display:flex;align-items:center;gap:3px}
+.el-lg i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--f);
+  border:1px solid rgba(0,0,0,.08)}
+.el-sub small{margin-left:6px;font-size:11px;font-weight:500;letter-spacing:0}
+.el-cps{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.el-cp{display:block;padding:7px 10px;border-radius:8px;background:var(--surface-2);
+  border-left:5px solid var(--f);min-width:0}
+.el-cp-s{display:block;font-size:11.5px;color:var(--muted);font-weight:700}
+.el-cp b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.el-cp small{display:block;font-size:11.5px;color:var(--text-secondary);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:759px){
+  .el-svg .lb{display:none}
+  .el-sc b{font-size:28px}
+  .el-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .el-map-t{flex:1}
+  .el-map-c{order:2}
+  .el-map-s{order:3;flex-basis:100%}
+  .el-cps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .el-say{font-size:13.5px}
+  .el-row{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"name val" "bar bar";
+    gap:8px 10px}
+  .el-name{grid-area:name}.el-val{grid-area:val}.el-bar{grid-area:bar}
+  .el-spark{display:none}
+  .el-races{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .el-legend{grid-template-columns:1fr}}
 .fs-brand{display:flex;justify-content:space-between;align-items:baseline;
   flex-wrap:wrap;gap:2px 12px;margin-top:12px;padding-top:9px;
   border-top:1px solid var(--grid)}
@@ -1931,7 +2075,7 @@ details.home-module[open]{padding-bottom:0}
   <a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/inflation/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a>
   <h1><a class="h1-home" href="/">通膨</a></h1>
   
-  <div class="sub">Consumer Price Index　·　資料月份 2026-08　·　更新於 2026-10-05 07:45（台北）</div>
+  <div class="sub">Consumer Price Index　·　資料月份 2026-08　·　更新於 2026-10-05 10:34（台北）</div>
 </header>
 
 <div class="snav"><nav class="site"><a href="/">總覽</a><a href="/labor/">勞動市場</a><a href="/inflation/" class="on">通膨</a><a href="/fomc/">聯準會文本</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a></nav></div>
