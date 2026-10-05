@@ -571,6 +571,9 @@ td a[target="_blank"],.src a[target="_blank"]{
   background:var(--surface-2);font-size:13.5px;line-height:1.7}
 .sig-sum b{display:block;font-size:14.5px;margin-bottom:2px}
 .sig-sum span{color:var(--text-secondary)}
+.sig-rest{margin-top:16px}
+.pce-method{margin-top:14px}
+.sig-rest>summary{font-weight:700}
 .sig-tier{margin:16px 0 2px;font-size:11.5px;font-weight:700;letter-spacing:.06em;
   color:var(--muted)}
 .flag.alert .f-icon{color:var(--critical)}

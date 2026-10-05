@@ -357,8 +357,29 @@ def classify_labor_momentum(lab: dict | None) -> str:
     return "持平"
 
 
+def inflation_momentum_source(infl: dict | None) -> tuple[str, float | None]:
+    """
+    動能用哪一個數字（2026-10 起）：
+      "pce"         核心 PCE 近三月平均月增（主力）
+      "cpi_preview" PCE 還沒公布、CPI 已公布的那兩週，用核心 CPI 當預告
+      "none"        都沒有
+    """
+    i = infl or {}
+    if i.get("core_pce_pace3") is not None and not i.get("pce_estimated"):
+        return "pce", i["core_pce_pace3"]
+    if i.get("core_cpi_pace3") is not None:
+        return "cpi_preview", i["core_cpi_pace3"]
+    if i.get("core_pce_pace3") is not None:
+        return "pce", i["core_pce_pace3"]
+    return "none", None
+
+
 def classify_inflation_momentum(infl: dict | None) -> str:
     """
+    2026-10 起改用**核心 PCE** 的月步速（0.17／0.27，見 inflation.PCE_PACE_*）；
+    PCE 還沒公布的那兩週用核心 CPI 的 0.2／0.3 當預告（見
+    inflation_momentum_source）。以下是 CPI 預告這一支沿用的原說明。
+
     月步速判定（0.2 準則，使用者指定）：核心 CPI 近三個月平均月增
     ≤0.2%＝降溫（符合 2% 目標換算的月步速）、≥0.3%＝升溫（年化 3.6%，
     明顯過快）、之間＝持平。門檻推導見 inflation.PACE_TARGET 的說明。
@@ -368,8 +389,10 @@ def classify_inflation_momentum(infl: dict | None) -> str:
     後，穩健性靠三個月平均（單月雜訊已平滑）與 0.2–0.3 的緩衝帶承擔；
     判定用**未捨入**的平均值，避免在單一門檻上月月翻面。
     """
-    from .inflation import PACE_TARGET, PACE_HOT
-    pace = (infl or {}).get("core_cpi_pace3")
+    from .inflation import PACE_TARGET, PACE_HOT, pce_momentum
+    src, pace = inflation_momentum_source(infl)
+    if src == "pce":
+        return pce_momentum(pace)
     if pace is None:
         return "持平"
     if pace >= PACE_HOT:
@@ -389,9 +412,37 @@ def blended_inflation(core_pce_yoy: float | None,
     return 0.6 * core_pce_yoy + 0.4 * core_pce_3m
 
 
+_HOTTER = {"低": "中", "中": "高", "高": "高"}
+_COOLER = {"高": "中", "中": "低", "低": "低"}
+
+
+def inflation_push(level_state: str, core_pce_3m: float | None,
+                   core_pce_6m: float | None, bands: dict | None = None) -> tuple[str, str]:
+    """
+    格位推一格（2026-10 使用者定案，比照就業頁的「往弱推一格」）：
+      三月與六月年化都高於「高」門檻 → 往高推一格
+      三月與六月年化都低於「低」門檻 → 往低推一格
+    回傳 (推格後的格位, 說明；沒推格時說明是空字串)。
+    """
+    if core_pce_3m is None or core_pce_6m is None:
+        return level_state, ""
+    b = bands or {}
+    lo, hi = b.get("low", 2.30), b.get("high", 2.90)
+    if core_pce_3m > hi and core_pce_6m > hi and level_state != "高":
+        return _HOTTER[level_state], (
+            f"三月年化 {core_pce_3m:.1f}%、六月年化 {core_pce_6m:.1f}% 都高於 "
+            f"{hi:.2f}%，格位往高推一格")
+    if core_pce_3m < lo and core_pce_6m < lo and level_state != "低":
+        return _COOLER[level_state], (
+            f"三月年化 {core_pce_3m:.1f}%、六月年化 {core_pce_6m:.1f}% 都低於 "
+            f"{lo:.2f}%，格位往低推一格")
+    return level_state, ""
+
+
 def classify_inflation(core_pce_yoy: float | None,
                        core_pce_3m: float | None,
-                       bands: dict | None = None) -> str:
+                       bands: dict | None = None,
+                       core_pce_6m: float | None = None) -> str:
     """
     以核心 PCE 相對 2% 目標為主軸，再用三個月年化的動能修正。
 
@@ -416,11 +467,9 @@ def classify_inflation(core_pce_yoy: float | None,
         return "中"
     b = bands or {}
     lo, hi = b.get("low", 2.30), b.get("high", 2.90)
-    if level < lo:
-        return "低"
-    if level > hi:
-        return "高"
-    return "中"
+    base = "低" if level < lo else ("高" if level > hi else "中")
+    # 2026-10：年增率定格位，三月＋六月年化同向越過門檻時推一格
+    return inflation_push(base, core_pce_3m, core_pce_6m, bands)[0]
 
 
 # ---------------------------------------------------------------------------
@@ -447,7 +496,7 @@ def synthesise(labor: dict | None, inflation: dict | None,
     _bands = (inflation or {}).get("bands") or {}
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
                                  (inflation or {}).get("core_pce_3m"),
-                                 _bands)
+                                 _bands, (inflation or {}).get("core_pce_6m"))
     i_momentum = classify_inflation_momentum(inflation)
 
     # ---- 依聯準會目前的重心選一張九宮格 ----

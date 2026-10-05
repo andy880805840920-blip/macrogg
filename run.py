@@ -133,7 +133,9 @@ LABOR_GROUPS = ("headline", "unemployment_structure", "wages", "jolts",
 INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
                "trend_measures", "energy", "expectations", "sep",
                # PPI 成分：PPI 卡與核心 PCE 成分法推估的原料
-               "ppi_components")
+               "ppi_components",
+               # 實質消費力道（2026-10）：實質消費、實質可支配所得、儲蓄率
+               "consumption")
 RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt",
                 # 匯率：只為了把海外發債的原幣金額換算成美元等值。
                 # 少了這一組，非美元的發債仍然會列出原幣金額，
@@ -734,6 +736,10 @@ def main() -> int:
             ids, labels, inverts = infl_series_ids(cfg)
             log.info("通膨模組：%d 個序列", len(ids))
             series, _, failed = gather_fred(args.offline, ids, "inflation")
+            # 電腦軟體與配件（FRED 沒有這層細項，直接讀 BEA 原始檔；失敗只少一塊）
+            if not args.offline:
+                from src.analysis import pce_detail
+                series.update(pce_detail.fetch_bea())
             all_series.update(series)
             all_failed += failed
             ctxs["inflation"] = build.build_inflation_context(

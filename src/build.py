@@ -1082,10 +1082,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
 
         "pce_display": _pct(summ.pce_core_yoy),
         # 這一張是聯準會真正盯的指標，副標維持同一組結構
-        "pce_sub": ((f"近三個月年化 {_pct(summ.pce_core_3m)}　·　"
-                     if summ.pce_core_3m is not None else "")
-                    + (f"相對 2% 基準 {summ.pce_core_yoy - PCE_TARGET:+.1f} 個百分點"
-                       if summ.pce_core_yoy is not None else "")),
+        # 2026-10：月增、3M、6M 年化一起列（使用者指定：MoM 同樣重要）
+        "pce_sub": "　·　".join(x for x in (
+            (f"月增 {summ.pce_core_mom:.2f}%" if summ.pce_core_mom is not None else ""),
+            (f"3M 年化 {_pct(summ.pce_core_3m)}" if summ.pce_core_3m is not None else ""),
+            (f"6M 年化 {_pct(summ.pce_core_6m)}" if summ.pce_core_6m is not None else ""),
+        ) if x),
         "pce_plain": (
             f"核心 PCE 年增 {summ.pce_core_yoy:.1f}%。"
             "這是基礎通膨趨勢指標；官方 2% 長期目標以總體 PCE 衡量。"
@@ -1286,6 +1288,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         # 九宮格通膨軸的兩條門檻。放在通膨 context 裡是因為它需要的
         # SEP 序列由這個模組抓；情境層直接取用，不必再算一次。
         "bands": infl_an.inflation_bands(summ),
+        # 綜合判定（明確升溫／黏著不降／穩定降溫），規則見 inflation.inflation_verdict
+        "verdict3": infl_an.inflation_verdict(series, cfg.get("regime_lights") or []),
         "kpi": kpi,
         "flags": flags,
         "tilt": tilt,
@@ -1311,6 +1315,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "surprises": _surprise_block(cpi_surprises),
         "trend_rows": trend_rows,
         "stickiness": _stickiness_block(summ),
+        # 電腦軟體與配件對核心 PCE 的貢獻（BEA 原始檔；抓不到就是 None）
+        "software": _software_block(series),
+        # PCE 方法調整說明（config 的 pce_method_note，過了 show_until 自動隱藏）
+        "pce_method": _pce_method_note(cfg),
+        # 實質消費力道
+        "consumption": _consumption_block(series),
         "trend_verdict": trend_verdict,
         "energy_stats": energy_stats,
         "energy_headline": energy_headline,
@@ -1367,7 +1377,7 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "core_pce": {"label": "核心 PCE 年增", "en": "Core PCE, y/y", "value": summ.pce_core_yoy,
                          "unit": "%", "delta_unit": " 個百分點",
                          "threshold": 0.05, "up_is": "hawkish"},
-            "supercore": {"label": "核心服務除住房", "en": "Supercore (core svcs ex-shelter), 3-mo ann.", "value": summ.supercore_3m,
+            "supercore": {"label": "超級核心服務", "en": "Supercore (core svcs ex-shelter), 3-mo ann.", "value": summ.supercore_3m,
                           "unit": "%", "delta_unit": " 個百分點",
                           "threshold": 0.1, "up_is": "hawkish"},
         },
@@ -1480,13 +1490,13 @@ def _stickiness_block(summ) -> dict:
 
     # 結論句：方向 ＋ 卡了多久 ＋ 對降息時間表的意思
     if summ.supercore_dir == "decel":
-        verdict = (f"核心服務**{label}**——3 個月年化低於 12 個月，"
+        verdict = (f"超級核心**{label}**——3 個月年化低於 12 個月，"
                    "通膨的慣性正在鬆動。這是降息時間表往前挪的必要條件。")
     elif summ.supercore_dir == "accel":
-        verdict = (f"核心服務**{label}**——3 個月年化高於 12 個月，"
+        verdict = (f"超級核心**{label}**——3 個月年化高於 12 個月，"
                    "降息時間表要往後推。")
     else:
-        verdict = (f"核心服務**{label}**——長短天期的年化差不多，"
+        verdict = (f"超級核心**{label}**——長短天期的年化差不多，"
                    "既沒有進一步惡化，也看不到回落的跡象。")
     _n = summ.supercore_streak
     if _n:
@@ -1550,6 +1560,102 @@ def _stickiness_block(summ) -> dict:
 
 def _pct(v, digits=1):
     return "—" if v is None else f"{v:.{digits}f}%"
+
+
+def _software_block(series: dict) -> dict | None:
+    """電腦軟體與配件：權重、漲幅、對核心 PCE 年增與三月年化的貢獻（約）。"""
+    from .analysis import pce_detail
+    try:
+        s = pce_detail.software_contribution(series)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("軟體與配件的貢獻計算失敗（%s）", e)
+        return None
+    if not s:
+        return None
+    stats = [
+        {"label": "佔核心 PCE 權重", "value": f"{s['weight']:.2f}%",
+         "note": "名目支出佔比"},
+        {"label": "價格年增", "value": f"{s['price_yoy']:+.1f}%",
+         "note": f"三月年化 {s['price_3m']:+.1f}%"},
+        {"label": "對核心 PCE 年增的貢獻", "value": f"約 {s['contrib_yoy']:+.2f} 個百分點",
+         "note": (f"核心 PCE 年增 {s['core_pce_yoy']:.1f}%"
+                  if s.get("core_pce_yoy") is not None else "")},
+        {"label": "對三月年化的貢獻", "value": f"約 {s['contrib_3m']:+.2f} 個百分點",
+         "note": (f"剔除後的核心 PCE 三月年化約 {s['ex_3m']:.1f}%"
+                  if s.get("ex_3m") is not None else "")},
+    ]
+    return {**s, "stats": stats}
+
+
+CONSUMPTION_SLOW = 0.5       # 實質消費三月年化低於這個＝明顯放緩
+CONSUMPTION_GAP = 1.0        # 消費比所得快這麼多（三月年化）＋儲蓄率下降＝靠儲蓄撐
+SAVING_DROP = 0.5            # 儲蓄率較半年前下降超過這個（百分點）
+
+
+def _consumption_block(series: dict) -> dict | None:
+    """
+    實質消費力道：消費成長、所得成長、儲蓄率，給一個結論。
+
+      消費明顯放緩    實質消費三月年化 < 0.5%
+      靠動用儲蓄撐    消費三月年化比所得快 1 個百分點以上，且儲蓄率較半年前降 0.5 以上
+      所得撐得住消費  消費三月年化 ≥ 2%、所得 ≥ 1.5%
+      消費溫和成長    其餘
+    """
+    c, inc, sv = (series.get("PCEC96") or [], series.get("DSPIC96") or [],
+                  series.get("PSAVERT") or [])
+    if len(c) < 13 or len(inc) < 13:
+        return None
+    from .analysis.core import mom_pct as _mom
+    c3, cy, cm = annualized(c, 3), yoy(c), _mom(c)
+    i3, iy = annualized(inc, 3), yoy(inc)
+    s_now = sv[-1]["value"] if sv else None
+    s_6 = sv[-7]["value"] if len(sv) > 6 else None
+    ds = (s_now - s_6) if s_now is not None and s_6 is not None else None
+    if None in (c3, i3):
+        return None
+    if c3 < CONSUMPTION_SLOW:
+        title, desc, lean = ("消費明顯放緩",
+                             "民眾在縮手，需求面的通膨壓力減輕", "dovish")
+    elif c3 - i3 >= CONSUMPTION_GAP and ds is not None and ds <= -SAVING_DROP:
+        title, desc, lean = ("消費靠動用儲蓄撐",
+                             "所得成長跟不上消費、儲蓄率在降——撐得了一時，很難持續",
+                             "neutral")
+    elif c3 >= 2.0 and i3 >= 1.5:
+        title, desc, lean = ("所得撐得住消費",
+                             "需求穩健，服務類通膨比較難降下來", "hawkish")
+    else:
+        title, desc, lean = ("消費溫和成長", "需求沒有過熱，也沒有明顯轉弱", "neutral")
+    month = c[-1]["date"][:7]
+    stats = [
+        {"label": "實質消費　月增", "value": f"{cm:+.1f}%" if cm is not None else "—",
+         "note": f"三月年化 {c3:+.1f}%、年增 {cy:+.1f}%"},
+        {"label": "實質可支配所得　三月年化", "value": f"{i3:+.1f}%",
+         "note": f"年增 {iy:+.1f}%" if iy is not None else ""},
+        {"label": "個人儲蓄率", "value": f"{s_now:.1f}%" if s_now is not None else "—",
+         "note": (f"半年前 {s_6:.1f}%（{ds:+.1f} 個百分點）" if ds is not None else ""),
+         "color": ("var(--serious)" if ds is not None and ds <= -SAVING_DROP else "inherit")},
+    ]
+    since_c = since(yoy_series(c), CHART_START, 12)
+    since_i = since(yoy_series(inc), CHART_START, 12)
+    return {"month": month, "title": title, "desc": desc, "lean": lean,
+            "stats": stats,
+            "c_chart": charts.line_chart(since_c, unit="%", zero=True, digits=1),
+            "i_chart": charts.line_chart(since_i, unit="%", zero=True, digits=1,
+                                         color="var(--series-2)"),
+            "sum": f"{title}　·　消費三月年化 {c3:+.1f}%"}
+
+
+def _pce_method_note(cfg: dict) -> dict | None:
+    """BEA 年度修正的 PCE 方法調整說明。config 沒設或過了 show_until 就不顯示。"""
+    n = (cfg or {}).get("pce_method_note") or {}
+    if not n or not n.get("items"):
+        return None
+    until = str(n.get("show_until") or "")
+    if until and clock.today().isoformat() > until:
+        return None
+    return {"title": n.get("title", ""), "lead": n.get("lead", ""),
+            "items": list(n.get("items") or []), "effect": n.get("effect", ""),
+            "source": n.get("source", ""), "source_url": n.get("source_url", "")}
 
 
 def _expect_plain(v):
@@ -2154,8 +2260,18 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
         # 多少）直接接在後面，於是一張本來一行的卡變成七行，整個九宮格區塊
         # 讀起來像一團字。那段說明有價值，但它回答的是「推估怎麼來的」，
         # 屬於展開之後的內容，不屬於第一眼。
-        _lead = (f"核心 PCE 年增 {_pct(yoy_v)}{_est} 決定格位；短期動能 "
-                 f"{_pct(m3)}{_actual_tag} 另列，{_cmp}"
+        _m6 = infl.get("core_pce_6m")
+        _lv = ("低" if lvl is not None and lvl < b.get("low", 2.30) else
+               "高" if lvl is not None and lvl > b.get("high", 2.90) else "中")
+        _pushed, _push_note = scenario.inflation_push(_lv, m3, _m6, b)
+        _msrc, _mpace = scenario.inflation_momentum_source(infl)
+        _mnote = ({"pce": f"動能看核心 PCE 近三月平均月增 {_mpace:.2f}%（目標步速 0.17）",
+                   "cpi_preview": f"PCE 還沒公布，動能暫用核心 CPI 近三月平均月增 "
+                                  f"{_mpace:.2f}% 當預告（目標步速 0.2）"}
+                  .get(_msrc, "") if _mpace is not None else "")
+        _lead = (f"核心 PCE 年增 {_pct(yoy_v)}{_est} 決定格位，{_cmp}"
+                 + (f"；{_push_note}" if _push_note else "")
+                 + (f"。{_mnote}" if _mnote else "")
                  if lvl is not None else "資料不足")
         _est_note = ("核心 PCE 這個月還沒公布（BEA 月底才發），上面那個值是用"
                      "已公布的核心 CPI 換算成 PCE 口徑推估的。換算而不是直接"
@@ -2169,7 +2285,10 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
             "note": _est_note,
             "rows": [
                 {"label": "核心 PCE 年增率（決定格位）", "value": _pct(yoy_v), "w": "水準"},
-                {"label": "核心 PCE 三個月年化（只決定方向）" + _actual_tag, "value": _pct(m3), "w": "動能"},
+                {"label": "核心 PCE 三個月年化" + _actual_tag, "value": _pct(m3),
+                 "w": "推格"},
+                {"label": "核心 PCE 六個月年化" + _actual_tag, "value": _pct(_m6),
+                 "w": "推格"},
             ],
             "level": (f"{lvl:.2f}%" if lvl is not None else "—"),
             "low": f'{b.get("low", 2.30):.2f}%',
@@ -2270,6 +2389,8 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 用季調指數重算近三月平均月增。轉格距離（blended）仍用 PCE
         # 年增＋三月年化——那條門檻錨在 SEP，口徑不能混。
         infl = {"core_pce_yoy": _pce_for_grid, "core_pce_3m": s.pce_core_3m,
+                "core_pce_6m": s.pce_core_6m,
+                "core_pce_pace3": s.pce_core_pace3,
                 "core_cpi_pace3": infl_ctx.get("core_pace3"),
                 "core_cpi_yoy": s.core_yoy, "core_cpi_3m": s.core_3m,
                 "headline_ppi_yoy": s.ppi_headline_yoy,

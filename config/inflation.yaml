@@ -318,18 +318,22 @@ expectations:
 #     以「三個月年化」為主，因為它比年增率更早反映轉折
 # ---------------------------------------------------------------------------
 regime_lights:
-  - key: core_cpi_3m
-    label: 核心 CPI 三月年化
-    desc: 近三個月的漲勢換算成年率。比年增率更早看出轉折
+  # 2026-10 改成 6 盞（使用者定案）：核心 PCE 三月年化取代核心 CPI 三月年化；
+  # 拿掉中位數 CPI、汽油價格，以及跟超級核心重複的「核心除住房」
+  # （核心除住房＝核心商品＋超級核心，兩者各自已有燈）；新增短期通膨預期。
+  # 綜合判定（明確升溫／黏著不降／穩定降溫）的規則見
+  # src/analysis/inflation.py 的 inflation_verdict。
+  - key: core_pce_3m
+    label: 核心 PCE 三月年化
+    desc: 聯準會盯的核心 PCE，近三個月換算成年率。比年增率更早看出轉折
     direction: higher_is_worse
-    green_below: 2.5
-    red_above: 3.2
+    green_below: 2.4
+    red_above: 3.0
   # 標籤要帶上「三月年化」。同一頁的傳導區顯示的是同一條序列的年增率，
   # 兩個不同的數字擺在一起卻只有一個標了口徑，看起來像互相矛盾。
   - key: supercore_3m
-    label: 核心服務除住房（三月年化）
-    desc: Fed 最在意的一塊，降息時間表看它降不降得下來。
-      這裡是近三個月換算成年率，與下方傳導區的年增率是同一條序列的兩種口徑
+    label: 超級核心服務（三月年化）
+    desc: 核心服務剔除住房（CPI 版，比 PCE 早兩週公布）。Fed 最在意的一塊，降息時間表看它降不降得下來
     direction: higher_is_worse
     green_below: 3.0
     red_above: 4.0
@@ -339,33 +343,58 @@ regime_lights:
     direction: higher_is_worse
     green_below: 2.3
     red_above: 2.8
-  - key: median_cpi
-    label: 中位數 CPI
-    desc: 剔除極端項目後的通膨趨勢
+  - key: expect_1y
+    label: 短期通膨預期（密大 1 年）
+    desc: 家戶對未來一年通膨的預期。短期預期飆高會推升薪資要求與定價行為
     direction: higher_is_worse
-    green_below: 2.8
-    red_above: 3.5
-  - key: core_ex_shelter
-    label: 核心除住房
-    desc: 住房項落後市場租金約一年，剔除後更接近當下的實際通膨
-    direction: higher_is_worse
-    green_below: 2.2
-    red_above: 3.0
+    green_below: 3.2
+    red_above: 4.0
   - key: expect_5y5y
     label: 長期通膨預期
-    desc: 市場對五年後起算五年的通膨定價。脫錨是 Fed 最怕的事
+    desc: 市場對五年後起算五年的通膨定價。脫錨是 Fed 最怕的事——一旦警戒，綜合判定直接是「明確升溫」
     direction: higher_is_worse
     green_below: 2.35
     red_above: 2.60
-  - key: gas_price
-    label: 汽油價格
-    desc: 油價會在兩到四週後反映到 CPI 能源項
-    direction: higher_is_worse
-    green_below: 3.30
-    red_above: 3.90
   - key: core_goods_yoy
     label: 核心商品年增
     desc: 商品通膨。受關稅與供應鏈影響最直接
     direction: higher_is_worse
     green_below: 0.5
     red_above: 1.5
+
+# ============================================================================
+# PCE 計算方式調整（BEA 2026 年度修正，9/30 公布）——顯示在通膨頁「關鍵數字」下方。
+# 過了 show_until 自動隱藏；下一次年度修正時改這一段就好。
+# 內容依 BEA 2026-06 的預告（Survey of Current Business：Preview of the 2026
+# Annual Update of the National Economic Accounts）。
+# ============================================================================
+pce_method_note:
+  title: PCE 計算方式調整（BEA 9/30 年度修正）
+  show_until: 2027-06-30
+  lead: 9/30 起 BEA 公布年度修正，歷史數據一起改寫——修正前後的核心 PCE 不能直接比。這次改了三個項目的價格算法：
+  items:
+    - 投資組合管理與投資顧問：改用以勞動統計局就業調查（CES）為基礎的數量外推，不再用 PPI 平減
+    - 法律服務：CPI 的法律服務項目自 2023 年起大多不公布、數據不可靠，改用 BEA 以 PPI 編製的綜合指數
+    - 電腦軟體與配件：改用結合 CPI 與多項 PPI 的綜合指數，較貼近實際的產品組成
+  effect: 市場估計這次調整讓核心 PCE 年增率低約 0.2 個百分點——年增率下降有一部分是統計方法造成的，不全是通膨真的降溫。
+  source: BEA 年度修正預告
+  source_url: https://apps.bea.gov/scb/issues/2026/06-june/0626-nea-preview.htm
+
+# ============================================================================
+# 實質消費力道（2026-10 使用者指定）：判斷民眾的消費力道撐不撐得住需求面
+# 的通膨。重點看「消費成長靠所得，還是靠動用儲蓄」——後者撐不久。
+# ============================================================================
+consumption:
+  - id: PCEC96
+    label: 實質個人消費支出
+    unit: index
+    enabled: true
+    note: BEA，2017 年連鎖美元（季調年率）
+  - id: DSPIC96
+    label: 實質可支配所得
+    unit: index
+    enabled: true
+  - id: PSAVERT
+    label: 個人儲蓄率
+    unit: percent
+    enabled: true

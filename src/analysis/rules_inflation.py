@@ -83,6 +83,41 @@ def r_pace(ctx) -> Flag | None:
 # 1. 趨勢方向：三月年化 vs 年增率
 # ---------------------------------------------------------------------------
 @rule
+def r_pce_momentum(ctx) -> Flag | None:
+    """
+    核心 PCE 的動能階梯（2026-10：九宮格動能改用核心 PCE，第一層訊號的主角）。
+    三月年化與年增率差 0.3 個百分點以上、六月年化沒有反向，才算方向明確。
+    """
+    s = ctx.s
+    y, m3, m6 = s.pce_core_yoy, s.pce_core_3m, getattr(s, "pce_core_6m", None)
+    if y is None or m3 is None:
+        return None
+    gap = m3 - y
+    mid_ok = m6 is None or (m6 - y) * gap >= 0
+    mom = (f"最新月增 {s.pce_core_mom:.2f}%、" if getattr(s, "pce_core_mom", None)
+           is not None else "")
+    six = f"、六月年化 {m6:.1f}%" if m6 is not None else ""
+    if gap <= -0.3 and mid_ok:
+        return Flag(
+            "pce_cooling", "alert" if m3 < 2.4 else "watch",
+            f"核心 PCE 在降溫：三月年化 {m3:.1f}%，低於年增 {y:.1f}%",
+            f"核心 PCE 年增 {y:.1f}%，{mom}三月年化 {m3:.1f}%{six}。"
+            "短天期低於長天期＝最近幾個月漲得比一年平均慢，年增率之後會跟著往下。"
+            "差距要 0.3 個百分點以上、六月年化沒有反向才算方向明確。",
+            "dovish", "聯準會盯的指標在降溫",
+            strength=abs(gap) / 0.3)
+    if gap >= 0.3 and mid_ok:
+        return Flag(
+            "pce_reheating", "alert" if m3 > 3.0 else "watch",
+            f"核心 PCE 重新加速：三月年化 {m3:.1f}%，高於年增 {y:.1f}%",
+            f"核心 PCE 年增 {y:.1f}%，{mom}三月年化 {m3:.1f}%{six}。"
+            "短天期高於長天期＝最近幾個月漲得比一年平均快，年增率之後會跟著往上。",
+            "hawkish", "聯準會盯的指標重新升溫",
+            strength=gap / 0.3)
+    return None
+
+
+@rule
 def r_momentum(ctx) -> Flag | None:
     s = ctx.s
     if s.core_3m is None or s.core_yoy is None:
@@ -164,7 +199,7 @@ def r_supercore(ctx) -> Flag | None:
 
     if s.supercore_3m > 4.0:
         return Flag(
-            "supercore_hot", "alert", "核心服務除住房仍高於目標區間",
+            "supercore_hot", "alert", "超級核心服務仍高於目標區間",
             # 「成本是人力、跟薪資連動」的道理主場在黏性卡的教學層，
             # 依據只留數字與判斷。
             _base + _stuck
@@ -183,7 +218,7 @@ def r_supercore(ctx) -> Flag | None:
         )
     if s.supercore_3m < 3.0:
         return Flag(
-            "supercore_cool", "info", "核心服務除住房回落至正常區間",
+            "supercore_cool", "info", "超級核心服務回落至正常區間",
             _base + "降下來代表通膨的慣性正在減弱。",
             "dovish", "通膨的慣性正在減弱",
         )
@@ -446,8 +481,38 @@ def r_expect_combo(ctx) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
+# 分層（2026-10 使用者定案）：重要性 3M 動能 → 超級核心 → 整體與住房，
+# 其餘併成「其他」預設收合。每層最多顯示 TIER_MAX 則，多的也收進「其他」。
+TIERS = {1: "三個月動能", 2: "超級核心服務", 3: "整體通膨與住房", 4: "其他"}
+TIER_MAX = 2
+TIER_OF = {
+    "pce_cooling": 1, "pce_reheating": 1, "pace_hot": 1, "pace_above": 1,
+    "pace_ontrack": 1, "cpi_cooling": 1, "cpi_reheating": 1,
+    "supercore_hot": 2, "supercore_cool": 2, "supercore_reaccel": 2,
+    "sticky_easing": 2,
+    "oil_up": 3, "oil_down": 3, "shelter_drag": 3, "shelter_turn": 3,
+    "shelter_understate": 3,
+}
+# 第一層的固定先後：核心 PCE（聯準會的指標）在前，CPI 的步速與動能在後
+TIER1_ORDER = ("pce_reheating", "pce_cooling", "pace_hot", "pace_above",
+               "pace_ontrack", "cpi_reheating", "cpi_cooling")
+
+
 def run_rules(ctx) -> list[Flag]:
     order = {"alert": 0, "watch": 1, "info": 2}
     flags = [f for f in (r(ctx) for r in RULES) if f is not None]
-    flags.sort(key=lambda f: order.get(f.severity, 9))
+    for f in flags:
+        f.tier = TIER_OF.get(f.key, 4)
+
+    def prio(f):
+        return TIER1_ORDER.index(f.key) if f.key in TIER1_ORDER else 99
+    flags.sort(key=lambda f: (f.tier, prio(f), order.get(f.severity, 9), -f.strength))
+    # 每層超過 TIER_MAX 的往「其他」放（保留原本的相對順序）
+    seen: dict = {}
+    for f in flags:
+        if f.tier < 4:
+            seen[f.tier] = seen.get(f.tier, 0) + 1
+            if seen[f.tier] > TIER_MAX:
+                f.tier = 4
+    flags.sort(key=lambda f: (f.tier, prio(f), order.get(f.severity, 9), -f.strength))
     return flags

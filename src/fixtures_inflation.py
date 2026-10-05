@@ -104,6 +104,18 @@ def build() -> dict[str, list[dict]]:
     # 實務上 PCE supercore 幾乎都低於 CPI supercore。
     # 離線畫面要走到「兩者背離」那條分支，這個差距是刻意留的。
     s["IA001260M"] = _index(d, 133.5, 3.1, noise=0.02, recent_pct=3.5)
+    # 實質消費力道（示範用）：消費成長略快於所得、儲蓄率緩降
+    s["PCEC96"] = _index(d, 16955.3, 2.2, noise=0.15, recent_pct=1.6)[:-1]
+    s["DSPIC96"] = _index(d, 18410.5, 1.8, noise=0.20, recent_pct=0.9)[:-1]
+    s["PSAVERT"] = [{"date": r["date"], "value": round(5.2 - 0.04 * i, 1)}
+                    for i, r in enumerate(s["PCEC96"])]
+    # BEA 細項（電腦軟體與配件，示範用）：價格指數、名目支出、核心 PCE 名目支出
+    _pd = s["PCEPILFE"]
+    s["BEA:DCPSRG"] = _index(d, 72.0, -1.0, noise=0.6, recent_pct=12.0)[:-1]
+    s["BEA:DPCCRC"] = [{"date": r["date"], "value": 18_000_000 * r["value"] / _pd[0]["value"]}
+                       for r in _pd]
+    s["BEA:DCPSRC"] = [{"date": r["date"], "value": 0.0125 * c["value"]}
+                       for r, c in zip(_pd, s["BEA:DPCCRC"])]
 
     # ---- 住房細項 ----
     s["CUSR0000SEHA"] = _index(d, 401.8, 3.9, noise=0.02, recent_pct=2.9)

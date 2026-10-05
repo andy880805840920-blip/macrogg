@@ -136,14 +136,14 @@ def _sticky_card(k: dict | None) -> str:
     # CPI 版與 PCE 版背離的解釋是方法說明（權重差在哪、以哪邊為準），
     # 常駐會擋在數字前面——收進下方「為什麼看三個時間尺度」的方法層。
     _dv = ""
-    if k.get("diverge"):
+    if k.get("diverge") and not k.get("software"):
         _d = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
                      for i, s in enumerate(k["diverge"].split("**")))
         _dv = f'<br>{_d}'
 
     return f"""<div class="grid">
   <div class="card">
-    <h2 id="sticky" data-sum="{esc(k['sum'])}">核心服務的黏性</h2>
+    <h2 id="sticky" data-sum="{esc(k['sum'])}">超級核心服務（核心服務除住房）</h2>
     <p class="hint">降息時間表卡最久的一塊。看的是<b>方向</b>不是水準。</p>
     <div class="impact {k['lean']}" style="margin-bottom:14px">{_v}</div>
     {_ladder_rows(k.get('ladders'))}
@@ -152,21 +152,77 @@ def _sticky_card(k: dict | None) -> str:
         "商品價格漲了會回落，服務價格漲了很難回頭——它的成本主要是人的薪水，而薪水幾乎不會降。這一塊不鬆，聯準會就不敢降息，所以它是降息時間表卡最久的關卡。",
         "先看方向（在加速還是減速），再看連續高於門檻的月數——月數越多代表卡得越久，別只看單月數字。")}
     {sf_html}
+    {_gap_block(k.get('software'), k.get('diverge_txt', ''))}
     <details class="f-more"><summary>為什麼看三個時間尺度、為什麼是 2.5%</summary>
       <div class="f-detail">
         單一個數字看不出方向。12 個月是趨勢、3 個月是當下，
         <b>短天期低於長天期就是在減速</b>，反過來就是重新加速——
         聯準會官員談這一塊時引用的也是這個形式。差距小於 0.3 個百分點時
         一律當「卡在原地」，因為月度資料的雜訊就有這個量級。{_dv}<br>
-        「連續幾個月高於 2.5%」用的是三個月年化。門檻不取 2%（目標值）
-        是因為月度雜訊會讓它頻繁穿越，數字會失去意義；2.5% 才代表真的卡住，
-        而不是在目標附近正常擺盪。<br>
+        「連續幾個月高於 2.5%」數的是三個月年化。三個月年化每個月會上下跳約 0.5 個百分點，門檻若設在 2%，數字在 2% 附近擺盪也會一下高於、一下低於，連續月數就一直歸零；所以多留一點緩衝設在 2.5%。連續高於 2.5% 的月數越多，代表降不下來的時間越久。<br>
         薪資是這一塊的上游——往下捲的
         <a href="#passthrough">薪資到服務業通膨的傳導</a>是同一條線。
       </div>
     </details>
   </div>
 </div>"""
+
+
+def _gap_block(sw: dict | None, diverge: str) -> str:
+    """
+    核心 CPI 與核心 PCE 為什麼不一樣：權重差（醫療）之外，近一年最大的
+    一塊是「電腦軟體與配件」（使用者指出，數字用 BEA 原始檔算）。
+    """
+    if not sw:
+        return ""
+    _dv = ""
+    if diverge:
+        _dv = "".join((f"<b>{esc(s)}</b>" if i % 2 else esc(s))
+                      for i, s in enumerate(diverge.split("**")))
+        _dv = f'<p class="hint" style="margin:10px 0 0">{_dv}</p>'
+    return f"""
+    <details data-m-collapse><summary>CPI 與 PCE 為什麼不同：電腦軟體與配件約貢獻核心 PCE 年增 {esc(f"{sw['contrib_yoy']:+.2f}")} 個百分點（{esc(sw['month'])}）</summary>
+      <p class="hint" style="margin:10px 0 0">PCE 的「電腦軟體與配件」含記憶體、儲存等配件，AI 需求推升 DRAM／Flash 價格時漲得很兇；它在 PCE 的權重也比 CPI 的同名項目大得多，所以同一波漲價在核心 PCE 裡推得比核心 CPI 多。BEA 9/30 起這一項改用 CPI＋多項 PPI 的綜合指數，這裡是修正後的數字。</p>
+      <div class="stat-row" style="margin-top:10px">{_stats(sw['stats'])}</div>
+      <p class="hint" style="margin:8px 0 0">貢獻＝權重 × 該項漲幅的一階近似（BEA 是鏈式加總，不能精確還原官方數字）。資料：BEA NIPA 細項（Table 2.4.4U／2.4.5U）。</p>
+      {_dv}
+    </details>"""
+
+
+def _consumption_card(c: dict | None) -> str:
+    """實質消費力道（2026-10 使用者指定）：需求面撐不撐得住通膨。"""
+    if not c:
+        return ""
+    return f"""<div class="grid">
+  <div class="card">
+    <h2 id="consumption" data-sum="{esc(c['sum'])}">實質消費力道</h2>
+    <p class="hint">扣掉物價之後，民眾實際多買了多少——需求面撐不撐得住通膨。資料到 {esc(c['month'])}。</p>
+    <div class="impact {c['lean']}">{esc(c['title'])}——{esc(c['desc'])}</div>
+    <div class="stat-row" style="margin-top:14px">{_stats(c['stats'])}</div>
+    <h3>實質個人消費支出　年增率</h3>
+    {c['c_chart']}
+    <h3>實質可支配所得　年增率</h3>
+    {c['i_chart']}
+    {teach(
+        "扣掉物價上漲後，民眾的消費量與收入各自成長多少，以及存下來的錢佔收入的比例。",
+        "消費撐得住，服務類的需求就降不下來，通膨也比較難回落；消費如果是靠動用儲蓄撐，撐得了一時，之後通常會放慢。",
+        "先看消費三月年化：低於 0.5% 是明顯放緩。再看消費是不是比所得成長快很多、儲蓄率又在降——那代表在動用老本。")}
+  </div>
+</div>"""
+
+
+def _pce_method_box(n: dict | None) -> str:
+    """BEA 年度修正的 PCE 方法調整（使用者指定補充）。"""
+    if not n:
+        return ""
+    items = "".join(f"<li>{esc(x)}</li>" for x in n["items"])
+    src = (f'<a href="{esc(n["source_url"])}" rel="noopener">{esc(n["source"])}</a>'
+           if n.get("source_url") else esc(n.get("source", "")))
+    return f"""<details class="f-more pce-method"><summary>{esc(n['title'])}</summary>
+  <div class="f-detail">{esc(n['lead'])}
+    <ul style="margin:8px 0 8px 18px;padding:0">{items}</ul>
+    {esc(n['effect'])}{('　來源：' + src) if src else ''}</div>
+</details>"""
 
 
 def _verdict_card(d: dict) -> str:
@@ -262,13 +318,36 @@ def _inflation_body_full(d: dict) -> str:
                   en="5y5y Inflation Breakeven", leans=lean.get("exp", ())),
     ])
 
-    flags_html = "".join(_flag_row(f) for f in d["flags"]) or \
-        '<div class="empty">本次沒有觸發任何訊號</div>'
+    # 分層呈現（2026-10，比照就業頁）：3M 動能 → 超級核心 → 整體與住房，
+    # 其餘併成「其他」預設收合（規則見 rules_inflation.TIERS／TIER_MAX）。
+    from ..analysis.rules_inflation import TIERS as _ITIERS
+    _main = [f for f in d["flags"] if getattr(f, "tier", 4) < 4]
+    _rest = [f for f in d["flags"] if getattr(f, "tier", 4) >= 4]
+    _parts, _cur = [], None
+    for f in _main:
+        if f.tier != _cur:
+            _cur = f.tier
+            _parts.append(f'<div class="sig-tier">{esc(_ITIERS.get(f.tier, ""))}</div>')
+        _parts.append(_flag_row(f))
+    if _rest:
+        _parts.append(
+            f'<details class="f-more sig-rest"><summary>其他 {len(_rest)} 項'
+            f'（{esc("、".join(f.headline[:10] for f in _rest[:2]))}…）</summary>'
+            + "".join(_flag_row(f) for f in _rest) + '</details>')
+    flags_html = "".join(_parts) or '<div class="empty">本次沒有觸發任何訊號</div>'
+    # 本期總結：綜合判定＋動能（同一套數字，不另外造句）
+    _v3 = d.get("verdict3") or {}
+    _s = d.get("summary")
+    _pace = getattr(_s, "pce_core_pace3", None) if _s is not None else None
+    sum_html = (
+        f'<div class="sig-sum"><b>本期總結：{esc(_v3["label"])}</b>'
+        f'<span>{esc(_v3["reason"])}。'
+        + (f'動能{esc(_v3.get("momentum", ""))}：核心 PCE 近三月平均月增 {_pace:.2f}%'
+           f'（目標步速約 0.17%）。' if _pace is not None else "")
+        + '</span></div>') if _v3.get("label") else ""
     # 每顆燈連回「主場」卡區（同一個數字的完整脈絡在那裡）。
-    _anchor_map = [("三月年化", "#kpi"), ("服務除住房", "#sticky"),
-                   ("核心 PCE", "#kpi"), ("中位數", "#trend"),
-                   ("核心除住房", "#trend"), ("通膨預期", "#kpi"),
-                   ("汽油", "#energy"), ("核心商品", "#contrib")]
+    _anchor_map = [("超級核心", "#sticky"), ("核心 PCE", "#kpi"),
+                   ("通膨預期", "#kpi"), ("核心商品", "#contrib")]
 
     def _anchor(label: str) -> str:
         return next((a for k, a in _anchor_map if k in label), "")
@@ -382,16 +461,19 @@ def _inflation_body_full(d: dict) -> str:
         f'{_n} 項{_lab}' for _key, _lab in
         (("critical", "警戒"), ("warning", "留意"), ("good", "正常"),
          ("unknown", "無資料")) if (_n := _lt.get(_key)))
-    # 檢核卡的一句結論：只由紅黃燈數量推出，跟勞動、長端頁同一套做法。
-    _lt_crit, _lt_warn = _lt.get("critical", 0), _lt.get("warning", 0)
-    if _lt_crit:
-        _lt_lean, _lt_txt = "hawkish", "通膨壓力已越過警戒線，注意集中在哪一類。"
-    elif _lt_warn:
-        _lt_lean, _lt_txt = "neutral", "沒有警戒，但有指標貼近門檻，方向要盯。"
-    else:
-        _lt_lean, _lt_txt = "neutral", "各項都在警戒線內。"
-    _lights_impact = (f'<div class="impact {_lt_lean}">{esc(_light_sum)}'
-                      f'——{esc(_lt_txt)}</div>' if d["lights"] else "")
+    # 綜合判定（2026-10，比照就業頁）：明確升溫／黏著不降／穩定降溫，
+    # 規則見 analysis.inflation.inflation_verdict——數燈號＋核心 PCE 六月年化，
+    # 不算綜合分數。
+    _vd = d.get("verdict3") or {}
+    _score_sum = (f'綜合判定：{_vd["label"]}（{_vd["reason"]}）'
+                  if _vd.get("label") else "")
+    _lights_impact = (f'<div class="impact {_vd.get("lean", "neutral")}">'
+                      f'{esc(_score_sum)}　·　{esc(_light_sum)}</div>'
+                      if _vd.get("label") and d["lights"] else "")
+    _vd_rule = (f'<p class="hint" style="margin-top:10px">判定規則：'
+                f'{esc(_vd.get("rule", ""))}結論講的是通膨的方向；'
+                '格位（高／中／低）仍由核心 PCE 年增率決定。</p>'
+                if _vd.get("rule") else "")
 
     return f"""
 {_verdict_card(d)}
@@ -399,7 +481,7 @@ def _inflation_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">本期關鍵訊號</h2>
-    <p class="hint">這個月<b>新發生</b>的事；目前的整體狀態看最下方「關鍵指標檢核」。點「依據」看支撐的數字。</p>
+    {sum_html}
     {flags_html}
   </div>
 </div>
@@ -409,10 +491,11 @@ def _inflation_body_full(d: dict) -> str:
     <h2 id="kpi" data-open="1" data-sum="{esc(_kpi_sum)}">關鍵數字</h2>
     <div class="grid g4 inner">{kpis}</div>
     {surp_foot}
+    {_pce_method_box(d.get('pce_method'))}
   </div>
 </div>
 
-{_sticky_card(d.get('stickiness'))}
+{_sticky_card({**(d.get('stickiness') or {}), 'software': d.get('software'), 'diverge_txt': (d.get('stickiness') or {}).get('diverge', '')} if d.get('stickiness') else None)}
 
 {_ppi_card(d.get('ppi'))}
 
@@ -474,6 +557,7 @@ def _inflation_body_full(d: dict) -> str:
     {_passthrough(d.get('passthrough'))}
   </div>
 </div>
+{_consumption_card(d.get('consumption'))}
 
 <div class="grid">
   <div class="card">
@@ -501,14 +585,15 @@ def _inflation_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="lights" data-sum="{esc(_light_sum)}">關鍵指標檢核</h2>
-    <p class="hint">八項關鍵指標的當期狀態（不限本月）。</p>
+    <h2 id="lights" data-sum="{esc(_light_sum)}{('　·　綜合判定：' + esc(_vd['label'])) if _vd.get('label') else ''}">關鍵指標檢核與綜合判定</h2>
+    <p class="hint">目前的整體狀態（不限本月）：逐項對照警戒線，再下結論。</p>
     {_lights_impact}
-    <details data-m-collapse open><summary>八項指標</summary>
+    <details data-m-collapse open><summary>{len(d["lights"])} 項指標</summary>
       <div class="lights" style="margin-top:12px">{lights_html}</div>
     </details>
+    {_vd_rule}
     {teach(
-        "八個通膨相關指標逐一對照警戒線，紅黃綠一眼掃完。",
+        "六個通膨指標逐一對照警戒線，再依規則下一個結論：明確升溫、黏著不降或穩定降溫。",
         "單一指標會騙人（基期效應能讓年增率忽高忽低），一排一起看才知道壓力是全面的還是個別的。",
         "數紅燈，並注意紅燈集中在哪一類——集中在服務類比集中在能源類嚴重得多。")}
   </div>

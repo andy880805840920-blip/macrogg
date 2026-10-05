@@ -213,6 +213,9 @@ class InflationSummary:
     pce_headline_3m: float | None = None
     pce_core_yoy: float | None = None
     pce_core_3m: float | None = None   # 核心 PCE 三個月年化（KPI 副標的短期動能）
+    pce_core_6m: float | None = None   # 核心 PCE 六個月年化（格位推格、結論用）
+    pce_core_mom: float | None = None  # 核心 PCE 最新月增（%）
+    pce_core_pace3: float | None = None  # 核心 PCE 近三月平均月增（動能）
     ppi_headline_yoy: float | None = None
     ppi_headline_mom: float | None = None
     ppi_headline_3m: float | None = None
@@ -587,6 +590,10 @@ def _streak_above(rows: list[dict], months: int, threshold: float) -> int:
 # 避免在單一門檻上月月翻面。
 # ---------------------------------------------------------------------------
 PACE_TARGET, PACE_HOT = 0.20, 0.30
+# 核心 PCE 版（2026-10 起九宮格動能改用核心 PCE，CPI 只在 PCE 公布前當預告）：
+# 從上面的 CPI 門檻扣掉 CPI 長期比 PCE 高的部分（約 0.03%／月）——
+# 0.17 ≈ 年化 2.0%（目標步速）、0.27 ≈ 年化 3.2%（明顯過快）。
+PCE_PACE_TARGET, PCE_PACE_HOT = 0.17, 0.27
 
 
 def round1(x: float) -> float:
@@ -784,6 +791,9 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.pce_headline_3m = annualized(g("PCEPI", []), 3)
     s.pce_core_yoy = yoy(g("PCEPILFE", []))
     s.pce_core_3m = annualized(g("PCEPILFE", []), 3)
+    s.pce_core_6m = annualized(g("PCEPILFE", []), 6)
+    s.pce_core_mom = mom_pct(g("PCEPILFE", []))
+    s.pce_core_pace3 = monthly_pace(g("PCEPILFE", []))
     s.ppi_headline_yoy = yoy(g("PPIFIS", []))
     s.ppi_headline_mom = mom_pct(g("PPIFIS", []))
     s.ppi_headline_3m = annualized(g("PPIFIS", []), 3)
@@ -856,6 +866,14 @@ def light_values(series: dict[str, list[dict]], summ: InflationSummary) -> dict[
         put("supercore_3m", summ.supercore_3m, prev, f"{summ.supercore_3m:.1f}%")
 
     pce = series.get("PCEPILFE", [])
+    if summ.pce_core_3m is not None:
+        prev = annualized(pce[:-1], 3) if len(pce) > 4 else None
+        put("core_pce_3m", summ.pce_core_3m, prev, f"{summ.pce_core_3m:.1f}%")
+
+    mi = series.get("MICH", [])
+    if summ.expect_1y is not None:
+        put("expect_1y", summ.expect_1y, value_at(mi, 1), f"{summ.expect_1y:.1f}%")
+
     if summ.pce_core_yoy is not None:
         prev = yoy(pce[:-1]) if len(pce) > 13 else None
         put("core_pce_yoy", summ.pce_core_yoy, prev, f"{summ.pce_core_yoy:.1f}%")
@@ -881,3 +899,111 @@ def light_values(series: dict[str, list[dict]], summ: InflationSummary) -> dict[
         put("core_goods_yoy", summ.core_goods_yoy, prev, f"{summ.core_goods_yoy:+.1f}%")
 
     return out
+
+
+# ---------------------------------------------------------------------------
+# 綜合判定（2026-10，比照就業頁：數燈號下結論，不算綜合分數）
+#
+#   明確升溫＝長期通膨預期警戒；或核心 PCE 三月年化警戒、六月年化也高於
+#             2.8%，而且超級核心同時警戒或動能升溫
+#   穩定降溫＝**連續兩個月**：核心 PCE 三月年化正常、六月年化低於 2.8%、
+#             超級核心與短期預期都沒有警戒、動能不是升溫
+#   黏著不降＝其餘
+#
+# 回測（2015–2026/08，FRED，門檻用現行值）：2015–19 幾乎全是穩定降溫；
+# 2021/04–2023/06 明確升溫；2023 下半年–2025 大多黏著不降。「穩定」要兩個月
+# 確認，否則 2024/07 那種單月降溫會一亮就跳回去。
+# ---------------------------------------------------------------------------
+VERDICT_6M_CAP = 2.8
+INFL_VERDICT_RULE = (
+    "明確升溫＝長期通膨預期警戒，或核心 PCE 三月年化警戒、六月年化也高於 2.8%，"
+    "且超級核心同時警戒或動能升溫；穩定降溫＝連續兩個月核心 PCE 三月年化正常、"
+    "六月年化低於 2.8%、超級核心與短期預期都沒有警戒、動能不是升溫；其餘為黏著不降。")
+
+
+def pce_momentum(pace: float | None) -> str:
+    """核心 PCE 近三月平均月增 → 升溫／持平／降溫。"""
+    if pace is None:
+        return "持平"
+    if pace >= PCE_PACE_HOT:
+        return "升溫"
+    if pace <= PCE_PACE_TARGET:
+        return "降溫"
+    return "持平"
+
+
+def _verdict_snap(series: dict, cfgs: dict, drop: int) -> dict:
+    """某一期（drop＝往前退幾期）的判定材料。每條序列各自退掉最新 drop 筆。"""
+    from .regime import _classify
+
+    def cut(sid):
+        rows = series.get(sid, []) or []
+        return rows[:-drop] if drop and len(rows) > drop else (rows if not drop else [])
+    pce = cut("PCEPILFE")
+    v = {"core_pce_3m": annualized(pce, 3) if pce else None,
+         "core_pce_6m": annualized(pce, 6) if pce else None,
+         "pace": monthly_pace(pce) if pce else None,
+         "supercore_3m": annualized(cut("CPISUPERCORE"), 3) if cut("CPISUPERCORE") else None,
+         "expect_1y": value_at(cut("MICH")) if cut("MICH") else None,
+         # 5y5y 是日資料：只用最新值（只有「明確升溫」用得到，不需要前一期）
+         "expect_5y5y": value_at(series.get("T5YIFR", [])) if not drop else None}
+
+    def st(key, val):
+        c = cfgs.get(key)
+        return _classify(val, c) if c and val is not None else "unknown"
+    S = {k: st(k, v[k]) for k in ("core_pce_3m", "supercore_3m", "expect_1y",
+                                  "expect_5y5y")}
+    mom = pce_momentum(v["pace"])
+    m6 = v["core_pce_6m"]
+    hot5 = S["expect_5y5y"] == "critical"
+    hot = hot5 or (S["core_pce_3m"] == "critical" and m6 is not None
+                   and m6 > VERDICT_6M_CAP
+                   and (S["supercore_3m"] == "critical" or mom == "升溫"))
+    cool = (S["core_pce_3m"] == "good" and m6 is not None and m6 < VERDICT_6M_CAP
+            and S["supercore_3m"] != "critical" and S["expect_1y"] != "critical"
+            and mom != "升溫")
+    return {"v": v, "S": S, "mom": mom, "hot": hot, "hot5": hot5, "cool": cool}
+
+
+def inflation_verdict(series: dict, light_cfgs: list) -> dict:
+    """回傳 {label, lean, reason, rule}。lean 給色框用（升溫＝hawkish）。"""
+    cfgs = {c["key"]: c for c in light_cfgs or [] if c.get("key")}
+    now = _verdict_snap(series, cfgs, 0)
+    prev = _verdict_snap(series, cfgs, 1)
+    v, S = now["v"], now["S"]
+
+    def pc(x):
+        return f"{x:.1f}%" if x is not None else "—"
+    if now["hot"]:
+        label = "明確升溫"
+        if now["hot5"]:
+            why = f"長期通膨預期 {v['expect_5y5y']:.2f}% 達警戒——預期開始脫錨"
+        else:
+            why = (f"核心 PCE 三月年化 {pc(v['core_pce_3m'])}、六月年化 {pc(v['core_pce_6m'])}"
+                   " 都偏高，" + (f"超級核心 {pc(v['supercore_3m'])} 也達警戒"
+                                 if S["supercore_3m"] == "critical" else "動能升溫"))
+    elif now["cool"] and prev["cool"]:
+        label = "穩定降溫"
+        why = (f"連續兩個月核心 PCE 三月年化回到正常（最新 {pc(v['core_pce_3m'])}）、"
+               f"六月年化 {pc(v['core_pce_6m'])} 低於 2.8%")
+    else:
+        label = "黏著不降"
+        if now["cool"]:
+            why = (f"降溫第一個月（三月年化 {pc(v['core_pce_3m'])}、六月年化 "
+                   f"{pc(v['core_pce_6m'])}），再一個月確認才算穩定降溫")
+        else:
+            miss = []
+            if S["core_pce_3m"] != "good":
+                miss.append(f"核心 PCE 三月年化 {pc(v['core_pce_3m'])} 還沒回到正常")
+            if v["core_pce_6m"] is not None and v["core_pce_6m"] >= VERDICT_6M_CAP:
+                miss.append(f"六月年化 {pc(v['core_pce_6m'])} 仍高於 2.8%")
+            if S["supercore_3m"] == "critical":
+                miss.append(f"超級核心 {pc(v['supercore_3m'])} 達警戒")
+            if S["expect_1y"] == "critical":
+                miss.append(f"短期通膨預期 {pc(v['expect_1y'])} 達警戒")
+            if now["mom"] == "升溫":
+                miss.append("動能升溫")
+            why = "、".join(miss[:2]) or "訊號互相抵銷"
+    lean = {"明確升溫": "hawkish", "穩定降溫": "dovish"}.get(label, "neutral")
+    return {"label": label, "lean": lean, "reason": why, "rule": INFL_VERDICT_RULE,
+            "momentum": now["mom"], "cool_now": now["cool"], "cool_prev": prev["cool"]}
