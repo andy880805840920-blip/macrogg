@@ -6,7 +6,7 @@
   頂部決議卡（決議與日期、投票、前次、下次會議與靜默期）
   政策訊號（事實清單，不加總）
   下次會議與靜默期 → 投票委員與官員 → 點陣圖與 SEP → 市場路徑 vs 點陣圖
-  → 聲明逐句比對 → 會議紀要觀點分布 → 官員最新發言 → 記者會原句
+  → 聲明逐句比對 → 會議紀要觀點分布 → 記者會原句（官員發言併入委員樹狀圖的人物面板）
   → 目前重心與轉向條件 → 歷次決議 → 判讀說明
 
 AI 只用在三個地方，畫面上一律標「AI」：聲明改動的中文說明、會議紀要
@@ -206,62 +206,157 @@ def _next_html(d: dict) -> str:
 # ---------------------------------------------------------------------------
 # 委員
 # ---------------------------------------------------------------------------
-_TIER_HEAD = {
-    1: ("第一層｜主席", "主持會議、記者會由他回答。他的話最直接影響市場對下一步的預期。"),
-    2: ("第二層｜兩位副主席", "紐約聯儲總裁是 FOMC 常任副主席、理事會副主席是主席的副手，"
-                         "兩人的發言通常被當成委員會主流看法。"),
-    3: ("第三層｜其他投票委員",
-        "近 12 個月沒投過反對票的委員，是決定多數落在哪一邊的人——"
-        "他們的立場改變，比已經表態的委員更有資訊量。"),
-}
 
 
-def _person(o: dict) -> str:
+def _initials(o: dict) -> str:
+    first = (o.get("name") or "?").split()[0][:1]
+    return (first + (o.get("surname") or "")[:1]).upper()
+
+
+def _vote_strip(votes: list) -> str:
+    """近 12 個月逐場：贊成（實心灰）、反對（依方向上色）、未投票（空框）。"""
+    if not votes:
+        return ""
+    cls = {"hike": "haw", "cut": "dov"}
+    cells = []
+    for v in votes:
+        k = ("for" if v["v"] == "for" else
+             ("x " + cls.get(v.get("dir"), "oth")) if v["v"] == "against" else "none")
+        tip = f'{v["date"]}｜{v["label"]}' + ("（新版聲明只公布票數，依今年委員名單推定）"
+                                              if v.get("inferred") else "")
+        mark = "✕" if v["v"] == "against" else ""
+        cells.append(f'<span class="vs-c {k}" data-tip="{esc(tip)}">{mark}'
+                     f'<em>{esc(_md(v["date"]))}</em></span>')
+    n_for = sum(1 for v in votes if v["v"] == "for")
+    n_ag = sum(1 for v in votes if v["v"] == "against")
+    return (f'<div class="vs"><div class="vs-h">近 12 個月 {len(votes)} 場會議：'
+            f'贊成 {n_for}、反對 {n_ag}、未投票 {len(votes) - n_for - n_ag}</div>'
+            f'<div class="vs-row" style="--n:{len(cells)}">{"".join(cells)}</div>'
+            '<div class="vs-leg"><span><i style="background:var(--muted-bar)"></i>贊成</span>'
+            '<span><i style="background:var(--critical)"></i>反對：主張升息</span>'
+            '<span><i style="background:var(--good)"></i>反對：主張降息</span>'
+            '<span><i style="background:var(--warning)"></i>反對其他事項</span>'
+            '<span><i style="border:1.5px dashed var(--baseline)"></i>未投票（輪值／未就任）</span>'
+            '</div></div>')
+
+
+def _person_detail(o: dict, pid: str, show: bool) -> str:
+    """點人物後下方面板的內容：身分、投票紀錄、近期發言（原「官員最新發言」併入）。"""
+    badges = [("投票委員" if o["voter"] else "候補委員（今年不投票）",
+               "" if o["voter"] else "muted"),
+              ("理事會" if o["board"] else f'{o.get("city_zh") or ""}聯儲', "")]
+    bl = "".join(f'<span class="od-b {k}">{esc(t)}</span>' for t, k in badges if t)
+    talk = []
+    if o.get("gist"):
+        talk.append(_ai(o["gist"]))
+    for sp in o.get("speeches") or []:
+        talk.append(f'<div class="sp-i"><span class="sp-k">官方演講</span>'
+                    f'<a href="{esc(sp["url"])}" target="_blank" rel="noopener">{esc(sp["title"])}</a>'
+                    f'<span class="sp-d">{_md(sp["date"])}</span></div>')
+    for n in o.get("news") or []:
+        link = (f'<a href="{esc(n["url"])}" target="_blank" rel="noopener">{esc(n["title"])}</a>'
+                if n.get("url") else esc(n["title"]))
+        talk.append(f'<div class="sp-i"><span class="sp-k">新聞</span>{link}'
+                    f'<span class="sp-d">{esc(n.get("source", ""))}　{_md(n["date"])}</span></div>')
+    if not talk:
+        talk.append('<div class="sp-i muted">近期沒有談利率的演講或報導</div>')
     tag_cls = DIR_CLS.get(o["lean"], "neutral")
-    return (f'<div class="fx-p"><div class="fx-pn"><b>{esc(o["name"])}</b>'
-            f'<span>{esc(o["title"])}</span></div>'
-            f'<span class="fx-tag {tag_cls}">{esc(o["dissent_tag"])}</span>'
+    return (f'<div class="od" id="od-{pid}" data-p="{pid}"{"" if show else " hidden"}>'
+            f'<div class="od-head"><span class="ot-av big {tag_cls}">{esc(_initials(o))}</span>'
+            f'<div><div class="od-name">{esc(o["name"])}</div>'
+            f'<div class="od-title">{esc(o["title"])}</div><div class="od-bs">{bl}'
+            f'<span class="fx-tag {tag_cls}">{esc(o["dissent_tag"])}</span></div></div></div>'
             + (f'<div class="fx-pnote">{esc(o["note"])}</div>' if o.get("note") else "")
+            + _vote_strip(o.get("votes") or [])
+            + f'<div class="od-talk"><div class="vs-h">近期發言</div>{"".join(talk)}</div>'
             + '</div>')
 
 
+def _node(o: dict, pid: str, on: bool) -> str:
+    size = {1: "t1", 2: "t2"}.get(o["tier"], "")
+    star = '<i class="ot-star" aria-hidden="true">★</i>' if o["tier"] == 1 else ""
+    role = {1: "主席", 2: "副主席"}.get(o["tier"], "")
+    if not role:
+        role = "理事" if o["board"] else (o.get("city_zh") or "")
+    return (f'<button type="button" class="ot-n {size}{" alt" if not o["voter"] else ""}" '
+            f'data-p="{pid}" aria-controls="od-{pid}" aria-pressed="{"true" if on else "false"}">'
+            f'<span class="ot-av {DIR_CLS.get(o["lean"], "neutral")}">{esc(_initials(o))}{star}</span>'
+            f'<span class="ot-sn">{esc(o["surname"])}</span>'
+            f'<span class="ot-role">{esc(role)}</span></button>')
+
+
 def _people_html(d: dict) -> str:
+    """
+    投票委員與官員：依機構分的樹狀圖（2026-10 使用者指定）。
+      FOMC（今年 12 票）→ 理事會 7 ／ 地方聯儲 5（紐約常任＋4 席輪值）／ 候補（不投票）
+    人物只放姓名縮寫的圓形標記；外框顏色＝近 12 個月反對票的方向。
+    點（觸碰）任何一位，下方面板換成他的身分、逐場投票與近期發言——
+    原本獨立的「官員最新發言」併進這裡。
+    """
     offs = d.get("officials") or []
     if not offs:
         return '<div class="empty">委員名單本次取得失敗</div>'
-    out = []
-    for t in (1, 2, 3):
-        grp = [o for o in offs if o["tier"] == t]
-        if not grp:
-            continue
-        head, why = _TIER_HEAD[t]
-        block = (f'<p class="hint" style="margin:2px 0 8px">{esc(why)}</p>'
-                 f'<div class="fx-people">{"".join(_person(o) for o in grp)}</div>')
-        if t == 3:
-            # 第三層人多：桌機展開、手機先收合（data-m-collapse 的既有行為）
-            out.append(f'<details data-m-collapse open class="fx-tier3"><summary>'
-                       f'{esc(head)}（{len(grp)} 位）</summary>{block}</details>')
-        else:
-            out.append(f'<div class="sig-tier">{esc(head)}</div>{block}')
-    alts = [o for o in offs if o["tier"] == 4]
-    if alts:
-        out.append(f'<details data-m-collapse><summary>候補委員（今年不投票）{len(alts)} 位</summary>'
-                   f'<p class="hint" style="margin:10px 0 8px">候補委員參加會議、參與討論，'
-                   f'也交點陣圖，只是今年沒有投票權。</p>'
-                   f'<div class="fx-people">{"".join(_person(o) for o in alts)}</div></details>')
-    n_board = sum(1 for o in offs if o["voter"] and o["board"])
-    n_bank = sum(1 for o in offs if o["voter"] and not o["board"])
-    out.append(
-        '<details data-m-collapse><summary>FOMC 是怎麼組成的</summary>'
-        '<div class="teach-body" style="margin-top:10px">'
-        f'<p>聯邦公開市場委員會（FOMC）今年有 {n_board + n_bank} 票：理事會的 {n_board} 位理事，'
-        f'加上 {n_bank} 位地方聯儲總裁。紐約聯儲總裁每年都投票，另外 4 席由其餘 11 家'
-        '地方聯儲輪流（2027 年輪到芝加哥、里奇蒙、亞特蘭大、舊金山）。</p>'
-        '<p>一年開 8 次會。3、6、9、12 月的會議會另外公布經濟預測摘要（SEP）與點陣圖；'
-        '每次會後三週公布會議紀要。完整逐字稿依規定延後五年公開。</p>'
-        '<p>鷹派／鴿派這裡只用<b>已表態的事實</b>標示（近 12 個月的反對票）。'
-        '點陣圖是匿名的，對不上人名，所以不拿來替個人貼標籤。</p></div></details>')
-    return "".join(out)
+    ids = {id(o): f"p{i}" for i, o in enumerate(offs)}
+    default = next((o for o in offs if o["tier"] == 1), offs[0])
+    board = [o for o in offs if o["voter"] and o["board"]]
+    banks = sorted([o for o in offs if o["voter"] and not o["board"]],
+                   key=lambda o: (o["tier"], o["surname"]))
+    alts = [o for o in offs if not o["voter"]]
+    board.sort(key=lambda o: (o["tier"], o["surname"]))
+
+    def branch(cls, head, n, why, grp):
+        nodes = "".join(_node(o, ids[id(o)], o is default) for o in grp)
+        cnt = f'<b>{n}</b> 票' if n else ""
+        return (f'<div class="ot-br {cls}"><div class="ot-bh"><span class="ot-bt">{esc(head)} {cnt}</span>'
+                f'<span class="ot-bw">{esc(why)}</span></div><div class="ot-nodes">{nodes}</div></div>')
+    n_vote = len(board) + len(banks)
+    tree = (f'<div class="ot" data-ot>'
+            f'<div class="ot-root"><span>FOMC</span><b>今年 {n_vote} 票</b></div>'
+            f'<div class="ot-brs">'
+            + branch("board", "理事會", len(board), "總統提名、參議院同意；每場都投票", board)
+            + branch("banks", "地方聯儲總裁", len(banks), "紐約常任＋其餘 11 家輪流 4 席", banks)
+            + branch("alts", "候補委員", 0, "今年不投票，但參與討論、也交點陣圖", alts)
+            + '</div>'
+            + '<div class="ot-leg"><span><i class="ot-lg hawkish"></i>近 12 個月投過「主張升息／反對寬鬆」</span>'
+              '<span><i class="ot-lg dovish"></i>投過「主張降息」</span>'
+              '<span><i class="ot-lg neutral"></i>未投反對票</span>'
+              '<span class="ot-hint">點人物看下方詳細資料</span></div>'
+            + '<div class="ot-panel" aria-live="polite">'
+            + "".join(_person_detail(o, ids[id(o)], o is default) for o in offs)
+            + '</div></div>')
+    return tree + _composition_html(d, board, banks)
+
+
+def _composition_html(d: dict, board: list, banks: list) -> str:
+    """FOMC 怎麼組成：三張事實卡＋今明兩年的輪值表（取代原本的三段文字）。"""
+    yr = int((d.get("latest_date") or "2026")[:4])
+    by_city = {o.get("affil"): o for o in (d.get("officials") or []) if not o["board"]}
+    groups = [("波士頓／費城／里奇蒙", 0), ("芝加哥／克里夫蘭", 1),
+              ("聖路易／達拉斯／亞特蘭大", 2), ("堪薩斯城／明尼亞波利斯／舊金山", 3)]
+    rows = ['<tr><th class="rowhead">紐約（常任）</th>'
+            + "".join('<td><b>紐約</b></td>' for _ in (yr, yr + 1)) + '</tr>']
+    for zh, gi in groups:
+        cells = []
+        for y in (yr, yr + 1):
+            c = fx.rotation(y)[gi]
+            who = by_city.get(c)
+            sub = f'<small>{esc(who["surname"])}</small>' if who else ""
+            cells.append(f'<td><b>{esc(fx.CITY_ZH.get(c, c))}</b>{sub}</td>')
+        rows.append(f'<tr><th class="rowhead">{esc(zh)}</th>{"".join(cells)}</tr>')
+    facts = [
+        ("12 票", f"理事會 {len(board) or 7} 位理事＋{len(banks) or 5} 位地方聯儲總裁"),
+        ("一年 8 次", "3、6、9、12 月的會議另外公布經濟預測（SEP）與點陣圖"),
+        ("3 週／5 年", "會後 3 週公布會議紀要；完整逐字稿 5 年後公開"),
+    ]
+    fc = "".join(f'<div class="cf"><b>{esc(a)}</b><span>{esc(b)}</span></div>' for a, b in facts)
+    return (f'<details data-m-collapse class="fx-comp"><summary>FOMC 是怎麼組成的</summary>'
+            f'<div class="cfs">{fc}</div>'
+            f'<div class="viz-h" style="margin-top:14px">地方聯儲投票輪值</div>'
+            f'<p class="viz-sub">四組各派一席、逐年輪替；小字是目前的總裁。</p>'
+            f'<div class="tscroll"><table class="fx-rot"><thead><tr><th>組別</th>'
+            f'<th>{yr} 年</th><th>{yr + 1} 年</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+            f'<p class="hint" style="margin-top:10px">鷹派／鴿派只用<b>已表態的事實</b>標示（近 12 個月的反對票）。'
+            f'點陣圖是匿名的，對不上人名，所以不拿來替個人貼標籤。</p></details>')
 
 
 # ---------------------------------------------------------------------------
@@ -333,6 +428,78 @@ def _sep_table(sep: dict) -> str:
             f'<tbody>{"".join(body)}</tbody></table></div>')
 
 
+_SEP_UP_BAD = {"gdp": False, "unrate": True, "pce": True, "core_pce": True, "ffr": None}
+
+
+def _sep_card(key: str, zh: str, v: dict, years: list, prev_zh: str) -> str:
+    """
+    SEP 一個變數一張小卡（手機上表格五欄數字太擠）：
+      大數字＝今年年底中位數；chip＝跟上一季比；小圖＝逐年路徑（本季實線、上季虛線）
+    """
+    med = v.get("median") or []
+    prv = v.get("prev") or []
+    if not med or med[0] is None:
+        return ""
+    m0, p0 = med[0], (prv[0] if prv else None)
+    chip = ""
+    if p0 is not None:
+        dlt = m0 - p0
+        if abs(dlt) < 0.05:
+            chip = f'<span class="sc-chip flat">與{esc(prev_zh)}持平</span>'
+        else:
+            bad = _SEP_UP_BAD.get(key)
+            tone = ("" if bad is None else
+                    ("haw" if (dlt > 0) == bad else "dov"))
+            chip = (f'<span class="sc-chip {tone}">{"▲" if dlt > 0 else "▼"} {abs(dlt):.1f}'
+                    f'　{esc(prev_zh)} {p0:.1f}%</span>')
+    labs = ["長期" if y.startswith("Longer") else y for y in years]
+    pts = [(i, x) for i, x in enumerate(med) if x is not None]
+    pps = [(i, x) for i, x in enumerate(prv) if x is not None]
+    allv = [x for _, x in pts + pps]
+    lo, hi = min(allv), max(allv)
+    pad = max((hi - lo) * 0.25, 0.15)
+    lo, hi = lo - pad, hi + pad
+    n = len(years)
+
+    def X(i):
+        return (i + .5) / n * 100
+
+    def Y(x):
+        return (1 - (x - lo) / (hi - lo)) * 100
+    poly = lambda ps: " ".join(f"{X(i):.1f},{Y(x):.1f}" for i, x in ps)
+    svg = (f'<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
+           + (f'<polyline points="{poly(pps)}" fill="none" stroke="var(--muted-bar)" '
+              f'stroke-width="1.6" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>'
+              if len(pps) > 1 else "")
+           + f'<polyline points="{poly(pts)}" fill="none" stroke="var(--series-1)" '
+             f'stroke-width="2" vector-effect="non-scaling-stroke"/></svg>')
+    dots = "".join(f'<span class="sc-dot{" now" if i == 0 else ""}" '
+                   f'style="left:{X(i):.1f}%;top:{Y(x):.1f}%" '
+                   f'data-tip="{esc(labs[i])}｜{x:.1f}%'
+                   + (f'（{esc(prev_zh)} {prv[i]:.1f}%）' if i < len(prv) and prv[i] is not None else "")
+                   + '"></span>' for i, x in pts)
+    xl = "".join(f'<span><b>{"—" if (i >= len(med) or med[i] is None) else f"{med[i]:.1f}"}</b>'
+                 f'{esc(labs[i])}</span>' for i in range(n))
+    return (f'<div class="sc"><div class="sc-k">{esc(zh)}</div>'
+            f'<div class="sc-v">{m0:.1f}<small>%</small></div>'
+            f'<div class="sc-y">{esc(labs[0])} 年底中位數</div>{chip}'
+            f'<div class="sc-plot">{svg}{dots}</div>'
+            f'<div class="sc-x" style="--n:{n}">{xl}</div></div>')
+
+
+def _sep_cards(sep: dict) -> str:
+    years = sep.get("years") or []
+    prev_zh = fx.sep_prev_zh(sep)
+    order = ["ffr", "core_pce", "pce", "unrate", "gdp"]
+    labs = {k: zh for k, zh, _ in fx.SEP_VARS}
+    cards = "".join(_sep_card(k, labs[k], (sep.get("vars") or {}).get(k) or {}, years, prev_zh)
+                    for k in order if (sep.get("vars") or {}).get(k))
+    return (f'<div class="scs">{cards}</div>'
+            f'<div class="sc-leg"><span><i class="sc-l now"></i>本季中位數</span>'
+            f'<span><i class="sc-l prev"></i>{esc(prev_zh)}</span>'
+            f'<span>▲▼ 顏色：紅＝對通膨／就業不利的方向、綠＝有利</span></div>')
+
+
 def _sep_html(d: dict) -> str:
     sep = d.get("sep")
     if not sep:
@@ -358,8 +525,9 @@ def _sep_html(d: dict) -> str:
             + '<p class="hint" style="margin:4px 0 14px">每個點是一位與會者（理事＋地方聯儲總裁，'
               '含今年不投票的人）認為適當的年底利率中點；紅色橫線是中位數，虛線是現行利率中點'
             + (f'（{mid:.3f}%）' if mid is not None else "") + '。</p>'
-            + (f'<p class="fx-lead" style="margin-top:0">{esc(path)}</p>' if path else "")
-            + _sep_table(sep)
+            + _sep_cards(sep)
+            + '<details data-m-collapse><summary>看完整數字（表格）</summary>'
+            + _sep_table(sep) + '</details>'
             + f'<div class="src">{esc(sep.get("date", ""))} 經濟預測摘要（SEP）表 1 與圖 2；'
               '▲▼ 對照上一季的中位數。數值為第四季對第四季的變動（失業率為第四季平均）。</div>')
 
@@ -438,33 +606,6 @@ def _minutes_html(d: dict) -> str:
 # ---------------------------------------------------------------------------
 # 官員最新發言
 # ---------------------------------------------------------------------------
-def _speeches_html(d: dict) -> str:
-    offs = [o for o in d.get("officials") or [] if o["voter"]]
-    if not offs:
-        return '<div class="empty">委員名單本次取得失敗</div>'
-    out = []
-    for o in offs:
-        bits = []
-        if o.get("gist"):
-            bits.append(_ai(o["gist"]))
-        for s in o.get("speeches") or []:
-            bits.append(f'<div class="sp-i"><span class="sp-k">官方演講</span>'
-                        f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["title"])}</a>'
-                        f'<span class="sp-d">{_md(s["date"])}</span></div>')
-        for n in o.get("news") or []:
-            link = (f'<a href="{esc(n["url"])}" target="_blank" rel="noopener">{esc(n["title"])}</a>'
-                    if n.get("url") else esc(n["title"]))
-            bits.append(f'<div class="sp-i"><span class="sp-k">新聞</span>{link}'
-                        f'<span class="sp-d">{esc(n.get("source", ""))}　{_md(n["date"])}</span></div>')
-        if not bits:
-            bits.append('<div class="sp-i muted">近期沒有談利率的演講或報導</div>')
-        out.append(f'<div class="fx-sp"><div class="fx-pn"><b>{esc(o["name"])}</b>'
-                   f'<span>{esc(o["title"])}</span></div>{"".join(bits)}</div>')
-    return ('<div class="fx-sps">' + "".join(out) + '</div>'
-            '<p class="src">理事的演講取自聯準會官方 RSS（近 30 天）；新聞為 Google News 近 14 天'
-            '的標題（依新聞，非官方）。標「AI」的一句話是根據這些標題整理，只當導讀。</p>')
-
-
 # ---------------------------------------------------------------------------
 # 記者會
 # ---------------------------------------------------------------------------
@@ -626,7 +767,7 @@ def _fomc_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="people" data-sum="今年 {n_vote} 位投票委員　·　依發言份量分三層">投票委員與官員</h2>
+    <h2 id="people" data-sum="今年 {n_vote} 位投票委員　·　點人物看投票紀錄與近期發言">投票委員與官員</h2>
     {_people_html(d)}
   </div>
 </div>
@@ -682,13 +823,6 @@ def _fomc_body_full(d: dict) -> str:
         "聲明只有百來字，紀要有好幾千字。聯準會描述「有多少人」用的是固定量詞（most、many、several、a few），所以可以看出某個觀點是主流還是少數。",
         "看政策路徑那一組：「許多與會者認為可能需要緊縮」跟「少數與會者認為」，對下一次會議的意義完全不同。")}
     {_minutes_html(d)}
-  </div>
-</div>
-
-<div class="grid">
-  <div class="card">
-    <h2 id="speeches" data-sum="投票委員近期的演講與報導">官員最新發言</h2>
-    {_speeches_html(d)}
   </div>
 </div>
 

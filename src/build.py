@@ -38,6 +38,22 @@ CHART_START = "2025-01-01"
 # 重點在**同一條程式路徑**：只要跟本期共用同一個函式，口徑就一定一致，
 # 不會出現「本期用新演算法、上期用舊演算法」那種假變動。
 # ---------------------------------------------------------------------------
+def _gap_rows(a: list, b: list) -> list:
+    """兩條同頻序列逐月相減（a − b），只取兩邊都有的月份。"""
+    bm = {r["date"][:7]: r["value"] for r in b if r.get("value") is not None}
+    return [{"date": r["date"], "value": r["value"] - bm[r["date"][:7]]}
+            for r in a if r.get("value") is not None and r["date"][:7] in bm]
+
+
+def _month_end(rows: list) -> list:
+    """日頻序列 → 每月最後一筆（月末值）。"""
+    out = {}
+    for r in rows or []:
+        if r.get("value") is not None:
+            out[r["date"][:7]] = r
+    return [out[k] for k in sorted(out)]
+
+
 def _kpi_leans(level: float | None, target: float | None,
                cur: float | None, prev: float | None,
                up_is: str = "hawkish", band: float = 0.05,
@@ -521,6 +537,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
 
     _jl = _job_losers_block(series)
 
+    _us = _ustar_gap(u3, series.get("UNRATEMDLR", []),
+                     series.get("UNRATECTLLR", []), series.get("UNRATECTHLR", []))
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Employment Situation"),
         "data_month": data_month,
@@ -588,16 +606,25 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "jolts": (series.get("JTSJOL") or [{}])[-1].get("date", ""),
             "claims": (series.get("CCSA") or [{}])[-1].get("date", ""),
         },
+        # 「近 5 期與比較基準」（2026-10 改版）：變動類用柱、水準類用點
         "mini": {
-            # 單位一律抽到上方只寫一次：格子裡不重複，數字才不會互相疊。
-            # 四張卡都要有這一列——只有一張有的話，那張卡的走勢圖與數值列
-            # 會比另外三張高 21px，一整排看過去參差不齊。
-            "nfp": charts.mini_series(nfp_chg_series, unit="萬人",
-                                      fmt=lambda v: f"{v/10:+,.1f}"),
-            "u3": charts.mini_series(u3, unit="%", fmt=lambda v: f"{v:.1f}"),
-            "ahe": charts.mini_series(yoy_series(ahe), unit="%",
-                                      fmt=lambda v: f"{v:.1f}"),
-            "lfpr": charts.mini_series(lfpr, unit="%", fmt=lambda v: f"{v:.1f}"),
+            "nfp": charts.kpi_history(
+                [{"date": r["date"], "value": r["value"] / 10} for r in nfp_chg_series],
+                kind="change", unit="萬人", fmt=lambda v: f"{v:+,.1f}",
+                en="非農就業月變動近 5 期"),
+            "u3": charts.kpi_history(
+                u3, kind="level", unit="%", fmt=lambda v: f"{v:.1f}",
+                band=((_us.get("lo"), _us.get("hi")) if _us.get("lo") is not None else None),
+                band_label=(f"FOMC 長期失業率預測 {_us.get('lo', 0):.1f}–{_us.get('hi', 0):.1f}%"
+                            if _us.get("lo") is not None else ""),
+                en="失業率近 5 期"),
+            "ahe": charts.kpi_history(
+                yoy_series(ahe), kind="level", unit="%", fmt=lambda v: f"{v:.1f}",
+                ref=3.5, ref_label="3.5%：與 2% 通膨相容的薪資漲幅（粗估）",
+                en="平均時薪年增率近 5 期"),
+            "lfpr": charts.kpi_history(
+                lfpr, kind="level", unit="%", fmt=lambda v: f"{v:.1f}",
+                en="勞動參與率近 5 期"),
         },
         # 給「本期變化摘要」比對用。人數一律以「萬人」呈現，與全站口徑一致。
         # up_is：這個指標**往上**代表偏鷹還是偏鴿。首頁的「本期變化」用它
@@ -1272,6 +1299,48 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         marks=[{"index": max(len(gas_rows) - 5, 0), "label": "一個月前"}]
     ) if len(gas_rows) > 2 else ""
 
+    # ---- 通膨廣度（2026-10 改版）：數線＋近 24 個月 ----
+    _core_yoy_rows = yoy_series(series.get("CPILFENS") or series.get("CPILFESL", []))
+    breadth = {
+        "line": charts.number_line([
+            {"label": "核心 CPI 年增", "value": summ.core_yoy, "color": "var(--line-1)"},
+            {"label": "中位數 CPI", "value": value_at(series.get("MEDCPIM159SFRBCLE", [])),
+             "color": "var(--line-2)"},
+            {"label": "截尾平均 CPI", "value": value_at(series.get("TRMMEANCPIM159SFRBCLE", [])),
+             "color": "#1baf7a"},
+        ], target=2.0, target_label="2% 目標", digits=2),
+        "chart": charts.compact_lines([
+            {"label": "核心 CPI", "color": "var(--line-1)", "points": _core_yoy_rows},
+            {"label": "中位數", "color": "var(--line-2)",
+             "points": series.get("MEDCPIM159SFRBCLE", [])},
+            {"label": "截尾平均", "color": "#1baf7a",
+             "points": series.get("TRMMEANCPIM159SFRBCLE", [])},
+        ], unit="%", height=140, digits=2, refs=[{"value": 2.0, "label": "2%"}],
+            aria="核心 CPI、中位數與截尾平均年增"),
+    }
+
+    # ---- 能源：傳導鏈＋原油／汽油小圖（近 24 個月）----
+    _gas_all = series.get("GASREGW", [])
+    _gas_1m = None
+    if len(_gas_all) > 5 and _gas_all[-5]["value"]:
+        _gas_1m = (_gas_all[-1]["value"] / _gas_all[-5]["value"] - 1) * 100
+    _oil_all = series.get("DCOILWTICO", [])
+    _oil_ago = _oil_all[-22]["date"] if len(_oil_all) > 22 else None
+    _gas_ago = _gas_all[-5]["date"] if len(_gas_all) > 5 else None
+    energy_viz = {
+        "gas_1m": _gas_1m,
+        "gas": _gas_all[-1]["value"] if _gas_all else None,
+        "oil": _oil_all[-1]["value"] if _oil_all else None,
+        "oil_chart": charts.compact_lines(
+            [{"label": "WTI 原油", "color": "var(--line-1)", "points": _oil_all}],
+            unit="", height=120, digits=1, aria="WTI 原油",
+            marks=([{"date": _oil_ago, "label": "一個月前"}] if _oil_ago else [])),
+        "gas_chart": charts.compact_lines(
+            [{"label": "零售汽油", "color": "var(--line-2)", "points": _gas_all}],
+            unit="", height=120, digits=2, aria="零售汽油",
+            marks=([{"date": _gas_ago, "label": "一個月前"}] if _gas_ago else [])),
+    }
+
     # ---- 薪資 → 服務業通膨的傳導（把兩個模組真正接起來的地方）----
     pass_block = _passthrough_block(labor_series or {}, series)
 
@@ -1333,6 +1402,8 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "oil_span": span_label(oil_rows),
         "gas_span": span_label(gas_rows),
         "passthrough": pass_block,
+        "breadth": breadth,
+        "energy_viz": energy_viz,
         "asof": {
             "cpi": headline[-1]["date"] if headline else "",
             "ppi": (series.get("PPIFIS") or [{}])[-1].get("date", ""),
@@ -1340,22 +1411,30 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
             "oil": (series.get("DCOILWTICO") or [{}])[-1].get("date", ""),
             "exp": (series.get("T5YIFR") or [{}])[-1].get("date", ""),
         },
+        # 「近 5 期與比較基準」（2026-10 改版）：變動類用柱、水準類用點，
+        # 都只畫 5 期。CPI／核心 CPI 卡的主數字是**季調月增**，這裡也必須
+        # 是月增——先前誤用年增序列，卡片寫 +0.4% 下面卻列 2.9、3.0…
         "mini": {
-            "headline": charts.mini_series(
-                yoy_series(series.get("CPIAUCNS")
-                           or series.get("CPIAUCSL", [])),
-                                           unit="%", fmt=lambda v: f"{v:.1f}"),
-            "core": charts.mini_series(
-                yoy_series(series.get("CPILFENS")
-                           or series.get("CPILFESL", [])),
-                                       unit="%", fmt=lambda v: f"{v:.1f}"),
-            "pce": charts.mini_series(yoy_series(series.get("PCEPILFE", [])),
-                                      unit="%", fmt=lambda v: f"{v:.1f}"),
-            # 日頻序列：從最新一筆往回每 7 個交易日取一點（[::7] 從頭取
-            # 會讓最後一格不是最新值），並標到「月/日」避免三格都寫同一個月
-            "exp": charts.mini_series(
-                since(series.get("T5YIFR", []), CHART_START, 40)[::-1][::7][::-1],
-                unit="%", fmt=lambda v: f"{v:.2f}", daily=True),
+            "headline": charts.kpi_history(
+                infl_an.mom_series(series.get("CPIAUCSL", [])), kind="change",
+                unit="%", fmt=lambda v: f"{v:+.1f}",
+                ref=infl_an.PACE_TARGET, ref_label="0.2% 目標步速",
+                en="CPI 月增率近 5 期"),
+            "core": charts.kpi_history(
+                infl_an.mom_series(series.get("CPILFESL", [])), kind="change",
+                unit="%", fmt=lambda v: f"{v:+.1f}",
+                ref=infl_an.PACE_TARGET, ref_label="0.2% 目標步速",
+                en="核心 CPI 月增率近 5 期"),
+            "pce": charts.kpi_history(
+                yoy_series(series.get("PCEPILFE", [])), kind="level",
+                unit="%", fmt=lambda v: f"{v:.1f}", ref=PCE_TARGET,
+                ref_label="2% 目標", en="核心 PCE 年增率近 5 期"),
+            # 日頻序列取每月最後一個交易日，5 期＝5 個月，跟其他卡同一個節奏
+            "exp": charts.kpi_history(
+                _month_end(series.get("T5YIFR", [])), kind="level",
+                unit="%", fmt=lambda v: f"{v:.2f}",
+                band=(2.35, 2.60), band_label="留意區 2.35–2.60%（燈號門檻）",
+                en="5y5y 通膨預期近 5 個月"),
         },
         # 通膨這幾條一律「往上＝偏鷹」，沒有例外
         "key_metrics": {
@@ -1408,6 +1487,20 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                            and summ.core_yoy is not None else None),
             "asof": (series.get("PPIFIS") or [{}])[-1].get("date", ""),
             "nowcast": _pce_nowcast,
+            # 近 24 個月「核心 PPI 年增 − 核心 CPI 年增」：正＝上游漲得比下游快
+            "gap_chart": charts.gap_columns(
+                _gap_rows(yoy_series(series.get("PPIFES", [])),
+                          yoy_series(series.get("CPILFENS")
+                                     or series.get("CPILFESL", []))),
+                unit=" pp", up_label="上游漲得比零售快（成本待轉嫁）",
+                down_label="上游漲得比零售慢"),
+            "lines": charts.compact_lines([
+                {"label": "核心 PPI 年增", "color": "var(--line-1)",
+                 "points": yoy_series(series.get("PPIFES", []))},
+                {"label": "核心 CPI 年增", "color": "var(--line-2)",
+                 "points": yoy_series(series.get("CPILFENS")
+                                      or series.get("CPILFESL", []))},
+            ], unit="%", height=130, aria="核心 PPI 與核心 CPI 年增"),
         },
         "pce_actual_month": ((series.get("PCEPILFE") or [{}])[-1].get("date", "")[:7]),
 
@@ -1644,6 +1737,19 @@ def _consumption_block(series: dict) -> dict | None:
             "c_chart": charts.line_chart(since_c, unit="%", zero=True, digits=1),
             "i_chart": charts.line_chart(since_i, unit="%", zero=True, digits=1,
                                          color="var(--series-2)"),
+            # 2026-10 改版：消費與所得疊在同一張（同單位），消費跑贏所得的
+            # 區段塗淡橘＝錢從儲蓄出來；儲蓄率另外一張小圖。
+            "ci_chart": charts.compact_lines([
+                {"label": "實質消費", "color": "var(--line-1)", "points": yoy_series(c)},
+                {"label": "實質可支配所得", "color": "var(--line-2)",
+                 "points": yoy_series(inc)},
+            ], unit="%", height=140, zero=True,
+                fill_between={"a": 0, "b": 1, "label": "消費快於所得（動用儲蓄）"},
+                aria="實質消費與實質可支配所得年增"),
+            "s_chart": charts.compact_lines(
+                [{"label": "個人儲蓄率", "color": "var(--text-secondary)", "points": sv}],
+                unit="%", height=100, aria="個人儲蓄率"),
+            "c3": c3, "i3": i3, "s_now": s_now, "ds": ds,
             "sum": f"{title}　·　消費三月年化 {c3:+.1f}%"}
 
 
@@ -2634,6 +2740,18 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
     sc_chart = charts.line_chart(_sc_rows, unit="%", height=120,
                                  color="var(--line-2)")
 
+    # 2026-10 改版：三條薪資／服務價格疊在同一張（同單位 %），
+    # 加一條 3.5% 參考線；相關係數改成 0–12 個月的細柱（收合）。
+    lines_chart = charts.compact_lines([
+        {"label": "平均時薪", "color": "var(--line-1)", "points": w},
+        {"label": "核心服務除住房", "color": "var(--line-2)", "points": s},
+        {"label": "僱用成本指數（季）", "color": "#1baf7a", "points": eci_yoy},
+    ], unit="%", height=150, refs=[{"value": 3.5, "label": "3.5% 薪資相容線"}],
+        aria="薪資與核心服務除住房年增")
+    lag_chart = charts.gap_columns(
+        [{"label": f'{c["lag"]}', "value": c["corr"]} for c in p.corr_by_lag
+        ],
+        unit="", digits=2, labels=True, highlight=f"{p.best_lag}")
     lag_rows = "".join(
         f'<tr><td>{c["lag"]} 個月</td><td>{c["corr"]:+.2f}</td></tr>'
         for c in p.corr_by_lag
@@ -2642,6 +2760,7 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
 
     return {"available": True, "stats": stats, "wage_chart": wage_chart,
             "sc_chart": sc_chart, "lag_rows": lag_rows, "note": p.note,
+            "lines_chart": lines_chart, "lag_chart": lag_chart,
             "corr_note": p.corr_note,
             "best_lag": p.best_lag, "best_corr": p.best_corr,
             # verdict 原樣帶給頁面層：結論框的傾向由它決定，

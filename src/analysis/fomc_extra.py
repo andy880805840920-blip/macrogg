@@ -563,6 +563,58 @@ def dissent_record(docs: list, today: dt.date, months: int = 12) -> dict:
     return rec
 
 
+def vote_history(docs: list, sn: str, today: dt.date, months: int = 12,
+                 roster_year: int | None = None, roster_voters: set | None = None) -> list[dict]:
+    """
+    近 N 個月每場會議這個人怎麼投：只用聲明投票段落裡**有名字**的事實。
+      for      名字在「Voting for」名單
+      against  名字在反對名單（附方向）
+      none     兩邊都沒有＝那場沒有投票權（輪值、尚未就任）
+    2026 年 6 月起的新版聲明只寫票數（「12:0」）不列贊成者姓名：
+    票數加總剛好等於今年委員名單人數時，依名單推定贊成（inferred=True）。
+    """
+    roster_voters = roster_voters or set()
+    cut = today - dt.timedelta(days=int(months * 30.5))
+    out = []
+    for d in docs:
+        date = getattr(d, "date", "") or (d.get("date") if isinstance(d, dict) else "")
+        try:
+            dd = dt.date.fromisoformat(date)
+        except (ValueError, TypeError):
+            continue
+        if dd < cut or dd > today:
+            continue
+        vote = getattr(d, "vote", None) or (d.get("vote") if isinstance(d, dict) else {}) or {}
+        sup = {surname(x) for x in vote.get("supporting") or []}
+        dis = {surname(x.get("name", "")): x.get("direction") for x in vote.get("dissents") or []}
+        if sn in dis:
+            k = dis[sn]
+            out.append({"date": date, "v": "against", "dir": k,
+                         "label": ({"hike": "主張升息", "cut": "主張降息", "hold": "主張維持"}.get(k)
+                                   or OTHER_DISSENT.get(k, OTHER_DISSENT["unknown"]))})
+        elif sn in sup:
+            out.append({"date": date, "v": "for", "dir": "", "label": "贊成"})
+        elif (not sup and dd.year == roster_year and sn in roster_voters
+              and (vote.get("stated_support") or 0) + len(dis) == len(roster_voters)):
+            out.append({"date": date, "v": "for", "dir": "", "label": "贊成",
+                        "inferred": True})
+        else:
+            out.append({"date": date, "v": "none", "dir": "", "label": "未投票"})
+    out.sort(key=lambda x: x["date"])
+    return out
+
+
+# 地方聯儲輪值：紐約每年投票，其餘 11 家分四組輪流（聯邦準備法第 12A 條）。
+# 以 2025 年為基準：波士頓／芝加哥／聖路易／堪薩斯城。
+_ROT = (("Boston", "Philadelphia", "Richmond"), ("Chicago", "Cleveland"),
+        ("St. Louis", "Dallas", "Atlanta"), ("Kansas City", "Minneapolis", "San Francisco"))
+
+
+def rotation(year: int) -> list[str]:
+    """該年有投票權的地方聯儲（不含紐約）。"""
+    return [g[(year - 2025) % len(g)] for g in _ROT]
+
+
 def _dissent_tag(r: dict | None) -> tuple[str, str]:
     if not r:
         return "近 12 個月未投反對票", "neutral"
@@ -594,6 +646,7 @@ def build_officials(roster: dict | None, board_titles: dict, docs: list,
         return []
     notes = notes or {}
     rec = dissent_record(docs, today)
+    _rv = {surname(m["name"]) for m in roster["members"]}
     out = []
     for voter, group in ((True, roster["members"]), (False, roster["alternates"])):
         for m in group:
@@ -610,7 +663,10 @@ def build_officials(roster: dict | None, board_titles: dict, docs: list,
             tag, lean = _dissent_tag(rec.get(sn))
             out.append({"name": m["name"], "surname": sn, "title": title,
                         "voter": voter, "tier": tier, "board": m["affil"] == "Board of Governors",
+                        "affil": m["affil"], "city_zh": CITY_ZH.get(m["affil"], ""),
                         "dissent_tag": tag, "lean": lean,
+                        "votes": vote_history(docs, sn, today, roster_year=roster.get("year"),
+                                              roster_voters=_rv),
                         "note": notes.get(sn, "")})
     out.sort(key=lambda x: (x["tier"], 0 if x["lean"] != "neutral" else 1, x["surname"]))
     return out

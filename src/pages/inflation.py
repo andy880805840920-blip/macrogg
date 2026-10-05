@@ -189,6 +189,70 @@ def _gap_block(sw: dict | None, diverge: str) -> str:
     </details>"""
 
 
+def _breadth_viz(b: dict | None) -> str:
+    """通膨廣度：先一條數線看「現在」三個指標擠在哪，再看 24 個月怎麼走到這裡。"""
+    if not b:
+        return ""
+    return f"""<div class="viz-block">
+      <div class="viz-h">現在：三個口徑在同一條數線上</div>
+      <p class="viz-sub">點靠在一起＝漲勢是普遍的；中位數／截尾明顯低於核心＝少數項目在拉高平均。</p>
+      {b.get('line', '')}
+    </div>
+    <div class="viz-block">
+      <div class="viz-h">近 24 個月　年增率</div>
+      {b.get('chart', '')}
+    </div>"""
+
+
+def _ppi_chain(pp: dict) -> str:
+    def pv(v):
+        return f"{v:+.1f}%" if v is not None else "—"
+    gap = pp.get("gap_vs_cpi")
+    tone = lambda v: "" if v is None else ("up" if v > 2.3 else "")
+    return charts.chain([
+        {"label": "總體 PPI 年增", "value": pv(pp.get("headline_yoy")),
+         "note": "出廠價，含食物與能源"},
+        {"label": "核心 PPI 年增", "value": pv(pp.get("core_yoy")),
+         "note": f'三月年化 {pv(pp.get("core_3m"))}', "tone": tone(pp.get("core_yoy"))},
+        {"label": "差距：核心 PPI − 核心 CPI",
+         "value": (f"{gap:+.1f} pp" if gap is not None else "—"),
+         "note": "正＝上游漲得快、成本待轉嫁", "tone": ("up" if (gap or 0) > 0.3 else
+                                                       "down" if (gap or 0) < -0.3 else ""),
+         },
+    ], links=["剔除食物能源", "對照零售端"])
+
+
+def _energy_chain(d: dict) -> str:
+    """能源傳導鏈：原油 → 加油站 → 總體 CPI。三格各一個數字，箭頭上寫時差。"""
+    ev = d.get("energy_viz") or {}
+    s = d.get("summary")
+    oil1 = getattr(s, "oil_1m", None) if s is not None else None
+    eh = d.get("energy_headline") or {}
+    if oil1 is None:
+        return ""
+    g1 = ev.get("gas_1m")
+    tone = lambda v: "" if v is None else ("up" if v > 0.5 else "down" if v < -0.5 else "")
+    return charts.chain([
+        {"label": "WTI 原油　近一個月", "value": f"{oil1:+.1f}%",
+         "note": (f"現價 {ev['oil']:.1f} 美元／桶" if ev.get("oil") else ""), "tone": tone(oil1)},
+        {"label": "零售汽油　近一個月", "value": (f"{g1:+.1f}%" if g1 is not None else "—"),
+         "note": (f"現價 {ev['gas']:.2f} 美元／加侖" if ev.get("gas") else ""), "tone": tone(g1)},
+        {"label": "對總體 CPI 的估計影響", "value": eh.get("value", "—").replace(" 個百分點", " pp"),
+         "note": "粗估：能源佔 CPI 6.2%、約四成傳到零售；核心 CPI 不受影響",
+         "tone": tone((oil1 or 0) * 0.062 * 0.4 * 10)},
+    ], links=["落後 2–4 週", "下次 CPI 反映"])
+
+
+def _energy_pair(d: dict) -> str:
+    ev = d.get("energy_viz") or {}
+    if not ev.get("oil_chart"):
+        return ""
+    return f"""<div class="viz-block cl-pair">
+      <div><div class="viz-h">WTI 原油（美元／桶）</div>{ev['oil_chart']}</div>
+      <div><div class="viz-h">零售汽油（美元／加侖）</div>{ev['gas_chart']}</div>
+    </div>"""
+
+
 def _consumption_card(c: dict | None) -> str:
     """實質消費力道（2026-10 使用者指定）：需求面撐不撐得住通膨。"""
     if not c:
@@ -199,10 +263,15 @@ def _consumption_card(c: dict | None) -> str:
     <p class="hint">扣掉物價之後，民眾實際多買了多少——需求面撐不撐得住通膨。資料到 {esc(c['month'])}。</p>
     <div class="impact {c['lean']}">{esc(c['title'])}——{esc(c['desc'])}</div>
     <div class="stat-row" style="margin-top:14px">{_stats(c['stats'])}</div>
-    <h3>實質個人消費支出　年增率</h3>
-    {c['c_chart']}
-    <h3>實質可支配所得　年增率</h3>
-    {c['i_chart']}
+    <div class="viz-block">
+      <div class="viz-h">消費 vs 所得　年增率（近 24 個月）</div>
+      <p class="viz-sub">兩條同單位疊在一起比；橘色淡底＝消費跑得比所得快，差額來自儲蓄。</p>
+      {c.get('ci_chart') or (c['c_chart'] + c['i_chart'])}
+    </div>
+    <div class="viz-block">
+      <div class="viz-h">個人儲蓄率</div>
+      {c.get('s_chart', '')}
+    </div>
     {teach(
         "扣掉物價上漲後，民眾的消費量與收入各自成長多少，以及存下來的錢佔收入的比例。",
         "消費撐得住，服務類的需求就降不下來，通膨也比較難回落；消費如果是靠動用儲蓄撐，撐得了一時，之後通常會放慢。",
@@ -264,21 +333,18 @@ def _passthrough(p) -> str:
                 "aligned": "neutral"}.get(p.get("verdict", ""), "neutral")
     return f"""<div class="impact {_pt_lean}">{esc(p['verdict_title'])}——{esc(p['verdict_desc'])}</div>
 <div class="stat-row" style="margin-top:14px">{_stats(p['stats'])}</div>
-<h3>平均時薪年增率</h3>
-{p['wage_chart']}
-<h3>核心服務除住房年增率</h3>
-{p['sc_chart']}
-<p class="hint" style="margin-top:14px">
-  兩條線分開畫，不用雙軸——不同尺度硬放同一張圖會製造出實際上不存在的關係。
-</p>
+<div class="viz-block">
+  <div class="viz-h">薪資 vs 服務業物價　年增率（近 24 個月）</div>
+  <p class="viz-sub">三條都是年增率、同一個單位，所以放同一張、同一個軸。虛線 3.5% 是薪資與 2% 通膨大致相容的水準。</p>
+  {p.get('lines_chart') or (p['wage_chart'] + p['sc_chart'])}
+</div>
 {teach(
     "薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。",
     "服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。",
     "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。")}
-<details data-m-collapse><summary>領先落後的相關性</summary>
-  <table style="margin-top:10px">
-    <thead><tr><th>薪資領先期數</th><th>相關係數</th></tr></thead>
-    <tbody>{p['lag_rows']}</tbody></table>
+<details data-m-collapse><summary>領先落後的相關性：薪資領先 {esc(str(p.get('best_lag', '—')))} 個月時最強（{esc(f"{p['best_corr']:+.2f}" if p.get('best_corr') is not None else '—')}）</summary>
+  <p class="viz-sub" style="margin-top:10px">橫軸＝薪資領先幾個月，柱＝相關係數（−1 到 +1）；深色是最強的那一格。</p>
+  {p.get('lag_chart', '')}
   <p class="hint" style="margin-top:10px">{esc(p['note'])}</p>
 </details>
 {corr_warn}"""
@@ -295,24 +361,24 @@ def _inflation_body_full(d: dict) -> str:
     _fresh = bool(d.get("is_fresh"))
     kpis = "".join([
         _kpi_card("CPI 月增率", k["headline_display"], k["headline_sub"],
-                  k["headline_plain"], charts.sparkline(k["headline_spark"]),
+                  k["headline_plain"], "",
                   mini=mini.get("headline", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("headline"), fresh=_fresh,
                   en="Headline CPI, m/m", leans=lean.get("headline", ())),
         _kpi_card("核心 CPI 月增率", k["core_display"], k["core_sub"],
-                  k["core_plain"], charts.sparkline(k["core_spark"]),
+                  k["core_plain"], "",
                   k.get("core_flag"), k.get("core_flag_kind", ""),
                   mini=mini.get("core", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("core"), fresh=_fresh,
                   en="Core CPI, m/m", leans=lean.get("core", ())),
         _kpi_card("核心 PCE 年增率", k["pce_display"], k["pce_sub"],
-                  k["pce_plain"], charts.sparkline(k["pce_spark"]),
+                  k["pce_plain"], "",
                   k.get("pce_flag"), k.get("pce_flag_kind", ""),
                   mini=mini.get("pce", ""), asof=(a.get("pce") or "")[:7],
                   fresh=_fresh,
                   en="Core PCE, y/y", leans=lean.get("pce", ())),
         _kpi_card("5年後5年期通膨預期", k["exp_display"], k["exp_sub"],
-                  k["exp_plain"], charts.sparkline(k["exp_spark"]),
+                  k["exp_plain"], "",
                   mini=mini.get("exp", ""), asof=(a.get("exp") or "")[:7],
                   fresh=_fresh,
                   en="5y5y Inflation Breakeven", leans=lean.get("exp", ())),
@@ -394,7 +460,7 @@ def _inflation_body_full(d: dict) -> str:
                if x.get("note") else "")
             for x in parts
         )
-        parts_html = f'<div class="dcomp">{rows}</div>'
+        parts_html = charts.waterfall(parts)
 
     # 「剔除住房後比含住房高」每期都可能出現，而且每次都會被讀成算錯。
     # 它其實是重要訊息（住房在把整體往下拉），所以直接寫成一句話。
@@ -528,11 +594,12 @@ def _inflation_body_full(d: dict) -> str:
     <h2 id="trend" data-sum="{_trend_sum}">通膨廣度：中位數與截尾平均</h2>
     <p class="hint">三個指標用不同方法剔除極端值，再跟核心 CPI 比對。</p>
     {trend_html}
+    {_breadth_viz(d.get('breadth'))}
     {teach(
         "把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。",
         "同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。",
         "中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。")}
-    <details data-m-collapse><summary>三個指標的定義與數值</summary>
+    <details data-m-collapse><summary>指標定義與算法</summary>
       <table class="lefty" style="margin-top:10px">
         <thead><tr><th>指標</th><th>目前</th><th>算法</th></tr></thead>
         <tbody>{trend_rows}</tbody></table>
@@ -565,21 +632,12 @@ def _inflation_body_full(d: dict) -> str:
     <p class="hint">「已經發生但還沒反映到數據裡」的部分。</p>
     <div class="impact neutral">{esc(d.get('energy_core_note', ''))}
       <b>除非久到推高通膨預期</b>，油價不改變利率決策。</div>
-    <div class="stat-row" style="margin-top:14px">{_stats(d['energy_stats'])}</div>
-    {energy_head}
-    <h3 style="margin-top:20px">WTI 原油（{esc(d.get('oil_span', ''))}）</h3>
-    <p class="hint" style="margin:0 0 8px">虛線是一個月前的位置。</p>
-    {d.get('oil_chart', '')}
+    {_energy_chain(d) or (_stats(d['energy_stats']) + energy_head)}
+    {_energy_pair(d)}
     {teach(
         "油價最近的變動，以及它大概會在一到兩個月後對總體 CPI 造成多大影響。",
         "能源只佔 CPI 約 6%，但波動極大，常常是單月 CPI 意外的主因。先知道油價動了多少，下個月 CPI 出爐時就不會被表面數字嚇到。",
         "油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。")}
-    <details data-m-collapse><summary>零售汽油價格（{esc(d.get('gas_span', ''))}）</summary>
-      <div style="margin-top:12px">{d.get('gas_chart', '')}</div>
-      <p class="hint" style="margin-top:10px">
-        汽油是 CPI 能源項裡權重最大的一塊，也是消費者最有感的價格。
-        它落後原油約兩到四週。</p>
-    </details>
   </div>
 </div>
 
@@ -676,7 +734,15 @@ def _ppi_card(pp: dict | None) -> str:
     <h2 id="ppi" data-sum="核心 PPI {esc(pv(pp['core_yoy']))}　·　PPI−CPI {esc(f'{gap:+.1f}pp' if gap is not None else '—')}">生產者物價 PPI（上游）</h2>
     <p class="hint">企業的出廠價。資料至 {esc((pp.get('asof') or '—')[:7])}。</p>
     {_gap_impact}
-    <div class="stat-row" style="margin-top:14px">{stats}</div>
+    {_ppi_chain(pp)}
+    <div class="viz-block">
+      <div class="viz-h">上游 vs 零售：核心 PPI − 核心 CPI 年增差距（近 24 個月）</div>
+      <p class="viz-sub">柱在零線上方＝出廠價漲得比零售價快，企業有成本還沒轉嫁；最新一期顏色最深。</p>
+      {pp.get('gap_chart', '')}
+    </div>
+    <details data-m-collapse><summary>兩條原始年增率走勢</summary>
+      {pp.get('lines', '')}
+    </details>
     {nc_html}
     {teach(
         "企業賣給下游的價格（出廠價）漲了多少。CPI 是你我付的零售價，PPI 是它的上游。",

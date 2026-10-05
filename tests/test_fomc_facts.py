@@ -4,6 +4,7 @@
 #   · 靜默期、SEP／點陣圖、會議紀要量詞、委員名單、官員新聞、記者會只摘主席
 #   · AI 只做中文說明，數字鎖擋掉捏造的數字
 import sys
+import re
 import json
 import pathlib
 import datetime as dt
@@ -249,12 +250,40 @@ _body = html.split('id="howto"')[0]          # 判讀說明會交代「為什麼
 for bad in ("客觀訊號分數", "措辭分數", "記者會措辭分數", "Objective Signal"):
     check(f"⑭ 頁面不再出現「{bad}」", bad not in _body)
 for good in ('id="signals"', 'id="next"', 'id="people"', 'id="sep"', 'id="market"',
-             'id="minutes"', 'id="speeches"', 'id="presser"', 'id="focus"', 'id="trend"'):
+             'id="minutes"', 'id="presser"', 'id="focus"', 'id="trend"'):
     check(f"⑭ 新區塊 {good}", good in html)
 check("⑭ 頂部決議卡寫日期", "FOMC 決議｜2026-09-16 會議" in html and "升息一碼至 3.75–4.00%" in html)
 check("⑭ 前次會議也寫出來", "前次 7/29：維持不變，3 票主張升息" in html)
 check("⑭ 離線沒有 AI 說明就不出現 AI 標籤內容", 'class="fx-ai"' not in html)
 check("⑭ 4 月的寬鬆傾向反對票照實寫", "3 票反對聲明加入寬鬆傾向" in html)
+check("⑮ 官員最新發言併進樹狀圖（不再有獨立區塊）",
+      'id="speeches"' not in html and 'data-ot' in html and 'class="ot-panel"' in html)
+_n_nodes = len(re.findall(r'class="ot-n[ "]', html))
+check("⑮ 每位官員一個節點、一個面板，預設只展開主席",
+      _n_nodes == len(ctx["officials"]) == html.count('class="od"')
+      and html.count('aria-pressed="true"') == 1, (_n_nodes, len(ctx["officials"])))
+check("⑮ FOMC 組成：事實卡＋輪值表", 'class="cfs"' in html and 'class="fx-rot"' in html)
+check("⑮ SEP 五張小卡、表格收進看完整數字",
+      html.count('class="sc"') == 5 and "看完整數字" in html, html.count('class="sc"'))
+check("⑮ 輪值：2026 費城／克里夫蘭／達拉斯／明尼亞波利斯；2027 里奇蒙／芝加哥／亞特蘭大／舊金山",
+      fx.rotation(2026) == ["Philadelphia", "Cleveland", "Dallas", "Minneapolis"]
+      and fx.rotation(2027) == ["Richmond", "Chicago", "Atlanta", "San Francisco"])
+_vh = fx.vote_history(
+    [{"date": "2026-07-29", "vote": {"supporting": [], "stated_support": 9,
+      "dissents": [{"name": "Beth M. Hammack", "direction": "hike"}]}},
+     {"date": "2026-01-28", "vote": {"supporting": ["Lisa D. Cook"], "dissents": []}}],
+    "Hammack", dt.date(2026, 10, 1), roster_year=2026,
+    roster_voters={"Hammack", "Cook", "Warsh", "A", "B", "C", "D", "E", "F", "G", "H", "I"})
+check("⑮ 逐場投票：只寫票數的新版聲明依名單推定、反對附方向、名單沒有＝未投票",
+      [(v["date"], v["v"], v["label"]) for v in _vh]
+      == [("2026-01-28", "none", "未投票"), ("2026-07-29", "against", "主張升息")], _vh)
+_vh2 = fx.vote_history(
+    [{"date": "2026-07-29", "vote": {"supporting": [], "stated_support": 11,
+      "dissents": [{"name": "Beth M. Hammack", "direction": "hike"}]}}],
+    "Cook", dt.date(2026, 10, 1), roster_year=2026,
+    roster_voters={"Hammack", "Cook", "Warsh", "A", "B", "C", "D", "E", "F", "G", "H", "I"})
+check("⑮ 票數＝名單人數才推定贊成（標 inferred）", _vh2 and _vh2[0]["v"] == "for"
+      and _vh2[0].get("inferred"), _vh2)
 check("⑭ 點陣圖 SVG 有 18 個點", html.count("<circle") == 18 + 18 + 17 + 17 + 18, html.count("<circle"))
 
 if not ok:
