@@ -16,6 +16,7 @@ from . import compact_full, state_chip
 from ..analysis import changes as chg_mod
 from ..analysis import brief as brief_mod
 from ..analysis import scenario as scenario_mod
+from .election import election_card as _election_card
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -847,6 +848,13 @@ def _focus_strip(f: dict | None) -> str:
     fw = f.get("fedwatch") or {}
     cat = f.get("chips") or []
     picker = script = ""
+    # 主題補充：每個主題的一則補充都放進 HTML，依指標順序挑兩則顯示
+    from ..analysis.focus_today import pick_topics
+    topics = [x for x in (f.get("topics") or []) if x.get("text")]
+    topic_map = f.get("topic_map") or {}
+    avail = [x["id"] for x in topics]
+    _default_sel = [c["id"] for c in cat if c.get("on")]
+    shown = pick_topics(_default_sel, topic_map, avail)
     if cat:
         chips, defaults, opts = [], [], []
         for c in cat:
@@ -871,33 +879,63 @@ def _focus_strip(f: dict | None) -> str:
                   '<div class="fs-pick-panel">' + rows +
                   '<div class="fs-pick-note"><span class="fs-count">已選 '
                   f'{len(defaults)}／4</span>　·　選擇存在此裝置</div>'
+                  '<div class="fs-pick-note">先勾的排前面；前兩個指標決定'
+                  '主軸下方的補充新聞</div>'
                   '</div></details>')
         # 原生 JS，無相依：讀 localStorage → 套用顯示 → 勾選時存回。
         # 上限四顆（固定四格版面）：勾滿後其餘選項停用，要換先取消一顆。
         # 全部取消時退回預設組——空清單沒有意義，畫面也不能空。
+        # 2026-10：選的順序＝顯示順序（先勾的排前面），前兩個指標決定
+        # 主軸下方兩則補充的主題（規則同 focus_today.pick_topics）。
         script = ('<script>(function(){var K="fsChips";var M=4;'
                   'var D=' + _json.dumps(defaults) + ';'
+                  'var TM=' + _json.dumps(topic_map, ensure_ascii=False) + ';'
+                  'var TA=' + _json.dumps(avail) + ';'
                   'var box=document.querySelector(".fs-chips");if(!box)return;'
                   'var ps=Array.prototype.slice.call('
                   'document.querySelectorAll(".fs-pick [data-pick]"));'
+                  'var ids=ps.map(function(p){return p.getAttribute("data-pick");});'
+                  'function each(q,f){Array.prototype.forEach.call('
+                  'document.querySelectorAll(q),f);}'
+                  'function tp(sel){var ul=document.querySelector(".fs-news .fs-list");'
+                  'var w=[];sel.forEach(function(c){var t=TM[c];'
+                  'if(t&&TA.indexOf(t)>=0&&w.indexOf(t)<0&&w.length<2)w.push(t);});'
+                  'if(ul){each(".fs-news [data-topic]",function(li){'
+                  'li.classList.toggle("fs-off",w.indexOf(li.getAttribute("data-topic"))<0);});'
+                  'w.forEach(function(t){var li=ul.querySelector(\'[data-topic="\'+t+\'"]\');'
+                  'if(li)ul.appendChild(li);});var k=0;'
+                  'each(".fs-news [data-gen]",function(li){var on=k<2-w.length;'
+                  'li.classList.toggle("fs-off",!on);if(on)k++;ul.appendChild(li);});}'
+                  'each(".fs-news [data-tlink]",function(a){'
+                  'a.classList.toggle("fs-off",w.indexOf(a.getAttribute("data-tlink"))<0);});'
+                  'var ss=[];each(".fs-news .fs-link:not(.fs-off) .fs-src",function(s){'
+                  'var x=s.textContent.trim();if(x&&ss.indexOf(x)<0)ss.push(x);});'
+                  'var sp=document.querySelector(".fs-srcs");'
+                  'if(sp)sp.textContent=ss.length?"\u3000\u00b7\u3000新聞："'
+                  '+ss.slice(0,3).join("\u3001"):"";}'
                   'function ap(sel){sel=sel.slice(0,M);'
                   'Array.prototype.forEach.call('
                   'box.querySelectorAll("[data-chip]"),function(ch){'
                   'ch.classList.toggle("fs-off",'
                   'sel.indexOf(ch.getAttribute("data-chip"))<0);});'
+                  'sel.forEach(function(id){var ch=box.querySelector('
+                  '\'[data-chip="\'+id+\'"]\');if(ch)box.appendChild(ch);});'
                   'ps.forEach(function(p){var id=p.getAttribute("data-pick");'
                   'p.checked=sel.indexOf(id)>=0;'
                   'p.disabled=(!p.checked&&sel.length>=M);});'
                   'var n=document.querySelector(".fs-count");'
-                  'if(n)n.textContent="已選 "+sel.length+"／"+M;}'
+                  'if(n)n.textContent="已選 "+sel.length+"／"+M;tp(sel);}'
                   'var sel=null;'
                   'try{sel=JSON.parse(localStorage.getItem(K)||"null");}'
                   'catch(e){}'
-                  'if(!(sel instanceof Array)||!sel.length)sel=D;ap(sel);'
+                  'if(sel instanceof Array)sel=sel.filter(function(x){'
+                  'return ids.indexOf(x)>=0;});'
+                  'if(!(sel instanceof Array)||!sel.length)sel=D.slice();ap(sel);'
                   'ps.forEach(function(p){p.addEventListener("change",'
-                  'function(){var s=[];ps.forEach(function(q){'
-                  'if(q.checked)s.push(q.getAttribute("data-pick"));});'
-                  'if(!s.length)s=D;s=s.slice(0,M);'
+                  'function(){var id=p.getAttribute("data-pick");'
+                  'var s=sel.filter(function(x){return x!==id;});'
+                  'if(p.checked)s.push(id);'
+                  'if(!s.length)s=D.slice();s=s.slice(0,M);sel=s;'
                   'try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}'
                   'ap(s);});});})();</script>' + _LIVE_JS)
     else:
@@ -918,11 +956,23 @@ def _focus_strip(f: dict | None) -> str:
         # 版式 A：第一行是主軸（一段話），其餘是補充（逐則 <li>）
         # 主軸可分 2–3 段（內部以 ¶ 串成一行，見 focus_today.MAIN_PARA）
         _mp = [s.strip() for s in _paras[0].split("¶") if s.strip()]
+        # 補充：主題補充（依指標挑兩則）在前，一般補充（主軸那次一起寫的）
+        # 只在主題不足兩則時遞補。預設畫面＝預設指標組的結果，JS 再依讀者
+        # 的選擇重排；關 JS 也看得到合理的內容。
+        _by = {x["id"]: x for x in topics}
+        _tl = [f'<li class="fs-text fs-topic" data-topic="{esc(tid)}">'
+               f'<span class="fs-tag">{esc(_by[tid]["label"])}</span>'
+               f'{esc(_by[tid]["text"])}</li>' for tid in shown]
+        _tl += [f'<li class="fs-text fs-topic fs-off" data-topic="{esc(x["id"])}">'
+                f'<span class="fs-tag">{esc(x["label"])}</span>{esc(x["text"])}</li>'
+                for x in topics if x["id"] not in shown]
+        _gl = [f'<li class="fs-text{"" if i < 2 - len(shown) else " fs-off"}"'
+               f' data-gen="1">{esc(s)}</li>' for i, s in enumerate(_paras[1:])]
+        _items = _tl + _gl
         text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>'
                 + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)
-                + ('<ul class="fs-list">'
-                   + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras[1:])
-                   + '</ul>' if _paras[1:] else "")
+                + ('<ul class="fs-list">' + "".join(_items) + '</ul>'
+                   if _items else "")
                 + '</div>')
     else:
         text = ('<ul class="fs-body fs-list">'
@@ -932,13 +982,19 @@ def _focus_strip(f: dict | None) -> str:
     # 不再另外把標題串成一段假摘要（同一批字印兩次）。
     _headline_mode = (f.get("text_source") == "headlines")
     links = ""
-    if f.get("links"):
-        rows = "".join(
-            f'<div class="fs-link"><a href="{esc(x["link"])}" rel="noopener">'
-            f'{esc(x["title"])}</a>'
-            + (f'<span class="fs-src">{esc(x["source"])}</span>'
-               if x.get("source") else "")
-            + '</div>' for x in f["links"])
+    if f.get("links") or topics:
+        def _lk(x, tid=""):
+            return (f'<div class="fs-link{"" if not tid or tid in shown else " fs-off"}"'
+                    + (f' data-tlink="{esc(tid)}"' if tid else "") + '>'
+                    + (f'<span class="fs-tag">{esc(_lbl.get(tid, ""))}</span>' if tid else "")
+                    + f'<a href="{esc(x["link"])}" rel="noopener">{esc(x["title"])}</a>'
+                    + (f'<span class="fs-src">{esc(x["source"])}</span>'
+                       if x.get("source") else "")
+                    + '</div>')
+        _lbl = {x["id"]: x["label"] for x in topics}
+        rows = ("".join(_lk(x) for x in f.get("links") or [])
+                + "".join(_lk(x, t["id"]) for t in topics
+                          for x in (t.get("links") or [])[:1]))
         links = (f'<details class="f-more"{" open" if _headline_mode else ""}>'
                  f'<summary>來源標題</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
@@ -963,7 +1019,8 @@ def _focus_strip(f: dict | None) -> str:
     # 要自己說得清楚「誰做的、哪一天、新聞從哪來」，不能靠頁面其他地方。
     # 標題旁仍不放日期（使用者先前指定移除），時間放在這一列。
     _srcs = []
-    for x in f.get("links") or []:
+    for x in (list(f.get("links") or [])
+              + [(t.get("links") or [{}])[0] for t in topics if t["id"] in shown]):
         s = (x.get("source") or "").strip()
         if s and s not in _srcs:
             _srcs.append(s)
@@ -971,8 +1028,9 @@ def _focus_strip(f: dict | None) -> str:
     brand = ('<div class="fs-brand"><span class="fs-brand-name">'
              f'<b>{esc(SITE_NAME)}</b>{esc(TAGLINE)}</span>'
              f'<span class="fs-brand-meta">{esc(clock.stamp())}'
+             + '<span class="fs-srcs">'
              + (f'　·　新聞：{esc("、".join(_srcs[:3]))}' if _srcs else "")
-             + '</span></div>')
+             + '</span></span></div>')
     # 桌機兩欄：左邊 2×2 數據磚、右邊新聞——截圖是一張緊湊的橫幅；
     # 手機上下堆疊。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
@@ -1042,6 +1100,7 @@ def home_body(ctxs: dict) -> str:
     return f"""
 <main class="home-dashboard">
   {_focus_strip(ctxs.get('_focus'))}
+  {_election_card(ctxs.get('_election'))}
   <section class="home-hero {esc(sc.lean)}" aria-labelledby="home-now">
     <div class="home-hero-top">
       <div><div class="home-kicker">目前情境</div>
@@ -1116,9 +1175,13 @@ def home_footer(ctxs: dict) -> str:
         '台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），'
         '變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：「今日主軸」把當天最'
         '重要、彼此相關的幾則報導（優先採彭博、路透）綜合成 200–250 字的論述'
-        '——發生什麼、為什麼、對利率或聯準會代表什麼；下面兩則補充其他事件；排序依跨來源熱度、時效、來源與發布日，'
+        '——發生什麼、為什麼、對利率或聯準會代表什麼；下面兩則補充依你在「選擇」裡排的'
+        '前兩個指標換主題（例如選了 WTI 就補油價新聞；同主題往下找，該主題沒有新聞就'
+        '往下一個指標遞補），先勾的指標排前面；排序依跨來源熱度、時效、來源與發布日，'
         '數字均出自原文並經機械驗證；'
-        '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。</span>'
+        '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。'
+        '眾院・民主黨／參院・民主黨＝Polymarket 預測市場上民主黨拿下該院的價格'
+        '（反映下注者的看法，不是民調），隨網站每天更新 3 次。</span>'
         '</div></details>'
         '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'
         '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'

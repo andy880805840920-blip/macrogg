@@ -40,6 +40,7 @@ from src.analysis import freshness                                # noqa: E402
 from src.analysis import series_quality                             # noqa: E402
 from src.analysis import brief as brief_mod                        # noqa: E402
 from src.analysis import focus_today                               # noqa: E402
+from src.analysis import polymarket                                # noqa: E402
 from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
 from src.pages import scenario as scen_page                       # noqa: E402
@@ -931,13 +932,24 @@ def main() -> int:
         for _k in ("cpi", "ppi", "pce"):
             if _next.get(_k):
                 ctxs["inflation"][f"next_{_k}"] = _next[_k]
+    # 美國期中選舉預測（Polymarket）：首頁卡片＋焦點條的眾院／參院 chip。
+    # 先跑，焦點條的 chip 目錄要用到。失敗只少一張卡片。
+    _focus_cfg = load_config("focus.yaml")
+    try:
+        ctxs["_election"] = polymarket.build(
+            (_focus_cfg or {}).get("election"), STATE_FILE.parent / "election.json",
+            args.offline)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("期中選舉預測產生失敗（%s），該卡片本次不顯示", e)
+        ctxs["_election"] = None
     # 今日市場焦點（首頁 hero 之上的窄條）。任何一步失敗都不擋主流程。
     try:
         ctxs["_focus"] = focus_today.build(
-            rates_series, args.offline, load_config("focus.yaml"),
+            rates_series, args.offline, _focus_cfg,
             STATE_FILE.parent / "focus.json", liq_series=liq_series,
             # 今天／昨天有哪些發布：發布當天相關新聞加分
-            events=watch_calendar.event_dates(ctxs["_schedule"]))
+            events=watch_calendar.event_dates(ctxs["_schedule"]),
+            election=ctxs["_election"])
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None

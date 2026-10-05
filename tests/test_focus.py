@@ -1297,7 +1297,8 @@ _hA = _home._focus_strip({"chips": [], "text": "主軸一段\n補充甲\n補充�
                           "layout": "main", "fedwatch": None,
                           "text_source": "model-content", "links": []})
 check("㉜ 主軸是一個段落、補充是兩則清單",
-      '<p class="fs-main">主軸一段</p>' in _hA and _hA.count('<li class="fs-text">') == 2)
+      '<p class="fs-main">主軸一段</p>' in _hA and _hA.count('data-gen="1"') == 2
+      and "fs-off" not in _hA.split('<ul class="fs-list">')[1].split("</ul>")[0])
 _hB = _home._focus_strip({"chips": [], "text": "第一段¶第二段\n補充甲\n補充乙",
                           "layout": "main", "fedwatch": None,
                           "text_source": "model-content", "links": []})

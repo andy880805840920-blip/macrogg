@@ -460,7 +460,7 @@ def _txf_chip(q: dict | None) -> dict:
 def build_catalog(rates_series: dict | None, liq_series: dict | None,
                   fresh_yields: list | None, offline: bool,
                   _get=None, fw: dict | None = None,
-                  _post=None) -> list[dict]:
+                  _post=None, election: dict | None = None) -> list[dict]:
     """
     焦點條的完整 chip 目錄（14 顆）。每顆：id、短標籤、顯示值、
     對前一日收盤的變動、方向色、資料日（月-日）、是否預設顯示。
@@ -576,6 +576,10 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     # 測試注入了 _get（GET 假物件）卻沒給 _post 時不打真網路
     _txf_live = not offline and (_post is not None or _get is None)
     chips.append(_txf_chip(fetch_txf(_get_post=_post) if _txf_live else None))
+    # 期中選舉（Polymarket）：眾院、參院兩顆。卡片停用或過了顯示期就不放。
+    if election:
+        from .polymarket import chips as _pm_chips
+        chips.extend(_pm_chips(election))
     return chips
 
 
@@ -754,7 +758,8 @@ def _excluded(title: str, exclude: list[str] | None) -> bool:
 
 def fetch_feed_headlines(feeds: list, keywords: list[str],
                          hours: int = 30, _get=None,
-                         exclude: list[str] | None = None) -> list[dict]:
+                         exclude: list[str] | None = None,
+                         raw_out: list | None = None) -> list[dict]:
     """
     吃 RSS，只留**標題命中任一關鍵字詞**的項目。單一 feed 失敗就跳過。
 
@@ -764,6 +769,10 @@ def fetch_feed_headlines(feeds: list, keywords: list[str],
 
     每條 feed 都記一行「取得 N 則、命中 M 則」：先前 Yahoo 那幾條 feed
     內容早就不是總經新聞了（滿版台股個股、加密貨幣），卻一直沒人發現。
+
+    raw_out：有給的話，時間窗內**所有**項目（不經關鍵字與排除詞過濾）
+    也收進這個列表——主題補充從同一批 feed 用各自的關鍵字再篩一次，
+    不必把每條 feed 重抓一遍。
     """
     get = _get or (lambda url: requests.get(
         url, timeout=TIMEOUT, headers={"User-Agent": "macro-dashboard/1.0"}))
@@ -789,11 +798,6 @@ def fetch_feed_headlines(feeds: list, keywords: list[str],
             if not title or not link:
                 continue
             n_all += 1
-            if not take_all and not any(_kw_hit(w, _kw_text(title))
-                                        for w in words):
-                continue
-            if _excluded(title, exclude):
-                continue
             try:
                 at = parsedate_to_datetime(pub)
                 if at.tzinfo is None:
@@ -802,11 +806,6 @@ def fetch_feed_headlines(feeds: list, keywords: list[str],
                 continue
             if at < cutoff:
                 continue
-            key = re.sub(r"\s+", "", _norm_title(title))[:40]
-            if key in seen:
-                continue
-            seen.add(key)
-            n_hit += 1
             # RSS 的官方摘要（FT／WSJ／CNBC 的 description 是出版社自己寫的
             # 一兩句話，合法免費）：付費牆來源靠它補一點實質內容。
             desc = _html.unescape(re.sub(
@@ -814,9 +813,22 @@ def fetch_feed_headlines(feeds: list, keywords: list[str],
             desc = re.sub(r"\s+", " ", desc).strip()[:240]
             if desc and _sim(_norm_title(desc), _norm_title(title)) > 0.7:
                 desc = ""                          # 摘要只是標題重印就不留
-            out.append({"title": title, "link": link, "source": label,
-                        "at": at.isoformat(), "kw": "",
-                        "summary": desc if len(desc) >= 30 else ""})
+            rec = {"title": title, "link": link, "source": label,
+                   "at": at.isoformat(), "kw": "",
+                   "summary": desc if len(desc) >= 30 else ""}
+            if raw_out is not None:
+                raw_out.append(dict(rec))
+            if not take_all and not any(_kw_hit(w, _kw_text(title))
+                                        for w in words):
+                continue
+            if _excluded(title, exclude):
+                continue
+            key = re.sub(r"\s+", "", _norm_title(title))[:40]
+            if key in seen:
+                continue
+            seen.add(key)
+            n_hit += 1
+            out.append(rec)
         log.info("市場焦點：feed %s 取得 %d 則、入選 %d 則", label, n_all, n_hit)
     out.sort(key=lambda x: x["at"], reverse=True)
     return out
@@ -2255,6 +2267,318 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 # ---------------------------------------------------------------------------
 # 主流程
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 主題補充（2026-10）：主軸下方的兩則補充，依讀者在「選擇」裡排的前兩個
+# 指標換成對應主題的新聞。每次更新把**所有主題**的補充都寫好放進頁面，
+# 瀏覽器再依讀者的選擇挑兩則顯示（網站仍是靜態頁，不多耗 Netlify）。
+#
+# 規則（使用者定案）：
+#   · 前兩個指標屬於同一主題 → 往下找下一個不同主題的指標
+#   · 主題當天沒有新聞 → 往讀者選的下一個指標遞補；都沒有就用一般補充
+#   · 台指期主題用自己的關鍵字與排除詞（全站的「台股」「金控」排除只
+#     套用在主軸與其他主題）
+#   · 每則補充前面加主題標籤
+# ---------------------------------------------------------------------------
+TOPIC_PROMPT_VERSION = "t1"
+TOPIC_CHARS, TOPIC_MIN = 80, 40
+TOPIC_HARD = int(TOPIC_CHARS * HARD_MULT_SUPP)          # 100 字
+
+DEFAULT_TOPICS = [
+    {"id": "fed", "label": "聯準會",
+     "chips": ["fedwatch", "fw_dec", "fw_cum", "dgs3mo", "dgs2"],
+     "keywords": ["Fed", "FOMC", "Powell", "Warsh", "聯準會", "降息", "升息",
+                  "rate cut", "rate hike"]},
+    {"id": "long", "label": "長天期美債",
+     "chips": ["dgs5", "dgs10", "dgs30", "move"],
+     "keywords": ["Treasury", "yields", "bond market", "美債", "殖利率", "公債標售"]},
+    {"id": "funding", "label": "資金市場",
+     "chips": ["sofr", "sofr_iorb", "onrrp", "srf"],
+     "keywords": ["repo", "SOFR", "reserves", "money market", "回購", "準備金"]},
+    {"id": "oil", "label": "油價", "chips": ["wti", "brent"],
+     "keywords": ["oil", "crude", "OPEC", "Brent", "油價", "原油"]},
+    {"id": "equity", "label": "美股", "chips": ["dji", "vix"],
+     "keywords": ["Dow", "S&P 500", "Wall Street", "stocks", "美股", "道瓊", "標普"]},
+    {"id": "semi", "label": "半導體", "chips": ["sox"],
+     "keywords": ["chip", "semiconductor", "Nvidia", "TSMC", "半導體", "晶片",
+                  "輝達", "台積電"]},
+    {"id": "twf", "label": "台指期", "chips": ["txf"],
+     "keywords": ["台指期", "台股", "加權指數", "外資", "夜盤"],
+     "exclude": ["ETF", "存股", "高股息", "定期定額", "0050"]},
+    {"id": "election", "label": "期中選舉", "chips": ["pm_house", "pm_senate"],
+     "keywords": ["midterm", "Senate race", "House majority", "期中選舉",
+                  "參議院", "眾議院"]},
+]
+
+_GNEWS = {"en": "https://news.google.com/rss/search?q={q}%20when:2d"
+                "&hl=en-US&gl=US&ceid=US:en",
+          "zh": "https://news.google.com/rss/search?q={q}%20when:2d"
+                "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"}
+
+
+def topic_specs(cfg: dict | None) -> list[dict]:
+    """config 的 topics:（沒設就用內建的八個主題），正規化成固定欄位。"""
+    raw = (cfg or {}).get("topics") or DEFAULT_TOPICS
+    out = []
+    for t in raw:
+        if not isinstance(t, dict) or not t.get("id"):
+            continue
+        out.append({
+            "id": str(t["id"]), "label": str(t.get("label") or t["id"]),
+            "chips": [str(c) for c in (t.get("chips") or [])],
+            "keywords": [str(k) for k in (t.get("keywords") or []) if k],
+            # exclude 有寫就**取代**全站排除詞（台指期要放行「台股」）
+            "exclude": ([str(x) for x in t["exclude"]]
+                        if t.get("exclude") is not None else None),
+            "search": [s for s in (t.get("search") or []) if isinstance(s, dict)
+                       and s.get("q")],
+        })
+    return out
+
+
+def chip_topic_map(specs: list[dict]) -> dict:
+    return {c: s["id"] for s in specs for c in s["chips"]}
+
+
+def pick_topics(sel: list[str], cmap: dict, available, n: int = 2) -> list[str]:
+    """
+    讀者的指標順序 → 要顯示的主題（最多 n 個）。同主題只算一次；
+    沒有內容的主題跳過、往下一個指標遞補。前端 JS 是同一套規則。
+    """
+    out = []
+    for c in sel or []:
+        tid = cmap.get(c)
+        if tid and tid in available and tid not in out:
+            out.append(tid)
+        if len(out) >= n:
+            break
+    return out
+
+
+def _topic_url(s: dict) -> str:
+    return _GNEWS.get(str(s.get("lang") or "en"), _GNEWS["en"]).format(
+        q=quote(str(s["q"])))
+
+
+def _phrase_hit(kw: str, title: str) -> bool:
+    """
+    主題關鍵字是**詞組**比對（跟主軸的「空白拆成單詞」不同）：「Wall Street」
+    要整組出現，不能拆成「Wall」「Street」——拆開的話「market」「500」這種
+    單詞會命中幾乎所有標題。中文詞組（「台股 外資」）則是每個詞都要出現。
+    """
+    t = _kw_text(title or "")
+    kw = str(kw).strip()
+    if not kw:
+        return False
+    if kw.isascii():
+        return re.search(r"(?<![A-Za-z])" + re.escape(kw.lower()) + r"(?![A-Za-z])",
+                         t.lower()) is not None
+    return all(w in t for w in kw.split())
+
+
+def _rank_topic(cand: list[dict], kws, n: int, now=None) -> list[dict]:
+    """主題內排序：命中詞組數 ×2＋時效＋來源（彭博路透優先），再擋同一件事。"""
+    scored = sorted(cand, reverse=True, key=lambda h: (
+        2.0 * sum(_phrase_hit(k, h.get("title") or "") for k in kws)
+        + rank_score(h, [], now=now)))
+    out = []
+    for h in scored:
+        c = _norm_title(h["title"])
+        if any(_sim(c, _norm_title(p["title"])) > 0.55 for p in out):
+            continue
+        out.append(h)
+        if len(out) >= n:
+            break
+    return out
+
+
+def gather_topic_material(specs: list[dict], pool: list[dict], *,
+                          global_exclude=None, main_titles=(), now=None,
+                          _fetch=None, _body=None) -> dict:
+    """
+    每個主題的材料：{tid: {"arts": [...], "briefs": [...], "links": [...]}}。
+      · 候選＝主 feed 池（不分關鍵字的全部項目）用主題詞組篩＋主題自己
+        的 Google News 搜尋 feed（只有標題與摘要，同樣用詞組篩）
+      · 跟主軸來源標題太像的（同一件事）先剔掉——補充不重複主軸
+      · 有內文的取前 2 篇抓正文；只有標題的取前 3 則當「標題快訊」
+    """
+    fetch = _fetch or fetch_feed_headlines
+    body = _body or fetch_article_text
+    mains = [_norm_title(x) for x in main_titles if x]
+    picked: dict = {}
+    for s in specs:
+        exc = s["exclude"] if s["exclude"] is not None else (global_exclude or [])
+        extra = []
+        if s["search"]:
+            try:
+                extra = fetch([{"url": _topic_url(x), "all": True}
+                               for x in s["search"]], [], hours=36, exclude=exc)
+            except Exception as e:                 # noqa: BLE001
+                log.warning("主題補充：%s 的搜尋 feed 失敗（%s）", s["id"], e)
+        seen, cand = set(), []
+        for h, _srch in ([(x, False) for x in pool]
+                         + [(x, True) for x in (extra or [])]):
+            title = h.get("title") or ""
+            k = _norm_title(title)[:40]
+            if (k in seen or _excluded(title, exc)
+                    or not any(_phrase_hit(w, title) for w in s["keywords"])
+                    or any(_sim(_norm_title(title), m) > 0.55 for m in mains)):
+                continue
+            seen.add(k)
+            h = dict(h)
+            # Google News 搜尋的項目：真正的來源在標題尾巴「 - Reuters」
+            if _srch or not h.get("source") or "news.google" in h.get("source", ""):
+                m_ = re.search(r"\s[-–—]\s([^-–—]{2,40})$", title)
+                h["source"] = (m_.group(1).replace(".com", "").strip()
+                               if m_ else "Google News")
+            cand.append(h)
+        if not cand:
+            continue
+        picked[s["id"]] = {
+            "body_cand": _rank_topic([h for h in cand if not _headline_only(h["link"])],
+                                     s["keywords"], 2, now),
+            "briefs": _rank_topic([h for h in cand if _headline_only(h["link"])],
+                                  s["keywords"], 3, now),
+            "links": _rank_topic(cand, s["keywords"], 2, now)}
+    # 內文一次並行抓（全部主題合起來）
+    jobs = [(tid, h) for tid, m in picked.items() for h in m["body_cand"]]
+    bodies = _pmap(lambda j: body(j[1]["link"]), jobs, workers=8)
+    out = {}
+    for tid, m in picked.items():
+        arts = [{"title": h["title"], "body": b, "source": h.get("source", "")}
+                for (t2, h), b in zip(jobs, bodies) if t2 == tid and b]
+        if not arts and not m["briefs"]:
+            continue
+        out[tid] = {"arts": arts, "briefs": m["briefs"],
+                    "links": [{"title": re.sub(r"\s*[-–—|]\s*[^-–—|]{1,30}$", "",
+                                               x["title"]).strip() or x["title"],
+                               "link": x["link"], "source": x.get("source", "")}
+                              for x in m["links"]]}
+    return out
+
+
+_TOPIC_SYSTEM = (
+    "你是財經記者。輸入的最前面是今天首頁「主軸」已經寫過的內容，後面分成幾個"
+    "主題區塊（=== 代號｜主題 ===），每個區塊是該主題的新聞標題、摘要與內文"
+    "節錄（可能中英文混合）。為每個區塊寫一則重點，{min}–{cap} 個中文字："
+    "寫出發生了什麼，再加一個具體細節（數字、時間、誰說的或原因）；材料裡有人"
+    "講到時，點出它對利率、聯準會或市場的意義。不能只重述標題。不要跟主軸講"
+    "同一件事——區塊裡若都是主軸那件事，就寫同一主題下的另一件事；真的沒有"
+    "別的事就輸出「代號｜略」。硬性規則：只能使用該區塊材料裡的資訊，不得補充"
+    "材料以外的事實或數字；只有標題的新聞只能轉述標題與摘要字面上的事，引用時"
+    "帶來源（例如「路透報導稱…」）；不得自行推論來源沒有寫的因果關係；不做"
+    "預測、不下投資結論；繁體中文；不要評論材料本身，不要出現「材料」「區塊」"
+    "這類字眼。輸出格式：每個主題一行，「代號｜內容」，例如「oil｜…」，"
+    "不要其他文字、不要編號、不要粗體記號。")
+
+_TOPIC_LINE = re.compile(r"^\s*[-*・•]?\s*([a-z][a-z0-9_]*)\s*[｜|:：]\s*(.+?)\s*$")
+
+
+def _topic_block(tid: str, label: str, m: dict) -> str:
+    parts = [f"=== {tid}｜{label} ==="]
+    for a in m["arts"]:
+        parts.append(f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}")
+    for b in m["briefs"]:
+        parts.append(f"【{b.get('source') or '—'}】{b['title']}（只有標題）"
+                     + (f"——{b['summary']}" if b.get("summary") else ""))
+    return "\n".join(parts)
+
+
+def _parse_topic_lines(text: str) -> dict:
+    out = {}
+    for ln in _tidy_focus(text).splitlines():
+        m = _TOPIC_LINE.match(ln)
+        if m and m.group(1) not in out:
+            out[m.group(1)] = m.group(2).strip()
+    return out
+
+
+def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
+                     meta_markers=None) -> dict:
+    """
+    一次 AI 呼叫寫完所有主題；逐則驗證（後設字眼、數字鎖對該主題自己的
+    材料、長度）。有問題的主題帶原因**只重寫那幾個**一次；仍不合格就不顯示
+    那個主題（前端自動遞補）。回傳 {tid: 文字}。
+    """
+    if not material:
+        return {}
+    system = _TOPIC_SYSTEM.format(min=TOPIC_MIN, cap=TOPIC_CHARS)
+    head = "=== 今日主軸（不要重複）===\n" + (main_text or "").replace(MAIN_PARA, "\n")
+    srcs = {tid: _topic_block(tid, labels.get(tid, tid), m)
+            for tid, m in material.items()}
+    good: dict = {}
+    todo = list(material)
+    note = ""
+    for attempt in (1, 2):
+        text, err = _call_ai(head + "\n\n" + "\n\n".join(srcs[t] for t in todo)
+                             + note, system, env)
+        if err:
+            log.warning("主題補充：AI 呼叫失敗（%s）", err)
+            break
+        got = _parse_topic_lines(text)
+        bad = {}
+        for tid in todo:
+            s = (got.get(tid) or "").strip()
+            if not s or s in ("略", "無", "—"):
+                continue                           # 沒有別的事：這個主題不顯示
+            if _meta_hits(s, meta_markers):
+                bad[tid] = "在評論材料而不是寫新聞"
+            elif not _digits_ok(s, srcs[tid]):
+                bad[tid] = "出現該主題材料裡沒有的數字"
+            elif cjk_len(s) < int(TOPIC_MIN * SHORT_TOL) and attempt == 1:
+                bad[tid] = (f"只有 {cjk_len(s)} 字，像在列標題（要寫出發生了什麼"
+                            "再加一個具體細節）")
+            else:
+                good[tid] = _trim_to(s, TOPIC_HARD)
+        if not bad or attempt == 2:
+            if bad:
+                log.warning("主題補充：重寫後仍不合格，不顯示 %s", "、".join(bad))
+            break
+        log.warning("主題補充：%s，帶原因重寫一次",
+                    "；".join(f"{k} {v}" for k, v in bad.items()))
+        todo = list(bad)
+        note = ("\n\n（上一次這幾個主題被退回："
+                + "；".join(f"{k}：{v}" for k, v in bad.items())
+                + f"。請只重寫這幾個主題，每則 {TOPIC_MIN}–{TOPIC_CHARS} 字。）")
+    log.info("主題補充：產出 %d 個主題（%s）", len(good), "、".join(good))
+    return good
+
+
+def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
+                 main_titles, state: dict, env=None, now=None,
+                 meta_markers=None) -> dict:
+    """
+    主題補充的整條流程（含快取）：回傳 {"items": [...], "map": {chip: tid}}。
+    快取鍵＝提示詞版本＋主軸＋各主題入選標題；12 小時內相同就沿用。
+    """
+    specs = topic_specs(cfg)
+    res = {"items": [], "map": chip_topic_map(specs),
+           "order": [s["id"] for s in specs]}
+    if not specs:
+        return res
+    labels = {s["id"]: s["label"] for s in specs}
+    mat = gather_topic_material(
+        specs, pool, global_exclude=(cfg or {}).get("exclude_keywords") or [],
+        main_titles=main_titles, now=now)
+    key = hashlib.sha256((TOPIC_PROMPT_VERSION + "|" + (main_text or "") + "|" + "|".join(
+        f"{tid}:" + ",".join(x["title"] for x in m["links"] + m["briefs"])
+        for tid, m in sorted(mat.items()))).encode("utf-8")).hexdigest()[:16]
+    old = state.get("topics") or {}
+    _age = _age_hours({"at": old.get("at")}, now or dt.datetime.now(dt.timezone.utc))
+    if old.get("hash") == key and old.get("items") and _age is not None \
+            and _age < CACHE_TTL_HOURS:
+        log.info("主題補充：材料與上次相同，沿用 %.1f 小時前的內容", _age)
+        res["items"] = old["items"]
+        return res
+    texts = summarize_topics(mat, labels, main_text, env, meta_markers)
+    res["items"] = [{"id": tid, "label": labels[tid], "text": texts[tid],
+                     "links": mat[tid]["links"]}
+                    for tid in res["order"] if tid in texts]
+    if res["items"]:
+        state["topics"] = {"hash": key, "items": res["items"],
+                           "at": (now or dt.datetime.now(dt.timezone.utc)).isoformat()}
+    return res
+
+
 def _todays_events(events: dict | None, cfg: dict | None,
                    today: dt.date) -> list[str]:
     """
@@ -2278,7 +2602,7 @@ def _todays_events(events: dict | None, cfg: dict | None,
 
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
           state_path: Path, env=None, liq_series: dict | None = None,
-          events: dict | None = None) -> dict:
+          events: dict | None = None, election: dict | None = None) -> dict:
     cfg = cfg or {}
     keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
     # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
@@ -2303,7 +2627,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                        "當天的市場焦點一段。")
         out["text_source"] = "offline"
         out["chips"] = build_catalog(rates_series, liq_series, yields,
-                                     offline=True)
+                                     offline=True, election=election)
+        out["topic_map"] = chip_topic_map(topic_specs(cfg))
         return out
 
     # ---- 殖利率即時 chip：優先重用長端模組已升級的序列（帶 live 標記
@@ -2385,7 +2710,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     vague_markers = ([str(m) for m in cfg.get("vague_markers") if m]
                      if cfg.get("vague_markers") else None)
     # feed 過濾要認得兩級關鍵字（次級只是排序權重低，不是不收）
-    heads = fetch_feed_headlines(feeds, keywords + kw2, exclude=exclude)
+    _raw_pool: list = []                           # 主題補充用：時間窗內全部項目
+    heads = fetch_feed_headlines(feeds, keywords + kw2, exclude=exclude,
+                                 raw_out=_raw_pool)
     mode = "content"
     if not heads:
         log.warning("市場焦點：Yahoo RSS 無命中或全部失敗，退回 Google News 標題模式")
@@ -2523,6 +2850,18 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     else:
         log.warning("市場焦點：沒有抓到任何標題")
 
+    # ---- 主題補充：依讀者選的前兩個指標換主題（主軸寫成才做）----
+    out["topics"], out["topic_map"] = [], chip_topic_map(topic_specs(cfg))
+    if out.get("layout") == "main" and out.get("text"):
+        try:
+            _tp = build_topics(cfg, _raw_pool, out["text"].split("\n")[0],
+                               [x.get("title", "") for x in out.get("links") or []],
+                               state, env, now=dt.datetime.now(dt.timezone.utc),
+                               meta_markers=meta_markers)
+            out["topics"], out["topic_map"] = _tp["items"], _tp["map"]
+        except Exception as e:                     # noqa: BLE001
+            log.warning("主題補充失敗（%s），補充維持一般內容", e)
+
     try:
         state_path.parent.mkdir(parents=True, exist_ok=True)
         state_path.write_text(json.dumps(state, ensure_ascii=False, indent=1),
@@ -2534,7 +2873,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     try:
         out["chips"] = build_catalog(rates_series, liq_series,
                                      out["yields"], offline=False,
-                                     fw=out.get("fedwatch"))
+                                     fw=out.get("fedwatch"), election=election)
     except Exception as e:                         # noqa: BLE001
         log.warning("chip 目錄組裝失敗（%s），退回預設呈現", e)
         out["chips"] = []

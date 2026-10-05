@@ -212,3 +212,119 @@ sources:
   - wall street journal
   - financial times
   - ft
+
+# ============================================================================
+# 主題補充（2026-10）：主軸下方的兩則補充，依讀者在「選擇」裡排的前兩個
+# 指標換成對應主題的新聞。每次更新把所有主題都寫好，瀏覽器再依讀者的選擇
+# 挑兩則顯示。
+#   chips     屬於這個主題的指標（指標代號見首頁「選擇」）
+#   keywords  從新聞來源池挑這個主題的新聞。**詞組比對**：英文整組出現才算
+#             （不分大小寫、整字比對，複數要另外列，例如 chip／chips）；
+#             中文詞組裡空白分開的每個詞都要出現
+#   exclude   有寫就**取代**上面的 exclude_keywords（台指期要放行「台股」）
+#   search    額外的 Google News 搜尋（只有標題＋摘要），lang: en／zh
+# 規則：前兩個指標同主題 → 往下找不同主題；主題當天沒新聞 → 往下一個
+# 指標遞補，都沒有就用主軸那次一起寫的一般補充。
+# ============================================================================
+topics:
+  - id: fed
+    label: 聯準會
+    chips: [fedwatch, fw_dec, fw_cum, dgs3mo, dgs2]
+    keywords: [Fed, Federal Reserve, FOMC, Powell, Warsh, 聯準會, 降息, 升息, rate cut, rate cuts, rate hike]
+    search:
+      - {q: "Federal Reserve officials", lang: en}
+      - {q: "Fed (site:reuters.com OR site:bloomberg.com)", lang: en}
+  - id: long
+    label: 長天期美債
+    chips: [dgs5, dgs10, dgs30, move]
+    # 只收美債：yield／殖利率這種泛稱會把印度債、歐債、台股的「股息殖利率」都拉進來
+    keywords: [Treasury, Treasuries, 10-year, 30-year, 美債, 美國公債, 美債殖利率, 公債標售]
+    search:
+      - {q: "Treasury yields (site:reuters.com OR site:bloomberg.com)", lang: en}
+      - {q: "Treasury auction", lang: en}
+  - id: funding
+    label: 資金市場
+    chips: [sofr, sofr_iorb, onrrp, srf]
+    keywords: [repo market, SOFR, bank reserves, reverse repo, standing repo, money market, 回購市場, 準備金]
+    search:
+      - {q: "\"repo market\" OR SOFR OR \"bank reserves\" Fed", lang: en}
+  - id: oil
+    label: 油價
+    chips: [wti, brent]
+    keywords: [oil, crude, OPEC, Brent, WTI, 油價, 原油]
+    search:
+      - {q: "oil prices (site:reuters.com OR site:bloomberg.com)", lang: en}
+  - id: equity
+    label: 美股
+    chips: [dji, vix]
+    keywords: [Dow, S&P 500, Nasdaq, Wall Street, stocks, VIX, 美股, 道瓊, 標普]
+    search:
+      - {q: "Wall Street stocks (site:reuters.com OR site:bloomberg.com)", lang: en}
+  - id: semi
+    label: 半導體
+    chips: [sox]
+    keywords: [chip, chips, chipmaker, chipmakers, semiconductor, semiconductors, Nvidia, TSMC, AI capex, 半導體, 晶片, 輝達, 台積電]
+    # 台積電、輝達的中文新聞常是個股理財文——擋掉，其餘沿用全站排除詞
+    exclude: [ETF, 存股, 高股息, 股息, 定期定額, "0050", 台股, 金控, 必漲, 卡位, 黑馬, 飆股, 千金股]
+    search:
+      - {q: "chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)", lang: en}
+  - id: twf
+    label: 台指期
+    chips: [txf]
+    keywords: [台指期, 台股, 加權指數, 外資, 夜盤]
+    exclude: [ETF, 存股, 高股息, 定期定額, "0050", 必漲, 卡位, 黑馬, 飆股, 千金股]
+    search:
+      - {q: "台指期", lang: zh}
+      - {q: "台股 外資", lang: zh}
+  - id: election
+    label: 期中選舉
+    chips: [pm_house, pm_senate]
+    keywords: [midterm, midterms, Senate race, House majority, Senate control, House control, 期中選舉, 參議院, 眾議院]
+    search:
+      - {q: "midterm elections (site:reuters.com OR site:bloomberg.com)", lang: en}
+      - {q: "美國期中選舉", lang: zh}
+
+# ============================================================================
+# 美國期中選舉預測（Polymarket，首頁卡片＋眾院／參院兩顆指標）
+# 公開資料、不用金鑰。選舉日後卡片改成「選舉結果」，hide_after 之後自動隱藏。
+# 事件代號（slug）就是 Polymarket 網址 /event/ 後面那一段。
+# ============================================================================
+election:
+  enabled: true
+  election_date: 2026-11-03
+  hide_after: 2026-11-17
+  house: which-party-will-win-the-house-in-2026
+  senate: which-party-will-win-the-senate-in-2026
+  balance: balance-of-power-2026-midterms
+  tag: midterms
+  n_races: 4                 # 參院選戰列幾州（自動挑勝負最接近的）
+  min_volume: 100000         # 眾院／參院／權力組合的交易量下限（美元）
+  race_min_volume: 300000    # 個別州選戰的交易量下限（美元）
+  stale_days: 3              # 抓不到時沿用上次結果的最長天數
+  # ---- 各州地圖（選舉卡片下方，可收合）----
+  map: true
+  # 這次沒改選的席次（參院 65 席、州長 14 州）——選前狀態，選後就不用改
+  senate_not_up: {D: 34, R: 31}     # 民主黨含 2 位與民主黨同黨團的獨立參議員
+  senate_majority: 51
+  senate_tiebreak: R                # 50:50 由副總統（共和黨）投票
+  senate_control: R                 # 改選前由誰掌控
+  governor_not_up: {D: 6, R: 8}     # D：DE KY NJ NC VA WA；R：IN LA MS MO MT ND UT WV
+  governor_before: {R: 27, D: 23}
+  # Polymarket 沒掛 midterms 標籤的事件（州 → 事件代號）
+  extra_events:
+    governor:
+      California: california-governor-election-2026
+  # 盤口上沒標黨派的候選人（D／R／I）。log 出現「領先者沒標黨派」就在這裡補
+  party_overrides:
+    Mary Peltola: D
+    Dan Sullivan: R
+    Jonathan Kreiss-Tomkins: D
+    Tom Begich: D
+    Bernadette Wilson: R
+    David Bronson: R
+    Xavier Becerra: D
+    Steve Hilton: R
+  # 席次分布盤（顯示市場價格最高的那一格）
+  senate_seats_event: republican-senate-seats-after-the-2026-midterm-elections-927
+  house_seats_event: republican-house-seats-after-the-2026-midterm-elections
+  governor_seats_event: how-many-republican-governors-after-the-2026-midterm-elections
