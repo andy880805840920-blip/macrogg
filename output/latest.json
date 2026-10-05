@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T10:35:46+08:00",
+  "generated_at": "2026-10-05T19:46:56+08:00",
   "labor": {
     "month": "2026-09",
     "score": 0.09234386181407878,
@@ -65,12 +65,22 @@
   "inflation": {
     "month": "2026-08",
     "tilt": {
-      "dovish": 4.5,
+      "dovish": 6.5,
       "hawkish": 4.0,
-      "net": -0.5,
-      "tilt": "balanced"
+      "net": -2.5,
+      "tilt": "dovish"
     },
     "flags": [
+      {
+        "key": "pce_cooling",
+        "severity": "alert",
+        "headline": "核心 PCE 在降溫：三月年化 2.0%，低於年增 3.0%",
+        "detail": "核心 PCE 年增 3.0%，最新月增 0.25%、三月年化 2.0%、六月年化 2.7%。短天期低於長天期＝最近幾個月漲得比一年平均慢，年增率之後會跟著往下。差距要 0.3 個百分點以上、六月年化沒有反向才算方向明確。",
+        "lean": "dovish",
+        "impact": "聯準會盯的指標在降溫",
+        "tier": 1,
+        "strength": 3.203991892924307
+      },
       {
         "key": "cpi_cooling",
         "severity": "alert",
@@ -78,17 +88,17 @@
         "detail": "核心 CPI 年增 2.4%，但把最近三個月的漲勢換算成年率只有 2.0%，低了 0.5 個百分點。年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。",
         "lean": "dovish",
         "impact": "通膨降溫的證據",
-        "tier": 0,
+        "tier": 1,
         "strength": 1.0
       },
       {
-        "key": "above_target",
-        "severity": "alert",
-        "headline": "核心 PCE 顯著高於目標",
-        "detail": "核心 PCE 年增 3.0%，高出目標 1.0 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
-        "lean": "hawkish",
-        "impact": "通膨仍是降息的阻力",
-        "tier": 0,
+        "key": "supercore_cool",
+        "severity": "info",
+        "headline": "超級核心服務回落至正常區間",
+        "detail": "剔除住房後的核心服務，近三個月年化 2.8%（近 12 個月 2.8%）。降下來代表通膨的慣性正在減弱。",
+        "lean": "dovish",
+        "impact": "通膨的慣性正在減弱",
+        "tier": 2,
         "strength": 1.0
       },
       {
@@ -98,7 +108,7 @@
         "detail": "核心 CPI 年增 2.4%，但把住房剔除後只有 2.0%。住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。換句話說，現在的住房數字反映的是去年的租金行情。",
         "lean": "dovish",
         "impact": "實際通膨比表面低",
-        "tier": 0,
+        "tier": 3,
         "strength": 1.0
       },
       {
@@ -108,17 +118,17 @@
         "detail": "原油近一個月上漲 14%。油價通常兩到四週後反映到加油站價格，再進到 CPI 的能源項。以能源佔 CPI 約 6% 粗估，接下來一兩個月大約會推高整體 CPI 0.3 個百分點。注意這只影響總體，不影響核心。",
         "lean": "hawkish",
         "impact": "總體 CPI 的短期逆風",
-        "tier": 0,
+        "tier": 3,
         "strength": 1.0
       },
       {
-        "key": "ppi_pipeline",
-        "severity": "watch",
-        "headline": "上游漲價還沒轉嫁完",
-        "detail": "核心 PPI 年增 4.6%，比核心 CPI 高 2.2 個百分點。出廠價漲得比零售價快，代表企業手上還有一段成本沒轉嫁——未來幾季 CPI 有既定的上行壓力。",
+        "key": "above_target",
+        "severity": "alert",
+        "headline": "核心 PCE 顯著高於目標",
+        "detail": "核心 PCE 年增 3.0%，高出目標 1.0 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
         "lean": "hawkish",
-        "impact": "上游管線裡還有未轉嫁的漲價",
-        "tier": 0,
+        "impact": "通膨仍是降息的阻力",
+        "tier": 4,
         "strength": 1.0
       },
       {
@@ -128,17 +138,17 @@
         "detail": "住房項年增 3.4%，但近三個月年化只有 2.1%。住房是 CPI 權重最大的一塊、又落後市場租金約一年——短期動能明顯低於年增率，代表未來幾個月的住房讀數會照著新簽租金往下走。",
         "lean": "dovish",
         "impact": "權重最大的一塊有既定的下行慣性",
-        "tier": 0,
+        "tier": 4,
         "strength": 1.0
       },
       {
-        "key": "supercore_cool",
-        "severity": "info",
-        "headline": "核心服務除住房回落至正常區間",
-        "detail": "剔除住房後的核心服務，近三個月年化 2.8%（近 12 個月 2.8%）。降下來代表通膨的慣性正在減弱。",
-        "lean": "dovish",
-        "impact": "通膨的慣性正在減弱",
-        "tier": 0,
+        "key": "ppi_pipeline",
+        "severity": "watch",
+        "headline": "上游漲價還沒轉嫁完",
+        "detail": "核心 PPI 年增 4.6%，比核心 CPI 高 2.2 個百分點。出廠價漲得比零售價快，代表企業手上還有一段成本沒轉嫁——未來幾季 CPI 有既定的上行壓力。",
+        "lean": "hawkish",
+        "impact": "上游管線裡還有未轉嫁的漲價",
+        "tier": 4,
         "strength": 1.0
       },
       {
@@ -148,7 +158,7 @@
         "detail": "密大 1 年期預期 4.0% 偏高，但五年後五年只有 2.35%——市場把眼前的物價壓力讀成暫時性，還相信聯準會最終會把通膨帶回目標。",
         "lean": "neutral",
         "impact": "市場仍給聯準會信任票",
-        "tier": 0,
+        "tier": 4,
         "strength": 1.0
       }
     ]
