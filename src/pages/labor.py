@@ -242,24 +242,50 @@ def _structure_block(u: dict | None) -> str:
     """
     if not u:
         return ""
-    # 瘦身：每列只留「名稱＋橫條＋人數＋較一年前」。逐類的一句說明與
-    # 佔比數字都砍掉——五類 × 五個元素是這張卡先前「第二套圖表系統」
-    # 的來源；分母怎麼選的方法論整段刪除（那是寫給自己的辯護）。
+    # 2026-10 v2（使用者：四類比重疊成 100% 的走勢圖彼此太接近，看不出所以然）：
+    # 改成一張表，主角是「比重較一年前變化」的正負橫條——結構有沒有變，看的就是這個。
+    # 橫條以 0 為中線；淺灰帶＝±1 個百分點的雜訊範圍（與結論句同一條門檻）。
+    # 顏色看意義不看正負：失去工作的比重上升＝偏壞；其他三類上升＝偏好。
+    vals = [abs(r["share_yoy"]) for r in u["rows"] if r.get("share_yoy") is not None]
+    lim = max([1.5] + vals) * 1.15
+
+    def _bar(r):
+        d = r.get("share_yoy")
+        if d is None:
+            return '<div class="us2-bar"></div>'
+        w = abs(d) / lim * 50
+        good = (d < 0) if r["kind"] == "bad" else (d > 0)
+        tone = "flat" if abs(d) < 1 else ("good" if good else "bad")
+        side = f"left:50%" if d >= 0 else f"right:50%"
+        nb = 1 / lim * 50
+        return (f'<div class="us2-bar"><span class="us2-noise" style="left:{50 - nb:.1f}%;width:{2 * nb:.1f}%"></span>'
+                f'<i class="{tone}" style="{side};width:{w:.1f}%"></i></div>')
+    _short = {"失去工作／臨時工作結束": "失去工作"}
     rows = "".join(
-        f'<div class="ustr {r["kind"]}">'
-        f'<div class="us-name">{esc(r["label"])}</div>'
-        f'<div class="us-bar"><i style="width:{r["share"]:.1f}%"></i></div>'
-        f'<div class="us-val">{r["share"]:.1f}%</div>'
-        f'<div class="us-yoy">比重較一年前 <b>{esc(r["share_yoy_display"])}</b>'
-        f'　·　人數 {esc(r["display"])}（較一年前 {esc(r["yoy_display"])}）</div></div>'
+        f'<div class="us2-r">'
+        f'<div class="us2-n"><b title="{esc(r["label"])}">{esc(_short.get(r["label"], r["label"]))}</b>'
+        f'<small><span class="us2-sm">佔失業 {r["share"]:.1f}%</span><span class="us2-pp">{esc(r["display"])}</span></small></div>'
+        f'<div class="us2-s">{r["share"]:.1f}%</div>'
+        f'{_bar(r)}'
+        f'<div class="us2-v">{"—" if r.get("share_yoy") is None else f"{r["share_yoy"]:+.1f}".replace("-", "−")}</div>'
+        f'</div>'
         for r in u["rows"])
-    # 結論直接寫在收合列上，點開前就知道答案
-    _v = (u.get("verdict") or "").rstrip("。")
-    return f"""<details class="f-more ustruct"><summary>失業的人是怎麼變成失業的　·　{esc(_v)}</summary>
-  <div class="ustr-list" style="margin-top:12px">{rows}</div>
-  <p class="hint" style="margin-top:10px">橫條與百分比＝佔全部失業人口的比例（BLS 官方序列）。重點看<b>比重較一年前的變化</b>：人數會跟著勞動力規模一起變——勞動力縮小時每一類人數都會下降——比例才看得出結構有沒有變。{esc(u.get('lt_note', ''))}</p>
-  <div style="margin-top:14px">{u.get('chart', '')}</div>
-  <p class="hint" style="margin-top:6px">各類失業原因的比重（2025 年起，四類加總＝100%）。</p>四類加總＝100%；深色陰影＝衰退期間）。</p>
+    # 收合列：短句（手機一行放得下）。完整結論句仍由 build 端算，這裡只取數字
+    _jl = next((r for r in u["rows"] if r["kind"] == "bad"), None)
+    _d = (_jl or {}).get("share_yoy")
+    if _d is None:
+        _v = (u.get("verdict") or "").rstrip("。")
+    else:
+        _v = (f"被裁員的比重 {_d:+.1f} 個百分點".replace("-", "−")
+              + ("，結構轉差" if _d >= 1 else "，結構改善" if _d <= -1 else "，結構沒變"))
+    _lt = esc(u.get("lt_note", "")).rstrip("。")
+    return f"""<details class="f-more ustruct"><summary>失業原因　·　{esc(_v)}</summary>
+  <div class="us2">
+    <div class="us2-r us2-h"><span>原因</span><span>佔失業人口</span><span class="us2-hb">比重較一年前（個百分點）</span><span></span></div>
+    {rows}
+  </div>
+  <div class="us2-lg"><span><i class="bad"></i>變差</span><span><i class="good"></i>變好</span><span><i class="noise"></i>±1 以內＝雜訊</span></div>
+  {f'<p class="us2-lt">{_lt}。</p>' if _lt else ''}
 </details>"""
 
 
@@ -896,10 +922,14 @@ def labor_body(d: dict) -> str:
 
 
 def labor_footer(d: dict) -> str:
-    return (
-        "資料來源：美國勞工統計局（BLS）與勞工部（DOL），經 FRED 取得，"
-        "數字為修正後的最新版本。<br>"
-        f"修正追蹤來源：{esc(d['revision']['source_note'])}"
-        "　·　所有判定由固定規則產生，每次執行結果一致。<br>"
-        "本頁僅為數據整理，不構成投資建議。"
-    )
+    from ..site import source_footer
+    return source_footer(
+        [("非農就業、失業率、時薪、勞動參與率", "美國勞工統計局 BLS（經 FRED）", f"每月・資料 {esc(d.get('data_month', '—'))}"),
+         ("初領、續領失業金", "美國勞工部 DOL（經 FRED）", "每週四"),
+         ("JOLTS 職缺與人力流動", "BLS（經 FRED）", "每月"),
+         ("失業原因、長期失業", "BLS 家戶調查（經 FRED）", "每月"),
+         ("歷史修正追蹤", esc(d.get("revision", {}).get("source_note", "BLS 歷次發布")), "每月")],
+        ["數字為修正後的最新版本；修正追蹤保留每次發布時的原值。",
+         "所有判定由固定規則產生，每次執行結果一致。"],
+        head="<b>資料來源</b> BLS、DOL（經 FRED）")
+

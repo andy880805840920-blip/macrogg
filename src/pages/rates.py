@@ -232,185 +232,83 @@ def _rates_body_full(d: dict) -> str:
         hs_impact = (f'<div class="impact {_hs_lean}">{esc(hs_title)}——'
                      f'合計資本支出已達同期營運現金流的 {_ratio:.0f}%{_tail}</div>')
 
-    # ---- 近期發債申報 ----
-    # 這是時效補丁：季報最久落後 135 天，發債當天就要申報。
-    # 放在科技巨頭卡的最上方，因為它直接影響「下方那些季報數字
-    # 下一期會往哪邊走」——不先講，讀者會以為 83% 是最新狀態。
-    # ---- 前瞻資本支出指引 ----
-    # 放在科技巨頭卡的最上方，位置比實績還前面：這一頁的論點是
-    #「AI 資本支出推高長端供給」，那個故事的主角是接下來要花多少，
-    # 不是上一季花了多少。實績是驗證，指引是主詞。
+    # ---- 方法與資料來源（2026-10 v2，使用者：收合裡文字雜亂）----
+    # 拆成三小塊，各用表格：① 資料時效（一家一列）② 近期發債（最近 5 筆，其餘再展開）
+    # ③ 方法（4 條重點）。先前的長段落說明全部濃縮進 ③。
     gd = d.get("guidance") or {}
-    guidance_html = ""
-    if gd.get("available"):
-        # 小卡並排取代表格。先前的三欄表格「公司／指引／備註」有兩個排版
-        # 問題：備註只有一家有字、其他列空一大塊；單值（2,000）與區間
-        # （1,750–1,850）混排把欄寬撐得參差。小卡跟頁首的指標卡同一套
-        # 視覺語言，備註與方法說明收進展開層。
-        _cmp = ""
-        if gd.get("ratio_display"):
-            _cmp = f'　·　年化實績的 {esc(gd["ratio_display"])}'
-        chips = "".join(
-            f'<div class="focus-metric"><span>{esc(r["name"])}</span>'
-            f'<b>{esc(r["value"].replace(" 億美元", ""))}</b>'
-            f'<small>億美元</small></div>'
-            for r in gd["rows"])
-        _notes = "".join(
-            f'<li><b>{esc(r["name"])}</b>：{esc(r["note"])}</li>'
-            for r in gd["rows"] if r.get("note"))
-        _miss_li = (f'<li><b>{esc(gd["missing"])}</b>：未提供年度指引，'
-                    f'不在合計內。</li>' if gd.get("missing") else "")
-        guidance_html = f"""<h3 style="margin-top:4px">{esc(str(gd['year']))} 年資本支出計畫
-      <span class="asof">指引更新於 {esc(gd['as_of'])}</span></h3>
-    <p class="hint" style="margin:4px 0 10px">合計 <b>{esc(gd['total_display'])}</b>{_cmp}
-      ——<b>還沒花、但已經承諾的錢</b>；推高長端供給的是這個。</p>
-    <div class="focus-grid">{chips}</div>
-    <details class="f-more"><summary>備註與資料來源</summary>
-      <div class="f-detail"><ul style="margin:8px 0;padding-left:18px">
-        {_notes}{_miss_li}</ul>
-        <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
-        它是法說會與新聞稿裡用自然語言講的（「approximately」
-        「in the range of」），每家寫法不同、每季還會改。
-        硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
-        更新於 {esc(gd['as_of'])}　·　{esc(gd['source'])}</div>
-    </details>"""
-
-    # ---- 財報新聞稿的時效 ----
-    # 只在「新聞稿已經公布、但下方表格還沒更新到那一季」時出現。
-    # 兩者同季時這一區不顯示——沒有落差就沒有話要講。
     ea = d.get("earnings") or {}
-    earnings_html = ""
-    if ea.get("available") and ea.get("ahead_n"):
-        _erows = "".join(
-            f'<tr><td>{esc(r["name"])}</td>'
-            f'<td class="muted-cell">{esc(r["date"])}</td>'
-            f'<td class="muted-cell">'
-            + ("下方表格尚未涵蓋" if r["ahead"] else esc(r["lag_display"]))
-            + '</td><td class="muted-cell">'
-            + (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">'
-               f'8-K</a>' if r["url"] else "—")
-            + '</td></tr>'
-            for r in ea["rows"])
-        earnings_html = f"""<details class="f-more tline"><summary>
-      <b>{esc(ea['ahead_names'])} 已公布新一季財報</b>，表格待 10-Q（約慢兩週）</summary>
-      <div class="f-detail">
-      財報新聞稿約在季末後三週申報，10-Q 的結構化數字要再等兩週左右。
-      這一頁的表格只用 10-Q 的原始標記，所以會慢那兩週。</div>
-        <div class="tscroll" style="margin-top:10px"><table>
-          <thead><tr><th>公司</th><th>公布日</th><th>對照下方表格</th>
-            <th>原文</th></tr></thead>
-          <tbody>{_erows}</tbody></table></div>
-        <p class="hint" style="margin-top:10px">
-          <b>只取日期與連結，不解析新聞稿裡的數字</b>：新聞稿是非結構化文字，
-          各家的口徑（是否含融資租賃、GAAP 或 non-GAAP）寫法都不同，
-          硬解會拿到一個不知道是什麼的數字混進表格。兩週後 XBRL 就會給出
-          經審核、標記明確的版本——寧可慢兩週，不要一個來路不明的數字。</p>
-    </details>"""
-
     off = d.get("offerings") or {}
-    offerings_html = ""
-    if off.get("available"):
-        # 金額欄以**原幣為主、美元為輔**：原幣是說明書封面上白紙黑字的
-        # 數字，美元是我們用某一天的匯率換算出來的。把換算值當主角，
-        # 等於讓一個會隨匯率漂動的數字蓋掉一個歷史事實。
-        def _off_row(r) -> str:
-            amt = ('<td class="muted-cell">' if r.get("pending") else "<td>")
-            amt += esc(r["amount"])
-            if r.get("usd_note"):
-                amt += f'<span class="dnote">{esc(r["usd_note"])}</span>'
-            amt += "</td>"
-            src = ('<td class="muted-cell">'
-                   + (f'<a href="{esc(r["url"])}" target="_blank" '
-                      f'rel="noopener">{esc(r["form"])}</a>'
-                      if r["url"] else esc(r["form"]))
-                   + "</td>")
-            return (f'<tr><td>{esc(r["name"])}</td>'
-                    f'<td class="muted-cell">{esc(r["date"])}</td>'
-                    f'<td class="muted-cell">{esc(r["kind"])}</td>'
-                    + amt + src + "</tr>")
+    _ea = {r["name"]: r for r in (ea.get("rows") or [])} if ea.get("available") else {}
+    _gdr = {r["name"]: r for r in (gd.get("rows") or [])} if gd.get("available") else {}
 
-        _rows = "".join(_off_row(r) for r in off["rows"])
-        # 筆數與金額分開講：「5 筆交易、其中 4 筆已確認金額」比
-        #「5 筆申報、合計 X（另有 1 筆無法解析）」好讀，而且不會讓人
-        # 把合計誤讀成全部。
-        if off.get("insane"):
-            # 解析結果跟季報數字差太多 → 寧可不報金額。這一段的價值在時效，
-            # 沒有金額仍然成立；報一個錯了好幾倍的合計會毀掉整頁的可信度。
-            _known = ("金額暫不顯示：解析出的合計與季報申報值差距過大，"
-                      "多半是封面解析出錯。逐筆的原文連結仍可查")
-            _ratio = _unknown = ""
+    def _md(x: str) -> str:
+        x = str(x or "")
+        return f"{int(x[5:7])}/{int(x[8:10])}" if len(x) >= 10 and x[4] == "-" else (x or "—")
+    _fresh_rows = ""
+    for c in hs.companies:
+        e = _ea.get(c["name"])
+        g = _gdr.get(c["name"])
+        if e and e.get("ahead"):
+            st, stc = "新財報已公布，表格待 10-Q", "wait"
+        elif not c.get("from_sec"):
+            st, stc = "後備值", "off"
         else:
-            _known = (f"{off['known_n']} 筆已確認金額，合計 "
-                      f"{esc(off['total_display'])}")
-            _unknown = (f"；另 {off['unknown_n']} 筆金額待確認"
-                        if off["unknown_n"] else "")
-            _ratio = (f"，相當於最新一季申報發債（{esc(off['ref_display'])}）的 "
-                      f"{off['ratio_display']}" if off.get("ratio_display") else "")
-        # 預估版不算交易，但要講出來——「還有幾筆正在路上」對供給面是資訊
-        _prelim = (f"另有 {off['prelim_n']} 筆已宣布、尚未定價。"
-                   if off.get("prelim_n") else "")
-        # 被排除的（股票發行、ATM 增發、銀行貸款額度）用**一句話**交代，
-        # 不再逐列列出來。
-        #
-        # 這一區問的是長端供給，而股票與貸款額度不進債市。先前把它們也列進
-        # 明細（標「不計入發債」），本意是「讓你看到我看過、也知道為什麼
-        # 排除」，實際效果是七筆非債券混在十幾列裡、「金額」欄一半寫著
-        # 「不計入發債」——讀者要一列一列篩才找得到真正的債券。
-        # 為了證明沒有遺漏而讓主線更難讀，是划不來的交易。
-        _other = (f"另有 {off['other_n']} 件非債券的融資申報（股票發行、"
-                  f"ATM 增發或貸款額度），不進債市，明細不列。"
-                  if off.get("other_n") else "")
-        _ccy = (f"幣別分布：{esc(off['ccy_note'])}。"
-                if off.get("multi_ccy") else "")
-        _nofx = (f"其中 {off['no_fx']} 筆換不到匯率，不進合計。"
-                 if off.get("no_fx") else "")
-        # 摘要句只留一行（筆數＋合計＋佔比），幣別分布、待確認、預估版、
-        # 非債券排除這些第二層資訊全部收進展開——它們有價值，但不值得
-        # 每天佔著常駐版面。
-        _head_line = (f"合計 {esc(off['total_display'])}"
-                      + (f"（季報的 {esc(off['ratio_display'])}）"
-                         if off.get("ratio_display") and not off.get("insane")
-                         else ""))
+            st, stc = "最新", "ok"
+        _pe = _md(c.get("period_end")) if c.get("period_end") else "—"
+        if stc == "wait":
+            _d8 = esc(_md(e["date"]))
+            st = ('待 10-Q<small>財報稿 '
+                  + (f'<a href="{esc(e["url"])}" target="_blank" rel="noopener">{_d8}</a>' if e.get("url") else _d8)
+                  + '</small>')
+        else:
+            st = esc(st)
+        _gv = esc(g["value"].replace(" 億美元", "")) if g else "—"
+        # 一家一列：桌機是四欄；手機兩行（公司＋狀態／季末・計畫）
+        _fresh_rows += (f'<div class="hs5-r"><b class="hs5-n">{esc(c["name"])}</b>'
+                        f'<span class="hs5-m"><span><em>季末</em>{esc(_pe)}</span>'
+                        f'<span><em>{esc(str(gd.get("year", "")))} 計畫</em>{_gv}</span></span>'
+                        f'<span class="hs4-st {stc}"><i></i><span>{st}</span></span></div>')
+    fresh_html = (f'<div class="hs4-sec"><div class="hs4-h">資料時效</div>'
+                  f'<div class="hs5 hs5-f"><div class="hs5-r hs5-hd"><span>公司</span>'
+                  f'<span class="hs5-m"><span>表格季末</span><span>{esc(str(gd.get("year", "")))} 計畫（億美元）</span></span>'
+                  f'<span>狀態</span></div>{_fresh_rows}</div>'
+                  + (f'<p class="hs4-n">計畫更新於 {esc(_md(gd.get("as_of", "")))}；表格只用 10-Q（約比財報稿晚兩週）。</p>'
+                     if gd.get("available") else "")
+                  + '</div>')
+
+    offerings_html = ""
+    if off.get("available") and off.get("rows"):
+        def _off_row(r) -> str:
+            amt = esc(r["amount"]) + (f'<small>{esc(r["usd_note"])}</small>' if r.get("usd_note") else "")
+            src = (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">{esc(r["form"])}</a>'
+                   if r.get("url") else esc(r["form"]))
+            # 一筆一列：桌機五欄；手機兩行（公司＋金額／日期・類型・原文）
+            return (f'<div class="hs5-r"><b class="hs5-n">{esc(r["name"])}</b>'
+                    f'<span class="hs5-m"><span>{esc(_md(r["date"]))}</span><span>{esc(r["kind"])}</span>'
+                    f'<span>{src}</span></span>'
+                    f'<span class="hs5-a{" pend" if r.get("pending") else ""}">{amt}</span></div>')
+        _head = ('<div class="hs5-r hs5-hd"><span class="hs5-n">公司</span><span class="hs5-m"><span>日期</span>'
+                 '<span>類型</span><span>原文</span></span><span class="hs5-a">金額（原幣）</span></div>')
+        rows = off["rows"]
+        top = "".join(_off_row(r) for r in rows[:5])
+        more = ""
+        if rows[5:]:
+            more = (f'<details class="f-more"><summary>其餘 {len(rows) - 5} 筆</summary>'
+                    f'<div class="hs5 hs5-o">' + "".join(_off_row(r) for r in rows[5:]) + '</div></details>')
         if off.get("insane"):
-            _head_line = "金額暫不顯示（解析異常）"
-        offerings_html = f"""<details class="f-more tline"><summary>
-      <b>近 120 天 {off['count']} 筆已定價發債</b>，{_head_line}，尚未入下方季報</summary>
-      <div class="f-detail">
-      {_known}{_ratio}{_unknown}。{_ccy}{_nofx}{_prelim}{_other}最近一筆在
-      {esc(off['latest'])}。</div>
-      <details class="f-more" style="margin-top:6px"><summary>逐筆債券明細</summary>
-        <div class="tscroll" style="margin-top:10px"><table>
-          <thead><tr><th>公司</th><th>日期</th><th>類型</th>
-            <th>金額（原幣）</th><th>原文</th></tr></thead>
-          <tbody>{_rows}</tbody></table></div>
-        <p class="hint" style="margin-top:10px">
-          <b>表格號不代表證券種類</b>：424B2／424B5 只代表「定價後的公開
-          說明書補充」，賣的可能是債券、普通股、特別股、存託股或 ATM 增發
-          計畫。這裡是<b>讀文件內容</b>來分類的——要出現
-          <code>aggregate principal amount</code>、<code>Senior Notes</code>
-          或 <code>Notes due 20xx</code> 這類證據才算債券。<br>
-          <b>這張表只列債券</b>：股票發行、ATM 增發、銀行貸款與循環額度
-          （8-K 項目 2.03）既不計入金額，也**不列在明細裡**——它們不進債市，
-          對長端供給沒有貢獻。上方那句話會告訴你被排除了幾件、是哪幾類，
-          知道有這回事就夠了，不必逐列翻過去。<br>
-          <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
-          預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
-          同一筆會被數兩次。已經有對應定價版的預估版直接不列。<br>
-          <b>金額以原幣為準</b>：分券金額逐檔相加，同一檔券在文件裡重複
-          出現只算一次（依幣別、金額、到期年、票息去重）。<br>
-          <b>美元等值一律用「該筆定價日當天」的匯率換算</b>（FRED 每日匯率；
-          碰到週末或假日往前取最近一個交易日）。不是用今天的匯率——發行人
-          在定價那天就把金額鎖住了，用今天的匯率會讓一筆已經完成的發行
-          <b>每天早上都變一個數字</b>，而變動的原因跟債券市場無關；上面那個
-          「相當於最新一季申報發債的百分之幾」也會變成拿重估值去除歷史值。
-          規則固定，所以每一列都可以自己去 FRED 對，不必逐列重印匯率。
-          只有匯率取自跟定價日差七天以上的日期時（資料有缺口），
-          那一列才會單獨標出來。<br>
-          <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
-          融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
-          市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
-      </details>
-    </details>"""
+            _line = f"近 120 天 {off['count']} 筆已定價；金額解析異常，暫不顯示合計"
+        else:
+            _line = (f"近 120 天 {off['count']} 筆已定價，合計 {esc(off['total_display'])}"
+                     + (f"（季報發債的 {esc(off['ratio_display'])}）" if off.get("ratio_display") else "")
+                     + "，尚未進季報")
+        _extra = "　".join(x for x in (
+            f"另 {off['unknown_n']} 筆金額待確認。" if off.get("unknown_n") and not off.get("insane") else "",
+            f"另 {off['prelim_n']} 筆已宣布、未定價。" if off.get("prelim_n") else "",
+            f"另 {off['other_n']} 件非債券融資不列。" if off.get("other_n") else "") if x)
+        offerings_html = (f'<div class="hs4-sec"><div class="hs4-h">近期發債</div>'
+                          f'<p class="hs4-lead">{_line}。</p>'
+                          f'<div class="hs5 hs5-o">{_head}{top}</div>'
+                          + (f'<p class="hs4-n">{_extra}</p>' if _extra else "") + more + '</div>')
 
     # ---- 財政：一句結論＋缺口併進 stat-row ----
     # 傾向直接沿用 debt.verdict 的判定（widening／drifting／stable），
@@ -460,11 +358,6 @@ def _rates_body_full(d: dict) -> str:
                   for r in gd.get("rows") or [] if r.get("note"))
     if gd.get("missing"):
         _gn += f'<li><b>{esc(gd["missing"])}</b>：未提供年度指引，不在合計內。</li>'
-    guidance_notes = ((f'<p><b>{esc(str(gd.get("year", "")))} 年資本支出計畫</b>：合計 {esc(gd.get("total_display", ""))}'
-                       f'，指引更新於 {esc(gd.get("as_of", ""))}・{esc(gd.get("source", ""))}。'
-                       '前瞻指引不在任何申報欄位裡，是法說會與新聞稿用自然語言講的，所以手動維護。</p>'
-                       f'<ul style="margin:6px 0;padding-left:18px">{_gn}</ul>')
-                      if gd.get("available") else "")
 
     # 資料來源逐家列出，附上 EDGAR 的申報清單連結，讓讀者能自己核對。
     # 這一區的每個結論都建立在這五家的數字上，沒有連結就等於要人相信我。
@@ -555,29 +448,25 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">科技巨頭：AI 資本支出與發債</h2>
-    <p class="hint">期限溢酬裡的「財政與供給壓力」，除了國債，還有這批科技公司的發債——
-      它們正從債市的<b>買方</b>變成<b>賣方</b>。</p>
+    <p class="hint">AI 資本支出讓這幾家公司從債市的<b>買方</b>變成<b>賣方</b>——長端供給的另一個來源。</p>
     {hs_impact}
     <div class="hs3-q">{_hs_q}</div>
     {LE.hs_agg_chart(d)}
     {LE.hs_table(d)}
     {unverified}
     {LE.guidance_stale(d).replace('class="warnbox"', 'class="hs3-stale"')}
-    <details class="f-more"><summary>方法、指引備註與資料來源</summary>
-      <div class="f-detail">
-        <p>{esc(hs_desc)}</p>
-        {guidance_notes}
-        <p>公司名稱下方是該公司自己的<b>會計季末日</b>（各家年度起點不同，同一列不是同一季）；
-        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引；
-        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負；
-        合計比率是合計 ÷ 合計，非五家平均。所有百分比都由原始金額算出來，沒有手填的百分比。</p>
-        {hs_source_html}
-      </div>
-      <div class="tlines">
-        <div class="tlines-k">資料時效</div>
-        {earnings_html}
-        {offerings_html}
-      </div>
+    <details class="f-more hs4"><summary>資料時效與近期發債</summary>
+      {fresh_html}
+      {offerings_html}
+    </details>
+    <details class="f-more hs4"><summary>方法與資料來源</summary>
+      <ul class="hs4-m">
+        <li><b>口徑</b>：取自 10-Q／10-K 現金流量表；年增對去年同季；佔營運現金流＝合計 ÷ 合計。</li>
+        <li><b>季末不同</b>：各家會計年度不同，同一列不是同一季；加總圖依「最近第幾季」對齊。財報新聞稿只取日期與連結，不解析新聞稿裡的數字。</li>
+        <li><b>年度計畫</b>：法說會的口頭指引，手動維護。{('<ul>' + _gn + '</ul>') if _gn else ''}</li>
+        <li><b>發債</b>：讀說明書判斷是否為債券；預估版不計；美元以定價日匯率換算；只含 SEC 申報。</li>
+      </ul>
+      {hs_source_html}
     </details>
     {teach(
         "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
@@ -752,15 +641,21 @@ def rates_body(d: dict) -> str:
 
 
 def rates_footer(d: dict) -> str:
-    _live = ("10 年期與 30 年期的最新一筆為盤中即時報價"
-             "（Yahoo Finance，延遲約 15 分鐘），其餘皆為 FRED 收盤。<br>"
-             if d.get("as_of_live") else "")
-    return (
-        "資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數、Kim-Wright 期限溢酬、"
-        "克里夫蘭聯儲預期通膨、Freddie Mac、OECD）、TreasuryDirect、紐約聯儲 SOMA、"
-        "財政部 MSPD。<br>"
-        + _live +
-        "科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，"
-        "每季財報一申報就會自動更新。<br>"
-        "本頁僅為數據整理，不構成投資建議。"
-    )
+    from ..site import source_footer
+    _ten = ("FRED 收盤；10、30 年最新一筆為 Yahoo 盤中（延遲約 15 分）"
+            if d.get("as_of_live") else "FRED 收盤")
+    return source_footer(
+        [("公債殖利率、損益兩平、TIPS", "美國財政部（經 FRED）", "每日・" + _ten),
+         ("期限溢酬", "聯準會 Kim-Wright 模型（FRED）", "每日・約晚一週"),
+         ("預期通膨（模型）", "克里夫蘭聯儲（FRED）", "每月"),
+         ("油價", "EIA（FRED）", "每日"),
+         ("信用利差", "ICE BofA 指數（FRED）", "每日"),
+         ("拍賣結果", "TreasuryDirect", "每次拍賣"),
+         ("流通在外、WAM、Fed 持有", "財政部 MSPD、紐約聯儲 SOMA", "每月／每週"),
+         ("政府財政", "財政部、BEA（FRED）", "每月／每季"),
+         ("全球長端", "OECD（FRED）", "每月・晚約一個月"),
+         ("科技巨頭資本支出與發債", "SEC EDGAR（XBRL 申報、說明書）", "財報一申報即更新")],
+        ["拆解、型態、燈號都由固定規則產生；殖利率曲線的判讀文字不是 AI。",
+         "科技巨頭的年度資本支出計畫來自法說會，手動維護。"],
+        head="<b>資料來源</b> FRED、TreasuryDirect、紐約聯儲、SEC EDGAR")
+

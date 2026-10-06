@@ -880,17 +880,6 @@ def _unemp_structure(series: dict) -> dict:
     else:
         verdict, lean = "失業的組成跟一年前差不多，結構沒有明顯變化。", "neutral"
 
-    # 比重的時間軸（2025 起，使用者指定只看近期）
-    _cut = "2025"
-    _chart = charts.stacked_shares(
-        [{"label": lb, "color": col,
-          "points": [r for r in (series.get(sid) or []) if str(r["date"]) >= _cut]}
-         for lb, col, sid in (("新進入", "var(--muted-bar)", "LNS13023570"),
-                              ("重新進入", "var(--series-1)", "LNS13023558"),
-                              ("自願離職", "var(--good)", "LNS13023706"),
-                              ("失去工作", "var(--neg)", "LNS13023622"))],
-        shade=[(a, b) for a, b in job_losers.RECESSIONS if b >= _cut])
-
     long_term = series.get("UEMP27OV") or []
     lt_note = ""
     if len(long_term) >= 13:
@@ -899,8 +888,7 @@ def _unemp_structure(series: dict) -> dict:
             lt_note = (f"長期失業（27 週以上）{fmt.persons_to_wan(lt_cur * 1000, digits=1)}"
                        + (f"，較一年前 {fmt.wan(lt_cur - lt_yr, digits=1)}"
                           if lt_yr is not None else "") + "。")
-    return {"rows": rows, "verdict": verdict, "lean": lean, "lt_note": lt_note,
-            "chart": _chart}
+    return {"rows": rows, "verdict": verdict, "lean": lean, "lt_note": lt_note}
 
 
 def _ustar_gap(u3: list, mid: list, lo: list, hi: list) -> dict:
@@ -2896,32 +2884,44 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
             {"label": "10 年公債", "color": "var(--line-1)", "points": series.get("DGS10") or []},
         ], unit="%", height=130, digits=2, aria="房貸利率與 10 年公債"),
     }
-    # 曲線
+    # 曲線（2026-10 v2）：形狀比較現在／1 週前／1 個月前／年初；
+    # 利差 10-2、30-10、30-2 的水準＋週／月變化＋型態，三張小圖共用縱軸、2026 年起
     snaps = le.curve_snapshots(series)
-    cols = {"現在": "var(--line-1)", "1 個月前": "var(--line-2)", "1 年前": "var(--muted-bar)"}
+    cols = {"現在": "var(--brand-ink)", "1 週前": "var(--brand-orange)",
+            "1 個月前": "#8b97a8", "年初": "var(--muted-bar)"}
     out["curve_chart"] = charts.cat_lines(
         [{"label": f'{sn["label"]}（{sn["date"][5:].replace("-", "/")}）', "color": cols[sn["label"]],
-          "dash": sn["label"] == "1 年前", "points": [(t, v) for t, _, v in sn["points"]]}
+          "dash": sn["label"] == "年初", "points": [(t, v) for t, _, v in sn["points"]]}
          for sn in snaps], aria="殖利率曲線")
     out["curve_snaps"] = snaps
-
-    def _slope(a, b):
-        A, B = series.get(a) or [], series.get(b) or []
-        bm = {r["date"]: r["value"] for r in B}
-        return [{"date": r["date"], "value": r["value"] - bm[r["date"]]} for r in A
-                if r["date"] in bm and r.get("value") is not None and bm[r["date"]] is not None]
-    out["slopes"] = []
-    for lab, a, b in (("10 年 − 2 年", "DGS10", "DGS2"), ("30 年 − 10 年", "DGS30", "DGS10")):
-        rows = _slope(a, b)
-        if rows:
-            out["slopes"].append({"label": lab, "value": rows[-1]["value"] * 100,
-                                  "chg": ((rows[-1]["value"] - rows[-23]["value"]) * 100
-                                          if len(rows) > 23 else None),
-                                  "chart": charts.compact_lines(
-                                      [{"label": lab, "color": "var(--line-1)",
-                                        "points": [{"date": r["date"], "value": r["value"] * 100}
-                                                   for r in rows]}],
-                                      unit="bp", height=90, digits=0, zero=True, aria=lab)})
+    out["spreads"] = le.spread_rows(series)
+    _since = f"{clock.today().year}-01-01"
+    _sp = {k: le.spread_series(series, lid, sid, _since) for k, lid, sid, _, _ in le.SPREADS}
+    _allv = [p["value"] for v in _sp.values() for p in v] + [0.0]
+    if _allv:
+        import math as _m
+        _lo = _m.floor(min(_allv) / 25) * 25
+        _hi = _m.ceil(max(_allv) / 25) * 25 + (25 if max(_allv) % 25 > 18 else 0)
+        for r in out["spreads"]:
+            pts = _sp.get(r["key"]) or []
+            r["chart"] = (charts.compact_lines(
+                [{"label": r["key"], "color": "var(--brand-ink)", "points": pts}],
+                unit="", height=110, digits=0, zero=True, months=12, yrange=(_lo, _hi),
+                step=(50 if _hi - _lo > 100 else 25), xmonths=True, show_legend=False, aria=f"{r['key']} 利差（bp）")
+                if len(pts) >= 5 else '<div class="empty">資料不足</div>')
+    # 自選期間：嵌入頁面的對齊日資料（去年 12 月起，年初至今要用到 12/31）＋ 2／10／30 年走勢
+    out["cw"] = le.curve_data(series, f"{clock.today().year - 1}-12-01")
+    out["cw_year"] = clock.today().year
+    out["yield_chart"] = charts.compact_lines(
+        [{"label": zh, "color": col, "points": [r for r in (series.get(sid) or []) if r["date"] >= _since]}
+         for zh, sid, col in (("2 年", "DGS2", "var(--y2)"), ("10 年", "DGS10", "var(--y10)"),
+                              ("30 年", "DGS30", "var(--y30)"))],
+        unit="%", height=170, digits=2, months=12, xmonths=True, aria="2、10、30 年期殖利率")
+    out["curve_drivers"] = le.curve_drivers(series)
+    out["forwards"] = le.forwards(series)
+    # 舊欄位（收合摘要用）：沿用 spreads
+    out["slopes"] = [{"label": r["key"], "value": r["value"], "chg": r.get("mom")}
+                     for r in out["spreads"]]
     # 全球長端
     glb = [("美國", "IRLTLT01USM156N", "var(--line-1)"), ("德國", "IRLTLT01DEM156N", "var(--line-2)"),
            ("英國", "IRLTLT01GBM156N", "#1baf7a"), ("日本", "IRLTLT01JPM156N", "#eda100")]
@@ -3205,11 +3205,12 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
          "note": "合計 ÷ 合計，非五家平均"},
         # 發債金額的期間**必須**寫在標籤裡。先前寫「本季」——五家的
         # 「本季」是五段不同的期間，這樣寫等於沒有期間定義。
-        {"label": f"單季發債合計{f'（期末 {_span}）' if _span else ''}",
+        # 期間放進小字（2026-10：標籤太長，手機上擠成兩行）
+        {"label": "單季發債合計",
          "value": f"{hs.total_issued * 10:,.0f} 億美元",
          # 佔投資級市場的比重只有在分母經人工確認時才顯示（見 rates.hyperscalers）
-         "note": (f"佔投資級發行 {hs.ig_share:.0f}%"
-                  if hs.ig_share is not None else "分子為五家不同會計期別之和")},
+         "note": ((f"佔投資級發行 {hs.ig_share:.0f}%　" if hs.ig_share is not None else "")
+                  + (f"期末 {_span}" if _span else "五家不同會計期別之和"))},
         {"label": "簡化口徑自由現金流為負",
          "value": f"{hs.n_cash_negative} / {len(hs.companies)} 家",
          "note": "營運現金流 − 現金資本支出 < 0"},

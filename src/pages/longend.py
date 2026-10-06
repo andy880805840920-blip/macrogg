@@ -8,6 +8,8 @@
 """
 
 from __future__ import annotations
+import logging
+log = logging.getLogger(__name__)
 
 from ..analysis import longend as le
 from ..site import esc
@@ -125,7 +127,45 @@ def _ev_text(e: dict) -> str:
 # ---------------------------------------------------------------------------
 # 長端利率的組成
 # ---------------------------------------------------------------------------
+def _trend_line(L: dict) -> str:
+    """
+    「趨勢還是雜訊」：1、3、12 個月的主因是否一致（規則判定，2026-10）。
+      三個窗主因相同          → 趨勢
+      1 個月不同、3 與 12 相同 → 本月是短期雜訊，趨勢仍是 3／12 個月那一段
+      其他                    → 方向未定
+    """
+    c = L.get("contrib") or {}
+    mains = {k: (c.get(k) or {}).get("main") for k in (1, 3, 12)}
+    if not all(mains.values()):
+        return ""
+    m1, m3, m12 = mains[1], mains[3], mains[12]
+    z = le.COMP_ZH
+    if m1 == m3 == m12:
+        txt, cls = (f"<b>趨勢</b>：{z[m1]}在 1、3、12 個月都是最大推力，"
+                    f"這不是單月雜訊。"), "trend"
+    elif m3 == m12:
+        txt, cls = (f"<b>本月偏雜訊</b>：這個月主因是{z[m1]}，但 3 與 12 個月的主因都是"
+                    f"{z[m3]}——趨勢仍是後者。"), "noise"
+    elif m1 == m3:
+        txt, cls = (f"<b>新趨勢成形中</b>：近 1、3 個月主因都是{z[m1]}，"
+                    f"12 個月看則是{z[m12]}。"), "turn"
+    else:
+        txt, cls = (f"<b>方向未定</b>：1、3、12 個月的主因各不相同"
+                    f"（{z[m1]}／{z[m3]}／{z[m12]}）。"), "mixed"
+    chips = "".join(f'<span><em>{k} 個月</em>{z[mains[k]]}</span>' for k in (1, 3, 12))
+    if cls == "trend":            # 三個窗都同一段：標籤列只是重複，不放
+        chips = ""
+    return (f'<div class="le3-tr {cls}"><p>{txt}</p>'
+            + (f'<div class="le3-trc">{chips}</div>' if chips else "") + '</div>')
+
+
 def decomp(d: dict) -> str:
+    """
+    長端利率的組成（2026-10 v3，使用者：點開太多層）：
+    這一區只回答「本月的主因是趨勢還是雜訊」。首卡已經講了這個月是誰在推，
+    這裡不再重複主因句；房貸拿掉；「Fed 跟上曲線」搬到殖利率曲線；
+    市場口徑、教學與方法併成一個收合。
+    """
     L = d.get("le") or {}
     br = L.get("bridges") or {}
     if not br:
@@ -137,78 +177,208 @@ def decomp(d: dict) -> str:
         tabs += (f'<input type="radio" name="le-br" id="le-br{k}"{" checked" if i == 0 else ""}>'
                  f'<label for="le-br{k}">{k} 個月</label>')
     panes = "".join(f'<div class="tabp p{k}">{br[k]}</div>' for k in (1, 3, 12) if k in br)
-    c1 = (L.get("contrib") or {}).get(1)
-    impact = ""
-    if c1:
-        m = c1["main"]
-        lean = "hawkish" if c1["parts"][m] > 0 else "dovish"
-        impact = (f'<div class="impact {lean}">{esc(L.get("main_sentence", ""))}。'
-                  f'{esc(le.NATURE[m])}。</div>')
-    mt = L.get("match")
-    match_html = ""
-    if mt:
-        match_html = (f'<div class="le-match"><div class="viz-h">Fed 跟上曲線了嗎</div>'
-                      f'<div class="le-mrow"><div><span>現行利率中點</span><b>{mt["r0"]:.2f}%</b></div>'
-                      f'<div><span>期貨隱含 {esc(str(mt["year"]))} 年底</span><b>{mt["market_end"]:.2f}%</b>'
-                      f'<em>{_bp(mt["market_bp"])}</em></div>'
-                      f'<div><span>點陣圖中位數</span><b>{mt["dot_median"]:.2f}%</b>'
-                      f'<em>{_bp(mt["dots_bp"])}</em></div></div>'
-                      f'<div class="impact neutral">{esc(mt["verdict"])}'
-                      + (f'。近 12 個月預期實質路徑 {_bp(mt["real12_bp"])}' if mt.get("real12_bp") is not None else "")
-                      + '。</div></div>')
-    mg = L.get("mortgage") or {}
-    mort = ""
-    if mg.get("value") is not None:
-        mort = (f'<div class="viz-block"><div class="viz-h">名目緊縮傳到哪裡：30 年固定房貸 '
-                f'{mg["value"]:.2f}%</div>'
-                f'<p class="viz-sub">預期通膨推高名目利率時，實質利率沒動，但借貸成本是照名目算的。'
-                f'{("近 1 年 " + _bp(mg["chg_1y"])) if mg.get("chg_1y") is not None else ""}'
-                f'（Freddie Mac，週資料至 {esc(_md(mg["date"]))}）</p>{mg["chart"]}</div>')
     mr = L.get("market_ref") or {}
-    ref = (f'<details data-m-collapse><summary>參考：市場口徑（TIPS 實質利率 {mr.get("real") or 0:.2f}%、'
-           f'損益兩平 {mr.get("be") or 0:.2f}%）</summary>'
-           '<p class="hint" style="margin-top:10px">名目 10Y − TIPS 殖利率＝損益兩平。損益兩平裡除了預期通膨，'
-           '還混了通膨風險溢酬與流動性溢酬；TIPS 殖利率裡也有實質期限溢酬。所以這兩段加不出三股力量，'
-           '也分不出誰是主因，這裡只當市場報價的參考。</p></details>') if mr.get("real") is not None else ""
+    ref = (f'<p><b>市場口徑</b>：TIPS 實質利率 {mr.get("real") or 0:.2f}%、損益兩平 {mr.get("be") or 0:.2f}%。'
+           '兩者各自混了風險溢酬與流動性溢酬，加不出三股力量，只當參考。</p>') if mr.get("real") is not None else ""
     return f"""
-    {impact}
+    {_trend_line(L)}
     <div class="tabs le-tabs">{tabs}{panes}</div>
     <div class="viz-block"><div class="viz-h">三段的走勢（月均，近 24 個月）</div>
-      <p class="viz-sub">同一個軸、不堆疊——預期實質路徑可能是負值，疊起來會誤導。</p>
       {L.get('dec_lines', '')}</div>
-    {match_html}
-    {mort}
-    {ref}
-    {teach(
-        "把 10 年期殖利率拆成三段相加：預期實質路徑（政策）、預期通膨、期限溢酬（財政與供給），看這個月是哪一段在推。",
-        "三種上升的意義不同：實質路徑上升是市場替 Fed 預先定價，Fed 還沒跟上之前不算真正的緊縮；預期通膨上升是名目緊縮、實質未收緊；期限溢酬上升則不靠 Fed 也會收緊金融條件。",
-        "先看「本月主因」那一段，再看它跟 3 個月、12 個月的方向是否一致——一致才是趨勢，不一致是雜訊。")}
-    <details data-m-collapse><summary>拆解方法與資料</summary>
-      <dl class="gloss" style="margin-top:10px">
-        <dt>期限溢酬</dt><dd>Kim-Wright 模型（聯準會理事會）的 10 年期限溢酬，FRED THREEFYTP10。</dd>
-        <dt>預期通膨</dt><dd>克里夫蘭聯儲 10 年預期通膨（EXPINF10YR），模型值，已扣除通膨風險溢酬，月頻。</dd>
-        <dt>預期實質路徑</dt><dd>Kim-Wright 10 年擬合殖利率 − 期限溢酬 − 預期通膨，也就是市場對未來 10 年實質短率的平均預期。</dd>
-        <dt>殘差</dt><dd>實際 10 年期殖利率（附息債）與模型擬合值（零息）的差，照實列出，不分配到三段。</dd>
-        <dt>為什麼用月均</dt><dd>預期通膨是月頻，三段一律用月均對齊；所以這裡的變動跟頁首的日資料變動不會完全一樣。</dd>
-        <dt>注意</dt><dd>兩個模型出自不同機構，三段相加是近似；它回答「哪一段動得最多」，不是精確會計。</dd>
-      </dl>
+    <details class="f-more"><summary>怎麼讀・方法與資料</summary>
+      <div class="f-detail le3-how">
+        <p><b>怎麼讀</b>：10 年期殖利率拆成三段相加——預期實質路徑（政策）、預期通膨、期限溢酬（財政與供給）。
+        先看首卡的「本月主因」，再看這裡 1、3、12 個月是否同一段：一致才是趨勢。</p>
+        <p><b>期限溢酬</b>：Kim-Wright 模型（FRED THREEFYTP10）。<b>預期通膨</b>：克里夫蘭聯儲 EXPINF10YR（月頻，已扣風險溢酬）。
+        <b>預期實質路徑</b>：擬合殖利率 − 期限溢酬 − 預期通膨。<b>殘差</b>：實際 10 年期與模型擬合值的差，照實列出。</p>
+        <p>預期通膨是月頻，三段一律用月均對齊，所以跟頁首的日資料變動不會完全一樣；兩個模型出自不同機構，相加是近似。</p>
+        {ref}
+      </div>
     </details>"""
 
 
 # ---------------------------------------------------------------------------
-# 殖利率曲線
+# 殖利率曲線（2026-10 v2）
 # ---------------------------------------------------------------------------
+_RG_CLS = {"bear_steep": "bear", "bear_flat": "bear", "bull_steep": "bull", "bull_flat": "bull",
+           "twist_steep": "tw", "twist_flat": "tw", "flat": "fl", "na": "fl"}
+
+
+def _sbp(v) -> str:
+    return "—" if v is None else f"{v:+.0f}".replace("-", "−")
+
+
+def _cw_tenors(ten: list[dict]) -> str:
+    """2／10／30 年 起點→終點（共用一條百分比軸）。markup 與 _CW_JS 的 tenors() 相同。"""
+    vals = [x for t in ten for x in (t["a"], t["b"]) if x is not None]
+    if not vals:
+        return ""
+    lo, hi = min(vals) - 0.1, max(vals) + 0.1
+    P = lambda v: (v - lo) / (hi - lo) * 100
+    out = []
+    for t in ten:
+        if t["d"] is None:
+            continue
+        cls = "up" if t["d"] > 0 else "dn"
+        pa, pb = P(t["a"]), P(t["b"])
+        out.append(f'<div class="cw-dr"><span class="cw-dk">{t["zh"]}</span><div class="cw-dt">'
+                   f'<i class="cw-dl {cls}" style="left:{min(pa, pb):.1f}%;width:{abs(pb - pa):.1f}%"></i>'
+                   f'<b class="cw-da" style="left:{pa:.1f}%"></b><b class="cw-dz {cls}" style="left:{pb:.1f}%"></b></div>'
+                   f'<span class="cw-dv {cls}">{le._sgn(t["d"])}<small>{le._num(t["a"], 2)} → {le._num(t["b"], 2)}%</small></span></div>')
+    return "".join(out)
+
+
+def _cw_spreads(sp: list[dict]) -> str:
+    """利差表三列。markup 與 _CW_JS 的 spreads() 相同。"""
+    return "".join(
+        f'<div class="cw-sr"><span class="cw-sk">{x["key"]}</span>'
+        f'<span class="cw-sab">{le._num(x["a"])} → {le._num(x["b"])}</span>'
+        f'<span class="cw-sd">{le._sgn(x["d"], "")}</span>'
+        f'<span class="le3-rg {_RG_CLS.get(x["code"], "fl")}">{x["zh"]}'
+        + (f'<small>{x["lead"]}</small>' if x["lead"] else "") + '</span></div>'
+        for x in sp)
+
+
+# 自選期間的瀏覽器端：跟 analysis/longend.window_analysis 同一套規則
+# （tests/test_curve_window.py 逐窗比對兩邊輸出）。
+_CW_CORE_JS = r"""
+function cwCore(CD){var Y=CD.year;
+var RG={bear_steep:'bear',bear_flat:'bear',bull_steep:'bull',bull_flat:'bull',twist_steep:'tw',twist_flat:'tw',flat:'fl',na:'fl'};
+function idx(dt){var i=0;for(var j=0;j<CD.d.length;j++){if(CD.d[j]<=dt)i=j;else break;}return i;}
+function val(k,i){var a=CD[k]||[];for(var j=i;j>Math.max(-1,i-6);j--){if(j<a.length&&a[j]!==null)return a[j];}return null;}
+function hu(v,nd){var f=Math.pow(10,nd);return Math.floor(v*f+0.5)/f;}
+function num(v,nd){nd=nd||0;var r=hu(v,nd);if(r===0)r=0;return r.toFixed(nd).replace('-','−');}
+function sgn(v,u,nd){if(u===undefined)u='bp';nd=nd||0;var r=hu(v,nd);if(r===0)return (0).toFixed(nd)+u;return (r>0?'+':'')+num(v,nd)+u;}
+function md2(s){return parseInt(s.slice(5,7),10)+'/'+parseInt(s.slice(8,10),10);}
+function regime(dl,ds){if(dl===null||ds===null)return{code:'na',zh:'—',lead:''};var x=dl-ds;
+ if(Math.abs(x)<2)return{code:'flat',zh:'大致持平',lead:''};
+ if(x>0){if(dl>0&&ds<0)return{code:'twist_steep',zh:'扭轉變陡',lead:'兩端反向'};
+  if(Math.abs(dl)>=Math.abs(ds))return dl>0?{code:'bear_steep',zh:'熊陡',lead:'長端帶動'}:{code:'bull_steep',zh:'牛陡',lead:'短端帶動'};
+  return ds<0?{code:'bull_steep',zh:'牛陡',lead:'短端帶動'}:{code:'bear_steep',zh:'熊陡',lead:'長端帶動'};}
+ if(dl<0&&ds>0)return{code:'twist_flat',zh:'扭轉變平',lead:'兩端反向'};
+ if(Math.abs(ds)>=Math.abs(dl))return ds>0?{code:'bear_flat',zh:'熊平',lead:'短端帶動'}:{code:'bull_flat',zh:'牛平',lead:'長端帶動'};
+ return dl<0?{code:'bull_flat',zh:'牛平',lead:'長端帶動'}:{code:'bear_flat',zh:'熊平',lead:'短端帶動'};}
+function analysis(start,end){var ia=idx(start),ib=idx(end);if(ia>=ib)ia=Math.max(0,ib-1);
+ var da=CD.d[ia],db=CD.d[ib],ten=[],T={};
+ [['y2','2 年'],['y10','10 年'],['y30','30 年']].forEach(function(p){var a=val(p[0],ia),b=val(p[0],ib);
+  var t={k:p[0],zh:p[1],a:a,b:b,d:(a===null||b===null)?null:(b-a)*100};ten.push(t);T[p[0]]=t;});
+ var sp=[],S={};
+ [['10-2','y10','y2'],['30-10','y30','y10'],['30-2','y30','y2']].forEach(function(p){var L=T[p[1]],Sh=T[p[2]];
+  if(L.a===null||L.b===null||Sh.a===null||Sh.b===null)return;var a=(L.a-Sh.a)*100,b=(L.b-Sh.b)*100,g=regime(L.d,Sh.d);
+  var x={key:p[0],a:a,b:b,d:b-a,zh:g.zh,lead:g.lead,code:g.code};sp.push(x);S[p[0]]=x;});
+ function dch(k){var a=val(k,ia),b=val(k,ib);return(a===null||b===null)?null:(b-a)*100;}
+ var be=dch('be'),real=dch('real'),tp=dch('tp'),y3m=dch('y3m'),oa=val('oil',ia),ob=val('oil',ib);
+ var oil=(oa&&ob)?(ob/oa-1)*100:null,txt=[];
+ if(S['10-2']){var x=S['10-2'];var s1=md2(da)+' → '+md2(db)+'：10-2 利差'+(x.d>0?'擴大':'收窄')+' '+num(Math.abs(x.d))+'bp（'+num(x.a)+' → '+num(x.b)+'），'
+  +x.zh+(x.lead?'（'+x.lead+'）':'')+'：10 年 '+sgn(T.y10.d)+'、2 年 '+sgn(T.y2.d);
+  if(S['30-10']&&S['30-10'].code!=='flat'&&S['30-10'].code!=='na'&&S['30-10'].code!==x.code)s1+='；30-10 '+S['30-10'].zh;txt.push(s1+'。');}
+ if(T.y10.d!==null&&be!==null&&real!==null){var lead=Math.abs(be)>Math.abs(real)?'通膨預期':'實質利率';
+  var s2='10 年 '+sgn(T.y10.d)+'：通膨預期 '+sgn(be)+'、實質利率 '+sgn(real)+(tp!==null?'；期限溢酬（財政與供給）'+sgn(tp):'；期限溢酬尚未公布')
+   +(oil!==null?'；油價 '+sgn(oil,'%'):'')+'。主要是'+lead+'在推';
+  if(lead==='實質利率'&&tp!==null&&tp>0&&tp>=Math.abs(real)*0.5)s2+='，期限溢酬也在漲——財政與供給有份';
+  else if(lead==='通膨預期'&&oil!==null&&oil>5)s2+='，跟油價上漲同步';txt.push(s2+'。');}
+ if(T.y2.d!==null){var path=y3m===null?null:T.y2.d-y3m;var pv=path||0;
+  txt.push('2 年 '+sgn(T.y2.d)+(path!==null?'，2 年 − 3 個月 '+sgn(path):'')+(pv>5?'：市場把升息押得更多（或降息延後）。':pv<-5?'：市場提高降息預期。':'：政策預期大致沒變。'));}
+ return{start:da,end:db,tenors:ten,spreads:sp,text:txt};}
+function startFor(k,end){if(k==='ytd')return(Y-1)+'-12-31';var n={'1w':7,'1m':30,'3m':91}[k];
+ var t=new Date(end+'T00:00:00Z');t.setUTCDate(t.getUTCDate()-n);return t.toISOString().slice(0,10);}
+return{analysis:analysis,startFor:startFor,num:num,sgn:sgn,RG:RG};}
+"""
+
+_CW_JS = _CW_CORE_JS + r"""
+(function(){
+var root=document.querySelector('.cw');if(!root)return;
+var CD=JSON.parse(document.getElementById('cw-data').textContent);
+var C=cwCore(CD),analysis=C.analysis,startFor=C.startFor,num=C.num,sgn=C.sgn,RG=C.RG;
+function tenors(ten){var v=[];ten.forEach(function(t){if(t.a!==null)v.push(t.a);if(t.b!==null)v.push(t.b);});if(!v.length)return'';
+ var lo=Math.min.apply(null,v)-0.1,hi=Math.max.apply(null,v)+0.1;function P(x){return(x-lo)/(hi-lo)*100;}
+ return ten.filter(function(t){return t.d!==null;}).map(function(t){var c=t.d>0?'up':'dn',pa=P(t.a),pb=P(t.b);
+  return '<div class="cw-dr"><span class="cw-dk">'+t.zh+'</span><div class="cw-dt"><i class="cw-dl '+c+'" style="left:'+Math.min(pa,pb).toFixed(1)+'%;width:'+Math.abs(pb-pa).toFixed(1)+'%"></i>'
+  +'<b class="cw-da" style="left:'+pa.toFixed(1)+'%"></b><b class="cw-dz '+c+'" style="left:'+pb.toFixed(1)+'%"></b></div>'
+  +'<span class="cw-dv '+c+'">'+sgn(t.d)+'<small>'+num(t.a,2)+' → '+num(t.b,2)+'%</small></span></div>';}).join('');}
+function spreads(sp){return sp.map(function(x){return '<div class="cw-sr"><span class="cw-sk">'+x.key+'</span><span class="cw-sab">'+num(x.a)+' → '+num(x.b)+'</span>'
+ +'<span class="cw-sd">'+sgn(x.d,'')+'</span><span class="le3-rg '+(RG[x.code]||'fl')+'">'+x.zh+(x.lead?'<small>'+x.lead+'</small>':'')+'</span></div>';}).join('');}
+function mk(s){return parseInt(s.slice(0,4),10)*12+parseInt(s.slice(5,7),10)-1+(parseInt(s.slice(8,10),10)-1)/31;}
+function bands(a,b){root.querySelectorAll('.cl-plot[data-x0]').forEach(function(p){var x0=+p.dataset.x0,x1=+p.dataset.x1,r=(x1-x0)||1;
+ var l=Math.max(0,(mk(a)-x0)/r*100),R=Math.min(100,(mk(b)-x0)/r*100);var e=p.querySelector('.cl-band');
+ if(!e){e=document.createElement('span');e.className='cl-band';p.insertBefore(e,p.firstChild);}e.style.left=l+'%';e.style.width=Math.max(0.6,R-l)+'%';});}
+function show(r){root.querySelector('.cw-text').innerHTML=r.text.map(function(t){return'<p>'+t+'</p>';}).join('');
+ root.querySelector('.cw-db').innerHTML=tenors(r.tenors);root.querySelector('.cw-st').innerHTML=spreads(r.spreads);
+ root.querySelector('.cw-when').textContent='實際使用 '+r.start.replace(/-/g,'/')+' → '+r.end.replace(/-/g,'/')+' 的收盤（遇假日取前一個交易日）';bands(r.start,r.end);}
+var last=CD.d[CD.d.length-1],fa=root.querySelector('.cw-from'),fb=root.querySelector('.cw-to'),cu=root.querySelector('.cw-cust');
+function pick(k){root.querySelectorAll('.cw-btn').forEach(function(b){b.classList.toggle('on',b.dataset.w===k);});
+ if(k==='custom'){cu.hidden=false;if(!fa.value){fa.value=startFor('1m',last);fb.value=last;}show(analysis(fa.value,fb.value));return;}
+ cu.hidden=true;show(analysis(startFor(k,last),last));}
+root.querySelectorAll('.cw-btn').forEach(function(b){b.addEventListener('click',function(){pick(b.dataset.w);});});
+[fa,fb].forEach(function(e){e.addEventListener('change',function(){if(fa.value&&fb.value)show(analysis(fa.value<fb.value?fa.value:fb.value,fa.value<fb.value?fb.value:fa.value));});});
+pick('1w');
+})();
+"""
+
+
 def curve(d: dict) -> str:
     L = d.get("le") or {}
-    sl = "".join(
-        f'<div class="le-slope"><div class="le-sk">{esc(s["label"])}</div>'
-        f'<div class="le-sv">{s["value"]:+.0f}<small>bp</small>'
-        f'<span>近 1 月 {_bp(s["chg"])}</span></div>{s["chart"]}</div>'
-        for s in L.get("slopes") or [])
+    cd = L.get("cw") or {}
+    if not cd.get("d"):
+        return '<div class="empty">資料不足</div>'
+    import json as _json
+    year = L.get("cw_year") or int(cd["d"][-1][:4])
+    last = cd["d"][-1]
+    r0 = le.window_analysis(cd, le.cw_start(cd, "1w", last, year), last)
+    rows = L.get("spreads") or []
+    fwd = L.get("forwards") or []
+    rf = L.get("refunding") or {}
+    fn = L.get("fomc_next") or ""
+    st = le.curve_story(rows, L.get("curve_drivers") or {}, fwd, fomc_next=_md(fn) if fn else "",
+                        refunding_next=_md(str(rf.get("next") or "")) if rf.get("next") else "")
+    btns = "".join(f'<button type="button" class="cw-btn{" on" if k == "1w" else ""}" data-w="{k}">{zh}</button>'
+                   for k, zh, _ in le.CW_WINDOWS) + '<button type="button" class="cw-btn" data-w="custom">自訂</button>'
+    first = cd["d"][0] if cd["d"][0] >= f"{year}-01-01" else f"{year - 1}-12-31"
+    data = _json.dumps({**cd, "year": year}, ensure_ascii=False, separators=(",", ":"))
+    smalls = "".join(f'<div class="le3-sm"><div class="le3-smh"><b>{esc(x["key"])}</b>'
+                     f'<span>{x["value"]:.0f} bp</span></div>{x.get("chart", "")}</div>' for x in rows)
+    frows = "".join(
+        f'<div class="le3-fr"><span>{esc(x["label"])}</span><b>{x["fwd"]:.2f}%</b>'
+        f'<span class="le3-fg {"up" if x["gap_bp"] > 0 else "dn"}">比現在 {esc(x["spot_zh"])} {_sbp(x["gap_bp"])}bp</span>'
+        f'<span class="le3-fw">近一月 {_sbp(x.get("mom_bp"))}bp</span></div>' for x in fwd)
+    mt = L.get("match")
+    match_html = ""
+    if mt:
+        match_html = (f'<div class="le3-mt"><span>Fed 跟上曲線了嗎</span>'
+                      f'<p>現行利率中點 <b>{mt["r0"]:.2f}%</b>・期貨隱含 {esc(str(mt["year"]))} 年底 <b>{mt["market_end"]:.2f}%</b>'
+                      f'・點陣圖 <b>{mt["dot_median"]:.2f}%</b>——{esc(mt["verdict"])}。</p></div>')
+    outl = "".join(f'<li class="{"hot" if o["hot"] else ""}"><b>{esc(o["tag"])}</b>{esc(o["text"])}</li>'
+                   for o in st["outlook"])
     return f"""
-    <p class="hint">現在、1 個月前、1 年前三條曲線疊在一起：長端翹起來＝期限溢酬與供給在推；整條平移＝政策預期在推。</p>
-    {L.get('curve_chart', '')}
-    <div class="cl-pair viz-block">{sl}</div>"""
+    <div class="cw">
+      <div class="cw-ctl" role="group" aria-label="比較期間">{btns}</div>
+      <div class="cw-cust" hidden><label>從 <input type="date" class="cw-from" min="{first}" max="{last}"></label>
+        <label>到 <input type="date" class="cw-to" min="{first}" max="{last}"></label></div>
+      <div class="cw-text impact neutral">{"".join(f"<p>{esc(t)}</p>" for t in r0["text"])}</div>
+      <div class="cw-blk"><div class="cw-h">2、10、30 年：起點 → 終點</div><div class="cw-db">{_cw_tenors(r0["tenors"])}</div></div>
+      <div class="cw-blk"><div class="cw-h">利差（bp）</div><div class="cw-st">{_cw_spreads(r0["spreads"])}</div></div>
+      <div class="tabs cw-tabs">
+        <input type="radio" name="cw-tab" id="cw-t1" checked><label for="cw-t1">殖利率</label>
+        <input type="radio" name="cw-tab" id="cw-t2"><label for="cw-t2">利差</label>
+        <div class="tabp p1">{L.get("yield_chart", "")}</div>
+        <div class="tabp p2"><div class="le3-sms">{smalls}</div></div>
+      </div>
+      <p class="le3-cap cw-when">實際使用 {r0["start"].replace("-", "/")} → {r0["end"].replace("-", "/")} 的收盤（遇假日取前一個交易日）</p>
+      <script type="application/json" id="cw-data">{data}</script>
+      <script>{_CW_JS}</script>
+    </div>
+    <details class="f-more"><summary>曲線形狀：現在、1 週前、1 個月前、年初</summary>{L.get('curve_chart', '')}</details>
+    <details class="f-more"><summary>市場定價的未來</summary>
+      <div class="le3-ft" style="margin-top:6px">{frows}</div>{match_html}</details>
+    <details class="f-more"><summary>接下來看什麼</summary><ul class="le3-ol">{outl}</ul></details>
+    <details class="f-more"><summary>方法與限制</summary>
+      <div class="f-detail le3-how">
+        <p><b>型態</b>：利差擴大＝變陡、收窄＝變平；看兩端誰動得多決定由哪一端帶動，殖利率上升為熊、下降為牛；兩端反向為扭轉。利差變動 2bp 以內視為持平。</p>
+        <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；期限溢酬（Kim-Wright，約晚一週公布）跟實質利率有重疊，當旁證看。</p>
+        <p><b>市場定價的未來</b>：用目前的公債殖利率算遠期利率，是市場「已經定價」的路徑，含期限溢酬，不是預測；殖利率為平價收益率，計算為近似值。</p>
+        <p><b>自選期間</b>：FRED 每日收盤，2026 年起；判讀文字由固定規則產生，不是 AI。</p>
+      </div>
+    </details>"""
 
 
 # ---------------------------------------------------------------------------
@@ -425,9 +595,10 @@ def guidance_stale(d: dict) -> str:
         return ""
     late = max(ends)
     if late > asof:
-        return (f'<div class="warnbox" style="margin-top:12px"><b>指引待更新</b>　'
-                f'最新財報期末到 {esc(late)}，資本支出指引仍是 {esc(asof)} 的版本——'
-                f'各家在最新一次法說會可能已經調整，請更新 <code>config/rates.yaml</code> 的 capex_guidance。</div>')
+        # 給讀者看的版本：不提設定檔（維護提醒寫在執行紀錄）
+        log.warning("資本支出指引待更新：財報期末 %s、指引 %s（config/rates.yaml capex_guidance）", late, asof)
+        return (f'<div class="warnbox" style="margin-top:12px"><b>計畫可能已過時</b>　'
+                f'年度計畫是 {esc(_md(asof))} 的版本，財報已更新到 {esc(_md(late))}。</div>')
     return ""
 
 
@@ -487,8 +658,7 @@ def hs_agg_chart(d: dict) -> str:
             f'<div class="hs3-p">{"".join(cols)}</div>'
             '<div class="cl-leg"><span><i class="hs3-lg-b"></i>資本支出</span>'
             '<span><i class="hs3-lg-o"></i>營運現金流</span></div>'
-            '<p class="hs3-note">柱子追上橫線＝本業現金不夠付資本支出，缺口要靠發債。'
-            '各家會計季末不同，依「最近第幾季」對齊相加。</p></div>')
+            '<p class="hs3-note">柱子高過橫線＝現金不夠付資本支出，缺口靠發債。</p></div>')
 
 
 def hs_table(d: dict) -> str:
@@ -523,7 +693,7 @@ def hs_table(d: dict) -> str:
             f'<span class="hs3-v"><em>年增</em>{yoy}</span>'
             f'<span class="hs3-v hs3-ratio"><em>佔營運現金流</em>'
             + (f'<b class="{"over" if ratio > 100 else ""}">{ratio:.0f}%</b>' if ratio is not None else "—")
-            + f'{bar}</span>'
+            + f'{bar}</span><i class="hs3-br"></i>'
             f'<span class="hs3-v"><em>單季發債</em>{c["issued"] * 10:,.0f}</span>'
             f'<span class="hs3-v"><em>{esc(str(gd.get("year", "")))} 年計畫</em>{esc(g)}</span>'
             f'</summary><div class="hs3-body">{body}</div></details>')
@@ -531,5 +701,4 @@ def hs_table(d: dict) -> str:
             '<span>佔營運現金流</span><span>單季發債</span>'
             f'<span>{esc(str(gd.get("year", "")))} 年資本支出計畫</span></div>')
     return (f'<div class="hs3-t">{head}{"".join(rows)}</div>'
-            '<p class="hs3-note">金額單位：億美元・點一家看近 8 季資本支出與發債紀錄・'
-            '佔營運現金流超過 100% 以紅字標示</p>')
+            '<p class="hs3-note">億美元・點一家看近 8 季・超過 100% 標紅</p>')

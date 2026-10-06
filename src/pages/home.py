@@ -1207,43 +1207,63 @@ def _hm_brief(ctxs: dict) -> tuple[str, str]:
 
 
 def _hm_changes(cs) -> str:
-    """本期變化：依政策方向分組（偏鴿／偏鷹／中性），先一句總結。"""
+    """
+    本期變化（2026-10 v2，使用者：太雜）：
+      ① 一條比例條＋一句傾向（偏鴿／偏鷹／中性各幾項）
+      ② 只列最重要的 5 項，一項一行：方向點・模組・內容
+         排序：格位移動 → 數字變動（依「動了幾倍雜訊門檻」）→ 新出現的訊號 → 解除的訊號
+      ③ 其餘收進「其他 N 項」，展開後依方向分三小段
+    """
     if not cs or not cs.has_previous:
         return '<div class="home-empty">尚無可比對的上期資料；下一次更新後會顯示本期差異。</div>'
-    buck = {"dovish": [], "hawkish": [], "neutral": []}
-    for f in cs.new_flags + cs.resolved_flags:
-        lean = f.get("change_lean") or "neutral"
-        buck.setdefault(lean, []).append((f.get("module", "訊號"),
-                                          ("解除：" if f.get("kind") != "new" else "") + f.get("title", "—")))
-    for m in cs.metric_moves:
+    items = []   # (rank, lean, module, text)
+    for f in cs.new_flags:
+        items.append((2, f.get("change_lean") or "neutral", f.get("module", "訊號"), f.get("title", "—")))
+    for f in cs.resolved_flags:
+        items.append((3, f.get("change_lean") or "neutral", f.get("module", "訊號"), "解除：" + f.get("title", "—")))
+    _ml = {"labor": "就業", "inflation": "物價", "claims": "就業", "jolts": "就業", "market": "市場"}
+    moves = sorted(cs.metric_moves, key=lambda m: -abs(m.get("delta", 0)) / (m.get("threshold") or 1))
+    for i, m in enumerate(moves):
         u = m.get("unit", "")
-        buck.setdefault(m.get("lean") or "neutral", []).append(
-            (m.get("label", "數據"), f"{m.get('from', 0):,.2f}{u} → {m.get('to', 0):,.2f}{u}"))
-    n = {k: len(v) for k, v in buck.items()}
-    total = sum(n.values())
-    if not total and not cs.scenario_moved:
-        return '<div class="home-empty">主要訊號與上期相同，九宮格位置沒有改變。</div>'
+        # 數字只取前 3 名進「重點」，其餘排在訊號之後——否則 5 格常被數字佔滿，新訊號上不來
+        items.append(((1 if i < 3 else 4) + i * 0.001, m.get("lean") or "neutral", _ml.get(m.get("module"), "數據"),
+                      f"{m.get('label', '數據')} {m.get('from', 0):,.2f}{u} → {m.get('to', 0):,.2f}{u}"))
+    if not items and not cs.scenario_moved:
+        return '<div class="home-empty">主要訊號與上期相同，情境格位沒有改變。</div>'
+    n = {k: sum(1 for x in items if x[1] == k) for k in ("dovish", "hawkish", "neutral")}
+    total = len(items)
     tilt = ("整體往降息方向傾斜" if n["dovish"] > n["hawkish"] + 1 else
             "整體往維持高利率方向傾斜" if n["hawkish"] > n["dovish"] + 1 else "兩邊大致抵銷")
-    head = (f'<p class="hm-chsum">本期 {total} 項訊號變動：<b class="dov">偏鴿 {n["dovish"]}</b>、'
-            f'<b class="haw">偏鷹 {n["hawkish"]}</b>、<b>中性 {n["neutral"]}</b>——{tilt}。'
-            + (f'九宮格位置改變：{esc(cs.headline)}。' if cs.scenario_moved else "") + '</p>')
-    meta = (("dovish", "偏鴿", "增加寬鬆空間"), ("hawkish", "偏鷹", "維持高利率的約束"),
-            ("neutral", "中性", "不改變政策方向"))
-    cols = []
-    for k, zh, eff in meta:
-        items = buck.get(k) or []
-        if not items:
-            continue
-        def li(x):
-            return f'<li><span class="hm-tag">{esc(x[0])}</span>{esc(x[1])}</li>'
-        body = "".join(li(x) for x in items[:2])
-        if items[2:]:
-            body += (f'<li class="hm-more"><details><summary>另 {len(items) - 2} 項</summary><ul>'
-                     + "".join(li(x) for x in items[2:]) + '</ul></details></li>')
-        cols.append(f'<div class="hm-chc {k}"><div class="hm-chc-h"><b>{zh}　{len(items)} 項</b>'
-                    f'<span>{eff}</span></div><ul>{body}</ul></div>')
-    return head + f'<div class="hm-chcs">{"".join(cols)}</div>'
+    bar = "".join(f'<i class="{k}" style="flex:{n[k]}"></i>' for k in ("dovish", "hawkish", "neutral") if n[k])
+    head = (f'<div class="hm-c2-h"><p><b>{esc(tilt)}</b><span>本期 {total} 項變動</span></p>'
+            f'<div class="hm-c2-bar">{bar}</div>'
+            f'<div class="hm-c2-lg"><span><i class="dovish"></i>偏鴿 {n["dovish"]}</span>'
+            f'<span><i class="hawkish"></i>偏鷹 {n["hawkish"]}</span>'
+            f'<span><i class="neutral"></i>中性 {n["neutral"]}</span></div></div>')
+    items.sort(key=lambda x: x[0])
+    _zh = {"dovish": "偏鴿", "hawkish": "偏鷹", "neutral": "中性"}
+
+    def row(x):
+        return (f'<li><i class="hm-c2-d {x[1]}" title="{_zh.get(x[1], "")}"></i>'
+                f'<span class="hm-c2-m">{esc(x[2])}</span><span class="hm-c2-t">{esc(x[3])}</span></li>')
+    top = items[:5]
+    lead = ""
+    if cs.scenario_moved:
+        lead = (f'<li class="hm-c2-sc"><i class="hm-c2-d"></i><span class="hm-c2-m">格位</span>'
+                f'<span class="hm-c2-t">{esc(cs.headline)}</span></li>')
+        top = items[:4]
+    body = f'<ul class="hm-c2">{lead}{"".join(row(x) for x in top)}</ul>'
+    rest = items[len(top):]
+    if rest:
+        grp = ""
+        for k in ("dovish", "hawkish", "neutral"):
+            g = [x for x in rest if x[1] == k]
+            if g:
+                grp += (f'<div class="hm-c2-g"><div class="hm-c2-gh"><i class="hm-c2-d {k}"></i>{_zh[k]} {len(g)} 項</div>'
+                        f'<ul class="hm-c2">{"".join(row(x) for x in g)}</ul></div>')
+        body += (f'<details class="hm-c2-more"><summary>其他 {len(rest)} 項</summary>'
+                 f'<div class="hm-c2-gs">{grp}</div></details>')
+    return head + body
 
 
 def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
@@ -1332,14 +1352,7 @@ def home_body(ctxs: dict) -> str:
         f"就業 {lab.get('data_month', '—')}", f"CPI {(asof.get('cpi') or '—')[:7]}",
         f"PCE {(asof.get('pce') or '—')[:7]}", f"FOMC {fom.get('latest_date', '—')}",
         f"利率 {rates.get('as_of', '—')}"])
-    # 下一格距離條（跟情境頁同一套：0.5 個百分點以外是空條）
-    bar = ""
-    if trigger is not None and not trigger.met:
-        import re as _re
-        m = _re.search(r"[-+]?\d+(?:\.\d+)?", trigger.distance or "")
-        if m:
-            close = max(0.0, 1 - abs(float(m.group(0))) / 0.5) * 100
-            bar = f'<div class="hm-bar"><i style="width:{close:.0f}%"></i></div>'
+    # 下一格距離條已移除（2026-10 使用者：橘線沒有意義）
 
     return f"""
 <main class="home-dashboard hm">
@@ -1352,7 +1365,7 @@ def home_body(ctxs: dict) -> str:
       <div class="hm-verdict"><b>{esc(sc.name)}</b><span>{esc(lean)}</span></div>
       {f'<p class="hm-key">{esc(takeaway)}</p>' if takeaway else ''}
       <a class="hm-next" href="/scenario/"><span>可能下一格</span><b>{esc(next_name)}</b>
-        <small>{esc(trigger_text)}</small>{bar}<em>完整九宮格 →</em></a>
+        <small>{esc(trigger_text)}</small><em>完整九宮格 →</em></a>
     </div>
     <div class="hm-layer">
       <div class="hm-lh">整體情勢</div>
@@ -1382,46 +1395,24 @@ def home_body(ctxs: dict) -> str:
 
 
 def home_footer(ctxs: dict) -> str:
-    lab, inf, fom = ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc")
-
-    def _d(value: str) -> str:
-        return f'<span class="nb">{esc(value)}</span>'
-
-    return (
-        '<div class="home-footer">'
-        '<div><b>資料來源</b><span>FRED、BLS、BEA、DOL、Federal Reserve 與公司財報</span>'
-        f'<span>就業 {_d((lab or {}).get("data_month", "—"))}｜物價 {_d((inf or {}).get("data_month", "—"))}｜FOMC {_d((fom or {}).get("latest_date", "—"))}</span></div>'
-        '<details class="foot-fold"><summary>焦點條指標與資料來源說明</summary>'
-        '<div class="foot-fold-body">'
-        '<span>SOFR＝銀行間隔夜擔保資金的實際成交利率；'
-        'SOFR−IORB＝資金價格與聯準會地板利率的距離，轉正代表準備金趨緊'
-        '（2019 年 9 月回購市場事件即此訊號先爆）；ON RRP＝貨幣基金停泊在'
-        '聯準會的隔夜資金，是體系多餘現金的緩衝池，接近零代表 QT 開始直接'
-        '抽銀行準備金；SRF＝聯準會常備回購機制的動用量，0 是常態、'
-        '非零代表有人在向央行借急錢；MOVE＝美債版的 VIX（利率波動率指數）。</span>'
-        '<span>來源分層：殖利率與油價／波動率以 Yahoo 即時報價為主'
-        '（延遲約 15 分鐘）、抓不到退回 FRED 收盤，每顆 chip 的小字＝'
-        '該筆資料的日期；變動一律對前一個交易日收盤，1 bp＝0.01 個百分點。'
-        '開著首頁時，殖利率、油價、波動率、道瓊、費半與台指期每分鐘自動'
-        '更新，小字改為「盤中・延遲 HH:MM」（台灣時間）；休市時維持收盤值。'
-        '升降息由聯邦基金期貨從目前利率逐場往前推（WIRP 同款算法，延遲報價）：'
-        '「下次會議」列機率最高的兩個結果（單場推算只會切成相鄰兩種）；'
-        '「單場幅度」是那一場會議市場定價的變動，「累計」是從現在到那一場'
-        '（含）總共定價多少，1 碼＝25 bp。道瓊、費城半導體來自 Yahoo；'
-        '台指期取日盤與夜盤中較新的一盤（期交所行情資料，非官方 API），'
-        '變動對該盤參考價。焦點由 AI 讀取多篇報導後寫成：「今日主軸」把當天最'
-        '重要、彼此相關的幾則報導（優先採彭博、路透）綜合成 200–250 字的論述'
-        '——發生什麼、為什麼、對利率或聯準會代表什麼；下面兩則補充依你在「選擇」裡排的'
-        '前兩個指標換主題（例如選了 WTI 就補油價新聞；同主題往下找，該主題沒有新聞就'
-        '往下一個指標遞補），先勾的指標排前面；排序依跨來源熱度、時效、來源與發布日，'
-        '數字均出自原文並經機械驗證；'
-        '付費牆來源（路透、彭博、FT、WSJ）僅以標題與官方摘要入稿。'
-        '眾院・民主黨／參院・民主黨＝Polymarket 預測市場上民主黨拿下該院的價格'
-        '（反映下注者的看法，不是民調），隨網站每天更新 3 次。</span>'
-        '</div></details>'
-        '<div><b>使用說明</b><span>九宮格與數字由固定規則產生、每次執行結果一致，AI 只整理文字敘述。本網站僅為資料整理與情境判讀，不構成投資建議。</span>'
-        '<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span></div>'
-        '</div>')
+    from ..site import source_footer
+    lab, inf, fom = ctxs.get("labor") or {}, ctxs.get("inflation") or {}, ctxs.get("fomc") or {}
+    return source_footer(
+        [("殖利率、油價、波動率、道瓊、費半", "Yahoo 盤中（延遲約 15 分），抓不到改用 FRED 收盤", "開著頁面每分鐘"),
+         ("台指期", "期交所行情（日盤與夜盤取較新一盤）", "每分鐘"),
+         ("升降息機率", "聯邦基金期貨逐場推算（WIRP 同款算法）", "每日"),
+         ("SOFR、ON RRP、SRF", "紐約聯儲（經 FRED）", "每日"),
+         ("今日焦點與補充新聞", "彭博、路透、Yahoo 等；AI 綜合改寫", "每天 3 次"),
+         ("期中選舉", "Polymarket 預測市場（下注者看法，不是民調）", "每天 3 次"),
+         ("就業、物價、聯準會", f"BLS、BEA、聯準會（就業 {esc(lab.get('data_month', '—'))}・物價 {esc(inf.get('data_month', '—'))}・FOMC {esc(fom.get('latest_date', '—'))}）", "依發布")],
+        ["變動一律對前一個交易日收盤；1 bp＝0.01 個百分點，1 碼＝25 bp。",
+         "SOFR−IORB 轉正代表準備金趨緊；ON RRP 接近零代表縮表開始直接抽銀行準備金；SRF 非零代表有人向央行借急錢；MOVE＝美債版 VIX。",
+         "焦點由 AI 讀多篇報導後綜合；數字都出自原文並經機械比對。付費牆來源只用標題與官方摘要。",
+         "補充新聞依「選擇指標」的前兩個指標換主題，該主題沒有新聞就往下遞補。",
+         "情境格位與數字由固定規則產生，AI 只整理文字敘述。"],
+        head="<b>資料來源</b> FRED、BLS、BEA、DOL、聯準會、公司財報、Polymarket",
+        disclaimer="本網站僅為資料整理與情境判讀，不構成投資建議。",
+        links='<span><a href="/scenario/">方法與判斷規則</a>｜<a href="/archive/">歷次存檔</a></span>')
 
 def archive_body(entries: list[dict]) -> str:
     if not entries:

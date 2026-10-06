@@ -1044,6 +1044,7 @@ def main() -> int:
         if _rle is not None:
             from src.analysis import longend as _le
             _rle["match"] = _le.match_the_curve(_fom["mvd"], (_rle.get("contrib") or {}).get(12))
+            _rle["fomc_next"] = ((_fom.get("next_meeting") or {}).get("date") or "")
         _u3 = ((((ctxs.get("labor") or {}).get("key_metrics") or {}).get("u3")
                 or {}).get("value"))
         _fom["shift_conds"] = _fx.shift_conditions(

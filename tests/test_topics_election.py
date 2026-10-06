@@ -87,6 +87,31 @@ check("⑧ 油價主題用全站排除詞、抓到內文", "oil" in mat and mat[
 check("⑨ 跟主軸同一件事的新聞剔除（聯準會主題沒有別的新聞 → 不出現）",
       "fed" not in mat, list(mat))
 
+# ⑨b 美股主題（2026-10 使用者：美股新聞篩錯）：AI 標題要真的講美股才算；
+#     其他國家股市、原油庫存、世界銀行區域報告一律擋掉
+_eq = [x for x in ft.topic_specs(None) if x["id"] == "equity"]
+_pool_eq = [
+    {"title": "World Bank warns East Asia over-reliant on AI exports", "link": "https://finance.yahoo.com/e1",
+     "source": "Yahoo Finance", "at": _at, "summary": ""},
+    {"title": "日股在AI與半導體股帶動下收高", "link": "https://tw.stock.yahoo.com/e2",
+     "source": "Yahoo奇摩股市", "at": _at, "summary": ""},
+    {"title": "Oil slips as G7 stocks release eases supply worry", "link": "https://finance.yahoo.com/e3",
+     "source": "Yahoo Finance", "at": _at, "summary": ""},
+    {"title": "Wall Street rises as Nvidia lifts AI shares", "link": "https://finance.yahoo.com/e4",
+     "source": "Yahoo Finance", "at": _at, "summary": ""},
+]
+_mat_eq = ft.gather_topic_material(_eq, _pool_eq, global_exclude=[], now=_now,
+                                   _fetch=lambda *a, **k: [],
+                                   _body=lambda u: "Stocks rose on Wall Street." * 5)
+check("⑨b 美股主題只收真的在講美股的標題（擋 AI 區域報告、日股、原油庫存）",
+      "equity" in _mat_eq and [a["title"] for a in _mat_eq["equity"]["arts"]]
+      == ["Wall Street rises as Nvidia lifts AI shares"], _mat_eq.get("equity"))
+import yaml as _yaml
+_cfg_eq = [x for x in ft.topic_specs(_yaml.safe_load(open(pathlib.Path(__file__).resolve().parents[1] / "config" / "focus.yaml", encoding="utf-8")))
+           if x["id"] == "equity"]
+check("⑨c config 的美股主題也有 require／exclude_add",
+      bool(_cfg_eq) and bool(_cfg_eq[0]["require"]) and "日股" in _cfg_eq[0]["exclude_add"], _cfg_eq[:1])
+
 # ---------------------------------------------------------------- 生成與驗證
 _seen = []
 

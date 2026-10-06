@@ -799,10 +799,13 @@ def inflation_body(d: dict) -> str:
 
 
 def inflation_footer(d: dict) -> str:
-    return (
-        "資料來源：美國勞工統計局（BLS）、經濟分析局（BEA）、"
-        "克里夫蘭聯準銀行與亞特蘭大聯準銀行，經 FRED 取得。<br>"
-        f"CPI 權重版本：{esc(d.get('weights_vintage', '—'))}"
-        "　·　權重每年一月由 BLS 更新，需同步校準。<br>"
-        "本頁僅為數據整理，不構成投資建議。"
-    )
+    from ..site import source_footer
+    return source_footer(
+        [("CPI、PPI", "美國勞工統計局 BLS（經 FRED）", f"每月・資料 {esc(d.get('data_month', '—'))}"),
+         ("PCE、個人所得與支出", "經濟分析局 BEA（經 FRED）", "每月"),
+         ("通膨預期", "克里夫蘭聯儲、亞特蘭大聯儲（經 FRED）", "每月"),
+         ("油價", "EIA（經 FRED）", "每日")],
+        [f"CPI 權重版本：{esc(d.get('weights_vintage', '—'))}；BLS 每年一月更新權重，需同步校準。",
+         "所有判定由固定規則產生，每次執行結果一致。"],
+        head="<b>資料來源</b> BLS、BEA、克里夫蘭／亞特蘭大聯儲（經 FRED）")
+

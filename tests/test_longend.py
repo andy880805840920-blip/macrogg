@@ -99,6 +99,35 @@ check("⑤ 類別曲線：三個天期", h.count('class="cl-hit"') == 3 and "--n
 h = charts.segbar([{"label": "a", "value": 1.0, "color": "#1"}, {"label": "b", "value": -0.2, "color": "#2"}])
 check("⑤ 組成條：負值不畫、另行註明", h.count('class="sg-seg"') == 1 and "負值" in h)
 
+# ---- 殖利率曲線 v2（2026-10）：型態、遠期、判讀 ----
+R = le.regime
+check("⑥a 長端漲較多＝熊陡（長端帶動）", R(20, 5)["zh"] == "熊陡" and R(20, 5)["lead"] == "長端帶動")
+check("⑥b 短端跌較多＝牛陡（短端帶動）", R(-5, -20)["zh"] == "牛陡" and R(-5, -20)["lead"] == "短端帶動")
+check("⑥c 短端漲較多＝熊平", R(5, 20)["zh"] == "熊平")
+check("⑥d 長端跌較多＝牛平", R(-20, -5)["zh"] == "牛平")
+check("⑥e 長漲短跌＝扭轉變陡；長跌短漲＝扭轉變平", R(5, -5)["zh"] == "扭轉變陡" and R(-5, 5)["zh"] == "扭轉變平")
+check("⑥f 利差變動 2bp 內＝大致持平", R(10, 9)["zh"] == "大致持平")
+check("⑥g 遠期：1 年 4%、2 年 5% → 1y1y 約 6.01%", abs(le._fwd(4, 1, 5, 2) - 6.0096) < 0.001)
+_d0 = dt.date(2026, 1, 2)
+_ser = {sid: [{"date": (_d0 + dt.timedelta(days=i)).isoformat(), "value": v0 + i * dv}
+              for i in range(120)]
+        for sid, v0, dv in (("DGS10", 4.0, 0.002), ("DGS2", 3.6, 0.0), ("DGS30", 4.5, 0.003),
+                            ("DGS1", 3.7, 0.0), ("DGS5", 3.8, 0.001), ("DGS20", 4.4, 0.0025),
+                            ("DGS3MO", 3.9, 0.0), ("T10YIE", 2.3, 0.0005), ("DFII10", 1.7, 0.0015),
+                            ("THREEFYTP10", 0.5, 0.001))}
+_rows = le.spread_rows(_ser)
+check("⑥h 三組利差都算出來，10-2 一個月是熊陡（長端帶動）",
+      [r["key"] for r in _rows] == ["10-2", "30-10", "30-2"]
+      and _rows[0]["mom_regime"]["zh"] == "熊陡", [(r["key"], r["mom_regime"]) for r in _rows])
+_st = le.curve_story(_rows, le.curve_drivers(_ser), le.forwards(_ser), fomc_next="10/28")
+check("⑥i 判讀句：有型態、有長端拆解、接下來三條",
+      "熊陡" in _st["head"] and "通膨預期" in _st["long"] and len(_st["outlook"]) == 3, _st)
+check("⑥j 遠期四組都有，2y3y 對照內插的 3 年期",
+      [x["key"] for x in le.forwards(_ser)] == ["1y1y", "2y3y", "5y5y", "10y20y"]
+      and le.forwards(_ser)[1]["spot_zh"] == "3 年期")
+_sn = le.curve_snapshots(_ser)
+check("⑥k 曲線快照：現在／1 週前／1 個月前／年初", [x["label"] for x in _sn][:3] == ["現在", "1 週前", "1 個月前"])
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

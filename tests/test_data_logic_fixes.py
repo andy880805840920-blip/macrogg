@@ -51,7 +51,10 @@ check("④b 比重一年變化用個百分點表示",
       next(r for r in us["rows"] if r["kind"] == "bad")["share_yoy_display"]
       == "+0.2 個百分點")
 check("④c 比重一年變化不到 1 個百分點 → 結構沒有明顯變化", "沒有明顯變化" in us["verdict"])
-check("④d 失業結構附時間軸圖", "<svg" in us["chart"])
+from src.pages import labor as _lab   # noqa: E402
+_ush = _lab._structure_block(us)
+# 2026-10 v2：四類比重的走勢圖改成「比重較一年前」的正負橫條（一類一列）
+check("④d 失業結構是比重變化的正負橫條", _ush.count('class="us2-bar"') == 4 and "us2-noise" in _ush)
 check("⑤ 正確使用 Reentrants 序列", "重新進入" in labels)
 
 # CPI 分項缺資料時要回報覆蓋率。

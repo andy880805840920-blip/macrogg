@@ -540,7 +540,9 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
                   refs: Sequence[dict] = (), digits: int = 1,
                   fill_between: dict | None = None, marks: Sequence[dict] = (),
                   zero: bool = False, months: int = 24, aria: str = "走勢",
-                  legend_note: str = "") -> str:
+                  legend_note: str = "", yrange: tuple | None = None,
+                  step: float | None = None, xmonths: bool = False,
+                  show_legend: bool = True) -> str:
     """
     精簡走勢圖：同單位的 1–3 條線疊在一張，近 24 個月。
 
@@ -562,10 +564,14 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
     allv += [r["value"] for r in refs]
     if zero:
         allv.append(0.0)
-    lo, hi = min(allv), max(allv)
-    pad = ((hi - lo) or 1) * 0.1
-    lo, hi = lo - pad, hi + pad
-    step = _nice_step(hi - lo)
+    # yrange：小圖並排時共用同一個縱軸（2026-10 殖利率利差三張小圖）
+    if yrange:
+        lo, hi = yrange
+    else:
+        lo, hi = min(allv), max(allv)
+        pad = ((hi - lo) or 1) * 0.1
+        lo, hi = lo - pad, hi + pad
+    step = step or _nice_step(hi - lo)
     import math
     t0 = math.ceil(lo / step) * step
     ticks = []
@@ -673,13 +679,29 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
         legend += f'<span><i class="lg-ref"></i>{_esc(r["label"])}</span>'
     if fill_between and fill_between.get("label"):
         legend += f'<span><i class="lg-fill"></i>{_esc(fill_between["label"])}</span>'
+    if xmonths:
+        # 逐月刻度：每月 1 日的位置；1 月寫年份
+        y_, m_ = int(first[:4]), int(first[5:7])
+        labs = []
+        while f"{y_}-{m_:02d}" <= last[:7]:
+            xp = X(f"{y_}-{m_:02d}-01") / W * 100
+            if -4 <= xp < 0:          # 資料從 1/2 開始：1 月的刻度貼齊左緣
+                xp = 0.0
+            if 0 <= xp <= 100:
+                labs.append(f'<span style="left:{xp:.2f}%">{f"{y_ % 100}/1" if m_ == 1 else m_}</span>')
+            m_ += 1
+            if m_ > 12:
+                y_, m_ = y_ + 1, 1
+        xaxis = f'<div class="cl-xm">{"".join(labs)}</div>'
+    else:
+        xaxis = (f'<div class="cl-x"><span>{_esc(first[:7].replace("-", "/"))}</span>'
+                 f'<span>{_esc(last[:7].replace("-", "/"))}</span></div>')
     return (f'<div class="cl">'
-            f'<div class="cl-plot" style="height:{H}px">'
+            f'<div class="cl-plot" style="height:{H}px" data-x0="{x0:.4f}" data-x1="{x1:.4f}">'
             f'<svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" role="img" '
             f'aria-label="{_esc(aria)}">{"".join(svg)}</svg>{"".join(over)}</div>'
-            f'<div class="cl-x"><span>{_esc(first[:7].replace("-", "/"))}</span>'
-            f'<span>{_esc(last[:7].replace("-", "/"))}</span></div>'
-            f'<div class="cl-leg">{legend}</div>'
+            + xaxis
+            + (f'<div class="cl-leg">{legend}</div>' if show_legend else "")
             + (f'<div class="cl-note">{legend_note}</div>' if legend_note else "")
             + '</div>')
 

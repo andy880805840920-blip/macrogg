@@ -109,23 +109,390 @@ def _at(rows: list[dict], date: str):
     return best
 
 
-def curve_snapshots(series: dict) -> list[dict]:
-    """現在、1 個月前、1 年前三條曲線：[{label, date, points:[(tenor, years, value)]}]。"""
+def curve_snapshots(series: dict, year_start: bool = True) -> list[dict]:
+    """
+    曲線快照：現在、1 週前、1 個月前、年初（2026-10 使用者：要跟利差表的週／月變化對得起來）。
+    回傳 [{label, date, points:[(tenor, years, value)]}]。
+    """
     last = (series.get("DGS10") or [{}])[-1].get("date")
     if not last:
         return []
     d0 = dt.date.fromisoformat(last[:10])
+    marks = [("現在", d0), ("1 週前", d0 - dt.timedelta(days=7)),
+             ("1 個月前", d0 - dt.timedelta(days=30))]
+    if year_start:
+        marks.append(("年初", dt.date(d0.year - 1, 12, 31)))
     out = []
-    for lab, dd in (("現在", d0), ("1 個月前", d0 - dt.timedelta(days=30)),
-                    ("1 年前", d0 - dt.timedelta(days=365))):
+    for lab, dd in marks:
         pts = []
         for ten, sid, yrs in CURVE:
             r = _at(series.get(sid) or [], dd.isoformat())
             if r:
                 pts.append((ten, yrs, r["value"]))
         if len(pts) >= 4:
-            out.append({"label": lab, "date": dd.isoformat(), "points": pts})
+            out.append({"label": lab, "date": (_at(series.get("DGS10") or [], dd.isoformat()) or {}).get("date", dd.isoformat()),
+                        "points": pts})
     return out
+
+
+# ---------------------------------------------------------------------------
+# 利差：10-2、30-10、30-2 的水準、週變化、月變化與型態（2026-10）
+# ---------------------------------------------------------------------------
+SPREADS = [("10-2", "DGS10", "DGS2", "10 年", "2 年"),
+           ("30-10", "DGS30", "DGS10", "30 年", "10 年"),
+           ("30-2", "DGS30", "DGS2", "30 年", "2 年")]
+WINDOWS = (("wow", 7, "週"), ("mom", 30, "月"))
+FLAT_BP = 2.0          # 利差變動 2bp 以內＝大致持平
+
+
+def regime(d_long: float | None, d_short: float | None) -> dict:
+    """
+    曲線型態（以 bp 計）：
+      變陡（利差擴大）  長端漲得比短端多 → 熊陡（長端帶動）
+                        短端跌得比長端多 → 牛陡（短端帶動）
+                        長端漲、短端跌    → 扭轉變陡
+      變平（利差收窄）  短端漲得比長端多 → 熊平（短端帶動）
+                        長端跌得比短端多 → 牛平（長端帶動）
+                        長端跌、短端漲    → 扭轉變平
+    「熊」＝殖利率上升（債價跌），「牛」＝殖利率下降。
+    """
+    if d_long is None or d_short is None:
+        return {"code": "na", "zh": "—", "lead": ""}
+    ds = d_long - d_short
+    if abs(ds) < FLAT_BP:
+        return {"code": "flat", "zh": "大致持平", "lead": ""}
+    if ds > 0:                                   # 變陡
+        if d_long > 0 and d_short < 0:
+            return {"code": "twist_steep", "zh": "扭轉變陡", "lead": "兩端反向"}
+        if abs(d_long) >= abs(d_short):
+            return ({"code": "bear_steep", "zh": "熊陡", "lead": "長端帶動"} if d_long > 0
+                    else {"code": "bull_steep", "zh": "牛陡", "lead": "短端帶動"})
+        return ({"code": "bull_steep", "zh": "牛陡", "lead": "短端帶動"} if d_short < 0
+                else {"code": "bear_steep", "zh": "熊陡", "lead": "長端帶動"})
+    if d_long < 0 and d_short > 0:
+        return {"code": "twist_flat", "zh": "扭轉變平", "lead": "兩端反向"}
+    if abs(d_short) >= abs(d_long):
+        return ({"code": "bear_flat", "zh": "熊平", "lead": "短端帶動"} if d_short > 0
+                else {"code": "bull_flat", "zh": "牛平", "lead": "長端帶動"})
+    return ({"code": "bull_flat", "zh": "牛平", "lead": "長端帶動"} if d_long < 0
+            else {"code": "bear_flat", "zh": "熊平", "lead": "短端帶動"})
+
+
+def _chg(rows: list[dict], last: str, days: int):
+    """last 那天的值 − days 天前（當天或之前最近一筆）的值。"""
+    a = _at(rows, last)
+    b = _at(rows, (dt.date.fromisoformat(last[:10]) - dt.timedelta(days=days)).isoformat())
+    if not a or not b:
+        return None
+    return a["value"] - b["value"]
+
+
+def spread_series(series: dict, long_id: str, short_id: str, since: str = "") -> list[dict]:
+    A, B = series.get(long_id) or [], series.get(short_id) or []
+    bm = {r["date"]: r["value"] for r in B if r.get("value") is not None}
+    return [{"date": r["date"], "value": (r["value"] - bm[r["date"]]) * 100} for r in A
+            if r.get("value") is not None and r["date"] in bm and r["date"] >= since]
+
+
+def spread_rows(series: dict) -> list[dict]:
+    """[{key, label, value, wow, mom, d_long/d_short per window, regime per window}]（bp）。"""
+    out = []
+    for key, lid, sid, lz, sz in SPREADS:
+        sp = spread_series(series, lid, sid)
+        if len(sp) < 25:
+            continue
+        last = sp[-1]["date"]
+        row = {"key": key, "label": f"{lz} − {sz}", "value": sp[-1]["value"], "date": last,
+               "long": lz, "short": sz}
+        for w, days, _ in WINDOWS:
+            dl, ds_ = _chg(series.get(lid) or [], last, days), _chg(series.get(sid) or [], last, days)
+            row[w] = None if dl is None or ds_ is None else (dl - ds_) * 100
+            row[w + "_long"] = None if dl is None else dl * 100
+            row[w + "_short"] = None if ds_ is None else ds_ * 100
+            row[w + "_regime"] = regime(row[w + "_long"], row[w + "_short"])
+        out.append(row)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 誰在推曲線：長端拆通膨預期／實質利率（其中期限溢酬），短端看政策預期
+# ---------------------------------------------------------------------------
+def curve_drivers(series: dict) -> dict:
+    """
+    週、月兩個窗的變動（bp；油價為 %）：
+      long：10 年 = 損益兩平（通膨預期）＋ TIPS 實質利率；期限溢酬是實質利率裡「財政與供給」的那一塊
+      short：2 年、3 個月，以及 2 年 − 3 個月（市場對未來兩年升降息的定價）
+    市場口徑（損益兩平、TIPS）是日資料，跟上方模型拆解（月均）不同，畫面上會講。
+    """
+    last = (series.get("DGS10") or [{}])[-1].get("date")
+    if not last:
+        return {}
+    out = {"date": last}
+    for w, days, _ in WINDOWS:
+        g = {}
+        for k, sid in (("y10", "DGS10"), ("be", "T10YIE"), ("real", "DFII10"),
+                       ("tp", "THREEFYTP10"), ("y2", "DGS2"), ("y3m", "DGS3MO"), ("y30", "DGS30")):
+            v = _chg(series.get(sid) or [], last, days)
+            g[k] = None if v is None else v * 100
+        oil = series.get("DCOILWTICO") or []
+        a = _at(oil, last)
+        b = _at(oil, (dt.date.fromisoformat(last) - dt.timedelta(days=days)).isoformat())
+        g["oil_pct"] = ((a["value"] / b["value"] - 1) * 100) if a and b and b["value"] else None
+        g["oil"] = a["value"] if a else None
+        g["path"] = (None if g["y2"] is None or g["y3m"] is None else g["y2"] - g["y3m"])
+        out[w] = g
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 自選期間（2026-10）：頁面嵌入對齊好的日資料，瀏覽器端用**同一套規則**
+# 重算（src/pages/longend.py 的 _CW_JS）。這裡是參考實作：伺服器端先算好
+# 預設的「1 週」畫面，tests/test_curve_window.py 逐窗比對兩邊輸出一字不差。
+# ---------------------------------------------------------------------------
+CW_FIELDS = (("y3m", "DGS3MO"), ("y2", "DGS2"), ("y10", "DGS10"), ("y30", "DGS30"),
+             ("be", "T10YIE"), ("real", "DFII10"), ("tp", "THREEFYTP10"), ("oil", "DCOILWTICO"))
+CW_WINDOWS = (("1w", "1 週", 7), ("1m", "1 個月", 30), ("3m", "3 個月", 91), ("ytd", "年初至今", 0))
+
+
+def curve_data(series: dict, since: str) -> dict:
+    """以 10 年期的交易日為軸，各序列對齊（缺值為 None）。since 之後（含）。"""
+    dates = [r["date"][:10] for r in series.get("DGS10") or []
+             if r.get("value") is not None and r["date"][:10] >= since]
+    out = {"d": dates}
+    for k, sid in CW_FIELDS:
+        m = {r["date"][:10]: r["value"] for r in series.get(sid) or [] if r.get("value") is not None}
+        out[k] = [None if m.get(x) is None else round(m[x], 4) for x in dates]
+    return out
+
+
+def _cw_idx(cd: dict, date: str) -> int:
+    """date 當天或之前最近的交易日索引（早於第一天時回 0）。"""
+    i = 0
+    for j, x in enumerate(cd["d"]):
+        if x <= date:
+            i = j
+        else:
+            break
+    return i
+
+
+def _cw_val(cd: dict, k: str, i: int):
+    """第 i 天的值；那天沒有（例如期限溢酬晚一週公布）就往前找最近一筆，最多 5 個交易日。"""
+    arr = cd.get(k) or []
+    for j in range(i, max(-1, i - 6), -1):
+        if j < len(arr) and arr[j] is not None:
+            return arr[j]
+    return None
+
+
+def cw_start(cd: dict, key: str, end: str, year: int) -> str:
+    """快捷鍵 → 起點日期（yyyy-mm-dd，尚未對齊交易日）。"""
+    if key == "ytd":
+        return f"{year - 1}-12-31"
+    days = {k: n for k, _, n in CW_WINDOWS}[key]
+    return (dt.date.fromisoformat(end) - dt.timedelta(days=days)).isoformat()
+
+
+def _hu(v: float, nd: int = 0) -> float:
+    """四捨五入（半數往上，跟 JS 的 Math.round 一致；Python 的 round 是銀行家捨入）。"""
+    import math
+    f = 10 ** nd
+    return math.floor(v * f + 0.5) / f
+
+
+def _num(v: float, nd: int = 0) -> str:
+    r = _hu(v, nd)
+    return f"{0.0 if r == 0 else r:.{nd}f}".replace("-", "−")
+
+
+def _sgn(v: float, unit: str = "bp", nd: int = 0) -> str:
+    r = _hu(v, nd)
+    if r == 0:
+        return f"{0:.{nd}f}{unit}"
+    return ("+" if r > 0 else "") + _num(v, nd) + unit
+
+
+def _md2(iso: str) -> str:
+    return f"{int(iso[5:7])}/{int(iso[8:10])}"
+
+
+def window_analysis(cd: dict, start: str, end: str) -> dict:
+    """
+    起訖兩天（各自對齊到當天或之前的交易日）之間：
+      tenors   2／10／30 年 起點、終點、變動（bp）
+      spreads  10-2、30-10、30-2 起點、終點、變動、型態
+      text     三句判讀（型態／長端原因／短端原因）
+    """
+    ia, ib = _cw_idx(cd, start), _cw_idx(cd, end)
+    if ia >= ib:
+        ia = max(0, ib - 1)
+    da, db = cd["d"][ia], cd["d"][ib]
+    v = lambda k, i: _cw_val(cd, k, i)
+    ten = []
+    for k, zh in (("y2", "2 年"), ("y10", "10 年"), ("y30", "30 年")):
+        a, b = v(k, ia), v(k, ib)
+        ten.append({"k": k, "zh": zh, "a": a, "b": b,
+                    "d": None if a is None or b is None else (b - a) * 100})
+    T = {t["k"]: t for t in ten}
+    sp = []
+    for key, lk, sk in (("10-2", "y10", "y2"), ("30-10", "y30", "y10"), ("30-2", "y30", "y2")):
+        L, S = T[lk], T[sk]
+        if None in (L["a"], L["b"], S["a"], S["b"]):
+            continue
+        a, b = (L["a"] - S["a"]) * 100, (L["b"] - S["b"]) * 100
+        g = regime(L["d"], S["d"])
+        sp.append({"key": key, "a": a, "b": b, "d": b - a,
+                   "zh": g["zh"], "lead": g["lead"], "code": g["code"]})
+    S = {x["key"]: x for x in sp}
+
+    def dch(k):
+        a, b = v(k, ia), v(k, ib)
+        return None if a is None or b is None else (b - a) * 100
+    be, real, tp, y3m = dch("be"), dch("real"), dch("tp"), dch("y3m")
+    oa, ob = v("oil", ia), v("oil", ib)
+    oil = (ob / oa - 1) * 100 if oa and ob else None
+    txt = []
+    if "10-2" in S:
+        x = S["10-2"]
+        act = "擴大" if x["d"] > 0 else "收窄"
+        s1 = (f"{_md2(da)} → {_md2(db)}：10-2 利差{act} {_num(abs(x['d']))}bp（{_num(x['a'])} → {_num(x['b'])}），"
+              f"{x['zh']}" + (f"（{x['lead']}）" if x["lead"] else "")
+              + f"：10 年 {_sgn(T['y10']['d'])}、2 年 {_sgn(T['y2']['d'])}")
+        if "30-10" in S and S["30-10"]["code"] not in ("flat", "na") and S["30-10"]["code"] != x["code"]:
+            s1 += f"；30-10 {S['30-10']['zh']}"
+        txt.append(s1 + "。")
+    if T["y10"]["d"] is not None and be is not None and real is not None:
+        lead = "通膨預期" if abs(be) > abs(real) else "實質利率"
+        s2 = (f"10 年 {_sgn(T['y10']['d'])}：通膨預期 {_sgn(be)}、實質利率 {_sgn(real)}"
+              + (f"；期限溢酬（財政與供給）{_sgn(tp)}" if tp is not None else "；期限溢酬尚未公布")
+              + (f"；油價 {_sgn(oil, '%')}" if oil is not None else "")
+              + f"。主要是{lead}在推")
+        if lead == "實質利率" and tp is not None and tp > 0 and tp >= abs(real) * 0.5:
+            s2 += "，期限溢酬也在漲——財政與供給有份"
+        elif lead == "通膨預期" and oil is not None and oil > 5:
+            s2 += "，跟油價上漲同步"
+        txt.append(s2 + "。")
+    if T["y2"]["d"] is not None:
+        path = None if y3m is None else T["y2"]["d"] - y3m
+        s3 = (f"2 年 {_sgn(T['y2']['d'])}"
+              + (f"，2 年 − 3 個月 {_sgn(path)}" if path is not None else "")
+              + ("：市場把升息押得更多（或降息延後）。" if (path or 0) > 5 else
+                 "：市場提高降息預期。" if (path or 0) < -5 else "：政策預期大致沒變。"))
+        txt.append(s3)
+    return {"start": da, "end": db, "tenors": ten, "spreads": sp, "text": txt,
+            "drivers": {"be": be, "real": real, "tp": tp, "oil": oil, "y3m": y3m}}
+
+
+def _fwd(y1: float, n1: float, y2: float, n2: float) -> float:
+    """n1 年後、期間 n2−n1 年的遠期利率（年複利，%）。CMT 是平價殖利率，這裡是近似。"""
+    a, b = (1 + y1 / 100) ** n1, (1 + y2 / 100) ** n2
+    return ((b / a) ** (1 / (n2 - n1)) - 1) * 100
+
+
+FORWARDS = [("1y1y", "1 年後的 1 年期", "DGS1", 1, "DGS2", 2, "DGS1"),
+            ("2y3y", "2 年後的 3 年期", "DGS2", 2, "DGS5", 5, "DGS3*"),
+            ("5y5y", "5 年後的 5 年期", "DGS5", 5, "DGS10", 10, "DGS5"),
+            ("10y20y", "10 年後的 20 年期", "DGS10", 10, "DGS30", 30, "DGS20")]
+
+
+def forwards(series: dict) -> list[dict]:
+    """
+    市場隱含的未來利率：用現在的曲線算遠期利率，跟「同天期現在的利率」比。
+    遠期＞現在＝市場定價該天期利率會走高（或要求更多期限溢酬）；遠期＜現在＝定價會走低。
+    另附 1 週前、1 個月前的遠期，看市場的預期往哪邊改。
+    """
+    last = (series.get("DGS10") or [{}])[-1].get("date")
+    if not last:
+        return []
+    d0 = dt.date.fromisoformat(last)
+    out = []
+    for key, zh, s1, n1, s2, n2, spot in FORWARDS:
+        vals = {}
+        for tag, dd in (("now", d0), ("w", d0 - dt.timedelta(days=7)), ("m", d0 - dt.timedelta(days=30))):
+            a, b = _at(series.get(s1) or [], dd.isoformat()), _at(series.get(s2) or [], dd.isoformat())
+            vals[tag] = _fwd(a["value"], n1, b["value"], n2) if a and b else None
+        if spot == "DGS3*":       # 沒有 3 年 CMT：用 2 年與 5 年線性內插（跟拍賣 tail 同一套）
+            a2, a5 = _at(series.get("DGS2") or [], last), _at(series.get("DGS5") or [], last)
+            sp = {"value": a2["value"] + (a5["value"] - a2["value"]) / 3} if a2 and a5 else None
+        else:
+            sp = _at(series.get(spot) or [], last)
+        if vals["now"] is None or not sp:
+            continue
+        out.append({"key": key, "label": zh, "fwd": vals["now"], "spot": sp["value"],
+                    "gap_bp": (vals["now"] - sp["value"]) * 100,
+                    "wow_bp": None if vals["w"] is None else (vals["now"] - vals["w"]) * 100,
+                    "mom_bp": None if vals["m"] is None else (vals["now"] - vals["m"]) * 100,
+                    "spot_zh": {"DGS1": "1 年期", "DGS3*": "3 年期", "DGS5": "5 年期", "DGS20": "20 年期"}[spot]})
+    return out
+
+
+def _bp(v) -> str:
+    return "—" if v is None else f"{v:+.0f}bp".replace("-", "−")
+
+
+def curve_story(rows: list[dict], drv: dict, fwd: list[dict], *, fomc_next: str = "",
+                refunding_next: str = "") -> dict:
+    """
+    規則寫成的判讀（不交給 AI）：
+      head    一句話：本月曲線型態（以 10-2 為主）＋誰帶動
+      long    長端原因：10 年變動拆成通膨預期與實質利率，期限溢酬、油價當旁證
+      short   短端原因：2 年變動與 2 年−3 個月（政策預期）
+      outlook 接下來的觀察條件（通膨／財政／政策各一條，依目前主因排序）
+    """
+    r = {x["key"]: x for x in rows}
+    m = drv.get("mom") or {}
+    head = ""
+    if "10-2" in r:
+        g = r["10-2"]["mom_regime"]
+        x = r["10-2"]
+        head = (f"近一個月 10-2 利差 {_bp(x['mom'])}，{g['zh']}"
+                + (f"（{g['lead']}）" if g["lead"] else "")
+                + f"：10 年 {_bp(x['mom_long'])}、2 年 {_bp(x['mom_short'])}")
+        if "30-10" in r and r["30-10"]["mom_regime"]["code"] not in ("flat", "na"):
+            head += f"；30-10 {r['30-10']['mom_regime']['zh']}"
+        head += "。"
+    long_txt = ""
+    if m.get("y10") is not None and m.get("be") is not None and m.get("real") is not None:
+        be, real, tp = m["be"], m["real"], m.get("tp")
+        lead = "通膨預期" if abs(be) > abs(real) else "實質利率"
+        long_txt = (f"10 年 {_bp(m['y10'])}：通膨預期（損益兩平）{_bp(be)}、實質利率 {_bp(real)}"
+                    + (f"；期限溢酬（財政與供給）{_bp(tp)}" if tp is not None else "")
+                    + (f"；油價 {m['oil_pct']:+.0f}%".replace("-", "−") if m.get("oil_pct") is not None else "")
+                    + f"。主要是{lead}在推")
+        if lead == "實質利率" and tp is not None and abs(tp) >= abs(real) * 0.5:
+            long_txt += "，期限溢酬也在漲——財政與供給有份"
+        elif lead == "通膨預期" and (m.get("oil_pct") or 0) > 5:
+            long_txt += "，跟油價上漲同步"
+        long_txt += "。"
+    short_txt = ""
+    if m.get("y2") is not None:
+        p = m.get("path")
+        short_txt = (f"2 年 {_bp(m['y2'])}"
+                     + (f"，2 年 − 3 個月 {_bp(p)}" if p is not None else "")
+                     + ("：市場把升息押得更多（或降息延後）" if (p or 0) > 5 else
+                        "：市場提高降息預期" if (p or 0) < -5 else "：政策預期大致沒變")
+                     + "。")
+    # 接下來看什麼：依目前主因排序
+    tp_hot = (m.get("tp") or 0) > 5
+    be_hot = (m.get("be") or 0) > 5 or (m.get("oil_pct") or 0) > 8
+    pol_hot = abs(m.get("path") or 0) > 5
+    items = [
+        (tp_hot, "財政", "期限溢酬若續升，長端領漲的熊陡會延續"
+         + (f"；下一次季度再融資公告 {refunding_next}，看長債發行量" if refunding_next else "") + "。"),
+        (be_hot, "通膨", "損益兩平與油價同步走高時，長端會被通膨預期往上拉；油價回落則反向。"),
+        (pol_hot, "政策", "短端跟著升降息預期走"
+         + (f"；下次 FOMC {fomc_next}" if fomc_next else "") + "，決議偏鷹時曲線傾向熊平。"),
+    ]
+    items.sort(key=lambda x: not x[0])
+    # 遠期：一句話
+    f = {x["key"]: x for x in fwd}
+    fwd_txt = ""
+    if "1y1y" in f and "5y5y" in f:
+        a, b = f["1y1y"], f["5y5y"]
+        fwd_txt = (f"市場定價：1 年後的 1 年期利率 {a['fwd']:.2f}%（比現在 {_bp(a['gap_bp'])}）、"
+                   f"5 年後的 5 年期 {b['fwd']:.2f}%（比現在 {_bp(b['gap_bp'])}）。")
+    return {"head": head, "long": long_txt, "short": short_txt, "fwd": fwd_txt,
+            "outlook": [{"tag": t, "text": x, "hot": h} for h, t, x in items]}
 
 
 # ---------------------------------------------------------------------------

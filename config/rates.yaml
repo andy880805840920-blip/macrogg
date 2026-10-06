@@ -120,6 +120,10 @@ fx:
 #   預期實質路徑 ＝ 擬合殖利率 − 期限溢酬 − 預期通膨
 # ---------------------------------------------------------------------------
 longend:
+  # WTI 油價：殖利率曲線「誰在推」裡當通膨預期的旁證（2026-10）
+  - id: DCOILWTICO
+    label: WTI 原油
+    enabled: true
   - id: THREEFY10
     label: 10 年擬合殖利率（Kim-Wright）
     frequency: daily

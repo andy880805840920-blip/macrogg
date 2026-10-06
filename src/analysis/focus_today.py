@@ -2341,7 +2341,12 @@ DEFAULT_TOPICS = [
     # AI 消息同時推動美股、台股與半導體：三個主題都收 AI 關鍵字（2026-10）
     {"id": "equity", "label": "美股", "chips": ["dji", "vix"],
      "keywords": ["Dow", "S&P 500", "Wall Street", "stocks", "美股", "道瓊", "標普",
-                  "AI", "Nvidia", "OpenAI", "data center", "人工智慧", "輝達"]},
+                  "AI", "Nvidia", "OpenAI", "data center", "人工智慧", "輝達"],
+     # 2026-10（使用者：美股新聞篩得不準——世界銀行談東亞 AI 出口被當成美股）：
+     # 標題除了命中關鍵字，還必須有「美股／指數」類的詞；其他國家股市與
+     # 原油庫存（oil stocks）的標題排除。exclude_add 是在全站排除詞之外**追加**。
+     "require": ["Dow", "S&P 500", "S&P", "Nasdaq", "Wall Street", "US stocks", "U.S. stocks", "stocks", "stock market", "equities", "VIX", "美股", "道瓊", "標普", "那斯達克", "華爾街", "美國股市"],
+     "exclude_add": ["台股", "日股", "陸股", "港股", "歐股", "韓股", "A股", "日經", "恆生", "Nikkei", "Hang Seng", "FTSE", "DAX", "European stocks", "Asian stocks", "China stocks", "Japan stocks", "oil stocks", "crude stocks", "G7 stocks", "stockpile", "World Bank", "世界銀行"]},
     {"id": "semi", "label": "AI 與半導體", "chips": ["sox"],
      "keywords": ["chip", "semiconductor", "Nvidia", "TSMC", "半導體", "晶片",
                   "輝達", "台積電", "AI", "OpenAI", "data center", "人工智慧", "資料中心"]},
@@ -2376,6 +2381,10 @@ def topic_specs(cfg: dict | None) -> list[dict]:
                         if t.get("exclude") is not None else None),
             "search": [s for s in (t.get("search") or []) if isinstance(s, dict)
                        and s.get("q")],
+            # require：標題至少要再命中其中一個詞組（例：美股必須真的在講美股）
+            "require": [str(k) for k in (t.get("require") or []) if k],
+            # exclude_add：在全站（或主題自己的）排除詞之外追加
+            "exclude_add": [str(x) for x in (t.get("exclude_add") or []) if x],
         })
     return out
 
@@ -2451,7 +2460,9 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
     mains = [_norm_title(x) for x in main_titles if x]
     picked: dict = {}
     for s in specs:
-        exc = s["exclude"] if s["exclude"] is not None else (global_exclude or [])
+        exc = list(s["exclude"] if s["exclude"] is not None else (global_exclude or []))
+        exc += s.get("exclude_add") or []
+        req = s.get("require") or []
         extra = []
         if s["search"]:
             try:
@@ -2466,6 +2477,7 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
             k = _norm_title(title)[:40]
             if (k in seen or _excluded(title, exc)
                     or not any(_phrase_hit(w, title) for w in s["keywords"])
+                    or (req and not any(_phrase_hit(w, title) for w in req))
                     or any(_sim(_norm_title(title), m) > 0.55 for m in mains)):
                 continue
             seen.add(k)

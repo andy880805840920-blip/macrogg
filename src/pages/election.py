@@ -26,7 +26,7 @@ def _d1(d1) -> str:
 def _d1s(d1, dem_lead: bool) -> str:
     """領先者一天的變化（短版，手機一行放得下）。"""
     pp = round((d1 if dem_lead else -d1) * 100, 1)
-    return "一天持平" if pp == 0 else f"一天 {pp:+.1f} 點"
+    return "一天持平" if pp == 0 else f"一天 {pp:+.1f} 點".replace("-", "−")
 
 
 def spark(vals: list[float], w: int = 96, h: int = 26) -> str:
@@ -57,11 +57,13 @@ def _chamber2(name: str, d: dict | None) -> str:
     is_dem = dem >= rep
     lead, lp, op = ("民主黨" if is_dem else "共和黨"), max(dem, rep), min(dem, rep)
     d1 = d.get("d1")
-    sub = f'對手 {_pct(op)}' + (f'　·　{_d1s(d1, is_dem)}' if d1 is not None else "")
+    sub = f'<span>對手 {_pct(op)}</span>'
+    # 一天變化放在標籤列右側（使用者：兩院的「民主黨」要上下對齊，變化移到別處）
+    _d1 = f'<em class="el2-d1">{esc(_d1s(d1, is_dem))}</em>' if d1 is not None else ""
     return (f'<a class="el2-ch" href="{esc(d.get("url", ""))}" rel="noopener" target="_blank">'
-            f'<span class="el2-k">{name}</span>'
+            f'<span class="el2-k"><span>{name}</span>{_d1}</span>'
             f'<b class="{"dem" if is_dem else "rep"}">{lead} {_pct(lp)}</b>'
-            f'<small>{esc(sub)}</small>{spark(d.get("hist") or [])}</a>')
+            f'<small>{sub}</small>{spark(d.get("hist") or [])}</a>')
 
 
 def _head_url(e: dict) -> str:

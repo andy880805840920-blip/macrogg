@@ -268,6 +268,10 @@ topics:
     chips: [dji, vix]
     # AI 消息同時推動美股、台股與半導體（2026-10，使用者：AI 要對應台指期與美股）
     keywords: [Dow, S&P 500, Nasdaq, Wall Street, stocks, VIX, 美股, 道瓊, 標普, AI, artificial intelligence, Nvidia, OpenAI, AI capex, data center, data centers, hyperscaler, 人工智慧, 輝達, 資料中心, AI 伺服器]
+    # 標題還必須有美股／指數類的詞（AI 新聞要真的在講美股才算；2026-10 使用者：美股新聞篩錯）
+    require: [Dow, S&P 500, S&P, Nasdaq, Wall Street, US stocks, U.S. stocks, stocks, stock market, equities, VIX, 美股, 道瓊, 標普, 那斯達克, 華爾街, 美國股市]
+    # 在全站排除詞之外追加：其他國家股市、原油庫存（oil stocks）、世界銀行區域報告
+    exclude_add: [台股, 日股, 陸股, 港股, 歐股, 韓股, A股, 日經, 恆生, Nikkei, Hang Seng, FTSE, DAX, European stocks, Asian stocks, China stocks, Japan stocks, oil stocks, crude stocks, G7 stocks, stockpile, World Bank, 世界銀行]
     search:
       - {q: "Wall Street stocks (site:reuters.com OR site:bloomberg.com)", lang: en}
   - id: semi
