@@ -1,7 +1,12 @@
 {
- "hash": "a44031d7a765421a",
- "text": "美債殖利率近期上升引發市場關注。高盛警告，利率上升將對美國不斷膨脹的債務造成嚴峻衝擊，暗示聯邦政府面臨債務成本上升的壓力。與此同時，債券市場出現拋售，但股市仍保持韌性，S&P 500 觸及歷史新高，科技股在債市下滑中仍能上漲，反映市場對AI相關投資的持續追捧。¶這種債股分化現象反映了市場對利率前景的複雜預期。彭博報導指出，隨著聯準會升息預期降溫，新興市場資產上升，但美債殖利率居高不下，顯示市場對通膨與財政風險的擔憂仍未消散。債券市場的拋售與股市創高形成對比，表明投資人對經濟前景與聯準會政策路徑的看法存在分歧。\n高盛指出美國債務膨脹在利率上升環境下面臨風險，但未提供具體數字或時間表，僅警告政府債務成本將上升。\n彭博報導稱聯準會升息預期冷卻，推動新興市場資產上漲，同時美元走強與殖利率上升對匯率路徑造成壓力。",
+ "hash": "cfe8704edd2f25f3",
+ "text": "美債殖利率近日回落，推動股市觸及歷史高位。路透報導指出，美國財政部面臨債券市場拍賣的挑戰，暗示殖利率波動對公債發行的潛在壓力。高盛則警告，若利率持續上升，美國不斷膨脹的債務將面臨嚴峻現實，債務成本將大幅上升。¶市場目前在殖利率回落的環境中重新定價，但這種動態反映出債券市場對聯準會政策路徑的不確定性。隨著美債供應持續增加與殖利率波動加劇，投資人對長期利率走向的擔憂加深，這將直接影響聯準會未來的降息決策空間。\n路透報導稱，法國極右翼政黨若贏得總統大選，承諾實施更大幅度的支出削減，以安撫債券市場；同時歐元因法國公債殖利率下跌而反彈，顯示市場對財政緊縮預期的反應。",
  "links": [
+  {
+   "title": "COMMENTARY: For Trump’s Treasury, the sting is in the auction ‘tail’",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOaFVZRlVfTmRGRkNfM2FDTGFCV3dmZi1nN3lGc1g4WG1mVUNfclNlSTZsY0dscnhBdmJ6UHFLclYwQWV1TkViWXVWeWhYM09KMUFUMDh1WXFSYVZxblJkYTE0SkZKTG1zODA2Y1poMVFiRS05enFCc3FVN2p0TGsyZ1JnSmV4ajJ1RXNiOVA0SzhWeTlVZDFHOXBGNTdZM0ZwdmJkY0JPQlU4TGNPelNUVTNKbU1kZw?oc=5",
+   "source": "Reuters"
+  },
   {
    "title": "S&P 500 hits record high as AI stocks shrug off bond market slump",
    "link": "https://www.ft.com/content/1c1ee003-f041-4c66-a971-f08d488d11f7?syn-25a6b1a6=1",
@@ -11,11 +16,6 @@
    "title": "Gold Steadies as Stronger Dollar and Yields Weigh on Rate Path",
    "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOckVuVzF3a0QtMHgwcHp2N0IyWnU1OW1jVzBjR28wSm9QdEo2MDdNNjZOVEI3YkxPdnZoVEJSeEdxTG9MLVFPMlp1YVNwUFFwWGVLSHRrcDdZeHN1Skktb3NiRThZMTd5UF9uQ2Q3c3Zsem9hNHEzVEREVnlDTTVLOTdhcUZfM0ZvYmx0R2NMeFBuVnFqaHJkTDFrMzVQcmtjNnZlT08zMVlsTGphTzRTdnVBbw?oc=5",
    "source": "Bloomberg"
-  },
-  {
-   "title": "Stock market today: S&P 500, Nasdaq touch all-time highs as stocks power higher, bond yields retreat",
-   "link": "https://finance.yahoo.com/markets/live/stock-market-today-tuesday-october-6-dow-sp-500-nasdaq-080526166.html?.tsrc=rss",
-   "source": "Yahoo Finance"
   }
  ],
  "fedwatch": {
@@ -137,41 +137,41 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-06T16:37:10.019519+00:00",
+ "at": "2026-10-06T19:53:23.254639+00:00",
  "layout": "main",
  "topics": {
-  "hash": "a59e1722c0a10c9e",
+  "hash": "f991dec0791dbce6",
   "items": [
    {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "台灣央行決策與全球升息步調出現分歧。國泰世華銀行首席經濟學家林啟超指出，美債殖利率超過5.2%預告美國12月升息一碼、明年上半年升息兩碼，日本、歐洲、韓國年底前也將升息，但台灣央行預估今年底前不會升息，與全球主要央行決策大相逕庭。",
+    "id": "long",
+    "label": "長天期美債",
+    "text": "PIMCO資深顧問稱美債殖利率「尖叫著喊好便宜」，暗示長天期公債在當前價位具吸引力；同時貨幣基金現金流放緩衝擊短期公債，反映投資人在殖利率環境中的資金配置調整。",
     "links": [
      {
-      "title": "Fed plans to overhaul bank supervision responsibilities, Bowman says",
-      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQeXUxU2F5X1UwSTZreDdOc3FaTDdsWVBreUNYY3U1WVlpZXVUNGM1UE8tLU50eUU1UTlzVHRPVlhOTlBmemF5ZTJGY3lNa2Njc1NwaFNkWG04OVdTbkUxVGd4d1E1WkFkVkpXdmFoVkEyUHFkX24tSUlMTkZaS3FUYy1pQzJfQ1Nldy10bDhwdEhoOHg5eHFpVDFMWDJ6bkcyT1F3R0tDaWhFSU4tb0RHeUVYNFVSUHJT?oc=5",
+      "title": "US Treasury yields are \"screaming good value\" says PIMCO senior advisor",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWmVRdHA4bVRsVmVyUThxTVdUb3AzNklqYnNDS2JvVVVEa2hnbk1qaHVWcHBnN1Bya2piTTM3eEkxRWxrZVE4WDRidzAyZGFocEFVYjN6RENUWm9rbFBKQ1hQRlM5Qi12eTFKV2dxNF80MHF1Xy12NkR6SG9kcllSR2JlalFQZXdPYUtOeXhfMHlwdGdZbEZXTk96ZzhPS3MtUjFfRkNXNzFiWkJzTFNLTVJVQk8?oc=5",
       "source": "Reuters"
      },
      {
-      "title": "Copper Gains as US Jobs Data Offers Relief on Fed Tightening",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPeHJ4WjNIQUVnR3lNNER0dUoybmJBb2lVVl9Zbkx2dzVsNEdrdFZUcFp2X0FPVDV3YTFoMUxXVFVvT1JnRE15UUJFNXF6aTBUOTYxMXNicnNuUU9EZkMySkdRWTlvRjV2MEcwOXFxdldaekR5enFZRkJVUjdzblJlMUd5UXJFQzBSdzFFWnhfZjYwRFRWMkRDXzVTaEJIa1JsTUpxZFNTSEttM01kb1hINg?oc=5",
-      "source": "Bloomberg"
+      "title": "Italy's tax evasion above expected and rising, Treasury report shows",
+      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPNVd1SlZQWHhSUEtnUVpCUXNJeXZhRHozMFYwSjBRYzBJUzNaN0NULUFFT2U3aGJWVkxRb1BBS01zaFZhMlBFRWs2S3NwM1hmclV1ODNILU1pazJNcHk3N3d2aFYyZC16RDJJRjFmX0RBa1ExdUl2MFZ2OGJZdDZuSmlJdnBQYUlrY0wzYnVwZVRFYlZVaHNVUTlfQW9ud2pOWmEzNXRpak83XzZJN0ZxSkxSZXlNUTltY2c?oc=5",
+      "source": "Reuters"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中國獨立煉廠因伊朗原油供應減少而改變採購策略。美國7月重新對伊朗船運實施海上封鎖，導致中國9月從伊朗進口原油量比去年同期幾乎減半至每天59萬桶，創2023年1月以來最低；中國煉廠轉向伊拉克和卡達採購至少1200萬桶原油，交貨期為10月和11月。",
+    "text": "美國能源資訊署上調第四季布蘭特原油均價預測至每桶105美元，較前次預測提高14美元，主因美伊戰爭導致全球庫存快速下降、柴油供應吃緊；英國柴油價格創新高至每公升199.52便士，超越2022年烏克蘭戰爭後的紀錄。",
     "links": [
      {
-      "title": "S&P 500, Nasdaq hit record highs as Treasury yields stall, oil slips",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPZ0p5VWxQQ0ZmUUI0Vk5wRUVjTUJhZjZGUlZjU2tWU1AtOEdqYjZ0OFRtRXNrUVdrTFlNZjVWdzluRjUyaWhHTlYxMG5Yc21pMHFubTdiX1RIRTRUSnB4UTZPckRMZTlzTHBEbkZKU1ROMTZpWE9lMXhPQkhyQmhBV3JNdkFrQVk?oc=5",
+      "title": "London stocks gain on softer oil, easing gilt yields; Defence shares fall",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNSzh2RWtVenBUZmhPWExwdWdmTjlkMmhiSS12TGRobzUxNWlVdFRHWDAxaFhackxjZEI0WHJjOGF0TURrVFJsWWhjQXk1M29CV195NG54MlhZd1RXVC1XYlZ5VDZ3YTNSMEZpdVlNYi1LeUVmOGUwQUdSZndkTjZwcVZiMFZWSWdpOHpGTDI5MmZ0c3diaXFxbmdBUUt4MWNYQUR3cVZ4aVY1N1VSME1faG9xYU9Mc3djcFlPMDREYw?oc=5",
       "source": "Reuters"
      },
      {
-      "title": "Chinese independent refiners boost Iraqi oil purchases as Iranian flows fall, traders say",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOeVpJd0hveEZLT295UHBsdlFzX0U5MnRpMHVrcGZYMXZmSzMzeXlfMGd3TmRBdlNwYl9lWW1EeDNWVy1ZRGppc21oSElzWG9ONVpRWjhHS1NERTFkczJTMlhWQVlVVEQyM0RKRkZTVDNHQ3lsRXBJbUs5ZmE3VHYxU1hPb09TUlR3Y1g5T3FLVWJnWEJLR2VPOFR5VFVhZi1saF9kMTNlQ2RVM0NETUthX1hBaHNHOXM2RDh5TmhaY2hwZ2s?oc=5",
+      "title": "From just-in-time to just-in-case: oil executives say world needs more export routes",
+      "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQTDR0Q2ZrRW1NUW9NNU13Q0hldFhocVBkZTJrRHpicldtQXRjNEp3akpjaEI3NUtESWJqT0EwS2kwaXg4c21iQTg5Yy0xX3Q0aVNhTXg4dHRCNmZYU1N3aWZWN3JjZGR0WHBrNzFJZkhXNnBPVzltUHp1U0U4Q0E2MEtQa1prMDMzSHBoQlE5RlZiQ29zTmZvbWhVM3JPOURSN3htdFdCZ3FfVlowQ1FmRC1IWWVYUnVrandwcThELWQxdGpoeXc?oc=5",
       "source": "Reuters"
      }
     ]
@@ -179,10 +179,10 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股領漲推動主要指數創高。標普500指數盤中創歷史新高，AI題材熱度回升與企業獲利展望樂觀帶動科技股上漲，加上油價與美債殖利率回落，輝達市值逼近6兆美元，超微執行長預期未來晶片需求將「非常強勁」。",
+    "text": "標普500與那斯達克觸及歷史高位，科技股領漲，邁威爾科技狂飆7%，輝達與超微分別創歷史新高；10年期美債殖利率下跌逾4個基點至5.262%，支撐股市上揚。",
     "links": [
      {
-      "title": "S&P 500, Nasdaq hit record highs as Treasury yields stall, oil slips",
+      "title": "S&P 500, Nasdaq on track for record closing highs as focus turns to earnings",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPZ0p5VWxQQ0ZmUUI0Vk5wRUVjTUJhZjZGUlZjU2tWU1AtOEdqYjZ0OFRtRXNrUVdrTFlNZjVWdzluRjUyaWhHTlYxMG5Yc21pMHFubTdiX1RIRTRUSnB4UTZPckRMZTlzTHBEbkZKU1ROMTZpWE9lMXhPQkhyQmhBV3JNdkFrQVk?oc=5",
       "source": "Reuters"
      },
@@ -196,7 +196,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "全球銅需求因AI資料中心與綠能發展飆升。標普全球預估全球銅需求到2040年將成長50%，必和必拓預計2026年銅產量將達180至200萬噸，並計畫到2035年將銅當量產量提高多達40%，銅業務已於2026年8月首度以182億美元營運收益超越鐵礦石。",
+    "text": "AM Intelligence在印度與馬來西亞擴大NVIDIA Vera Rubin人工智慧工廠規模，新增兩萬顆GPU訂單，使其承諾採購總額達約29,000顆Rubin GPU與近100兆瓦算力，計畫2027年第二季交付。",
     "links": [
      {
       "title": "Nvidia, Broadcom shielded as AI power crunch hits chip supply chain, says Morgan Stanley",
@@ -204,16 +204,16 @@
       "source": "Reuters"
      },
      {
-      "title": "Banks Chase Risky Chip Loans in Asia’s $8.2 Trillion AI Buildout",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQdnRTMGN4WmF5S0w3U1VQMDY0NEhhSHhWTWhnYWE1VXU0TWRwV1BMdFowSEZMa2x2ZTdDR0NaYlhHelV1TGNMQ1kzc0NURkxPTHpVR1dHbWxKZzMtMl9aT1Q2Mkhnb2N4a1pveTZVcXk3NHVjc3RoWnBRaXZFbkVmamRZTFJvM2Q2c3F4SVBEM0tuY3RudTZLRXdsZnpYMU9UOUlkMHZ5RVl6aE1PS3AtdXZORWk?oc=5",
-      "source": "Bloomberg"
+      "title": "Marvell raises 2028 revenue forecast on strong AI data center demand",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQcDJISmlqQ09tSDQ4NnNJNElrbWtnQlpVZGlrd3NCQjlvVktSMm00UE1JZDBHZGFqOUVUWjUxbU1KcTM4NXBCMDdGSUY4UW9kd202NzFXT0NBTzdFQU5xbmdqMWFYelRYVmNRTnhDNmlpdlJRODVCMHVpZ21XWnRldHVDd3p6RjJlQjRTMWZiMnE3LTVJM1FMZW1yaktxNHNDQnBTc2ZnZ3JZYjVsZnhj?oc=5",
+      "source": "Reuters"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤延續美股漲勢站穩5萬點。在美債殖利率與油價雙雙下滑推動下，台指期夜盤一度上漲183點報50265點，費城半導體指數早盤漲幅逾1%，與台股連動密切的台積電ADR則震盪走低跌0.72%。",
+    "text": "台指期夜盤一度創新高至50265點，但盤中疲軟由紅翻黑，截稿前小跌0.04%至50060點；台積電ADR與聯電ADR皆走弱，未能跟上美股漲勢。",
     "links": [
      {
       "title": "外資單日狂掃718億！台股創高逼近五萬大關，AI伺服器供應鏈與台積電領軍衝鋒-財經焦點情報站",
@@ -228,6 +228,6 @@
     ]
    }
   ],
-  "at": "2026-10-06T16:37:22.527888+00:00"
+  "at": "2026-10-06T19:53:34.951060+00:00"
  }
 }
