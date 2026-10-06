@@ -178,10 +178,11 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
 .pagehead h1{color:var(--brand-ink)}
 @media(max-width:759px){
   :root{--navh:46px}
-  .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px}
+  .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px;column-gap:8px}
   .brand .logo-full{display:none}
   .brand .logo-compact{display:block}
-  .brandbar .lang-btn{margin-left:auto;align-self:center}
+  .brandbar .theme-btn{margin-left:auto;width:44px;height:44px;align-self:center}
+  .brandbar .lang-btn{margin-left:0;min-width:44px;align-self:center}
   .upd{order:3;width:100%;margin-left:0;grid-template-columns:auto 1fr 1fr 1fr;
     column-gap:8px;align-items:baseline;border-top:1px dashed rgba(18,35,59,.15);padding-top:7px}
   .upd-k{padding:0;font-size:11px}
@@ -3890,7 +3891,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 :root:not([data-theme="light"]) [style*="#e6eef8"]{background:rgba(100,167,244,.16)!important}
 :root:not([data-theme="light"]) .hs3-b{background:#4a5a74}.hs3-b.over{background:#9a5a40}
 :root:not([data-theme="light"]) .c-off{--f:#2a3240}.c-na{--f:#1c232e}.c-toss{--f:#8a7a45}
-:root:not([data-theme="light"]) .logo-full:not(.logo-dk),.logo-compact:not(.logo-dk){display:none!important}
+:root:not([data-theme="light"]) .logo-full:not(.logo-dk),
+:root:not([data-theme="light"]) .logo-compact:not(.logo-dk){display:none!important}
 :root:not([data-theme="light"]) .logo-full.logo-dk{display:block!important}
 :root:not([data-theme="light"]) .el-tab[aria-selected="true"]{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
 :root:not([data-theme="light"]) .el-svg .st{stroke:var(--surface-1)}
@@ -3907,7 +3909,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 :root[data-theme="dark"] [style*="#e6eef8"]{background:rgba(100,167,244,.16)!important}
 :root[data-theme="dark"] .hs3-b{background:#4a5a74}.hs3-b.over{background:#9a5a40}
 :root[data-theme="dark"] .c-off{--f:#2a3240}.c-na{--f:#1c232e}.c-toss{--f:#8a7a45}
-:root[data-theme="dark"] .logo-full:not(.logo-dk),.logo-compact:not(.logo-dk){display:none!important}
+:root[data-theme="dark"] .logo-full:not(.logo-dk),
+:root[data-theme="dark"] .logo-compact:not(.logo-dk){display:none!important}
 :root[data-theme="dark"] .logo-full.logo-dk{display:block!important}
 :root[data-theme="dark"] .el-tab[aria-selected="true"]{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
 :root[data-theme="dark"] .el-svg .st{stroke:var(--surface-1)}
@@ -3925,8 +3928,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-06 23:06（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/06</span></span><div class="upd-c"><span>台北</span><b>23:06</b><i>10/06</i></div><div class="upd-c"><span>紐約</span><b>11:06</b><i>10/06</i></div><div class="upd-c"><span>倫敦</span><b>16:06</b><i>10/06</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/archive/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-07 00:37（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/07</span></span><div class="upd-c"><span>台北</span><b>00:37</b><i>10/07</i></div><div class="upd-c"><span>紐約</span><b>12:37</b><i>10/06</i></div><div class="upd-c"><span>倫敦</span><b>17:37</b><i>10/06</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/archive/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/" class="on" aria-current="page">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>存檔</h1><div class="sub">共 6 期</div></div>
