@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-06T19:15:19+08:00",
+  "at": "2026-10-06T23:05:37+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -597,7 +597,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.31,
+            "value": 5.27,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -605,7 +605,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.67,
+            "value": 5.64,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -621,7 +621,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.85,
+            "value": 0.84,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -770,7 +770,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-06T19:15:19+08:00",
+      "at": "2026-10-06T23:05:37+08:00",
       "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
