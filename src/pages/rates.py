@@ -450,6 +450,21 @@ def _rates_body_full(d: dict) -> str:
                 f'<td>{c["issued"] * 10:,.0f}</td></tr>')
 
     hs_rows = "".join(_hs_row(c) for c in hs.companies)
+    # 三個常駐數字（2026-10）：季資本支出合計、佔營運現金流、單季發債合計
+    _hs_q = "".join(
+        f'<div><span>{esc(x["label"])}</span><b'
+        + (' class="over"' if x["label"] == "佔營運現金流" and (hs.capex_to_ocf or 0) > 100 else "")
+        + f'>{esc(x["value"])}</b><small>{esc(x.get("note", ""))}</small></div>'
+        for x in d["hs_stats"][:3])
+    _gn = "".join(f'<li><b>{esc(r["name"])}</b>：{esc(r["note"])}</li>'
+                  for r in gd.get("rows") or [] if r.get("note"))
+    if gd.get("missing"):
+        _gn += f'<li><b>{esc(gd["missing"])}</b>：未提供年度指引，不在合計內。</li>'
+    guidance_notes = ((f'<p><b>{esc(str(gd.get("year", "")))} 年資本支出計畫</b>：合計 {esc(gd.get("total_display", ""))}'
+                       f'，指引更新於 {esc(gd.get("as_of", ""))}・{esc(gd.get("source", ""))}。'
+                       '前瞻指引不在任何申報欄位裡，是法說會與新聞稿用自然語言講的，所以手動維護。</p>'
+                       f'<ul style="margin:6px 0;padding-left:18px">{_gn}</ul>')
+                      if gd.get("available") else "")
 
     # 資料來源逐家列出，附上 EDGAR 的申報清單連結，讓讀者能自己核對。
     # 這一區的每個結論都建立在這五家的數字上，沒有連結就等於要人相信我。
@@ -539,6 +554,40 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
+    <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">科技巨頭：AI 資本支出與發債</h2>
+    <p class="hint">期限溢酬裡的「財政與供給壓力」，除了國債，還有這批科技公司的發債——
+      它們正從債市的<b>買方</b>變成<b>賣方</b>。</p>
+    {hs_impact}
+    <div class="hs3-q">{_hs_q}</div>
+    {LE.hs_agg_chart(d)}
+    {LE.hs_table(d)}
+    {unverified}
+    {LE.guidance_stale(d).replace('class="warnbox"', 'class="hs3-stale"')}
+    <details class="f-more"><summary>方法、指引備註與資料來源</summary>
+      <div class="f-detail">
+        <p>{esc(hs_desc)}</p>
+        {guidance_notes}
+        <p>公司名稱下方是該公司自己的<b>會計季末日</b>（各家年度起點不同，同一列不是同一季）；
+        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引；
+        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負；
+        合計比率是合計 ÷ 合計，非五家平均。所有百分比都由原始金額算出來，沒有手填的百分比。</p>
+        {hs_source_html}
+      </div>
+      <div class="tlines">
+        <div class="tlines-k">資料時效</div>
+        {earnings_html}
+        {offerings_html}
+      </div>
+    </details>
+    {teach(
+        "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
+        "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
+        "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。")}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
     <h2 id="curve" data-sum="{esc(_crv_sum)}">殖利率曲線</h2>
     {LE.curve(d)}
   </div>
@@ -595,48 +644,6 @@ def _rates_body_full(d: dict) -> str:
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
     </details>
-  </div>
-</div>
-
-<div class="grid">
-  <div class="card">
-    <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">科技巨頭：資本支出與發債</h2>
-    <p class="hint">關鍵不是金額，是<b>融資方式</b>——
-      這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
-    {hs_impact}
-    {LE.hs_quarters(d)}
-    {guidance_html}
-    {LE.guidance_stale(d)}
-    <div class="tlines">
-      <div class="tlines-k">資料時效</div>
-      {earnings_html}
-      {offerings_html}
-    </div>
-    {teach(
-        "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
-        "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
-        "盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。")}
-    <details data-m-collapse><summary>五家公司的明細</summary>
-      <p class="hint" style="margin:10px 0 0">{esc(hs_desc)}</p>
-      <div class="stat-row" style="margin-top:12px">{_stats(d['hs_stats'])}</div>
-      <div class="tscroll" style="margin-top:16px">
-        <table>
-          <thead><tr><th>公司</th><th>資本支出</th><th>年增</th>
-            <th>營運現金流</th><th>佔營運現金流</th><th>佔營收</th>
-            <th>單季發債</th></tr></thead>
-          <tbody>{hs_rows}</tbody></table>
-      </div>
-      <div class="src">金額單位：億美元　·　公司名稱下方是該公司自己的
-        <b>會計季末日</b>（各家年度起點不同，同一列不是同一季）　·
-        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引　·
-        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依
-        「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負　·
-        「佔營收」＝同一季的資本支出 ÷ 營收，用來比較規模不同的公司
-        誰擴張得比較猛　·　所有百分比都由左邊的原始金額算出來，
-        沒有手填的百分比</div>
-      {hs_source_html}
-    </details>
-    {unverified}
   </div>
 </div>
 

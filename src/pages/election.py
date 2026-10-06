@@ -64,33 +64,6 @@ def _chamber2(name: str, d: dict | None) -> str:
             f'<small>{esc(sub)}</small>{spark(d.get("hist") or [])}</a>')
 
 
-def _balance2(b: dict | None) -> str:
-    if not b:
-        return ""
-    rows = sorted([r for r in b["rows"]], key=lambda r: -r["p"])
-    top, rest = rows[:2], rows[2:]
-    other = sum(r["p"] for r in rest)
-    items = "".join(f'<span><i class="el-sw {r["key"]}"></i>{esc(r["label"])}<b>{_pct(r["p"])}</b></span>'
-                    for r in top)
-    items += f'<span class="el2-oth">其他組合<b>{_pct(other)}</b></span>' if rest else ""
-    return (f'<a class="el2-line" href="{esc(b.get("url", ""))}" rel="noopener" target="_blank">'
-            f'<span class="el2-lk">兩院組合</span><span class="el2-items">{items}</span></a>')
-
-
-def _races2(races: list[dict]) -> str:
-    if not races:
-        return ""
-
-    def cls(c):
-        return {"民": "dem", "共": "rep"}.get(c.get("party"), "oth")
-    items = "".join(
-        f'<a class="el2-r" href="{esc(r["url"])}" rel="noopener" target="_blank">'
-        f'<span>{esc(r["state"])}</span><b class="{cls(r["lead"])}">{esc(r["lead"].get("party", ""))} {_pct(r["lead"]["p"])}</b>'
-        f'<small>{esc(r["lead"]["name"])}</small></a>' for r in races)
-    return ('<div class="el2-line el2-races"><span class="el2-lk">最接近的參院選戰</span>'
-            f'<span class="el2-rs">{items}</span></div>')
-
-
 def _head_url(e: dict) -> str:
     for k in ("balance", "house", "senate"):
         if (e.get(k) or {}).get("url"):
@@ -201,14 +174,9 @@ def _score(kind: str, m: dict, e: dict) -> str:
     tiles = [_tile(f'改選 {t["n_up"]} {unit}・目前領先', _vs(lead["D"], lead["R"])),
              _tile("這次沒改選", _vs(int(base.get("D", 0)), int(base.get("R", 0))))]
     if kind == "senate":
-        if e.get("senate"):
-            tiles.append(_tile("拿下參院的機率", f'<span class="vd">民主黨 '
-                               f'{e["senate"]["dem"] * 100:.1f}%</span>'))
+        # 拿下兩院的機率已在卡片最上方，這裡不重複（2026-10）
         if seats.get("senate"):
             tiles.append(_tile("共和黨參院席次・最可能", seat_v(seats["senate"])))
-        if e.get("house"):
-            tiles.append(_tile("拿下眾院的機率", f'<span class="vd">民主黨 '
-                               f'{e["house"]["dem"] * 100:.1f}%</span>'))
         if seats.get("house"):
             tiles.append(_tile("共和黨眾院席次・最可能", seat_v(seats["house"])))
     else:
@@ -251,7 +219,8 @@ _MAP_JS = ('<script>(function(){var w=document.querySelector(".el-map");if(!w)re
            'function(){var k=b.getAttribute("data-k");'
            'w.querySelectorAll(".el-tab").forEach(function(x){'
            'x.setAttribute("aria-selected",x===b?"true":"false");});'
-           'w.querySelectorAll(".el-pane").forEach(function(p){'
+           'var cd=w.closest(".el-card")||w;'
+           'cd.querySelectorAll(".el-pane,.el-mpane,.el-msum").forEach(function(p){'
            'p.hidden=p.getAttribute("data-k")!==k;});});});'
            'function show(el){var t=el.getAttribute("data-tip");if(!t)return;'
            'var pane=el.closest(".el-pane");var box=pane&&pane.querySelector(".el-info");'
@@ -267,51 +236,56 @@ _MAP_JS = ('<script>(function(){var w=document.querySelector(".el-map");if(!w)re
            'if(el)show(el);});})();</script>')
 
 
-def map_section(e: dict) -> str:
+def map_section(e: dict) -> tuple[str, str]:
+    """
+    （預設顯示的地圖, 收進「更多」的細節）。2026-10 改版：地圖預設打開；
+    席次比分、競爭州、計算方式只放在「更多」裡一次，不再兩處重複。
+    """
     maps = e.get("maps") or {}
     if not maps.get("senate") and not maps.get("governor"):
-        return ""
+        return "", ""
     from ..analysis.polymarket import SENATE_2026, GOVERNOR_2026
-
-    def sc(kind):
-        m = maps.get(kind)
-        if not m:
-            return ""
-        t = m["tally"]["total"]
-        zh = "參院" if kind == "senate" else "州長"
-        # 純文字版（測試、螢幕閱讀器）＋上色的數字
-        txt = (f'{zh} 民主黨 {t["D"]} : {t["R"]} 共和黨' if t["D"] >= t["R"]
-               else f'{zh} 共和黨 {t["R"]} : {t["D"]} 民主黨')
-        return (f'<span class="el-chip" aria-label="{esc(txt)}">{zh}'
-                f'{_vs(t["D"], t["R"], t["D"] >= t["R"])}</span>')
-    summary = "".join(s for s in (sc("senate"), sc("governor")) if s)
-    panes, tabs = [], []
-    for i, (kind, zh, up) in enumerate((("senate", "參議院", SENATE_2026),
-                                        ("governor", "州長", GOVERNOR_2026))):
+    panes, tabs, more = [], [], []
+    for kind, zh, up in (("senate", "參議院", SENATE_2026), ("governor", "州長", GOVERNOR_2026)):
         m = maps.get(kind)
         if not m:
             continue
         tabs.append(f'<button type="button" class="el-tab" data-k="{kind}" role="tab"'
                     f' aria-selected="{"true" if not tabs else "false"}">{zh}</button>')
         panes.append(f'<div class="el-pane" data-k="{kind}"{"" if len(panes) == 0 else " hidden"}>'
-                     + _score(kind, m, e)
                      + f'<div class="el-mapwrap">{_svg(kind, m["races"], up)}</div>'
                      + '<div class="el-info" aria-live="polite"><span>點選州看兩位候選人與價格</span></div>'
-                     + _LEGEND + _comp_list(m) + '</div>')
-    return ('<details class="el-map"><summary>'
-            '<span class="el-map-t">各州地圖</span>'
-            f'<span class="el-map-s">{summary}</span>'
-            '<span class="el-map-c" aria-hidden="true"></span></summary>'
-            '<div class="el-map-body">'
-            f'<div class="el-tabs" role="tablist">{"".join(tabs)}</div>'
-            + "".join(panes)
-            + '<details class="el-how"><summary>比分怎麼算？</summary><p>'
-              '比分＝照各州目前價格較高的候選人全拿，加上這次沒改選的席次；'
-              '不是機率加總，只代表「如果現在的領先者都贏」。參院過半 51 席，'
-              '50:50 由副總統（共和黨）投票。顏色深→淺：領先者價格 ≥85% 穩拿、'
-              '65–85% 傾向、55–65% 微幅；低於 55% 為五五波。'
-              '「最可能」＝Polymarket 席次區間盤裡價格最高的那一格。</p></details>'
-            '</div></details>' + _MAP_JS)
+                     + _LEGEND + '</div>')
+        # 「更多」跟著分頁切換：參議院分頁帶兩院權力組合（國會的事），州長分頁只講州長
+        more.append(f'<div class="el-mpane" data-k="{kind}"{"" if len(more) == 0 else " hidden"}>'
+                    + (_balance3(e.get("balance")) if kind == "senate" else "")
+                    + f'<div class="el-more-k">{zh}席次</div>' + _score(kind, m, e) + _comp_list(m) + '</div>')
+    map_html = ('<div class="el-map el-map2">'
+                f'<div class="el-tabs" role="tablist">{"".join(tabs)}</div>'
+                + "".join(panes) + '</div>' + _MAP_JS)
+    how = ('<p class="el-note">比分＝照各州目前價格較高的候選人全拿，加上這次沒改選的席次；'
+           '不是機率加總，只代表「如果現在的領先者都贏」。參院過半 51 席，'
+           '50:50 由副總統（共和黨）投票。顏色深→淺：領先者價格 ≥85% 穩拿、'
+           '65–85% 傾向、55–65% 微幅；低於 55% 為五五波。'
+           '「最可能」＝Polymarket 席次區間盤裡價格最高的那一格。</p>')
+    return map_html, "".join(more) + how
+
+
+def _balance3(b: dict | None) -> str:
+    """兩院權力組合：一條合計 100% 的比例條（2026-10）。"""
+    if not b:
+        return ""
+    order = {"dem": 0, "mix": 1, "mix2": 2, "rep": 3, "oth": 4}
+    rows = sorted(b["rows"], key=lambda r: order.get(r["key"], 9))
+    tot = sum(r["p"] for r in rows) or 1
+    segs = "".join(
+        f'<i class="{r["key"]}" style="width:{r["p"] / tot * 100:.2f}%" title="{esc(r["label"])} {_pct(r["p"])}">'
+        + (f'<em>{_pct(r["p"])}</em>' if r["p"] / tot >= 0.12 else "") + '</i>' for r in rows)
+    leg = "".join(f'<li><span class="el-sw {r["key"]}"></span>{esc(r["label"])}<b>{_pct(r["p"])}</b></li>'
+                  for r in rows if r["p"] >= 0.0005)
+    return ('<div class="el-more-k">兩院權力組合（合計 100%）</div>'
+            f'<a class="el-bal3" href="{esc(b.get("url", ""))}" rel="noopener" target="_blank">'
+            f'<span class="el-b3">{segs}</span><ul class="el-legend">{leg}</ul></a>')
 
 
 def election_card(e: dict | None) -> str:
@@ -331,14 +305,20 @@ def election_card(e: dict | None) -> str:
     asof = e.get("stale_from") or e.get("date") or ""
     stale = (f"（本次擷取失敗，沿用 {esc(asof[5:])} 的數字）"
              if e.get("stale_from") else "")
-    # 註腳：一行重點常駐，其餘收進「說明」（手機上原本是四行小字）
-    note = (f'<p class="el-note">價格＝下注者的看法，不是民調・資料日 {esc(asof[5:])}{stale}</p>'
-            '<details class="el-how"><summary>說明</summary><p>'
-            "交易量小的盤容易被少數人推動。"
-            + ("開票後價格接近 100% 代表市場認定結果已底定。" if after else "")
-            + "「勝負最接近的州」＝交易量逾 30 萬美元、勝負最接近的參院選戰"
-            "（每次更新自動挑選）。「一天」＝領先者價格 24 小時的變化（百分點）。"
-            "數字每天隨網站更新 3 次。</p></details>")
+    map_html, more_html = map_section(e)
+    note = (f'<p class="el-note">價格＝下注者的看法，不是民調・資料日 {esc(asof[5:])}{stale}'
+            '・交易量小的盤容易被少數人推動'
+            + ("・開票後價格接近 100% 代表結果已底定" if after else "") + '</p>')
+    _maps = e.get("maps") or {}
+    _sum = ""
+    for k, txt in (("senate", "更多：兩院組合、參院席次、競爭州"), ("governor", "更多：州長席次、競爭州")):
+        if _maps.get(k):
+            _sum += f'<span class="el-msum" data-k="{k}"{"" if not _sum else " hidden"}>{txt}</span>'
+    if not _sum:
+        _sum = "更多：兩院組合"
+        more_html = _balance3(e.get("balance"))
+    more = (f'<details class="el-more"><summary>{_sum}</summary>'
+            f'<div class="el-more-b">{more_html}</div></details>')
     return ('<section class="home-zone el-card" aria-labelledby="el-title">'
             '<div class="home-zone-head"><div>'
             f'<span class="home-zone-num">{esc(kicker)}</span>'
@@ -347,5 +327,4 @@ def election_card(e: dict | None) -> str:
             ' rel="noopener" target="_blank">資料：Polymarket ↗</a></div>'
             '<div class="el2-chs">'
             + _chamber2("眾議院", e.get("house")) + _chamber2("參議院", e.get("senate"))
-            + '</div>' + _balance2(e.get("balance")) + _races2(e.get("races") or [])
-            + note + map_section(e) + '</section>')
+            + '</div>' + map_html + note + more + '</section>')

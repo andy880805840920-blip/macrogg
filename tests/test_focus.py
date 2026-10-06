@@ -712,10 +712,10 @@ check("⑯ 預設顯示四顆（2Y／10Y／30Y／機率）",
 check("⑯b 其餘 15 顆帶 .fs-off 隱藏但都在 HTML",
       _hs.count("fs-off") >= 15
       and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 19)
-check("⑯c 選擇面板：四格下拉、每格 19 個選項、恢復預設＋裝置說明",
-      _hs.count('data-slot="') == 4 and _hs.count("<option value=") == 19 * 4
-      and "恢復預設" in _hs and "選擇存在此裝置" in _hs
-      and _hs.count("<em>補充新聞</em>") == 2)
+check("⑯c 就地選擇：選擇指標鈕、編輯列（恢復預設／完成）、選單含 19 個指標",
+      'class="fs-edit-btn"' in _hs and 'class="fs-editbar"' in _hs
+      and "恢復預設" in _hs and "完成" in _hs and "點任一行更換指標" in _hs
+      and _hs.count("<option value=") >= 19 and "fs-pick" not in _hs)
 check("⑯d 內嵌 JS 帶預設組、上限與 localStorage 鍵",
       'var D=["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
       and "var M=4" in _hs and "localStorage" in _hs)

@@ -31,6 +31,11 @@ def _md(iso: str) -> str:
 # 頂部結論卡
 # ---------------------------------------------------------------------------
 def hero(d: dict) -> str:
+    """
+    首卡（2026-10 第三版，使用者：「畫得亂七八糟、文字太多」）：
+      一行報價（10Y／30Y）→ 本月主因一句 → 三段組成的小表（點一行看白話）。
+    顏色只在主因那一行（品牌橘左邊線）；藍橘綠三色與大卡全部拿掉。
+    """
     L = d.get("le") or {}
     curve = d.get("curve")
     y10 = curve.levels.get("10Y") if curve else None
@@ -40,39 +45,48 @@ def hero(d: dict) -> str:
     c1 = (L.get("contrib") or {}).get(1)
     dec = (L.get("dec") or [None])[-1] if L.get("dec") else None
     asof = (f'{d.get("as_of", "—")}（盤中）' if d.get("as_of_live") else d.get("as_of", "—"))
-    top = (f'<div class="le-top"><div class="le-big"><span class="le-k">10 年期</span>'
-           f'<b>{y10:.2f}%</b><span class="le-chg {"up" if (ch10 or 0) > 0 else "dn"}">'
-           f'近 1 月 {_bp(ch10)}</span></div>'
-           f'<div class="le-small"><span class="le-k">30 年期</span><b>{y30:.2f}%</b>'
-           f'<span>近 1 月 {_bp(ch30)}</span></div>'
-           f'<div class="le-asof">資料 {esc(asof)}</div></div>') if y10 is not None and y30 is not None else ""
-    seg = ""
-    tiles = ""
-    if dec:
-        from .. import charts
-        seg = charts.segbar([{"label": le.COMP_ZH[k], "value": dec[k], "color": CCOL[k]}
-                             for k in ("real", "infl", "tp")],
-                            total_label=f'{dec["month"][:4]} 年 {int(dec["month"][5:])} 月 10Y 由哪三段組成（月均）')
-        for k in ("real", "infl", "tp"):
-            dv = c1["parts"][k] if c1 else None
-            main = c1 and c1["main"] == k
-            tiles += (f'<div class="le-tile{" main" if main else ""}" style="--c:{CCOL[k]}">'
-                      + ('<span class="le-badge">本月主因</span>' if main else "")
-                      + f'<div class="le-tk">{esc(le.PRESSURE_ZH[k])}</div>'
-                      f'<div class="le-tn">{esc(le.COMP_ZH[k])}</div>'
-                      f'<div class="le-tv">{dec[k]:.2f}%<span class="{"up" if (dv or 0) > 0 else "dn"}">'
-                      f'{_bp(dv)}</span></div>'
-                      f'<div class="le-tx">{esc(le.NATURE[k])}</div></div>')
-    # 標題只講結論（本月主因），算式與期間降到副標——先前整句塞進標題會折成兩三行
+
+    def _q(name, v, ch):
+        cls = "up" if (ch or 0) > 0 else "dn" if (ch or 0) < 0 else ""
+        return (f'<div class="le2-qi"><span>{name}</span><b>{v:.2f}%</b>'
+                f'<em class="{cls}">近 1 月 {_bp(ch)}</em></div>')
+    top = ""
+    if y10 is not None and y30 is not None:
+        top = (f'<div class="le2-q">{_q("10 年期", y10, ch10)}{_q("30 年期", y30, ch30)}</div>'
+               f'<div class="le2-asof">資料 {esc(asof)}</div>')
     title = (f'本月主因：{le.COMP_ZH[c1["main"]]} {c1["parts"][c1["main"]]:+.0f}bp' if c1
              else "長端利率的三股力量")
-    sub = (f'{int(c1["from"][5:])} 月→{int(c1["to"][5:])} 月 10Y 月均 {c1["nominal"]:+.0f}bp，'
-           f'推力來自{le.PRESSURE_ZH[c1["main"]]}。' if c1 else "")
-    return (f'<div class="grid"><div class="card focus-card"><div class="le-hero">'
-            f'<div class="focus-eyebrow">Long-end drivers</div>{top}'
-            f'<h2 class="focus-title">{esc(title)}</h2>'
-            f'<p class="focus-sub">{esc(sub)}長端跟著三件事走：政策預期、通膨預期、期限溢酬。</p>'
-            f'{seg}<div class="le-tiles">{tiles}</div>{_evidence()}{events(L)}</div></div></div>')
+    sub = (f'{le.PRESSURE_ZH[c1["main"]]}推高長端——{le.NATURE[c1["main"]]}。' if c1 else "")
+    table = ""
+    if dec:
+        from .. import charts
+        # 組成比例條保留（使用者 2026-10）：只用品牌色——主因那段橘、其餘兩段藏青深淺
+        _main = c1["main"] if c1 else None
+        _shade = iter(("var(--brand-navy)", "#8b97a8"))
+        col = {k: ("var(--brand-orange)" if k == _main else next(_shade)) for k in ("real", "infl", "tp")}
+        seg = charts.segbar([{"label": le.COMP_ZH[k], "value": dec[k], "color": col[k]}
+                             for k in ("real", "infl", "tp")])
+        rows = ""
+        for k in ("real", "infl", "tp"):
+            dv = c1["parts"][k] if c1 else None
+            main = bool(c1 and c1["main"] == k)
+            cls = "up" if (dv or 0) > 0 else "dn" if (dv or 0) < 0 else "fl"
+            rows += (f'<div class="le2-r{" main" if main else ""}" title="{esc(le.NATURE[k])}">'
+                     f'<div class="le2-n"><span><i class="le2-sw" style="background:{col[k]}"></i>{esc(le.COMP_ZH[k])}'
+                     + ('<em>本月主因</em>' if main else "") + '</span>'
+                     f'<small>{esc(le.PRESSURE_ZH[k])}</small></div>'
+                     f'<b>{dec[k]:.2f}%</b><i class="{cls}">{_bp(dv)}</i></div>')
+        mo = int(dec["month"][5:])
+        chg_h = (f'{int(c1["from"][5:])}→{int(c1["to"][5:])} 月' if c1 else "變動")
+        table = (f'<div class="le2-seg">{seg}</div><div class="le2-t"><div class="le2-h"><span>10Y 三段組成（{mo} 月均）</span>'
+                 f'<span>水準</span><span>{chg_h}</span></div>{rows}</div>'
+                 '<p class="le2-tip">點一行看白話說明</p>')
+    js = ('<script>(function(){document.querySelectorAll(".le2-r[title]").forEach(function(r){'
+          'r.addEventListener("click",function(){r.classList.toggle("tip-on");});});})();</script>')
+    return (f'<div class="grid"><div class="card focus-card"><div class="le-hero le2">'
+            f'{top}<h2 class="focus-title">{esc(title)}</h2>'
+            + (f'<p class="focus-sub">{esc(sub)}</p>' if sub else "")
+            + f'{table}{_evidence()}{events(L)}</div></div></div>{js}')
 
 
 def _evidence() -> str:
@@ -442,3 +456,80 @@ def lights_grouped(d: dict, card_fn) -> str:
                    f'<div class="le-lgc">{"".join(card_fn(l) for l in ls)}</div></div>')
     return f'<div class="le-lgs">{"".join(out)}</div>'
 
+
+
+# ---------------------------------------------------------------------------
+# 科技巨頭（2026-10 第三版）：三個數字＋一張加總圖＋一家一列的公司表
+# ---------------------------------------------------------------------------
+def hs_agg_chart(d: dict) -> str:
+    """五家加總：每季資本支出（柱）對營運現金流（橫線），同一個軸。"""
+    agg = (d.get("le") or {}).get("hs_agg") or []
+    if len(agg) < 2:
+        return ""
+    top = max(max(a["capex"], a["ocf"]) for a in agg) * 1.08
+    cols = []
+    for i, a in enumerate(agg):
+        last = i == len(agg) - 1
+        over = a["capex"] >= a["ocf"]
+        cols.append(
+            f'<div class="hs3-c{" on" if last else ""}" data-tip="{esc(a["label"])}｜資本支出 {a["capex"]:,.0f}｜'
+            f'營運現金流 {a["ocf"]:,.0f}｜{a["capex"] / a["ocf"] * 100:.0f}%">'
+            f'<span class="hs3-b{" over" if over else ""}" style="height:{a["capex"] / top * 100:.1f}%">'
+            + '</span>'
+            f'<span class="hs3-o" style="bottom:{a["ocf"] / top * 100:.1f}%">'
+            + '</span>'
+            f'<span class="hs3-x">{esc(a["label"])}</span></div>')
+    la = agg[-1]
+    latest = (f'<div class="hs3-last">最新一季（{esc(la["label"])}）：資本支出 <b>{la["capex"]:,.0f}</b>'
+              f'　營運現金流 <b>{la["ocf"]:,.0f}</b>　佔 <b class="{"over" if la["capex"] > la["ocf"] else ""}">'
+              f'{la["capex"] / la["ocf"] * 100:.0f}%</b></div>')
+    return ('<div class="hs3-chart"><div class="hs3-ch">五家加總・每季（億美元）</div>' + latest +
+            f'<div class="hs3-p">{"".join(cols)}</div>'
+            '<div class="cl-leg"><span><i class="hs3-lg-b"></i>資本支出</span>'
+            '<span><i class="hs3-lg-o"></i>營運現金流</span></div>'
+            '<p class="hs3-note">柱子追上橫線＝本業現金不夠付資本支出，缺口要靠發債。'
+            '各家會計季末不同，依「最近第幾季」對齊相加。</p></div>')
+
+
+def hs_table(d: dict) -> str:
+    """一家一列：本季資本支出、年增、佔營運現金流（小橫條）、單季發債、年度指引；點一列看 8 季。"""
+    hs = d.get("hyperscalers")
+    comps = getattr(hs, "companies", None) or []
+    if not comps:
+        return ""
+    gd = d.get("guidance") or {}
+    guide = {r["name"]: r["value"].replace(" 億美元", "") for r in gd.get("rows") or []}
+    hist = {h["name"]: h for h in (d.get("le") or {}).get("hs_hist") or []}
+    rows = []
+    for c in comps:
+        ratio = c.get("capex_to_ocf")
+        yoy = "—" if c.get("capex_yoy") is None else f'{c["capex_yoy"]:+.0f}%'
+        pe = c.get("period_end") or ""
+        when = esc(pe) if pe else "未取自 SEC"
+        bar = ""
+        if ratio is not None:
+            bar = (f'<span class="hs3-rb"><i class="{"over" if ratio > 100 else ""}" '
+                   f'style="width:{min(ratio, 150) / 150 * 100:.1f}%"></i><u></u></span>')
+        g = guide.get(c["name"]) or ("未提供" if gd.get("available") else "—")
+        h = hist.get(c["name"])
+        deb = [x for x in (h or {}).get("ratio", []) if x["debt"]]
+        dtxt = ("、".join(f'{_md(x["end"])} {x["debt"] * 10:,.0f} 億' for x in deb[-4:])
+                if deb else "近 8 季沒有申報長期債務發行")
+        body = ((h["capex"] if h else "") + f'<p class="hs3-deb">發債紀錄：{esc(dtxt)}</p>')
+        rows.append(
+            f'<details class="hs3-r"><summary>'
+            f'<span class="hs3-n"><b>{esc(c["name"])}</b><small>{when}</small></span>'
+            f'<span class="hs3-v"><em>本季資本支出</em>{c["capex"] * 10:,.0f}</span>'
+            f'<span class="hs3-v"><em>年增</em>{yoy}</span>'
+            f'<span class="hs3-v hs3-ratio"><em>佔營運現金流</em>'
+            + (f'<b class="{"over" if ratio > 100 else ""}">{ratio:.0f}%</b>' if ratio is not None else "—")
+            + f'{bar}</span>'
+            f'<span class="hs3-v"><em>單季發債</em>{c["issued"] * 10:,.0f}</span>'
+            f'<span class="hs3-v"><em>{esc(str(gd.get("year", "")))} 年計畫</em>{esc(g)}</span>'
+            f'</summary><div class="hs3-body">{body}</div></details>')
+    head = ('<div class="hs3-hd"><span>公司</span><span>本季資本支出</span><span>年增</span>'
+            '<span>佔營運現金流</span><span>單季發債</span>'
+            f'<span>{esc(str(gd.get("year", "")))} 年資本支出計畫</span></div>')
+    return (f'<div class="hs3-t">{head}{"".join(rows)}</div>'
+            '<p class="hs3-note">金額單位：億美元・點一家看近 8 季資本支出與發債紀錄・'
+            '佔營運現金流超過 100% 以紅字標示</p>')

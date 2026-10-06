@@ -165,7 +165,8 @@ check("⑯ 主題連結：顯示中的主題才露出、來源列含該主題來
       and "新聞：Reuters、CNBC" in h)
 check("⑰ JS：指標→主題對應、有內容的主題、先勾的排前面",
       '"wti": "oil"' in h and 'var TA=["fed", "oil"]' in h
-      and "box.appendChild(ch)" in h and "<em>補充新聞</em>" in h)
+      and "box.appendChild(ch)" in h and "fs-tagsel" in h and 'var REP={' in h
+      and '"oil": "wti"' in h)
 
 # ---------------------------------------------------------------- Polymarket
 def mk_market(name, p, vol=1000, d1=None, token="t"):
@@ -345,28 +346,28 @@ e_map = {**e, "maps": {"senate": {"races": races, "tally": t1, "sentence": s1},
                                     "sentence": sg},
                        "seats": {"senate": {"label": "≦47 席", "p": 0.385, "url": "u"}}}}
 html = el.election_card(e_map)
-sec = html.split('<details class="el-map">')[1] if '<details class="el-map">' in html else ""
-check("㊶ 地圖預設收合、標題列直接寫比分（參院、州長）",
-      sec and "參院 民主黨 52 : 48 共和黨" in sec and "州長 民主黨 27 : 23 共和黨" in sec
-      and '<details class="el-map" open' not in html, sec[:200])
-check("㊷ 參院／州長切換、州長頁預設隱藏、過半線、市場席次、一句話",
-      'class="el-tab" data-k="senate"' in sec and 'data-k="governor" hidden' in sec
-      and "過半 51" in sec and "共和黨參院席次・最可能" in sec
-      and "≦47 席<small>38.5%</small>" in sec and s1 in sec)
+# 2026-10 改版：地圖預設顯示；席次比分、競爭州、計算方式只在「更多」裡出現一次
+mp = html.split('<div class="el-map el-map2">')[1].split('<details class="el-more">')[0] \
+    if '<div class="el-map el-map2">' in html else ""
+more = html.split('<details class="el-more">')[1] if '<details class="el-more">' in html else ""
+check("㊶ 預設：兩院勝率＋參院地圖，「更多」預設收合",
+      mp and '<details class="el-more" open' not in html
+      and html.index('class="el2-chs"') < html.index('el-map2') < html.index('el-more'))
+check("㊷ 參院／州長切換、州長頁預設隱藏；過半線、市場席次、一句話在「更多」",
+      'class="el-tab" data-k="senate"' in mp and 'data-k="governor" hidden' in mp
+      and "過半 51" in more and "共和黨參院席次・最可能" in more
+      and "≦47 席<small>38.5%</small>" in more and s1 in more)
 check("㊸ 地圖：51 個州（含 DC）、小州方塊、沒改選的灰、提示文字含候選人",
-      sec.count('<path class="st') == 102 and sec.count('class="sb"') == 16
-      and "c-off" in sec and "data-tip=\"緬因・微幅" in sec, sec.count('<path class="st'))
-check("㊹ 圖例與競爭州列表（短標籤；分級定義收在「比分怎麼算？」）",
-      "五五波</li>" in sec and "競爭州<small>領先者低於 65%</small>" in sec
-      and "<summary>比分怎麼算？</summary>" in sec and "≥85% 穩拿" in sec)
-check("㊺ 手機版：數字磚取代長句、註腳一行＋「說明」收合、州名後是黨＋價格",
-      'class="el-stats"' in sec and "el-detail" not in sec
-      and '<details class="el-how"><summary>說明</summary>' in html
-      and "價格＝下注者的看法，不是民調" in html
-      and '<b class="rep">共 57.5%</b>' in html
-      # 2026-10 精簡版：長條圖只剩眾參院旁的走勢線
-      and "el-bar" not in html.split('<details class="el-map">')[0]
-      and "el-stack" not in html and "el-mini" not in html.split('<details class="el-map">')[0],
+      mp.count('<path class="st') == 102 and mp.count('class="sb"') == 16
+      and "c-off" in mp and "data-tip=\"緬因・微幅" in mp, mp.count('<path class="st'))
+check("㊹ 圖例在地圖下；競爭州與計算方式在「更多」",
+      "五五波</li>" in mp and "競爭州<small>領先者低於 65%</small>" in more
+      and "≥85% 穩拿" in more and "競爭州" not in mp)
+check("㊺ 不重複：兩院勝率只在最上方一次、說明一行；兩院組合是一條 100% 比例條",
+      "拿下參院的機率" not in html and "拿下眾院的機率" not in html
+      and html.count("價格＝下注者的看法，不是民調") == 1
+      and 'class="el-b3"' in more and "合計 100%" in more
+      and "el-stack" not in html and "el-mini" not in html and "最接近的參院選戰" not in html,
       html[:100])
 
 print()

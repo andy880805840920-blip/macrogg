@@ -72,34 +72,64 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
     多少」正是市場在反應的數字，所以整行常駐；過了 72 小時它變成歷史，
     自動退進收合層。沿用整站既有的 72 小時新鮮度機制，不另立規則。
     """
-    plain_html = f'<div class="k-plain">{esc(plain)}</div>' if plain else ""
-    asof_html = f'<span class="asof">{esc(asof)}</span>' if asof else ""
+    # 2026-10 改版（使用者：「一組內有很多小卡區膠囊」）：膠囊改成「短標籤＋一句判讀」
+    # 的小表，顏色只留在行首小圓點；白話說明收進收合層；日期改成右上淺灰小字。
     head = esc(en or label)
     sub_label = f'<div class="k-label-zh">{esc(label)}</div>' if en else ""
-    chips = [(t, k) for t, k in (leans or ()) if t]
-    if flag:
-        chips.append((flag, flag_kind or "info"))
-    # 沒有 chips 也要輸出空容器：桌機用「各層固定最小高度」對齊四張卡，
-    # 少了這一層，該卡的白話句會浮高、跟旁邊的卡對不齊。
-    chips_html = ('<div class="k-chips">' + "".join(
-        f'<span class="k-chip {k}">{esc(t)}</span>' for t, k in chips)
-        + '</div>') if chips else '<div class="k-chips"></div>'
+    rows = _judge_rows(leans, flag, flag_kind)
+    judge = ('<div class="k-judge">' + "".join(
+        f'<div class="kj-r"><span class="kj-k">{esc(k)}</span>'
+        f'<span class="kj-v"><i class="kj-d {d}"></i>{esc(v)}</span></div>' for k, v, d in rows)
+        + '</div>')
     surp_now = _surprise_line(surprise) if fresh else ""
-    more_bits = (f'<div class="k-sub">{esc(sub)}</div>' if sub else "") \
+    more_bits = (f'<p class="k-plain2">{esc(plain)}</p>' if plain else "") \
+        + (f'<div class="k-sub">{esc(sub)}</div>' if sub else "") \
         + ("" if fresh else _surprise_line(surprise)) + spark_html + mini
-    more_html = (f'<details class="k-more"><summary>近 5 期與比較基準</summary>'
+    more_html = (f'<details class="k-more"><summary>白話說明・近 5 期與比較基準</summary>'
                  f'<div class="k-more-body">{more_bits}</div></details>'
                  if more_bits.strip() else "")
-    # 固定四格（標題＋數字／chips＋意外／白話句／收合列）。桌機用 CSS subgrid
-    # 讓同一列四張卡的每一格共用列高——哪張卡的 chips 多一列、白話句多一行，
-    # 整列一起讓位，「近 5 期與比較基準」永遠落在同一條水平線上。
+    when = f'<span class="k-when">{esc(asof)}</span>' if asof else ""
+    # 固定四格（標題＋數字／判讀／保留格／收合列）：桌機用 subgrid 讓同列卡片對齊
     return f"""<div class="card kpi">
-  <div class="k-s1"><div class="k-label">{head}{asof_html}</div>
+  <div class="k-s1"><div class="k-label">{head}{when}</div>
   {sub_label}<div class="k-value">{esc(value)}</div></div>
-  <div class="k-s2">{chips_html}{surp_now}</div>
-  <div class="k-s3">{plain_html}</div>
+  <div class="k-s2">{judge}{surp_now}</div>
+  <div class="k-s3"></div>
   <div class="k-s4">{more_html}</div>
 </div>"""
+
+
+_JUDGE_SHORT = (
+    (r"對應水準$", ""), (r"^月增\s*[+−-]?[\d.]+%，", ""), (r"目標步速", "步速"),
+    (r"^近三月平均月增\s*", "平均 "), (r"所致$", ""), (r"較大$", "大"),
+)
+
+
+def _judge_rows(leans, flag=None, flag_kind="") -> list[tuple[str, str, str]]:
+    """膠囊文字 → (短標籤, 一句判讀, 圓點顏色)。判讀不重複大數字。"""
+    import re as _re
+    dot = {"hawkish": "haw", "neg": "haw", "dovish": "dov", "pos": "dov", "watch": "wat"}
+    out, has_high = [], False
+    items = [(t, k) for t, k in (leans or ()) if t]
+    if flag:
+        items.append((flag, flag_kind or "info"))
+    for t, k in items:
+        if "：" in t and t.split("：", 1)[0] in ("水準", "本期"):
+            key, v = t.split("：", 1)
+        elif "近三月" in t:
+            key, v = "三月", t
+        elif t.endswith("所致"):
+            key, v = "原因", t
+        else:
+            key, v = "補充", t
+        for pat, rep in _JUDGE_SHORT:
+            v = _re.sub(pat, rep, v)
+        if key == "水準" and "高於" in v:
+            has_high = True
+        if key == "補充" and has_high and _re.search(r"仍高於.*基準", v):
+            continue                      # 已在「水準：高於目標」講過
+        out.append((key, v.strip(), dot.get(k, "neu")))
+    return out
 
 
 def _light_card(lt, href: str = "") -> str:

@@ -3007,6 +3007,22 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
             "ratio": [{"end": r["end"], "v": (r["capex"] / r["ocf"] * 100) if r.get("ocf") else None,
                        "debt": r.get("debt_issued") or 0} for r in h],
         })
+    # 五家加總（2026-10）：各家會計季末不同，依「最近第 N 季」對齊相加；
+    # 標籤取各家季末的最大值（月/年）。單位億美元。
+    _hs = [c.get("hist") if isinstance(c, dict) else getattr(c, "hist", None) for c in hs.companies]
+    _hs = [h for h in _hs if h]
+    agg = []
+    if _hs:
+        n = min(len(h) for h in _hs)
+        for i in range(n, 0, -1):
+            rows = [h[-i] for h in _hs]
+            if any(r.get("capex") is None or not r.get("ocf") for r in rows):
+                continue
+            end = max(r["end"] for r in rows)
+            agg.append({"end": end, "label": f"{end[2:4]}/{int(end[5:7])}",
+                        "capex": sum(r["capex"] for r in rows) * 10,
+                        "ocf": sum(r["ocf"] for r in rows) * 10})
+    out["hs_agg"] = agg
     return out
 
 

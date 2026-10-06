@@ -815,10 +815,12 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'if(q.k==="pct"){var b=Math.round(dv*100);'
             'return[q.v.toFixed(2)+"%",(b>=0?"+":"")+b+" bp",'
             'b>0?"up":(b<0?"dn":"")];}'
-            'if(q.k==="idx"){var pc=q.p?dv/q.p*100:0,r=Math.round(dv);'
-            'return[g(q.v),(r<0?"-":"+")+g(dv)+"（"+(pc>=0?"+":"")'
-            '+pc.toFixed(2)+"%）",dir];}'
-            'var s=dv.toFixed(1);return[q.v.toFixed(1)+(q.u||""),'
+            # 報價板（2026-10）：指數的變動只寫點數（漲跌幅在點擊說明裡），
+            # 美元計價改成「$89.8」——跟伺服器端產生的格式一致
+            'if(q.k==="idx"){var r=Math.round(dv);'
+            'return[g(q.v),(r<0?"-":"+")+g(dv),dir];}'
+            'var s=dv.toFixed(1),u=q.u||"";'
+            'return[(u.indexOf("美元")>=0?"$"+q.v.toFixed(1):q.v.toFixed(1)+u),'
             '(s.charAt(0)==="-"?"":"+")+s,dir];}'
             'function ap(r){var now=r.t||Date.now()/1000;'
             'Object.keys(r.q||{}).forEach(function(id){var q=r.q[id];'
@@ -830,12 +832,14 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'if(q.k==="pct"&&b){var o=parseFloat(b.textContent);'
             'if(isFinite(o)&&Math.abs(q.v-o)>0.6)return;}'
             'var f=fmt(q);if(b)b.textContent=f[0];'
-            'if(!i){i=document.createElement("i");ch.insertBefore(i,w);}'
-            'i.textContent=f[1];i.className=f[2];'
+            'if(!i){i=document.createElement("i");ch.insertBefore(i,b);}'
+            'i.textContent=f[1];i.className=f[2]||"fl";'
+            'if(q.k==="idx"&&q.p){var pc=(q.v-q.p)/q.p*100;'
+            'ch.setAttribute("title","漲跌幅 "+(pc>=0?"+":"")+pc.toFixed(2)+"%");}'
             'if(!w){w=document.createElement("small");w.className="fs-when";'
-            'ch.appendChild(w);}'
+            'var nm=ch.querySelector(".fs-nm")||ch;nm.appendChild(w);}'
             'w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts))'
-            ':((q.s?q.s+" ":"")+q.d.slice(5));'
+            ':((q.s?q.s+" ":"")+q.d.slice(5).replace("-","/"));'
             'ch.setAttribute("data-d",q.d);});}'
             'function tk(){if(document.visibilityState!=="visible"||N>=M)return;'
             'N++;last=Date.now();fetch("/api/quotes").then(function(r){'
@@ -845,6 +849,14 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'document.addEventListener("visibilitychange",function(){'
             'if(document.visibilityState==="visible"&&Date.now()-last>60000)tk();});'
             '})();</script>')
+
+
+# 八大主題的代表指標：點新聞主題標籤時，這一顆移到報價板第一行（2026-10）
+TOPIC_REP = {"fed": "fedwatch", "long": "dgs10", "funding": "sofr", "oil": "wti",
+             "equity": "dji", "semi": "sox", "twf": "txf", "election": "pm_senate"}
+TOPIC_REP_ORDER = ("fed", "long", "funding", "oil", "equity", "semi", "twf", "election")
+TOPIC_LABEL = {"fed": "聯準會", "long": "長天期美債", "funding": "資金市場", "oil": "油價",
+               "equity": "美股", "semi": "AI 與半導體", "twf": "台指期", "election": "期中選舉"}
 
 
 def _unify_chip(c: dict) -> dict:
@@ -860,8 +872,8 @@ def _unify_chip(c: dict) -> dict:
     date, d, tip = c.get("date", "") or "", c.get("dir", ""), ""
     date = date.replace("-", "/")
     m = re.match(r"^(日盤|夜盤)\s*(.*)$", date)
-    if m:
-        tip, date = m.group(1), m.group(2)
+    if m:                       # 盤別由即時報價寫在日期列，提示裡不重複
+        date = m.group(2)
     if cid == "fedwatch":
         mv = re.match(r"^(.+?)\s*(\d+)%$", value)
         md = re.search(r"（(\d+/\d+)）", label)
@@ -895,7 +907,7 @@ def _unify_chip(c: dict) -> dict:
     elif cid in ("dji", "sox", "txf"):
         if "（" in delta:
             delta, pct = delta.split("（", 1)
-            tip = (tip + "　" if tip else "") + "漲跌幅 " + pct.rstrip("）")
+            tip = "漲跌幅 " + pct.rstrip("）")
     elif cid in ("pm_house", "pm_senate"):
         delta = delta.replace(" 個百分點", "%").replace("個百分點", "%").replace(" 百分點", "%")
         label = label.replace("・", " ")
@@ -920,7 +932,7 @@ def _focus_strip(f: dict | None) -> str:
     import json as _json
     fw = f.get("fedwatch") or {}
     cat = f.get("chips") or []
-    picker = script = ""
+    picker = script = editbar = ""
     # 主題補充：每個主題的一則補充都放進 HTML，依指標順序挑兩則顯示
     from ..analysis.focus_today import pick_topics
     topics = [x for x in (f.get("topics") or []) if x.get("text")]
@@ -947,32 +959,51 @@ def _focus_strip(f: dict | None) -> str:
                          f'<div class="fs-nm"><span>{esc(u["label"])}</span>{when}</div>'
                          f'{delta}<b>{esc(u["value"])}</b></div>')
             opts.append((c["id"], c["label"], c.get("on")))
-        # 2026-10 改版：固定四格、每格一個下拉選單（使用者：「要先移除 2、3、4
-        # 才能換前兩個，流程很麻煩」）。選到已在別格的指標時兩格互換，
-        # 永遠是四格、不必先取消；第 1、2 格決定補充新聞，標在格名旁。
-        _ol = "".join(f'<option value="{cid}">{esc(lb)}</option>' for cid, lb, _ in opts)
-        slots = "".join(
-            f'<label class="fs-slot"><span>第 {i + 1} 格'
-            + ('<em>補充新聞</em>' if i < 2 else '') + '</span>'
-            f'<select data-slot="{i}">{_ol}</select></label>' for i in range(4))
-        picker = ('<details class="fs-pick"><summary>'
-                  '<span class="fs-pick-btn">選擇指標</span></summary>'
-                  '<div class="fs-pick-panel">' + slots +
-                  '<div class="fs-pick-foot"><button type="button" class="fs-reset">恢復預設</button>'
-                  '<span class="fs-pick-note">選擇存在此裝置</span></div>'
-                  '</div></details>')
+        # 2026-10 改版（使用者：「直接從下方四個去選，沒必要再跳出一個篩選器」）：
+        # 按「選擇指標」→ 報價板進入編輯狀態，點任一行就是原生選單、選了換掉
+        # 那一行（選到已在板上的就兩行互換）；前兩行標「補充新聞」。
+        # 反向：新聞上方八個主題標籤，點了把該主題的代表指標移到第一行。
+        _ol = "".join(f'<option value="{cid}">{esc(_unify_chip(cc)["label"])}</option>'
+                      for cc in cat for cid in [cc["id"]])
+        picker = ('<button type="button" class="fs-edit-btn">選擇指標</button>')
+        editbar = ('<div class="fs-editbar"><span>點任一行更換指標</span>'
+                   '<button type="button" class="fs-reset">恢復預設</button>'
+                   '<button type="button" class="fs-done">完成</button></div>')
+        _ids = [cc["id"] for cc in cat]
+        _rep = {}
+        for tid in TOPIC_REP_ORDER:
+            pref = TOPIC_REP.get(tid)
+            if pref in _ids and topic_map.get(pref) == tid:
+                _rep[tid] = pref
+            else:
+                _rep[tid] = next((c for c in _ids if topic_map.get(c) == tid), None)
+        _tl = {x["id"]: x["label"] for x in topics}
+        _topt = "".join(
+            f'<option value="{tid}"' + ("" if tid in avail else " disabled") + '>'
+            + esc(_tl.get(tid) or TOPIC_LABEL.get(tid, tid)) + ("" if tid in avail else "（今日無新聞）")
+            + '</option>' for tid in TOPIC_REP_ORDER if _rep.get(tid))
         script = ('<script>(function(){var K="fsChips";var M=4;'
                   'var D=' + _json.dumps(defaults) + ';'
                   'var TM=' + _json.dumps(topic_map, ensure_ascii=False) + ';'
                   'var TA=' + _json.dumps(avail) + ';'
-                  'var box=document.querySelector(".fs-chips");if(!box)return;'
-                  'var ss=Array.prototype.slice.call(document.querySelectorAll(".fs-slot select"));'
+                  'var REP=' + _json.dumps({k: v for k, v in _rep.items() if v}) + ';'
+                  'var OPT=' + _json.dumps(_ol, ensure_ascii=False) + ';'
+                  'var TOPT=' + _json.dumps(_topt, ensure_ascii=False) + ';'
+                  'var st=document.querySelector(".focus-strip");'
+                  'var box=document.querySelector(".fs-chips");if(!box||!st)return;'
                   'var ids=Array.prototype.map.call(box.querySelectorAll("[data-chip]"),'
                   'function(c){return c.getAttribute("data-chip");});'
                   'function each(q,f){Array.prototype.forEach.call(document.querySelectorAll(q),f);}'
                   'function tp(sel){var ul=document.querySelector(".fs-news .fs-list");'
-                  'var w=[];sel.forEach(function(c){var t=TM[c];'
-                  'if(t&&TA.indexOf(t)>=0&&w.indexOf(t)<0&&w.length<2)w.push(t);});'
+                  'var w=[],ws=[];sel.forEach(function(c,ix){var t=TM[c];'
+                  'if(t&&TA.indexOf(t)>=0&&w.indexOf(t)<0&&w.length<2){w.push(t);ws.push(ix);}});'
+                  # 補充新聞的主題標籤可以點：換主題＝把該主題的代表指標換進對應那一行
+                  'w.forEach(function(t,k){var li=document.querySelector(\'.fs-news [data-topic="\'+t+\'"]\');'
+                  'var tg=li&&li.querySelector(".fs-tag");if(!tg)return;tg.classList.add("fs-tagsel");'
+                  'var s=tg.querySelector("select");if(!s){s=document.createElement("select");s.innerHTML=TOPT;'
+                  's.setAttribute("aria-label","換一個補充新聞主題");tg.appendChild(s);'
+                  's.addEventListener("change",function(){var rp=REP[s.value];var i=+s.getAttribute("data-row");'
+                  'if(rp)pick(i,rp);});}s.value=t;s.setAttribute("data-row",ws[k]);});'
                   'if(ul){each(".fs-news [data-topic]",function(li){'
                   'li.classList.toggle("fs-off",w.indexOf(li.getAttribute("data-topic"))<0);});'
                   'w.forEach(function(t){var li=ul.querySelector(\'[data-topic="\'+t+\'"]\');'
@@ -984,22 +1015,33 @@ def _focus_strip(f: dict | None) -> str:
                   'var xs=[];each(".fs-news .fs-link:not(.fs-off) .fs-src",function(q){'
                   'var x=q.textContent.trim();if(x&&xs.indexOf(x)<0)xs.push(x);});'
                   'var sp=document.querySelector(".fs-srcs");'
-                  'if(sp)sp.textContent=xs.length?"\u3000\u00b7\u3000新聞："+xs.slice(0,3).join("\u3001"):"";}'
+                  'if(sp)sp.textContent=xs.length?"　·　新聞："+xs.slice(0,3).join("、"):"";}'
                   'function fill(sel){var o=[];sel.forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});'
                   'D.concat(ids).forEach(function(x){if(o.length<M&&o.indexOf(x)<0)o.push(x);});return o.slice(0,M);}'
                   'function ap(sel){Array.prototype.forEach.call(box.querySelectorAll("[data-chip]"),function(ch){'
-                  'ch.classList.toggle("fs-off",sel.indexOf(ch.getAttribute("data-chip"))<0);});'
-                  'sel.forEach(function(id){var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(ch)box.appendChild(ch);});'
-                  'ss.forEach(function(s,i){s.value=sel[i];});tp(sel);}'
+                  'ch.classList.toggle("fs-off",sel.indexOf(ch.getAttribute("data-chip"))<0);'
+                  'ch.classList.remove("slot1","slot2");});'
+                  'sel.forEach(function(id,i){var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');'
+                  'if(ch){box.appendChild(ch);if(i<2)ch.classList.add("slot"+(i+1));'
+                  'var s=ch.querySelector(".fs-rowsel");if(!s){s=document.createElement("select");'
+                  's.className="fs-rowsel";s.innerHTML=OPT;s.setAttribute("aria-label","更換這一行的指標");'
+                  's.addEventListener("change",function(){var j=sel.indexOf(ch.getAttribute("data-chip"));'
+                  'pick(j,s.value);});ch.appendChild(s);}s.value=id;}});tp(sel);}'
+                  'function save(){try{localStorage.setItem(K,JSON.stringify(sel));}catch(e){}}'
+                  'function pick(i,v){if(i<0)return;var j=sel.indexOf(v);if(j>=0&&j!==i)sel[j]=sel[i];'
+                  'sel[i]=v;save();ap(sel);}'
                   'var sel=null;try{sel=JSON.parse(localStorage.getItem(K)||"null");}catch(e){}'
                   'sel=fill(sel instanceof Array?sel:D);ap(sel);'
-                  'function save(){try{localStorage.setItem(K,JSON.stringify(sel));}catch(e){}}'
-                  'ss.forEach(function(s,i){s.addEventListener("change",function(){var v=s.value;'
-                  'var j=sel.indexOf(v);if(j>=0&&j!==i)sel[j]=sel[i];sel[i]=v;save();ap(sel);});});'
+                  'var eb=document.querySelector(".fs-edit-btn");'
+                  'function ed(on){st.classList.toggle("fs-editing",on);if(eb)eb.setAttribute("aria-pressed",on?"true":"false");}'
+                  'if(eb)eb.addEventListener("click",function(){ed(!st.classList.contains("fs-editing"));});'
+                  'var dn=document.querySelector(".fs-done");if(dn)dn.addEventListener("click",function(){ed(false);});'
                   'var r=document.querySelector(".fs-reset");if(r)r.addEventListener("click",function(){'
                   'sel=fill(D);try{localStorage.removeItem(K);}catch(e){}ap(sel);});'
+                  # 一般狀態點一行＝展開說明（編輯狀態由選單接手）
                   'Array.prototype.forEach.call(box.querySelectorAll(".fs-chip[title]"),function(c){'
-                  'c.addEventListener("click",function(){c.classList.toggle("tip-on");});});'
+                  'c.addEventListener("click",function(){if(!st.classList.contains("fs-editing"))'
+                  'c.classList.toggle("tip-on");});});'
                   '})();</script>' + _LIVE_JS)
     else:
         # 目錄組裝失敗的後備：照舊三顆（10Y／30Y／機率），行為與舊版一致。
@@ -1098,7 +1140,7 @@ def _focus_strip(f: dict | None) -> str:
     # 手機上下堆疊。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
             '<div class="fs-head">今日市場焦點'
-            + picker + '</div>'
+            + picker + '</div>' + editbar +
             '<div class="fs-grid">'
             '<div class="fs-chips"><div class="fs-hd"><span>指標</span>'
             '<span>變動</span><span>數值</span></div>' + "".join(chips) + '</div>'
