@@ -2371,12 +2371,20 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
         _m6 = infl.get("core_pce_6m")
         _lv = ("低" if lvl is not None and lvl < b.get("low", 2.30) else
                "高" if lvl is not None and lvl > b.get("high", 2.90) else "中")
-        _pushed, _push_note = scenario.inflation_push(_lv, m3, _m6, b)
+        if infl.get("supercore_last2"):
+            _pushed, _push_note = scenario.supercore_push(_lv, infl["supercore_last2"])
+        else:
+            _pushed, _push_note = scenario.inflation_push(_lv, m3, _m6, b)
         _msrc, _mpace = scenario.inflation_momentum_source(infl)
         _mnote = ({"pce": f"動能看核心 PCE 近三月平均月增 {_mpace:.2f}%（目標步速 0.17）",
                    "cpi_preview": f"PCE 還沒公布，動能暫用核心 CPI 近三月平均月增 "
                                   f"{_mpace:.2f}% 當預告（目標步速 0.2）"}
                   .get(_msrc, "") if _mpace is not None else "")
+        _sl2 = infl.get("supercore_last2")
+        if _sl2 and _sl2[-1] is not None:
+            _mnote = (f"動能看 PCE Supercore 三月年化 {_sl2[-1]:.1f}%"
+                      f"（中心 {scenario.SC_ANCHOR:.1f}%，高於 {scenario.SC_HI:.1f}% 升溫、"
+                      f"低於 {scenario.SC_LO:.1f}% 降溫）")
         _lead = (f"核心 PCE 年增 {_pct(yoy_v)}{_est} 決定格位，{_cmp}"
                  + (f"；{_push_note}" if _push_note else "")
                  + (f"。{_mnote}" if _mnote else "")
@@ -2470,8 +2478,66 @@ def _axis_derivation(sc, labor: dict | None, infl: dict | None,
     return out
 
 
+from .analysis import positioning  # noqa: E402
+
+
+def _driver_cards(labor_ctx, infl_ctx, fomc_ctx, rates_ctx) -> list[dict]:
+    """主要驅動因素（2026-10）：各頁「本期關鍵訊號」最高級的那一條＋聯準會決議＋長端主因。"""
+    sev = {"alert": 0, "watch": 1, "info": 2}
+    out = []
+
+    def _top(ctx, axis, href, page):
+        fl = (ctx or {}).get("flags") or []
+        if not fl:
+            return
+        f = sorted(fl, key=lambda f: (sev.get(getattr(f, "severity", "info"), 3),
+                                      getattr(f, "tier", 4)))[0]
+        out.append({"page": page, "axis": axis, "href": href, "title": f.headline,
+                    "lean": getattr(f, "lean", "neutral"),
+                    "sev": getattr(f, "severity", "info")})
+    _top(labor_ctx, "就業軸", "/labor/#signals", "就業")
+    _top(infl_ctx, "通膨軸", "/inflation/#signals", "通膨")
+    if fomc_ctx and not fomc_ctx.get("empty"):
+        sh = fomc_ctx.get("shift") or {}
+        if sh.get("decision_label"):
+            out.append({"page": "聯準會", "axis": "政策", "href": "/fomc/",
+                        "title": f'{sh.get("cur_date", "")} 決議：{sh["decision_label"]}',
+                        "lean": sh.get("direction", "neutral"), "sev": "info"})
+    if rates_ctx:
+        sp = rates_ctx.get("pressure")
+        if getattr(sp, "main", ""):
+            out.append({"page": "長端", "axis": "曲線形狀", "href": "/rates/#decomp",
+                        "title": f'本月主因：{sp.main} {sp.main_bp:+.0f}bp',
+                        "lean": "hawkish" if (sp.main_bp or 0) > 0 else "dovish", "sev": "info"})
+    return out
+
+
+_NEXT_AXIS = {
+    "employment": ("就業報告", "就業軸", "失業率決定就業軸的強／中／弱"),
+    "cpi": ("CPI", "通膨軸", "先換算成 PCE 口徑，更新通膨軸的推估值"),
+    "pce": ("PCE 物價", "通膨軸", "核心 PCE 與 Supercore 是通膨軸的正式依據"),
+    "fomc": ("FOMC 決議", "重心", "聲明與點陣圖決定用哪一張九宮格"),
+}
+
+
+def scenario_next_releases(schedule: dict, fomc_next: str | None = None,
+                           n: int = 4) -> list[dict]:
+    """情境頁「下一個可能移動格子的數據」：依日期排序，只列今天以後。"""
+    today = clock.today().isoformat()
+    schedule = dict(schedule or {})
+    if fomc_next:
+        schedule["fomc"] = [(str(fomc_next)[:10], "")]
+    out = []
+    for key, (label, axis, why) in _NEXT_AXIS.items():
+        ds = sorted(d for d, _ in (schedule.get(key) or []) if d >= today)
+        if ds:
+            out.append({"key": key, "label": label, "axis": axis, "why": why, "date": ds[0]})
+    return sorted(out, key=lambda r: r["date"])[:n]
+
+
 def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
-                           fomc_ctx: dict | None, rates_ctx: dict | None = None) -> dict:
+                           fomc_ctx: dict | None, rates_ctx: dict | None = None,
+                           series: dict | None = None) -> dict:
     labor = None
     if labor_ctx:
         labor = {"score": labor_ctx["score"]["score"],
@@ -2498,6 +2564,8 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 年增＋三月年化——那條門檻錨在 SEP，口徑不能混。
         infl = {"core_pce_yoy": _pce_for_grid, "core_pce_3m": s.pce_core_3m,
                 "core_pce_6m": s.pce_core_6m,
+                "supercore_last2": ([s.pce_supercore_3m_prev, s.pce_supercore_3m]
+                                    if getattr(s, "pce_supercore_3m", None) is not None else None),
                 "core_pce_pace3": s.pce_core_pace3,
                 "core_cpi_pace3": infl_ctx.get("core_pace3"),
                 "core_cpi_yoy": s.core_yoy, "core_cpi_3m": s.core_3m,
@@ -2538,7 +2606,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         p_title, p_desc = PRESSURE_TEXT.get(sp.level, ("—", ""))
         c_title, c_desc = CURVE_IMPLICATION.get(
             (sc.lean, sp.level),
-            ("尚無對照", "政策方向或供給壓力其中一項資料不足。"))
+            ("尚無對照", "政策方向或期限溢酬其中一項資料不足。"))
         top = sorted(sp.parts, key=lambda x: -abs(x["score"]))[:3]
         rates_line = {
             "level": sp.level,
@@ -2548,6 +2616,7 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
             "curve_title": c_title,
             "curve_desc": c_desc,
             "parts": top,
+            "main": getattr(sp, "main", ""),
         }
         if rates_ctx.get("as_of"):
             parts.append(f"利率 {rates_ctx['as_of']}")
@@ -2556,10 +2625,10 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
         # 供給壓力偏高時這個前提不成立，必須在同一頁講清楚，否則兩段敘述互相矛盾。
         if sp.level == "high" and sc.positioning.get("殖利率曲線"):
             sc.positioning["殖利率曲線"] += (
-                "。但目前長端供給壓力偏高，期限溢酬可能抵銷這個方向，"
+                "。但目前期限溢酬偏高（財政與供給壓力），可能抵銷這個方向，"
                 "平坦化的力道會比一般情況小")
         elif sp.level == "low" and sc.positioning.get("殖利率曲線"):
-            sc.positioning["殖利率曲線"] += "。目前供給壓力偏低，長端的反應可能比一般情況更順"
+            sc.positioning["殖利率曲線"] += "。目前期限溢酬偏低，長端的反應可能比一般情況更順"
 
     return {
         "scenario": sc,
@@ -2576,6 +2645,18 @@ def build_scenario_context(labor_ctx: dict | None, infl_ctx: dict | None,
             for r in scenario.REGIMES],
         "cell_is_conflict": cur in scenario.CONFLICT_CELLS,
         "rates_line": rates_line,
+        # ---- 2026-10 改版 ----
+        "driver_cards": _driver_cards(labor_ctx, infl_ctx, fomc_ctx, rates_ctx),
+        "pos_compare": positioning.compare(sc.name.split("：")[0] if sc.name not in positioning.EXPECT
+                                           else sc.name, series or {}),
+        "duration": positioning.duration_table(series or {}),
+        "trail": positioning.grid_trail(series or {}, (labor or {}).get("u_lo"),
+                                        (labor or {}).get("u_hi"), (infl or {}).get("bands")),
+        # run.py 接上期貨曲線後補：futures_curve、divergence、next_releases
+        "futures_curve": None, "divergence": None, "next_releases": [],
+        "dots": positioning.dot_medians((fomc_ctx or {}).get("sep")),
+        "mvd": (fomc_ctx or {}).get("mvd"),
+        "supercore_3m": (((infl or {}).get("supercore_last2")) or [None, None])[-1],
         # 市場定價：由 FOMC 模組算好（2 年期殖利率 vs 政策利率中值）。
         # 情境頁那張「尚未接入」的空卡就是為了這個留的位置。
         "market": (fomc_ctx or {}).get("market") or {},
@@ -2772,8 +2853,170 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
 # ===========================================================================
 # 長端利率與債務供給（P5）
 # ===========================================================================
+def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
+    """長端頁 2026-10 改版的全部新資料（純事實與規則判定，不做加權總分）。"""
+    from .analysis import longend as le
+    from .treasury_source import TENOR_ZH
+    out: dict = {"failed": list(tr.get("failed") or [])}
+    dec = le.decompose(series)
+    out["dec"] = dec
+    out["contrib"] = {k: le.contribution(dec, k) for k in (1, 3, 12)}
+    c1 = out["contrib"][1]
+    out["main_sentence"] = le.main_sentence(c1)
+    out["dec_lines"] = charts.compact_lines([
+        {"label": "預期實質路徑", "color": "var(--line-1)",
+         "points": [{"date": d["month"] + "-01", "value": d["real"]} for d in dec]},
+        {"label": "預期通膨", "color": "var(--line-2)",
+         "points": [{"date": d["month"] + "-01", "value": d["infl"]} for d in dec]},
+        {"label": "期限溢酬", "color": "#1baf7a",
+         "points": [{"date": d["month"] + "-01", "value": d["tp"]} for d in dec]},
+    ], unit="%", height=150, digits=2, aria="10 年利率三段組成（月均）")
+    out["bridges"] = {}
+    for k, c in out["contrib"].items():
+        if not c:
+            continue
+        parts = [{"label": le.COMP_ZH[key], "bp": c["parts"][key],
+                  "note": le.PRESSURE_ZH[key], "main": key == c["main"]}
+                 for key in ("real", "infl", "tp")]
+        parts.append({"label": "殘差", "bp": c["resid"], "note": "實際 10Y − 模型擬合值",
+                      "muted": True})
+        fm = lambda m: f"{m[:4]}/{int(m[5:7])}"
+        out["bridges"][k] = charts.bridge(c["start"], f"{fm(c['from'])} 10Y（月均）",
+                                          parts, c["end"], f"{fm(c['to'])} 10Y（月均）")
+    # TIPS／損益兩平（參考：市場口徑）
+    out["market_ref"] = {"real": value_at(series.get("DFII10") or []),
+                         "be": value_at(series.get("T10YIE") or [])}
+    # 房貸
+    mtg = series.get("MORTGAGE30US") or []
+    out["mortgage"] = {
+        "value": value_at(mtg), "date": (mtg[-1]["date"] if mtg else ""),
+        "chg_1y": ((mtg[-1]["value"] - mtg[-53]["value"]) * 100 if len(mtg) > 53 else None),
+        "chart": charts.compact_lines([
+            {"label": "30 年固定房貸", "color": "var(--line-2)", "points": mtg},
+            {"label": "10 年公債", "color": "var(--line-1)", "points": series.get("DGS10") or []},
+        ], unit="%", height=130, digits=2, aria="房貸利率與 10 年公債"),
+    }
+    # 曲線
+    snaps = le.curve_snapshots(series)
+    cols = {"現在": "var(--line-1)", "1 個月前": "var(--line-2)", "1 年前": "var(--muted-bar)"}
+    out["curve_chart"] = charts.cat_lines(
+        [{"label": f'{sn["label"]}（{sn["date"][5:].replace("-", "/")}）', "color": cols[sn["label"]],
+          "dash": sn["label"] == "1 年前", "points": [(t, v) for t, _, v in sn["points"]]}
+         for sn in snaps], aria="殖利率曲線")
+    out["curve_snaps"] = snaps
+
+    def _slope(a, b):
+        A, B = series.get(a) or [], series.get(b) or []
+        bm = {r["date"]: r["value"] for r in B}
+        return [{"date": r["date"], "value": r["value"] - bm[r["date"]]} for r in A
+                if r["date"] in bm and r.get("value") is not None and bm[r["date"]] is not None]
+    out["slopes"] = []
+    for lab, a, b in (("10 年 − 2 年", "DGS10", "DGS2"), ("30 年 − 10 年", "DGS30", "DGS10")):
+        rows = _slope(a, b)
+        if rows:
+            out["slopes"].append({"label": lab, "value": rows[-1]["value"] * 100,
+                                  "chg": ((rows[-1]["value"] - rows[-23]["value"]) * 100
+                                          if len(rows) > 23 else None),
+                                  "chart": charts.compact_lines(
+                                      [{"label": lab, "color": "var(--line-1)",
+                                        "points": [{"date": r["date"], "value": r["value"] * 100}
+                                                   for r in rows]}],
+                                      unit="bp", height=90, digits=0, zero=True, aria=lab)})
+    # 全球長端
+    glb = [("美國", "IRLTLT01USM156N", "var(--line-1)"), ("德國", "IRLTLT01DEM156N", "var(--line-2)"),
+           ("英國", "IRLTLT01GBM156N", "#1baf7a"), ("日本", "IRLTLT01JPM156N", "#eda100")]
+    out["global"] = {
+        "chart": charts.compact_lines([{"label": n, "color": c, "points": series.get(sid) or []}
+                                       for n, sid, c in glb], unit="%", height=150, digits=2,
+                                      aria="全球 10 年期公債殖利率"),
+        "rows": [{"name": n, "value": value_at(series.get(sid) or []),
+                  "chg12": ((series[sid][-1]["value"] - series[sid][-13]["value"]) * 100
+                            if len(series.get(sid) or []) > 13 else None),
+                  "date": (series.get(sid) or [{}])[-1].get("date", "")}
+                 for n, sid, _ in glb if series.get(sid)],
+    }
+    # 拍賣
+    auc = tr.get("auctions") or []
+    rows = le.auction_rows(auc, series)
+    out["auctions"] = le.latest_by_tenor(rows)
+    out["auction_rule"] = le.VERDICT_RULE
+    _recent = [r for r in rows if r["date"] >= (clock.today() - dt.timedelta(days=21)).isoformat()]
+    out["auction_recent"] = {v: sum(1 for r in _recent if r["verdict"] == v)
+                             for v in ("偏弱", "中性", "偏強")}
+    out["auction_recent_n"] = len(_recent)
+    out["tenor_zh"] = TENOR_ZH
+    # 發行路徑
+    sp = le.size_path(auc, months=24)
+    out["sizes"] = []
+    for t, pts in sp.items():
+        if not pts:
+            continue
+        q = pts[-8:] if len(pts) >= 8 else pts
+        prev = [p for p in pts if p["date"] <= _shift_iso_year(pts[-1]["date"], -1)]
+        out["sizes"].append({
+            "term": t, "zh": TENOR_ZH.get(t, t), "latest": pts[-1]["value"], "pts": q,
+            "year_ago": prev[-1]["value"] if prev else None,
+            "chart": charts.kpi_history([{"date": p["date"], "value": p["value"] * 10} for p in q],
+                                        kind="change", n=8, fmt=lambda v: f"{v:,.0f}",
+                                        unit="億美元", head="每月拍賣規模（含增發）",
+                                        en=f"{t} 每月拍賣規模", short_dates=True)})
+    out["refunding"] = cfg.get("refunding") or {}
+    out["upcoming"] = [a for a in (tr.get("upcoming") or []) if a.get("type") != "Bill"]
+    out["events"] = le.events(clock.today(), tr.get("upcoming") or [],
+                              (cfg.get("refunding") or {}).get("next"))
+    # Fed 資產端
+    out["soma"] = le.soma_mix(tr.get("soma") or [])
+    if out["soma"].get("flows"):
+        out["soma"]["flow_chart"] = charts.dual_columns(
+            out["soma"]["flows"], [("mbs", "MBS 月變動", "var(--muted-bar)"),
+                                   ("bills", "T-Bills 月變動", "var(--line-1)")],
+            unit=" 十億美元", digits=0)
+    wam = tr.get("wam") or {}
+    out["wam"] = {
+        "soma": (wam.get("soma") or [{}])[-1], "market": (wam.get("market") or [{}])[-1],
+        "chart": charts.compact_lines([
+            {"label": "Fed 持有公債 WAM", "color": "var(--line-1)",
+             "points": [{"date": r["date"], "value": r["value"]} for r in wam.get("soma") or []]},
+            {"label": "流通在外公債 WAM", "color": "var(--line-2)",
+             "points": [{"date": r["date"], "value": r["value"]} for r in wam.get("market") or []]},
+        ], unit=" 年", height=120, digits=2, aria="加權平均剩餘年限") if wam.get("soma") else "",
+    }
+    out["fed_policy"] = cfg.get("fed_balance_sheet") or {}
+    # 信用利差
+    out["credit"] = {
+        "ig": charts.compact_lines([{"label": "投資級", "color": "var(--line-1)",
+                                     "points": series.get("BAMLC0A0CM") or []}],
+                                   unit="%", height=120, digits=2, aria="投資級利差"),
+        "hy": charts.compact_lines([{"label": "高收益", "color": "var(--line-2)",
+                                     "points": series.get("BAMLH0A0HYM2") or []}],
+                                   unit="%", height=120, digits=2, aria="高收益利差"),
+    }
+    # 科技巨頭：逐季（SEC）
+    out["hs_hist"] = []
+    for c in hs.companies:
+        h = c.get("hist") if isinstance(c, dict) else getattr(c, "hist", None)
+        if not h:
+            continue
+        name = c["name"] if isinstance(c, dict) else c.name
+        out["hs_hist"].append({
+            "name": name,
+            "capex": charts.kpi_history([{"date": r["end"], "value": r.get("capex", 0) * 10} for r in h],
+                                        kind="change", n=8, fmt=lambda v: f"{v:,.0f}", unit="億美元",
+                                        head="每季資本支出", en=f"{name} 資本支出",
+                                        short_dates=True),
+            "ratio": [{"end": r["end"], "v": (r["capex"] / r["ocf"] * 100) if r.get("ocf") else None,
+                       "debt": r.get("debt_issued") or 0} for r in h],
+        })
+    return out
+
+
+def _shift_iso_year(iso: str, n: int) -> str:
+    return f"{int(iso[:4]) + n}{iso[4:]}"
+
+
 def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
-                        real_growth: float | None = None) -> dict:
+                        real_growth: float | None = None,
+                        treasury: dict | None = None) -> dict:
     from .analysis import rates as rt
 
     curve = rt.curve_state(series)
@@ -2789,7 +3032,23 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     earnings = _hs_cfg.get("earnings") or []
     ig_oas = value_at(series.get("BAMLC0A0CM") or [])
     qt = rt.fed_holdings_pace(series)
+    # 2026-10：拿掉「供給壓力」合成分數。首頁、情境頁沿用 pressure 物件，但等級改由
+    # **期限溢酬的水準**對照燈號門檻決定（0.40% 以下偏低、0.90% 以上偏高），
+    # score 就是期限溢酬本身；parts 換成本月三股力量的貢獻（bp）。只有事實，沒有加權。
     press = rt.supply_pressure(curve, debt, hs, ig_oas, qt_monthly=qt)
+    _tpc = next((c for c in (cfg.get("regime_lights") or []) if c.get("key") == "term_premium"), {})
+    _tp = curve.term_premium
+    press.score = _tp if _tp is not None else 0.0
+    press.level = ("high" if _tp is not None and _tp > _tpc.get("red_above", 0.9) else
+                   "low" if _tp is not None and _tp < _tpc.get("green_below", 0.4) else
+                   "moderate" if _tp is not None else "unknown")
+    from .analysis import longend as _le
+    _c1 = _le.contribution(_le.decompose(series), 1)
+    press.parts = ([{"label": _le.COMP_ZH[k], "detail": _le.PRESSURE_ZH[k],
+                     "score": _c1["parts"][k] / 100} for k in ("tp", "infl", "real")]
+                   if _c1 else [])
+    press.main = (_le.COMP_ZH[_c1["main"]] if _c1 else "")
+    press.main_bp = (_c1["parts"][_c1["main"]] if _c1 else None)
 
     # ---- 燈號 ----
     computed = {}
@@ -2904,8 +3163,10 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     # 債務比是季資料，一年才四筆，min_points 放寬一點才有形狀。
     # 這也代表實際起點可能早於 CHART_START，所以期間要標出來。
     debt_rows = since(series.get("GFDEGDQ188S") or [], CHART_START, 6)
-    debt_chart = charts.line_chart(
-        debt_rows, unit="%", height=150, color="var(--line-2)")
+    debt_chart = charts.compact_lines(
+        [{"label": "聯邦債務佔 GDP", "color": "var(--line-2)",
+          "points": series.get("GFDEGDQ188S") or []}],
+        unit="%", height=130, digits=1, months=36, aria="聯邦債務佔 GDP")
     debt_span = span_label(debt_rows)
 
     # ---- Hyperscaler ----
@@ -3051,4 +3312,6 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             "ig_oas": {"label": "投資級利差", "value": ig_oas,
                        "unit": "%", "threshold": 0.05},
         },
+        # 2026-10 改版：三股力量拆解、曲線、供給、拍賣、全球長端
+        "le": _longend_block(series, treasury or {}, cfg, hs, debt),
     }

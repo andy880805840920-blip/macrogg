@@ -5,6 +5,7 @@ from __future__ import annotations
 from ..site import esc
 from .labor import _light_card, _stats
 from . import compact_full, focus_evidence, state_chip, teach
+from . import longend as LE
 
 
 def _rates_body_full(d: dict) -> str:
@@ -488,112 +489,109 @@ def _rates_body_full(d: dict) -> str:
                '在表格裡標為「未取自 SEC」。')
             + '</div>')
 
-    return f"""
-<div class="verdict {lean_cls}">
-  <div class="v-eyebrow">{esc(d['as_of'])}　·　一句話結論</div>
-  <div class="v-main">{esc(title)}</div>
-  <div class="v-why">{esc(why)}</div>
-  {pressure_axis}
-  <div class="v-count">
-    這一頁看的是<b>長端</b>。前面三個模組決定政策利率的方向，
-    但 30 年期殖利率還受債券供給與期限溢酬影響，並非只由政策利率決定。
-  </div>
-</div>
+    # ---- 2026-10 改版：各區收合摘要與財政三張事實卡 ----
+    _L = d.get("le") or {}
+    _c1 = (_L.get("contrib") or {}).get(1)
+    _dec_sum = (f'主因：{LE.le.COMP_ZH[_c1["main"]]} {_c1["parts"][_c1["main"]]:+.0f}bp'
+                f'　·　10Y 月均 {_c1["nominal"]:+.0f}bp' if _c1 else "三股力量的拆解")
+    _sl = {x["label"]: x for x in _L.get("slopes") or []}
+    _crv_sum = "　·　".join(f'{k} {v["value"]:+.0f}bp' for k, v in _sl.items()) or "殖利率曲線"
+    _gr = (_L.get("global") or {}).get("rows") or []
+    _glb_sum = "　·　".join(f'{r["name"]} {r["value"]:.2f}%' for r in _gr[:3]) or "全球長端"
+    _wm = _L.get("wam") or {}
+    _sup_sum = ((f'Fed WAM {_wm["soma"]["value"]:.1f} 年　·　市場 {_wm["market"]["value"]:.1f} 年')
+                if (_wm.get("soma") or {}).get("value") is not None
+                and (_wm.get("market") or {}).get("value") is not None else "財政部發行路徑與 Fed 資產端")
+    _rc = _L.get("auction_recent") or {}
+    _auc_sum = (f'近 3 週：偏弱 {_rc.get("偏弱", 0)}、中性 {_rc.get("中性", 0)}、偏強 {_rc.get("偏強", 0)}'
+                if _L.get("auction_recent_n") else "最近各天期的拍賣結果")
+    _cs = d.get("credit_stats") or []
+    _dem_sum = "　·　".join(f'{x["label"]} {x["value"]}' for x in _cs[:2]) or "信用利差"
+    _db = d.get("debt")
+    _itr = getattr(_db, "interest_to_revenue", None)
+    _rg = getattr(_db, "r_minus_g", None)
+    _dfg = getattr(_db, "deficit_gdp", None)
+    _debt_stats = [
+        {"label": "利息佔稅收", "value": f"{_itr:.1f}%" if _itr is not None else "—",
+         "color": ("var(--critical)" if (_itr or 0) > 20 else "inherit"),
+         "note": "每收 100 元稅拿去付利息的比例（警戒線 20%）"},
+        {"label": "赤字佔 GDP", "value": f"{abs(_dfg):.1f}%" if _dfg is not None else "—",
+         "note": "需靠淨發行公債填補的部分"},
+        {"label": "r − g（前瞻）", "value": f"{_rg:+.2f}%" if _rg is not None else "—",
+         "color": ("var(--critical)" if (_rg or -1) > 0 else "var(--good)"),
+         "note": "市場實質利率 − 實質成長；大於零＝債務自我累積"},
+    ]
+    if _itr is not None and _rg is not None:
+        _dl = "hawkish" if (_rg > 0 or _itr > 20) else "neutral"
+        debt_impact = (f'<div class="impact {_dl}">利息佔稅收 {_itr:.1f}%，r − g {_rg:+.2f}%——'
+                       + ("利率高於成長，債務比會自我累積，長端供給的壓力是結構性的。" if _rg > 0 else
+                          "成長仍高於實質利率，債務比不會自己滾大。") + '</div>')
+    _debt_sum = (f'利息佔稅收 {_itr:.1f}%　·　r − g {_rg:+.2f}%'
+                 if _itr is not None and _rg is not None else "政府財政")
 
+    return f"""
 <div class="grid">
   <div class="card">
     <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
-    <p class="hint"><b>期限溢酬（持有長債多要求的補償）不一定會隨政策利率同步下降</b>——這一頁在追那一段。</p>
-    {decomp_impact}
-    {decomp_head_html}
-    <div class="stat-row" style="margin-top:18px">{_stats(d['decomp_stats'])}</div>
-    {teach(
-        "把 10 年期／30 年期殖利率拆成三塊：市場預期的短率路徑、通膨補償、以及「多承擔長天期」要求的額外報酬（期限溢酬）。",
-        "長端利率不是聯準會直接決定的。降息了長端卻不跌的情況一再發生——多半是期限溢酬在漲，也就是市場對「長期借錢給政府」要求更高的補償。",
-        "看哪一塊在動：預期路徑動＝在賭聯準會；期限溢酬動＝在反映供需與財政，跟降不降息可以無關。")}
-    <details data-m-collapse><summary>三種上升的意義有什麼不同</summary>
-      <p class="hint" style="margin:10px 0 0">{esc(d['decomp_note'])}</p>
-      <dl class="gloss" style="margin-top:10px">
-        <dt>實質利率上升</dt>
-        <dd>市場預期實質成長或資金需求增強。對股市未必是壞事，
-          但會壓抑利率敏感的產業。</dd>
-        <dt>通膨補償上升</dt>
-        <dd>市場預期通膨走高。這是聯準會的責任範圍，會提高升息的可能性。</dd>
-        <dt>期限溢酬上升</dt>
-        <dd>是投資人持有長債要求的額外補償，可能反映利率、通膨與模型不確定性，
-          也可能受到債券供給與財政疑慮影響。
-          <b>它不一定會隨聯準會降息同步下降。</b></dd>
-        <dt>三段為什麼不能相加</dt>
-        <dd>名目殖利率 ＝ 實質利率 ＋ 通膨補償，這兩段是完整的拆解。
-          期限溢酬是<b>另一個角度</b>的拆解，衡量的是投資人持有長債要求的
-          額外補償，跟前兩段有重疊。三個數字加起來不會等於名目殖利率，
-          也不該這樣用。</dd>
-      </dl>
-    </details>
-  </div>
-</div>
-{supply_html}
-<div class="grid g2">
-  <div class="card">
-    <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
-    <p class="hint">供給增加不必然推高利率——信用利差是買方的溫度計。</p>
-    {demand_html}
-    <div class="stat-row" style="margin-top:16px">{_stats(d['credit_stats'])}</div>
-    <div style="margin-top:16px">{d['credit_chart']}</div>
-    {teach(
-        "供給暴增的另一半問題：買方（銀行、外國央行、基金）承接的意願與能力。",
-        "同樣的發行量，買盤強就相安無事，買盤縮手殖利率就得升到有人願意接為止。拍賣結果是最直接的溫度計。",
-        "看拍賣的投標倍數與尾差：連續幾場疲弱，代表市場開始要求更高的補償，長端要另外加壓。")}
-    {demand_more}
-  </div>
-
-  <div class="card">
-    <h2 id="priced" data-sum="{esc(_pr_sum)}">供給壓力 vs 市場定價</h2>
-    <p class="hint">市場已經替這些壓力定了多少價。</p>
-    {priced_html}
-    <div class="stat-row" style="margin-top:16px">{_stats(d['curve_stats'])}</div>
-    {teach(
-        "把「供給面算出來的壓力」跟「市場價格已經反映的壓力」放在同一把尺上比。",
-        "壓力大不代表利率會漲——市場早就定價完的利空，落地時反而不動。會動的是「還沒被反映」的那一段，所以兩個分數的差距比各自的水準重要。",
-        "差距超過 ±0.8 才有意義：供給分數高於已反映＝上行風險還在後面；已反映高於供給＝價格可能超前，供給不再惡化就有回落空間。")}
-    <details data-m-collapse><summary>其他天期</summary>
-      <div class="stat-row" style="margin-top:12px">{_stats(d['curve_short'])}</div>
-      <p class="hint" style="margin-top:12px">短天期由政策利率預期決定，
-        見<a href="/fomc/">聯準會文本</a>頁。</p>
-    </details>
+    {LE.decomp(d)}
   </div>
 </div>
 
 <div class="grid">
   <div class="card">
-    <h2 id="debt" data-sum="{esc(_debt_sum)}">供給端細節一：政府財政</h2>
-    <p class="hint">重點不是債務總額，是<b>會不會失控</b>。</p>
+    <h2 id="curve" data-sum="{esc(_crv_sum)}">殖利率曲線</h2>
+    {LE.curve(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="global" data-sum="{esc(_glb_sum)}">全球長端</h2>
+    {LE.global_(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="supply" data-sum="{esc(_sup_sum)}">債券供給：財政部與 Fed</h2>
+    {LE.supply(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="auctions" data-sum="{esc(_auc_sum)}">Coupon 拍賣結果</h2>
+    {LE.auctions(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
+    {LE.credit(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="debt" data-sum="{esc(_debt_sum)}">政府財政</h2>
+    <p class="hint">重點不是債務總額，是<b>利息負擔會不會自我累積</b>。</p>
     {debt_impact}
     <div class="stat-row" style="margin-top:14px">{_stats(_debt_stats)}</div>
-    <h3 style="margin-top:18px">聯邦債務佔 GDP 比（{esc(d.get('debt_span', ''))}）</h3>
+    <div class="viz-block"><div class="viz-h">聯邦債務佔 GDP（季資料，近 3 年）</div></div>
     {d['debt_chart']}
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
         "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。")}
-    <details data-m-collapse><summary>財政損益兩平的算法</summary>
-      <div class="stat-row" style="margin-top:12px">{_stats(d['debt_steps'])}</div>
-      <dl class="gloss" style="margin-top:14px">
-        <dt>公式</dt>
-        <dd>穩定所需的基本盈餘 ≈ 債務比 × (有效利率 − 名目成長) ÷ (1 + 名目成長)</dd>
-        <dt>基本盈餘</dt>
-        <dd>排除利息支出後的財政餘額（也就是「不算利息的話，政府是賺是賠」）。
-          利息是過去累積的結果，把它排除才看得出當期財政的實際狀況。</dd>
+    <details data-m-collapse><summary>名詞：有效利率與 r − g</summary>
+      <dl class="gloss" style="margin-top:10px">
         <dt>有效利率</dt>
         <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。
           新債換舊債時它會慢慢往市場利率靠攏，所以升息的痛是分好幾年到的。</dd>
-        <dt>為什麼利率高於成長很危險</dt>
-        <dd>當有效利率超過名目成長，利息負擔的成長速度會超過稅基，
-          債務比就會自我累積——即使財政收支平衡也一樣。</dd>
+        <dt>r − g</dt>
+        <dd>市場實質利率減實質經濟成長。大於零時，就算財政收支平衡，債務佔 GDP 也會自我累積。</dd>
       </dl>
-      <p class="hint" style="margin-top:10px">{esc(d['debt_note'])}</p>
-      {(f'<p class="hint" style="margin-top:12px">{esc(d["debt_divergence"])}</p>'
-        if d.get('debt_divergence') else '')}
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
     </details>
@@ -602,11 +600,13 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">供給端細節二：科技巨頭</h2>
+    <h2 id="hyperscalers" data-sum="{esc(_hs_sum)}">科技巨頭：資本支出與發債</h2>
     <p class="hint">關鍵不是金額，是<b>融資方式</b>——
       這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
     {hs_impact}
+    {LE.hs_quarters(d)}
     {guidance_html}
+    {LE.guidance_stale(d)}
     <div class="tlines">
       <div class="tlines-k">資料時效</div>
       {earnings_html}
@@ -640,20 +640,20 @@ def _rates_body_full(d: dict) -> str:
   </div>
 </div>
 
-<div class="grid g2">
+<div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
-    <p class="hint">目前的整體狀態（不限本月）：逐項對照警戒線。</p>
+    <p class="hint">依三股力量分組；本月推動 10Y 最多的那一組排第一。不另設權重——權重由市場這個月的貢獻決定。</p>
     {lights_impact}
-    <details data-m-collapse open><summary>逐項展開</summary>
-      <div class="lights" style="margin-top:12px">{lights_html}</div>
-    </details>
+    {LE.lights_grouped(d, _light_card)}
     {teach(
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",
         "紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。")}
   </div>
+</div>
 
+<div class="grid">
   <div class="card">
     <h2 id="glossary" data-sum="這一頁出現的專有名詞與計算方式">名詞解釋</h2>
         <dl class="gloss">
@@ -665,14 +665,22 @@ def _rates_body_full(d: dict) -> str:
         超過這個數字，買抗通膨債券才划算。</dd>
       <dt>實質利率</dt>
       <dd>剔除通膨補償後的真實資金成本。抗通膨債券（TIPS）的殖利率就是它。</dd>
-      <dt>基本盈餘</dt>
-      <dd>排除利息支出後的財政餘額。用來衡量「當期財政」的狀況，
-        不受過去累積的債務干擾。</dd>
       <dt>r 減 g</dt>
       <dd>實質利率減實質經濟成長率。大於零時，債務會在財政收支平衡的情況下
         仍然自我累積。</dd>
-      <dt>利差（OAS）</dt>
-      <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的信用風險補償。</dd>
+      <dt>信用利差</dt>
+      <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的信用風險補償。
+        本頁指的是廣義的信用利差。</dd>
+      <dt>OAS（選擇權調整利差）</dt>
+      <dd>針對<b>內含選擇權</b>的債券（例如發行人可提前贖回的公司債），把選擇權的價值扣掉之後的利差。
+        ICE BofA 公司債指數裡有很多可贖回債，所以指數用 OAS 表示；本頁把它當作廣義信用利差來讀。</dd>
+      <dt>WAM（加權平均剩餘年限）</dt>
+      <dd>一籃債券依面額加權的平均剩餘到期年數。Fed 的 WAM 縮短，代表長天期的利率風險留給私人市場。</dd>
+      <dt>Tail／Stop-through</dt>
+      <dd>拍賣得標殖利率高於拍賣當下市場價＝tail（需求弱）；低於＝stop-through（需求強）。本頁用當日收盤近似，標「≈」。</dd>
+      <dt>Indirect／Direct／Primary Dealers</dt>
+      <dd>Indirect 多為海外央行與機構透過交易商下單；Direct 是直接投標的國內投資人；Primary Dealers 有義務投標，
+        承接剩下的部分——比例越高代表終端需求越弱。</dd>
       <dt>基點（bps）</dt>
       <dd>利率的最小慣用單位，英文縮寫 bp／bps：1 bp＝0.01 個百分點。
         「升 25 個基點」就是升 0.25%，也就是「一碼」。</dd>
@@ -682,13 +690,8 @@ def _rates_body_full(d: dict) -> str:
 
       <dt>為什麼財政與科技公司會在同一頁</dt>
       <dd>政府發公債、科技巨頭發投資級公司債，兩者搶的是同一批買盤——
-        退休基金、保險公司、外國央行。第三個來源是聯準會縮表：
-        到期不續作的公債改由私人市場接手，對買盤而言跟財政部多發債是同一件事。</dd>
-      <dt>供給壓力分數怎麼算</dt>
-      <dd>只由供給來源構成（政府財政缺口、科技巨頭融資缺口、聯準會縮表）。
-        期限溢酬與 30 年減 10 年斜率是被這些供給推高的<b>價格</b>、不是原因，
-        算進同一個分數等於重複計算，所以改列成「供給壓力 vs 市場定價」。
-        兩者背離時（壓力大但價格還沒反映），那個落差本身就是訊號。</dd>
+        退休基金、保險公司、外國央行。Fed 雖然已停止縮表，但把到期的 MBS 換成 T-Bills、縮短持有年限，
+        長天期的部分一樣要由私人市場吸收。</dd>
       <dt>科技巨頭的年化發債</dt>
       <dd>把單季發債乘以四。發債是機會式的（挑市場條件好的時候一次發）、
         不是每季均勻，所以這個數字只用來比較<b>量級</b>，不宜當成精確預測。</dd>
@@ -734,54 +737,11 @@ def _rates_body_full(d: dict) -> str:
 
 
 def rates_body(d: dict) -> str:
-    """長端首卡把政府財政與 Hyperscalers 的現金流、CapEx、發債放在同一尺度。"""
-    sp, debt, hs = d["pressure"], d["debt"], d["hyperscalers"]
-    title, why = d.get("pressure_text", ("供給壓力資料不足", ""))
-    why_short = why.split("。")[0] + "。" if why else ""
-    level_text = {"high":"偏高","moderate":"中等","low":"偏低"}.get(sp.level, "資料不足")
-    curve = d.get("curve")
-    y10 = (curve.levels.get("10Y") if curve else None)
-    supply = d.get("supply_side") or {}
-    def pct(v, signed=False):
-        if v is None:
-            return "—"
-        return f"{v:+.1f}%" if signed else f"{v:.1f}%"
-    fiscal_note = ("缺口：基本盈餘低於穩定債務比所需水準" if (debt.pb_gap or 0) < 0
-                   else "緩衝：基本盈餘高於穩定債務比所需水準")
-    metrics = "".join([
-        state_chip("長端供給壓力", level_text, f"綜合分數 {sp.score:+.2f}", "watch" if sp.level == "high" else "neutral"),
-        state_chip("10 年期殖利率", f"{y10:.2f}%" if y10 is not None else "—",
-                   (f"盤中報價 {d.get('as_of', '—')}（延遲約 15 分鐘）"
-                    if d.get("as_of_live") else f"資料日 {d.get('as_of', '—')}")),
-        state_chip("美國財政赤字", pct(abs(debt.deficit_gdp) if debt.deficit_gdp is not None else None),
-                   "佔 GDP；年度債券供給主體", "watch"),
-        state_chip("財政穩定差", pct(debt.pb_gap, True), fiscal_note,
-                   "watch" if (debt.pb_gap or 0) < 0 else "neutral"),
-    ])
-    hs_span = hs.period_span or hs.as_of or "期別待更新"
-    flow = (f'<div class="grid-flow"><div class="flow-box"><strong>政府年度融資</strong>'
-            f'<div class="flow-values">{esc(supply.get("gov_display", "—"))}<br>{esc(supply.get("gov_note", ""))}</div></div>'
-            '<div class="flow-arrow">＋</div>'
-            f'<div class="flow-box"><strong>Hyperscalers 資本支出與現金流</strong><div class="flow-values">'
-            f'CapEx {hs.total_capex*10:,.0f} 億美元 · OCF {hs.total_ocf*10:,.0f} 億美元<br>'
-            f'CapEx / OCF {pct(hs.capex_to_ocf)} · 簡化 FCF 為負 {hs.n_cash_negative}/{len(hs.companies)} 家</div></div>'
-            '<div class="flow-arrow">→</div>'
-            f'<div class="flow-box"><strong>新增公司債供給</strong><div class="flow-values">'
-            f'單季 {hs.total_issued*10:,.0f} 億美元 · 年化 {esc(supply.get("hs_display", "—"))}<br>'
-            f'政府赤字規模比 {esc(supply.get("ratio_display", "—"))}</div></div></div>')
-    logic = (f'<div class="logic-strip"><div class="logic-step"><b>同一個問題</b><span>政府公債與大型科技公司債競爭同一批固定收益買盤。</span></div>'
-             f'<div class="logic-step"><b>目前結論</b><span>{esc(why)}</span></div>'
-             '<div class="logic-step"><b>與九宮格的關係</b><span>只影響長端與曲線形狀，不改政策利率格位。</span></div></div>')
-    evidence = focus_evidence(flow + logic, "查看供給傳導與判斷依據")
-    _asof_tag = (f'{d.get("as_of", "—")}（盤中）' if d.get("as_of_live")
-                 else d.get("as_of", "—"))
-    tags = (f'<div class="data-line"><span class="data-tag">利率 {esc(_asof_tag)}</span>'
-            f'<span class="data-tag">公司期末 {esc(hs_span)}</span>'
-            f'<span class="data-tag">SEC 實際資料 {hs.n_from_sec}/{len(hs.companies)} 家</span></div>')
-    hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long-end supply</div>'
-            f'<h2 class="focus-title">長端供給壓力{level_text}</h2><p class="focus-sub">{esc(why_short)}</p>'
-            f'<div class="focus-grid">{metrics}</div>{evidence}{tags}</div></div>')
-    return hero + compact_full(_rates_body_full(d), "財政、發債、現金流與利率完整拆解")
+    """
+    首卡（2026-10 改版）：10Y／30Y 與近 1 月變動、本月主因一句話、10Y 由三段組成的分段條、
+    三股力量各一張小卡、接下來 4 週的事件。其餘完整內容收在下方。
+    """
+    return LE.hero(d) + compact_full(_rates_body_full(d), "長端拆解、供給、拍賣與財政")
 
 
 def rates_footer(d: dict) -> str:
@@ -789,7 +749,9 @@ def rates_footer(d: dict) -> str:
              "（Yahoo Finance，延遲約 15 分鐘），其餘皆為 FRED 收盤。<br>"
              if d.get("as_of_live") else "")
     return (
-        "資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數）。<br>"
+        "資料來源：FRED（美國財政部、聯準會、BEA、ICE BofA 指數、Kim-Wright 期限溢酬、"
+        "克里夫蘭聯儲預期通膨、Freddie Mac、OECD）、TreasuryDirect、紐約聯儲 SOMA、"
+        "財政部 MSPD。<br>"
         + _live +
         "科技巨頭的資本支出、營運現金流與發債取自 SEC EDGAR 的 XBRL 申報，"
         "每季財報一申報就會自動更新。<br>"

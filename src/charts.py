@@ -439,7 +439,8 @@ def last_months(rows: Sequence[dict], months: int = 24) -> list[dict]:
 def kpi_history(points: Sequence[dict], kind: str = "change", fmt=None,
                 unit: str = "", ref: float | None = None, ref_label: str = "",
                 band: tuple | None = None, band_label: str = "",
-                daily: bool = False, n: int = 5, en: str = "") -> str:
+                daily: bool = False, n: int = 5, en: str = "", head: str = "",
+                short_dates: bool = False) -> str:
     """
     關鍵數字卡的「近 5 期與比較基準」。
 
@@ -512,7 +513,11 @@ def kpi_history(points: Sequence[dict], kind: str = "change", fmt=None,
     vals_row = "".join(
         f'<span class="{"last" if i == k - 1 else ""}">{_esc(fmt(p["value"]))}</span>'
         for i, p in enumerate(pts))
-    dates_row = "".join(f'<span>{_esc(_dlabel5(i, p["date"], daily))}</span>'
+    def _dl(i, date):
+        if short_dates:          # 「24/9」：8 格以上時「24年9月」會互相擠在一起
+            return f"{date[2:4]}/{int(date[5:7])}"
+        return _dlabel5(i, date, daily)
+    dates_row = "".join(f'<span>{_esc(_dl(i, p["date"]))}</span>'
                         for i, p in enumerate(pts))
     leg = []
     if ref is not None and ref_label:
@@ -520,10 +525,10 @@ def kpi_history(points: Sequence[dict], kind: str = "change", fmt=None,
     if band and band_label:
         leg.append(f'<span><i class="lg-band"></i>{_esc(band_label)}</span>')
     unit_html = f'<span class="kh-unit">單位：{_esc(unit.strip())}</span>' if unit.strip() else ""
-    kind_zh = "每期變動（柱）" if kind == "change" else "每期水準（點）"
+    kind_zh = head or ("每期變動（柱）" if kind == "change" else "每期水準（點）")
     return (f'<div class="kh kh-{kind}" style="--n:{k}" role="img" '
             f'aria-label="{_esc(en or "近 5 期")}">'
-            f'<div class="kh-top"><span>近 {k} 期　{kind_zh}</span>{unit_html}</div>'
+            f'<div class="kh-top"><span>{"" if head else f"近 {k} 期　"}{kind_zh}</span>{unit_html}</div>'
             f'<div class="kh-vals">{vals_row}</div>'
             f'<div class="kh-plot">{"".join(layers)}{line}{"".join(cols)}</div>'
             f'<div class="kh-dates">{dates_row}</div>'
@@ -830,3 +835,152 @@ def gap_columns(points: Sequence[dict], unit: str = "pp", digits: int = 1,
             + (f'<span class="gc-mx">+{m:.{digits}f}</span>' if zpos > 0 else '<span class="gc-mx">0</span>')
             + (f'<span class="gc-mn">−{m:.{digits}f}</span>' if zpos < 100 else '<span class="gc-mn">0</span>')
             + f'{"".join(cols)}</div>{axis}{legend}</div>')
+
+
+
+# ===========================================================================
+# 長端頁（2026-10）：利率橋、組成條、類別曲線、雙色柱
+# ===========================================================================
+def bridge(start: float, start_label: str, parts: Sequence[dict], end: float,
+           end_label: str, unit_bp: bool = True) -> str:
+    """
+    利率橋：起點（上月 10Y）→ 各段貢獻 → 終點（本月 10Y）。
+    起點與終點畫成刻度線而不是從零長出的長條——4.68% 跟 4.99% 從零畫，
+    差 31bp 的那一段會小到看不見。parts：[{label, bp, note?, main?}]
+    """
+    vals = [start]
+    cum = start
+    spans = []
+    for p in parts:
+        a, b = cum, cum + p["bp"] / 100
+        spans.append((p, a, b))
+        cum = b
+        vals.append(b)
+    vals.append(end)
+    lo, hi = min(vals), max(vals)
+    pad = ((hi - lo) or .1) * .12
+    lo, hi = lo - pad, hi + pad
+
+    def P(v):
+        return (v - lo) / (hi - lo) * 100
+    rows = [f'<div class="br-row br-end" data-tip="{_esc(start_label)}｜{start:.2f}%">'
+            f'<div class="br-name">{_esc(start_label)}</div>'
+            f'<div class="br-track"><span class="br-tick" style="left:{P(start):.2f}%"></span></div>'
+            f'<div class="br-val">{start:.2f}%</div></div>']
+    for p, a, b in spans:
+        l, r = sorted((P(a), P(b)))
+        up = p["bp"] >= 0
+        tip = f'{p["label"]}｜{p["bp"]:+.0f}bp'
+        rows.append(
+            f'<div class="br-row{" main" if p.get("main") else ""}" data-tip="{_esc(tip)}">'
+            f'<div class="br-name">{_esc(p["label"])}'
+            + (f'<span class="br-note">{_esc(p["note"])}</span>' if p.get("note") else "")
+            + f'</div><div class="br-track"><span class="br-guide" style="left:{P(a):.2f}%"></span>'
+            f'<span class="br-seg {"up" if up else "dn"}{" muted" if p.get("muted") else ""}" '
+            f'style="left:{l:.2f}%;width:{max(r - l, .7):.2f}%"></span></div>'
+            f'<div class="br-val {"up" if up else "dn"}">{p["bp"]:+.0f}<small>bp</small></div></div>')
+    rows.append(f'<div class="br-row br-end last" data-tip="{_esc(end_label)}｜{end:.2f}%">'
+                f'<div class="br-name">{_esc(end_label)}</div>'
+                f'<div class="br-track"><span class="br-tick now" style="left:{P(end):.2f}%"></span></div>'
+                f'<div class="br-val">{end:.2f}%</div></div>')
+    return ('<div class="br">' + "".join(rows)
+            + '<div class="wf-leg"><span><i class="up"></i>推高 10Y</span>'
+              '<span><i class="dn"></i>壓低 10Y</span>'
+              '<span class="wf-hint">每段從上一段結束處接著畫</span></div></div>')
+
+
+def segbar(parts: Sequence[dict], total_label: str = "") -> str:
+    """組成條：[{label, value, color}]，各段寬度依數值（只畫正值，負值另列）。"""
+    pos = [p for p in parts if (p.get("value") or 0) > 0]
+    tot = sum(p["value"] for p in pos) or 1
+    segs = "".join(
+        f'<span class="sg-seg" style="flex:{p["value"] / tot:.4f};background:{p["color"]}" '
+        f'data-tip="{_esc(p["label"])}｜{p["value"]:.2f}%">'
+        f'<b>{p["value"]:.2f}%</b></span>' for p in pos)
+    leg = "".join(f'<span><i style="background:{p["color"]}"></i>{_esc(p["label"])}</span>'
+                  for p in parts)
+    neg = [p for p in parts if (p.get("value") or 0) <= 0]
+    negs = ("".join(f'<div class="sg-neg">{_esc(p["label"])} {p["value"]:.2f}%（負值，未畫入）</div>'
+                    for p in neg))
+    return (f'<div class="sg">{f"<div class=sg-h>{_esc(total_label)}</div>" if total_label else ""}'
+            f'<div class="sg-bar">{segs}</div><div class="cl-leg">{leg}</div>{negs}</div>')
+
+
+def cat_lines(series: Sequence[dict], unit: str = "%", height: int = 170,
+              digits: int = 2, aria: str = "") -> str:
+    """類別 x 軸的折線（殖利率曲線）：series [{label, color, dash?, points:[(x, value)]}]。"""
+    xs = []
+    for s_ in series:
+        for x, _ in s_["points"]:
+            if x not in xs:
+                xs.append(x)
+    vals = [v for s_ in series for _, v in s_["points"]]
+    if len(xs) < 2 or not vals:
+        return '<div class="empty">資料不足</div>'
+    lo, hi = min(vals), max(vals)
+    pad = ((hi - lo) or .5) * .12
+    lo, hi = lo - pad, hi + pad
+    import math
+    step = _nice_step(hi - lo)
+    W, H = 600, height
+
+    def X(x):
+        return (xs.index(x) + .5) / len(xs) * W
+
+    def Yp(v):
+        return (1 - (v - lo) / (hi - lo)) * 100
+    svg, over = [], []
+    t = math.ceil(lo / step) * step
+    while t <= hi + 1e-9:
+        svg.append(f'<line x1="0" x2="{W}" y1="{Yp(t) / 100 * H:.1f}" y2="{Yp(t) / 100 * H:.1f}" '
+                   f'stroke="var(--grid)" vector-effect="non-scaling-stroke"/>')
+        over.append(f'<span class="cl-tick" style="top:{Yp(t):.1f}%">{t:g}{_esc(unit)}</span>')
+        t += step
+    for s_ in series:
+        poly = " ".join(f"{X(x):.1f},{Yp(v) / 100 * H:.1f}" for x, v in s_["points"])
+        dash = ' stroke-dasharray="6 4"' if s_.get("dash") else ""
+        svg.append(f'<polyline points="{poly}" fill="none" stroke="{s_["color"]}" stroke-width="2"'
+                   f'{dash} vector-effect="non-scaling-stroke"/>')
+        for x, v in s_["points"]:
+            over.append(f'<span class="ldot sm" style="left:{X(x) / W * 100:.2f}%;top:{Yp(v):.2f}%;'
+                        f'background:{s_["color"]}"></span>')
+    for x in xs:
+        bits = [f'{s_["label"]} {dict(s_["points"]).get(x):.{digits}f}{unit}' for s_ in series
+                if dict(s_["points"]).get(x) is not None]
+        l = xs.index(x) / len(xs) * 100
+        over.append(f'<span class="cl-hit" style="left:{l:.2f}%;width:{100 / len(xs):.2f}%" '
+                    f'data-tip="{_esc(x)}｜{_esc("｜".join(bits))}"></span>')
+    xl = "".join(f'<span>{_esc(x)}</span>' for x in xs)
+    leg = "".join(f'<span><i style="background:{s_["color"]}"></i>{_esc(s_["label"])}</span>'
+                  for s_ in series)
+    return (f'<div class="cl"><div class="cl-plot" style="height:{H}px">'
+            f'<svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" role="img" aria-label="{_esc(aria)}">'
+            f'{"".join(svg)}</svg>{"".join(over)}</div>'
+            f'<div class="cat-x" style="--n:{len(xs)}">{xl}</div><div class="cl-leg">{leg}</div></div>')
+
+
+def dual_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
+                 digits: int = 0, fmt_date=None) -> str:
+    """
+    每期兩根柱（例：MBS 月變動、Bills 月變動），零軸置中。
+    rows：[{date, k1, k2}]；keys：[(key, label, color)]
+    """
+    if not rows:
+        return '<div class="empty">資料不足</div>'
+    m = max(abs(r.get(k) or 0) for r in rows for k, _, _ in keys) or 1
+    cols = []
+    for r in rows:
+        bars = ""
+        for i, (k, lab, col) in enumerate(keys):
+            v = r.get(k) or 0
+            h = abs(v) / m * 50
+            st = f"bottom:50%;height:{h:.1f}%" if v >= 0 else f"top:50%;height:{h:.1f}%"
+            bars += (f'<span class="dc2-bar" style="{st};left:{8 + i * 44}%;background:{col}" '
+                     f'data-tip="{_esc(r["date"][:7])}｜{_esc(lab)} {v:+,.{digits}f}{_esc(unit)}"></span>')
+        lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
+        cols.append(f'<div class="dc2-col">{bars}<span class="gc-lab">{_esc(lab)}</span></div>')
+    leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
+                  for _, l, c in keys)
+    return (f'<div class="gc"><div class="gc-plot lbl"><span class="gc-zero" style="top:50%"></span>'
+            f'<span class="gc-mx">+{m:,.{digits}f}</span><span class="gc-mn">−{m:,.{digits}f}</span>'
+            f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')

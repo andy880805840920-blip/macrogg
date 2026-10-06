@@ -49,7 +49,8 @@ INFL_LEVELS = ["低", "中", "高"]
 # 所以三張格子裡完全一樣。這件事本身是有用的資訊：
 # 重心只在那三格有影響，畫面上會標出來。
 _BASE = {
-    ("強", "低"): ("溫和成長", "就業穩、通膨低。聯準會沒有壓力，可以慢慢來。", "neutral"),
+    ("強", "低"): ("溫和成長", "就業穩、通膨低：政策立場中性，但資金面寬鬆——"
+                             "Fed 沒有理由升息或降息，實質利率不高、信用利差收斂。", "neutral"),
     ("強", "中"): ("小心觀望", "就業穩但通膨還沒回到目標，聯準會會傾向按兵不動。", "neutral"),
     ("強", "高"): ("升息壓力", "經濟過熱。就業強加上通膨高，兩個使命同向指向緊縮。", "hawkish"),
     ("中", "低"): ("預防性降息", "通膨已受控，就業開始鬆動。聯準會有空間先降息保險。", "dovish"),
@@ -390,6 +391,10 @@ def classify_inflation_momentum(infl: dict | None) -> str:
     判定用**未捨入**的平均值，避免在單一門檻上月月翻面。
     """
     from .inflation import PACE_TARGET, PACE_HOT, pce_momentum
+    # 2026-10：有 PCE Supercore 時，方向一律看它的三月年化（相對 2.9% 中心 ±0.8）
+    _sl = (infl or {}).get("supercore_last2")
+    if _sl and _sl[-1] is not None:
+        return supercore_momentum(_sl[-1])
     src, pace = inflation_momentum_source(infl)
     if src == "pce":
         return pce_momentum(pace)
@@ -439,10 +444,42 @@ def inflation_push(level_state: str, core_pce_3m: float | None,
     return level_state, ""
 
 
+# ---------------------------------------------------------------------------
+# 通膨推一格（2026-10 定案）：PCE 版 Supercore（服務扣除能源與住房）三月年化。
+#   和 2% 目標相容的位置約 2.9%：1995–2019 年核心 PCE 落在 1.8–2.2% 的月份，
+#   Supercore 年增中位數 2.88%。上下對稱 0.8 個百分點：
+#     連續 2 個月 > 3.7%（約 1995–2019 的第 90 百分位）→ 往高推一格
+#     連續 2 個月 < 2.1%                                   → 往低推一格
+# 動能（方向）：三月年化相對中心 ±0.8 之外才算升溫／降溫。
+# ---------------------------------------------------------------------------
+SC_ANCHOR, SC_HI, SC_LO = 2.9, 3.7, 2.1
+
+
+def supercore_push(level_state: str, last2: list | None) -> tuple[str, str]:
+    """last2＝[前一個月, 最新] 的 Supercore 三月年化。回傳 (推格後格位, 說明)。"""
+    if not last2 or len(last2) < 2 or any(v is None for v in last2):
+        return level_state, ""
+    a, b = last2[-2], last2[-1]
+    if a > SC_HI and b > SC_HI and level_state != "高":
+        return _HOTTER[level_state], (
+            f"Supercore 三月年化連續兩個月高於 {SC_HI:.1f}%（{a:.1f}%、{b:.1f}%），格位往高推一格")
+    if a < SC_LO and b < SC_LO and level_state != "低":
+        return _COOLER[level_state], (
+            f"Supercore 三月年化連續兩個月低於 {SC_LO:.1f}%（{a:.1f}%、{b:.1f}%），格位往低推一格")
+    return level_state, ""
+
+
+def supercore_momentum(sc3: float | None) -> str:
+    if sc3 is None:
+        return "持平"
+    return "升溫" if sc3 > SC_HI else ("降溫" if sc3 < SC_LO else "持平")
+
+
 def classify_inflation(core_pce_yoy: float | None,
                        core_pce_3m: float | None,
                        bands: dict | None = None,
-                       core_pce_6m: float | None = None) -> str:
+                       core_pce_6m: float | None = None,
+                       supercore_last2: list | None = None) -> str:
     """
     以核心 PCE 相對 2% 目標為主軸，再用三個月年化的動能修正。
 
@@ -468,7 +505,10 @@ def classify_inflation(core_pce_yoy: float | None,
     b = bands or {}
     lo, hi = b.get("low", 2.30), b.get("high", 2.90)
     base = "低" if level < lo else ("高" if level > hi else "中")
-    # 2026-10：年增率定格位，三月＋六月年化同向越過門檻時推一格
+    # 2026-10：年增率定格位；推格改看 PCE Supercore 三月年化（連續兩個月）。
+    # 拿不到 Supercore 時退回舊規則（核心 PCE 三月＋六月年化）。
+    if supercore_last2:
+        return supercore_push(base, supercore_last2)[0]
     return inflation_push(base, core_pce_3m, core_pce_6m, bands)[0]
 
 
@@ -496,7 +536,8 @@ def synthesise(labor: dict | None, inflation: dict | None,
     _bands = (inflation or {}).get("bands") or {}
     i_state = classify_inflation((inflation or {}).get("core_pce_yoy"),
                                  (inflation or {}).get("core_pce_3m"),
-                                 _bands, (inflation or {}).get("core_pce_6m"))
+                                 _bands, (inflation or {}).get("core_pce_6m"),
+                                 (inflation or {}).get("supercore_last2"))
     i_momentum = classify_inflation_momentum(inflation)
 
     # ---- 依聯準會目前的重心選一張九宮格 ----

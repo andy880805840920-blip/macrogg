@@ -785,6 +785,8 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.pce_supercore_12m = annualized(_pcesc, 12)
     s.pce_supercore_6m = annualized(_pcesc, 6)
     s.pce_supercore_3m = annualized(_pcesc, 3)
+    # 前一個月的三月年化：九宮格「連續 2 個月」推格規則要用（2026-10）
+    s.pce_supercore_3m_prev = annualized(_pcesc[:-1], 3) if len(_pcesc) > 4 else None
     s.shelter_3m = annualized(g("CUSR0000SAH1", []), 3)
     s.core_goods_yoy = yoy(g("CUSR0000SACL1E", []))
     s.pce_headline_yoy = yoy(g("PCEPI", []))

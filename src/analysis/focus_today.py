@@ -1925,6 +1925,45 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
                       "cum_bp": prev["cum_bp"]} if prev else None)}
 
 
+def futures_curve(rates_series: dict | None, months: int = 13, _get=None,
+                  today: dt.date | None = None) -> dict | None:
+    """
+    未來 12 個月每個月的聯邦基金期貨隱含利率，與「終端利率」（2026-10）。
+
+    終端利率＝這段期間隱含利率離現行中點最遠的那一點（升息循環取最高、
+    降息循環取最低），也標出在哪個月。遠月合約成交稀，抓不到就停在那裡，
+    回傳實際抓到的範圍；當月合約仍做健康檢查（偏離中點 >0.15 整批不用）。
+    """
+    today = today or clock.today()
+    rs = rates_series or {}
+    lo, hi = _last_value(rs.get("DFEDTARL")), _last_value(rs.get("DFEDTARU"))
+    if lo is None or hi is None:
+        return None
+    mid = (lo + hi) / 2
+    ms, mo = [], today.isoformat()[:7]
+    for _ in range(months):
+        ms.append(mo)
+        mo = _next_month(mo)
+    res = _pmap(lambda m: fetch_zq_implied(_zq_symbol(m), _get,
+                                           require_movement=(m != ms[0])), ms)
+    pts = []
+    for m, r in zip(ms, res):
+        imp = r[0] if isinstance(r, tuple) else r
+        if imp is None:
+            break
+        pts.append({"month": m, "rate": round(float(imp), 4)})
+    if len(pts) < 2 or abs(pts[0]["rate"] - mid) > 0.15:
+        return None
+    if max(p["rate"] for p in pts) - min(p["rate"] for p in pts) > 2.0:
+        return None
+    far = max(pts, key=lambda p: abs(p["rate"] - mid))
+    return {"r0": mid, "points": pts, "terminal": far["rate"], "terminal_month": far["month"],
+            "terminal_bp": (far["rate"] - mid) * 100, "asof": today.isoformat(),
+            "thin_from": pts[min(6, len(pts) - 1)]["month"],
+            # 最遠那一點就是資料窗的最後一個月＝路徑還在走，終端可能在更遠處
+            "open_end": far["month"] == pts[-1]["month"]}
+
+
 _CN_N = {1: "一", 2: "兩", 3: "三", 4: "四"}
 
 

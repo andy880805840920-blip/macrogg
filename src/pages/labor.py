@@ -90,10 +90,15 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
     more_html = (f'<details class="k-more"><summary>近 5 期與比較基準</summary>'
                  f'<div class="k-more-body">{more_bits}</div></details>'
                  if more_bits.strip() else "")
+    # 固定四格（標題＋數字／chips＋意外／白話句／收合列）。桌機用 CSS subgrid
+    # 讓同一列四張卡的每一格共用列高——哪張卡的 chips 多一列、白話句多一行，
+    # 整列一起讓位，「近 5 期與比較基準」永遠落在同一條水平線上。
     return f"""<div class="card kpi">
-  <div class="k-label">{head}{asof_html}</div>
-  {sub_label}<div class="k-value">{esc(value)}</div>
-  {chips_html}{surp_now}{plain_html}{more_html}
+  <div class="k-s1"><div class="k-label">{head}{asof_html}</div>
+  {sub_label}<div class="k-value">{esc(value)}</div></div>
+  <div class="k-s2">{chips_html}{surp_now}</div>
+  <div class="k-s3">{plain_html}</div>
+  <div class="k-s4">{more_html}</div>
 </div>"""
 
 

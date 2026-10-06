@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import re
 
 from .. import clock
 
@@ -328,7 +329,8 @@ def _home_body_full(ctxs: dict) -> str:
         cards.append(_module_card(
             "/rates/", "長端與債務", f"{rat['as_of']} 資料",
             (f"{y30:.2f}%" if y30 is not None else "—"),
-            f"30 年期　·　供給壓力{lvl}",
+            f"30 年期　·　期限溢酬{lvl}"
+            + (f"　·　本月主因：{sp.main}" if getattr(sp, "main", "") else ""),
             "看曲線拆解、債務動態與科技巨頭發債", direction=_d))
     else:
         cards.append(_module_card("/rates/", "長端與債務", "無資料", "—",
@@ -567,7 +569,9 @@ def _home_body_legacy(ctxs: dict) -> str:
                    "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
         state_chip("兩軸方向", f"{sc.labor_momentum} / {sc.infl_momentum}", "就業 / 通膨"),
         state_chip("FOMC 會議結論", f_text, shift.get("decision_label", ""), f_dir),
-        state_chip("長端供給壓力", p_text, "財政＋Hyperscalers；不進九宮格", "watch" if p_level == "high" else "neutral"),
+        state_chip("期限溢酬（財政與供給）", p_text,
+                   (f"本月主因：{pressure.main}；不進九宮格" if getattr(pressure, "main", "") else "不進九宮格"),
+                   "watch" if p_level == "high" else "neutral"),
     ])
     parts = brief_mod.compose(ctxs).get("parts", [])
     wanted = [p for p in parts if p.get("key") in ("labor", "inflation", "fomc", "supply")][:3]
@@ -676,7 +680,7 @@ def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
                      if _fnm.get("blackout_start") else "—"))]),
         ("/rates/", "財政與長端", p_text,
          "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
-         f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；供給壓力{p_text}。",
+         f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；期限溢酬{p_text}。",
          [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("30 年期", _fmt_pct(levels.get("30Y"), 2)),
           ("期限溢酬", _fmt_pct(term, 2)),
           ("資料截止", (f"{rates.get('as_of', '—')}（盤中）"
@@ -843,6 +847,64 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             '})();</script>')
 
 
+def _unify_chip(c: dict) -> dict:
+    """
+    焦點指標的四欄統一（2026-10 示意）：
+      指標＝名稱（必要說明放這裡）　日期＝資料日
+      數值＝純數字（帶單位）　　　　變動＝對前一日、同類單位
+    原本混在數值／變動欄裡的文字（「維持」「約 +0.8 碼」「（+0.18%）」
+    「日盤」）全部移進 tip（滑鼠提示／手機點擊）。
+    """
+    cid = c.get("id", "")
+    label, value, delta = c.get("label", ""), c.get("value", ""), c.get("delta", "") or "—"
+    date, d, tip = c.get("date", "") or "", c.get("dir", ""), ""
+    date = date.replace("-", "/")
+    m = re.match(r"^(日盤|夜盤)\s*(.*)$", date)
+    if m:
+        tip, date = m.group(1), m.group(2)
+    if cid == "fedwatch":
+        mv = re.match(r"^(.+?)\s*(\d+)%$", value)
+        md = re.search(r"（(\d+/\d+)）", label)
+        if mv:
+            name, p = mv.group(1), int(mv.group(2))
+            label = (f"{md.group(1)} " if md else "") + f"{name}"
+            tip = f"{value}｜{delta}"
+            pm = re.search(r"前日\s*(\d+)%", delta)
+            if pm:
+                dp = p - (100 - int(pm.group(1)))
+                delta, d = f"{dp:+d}%", ("up" if dp > 0 else "dn" if dp < 0 else "")
+            else:
+                delta, d = "—", ""
+            value = f"{p}%"
+    elif cid in ("fw_dec", "fw_cum"):
+        mh = re.search(r"(\d+)\s*月", label)
+        label = (f"{mh.group(1)}月單場" if cid == "fw_dec" else f"至{mh.group(1)}月累計") if mh else label
+        cur = re.match(r"^([+-]?[\d.]+)", value)
+        old = re.search(r"前日\s*([+-]?[\d.]+)", delta)
+        tip = delta.split("（")[0]
+        if cur and old:
+            dd = float(cur.group(1)) - float(old.group(1))
+            delta, d = f"{dd:+.1f} bp", ("up" if dd > 0.05 else "dn" if dd < -0.05 else "")
+        else:
+            delta = "—"
+    elif cid == "srf":
+        if value.startswith("0"):
+            value, delta, tip = "0 億美元", "—", "未動用（零是常態：體系不缺錢）"
+    elif cid in ("wti", "brent"):
+        value = "$" + value.replace(" 美元", "").replace("美元", "")
+    elif cid in ("dji", "sox", "txf"):
+        if "（" in delta:
+            delta, pct = delta.split("（", 1)
+            tip = (tip + "　" if tip else "") + "漲跌幅 " + pct.rstrip("）")
+    elif cid in ("pm_house", "pm_senate"):
+        delta = delta.replace(" 個百分點", "%").replace("個百分點", "%").replace(" 百分點", "%")
+        label = label.replace("・", " ")
+        if not d and re.match(r"^[+-]\d", delta):
+            d = "up" if delta.startswith("+") else "dn"
+    return {"label": label, "value": value, "delta": delta.strip(), "dir": d,
+            "date": date, "tip": tip}
+
+
 def _focus_strip(f: dict | None) -> str:
     """
     今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
@@ -874,40 +936,40 @@ def _focus_strip(f: dict | None) -> str:
                 defaults.append(c["id"])
             when = (f'<small class="fs-when">{esc(c["date"])}</small>'
                     if c.get("date") else "")
-            delta = (f'<i class="{c["dir"]}">{esc(c["delta"])}</i>'
-                     if c.get("delta") else "")
+            # 報價板一行一格（2026-10）：四欄意義統一——數值＝純數字、
+            # 變動＝對前一日（同單位），說明文字一律進提示（見 _unify_chip）
+            u = _unify_chip(c)
+            when = (f'<small class="fs-when">{esc(u["date"])}</small>' if u["date"] else "")
+            delta = f'<i class="{u["dir"] or "fl"}">{esc(u["delta"])}</i>'
             chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}"'
-                         f' data-d="{esc(c.get("iso") or "")}">'
-                         f'<span>{esc(c["label"])}</span>'
-                         f'<b>{esc(c["value"])}</b>{delta}{when}</div>')
+                         f' data-d="{esc(c.get("iso") or "")}"'
+                         + (f' title="{esc(u["tip"])}"' if u["tip"] else "") + '>'
+                         f'<div class="fs-nm"><span>{esc(u["label"])}</span>{when}</div>'
+                         f'{delta}<b>{esc(u["value"])}</b></div>')
             opts.append((c["id"], c["label"], c.get("on")))
-        rows = "".join(
-            f'<label><input type="checkbox" data-pick="{cid}"'
-            + (" checked" if on else "") + f'>{esc(lb)}</label>'
-            for cid, lb, on in opts)
+        # 2026-10 改版：固定四格、每格一個下拉選單（使用者：「要先移除 2、3、4
+        # 才能換前兩個，流程很麻煩」）。選到已在別格的指標時兩格互換，
+        # 永遠是四格、不必先取消；第 1、2 格決定補充新聞，標在格名旁。
+        _ol = "".join(f'<option value="{cid}">{esc(lb)}</option>' for cid, lb, _ in opts)
+        slots = "".join(
+            f'<label class="fs-slot"><span>第 {i + 1} 格'
+            + ('<em>補充新聞</em>' if i < 2 else '') + '</span>'
+            f'<select data-slot="{i}">{_ol}</select></label>' for i in range(4))
         picker = ('<details class="fs-pick"><summary>'
-                  '<span class="fs-pick-btn">選擇</span></summary>'
-                  '<div class="fs-pick-panel">' + rows +
-                  '<div class="fs-pick-note"><span class="fs-count">已選 '
-                  f'{len(defaults)}／4</span>　·　選擇存在此裝置</div>'
-                  '<div class="fs-pick-note">先勾的排前面；前兩個指標決定'
-                  '主軸下方的補充新聞</div>'
+                  '<span class="fs-pick-btn">選擇指標</span></summary>'
+                  '<div class="fs-pick-panel">' + slots +
+                  '<div class="fs-pick-foot"><button type="button" class="fs-reset">恢復預設</button>'
+                  '<span class="fs-pick-note">選擇存在此裝置</span></div>'
                   '</div></details>')
-        # 原生 JS，無相依：讀 localStorage → 套用顯示 → 勾選時存回。
-        # 上限四顆（固定四格版面）：勾滿後其餘選項停用，要換先取消一顆。
-        # 全部取消時退回預設組——空清單沒有意義，畫面也不能空。
-        # 2026-10：選的順序＝顯示順序（先勾的排前面），前兩個指標決定
-        # 主軸下方兩則補充的主題（規則同 focus_today.pick_topics）。
         script = ('<script>(function(){var K="fsChips";var M=4;'
                   'var D=' + _json.dumps(defaults) + ';'
                   'var TM=' + _json.dumps(topic_map, ensure_ascii=False) + ';'
                   'var TA=' + _json.dumps(avail) + ';'
                   'var box=document.querySelector(".fs-chips");if(!box)return;'
-                  'var ps=Array.prototype.slice.call('
-                  'document.querySelectorAll(".fs-pick [data-pick]"));'
-                  'var ids=ps.map(function(p){return p.getAttribute("data-pick");});'
-                  'function each(q,f){Array.prototype.forEach.call('
-                  'document.querySelectorAll(q),f);}'
+                  'var ss=Array.prototype.slice.call(document.querySelectorAll(".fs-slot select"));'
+                  'var ids=Array.prototype.map.call(box.querySelectorAll("[data-chip]"),'
+                  'function(c){return c.getAttribute("data-chip");});'
+                  'function each(q,f){Array.prototype.forEach.call(document.querySelectorAll(q),f);}'
                   'function tp(sel){var ul=document.querySelector(".fs-news .fs-list");'
                   'var w=[];sel.forEach(function(c){var t=TM[c];'
                   'if(t&&TA.indexOf(t)>=0&&w.indexOf(t)<0&&w.length<2)w.push(t);});'
@@ -919,36 +981,26 @@ def _focus_strip(f: dict | None) -> str:
                   'li.classList.toggle("fs-off",!on);if(on)k++;ul.appendChild(li);});}'
                   'each(".fs-news [data-tlink]",function(a){'
                   'a.classList.toggle("fs-off",w.indexOf(a.getAttribute("data-tlink"))<0);});'
-                  'var ss=[];each(".fs-news .fs-link:not(.fs-off) .fs-src",function(s){'
-                  'var x=s.textContent.trim();if(x&&ss.indexOf(x)<0)ss.push(x);});'
+                  'var xs=[];each(".fs-news .fs-link:not(.fs-off) .fs-src",function(q){'
+                  'var x=q.textContent.trim();if(x&&xs.indexOf(x)<0)xs.push(x);});'
                   'var sp=document.querySelector(".fs-srcs");'
-                  'if(sp)sp.textContent=ss.length?"\u3000\u00b7\u3000新聞："'
-                  '+ss.slice(0,3).join("\u3001"):"";}'
-                  'function ap(sel){sel=sel.slice(0,M);'
-                  'Array.prototype.forEach.call('
-                  'box.querySelectorAll("[data-chip]"),function(ch){'
-                  'ch.classList.toggle("fs-off",'
-                  'sel.indexOf(ch.getAttribute("data-chip"))<0);});'
-                  'sel.forEach(function(id){var ch=box.querySelector('
-                  '\'[data-chip="\'+id+\'"]\');if(ch)box.appendChild(ch);});'
-                  'ps.forEach(function(p){var id=p.getAttribute("data-pick");'
-                  'p.checked=sel.indexOf(id)>=0;'
-                  'p.disabled=(!p.checked&&sel.length>=M);});'
-                  'var n=document.querySelector(".fs-count");'
-                  'if(n)n.textContent="已選 "+sel.length+"／"+M;tp(sel);}'
-                  'var sel=null;'
-                  'try{sel=JSON.parse(localStorage.getItem(K)||"null");}'
-                  'catch(e){}'
-                  'if(sel instanceof Array)sel=sel.filter(function(x){'
-                  'return ids.indexOf(x)>=0;});'
-                  'if(!(sel instanceof Array)||!sel.length)sel=D.slice();ap(sel);'
-                  'ps.forEach(function(p){p.addEventListener("change",'
-                  'function(){var id=p.getAttribute("data-pick");'
-                  'var s=sel.filter(function(x){return x!==id;});'
-                  'if(p.checked)s.push(id);'
-                  'if(!s.length)s=D.slice();s=s.slice(0,M);sel=s;'
-                  'try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}'
-                  'ap(s);});});})();</script>' + _LIVE_JS)
+                  'if(sp)sp.textContent=xs.length?"\u3000\u00b7\u3000新聞："+xs.slice(0,3).join("\u3001"):"";}'
+                  'function fill(sel){var o=[];sel.forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});'
+                  'D.concat(ids).forEach(function(x){if(o.length<M&&o.indexOf(x)<0)o.push(x);});return o.slice(0,M);}'
+                  'function ap(sel){Array.prototype.forEach.call(box.querySelectorAll("[data-chip]"),function(ch){'
+                  'ch.classList.toggle("fs-off",sel.indexOf(ch.getAttribute("data-chip"))<0);});'
+                  'sel.forEach(function(id){var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(ch)box.appendChild(ch);});'
+                  'ss.forEach(function(s,i){s.value=sel[i];});tp(sel);}'
+                  'var sel=null;try{sel=JSON.parse(localStorage.getItem(K)||"null");}catch(e){}'
+                  'sel=fill(sel instanceof Array?sel:D);ap(sel);'
+                  'function save(){try{localStorage.setItem(K,JSON.stringify(sel));}catch(e){}}'
+                  'ss.forEach(function(s,i){s.addEventListener("change",function(){var v=s.value;'
+                  'var j=sel.indexOf(v);if(j>=0&&j!==i)sel[j]=sel[i];sel[i]=v;save();ap(sel);});});'
+                  'var r=document.querySelector(".fs-reset");if(r)r.addEventListener("click",function(){'
+                  'sel=fill(D);try{localStorage.removeItem(K);}catch(e){}ap(sel);});'
+                  'Array.prototype.forEach.call(box.querySelectorAll(".fs-chip[title]"),function(c){'
+                  'c.addEventListener("click",function(){c.classList.toggle("tip-on");});});'
+                  '})();</script>' + _LIVE_JS)
     else:
         # 目錄組裝失敗的後備：照舊三顆（10Y／30Y／機率），行為與舊版一致。
         chips = []
@@ -1048,111 +1100,242 @@ def _focus_strip(f: dict | None) -> str:
             '<div class="fs-head">今日市場焦點'
             + picker + '</div>'
             '<div class="fs-grid">'
-            f'<div class="fs-chips">{"".join(chips)}</div>'
+            '<div class="fs-chips"><div class="fs-hd"><span>指標</span>'
+            '<span>變動</span><span>數值</span></div>' + "".join(chips) + '</div>'
             f'<div class="fs-news">{text}{links}</div></div>'
             f'{brand}<div class="fs-note">{esc(note)}</div>'
             + script + '</section>')
 
 
+# ===========================================================================
+# 總覽第二版（2026-10）：市場焦點置頂 → 選舉 → 今日結論主卡（藏青品牌帶，
+# 第二層整體情勢＋四大模組收合）→ 本期變化 → 接下來看什麼（四週）。
+# 閱讀舒適度優先：白底細線分隔、顏色只用品牌藏青與橘，紅藍只留在方向小圓點。
+# ===========================================================================
+_TONE_DOT = {"hawkish": "haw", "dovish": "dov"}
+
+
+def _hm_modules(ctxs: dict, sc, f_text: str, f_dir: str, p_text: str, p_level: str) -> str:
+    lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
+    fom, rates = ctxs.get("fomc") or {}, ctxs.get("rates") or {}
+    lk, ik = lab.get("kpi") or {}, inf.get("kpi") or {}
+    curve = rates.get("curve")
+    levels = getattr(curve, "levels", {}) if curve else {}
+    term = getattr(curve, "term_premium", None) if curve else None
+    _fnm = fom.get("next_meeting") or {}
+    labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
+    infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
+    tiles = [
+        ("/labor/", "就業", f"{labor_label}　{sc.labor_momentum}",
+         "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else "neutral",
+         [("失業率", lk.get("u3_display", "—")), ("非農新增", lk.get("nfp_display", "—"))]),
+        ("/inflation/", "通膨", f"{infl_label}　{sc.infl_momentum}",
+         "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else "neutral",
+         [("核心 PCE", ik.get("pce_display", "—")), ("核心 CPI", ik.get("core_display", "—"))]),
+        ("/fomc/", "聯準會", f_text, f_dir,
+         [("政策利率", fom.get("rate_range", "—")),
+          ("下次會議", _fnm.get("span") or _fnm.get("date") or "—")]),
+        ("/rates/", "長端與債務", f"期限溢酬{p_text}",
+         "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
+         [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("期限溢酬", _fmt_pct(term, 2))]),
+    ]
+    out = []
+    for href, name, status, tone, kv in tiles:
+        nums = "".join(f'<span><em>{esc(k)}</em><b>{esc(v)}</b></span>' for k, v in kv)
+        out.append(f'<a class="hm-mr" href="{href}"><span class="hm-mr-l"><b>{esc(name)}</b>'
+                   f'<span class="hm-st"><i class="hm-dot {_TONE_DOT.get(tone, "")}"></i>{esc(status.replace("　", "・"))}</span></span>'
+                   f'<span class="hm-mr-v">{nums}</span><span class="hm-mr-go">›</span></a>')
+    return f'<div class="hm-mrs">{"".join(out)}</div>'
+
+
+def _hm_brief(ctxs: dict) -> tuple[str, str]:
+    b = ctxs.get("_brief") or brief_mod.compose(ctxs)
+    whatsnew, bullets, rest, takeaway = _brief_pieces((b.get("text") or "").strip())
+    rows = "".join(f'<div class="hm-br"><b>{esc(lb)}</b><p>{esc(tx)}</p></div>' for lb, tx in bullets)
+    rows += "".join(f'<div class="hm-br"><b></b><p>{esc(x)}</p></div>' for x in rest)
+    new = ""
+    if whatsnew:
+        items = [x.strip() for x in whatsnew[len("本次更新："):].replace("；", "；\n").split("\n") if x.strip()]
+        head, tail = (items[0], items[1:]) if items else ("", [])
+        new = (f'<details class="hm-new"><summary><span>本次更新</span>{esc(head.rstrip("；"))}'
+               + (f'<em>＋{len(tail)} 項數字</em>' if tail else "") + '</summary>'
+               + "".join(f'<span class="hm-new-i">{esc(t.rstrip("；。"))}</span>' for t in tail)
+               + '</details>')
+    return takeaway, f'<div class="hm-brs">{rows}</div>{new}'
+
+
+def _hm_changes(cs) -> str:
+    """本期變化：依政策方向分組（偏鴿／偏鷹／中性），先一句總結。"""
+    if not cs or not cs.has_previous:
+        return '<div class="home-empty">尚無可比對的上期資料；下一次更新後會顯示本期差異。</div>'
+    buck = {"dovish": [], "hawkish": [], "neutral": []}
+    for f in cs.new_flags + cs.resolved_flags:
+        lean = f.get("change_lean") or "neutral"
+        buck.setdefault(lean, []).append((f.get("module", "訊號"),
+                                          ("解除：" if f.get("kind") != "new" else "") + f.get("title", "—")))
+    for m in cs.metric_moves:
+        u = m.get("unit", "")
+        buck.setdefault(m.get("lean") or "neutral", []).append(
+            (m.get("label", "數據"), f"{m.get('from', 0):,.2f}{u} → {m.get('to', 0):,.2f}{u}"))
+    n = {k: len(v) for k, v in buck.items()}
+    total = sum(n.values())
+    if not total and not cs.scenario_moved:
+        return '<div class="home-empty">主要訊號與上期相同，九宮格位置沒有改變。</div>'
+    tilt = ("整體往降息方向傾斜" if n["dovish"] > n["hawkish"] + 1 else
+            "整體往維持高利率方向傾斜" if n["hawkish"] > n["dovish"] + 1 else "兩邊大致抵銷")
+    head = (f'<p class="hm-chsum">本期 {total} 項訊號變動：<b class="dov">偏鴿 {n["dovish"]}</b>、'
+            f'<b class="haw">偏鷹 {n["hawkish"]}</b>、<b>中性 {n["neutral"]}</b>——{tilt}。'
+            + (f'九宮格位置改變：{esc(cs.headline)}。' if cs.scenario_moved else "") + '</p>')
+    meta = (("dovish", "偏鴿", "增加寬鬆空間"), ("hawkish", "偏鷹", "維持高利率的約束"),
+            ("neutral", "中性", "不改變政策方向"))
+    cols = []
+    for k, zh, eff in meta:
+        items = buck.get(k) or []
+        if not items:
+            continue
+        def li(x):
+            return f'<li><span class="hm-tag">{esc(x[0])}</span>{esc(x[1])}</li>'
+        body = "".join(li(x) for x in items[:2])
+        if items[2:]:
+            body += (f'<li class="hm-more"><details><summary>另 {len(items) - 2} 項</summary><ul>'
+                     + "".join(li(x) for x in items[2:]) + '</ul></details></li>')
+        cols.append(f'<div class="hm-chc {k}"><div class="hm-chc-h"><b>{zh}　{len(items)} 項</b>'
+                    f'<span>{eff}</span></div><ul>{body}</ul></div>')
+    return head + f'<div class="hm-chcs">{"".join(cols)}</div>'
+
+
+def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
+    """接下來看什麼：一次一週，‹ › 換週（純 CSS radio，不靠 JS）。"""
+    from ..analysis import watch_calendar as wc
+    today = clock.today()
+    fom = ctxs.get("fomc") or {}
+    import re as _re
+
+    def _trig(prefix):
+        c = [t for t in (sc.triggers or []) if t.label.startswith(prefix) and not t.met]
+        if not c:
+            return ""
+        t = min(c, key=lambda x: abs(float((_re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "") or [9e9])[0])))
+        return f"最近門檻：{t.label}，{t.distance}"
+    rows = wc.watch_rows(
+        ctxs.get("_schedule") or wc.merge_schedule({}, ctxs.get("_calendar") or {}, {}, today),
+        fomc_next=((fom.get("next_meeting")) or {}).get("date"),
+        fomc_desc="聲明與投票可能改變重心——重心一翻，同一格的結論就不同。",
+        trig={"employment": _trig("就業轉"), "cpi": _trig("通膨轉")}, weeks=weeks)
+    mon = today - dt.timedelta(days=today.weekday())
+    start = mon + dt.timedelta(days=7 if today.weekday() >= 5 else 0)
+
+    def _mrow(e):
+        return (f'<div class="hm-mid"><span class="hm-mid-d">{esc(e["label"])}</span>'
+                f'<b>{esc(e["name"])}</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
+    radios, panels = [], []
+    for w in range(weeks):
+        a_ = start + dt.timedelta(days=7 * w)
+        b_ = a_ + dt.timedelta(days=6)
+        name = (wc._GROUPS[(a_ - mon).days // 7] if (a_ - mon).days // 7 < len(wc._GROUPS) else f"第 {w + 1} 週")
+        wk = [e for e in rows if e.get("week") == w]
+        hi = [e for e in wk if e["impact"] == "high"]
+        mid = [e for e in wk if e["impact"] != "high"]
+        body = "".join(
+            f'<div class="hm-hi"><div class="hm-hi-d"><b>{esc(e["label"])}</b><span>{esc(e["when"])}</span></div>'
+            f'<div class="hm-hi-b"><b>{esc(e["name"])}<em>高影響</em></b>'
+            + (f'<p>{esc(e["desc"])}</p>' if e["desc"] else "") + '</div></div>' for e in hi)
+        if mid:
+            body += ('<div class="hm-mids-h">其他發布（影響中）</div><div class="hm-mids">'
+                     + "".join(_mrow(e) for e in mid) + '</div>')
+        if not wk:
+            body = '<p class="home-empty">這一週沒有排定的重要發布。</p>'
+        prev_l = (f'<label class="hm-wk-a" for="hm-wk-{w - 1}" aria-label="上一週">‹</label>'
+                  if w else '<span class="hm-wk-a off">‹</span>')
+        next_l = (f'<label class="hm-wk-a" for="hm-wk-{w + 1}" aria-label="下一週">›</label>'
+                  if w < weeks - 1 else '<span class="hm-wk-a off">›</span>')
+        dots = "".join(f'<i class="{"on" if j == w else ""}"></i>' for j in range(weeks))
+        radios.append(f'<input type="radio" name="hm-wk" id="hm-wk-{w}" class="hm-wk-in"{" checked" if w == 0 else ""}>')
+        panels.append(f'<div class="hm-wk-p"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t"><b>{esc(name)}</b>'
+                      f'<span>{a_.month}/{a_.day}–{b_.month}/{b_.day}　·　{len(wk)} 場</span>'
+                      f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>{body}</div>')
+    return f'<div class="hm-wk">{"".join(radios)}<div class="hm-wk-ps">{"".join(panels)}</div></div>'
+
+
 def home_body(ctxs: dict) -> str:
-    """總覽固定五區：先結論，再門檻、模組、變化與接下來看什麼。"""
     sd = ctxs.get("scenario") or {}
     sc = sd.get("scenario")
     if sc is None:
         return _home_body_full(ctxs)
-
     lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
     fom, rates = ctxs.get("fomc") or {}, ctxs.get("rates") or {}
-    shift = fom.get("shift") or {}
-    f_dir = shift.get("direction", "neutral")
-    f_text = {"hawkish": "偏鷹", "dovish": "偏鴿",
-              "neutral": "中性"}.get(f_dir, "資料不足")
+    f_dir = (fom.get("shift") or {}).get("direction", "neutral")
+    f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
     pressure = rates.get("pressure")
     p_level = getattr(pressure, "level", "") if pressure else ""
-    p_text = {"high": "偏高", "moderate": "中性",
-              "low": "偏低"}.get(p_level, "資料不足")
+    p_text = {"high": "偏高", "moderate": "中性", "low": "偏低"}.get(p_level, "資料不足")
     lean = LEAN_TEXT.get(sc.lean, "中性")
     labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
 
     _nx = _pick_next_trigger(sc)
-    trigger, unlock = _nx["trigger"], _nx["unlock"]
+    trigger = _nx["trigger"]
     if _nx["mode"] == "hold":
-        # 兩軸都在漂移、但都不朝相鄰門檻：誠實說「傾向不動」，
-        # 最近的門檻降級成參考，不冒充預測。
-        next_name = "傾向原地不動"
-        trigger_text = f"{_nx['reason']}——目前都不朝相鄰門檻走"
+        next_name, trigger_text = "傾向原地不動", f"{_nx['reason']}——兩軸都不朝相鄰門檻走"
     else:
         next_name, trigger_text = _next_cell(sc, trigger)
-        if _nx["mode"] == "directional" and _nx.get("reason"):
-            trigger_text += f"（依據：{_nx['reason']}）"
-    _ref = "參考門檻：" if _nx["mode"] == "hold" else ""
-    trigger_detail = (f'<span>{esc(_ref)}{esc(trigger.label)}　{esc(trigger.current)}</span>'
-                      f'<span>{esc(trigger.threshold)}</span>'
-                      if trigger else "")
-    unlock_html = (
-        f'<div class="home-trigger-unlock"><span>政策解鎖</span>'
-        f'{esc(unlock.label)}：{esc("已觸發" if unlock.met else unlock.distance)}</div>'
-        if unlock else "")
-
-    status = "".join([
-        f'<div><span>就業</span><b>{esc(labor_label)}｜{esc(sc.labor_momentum)}</b></div>',
-        f'<div><span>通膨</span><b>{esc(infl_label)}｜{esc(sc.infl_momentum)}</b></div>',
-        f'<div><span>FOMC</span><b>{esc(f_text)}</b></div>',
-        f'<div><span>長端壓力</span><b>{esc(p_text)}</b></div>',
-    ])
+    takeaway, brief_html = _hm_brief(ctxs)
+    _mod_strip = "".join(
+        f'<span><i class="hm-dot {_TONE_DOT.get(t, "")}"></i>{esc(n)} {esc(v)}</span>'
+        for n, v, t in (("就業", labor_label, "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else ""),
+                        ("通膨", infl_label, "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else ""),
+                        ("聯準會", f_text, f_dir), ("期限溢酬", p_text, "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "")))
     asof = inf.get("asof") or {}
-    dates = "｜".join([
+    dates = "　·　".join([
         f"就業 {lab.get('data_month', '—')}", f"CPI {(asof.get('cpi') or '—')[:7]}",
-        f"PPI {(asof.get('ppi') or '—')[:7]}", f"PCE {(asof.get('pce') or '—')[:7]}",
-        f"FOMC {fom.get('latest_date', '—')}",
-    ])
+        f"PCE {(asof.get('pce') or '—')[:7]}", f"FOMC {fom.get('latest_date', '—')}",
+        f"利率 {rates.get('as_of', '—')}"])
+    # 下一格距離條（跟情境頁同一套：0.5 個百分點以外是空條）
+    bar = ""
+    if trigger is not None and not trigger.met:
+        import re as _re
+        m = _re.search(r"[-+]?\d+(?:\.\d+)?", trigger.distance or "")
+        if m:
+            close = max(0.0, 1 - abs(float(m.group(0))) / 0.5) * 100
+            bar = f'<div class="hm-bar"><i style="width:{close:.0f}%"></i></div>'
 
     return f"""
-<main class="home-dashboard">
+<main class="home-dashboard hm">
   {_focus_strip(ctxs.get('_focus'))}
   {_election_card(ctxs.get('_election'))}
-  <section class="home-hero {esc(sc.lean)}" aria-labelledby="home-now">
-    <div class="home-hero-top">
-      <div><div class="home-kicker">目前情境</div>
-        <h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2></div>
-      <div class="home-verdict {esc(sc.lean)}"><span>{esc(sc.name)}</span><b>{esc(lean)}</b></div>
+  <section class="home-hero hm-hero {esc(sc.lean)}" aria-labelledby="home-now">
+    <div class="hm-band">
+      <div class="hm-kick"><span class="hm-num">01</span>今日結論</div>
+      <h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2>
+      <div class="hm-verdict"><b>{esc(sc.name)}</b><span>{esc(lean)}</span></div>
+      {f'<p class="hm-key">{esc(takeaway)}</p>' if takeaway else ''}
+      <a class="hm-next" href="/scenario/"><span>可能下一格</span><b>{esc(next_name)}</b>
+        <small>{esc(trigger_text)}</small>{bar}<em>完整九宮格 →</em></a>
     </div>
-    <div class="home-narrative">{_brief_content(ctxs)}</div>
-    <div class="home-status-rail">{status}</div>
+    <div class="hm-layer">
+      <div class="hm-lh">整體情勢</div>
+      {brief_html}
+      <details class="hm-modx"><summary><span class="hm-modx-k">四大模組</span>
+        <span class="hm-modx-s">{_mod_strip}</span></summary>
+      <div class="hm-modx-b">{_hm_modules(ctxs, sc, f_text, f_dir, p_text, p_level)}</div></details>
+    </div>
   </section>
 
-  <section class="home-zone home-transition" aria-labelledby="home-grid">
-    <div class="home-zone-head"><div><span class="home-zone-num">02</span>
-      <h2 id="home-grid">九宮格與下一格</h2></div>
-      <a class="home-primary-link" href="/scenario/">查看完整九宮格 →</a></div>
-    <div class="home-transition-grid">
-      <div class="home-cell-now"><span>目前位置</span><b>{esc(sc.name)}</b><small>就業{esc(labor_label)} × 通膨{esc(infl_label)}</small></div>
-      <div class="home-transition-arrow" aria-hidden="true">→</div>
-      <div class="home-cell-next"><span>可能下一格</span><b>{esc(next_name)}</b><small>{esc(trigger_text)}</small></div>
-      <div class="home-trigger-detail">{trigger_detail}</div>
-    </div>{unlock_html}
-    <div class="home-dates">資料期別：{esc(dates)}</div>
+  <section class="home-zone hm-zone" aria-labelledby="home-changes">
+    <div class="hm-zh"><div><span class="hm-num">02</span><h2 id="home-changes">本期變化</h2></div>
+      <p>跟上一期比，新增或解除的訊號</p></div>
+    <div class="hm-chs">{_hm_changes(ctxs.get('changes'))}</div>
   </section>
 
-  <section class="home-zone" aria-labelledby="home-modules">
-    <div class="home-zone-head"><div><span class="home-zone-num">03</span>
-      <h2 id="home-modules">四大模組摘要</h2></div><p>點選一列查看核心數字</p></div>
-    <div class="home-module-list">{_module_rows(ctxs, sc, f_text, f_dir, p_text, p_level)}</div>
+  <section class="home-zone hm-zone" aria-labelledby="home-next">
+    <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
+      <p>未來四週，台灣時間</p></div>
+    {_hm_watch(ctxs, sc)}
+    <p class="hm-foot">高影響＝發布後會直接重判九宮格；中＝更新個別訊號、不直接改格位。</p>
   </section>
 
-  <section class="home-zone" aria-labelledby="home-changes">
-    <div class="home-zone-head"><div><span class="home-zone-num">04</span>
-      <h2 id="home-changes">本期變化與市場含義</h2></div><p>只顯示最多四項重要變化</p></div>
-    <div class="home-change-list">{_change_rows(ctxs.get('changes'))}</div>
-  </section>
-
-  <section class="home-zone" aria-labelledby="home-next">
-    <div class="home-zone-head"><div><span class="home-zone-num">05</span>
-      <h2 id="home-next">接下來看什麼</h2></div><p>本週與下週的發布（台灣時間）與它會動什麼</p></div>
-    <div class="home-next-list">{_watch_rows(ctxs, sc)}</div>
-    <div class="home-next-foot">影響：高＝發布後會直接重判本站九宮格的格位；中＝更新個別訊號或市場常有反應，但不直接改格位。已發布的場次自動移除。<br>自動更新：{esc(sd.get('as_of', '—'))}</div>
-  </section>
+  <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>
+    <span>明天過後，帶你看總經</span></div><small>資料期別　{esc(dates)}</small></div>
 </main>"""
 
 

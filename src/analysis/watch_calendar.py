@@ -182,7 +182,7 @@ def taipei_time(d: dt.date, hm: tuple[int, int]) -> dt.datetime:
 
 
 _WD = "一二三四五六日"
-_GROUPS = ("本週", "下週", "下下週")
+_GROUPS = ("本週", "下週", "下下週", "第 4 週", "第 5 週")
 
 
 def _group(d: dt.date, mon: dt.date) -> str:
@@ -196,9 +196,9 @@ def _group(d: dt.date, mon: dt.date) -> str:
 
 def watch_rows(schedule: dict, fomc_next: str | None = None,
                fomc_desc: str = "", trig: dict | None = None,
-               now: dt.datetime | None = None) -> list[dict]:
+               now: dt.datetime | None = None, weeks: int = 2) -> list[dict]:
     """
-    本週＋下週（週一起算，台北日期；週末改看下週＋下下週）尚未發布的事件，
+    本週＋下週（weeks＞2 時往後延伸，總覽日曆用 4 週）（週一起算，台北日期；週末改看下週＋下下週）尚未發布的事件，
     依時間排序。
     回傳 [{group, key, name, impact, date, tpe, when, src, desc}]。
     同一種事件第二次出現（例如每週的失業金）不重複說明——一頁一個意思講一次。
@@ -208,7 +208,7 @@ def watch_rows(schedule: dict, fomc_next: str | None = None,
     mon = today - dt.timedelta(days=today.weekday())
     # 週六、週日（台灣週六 07:00 那次）本週已經沒有發布，改看接下來兩整週
     start = mon + dt.timedelta(days=7 if today.weekday() >= 5 else 0)
-    end_next = start + dt.timedelta(days=13)
+    end_next = start + dt.timedelta(days=7 * weeks - 1)
     items = []
     sched = dict(schedule or {})
     if fomc_next:
@@ -231,7 +231,7 @@ def watch_rows(schedule: dict, fomc_next: str | None = None,
                 continue
             items.append({"key": key, "name": name, "impact": imp,
                           "date": d, "tpe": tpe, "src": src, "desc": desc,
-                          "group": _group(d, mon)})
+                          "group": _group(d, mon), "week": (d - start).days // 7})
     items.sort(key=lambda x: (x["tpe"], x["impact"] != "high"))
     seen = set()
     for it in items:

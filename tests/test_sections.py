@@ -176,16 +176,17 @@ if (OUT / "labor" / "index.html").exists():
     # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
     h = (OUT / "index.html").read_text(encoding="utf-8")
     hs = _sums(h)
-    check("㉙ index：總覽首卡含四個決策欄位",
+    check("㉙ index：主卡含結論、可能下一格、整體情勢、四大模組（收合）",
           h.count('<section class="home-hero') == 1
-          and h.count('<div class="home-status-rail">') == 1)
-    # 第 05 區由「資料狀態」改為「接下來看什麼」（home-data → home-next）：
-    # 前者只有一行更新時間（跟頁尾重複），後者是未來發布日＋觸發提示。
-    check("㉙b index：五區順序完整",
-          all(f'id="{sid}"' in h for sid in
-              ("home-now", "home-grid", "home-modules", "home-changes", "home-next")))
-    check("㉙c index：四個模組只有一層收合",
-          h.count('<details class="home-module">') == 4)
+          and h.count('class="hm-next"') == 1
+          and h.count('<details class="hm-modx">') == 1)
+    # 2026-10 總覽改版：九宮格區塊併進主卡（「可能下一格」一行），
+    # 五區變三區：01 今日結論、02 本期變化、03 接下來看什麼。
+    check("㉙b index：三區順序完整",
+          all(f'id="{sid}"' in h for sid in ("home-now", "home-changes", "home-next"))
+          and h.index('id="home-now"') < h.index('id="home-changes"') < h.index('id="home-next"'))
+    check("㉙c index：四個模組一列一個、日曆四週",
+          h.count('<a class="hm-mr"') == 4 and h.count('class="hm-wk-in"') == 4)
     check("㉚ index：摘要沒有殘留 markdown",
           not [s for s in hs if "**" in s], str(hs)[:90])
     # 摘要是拿來掃視的。超過 40 字在 390px 下會折成三行，而且多半代表

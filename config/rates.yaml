@@ -113,6 +113,44 @@ fx:
 # ---------------------------------------------------------------------------
 # 四、信用市場
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# 長端拆解、曲線、房貸、全球長端（2026-10 改版）
+#   THREEFY10 + THREEFYTP10：Kim-Wright 模型的 10 年擬合殖利率與期限溢酬
+#   EXPINF10YR：克里夫蘭聯儲 10 年預期通膨（模型值，已扣風險溢酬，月頻）
+#   預期實質路徑 ＝ 擬合殖利率 − 期限溢酬 − 預期通膨
+# ---------------------------------------------------------------------------
+longend:
+  - id: THREEFY10
+    label: 10 年擬合殖利率（Kim-Wright）
+    frequency: daily
+  - id: EXPINF10YR
+    label: 10 年預期通膨（克里夫蘭聯儲）
+    frequency: monthly
+  - id: DGS1
+    label: 1 年期公債殖利率
+    frequency: daily
+  - id: DGS7
+    label: 7 年期公債殖利率
+    frequency: daily
+  - id: DGS20
+    label: 20 年期公債殖利率
+    frequency: daily
+  - id: MORTGAGE30US
+    label: 30 年固定房貸利率（Freddie Mac）
+    frequency: weekly
+  - id: IRLTLT01USM156N
+    label: 美國 10 年期（月均，OECD）
+    frequency: monthly
+  - id: IRLTLT01DEM156N
+    label: 德國 10 年期（月均，OECD）
+    frequency: monthly
+  - id: IRLTLT01JPM156N
+    label: 日本 10 年期（月均，OECD）
+    frequency: monthly
+  - id: IRLTLT01GBM156N
+    label: 英國 10 年期（月均，OECD）
+    frequency: monthly
+
 credit:
   - id: BAMLC0A0CM
     label: 投資級利差 (OAS)
@@ -365,3 +403,22 @@ regime_lights:
     direction: higher_is_worse
     green_below: 1.00
     red_above: 1.40
+
+# ---------------------------------------------------------------------------
+# 九、財政部每季再融資（Quarterly Refunding）——每季手動更新一次
+#     原文取自財政部新聞稿；next 是財政部公布的下一次公告日。
+# ---------------------------------------------------------------------------
+refunding:
+  date: "2026-08-05"
+  next: "2026-11-04"
+  url: "https://home.treasury.gov/news/press-releases/sb0590"
+  guidance_en: "Treasury anticipates maintaining nominal coupon and FRN auction sizes for at least the next several quarters."
+  guidance_zh: "財政部預期至少未來數季維持名目 coupon 與 FRN 的拍賣規模不變；9 月縮減較短天期 bill 的規模，10 月起依季節性增加整條 bill 曲線的規模。"
+  buybacks_zh: "本季最多買回 380 億美元的舊券（流動性支援），以及最多 250 億美元的 1 個月至 2 年期（現金管理）。"
+
+# ---------------------------------------------------------------------------
+# 十、Fed 資產負債表的政策方向（文字說明，政策改變時手動更新）
+# ---------------------------------------------------------------------------
+fed_balance_sheet:
+  qt: false
+  text_zh: "Fed 已停止縮表。到期的 MBS 本金改買 T-Bills，持有公債的方向是縮短平均剩餘年限（WAM）——長天期公債要由私人市場吸收的比例因此變高。"

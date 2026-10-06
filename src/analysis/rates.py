@@ -293,6 +293,7 @@ def hyperscalers(cfg: dict, ig_quarterly: float | None = None,
             # 手動值」跟「五家全部退回手動值」在讀者眼中是完全不同的兩件事，
             # 而先前這兩種情況的畫面長得一模一樣。
             "from_sec": bool(c.get("from_sec")),
+            "hist": c.get("hist") or [],
             # 去核對原始申報的連結。只由 cik 決定，所以離線／退回手動值時
             # 一樣給得出來——「數字可能是舊的」跟「你查不到原始資料」
             # 是兩回事，後者沒有理由發生。
@@ -401,6 +402,8 @@ class SupplyPressure:
     priced: list = field(default_factory=list)     # 結果：價格已經反映多少
     priced_score: float = 0.0
     demand: list = field(default_factory=list)     # 需求端：買盤吃不吃得下
+    main: str = ""                    # 本月推動 10Y 最多的那一段（2026-10）
+    main_bp: float | None = None
     gap_note: str = ""                # 原因與結果背離時的說明
 
 
@@ -536,12 +539,15 @@ def supply_pressure(curve: CurveState, debt: DebtState,
 
 
 PRESSURE_TEXT = {
-    "high": ("長端供給壓力：偏高",
-             "債券供給大於需求，投資人要求更高的補償才願意持有長天期債券。"
-             "在這種環境下，即使聯準會降息，長端殖利率也可能不跟著下降——"
+    "high": ("期限溢酬：偏高",
+             "期限溢酬高於 0.90% 的警戒線：投資人要求更高的補償才願意持有長天期債券，"
+             "反映財政與供給壓力。這種環境下即使聯準會降息，長端殖利率也可能不跟著下降——"
              "曲線會走陡而非平行下移。"),
-    "moderate": ("長端供給壓力：中性",
-                 "供給與需求大致平衡，長端主要跟隨政策利率預期移動。"),
-    "low": ("長端供給壓力：偏低",
-            "需求充足，長端有下行空間。降息時長天期債券的漲幅可能大於短天期。"),
+    "moderate": ("期限溢酬：中性",
+                 "期限溢酬在 0.40%–0.90% 之間，長端主要跟隨政策與通膨預期移動。"),
+    "low": ("期限溢酬：偏低",
+            "期限溢酬低於 0.40%，市場對持有長債沒有要求額外補償，長端有下行空間。"),
+    "unknown": ("期限溢酬：資料不足", ""),
 }
+# 首頁／情境頁上的短標籤
+PRESSURE_LABEL_ZH = {"high": "偏高", "moderate": "中性", "low": "偏低"}

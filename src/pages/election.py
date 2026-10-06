@@ -49,66 +49,46 @@ def spark(vals: list[float], w: int = 96, h: int = 26) -> str:
             f'<circle cx="{lx}" cy="{ly}" r="2.2" fill="var(--el-dem)"/></svg>')
 
 
-def _chamber(name: str, d: dict | None) -> str:
+def _chamber2(name: str, d: dict | None) -> str:
     if not d:
-        return (f'<div class="el-row el-na"><span class="el-name">{name}</span>'
-                '<span class="el-miss">本次擷取失敗</span></div>')
+        return (f'<div class="el2-ch"><span class="el2-k">{name}</span>'
+                '<span class="el2-miss">本次擷取失敗</span></div>')
     dem, rep = d["dem"], d["rep"]
-    lead = "民主黨" if dem >= rep else "共和黨"
-    lp = max(dem, rep)
-    return (f'<a class="el-row" href="{esc(d.get("url", ""))}" rel="noopener" target="_blank">'
-            f'<span class="el-name">{name}</span>'
-            f'<span class="el-bar" aria-hidden="true">'
-            f'<i class="dem" style="width:{dem * 100:.1f}%"></i>'
-            f'<i class="rep" style="width:{rep * 100:.1f}%"></i></span>'
-            f'<span class="el-val"><b class="{"dem" if lead == "民主黨" else "rep"}">'
-            f'{lead} {_pct(lp)}</b>'
-            f'<small><span>{"共和黨" if lead == "民主黨" else "民主黨"} '
-            f'{_pct(min(dem, rep))}</span>'
-            + (f'<span>{esc(_d1s(d.get("d1"), lead == "民主黨"))}</span>'
-               if d.get("d1") is not None else "")
-            + '</small></span>'
-            f'{spark(d.get("hist") or [])}</a>')
+    is_dem = dem >= rep
+    lead, lp, op = ("民主黨" if is_dem else "共和黨"), max(dem, rep), min(dem, rep)
+    d1 = d.get("d1")
+    sub = f'對手 {_pct(op)}' + (f'　·　{_d1s(d1, is_dem)}' if d1 is not None else "")
+    return (f'<a class="el2-ch" href="{esc(d.get("url", ""))}" rel="noopener" target="_blank">'
+            f'<span class="el2-k">{name}</span>'
+            f'<b class="{"dem" if is_dem else "rep"}">{lead} {_pct(lp)}</b>'
+            f'<small>{esc(sub)}</small>{spark(d.get("hist") or [])}</a>')
 
 
-def _balance(b: dict | None) -> str:
+def _balance2(b: dict | None) -> str:
     if not b:
         return ""
-    rows = [r for r in b["rows"] if r["key"] != "oth"]
-    bar = "".join(f'<i class="{r["key"]}" style="width:{r["p"] * 100:.1f}%"'
-                  f' title="{esc(r["label"])} {_pct(r["p"])}"></i>' for r in rows)
-    legend = "".join(
-        f'<li><span class="el-sw {r["key"]}"></span>{esc(r["label"])}'
-        f'<b>{_pct(r["p"])}</b></li>' for r in sorted(rows, key=lambda r: -r["p"]))
-    return (f'<a class="el-bal" href="{esc(b.get("url", ""))}" rel="noopener" target="_blank">'
-            '<span class="el-sub">兩院權力組合</span>'
-            f'<span class="el-stack" aria-hidden="true">{bar}</span>'
-            f'<ul class="el-legend">{legend}</ul></a>')
+    rows = sorted([r for r in b["rows"]], key=lambda r: -r["p"])
+    top, rest = rows[:2], rows[2:]
+    other = sum(r["p"] for r in rest)
+    items = "".join(f'<span><i class="el-sw {r["key"]}"></i>{esc(r["label"])}<b>{_pct(r["p"])}</b></span>'
+                    for r in top)
+    items += f'<span class="el2-oth">其他組合<b>{_pct(other)}</b></span>' if rest else ""
+    return (f'<a class="el2-line" href="{esc(b.get("url", ""))}" rel="noopener" target="_blank">'
+            f'<span class="el2-lk">兩院組合</span><span class="el2-items">{items}</span></a>')
 
 
-def _races(races: list[dict]) -> str:
+def _races2(races: list[dict]) -> str:
     if not races:
         return ""
 
     def cls(c):
         return {"民": "dem", "共": "rep"}.get(c.get("party"), "oth")
-
-    def pz(c):
-        return {"民": "民主黨", "共": "共和黨", "獨": "獨立"}.get(c.get("party"), "")
-
-    # 版面（2026-10 手機改版）：州名 → 大字「黨＋價格」→ 小字候選人 → 對手
-    tiles = "".join(
-        f'<a class="el-race" href="{esc(r["url"])}" rel="noopener" target="_blank">'
-        f'<span class="el-state">{esc(r["state"])}</span>'
-        f'<b class="{cls(r["lead"])}">{esc(pz(r["lead"]))} {_pct(r["lead"]["p"])}</b>'
-        f'<small class="el-nm">{esc(r["lead"]["name"])}</small>'
-        f'<small>對 {esc(pz(r["other"]) or r["other"]["name"])} {_pct(r["other"]["p"])}</small>'
-        f'<span class="el-mini" aria-hidden="true">'
-        f'<i class="{cls(r["lead"])}" style="width:{r["lead"]["p"] * 100:.1f}%"></i>'
-        f'<i class="{cls(r["other"])}" style="width:{r["other"]["p"] * 100:.1f}%"></i>'
-        '</span></a>' for r in races)
-    return ('<div class="el-sub">參議院：勝負最接近的州</div>'
-            f'<div class="el-races">{tiles}</div>')
+    items = "".join(
+        f'<a class="el2-r" href="{esc(r["url"])}" rel="noopener" target="_blank">'
+        f'<span>{esc(r["state"])}</span><b class="{cls(r["lead"])}">{esc(r["lead"].get("party", ""))} {_pct(r["lead"]["p"])}</b>'
+        f'<small>{esc(r["lead"]["name"])}</small></a>' for r in races)
+    return ('<div class="el2-line el2-races"><span class="el2-lk">最接近的參院選戰</span>'
+            f'<span class="el2-rs">{items}</span></div>')
 
 
 def _head_url(e: dict) -> str:
@@ -365,7 +345,7 @@ def election_card(e: dict | None) -> str:
             f'<h2 id="el-title">{title}</h2></div>'
             f'<a class="home-primary-link" href="{esc(_head_url(e))}"'
             ' rel="noopener" target="_blank">資料：Polymarket ↗</a></div>'
-            '<div class="el-rows">'
-            + _chamber("眾議院", e.get("house")) + _chamber("參議院", e.get("senate"))
-            + '</div>' + _balance(e.get("balance")) + _races(e.get("races") or [])
+            '<div class="el2-chs">'
+            + _chamber2("眾議院", e.get("house")) + _chamber2("參議院", e.get("senate"))
+            + '</div>' + _balance2(e.get("balance")) + _races2(e.get("races") or [])
             + note + map_section(e) + '</section>')

@@ -71,6 +71,29 @@ FOMC_YEARS_BACK = 4
 # ---------------------------------------------------------------------------
 # 設定
 # ---------------------------------------------------------------------------
+
+def clean_jpeg(data: bytes) -> bytes:
+    """
+    移除 JPEG 的 APP1–APP15 區段（XMP、C2PA／JUMBF 等中繼資料），保留 APP0（JFIF）
+    與 APP2（ICC 色彩描述檔）。結構不對就原樣回傳——寧可不清，也不能把圖弄壞。
+    """
+    if data[:2] != b"\xff\xd8":
+        return data
+    out, i = bytearray(b"\xff\xd8"), 2
+    while i + 4 <= len(data):
+        if data[i] != 0xFF:
+            return data
+        marker = data[i + 1]
+        if marker == 0xDA:                       # 影像資料開始：其後全部照抄
+            out += data[i:]
+            return bytes(out)
+        seg_len = int.from_bytes(data[i + 2:i + 4], "big")
+        seg = data[i:i + 2 + seg_len]
+        if not (0xE1 <= marker <= 0xEF and marker != 0xE2):
+            out += seg
+        i += 2 + seg_len
+    return data
+
 def load_config(name: str) -> dict:
     p = ROOT / "config" / name
     if not p.exists():
@@ -137,6 +160,8 @@ INFL_GROUPS = ("headline", "cpi_components", "shelter_detail", "stickiness",
                # 實質消費力道（2026-10）：實質消費、實質可支配所得、儲蓄率
                "consumption")
 RATES_GROUPS = ("yields", "real_and_breakeven", "term_premium", "credit", "debt",
+                # 長端拆解／曲線／房貸／全球長端（2026-10）
+                "longend",
                 # 匯率：只為了把海外發債的原幣金額換算成美元等值。
                 # 少了這一組，非美元的發債仍然會列出原幣金額，
                 # 只是旁邊少一句「約合多少美元」——不會壞，只是少一點資訊。
@@ -684,7 +709,12 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         (OUT_DIR / "brand").mkdir(parents=True, exist_ok=True)
         for f in _brand.iterdir():
             if f.is_file():
-                shutil.copyfile(f, OUT_DIR / "brand" / f.name)
+                if f.suffix.lower() in (".jpg", ".jpeg"):
+                    # 連結縮圖要給 Threads／FB 的爬蟲抓：去掉 JPEG 裡的附加
+                    # 中繼資料（C2PA 內容憑證、XMP 等），只留影像本身
+                    (OUT_DIR / "brand" / f.name).write_bytes(clean_jpeg(f.read_bytes()))
+                else:
+                    shutil.copyfile(f, OUT_DIR / "brand" / f.name)
         # iOS 與部分瀏覽器會直接去根目錄找這兩個檔名
         for f in ("favicon.ico", "apple-touch-icon.png"):
             if (_brand / f).exists():
@@ -801,10 +831,18 @@ def main() -> int:
                 _live = focus_today.upgrade_yields_live(series)
                 if _live:
                     log.info("長端殖利率升級為即時：%s", "、".join(_live))
+            # 財政部拍賣、紐約聯儲 SOMA、MSPD（2026-10）：失敗只讓對應區塊空白
+            from src import treasury_source
+            try:
+                _tr = treasury_source.gather(args.offline, STATE_FILE.parent,
+                                             ROOT / "fixtures" / "treasury.json")
+            except Exception as e:                 # noqa: BLE001
+                log.warning("財政部／SOMA 資料取得失敗（%s），相關區塊本次不顯示", e)
+                _tr = {}
             ctxs["rates"] = build.build_rates_context(
-                cfg, series, failed, args.offline)
+                cfg, series, failed, args.offline, treasury=_tr)
             p = ctxs["rates"]["pressure"]
-            log.info("長端模組完成：供給壓力 %s（分數 %+.2f）", p.level, p.score)
+            log.info("長端模組完成：期限溢酬 %s（%+.2f%%）", p.level, p.score)
 
     # ---- 流動性群組（SOFR／IORB／ON RRP／SRF＋油價與 VIX 的 FRED 後備）----
     # 供焦點條的自選 chip 目錄；未來的流動性頁沿用同一組。
@@ -887,7 +925,7 @@ def main() -> int:
     # ---- 情境合成（缺件也會產出，但畫面上會明示缺哪一塊）----
     ctxs["scenario"] = build.build_scenario_context(
         ctxs.get("labor"), ctxs.get("inflation"), ctxs.get("fomc"),
-        ctxs.get("rates"))
+        ctxs.get("rates"), series=all_series)
     sc = ctxs["scenario"]["scenario"]
     log.info("情境合成：%s（就業%s × 通膨%s，適用「%s」的九宮格%s）",
              sc.name, sc.labor_state, sc.infl_state,
@@ -1001,6 +1039,11 @@ def main() -> int:
         from src.analysis import fomc_extra as _fx
         _fw = (ctxs.get("_focus") or {}).get("fedwatch")
         _fom["mvd"] = _fx.market_vs_dots(_fw, _fom.get("sep"), _fom.get("rate_mid"))
+        # 長端頁「Fed 跟上曲線了嗎」：同一組期貨路徑與點陣圖
+        _rle = (ctxs.get("rates") or {}).get("le")
+        if _rle is not None:
+            from src.analysis import longend as _le
+            _rle["match"] = _le.match_the_curve(_fom["mvd"], (_rle.get("contrib") or {}).get(12))
         _u3 = ((((ctxs.get("labor") or {}).get("key_metrics") or {}).get("u3")
                 or {}).get("value"))
         _fom["shift_conds"] = _fx.shift_conditions(
@@ -1009,6 +1052,25 @@ def main() -> int:
         _fom["xref"] = {"unrate": _u3,
                         "unrate_month": (ctxs.get("labor") or {}).get("data_month"),
                         "infl_verdict": (ctxs.get("inflation") or {}).get("verdict3")}
+    # 情境頁（2026-10）：期貨隱含路徑與終端利率、本頁判讀 vs 市場定價、
+    # 下一個可能移動格子的數據。任何一步失敗只少那一塊。
+    _scx = ctxs.get("scenario")
+    if _scx is not None:
+        try:
+            _fc = None if args.offline else focus_today.futures_curve(rates_series)
+            _scx["futures_curve"] = _fc
+            from src.analysis import positioning as _pos
+            _scx["divergence"] = _pos.divergence(_scx["scenario"].lean, _fc)
+            if _fc:
+                log.info("期貨路徑：%d 個月，終端 %.3f%%（%s，%+.0fbp）%s", len(_fc["points"]),
+                         _fc["terminal"], _fc["terminal_month"], _fc["terminal_bp"],
+                         "，路徑仍在走" if _fc.get("open_end") else "")
+        except Exception as e:                     # noqa: BLE001
+            log.warning("情境頁期貨路徑產生失敗（%s），該區塊本次不顯示", e)
+        _scx["mvd"] = (ctxs.get("fomc") or {}).get("mvd") or _scx.get("mvd")
+        _scx["next_releases"] = build.scenario_next_releases(
+            ctxs.get("_schedule") or {},
+            (((ctxs.get("fomc") or {}).get("next_meeting")) or {}).get("date"))
     ctxs["_stale"] = [] if args.offline else freshness.check(all_series)
     if ctxs["_stale"]:
         log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),

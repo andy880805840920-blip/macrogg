@@ -194,7 +194,7 @@ def snapshot(ctxs: dict) -> dict:
         # 只有偏高/偏低掛旗標；中性不掛——翻回中性時畫面上會出現
         # 「－ 偏高不再成立」（方向自動反轉成偏降息），一列就講完，
         # 不需要再多一列「＋ 中性」的廢話。
-        _LV_TITLE = {"high": "長端供給壓力偏高", "low": "長端供給壓力偏低"}
+        _LV_TITLE = {"high": "期限溢酬偏高", "low": "期限溢酬偏低"}
         _LV_LEAN = {"high": "hawkish", "low": "dovish"}
         _exp = getattr((ctxs.get("inflation") or {}).get("summary"),
                        "expect_5y5y", None)

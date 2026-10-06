@@ -10,13 +10,62 @@
   publish = "output"
   command = ""
 
-# 全站不被搜尋引擎收錄（頁面本身也帶 noindex meta，這裡是第二道）
+# 全站不被搜尋引擎收錄（頁面本身也帶 noindex meta，這裡是第二道）。
+#
+# 只掛在「頁面」上，不掛在 /brand/（LOGO、連結縮圖、圖示）：Threads／FB 的
+# 爬蟲抓連結縮圖時，圖片本身回 noindex 可能被當成不能用而不顯示縮圖。
+# Netlify 的規則無法「排除」某個路徑，所以逐一列出頁面路徑；新增分頁時
+# 記得加進來（漏加只是少一道保險，頁面的 noindex meta 仍然有效）。
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Robots-Tag = "noindex, nofollow, noarchive"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/labor/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/inflation/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/fomc/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/rates/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/scenario/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/archive/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/latest.json"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
 
 # HTML 不快取，資料一更新就看得到最新版。
 #

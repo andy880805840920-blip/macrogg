@@ -165,7 +165,7 @@ check("⑯ 主題連結：顯示中的主題才露出、來源列含該主題來
       and "新聞：Reuters、CNBC" in h)
 check("⑰ JS：指標→主題對應、有內容的主題、先勾的排前面",
       '"wti": "oil"' in h and 'var TA=["fed", "oil"]' in h
-      and "box.appendChild(ch)" in h and "前兩個指標決定" in h)
+      and "box.appendChild(ch)" in h and "<em>補充新聞</em>" in h)
 
 # ---------------------------------------------------------------- Polymarket
 def mk_market(name, p, vol=1000, d1=None, token="t"):
@@ -363,7 +363,11 @@ check("㊺ 手機版：數字磚取代長句、註腳一行＋「說明」收合
       'class="el-stats"' in sec and "el-detail" not in sec
       and '<details class="el-how"><summary>說明</summary>' in html
       and "價格＝下注者的看法，不是民調" in html
-      and '<b class="rep">共和黨 57.5%</b>' in html, html[:100])
+      and '<b class="rep">共 57.5%</b>' in html
+      # 2026-10 精簡版：長條圖只剩眾參院旁的走勢線
+      and "el-bar" not in html.split('<details class="el-map">')[0]
+      and "el-stack" not in html and "el-mini" not in html.split('<details class="el-map">')[0],
+      html[:100])
 
 print()
 print("全部通過" if ok else "有失敗")

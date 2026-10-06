@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from ..site import esc
 from ..analysis import scenario as scenario_mod
 from . import compact_full, focus_evidence, state_chip, teach
@@ -9,44 +11,54 @@ from . import compact_full, focus_evidence, state_chip, teach
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
 
 
-def _grid(cells) -> str:
-    head = ('<div class="axis"></div>'
-            + "".join(f'<div class="axis">通膨{esc(i)}</div>'
-                      for i in ("低", "中", "高")))
-    rows = []
-    for row in cells:
-        label = row[0]["labor"]
-        rows.append(f'<div class="axis row">就業{esc(label)}</div>')
-        for c in row:
-            # 「目前位置」是唯一需要的徽章。先前還有一個
-            # 「結論已依重心修正」——那是舊的事後改寫機制留下的補救說明，
-            # 三張格子之後格名本身就是結論，不需要再解釋一次。
-            badge = '<div class="sbadge">目前位置</div>' if c["current"] else ""
-            cls = " on" if c["current"] else ""
-            # 會隨體制改變的三格標一個小記號：其餘六格不管誰優先都一樣，
-            # 讀者不必為那六格擔心重心翻轉的風險。
-            cls += " conflict" if c.get("conflict") else ""
-            # 「停滯性通膨：通膨優先」這種帶冒號的複合名，在 360px 的
-            # 一格裡會折成三行，讓整個底列比其他兩列高出兩倍多。
-            # 冒號後面是限定語不是主詞，拆成小一級的第二行——
-            # 高度降下來，而且「主情境 ＋ 哪一邊優先」的層次反而更清楚。
-            _n = c["name"]
-            if "：" in _n:
-                _head, _qual = _n.split("：", 1)
-                name_html = (f'{esc(_head)}'
-                             f'<span class="sn-qual">{esc(_qual)}</span>')
+def _grid(cells, heads: dict | None = None, hypo: bool = False) -> str:
+    """
+    九宮格（2026-10 第二版，使用者：「太醜、太多顏色、太多字」）。
+
+    只用一個強調色：目前那一格實心深底；相鄰格白底細框（下一步可能去的地方）；
+    其餘淡灰。格子裡只放格名，門檻寫進欄列標題，讀者不必再讀兩段準則說明。
+    """
+    heads = heads or {}
+    cur = next(((i, j) for i, row in enumerate(cells) for j, c in enumerate(row)
+                if c.get("current")), None)
+    out = ['<div class="sx-gk"><span>就業</span><span>通膨</span></div>']
+    for j, k in enumerate(("低", "中", "高")):
+        on = " cur" if cur and cur[1] == j else ""
+        out.append(f'<div class="sx-gh{on}"><b>{k}</b><small>{esc(heads.get("i" + k, ""))}</small></div>')
+    for i, row in enumerate(cells):
+        lab = row[0]["labor"]
+        on = " cur" if cur and cur[0] == i else ""
+        out.append(f'<div class="sx-gr{on}"><b>{esc(lab)}</b><small>{esc(heads.get("l" + lab, ""))}</small></div>')
+        for j, c in enumerate(row):
+            if c["current"]:
+                cls = "cur"
+            elif cur and abs(i - cur[0]) + abs(j - cur[1]) == 1:
+                cls = "adj"
             else:
-                name_html = esc(_n)
-            # 格子裡**只有格名**。逐格的一句說明收在卡尾「九格各代表什麼」，
-            # 目前格的說明則以頁首結論卡為主場——先前目前格常駐一段、
-            # 其餘八格各藏一個收合，三張頁籤共 24 個收合＋一段跟頁首
-            # 一字不差的重複文，正是這張卡「排版混亂」的最大來源。
-            rows.append(
-                f'<div class="scell {c["lean"]}{cls}">'
-                f'<div class="sname">{name_html}</div>'
-                f'{badge}</div>'
-            )
-    return f'<div class="sgrid">{head}{"".join(rows)}</div>'
+                cls = "far"
+            n = c["name"]
+            head, qual = (n.split("：", 1) + [""])[:2]
+            tag = (f'<span class="sx-gt">{"假設" if hypo else "目前"}　{esc(LEAN_TEXT.get(c["lean"], ""))}</span>'
+                   if c["current"] else "")
+            out.append(f'<div class="sx-gx {cls}"><span class="sx-gn">{esc(head)}</span>'
+                       + (f'<span class="sx-gq">{esc(qual)}</span>' if qual else "")
+                       + f'{tag}</div>')
+    return f'<div class="sx-g">{"".join(out)}</div>'
+
+
+def _grid_heads(d: dict) -> dict:
+    """欄列標題上的門檻：通膨看核心 PCE 年增、就業看失業率。"""
+    w = d.get("why") or {}
+    inf, lab = w.get("inflation") or {}, w.get("labor") or {}
+    h = {}
+    lo, hi = inf.get("low"), inf.get("high")
+    if lo and hi:
+        h.update({"i低": f"＜{lo}", "i中": f"{lo[:-1]}–{hi}", "i高": f"＞{hi}"})
+    band = next((r["value"] for r in lab.get("rows") or [] if r["label"].startswith("FOMC 長期失業率")), "")
+    m = re.match(r"([\d.]+)–([\d.]+)%", band or "")
+    if m:
+        h.update({"l強": f"＜{m.group(1)}%", "l中": band, "l弱": f"＞{m.group(2)}%"})
+    return h
 
 
 def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
@@ -65,9 +77,10 @@ def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
     metas = d.get("regime_meta") or []
     grids = d.get("grids") or {}
     if not metas or not grids:
-        return _grid(d.get("cells") or []), "", ""
+        return _grid(d.get("cells") or [], _grid_heads(d)), "", ""
 
     tabs, panels = [], []
+    heads = _grid_heads(d)
     for i, m in enumerate(metas):
         rid = f"rg-{m['key']}"
         checked = " checked" if m["current"] else ""
@@ -78,13 +91,8 @@ def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
             f'<label for="{rid}" class="rtab">{esc(m["label"])}{cur_tag}</label>')
         # 切到非當前體制時，要提醒這是假設情況，不是現況
         note = ("" if m["current"] else
-                f'<div class="rt-hypo">這是<b>假設</b>聯準會改以'
-                f'{esc(m["label"])}時的對照，不是目前的判定。</div>')
-        panels.append(
-            f'<div class="rpanel">{note}'
-            f'<p class="hint" style="margin:0 0 12px">'
-            f'<b>{esc(m["label"])}的規則：</b>{esc(m["rule"])}</p>'
-            f'{_grid(grids[m["key"]])}</div>')
+                f'<div class="rt-hypo">假設聯準會改以{esc(m["label"])}：{esc(m["rule"])}</div>')
+        panels.append(f'<div class="rpanel">{note}{_grid(grids[m["key"]], heads, not m["current"])}</div>')
 
     # 目前這一格在三種體制下分別是什麼——直接回答「翻轉會怎樣」
     cur_row = "".join(
@@ -103,7 +111,7 @@ def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
         for m in _alt:
             if m["cell_name"] not in _names:
                 _names.append(m["cell_name"])
-        cmp_head = ("重心若翻轉，這一格會變成"
+        cmp_head = ("重心翻轉時：變成"
                     + "或".join(f'「{n}」' for n in _names[:2]))
         cmp_note = ("下面三列是同一格在三種體制下的結論。"
                     "重心是由聲明、投票與記者會判定的，會隨會議改變——"
@@ -116,7 +124,7 @@ def _grid_tabs(d: dict, sc) -> tuple[str, str, str]:
     # 上方三個情境頁籤（純 CSS radio），預設選中目前偵測到的重心，
     # 一次只顯示一張格子。翻轉對照的三列不再自帶收合框——
     # 它跟「重心怎麼判定」是同一個主題，由卡尾併成一個收合。
-    grid_html = (f'<div class="rtabs">{"".join(tabs)}'
+    grid_html = (f'<div class="rtabs sx-tabs"><span class="sx-tabs-k">聯準會重心</span>{"".join(tabs)}'
                  f'<div class="rpanels">{"".join(panels)}</div></div>')
     cmp_body = (f'<p class="hint" style="margin:10px 0 10px">{cmp_note}</p>'
                 f'{cur_row}')
@@ -141,87 +149,6 @@ def _cell_gloss(cells) -> str:
             '標 ◆ 的三格在其他重心下名稱與結論會不同（切上方頁籤看）。</p>'
             f'<dl class="gloss" style="margin-top:10px">{"".join(items)}</dl>'
             '</details>')
-
-
-def _triggers(trigs, drift=None) -> str:
-    if not trigs:
-        return '<div class="empty">資料不足，無法計算觸發距離</div>'
-    out = []
-    # 相鄰格的條件排前面——那是格子實際會先動到的方向。
-    ordered = sorted(trigs, key=lambda x: not getattr(x, "adjacent", True))
-    for t in ordered:
-        # 兩種標籤回答兩個不同的問題：
-        #   下一格＝九宮格的相鄰格（格子會先動到哪）
-        #   關鍵　＝政策解鎖條件（在目前的重心下，方向要翻需要它）
-        # 先前只有「關鍵」一種，而它可能指向對角另一端，讀者把它當成
-        # 下一格就會覺得「跳了兩格」。
-        tags = ""
-        if getattr(t, "adjacent", True):
-            tags += '<span class="tadj">下一格</span>'
-        # 跟該軸數據漂移方向一致的門檻標「動能指向」——
-        # 「可能下一格」就是從這些條裡挑距離最近的。
-        if (drift and getattr(t, "direction", "") and not t.met
-                and (drift.get(t.axis) or (None,))[0] == t.direction):
-            tags += '<span class="tdir">動能指向</span>'
-        if getattr(t, "binding", False):
-            tags += '<span class="tbind">關鍵</span>'
-        out.append(
-            f'<div class="trig{" met" if t.met else ""}">'
-            f'<div class="tname">{esc(t.label)}{tags}</div>'
-            f'<div class="tdist">{esc("已觸發" if t.met else t.distance)}</div>'
-            f'<div class="tnow">目前 {esc(t.current)}　·　{esc(t.threshold)}</div>'
-            f"</div>"
-        )
-    # 這一段是教學不是結論，收進 teach 層——常駐的話會把方法論擺在
-    # 門檻列前面（散文稽核也會超標）。
-    from . import teach
-    out.append(teach(
-        "每一條門檻代表九宮格的一種移動：現在的數字離那條線多遠。",
-        "「下一格」是相鄰的格子，門檻一到格子就先移過去；「關鍵」是政策"
-        "方向真正的解鎖條件——在通膨優先的重心下，就業再弱也要等通膨"
-        "回到「低」才換得到降息，所以兩者可能不是同一條。",
-        "「動能指向」標在跟當期數據方向一致的門檻上——「可能下一格」"
-        "就是從這些條裡挑距離最近的；離得近但方向相反的門檻不會被當成預測。"
-        "平常只要盯「關鍵」那條的距離有沒有在縮小。注意口徑：通膨門檻的判定值"
-        "是「綜合水準」＝0.6×年增＋0.4×三月年化（轉格要看得夠早，所以把"
-        "動能一起計入）；上方格位判定只用年增。兩個數字不同是口徑不同，"
-        "不是算錯。"))
-    return "".join(out)
-
-
-PRESSURE_LABEL = {"high": "偏高", "moderate": "中性", "low": "偏低"}
-
-
-def _rates_line(r: dict | None) -> str:
-    """
-    長端供給壓力：刻意不併入九宮格，因為它決定的是曲線形狀而非政策方向。
-
-    這裡**只留結論**。先前把長端頁的三個分項（含「每月減持約 37 十億美元
-    公債…」這種說明句）整段逐字搬過來，等於同一份拆解在兩頁各印一次；
-    從首頁走到這裡的讀者，得先讀完兩段看過的東西才走得到真正的新內容
-    （部位對照、市場定價對照）。分項屬於長端頁，這裡給連結就好。
-    """
-    if not r:
-        return ""
-    cls = {"high": "hawkish", "low": "dovish"}.get(r["level"], "balanced")
-    return f"""
-<div class="grid">
-  <div class="card">
-    <h2 id="curve-pressure" data-sum="供給壓力 {esc(PRESSURE_LABEL.get(r['level'], '—'))}　·　{esc(r['curve_title'])}">長端供給壓力（不進九宮格）</h2>
-    <p class="hint">九宮格講<b>政策利率往哪走</b>，這裡講<b>曲線的形狀</b>——
-      兩件事，所以分開列。</p>
-    <div class="verdict {cls}" style="margin:14px 0 0">
-      <div class="v-eyebrow">供給壓力 {esc(PRESSURE_LABEL.get(r['level'], '—'))}　·　綜合分數 {r['score']:+.2f}</div>
-      <div class="v-main">{esc(r['curve_title'])}</div>
-      <div class="v-why">{esc(r['curve_desc'])}</div>
-      <div class="v-count">{esc(r['desc'])}</div>
-    </div>
-    <div class="src">三項分數的逐項拆解與債務動態見
-      <a href="/rates/#priced">長端與債務</a>頁。</div>
-  </div>
-</div>
-"""
-
 
 # 各頁結論卡上那句話的用詞，用來在對照時原樣引用
 _TILT_LABEL = {"hawkish": "利升息", "dovish": "利降息",
@@ -431,6 +358,332 @@ def _nc_calc(nc: dict) -> str:
             + mae_line + '</div>' + calc)
 
 
+# ===========================================================================
+# 2026-10 改版：手機優先的情境頁
+# ===========================================================================
+_NUM = re.compile(r"[-+]?\d+(?:\.\d+)?")
+LEAN_ZH = {"hawkish": "偏緊縮", "dovish": "偏寬鬆", "neutral": "大致不動"}
+NB = " "          # 收合摘要裡數字與文字之間用不斷行空白
+
+
+def _num(s: str):
+    m = _NUM.findall(s or "")
+    return float(m[-1]) if m else None
+
+
+def _md(iso: str) -> str:
+    return f"{int(iso[5:7])}/{int(iso[8:10])}" if iso and len(iso) >= 10 else iso or ""
+
+
+_WD = "一二三四五六日"
+
+
+def _md_wd(iso: str) -> str:
+    import datetime as _dt
+    try:
+        return f"{_md(iso)}（{_WD[_dt.date.fromisoformat(iso[:10]).weekday()]}）"
+    except ValueError:
+        return _md(iso)
+
+
+def _now_line(d: dict) -> str:
+    w = d.get("why") or {}
+    lab = {r["label"]: r["value"] for r in (w.get("labor") or {}).get("rows") or []}
+    u = next((v for k, v in lab.items() if k.startswith("失業率")), None)
+    p = (w.get("inflation") or {}).get("level")
+    bits = []
+    if u:
+        bits.append(f'失業率 <b>{esc(u)}</b>')
+    if p:
+        bits.append(f'核心 PCE 年增 <b>{esc(p)}</b>')
+    return f'<div class="sx-now">目前讀數　{"　·　".join(bits)}</div>' if bits else ""
+
+
+def _trail(d: dict, sc) -> str:
+    tr = d.get("trail") or []
+    cells = d.get("cells") or []
+    if not tr or not cells:
+        return ""
+    pos = {}
+    for i, row in enumerate(cells):
+        for j, c in enumerate(row):
+            pos[(c["labor"], c["infl"])] = (i, j)
+    items = [(f'{int(t["month"][5:7])} 月', t["labor"], t["infl"], False) for t in tr]
+    items.append(("現在", sc.labor_state, sc.infl_state, True))
+
+    def mini(l, i_, now):
+        p = pos.get((l, i_))
+        sq = "".join(
+            f'<i class="{"f" if p == (r, c) else ""}"></i>'
+            for r in range(3) for c in range(3))
+        return f'<div class="sx-tg{" now" if now else ""}">{sq}</div>'
+
+    blocks = "".join(
+        f'<div class="sx-ti{" now" if now else ""}">{mini(l, i_, now)}'
+        f'<span>{esc(m)}</span></div>' for m, l, i_, now in items)
+    same = all((t["labor"], t["infl"]) == (sc.labor_state, sc.infl_state) for t in tr)
+    if same:
+        txt = f'近 {len(tr)} 個月都在這一格'
+    else:
+        moves = []
+        prev = None
+        for t in tr + [{"month": "現在", "labor": sc.labor_state, "infl": sc.infl_state}]:
+            k = (t["labor"], t["infl"])
+            if prev and k != prev:
+                moves.append(f'{t["month"][5:7].lstrip("0") + " 月" if t["month"] != "現在" else "現在"}'
+                             f'移到就業{k[0]} × 通膨{k[1]}')
+            prev = k
+        txt = "；".join(moves) or "格位有變動"
+    return (f'<details class="f-more sx-trail"><summary>格位軌跡：{esc(txt)}</summary>'
+            f'<div class="sx-tis">{blocks}</div>'
+            '<div class="sx-note">過去月份用目前的門檻回推，不含失去工作者推格；停在核心 PCE 最新一期。</div>'
+            '</details>')
+
+
+# ---- 主要驅動因素：各頁本期關鍵訊號的第一條 ----
+def _driver_cards(cards: list) -> str:
+    if not cards:
+        return '<div class="empty">尚無資料</div>'
+    eyebrow = {"就業軸": "就業軸　·　本期關鍵訊號", "通膨軸": "通膨軸　·　本期關鍵訊號",
+               "政策": "政策　·　最近一次決議", "曲線形狀": "曲線形狀　·　長端本月主因"}
+    sev = {"alert": "警示", "watch": "留意", "info": ""}
+    out = []
+    for c in cards:
+        tag = sev.get(c.get("sev"), "")
+        out.append(
+            f'<a class="sx-dc {c.get("lean", "neutral")}" href="{esc(c["href"])}">'
+            f'<span class="sx-dc-k">{esc(eyebrow.get(c["axis"], c["axis"]))}'
+            + (f'<em class="sx-sev {c.get("sev")}">{tag}</em>' if tag else "")
+            + f'</span><b class="sx-dc-t">{esc(c["title"])}</b>'
+            f'<span class="sx-dc-f"><i class="sx-lean {c.get("lean", "neutral")}">'
+            f'{esc(LEAN_TEXT.get(c.get("lean"), "中性"))}</i>來源：{esc(c["page"])}頁 →</span></a>')
+    return f'<div class="sx-dcs">{"".join(out)}</div>'
+
+
+# ---- 情境轉換門檻：距離條 ----
+_AXIS_ZH = {"labor": "就業軸", "inflation": "通膨軸"}
+_SCALE = 0.5          # 0.5 個百分點以外＝條是空的
+
+
+def _trigger_bars(trigs, drift=None) -> str:
+    if not trigs:
+        return '<div class="empty">資料不足，無法計算觸發距離</div>'
+    groups = {}
+    for t in sorted(trigs, key=lambda x: not getattr(x, "adjacent", True)):
+        groups.setdefault(getattr(t, "axis", "") or "labor", []).append(t)
+    out = []
+    for ax in ("labor", "inflation"):
+        rows = []
+        for t in groups.get(ax, []):
+            cur, thr = _num(t.current), _num(t.threshold)
+            dist = 0.0 if t.met else (abs(thr - cur) if cur is not None and thr is not None else None)
+            close = 100.0 if t.met else (max(0.0, 1 - dist / _SCALE) * 100 if dist is not None else 0)
+            tags = ""
+            if getattr(t, "adjacent", True):
+                tags += '<span class="tadj">下一格</span>'
+            if (drift and t.direction and not t.met
+                    and (drift.get(t.axis) or (None,))[0] == t.direction):
+                tags += '<span class="tdir">動能指向</span>'
+            if getattr(t, "binding", False):
+                tags += '<span class="tbind">關鍵</span>'
+            rows.append(
+                f'<div class="sx-tr{" met" if t.met else ""}{"" if getattr(t, "adjacent", True) else " far"}">'
+                f'<div class="sx-tr-h"><b>{esc(t.label)}</b>{tags}'
+                f'<span class="sx-tr-d">{esc("已觸發" if t.met else t.distance)}</span></div>'
+                f'<div class="sx-tr-bar"><i style="width:{close:.0f}%"></i></div>'
+                f'<div class="sx-tr-n">{esc(t.current)}　→　{esc(t.threshold)}</div></div>')
+        if rows:
+            out.append(f'<div class="sx-tg-h">{_AXIS_ZH[ax]}</div>' + "".join(rows))
+    out.append('<div class="sx-note">條越滿＝越接近觸發；差 0.5 個百分點以上是空條。'
+               '通膨門檻用「綜合水準」（0.6×年增＋0.4×三月年化），比格位判定早一步反應。</div>')
+    return "".join(out)
+
+
+def _next_releases(rows: list, trigs) -> str:
+    if not rows:
+        return ""
+    near = {}
+    for t in trigs or []:
+        if t.met or not getattr(t, "adjacent", True):
+            continue
+        cur, thr = _num(t.current), _num(t.threshold)
+        if cur is None or thr is None:
+            continue
+        k = {"labor": "就業軸", "inflation": "通膨軸"}.get(t.axis)
+        if k and (k not in near or abs(thr - cur) < near[k][0]):
+            near[k] = (abs(thr - cur), t)
+    out = []
+    for r in rows:
+        n = near.get(r["axis"])
+        hint = (f'最近門檻：{n[1].label}　{n[1].distance}' if n else r["why"])
+        out.append(f'<div class="sx-nx"><span class="sx-nx-d">{esc(_md_wd(r["date"]))}</span>'
+                   f'<div class="sx-nx-b"><b>{esc(r["label"])}</b><span class="sx-nx-a">{esc(r["axis"])}</span>'
+                   f'<small>{esc(hint)}</small></div></div>')
+    return ('<h3 class="sx-h3">接下來可能移動格子的數據</h3>'
+            f'<div class="sx-nxs">{"".join(out)}</div>')
+
+
+# ---- 固定收益對照 ----
+def _fmt_level(r) -> str:
+    if r.get("level") is None:
+        return ""
+    if r["key"] in ("short", "long"):
+        return f'{r["level"]:+.0f}bp'
+    if r["key"] in ("ig", "hy"):
+        return f'{r["level"] * 100:.0f}bp'
+    return f'{r["level"]:.2f}%'
+
+
+def _pos_table(rows: list, name: str) -> str:
+    if not rows:
+        return '<div class="empty">尚無資料</div>'
+    from ..analysis.positioning import MATCH_ZH
+    body = []
+    for r in rows:
+        dl = (f'{r["delta_bp"]:+.0f}bp'.replace("-", "−") if r.get("delta_bp") is not None else "—")
+        body.append(
+            f'<div class="sx-pr {r["match"]}">'
+            f'<div class="sx-pk"><b>{esc(r["label"])}</b><small>{esc(r["sub"])}　{esc(_fmt_level(r))}</small></div>'
+            f'<div class="sx-pe"><em>框架預期</em>{esc(r["expect_txt"])}</div>'
+            f'<div class="sx-pa"><em>近 1 月實際</em>{esc(r["actual_txt"])}<small>{esc(dl)}</small></div>'
+            f'<div class="sx-pm"><span class="sx-m {r["match"]}">{esc(MATCH_ZH[r["match"]])}</span></div></div>')
+    head = ('<div class="sx-ph"><span>變數</span><span>框架預期（' + esc(name) + '）</span>'
+            '<span>近 1 月實際</span><span>對照</span></div>')
+    return f'<div class="sx-pos">{head}{"".join(body)}</div>'
+
+
+def _pos_summary(rows: list) -> tuple[str, str]:
+    from collections import Counter
+    c = Counter(r["match"] for r in rows)
+    sm = f'一致{c.get("same", 0)}　·　偏離{c.get("off", 0)}　·　相反{c.get("opp", 0)}'
+    opp = [r for r in rows if r["match"] == "opp"]
+    if opp:
+        line = "；".join(f'{r["label"]}：框架預期{r["expect_txt"]}，實際{r["actual_txt"]}'
+                        f'（{r["delta_bp"]:+.0f}bp）'.replace("-", "−") for r in opp)
+        line = "跟框架<b>相反</b>的：" + esc(line) + "。相反不代表框架錯，常見原因是另一股力量蓋過了政策方向（例如期限溢酬）。"
+    else:
+        line = "七個變數裡沒有跟框架方向相反的。"
+    return sm, line
+
+
+def _duration(rows: list) -> str:
+    if not rows:
+        return ""
+    tiles = []
+    for r in rows:
+        cls = "dn" if r["real"] < 0 else "up"
+        tiles.append(
+            f'<div class="sx-du"><div class="sx-du-h"><b>{esc(r["tenor"])}</b>'
+            f'<span>存續期間 {r["D"]:.1f}</span></div>'
+            f'<div class="sx-du-v {cls}">{r["real"]:+.2f}%<small>近 1 月殖利率 {r["dy"]:+.0f}bp</small></div>'
+            f'<div class="sx-du-s"><span>+25bp　<b>{r["up25"]:+.2f}%</b></span>'
+            f'<span>−25bp　<b>{r["dn25"]:+.2f}%</b></span></div></div>')
+    return ('<h3 class="sx-h3">存續期間試算：價格變動 ≈ −D×Δy ＋ ½×C×Δy²</h3>'
+            f'<div class="sx-dus">{"".join(tiles)}</div>'
+            '<div class="sx-note">以當前殖利率的平價債近似（修正存續期間 D、凸性 C）；'
+            '「近 1 月」用過去 22 個交易日的殖利率實際變動代入，不含票息收入。'
+            '±25bp 是情境試算：凸性讓下跌比上漲少一點。</div>')
+
+
+# ---- 市場定價：期貨路徑 vs 點陣圖 ----
+def _futures(d: dict, sc) -> tuple[str, str]:
+    fc = d.get("futures_curve") or {}
+    dots = d.get("dots") or {}
+    mvd = d.get("mvd") or {}
+    mk = d.get("market") or {}
+    if not fc.get("points"):
+        body = ('<div class="soonbox" style="margin-top:0;padding:22px 18px;box-shadow:none;'
+                'border-style:dashed"><h3>本次沒有取得期貨路徑</h3><p>聯邦基金期貨（ZQ）報價抓取失敗，'
+                '下次更新自動補上。</p></div>')
+        if mk:
+            body += (f'<div class="sx-note">替代參考：2 年期殖利率 − 政策利率中值 '
+                     f'{esc(mk.get("display", ""))}（{esc(mk.get("text", ""))}）</div>')
+        return body, "本次沒有取得期貨路徑"
+    r0, pts = fc["r0"], fc["points"]
+    bps = [(p["rate"] - r0) * 100 for p in pts]
+    dbp = {y: (v - r0) * 100 for y, v in dots.items()}
+    m = max([abs(x) for x in bps] + [abs(v) for y, v in dbp.items() if any(p["month"][:4] == y for p in pts)] + [25])
+    term_m = fc["terminal_month"]
+    cols = []
+    for p, bp in zip(pts, bps):
+        y, mo = p["month"][:4], int(p["month"][5:7])
+        thin = " thin" if p["month"] >= fc.get("thin_from", "9999") else ""
+        on = " on" if p["month"] == term_m else ""
+        h = abs(bp) / m * 100
+        dot = ""
+        if y in dbp:
+            dot = f'<span class="sx-fp-dot" style="bottom:{max(dbp[y], 0) / m * 100:.1f}%"></span>'
+        lab = ""
+        if p is pts[0] or p["month"] == term_m:
+            lab = f'<em>{p["rate"]:.2f}</em>'
+        xl = (f'{y[2:]}/{mo}' if (mo in (1, 4, 7, 10) or p is pts[0]) else "")
+        cols.append(f'<div class="sx-fp-c{thin}{on}" data-tip="{p["month"]}｜{p["rate"]:.3f}%（{bp:+.0f}bp）">'
+                    f'<span class="sx-fp-b {"up" if bp >= 0 else "dn"}" style="height:{h:.1f}%">{lab}</span>'
+                    f'{dot}<span class="sx-fp-x">{esc(xl)}</span></div>')
+    chart = (f'<div class="sx-fp"><div class="sx-fp-y"><span>+{m:.0f}bp</span><span>0</span></div>'
+             f'<div class="sx-fp-p">{"".join(cols)}</div></div>'
+             '<div class="cl-leg"><span><i class="gc-up"></i>期貨隱含利率（相對現行中點）</span>'
+             '<span><i class="sx-lg-dot"></i>點陣圖年底中位數</span>'
+             '<span><i class="sx-lg-thin"></i>遠月成交稀、僅供參考</span></div>')
+    # 數字列
+    tbp = fc["terminal_bp"]
+    tiles = [("現行區間中點", f'{r0:.3f}%', "政策利率目標區間的中點"),
+             ("期貨終端利率", f'{fc["terminal"]:.2f}%',
+              f'{term_m[:4]}/{int(term_m[5:7])}　{tbp:+.0f}bp' + ("，仍在升" if fc.get("open_end") and tbp > 0
+                                                               else "，仍在降" if fc.get("open_end") else ""))]
+    for y in sorted(dots)[:2]:
+        tiles.append((f"點陣圖 {y} 年底", f"{dots[y]:.3f}%", f'較現行 {(dots[y] - r0) * 100:+.0f}bp'))
+    tiles_html = "".join(f'<div class="stat"><div class="s-label">{esc(a)}</div>'
+                         f'<div class="s-value">{esc(b)}</div><div class="s-note">{esc(c)}</div></div>'
+                         for a, b, c in tiles)
+    # 一句話：年底一致嗎、明年差多少
+    sent = []
+    y0 = sorted(dots)[0] if dots else None
+    if y0 and mvd.get("market_end") is not None and str(mvd.get("year")) == y0:
+        g = (mvd["market_end"] - dots[y0]) * 100
+        sent.append(f'到 {y0} 年底，期貨 {mvd["market_end"]:.2f}% 對點陣圖 {dots[y0]:.3f}%'
+                    + ("，大致一致" if abs(g) < 12.5 else f"，期貨{'多' if g > 0 else '少'}定價 {abs(g):.0f}bp"))
+    last = pts[-1]
+    y1 = last["month"][:4]
+    if y1 in dots and y1 != y0:
+        g = (last["rate"] - dots[y1]) * 100
+        sent.append(f'到 {y1}/{int(last["month"][5:7])}，期貨 {last["rate"]:.2f}%，'
+                    f'點陣圖 {y1} 年底只有 {dots[y1]:.3f}%——'
+                    + (f'市場比聯準會{"多" if g > 0 else "少"}定價約 {abs(g):.0f}bp（{abs(g) / 25:.1f} 碼）'
+                       if abs(g) >= 12.5 else "兩者大致一致"))
+    if fc.get("open_end"):
+        sent.append("期貨路徑在資料窗的最後一個月還在走，真正的終端可能更遠、更高")
+    sent_html = f'<div class="impact {"hawkish" if tbp > 12.5 else "dovish" if tbp < -12.5 else "neutral"}">{esc("。".join(sent))}。</div>' if sent else ""
+    alt = (f'<div class="sx-note">另一個粗略代理：2 年期殖利率 − 政策利率中值 '
+           f'{esc(mk.get("display", ""))}（{esc(mk.get("text", ""))}）。</div>' if mk else "")
+    body = (sent_html + f'<div class="stat-row sx-stats">{tiles_html}</div>' + chart + alt
+            + teach("聯邦基金期貨每個月的隱含利率連成一條「市場預期的政策路徑」，再跟聯準會自己的點陣圖並排。",
+                    "終端利率＝這段期間離現行利率最遠的那一點，代表市場認為這一輪會升（降）到哪裡。"
+                    "期貨比點陣圖多定價，代表市場不相信聯準會會停在它說的地方。",
+                    "近月合約流動性好，遠月（約半年以後）成交稀，數字會跳，只看方向。"
+                    "期貨資料取自交易所報價，可能有 15 分鐘以上延遲。"))
+    sm = (f'終端{fc["terminal"]:.2f}%（{term_m[:4]}/{int(term_m[5:7])}，{tbp:+.0f}bp）'
+          + (f'　·　點陣圖{y1}年底{dots[y1]:.3f}%' if y1 in dots else ""))
+    return body, sm
+
+
+def _divergence_box(d: dict, sc) -> str:
+    dv = d.get("divergence")
+    fc = d.get("futures_curve") or {}
+    page = LEAN_ZH.get(sc.lean, "—")
+    if not dv:
+        return (f'<div class="sx-dv na"><div class="sx-dv-c"><span>本站判讀</span><b>{esc(page)}</b>'
+                f'<small>{esc(sc.name)}</small></div><div class="sx-dv-vs">—</div>'
+                '<div class="sx-dv-c"><span>期貨定價</span><b>本次未取得</b><small>下次更新補上</small></div></div>')
+    mkt = LEAN_ZH.get(dv["market"], "—")
+    return (f'<div class="sx-dv {"agree" if dv["agree"] else "split"}">'
+            f'<div class="sx-dv-c"><span>本站判讀</span><b class="{sc.lean}">{esc(page)}</b>'
+            f'<small>{esc(sc.name)}</small></div>'
+            f'<div class="sx-dv-vs">{"一致" if dv["agree"] else "分歧"}</div>'
+            f'<div class="sx-dv-c"><span>期貨定價</span><b class="{dv["market"]}">{esc(mkt)}</b>'
+            f'<small>終端 {fc.get("terminal", 0):.2f}%　{dv["bp"]:+.0f}bp</small></div></div>')
+
+
 def _scenario_body_full(d: dict) -> str:
     sc = d["scenario"]
     _why_html = _why_axes(d.get("why") or {}, d.get("pce_nowcast") or {})
@@ -440,240 +693,158 @@ def _scenario_body_full(d: dict) -> str:
         incomplete = (
             '<div class="v-count" style="border-top:none;padding-top:0;margin-top:12px">'
             f'⚠️ 以下模組尚無資料，這個判定並不完整：{esc("、".join(sc.incomplete))}。'
-            "</div>"
-        )
+            "</div>")
 
-    drivers = "".join(f"<li>{esc(x)}</li>" for x in sc.drivers)
-    drivers_html = (f'<ul style="margin:10px 0 0;padding-left:20px;font-size:14px;'
-                    f'line-height:1.9;color:var(--text-secondary)">{drivers}</ul>'
-                    if drivers else "")
-
-    pos_rows = "".join(
-        f"<dt>{esc(k)}</dt><dd>{esc(v)}</dd>"
-        for k, v in (sc.positioning or {}).items()
-    )
-    # 部位對照表現在直接對應「目前這張格子的那一格」，
-    # 不會再出現「標題寫降息受阻、表格擺存續期間偏長」這種打架，
-    # 所以先前那段落差說明整段刪掉。
-
-    # 就業格位不是靠分數、而是靠旗標淨值定案時要講出來——
-    # 否則門檻表裡沒有任何一條達標，讀者會以為算錯了。
     basis_note = (f'<div class="warnbox" style="margin:0 0 14px">'
                   f'{esc(sc.labor_basis_note)}</div>'
                   if getattr(sc, "labor_basis_note", "") else "")
-
-    # 只有真的有某一軸被標成「關鍵」時才解釋這個標記——
-    # 「兩邊並重」與「無法判定」時沒有任何一條會被標，
-    # 這時還寫「標關鍵的那一軸…」等於叫讀者去找不存在的東西。
     has_binding = any(getattr(t, "binding", False) for t in sc.triggers)
     binding_hint = (
-        "標「關鍵」的那一軸是目前的約束條件；另一軸就算觸發，"
-        "在現在的重心下也不會單獨改變政策方向。"
+        "標「關鍵」的是目前重心下真正會改變政策方向的那一軸。"
         if has_binding else
-        "目前聯準會沒有明顯偏向任何一邊，兩軸都可能主導——"
-        "哪一邊先觸發，哪一邊就會決定方向。")
-
-    fomc_note = (f'<div class="v-why" style="margin-top:14px">{esc(sc.fomc_note)}</div>'
-                 if sc.fomc_note else "")
+        "聯準會目前沒有明顯偏向任何一邊，哪一軸先觸發，哪一邊就決定方向。")
 
     grid_html, cmp_head, cmp_body = _grid_tabs(d, sc)
     nc_suffix = _nc_suffix(d)
 
-    # 收合摘要：一律取這一區已經算出來的結論。
-    _grid_sum = (f'就業{sc.labor_state} × 通膨{sc.infl_state}　·　{sc.name}'
+    _grid_sum = (f'就業{sc.labor_state}×通膨{sc.infl_state}　·　{sc.name}'
                  f'　·　{LEAN_TEXT.get(sc.lean, "")}')
-    # drivers 的元素長得像「勞動｜失業率下降源於…」，模組名在收合列上是雜訊，
-    # 只取分隔線後面的標題。
-    _d0 = (sc.drivers[0].split("｜")[-1] if sc.drivers else "")
-    _drv_sum = (f'{len(sc.drivers)} 項　·　{_d0}' if sc.drivers else "尚無資料")
+    cards = d.get("driver_cards") or []
+    _drv_sum = (f'{len(cards)}項　·　{cards[0]["title"]}' if cards else "尚無資料")
     _met = [x for x in sc.triggers if x.met]
-    _bind = next((x for x in sc.triggers if getattr(x, "binding", False)), None)
-    _trig_sum = (f'{len(_met)} 項已觸發' if _met else
-                 (f'關鍵：{_bind.label}　·　{_bind.distance}' if _bind else
-                  (f'{len(sc.triggers)} 項門檻與距離' if sc.triggers else "資料不足")))
-    _pos_sum = (f'{sc.name} 對應的四類部位' if sc.positioning else "尚無資料")
-    _mk = d.get("market") or {}
-    _mkt_sum = ((f'差距 {_mk["display"]}　·　'
-                 + ("與本頁判讀一致" if _mk.get("agree") else "與本頁判讀分歧"))
-                if _mk else "資料不足")
+    _adj = sorted([x for x in sc.triggers if not x.met and getattr(x, "adjacent", True)
+                   and _num(x.current) is not None and _num(x.threshold) is not None],
+                  key=lambda x: abs(_num(x.threshold) - _num(x.current)))
+    _trig_sum = (f'{len(_met)}項已觸發' if _met else
+                 (f'最近：{_adj[0].label}　·　{_adj[0].distance}' if _adj else
+                  (f'{len(sc.triggers)}項門檻與距離' if sc.triggers else "資料不足")))
+    _trig_sum = _trig_sum.replace(" ", NB)
+    pos_rows = d.get("pos_compare") or []
+    _pos_sum, _pos_line = _pos_summary(pos_rows) if pos_rows else ("尚無資料", "")
+    market_html, _mkt_sum = _futures(d, sc)
+    _mkt_sum = _mkt_sum.replace(" ", NB)
 
-    # 市場定價：用 2 年期殖利率相對政策利率中值當代理。
-    # 這不是會議層級的機率，但它回答了本頁真正在問的問題——
-    # 「我的判讀跟市場定價差在哪」。
-    mk = d.get("market") or {}
-    if mk:
-        _agree = ("目前**一致**：兩邊都指向同一個方向。一致不代表沒有機會，"
-                  "但代表這個判讀已經反映在價格裡了。"
-                  if mk["agree"] else
-                  "目前**分歧**：這正是值得追的地方。要嘛市場還沒反映最新的會議，"
-                  "要嘛判讀漏看了市場看到的東西。")
-        _agree_html = "".join(
-            (f"<b>{esc(s)}</b>" if i % 2 else esc(s))
-            for i, s in enumerate(_agree.split("**")))
-        _cls = {"hawkish": "hawkish", "dovish": "dovish"}.get(mk["lean"], "neutral")
-        _ag_short = ("兩邊指向同一個方向，這個判讀已經反映在價格裡"
-                     if mk["agree"] else
-                     "兩邊分歧——不是市場之後要修正，就是判讀漏看了市場看到的東西")
-        market_html = f"""<div class="impact {_cls}">{esc(mk['text'])}。{esc(_ag_short)}。</div>
-    <div class="stat-row" style="margin-top:14px">
-      <div class="stat"><div class="s-label">市場定價的政策路徑</div>
-        <div class="s-value">{mk['display']}</div>
-        <div class="s-note">2 年期公債殖利率減政策利率中值</div></div>
-      <div class="stat"><div class="s-label">本頁判讀</div>
-        <div class="s-value" style="font-size:17px">{esc(LEAN_TEXT.get(sc.lean, '—'))}</div>
-        <div class="s-note">目前這張九宮格給出的方向</div></div>
-    </div>
-    {teach(
-        "債券市場用真金白銀押出來的政策方向，跟本頁九宮格的判讀並排對照。",
-        "兩者常常不一致——那個落差本身就是資訊：不是市場之後要修正定價，就是聯準會要改口。",
-        "這裡用 2 年期殖利率減政策利率當代理，是粗略估計、不是會議層級的機率，差距小於 0.15 個百分點時不要過度解讀。")}
-    <details class="f-more"><summary>一致／分歧各代表什麼</summary>
-      <div class="f-detail">{_agree_html}</div></details>"""
-    else:
-        market_html = ('<div class="soonbox" style="margin-top:0;padding:26px 18px;'
-                       'box-shadow:none;border-style:dashed"><h3>資料不足</h3>'
-                       '<p>需要 2 年期公債殖利率與目前的政策利率區間，'
-                       '目前缺其中一項。</p></div>')
-
-    # ---- 反應函數：聯準會目前把哪一邊擺在前面 ----
-    # 先前這裡有一個「目前重心」大 verdict 框——資訊與頁首結論卡、
-    # 四步的③步、頁籤上方的規則行三重重複，整個刪除。
-    # 「判定依據」與「重心若翻轉會怎樣」是同一個主題，併成卡尾一個收合，
-    # 翻轉的答案仍寫在收合列上。
     focus = sc.focus or {}
     _fc_parts = []
     if focus.get("evidence"):
-        # 只留這一次真正的判定依據。「來源為聲明制式句與投票紀錄，不用模型」
-        # 是方法論、每一期都一樣，已經寫在頁尾的判讀說明裡。
         _fc_parts.append('<div class="f-detail"><b>本期判定依據</b>：'
                          + esc("、".join(focus["evidence"])) + '</div>')
     if cmp_body:
         _fc_parts.append(cmp_body)
-    _fc_sum = "重心怎麼判定" + (f"；{cmp_head}" if cmp_head else "")
+    _fc_sum = f'為什麼是「{focus.get("label") or "兩邊並重"}」、翻轉會怎樣'
     focus_collapse = (f'<details class="f-more"><summary>{esc(_fc_sum)}</summary>'
                       + "".join(_fc_parts) + '</details>') if _fc_parts else ""
-    # 判不出重心時要明講：訊號互相抵銷 ≠ 聯準會真的兩邊並重。
-    # 降成四步下方的一行警語（原本佔著大框的一角）。
     assumed_note = ""
     if getattr(sc, "regime_assumed", False):
         assumed_note = ('<div class="caveat"><b>本次判不出重心</b>——'
-                        '聲明、投票與記者會的訊號互相抵銷，也沒有明確說'
-                        '「兩邊風險大致平衡」。下面暫用「兩邊並重」那一張對照，'
+                        '聲明、投票與記者會的訊號互相抵銷。下面暫用「兩邊並重」那一張對照，'
                         '但那是<b>不知道</b>，不是<b>真的並重</b>，判讀時要打折。</div>')
+    from ..analysis.positioning import WHY
+    why_rows = "".join(f'<dt>{esc(r["label"])}</dt><dd>{esc(WHY[r["key"]])}</dd>' for r in pos_rows)
 
     return f"""
 <div class="verdict {sc.lean}">
   <div class="v-eyebrow">{esc(d['as_of'])}　·　目前情境</div>
   <div class="v-main">{esc(sc.name)}</div>
   <div class="v-why">{esc(sc.description)}</div>
-  {fomc_note}
-  <div class="v-count">
-    定位：就業{esc(sc.labor_state)}　×　通膨{esc(sc.infl_state)}　·
-    政策傾向 {esc(LEAN_TEXT.get(sc.lean, ''))}<br>
-    這裡刻意不給機率。機率市場早就定價了，有價值的是「我的判讀跟市場定價差在哪」。
-  </div>
   {incomplete}
 </div>
 
 <div class="grid">
   <div class="card">
     <h2 id="grid" data-open="1" data-sum="{esc(_grid_sum)}">九宮格定位</h2>
-    <p class="hint">就業 × 通膨交叉定位；算法與門檻出處見卡尾「完整算式」。</p>
+    {_now_line(d)}
     {assumed_note}
     {grid_html}
-    <p class="hint" style="margin-top:16px">
-      <span class="lg-on">反白粗框</span>＝目前位置　·
-      <span class="cflag">◆</span>＝會隨重心改變的三格（其餘六格不隨重心變）
-    </p>
-    <details class="f-more" style="margin-top:14px"><summary>完整算式與門檻出處（可驗算）{esc(nc_suffix)}</summary>
+    <p class="sx-note sx-glg"><i class="sx-glg-cur"></i>目前位置　<i class="sx-glg-adj"></i>下一步可能去的格</p>
+    {_trail(d, sc)}
+    <details class="f-more"><summary>完整算式與門檻出處（可驗算）{esc(nc_suffix)}</summary>
       {_why_html}
     </details>
     {focus_collapse}
     {_cell_gloss(d.get('cells'))}
     {teach(
-        "格子的位置不是主觀判斷，是固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
-        "看得懂這套算法，你就能在數據公布的當下自己推出格子會不會動——不用等任何人的解讀。門檻全部錨在外部標準（FOMC 自己的預測），不是本站選的數字。",
-        "細節（權重、門檻出處、PCE 推估算式）都在上方「完整算式」裡，數字全部可以驗算。口徑提醒：格位只用**年增率**判；「情境轉換門檻」的通膨判定值是綜合水準（0.6×年增＋0.4×三月年化），兩處數字不一樣是口徑不同，不是算錯。")}
+        "格子的位置是固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
+        "看得懂這套算法，你就能在數據公布的當下自己推出格子會不會動。門檻錨在 FOMC 自己的預測，不是本站選的數字。",
+        "格位只用水準判（失業率、核心 PCE 年增）；動能改看 PCE Supercore 三月年化，連兩個月越過 3.7%／2.1% 才推一格。")}
   </div>
 </div>
-<div class="grid g2">
+
+<div class="grid">
   <div class="card">
     <h2 id="drivers" data-sum="{esc(_drv_sum)}">主要驅動因素</h2>
-    <p class="hint">依嚴重度排序。</p>
-    {drivers_html or '<div class="empty">尚無資料</div>'}
-    <p class="hint" style="margin:12px 0 0">每一條的完整依據在來源頁：
-      <a href="/labor/#signals">勞動市場的本期關鍵訊號</a>　·
-      <a href="/inflation/#signals">通膨的本期關鍵訊號</a></p>
+    <p class="hint">各頁「本期關鍵訊號」排第一的那條，加上聯準會最近一次決議與長端本月主因。點卡片看完整依據。</p>
+    {_driver_cards(cards)}
   </div>
+</div>
 
+<div class="grid">
   <div class="card">
     <h2 id="triggers" data-sum="{esc(_trig_sum)}">情境轉換門檻</h2>
     <p class="hint">{binding_hint}</p>
     {basis_note}
-    {_triggers(sc.triggers, sc.drift)}
+    {_trigger_bars(sc.triggers, sc.drift)}
+    {_next_releases(d.get('next_releases') or [], sc.triggers)}
   </div>
 </div>
 
-<div class="grid g2">
+<div class="grid">
   <div class="card">
-    <h2 id="positioning" data-sum="{esc(_pos_sum)}">固定收益部位對照</h2>
-    <p class="hint">方向性參考，不是進出場訊號。</p>
-    <dl class="poslist">{pos_rows or '<dt>尚無資料</dt><dd>—</dd>'}</dl>
+    <h2 id="positioning" data-sum="{esc(_pos_sum)}">固定收益對照</h2>
+    <p class="hint">「{esc(sc.name)}」這一格在教科書上會怎麼反映到債市，對照過去一個月市場實際怎麼走。方向性參考，不是進出場訊號。</p>
+    {_pos_table(pos_rows, sc.name)}
+    {f'<div class="sx-pos-line">{_pos_line}</div>' if _pos_line else ''}
+    <details class="f-more"><summary>每一列為什麼這樣預期</summary>
+      <dl class="gloss" style="margin-top:10px">{why_rows}</dl>
+      <div class="f-detail">判定規則：近 22 個交易日的變動超過 ±5bp（高收益 ±15bp）才算有方向，否則算「區間」。
+        預期與實際同向＝一致；一邊有方向、另一邊區間＝偏離；方向相反＝相反。</div>
+    </details>
+    {_duration(d.get('duration') or [])}
   </div>
+</div>
 
+<div class="grid">
   <div class="card">
-    <h2 id="market" data-sum="{esc(_mkt_sum)}">市場定價對照</h2>
-    <p class="hint">自己的判讀與市場定價差在哪。</p>
+    <h2 id="market" data-sum="{esc(_mkt_sum)}">市場定價：期貨路徑與點陣圖</h2>
+    <p class="hint">市場用真金白銀押出的政策路徑，對照聯準會自己的點陣圖。</p>
     {market_html}
   </div>
 </div>
 
-{_rates_line(d.get('rates_line'))}
 <div class="grid">
   <div class="card">
     <h2 id="howto" data-sum="三張格子的規則、重心怎麼判定、格子怎麼移動">判讀說明</h2>
-    <p class="hint">這一頁的規則書：三張格子怎麼來、重心怎麼判、格子怎麼移。
-      內容不隨數據變動，<b>看過一次就夠</b>——所以預設收起來。</p>
+    <p class="hint">這一頁的規則書，內容不隨數據變動，<b>看過一次就夠</b>。</p>
     <details class="f-more"><summary>展開完整說明（七個問答）</summary>
         <dl class="gloss">
       <dt>為什麼有三張九宮格</dt>
       <dd>聯準會有兩個使命，而它們有時指向相反的方向——就業弱要降息、
         通膨高不能降。誰優先，結論就完全不同。所以三種體制各一張格子，
-        由聲明、投票與記者會判定目前適用哪一張。<br>
-        九格裡只有三格會隨體制改變（標◆那三格），
-        其餘六格兩個使命同向或都不極端，不管誰優先都一樣。</dd>
-      <dt>四個角各是什麼意思</dt>
-      <dd>左下角（就業弱、通膨低）是降息最順的情況——兩個使命指向同一邊。
-        右下角（就業弱、通膨高）是停滯性通膨，兩個目標互相打架，
-        聯準會最難處理，也是三張格子差最多的那一格。
-        上排（就業強）不論通膨高低都不急著降息，差別只在要不要往緊縮走。</dd>
+        由聲明、投票與記者會判定目前適用哪一張。九格裡只有三格會隨體制改變（標◆），
+        其餘六格不管誰優先都一樣。</dd>
+      <dt>通膨的動能為什麼看 Supercore</dt>
+      <dd>Supercore（核心服務扣除住房）跟薪資連動最緊、最難靠商品價格回落降下來，
+        是聯準會最在意的那一段。它的三月年化連兩個月高於 3.7% 或低於 2.1%
+        （1995–2019 年歷史分布的 90／10 百分位附近，中心約 2.9%）才把通膨格位推一格——
+        兩個月是為了不被單月雜訊帶著跑。</dd>
       <dt>為什麼不給機率</dt>
       <dd>機率市場早就定價了，複述它沒有附加價值。有價值的是指出
-        「我算出來偏鴿，但市場定價偏鷹」這類具體的分歧，以及明確的門檻
-        與目前的距離——那比較誠實，也更能直接拿來盯。</dd>
+        「本站判讀偏寬鬆、但期貨定價偏緊縮」這類具體的分歧，以及明確的門檻
+        與目前的距離。</dd>
       <dt>重心怎麼判定</dt>
-      <dd>聲明裡的制式風險句（±2）、聲明對現況的描述
-        （±1，「通膨仍高於目標」／「勞動市場已轉弱」，講現況不是講風險，弱一級）、
-        反對票的方向與張數（±1～2）、
-        記者會裡的明確表態（±1，權重刻意低一級，因為那是即席發言，
-        而且逐字稿會後數日才發布、不是每次都抓得到）。
-        每一條加分項都有方向相反的對應項，兩側對稱——
-        不對稱會變成常數偏誤（「通膨仍偏高」幾乎每次都在）。
-        全部是固定的片語比對，不用模型，每次執行結果一致。</dd>
+      <dd>聲明裡的制式風險句（±2）、聲明對現況的描述（±1）、
+        反對票的方向與張數（±1～2）、記者會裡的明確表態（±1）。
+        每一條加分項都有方向相反的對應項，全部是固定的片語比對，不用模型。</dd>
       <dt>格子會怎麼移動</dt>
-      <dd>通常是一次移動一格，而且往往是通膨先動、就業後動。
-        跳格（例如從「按兵不動」直接到「衰退式降息」）多半發生在有外生衝擊時。</dd>
-      <dt>長端為什麼不進九宮格</dt>
-      <dd>九宮格回答的是「聯準會會不會動、往哪動」，那是政策利率。
-        30 年期殖利率還受債券供給、財政狀況與期限溢酬影響，並非只由政策利率決定。
-        把兩者合成一個分數，會讓「降息但長端不降」這種最關鍵的組合消失，
-        所以它獨立列在上方。</dd>
+      <dd>通常一次移動一格，而且往往是通膨先動、就業後動。
+        跳格多半發生在有外生衝擊時。上方「格位軌跡」可以看最近半年怎麼走。</dd>
+      <dt>固定收益對照怎麼讀</dt>
+      <dd>每一格情境對七個市場變數各有一個教科書式的預期方向。跟實際並排，
+        「相反」的那幾列最值得看：通常代表有另一股力量（期限溢酬、信用事件、
+        發債潮）蓋過了政策方向。長端曲線那一列就是先前獨立的「長端」卡併進來的地方。</dd>
       <dt>文本的角色</dt>
       <dd>聯準會的實際決議（升息、降息或維持，以及反對票主張的方向）用來校準，
-        不是決定格子的位置。這裡不採用任何措辭分數——語氣會隨主席文風
-        改變，主席換人時會整段位移，不能用來加減信心。
-        當決議方向與數據方向不一致時，通常代表官員看到了數據還沒反映的東西，
-        或反過來——他們還沒承認數據已經轉向。</dd>
+        不是決定格子的位置。這裡不採用任何措辭分數——語氣會隨主席文風改變。</dd>
     </dl>
     </details>
   </div>
@@ -683,17 +854,26 @@ def _scenario_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="glossary" data-sum="這一頁出現的專有名詞">名詞解釋</h2>
         <dl class="gloss">
-      <dt>殖利率曲線變陡／變平</dt>
-      <dd>「變陡」是短天期利率降得比長天期多，通常出現在降息初期；
-        「變平」是短天期被推高或長天期被壓低，通常出現在升息或景氣疑慮升高時。</dd>
-      <dt>存續期間（久期）</dt>
-      <dd>債券對利率變動的敏感度。存續期間越長，利率一動、價格波動越大。
-        預期降息時拉長存續期間，賺的就是價格上漲。</dd>
-      <dt>抗通膨債券</dt>
-      <dd>本金會隨通膨調整的公債（TIPS）。通膨預期升高時它會比一般公債強。</dd>
-      <dt>公司債利差</dt>
-      <dd>公司債殖利率高於同天期公債的部分，也就是投資人要求的風險補償。
-        景氣轉差時利差走闊，公司債價格相對承壓。</dd>
+      <dt>短端／長端曲線變陡、變平</dt>
+      <dd>短端看 10 年減 2 年，長端看 30 年減 10 年。「變陡」是長天期相對短天期上升，
+        「變平」相反。短端跟著政策預期走；長端還受期限溢酬（財政與供給）影響。</dd>
+      <dt>存續期間與凸性</dt>
+      <dd>存續期間是債券價格對殖利率的敏感度：殖利率上升 1 個百分點，價格大約下跌「存續期間」個百分比。
+        凸性是修正項，讓殖利率大幅變動時，下跌比線性估的少、上漲比線性估的多。</dd>
+      <dt>TIPS 與實質殖利率</dt>
+      <dd>TIPS 是本金隨通膨調整的公債，它的殖利率就是「實質殖利率」。
+        實質殖利率上升，TIPS 價格下跌——跟一般債券一樣是反向關係。</dd>
+      <dt>損益兩平通膨率</dt>
+      <dd>同天期一般公債殖利率減 TIPS 殖利率，是市場要求的通膨補償。
+        它擴大代表市場預期的通膨（加上通膨風險溢酬）上升。</dd>
+      <dt>投資級／高收益利差（OAS）</dt>
+      <dd>公司債殖利率高於同天期公債的部分，已扣除提前贖回等選擇權的影響。
+        投資級反映大型企業（近期受科技巨頭大量發債影響），高收益反映景氣與違約風險。</dd>
+      <dt>終端利率</dt>
+      <dd>這一輪升息（或降息）循環市場預期最後會停在哪裡。本頁取未來 13 個月期貨隱含利率中
+        離現行利率最遠的那一點。</dd>
+      <dt>點陣圖</dt>
+      <dd>每季的經濟預測摘要（SEP）裡，每位與會者對各年底政策利率的預測，一人一點；本頁取中位數。</dd>
     </dl>
   </div>
 </div>
@@ -701,16 +881,13 @@ def _scenario_body_full(d: dict) -> str:
 
 
 def scenario_body(d: dict) -> str:
-    """總覽的核心：九宮格、移動方向、政策傾向與下一個觸發同屏。"""
+    """首卡：九宮格位置、市場是否同意、下一個轉格條件與下一個數據。"""
     sc = d["scenario"]
     lean = LEAN_TEXT.get(sc.lean, "中性")
     labor_text = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_text = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
     desc = (sc.description or "").split("。")[0]
     regime = next((m["label"] for m in d.get("regime_meta", []) if m.get("current")), "兩邊並重")
-    # 「下一個轉格條件」用共用的 pick_next（analysis.scenario）：
-    # 方向優先、距離其次——只挑跟數據漂移方向一致的相鄰門檻；
-    # 兩軸都不朝相鄰門檻時誠實寫「傾向不動」。首頁同一個函式。
     _nx = scenario_mod.pick_next(sc)
     trig, _unlock = _nx["trigger"], _nx["unlock"]
     if _nx["mode"] == "hold":
@@ -732,33 +909,31 @@ def scenario_body(d: dict) -> str:
                    "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
         state_chip("FOMC 反應體制", regime, "只改政策解讀，不改兩軸資料"),
     ])
-    rates = d.get("rates_line") or {}
-    # title 本身就是「長端供給壓力：偏高」的完整句，前面不能再冠一次
-    # 「長端供給壓力：」——先前畫面出現「長端供給壓力：長端供給壓力：偏高」。
-    overlay = (f"{rates.get('title', '長端供給壓力：資料不足')}；{rates.get('curve_title', '')}"
-               if rates else "長端供給資料不足")
+    nr = (d.get("next_releases") or [])
+    nr_text = ("　·　".join(f'{_md(r["date"])} {r["label"]}' for r in nr[:2]) if nr else "—")
     logic = (f'<div class="logic-strip"><div class="logic-step"><b>當前位置</b>'
              f'<span>就業 {sc.labor_state} × 通膨 {sc.infl_state}＝{esc(sc.name)}</span></div>'
              f'<div class="logic-step"><b>下一個轉格條件</b><span>{esc(trigger_text)}</span></div>'
              + (f'<div class="logic-step"><b>政策解鎖條件</b><span>{esc(unlock_text)}</span></div>'
                 if unlock_text else "")
-             + f'<div class="logic-step"><b>格外覆蓋層</b><span>{esc(overlay)}</span></div></div>')
+             + f'<div class="logic-step"><b>下一個會動格子的數據</b><span>{esc(nr_text)}</span></div></div>')
     logic = focus_evidence(logic)
     notes = (f'<div class="data-line"><span class="data-tag">{esc(d.get("as_of", "—"))}</span>'
-             '<span class="data-tag">格位＝水準；箭頭＝動能；兩者不得混算</span>'
-             '<span class="data-tag">PPI、財政、AI 發債不直接移格</span></div>')
+             '<span class="data-tag">格位＝水準；動能看 Supercore</span>'
+             '<span class="data-tag">長端與信用在「固定收益對照」</span></div>')
     hero = (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Macro regime</div>'
-            f'<h2 class="focus-title">就業{labor_text} × 通膨{infl_text}</h2><p class="focus-sub">{esc(sc.name)}｜{lean}。{esc(desc)}。</p>'
-            f'<div class="focus-grid">{metrics}</div>{logic}{notes}</div></div>')
+            f'<h2 class="focus-title">就業{labor_text} × 通膨{infl_text}</h2>'
+            f'<p class="focus-sub">{esc(sc.name)}｜{lean}。{esc(desc)}。</p>'
+            f'<div class="focus-grid">{metrics}</div>{_divergence_box(d, sc)}{logic}{notes}</div></div>')
     return hero + compact_full(_scenario_body_full(d), "九宮格依據、部位與完整方法")
 
 
 def scenario_footer(d: dict) -> str:
     return (
         "情境分類由固定規則產生：失業率相對 FOMC 長期區間決定就業格位，"
-        "核心 PCE 年增決定通膨格位；短期指標只決定移動方向。聯準會的重心"
-        "（聲明制式句、反對票、記者會表態）"
-        "決定用哪一張九宮格。全部是確定性規則，不含模型生成內容。<br>"
-        "長端供給壓力另行計算，不併入九宮格——它影響的是曲線形狀，不是政策方向。<br>"
+        "核心 PCE 年增決定通膨格位，PCE Supercore 三月年化連兩個月越過門檻才推一格。"
+        "聯準會的重心（聲明制式句、反對票、記者會表態）決定用哪一張九宮格。"
+        "全部是確定性規則，不含模型生成內容。<br>"
+        "固定收益對照的「框架預期」是教科書式映射；期貨路徑取自交易所報價，可能延遲。<br>"
         "本頁僅為分析框架，不構成投資建議。"
     )

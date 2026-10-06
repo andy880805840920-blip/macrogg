@@ -520,10 +520,14 @@ def fetch_hyperscalers(cfg: dict,
             continue
 
         got: dict = {}
+        hist: dict = {}
         for metric in ("capex", "ocf", "revenue", "debt_issued"):
             rows = client.metric(int(cik), metric)
             if not rows:
                 continue
+            # 近 8 季的逐季數字（長端頁的科技巨頭小圖用）
+            for r_ in rows[-8:]:
+                hist.setdefault(r_["end"], {})[metric] = r_["val"] / 1e9
             latest = rows[-1]
             got[metric] = latest["val"] / 1e9        # → 十億美元
             if metric == "capex":
@@ -566,6 +570,8 @@ def fetch_hyperscalers(cfg: dict,
                           if got.get("capex_yoy") is not None else None),
             "period_end": got["_end"],
             "source_tag": got.get("_tag", ""),
+            "hist": [{"end": e, **hist[e]} for e in sorted(hist)
+                     if "capex" in hist[e]][-8:],
             "from_sec": True,
         })
         log.info("SEC %s：資本支出 %.1f 十億、營運現金流 %.1f 十億（截至 %s）",
