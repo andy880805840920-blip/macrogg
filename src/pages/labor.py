@@ -235,6 +235,10 @@ def _ustar_row(u: dict | None) -> str:
 </details>"""
 
 
+def _yoy_txt(v):
+    return "—" if v is None else f"{v:+.1f}".replace("-", "−")
+
+
 def _structure_block(u: dict | None) -> str:
     """
     失業結構。收合起來——它回答的是同一張卡的追問（「為什麼變成失業的」），
@@ -267,7 +271,7 @@ def _structure_block(u: dict | None) -> str:
         f'<small><span class="us2-sm">佔失業 {r["share"]:.1f}%</span><span class="us2-pp">{esc(r["display"])}</span></small></div>'
         f'<div class="us2-s">{r["share"]:.1f}%</div>'
         f'{_bar(r)}'
-        f'<div class="us2-v">{"—" if r.get("share_yoy") is None else f"{r["share_yoy"]:+.1f}".replace("-", "−")}</div>'
+        f'<div class="us2-v">{_yoy_txt(r.get("share_yoy"))}</div>'
         f'</div>'
         for r in u["rows"])
     # 收合列：短句（手機一行放得下）。完整結論句仍由 build 端算，這裡只取數字
