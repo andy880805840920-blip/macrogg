@@ -1,20 +1,20 @@
 {
- "hash": "efe06f0008a6e1cc",
- "text": "前波士頓聯準銀行總裁認為暫緩升息決策正確，暗示聯準會在當前環境下維持利率政策的合理性。儘管公債殖利率上升，黑石集團表示更高殖利率對市場未必不利，科技股也未因債券市場警訊而下跌，反映市場對高殖利率環境的適應。\n印度央行通過回收過剩流動性，預期將使該國公債殖利率曲線趨平。",
+ "hash": "085452df3213f5b4",
+ "text": "美國公債殖利率居高不下，引發全球資產配置變化。新興市場資產上升，反映聯準會升息預期降溫，油價下跌；同時高殖利率對歐洲構成潛在風險。儘管殖利率上升，央行仍維持黃金儲備地位，顯示對美債長期信心的複雜態度。\n科技股在公債殖利率維持高位下小幅上揚，顯示市場對高利率環境的適應。",
  "links": [
-  {
-   "title": "Watch Fmr. Boston Fed Pres: Waiting To Raise Rates Seems Right",
-   "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQbXhrNUlZWERDdUJseTd0eEgxZGZLRC1rT3FyeDB4R1pQNkZrUWoxM0xZamcwajdQVmpwZERSdzNwNEVFVXl6cVZlNnNDMHlTWnJkZ3o4OENsYmR0X0tYa0UtTFp2RERQUVVNOWIxTEJiUGg1MEM2a1ZSbi05bHhZakczeGRlTVVTXzBwZ1B3TXd2Q3Q4LWZISjIzd2o3RG9ZYzI1ME82ODlqSHdDTGc?oc=5",
-   "source": "Bloomberg"
-  },
   {
    "title": "Gold retains key reserve status despite surging bond yields, central bankers say",
    "link": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPTkc3ZDlWSGdsakRCS1RUdWhQY29QX0lxWWZUS3hVa1dYclV2dTZWQUZsako5VS1jTGR1VHlLdWhrM0tfdXktS3Q1YWREUGVuME9ua3ROQzFkSDMtaXpZc3hIV01VazNRSFBQclNwUURLOHVpcEFaNllIc3RBbjUyQnJkWEd5LVIwdjJ1b0VFWk9LeThDQTl0QkxuSHB4M01kSzVSUUpwUEVMVW9CT09ZVm9jdVEtaE9TeFZOVXcyZ3ZGWnFNYUhwenA5SnE?oc=5",
    "source": "Reuters"
   },
   {
-   "title": "Indian Bond Yield Curve Seen Flatter as RBI Drains Surplus Cash",
-   "link": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxOWjhvaFJFbU1WWUNRQnAxSVJ4Y2Vuekpuci1jTmJUSzZnMmFqVWktLW9SNkh6YjdINVZPOE9WaThRTlhZRXJMc1IzOHc5UEF1YVJEQzVUY1BMZkZrWkh6cGYwY0o5SU1mdXlLdllKZXVCMU96TE14U052ZVJPeEtMd3hXZFBUSVluMTNXUkgzN19ma2xQSk9pS29UbWdrLUE0T0tEQ2JRWW1zcXNxWGVLQldCbjhwalNPenNzZE5zN2NqdTNFcXJHeHpQVENGUjh0dkc0?oc=5",
+   "title": "Strategy Returns to Profitability on $21 Billion 3Q Gain",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPMDhSLVA3ZFIwUExsMEJPZFJadmYxdExYLVdkT1RpNmF0Ung0RE9YTXdZeXg2cGc2bmxEY1lnMm44VzNwSUtYY0ZpZ3IyRTEtT1JQQjZUMXdkVkJ3QnBXYUFOejdqZHZzRE40bFJwZE9ieDVFV2czdl9jZEZHZE40WWctbHFiQ3JVVEptYk0xVi1qUlFHdjdQaVVaRXE4MW5HeFR6UjNDWHh6bVVNUnlhNEhrVVY?oc=5",
+   "source": "Bloomberg"
+  },
+  {
+   "title": "Lockheed’s Fabled Skunk Works Integrates AI in Push to Modernize Defense",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPRWJVbGZIWFg5OS1oSWJFRnpEcFhfV01Rc2s3NjlDVXpua1ZNRWFLVWUtaGxBTzhOQ3BzazdnaVE5TkZrMFFtVVBuSmVYdi1VMlRzSXhRVWxSSE4wamY4cjN6S29mZ3M2Z3AtRFZXbHB3NVQxZmNfZW5fUmxHdjZWTzNPWFVEM21pYTVrOFFKOHZaaUdOSklGUHJjX1psc2dYSVBwUXNiU2ZJRTBYT3ctZXRKMzUxbkcwSHNKa2d4NUVDS3ds?oc=5",
    "source": "Bloomberg"
   }
  ],
@@ -137,19 +137,19 @@
   }
  },
  "text_source": "model",
- "at": "2026-10-05T21:42:28.401084+00:00",
+ "at": "2026-10-06T02:55:57.668423+00:00",
  "layout": "main",
  "topics": {
-  "hash": "284a22778775424c",
+  "hash": "b44623e8e69bc137",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "美國9月服務業投入價格指數升至74，創2022年7月以來高點，供應管理協會主席指關稅與燃料成本是企業最常提及的供應鏈問題，燃料成本提及次數為其他問題的兩倍，凸顯通膨壓力持續困擾聯準會降息前景。",
+    "text": "路透報導稱通膨可能迫使聯準會本月升息，但聯準會官員淡化近期升息可能性；川普幕僚哈塞特表示鮑威爾應該「離開」聯準會董事會；銅價上漲因美國就業數據緩解升息擔憂。",
     "links": [
      {
       "title": "Inflation may force Fed rate hike this month, investor says",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE90TkNNVHNXcHdNUUtXSElrMGlfRE1Xejk5ZkVSVHY4aDU1aDh3cVQwQ3VTamlOMVB4YllsTEVyejVkX01DM1BnZGFNUzA4eHV2d2ppZXF6MDBiOFNuSnVlbGh4cFFjTjQ?oc=5",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE94b2QyR19PVmhYbW9PYm1qM3VUbU42eFZyQzBNOFA0TzZSSnhoR2dhek1yWWVkWXg0NktnRmRsVExydWdJMW5MWnRGb2txc3Nlcy1MZTlpZXRCeFZrM1lNbmRRWGxUOW9SMFZjaEVFQ09SbEQxLXBQRXFqZktCZw?oc=5",
       "source": "Reuters"
      },
      {
@@ -162,16 +162,16 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國長期公債殖利率逼近20年高點，政府每收到5美元稅收就有1美元用於支付國債利息，若情勢惡化，下一階段措施可能需要聯準會配合，包括重啟「扭轉操作」壓低長期殖利率。",
+    "text": "美債長天期殖利率創24年新高，10年期與30年期公債殖利率均創新高，2年期則下跌；美元走強推低亞洲黃金現貨0.13%至每盎司4,134.25美元；供應管理協會報告顯示服務業成本壓力增幅創四年多來新高。",
     "links": [
+     {
+      "title": "US Treasury yields for 10-year, 30-year hit 24-year highs, two-year Treasury yield down. What does this me",
+      "link": "https://news.google.com/rss/articles/CBMi1wJBVV95cUxQdFFrakpySm96U3oweVpCZTJaVWtCOVc4dF9ZdlFYMmczOGxkZDBvWnctaHFndW5NaU1Pa1AtNFZ4LV9EX2JES0pJMm1JVnViSGluSXF5ZkN1NzdHZGgzcS11RzVjc2VIVkVNYWZQWm5iMTNmTXdDNXRmdjNlcEhRQmQ3RG1ZS0JwcXFaWFV1TU5fN2l3S0lDd2c2MUdDMWl5VUliSmpPTjZnV3ZqeklHOEctbEVJUjVBampSQUZDek5KaTlBWmNDdlo4Mk5xN3ZqTS1CelN4aHNGMkFiLUhxdlE4N21Va212aXMyelBUa21QVzdrX3lwMklNWkV4YXVselhqVVNteElUTjVFNmtZV0lWc2x5VWhFeGZXTXlnN1dOandaMlBGMWZQT2lVYmV1Vkl6N1FJRnE3MXVWazFXMU1sN1o5OTdTd2FOaldXZlZjQUhjWFZj0gHXAkFVX3lxTFB0UWtqSnJKb3pTejB5WkJlMlpVa0I5Vzh0X1l2UVgyZzM4bGRkMG9ady1ocWd1bk1pTU9rUC00VngtX0RfYkRLSkkybUlWdWJIaW5JcXlmQ3U3N0dkaDNxLXVHNWNzZUhWRU1hZlBabmIxM2ZNd0M1dGZ2M2VwSFFCZDdEbVlLQnBxcVpYVXVNTl83aXdLSUN3ZzYxR0MxaXlVSWJKak9ONmdXdmp6SUc4Ry1sRUlSNUFqalJBRkN6TkppOUFaY0N2WjgyTnE3dmpNLUJ6U3hoc0YyQWItSHF2UTg3bVVrbXZpczJ6UFRrbVBXN2tfeXAySU1aRXhhdWx6WGpVU214SVRONUU2a1lXSVZzbHlVaEV4ZldNeWc3V05qd1oyUEYxZlBPaVViZXVWSXo3UUlGcTcxdVZrMVcxTWw3Wjk5N1N3YU5qV1dmVmNBSGNYVmM?oc=5",
+      "source": "economictimes"
+     },
      {
       "title": "Watch BMO's Davis Says 30-Year Treasury Yields Will Hit 6%",
       "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQX0NnajFGcUR2UWFja25aT3RONHlSSW5WU2VweEgzR0lDMUJlY2drdW5jY2pxT1lYRXI4cm45dFNrcm5fanlhNmJFM25HWXk0dlV3QW85NE1pTnJGUGZ4eTF2bkU2V3ZTbDc2dm1OZE9LX2hrbDFMU2xIR0ltbDFHZWNJUE84eTB6R3ZCY3dObzc5WURkREhKSGV3SHhQem1iMDB2cU9KcWtaUQ?oc=5",
-      "source": "Bloomberg"
-     },
-     {
-      "title": "New Hazard for Treasuries Hides in Bond Futures’ Fine Print",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOZkkzRE8yckxoMGc3Sm5oNXR2YURxUzFncnBsV3RZdldfZy1PMzdLRllBc0tRbjl4ZmhiYzZZS3NCRUJnQVVuYzJWUldUUU5ZSkFoWURzUWhMUXR3X21aNklCelNTdFJESGN1TDRKQTJaTUltOFNONXA2NERMSHpaTjlGZTVMWHF2Nkw1Rm9YMXNHUnUydnpTZEVsY01yUW5uekYwMU91QnlvMnJoQ1E?oc=5",
       "source": "Bloomberg"
      }
     ]
@@ -179,7 +179,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "川普政府最快5日公布行政命令，擴大免稅柴油使用範圍，放寬「免稅紅柴油」用途，盼在11月期中選舉前減輕農民與卡車司機燃料負擔，但措施主要透過稅負優惠降低支出，無法增加柴油整體供應。",
+    "text": "路透報導油價因中東原油出口增加與七國集團釋放戰略儲備而下跌；彭博報導新興市場資產上升因聯準會升息預期降溫，油價下跌。",
     "links": [
      {
       "title": "Oil slips on rising Mideast crude exports, G7 stocks release",
@@ -187,8 +187,8 @@
       "source": "Reuters"
      },
      {
-      "title": "OPEC+ agrees to keep November oil output targets steady",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxObkpnNDluR1haTkdBX3RldWlkX2pySlFJWlFIdmZhaGt1NTFuYlVJS3Nkc2VNQlJ4bXN2LTc1VTF1SWViaVloM1Y4U1JndkpESXNfb2IxazBFS3RTVjRpUUhVeWNURVNtd2dKcWxRMjdoTEFiRTdwd1FrWEw2OUx4NUY5U1hkNFBqVjUxZlJyVVlQNFBEUmVPVTBYejluWWhMZF9xZlNrQmFqU0R4ZlJGc0N5QzJ0ckNfN0dYdkFQalpkVkk?oc=5",
+      "title": "UK's FTSE 100 steadies after worst week since April as oil eases",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQbjZQTm5OMFRocmQyRFgtS0NzeTYyVFdQNldxR3NtaE5RdjBtdWpkUHhoaTh0UnQ0eURfZXFDalM2d0c0M2h2VDFMeGItOUVhdHVuT3ZMNUhVMUN3YmxsZFZvejFnd3VGTXRQMEs1UWlidWIxMmdFOF9tb0NhbFVJaUw0b1V4UE1pbkhkUDZnX2FiZmNPd1NsM2tUNVdIUDVJSXBHcTRROExXNDA?oc=5",
       "source": "Reuters"
      }
     ]
@@ -196,16 +196,16 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "巴西首輪總統選舉結果出爐，前總統之子波索納羅獲47%以上選票，超越現任總統盧拉近2個百分點，預測市場給波索納羅超過80%勝率，巴西股市應聲上漲，EWZ漲逾12%。",
+    "text": "巴西總統大選第一輪投票後，前總統波索納洛之子弗拉維奧在預測市場上贏面大幅提升至80-85%，巴西股市應聲上漲，iShares巴西ETF漲12%、伊塔烏銀行漲15%、巴西銀行漲19%；納斯達克創歷史新高，科技股強勢；歐洲STOXX 600指數因銀行股上漲而上升。",
     "links": [
      {
-      "title": "Brazil's currency, stocks soar after Bolsonaro scores first-round election upset",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPNnBVVGg0X283c2E3UVFRekJud193dksxLU9RcDJSLXVoT3dpN1k0emRjS0k4RnJ2Yk1VN3lMd3Z3al94X3FreFRuWV82ei1RY21IUkFTZHB3djVIQkxlZzc1TElvY2JfNWpTOXNucTRVSFpNQ090ZnlFVEVDWnpHMy02WmQzLXRqTmRRTnFGeWhJbTV3MEh6TV9EMmhDOWpQNHBpM3JXWlJvalpm?oc=5",
+      "title": "Europe's STOXX 600 gains on banks boost; French stocks slide on fiscal fears",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPa3dPemtwS0RmaDA2RW11VjIwOUstOXlwM3BJY1hfTUQ0NjctVDVRajItbS04dW9kNGwtandVUjFPZFBGZVNrSk9vUWpVajR2TVM2VE5ZZVQ2U2lLdURaYzdHZ210OERtVG5tOVY2SnhEd2hIQU5DLV9ES2E3Q2dZWEd5OHA5eUR6OG5OeVpIcVEyajdIbGFnN25uZXllYklyS3JxMC05aHRXemtnSl82Y296dzg?oc=5",
       "source": "Reuters"
      },
      {
-      "title": "Nasdaq notches record high close as investors focus on earnings",
-      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQV09jSm4zWHp2ODd2SmNPRHdJcUhDcjNzZ3dwYkwzZ3NSVHdyVUdUVEI0TWltb3RKQUZucVVNa2l1UzAxWmtSd0hQSWFjVXV0WVZiUjJFNGJDeEZQVlhoWDJ5WWpxLWxuc3ZVYXBLR0QxSzdZMVFjSklpUTB2Q2YwdE12VFl0bUw2RGRjZ3VoUmFlMkp4UUstYy1R?oc=5",
+      "title": "Trading Day: Nasdaq highs, Brazil surprise",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNekZHUjVfNDc1RTVWS1M2YVFlU2MtOG93UUhfWkIyTzRWRE9sWTFiY05sNWxDU2tydkNJWWdEWlNoQzUwVzh6djlETnJLRUIzQnhkNjBwOHBoSTRYLUFzMlRIdDZrTGxZQjU4UU1xUWdqM2xITHc4SG1KdElwZ2p4YXdiaW1YSV9zanZxTUM3MUp2N3R2YVpIN3JNVGozR05wNXQ4V0VB?oc=5",
       "source": "Reuters"
      }
     ]
@@ -213,7 +213,7 @@
    {
     "id": "semi",
     "label": "半導體",
-    "text": "摩根士丹利警告美國資料中心電力短缺日益嚴重，截至2028年將面臨34%淨電力缺口，可能拖慢AI部署，記憶體、光學等零組件供應商最易面臨庫存失衡，但輝達與博通因掌握度較高相對較能抵禦。",
+    "text": "摩根士丹利報告指輝達與博通因AI電力需求而受保護，不受晶片供應鏈衝擊；輝達支持的Reflection公司推出開源AI模型對抗中國；銀行在亞洲8.2兆美元AI建設中追逐高風險晶片貸款。",
     "links": [
      {
       "title": "Nvidia, Broadcom shielded as AI power crunch hits chip supply chain, says Morgan Stanley",
@@ -230,21 +230,21 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤衝破5萬點整數關卡，盤中飆漲303點至50247點再創歷史新高，台積電ADR上漲逾2%至482.85美元，總市值突破2.5兆美元，惟美股早盤費城半導體指數翻黑走跌1%。",
+    "text": "台股昨日大漲千點逼近5萬點，但籌碼面出現警訊，瑤池金母（00981A）昨日減碼聯電2,500張、日月光1,000張、富世達469張等6檔個股，僅加碼奇鋐173張；台指期夜盤站穩5萬點，台積電再創新天價2,620元。",
     "links": [
      {
-      "title": "快訊／明天台股漲勢穩了？台指期夜盤「衝破5萬大關」",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE54Vk13eU1lNEtLRlNJUm56N1J3NTN1azZEdEVsSkl0SFhUSWdTaU51M0JtOTVXd3BLa2NlUlFrN3hhNzlvY3ctNnM4Mm1PNmpQOVHSAVBBVV95cUxQRzNJbUpEMFRzUVFUdGN1XzZ1a1I2WXZKbGtkNXJ0b2VnZExQYktrUUNUSUI3V0VpZTNSRkhOQkppZW1BRHhrTHJXNmFGT0RfZw?oc=5",
-      "source": "ETtoday財經雲"
+      "title": "台股今續噴？台指期夜盤「站穩5萬點」 台積電再創新天價2620元",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5qRzh0VzNLUnR4NTNNZlVpVlgwUFZOUzZGeTdhWTFuTkJzMkhOcUViVGpQNm9kbmREcDQ0bGZpZnBIV1dHTzFOZlZaN2FSQjA?oc=5",
+      "source": "TVBS新聞網"
      },
      {
-      "title": "台股沒問題! 台指期夜盤衝破5萬再創歷史新高點｜TVBS新聞 @TVBSNEWS01 │ TVBS新聞網",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFB4dDlqblJlcnJHUjZsai1SODNOTnNFSnNBb2JBeldPWTgtMTdZNlpNTF9GOTZZUVZLV3hVdGhxOFprODBLcGxtVnEzT0pfN3YwNTBlLTBn?oc=5",
-      "source": "TVBS新聞網"
+      "title": "今台股紅通通？台指期夜盤衝破50000大關！台積電收高2620元",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE8yeTJSajBTY3c0NmJXYV9QWHZ5NEl3WnB1SHhIaTRBRUdJLUY2OC0wVU9kVjJzNFJYWkZoVVBWaU03aFlLd1dRTThWOA?oc=5",
+      "source": "三立新聞網SETN"
      }
     ]
    }
   ],
-  "at": "2026-10-05T21:42:38.903831+00:00"
+  "at": "2026-10-06T02:56:06.807093+00:00"
  }
 }
