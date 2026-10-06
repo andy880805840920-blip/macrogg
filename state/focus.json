@@ -1,6 +1,6 @@
 {
- "hash": "47304d9e3f6cf2fd",
- "text": "債券殖利率居高不下，正在衝擊消費類股與新興市場資產配置。雖然科技股因AI相關出口強勁而創新高，但更高的利率環境對利率敏感的消費裁量股造成損害。路透報導指出，儘管債券殖利率飆升，央行仍維持黃金的關鍵儲備地位，反映市場對長期利率環境的擔憂。彭博報導顯示，隨著聯準會升息預期降溫，新興市場資產開始反彈，但這種反彈仍受到高殖利率環境的制約。\n東亞太平洋地區經濟成長預測上調至4.5%，主要受AI相關製造與出口帶動，但世界銀行警告該地區對AI繁榮的依賴使其易受全球科技支出逆轉影響，越南獲得最大升幅至7.4%。",
+ "hash": "b04a9c17abe5103e",
+ "text": "債券殖利率持續高企成為市場焦點。美債殖利率維持在高位，對股市產生分化效應：科技股因AI前景強勁而創新高，納斯達克與英偉達等大型科技股逆勢上漲；但消費類股因融資成本上升而承壓，高利率環境對這類對利率敏感的產業造成明顯傷害。¶債券市場的調整反映市場對聯準會政策路徑的重新評估。路透報導指出，新興市場資產因聯準會升息預期降溫而上漲，同時油價下跌，顯示市場對經濟前景與貨幣政策的預期正在轉變。日本10年期公債標售也吸引穩健需求，儘管殖利率已突破3%，反映全球債券市場在高利率環境下的複雜動態。\n路透報導稱，儘管債券殖利率飆升，中央銀行官員仍表示黃金保留其關鍵儲備地位，暗示高殖利率環境下央行對黃金作為價值儲存工具的信心未減。\n彭博報導指出，新興市場資產因聯準會升息預期冷卻而上漲，油價同步下跌，反映市場對美國貨幣政策路徑的樂觀調整。",
  "links": [
   {
    "title": "Gold retains key reserve status despite surging bond yields, central bankers say",
@@ -13,8 +13,8 @@
    "source": "Bloomberg"
   },
   {
-   "title": "Gold Steadies as Stronger Dollar and Yields Weigh on Rate Path",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOckVuVzF3a0QtMHgwcHp2N0IyWnU1OW1jVzBjR28wSm9QdEo2MDdNNjZOVEI3YkxPdnZoVEJSeEdxTG9MLVFPMlp1YVNwUFFwWGVLSHRrcDdZeHN1Skktb3NiRThZMTd5UF9uQ2Q3c3Zsem9hNHEzVEREVnlDTTVLOTdhcUZfM0ZvYmx0R2NMeFBuVnFqaHJkTDFrMzVQcmtjNnZlT08zMVlsTGphTzRTdnVBbw?oc=5",
+   "title": "Lockheed’s Fabled Skunk Works Integrates AI in Push to Modernize Defense",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPRWJVbGZIWFg5OS1oSWJFRnpEcFhfV01Rc2s3NjlDVXpua1ZNRWFLVWUtaGxBTzhOQ3BzazdnaVE5TkZrMFFtVVBuSmVYdi1VMlRzSXhRVWxSSE4wamY4cjN6S29mZ3M2Z3AtRFZXbHB3NVQxZmNfZW5fUmxHdjZWTzNPWFVEM21pYTVrOFFKOHZaaUdOSklGUHJjX1psc2dYSVBwUXNiU2ZJRTBYT3ctZXRKMzUxbkcwSHNKa2d4NUVDS3ds?oc=5",
    "source": "Bloomberg"
   }
  ],
@@ -137,53 +137,70 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-06T06:06:48.492529+00:00",
+ "at": "2026-10-06T07:13:42.410668+00:00",
  "layout": "main",
  "topics": {
-  "hash": "12e56ab4be890bcd",
+  "hash": "3f41ac2a3e1fe9ca",
   "items": [
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "橋水基金創辦人達里歐警告，中國不願增持、日本欲收回美債，美國約三分之一債務仰賴外資，恐衝擊公債市場；10年期美債殖利率目前約5.3%，徘徊2002年來高檔。",
+    "id": "fed",
+    "label": "聯準會",
+    "text": "路透報導指出，銅價上漲因美國就業數據緩解聯準會升息擔憂，顯示市場對聯準會政策路徑的預期正在調整。",
     "links": [
      {
-      "title": "Will the 30-year Treasury yield surpass 6% this month? Economic resilience and inflationary pressures are pushing rates higher, further intensifying the sell-off in U.S. Treasuries.",
-      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPLTZ4MHgzZXh1THh2M2N6dzYxSEJnMkFlYlY2bWhncE1YSTBXYS02N1FRZnViQTd0YVZFMjFjV1BNenVjRHZmWGxSUXNPaTl1Mk9VRmtzV3BydDFEUy11VnFLMmtFeWptZGRmNEEwWExVVEh0N3RGLWc5WGp3MUZVY092RUxxQ3QxdjhBNTNhTENUNjUzQlUxcFdNcw?oc=5",
-      "source": "富途牛牛"
+      "title": "Inflation may force Fed rate hike this month, investor says",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE94b2QyR19PVmhYbW9PYm1qM3VUbU42eFZyQzBNOFA0TzZSSnhoR2dhek1yWWVkWXg0NktnRmRsVExydWdJMW5MWnRGb2txc3Nlcy1MZTlpZXRCeFZrM1lNbmRRWGxUOW9SMFZjaEVFQ09SbEQxLXBQRXFqZktCZw?oc=5",
+      "source": "Reuters"
      },
      {
-      "title": "Asian shares track Wall Street higher, Treasury yields near multi-decade highs",
-      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNZlMwQU1nbHRaZ2dnOUVOM1c1LXBxNXhWUTNzS1ROWDZyODk1NldRTHB2ODNKbnI0am5tUUcwMU9YekUxMWtLOFVGMFczTU12cHpCclQ1cnhDRzBMVGRBWTYwRjZPVUZidVFlT1FMZGdUcnR6MENjNXVMUXRzTlVzdVJkSQ?oc=5",
+      "title": "Copper Gains as US Jobs Data Offers Relief on Fed Tightening",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPeHJ4WjNIQUVnR3lNNER0dUoybmJBb2lVVl9Zbkx2dzVsNEdrdFZUcFp2X0FPVDV3YTFoMUxXVFVvT1JnRE15UUJFNXF6aTBUOTYxMXNicnNuUU9EZkMySkdRWTlvRjV2MEcwOXFxdldaekR5enFZRkJVUjdzblJlMUd5UXJFQzBSdzFFWnhfZjYwRFRWMkRDXzVTaEJIa1JsTUpxZFNTSEttM01kb1hINg?oc=5",
+      "source": "Bloomberg"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "摩根士丹利指出，英偉達與博通因AI電力短缺衝擊晶片供應鏈而受到保護，反映高利率環境下資金市場對特定科技企業融資成本的差異化影響。",
+    "links": [
+     {
+      "title": "Gold’s Share of Central Bank Reserves Nearly Doubled. A Top Banker Just Explained Why.",
+      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQVWtuOXZEbTR3VF9YLUdYaXJEMGhQbjRFYVBOdmVTZE82ZGdqMG50cUwwLWZYNl9fejUyNzRGVW10MkRqNC11TDNhbkhvOTlZUXJqZFk3dTRpTFNLUFZRNWJpN0RwNEQtTENHTVprWE5LaW5Na1lsMFpKSnVNRWJjc3M4VFlMdzliTWZKNDZ5czVqc1VSakdEeWZTR0U5R0JnZmMwLQ?oc=5",
+      "source": "GoldSilver"
+     },
+     {
+      "title": "SOFR swaps market challenges higher-for-longer Fed policy narrative",
+      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQZEVvZFJyNHZrSko0aGpRc3doY0NMYWE0aVVLd2x3X3JiaWtVWlZjSFJaZ3htVDAwazRwRlpKVENnallOUFpWYWEtWVRKR3NhT0IyWmdRVUpDUVg3eHFTaGdwOFVyM255VjZiSHZwWGdkWXo3VGtmTi1XbDBBcHphYlBfU3pob0d5T0x5amxwZEo4S1lmQmV5V1pfZVRKN3FBSUJyQVA0VUk?oc=5",
+      "source": "Seeking Alpha"
+     }
+    ]
+   },
+   {
+    "id": "oil",
+    "label": "油價",
+    "text": "路透報導稱，油價下跌因中東原油出口增加與七國集團釋放戰略石油儲備，市場對經濟前景與能源需求的預期轉變。",
+    "links": [
+     {
+      "title": "Oil slips on rising Mideast crude exports, G7 stocks release",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOZm4yN3lGTlZFWFRCMmNTSFJSUWE4MnJqSGc5aGVKMXBWR3lrcXYtSEpTRWpncXNuUHc5QVVKeDVRa0NuTWpuXzBSRUxqXzcyUklYUlU2NUdLNTkwS2FndzlLdXBaQThKZThGT2d3cjRkN0FBVjFQcEJzR2NrbEpDa1RvSlJ3a3d2bUoxcnAwSF9jVnZXY0J4V0s4WjM5Y3hRVWlhY3dSQ0J0WkMxZ3c?oc=5",
       "source": "Reuters"
+     },
+     {
+      "title": "Emerging-Market Assets Climb as Fed Hike Bets Cool, Oil Drops",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxObFd3VDVxVXBJOHN2WUNVdXZlZ2lxQUJaa0JTRGlsQjAyM3FncHIzUlFkYjdvN1R2ei13LUxoSGlPMC1tRDB4NDdZdll2WV9NSWQ3Tm9la2k0elhPaVpfc1JEZ01HWG4wcU1MUENhREljdDhjdFViYVF4U3Y0eGctejdBLUJoT1pXVFhaV0FZVDJLeHhPZm9LUk0wazZMRXNTZXJLUmNjSzQzbnYxcmlYbA?oc=5",
+      "source": "Bloomberg"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "巴西大選首輪投票後，市場對前總統之子波索納洛當選的預期大幅上升，預測市場給他超過80%勝率（前為60%），巴西股市應聲上漲，EWZ漲逾12%、伊塔烏銀行ADR漲15%。",
+    "text": "世界銀行警告東亞太平洋地區過度依賴AI相關出口存在風險，儘管該區域今年成長預期上調至4.5%，但非AI商品貿易成長「疲弱或負成長」，AI產品佔馬來西亞、菲律賓、泰國、越南出口成長逾70%。",
     "links": [
      {
-      "title": "Asian shares track Wall Street higher, Treasury yields near multi-decade highs",
-      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNZlMwQU1nbHRaZ2dnOUVOM1c1LXBxNXhWUTNzS1ROWDZyODk1NldRTHB2ODNKbnI0am5tUUcwMU9YekUxMWtLOFVGMFczTU12cHpCclQ1cnhDRzBMVGRBWTYwRjZPVUZidVFlT1FMZGdUcnR6MENjNXVMUXRzTlVzdVJkSQ?oc=5",
-      "source": "Reuters"
-     },
-     {
-      "title": "Trading Day: Nasdaq highs, Brazil surprise",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNekZHUjVfNDc1RTVWS1M2YVFlU2MtOG93UUhfWkIyTzRWRE9sWTFiY05sNWxDU2tydkNJWWdEWlNoQzUwVzh6djlETnJLRUIzQnhkNjBwOHBoSTRYLUFzMlRIdDZrTGxZQjU4UU1xUWdqM2xITHc4SG1KdElwZ2p4YXdiaW1YSV9zanZxTUM3MUp2N3R2YVpIN3JNVGozR05wNXQ4V0VB?oc=5",
-      "source": "Reuters"
-     }
-    ]
-   },
-   {
-    "id": "semi",
-    "label": "半導體",
-    "text": "超微執行長蘇姿丰訪台密會台積電，證實先前宣布的100億美元在台投資計畫符合進度，並因AI需求暴增已決定調高投資金額，未來將持續擴大在台供應鏈投資。",
-    "links": [
-     {
-      "title": "Contrabando de chips en China expone los puntos débiles de Nvidia",
-      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPMl85YlJSRXF6Q2JOb0syR0xGandIY1loREJUakVlaHlFR0JINU1lclFfUmJycWlPTkdzcjhObXFpX1ZTOEhyV1MyVUFMWDlwbWRoakZXd3dqLW9IWVlKSkhmdVNHdjFFamhhel81NUFDZEJ5SWNLS05Lb1lRd29zeVMyd3kyUW1wcmxqaWhENGlVYXFIcXRiOWpjRFFodmNVcTd3WjFmQjg4WnMtbEFLY3B6MFA5dXI2WWc?oc=5",
+      "title": "Singapore’s DayOne Files for US IPO Joining AI Data Center Rush",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNZG9YTmdPWWFVWWp0SVF6LVNINV9sclBFUWV5d3NCXzktUUtTUkVBczUtR2UyQnVNQTdIemNRQmUxUWRhakhtVklrcEYzdkxOZ1BaLUpnUWpDN0hJWC1pSUMwUUJlYlhUUnQ4TjB5SmRBMUNKNDNwMjlIb0FsRlhSaWNPZ2RDQW1kSlEyZ1E2SnVLWVMtdVdNZ0FucGhsOUQ2b1dQSUJudzFKTWF4RHNVOWxRMlg?oc=5",
       "source": "Bloomberg"
      },
      {
@@ -194,23 +211,40 @@
     ]
    },
    {
+    "id": "semi",
+    "label": "AI 與半導體",
+    "text": "日股在AI與半導體股帶動下收高，日經指數漲1.1%至70683.98點；世界銀行指出南韓出口9月創高120.9億美元，晶片佔半數，但三星與SK海力士兩家廠商佔韓股指數43%，反映產業集中風險。",
+    "links": [
+     {
+      "title": "Nvidia, Broadcom shielded as AI power crunch hits chip supply chain, says Morgan Stanley",
+      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOMF9lcTkxVU5OWUp5THhibUJWc3U0MWo5c2dreS02dFk3TGt4SlBXLVdpX0htOV85SnVsc3RUZjZJZDJac3p3bFgzS05uU2hjVXh5N0RjcFVtQml0TnBRSllwREVDdUVFOTBoTTRMT01RMnVUNGQtZk1ZY0ZIdUZHWHNBbjlaMk10dEpJZ3J5eTZHYjlDQW9JdEg4STBBLVNYNlFRb1J1aUJudHJkS2lmT0otSUJHdE5wVnJaXw?oc=5",
+      "source": "Reuters"
+     },
+     {
+      "title": "Singapore’s DayOne Files for US IPO Joining AI Data Center Rush",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNZG9YTmdPWWFVWWp0SVF6LVNINV9sclBFUWV5d3NCXzktUUtTUkVBczUtR2UyQnVNQTdIemNRQmUxUWRhakhtVklrcEYzdkxOZ1BaLUpnUWpDN0hJWC1pSUMwUUJlYlhUUnQ4TjB5SmRBMUNKNDNwMjlIb0FsRlhSaWNPZ2RDQW1kSlEyZ1E2SnVLWVMtdVdNZ0FucGhsOUQ2b1dQSUJudzFKTWF4RHNVOWxRMlg?oc=5",
+      "source": "Bloomberg"
+     }
+    ]
+   },
+   {
     "id": "twf",
     "label": "台指期",
-    "text": "台股收盤再創歷史新高49,822.55點，距5萬點僅差177點，台積電上漲10元撐盤；美股那指創新高、輝達漲2.1%創歷史新高，帶動台股科技股正面氣氛。",
+    "text": "台股盤中創高49968.92點逼近5萬點，台積電再創新高2585元、市值67.03兆元，超過千元高價股達56檔追平紀錄，但聯發科跌破5000元、跌幅逾4%，櫃買指數翻黑。",
     "links": [
      {
       "title": "台股今續噴？台指期夜盤「站穩5萬點」 台積電再創新天價2620元",
       "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5qRzh0VzNLUnR4NTNNZlVpVlgwUFZOUzZGeTdhWTFuTkJzMkhOcUViVGpQNm9kbmREcDQ0bGZpZnBIV1dHTzFOZlZaN2FSQjA?oc=5",
-      "source": "news.tvbs.tw"
+      "source": "TVBS新聞網"
      },
      {
-      "title": "今台股紅通通？台指期夜盤衝破50000大關！台積電收高2620元",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE8yeTJSajBTY3c0NmJXYV9QWHZ5NEl3WnB1SHhIaTRBRUdJLUY2OC0wVU9kVjJzNFJYWkZoVVBWaU03aFlLd1dRTThWOA?oc=5",
-      "source": "三立新聞網SETN"
+      "title": "聯電ADR崩9%！台積電、輝達及那指創新高 台指期夜盤攻上5萬點",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1jak4yYU5Gc05sTzJJVE9JZXNHYmo0bEk1QWl5akRPTTNMZWlFazdFVzZOY1N2RlJYOHNkaHVOQ0dwQklLSEE0cGJfYjg1X0FNa3VNbXViR0JHMVRZWXdqWU5fZUhSV3JzNkcybjRZUQ?oc=5",
+      "source": "知新聞"
      }
     ]
    }
   ],
-  "at": "2026-10-06T06:06:55.086839+00:00"
+  "at": "2026-10-06T07:13:52.838341+00:00"
  }
 }

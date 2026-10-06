@@ -3327,20 +3327,184 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 /* 報價板：點一下顯示提示（手機沒有滑鼠移上去） */
 .viz-root:not(#_) .hm .focus-strip .fs-chip.tip-on::after{content:attr(title);grid-column:1/-1;font-size:11.5px;
   color:var(--text-secondary);padding-top:6px;line-height:1.5}
+/* 報價板：就地編輯（2026-10） */
+.fs-edit-btn{font:inherit;font-size:var(--fs-small);font-weight:600;color:var(--brand-navy);background:var(--surface-1);
+  border:1px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;margin-left:6px}
+.fs-editing .fs-edit-btn{background:var(--brand-navy);color:#fff;border-color:var(--brand-navy)}
+.fs-editbar{display:none;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;padding:9px 12px;border-radius:10px;
+  background:var(--surface-2);font-size:var(--fs-small);color:var(--text-secondary)}
+.fs-editing .fs-editbar{display:flex}
+.fs-editbar span{flex:1 1 auto;white-space:nowrap}
+.fs-editbar button{font:inherit;font-size:var(--fs-small);font-weight:600;border-radius:999px;padding:4px 12px;cursor:pointer}
+.fs-editbar .fs-reset{background:transparent;border:1px solid var(--brand-navy);color:var(--brand-navy)}
+.fs-editbar .fs-done{background:var(--brand-orange);border:1px solid var(--brand-orange);color:#fff}
+.hm .focus-strip .fs-chip{position:relative}
+.fs-rowsel{display:none}
+.fs-editing .fs-chip:not(.fs-off) .fs-rowsel{display:block;position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;
+  font-size:16px;-webkit-appearance:none;appearance:none;border:0}
+.fs-editing .fs-chip:not(.fs-off){background:var(--surface-1);box-shadow:inset 3px 0 0 var(--brand-orange)}
+.viz-root:not(#_) .hm .fs-editing .fs-chip:not(.fs-off)>b::after{content:" ▾";font-size:11px;color:var(--brand-orange);font-weight:700}
+.viz-root:not(#_) .hm .fs-editing .fs-chip.slot1 .fs-nm>span::after,
+.viz-root:not(#_) .hm .fs-editing .fs-chip.slot2 .fs-nm>span::after{content:"補充新聞";margin-left:6px;font-size:10px;font-weight:700;
+  color:#fff;background:var(--brand-orange);border-radius:4px;padding:0 4px;vertical-align:1px}
+.viz-root:not(#_) .hm .fs-editing .fs-chip .fs-nm>span{overflow:visible}
+/* 新聞主題標籤（反向聯動） */
+.fs-tps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px}
+.fs-tps-k{font-size:var(--fs-micro);font-weight:700;color:var(--muted);margin-right:2px}
+.fs-tp{font:inherit;font-size:var(--fs-small);font-weight:600;border-radius:999px;padding:3px 10px;cursor:pointer;
+  background:var(--surface-1);color:var(--brand-navy);border:1px solid var(--border)}
+.fs-tp:hover{border-color:var(--brand-navy)}
+.fs-tp.on{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
+.fs-tp.na{opacity:.4;cursor:default}
+/* 補充新聞主題標籤：可點、換主題（2026-10） */
+.fs-tag.fs-tagsel{position:relative;padding-right:18px;cursor:pointer;border:1px solid var(--brand-navy)!important}
+.fs-tag.fs-tagsel::after{content:"▾";position:absolute;right:5px;top:50%;transform:translateY(-52%);font-size:10px;color:var(--brand-orange)}
+.fs-tag.fs-tagsel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:0;-webkit-appearance:none;appearance:none}
+/* 選舉：兩院組合 100% 比例條、「更多」 */
+.el-map2{margin-top:14px}
+.el-more{margin-top:10px;border-top:1px solid var(--grid)}
+.el-more>summary{list-style:none;cursor:pointer;padding:12px 0;font-size:var(--fs-small);font-weight:700;color:var(--brand-navy)}
+.el-more>summary::-webkit-details-marker{display:none}
+.el-more>summary::after{content:" ▾";color:var(--brand-orange)}
+.el-more[open]>summary::after{content:" ▴"}
+.el-more-k{font-size:var(--fs-small);font-weight:700;color:var(--muted);margin:16px 0 8px}
+.el-more-b>.el-more-k:first-child{margin-top:4px}
+.el-bal3{display:block;color:inherit;text-decoration:none}
+.el-b3{display:flex;height:26px;border-radius:7px;overflow:hidden;gap:2px;background:var(--surface-1)}
+.el-b3 i{display:flex;align-items:center;justify-content:center;min-width:2px}
+.el-b3 i em{font-style:normal;font-size:var(--fs-small);font-weight:700;color:#fff;white-space:nowrap}
+.el-b3 i.dem{background:var(--el-dem)}.el-b3 i.rep{background:var(--el-rep)}
+.el-b3 i.mix{background:var(--el-mix)}.el-b3 i.mix2{background:var(--el-mix2)}.el-b3 i.oth{background:var(--el-oth)}
+/* 長端首卡第三版：一行報價＋主因一句＋三段組成小表 */
+.le2-q{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.le2-qi{min-width:0;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"k k" "v c";gap:2px 10px;
+  align-items:baseline;padding:12px 16px}
+.le2-qi+.le2-qi{border-left:1px solid var(--grid)}
+.le2-qi span{grid-area:k;font-size:var(--fs-small);color:var(--muted)}
+.viz-root:not(#_) .le2-qi b{grid-area:v;font-size:var(--fs-num);font-weight:700;color:var(--brand-navy);font-variant-numeric:tabular-nums}
+.le2-qi em{grid-area:c;font-style:normal;font-size:var(--fs-small);color:var(--text-secondary);white-space:nowrap}
+.le2-qi em.up::before{content:"▲ ";color:var(--critical);font-size:10px}
+.le2-qi em.dn::before{content:"▼ ";color:var(--good);font-size:10px}
+@media(max-width:480px){.le2-qi{grid-template-areas:"k" "v" "c";grid-template-columns:1fr;padding:10px 12px}}
+.le2-asof{font-size:var(--fs-micro);color:#a3a29c;margin:6px 2px 0;text-align:right}
+.le2 .focus-title{margin-top:16px}
+.le2-t{margin-top:16px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.le2-h,.le2-r{display:grid;grid-template-columns:minmax(0,1fr) 76px 84px;column-gap:10px;align-items:center;padding:10px 14px}
+.le2-h{padding:8px 14px;border-bottom:1px solid var(--border)}
+.le2-h span{font-size:var(--fs-micro);font-weight:600;color:var(--muted)}
+.le2-h span:nth-child(n+2){text-align:right}
+.le2-r{border-top:1px solid var(--grid);cursor:help}
+.le2-h+.le2-r{border-top:0}
+.le2-r.main{box-shadow:inset 3px 0 0 var(--brand-orange);background:rgba(230,113,67,.05)}
+.le2-n{display:flex;flex-direction:column;gap:1px;min-width:0}
+.le2-n span{font-size:var(--fs-body);font-weight:600;color:var(--text-primary)}
+.le2-n em{font-style:normal;font-size:10px;font-weight:700;color:#fff;background:var(--brand-orange);border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.le2-n small{font-size:var(--fs-micro);color:#a3a29c}
+.viz-root:not(#_) .le2-r b{font-size:17px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.le2-r i{font-style:normal;font-size:var(--fs-small);color:var(--text-secondary);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.le2-r i.up::before{content:"▲ ";color:var(--critical);font-size:10px}
+.le2-r i.dn::before{content:"▼ ";color:var(--good);font-size:10px}
+.le2-r.tip-on::after{content:attr(title);grid-column:1/-1;font-size:var(--fs-small);color:var(--text-secondary);padding-top:6px;line-height:1.5}
+.le2-tip{font-size:var(--fs-micro);color:#a3a29c;margin:6px 2px 0}
+@media(max-width:400px){.le2-h,.le2-r{grid-template-columns:minmax(0,1fr) 66px 76px;padding-left:12px;padding-right:12px}}
+.le2-seg{margin-top:16px}.le2-seg .cl-leg{display:none}.le2-seg+.le2-t{margin-top:8px}
+.le2-sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:1px}
+.el-mpane[hidden],.el-msum[hidden]{display:none!important}
+.el-mpane>.el-more-k:first-child{margin-top:4px}
+/* 關鍵數字卡 2026-10：判讀小表取代膠囊；日期右上淺灰；白話收進收合層 */
+.viz-root:not(#_) .kpi .k-label{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.kpi .k-when{flex:none;font-size:11px;font-weight:400;color:#a3a29c;font-variant-numeric:tabular-nums}
+.k-judge{display:grid;gap:0;margin-top:12px;border-top:1px solid var(--grid)}
+.kj-r{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--grid)}
+.kj-k{font-size:var(--fs-small);color:var(--muted);font-weight:600}
+.kj-v{font-size:var(--fs-body);color:var(--text-primary);line-height:1.45}
+.kj-d{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:1px;background:var(--muted-bar)}
+.kj-d.haw{background:var(--serious)}.kj-d.dov{background:var(--series-1)}.kj-d.wat{background:var(--warning)}
+.viz-root:not(#_) .k-plain2{font-size:var(--fs-body);line-height:1.75;color:var(--text-secondary);margin:2px 0 10px}
+/* 科技巨頭第三版：三個數字＋加總圖＋一家一列 */
+.hs3-q{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:14px}
+.hs3-q>div{display:flex;flex-direction:column;gap:2px;padding:12px 14px;min-width:0}
+.hs3-q>div+div{border-left:1px solid var(--grid)}
+.hs3-q span{font-size:var(--fs-small);color:var(--muted)}
+.viz-root:not(#_) .hs3-q b{font-size:var(--fs-num);font-weight:700;color:var(--brand-navy);font-variant-numeric:tabular-nums;line-height:1.25}
+.viz-root:not(#_) .hs3-q b.over{color:var(--critical)}
+.hs3-q small{font-size:var(--fs-micro);color:#a3a29c;line-height:1.4}
+@media(max-width:600px){.hs3-q{grid-template-columns:1fr}.hs3-q>div+div{border-left:0;border-top:1px solid var(--grid)}
+  .hs3-q>div{display:grid;grid-template-columns:1fr auto;align-items:baseline}.hs3-q small{grid-column:1/-1}}
+.hs3-chart{margin-top:18px}
+.hs3-ch{font-size:var(--fs-small);font-weight:700;color:var(--muted);margin-bottom:24px}
+.hs3-p{position:relative;display:flex;gap:6px;height:150px;border-bottom:1px solid var(--text-secondary)}
+.hs3-c{position:relative;flex:1 1 0;min-width:0}
+.hs3-b{position:absolute;bottom:0;left:16%;right:16%;background:#b7c0cc;border-radius:3px 3px 0 0}
+.hs3-c.on .hs3-b{background:var(--brand-navy)}
+.hs3-b.over{background:#e7a48a}.hs3-c.on .hs3-b.over{background:var(--brand-orange)}
+.hs3-b em,.hs3-o em{position:absolute;left:50%;transform:translateX(-50%);font-style:normal;font-size:var(--fs-micro);font-weight:700;white-space:nowrap}
+.hs3-b em{bottom:calc(100% + 3px);color:var(--text-primary)}
+.hs3-o{position:absolute;left:4%;right:4%;height:0;border-top:2.5px solid var(--text-primary)}
+.hs3-o em{top:-18px;left:auto;right:-4px;transform:none;color:var(--text-secondary)}
+.hs3-x{position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:var(--fs-micro);color:var(--muted);white-space:nowrap}
+.hs3-chart .cl-leg{margin-top:28px}
+.hs3-lg-b{display:inline-block;width:12px;height:10px;border-radius:2px;background:var(--brand-navy)}
+.hs3-lg-o{display:inline-block;width:16px;border-top:2.5px solid var(--text-primary)}
+.hs3-note{font-size:var(--fs-micro);color:#a3a29c;margin:6px 0 0;line-height:1.6}
+.hs3-t{margin-top:18px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.hs3-hd,.hs3-r>summary{display:grid;grid-template-columns:minmax(0,1.2fr) 0.9fr 0.7fr 1.3fr 0.8fr 1.1fr;column-gap:12px;align-items:center;padding:10px 14px}
+.hs3-hd{border-bottom:1px solid var(--border)}
+.hs3-hd span{font-size:var(--fs-micro);font-weight:600;color:var(--muted)}
+.hs3-hd span:nth-child(n+2){text-align:right}
+.hs3-r{border-top:1px solid var(--grid)}
+.hs3-hd+.hs3-r{border-top:0}
+.hs3-r>summary{list-style:none;cursor:pointer}
+.hs3-r>summary::-webkit-details-marker{display:none}
+.hs3-r>summary:hover{background:var(--surface-2)}
+.hs3-n{display:flex;flex-direction:column;min-width:0}
+.hs3-n b{font-size:var(--fs-body);color:var(--brand-navy)}
+.hs3-n small{font-size:var(--fs-micro);color:#a3a29c}
+.hs3-v{font-size:var(--fs-body);font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hs3-v em{display:none;font-style:normal}
+.hs3-ratio{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.hs3-ratio b{font-weight:700}.hs3-ratio b.over{color:var(--critical)}
+.hs3-rb{position:relative;display:inline-block;width:64px;height:6px;border-radius:3px;background:var(--grid)}
+.hs3-rb i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--brand-navy)}
+.hs3-rb i.over{background:var(--critical)}
+.hs3-rb u{position:absolute;left:66.7%;top:-3px;bottom:-3px;border-left:1.5px solid var(--text-primary)}
+.hs3-body{padding:4px 14px 14px}
+.hs3-deb{font-size:var(--fs-small);color:var(--text-secondary);margin:6px 0 0}
+.hs3-stale{font-size:var(--fs-micro);color:#a3a29c;margin-top:8px}
+.hs3-stale b{color:var(--warning)}
+@media(max-width:759px){
+  .hs3-hd{display:none}
+  .hs3-r>summary{grid-template-columns:1fr 1fr;grid-template-areas:"n r" "a b" "c d";gap:6px 12px;padding:12px}
+  .hs3-n{grid-area:n}.hs3-ratio{grid-area:r}
+  .hs3-v{text-align:left;display:flex;flex-direction:column}
+  .hs3-v em{display:block;font-size:var(--fs-micro);color:#a3a29c;font-weight:400}
+  .hs3-ratio{flex-direction:row;flex-wrap:wrap;justify-content:flex-end;text-align:right}
+  .hs3-ratio em{width:100%;text-align:right}
+}
+.viz-root:not(#_) .hs3-r>summary{padding:10px 14px!important;margin:0!important;min-height:0!important;color:var(--text-primary);text-indent:0;border:0}
+.viz-root:not(#_) .hs3-r{margin:0;padding:0}
+.viz-root:not(#_) .hs3-r>summary::before{content:none}
+.viz-root:not(#_) .hs3-v{color:var(--text-primary)}
+.viz-root:not(#_) .hs3-chart .cl-leg i.hs3-lg-b{display:inline-block;width:12px;height:10px;border:0;border-radius:2px;background:var(--brand-navy)}
+.viz-root:not(#_) .hs3-chart .cl-leg i.hs3-lg-o{display:inline-block;width:16px;height:0;border-top:2.5px solid var(--text-primary);background:none}
+.hs3-ch{margin-bottom:6px}
+.hs3-last{font-size:var(--fs-small);color:var(--text-secondary);margin-bottom:14px}
+.hs3-last b{color:var(--text-primary);font-variant-numeric:tabular-nums}.hs3-last b.over{color:var(--critical)}
+@media(max-width:759px){.viz-root:not(#_) .hs3-r>summary{padding:12px}}
 </style>
 <script type="speculationrules">
 {"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-06 14:07（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/06</span></span><div class="upd-c"><span>台北</span><b>14:07</b><i>10/06</i></div><div class="upd-c"><span>紐約</span><b>02:07</b><i>10/06</i></div><div class="upd-c"><span>倫敦</span><b>07:07</b><i>10/06</i></div></div><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-06 15:14（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/06</span></span><div class="upd-c"><span>台北</span><b>15:14</b><i>10/06</i></div><div class="upd-c"><span>紐約</span><b>03:14</b><i>10/06</i></div><div class="upd-c"><span>倫敦</span><b>08:14</b><i>10/06</i></div></div><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/rates/" class="on" aria-current="page">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>長端與債務</h1><div class="sub">Rates & Debt Supply　·　資料截止 2026-10-05</div></div>
 
-<div class="anav"><nav class="anchors"><a href="#decomp">長端利率的組成</a><a href="#curve">殖利率曲線</a><a href="#global">全球長端</a><a href="#supply">債券供給：財政部與 Fed</a><a href="#auctions">Coupon 拍賣結果</a><a href="#demand">債券需求：信用利差</a><a href="#debt">政府財政</a><a href="#hyperscalers">科技巨頭：資本支出與發債</a><a href="#lights">關鍵指標檢核</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="le-hero"><div class="focus-eyebrow">Long-end drivers</div><div class="le-top"><div class="le-big"><span class="le-k">10 年期</span><b>5.31%</b><span class="le-chg up">近 1 月 +52bp</span></div><div class="le-small"><span class="le-k">30 年期</span><b>5.67%</b><span>近 1 月 +40bp</span></div><div class="le-asof">資料 2026-10-05（盤中）</div></div><h2 class="focus-title">本月主因：期限溢酬 +10bp</h2><p class="focus-sub">8 月→9 月 10Y 月均 +30bp，推力來自財政與供給壓力。長端跟著三件事走：政策預期、通膨預期、期限溢酬。</p><div class="sg"><div class=sg-h>2026 年 9 月 10Y 由哪三段組成（月均）</div><div class="sg-bar"><span class="sg-seg" style="flex:0.2921;background:var(--line-1)" data-tip="預期實質路徑｜1.45%"><b>1.45%</b></span><span class="sg-seg" style="flex:0.5180;background:var(--line-2)" data-tip="預期通膨｜2.57%"><b>2.57%</b></span><span class="sg-seg" style="flex:0.1899;background:#1baf7a" data-tip="期限溢酬｜0.94%"><b>0.94%</b></span></div><div class="cl-leg"><span><i style="background:var(--line-1)"></i>預期實質路徑</span><span><i style="background:var(--line-2)"></i>預期通膨</span><span><i style="background:#1baf7a"></i>期限溢酬</span></div></div><div class="le-tiles"><div class="le-tile" style="--c:var(--line-1)"><div class="le-tk">政策壓力</div><div class="le-tn">預期實質路徑</div><div class="le-tv">1.45%<span class="up">+4bp</span></div><div class="le-tx">市場預先替 Fed 定價；Fed 跟上之前只是預告</div></div><div class="le-tile" style="--c:var(--line-2)"><div class="le-tk">通膨壓力</div><div class="le-tn">預期通膨</div><div class="le-tv">2.57%<span class="up">+7bp</span></div><div class="le-tx">名目緊縮、實質未收緊：借貸成本變高，但實質利率沒動</div></div><div class="le-tile main" style="--c:#1baf7a"><span class="le-badge">本月主因</span><div class="le-tk">財政與供給壓力</div><div class="le-tn">期限溢酬</div><div class="le-tv">0.94%<span class="up">+10bp</span></div><div class="le-tx">不靠 Fed 也會收緊金融條件</div></div></div><details class="focus-evidence"><summary>查看三股力量怎麼量</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>政策壓力＝預期實質路徑</b><span>Kim-Wright 擬合殖利率 − 期限溢酬 − 預期通膨；市場對未來實質短率的平均預期</span></div><div class="logic-step"><b>通膨壓力＝預期通膨</b><span>克里夫蘭聯儲 10 年預期通膨（模型值，已扣風險溢酬）</span></div><div class="logic-step"><b>財政與供給壓力＝期限溢酬</b><span>Kim-Wright 10 年期限溢酬</span></div></div><p class="hint" style="margin-top:8px">三段一律用月均相加，剩下的差列為殘差；TIPS 與損益兩平只當參考。本月主因＝三段中變動絕對值最大的那一段。</p></div></details><div class="evs"><div class="evs-h">接下來 4 週</div><div class="ev-grid"><div class="ev"><span class="ev-d">10/6</span><span class="ev-k">拍賣</span><span class="ev-t">3 年（新券）　580 億美元</span></div><div class="ev"><span class="ev-d">10/6</span><span class="ev-k">債務月報</span><span class="ev-t">財政部 MSPD（流通在外公債明細）</span></div><div class="ev"><span class="ev-d">10/7</span><span class="ev-k">拍賣</span><span class="ev-t">10 年（增發舊券）　390 億美元</span></div><div class="ev"><span class="ev-d">10/8</span><span class="ev-k">拍賣</span><span class="ev-t">30 年（增發舊券）　220 億美元</span></div><div class="ev"><span class="ev-d">10/8</span><span class="ev-k">Fed 資產</span><span class="ev-t">H.4.1 Fed 資產負債表</span></div><div class="ev"><span class="ev-d">11/4</span><span class="ev-k">再融資</span><span class="ev-t">每季再融資公告（下一季各天期 coupon 規模與指引）</span></div></div></div></div></div></div>
+<div class="anav"><nav class="anchors"><a href="#decomp">長端利率的組成</a><a href="#hyperscalers">科技巨頭：AI 資本支出與發債</a><a href="#curve">殖利率曲線</a><a href="#global">全球長端</a><a href="#supply">債券供給：財政部與 Fed</a><a href="#auctions">Coupon 拍賣結果</a><a href="#demand">債券需求：信用利差</a><a href="#debt">政府財政</a><a href="#lights">關鍵指標檢核</a></nav></div>
+<div class="grid"><div class="card focus-card"><div class="le-hero le2"><div class="le2-q"><div class="le2-qi"><span>10 年期</span><b>5.31%</b><em class="up">近 1 月 +52bp</em></div><div class="le2-qi"><span>30 年期</span><b>5.67%</b><em class="up">近 1 月 +40bp</em></div></div><div class="le2-asof">資料 2026-10-05（盤中）</div><h2 class="focus-title">本月主因：期限溢酬 +10bp</h2><p class="focus-sub">財政與供給壓力推高長端——不靠 Fed 也會收緊金融條件。</p><div class="le2-seg"><div class="sg"><div class="sg-bar"><span class="sg-seg" style="flex:0.2921;background:var(--brand-navy)" data-tip="預期實質路徑｜1.45%"><b>1.45%</b></span><span class="sg-seg" style="flex:0.5180;background:#8b97a8" data-tip="預期通膨｜2.57%"><b>2.57%</b></span><span class="sg-seg" style="flex:0.1899;background:var(--brand-orange)" data-tip="期限溢酬｜0.94%"><b>0.94%</b></span></div><div class="cl-leg"><span><i style="background:var(--brand-navy)"></i>預期實質路徑</span><span><i style="background:#8b97a8"></i>預期通膨</span><span><i style="background:var(--brand-orange)"></i>期限溢酬</span></div></div></div><div class="le2-t"><div class="le2-h"><span>10Y 三段組成（9 月均）</span><span>水準</span><span>8→9 月</span></div><div class="le2-r" title="市場預先替 Fed 定價；Fed 跟上之前只是預告"><div class="le2-n"><span><i class="le2-sw" style="background:var(--brand-navy)"></i>預期實質路徑</span><small>政策壓力</small></div><b>1.45%</b><i class="up">+4bp</i></div><div class="le2-r" title="名目緊縮、實質未收緊：借貸成本變高，但實質利率沒動"><div class="le2-n"><span><i class="le2-sw" style="background:#8b97a8"></i>預期通膨</span><small>通膨壓力</small></div><b>2.57%</b><i class="up">+7bp</i></div><div class="le2-r main" title="不靠 Fed 也會收緊金融條件"><div class="le2-n"><span><i class="le2-sw" style="background:var(--brand-orange)"></i>期限溢酬<em>本月主因</em></span><small>財政與供給壓力</small></div><b>0.94%</b><i class="up">+10bp</i></div></div><p class="le2-tip">點一行看白話說明</p><details class="focus-evidence"><summary>查看三股力量怎麼量</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>政策壓力＝預期實質路徑</b><span>Kim-Wright 擬合殖利率 − 期限溢酬 − 預期通膨；市場對未來實質短率的平均預期</span></div><div class="logic-step"><b>通膨壓力＝預期通膨</b><span>克里夫蘭聯儲 10 年預期通膨（模型值，已扣風險溢酬）</span></div><div class="logic-step"><b>財政與供給壓力＝期限溢酬</b><span>Kim-Wright 10 年期限溢酬</span></div></div><p class="hint" style="margin-top:8px">三段一律用月均相加，剩下的差列為殘差；TIPS 與損益兩平只當參考。本月主因＝三段中變動絕對值最大的那一段。</p></div></details><div class="evs"><div class="evs-h">接下來 4 週</div><div class="ev-grid"><div class="ev"><span class="ev-d">10/6</span><span class="ev-k">拍賣</span><span class="ev-t">3 年（新券）　580 億美元</span></div><div class="ev"><span class="ev-d">10/6</span><span class="ev-k">債務月報</span><span class="ev-t">財政部 MSPD（流通在外公債明細）</span></div><div class="ev"><span class="ev-d">10/7</span><span class="ev-k">拍賣</span><span class="ev-t">10 年（增發舊券）　390 億美元</span></div><div class="ev"><span class="ev-d">10/8</span><span class="ev-k">拍賣</span><span class="ev-t">30 年（增發舊券）　220 億美元</span></div><div class="ev"><span class="ev-d">10/8</span><span class="ev-k">Fed 資產</span><span class="ev-t">H.4.1 Fed 資產負債表</span></div><div class="ev"><span class="ev-d">11/4</span><span class="ev-k">再融資</span><span class="ev-t">每季再融資公告（下一季各天期 coupon 規模與指引）</span></div></div></div></div></div></div><script>(function(){document.querySelectorAll(".le2-r[title]").forEach(function(r){r.addEventListener("click",function(){r.classList.toggle("tip-on");});});})();</script>
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
   <details class="card sect" open><summary><h2 id="decomp">長端利率的組成</h2><span class="sect-sum">主因：期限溢酬 +10bp　·　10Y 月均 +30bp</span></summary><div class="sect-body">
@@ -3364,6 +3528,73 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
         <dt>注意</dt><dd>兩個模型出自不同機構，三段相加是近似；它回答「哪一段動得最多」，不是精確會計。</dd>
       </dl>
     </details>
+  </div></details>
+</div>
+
+<div class="grid">
+  <details class="card sect"><summary><h2 id="hyperscalers">科技巨頭：AI 資本支出與發債</h2><span class="sect-sum">2026 年計畫 6,900–7,200 億美元　·　佔營運現金流 99%</span></summary><div class="sect-body">
+    <p class="hint">期限溢酬裡的「財政與供給壓力」，除了國債，還有這批科技公司的發債——
+      它們正從債市的<b>買方</b>變成<b>賣方</b>。</p>
+    <div class="impact hawkish">正在轉向舉債支應——合計資本支出已達同期營運現金流的 99%，逼近本業現金能支應的上限。</div>
+    <div class="hs3-q"><div><span>資本支出合計</span><b>1,936 億美元</b><small>年增 +110%（對去年同季）</small></div><div><span>佔營運現金流</span><b>99%</b><small>合計 ÷ 合計，非五家平均</small></div><div><span>單季發債合計（期末 2026-06-30～2026-08-31）</span><b>450 億美元</b><small>分子為五家不同會計期別之和</small></div></div>
+    <div class="hs3-chart"><div class="hs3-ch">五家加總・每季（億美元）</div><div class="hs3-last">最新一季（26/8）：資本支出 <b>1,935</b>　營運現金流 <b>1,949</b>　佔 <b class="">99%</b></div><div class="hs3-p"><div class="hs3-c" data-tip="24/11｜資本支出 628｜營運現金流 1,169｜54%"><span class="hs3-b" style="height:29.9%"></span><span class="hs3-o" style="bottom:55.5%"></span><span class="hs3-x">24/11</span></div><div class="hs3-c" data-tip="25/2｜資本支出 782｜營運現金流 1,410｜55%"><span class="hs3-b" style="height:37.2%"></span><span class="hs3-o" style="bottom:67.0%"></span><span class="hs3-x">25/2</span></div><div class="hs3-c" data-tip="25/5｜資本支出 810｜營運現金流 1,204｜67%"><span class="hs3-b" style="height:38.5%"></span><span class="hs3-o" style="bottom:57.2%"></span><span class="hs3-x">25/5</span></div><div class="hs3-c" data-tip="25/8｜資本支出 967｜營運現金流 1,366｜71%"><span class="hs3-b" style="height:46.0%"></span><span class="hs3-o" style="bottom:64.9%"></span><span class="hs3-x">25/8</span></div><div class="hs3-c" data-tip="25/11｜資本支出 1,093｜營運現金流 1,611｜68%"><span class="hs3-b" style="height:51.9%"></span><span class="hs3-o" style="bottom:76.5%"></span><span class="hs3-x">25/11</span></div><div class="hs3-c" data-tip="26/2｜資本支出 1,373｜營運現金流 1,860｜74%"><span class="hs3-b" style="height:65.2%"></span><span class="hs3-o" style="bottom:88.4%"></span><span class="hs3-x">26/2</span></div><div class="hs3-c" data-tip="26/5｜資本支出 1,462｜營運現金流 1,653｜88%"><span class="hs3-b" style="height:69.5%"></span><span class="hs3-o" style="bottom:78.6%"></span><span class="hs3-x">26/5</span></div><div class="hs3-c on" data-tip="26/8｜資本支出 1,935｜營運現金流 1,949｜99%"><span class="hs3-b" style="height:92.0%"></span><span class="hs3-o" style="bottom:92.6%"></span><span class="hs3-x">26/8</span></div></div><div class="cl-leg"><span><i class="hs3-lg-b"></i>資本支出</span><span><i class="hs3-lg-o"></i>營運現金流</span></div><p class="hs3-note">柱子追上橫線＝本業現金不夠付資本支出，缺口要靠發債。各家會計季末不同，依「最近第幾季」對齊相加。</p></div>
+    <div class="hs3-t"><div class="hs3-hd"><span>公司</span><span>本季資本支出</span><span>年增</span><span>佔營運現金流</span><span>單季發債</span><span>2026 年資本支出計畫</span></div><details class="hs3-r"><summary><span class="hs3-n"><b>Microsoft</b><small>2026-06-30</small></span><span class="hs3-v"><em>本季資本支出</em>358</span><span class="hs3-v"><em>年增</em>+110%</span><span class="hs3-v hs3-ratio"><em>佔營運現金流</em><b class="">65%</b><span class="hs3-rb"><i class="" style="width:43.0%"></i><u></u></span></span><span class="hs3-v"><em>單季發債</em>0</span><span class="hs3-v"><em>2026 年計畫</em>1,900</span></summary><div class="hs3-body"><div class="kh kh-change" style="--n:8" role="img" aria-label="Microsoft 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">149</span><span class="">158</span><span class="">167</span><span class="">171</span><span class="">194</span><span class="">299</span><span class="">309</span><span class="last">358</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜149億美元"><span class="kh-bar" style="top:61.4%;height:38.6%"></span></div><div class="kh-col" data-tip="24年12月｜158億美元"><span class="kh-bar" style="top:59.1%;height:40.9%"></span></div><div class="kh-col" data-tip="25年3月｜167億美元"><span class="kh-bar" style="top:56.7%;height:43.3%"></span></div><div class="kh-col" data-tip="25年6月｜171億美元"><span class="kh-bar" style="top:55.8%;height:44.2%"></span></div><div class="kh-col" data-tip="25年9月｜194億美元"><span class="kh-bar" style="top:49.8%;height:50.2%"></span></div><div class="kh-col" data-tip="25年12月｜299億美元"><span class="kh-bar" style="top:22.7%;height:77.3%"></span></div><div class="kh-col" data-tip="26年3月｜309億美元"><span class="kh-bar" style="top:20.1%;height:79.9%"></span></div><div class="kh-col" data-tip="26年6月｜358億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><p class="hs3-deb">發債紀錄：近 8 季沒有申報長期債務發行</p></div></details><details class="hs3-r"><summary><span class="hs3-n"><b>Alphabet</b><small>2026-06-30</small></span><span class="hs3-v"><em>本季資本支出</em>449</span><span class="hs3-v"><em>年增</em>+100%</span><span class="hs3-v hs3-ratio"><em>佔營運現金流</em><b class="over">115%</b><span class="hs3-rb"><i class="over" style="width:76.6%"></i><u></u></span></span><span class="hs3-v"><em>單季發債</em>0</span><span class="hs3-v"><em>2026 年計畫</em>1,750–1,850</span></summary><div class="hs3-body"><div class="kh kh-change" style="--n:8" role="img" aria-label="Alphabet 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">131</span><span class="">143</span><span class="">172</span><span class="">224</span><span class="">240</span><span class="">279</span><span class="">357</span><span class="last">449</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜131億美元"><span class="kh-bar" style="top:73.1%;height:26.9%"></span></div><div class="kh-col" data-tip="24年12月｜143億美元"><span class="kh-bar" style="top:70.6%;height:29.4%"></span></div><div class="kh-col" data-tip="25年3月｜172億美元"><span class="kh-bar" style="top:64.6%;height:35.4%"></span></div><div class="kh-col" data-tip="25年6月｜224億美元"><span class="kh-bar" style="top:53.7%;height:46.3%"></span></div><div class="kh-col" data-tip="25年9月｜240億美元"><span class="kh-bar" style="top:50.6%;height:49.4%"></span></div><div class="kh-col" data-tip="25年12月｜279億美元"><span class="kh-bar" style="top:42.6%;height:57.4%"></span></div><div class="kh-col" data-tip="26年3月｜357億美元"><span class="kh-bar" style="top:26.5%;height:73.5%"></span></div><div class="kh-col" data-tip="26年6月｜449億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><p class="hs3-deb">發債紀錄：近 8 季沒有申報長期債務發行</p></div></details><details class="hs3-r"><summary><span class="hs3-n"><b>Amazon</b><small>2026-06-30</small></span><span class="hs3-v"><em>本季資本支出</em>542</span><span class="hs3-v"><em>年增</em>+68%</span><span class="hs3-v hs3-ratio"><em>佔營運現金流</em><b class="over">119%</b><span class="hs3-rb"><i class="over" style="width:79.6%"></i><u></u></span></span><span class="hs3-v"><em>單季發債</em>136</span><span class="hs3-v"><em>2026 年計畫</em>2,000</span></summary><div class="hs3-body"><div class="kh kh-change" style="--n:8" role="img" aria-label="Amazon 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">226</span><span class="">278</span><span class="">250</span><span class="">322</span><span class="">351</span><span class="">395</span><span class="">442</span><span class="last">542</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜226億美元"><span class="kh-bar" style="top:61.4%;height:38.6%"></span></div><div class="kh-col" data-tip="24年12月｜278億美元"><span class="kh-bar" style="top:52.5%;height:47.5%"></span></div><div class="kh-col" data-tip="25年3月｜250億美元"><span class="kh-bar" style="top:57.3%;height:42.7%"></span></div><div class="kh-col" data-tip="25年6月｜322億美元"><span class="kh-bar" style="top:45.0%;height:55.0%"></span></div><div class="kh-col" data-tip="25年9月｜351億美元"><span class="kh-bar" style="top:40.1%;height:59.9%"></span></div><div class="kh-col" data-tip="25年12月｜395億美元"><span class="kh-bar" style="top:32.5%;height:67.5%"></span></div><div class="kh-col" data-tip="26年3月｜442億美元"><span class="kh-bar" style="top:24.5%;height:75.5%"></span></div><div class="kh-col" data-tip="26年6月｜542億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><p class="hs3-deb">發債紀錄：3/31 7 億、12/31 149 億、3/31 534 億、6/30 136 億</p></div></details><details class="hs3-r"><summary><span class="hs3-n"><b>Meta</b><small>2026-06-30</small></span><span class="hs3-v"><em>本季資本支出</em>301</span><span class="hs3-v"><em>年增</em>+82%</span><span class="hs3-v hs3-ratio"><em>佔營運現金流</em><b class="">95%</b><span class="hs3-rb"><i class="" style="width:63.0%"></i><u></u></span></span><span class="hs3-v"><em>單季發債</em>299</span><span class="hs3-v"><em>2026 年計畫</em>1,250–1,450</span></summary><div class="hs3-body"><div class="kh kh-change" style="--n:8" role="img" aria-label="Meta 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">83</span><span class="">144</span><span class="">129</span><span class="">165</span><span class="">188</span><span class="">214</span><span class="">190</span><span class="last">301</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜83億美元"><span class="kh-bar" style="top:74.6%;height:25.4%"></span></div><div class="kh-col" data-tip="24年12月｜144億美元"><span class="kh-bar" style="top:55.6%;height:44.4%"></span></div><div class="kh-col" data-tip="25年3月｜129億美元"><span class="kh-bar" style="top:60.2%;height:39.8%"></span></div><div class="kh-col" data-tip="25年6月｜165億美元"><span class="kh-bar" style="top:49.2%;height:50.8%"></span></div><div class="kh-col" data-tip="25年9月｜188億美元"><span class="kh-bar" style="top:42.1%;height:57.9%"></span></div><div class="kh-col" data-tip="25年12月｜214億美元"><span class="kh-bar" style="top:34.3%;height:65.7%"></span></div><div class="kh-col" data-tip="26年3月｜190億美元"><span class="kh-bar" style="top:41.6%;height:58.4%"></span></div><div class="kh-col" data-tip="26年6月｜301億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><p class="hs3-deb">發債紀錄：9/30 104 億、12/31 299 億</p></div></details><details class="hs3-r"><summary><span class="hs3-n"><b>Oracle</b><small>2026-08-31</small></span><span class="hs3-v"><em>本季資本支出</em>285</span><span class="hs3-v"><em>年增</em>+235%</span><span class="hs3-v hs3-ratio"><em>佔營運現金流</em><b class="over">123%</b><span class="hs3-rb"><i class="over" style="width:82.3%"></i><u></u></span></span><span class="hs3-v"><em>單季發債</em>16</span><span class="hs3-v"><em>2026 年計畫</em>未提供</span></summary><div class="hs3-body"><div class="kh kh-change" style="--n:8" role="img" aria-label="Oracle 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">40</span><span class="">59</span><span class="">91</span><span class="">85</span><span class="">120</span><span class="">186</span><span class="">165</span><span class="last">285</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年11月｜40億美元"><span class="kh-bar" style="top:87.1%;height:12.9%"></span></div><div class="kh-col" data-tip="25年2月｜59億美元"><span class="kh-bar" style="top:81.0%;height:19.0%"></span></div><div class="kh-col" data-tip="25年5月｜91億美元"><span class="kh-bar" style="top:70.5%;height:29.5%"></span></div><div class="kh-col" data-tip="25年8月｜85億美元"><span class="kh-bar" style="top:72.4%;height:27.6%"></span></div><div class="kh-col" data-tip="25年11月｜120億美元"><span class="kh-bar" style="top:60.9%;height:39.1%"></span></div><div class="kh-col" data-tip="26年2月｜186億美元"><span class="kh-bar" style="top:39.5%;height:60.5%"></span></div><div class="kh-col" data-tip="26年5月｜165億美元"><span class="kh-bar" style="top:46.4%;height:53.6%"></span></div><div class="kh-col" data-tip="26年8月｜285億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/11</span><span>25/2</span><span>25/5</span><span>25/8</span><span>25/11</span><span>26/2</span><span>26/5</span><span>26/8</span></div></div><p class="hs3-deb">發債紀錄：2/28 77 億、2/28 267 億、5/31 15 億</p></div></details></div><p class="hs3-note">金額單位：億美元・點一家看近 8 季資本支出與發債紀錄・佔營運現金流超過 100% 以紅字標示</p>
+    
+    <div class="hs3-stale" style="margin-top:12px"><b>指引待更新</b>　最新財報期末到 2026-08-31，資本支出指引仍是 2026-04-29 的版本——各家在最新一次法說會可能已經調整，請更新 <code>config/rates.yaml</code> 的 capex_guidance。</div>
+    <details class="f-more"><summary>方法、指引備註與資料來源</summary>
+      <div class="f-detail">
+        <p>合計資本支出已達同期營運現金流的 99%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。</p>
+        <p><b>2026 年資本支出計畫</b>：合計 6,900–7,200 億美元，指引更新於 2026-04-29・各公司法說會與財報新聞稿。前瞻指引不在任何申報欄位裡，是法說會與新聞稿用自然語言講的，所以手動維護。</p><ul style="margin:6px 0;padding-left:18px"><li><b>Microsoft</b>：含約 250 億美元的零組件漲價</li><li><b>Oracle</b>：未提供年度指引，不在合計內。</li></ul>
+        <p>公司名稱下方是該公司自己的<b>會計季末日</b>（各家年度起點不同，同一列不是同一季）；
+        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引；
+        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負；
+        合計比率是合計 ÷ 合計，非五家平均。所有百分比都由原始金額算出來，沒有手填的百分比。</p>
+        <div class="src">資料來源：SEC EDGAR 的 XBRL 申報（10-Q／10-K 現金流量表原始標記）　·　<a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000789019&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Microsoft</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001652044&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Alphabet</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001018724&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Amazon</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001326801&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Meta</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001341439&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Oracle</a>　·　2026-06-30～2026-08-31　·　5 / 5 家取自 SEC</div>
+      </div>
+      <div class="tlines">
+        <div class="tlines-k">資料時效</div>
+        
+        <details class="f-more tline"><summary>
+      <b>近 120 天 4 筆已定價發債</b>，合計 658 億美元（季報的 146%），尚未入下方季報</summary>
+      <div class="f-detail">
+      4 筆已確認金額，合計 658 億美元，相當於最新一季申報發債（450 億美元）的 146%。幣別分布：USD 2 筆、GBP 1 筆、CAD 1 筆。另有 2 筆已宣布、尚未定價。另有 3 件非債券的融資申報（股票發行、ATM 增發或貸款額度），不進債市，明細不列。最近一筆在
+      2026-09-11。</div>
+      <details class="f-more" style="margin-top:6px"><summary>逐筆債券明細</summary>
+        <div class="tscroll" style="margin-top:10px"><table>
+          <thead><tr><th>公司</th><th>日期</th><th>類型</th>
+            <th>金額（原幣）</th><th>原文</th></tr></thead>
+          <tbody><tr><td>Amazon</td><td class="muted-cell">2026-09-11</td><td class="muted-cell">債券發行</td><td>£42 億<span class="dnote">約 US$57 億</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926107122/tm2624614-3_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-09-09</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926106115/tm2624614-1_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-08-07</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526340264/d32286d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-07-08</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926081786/tm2619352-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">債券發行</td><td>C$140 億<span class="dnote">約 US$101 億</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072332/tm2613616-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-08</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926071190/tm2613616-1_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr></tbody></table></div>
+        <p class="hint" style="margin-top:10px">
+          <b>表格號不代表證券種類</b>：424B2／424B5 只代表「定價後的公開
+          說明書補充」，賣的可能是債券、普通股、特別股、存託股或 ATM 增發
+          計畫。這裡是<b>讀文件內容</b>來分類的——要出現
+          <code>aggregate principal amount</code>、<code>Senior Notes</code>
+          或 <code>Notes due 20xx</code> 這類證據才算債券。<br>
+          <b>這張表只列債券</b>：股票發行、ATM 增發、銀行貸款與循環額度
+          （8-K 項目 2.03）既不計入金額，也**不列在明細裡**——它們不進債市，
+          對長端供給沒有貢獻。上方那句話會告訴你被排除了幾件、是哪幾類，
+          知道有這回事就夠了，不必逐列翻過去。<br>
+          <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
+          預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
+          同一筆會被數兩次。已經有對應定價版的預估版直接不列。<br>
+          <b>金額以原幣為準</b>：分券金額逐檔相加，同一檔券在文件裡重複
+          出現只算一次（依幣別、金額、到期年、票息去重）。<br>
+          <b>美元等值一律用「該筆定價日當天」的匯率換算</b>（FRED 每日匯率；
+          碰到週末或假日往前取最近一個交易日）。不是用今天的匯率——發行人
+          在定價那天就把金額鎖住了，用今天的匯率會讓一筆已經完成的發行
+          <b>每天早上都變一個數字</b>，而變動的原因跟債券市場無關；上面那個
+          「相當於最新一季申報發債的百分之幾」也會變成拿重估值去除歷史值。
+          規則固定，所以每一列都可以自己去 FRED 對，不必逐列重印匯率。
+          只有匯率取自跟定價日差七天以上的日期時（資料有缺口），
+          那一列才會單獨標出來。<br>
+          <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
+          融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
+          市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
+      </details>
+    </details>
+      </div>
+    </details>
+    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。</p><p><b>為什麼重要：</b>這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。</p><p><b>怎麼判讀：</b>盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。</p></div></details>
   </div></details>
 </div>
 
@@ -3525,94 +3756,6 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
       </dl>
       <p class="hint" style="margin-top:8px">r 減 g 的成長率用實質 GDP 年增 2.2%</p>
     </details>
-  </div></details>
-</div>
-
-<div class="grid">
-  <details class="card sect"><summary><h2 id="hyperscalers">科技巨頭：資本支出與發債</h2><span class="sect-sum">2026 年計畫 6,900–7,200 億美元　·　佔營運現金流 99%</span></summary><div class="sect-body">
-    <p class="hint">關鍵不是金額，是<b>融資方式</b>——
-      這幾家從債市<b>買方</b>變成<b>賣方</b>的轉折點。</p>
-    <div class="impact hawkish">正在轉向舉債支應——合計資本支出已達同期營運現金流的 99%，逼近本業現金能支應的上限。</div>
-    <div class="le-hss"><div class="le-hs"><div class="viz-h">Microsoft</div><div class="le-hsr">最新一季資本支出佔營運現金流 <b class="">65%</b></div><div class="kh kh-change" style="--n:8" role="img" aria-label="Microsoft 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">149</span><span class="">158</span><span class="">167</span><span class="">171</span><span class="">194</span><span class="">299</span><span class="">309</span><span class="last">358</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜149億美元"><span class="kh-bar" style="top:61.4%;height:38.6%"></span></div><div class="kh-col" data-tip="24年12月｜158億美元"><span class="kh-bar" style="top:59.1%;height:40.9%"></span></div><div class="kh-col" data-tip="25年3月｜167億美元"><span class="kh-bar" style="top:56.7%;height:43.3%"></span></div><div class="kh-col" data-tip="25年6月｜171億美元"><span class="kh-bar" style="top:55.8%;height:44.2%"></span></div><div class="kh-col" data-tip="25年9月｜194億美元"><span class="kh-bar" style="top:49.8%;height:50.2%"></span></div><div class="kh-col" data-tip="25年12月｜299億美元"><span class="kh-bar" style="top:22.7%;height:77.3%"></span></div><div class="kh-col" data-tip="26年3月｜309億美元"><span class="kh-bar" style="top:20.1%;height:79.9%"></span></div><div class="kh-col" data-tip="26年6月｜358億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><div class="le-hsd">發債：近 8 季沒有申報長期債務發行</div></div><div class="le-hs"><div class="viz-h">Alphabet</div><div class="le-hsr">最新一季資本支出佔營運現金流 <b class="up">115%</b></div><div class="kh kh-change" style="--n:8" role="img" aria-label="Alphabet 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">131</span><span class="">143</span><span class="">172</span><span class="">224</span><span class="">240</span><span class="">279</span><span class="">357</span><span class="last">449</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜131億美元"><span class="kh-bar" style="top:73.1%;height:26.9%"></span></div><div class="kh-col" data-tip="24年12月｜143億美元"><span class="kh-bar" style="top:70.6%;height:29.4%"></span></div><div class="kh-col" data-tip="25年3月｜172億美元"><span class="kh-bar" style="top:64.6%;height:35.4%"></span></div><div class="kh-col" data-tip="25年6月｜224億美元"><span class="kh-bar" style="top:53.7%;height:46.3%"></span></div><div class="kh-col" data-tip="25年9月｜240億美元"><span class="kh-bar" style="top:50.6%;height:49.4%"></span></div><div class="kh-col" data-tip="25年12月｜279億美元"><span class="kh-bar" style="top:42.6%;height:57.4%"></span></div><div class="kh-col" data-tip="26年3月｜357億美元"><span class="kh-bar" style="top:26.5%;height:73.5%"></span></div><div class="kh-col" data-tip="26年6月｜449億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><div class="le-hsd">發債：近 8 季沒有申報長期債務發行</div></div><div class="le-hs"><div class="viz-h">Amazon</div><div class="le-hsr">最新一季資本支出佔營運現金流 <b class="up">119%</b></div><div class="kh kh-change" style="--n:8" role="img" aria-label="Amazon 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">226</span><span class="">278</span><span class="">250</span><span class="">322</span><span class="">351</span><span class="">395</span><span class="">442</span><span class="last">542</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜226億美元"><span class="kh-bar" style="top:61.4%;height:38.6%"></span></div><div class="kh-col" data-tip="24年12月｜278億美元"><span class="kh-bar" style="top:52.5%;height:47.5%"></span></div><div class="kh-col" data-tip="25年3月｜250億美元"><span class="kh-bar" style="top:57.3%;height:42.7%"></span></div><div class="kh-col" data-tip="25年6月｜322億美元"><span class="kh-bar" style="top:45.0%;height:55.0%"></span></div><div class="kh-col" data-tip="25年9月｜351億美元"><span class="kh-bar" style="top:40.1%;height:59.9%"></span></div><div class="kh-col" data-tip="25年12月｜395億美元"><span class="kh-bar" style="top:32.5%;height:67.5%"></span></div><div class="kh-col" data-tip="26年3月｜442億美元"><span class="kh-bar" style="top:24.5%;height:75.5%"></span></div><div class="kh-col" data-tip="26年6月｜542億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><div class="le-hsd">發債：12/31 149 億、3/31 534 億、6/30 136 億</div></div><div class="le-hs"><div class="viz-h">Meta</div><div class="le-hsr">最新一季資本支出佔營運現金流 <b class="">95%</b></div><div class="kh kh-change" style="--n:8" role="img" aria-label="Meta 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">83</span><span class="">144</span><span class="">129</span><span class="">165</span><span class="">188</span><span class="">214</span><span class="">190</span><span class="last">301</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年9月｜83億美元"><span class="kh-bar" style="top:74.6%;height:25.4%"></span></div><div class="kh-col" data-tip="24年12月｜144億美元"><span class="kh-bar" style="top:55.6%;height:44.4%"></span></div><div class="kh-col" data-tip="25年3月｜129億美元"><span class="kh-bar" style="top:60.2%;height:39.8%"></span></div><div class="kh-col" data-tip="25年6月｜165億美元"><span class="kh-bar" style="top:49.2%;height:50.8%"></span></div><div class="kh-col" data-tip="25年9月｜188億美元"><span class="kh-bar" style="top:42.1%;height:57.9%"></span></div><div class="kh-col" data-tip="25年12月｜214億美元"><span class="kh-bar" style="top:34.3%;height:65.7%"></span></div><div class="kh-col" data-tip="26年3月｜190億美元"><span class="kh-bar" style="top:41.6%;height:58.4%"></span></div><div class="kh-col" data-tip="26年6月｜301億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/9</span><span>24/12</span><span>25/3</span><span>25/6</span><span>25/9</span><span>25/12</span><span>26/3</span><span>26/6</span></div></div><div class="le-hsd">發債：9/30 104 億、12/31 299 億</div></div><div class="le-hs"><div class="viz-h">Oracle</div><div class="le-hsr">最新一季資本支出佔營運現金流 <b class="up">123%</b></div><div class="kh kh-change" style="--n:8" role="img" aria-label="Oracle 資本支出"><div class="kh-top"><span>每季資本支出</span><span class="kh-unit">單位：億美元</span></div><div class="kh-vals"><span class="">40</span><span class="">59</span><span class="">91</span><span class="">85</span><span class="">120</span><span class="">186</span><span class="">165</span><span class="last">285</span></div><div class="kh-plot"><div class="kh-col" data-tip="24年11月｜40億美元"><span class="kh-bar" style="top:87.1%;height:12.9%"></span></div><div class="kh-col" data-tip="25年2月｜59億美元"><span class="kh-bar" style="top:81.0%;height:19.0%"></span></div><div class="kh-col" data-tip="25年5月｜91億美元"><span class="kh-bar" style="top:70.5%;height:29.5%"></span></div><div class="kh-col" data-tip="25年8月｜85億美元"><span class="kh-bar" style="top:72.4%;height:27.6%"></span></div><div class="kh-col" data-tip="25年11月｜120億美元"><span class="kh-bar" style="top:60.9%;height:39.1%"></span></div><div class="kh-col" data-tip="26年2月｜186億美元"><span class="kh-bar" style="top:39.5%;height:60.5%"></span></div><div class="kh-col" data-tip="26年5月｜165億美元"><span class="kh-bar" style="top:46.4%;height:53.6%"></span></div><div class="kh-col" data-tip="26年8月｜285億美元"><span class="kh-bar last" style="top:7.4%;height:92.6%"></span></div></div><div class="kh-dates"><span>24/11</span><span>25/2</span><span>25/5</span><span>25/8</span><span>25/11</span><span>26/2</span><span>26/5</span><span>26/8</span></div></div><div class="le-hsd">發債：2/28 77 億、2/28 267 億、5/31 15 億</div></div></div>
-    <h3 style="margin-top:4px">2026 年資本支出計畫
-      <span class="asof">指引更新於 2026-04-29</span></h3>
-    <p class="hint" style="margin:4px 0 10px">合計 <b>6,900–7,200 億美元</b>　·　年化實績的 0.9 倍
-      ——<b>還沒花、但已經承諾的錢</b>；推高長端供給的是這個。</p>
-    <div class="focus-grid"><div class="focus-metric"><span>Amazon</span><b>2,000</b><small>億美元</small></div><div class="focus-metric"><span>Microsoft</span><b>1,900</b><small>億美元</small></div><div class="focus-metric"><span>Alphabet</span><b>1,750–1,850</b><small>億美元</small></div><div class="focus-metric"><span>Meta</span><b>1,250–1,450</b><small>億美元</small></div></div>
-    <details class="f-more"><summary>備註與資料來源</summary>
-      <div class="f-detail"><ul style="margin:8px 0;padding-left:18px">
-        <li><b>Microsoft</b>：含約 250 億美元的零組件漲價</li><li><b>Oracle</b>：未提供年度指引，不在合計內。</li></ul>
-        <b>這幾個數字為什麼要手動維護</b>：前瞻指引不在任何申報欄位裡，
-        它是法說會與新聞稿裡用自然語言講的（「approximately」
-        「in the range of」），每家寫法不同、每季還會改。
-        硬解析的失敗方式是安靜地少一家或抓到錯的口徑。
-        更新於 2026-04-29　·　各公司法說會與財報新聞稿</div>
-    </details>
-    <div class="warnbox" style="margin-top:12px"><b>指引待更新</b>　最新財報期末到 2026-08-31，資本支出指引仍是 2026-04-29 的版本——各家在最新一次法說會可能已經調整，請更新 <code>config/rates.yaml</code> 的 capex_guidance。</div>
-    <div class="tlines">
-      <div class="tlines-k">資料時效</div>
-      
-      <details class="f-more tline"><summary>
-      <b>近 120 天 4 筆已定價發債</b>，合計 658 億美元（季報的 146%），尚未入下方季報</summary>
-      <div class="f-detail">
-      4 筆已確認金額，合計 658 億美元，相當於最新一季申報發債（450 億美元）的 146%。幣別分布：USD 2 筆、GBP 1 筆、CAD 1 筆。另有 2 筆已宣布、尚未定價。另有 3 件非債券的融資申報（股票發行、ATM 增發或貸款額度），不進債市，明細不列。最近一筆在
-      2026-09-11。</div>
-      <details class="f-more" style="margin-top:6px"><summary>逐筆債券明細</summary>
-        <div class="tscroll" style="margin-top:10px"><table>
-          <thead><tr><th>公司</th><th>日期</th><th>類型</th>
-            <th>金額（原幣）</th><th>原文</th></tr></thead>
-          <tbody><tr><td>Amazon</td><td class="muted-cell">2026-09-11</td><td class="muted-cell">債券發行</td><td>£42 億<span class="dnote">約 US$57 億</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926107122/tm2624614-3_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-09-09</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926106115/tm2624614-1_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Alphabet</td><td class="muted-cell">2026-08-07</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1652044/000119312526340264/d32286d424b2.htm" target="_blank" rel="noopener">424B2</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-07-08</td><td class="muted-cell">債券發行</td><td>US$250 億</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926081786/tm2619352-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-10</td><td class="muted-cell">債券發行</td><td>C$140 億<span class="dnote">約 US$101 億</span></td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926072332/tm2613616-2_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr><tr><td>Amazon</td><td class="muted-cell">2026-06-08</td><td class="muted-cell">預估版</td><td class="muted-cell">尚未定價</td><td class="muted-cell"><a href="https://www.sec.gov/Archives/edgar/data/1018724/000110465926071190/tm2613616-1_424b5.htm" target="_blank" rel="noopener">424B5</a></td></tr></tbody></table></div>
-        <p class="hint" style="margin-top:10px">
-          <b>表格號不代表證券種類</b>：424B2／424B5 只代表「定價後的公開
-          說明書補充」，賣的可能是債券、普通股、特別股、存託股或 ATM 增發
-          計畫。這裡是<b>讀文件內容</b>來分類的——要出現
-          <code>aggregate principal amount</code>、<code>Senior Notes</code>
-          或 <code>Notes due 20xx</code> 這類證據才算債券。<br>
-          <b>這張表只列債券</b>：股票發行、ATM 增發、銀行貸款與循環額度
-          （8-K 項目 2.03）既不計入金額，也**不列在明細裡**——它們不進債市，
-          對長端供給沒有貢獻。上方那句話會告訴你被排除了幾件、是哪幾類，
-          知道有這回事就夠了，不必逐列翻過去。<br>
-          <b>預估版不計入筆數與金額</b>：同一筆債會先申報一份尚未定價的
-          預估版（封面的定價欄是空的），兩三天後才有定價版。兩份都算的話
-          同一筆會被數兩次。已經有對應定價版的預估版直接不列。<br>
-          <b>金額以原幣為準</b>：分券金額逐檔相加，同一檔券在文件裡重複
-          出現只算一次（依幣別、金額、到期年、票息去重）。<br>
-          <b>美元等值一律用「該筆定價日當天」的匯率換算</b>（FRED 每日匯率；
-          碰到週末或假日往前取最近一個交易日）。不是用今天的匯率——發行人
-          在定價那天就把金額鎖住了，用今天的匯率會讓一筆已經完成的發行
-          <b>每天早上都變一個數字</b>，而變動的原因跟債券市場無關；上面那個
-          「相當於最新一季申報發債的百分之幾」也會變成拿重估值去除歷史值。
-          規則固定，所以每一列都可以自己去 FRED 對，不必逐列重印匯率。
-          只有匯率取自跟定價日差七天以上的日期時（資料有缺口），
-          那一列才會單獨標出來。<br>
-          <b>資料來源只有 SEC 申報</b>：這裡是「依 SEC filings 偵測之公開
-          融資事件」，不是「全球所有債券發行」。部分海外發行（歐洲、日本
-          市場的當地發行）不一定會產生可辨識的 SEC 申報。</p>
-      </details>
-    </details>
-    </div>
-    <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。</p><p><b>為什麼重要：</b>這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。</p><p><b>怎麼判讀：</b>盯「資本支出佔營運現金流」：接近或超過 100%，代表花的比賺的多，缺口只能靠發債，供給壓力就會持續。</p></div></details>
-    <details data-m-collapse><summary>五家公司的明細</summary>
-      <p class="hint" style="margin:10px 0 0">合計資本支出已達同期營運現金流的 99%，逼近本業現金所能支應的範圍。依「營運現金流 − 現金資本支出」的簡化口徑，5 家中有 3 家為負。若 AI 基礎設施投資持續擴張，對外部融資、既有現金與其他資金來源的依賴可能進一步上升。這是供給壓力的前置訊號，不是既成事實。</p>
-      <div class="stat-row" style="margin-top:12px"><div class="stat"><div class="s-label">資本支出合計</div><div class="s-value" style="color:inherit">1,936 億美元</div><div class="s-note">年增 +110%（對去年同季）</div></div><div class="stat"><div class="s-label">佔營運現金流</div><div class="s-value" style="color:var(--serious)">99%</div><div class="s-note">合計 ÷ 合計，非五家平均</div></div><div class="stat"><div class="s-label">單季發債合計（期末 2026-06-30～2026-08-31）</div><div class="s-value" style="color:inherit">450 億美元</div><div class="s-note">分子為五家不同會計期別之和</div></div><div class="stat"><div class="s-label">簡化口徑自由現金流為負</div><div class="s-value" style="color:inherit">3 / 5 家</div><div class="s-note">營運現金流 − 現金資本支出 &lt; 0</div></div></div>
-      <div class="tscroll" style="margin-top:16px">
-        <table>
-          <thead><tr><th>公司</th><th>資本支出</th><th>年增</th>
-            <th>營運現金流</th><th>佔營運現金流</th><th>佔營收</th>
-            <th>單季發債</th></tr></thead>
-          <tbody><tr><td>Microsoft<span class="dnote">2026-06-30</span></td><td>358</td><td class="muted-cell">+110%</td><td class="muted-cell">554</td><td class="">65%</td><td class="muted-cell">40%</td><td>0</td></tr><tr><td>Alphabet<span class="dnote">2026-06-30</span></td><td>449</td><td class="muted-cell">+100%</td><td class="muted-cell">391</td><td class="neg">115%</td><td class="muted-cell">37%</td><td>0</td></tr><tr><td>Amazon<span class="dnote">2026-06-30</span></td><td>542</td><td class="muted-cell">+68%</td><td class="muted-cell">454</td><td class="neg">119%</td><td class="muted-cell">27%</td><td>136</td></tr><tr><td>Meta<span class="dnote">2026-06-30</span></td><td>301</td><td class="muted-cell">+82%</td><td class="muted-cell">319</td><td class="">95%</td><td class="muted-cell">50%</td><td>299</td></tr><tr><td>Oracle<span class="dnote">2026-08-31</span></td><td>285</td><td class="muted-cell">+235%</td><td class="muted-cell">231</td><td class="neg">123%</td><td class="muted-cell">147%</td><td>16</td></tr></tbody></table>
-      </div>
-      <div class="src">金額單位：億美元　·　公司名稱下方是該公司自己的
-        <b>會計季末日</b>（各家年度起點不同，同一列不是同一季）　·
-        「年增」是本季對<b>去年同一季</b>，不是對上一季，也不是全年指引　·
-        「佔營運現金流」＝資本支出 ÷ 營運現金流，超過 100% 代表依
-        「營運現金流 − 現金資本支出」的簡化口徑自由現金流為負　·
-        「佔營收」＝同一季的資本支出 ÷ 營收，用來比較規模不同的公司
-        誰擴張得比較猛　·　所有百分比都由左邊的原始金額算出來，
-        沒有手填的百分比</div>
-      <div class="src">資料來源：SEC EDGAR 的 XBRL 申報（10-Q／10-K 現金流量表原始標記）　·　<a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000789019&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Microsoft</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001652044&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Alphabet</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001018724&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Amazon</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001326801&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Meta</a> <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0001341439&amp;type=10-Q&amp;dateb=&amp;owner=include&amp;count=10" target="_blank" rel="noopener">Oracle</a>　·　2026-06-30～2026-08-31　·　5 / 5 家取自 SEC</div>
-    </details>
-    
   </div></details>
 </div>
 
