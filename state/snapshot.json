@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-06T10:55:50+08:00",
+  "at": "2026-10-06T14:06:39+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -585,9 +585,15 @@
       "current": {
         "vintage": "2026-W41",
         "released": "2026-10-05",
-        "flags": [],
-        "flag_titles": {},
-        "flag_leans": {},
+        "flags": [
+          "pressure_high"
+        ],
+        "flag_titles": {
+          "pressure_high": "期限溢酬偏高"
+        },
+        "flag_leans": {
+          "pressure_high": "hawkish"
+        },
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
@@ -764,7 +770,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-06T10:55:50+08:00",
+      "at": "2026-10-06T14:06:39+08:00",
       "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
