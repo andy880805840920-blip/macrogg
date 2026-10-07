@@ -3829,6 +3829,53 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   .cw-sr .le3-rg{flex-direction:column;align-items:flex-end;text-align:right}
 }
 
+
+/* Shared chart selection: persistent readout below the chart on every device. */
+.chart-inspector{position:absolute;inset:0;z-index:3;touch-action:pan-y;cursor:crosshair}
+.chart-inspector:focus-visible{outline:2px solid var(--brand-orange);outline-offset:3px}
+.chart-cursor{position:absolute;top:0;bottom:0;border-left:1px solid var(--text-secondary);pointer-events:none;z-index:4}
+.chart-selected-dot{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--surface-1);pointer-events:none;z-index:4}
+.chart-readout{margin-top:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);font-size:var(--fs-small);line-height:1.6;min-height:40px;box-sizing:border-box;color:var(--text-secondary)}
+.chart-readout strong{display:block;color:var(--text-primary);font-size:var(--fs-small)}
+.chart-readout-values{display:flex;flex-wrap:wrap;gap:4px 18px}
+.chart-readout-values span{display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums}
+.chart-readout-values i{width:8px;height:8px;border-radius:50%;flex:none}
+.chart-readout-values b{color:var(--text-primary);font-weight:700}
+[data-chart-selected]{outline:1px solid var(--brand-orange);outline-offset:-1px}
+@media(max-width:759px){.chart-readout-values{display:grid;grid-template-columns:1fr;gap:3px}.chart-readout-values span{justify-content:space-between}.chart-readout-values i{margin-right:0}}
+
+
+/* Curve summary: explicit values before explanations. */
+.fwd-date{grid-column:1/-1;color:var(--muted);font-size:var(--fs-micro);line-height:1.6}
+/* 所選期間的利率用三列比較，手機與桌機使用相同表格。 */
+.cw-db{display:block;max-width:none}
+.viz-root:not(#_) .cw-compact{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;font-variant-numeric:tabular-nums;font-size:var(--fs-body)}
+.viz-root:not(#_) .cw-compact th,.viz-root:not(#_) .cw-compact td{padding:9px 12px;line-height:1.6;text-align:right;border:0;background:transparent;white-space:nowrap}
+.viz-root:not(#_) .cw-compact thead th{font-size:var(--fs-small);font-weight:500;color:var(--muted);background:var(--surface-2)}
+.viz-root:not(#_) .cw-compact th:first-child{ text-align:left }
+.viz-root:not(#_) .cw-compact tbody th,.viz-root:not(#_) .cw-compact tbody td{font-weight:600;color:var(--text-primary)}
+.viz-root:not(#_) .cw-compact tbody tr+tr>*{border-top:1px solid var(--grid)}
+.viz-root:not(#_) .cw-compact td.up{color:var(--serious)}
+.viz-root:not(#_) .cw-compact td.dn{color:var(--series-1)}
+.viz-root:not(#_) .cw-compact td.flat{color:var(--muted)}
+.viz-root:not(#_) .cw-text{margin-top:16px}
+.viz-root:not(#_) .cw-headline{padding:14px 16px;background:var(--surface-2);border-radius:12px;font-weight:700;line-height:1.6}
+.cw-panels{display:grid;gap:12px;margin-top:12px}
+@media(min-width:1000px){.cw-panels{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}}
+.cw-panel,.future-policy,.future-bonds{border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface-1)}
+.viz-root:not(#_) .cw-panel h3,.viz-root:not(#_) .future-policy h3,.viz-root:not(#_) .future-bonds h3{margin:0 0 8px;font-size:var(--fs-body);color:var(--text-primary)}
+.viz-root:not(#_) .cw-panel p,.viz-root:not(#_) .future-policy p,.viz-root:not(#_) .future-bonds p{font-size:var(--fs-small);font-weight:400;line-height:1.7;margin:6px 0 10px}
+.cw-metrics{margin:10px 0}
+.cw-metrics>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 14px;padding:9px 0;border-top:1px solid var(--grid);align-items:baseline}
+.cw-metrics dt{font-size:var(--fs-small);color:var(--text-secondary)}
+.cw-metrics dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-size:var(--fs-body)}
+.cw-metrics dd small{display:block;font-size:var(--fs-micro);color:var(--muted);font-weight:400;line-height:1.5;overflow-wrap:anywhere}
+.cw-panel-note{display:block;color:var(--muted);font-size:var(--fs-micro);line-height:1.7}
+.future-policy,.future-bonds{margin-top:12px}
+.viz-root:not(#_) .future-bonds .future-headline{font-weight:700;font-size:var(--fs-body)}
+.viz-root:not(#_) .fwd-reading{grid-column:1/-1;margin:4px 0 0;font-size:var(--fs-small);color:var(--text-secondary);line-height:1.65}
+@media(max-width:759px){.viz-root:not(#_) .cw-compact{font-size:14px}.viz-root:not(#_) .cw-compact th,.viz-root:not(#_) .cw-compact td{padding:8px 4px}.viz-root:not(#_) .cw-compact thead th{font-size:12px}.cw-panel,.future-policy,.future-bonds{padding:14px}.cw-metrics>div{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+
 /* ---- 頁尾：資料來源與方法（2026-10 統一） ---- */
 .pf{border-top:1px solid var(--border);padding-top:14px}
 .pf-top{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:var(--fs-small);color:var(--muted);line-height:1.7}
@@ -3922,14 +3969,39 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(max-width:759px) and (prefers-color-scheme:dark){
   :root:not([data-theme="light"]) .logo-full.logo-dk{display:none!important}
   :root:not([data-theme="light"]) .logo-compact.logo-dk{display:block!important}}
+/* 本期關鍵訊號：淡底與留白定義每則範圍，不添加數據欄位。 */
+.viz-root:not(#_) .flag,.viz-root:not(#_) .flag:first-of-type,.viz-root:not(#_) .flag:last-child{
+  display:block;min-width:0;padding:18px 20px;margin:0 0 14px;border:0;border-radius:10px;background:var(--surface-2)}
+.viz-root:not(#_) .flag .f-head{display:flex;align-items:flex-start;gap:12px;margin:0;line-height:1.6}
+.viz-root:not(#_) .flag .f-title{flex:1;min-width:0;overflow-wrap:anywhere}
+.viz-root:not(#_) .flag .f-tag{flex:none;display:inline-block;margin:2px 0 0;padding:3px 8px;border:0;border-radius:5px;background:var(--grid);color:var(--text-secondary);font-size:var(--fs-micro);font-weight:600;line-height:1.5;white-space:nowrap}
+.viz-root:not(#_) .flag.alert .f-tag{background:var(--tint-haw);color:var(--serious)}
+.viz-root:not(#_) .flag.watch .f-tag{color:var(--warning)}
+.viz-root:not(#_) .flag .f-impact{display:flex;align-items:flex-start;gap:9px;margin-top:10px;font-size:var(--fs-body);line-height:1.7;color:var(--text-secondary)}
+.viz-root:not(#_) .flag .f-impact>span:last-child{flex:1;min-width:0;overflow-wrap:anywhere}
+.viz-root:not(#_) .flag .f-lean{flex:none;padding:3px 7px;border-radius:5px;margin-top:1px;font-size:var(--fs-micro);font-weight:600;line-height:1.5;white-space:nowrap;background:var(--grid);color:var(--text-secondary)}
+.viz-root:not(#_) .flag .f-lean.dovish{background:var(--tint-dov);color:var(--series-1)}
+.viz-root:not(#_) .flag .f-lean.hawkish{background:var(--tint-haw);color:var(--series-2)}
+.viz-root:not(#_) .flag .f-more,.viz-root:not(#_) .flag .f-more[open]{border:0;padding:0;margin:8px 0 0;background:none}
+.viz-root:not(#_) .flag .f-more>summary{display:inline-flex;gap:8px;min-height:44px;padding:0;border:0}
+.viz-root:not(#_) .flag .f-more>summary::after{margin-left:0}
+.viz-root:not(#_) .flag .f-detail{max-width:80ch;margin:0;padding:0 0 4px;line-height:1.85}
+.viz-root:not(#_) .flag .f-detail p{margin:0 0 12px;font-size:var(--fs-body);line-height:1.85;color:var(--text-secondary)}
+.viz-root:not(#_) .flag .f-detail p:last-child{margin-bottom:0}
+.viz-root:not(#_) .sig-rest{border-top:0}
+@media(max-width:759px){
+  .viz-root:not(#_) .flag,.viz-root:not(#_) .flag:first-of-type,.viz-root:not(#_) .flag:last-child{padding:15px 14px;margin-bottom:12px}
+  .viz-root:not(#_) .flag .f-head{gap:8px}
+  .viz-root:not(#_) .flag .f-tag{padding:3px 6px}}
+
 </style>
 <script type="speculationrules">
 {"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-07 10:18（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/07</span></span><div class="upd-c"><span>台北</span><b>10:18</b><i>10/07</i></div><div class="upd-c"><span>紐約</span><b>22:18</b><i>10/06</i></div><div class="upd-c"><span>倫敦</span><b>03:18</b><i>10/07</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/labor/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-07 13:04（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/07</span></span><div class="upd-c"><span>台北</span><b>13:04</b><i>10/07</i></div><div class="upd-c"><span>紐約</span><b>01:04</b><i>10/07</i></div><div class="upd-c"><span>倫敦</span><b>06:04</b><i>10/07</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/labor/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/labor/" class="on" aria-current="page">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>勞動市場</h1><div class="sub">Employment Situation　·　資料月份 2026-09</div></div>
@@ -3942,52 +4014,37 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 <div class="grid">
   <details class="card sect" open><summary><h2 id="signals">本期關鍵訊號</h2><span class="sect-sum">5 項　·　失業率上升源於勞動力擴張</span></summary><div class="sect-body">
     <div class="sig-sum"><b>本期總結：低招聘、低裁員</b><span>就業市場凍結：已經有工作的人相對安全，正在找工作的人很辛苦。招聘率 3.3%、裁員率 1.0%（JOLTS 2026-08；疫情前 2015–2019 平均 3.8%、1.2%，差距 0.1 個百分點以內算正常）。</span></div>
-    <div class="sig-tier">改變頭條數字的解讀</div><div class="flag info">
-  <span class="f-icon">●</span>
-  <div>
-    <div class="f-head">失業率上升源於勞動力擴張
-      <span class="f-tag">參考</span></div>
-    <div class="impact neutral">中性　不必過度解讀</div>
-    <details class="f-more"><summary>依據</summary>
-      <div class="f-detail">投入職場的人增加 48.5 萬人，新加入的人還沒馬上找到工作，所以失業率上升。這通常不是壞事。（0.1 個百分點低於顯著門檻 0.2，強度別當真。）家庭調查是抽樣調查，就業人數單月變動的 90% 信賴區間約 ±60 萬人，這次的幅度在誤差範圍內——方向值得留意，連續幾個月同方向才算確認。</div></details>
-  </div>
-</div><div class="flag alert">
-  <span class="f-icon">■</span>
-  <div>
-    <div class="f-head">前兩月大幅下修，實質動能弱於初值
-      <span class="f-tag">重要</span></div>
-    <div class="impact dovish">利降息　就業動能比初值顯示的更弱</div>
-    <details class="f-more"><summary>依據</summary>
-      <div class="f-detail">政府這次把前兩個月的就業人數合計往下修了 6.0 萬人，比本月的變動量還大。把修正算進去後，近三個月平均每月新增從 +7.1 萬人掉到 +5.1 萬人——為什麼會修正，見下方「歷史數據修正」卡。</div></details>
-  </div>
-</div><div class="flag watch">
-  <span class="f-icon">▲</span>
-  <div>
-    <div class="f-head">年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3
-      <span class="f-tag">留意</span></div>
-    <div class="impact dovish">利降息　過去一年的就業比目前數字顯示的少</div>
-    <details class="f-more"><summary>依據</summary>
-      <div class="f-detail">BLS 在 8 月 28 日公布 2026 年 3 月 的基準修正初估：非農就業 -7.9 萬人（-0.1%），其中民間 -17.8 萬人。修正幅度會攤進 2025/4–2026/3 各月，正式數字在 2027 年 2 月（隨 2027 年 1 月就業報告） 併入，在那之前目前公布的數字都還沒反映。</div></details>
-  </div>
-</div><div class="sig-tier">結構背景</div><div class="flag watch">
-  <span class="f-icon">▲</span>
-  <div>
-    <div class="f-head">近 12 次月度修正平均往下修
-      <span class="f-tag">留意</span></div>
-    <div class="impact dovish">利降息　初值應打折看待</div>
-    <details class="f-more"><summary>依據</summary>
-      <div class="f-detail">每份就業報告公布後，接下來兩個月都會再修一次。近 12 個月份的初值到現在的版本，平均每個月被往下修 0.7 萬人。看到剛公布的數字時，要記得它之後很可能被調降。（這是每月的例行修正，跟每年一次、用失業保險稅籍資料校正的「年度基準修正」是兩件事。）</div></details>
-  </div>
-</div><div class="flag watch">
-  <span class="f-icon">▲</span>
-  <div>
-    <div class="f-head">非管理職薪資增速高於總體
-      <span class="f-tag">留意</span></div>
-    <div class="impact hawkish">利升息　薪資推動的通膨壓力比表面大</div>
-    <details class="f-more"><summary>依據</summary>
-      <div class="f-detail">整體平均時薪年增 3.02%，但基層員工（不含主管）達 3.30%。基層薪資是服務業成本的主要來源，漲得比整體快，代表薪資推動的通膨壓力比整體數字顯示的更大。</div></details>
-  </div>
-</div>
+    <div class="sig-tier">改變頭條數字的解讀</div><article class="flag info">
+  <div class="f-head"><span class="f-title">失業率上升源於勞動力擴張</span>
+    <span class="f-tag">參考</span></div>
+  <div class="f-impact"><span class="f-lean neutral">中性</span><span>不必過度解讀</span></div>
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail"><p>投入職場的人增加 48.5 萬人，新加入的人還沒馬上找到工作，所以失業率上升。</p><p>這通常不是壞事。</p><p>（0.1 個百分點低於顯著門檻 0.2，強度別當真。）家庭調查是抽樣調查，就業人數單月變動的 90% 信賴區間約 ±60 萬人，這次的幅度在誤差範圍內——方向值得留意，連續幾個月同方向才算確認。</p></div></details>
+</article><article class="flag alert">
+  <div class="f-head"><span class="f-title">前兩月大幅下修，實質動能弱於初值</span>
+    <span class="f-tag">重要</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>就業動能比初值顯示的更弱</span></div>
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail"><p>政府這次把前兩個月的就業人數合計往下修了 6.0 萬人，比本月的變動量還大。</p><p>把修正算進去後，近三個月平均每月新增從 +7.1 萬人掉到 +5.1 萬人——為什麼會修正，見下方「歷史數據修正」卡。</p></div></details>
+</article><article class="flag watch">
+  <div class="f-head"><span class="f-title">年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3</span>
+    <span class="f-tag">留意</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>過去一年的就業比目前數字顯示的少</span></div>
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail"><p>BLS 在 8 月 28 日公布 2026 年 3 月 的基準修正初估：非農就業 -7.9 萬人（-0.1%），其中民間 -17.8 萬人。</p><p>修正幅度會攤進 2025/4–2026/3 各月，正式數字在 2027 年 2 月（隨 2027 年 1 月就業報告） 併入，在那之前目前公布的數字都還沒反映。</p></div></details>
+</article><div class="sig-tier">結構背景</div><article class="flag watch">
+  <div class="f-head"><span class="f-title">近 12 次月度修正平均往下修</span>
+    <span class="f-tag">留意</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>初值應打折看待</span></div>
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail"><p>每份就業報告公布後，接下來兩個月都會再修一次。</p><p>近 12 個月份的初值到現在的版本，平均每個月被往下修 0.7 萬人。</p><p>看到剛公布的數字時，要記得它之後很可能被調降。</p><p>（這是每月的例行修正，跟每年一次、用失業保險稅籍資料校正的「年度基準修正」是兩件事。）</p></div></details>
+</article><article class="flag watch">
+  <div class="f-head"><span class="f-title">非管理職薪資增速高於總體</span>
+    <span class="f-tag">留意</span></div>
+  <div class="f-impact"><span class="f-lean hawkish">利升息</span><span>薪資推動的通膨壓力比表面大</span></div>
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail"><p>整體平均時薪年增 3.02%，但基層員工（不含主管）達 3.30%。</p><p>基層薪資是服務業成本的主要來源，漲得比整體快，代表薪資推動的通膨壓力比整體數字顯示的更大。</p></div></details>
+</article>
   </div></details>
 </div>
 
@@ -4060,7 +4117,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
       <span class="nb">統計週至 2026-09-26</span>。</p>
     <div class="impact hawkish">初領與續領都在近一年低位，勞動市場仍然緊。</div>
     <div class="stat-row" style="margin-top:14px"><div class="stat"><div class="s-label">初領：四週移動平均</div><div class="s-value" style="color:inherit">20.0 萬人</div><div class="s-note">較四週前 -3.6%，判讀用這條</div></div><div class="stat"><div class="s-label">初領：最新單週</div><div class="s-value" style="color:inherit">19.7 萬人</div><div class="s-note">新聞用口徑，雜訊大、會回修</div></div><div class="stat"><div class="s-label">續領：最新一週</div><div class="s-value" style="color:inherit">170.1 萬人</div><div class="s-note">較四週前 -4.2%，統計週比初領早一週</div></div><div class="stat"><div class="s-label">失業持續期間中位數</div><div class="s-value" style="color:inherit">11.5 週</div><div class="s-note">較一年前 +1.6 週</div></div></div>
-    <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" style="height:130px" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,12.6 16.2,18.6 32.4,43.9 48.6,32.5 64.9,22.2 81.1,18.6 97.3,41.5 113.5,15.0 129.7,29.5 145.9,27.0 162.2,48.1 178.4,38.5 194.6,65.6 210.8,52.3 227.0,52.9 243.2,72.2 259.5,83.1 275.7,72.2 291.9,75.2 308.1,66.8 324.3,75.2 340.5,66.2 356.8,57.8 373.0,50.5 389.2,54.2 405.4,45.1 421.6,59.0 437.8,64.4 454.1,71.6 470.3,58.4 486.5,69.2 502.7,60.2 518.9,75.2 535.1,72.8 551.4,78.9 567.6,107.8 583.8,110.8 600.0,117.4 600,130" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,12.6 16.2,18.6 32.4,43.9 48.6,32.5 64.9,22.2 81.1,18.6 97.3,41.5 113.5,15.0 129.7,29.5 145.9,27.0 162.2,48.1 178.4,38.5 194.6,65.6 210.8,52.3 227.0,52.9 243.2,72.2 259.5,83.1 275.7,72.2 291.9,75.2 308.1,66.8 324.3,75.2 340.5,66.2 356.8,57.8 373.0,50.5 389.2,54.2 405.4,45.1 421.6,59.0 437.8,64.4 454.1,71.6 470.3,58.4 486.5,69.2 502.7,60.2 518.9,75.2 535.1,72.8 551.4,78.9 567.6,107.8 583.8,110.8 600.0,117.4" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">187.5 萬人</span><span class="glab" style="top:calc(90.3% + 4px)">170.1 萬人</span><span class="ldot" style="left:100.00%;top:90.32%;background:var(--series-1)"></span></div><div class="lxaxis"><span>2026-01-03</span><span class="nb">最新 <b>170.1 萬人</b>（2026-09-19）</span></div></div></div>
+    <div style="margin-top:16px"><div class="lwrap"><div class="lplot"><svg class="lchart" viewBox="0 0 600 130" preserveAspectRatio="none" style="height:130px" role="img" aria-label="時間序列走勢"><polygon points="0,130 0.0,12.6 16.2,18.6 32.4,43.9 48.6,32.5 64.9,22.2 81.1,18.6 97.3,41.5 113.5,15.0 129.7,29.5 145.9,27.0 162.2,48.1 178.4,38.5 194.6,65.6 210.8,52.3 227.0,52.9 243.2,72.2 259.5,83.1 275.7,72.2 291.9,75.2 308.1,66.8 324.3,75.2 340.5,66.2 356.8,57.8 373.0,50.5 389.2,54.2 405.4,45.1 421.6,59.0 437.8,64.4 454.1,71.6 470.3,58.4 486.5,69.2 502.7,60.2 518.9,75.2 535.1,72.8 551.4,78.9 567.6,107.8 583.8,110.8 600.0,117.4 600,130" fill="var(--series-1)" opacity="0.09"/><line x1="0" y1="12.6" x2="600" y2="12.6" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><line x1="0" y1="117.4" x2="600" y2="117.4" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/><polyline points="0.0,12.6 16.2,18.6 32.4,43.9 48.6,32.5 64.9,22.2 81.1,18.6 97.3,41.5 113.5,15.0 129.7,29.5 145.9,27.0 162.2,48.1 178.4,38.5 194.6,65.6 210.8,52.3 227.0,52.9 243.2,72.2 259.5,83.1 275.7,72.2 291.9,75.2 308.1,66.8 324.3,75.2 340.5,66.2 356.8,57.8 373.0,50.5 389.2,54.2 405.4,45.1 421.6,59.0 437.8,64.4 454.1,71.6 470.3,58.4 486.5,69.2 502.7,60.2 518.9,75.2 535.1,72.8 551.4,78.9 567.6,107.8 583.8,110.8 600.0,117.4" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="glab" style="top:calc(9.7% - 14px)">187.5 萬人</span><span class="glab" style="top:calc(90.3% + 4px)">170.1 萬人</span><span class="ldot" style="left:100.00%;top:90.32%;background:var(--series-1)"></span><span class="chart-inspector" tabindex="0" role="slider" aria-label="選擇圖表資料點，可用左右方向鍵" aria-valuemin="0" aria-valuemax="37" aria-valuenow="0" data-points="[{&quot;date&quot;:&quot;2026-01-03&quot;,&quot;x&quot;:0.0,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;187.5 萬人&quot;,&quot;y&quot;:9.67741935483868,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-01-10&quot;,&quot;x&quot;:2.7027027027027026,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;186.5 萬人&quot;,&quot;y&quot;:14.312198739339987,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-01-17&quot;,&quot;x&quot;:5.405405405405405,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;182.3 萬人&quot;,&quot;y&quot;:33.77827215424539,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-01-24&quot;,&quot;x&quot;:8.108108108108109,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;184.2 萬人&quot;,&quot;y&quot;:24.97219132369303,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-01-31&quot;,&quot;x&quot;:10.81081081081081,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;185.9 萬人&quot;,&quot;y&quot;:17.09306637004073,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-02-07&quot;,&quot;x&quot;:13.513513513513514,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;186.5 萬人&quot;,&quot;y&quot;:14.312198739339987,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-02-14&quot;,&quot;x&quot;:16.216216216216218,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;182.7 萬人&quot;,&quot;y&quot;:31.924360400444975,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-02-21&quot;,&quot;x&quot;:18.91891891891892,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;187.1 萬人&quot;,&quot;y&quot;:11.53133110863923,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-02-28&quot;,&quot;x&quot;:21.62162162162162,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;184.7 萬人&quot;,&quot;y&quot;:22.65480163144238,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-03-07&quot;,&quot;x&quot;:24.324324324324326,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;185.1 萬人&quot;,&quot;y&quot;:20.800889877641826,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-03-14&quot;,&quot;x&quot;:27.027027027027028,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;181.6 萬人&quot;,&quot;y&quot;:37.02261772339638,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-03-21&quot;,&quot;x&quot;:29.72972972972973,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;183.2 萬人&quot;,&quot;y&quot;:29.606970708194325,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-03-28&quot;,&quot;x&quot;:32.432432432432435,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;178.7 萬人&quot;,&quot;y&quot;:50.46347793845016,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-04-04&quot;,&quot;x&quot;:35.13513513513514,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;180.9 萬人&quot;,&quot;y&quot;:40.26696329254723,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-04-11&quot;,&quot;x&quot;:37.83783783783784,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;180.8 萬人&quot;,&quot;y&quot;:40.730441230997336,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-04-18&quot;,&quot;x&quot;:40.54054054054054,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.6 萬人&quot;,&quot;y&quot;:55.56173526140158,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-04-25&quot;,&quot;x&quot;:43.24324324324324,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;175.8 萬人&quot;,&quot;y&quot;:63.90433815350383,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-05-02&quot;,&quot;x&quot;:45.94594594594595,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.6 萬人&quot;,&quot;y&quot;:55.56173526140158,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-05-09&quot;,&quot;x&quot;:48.64864864864865,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.1 萬人&quot;,&quot;y&quot;:57.879124953652216,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-05-16&quot;,&quot;x&quot;:51.35135135135135,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;178.5 萬人&quot;,&quot;y&quot;:51.39043381535038,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-05-23&quot;,&quot;x&quot;:54.054054054054056,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.1 萬人&quot;,&quot;y&quot;:57.879124953652216,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-05-30&quot;,&quot;x&quot;:56.75675675675676,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;178.6 萬人&quot;,&quot;y&quot;:50.92695587690027,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-06-06&quot;,&quot;x&quot;:59.45945945945946,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;180.0 萬人&quot;,&quot;y&quot;:44.438264738598434,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-06-13&quot;,&quot;x&quot;:62.16216216216216,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;181.2 萬人&quot;,&quot;y&quot;:38.87652947719692,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-06-20&quot;,&quot;x&quot;:64.86486486486487,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;180.6 萬人&quot;,&quot;y&quot;:41.65739710789767,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-06-27&quot;,&quot;x&quot;:67.56756756756756,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;182.1 萬人&quot;,&quot;y&quot;:34.70522803114573,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-07-04&quot;,&quot;x&quot;:70.27027027027027,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;179.8 萬人&quot;,&quot;y&quot;:45.365220615498636,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-07-11&quot;,&quot;x&quot;:72.97297297297297,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;178.9 萬人&quot;,&quot;y&quot;:49.536522061549825,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-07-18&quot;,&quot;x&quot;:75.67567567567568,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.7 萬人&quot;,&quot;y&quot;:55.09825732295146,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-07-25&quot;,&quot;x&quot;:78.37837837837837,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;179.9 萬人&quot;,&quot;y&quot;:44.90174267704853,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-08-01&quot;,&quot;x&quot;:81.08108108108108,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;178.1 萬人&quot;,&quot;y&quot;:53.24434556915092,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-08-08&quot;,&quot;x&quot;:83.78378378378379,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;179.6 萬人&quot;,&quot;y&quot;:46.29217649239897,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-08-15&quot;,&quot;x&quot;:86.48648648648648,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.1 萬人&quot;,&quot;y&quot;:57.879124953652216,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-08-22&quot;,&quot;x&quot;:89.1891891891892,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;177.5 萬人&quot;,&quot;y&quot;:56.02521319985168,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-08-29&quot;,&quot;x&quot;:91.8918918918919,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;176.5 萬人&quot;,&quot;y&quot;:60.65999258435297,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-09-05&quot;,&quot;x&quot;:94.5945945945946,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;171.7 萬人&quot;,&quot;y&quot;:82.90693362995927,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-09-12&quot;,&quot;x&quot;:97.2972972972973,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;171.2 萬人&quot;,&quot;y&quot;:85.22432332220991,&quot;color&quot;:&quot;var(--series-1)&quot;}]},{&quot;date&quot;:&quot;2026-09-19&quot;,&quot;x&quot;:100.0,&quot;values&quot;:[{&quot;label&quot;:&quot;數值&quot;,&quot;text&quot;:&quot;170.1 萬人&quot;,&quot;y&quot;:90.32258064516132,&quot;color&quot;:&quot;var(--series-1)&quot;}]}]"></span></div><div class="lxaxis"><span>2026-01-03</span><span class="nb">最新 <b>170.1 萬人</b>（2026-09-19）</span></div></div></div>
     <p class="hint" style="margin-top:8px">續領失業金人數（今年以來，單位萬人）</p>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>每週有多少人新申請失業補助（初領）、多少人還在領（續領）。</p><p><b>為什麼重要：</b>這是兩次就業報告之間唯一會更新的勞動數據。初領量的是裁員的速度、續領量的是再就業的難度——兩者可以背離，而背離是勞動市場轉弱最早的形態。</p><p><b>怎麼判讀：</b>別逐週反應：看四週平均與近一年的百分位。續領一直爬而初領沒動，就是「沒人被裁，但被裁的找不到下一份工作」。</p></div></details>
     <details class="f-more"><summary>初領與續領差在哪、為什麼看四週平均</summary>
@@ -4510,20 +4567,70 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
     });
   });
 
-  document.addEventListener('mouseover',function(e){
-    var el=e.target.closest('[data-tip]'); if(!el||!t)return;
-    t.textContent=el.getAttribute('data-tip'); t.style.opacity=1;
+
+  // Full chart data are shared by mouse, touch, pen and keyboard.
+  var CHARTS='.cl,.lwrap,.kh,.gc,.wf,.br,.sg,.nl,.dbars,.sstrip,.heatwrap,.hs3';
+  function readout(host){
+    var r=host.querySelector(':scope > .chart-readout');
+    if(!r){r=document.createElement('div');r.className='chart-readout';r.setAttribute('role','status');r.setAttribute('aria-live','polite');host.appendChild(r);}
+    return r;
+  }
+  function points(el){if(!el._chartPoints)el._chartPoints=JSON.parse(el.dataset.points);return el._chartPoints;}
+  function choose(el,index){
+    var data=points(el);if(!data.length)return;
+    index=Math.max(0,Math.min(data.length-1,index));el._index=index;
+    var p=data[index],plot=el.parentElement,host=el.closest(CHARTS)||plot.parentElement;
+    el.setAttribute('aria-valuenow',index);el.setAttribute('aria-valuetext',p.date+' '+p.values.map(function(v){return v.label+' '+v.text;}).join('，'));
+    var line=plot.querySelector('.chart-cursor');if(!line){line=document.createElement('span');line.className='chart-cursor';plot.appendChild(line);}line.style.left=p.x+'%';
+    plot.querySelectorAll('.chart-selected-dot').forEach(function(d){d.remove();});
+    var r=readout(host);r.replaceChildren();var date=document.createElement('strong');date.textContent=p.date;r.appendChild(date);
+    var vals=document.createElement('div');vals.className='chart-readout-values';r.appendChild(vals);
+    p.values.forEach(function(v){
+      var row=document.createElement('span'),label=document.createElement('span'),dot=document.createElement('i'),value=document.createElement('b');
+      dot.style.background=v.color;label.appendChild(dot);label.appendChild(document.createTextNode(v.label));value.textContent=v.text;row.appendChild(label);row.appendChild(value);vals.appendChild(row);
+      if(v.y!==undefined&&v.y!==null){var d=document.createElement('span');d.className='chart-selected-dot';d.style.cssText='left:'+p.x+'%;top:'+v.y+'%;background:'+v.color;plot.appendChild(d);}
+    });
+    if(t)t.style.opacity=0;
+  }
+  function atX(el,x){var box=el.getBoundingClientRect(),xp=(x-box.left)/box.width*100,data=points(el),best=0,dist=Infinity;data.forEach(function(p,i){var d=Math.abs(p.x-xp);if(d<dist){best=i;dist=d;}});choose(el,best);}
+  document.querySelectorAll('.chart-inspector').forEach(function(el){
+    var host=el.closest(CHARTS)||el.parentElement.parentElement;
+    readout(host).textContent='點選圖表查看數值；可左右拖動或使用方向鍵。';
   });
-  document.addEventListener('mousemove',function(e){
-    if(!t||t.style.opacity!=='1')return;
-    var x=e.clientX+14,y=e.clientY-34;
-    if(x+t.offsetWidth>window.innerWidth-8)x=e.clientX-t.offsetWidth-14;
-    if(y<8)y=e.clientY+22;
-    t.style.left=x+'px'; t.style.top=y+'px';
+  var drag=null;
+  document.addEventListener('pointerdown',function(e){
+    var el=e.target.closest('.chart-inspector');
+    if(el){atX(el,e.clientX);drag={el:el,id:e.pointerId,x:e.clientX,y:e.clientY};if(e.pointerType==='touch')el.setPointerCapture(e.pointerId);return;}
+    var tip=e.target.closest('[data-tip]');if(!tip){if(t)t.style.opacity=0;return;}
+    var host=tip.closest(CHARTS);
+    if(host){host.querySelectorAll('[data-chart-selected]').forEach(function(x){x.removeAttribute('data-chart-selected');});tip.setAttribute('data-chart-selected','');var r=readout(host);r.replaceChildren();tip.dataset.tip.split('｜').forEach(function(part,i){var p=document.createElement(i===0?'strong':'div');p.textContent=part;r.appendChild(p);});if(t)t.style.opacity=0;}
+    else{showTip(tip,e);}
   });
-  document.addEventListener('mouseout',function(e){
-    if(t&&e.target.closest('[data-tip]'))t.style.opacity=0;
+  document.addEventListener('pointermove',function(e){
+    var el=e.target.closest('.chart-inspector');
+    if(drag&&drag.id===e.pointerId&&e.pointerType==='touch'){
+      if(Math.abs(e.clientY-drag.y)>Math.abs(e.clientX-drag.x)+8){drag=null;return;}
+      if(Math.abs(e.clientX-drag.x)>8)atX(drag.el,e.clientX);return;
+    }
+    if(el&&e.pointerType!=='touch'){atX(el,e.clientX);return;}
+    if(e.pointerType==='touch')return;var tip=e.target.closest('[data-tip]');if(tip)showTip(tip,e);else if(t)t.style.opacity=0;
   });
+  document.addEventListener('pointerup',function(){drag=null;});
+  document.addEventListener('pointercancel',function(){drag=null;});
+  document.addEventListener('keydown',function(e){
+    var el=e.target.closest('.chart-inspector');if(!el)return;var i=el._index===undefined?0:el._index;
+    if(e.key==='ArrowLeft')i--;else if(e.key==='ArrowRight')i++;else if(e.key==='Home')i=0;else if(e.key==='End')i=points(el).length-1;else return;
+    e.preventDefault();choose(el,i);
+  });
+  function showTip(el,e){
+    if(!t)return;t.textContent=el.dataset.tip;t.style.opacity=1;
+    var x=Math.min(Math.max(8,e.clientX+14),Math.max(8,window.innerWidth-t.offsetWidth-8));
+    var y=e.clientY-34;if(y<8)y=e.clientY+22;y=Math.min(Math.max(8,y),Math.max(8,window.innerHeight-t.offsetHeight-8));
+    t.style.left=x+'px';t.style.top=y+'px';
+  }
+  document.addEventListener('pointerout',function(e){if(e.pointerType!=='touch'&&t&&e.target.closest('[data-tip]'))t.style.opacity=0;});
+  window.addEventListener('scroll',function(){if(t)t.style.opacity=0;},{passive:true});
+
 })();
 </script>
 </body>

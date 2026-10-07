@@ -1,6 +1,6 @@
 {
- "hash": "1d993c45ec05e7bd",
- "text": "聯準會升息預期與美債殖利率走勢成為市場焦點。星展銀行預測港幣最快10月觸及1美元兌7.85的弱方兌換保證，主因是港幣需求不足加上市場預期聯準會將升息，正利差交易推動美元走強；星展並預期聯準會到2027年第一季前還會升息兩次。同時，亞洲市場權衡油價與債券殖利率對聯準會本月升息決議的影響，中東石油供應增加與殖利率下降有助舒緩升息壓力，但美伊衝突風險仍存。聯準會9月會議記錄將於本週公佈，為未來政策走向提供線索。\n路透報導稱，高盛警告美債殖利率上升可能對美國龐大債務堆積造成嚴峻現實，反映市場對聯準會升息政策與美債成本上升的擔憂。\n彭博報導指出，貝森特若廢除20年期公債，美國財政部可能面臨更高殖利率風險，凸顯債券市場對財政政策變化的敏感反應。",
+ "hash": "dcca95512816774f",
+ "text": "美國財政部長貝森特若取消20年期公債發行，恐推高美債殖利率。根據彭博報導，法國巴黎銀行警告，廢除20年期債券可能導致殖利率上升，因為市場流動性會受限、投資者需求難以滿足。這反映出川普政府財政政策調整對債券市場的潛在衝擊——取消特定期限債券雖可能降低政府融資成本，但會縮小債券市場深度，推升其他期限的殖利率，進而影響整體借貸成本。同時高盛警告，美債殖利率上升將加劇美國龐大債務負擔的嚴峻現實，凸顯聯準會未來面臨的政策困境。\n路透報導美元在聯準會會議紀錄與官員發言前回吐漲幅，市場等待Fed對利率路徑的新線索；黃金則因美元走強與殖利率上升而承壓，投資者關注聯準會對降息步伐的態度。\n印度央行行長馬爾霍特拉宣布央行改變政策立場為「校準式緊縮」，並將基準回購利率上調25個基點至5.5%，創1年高位；他表示近期內降息已不在考慮範圍，未來政策行動只能是升息或暫停，高盛與匯豐預期12月還會再升息。",
  "links": [
   {
    "title": "Surging Yields Hit Asian Bond Sales as AI Fundraising Trails US",
@@ -8,14 +8,14 @@
    "source": "Bloomberg"
   },
   {
+   "title": "Dollar holds losses as markets await Fed minutes, speakers",
+   "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQVnY5bzdPR0xZNUZ6VEJzWUhMVmJQZEI0bzY0cHpWV21LdHRFeDlIWkxnMURDYVFDVU9nZEVPYU9TNWNNV3NvWUE5MlJPaUVXT2VqaGJQQVFwNmtHWE5nNUF2SU5Ob3dmYVlSOENZVmRBc3lVUjFMM1NYYlBfLUJ6ZzJaU0FQQlQwMkh0cXlrZEItc0ZKeC1YLXdOd2wzRWxHeUlSUDg4STVVQTVGdmc?oc=5",
+   "source": "Reuters"
+  },
+  {
    "title": "Bessent Risks Higher Yields If He Axes 20-Year Bond, BNP Warns",
    "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNZXdUcjVXUUdfRW9mMEdJeTZzVVJOQzNXTHkyNkxmVGtwNE1aZFduWHNXWjlHT25UWWVBUHhCcFFtQV9OaHkzWGx6QWpENElXZ0Z1cVJXdVhXY2hZRDIwMjZ4WnMxRWZEVFFXc09mVjd6UVo4UmZ4T2dvQTExNnBmeko2Q3ZzbUVhUGRYeFNBV2pRYjU1OUJiR2pYUmZnZ1hCSWVSNXlNVDlTUThJWHJqaUVtSU4?oc=5",
    "source": "Bloomberg"
-  },
-  {
-   "title": "COMMENTARY: For Trump’s Treasury, the sting is in the auction ‘tail’: McGeever​",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOaFVZRlVfTmRGRkNfM2FDTGFCV3dmZi1nN3lGc1g4WG1mVUNfclNlSTZsY0dscnhBdmJ6UHFLclYwQWV1TkViWXVWeWhYM09KMUFUMDh1WXFSYVZxblJkYTE0SkZKTG1zODA2Y1poMVFiRS05enFCc3FVN2p0TGsyZ1JnSmV4ajJ1RXNiOVA0SzhWeTlVZDFHOXBGNTdZM0ZwdmJkY0JPQlU4TGNPelNUVTNKbU1kZw?oc=5",
-   "source": "Reuters"
   }
  ],
  "fedwatch": {
@@ -137,19 +137,19 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-07T02:17:39.390980+00:00",
+ "at": "2026-10-07T05:04:31.739762+00:00",
  "layout": "main",
  "topics": {
-  "hash": "1468c5f7b461191e",
+  "hash": "b44208fb3c97d4ec",
   "items": [
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "橋水基金創辦人達里歐警告，若中國與日本對美債需求減弱，美國公債市場今年恐面臨更多動盪，因日本欲收回過去投入資金、中國不願繼續累積美債，形成債務人與債權人同時對立的棘手局面；10年期美債殖利率周二下跌3個基點至5.281%。",
+    "text": "路透報導指美債殖利率被評為「尖叫般的好價值」，PIMCO資深顧問認為長天期美債具吸引力。此評論暗示市場對長期債券殖利率水準的看法出現分歧，反映投資者對聯準會政策走向與長期通膨預期的不同判斷。",
     "links": [
      {
-      "title": "US Treasury yields are \"screaming good value\" says PIMCO senior advisor",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWmVRdHA4bVRsVmVyUThxTVdUb3AzNklqYnNDS2JvVVVEa2hnbk1qaHVWcHBnN1Bya2piTTM3eEkxRWxrZVE4WDRidzAyZGFocEFVYjN6RENUWm9rbFBKQ1hQRlM5Qi12eTFKV2dxNF80MHF1Xy12NkR6SG9kcllSR2JlalFQZXdPYUtOeXhfMHlwdGdZbEZXTk96ZzhPS3MtUjFfRkNXNzFiWkJzTFNLTVJVQk8?oc=5",
+      "title": "COMMENTARY: For Trump’s Treasury, the sting is in the auction ‘tail’: McGeever​",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOaFVZRlVfTmRGRkNfM2FDTGFCV3dmZi1nN3lGc1g4WG1mVUNfclNlSTZsY0dscnhBdmJ6UHFLclYwQWV1TkViWXVWeWhYM09KMUFUMDh1WXFSYVZxblJkYTE0SkZKTG1zODA2Y1poMVFiRS05enFCc3FVN2p0TGsyZ1JnSmV4ajJ1RXNiOVA0SzhWeTlVZDFHOXBGNTdZM0ZwdmJkY0JPQlU4TGNPelNUVTNKbU1kZw?oc=5",
       "source": "Reuters"
      },
      {
@@ -162,7 +162,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "路透報導稱，國際油價周二回穩，中東石油供應增加有助舒緩聯準會升息壓力，但伊朗近日加快荷姆茲海峽油輪襲擊，多家石油公司高層警告世界面臨嚴峻挑戰，長達8個月的美伊戰爭已讓各國疲於因應。",
+    "text": "墨西哥灣風暴預計兩天內升級為颶風，威脅美國15%原油產區及6座煉油廠；中國獨立煉廠同時增購伊拉克及卡達原油替代伊朗供應，9月伊朗原油進口量創2023年1月來最低，凸顯中東地緣政治對全球能源供應鏈的衝擊。",
     "links": [
      {
       "title": "Oil slips on rising Mideast crude exports, G7 stocks release",
@@ -170,8 +170,8 @@
       "source": "Reuters"
      },
      {
-      "title": "London stocks gain on softer oil, easing gilt yields; Defence shares fall",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNSzh2RWtVenBUZmhPWExwdWdmTjlkMmhiSS12TGRobzUxNWlVdFRHWDAxaFhackxjZEI0WHJjOGF0TURrVFJsWWhjQXk1M29CV195NG54MlhZd1RXVC1XYlZ5VDZ3YTNSMEZpdVlNYi1LeUVmOGUwQUdSZndkTjZwcVZiMFZWSWdpOHpGTDI5MmZ0c3diaXFxbmdBUUt4MWNYQUR3cVZ4aVY1N1VSME1faG9xYU9Mc3djcFlPMDREYw?oc=5",
+      "title": "Asia shares weaker, oil up; investors weigh Saudi-Houthi escalation",
+      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQZW5YUkkzdjhfTWJXY25aWkVLeExISGkybXo1YmFoS256Qk5DclZaVVc4ODRnejkzYlBYOTBVWWp5YTVHRDVyMmtBUDVZWHlFclVhYUtIU2d0Tm1GWmRzMnhQNlg4aVVfWEZjb21nQ0tTUzc0WjQ5bEhmWVJuNzFwX25Bdw?oc=5",
       "source": "Reuters"
      }
     ]
@@ -179,16 +179,16 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股指數創新高，但漲勢集中在少數AI相關科技股。標普500觸及盤中7844.52點，超越8月高點，也首度收盤站上7800點。CNBC引述經濟策略師指出，儘管油價與債券殖利率波動，但企業獲利穩健使股市具韌性，美股相對其他市場仍是最佳投資地。",
+    "text": "S&P 500與Nasdaq創歷史新高，10年期公債殖利率超5.3%、油價波動逾$70至$100區間後，股市仍因企業獲利強勁而韌性十足，Potomac基金管理策略師指出獲利若穩健，股市即使經濟混合也能抵禦逆風。",
     "links": [
-     {
-      "title": "S&P 500 hits record high as AI stocks shrug off bond market slump",
-      "link": "https://www.ft.com/content/1c1ee003-f041-4c66-a971-f08d488d11f7?syn-25a6b1a6=1",
-      "source": "Financial Times"
-     },
      {
       "title": "S&P 500, Nasdaq reach record closing highs as focus pivots to earnings",
       "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPZ0p5VWxQQ0ZmUUI0Vk5wRUVjTUJhZjZGUlZjU2tWU1AtOEdqYjZ0OFRtRXNrUVdrTFlNZjVWdzluRjUyaWhHTlYxMG5Yc21pMHFubTdiX1RIRTRUSnB4UTZPckRMZTlzTHBEbkZKU1ROMTZpWE9lMXhPQkhyQmhBV3JNdkFrQVk?oc=5",
+      "source": "Reuters"
+     },
+     {
+      "title": "US software stocks scale fresh 2026 highs as AI disruption worries fade",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPdnhFSTVnZUJoZGRnMDJIQmZyM3RKR2c5X2FReUNWbmVwQ29uMnN6R1RUS1p2aG1hTlJYWFdRWElvNEpxYjJpMmFFWmtCVWJVZWpUVWNBcTJXQzllczlZWG5xWTkzbTJadkg1NUY0T2Nob3R1aDlRbDlhUUx5M3p4MTk0MXlWTmlWc1hIMHhMMzJGb1V1ZTlIaXNZTVlWbk5Ed29VWWtJMTlWRElZVk03QWxkaw?oc=5",
       "source": "Reuters"
      }
     ]
@@ -196,7 +196,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "SpaceX正籌措400億美元融資購買輝達晶片，計畫透過約100億美元銀行貸款與300億美元投資級債券進行，由阿波羅全球管理公司主導，預計2027年完成；此舉凸顯市場籌集巨額資金支應AI基礎設施投資的趨勢。",
+    "text": "SpaceX傳籌資400億美元採購輝達晶片，預計2027年完成，融資包含100億美元銀行貸款及300億美元投資級債務，由阿波羅全球管理主導；輝達投資的新創Reflection本月推首款開源模型，主打低成本挑戰中國AI模型在開源市場地位。",
     "links": [
      {
       "title": "SpaceX seeks $40 billion financing led by Apollo to buy Nvidia chips, FT reports",
@@ -204,16 +204,16 @@
       "source": "Reuters"
      },
      {
-      "title": "Marvell raises 2028 revenue forecast on strong AI data center demand",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQcDJISmlqQ09tSDQ4NnNJNElrbWtnQlpVZGlrd3NCQjlvVktSMm00UE1JZDBHZGFqOUVUWjUxbU1KcTM4NXBCMDdGSUY4UW9kd202NzFXT0NBTzdFQU5xbmdqMWFYelRYVmNRTnhDNmlpdlJRODVCMHVpZ21XWnRldHVDd3p6RjJlQjRTMWZiMnE3LTVJM1FMZW1yaktxNHNDQnBTc2ZnZ3JZYjVsZnhj?oc=5",
-      "source": "Reuters"
+      "title": "Musk’s SpaceX in Talks to Borrow $40 Billion to Buy Nvidia Chips",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNelk1VmhBcFVqRmpRQndWdklsTm1EVVZmaHk4REFBRXk1WmJYdDMxUDBxSEFkNHl1YWs2OUNCU1ZDWXRVcG9XaGJzR2JHaFUtLXlNaHZTZVNxQjN2NGkzTW5jczlfZXN1S3ppd0ttdnJZemtvM3llR25xOUVvSVMxY3hPd1dtaEtVV2NRNXN4eU5wMG4zUjNxWW9WTEFHT2l4V1p5OE1oODNoVE45bXJGZUQ1SQ?oc=5",
+      "source": "Bloomberg"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "高盛將台積電目標價由3100元上調至3300元，並大幅上修2027年及2028年資本支出預估至850億及980億美元，主因Agentic AI帶動伺服器CPU需求加速，預估台積電2026年和2027年美元營收年增率分別為42%及36.9%。",
+    "text": "台股指期夜盤站穩5萬點，台積電創新天價2,620元，外資單日狂掃718億，AI伺服器供應鏈與台積電領軍衝鋒。",
     "links": [
      {
       "title": "外資單日狂掃718億！台股創高逼近五萬大關，AI伺服器供應鏈與台積電領軍衝鋒-財經焦點情報站",
@@ -226,8 +226,25 @@
       "source": "TVBS新聞網"
      }
     ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "美國全民公共醫保支持率升至66%，高於2020年的53%；民主黨受訪者84%支持，獨立選民72%支持，醫療費用已成距離11月3日期中選舉不到一個月的選民關注重點。",
+    "links": [
+     {
+      "title": "'I'm getting fed up': early US midterm voters line up before dawn in Ohio",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOR3NBVWtIOEhDaDlKenA1S0x2NUh3dDFfa1c5REw3OThWbjVzQnpwWVhQd09nYnBJU2dwMFJfZWxhcU1nb1JTR1JETm85R1lRV0RVZEViRmR0UGZJdmpSQUdNLXZhTWRleFRaMndmX283c29UY3FvZE9KSVBsRVM0ZW5rMXZYam9FeklWUTZoU3FKQ2pDcFBzc21LVFF6QndO?oc=5",
+      "source": "Reuters"
+     },
+     {
+      "title": "US luxury spending slows ahead of midterms, credit card data shows",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQMzhhSlRkUEQzdlRlZEJob2lBbUZfZUItM0Y5bGpCTFVkX0o3UmVDdjhPMm1QelJkSTk3MGU1V3JzVVZtR0dGVmtCdlNESmktcjY3dm5tOHRvV0xYZERLR29tcGVObXVYbzZ6UWFIcE5tNW9nOTF5aXhySVowNGtKamlRcXRjV2pjcExhX0NyUHRsZ2Z3NmF2Y0hkNGRYNW5aZlpfRHZyZ3hud3htTEhmSWdRSFNqQQ?oc=5",
+      "source": "Reuters"
+     }
+    ]
    }
   ],
-  "at": "2026-10-07T02:17:45.863559+00:00"
+  "at": "2026-10-07T05:04:40.043374+00:00"
  }
 }
