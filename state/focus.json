@@ -1,7 +1,12 @@
 {
- "hash": "840005f36bf940e3",
- "text": "美國10年期公債殖利率升至2002年以來最高水準，推動股市回檔。路透民調顯示，儘管殖利率在第三季創1994年以來最大季度漲幅，市場對未來殖利率走勢的預期仍偏向下行，反映投資人對聯準會未來降息的期待。PIMCO資深顧問認為美債目前「價值極具吸引力」，暗示高殖利率已提供買進機會。\n路透報導稱美國能源資訊署再度上調油價預測，理由是伊朗戰爭導致全球石油庫存下降。國際貨幣基金組織總裁Georgieva表示，AI投資帶來的正面需求衝擊與中東戰爭造成的負面能源供應衝擊同時發生，全球經濟增長受到高度不均勻的影響。",
+ "hash": "ba1ea0aff880dc71",
+ "text": "美國10年期公債殖利率大幅上升，創1994年以來最大季度漲幅，但PIMCO高級顧問認為殖利率具有吸引力。10年期公債拍賣強勁，美債市場保持穩定，儘管殖利率攀升衝擊股市，美股收低。\n抵押貸款債券殖利率上升可能引發對美債殖利率的連鎖反應，形成市場反饋機制中的惡性循環。",
  "links": [
+  {
+   "title": "US government bonds steady after strong 10",
+   "link": "https://www.ft.com/content/33c67aa0-bfdb-457b-84bb-960b4fed94b6?syn-25a6b1a6=1",
+   "source": "Financial Times"
+  },
   {
    "title": "How US mortgage bonds can trigger a ‘vicious loop’ for Treasury yields",
    "link": "https://www.ft.com/content/a04ef3b4-2fcf-48f9-ab34-2c40c39d9a0c",
@@ -11,19 +16,14 @@
    "title": "Surging Yields Hit Asian Bond Sales as AI Fundraising Trails US",
    "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPUzRtcndDQnd0cHJVb1FlUmRkOWpIQlZkZE9ORmJ5MG1VdzBsNUR5ZFlZUDBnU0t4T3pwUnNPMFVzNXA3UHN3MDRXYlV6bDBySTd1OURVV0VWSlFuNEVUVm1zcm40Ny1Za0QzNzNWVXZWSC15a0l2d3U0c0NXWEpIUGp3Rlo3QmpudXNZUzVlRXFIZ3g5M0pQZUhhOXFFdjM4TWJrR0sta1lGUnNVb0JQdzN6R3g?oc=5",
    "source": "Bloomberg"
-  },
-  {
-   "title": "US Treasury yields are \"screaming good value\" says PIMCO senior advisor",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWmVRdHA4bVRsVmVyUThxTVdUb3AzNklqYnNDS2JvVVVEa2hnbk1qaHVWcHBnN1Bya2piTTM3eEkxRWxrZVE4WDRidzAyZGFocEFVYjN6RENUWm9rbFBKQ1hQRlM5Qi12eTFKV2dxNF80MHF1Xy12NkR6SG9kcllSR2JlalFQZXdPYUtOeXhfMHlwdGdZbEZXTk96ZzhPS3MtUjFfRkNXNzFiWkJzTFNLTVJVQk8?oc=5",
-   "source": "Reuters"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-07",
+  "date": "2026-10-08",
   "method": 6,
   "path": {
    "src": "futures",
-   "date": "2026-10-07",
+   "date": "2026-10-08",
    "meetings": [
     {
      "date": "2026-10-28",
@@ -45,16 +45,16 @@
     {
      "date": "2026-12-09",
      "start": 3.925,
-     "end": 4.136364,
-     "move_bp": 21.136,
+     "end": 4.129318,
+     "move_bp": 20.432,
      "outcomes": [
       [
        25,
-       0.8455
+       0.8173
       ],
       [
        0,
-       0.1545
+       0.1827
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
@@ -80,120 +80,120 @@
    "horizon": {
     "date": "2026-12-09",
     "start": 3.925,
-    "end": 4.136364,
-    "move_bp": 21.136,
+    "end": 4.129318,
+    "move_bp": 20.432,
     "outcomes": [
      [
       25,
-      0.8455
+      0.8173
      ],
      [
       0,
-      0.1545
+      0.1827
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 25.842,
+   "cum_bp": 25.137,
    "r0": 3.877946,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "prev": {
     "next": {
      "date": "2026-10-28",
-     "start": 3.879643,
-     "end": 3.935,
-     "move_bp": 5.536,
+     "start": 3.880179,
+     "end": 3.93,
+     "move_bp": 4.982,
      "outcomes": [
       [
        0,
-       0.7786
+       0.8007
       ],
       [
        25,
-       0.2214
+       0.1993
       ]
      ],
      "how": "2026-11 合約平均"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.935,
-     "end": 4.146364,
-     "move_bp": 21.136,
+     "start": 3.93,
+     "end": 4.134318,
+     "move_bp": 20.432,
      "outcomes": [
       [
        25,
-       0.8455
+       0.8173
       ],
       [
        0,
-       0.1545
+       0.1827
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 26.672
+    "cum_bp": 25.414
    }
   }
  },
- "text_source": "model-content",
- "at": "2026-10-07T15:48:43.472569+00:00",
+ "text_source": "model",
+ "at": "2026-10-07T20:13:15.117010+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c4bee0615ecb15a0",
+  "hash": "04d3e99d1089eff6",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "紐約聯準會9月消費預期調查顯示，未來12個月通膨中位數預期升至3.9%，為2023年5月以來最高，較8月上升0.3個百分點，反映通膨疑慮升溫，但長期預期仍相對穩定。",
+    "text": "紐約聯準會9月消費者預期調查顯示，未來12個月通膨中位數預期升至3.9%，較8月上升0.3個百分點，創2023年5月以來最高，反映通膨擔憂升溫，對聯準會政策前景構成挑戰。",
     "links": [
+     {
+      "title": "Fed Minutes Show Hawkish Unity Behind September Rate Hike",
+      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNc2dJM2Q2bTVvQVNpNUNzSTgzNHJCbWc3Ync3aXEyYmdSVHo1b1JZNHB1UXdGYVY5YWpPTHpDdWtQYjdtbnZOa1k0SzVIeV9SS0ljelRxbUdIWXB5NHBtdk5lUDM1ZWQyUHlNSjFlbVh6Q1lHbm9jdUJCRllMZXdnVWluOHRwV2x4WUdZdHBkU2NuY3BJNWtYS1puYWVtTTQySDR1QXJEaGJrTng2?oc=5",
+      "source": "Bloomberg"
+     },
      {
       "title": "Fed’s Warsh Earns IMF Praise for Focusing on Price Stability",
       "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPLXVVbWc0eUVHdXQ4RF94QUUzY3hrTnVJM2wxd2o1Y29Rd3g1UExqWlNXSlJNTDRCMUgzUjNJYWFRb3RLX3JFV0gxWFlzZEoyV010eW16bDA3dWdMSU9ybkgyS2NnVzJPSlo3T3R4aGJkQWc2SlpaWDZCclFCQ3oydzRtNVJvSW02Uk5hNkpaYTlpeUc1U0JCTU96SDlJbXlRTzE3SEpJLU1YRlM0QWp3Xw?oc=5",
       "source": "Bloomberg"
-     },
-     {
-      "title": "Fed minutes could detail rate-hike decision, policy path",
-      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPaFdleVVLSGdCQUlSODJ0bVFmdlh3cl9WZFFrUG5oUHhxdGNTMUlKUW1QaDBfVXAwd2FLaE0yYk9nb1lNcGY2Z0twTXNweEtEV203X09TTUR3ai1fellVelpWUHlEWWRUYW9oVTByX0ttLXl5b1I0ZjRyQm9ZVFBldFVLR0Z3UVRScGI2b2NuVC1pblU3dzJtd1JnNHY0M1Y0SlE?oc=5",
-      "source": "Reuters"
      }
     ]
    },
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "10年期美債殖利率升破5.30%，創24年高點，美國財政部將標售390億美元10年期公債，市場關注標售需求能否反映當前殖利率對投資人的吸引力，若需求不佳恐推升風險溢價要求。",
+    "id": "oil",
+    "label": "油價",
+    "text": "美國原油庫存意外大幅下降318.6萬桶至4.241億桶，創六周最大降幅，但庫欣交割中心庫存增加44.4萬桶至2,470萬桶，連續第三周回升，柴油供應吃緊推升期貨上漲約3%。",
     "links": [
      {
-      "title": "Lower US Treasury yield view persists despite biggest quarterly surge since 1994: Reuters poll",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNaGNfYWZBTXVWQjV6WUFib3lJV2RJZlZYVVJNalI0TlpKVmFvVklyd1lrNVpLdWQ2d21ncGY4NGVjZzdGc0ZfQ1FpY1BaazFIYUVHaFREdENXVFI4U3pBVGxubXJoUzhoU2JqUlR4RTN6dklyWXF5aXEteWdWOTQ4bmJSRS1LcUVpZ19sZ3VoNGpVMDNVTzBmdXVVX29SVC1CcFZSVHBDUkhub1JPdVFKRGpnZ2ZTNXVHaDFYX0RQRXp1N1U?oc=5",
-      "source": "Reuters"
-     },
-     {
-      "title": "Bessent Pressed by Warren on ‘Chaotic’ US Treasuries Buybacks",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNenBMNV9kcks0OUhlX3dHR2dodkRfQkFHeXlwQ3piU29RaHc0Z1Bta2VTb190T0JBY0RRazE4TVhhNlViZm1DQmpWVnBSNUppcGY1c2ZONVRROW1LMUVVQ21td2xFdzBJeUlWWTJjZDdxbjdKdnBuZUVkMzZvLTlsNGtOVW9sdWZDVVVXX2VKMTc3RnY3X1JxdVBCVDNBR2dMS0hwd2o3aEZFYmtBRDM0?oc=5",
+      "title": "Syria Set to Emerge as Hormuz-Bypass Option for Iraq’s Crude Oil",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOakJ0b0tmWC10TnFvZDRsZ0ZQdGdCX3RYcm1RMVBpMUpVeHNObEhvaGh0ZUNfRU1IZ0FMZmt1LVI0bUxSREROdjBNMVZ6LU9vdmVRSFlrbjBIeWVRNk1UaDVzUmx2UmRWT1hwclVNUHN6MFN5LWFza2xWcktaWU51OFk1TVVOSEdYbXVNTnFWR1Q4OUxBd0g2aUFuLW40QTU3QmZGTlhYM1pCaHhPbEhwUU5YR1VFdw?oc=5",
       "source": "Bloomberg"
+     },
+     {
+      "title": "World shares, euro slide as high oil prices, fiscal worries linger",
+      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQZW5YUkkzdjhfTWJXY25aWkVLeExISGkybXo1YmFoS256Qk5DclZaVVc4ODRnejkzYlBYOTBVWWp5YTVHRDVyMmtBUDVZWHlFclVhYUtIU2d0Tm1GWmRzMnhQNlg4aVVfWEZjb21nQ0tTUzc0WjQ5bEhmWVJuNzFwX25Bdw?oc=5",
+      "source": "Reuters"
      }
     ]
    },
    {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣周三兌美元貶值1.4分至31.795元，美債殖利率與美元雙雙回升，推動新台幣走貶。",
+    "id": "semi",
+    "label": "AI 與半導體",
+    "text": "Microsoft與NVIDIA推出搭載NVIDIARTX Spark晶片的Surface Laptop Ultra，讓AI代理直接在個人電腦執行程式設計工作，減少對雲端依賴，但記憶體價格飆升推高硬體成本，衝擊競爭力。",
     "links": [
      {
-      "title": "Iraq devalues dinar to 1,520 per US dollar, state news agency says",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPMEpwOEJxamRUYWRiRS1XT1lsUDlTcWx6WnhhblZWODZ1b1NpN1ZRTWJXMjZjbVR1SnplZEMwYmYyNXpQOGRnanRaenFiNUVBdVY2bmZxUURyb1RUdktXUGpLaVdGUThRLUY1Z1BEMXItUEZoVUlWbE04Vy11ZjlpajJsZ3l2QVd3N2NIREJwZWFFZ0RJbThweG8zZjJGeDdtbThuUEJacHVFRnh3QWFNd3hrLXA4QQ?oc=5",
+      "title": "Musk says TSMC won't run Terafab AI chip complex",
+      "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQdXV3b1VldjdSN0dMQlNTZm9JYmRscDY2UllLUnlaTEJoU21xVzRpVXhucnlxbFhsOUFLUmlYU1EzejBIRWQzYm0zeTdVdE1lckU4V01RZ2pneE9nbkI1UHJHTGM2UkIwaUI4WWltR1pocHpmcHZraExfVHB4dld0N1pGX2ZRTWw5Zjc2V0FhTEg5Y29DN0hYMmdmVV9YVWNnZjlQRmNlNF9sMGozVVFOOWNOc2FDWlBZbVRzaTJxcmFrUU1UT1c2T1NSR0JzQQ?oc=5",
       "source": "Reuters"
      },
      {
-      "title": "國內匯市：美債殖利率與美元雙雙回升，新台幣週三小貶1.4分，以31.795元作收",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQbVlYb2dtNHpVLWtRenc2Nk5MZXZpTWxGRWgwMUtlbFpra0Vpa2NKOU9SOERCVDJNVzRtSmpuZk9HdWpVeG5XSzJ1MTZVaUJQbG13TjB1dEFvTlVoa1EyUXBnUnhsTFBtTjYwRkF0MWxtcDRRMld5aF9kX3RqRUlXdVBSeFlfY243?oc=5",
-      "source": "富聯網"
+      "title": "Microsoft Says New Laptop With NVIDIA Chip Outperforms MacBooks",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPa09BTnNZWVFzMlJobFBTbUN1TVlHMW9fX0NJOXpZbG82TlphcktROG8tY1VYdkNNTVZONGJaNUJDZlJPcndhOWVDYjhkV0tNcDhkeUd5RUQxLTRvRHJNT0NKV3FGOVNMbDZMN3VLLV83NEZfR1hHY0F3dnNFWlBFNllUbVdlZFBRb0g2VFRXQ1lmZ1FhZ3pEa2pWbnVETGtfVnAweGF4MGV6NVoxeTdoYUlIT2Q?oc=5",
+      "source": "Bloomberg"
      }
     ]
    }
   ],
-  "at": "2026-10-07T15:48:54.759730+00:00"
+  "at": "2026-10-07T20:13:26.499935+00:00"
  }
 }

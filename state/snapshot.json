@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-07T23:48:34+08:00",
+  "at": "2026-10-08T04:13:03+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -187,9 +187,8 @@
           "cpi_cooling",
           "supercore_cool",
           "shelter_drag",
-          "oil_up",
-          "above_target",
           "shelter_turn",
+          "above_target",
           "ppi_pipeline",
           "expect_anchored"
         ],
@@ -198,9 +197,8 @@
           "cpi_cooling": "近三月年化低於年增率 0.4 個百分點以上",
           "supercore_cool": "超級核心服務回落至正常區間",
           "shelter_drag": "住房落後項推升整體讀數",
-          "oil_up": "油價上行，未來一至兩月推升總體 CPI",
-          "above_target": "核心 PCE 顯著高於目標",
           "shelter_turn": "住房通膨的降溫已成既定路徑",
+          "above_target": "核心 PCE 顯著高於目標",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
           "expect_anchored": "短期預期偏高，但長期仍錨定"
         },
@@ -209,9 +207,8 @@
           "cpi_cooling": "dovish",
           "supercore_cool": "dovish",
           "shelter_drag": "dovish",
-          "oil_up": "hawkish",
-          "above_target": "hawkish",
           "shelter_turn": "dovish",
+          "above_target": "hawkish",
           "ppi_pipeline": "hawkish",
           "expect_anchored": "neutral"
         },
@@ -597,7 +594,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.27,
+            "value": 5.28,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -605,7 +602,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.64,
+            "value": 5.67,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -621,7 +618,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.84,
+            "value": 0.83,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -770,7 +767,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-07T23:48:34+08:00",
+      "at": "2026-10-08T04:13:03+08:00",
       "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
