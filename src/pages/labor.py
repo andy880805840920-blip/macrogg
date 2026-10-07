@@ -633,7 +633,11 @@ def _labor_body_full(d: dict) -> str:
             '「沒什麼事」與「大幅變動但互相抵消」，對政策的意涵完全不同。</div>')
     failed_html = ""
     if d.get("failed"):
-        items = "".join(f"<li>{esc((d.get("failed_labels") or {}).get(a, "部分就業指標"))}：資料暫缺</li>" for a, _ in d["failed"])
+        missing_names = d.get("failed_labels") or {}
+        items = "".join(
+            f"<li>{esc(missing_names.get(sid, '部分就業指標'))}：資料暫缺</li>"
+            for sid, _ in d["failed"]
+        )
         failed_html = (f'<div class="card"><details class="plain"><summary>'
                        f'本次有 {len(d["failed"])} 項指標資料暫缺</summary>'
                        f'<ul style="font-size:13px;color:var(--text-secondary)">{items}</ul>'
