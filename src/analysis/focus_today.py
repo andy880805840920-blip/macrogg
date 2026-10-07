@@ -65,10 +65,8 @@ TIMEOUT = 8
 RSS_URL = ("https://news.google.com/rss/search?q={q}"
            "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant")
 
-DEFAULT_KEYWORDS = [
-    "川普 聯準會", "Fed 利率", "Kevin Warsh", "美國財政部", "貝森特",
-    "美債 殖利率", "債券市場", "美伊",
-]
+from . import news_policy
+DEFAULT_KEYWORDS = list(news_policy.MAIN_TOPICS)
 
 
 # ---------------------------------------------------------------------------
@@ -230,6 +228,9 @@ def upgrade_yields_live(series: dict, _get=None) -> list[str]:
 # 範圍是防呆（抓錯商品、格式變了），不是預測——超出就整顆退回 FRED 後備。
 # MOVE 是唯一沒有 FRED 後備的（ICE 授權），Yahoo 掛掉只能標「擷取失敗」。
 QUOTE_SPECS = {
+    "gold": {"sym": "GC=F", "label": "黃金期貨", "lo": 300.0, "hi": 15000.0, "unit": " 美元／盎司", "fred": None, "digits": 2},
+    "dxy": {"sym": "DX-Y.NYB", "label": "美元指數 DXY", "lo": 40.0, "hi": 180.0, "unit": "", "fred": None, "digits": 2},
+    "twd": {"sym": "TWD=X", "label": "台幣 USD/TWD", "lo": 15.0, "hi": 60.0, "unit": " 元", "fred": "DEXTAUS", "digits": 3},
     "wti":   {"sym": "CL=F",  "label": "WTI 原油",   "lo": 10.0, "hi": 300.0,
               "unit": " 美元", "fred": "DCOILWTICO"},
     "brent": {"sym": "BZ=F",  "label": "Brent 原油", "lo": 10.0, "hi": 300.0,
@@ -331,16 +332,19 @@ def _pct_chip(cid, label, rows):
                f"{db:+d} bp" if db is not None else "—", cls, d)
 
 
-def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
+_QUOTE_UNSET = object()
+
+def _level_chip(cid, spec, liq, offline, _get=None, _pre=_QUOTE_UNSET):
     """即時報價 chip（油價、VIX、MOVE）：Yahoo 主、FRED 後備。
     _pre 是呼叫端並行預抓的結果（避免逐顆串行等逾時）。
     日期新者勝：報價日不比 FRED 後備新（stale 成交）就退後備。"""
     if not offline:
-        q = _pre if _pre is not None else fetch_yahoo_quote(
+        q = _pre if _pre is not _QUOTE_UNSET else fetch_yahoo_quote(
             spec["sym"], spec["lo"], spec["hi"], _get=_get)
         _, _, _fd = _last2((liq or {}).get(spec["fred"])
                            if spec.get("fred") else None)
-        if q and _fd and str(q.get("date") or "") <= _fd:
+        if q and _fd and (str(q.get("date") or "") < _fd if cid == "twd"
+                         else str(q.get("date") or "") <= _fd):
             log.info("即時報價 %s 報價日 %s 不比 FRED %s 新，退後備",
                      spec["sym"], q.get("date"), _fd)
             q = None
@@ -351,16 +355,24 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=None):
                 pct = dv / q["prev"] * 100 if q["prev"] else 0.0
                 return _mk(cid, spec["label"], f"{q['value']:,.0f}",
                            f"{dv:+,.0f}（{pct:+.2f}%）", cls, q["date"])
-            return _mk(cid, spec["label"], f"{q['value']:.1f}{spec['unit']}",
-                       f"{dv:+.1f}", cls, q["date"])
+            digits = spec.get("digits", 1)
+            delta = (("貶" if dv > 0 else "升" if dv < 0 else "持平") + f"{abs(dv):.{digits}f}"
+                     if cid == "twd" else f"{dv:+.{digits}f}")
+            chip = _mk(cid, spec["label"], f"{q['value']:.{digits}f}{spec['unit']}", delta, cls, q["date"])
+            chip["source"] = "Yahoo"
+            return chip
     rows = (liq or {}).get(spec["fred"]) if spec.get("fred") else None
     v, p, d = _last2(rows)
     if v is None:
         return _mk(cid, spec["label"], "—", "本次擷取失敗", "", "")
     dv = None if p is None else v - p
     cls = "up" if (dv or 0) > 0 else ("dn" if (dv or 0) < 0 else "")
-    return _mk(cid, spec["label"], f"{v:.1f}{spec['unit']}",
-               f"{dv:+.1f}" if dv is not None else "—", cls, d)
+    digits = spec.get("digits", 1)
+    delta = ("—" if dv is None else (("貶" if dv > 0 else "升" if dv < 0 else "持平") + f"{abs(dv):.{digits}f}"
+             if cid == "twd" else f"{dv:+.{digits}f}"))
+    chip = _mk(cid, spec["label"], f"{v:.{digits}f}{spec['unit']}", delta, cls, d)
+    chip["source"] = "FRED"
+    return chip
 
 
 # 台指期：期交所行情頁背後使用的資料端點（**非官方 API**，可能改版）。
@@ -544,7 +556,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                          f"{dv:+,.1f} 億" if dv is not None else "—",
                          "up", d))
     # ---- 即時報價：油價與波動率（並行）----
-    _qids = ("wti", "brent", "vix", "move", "dji", "sox")
+    _qids = ("wti", "brent", "vix", "move", "dji", "sox", "gold", "dxy", "twd")
     _quotes = dict(zip(_qids, _pmap(
         lambda c: None if offline else fetch_yahoo_quote(
             QUOTE_SPECS[c]["sym"], QUOTE_SPECS[c]["lo"],
@@ -719,9 +731,7 @@ def _kw_text(title: str) -> str:
 def _kw_hit(word: str, title: str) -> bool:
     """單一關鍵詞是否命中。英文詞不分大小寫（FT/WSJ 的標題是英文，
     「Fed」「fed」「FED」都要算）；中文照原樣子字串比對。"""
-    if word.isascii():
-        return word.lower() in title.lower()
-    return word in title
+    return news_policy.hit(word, title)
 
 
 def _excluded(title: str, exclude: list[str] | None) -> bool:
@@ -1028,8 +1038,8 @@ def _tidy_focus(text: str) -> str:
     """焦點段的排版清理：逐段去掉 markdown 記號（粗體實際上過線）。
     段落結構（空行）保留——首頁靠它分段渲染。"""
     from . import polish as _pl
-    return "\n".join(_pl._sanitize(ln) if ln.strip() else ""
-                      for ln in (text or "").splitlines())
+    return news_policy.english_names("\n".join(_pl._sanitize(ln) if ln.strip() else ""
+                      for ln in (text or "").splitlines()))
 
 
 # 版式：N 則重點、每則 item_cap 字（config 的 items／item_chars，
@@ -1093,7 +1103,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f6-main3"
+FOCUS_PROMPT_VERSION = "f8-topic-scope-english-companies"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1193,7 +1203,7 @@ def _trim_item(text: str, limit: int) -> str:
 def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
                     n_items: int = 0, meta_markers=None,
                     vague_markers=None, caps: list[int] | None = None,
-                    mins: list[int] | None = None
+                    mins: list[int] | None = None, scope_topics: list[str] | None = None
                     ) -> tuple[str, str]:
     """
     共用的生成＋驗證核心（內文模式與標題模式都走這裡）。
@@ -1206,6 +1216,8 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
     """
     # caps：每一行各自的字數上限（版式 A：[主軸, 補充, 補充]）；沒給就是
     # 舊版的 N 則等長。硬底線一律是上限 × HARD_MULT。
+    if scope_topics is not None:
+        system += "\n指定主題範圍：" + "、".join(scope_topics) + "。"
     layout_a = bool(caps)
     caps = list(caps) if caps else [item_cap] * n_items
     n_items = len(caps)
@@ -1218,6 +1230,7 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
     vague_markers = vague_markers or DEFAULT_VAGUE_MARKERS
     best: list[str] = []
     note = ""
+    scope_failed = False
     for attempt in (1, 2):
         text, err = _call_ai(src_text + note, system, env)
         if err:
@@ -1227,6 +1240,11 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
         if not items:
             return "", "輸出是空的"
         joined = "\n".join(items)
+        if scope_topics is not None and not all(news_policy.main_allowed({"title": item}, scope_topics) for item in items):
+            scope_failed = True
+            log.warning("市場焦點：輸出不符合設定主題，退回重試")
+            note = "\n\n（請重寫：只寫設定主題的新聞；不要用其他國家的本地通膨、GDP、失業率或利率新聞補滿。）"
+            continue
         meta = _meta_hits(joined, meta_markers)
         if meta:
             log.warning("市場焦點：輸出含後設字眼（%s），退回重試",
@@ -1272,7 +1290,7 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
     if best:
         log.warning("市場焦點：重寫後仍不合格，採用第一版並裁切超長的則")
         return "\n".join(_trim_item(it, hards[i]) for i, it in enumerate(best)), ""
-    return "", "輸出反覆評論材料本身（後設字眼）"
+    return "", "輸出不符合設定主題範圍" if scope_failed else "輸出反覆評論材料本身（後設字眼）"
 
 
 def summarize_content(articles: list[dict], keywords: list[str],
@@ -1280,7 +1298,7 @@ def summarize_content(articles: list[dict], keywords: list[str],
                       briefs: list[dict] | None = None,
                       meta_markers=None, n_items: int = DEFAULT_ITEMS,
                       vague_markers=None, caps: list[int] | None = None,
-                      mins: list[int] | None = None
+                      mins: list[int] | None = None, scope_topics: list[str] | None = None
                       ) -> tuple[str, str]:
     """
     讀文章內文寫成重點。caps 有給＝版式 A（一段主軸＋補充），否則 N 則等長。回傳 (重點, "model-content")；失敗回 ("", 原因)。
@@ -1310,10 +1328,11 @@ def summarize_content(articles: list[dict], keywords: list[str],
     else:
         system = _FOCUS_CONTENT_SYSTEM.format(kws="、".join(keywords),
                                               cap=item_cap, n=n_items)
+    system += "\n" + news_policy.PERSON_RULE + "\n" + news_policy.COMPANY_RULE + "\n" + news_policy.SCOPE_RULE
     text, err = _generate_items(src_text, system, env, item_cap=item_cap,
                                 n_items=n_items, meta_markers=meta_markers,
                                 vague_markers=vague_markers, caps=caps,
-                                mins=mins)
+                                mins=mins, scope_topics=scope_topics)
     return (text, "model-content") if text else ("", err)
 
 
@@ -1461,8 +1480,8 @@ def pick_fallback(headlines: list[dict], keywords: list[str],
 # Gemini：焦點段（無接地）與 FedWatch 擷取（搜尋接地）
 # ---------------------------------------------------------------------------
 _FOCUS_SYSTEM = (
-    "你是財經編輯。輸入是新聞標題清單（有些附官方摘要）。挑出對"
-    "「美國公債殖利率與聯準會政策」最重要的 {n} 件事，寫成 {n} 則重點："
+    "你是財經編輯。輸入是新聞標題清單（有些附官方摘要）。從設定主題中挑出"
+    "今天最重要的 {n} 件事，寫成 {n} 則重點："
     "每則一行、只講一件事、{cap} 個中文字以內，最重要的放第一則；"
     "每則要寫出具體的事（誰、做了什麼），不要寫「成為市場焦點」「備受"
     "關注」這類空話。只能使用標題與摘要裡已有的資訊，不得補充任何以外"
@@ -1475,7 +1494,7 @@ _FOCUS_SYSTEM = (
 # 規則不放寬：仍只能轉述標題與摘要字面上有的事。
 _FOCUS_SYSTEM_A = (
     "你是財經編輯。輸入是新聞標題清單（有些附官方摘要），標【Bloomberg】"
-    "【Reuters】的是彭博與路透。挑出對「美國公債殖利率與聯準會政策」最重要"
+    "【Reuters】的是彭博與路透。從設定主題中挑出今天最重要"
     "的事，輸出：【主軸】{main} 個中文字以內，可分 2–3 段（每段一行），把"
     "今天最重要、彼此相關的幾則標題綜合起來講——發生什麼、為什麼、對利率或"
     "聯準會代表什麼（只寫標題與摘要裡有的）；優先選彭博或路透報導的事件，"
@@ -1499,7 +1518,7 @@ def _digits_ok(text: str, source: str) -> bool:
 def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
               env=None, n_items: int = DEFAULT_ITEMS, meta_markers=None,
               vague_markers=None, caps: list[int] | None = None,
-              mins: list[int] | None = None
+              mins: list[int] | None = None, scope_topics: list[str] | None = None
               ) -> tuple[str, str]:
     """標題模式：只有標題（＋官方摘要）可用時寫成 N 則重點。
     回傳 (重點, "model")；失敗回 ("", 原因)。"""
@@ -1511,10 +1530,11 @@ def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
                                      supp=caps[1] if len(caps) > 1 else 0,
                                      ns=len(caps) - 1)
               if caps else _FOCUS_SYSTEM.format(cap=item_cap, n=n_items))
+    system += "\n" + news_policy.PERSON_RULE + "\n" + news_policy.COMPANY_RULE + "\n" + news_policy.SCOPE_RULE
     text, err = _generate_items(
         lines, system, env,
         item_cap=item_cap, n_items=n_items, meta_markers=meta_markers,
-        vague_markers=vague_markers, caps=caps)
+        vague_markers=vague_markers, caps=caps, scope_topics=scope_topics)
     return (text, "model") if text else ("", err)
 
 
@@ -2301,43 +2321,11 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 #     套用在主軸與其他主題）
 #   · 每則補充前面加主題標籤
 # ---------------------------------------------------------------------------
-TOPIC_PROMPT_VERSION = "t1"
+TOPIC_PROMPT_VERSION = "t3-topics-fx-gold-english-companies"
 TOPIC_CHARS, TOPIC_MIN = 80, 40
 TOPIC_HARD = int(TOPIC_CHARS * HARD_MULT_SUPP)          # 100 字
 
-DEFAULT_TOPICS = [
-    {"id": "fed", "label": "聯準會",
-     "chips": ["fedwatch", "fw_dec", "fw_cum", "dgs3mo", "dgs2"],
-     "keywords": ["Fed", "FOMC", "Powell", "Warsh", "聯準會", "降息", "升息",
-                  "rate cut", "rate hike"]},
-    {"id": "long", "label": "長天期美債",
-     "chips": ["dgs5", "dgs10", "dgs30", "move"],
-     "keywords": ["Treasury", "yields", "bond market", "美債", "殖利率", "公債標售"]},
-    {"id": "funding", "label": "資金市場",
-     "chips": ["sofr", "sofr_iorb", "onrrp", "srf"],
-     "keywords": ["repo", "SOFR", "reserves", "money market", "回購", "準備金"]},
-    {"id": "oil", "label": "油價", "chips": ["wti", "brent"],
-     "keywords": ["oil", "crude", "OPEC", "Brent", "油價", "原油"]},
-    # AI 消息同時推動美股、台股與半導體：三個主題都收 AI 關鍵字（2026-10）
-    {"id": "equity", "label": "美股", "chips": ["dji", "vix"],
-     "keywords": ["Dow", "S&P 500", "Wall Street", "stocks", "美股", "道瓊", "標普",
-                  "AI", "Nvidia", "OpenAI", "data center", "人工智慧", "輝達"],
-     # 2026-10（使用者：美股新聞篩得不準——世界銀行談東亞 AI 出口被當成美股）：
-     # 標題除了命中關鍵字，還必須有「美股／指數」類的詞；其他國家股市與
-     # 原油庫存（oil stocks）的標題排除。exclude_add 是在全站排除詞之外**追加**。
-     "require": ["Dow", "S&P 500", "S&P", "Nasdaq", "Wall Street", "US stocks", "U.S. stocks", "stocks", "stock market", "equities", "VIX", "美股", "道瓊", "標普", "那斯達克", "華爾街", "美國股市"],
-     "exclude_add": ["台股", "日股", "陸股", "港股", "歐股", "韓股", "A股", "日經", "恆生", "Nikkei", "Hang Seng", "FTSE", "DAX", "European stocks", "Asian stocks", "China stocks", "Japan stocks", "oil stocks", "crude stocks", "G7 stocks", "stockpile", "World Bank", "世界銀行"]},
-    {"id": "semi", "label": "AI 與半導體", "chips": ["sox"],
-     "keywords": ["chip", "semiconductor", "Nvidia", "TSMC", "半導體", "晶片",
-                  "輝達", "台積電", "AI", "OpenAI", "data center", "人工智慧", "資料中心"]},
-    {"id": "twf", "label": "台指期", "chips": ["txf"],
-     "keywords": ["台指期", "台股", "加權指數", "外資", "夜盤", "人工智慧", "輝達",
-                  "台積電", "AI 伺服器"],
-     "exclude": ["ETF", "存股", "高股息", "定期定額", "0050"]},
-    {"id": "election", "label": "期中選舉", "chips": ["pm_house", "pm_senate"],
-     "keywords": ["midterm", "Senate race", "House majority", "期中選舉",
-                  "參議院", "眾議院"]},
-]
+DEFAULT_TOPICS = [{'id': 'fed', 'label': '聯準會', 'chips': ['fedwatch', 'fw_dec', 'fw_cum', 'dgs3mo', 'dgs2'], 'keywords': ['Fed', 'Federal Reserve', 'FOMC', 'Powell', 'Warsh', '聯準會', '降息', '升息', 'rate cut', 'rate cuts', 'rate hike'], 'search': [{'q': 'Federal Reserve officials', 'lang': 'en'}, {'q': 'Fed (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'long', 'label': '長天期美債', 'chips': ['dgs5', 'dgs10', 'dgs30', 'move', 'live_dgs10', 'live_dgs30'], 'keywords': ['Treasury', 'Treasuries', '10-year', '30-year', '美債', '美國公債', '美債殖利率', '公債標售'], 'search': [{'q': 'Treasury yields (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': 'Treasury auction', 'lang': 'en'}], 'require': ['Treasury', 'Treasuries', 'US bonds', 'U.S. bonds', '美債', '美國公債', '美國財政部']}, {'id': 'funding', 'label': '資金市場', 'chips': ['sofr', 'sofr_iorb', 'onrrp', 'srf'], 'keywords': ['repo market', 'SOFR', 'bank reserves', 'reverse repo', 'standing repo', 'money market', '回購市場', '準備金'], 'search': [{'q': '"repo market" OR SOFR OR "bank reserves" Fed', 'lang': 'en'}]}, {'id': 'oil', 'label': '油價', 'chips': ['wti', 'brent'], 'keywords': ['oil', 'crude', 'OPEC', 'Brent', 'WTI', '油價', '原油', 'crude oil', 'oil prices', 'OPEC+', 'Middle East war', 'US-Iran conflict', 'U.S.-Iran conflict', 'Iran', 'Israel', 'Gaza', 'Strait of Hormuz', 'Red Sea', '中東戰爭', '中東衝突', '美伊衝突', '伊朗', '以色列', '加薩', '荷姆茲海峽', '霍爾木茲海峽', '紅海', '油輪', '能源供應', '航運中斷', '制裁'], 'search': [{'q': 'oil prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'equity', 'label': '美股', 'chips': ['dji', 'vix'], 'keywords': ['Dow', 'S&P 500', 'Nasdaq', 'Wall Street', 'stocks', 'VIX', '美股', '道瓊', '標普', 'AI', 'artificial intelligence', 'Nvidia', 'OpenAI', 'AI capex', 'data center', 'data centers', 'hyperscaler', '人工智慧', '輝達', '資料中心', 'AI 伺服器'], 'require': ['Dow', 'S&P 500', 'S&P', 'Nasdaq', 'Wall Street', 'US stocks', 'U.S. stocks', 'stocks', 'stock market', 'equities', 'VIX', '美股', '道瓊', '標普', '那斯達克', '華爾街', '美國股市'], 'exclude_add': ['台股', '日股', '陸股', '港股', '歐股', '韓股', 'A股', '日經', '恆生', 'Nikkei', 'Hang Seng', 'FTSE', 'DAX', 'European stocks', 'Asian stocks', 'China stocks', 'Japan stocks', 'oil stocks', 'crude stocks', 'G7 stocks', 'stockpile', 'World Bank', '世界銀行'], 'search': [{'q': 'Wall Street stocks (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'semi', 'label': 'AI 與半導體', 'chips': ['sox'], 'keywords': ['chip', 'chips', 'chipmaker', 'chipmakers', 'semiconductor', 'semiconductors', 'Nvidia', 'TSMC', 'AI capex', '半導體', '晶片', '輝達', '台積電', 'AI', 'artificial intelligence', 'OpenAI', 'data center', 'data centers', 'hyperscaler', '人工智慧', '資料中心', 'AI 伺服器'], 'exclude': ['ETF', '存股', '高股息', '股息', '定期定額', '0050', '台股', '金控', '必漲', '卡位', '黑馬', '飆股', '千金股'], 'search': [{'q': 'chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'twf', 'label': '台指期', 'chips': ['txf'], 'keywords': ['台指期', '台股', '加權指數', '外資', '夜盤', '人工智慧', '輝達', '台積電', 'AI 伺服器', 'AI 概念股', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF', 'NVIDIA', 'TSMC'], 'exclude': ['ETF', '存股', '高股息', '定期定額', '0050', '必漲', '卡位', '黑馬', '飆股', '千金股', 'ETFs', '指數型基金', '指數股票型基金', '配息', '申購', '股息'], 'search': [{'q': '台指期', 'lang': 'zh'}, {'q': '台股 外資', 'lang': 'zh'}], 'require': ['台指期', '臺指期', '台股', '臺股', '加權指數', '台灣股市', '臺灣股市', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF']}, {'id': 'election', 'label': '期中選舉', 'chips': ['pm_house', 'pm_senate'], 'keywords': ['midterm', 'midterms', 'Senate race', 'House majority', 'Senate control', 'House control', '期中選舉', '參議院', '眾議院'], 'search': [{'q': 'midterm elections (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '美國期中選舉', 'lang': 'zh'}]}, {'id': 'gold', 'label': '黃金', 'chips': ['gold'], 'keywords': ['gold', 'bullion', 'XAU/USD', 'gold futures', '黃金', '金價'], 'exclude': ['ETF', 'ETFs', '黃金ETF', '珠寶促銷', '飾金促銷'], 'search': [{'q': 'gold prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'fx', 'label': '匯率', 'chips': ['dxy', 'twd'], 'keywords': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數', '台灣央行', '臺灣央行', '外資匯入', '外資匯出'], 'require': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數'], 'exclude': ['ETF', 'ETFs', '存股', '高股息', '定期定額'], 'search': [{'q': '台幣 美元 匯率', 'lang': 'zh'}, {'q': 'Taiwan dollar currency Reuters', 'lang': 'en'}, {'q': 'US dollar index (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}]
 
 _GNEWS = {"en": "https://news.google.com/rss/search?q={q}%20when:2d"
                 "&hl=en-US&gl=US&ceid=US:en",
@@ -2346,7 +2334,7 @@ _GNEWS = {"en": "https://news.google.com/rss/search?q={q}%20when:2d"
 
 
 def topic_specs(cfg: dict | None) -> list[dict]:
-    """config 的 topics:（沒設就用內建的八個主題），正規化成固定欄位。"""
+    """config 的 topics:（沒設就用內建的十個主題），正規化成固定欄位。"""
     raw = (cfg or {}).get("topics") or DEFAULT_TOPICS
     out = []
     for t in raw:
@@ -2455,7 +2443,8 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
                          + [(x, True) for x in (extra or [])]):
             title = h.get("title") or ""
             k = _norm_title(title)[:40]
-            if (k in seen or _excluded(title, exc)
+            if (k in seen or news_policy.topic_excluded(s["id"], h, exc)
+                    or not news_policy.topic_allowed(s["id"], h)
                     or not any(_phrase_hit(w, title) for w in s["keywords"])
                     or (req and not any(_phrase_hit(w, title) for w in req))
                     or any(_sim(_norm_title(title), m) > 0.55 for m in mains)):
@@ -2471,6 +2460,8 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
         if not cand:
             continue
         picked[s["id"]] = {
+            "spec": s,
+            "exclude": exc,
             "body_cand": _rank_topic([h for h in cand if not _headline_only(h["link"])],
                                      s["keywords"], 2, now),
             "briefs": _rank_topic([h for h in cand if _headline_only(h["link"])],
@@ -2481,8 +2472,12 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
     bodies = _pmap(lambda j: body(j[1]["link"]), jobs, workers=8)
     out = {}
     for tid, m in picked.items():
+        rejected = {h["link"] for (t2, h), b in zip(jobs, bodies) if t2 == tid and b
+                    and (news_policy.topic_excluded(tid, {**h, "body": b}, m["exclude"])
+                         or not news_policy.topic_allowed(tid, {**h, "body": b}))}
         arts = [{"title": h["title"], "body": b, "source": h.get("source", "")}
-                for (t2, h), b in zip(jobs, bodies) if t2 == tid and b]
+                for (t2, h), b in zip(jobs, bodies) if t2 == tid and b and h["link"] not in rejected]
+        m["links"] = [h for h in m["links"] if h["link"] not in rejected]
         if not arts and not m["briefs"]:
             continue
         out[tid] = {"arts": arts, "briefs": m["briefs"],
@@ -2538,7 +2533,7 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
     """
     if not material:
         return {}
-    system = _TOPIC_SYSTEM.format(min=TOPIC_MIN, cap=TOPIC_CHARS)
+    system = _TOPIC_SYSTEM.format(min=TOPIC_MIN, cap=TOPIC_CHARS) + "\n" + news_policy.PERSON_RULE + "\n" + news_policy.COMPANY_RULE
     head = "=== 今日主軸（不要重複）===\n" + (main_text or "").replace(MAIN_PARA, "\n")
     srcs = {tid: _topic_block(tid, labels.get(tid, tid), m)
             for tid, m in material.items()}
@@ -2605,11 +2600,13 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
             and _age < CACHE_TTL_HOURS:
         log.info("主題補充：材料與上次相同，沿用 %.1f 小時前的內容", _age)
         res["items"] = old["items"]
+        news_policy.display_news(res)
         return res
     texts = summarize_topics(mat, labels, main_text, env, meta_markers)
     res["items"] = [{"id": tid, "label": labels[tid], "text": texts[tid],
                      "links": mat[tid]["links"]}
                     for tid in res["order"] if tid in texts]
+    news_policy.display_news(res)
     if res["items"]:
         state["topics"] = {"hash": key, "items": res["items"],
                            "at": (now or dt.datetime.now(dt.timezone.utc)).isoformat()}
@@ -2641,7 +2638,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
           state_path: Path, env=None, liq_series: dict | None = None,
           events: dict | None = None, election: dict | None = None) -> dict:
     cfg = cfg or {}
-    keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
+    scope_topics = cfg.get("keywords") or DEFAULT_KEYWORDS
+    keywords = news_policy.expand(scope_topics)
     # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
     n_items = int(cfg.get("items") or DEFAULT_ITEMS)
     item_cap = int(cfg.get("item_chars") or DEFAULT_ITEM_CHARS)
@@ -2660,7 +2658,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
            "chips": []}
 
     if offline or cfg.get("enabled") is False:
-        out["text"] = ("離線示範模式：不抓取新聞，正式執行時這裡是"
+        out["text"] = ("示範頁面暫不提供新聞摘要；正式網站顯示"
                        "當天的市場焦點一段。")
         out["text_source"] = "offline"
         out["chips"] = build_catalog(rates_series, liq_series, yields,
@@ -2732,10 +2730,12 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     _raw_pool: list = []                           # 主題補充用：時間窗內全部項目
     heads = fetch_feed_headlines(feeds, keywords + kw2, exclude=exclude,
                                  raw_out=_raw_pool)
+    heads = [h for h in heads if news_policy.main_allowed(h, scope_topics)]
     mode = "content"
     if not heads:
         log.warning("市場焦點：Yahoo RSS 無命中或全部失敗，退回 Google News 標題模式")
-        heads = fetch_headlines(keywords)
+        heads = [h for h in fetch_headlines(scope_topics)
+                 if news_policy.main_allowed(h, scope_topics)]
         # 來源白名單（config 的 sources）只在標題模式有意義——
         # Yahoo feed 本身就只有 Yahoo。全部沒命中時退回不過濾。
         _srcs = [str(s).lower() for s in (cfg.get("sources") or []) if s]
@@ -2768,7 +2768,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         briefs = pick_fallback([x for x in heads
                                 if _headline_only(x["link"])],
                                keywords, n=6, **_rk)
-        h = hashlib.sha256((FOCUS_PROMPT_VERSION + "|" + mode + "|" + "|".join(
+        h = hashlib.sha256((FOCUS_PROMPT_VERSION + "|" + "|".join(scope_topics) + "|" + mode + "|" + "|".join(
             x["title"] for x in (top + body_cand + briefs)))
                            .encode("utf-8")).hexdigest()[:16]
         _age = _age_hours({"at": state.get("at")}, _now)
@@ -2793,14 +2793,15 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                          "重新生成", CACHE_TTL_HOURS)
             text, src = "", ""
             _gen = dict(n_items=n_items, meta_markers=meta_markers,
-                        vague_markers=vague_markers, caps=caps)
+                        vague_markers=vague_markers, caps=caps, scope_topics=scope_topics)
             if mode == "content":
                 # 內文並行抓（各篇獨立的 I/O 等待，串行是慢的主因之一）
                 _bodies = _pmap(lambda x: fetch_article_text(x["link"]),
                                 body_cand)
                 arts = [{"title": x["title"], "body": b,
                          "source": x.get("source", "")}
-                        for x, b in zip(body_cand, _bodies) if b]
+                        for x, b in zip(body_cand, _bodies)
+                        if b and news_policy.main_allowed({**x, "summary": b[:600]}, scope_topics)]
                 if len(arts) < 3:
                     # 材料太薄不放棄：第二輪把時間窗放寬到 60 小時、
                     # 候選從排名往後遞補再抓一批（使用者指定：先繼續爬，
@@ -2809,6 +2810,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                              "時間窗（60 小時）再爬", len(arts))
                     heads2 = fetch_feed_headlines(feeds, keywords + kw2,
                                                   hours=60, exclude=exclude)
+                    heads2 = [h for h in heads2 if news_policy.main_allowed(h, scope_topics)]
                     _got = {x["link"] for x in body_cand}
                     cand2 = [x for x in pick_fallback(
                         [h2 for h2 in heads2
@@ -2819,7 +2821,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                 cand2)
                     arts += [{"title": x["title"], "body": b,
                               "source": x.get("source", "")}
-                             for x, b in zip(cand2, _b2) if b]
+                             for x, b in zip(cand2, _b2)
+                             if b and news_policy.main_allowed({**x, "summary": b[:600]}, scope_topics)]
                 if arts:
                     # 抓到多少內文寫進 log：摘要品質有疑慮時要能回頭查
                     # 是不是內文本身太薄。
@@ -2862,6 +2865,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 out["text"] = ""
                 out["text_source"] = "headlines"
             out["links"] = links
+            news_policy.display_news(out)
             state.update({"hash": h, "text": out["text"], "links": links,
                           "text_source": out["text_source"],
                           "layout": out.get("layout", ""),
@@ -2881,6 +2885,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         except Exception as e:                     # noqa: BLE001
             log.warning("主題補充失敗（%s），補充維持一般內容", e)
 
+    news_policy.display_news(out)
+    if state.get("topics"):
+        news_policy.display_news(state["topics"])
     try:
         state_path.parent.mkdir(parents=True, exist_ok=True)
         state_path.write_text(json.dumps(state, ensure_ascii=False, indent=1),

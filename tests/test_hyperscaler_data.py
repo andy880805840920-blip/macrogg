@@ -197,7 +197,7 @@ else:
     html = out.read_text(encoding="utf-8")
     # 離線產出時五家都不是來自 SEC，畫面必須明講
     check("㉞ 全部過期時畫面用最強的措辭",
-          "這一區的數字全部不是最新的" in html)
+          "本區資料尚未更新" in html and "並非最新一季財報" in html and "config/rates.yaml" not in html and "SEC_USER_AGENT" not in html)
     check("㉟ 逐列標出「未取自 SEC」", html.count("未取自 SEC") >= 5)
     check("㊱ 每家都有可點的原始申報連結", html.count("browse-edgar") == 5)
     check("㊲ 不再出現沒有期間定義的「本季發債」",

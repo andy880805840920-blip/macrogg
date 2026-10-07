@@ -81,55 +81,44 @@ vague_markers:
   - 不容忽視
   - 牽動市場
 
-# 主級關鍵字：命中一次計 2 分（挑選排序用）。政策與利率核心。
+# 今日主軸只選下列主題；程式會展開中英文同義詞，並區分本地與美國總經新聞。
+# 其他國家的 CPI／GDP／利率不能僅因同字而入選；BOJ、日圓、AI、油價及指定戰爭可跨國。
 keywords:
-  - 川普 聯準會
-  - Fed 利率
-  - Kevin Warsh
-  - 美國財政部
-  - 貝森特
-  - 美債 殖利率
-  - 債券市場
-  - 美伊
-  - 降息
-  - 升息
-  - 殖利率曲線
-  - 公債標售
-  # 英文組（FT／WSJ／Google News 的 feed 是英文標題；比對不分大小寫）
-  - Fed rate
-  - Treasury yields
-  - Bessent
+  - Fed
   - FOMC
-  - Powell Warsh
-  - bond market
-  - rate cut
-  - rate hike
-  - yield curve
-  - Treasury auction
-
-# 次級關鍵字：命中一次計 1 分——債市生態系與 AI 資本週期，
-# 只在主線新聞不足時自然上位，不搶聯準會頭條的位置。
-keywords_secondary:
-  - 信用利差
-  - 公司債
-  - 回購市場
-  - 債務上限
-  - 信評調降
-  - 日債
-  - 晶片戰爭
-  - 晶片關稅
-  - AI 資本支出
-  - AI 發債
-  - credit spreads
-  - corporate bond
-  - repo market
-  - debt ceiling
-  - downgrade
-  - JGB
-  - chip war
-  - chip tariffs
-  - AI capex
-  - AI bond
+  - 升息
+  - 降息
+  - 通膨
+  - CPI
+  - PCE
+  - 非農
+  - 失業率
+  - GDP
+  - 美債
+  - 美債殖利率
+  - 美元
+  - 美國財政部
+  - 財政赤字
+  - 川普
+  - 關稅
+  - 日本央行
+  - 日圓
+  - AI
+  - NVIDIA
+  - 半導體
+  - AI資本支出
+  - 油價
+  - 伊朗
+  - 中東戰爭
+  - 俄烏戰爭
+  - 黃金
+  - 聯準會
+  - Kevin Warsh
+  - 發債
+  - BOJ
+  - 輝達
+# 不用額外的泛稱債市／殖利率等次級詞放寬主軸範圍。
+keywords_secondary: []
 
 # 後設偵測：AI 輸出含任一詞組＝在評論材料而不是寫新聞（實際發生過：
 # 整篇「材料相關內容極為有限…無法按要求綜合改寫」上了線）。
@@ -207,8 +196,8 @@ feeds:
   # 改走 Google News 的搜尋型 feed 限定來源＋主題。預期是**標題級**
   # 貢獻（彭博硬付費牆、路透偶爾放行）；兩家的通訊社稿全文本來就經
   # Yahoo 轉載進來，這兩條補的是原始出處的標題視角與來源多樣性。
-  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell%20OR%20yield%20OR%20auction%20OR%20bond)%20when:2d&hl=en-US&gl=US&ceid=US:en
-  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20Powell%20OR%20yield%20OR%20auction%20OR%20bond)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
 # 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
 # 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。
@@ -236,67 +225,386 @@ sources:
 # 指標遞補，都沒有就用主軸那次一起寫的一般補充。
 # ============================================================================
 topics:
-  - id: fed
-    label: 聯準會
-    chips: [fedwatch, fw_dec, fw_cum, dgs3mo, dgs2]
-    keywords: [Fed, Federal Reserve, FOMC, Powell, Warsh, 聯準會, 降息, 升息, rate cut, rate cuts, rate hike]
-    search:
-      - {q: "Federal Reserve officials", lang: en}
-      - {q: "Fed (site:reuters.com OR site:bloomberg.com)", lang: en}
-  - id: long
-    label: 長天期美債
-    chips: [dgs5, dgs10, dgs30, move]
-    # 只收美債：yield／殖利率這種泛稱會把印度債、歐債、台股的「股息殖利率」都拉進來
-    keywords: [Treasury, Treasuries, 10-year, 30-year, 美債, 美國公債, 美債殖利率, 公債標售]
-    search:
-      - {q: "Treasury yields (site:reuters.com OR site:bloomberg.com)", lang: en}
-      - {q: "Treasury auction", lang: en}
-  - id: funding
-    label: 資金市場
-    chips: [sofr, sofr_iorb, onrrp, srf]
-    keywords: [repo market, SOFR, bank reserves, reverse repo, standing repo, money market, 回購市場, 準備金]
-    search:
-      - {q: "\"repo market\" OR SOFR OR \"bank reserves\" Fed", lang: en}
-  - id: oil
-    label: 油價
-    chips: [wti, brent]
-    keywords: [oil, crude, OPEC, Brent, WTI, 油價, 原油]
-    search:
-      - {q: "oil prices (site:reuters.com OR site:bloomberg.com)", lang: en}
-  - id: equity
-    label: 美股
-    chips: [dji, vix]
-    # AI 消息同時推動美股、台股與半導體（2026-10，使用者：AI 要對應台指期與美股）
-    keywords: [Dow, S&P 500, Nasdaq, Wall Street, stocks, VIX, 美股, 道瓊, 標普, AI, artificial intelligence, Nvidia, OpenAI, AI capex, data center, data centers, hyperscaler, 人工智慧, 輝達, 資料中心, AI 伺服器]
-    # 標題還必須有美股／指數類的詞（AI 新聞要真的在講美股才算；2026-10 使用者：美股新聞篩錯）
-    require: [Dow, S&P 500, S&P, Nasdaq, Wall Street, US stocks, U.S. stocks, stocks, stock market, equities, VIX, 美股, 道瓊, 標普, 那斯達克, 華爾街, 美國股市]
-    # 在全站排除詞之外追加：其他國家股市、原油庫存（oil stocks）、世界銀行區域報告
-    exclude_add: [台股, 日股, 陸股, 港股, 歐股, 韓股, A股, 日經, 恆生, Nikkei, Hang Seng, FTSE, DAX, European stocks, Asian stocks, China stocks, Japan stocks, oil stocks, crude stocks, G7 stocks, stockpile, World Bank, 世界銀行]
-    search:
-      - {q: "Wall Street stocks (site:reuters.com OR site:bloomberg.com)", lang: en}
-  - id: semi
-    label: AI 與半導體
-    chips: [sox]
-    keywords: [chip, chips, chipmaker, chipmakers, semiconductor, semiconductors, Nvidia, TSMC, AI capex, 半導體, 晶片, 輝達, 台積電, AI, artificial intelligence, OpenAI, data center, data centers, hyperscaler, 人工智慧, 資料中心, AI 伺服器]
-    # 台積電、輝達的中文新聞常是個股理財文——擋掉，其餘沿用全站排除詞
-    exclude: [ETF, 存股, 高股息, 股息, 定期定額, "0050", 台股, 金控, 必漲, 卡位, 黑馬, 飆股, 千金股]
-    search:
-      - {q: "chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)", lang: en}
-  - id: twf
-    label: 台指期
-    chips: [txf]
-    keywords: [台指期, 台股, 加權指數, 外資, 夜盤, 人工智慧, 輝達, 台積電, AI 伺服器, AI 概念股]
-    exclude: [ETF, 存股, 高股息, 定期定額, "0050", 必漲, 卡位, 黑馬, 飆股, 千金股]
-    search:
-      - {q: "台指期", lang: zh}
-      - {q: "台股 外資", lang: zh}
-  - id: election
-    label: 期中選舉
-    chips: [pm_house, pm_senate]
-    keywords: [midterm, midterms, Senate race, House majority, Senate control, House control, 期中選舉, 參議院, 眾議院]
-    search:
-      - {q: "midterm elections (site:reuters.com OR site:bloomberg.com)", lang: en}
-      - {q: "美國期中選舉", lang: zh}
+- id: fed
+  label: 聯準會
+  chips:
+  - fedwatch
+  - fw_dec
+  - fw_cum
+  - dgs3mo
+  - dgs2
+  keywords:
+  - Fed
+  - Federal Reserve
+  - FOMC
+  - Powell
+  - Warsh
+  - 聯準會
+  - 降息
+  - 升息
+  - rate cut
+  - rate cuts
+  - rate hike
+  search:
+  - q: Federal Reserve officials
+    lang: en
+  - q: Fed (site:reuters.com OR site:bloomberg.com)
+    lang: en
+- id: long
+  label: 長天期美債
+  chips:
+  - dgs5
+  - dgs10
+  - dgs30
+  - move
+  - live_dgs10
+  - live_dgs30
+  keywords:
+  - Treasury
+  - Treasuries
+  - 10-year
+  - 30-year
+  - 美債
+  - 美國公債
+  - 美債殖利率
+  - 公債標售
+  search:
+  - q: Treasury yields (site:reuters.com OR site:bloomberg.com)
+    lang: en
+  - q: Treasury auction
+    lang: en
+  require:
+  - Treasury
+  - Treasuries
+  - US bonds
+  - U.S. bonds
+  - 美債
+  - 美國公債
+  - 美國財政部
+- id: funding
+  label: 資金市場
+  chips:
+  - sofr
+  - sofr_iorb
+  - onrrp
+  - srf
+  keywords:
+  - repo market
+  - SOFR
+  - bank reserves
+  - reverse repo
+  - standing repo
+  - money market
+  - 回購市場
+  - 準備金
+  search:
+  - q: '"repo market" OR SOFR OR "bank reserves" Fed'
+    lang: en
+- id: oil
+  label: 油價
+  chips:
+  - wti
+  - brent
+  keywords:
+  - oil
+  - crude
+  - OPEC
+  - Brent
+  - WTI
+  - 油價
+  - 原油
+  - crude oil
+  - oil prices
+  - OPEC+
+  - Middle East war
+  - US-Iran conflict
+  - U.S.-Iran conflict
+  - Iran
+  - Israel
+  - Gaza
+  - Strait of Hormuz
+  - Red Sea
+  - 中東戰爭
+  - 中東衝突
+  - 美伊衝突
+  - 伊朗
+  - 以色列
+  - 加薩
+  - 荷姆茲海峽
+  - 霍爾木茲海峽
+  - 紅海
+  - 油輪
+  - 能源供應
+  - 航運中斷
+  - 制裁
+  search:
+  - q: oil prices (site:reuters.com OR site:bloomberg.com)
+    lang: en
+- id: equity
+  label: 美股
+  chips:
+  - dji
+  - vix
+  keywords:
+  - Dow
+  - S&P 500
+  - Nasdaq
+  - Wall Street
+  - stocks
+  - VIX
+  - 美股
+  - 道瓊
+  - 標普
+  - AI
+  - artificial intelligence
+  - Nvidia
+  - OpenAI
+  - AI capex
+  - data center
+  - data centers
+  - hyperscaler
+  - 人工智慧
+  - 輝達
+  - 資料中心
+  - AI 伺服器
+  require:
+  - Dow
+  - S&P 500
+  - S&P
+  - Nasdaq
+  - Wall Street
+  - US stocks
+  - U.S. stocks
+  - stocks
+  - stock market
+  - equities
+  - VIX
+  - 美股
+  - 道瓊
+  - 標普
+  - 那斯達克
+  - 華爾街
+  - 美國股市
+  exclude_add:
+  - 台股
+  - 日股
+  - 陸股
+  - 港股
+  - 歐股
+  - 韓股
+  - A股
+  - 日經
+  - 恆生
+  - Nikkei
+  - Hang Seng
+  - FTSE
+  - DAX
+  - European stocks
+  - Asian stocks
+  - China stocks
+  - Japan stocks
+  - oil stocks
+  - crude stocks
+  - G7 stocks
+  - stockpile
+  - World Bank
+  - 世界銀行
+  search:
+  - q: Wall Street stocks (site:reuters.com OR site:bloomberg.com)
+    lang: en
+- id: semi
+  label: AI 與半導體
+  chips:
+  - sox
+  keywords:
+  - chip
+  - chips
+  - chipmaker
+  - chipmakers
+  - semiconductor
+  - semiconductors
+  - Nvidia
+  - TSMC
+  - AI capex
+  - 半導體
+  - 晶片
+  - 輝達
+  - 台積電
+  - AI
+  - artificial intelligence
+  - OpenAI
+  - data center
+  - data centers
+  - hyperscaler
+  - 人工智慧
+  - 資料中心
+  - AI 伺服器
+  exclude:
+  - ETF
+  - 存股
+  - 高股息
+  - 股息
+  - 定期定額
+  - '0050'
+  - 台股
+  - 金控
+  - 必漲
+  - 卡位
+  - 黑馬
+  - 飆股
+  - 千金股
+  search:
+  - q: chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)
+    lang: en
+- id: twf
+  label: 台指期
+  chips:
+  - txf
+  keywords:
+  - 台指期
+  - 台股
+  - 加權指數
+  - 外資
+  - 夜盤
+  - 人工智慧
+  - 輝達
+  - 台積電
+  - AI 伺服器
+  - AI 概念股
+  - TAIEX
+  - Taiwan stocks
+  - Taiwan futures
+  - TXF
+  - NVIDIA
+  - TSMC
+  exclude:
+  - ETF
+  - 存股
+  - 高股息
+  - 定期定額
+  - '0050'
+  - 必漲
+  - 卡位
+  - 黑馬
+  - 飆股
+  - 千金股
+  - ETFs
+  - 指數型基金
+  - 指數股票型基金
+  - 配息
+  - 申購
+  - 股息
+  search:
+  - q: 台指期
+    lang: zh
+  - q: 台股 外資
+    lang: zh
+  require:
+  - 台指期
+  - 臺指期
+  - 台股
+  - 臺股
+  - 加權指數
+  - 台灣股市
+  - 臺灣股市
+  - TAIEX
+  - Taiwan stocks
+  - Taiwan futures
+  - TXF
+- id: election
+  label: 期中選舉
+  chips:
+  - pm_house
+  - pm_senate
+  keywords:
+  - midterm
+  - midterms
+  - Senate race
+  - House majority
+  - Senate control
+  - House control
+  - 期中選舉
+  - 參議院
+  - 眾議院
+  search:
+  - q: midterm elections (site:reuters.com OR site:bloomberg.com)
+    lang: en
+  - q: 美國期中選舉
+    lang: zh
+- id: gold
+  label: 黃金
+  chips:
+  - gold
+  keywords:
+  - gold
+  - bullion
+  - XAU/USD
+  - gold futures
+  - 黃金
+  - 金價
+  exclude:
+  - ETF
+  - ETFs
+  - 黃金ETF
+  - 珠寶促銷
+  - 飾金促銷
+  search:
+  - q: gold prices (site:reuters.com OR site:bloomberg.com)
+    lang: en
+- id: fx
+  label: 匯率
+  chips:
+  - dxy
+  - twd
+  keywords:
+  - USD/TWD
+  - USDTWD
+  - TWD
+  - Taiwan dollar
+  - New Taiwan dollar
+  - DXY
+  - dollar index
+  - US dollar
+  - U.S. dollar
+  - dollar
+  - 台幣
+  - 臺幣
+  - 新台幣
+  - 美元
+  - 美元指數
+  - 台灣央行
+  - 臺灣央行
+  - 外資匯入
+  - 外資匯出
+  require:
+  - USD/TWD
+  - USDTWD
+  - TWD
+  - Taiwan dollar
+  - New Taiwan dollar
+  - DXY
+  - dollar index
+  - US dollar
+  - U.S. dollar
+  - dollar
+  - 台幣
+  - 臺幣
+  - 新台幣
+  - 美元
+  - 美元指數
+  exclude:
+  - ETF
+  - ETFs
+  - 存股
+  - 高股息
+  - 定期定額
+  search:
+  - q: 台幣 美元 匯率
+    lang: zh
+  - q: Taiwan dollar currency Reuters
+    lang: en
+  - q: US dollar index (site:reuters.com OR site:bloomberg.com)
+    lang: en
 
 # ============================================================================
 # 美國期中選舉預測（Polymarket，首頁卡片＋眾院／參院兩顆指標）

@@ -391,7 +391,7 @@ def window_view(r: dict) -> dict:
                 "value": f"{_num(x['a'])} → {_num(x['b'])} bp",
                 "note": "變動 " + _sgn(x["d"])} for x in r["spreads"]]
     panels = [{"title": "利差怎麼變", "verdict": "長短利差擴大代表曲線變陡，縮小代表變平。",
-               "metrics": metrics, "note": "比較的是所選期間的起點與終點。"}]
+               "metrics": metrics, "note": "比較的是所選期間開始與結束日期的利差。"}]
     be, real, dy = D.get("be"), D.get("real"), T["y10"]["d"]
     aligned = None not in (be, real, dy) and abs(dy-be-real) <= 2
     if aligned and max(abs(dy), abs(be), abs(real)) < 0.5:

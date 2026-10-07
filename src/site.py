@@ -3885,7 +3885,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .cw-compact td.dn{color:var(--series-1)}
 .viz-root:not(#_) .cw-compact td.flat{color:var(--muted)}
 .viz-root:not(#_) .cw-text{margin-top:16px}
-.viz-root:not(#_) .cw-headline{padding:14px 16px;background:var(--surface-2);border-radius:12px;font-weight:700;line-height:1.6}
+.viz-root:not(#_) .cw-headline{padding:0;background:transparent;border-radius:0;font-weight:700;line-height:1.7;margin:20px 0 12px}
 .cw-panels{display:grid;gap:12px;margin-top:12px}
 @media(min-width:1000px){.cw-panels{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}}
 .cw-panel,.future-policy,.future-bonds{border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface-1)}
@@ -4019,6 +4019,58 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   .viz-root:not(#_) .flag,.viz-root:not(#_) .flag:first-of-type,.viz-root:not(#_) .flag:last-child{padding:15px 14px;margin-bottom:12px}
   .viz-root:not(#_) .flag .f-head{gap:8px}
   .viz-root:not(#_) .flag .f-tag{padding:3px 6px}}
+
+
+/* Curve explanations remain one compact row when folded on both platforms. */
+.viz-root:not(#_) .cw-panels{grid-template-columns:minmax(0,1fr);gap:10px}
+.viz-root:not(#_) details.cw-fold{padding:0;background:transparent;border:0;border-radius:0}
+.viz-root:not(#_) .cw-fold>summary{display:flex;align-items:flex-start;gap:12px;padding:18px 0;list-style:none;min-height:44px;text-indent:0}
+.cw-fold>summary::-webkit-details-marker{display:none}
+.viz-root:not(#_) .cw-fold>summary::before{content:none;display:none}
+.cw-fold-number{font-size:var(--fs-micro);color:var(--muted);padding-top:3px}
+.cw-fold-title{display:grid;gap:5px;min-width:0;flex:1}
+.cw-fold-title b{font-size:var(--fs-body);color:var(--text-primary)}
+.cw-fold-reading{font-size:var(--fs-small);line-height:1.65;color:var(--text-secondary)}
+.cw-fold>summary::after{content:"";width:7px;height:7px;border:solid var(--muted);border-width:0 1.6px 1.6px 0;transform:rotate(45deg);margin:5px 2px 0 8px;flex:none}
+.cw-fold[open]>summary::after{transform:rotate(-135deg);margin-top:9px}
+.cw-panel-content{padding:0 0 20px 30px}
+.cw-weekly{padding:0 0 24px 30px;margin-top:8px}
+.ww-heading{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.viz-root:not(#_) .ww-heading h3{font-size:var(--fs-body);margin:0}
+.ww-heading>span,.ww-legend,.ww-period{font-size:var(--fs-small);color:var(--muted)}
+.ww-controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.ww-controls button,.ww-apply{font:inherit;font-size:var(--fs-small);padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface-1);color:var(--text-primary);min-height:44px;cursor:pointer}
+.ww-controls button[aria-pressed="true"]{background:var(--series-1);color:var(--surface-1);border-color:var(--series-1)}
+.ww-custom{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.ww-custom[hidden]{display:none}
+.ww-custom label{display:grid;gap:5px;flex:1;min-width:125px;font-size:var(--fs-small);color:var(--text-secondary)}
+.ww-custom input{width:100%;min-width:0;box-sizing:border-box;font:inherit;padding:8px;border:1px solid var(--border);border-radius:6px;color:var(--text-primary);background:var(--surface-1);min-height:44px}
+.ww-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.ww-legend span{display:flex;align-items:center;gap:6px}
+.ww-legend i{display:inline-block;width:7px;height:7px;border-radius:2px}
+.ww-legend .up,.ww-mark.up{background:var(--series-2)}
+.ww-legend .dn,.ww-mark.dn{background:var(--series-1)}
+.ww-chart{display:grid;grid-template-columns:38px minmax(0,1fr);height:225px;margin:24px 0 38px}
+.ww-y{position:relative;margin-right:8px}
+.ww-y span{position:absolute;right:0;transform:translateY(-50%);font-size:var(--fs-micro);color:var(--muted);font-variant-numeric:tabular-nums}
+.ww-plot{display:grid;grid-template-columns:repeat(var(--ww-n),minmax(0,1fr));position:relative;border-top:1px solid var(--grid);border-bottom:1px solid var(--grid);touch-action:pan-y}
+.ww-grid{position:absolute;left:0;right:0;border-top:1px solid var(--grid);pointer-events:none}
+.ww-grid.zero{border-color:var(--baseline)}
+.ww-bar{position:relative;display:block;height:100%;width:100%;border:0;background:transparent;padding:0;font:inherit;color:var(--text-primary);cursor:pointer;min-width:0;touch-action:pan-y}
+.ww-mark{position:absolute;left:22%;width:56%;max-width:48px;border-radius:2px;opacity:.8}
+.ww-bar[aria-pressed="true"] .ww-mark{opacity:1;filter:brightness(.85)}
+.ww-value{position:absolute;left:50%;white-space:nowrap;translate:-50% 0;font-size:var(--fs-micro);font-variant-numeric:tabular-nums}
+.ww-date{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);white-space:nowrap;font-size:var(--fs-micro);color:var(--muted)}
+.ww-readout{background:transparent;padding:12px 0;border-radius:0;font-size:var(--fs-small);line-height:1.7}
+.ww-readout>span{color:var(--muted);font-size:var(--fs-micro)}
+.ww-readout>div{display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap}
+.viz-root:not(#_) .ww-note{font-size:var(--fs-micro);line-height:1.7;color:var(--muted);margin:10px 0 0}
+.ww-error{color:var(--series-2)}
+@media(max-width:759px){.cw-panel-content,.cw-weekly{padding-left:24px;padding-right:0}.viz-root:not(#_) .cw-fold>summary{padding:16px 0;gap:9px}.ww-custom input{font-size:16px}.ww-chart{height:205px}}
+.viz-root:not(#_) details.future-section{margin-top:18px;border-top:1px solid var(--grid);padding-top:8px}
+.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds{border:0;border-radius:0;background:transparent;padding:0 0 16px 30px}
+.viz-root:not(#_) .cw-fold>summary:focus-visible{outline:2px solid var(--brand-orange);outline-offset:3px}
+@media(max-width:759px){.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds{padding-left:24px}}
 
 """
 
@@ -4706,11 +4758,11 @@ def source_footer(rows, notes=(), *, head: str = "", cols=("資料", "來源", "
 
 def soon_page(title: str, active: str, what: str, when: str) -> str:
     body = f"""<div class="soonbox">
-  <h3>{esc(title)} — 建置中</h3>
+  <h3>{esc(title)} — 即將推出</h3>
   <p>{esc(what)}</p>
-  <p style="margin-top:14px;color:var(--muted)">預計階段：{esc(when)}</p>
+  <p style="margin-top:14px;color:var(--muted)">預計推出：{esc(when)}</p>
 </div>"""
-    return page(title, active, body, subtitle="尚未建置")
+    return page(title, active, body, subtitle="即將推出")
 
 
 def next_cpi_release(after: dt.date | None = None) -> dt.date:

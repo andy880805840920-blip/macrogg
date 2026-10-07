@@ -52,7 +52,7 @@ def spark(vals: list[float], w: int = 96, h: int = 26) -> str:
 def _chamber2(name: str, d: dict | None) -> str:
     if not d:
         return (f'<div class="el2-ch"><span class="el2-k">{name}</span>'
-                '<span class="el2-miss">本次擷取失敗</span></div>')
+                '<span class="el2-miss">資料暫缺</span></div>')
     dem, rep = d["dem"], d["rep"]
     is_dem = dem >= rep
     lead, lp, op = ("民主黨" if is_dem else "共和黨"), max(dem, rep), min(dem, rep)
@@ -305,7 +305,7 @@ def election_card(e: dict | None) -> str:
         kicker = (f"美國期中選舉 {md}・" + ("今天投票" if days == 0
                                             else f"還有 {days} 天"))
     asof = e.get("stale_from") or e.get("date") or ""
-    stale = (f"（本次擷取失敗，沿用 {esc(asof[5:])} 的數字）"
+    stale = (f"（最新資料暫缺，顯示 {esc(asof[5:])} 的資料）"
              if e.get("stale_from") else "")
     map_html, more_html = map_section(e)
     note = (f'<p class="el-note">價格＝下注者的看法，不是民調・資料日 {esc(asof[5:])}{stale}'

@@ -354,13 +354,11 @@ def offline_banner(real_modules: list | None = None) -> str:
     # 第一張卡推到摺線以下（rates 頁只露出 7px）。
     # 該講的重點（「這是示範數字，不可引用」）留在收合的那一行，
     # 細節與範圍在展開裡。
-    return ('<details class="banner"><summary><b>離線示範模式</b>　'
-            '數字為示範序列，不可引用</summary>'
+    return ('<details class="banner"><summary><b>示範資料</b>　'
+            '部分數字為示範值，不可引用</summary>'
             '<div class="banner-body">'
             '聯準會聲明與記者會逐字稿為 federalreserve.gov 的真實原文；'
-            f'{series_note}為程式生成的示範序列（統計特性接近真實，'
-            '但個別數值非實際發布值），不可用於研究引用。'
-            '正式執行（不加 --offline）一律使用即時資料。'
+            f'{series_note}為示範資料，並非實際公布數值，不可用於研究引用。'
             '</div></details>')
 
 
@@ -635,9 +633,9 @@ def _labor_body_full(d: dict) -> str:
             '「沒什麼事」與「大幅變動但互相抵消」，對政策的意涵完全不同。</div>')
     failed_html = ""
     if d.get("failed"):
-        items = "".join(f"<li>{esc(a)} — {esc(b)}</li>" for a, b in d["failed"])
+        items = "".join(f"<li>{esc((d.get("failed_labels") or {}).get(a, "部分就業指標"))}：資料暫缺</li>" for a, _ in d["failed"])
         failed_html = (f'<div class="card"><details class="plain"><summary>'
-                       f'本次有 {len(d["failed"])} 個資料序列抓取失敗</summary>'
+                       f'本次有 {len(d["failed"])} 項指標資料暫缺</summary>'
                        f'<ul style="font-size:13px;color:var(--text-secondary)">{items}</ul>'
                        f"</details></div>")
 
@@ -935,6 +933,6 @@ def labor_footer(d: dict) -> str:
          ("失業原因、長期失業", "BLS 家戶調查（經 FRED）", "每月"),
          ("歷史修正追蹤", esc(d.get("revision", {}).get("source_note", "BLS 歷次發布")), "每月")],
         ["數字為修正後的最新版本；修正追蹤保留每次發布時的原值。",
-         "所有判定由固定規則產生，每次執行結果一致。"],
+         "就業判讀依據失業率、裁員比例與就業修正，詳細條件見方法說明。"],
         head="<b>資料來源</b> BLS、DOL（經 FRED）")
 

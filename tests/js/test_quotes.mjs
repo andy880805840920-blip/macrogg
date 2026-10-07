@@ -58,5 +58,12 @@ const all = await collect(async (url, opt) => { requests.push(url); return yield
 check("④a 不抓 2 年期期貨、不回傳 dgs2", !requests.some(u => u.includes("2YY")) && !("dgs2" in all));
 check("④ collect 只回抓得到的", Object.keys(all).join() === "live_dgs10", Object.keys(all));
 check("④b 官方日利率完全不在盤中 API", ["dgs2", "dgs3mo", "dgs5", "dgs10", "dgs30"].every(k => !(k in SPECS) && !(k in all)));
+
+q = await yahoo("twd", SPECS.twd, fake({ "TWD=X": ch(res(32.015, [32.005, 32.015], 0)) }));
+check("⑤ 台幣保留三位小數與匯率口徑", q && q.k === "fx" && q.dp === 3 && q.u === " 元" && q.s === "Yahoo" && q.v === 32.015 && q.p === 32.005, q);
+q = await yahoo("gold", SPECS.gold, fake({ "GC=F": ch(res(4051.25, [4000, 4051.25], 0)) }));
+check("⑤b 黃金是期貨且保留小數", SPECS.gold.sym === "GC=F" && q && q.dp === 2 && q.u === " 美元／盎司" && q.v === 4051.25, q);
+q = await yahoo("dxy", SPECS.dxy, fake({ "DX-Y.NYB": ch(res(101.23, [101.01, 101.23], 0)) }));
+check("⑤c DXY 使用美元指數、保留兩位小數", q && q.dp === 2 && q.v === 101.23 && q.p === 101.01, q);
 console.log(ok ? "\n全部通過" : "\n有失敗");
 process.exit(ok ? 0 : 1);

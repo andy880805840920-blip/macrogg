@@ -805,7 +805,7 @@ def inflation_footer(d: dict) -> str:
          ("PCE、個人所得與支出", "經濟分析局 BEA（經 FRED）", "每月"),
          ("通膨預期", "克里夫蘭聯儲、亞特蘭大聯儲（經 FRED）", "每月"),
          ("油價", "EIA（經 FRED）", "每日")],
-        [f"CPI 權重版本：{esc(d.get('weights_vintage', '—'))}；BLS 每年一月更新權重，需同步校準。",
-         "所有判定由固定規則產生，每次執行結果一致。"],
+        [f"CPI 權重版本：{esc(d.get('weights_vintage', '—'))}；BLS 每年一月更新權重。",
+         "通膨判讀依據核心 PCE、服務物價與通膨預期，詳細條件見方法說明。"],
         head="<b>資料來源</b> BLS、BEA、克里夫蘭／亞特蘭大聯儲（經 FRED）")
 

@@ -31,8 +31,8 @@ def check(name, cond, detail=""):
 # ---------------------------------------------------------------- 主題對應
 specs = ft.topic_specs({})
 cmap = ft.chip_topic_map(specs)
-check("① 內建八個主題、每個指標都有歸屬",
-      len(specs) == 8 and cmap["wti"] == "oil" and cmap["txf"] == "twf"
+check("① 內建十個主題、每個指標都有歸屬",
+      len(specs) == 10 and cmap["wti"] == "oil" and cmap["txf"] == "twf"
       and cmap["pm_house"] == "election" and cmap["dgs2"] == "fed"
       and cmap["dgs10"] == "long", cmap)
 allt = [s["id"] for s in specs]
@@ -188,10 +188,11 @@ check("⑮ 預設指標 → 聯準會補充顯示（帶標籤）、長天期美�
 check("⑯ 主題連結：顯示中的主題才露出、來源列含該主題來源",
       'data-tlink="fed"' in h and 'fs-link fs-off" data-tlink="oil"' in h
       and "新聞：Reuters、CNBC" in h)
-check("⑰ JS：指標→主題對應、有內容的主題、先勾的排前面",
-      '"wti": "oil"' in h and 'var TA=["fed", "oil"]' in h
-      and "box.appendChild(ch)" in h and "fs-tagsel" in h and 'var REP={' in h
-      and '"oil": "wti"' in h)
+check("⑰ JS：指標帶主題對應、補充新聞可獨立選擇",
+      '\"wti\": \"oil\"' in h and '\"available\": [\"fed\", \"oil\"]' in h
+      and "box.appendChild(ch)" in h and "fs-tagsel" in h and "fsNewsTopics" in h
+      and "if(rp)pick" not in h)
+
 
 # ---------------------------------------------------------------- Polymarket
 def mk_market(name, p, vol=1000, d1=None, token="t"):

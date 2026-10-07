@@ -593,8 +593,8 @@ def _futures(d: dict, sc) -> tuple[str, str]:
     mk = d.get("market") or {}
     if not fc.get("points"):
         body = ('<div class="soonbox" style="margin-top:0;padding:22px 18px;box-shadow:none;'
-                'border-style:dashed"><h3>本次沒有取得期貨路徑</h3><p>聯邦基金期貨（ZQ）報價抓取失敗，'
-                '下次更新自動補上。</p></div>')
+                'border-style:dashed"><h3>本次沒有取得期貨路徑</h3><p>聯邦基金期貨（ZQ）資料暫缺，'
+                '取得新資料後更新。</p></div>')
         if mk:
             body += (f'<div class="sx-note">替代參考：2 年期殖利率 − 政策利率中值 '
                      f'{esc(mk.get("display", ""))}（{esc(mk.get("text", ""))}）</div>')
@@ -828,20 +828,18 @@ def _scenario_body_full(d: dict) -> str:
         （1995–2019 年歷史分布的 90／10 百分位附近，中心約 2.9%）才把通膨格位推一格——
         兩個月是為了不被單月雜訊帶著跑。</dd>
       <dt>為什麼不給機率</dt>
-      <dd>機率市場早就定價了，複述它沒有附加價值。有價值的是指出
-        「本站判讀偏寬鬆、但期貨定價偏緊縮」這類具體的分歧，以及明確的門檻
-        與目前的距離。</dd>
+      <dd>本頁對照經濟數據與市場利率定價，觀察兩者的分歧，以及改變當前判讀所需的條件。</dd>
       <dt>重心怎麼判定</dt>
       <dd>聲明裡的制式風險句（±2）、聲明對現況的描述（±1）、
         反對票的方向與張數（±1～2）、記者會裡的明確表態（±1）。
-        每一條加分項都有方向相反的對應項，全部是固定的片語比對，不用模型。</dd>
+        綜合以上資料，觀察聯準會目前更重視通膨還是就業。</dd>
       <dt>格子會怎麼移動</dt>
       <dd>通常一次移動一格，而且往往是通膨先動、就業後動。
         跳格多半發生在有外生衝擊時。上方「格位軌跡」可以看最近半年怎麼走。</dd>
       <dt>固定收益對照怎麼讀</dt>
       <dd>每一格情境對七個市場變數各有一個教科書式的預期方向。跟實際並排，
         「相反」的那幾列最值得看：通常代表有另一股力量（期限溢酬、信用事件、
-        發債潮）蓋過了政策方向。長端曲線那一列就是先前獨立的「長端」卡併進來的地方。</dd>
+        發債潮）蓋過了政策方向。長端曲線那一列可對照利率變化與政策方向是否一致。</dd>
       <dt>文本的角色</dt>
       <dd>聯準會的實際決議（升息、降息或維持，以及反對票主張的方向）用來校準，
         不是決定格子的位置。這裡不採用任何措辭分數——語氣會隨主席文風改變。</dd>
@@ -907,7 +905,7 @@ def scenario_body(d: dict) -> str:
                    "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else "neutral"),
         state_chip("政策傾向", lean, sc.name,
                    "hawkish" if sc.lean == "hawkish" else "dovish" if sc.lean == "dovish" else "neutral"),
-        state_chip("FOMC 反應體制", regime, "只改政策解讀，不改兩軸資料"),
+        state_chip("FOMC 反應體制", regime, "觀察聯準會更重視通膨還是就業"),
     ])
     nr = (d.get("next_releases") or [])
     nr_text = ("　·　".join(f'{_md(r["date"])} {r["label"]}' for r in nr[:2]) if nr else "—")
@@ -935,8 +933,8 @@ def scenario_footer(d: dict) -> str:
          ("通膨格位", "核心 PCE 年增；Supercore 三月年化連兩月越過門檻才推一格", "每月"),
          ("用哪一張九宮格", "聯準會重心：聲明制式句、反對票、記者會表態", "每次會議"),
          ("固定收益對照", "框架預期是教科書式映射；期貨路徑取自交易所報價", "每日")],
-        ["全部是確定性規則，不含模型生成內容。"],
+        ["情境依據就業、通膨與聯準會政策資料判讀，詳細條件見各區說明。"],
         cols=("項目", "依據", "更新"),
-        head="<b>規則</b> 全部為固定規則，不用模型",
+        head="<b>判讀依據</b> 就業、通膨與聯準會政策",
         disclaimer="本頁僅為分析框架，不構成投資建議。")
 

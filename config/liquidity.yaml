@@ -39,3 +39,8 @@ series:
   - id: VIXCLS
     label: VIX（FRED 後備）
     enabled: true
+
+  # 台幣即時匯率失敗時使用 FRED 備援，顯示實際資料日與来源。
+  - id: DEXTAUS
+    label: 台幣兌美元（FRED 備援）
+    enabled: true

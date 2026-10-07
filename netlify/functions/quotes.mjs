@@ -20,6 +20,9 @@ const TIMEOUT_MS = 4000;
 
 // chip id → 代號與規則。k：pct＝殖利率（%）、lvl＝一般價位、idx＝指數（整數＋漲跌幅）
 export const SPECS = {
+  gold: { sym: "GC=F", k: "lvl", lo: 300, hi: 15000, u: " 美元／盎司", dp: 2 },
+  dxy: { sym: "DX-Y.NYB", k: "lvl", lo: 40, hi: 180, u: "", dp: 2 },
+  twd: { sym: "TWD=X", k: "fx", lo: 15, hi: 60, u: " 元", dp: 3 },
   // Official daily chips are immutable here; intraday quotes have separate IDs.
   live_dgs10: { sym: "^TNX", k: "pct" },
   live_dgs30: { sym: "^TYX", k: "pct" },
@@ -82,6 +85,8 @@ export async function yahoo(id, spec, f = fetch) {
     }
     const out = { v, p, ts, d: utcDate(ts), k: spec.k };
     if (spec.u !== undefined) out.u = spec.u;
+    if (spec.dp !== undefined) out.dp = spec.dp;
+    if (["gold", "dxy", "twd"].includes(id)) out.s = "Yahoo";
     return out;
   } catch {
     return null;

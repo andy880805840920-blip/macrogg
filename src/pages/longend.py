@@ -223,16 +223,19 @@ def _cw_tenors(ten: list[dict], start: str, end: str) -> str:
     return "".join(out) + "</tbody></table>"
 
 
-def _cw_explain(r: dict) -> str:
+def _cw_explain(r: dict, weekly: str = "") -> str:
     view = le.window_view(r)
     out = [f'<p class="cw-headline">{esc(view["headline"])}</p><div class="cw-panels">']
     for i, panel in enumerate(view["panels"], 1):
-        out.append(f'<section class="cw-panel"><h3>{i}. {esc(panel["title"])}</h3>'
-                   f'<p>{esc(panel["verdict"])}</p><dl class="cw-metrics">')
+        out.append(f'<details class="cw-panel cw-fold" data-panel="{i}"><summary>'
+                   f'<span class="cw-fold-number">{i:02d}</span><span class="cw-fold-title">'
+                   f'<b>{esc(panel["title"])}</b><span class="cw-fold-reading">{esc(panel["verdict"])}</span>'
+                   f'</span></summary><div class="cw-panel-content"><dl class="cw-metrics">')
         for m in panel["metrics"]:
             out.append(f'<div><dt>{esc(m["label"])}</dt><dd><b>{esc(m["value"])}</b>'
                        f'<small>{esc(m["note"])}</small></dd></div>')
-        out.append(f'</dl><small class="cw-panel-note">{esc(panel["note"])}</small></section>')
+        out.append(f'</dl><small class="cw-panel-note">{esc(panel["note"])}</small></div>'
+                   + (weekly if i == 1 else "") + '</details>')
     return "".join(out) + "</div>"
 
 
@@ -284,7 +287,7 @@ function view(r){
  var T={},S={};r.tenors.forEach(function(t){T[t.k]=t;});r.spreads.forEach(function(s){S[s.key]=s;});var D=r.drivers,x=S['10-2'];
  var headline=!x?'資料不足，暫不判定曲線方向。':Math.abs(x.d)<2?'曲線大致持平：10 年與 2 年的利差變動很小。':x.d>0?'曲線變陡：10 年與 2 年的利差擴大。':'曲線變平：10 年與 2 年的利差縮小。';
  var metrics=r.spreads.map(function(x){return{label:x.key.replace('-',' 年 − ')+' 年',value:num(x.a)+' → '+num(x.b)+' bp',note:'變動 '+sgn(x.d)};});
- var panels=[{title:'利差怎麼變',verdict:'長短利差擴大代表曲線變陡，縮小代表變平。',metrics:metrics,note:'比較的是所選期間的起點與終點。'}];
+ var panels=[{title:'利差怎麼變',verdict:'長短利差擴大代表曲線變陡，縮小代表變平。',metrics:metrics,note:'比較的是所選期間開始與結束日期的利差。'}];
  var be=D.be,real=D.real,dy=T.y10.d,has=be!==null&&real!==null&&dy!==null,aligned=has&&Math.abs(dy-be-real)<=2;
  var verdict=aligned&&Math.max(Math.abs(dy),Math.abs(be),Math.abs(real))<0.5?'10 年期與拆解指標大致持平。':aligned&&Math.abs(dy)<0.5?'通膨補償與實質利率的變動大致抵銷，10 年期接近持平。':aligned?'10 年期主要由'+(Math.abs(be)>Math.abs(real)?'通膨補償':'實質利率')+'變動帶動。':!has?'所選日期的拆解資料不足，暫不判定主要原因。':'參考指標與 10 年期變動尚未吻合，暫不判定主要原因。';
  function metric(label,v,u){return{label:label,value:v===null?'—':sgn(v,u===undefined?'bp':u),note:'所選期間變動'};}
@@ -311,14 +314,18 @@ function tenors(ten,a,b){function date(s){return parseInt(s.slice(5,7),10)+'/'+p
  return '<table class="cw-compact" aria-label="所選期間利率變化"><thead><tr><th scope="col">天期</th><th scope="col">'+date(a)+'</th><th scope="col">'+date(b)+'</th><th scope="col">變動</th></tr></thead><tbody>'+ten.map(function(t){var c=t.d>0?'up':t.d<0?'dn':'flat';function pct(v){return v===null?'—':num(v,2)+'%';}
  return '<tr><th scope="row">'+safe(t.zh)+'期</th><td>'+pct(t.a)+'</td><td>'+pct(t.b)+'</td><td class="'+c+'">'+(t.d===null?'—':sgn(t.d))+'</td></tr>';}).join('')+'</tbody></table>';}
 
-function explain(r){var v=C.view(r);return '<p class="cw-headline">'+safe(v.headline)+'</p><div class="cw-panels">'+v.panels.map(function(p,i){return '<section class="cw-panel"><h3>'+(i+1)+'. '+safe(p.title)+'</h3><p>'+safe(p.verdict)+'</p><dl class="cw-metrics">'+p.metrics.map(function(m){return '<div><dt>'+safe(m.label)+'</dt><dd><b>'+safe(m.value)+'</b><small>'+safe(m.note)+'</small></dd></div>';}).join('')+'</dl><small class="cw-panel-note">'+safe(p.note)+'</small></section>';}).join('')+'</div>';}
+function explain(r){var v=C.view(r);root.querySelector('.cw-headline').textContent=v.headline;
+ v.panels.forEach(function(p,i){var panel=root.querySelector('[data-panel="'+(i+1)+'"]');if(!panel)return;
+ panel.querySelector('.cw-fold-reading').textContent=p.verdict;
+ panel.querySelector('.cw-panel-content').innerHTML='<dl class="cw-metrics">'+p.metrics.map(function(m){return '<div><dt>'+safe(m.label)+'</dt><dd><b>'+safe(m.value)+'</b><small>'+safe(m.note)+'</small></dd></div>';}).join('')+'</dl><small class="cw-panel-note">'+safe(p.note)+'</small>';});}
+
 function spreads(sp){return sp.map(function(x){return '<div class="cw-sr"><span class="cw-sk">'+x.key+'</span><span class="cw-sab">'+num(x.a)+' → '+num(x.b)+'</span>'
  +'<span class="cw-sd">'+sgn(x.d,'')+'</span><span class="le3-rg '+(RG[x.code]||'fl')+'">'+x.zh+(x.lead?'<small>'+x.lead+'</small>':'')+'</span></div>';}).join('');}
 function mk(s){return parseInt(s.slice(0,4),10)*12+parseInt(s.slice(5,7),10)-1+(parseInt(s.slice(8,10),10)-1)/31;}
 function bands(a,b){root.querySelectorAll('.cl-plot[data-x0]').forEach(function(p){var x0=+p.dataset.x0,x1=+p.dataset.x1,r=(x1-x0)||1;
  var l=Math.max(0,(mk(a)-x0)/r*100),R=Math.min(100,(mk(b)-x0)/r*100);var e=p.querySelector('.cl-band');
  if(!e){e=document.createElement('span');e.className='cl-band';p.insertBefore(e,p.firstChild);}e.style.left=l+'%';e.style.width=Math.max(0.6,R-l)+'%';});}
-function show(r){root.querySelector('.cw-text').innerHTML=explain(r);
+function show(r){explain(r);
  root.querySelector('.cw-db').innerHTML=tenors(r.tenors,r.start,r.end);root.querySelector('.cw-st').innerHTML=spreads(r.spreads);
  root.querySelector('.cw-when').textContent='實際使用 '+r.start.replace(/-/g,'/')+' → '+r.end.replace(/-/g,'/')+' 的官方日殖利率（遇假日取前一個交易日）';bands(r.start,r.end);}
 var last=CD.d[CD.d.length-1],fa=root.querySelector('.cw-from'),fb=root.querySelector('.cw-to'),cu=root.querySelector('.cw-cust');
@@ -341,6 +348,8 @@ def curve(d: dict) -> str:
     year = L.get("cw_year") or int(cd["d"][-1][:4])
     last = cd["d"][-1]
     r0 = le.window_analysis(cd, le.cw_start(cd, "1w", last, year), last)
+    from .curve_weekly import weekly_chart
+    weekly = weekly_chart(cd)
     rows = L.get("spreads") or []
     fwd = L.get("forwards") or []
     rf = L.get("refunding") or {}
@@ -383,7 +392,7 @@ def curve(d: dict) -> str:
       <div class="cw-cust" hidden><label>從 <input type="date" class="cw-from" min="{first}" max="{last}"></label>
         <label>到 <input type="date" class="cw-to" min="{first}" max="{last}"></label></div>
       <div class="cw-blk"><div class="cw-h">所選期間利率變化</div><div class="cw-db">{_cw_tenors(r0["tenors"], r0["start"], r0["end"])}</div></div>
-      <div class="cw-text">{_cw_explain(r0)}</div>
+      <div class="cw-text">{_cw_explain(r0, weekly)}</div>
       <details class="f-more"><summary>利差型態補充</summary><div class="cw-st">{_cw_spreads(r0["spreads"])}</div></details>
       <div class="tabs cw-tabs">
         <input type="radio" name="cw-tab" id="cw-t1" checked><label for="cw-t1">殖利率</label>
@@ -396,7 +405,7 @@ def curve(d: dict) -> str:
       <script>{_CW_JS}</script>
     </div>
     <details class="f-more"><summary>曲線形狀：現在、1 週前、1 個月前、年初</summary>{L.get('curve_chart', '')}</details>
-    <details class="f-more future-section" open><summary>市場怎麼看未來利率</summary>
+    <details class="f-more future-section cw-fold"><summary><span class="cw-fold-number">04</span><span class="cw-fold-title"><b>市場怎麼看未來利率</b><span class="cw-fold-reading">{esc(policy["text"] if policy else future["headline"])}</span></span></summary>
       {match_html}
       <section class="future-bonds"><h3>公債遠期定價方向</h3>
         <p class="future-headline">{esc(future["headline"])}</p><p>{esc(future["recent"])}</p>
@@ -408,9 +417,9 @@ def curve(d: dict) -> str:
       <div class="f-detail le3-how">
         <p><b>型態</b>：利差擴大＝變陡、收窄＝變平；看兩端誰動得多決定由哪一端帶動，殖利率上升為熊、下降為牛；兩端反向為扭轉。利差變動 2bp 以內視為持平。</p>
         <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；期限溢酬（Kim-Wright，約晚一週公布）跟實質利率有重疊，當旁證看。</p>
-        <p><b>市場定價的未來</b>：用目前的公債殖利率算遠期利率，是市場「已經定價」的路徑，含期限溢酬，不是預測；殖利率為平價收益率，計算為近似值；3 年期比較基準由 2 年與 5 年期內插。各區間使用同日資料，超過 7 日仍無共同資料則不判讀。遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
-        <p><b>資料口徑</b>：首頁主要公債利率、歷史曲線與利差使用美國財政部官方日殖利率，FRED 為備援；各天期對齊共同資料日。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。實質利率、損益兩平及期限溢酬仍由 FRED 提供；當日拆解資料未齊時暫不判讀。Yahoo 盤中另列，不寫入歷史資料；日期為美國資料日。</p>
-        <p><b>自選期間</b>：2026 年起；遇假日取前一個有效資料日。判讀文字由固定規則產生，不是 AI。</p>
+        <p><b>市場定價的未來</b>：用目前的公債殖利率算遠期利率，是市場「已經定價」的路徑，含期限溢酬，不是預測；殖利率為平價收益率，計算為近似值；3 年期比較基準由 2 年與 5 年期內插。各區間使用同日資料，超過 7 日仍找不到各天期同日資料時，暫不判讀。遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
+        <p><b>資料口徑</b>：首頁主要公債利率、歷史曲線與利差使用美國財政部官方日殖利率，部分資料由 FRED 提供；各天期比較採同一天資料。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。實質利率、損益兩平及期限溢酬仍由 FRED 提供；當日拆解資料未齊時暫不判讀。盤中報價另列；歷史圖使用官方每日資料，日期以美國資料日為準。</p>
+        <p><b>自選期間</b>：可查看 2026 年起的資料；遇假日採前一個有資料的日期。</p>
       </div>
     </details>"""
 

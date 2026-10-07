@@ -660,11 +660,11 @@ RS = {"DGS3MO": [{"date": "2026-08-24", "value": 3.71},
 
 cat = ft.build_catalog(RS, LIQ, [], offline=True)
 _ids = [c["id"] for c in cat]
-check("⑮ 目錄 21 顆、順序固定（升降息三顆＋道瓊／費半／台指期）",
+check("⑮ 目錄 24 顆、順序固定（升降息三顆＋道瓊／費半／台指期）",
       _ids == ["dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "live_dgs10", "live_dgs30",
                "fedwatch", "fw_dec", "fw_cum",
                "sofr", "sofr_iorb", "onrrp", "srf",
-               "wti", "brent", "vix", "move", "dji", "sox", "txf"], _ids)
+               "wti", "brent", "vix", "move", "dji", "sox", "gold", "dxy", "twd", "txf"], _ids)
 _by = {c["id"]: c for c in cat}
 check("⑮b 預設組＝2Y＋10Y＋30Y＋機率（固定四格湊滿）",
       [c["id"] for c in cat if c.get("on")]
@@ -709,15 +709,15 @@ import re as _re
 _vis = _re.findall(r'<div class="fs-chip" data-chip="([^"]+)"', _hs)
 check("⑯ 預設顯示四顆（2Y／10Y／30Y／機率）",
       _vis == ["dgs2", "dgs10", "dgs30", "fedwatch"], _vis)
-check("⑯b 其餘 17 顆帶 .fs-off 隱藏但都在 HTML",
-      _hs.count("fs-off") >= 17
-      and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 21)
-check("⑯c 就地選擇：選擇指標鈕、編輯列（恢復預設／完成）、選單含 21 個指標",
+check("⑯b 其餘 20 顆帶 .fs-off 隱藏但都在 HTML",
+      _hs.count("fs-off") >= 20
+      and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 24)
+check("⑯c 就地選擇：選擇指標鈕、編輯列（恢復預設／完成）、選單含 24 個指標",
       'class="fs-edit-btn"' in _hs and 'class="fs-editbar"' in _hs
       and "恢復預設" in _hs and "完成" in _hs and "點任一行更換指標" in _hs
-      and _hs.count("<option value=") >= 21 and "fs-pick" not in _hs)
+      and _hs.count("<option value=") >= 24 and "fs-pick" not in _hs)
 check("⑯d 內嵌 JS 帶預設組、上限與 localStorage 鍵",
-      'var D=["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
+      '"defaults": ["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
       and "var M=4" in _hs and "localStorage" in _hs)
 _hs2 = _home._focus_strip({"yields": [
     {"label": "10 年期", "value": 4.66, "delta_bp": -4, "date": "2026-08-26"}],
