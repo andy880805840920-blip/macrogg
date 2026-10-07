@@ -1,21 +1,21 @@
 {
- "hash": "750818e2daca2d08",
- "text": "聯準會會議紀錄將披露升息決策與政策路徑，市場對升息預期正在鬆動。油價上漲與殖利率下跌同步出現，反映投資人對進一步升息的押注減少，黃金價格因此保持穩定。聯準會官員沃許因專注物價穩定獲國際貨幣基金組織肯定，凸顯央行在政策溝通上的重點。\n美國公債殖利率上升衝擊亞洲債券發行，企業融資成本攀升，特別是人工智慧相關募資活動遠落後美國。",
+ "hash": "840005f36bf940e3",
+ "text": "美國10年期公債殖利率升至2002年以來最高水準，推動股市回檔。路透民調顯示，儘管殖利率在第三季創1994年以來最大季度漲幅，市場對未來殖利率走勢的預期仍偏向下行，反映投資人對聯準會未來降息的期待。PIMCO資深顧問認為美債目前「價值極具吸引力」，暗示高殖利率已提供買進機會。\n路透報導稱美國能源資訊署再度上調油價預測，理由是伊朗戰爭導致全球石油庫存下降。國際貨幣基金組織總裁Georgieva表示，AI投資帶來的正面需求衝擊與中東戰爭造成的負面能源供應衝擊同時發生，全球經濟增長受到高度不均勻的影響。",
  "links": [
   {
-   "title": "Fed minutes could detail rate-hike decision, policy path",
-   "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPaFdleVVLSGdCQUlSODJ0bVFmdlh3cl9WZFFrUG5oUHhxdGNTMUlKUW1QaDBfVXAwd2FLaE0yYk9nb1lNcGY2Z0twTXNweEtEV203X09TTUR3ai1fellVelpWUHlEWWRUYW9oVTByX0ttLXl5b1I0ZjRyQm9ZVFBldFVLR0Z3UVRScGI2b2NuVC1pblU3dzJtd1JnNHY0M1Y0SlE?oc=5",
+   "title": "How US mortgage bonds can trigger a ‘vicious loop’ for Treasury yields",
+   "link": "https://www.ft.com/content/a04ef3b4-2fcf-48f9-ab34-2c40c39d9a0c",
+   "source": "Financial Times"
+  },
+  {
+   "title": "Surging Yields Hit Asian Bond Sales as AI Fundraising Trails US",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPUzRtcndDQnd0cHJVb1FlUmRkOWpIQlZkZE9ORmJ5MG1VdzBsNUR5ZFlZUDBnU0t4T3pwUnNPMFVzNXA3UHN3MDRXYlV6bDBySTd1OURVV0VWSlFuNEVUVm1zcm40Ny1Za0QzNzNWVXZWSC15a0l2d3U0c0NXWEpIUGp3Rlo3QmpudXNZUzVlRXFIZ3g5M0pQZUhhOXFFdjM4TWJrR0sta1lGUnNVb0JQdzN6R3g?oc=5",
+   "source": "Bloomberg"
+  },
+  {
+   "title": "US Treasury yields are \"screaming good value\" says PIMCO senior advisor",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWmVRdHA4bVRsVmVyUThxTVdUb3AzNklqYnNDS2JvVVVEa2hnbk1qaHVWcHBnN1Bya2piTTM3eEkxRWxrZVE4WDRidzAyZGFocEFVYjN6RENUWm9rbFBKQ1hQRlM5Qi12eTFKV2dxNF80MHF1Xy12NkR6SG9kcllSR2JlalFQZXdPYUtOeXhfMHlwdGdZbEZXTk96ZzhPS3MtUjFfRkNXNzFiWkJzTFNLTVJVQk8?oc=5",
    "source": "Reuters"
-  },
-  {
-   "title": "Fed’s Warsh Earns IMF Praise for Focusing on Price Stability",
-   "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPLXVVbWc0eUVHdXQ4RF94QUUzY3hrTnVJM2wxd2o1Y29Rd3g1UExqWlNXSlJNTDRCMUgzUjNJYWFRb3RLX3JFV0gxWFlzZEoyV010eW16bDA3dWdMSU9ybkgyS2NnVzJPSlo3T3R4aGJkQWc2SlpaWDZCclFCQ3oydzRtNVJvSW02Uk5hNkpaYTlpeUc1U0JCTU96SDlJbXlRTzE3SEpJLU1YRlM0QWp3Xw?oc=5",
-   "source": "Bloomberg"
-  },
-  {
-   "title": "Gold Steady as More Oil and Falling Yields Ease Rate-Hike Bets",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPdGpoVjItaDZJaTZmNzBfekFfXzEyeUdQY2NRaWJwSUEtVDU1dmRlZHE2TjE0RWRWdnlWbWctX1FOdGI5OVBLWmtGTTVTRkRDYkt4WnBsN0k4Y3JucGJobnN3blo3N25HeXJQdlY0TW1Bb0hhbFBlV0xZWVlkX0hRRFQzdGxLbkZ2YkFYNHBadUQzeTU4SHpKakhoWVpTTEc0TW5jaE5NUDFCZ2pHd2NyQU1ZUQ?oc=5",
-   "source": "Bloomberg"
   }
  ],
  "fedwatch": {
@@ -136,25 +136,25 @@
    }
   }
  },
- "text_source": "model",
- "at": "2026-10-07T15:33:28.692021+00:00",
+ "text_source": "model-content",
+ "at": "2026-10-07T15:48:43.472569+00:00",
  "layout": "main",
  "topics": {
-  "hash": "076a12722b5c6a8c",
+  "hash": "c4bee0615ecb15a0",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "紐約聯準會9月消費者預期調查顯示，未來12個月通膨中位數預期升至3.9%，為近3年半最高，較8月上升0.3個百分點；同時家戶支出成長預期也升至5.5%，創2023年5月以來新高，反映通膨擔憂加劇。",
+    "text": "紐約聯準會9月消費預期調查顯示，未來12個月通膨中位數預期升至3.9%，為2023年5月以來最高，較8月上升0.3個百分點，反映通膨疑慮升溫，但長期預期仍相對穩定。",
     "links": [
+     {
+      "title": "Fed’s Warsh Earns IMF Praise for Focusing on Price Stability",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPLXVVbWc0eUVHdXQ4RF94QUUzY3hrTnVJM2wxd2o1Y29Rd3g1UExqWlNXSlJNTDRCMUgzUjNJYWFRb3RLX3JFV0gxWFlzZEoyV010eW16bDA3dWdMSU9ybkgyS2NnVzJPSlo3T3R4aGJkQWc2SlpaWDZCclFCQ3oydzRtNVJvSW02Uk5hNkpaYTlpeUc1U0JCTU96SDlJbXlRTzE3SEpJLU1YRlM0QWp3Xw?oc=5",
+      "source": "Bloomberg"
+     },
      {
       "title": "Fed minutes could detail rate-hike decision, policy path",
       "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPaFdleVVLSGdCQUlSODJ0bVFmdlh3cl9WZFFrUG5oUHhxdGNTMUlKUW1QaDBfVXAwd2FLaE0yYk9nb1lNcGY2Z0twTXNweEtEV203X09TTUR3ai1fellVelpWUHlEWWRUYW9oVTByX0ttLXl5b1I0ZjRyQm9ZVFBldFVLR0Z3UVRScGI2b2NuVC1pblU3dzJtd1JnNHY0M1Y0SlE?oc=5",
-      "source": "Reuters"
-     },
-     {
-      "title": "Hawkish Fed triggers emerging market outflows in September",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOZ0J5MWhUZURxcWw2ZzNtU3VWZlgyeF9lVjc1MHFlbDBmcm5LQmlnMm4wOTNaOHhabmJZSkxMdDRQT3F5X1B4NWk0YTNERFlRMFFIM2dybVpNdFJfQ0t3WGNpbzctaGtsM1NQTWNXcUxrdU5ndmI3aWNjNkMwNVlCMjBlMXVUXzl3YkJHRGZMRDhmVnlQY1RiajNOSnZwSGhicmxJOHU3RURkNV91?oc=5",
       "source": "Reuters"
      }
     ]
@@ -162,55 +162,38 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國10年期公債殖利率升至2002年以來最高水準，30年期公債殖利率也創24年新高，法國、義大利及英國公債同步承壓，全球債市賣壓加重。",
+    "text": "10年期美債殖利率升破5.30%，創24年高點，美國財政部將標售390億美元10年期公債，市場關注標售需求能否反映當前殖利率對投資人的吸引力，若需求不佳恐推升風險溢價要求。",
     "links": [
      {
-      "title": "Global bond sell-off resumes as 30-year Treasury yield hits highest since 2002",
-      "link": "https://www.ft.com/content/33c67aa0-bfdb-457b-84bb-960b4fed94b6?syn-25a6b1a6=1",
-      "source": "Financial Times"
+      "title": "Lower US Treasury yield view persists despite biggest quarterly surge since 1994: Reuters poll",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNaGNfYWZBTXVWQjV6WUFib3lJV2RJZlZYVVJNalI0TlpKVmFvVklyd1lrNVpLdWQ2d21ncGY4NGVjZzdGc0ZfQ1FpY1BaazFIYUVHaFREdENXVFI4U3pBVGxubXJoUzhoU2JqUlR4RTN6dklyWXF5aXEteWdWOTQ4bmJSRS1LcUVpZ19sZ3VoNGpVMDNVTzBmdXVVX29SVC1CcFZSVHBDUkhub1JPdVFKRGpnZ2ZTNXVHaDFYX0RQRXp1N1U?oc=5",
+      "source": "Reuters"
      },
      {
-      "title": "10-year Treasury note yield hits highest level since 2002 as traders brace for key bond sale",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBydl83WVU4amtHYUl5MkVjQnJXZmdwN1dQZnNOYTNVeFBsRDJBMGcyd3hLaHd1N0JpN0lRTGl5NkhqR2N6S3ZFSlBVdzlwZ2pxYkVWMDNhUnFXbXNoaDV5SGJfUzA3LUNZLWxfMExUUzVMVFBORjBZWHJUZDM3UdIBgwFBVV95cUxNbGdtZkRaZURkVnlOMlgwY24wQ3JTeXUwQlNyQzRhdTZ1NXZWbHRlOXlqY2lvTG9GeG1fQnZSYXVkeEQwcUdDSzhSVlhjdjZES1FQWDY0dHN1Q0dwYVBnZzVqTE83bEE2VlVpMmRIOWpXRHIyLTF2RDRqMnQ4enZLdmdscw?oc=5",
-      "source": "CNBC"
+      "title": "Bessent Pressed by Warren on ‘Chaotic’ US Treasuries Buybacks",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNenBMNV9kcks0OUhlX3dHR2dodkRfQkFHeXlwQ3piU29RaHc0Z1Bta2VTb190T0JBY0RRazE4TVhhNlViZm1DQmpWVnBSNUppcGY1c2ZONVRROW1LMUVVQ21td2xFdzBJeUlWWTJjZDdxbjdKdnBuZUVkMzZvLTlsNGtOVW9sdWZDVVVXX2VKMTc3RnY3X1JxdVBCVDNBR2dMS0hwd2o3aEZFYmtBRDM0?oc=5",
+      "source": "Bloomberg"
      }
     ]
    },
    {
-    "id": "oil",
-    "label": "油價",
-    "text": "布蘭特原油價格突破每桶101美元，伊朗加強攻擊荷姆茲海峽船隻推升油價，與美債殖利率同步上升加深市場對通膨與升息的疑慮。",
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣周三兌美元貶值1.4分至31.795元，美債殖利率與美元雙雙回升，推動新台幣走貶。",
     "links": [
      {
-      "title": "Nasdaq, S&P 500 slip from record highs as yields and oil rebound",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
+      "title": "Iraq devalues dinar to 1,520 per US dollar, state news agency says",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPMEpwOEJxamRUYWRiRS1XT1lsUDlTcWx6WnhhblZWODZ1b1NpN1ZRTWJXMjZjbVR1SnplZEMwYmYyNXpQOGRnanRaenFiNUVBdVY2bmZxUURyb1RUdktXUGpLaVdGUThRLUY1Z1BEMXItUEZoVUlWbE04Vy11ZjlpajJsZ3l2QVd3N2NIREJwZWFFZ0RJbThweG8zZjJGeDdtbThuUEJacHVFRnh3QWFNd3hrLXA4QQ?oc=5",
       "source": "Reuters"
      },
      {
-      "title": "Banks lead FTSE 100 lower as gilt yields, oil prices climb",
-      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQQkw0Nm9BQmtob3l3a3h6Vm0zRVl6dDhqbzVDWmttaUlfaEUwWDZURC1oNkx2bGZUdVJWNjl0Xzh2T0lVMlVUYVVSMUEwckgyakNPYzdQdlJDU2NJMlU5YnM0amRoVDlDSGhVN2FVWUV6bHNOYzZCcTZYcFp0cDRKZmROT2NGZjVUX2gxYWtuSmUyS2g2SUZiNVMtWktWNnluLVhzblFCazJadw?oc=5",
-      "source": "Reuters"
-     }
-    ]
-   },
-   {
-    "id": "equity",
-    "label": "美股",
-    "text": "標普500指數創新高至7844.52點，超越8月紀錄，儘管油價與公債殖利率上升，但企業獲利強勁支撐股市韌性；Potomac基金管理公司策略師指出，相比其他地區，美股仍是最佳投資地點。",
-    "links": [
-     {
-      "title": "Nasdaq, S&P 500 slip from record highs as yields and oil rebound",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
-      "source": "Reuters"
-     },
-     {
-      "title": "S&P 500, Nasdaq reach record closing highs as focus pivots to earnings",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPZ0p5VWxQQ0ZmUUI0Vk5wRUVjTUJhZjZGUlZjU2tWU1AtOEdqYjZ0OFRtRXNrUVdrTFlNZjVWdzluRjUyaWhHTlYxMG5Yc21pMHFubTdiX1RIRTRUSnB4UTZPckRMZTlzTHBEbkZKU1ROMTZpWE9lMXhPQkhyQmhBV3JNdkFrQVk?oc=5",
-      "source": "Reuters"
+      "title": "國內匯市：美債殖利率與美元雙雙回升，新台幣週三小貶1.4分，以31.795元作收",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQbVlYb2dtNHpVLWtRenc2Nk5MZXZpTWxGRWgwMUtlbFpra0Vpa2NKOU9SOERCVDJNVzRtSmpuZk9HdWpVeG5XSzJ1MTZVaUJQbG13TjB1dEFvTlVoa1EyUXBnUnhsTFBtTjYwRkF0MWxtcDRRMld5aF9kX3RqRUlXdVBSeFlfY243?oc=5",
+      "source": "富聯網"
      }
     ]
    }
   ],
-  "at": "2026-10-07T15:33:36.878034+00:00"
+  "at": "2026-10-07T15:48:54.759730+00:00"
  }
 }
