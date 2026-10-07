@@ -3268,9 +3268,8 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     return {
         "release_name": (cfg.get("meta") or {}).get("release_name", "Rates"),
         "as_of": as_of,
-        # 最後一列是 Yahoo 即時報價（非 FRED 收盤）時為 True——
-        # 頁面上要標「盤中報價」，不能讓讀者以為是官方收盤。
-        "as_of_live": bool(_last10.get("live")),
+        "as_of_live": False,
+        "yield_source": {"Treasury": "財政部", "FRED": "FRED", "Snapshot": "官方快照"}.get(_last10.get("source") or "FRED", "官方"),
         "generated_at": clock.stamp(),
         # 給變化引擎的市場價格原始值（週輪替的比較單位）
         "market_raw": {

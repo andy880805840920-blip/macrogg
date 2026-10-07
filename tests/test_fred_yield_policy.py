@@ -1,4 +1,4 @@
-"""首頁 2Y 固定使用 FRED；盤中報價與歷史資料保持獨立。"""
+"""首頁主要利率使用官方日資料；FRED 備援與盤中指標保持獨立。"""
 import copy
 import pathlib
 import sys
@@ -27,11 +27,13 @@ assert chips["dgs2"]["delta"] == "+1 bp"
 assert chips["dgs2"]["iso"] == "2026-10-05"
 assert not any("2YY" in u for u in requested)
 assert RS == original, "首頁報價不得改寫 FRED 歷史資料"
-assert chips["dgs10"]["value"] == "5.27%", "其他首頁盤中報價仍可使用"
+assert chips["dgs10"]["value"] == "—", "缺官方資料不得以盤中冒充"
+assert chips["live_dgs10"]["value"] == "5.27%", "盤中報價使用獨立指標"
+assert not chips["live_dgs10"]["on"], "盤中指標由使用者選擇"
 html = home._focus_strip({"chips": catalog, "text": "", "fedwatch": None})
 assert "FRED 10/05" in html
 assert 'data-chip="dgs2" data-d="2026-10-05"' in html
 
 empty = {c["id"]: c for c in ft.build_catalog({}, {}, fresh, offline=True)}
 assert empty["dgs2"]["value"] == "—", "缺 FRED 時不得用期貨冒充"
-print("通過：2Y 使用 FRED 最新日期與數值、日變動、缺資料處理、來源標示，其他盤中報價獨立且歷史資料未修改。")
+print("通過：2Y 使用 FRED 最新日期與數值、日變動、缺資料處理、來源標示，盤中報價使用獨立指標且歷史資料未修改。")

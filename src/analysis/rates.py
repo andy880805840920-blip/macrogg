@@ -60,8 +60,9 @@ def curve_state(s: dict[str, list[dict]]) -> CurveState:
 
     # ---- 名目 10Y = 實質 + 通膨補償（期限溢酬含在其中）----
     nom = c.levels.get("10Y")
-    real = value_at(s.get("DFII10") or [])
-    be = value_at(s.get("T10YIE") or [])
+    nominal_date = (s.get("DGS10") or [{}])[-1].get("date", "")
+    real = next((r["value"] for r in s.get("DFII10") or [] if r.get("date") == nominal_date), None)
+    be = next((r["value"] for r in s.get("T10YIE") or [] if r.get("date") == nominal_date), None)
     if nom is not None and real is not None and be is not None:
         c.decomposition = {
             "nominal": nom,

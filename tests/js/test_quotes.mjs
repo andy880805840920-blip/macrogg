@@ -24,7 +24,7 @@ const fake = (map) => async (url, opt) => {
   return { ok: true, json: async () => body };
 };
 const ch = (r) => ({ chart: { result: [r] } });
-let q = await yahoo("dgs10", SPECS.dgs10, fake({ "^TNX": ch(res(42.8, [42.0, 42.6, 42.8], 0)) }));
+let q = await yahoo("live_dgs10", SPECS.live_dgs10, fake({ "^TNX": ch(res(42.8, [42.0, 42.6, 42.8], 0)) }));
 check("② ×10 慣例換算", q && Math.abs(q.v - 4.28) < 1e-9 && Math.abs(q.p - 4.26) < 1e-9 && q.k === "pct", q);
 q = await yahoo("vix", SPECS.vix, fake({ "^VIX": ch(res(200, [190, 200], 0)) }));
 check("②b 超出範圍不回", q === null);
@@ -56,6 +56,7 @@ const yields = fake({ "2YY=F": ch(res(4.99, [4.90, 4.99], 1)),
                       "^TNX": ch(res(4.28, [4.2, 4.26, 4.28], 0)) });
 const all = await collect(async (url, opt) => { requests.push(url); return yields(url, opt); });
 check("④a 不抓 2 年期期貨、不回傳 dgs2", !requests.some(u => u.includes("2YY")) && !("dgs2" in all));
-check("④ collect 只回抓得到的", Object.keys(all).join() === "dgs10", Object.keys(all));
+check("④ collect 只回抓得到的", Object.keys(all).join() === "live_dgs10", Object.keys(all));
+check("④b 官方日利率完全不在盤中 API", ["dgs2", "dgs3mo", "dgs5", "dgs10", "dgs30"].every(k => !(k in SPECS) && !(k in all)));
 console.log(ok ? "\n全部通過" : "\n有失敗");
 process.exit(ok ? 0 : 1);

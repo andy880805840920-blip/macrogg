@@ -112,7 +112,7 @@ _d0 = dt.date(2026, 1, 2)
 _ser = {sid: [{"date": (_d0 + dt.timedelta(days=i)).isoformat(), "value": v0 + i * dv}
               for i in range(120)]
         for sid, v0, dv in (("DGS10", 4.0, 0.002), ("DGS2", 3.6, 0.0), ("DGS30", 4.5, 0.003),
-                            ("DGS1", 3.7, 0.0), ("DGS5", 3.8, 0.001), ("DGS20", 4.4, 0.0025),
+                            ("DGS1", 3.7, 0.0), ("DGS5", 3.8, 0.001), ("DGS7", 3.9, 0.001), ("DGS20", 4.4, 0.0025),
                             ("DGS3MO", 3.9, 0.0), ("T10YIE", 2.3, 0.0005), ("DFII10", 1.7, 0.0015),
                             ("THREEFYTP10", 0.5, 0.001))}
 _rows = le.spread_rows(_ser)

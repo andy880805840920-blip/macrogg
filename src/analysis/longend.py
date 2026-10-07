@@ -114,24 +114,24 @@ def curve_snapshots(series: dict, year_start: bool = True) -> list[dict]:
     曲線快照：現在、1 週前、1 個月前、年初（2026-10 使用者：要跟利差表的週／月變化對得起來）。
     回傳 [{label, date, points:[(tenor, years, value)]}]。
     """
-    last = (series.get("DGS10") or [{}])[-1].get("date")
-    if not last:
+    maps = {sid: {x["date"]: x for x in series.get(sid) or [] if x.get("value") is not None}
+            for _, sid, _ in CURVE}
+    common = sorted(set.intersection(*(set(m) for m in maps.values())))
+    if not common:
         return []
-    d0 = dt.date.fromisoformat(last[:10])
+    d0 = dt.date.fromisoformat(common[-1][:10])
     marks = [("現在", d0), ("1 週前", d0 - dt.timedelta(days=7)),
              ("1 個月前", d0 - dt.timedelta(days=30))]
     if year_start:
         marks.append(("年初", dt.date(d0.year - 1, 12, 31)))
     out = []
     for lab, dd in marks:
-        pts = []
-        for ten, sid, yrs in CURVE:
-            r = _at(series.get(sid) or [], dd.isoformat())
-            if r:
-                pts.append((ten, yrs, r["value"]))
-        if len(pts) >= 4:
-            out.append({"label": lab, "date": (_at(series.get("DGS10") or [], dd.isoformat()) or {}).get("date", dd.isoformat()),
-                        "points": pts})
+        dates = [day for day in common if day <= dd.isoformat()]
+        if not dates:
+            continue
+        day = dates[-1]
+        out.append({"label": lab, "date": day,
+                    "points": [(ten, yrs, maps[sid][day]["value"]) for ten, sid, yrs in CURVE]})
     return out
 
 
@@ -205,7 +205,9 @@ def spread_rows(series: dict) -> list[dict]:
         row = {"key": key, "label": f"{lz} − {sz}", "value": sp[-1]["value"], "date": last,
                "long": lz, "short": sz}
         for w, days, _ in WINDOWS:
-            dl, ds_ = _chg(series.get(lid) or [], last, days), _chg(series.get(sid) or [], last, days)
+            common = {r["date"] for r in sp}
+            dl = _chg([r for r in series.get(lid) or [] if r["date"] in common], last, days)
+            ds_ = _chg([r for r in series.get(sid) or [] if r["date"] in common], last, days)
             row[w] = None if dl is None or ds_ is None else (dl - ds_) * 100
             row[w + "_long"] = None if dl is None else dl * 100
             row[w + "_short"] = None if ds_ is None else ds_ * 100
@@ -232,7 +234,14 @@ def curve_drivers(series: dict) -> dict:
         g = {}
         for k, sid in (("y10", "DGS10"), ("be", "T10YIE"), ("real", "DFII10"),
                        ("tp", "THREEFYTP10"), ("y2", "DGS2"), ("y3m", "DGS3MO"), ("y30", "DGS30")):
-            v = _chg(series.get(sid) or [], last, days)
+            rows = series.get(sid) or []
+            v = _chg(rows, last, days)
+            if k in ("be", "real"):
+                # These releases can lag Treasury. Require the same two nominal days.
+                start = _at(series.get("DGS10") or [],
+                            (dt.date.fromisoformat(last) - dt.timedelta(days=days)).isoformat())
+                m = {r["date"]: r["value"] for r in rows if r.get("value") is not None}
+                v = m[last] - m[start["date"]] if last in m and start and start["date"] in m else None
             g[k] = None if v is None else v * 100
         oil = series.get("DCOILWTICO") or []
         a = _at(oil, last)

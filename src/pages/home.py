@@ -823,7 +823,7 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'return[(u.indexOf("美元")>=0?"$"+q.v.toFixed(1):q.v.toFixed(1)+u),'
             '(s.charAt(0)==="-"?"":"+")+s,dir];}'
             'function ap(r){var now=r.t||Date.now()/1000;'
-            'Object.keys(r.q||{}).forEach(function(id){if(id==="dgs2")return;var q=r.q[id];'
+            'Object.keys(r.q||{}).forEach(function(id){if(["dgs3mo","dgs2","dgs5","dgs10","dgs30"].indexOf(id)>=0)return;var q=r.q[id];'
             'var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(!ch)return;'
             'var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;'
             'var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;'
@@ -874,9 +874,13 @@ def _unify_chip(c: dict) -> dict:
     m = re.match(r"^(日盤|夜盤)\s*(.*)$", date)
     if m:                       # 盤別由即時報價寫在日期列，提示裡不重複
         date = m.group(2)
-    if cid == "dgs2":
-        date = ("FRED " + date) if date else ""
-        tip = "FRED DGS2 官方日資料；變動對前一筆有效日資料，依美國資料日期顯示。"
+    if cid in ("dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30"):
+        source = {"Treasury": "財政部", "FRED": "FRED", "Snapshot": "官方快照"}.get(c.get("source") or "FRED", "官方日資料")
+        date = (source + " " + date) if date else ""
+        tip = "官方日殖利率；變動對前一筆有效日資料，日期為美國資料日。固定期限殖利率可能與 Bloomberg PX_LAST 不同。"
+    elif cid in ("live_dgs10", "live_dgs30"):
+        date = ("Yahoo " + date) if date else ""
+        tip = "Yahoo 延遲盤中報價；獨立於官方日殖利率與歷史圖表。"
     elif cid == "fedwatch":
         mv = re.match(r"^(.+?)\s*(\d+)%$", value)
         md = re.search(r"（(\d+/\d+)）", label)
@@ -1121,7 +1125,7 @@ def _focus_strip(f: dict | None) -> str:
     _fw_note = ("・機率由期貨反推" if fw.get("src") == "futures"
                 else "・機率：官方值" if fw.get("src") == "atlanta"
                 else "")
-    note = ("數據：2 年期用 FRED；其他報價 FRED／Yahoo（小字＝資料日）" + _fw_note + _t_note
+    note = ("利率：財政部優先／FRED 備援；盤中另列（小字＝來源與資料日）" + _fw_note + _t_note
             + "｜指標與方法說明見頁尾")
     # 品牌列（2026-10）：這一區是使用者每天截圖發社群的部分——截出去的圖
     # 要自己說得清楚「誰做的、哪一天、新聞從哪來」，不能靠頁面其他地方。
@@ -1401,16 +1405,16 @@ def home_footer(ctxs: dict) -> str:
     from ..site import source_footer
     lab, inf, fom = ctxs.get("labor") or {}, ctxs.get("inflation") or {}, ctxs.get("fomc") or {}
     return source_footer(
-        [("2 年期殖利率", "FRED DGS2 官方日資料（非盤中）；日期為美國資料日", "每天 3 次建置時檢查"),
-         ("利率歷史與殖利率曲線", "FRED 官方日資料；不混入 Yahoo 盤中報價", "依官方發布"),
-         ("其他首頁殖利率、油價、波動率、道瓊、費半", "Yahoo 盤中（延遲約 15 分），抓不到改用 FRED 日資料", "開著頁面每分鐘"),
+        [("首頁公債殖利率、歷史與曲線", "美國財政部官方日殖利率；FRED 備援；日期為美國資料日", "每天 3 次建置時檢查"),
+         ("10 年期／30 年期盤中（可選）", "Yahoo 延遲報價；不覆寫主要利率或歷史資料", "開著頁面每分鐘"),
+         ("油價、波動率、道瓊、費半", "Yahoo 延遲報價；油價等有 FRED 日資料時作備援", "開著頁面每分鐘"),
          ("台指期", "期交所行情（日盤與夜盤取較新一盤）", "每分鐘"),
          ("升降息機率", "聯邦基金期貨逐場推算（WIRP 同款算法）", "每日"),
          ("SOFR、ON RRP、SRF", "紐約聯儲（經 FRED）", "每日"),
          ("今日焦點與補充新聞", "彭博、路透、Yahoo 等；AI 綜合改寫", "每天 3 次"),
          ("期中選舉", "Polymarket 預測市場（下注者看法，不是民調）", "每天 3 次"),
          ("就業、物價、聯準會", f"BLS、BEA、聯準會（就業 {esc(lab.get('data_month', '—'))}・物價 {esc(inf.get('data_month', '—'))}・FOMC {esc(fom.get('latest_date', '—'))}）", "依發布")],
-        ["變動一律對前一個交易日收盤；1 bp＝0.01 個百分點，1 碼＝25 bp。",
+        ["官方日利率變動對前一個有效資料日；盤中報價變動對昨收。1 bp＝0.01 個百分點，1 碼＝25 bp。",
          "SOFR−IORB 轉正代表準備金趨緊；ON RRP 接近零代表縮表開始直接抽銀行準備金；SRF 非零代表有人向央行借急錢；MOVE＝美債版 VIX。",
          "焦點由 AI 讀多篇報導後綜合；數字都出自原文並經機械比對。付費牆來源只用標題與官方摘要。",
          "補充新聞依「選擇指標」的前兩個指標換主題，該主題沒有新聞就往下遞補。",

@@ -277,6 +277,19 @@ def gather_fred(offline: bool, ids: list[str], module: str,
     # 免得把舊資料誤記成「這一次抓到的」）。
     _restored = set(_restore_from_snapshot(series, store, client.failed))
 
+    if module == "rates":
+        from src import treasury_yields
+        # SQLite snapshots do not retain source metadata; label restored values
+        # honestly until the validated Treasury cache supplies their origin.
+        for sid in _restored.intersection(treasury_yields.FIELDS):
+            for row in series[sid]:
+                row["source"] = "Snapshot"
+        result = treasury_yields.merge(series, ROOT / "state" / "treasury_yields.json")
+        _restored.difference_update(result["updated"])
+        if result["date"]:
+            log.info("官方殖利率：%s，資料日 %s（財政部最新 %s）",
+                     result["source"], result["date"], result["treasury_date"] or "未取得")
+
     # BLS 快速通道：CPI 與就業報告都是 BLS 08:30 發布，而 FRED 是轉載，
     # 當天可能要等好幾個小時才同步（實測 8/12 的 7 月 CPI，兩小時後
     # FRED 仍停在 6 月）。這裡在 FRED 的結果上補最新的那幾期，

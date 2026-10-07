@@ -642,9 +642,10 @@ def rates_body(d: dict) -> str:
 
 def rates_footer(d: dict) -> str:
     from ..site import source_footer
-    _ten = "FRED 官方日資料（歷史序列不混入盤中報價）"
+    _ten = "財政部優先／FRED 備援（不混入盤中報價）"
     return source_footer(
-        [("公債殖利率、損益兩平、TIPS", "美國財政部（經 FRED）", "每日・" + _ten),
+        [("公債殖利率", "美國財政部官方日殖利率；FRED 備援", "每日・" + _ten),
+         ("損益兩平、TIPS", "FRED（T10YIE、DFII 系列）", "每日・依實際資料日"),
          ("期限溢酬", "聯準會 Kim-Wright 模型（FRED）", "每日・約晚一週"),
          ("預期通膨（模型）", "克里夫蘭聯儲（FRED）", "每月"),
          ("油價", "EIA（FRED）", "每日"),

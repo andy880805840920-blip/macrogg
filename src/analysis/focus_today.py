@@ -72,7 +72,7 @@ DEFAULT_KEYWORDS = [
 
 
 # ---------------------------------------------------------------------------
-# 殖利率：優先 Yahoo 即時報價（±bp 對昨收），失敗退回 FRED（隔日）
+# 殖利率：官方日資料為主；Yahoo 盤中以獨立指標顯示
 # ---------------------------------------------------------------------------
 def _yield_chip(rows: list, label: str) -> dict | None:
     rows = [r for r in (rows or []) if r.get("value") is not None]
@@ -81,7 +81,7 @@ def _yield_chip(rows: list, label: str) -> dict | None:
     last, prev = rows[-1], rows[-2]
     return {"label": label, "value": last["value"],
             "delta_bp": round((last["value"] - prev["value"]) * 100),
-            "date": last.get("date", "")}
+            "date": last.get("date", ""), "source": last.get("source") or "FRED"}
 
 
 def _yahoo_prev_close(res0: dict) -> float | None:
@@ -163,7 +163,7 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
                 "delta_bp": round((cur - prev) * 100),
                 "date": date, "live": True}
     except Exception as e:                         # noqa: BLE001
-        log.warning("Yahoo 殖利率 %s 抓取失敗（%s），退回 FRED", symbol, e)
+        log.warning("Yahoo 殖利率 %s 抓取失敗（%s），盤中指標暫缺", symbol, e)
         return None
 
 
@@ -462,7 +462,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                   _get=None, fw: dict | None = None,
                   _post=None, election: dict | None = None) -> list[dict]:
     """
-    焦點條的完整 chip 目錄（14 顆）。每顆：id、短標籤、顯示值、
+    焦點條的完整 chip 目錄（含可選盤中指標）。每顆：id、短標籤、顯示值、
     對前一日收盤的變動、方向色、資料日（月-日）、是否預設顯示。
 
     fedwatch 是佔位（special）：機率 chip 的分層來源標示已經在
@@ -470,47 +470,33 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     """
     rs, liq = rates_series or {}, liq_series or {}
     chips: list[dict] = []
-    # ---- 2Y 固定使用 FRED DGS2；其他天期保留首頁的 Yahoo 報價 ----
-    # 2YY=F 是期貨，可能長時間沒有成交，不能當作現貨 2Y 最新日資料。
-    # 即使呼叫端傳入 2Y 即時 chip，也不採用；資料日保留 FRED 原始日期。
-    # 10Y／30Y 的報價只用於首頁，不再寫入長端歷史序列。
-    fresh = {c["label"]: c for c in (fresh_yields or [])}
-    _tenors = (("dgs3mo", "DGS3MO", "3 個月", "^IRX"),
-               ("dgs2", "DGS2", "2 年期", None),
-               ("dgs5", "DGS5", "5 年期", "^FVX"),
-               ("dgs10", "DGS10", "10 年期", None),
-               ("dgs30", "DGS30", "30 年期", None))
-    # 需要補抓的天期一次並行打（跟油價／波動率那批同一個小工具）
-    _to_fetch = [(cid, label, sym) for cid, _, label, sym in _tenors
-                 if sym and not offline and fresh.get(label) is None]
-    _live_t = dict(zip((c for c, _, _ in _to_fetch), _pmap(
-        lambda t: fetch_yahoo_yield(t[2], t[1], _get=_get), _to_fetch)))
-    for cid, sid, label, live_sym in _tenors:
-        fc = None if cid == "dgs2" else fresh.get(label)
-        if fc is None and live_sym and not offline:
-            fc = _live_t.get(cid)
-            fred_last, _, fred_date = _last2(rs.get(sid))
-            if (fc and fred_last is not None
-                    and abs(fc["value"] - fred_last) > LIVE_JUMP_CAP):
-                log.warning("殖利率即時 %s（%s）%.2f 與 FRED 收盤 %.2f 差逾 "
-                            "%.2f 個百分點，不採用退收盤", live_sym, label,
-                            fc["value"], fred_last, LIVE_JUMP_CAP)
-                fc = None
-            # 即時日期必須晚於 FRED 最後資料日；過期成交不能覆蓋更新的官方值。
-            if (fc and fred_date
-                    and str(fc.get("date") or "") <= fred_date):
-                log.info("殖利率即時 %s（%s）報價日 %s 不比 FRED 收盤 %s 新"
-                         "（合約成交稀疏），退回收盤", live_sym, label,
-                         fc.get("date"), fred_date)
-                fc = None
-        if fc:
-            db = fc.get("delta_bp")
-            cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
-            chips.append(_mk(cid, label, f"{fc['value']:.2f}%",
-                             f"{db:+d} bp" if db is not None else "—",
-                             cls, fc.get("date") or ""))
+    # Primary tenors always use the same official daily history as charts.
+    for cid, sid, label in (("dgs3mo", "DGS3MO", "3 個月"),
+                            ("dgs2", "DGS2", "2 年期"),
+                            ("dgs5", "DGS5", "5 年期"),
+                            ("dgs10", "DGS10", "10 年期"),
+                            ("dgs30", "DGS30", "30 年期")):
+        rows = [r for r in rs.get(sid) or [] if not r.get("live")]
+        chip = _pct_chip(cid, label, rows)
+        chip["source"] = (rows[-1].get("source") or "FRED") if rows else ""
+        chips.append(chip)
+    # Optional intraday indicators have separate IDs and never overwrite history.
+    fresh = {c["label"]: c for c in fresh_yields or [] if c.get("live")}
+    specs = (("live_dgs10", "10 年期", "^TNX"), ("live_dgs30", "30 年期", "^TYX"))
+    quotes = dict(zip((cid for cid, _, _ in specs), _pmap(
+        lambda t: (fresh.get(t[1]) or fetch_yahoo_yield(t[2], t[1], _get=_get))
+                  if not offline else None, specs)))
+    for cid, label, _ in specs:
+        q = quotes.get(cid)
+        if q:
+            bp = q.get("delta_bp")
+            chip = _mk(cid, label + "盤中", f"{q['value']:.2f}%",
+                       f"{bp:+d} bp" if bp is not None else "—",
+                       "up" if (bp or 0) > 0 else "dn" if (bp or 0) < 0 else "", q.get("date") or "")
         else:
-            chips.append(_pct_chip(cid, label, rs.get(sid)))
+            chip = _mk(cid, label + "盤中", "—", "擷取失敗", "", "")
+        chip["source"] = "Yahoo"
+        chips.append(chip)
     # 升降息：下次會議機率＋目標會議單場＋累計（三顆一般 chip）
     for _c in fw_chips(fw):
         _c["on"] = _c["id"] in DEFAULT_CHIPS
@@ -2682,25 +2668,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         out["topic_map"] = chip_topic_map(topic_specs(cfg))
         return out
 
-    # ---- 首頁 10Y／30Y 另取 Yahoo 報價，不修改 FRED 歷史序列。
-    # 抓不到退回 FRED 日資料；既有 live chip 僅保留相容處理。 ----
-    _fred = {"10 年期": (rates_series or {}).get("DGS10"),
-             "30 年期": (rates_series or {}).get("DGS30")}
-    _sym_of = dict((lb, sym) for sym, lb in YIELD_SYMBOLS)
-    _reused = {lb: _chip_from_live_rows(_fred.get(lb), lb)
-               for _, lb in YIELD_SYMBOLS}
-    _need = [lb for _, lb in YIELD_SYMBOLS if not _reused.get(lb)]
-    _fetched = dict(zip(_need, _pmap(
-        lambda lb: fetch_yahoo_yield(_sym_of[lb], lb), _need)))
-    _fresh = []
-    for _, _label in YIELD_SYMBOLS:
-        c = (_reused.get(_label) or _fetched.get(_label)
-             or _yield_chip(_fred.get(_label), _label))
-        if c:
-            _fresh.append(c)
-    if _fresh:
-        out["yields"] = _fresh
-        out["asof"] = _fresh[0].get("date", "")
+    # Official daily yields remain primary; build_catalog fetches optional
+    # intraday quotes under separate IDs, without replacing out["yields"].
 
     try:
         state = json.loads(state_path.read_text(encoding="utf-8"))

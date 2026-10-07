@@ -47,7 +47,7 @@ def hero(d: dict) -> str:
     c1 = (L.get("contrib") or {}).get(1)
     dec = (L.get("dec") or [None])[-1] if L.get("dec") else None
     asof = (f'{d.get("as_of", "—")}（盤中）' if d.get("as_of_live")
-            else f'{d.get("as_of", "—")}（FRED 官方日資料）')
+            else f'{d.get("as_of", "—")}（{d.get("yield_source", "FRED")} 官方日殖利率）')
 
     def _q(name, v, ch):
         cls = "up" if (ch or 0) > 0 else "dn" if (ch or 0) < 0 else ""
@@ -320,7 +320,7 @@ function bands(a,b){root.querySelectorAll('.cl-plot[data-x0]').forEach(function(
  if(!e){e=document.createElement('span');e.className='cl-band';p.insertBefore(e,p.firstChild);}e.style.left=l+'%';e.style.width=Math.max(0.6,R-l)+'%';});}
 function show(r){root.querySelector('.cw-text').innerHTML=explain(r);
  root.querySelector('.cw-db').innerHTML=tenors(r.tenors,r.start,r.end);root.querySelector('.cw-st').innerHTML=spreads(r.spreads);
- root.querySelector('.cw-when').textContent='實際使用 '+r.start.replace(/-/g,'/')+' → '+r.end.replace(/-/g,'/')+' 的 FRED 官方日資料（遇假日取前一個交易日）';bands(r.start,r.end);}
+ root.querySelector('.cw-when').textContent='實際使用 '+r.start.replace(/-/g,'/')+' → '+r.end.replace(/-/g,'/')+' 的官方日殖利率（遇假日取前一個交易日）';bands(r.start,r.end);}
 var last=CD.d[CD.d.length-1],fa=root.querySelector('.cw-from'),fb=root.querySelector('.cw-to'),cu=root.querySelector('.cw-cust');
 function pick(k){root.querySelectorAll('.cw-btn').forEach(function(b){b.classList.toggle('on',b.dataset.w===k);});
  if(k==='custom'){cu.hidden=false;if(!fa.value){fa.value=startFor('1m',last);fb.value=last;}show(analysis(fa.value,fb.value));return;}
@@ -358,7 +358,7 @@ def curve(d: dict) -> str:
         f'<div class="le3-fr"><span>{esc(x["label"])}</span><b>{x["fwd"]:.2f}%</b>'
         f'<span class="le3-fg {"up" if x["gap_bp"] > 0 else "dn"}">比目前 {esc(x["spot_zh"])} {_sbp(x["gap_bp"])}bp</span>'
         f'<span class="le3-fw">近一月 {_sbp(x.get("mom_bp"))}bp</span>'
-        f'<small class="fwd-date">FRED 資料日 {esc(x.get("date") or "—")}'
+        f'<small class="fwd-date">官方資料日 {esc(x.get("date") or "—")}'
         f'{("；月比較 " + esc(x["mom_date"])) if x.get("mom_date") else "；月比較資料不足"}</small>'
         f'<p class="fwd-reading">{("遠期定價高於目前同天期利率。" if x["gap_bp"] > 5 else "遠期定價低於目前同天期利率。" if x["gap_bp"] < -5 else "遠期與目前同天期利率接近。")}</p></div>' for x in fwd)
     policy = future["policy"]
@@ -391,7 +391,7 @@ def curve(d: dict) -> str:
         <div class="tabp p1">{L.get("yield_chart", "")}</div>
         <div class="tabp p2"><div class="le3-sms">{smalls}</div></div>
       </div>
-      <p class="le3-cap cw-when">實際使用 {r0["start"].replace("-", "/")} → {r0["end"].replace("-", "/")} 的 FRED 官方日資料（遇假日取前一個交易日）</p>
+      <p class="le3-cap cw-when">實際使用 {r0["start"].replace("-", "/")} → {r0["end"].replace("-", "/")} 的官方日殖利率（遇假日取前一個交易日）</p>
       <script type="application/json" id="cw-data">{data}</script>
       <script>{_CW_JS}</script>
     </div>
@@ -409,7 +409,7 @@ def curve(d: dict) -> str:
         <p><b>型態</b>：利差擴大＝變陡、收窄＝變平；看兩端誰動得多決定由哪一端帶動，殖利率上升為熊、下降為牛；兩端反向為扭轉。利差變動 2bp 以內視為持平。</p>
         <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；期限溢酬（Kim-Wright，約晚一週公布）跟實質利率有重疊，當旁證看。</p>
         <p><b>市場定價的未來</b>：用目前的公債殖利率算遠期利率，是市場「已經定價」的路徑，含期限溢酬，不是預測；殖利率為平價收益率，計算為近似值；3 年期比較基準由 2 年與 5 年期內插。各區間使用同日資料，超過 7 日仍無共同資料則不判讀。遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
-        <p><b>資料口徑</b>：利率歷史與自選期間只用 FRED 官方日資料，不混入首頁 Yahoo 盤中報價。DGS 系列是依日末市場報價計算的固定期限殖利率，可能與其他平台最後一筆報價不同；日期是美國資料日，發布時間較晚。</p>
+        <p><b>資料口徑</b>：首頁主要公債利率、歷史曲線與利差使用美國財政部官方日殖利率，FRED 為備援；各天期對齊共同資料日。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。實質利率、損益兩平及期限溢酬仍由 FRED 提供；當日拆解資料未齊時暫不判讀。Yahoo 盤中另列，不寫入歷史資料；日期為美國資料日。</p>
         <p><b>自選期間</b>：2026 年起；遇假日取前一個有效資料日。判讀文字由固定規則產生，不是 AI。</p>
       </div>
     </details>"""
