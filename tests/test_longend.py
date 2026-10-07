@@ -95,7 +95,7 @@ h = charts.bridge(4.68, "8 月", [{"label": "期限溢酬", "bp": 10, "main": Tr
                                 {"label": "預期通膨", "bp": -5}], 4.73, "9 月")
 check("⑤ 利率橋：起點、兩段、終點", h.count('class="br-row') == 4 and "br-seg up" in h and "br-seg dn" in h)
 h = charts.cat_lines([{"label": "現在", "color": "#000", "points": [("2Y", 4.0), ("10Y", 4.5), ("30Y", 4.8)]}])
-check("⑤ 類別曲線：三個天期", h.count('class="cl-hit"') == 3 and "--n:3" in h)
+check("⑤ 類別曲線：三個天期", h.count('class="chart-inspector"') == 1 and "data-points=" in h and "--n:3" in h)
 h = charts.segbar([{"label": "a", "value": 1.0, "color": "#1"}, {"label": "b", "value": -0.2, "color": "#2"}])
 check("⑤ 組成條：負值不畫、另行註明", h.count('class="sg-seg"') == 1 and "負值" in h)
 

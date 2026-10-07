@@ -470,16 +470,13 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     """
     rs, liq = rates_series or {}, liq_series or {}
     chips: list[dict] = []
-    # ---- 天期利率：全部先試 Yahoo 即時，抓不到退 FRED 收盤 ----
-    # 10Y／30Y 用已升級的即時 chip（同一次抓取，不重打）；3M／5Y 用
-    # CBOE 殖利率指數（^IRX／^FVX，×10 慣例由 fetch_yahoo_yield 規範化）；
-    # 2Y 是 Yahoo 唯一沒有指數的天期，改用 CME 微型殖利率期貨 2YY=F
-    #（直接報殖利率、與現貨通常差幾個 bp，但流動性偶爾薄）——所以
-    # 每檔即時值都過「與 FRED 收盤差逾 0.6 個百分點就不採用」的防呆，
-    # 跟 10Y／30Y 的升級規則同一條。
+    # ---- 2Y 固定使用 FRED DGS2；其他天期保留首頁的 Yahoo 報價 ----
+    # 2YY=F 是期貨，可能長時間沒有成交，不能當作現貨 2Y 最新日資料。
+    # 即使呼叫端傳入 2Y 即時 chip，也不採用；資料日保留 FRED 原始日期。
+    # 10Y／30Y 的報價只用於首頁，不再寫入長端歷史序列。
     fresh = {c["label"]: c for c in (fresh_yields or [])}
     _tenors = (("dgs3mo", "DGS3MO", "3 個月", "^IRX"),
-               ("dgs2", "DGS2", "2 年期", "2YY=F"),
+               ("dgs2", "DGS2", "2 年期", None),
                ("dgs5", "DGS5", "5 年期", "^FVX"),
                ("dgs10", "DGS10", "10 年期", None),
                ("dgs30", "DGS30", "30 年期", None))
@@ -489,7 +486,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     _live_t = dict(zip((c for c, _, _ in _to_fetch), _pmap(
         lambda t: fetch_yahoo_yield(t[2], t[1], _get=_get), _to_fetch)))
     for cid, sid, label, live_sym in _tenors:
-        fc = fresh.get(label)
+        fc = None if cid == "dgs2" else fresh.get(label)
         if fc is None and live_sym and not offline:
             fc = _live_t.get(cid)
             fred_last, _, fred_date = _last2(rs.get(sid))
@@ -499,10 +496,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                             "%.2f 個百分點，不採用退收盤", live_sym, label,
                             fc["value"], fred_last, LIVE_JUMP_CAP)
                 fc = None
-            # 日期新者勝：微型合約（2YY=F）成交稀疏，Yahoo 的「最新價」
-            # 可能是六週前的最後一筆成交（實例：2Y 顯示 7/15）——
-            # 即時報價必須**晚於** FRED 最後收盤日才有資格上場，
-            # 否則收盤反而比較新。跟 10Y/30Y 升級層同一條規則。
+            # 即時日期必須晚於 FRED 最後資料日；過期成交不能覆蓋更新的官方值。
             if (fc and fred_date
                     and str(fc.get("date") or "") <= fred_date):
                 log.info("殖利率即時 %s（%s）報價日 %s 不比 FRED 收盤 %s 新"
@@ -2688,9 +2682,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         out["topic_map"] = chip_topic_map(topic_specs(cfg))
         return out
 
-    # ---- 殖利率即時 chip：優先重用長端模組已升級的序列（帶 live 標記
-    # 的最後一列），同一次執行不再重打 Yahoo；沒升級到的才逐檔補抓，
-    # 抓不到退回 FRED 收盤。補抓的兩檔並行。 ----
+    # ---- 首頁 10Y／30Y 另取 Yahoo 報價，不修改 FRED 歷史序列。
+    # 抓不到退回 FRED 日資料；既有 live chip 僅保留相容處理。 ----
     _fred = {"10 年期": (rates_series or {}).get("DGS10"),
              "30 年期": (rates_series or {}).get("DGS30")}
     _sym_of = dict((lb, sym) for sym, lb in YIELD_SYMBOLS)

@@ -824,13 +824,9 @@ def main() -> int:
             # 科技巨頭的財報改由 SEC EDGAR 自動擷取，就地覆寫 cfg
             failed = failed + gather_hyperscalers(cfg, args.offline)
             all_failed += failed
-            # 10Y／30Y 升級成即時報價（跟首頁焦點條同一來源），
-            # 讓長端頁不再掛著比焦點條舊一兩天的收盤——同站同數字。
-            # 失敗就安靜用 FRED 收盤，規則在 upgrade_yields_live 裡。
-            if not args.offline:
-                _live = focus_today.upgrade_yields_live(series)
-                if _live:
-                    log.info("長端殖利率升級為即時：%s", "、".join(_live))
+            # 長端歷史、殖利率曲線與期間比較只使用 FRED 官方日資料。
+            # Yahoo 盤中報價由首頁焦點條另外抓取，不附加到歷史序列，
+            # 避免最新一天的 10Y／30Y 與其他天期混用不同時間的口徑。
             # 財政部拍賣、紐約聯儲 SOMA、MSPD（2026-10）：失敗只讓對應區塊空白
             from src import treasury_source
             try:

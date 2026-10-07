@@ -2906,7 +2906,7 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
             pts = _sp.get(r["key"]) or []
             r["chart"] = (charts.compact_lines(
                 [{"label": r["key"], "color": "var(--brand-ink)", "points": pts}],
-                unit="", height=110, digits=0, zero=True, months=12, yrange=(_lo, _hi),
+                unit=" bp", height=110, digits=0, zero=True, months=12, yrange=(_lo, _hi),
                 step=(50 if _hi - _lo > 100 else 25), xmonths=True, show_legend=False, aria=f"{r['key']} 利差（bp）")
                 if len(pts) >= 5 else '<div class="empty">資料不足</div>')
     # 自選期間：嵌入頁面的對齊日資料（去年 12 月起，年初至今要用到 12/31）＋ 2／10／30 年走勢

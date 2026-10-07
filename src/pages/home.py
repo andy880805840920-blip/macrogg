@@ -823,7 +823,7 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'return[(u.indexOf("美元")>=0?"$"+q.v.toFixed(1):q.v.toFixed(1)+u),'
             '(s.charAt(0)==="-"?"":"+")+s,dir];}'
             'function ap(r){var now=r.t||Date.now()/1000;'
-            'Object.keys(r.q||{}).forEach(function(id){var q=r.q[id];'
+            'Object.keys(r.q||{}).forEach(function(id){if(id==="dgs2")return;var q=r.q[id];'
             'var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(!ch)return;'
             'var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;'
             'var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;'
@@ -874,7 +874,10 @@ def _unify_chip(c: dict) -> dict:
     m = re.match(r"^(日盤|夜盤)\s*(.*)$", date)
     if m:                       # 盤別由即時報價寫在日期列，提示裡不重複
         date = m.group(2)
-    if cid == "fedwatch":
+    if cid == "dgs2":
+        date = ("FRED " + date) if date else ""
+        tip = "FRED DGS2 官方日資料；變動對前一筆有效日資料，依美國資料日期顯示。"
+    elif cid == "fedwatch":
         mv = re.match(r"^(.+?)\s*(\d+)%$", value)
         md = re.search(r"（(\d+/\d+)）", label)
         if mv:
@@ -1118,7 +1121,7 @@ def _focus_strip(f: dict | None) -> str:
     _fw_note = ("・機率由期貨反推" if fw.get("src") == "futures"
                 else "・機率：官方值" if fw.get("src") == "atlanta"
                 else "")
-    note = ("數據：FRED／Yahoo（小字＝資料日）" + _fw_note + _t_note
+    note = ("數據：2 年期用 FRED；其他報價 FRED／Yahoo（小字＝資料日）" + _fw_note + _t_note
             + "｜指標與方法說明見頁尾")
     # 品牌列（2026-10）：這一區是使用者每天截圖發社群的部分——截出去的圖
     # 要自己說得清楚「誰做的、哪一天、新聞從哪來」，不能靠頁面其他地方。
@@ -1398,7 +1401,9 @@ def home_footer(ctxs: dict) -> str:
     from ..site import source_footer
     lab, inf, fom = ctxs.get("labor") or {}, ctxs.get("inflation") or {}, ctxs.get("fomc") or {}
     return source_footer(
-        [("殖利率、油價、波動率、道瓊、費半", "Yahoo 盤中（延遲約 15 分），抓不到改用 FRED 收盤", "開著頁面每分鐘"),
+        [("2 年期殖利率", "FRED DGS2 官方日資料（非盤中）；日期為美國資料日", "每天 3 次建置時檢查"),
+         ("利率歷史與殖利率曲線", "FRED 官方日資料；不混入 Yahoo 盤中報價", "依官方發布"),
+         ("其他首頁殖利率、油價、波動率、道瓊、費半", "Yahoo 盤中（延遲約 15 分），抓不到改用 FRED 日資料", "開著頁面每分鐘"),
          ("台指期", "期交所行情（日盤與夜盤取較新一盤）", "每分鐘"),
          ("升降息機率", "聯邦基金期貨逐場推算（WIRP 同款算法）", "每日"),
          ("SOFR、ON RRP、SRF", "紐約聯儲（經 FRED）", "每日"),

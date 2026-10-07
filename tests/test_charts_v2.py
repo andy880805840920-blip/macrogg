@@ -54,7 +54,7 @@ check("④ 一張圖兩條線、一個 y 軸（刻度只有一組）",
       h.count("<polyline") == 2 and h.count('class="cl-x"') == 1)
 check("④ 線下不塗面積（只有 fill_between 的多邊形）",
       all("var(--fillb" in m for m in re.findall(r"<polygon[^>]*>", h)))
-check("④ hover 切片 24 個、圖例有最新值", h.count('class="cl-hit"') == 24 and "<b>3.1%</b>" in h)
+check("④ 完整互動資料點 24 個、圖例有最新值", h.count('class="chart-inspector"') == 1 and h.count("&quot;date&quot;") == 24 and "<b>3.1%</b>" in h)
 check("④ 參考線標籤", "參考" in h)
 check("④ 資料不足", "資料不足" in charts.compact_lines([{"label": "x", "color": "#0",
                                                           "points": mon([1])}]))

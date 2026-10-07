@@ -21,7 +21,7 @@ const TIMEOUT_MS = 4000;
 // chip id → 代號與規則。k：pct＝殖利率（%）、lvl＝一般價位、idx＝指數（整數＋漲跌幅）
 export const SPECS = {
   dgs3mo: { sym: "^IRX", k: "pct" },
-  dgs2: { sym: "2YY=F", k: "pct" },
+  // 2Y 固定使用建置時的 FRED DGS2，盤中 API 不覆寫官方日資料。
   dgs5: { sym: "^FVX", k: "pct" },
   dgs10: { sym: "^TNX", k: "pct" },
   dgs30: { sym: "^TYX", k: "pct" },

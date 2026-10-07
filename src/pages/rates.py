@@ -642,8 +642,7 @@ def rates_body(d: dict) -> str:
 
 def rates_footer(d: dict) -> str:
     from ..site import source_footer
-    _ten = ("FRED 收盤；10、30 年最新一筆為 Yahoo 盤中（延遲約 15 分）"
-            if d.get("as_of_live") else "FRED 收盤")
+    _ten = "FRED 官方日資料（歷史序列不混入盤中報價）"
     return source_footer(
         [("公債殖利率、損益兩平、TIPS", "美國財政部（經 FRED）", "每日・" + _ten),
          ("期限溢酬", "聯準會 Kim-Wright 模型（FRED）", "每日・約晚一週"),

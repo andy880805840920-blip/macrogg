@@ -18,7 +18,12 @@ def check(name, cond, detail=""):
     ok &= bool(cond)
 
 
-series = json.load(open(ROOT / "fixtures" / "rates.json", encoding="utf-8"))["series"]
+fixture = ROOT / "fixtures" / "rates.json"
+if fixture.exists():
+    series = json.loads(fixture.read_text(encoding="utf-8"))["series"]
+else:
+    from src import fixtures_rates
+    series = fixtures_rates.build()
 # 補一條油價（fixture 沒有），確認油價分支兩邊一致
 import random
 random.seed(7)
@@ -41,7 +46,7 @@ cases.append((days[-1], days[-1]))             # 起訖同一天 → 自動往�
 py = []
 for a, b in cases:
     r = le.window_analysis(cd, a, b)
-    py.append({"start": r["start"], "end": r["end"], "text": r["text"],
+    py.append({"start": r["start"], "end": r["end"], "text": r["text"], "view": le.window_view(r),
                "sp": [[x["key"], le._num(x["a"]), le._num(x["b"]), le._sgn(x["d"], ""), x["code"]] for x in r["spreads"]],
                "ten": [[t["k"], le._sgn(t["d"]) if t["d"] is not None else None] for t in r["tenors"]]})
 py_starts = [le.cw_start(cd, k, last, 2026) for k, _, _ in le.CW_WINDOWS]
@@ -52,7 +57,7 @@ if not node:
 else:
     js = LP._CW_CORE_JS + """
 var CD=%s, cases=%s, C=cwCore(CD);
-var out=cases.map(function(c){var r=C.analysis(c[0],c[1]);return{start:r.start,end:r.end,text:r.text,
+var out=cases.map(function(c){var r=C.analysis(c[0],c[1]);return{start:r.start,end:r.end,text:r.text,view:C.view(r),
  sp:r.spreads.map(function(x){return[x.key,C.num(x.a),C.num(x.b),C.sgn(x.d,''),x.code];}),
  ten:r.tenors.map(function(t){return[t.k,t.d===null?null:C.sgn(t.d)];})};});
 var st=['1w','1m','3m','ytd'].map(function(k){return C.startFor(k,%s);});

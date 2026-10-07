@@ -17,11 +17,21 @@ SVG 若設 width="100%" 搭配固定 height，在窄螢幕上內容會等比縮�
 from __future__ import annotations
 
 import html
+import json
 from typing import Sequence
 
 
 def _esc(s) -> str:
     return html.escape(str(s), quote=True)
+
+
+def _inspect_layer(points: list[dict]) -> str:
+    """共享滑鼠／觸控資料層：保存所有資料日，不抽樣、不跨日期補值。"""
+    payload = json.dumps(points, ensure_ascii=False, separators=(",", ":"))
+    return (f'<span class="chart-inspector" tabindex="0" role="slider" '
+            f'aria-label="選擇圖表資料點，可用左右方向鍵" '
+            f'aria-valuemin="0" aria-valuemax="{len(points)-1}" aria-valuenow="0" '
+            f'data-points="{_esc(payload)}"></span>')
 
 
 # ---------------------------------------------------------------------------
@@ -269,9 +279,14 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
         f'{data_lo:,.{digits}f}{_esc(unit)}</span>'
     )
 
+    inspect = _inspect_layer([
+        {"date": p["date"], "x": i / (len(pts)-1) * 100,
+         "values": [{"label": "數值", "text": f'{p["value"]:,.{digits}f}{unit}',
+                     "y": y_pct(p["value"]), "color": color}]}
+        for i, p in enumerate(pts)])
     return (
         f'<div class="lwrap">'
-        f'<div class="lplot">{svg}{glabs}{mark_labels}{end_dot}</div>'
+        f'<div class="lplot">{svg}{glabs}{mark_labels}{end_dot}{inspect}</div>'
         # 下緣右側寫成一個詞組「最新 值（日期）」：先前是「粗體值　日期」
         # 兩個 token 並排，手機上跟左側的起日看起來像一行擠了三個數字。
         f'<div class="lxaxis"><span>{_esc(pts[0]["date"])}</span>'
@@ -325,7 +340,12 @@ def stacked_shares(layers: Sequence[dict], shade: Sequence[tuple] = (),
     legend = "".join(
         f'<span><i style="background:{L["color"]}"></i>{_esc(L["label"])} '
         f'<b>{last[L["label"]]:.1f}%</b></span>' for L in reversed(list(layers)))
-    return (f'<div class="lwrap"><div class="lplot">{svg}</div>'
+    inspect = _inspect_layer([
+        {"date": d, "x": i / (n-1) * 100,
+         "values": [{"label": L["label"], "text": f'{m[d]:.1f}%', "color": L["color"]}
+                    for L, m in zip(layers, maps)]}
+        for i, d in enumerate(dates)])
+    return (f'<div class="lwrap"><div class="lplot">{svg}{inspect}</div>'
             f'<div class="lxaxis"><span>{_esc(dates[0])}</span>'
             f'<span>{_esc(dates[-1])}</span></div>'
             f'<div class="dlegend">{legend}</div></div>')
@@ -650,24 +670,19 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
         p = s["points"][-1]
         over.append(f'<span class="ldot" style="left:{X(p["date"]) / W * 100:.2f}%;'
                     f'top:{Yp(p["value"]):.2f}%;background:{s["color"]}"></span>')
-    # hover 切片：以第一條序列的日期為主，日頻資料每週取一點
-    maps = [{p["date"]: p["value"] for p in s["points"]} for s in ser]
-    mon = [{p["date"][:7]: p["value"] for p in s["points"]} for s in ser]
-    base = ser[0]["points"]
-    if len(base) > 130:
-        base = base[::-(-len(base) // 110)] + [base[-1]]
-    xs = [X(p["date"]) / W * 100 for p in base]
-    for i, p in enumerate(base):
-        l = (xs[i - 1] + xs[i]) / 2 if i else 0.0
-        r_ = (xs[i] + xs[i + 1]) / 2 if i + 1 < len(xs) else 100.0
-        bits = []
-        for s, mp, mm in zip(ser, maps, mon):
-            v = mp.get(p["date"], mm.get(p["date"][:7]))
-            if v is not None:
-                bits.append(f'{s["label"]} {v:,.{digits}f}{unit}')
-        tip = f'{p["date"][:10] if len(base) > 60 else p["date"][:7]}｜' + "｜".join(bits)
-        over.append(f'<span class="cl-hit" style="left:{l:.2f}%;width:{r_ - l:.2f}%" '
-                    f'data-tip="{_esc(tip)}"></span>')
+    # 所有序列的有效日期聯集；選取當天沒有的序列明示缺值。
+    maps = [{p["date"]: p["value"] for p in s_["points"]} for s_ in ser]
+    dates = sorted(set().union(*(set(m) for m in maps)))
+    inspect = []
+    for date in dates:
+        values = []
+        for s_, m in zip(ser, maps):
+            v = m.get(date)
+            values.append({"label": s_["label"],
+                           "text": "當日無資料" if v is None else f"{v:,.{digits}f}{unit}",
+                           "y": None if v is None else Yp(v), "color": s_["color"]})
+        inspect.append({"date": date, "x": X(date) / W * 100, "values": values})
+    over.append(_inspect_layer(inspect))
     first = min((s["points"][0]["date"] for s in ser))
     last = max((s["points"][-1]["date"] for s in ser))
     legend = "".join(
@@ -966,12 +981,16 @@ def cat_lines(series: Sequence[dict], unit: str = "%", height: int = 170,
         for x, v in s_["points"]:
             over.append(f'<span class="ldot sm" style="left:{X(x) / W * 100:.2f}%;top:{Yp(v):.2f}%;'
                         f'background:{s_["color"]}"></span>')
+    inspect = []
     for x in xs:
-        bits = [f'{s_["label"]} {dict(s_["points"]).get(x):.{digits}f}{unit}' for s_ in series
-                if dict(s_["points"]).get(x) is not None]
-        l = xs.index(x) / len(xs) * 100
-        over.append(f'<span class="cl-hit" style="left:{l:.2f}%;width:{100 / len(xs):.2f}%" '
-                    f'data-tip="{_esc(x)}｜{_esc("｜".join(bits))}"></span>')
+        values = []
+        for s_ in series:
+            v = dict(s_["points"]).get(x)
+            values.append({"label": s_["label"],
+                           "text": "此天期無資料" if v is None else f"{v:.{digits}f}{unit}",
+                           "y": None if v is None else Yp(v), "color": s_["color"]})
+        inspect.append({"date": x, "x": X(x) / W * 100, "values": values})
+    over.append(_inspect_layer(inspect))
     xl = "".join(f'<span>{_esc(x)}</span>' for x in xs)
     leg = "".join(f'<span><i style="background:{s_["color"]}"></i>{_esc(s_["label"])}</span>'
                   for s_ in series)

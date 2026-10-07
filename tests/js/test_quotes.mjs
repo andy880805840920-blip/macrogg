@@ -50,7 +50,12 @@ q = await txf(async (url, opt) => ({ ok: true, json: async () =>
     : tx("TXF-P", "TXFK6-M", "20261002", "045959", "23,250", "23,100") }));
 check("③c 日盤進行中取日盤、而且是期貨不是現貨列", q && q.s === "日盤" && q.v === 23400, q);
 
-const all = await collect(fake({ "^TNX": ch(res(4.28, [4.2, 4.26, 4.28], 0)) }));
+// 2Y 改用 FRED；即使 Yahoo 的 2YY=F 有較新資料，也不能回傳覆蓋它。
+const requests = [];
+const yields = fake({ "2YY=F": ch(res(4.99, [4.90, 4.99], 1)),
+                      "^TNX": ch(res(4.28, [4.2, 4.26, 4.28], 0)) });
+const all = await collect(async (url, opt) => { requests.push(url); return yields(url, opt); });
+check("④a 不抓 2 年期期貨、不回傳 dgs2", !requests.some(u => u.includes("2YY")) && !("dgs2" in all));
 check("④ collect 只回抓得到的", Object.keys(all).join() === "dgs10", Object.keys(all));
 console.log(ok ? "\n全部通過" : "\n有失敗");
 process.exit(ok ? 0 : 1);

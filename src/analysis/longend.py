@@ -277,9 +277,11 @@ def _cw_idx(cd: dict, date: str) -> int:
 
 
 def _cw_val(cd: dict, k: str, i: int):
-    """第 i 天的值；那天沒有（例如期限溢酬晚一週公布）就往前找最近一筆，最多 5 個交易日。"""
+    """主要指標只取當天；期限溢酬最多回看 5 個交易日，實際日期另存。"""
     arr = cd.get(k) or []
-    for j in range(i, max(-1, i - 6), -1):
+    # 利率與拆解指標只用選定資料日；期限溢酬晚公布，另標示實際日期。
+    lookback = 6 if k == "tp" else 1
+    for j in range(i, max(-1, i - lookback), -1):
         if j < len(arr) and arr[j] is not None:
             return arr[j]
     return None
@@ -297,7 +299,7 @@ def _hu(v: float, nd: int = 0) -> float:
     """四捨五入（半數往上，跟 JS 的 Math.round 一致；Python 的 round 是銀行家捨入）。"""
     import math
     f = 10 ** nd
-    return math.floor(v * f + 0.5) / f
+    return math.floor(v * f + 0.5 + 1e-10) / f
 
 
 def _num(v: float, nd: int = 0) -> str:
@@ -351,36 +353,107 @@ def window_analysis(cd: dict, start: str, end: str) -> dict:
     be, real, tp, y3m = dch("be"), dch("real"), dch("tp"), dch("y3m")
     oa, ob = v("oil", ia), v("oil", ib)
     oil = (ob / oa - 1) * 100 if oa and ob else None
-    txt = []
-    if "10-2" in S:
-        x = S["10-2"]
-        act = "擴大" if x["d"] > 0 else "收窄"
-        s1 = (f"{_md2(da)} → {_md2(db)}：10-2 利差{act} {_num(abs(x['d']))}bp（{_num(x['a'])} → {_num(x['b'])}），"
-              f"{x['zh']}" + (f"（{x['lead']}）" if x["lead"] else "")
-              + f"：10 年 {_sgn(T['y10']['d'])}、2 年 {_sgn(T['y2']['d'])}")
-        if "30-10" in S and S["30-10"]["code"] not in ("flat", "na") and S["30-10"]["code"] != x["code"]:
-            s1 += f"；30-10 {S['30-10']['zh']}"
-        txt.append(s1 + "。")
-    if T["y10"]["d"] is not None and be is not None and real is not None:
-        lead = "通膨預期" if abs(be) > abs(real) else "實質利率"
-        s2 = (f"10 年 {_sgn(T['y10']['d'])}：通膨預期 {_sgn(be)}、實質利率 {_sgn(real)}"
-              + (f"；期限溢酬（財政與供給）{_sgn(tp)}" if tp is not None else "；期限溢酬尚未公布")
-              + (f"；油價 {_sgn(oil, '%')}" if oil is not None else "")
-              + f"。主要是{lead}在推")
-        if lead == "實質利率" and tp is not None and tp > 0 and tp >= abs(real) * 0.5:
-            s2 += "，期限溢酬也在漲——財政與供給有份"
-        elif lead == "通膨預期" and oil is not None and oil > 5:
-            s2 += "，跟油價上漲同步"
-        txt.append(s2 + "。")
-    if T["y2"]["d"] is not None:
-        path = None if y3m is None else T["y2"]["d"] - y3m
-        s3 = (f"2 年 {_sgn(T['y2']['d'])}"
-              + (f"，2 年 − 3 個月 {_sgn(path)}" if path is not None else "")
-              + ("：市場把升息押得更多（或降息延後）。" if (path or 0) > 5 else
-                 "：市場提高降息預期。" if (path or 0) < -5 else "：政策預期大致沒變。"))
-        txt.append(s3)
-    return {"start": da, "end": db, "tenors": ten, "spreads": sp, "text": txt,
-            "drivers": {"be": be, "real": real, "tp": tp, "oil": oil, "y3m": y3m}}
+    def tp_date(i):
+        arr = cd.get("tp") or []
+        return next((cd["d"][j] for j in range(i, max(-1, i-6), -1)
+                     if j < len(arr) and arr[j] is not None), None)
+    result = {"start": da, "end": db, "tenors": ten, "spreads": sp,
+              "drivers": {"be": be, "real": real, "tp": tp, "oil": oil, "y3m": y3m,
+                          "tp_dates": [tp_date(ia), tp_date(ib)]}}
+    view = window_view(result)
+    result["text"] = [view["headline"], view["panels"][1]["verdict"], view["panels"][2]["verdict"]]
+    return result
+
+
+def window_view(r: dict) -> dict:
+    """讀者可直接掃讀的結論與三段說明；與瀏覽器端採相同規則。"""
+    T = {t["k"]: t for t in r["tenors"]}
+    S = {x["key"]: x for x in r["spreads"]}
+    D = r["drivers"]
+    x = S.get("10-2")
+    if not x:
+        headline = "資料不足，暫不判定曲線方向。"
+    elif abs(x["d"]) < 2:
+        headline = "曲線大致持平：10 年與 2 年的利差變動很小。"
+    else:
+        headline = ("曲線變陡：10 年與 2 年的利差擴大。" if x["d"] > 0
+                    else "曲線變平：10 年與 2 年的利差縮小。")
+    metrics = [{"label": x["key"].replace("-", " 年 − ") + " 年",
+                "value": f"{_num(x['a'])} → {_num(x['b'])} bp",
+                "note": "變動 " + _sgn(x["d"])} for x in r["spreads"]]
+    panels = [{"title": "利差怎麼變", "verdict": "長短利差擴大代表曲線變陡，縮小代表變平。",
+               "metrics": metrics, "note": "比較的是所選期間的起點與終點。"}]
+    be, real, dy = D.get("be"), D.get("real"), T["y10"]["d"]
+    aligned = None not in (be, real, dy) and abs(dy-be-real) <= 2
+    if aligned and max(abs(dy), abs(be), abs(real)) < 0.5:
+        verdict = "10 年期與拆解指標大致持平。"
+    elif aligned and abs(dy) < 0.5:
+        verdict = "通膨補償與實質利率的變動大致抵銷，10 年期接近持平。"
+    elif aligned:
+        verdict = "10 年期主要由" + ("通膨補償" if abs(be) > abs(real) else "實質利率") + "變動帶動。"
+    elif None in (be, real, dy):
+        verdict = "所選日期的拆解資料不足，暫不判定主要原因。"
+    else:
+        verdict = "參考指標與 10 年期變動尚未吻合，暫不判定主要原因。"
+    metric = lambda label, v, unit="bp": {"label": label, "value": "—" if v is None else _sgn(v, unit), "note": "所選期間變動"}
+    lm = [metric("10 年期", dy), metric("通膨補償", be), metric("實質利率", real)]
+    td = D.get("tp_dates") or [None, None]
+    if D.get("tp") is not None:
+        lm.append({"label": "期限溢酬（參考）", "value": _sgn(D["tp"]),
+                   "note": f"資料日 {td[0]} → {td[1]}"})
+    if D.get("oil") is not None:
+        lm.append(metric("油價（參考）", D["oil"], "%"))
+    panels.append({"title": "10 年期為什麼變", "verdict": verdict, "metrics": lm,
+                   "note": "期限溢酬僅作參考，不再加到通膨補償與實質利率之上；損益兩平也含風險與流動性因素。"})
+    dy2, y3m = T["y2"]["d"], D.get("y3m")
+    path = None if dy2 is None or y3m is None else dy2-y3m
+    verdict = ("資料不足，暫不判定短端定價方向。" if path is None else
+               "2 年期相對短端走高，未來利率偏高的定價增強。" if path > 5 else
+               "2 年期相對短端走低，未來利率偏低的定價增強。" if path < -5 else
+               "2 年期與短端的相對變化不大，定價方向大致未變。")
+    panels.append({"title": "短端定價怎麼變", "verdict": verdict,
+                   "metrics": [metric("2 年期", dy2), metric("3 個月期", y3m), metric("2 年 − 3 個月利差", path)],
+                   "note": "這是公債短端的相對變化；年底政策利率方向另看下方期貨定價。"})
+    return {"headline": headline, "panels": panels}
+
+
+def future_view(forwards: list[dict], market: dict | None) -> dict:
+    """公債遠期與政策利率分開判讀；不把不同天期或不同未來區間連成單一路徑。"""
+    valid = [x for x in forwards if x.get("gap_bp") is not None]
+    up = sum(x["gap_bp"] > 5 for x in valid)
+    dn = sum(x["gap_bp"] < -5 for x in valid)
+    n = len(valid)
+    if not n:
+        headline = "公債遠期資料不足，暫不判定方向。"
+    elif up == n:
+        headline = f"已取得的 {n} 個遠期區間均高於目前同天期利率，公債未來定價偏高。"
+    elif dn == n:
+        headline = f"已取得的 {n} 個遠期區間均低於目前同天期利率，公債未來定價偏低。"
+    elif not up and not dn:
+        headline = "遠期與目前同天期利率接近，公債未來定價大致持平。"
+    else:
+        headline = f"不同區間方向分歧：{up} 個偏高、{dn} 個偏低，其餘接近目前同天期利率。"
+    changes = [x["mom_bp"] for x in forwards if x.get("mom_bp") is not None]
+    if not changes:
+        recent = "近一個月比較資料不足，暫不判定定價變化。"
+    elif all(v > 5 for v in changes):
+        recent = f"有月比較資料的 {len(changes)} 個區間全部上修，近期定價整體往更高利率移動。"
+    elif all(v < -5 for v in changes):
+        recent = f"有月比較資料的 {len(changes)} 個區間全部下修，近期定價整體往更低利率移動。"
+    elif all(abs(v) <= 5 for v in changes):
+        recent = "近一個月定價變動不大。"
+    else:
+        recent = "近一個月各區間調整方向不一致，需分開看。"
+    market = market or {}
+    r0, end = market.get("r0"), market.get("market_end")
+    policy = None
+    if r0 is not None and end is not None:
+        delta = (end-r0)*100
+        direction = "偏升" if delta > 12.5 else "偏降" if delta < -12.5 else "大致持平"
+        policy = {"title": f"年底政策利率定價{direction}", "now": f"{r0:.2f}%", "end": f"{end:.2f}%",
+                  "change": _sgn(delta), "year": str(market.get("year") or ""),
+                  "text": "這是期貨隱含的市場定價；可判讀年底方向，無法據此斷定每場會議的動作。"}
+    return {"headline": headline, "recent": recent, "policy": policy}
 
 
 def _fwd(y1: float, n1: float, y2: float, n2: float) -> float:
@@ -401,27 +474,35 @@ def forwards(series: dict) -> list[dict]:
     遠期＞現在＝市場定價該天期利率會走高（或要求更多期限溢酬）；遠期＜現在＝定價會走低。
     另附 1 週前、1 個月前的遠期，看市場的預期往哪邊改。
     """
-    last = (series.get("DGS10") or [{}])[-1].get("date")
-    if not last:
+    ten = [r for r in series.get("DGS10") or [] if r.get("value") is not None]
+    if not ten:
         return []
+    last = ten[-1]["date"][:10]
     d0 = dt.date.fromisoformat(last)
     out = []
     for key, zh, s1, n1, s2, n2, spot in FORWARDS:
-        vals = {}
-        for tag, dd in (("now", d0), ("w", d0 - dt.timedelta(days=7)), ("m", d0 - dt.timedelta(days=30))):
-            a, b = _at(series.get(s1) or [], dd.isoformat()), _at(series.get(s2) or [], dd.isoformat())
-            vals[tag] = _fwd(a["value"], n1, b["value"], n2) if a and b else None
-        if spot == "DGS3*":       # 沒有 3 年 CMT：用 2 年與 5 年線性內插（跟拍賣 tail 同一套）
-            a2, a5 = _at(series.get("DGS2") or [], last), _at(series.get("DGS5") or [], last)
-            sp = {"value": a2["value"] + (a5["value"] - a2["value"]) / 3} if a2 and a5 else None
-        else:
-            sp = _at(series.get(spot) or [], last)
-        if vals["now"] is None or not sp:
+        needed = {s1, s2} | ({"DGS2", "DGS5"} if spot == "DGS3*" else {spot})
+        maps = {sid: {r["date"][:10]: r["value"] for r in series.get(sid) or []
+                      if r.get("value") is not None} for sid in needed}
+        common = sorted(set.intersection(*(set(m) for m in maps.values())))
+        vals, dates = {}, {}
+        for tag, dd in (("now", d0), ("w", d0-dt.timedelta(days=7)), ("m", d0-dt.timedelta(days=30))):
+            date = next((d for d in reversed(common) if d <= dd.isoformat()), None)
+            if date is None or (dd-dt.date.fromisoformat(date)).days > 7:
+                vals[tag], dates[tag] = None, None
+            else:
+                vals[tag] = _fwd(maps[s1][date], n1, maps[s2][date], n2)
+                dates[tag] = date
+        if vals["now"] is None:
             continue
-        out.append({"key": key, "label": zh, "fwd": vals["now"], "spot": sp["value"],
-                    "gap_bp": (vals["now"] - sp["value"]) * 100,
-                    "wow_bp": None if vals["w"] is None else (vals["now"] - vals["w"]) * 100,
-                    "mom_bp": None if vals["m"] is None else (vals["now"] - vals["m"]) * 100,
+        date = dates["now"]
+        sp = (maps["DGS2"][date] + (maps["DGS5"][date]-maps["DGS2"][date])/3
+              if spot == "DGS3*" else maps[spot][date])
+        out.append({"key": key, "label": zh, "fwd": vals["now"], "spot": sp,
+                    "date": date, "mom_date": dates["m"], "wow_date": dates["w"],
+                    "gap_bp": (vals["now"]-sp)*100,
+                    "wow_bp": None if vals["w"] is None else (vals["now"]-vals["w"])*100,
+                    "mom_bp": None if vals["m"] is None else (vals["now"]-vals["m"])*100,
                     "spot_zh": {"DGS1": "1 年期", "DGS3*": "3 年期", "DGS5": "5 年期", "DGS20": "20 年期"}[spot]})
     return out
 

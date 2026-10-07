@@ -151,31 +151,32 @@ def _light_card(lt, href: str = "") -> str:
 
 
 def _flag_row(f) -> str:
-    """
-    一項訊號 = 標題 + 影響標籤（一直看得到）+ 說明（收合）。
-
-    說明是三到四行的數字佐證。六項訊號全部攤開要捲五個螢幕，
-    而讀者第一輪要的是「有哪幾件事、各自往哪邊」——那兩樣留在外面，
-    「為什麼」點開再看。
-    """
+    """每則訊號放在同一個淡底區塊；保留標題、影響與完整依據。"""
     impact = ""
     if f.impact:
-        impact = (f'<div class="impact {f.lean}">'
-                  f'{esc(LEAN_TEXT.get(f.lean, ""))}　{esc(f.impact)}</div>')
-    # 「依據」一律預設收合（含 alert 級）。先前 alert 的依據自動展開，
-    # 理由是「頭條省一次點擊」——但實際效果是整張卡第一眼就是一段長文，
-    # 「有哪幾件事、各自往哪邊」的掃讀節奏反而被打斷。
-    _open = ""
-    return f"""<div class="flag {f.severity}">
-  <span class="f-icon">{SEV_ICON.get(f.severity,'●')}</span>
-  <div>
-    <div class="f-head">{esc(f.headline)}
-      <span class="f-tag">{SEV_TEXT.get(f.severity,'')}</span></div>
-    {impact}
-    <details class="f-more"{_open}><summary>依據</summary>
-      <div class="f-detail">{esc(f.detail)}</div></details>
-  </div>
-</div>"""
+        impact = (f'<div class="f-impact"><span class="f-lean {esc(f.lean)}">'
+                  f'{esc(LEAN_TEXT.get(f.lean, ""))}</span><span>{esc(f.impact)}</span></div>')
+    # 只在完整句子後分段；括號內說明保持連續，原文不增刪。
+    paragraphs, chunk, depth = [], "", 0
+    for char in f.detail:
+        chunk += char
+        if char in "（(":
+            depth += 1
+        elif char in "）)":
+            depth = max(0, depth - 1)
+        if char == "。" and depth == 0:
+            paragraphs.append(chunk)
+            chunk = ""
+    if chunk:
+        paragraphs.append(chunk)
+    detail = "".join(f'<p>{esc(part)}</p>' for part in paragraphs)
+    return f"""<article class="flag {esc(f.severity)}">
+  <div class="f-head"><span class="f-title">{esc(f.headline)}</span>
+    <span class="f-tag">{SEV_TEXT.get(f.severity, '')}</span></div>
+  {impact}
+  <details class="f-more"><summary>查看依據</summary>
+    <div class="f-detail">{detail}</div></details>
+</article>"""
 
 
 def _stats(items) -> str:
