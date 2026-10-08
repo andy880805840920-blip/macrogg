@@ -1029,19 +1029,11 @@ def _focus_strip(f: dict | None) -> str:
         editbar = ('<div class="fs-editbar"><span>點任一行更換指標</span>'
                    '<button type="button" class="fs-reset">恢復預設</button>'
                    '<button type="button" class="fs-done">完成</button></div>')
-        _ids = [cc["id"] for cc in cat]
-        _rep = {}
-        for tid in TOPIC_REP_ORDER:
-            pref = TOPIC_REP.get(tid)
-            if pref in _ids and topic_map.get(pref) == tid:
-                _rep[tid] = pref
-            else:
-                _rep[tid] = next((c for c in _ids if topic_map.get(c) == tid), None)
         _tl = {x["id"]: x["label"] for x in topics}
         _topt = "".join(
             f'<option value="{tid}"' + ("" if tid in avail else " disabled") + '>'
-            + esc(_tl.get(tid) or TOPIC_LABEL.get(tid, tid)) + ("" if tid in avail else "（今日無新聞）")
-            + '</option>' for tid in TOPIC_REP_ORDER if _rep.get(tid))
+            + esc(_tl.get(tid) or TOPIC_LABEL.get(tid, tid)) + ("" if tid in avail else "（新聞暫缺）")
+            + '</option>' for tid in TOPIC_REP_ORDER)
         script = ('<script>var FS_CONFIG=' + _json.dumps({"defaults": defaults, "topicMap": topic_map,
                   "available": avail, "options": _ol, "topicOptions": _topt}, ensure_ascii=False)
                   + ';' + _CHIP_SELECT_JS + '</script>' + _LIVE_JS)
@@ -1086,25 +1078,42 @@ def _focus_strip(f: dict | None) -> str:
         text = ('<ul class="fs-body fs-list">'
                 + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
                 + '</ul>') if _paras else ""
+    # 主軸摘要暫缺也保留獨立主題新聞，避免一項摘要失敗使全部補充消失。
+    if topics and not (_paras and f.get("layout") == "main"):
+        _topic_rows = [
+            f'<li class="fs-text fs-topic{"" if x["id"] in shown else " fs-off"}"'
+            f' data-topic="{esc(x["id"])}"><span class="fs-tag">{esc(x["label"])}</span>'
+            f'{esc(x["text"])}</li>' for x in topics]
+        text += '<ul class="fs-list">' + "".join(_topic_rows) + '</ul>'
     # 列標題模式：AI 摘要不可用，標題清單就是內容——收合預設打開，
     # 不再另外把標題串成一段假摘要（同一批字印兩次）。
     _headline_mode = (f.get("text_source") == "headlines")
     links = ""
     if f.get("links") or topics:
         def _lk(x, tid=""):
+            when = ""
+            try:
+                stamp = dt.datetime.fromisoformat(str(x.get("at") or ""))
+                if stamp.tzinfo is None:
+                    stamp = stamp.replace(tzinfo=dt.timezone.utc)
+                when = stamp.astimezone(dt.timezone(dt.timedelta(hours=8))).date().isoformat()
+            except (ValueError, TypeError):
+                pass
             return (f'<div class="fs-link{"" if not tid or tid in shown else " fs-off"}"'
                     + (f' data-tlink="{esc(tid)}"' if tid else "") + '>'
                     + (f'<span class="fs-tag">{esc(_lbl.get(tid, ""))}</span>' if tid else "")
                     + f'<a href="{esc(x["link"])}" rel="noopener">{esc(x["title"])}</a>'
                     + (f'<span class="fs-src">{esc(x["source"])}</span>'
                        if x.get("source") else "")
+                    + (f'<span class="fs-src">{esc(when)} 報導</span>'
+                       if when else "")
                     + '</div>')
         _lbl = {x["id"]: x["label"] for x in topics}
         rows = ("".join(_lk(x) for x in f.get("links") or [])
                 + "".join(_lk(x, t["id"]) for t in topics
                           for x in (t.get("links") or [])[:1]))
         links = (f'<details class="f-more"{" open" if _headline_mode else ""}>'
-                 f'<summary>來源標題</summary>'
+                 f'<summary>參考報導</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
     # 機率的來源標示跟著實際走的那一層：期貨自算是可驗算的規則、
     # AI 擷取只是備援——兩者的可信度不同，不能共用同一句話。
@@ -1113,7 +1122,7 @@ def _focus_strip(f: dict | None) -> str:
     # 「焦點條指標」收合區，這裡只留最低限度的標示與指路。
     _ts = f.get("text_source") or ""
     if _ts == "headlines":
-        _t_note = "・新聞摘要暫缺，可查看來源標題"
+        _t_note = "・新聞摘要暫缺，可查看參考報導"
     elif _ts in ("model", "cache", "model-content"):
         _t_note = "・焦點由 AI 綜合報導改寫"
     else:

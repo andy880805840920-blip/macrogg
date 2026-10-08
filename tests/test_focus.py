@@ -1018,7 +1018,7 @@ import logging as _lg24
 _saved = {k: getattr(ft, k) for k in (
     "fetch_yahoo_yield", "fedwatch_from_futures", "fetch_atlanta_fedwatch",
     "fetch_fedwatch", "fetch_feed_headlines", "fetch_article_text",
-    "fetch_headlines", "build_catalog", "_call_ai")}
+    "fetch_headlines", "build_catalog", "build_topics", "_call_ai")}
 _calls24 = []
 _body24 = {"v": "財政部宣布擴大十年期公債標售，規模創今年新高。" * 4}
 ft.fetch_yahoo_yield = lambda *a, **k: None
@@ -1027,9 +1027,11 @@ ft.fetch_atlanta_fedwatch = lambda *a, **k: None
 ft.fetch_fedwatch = lambda *a, **k: None
 ft.fetch_headlines = lambda *a, **k: []
 ft.build_catalog = lambda *a, **k: []
+ft.build_topics = lambda *a, **k: {"items": [], "map": {}}
+_at24 = _dt23.datetime.now(_dt23.timezone.utc).isoformat()
 ft.fetch_feed_headlines = lambda *a, **k: [
     {"title": "Treasury auction expands", "link": "https://x/1",
-     "source": "CNBC", "at": _dt23.datetime.now(_dt23.timezone.utc).isoformat(),
+     "source": "CNBC", "at": _at24,
      "summary": ""}]
 ft.fetch_article_text = lambda url, *a, **k: _body24["v"]
 
@@ -1078,8 +1080,9 @@ try:
     _sp2 = __import__("pathlib").Path(_tf24.mkdtemp()) / "focus.json"
     _calls24.clear()
     _o4 = ft.build({}, False, _cfg24, _sp2, env={})
-    check("㉔d 沒抓到內文 → 直接用標題寫重點（只呼叫一次、標題模式）",
-          _o4["text_source"] == "model" and len(_calls24) == 1
+    check("㉔d 沒抓到內文 → 標題模式也套用字數下限並重寫過短摘要",
+          _o4["text_source"] == "model" and len(_calls24) == 2
+          and "200–250" in _calls24[0]
           and "標題清單" in _calls24[0], (_o4["text_source"], len(_calls24)))
 finally:
     for _k, _v in _saved.items():

@@ -84,6 +84,14 @@ def main_allowed(article: dict, topics: list[str] | None = None) -> bool:
     if not matched and not official_fed:
         return False
     foreign = FOREIGN.search(title)
+    us_bond = re.search(r"(?<![A-Za-z])(?:U[.]?S[.]?\s+Treasur(?:y|ies)|United States (?:bonds|Treasuries))(?![A-Za-z])|美債|美國公債", title, re.I)
+    # Foreign investors buying U.S. bonds are U.S.-bond news; local foreign bonds
+    # do not become U.S. news merely by appending a Treasury comparison.
+    if matched & {"美債", "美國財政部"} and us_bond:
+        before = title[:us_bond.start()]
+        local_bond = re.search(r"bond yields?|government yields?|government bonds?|\bbonds?\b|\bCPI\b|\bGDP\b|inflation|unemployment|central bank|rate cuts?|rate hikes?|\bstocks?\b|rupee|公債|債市|債券|通膨|失業率|央行|降息|升息|股市", before, re.I)
+        if not foreign or foreign.start() > us_bond.start() or not local_bond:
+            return True
     # Local macro as the subject stays out even if the headline appends oil/Fed.
     first_clause = re.split(r"[,，;；：:]", title, maxsplit=1)[0]
     local_macro = re.search(r"(?<![A-Za-z0-9])(?:CPI|GDP|inflation|unemployment|RBI|central bank|rate cut|rate cuts|rate hike|rate hikes|bond yields|bonds|bond issuance|budget|deficit|stocks|rupee)(?![A-Za-z0-9])|通膨|通脹|失業率|央行|降息|升息|債市|財政赤字|股市|盧比", first_clause, re.I)
@@ -143,8 +151,23 @@ def topic_excluded(tid: str, article: dict, excludes) -> bool:
     text = " ".join(str(article.get(k) or "") for k in ("title", "summary", "body"))
     # Taiwan futures and gold reject ETF stories even when mentioned only in a summary/body.
     target = text if tid in {"twf", "gold", "fx"} else title
-    return any(hit(k, target) for k in excludes or []) or (
+    excludes = list(excludes or [])
+    if tid == "semi" and any(hit(k, text) for k in ("NVIDIA", "TSMC", "輝達", "台積電", "semiconductor", "semiconductors", "晶片", "半導體")):
+        excludes = [k for k in excludes if k not in {"台股", "臺股"}]
+    if tid == "equity":
+        us_market = re.search(r"Wall Street|S&P|Nasdaq|Dow|US stocks|U[.]S[.] stocks|美股|道瓊|標普|那斯達克|華爾街", title, re.I)
+        foreign = FOREIGN.search(title)
+        if us_market and (not foreign or us_market.start() < foreign.start()):
+            region_words = {"台股", "日股", "陸股", "港股", "歐股", "韓股", "日經", "恆生", "Nikkei", "Hang Seng", "FTSE", "DAX", "European stocks", "Asian stocks", "China stocks", "Japan stocks"}
+            excludes = [k for k in excludes if k not in region_words]
+    return any(hit(k, target) for k in excludes) or (
         tid in {"twf", "gold"} and re.search(r"(?<![A-Za-z])ETFs?(?![A-Za-z])", target, re.I) is not None)
+
+
+def is_official_fed(article: dict) -> bool:
+    hostname = (urlsplit(str(article.get("link") or "")).hostname or "").lower()
+    return (hostname == "federalreserve.gov" or hostname.endswith(".federalreserve.gov")
+            or str(article.get("source") or "").casefold() == "federal reserve")
 
 
 def topic_allowed(tid: str, article: dict) -> bool:
@@ -152,12 +175,31 @@ def topic_allowed(tid: str, article: dict) -> bool:
     text = " ".join(str(article.get(k) or "") for k in ("title", "summary", "body"))
     if tid == "twf":
         return any(hit(k, title) for k in ("台指期", "臺指期", "台股", "臺股", "加權指數", "台灣股市", "臺灣股市", "TAIEX", "Taiwan stocks", "Taiwan futures", "TXF"))
-    if tid == "long":
-        return main_allowed(article, ["美債", "美債殖利率"])
+    if tid in {"long", "fed"}:
+        lead = title + " " + str(article.get("summary") or "")
+        if not article.get("summary") and article.get("body"):
+            lead += " " + str(article["body"])[:600]
+        scope = ["美債", "美債殖利率"] if tid == "long" else ["Fed", "FOMC", "Kevin Warsh", "升息", "降息"]
+        if tid == "fed":
+            official = is_official_fed(article)
+            explicit = any(hit(k, lead) for k in ALIASES["Fed"] + ALIASES["FOMC"] + ALIASES["Kevin Warsh"])
+            if not official and not explicit and not US_CORE.search(lead):
+                return False
+        # A foreign local rate decision remains out even if a summary mentions the Fed.
+        foreign = FOREIGN.search(title)
+        local = re.search(r"central bank|rate cuts?|rate hikes?|RBI|inflation|央行|降息|升息|通膨", title, re.I)
+        us = US_CORE.search(title)
+        if tid == "fed" and foreign and foreign.start() <= 12 and local and (not us or us.start() > foreign.start()):
+            return False
+        return main_allowed({**article, "title": lead}, scope)
     if tid == "oil":
         # Conflict belongs to this topic only when energy supply/prices/transport are involved.
         return any(hit(k, text) for k in ("oil", "crude", "WTI", "Brent", "OPEC", "油價", "原油", "油輪", "能源供應", "energy supply", "oil tanker", "oil tankers", "oil exports", "石油", "石油出口"))
     if tid == "fx":
+        other = re.search(r"rupee|yuan|renminbi|won|ringgit|baht|Singapore dollar|Australian dollar|Canadian dollar|Hong Kong dollar|euro|pound|英鎊|歐元|人民幣|港幣|韓元|泰銖|盧比|新加坡幣|澳幣|加幣", title, re.I)
+        focus = re.search(r"USD/TWD|USDTWD|TWD|Taiwan dollar|New Taiwan dollar|DXY|dollar index|(?<![A-Za-z])(?:U[.]?S[.]?\s+)?dollar(?:s)?(?![A-Za-z])|台幣|臺幣|新台幣|美元", title, re.I)
+        if other and (not focus or other.start() < focus.start()):
+            return False
         if any(hit(k, text) for k in ("USD/TWD", "USDTWD", "TWD", "Taiwan dollar", "New Taiwan dollar", "台幣", "臺幣", "新台幣", "DXY", "dollar index", "美元指數")):
             return True
         foreign = FOREIGN.search(title)
