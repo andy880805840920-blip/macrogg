@@ -977,6 +977,34 @@ def _unify_chip(c: dict) -> dict:
             "date": date, "tip": tip}
 
 
+_INDICATOR_GROUPS = (
+    ("美債殖利率", ("dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "live_dgs10", "live_dgs30")),
+    ("聯準會與升降息", ("fedwatch", "fw_dec", "fw_cum")),
+    ("資金市場", ("sofr", "sofr_iorb", "onrrp", "srf")),
+    ("股市與台指期", ("dji", "sox", "txf")),
+    ("市場波動", ("vix", "move")),
+    ("原油與黃金", ("wti", "brent", "gold")),
+    ("匯率", ("dxy", "twd")),
+    ("期中選舉", ("pm_house", "pm_senate")),
+)
+
+
+def _indicator_options(cat: list[dict]) -> str:
+    """Group the native picker; keep every indicator's ID and news mapping."""
+    by_id={c["id"]:c for c in cat}
+    seen=set()
+    groups=[]
+    definitions=list(_INDICATOR_GROUPS)+[("其他指標",tuple(by_id))]
+    for label,ids in definitions:
+        members=[cid for cid in ids if cid in by_id and cid not in seen]
+        if not members:
+            continue
+        seen.update(members)
+        options="".join('<option value="'+esc(cid)+'">'+esc(_unify_chip(by_id[cid])["label"])+"</option>" for cid in members)
+        groups.append('<optgroup label="'+esc(label)+'">'+options+"</optgroup>")
+    return "".join(groups)
+
+
 def _focus_strip(f: dict | None) -> str:
     """
     今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
@@ -1023,8 +1051,7 @@ def _focus_strip(f: dict | None) -> str:
         # 按「選擇指標」→ 報價板進入編輯狀態，點任一行就是原生選單、選了換掉
         # 那一行（選到已在板上的就兩行互換）；前兩行標「補充新聞」。
         # 新聞主題可獨立更換；只有調整指標時才重新依序選新聞。
-        _ol = "".join(f'<option value="{cid}">{esc(_unify_chip(cc)["label"])}</option>'
-                      for cc in cat for cid in [cc["id"]])
+        _ol = _indicator_options(cat)
         picker = ('<button type="button" class="fs-edit-btn">選擇指標</button>')
         editbar = ('<div class="fs-editbar"><span>點任一行更換指標</span>'
                    '<button type="button" class="fs-reset">恢復預設</button>'
@@ -1123,6 +1150,8 @@ def _focus_strip(f: dict | None) -> str:
     _ts = f.get("text_source") or ""
     if _ts == "headlines":
         _t_note = "・新聞摘要暫缺，可查看參考報導"
+    elif _ts == "publisher-excerpt":
+        _t_note = "・新聞重點摘錄自參考報導"
     elif _ts in ("model", "cache", "model-content"):
         _t_note = "・焦點由 AI 綜合報導改寫"
     else:

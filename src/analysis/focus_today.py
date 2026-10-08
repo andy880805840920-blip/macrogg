@@ -1170,7 +1170,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f12-public-sources-content-24h"
+FOCUS_PROMPT_VERSION = "f13-preserve-main-independent-recovery-24h"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1309,6 +1309,11 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
     for attempt in (1, 2):
         text, err = _call_ai(src_text + note, system, env)
         if err:
+            if best:
+                if provenance is not None:
+                    provenance["main_ids"] = best_ids
+                log.warning("市場焦點：重寫呼叫失敗，保留第一版已通過事實檢查的內容")
+                return "\n".join(_trim_item(it, hards[i]) for i, it in enumerate(best)), ""
             return "", err
         citations = re.findall(r"^[ \t]*【主軸來源】([^\n]*)$", text, re.I | re.M)
         ids = re.findall(r"a\d+", citations[-1], re.I) if citations else []
@@ -1320,6 +1325,13 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
                  else _split_items(_tidy_focus(text), n_items))
         if not items:
             return "", "輸出是空的"
+        if layout_a and len(items) > 1:
+            safe_supp = [item for item in items[1:]
+                         if (scope_topics is None or news_policy.main_allowed({"title": item}, scope_topics))
+                         and not _meta_hits(item, meta_markers) and _digits_ok(item, src_text)]
+            if len(safe_supp) != len(items) - 1:
+                log.warning("市場焦點：移除未通過檢查的一般補充，主軸獨立驗證")
+                items = [items[0]] + safe_supp
         joined = "\n".join(items)
         if scope_topics is not None and not all(news_policy.main_allowed({"title": item}, scope_topics) for item in items):
             scope_failed = True
@@ -1335,6 +1347,11 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
                     "一兩則就只寫一兩則。）")
             continue
         if not _digits_ok(joined, src_text):
+            if best:
+                if provenance is not None:
+                    provenance["main_ids"] = best_ids
+                log.warning("市場焦點：重寫數字不合格，保留第一版已驗證內容")
+                return "\n".join(_trim_item(it, hards[i]) for i, it in enumerate(best)), ""
             return "", "輸出出現材料裡沒有的數字"
         long_ = [i + 1 for i, it in enumerate(items) if cjk_len(it) > hards[i]]
         # 太短（版式 A 才檢查）：主軸撐不到下限＝沒講完整；補充太短＝在列標題
@@ -2834,6 +2851,76 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
     return res
 
 
+def _main_recovery(articles, headlines, raw_pool, *, scope_topics, cap, env,
+                   meta_markers=None, provenance=None, exclude=None):
+    """Recover one independently sourced main story; never reuse expired news."""
+    candidates=[]
+    seen=set()
+    for article in list(articles or []) + list(headlines or []) + list(raw_pool or []):
+        if (not article.get("link") or not _within_news_window(article)
+                or not news_policy.news_item_allowed(article)
+                or _excluded(article.get("title") or "",exclude)
+                or not news_policy.main_allowed(article,scope_topics)):
+            continue
+        key=article["link"]
+        if key in seen:
+            continue
+        seen.add(key); candidates.append(article)
+    if not candidates:
+        return "", "", []
+    # A Chinese publisher lead/body supplies a readable fallback without invented translation.
+    candidates.sort(key=lambda h:(bool(h.get("body")),bool(h.get("summary")),_src_weight(h)),reverse=True)
+    chosen=candidates[0]
+    material=str(chosen.get("body") or chosen.get("summary") or chosen["title"])
+    src_text="【報導a1】【"+str(chosen.get("source") or "新聞報導")+"】"+chosen["title"]+"\n"+material
+    recovery_sources={"a1":chosen}
+    proof={"sources":recovery_sources}
+    system=("只根據這一篇已篩選的市場報導，寫今日主軸。用繁體中文交代發生的事件、"
+            "來源已有的具體細節與影響，最多 "+str(cap)+" 個中文字；內容足夠時約200字。"
+            "不要寫補充新聞，不要為達字數編造原因或數字。只能引用報導已有的資訊。"
+            "用【主軸】標示正文，可以分段。")
+    system += "\n"+news_policy.PERSON_RULE+"\n"+news_policy.COMPANY_RULE
+    text,err=_generate_items(src_text,system,env,caps=[cap],mins=[0],
+                             meta_markers=meta_markers,scope_topics=scope_topics,provenance=proof)
+    if text:
+        if provenance is not None:
+            provenance.clear();provenance.update(proof);provenance["main_ids"]=["a1"]
+        return text,"model-content" if chosen.get("body") else "model",[chosen]
+    log.warning("市場焦點：獨立主軸摘要未完成（%s），使用出版社可讀摘錄",err)
+    for article in candidates:
+        for field in ("body","summary"):
+            raw=str(article.get(field) or "")
+            clean=re.sub(r"<[^>]*>","",raw)
+            clean=re.sub(r"^〔[^〕]*報導〕\s*","",clean.strip())
+            clean=re.sub(r"(?:\.{3}|…)+\s*$","",clean).strip()
+            if cjk_len(clean)<30 or _norm_title(clean)==_norm_title(article["title"]):
+                continue
+            # Keep complete source sentences; each paragraph remains separately readable.
+            sentences=re.findall(r"[^。！？]*[。！？]",clean)
+            if not sentences:
+                continue
+            source=str(article.get("source") or "新聞報導")
+            paragraphs=[]
+            budget=max(30,cap-cjk_len(source)-3)
+            for sentence in sentences:
+                sentence=sentence.strip()
+                if not sentence:
+                    continue
+                if cjk_len("".join(paragraphs)+sentence)>budget:
+                    break
+                paragraphs.append(sentence)
+            excerpt="".join(paragraphs)
+            if cjk_len(excerpt)<30 or _meta_hits(excerpt,meta_markers):
+                continue
+            text=news_policy.english_names(source+"報導，"+excerpt)
+            if not _digits_ok(text,raw):
+                continue
+            if provenance is not None:
+                provenance.clear();provenance.update({"sources":{"a1":article},"main_ids":["a1"]})
+            return text,"publisher-excerpt",[article]
+    return "","",[]
+
+
 def _todays_events(events: dict | None, cfg: dict | None,
                    today: dt.date) -> list[str]:
     """
@@ -3028,7 +3115,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                            .encode("utf-8")).hexdigest()[:16]
         _age = _age_hours({"at": state.get("at")}, _now)
         _fresh = _age is not None and _age < CACHE_TTL_HOURS
-        if state.get("hash") == h and state.get("text") and _fresh:
+        if (state.get("hash") == h and state.get("text") and _fresh
+                and state.get("text_source") != "publisher-excerpt"
+                and all(_within_news_window(link,_now) for link in state.get("links") or [])):
             out["text"] = state["text"]
             out["text_source"] = "cache"
             out["cached_mode"] = ("content"
@@ -3072,6 +3161,12 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                 "（含官方摘要）寫重點")
             if not text:
                 text, src = summarize(top, item_cap, env, **_gen)
+            if not text:
+                text, recovered_src, recovered = _main_recovery(
+                    arts, top + briefs, _raw_pool, scope_topics=scope_topics, cap=caps[0],
+                    env=env, meta_markers=meta_markers, provenance=_provenance, exclude=exclude)
+                if text:
+                    src = recovered_src
             # 顯示用的標題把尾巴的「 - 來源」去掉——旁邊已經另掛來源小標，
             # 留著會變成「…- Yahoo奇摩財經　Yahoo奇摩財經」連講兩次。
             source_map = _provenance.get("sources", {})
