@@ -1,7 +1,43 @@
 {
- "hash": "eb7491772d53effa",
- "text": "",
+ "hash": "108d1bd6d4ec9765",
+ "text": "美國10年期公債殖利率週三升至5.34%，創2002年以來最高水準，推動股市下跌。聯準會9月會議紀錄顯示，19名決策官員一致支持最近的升息，多數認為年底前可能還需再升息一次，市場已定價12月升息機率達78.3%。紀錄中提及聯準會對「令人沮喪的Qualcomm膨」感到驚訝，並對AI建設規模與速度感到意外，認為這可能推高物價壓力。分析師指出，聯準會鷹派立場已被市場充分反映，預期12月升息25個基點至4.25%，明年再升息50個基點，儘管有人認為過於激進，但市場難以對抗這股鷹派定價。美元指數因此升至102.30附近，接近年度高點102.54。\n日圓兌美元週四下跌0.12%至158.20，美元走強反映市場對聯準會年底前再升息的預期增加，FOMC紀錄指出AI建設可能推升總需求超過供給，造成物價上升壓力。\n美國10年期公債拍賣需求強勁，投標倍數與間接投標表現良好，顯示當殖利率足夠高時，公債仍有買盤支撐，強化美元升值動能。",
  "links": [
+  {
+   "title": "Dow Jones futures drop as US Treasury yields surge",
+   "link": "https://www.fxstreet.com/news/dow-jones-futures-drop-as-us-treasury-yields-surge-202610080832",
+   "source": "FXStreet",
+   "at": "2026-10-08T08:32:44+00:00"
+  },
+  {
+   "title": "US Dollar Index Price Forecast: Hawkish Fed bets build case for more upside towards 102.85",
+   "link": "https://www.fxstreet.com/news/us-dollar-index-price-forecast-hawkish-fed-bets-build-case-for-more-upside-towards-10285-202610080804",
+   "source": "FXStreet",
+   "at": "2026-10-08T08:04:35+00:00"
+  },
+  {
+   "title": "10-year Treasury yield hits highest level since 2002 as stocks retreat: AlphaCheck",
+   "link": "https://finance.yahoo.com/markets/article/10-year-treasury-yield-hits-highest-level-since-2002-as-stocks-retreat-alphacheck-134621987.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-07T13:46:21+00:00"
+  },
+  {
+   "title": "US Dollar: Fed cautious on further hikes – MUFG",
+   "link": "https://www.fxstreet.com/news/us-dollar-fed-cautious-on-further-hikes-mufg-202610080850",
+   "source": "FXStreet",
+   "at": "2026-10-08T08:50:57+00:00"
+  },
+  {
+   "title": "Japanese Yen weakens against US Dollar amid hawkish FOMC minutes",
+   "link": "https://www.fxstreet.com/news/japanese-yen-weakens-against-us-dollar-amid-hawkish-fomc-minutes-202610080848",
+   "source": "FXStreet",
+   "at": "2026-10-08T08:48:53+00:00"
+  },
+  {
+   "title": "US Dollar: Hawkish Fed outlook lifts DXY towards 102.85 - ING",
+   "link": "https://www.fxstreet.com/news/us-dollar-hawkish-fed-outlook-lifts-dxy-towards-10285-ing-202610080737",
+   "source": "FXStreet",
+   "at": "2026-10-08T07:37:29+00:00"
+  },
   {
    "title": "Fed Used Treasury Funds to Support Yen in Joint Intervention",
    "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQVTJZdUNqaGpmYlEyNWtVNDR3cFc5ano2UHpFMWtlYkd1UEVZNGhLZGx6TUxvZHVEeDdaV2ZQc3J6LXU1aU5pTnhPRDlJZzJKdzBVZEM3aThUWjVTZ0prNVFUSnR6M1lxQ0tFanJzMmc5dDRxUDFld0MtMmpoRG1MX3hnZHM1X1JSczM2VTBFd1MtNHNwM2pYMmk4Y2dTWExoMHNpUzAwaGVodDBiRTVKRA?oc=5",
@@ -13,12 +49,6 @@
    "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNaGNfYWZBTXVWQjV6WUFib3lJV2RJZlZYVVJNalI0TlpKVmFvVklyd1lrNVpLdWQ2d21ncGY4NGVjZzdGc0ZfQ1FpY1BaazFIYUVHaFREdENXVFI4U3pBVGxubXJoUzhoU2JqUlR4RTN6dklyWXF5aXEteWdWOTQ4bmJSRS1LcUVpZ19sZ3VoNGpVMDNVTzBmdXVVX29SVC1CcFZSVHBDUkhub1JPdVFKRGpnZ2ZTNXVHaDFYX0RQRXp1N1U?oc=5",
    "source": "Reuters",
    "at": "2026-10-07T13:59:01+00:00"
-  },
-  {
-   "title": "Dow Jones futures drop as US Treasury yields surge",
-   "link": "https://www.fxstreet.com/news/dow-jones-futures-drop-as-us-treasury-yields-surge-202610080832",
-   "source": "FXStreet",
-   "at": "2026-10-08T08:32:44+00:00"
   },
   {
    "title": "EXCLUSIVE: US, Russia explore gas sale to Europe amid Ukraine war, say sources",
@@ -37,6 +67,12 @@
    "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
    "source": "Reuters",
    "at": "2026-10-07T23:14:17+00:00"
+  },
+  {
+   "title": "AI Drives Global Goods Trade Facing Trump Tariffs, War Headwinds",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQZEhxbGh2RWpRVVU3SmZHaXZ5SDNvbEpNZlVoMzNxUjBPcFk3T2RUdnFxUERqeUVuRkMydmNnQTN1ZEFWdHNTT0dReFlJdG00ZFVyUmFxOGhwZ2ZsTmlNaFhYYThnLVQ0MGViWGc2VDZNclJ3eTd0TWRkcnhIOTVvdjN2T2xac1lwY2E1Q21DWm9WZ2xqaU56dnFJam5SUzFIQWc2MVo0ZElGZHc3SFp5am9aRUI?oc=5",
+   "source": "Bloomberg.com",
+   "at": "2026-10-07T12:30:00+00:00"
   }
  ],
  "fedwatch": {
@@ -157,22 +193,22 @@
    }
   }
  },
- "text_source": "headlines",
- "at": "2026-10-08T09:14:32.645047+00:00",
- "layout": "",
+ "text_source": "model-content",
+ "at": "2026-10-08T09:50:01.704458+00:00",
+ "layout": "main",
  "topics": {
   "hash": "",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會9月升息定調為預防性升息，年底前還會再升息1碼；消費者對未來12個月通膨預期中位數升至3.9%，創2023年5月以來最高，顯示通膨仍是聯準會關注焦點。",
+    "text": "聯準會消費者預期調查顯示，未來12個月通膨中位數預期升至3.9%，創2023年5月以來最高，反映民眾對物價上漲的擔憂加劇。",
     "links": [
      {
-      "title": "統一期貨：FOMC會議紀要顯示9月升息為預防性升息，對行情影響有限",
-      "link": "https://tw.stock.yahoo.com/news/%E7%B5%B1-%E6%9C%9F%E8%B2%A8-fomc%E6%9C%83%E8%AD%B0%E7%B4%80%E8%A6%81%E9%A1%AF%E7%A4%BA9%E6%9C%88%E5%8D%87%E6%81%AF%E7%82%BA%E9%A0%90%E9%98%B2%E6%80%A7%E5%8D%87%E6%81%AF-%E5%B0%8D%E8%A1%8C%E6%83%85%E5%BD%B1%E9%9F%BF%E6%9C%89%E9%99%90-084128825.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-08T08:41:28+08:00"
+      "title": "Inflation fears on the rise as one-year outlook in Fed survey hits highest level since May 2023",
+      "link": "https://www.cnbc.com/2026/10/07/inflation-fears-on-the-rise-as-one-year-outlook-in-fed-survey-hits-highest-since-may-2023.html",
+      "source": "CNBC",
+      "at": "2026-10-07T18:44:36+00:00"
      },
      {
       "title": "Fed Minutes Show Hawkish Unity Behind September Rate Hike",
@@ -186,7 +222,7 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "長天期美債10年期美債殖利率升至5.34%，創2002年來最高；30年期美債殖利率升至5.71%，反映聯準會鷹派立場與通膨持續風險，金融環境緊縮壓低股市。",
+    "text": "美國10年期公債殖利率升至5.34%，創2002年以來最高，2年期公債也升至4.82%；科技股因此下跌，NVIDIA與AMD從歷史高點回落，Bitcoin跌逾3%至83,000美元附近。",
     "links": [
      {
       "title": "10-year Treasury yield hits highest level since 2002 as stocks retreat: AlphaCheck",
@@ -195,10 +231,10 @@
       "at": "2026-10-07T13:46:21+00:00"
      },
      {
-      "title": "Wall Street ends lower, off record highs, as Treasury yields climb",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-07T23:14:17+00:00"
+      "title": "Treasury yields rise as Fed's Waller says more hikes needed, investors await 30-year auction",
+      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPNF9IY0FlbFM0NmU5dU1WSVlJMUQtSTd1UEwwTGNfUFI3SVhfU3RWczRMWU5SSnNjOUhRbm15Q3EyVkw0Q1NBdm16UEF4ZktEVUl5MDVuTEs3emhON09xa2c5MDZDX3paNUZCcWl4QTNkc3ZYX0M1a3ctSlJKUDBfNEdB0gGHAUFVX3lxTFBPQ2Y1aEJEU2JUYVlGMW8wTm9mVGFtT1liT2pLZ0J4RVR0ZDN3aG9KTHJrdGEtS2FjRzdzMUhNNXE0bWhYOWhKUnVsLWt6UkVkc01WV2FXOVdUbGlmSE9NcWVocVRoQnRZWEFPTE56WTVXQ1BLRHA3RnZRaGJvN0FXTEZxY3pRNA?oc=5",
+      "source": "CNBC",
+      "at": "2026-10-08T09:19:44+00:00"
      }
     ],
     "text_source": "model"
@@ -206,7 +242,7 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "路透報導稱，聯準會會議紀要顯示部分官員準備應對市場壓力情景。",
+    "text": "聯準會會議紀錄顯示，部分官員希望為市場壓力做準備，路透報導稱此反映決策官員對金融穩定風險的關注，儘管聯準會整體維持鷹派升息立場。",
     "links": [
      {
       "title": "Fed minutes show some officials want to prepare for market stress",
@@ -220,13 +256,13 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "FXStreet：WTI Oil rushes above $90.00 as tensions in the Middle East grow",
+    "text": "油價升至102美元上方，受伊朗局勢升溫支撐；荷姆茲海峽油輪運輸量跌至兩個月低點，但波斯灣及紅海替代路線出口增加部分抵銷，IEA加速釋放石油儲備優先供應柴油以應對市場緊張。",
     "links": [
      {
-      "title": "WTI Oil rushes above $90.00 as tensions in the Middle East grow",
-      "link": "https://www.fxstreet.com/news/wti-oil-rushes-above-9000-as-tensions-in-the-middle-east-grow-202610080802",
+      "title": "Oil: Prices supported by supply risks and Iran tensions – Danske Bank",
+      "link": "https://www.fxstreet.com/news/oil-prices-supported-by-supply-risks-and-iran-tensions-danske-bank-202610080914",
       "source": "FXStreet",
-      "at": "2026-10-08T08:02:36+00:00"
+      "at": "2026-10-08T09:14:24+00:00"
      },
      {
       "title": "Watch Oil Prices Rise as Trump Said to Consider Iran Strike Options Before Midterms",
@@ -235,12 +271,12 @@
       "at": "2026-10-08T00:00:00+00:00"
      }
     ],
-    "text_source": "headlines"
+    "text_source": "model"
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨下跌，道瓊期貨跌0.6%、標普500期貨跌0.3%、那斯達克100期貨跌0.4%；10年期美債殖利率升至5.28%、30年期升至5.66%，創數十年高位，加重投資人對通膨的擔憂。",
+    "text": "美股期貨下跌，投資人在獲利樂觀與通膨憂慮間拉扯；第三季財報季啟動，FactSet估標普500獲利成長29.5%，若成立將是連續第三季成長超25%。",
     "links": [
      {
       "title": "Stock market today: Dow, S&P 500, Nasdaq futures fall as oil rises, reviving inflation worries",
@@ -260,13 +296,13 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "AI與半導體中磊電子與Broadcom合作推出RDK影音加速器機上盒，採用BCM74116晶片方案，內建神經處理單元提供邊緣AI運算能力，配備Wi-Fi 7與藍牙6.0，支援後量子密碼技術；Astera Labs亞太副總裁甘博隆加入熙特爾董事會，協助其布局AI資料中心電力基礎設施。",
+    "text": "TSMC季度營收躍升51%，AI需求持續支撐；Biren融資5.15億美元進行股票發售；Cardano區塊鏈整合ADA支付至x402 SDK，允許AI代理直接以加密貨幣結算服務費用。",
     "links": [
      {
-      "title": "中磊跨足次世代影音與AI應用，發表RDK機上盒硬體設計",
-      "link": "https://tw.stock.yahoo.com/news/%E4%B8%AD%E7%A3%8A%E8%B7%A8%E8%B6%B3%E6%AC%A1%E4%B8%96%E4%BB%A3%E5%BD%B1%E9%9F%B3%E8%88%87ai%E6%87%89%E7%94%A8-%E7%99%BC%E8%A1%A8rdk%E6%A9%9F%E4%B8%8A%E7%9B%92%E7%A1%AC%E9%AB%94%E8%A8%AD%E8%A8%88-090742816.html",
+      "title": "沃奇衛士擴展AI代理工具 助MSP自動化資安營運",
+      "link": "https://tw.stock.yahoo.com/news/%E6%B2%83%E5%A5%87%E8%A1%9B%E5%A3%AB%E6%93%B4%E5%B1%95ai%E4%BB%A3%E7%90%86%E5%B7%A5%E5%85%B7-%E5%8A%A9msp%E8%87%AA%E5%8B%95%E5%8C%96%E8%B3%87%E5%AE%89%E7%87%9F%E9%81%8B-093756952.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T09:07:42+00:00"
+      "at": "2026-10-08T09:37:56+00:00"
      },
      {
       "title": "TSMC’s Quarterly Revenue Jumps 51% After AI Demand Holds Up",
@@ -280,27 +316,27 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股逼近5萬點之際，網友熱議在通膨時代是否應適度借貸投資。",
+    "text": "Yahoo股市報導，台股連假前5萬點無望？美股四大指數全倒 TSMCADR挫1.4％、台指期夜盤殺回49K；Yahoo股市報導，【Follow法人】外資再砍758億元！連3天提款台股955億元 分析師：TSMC法說後是關鍵",
     "links": [
-     {
-      "title": "台股逼近5萬點！ 他喊「不借錢投資反吃虧」網友吵翻了",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%80%BC%E8%BF%915%E8%90%AC%E9%BB%9E-%E4%BB%96%E5%96%8A-%E4%B8%8D%E5%80%9F%E9%8C%A2%E6%8A%95%E8%B3%87%E5%8F%8D%E5%90%83%E8%99%A7-%E7%B6%B2%E5%8F%8B%E5%90%B5%E7%BF%BB%E4%BA%86-085300914.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T08:53:00+00:00"
-     },
      {
       "title": "台股連假前5萬點無望？美股四大指數全倒 TSMCADR挫1.4％、台指期夜盤殺回49K",
       "link": "https://news.google.com/rss/articles/CBMivANBVV95cUxONmdSc3BrN2I3NjZndVUwLWpCcHJaTVhVaEFDRHZ1c1JIVDBldUp5OTlSRmlOelYxSUNHM2I0ZmxDQjBRdDNWdEpQSGNfM3J2dmlBZ0FobmhsWEtaamNNWWJFQ2p0UzBkLUxCVjVncUZLMGszTGxxSmN1LWduWjdsOFFlWkR5Mlc1RlF6SzBrc0NQOFk4MVpxRkU1bGw4eG9QVFFLMl8zcnRfaHR0b1hGNVdIeFVla3p3RkUtd2hyUFZwYTFCSFl2dk9lVGxhNlp1OTVVMjhRMGI5cjZIbHljUDg5N3Z4NjVSUTBPMmdnUVhHMFNJWHZ2d2FZWS1mbWswMWs1c1c2UDhDTThZT29QYjM4UVR5RkN0N000X1dHZzBxWmRRdDJvbHhhelJWZ3F3QkkwUjhwQzNaX0Z0ZVMtWWhLR0R2aExPMndiVTBMVFA0QUc0VW15LU1lNUJVUkZOYWZ0enY1OXFnaDYyd3NvMlRSRW55N2FKV0lzNHVweTRhMGoxdXJjWDIxMXRER2wycXd4WnJSVGk5T3ZXQnMtZmJROHl1R09uakxMMXBpS1NwN0hyd3FyYVUwRlE?oc=5",
       "source": "Yahoo股市",
       "at": "2026-10-07T14:35:00+00:00"
+     },
+     {
+      "title": "【Follow法人】外資再砍758億元！連3天提款台股955億元 分析師：TSMC法說後是關鍵",
+      "link": "https://news.google.com/rss/articles/CBMi7gNBVV95cUxOa2QtSDVRSDk5cjdycTNIMUlxYndiZndOdGxXWXE0dnZIczUtNG5mMV94Sm82aUMxUllDUTRUZ0xFZ2s4N0h6MVNURi1KU290UEQ2MGVrT1RnU0U0MWp3WUNid0llWnBWXzRXbFdCU05qNEFoSW1udDhoR09VWi1PWVktRGxIOU9OWkp4X19ZVjVRSHhGb3BMQ3RvZlFJaTR3MFBzVDl3YkpGb3M2Ui1EdnJLT1lZNUVHMDZaM2hKYjNsQm1JcEJVNlBkOWVvdmVMMVJNdHI3X2VQREZvZllfOGl4bWdOSDFjcUQ2ZXA1NnU3SFlHWlFjUGEtMDV1WjRxX1RZR0c0ZVQ1c1o2TGlPWlI0ajJWS1lIXzBCSS1zbll1cmhrbUxqd2JXTTFkam42cDNBdWJaNUFCaWpoOHF6RUFBZnpGUjJUYTBCZDA4ckJxMW91alBGN1hxVkVXM2Q4UjNDOTZCclNHU3ptYXBOZWJuajBUcTBRZ0Mtbng0Z2dYZ1VERHpvMVRaRkhwYjB0RmE4NFpFYnJQSmJMeTNSOU9xN1pxNGd0T1h1MGNmSGxqX3FPZG9PeXRaaWd5dVh3OWxpd0Vuc1hweTdmRWZKRTlWS1NMSlFyZzdhVXd2NFFOZWVkRko0OENaWmNRUQ?oc=5",
+      "source": "Yahoo股市",
+      "at": "2026-10-08T07:04:34+00:00"
      }
     ],
-    "text_source": "model"
+    "text_source": "headlines"
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "路透報導稱，美軍五角大廈已下令完成對伊朗恢復「大規模作戰行動」的準備，消息人士指行動可能在美國期中選舉前進行，甚至可能在以色列大選之前發生。",
+    "text": "路透報導指Trump在期中選舉前可能對伊朗發動大規模作戰行動，預計與以色列聯手轟炸伊朗能源與核設施，油價可能因此上漲影響選情。",
     "links": [
      {
       "title": "Donald Trump被爆擬重啟美伊戰爭 不排除聯手以色列、期中選舉前開打",
@@ -320,19 +356,19 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "聯準會會議紀要顯示成員一致投票升息並傾向進一步緊縮，市場預期12月升息機率約80%；美債殖利率升至多年高位，美元走強，黃金跌至兩個月低點下方，缺乏上漲動力。",
+    "text": "瑞士8月黃金出口月增65%至156.5噸，其中逾6成流向英國創7年新高，印度進口暴減58%至3.45噸，受高金價與舊金供應充足影響；黃金價格在聯準會鷹派立場與強勢美元壓制下，難以延續反彈。",
     "links": [
      {
-      "title": "Gold bulls remain on the sidelines as hawkish Fed and Middle East jitters underpin USD",
-      "link": "https://www.fxstreet.com/news/gold-moves-away-from-two-month-low-not-out-of-the-woods-yet-amid-hawkish-fed-bullish-usd-202610080432",
-      "source": "FXStreet",
-      "at": "2026-10-08T04:32:31+00:00"
+      "title": "黃金流向大洗牌？瑞士出口狂飆65％  逾6成流向「這國」",
+      "link": "https://ec.ltn.com.tw/article/breakingnews/5599893",
+      "source": "自由時報",
+      "at": "2026-10-08T17:20:40+08:00"
      },
      {
-      "title": "ICE Starts Gold Futures in London Market Dominated by Top Banks",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNWlF0Zmx4S0tjdmlURmZ2a19QMnhUWDhUOWZhLTBPUnBMTGI4a3R5YnEtMFRjTUtOMUlqSFZhZk55clQ0UnludUNaVEQ0c182RDFvbmh1bUlMcExURkFnNksyT19Na212bzQ5MV84dnExY3U3NF9WQW03OFRPZ3JqSnlIMUFYa19NZWdqZFVESld6NmRkcXBpWEtMOFhSUFFrbGdzcVNGLWEzMFlhbFMtOFhHMkQ?oc=5",
-      "source": "Bloomberg.com",
-      "at": "2026-10-07T09:48:57+00:00"
+      "title": "黃金價格預測：XAU/USD 回吐漲幅，逼近 4,104 美元的兩個月低點",
+      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxObFU5Zl9Ncm9OWEF5d3J1dWJ3YlBKTTNGaW1hRW1ack5jTUtFN3oxdVBKcjVpV1hZUDJfbnZZOERTYloxdk5KUTVSdW03OVdoWGN6X0E4RnNXemtxWWY3MmRfOGFvdVdxX05KVnhFQkh5b3NaRmJLUjdzY1RZRjJxR1hzdm5kME1KR2FmVGRlVDJUSnNfclNLMm5UbHloa0RBSUt6WE1KZ1k1d0ZKWW1CczM1eGM3QTA1ZENQRzZTX2VyS3RCS1BBOUJ2eE1FVnVxaFctbGJjWGJjTjg?oc=5",
+      "source": "www.tmgm.com",
+      "at": "2026-10-07T12:04:11+00:00"
      }
     ],
     "text_source": "model"
@@ -340,7 +376,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "匯率美元指數升至102.30，接近本週年高102.54；聯準會9月會議紀要顯示鷹派立場，市場預期12月升息25個基點至4.25%，美債殖利率升至5.33%支撐美元，新台幣貶8分收31.875元。",
+    "text": "美元指數升至102.30附近，接近年度高點102.54；ING分析指聯準會鷹派立場已被市場定價，預期12月升息25個基點至4.25%，美元指數目標看向102.85。",
     "links": [
      {
       "title": "US Dollar Index Price Forecast: Hawkish Fed bets build case for more upside towards 102.85",
@@ -358,7 +394,7 @@
     "text_source": "model"
    }
   ],
-  "at": "2026-10-08T09:14:46.774049+00:00"
+  "at": "2026-10-08T09:50:09.157786+00:00"
  },
  "main_source_titles": []
 }
