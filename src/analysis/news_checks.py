@@ -52,8 +52,33 @@ def number_tokens(text: str):
         result.append((value,family,quantity))
     return result
 
+def _source_numeric_equivalents(source: str) -> str:
+    """Normalize explicit date/duration words and clearly stated Taiwan-dollar cents."""
+    extra=[]
+    words={"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,
+           "eight":8,"nine":9,"ten":10,"eleven":11,"twelve":12}
+    for m in re.finditer(r"\b("+"|".join(words)+r")[ -]+(weeks?|months?|years?|days?)\b",source,re.I):
+        extra.append(str(words[m[1].lower()])+" "+m[2])
+    months=["January","February","March","April","May","June","July","August",
+            "September","October","November","December"]
+    for month,n in zip(months,range(1,13)):
+        # May can be a verb; require an explicit calendar phrase for that month.
+        pattern=(r"\b(?:in|during|for|since|through|until|by|last|next|this)\s+May\b|\bMay\s+\d{1,2}\b"
+                 if month=="May" else r"\b"+month+r"\b")
+        if re.search(pattern,source,re.I):
+            extra.append(str(n)+"月")
+    chinese={"一":1,"二":2,"兩":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9,
+             "十":10,"十一":11,"十二":12}
+    for m in re.finditer(r"(十一|十二|十|一|二|兩|三|四|五|六|七|八|九)(個月|月|週|周|天|年)",source):
+        extra.append(str(chinese[m[1]])+m[2])
+    if re.search(r"新?台幣|新?臺幣|Taiwan dollar|\bTWD\b",source,re.I):
+        for m in re.finditer(r"(?:升值|貶值|升|貶|漲|跌)\s*(\d+(?:\.\d+)?)\s*分(?!鐘|數|析|配|別|評)",source):
+            extra.append(str(Decimal(m[1])/100)+"元")
+    return source+"\n"+" ".join(extra)
+
+
 def digits_ok(text: str, source: str) -> bool:
-    src=number_tokens(source)
+    src=number_tokens(_source_numeric_equivalents(source))
     plain={v for v,f,q in src}
     quantities={(f,q) for v,f,q in src if f}
     for value,family,quantity in number_tokens(text):

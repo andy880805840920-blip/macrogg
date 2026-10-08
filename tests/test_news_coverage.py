@@ -94,11 +94,12 @@ class CoverageTests(unittest.TestCase):
             self.assertTrue(i['text'].startswith('Reuters：'))
             self.assertNotIn('unavailable',i['text'])
 
-    def test_explicit_repeat_skip_does_not_fallback(self):
+    def test_model_skip_cannot_remove_qualified_news(self):
         mat={'gold':self.material()['gold']}
         with patch.object(ft,'gather_topic_material',return_value=mat),patch.object(ft,'_call_ai',return_value=('gold｜略','')):
             result=ft.build_topics(self.cfg,self.pool,'相同事件',[],{},now=self.now)
-        self.assertEqual(result['items'],[])
+        self.assertEqual([x['id'] for x in result['items']],['gold'])
+        self.assertEqual(result['items'][0]['text_source'],'headlines')
 
     def test_skipped_topic_is_rechecked_before_it_disappears(self):
         good='黃金價格上漲，報導指出市場對避險需求的變化影響金價表現，投資人仍持續關注美元與利率走勢。'

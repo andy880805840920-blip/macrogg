@@ -124,6 +124,8 @@ def _fake_ai(replies):
 
 
 _orig = ft._call_ai
+_orig_body = ft.fetch_article_text
+_orig_feed = ft.fetch_feed_headlines
 _good_twf = "外資今天賣超 120 億元，加權指數下跌 1.2%，賣壓集中在電子權值股，市場擔心美債殖利率走高壓抑科技股評價。"
 _good_oil = "OPEC 表示可能減產，油價上漲 4% 至每桶 95 美元，能源價格走高推升市場的通膨預期，也讓降息路徑更難預料。"
 try:
@@ -143,7 +145,7 @@ try:
     ft._call_ai = _fake_ai([f"twf｜外資賣超\noil｜略", f"twf｜{_good_twf}"])
     got = ft.summarize_topics({k: mat[k] for k in ("twf", "oil")},
                               {"twf": "台指期", "oil": "油價"}, "主軸內容")
-    check("⑫ 太短像標題 → 重寫；「略」＝這個主題不顯示",
+    check("⑫ 太短或回傳略 → 重試；來源備援由 build_topics 保留",
           got == {"twf": _good_twf} and "像在列標題" in _seen[1][0], got)
 
     # 整條流程＋快取
@@ -152,7 +154,7 @@ try:
     st = {}
     cfg = {"topics": [dict(s, search=[]) for s in ft.DEFAULT_TOPICS],
            "exclude_keywords": ["台股", "ETF"]}
-    _orig_body = ft.fetch_article_text
+    ft.fetch_feed_headlines = lambda *a, **k: []
     ft.fetch_article_text = lambda u, **k: _bodies.get(u, "")
     r1 = ft.build_topics(cfg, pool, "主軸", ["Fed's Waller says rate cut not needed"],
                          st, now=_now)
@@ -166,6 +168,8 @@ try:
           len(_seen) == 1 and r2["items"] == r1["items"])
 finally:
     ft._call_ai = _orig
+    ft.fetch_article_text = _orig_body
+    ft.fetch_feed_headlines = _orig_feed
 
 # ---------------------------------------------------------------- 首頁渲染
 cat = [ft._mk(c, c.upper(), "1", "+0", "", "2026-10-05", on=c in ft.DEFAULT_CHIPS)

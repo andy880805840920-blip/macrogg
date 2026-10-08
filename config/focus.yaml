@@ -199,6 +199,14 @@ feeds:
   - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
   - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
+  # 公開正文與出版社摘要：全主題共同來源，所有報導仍限制過去24小時。
+  - https://news.ltn.com.tw/rss/business.xml
+  - https://news.ltn.com.tw/rss/world.xml
+  - https://www.theguardian.com/business/rss
+  - https://www.theguardian.com/us-news/us-politics/rss
+  - https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
+  - https://www.fxstreet.com/rss/news
+
 # 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
 # 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。
 # 全部沒命中時退回不過濾，寧可來源雜一點也不讓整段消失。
@@ -297,9 +305,41 @@ topics:
   - money market
   - 回購市場
   - 準備金
+  - repo
+  - repurchase agreement
+  - repo rates
+  - funding pressure
+  - funding stress
+  - money markets
+  - money-market funds
+  - money market funds
+  - dollar liquidity
+  - overnight funding
+  - Treasury bills
+  - T-bills
+  - Treasury cash balance
+  - market stress
+  - IORB
+  - SRF
+  - ON RRP
+  - 資金市場
+  - 貨幣市場
+  - 美元流動性
+  - 隔夜利率
+  - 隔夜融資
+  - 短期融資
+  - 回購利率
+  - 銀行準備金
+  - 美國國庫券
+  - 短期美債
+  - 資金壓力
   search:
-  - q: '"repo market" OR SOFR OR "bank reserves" Fed'
+  - q: ("money market" OR "money markets" OR repo OR SOFR OR "Treasury bills") ("United States" OR Fed OR "U.S.")
     lang: en
+  - q: Fed (reserves OR liquidity OR "market stress") (site:reuters.com OR site:bloomberg.com)
+    lang: en
+  - q: 美國 (回購市場 OR 貨幣市場 OR 流動性 OR 國庫券)
+    lang: zh
 - id: oil
   label: 油價
   chips:
@@ -340,6 +380,8 @@ topics:
   search:
   - q: oil prices (site:reuters.com OR site:bloomberg.com)
     lang: en
+  - q: 油價 (原油 OR 中東 OR 伊朗)
+    lang: zh
 - id: equity
   label: 美股
   chips:
@@ -410,8 +452,10 @@ topics:
   - World Bank
   - 世界銀行
   search:
-  - q: Wall Street stocks (site:reuters.com OR site:bloomberg.com)
+  - q: (S&P OR Nasdaq OR Dow OR "Wall Street") (site:reuters.com OR site:bloomberg.com)
     lang: en
+  - q: 美股 (道瓊 OR 標普 OR 那斯達克 OR 收盤)
+    lang: zh
 - id: semi
   label: AI 與半導體
   chips:
@@ -495,9 +539,9 @@ topics:
   - 申購
   - 股息
   search:
-  - q: 台指期
+  - q: (台指期 OR 臺指期) (夜盤 OR 日盤)
     lang: zh
-  - q: 台股 外資
+  - q: (台股 OR 加權指數) (外資 OR 收盤)
     lang: zh
   require:
   - 台指期
@@ -526,10 +570,22 @@ topics:
   - 期中選舉
   - 參議院
   - 眾議院
+  - Senate election
+  - House election
+  - congressional election
+  - midterm election
+  - midterm elections
+  - US election
+  - 美國選舉
+  - 美國大選
+  - 國會選舉
+  - 選情
   search:
-  - q: midterm elections (site:reuters.com OR site:bloomberg.com)
+  - q: '"midterm elections" (Senate OR House OR poll OR campaign) (site:reuters.com OR site:bloomberg.com)'
     lang: en
-  - q: 美國期中選舉
+  - q: ("US midterms" OR "U.S. midterms" OR "midterm elections")
+    lang: en
+  - q: 美國 (期中選舉 OR 中期選舉) (參議院 OR 眾議院 OR 民調)
     lang: zh
 - id: gold
   label: 黃金
@@ -551,6 +607,8 @@ topics:
   search:
   - q: gold prices (site:reuters.com OR site:bloomberg.com)
     lang: en
+  - q: 黃金 金價
+    lang: zh
 - id: fx
   label: 匯率
   chips:
@@ -606,11 +664,6 @@ topics:
   - q: US dollar index (site:reuters.com OR site:bloomberg.com)
     lang: en
 
-# ============================================================================
-# 美國期中選舉預測（Polymarket，首頁卡片＋眾院／參院兩顆指標）
-# 公開資料、不用金鑰。選舉日後卡片改成「選舉結果」，hide_after 之後自動隱藏。
-# 事件代號（slug）就是 Polymarket 網址 /event/ 後面那一段。
-# ============================================================================
 election:
   enabled: true
   election_date: 2026-11-03

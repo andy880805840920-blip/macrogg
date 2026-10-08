@@ -84,6 +84,10 @@ def main_allowed(article: dict, topics: list[str] | None = None) -> bool:
     if not matched and not official_fed:
         return False
     foreign = FOREIGN.search(title)
+    foreign_fx = re.search(r"British Pound|Canadian Dollar|Australian Dollar|Singapore Dollar|Hong Kong Dollar|\b(?:rupee|yuan|renminbi|euro|pound|won|ringgit|baht)\b|英鎊|歐元|人民幣|港幣|韓元|泰銖|盧比|新加坡幣|澳幣|加幣",title,re.I)
+    us_lead = US_CORE.search(title)
+    if foreign_fx and foreign_fx.start()<=12 and (not us_lead or foreign_fx.start()<us_lead.start()):
+        return False
     us_bond = re.search(r"(?<![A-Za-z])(?:U[.]?S[.]?\s+Treasur(?:y|ies)|United States (?:bonds|Treasuries))(?![A-Za-z])|美債|美國公債", title, re.I)
     # Foreign investors buying U.S. bonds are U.S.-bond news; local foreign bonds
     # do not become U.S. news merely by appending a Treasury comparison.
@@ -139,6 +143,8 @@ COMPANY_NAMES = {
     "Alphabet": ("谷歌母公司", "Google母公司"), "Google": ("谷歌",), "Meta": ("臉書母公司",),
     "Facebook": ("臉書",), "OpenAI": ("開放人工智慧公司",), "Oracle": ("甲骨文",),
     "Tesla": ("特斯拉",), "AMD": ("超微",), "Intel": ("英特爾",), "Broadcom": ("博通",),
+    "Wistron": ("緯創",), "Wiwynn": ("緯穎",), "Quanta": ("廣達",),
+    "Foxconn": ("鴻海",), "MediaTek": ("聯發科",), "Delta Electronics": ("台達電",),
     "Qualcomm": ("高通",), "Micron": ("美光",), "Samsung": ("三星電子",), "SK hynix": ("SK海力士", "海力士"),
 }
 COMPANY_RULE = ("公司名稱一律使用來源可確認的英文名稱，例如 NVIDIA、TSMC、Microsoft、Apple、Amazon、Meta、Alphabet、Google、OpenAI。"
@@ -152,6 +158,10 @@ def topic_excluded(tid: str, article: dict, excludes) -> bool:
     # Taiwan futures and gold reject ETF stories even when mentioned only in a summary/body.
     target = text if tid in {"twf", "gold", "fx"} else title
     excludes = list(excludes or [])
+    if tid == "twf" and not re.search(r"(?<![A-Za-z])ETFs?(?![A-Za-z])|指數型基金|指數股票型基金",text,re.I):
+        # Corporate dividends affecting futures are market news; ETF/high-dividend promotions remain excluded.
+        if re.search(r"台指期|臺指期|Taiwan futures|\bTXF\b",title,re.I):
+            excludes=[k for k in excludes if k not in {"股息","配息"}]
     if tid == "semi" and any(hit(k, text) for k in ("NVIDIA", "TSMC", "輝達", "台積電", "semiconductor", "semiconductors", "晶片", "半導體")):
         excludes = [k for k in excludes if k not in {"台股", "臺股"}]
     if tid == "equity":
@@ -170,12 +180,62 @@ def is_official_fed(article: dict) -> bool:
             or str(article.get("source") or "").casefold() == "federal reserve")
 
 
+def news_item_allowed(article: dict) -> bool:
+    original_title=str(article.get("title") or "")
+    foreign=FOREIGN.search(original_title)
+    # Local daily gold quotes are not global bullion-market news.
+    if foreign and foreign.start()<=12 and re.search(r"gold price today|gold prices? (?:in|today)|今日金價|當地金價",original_title,re.I):
+        return False
+    title=re.sub(r"\s+[-–—|]\s+[^|–—-]{1,60}$", "", str(article.get("title") or "")).strip()
+    if title.casefold() in {"stocks","markets","news","business","finance","economy","stock market","股市","財經新聞"}:
+        return False
+    return not bool(re.search(r"\b(?:settlements|stock quote|stock quotes|market overview|products overview)\b|股票報價查詢|商品介紹|結算價格查詢",title,re.I))
+
+
 def topic_allowed(tid: str, article: dict) -> bool:
     title = article.get("title") or ""
     text = " ".join(str(article.get(k) or "") for k in ("title", "summary", "body"))
+    if tid == "funding":
+        if re.search(r"tokeni[sz]ed|crypto|代幣化|加密資產",title,re.I) and re.search(r"launch|introduc|推出|發行",title,re.I):
+            return False
+        signals=("SOFR","IORB","SRF","ON RRP","repo","repurchase agreement","bank reserves","reverse repo",
+                 "money market","money markets","money-market","dollar liquidity","overnight funding",
+                 "funding stress","funding pressure","Treasury bills","T-bills","Treasury cash balance",
+                 "market stress","資金市場","貨幣市場","美元流動性","隔夜利率","隔夜融資",
+                 "短期融資","回購市場","回購利率","準備金","美國國庫券","短期美債","資金壓力")
+        if not any(hit(k,text) for k in signals):
+            return False
+        foreign_signals=[m for m in (FOREIGN.search(title), re.search(
+            r"Bank of England|\bBoE\b|\bRBI\b|\bECB\b|\bBOJ\b|gilt|英國央行|印度央行|歐洲央行|日本央行",title,re.I)) if m]
+        foreign=min(foreign_signals,key=lambda m:m.start()) if foreign_signals else None
+        us=US_CORE.search(title)
+        if foreign and (not us or foreign.start()<us.start()):
+            return False
+        return bool(US_CORE.search(text) or is_official_fed(article)
+                    or any(hit(k,text) for k in ("SOFR","IORB","SRF","ON RRP","US repo","U.S. repo")))
+    if tid == "equity":
+        market=re.search(r"Wall Street|S&P(?: 500)?|Nasdaq|Dow|US stocks|U[.]S[.] stocks|美股|道瓊|標普|那斯達克|華爾街",text,re.I)
+        if not market:
+            return False
+        # A Wall Street employer or technology hub is not U.S. stock-market coverage.
+        if re.search(r"fresh grads|graduates|hiring|tech hubs|investment bank jobs|畢業生|招聘|招募",title,re.I) and not re.search(r"stocks?|shares?|equities|\bDow\b|\bNasdaq\b|S&P|股市|股價|美股",title,re.I):
+            return False
+        foreign=FOREIGN.search(title)
+        explicit_us=re.search(r"Wall Street|S&P|Nasdaq|Dow|US stocks|U[.]S[.] stocks|美股|道瓊|標普|那斯達克|華爾街",title,re.I)
+        return not foreign or bool(explicit_us and explicit_us.start()<foreign.start())
+    if tid == "election":
+        electoral=re.search(r"midterms?|elections?|Senate race|House (?:race|control|majority)|Senate control|congressional race|voters?|campaign|polls?|期中選舉|中期選舉|國會選舉|競選|選情|選民|民調",text,re.I)
+        us=re.search(r"United States|U[.]S[.]|(?<![A-Za-z])US(?![A-Za-z])|Trump|Republicans?|Democrats?|GOP|Congress|Senate|美國|川普|共和黨|民主黨|美國國會",text,re.I)
+        foreign=FOREIGN.search(title)
+        us_lead=US_CORE.search(title) or re.search(r"Trump|Republicans?|Democrats?|GOP|Congress|Senate|美國|川普|共和黨|民主黨",title,re.I)
+        return bool(electoral and us and (not foreign or (us_lead and us_lead.start()<foreign.start())))
     if tid == "twf":
         return any(hit(k, title) for k in ("台指期", "臺指期", "台股", "臺股", "加權指數", "台灣股市", "臺灣股市", "TAIEX", "Taiwan stocks", "Taiwan futures", "TXF"))
     if tid in {"long", "fed"}:
+        foreign_currency=re.search(r"British Pound|Canadian Dollar|Australian Dollar|Singapore Dollar|Hong Kong Dollar|\b(?:rupee|yuan|renminbi|yen|euro|pound|won|ringgit|baht)\b|英鎊|歐元|人民幣|港幣|韓元|泰銖|盧比|日圓|新加坡幣|澳幣|加幣",title,re.I)
+        us_subject=US_CORE.search(title)
+        if foreign_currency and (not us_subject or foreign_currency.start()<us_subject.start()):
+            return False
         lead = title + " " + str(article.get("summary") or "")
         if not article.get("summary") and article.get("body"):
             lead += " " + str(article["body"])[:600]
@@ -193,9 +253,29 @@ def topic_allowed(tid: str, article: dict) -> bool:
             return False
         return main_allowed({**article, "title": lead}, scope)
     if tid == "oil":
+        currency=re.search(r"Canadian Dollar|Australian Dollar|British Pound|US Dollar|U[.]S[.] Dollar|United States Dollar|Taiwan Dollar|\b(?:rupee|yuan|yen|euro|pound)\b|美元|台幣|日圓|英鎊|加幣|澳幣|歐元",title,re.I)
+        energy=re.search(r"oil|crude|WTI|Brent|OPEC|油價|原油|油輪|石油|能源供應",title,re.I)
+        if currency and (not energy or currency.start()<energy.start()):
+            return False
         # Conflict belongs to this topic only when energy supply/prices/transport are involved.
         return any(hit(k, text) for k in ("oil", "crude", "WTI", "Brent", "OPEC", "油價", "原油", "油輪", "能源供應", "energy supply", "oil tanker", "oil tankers", "oil exports", "石油", "石油出口"))
     if tid == "fx":
+        if re.search(r"tuition|visa fee|salary|留美工作|留學|學費|簽證費",title,re.I) and not re.search(
+                r"exchange rate|currency|forex|DXY|dollar index|匯率|匯市|美元(?:走強|走弱|升值|貶值)",title,re.I):
+            return False
+        # Require an exchange-rate subject, not a cash amount converted to TWD.
+        fx_subject = (r"exchange rate|currenc(?:y|ies)|forex|FX market|DXY|dollar index|USD/TWD|USDTWD|"
+                      r"Taiwan dollar|台幣|臺幣|匯率|匯市|匯價|外匯|"
+                      r"美元(?:走強|走弱|上漲|下跌|指數|升值|貶值)|"
+                      r"dollar (?:rises?|falls?|gains?|drops?|strengthens?|weakens?|firms?|rallies|steady|higher|lower|retreats?|advances?|surges?|slides?)")
+        if not re.search(fx_subject,title,re.I):
+            # Generic headlines may use a publisher lead that explicitly discusses FX.
+            lead = str(article.get("summary") or "")[:600]
+            rate_context = re.search(r"exchange rate|forex|FX market|DXY|dollar index|匯率|匯市|匯價|外匯|"
+                                    r"(?:美元|台幣|臺幣)[^。；;]{0,15}(?:走強|走弱|升值|貶值)|"
+                                    r"dollar (?:rises?|falls?|gains?|strengthens?|weakens?)",lead,re.I)
+            if not rate_context:
+                return False
         other = re.search(r"rupee|yuan|renminbi|won|ringgit|baht|Singapore dollar|Australian dollar|Canadian dollar|Hong Kong dollar|euro|pound|英鎊|歐元|人民幣|港幣|韓元|泰銖|盧比|新加坡幣|澳幣|加幣", title, re.I)
         focus = re.search(r"USD/TWD|USDTWD|TWD|Taiwan dollar|New Taiwan dollar|DXY|dollar index|(?<![A-Za-z])(?:U[.]?S[.]?\s+)?dollar(?:s)?(?![A-Za-z])|台幣|臺幣|新台幣|美元", title, re.I)
         if other and (not focus or other.start() < focus.start()):

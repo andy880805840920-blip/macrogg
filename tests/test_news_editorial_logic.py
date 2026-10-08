@@ -145,7 +145,8 @@ class EditorialTests(unittest.TestCase):
             return [] if 'site:' in url else [self.story('Gold prices rise - Financial Times')]
         mat=self.gather('gold',[],fetch=fetch)
         self.assertIn('gold',mat)
-        self.assertEqual(len(calls),2)
+        self.assertEqual(len(calls),3)
+        self.assertIn('news.ltn.com.tw',calls[-1])
 
     def test_topic_summary_update_invalidates_cache(self):
         mat=self.gather('gold',[self.story('Gold prices rise')])

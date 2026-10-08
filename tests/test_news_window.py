@@ -36,8 +36,9 @@ class WindowTests(unittest.TestCase):
             return [] if 'site:' in calls[-1][0] else [self.story(25)]
         got=ft.gather_topic_material([self.spec],[],now=self.now,_fetch=fetch,_body=lambda u:'')
         self.assertEqual(got,{})
-        self.assertEqual(len(calls),2)
-        self.assertTrue(all('when:1d' in u and hours==24 for u,hours in calls))
+        self.assertEqual(len(calls),3)
+        self.assertTrue(all(hours==24 for u,hours in calls))
+        self.assertTrue(all('when:1d' in u for u,hours in calls if 'news.google.com' in u))
     def rss_get(self,urls):
         records=[self.story(age) for age in [1,25,-1]]
         xml='<rss><channel>'+''.join('<item><title>'+h['title']+str(i)+'</title><link>'+h['link']+str(i)+'</link><pubDate>'+format_datetime(dt.datetime.fromisoformat(h['at']))+'</pubDate><source>Reuters</source></item>' for i,h in enumerate(records))+'</channel></rss>'
