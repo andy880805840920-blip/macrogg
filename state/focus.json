@@ -1,6 +1,6 @@
 {
- "hash": "ba1ea0aff880dc71",
- "text": "美國10年期公債殖利率大幅上升，創1994年以來最大季度漲幅，但PIMCO高級顧問認為殖利率具有吸引力。10年期公債拍賣強勁，美債市場保持穩定，儘管殖利率攀升衝擊股市，美股收低。\n抵押貸款債券殖利率上升可能引發對美債殖利率的連鎖反應，形成市場反饋機制中的惡性循環。",
+ "hash": "fda30cbb2d893750",
+ "text": "美國十年期公債殖利率觸及2002年以來最高水準，引發市場對聯準會政策前景的重新評估。Yahoo Finance報導指出，隨著股市回檔，十年期Treasury殖利率創下逾二十年新高，反映市場對長期通膨與財政狀況的擔憂升溫。聯準會於九月十五至十六日召開FOMC會議，會議紀錄已於周三發布，但材料未披露具體政策決議內容。Treasury殖利率飆升同時，Financial Times報導美國十年期公債拍賣表現強勁，惟亞洲債券發行因殖利率上升而承壓，顯示全球債市面臨重新定價壓力。\n聯準會與日本央行進行聯合干預支撐日圓，Bloomberg報導指出Fed動用Treasury基金參與此次干預，反映對匯市穩定的關注。路透民調顯示，儘管第三季Treasury殖利率創1994年以來最大季度漲幅，市場仍普遍預期美債殖利率將走低。",
  "links": [
   {
    "title": "US government bonds steady after strong 10",
@@ -136,16 +136,16 @@
    }
   }
  },
- "text_source": "model",
- "at": "2026-10-07T20:13:15.117010+00:00",
+ "text_source": "model-content",
+ "at": "2026-10-08T02:41:27.925967+00:00",
  "layout": "main",
  "topics": {
-  "hash": "04d3e99d1089eff6",
+  "hash": "8cf335eec7f6d55c",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "紐約聯準會9月消費者預期調查顯示，未來12個月通膨中位數預期升至3.9%，較8月上升0.3個百分點，創2023年5月以來最高，反映通膨擔憂升溫，對聯準會政策前景構成挑戰。",
+    "text": "紐約聯準會消費者預期調查顯示，九月份未來十二個月通膨中位數預期升至3.9%，為近三年半最高，較八月上升0.3個百分點，反映市場對物價上升的擔憂加劇。",
     "links": [
      {
       "title": "Fed Minutes Show Hawkish Unity Behind September Rate Hike",
@@ -160,9 +160,26 @@
     ]
    },
    {
+    "id": "long",
+    "label": "長天期美債",
+    "text": "美國十年期公債殖利率升破5.35%，30年期則上升至5.725%，債券殖利率提高增加政府與企業融資成本，同時提高固定收益資產相對吸引力，促使投資人重新評估高估值科技成長股的合理價格。",
+    "links": [
+     {
+      "title": "Wall Street ends lower, off record highs, as Treasury yields climb",
+      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
+      "source": "Reuters"
+     },
+     {
+      "title": "Lower US Treasury yield view persists despite biggest quarterly surge since 1994: Reuters poll",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNaGNfYWZBTXVWQjV6WUFib3lJV2RJZlZYVVJNalI0TlpKVmFvVklyd1lrNVpLdWQ2d21ncGY4NGVjZzdGc0ZfQ1FpY1BaazFIYUVHaFREdENXVFI4U3pBVGxubXJoUzhoU2JqUlR4RTN6dklyWXF5aXEteWdWOTQ4bmJSRS1LcUVpZ19sZ3VoNGpVMDNVTzBmdXVVX29SVC1CcFZSVHBDUkhub1JPdVFKRGpnZ2ZTNXVHaDFYX0RQRXp1N1U?oc=5",
+      "source": "Reuters"
+     }
+    ]
+   },
+   {
     "id": "oil",
     "label": "油價",
-    "text": "美國原油庫存意外大幅下降318.6萬桶至4.241億桶，創六周最大降幅，但庫欣交割中心庫存增加44.4萬桶至2,470萬桶，連續第三周回升，柴油供應吃緊推升期貨上漲約3%。",
+    "text": "西德克薩斯中間基原油週三收高0.6%至每桶101.17美元，布蘭特原油突破101美元，漲勢與中東地緣政治風險及荷莫茲海峽運輸疑慮相關，墨西哥灣熱帶風暴逼近也增加能源供應不確定性。",
     "links": [
      {
       "title": "Syria Set to Emerge as Hormuz-Bypass Option for Iraq’s Crude Oil",
@@ -170,16 +187,33 @@
       "source": "Bloomberg"
      },
      {
-      "title": "World shares, euro slide as high oil prices, fiscal worries linger",
-      "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQZW5YUkkzdjhfTWJXY25aWkVLeExISGkybXo1YmFoS256Qk5DclZaVVc4ODRnejkzYlBYOTBVWWp5YTVHRDVyMmtBUDVZWHlFclVhYUtIU2d0Tm1GWmRzMnhQNlg4aVVfWEZjb21nQ0tTUzc0WjQ5bEhmWVJuNzFwX25Bdw?oc=5",
+      "title": "Oil Edges Higher on Iran Strike Options Report and Storm Impact",
+      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOVm1wbXQ1aE1YUVVrSi1SOGlvX3dMejZxTnFhemxUbWhHTjB1UERwV0hEMGtHZnJmWU12UVlteWc4U0wzUW45b1FKY2xFbDBRNUc0TGVxcVZkbzVqSnF4Z2twbFNpTXNUb1lhcUlXZ3Z1cGNTWXBubUZnX0M3ZFlWRndxZHg5el9EN3ZwX0dZaTY0R0x4b0MxRW1IUQ?oc=5",
+      "source": "Bloomberg"
+     }
+    ]
+   },
+   {
+    "id": "equity",
+    "label": "美股",
+    "text": "標普500指數儘管十年期公債殖利率飆升至5.36%，仍創歷史新高，主要受強勁經濟成長與AI投資熱潮支撐，九月S&P Global採購經理人指數達五年高點，市場預期2026年企業獲利將實現雙位數成長。",
+    "links": [
+     {
+      "title": "Wall Street ends lower, off record highs, as Treasury yields climb",
+      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
       "source": "Reuters"
+     },
+     {
+      "title": "Stocks Are Due for a ‘Gut Check’ From Rates, Oil and the Dollar",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNWXhQd05BazhheG0tV2NqUVRfWV9xU2hESlliUFRrdDFLVURoRk5EdVZ1elI3Y0N0Yk12MXEzd1RrQlV6VWZWYVNXaVhoWEI3cG5tdzduZnpjNDU1NzduYlNnamx1UUppWlQ5LWdqTFEtSjFCTXVyRmlLNG5fU1BuSW5aNU5fbnU5c2VZSldUb3pYY0pSc04yeVVHQmxjcUdJNXAxSXpSeExLeEVadDdBdDEzaTg?oc=5",
+      "source": "Bloomberg"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Microsoft與NVIDIA推出搭載NVIDIARTX Spark晶片的Surface Laptop Ultra，讓AI代理直接在個人電腦執行程式設計工作，減少對雲端依賴，但記憶體價格飆升推高硬體成本，衝擊競爭力。",
+    "text": "OpenAI發布722篇AI生成數學論文，對超過300個未解問題提供進展，涵蓋數論與代數幾何等領域；Mistral AI推出兆級參數模型，展現AI在科學研究的突破性進展。",
     "links": [
      {
       "title": "Musk says TSMC won't run Terafab AI chip complex",
@@ -192,8 +226,59 @@
       "source": "Bloomberg"
      }
     ]
+   },
+   {
+    "id": "twf",
+    "label": "台指期",
+    "text": "台指期夜盤下跌，TSMCADR跌幅逾1.4%，受美股四大指數全面下挫影響，法人預期台股可能面臨高檔震盪。",
+    "links": [
+     {
+      "title": "台股連假前5萬點無望？美股四大指數全倒 TSMCADR挫1.4％、台指期夜盤殺回49K",
+      "link": "https://news.google.com/rss/articles/CBMivANBVV95cUxONmdSc3BrN2I3NjZndVUwLWpCcHJaTVhVaEFDRHZ1c1JIVDBldUp5OTlSRmlOelYxSUNHM2I0ZmxDQjBRdDNWdEpQSGNfM3J2dmlBZ0FobmhsWEtaamNNWWJFQ2p0UzBkLUxCVjVncUZLMGszTGxxSmN1LWduWjdsOFFlWkR5Mlc1RlF6SzBrc0NQOFk4MVpxRkU1bGw4eG9QVFFLMl8zcnRfaHR0b1hGNVdIeFVla3p3RkUtd2hyUFZwYTFCSFl2dk9lVGxhNlp1OTVVMjhRMGI5cjZIbHljUDg5N3Z4NjVSUTBPMmdnUVhHMFNJWHZ2d2FZWS1mbWswMWs1c1c2UDhDTThZT29QYjM4UVR5RkN0N000X1dHZzBxWmRRdDJvbHhhelJWZ3F3QkkwUjhwQzNaX0Z0ZVMtWWhLR0R2aExPMndiVTBMVFA0QUc0VW15LU1lNUJVUkZOYWZ0enY1OXFnaDYyd3NvMlRSRW55N2FKV0lzNHVweTRhMGoxdXJjWDIxMXRER2wycXd4WnJSVGk5T3ZXQnMtZmJROHl1R09uakxMMXBpS1NwN0hyd3FyYVUwRlE?oc=5",
+      "source": "Yahoo股市"
+     },
+     {
+      "title": "台指期夜盤下跌　法人：台股可能高檔震盪",
+      "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNU282a2xiSWRXMlBGdzlPSmZUaDhuS3ZjZUNvdHdxQV9jcEhqd2M5M2VVUERNUlVYRmxBSEhuRnk1ZzhIUm00V1pJb2lTNVVIUHB3VUFDY2cwRjBiSThFOWZVeGFFWmFFZDFKVnQ3dDZ6WjFycExWYWY4UEtaUFczX9IBX0FVX3lxTE5FS0xqMEp1ajlrZDdoQTYyd0FtV09jeFNmMTdMbE14MWpfWHQ0ZEVPUXRxNzJoZFdBa0VGSUtMWjZXOFNUakFoT3dsaWtrTHN3a0lLUmdlck5PUEFna19J?oc=5",
+      "source": "經濟日報"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "中國央行九月增加黃金儲備，香港與新加坡爭相建立黃金交易樞紐地位，黃金在觸及兩個月低點後小幅回升。",
+    "links": [
+     {
+      "title": "China’s Central Bank Adds Gold in September as Bullion Weakens",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQbGRoWVhaLXpCM2tSZE1vZkpKVkZ2aFR0SlRxVHoxX3FxYlZhMTVDMDlrSkpBWkhpQkQwMDJPYzRsOWhodmhSSnU1aEw5ZnpSaWNjczNkQ2R5RVJkLUdWYTdkVEJVS3oyVnZkaUZaaW9veWtfT3BWejNwU216OWVYaHZBZkNmYnpIX0ZVa2k4SHhsNnFnWVM5VTdIMTZSdlUtQ1Fqc0xGTUtIRGh5TnJfQ3ZVUQ?oc=5",
+      "source": "Bloomberg"
+     },
+     {
+      "title": "Hong Kong and Singapore Pitch Rival Gold Hubs to Bullion Market",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxORVZkcHBBcDNtYXV5dkFWcGFvZ2xYUm5VMmRzenluZEpVQkpnM2cwRjFvRm9vVDNlcThJdklZS0FnUGF6LWttZy1fYnZ0bTRHNTA2YXNWYWFod2RpUVJwNVVMSlJOLXp4QnNWZXVkbHpWdzRuWlViVjlCMmFnZ3owUHpJanZaeVNHZHltbDhGN1lYQjFnSTFDNjdnbG1HVU1Kb3VWOFpYRWlaQXNXYzk1THJLcnM?oc=5",
+      "source": "Bloomberg"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "伊拉克將第納爾貶值至兌美元1,520元，新台幣週三小貶1.4分至31.795元，美債殖利率與美元雙雙回升推升貶值壓力。",
+    "links": [
+     {
+      "title": "Iraq devalues dinar to 1,520 per US dollar, state news agency says",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPMEpwOEJxamRUYWRiRS1XT1lsUDlTcWx6WnhhblZWODZ1b1NpN1ZRTWJXMjZjbVR1SnplZEMwYmYyNXpQOGRnanRaenFiNUVBdVY2bmZxUURyb1RUdktXUGpLaVdGUThRLUY1Z1BEMXItUEZoVUlWbE04Vy11ZjlpajJsZ3l2QVd3N2NIREJwZWFFZ0RJbThweG8zZjJGeDdtbThuUEJacHVFRnh3QWFNd3hrLXA4QQ?oc=5",
+      "source": "Reuters"
+     },
+     {
+      "title": "《國內匯市》09:45，新台幣兌美元為31.841元，貶值4.6分",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPX0pyRVdXQ3BQUFY4RjI4OVR6dFo2bHFqV3NkQVNQdmttLVB5Wlg2eFdJMmtOekljdlExVWh1S0phbHEtbTRyUS1rWmJyMzBvV2E3ZVk5LWxlZjVNNXRzdzF2TkhzSjdYY0RuaWUzWDcxcHZrR0doazJ0UzFxelZabWNVRG5vUy1r?oc=5",
+      "source": "富聯網"
+     }
+    ]
    }
   ],
-  "at": "2026-10-07T20:13:26.499935+00:00"
+  "at": "2026-10-08T02:41:39.385309+00:00"
  }
 }
