@@ -145,27 +145,28 @@ class EditorialTests(unittest.TestCase):
             return [] if 'site:' in url else [self.story('Gold prices rise - Financial Times')]
         mat=self.gather('gold',[],fetch=fetch)
         self.assertIn('gold',mat)
-        self.assertEqual(len(calls),3)
-        self.assertIn('news.ltn.com.tw',calls[-1])
+        self.assertIn('news.ltn.com.tw',calls[0])
+        self.assertTrue(any('site:' in c for c in calls))
+        self.assertEqual(mat['gold']['links'][0]['source'],'Reuters')
 
     def test_topic_summary_update_invalidates_cache(self):
-        mat=self.gather('gold',[self.story('Gold prices rise')])
+        mat=self.gather('gold',[self.story('Gold prices rise',summary='Gold rose as investors sought safety and the US dollar weakened during trading.')])
         st={};text='黃金價格上漲，市場避險需求推升金價，報導指出美元與利率走勢仍是投資人評估黃金表現的重要因素。'
         with patch.object(ft,'gather_topic_material',return_value=mat),patch.object(ft,'_call_ai',return_value=('gold｜'+text,'')) as ai:
             ft.build_topics(self.cfg,[],'',[],st,now=self.now)
             ft.build_topics(self.cfg,[],'',[],st,now=self.now)
             self.assertEqual(ai.call_count,1)
-            mat['gold']['briefs'][0]['summary']='Gold rose on renewed demand.'
+            mat['gold']['briefs'][0]['summary']='Gold rose on renewed demand as investors weighed changes in the US dollar and Treasury yields.'
             ft.build_topics(self.cfg,[],'',[],st,now=self.now)
             self.assertEqual(ai.call_count,2)
     def test_topic_body_update_invalidates_cache(self):
         mat=self.gather('gold',[self.story('Gold prices rise')])
-        mat['gold']['arts']=[{'title':'Gold prices rise','body':'first report','source':'Reuters','link':'https://example.com/a'}]
+        mat['gold']['arts']=[{'title':'Gold prices rise','body':'Gold prices rose as safe haven demand increased and investors assessed movements in the US dollar.','source':'Reuters','link':'https://example.com/a'}]
         st={}
-        with patch.object(ft,'gather_topic_material',return_value=mat),patch.object(ft,'_call_ai',return_value=('gold｜黃金價格上漲。','')) as ai:
+        with patch.object(ft,'gather_topic_material',return_value=mat),patch.object(ft,'_call_ai',return_value=('gold｜黃金價格上漲，市場避險需求增加，投資人同時評估美元的變動。','')) as ai:
             ft.build_topics(self.cfg,[],'',[],st,now=self.now)
             before=ai.call_count
-            mat['gold']['arts'][0]['body']='updated report'
+            mat['gold']['arts'][0]['body']='Gold prices rose on stronger demand as investors monitored the US dollar and Treasury yield changes.'
             ft.build_topics(self.cfg,[],'',[],st,now=self.now)
             self.assertGreater(ai.call_count,before)
     def test_old_news_is_not_generated(self):

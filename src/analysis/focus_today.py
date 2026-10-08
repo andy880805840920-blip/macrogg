@@ -629,7 +629,7 @@ def fetch_headlines(keywords: list[str], hours: int = NEWS_HOURS,
             core = news_checks.clean_title(title, src)
             key = _norm_title(core)
             desc = _html.unescape(re.sub(r"<[^>]+>", " ", item.findtext("description") or ""))
-            desc = re.sub(r"\s+", " ", desc).strip()[:240]
+            desc = news_checks.clean_news_copy(desc)[:240]
             rec = {"title": title, "link": link, "source": src,
                    "at": at.isoformat(), "kw": kw, "summary": desc}
             if key in seen:
@@ -855,7 +855,7 @@ def fetch_feed_headlines(feeds: list, keywords: list[str],
     out.sort(key=lambda x: dt.datetime.fromisoformat(x["at"]), reverse=True)
     return out
 
-def _article_paragraphs(page: str) -> list[str]:
+def _legacy_article_paragraphs(page: str) -> list[str]:
     """Prefer actual article content; exclude navigation, related stories and ads."""
     from html.parser import HTMLParser
     class Paragraphs(HTMLParser):
@@ -894,18 +894,22 @@ def _article_paragraphs(page: str) -> list[str]:
     parser.feed(page); parser.finish()
     scoped=[text for text,scope in parser.rows if scope]
     rows=scoped or [text for text,scope in parser.rows]
-    return [p for p in rows if not re.search(
+    return [cleaned for p in rows if not re.search(
         r"資料照|圖片來源|（記者[^）]{0,50}攝）|版權所有|All Rights Reserved|一手掌握.*訂閱|點我下載|APP看新聞|加入Google首選"
-        r"|^(?:Support the Guardian|Sign up for|Subscribe to our|We use cookies)",p,re.I)]
+        r"|^(?:Support the Guardian|Sign up for|Subscribe to our|We use cookies)",p,re.I)
+        and (cleaned := news_checks.clean_news_copy(p))]
+
+
+def _article_paragraphs(page: str, url: str = "") -> list[str]:
+    from .news_article import extract_paragraphs
+    return extract_paragraphs(page, url, fallback=_legacy_article_paragraphs)
 
 
 def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
     """
-    抓文章頁、抽出正文（<p> 段落）。Yahoo 新聞頁的正文是伺服器渲染的，
-    requests 就抓得到。抽不出足夠文字（<100 字）回空字串——改版、擋爬、
-    影音頁都會走到這裡，由呼叫端退回標題模式。
+    抓文章頁，先用共用正文擷取器排除署名、導覽與推薦，再備援文章段落。
+    抽不出足夠文字時回空字串，由呼叫端換下一篇；不把整頁文字當正文。
     """
-    import html as _html
     get = _get or (lambda u: requests.get(
         u, timeout=TIMEOUT,
         headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
@@ -917,7 +921,7 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
         log.warning("市場焦點：文章抓取失敗（%s：%s）", url[:60], e)
         return ""
     paras = []
-    for text in _article_paragraphs(page):
+    for text in _article_paragraphs(page, url):
         paras.append(text)
         if sum(len(p) for p in paras) >= cap:
             break
@@ -1170,7 +1174,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f14-name-compound-boundaries-24h"
+FOCUS_PROMPT_VERSION = "f16-shared-article-extraction-24h"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1424,7 +1428,7 @@ def summarize_content(articles: list[dict], keywords: list[str],
     if briefs:
         src_text += "\n\n標題快訊（只能轉述標題與官方摘要）：\n" + "\n".join(
             f"【報導a{i + len(articles) + 1}】【{b.get('source') or '—'}】{b['title']}"
-            + (f"——{b['summary']}" if b.get("summary") else "")
+            + (f"——{news_checks.clean_news_copy(b['summary'])}" if b.get("summary") else "")
             for i, b in enumerate(briefs))
     if caps:
         _mins = mins or focus_mins({})
@@ -2426,7 +2430,7 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 #     套用在主軸與其他主題）
 #   · 每則補充前面加主題標籤
 # ---------------------------------------------------------------------------
-TOPIC_PROMPT_VERSION = "t9-name-compound-boundaries-24h"
+TOPIC_PROMPT_VERSION = "t11-shared-source-recovery-24h"
 TOPIC_CHARS, TOPIC_MIN = 80, 40
 # 公開RSS提供直接文章連結與出版社摘要；全部主題缺少可讀內容時補入。
 TOPIC_PUBLIC_FEEDS = PUBLIC_NEWS_FEEDS
@@ -2536,7 +2540,13 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
     body = _body or fetch_article_text
     mains = [x for x in main_titles if x]
     picked: dict = {}
-    public_pool = None
+    # All topics see the same public sources, even when a search yielded only titles.
+    try:
+        public_pool = fetch([{"url": u, "all": True} for u in TOPIC_PUBLIC_FEEDS],
+                            [], hours=NEWS_HOURS, exclude=[])
+    except Exception as e:
+        log.warning("主題補充：公開財經RSS取得失敗（%s）", e)
+        public_pool = []
     for s in specs:
         exc = list(s["exclude"] if s["exclude"] is not None else (global_exclude or []))
         exc += s.get("exclude_add") or []
@@ -2550,7 +2560,7 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
                 log.warning("主題補充：%s 的搜尋 feed 失敗（%s）", s["id"], e)
         def candidates(extra_heads):
             found, seen = [], set()
-            pairs = [(x, False) for x in pool] + [(x, True) for x in extra_heads or []]
+            pairs = [(x, False) for x in list(pool) + public_pool] + [(x, True) for x in extra_heads or []]
             pairs.sort(key=lambda item: (
                 _age_hours(item[0], now or dt.datetime.now(dt.timezone.utc))
                 if _age_hours(item[0], now or dt.datetime.now(dt.timezone.utc)) is not None
@@ -2593,53 +2603,59 @@ def gather_topic_material(specs: list[dict], pool: list[dict], *,
                     cand = candidates(extra)
                 except Exception as e:             # noqa: BLE001
                     log.warning("主題補充：%s 擴大來源失敗（%s）", s["id"], e)
-        if not cand or not any(h.get("summary") for h in cand):
-            if public_pool is None:
-                try:
-                    public_pool = fetch([{"url": u, "all": True} for u in TOPIC_PUBLIC_FEEDS],
-                                        [], hours=NEWS_HOURS, exclude=[])
-                except Exception as e:             # noqa: BLE001
-                    log.warning("主題補充：公開財經RSS取得失敗（%s）", e)
-                    public_pool = []
-            # 各主題重新套用時間、關鍵字、國家與排除條件，不能整批放行。
-            cand = candidates(extra + (public_pool or []))
         if not cand:
             continue
         picked[s["id"]] = {
             "spec": s,
             "exclude": exc,
             "body_cand": _rank_topic([h for h in cand if not _headline_only(h["link"])],
-                                     s["keywords"], 2, now),
+                                     s["keywords"], 4, now),
             "briefs": _rank_topic([h for h in cand if _headline_only(h["link"])],
                                   s["keywords"], 3, now),
             "links": _rank_topic(cand, s["keywords"], 2, now)}
-    # 內文一次並行抓（全部主題合起來）
-    jobs = [(tid, h) for tid, m in picked.items() for h in m["body_cand"]]
-    bodies = _pmap(lambda j: body(j[1]["link"]), jobs, workers=8)
+    # One bounded extraction/replacement policy for all topics. Fetch shared URLs once.
+    fetched = {}
+    accepted = {tid: [] for tid in picked}
+    rejected = {tid: set() for tid in picked}
+    attempted = {tid: [] for tid in picked}
+    for offset in (0, 2):
+        jobs = [(tid, h) for tid, m in picked.items() if len(accepted[tid]) < 2
+                for h in m["body_cand"][offset:offset + 2]]
+        urls = list(dict.fromkeys(h["link"] for tid, h in jobs if h["link"] not in fetched))
+        for url, value in zip(urls, _pmap(body, urls, workers=8)):
+            fetched[url] = value or ""
+        for tid, h in jobs:
+            attempted[tid].append(h)
+            value = fetched.get(h["link"], "")
+            if not value:
+                continue
+            article = {**h, "body": value}
+            if (news_policy.topic_excluded(tid, article, picked[tid]["exclude"])
+                    or not news_policy.topic_allowed(tid, article)):
+                rejected[tid].add(h["link"])
+                continue
+            if len(accepted[tid]) < 2 and not any(news_checks.same_event(article, a) for a in accepted[tid]):
+                accepted[tid].append(article)
     out = {}
     for tid, m in picked.items():
-        rejected = {h["link"] for (t2, h), b in zip(jobs, bodies) if t2 == tid and b
-                    and (news_policy.topic_excluded(tid, {**h, "body": b}, m["exclude"])
-                         or not news_policy.topic_allowed(tid, {**h, "body": b}))}
-        arts = [{"title": h["title"], "body": b, "source": h.get("source", ""),
-                 "link": h["link"], "at": h.get("at", ""), "summary": h.get("summary", "")}
-                for (t2, h), b in zip(jobs, bodies) if t2 == tid and b and h["link"] not in rejected]
-        # 正文讀不到時保留合格的公開標題／摘要，已確認違反主題條件的報導不回補。
-        m["briefs"] = _rank_topic(m["briefs"] + [h for (t2, h), b in zip(jobs, bodies)
-                                               if t2 == tid and not b
-                                               and h["link"] not in rejected],
-                                   m["spec"]["keywords"], 3, now, prefer_detail=True)
+        arts = accepted[tid]
+        # Failed extractions may contribute a publisher excerpt, never rejected content.
+        m["briefs"] = _rank_topic(m["briefs"] + [h for h in attempted[tid]
+                    if not fetched.get(h["link"]) and h["link"] not in rejected[tid]],
+                    m["spec"]["keywords"], 3, now, prefer_detail=True)
         m["briefs"] = [h for h in m["briefs"]
                        if not any(news_checks.same_event(h, a) for a in arts)]
-        material_links = {a["link"] for a in arts} | {b["link"] for b in m["briefs"]}
-        linked = _rank_topic([h for h in m["body_cand"] + m["briefs"]
-                              if h["link"] in material_links], m["spec"]["keywords"], 5, now)
-        # 參考報導至少保留一篇實際提供正文／摘要的來源，避免只連到空標題。
-        detailed = [h for h in m["body_cand"] + m["briefs"] if h["link"] in material_links
-                    and (any(a["link"] == h["link"] for a in arts) or h.get("summary"))]
-        first_detail = _rank_topic(detailed, m["spec"]["keywords"], 1, now)
-        m["links"] = (first_detail + [h for h in linked
-                         if not any(news_checks.same_event(h, d) for d in first_detail)])[:2]
+        # The summary and the public reference links use the same source articles.
+        sources = arts + m["briefs"]
+        m["links"] = []
+        for article in sources:
+            if not any(news_checks.same_event(article, a) for a in m["links"]):
+                m["links"].append(article)
+            if len(m["links"]) == 2:
+                break
+        included = {a["link"] for a in m["links"]}
+        arts = [a for a in arts if a["link"] in included]
+        m["briefs"] = [a for a in m["briefs"] if a["link"] in included]
         if not arts and not m["briefs"]:
             continue
         out[tid] = {"arts": arts, "briefs": m["briefs"],
@@ -2658,12 +2674,12 @@ _TOPIC_SYSTEM = (
     "講到時，點出它對利率、聯準會或市場的意義。不能只重述標題。不要跟主軸講"
     "同一件事——區塊裡若都是主軸那件事，就寫同一主題下的另一件事；真的沒有"
     "別的事也要忠實整理該主題已有的報導，不得省略代號或輸出略；"
-    "只有標題時可以精簡，不能為達字數而編造細節。硬性規則：只能使用該區塊材料裡的資訊，不得補充"
-    "材料以外的事實或數字；只有標題的新聞只能轉述標題與摘要字面上的事，引用時"
+    "必須使用正文或出版社摘要已有的細節，不能只是改寫標題。硬性規則：只能使用該區塊材料裡的資訊，不得補充"
+    "材料以外的事實或數字；標題只能幫助辨識事件，不得當成完整內容。引用時"
     "帶來源（例如「路透報導稱…」）；不得自行推論來源沒有寫的因果關係；不做"
     "預測、不下投資結論；繁體中文；不要評論材料本身，不要出現「材料」「區塊」"
     "這類字眼。輸出格式：每個主題一行，「代號｜內容」，例如「oil｜…」，"
-    "不要其他文字、不要編號、不要粗體記號。")
+    "不要其他文字、不要編號、不要粗體記號。所有內容都用自然繁體中文、以完整句子結束；記者署名、導覽及假日休市資訊不要取代主題市場變化。")
 
 _TOPIC_LINE = re.compile(r"^\s*[-*・•]?\s*([a-z][a-z0-9_]*)\s*[｜|:：]\s*(.+?)\s*$")
 
@@ -2671,7 +2687,7 @@ _TOPIC_LINE = re.compile(r"^\s*[-*・•]?\s*([a-z][a-z0-9_]*)\s*[｜|:：]\s*(.
 def _topic_block(tid: str, label: str, m: dict) -> str:
     parts = [f"=== {tid}｜{label} ==="]
     for a in m["arts"]:
-        parts.append(f"【{a.get('source') or '—'}】{a['title']}\n{a['body']}")
+        parts.append(f"【{a.get('source') or '—'}】{a['title']}\n{news_checks.clean_news_copy(a['body'])}")
     for b in m["briefs"]:
         kind = "標題與出版社摘要" if b.get("summary") else "只有標題"
         parts.append(f"【{b.get('source') or '—'}】{b['title']}（{kind}）"
@@ -2697,6 +2713,35 @@ def _parse_topic_lines(text: str) -> dict:
     return out
 
 
+def _topic_has_detail(m: dict) -> bool:
+    for article in m.get("arts", []) + m.get("briefs", []):
+        text = news_checks.clean_news_copy(article.get("body") or article.get("summary") or "")
+        if text and _norm_title(text) != _norm_title(article.get("title", "")):
+            if cjk_len(text) >= 15 or len(text) >= 60:
+                return True
+    return False
+
+
+def _topic_summary_problem(text: str, src: str, m: dict, meta_markers=None) -> str:
+    """The same publication checks apply to every topic and every retry."""
+    problem = news_checks.topic_copy_problem(text)
+    if problem:
+        return problem
+    if news_checks.topic_copy_problem(_trim_to(text, TOPIC_HARD)):
+        return "縮短後句子不完整，請在字數範圍內重寫完整句子"
+    if _meta_hits(text, meta_markers):
+        return "在評論材料而不是寫新聞"
+    if not _digits_ok(text, src):
+        return "出現該主題材料裡沒有的數字"
+    if cjk_len(text) < 15:
+        return "內容過短，請交代事件及來源已提供的細節"
+    plain = re.sub(r"^[^：:]{1,30}[：:]", "", text)
+    if any(_norm_title(plain) == _norm_title(a.get("title", ""))
+           for a in m.get("arts", []) + m.get("briefs", []) + m.get("links", [])):
+        return "只有重述標題，請整理正文或出版社摘要的具體細節"
+    return ""
+
+
 def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
                      meta_markers=None, skipped: set | None = None) -> dict:
     """
@@ -2704,6 +2749,7 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
     材料、長度）。有問題的主題先批次重寫一次，仍失敗則各自重試；
     合格結果回傳 {tid: 文字}，最終備援由 build_topics 處理。
     """
+    material = {tid: m for tid, m in material.items() if _topic_has_detail(m)}
     if not material:
         return {}
     skipped = skipped if skipped is not None else set()
@@ -2734,10 +2780,9 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
                 continue
             if skipped is not None:
                 skipped.discard(tid)
-            if _meta_hits(s, meta_markers):
-                bad[tid] = "在評論材料而不是寫新聞"
-            elif not _digits_ok(s, srcs[tid]):
-                bad[tid] = "出現該主題材料裡沒有的數字"
+            problem = _topic_summary_problem(s, srcs[tid], material[tid], meta_markers)
+            if problem:
+                bad[tid] = problem
             elif cjk_len(s) < int(TOPIC_MIN * SHORT_TOL) and attempt == 1:
                 bad[tid] = (f"只有 {cjk_len(s)} 字，像在列標題（要寫出發生了什麼"
                             "再加一個具體細節）")
@@ -2757,9 +2802,10 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
     remaining = ([] if recovery_unavailable else
                  [tid for tid in material if tid not in good])
     def recover(tid):
-        prompt = (head + "\n\n" + srcs[tid] + "\n\n只處理這一個主題。"
+        prompt = (head + "\n\n" + _topic_recovery_block(tid, labels.get(tid, tid), material[tid]) + "\n\n只處理這一個主題。"
                   "優先選有正文或出版社摘要的報導，寫出事件與來源已交代的細節。"
                   "只有標題時可以忠實整理多則標題，但不得補造原因、走勢、日期或數字；"
+                  "只選一篇報導，不必把全部數字寫進摘要；可以用來源已有的市場反應、公司比較或原因作為具體細節。"
                   "內容有限時寧可精簡，不要評論素材。輸出代號｜內容。")
         text, err = _call_ai(prompt, system, env)
         value = (_parse_topic_lines(text).get(tid) or "").strip()
@@ -2767,10 +2813,8 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
             return tid, ""
         if err or not value:
             return tid, ""
-        if _meta_hits(value, meta_markers) or not _digits_ok(value, srcs[tid]):
+        if _topic_summary_problem(value, srcs[tid], material[tid], meta_markers):
             log.warning("主題補充：%s 單獨重寫仍未通過內容檢查", tid)
-            return tid, ""
-        if cjk_len(value) < 15:
             return tid, ""
         return tid, _trim_to(value, TOPIC_HARD)
     for result in _pmap(recover, remaining, workers=3):
@@ -2780,28 +2824,72 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
     return good
 
 
-def _topic_public_text(m: dict) -> str:
-    """摘要無法產出時呈現來源字面，不自行補寫新聞內容。"""
-    if not m.get("links"):
+_COPY_CUES = {
+    "twf": ("台指期", "臺指期", "Taiwan futures", "TXF"),
+    "semi": ("chip", "chips", "chipmaker", "semiconductor", "semiconductors", "Nvidia", "Samsung", "Micron", "SK Hynix", "TSMC", "AI", "半導體", "晶片", "輝達", "台積電", "人工智慧"),
+    "fed": ("Fed", "Federal Reserve", "FOMC", "聯準會", "升息", "降息"),
+    "long": ("Treasury", "Treasuries", "yield", "yields", "美債", "殖利率", "公債"),
+    "funding": ("repo", "SOFR", "reserves", "market stress", "回購", "資金", "準備金"),
+    "oil": ("oil", "crude", "Brent", "WTI", "油價", "原油"),
+    "equity": ("Dow", "Nasdaq", "S&P", "stocks", "美股", "道瓊", "標普", "那斯達克"),
+    "gold": ("gold", "bullion", "黃金", "金價"),
+    "fx": ("dollar", "DXY", "TWD", "美元", "台幣", "臺幣", "新台幣", "匯率"),
+    "election": ("midterm", "midterms", "elections", "Senate", "House", "期中選舉", "參議院", "眾議院", "選情"),
+}
+
+
+def _topic_copy_parts(text: str, tid: str = "") -> list[str]:
+    text = news_checks.clean_news_copy(text)
+    parts = [x.strip() for x in re.split(r"(?<=[。！？])\s*|\n+", text) if x.strip()]
+    scored = [(sum(_phrase_hit(k, line) for k in _COPY_CUES.get(tid, ())), i, line)
+              for i, line in enumerate(parts)]
+    if tid:
+        scored = [x for x in scored if x[0] > 0]
+    return [line for score, i, line in sorted(scored, key=lambda x: (-x[0], x[1]))]
+
+
+def _topic_recovery_block(tid: str, label: str, m: dict) -> str:
+    """Retry one event using relevant paragraphs, not the same overloaded bundle."""
+    candidates = []
+    allowed = {x["link"] for x in m.get("links", [])}
+    for article in m.get("arts", []) + m.get("briefs", []):
+        if article.get("link") not in allowed:
+            continue
+        parts = _topic_copy_parts(article.get("body") or article.get("summary") or "", tid)
+        if parts:
+            candidates.append({**article, "body": "\n".join(parts[:3])[:1200]})
+    if candidates:
+        chosen = candidates[0]
+        return _topic_block(tid, label, {"arts": [chosen], "briefs": []})
+    return _topic_block(tid, label, {"arts": [], "briefs": m.get("briefs", [])[:2]})
+
+
+def _topic_public_text(m: dict, tid: str = "") -> str:
+    """Use relevant complete source sentences; never display an English title as a summary."""
+    links = m.get("links") or []
+    if not links:
         return ""
-    first = m["links"][0]
-    title = first["title"]
-    for link in m["links"]:
-        brief = next((b for b in m.get("briefs", []) + m.get("arts", [])
-                      if b.get("link") == link["link"]), {})
-        summary = re.sub(r"<[^>]*>", "", str(brief.get("summary") or "")).strip()
-        summary = re.sub(r"^〔[^〕]*報導〕\s*", "", summary)
-        if re.search(r"(?:\.{3}|…)+\s*$", summary):
-            cut = max(summary.rfind(c) for c in "。！？")
-            summary = summary[:cut + 1] if cut >= 0 else re.sub(r"(?:\.{3}|…)+\s*$", "", summary).strip()
-        if summary and cjk_len(summary) >= 15 and _norm_title(summary) != _norm_title(link["title"]):
-            return (link.get("source") or "新聞報導") + "：" + _trim_to(summary, TOPIC_HARD)
-    # 無摘要但有兩則中文報導，呈現兩則已知事件，不只留第一個標題。
-    chinese = [x for x in m["links"] if cjk_len(x["title"]) >= 8]
-    if len(chinese) >= 2:
-        return _trim_to("；".join((x.get("source") or "新聞報導") + "報導，" + x["title"]
-                                 for x in chinese[:2]), TOPIC_HARD)
-    return (first.get("source") or "新聞報導") + "：" + title
+    # Full reporting before an RSS lead. Preserve the actual source of the excerpt.
+    for field in ("body", "summary"):
+        for link in links:
+            article = next((a for a in m.get("arts", []) + m.get("briefs", [])
+                            if a.get("link") == link["link"] and a.get(field)), {})
+            parts = _topic_copy_parts(article.get(field, ""), tid)
+            kept = []
+            for part in parts:
+                if cjk_len(part) < 8 or not re.search(r"[。！？]$", part):
+                    continue
+                if _norm_title(part) == _norm_title(link["title"]):
+                    continue
+                candidate = "".join(kept + [part])
+                if cjk_len(candidate) <= TOPIC_HARD:
+                    kept.append(part)
+                if len(kept) >= 2:
+                    break
+            if kept:
+                return (link.get("source") or "新聞報導") + "：" + "".join(kept)
+    # English reports remain reachable in references; a failed translation cannot masquerade as news.
+    return (links[0].get("source") or "新聞報導") + "：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。"
 
 
 def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
@@ -2827,14 +2915,15 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
     old = state.get("topics") or {}
     _age = _age_hours({"at": old.get("at")}, now or dt.datetime.now(dt.timezone.utc))
     if old.get("hash") == key and old.get("items") and _age is not None \
-            and _age < CACHE_TTL_HOURS:
+            and _age < CACHE_TTL_HOURS and all(not news_checks.topic_copy_problem(i.get("text", ""))
+                for i in old["items"]):
         log.info("主題補充：材料與上次相同，沿用 %.1f 小時前的內容", _age)
         res["items"] = old["items"]
         news_policy.display_news(res)
         return res
     skipped: set = set()
     texts = summarize_topics(mat, labels, main_text, env, meta_markers, skipped=skipped)
-    fallbacks = {tid: _topic_public_text(m) for tid, m in mat.items()
+    fallbacks = {tid: _topic_public_text(m, tid) for tid, m in mat.items()
                  if tid not in texts}
     texts.update({tid: text for tid, text in fallbacks.items() if text})
     res["items"] = [{"id": tid, "label": labels[tid], "text": texts[tid],
@@ -2890,9 +2979,7 @@ def _main_recovery(articles, headlines, raw_pool, *, scope_topics, cap, env,
     for article in candidates:
         for field in ("body","summary"):
             raw=str(article.get(field) or "")
-            clean=re.sub(r"<[^>]*>","",raw)
-            clean=re.sub(r"^〔[^〕]*報導〕\s*","",clean.strip())
-            clean=re.sub(r"(?:\.{3}|…)+\s*$","",clean).strip()
+            clean=news_checks.clean_news_copy(raw)
             if cjk_len(clean)<30 or _norm_title(clean)==_norm_title(article["title"]):
                 continue
             # Keep complete source sentences; each paragraph remains separately readable.

@@ -123,3 +123,51 @@ def meta_hits(text: str, markers) -> list[str]:
             out.append(marker)
     return out
 
+
+
+_COPY_NOISE = re.compile(
+    r"^(?:將\s*Yahoo\s*設為|更多.{0,35}(?:新聞網|報導)|延伸閱讀|相關新聞|"
+    r"Read more\s*:|Click here\b|Sign up\b|Subscribe\b|Follow us\b|"
+    r"◎.{0,35}提醒您|本資料僅供參考|免責聲明)", re.I)
+_BYLINE = re.compile(
+    r"^\s*(?:[\[【〔][^\]】〕\n]{1,60}[\]】〕]\s*)?"
+    r"(?:記者|編譯|特派員|文|撰文)[^／/\n：:。]{1,24}"
+    r"(?:[／/]\s*(?:綜合報導|綜合外電報導|外電報導|報導|編譯|整理)|[：:]\s*)\s*")
+
+
+_WIRE_BYLINE = re.compile(r"^[（(](?:中央社|中新社|新華社)[^）)\n]{1,100}(?:報導|電|电)[）)]\s*")
+
+
+def clean_news_copy(text: str) -> str:
+    """Strip publishing metadata, never substitute or add reported facts."""
+    import html
+    text = html.unescape(re.sub(r"<[^>]+>", " ", str(text or "")))
+    cleaned = []
+    for line in text.splitlines():
+        line = re.sub(r"\s+", " ", line).strip()
+        if not line or _COPY_NOISE.search(line):
+            continue
+        line = re.sub(r"^〔[^〕]{1,60}(?:報導|編譯)〕\s*", "", line)
+        line = _WIRE_BYLINE.sub("", line)
+        line = re.sub(r"^(?:財經|國際|政治|新聞)中心[／/]\s*綜合報導\s*", "", line)
+        line = _BYLINE.sub("", line)
+        line = re.sub(r"^(?:Good morning|Good afternoon)[.!]\s*", "", line, flags=re.I)
+        if re.search(r"(?:\.{3}|…)+\s*$", line):
+            end = max(line.rfind(c) for c in "。！？")
+            line = line[:end + 1] if end >= 0 else ""
+        if line:
+            cleaned.append(line)
+    return "\n".join(cleaned)
+
+
+def topic_copy_problem(text: str) -> str:
+    """A supplement needs readable Chinese reporting, not a masthead or raw headline."""
+    if len(re.findall(r"[\u4e00-\u9fff]", text or "")) < 8:
+        return "缺少可閱讀的中文新聞內容，像在列標題；請用繁體中文忠實整理"
+    if _BYLINE.search(text or "") or _WIRE_BYLINE.search(text or "") or re.search(r"\[(?:FTNN|[^\]]*新聞網)[^\]]*\]|記者.{1,24}[／/]綜合報導", text or ""):
+        return "混入記者署名或出版資訊，請只保留新聞事件與細節"
+    if _COPY_NOISE.search(text or ""):
+        return "混入導覽、推薦或訂閱資訊，請只保留新聞事件"
+    if not re.search(r"[。！？!?]$", text.strip()):
+        return "句子未完整結束，請重寫為完整中文句子"
+    return ""

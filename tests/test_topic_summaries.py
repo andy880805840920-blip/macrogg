@@ -50,9 +50,9 @@ class SummaryTests(unittest.TestCase):
         bad={**self.story('gold',True),'title':'黃金ETF配息策略','summary':'黃金ETF申購指南'}
         got,_=self.gather([bad])
         self.assertTrue(all('ETF' not in x['title'] for x in got['gold']['links']))
-    def test_existing_readable_articles_do_not_fetch_extra_feed(self):
+    def test_public_feeds_are_shared_once_even_with_existing_articles(self):
         _,calls=self.gather([],pool=[self.story('gold',True),self.story('fx',True)])
-        self.assertFalse(any(ft.TOPIC_PUBLIC_FEEDS[0] in c[0][0]['url'] for c in calls))
+        self.assertEqual(sum(ft.TOPIC_PUBLIC_FEEDS[0] in c[0][0]['url'] for c in calls),1)
     def test_public_summary_is_not_described_as_title_only(self):
         block=ft._topic_block('gold','黃金',self.material()['gold'])
         self.assertIn('標題與出版社摘要',block)
@@ -94,12 +94,13 @@ class SummaryTests(unittest.TestCase):
     def test_fallback_can_use_summary_from_successful_article(self):
         m=self.material()['gold'];m['arts']=m['briefs'];m['briefs']=[]
         self.assertEqual(ft._topic_public_text(m),'自由財經：'+self.gold)
-    def test_two_chinese_source_reports_are_retained_in_fallback(self):
+    def test_title_only_reports_keep_references_but_are_not_summaries(self):
         m={'arts':[],'briefs':[],'links':[{'title':'美元走強，新台幣貶破31.8元','source':'自由財經','link':'https://x/1'},
             {'title':'午盤新台幣兌美元報31.872元','source':'經濟日報','link':'https://x/2'}]}
         result=ft._topic_public_text(m)
-        self.assertIn('31.8',result);self.assertIn('31.872',result)
-        self.assertIn('自由財經',result);self.assertIn('經濟日報',result)
+        self.assertNotIn('31.8',result);self.assertNotIn('31.872',result)
+        self.assertIn('中文摘要暫時無法取得',result)
+        self.assertEqual(len(m['links']),2)
 
     def test_publisher_excerpt_omits_byline_and_truncated_sentence(self):
         m=self.material()['gold']
