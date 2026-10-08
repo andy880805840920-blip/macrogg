@@ -447,6 +447,97 @@ def minutes_by_topic(rows: list, per_topic: int = 3) -> list[tuple[str, list]]:
     return out
 
 
+
+def minutes_review(rows: list) -> list[dict]:
+    """Compact source-based comparison, without inventing opposing camps."""
+    buckets = {t: [] for t in ("政策路徑", "通膨", "就業", "金融情勢")}
+    for original in rows or []:
+        r = dict(original)
+        low = r.get("text", "").lower()
+        if re.search(r"target range|policy rate|policy tightening|policy easing", low):
+            topic = "政策路徑"
+        elif re.search(r"financial conditions|credit appeared|mortgage rates|treasury yields", low):
+            topic = "金融情勢"
+        elif re.search(r"labor market|aggregate wage", low):
+            topic = "就業"
+        elif "inflation" in low or "price increases" in low:
+            topic = "通膨"
+        else:
+            topic = r.get("topic")
+        if topic not in buckets or re.search(r"(?:also )?discussed developments related to", low):
+            continue
+        r["topic"] = topic
+        buckets[topic].append(r)
+    out = []
+    for topic, rs in buckets.items():
+        if not rs:
+            continue
+        def priority(r):
+            low = r["text"].lower()
+            if topic == "政策路徑":
+                if "supported" in low and re.search(r"raising|lowering|maintaining", low):
+                    return (0, r["rank"])
+                if re.search(r"beyond the current meeting|by year end", low):
+                    return (1, r["rank"])
+            if topic == "通膨" and "progress" in low:
+                return (0, r["rank"])
+            if topic == "就業" and "conditions were stable" in low:
+                return (0, r["rank"])
+            if topic == "金融情勢" and "credit appeared" in low:
+                return (0, r["rank"])
+            return (2, r["rank"])
+        ordered = sorted(rs, key=priority)
+        others = ordered[1:]
+        cue = {"金融情勢": "mortgage", "就業": "dynamism", "通膨": "expectations"}.get(topic)
+        if cue:
+            others.sort(key=lambda r: (cue not in r["text"].lower(), r["rank"]))
+        out.append({"topic": topic, "main": ordered[0], "other": others[:1]})
+    return out
+
+
+def minutes_count(row: dict) -> str:
+    # The label belongs to this quoted view, not to the meeting's voting total.
+    level = row.get("level", "")
+    text = row.get("text", "")
+    if level == "兩位" and re.search(r"\btwo (?:other )?participants\b", text, re.I):
+        return "2 人"
+    if level == "一位" and re.search(r"\bone participant\b", text, re.I):
+        return "1 人"
+    return "未明示人數" if level == "普遍" or not level else level
+
+
+def minutes_fallback(text: str) -> str:
+    """Conservative translations of explicit facts; unfamiliar text stays English."""
+    low = text.lower()
+    if re.search(r"not supported|did not support|opposed (?:raising|lowering|maintaining)", low):
+        return ""
+    rules = [
+        (r"supported raising the target range", "支持本次會議升息。"),
+        (r"supported lowering the target range", "支持本次會議降息。"),
+        (r"supported maintaining the target range", "支持本次會議維持利率不變。"),
+        (r"another increase.*likely.*appropriate by year end", "認為年底前可能適合再升息。"),
+        (r"inflation remained elevated.*not seen sufficient progress", "通膨仍高，近幾個月降溫進展不足。"),
+        (r"inflation expectations remained at levels consistent", "中長期通膨預期仍符合通膨目標。"),
+        (r"labor market conditions were stable.*close to maximum employment", "就業市場穩定，接近充分就業。"),
+        (r"dynamism in the labor market was unusually low.*low rates of hiring and layoffs.*elevated long-term unemployment", "招聘與裁員偏低，求職及長期失業仍值得留意。"),
+        (r"credit appeared broadly available", "企業融資與信貸供應仍充裕。"),
+        (r"housing.*financial conditions did not appear supportive.*mortgage rates", "房貸利率仍高，房市受到的金融支持較弱。"),
+    ]
+    return next((zh for rx, zh in rules if re.search(rx, low)), "")
+
+
+def minutes_review_payload(review: list) -> dict:
+    rows = [r for item in review for r in [item["main"], *item["other"]]]
+    payload = {}
+    for i, r in enumerate(rows):
+        payload[f"m{i}"] = {"kind": "minutes_extract", "task": "翻成一句繁體中文（50 字內），保留原文條件與量詞；人名及公司名用英文，不推算人數。", "text": r["text"]}
+    if rows:
+        payload["minutes_overview"] = {
+            "task": "寫100至150字繁體中文紀要綜述，先本次決策，再未來路徑、通膨、就業及金融情勢的關聯。只根據以下原文；不預測下一次決議，不把不同部門的觀察寫成對立，不推算人數或比例，人名及公司名用英文。",
+            "kind": "minutes_overview", "text": "\n".join(r["text"] for r in rows)}
+    return payload
+
+
 def minutes_index(calendar_html: str) -> list[dict]:
     """行事曆頁上所有已公布的會議紀要：[{meeting, released, url}]，新的在後。"""
     out = []
@@ -904,8 +995,23 @@ def _digits(s: str) -> set:
 def _check(item: dict, out: str) -> bool:
     if not isinstance(out, str) or not out.strip():
         return False
-    if len(out) > 80:
+    if len(out) > (150 if item.get("kind") == "minutes_overview" else 80):
         return False
+    is_minutes = item.get("kind") in ("minutes_extract", "minutes_overview")
+    if is_minutes:
+        if not re.search(r"[\u4e00-\u9fff]", out):
+            return False
+        explicit = set()
+        for n, word in (("1", r"\bone (?:other )?participant\b"),
+                        ("2", r"\btwo (?:other )?participants\b")):
+            if re.search(word, item.get("text", ""), re.I):
+                explicit.add(n)
+        chinese_counts = {"一": "1", "二": "2", "兩": "2"}
+        for count in re.findall(r"([0-9]+|[一二三四五六七八九十百兩]+)\s*(?:人|位(?:與會者|參與者)?)", out):
+            if chinese_counts.get(count, count) not in explicit:
+                return False
+        if not _digits(out) <= _digits(item.get("text", "")) | explicit:
+            return False
     src = json.dumps(item, ensure_ascii=False)
     # 數字鎖：中文裡出現的數字都要在原文找得到
     return _digits(out) <= _digits(src) | {"1", "2"}

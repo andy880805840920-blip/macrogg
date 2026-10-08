@@ -10,7 +10,7 @@
   → 目前重心與轉向條件 → 歷次決議 → 判讀說明
 
 AI 只用在三個地方，畫面上一律標「AI」：聲明改動的中文說明、會議紀要
-量詞句的中文翻譯、官員近期新聞標題的一句話整理。AI 失敗就只顯示原文。
+量詞句的中文翻譯與綜述、官員近期新聞標題的一句話整理。紀要綜述失敗時保留可核對的重點摘錄與原文。
 """
 
 from __future__ import annotations
@@ -584,23 +584,64 @@ def _minutes_html(d: dict) -> str:
     mn = d.get("minutes")
     nxt = d.get("minutes_next")
     nxt_txt = (f'<p class="hint">下一份紀要：{_md(nxt["date"])} 美東 14:00 公布'
-               f'（{_tw(nxt["date"])}），之後自動更新。</p>' if nxt else "")
+               f'（{_tw(nxt["date"])}）。</p>' if nxt else "")
     if not mn:
-        return '<div class="empty">會議紀要本次取得失敗</div>' + nxt_txt
+        return '<div class="empty">會議紀要暫時無法取得</div>' + nxt_txt
+    review = mn.get("review") or fx.minutes_review(
+        [r for _, rows in mn.get("groups", []) for r in rows])
+    def statement(r):
+        zh = r.get("zh") or fx.minutes_fallback(r["text"])
+        return (f'<p>{esc(zh or r["text"])}</p>'
+                f'<small class="mn-count">{esc(fx.minutes_count(r))}</small>')
+    table_rows = []
+    for item in review:
+        main = statement(item["main"])
+        other = "".join(statement(r) for r in item["other"])
+        if not other:
+            other = '<p class="hint">這份紀要未列出其他明確看法。</p>'
+        table_rows.append(f'<tr><th scope="row">{esc(item["topic"])}</th>'
+                          f'<td data-label="主要看法">{main}</td>'
+                          f'<td data-label="其他觀察／不同看法">{other}</td></tr>')
+    overview = mn.get("overview", "")
+    overview_ai = bool(overview)
+    if not overview:
+        facts = []
+        for item in review:
+            rows = [item["main"], *item["other"]] if item["topic"] == "政策路徑" else [item["main"]]
+            for r in rows:
+                zh = r.get("zh") or fx.minutes_fallback(r["text"])
+                if zh:
+                    count = fx.minutes_count(r)
+                    prefix = (count + "與會者") if count not in ("未明示人數", "1 人", "2 人") else "紀要指出"
+                    facts.append(zh if r.get("zh") else prefix + zh)
+        overview = "".join(facts) or "以下依政策、通膨、就業與金融情勢整理紀要觀點；詳細依據保留英文原文。"
     out = []
     for topic, rows in mn.get("groups") or []:
         li = "".join(
-            f'<li><span class="q-lv r{min(r["rank"], 8)}">{esc(r["level"])}</span>'
-            f'<div><div class="q-en">{esc(r["text"])}</div>{_ai(r.get("zh", ""))}</div></li>'
+            f'<li><small class="mn-count">{esc(fx.minutes_count(r))}</small>'
+            f'<div>{_ai(r.get("zh", ""))}<div class="q-en">{esc(r["text"])}</div></div></li>'
             for r in rows)
         out.append(f'<h3>{esc(topic)}</h3><ul class="fx-q">{li}</ul>')
-    return (f'<p class="fx-lead">{_md(mn["meeting"])} 會議的紀要（{_md(mn["released"])} 公布）。'
-            f'只列與會者討論段落裡帶量詞的句子，每個主題取量詞最大的幾句。</p>'
-            + nxt_txt + "".join(out)
-            + f'<p class="src">原文：<a href="{esc(mn["url"])}" target="_blank" rel="noopener">'
-              'federalreserve.gov 會議紀要</a>。量詞依聯準會慣例：全體／幾乎全體 ＞ 多數 ＞ 許多'
-              ' ＞ 數位 ＞ 部分 ＞ 少數 ＞ 兩位 ＞ 一位；「普遍」＝原文沒加量詞的'
-              '「Participants ...」。</p>')
+    originals = {r["text"] for _, rows in mn.get("groups", []) for r in rows}
+    added = [r for item in review for r in [item["main"], *item["other"]] if r["text"] not in originals]
+    if added:
+        out.append('<h3>補充觀點</h3><ul class="fx-q">' + "".join(
+            f'<li><small class="mn-count">{esc(fx.minutes_count(r))}</small><div>'
+            f'{_ai(r.get("zh", ""))}<div class="q-en">{esc(r["text"])}</div></div></li>' for r in added) + '</ul>')
+    ai_label = '<small class="mn-count">AI 中文綜述</small>' if overview_ai else ''
+    translation_label = '<small class="mn-count">中文說明含 AI 翻譯，英文原文可展開核對。</small>' if any(
+        r.get("zh") for item in review for r in [item["main"], *item["other"]]) else ''
+    return (f'<p class="hint">{_md(mn["meeting"])} 會議 · {_md(mn["released"])} 公布</p>'
+            + nxt_txt + f'<h3>本次紀要重點</h3><p class="mn-overview">{esc(overview)}</p>{ai_label}'
+            + '<h3>共識與分歧</h3>' + translation_label + '<table class="mn-table"><thead><tr>'
+              '<th scope="col">議題</th><th scope="col">主要看法</th><th scope="col">其他觀察／不同看法</th>'
+              '</tr></thead><tbody>' + "".join(table_rows) + '</tbody></table>'
+            + '<p class="hint mn-caution">其他觀察可能描述不同部門，未必互相對立；'
+              '未列出不同看法，也不代表全體一致。量詞不換算人數或比例，與會者也不等於投票委員。</p>'
+            + '<details class="mn-evidence"><summary>查看詳細依據與英文原文</summary>'
+            + "".join(out) + '</details>'
+            + f'<p class="src">來源：<a href="{esc(mn["url"])}" target="_blank" rel="noopener">'
+              'Federal Reserve 會議紀要</a>。人數標示沿用原文；未寫明人數的敘述標為「未明示人數」。</p>')
 
 
 # ---------------------------------------------------------------------------
@@ -817,10 +858,10 @@ def _fomc_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="minutes" data-sum="{esc(_min_sum)}">會議紀要：與會者怎麼分布</h2>
+    <h2 id="minutes" data-sum="{esc(_min_sum)}">會議紀要：共識與分歧</h2>
     {teach(
-        "會後三週公布的會議紀要，記錄與會者討論了什麼、各種看法有多少人支持。",
-        "聲明只有百來字，紀要有好幾千字。聯準會描述「有多少人」用的是固定量詞（most、many、several、a few），所以可以看出某個觀點是主流還是少數。",
+        "會後三週公布的會議紀要，記錄與會者對政策、通膨與就業的討論。",
+        "聲明只有百來字，紀要有好幾千字。聯準會描述「有多少人」用的是固定量詞（most、many、several、a few），可作為觀點廣度的線索，但不能換算確切人數或比例。",
         "看政策路徑那一組：「許多與會者認為可能需要緊縮」跟「少數與會者認為」，對下一次會議的意義完全不同。")}
     {_minutes_html(d)}
   </div>

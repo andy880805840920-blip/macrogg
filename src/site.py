@@ -1891,6 +1891,31 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fx-sep th.rowhead{text-align:left}
 .fx-sep td small{display:block;font-size:10.5px;color:var(--muted);font-weight:400}
 .fx-sep td small.up{color:var(--critical)}.fx-sep td small.dn{color:var(--good)}
+/* Meeting minutes: same source content on desktop and phone. */
+.mn-overview{font-size:15px;line-height:1.85;margin:8px 0;color:var(--text-primary)}
+.mn-count{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin:5px 0 0}
+.mn-table{width:100%;table-layout:fixed;border-collapse:collapse;margin:10px 0}
+.mn-table th,.mn-table td{text-align:left;white-space:normal;vertical-align:top;padding:14px 16px;line-height:1.75;overflow-wrap:anywhere}
+.mn-table thead th{font-size:12px;color:var(--muted);background:transparent;border-bottom:1px solid var(--grid)}
+.mn-table th:first-child{width:18%}
+.mn-table tbody th{font-size:14px;font-weight:700}
+.mn-table tbody td{font-size:14px}
+.mn-table p{margin:0}
+.mn-table tbody tr+tr>*{border-top:1px solid var(--grid)}
+.mn-caution{margin:12px 0 18px}
+.mn-evidence{margin:18px 0 0}
+.mn-evidence summary{font-weight:600;cursor:pointer}
+@media(max-width:640px){
+  .mn-table,.mn-table tbody{display:block;width:100%}
+  .mn-table thead{display:none}
+  .mn-table tr{display:block;padding:16px 0}
+  .mn-table tbody tr+tr{border-top:1px solid var(--grid)}
+  .mn-table th,.mn-table td{display:block;width:100%!important;border:0!important;padding:0;background:transparent}
+  .mn-table tbody th{font-size:15px;margin-bottom:12px}
+  .mn-table td+td{margin-top:14px}
+  .mn-table td:before{content:attr(data-label);display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+  .mn-table .mn-count{margin-top:3px}
+}
 .fx-q,.fx-ev,.fx-cond{list-style:none;margin:0 0 6px;padding:0}
 .fx-q li,.fx-ev li,.fx-cond li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;
   padding:8px 0;border-bottom:1px solid var(--grid);font-size:13.5px;line-height:1.6}

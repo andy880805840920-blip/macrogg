@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime as dt
 import logging
+from pathlib import Path
 import re
 
 from . import charts, fmt, clock
@@ -1931,6 +1932,14 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
     ai = fx.ai_notes(fx.ai_payload(changed, _mrows, officials), ai_cache, offline)
     for i, r in enumerate(_mrows):
         r["zh"] = ai.get(f"m{i}", "")
+    minutes_review = fx.minutes_review(minutes["rows"]) if minutes else []
+    _review_cache = (Path(ai_cache).with_name("fomc_minutes_review_ai.json")
+                     if ai_cache else None)
+    review_notes = fx.ai_notes(fx.minutes_review_payload(minutes_review), _review_cache, offline)
+    _review_rows = [r for item in minutes_review for r in [item["main"], *item["other"]]]
+    for i, r in enumerate(_review_rows):
+        r["zh"] = review_notes.get(f"m{i}", "") or next(
+            (old.get("zh", "") for old in _mrows if old["text"] == r["text"]), "")
     for o in officials:
         o["gist"] = ai.get(f"o_{o['surname']}", "")
     diff_notes = [ai.get(f"d{i}", "") for i in range(len(changed))]
@@ -1965,7 +1974,8 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
         "focus": latest.focus,
         "sep": extras.get("sep"),
         "minutes": ({**{k: v for k, v in minutes.items() if k != "rows"},
-                     "groups": minutes_groups} if minutes else None),
+                     "groups": minutes_groups, "review": minutes_review,
+                     "overview": review_notes.get("minutes_overview", "")} if minutes else None),
         "minutes_next": _next_min,
         "officials": officials,
         "ai_used": bool(ai),

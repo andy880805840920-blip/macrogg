@@ -149,7 +149,9 @@ COMPANY_NAMES = {
 }
 COMPANY_RULE = ("公司名稱一律使用來源可確認的英文名稱，例如 NVIDIA、TSMC、Microsoft、Apple、Amazon、Meta、Alphabet、Google、OpenAI。"
                 "主軸、補充與引述都適用，不附中文音譯；公司與旗下品牌依來源區分，不把 Google 自動改成 Alphabet。"
-                "未知英文名稱時使用來源已有的公司角色或產業描述，不自行猜測拼寫。")
+                "未知英文名稱時使用來源已有的公司角色或產業描述，不自行猜測拼寫。"
+                "高通膨、高通量、超微細等一般用語不是公司名稱，不可替換成 Qualcomm 或 AMD。"
+                "中文敘述用自然的台灣用語；frustratingly high inflation 可表達為通膨持續偏高、令官員感到挫折，不能把編輯改寫當成逐字引述。")
 
 
 def topic_excluded(tid: str, article: dict, excludes) -> bool:
@@ -291,16 +293,26 @@ def topic_allowed(tid: str, article: dict) -> bool:
     return True
 
 
+
+def _name_alias_pattern(alias: str) -> str:
+    # Chinese company aliases can also begin ordinary economic/technical words.
+    guards = {
+        "高通": r"(?!膨|[脹胀]|量(?!產|产)|透(?:性|光|明)|過率|过率|濾波|滤波)",
+        "超微": r"(?!細|细|粒|型(?!號|号))",
+    }
+    return re.escape(alias) + guards.get(alias, "")
+
+
 def english_names(text: str) -> str:
     text = text or ""
     for english, aliases in {**PERSON_NAMES, **COMPANY_NAMES}.items():
-        alias_re = "(?:" + "|".join(re.escape(a) for a in sorted(aliases, key=len, reverse=True)) + ")"
+        alias_re = "(?:" + "|".join(_name_alias_pattern(a) for a in sorted(aliases, key=len, reverse=True)) + ")"
         variants = "(?:" + re.escape(english) + "|" + re.escape(english.split()[-1]) + ")"
         # Preserve existing English names, remove redundant bilingual parentheses.
         text = re.sub(r"(" + variants + r")\s*[（(]" + alias_re + r"[）)]", r"\1", text, flags=re.I)
         text = re.sub(alias_re + r"\s*[（(](" + variants + r")[）)]", r"\1", text, flags=re.I)
     replacements = sorted(((a, e) for e, aa in {**PERSON_NAMES, **COMPANY_NAMES}.items() for a in aa), key=lambda x:len(x[0]), reverse=True)
-    pattern = re.compile("|".join(re.escape(a) for a, _ in replacements))
+    pattern = re.compile("|".join(_name_alias_pattern(a) for a, _ in replacements))
     mapping = dict(replacements)
     if re.search(r"iPhone|iPad|MacBook|Tim Cook|庫克|蘋果(?:財報|股價|手機|新品|晶片)", text, re.I):
         text = text.replace("蘋果", "Apple")

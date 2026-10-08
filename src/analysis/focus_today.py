@@ -1170,7 +1170,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f13-preserve-main-independent-recovery-24h"
+FOCUS_PROMPT_VERSION = "f14-name-compound-boundaries-24h"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -2426,7 +2426,7 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 #     套用在主軸與其他主題）
 #   · 每則補充前面加主題標籤
 # ---------------------------------------------------------------------------
-TOPIC_PROMPT_VERSION = "t8-all-topics-content-no-model-skip-24h"
+TOPIC_PROMPT_VERSION = "t9-name-compound-boundaries-24h"
 TOPIC_CHARS, TOPIC_MIN = 80, 40
 # 公開RSS提供直接文章連結與出版社摘要；全部主題缺少可讀內容時補入。
 TOPIC_PUBLIC_FEEDS = PUBLIC_NEWS_FEEDS
