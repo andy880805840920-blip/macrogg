@@ -1,12 +1,12 @@
 {
- "hash": "728c1ba1cebc8dbb",
- "text": "美債殖利率與美元走勢波動，金價在本週震盪中上升。10年期美債殖利率週四大幅下跌11.9個基點至5.235%，帶動美元走弱，黃金隨之反彈；週五現貨金價上漲1.5%至每盎司4,193.94美元。Pimco首席投資官Dan Ivascyn警告，10年期殖利率可能升至6%，為2000年以來首次，理由包括高油價加劇通膨憂慮與美國公債增長。聯準會官員態度偏鷹派：聖路易斯聯準會主席Alberto Musalem表示未來六至九個月可能需進一步升息以控制通膨，市場預期12月升息機率達82%。油價波動與中東局勢不確定性持續影響市場，Donald Trump表示美國不會在11月中期選舉前攻擊伊朗，暫時緩解能源供應憂慮。",
+ "hash": "546be7da07a63069",
+ "text": "美國財政部長 Bessent 聘請 Judy Shelton 為顧問，專責評估中國金融狀況與貨幣政策。Shelton 曾是Donald Trump第一任期內的聯準會提名人選，但因其對聯準會獨立性的看法與支持金本位制等立場，遭跨黨派參議員反對而未獲確認。此次任命反映 Bessent 在財政部人事異動頻繁的背景下，持續補強高層顧問團隊。同時，美債殖利率面臨上升壓力——Pimco 首席投資官 Ivascyn 警告，10 年期美債殖利率可能觸及 6%，為 2000 年來首見，主要受高油價推升通膨預期與公債規模擴大的驅動。他指出若殖利率升至 5.5% 以上，將對股票與公司債等風險資產造成顯著壓力。",
  "links": [
   {
-   "title": "Gold rises over 1% as dollar weakens, Treasury yields retreat",
-   "link": "https://sg.finance.yahoo.com/news/gold-rises-over-1-dollar-032631854.html",
-   "source": "Yahoo Finance Singapore",
-   "at": "2026-10-09T03:26:00+00:00"
+   "title": "Trump's Fed ex-nominee Shelton to advise Bessent, Treasury says",
+   "link": "https://finance.yahoo.com/economy/policy/articles/trumps-fed-ex-nominee-shelton-123007962.html",
+   "source": "Yahoo Finance",
+   "at": "2026-10-09T12:30:07+00:00"
   },
   {
    "title": "US 10-year Treasury yield risks hitting 6% for first time since 2000, Pimco's Ivascyn tells FT",
@@ -15,44 +15,32 @@
    "at": "2026-10-09T05:29:00+00:00"
   },
   {
-   "title": "Ray Dalio Says AI Bubble Is ‘Close’ to Bursting as Debt and Rising Rates Raise Red Flags",
-   "link": "https://finance.yahoo.com/technology/ai/articles/ray-dalio-says-ai-bubble-003016920.html",
-   "source": "Yahoo Finance",
-   "at": "2026-10-09T00:30:00+00:00"
-  },
-  {
-   "title": "What rate cuts, the bond sell-off mean for investor portfolios",
-   "link": "https://finance.yahoo.com/video/what-rate-cuts-the-bond-sell-off-mean-for-investor-portfolios-132413758.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-09T13:24:13+00:00"
-  },
-  {
-   "title": "Gold recovery stalls near $4,200 as US Dollar, Treasury yields stabilise",
-   "link": "https://www.fxstreet.com/news/gold-recovery-stalls-near-4-200-as-us-dollar-treasury-yields-stabilise-202610091100",
-   "source": "FXStreet",
-   "at": "2026-10-09T11:00:03+00:00"
+   "title": "Treasury's Bessent hires Trump's controversial former Fed board pick, Judy Shelton, as advisor",
+   "link": "https://www.cnbc.com/2026/10/09/judy-shelton-scott-bessent-treasury.html",
+   "source": "CNBC",
+   "at": "2026-10-09T13:09:19+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-09",
+  "date": "2026-10-10",
   "method": 6,
   "path": {
    "src": "futures",
-   "date": "2026-10-09",
+   "date": "2026-10-10",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.880714,
+     "start": 3.877946,
      "end": 3.925,
-     "move_bp": 4.429,
+     "move_bp": 4.705,
      "outcomes": [
       [
        0,
-       0.8229
+       0.8118
       ],
       [
        25,
-       0.1771
+       0.1882
       ]
      ],
      "how": "2026-11 合約平均"
@@ -60,16 +48,16 @@
     {
      "date": "2026-12-09",
      "start": 3.925,
-     "end": 4.122273,
-     "move_bp": 19.727,
+     "end": 4.129318,
+     "move_bp": 20.432,
      "outcomes": [
       [
        25,
-       0.7891
+       0.8173
       ],
       [
        0,
-       0.2109
+       0.1827
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
@@ -77,17 +65,17 @@
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.880714,
+    "start": 3.877946,
     "end": 3.925,
-    "move_bp": 4.429,
+    "move_bp": 4.705,
     "outcomes": [
      [
       0,
-      0.8229
+      0.8118
      ],
      [
       25,
-      0.1771
+      0.1882
      ]
     ],
     "how": "2026-11 合約平均"
@@ -95,22 +83,22 @@
    "horizon": {
     "date": "2026-12-09",
     "start": 3.925,
-    "end": 4.122273,
-    "move_bp": 19.727,
+    "end": 4.129318,
+    "move_bp": 20.432,
     "outcomes": [
      [
       25,
-      0.7891
+      0.8173
      ],
      [
       0,
-      0.2109
+      0.1827
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 24.156,
-   "r0": 3.880714,
+   "cum_bp": 25.137,
+   "r0": 3.877946,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "prev": {
     "next": {
@@ -152,7 +140,7 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-09T15:17:30.800808+00:00",
+ "at": "2026-10-09T19:50:56.324126+00:00",
  "layout": "main",
  "topics": {
   "hash": "",
@@ -160,19 +148,19 @@
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聖路易斯聯準會主席Alberto Musalem週四表示，未來六至九個月內需進一步升息以在18個月內將通膨回到2%目標，但未對10月底政策會議的決定表態；市場預期12月才會升息。",
+    "text": "Trump 成立委員會調查聯準會理事 Lisa Cook 的抵押貸款詐欺指控，Cook 是聯準會首位黑人女性理事，去年 8 月遭 Trump 解職，但最高法院今年 6 月裁定她可繼續任職，未就詐欺指控本身做出裁決。",
     "links": [
      {
-      "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-steadies-traders-assess-us-000232268.html",
+      "title": "Trump forms committee to investigate mortgage fraud allegations against Fed governor Lisa Cook",
+      "link": "https://finance.yahoo.com/economy/policy/article/trump-forms-committee-to-investigate-mortgage-fraud-allegations-against-fed-governor-lisa-cook-153243615.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T00:02:00+00:00"
+      "at": "2026-10-09T15:32:43+00:00"
      },
      {
-      "title": "Fed's Musalem says tighter monetary policy needed to lower inflation",
-      "link": "https://finance.yahoo.com/economy/policy/articles/feds-musalem-says-lowering-inflation-181323583.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-08T19:13:21+00:00"
+      "title": "聯準會全員同意升息25基點 市場估計年底前再升息",
+      "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%85%A8%E5%93%A1%E5%90%8C%E6%84%8F%E5%8D%87%E6%81%AF25%E5%9F%BA%E9%BB%9E-%E5%B8%82%E5%A0%B4%E4%BC%B0%E8%A8%88%E5%B9%B4%E5%BA%95%E5%89%8D%E5%86%8D%E5%8D%87%E6%81%AF-014057667.html",
+      "source": "Yahoo股市",
+      "at": "2026-10-09T01:56:22+00:00"
      }
     ],
     "text_source": "model"
@@ -180,19 +168,19 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "Pimco首席投資官Dan Ivascyn警告10年期美債殖利率可能升至6%，為26年來首次，理由包括高油價加劇通膨憂慮、美國公債增長，以及對沖基金等槓桿投資者可能在債市拋售中止損。",
+    "text": "美元和美債殖利率下滑提振黃金吸引力，現貨金價 9 日盤中上揚 1.4% 至每盎司 4,191.72 美元，從 7 日的二個月低點回彈；分析師指出中東衝突加重通膨風險，聯準會稍晚可能再度升息，但全球央行對黃金的強勁需求可望抑制金價跌幅。",
     "links": [
      {
-      "title": "U.S. 10-year Treasury yields at risk of hitting 6%, Pimco tells FT",
-      "link": "https://finance.yahoo.com/markets/options/articles/u-10-treasury-yields-risk-091051042.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T09:10:51+00:00"
+      "title": "黃金魅力再現！美元、美債殖利率雙雙下滑金價強勁反彈- 國際",
+      "link": "https://www.ctee.com.tw/news/20261009700812-430702",
+      "source": "工商時報",
+      "at": "2026-10-09T13:42:00+00:00"
      },
      {
-      "title": "U.S. 10-year Treasury yields at risk of hitting 6%, Pimco tells FT",
-      "link": "https://sg.finance.yahoo.com/news/u-10-treasury-yields-risk-091051042.html",
-      "source": "Yahoo Finance Singapore",
-      "at": "2026-10-09T09:10:51+00:00"
+      "title": "Treasuries Slide on Inflation Worry as Energy Costs Stay High",
+      "link": "https://www.bloomberg.com/news/articles/2026-10-09/treasuries-slide-on-inflation-worry-as-energy-costs-stay-high",
+      "source": "Bloomberg.com",
+      "at": "2026-10-09T17:24:58+00:00"
      }
     ],
     "text_source": "model"
@@ -200,7 +188,7 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "美國國債清算系統轉換在即，市場參與者正規劃從現金交割逐步轉向回購市場（repo）的過渡策略，Bloomberg報導指出這項轉變涉及資金市場基礎設施的重大調整。",
+    "text": "美國財政部正規劃美債清算系統轉換，Bloomberg 報導指出市場參與者需要為現金與回購市場的過渡做準備。",
     "links": [
      {
       "title": "A Record $166.4 Billion Floods Into Money Market Funds in a Single Week — BofA: Cash Won't Leave Until the Fed Cuts - BigGo Finance",
@@ -220,10 +208,10 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價週五因Trump宣布美國不會在11月中期選舉前攻擊伊朗而下跌，布蘭特原油跌至103.18美元/桶，跌幅1.1%；中國恢復精煉燃料出口也對油價造成壓力，但中東供應中斷風險仍存。",
+    "text": "Trump 宣稱美國不會在 11 月中期選舉前攻擊伊朗，並表示與伊朗進行「富有成效」的談判，緩解中東供應擔憂。受此消息與中國恢復精煉燃料出口影響，布蘭特原油週五下跌 0.5% 至每桶 103.76 美元，惟週線仍呈上漲。",
     "links": [
      {
-      "title": "Oil prices dip after Trump says no Iran attack before midterms",
+      "title": "Oil prices dip after Trump rules out pre-midterms Iran attack, easing supply fears",
       "link": "https://finance.yahoo.com/energy/articles/oil-falls-slightly-trump-says-001615705.html",
       "source": "Yahoo Finance",
       "at": "2026-10-09T00:16:00+00:00"
@@ -232,7 +220,7 @@
       "title": "Oil falls as Trump comments on Iran talks ease supply concerns",
       "link": "https://finance.yahoo.com/news/oil-falls-trump-comments-iran-022757245.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T12:16:54+00:00"
+      "at": "2026-10-09T14:05:47+00:00"
      }
     ],
     "text_source": "model"
@@ -240,19 +228,19 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股週五反彈，那斯達克上漲0.6%，此前週四因OpenAI營收報告低於預期而大跌逾1%；Trump表示美國不會在中期選舉前攻擊伊朗，緩解地緣政治憂慮並帶動油價回落。",
+    "text": "美股三大指數 9 日漲幅約 0.3% 至 0.4%，消費裁量和房地產股領漲，科技股回穩；本週所有三大指數均上漲，道瓊和那斯達克各漲 0.4%，標普 500 指數漲近 1%，扭轉前日因 OpenAI 營收低於預期引發的科技股拋售。",
     "links": [
+     {
+      "title": "S&P 500, Dow and Nasdaq Rise After Steep AI Sell-Off",
+      "link": "https://finance.yahoo.com/markets/stocks/articles/p-500-dow-nasdaq-rise-172418323.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T17:24:18+00:00"
+     },
      {
       "title": "Nasdaq rises after OpenAI revenue report rattles AI stocks",
       "link": "https://finance.yahoo.com/markets/stocks/articles/nasdaq-rises-openai-revenue-report-134846677.html",
       "source": "Yahoo Finance",
       "at": "2026-10-09T13:48:46+00:00"
-     },
-     {
-      "title": "US Stock Futures Rise as Investors Assess OpenAI Revenue Reports, Delta Earnings and Consumer Sentiment: Dow Jones, S&P, Nasdaq, Wall Street",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/us-stock-futures-rise-investors-092540495.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T09:25:40+00:00"
      }
     ],
     "text_source": "model"
@@ -260,7 +248,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Yahoo Finance分析指出，NVIDIA儘管過去十年表現最佳，但未必是未來十年最佳選擇，文章建議投資人考慮其他AI晶片股；NVIDIA目前以15倍本益比交易fiscal 2028年度預估，在AI模型訓練GPU市場領導地位穩固，已轉型為完整AI基礎設施供應商。",
+    "text": "Yahoo Finance 分析指 NVIDIA 雖然過去十年表現最佳，但認為該公司在 AI 晶片股中仍是強選，理由是其在 AI 模型訓練用 GPU 的領導地位無可撼動，且已轉型為完整 AI 基礎設施供應商，股票本益比相對便宜，以 2028 財年預估本益比僅 15 倍。",
     "links": [
      {
       "title": "Should You Forget NVIDIA and Buy These 2 Artificial Intelligence (AI) Chip Stocks Instead?",
@@ -272,7 +260,7 @@
       "title": "Stocktwits AI Roundup: OpenAI Revenue Woes Rattle Chip Stocks, SoftBank Hunts $100B, Microsoft Goes AI-First",
       "link": "https://finance.yahoo.com/technology/ai/articles/stocktwits-ai-roundup-openai-revenue-064330853.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T06:43:00+00:00"
+      "at": "2026-10-09T06:43:30+00:00"
      }
     ],
     "text_source": "model"
@@ -280,7 +268,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期週四夜盤開低走低，開盤跌471點至49,122點，終場收在48,705點，下跌652點或1.32%；TSMCADR週四跌3.01%，週五跌0.97%至453.57美元，受美股科技股賣壓影響。",
+    "text": "台指期夜盤 8 日開低走低，開盤跌 471 點至 49,122 點，終場收在 48,705 點，下跌 652 點或 1.32%；TSMC ADR 跌 3.01%，受美股半導體類股走弱拖累，費城半導體指數大跌 3.39%。",
     "links": [
      {
       "title": "台股連假後挫咧等？美股3指數收黑、半導體股齊下殺 TSMCADR跌3%、台指期夜盤失守4萬9",
@@ -300,7 +288,7 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "美國財政部10月8日宣布對17艘油輪及公司實施新制裁，指控其協助伊朗運輸原油及石油產品；財政部長Scott Bessent表示將持續打擊伊朗制裁規避網絡，該行動為8月啟動的「經濟孤立行動」的一部分。",
+    "text": "財政部長 Bessent 宣布對 17 艘船隻和公司實施新制裁，指控其協助伊朗運輸原油和石油產品違反美國制裁；這是 8 月啟動的「經濟孤立行動」的一部分，旨在限制伊朗獲取外匯並破壞規避制裁的網絡。",
     "links": [
      {
       "title": "Trump Says US Won't Attack Iran Before Midterm Elections",
@@ -309,10 +297,10 @@
       "at": "2026-10-09T04:49:25+00:00"
      },
      {
-      "title": "Oil falls to $103 as Trump says US will not attack Iran before the midterm elections",
-      "link": "https://finance.yahoo.com/markets/article/oil-falls-to-103-as-trump-says-us-will-not-attack-iran-before-the-midterm-elections-171630147.html",
+      "title": "Oil prices dip after Trump rules out pre-midterms Iran attack, easing supply fears",
+      "link": "https://finance.yahoo.com/energy/articles/oil-falls-slightly-trump-says-001615705.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-08T17:00:15+00:00"
+      "at": "2026-10-09T00:16:00+00:00"
      }
     ],
     "text_source": "model"
@@ -329,10 +317,10 @@
       "at": "2026-10-08T22:37:00+00:00"
      },
      {
-      "title": "J. Rotbart & Co. Releases Post-LBMA Analysis of Gold Storage Strategy and Asian Bullion Hubs",
-      "link": "https://au.finance.yahoo.com/news/j-rotbart-co-releases-post-163600144.html",
-      "source": "Yahoo Finance Australia",
-      "at": "2026-10-08T16:36:00+00:00"
+      "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-steadies-traders-assess-us-000232268.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T00:02:00+00:00"
      }
     ],
     "text_source": "headlines"
@@ -340,7 +328,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元週五走弱，推升以美元計價的黃金吸引力；聯準會官員鷹派言論雖支撐美元，但市場對12月降息預期的增加及中東地緣政治風險溢價正在削弱美元漲勢。",
+    "text": "美元仍保持強勢，儘管對聯準會立即升息的預期減弱；聯準會理事 Christopher Waller 表示可能需要進一步升息以將通膨降至 2% 目標，市場目前定價 10 月升息機率為 17% 至 20%，主要升息預期集中在 12 月。",
     "links": [
      {
       "title": "US Dollar Price Forecast: DXY Tests 101.76, Can EUR/USD and GBP/USD Extend Gains?",
@@ -349,16 +337,16 @@
       "at": "2026-10-09T08:15:35+00:00"
      },
      {
-      "title": "Gold rises over 1% as dollar weakens, Treasury yields retreat",
-      "link": "https://au.finance.yahoo.com/news/gold-rises-over-1-dollar-032811396.html",
-      "source": "Yahoo Finance Australia",
-      "at": "2026-10-09T03:28:00+00:00"
+      "title": "仁新*:公告本公司股票面額由「新台幣10元」變更為「新台幣1元」，公告期間：115年8月5日至115年11月4日。",
+      "link": "https://news.cnyes.com/news/print/6626618",
+      "source": "鉅亨網",
+      "at": "2026-10-09T07:29:00+00:00"
      }
     ],
     "text_source": "model"
    }
   ],
-  "at": "2026-10-09T15:17:45.427569+00:00"
+  "at": "2026-10-09T19:51:11.102823+00:00"
  },
  "main_source_titles": []
 }
