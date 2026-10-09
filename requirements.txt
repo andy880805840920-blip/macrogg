@@ -5,3 +5,7 @@ pdfplumber>=0.11
 
 # Shared news main-text extraction
 trafilatura==2.3.1
+
+# Google News publisher URL resolution (compatible parser backend)
+googlenewsdecoder==0.2.1
+selectolax==0.4.12

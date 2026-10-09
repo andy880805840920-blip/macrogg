@@ -167,7 +167,7 @@ class AllNewsTests(unittest.TestCase):
         self.assertEqual(result['text_source'],'model-content')
         self.assertEqual(content.call_args.args[0][0]['body'],body)
         headline.assert_not_called()
-        self.assertTrue(set(ft.PUBLIC_NEWS_FEEDS).issubset(set(feeds.call_args_list[0].args[0])))
+        self.assertTrue(set(ft.PUBLIC_NEWS_FEEDS).issubset({x if isinstance(x,str) else x["url"] for x in feeds.call_args_list[0].args[0]}))
 
     def test_foreign_fx_headline_does_not_become_main_by_mentioning_dollar_and_oil(self):
         h=self.story('British Pound slips due to stable US Dollar, rising oil prices')

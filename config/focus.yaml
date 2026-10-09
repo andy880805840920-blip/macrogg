@@ -207,17 +207,22 @@ feeds:
   - https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
   - https://www.fxstreet.com/rss/news
 
-# 來源白名單：**只在退回 Google News 標題模式時**生效（Yahoo feed 本身
-# 就只有 Yahoo）。「yahoo」涵蓋 Yahoo Finance、Yahoo奇摩財經／股市／新聞。
-# 全部沒命中時退回不過濾，寧可來源雜一點也不讓整段消失。
+# 新聞來源偏好：主軸與十類補充共用分層排序。
+# Bloomberg／Reuters／Yahoo Finance 第一層，其餘指定媒體第二層。
+# 這份清單供舊版設定相容；完整名稱、網域與共用規則見 news_publishers.py。
+# 偏好不是獨占白名單；缺合格內容時保留其他來源備援。
 sources:
-  - yahoo
-  - reuters
   - bloomberg
+  - reuters
+  - yahoo finance
+  - financial times
   - wsj
   - wall street journal
-  - financial times
-  - ft
+  - the economist
+  - yahoo
+  - 鉅亨
+  - 經濟日報
+  - 工商時報
 
 # ============================================================================
 # 主題補充（2026-10）：主軸下方的兩則補充，依讀者在「選擇」裡排的前兩個

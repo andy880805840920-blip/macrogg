@@ -135,6 +135,7 @@ class CoverageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, \
              patch.object(ft,'fetch_feed_headlines',side_effect=feed), \
              patch.object(ft,'fetch_article_text',return_value=''), \
+             patch('src.analysis.news_sources.find_same_article',return_value=[]), \
              patch.object(ft,'fedwatch_path',return_value=None), \
              patch.object(ft,'fetch_atlanta_fedwatch',return_value=None), \
              patch.object(ft,'build_catalog',return_value=[]), \

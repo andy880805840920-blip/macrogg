@@ -198,6 +198,11 @@ def topic_allowed(tid: str, article: dict) -> bool:
     title = article.get("title") or ""
     text = " ".join(str(article.get(k) or "") for k in ("title", "summary", "body"))
     if tid == "funding":
+        # Crypto price moves are not U.S. money-market coverage merely because they cite yields.
+        if re.search(r"crypto|bitcoin|比特幣|比特币|加密貨幣|加密货币", title, re.I) and not any(
+                hit(k,title) for k in ("SOFR","IORB","repo","bank reserves","reverse repo","Treasury bills",
+                                      "回購市場","回購利率","銀行準備金","美國國庫券")):
+            return False
         if re.search(r"tokeni[sz]ed|crypto|代幣化|加密資產",title,re.I) and re.search(r"launch|introduc|推出|發行",title,re.I):
             return False
         signals=("SOFR","IORB","SRF","ON RRP","repo","repurchase agreement","bank reserves","reverse repo",
