@@ -1,12 +1,12 @@
 {
- "hash": "40b4d277a490d4ff",
- "text": "美債殖利率回落帶動黃金溫和上漲。美國國債收益率下滑減緩美元升勢，黃金因而收復部分失地，但漲幅有限，整體仍處於看跌的盤整階段，缺乏明確的上升動能。Fed升息風險依然存在，對金價形成壓力。¶華爾街股市回落，美債殖利率攀升。股市從紀錄高位下滑，主要受美國國債收益率上升拖累，投資人對利率前景的擔憂重新浮現。\nBiren 這家 AI 晶片製造商透過股票發行融資 5.15 億美元，用於支持其 AI 業務擴張。",
+ "hash": "ecae83dffd7dcdf8",
+ "text": "美國財政部頻繁干預市場引發政策信譽風險。根據 Financial Times 報導，美國財政部多次出手穩定市場壓力，但這項政策工具可能演變成道德風險來源，反而加深市場波動。該報導指出，重複干預恐侵蝕政策制定者的可信度，威脅到這項穩定機制的長期有效性。\nWTO 上調商品貿易預測，認為 AI 榮景足以抵銷中東運輸中斷的衝擊。",
  "links": [
   {
-   "title": "Gold gains modestly as US Treasury yields ease, Fed hike risks linger",
-   "link": "https://www.fxstreet.com/news/gold-struggles-as-rising-yields-and-hawkish-fed-signals-weigh-202610081055",
-   "source": "FXStreet",
-   "at": "2026-10-08T10:55:42+00:00"
+   "title": "Repeated US Treasury interventions risk an erosion of credibility",
+   "link": "https://www.ft.com/content/eec1e15d-78b9-4706-a518-2a9db4f37128?syn-25a6b1a6=1",
+   "source": "Financial Times",
+   "at": "2026-10-08T14:30:04+00:00"
   },
   {
    "title": "EXCLUSIVE: US, Russia explore gas sale to Europe amid Ukraine war, say sources",
@@ -15,28 +15,28 @@
    "at": "2026-10-08T05:04:00+00:00"
   },
   {
+   "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOZDFBZHA2ZldZVC1QZXBxNEIzTlRYcGdFWFJNRWlRLVJremJKZWt2bnJ0LUVTWXhnWWQwdFhwN0JyT3VMazZRdmVnTnVQMjBHSUpYTUQtRk1Kdld3X0JqWHBDOERUNEFaQlhJWklmLXZVblVxOFZURUR1QzBUV2NmRko0NURramJ3OFV3Z0o1UHpFZWNyYTl5cFR2Z3RLWFBIMzBUS1pJZTJrZEVQZzY3SVJxRQ?oc=5",
+   "source": "Bloomberg.com",
+   "at": "2026-10-09T00:02:00+00:00"
+  },
+  {
    "title": "Tencent Mulls $5 Billion Bond Offering as AI Push Ramps Up",
    "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQakVydFZGOThUWFpjeGp5a3dzaFptTWdoR193RTJTNG9RRko2QWh6aDZrUFBsbmxneXYtNmxXYXdrVGFGb05aTDVfdG5UM2JvaVF3Q3pSaW96LVNuRWR6TGRYNEpPZFJYMEdJel8xc3lGVDNoeHhDaHVGX1JEdUJWemw2bWFBXzk3Vng5WGlCVlc4anktYUZBSjhaajhFdjFZaXA3VlVHQnItV3Fz?oc=5",
    "source": "Bloomberg.com",
    "at": "2026-10-08T05:37:00+00:00"
   },
   {
-   "title": "Wall Street ends lower, off record highs, as Treasury yields climb",
-   "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOYlBxMHUzb2ZDaHpMY3JBZUl2Rk9XSE94bjQ2aFVndHhYeU4zS1Rwb2I1SlFJWjVpaE9sS0V4c2ZiQ2JsMzd0R0lydzlFejhJVkNYbU5ZTGVjeW9tWUJtTmUzX2VwY0N1SnpLVmdvQWRvM20xS25hRmhXRDdHVUppRk9hS2JhVExxdVUtX0hfQlNqWnd0OUhHWEpaa2w1Z3hXNVRkaw?oc=5",
+   "title": "WTO upgrades goods trade forecast as AI boom offsets Middle East disruption",
+   "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxONDV4VmEzel9IcmR0elJ5WVc3cExxU2NnRkY4V1l5UnFFV2JVYnktX3FJaldIZ08wMEFYUW1CWTM0b0Vob1pJTXhrc01YRWxHS0xnNmJONjF5TkZRYUtSM1Jyd0IydnozZUxjaEE2OVAzQklkYWZBb0Q1V3Ffa2Z0NDc0bWtIWGxyRzg0bmxfQWR1LTFjaTN6NTJWTEp1ekNibnRmM2dKTzFFQ0dLRzctdU9OVG9LWnhZODd3VVJGNEhEOEdlYlE?oc=5",
    "source": "Reuters",
-   "at": "2026-10-07T23:14:17+00:00"
+   "at": "2026-10-08T13:05:56+00:00"
   },
   {
-   "title": "AI Chipmaker Biren Taps Market Again in $515 Million Share Sale",
-   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNbnh0Z1NaYk16TUIydjMyai1kb0tsdVg5R0c1T3kyT3RycjllRmF6dnVyN1h5cWVNR0RNTGgtQnVJNmh6cnNpeXVxeHlmRmVpUERoVUVSUjVseDByTDhZUkloSTBxWlZ4bm9Ua2JsaDZ3NVp2dUM1OFBURnN5cFFSc3VEVTBBR2lNX3kxVC1Ic0VDRnBnc19nYzZ2S3U3QWJaZmpaV2MzQ2x6cTZvdF92eGhkNA?oc=5",
-   "source": "Bloomberg.com",
-   "at": "2026-10-08T02:46:00+00:00"
-  },
-  {
-   "title": "Most US voters say Trump, Congress don't take AI risks seriously, Reuters/Ipsos poll finds",
-   "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNN2p1M1ZHTVBGQXhwSXJMYWp2SXBVWGZzVnV1V3JaWjJWTjI0RnVKS2t2OGdRc1VCYVBwTTljSk9EQ2xINUtZbl9IMDZDZTZWc3hodFYzckxmaldPNC1taDFwcTJxcTJFdjk1eTl0LVpoYlBEREJnX2U0ajB0V0FXRXE2QWlvTllvWVRFaU43SlJRQlhiVVNhVDR4WkdGMi1mSnAtUXprYmZHV1ZfT3RMdTc1emNYVEtCZkNSeFdXZw?oc=5",
+   "title": "Dutch firm uses AI to help drone systems 'talk' on Ukraine's battlefield",
+   "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQNXZJQ083ancxS1lGeXhhV0w2Xy1CaU1md0IxdGlhdklJMnFpcUNfVW9jbjNIT3NxaVFVcHhIcTY1a1lHUUkwenkyQWdCMjBkeTliVkxKcGRzOGppNkhTZUJlbUtfZnRYTFNTb1dTWnAyb2Jua2YzeDVOTU9PS242dF9LUnZiaENXc2J6RDRnbHNUR0tYMHlYbVZsRG1xSXVSWXdwNnQ4TUc5b1FlbVFrbzJyTzltemo4YmtESk5GUHhoUi16b3c4WA?oc=5",
    "source": "Reuters",
-   "at": "2026-10-07T22:40:51+00:00"
+   "at": "2026-10-08T09:06:09+00:00"
   }
  ],
  "fedwatch": {
@@ -158,7 +158,7 @@
   }
  },
  "text_source": "model",
- "at": "2026-10-08T20:13:07.544457+00:00",
+ "at": "2026-10-09T02:57:24.203181+00:00",
  "layout": "main",
  "topics": {
   "hash": "",
@@ -166,13 +166,13 @@
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "紐約聯準會研究團隊發現，67類日常商品價格因Trump關稅而上漲2.9個百分點，若無關稅這些商品價格去年至今年初應下跌近1%，凸顯關稅政策對消費者荷包的直接衝擊，預計消費者將持續承受高價至2027年。",
+    "text": "聯準會全票支持升息25基點後，市場預期年底前再升息機率達八成，美元匯率因此升至18個月新高；紐約聯準會研究指出，67類商品價格因Trump關稅而高出2.9個百分點，若無關稅這些商品去年至今年初價格應下跌近1%。",
     "links": [
      {
-      "title": "實質利率攀升預示聯準會續升息？緊縮力道牽動全球市場",
-      "link": "https://tw.stock.yahoo.com/news/%E5%AF%A6%E8%B3%AA%E5%88%A9%E7%8E%87%E6%94%80%E5%8D%87%E9%A0%90%E7%A4%BA%E8%81%AF%E6%BA%96%E6%9C%83%E7%BA%8C%E5%8D%87%E6%81%AF-%E7%B7%8A%E7%B8%AE%E5%8A%9B%E9%81%93%E7%89%BD%E5%8B%95%E5%85%A8%E7%90%83%E5%B8%82%E5%A0%B4-162606644.html",
+      "title": "聯準會全員同意升息25基點 市場估計年底前再升息",
+      "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%85%A8%E5%93%A1%E5%90%8C%E6%84%8F%E5%8D%87%E6%81%AF25%E5%9F%BA%E9%BB%9E-%E5%B8%82%E5%A0%B4%E4%BC%B0%E8%A8%88%E5%B9%B4%E5%BA%95%E5%89%8D%E5%86%8D%E5%8D%87%E6%81%AF-014057667.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T16:26:06+00:00"
+      "at": "2026-10-09T01:40:57+00:00"
      },
      {
       "title": "Inflation on many everyday items was entirely due to tariffs, NY Fed says",
@@ -186,19 +186,19 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "Donald Trump宣布期中選舉前不攻擊伊朗後，10年期美債殖利率短線下挫超3個基點至5.24%，30年期美債殖利率跌穿5.62%，市場部分交易員押注長債跌勢接近尾聲，iShares 20年期以上美國公債ETF買權成交量較平均高50%，顯示資金開始布局債券反彈。",
+    "text": "美債殖利率在升息預期緩和下回落，10年期公債殖利率從本週高點回跌逾4基點至5.227%，30年期公債殖利率下跌逾5基點至5.602%；市場對10月升息機率僅17.7%，但12月升息機率達83%。",
     "links": [
      {
-      "title": "Donald Trump喊話期中選舉前不打伊朗！國際油價短線急挫 美債殖利率回落",
-      "link": "https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE%E5%96%8A%E8%A9%B1%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E5%89%8D%E4%B8%8D%E6%89%93%E4%BC%8A%E6%9C%97-%E5%9C%8B%E9%9A%9B%E6%B2%B9%E5%83%B9%E7%9F%AD%E7%B7%9A%E6%80%A5%E6%8C%AB-%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E5%9B%9E%E8%90%BD-162307482.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T16:23:07+00:00"
+      "title": "New Zealand Dollar strengthens above 0.5600 amid softer US Dollar, easing yields",
+      "link": "https://www.fxstreet.com/news/new-zealand-dollar-strengthens-above-05600-amid-softer-us-dollar-easing-yields-202610090243",
+      "source": "FXStreet",
+      "at": "2026-10-09T02:43:44+00:00"
      },
      {
-      "title": "美債跌夠了？有人先進場抄底 押注長債反彈",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E8%B7%8C%E5%A4%A0%E4%BA%86-%E6%9C%89%E4%BA%BA%E5%85%88%E9%80%B2%E5%A0%B4%E6%8A%84%E5%BA%95-%E6%8A%BC%E6%B3%A8%E9%95%B7%E5%82%B5%E5%8F%8D%E5%BD%88-173008683.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T17:30:08+00:00"
+      "title": "Gold gains on geopolitics as Fed hike bets shift to December",
+      "link": "https://www.fxstreet.com/news/gold-gains-on-geopolitics-as-fed-hike-bets-shift-to-december-202610082105",
+      "source": "FXStreet",
+      "at": "2026-10-08T21:05:52+00:00"
      }
     ],
     "text_source": "model"
@@ -206,19 +206,19 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "Reuters：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
+    "text": "富途牛牛：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
     "links": [
-     {
-      "title": "Fed minutes show some officials want to prepare for market stress",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQOWFKZEFfR182VlUzeWdFaHJOYlVxQ3FxYVVnS3Z4VXdnUlRZaGtIZkxocjFlejVyY2lKbHA5UEw0bUFUbEhRaExnTUMzZWlPWmFMQkdlVU94ejB3bjBGdGFfYXlwX0c5M3RMRDJ2NGNmU0pNSWo5X200MTZGdzJuREtOekJpRGEtZHV1ODZUTEZ5empUOFU2ajFxdF9TaDNQMndvTnFn?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-07T21:34:27+00:00"
-     },
      {
       "title": "美國投資公司協會（ICI）：美國貨幣市場基金資產規模升至7.96萬億美元。",
       "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQdklqQzgzVXlqTnc4QkRWRkZPUUtTc0hPb3ZSSU4yMUNjU092MDZFaldSNmdLTW96X2N2MEYtS1VZaW5lWG56czR6cThiS2FLVjlrWk15NHgyYXI4S09VeDJlZ0NBYU5GbXppcWNKMXNGTE1raW9OTmwzQTJ2NmFVMlhia25mdDBBc0ZNTDFRRUkwNDBTbm5Yckh5XzZMdUZVTVJjVzZlRTVDc1FX?oc=5",
       "source": "富途牛牛",
       "at": "2026-10-08T19:35:03+00:00"
+     },
+     {
+      "title": "比特幣跌破8.3萬美元，創近三週新低：中東局勢推高油價與美債收益率，加密貨幣市場承壓",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5IMUV4MlR2U3Bqa3RBLWJuV3Y1N2dJcS04RWRCUFA5TkpoRlhtaUsteFZPOV9JdndBQWdjclRTTVVPN1ZON1V3X0k2NE9faUZPWUlqMXh4ajY3Wkth?oc=5",
+      "source": "Moomoo",
+      "at": "2026-10-08T09:33:08+00:00"
      }
     ],
     "text_source": "headlines"
@@ -226,7 +226,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油突破每桶100美元，受Trump據報考慮在中期選舉前對伊朗發動軍事打擊推升，同時荷姆茲海峽油輪運輸遭胡塞武裝密集攻擊，9月28日至10月4日間10艘油輪遭擊中創紀錄，導致油價上漲5%並推高全球債券殖利率。",
+    "text": "布蘭特原油突破每桶 100 美元，主要受地緣政治風險推升。",
     "links": [
      {
       "title": "Global bond yields face pressure as Brent crude oil rises above $100",
@@ -246,19 +246,19 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "Accenture第四季新簽約訂單年增5%至222億美元，其中1億美元以上大型訂單達141筆創高，顧問業務營收年增7%至92.8億美元，顯示AI顧問需求回溫，但FBI因個資外洩終止一名承包商合作。",
+    "text": "OpenAI年化營收被披露僅500億美元，較上月傳聞的700億美元少200億美元，拖累那斯達克指數下跌1.25%、費城半導體指數重挫3.39%；科技股普遍承壓，TSMCADR下跌3.01%，NVIDIA、AMD、Intel跌幅分別達2.94%、3.9%、5.34%。",
     "links": [
      {
-      "title": "《強勢美股特報》ERIE,DOW,ACN,BF.B等5檔",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1-erie-dow-acn-bf-180700652.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T18:07:00+00:00"
+      "title": "美股多收黑　OpenAI年化營收低於投資人預期拖累AI股",
+      "link": "https://ec.ltn.com.tw/article/breakingnews/5600478",
+      "source": "自由時報",
+      "at": "2026-10-09T05:30:06+08:00"
      },
      {
-      "title": "AI代理誰當老大都得買晶片！華爾街看好這群贏家",
-      "link": "https://tw.stock.yahoo.com/news/ai%E4%BB%A3%E7%90%86%E8%AA%B0%E7%95%B6%E8%80%81%E5%A4%A7%E9%83%BD%E5%BE%97%E8%B2%B7%E6%99%B6%E7%89%87-%E8%8F%AF%E7%88%BE%E8%A1%97%E7%9C%8B%E5%A5%BD%E9%80%99%E7%BE%A4%E8%B4%8F%E5%AE%B6-190006001.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T19:00:06+00:00"
+      "title": "美股收盤》AI股重摔！費半大跌3.39％ TSMCADR重挫3％",
+      "link": "https://ec.ltn.com.tw/article/breakingnews/5600482",
+      "source": "自由時報",
+      "at": "2026-10-09T05:50:19+08:00"
      }
     ],
     "text_source": "model"
@@ -266,19 +266,19 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "華爾街分析師認為無論哪家公司主導AI代理市場，晶片與基礎建設需求都將持續增長，彭博預期AI基礎建設產業2027年淨利成長63%、營收增加54%，高於7月預估的48%與32%，花旗分析師馬利克估計CPU潛在市場至2030年年複合成長率達60%。",
+    "text": "Trump政府宣布「創世紀任務」獲11家科技公司承諾提供24億美元AI資源，其中NVIDIA承諾10億美元為最大貢獻者，AMD提供5億美元、OpenAI提供2億美元；Microsoft發表搭載NVIDIA RTX Spark晶片的Surface Laptop Ultra，可在本地運行超過1,200億參數的AI模型，入門款售價2,599美元。",
     "links": [
      {
-      "title": "AI代理誰當老大都得買晶片！華爾街看好這群贏家",
-      "link": "https://tw.stock.yahoo.com/news/ai%E4%BB%A3%E7%90%86%E8%AA%B0%E7%95%B6%E8%80%81%E5%A4%A7%E9%83%BD%E5%BE%97%E8%B2%B7%E6%99%B6%E7%89%87-%E8%8F%AF%E7%88%BE%E8%A1%97%E7%9C%8B%E5%A5%BD%E9%80%99%E7%BE%A4%E8%B4%8F%E5%AE%B6-190006001.html",
+      "title": "Donald Trump推「創世紀任務」擴大AI科研 11家企業提供24億美元資源 NVIDIA一掏就10億美元",
+      "link": "https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE%E6%8E%A8-%E5%89%B5%E4%B8%96%E7%B4%80%E4%BB%BB%E5%8B%99-%E6%93%B4%E5%A4%A7ai%E7%A7%91%E7%A0%94-11%E5%AE%B6%E4%BC%81%E6%A5%AD%E6%8F%90%E4%BE%9B24%E5%84%84%E7%BE%8E%E5%85%83%E8%B3%87%E6%BA%90-%E8%BC%9D%E9%81%94-020010172.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T19:00:06+00:00"
+      "at": "2026-10-09T02:00:10+00:00"
      },
      {
-      "title": "Chip stocks retreat despite Samsung's record profit guidance: AlphaCheck",
-      "link": "https://finance.yahoo.com/markets/article/chip-stocks-retreat-despite-samsungs-record-profit-guidance-alphacheck-134449548.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-08T13:44:49+00:00"
+      "title": "MicrosoftNVIDIA聯手打造 RTX Spark PC 筆電運行千億級 AI 模型",
+      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9F%E8%BC%9D%E9%81%94%E8%81%AF%E6%89%8B%E6%89%93%E9%80%A0-rtx-spark-pc-%E7%AD%86%E9%9B%BB%E9%81%8B%E8%A1%8C%E5%8D%83%E5%84%84%E7%B4%9A-014321860.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-09T01:43:21+00:00"
      }
     ],
     "text_source": "model"
@@ -286,19 +286,19 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "Yahoo奇摩新聞：台指期夜盤報49180點，跌177點，盤中最低報48788點，一度失守49K。",
+    "text": "今周刊：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
     "links": [
      {
-      "title": "台股連假躲崩？美股四大指數開盤全殺　台指期夜盤一度失守49K、TSMCADR臉綠",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%80%A3%E5%81%87%E8%BA%B2%E5%B4%A9-%E7%BE%8E%E8%82%A1%E5%9B%9B%E5%A4%A7%E6%8C%87%E6%95%B8%E9%96%8B%E7%9B%A4%E5%85%A8%E6%AE%BA-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4-%E5%BA%A6%E5%A4%B1%E5%AE%8849k-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%87%89%E7%B6%A0-143500430.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-08T14:35:00+08:00"
+      "title": "OpenAI營收低預期，AI前景又有疑慮？NVIDIA、TSMCADR殺逾3%，台指期夜盤先破49000⋯台股下週怎麼走",
+      "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxORjNwZGNkbXN0blAzbkY0SGtENlhJY29PNmlDSE9GUXJCMHUxRG9RM2FaZEt3LWF1WHAyQldjbWVxWTZLbkpEeDVOTUdRenBCMVkySDFxOUZaN3AwcHNoU1RWQUtEUlkwRHh4dEJiQzNocjJkRGJUSUY5M2ZhRHhKNA?oc=5",
+      "source": "今周刊",
+      "at": "2026-10-09T01:57:00+00:00"
      },
      {
-      "title": "下週要小心？台指期夜盤殺破4萬9大關",
-      "link": "https://ec.ltn.com.tw/article/breakingnews/5600190",
-      "source": "自由時報",
-      "at": "2026-10-08T18:33:17+08:00"
+      "title": "台股連假後挫咧等？美股3指數收黑、半導體股齊下殺 TSMCADR跌3%、台指期夜盤失守4萬9",
+      "link": "https://news.google.com/rss/articles/CBMi9gNBVV95cUxNSVBnNVJCdXNQT1ZpeEFwZGJvWFhZRFNZYTk5OF82YkpoWU51MWViUjgyU0RXMkwtdUZSQ1owYWhUSE1GQkRjVEswNl8tSVUzYTFENTNmYlBlV0lDZjVJNzRuTENjdDJpSGZoNU1TTldvRGI5V0ZPSVRmVFZaVDVoN1luTTRSMnY3SC11cmJyaDJHazROMkNUUFpmUEllY2RabF9nc0tYbGxDUGg0ZFlMX1VOTkZ6ZG9sZXJtaEhZNVdRT1BlRzgzVkQzWFN1aUhZd0hMbU5ZSEotWmZFRlI3Wk5TQTF3M1MzRUo2Wkp6WnR1NzhNa0J5TXdDZWlYWHNvbnpvQWd0MGRHMGRzQV9zMzhBbElueEhJZ1oxeExTT1dZQ0dEcU95UTBCMEdwWUp0Z3lOSFRRa19kd2w0WWZuZC1CaFBlMnpCWThxWnpxRDZmN3NCaHF2dnhIY3FMaHoxN294MjR2cl95ZmY4UFZIdDNIcXVXTU45MlVrT3UwSmJTMGx4VmpXd0tVRDVudG13Q29vWFBrVEZ0WWR6bjA1UGVNTnJiMTJFa1o1bFdjcEcxdkFBY3p5dXlOLXdNcW5BS3ZIZElvRU0xTllKZTFYekhVclNBUkFaZm9Vc3ZZZnhGYUFzLTFEeVJtUlA3cG5uNVhxRnpR?oc=5",
+      "source": "Yahoo股市",
+      "at": "2026-10-08T23:05:00+00:00"
      }
     ],
     "text_source": "headlines"
@@ -306,7 +306,7 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "Donald Trump周四宣布期中選舉前不攻擊伊朗，油價應聲下跌，西德州原油跌至90美元、布蘭特原油跌至103美元，此前大西洋月刊報導五角大廈正擬定攻擊伊朗計畫，鷹派人士認為軍事勝利有助共和黨選情，但也引發參選人擔憂戰爭拖累選票。",
+    "text": "Trump表示美國不會在11月3日期中選舉前攻擊伊朗，並稱與伊朗進行「富有成效的討論」，此言論使油價從高點回落；鷹派人士認為選前軍事行動可展現實力助共和黨贏面，但也引發部分候選人擔憂戰爭拖累選情。",
     "links": [
      {
       "title": "Oil falls to $103 as Trump says US will not attack Iran before the midterm elections",
@@ -326,19 +326,19 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "香港與新加坡爭搶亞洲金融樞紐地位，香港已推出黃金試驗性清算平台並計畫年底前公布離岸人民幣黃金期貨細節，世界黃金協會調查顯示45%央行計畫未來一年內購入黃金，創2018年調查啟動以來最高比例。",
+    "text": "黃金價格在跌至兩個月低點後反彈，現貨金價上漲0.4%至每盎司4,126.78美元；WisdomTree策略師指出高殖利率凸顯市場對債務規模龐大的憂慮，若債務持續增加黃金可能受青睞，聯準會利率政策缺乏預設路徑也提高金市波動性。",
     "links": [
      {
-      "title": "香港新加坡爭搶金融樞紐地位 黃金與富豪財富成新戰場",
-      "link": "https://tw.stock.yahoo.com/news/%E9%A6%99%E6%B8%AF%E6%96%B0%E5%8A%A0%E5%9D%A1%E7%88%AD%E6%90%B6%E9%87%91%E8%9E%8D%E6%A8%9E%E7%B4%90%E5%9C%B0%E4%BD%8D-%E9%BB%83%E9%87%91%E8%88%87%E5%AF%8C%E8%B1%AA%E8%B2%A1%E5%AF%8C%E6%88%90%E6%96%B0%E6%88%B0%E5%A0%B4-191804506.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-08T19:18:04+00:00"
+      "title": "黃金價格反彈！跌破2個月低點後回升 聯準會利率走向成焦點",
+      "link": "https://ec.ltn.com.tw/article/breakingnews/5600574",
+      "source": "自由時報",
+      "at": "2026-10-09T09:20:37+08:00"
      },
      {
-      "title": "Gold gains modestly as US Treasury yields ease, Fed hike risks linger",
-      "link": "https://www.fxstreet.com/news/gold-struggles-as-rising-yields-and-hawkish-fed-signals-weigh-202610081055",
+      "title": "Gold gains ground to near $4,150 as traders weigh Fed rate path",
+      "link": "https://www.fxstreet.com/news/gold-gains-ground-to-near-4-150-as-traders-weigh-fed-rate-path-202610082321",
       "source": "FXStreet",
-      "at": "2026-10-08T10:55:42+00:00"
+      "at": "2026-10-08T23:21:26+00:00"
      }
     ],
     "text_source": "model"
@@ -346,25 +346,25 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣周四午後一度貶破31.9元，央行尾盤調節後收在31.875元，貶值8分，外資連續第三日賣超，今日賣超金額擴大至758億元，TSMC發放股利後外資部分匯出加劇台幣貶勢。",
+    "text": "台灣銀行因應資金需求升溫調升存放款利率，AI聯貸大案利率從過去2%以下提高至2.3%至2.5%；金管會統計7月底國銀存放比達72.96%創近6年新高，銀行為提升流動性覆蓋比率(LCR)展開搶存款大作戰，多家銀行推出2%起跳的定存優惠專案。",
     "links": [
      {
-      "title": "國慶連假前外資倒貨！股匯雙殺  新台幣一度貶破31.9元",
-      "link": "https://ec.ltn.com.tw/article/breakingnews/5600191",
-      "source": "自由時報",
-      "at": "2026-10-08T18:20:15+08:00"
+      "title": "告別便宜新台幣時代？銀行掀LCR防衛戰",
+      "link": "https://tw.stock.yahoo.com/news/%E5%91%8A%E5%88%A5%E4%BE%BF%E5%AE%9C%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%99%82%E4%BB%A3-%E9%8A%80%E8%A1%8C%E6%8E%80lcr%E9%98%B2%E8%A1%9B%E6%88%B0-020623815.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-09T02:06:23+00:00"
      },
      {
-      "title": "Taiwan Dollar: Trade boom contrasts FX stability – ING",
-      "link": "https://www.fxstreet.com/news/taiwan-dollar-trade-boom-contrasts-fx-stability-ing-202610081841",
+      "title": "New Zealand Dollar strengthens above 0.5600 amid softer US Dollar, easing yields",
+      "link": "https://www.fxstreet.com/news/new-zealand-dollar-strengthens-above-05600-amid-softer-us-dollar-easing-yields-202610090243",
       "source": "FXStreet",
-      "at": "2026-10-08T18:41:00+00:00"
+      "at": "2026-10-09T02:43:44+00:00"
      }
     ],
     "text_source": "model"
    }
   ],
-  "at": "2026-10-08T20:13:22.506803+00:00"
+  "at": "2026-10-09T02:57:36.592990+00:00"
  },
  "main_source_titles": []
 }
