@@ -1,24 +1,24 @@
 {
- "hash": "546be7da07a63069",
- "text": "美國財政部長 Bessent 聘請 Judy Shelton 為顧問，專責評估中國金融狀況與貨幣政策。Shelton 曾是Donald Trump第一任期內的聯準會提名人選，但因其對聯準會獨立性的看法與支持金本位制等立場，遭跨黨派參議員反對而未獲確認。此次任命反映 Bessent 在財政部人事異動頻繁的背景下，持續補強高層顧問團隊。同時，美債殖利率面臨上升壓力——Pimco 首席投資官 Ivascyn 警告，10 年期美債殖利率可能觸及 6%，為 2000 年來首見，主要受高油價推升通膨預期與公債規模擴大的驅動。他指出若殖利率升至 5.5% 以上，將對股票與公司債等風險資產造成顯著壓力。",
+ "hash": "21d9665ddd4a9ac3",
+ "text": "美國長期公債殖利率持續攀升，10年期美債殖利率本週跌幅有限，仍在5.25%附近徘徊，30年期殖利率更觸及5.60%，市場擔憂可能觸及2000年以來首次6%的水位。推升殖利率的主因是全球原油價格持續上漲引發通膨憂慮，聖路易斯聯準會總裁Alberto Musalem週四表示需要進一步升息以將通膨拉回2%目標，並暗示未來六至九個月利率可能需要繼續上升。Invesco分析師指出，能源市場正主導固定收益市場情緒，高油價既對消費者構成稅負效應，也讓聯準會對通膨保持高度警戒，迫使市場預期聯準會將維持緊縮政策立場至明年。美元指數連續第七週升值，受惠於殖利率上升帶來的強勁支撐。\n美國財政部長Scott Bessent聘用曾遭參議院否決的聯準會提名人Judy Shelton擔任顧問，專責評估中國金融狀況與匯率政策，Shelton因支持金本位制與質疑美國是否需要央行等立場曾遭兩黨參議員反對。",
  "links": [
   {
-   "title": "Trump's Fed ex-nominee Shelton to advise Bessent, Treasury says",
-   "link": "https://finance.yahoo.com/economy/policy/articles/trumps-fed-ex-nominee-shelton-123007962.html",
+   "title": "Gold Prices Rise 1.5% as Dollar and US Treasury Yields Retreat",
+   "link": "https://finance.yahoo.com/markets/commodities/articles/gold-prices-rise-1-5-093226752.html",
    "source": "Yahoo Finance",
-   "at": "2026-10-09T12:30:07+00:00"
+   "at": "2026-10-09T09:32:26+00:00"
   },
   {
-   "title": "US 10-year Treasury yield risks hitting 6% for first time since 2000, Pimco's Ivascyn tells FT",
-   "link": "https://finance.yahoo.com/markets/currencies/articles/us-10-treasury-yield-risks-052945916.html",
-   "source": "Yahoo Finance",
-   "at": "2026-10-09T05:29:00+00:00"
+   "title": "Gold rises over 1% as dollar weakens, Treasury yields retreat",
+   "link": "https://sg.finance.yahoo.com/news/gold-rises-over-1-dollar-032631854.html",
+   "source": "Yahoo Finance Singapore",
+   "at": "2026-10-09T03:26:00+00:00"
   },
   {
-   "title": "Treasury's Bessent hires Trump's controversial former Fed board pick, Judy Shelton, as advisor",
-   "link": "https://www.cnbc.com/2026/10/09/judy-shelton-scott-bessent-treasury.html",
-   "source": "CNBC",
-   "at": "2026-10-09T13:09:19+00:00"
+   "title": "Stocktwits Weekly Spread: What Shaped Treasury Yields And The Dollar This Week",
+   "link": "https://finance.yahoo.com/markets/currencies/articles/stocktwits-weekly-spread-shaped-treasury-001857840.html",
+   "source": "Yahoo Finance",
+   "at": "2026-10-10T00:18:00+00:00"
   }
  ],
  "fedwatch": {
@@ -140,7 +140,7 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-09T19:50:56.324126+00:00",
+ "at": "2026-10-10T02:18:20.686003+00:00",
  "layout": "main",
  "topics": {
   "hash": "",
@@ -148,19 +148,19 @@
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "Trump 成立委員會調查聯準會理事 Lisa Cook 的抵押貸款詐欺指控，Cook 是聯準會首位黑人女性理事，去年 8 月遭 Trump 解職，但最高法院今年 6 月裁定她可繼續任職，未就詐欺指控本身做出裁決。",
+    "text": "聯準會9月會議紀錄顯示多位官員認為政策利率「不具限制性或僅具輕微限制性」，暗示9月升息可能不足以冷卻經濟，CME FedWatch數據顯示12月前再升息機率達81.9%，下週將公布9月消費者物價指數。",
     "links": [
      {
-      "title": "Trump forms committee to investigate mortgage fraud allegations against Fed governor Lisa Cook",
-      "link": "https://finance.yahoo.com/economy/policy/article/trump-forms-committee-to-investigate-mortgage-fraud-allegations-against-fed-governor-lisa-cook-153243615.html",
+      "title": "Fed Minutes Signal Another Rate Hike Is on the Table",
+      "link": "https://finance.yahoo.com/economy/policy/articles/fed-minutes-signal-another-rate-161841158.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T15:32:43+00:00"
+      "at": "2026-10-09T16:18:41+00:00"
      },
      {
-      "title": "聯準會全員同意升息25基點 市場估計年底前再升息",
-      "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%85%A8%E5%93%A1%E5%90%8C%E6%84%8F%E5%8D%87%E6%81%AF25%E5%9F%BA%E9%BB%9E-%E5%B8%82%E5%A0%B4%E4%BC%B0%E8%A8%88%E5%B9%B4%E5%BA%95%E5%89%8D%E5%86%8D%E5%8D%87%E6%81%AF-014057667.html",
-      "source": "Yahoo股市",
-      "at": "2026-10-09T01:56:22+00:00"
+      "title": "Trump Renews Effort to Fire Fed Governor Lisa Cook",
+      "link": "https://finance.yahoo.com/economy/policy/articles/trump-renews-effort-fire-fed-230459849.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T23:04:59+00:00"
      }
     ],
     "text_source": "model"
@@ -168,19 +168,19 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美元和美債殖利率下滑提振黃金吸引力，現貨金價 9 日盤中上揚 1.4% 至每盎司 4,191.72 美元，從 7 日的二個月低點回彈；分析師指出中東衝突加重通膨風險，聯準會稍晚可能再度升息，但全球央行對黃金的強勁需求可望抑制金價跌幅。",
+    "text": "Pimco首席投資官Dan Ivascyn告訴金融時報，10年期美債殖利率觸及5.225%後，進一步上升至6%「確實可能」，因對沖基金等槓桿投資者在債市拋售中止損，伊朗戰爭推升油價與AI基礎設施融資永續性疑慮加劇通膨擔憂。",
     "links": [
      {
-      "title": "黃金魅力再現！美元、美債殖利率雙雙下滑金價強勁反彈- 國際",
-      "link": "https://www.ctee.com.tw/news/20261009700812-430702",
-      "source": "工商時報",
-      "at": "2026-10-09T13:42:00+00:00"
+      "title": "U.S. 10-year Treasury yields at risk of hitting 6%, Pimco tells FT",
+      "link": "https://uk.finance.yahoo.com/news/u-10-treasury-yields-risk-091211274.html",
+      "source": "Yahoo Finance UK",
+      "at": "2026-10-09T09:12:11+00:00"
      },
      {
-      "title": "Treasuries Slide on Inflation Worry as Energy Costs Stay High",
-      "link": "https://www.bloomberg.com/news/articles/2026-10-09/treasuries-slide-on-inflation-worry-as-energy-costs-stay-high",
-      "source": "Bloomberg.com",
-      "at": "2026-10-09T17:24:58+00:00"
+      "title": "U.S. 10-year Treasury yields at risk of hitting 6%, Pimco tells FT",
+      "link": "https://finance.yahoo.com/markets/options/articles/u-10-treasury-yields-risk-091051042.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T09:10:51+00:00"
      }
     ],
     "text_source": "model"
@@ -188,59 +188,53 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "美國財政部正規劃美債清算系統轉換，Bloomberg 報導指出市場參與者需要為現金與回購市場的過渡做準備。",
+    "text": "BigGo Finance：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
     "links": [
      {
       "title": "A Record $166.4 Billion Floods Into Money Market Funds in a Single Week — BofA: Cash Won't Leave Until the Fed Cuts - BigGo Finance",
       "link": "https://finance.biggo.com/news/f141aa3f-9618-4c14-ab25-ba1decce5b7a",
       "source": "BigGo Finance",
       "at": "2026-10-09T11:55:00+00:00"
-     },
-     {
-      "title": "Cash now, repo next: Planning for the U.S. Treasury clearing transition",
-      "link": "https://www.bloomberg.com/professional/insights/regulation/cash-now-repo-next-planning-for-the-u-s-treasury-clearing-transition/",
-      "source": "Bloomberg.com",
-      "at": "2026-10-08T21:58:53+00:00"
      }
     ],
-    "text_source": "model"
+    "text_source": "headlines"
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "Trump 宣稱美國不會在 11 月中期選舉前攻擊伊朗，並表示與伊朗進行「富有成效」的談判，緩解中東供應擔憂。受此消息與中國恢復精煉燃料出口影響，布蘭特原油週五下跌 0.5% 至每桶 103.76 美元，惟週線仍呈上漲。",
+    "text": "Yahoo Finance：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
     "links": [
      {
-      "title": "Oil prices dip after Trump rules out pre-midterms Iran attack, easing supply fears",
-      "link": "https://finance.yahoo.com/energy/articles/oil-falls-slightly-trump-says-001615705.html",
+      "title": "Stocks move higher even as Treasury yields, oil prices tick up",
+      "link": "https://finance.yahoo.com/markets/stocks/articles/tech-stocks-struggle-ai-spending-015636766.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T00:16:00+00:00"
+      "at": "2026-10-09T16:42:10+00:00"
      },
      {
-      "title": "Oil falls as Trump comments on Iran talks ease supply concerns",
-      "link": "https://finance.yahoo.com/news/oil-falls-trump-comments-iran-022757245.html",
+      "title": "Trump Puts Iran Strikes on Hold as Hurricane Threatens Oil Supply",
+      "link": "https://finance.yahoo.com/energy/articles/trump-puts-iran-strikes-hold-163522464.html",
       "source": "Yahoo Finance",
-      "at": "2026-10-09T14:05:47+00:00"
+      "at": "2026-10-09T16:35:22+00:00"
      }
     ],
-    "text_source": "model"
+    "text_source": "headlines"
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股三大指數 9 日漲幅約 0.3% 至 0.4%，消費裁量和房地產股領漲，科技股回穩；本週所有三大指數均上漲，道瓊和那斯達克各漲 0.4%，標普 500 指數漲近 1%，扭轉前日因 OpenAI 營收低於預期引發的科技股拋售。",
+    "text": "美股期貨週五小幅上揚，Nasdaq-100期貨漲0.36%、S&P 500期貨漲0.28%、道瓊期貨漲0.23%，扭轉前一交易日科技股跌勢；Yahoo Finance報導指出，OpenAI營收表現不如預期引發科技股拋售，Nasdaq綜合指數週四下跌1.25%，S&P 500下跌0.47%。",
     "links": [
+     {
+      "title": "Dow, S&P 500, Nasdaq Futures Climb After OpenAI’s Tepid Revenue Sparks Tech Selloff: NBIS, SPCX, T, VZ Stocks In Focus",
+      "link": "https://finance.yahoo.com/markets/stocks/articles/dow-p-500-nasdaq-futures-033006007.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T03:30:00+00:00"
+     },
      {
       "title": "S&P 500, Dow and Nasdaq Rise After Steep AI Sell-Off",
       "link": "https://finance.yahoo.com/markets/stocks/articles/p-500-dow-nasdaq-rise-172418323.html",
       "source": "Yahoo Finance",
       "at": "2026-10-09T17:24:18+00:00"
-     },
-     {
-      "title": "Nasdaq rises after OpenAI revenue report rattles AI stocks",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/nasdaq-rises-openai-revenue-report-134846677.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T13:48:46+00:00"
      }
     ],
     "text_source": "model"
@@ -248,13 +242,13 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Yahoo Finance 分析指 NVIDIA 雖然過去十年表現最佳，但認為該公司在 AI 晶片股中仍是強選，理由是其在 AI 模型訓練用 GPU 的領導地位無可撼動，且已轉型為完整 AI 基礎設施供應商，股票本益比相對便宜，以 2028 財年預估本益比僅 15 倍。",
+    "text": "Super Micro Computer承包商Ting-Wei Sun認罪四項罪名，包括違反美國出口管制與走私含NVIDIAAI晶片伺服器至中國，該計畫自2023年10月開始、涉及約25億美元美國AI技術，Super Micro已終止Sun與其他被告的合作關係。",
     "links": [
      {
-      "title": "Should You Forget NVIDIA and Buy These 2 Artificial Intelligence (AI) Chip Stocks Instead?",
-      "link": "https://finance.yahoo.com/technology/ai/articles/forget-nvidia-buy-2-artificial-103500357.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T10:35:00+00:00"
+      "title": "Super Micro contractor pleads guilty in scheme to divert AI servers with NVIDIA chips to China",
+      "link": "https://ca.finance.yahoo.com/news/super-micro-contractor-pleads-guilty-020005083.html",
+      "source": "Yahoo! Finance Canada",
+      "at": "2026-10-10T02:00:00+00:00"
      },
      {
       "title": "Stocktwits AI Roundup: OpenAI Revenue Woes Rattle Chip Stocks, SoftBank Hunts $100B, Microsoft Goes AI-First",
@@ -268,19 +262,19 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤 8 日開低走低，開盤跌 471 點至 49,122 點，終場收在 48,705 點，下跌 652 點或 1.32%；TSMC ADR 跌 3.01%，受美股半導體類股走弱拖累，費城半導體指數大跌 3.39%。",
+    "text": "台指期夜盤下跌652點至48705點，TSMCADR跌近1%，美股漲多跌少、費半下挫0.33%，Yahoo奇摩股市報導。",
     "links": [
-     {
-      "title": "台股連假後挫咧等？美股3指數收黑、半導體股齊下殺 TSMCADR跌3%、台指期夜盤失守4萬9",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%80%A3%E5%81%87%E5%BE%8C%E6%8C%AB%E5%92%A7%E7%AD%89-%E7%BE%8E%E8%82%A13%E6%8C%87%E6%95%B8%E6%94%B6%E9%BB%91-%E5%8D%8A%E5%B0%8E%E9%AB%94%E8%82%A1%E9%BD%8A%E4%B8%8B%E6%AE%BA-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%B7%8C3-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%A4%B1%E5%AE%884%E8%90%AC9-230500516.html",
-      "source": "Yahoo股市",
-      "at": "2026-10-08T23:05:00+00:00"
-     },
      {
       "title": "美股漲多跌少！道瓊、標普、那斯達克領漲唯費半下挫0.33% TSMCADR跌近1%、台指期夜盤跌逾650點",
       "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%BC%B2%E5%A4%9A%E8%B7%8C%E5%B0%91-%E9%81%93%E7%93%8A-%E6%A8%99%E6%99%AE-%E9%82%A3%E6%96%AF%E9%81%94%E5%85%8B%E9%A0%98%E6%BC%B2%E5%94%AF%E8%B2%BB%E5%8D%8A%E4%B8%8B%E6%8C%AB0-33-144000024.html",
       "source": "Yahoo股市",
       "at": "2026-10-09T14:40:00+00:00"
+     },
+     {
+      "title": "台指期夜盤重挫652點 AI鬼故事又來了？法人看5大利多加持、Q4這樣選股- 日報",
+      "link": "https://www.ctee.com.tw/news/20261010700026-439901",
+      "source": "工商時報",
+      "at": "2026-10-09T19:00:00+00:00"
      }
     ],
     "text_source": "model"
@@ -288,19 +282,19 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "財政部長 Bessent 宣布對 17 艘船隻和公司實施新制裁，指控其協助伊朗運輸原油和石油產品違反美國制裁；這是 8 月啟動的「經濟孤立行動」的一部分，旨在限制伊朗獲取外匯並破壞規避制裁的網絡。",
+    "text": "Donald Trump周五宣布與俄羅斯協議供應柴油試圖壓低燃料價格，美國財政部隨即暫時解除對俄柴油出口制裁，前駐俄大使Michael McFaul批評此舉為Vladimir Putin提供資金製造武器，烏克蘭總統Volodymyr Zelenskyy稱此為「送給Vladimir Putin的禮物」將延長戰爭。",
     "links": [
      {
-      "title": "Trump Says US Won't Attack Iran Before Midterm Elections",
-      "link": "https://www.rferl.org/a/iran-live-blog-trump-middle-east/33803414.html",
-      "source": "Radio Free Europe/Radio Liberty",
-      "at": "2026-10-09T04:49:25+00:00"
+      "title": "為選情急轉彎！Donald Trump解禁俄柴油前大使開轟資助戰爭 策略師：太少也太遲",
+      "link": "https://tw.stock.yahoo.com/news/%E7%82%BA%E9%81%B8%E6%83%85%E6%80%A5%E8%BD%89%E5%BD%8E-%E5%B7%9D%E6%99%AE%E8%A7%A3%E7%A6%81%E4%BF%84%E6%9F%B4%E6%B2%B9%E5%89%8D%E5%A4%A7%E4%BD%BF%E9%96%8B%E8%BD%9F%E8%B3%87%E5%8A%A9%E6%88%B0%E7%88%AD-%E7%AD%96%E7%95%A5%E5%B8%AB-%E5%A4%AA%E5%B0%91%E4%B9%9F%E5%A4%AA%E9%81%B2-004002062.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-10T00:40:02+00:00"
      },
      {
-      "title": "Oil prices dip after Trump rules out pre-midterms Iran attack, easing supply fears",
-      "link": "https://finance.yahoo.com/energy/articles/oil-falls-slightly-trump-says-001615705.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T00:16:00+00:00"
+      "title": "Donald Trump不到一天就改口？期中選舉前「仍可能對伊朗動武」",
+      "link": "https://www.ctee.com.tw/news/20261010700172-430701",
+      "source": "工商時報",
+      "at": "2026-10-10T00:29:00+00:00"
      }
     ],
     "text_source": "model"
@@ -308,27 +302,27 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "Yahoo Finance Australia：這則報導的中文摘要暫時無法取得，可點選參考報導查看原文。",
+    "text": "黃金開採商面臨2027年成本壓力，UBS建議選擇性布局相關股票。",
     "links": [
      {
-      "title": "Alkane Resources produces 40,740 gold equivalent ounces in September quarter, closes with $440 million cash and bullion",
-      "link": "https://au.finance.yahoo.com/news/alkane-resources-produces-40-740-223700992.html",
-      "source": "Yahoo Finance Australia",
-      "at": "2026-10-08T22:37:00+00:00"
+      "title": "UBS Picks Top Gold Mining Stocks as Sector Faces Cost Pressures in 2027",
+      "link": "https://uk.finance.yahoo.com/news/ubs-picks-top-gold-mining-110212332.html",
+      "source": "Yahoo Finance UK",
+      "at": "2026-10-09T11:02:12+00:00"
      },
      {
-      "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-steadies-traders-assess-us-000232268.html",
-      "source": "Yahoo Finance",
-      "at": "2026-10-09T00:02:00+00:00"
+      "title": "黃金價格太貴 新人結婚流行「舊金換新金」",
+      "link": "https://tw.news.yahoo.com/%E9%BB%83%E9%87%91%E5%83%B9%E6%A0%BC%E5%A4%AA%E8%B2%B4-%E6%96%B0%E4%BA%BA%E7%B5%90%E5%A9%9A%E6%B5%81%E8%A1%8C-%E8%88%8A%E9%87%91%E6%8F%9B%E6%96%B0%E9%87%91-215110332.html",
+      "source": "Yahoo新聞",
+      "at": "2026-10-09T21:51:10+00:00"
      }
     ],
-    "text_source": "headlines"
+    "text_source": "model"
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元仍保持強勢，儘管對聯準會立即升息的預期減弱；聯準會理事 Christopher Waller 表示可能需要進一步升息以將通膨降至 2% 目標，市場目前定價 10 月升息機率為 17% 至 20%，主要升息預期集中在 12 月。",
+    "text": "美元指數測試101.76水位，聯準會理事Christopher Waller表示可能需要進一步升息以將通膨拉回2%目標，但升息無需連續進行；市場目前預期10月升息機率為17–20%，多數升息預期集中在12月。",
     "links": [
      {
       "title": "US Dollar Price Forecast: DXY Tests 101.76, Can EUR/USD and GBP/USD Extend Gains?",
@@ -337,16 +331,20 @@
       "at": "2026-10-09T08:15:35+00:00"
      },
      {
-      "title": "仁新*:公告本公司股票面額由「新台幣10元」變更為「新台幣1元」，公告期間：115年8月5日至115年11月4日。",
-      "link": "https://news.cnyes.com/news/print/6626618",
-      "source": "鉅亨網",
-      "at": "2026-10-09T07:29:00+00:00"
+      "title": "Dollar Strengthens with T-Note Yields",
+      "link": "https://finance.yahoo.com/markets/currencies/articles/dollar-strengthens-t-note-yields-193512811.html",
+      "source": "Yahoo Finance",
+      "at": "2026-10-09T19:35:12+00:00"
      }
     ],
     "text_source": "model"
    }
   ],
-  "at": "2026-10-09T19:51:11.102823+00:00"
+  "at": "2026-10-10T02:18:37.824806+00:00"
  },
- "main_source_titles": []
+ "main_source_titles": [
+  "Gold Prices Rise 1.5% as Dollar and US Treasury Yields Retreat - Yahoo Finance",
+  "Gold rises over 1% as dollar weakens, Treasury yields retreat - Yahoo Finance Singapore",
+  "Stocktwits Weekly Spread: What Shaped Treasury Yields And The Dollar This Week - Yahoo Finance"
+ ]
 }
