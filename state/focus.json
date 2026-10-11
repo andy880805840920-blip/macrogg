@@ -137,44 +137,44 @@
  "at": "2026-10-11T08:46:21.531568+00:00",
  "layout": "main",
  "topics": {
-  "hash": "5353850d95918b0f",
+  "hash": "86ea183f598d51dc",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會退休基金與長期投資基金面臨美債需求轉弱，可能加劇經濟脆弱性。塔雷伯警告，美國本土需求減弱尤其令人擔憂，持續累積的債務正在加劇西方經濟體脆弱性，即使通膨降低債務實際價值，高利率仍可能延續政府利息負擔",
+    "text": "聯準會調查擴大。川普宣布對聯準會理事啟動新調查，同時美國家庭債務負擔加重，聯準會數據顯示越來越多美國家庭將收入的40%以上用於償債",
     "links": [
      {
-      "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOZDFBZHA2ZldZVC1QZXBxNEIzTlRYcGdFWFJNRWlRLVJremJKZWt2bnJ0LUVTWXhnWWQwdFhwN0JyT3VMazZRdmVnTnVQMjBHSUpYTUQtRk1Kdld3X0JqWHBDOERUNEFaQlhJWklmLXZVblVxOFZURUR1QzBUV2NmRko0NURramJ3OFV3Z0o1UHpFZWNyYTl5cFR2Z3RLWFBIMzBUS1pJZTJrZEVQZzY3SVJxRQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-09T22:52:18+00:00"
+      "title": "Growing Number of American Families Allocate Over 40% of Income to Debt Payments, Federal Reserve Reports",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBVeWFLNDJvSGZyOHV1Y2MxYmdYWW1hNkRkS2p4TGMxLXlrLWtSUkxTNVhXemVnS1VZRmtUUnhFNXVTaDlnX01Rclk5d3A5M2JBTmc4MTN2Q0U?oc=5",
+      "source": "CubaHeadlines",
+      "at": "2026-10-10T15:02:25+00:00"
+     },
+     {
+      "title": "Trump Announces New Investigation of Federal Reserve Governor",
+      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOQ0xDMXViUUt0V2RVTHUwRzRVY1JIQlVleVlQTmFsZWxheGlXNWNCNUJLVFRUaWJQeDNVM3ZZSng4cnVRY1RocGM4VEFwaVRVemo4VklsR0V1WDBIOVVNYmJJMnJmbm9GWkRQWDhMdXRZZk5PTElCcXFUMEt2SzRDYXdBVGFNYV9VVnpaTmxYaVpTMDVXenlMcFNOMjdMdWtyMUlSUVZDV2Mwdw?oc=5",
+      "source": "The Well News",
+      "at": "2026-10-09T22:08:40+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "長天期美債殖利率攀升至12年高位，期限溢酬創新高。長期美債面臨需求風險，華盛頓對美債拍賣風險的擔憂已獲確認",
+    "text": "長天期美債殖利率創12年新高，觸及24年高位。塔雷伯警告美債需求減弱加劇經濟脆弱性，尤其擔心美國本土退休基金撤出，認為債務累積形成債務螺旋，即使通膨降低債務實際價值，高利率仍延續政府利息負擔，威脅美股上漲趨勢",
     "links": [
      {
-      "title": "Willem Middelkoop: Washington concerns over U.S. Treasury auction risks confirmed by Bloomberg",
-      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOUE1lS3BxMDdHX2JpejJOYlhEWmN2eG5DRlNpZDFBTU9KUUpHRkxEZHJyZmJ2WmNDb2p3SUo3dUVaZFFxaUFvWTJsQ05La0lpU3JFZGRBMVZHcHhMdlIzcURLb3d3QnNBUHpoTEdhR1dCV0ZJbEttbi1RWGdIcGpUQjJaaDEwckJLZDZaQ1Q4V0Q4ZERCbUQ2bg?oc=5",
-      "source": "Traders Union",
-      "at": "2026-10-10T15:40:56+00:00"
-     },
-     {
-      "title": "US Long-Term Treasury Yields Surge — Term Premium Hits 12-Year High",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQVGlwRHhuckdSRjhEanBTM3N6RlFfak9QYVNDaG5ZNDhYeHZobkhvNDhPbDNPMmY5ODRYNHNlY0RVODdwQ3RaQjZtVXJ2dHNFVk5xWXdwUzZyR3BoTmhaLVQzLUtPeHpqWVhqMlVya0ZhNzFFakN1ZDYxcXRTSjlKSlltczg4anpy?oc=5",
-      "source": "The Korea Daily",
-      "at": "2026-10-11T00:31:22+00:00"
+      "title": "《黑天鵝》作者示警：AI前景好不等於值得買 更怕美國人自己撤出美債",
+      "link": "https://tw.stock.yahoo.com/news/%E9%BB%91%E5%A4%A9%E9%B5%9D-%E4%BD%9C%E8%80%85%E7%A4%BA%E8%AD%A6-ai%E5%89%8D%E6%99%AF%E5%A5%BD%E4%B8%8D%E7%AD%89%E6%96%BC%E5%80%BC%E5%BE%97%E8%B2%B7-%E6%9B%B4%E6%80%95%E7%BE%8E%E5%9C%8B%E4%BA%BA%E8%87%AA%E5%B7%B1%E6%92%A4%E5%87%BA%E7%BE%8E%E5%82%B5-050005838.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-11T05:00:05+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗表示不會投降，帶動紐約原油期貨上漲 1.8%；WTI 原油價格守住 90 美元關卡，下週有望挑戰 100 美元。川普稱不會在中期選舉前攻擊伊朗，可能開啟新一輪油價下跌",
+    "text": "油價守住90美元關卡。伊朗表示不投降推升原油上漲1.8%，但川普改口稱不會在中期選舉前攻擊伊朗，市場預期可能開啟新一輪下跌",
     "links": [
      {
       "title": "WTI原油價格預測：油價守住90美元，下週有望挑戰100美元",
@@ -193,26 +193,26 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "標普500與那斯達克創新高，輝達與台積電ADR同創新高，油價下跌支撐股市。AI獲利成長期待推升市場，惟費半指數獨跌4%，反映市場進入獲利驗收期",
+    "text": "美股記憶體類股遭拋售。三星電子季報營業利益表現優異甚至超越輝達，但市場反應冷淡，美光、閃迪、SK海力士ADR全面重挫逾4%，分析師指這波拋售屬過度反應",
     "links": [
+     {
+      "title": "Once-Hot AI Trade Leaves Korean Stocks Struggling for Buyers",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQWVdHUEV4N1ZZeXBlNU5JMUUyTnZYZGU5SXdLYU8xOWdsaGUyX3hKZTNQVmxLb2x2NU1wUWdZVTBqXzFfM2JDMy15VWZfckttTUZmbno4NTVZVWF2QmlNQjJaeGRza2p2UmJYeG5YVGdiX0s3b25ZVzFwS1RfMFRLN3Z5dzltRm90aXV4dGEwaWVfSk5PSHdJbUItNFF1cGVNWUR1RnlPcVJ1dnNwbzFqRA?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-11T00:00:00+00:00"
+     },
      {
       "title": "【美股特別報導】費半獨跌4％ 標普反而最強 AI交易進入「驗收期」",
       "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5LQ0JGUkpDcG1CekZhNlB4M2hEX19INHBNaE1lNEhvTTloZmxha1BtUFJKS0FtYnVfSk9RbHg3cjRUc1hJdkpraXYybXRwRmNfeXlSMlFJelA0SFVoVWNEMGJBNjZKdw?oc=5",
       "source": "CMoney",
       "at": "2026-10-10T13:08:36+00:00"
-     },
-     {
-      "title": "美股收盤／AI 獲利成長期待加油價下跌 輝達、台積電ADR、那斯達克同創新高",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFA2UlpKblJGYjFucTBNeXQtRV8zT05BWEVRTHFUaVMyaFdWa1JLa2U1bXJ1QUQyNXl3eDdNM3A3OXlyZlpUNmMwT2l6LTJsWEc0Q3ZEMllyY0NrX3lG0gFiQVVfeXFMUG1WdkJqNWhwSkwzNVUweWt0MnpuTEtIUGo2eDQ1UmNNTWg0MUMwZnJpS200RTRXMmRGSnVYcm5LLWhDY2VIVEhtdE5HZGpEVFliZ1ZaQmtvQmtOQURrQnRXVFE?oc=5",
-      "source": "經濟日報",
-      "at": "2026-10-10T09:00:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達正與新創Reflection AI進行收購或投資談判，估值250億美元。Reflection AI由Google DeepMind前員工創辦，已推出首款模型「Beam」，投資方包括川普之子小唐納川普，背景雄厚",
+    "text": "輝達洽談收購或投資新創Reflection AI。該公司由Google DeepMind前員工創辦，估值250億美元，已獲輝達8億美元投資，川普之子小唐納川普也是投資方，10月推出首款模型「Beam」，具低成本優勢",
     "links": [
      {
       "title": "Nvidia in talks to invest further in Reflection AI or buy it, FT reports",
@@ -231,7 +231,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股連假後面臨三大壓力：台積電ADR回檔4%、中東地緣政治危機加劇、美啟動337條款調查廣達等AI權值股。若台積電同步下跌4%，單檔個股恐拖累大盤816點，加上其他權值股調節，大盤重挫千點非不可能",
+    "text": "台積電ADR連假期間回檔4%至453美元，若現貨同步修正，股價恐跌至2448元附近，按市場估算每跌1元影響大盤8點，單一檔股票可能拖累指數816點；加上沙烏地阿拉伯機場遭襲擊造成12死309傷，以及美國對廣達、鴻海、台達電啟動337條款調查，三重壓力夾擊下，10/12開盤恐面臨千",
     "links": [
      {
       "title": "台積電ADR回檔　台股週一開盤恐有場硬仗",
@@ -250,7 +250,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格穩定，地緣政治風險與聯準會政策路徑成交易焦點。道富預估金價2027年第一季末最高見5500美元",
+    "text": "黃金牛市結構性因素持續。道富預測金價2027年第一季末最高見5500美元，地緣政治緊張與聯準會政策路徑推升避險需求",
     "links": [
      {
       "title": "Gold Steadies as Traders Assess US-Iran Tensions, Fed Rate Path",
@@ -269,7 +269,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "中東局勢升溫引發美元強勢，新台幣 10/9 大幅貶值逾 1 角、跌破 31.5 元。隨後亞幣反彈，新台幣連 4 升至 31.85 元；央行總裁楊金龍指出台積電美元配息有助減緩台幣波動",
+    "text": "新台幣重貶逾1角。中東戰火升溫美元強彈，新台幣帶量摜破31.5元，央行尾盤出手守31字頭，台積電美元配息有助減緩台幣波動",
     "links": [
      {
       "title": "中東戰火升溫、美元強彈！新台幣帶量摜破31.5元、重貶逾1角",
@@ -286,7 +286,7 @@
     ]
    }
   ],
-  "at": "2026-10-11T08:46:51.390147+00:00"
+  "at": "2026-10-11T08:51:26.371072+00:00"
  },
  "main_source_titles": [
   "US CPI to Show Overall Inflation Boosted by Higher Gasoline Prices",
