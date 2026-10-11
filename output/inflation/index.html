@@ -3173,6 +3173,9 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   .hm-next em{grid-column:2;grid-row:1}.hm-next span{grid-column:1/-1}}
 /* 四大模組收合列 */
 .hm-modx{margin-top:4px;border-top:1px solid var(--grid)}
+/* 第十八批：整體情勢預設收合，是第二層的第一個區塊——不要再多一條上框線 */
+.viz-root:not(#_) .hm .hm-layer>.hm-briefx:first-child{margin-top:0;border-top:0}
+
 .hm-modx>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:14px 0}
 .hm-modx>summary::-webkit-details-marker{display:none}
 .hm-modx>summary::after{content:"展開 ▾";margin-left:auto;font-size:var(--fs-small);font-weight:600;color:var(--brand-orange)}
@@ -3344,6 +3347,27 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .hm-mr-go{grid-area:auto;color:var(--muted-bar);font-size:18px;font-weight:400}
 @media(max-width:759px){.viz-root:not(#_) .hm-mr{grid-template-columns:116px 1fr 10px;gap:0 12px;padding:12px}
   .hm-mr-l{padding-right:12px}}
+/* 第十八批：四大模組切成等寬四格（桌機一列四格、手機 2×2），收合摘要與展開格一一對齊 */
+.viz-root:not(#_) .hm .hm-modx>summary:has(.hm-ms4){flex-wrap:wrap}
+.viz-root:not(#_) .hm .hm-modx>summary:has(.hm-ms4)::after{order:2}
+.viz-root:not(#_) .hm .hm-ms4{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 0}
+.viz-root:not(#_) .hm .hm-ms4>span{padding:0 16px;min-width:0;white-space:nowrap}
+.viz-root:not(#_) .hm .hm-mrs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.viz-root:not(#_) .hm .hm-mr{display:flex;flex-direction:column;align-items:stretch;gap:10px;position:relative;
+  padding:14px 16px;border-top:0;border-left:1px solid var(--grid);min-width:0}
+.viz-root:not(#_) .hm .hm-mr:first-child{border-left:0}
+.viz-root:not(#_) .hm .hm-mr-l{padding:0 22px 10px 0;border-right:0;border-bottom:1px solid var(--grid);align-self:auto}
+.viz-root:not(#_) .hm .hm-mr-v{display:grid;grid-template-columns:1fr;gap:6px}
+.viz-root:not(#_) .hm .hm-mr-v>span{display:flex;flex-direction:row;justify-content:space-between;align-items:baseline;gap:8px;min-width:0}
+.viz-root:not(#_) .hm .hm-mr-go{position:absolute;top:12px;right:12px}
+@media(max-width:759px){
+  .viz-root:not(#_) .hm .hm-ms4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .viz-root:not(#_) .hm .hm-ms4>span{padding:0 12px}
+  .viz-root:not(#_) .hm .hm-mrs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .viz-root:not(#_) .hm .hm-mr{padding:12px}
+  .viz-root:not(#_) .hm .hm-mr:nth-child(odd){border-left:0}
+  .viz-root:not(#_) .hm .hm-mr:nth-child(n+3){border-top:1px solid var(--grid)}
+  .viz-root:not(#_) .hm .hm-mr-v>span{flex-direction:column;align-items:flex-start;gap:0}}
 /* 焦點報價板 v6：指標｜日期｜數值｜變動；文字欄靠左、數字欄靠右，欄名同向 */
 .hm .fs-hd,.viz-root:not(#_) .hm .focus-strip .fs-chip{grid-template-columns:minmax(0,1fr) 46px 84px 96px;column-gap:10px}
 .hm .fs-hd span:nth-child(-n+2){text-align:left}
@@ -3430,12 +3454,12 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   border-radius:9px;min-width:18px;text-align:center;padding:0 5px;line-height:17px}
 .fs-pk-n:empty{display:none}
 .viz-root:not(#_) .hm .fs-editing .fs-chip:not(.fs-off)>b::after{content:none}
-.fs-modes{display:inline-flex;vertical-align:middle;border:1px solid var(--border);border-radius:7px;overflow:hidden;background:var(--surface-1)}
-.fs-modes button{font:inherit;font-size:10.5px;font-weight:700;line-height:1.6;padding:0 6px;border:0;background:transparent;
-  color:var(--muted);cursor:pointer}
-.fs-modes button+button{border-left:1px solid var(--grid)}
-.fs-modes button[aria-pressed=true]{background:var(--brand-navy);color:#fff}
-@media(max-width:380px){.fs-modes button{padding:0 4px;font-size:10px}}
+.fs-mode{position:relative;display:inline-flex;align-items:center}
+.fs-mode::after{content:"▾";position:absolute;right:6px;pointer-events:none;font-size:10px;color:var(--brand-orange)}
+.fs-mode-sel{font:inherit;font-size:var(--fs-micro);font-weight:700;color:var(--brand-ink);background:var(--surface-1);
+  border:1px solid var(--border);border-radius:6px;padding:2px 20px 2px 7px;cursor:pointer;
+  -webkit-appearance:none;appearance:none;line-height:1.5}
+.fs-mode-sel:hover,.fs-mode-sel:focus{border-color:var(--brand-ink);outline:none}
 /* 新聞主題標籤（反向聯動） */
 .fs-tps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px}
 .fs-tps-k{font-size:var(--fs-micro);font-weight:700;color:var(--muted);margin-right:2px}
@@ -4269,8 +4293,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-12 00:48（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/12</span></span><div class="upd-c"><span>台北</span><b>00:48</b><i>10/12</i></div><div class="upd-c"><span>紐約</span><b>12:48</b><i>10/11</i></div><div class="upd-c"><span>倫敦</span><b>17:48</b><i>10/11</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/inflation/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-12 01:23（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/12</span></span><div class="upd-c"><span>台北</span><b>01:23</b><i>10/12</i></div><div class="upd-c"><span>紐約</span><b>13:23</b><i>10/11</i></div><div class="upd-c"><span>倫敦</span><b>18:23</b><i>10/11</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/inflation/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/labor/">就業</a><a href="/inflation/" class="on" aria-current="page">通膨</a><a href="/fomc/">聯準會</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>通膨</h1><div class="sub">Consumer Price Index　·　資料月份 2026-08</div></div>
@@ -4295,43 +4319,43 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
     <div class="sig-tier">三個月動能</div><article class="flag alert">
   <div class="f-head"><span class="f-title">核心 PCE 在降溫：三月年化 2.0%，低於年增 3.0%</span>
     <span class="f-tag">重要</span></div>
-  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>聯準會盯的指標在降溫</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利寬鬆</span><span>聯準會盯的指標在降溫</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>核心 PCE 年增 3.0%，最新月增 0.25%、三月年化 2.0%、六月年化 2.7%。</p><p>短天期低於長天期＝最近幾個月漲得比一年平均慢，年增率之後會跟著往下。</p><p>差距要 0.3 個百分點以上、六月年化沒有反向才算方向明確。</p></div></details>
 </article><article class="flag alert">
   <div class="f-head"><span class="f-title">近三月年化低於年增率 0.4 個百分點以上</span>
     <span class="f-tag">重要</span></div>
-  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>通膨降溫的證據</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利寬鬆</span><span>通膨降溫的證據</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>核心 CPI 年增 2.4%，但把最近三個月的漲勢換算成年率只有 2.0%，低了 0.5 個百分點。</p><p>年增率會被一年前的舊數字拖住，三個月年化反映的是當下的溫度，通常更早看出轉折。</p><p>差距要大於 0.4 個百分點才視為方向明確，避免被單月雜訊帶著走。</p></div></details>
 </article><div class="sig-tier">超級核心服務</div><article class="flag info">
   <div class="f-head"><span class="f-title">超級核心服務回落至正常區間</span>
     <span class="f-tag">參考</span></div>
-  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>通膨的慣性正在減弱</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利寬鬆</span><span>通膨的慣性正在減弱</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>剔除住房後的核心服務，近三個月年化 2.8%（近 12 個月 2.8%）。</p><p>降下來代表通膨的慣性正在減弱。</p></div></details>
 </article><div class="sig-tier">整體通膨與住房</div><article class="flag watch">
   <div class="f-head"><span class="f-title">住房落後項推升整體讀數</span>
     <span class="f-tag">留意</span></div>
-  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>實際通膨比表面低</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利寬鬆</span><span>實際通膨比表面低</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>核心 CPI 年增 2.4%，但把住房剔除後只有 2.0%。</p><p>住房項的算法是把既有租約一起平均，所以會落後市場實際租金大約一年。</p><p>換句話說，現在的住房數字反映的是去年的租金行情。</p></div></details>
 </article><article class="flag watch">
   <div class="f-head"><span class="f-title">住房通膨的降溫已成既定路徑</span>
     <span class="f-tag">留意</span></div>
-  <div class="f-impact"><span class="f-lean dovish">利降息</span><span>權重最大的一塊有既定的下行慣性</span></div>
+  <div class="f-impact"><span class="f-lean dovish">利寬鬆</span><span>權重最大的一塊有既定的下行慣性</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>住房項年增 3.4%，但近三個月年化只有 2.1%。</p><p>住房是 CPI 權重最大的一塊、又落後市場租金約一年——短期動能明顯低於年增率，代表未來幾個月的住房讀數會照著新簽租金往下走。</p></div></details>
 </article><details class="f-more sig-rest"><summary>其他 3 項（核心 PCE 顯著高、上游漲價還沒轉嫁完…）</summary><article class="flag alert">
   <div class="f-head"><span class="f-title">核心 PCE 顯著高於目標</span>
     <span class="f-tag">重要</span></div>
-  <div class="f-impact"><span class="f-lean hawkish">利升息</span><span>通膨仍是降息的阻力</span></div>
+  <div class="f-impact"><span class="f-lean hawkish">利緊縮</span><span>通膨仍是降息的阻力</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>核心 PCE 年增 3.0%，高出目標 1.0 個百分點。</p><p>只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。</p></div></details>
 </article><article class="flag watch">
   <div class="f-head"><span class="f-title">上游漲價還沒轉嫁完</span>
     <span class="f-tag">留意</span></div>
-  <div class="f-impact"><span class="f-lean hawkish">利升息</span><span>上游管線裡還有未轉嫁的漲價</span></div>
+  <div class="f-impact"><span class="f-lean hawkish">利緊縮</span><span>上游管線裡還有未轉嫁的漲價</span></div>
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail"><p>核心 PPI 年增 4.6%，比核心 CPI 高 2.2 個百分點。</p><p>出廠價漲得比零售價快，代表企業手上還有一段成本沒轉嫁——未來幾季 CPI 有既定的上行壓力。</p></div></details>
 </article><article class="flag info">

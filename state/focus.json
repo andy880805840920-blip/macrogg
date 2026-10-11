@@ -1,12 +1,12 @@
 {
- "hash": "4ccae3dbf7d249e9",
- "text": "全球公債殖利率持續攀升，美國 10 年期公債殖利率創數十年高點，法國、義大利、日本、南韓等多國基準殖利率自年初以來漲幅至少 100 個基點。法國情況最為嚴峻，公債殖利率逼近 5%，創 20 多年新高，與德國殖利率差已擴大至 136 個基點，為 2011 年歐元區危機以來最高水準。¶法國公共債務膨脹至 GDP 的 113%，今年預算赤字預計超過 6%，2027 年利息支付將達 910 億歐元，占經濟產出近 3%。政治風險與財政不確定性推升投資人對法國債務的風險溢價要求。法國借貸成本上升連帶衝擊義大利、西班牙、比利時及希臘等其他歐元區國家。分析師指出，低利率時代已結束，市場正迫使各國政府正視過度擴張的財政政策。\n美國 9 月 CPI 將於 10/14 公布，市場預估年增率 3.7%、核心 CPI 年增率 2.5%，數據將影響聯準會 10 月決策會議的升息預期。日本投資人在國內殖利率正常化下，正從逾 1.3 兆美元的美債部位中回流資金，加劇全球債市拋售壓力。",
+ "hash": "66df563defe701ca",
+ "text": "美國將在10/14公布9月消費者物價指數（CPI），預估年增3.7%、核心通膨年增2.5%，這份數據將直接影響聯準會10月底FOMC會議的降息預期。通膨走勢仍是聯準會決策的關鍵指標，市場密切關注CPI能否進一步回落，以支持進一步寬鬆政策。¶同時，全球債市面臨上升壓力。法國公債因財政赤字擴大，與德國公債的殖利率差已擴大至2%以上，投資人要求更高風險溢價，反映歐洲債務危機隱患。美國債市也面臨類似壓力，多家大銀行將在10/11至10/15期間公布第3季財報，市場關注高利率與公債殖利率攀升對金融機構獲利的衝擊。\n法國政府公債因財政缺口擴大，投資人要求更高風險溢價，法德公債殖利率差已擴大至2%以上，反映歐洲債務危機風險升溫。\n摩根大通、高盛等六大銀行本週公布第3季財報，市場關注高利率與公債殖利率攀升對銀行淨利息收入與資產品質的壓力。",
  "links": [
   {
-   "title": "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
-   "link": "https://finance.yahoo.com/markets/article/bond-yields-are-surging-worldwide--and-france-is-on-the-ugly-side-chart-of-the-day-123643553.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-11T12:36:43+00:00"
+   "title": "US CPI to Show Overall Inflation Boosted by Higher Gasoline Prices",
+   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPUHNUeWNTY1NneVFOYnBzR0xFeWs2eWs3UWJCODFyaEtnNDZtamJJY1pSNFpyZ2xmcmNoR3FIc1VEeVU5bXdHSktiQlVqbFZTUHlTMjlsbjZOOU9fMFVwSUZoNGxNV0toMU1Sc3VZTnRWTmtnTXNlSnVCaDNMREVnWUtOSFctdGlTZ01EU1hnRVVsd1VnaHJiNEF0d3AwQVZubko5RVNjVDlKZ3FkbnI2bHFTbWdrN2JY?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-10T20:00:00+00:00"
   },
   {
    "title": "本週操盤筆記：美CPI牽動升息預期！美股財報季開跑、台積電法說和ASML接力登場",
@@ -295,48 +295,16 @@
    }
   }
  },
- "text_source": "model-content",
- "at": "2026-10-11T16:48:09.812255+00:00",
+ "text_source": "model",
+ "at": "2026-10-11T17:22:44.915238+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c4dd8207b760d580",
+  "hash": "2d140f11cda44f45",
   "items": [
-   {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "聯準會主席華許暗示今年可能還有升息，但美國就業成長疲弱，聯準會面臨通膨與就業的兩難",
-    "links": [
-     {
-      "title": "Weak U.S. Jobs Growth Raises Pressure on the Federal Reserve Ahead of October Meeting",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOSk5aWG80QVU4T3p0N2dfcUMxN1JDajU0dXZXT0VuR3hZaEVpalF3OUotNFV6NVVfcFRlS21kMm5xZEhpU2RVTGlOWGRXTXc2cVFlcmRPRkZ1cU45dXBwbVYzVlo4Q3V4c1p5Tnp3dHh2NjRSQnJQcG5TUmtJc2ZoVmN3ZWtjbllETWs4aTZJNFJMUkdXVlJLY2l0Q3JVazJraS1SbnZndnN0Vi1GRXc?oc=5",
-      "source": "Tekedia",
-      "at": "2026-10-11T08:46:54+00:00"
-     },
-     {
-      "title": "Fed minutes: Another rate hike likely coming this year to combat persistent inflation",
-      "link": "https://news.google.com/rss/articles/CBMiiwJBVV95cUxOSVdrcGlpemZZMVJPdm1BY2Y3dXNnbzY2eENUY05RVTRUWlNfSDl2SGRkcmp5UGp6aXZZQkRfV3VnMzdabmhHMjkwZUlzV3VMQ0ZHMnIzT0RhRUVnOTBKdjB2c1dveG9JMUQtYkUwT21OQWU3VjUzbmNpNUR0ZHMxMzRTUGVjWnRNcFV5RGVYbFU5T255YzFwS3RoRW1zRDFXYkRVT0hBQ2FwamUxOThtenlabE9oakI1dnB1R2ZKWmxxQUhmUXE2dU8tclhDZGtidWV2aHBVZ05WRHFMQXRlWTRQM3RKZ0s2cnoxcXJjeGpveWs0c0FnQld0ZDhIaVo3V0FSWlBYUkxvcVk?oc=5",
-      "source": "Ottumwa Courier",
-      "at": "2026-10-11T09:00:22+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "美國財政部本週拍賣 728 億美元公債，3 年期、10 年期、30 年期殖利率均創 20 多年新高，市場需求浮現但融資成本大幅上升",
-    "links": [
-     {
-      "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPQjJrT1hOSlY0QVJ1a2JIRGlFQ2c4Z3dld1VSOXJLV1NJOGFnTXVGb1JPVXFMRTlKa3FxM0t2OElRN1otOEpPU2ZwdDY1RVJKWUJMYVZTRXhRaGQycnB1M2IxbGQ1SHF5b0VjYUxDVm9pUU5GWUlDMlR4SUE5WU1IZUZjbmpiX0VjejE0a21tOUViNTM5SVHSAZsBQVVfeXFMTUNRWGZ2ODhsUXVNeVdSWktJcWdYSHdkakNwLTg4c3k1cDFOeXlFR0RLZGMyRTlReVVWZWxYN0ZLYlhza3VfcUExMUhrN2hENFpnclp3dlozWERBdDJpb3Q1STlNd3kyVHZ6NW1Kc0FvVDhXWF93V1dPbl91SXNzVlJsNFd4LVlNM19qT0VBY1E4RURPUEtEekFlMHM?oc=5",
-      "source": "Forex Factory",
-      "at": "2026-10-11T12:15:00+00:00"
-     }
-    ]
-   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東石油出口已回到每日 2330 萬桶，與 2025 年日均水準相當，顯示供應復甦，但成品油缺口仍存，地緣政治風險未消除",
+    "text": "中東原油出口已回升至每日2330萬桶，接近戰前水準，成品油供應缺口逐漸收斂，但地緣政治風險仍存，若美伊衝突趨緩，原油供給集中風險將推升地緣政治風險溢價，可能成為常態",
     "links": [
      {
       "title": "油價再漲破百美元不合理？ 富蘭克林透露 中東石油出口已回到2025年日均水準",
@@ -349,8 +317,14 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "標普 500 第三季獲利預計年增 31%，其中科技與 AI 相關公司貢獻約三分之二成長；能源類股獲利預計年增 115%，受中東衝突推升油價",
+    "text": "標普500創下今年第28次歷史新高，華爾街分析師預估明年9月將達9,275點，較現水準再漲19%；第3季標普500獲利預計年增31%，科技與AI相關公司貢獻約三分之二，能源類股獲利預計年增115%",
     "links": [
+     {
+      "title": "The S&P 500 Just Hit a Record High -- Here's How Much Higher It Can Climb, According to the Wall Street Consensus",
+      "link": "https://www.fool.com/investing/2026/10/11/sp-500-just-hit-record-high-how-much/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-11T17:04:00+00:00"
+     },
      {
       "title": "S&P 500 Earnings Expected to Rise 31% in Q3 as AI",
       "link": "https://investorshub.advfn.com/market-news/article/37825/sp-500-earnings-expected-to-rise-31-in-q3-as-ai-related-companies-lead-growth?.tsrc=rss",
@@ -362,7 +336,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台塑與創曦資訊合作在麥寮建置 AI 資料中心，並與中華化等企業合資成立資本額 60 億元公司擴建電子級硫酸產線，目標 2030 年新增營收逾 300 億元",
+    "text": "台塑攜手創曦資訊在麥寮建置AI資料中心，規劃成立合資公司搶主機代管及算力出租商機，並與中華化等合資成立資本額60億元新公司擴建電子級硫酸產線，目標2030年新增營收逾300億元，三大法人買超逾8.2萬張",
     "links": [
      {
       "title": "AI資料中心、半導體材料雙線布局！台塑2030年轉型新增營收拚逾300億元　三大法人砸61.4億元搶進8.2萬張",
@@ -375,7 +349,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台積電 ADR 連假期間下跌 4%，若現貨同步下跌，單一個股恐拖累大盤約 816 點；加上中東局勢升溫與廣達、鴻海、台達電遭 337 條款調查，台股 10/12 開盤恐面臨千點跌幅",
+    "text": "台積電ADR下跌4%至約453美元，按台積電每下跌1元影響大盤約8點推算，單台積電跌幅就可能拖累大盤約816點；加上中東利雅德機場遭攻擊12人死亡、美國貿易委員會啟動337條款調查廣達等台廠，市場風險情緒轉弱恐引發權值股同步調節",
     "links": [
      {
       "title": "台積電ADR重摔4%！專家揭「1:8公式」：台股週一恐跌千點",
@@ -384,24 +358,18 @@
       "at": "2026-10-11T10:22:00+08:00"
      },
      {
-      "title": "台股12日開盤恐重挫千點？ 投資達人示警：3大壓力齊發",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A112%E6%97%A5%E9%96%8B%E7%9B%A4%E6%81%90%E9%87%8D%E6%8C%AB%E5%8D%83%E9%BB%9E-%E6%8A%95%E8%B3%87%E9%81%94%E4%BA%BA%E7%A4%BA%E8%AD%A6-3%E5%A4%A7%E5%A3%93%E5%8A%9B%E9%BD%8A%E7%99%BC-150351348.html",
+      "title": "美337調查台股飄烏雲　聚焦價值股12檔",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E337%E8%AA%BF%E6%9F%A5%E5%8F%B0%E8%82%A1%E9%A3%84%E7%83%8F%E9%9B%B2-%E8%81%9A%E7%84%A6%E5%83%B9%E5%80%BC%E8%82%A112%E6%AA%94-170500876.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-11T15:03:51+08:00"
+      "at": "2026-10-11T17:05:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "期中選舉將對能源、金融及人工智慧產業政策產生重大影響；川普表示正與伊朗進行富有成效的討論，並承諾在期中選舉前不會攻擊伊朗",
+    "text": "川普改口稱期中選舉前「不排除對伊朗動武」，隨後又表示與伊朗有建設性討論且中期選舉前不會攻擊伊朗，地緣政治風險引發市場警報",
     "links": [
-     {
-      "title": "What the Midterm Elections Mean for Energy, Finance and AI",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOS1U1QWNIQnVRbnRIVlpQVWdSbUE3QV9XNUdUaGtHQVJoaHBxYmNqQUFpUDNEeWI5QU0yNnhPRVFxS1RyeFBsWXo2V3dsTzZUSUp2US1sX0o1R3h6N3hXVlU2dng0Q1U1a05JOWd1RUFwUlBQTl9NblotUHJURE9CZDRNbldESFowUVRzbzhORWdGMkRxdzRqNzJxbVRkMHJZWFBEZ2xGTkhsV2NINS1KUA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-10T05:05:50+00:00"
-     },
      {
       "title": "Trump: having productive discussions with Iran; We will not be attacking Iran at any time prior to the Midterm Elections",
       "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQTWcyTFFZTmdjV1FNUHhsMXpJSDFKWTFQOWRaT25GcnlWcngzcVlKdUY1R0tTNUxuX3BaWk9XR3NWMlNWWGNfR0k5WmV6bEpSaUJJeXMya3p5QU5kZDYtTS1FNjZ0RGhjNlA0RjRFUndzaXc4ZXJMLVdTaWUyLU1YdVZXdEVJbVZTMjFZdWVvM2NYb29JOE04MTBUc9IBoAFBVV95cUxQekR0NGFzdldRWGg2VkdLN2Zud0o2cllOOXV6NWJ3bVN6M0QxWjM2SUp5cGZLNU9PVllxMk1PWTZPczJoM0ZjUkpwWFhvWU1hOTl6ZFpobGdfNGZ0bUJXbmx4N1M5Sk5YaUVFcktZQ25BSzdGdG11WWJpU1FndnBxLU1veXFFamY4eW9VQk1Nc0JOTVAwNDdMeDU4SXJKd05C?oc=5",
@@ -411,9 +379,28 @@
     ]
    },
    {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金突破4200美元，道富預估2027年第一季末金價最高可見5500美元，央行持續買盤與地緣政治緊張情勢支撐金價，黃金與股市相關性低，成為投資人在不確定時期的多元化資產",
+    "links": [
+     {
+      "title": "黃金牛市結構性因素仍存在！道富料金價2027年第一季末最高見5500美元",
+      "link": "https://news.google.com/rss/articles/CBMi4gJBVV95cUxOM2RRQnFRSFZkVElnTV9zTU5HSks4WFRXMnh0NGNQdzJUSzRvbUI1OVNGa1dZdlBHVEZDd00ydTQzeE15ZVk5MVFBWVZEQlQ4MElsOS1HZjhIVEs3d28zaEhpYVJkTldoajE4by0zazRyUlR4a3FCT0w3d1U1LW9FU3FWTms0emlRcFR6Y2FuWVNWY1M2a0I1SGR3YUE3VHpkaVBrN1U1RVlnU0UtZ2paWWRKWXZuX0Q5OElQdERzUC11YUNSS0NxSFNVWWhmUjRxRzY1NUJ1aE5CeC0zdnlkTzhxay0wcVJCWFVIRERXLWNmMUgxVEk5WVJDMTNCMnhSbWJXRmpRek84ZDdmeXlvOWxpdWZmcjFiVkRBeGxlOG14ajBha3pPcmpnM2NiWTdkT3JsWmdqVmhlTGRpVVZwTEdiWkxiMl9DbXVpaUxTWTZxWFV3UGRpVm5kYmhiUzcyMEE?oc=5",
+      "source": "香港財經時報HKBT",
+      "at": "2026-10-11T05:53:00+00:00"
+     },
+     {
+      "title": "【今日要聞】黃金價格突破4200美元！原油價格回落，比特幣一度逼近8萬美元",
+      "link": "https://news.google.com/rss/articles/CBMi0wJBVV95cUxPaXR6dElIVDJtcnhSQ0hINWtLX0MycVExcUQxXzI5anZ0X3pwM3FIRFAwd19ER3VyVGg3LUItWEd1TDVLbmJ5R1YyZ0V5Ump0akxLeTZQM0dOWWlHcUc5Y21DVkNmSUJBXzEwS3gxaVMzZ1ktalVUODR3VE90ZFlCdzRvZk0wdHZPbUIxTTZ2U0RuWlUzLW1pa25UbHdGYnRVSS1hcXBGdk9YQlYya052c01YZndLUHBDV2J0aXNwaktqNnI4cEd4Wnc2dVJUc05NZ19iNDlXWkxZQ1E4M2xuZTZQX1dSbzJrRVNtdV9MLXNQel9TQWl6eFFCTGs5WVJJSkVpSVV2dnZDWDVSZHFTMVdFVURSbU1kR1hWZHNjeTduYmctOWxxdmY5MU1xczFLVTlvMUlHdkdvWkN2TUdDZ1Nld3FGT3NKdFlZOTQzb3ZSTUE?oc=5",
+      "source": "HK MoneyClub",
+      "at": "2026-10-10T10:44:10+00:00"
+     }
+    ]
+   },
+   {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣連續 4 個交易日升值，收在 31.85 元，央行總裁楊金龍指出台積電美元配息有助減緩台幣波動",
+    "text": "新台幣連4升至31.85元，亞幣普遍反彈；央行總裁楊金龍表示台積電美元配息有助減緩台幣波動，台幣在31.6至32元區間整理",
     "links": [
      {
       "title": "台積挺美元配息 楊金龍︰有助減緩台幣波動",
@@ -430,15 +417,15 @@
     ]
    }
   ],
-  "at": "2026-10-11T16:48:27.411848+00:00"
+  "at": "2026-10-11T17:23:06.494516+00:00"
  },
  "main_source_titles": [
-  "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
+  "US CPI to Show Overall Inflation Boosted by Higher Gasoline Prices",
   "本週操盤筆記：美CPI牽動升息預期！美股財報季開跑、台積電法說和ASML接力登場",
   "法國財政赤字飆高引爆歐債憂慮 恐成歐洲經濟最大隱患"
  ],
- "headline": "全球債市拋售潮持續，法國債務危機成歐洲最大隱患",
- "rate_note": "全球債市拋售反映經濟成長與通膨預期，美債殖利率雖近期小幅回落，但仍處高檔，聯準會降息空間受限。",
+ "headline": "美國9月CPI將公布，通膨數據牽動聯準會10月降息決策",
+ "rate_note": "通膨數據若符合預期或低於預期，將支持聯準會繼續降息，與近期美債殖利率大致持平的走勢一致；若高於預期則可能延緩降息步伐。",
  "recent_mains": [
   {
    "headline": "美國汽油價格推高整體通膨，關稅衝擊已現跡象",
@@ -456,6 +443,15 @@
     "法國財政赤字飆高引爆歐債憂慮 恐成歐洲經濟最大隱患"
    ],
    "at": "2026-10-11T16:48:09.812255+00:00"
+  },
+  {
+   "headline": "美國9月CPI將公布，通膨數據牽動聯準會10月降息決策",
+   "titles": [
+    "US CPI to Show Overall Inflation Boosted by Higher Gasoline Prices",
+    "本週操盤筆記：美CPI牽動升息預期！美股財報季開跑、台積電法說和ASML接力登場",
+    "法國財政赤字飆高引爆歐債憂慮 恐成歐洲經濟最大隱患"
+   ],
+   "at": "2026-10-11T17:22:44.915238+00:00"
   }
  ]
 }
