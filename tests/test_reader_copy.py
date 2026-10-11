@@ -17,6 +17,10 @@ class Visible(HTMLParser):
 def text(html):
  p=Visible();p.feed(html);return ' '.join(p.parts)
 for p in (ROOT/'output').rglob('*.html'):
+ # 第十八批：各月份存檔頁（archive/labor-2026-09/ 這類）是發布當時凍結的快照，設計上不再覆寫，
+ # 舊版文字改不到也不該改；只檢查每次都會重新產生的頁面（含存檔索引頁）。
+ if p.parent.parent.name=='archive' and p.parent.name!='archive':
+  continue
  body=text(p.read_text(encoding='utf-8'))
  for phrase in ['config/rates.yaml','SEC_USER_AGENT','User-Agent','--offline','每天 3 次建置','每次執行結果一致','機械比對','固定規則產生','不是 AI','全部是確定性規則','先前的「客觀訊號分數」','使用者要求','你的提示詞']:
   assert phrase not in body,(str(p),phrase)

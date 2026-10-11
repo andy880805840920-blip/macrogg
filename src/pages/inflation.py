@@ -401,16 +401,9 @@ def _inflation_body_full(d: dict) -> str:
             f'（{esc("、".join(f.headline[:10] for f in _rest[:2]))}…）</summary>'
             + "".join(_flag_row(f) for f in _rest) + '</details>')
     flags_html = "".join(_parts) or '<div class="empty">本次沒有觸發任何訊號</div>'
-    # 本期總結：綜合判定＋動能（同一套數字，不另外造句）
-    _v3 = d.get("verdict3") or {}
-    _s = d.get("summary")
-    _pace = getattr(_s, "pce_core_pace3", None) if _s is not None else None
-    sum_html = (
-        f'<div class="sig-sum"><b>本期總結：{esc(_v3["label"])}</b>'
-        f'<span>{esc(_v3["reason"])}。'
-        + (f'動能{esc(_v3.get("momentum", ""))}：核心 PCE 近三月平均月增 {_pace:.2f}%'
-           f'（目標步速約 0.17%）。' if _pace is not None else "")
-        + '</span></div>') if _v3.get("label") else ""
+    # 第十八批（使用者指定）：「本期總結」整段拿掉——它的「黏著不降」與「動能降溫」
+    # 跟九宮格的方向定義不一致，讀者會看到互相矛盾的結論。
+    sum_html = ""
     # 每顆燈連回「主場」卡區（同一個數字的完整脈絡在那裡）。
     _anchor_map = [("超級核心", "#sticky"), ("核心 PCE", "#kpi"),
                    ("通膨預期", "#kpi"), ("核心商品", "#contrib")]

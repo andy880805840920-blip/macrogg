@@ -1023,6 +1023,13 @@ def main() -> int:
     # 美國期中選舉預測（Polymarket）：首頁卡片＋焦點條的眾院／參院 chip。
     # 先跑，焦點條的 chip 目錄要用到。失敗只少一張卡片。
     _focus_cfg = load_config("focus.yaml")
+    # 第十八批：接下來看什麼的三個篩選（數據／發債／官員談話）與市場預估
+    try:
+        from src.analysis import watch_extra as _wx
+        ctxs["_watch_extra"] = _wx.collect(_focus_cfg, args.offline)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("接下來看什麼的附加資料組裝失敗（%s）", e)
+        ctxs["_watch_extra"] = {}
     try:
         ctxs["_election"] = polymarket.build(
             (_focus_cfg or {}).get("election"), STATE_FILE.parent / "election.json",
@@ -1089,7 +1096,8 @@ def main() -> int:
     _scx = ctxs.get("scenario")
     if _scx is not None:
         try:
-            _fc = None if args.offline else focus_today.futures_curve(rates_series)
+            _fc = None if args.offline else focus_today.futures_curve(
+                rates_series, fomc_dates=(_focus_cfg or {}).get("fomc_dates"))
             _scx["futures_curve"] = _fc
             from src.analysis import positioning as _pos
             _scx["divergence"] = _pos.divergence(_scx["scenario"].lean, _fc)

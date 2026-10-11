@@ -660,11 +660,12 @@ RS = {"DGS3MO": [{"date": "2026-08-24", "value": 3.71},
 
 cat = ft.build_catalog(RS, LIQ, [], offline=True)
 _ids = [c["id"] for c in cat]
-check("⑮ 目錄 24 顆、順序固定（升降息三顆＋道瓊／費半／台指期）",
-      _ids == ["dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "live_dgs10", "live_dgs30",
-               "fedwatch", "fw_dec", "fw_cum",
+check("⑮ 目錄 33 顆、順序固定（第十八批：7Y／20Y、三段累計、S&P／NASDAQ／加權、三組匯率）",
+      _ids == ["dgs3mo", "dgs2", "dgs5", "dgs7", "dgs10", "dgs20", "dgs30", "live_dgs10", "live_dgs30",
+               "fedwatch", "fw_h1", "fw_h2", "fw_h3",
                "sofr", "sofr_iorb", "onrrp", "srf",
-               "wti", "brent", "vix", "move", "dji", "sox", "gold", "dxy", "twd", "txf"], _ids)
+               "wti", "brent", "vix", "move", "dji", "spx", "ixic", "sox", "twii",
+               "gold", "dxy", "twd", "eurusd", "usdjpy", "usdcnh", "txf"], _ids)
 _by = {c["id"]: c for c in cat}
 check("⑮b 預設組＝2Y＋10Y＋30Y＋機率（固定四格湊滿）",
       [c["id"] for c in cat if c.get("on")]
@@ -709,16 +710,18 @@ import re as _re
 _vis = _re.findall(r'<div class="fs-chip" data-chip="([^"]+)"', _hs)
 check("⑯ 預設顯示四顆（2Y／10Y／30Y／機率）",
       _vis == ["dgs2", "dgs10", "dgs30", "fedwatch"], _vis)
-check("⑯b 其餘 20 顆帶 .fs-off 隱藏但都在 HTML",
-      _hs.count("fs-off") >= 20
-      and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 24)
-check("⑯c 就地選擇：選擇指標鈕、編輯列（恢復預設／完成）、選單含 24 個指標",
+check("⑯b 其餘 29 顆帶 .fs-off 隱藏但都在 HTML",
+      _hs.count("fs-off") >= 29
+      and len(_re.findall(r'<div class="fs-chip[^"]*" data-chip=', _hs)) == 33)
+check("⑯c 勾選清單（第十八批）：選擇指標鈕、編輯列、33 個 checkbox、預設四個已勾",
       'class="fs-edit-btn"' in _hs and 'class="fs-editbar"' in _hs
-      and "恢復預設" in _hs and "完成" in _hs and "點任一行更換指標" in _hs
-      and _hs.count("<option value=") >= 24 and "fs-pick" not in _hs)
-check("⑯d 內嵌 JS 帶預設組、上限與 localStorage 鍵",
+      and "恢復預設" in _hs and "完成" in _hs and "不限數量" in _hs
+      and _hs.count('type="checkbox"') == 33 and _hs.count(" checked>") == 4
+      and "<option value=" not in _hs.split("topicOptions")[0])
+check("⑯d 內嵌 JS 帶預設組、不設上限、localStorage 鍵與 MTD／YTD 切換",
       '"defaults": ["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
-      and "var M=4" in _hs and "localStorage" in _hs)
+      and "var M=4" not in _hs and "localStorage" in _hs and 'MK="fsMode"' in _hs
+      and ">MTD<" in _hs and ">YTD<" in _hs)
 _hs2 = _home._focus_strip({"yields": [
     {"label": "10 年期", "value": 4.66, "delta_bp": -4, "date": "2026-08-26"}],
     "links": [], "fedwatch": None, "text": "", "text_source": "",
@@ -1150,17 +1153,24 @@ check("㉗b 下次會議：機率最高的兩個結果＋前日",
       and _c27["fedwatch"]["value"].startswith("升一碼")
       and "維持" in _c27["fedwatch"]["delta"]
       and "前日 40%" in _c27["fedwatch"]["delta"], _c27["fedwatch"])
-check("㉗c 12 月單場幅度（bp＋約幾碼＋前日）",
-      _c27["fw_dec"]["value"] == "+10.6 bp"
-      and "約 +0.4 碼" in _c27["fw_dec"]["delta"]
-      and "前日 +8.0 bp" in _c27["fw_dec"]["delta"]
-      and _c27["fw_dec"]["dir"] == "up", _c27["fw_dec"])
-check("㉗d 至 12 月累計",
-      _c27["fw_cum"]["label"] == "至 12 月 FOMC 累計"
-      and _c27["fw_cum"]["value"] == f"{_p26b['cum_bp']:+.1f} bp",
-      _c27["fw_cum"])
-check("㉗e 沒資料 → 三顆都標擷取失敗",
-      [c["value"] for c in ft.fw_chips(None)] == ["—", "—", "—"])
+check("㉗c 舊格式（沒有 horizons）→ 第一顆累計用 horizon／cum_bp 後備",
+      _c27["fw_h1"]["label"] == "至 2026 年底（12/9）累計"
+      and _c27["fw_h1"]["value"] == f"{_p26b['cum_bp']:+.1f} bp"
+      and "前日 +23.0 bp" in _c27["fw_h1"]["delta"], _c27["fw_h1"])
+check("㉗d 舊格式缺的節點標「遠月報價不可用」",
+      _c27["fw_h2"]["value"] == "—" and _c27["fw_h3"]["value"] == "—")
+_fw27h = {**_fw27, "horizons": [
+    {"date": "2026-12-09", "label": "2026 年底", "cum_bp": 25.1, "prev_cum_bp": 24.2},
+    {"date": "2027-06-09", "label": "2027 年中", "cum_bp": 72.9, "prev_cum_bp": 68.4},
+    {"date": "2027-12-08", "label": "2027 年底", "cum_bp": 81.0, "prev_cum_bp": 76.8}]}
+_c27h = {c["id"]: c for c in ft.fw_chips(_fw27h)}
+check("㉗d2 三段累計：至今年底／明年中／明年底，約幾碼＋前日",
+      [_c27h[k]["label"] for k in ("fw_h1", "fw_h2", "fw_h3")]
+      == ["至 2026 年底（12/9）累計", "至 2027 年中（6/9）累計", "至 2027 年底（12/8）累計"]
+      and _c27h["fw_h3"]["value"] == "+81.0 bp" and "約 +3.2 碼" in _c27h["fw_h3"]["delta"]
+      and _c27h["fw_h2"]["dir"] == "up", [_c27h[k] for k in ("fw_h1", "fw_h2", "fw_h3")])
+check("㉗e 沒資料 → 四顆都標擷取失敗",
+      [c["value"] for c in ft.fw_chips(None)] == ["—", "—", "—", "—"])
 _c27s = ft.fw_chips({**_fw27, "stale_from": "2026-10-02"})
 check("㉗f 沿用舊值時小字標明沿用日期", _c27s[0]["date"] == "沿用 10-02",
       _c27s[0]["date"])

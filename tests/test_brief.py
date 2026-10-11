@@ -223,12 +223,23 @@ _INF_PACE = {"core_pace3": 0.3, "core_pace_hot": 4}
 # 重點句不再複述數字（通膨 bullet 以訊號為主體後，「連 N 個月／
 # 近三月 X%」由 bullet 承載，重點句只留問題框架＋解鎖條件）
 check("㉙ 偏鷹＋通膨重心 → 問「升不升息」、指向月步速但不複述數字",
-      (lambda t: "升不升息" in t and "月步速" in t and "0.2%" in t
+      (lambda t: "升不升息" in t and "核心通膨月增率" in t and "0.2%" in t
        and "0.30" not in t and "連 4 個月" not in t)(
           take(S(), FOM, _INF_PACE)),
       take(S(), FOM, _INF_PACE))
 # 使用者的批評：重點句太冗長。瘦身後最長分支釘在 70 中文字以內，
 # 同義補述（「再加速則升息機率上升」）不准回來。
+# 第十八批：有九宮格同口徑的通膨門檻時，重點句講那一條（白話），不講月步速
+from src.analysis import scenario as _scm
+_tg = _scm._triggers({"unrate": 4.2, "u_lo": 4.0, "u_hi": 4.3},
+                     {"core_pce_yoy": 3.01, "core_pce_3m": 2.05, "core_pce_6m": 2.7,
+                      "supercore_last2": [2.4, 2.13], "bands": {"low": 2.25, "high": 2.5}},
+                     "中", "高", "通膨")
+_tk = take(S(triggers=_tg), FOM, _INF_PACE)
+check("㉙c 重點句用格位同口徑條件（Supercore 連兩個月）、不寫「還差」",
+      "Supercore" in _tk and "連兩個月低於 2.1%" in _tk and "轉「中」" in _tk
+      and "還差" not in _tk and "月步速" not in _tk, _tk)
+check("㉙d 重點句長度 ≤ 90 中文字（含白話條件）", brief.cjk_len(_tk) <= 90, brief.cjk_len(_tk))
 check("㉙b 重點句長度 ≤ 70 中文字",
       brief.cjk_len(take(S(), FOM, _INF_PACE)) <= 70,
       brief.cjk_len(take(S(), FOM, _INF_PACE)))

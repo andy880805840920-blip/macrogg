@@ -692,13 +692,21 @@ def r_factory_hours(ctx: RuleContext) -> Flag | None:
 
 
 # ---------------------------------------------------------------------------
+# 第十八批（使用者指定）：就業數據的修正不再當訊號——每月例行修正與年度基準
+# 修正本身是抽樣模型的誤差，不改變判讀；它們不進鷹鴿淨值、不上首頁與情境頁。
+# 規則函式保留（就業頁的「歷史數據修正」卡照舊顯示），只是不列為訊號。
+DISABLED_KEYS = frozenset({"revision_swamps", "revision_bias_down",
+                           "revision_bias_up", "benchmark_revision"})
+
+
 def run_rules(ctx: RuleContext) -> list[Flag]:
     """
     排序：層級（TIERS）→ 第一層的固定先後（TIER1_ORDER）→ 嚴重度 → 強度。
     嚴重度仍照各規則自己判（它決定鷹鴿淨值的權重），層級只管先後。
     """
     order = {"alert": 0, "watch": 1, "info": 2}
-    flags = [f for f in (r(ctx) for r in RULES) if f is not None]
+    flags = [f for f in (r(ctx) for r in RULES)
+             if f is not None and f.key not in DISABLED_KEYS]
     for f in flags:
         if not f.tier:
             f.tier = TIER_OF.get(f.key, 3)

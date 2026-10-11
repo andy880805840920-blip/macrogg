@@ -511,7 +511,22 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
         if getattr(trig, "met", False):
             cond = f"，{trig.label}的條件已經達成"
         else:
-            cond = f"，解鎖條件是{trig.label}（{trig.distance}）"
+            cond = f"，解鎖條件是{getattr(trig, 'plain', '') or trig.label + '（' + trig.distance + '）'}"
+    # 第十八批：通膨的「升息壓力解除」條件跟九宮格同一套規則——
+    # 取通膨軸往下的相鄰門檻中最近的一條（Supercore 或核心 PCE 年增）。
+    import re as _re
+
+    def _gap(x):
+        m = _re.search(r"[-+]?\d+(?:\.\d+)?", getattr(x, "distance", "") or "")
+        return abs(float(m.group(0))) if m else 9e9
+    _dn = [x for x in trigs if getattr(x, "axis", "") == "inflation"
+           and getattr(x, "direction", "") == "down" and getattr(x, "adjacent", False)
+           and not getattr(x, "met", False)]
+    _up = [x for x in trigs if getattr(x, "axis", "") == "inflation"
+           and getattr(x, "direction", "") == "up" and getattr(x, "adjacent", False)
+           and not getattr(x, "met", False)]
+    dn = min(_dn, key=_gap) if _dn else None
+    up = min(_up, key=_gap) if _up else None
 
     dis = ((fom or {}).get("vote") or {}).get("dissents") or []
     hikes = sum(1 for d in dis if isinstance(d, dict)
@@ -525,15 +540,21 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
     # 重點句只負責：問題框架、解鎖條件、委員會動態。
     if lean == "hawkish":
         tail = "；委員會內已有升息主張" if hikes else ""
+        if binding != "就業" and dn is not None and getattr(dn, "plain", ""):
+            return ("重點：問題是升不升息、不是何時降息——關鍵在核心通膨能否續降："
+                    f"{dn.plain}，通膨才會轉「{dn.label[-2]}」、升息壓力解除{tail}。")
         if binding != "就業" and pace is not None:
-            return ("重點：問題是升不升息、不是何時降息——關鍵在通膨"
-                    f"月步速；回到 0.2% 以下壓力解除{tail}。")
+            return ("重點：問題是升不升息、不是何時降息——關鍵在核心通膨"
+                    f"月增率；回到 0.2% 以下壓力解除{tail}。")
         return f"重點：政策風險偏向升息{cond}{tail}。"
     if lean == "dovish":
         tail = "；委員會內已有人主張先動" if cuts else ""
         return f"重點：討論的是降息時點{cond}{tail}。"
+    if dn is not None and up is not None and dn.plain and up.plain:
+        return (f"重點：最可能按兵不動，下一步看通膨——{dn.plain}偏降息；"
+                f"{up.plain}偏升息。")
     if pace is not None:
-        return ("重點：最可能按兵不動，下一步看通膨——月步速回到 0.2% "
+        return ("重點：最可能按兵不動，下一步看通膨——核心通膨月增率回到 0.2% "
                 "以下偏降息、再加速偏升息。")
     return f"重點：按兵不動的可能性最高{cond}。"
 
@@ -556,7 +577,7 @@ def _takeaway(sc, fom: dict | None, inf: dict | None = None) -> str:
 import logging as _logging
 log = _logging.getLogger(__name__)
 
-_GEN_PROMPT_VERSION = "g1"
+_GEN_PROMPT_VERSION = "g2-tone-lock"
 _GEN_LABELS = ("勞動市場", "通膨", "聯準會")
 _GEN_SYSTEM = (
     "你是總經分析師。輸入是三個模組由固定規則算出的判定與關鍵訊號。"
@@ -568,6 +589,9 @@ _GEN_SYSTEM = (
     "（利升息／利降息／中性，照抄輸入，不得自行改判）。內容規則："
     "只能使用輸入已有的資訊；最多引用兩三個關鍵數字，其餘用文字描述；引用的數字必須照輸入的寫法**原樣照抄**（含小數位數與百分號），不得換算、不得改寫格式、不得自行補年份或日期；"
     "不得推論輸入沒有寫的因果；不做預測、不下投資結論；"
+    "**語氣必須和該軸的格位與方向一致**（輸入的【一致性】行）：通膨格位「高」而方向"
+    "不是「降溫」時，只能說近期讀數放緩、降溫能否延續尚待確認，不得寫「降溫趨勢明確」"
+    "「已經降溫」；就業格位「中」而方向不是「轉弱」時，不得寫「韌性有限」「明顯轉弱」；"
     "不要條列符號、不要粗體記號、不要前言。繁體中文。")
 _LEAN_ZH = {"hawkish": "利升息", "dovish": "利降息",
             "neutral": "中性", "balanced": "中性"}
@@ -635,8 +659,46 @@ def judgment_pack(ctxs: dict) -> dict | None:
             f"【聯準會】最近一次決議：{_sh}；目前重心：{_fl or '—'}；"
             + (f"反對票：{_h} 票主張升息；" if _h else "")
             + f"本期訊號：{_flags(fom) or '無'}")
+    _ls, _lm = getattr(sc, "labor_state", ""), getattr(sc, "labor_momentum", "")
+    _is, _im = getattr(sc, "infl_state", ""), getattr(sc, "infl_momentum", "")
+    lines.append(f"【一致性】就業格位「{_ls}」、方向「{_lm}」；通膨格位「{_is}」、方向「{_im}」"
+                 "——三則的結論語氣不得與此矛盾")
     return {"text": "\n".join(lines),
-            "lean": _LEAN_ZH.get(getattr(sc, "lean", ""), "中性")}
+            "lean": _LEAN_ZH.get(getattr(sc, "lean", ""), "中性"),
+            "labor_state": _ls, "labor_mom": _lm, "infl_state": _is, "infl_mom": _im}
+
+
+# 第十八批（使用者抓到的矛盾）：結論是「就業中性 × 通膨偏高」，整體情勢卻寫
+# 「降溫趨勢明確」「勞市韌性有限」。語氣跟格位、方向不一致就退回重寫。
+_TONE_INFL_COOL = re.compile(r"降溫趨勢(?:已)?(?:明確|確立)|明確降溫|已(?:經)?(?:明顯)?降溫|通膨(?:已)?受控|降溫已成定局")
+_TONE_INFL_HOT = re.compile(r"明顯(?:升溫|再加速)|通膨失控|升溫趨勢(?:已)?(?:明確|確立)")
+_TONE_LAB_WEAK = re.compile(r"韌性有限|明顯(?:轉弱|惡化)|快速轉弱|勞(?:動)?市(?:場)?(?:已)?轉弱|就業(?:已)?(?:明顯)?轉弱")
+_TONE_LAB_STRONG = re.compile(r"明顯(?:過熱|轉強)|勞(?:動)?市(?:場)?過熱")
+
+
+def _tone_issues(bullets, pack: dict) -> str:
+    """回傳第一個語氣矛盾的原因；沒有回空字串。"""
+    got = dict(bullets or [])
+    inf, lab = got.get("通膨", ""), got.get("勞動市場", "")
+    if pack.get("infl_mom") != "降溫" and pack.get("infl_state") != "低":
+        m = _TONE_INFL_COOL.search(inf)
+        if m:
+            return (f"通膨格位「{pack.get('infl_state')}」、方向「{pack.get('infl_mom')}」，"
+                    f"卻寫了「{m.group(0)}」——改成近期放緩但降溫能否延續尚待確認")
+    if pack.get("infl_mom") != "升溫" and pack.get("infl_state") != "高":
+        m = _TONE_INFL_HOT.search(inf)
+        if m:
+            return f"通膨方向「{pack.get('infl_mom')}」，卻寫了「{m.group(0)}」"
+    if pack.get("labor_mom") != "轉弱" and pack.get("labor_state") != "弱":
+        m = _TONE_LAB_WEAK.search(lab)
+        if m:
+            return (f"就業格位「{pack.get('labor_state')}」、方向「{pack.get('labor_mom')}」，"
+                    f"卻寫了「{m.group(0)}」")
+    if pack.get("labor_mom") != "轉強" and pack.get("labor_state") != "強":
+        m = _TONE_LAB_STRONG.search(lab)
+        if m:
+            return f"就業方向「{pack.get('labor_mom')}」，卻寫了「{m.group(0)}」"
+    return ""
 
 
 def _gen_digit_issues(text: str, source: str) -> tuple[list, list]:
@@ -775,6 +837,11 @@ def generate(ctxs: dict, assembled: dict, cache_path, offline: bool = False,
             log.warning("整體情勢生成被退回的輸出開頭：%s…", res[:80])
         else:
             bullets, reason = _parse_generated(res, pack["lean"])
+            if bullets:
+                _tone = _tone_issues(bullets, pack)
+                if _tone:
+                    bullets, reason = None, "語氣與格位不一致：" + _tone
+                    log.warning("整體情勢生成被退回（%s）", _tone)
         if bullets:
             break
         if attempt == 1:

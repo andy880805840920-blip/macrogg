@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 EVENTS: dict[str, tuple[str, str, tuple[int, int], str]] = {
     "employment": ("就業報告（非農）", "high", (8, 30),
                    "失業率決定就業格位，非農與時薪決定方向。"),
-    "cpi": ("CPI", "high", (8, 30), "先更新通膨軸的推估值與動能。"),
+    "cpi": ("CPI", "high", (8, 30), "CPI 公布後，本站先換算成核心 PCE 的推估值，通膨格位依推估值重判。"),
     "pce": ("PCE 物價", "high", (8, 30),
             "推估值換回實際值，通膨格位以實際值重新判定。"),
     "fomc": ("FOMC 利率決策", "high", (14, 0), ""),

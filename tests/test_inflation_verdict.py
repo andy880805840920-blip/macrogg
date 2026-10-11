@@ -180,9 +180,18 @@ check("⑪c 消費 ≥2%、所得 ≥1.5% → 所得撐得住消費（利升息�
 check("⑪d 資料不足 → None", _b._consumption_block({"PCEC96": idx([0.1] * 5)}) is None)
 
 # ---- 頁面（有 output 才檢查）----
-OUT = ROOT / "output" / "inflation" / "index.html"
-if OUT.exists():
-    h = OUT.read_text(encoding="utf-8")
+# 第十八批：測試自己用測試資料渲染通膨頁，不讀 output/（那份可能是正式更新產生的舊版）
+def _render_inflation():
+    import yaml as _yaml
+    from src import build as _bd, fixtures_inflation as _fi, fixtures as _fl
+    from src.pages import inflation as _ip
+    _cfg = _yaml.safe_load((ROOT / "config" / "inflation.yaml").read_text(encoding="utf-8"))
+    _ctx = _bd.build_inflation_context(_cfg, _fi.build(), [], True, labor_series=_fl.build())
+    return _ip.inflation_body(_ctx)
+
+
+if True:
+    h = _render_inflation()
     check("⑥ 通膨頁：檢核區改名、有綜合判定與判定規則",
           "關鍵指標檢核與綜合判定" in h and "綜合判定：" in h and "判定規則：" in h)
     check("⑥b 核心 PCE 卡副標有月增、3M、6M", "6M 年化" in h and "3M 年化" in h)
@@ -190,8 +199,8 @@ if OUT.exists():
           "超級核心服務（核心服務除住房）" in h and "CPI 與 PCE 為什麼不同" in h
           and "PCE 計算方式調整" in h)
     check("⑥e 實質消費力道卡", 'id="consumption"' in h and "實質可支配所得" in h)
-    check("⑥c 關鍵訊號：本期總結、分層小標、其他收合",
-          "本期總結：" in h and 'class="sig-tier">三個月動能' in h
+    check("⑥c 關鍵訊號：第十八批拿掉本期總結；分層小標、其他收合",
+          "本期總結：" not in h and 'class="sig-sum"' not in h and 'class="sig-tier">三個月動能' in h
           and ('class="f-more sig-rest"' in h or h.count('class="sig-tier"') >= 1))
 
 print()

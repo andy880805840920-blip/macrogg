@@ -252,6 +252,9 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     ahe_now = value_at(ahe)
     # 民間／政府拆分：民間是下方行業分解的總結，也是景氣連動的那一塊
     _priv = value_at(diff_series(series.get("USPRIV", [])))
+    _priv_chg = diff_series(series.get("USPRIV", []))
+    _priv_ma3 = moving_avg(_priv_chg, 3) if len(_priv_chg) >= 3 else None
+    _priv_ma3_prev = moving_avg(_priv_chg[:-1], 3) if len(_priv_chg) > 3 else None
     _gov = (nfp_now - _priv) if (nfp_now is not None and _priv is not None) else None
     plain_nfp = "—"
     if nfp_now is not None:
@@ -627,6 +630,11 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "lfpr": charts.kpi_history(
                 lfpr, kind="level", unit="%", fmt=lambda v: f"{v:.1f}",
                 en="勞動參與率近 5 期"),
+            # 第十八批：首頁「接下來看什麼」沒有市場預估時，給前值＋近半年走勢
+            "nfp6": charts.kpi_history(
+                [{"date": r["date"], "value": r["value"] / 10} for r in nfp_chg_series],
+                kind="change", unit="萬人", fmt=lambda v: f"{v:+,.1f}", n=6,
+                short_dates=True, en="非農就業月變動近 6 期"),
         },
         # 給「本期變化摘要」比對用。人數一律以「萬人」呈現，與全站口徑一致。
         # up_is：這個指標**往上**代表偏鷹還是偏鴿。首頁的「本期變化」用它
@@ -650,6 +658,15 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "ahe_yoy": {"label": "平均時薪年增", "en": "Avg Hourly Earnings, y/y", "value": ahe_yoy,
                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.05,
                         "up_is": "hawkish"},
+            # 第十八批（使用者：修正是模型誤差、不重要；更該看私部門趨勢與
+            # 失業者中「失去工作」的比例）
+            "priv_3m": {"label": "私部門就業三個月均", "en": "Private Payrolls, 3-mo avg",
+                        "value": None if _priv_ma3 is None else _priv_ma3 / 10,
+                        "unit": "萬人", "threshold": 1, "up_is": "hawkish"},
+            "jl_share": {"label": "失業者中失去工作者比重", "en": "Job Losers, % of Unemployed",
+                         "value": value_at(series.get(job_losers.SERIES_ID, [])),
+                         "unit": "%", "delta_unit": " 個百分點", "threshold": 0.3,
+                         "up_is": "dovish"},
         },
         # 見通膨模組同名欄位的說明：計算方法換版那一期的比較基準。
         # 損益兩平就業增速沒放進來——它是好幾條序列合成的，重算一次要把
@@ -661,6 +678,8 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
             "u3": {"value": value_at(u3, 1)},
             "lfpr": {"value": value_at(lfpr, 1)},
             "ahe_yoy": {"value": _prev_yoy(series, "CES0500000003")},
+            "priv_3m": {"value": None if _priv_ma3_prev is None else _priv_ma3_prev / 10},
+            "jl_share": {"value": value_at(series.get(job_losers.SERIES_ID, []), 1)},
         },
     }
 
@@ -1419,6 +1438,16 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                 yoy_series(series.get("PCEPILFE", [])), kind="level",
                 unit="%", fmt=lambda v: f"{v:.1f}", ref=PCE_TARGET,
                 ref_label="2% 目標", en="核心 PCE 年增率近 5 期"),
+            "core6": charts.kpi_history(
+                infl_an.mom_series(series.get("CPILFESL", [])), kind="change",
+                unit="%", fmt=lambda v: f"{v:+.2f}", n=6, short_dates=True,
+                ref=infl_an.PACE_TARGET, ref_label="0.2% 目標步速",
+                en="核心 CPI 月增率近 6 期"),
+            "pcemom6": charts.kpi_history(
+                infl_an.mom_series(series.get("PCEPILFE", [])), kind="change",
+                unit="%", fmt=lambda v: f"{v:+.2f}", n=6, short_dates=True,
+                ref=infl_an.PACE_TARGET, ref_label="0.2% 目標步速",
+                en="核心 PCE 月增率近 6 期"),
             # 日頻序列取每月最後一個交易日，5 期＝5 個月，跟其他卡同一個節奏
             "exp": charts.kpi_history(
                 _month_end(series.get("T5YIFR", [])), kind="level",

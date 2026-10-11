@@ -32,6 +32,13 @@ export const SPECS = {
   move: { sym: "^MOVE", k: "lvl", lo: 30, hi: 300, u: "" },
   dji: { sym: "^DJI", k: "idx", lo: 10000, hi: 100000 },
   sox: { sym: "^SOX", k: "idx", lo: 500, hi: 30000 },
+  // 第十八批：S&P 500、NASDAQ 綜合、台灣加權、三組匯率（Python 端 QUOTE_SPECS 同一套）
+  spx: { sym: "^GSPC", k: "idx", lo: 1000, hi: 30000 },
+  ixic: { sym: "^IXIC", k: "idx", lo: 3000, hi: 100000 },
+  twii: { sym: "^TWII", k: "idx", lo: 5000, hi: 100000 },
+  eurusd: { sym: "EURUSD=X", k: "lvl", lo: 0.5, hi: 2, u: "", dp: 4 },
+  usdjpy: { sym: "JPY=X", k: "lvl", lo: 50, hi: 300, u: "", dp: 2 },
+  usdcnh: { sym: "CNH=X", k: "lvl", lo: 4, hi: 12, u: "", dp: 4 },
 };
 const TXF_RANGE = [5000, 80000];
 
@@ -86,7 +93,7 @@ export async function yahoo(id, spec, f = fetch) {
     const out = { v, p, ts, d: utcDate(ts), k: spec.k };
     if (spec.u !== undefined) out.u = spec.u;
     if (spec.dp !== undefined) out.dp = spec.dp;
-    if (["gold", "dxy", "twd"].includes(id)) out.s = "Yahoo";
+    if (["gold", "dxy", "twd", "eurusd", "usdjpy", "usdcnh"].includes(id)) out.s = "Yahoo";
     return out;
   } catch {
     return null;

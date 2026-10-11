@@ -127,17 +127,27 @@ check("㉑ 明細欄位只有日期與連結，沒有金額",
 # ---------------------------------------------------------------------------
 # ③ 算得出來還不夠——畫面上要看得到
 # ---------------------------------------------------------------------------
-out = pathlib.Path(__file__).parent.parent / "output" / "rates" / "index.html"
-if not out.exists():
-    print("略過  ㉒–㉕ 需要先 python run.py --offline")
-else:
-    h = out.read_text(encoding="utf-8")
+
+def _offline_rates_html():
+    """第十八批：測試自己用測試資料渲染長端頁，不讀 output/（那份可能是正式更新產生的）。"""
+    import yaml as _yaml
+    from src import build as _build, fixtures_rates as _fr
+    from src.pages import rates as _rp
+    _root = pathlib.Path(__file__).resolve().parents[1]
+    _cfg = _yaml.safe_load((_root / "config" / "rates.yaml").read_text(encoding="utf-8"))
+    _ctx = _build.build_rates_context(_cfg, _fr.build(), [], True)
+    _ctx["earnings"] = _earnings_block(EARN)      # 新聞稿先於 10-Q 的情境（Microsoft）
+    return _rp.rates_body(_ctx)
+
+
+if True:
+    h = _offline_rates_html()
     check("㉒ 指引區塊在畫面上", "資本支出計畫" in h and "億美元" in h)
     check("㉓ 沒給指引的公司在畫面上被交代", "未提供年度指引，不在合計內" in h)
     # 2026-10 v2：落差寫在「資料時效」表的狀態欄
     check("㉔ 財報新聞稿的落差在畫面上", "待 10-Q" in h and "財報稿" in h)
-    check("㉕ 「不解析新聞稿數字」的理由有寫出來",
-          "不解析新聞稿裡的數字" in h)
+    check("㉕ 為什麼以正式季報為準（不用新聞稿數字）有寫出來",
+          "財報新聞稿的時效" in h and "以正式季報的現金流量表為準" in h)
     # 2026-10 改版：指引併進公司表的一欄（「2026 年資本支出計畫」），
     # 整區移到「長端利率的組成」正下方
     check("㉖ 指引是公司表的一欄、整區緊接在長端組成之後",

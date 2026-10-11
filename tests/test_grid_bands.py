@@ -199,9 +199,9 @@ check("㊷ 轉「低」仍在，但標成非相鄰（政策解鎖）",
       "通膨轉「低」" in _by and not _by["通膨轉「低」"].adjacent)
 check("㊸ 解鎖條件掛「關鍵」、相鄰條件不掛",
       _by["通膨轉「低」"].binding and not _by["通膨轉「中」"].binding)
-check("㊹ 通膨軸用加權水準（跟格位判定同口徑），不是原始年增率",
-      "3.27" in _by["通膨轉「中」"].current
-      or "3.28" in _by["通膨轉「中」"].current,
+check("㊹ 第十八批：通膨門檻跟格位同一套規則——用核心 PCE 年增（格位判定值），不再用綜合水準",
+      _by["通膨轉「中」"].current.startswith("核心 PCE 年增")
+      and "綜合" not in _by["通膨轉「中」"].current,
       _by["通膨轉「中」"].current)
 
 # 就業在「中」：兩邊都是相鄰格

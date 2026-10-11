@@ -894,6 +894,8 @@ def market_vs_dots(fw: dict | None, sep: dict | None, mid: float | None) -> dict
             meets.append(m)
     if not meets:
         return {}
+    # 第十八批：期貨路徑延到明年底，這張表仍只比「今年（第一場會議那年）底」
+    meets = [m for m in meets if m["date"][:4] == meets[0]["date"][:4]]
     last = meets[-1]
     yr = last["date"][:4]
     years = sep.get("years") or []

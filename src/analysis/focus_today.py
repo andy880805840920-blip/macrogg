@@ -118,6 +118,51 @@ def _yahoo_prev_close(res0: dict) -> float | None:
     return None
 
 
+def _period_bases(points, ref: str) -> tuple:
+    """
+    MTD／YTD 的基準（第十八批）：points＝[(YYYY-MM-DD, 值)…] 依日期排序，
+    ref＝最新資料日。MTD 基準＝參考月份**之前**最後一筆（上月底收盤），
+    YTD 基準＝參考年份之前最後一筆（去年底收盤）。缺就回 None——寧可「—」。
+    """
+    if not ref or len(ref) < 10:
+        return None, None
+    m0, y0 = ref[:7] + "-01", ref[:4] + "-01-01"
+    bm = by = None
+    for d, v in points:
+        if v is None:
+            continue
+        if d < m0:
+            bm = v
+        if d < y0:
+            by = v
+    return bm, by
+
+
+def _yahoo_bases(res0: dict, scale=None) -> dict:
+    """Yahoo 日線 → {"bm": 上月底收盤, "by": 去年底收盤}（交易所當地日期）。"""
+    meta = res0.get("meta") or {}
+    ts = res0.get("timestamp") or []
+    cl = (((res0.get("indicators") or {}).get("quote") or [{}])[0] or {}).get("close") or []
+    off = int(meta.get("gmtoffset") or 0)
+
+    def _d(x):
+        return dt.datetime.fromtimestamp(int(x) + off, dt.timezone.utc).date().isoformat()
+    pts = [(_d(t), (scale(float(c)) if scale else float(c)))
+           for t, c in zip(ts, cl) if t is not None and c is not None]
+    rmt = meta.get("regularMarketTime")
+    ref = _d(rmt) if rmt else (pts[-1][0] if pts else "")
+    bm, by = _period_bases(pts, ref)
+    return {"bm": bm, "by": by}
+
+
+def _fred_bases(rows) -> tuple:
+    rows = [r for r in (rows or []) if r.get("value") is not None and not r.get("live")]
+    if not rows:
+        return None, None
+    return _period_bases([(str(r.get("date") or "")[:10], r["value"]) for r in rows],
+                         str(rows[-1].get("date") or "")[:10])
+
+
 # CBOE 的殖利率指數：^TNX＝10 年期、^TYX＝30 年期。
 # 慣例是「殖利率 ×10」（49.8 ＝ 4.98%），但 Yahoo 顯示上兩種格式都出現過
 # ——所以拿到值之後做規範化（>20 就除以 10）再做合理範圍檢查。
@@ -136,7 +181,7 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
         url, timeout=TIMEOUT,
         headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
     try:
-        r = get(YQ_URL.format(sym=quote(symbol)))
+        r = get(YQ_URL_1Y.format(sym=quote(symbol)))
         r.raise_for_status()
         res = (r.json().get("chart") or {}).get("result") or []
         meta = (res[0].get("meta") or {}) if res else {}
@@ -146,6 +191,8 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
         if cur is None or prev is None:
             return None
         cur, prev = float(cur), float(prev)
+        _x10 = cur > 20.0
+        bases = _yahoo_bases(res[0], (lambda v: v / 10.0) if _x10 else None)
         if cur > 20.0:                    # ×10 慣例 → 換算回百分比
             cur, prev = cur / 10.0, prev / 10.0
         if not (0.1 <= cur <= 15.0 and 0.1 <= prev <= 15.0):
@@ -161,7 +208,7 @@ def fetch_yahoo_yield(symbol: str, label: str, _get=None) -> dict | None:
                 date = ""
         return {"label": label, "value": round(cur, 2),
                 "delta_bp": round((cur - prev) * 100),
-                "date": date, "live": True}
+                "date": date, "live": True, **bases}
     except Exception as e:                         # noqa: BLE001
         log.warning("Yahoo 殖利率 %s 抓取失敗（%s），盤中指標暫缺", symbol, e)
         return None
@@ -246,6 +293,19 @@ QUOTE_SPECS = {
               "hi": 100000.0, "unit": "", "fred": None, "fmt": "index"},
     "sox":   {"sym": "^SOX",  "label": "費城半導體", "lo": 500.0,
               "hi": 30000.0, "unit": "", "fred": None, "fmt": "index"},
+    # 第十八批：S&P 500、NASDAQ 綜合指數、台灣加權指數、三組匯率
+    "spx":   {"sym": "^GSPC", "label": "S&P 500", "lo": 1000.0,
+              "hi": 30000.0, "unit": "", "fred": None, "fmt": "index"},
+    "ixic":  {"sym": "^IXIC", "label": "NASDAQ 綜合", "lo": 3000.0,
+              "hi": 100000.0, "unit": "", "fred": None, "fmt": "index"},
+    "twii":  {"sym": "^TWII", "label": "台灣加權指數", "lo": 5000.0,
+              "hi": 100000.0, "unit": "", "fred": None, "fmt": "index"},
+    "eurusd": {"sym": "EURUSD=X", "label": "EUR/USD", "lo": 0.5, "hi": 2.0,
+               "unit": "", "fred": None, "digits": 4},
+    "usdjpy": {"sym": "JPY=X", "label": "USD/JPY", "lo": 50.0, "hi": 300.0,
+               "unit": "", "fred": None, "digits": 2},
+    "usdcnh": {"sym": "CNH=X", "label": "USD/CNH", "lo": 4.0, "hi": 12.0,
+               "unit": "", "fred": None, "digits": 4},
 }
 
 # 預設顯示組（使用者未自選、關 JS、初次造訪都用這組）。
@@ -265,7 +325,7 @@ def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
         url, timeout=TIMEOUT,
         headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
     try:
-        r = get(YQ_URL.format(sym=quote(symbol)))
+        r = get(YQ_URL_1Y.format(sym=quote(symbol)))
         r.raise_for_status()
         res = (r.json().get("chart") or {}).get("result") or []
         meta = (res[0].get("meta") or {}) if res else {}
@@ -275,6 +335,10 @@ def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
         if cur is None or prev is None:
             return None
         cur, prev = float(cur), float(prev)
+        bases = _yahoo_bases(res[0])
+        for _k in ("bm", "by"):              # 基準超出合理範圍＝壞資料，只丟基準
+            if bases.get(_k) is not None and not lo <= bases[_k] <= hi:
+                bases[_k] = None
         if not (lo <= cur <= hi and lo <= prev <= hi):
             log.warning("Yahoo 報價 %s 超出合理範圍（%.2f／%.2f），不採用",
                         symbol, cur, prev)
@@ -286,7 +350,7 @@ def fetch_yahoo_quote(symbol: str, lo: float, hi: float,
                     int(ts), dt.timezone.utc).date().isoformat()
             except (ValueError, TypeError, OSError):
                 date = ""
-        return {"value": cur, "prev": prev, "date": date, "live": True}
+        return {"value": cur, "prev": prev, "date": date, "live": True, **bases}
     except Exception as e:                         # noqa: BLE001
         log.warning("Yahoo 報價 %s 抓取失敗（%s）", symbol, e)
         return None
@@ -323,6 +387,21 @@ def _mk(cid, label, value, delta, direction, date, on=False, iso=""):
             "on": cid in DEFAULT_CHIPS or on}
 
 
+def _attach(chip: dict, num, bm, by, kind: str, unit: str = "") -> dict:
+    """
+    MTD／YTD 用的數字（第十八批）：num＝目前值、bm／by＝上月底／去年底基準，
+    kind＝變動怎麼算與怎麼寫（前端 _MODE_JS 同一套）：
+      bp　值是百分比、變動寫 bp　　bp0　值本身就是 bp
+      pct 漲跌幅 %　　　　　　　　　a0…a4 絕對變動（小數位數）　twd 升／貶
+    """
+    if num is None:
+        return chip
+    chip.update({"num": round(float(num), 6), "k": kind, "u": unit,
+                 "bm": None if bm is None else round(float(bm), 6),
+                 "by": None if by is None else round(float(by), 6)})
+    return chip
+
+
 def _pct_chip(cid, label, rows):
     """百分比序列（天期利率、SOFR）：值 x.xx%、變動 ±bp 對前一日。"""
     v, p, d = _last2(rows)
@@ -330,8 +409,9 @@ def _pct_chip(cid, label, rows):
         return _mk(cid, label, "—", "缺資料", "", "")
     db = None if p is None else round((v - p) * 100)
     cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
-    return _mk(cid, label, f"{v:.2f}%",
-               f"{db:+d} bp" if db is not None else "—", cls, d)
+    bm, by = _fred_bases(rows)
+    return _attach(_mk(cid, label, f"{v:.2f}%",
+                       f"{db:+d} bp" if db is not None else "—", cls, d), v, bm, by, "bp")
 
 
 _QUOTE_UNSET = object()
@@ -355,14 +435,17 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=_QUOTE_UNSET):
             cls = "up" if dv > 0 else ("dn" if dv < 0 else "")
             if spec.get("fmt") == "index":
                 pct = dv / q["prev"] * 100 if q["prev"] else 0.0
-                return _mk(cid, spec["label"], f"{q['value']:,.0f}",
+                chip = _mk(cid, spec["label"], f"{q['value']:,.0f}",
                            f"{dv:+,.0f}（{pct:+.2f}%）", cls, q["date"])
+                chip["source"] = "Yahoo"
+                return _attach(chip, q["value"], q.get("bm"), q.get("by"), "pct")
             digits = spec.get("digits", 1)
             delta = (("貶" if dv > 0 else "升" if dv < 0 else "持平") + f"{abs(dv):.{digits}f}"
                      if cid == "twd" else f"{dv:+.{digits}f}")
             chip = _mk(cid, spec["label"], f"{q['value']:.{digits}f}{spec['unit']}", delta, cls, q["date"])
             chip["source"] = "Yahoo"
-            return chip
+            return _attach(chip, q["value"], q.get("bm"), q.get("by"),
+                           "twd" if cid == "twd" else f"a{digits}")
     rows = (liq or {}).get(spec["fred"]) if spec.get("fred") else None
     v, p, d = _last2(rows)
     if v is None:
@@ -374,7 +457,8 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=_QUOTE_UNSET):
              if cid == "twd" else f"{dv:+.{digits}f}"))
     chip = _mk(cid, spec["label"], f"{v:.{digits}f}{spec['unit']}", delta, cls, d)
     chip["source"] = "FRED"
-    return chip
+    bm, by = _fred_bases(rows)
+    return _attach(chip, v, bm, by, "twd" if cid == "twd" else f"a{digits}")
 
 
 # 台指期：期交所行情頁背後使用的資料端點（**非官方 API**，可能改版）。
@@ -488,7 +572,9 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     for cid, sid, label in (("dgs3mo", "DGS3MO", "3 個月"),
                             ("dgs2", "DGS2", "2 年期"),
                             ("dgs5", "DGS5", "5 年期"),
+                            ("dgs7", "DGS7", "7 年期"),
                             ("dgs10", "DGS10", "10 年期"),
+                            ("dgs20", "DGS20", "20 年期"),
                             ("dgs30", "DGS30", "30 年期")):
         rows = [r for r in rs.get(sid) or [] if not r.get("live")]
         chip = _pct_chip(cid, label, rows)
@@ -507,6 +593,7 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
             chip = _mk(cid, label + "盤中", f"{q['value']:.2f}%",
                        f"{bp:+d} bp" if bp is not None else "—",
                        "up" if (bp or 0) > 0 else "dn" if (bp or 0) < 0 else "", q.get("date") or "")
+            _attach(chip, q["value"], q.get("bm"), q.get("by"), "bp")
         else:
             chip = _mk(cid, label + "盤中", "—", "擷取失敗", "", "")
         chip["source"] = "Yahoo"
@@ -533,8 +620,14 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                 dd = spread - (s2 - i2) * 100
                 d_disp = f"{dd:+.0f} bp"
                 cls = "up" if dd > 0 else ("dn" if dd < 0 else "")
-        chips.append(_mk("sofr_iorb", "SOFR−IORB", f"{spread:+.0f} bp",
-                         d_disp, cls, sd))
+        _sp = [(str(r.get("date") or "")[:10],
+                (r["value"] - _iv) * 100)
+               for r in srows
+               for _iv in [_at_or_before(liq.get("IORB"), str(r.get("date") or ""))]
+               if _iv is not None]
+        _bm, _by = _period_bases(_sp, str(sd)[:10])
+        chips.append(_attach(_mk("sofr_iorb", "SOFR−IORB", f"{spread:+.0f} bp",
+                                 d_disp, cls, sd), spread, _bm, _by, "bp0", " bp"))
     else:
         chips.append(_mk("sofr_iorb", "SOFR−IORB", "—", "缺資料", "", ""))
     # ON RRP：FRED 單位是十億美元 → 顯示成億美元（×10）。
@@ -542,8 +635,11 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     if v is not None:
         dv = None if p is None else (v - p) * 10
         cls = "up" if (dv or 0) > 0 else ("dn" if (dv or 0) < 0 else "")
-        chips.append(_mk("onrrp", "ON RRP", f"{v * 10:,.0f} 億美元",
-                         f"{dv:+,.0f} 億" if dv is not None else "—", cls, d))
+        _bm, _by = _fred_bases(liq.get("RRPONTSYD"))
+        chips.append(_attach(_mk("onrrp", "ON RRP", f"{v * 10:,.0f} 億美元",
+                                 f"{dv:+,.0f} 億" if dv is not None else "—", cls, d),
+                             v * 10, None if _bm is None else _bm * 10,
+                             None if _by is None else _by * 10, "a0", " 億"))
     else:
         chips.append(_mk("onrrp", "ON RRP", "—", "缺資料", "", ""))
     # SRF（隔夜回購動用）：零是常態也是資訊——體系不缺錢；非零轉警示色。
@@ -558,7 +654,8 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                          f"{dv:+,.1f} 億" if dv is not None else "—",
                          "up", d))
     # ---- 即時報價：油價與波動率（並行）----
-    _qids = ("wti", "brent", "vix", "move", "dji", "sox", "gold", "dxy", "twd")
+    _qids = ("wti", "brent", "vix", "move", "dji", "spx", "ixic", "sox", "twii",
+             "gold", "dxy", "twd", "eurusd", "usdjpy", "usdcnh")
     _quotes = dict(zip(_qids, _pmap(
         lambda c: None if offline else fetch_yahoo_quote(
             QUOTE_SPECS[c]["sym"], QUOTE_SPECS[c]["lo"],
@@ -942,7 +1039,9 @@ _NEWS_RULES = (
     "報導也一樣，直接轉述標題與摘要字面上的事。②時間一律寫成「10/9」這種月/日"
     "（美國的事件可寫「10/9（美國時間）」），不要寫「本週」「上週」「週四」「昨天」"
     "「今天」「明天」這類相對時間；每篇報導的日期標在它的代號旁。③人名、公司名用"
-    "台灣常用的中文譯名（例如川普、鮑爾、貝森特、華許、輝達、台積電），不附英文。")
+    "台灣常用的中文譯名（例如川普、華許、貝森特、輝達、台積電），不附英文。"
+    "④聯準會現任主席是華許（Kevin Warsh，2026 年 5 月接任）；鮑爾是前任主席、"
+    "目前是理事，提到他要寫「前主席鮑爾」或「理事鮑爾」，絕對不要稱他為主席。")
 
 _FOCUS_CONTENT_SYSTEM_A = (
     "你是財經記者，負責一個美國利率與總經儀表板的「今日主軸」。輸入是幾篇新聞，"
@@ -1161,7 +1260,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f7-rates-main-headline"
+FOCUS_PROMPT_VERSION = "f8-warsh-chair"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1416,7 +1515,30 @@ def normalize_names(text: str, name_map: dict | None = None) -> str:
         for a, _ in pairs), re.I)
     out = pat.sub(lambda m: mapping.get(m.group(0).lower() if m.group(0).isascii()
                                         else m.group(0), m.group(0)), text)
-    return re.sub(r"(?<=[一-鿿])[ \t]+(?=[一-鿿])", "", out)
+    out = re.sub(r"(?<=[一-鿿])[ \t]+(?=[一-鿿])", "", out)
+    return fix_chair(out)
+
+
+# 現任聯準會主席（第十八批，使用者：主軸還把鮑爾當主席）。主席交接時改這裡。
+FED_CHAIR = "華許"
+FED_CHAIR_EN = "Kevin Warsh"
+FED_CHAIR_SINCE = "2026 年 5 月"
+FORMER_CHAIRS = ("鮑爾",)
+_CHAIR_FIX = re.compile(r"(?<![前任])(?:美國)?(?:聯準會|Fed|聯儲)?主席(" + "|".join(FORMER_CHAIRS) + r")"
+                        r"|(" + "|".join(FORMER_CHAIRS) + r")主席")
+
+
+def fix_chair(text: str) -> str:
+    """把「主席鮑爾」「聯準會主席鮑爾」「鮑爾主席」改成「前主席鮑爾」——
+    舊報導或模型記憶常沿用舊稱謂；人換了就是換了，不改成別人的名字。"""
+    if not text:
+        return text or ""
+    def _r(m):
+        # 前面五個字內已有「前」「前任」（例：前聯準會主席鮑爾）就不動
+        if "前" in text[max(0, m.start() - 5):m.start()]:
+            return m.group(0)
+        return "前主席" + (m.group(1) or m.group(2))
+    return _CHAIR_FIX.sub(_r, text)
 
 
 # 正文不寫媒體名（來源列在下方）。偵測到就帶原因重寫；重寫後仍有，
@@ -1781,7 +1903,7 @@ SOURCE_WEIGHT = (("reuters", 3.0), ("bloomberg", 3.0), ("wall street", 1.5),
 # 發布日加分：當天（或前一天，台灣早上那次對應美國前一天）有這類
 # 發布時，標題提到它的新聞加分——FOMC、CPI、非農當天，大家看的就是那件事。
 EVENT_WORDS = {
-    "fomc": ("FOMC", "聯準會", "Fed", "Powell", "利率決策", "rate decision"),
+    "fomc": ("FOMC", "聯準會", "Fed", "Warsh", "華許", "利率決策", "rate decision"),
     "cpi": ("CPI", "通膨", "inflation", "消費者物價"),
     "employment": ("非農", "就業", "payrolls", "jobs report", "unemployment"),
     "pce": ("PCE",),
@@ -1800,7 +1922,7 @@ _FOREIGN = re.compile(r"(?<![A-Za-z])(?:Egypt|India|Indian|Pakistan|Bangladesh|T
                       r"Sri Lanka|Ghana)(?![A-Za-z])|埃及|印度|巴基斯坦|孟加拉|土耳其|巴西|奈及利亞|阿根廷|"
                       r"墨西哥|印尼|菲律賓|越南|泰國|馬來西亞|南非|波蘭|澳洲|紐西蘭|加拿大|英國|南韓|韓國|斯里蘭卡")
 _US_WORDS = re.compile(r"(?<![A-Za-z])(?:US|U\.S\.|Fed|FOMC|Treasury|Treasuries|Wall Street|"
-                       r"American|Powell|Trump|dollar)(?![A-Za-z])|美國|美債|聯準會|美股|美元|川普")
+                       r"American|Warsh|Powell|Trump|dollar)(?![A-Za-z])|美國|美債|聯準會|美股|美元|川普|華許")
 # 鎖定級事件：當天（或台灣隔天早上）只要有相關報導，主軸一定寫它。
 # 初領失業金、密大信心這類每週／次要數據只加分、不鎖定。
 LOCK_EVENTS = ("fomc", "cpi", "employment", "pce")
@@ -1985,6 +2107,9 @@ def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
 # ---------------------------------------------------------------------------
 YQ_URL = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
           "?range=5d&interval=1d")
+# 報價 chip 用一年日線：同一次請求順便算 MTD／YTD 基準（第十八批）
+YQ_URL_1Y = ("https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
+             "?range=1y&interval=1d")
 # 預設目標會議（config 的 fedwatch_meeting 蓋掉它；一年更新一次）
 DEFAULT_MEETING = "2026-12-09"
 
@@ -1994,12 +2119,15 @@ DEFAULT_MEETING = "2026-12-09"
 # 3＝2 ＋遠月停滯偵測＋Atlanta 交叉檢核；
 # 4＝WIRP 逐會議法（日曆日加權、不封頂、正負＝升降息）
 # 6＝回傳值多帶逐場 meetings（聯準會頁用），算法同 5
-FW_METHOD = 6
+FW_METHOD = 7   # 第十八批：三個累計節點（今年底／明年中／明年底）
 
 
 def _last_value(rows) -> float | None:
     rows = [r for r in (rows or []) if r.get("value") is not None]
     return rows[-1]["value"] if rows else None
+
+
+_ZQ_MEMO: dict = {}
 
 
 def fetch_zq_implied(symbol: str, _get=None,
@@ -2021,13 +2149,22 @@ def fetch_zq_implied(symbol: str, _get=None,
     +0.0 pp）。當月合約**不能**開這個檢查：它被已實現的實際利率釘住，
     平盤好幾天是正常的。
     """
+    # 同一次執行裡首頁（fedwatch_path）與情境頁（futures_curve）抓同一批合約：
+    # 記住原始回應，兩邊用的是同一筆報價，數字一定一致（測試注入 _get 時不記）
+    _memo = _get is None
     get = _get or (lambda url: requests.get(
         url, timeout=TIMEOUT,
         headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
     try:
-        r = get(YQ_URL.format(sym=quote(symbol)))
-        r.raise_for_status()
-        res = (r.json().get("chart") or {}).get("result") or []
+        if _memo and symbol in _ZQ_MEMO:
+            _js = _ZQ_MEMO[symbol]
+        else:
+            r = get(YQ_URL.format(sym=quote(symbol)))
+            r.raise_for_status()
+            _js = r.json()
+            if _memo:
+                _ZQ_MEMO[symbol] = _js
+        res = (_js.get("chart") or {}).get("result") or []
         if not res:
             return (None, None) if with_prev else None
         closes = (((res[0].get("indicators") or {}).get("quote") or [{}])[0]
@@ -2281,6 +2418,26 @@ def meeting_path(futures_prices: dict, fomc_dates: list, horizon: str,
             "cum_bp": round((meetings[-1]["end"] - r0) * 100, 3)}
 
 
+def fw_horizons(fomc_dates, today: dt.date) -> list[tuple[str, str]]:
+    """
+    升降息累計的三個節點（第十八批，使用者指定）：接下來的「年底、年中、年底」
+    取前三個——十月時是「今年底、明年中、明年底」，一月時是「今年中、今年底、
+    明年中」。年中＝該年上半年最後一場會議（通常是 6 月），年底＝該年最後一場。
+    只用 config 裡有的會議日；明年的日程還沒填就只剩前一兩個。
+    """
+    by_year: dict[str, list[str]] = {}
+    for d in sorted({str(x)[:10] for x in (fomc_dates or [])}):
+        by_year.setdefault(d[:4], []).append(d)
+    cands = []
+    for y in sorted(by_year):
+        ds = by_year[y]
+        mid = [d for d in ds if int(d[5:7]) <= 6]
+        if mid:
+            cands.append((mid[-1], f"{y} 年中"))
+        cands.append((ds[-1], f"{y} 年底"))
+    return [c for c in cands if c[0] >= today.isoformat()][:3]
+
+
 def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
                   today: dt.date | None = None) -> dict | None:
     """
@@ -2304,14 +2461,16 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
         return None
     mid = (lo + hi) / 2
     fomc = [str(x)[:10] for x in (cfg.get("fomc_dates") or [])]
-    horizon = str(cfg.get("fedwatch_meeting") or DEFAULT_MEETING)
-    if horizon < today.isoformat():
-        later = [d for d in fomc if d >= today.isoformat()]
-        if not later:
-            log.warning("FedWatch 前推：config 沒有今天之後的 FOMC 日期，"
-                        "請在 config/focus.yaml 補上明年的會議日")
-            return None
-        horizon = later[-1]
+    # 第十八批：不再盯單一目標會議（fedwatch_meeting 已不用），改算三個節點
+    hz_list = fw_horizons(fomc, today)
+    if not hz_list:
+        log.warning("FedWatch 前推：config 沒有今天之後的 FOMC 日期，"
+                    "請在 config/focus.yaml 補上明年的會議日")
+        return None
+    if len(hz_list) < 3:
+        log.warning("FedWatch 前推：只排得出 %d 個累計節點——請在 config/focus.yaml "
+                    "補上下一年的 FOMC 會議日", len(hz_list))
+    horizon = hz_list[-1][0]
     months, mo = [], today.isoformat()[:7]
     while mo <= horizon[:7]:
         months.append(mo)
@@ -2324,9 +2483,17 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
     for m, r in zip(months, res):
         imp, imp_prev = r if isinstance(r, tuple) else (None, None)
         if imp is None:
-            log.warning("FedWatch 前推：%s 合約報價不可用，整批不採用",
-                        _zq_symbol(m))
-            return None
+            # 遠月成交稀、報價可能是死的：缺在第一個節點之後就把後面的節點
+            # 截掉（少一兩顆 chip），缺在第一個節點之前才整批不採用
+            if m <= hz_list[0][0][:7]:
+                log.warning("FedWatch 前推：%s 合約報價不可用，整批不採用",
+                            _zq_symbol(m))
+                return None
+            log.warning("FedWatch 前推：%s 合約報價不可用，累計節點只算到 %s 之前",
+                        _zq_symbol(m), m)
+            hz_list = [h for h in hz_list if h[0][:7] < m]
+            horizon = hz_list[-1][0]
+            break
         prices[m] = round(100.0 - imp, 4)
         if imp_prev is not None:
             prices_prev[m] = round(100.0 - imp_prev, 4)
@@ -2350,6 +2517,14 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
     if set(prices_prev) == set(prices):
         prev = meeting_path(prices_prev, fomc, horizon, today,
                             fallback_rate=mid)
+
+    def _cum(pth, d):
+        m = next((x for x in (pth or {}).get("meetings") or [] if x["date"] == d), None)
+        return None if m is None else round((m["end"] - pth["r0"]) * 100, 3)
+    horizons = [{"date": d, "label": lb, "cum_bp": _cum(path, d),
+                 "prev_cum_bp": _cum(prev, d) if prev else None}
+                for d, lb in hz_list]
+    _h0 = next(x for x in path["meetings"] if x["date"] == hz_list[0][0])
     for m in path["meetings"]:
         log.info("FedWatch 前推：%s 會議 Start %.4f → End %.4f，隱含 %+.2f bp"
                  "（%s）", m["date"], m["start"], m["end"], m["move_bp"],
@@ -2359,16 +2534,18 @@ def fedwatch_path(rates_series: dict | None, cfg: dict | None, _get=None,
     return {"src": "futures", "date": today.isoformat(),
             # 逐場全列：聯準會頁的「市場路徑 vs 點陣圖」要每一場的會後利率
             "meetings": path["meetings"],
-            "next": path["meetings"][0], "horizon": path["meetings"][-1],
-            "cum_bp": path["cum_bp"], "r0": path["r0"],
-            "r0_src": path["r0_src"],
+            # horizon／cum_bp＝第一個節點（今年底），沿用舊鍵給聯準會頁
+            "next": path["meetings"][0], "horizon": _h0,
+            "cum_bp": horizons[0]["cum_bp"], "r0": path["r0"],
+            "r0_src": path["r0_src"], "horizons": horizons,
             "prev": ({"next": prev["meetings"][0],
-                      "horizon": prev["meetings"][-1],
-                      "cum_bp": prev["cum_bp"]} if prev else None)}
+                      "horizon": next(x for x in prev["meetings"]
+                                      if x["date"] == hz_list[0][0]),
+                      "cum_bp": horizons[0]["prev_cum_bp"]} if prev else None)}
 
 
-def futures_curve(rates_series: dict | None, months: int = 13, _get=None,
-                  today: dt.date | None = None) -> dict | None:
+def futures_curve(rates_series: dict | None, months: int | None = 13, _get=None,
+                  today: dt.date | None = None, fomc_dates=None) -> dict | None:
     """
     未來 12 個月每個月的聯邦基金期貨隱含利率，與「終端利率」（2026-10）。
 
@@ -2382,8 +2559,14 @@ def futures_curve(rates_series: dict | None, months: int = 13, _get=None,
     if lo is None or hi is None:
         return None
     mid = (lo + hi) / 2
+    if fomc_dates:
+        # 第十八批：資料窗延到首頁第三個累計節點（明年底）那個月，兩邊同一條路徑
+        hz = fw_horizons(fomc_dates, today)
+        if hz:
+            y, m = int(hz[-1][0][:4]), int(hz[-1][0][5:7])
+            months = max(months or 0, (y - today.year) * 12 + m - today.month + 1)
     ms, mo = [], today.isoformat()[:7]
-    for _ in range(months):
+    for _ in range(months or 13):
         ms.append(mo)
         mo = _next_month(mo)
     res = _pmap(lambda m: fetch_zq_implied(_zq_symbol(m), _get,
@@ -2417,25 +2600,26 @@ def outcome_name(bp: int) -> str:
     return ("升" if bp > 0 else "降") + _CN_N.get(n, str(n)) + "碼"
 
 
+FW_H_IDS = ("fw_h1", "fw_h2", "fw_h3")
+
+
 def fw_chips(fw: dict | None) -> list[dict]:
     """
-    三顆升降息 chip（給目錄用的一般 chip 格式）：
-      fedwatch  下次會議：機率最高的兩個結果（單場推算只會切成相鄰兩種，
-                第三種在這個方法下是 0%，不硬湊）
-      fw_dec    目標會議（12 月）單場的隱含幅度
-      fw_cum    從現在到目標會議（含）的累計隱含幅度
+    升降息 chip（第十八批）：
+      fedwatch      下次會議：機率最高的兩個結果
+      fw_h1…fw_h3   到「今年底／明年中／明年底」（依 fw_horizons 滾動）的
+                    累計隱含升降息幅度，對前一日收盤
     """
     def _md(d):
         return f"{int(d[5:7])}/{int(d[8:10])}"
 
     if not fw or not fw.get("next"):
-        return [_mk("fedwatch", "下次 FOMC 機率", "—", "本次擷取失敗", "", ""),
-                _mk("fw_dec", "目標會議單場幅度", "—", "本次擷取失敗", "", ""),
-                _mk("fw_cum", "累計升降息幅度", "—", "本次擷取失敗", "", "")]
-    nxt, hz, prev = fw["next"], fw["horizon"], fw.get("prev") or {}
+        return ([_mk("fedwatch", "下次 FOMC 機率", "—", "本次擷取失敗", "", "")]
+                + [_mk(c, "累計升降息幅度", "—", "本次擷取失敗", "", "") for c in FW_H_IDS])
+    nxt, prev = fw["next"], fw.get("prev") or {}
     when = (f"沿用 {fw['stale_from'][5:]}" if fw.get("stale_from")
             else str(fw.get("date") or ""))
-    nm, hm = int(nxt["date"][5:7]), int(hz["date"][5:7])
+    nm = int(nxt["date"][5:7])
     o = [x for x in nxt["outcomes"] if x[1] >= 0.005] or nxt["outcomes"][:1]
     top = f"{outcome_name(o[0][0])} {o[0][1] * 100:.0f}%"
     if len(o) > 1:
@@ -2460,17 +2644,22 @@ def fw_chips(fw: dict | None) -> list[dict]:
                else "dn" if cur - old < -0.05 else "")
         return txt, cls
 
-    dec_txt, dec_cls = _amt(hz["move_bp"], (prev.get("horizon") or {}).get(
-        "move_bp"))
-    cum_txt, cum_cls = _amt(fw["cum_bp"], prev.get("cum_bp"))
-    return [
-        _mk("fedwatch", f"{nm} 月 FOMC（{_md(nxt['date'])}）", top, second,
-            d_cls, when, on=True),
-        _mk("fw_dec", f"{hm} 月 FOMC 單場幅度", f"{hz['move_bp']:+.1f} bp",
-            dec_txt, dec_cls, when),
-        _mk("fw_cum", f"至 {hm} 月 FOMC 累計", f"{fw['cum_bp']:+.1f} bp",
-            cum_txt, cum_cls, when),
-    ]
+    out = [_mk("fedwatch", f"{nm} 月 FOMC（{_md(nxt['date'])}）", top, second,
+               d_cls, when, on=True)]
+    hz = fw.get("horizons") or ([{"date": fw["horizon"]["date"],
+                                  "label": f"{fw['horizon']['date'][:4]} 年底",
+                                  "cum_bp": fw.get("cum_bp"),
+                                  "prev_cum_bp": prev.get("cum_bp")}]
+                                if fw.get("horizon") and fw.get("cum_bp") is not None else [])
+    for i, cid in enumerate(FW_H_IDS):
+        h = hz[i] if i < len(hz) else None
+        if not h or h.get("cum_bp") is None:
+            out.append(_mk(cid, "累計升降息幅度", "—", "遠月報價不可用", "", ""))
+            continue
+        txt, cls = _amt(h["cum_bp"], h.get("prev_cum_bp"))
+        out.append(_mk(cid, f"至 {h['label']}（{_md(h['date'])}）累計",
+                       f"{h['cum_bp']:+.1f} bp", txt, cls, when))
+    return out
 
 
 def fedwatch_from_futures(rates_series: dict | None, cfg: dict | None,
@@ -2763,12 +2952,12 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 #     套用在主軸與其他主題）
 #   · 每則補充前面加主題標籤
 # ---------------------------------------------------------------------------
-TOPIC_PROMPT_VERSION = "t2-ids-nodup"
+TOPIC_PROMPT_VERSION = "t3-warsh-chair"
 TOPIC_CHARS, TOPIC_MIN = 80, 40
 # 公開RSS提供直接文章連結與出版社摘要；全部主題缺少可讀內容時補入。
 TOPIC_HARD = int(TOPIC_CHARS * HARD_MULT_SUPP)          # 100 字
 
-DEFAULT_TOPICS = [{'id': 'fed', 'label': '聯準會', 'chips': ['fedwatch', 'fw_dec', 'fw_cum', 'dgs3mo', 'dgs2'], 'keywords': ['Fed', 'Federal Reserve', 'FOMC', 'Powell', 'Warsh', '聯準會', '降息', '升息', 'rate cut', 'rate cuts', 'rate hike'], 'search': [{'q': 'Federal Reserve officials', 'lang': 'en'}, {'q': 'Fed (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'long', 'label': '長天期美債', 'chips': ['dgs5', 'dgs10', 'dgs30', 'move', 'live_dgs10', 'live_dgs30'], 'keywords': ['Treasury', 'Treasuries', '10-year', '30-year', '美債', '美國公債', '美債殖利率', '公債標售'], 'search': [{'q': 'Treasury yields (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': 'Treasury auction', 'lang': 'en'}], 'require': ['Treasury', 'Treasuries', 'US bonds', 'U.S. bonds', '美債', '美國公債', '美國財政部']}, {'id': 'funding', 'label': '資金市場', 'chips': ['sofr', 'sofr_iorb', 'onrrp', 'srf'], 'keywords': ['repo market', 'SOFR', 'bank reserves', 'reverse repo', 'standing repo', 'money market', '回購市場', '準備金', 'repo', 'repurchase agreement', 'repo rates', 'funding pressure', 'funding stress', 'money markets', 'money-market funds', 'money market funds', 'dollar liquidity', 'overnight funding', 'Treasury bills', 'T-bills', 'Treasury cash balance', 'market stress', 'IORB', 'SRF', 'ON RRP', '資金市場', '貨幣市場', '美元流動性', '隔夜利率', '隔夜融資', '短期融資', '回購利率', '銀行準備金', '美國國庫券', '短期美債', '資金壓力'], 'search': [{'q': '("money market" OR "money markets" OR repo OR SOFR OR "Treasury bills") ("United States" OR Fed OR "U.S.")', 'lang': 'en'}, {'q': 'Fed (reserves OR liquidity OR "market stress") (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '美國 (回購市場 OR 貨幣市場 OR 流動性 OR 國庫券)', 'lang': 'zh'}]}, {'id': 'oil', 'label': '油價', 'chips': ['wti', 'brent'], 'keywords': ['oil', 'crude', 'OPEC', 'Brent', 'WTI', '油價', '原油', 'crude oil', 'oil prices', 'OPEC+', 'Middle East war', 'US-Iran conflict', 'U.S.-Iran conflict', 'Iran', 'Israel', 'Gaza', 'Strait of Hormuz', 'Red Sea', '中東戰爭', '中東衝突', '美伊衝突', '伊朗', '以色列', '加薩', '荷姆茲海峽', '霍爾木茲海峽', '紅海', '油輪', '能源供應', '航運中斷', '制裁'], 'search': [{'q': 'oil prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '油價 (原油 OR 中東 OR 伊朗)', 'lang': 'zh'}]}, {'id': 'equity', 'label': '美股', 'chips': ['dji', 'vix'], 'keywords': ['Dow', 'S&P 500', 'Nasdaq', 'Wall Street', 'stocks', 'VIX', '美股', '道瓊', '標普', 'AI', 'artificial intelligence', 'Nvidia', 'OpenAI', 'AI capex', 'data center', 'data centers', 'hyperscaler', '人工智慧', '輝達', '資料中心', 'AI 伺服器'], 'require': ['Dow', 'S&P 500', 'S&P', 'Nasdaq', 'Wall Street', 'US stocks', 'U.S. stocks', 'stocks', 'stock market', 'equities', 'VIX', '美股', '道瓊', '標普', '那斯達克', '華爾街', '美國股市'], 'exclude_add': ['台股', '日股', '陸股', '港股', '歐股', '韓股', 'A股', '日經', '恆生', 'Nikkei', 'Hang Seng', 'FTSE', 'DAX', 'European stocks', 'Asian stocks', 'China stocks', 'Japan stocks', 'oil stocks', 'crude stocks', 'G7 stocks', 'stockpile', 'World Bank', '世界銀行'], 'search': [{'q': '(S&P OR Nasdaq OR Dow OR "Wall Street") (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '美股 (道瓊 OR 標普 OR 那斯達克 OR 收盤)', 'lang': 'zh'}]}, {'id': 'semi', 'label': 'AI 與半導體', 'chips': ['sox'], 'keywords': ['chip', 'chips', 'chipmaker', 'chipmakers', 'semiconductor', 'semiconductors', 'Nvidia', 'TSMC', 'AI capex', '半導體', '晶片', '輝達', '台積電', 'AI', 'artificial intelligence', 'OpenAI', 'data center', 'data centers', 'hyperscaler', '人工智慧', '資料中心', 'AI 伺服器'], 'exclude': ['ETF', '存股', '高股息', '股息', '定期定額', '0050', '台股', '金控', '必漲', '卡位', '黑馬', '飆股', '千金股'], 'search': [{'q': 'chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'twf', 'label': '台指期', 'chips': ['txf'], 'keywords': ['台指期', '台股', '加權指數', '外資', '夜盤', '人工智慧', '輝達', '台積電', 'AI 伺服器', 'AI 概念股', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF', 'NVIDIA', 'TSMC'], 'exclude': ['ETF', '存股', '高股息', '定期定額', '0050', '必漲', '卡位', '黑馬', '飆股', '千金股', 'ETFs', '指數型基金', '指數股票型基金', '配息', '申購', '股息'], 'search': [{'q': '(台指期 OR 臺指期) (夜盤 OR 日盤)', 'lang': 'zh'}, {'q': '(台股 OR 加權指數) (外資 OR 收盤)', 'lang': 'zh'}], 'require': ['台指期', '臺指期', '台股', '臺股', '加權指數', '台灣股市', '臺灣股市', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF']}, {'id': 'election', 'label': '期中選舉', 'chips': ['pm_house', 'pm_senate'], 'keywords': ['midterm', 'midterms', 'Senate race', 'House majority', 'Senate control', 'House control', '期中選舉', '參議院', '眾議院', 'Senate election', 'House election', 'congressional election', 'midterm election', 'midterm elections', 'US election', '美國選舉', '美國大選', '國會選舉', '選情'], 'search': [{'q': '"midterm elections" (Senate OR House OR poll OR campaign) (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '("US midterms" OR "U.S. midterms" OR "midterm elections")', 'lang': 'en'}, {'q': '美國 (期中選舉 OR 中期選舉) (參議院 OR 眾議院 OR 民調)', 'lang': 'zh'}]}, {'id': 'gold', 'label': '黃金', 'chips': ['gold'], 'keywords': ['gold', 'bullion', 'XAU/USD', 'gold futures', '黃金', '金價'], 'exclude': ['ETF', 'ETFs', '黃金ETF', '珠寶促銷', '飾金促銷'], 'search': [{'q': 'gold prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '黃金 金價', 'lang': 'zh'}]}, {'id': 'fx', 'label': '匯率', 'chips': ['dxy', 'twd'], 'keywords': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數', '台灣央行', '臺灣央行', '外資匯入', '外資匯出'], 'require': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數'], 'exclude': ['ETF', 'ETFs', '存股', '高股息', '定期定額'], 'search': [{'q': '台幣 美元 匯率', 'lang': 'zh'}, {'q': 'Taiwan dollar currency Reuters', 'lang': 'en'}, {'q': 'US dollar index (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}]
+DEFAULT_TOPICS = [{'id': 'fed', 'label': '聯準會', 'chips': ['fedwatch', 'fw_h1', 'fw_h2', 'fw_h3', 'dgs3mo', 'dgs2'], 'keywords': ['Fed', 'Federal Reserve', 'FOMC', 'Powell', 'Warsh', '聯準會', '降息', '升息', 'rate cut', 'rate cuts', 'rate hike'], 'search': [{'q': 'Federal Reserve officials', 'lang': 'en'}, {'q': 'Fed (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'long', 'label': '長天期美債', 'chips': ['dgs5', 'dgs7', 'dgs10', 'dgs20', 'dgs30', 'move', 'live_dgs10', 'live_dgs30'], 'keywords': ['Treasury', 'Treasuries', '10-year', '30-year', '美債', '美國公債', '美債殖利率', '公債標售'], 'search': [{'q': 'Treasury yields (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': 'Treasury auction', 'lang': 'en'}], 'require': ['Treasury', 'Treasuries', 'US bonds', 'U.S. bonds', '美債', '美國公債', '美國財政部']}, {'id': 'funding', 'label': '資金市場', 'chips': ['sofr', 'sofr_iorb', 'onrrp', 'srf'], 'keywords': ['repo market', 'SOFR', 'bank reserves', 'reverse repo', 'standing repo', 'money market', '回購市場', '準備金', 'repo', 'repurchase agreement', 'repo rates', 'funding pressure', 'funding stress', 'money markets', 'money-market funds', 'money market funds', 'dollar liquidity', 'overnight funding', 'Treasury bills', 'T-bills', 'Treasury cash balance', 'market stress', 'IORB', 'SRF', 'ON RRP', '資金市場', '貨幣市場', '美元流動性', '隔夜利率', '隔夜融資', '短期融資', '回購利率', '銀行準備金', '美國國庫券', '短期美債', '資金壓力'], 'search': [{'q': '("money market" OR "money markets" OR repo OR SOFR OR "Treasury bills") ("United States" OR Fed OR "U.S.")', 'lang': 'en'}, {'q': 'Fed (reserves OR liquidity OR "market stress") (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '美國 (回購市場 OR 貨幣市場 OR 流動性 OR 國庫券)', 'lang': 'zh'}]}, {'id': 'oil', 'label': '油價', 'chips': ['wti', 'brent'], 'keywords': ['oil', 'crude', 'OPEC', 'Brent', 'WTI', '油價', '原油', 'crude oil', 'oil prices', 'OPEC+', 'Middle East war', 'US-Iran conflict', 'U.S.-Iran conflict', 'Iran', 'Israel', 'Gaza', 'Strait of Hormuz', 'Red Sea', '中東戰爭', '中東衝突', '美伊衝突', '伊朗', '以色列', '加薩', '荷姆茲海峽', '霍爾木茲海峽', '紅海', '油輪', '能源供應', '航運中斷', '制裁'], 'search': [{'q': 'oil prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '油價 (原油 OR 中東 OR 伊朗)', 'lang': 'zh'}]}, {'id': 'equity', 'label': '美股', 'chips': ['dji', 'spx', 'ixic', 'vix'], 'keywords': ['Dow', 'S&P 500', 'Nasdaq', 'Wall Street', 'stocks', 'VIX', '美股', '道瓊', '標普', 'AI', 'artificial intelligence', 'Nvidia', 'OpenAI', 'AI capex', 'data center', 'data centers', 'hyperscaler', '人工智慧', '輝達', '資料中心', 'AI 伺服器'], 'require': ['Dow', 'S&P 500', 'S&P', 'Nasdaq', 'Wall Street', 'US stocks', 'U.S. stocks', 'stocks', 'stock market', 'equities', 'VIX', '美股', '道瓊', '標普', '那斯達克', '華爾街', '美國股市'], 'exclude_add': ['台股', '日股', '陸股', '港股', '歐股', '韓股', 'A股', '日經', '恆生', 'Nikkei', 'Hang Seng', 'FTSE', 'DAX', 'European stocks', 'Asian stocks', 'China stocks', 'Japan stocks', 'oil stocks', 'crude stocks', 'G7 stocks', 'stockpile', 'World Bank', '世界銀行'], 'search': [{'q': '(S&P OR Nasdaq OR Dow OR "Wall Street") (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '美股 (道瓊 OR 標普 OR 那斯達克 OR 收盤)', 'lang': 'zh'}]}, {'id': 'semi', 'label': 'AI 與半導體', 'chips': ['sox'], 'keywords': ['chip', 'chips', 'chipmaker', 'chipmakers', 'semiconductor', 'semiconductors', 'Nvidia', 'TSMC', 'AI capex', '半導體', '晶片', '輝達', '台積電', 'AI', 'artificial intelligence', 'OpenAI', 'data center', 'data centers', 'hyperscaler', '人工智慧', '資料中心', 'AI 伺服器'], 'exclude': ['ETF', '存股', '高股息', '股息', '定期定額', '0050', '台股', '金控', '必漲', '卡位', '黑馬', '飆股', '千金股'], 'search': [{'q': 'chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}, {'id': 'twf', 'label': '台指期', 'chips': ['txf', 'twii'], 'keywords': ['台指期', '台股', '加權指數', '外資', '夜盤', '人工智慧', '輝達', '台積電', 'AI 伺服器', 'AI 概念股', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF', 'NVIDIA', 'TSMC'], 'exclude': ['ETF', '存股', '高股息', '定期定額', '0050', '必漲', '卡位', '黑馬', '飆股', '千金股', 'ETFs', '指數型基金', '指數股票型基金', '配息', '申購', '股息'], 'search': [{'q': '(台指期 OR 臺指期) (夜盤 OR 日盤)', 'lang': 'zh'}, {'q': '(台股 OR 加權指數) (外資 OR 收盤)', 'lang': 'zh'}], 'require': ['台指期', '臺指期', '台股', '臺股', '加權指數', '台灣股市', '臺灣股市', 'TAIEX', 'Taiwan stocks', 'Taiwan futures', 'TXF']}, {'id': 'election', 'label': '期中選舉', 'chips': ['pm_house', 'pm_senate'], 'keywords': ['midterm', 'midterms', 'Senate race', 'House majority', 'Senate control', 'House control', '期中選舉', '參議院', '眾議院', 'Senate election', 'House election', 'congressional election', 'midterm election', 'midterm elections', 'US election', '美國選舉', '美國大選', '國會選舉', '選情'], 'search': [{'q': '"midterm elections" (Senate OR House OR poll OR campaign) (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '("US midterms" OR "U.S. midterms" OR "midterm elections")', 'lang': 'en'}, {'q': '美國 (期中選舉 OR 中期選舉) (參議院 OR 眾議院 OR 民調)', 'lang': 'zh'}]}, {'id': 'gold', 'label': '黃金', 'chips': ['gold'], 'keywords': ['gold', 'bullion', 'XAU/USD', 'gold futures', '黃金', '金價'], 'exclude': ['ETF', 'ETFs', '黃金ETF', '珠寶促銷', '飾金促銷'], 'search': [{'q': 'gold prices (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}, {'q': '黃金 金價', 'lang': 'zh'}]}, {'id': 'fx', 'label': '匯率', 'chips': ['dxy', 'twd', 'eurusd', 'usdjpy', 'usdcnh'], 'keywords': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數', '台灣央行', '臺灣央行', '外資匯入', '外資匯出'], 'require': ['USD/TWD', 'USDTWD', 'TWD', 'Taiwan dollar', 'New Taiwan dollar', 'DXY', 'dollar index', 'US dollar', 'U.S. dollar', 'dollar', '台幣', '臺幣', '新台幣', '美元', '美元指數'], 'exclude': ['ETF', 'ETFs', '存股', '高股息', '定期定額'], 'search': [{'q': '台幣 美元 匯率', 'lang': 'zh'}, {'q': 'Taiwan dollar currency Reuters', 'lang': 'en'}, {'q': 'US dollar index (site:reuters.com OR site:bloomberg.com)', 'lang': 'en'}]}]
 
 _GNEWS = {"en": "https://news.google.com/rss/search?q={q}%20when:2d"
                 "&hl=en-US&gl=US&ceid=US:en",

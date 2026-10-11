@@ -40,8 +40,8 @@ check("①b 續領新高（重要）排在它後面、屬「趨勢轉折」",
       "continuing_claims_high" in keys
       and keys.index("continuing_claims_high") > 0
       and fl[keys.index("continuing_claims_high")].tier == 2, keys)
-check("①c 月度修正偏向放最後（結構背景）",
-      keys[-1] == "revision_bias_down" and fl[-1].tier == 3, keys)
+check("①c 第十八批：修正類不再列為訊號（run_rules 濾掉）",
+      not any(k.startswith("revision") or k == "benchmark_revision" for k in keys), keys)
 check("①d 嚴重度沒被改（鷹鴿淨值權重靠它）",
       fl[0].severity == "info")
 check("①e 每條訊號都有層級名稱",
@@ -51,9 +51,8 @@ check("①e 每條訊號都有層級名稱",
 REV2 = NS(two_month_net=-103, recent=[NS(current=-23)], ma3_before_revision=54,
           ma3_now=20, bias_12m=None, bias_direction="unknown")
 _f2 = R.run_rules(R.RuleContext(unrate_decomp=DEC, revisions=REV2))
-check("①f 勞動力退出排在重要級的修正前面",
-      [f.key for f in _f2][:2] == ["bad_decline", "revision_swamps"],
-      [f.key for f in _f2])
+check("①f 前兩月大幅下修不再列為訊號",
+      [f.key for f in _f2] == ["bad_decline"], [f.key for f in _f2])
 
 # ② 家庭調查抽樣誤差註記
 check("② 55.5 萬／75.5 萬：大的那塊超過 ±60 萬 → 不加註",
@@ -71,7 +70,7 @@ _s = sorted([f1, f2], key=lambda f: (f.tier, _order[f.severity], -f.strength))
 check("③ 同層同級時強度 2.5 排在 1.2 前面", [f.key for f in _s] == ["b", "a"])
 
 # ④ 月度修正改名，不再寫「近一年」
-_rb = [f for f in fl if f.key == "revision_bias_down"][0]
+_rb = R.r_revision_bias(ctx)          # 規則函式保留（就業頁修正卡），只是不進訊號
 check("④ 月度修正的標題與說明分清楚兩種修正",
       "月度修正" in _rb.headline and "年度基準修正" in _rb.detail)
 

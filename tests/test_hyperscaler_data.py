@@ -190,11 +190,19 @@ check("㉝ 部分退回 → 數得出來",
           dict(CFG["companies"][0]),
           dict(CFG["companies"][1], from_sec=False)]}).n_from_sec == 1)
 
-out = ROOT / "output" / "rates" / "index.html"
-if not out.exists():
-    print("略過  ㉞–㊱ 需要先 python run.py --offline")
-else:
-    html = out.read_text(encoding="utf-8")
+
+def _offline_rates_html():
+    """第十八批：測試自己用測試資料渲染長端頁，不讀 output/（那份可能是正式更新產生的）。"""
+    import yaml as _yaml
+    from src import build as _build, fixtures_rates as _fr
+    from src.pages import rates as _rp
+    _root = pathlib.Path(__file__).resolve().parents[1]
+    _cfg = _yaml.safe_load((_root / "config" / "rates.yaml").read_text(encoding="utf-8"))
+    return _rp.rates_body(_build.build_rates_context(_cfg, _fr.build(), [], True))
+
+
+if True:
+    html = _offline_rates_html()
     # 離線產出時五家都不是來自 SEC，畫面必須明講
     check("㉞ 全部過期時畫面用最強的措辭",
           "本區資料尚未更新" in html and "並非最新一季財報" in html and "config/rates.yaml" not in html and "SEC_USER_AGENT" not in html)

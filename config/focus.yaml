@@ -12,6 +12,10 @@ enabled: true
 # 目標會議的決策日填這裡；需要的合約（會議月＋往回到第一個無會議月）
 # 由程式自動推（例：12/09 會議 → ZQZ26 ＋ ZQX26），不用手填合約代號。
 # 會議結束後把這裡改成下一場要盯的會議。
+# 第十八批起：首頁的累計升降息改成「今年底／明年中／明年底」三個節點，
+# 由下面的 fomc_dates 自動滾動；這個欄位只剩後備算法在用。
+# ⚠️ 每年夏天聯準會公布下一年日程後，記得把下一年的會議日補進 fomc_dates，
+# 否則年底過後第三個節點會排不出來（log 會警告）。
 fedwatch_meeting: 2026-12-09
 
 # 該年度的 FOMC 決策日（兩天會議的第二天）。每年一月照官方行事曆
@@ -35,6 +39,16 @@ fomc_dates:
   - 2027-09-15
   - 2027-10-27
   - 2027-12-08
+
+# 首頁「接下來看什麼 → 官員談話」的票委標記（第十八批）。
+# fomc_board：理事會成員（英文姓氏），永遠有投票權。
+# fomc_voters：各年度有投票權的地區聯儲總裁（紐約聯儲總裁每年都投）。
+# ⚠️ 每年一月照聯準會官網更新；人事異動（例如新總裁上任）也要改這裡。
+fomc_board: [Warsh, Jefferson, Bowman, Waller, Cook, Barr, Miran, Powell]
+fomc_voters:
+  2026: [Williams, Hammack, Paulson, Logan, Kashkari]
+  # 2027 輪值：里奇蒙、芝加哥、亞特蘭大、舊金山（亞特蘭大新總裁的姓氏上任後補上）
+  2027: [Williams, Barkin, Goolsbee, Daly]
 
 # 報價鏈健康檢查用的「當月合約」由程式按月份自動推，逐月自動滾；
 # 要固定時才設 fedwatch_health_contract（例：ZQQ26.CBT）。
@@ -90,11 +104,10 @@ keywords:
   # 片語會拆成單字各自比對（例：「rate cut」＝rate、cut）。
   - Fed
   - FOMC
-  - Powell
+  # 主席是華許（2026-05 接任）；鮑爾已卸任主席、留任理事，降為次級詞
   - Warsh
-  - 聯準會
-  - 鮑爾
   - 華許
+  - 聯準會
   - 升息
   - 降息
   - inflation
@@ -128,6 +141,8 @@ keywords:
   - tariff
   - 關稅
 keywords_secondary:
+  - Powell
+  - 鮑爾
   - Trump
   - 川普
   - dollar
@@ -263,8 +278,9 @@ topics:
   label: 聯準會
   chips:
   - fedwatch
-  - fw_dec
-  - fw_cum
+  - fw_h1
+  - fw_h2
+  - fw_h3
   - dgs3mo
   - dgs2
   keywords:
@@ -288,7 +304,9 @@ topics:
   label: 長天期美債
   chips:
   - dgs5
+  - dgs7
   - dgs10
+  - dgs20
   - dgs30
   - move
   - live_dgs10
@@ -436,6 +454,8 @@ topics:
   label: 美股
   chips:
   - dji
+  - spx
+  - ixic
   - vix
   keywords:
   - Dow
@@ -554,6 +574,7 @@ topics:
   label: 台指期
   chips:
   - txf
+  - twii
   keywords:
   - 台指期
   - 台股
@@ -712,6 +733,9 @@ topics:
   chips:
   - dxy
   - twd
+  - eurusd
+  - usdjpy
+  - usdcnh
   keywords:
   - USD/TWD
   - USDTWD

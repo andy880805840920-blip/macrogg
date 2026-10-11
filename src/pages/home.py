@@ -636,7 +636,8 @@ def _next_cell(sc, trigger) -> tuple[str, str]:
             inflation = value
     cell = scenario_mod.grid_for(sc.regime).get((labor, inflation))
     name = cell[0] if cell else f"{labor} × {inflation}"
-    return name, f"{trigger.label}：{'已觸發' if trigger.met else trigger.distance}"
+    # 第十八批：首頁只說數據要怎麼變（plain），不寫「還差 0.1 個百分點」
+    return name, ("條件已觸發" if trigger.met else (trigger.plain or trigger.distance))
 
 
 def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
@@ -825,7 +826,7 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'return[(u.indexOf("美元")>=0?"$"+q.v.toFixed(1):q.v.toFixed(1)+u),'
             '(s.charAt(0)==="-"?"":"+")+s,dir];}'
             'function ap(r){var now=r.t||Date.now()/1000;'
-            'Object.keys(r.q||{}).forEach(function(id){if(["dgs3mo","dgs2","dgs5","dgs10","dgs30"].indexOf(id)>=0)return;var q=r.q[id];'
+            'Object.keys(r.q||{}).forEach(function(id){if(["dgs3mo","dgs2","dgs5","dgs7","dgs10","dgs20","dgs30"].indexOf(id)>=0)return;var q=r.q[id];'
             'var ch=box.querySelector(\'[data-chip="\'+id+\'"]\');if(!ch)return;'
             'var dd=ch.getAttribute("data-d")||"";if(dd&&q.d<dd)return;'
             'var fr=(now-q.ts)<=2700;if(!fr&&!(q.d>dd))return;'
@@ -842,7 +843,8 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'var nm=ch.querySelector(".fs-nm")||ch;nm.appendChild(w);}'
             'w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts))'
             ':((q.s?q.s+" ":"")+q.d.slice(5).replace("-","/"));'
-            'ch.setAttribute("data-d",q.d);});}'
+            'ch.setAttribute("data-d",q.d);ch.setAttribute("data-v",q.v);'
+            'if(window.fsReMode)window.fsReMode(ch);});}'
             'function tk(){if(document.visibilityState!=="visible"||N>=M)return;'
             'N++;last=Date.now();fetch("/api/quotes").then(function(r){'
             'return r.ok?r.json():null;}).then(function(r){if(r)ap(r);})'
@@ -856,13 +858,15 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
 # 補充新聞主題選單：對應指標只用來建立選項，新聞選擇不反向改動指標。
 
 _CHIP_SELECT_JS = r"""
-(function(){var K="fsChips",NK="fsNewsTopics";var M=4;
-var D=FS_CONFIG.defaults,TM=FS_CONFIG.topicMap,TA=FS_CONFIG.available,OPT=FS_CONFIG.options,TOPT=FS_CONFIG.topicOptions;
+(function(){var K="fsChips",NK="fsNewsTopics",MK="fsMode";
+var D=FS_CONFIG.defaults,TM=FS_CONFIG.topicMap,TA=FS_CONFIG.available,TOPT=FS_CONFIG.topicOptions;
 var st=document.querySelector('.focus-strip'),box=document.querySelector('.fs-chips');if(!box||!st)return;
 var ids=Array.prototype.map.call(box.querySelectorAll('[data-chip]'),function(c){return c.dataset.chip;});
 var news=[];
 function each(q,f){Array.prototype.forEach.call(document.querySelectorAll(q),f);}
-function saveNews(){try{localStorage.setItem(NK,JSON.stringify({chips:sel,topics:news}));}catch(e){}}
+function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lss(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){}}
+function saveNews(){lss(NK,JSON.stringify({chips:sel,topics:news}));}
 function showTopics(w){news=w.slice(0,2);var ul=document.querySelector('.fs-news .fs-list');if(!ul)return;
  each('.fs-news [data-topic]',function(li){li.classList.toggle('fs-off',news.indexOf(li.dataset.topic)<0);});
  news.forEach(function(t,k){var li=ul.querySelector('[data-topic="'+t+'"]');if(!li)return;ul.appendChild(li);
@@ -876,24 +880,50 @@ function showTopics(w){news=w.slice(0,2);var ul=document.querySelector('.fs-news
  var xs=[];each('.fs-news .fs-link:not(.fs-off) .fs-src',function(q){var x=q.textContent.trim();if(x&&xs.indexOf(x)<0)xs.push(x);});
  var sp=document.querySelector('.fs-srcs');if(sp)sp.textContent=xs.length?'　·　新聞：'+xs.slice(0,3).join('、'):'';}
 function tp(sel){var w=[];sel.forEach(function(c){var t=TM[c];if(t&&TA.indexOf(t)>=0&&w.indexOf(t)<0&&w.length<2)w.push(t);});showTopics(w);}
+// 第十八批：勾幾個顯示幾個（不設上限），勾選順序＝顯示順序；至少留一個
 function fill(selected){var o=[];(selected||[]).forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});
- D.concat(ids).forEach(function(x){if(o.length<M&&o.indexOf(x)<0)o.push(x);});return o.slice(0,M);}
+ if(!o.length)D.forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});return o;}
 function ap(selected){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),function(ch){ch.classList.toggle('fs-off',selected.indexOf(ch.dataset.chip)<0);ch.classList.remove('slot1','slot2');});
- selected.forEach(function(id,i){var ch=box.querySelector('[data-chip="'+id+'"]');if(!ch)return;box.appendChild(ch);if(i<2)ch.classList.add('slot'+(i+1));
-  var s=ch.querySelector('.fs-rowsel');if(!s){s=document.createElement('select');s.className='fs-rowsel';s.innerHTML=OPT;s.setAttribute('aria-label','更換這一行的指標');
-   s.addEventListener('change',function(){pick(sel.indexOf(ch.dataset.chip),s.value);});ch.appendChild(s);}s.value=id;});tp(selected);}
-function save(){try{localStorage.setItem(K,JSON.stringify(sel));}catch(e){}}
-function pick(i,v){if(i<0||ids.indexOf(v)<0||sel[i]===v)return;var j=sel.indexOf(v);if(j>=0&&j!==i)sel[j]=sel[i];sel[i]=v;save();
- try{localStorage.removeItem(NK);}catch(e){}ap(sel);}
-var sel=null;try{sel=JSON.parse(localStorage.getItem(K)||'null');}catch(e){}
+ selected.forEach(function(id,i){var ch=box.querySelector('[data-chip="'+id+'"]');if(!ch)return;box.appendChild(ch);if(i<2)ch.classList.add('slot'+(i+1));});
+ each('.fs-pickp input[type=checkbox]',function(cb){var k=selected.indexOf(cb.value);cb.checked=k>=0;cb.disabled=(k>=0&&selected.length===1);
+  var o=cb.parentNode.querySelector('.fs-pk-n');if(o)o.textContent=k>=0?String(k+1):'';});
+ var c=st.querySelector('.fs-pk-cnt');if(c)c.textContent='已選 '+selected.length+' 個';tp(selected);}
+function save(){lss(K,JSON.stringify(sel));}
+var sel=null;try{sel=JSON.parse(lsg(K)||'null');}catch(e){}
 sel=fill(sel instanceof Array?sel:D);ap(sel);
-try{var saved=JSON.parse(localStorage.getItem(NK)||'null');if(saved&&JSON.stringify(saved.chips)===JSON.stringify(sel)&&Array.isArray(saved.topics)){
+try{var saved=JSON.parse(lsg(NK)||'null');if(saved&&JSON.stringify(saved.chips)===JSON.stringify(sel)&&Array.isArray(saved.topics)){
  var valid=saved.topics.filter(function(t,i,a){return TA.indexOf(t)>=0&&a.indexOf(t)===i;});if(valid.length)showTopics(valid);}}catch(e){}
+each('.fs-pickp input[type=checkbox]',function(cb){cb.addEventListener('change',function(){var k=sel.indexOf(cb.value);
+ if(cb.checked&&k<0)sel.push(cb.value);else if(!cb.checked&&k>=0&&sel.length>1)sel.splice(k,1);
+ save();lss(NK,null);ap(sel);});});
 var eb=st.querySelector('.fs-edit-btn');function ed(on){st.classList.toggle('fs-editing',on);if(eb)eb.setAttribute('aria-pressed',on?'true':'false');}
 if(eb)eb.addEventListener('click',function(){ed(!st.classList.contains('fs-editing'));});
 var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function(){ed(false);});
-var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);try{localStorage.removeItem(K);localStorage.removeItem(NK);}catch(e){}ap(sel);});
+var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);lss(K,null);lss(NK,null);ap(sel);});
 Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
+// 第十八批：變動欄可切「日／MTD／YTD」（上月底、去年底收盤為基準）
+var mode=lsg(MK)||"d";if(["d","m","y"].indexOf(mode)<0)mode="d";
+function grp(x){return x.replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+function rd(ch){var i=ch.querySelector('i');if(!i)return;
+ if(!ch.hasAttribute('data-dd')){ch.setAttribute('data-dd',i.textContent);ch.setAttribute('data-dc',i.className||'fl');}
+ if(mode==="d"){i.textContent=ch.getAttribute('data-dd');i.className=ch.getAttribute('data-dc');return;}
+ var v=parseFloat(ch.getAttribute('data-v')),b=parseFloat(ch.getAttribute(mode==="m"?'data-bm':'data-by')),k=ch.getAttribute('data-k');
+ if(!k||!isFinite(v)||!isFinite(b)||b===0&&k==="pct"){i.textContent="—";i.className="fl";return;}
+ var d=v-b,t,x;
+ if(k==="bp"){x=Math.round(d*100);t=(x>=0?"+":"")+x+" bp";}
+ else if(k==="bp0"){x=Math.round(d);t=(x>=0?"+":"")+x+" bp";}
+ else if(k==="pct"){x=d/b*100;t=(x>=0?"+":"")+x.toFixed(2)+"%";}
+ else if(k==="twd"){x=d;t=(d>0?"貶":d<0?"升":"持平")+Math.abs(d).toFixed(3);}
+ else{var n=+k.slice(1)||0,a=Math.abs(d).toFixed(n),p=a.split(".");x=+a===0?0:d;t=(d<0&&+a!==0?"-":"+")+grp(p[0])+(p[1]?"."+p[1]:"")+(ch.getAttribute('data-u')||"");}
+ i.textContent=t;i.className=x>0?"up":(x<0?"dn":"fl");}
+function am(){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),rd);
+ each('.fs-modes button',function(b){b.setAttribute('aria-pressed',b.dataset.m===mode?'true':'false');});}
+window.fsReMode=function(ch){ch.removeAttribute('data-dd');rd(ch);};
+var hd=box.querySelector('.fs-hd span:nth-child(2)');
+if(hd){hd.innerHTML='<span class="fs-modes" role="group" aria-label="變動區間">'
+ +'<button type="button" data-m="d">日</button><button type="button" data-m="m">MTD</button><button type="button" data-m="y">YTD</button></span>';
+ each('.fs-modes button',function(b){b.addEventListener('click',function(){mode=b.dataset.m;lss(MK,mode);am();});});}
+am();
 })();
 """
 
@@ -919,7 +949,7 @@ def _unify_chip(c: dict) -> dict:
     m = re.match(r"^(日盤|夜盤)\s*(.*)$", date)
     if m:                       # 盤別由即時報價寫在日期列，提示裡不重複
         date = m.group(2)
-    if cid in ("dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30"):
+    if cid in ("dgs3mo", "dgs2", "dgs5", "dgs7", "dgs10", "dgs20", "dgs30"):
         source = {"Treasury": "財政部", "FRED": "FRED", "Snapshot": "官方快照"}.get(c.get("source") or "FRED", "官方日資料")
         date = (source + " " + date) if date else ""
         tip = "官方日殖利率；變動對前一筆有效日資料，日期為美國資料日。固定期限殖利率可能與 Bloomberg PX_LAST 不同。"
@@ -940,12 +970,15 @@ def _unify_chip(c: dict) -> dict:
             else:
                 delta, d = "—", ""
             value = f"{p}%"
-    elif cid in ("fw_dec", "fw_cum"):
-        mh = re.search(r"(\d+)\s*月", label)
-        label = (f"{mh.group(1)}月單場" if cid == "fw_dec" else f"至{mh.group(1)}月累計") if mh else label
+    elif cid in ("fw_h1", "fw_h2", "fw_h3"):
+        # 「至 2026 年底（12/9）累計」→ 標籤「至 2026 年底」，會議日進提示
+        mh = re.match(r"^至\s*(\d{4})\s*年(底|中)（(\d+/\d+)）", label)
+        if mh:
+            label = f"至{mh.group(1)}年{mh.group(2)}"
         cur = re.match(r"^([+-]?[\d.]+)", value)
         old = re.search(r"前日\s*([+-]?[\d.]+)", delta)
-        tip = delta.split("（")[0]
+        tip = delta.split("（")[0] + (f"｜到 {mh.group(3)} 會議為止的累計隱含升降息，聯邦基金期貨推算"
+                                       if cid.startswith("fw_h") and mh else "")
         if cur and old:
             dd = float(cur.group(1)) - float(old.group(1))
             delta, d = f"{dd:+.1f} bp", ("up" if dd > 0.05 else "dn" if dd < -0.05 else "")
@@ -954,17 +987,20 @@ def _unify_chip(c: dict) -> dict:
     elif cid == "srf":
         if value.startswith("0"):
             value, delta, tip = "0 億美元", "—", "未動用（零是常態：體系不缺錢）"
-    elif cid in ("gold", "dxy", "twd"):
+    elif cid in ("gold", "dxy", "twd", "eurusd", "usdjpy", "usdcnh"):
         source = c.get("source") or "Yahoo"
         date = (source + " " + date) if date else ""
         tip = {"gold": "COMEX 黃金期貨（GC=F），美元／盎司；Yahoo 延遲報價。",
                "dxy": "美元指數 DXY（DX-Y.NYB）；Yahoo 延遲報價。",
+               "eurusd": "EUR/USD：1 歐元兌多少美元，上升＝歐元升值、美元走弱；Yahoo 延遲報價。",
+               "usdjpy": "USD/JPY：1 美元兌多少日圓，上升＝日圓貶值；Yahoo 延遲報價。",
+               "usdcnh": "USD/CNH：1 美元兌多少離岸人民幣，上升＝人民幣貶值；Yahoo 延遲報價。",
                "twd": "USD/TWD：1 美元兌多少新台幣。數值上升＝台幣貶值，下降＝台幣升值。FRED 資料為紐約中午買入匯率，非台灣收盤價。"}[cid]
         if cid == "gold" and value != "—":
             value = "$" + value.replace(" 美元／盎司", "")
     elif cid in ("wti", "brent"):
         value = "$" + value.replace(" 美元", "").replace("美元", "")
-    elif cid in ("dji", "sox", "txf"):
+    elif cid in ("dji", "sox", "txf", "spx", "ixic", "twii"):
         if "（" in delta:
             delta, pct = delta.split("（", 1)
             tip = "漲跌幅 " + pct.rstrip("）")
@@ -978,13 +1014,14 @@ def _unify_chip(c: dict) -> dict:
 
 
 _INDICATOR_GROUPS = (
-    ("美債殖利率", ("dgs3mo", "dgs2", "dgs5", "dgs10", "dgs30", "live_dgs10", "live_dgs30")),
-    ("聯準會與升降息", ("fedwatch", "fw_dec", "fw_cum")),
+    ("美債殖利率", ("dgs3mo", "dgs2", "dgs5", "dgs7", "dgs10", "dgs20", "dgs30",
+                   "live_dgs10", "live_dgs30")),
+    ("聯準會與升降息", ("fedwatch", "fw_h1", "fw_h2", "fw_h3")),
     ("資金市場", ("sofr", "sofr_iorb", "onrrp", "srf")),
-    ("股市與台指期", ("dji", "sox", "txf")),
+    ("股市與台指期", ("dji", "spx", "ixic", "sox", "twii", "txf")),
     ("市場波動", ("vix", "move")),
     ("原油與黃金", ("wti", "brent", "gold")),
-    ("匯率", ("dxy", "twd")),
+    ("匯率", ("dxy", "twd", "eurusd", "usdjpy", "usdcnh")),
     ("期中選舉", ("pm_house", "pm_senate")),
 )
 
@@ -1003,6 +1040,24 @@ def _indicator_options(cat: list[dict]) -> str:
         options="".join('<option value="'+esc(cid)+'">'+esc(_unify_chip(by_id[cid])["label"])+"</option>" for cid in members)
         groups.append('<optgroup label="'+esc(label)+'">'+options+"</optgroup>")
     return "".join(groups)
+
+
+def _indicator_checks(cat: list[dict]) -> str:
+    """勾選清單（第十八批）：分組、每個指標一個 checkbox，右側小數字是顯示順序。"""
+    by_id = {c["id"]: c for c in cat}
+    seen, groups = set(), []
+    for label, ids in list(_INDICATOR_GROUPS) + [("其他指標", tuple(by_id))]:
+        members = [cid for cid in ids if cid in by_id and cid not in seen]
+        if not members:
+            continue
+        seen.update(members)
+        boxes = "".join(
+            f'<label class="fs-pk"><input type="checkbox" value="{esc(cid)}"'
+            + (" checked" if by_id[cid].get("on") else "") + '>'
+            f'<span>{esc(_unify_chip(by_id[cid])["label"])}</span><em class="fs-pk-n"></em></label>'
+            for cid in members)
+        groups.append(f'<fieldset class="fs-pkg"><legend>{esc(label)}</legend>{boxes}</fieldset>')
+    return '<div class="fs-pickp">' + "".join(groups) + '</div>'
 
 
 def _focus_strip(f: dict | None) -> str:
@@ -1041,8 +1096,15 @@ def _focus_strip(f: dict | None) -> str:
             u = _unify_chip(c)
             when = (f'<small class="fs-when">{esc(u["date"])}</small>' if u["date"] else "")
             delta = f'<i class="{u["dir"] or "fl"}">{esc(u["delta"])}</i>'
+            # MTD／YTD（第十八批）：目前值與上月底、去年底基準給前端算
+            _mv = ""
+            if c.get("num") is not None and c.get("k"):
+                _mv = (f' data-v="{c["num"]}" data-k="{esc(c["k"])}"'
+                       + (f' data-bm="{c["bm"]}"' if c.get("bm") is not None else "")
+                       + (f' data-by="{c["by"]}"' if c.get("by") is not None else "")
+                       + (f' data-u="{esc(c["u"])}"' if c.get("u") else ""))
             chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}"'
-                         f' data-d="{esc(c.get("iso") or "")}"'
+                         f' data-d="{esc(c.get("iso") or "")}"' + _mv
                          + (f' title="{esc(u["tip"])}"' if u["tip"] else "") + '>'
                          f'<div class="fs-nm"><span>{esc(u["label"])}</span>{when}</div>'
                          f'{delta}<b>{esc(u["value"])}</b></div>')
@@ -1051,18 +1113,21 @@ def _focus_strip(f: dict | None) -> str:
         # 按「選擇指標」→ 報價板進入編輯狀態，點任一行就是原生選單、選了換掉
         # 那一行（選到已在板上的就兩行互換）；前兩行標「補充新聞」。
         # 新聞主題可獨立更換；只有調整指標時才重新依序選新聞。
-        _ol = _indicator_options(cat)
+        # 第十八批：改成勾選清單——勾幾個顯示幾個（不設上限），勾選順序就是
+        # 顯示順序；前兩個決定補充新聞。
         picker = ('<button type="button" class="fs-edit-btn">選擇指標</button>')
-        editbar = ('<div class="fs-editbar"><span>點任一行更換指標</span>'
+        editbar = ('<div class="fs-editbar"><span>勾選要顯示的指標，不限數量；勾選順序＝顯示順序，'
+                   '前兩個決定補充新聞<b class="fs-pk-cnt"></b></span>'
                    '<button type="button" class="fs-reset">恢復預設</button>'
-                   '<button type="button" class="fs-done">完成</button></div>')
+                   '<button type="button" class="fs-done">完成</button>'
+                   + _indicator_checks(cat) + '</div>')
         _tl = {x["id"]: x["label"] for x in topics}
         _topt = "".join(
             f'<option value="{tid}"' + ("" if tid in avail else " disabled") + '>'
             + esc(_tl.get(tid) or TOPIC_LABEL.get(tid, tid)) + ("" if tid in avail else "（新聞暫缺）")
             + '</option>' for tid in TOPIC_REP_ORDER)
         script = ('<script>var FS_CONFIG=' + _json.dumps({"defaults": defaults, "topicMap": topic_map,
-                  "available": avail, "options": _ol, "topicOptions": _topt}, ensure_ascii=False)
+                  "available": avail, "topicOptions": _topt}, ensure_ascii=False)
                   + ';' + _CHIP_SELECT_JS + '</script>' + _LIVE_JS)
 
     else:
@@ -1215,10 +1280,10 @@ def _hm_modules(ctxs: dict, sc, f_text: str, f_dir: str, p_text: str, p_level: s
     tiles = [
         ("/labor/", "就業", f"{labor_label}　{sc.labor_momentum}",
          "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else "neutral",
-         [("失業率", lk.get("u3_display", "—")), ("非農新增", lk.get("nfp_display", "—"))]),
+         [("失業率", lk.get("u3_display", "—")), ("非農月增", lk.get("nfp_display", "—"))]),
         ("/inflation/", "通膨", f"{infl_label}　{sc.infl_momentum}",
          "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else "neutral",
-         [("核心 PCE", ik.get("pce_display", "—")), ("核心 CPI", ik.get("core_display", "—"))]),
+         [("核心 PCE 年增", ik.get("pce_display", "—")), ("核心 CPI 月增", ik.get("core_display", "—"))]),
         ("/fomc/", "聯準會", f_text, f_dir,
          [("政策利率", fom.get("rate_range", "—")),
           ("下次會議", _fnm.get("span") or _fnm.get("date") or "—")]),
@@ -1251,7 +1316,7 @@ def _hm_brief(ctxs: dict) -> tuple[str, str]:
     return takeaway, f'<div class="hm-brs">{rows}</div>{new}'
 
 
-def _hm_changes(cs) -> str:
+def _hm_changes(cs, regime: str = "") -> str:
     """
     本期變化（2026-10 v2，使用者：太雜）：
       ① 一條比例條＋一句傾向（偏鴿／偏鷹／中性各幾項）
@@ -1277,10 +1342,23 @@ def _hm_changes(cs) -> str:
         return '<div class="home-empty">主要訊號與上期相同，情境格位沒有改變。</div>'
     n = {k: sum(1 for x in items if x[1] == k) for k in ("dovish", "hawkish", "neutral")}
     total = len(items)
-    tilt = ("整體往降息方向傾斜" if n["dovish"] > n["hawkish"] + 1 else
-            "整體往維持高利率方向傾斜" if n["hawkish"] > n["dovish"] + 1 else "兩邊大致抵銷")
+    # 第十八批：依聯準會目前的重心加權——重心那一軸的變動算兩倍。
+    # 只數條數會讓就業（條目多）壓過通膨，而聯準會現在看的是通膨。
+    _pri = {"inflation": "物價", "employment": "就業"}.get(regime, "")
+    _w = lambda x: 2 if _pri and x[2] == _pri else 1
+    wd = sum(_w(x) for x in items if x[1] == "dovish")
+    wh = sum(_w(x) for x in items if x[1] == "hawkish")
+    tilt = ("整體偏鴿" if wd > wh + 1 else "整體偏鷹" if wh > wd + 1 else "鷹鴿大致抵銷")
+    _wnote = (f"{'通膨' if _pri == '物價' else '就業'}訊號加權 ×2（聯準會重心）" if _pri else "")
+    # 重點 5 項：重心那一軸優先（最多 3 項），其餘照原排序補滿
+    if _pri:
+        items.sort(key=lambda x: x[0])
+        _p = [x for x in items if x[2] == _pri][:3]
+        _rest = [x for x in items if x not in _p]
+        items = [(i * 0.001, *x[1:]) for i, x in enumerate(_p + _rest)]
     bar = "".join(f'<i class="{k}" style="flex:{n[k]}"></i>' for k in ("dovish", "hawkish", "neutral") if n[k])
-    head = (f'<div class="hm-c2-h"><p><b>{esc(tilt)}</b><span>本期 {total} 項變動</span></p>'
+    head = (f'<div class="hm-c2-h"><p><b>{esc(tilt)}</b><span>本期 {total} 項變動'
+            + (f'　·　{esc(_wnote)}' if _wnote else '') + '</span></p>'
             f'<div class="hm-c2-bar">{bar}</div>'
             f'<div class="hm-c2-lg"><span><i class="dovish"></i>偏鴿 {n["dovish"]}</span>'
             f'<span><i class="hawkish"></i>偏鷹 {n["hawkish"]}</span>'
@@ -1311,11 +1389,27 @@ def _hm_changes(cs) -> str:
     return head + body
 
 
+def _hm_when(tpe: dt.datetime, d_et: dt.date, today: dt.date) -> str:
+    tw = "台灣隔天 " if tpe.date() > d_et else "台灣 "
+    return f"{'今天 ' if d_et == today else ''}{tw}{tpe.strftime('%H:%M')}"
+
+
+def _hm_label(d: dt.date) -> str:
+    return f"{d.month:02d}/{d.day:02d}（{'一二三四五六日'[d.weekday()]}）"
+
+
 def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
-    """接下來看什麼：一次一週，‹ › 換週（純 CSS radio，不靠 JS）。"""
+    """
+    接下來看什麼：一次一週，‹ › 換週（純 CSS radio，不靠 JS）。
+    第十八批：上方三個篩選——數據（原本的）、發債（標售＋回購）、官員談話；
+    數據列帶市場預估與前值（ForexFactory，只有本週），沒有預估時給前值＋近 6 期走勢。
+    """
     from ..analysis import watch_calendar as wc
     today = clock.today()
+    now = clock.now()
     fom = ctxs.get("fomc") or {}
+    wx = ctxs.get("_watch_extra") or {}
+    cons = wx.get("consensus") or {}
     import re as _re
 
     def _trig(prefix):
@@ -1323,18 +1417,121 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         if not c:
             return ""
         t = min(c, key=lambda x: abs(float((_re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "") or [9e9])[0])))
-        return f"最近門檻：{t.label}，{t.distance}"
+        return f"{t.label}的條件：{t.plain or t.distance}。"
     rows = wc.watch_rows(
         ctxs.get("_schedule") or wc.merge_schedule({}, ctxs.get("_calendar") or {}, {}, today),
         fomc_next=((fom.get("next_meeting")) or {}).get("date"),
         fomc_desc="聲明與投票可能改變重心——重心一翻，同一格的結論就不同。",
-        trig={"employment": _trig("就業轉"), "cpi": _trig("通膨轉")}, weeks=weeks)
+        trig={"employment": _trig("就業轉"), "cpi": _trig("通膨轉"),
+              "pce": _trig("通膨轉")}, weeks=weeks)
+    # 發債／官員談話也照數據列的格式：week、label、when、name、sub
     mon = today - dt.timedelta(days=today.weekday())
     start = mon + dt.timedelta(days=7 if today.weekday() >= 5 else 0)
+    end = start + dt.timedelta(days=7 * weeks - 1)
+
+    def _wk(d):
+        return (d - start).days // 7
+
+    supply = []
+    for a in wx.get("auctions") or []:
+        try:
+            d = dt.date.fromisoformat(a["date"])
+        except (TypeError, ValueError):
+            continue
+        tpe = wc.taipei_time(d, (13, 0))
+        if tpe <= now or not start <= d <= end:
+            continue
+        sub = ("已公告" + (f"・{a['amount']}" if a.get("amount") else "")
+               if a.get("src") == "財政部公告" else "財政部暫定時程")
+        supply.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+                       "when": _hm_when(tpe, d, today), "name": a.get("name", "公債標售"),
+                       "sub": sub, "tag": "標售"})
+    for b in wx.get("buybacks") or []:
+        try:
+            d = dt.date.fromisoformat(b["date"])
+        except (TypeError, ValueError):
+            continue
+        tpe = wc.taipei_time(d, tuple(b.get("end") or (14, 0)))
+        if tpe <= now or not start <= d <= end:
+            continue
+        supply.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+                       "when": _hm_when(tpe, d, today),
+                       "name": f"國債回購・{b.get('segment', '')}",
+                       "sub": f"{b.get('purpose', '')}・{b.get('max', '')}・財政部暫定時程",
+                       "tag": "回購"})
+    speeches = []
+    for x in wx.get("speeches") or []:
+        et = x.get("et")
+        if isinstance(et, str):
+            try:
+                et = dt.datetime.fromisoformat(et)
+            except ValueError:
+                continue
+        d = et.date()
+        tpe = wc.taipei_time(d, (et.hour, et.minute))
+        if tpe <= now or not start <= d <= end:
+            continue
+        who = f"{x.get('role', '')} {x.get('zh', '')}".strip()
+        sub = "・".join(v for v in (x.get("kind", ""), x.get("topic", "")) if v)
+        speeches.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+                         "when": _hm_when(tpe, d, today) if x.get("time_known", True) else "時間未定",
+                         "name": who, "sub": sub, "voter": x.get("voter"),
+                         "src": x.get("src", "")})
+    # 10Y／30Y 標售原本混在數據列（財政部 upcoming＋yaml 暫定表）：搬到「發債」；
+    # 附加資料抓不到時拿它們當後備
+    _auc = [e for e in rows if str(e.get("key", "")).startswith("auction_")]
+    rows = [e for e in rows if not str(e.get("key", "")).startswith("auction_")]
+    if not wx.get("auctions"):
+        supply += [{"week": e["week"], "tpe": e["tpe"], "label": e["label"], "when": e["when"],
+                    "name": e["name"], "sub": e.get("src", ""), "tag": "標售"} for e in _auc]
+    supply.sort(key=lambda e: e["tpe"])
+    speeches.sort(key=lambda e: e["tpe"])
+
+    lk = (ctxs.get("labor") or {})
+    ik = (ctxs.get("inflation") or {})
+    _prev = {"employment": f"前值：非農 {(lk.get('kpi') or {}).get('nfp_display', '—')}、"
+                           f"失業率 {(lk.get('kpi') or {}).get('u3_display', '—')}",
+             "cpi": f"前值：核心 CPI 月增 {(ik.get('kpi') or {}).get('core_display', '—')}",
+             "pce": f"前值：核心 PCE 年增 {(ik.get('kpi') or {}).get('pce_display', '—')}"}
+    _trend = {"employment": (lk.get("mini") or {}).get("nfp6", ""),
+              "cpi": (ik.get("mini") or {}).get("core6", ""),
+              "pce": (ik.get("mini") or {}).get("pcemom6", "")}
+
+    def _cons(e, short=False):
+        c = cons.get(f"{e['key']}|{e['date'].isoformat()}") or []
+        if not c:
+            return ""
+        if short:
+            x = c[0]
+            return (f'<span class="hm-cons-s">預估 {esc(x["forecast"] or "—")}'
+                    f'｜前值 {esc(x["previous"] or "—")}</span>')
+        return ('<div class="hm-cons"><span class="hm-cons-k">市場預估</span>'
+                + "".join(f'<span class="hm-cons-i"><span class="hm-cons-l">{esc(x["label"])}</span>'
+                          f'<b>{esc(x["forecast"] or "—")}</b>'
+                          f'<small>前值 {esc(x["previous"] or "—")}</small></span>' for x in c[:4])
+                + '</div>')
+
+    def _hi_extra(e):
+        out = _cons(e)
+        if not out and e["key"] in _prev:
+            out = f'<div class="hm-cons"><span class="hm-cons-k">尚無市場預估</span><span class="hm-cons-p">{esc(_prev[e["key"]])}</span></div>'
+        if _trend.get(e["key"]):
+            out += (f'<details class="hm-tr"><summary>近 6 期走勢</summary>'
+                    f'{_trend[e["key"]]}</details>')
+        return out
 
     def _mrow(e):
         return (f'<div class="hm-mid"><span class="hm-mid-d">{esc(e["label"])}</span>'
-                f'<b>{esc(e["name"])}</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
+                f'<b>{esc(e["name"])}{_cons(e, True)}</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
+
+    def _xrow(e, cls):
+        tag = (f'<em class="hm-x-tag">{esc(e["tag"])}</em>' if e.get("tag") else "")
+        vt = ('<em class="hm-x-vote">票委</em>' if e.get("voter") else "")
+        return (f'<div class="hm-mid hm-x {cls}"><span class="hm-mid-d">{esc(e["label"])}</span>'
+                f'<b>{tag}{esc(e["name"])}{vt}'
+                + (f'<small class="hm-x-sub">{esc(e["sub"])}</small>' if e.get("sub") else "")
+                + f'</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
+
     radios, panels = [], []
     for w in range(weeks):
         a_ = start + dt.timedelta(days=7 * w)
@@ -1346,22 +1543,42 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         body = "".join(
             f'<div class="hm-hi"><div class="hm-hi-d"><b>{esc(e["label"])}</b><span>{esc(e["when"])}</span></div>'
             f'<div class="hm-hi-b"><b>{esc(e["name"])}<em>高影響</em></b>'
-            + (f'<p>{esc(e["desc"])}</p>' if e["desc"] else "") + '</div></div>' for e in hi)
+            + (f'<p>{esc(e["desc"])}</p>' if e["desc"] else "") + _hi_extra(e) + '</div></div>' for e in hi)
         if mid:
             body += ('<div class="hm-mids-h">其他發布（影響中）</div><div class="hm-mids">'
                      + "".join(_mrow(e) for e in mid) + '</div>')
         if not wk:
             body = '<p class="home-empty">這一週沒有排定的重要發布。</p>'
+        sw = [e for e in supply if e["week"] == w]
+        pw = [e for e in speeches if e["week"] == w]
+        sup_html = ("".join(_xrow(e, "") for e in sw) if sw else
+                    '<p class="home-empty">這一週沒有排定的附息公債標售或國債回購。</p>')
+        spk_html = ("".join(_xrow(e, "") for e in pw) if pw else
+                    '<p class="home-empty">' + ("目前只排得到理事會成員的行程；地區聯儲總裁的談話要到該週才公布。"
+                                                if w >= 1 else "這一週沒有排定的官員談話。") + '</p>')
         prev_l = (f'<label class="hm-wk-a" for="hm-wk-{w - 1}" aria-label="上一週">‹</label>'
                   if w else '<span class="hm-wk-a off">‹</span>')
         next_l = (f'<label class="hm-wk-a" for="hm-wk-{w + 1}" aria-label="下一週">›</label>'
                   if w < weeks - 1 else '<span class="hm-wk-a off">›</span>')
         dots = "".join(f'<i class="{"on" if j == w else ""}"></i>' for j in range(weeks))
+        cnt = (f'<span class="hm-cnt hm-cnt-data">{len(wk)} 場</span>'
+               f'<span class="hm-cnt hm-cnt-sup">{len(sw)} 場</span>'
+               f'<span class="hm-cnt hm-cnt-spk">{len(pw)} 場</span>')
         radios.append(f'<input type="radio" name="hm-wk" id="hm-wk-{w}" class="hm-wk-in"{" checked" if w == 0 else ""}>')
         panels.append(f'<div class="hm-wk-p"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t"><b>{esc(name)}</b>'
-                      f'<span>{a_.month}/{a_.day}–{b_.month}/{b_.day}　·　{len(wk)} 場</span>'
-                      f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>{body}</div>')
-    return f'<div class="hm-wk">{"".join(radios)}<div class="hm-wk-ps">{"".join(panels)}</div></div>'
+                      f'<span>{a_.month}/{a_.day}–{b_.month}/{b_.day}　·　{cnt}</span>'
+                      f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>'
+                      f'<div class="hm-cat hm-cat-data">{body}</div>'
+                      f'<div class="hm-cat hm-cat-sup">{sup_html}</div>'
+                      f'<div class="hm-cat hm-cat-spk">{spk_html}</div></div>')
+    cats = ('<input type="radio" name="hm-cat" id="hm-cat-data" class="hm-cat-in" checked>'
+            '<input type="radio" name="hm-cat" id="hm-cat-sup" class="hm-cat-in">'
+            '<input type="radio" name="hm-cat" id="hm-cat-spk" class="hm-cat-in">'
+            '<div class="hm-cats" role="group" aria-label="篩選">'
+            '<label for="hm-cat-data">數據</label><label for="hm-cat-sup">發債</label>'
+            '<label for="hm-cat-spk">官員談話</label></div>')
+    return (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
+            f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
 
 
 def home_body(ctxs: dict) -> str:
@@ -1424,14 +1641,14 @@ def home_body(ctxs: dict) -> str:
   <section class="home-zone hm-zone" aria-labelledby="home-changes">
     <div class="hm-zh"><div><span class="hm-num">02</span><h2 id="home-changes">本期變化</h2></div>
       <p>跟上一期比，新增或解除的訊號</p></div>
-    <div class="hm-chs">{_hm_changes(ctxs.get('changes'))}</div>
+    <div class="hm-chs">{_hm_changes(ctxs.get('changes'), getattr(sc, "regime", ""))}</div>
   </section>
 
   <section class="home-zone hm-zone" aria-labelledby="home-next">
     <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
       <p>未來四週，台灣時間</p></div>
     {_hm_watch(ctxs, sc)}
-    <p class="hm-foot">高影響：可能改變整體經濟與利率判讀；中影響：主要影響個別指標。</p>
+    <p class="hm-foot">高影響：可能改變整體經濟與利率判讀；中影響：主要影響個別指標。市場預估與地區聯儲總裁行程取自 ForexFactory（非官方，只有本週）；標售與回購取自美國財政部；理事會行程取自聯準會官網。</p>
   </section>
 
   <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>

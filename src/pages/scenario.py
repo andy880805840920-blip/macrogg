@@ -495,7 +495,8 @@ def _trigger_bars(trigs, drift=None) -> str:
         if rows:
             out.append(f'<div class="sx-tg-h">{_AXIS_ZH[ax]}</div>' + "".join(rows))
     out.append('<div class="sx-note">條越滿＝越接近觸發；差 0.5 個百分點以上是空條。'
-               '通膨門檻用「綜合水準」（0.6×年增＋0.4×三月年化），比格位判定早一步反應。</div>')
+               '通膨門檻跟格位同一套規則：核心 PCE 年增越過格位門檻，或 Supercore 三月年化'
+               '連兩個月越過 2.1%／3.7%（推一格），兩條路先到先算。</div>')
     return "".join(out)
 
 
@@ -515,7 +516,7 @@ def _next_releases(rows: list, trigs) -> str:
     out = []
     for r in rows:
         n = near.get(r["axis"])
-        hint = (f'最近門檻：{n[1].label}　{n[1].distance}' if n else r["why"])
+        hint = (f'最近門檻：{n[1].label}——{n[1].plain or n[1].distance}' if n else r["why"])
         out.append(f'<div class="sx-nx"><span class="sx-nx-d">{esc(_md_wd(r["date"]))}</span>'
                    f'<div class="sx-nx-b"><b>{esc(r["label"])}</b><span class="sx-nx-a">{esc(r["axis"])}</span>'
                    f'<small>{esc(hint)}</small></div></div>')
@@ -868,7 +869,7 @@ def _scenario_body_full(d: dict) -> str:
       <dd>公司債殖利率高於同天期公債的部分，已扣除提前贖回等選擇權的影響。
         投資級反映大型企業（近期受科技巨頭大量發債影響），高收益反映景氣與違約風險。</dd>
       <dt>終端利率</dt>
-      <dd>這一輪升息（或降息）循環市場預期最後會停在哪裡。本頁取未來 13 個月期貨隱含利率中
+      <dd>這一輪升息（或降息）循環市場預期最後會停在哪裡。本頁取到明年底最後一次會議那個月為止的期貨隱含利率中
         離現行利率最遠的那一點。</dd>
       <dt>點陣圖</dt>
       <dd>每季的經濟預測摘要（SEP）裡，每位與會者對各年底政策利率的預測，一人一點；本頁取中位數。</dd>
@@ -890,14 +891,14 @@ def scenario_body(d: dict) -> str:
     trig, _unlock = _nx["trigger"], _nx["unlock"]
     if _nx["mode"] == "hold":
         trigger_text = (f"短期傾向原地不動（{_nx['reason']}）"
-                        + (f"；參考門檻：{trig.label}：{trig.distance}" if trig else ""))
+                        + (f"；參考門檻：{trig.label}：{trig.plain or trig.distance}" if trig else ""))
     elif trig:
-        trigger_text = f"{trig.label}：{trig.distance}"
+        trigger_text = f"{trig.label}：{trig.plain or trig.distance}"
         if _nx["mode"] == "directional" and _nx.get("reason"):
             trigger_text += f"（依據：{_nx['reason']}）"
     else:
         trigger_text = "目前沒有可計算門檻"
-    unlock_text = (f"{_unlock.label}：{_unlock.distance}" if _unlock else "")
+    unlock_text = (f"{_unlock.label}：{_unlock.plain or _unlock.distance}" if _unlock else "")
     metrics = "".join([
         state_chip("就業格位", sc.labor_state, f"方向 {sc.labor_momentum}",
                    "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else "neutral"),

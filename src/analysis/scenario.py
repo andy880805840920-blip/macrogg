@@ -18,6 +18,8 @@
 
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass, field
 
 
@@ -229,6 +231,9 @@ class Trigger:
     #   direction 就業軸 "weaker"/"stronger"；通膨軸 "down"/"up"
     axis: str = ""
     direction: str = ""
+    # 給首頁與重點句用的白話條件（第十八批，使用者：不要寫「還差 0.1 個
+    # 百分點」，改說就業和通膨要怎麼變）。例：「失業率升到 4.4% 以上（目前 4.2%）」
+    plain: str = ""
 
 
 @dataclass
@@ -703,6 +708,141 @@ def pick_next(sc) -> dict:
             "reason": "兩軸方向中性，取距離最近的門檻"}
 
 
+_ORDER_I = ("低", "中", "高")
+
+
+def _shift(state: str, d: str) -> str | None:
+    i = _ORDER_I.index(state) + (1 if d == "up" else -1)
+    return _ORDER_I[i] if 0 <= i < 3 else None
+
+
+def _labor_plain(t: "Trigger", lab: dict) -> str:
+    """就業門檻的白話條件。失業率只公布到小數一位，「高於 4.3%」＝4.4% 以上。"""
+    u = lab.get("unrate")
+    m = re.search(r"需(高於或等於|高於|低於)\s*([\d.]+)%", t.threshold or "")
+    if t.current.startswith("失業率") and u is not None and m:
+        v = float(m.group(2))
+        if m.group(1) == "高於":
+            v = round(v + 0.1, 1)
+        elif m.group(1) == "低於":
+            v = round(v - 0.1, 1)
+        verb = "降到" if m.group(1) == "低於" else "升到"
+        side = "以下" if m.group(1) == "低於" else "以上"
+        return f"失業率{verb} {v:.1f}% {side}（目前 {u:.1f}%）"
+    if t.current.startswith("失去工作者"):
+        return f"失去工作者比重回落（{t.current}，{t.threshold}）"
+    return f"{t.current}，{t.threshold}"
+
+
+def _infl_triggers(infl: dict, i_state: str, binding: str = "") -> list["Trigger"]:
+    """
+    通膨軸的轉格條件，**用 classify_inflation 模擬**，不另立口徑：
+      水準路徑　核心 PCE 年增越過格位門檻（Supercore 狀態不變）
+      動能路徑　Supercore 三月年化連兩個月越過 2.1%／3.7%
+                （或從推格狀態回到正常區間）
+    拿不到 Supercore 時，動能路徑改用舊規則（核心 PCE 三月＋六月年化）。
+    """
+    out: list[Trigger] = []
+    yoy = infl.get("core_pce_yoy")
+    if yoy is None:
+        return out
+    b = infl.get("bands") or {}
+    lo, hi = b.get("low", 2.30), b.get("high", 2.90)
+    m3, m6 = infl.get("core_pce_3m"), infl.get("core_pce_6m")
+    sc2 = infl.get("supercore_last2")
+    has_sc = bool(sc2) and len(sc2) >= 2 and all(v is not None for v in sc2[-2:])
+
+    def cell(y=None, s2=None, a3=None, a6=None):
+        return classify_inflation(yoy if y is None else y,
+                                  m3 if a3 is None else a3, b,
+                                  m6 if a6 is None else a6,
+                                  (sc2 if has_sc else None) if s2 is None else s2)
+
+    _b = (binding == "通膨")
+    cur_y = f"核心 PCE 年增 {yoy:.2f}%"
+    for d in ("down", "up"):
+        tgt = _shift(i_state, d)
+        if tgt is None:
+            continue
+        # ① 水準路徑：年增剛好越過哪一條門檻會到 tgt
+        edges = ([(hi, "高於"), (lo, "高於")] if d == "up" else [(hi, "低於"), (lo, "低於")])
+        for edge, _ in edges:
+            y2 = edge + 0.005 if d == "up" else edge - 0.005
+            if (d == "up" and y2 <= yoy) or (d == "down" and y2 >= yoy):
+                continue
+            if cell(y=y2) == tgt:
+                gap = abs(yoy - edge)
+                word = "升到" if d == "up" else "降到"
+                side = "以上" if d == "up" else "以下"
+                out.append(Trigger(
+                    f"通膨轉「{tgt}」", cur_y,
+                    f"需{'高於' if d == 'up' else '低於'} {edge:.2f}%",
+                    f"還差 {gap:.2f} 個百分點", False,
+                    binding=False, adjacent=True, axis="inflation", direction=d,
+                    plain=f"核心 PCE 年增{word} {edge:.2f}% {side}（目前 {yoy:.2f}%）"))
+                break
+        # ② 動能路徑
+        if has_sc:
+            a, c = sc2[-2], sc2[-1]
+            cands = ([("normal_dn", [SC_ANCHOR] * 2), ("low", [SC_LO - 0.01] * 2)] if d == "down"
+                     else [("normal_up", [SC_ANCHOR] * 2), ("high", [SC_HI + 0.01] * 2)])
+            for kind, s2 in cands:
+                if cell(s2=s2) != tgt or cell() == tgt:
+                    continue
+                cur = f"Supercore 三月年化 {c:.2f}%（前月 {a:.2f}%）"
+                if kind == "low":
+                    gap = max(c - SC_LO, 0.0)
+                    thr = f"需連續兩個月低於 {SC_LO:.1f}%"
+                    pl = (f"Supercore（核心服務扣除住房）三月年化連兩個月低於 {SC_LO:.1f}%"
+                          f"（目前 {c:.2f}%" + ("，已低於、需下個月再確認）" if c < SC_LO else "）"))
+                elif kind == "high":
+                    gap = max(SC_HI - c, 0.0)
+                    thr = f"需連續兩個月高於 {SC_HI:.1f}%"
+                    pl = (f"Supercore（核心服務扣除住房）三月年化連兩個月高於 {SC_HI:.1f}%"
+                          f"（目前 {c:.2f}%）")
+                elif kind == "normal_dn":
+                    gap = max(c - SC_HI, 0.0)
+                    thr = f"需回到 {SC_HI:.1f}% 以下"
+                    pl = f"Supercore 三月年化回到 {SC_HI:.1f}% 以下（目前 {c:.2f}%）"
+                else:
+                    gap = max(SC_LO - c, 0.0)
+                    thr = f"需回到 {SC_LO:.1f}% 以上"
+                    pl = f"Supercore 三月年化回到 {SC_LO:.1f}% 以上（目前 {c:.2f}%）"
+                out.append(Trigger(f"通膨轉「{tgt}」", cur, thr,
+                                   f"還差 {gap:.2f} 個百分點", False,
+                                   binding=False, adjacent=True, axis="inflation",
+                                   direction=d, plain=pl))
+                break
+        elif m3 is not None and m6 is not None:
+            v = max(m3, m6) if d == "down" else min(m3, m6)
+            edge = lo if d == "down" else hi
+            a2 = edge - 0.01 if d == "down" else edge + 0.01
+            if cell(a3=a2, a6=a2) == tgt and cell() != tgt:
+                gap = abs(v - edge)
+                out.append(Trigger(
+                    f"通膨轉「{tgt}」", f"核心 PCE 三月年化 {m3:.2f}%、六月年化 {m6:.2f}%",
+                    f"兩者都需{'低於' if d == 'down' else '高於'} {edge:.2f}%",
+                    f"還差 {gap:.2f} 個百分點", False, binding=False, adjacent=True,
+                    axis="inflation", direction=d,
+                    plain=(f"核心 PCE 三月與六月年化都{'低於' if d == 'down' else '高於'} "
+                           f"{edge:.2f}%（目前 {m3:.2f}%、{m6:.2f}%）")))
+    # ③ 政策解鎖條件（不相鄰）：站在一端時，到另一端要年增本身越過遠端門檻
+    far = {"高": ("低", lo, "down"), "低": ("高", hi, "up")}.get(i_state)
+    if far:
+        tgt, edge, d = far
+        gap = (yoy - edge) if d == "down" else (edge - yoy)
+        out.append(Trigger(
+            f"通膨轉「{tgt}」", cur_y, f"需{'低於' if d == 'down' else '高於'} {edge:.2f}%",
+            f"還差 {max(gap, 0):.2f} 個百分點", gap <= 0, binding=_b, adjacent=False,
+            axis="inflation", direction=d,
+            plain=f"核心 PCE 年增{'降到' if d == 'down' else '升到'} {edge:.2f}% "
+                  f"{'以下' if d == 'down' else '以上'}（目前 {yoy:.2f}%）"))
+    elif _b:
+        for t in out:
+            t.binding = True
+    return out
+
+
 def _triggers(labor: dict | None, inflation: dict | None,
               l_state: str, i_state: str, binding: str = "") -> list[Trigger]:
     """
@@ -722,9 +862,7 @@ def _triggers(labor: dict | None, inflation: dict | None,
     **指向另一端**的那條（政策要翻向需要的條件）；相鄰格條件是
     「格子會先動到哪」，兩者回答不同的問題，畫面上分開標。
 
-    通膨軸用**加權後的綜合水準**（0.6×年增＋0.4×三月年化），跟格位判定
-    同一個口徑——先前這裡用原始年增率，「還差 X」跟軸卡上顯示的
-    「加權後 Y%」對不起來，讀者拿計算機驗算會失敗。
+    通膨軸跟格位判定用同一套規則（見 _infl_triggers）。
     """
     out: list[Trigger] = []
 
@@ -796,41 +934,15 @@ def _triggers(labor: dict | None, inflation: dict | None,
                                    direction=("weaker" if label.endswith("「弱」")
                                               else "stronger")))
 
-    # ---- 通膨軸：跟格位判定同口徑的加權水準 ----
-    infl = inflation or {}
-    level = blended_inflation(infl.get("core_pce_yoy"), infl.get("core_pce_3m"))
-    if level is not None:
-        b = infl.get("bands") or {}
-        lo, hi = b.get("low", 2.30), b.get("high", 2.90)
-        cur = f"綜合通膨水準 {level:.2f}%"
-        _b = (binding == "通膨")
-        if i_state == "高":
-            out.append(Trigger("通膨轉「中」", cur, f"需低於 {hi:.2f}%",
-                               f"還差 {level - hi:.2f} 個百分點", level <= hi,
-                               binding=False, adjacent=True,
-                               axis="inflation", direction="down"))
-            out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
-                               f"還差 {level - lo:.2f} 個百分點", level < lo,
-                               binding=_b, adjacent=False,
-                               axis="inflation", direction="down"))
-        elif i_state == "低":
-            out.append(Trigger("通膨轉「中」", cur, f"需高於 {lo:.2f}%",
-                               f"還差 {lo - level:.2f} 個百分點", level >= lo,
-                               binding=False, adjacent=True,
-                               axis="inflation", direction="up"))
-            out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
-                               f"還差 {hi - level:.2f} 個百分點", level > hi,
-                               binding=_b, adjacent=False,
-                               axis="inflation", direction="up"))
-        else:                                      # 中：兩邊都是相鄰格
-            out.append(Trigger("通膨轉「低」", cur, f"需低於 {lo:.2f}%",
-                               f"還差 {level - lo:.2f} 個百分點", level < lo,
-                               binding=_b, adjacent=True,
-                               axis="inflation", direction="down"))
-            out.append(Trigger("通膨轉「高」", cur, f"需高於 {hi:.2f}%",
-                               f"還差 {hi - level:.2f} 個百分點", level > hi,
-                               binding=_b, adjacent=True,
-                               axis="inflation", direction="up"))
+    # ---- 通膨軸：跟格位判定**同一套規則**（第十八批修正）----
+    # 先前這裡用綜合水準（0.6×年增＋0.4×三月年化），但格位其實是「核心 PCE
+    # 年增定格＋Supercore 三月年化連兩個月推一格」——綜合水準跌破門檻
+    # 格子並不會動，「還差 0.12 個百分點」是假的。現在每條門檻都用
+    # classify_inflation 本身模擬「數字變成這樣時格子會到哪」，保證一致。
+    out.extend(_infl_triggers(inflation or {}, i_state, binding))
+    for t in out:
+        if not t.plain:
+            t.plain = _labor_plain(t, lab)
     return out
 
 

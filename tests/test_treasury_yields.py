@@ -101,7 +101,8 @@ with tempfile.TemporaryDirectory() as tmp:
     with patch.object(runner, 'ROOT', root), patch.object(runner, 'SAVE_FIXTURES', False), \
          patch.object(fred_module, 'FredClient') as client, \
          patch.object(fred_module, 'fetch_all', return_value=fred()), \
-         patch.object(ty.requests, 'get', side_effect=lambda url,**kw: Response(payload)):
+         patch.object(ty.requests, 'get', side_effect=lambda url,**kw: Response(payload)), \
+         patch.object(ty.clock, 'today', return_value=TODAY):
         client.return_value.failed = []
         gathered, _, failed = runner.gather_fred(False, list(ty.FIELDS), 'rates')
     assert not failed and gathered['DGS2'][-1]['value'] == 4.79
