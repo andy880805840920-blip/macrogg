@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-11T16:51:16+08:00",
+  "at": "2026-10-12T00:47:52+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -7,26 +7,17 @@
         "released": "2026-10-02",
         "month": "2026-09",
         "score": 0.04512917960650821,
-        "tilt": "dovish",
+        "tilt": "balanced",
         "flags": [
           "supply_rise",
-          "revision_swamps",
-          "benchmark_revision",
-          "revision_bias_down",
           "wage_understated"
         ],
         "flag_titles": {
           "supply_rise": "失業率上升源於勞動力擴張",
-          "revision_swamps": "前兩月大幅下修，實質動能弱於初值",
-          "benchmark_revision": "年度基準修正初估 -7.9 萬人，涵蓋 2025/4–2026/3",
-          "revision_bias_down": "近 12 次月度修正平均往下修",
           "wage_understated": "非管理職薪資增速高於總體"
         },
         "flag_leans": {
           "supply_rise": "neutral",
-          "revision_swamps": "dovish",
-          "benchmark_revision": "dovish",
-          "revision_bias_down": "dovish",
           "wage_understated": "hawkish"
         },
         "metrics": {
@@ -72,6 +63,23 @@
             "delta_unit": " 個百分點",
             "threshold": 0.05,
             "up_is": "hawkish"
+          },
+          "priv_3m": {
+            "label": "私部門就業三個月均",
+            "en": "Private Payrolls, 3-mo avg",
+            "value": 5.433333333333334,
+            "unit": "萬人",
+            "threshold": 1,
+            "up_is": "hawkish"
+          },
+          "jl_share": {
+            "label": "失業者中失去工作者比重",
+            "en": "Job Losers, % of Unemployed",
+            "value": 45.4,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.3,
+            "up_is": "dovish"
           }
         },
         "method": 2,
@@ -90,6 +98,12 @@
           },
           "ahe_yoy": {
             "value": 3.1130529765155623
+          },
+          "priv_3m": {
+            "value": 4.766666666666667
+          },
+          "jl_share": {
+            "value": 46.4
           }
         }
       },
@@ -767,7 +781,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-11T16:51:16+08:00",
+      "at": "2026-10-12T00:47:52+08:00",
       "vintage": "labor:2026-09|inflation:2026-08|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",
