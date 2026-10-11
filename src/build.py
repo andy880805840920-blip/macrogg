@@ -2908,18 +2908,23 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     out["spreads"] = le.spread_rows(series)
     _since = f"{clock.today().year}-01-01"
     _sp = {k: le.spread_series(series, lid, sid, _since) for k, lid, sid, _, _ in le.SPREADS}
-    _allv = [p["value"] for v in _sp.values() for p in v] + [0.0]
-    if _allv:
-        import math as _m
-        _lo = _m.floor(min(_allv) / 25) * 25
-        _hi = _m.ceil(max(_allv) / 25) * 25 + (25 if max(_allv) % 25 > 18 else 0)
-        for r in out["spreads"]:
-            pts = _sp.get(r["key"]) or []
-            r["chart"] = (charts.compact_lines(
-                [{"label": r["key"], "color": "var(--brand-ink)", "points": pts}],
-                unit=" bp", height=110, digits=0, zero=True, months=12, yrange=(_lo, _hi),
-                step=(50 if _hi - _lo > 100 else 25), xmonths=True, show_legend=False, aria=f"{r['key']} 利差（bp）")
-                if len(pts) >= 5 else '<div class="empty">資料不足</div>')
+    # 2026-10：三張小圖各自用貼近資料的刻度（先前共用 0–150bp，10-2、30-10
+    # 只在 30–70bp 之間動，被壓成幾乎水平的線，看不出變化）
+    import math as _m
+    for r in out["spreads"]:
+        pts = _sp.get(r["key"]) or []
+        if len(pts) < 5:
+            r["chart"] = '<div class="empty">資料不足</div>'
+            continue
+        _v = [p["value"] for p in pts]
+        _span = max(_v) - min(_v)
+        _st = 5 if _span <= 25 else 10 if _span <= 50 else 25
+        _lo = _m.floor((min(_v) - _st * 0.4) / _st) * _st
+        _hi = _m.ceil((max(_v) + _st * 0.4) / _st) * _st
+        r["chart"] = charts.compact_lines(
+            [{"label": r["key"], "color": "var(--brand-ink)", "points": pts}],
+            unit="", height=120, digits=0, zero=_lo <= 0 <= _hi, months=12, yrange=(_lo, _hi),
+            step=_st, xmonths=True, show_legend=False, aria=f"{r['key']} 利差（bp）")
     # 自選期間：嵌入頁面的對齊日資料（去年 12 月起，年初至今要用到 12/31）＋ 2／10／30 年走勢
     out["cw"] = le.curve_data(series, f"{clock.today().year - 1}-12-01")
     out["cw_year"] = clock.today().year
@@ -2930,6 +2935,12 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
         unit="%", height=170, digits=2, months=12, xmonths=True, aria="2、10、30 年期殖利率")
     out["curve_drivers"] = le.curve_drivers(series)
     out["forwards"] = le.forwards(series)
+    # 30−2 週報（滾動一週）＋ 2Y／10Y／30Y 的 1 年後、5 年後遠期
+    try:
+        out["brief"] = le.curve_brief(series)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("殖利率曲線週報計算失敗：%s", e)
+        out["brief"] = None
     # 舊欄位（收合摘要用）：沿用 spreads
     out["slopes"] = [{"label": r["key"], "value": r["value"], "chg": r.get("mom")}
                      for r in out["spreads"]]

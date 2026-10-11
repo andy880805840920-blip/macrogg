@@ -209,23 +209,140 @@ def _sbp(v) -> str:
     return "—" if v is None else f"{v:+.0f}".replace("-", "−")
 
 
-def _cw_tenors(ten: list[dict], start: str, end: str) -> str:
-    date_label = lambda d: f"{int(d[5:7])}/{int(d[8:10])}"
-    out = [f'<table class="cw-compact" aria-label="所選期間利率變化">'
-           f'<thead><tr><th scope="col">天期</th><th scope="col">{date_label(start)}</th>'
-           f'<th scope="col">{date_label(end)}</th><th scope="col">變動</th></tr></thead><tbody>']
-    for t in ten:
-        fmt = lambda v: "—" if v is None else le._num(v, 2) + "%"
-        delta = "—" if t["d"] is None else le._sgn(t["d"])
-        cls = "up" if (t["d"] or 0) > 0 else "dn" if (t["d"] or 0) < 0 else "flat"
-        out.append(f'<tr><th scope="row">{esc(t["zh"])}期</th><td>{fmt(t["a"])}</td>'
-                   f'<td>{fmt(t["b"])}</td><td class="{cls}">{delta}</td></tr>')
-    return "".join(out) + "</tbody></table>"
+_TEN = (("y2", "2", "2Y"), ("y10", "10", "10Y"), ("y30", "30", "30Y"))
+_SPK = (("10-2", "10−2"), ("30-10", "30−10"), ("30-2", "30−2"))
 
 
-def _cw_explain(r: dict, weekly: str = "") -> str:
+def _cls(v) -> str:
+    return "flat" if v is None or abs(v) < 0.5 else "up" if v > 0 else "dn"
+
+
+def _cw_brief(b: dict | None, events=None) -> str:
+    """最上方：一段白話（少數關鍵數字）＋「數字明細」收合＋複製按鈕。固定滾動一週。"""
+    if not b:
+        return ""
+    prose = le.brief_prose(b, events)
+    detail = "".join(f"<li>{esc(x)}</li>" for x in b["text"])
+    span = f"{le._md2(b['from'])} → {le._md2(b['to'])}"
+    return (f'<section class="cwb" aria-label="30−2 週報"><div class="cwb-h"><b>30−2 週報</b>'
+            f'<span>{span}・滾動一週（最新收盤比 5 個交易日前）</span>'
+            f'<button type="button" class="cwb-copy" data-copy="{esc(prose + "（30−2 週報 " + span + "，MACRO GG）")}">複製</button></div>'
+            f'<p class="cwb-prose">{esc(prose)}</p>'
+            f'<details class="cwb-more"><summary>數字明細（各天期、分段、遠期）</summary><ul>{detail}</ul></details>'
+            f'</section>')
+
+
+_ROWS = (("ten", "y2", "2", "2Y"), ("ten", "y10", "10", "10Y"), ("ten", "y30", "30", "30Y"),
+         ("sp", "10-2", "10-2", "10−2"), ("sp", "30-10", "30-10", "30−10"), ("sp", "30-2", "30-2", "30−2"))
+
+
+def _bar(v, scale) -> str:
+    """變化欄的細長條：0 在中間，往右＝上升／擴大、往左＝下跌／收窄。"""
+    if v is None or not scale:
+        return '<i class="cwm-bar"></i>'
+    w = min(50.0, abs(v) / scale * 50)
+    side = "r" if v > 0 else "l"
+    return f'<i class="cwm-bar"><b class="{side} {_cls(v)}" style="width:{w:.1f}%"></b></i>'
+
+
+def _range(v, lo, hi) -> str:
+    """年內位置條：左＝年內最低、右＝年內最高，圓點＝現在。"""
+    if v is None or hi is None or lo is None or hi - lo < 1e-9:
+        return ""
+    p = max(0.0, min(100.0, (v - lo) / (hi - lo) * 100))
+    return f'<i class="cwm-rng" title="年內區間"><b style="left:{p:.1f}%"></b></i>'
+
+
+def _spark(vals) -> str:
+    vals = [v for v in vals or [] if v is not None]
+    if len(vals) < 5:
+        return ""
+    lo, hi = min(vals), max(vals)
+    span = (hi - lo) or 1
+    pts = " ".join(f"{i / (len(vals) - 1) * 56:.1f},{14 - (v - lo) / span * 12:.1f}" for i, v in enumerate(vals))
+    return (f'<svg class="cwm-spark" viewBox="0 0 56 16" aria-hidden="true">'
+            f'<polyline points="{pts}" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>')
+
+
+def _cw_matrix(b: dict | None, r0: dict, win_label: str) -> str:
+    """
+    監控表（2026-10 v4）：一列一個標的、從左讀到右。
+      現在（含年內位置條）｜週變化｜所選期間（跟期間按鈕連動）｜1 年後隱含｜5 年後隱含
+    只有兩個變化欄上色並附細長條；遠期是黑字＋灰色差距＋近 3 個月小走勢線。
+    """
+    T = {t["k"]: t for t in r0["tenors"]}
+    S = {x["key"]: x for x in r0["spreads"]}
+    b = b or {}
+    lv, sp, fw, yr = b.get("lv") or {}, b.get("sp") or {}, b.get("fwd") or {}, b.get("ytd") or {}
+    hist = b.get("fwd_hist") or {}
+
+    def now_of(kind, key):
+        if kind == "ten":
+            return lv.get(key, {}).get("b")
+        return sp.get(key, {}).get("b")
+
+    def week_of(kind, key):
+        return (lv if kind == "ten" else sp).get(key, {}).get("d")
+
+    def sel_of(kind, mk):
+        return T[mk]["d"] if kind == "ten" else (S[mk]["d"] if mk in S else None)
+    scale = {}
+    for kind in ("ten", "sp"):
+        ks = [r for r in _ROWS if r[0] == kind]
+        scale[("w", kind)] = max([abs(week_of(k, key) or 0) for k, _, key, _ in ks] + [2])
+        scale[("s", kind)] = max([abs(sel_of(k, mk) or 0) for k, mk, _, _ in ks] + [2])
+    head = (f'<thead><tr><th scope="col">標的</th>'
+            f'<th scope="col">現在<small>{le._md2(b["to"]) if b else ""}・年內位置</small></th>'
+            f'<th scope="col" class="cwm-c">週變化<small>{(le._md2(b["from"]) + " → " + le._md2(b["to"])) if b else ""}</small></th>'
+            f'<th scope="col" class="cwm-c cwm-selh">{esc(win_label)}<small class="cwm-when">{le._md2(r0["start"])} → {le._md2(r0["end"])}</small></th>'
+            f'<th scope="col" class="cwm-f">1 年後隱含<small>遠期・比現在</small></th>'
+            f'<th scope="col" class="cwm-f">5 年後隱含<small>遠期・比現在</small></th></tr></thead>')
+    body = []
+    for kind, mk, key, zh in _ROWS:
+        if kind == "ten" and key == "2":
+            body.append('<tr class="cwm-g"><th colspan="6">殖利率（%）</th></tr>')
+        if kind == "sp" and key == "10-2":
+            body.append('<tr class="cwm-g"><th colspan="6">利差（bp）</th></tr>')
+        nv = now_of(kind, key)
+        r = yr.get(key) or {}
+        now_txt = "—" if nv is None else (le._num(nv, 2) + "%" if kind == "ten" else le._num(nv))
+        cells = [f'<th scope="row">{zh}</th>',
+                 f'<td class="cwm-now"><span>{now_txt}</span>{_range(nv, r.get("lo"), r.get("hi"))}</td>']
+        w = week_of(kind, key)
+        cells.append(f'<td class="cwm-c"><span class="{_cls(w)}">{"—" if w is None else le._sgn(w, "")}</span>'
+                     f'{_bar(w, scale[("w", kind)])}</td>')
+        v = sel_of(kind, mk)
+        tag = ""
+        if kind == "sp" and mk in S and S[mk]["code"] not in ("na",):
+            tag = f'<small class="le3-rg {_RG_CLS.get(S[mk]["code"], "fl")}">{esc(S[mk]["zh"])}</small>'
+        cells.append(f'<td class="cwm-c" data-m="{mk}"><span class="{_cls(v)}">{"—" if v is None else le._sgn(v, "")}</span>'
+                     f'{_bar(v, scale[("s", kind)])}{tag}</td>')
+        for h in ("1", "5"):
+            f = fw.get(h)
+            if not f or nv is None:
+                cells.append('<td class="cwm-f">—</td>')
+                continue
+            fv = f["lv"][key] if kind == "ten" else f["sp"][key]
+            gap = (fv - nv) * 100 if kind == "ten" else fv - nv
+            txt = le._num(fv, 2) + "%" if kind == "ten" else le._num(fv)
+            cells.append(f'<td class="cwm-f"><span>{txt}</span><small>{le._sgn(gap, "")}</small>'
+                         f'{_spark((hist.get(h) or {}).get(key))}</td>')
+        body.append("<tr>" + "".join(cells) + "</tr>")
+    note = ("變化單位 bp；殖利率為美國財政部官方日資料。年內位置條：左端＝今年最低、右端＝今年最高、圓點＝現在。"
+            "遠期由目前曲線推算，含期限溢酬，是市場已定價的路徑、不是預測；小走勢線是近 3 個月的遠期值。"
+            "10Y、30Y 遠期以 9 年、29 年（1 年後）與 25 年（5 年後）近似"
+            + ("；3 年期資料暫缺，以 2 年與 5 年內插" if b.get("interp3") else "") + "。")
+    tog = ('<div class="cw-ctl cwm-tog" role="group" aria-label="表格欄位">'
+           '<button type="button" class="cw-btn on" data-v="ch" aria-pressed="true">變化</button>'
+           '<button type="button" class="cw-btn" data-v="fw" aria-pressed="false">遠期</button></div>')
+    return (f'<div class="cwm" data-v="ch">{tog}<div class="cwm-wrap"><table class="cwm-t" aria-label="2Y、10Y、30Y 與利差監控表">'
+            f'{head}<tbody>{"".join(body)}</tbody></table></div>'
+            f'<details class="cw-note"><summary>表格說明</summary><p class="cwm-note">{esc(note)}</p></details></div>')
+
+
+def _cw_folds(r: dict) -> str:
     view = le.window_view(r)
-    out = [f'<p class="cw-headline">{esc(view["headline"])}</p><div class="cw-panels">']
+    out = ['<div class="cw-panels">']
     for i, panel in enumerate(view["panels"], 1):
         out.append(f'<details class="cw-panel cw-fold" data-panel="{i}"><summary>'
                    f'<span class="cw-fold-number">{i:02d}</span><span class="cw-fold-title">'
@@ -234,34 +351,26 @@ def _cw_explain(r: dict, weekly: str = "") -> str:
         for m in panel["metrics"]:
             out.append(f'<div><dt>{esc(m["label"])}</dt><dd><b>{esc(m["value"])}</b>'
                        f'<small>{esc(m["note"])}</small></dd></div>')
-        out.append(f'</dl><small class="cw-panel-note">{esc(panel["note"])}</small></div>'
-                   + (weekly if i == 1 else "") + '</details>')
+        out.append(f'</dl><small class="cw-panel-note">{esc(panel["note"])}</small></div></details>')
     return "".join(out) + "</div>"
 
 
-def _cw_spreads(sp: list[dict]) -> str:
-    """利差表三列。markup 與 _CW_JS 的 spreads() 相同。"""
-    return "".join(
-        f'<div class="cw-sr"><span class="cw-sk">{x["key"]}</span>'
-        f'<span class="cw-sab">{le._num(x["a"])} → {le._num(x["b"])}</span>'
-        f'<span class="cw-sd">{le._sgn(x["d"], "")}</span>'
-        f'<span class="le3-rg {_RG_CLS.get(x["code"], "fl")}">{x["zh"]}'
-        + (f'<small>{x["lead"]}</small>' if x["lead"] else "") + '</span></div>'
-        for x in sp)
-
-
-# 自選期間的瀏覽器端：跟 analysis/longend.window_analysis 同一套規則
+# 自選期間的瀏覽器端：跟 analysis/longend.window_analysis／window_view 同一套規則
 # （tests/test_curve_window.py 逐窗比對兩邊輸出）。
 _CW_CORE_JS = r"""
 function cwCore(CD){var Y=CD.year;
 var RG={bear_steep:'bear',bear_flat:'bear',bull_steep:'bull',bull_flat:'bull',twist_steep:'tw',twist_flat:'tw',flat:'fl',na:'fl'};
 function idx(dt){var i=0;for(var j=0;j<CD.d.length;j++){if(CD.d[j]<=dt)i=j;else break;}return i;}
+function ok(k,j){var a=CD[k]||[];return j>=0&&j<a.length&&a[j]!==null;}
 function val(k,i){var a=CD[k]||[];for(var j=i;j>Math.max(-1,i-(k==='tp'?6:1));j--){if(j<a.length&&a[j]!==null)return a[j];}return null;}
+function drvIdx(i){for(var j=i;j>Math.max(-1,i-6);j--){if(ok('y10',j)&&ok('be',j)&&ok('real',j))return j;}return null;}
+function lagIdx(k,i){for(var j=i;j>Math.max(-1,i-6);j--){if(ok(k,j))return j;}return null;}
 function hu(v,nd){var f=Math.pow(10,nd);return Math.floor(v*f+0.5+1e-10)/f;}
 function num(v,nd){nd=nd||0;var r=hu(v,nd);if(r===0)r=0;return r.toFixed(nd).replace('-','−');}
 function sgn(v,u,nd){if(u===undefined)u='bp';nd=nd||0;var r=hu(v,nd);if(r===0)return (0).toFixed(nd)+u;return (r>0?'+':'')+num(v,nd)+u;}
 function md2(s){return parseInt(s.slice(5,7),10)+'/'+parseInt(s.slice(8,10),10);}
-function regime(dl,ds){if(dl===null||ds===null)return{code:'na',zh:'—',lead:''};var x=dl-ds;
+function r6(v){return Math.floor(v*1e6+0.5)/1e6;}
+function regime(dl,ds){if(dl===null||ds===null)return{code:'na',zh:'—',lead:''};var x=r6(dl-ds);
  if(Math.abs(x)<2)return{code:'flat',zh:'大致持平',lead:''};
  if(x>0){if(dl>0&&ds<0)return{code:'twist_steep',zh:'扭轉變陡',lead:'兩端反向'};
   if(Math.abs(dl)>=Math.abs(ds))return dl>0?{code:'bear_steep',zh:'熊陡',lead:'長端帶動'}:{code:'bull_steep',zh:'牛陡',lead:'短端帶動'};
@@ -273,70 +382,115 @@ function analysis(start,end){var ia=idx(start),ib=idx(end);if(ia>=ib)ia=Math.max
  var da=CD.d[ia],db=CD.d[ib],ten=[],T={};
  [['y2','2 年'],['y10','10 年'],['y30','30 年']].forEach(function(p){var a=val(p[0],ia),b=val(p[0],ib);
   var t={k:p[0],zh:p[1],a:a,b:b,d:(a===null||b===null)?null:(b-a)*100};ten.push(t);T[p[0]]=t;});
- var sp=[],S={};
+ var sp=[];
  [['10-2','y10','y2'],['30-10','y30','y10'],['30-2','y30','y2']].forEach(function(p){var L=T[p[1]],Sh=T[p[2]];
   if(L.a===null||L.b===null||Sh.a===null||Sh.b===null)return;var a=(L.a-Sh.a)*100,b=(L.b-Sh.b)*100,g=regime(L.d,Sh.d);
-  var x={key:p[0],a:a,b:b,d:b-a,zh:g.zh,lead:g.lead,code:g.code};sp.push(x);S[p[0]]=x;});
- function dch(k){var a=val(k,ia),b=val(k,ib);return(a===null||b===null)?null:(b-a)*100;}
- var be=dch('be'),real=dch('real'),tp=dch('tp'),y3m=dch('y3m'),oa=val('oil',ia),ob=val('oil',ib);
- var oil=(oa&&ob)?(ob/oa-1)*100:null,txt=[];
- function tpDate(i){var a=CD.tp||[];for(var j=i;j>Math.max(-1,i-6);j--){if(j<a.length&&a[j]!==null)return CD.d[j];}return null;}
- var result={start:da,end:db,tenors:ten,spreads:sp,drivers:{be:be,real:real,tp:tp,oil:oil,y3m:y3m,tp_dates:[tpDate(ia),tpDate(ib)]}};
- var brief=view(result);result.text=[brief.headline,brief.panels[1].verdict,brief.panels[2].verdict];return result;}
+  sp.push({key:p[0],a:a,b:b,d:b-a,zh:g.zh,lead:g.lead,code:g.code});});
+ var ja=drvIdx(ia),jb=drvIdx(ib),be=null,real=null,d10=null,dd=[null,null];
+ if(ja!==null&&jb!==null&&ja<jb){be=(CD.be[jb]-CD.be[ja])*100;real=(CD.real[jb]-CD.real[ja])*100;d10=(CD.y10[jb]-CD.y10[ja])*100;dd=[CD.d[ja],CD.d[jb]];}
+ function lagged(k){var a=lagIdx(k,ia),b=lagIdx(k,ib);if(a===null||b===null||a>=b)return null;return[CD[k][a],CD[k][b],[CD.d[a],CD.d[b]]];}
+ var t=lagged('tp'),o=lagged('oil'),a3=val('y3m',ia),b3=val('y3m',ib);
+ var result={start:da,end:db,ia:ia,ib:ib,tenors:ten,spreads:sp,drivers:{be:be,real:real,d10:d10,dates:dd,
+  tp:t?(t[1]-t[0])*100:null,tp_dates:t?t[2]:[null,null],oil:(o&&o[0]&&o[1])?(o[1]/o[0]-1)*100:null,
+  y3m:(a3===null||b3===null)?null:(b3-a3)*100}};
+ var v=view(result);result.text=[v.headline,v.panels[0].verdict,v.panels[1].verdict];return result;}
+function headline(S){var x=S['30-2'],a=S['10-2'],b=S['30-10'];if(!x||!a||!b)return'資料不足，暫不判定曲線方向。';
+ var seg='10−2 '+sgn(a.d,'')+'、30−10 '+sgn(b.d,'');
+ if(Math.abs(r6(x.d))<2){if(Math.abs(r6(a.d))>=2&&Math.abs(r6(b.d))>=2&&a.d*b.d<0)return'30−2 大致持平（'+sgn(x.d)+'）：'+seg+'，兩段互相抵銷。';
+  return'曲線大致持平：30−2 '+sgn(x.d)+'；'+seg+'。';}
+ return'曲線'+x.zh+(x.lead?'（'+x.lead+'）':'')+'：30−2 '+(x.d>0?'擴大':'收窄')+' '+num(Math.abs(x.d))+'bp；'+seg+'。';}
 function view(r){
- var T={},S={};r.tenors.forEach(function(t){T[t.k]=t;});r.spreads.forEach(function(s){S[s.key]=s;});var D=r.drivers,x=S['10-2'];
- var headline=!x?'資料不足，暫不判定曲線方向。':Math.abs(x.d)<2?'曲線大致持平：10 年與 2 年的利差變動很小。':x.d>0?'曲線變陡：10 年與 2 年的利差擴大。':'曲線變平：10 年與 2 年的利差縮小。';
- var metrics=r.spreads.map(function(x){return{label:x.key.replace('-',' 年 − ')+' 年',value:num(x.a)+' → '+num(x.b)+' bp',note:'變動 '+sgn(x.d)};});
- var panels=[{title:'利差怎麼變',verdict:'長短利差擴大代表曲線變陡，縮小代表變平。',metrics:metrics,note:'比較的是所選期間開始與結束日期的利差。'}];
- var be=D.be,real=D.real,dy=T.y10.d,has=be!==null&&real!==null&&dy!==null,aligned=has&&Math.abs(dy-be-real)<=2;
- var verdict=aligned&&Math.max(Math.abs(dy),Math.abs(be),Math.abs(real))<0.5?'10 年期與拆解指標大致持平。':aligned&&Math.abs(dy)<0.5?'通膨補償與實質利率的變動大致抵銷，10 年期接近持平。':aligned?'10 年期主要由'+(Math.abs(be)>Math.abs(real)?'通膨補償':'實質利率')+'變動帶動。':!has?'所選日期的拆解資料不足，暫不判定主要原因。':'參考指標與 10 年期變動尚未吻合，暫不判定主要原因。';
- function metric(label,v,u){return{label:label,value:v===null?'—':sgn(v,u===undefined?'bp':u),note:'所選期間變動'};}
- var lm=[metric('10 年期',dy),metric('通膨補償',be),metric('實質利率',real)],td=D.tp_dates||[null,null];
- if(D.tp!==null)lm.push({label:'期限溢酬（參考）',value:sgn(D.tp),note:'資料日 '+td[0]+' → '+td[1]});
+ var T={},S={};r.tenors.forEach(function(t){T[t.k]=t;});r.spreads.forEach(function(s){S[s.key]=s;});var D=r.drivers,panels=[];
+ var be=D.be,real=D.real,dy=D.d10,has=be!==null&&real!==null&&dy!==null,aligned=has&&Math.abs(dy-be-real)<=2;
+ var verdict=aligned&&Math.max(Math.abs(dy),Math.abs(be),Math.abs(real))<0.5?'10 年期與拆解指標大致持平。':aligned&&Math.abs(dy)<0.5?'通膨補償與實質利率的變動大致抵銷，10 年期接近持平。':aligned?'10 年期主要由'+(Math.abs(be)>Math.abs(real)?'通膨補償':'實質利率')+'變動帶動。':!has?'所選期間的拆解資料不足，暫不判定主要原因。':'參考指標與 10 年期變動尚未吻合，暫不判定主要原因。';
+ function metric(label,v,u,note){return{label:label,value:v===null?'—':sgn(v,u===undefined?'bp':u),note:note||'所選期間變動'};}
+ var dd=D.dates||[null,null],dn=(dd[0]&&dd[1])?'拆解資料 '+md2(dd[0])+' → '+md2(dd[1]):'拆解資料不足',td=D.tp_dates||[null,null];
+ var lm=[metric('10 年期',dy,'bp',dn),metric('通膨補償',be,'bp',dn),metric('實質利率',real,'bp',dn),
+  metric('期限溢酬（參考）',D.tp,'bp',D.tp!==null?'資料日 '+md2(td[0])+' → '+md2(td[1]):'所選期間尚無新資料（約晚一週公布）')];
  if(D.oil!==null)lm.push(metric('油價（參考）',D.oil,'%'));
- panels.push({title:'10 年期為什麼變',verdict:verdict,metrics:lm,note:'期限溢酬僅作參考，不再加到通膨補償與實質利率之上；損益兩平也含風險與流動性因素。'});
+ panels.push({title:'10 年期為什麼變',verdict:verdict,metrics:lm,note:'實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到通膨補償與實質利率之上。'});
  var dy2=T.y2.d,y3m=D.y3m,path=dy2===null||y3m===null?null:dy2-y3m;
  verdict=path===null?'資料不足，暫不判定短端定價方向。':path>5?'2 年期相對短端走高，未來利率偏高的定價增強。':path< -5?'2 年期相對短端走低，未來利率偏低的定價增強。':'2 年期與短端的相對變化不大，定價方向大致未變。';
  panels.push({title:'短端定價怎麼變',verdict:verdict,metrics:[metric('2 年期',dy2),metric('3 個月期',y3m),metric('2 年 − 3 個月利差',path)],note:'這是公債短端的相對變化；年底政策利率方向另看下方期貨定價。'});
- return{headline:headline,panels:panels};}
+ return{headline:headline(S),panels:panels};}
 function startFor(k,end){if(k==='ytd')return(Y-1)+'-12-31';var n={'1w':7,'1m':30,'3m':91}[k];
  var t=new Date(end+'T00:00:00Z');t.setUTCDate(t.getUTCDate()-n);return t.toISOString().slice(0,10);}
-return{analysis:analysis,view:view,startFor:startFor,num:num,sgn:sgn,RG:RG};}
+return{analysis:analysis,view:view,startFor:startFor,num:num,sgn:sgn,RG:RG,idx:idx,md2:md2};}
 """
 
 _CW_JS = _CW_CORE_JS + r"""
 (function(){
 var root=document.querySelector('.cw');if(!root)return;
 var CD=JSON.parse(document.getElementById('cw-data').textContent);
-var C=cwCore(CD),analysis=C.analysis,startFor=C.startFor,num=C.num,sgn=C.sgn,RG=C.RG;
+var C=cwCore(CD),analysis=C.analysis,startFor=C.startFor,num=C.num,sgn=C.sgn,RG=C.RG,cur=null,mode='ten';
 function safe(v){return String(v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function tenors(ten,a,b){function date(s){return parseInt(s.slice(5,7),10)+'/'+parseInt(s.slice(8,10),10);}
- return '<table class="cw-compact" aria-label="所選期間利率變化"><thead><tr><th scope="col">天期</th><th scope="col">'+date(a)+'</th><th scope="col">'+date(b)+'</th><th scope="col">變動</th></tr></thead><tbody>'+ten.map(function(t){var c=t.d>0?'up':t.d<0?'dn':'flat';function pct(v){return v===null?'—':num(v,2)+'%';}
- return '<tr><th scope="row">'+safe(t.zh)+'期</th><td>'+pct(t.a)+'</td><td>'+pct(t.b)+'</td><td class="'+c+'">'+(t.d===null?'—':sgn(t.d))+'</td></tr>';}).join('')+'</tbody></table>';}
-
-function explain(r){var v=C.view(r);root.querySelector('.cw-headline').textContent=v.headline;
+function cls(v){return v===null||Math.abs(v)<0.5?'flat':v>0?'up':'dn';}
+function explain(r){var v=C.view(r);
  v.panels.forEach(function(p,i){var panel=root.querySelector('[data-panel="'+(i+1)+'"]');if(!panel)return;
  panel.querySelector('.cw-fold-reading').textContent=p.verdict;
  panel.querySelector('.cw-panel-content').innerHTML='<dl class="cw-metrics">'+p.metrics.map(function(m){return '<div><dt>'+safe(m.label)+'</dt><dd><b>'+safe(m.value)+'</b><small>'+safe(m.note)+'</small></dd></div>';}).join('')+'</dl><small class="cw-panel-note">'+safe(p.note)+'</small>';});}
-
-function spreads(sp){return sp.map(function(x){return '<div class="cw-sr"><span class="cw-sk">'+x.key+'</span><span class="cw-sab">'+num(x.a)+' → '+num(x.b)+'</span>'
- +'<span class="cw-sd">'+sgn(x.d,'')+'</span><span class="le3-rg '+(RG[x.code]||'fl')+'">'+x.zh+(x.lead?'<small>'+x.lead+'</small>':'')+'</span></div>';}).join('');}
+function bar(v,sc){if(v===null||!sc)return'<i class="cwm-bar"></i>';var w=Math.min(50,Math.abs(v)/sc*50);return'<i class="cwm-bar"><b class="'+(v>0?'r':'l')+' '+cls(v)+'" style="width:'+w.toFixed(1)+'%"></b></i>';}
+function matrix(r,label){root.querySelectorAll('.cwm-when').forEach(function(e){e.textContent=C.md2(r.start)+' → '+C.md2(r.end);});
+ var h=root.querySelector('.cwm-selh');if(h&&label)h.firstChild.nodeValue=label;
+ var sp={};r.spreads.forEach(function(x){sp[x.key]=x;});
+ var st=Math.max.apply(null,[2].concat(r.tenors.map(function(t){return Math.abs(t.d||0);}))),ss=Math.max.apply(null,[2].concat(r.spreads.map(function(x){return Math.abs(x.d||0);})));
+ r.tenors.forEach(function(t){var e=root.querySelector('td[data-m="'+t.k+'"]');if(e)e.innerHTML='<span class="'+cls(t.d)+'">'+(t.d===null?'—':safe(sgn(t.d,'')))+'</span>'+bar(t.d,st);});
+ ['10-2','30-10','30-2'].forEach(function(k){var e=root.querySelector('td[data-m="'+k+'"]');if(!e)return;var x=sp[k];
+  if(!x){e.innerHTML='<span class="flat">—</span>'+bar(null,ss);return;}
+  e.innerHTML='<span class="'+cls(x.d)+'">'+safe(sgn(x.d,''))+'</span>'+bar(x.d,ss)+(x.code!=='na'?'<small class="le3-rg '+(RG[x.code]||'fl')+'">'+safe(x.zh)+'</small>':'');});}
+var DEF={ten:[['2Y',function(j){return CD.y2[j];},'var(--y2)',1],['10Y',function(j){return CD.y10[j];},'var(--y10)',1],['30Y',function(j){return CD.y30[j];},'var(--y30)',1]],
+ sp:[['10−2',function(j){return CD.y10[j]===null||CD.y2[j]===null?null:CD.y10[j]-CD.y2[j];},'var(--line-1)',1],
+     ['30−10',function(j){return CD.y30[j]===null||CD.y10[j]===null?null:CD.y30[j]-CD.y10[j];},'var(--line-2)',1],
+     ['30−2',function(j){return CD.y30[j]===null||CD.y2[j]===null?null:CD.y30[j]-CD.y2[j];},'var(--brand-ink)',2]]};
+function nice(span){var c=[1,2,5,10,20,25,50,100];for(var i=0;i<c.length;i++){if(span/c[i]<=5)return c[i];}return 200;}
+var EV=CD.ev||[];
+function cum(r){var box=root.querySelector('.cwc-plot');if(!box)return;var ia=r.ia,ib=r.ib,defs=DEF[mode],S=[];
+ defs.forEach(function(d){var b0=d[1](ia),pts=[];for(var j=ia;j<=ib;j++){var v=d[1](j);pts.push(v===null||b0===null?null:(v-b0)*100);}S.push({n:d[0],c:d[2],w:d[3],p:pts});});
+ var all=[0];S.forEach(function(s){s.p.forEach(function(v){if(v!==null)all.push(v);});});
+ var lo=Math.min.apply(null,all),hi=Math.max.apply(null,all),st=nice(Math.max(hi-lo,4));lo=Math.floor(lo/st)*st;hi=Math.ceil(hi/st)*st;if(hi===lo)hi=lo+st;
+ var W=Math.max(320,Math.round(box.clientWidth||640)),H=W<560?190:220,L=W<560?34:42,R=W<560?62:76,T=10,B=24,n=Math.max(1,ib-ia);function X(i){return L+(W-L-R)*i/n;}function Yv(v){return T+(H-T-B)*(hi-v)/(hi-lo);}
+ var g='';for(var t=lo;t<=hi+1e-9;t+=st){g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Yv(t)+'" y2="'+Yv(t)+'" class="'+(t===0?'cwc-zero':'cwc-grid')+'"/><text x="'+(L-6)+'" y="'+(Yv(t)+4)+'" class="cwc-ax" text-anchor="end">'+(t>0?'+':'')+String(t).replace('-','−')+'</text>';}
+ [0,Math.round(n/2),n].forEach(function(i,k){g+='<text x="'+X(i)+'" y="'+(H-6)+'" class="cwc-ax" text-anchor="'+(k===0?'start':k===2?'end':'middle')+'">'+C.md2(CD.d[ia+i])+'</text>';});
+ var evs=[];EV.forEach(function(e){for(var j=ia;j<=ib;j++){if(CD.d[j]===e[0]){evs.push([j-ia,e[1]]);break;}}});
+ evs.forEach(function(e){g+='<line class="cwc-ev" x1="'+X(e[0])+'" x2="'+X(e[0])+'" y1="'+T+'" y2="'+(H-B)+'"><title>'+safe(C.md2(CD.d[ia+e[0]])+' '+e[1])+'</title></line>';});
+ var lab=[];S.forEach(function(s){var d='',pen=false;s.p.forEach(function(v,i){if(v===null){pen=false;return;}d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Yv(v).toFixed(1);pen=true;});
+  g+='<path d="'+d+'" fill="none" stroke="'+s.c+'" stroke-width="'+s.w+'" stroke-linejoin="round" stroke-linecap="round"/>';
+  var lv=null;for(var i=s.p.length-1;i>=0;i--){if(s.p[i]!==null){lv=s.p[i];break;}}if(lv!==null)lab.push({y:Yv(lv),t:s.n+' '+sgn(lv,''),c:s.c});});
+ lab.sort(function(a,b){return a.y-b.y;});for(var i=1;i<lab.length;i++){if(lab[i].y-lab[i-1].y<13)lab[i].y=lab[i-1].y+13;}
+ lab.forEach(function(l){g+='<text x="'+(W-R+6)+'" y="'+(l.y+4)+'" class="cwc-lab" fill="'+l.c+'">'+safe(l.t)+'</text>';});
+ g+='<line class="cwc-cross" x1="0" x2="0" y1="'+T+'" y2="'+(H-B)+'" visibility="hidden"/><rect class="cwc-hit" x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent"/>';
+ box.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="所選期間起的累積變動（bp）">'+g+'</svg>';
+ var svg=box.querySelector('svg'),cross=svg.querySelector('.cwc-cross'),out=root.querySelector('.cwc-read');
+ function at(i){i=Math.max(0,Math.min(n,i));cross.setAttribute('x1',X(i));cross.setAttribute('x2',X(i));cross.setAttribute('visibility','visible');
+  var en=evs.filter(function(e){return e[0]===i;}).map(function(e){return e[1];});
+  out.innerHTML='<b>'+C.md2(CD.d[ia+i])+'</b>'+(en.length?'<em class="cwc-evn">'+safe(en.join('、'))+'</em>':'')+'　'+S.map(function(s){var v=s.p[i];return '<span style="color:'+s.c+'">'+safe(s.n)+' '+(v===null?'—':safe(sgn(v,'')))+'</span>';}).join('　')+'　<small>bp，相對 '+C.md2(CD.d[ia])+'</small>';}
+ function pos(e){var bb=svg.getBoundingClientRect();return Math.round(((e.clientX-bb.left)/bb.width*W-L)/(W-L-R)*n);}
+ svg.addEventListener('pointermove',function(e){at(pos(e));});svg.addEventListener('pointerdown',function(e){at(pos(e));});
+ at(n);}
 function mk(s){return parseInt(s.slice(0,4),10)*12+parseInt(s.slice(5,7),10)-1+(parseInt(s.slice(8,10),10)-1)/31;}
 function bands(a,b){root.querySelectorAll('.cl-plot[data-x0]').forEach(function(p){var x0=+p.dataset.x0,x1=+p.dataset.x1,r=(x1-x0)||1;
  var l=Math.max(0,(mk(a)-x0)/r*100),R=Math.min(100,(mk(b)-x0)/r*100);var e=p.querySelector('.cl-band');
  if(!e){e=document.createElement('span');e.className='cl-band';p.insertBefore(e,p.firstChild);}e.style.left=l+'%';e.style.width=Math.max(0.6,R-l)+'%';});}
-function show(r){explain(r);
- root.querySelector('.cw-db').innerHTML=tenors(r.tenors,r.start,r.end);root.querySelector('.cw-st').innerHTML=spreads(r.spreads);
- root.querySelector('.cw-when').textContent='實際使用 '+r.start.replace(/-/g,'/')+' → '+r.end.replace(/-/g,'/')+' 的官方日殖利率（遇假日取前一個交易日）';bands(r.start,r.end);}
+var LABEL={'1w':'1 週','1m':'1 個月','3m':'3 個月','ytd':'年初至今','custom':'自訂期間'},curk='1m';
+function show(r){cur=r;explain(r);matrix(r,LABEL[curk]);cum(r);bands(r.start,r.end);}
+root.querySelectorAll('.cwm-tog .cw-btn').forEach(function(b){b.addEventListener('click',function(){var m=root.querySelector('.cwm');m.dataset.v=b.dataset.v;root.querySelectorAll('.cwm-tog .cw-btn').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});});});
+var _rw=0;window.addEventListener('resize',function(){var w=(root.querySelector('.cwc-plot')||{}).clientWidth||0;if(cur&&Math.abs(w-_rw)>30){_rw=w;cum(cur);}});
+root.querySelectorAll('.cwc-mode').forEach(function(b){b.addEventListener('click',function(){mode=b.dataset.m;root.querySelectorAll('.cwc-mode').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',String(x===b));});if(cur)cum(cur);});});
 var last=CD.d[CD.d.length-1],fa=root.querySelector('.cw-from'),fb=root.querySelector('.cw-to'),cu=root.querySelector('.cw-cust');
-function pick(k){root.querySelectorAll('.cw-btn').forEach(function(b){b.classList.toggle('on',b.dataset.w===k);});
+function pick(k){curk=k;root.querySelectorAll('.cw-btn[data-w]').forEach(function(b){b.classList.toggle('on',b.dataset.w===k);});
  if(k==='custom'){cu.hidden=false;if(!fa.value){fa.value=startFor('1m',last);fb.value=last;}show(analysis(fa.value,fb.value));return;}
  cu.hidden=true;show(analysis(startFor(k,last),last));}
-root.querySelectorAll('.cw-btn').forEach(function(b){b.addEventListener('click',function(){pick(b.dataset.w);});});
+root.querySelectorAll('.cw-btn[data-w]').forEach(function(b){b.addEventListener('click',function(){pick(b.dataset.w);});});
 [fa,fb].forEach(function(e){e.addEventListener('change',function(){if(fa.value&&fb.value)show(analysis(fa.value<fb.value?fa.value:fb.value,fa.value<fb.value?fb.value:fa.value));});});
-pick('1w');
+pick(root.dataset.w||'1m');
 })();
+(function(){var b=document.querySelector('.cwb-copy');if(!b)return;b.addEventListener('click',function(){var t=b.dataset.copy||'';
+ function done(){var o=b.textContent;b.textContent='已複製';setTimeout(function(){b.textContent=o;},1500);}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){fb();});}else fb();
+ function fb(){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(a);}});})();
 """
+
+CW_DEFAULT = "1m"      # 預設期間：最上方週報已是「最近一週」，下面預設看 1 個月才不重複
 
 
 def curve(d: dict) -> str:
@@ -347,20 +501,23 @@ def curve(d: dict) -> str:
     import json as _json
     year = L.get("cw_year") or int(cd["d"][-1][:4])
     last = cd["d"][-1]
-    r0 = le.window_analysis(cd, le.cw_start(cd, "1w", last, year), last)
+    r0 = le.window_analysis(cd, le.cw_start(cd, CW_DEFAULT, last, year), last)
     from .curve_weekly import weekly_chart
     weekly = weekly_chart(cd)
+    brief = L.get("brief")
     rows = L.get("spreads") or []
     fwd = L.get("forwards") or []
     rf = L.get("refunding") or {}
     fn = L.get("fomc_next") or ""
     st = le.curve_story(rows, L.get("curve_drivers") or {}, fwd, fomc_next=_md(fn) if fn else "",
                         refunding_next=_md(str(rf.get("next") or "")) if rf.get("next") else "")
-    btns = "".join(f'<button type="button" class="cw-btn{" on" if k == "1w" else ""}" data-w="{k}">{zh}</button>'
+    btns = "".join(f'<button type="button" class="cw-btn{" on" if k == CW_DEFAULT else ""}" data-w="{k}">{zh}</button>'
                    for k, zh, _ in le.CW_WINDOWS) + '<button type="button" class="cw-btn" data-w="custom">自訂</button>'
+    win_label = {k: zh for k, zh, _ in le.CW_WINDOWS}[CW_DEFAULT]
     first = cd["d"][0] if cd["d"][0] >= f"{year}-01-01" else f"{year - 1}-12-31"
-    data = _json.dumps({**cd, "year": year}, ensure_ascii=False, separators=(",", ":"))
-    smalls = "".join(f'<div class="le3-sm"><div class="le3-smh"><b>{esc(x["key"])}</b>'
+    events = [list(e) for e in (L.get("cw_events") or []) if e and str(e[0]) >= cd["d"][0]]
+    data = _json.dumps({**cd, "year": year, "ev": events}, ensure_ascii=False, separators=(",", ":"))
+    smalls = "".join(f'<div class="le3-sm"><div class="le3-smh"><b>{esc(x["key"].replace("-", "−"))}</b>'
                      f'<span>{x["value"]:.0f} bp</span></div>{x.get("chart", "")}</div>' for x in rows)
     future = le.future_view(fwd, L.get("match") or d.get("mvd"))
     frows = "".join(
@@ -386,40 +543,52 @@ def curve(d: dict) -> str:
                        f'兩者差距 {_sbp((mt["market_end"]-mt["dot_median"])*100)}bp。</p></details>')
     outl = "".join(f'<li class="{"hot" if o["hot"] else ""}"><b>{esc(o["tag"])}</b>{esc(o["text"])}</li>'
                    for o in st["outlook"])
+    modes = "".join(f'<button type="button" class="cw-btn cwc-mode{" on" if m == "ten" else ""}" data-m="{m}" '
+                    f'aria-pressed="{"true" if m == "ten" else "false"}">{zh}</button>'
+                    for m, zh in (("ten", "2Y／10Y／30Y"), ("sp", "三條利差")))
     return f"""
-    <div class="cw">
+    {_cw_brief(brief, events)}
+    <div class="cw" data-w="{CW_DEFAULT}">
       <div class="cw-ctl" role="group" aria-label="比較期間">{btns}</div>
       <div class="cw-cust" hidden><label>從 <input type="date" class="cw-from" min="{first}" max="{last}"></label>
         <label>到 <input type="date" class="cw-to" min="{first}" max="{last}"></label></div>
-      <div class="cw-blk"><div class="cw-h">所選期間利率變化</div><div class="cw-db">{_cw_tenors(r0["tenors"], r0["start"], r0["end"])}</div></div>
-      <div class="cw-text">{_cw_explain(r0, weekly)}</div>
-      <details class="f-more"><summary>利差型態補充</summary><div class="cw-st">{_cw_spreads(r0["spreads"])}</div></details>
+      {_cw_matrix(brief, r0, win_label)}
       <div class="tabs cw-tabs">
-        <input type="radio" name="cw-tab" id="cw-t1" checked><label for="cw-t1">殖利率</label>
-        <input type="radio" name="cw-tab" id="cw-t2"><label for="cw-t2">利差</label>
-        <div class="tabp p1">{L.get("yield_chart", "")}</div>
-        <div class="tabp p2"><div class="le3-sms">{smalls}</div></div>
+        <input type="radio" name="cw-tab" id="cw-t1" checked><label for="cw-t1">累積變動</label>
+        <input type="radio" name="cw-tab" id="cw-t2"><label for="cw-t2">殖利率水準</label>
+        <input type="radio" name="cw-tab" id="cw-t3"><label for="cw-t3">利差水準</label>
+        <div class="tabp p1"><div class="cwc"><div class="cw-ctl cwc-modes" role="group" aria-label="累積變動">{modes}</div>
+          <div class="cwc-plot"><noscript>需要 JavaScript 才能顯示累積變動圖。</noscript></div>
+          <p class="cwc-read" aria-live="polite"></p>
+          <details class="cw-note"><summary>圖表說明</summary><p class="cwm-note">所選期間第一天為 0，往後每天相對第一天的變動（bp）。線越往上＝殖利率上升／利差擴大。灰色虛線＝事件日（FOMC、CPI、非農、PCE、公債再融資公告），滑過或點選圖表可看名稱。</p></details></div></div>
+        <div class="tabp p2">{L.get("yield_chart", "")}</div>
+        <div class="tabp p3"><div class="le3-sms">{smalls}</div><details class="cw-note"><summary>圖表說明</summary><p class="cwm-note">三張小圖各自用貼近資料的刻度，才看得出變化；彼此高度不能直接比較。</p></details></div>
       </div>
-      <p class="le3-cap cw-when">實際使用 {r0["start"].replace("-", "/")} → {r0["end"].replace("-", "/")} 的官方日殖利率（遇假日取前一個交易日）</p>
+      {weekly}
+      {_cw_folds(r0)}
       <script type="application/json" id="cw-data">{data}</script>
       <script>{_CW_JS}</script>
     </div>
-    <details class="f-more"><summary>曲線形狀：現在、1 週前、1 個月前、年初</summary>{L.get('curve_chart', '')}</details>
-    <details class="f-more future-section cw-fold"><summary><span class="cw-fold-number">04</span><span class="cw-fold-title"><b>市場怎麼看未來利率</b><span class="cw-fold-reading">{esc(policy["text"] if policy else future["headline"])}</span></span></summary>
+    <details class="f-more future-section cw-fold"><summary><span class="cw-fold-number">03</span><span class="cw-fold-title"><b>市場怎麼看未來利率</b><span class="cw-fold-reading">{esc(policy["text"] if policy else future["headline"])}</span></span></summary>
       {match_html}
       <section class="future-bonds"><h3>公債遠期定價方向</h3>
         <p class="future-headline">{esc(future["headline"])}</p><p>{esc(future["recent"])}</p>
         <div class="le3-ft" style="margin-top:6px">{frows or '<p>遠期資料不足</p>'}</div>
         <p class="cw-panel-note">各列代表不同的未來區間與期限，不是連續的升降息路徑；遠期值含期限溢酬，不能直接當作 Fed 的未來政策利率。</p>
       </section>{compare_html}</details>
+    <details class="f-more"><summary>曲線形狀：現在、1 週前、1 個月前、年初</summary>{L.get('curve_chart', '')}</details>
     <details class="f-more"><summary>接下來看什麼</summary><ul class="le3-ol">{outl}</ul></details>
     <details class="f-more"><summary>方法與限制</summary>
       <div class="f-detail le3-how">
+        <p><b>30−2 週報</b>：最新官方收盤比 5 個交易日前（滾動一週），每天都是最新的一週；下方「每週變化」長條圖則固定週五比週五。分段：30−2＝10−2＋30−10，貢獻同方向且較大的那一段標為主要來源。</p>
         <p><b>型態</b>：利差擴大＝變陡、收窄＝變平；看兩端誰動得多決定由哪一端帶動，殖利率上升為熊、下降為牛；兩端反向為扭轉。利差變動 2bp 以內視為持平。</p>
-        <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；期限溢酬（Kim-Wright，約晚一週公布）跟實質利率有重疊，當旁證看。</p>
-        <p><b>市場定價的未來</b>：用目前的公債殖利率算遠期利率，是市場「已經定價」的路徑，含期限溢酬，不是預測；殖利率為平價收益率，計算為近似值；3 年期比較基準由 2 年與 5 年期內插。各區間使用同日資料，超過 7 日仍找不到各天期同日資料時，暫不判讀。遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
-        <p><b>資料口徑</b>：首頁主要公債利率、歷史曲線與利差使用美國財政部官方日殖利率，部分資料由 FRED 提供；各天期比較採同一天資料。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。實質利率、損益兩平及期限溢酬仍由 FRED 提供；當日拆解資料未齊時暫不判讀。盤中報價另列；歷史圖使用官方每日資料，日期以美國資料日為準。</p>
-        <p><b>自選期間</b>：可查看 2026 年起的資料；遇假日採前一個有資料的日期。</p>
+        <p><b>遠期（1 年後、5 年後）</b>：用同一天的官方曲線推算。1 年後的 2Y＝1y2y（1Y、3Y）；10Y、30Y 因沒有 11 年、31 年期，以 1y9y、1y29y 近似。5 年後的 2Y＝5y2y（5Y、7Y）；10Y＝5y10y（15Y 由 10Y、20Y 內插）；30Y 以 5y25y 近似。官方殖利率是平價收益率，結果為近似值；遠期含期限溢酬，是市場已定價的路徑、不是預測。</p>
+        <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；實質利率晚一天公布，拆解用兩端最近都有資料的日子。期限溢酬（Kim-Wright，約晚一週公布）跟實質利率有重疊，當旁證看；起訖退到同一天時顯示「—」。</p>
+        <p><b>市場定價的未來</b>：遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
+        <p><b>資料口徑</b>：2Y、10Y、30Y 與利差使用美國財政部官方日殖利率，部分資料由 FRED 提供；各天期比較採同一天資料。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。</p>
+        <p><b>自選期間</b>：可查看 2026 年起的資料；遇假日採前一個有資料的日期，監控表欄位標題會標出實際使用的日期。</p>
+        <p><b>事件標記</b>：FOMC 用全年會議日；非農、CPI、PCE 用 FRED 官方行事曆與手動維護的行事曆（config/releases_calendar.yaml，目前自 2026 年 8 月起），公債再融資公告用 config/rates.yaml。只標有出處的日期，不用慣例推估；較早月份要標記時，把日期補進行事曆即可。週報的「主要變化集中在…」挑這一週最大的單日變動（天期或利差，4bp 以上才寫），同一天有上述事件就一併點出。</p>
+        <p><b>年內位置</b>：今年 1/1 起各標的的最低與最高，圓點是現在的位置。</p>
       </div>
     </details>"""
 

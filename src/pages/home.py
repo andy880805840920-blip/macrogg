@@ -1096,8 +1096,12 @@ def _focus_strip(f: dict | None) -> str:
         _gl = [f'<li class="fs-text{"" if i < 2 - len(shown) else " fs-off"}"'
                f' data-gen="1">{esc(s)}</li>' for i, s in enumerate(_paras[1:])]
         _items = _tl + _gl
+        _hl = (f.get("headline") or "").strip()
+        _rn = (f.get("rate_note") or "").strip()
         text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>'
+                + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
                 + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)
+                + (f'<p class="fs-rate"><b>對利率</b>{esc(_rn)}</p>' if _rn else "")
                 + ('<ul class="fs-list">' + "".join(_items) + '</ul>'
                    if _items else "")
                 + '</div>')

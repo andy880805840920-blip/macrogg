@@ -126,7 +126,7 @@ def _fake_ai(replies):
 _orig = ft._call_ai
 _orig_body = ft.fetch_article_text
 _orig_feed = ft.fetch_feed_headlines
-_good_twf = "外資今天賣超 120 億元，加權指數下跌 1.2%，賣壓集中在電子權值股，市場擔心美債殖利率走高壓抑科技股評價。"
+_good_twf = "外資賣超 120 億元，加權指數下跌 1.2%，賣壓集中在電子權值股，市場擔心美債殖利率走高壓抑科技股評價。"
 _good_oil = "OPEC 表示可能減產，油價上漲 4% 至每桶 95 美元，能源價格走高推升市場的通膨預期，也讓降息路徑更難預料。"
 try:
     _seen.clear()
@@ -137,7 +137,7 @@ try:
                               {"twf": "台指期", "oil": "油價"}, "主軸內容")
     check("⑩ 數字鎖逐主題：油價那則有材料外的數字 → 只重寫油價",
           len(_seen) == 2 and "=== twf" not in _seen[1][0] and "=== oil" in _seen[1][0]
-          and got == {"twf": _good_twf, "oil": _good_oil}, got)
+          and {k: v["text"] for k, v in got.items()} == {"twf": _good_twf, "oil": _good_oil}, got)
     check("⑪ 提示詞：不重複主軸、不能只重述標題、代號｜內容格式",
           "不要跟主軸講同一件事" in _seen[0][1] and "不能只重述標題" in _seen[0][1]
           and "代號｜內容" in _seen[0][1])
@@ -146,7 +146,7 @@ try:
     got = ft.summarize_topics({k: mat[k] for k in ("twf", "oil")},
                               {"twf": "台指期", "oil": "油價"}, "主軸內容")
     check("⑫ 太短或回傳略 → 重試；來源備援由 build_topics 保留",
-          got == {"twf": _good_twf} and "像在列標題" in _seen[1][0], got)
+          {k: v["text"] for k, v in got.items()} == {"twf": _good_twf} and "像在列標題" in _seen[1][0], got)
 
     # 整條流程＋快取
     _seen.clear()

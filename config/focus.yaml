@@ -84,41 +84,75 @@ vague_markers:
 # 今日主軸只選下列主題；程式會展開中英文同義詞，並區分本地與美國總經新聞。
 # 其他國家的 CPI／GDP／利率不能僅因同字而入選；BOJ、日圓、AI、油價及指定戰爭可跨國。
 keywords:
+  # 主軸關鍵字分兩級（2026-10 第十七批）：主軸回到利率主線。
+  # 主級：命中一次 +2 分；次級：+1 分（一樣收進來，只是排序低一點）。
+  # 英文要完整單字才算命中（可帶複數 s），「AI」不會再命中 said、again。
+  # 片語會拆成單字各自比對（例：「rate cut」＝rate、cut）。
   - Fed
   - FOMC
+  - Powell
+  - Warsh
+  - 聯準會
+  - 鮑爾
+  - 華許
   - 升息
   - 降息
-  - 通膨
+  - inflation
   - CPI
   - PCE
+  - PPI
+  - 通膨
+  - payrolls
+  - unemployment
   - 非農
   - 失業率
   - GDP
+  - Treasury
+  - Treasuries
+  - yields
+  - bond
   - 美債
+  # 中文詞避開台灣在地新聞也會用的字：「殖利率」（台股高殖利率股）、
+  # 「財政部」「公債」（台灣財政部）、「利率」「就業」（房貸利率、台灣就業）
   - 美債殖利率
-  - 美元
+  - 公債殖利率
+  - 美國公債
+  - 公債標售
+  - 債市
+  - deficit
   - 美國財政部
   - 財政赤字
-  - 川普
+  - 發債
+  - Bessent
+  - 貝森特
+  - tariff
   - 關稅
+keywords_secondary:
+  - Trump
+  - 川普
+  - dollar
+  - 美元
+  - BOJ
   - 日本央行
+  - yen
   - 日圓
   - AI
-  - NVIDIA
+  - Nvidia
+  - 輝達
+  - semiconductor
   - 半導體
   - AI資本支出
+  - oil
+  - crude
   - 油價
-  - 伊朗
-  - 中東戰爭
-  - 俄烏戰爭
+  - 原油
+  - gold
   - 黃金
-  - 聯準會
-  - Kevin Warsh
-  - 發債
-  - BOJ
-  - 輝達
-# 不用額外的泛稱債市／殖利率等次級詞放寬主軸範圍。
-keywords_secondary: []
+  - Iran
+  - 伊朗
+  - 中東
+  - Ukraine
+  - 俄烏
 
 # 後設偵測：AI 輸出含任一詞組＝在評論材料而不是寫新聞（實際發生過：
 # 整篇「材料相關內容極為有限…無法按要求綜合改寫」上了線）。
@@ -185,7 +219,10 @@ feeds:
   # ── 原有來源 ──
   - https://tw.news.yahoo.com/rss/finance
   - https://tw.stock.yahoo.com/rss?category=news
-  - https://finance.yahoo.com/news/rssindex
+  # Yahoo Finance 總覽 RSS（news/rssindex）已失效（404，2026-10 實測），
+  # 改用個股／指數頁的新聞 feed：30 年期、3 個月、美元指數、標普 500，
+  # 文章頁是 finance.yahoo.com、內文抓得到（常是路透、彭博轉載稿）。
+  - https://feeds.finance.yahoo.com/rss/2.0/headline?s=%5ETYX,%5EIRX,DX-Y.NYB,%5EGSPC&region=US&lang=en-US
   # 標題級來源：RSS 公開、內文有付費牆——貢獻標題與連結進標題池，
   # 內文抓不到會被長度檢查自動跳過，不影響其他來源。
   # ⚠️ 這裡有設定就會蓋掉程式內建的預設清單，所以 FT／WSJ 要列在這裡
@@ -196,33 +233,14 @@ feeds:
   # 改走 Google News 的搜尋型 feed 限定來源＋主題。預期是**標題級**
   # 貢獻（彭博硬付費牆、路透偶爾放行）；兩家的通訊社稿全文本來就經
   # Yahoo 轉載進來，這兩條補的是原始出處的標題視角與來源多樣性。
-  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
-  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Treasury%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20GDP%20OR%20dollar%20OR%20Trump%20OR%20tariffs%20OR%20BOJ%20OR%20yen%20OR%20AI%20OR%20Nvidia%20OR%20semiconductor%20OR%20oil%20OR%20Iran%20OR%20Ukraine%20OR%20gold%20OR%20Warsh%20OR%20bonds)%20when:2d&hl=en-US&gl=US&ceid=US:en
-
-  # 公開正文與出版社摘要：全主題共同來源，所有報導仍限制過去24小時。
-  - https://news.ltn.com.tw/rss/business.xml
-  - https://news.ltn.com.tw/rss/world.xml
-  - https://www.theguardian.com/business/rss
-  - https://www.theguardian.com/us-news/us-politics/rss
-  - https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
-  - https://www.fxstreet.com/rss/news
-
-# 新聞來源偏好：主軸與十類補充共用分層排序。
-# Bloomberg／Reuters／Yahoo Finance 第一層，其餘指定媒體第二層。
-# 這份清單供舊版設定相容；完整名稱、網域與共用規則見 news_publishers.py。
-# 偏好不是獨占白名單；缺合格內容時保留其他來源備援。
-sources:
-  - bloomberg
-  - reuters
-  - yahoo finance
-  - financial times
-  - wsj
-  - wall street journal
-  - the economist
-  - yahoo
-  - 鉅亨
-  - 經濟日報
-  - 工商時報
+  # 搜尋條件拆短（2026-10）：一條塞 22 個 OR，Google 可能忽略 site: 限制，
+  # 混進其他網站。現在每家拆三組，各 6–8 個詞。
+  - https://news.google.com/rss/search?q=site:reuters.com%20(Fed%20OR%20FOMC%20OR%20Powell%20OR%20Warsh%20OR%20%22rate%20cut%22%20OR%20%22rate%20hike%22)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:reuters.com%20(Treasury%20OR%20Treasuries%20OR%20yields%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20jobs)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:reuters.com%20(dollar%20OR%20tariffs%20OR%20Trump%20OR%20BOJ%20OR%20yen%20OR%20oil%20OR%20gold%20OR%20Nvidia)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Powell%20OR%20Warsh%20OR%20%22rate%20cut%22%20OR%20%22rate%20hike%22)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(Treasury%20OR%20Treasuries%20OR%20yields%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20jobs)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(dollar%20OR%20tariffs%20OR%20Trump%20OR%20BOJ%20OR%20yen%20OR%20oil%20OR%20gold%20OR%20Nvidia)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
 # ============================================================================
 # 主題補充（2026-10）：主軸下方的兩則補充，依讀者在「選擇」裡排的前兩個
@@ -234,6 +252,9 @@ sources:
 #             中文詞組裡空白分開的每個詞都要出現
 #   exclude   有寫就**取代**上面的 exclude_keywords（台指期要放行「台股」）
 #   search    額外的 Google News 搜尋（只有標題＋摘要），lang: en／zh
+#   require   標題還必須命中其中一個詞組（擋掉只是順帶提到關鍵字的新聞）
+#   exclude_add 在排除詞之外追加
+#   feeds     只給這個主題用的 RSS（例：FXStreet 只餵匯率與黃金，不進主軸）
 # 規則：前兩個指標同主題 → 往下找不同主題；主題當天沒新聞 → 往下一個
 # 指標遞補，都沒有就用主軸那次一起寫的一般補充。
 # ============================================================================
@@ -323,7 +344,6 @@ topics:
   - Treasury bills
   - T-bills
   - Treasury cash balance
-  - market stress
   - IORB
   - SRF
   - ON RRP
@@ -345,6 +365,15 @@ topics:
     lang: en
   - q: 美國 (回購市場 OR 貨幣市場 OR 流動性 OR 國庫券)
     lang: zh
+  exclude_add:
+  - 加密貨幣
+  - 虛擬貨幣
+  - 比特幣
+  - crypto
+  - Crypto
+  - Bitcoin
+  - bitcoin
+  - KuCoin
 - id: oil
   label: 油價
   chips:
@@ -387,6 +416,22 @@ topics:
     lang: en
   - q: 油價 (原油 OR 中東 OR 伊朗)
     lang: zh
+  require:
+  - 油價
+  - 原油
+  - 能源
+  - 油輪
+  - 石油
+  - oil
+  - crude
+  - OPEC
+  - OPEC+
+  - Brent
+  - WTI
+  - energy
+  - petroleum
+  - gasoline
+  - fuel
 - id: equity
   label: 美股
   chips:
@@ -592,6 +637,21 @@ topics:
     lang: en
   - q: 美國 (期中選舉 OR 中期選舉) (參議院 OR 眾議院 OR 民調)
     lang: zh
+  require:
+  - 期中選舉
+  - 中期選舉
+  - 選舉
+  - 選戰
+  - 民調
+  - 初選
+  - midterm
+  - midterms
+  - election
+  - elections
+  - poll
+  - polls
+  - campaign
+  - race
 - id: gold
   label: 黃金
   chips:
@@ -609,11 +669,44 @@ topics:
   - 黃金ETF
   - 珠寶促銷
   - 飾金促銷
+  - 金礦
+  - 礦業股
+  - 礦商
+  - mining
+  - miners
+  - miner
+  - 婚
+  - 珠寶
+  - 飾金
+  - 舊金換新金
+  - 金飾
+  - 黃金週
+  - 黃金交叉
+  - 黃金比例
+  - Gold Cup
+  - gold medal
+  - Mining
+  - Miners
+  - Miner
+  - Gold Medal
   search:
   - q: gold prices (site:reuters.com OR site:bloomberg.com)
     lang: en
   - q: 黃金 金價
     lang: zh
+  require:
+  - 金價
+  - 黃金價格
+  - 黃金期貨
+  - 現貨黃金
+  - 國際金價
+  - 金市
+  - gold
+  - bullion
+  - XAU
+  - XAU/USD
+  feeds:
+  - https://www.fxstreet.com/rss/news
 - id: fx
   label: 匯率
   chips:
@@ -640,27 +733,37 @@ topics:
   - 外資匯入
   - 外資匯出
   require:
+  - 匯率
+  - 升值
+  - 貶值
+  - 新台幣
+  - 台幣
+  - 臺幣
+  - 美元指數
   - USD/TWD
   - USDTWD
   - TWD
-  - Taiwan dollar
-  - New Taiwan dollar
   - DXY
   - dollar index
-  - US dollar
-  - U.S. dollar
-  - dollar
-  - 台幣
-  - 臺幣
-  - 新台幣
-  - 美元
-  - 美元指數
+  - currency
+  - currencies
+  - forex
+  - greenback
+  - Taiwan dollar
+  - 外匯
   exclude:
   - ETF
   - ETFs
   - 存股
   - 高股息
   - 定期定額
+  - 基金淨值
+  - 淨值
+  - 加密貨幣
+  - 比特幣
+  - Bitcoin
+  - crypto
+  - Crypto
   search:
   - q: 台幣 美元 匯率
     lang: zh
@@ -668,7 +771,8 @@ topics:
     lang: en
   - q: US dollar index (site:reuters.com OR site:bloomberg.com)
     lang: en
-
+  feeds:
+  - https://www.fxstreet.com/rss/news
 election:
   enabled: true
   election_date: 2026-11-03

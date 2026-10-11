@@ -1043,6 +1043,28 @@ def main() -> int:
         ctxs["_focus"] = None
     # 聯準會頁：期貨路徑（焦點條剛算好的 fw）對照點陣圖，以及「目前重心」
     # 的轉向條件（要用到通膨頁的三分法與勞動頁的失業率，所以在這裡接）。
+    # 殖利率曲線的事件標記（累積變動圖的虛線、週報「當天有什麼」）：
+    # FOMC 全年（focus.yaml）、非農／CPI／PCE（FRED 官方行事曆＋手動行事曆）、
+    # 公債再融資公告（rates.yaml）。只用有出處的日期，不用慣例推估。
+    _rle0 = (ctxs.get("rates") or {}).get("le")
+    if _rle0 is not None:
+        try:
+            _ev = []
+            for _d in (_focus_cfg or {}).get("fomc_dates") or []:
+                _ev.append((str(_d)[:10], "FOMC 利率決策"))
+            _names = {"employment": "非農就業報告", "cpi": "CPI", "pce": "PCE"}
+            for _k, _zh in _names.items():
+                for _d in (ctxs.get("_calendar") or {}).get(_k, {}).values():
+                    _ev.append((str(_d)[:10], _zh))
+                for _d in _rel_all.get(_k, []) if isinstance(_rel_all, dict) else []:
+                    _ev.append((str(_d)[:10], _zh))
+            _rf = _rle0.get("refunding") or {}
+            for _d in (_rf.get("date"), _rf.get("next")):
+                if _d:
+                    _ev.append((str(_d)[:10], "公債再融資公告"))
+            _rle0["cw_events"] = sorted(set(_ev))
+        except Exception as e:                     # noqa: BLE001
+            log.warning("殖利率曲線事件標記組裝失敗（%s）", e)
     _fom = ctxs.get("fomc")
     if _fom and not _fom.get("empty"):
         from src.analysis import fomc_extra as _fx

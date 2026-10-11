@@ -20,6 +20,9 @@ log = logging.getLogger(__name__)
 FIELDS = {"DGS3MO": "BC_3MONTH", "DGS1": "BC_1YEAR", "DGS2": "BC_2YEAR",
           "DGS5": "BC_5YEAR", "DGS7": "BC_7YEAR", "DGS10": "BC_10YEAR",
           "DGS20": "BC_20YEAR", "DGS30": "BC_30YEAR"}
+# 選配天期：有就收、沒有不影響整天資料（舊快取沒有這些欄位也照常讀）。
+# 3 年期給「1 年後的 2 年期」遠期用（2026-10）。
+OPTIONAL = {"DGS3": "BC_3YEAR"}
 URL = ("https://home.treasury.gov/resource-center/data-chart-center/interest-rates/"
        "pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value={year}")
 TIMEOUT = 15
@@ -38,7 +41,13 @@ def _day(date, values, today):
     day = dt.date.fromisoformat(str(date)[:10])
     if day > today or day.weekday() > 4:
         raise ValueError("invalid observation date")
-    return {"date": day.isoformat(), "values": {k: _value(values[k]) for k in FIELDS}}
+    vals = {k: _value(values[k]) for k in FIELDS}
+    for k in OPTIONAL:
+        try:
+            vals[k] = _value(values.get(k))
+        except (ValueError, TypeError):
+            pass
+    return {"date": day.isoformat(), "values": vals}
 
 
 def parse_xml(data: bytes | str, today: dt.date) -> list[dict]:
@@ -49,7 +58,7 @@ def parse_xml(data: bytes | str, today: dt.date) -> list[dict]:
             continue
         p = {x.tag.rsplit("}", 1)[-1]: x.text for x in element}
         try:
-            row = _day(p["NEW_DATE"], {k: p.get(v) for k, v in FIELDS.items()}, today)
+            row = _day(p["NEW_DATE"], {k: p.get(v) for k, v in {**FIELDS, **OPTIONAL}.items()}, today)
         except (KeyError, ValueError, TypeError):
             continue
         days[row["date"]] = row
@@ -127,10 +136,18 @@ def merge(series: dict, cache_path: Path | None = None, *, _get=None,
         series[sid] = [values[d] for d in sorted(values)]
         if ordered:
             updated.append(sid)
+    for sid in OPTIONAL:
+        values = {r["date"][:10]: r for r in series.get(sid) or [] if not r.get("live")
+                  and r.get("value") is not None}
+        for r in ordered:
+            if sid in r["values"]:
+                values[r["date"]] = {"date": r["date"], "value": r["values"][sid], "source": "Treasury"}
+        if values:
+            series[sid] = [values[d] for d in sorted(values)]
     common = set.intersection(*(set(r["date"] for r in series[k]) for k in FIELDS))
     last = max(common) if common else ""
     if last:
-        for sid in FIELDS:
+        for sid in list(FIELDS) + [k for k in OPTIONAL if series.get(k)]:
             series[sid] = [r for r in series[sid] if r["date"] <= last]
     return {"updated": updated, "date": last,
             "source": (series["DGS10"][-1].get("source") if last else ""),

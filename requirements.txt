@@ -2,10 +2,5 @@ requests>=2.31
 PyYAML>=6.0
 # 記者會逐字稿是 PDF，少了這個 FOMC 頁的「記者會」整區都拿不到資料
 pdfplumber>=0.11
-
-# Shared news main-text extraction
+# 新聞正文擷取（純本機解析 HTML，不連外）：Yahoo Finance 改版後舊的 <p> 抽法只抽到選單
 trafilatura==2.3.1
-
-# Google News publisher URL resolution (compatible parser backend)
-googlenewsdecoder==0.2.1
-selectolax==0.4.12

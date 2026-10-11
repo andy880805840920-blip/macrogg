@@ -1083,7 +1083,7 @@ try:
     check("㉔d 沒抓到內文 → 標題模式也套用字數下限並重寫過短摘要",
           _o4["text_source"] == "model" and len(_calls24) == 2
           and "200–250" in _calls24[0]
-          and "標題清單" in _calls24[0], (_o4["text_source"], len(_calls24)))
+          and "只有標題" in _calls24[0], (_o4["text_source"], len(_calls24)))
 finally:
     for _k, _v in _saved.items():
         setattr(ft, _k, _v)
@@ -1239,8 +1239,12 @@ check("㉚b config 可覆寫", ft.focus_caps({"main_chars": 180, "supp_items": 1
                                        "supp_chars": 60}) == [180, 60])
 
 
+_HL = "【標題】美債殖利率走高、財政部擴大發債\n"     # 第十七批起主軸要有一句標題
+
+
 def _runA(replies):
     seen = []
+    replies = [_HL + r for r in replies]
 
     def _ca(src, system, env=None):
         seen.append((src, system))
@@ -1265,7 +1269,7 @@ check("㉚d 「主軸：」「補充：」標籤被拿掉、三行都在",
 _tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U * 2,   # 補充 150 字 > 100
                           _ma + "\n" + _U * 3 + "\n" + _U * 2])
 check("㉚e 補充超過 80×1.25＝100 字 → 帶原因重寫（訊息標出是第 2 行）",
-      len(_seenb) == 2 and "第 2 行超過 100 字" in _seenb[1][0], _seenb[-1][0][-80:])
+      len(_seenb) == 2 and "第 1 則補充超過 100 字" in _seenb[1][0], _seenb[-1][0][-80:])
 _tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U * 2])           # 主軸 275 字（底線 275）
 check("㉚f 主軸在底線內 → 直接採用、只補一則也可以",
       len(_seenc) == 1 and len(_tc.splitlines()) == 2)
@@ -1286,9 +1290,10 @@ check("㉚i 補充只有幾個字（像標題）→ 帶原因重寫",
 _tg, _, _ = _runA([_U * 4 + "\n" + _U * 4 + "\n" + _U * 2 + "\n" + _U * 2])
 check("㉚j 沒寫標記：最後兩行是補充、前面都是主軸的段落",
       _tg.splitlines()[0] == _U * 4 + "¶" + _U * 4 and len(_tg.splitlines()) == 3)
-check("㉚k 提示詞寫明 200–250 字、可分段、三則綜合、不能只重述標題",
+check("㉚k 提示詞寫明 200–250 字、可分段、標題、對利率、利率主線優先",
       "200–250" in _seena[0][1] and "分 2–3 段" in _seena[0][1]
-      and "三則" in _seena[0][1] and "不能只重述標題" in _seena[0][1])
+      and "【標題】" in _seena[0][1] and "【對利率】" in _seena[0][1]
+      and "利率主線" in _seena[0][1])
 
 # ㉛ 彭博、路透優先
 _bb = {"title": "Fed officials weigh rate path", "source": "Bloomberg"}

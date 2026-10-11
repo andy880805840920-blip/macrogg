@@ -145,6 +145,11 @@ WINDOWS = (("wow", 7, "週"), ("mom", 30, "月"))
 FLAT_BP = 2.0          # 利差變動 2bp 以內＝大致持平
 
 
+def _r6(v: float) -> float:
+    import math
+    return math.floor(v * 1e6 + 0.5) / 1e6
+
+
 def regime(d_long: float | None, d_short: float | None) -> dict:
     """
     曲線型態（以 bp 計）：
@@ -158,7 +163,9 @@ def regime(d_long: float | None, d_short: float | None) -> dict:
     """
     if d_long is None or d_short is None:
         return {"code": "na", "zh": "—", "lead": ""}
-    ds = d_long - d_short
+    # 先四捨五入到 1e-6 bp：5.60−4.75 這種兩位小數相減會出現 1.9999999，
+    # 畫面顯示 +2bp 卻被判成「大致持平」（2026-10 修正，JS 同規則）
+    ds = _r6(d_long - d_short)
     if abs(ds) < FLAT_BP:
         return {"code": "flat", "zh": "大致持平", "lead": ""}
     if ds > 0:                                   # 變陡
@@ -327,12 +334,33 @@ def _md2(iso: str) -> str:
     return f"{int(iso[5:7])}/{int(iso[8:10])}"
 
 
+def _drv_idx(cd: dict, i: int, back: int = 5):
+    """拆解用的資料日：i 當天或往前最多 back 個交易日內，10 年期、損益兩平、
+    實質利率**三者都有值**的最近一天。實質利率（DFII10）比殖利率晚一天公布，
+    只看當天的話最新一天永遠是「資料不足」（2026-10 修正）。"""
+    for j in range(i, max(-1, i - back - 1), -1):
+        if all(j < len(cd.get(k) or []) and cd[k][j] is not None for k in ("y10", "be", "real")):
+            return j
+    return None
+
+
+def _lag_idx(cd: dict, k: str, i: int, back: int = 5):
+    """晚公布的序列（期限溢酬、油價）：i 當天或往前 back 個交易日內最近有值的索引。"""
+    arr = cd.get(k) or []
+    for j in range(i, max(-1, i - back - 1), -1):
+        if j < len(arr) and arr[j] is not None:
+            return j
+    return None
+
+
 def window_analysis(cd: dict, start: str, end: str) -> dict:
     """
     起訖兩天（各自對齊到當天或之前的交易日）之間：
       tenors   2／10／30 年 起點、終點、變動（bp）
       spreads  10-2、30-10、30-2 起點、終點、變動、型態
-      text     三句判讀（型態／長端原因／短端原因）
+      drivers  10 年期拆解（用兩端各自最近「三項都有值」的日子）、期限溢酬、
+               油價（晚公布：起訖退到同一天就視為沒有新資料，回 None）
+      text     三句判讀（曲線／10 年期原因／短端定價）
     """
     ia, ib = _cw_idx(cd, start), _cw_idx(cd, end)
     if ia >= ib:
@@ -354,45 +382,59 @@ def window_analysis(cd: dict, start: str, end: str) -> dict:
         g = regime(L["d"], S["d"])
         sp.append({"key": key, "a": a, "b": b, "d": b - a,
                    "zh": g["zh"], "lead": g["lead"], "code": g["code"]})
-    S = {x["key"]: x for x in sp}
+    ja, jb = _drv_idx(cd, ia), _drv_idx(cd, ib)
+    if ja is not None and jb is not None and ja < jb:
+        be = (cd["be"][jb] - cd["be"][ja]) * 100
+        real = (cd["real"][jb] - cd["real"][ja]) * 100
+        d10 = (cd["y10"][jb] - cd["y10"][ja]) * 100
+        drv_dates = [cd["d"][ja], cd["d"][jb]]
+    else:
+        be = real = d10 = None
+        drv_dates = [None, None]
 
-    def dch(k):
-        a, b = v(k, ia), v(k, ib)
-        return None if a is None or b is None else (b - a) * 100
-    be, real, tp, y3m = dch("be"), dch("real"), dch("tp"), dch("y3m")
-    oa, ob = v("oil", ia), v("oil", ib)
+    def lagged(k):
+        a, b = _lag_idx(cd, k, ia), _lag_idx(cd, k, ib)
+        if a is None or b is None or a >= b:
+            return None, None, None
+        return cd[k][a], cd[k][b], [cd["d"][a], cd["d"][b]]
+    ta, tb, tp_dates = lagged("tp")
+    tp = None if ta is None else (tb - ta) * 100
+    oa, ob, _ = lagged("oil")
     oil = (ob / oa - 1) * 100 if oa and ob else None
-    def tp_date(i):
-        arr = cd.get("tp") or []
-        return next((cd["d"][j] for j in range(i, max(-1, i-6), -1)
-                     if j < len(arr) and arr[j] is not None), None)
+    a3, b3 = v("y3m", ia), v("y3m", ib)
+    y3m = None if a3 is None or b3 is None else (b3 - a3) * 100
     result = {"start": da, "end": db, "tenors": ten, "spreads": sp,
-              "drivers": {"be": be, "real": real, "tp": tp, "oil": oil, "y3m": y3m,
-                          "tp_dates": [tp_date(ia), tp_date(ib)]}}
+              "drivers": {"be": be, "real": real, "d10": d10, "dates": drv_dates,
+                          "tp": tp, "tp_dates": tp_dates or [None, None],
+                          "oil": oil, "y3m": y3m}}
     view = window_view(result)
-    result["text"] = [view["headline"], view["panels"][1]["verdict"], view["panels"][2]["verdict"]]
+    result["text"] = [view["headline"], view["panels"][0]["verdict"], view["panels"][1]["verdict"]]
     return result
 
 
+def curve_headline(S: dict) -> str:
+    """一句話的曲線判讀：以 30−2 為主，附上兩段（10−2、30−10）。Python／JS 同規則。"""
+    x, a, b = S.get("30-2"), S.get("10-2"), S.get("30-10")
+    if not x or not a or not b:
+        return "資料不足，暫不判定曲線方向。"
+    seg = f"10−2 {_sgn(a['d'], '')}、30−10 {_sgn(b['d'], '')}"
+    if abs(_r6(x["d"])) < FLAT_BP:
+        if abs(_r6(a["d"])) >= FLAT_BP and abs(_r6(b["d"])) >= FLAT_BP and a["d"] * b["d"] < 0:
+            return f"30−2 大致持平（{_sgn(x['d'])}）：{seg}，兩段互相抵銷。"
+        return f"曲線大致持平：30−2 {_sgn(x['d'])}；{seg}。"
+    lead = f"（{x['lead']}）" if x["lead"] else ""
+    move = "擴大" if x["d"] > 0 else "收窄"
+    return f"曲線{x['zh']}{lead}：30−2 {move} {_num(abs(x['d']))}bp；{seg}。"
+
+
 def window_view(r: dict) -> dict:
-    """讀者可直接掃讀的結論與三段說明；與瀏覽器端採相同規則。"""
+    """讀者可直接掃讀的結論與兩段說明；與瀏覽器端採相同規則。"""
     T = {t["k"]: t for t in r["tenors"]}
     S = {x["key"]: x for x in r["spreads"]}
     D = r["drivers"]
-    x = S.get("10-2")
-    if not x:
-        headline = "資料不足，暫不判定曲線方向。"
-    elif abs(x["d"]) < 2:
-        headline = "曲線大致持平：10 年與 2 年的利差變動很小。"
-    else:
-        headline = ("曲線變陡：10 年與 2 年的利差擴大。" if x["d"] > 0
-                    else "曲線變平：10 年與 2 年的利差縮小。")
-    metrics = [{"label": x["key"].replace("-", " 年 − ") + " 年",
-                "value": f"{_num(x['a'])} → {_num(x['b'])} bp",
-                "note": "變動 " + _sgn(x["d"])} for x in r["spreads"]]
-    panels = [{"title": "利差怎麼變", "verdict": "長短利差擴大代表曲線變陡，縮小代表變平。",
-               "metrics": metrics, "note": "比較的是所選期間開始與結束日期的利差。"}]
-    be, real, dy = D.get("be"), D.get("real"), T["y10"]["d"]
+    headline = curve_headline(S)
+    panels = []
+    be, real, dy = D.get("be"), D.get("real"), D.get("d10")
     aligned = None not in (be, real, dy) and abs(dy-be-real) <= 2
     if aligned and max(abs(dy), abs(be), abs(real)) < 0.5:
         verdict = "10 年期與拆解指標大致持平。"
@@ -401,19 +443,23 @@ def window_view(r: dict) -> dict:
     elif aligned:
         verdict = "10 年期主要由" + ("通膨補償" if abs(be) > abs(real) else "實質利率") + "變動帶動。"
     elif None in (be, real, dy):
-        verdict = "所選日期的拆解資料不足，暫不判定主要原因。"
+        verdict = "所選期間的拆解資料不足，暫不判定主要原因。"
     else:
         verdict = "參考指標與 10 年期變動尚未吻合，暫不判定主要原因。"
-    metric = lambda label, v, unit="bp": {"label": label, "value": "—" if v is None else _sgn(v, unit), "note": "所選期間變動"}
-    lm = [metric("10 年期", dy), metric("通膨補償", be), metric("實質利率", real)]
+    metric = lambda label, v, unit="bp", note="所選期間變動": {
+        "label": label, "value": "—" if v is None else _sgn(v, unit), "note": note}
+    dd = D.get("dates") or [None, None]
+    dnote = f"拆解資料 {_md2(dd[0])} → {_md2(dd[1])}" if dd[0] and dd[1] else "拆解資料不足"
+    lm = [metric("10 年期", dy, note=dnote), metric("通膨補償", be, note=dnote),
+          metric("實質利率", real, note=dnote)]
     td = D.get("tp_dates") or [None, None]
-    if D.get("tp") is not None:
-        lm.append({"label": "期限溢酬（參考）", "value": _sgn(D["tp"]),
-                   "note": f"資料日 {td[0]} → {td[1]}"})
+    lm.append(metric("期限溢酬（參考）", D.get("tp"),
+                     note=(f"資料日 {_md2(td[0])} → {_md2(td[1])}" if D.get("tp") is not None
+                           else "所選期間尚無新資料（約晚一週公布）")))
     if D.get("oil") is not None:
         lm.append(metric("油價（參考）", D["oil"], "%"))
     panels.append({"title": "10 年期為什麼變", "verdict": verdict, "metrics": lm,
-                   "note": "期限溢酬僅作參考，不再加到通膨補償與實質利率之上；損益兩平也含風險與流動性因素。"})
+                   "note": "實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到通膨補償與實質利率之上。"})
     dy2, y3m = T["y2"]["d"], D.get("y3m")
     path = None if dy2 is None or y3m is None else dy2-y3m
     verdict = ("資料不足，暫不判定短端定價方向。" if path is None else
@@ -424,6 +470,228 @@ def window_view(r: dict) -> dict:
                    "metrics": [metric("2 年期", dy2), metric("3 個月期", y3m), metric("2 年 − 3 個月利差", path)],
                    "note": "這是公債短端的相對變化；年底政策利率方向另看下方期貨定價。"})
     return {"headline": headline, "panels": panels}
+
+
+# ---------------------------------------------------------------------------
+# 30−2 週報（2026-10 第十七批）：最上方固定段落，滾動一週（最新收盤比 5 個
+# 交易日前），2Y／10Y／30Y 與三條利差，加上市場隱含的 1 年後、5 年後。
+# ---------------------------------------------------------------------------
+BRIEF_TENORS = (("2", "DGS2"), ("10", "DGS10"), ("30", "DGS30"))
+BRIEF_SPREADS = (("10-2", "10", "2"), ("30-10", "30", "10"), ("30-2", "30", "2"))
+_RG_PHRASE = {"bear_steep": "長端升幅大於短端", "bull_steep": "短端降幅大於長端",
+              "bear_flat": "短端升幅大於長端", "bull_flat": "長端降幅大於短端",
+              "twist_steep": "短端降、長端升", "twist_flat": "短端升、長端降"}
+
+
+def _fwd_set(y: dict) -> dict | None:
+    """一天的曲線 → 1 年後、5 年後的 2Y／10Y／30Y（%）。缺天期回 None。
+      1 年後：2Y＝1y2y（1Y、3Y）；10Y≈1y9y（1Y、10Y）；30Y≈1y29y（1Y、30Y）
+      5 年後：2Y＝5y2y（5Y、7Y）；10Y＝5y10y（5Y、15Y，15Y 由 10Y／20Y 內插）；
+              30Y≈5y25y（5Y、30Y）
+    3Y 沒有資料時由 2Y／5Y 內插（標記 interp3）。"""
+    need = ("1", "2", "5", "7", "10", "20", "30")
+    if any(y.get(k) is None for k in need):
+        return None
+    y3 = y.get("3")
+    interp3 = y3 is None
+    if interp3:
+        y3 = y["2"] + (y["5"] - y["2"]) / 3
+    y15 = (y["10"] + y["20"]) / 2
+    return {"1": {"2": _fwd(y["1"], 1, y3, 3), "10": _fwd(y["1"], 1, y["10"], 10),
+                  "30": _fwd(y["1"], 1, y["30"], 30)},
+            "5": {"2": _fwd(y["5"], 5, y["7"], 7), "10": _fwd(y["5"], 5, y15, 15),
+                  "30": _fwd(y["5"], 5, y["30"], 30)},
+            "interp3": interp3}
+
+
+def curve_brief(series: dict, n: int = 5) -> dict | None:
+    """最上方的 30−2 週報資料＋文字。最新共同資料日比 n 個交易日前。"""
+    ids = {"1": "DGS1", "2": "DGS2", "3": "DGS3", "5": "DGS5", "7": "DGS7",
+           "10": "DGS10", "20": "DGS20", "30": "DGS30"}
+    m = {k: {r["date"][:10]: r["value"] for r in series.get(sid) or []
+             if r.get("value") is not None and not r.get("live")} for k, sid in ids.items()}
+    axis = sorted(set(m["2"]) & set(m["10"]) & set(m["30"]))
+    if len(axis) <= n:
+        return None
+    d1, d0 = axis[-1], axis[-1 - n]
+    lv = {}
+    for k, _ in BRIEF_TENORS:
+        a, b = m[k][d0], m[k][d1]
+        lv[k] = {"a": a, "b": b, "d": (b - a) * 100}
+    sp = {}
+    for key, lk, sk in BRIEF_SPREADS:
+        a = (lv[lk]["a"] - lv[sk]["a"]) * 100
+        b = (lv[lk]["b"] - lv[sk]["b"]) * 100
+        g = regime(lv[lk]["d"], lv[sk]["d"])
+        sp[key] = {"a": a, "b": b, "d": b - a, **g}
+    curves = {d: {k: m[k].get(d) for k in ids} for d in (d0, d1)}
+    f_now, f_prev = _fwd_set(curves[d1]), _fwd_set(curves[d0])
+    fwd = {}
+    if f_now:
+        for h in ("1", "5"):
+            lvls = f_now[h]
+            spr = {key: (lvls[lk] - lvls[sk]) * 100 for key, lk, sk in BRIEF_SPREADS}
+            prev = ({key: (f_prev[h][lk] - f_prev[h][sk]) * 100 for key, lk, sk in BRIEF_SPREADS}
+                    if f_prev else None)
+            fwd[h] = {"lv": lvls, "sp": spr, "prev_sp": prev,
+                      "prev_lv": f_prev[h] if f_prev else None}
+    out = {"from": d0, "to": d1, "lv": lv, "sp": sp, "fwd": fwd,
+           "interp3": bool(f_now and f_now["interp3"])}
+    # 年內區間（監控表「現在」欄的位置條）：今年 1/1 起的最低、最高
+    year = d1[:4] + "-01-01"
+    ytd_days = [d for d in axis if d >= year] or axis
+    rng = {}
+    for k, _ in BRIEF_TENORS:
+        vals = [m[k][d] for d in ytd_days]
+        rng[k] = {"lo": min(vals), "hi": max(vals)}
+    for key, lk, sk in BRIEF_SPREADS:
+        vals = [(m[lk][d] - m[sk][d]) * 100 for d in ytd_days]
+        rng[key] = {"lo": min(vals), "hi": max(vals)}
+    out["ytd"] = rng
+    # 這一週每天的變動：找出最大的單日變動（天期或利差），給白話段落點名
+    week = axis[-1 - n:]
+    best = None
+    for i in range(1, len(week)):
+        p, c = week[i - 1], week[i]
+        cands = [(f"{k} 年", (m[k][c] - m[k][p]) * 100) for k, _ in BRIEF_TENORS]
+        cands += [(key.replace("-", "−"), ((m[lk][c] - m[sk][c]) - (m[lk][p] - m[sk][p])) * 100)
+                  for key, lk, sk in BRIEF_SPREADS]
+        for name, v in cands:
+            if best is None or abs(v) > abs(best["d"]) + 1e-9:
+                best = {"date": c, "name": name, "d": v}
+    out["move"] = best
+    # 遠期歷史（近 3 個月，給監控表的小走勢線）
+    hist = {"1": {k: [] for k in ("2", "10", "30", "10-2", "30-10", "30-2")},
+            "5": {k: [] for k in ("2", "10", "30", "10-2", "30-10", "30-2")}}
+    for d in axis[-64:]:
+        f = _fwd_set({k: m[k].get(d) for k in ids})
+        if not f:
+            continue
+        for h in ("1", "5"):
+            for k in ("2", "10", "30"):
+                hist[h][k].append(round(f[h][k], 4))
+            for key, lk, sk in BRIEF_SPREADS:
+                hist[h][key].append(round((f[h][lk] - f[h][sk]) * 100, 2))
+    out["fwd_hist"] = hist
+    out["text"] = _brief_text(out)
+    return out
+
+
+def _verb(v: float) -> str:
+    return "幾乎不動" if abs(_r6(v)) < 1 else (f"上升 {_num(abs(v))}bp" if v > 0 else f"下跌 {_num(abs(v))}bp")
+
+
+def brief_prose(b: dict, events: list | None = None) -> str:
+    """
+    最上方的白話段落：2–3 句、只帶幾個關鍵數字（2026-10 使用者：「純文字加少數
+    關鍵數字」）。逐項數字放在下方「數字明細」收合區（_brief_text）。
+      ① 本週曲線怎麼動、哪一端帶動、30−2 現在多少
+      ② 最大單日變動在哪天、當天有什麼事件（4bp 以上才講）
+      ③ 市場定價：1 年後、5 年後的 30−2，以及比上週往哪邊修正
+    """
+    lv, sp, fwd = b["lv"], b["sp"], b["fwd"]
+    x = sp["30-2"]
+    d2, d10, d30 = lv["2"]["d"], lv["10"]["d"], lv["30"]["d"]
+    now = _num(x["b"])
+    if abs(_r6(x["d"])) < FLAT_BP:
+        ds = [d2, d10, d30]
+        if all(abs(_r6(v)) < FLAT_BP for v in ds):
+            s1 = f"本週曲線幾乎沒動：2 年、10 年、30 年變動都在 2bp 以內，30−2 停在 {now}bp。"
+        elif all(v > 0 for v in ds) or all(v < 0 for v in ds):
+            lo, hi = min(abs(v) for v in ds), max(abs(v) for v in ds)
+            rng = f"{_num(lo)}–{_num(hi)}" if _num(lo) != _num(hi) else _num(lo)
+            s1 = (f"本週曲線大致平行{'上移' if d2 > 0 else '下移'}：2 年、10 年、30 年"
+                  f"都{'上升' if d2 > 0 else '下跌'} {rng}bp，形狀幾乎不變，30−2 停在 {now}bp。")
+        else:
+            s1 = f"本週曲線形狀幾乎沒變：各天期漲跌互見，30−2 停在 {now}bp。"
+        a, c = sp["10-2"]["d"], sp["30-10"]["d"]
+        if abs(_r6(a)) >= FLAT_BP and abs(_r6(c)) >= FLAT_BP and a * c < 0:
+            s1 = s1[:-1] + f"；不過中段與長段反向（10−2 {_sgn(a)}、30−10 {_sgn(c)}），互相抵銷。"
+    else:
+        size = "明顯" if abs(x["d"]) >= 8 else "小幅"
+        shape = "變陡" if x["d"] > 0 else "變平"
+        lead = f"，{x['lead']}" if x.get("lead") else ""
+        s1 = (f"本週曲線{size}{shape}：30 年{_verb(d30)}、2 年{_verb(d2)}{lead}，"
+              f"30−2 {'擴大' if x['d'] > 0 else '收窄'}到 {now}bp。")
+    out = [s1]
+    mv = b.get("move")
+    if mv and abs(mv["d"]) >= 4:
+        names = [zh for d, zh in (events or []) if d == mv["date"]]
+        ev = f"，當天有{'、'.join(dict.fromkeys(names))}" if names else ""
+        out.append(f"主要變化集中在 {_md2(mv['date'])}：{mv['name']}單日"
+                   f"{'上升' if mv['d'] > 0 else '下跌'} {_num(abs(mv['d']))}bp{ev}。")
+    if fwd.get("1") and fwd.get("5"):
+        f1, f5 = fwd["1"]["sp"]["30-2"], fwd["5"]["sp"]["30-2"]
+        g1, g5 = f1 - x["b"], f5 - x["b"]
+        c1 = "up" if g1 > 5 else "dn" if g1 < -5 else "eq"
+        c5 = "up" if g5 > 5 else "dn" if g5 < -5 else "eq"
+        view = {("dn", "dn"): "市場仍押注曲線未來回平",
+                ("up", "up"): "市場押注曲線未來續陡",
+                ("up", "dn"): "市場押注一年內續陡、長期回平",
+                ("dn", "up"): "市場押注一年內回平、長期再陡",
+                ("eq", "dn"): "市場押注一年內大致維持、長期回平",
+                ("eq", "up"): "市場押注一年內大致維持、長期更陡",
+                ("dn", "eq"): "市場押注一年內回平、之後大致維持",
+                ("up", "eq"): "市場押注一年內續陡、之後大致維持",
+                ("eq", "eq"): "市場預期曲線大致維持現在的陡度"}[(c1, c5)]
+        s3 = (f"市場定價方面，遠期顯示 30−2 一年後約 {_num(f1)}bp、五年後約 {_num(f5)}bp，{view}")
+        pv = fwd["1"].get("prev_sp")
+        if pv:
+            r = f1 - pv["30-2"]
+            s3 += ("；比上週往變陡修正了 " + _num(abs(r)) + "bp" if r > 2 else
+                   "；比上週往變平修正了 " + _num(abs(r)) + "bp" if r < -2 else "，與上週相近")
+        out.append(s3 + "。")
+    return "".join(out)
+
+
+def _brief_text(b: dict) -> list[str]:
+    lv, sp, fwd = b["lv"], b["sp"], b["fwd"]
+    x = sp["30-2"]
+    move = ("大致持平" if abs(_r6(x["d"])) < FLAT_BP else
+            f"擴大 {_num(abs(x['d']))}bp" if x["d"] > 0 else f"收窄 {_num(abs(x['d']))}bp")
+    s1 = f"30−2 利差 {_num(x['a'])} → {_num(x['b'])}bp（{move}）"
+    tenors = f"2Y {_sgn(lv['2']['d'])}、10Y {_sgn(lv['10']['d'])}、30Y {_sgn(lv['30']['d'])}"
+    if x["code"] == "flat":
+        d2, d30 = lv["2"]["d"], lv["30"]["d"]
+        if abs(_r6(d2)) < FLAT_BP and abs(_r6(d30)) < FLAT_BP:
+            how = "各天期變動都不大"
+        else:
+            how = "兩端同步" + ("上行" if d2 + d30 > 0 else "下行") + "（大致平行）"
+    else:
+        lead = f"，{x['lead']}" if x["lead"] and not x["code"].startswith("twist") else ""
+        how = f"{x['zh']}：{_RG_PHRASE.get(x['code'], '')}{lead}"
+    s2 = f"{tenors}；{how}。"
+    a, c = sp["10-2"]["d"], sp["30-10"]["d"]
+    seg = f"分段：10−2 {_sgn(a)}、30−10 {_sgn(c)}"
+    if abs(_r6(x["d"])) < FLAT_BP:
+        s3 = seg + ("，兩段互相抵銷。" if abs(_r6(a)) >= FLAT_BP and abs(_r6(c)) >= FLAT_BP and a * c < 0
+                    else "，兩段都沒什麼動。")
+    else:
+        same = [(abs(a), "2→10 年段") if a * x["d"] > 0 else None,
+                (abs(c), "10→30 年段") if c * x["d"] > 0 else None]
+        same = [s for s in same if s]
+        s3 = seg + (f"，主要來自 {max(same)[1]}。" if same else "。")
+    out = [s1, s2, s3]
+    if fwd.get("1") and fwd.get("5"):
+        def part(h, zh):
+            f = fwd[h]["sp"]["30-2"]
+            g = f - x["b"]
+            pv = fwd[h]["prev_sp"]
+            wk = f"，較上週 {_sgn(f - pv['30-2'])}" if pv else ""
+            return f"{zh} 30−2 約 {_num(f)}bp（比現在 {_sgn(g)}{wk}）"
+        out.append("市場隱含：" + part("1", "1 年後") + "；" + part("5", "5 年後") + "。")
+        g1 = fwd["1"]["sp"]["30-2"] - x["b"]
+        g5 = fwd["5"]["sp"]["30-2"] - x["b"]
+        p1 = "未來一年續陡" if g1 > 5 else "未來一年回平" if g1 < -5 else "未來一年大致維持"
+        p5 = "五年後更陡" if g5 > 5 else "五年後更平" if g5 < -5 else "五年後與現在接近"
+        pv = fwd["1"]["prev_sp"]
+        if pv:
+            r = fwd["1"]["sp"]["30-2"] - pv["30-2"]
+            rev = ("較上週往更陡修正" if r > 2 else "較上週往更平修正" if r < -2 else "與上週相近")
+            out.append(f"定價偏向{p1}、{p5}；{rev}。")
+        else:
+            out.append(f"定價偏向{p1}、{p5}。")
+    return out
 
 
 def future_view(forwards: list[dict], market: dict | None) -> dict:
