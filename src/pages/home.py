@@ -837,13 +837,12 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
             'var f=fmt(q);if(b)b.textContent=f[0];'
             'if(!i){i=document.createElement("i");ch.insertBefore(i,b);}'
             'i.textContent=f[1];i.className=f[2]||"fl";'
-            'if(q.k==="idx"&&q.p){var pc=(q.v-q.p)/q.p*100;'
-            'ch.setAttribute("title","漲跌幅 "+(pc>=0?"+":"")+pc.toFixed(2)+"%");}'
+
             'if(!w){w=document.createElement("small");w.className="fs-when";'
             'var nm=ch.querySelector(".fs-nm")||ch;nm.appendChild(w);}'
             'w.textContent=fr?((q.s||"盤中")+"・延遲 "+hm(q.ts))'
             ':((q.s?q.s+" ":"")+q.d.slice(5).replace("-","/"));'
-            'ch.setAttribute("data-d",q.d);ch.setAttribute("data-v",q.v);'
+            'ch.setAttribute("data-d",q.d);ch.setAttribute("data-v",q.v);if(q.p)ch.setAttribute("data-pv",q.p);'
             'if(window.fsReMode)window.fsReMode(ch);});}'
             'function tk(){if(document.visibilityState!=="visible"||N>=M)return;'
             'N++;last=Date.now();fetch("/api/quotes").then(function(r){'
@@ -904,25 +903,40 @@ Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c)
 // 第十八批：變動欄可切「日／MTD／YTD」（上月底、去年底收盤為基準）
 var mode=lsg(MK)||"d";if(["d","m","y"].indexOf(mode)<0)mode="d";
 function grp(x){return x.replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+function fx(x,n){var a=Math.abs(x).toFixed(n),p=a.split(".");return grp(p[0])+(p[1]?"."+p[1]:"");}
+function md(d){return d?(+d.slice(5,7))+"/"+(+d.slice(8,10))+(d.slice(0,4)!==String(new Date().getFullYear())?"（"+d.slice(0,4)+"）":""):"";}
 function rd(ch){var i=ch.querySelector('i');if(!i)return;
  if(!ch.hasAttribute('data-dd')){ch.setAttribute('data-dd',i.textContent);ch.setAttribute('data-dc',i.className||'fl');}
+ var k=ch.getAttribute('data-k'),v=parseFloat(ch.getAttribute('data-v')),n=k&&k.charAt(0)==="a"?(+k.slice(1)||0):(k==="twd"?3:2);
+ var t0=ch.getAttribute('data-tip0')||"";
+ // 點開說明：價格類給所選區間的漲跌幅（第十八批：百分比只放這裡）
+ if(ch.getAttribute('data-pc')==="1"){var bb=parseFloat(ch.getAttribute(mode==="d"?'data-pv':(mode==="m"?'data-bm':'data-by'))),
+   lb=mode==="d"?"日":(mode==="m"?"MTD ":"YTD "),bd=mode==="d"?"前一交易日":md(ch.getAttribute(mode==="m"?'data-bmd':'data-byd'));
+  if(isFinite(v)&&isFinite(bb)&&bb){var pc=(v/bb-1)*100;
+   ch.setAttribute('title',lb+"漲跌幅 "+(pc>=0?"+":"")+pc.toFixed(2)+"%（對"+(mode==="d"?bd+"收盤":" "+bd+" 收盤 "+fx(bb,n))+"）"+(t0?"｜"+t0:""));}
+  else if(t0)ch.setAttribute('title',t0);}
+ else if(k){var bd2=md(ch.getAttribute(mode==="m"?'data-bmd':'data-byd'));
+  if(mode==="d"){if(t0)ch.setAttribute('title',t0);}
+  else ch.setAttribute('title',(mode==="m"?"MTD":"YTD")+" 變動"+(bd2?"（對 "+bd2+"）":"")+(t0?"｜"+t0:""));}
  if(mode==="d"){i.textContent=ch.getAttribute('data-dd');i.className=ch.getAttribute('data-dc');return;}
- var v=parseFloat(ch.getAttribute('data-v')),b=parseFloat(ch.getAttribute(mode==="m"?'data-bm':'data-by')),k=ch.getAttribute('data-k');
- if(!k||!isFinite(v)||!isFinite(b)||b===0&&k==="pct"){i.textContent="—";i.className="fl";return;}
+ var b=parseFloat(ch.getAttribute(mode==="m"?'data-bm':'data-by'));
+ if(!k||!isFinite(v)||!isFinite(b)){i.textContent="—";i.className="fl";return;}
+ // 變動欄一律寫絕對差距：bp、點數、價差（第十八批 v2）
  var d=v-b,t,x;
  if(k==="bp"){x=Math.round(d*100);t=(x>=0?"+":"")+x+" bp";}
  else if(k==="bp0"){x=Math.round(d);t=(x>=0?"+":"")+x+" bp";}
- else if(k==="pct"){x=d/b*100;t=(x>=0?"+":"")+x.toFixed(2)+"%";}
+ else if(k==="pct"){x=d;t=(d<0?"-":"+")+fx(d,0);}
  else if(k==="twd"){x=d;t=(d>0?"貶":d<0?"升":"持平")+Math.abs(d).toFixed(3);}
- else{var n=+k.slice(1)||0,a=Math.abs(d).toFixed(n),p=a.split(".");x=+a===0?0:d;t=(d<0&&+a!==0?"-":"+")+grp(p[0])+(p[1]?"."+p[1]:"")+(ch.getAttribute('data-u')||"");}
+ else{var a=Math.abs(d).toFixed(n);x=+a===0?0:d;t=(d<0&&+a!==0?"-":"+")+fx(d,n)+(ch.getAttribute('data-u')||"");}
  i.textContent=t;i.className=x>0?"up":(x<0?"dn":"fl");}
 function am(){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),rd);
- each('.fs-modes button',function(b){b.setAttribute('aria-pressed',b.dataset.m===mode?'true':'false');});}
+ var s=box.querySelector('.fs-mode-sel');if(s)s.value=mode;}
 window.fsReMode=function(ch){ch.removeAttribute('data-dd');rd(ch);};
+// 表頭「變動」換成原生下拉選單（第十八批：使用者指定 日變動／MTD／YTD）；沒開 JS 時維持文字「變動」
 var hd=box.querySelector('.fs-hd span:nth-child(2)');
-if(hd){hd.innerHTML='<span class="fs-modes" role="group" aria-label="變動區間">'
- +'<button type="button" data-m="d">日</button><button type="button" data-m="m">MTD</button><button type="button" data-m="y">YTD</button></span>';
- each('.fs-modes button',function(b){b.addEventListener('click',function(){mode=b.dataset.m;lss(MK,mode);am();});});}
+if(hd){hd.innerHTML='<label class="fs-mode"><select class="fs-mode-sel" aria-label="變動區間">'
+ +'<option value="d">日變動</option><option value="m">MTD</option><option value="y">YTD</option></select></label>';
+ var sl=hd.querySelector('select');sl.addEventListener('change',function(){mode=sl.value;lss(MK,mode);am();});}
 am();
 })();
 """
@@ -966,7 +980,7 @@ def _unify_chip(c: dict) -> dict:
             pm = re.search(r"前日\s*(\d+)%", delta)
             if pm:
                 dp = p - (100 - int(pm.group(1)))
-                delta, d = f"{dp:+d}%", ("up" if dp > 0 else "dn" if dp < 0 else "")
+                delta, d = f"{dp:+d}pp", ("up" if dp > 0 else "dn" if dp < 0 else "")
             else:
                 delta, d = "—", ""
             value = f"{p}%"
@@ -1005,7 +1019,7 @@ def _unify_chip(c: dict) -> dict:
             delta, pct = delta.split("（", 1)
             tip = "漲跌幅 " + pct.rstrip("）")
     elif cid in ("pm_house", "pm_senate"):
-        delta = delta.replace(" 個百分點", "%").replace("個百分點", "%").replace(" 百分點", "%")
+        delta = delta.replace(" 個百分點", "pp").replace("個百分點", "pp").replace(" 百分點", "pp")
         label = label.replace("・", " ")
         if not d and re.match(r"^[+-]\d", delta):
             d = "up" if delta.startswith("+") else "dn"
@@ -1100,9 +1114,17 @@ def _focus_strip(f: dict | None) -> str:
             _mv = ""
             if c.get("num") is not None and c.get("k"):
                 _mv = (f' data-v="{c["num"]}" data-k="{esc(c["k"])}"'
-                       + (f' data-bm="{c["bm"]}"' if c.get("bm") is not None else "")
-                       + (f' data-by="{c["by"]}"' if c.get("by") is not None else "")
+                       + (f' data-bm="{c["bm"]}" data-bmd="{esc(c.get("bmd", ""))}"' if c.get("bm") is not None else "")
+                       + (f' data-by="{c["by"]}" data-byd="{esc(c.get("byd", ""))}"' if c.get("by") is not None else "")
+                       + (f' data-pv="{c["pv"]}"' if c.get("pv") is not None else "")
+                       + (' data-pc="1"' if c.get("pc") else "")
                        + (f' data-u="{esc(c["u"])}"' if c.get("u") else ""))
+                # 價格類：點開說明＝日漲跌幅（JS 會依「日變動／MTD／YTD」改寫），後接原本的說明
+                _t0 = u["tip"] if not (u["tip"] or "").startswith("漲跌幅") else ""
+                _mv += f' data-tip0="{esc(_t0)}"'
+                if c.get("pc") and c.get("pv"):
+                    _pct = (c["num"] / c["pv"] - 1) * 100
+                    u = dict(u, tip=f"日漲跌幅 {_pct:+.2f}%（對前一交易日收盤）" + (f"｜{_t0}" if _t0 else ""))
             chips.append(f'<div class="fs-chip{off}" data-chip="{c["id"]}"'
                          f' data-d="{esc(c.get("iso") or "")}"' + _mv
                          + (f' title="{esc(u["tip"])}"' if u["tip"] else "") + '>'
@@ -1630,10 +1652,11 @@ def home_body(ctxs: dict) -> str:
         <small>{esc(trigger_text)}</small><em>完整九宮格 →</em></a>
     </div>
     <div class="hm-layer">
-      <div class="hm-lh">整體情勢</div>
-      {brief_html}
+      <details class="hm-modx hm-briefx"><summary><span class="hm-modx-k">整體情勢</span>
+        <span class="hm-modx-s"><span>勞動市場・通膨・聯準會</span></span></summary>
+      <div class="hm-modx-b">{brief_html}</div></details>
       <details class="hm-modx"><summary><span class="hm-modx-k">四大模組</span>
-        <span class="hm-modx-s">{_mod_strip}</span></summary>
+        <span class="hm-modx-s hm-ms4">{_mod_strip}</span></summary>
       <div class="hm-modx-b">{_hm_modules(ctxs, sc, f_text, f_dir, p_text, p_level)}</div></details>
     </div>
   </section>

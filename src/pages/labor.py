@@ -21,6 +21,10 @@ SEV_ICON = {"alert": "■", "watch": "▲", "info": "●"}
 SEV_TEXT = {"alert": "重要", "watch": "留意", "info": "參考"}
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
+# 第十八批（使用者指定）：就業頁與通膨頁「本期關鍵訊號」每條訊號的標籤改說
+# 對貨幣政策的傾向（利寬鬆／利緊縮）；其他地方的說法不動。
+SIGNAL_LEAN_TEXT = {"dovish": "利寬鬆", "hawkish": "利緊縮",
+                    "neutral": "中性", "balanced": "多空拉鋸"}
 
 
 # ---------------------------------------------------------------------------
@@ -155,7 +159,7 @@ def _flag_row(f) -> str:
     impact = ""
     if f.impact:
         impact = (f'<div class="f-impact"><span class="f-lean {esc(f.lean)}">'
-                  f'{esc(LEAN_TEXT.get(f.lean, ""))}</span><span>{esc(f.impact)}</span></div>')
+                  f'{esc(SIGNAL_LEAN_TEXT.get(f.lean, ""))}</span><span>{esc(f.impact)}</span></div>')
     # 只在完整句子後分段；括號內說明保持連續，原文不增刪。
     paragraphs, chunk, depth = [], "", 0
     for char in f.detail:

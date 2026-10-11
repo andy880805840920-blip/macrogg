@@ -721,7 +721,7 @@ check("⑯c 勾選清單（第十八批）：選擇指標鈕、編輯列、33 �
 check("⑯d 內嵌 JS 帶預設組、不設上限、localStorage 鍵與 MTD／YTD 切換",
       '"defaults": ["dgs2", "dgs10", "dgs30", "fedwatch"]' in _hs
       and "var M=4" not in _hs and "localStorage" in _hs and 'MK="fsMode"' in _hs
-      and ">MTD<" in _hs and ">YTD<" in _hs)
+      and "日變動" in _hs and ">MTD<" in _hs and ">YTD<" in _hs and "fs-mode-sel" in _hs)
 _hs2 = _home._focus_strip({"yields": [
     {"label": "10 年期", "value": 4.66, "delta_bp": -4, "date": "2026-08-26"}],
     "links": [], "fedwatch": None, "text": "", "text_source": "",

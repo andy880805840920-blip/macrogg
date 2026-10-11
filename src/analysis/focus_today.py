@@ -118,6 +118,22 @@ def _yahoo_prev_close(res0: dict) -> float | None:
     return None
 
 
+def _period_bases_d(points, ref: str) -> dict:
+    """同 _period_bases，另外帶基準日（點開說明要寫「對 9/30 收盤」）。"""
+    out = {"bm": None, "by": None, "bmd": "", "byd": ""}
+    if not ref or len(ref) < 10:
+        return out
+    m0, y0 = ref[:7] + "-01", ref[:4] + "-01-01"
+    for d, v in points:
+        if v is None:
+            continue
+        if d < m0:
+            out["bm"], out["bmd"] = v, d
+        if d < y0:
+            out["by"], out["byd"] = v, d
+    return out
+
+
 def _period_bases(points, ref: str) -> tuple:
     """
     MTD／YTD 的基準（第十八批）：points＝[(YYYY-MM-DD, 值)…] 依日期排序，
@@ -151,8 +167,15 @@ def _yahoo_bases(res0: dict, scale=None) -> dict:
            for t, c in zip(ts, cl) if t is not None and c is not None]
     rmt = meta.get("regularMarketTime")
     ref = _d(rmt) if rmt else (pts[-1][0] if pts else "")
-    bm, by = _period_bases(pts, ref)
-    return {"bm": bm, "by": by}
+    return _period_bases_d(pts, ref)
+
+
+def _fred_bases_d(rows) -> dict:
+    rows = [r for r in (rows or []) if r.get("value") is not None and not r.get("live")]
+    if not rows:
+        return {"bm": None, "by": None, "bmd": "", "byd": ""}
+    return _period_bases_d([(str(r.get("date") or "")[:10], r["value"]) for r in rows],
+                           str(rows[-1].get("date") or "")[:10])
 
 
 def _fred_bases(rows) -> tuple:
@@ -387,7 +410,8 @@ def _mk(cid, label, value, delta, direction, date, on=False, iso=""):
             "on": cid in DEFAULT_CHIPS or on}
 
 
-def _attach(chip: dict, num, bm, by, kind: str, unit: str = "") -> dict:
+def _attach(chip: dict, num, bm, by, kind: str, unit: str = "", *, bmd: str = "",
+            byd: str = "", pv=None, pc: bool = False) -> dict:
     """
     MTD／YTD 用的數字（第十八批）：num＝目前值、bm／by＝上月底／去年底基準，
     kind＝變動怎麼算與怎麼寫（前端 _MODE_JS 同一套）：
@@ -396,9 +420,13 @@ def _attach(chip: dict, num, bm, by, kind: str, unit: str = "") -> dict:
     """
     if num is None:
         return chip
+    # 第十八批 v2：變動欄一律寫絕對差距；pc＝價格類，點開說明才給漲跌幅 %
+    #（日＝對前一交易日 pv、MTD＝對 bmd 收盤、YTD＝對 byd 收盤）
     chip.update({"num": round(float(num), 6), "k": kind, "u": unit,
                  "bm": None if bm is None else round(float(bm), 6),
-                 "by": None if by is None else round(float(by), 6)})
+                 "by": None if by is None else round(float(by), 6),
+                 "bmd": bmd or "", "byd": byd or "", "pc": bool(pc),
+                 "pv": None if pv is None else round(float(pv), 6)})
     return chip
 
 
@@ -409,9 +437,10 @@ def _pct_chip(cid, label, rows):
         return _mk(cid, label, "—", "缺資料", "", "")
     db = None if p is None else round((v - p) * 100)
     cls = "up" if (db or 0) > 0 else ("dn" if (db or 0) < 0 else "")
-    bm, by = _fred_bases(rows)
+    b = _fred_bases_d(rows)
     return _attach(_mk(cid, label, f"{v:.2f}%",
-                       f"{db:+d} bp" if db is not None else "—", cls, d), v, bm, by, "bp")
+                       f"{db:+d} bp" if db is not None else "—", cls, d), v, b["bm"], b["by"], "bp",
+                   bmd=b["bmd"], byd=b["byd"], pv=p)
 
 
 _QUOTE_UNSET = object()
@@ -438,14 +467,16 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=_QUOTE_UNSET):
                 chip = _mk(cid, spec["label"], f"{q['value']:,.0f}",
                            f"{dv:+,.0f}（{pct:+.2f}%）", cls, q["date"])
                 chip["source"] = "Yahoo"
-                return _attach(chip, q["value"], q.get("bm"), q.get("by"), "pct")
+                return _attach(chip, q["value"], q.get("bm"), q.get("by"), "a0",
+                               bmd=q.get("bmd", ""), byd=q.get("byd", ""), pv=q["prev"], pc=True)
             digits = spec.get("digits", 1)
             delta = (("貶" if dv > 0 else "升" if dv < 0 else "持平") + f"{abs(dv):.{digits}f}"
                      if cid == "twd" else f"{dv:+.{digits}f}")
             chip = _mk(cid, spec["label"], f"{q['value']:.{digits}f}{spec['unit']}", delta, cls, q["date"])
             chip["source"] = "Yahoo"
             return _attach(chip, q["value"], q.get("bm"), q.get("by"),
-                           "twd" if cid == "twd" else f"a{digits}")
+                           "twd" if cid == "twd" else f"a{digits}",
+                           bmd=q.get("bmd", ""), byd=q.get("byd", ""), pv=q["prev"], pc=True)
     rows = (liq or {}).get(spec["fred"]) if spec.get("fred") else None
     v, p, d = _last2(rows)
     if v is None:
@@ -457,8 +488,9 @@ def _level_chip(cid, spec, liq, offline, _get=None, _pre=_QUOTE_UNSET):
              if cid == "twd" else f"{dv:+.{digits}f}"))
     chip = _mk(cid, spec["label"], f"{v:.{digits}f}{spec['unit']}", delta, cls, d)
     chip["source"] = "FRED"
-    bm, by = _fred_bases(rows)
-    return _attach(chip, v, bm, by, "twd" if cid == "twd" else f"a{digits}")
+    b = _fred_bases_d(rows)
+    return _attach(chip, v, b["bm"], b["by"], "twd" if cid == "twd" else f"a{digits}",
+                   bmd=b["bmd"], byd=b["byd"], pv=p, pc=True)
 
 
 # 台指期：期交所行情頁背後使用的資料端點（**非官方 API**，可能改版）。
@@ -593,7 +625,9 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
             chip = _mk(cid, label + "盤中", f"{q['value']:.2f}%",
                        f"{bp:+d} bp" if bp is not None else "—",
                        "up" if (bp or 0) > 0 else "dn" if (bp or 0) < 0 else "", q.get("date") or "")
-            _attach(chip, q["value"], q.get("bm"), q.get("by"), "bp")
+            _attach(chip, q["value"], q.get("bm"), q.get("by"), "bp",
+                    bmd=q.get("bmd", ""), byd=q.get("byd", ""),
+                    pv=None if bp is None else q["value"] - bp / 100)
         else:
             chip = _mk(cid, label + "盤中", "—", "擷取失敗", "", "")
         chip["source"] = "Yahoo"
@@ -625,9 +659,10 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
                for r in srows
                for _iv in [_at_or_before(liq.get("IORB"), str(r.get("date") or ""))]
                if _iv is not None]
-        _bm, _by = _period_bases(_sp, str(sd)[:10])
+        _b = _period_bases_d(_sp, str(sd)[:10])
         chips.append(_attach(_mk("sofr_iorb", "SOFR−IORB", f"{spread:+.0f} bp",
-                                 d_disp, cls, sd), spread, _bm, _by, "bp0", " bp"))
+                                 d_disp, cls, sd), spread, _b["bm"], _b["by"], "bp0", " bp",
+                             bmd=_b["bmd"], byd=_b["byd"]))
     else:
         chips.append(_mk("sofr_iorb", "SOFR−IORB", "—", "缺資料", "", ""))
     # ON RRP：FRED 單位是十億美元 → 顯示成億美元（×10）。
@@ -635,11 +670,12 @@ def build_catalog(rates_series: dict | None, liq_series: dict | None,
     if v is not None:
         dv = None if p is None else (v - p) * 10
         cls = "up" if (dv or 0) > 0 else ("dn" if (dv or 0) < 0 else "")
-        _bm, _by = _fred_bases(liq.get("RRPONTSYD"))
+        _b = _fred_bases_d(liq.get("RRPONTSYD"))
         chips.append(_attach(_mk("onrrp", "ON RRP", f"{v * 10:,.0f} 億美元",
                                  f"{dv:+,.0f} 億" if dv is not None else "—", cls, d),
-                             v * 10, None if _bm is None else _bm * 10,
-                             None if _by is None else _by * 10, "a0", " 億"))
+                             v * 10, None if _b["bm"] is None else _b["bm"] * 10,
+                             None if _b["by"] is None else _b["by"] * 10, "a0", " 億",
+                             bmd=_b["bmd"], byd=_b["byd"]))
     else:
         chips.append(_mk("onrrp", "ON RRP", "—", "缺資料", "", ""))
     # SRF（隔夜回購動用）：零是常態也是資訊——體系不缺錢；非零轉警示色。

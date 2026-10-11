@@ -219,6 +219,55 @@ check("E6 回購時程：日期、區間、上限", _bb and _bb[0]["date"] == "2
       and _bb[0]["segment"] == "名目債 10Y–20Y" and _bb[0]["max"] == "最多 40 億美元", _bb)
 check("E7 離線不連網", wx.collect({}, offline=True) == {})
 
+# ---------------------------------------------------------------------------
+# F. 就業／通膨頁訊號標籤：利寬鬆／利緊縮（其他地方不動）
+# ---------------------------------------------------------------------------
+from src.pages import labor as _lp  # noqa: E402
+from src.analysis.rules import Flag as _Flag  # noqa: E402
+_r1 = _lp._flag_row(_Flag("x", "watch", "測試", "說明。", lean="dovish", impact="影響"))
+_r2 = _lp._flag_row(_Flag("y", "watch", "測試", "說明。", lean="hawkish", impact="影響"))
+check("F1 訊號標籤改成利寬鬆／利緊縮", "利寬鬆" in _r1 and "利緊縮" in _r2
+      and "利降息" not in _r1 + _r2 and "利升息" not in _r1 + _r2)
+check("F2 其他地方的說法不動（就業頁 LEAN_TEXT 仍是利降息／利升息）",
+      _lp.LEAN_TEXT["dovish"] == "利降息" and _lp.LEAN_TEXT["hawkish"] == "利升息")
+
+# ---------------------------------------------------------------------------
+# G. 變動欄一律絕對差距；百分比只在點開說明、跟著區間走；機率寫 pp
+# ---------------------------------------------------------------------------
+class _FakeY:
+    def __init__(self, closes, days, cur):
+        import calendar as _cal
+        ts = [_cal.timegm(_dt.datetime.fromisoformat(d + "T05:00:00").timetuple()) for d in days]
+        self._j = {"chart": {"result": [{"meta": {"regularMarketPrice": cur, "regularMarketTime": ts[-1],
+                                                  "gmtoffset": 28800},
+                                         "timestamp": ts, "indicators": {"quote": [{"close": closes}]}}]}}
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self._j
+
+
+_days = ["2025-12-30", "2025-12-31", "2026-09-29", "2026-09-30", "2026-10-07", "2026-10-08"]
+_q = ft.fetch_yahoo_quote("^TWII", 5000, 100000,
+                          _get=lambda u: _FakeY([28000, 28964, 47500, 47940, 49806, 49313], _days, 49313))
+_c = ft._level_chip("twii", ft.QUOTE_SPECS["twii"], {}, False, _pre=_q)
+check("G1 指數：變動寫點數（a0）、價格類（pc）、帶基準日與前收",
+      _c["k"] == "a0" and _c["pc"] and _c["bmd"] == "2026-09-30" and _c["byd"] == "2025-12-31"
+      and _c["pv"] == 49806 and "%" not in _c["delta"].split("（")[0], _c)
+_hs = _home._focus_strip({"chips": [dict(_c, on=True)], "text": "", "links": [], "fedwatch": None})
+check("G2 頁面帶 data-pc／data-pv／基準日；初始說明是日漲跌幅", 'data-pc="1"' in _hs and 'data-pv="49806.0"' in _hs
+      and 'data-bmd="2026-09-30"' in _hs and "日漲跌幅 -0.99%" in _hs)
+_fw = {"id": "fedwatch", "label": "10 月 FOMC（10/28）", "value": "維持 81%",
+       "delta": "升一碼 19%（前日 18%）", "dir": "", "date": "10-11"}
+check("G3 機率變動寫 pp", _home._unify_chip(_fw)["delta"].endswith("pp"), _home._unify_chip(_fw))
+check("G4 前端：變動欄的 pct 分支改成點數（不再出現 x.toFixed(2)+\"%\" 的變動）",
+      't=(x>=0?"+":"")+x.toFixed(2)+"%"' not in _home._CHIP_SELECT_JS)
+_js = _home._CHIP_SELECT_JS
+check("G5 前端說明含日／MTD／YTD 漲跌幅與基準日", '"漲跌幅 "' in _js and "data-bmd" in _js
+      and "data-byd" in _js and "前一交易日" in _js)
+
 print()
 print("全部通過" if not FAILED else f"有失敗（{len(FAILED)}）")
 sys.exit(1 if FAILED else 0)
