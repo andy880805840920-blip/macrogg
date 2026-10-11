@@ -61,6 +61,47 @@ jobs:
       - name: 安裝依賴
         run: pip install -r requirements.txt
 
+      # 2026-10 新增：上線前的兩道關卡。任何一道沒過，這次就不產生頁面、
+      # 不 commit——網站維持上一版，不會出現壞掉的頁面。
+      #
+      # ① 語法檢查：用跟正式執行同一版的 Python（3.11）把每個 .py 編譯一次。
+      #    實際發生過：一行只有新版 Python 看得懂的 f-string 寫法，在 3.11
+      #    直接 SyntaxError，整次更新失敗、錯誤訊息又埋在很長的 log 裡。
+      - name: 語法檢查（Python 3.11）
+        run: |
+          python - <<'PY'
+          import pathlib, py_compile, sys
+          bad = []
+          for p in sorted(pathlib.Path(".").glob("**/*.py")):
+              if any(x in p.parts for x in ("output", ".git", "node_modules")):
+                  continue
+              try:
+                  py_compile.compile(str(p), doraise=True)
+              except py_compile.PyCompileError as e:
+                  bad.append(str(p)); print(e.msg)
+          if bad:
+              print("::error::語法錯誤：" + "、".join(bad))
+              sys.exit(1)
+          print("語法檢查通過")
+          PY
+
+      # ② 核心規則測試：新聞選文規則、殖利率曲線（Python 與瀏覽器端
+      #    計算必須一致）。這幾個測試只用內建的假資料、不連網，結果固定。
+      #    其他測試有些會隨日期或外部資料變動，不放在這道關卡裡。
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 核心規則測試
+        run: |
+          set -e
+          for t in test_news_rules test_curve_window test_curve_weekly test_future_outlook test_topics_election; do
+            if [ ! -f "tests/$t.py" ]; then echo "::warning::找不到 tests/$t.py，略過"; continue; fi
+            echo "::group::$t"
+            python tests/$t.py
+            echo "::endgroup::"
+          done
+
       # SQLite 內含每次抓取的快照（修正追蹤的後備來源，也是
       # 「FRED 這一次抓不到就沿用上次的值」的後備資料）。
       # 只放進 Actions 快取、不 commit 進 repo，避免二進位檔把 repo 撐大。
@@ -108,7 +149,44 @@ jobs:
           BRIEF_MODEL: ${{ vars.BRIEF_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python run.py --json
+        # 完整 log 另存 run.log：下一步把新聞與殖利率的關鍵幾行整理到
+        # 這次執行的摘要頁（Actions → 點進這次執行 → Summary），不用在
+        # 幾千行 log 裡找。pipefail 讓 run.py 失敗時這一步照樣標紅。
+        run: |
+          set -o pipefail
+          python run.py --json 2>&1 | tee run.log
+
+      # 2026-10 新增：執行摘要。把「市場焦點」「主題補充」「官方殖利率」等
+      # 關鍵行貼到 Summary 頁，要回報問題時直接複製這一頁就好。
+      - name: 執行摘要
+        if: always()
+        run: |
+          {
+            echo "## 更新摘要（$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M') 台北）"
+            echo
+            echo "### 新聞（市場焦點／主題補充）"
+            echo '```'
+            grep -E "市場焦點|主題補充" run.log | sed -E 's/^[A-Z]+ //' | head -60 || true
+            echo '```'
+            echo "### 殖利率與資料來源"
+            echo '```'
+            grep -E "官方殖利率|殖利率曲線|週報|財政部|FRED.*失敗" run.log | head -30 || true
+            echo '```'
+            echo "### 警告與錯誤"
+            echo '```'
+            grep -E "^(WARNING|ERROR)|Traceback|Error" run.log | head -40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+
+      # 完整 log 保留 14 天，需要時可在這次執行的頁面下載（Artifacts）
+      - name: 保存完整 log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-log-${{ github.run_number }}
+          path: run.log
+          retention-days: 14
+          if-no-files-found: ignore
 
       - name: Commit 產出
         run: |
