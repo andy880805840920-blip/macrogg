@@ -1,82 +1,82 @@
 {
- "hash": "e60d460c53917f6f",
- "text": "全球債市正經歷廣泛的殖利率上升，美國10年期公債殖利率上週逼近5.4%，創24年新高，這波漲勢並非美國獨有現象。在超過20個國家中，美國10年期殖利率漲幅最大，義大利、印尼、日本、南韓等國基準殖利率自年初以來也至少上升100個基點。分析人士指出，這波上升反映出兩股力量：一方面美國經濟成長超預期，將殖利率推回正常水準；另一方面，法國債殖利率飆升正發出債務危機警訊，與該國預算削減引發的街頭抗爭形成自我強化的因果關係。日本投資人在國內殖利率正常化之際，正在回收過去在低利率時代累積的超過1.3兆美元美債部位，也推高全球殖利率。長期債殖利率的上升反映出市場對全球低利率時代已然結束的認知。\n川普10/11宣布俄烏能源停火協議生效，俄羅斯同意立即供應超過30萬噸柴油至美國及全球市場，隨後11月供應50萬噸、之後100萬噸，短期內再供應300萬噸；此舉引發美國部分議員批評，與美國制裁俄羅斯石油收入的政策相悖。\n市場本週關注美國消費者物價指數、生產者物價指數及零售銷售數據，以尋求聯準會下一步政策方向的線索；市場目前定價10月升息機率18%，12月升息機率85%。",
+ "hash": "91b7c46de70a7e14",
+ "text": "聯準會克里夫蘭分行總裁哈馬克於10/12表示，為防止「通膨心態」根深蒂固，應維持緊縮貨幣政策立場，並主張採取較小幅度但相對快速的升息調整，而非等待後來需要更大幅度修正。她指出，考量各項因素，限制性政策立場對確保通膨及時回到2%目標屬必要。¶市場對升息預期分化：根據CME聯邦基金期貨工具，交易員對10/28會議維持利率不變的機率定價為78%，但對12月最後一次會議升息的機率則近88%。通膨數據成為關鍵：預測市場認為9月消費者物價指數年增率將達3.6%，較8月的3.4%上升，但認為2026年通膨已見頂，核心通膨預期維持在2.4%。\n華許主席不採用前瞻指引，與前任主席政策有別；諾貝爾經濟學獎得主伍德福研究催生央行前瞻指引作法，但華許認為供應衝擊環境下難以對未來利率作出承諾。",
  "links": [
   {
-   "title": "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
-   "link": "https://finance.yahoo.com/markets/article/bond-yields-are-surging-worldwide--and-france-is-on-the-ugly-side-chart-of-the-day-123643553.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-11T12:36:43+00:00"
+   "title": "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+   "link": "https://www.cnbc.com/2026/10/12/beth-hammack-fed-inflation-policy.html",
+   "source": "CNBC",
+   "at": "2026-10-12T17:15:21+00:00"
   },
   {
-   "title": "Asia stocks mixed as oil retreats, earnings season gathers pace",
-   "link": "https://finance.yahoo.com/markets/world-indices/articles/asia-stocks-mixed-oil-retreats-035535247.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-12T03:55:35+00:00"
+   "title": "Inflation likely peaked for 2026 but will remain sticky, according to prediction markets",
+   "link": "https://www.cnbc.com/2026/10/12/inflation-will-remain-sticky-in-2026-according-to-prediction-markets.html",
+   "source": "CNBC",
+   "at": "2026-10-12T15:37:26+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-12",
+   "date": "2026-10-13",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.877946,
-     "end": 3.925,
-     "move_bp": 4.705,
+     "start": 3.879643,
+     "end": 3.935,
+     "move_bp": 5.536,
      "outcomes": [
       [
        0,
-       0.8118
+       0.7786
       ],
       [
        25,
-       0.1882
+       0.2214
       ]
      ],
      "how": "2026-11 合約平均"
     },
     {
      "date": "2026-12-09",
-     "start": 3.925,
-     "end": 4.129318,
-     "move_bp": 20.432,
+     "start": 3.935,
+     "end": 4.146364,
+     "move_bp": 21.136,
      "outcomes": [
       [
        25,
-       0.8173
+       0.8455
       ],
       [
        0,
-       0.1827
+       0.1545
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
     {
      "date": "2027-01-27",
-     "start": 4.129318,
-     "end": 4.23,
-     "move_bp": 10.068,
+     "start": 4.146364,
+     "end": 4.255,
+     "move_bp": 10.864,
      "outcomes": [
       [
        0,
-       0.5973
+       0.5655
       ],
       [
        25,
-       0.4027
+       0.4345
       ]
      ],
      "how": "2027-02 合約平均"
     },
     {
      "date": "2027-03-17",
-     "start": 4.23,
-     "end": 4.407143,
+     "start": 4.255,
+     "end": 4.432143,
      "move_bp": 17.714,
      "outcomes": [
       [
@@ -92,25 +92,25 @@
     },
     {
      "date": "2027-04-28",
-     "start": 4.407143,
-     "end": 4.5,
-     "move_bp": 9.286,
+     "start": 4.432143,
+     "end": 4.535,
+     "move_bp": 10.286,
      "outcomes": [
       [
        0,
-       0.6286
+       0.5886
       ],
       [
        25,
-       0.3714
+       0.4114
       ]
      ],
      "how": "2027-05 合約平均"
     },
     {
      "date": "2027-06-09",
-     "start": 4.5,
-     "end": 4.607143,
+     "start": 4.535,
+     "end": 4.642143,
      "move_bp": 10.714,
      "outcomes": [
       [
@@ -126,8 +126,8 @@
     },
     {
      "date": "2027-07-28",
-     "start": 4.607143,
-     "end": 4.645,
+     "start": 4.642143,
+     "end": 4.68,
      "move_bp": 3.786,
      "outcomes": [
       [
@@ -143,8 +143,8 @@
     },
     {
      "date": "2027-09-15",
-     "start": 4.645,
-     "end": 4.685,
+     "start": 4.68,
+     "end": 4.72,
      "move_bp": 4.0,
      "outcomes": [
       [
@@ -160,34 +160,34 @@
     },
     {
      "date": "2027-10-27",
-     "start": 4.685,
-     "end": 4.695,
-     "move_bp": 1.0,
+     "start": 4.72,
+     "end": 4.715,
+     "move_bp": -0.5,
      "outcomes": [
       [
        0,
-       0.96
+       0.98
       ],
       [
-       25,
-       0.04
+       -25,
+       0.02
       ]
      ],
      "how": "2027-11 合約平均"
     },
     {
      "date": "2027-12-08",
-     "start": 4.695,
-     "end": 4.688261,
-     "move_bp": -0.674,
+     "start": 4.715,
+     "end": 4.681304,
+     "move_bp": -3.37,
      "outcomes": [
       [
        0,
-       0.973
+       0.8652
       ],
       [
        -25,
-       0.027
+       0.1348
       ]
      ],
      "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
@@ -195,59 +195,59 @@
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.877946,
-    "end": 3.925,
-    "move_bp": 4.705,
+    "start": 3.879643,
+    "end": 3.935,
+    "move_bp": 5.536,
     "outcomes": [
      [
       0,
-      0.8118
+      0.7786
      ],
      [
       25,
-      0.1882
+      0.2214
      ]
     ],
     "how": "2026-11 合約平均"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.925,
-    "end": 4.129318,
-    "move_bp": 20.432,
+    "start": 3.935,
+    "end": 4.146364,
+    "move_bp": 21.136,
     "outcomes": [
      [
       25,
-      0.8173
+      0.8455
      ],
      [
       0,
-      0.1827
+      0.1545
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 25.137,
-   "r0": 3.877946,
+   "cum_bp": 26.672,
+   "r0": 3.879643,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 25.137,
-     "prev_cum_bp": 24.156
+     "cum_bp": 26.672,
+     "prev_cum_bp": 24.86
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 72.92,
-     "prev_cum_bp": 68.429
+     "cum_bp": 76.25,
+     "prev_cum_bp": 72.643
     },
     {
      "date": "2027-12-08",
      "label": "2027 年底",
-     "cum_bp": 81.031,
-     "prev_cum_bp": 76.755
+     "cum_bp": 80.166,
+     "prev_cum_bp": 75.363
     }
    ],
    "prev": {
@@ -271,202 +271,162 @@
     "horizon": {
      "date": "2026-12-09",
      "start": 3.925,
-     "end": 4.122273,
-     "move_bp": 19.727,
+     "end": 4.129318,
+     "move_bp": 20.432,
      "outcomes": [
       [
        25,
-       0.7891
+       0.8173
       ],
       [
        0,
-       0.2109
+       0.1827
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 24.156
+    "cum_bp": 24.86
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-10-12T06:26:03.196771+00:00",
+ "at": "2026-10-12T17:49:54.841696+00:00",
  "layout": "main",
  "topics": {
-  "hash": "ba1e498cff00f79d",
+  "hash": "506fe4c3403c9ee1",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會官員多數認為今年還會升息，但對時機保持開放態度；聯準會會議紀錄指出，為對抗持續的通膨，升息可能性大",
+    "text": "華許不採用前瞻指引，與前任主席政策方向分歧。2026年諾貝爾經濟學獎得主研究催生央行前瞻指引作法，全球金融危機後央行廣泛採用向市場說明未來利率走向的工具，但華許認為不適用，未沿用這項政策工具",
     "links": [
      {
-      "title": "Most Fed Officials See Another Rate Hike This Year but Leave Timing Open",
-      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE12YldKeENTSzMzU0hTU0h2dnFJWWU5RTNBU3daWlZObEd2SjRNWVVOTVBHdFp0QnlsNTBBVGxKZV9MTHR0TE5oTjNraHprUmU0cWVENERBdkx2aHNQX2dYTXUxdjJITmZVX0VlOHFuUzdhNjBob3dCY3RxcjZMZw?oc=5",
-      "source": "Barron's",
-      "at": "2026-10-12T04:47:21+00:00"
-     },
-     {
-      "title": "Fed minutes: Another rate hike likely coming this year to combat persistent inflation",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQNmZBTXdSZ0JnWHVYYlhKNkVHZlMxS3ZpX3dBbGY4QW0zelBMZEVXSkhxRGV3N2dSNVZ6dDNKTy1PVEJXcEd4d2FLdDZ1anVmNkFXb3h5eDQ1T3lBdlp3bU1Sc0RWbjl2VmpjcHpFb1h3a2dHYXNKelkzd3N1Ym9oR1ZNVEpXZF9TalJrWDlQaGFFVWxvYkJDaFBsa2p6dkZIeTg4U3BzMDV0SEE2b1E?oc=5",
-      "source": "ABC7 Chicago",
-      "at": "2026-10-11T18:03:16+00:00"
+      "title": "諾貝爾經濟學獎得主研究催生央行前瞻指引　Fed主席華許未沿用",
+      "link": "https://tw.stock.yahoo.com/news/%E8%AB%BE%E8%B2%9D%E7%88%BE%E7%B6%93%E6%BF%9F%E5%AD%B8%E7%8D%8E%E5%BE%97%E4%B8%BB%E7%A0%94%E7%A9%B6%E5%82%AC%E7%94%9F%E5%A4%AE%E8%A1%8C%E5%89%8D%E7%9E%BB%E6%8C%87%E5%BC%95-fed%E4%B8%BB%E5%B8%AD%E8%8F%AF%E8%A8%B1%E6%9C%AA%E6%B2%BF%E7%94%A8-141102419.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-12T14:11:02+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國財政部10/10售出728億美元公債，3年期、10年期、30年期殖利率均創20多年新高，但需求浮現；同週短期殖利率則見升息跡象",
+    "text": "美國政府本週售出728億美元公債，3年期、10年期及30年期拍賣殖利率創20年以來新高，但市場需求浮現",
     "links": [
      {
-      "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges. Short-Term Yields See Rate Hike",
-      "link": "https://news.google.com/rss/articles/CBMiqgJBVV95cUxPa2g3LW80T1VNcFljaDFQX2EyUV95WVhtZFlLN2tES0szcW02ZnhXemwzcXVmUnFmN1NXSHR1TnR6M0o3SWJIMXF0bXlMSG5WVnJsazBISWRJU01oOVhJS0VJVW8yeHdjdFNwb0RTaE0zWU92U0Y4ZC1odnJDc3J6TWxOajhCZVNvczlJdHlVdHEwV0s2YkY0UTNQNG5HSktLSWNPbUoxZFdHTG5RMVlrMjk5dHpwRU1GWkQzUXFiUjBVaXdhTE11WV9PU0U1TGdOY0NpbUxpbGswb2VtUUowTmRCMmFsSmN5ZEluUFZCeDlCSEY4QW5VcmhNMndhQlN1N1BIYVF5dDZxdF90azB5dXVkdV9QTEFSeER4VzBfcFJVVDJWVkVscWl3?oc=5",
-      "source": "Wolf Street",
-      "at": "2026-10-11T01:38:04+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "全球資金轉向保守配置，貨幣市場基金吸金創5月來新高，投資人尋求更安全的現金等價物",
-    "links": [
-     {
-      "title": "全球資金轉保守 貨幣市場基金吸金創5月來最高",
-      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPdnN3WHNHZ0VvOFZyNEZlb25FVGhrY19VNkY1ZjM5SXFqeUY1RF9WTmxQQ1I4VzgtdUNTTzM1bTZPTEFYa3BPNVBVWEM4Y3VQeDJ6WF9yWHNHLXZSYnQ3QkFibGVqbG0tUlZ4MUlNNkZaeHZubXlSbDV1WTJ2anZHT0d3aHRxbC1lN0dlVTlMcklGcm8?oc=5",
-      "source": "MoneyDJ",
-      "at": "2026-10-12T06:07:00+00:00"
+      "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges",
+      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPQjJrT1hOSlY0QVJ1a2JIRGlFQ2c4Z3dld1VSOXJLV1NJOGFnTXVGb1JPVXFMRTlKa3FxM0t2OElRN1otOEpPU2ZwdDY1RVJKWUJMYVZTRXhRaGQycnB1M2IxbGQ1SHF5b0VjYUxDVm9pUU5GWUlDMlR4SUE5WU1IZUZjbmpiX0VjejE0a21tOUViNTM5SVHSAZsBQVVfeXFMTUNRWGZ2ODhsUXVNeVdSWktJcWdYSHdkakNwLTg4c3k1cDFOeXlFR0RLZGMyRTlReVVWZWxYN0ZLYlhza3VfcUExMUhrN2hENFpnclp3dlozWERBdDJpb3Q1STlNd3kyVHZ6NW1Kc0FvVDhXWF93V1dPbl91SXNzVlJsNFd4LVlNM19qT0VBY1E4RURPUEtEekFlMHM?oc=5",
+      "source": "Forex Factory",
+      "at": "2026-10-11T12:15:00+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "川普宣布俄烏能源停火協議生效，俄羅斯將立即供應逾30萬噸柴油至美國及全球市場，隨後11月再供50萬噸、之後100萬噸，油價因此下跌約1.5美元",
+    "text": "油價因中東局勢升溫而上漲。葉門伊朗支持的胡塞武裝組織對沙烏地阿拉伯發動攻擊，布蘭特原油升至每桶106美元、西德州原油升至93美元，市場擔憂全球供應緊張將延續至北半球冬季",
     "links": [
      {
-      "title": "Oil prices fall after Trump claims ‘energy ceasefire’ in Ukraine war",
-      "link": "https://www.ft.com/content/a663781e-2709-41f2-99df-4fb5a6162e6b?syn-25a6b1a6=1",
-      "source": "Financial Times",
-      "at": "2026-10-12T04:43:13+00:00"
+      "title": "Tech slumps as oil prices rise, focus turns to earnings season kickoff: AlphaCheck",
+      "link": "https://finance.yahoo.com/markets/article/tech-slumps-as-oil-prices-rise-focus-turns-to-earnings-season-kickoff-alphacheck-134202547.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-12T13:42:02+00:00"
      },
      {
-      "title": "Asian shares are mixed and oil prices fall about $1.50 as Trump says US will buy diesel from Russia",
-      "link": "https://finance.yahoo.com/markets/articles/asian-shares-mixed-oil-prices-043200193.html?.tsrc=rss",
+      "title": "Oil rises as Trump comments roil energy markets",
+      "link": "https://finance.yahoo.com/markets/articles/stocks-rise-oil-prices-tumble-023050308.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-12T04:32:00+00:00"
+      "at": "2026-10-12T15:55:03+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨10/11晚盤走高，油價下跌帶動漲勢，川普宣布俄烏達成「能源停火」協議立即生效，俄羅斯承諾供應逾300萬噸柴油",
+    "text": "美股10/12漲跌互見，投資人在財報季與通膨數據公布前保持謹慎。道瓊工業指數上漲0.49%至51909點，標普500指數跌0.06%，那斯達克指數跌0.37%，科技股因中國長鑫存儲宣布DRAM技術突破而承壓",
     "links": [
      {
-      "title": "Dow, S&P 500, Nasdaq Futures Climb After Oil In Focus As Trump Declares ‘Energy Ceasefire’ Between Russia And Ukraine: IREN, WFF, VSTM, CIFR Stocks In Focus",
-      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-climb-after-oil-in-focus-as-trump-declares-energy-ceasefire-between-russia-and-ukraine-iren-wff-vstm-cifr-stocks-in-focus/cZx4DAYRBFX?.tsrc=rss",
+      "title": "Stock Market Midday, Oct. 12: Dow Edges Higher as Investors Rotate Into Value Stocks",
+      "link": "https://www.fool.com/coverage/stock-market-today/2026/10/12/stock-market-midday-oct-12-dow-edges-higher-as-investors-rotate-into-value-stocks/?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-12T03:50:27+00:00"
+      "at": "2026-10-12T16:25:19+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電預期連續第六季創紀錄獲利，受惠AI熱潮；輝達與亞馬遜分別洽談投資或收購AI新創公司",
+    "text": "微軟推出第三代自研AI晶片Maia 300，計畫明年部署超過100萬顆以降低對輝達依賴。核心運算處理器採用台積電2奈米製程，其他功能採3奈米製程，每座機櫃搭載96顆晶片、功耗約167千瓦，微軟表示每消耗百萬瓦電力的有效運算量比領先GPU系統高約40%",
     "links": [
      {
-      "title": "TSMC expected to report sixth straight quarter of record profit thanks to AI boom",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOLVdZdVEzd2xJRXc2ZDVpOTJESklKcDlSSERrelBfdXdxVmNaek9lLTV1RlZxVGpBa3RmakZ3N3V6al9BTlFtWGl1dEV6dVJ6X2J6MDlEZThzQlQydXZ3NTY3LTRSZzFfVUpGZk5uaGl4VllRdmgwSkUxeGxHOVA5VE5NY3BmeXlVaFlQRHJmelpMZDNZQ3NUUzRaem5UTlB6bXk2N3o4YjhtczVnWTBEaVN5MVJhY1A0ajhuRA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-12T02:12:00+00:00"
+      "title": "微軟推新一代AI晶片Maia 300　部分採台積電2奈米製程",
+      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9F%E6%8E%A8%E6%96%B0-%E4%BB%A3ai%E6%99%B6%E7%89%87maia-300-%E9%83%A8%E5%88%86%E6%8E%A1%E5%8F%B0%E7%A9%8D%E9%9B%BB2%E5%A5%88%E7%B1%B3%E8%A3%BD%E7%A8%8B-150309675.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-12T15:03:09+00:00"
      },
      {
-      "title": "Nvidia in talks to invest further in Reflection AI or buy it, FT reports",
-      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQQXpmTnVsdlhWdUt0a0hnSUg1YUVoRWNhT2JSQ24yeHFvRWVPdG5SNzNsWkNLVS0zbng0UWZrMS1zaGtXRmNzRThMamRUNXJPUGRwX09vN2J0dXFSUW9ZSThFeGZ6bTg5bnFqVVktSk91RzBNMkN0MGFOX2FSSEFZMzZ4TXhMb1dsc1hpLUwtY1pmeERoMnE0M2llTEI0X1V2cGxRc1UtMnpYUmc?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-10T19:33:44+00:00"
+      "title": "不想全靠輝達！微軟自研AI晶片Maia 300明年可能部署逾百萬顆",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E6%83%B3%E5%85%A8%E9%9D%A0%E8%BC%9D%E9%81%94-%E5%BE%AE%E8%BB%9F%E8%87%AA%E7%A0%94ai%E6%99%B6%E7%89%87maia-300%E6%98%8E%E5%B9%B4%E5%8F%AF%E8%83%BD%E9%83%A8%E7%BD%B2%E9%80%BE%E7%99%BE%E8%90%AC%E9%A1%86-143004607.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-12T14:30:04+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股12日開低後逐步拉升，終場收49,301.96點、小跌11.48點，台積電收2,540元；連假期間美股費半跌3.7%、台積電ADR挫4%，台指期夜盤曾狂跌652點",
+    "text": "台指期10/12夜盤跌310點至49035點，費城半導體指數重挫2.45%。美光股價下跌4%失守千元大關至997美元，市場評估中國長鑫存儲競爭壓力，台積電ADR跌1.12%",
     "links": [
      {
-      "title": "抗美股震盪！台股展韌性終場小跌11點　台積電收2540元",
-      "link": "https://tw.stock.yahoo.com/news/%E6%8A%97%E7%BE%8E%E8%82%A1%E9%9C%87%E7%9B%AA-%E5%8F%B0%E8%82%A1%E5%B1%95%E9%9F%8C%E6%80%A7%E7%B5%82%E5%A0%B4%E5%B0%8F%E8%B7%8C11%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%94%B62540%E5%85%83-054842994.html",
+      "title": "快訊／美光重挫4%「失守千元」！台指期摔310點　台積電ADR走低",
+      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E7%BE%8E%E5%85%89%E9%87%8D%E6%8C%AB4-%E5%A4%B1%E5%AE%88%E5%8D%83%E5%85%83-%E5%8F%B0%E6%8C%87%E6%9C%9F%E6%91%94310%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%B5%B0%E4%BD%8E-164700862.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T05:48:42+08:00"
+      "at": "2026-10-12T16:47:00+08:00"
      },
      {
-      "title": "台股險守4萬9千點！五大權值股僅日月光漲2%撐盤　台積電領跌10元、台達電挫逾3%",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%9A%AA%E5%AE%884%E8%90%AC9%E5%8D%83%E9%BB%9E-%E4%BA%94%E5%A4%A7%E6%AC%8A%E5%80%BC%E8%82%A1%E5%83%85%E6%97%A5%E6%9C%88%E5%85%89%E6%BC%B22-%E6%92%90%E7%9B%A4-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%A0%98%E8%B7%8C10%E5%85%83-%E5%8F%B0%E9%81%94%E9%9B%BB%E6%8C%AB%E9%80%BE3-054800040.html",
+      "title": "魔王關卡在明天？ 台指期夜盤失守49K大關 費半急挫2％",
+      "link": "https://tw.stock.yahoo.com/news/%E9%AD%94%E7%8E%8B%E9%97%9C%E5%8D%A1%E5%9C%A8%E6%98%8E%E5%A4%A9-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%A4%B1%E5%AE%8849k%E5%A4%A7%E9%97%9C-%E8%B2%BB%E5%8D%8A%E6%80%A5%E6%8C%AB2-150516734.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T05:48:00+08:00"
+      "at": "2026-10-12T15:05:16+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金近4,200美元，受惠油價下跌與美債殖利率回軟，但聯準會鷹派立場與中東風險限制漲幅",
+    "text": "黃金在美元走強及美債殖利率居高不下的壓力下，於4163美元附近整理，交易員在等待週三消費者物價指數報告前避免大幅建倉，該數據將成為打破盤整的觸發點",
     "links": [
      {
-      "title": "Gold edges higher near $4,200 as traders weigh energy truce, Mideast risks",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-edges-higher-near-4-014728122.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-12T01:47:28+00:00"
-     },
-     {
-      "title": "Gold holds near one-week top, around $4,200 on softer USD; hawkish Fed caps gains",
-      "link": "https://www.fxstreet.com/news/gold-holds-near-one-week-top-around-4-200-on-softer-usd-hawkish-fed-caps-gains-202610120452",
+      "title": "Gold struggles below $4,200 amid stronger US Dollar, US CPI in focus",
+      "link": "https://www.fxstreet.com/news/gold-fails-to-sustain-a-break-above-4-200-us-cpi-in-focus-202610121129",
       "source": "www.fxstreet.com",
-      "at": "2026-10-12T04:52:36+00:00"
+      "at": "2026-10-12T11:29:34+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "印度央行推出新措施支撐盧比，建立特殊窗口供油企直接購匯，以減輕現貨市場壓力；美元指數小幅回軟至102附近，聯準會升息預期仍支撐美元",
+    "text": "美元指數觸及18個月高點，主要由於俄烏能源停火協議破裂導致油價上升，歐洲及日本以美元購買石油，推高歐元及日圓兌美元賣壓，兩者佔美元指數漲幅的四分之三",
     "links": [
      {
-      "title": "India steps up currency defense with tougher US Dollar curbs",
-      "link": "https://www.fxstreet.com/news/india-steps-up-currency-defense-with-tougher-us-dollar-curbs-reuters-202610120230",
+      "title": "Dollar Index hits an 18-month high as the energy ceasefire fails",
+      "link": "https://www.fxstreet.com/news/dollar-index-hits-an-18-month-high-as-the-energy-ceasefire-fails-202610121554",
       "source": "www.fxstreet.com",
-      "at": "2026-10-12T02:30:38+00:00"
-     },
-     {
-      "title": "United States Dollar Index drifts lower amid softer bond yields; bullish bias intact",
-      "link": "https://www.fxstreet.com/news/united-states-dollar-index-drifts-lower-amid-softer-bond-yields-bullish-bias-intact-202610120256",
-      "source": "www.fxstreet.com",
-      "at": "2026-10-12T02:56:36+00:00"
+      "at": "2026-10-12T15:54:22+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-12T06:39:38.128557+00:00"
+  "at": "2026-10-12T17:50:10.576315+00:00"
  },
  "main_source_titles": [
-  "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
-  "Asia stocks mixed as oil retreats, earnings season gathers pace"
+  "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+  "Inflation likely peaked for 2026 but will remain sticky, according to prediction markets"
  ],
- "headline": "全球債市長期殖利率創24年高點，法國債信風險引發歐洲傳染憂慮",
- "rate_note": "美債殖利率創24年新高，加上投資級信用違約交換指數升至伊朗戰爭以來最高，反映市場對聯準會維持高利率環境的預期，與升息循環持續的政策方向一致。",
+ "headline": "聯準會官員主張維持緊縮政策，市場靜待通膨數據決定升息路徑",
+ "rate_note": "聯準會官員重申緊縮立場與市場升息預期相符，12月升息機率近88%，與網站定價累計至2026年底升息27bp的預期一致。",
  "recent_mains": [
-  {
-   "headline": "美債期限溢價創12年高點，長期利率高檔難下",
-   "titles": [
-    "美債期限溢價飆至12年高點，華爾街示警降息難解高利率壓力",
-    "美債上週五反彈，10年期殖利率降至5.243%，通膨與財政疑慮未除",
-    "PIMCO警告美債10年期殖利率或衝破6%，避險基金停損賣壓恐重創股債"
-   ],
-   "at": "2026-10-12T00:37:31.092293+00:00"
-  },
   {
    "headline": "美債殖利率創22年新高，全球債市承壓引發歐洲債信風險",
    "titles": [
@@ -483,6 +443,14 @@
     "Asia stocks mixed as oil retreats, earnings season gathers pace"
    ],
    "at": "2026-10-12T06:26:03.196771+00:00"
+  },
+  {
+   "headline": "聯準會官員主張維持緊縮政策，市場靜待通膨數據決定升息路徑",
+   "titles": [
+    "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+    "Inflation likely peaked for 2026 but will remain sticky, according to prediction markets"
+   ],
+   "at": "2026-10-12T17:49:54.841696+00:00"
   }
  ]
 }
