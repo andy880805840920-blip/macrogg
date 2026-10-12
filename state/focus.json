@@ -1,6 +1,6 @@
 {
- "hash": "4957b038070fee08",
- "text": "美國10年期公債殖利率攀升至5.35%，創2002年以來新高，帶動全球債市大幅調整。美國以外，法國、義大利、印尼、日本、南韓等超過20個國家的基準殖利率今年已上升至少100個基點，其中法國因預算削減引發街頭抗議，債券殖利率飆升，被分析師列為「醜陋面」，暗示潛在債務危機風險。RBC財富管理資深投資組合策略師表示，全球已確實告別低利率時代。¶殖利率上升的背景包括美國經濟成長超預期、中東戰爭推高油價，以及日本投資者從負利率時代累積的超過1.3兆美元美債部位進行資本回流。策略師指出，美債殖利率上升一方面反映經濟基本面良好，另一方面則凸顯全球財政與債務壓力。本週美國消費者物價指數與聯準會主席華許的談話將進一步牽動全球利率預期。\n韓國央行總裁申鉉松表示通膨仍高於目標，進一步升息時機與步伐取決於數據，市場定價未來6個月升息50個基點機率約70%。\n油價因川普宣布俄烏能源停火協議而下跌，有助緩解能源驅動的通膨壓力，但基輔與莫斯科尚未確認該協議。",
+ "hash": "e60d460c53917f6f",
+ "text": "全球債市正經歷廣泛的殖利率上升，美國10年期公債殖利率上週逼近5.4%，創24年新高，這波漲勢並非美國獨有現象。在超過20個國家中，美國10年期殖利率漲幅最大，義大利、印尼、日本、南韓等國基準殖利率自年初以來也至少上升100個基點。分析人士指出，這波上升反映出兩股力量：一方面美國經濟成長超預期，將殖利率推回正常水準；另一方面，法國債殖利率飆升正發出債務危機警訊，與該國預算削減引發的街頭抗爭形成自我強化的因果關係。日本投資人在國內殖利率正常化之際，正在回收過去在低利率時代累積的超過1.3兆美元美債部位，也推高全球殖利率。長期債殖利率的上升反映出市場對全球低利率時代已然結束的認知。\n川普10/11宣布俄烏能源停火協議生效，俄羅斯同意立即供應超過30萬噸柴油至美國及全球市場，隨後11月供應50萬噸、之後100萬噸，短期內再供應300萬噸；此舉引發美國部分議員批評，與美國制裁俄羅斯石油收入的政策相悖。\n市場本週關注美國消費者物價指數、生產者物價指數及零售銷售數據，以尋求聯準會下一步政策方向的線索；市場目前定價10月升息機率18%，12月升息機率85%。",
  "links": [
   {
    "title": "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
@@ -9,16 +9,10 @@
    "at": "2026-10-11T12:36:43+00:00"
   },
   {
-   "title": "US stock futures rise tracking oil price decline; Q3 earnings on tap",
-   "link": "https://finance.yahoo.com/markets/stocks/articles/us-stock-futures-rise-tracking-015559662.html?.tsrc=rss",
+   "title": "Asia stocks mixed as oil retreats, earnings season gathers pace",
+   "link": "https://finance.yahoo.com/markets/world-indices/articles/asia-stocks-mixed-oil-retreats-035535247.html?.tsrc=rss",
    "source": "Yahoo Finance",
-   "at": "2026-10-12T01:55:59+00:00"
-  },
-  {
-   "title": "BOK總裁稱通膨仍高、升息視數據，韓債反彈面臨50基點緊縮預期",
-   "link": "https://tw.stock.yahoo.com/news/bok%E7%B8%BD%E8%A3%81%E7%A8%B1%E9%80%9A%E8%86%A8%E4%BB%8D%E9%AB%98-%E5%8D%87%E6%81%AF%E8%A6%96%E6%95%B8%E6%93%9A-%E9%9F%93%E5%82%B5%E5%8F%8D%E5%BD%88%E9%9D%A2%E8%87%A850%E5%9F%BA%E9%BB%9E%E7%B7%8A%E7%B8%AE%E9%A0%90%E6%9C%9F-015345022.html",
-   "source": "Yahoo奇摩新聞",
-   "at": "2026-10-12T01:53:45+08:00"
+   "at": "2026-10-12T03:55:35+00:00"
   }
  ],
  "fedwatch": {
@@ -296,190 +290,186 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-12T02:20:00.124071+00:00",
+ "at": "2026-10-12T06:26:03.196771+00:00",
  "layout": "main",
  "topics": {
-  "hash": "9b7a8405486211e5",
+  "hash": "48541433d0de2087",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會10月會議前，債券交易員關注消費者物價指數與華許談話以判斷升息路徑；聯準會會議紀錄顯示，為對抗持續通膨，今年可能還會再升息一次；同時美國就業成長疲弱，對聯準會構成壓力",
+    "text": "聯準會官員多數認為今年還會升息，但對時間點保持開放態度；聯準會會議紀錄顯示，為對抗持續通膨，另一次升息可能在年內到來",
     "links": [
      {
-      "title": "US Bond Traders Await CPI, Warsh For Insight on Fed’s Rate Path",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPM3lYa092MnRSV0FXYUtRRjVRSHN2akl0ZzM3UWlJcjh6bXNpbVE4dHJQUDM0bS1iWklWekQ0aENwMDRCdWhZbUZMTHFOMmVrZzZzYmFIMG5BamMzSTFfTE0wVjZsWjFBZ2ZQTmFWM0h4NUZkZlVseDlCM05QSFNyczJfdk5BV1IzVmd1NXlnaTdVVnNyOXV0TmxjSW9IRFZWWkEtZlZ1c25jcXU4WXQ1QmRNbw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-11T19:00:00+00:00"
+      "title": "Most Fed Officials See Another Rate Hike This Year but Leave Timing Open",
+      "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE12YldKeENTSzMzU0hTU0h2dnFJWWU5RTNBU3daWlZObEd2SjRNWVVOTVBHdFp0QnlsNTBBVGxKZV9MTHR0TE5oTjNraHprUmU0cWVENERBdkx2aHNQX2dYTXUxdjJITmZVX0VlOHFuUzdhNjBob3dCY3RxcjZMZw?oc=5",
+      "source": "Barron's",
+      "at": "2026-10-12T04:47:21+00:00"
      },
      {
-      "title": "Weak U.S. Jobs Growth Raises Pressure on the Federal Reserve Ahead of October Meeting",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOSk5aWG80QVU4T3p0N2dfcUMxN1JDajU0dXZXT0VuR3hZaEVpalF3OUotNFV6NVVfcFRlS21kMm5xZEhpU2RVTGlOWGRXTXc2cVFlcmRPRkZ1cU45dXBwbVYzVlo4Q3V4c1p5Tnp3dHh2NjRSQnJQcG5TUmtJc2ZoVmN3ZWtjbllETWs4aTZJNFJMUkdXVlJLY2l0Q3JVazJraS1SbnZndnN0Vi1GRXc?oc=5",
-      "source": "Tekedia",
-      "at": "2026-10-11T08:46:54+00:00"
+      "title": "Fed minutes: Another rate hike likely coming this year to combat persistent inflation",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPN0tqSVcwZHVFTDQ2RWZzaUVodkpkS3B6TzZvS0VrM2FQZ0UyT19qVGdhZWstN0hMVU5DYS1yQ2FqUlRmUHZ2Y3ZKZzB3UWNDbGxXQUg3RkVKM0FUdGpITnZCNlRsWE43ZlNZYjk4REVhMWdfdlo5eEFDQzRLX054bjJuRUJLRjR4b29BX1ZvZFZYa0tjRW8xUEp4T3pLNkJjZThCRzJn?oc=5",
+      "source": "ABC11 News",
+      "at": "2026-10-11T17:30:11+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率攀升至5.35%創新高，帶動長天期債券價格下跌，投資策略從押注降息轉向掌握高票息，短天期非投等債因存續期間約2年、對利率變動敏感度較低，成為升息環境下的配置選項",
+    "text": "美國財政部10/10售出728億美元公債，3年期、10年期與30年期公債殖利率均創20年以上新高，顯示長天期債券需求浮現；短期公債殖利率則因升息循環而上升。",
     "links": [
      {
-      "title": "美債殖利率新高 玉山00988B年化配息率9.17%  短天期高票息突圍 10/15最後買進日",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E6%96%B0%E9%AB%98-%E7%8E%89%E5%B1%B100988b%E5%B9%B4%E5%8C%96%E9%85%8D%E6%81%AF%E7%8E%879-17-%E7%9F%AD%E5%A4%A9%E6%9C%9F%E9%AB%98%E7%A5%A8%E6%81%AF%E7%AA%81%E5%9C%8D-10-020112561.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-12T02:01:12+00:00"
-     },
-     {
-      "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPQjJrT1hOSlY0QVJ1a2JIRGlFQ2c4Z3dld1VSOXJLV1NJOGFnTXVGb1JPVXFMRTlKa3FxM0t2OElRN1otOEpPU2ZwdDY1RVJKWUJMYVZTRXhRaGQycnB1M2IxbGQ1SHF5b0VjYUxDVm9pUU5GWUlDMlR4SUE5WU1IZUZjbmpiX0VjejE0a21tOUViNTM5SVHSAZsBQVVfeXFMTUNRWGZ2ODhsUXVNeVdSWktJcWdYSHdkakNwLTg4c3k1cDFOeXlFR0RLZGMyRTlReVVWZWxYN0ZLYlhza3VfcUExMUhrN2hENFpnclp3dlozWERBdDJpb3Q1STlNd3kyVHZ6NW1Kc0FvVDhXWF93V1dPbl91SXNzVlJsNFd4LVlNM19qT0VBY1E4RURPUEtEekFlMHM?oc=5",
-      "source": "Forex Factory",
-      "at": "2026-10-11T12:15:00+00:00"
+      "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges. Short-Term Yields See Rate Hike",
+      "link": "https://news.google.com/rss/articles/CBMiqgJBVV95cUxPa2g3LW80T1VNcFljaDFQX2EyUV95WVhtZFlLN2tES0szcW02ZnhXemwzcXVmUnFmN1NXSHR1TnR6M0o3SWJIMXF0bXlMSG5WVnJsazBISWRJU01oOVhJS0VJVW8yeHdjdFNwb0RTaE0zWU92U0Y4ZC1odnJDc3J6TWxOajhCZVNvczlJdHlVdHEwV0s2YkY0UTNQNG5HSktLSWNPbUoxZFdHTG5RMVlrMjk5dHpwRU1GWkQzUXFiUjBVaXdhTE11WV9PU0U1TGdOY0NpbUxpbGswb2VtUUowTmRCMmFsSmN5ZEluUFZCeDlCSEY4QW5VcmhNMndhQlN1N1BIYVF5dDZxdF90azB5dXVkdV9QTEFSeER4VzBfcFJVVDJWVkVscWl3?oc=5",
+      "source": "Wolf Street",
+      "at": "2026-10-11T01:38:04+00:00"
      }
     ]
    },
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "印度央行時隔近四年首次升息，將回購利率調升至5.5%，此舉導致孟買敏感指數跌至72,638.70點，反映中東局勢緊張下的市場波動",
+    "text": "全球資金轉向保守配置，貨幣市場基金吸金創5月來最高，反映投資人在殖利率上升環境中尋求安全資產；印度央行10/11將回購利率升至5.5%，影響房貸借款人的每月還款額與利息負擔。",
     "links": [
      {
-      "title": "BSE SENSEX Falls to 72,638.70 After RBI Raises Repo Rate to 5.5% Amid US-Iran Tensions",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQdFNWVm5Cd19SYjZXWi01WmpZcUxLX1BITGVuNjE2MEc2OUg4WmVLNWRmLS1WUkcxVnBNd1EyS0hzUVFpckF3eTgxVnRSdmZBeHZzXzRua3lTODFFYW9UbUFqVElxd1BEakJ2WmFPUFZOOXR5d2FpQk5RemI3dEdmVjBodzNfLXB6WnZXX3hYUmZkakdObDBrLVVzTUQ2bXl6U1I3MDBocFpqcXpDSE9EMzJzbU1ERzdaaVZJUllPY2lleFU?oc=5",
-      "source": "BBN Times",
-      "at": "2026-10-11T22:14:48+00:00"
+      "title": "全球資金轉保守貨幣市場基金吸金創5月來最高- 新聞",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQTkxMUnY2Y3FIYVJXUGw2aWN6WUItYmkyWHRMV2ZOWUNqTlVPb3RYdXFzeTV3dW84Tmc2d3NMMHdTR1NyTFpMRFpfZWI3d2psYnhxRnU1czhQS2h0LTBXUDZkb1A0UGZ1OUdRLUQ4aVMteVhwZkVTclA4QlNieUk0TVVUQl9xNU1Qc290Y0tnbTA0UQ?oc=5",
+      "source": "MoneyDJ",
+      "at": "2026-10-12T06:04:00+00:00"
      },
      {
-      "title": "RBI Set For First Repo Rate Hike In Nearly Four Years",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOaHBfZmwzZ055OFBsUE9MSXRWUUhHalh4bHlrUnpDZmhSZ2w1dEU0bG8xQkFwWTd1SFgxQ2ppbHRGQzBOQ1BHdWFLcU9qRkVQenJLSnZfVUNpWVhFYWVzWmRRNnBYRWtqVGUwYkJRaEhWaG1TRFN1a1ZBRU9iTXBFcVN1NkE5NVFfUlZuTXNoNVJnNWJYU2gzTFhhclBBZw?oc=5",
-      "source": "BW Businessworld",
-      "at": "2026-10-11T03:46:46+00:00"
+      "title": "RBI repo rate hike: How home loan borrowers can reduce EMI and interest burden",
+      "link": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxOVV9kTjBnNk93X05xMWVnWnY3b2ZwNFdmV25fS0FHMGZRMU13a0VJWmhlQ29PT3MyUjZhTUxQUWFrNUV0MWVYMHczcnBrRTVxWXI5elhvbFdVX0dsc0x6ZzJhTy01d0RXb2F5aXJlb3FzSFRMd0xTcU95OGVKUWlndXhPeDlpRWZud3RCdlB5YmI3amstZ3dTNnh1X0gtOURrbC1zbjAtZW1kTHh0ajZKYno0X2tXajVacDNQRXRLTVRYTUpjMkhDcTNqampzWWJNS3pIQThmM01GT1NMc0FoSnIwUdIB4wFBVV95cUxOVV9kTjBnNk93X05xMWVnWnY3b2ZwNFdmV25fS0FHMGZRMU13a0VJWmhlQ29PT3MyUjZhTUxQUWFrNUV0MWVYMHczcnBrRTVxWXI5elhvbFdVX0dsc0x6ZzJhTy01d0RXb2F5aXJlb3FzSFRMd0xTcU95OGVKUWlndXhPeDlpRWZud3RCdlB5YmI3amstZ3dTNnh1X0gtOURrbC1zbjAtZW1kTHh0ajZKYno0X2tXajVacDNQRXRLTVRYTUpjMkhDcTNqampzWWJNS3pIQThmM01GT1NMc0FoSnIwUQ?oc=5",
+      "source": "The Economic Times",
+      "at": "2026-10-12T01:00:00+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "西德州原油價格守住90美元，下週有望挑戰100美元；伊朗表示不投降，NYMEX原油上漲1.8%；儘管中東原油供應增加導致油價下跌，荷姆茲海峽仍存在地緣政治風險",
+    "text": "川普宣布俄烏能源停火協議生效，俄羅斯將立即供應超過30萬噸柴油至美國及全球市場，隨後11月再供50萬噸、之後100萬噸，油價因此下跌約1.5美元，但中東衝突持續威脅能源安全",
     "links": [
      {
-      "title": "WTI原油價格預測：油價守住90美元，下週有望挑戰100美元",
-      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQelJaMG5HNkpFV2hpS3hfTHFrM3haZ3d6YkxaeS1HLUhycnFRZ1VKWEV5bkNacjU2VDJHeWMzREx6TmNtNUtWaTUzOVVGWUt5QURaVVFQYzlfTzFwc0szOEVvMm9qcGhiQkZDdFh1N3BDOWgtZXVqaGlZanRldDJGZFNubmdVLVA0X1pLTkRwcldjdHZLQUdmbDN6OG5xVTFwcHktTENlTE1ZYmRNRzB2dGlHeGtZTGV1T2MtOUU4eVNSQ0lpYm5pYWkyRQ?oc=5",
-      "source": "TradingKey",
-      "at": "2026-10-11T07:06:13+00:00"
+      "title": "Oil prices fall after Trump claims ‘energy ceasefire’ in Ukraine war",
+      "link": "https://www.ft.com/content/a663781e-2709-41f2-99df-4fb5a6162e6b?syn-25a6b1a6=1",
+      "source": "Financial Times",
+      "at": "2026-10-12T04:43:13+00:00"
      },
      {
-      "title": "中東原油大解封！國際油價跌慘了 但荷姆茲海峽仍有風險",
-      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFAyTWNuX2JoRXFRbTJUOThuT3ROQjdnMm91THFzZXZlTVBwNWNPdG1SNm5OTUVuX2tWZm1QcS1DNTB0dUFSVE1lU2U0MmRHSURXNEIyQXZfRkM?oc=5",
-      "source": "自由時報",
-      "at": "2026-10-11T06:56:54+00:00"
+      "title": "Asian shares are mixed and oil prices fall about $1.50 as Trump says US will buy diesel from Russia",
+      "link": "https://finance.yahoo.com/markets/articles/asian-shares-mixed-oil-prices-043200193.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-12T04:32:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股AI股漲勢帶動標普500年初以來上漲13.5%，但剔除AI相關股票後，美股漲幅僅5.5%，與歐洲STOXX 600指數5.6%漲幅相當，顯示美股優勢主要來自AI投資集中",
+    "text": "美股期貨小幅上漲，受油價下跌支撐；微軟、帕蘭提爾、馬維爾科技獲華爾街升評，其中微軟因AI代理與雲端服務需求強勁獲看好，Azure雲端收入年增43%",
     "links": [
      {
-      "title": "Strip out AI stocks, and the US market lags Europe",
-      "link": "https://finance.yahoo.com/markets/article/strip-out-ai-stocks-and-the-us-market-lags-europe-190907424.html?.tsrc=rss",
+      "title": "3 Tech Stocks Wall Street Upgraded Last Week, and the One I'd Buy First",
+      "link": "https://www.fool.com/investing/2026/10/11/stocks-wall-street-upgraded-last-week-one-id-buy/?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-11T19:09:07+00:00"
+      "at": "2026-10-12T02:50:00+00:00"
      },
      {
-      "title": "高盛示警美股暗藏風險！標普500「只剩一筆AI交易」、六分之一成分股重挫逾50%",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBuNFdSQTZtemlDTTV2X0VSSW85WnUybWdXZlVzVURPR09xeWUxak1qanRWMlFGelhNQUxvRkRIVEZKUnNzWUlNOVFyMElqX0k?oc=5",
-      "source": "鉅亨網",
-      "at": "2026-10-12T00:40:03+00:00"
+      "title": "Dow, S&P 500, Nasdaq Futures Climb After Oil In Focus As Trump Declares ‘Energy Ceasefire’ Between Russia And Ukraine: IREN, WFF, VSTM, CIFR Stocks In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-climb-after-oil-in-focus-as-trump-declares-energy-ceasefire-between-russia-and-ukraine-iren-wff-vstm-cifr-stocks-in-focus/cZx4DAYRBFX?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-12T03:50:27+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "艾司摩爾對三星與SK海力士宣布2027年1月起調漲維修零件價格10%，並正與客戶協商新訂購設備機台價格，反映其在曝光機市場的壟斷地位；應材與東京威力科創也因供應鏈成本上升推行價格調漲",
+    "text": "台積電預期將報告第六季連續創紀錄獲利，受惠於AI熱潮帶動晶片需求；輝達同時洽談進一步投資或收購Reflection AI，亞馬遜也在談判收購AI新創Decart。",
     "links": [
      {
-      "title": "ASML對三星及海力士漲價、可能與台積電談判中　應材、東京威力科創也要漲價",
-      "link": "https://tw.news.yahoo.com/asml%E5%B0%8D%E4%B8%89%E6%98%9F%E5%8F%8A%E6%B5%B7%E5%8A%9B%E5%A3%AB%E6%BC%B2%E5%83%B9-%E5%8F%AF%E8%83%BD%E8%88%87%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%AB%87%E5%88%A4%E4%B8%AD-%E6%87%89%E6%9D%90-%E6%9D%B1%E4%BA%AC%E5%A8%81%E5%8A%9B%E7%A7%91%E5%89%B5%E4%B9%9F%E8%A6%81%E6%BC%B2%E5%83%B9-014500552.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T01:45:00+08:00"
+      "title": "TSMC expected to report sixth straight quarter of record profit thanks to AI boom",
+      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOLVdZdVEzd2xJRXc2ZDVpOTJESklKcDlSSERrelBfdXdxVmNaek9lLTV1RlZxVGpBa3RmakZ3N3V6al9BTlFtWGl1dEV6dVJ6X2J6MDlEZThzQlQydXZ3NTY3LTRSZzFfVUpGZk5uaGl4VllRdmgwSkUxeGxHOVA5VE5NY3BmeXlVaFlQRHJmelpMZDNZQ3NUUzRaem5UTlB6bXk2N3o4YjhtczVnWTBEaVN5MVJhY1A0ajhuRA?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-12T02:12:00+00:00"
+     },
+     {
+      "title": "Nvidia in talks to invest further in Reflection AI or buy it, FT reports",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQQXpmTnVsdlhWdUt0a0hnSUg1YUVoRWNhT2JSQ24yeHFvRWVPdG5SNzNsWkNLVS0zbng0UWZrMS1zaGtXRmNzRThMamRUNXJPUGRwX09vN2J0dXFSUW9ZSThFeGZ6bTg5bnFqVVktSk91RzBNMkN0MGFOX2FSSEFZMzZ4TXhMb1dsc1hpLUwtY1pmeERoMnE0M2llTEI0X1V2cGxRc1UtMnpYUmc?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-10T19:33:44+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股12日開盤下跌逾300點，台積電跌25元至2525元，聯發科下挫65元至4625元，費城半導體指數連續2個交易日下跌，電子權值股面臨修正壓力",
+    "text": "台股連假後開低走高，終場小跌11.48點至49,301.96點，台積電收2,540元、下跌10元；台指期夜盤曾重挫652點至48,705點，市場擔憂短線補跌壓力，但AI供應鏈穩健與企業獲利上修提供支撐",
     "links": [
      {
-      "title": "台股連假後補跌！早盤重挫逾540點失守49K　台積電跌40元",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%A3%E5%81%87%E5%BE%8C%E8%A3%9C%E8%B7%8C-%E6%97%A9%E7%9B%A4%E9%87%8D%E6%8C%AB%E9%80%BE540%E9%BB%9E%E5%A4%B1%E5%AE%8849k-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%B7%8C40%E5%85%83-014353766.html",
+      "title": "抗美股震盪！台股展韌性終場小跌11點　台積電收2540元",
+      "link": "https://tw.stock.yahoo.com/news/%E6%8A%97%E7%BE%8E%E8%82%A1%E9%9C%87%E7%9B%AA-%E5%8F%B0%E8%82%A1%E5%B1%95%E9%9F%8C%E6%80%A7%E7%B5%82%E5%A0%B4%E5%B0%8F%E8%B7%8C11%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%94%B62540%E5%85%83-054842994.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T01:43:53+08:00"
+      "at": "2026-10-12T05:48:42+08:00"
      },
      {
-      "title": "快訊／台股開盤下跌逾300點　台積電跌25元",
-      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4%E4%B8%8B%E8%B7%8C%E9%80%BE300%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%B7%8C25%E5%85%83-012100856.html",
+      "title": "台股險守4萬9千點！五大權值股僅日月光漲2%撐盤　台積電領跌10元、台達電挫逾3%",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%9A%AA%E5%AE%884%E8%90%AC9%E5%8D%83%E9%BB%9E-%E4%BA%94%E5%A4%A7%E6%AC%8A%E5%80%BC%E8%82%A1%E5%83%85%E6%97%A5%E6%9C%88%E5%85%89%E6%BC%B22-%E6%92%90%E7%9B%A4-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%A0%98%E8%B7%8C10%E5%85%83-%E5%8F%B0%E9%81%94%E9%9B%BB%E6%8C%AB%E9%80%BE3-054800040.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T01:21:00+08:00"
+      "at": "2026-10-12T05:48:00+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格在俄烏「能源停火」傳聞中小幅上漲，交易員在地緣政治風險與經濟數據間權衡",
+    "text": "黃金小幅上漲至4,200美元附近，俄烏能源停火協議緩解通膨壓力，惟中東衝突與聯準會升息預期限制漲幅；聯準會12月升息機率約85%",
     "links": [
      {
-      "title": "Gold Edges Up as Traders Weigh Russia-Ukraine ‘Energy Ceasefire’",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxObDBXTHA2YmE2OEM4Mi03Sm81ZTJwcFhTTnVXT0dVV09qZlRHZGJtazJ4QlR4SmtVQk9vVjlYMmtlaHZ1b3AwOUtlMjl5NlhDNGZBNnFCMDFta2NuWHJlempBWUlDRHF0Z0ZIRFhFSHk4Rm4zeGVyNE9Cbkp5RjU2SlZiZVRNYVFwVzFDOWtNU2dGYktsemN3ZEVOcGFGWFpRakpLT3JHOFJlaTZocW52aFdXMA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-12T00:38:00+00:00"
+      "title": "Gold edges higher near $4,200 as traders weigh energy truce, Mideast risks",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-edges-higher-near-4-014728122.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-12T01:47:28+00:00"
+     },
+     {
+      "title": "Gold holds near one-week top, around $4,200 on softer USD; hawkish Fed caps gains",
+      "link": "https://www.fxstreet.com/news/gold-holds-near-one-week-top-around-4-200-on-softer-usd-hawkish-fed-caps-gains-202610120452",
+      "source": "www.fxstreet.com",
+      "at": "2026-10-12T04:52:36+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元12日早盤貶破31.9元至31.946元，美元指數仍在102之上，日圓、韓元、人民幣兌美元也同步走貶",
+    "text": "印度央行推出新措施捍衛盧比，建立特殊窗口直接供應美元給國營油企，以減輕現貨市場壓力；美元指數小幅回落至102附近，聯準會升息預期與地緣政治風險提供支撐",
     "links": [
      {
-      "title": "美元有撐、台股跌　新台幣早盤貶破31.9元",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E5%85%83%E6%9C%89%E6%92%90-%E5%8F%B0%E8%82%A1%E8%B7%8C-%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%97%A9%E7%9B%A4%E8%B2%B6%E7%A0%B431-9%E5%85%83-012244347.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-12T01:22:44+08:00"
+      "title": "India steps up currency defense with tougher US Dollar curbs",
+      "link": "https://www.fxstreet.com/news/india-steps-up-currency-defense-with-tougher-us-dollar-curbs-reuters-202610120230",
+      "source": "www.fxstreet.com",
+      "at": "2026-10-12T02:30:38+00:00"
      },
      {
-      "title": "《國內匯市》09:15，新台幣兌美元為31.931元，貶值5.6分",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNTk9LVi1xa3FmclpsdGl1MHBCWXgwVTJnbGJKZnduaDhnMUpWSVpRdl9JRnJXSV8xX1U2VmM1S0wtVjVFRzVFWWJlVzlXZHZJQ2kwWnI0eVpNV2RKUzRpdW1FU0ltS3ZQblRvU1JiNHRScjdxelVxVjZ0VXZTYzQ4R1ltUXVkUUVZ?oc=5",
-      "source": "富聯網",
-      "at": "2026-10-12T01:22:00+00:00"
+      "title": "United States Dollar Index drifts lower amid softer bond yields; bullish bias intact",
+      "link": "https://www.fxstreet.com/news/united-states-dollar-index-drifts-lower-amid-softer-bond-yields-bullish-bias-intact-202610120256",
+      "source": "www.fxstreet.com",
+      "at": "2026-10-12T02:56:36+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-12T02:20:16.950044+00:00"
+  "at": "2026-10-12T06:26:20.621374+00:00"
  },
  "main_source_titles": [
   "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
-  "US stock futures rise tracking oil price decline; Q3 earnings on tap",
-  "BOK總裁稱通膨仍高、升息視數據，韓債反彈面臨50基點緊縮預期"
+  "Asia stocks mixed as oil retreats, earnings season gathers pace"
  ],
- "headline": "美債殖利率創22年新高，全球債市承壓引發歐洲債信風險",
- "rate_note": "美債殖利率創新高反映升息循環持續，全球央行面臨通膨與債務壓力的兩難，可能限制進一步升息空間，與網站判讀升息循環預期一致。",
+ "headline": "全球債市長期殖利率創24年高點，法國債信風險引發歐洲傳染憂慮",
+ "rate_note": "美債殖利率創24年新高，加上投資級信用違約交換指數升至伊朗戰爭以來最高，反映市場對聯準會維持高利率環境的預期，與升息循環持續的政策方向一致。",
  "recent_mains": [
-  {
-   "headline": "美國9月CPI將公布，通膨數據牽動聯準會10月降息決策",
-   "titles": [
-    "US CPI to Show Overall Inflation Boosted by Higher Gasoline Prices",
-    "本週操盤筆記：美CPI牽動升息預期！美股財報季開跑、台積電法說和ASML接力登場",
-    "法國財政赤字飆高引爆歐債憂慮 恐成歐洲經濟最大隱患"
-   ],
-   "at": "2026-10-11T17:22:44.915238+00:00"
-  },
   {
    "headline": "美債期限溢價創12年高點，長期利率高檔難下",
    "titles": [
@@ -497,6 +487,14 @@
     "BOK總裁稱通膨仍高、升息視數據，韓債反彈面臨50基點緊縮預期"
    ],
    "at": "2026-10-12T02:20:00.124071+00:00"
+  },
+  {
+   "headline": "全球債市長期殖利率創24年高點，法國債信風險引發歐洲傳染憂慮",
+   "titles": [
+    "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
+    "Asia stocks mixed as oil retreats, earnings season gathers pace"
+   ],
+   "at": "2026-10-12T06:26:03.196771+00:00"
   }
  ]
 }
