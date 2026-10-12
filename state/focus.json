@@ -293,12 +293,12 @@
  "at": "2026-10-12T06:26:03.196771+00:00",
  "layout": "main",
  "topics": {
-  "hash": "48541433d0de2087",
+  "hash": "ba1e498cff00f79d",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會官員多數認為今年還會升息，但對時間點保持開放態度；聯準會會議紀錄顯示，為對抗持續通膨，另一次升息可能在年內到來",
+    "text": "聯準會官員多數認為今年還會升息，但對時機保持開放態度；聯準會會議紀錄指出，為對抗持續的通膨，升息可能性大",
     "links": [
      {
       "title": "Most Fed Officials See Another Rate Hike This Year but Leave Timing Open",
@@ -308,16 +308,16 @@
      },
      {
       "title": "Fed minutes: Another rate hike likely coming this year to combat persistent inflation",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPN0tqSVcwZHVFTDQ2RWZzaUVodkpkS3B6TzZvS0VrM2FQZ0UyT19qVGdhZWstN0hMVU5DYS1yQ2FqUlRmUHZ2Y3ZKZzB3UWNDbGxXQUg3RkVKM0FUdGpITnZCNlRsWE43ZlNZYjk4REVhMWdfdlo5eEFDQzRLX054bjJuRUJLRjR4b29BX1ZvZFZYa0tjRW8xUEp4T3pLNkJjZThCRzJn?oc=5",
-      "source": "ABC11 News",
-      "at": "2026-10-11T17:30:11+00:00"
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQNmZBTXdSZ0JnWHVYYlhKNkVHZlMxS3ZpX3dBbGY4QW0zelBMZEVXSkhxRGV3N2dSNVZ6dDNKTy1PVEJXcEd4d2FLdDZ1anVmNkFXb3h5eDQ1T3lBdlp3bU1Sc0RWbjl2VmpjcHpFb1h3a2dHYXNKelkzd3N1Ym9oR1ZNVEpXZF9TalJrWDlQaGFFVWxvYkJDaFBsa2p6dkZIeTg4U3BzMDV0SEE2b1E?oc=5",
+      "source": "ABC7 Chicago",
+      "at": "2026-10-11T18:03:16+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國財政部10/10售出728億美元公債，3年期、10年期與30年期公債殖利率均創20年以上新高，顯示長天期債券需求浮現；短期公債殖利率則因升息循環而上升。",
+    "text": "美國財政部10/10售出728億美元公債，3年期、10年期、30年期殖利率均創20多年新高，但需求浮現；同週短期殖利率則見升息跡象",
     "links": [
      {
       "title": "US Government Sold $728 Billion of Treasuries this Week. Yields at the 3-Year, 10-Year, 30-Year Auctions Highest in 20+ Years, Demand Emerges. Short-Term Yields See Rate Hike",
@@ -330,26 +330,20 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "全球資金轉向保守配置，貨幣市場基金吸金創5月來最高，反映投資人在殖利率上升環境中尋求安全資產；印度央行10/11將回購利率升至5.5%，影響房貸借款人的每月還款額與利息負擔。",
+    "text": "全球資金轉向保守配置，貨幣市場基金吸金創5月來新高，投資人尋求更安全的現金等價物",
     "links": [
      {
-      "title": "全球資金轉保守貨幣市場基金吸金創5月來最高- 新聞",
-      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQTkxMUnY2Y3FIYVJXUGw2aWN6WUItYmkyWHRMV2ZOWUNqTlVPb3RYdXFzeTV3dW84Tmc2d3NMMHdTR1NyTFpMRFpfZWI3d2psYnhxRnU1czhQS2h0LTBXUDZkb1A0UGZ1OUdRLUQ4aVMteVhwZkVTclA4QlNieUk0TVVUQl9xNU1Qc290Y0tnbTA0UQ?oc=5",
+      "title": "全球資金轉保守 貨幣市場基金吸金創5月來最高",
+      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPdnN3WHNHZ0VvOFZyNEZlb25FVGhrY19VNkY1ZjM5SXFqeUY1RF9WTmxQQ1I4VzgtdUNTTzM1bTZPTEFYa3BPNVBVWEM4Y3VQeDJ6WF9yWHNHLXZSYnQ3QkFibGVqbG0tUlZ4MUlNNkZaeHZubXlSbDV1WTJ2anZHT0d3aHRxbC1lN0dlVTlMcklGcm8?oc=5",
       "source": "MoneyDJ",
-      "at": "2026-10-12T06:04:00+00:00"
-     },
-     {
-      "title": "RBI repo rate hike: How home loan borrowers can reduce EMI and interest burden",
-      "link": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxOVV9kTjBnNk93X05xMWVnWnY3b2ZwNFdmV25fS0FHMGZRMU13a0VJWmhlQ29PT3MyUjZhTUxQUWFrNUV0MWVYMHczcnBrRTVxWXI5elhvbFdVX0dsc0x6ZzJhTy01d0RXb2F5aXJlb3FzSFRMd0xTcU95OGVKUWlndXhPeDlpRWZud3RCdlB5YmI3amstZ3dTNnh1X0gtOURrbC1zbjAtZW1kTHh0ajZKYno0X2tXajVacDNQRXRLTVRYTUpjMkhDcTNqampzWWJNS3pIQThmM01GT1NMc0FoSnIwUdIB4wFBVV95cUxOVV9kTjBnNk93X05xMWVnWnY3b2ZwNFdmV25fS0FHMGZRMU13a0VJWmhlQ29PT3MyUjZhTUxQUWFrNUV0MWVYMHczcnBrRTVxWXI5elhvbFdVX0dsc0x6ZzJhTy01d0RXb2F5aXJlb3FzSFRMd0xTcU95OGVKUWlndXhPeDlpRWZud3RCdlB5YmI3amstZ3dTNnh1X0gtOURrbC1zbjAtZW1kTHh0ajZKYno0X2tXajVacDNQRXRLTVRYTUpjMkhDcTNqampzWWJNS3pIQThmM01GT1NMc0FoSnIwUQ?oc=5",
-      "source": "The Economic Times",
-      "at": "2026-10-12T01:00:00+00:00"
+      "at": "2026-10-12T06:07:00+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "川普宣布俄烏能源停火協議生效，俄羅斯將立即供應超過30萬噸柴油至美國及全球市場，隨後11月再供50萬噸、之後100萬噸，油價因此下跌約1.5美元，但中東衝突持續威脅能源安全",
+    "text": "川普宣布俄烏能源停火協議生效，俄羅斯將立即供應逾30萬噸柴油至美國及全球市場，隨後11月再供50萬噸、之後100萬噸，油價因此下跌約1.5美元",
     "links": [
      {
       "title": "Oil prices fall after Trump claims ‘energy ceasefire’ in Ukraine war",
@@ -368,14 +362,8 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨小幅上漲，受油價下跌支撐；微軟、帕蘭提爾、馬維爾科技獲華爾街升評，其中微軟因AI代理與雲端服務需求強勁獲看好，Azure雲端收入年增43%",
+    "text": "美股期貨10/11晚盤走高，油價下跌帶動漲勢，川普宣布俄烏達成「能源停火」協議立即生效，俄羅斯承諾供應逾300萬噸柴油",
     "links": [
-     {
-      "title": "3 Tech Stocks Wall Street Upgraded Last Week, and the One I'd Buy First",
-      "link": "https://www.fool.com/investing/2026/10/11/stocks-wall-street-upgraded-last-week-one-id-buy/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-12T02:50:00+00:00"
-     },
      {
       "title": "Dow, S&P 500, Nasdaq Futures Climb After Oil In Focus As Trump Declares ‘Energy Ceasefire’ Between Russia And Ukraine: IREN, WFF, VSTM, CIFR Stocks In Focus",
       "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-climb-after-oil-in-focus-as-trump-declares-energy-ceasefire-between-russia-and-ukraine-iren-wff-vstm-cifr-stocks-in-focus/cZx4DAYRBFX?.tsrc=rss",
@@ -387,7 +375,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電預期將報告第六季連續創紀錄獲利，受惠於AI熱潮帶動晶片需求；輝達同時洽談進一步投資或收購Reflection AI，亞馬遜也在談判收購AI新創Decart。",
+    "text": "台積電預期連續第六季創紀錄獲利，受惠AI熱潮；輝達與亞馬遜分別洽談投資或收購AI新創公司",
     "links": [
      {
       "title": "TSMC expected to report sixth straight quarter of record profit thanks to AI boom",
@@ -406,7 +394,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股連假後開低走高，終場小跌11.48點至49,301.96點，台積電收2,540元、下跌10元；台指期夜盤曾重挫652點至48,705點，市場擔憂短線補跌壓力，但AI供應鏈穩健與企業獲利上修提供支撐",
+    "text": "台股12日開低後逐步拉升，終場收49,301.96點、小跌11.48點，台積電收2,540元；連假期間美股費半跌3.7%、台積電ADR挫4%，台指期夜盤曾狂跌652點",
     "links": [
      {
       "title": "抗美股震盪！台股展韌性終場小跌11點　台積電收2540元",
@@ -425,7 +413,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金小幅上漲至4,200美元附近，俄烏能源停火協議緩解通膨壓力，惟中東衝突與聯準會升息預期限制漲幅；聯準會12月升息機率約85%",
+    "text": "黃金近4,200美元，受惠油價下跌與美債殖利率回軟，但聯準會鷹派立場與中東風險限制漲幅",
     "links": [
      {
       "title": "Gold edges higher near $4,200 as traders weigh energy truce, Mideast risks",
@@ -444,7 +432,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "印度央行推出新措施捍衛盧比，建立特殊窗口直接供應美元給國營油企，以減輕現貨市場壓力；美元指數小幅回落至102附近，聯準會升息預期與地緣政治風險提供支撐",
+    "text": "印度央行推出新措施支撐盧比，建立特殊窗口供油企直接購匯，以減輕現貨市場壓力；美元指數小幅回軟至102附近，聯準會升息預期仍支撐美元",
     "links": [
      {
       "title": "India steps up currency defense with tougher US Dollar curbs",
@@ -461,7 +449,7 @@
     ]
    }
   ],
-  "at": "2026-10-12T06:26:20.621374+00:00"
+  "at": "2026-10-12T06:39:38.128557+00:00"
  },
  "main_source_titles": [
   "Bond yields are surging worldwide — and France is on the 'ugly side': Chart of the Day",
