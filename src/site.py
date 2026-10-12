@@ -3246,7 +3246,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .hm-x b{display:block}
 .hm-cat>.hm-mid:first-child{border-top:0}
 .hm-x-sub{display:block;margin-top:2px;font-size:var(--fs-small);font-weight:400;color:var(--muted)}
-.hm-x-tag,.hm-x-vote{font-style:normal;font-size:var(--fs-micro);font-weight:700;border-radius:4px;padding:0 5px;vertical-align:1px}
+.hm-x-tag,.hm-x-vote{white-space:nowrap;display:inline-block;font-style:normal;font-size:var(--fs-micro);font-weight:700;border-radius:4px;padding:0 5px;vertical-align:1px}
 .hm-x-tag{margin-right:6px;color:var(--brand-ink);background:var(--surface-2);border:1px solid var(--border)}
 .hm-x-vote{margin-left:6px;color:#fff;background:var(--brand-orange)}
 .hm-wk-p{display:none}

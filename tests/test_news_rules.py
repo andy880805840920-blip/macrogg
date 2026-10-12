@@ -273,8 +273,12 @@ check("⑧ 黃金：金礦股、婚嫁換金不算",
       and not _passes("gold", "黃金價格太貴 新人結婚流行舊金換新金"))
 check("⑧ 黃金：金價上漲算", _passes("gold", "Gold rises over 1% as dollar weakens"))
 check("⑧ 資金市場：拿掉 market stress", "market stress" not in specs["funding"]["keywords"])
-check("⑧ AI 與半導體：AI 新聞全部保留（沒有加必含詞）", not specs["semi"]["require"]
-      and "AI" in specs["semi"]["keywords"])
+check("⑧ AI 與半導體（第十九批改）：必含國際大廠或產業用詞，台股個股盤勢排除",
+      "Nvidia" in specs["semi"]["require"] and "台積電" in specs["semi"]["require"]
+      and "三大法人" in specs["semi"]["exclude"] and "AI" in specs["semi"]["keywords"])
+check("⑧ AI 與半導體：台塑資料中心、法人買超不算；微軟資本支出算",
+      not _passes("semi", "台塑攜手創曦資訊在麥寮建置AI資料中心 三大法人買超逾8.2萬張")
+      and _passes("semi", "Microsoft boosts AI capex as data center spending climbs"))
 _feeds = json.dumps(cfg["feeds"])
 check("⑧ 主軸來源拿掉衛報、BBC、自由時報、FXStreet",
       not any(x in _feeds for x in ("theguardian", "bbci", "ltn.com.tw", "fxstreet")))

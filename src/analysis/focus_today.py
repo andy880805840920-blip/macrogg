@@ -1296,7 +1296,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f8-warsh-chair"
+FOCUS_PROMPT_VERSION = "f9-policy-stance"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1644,13 +1644,81 @@ def rate_context(rates_series: dict | None, n: int = 5) -> dict | None:
             "zh": rg.get("zh", ""), "lead": rg.get("lead", ""), "code": rg.get("code", "")}
 
 
+def policy_context(rates_series: dict | None, fw: dict | None = None) -> dict | None:
+    """
+    政策現況（第十九批，使用者抓到「對利率」寫成「支持聯準會繼續降息」，實際上
+    9/16 才升息一碼）：目標區間、最近一次決議（從 DFEDTARU 的歷史推）、
+    市場定價（首頁同一組期貨推算）。stance＝寫作時政策方向的硬約束。
+    """
+    rs = rates_series or {}
+    up = [r for r in rs.get("DFEDTARU") or [] if r.get("value") is not None]
+    lo = [r for r in rs.get("DFEDTARL") or [] if r.get("value") is not None]
+    if not up or not lo:
+        return None
+    out = {"lo": lo[-1]["value"], "hi": up[-1]["value"], "last": None}
+    for a, b in zip(reversed(up[:-1]), reversed(up[1:])):
+        if abs(b["value"] - a["value"]) >= 0.05:
+            bp = round((b["value"] - a["value"]) * 100)
+            out["last"] = {"date": str(b.get("date", ""))[:10], "bp": bp}
+            break
+    hz = (fw or {}).get("horizons") or []
+    out["market"] = [(h["label"], h["cum_bp"]) for h in hz if h.get("cum_bp") is not None]
+    nxt = (fw or {}).get("next") or {}
+    if nxt.get("outcomes"):
+        b0, p0 = nxt["outcomes"][0]
+        out["next"] = (str(nxt.get("date", ""))[:10], outcome_name(b0), round(p0 * 100))
+    # 政策方向：最近一次決議（一年內）＋市場對今年底的定價；兩者一致才下硬約束
+    last_dir = 0
+    if out["last"]:
+        try:
+            age = (clock.today() - dt.date.fromisoformat(out["last"]["date"])).days
+        except ValueError:
+            age = 9999
+        if age <= 365:
+            last_dir = 1 if out["last"]["bp"] > 0 else -1
+    mk = out["market"][0][1] if out["market"] else 0.0
+    mk_dir = 1 if mk >= 10 else (-1 if mk <= -10 else 0)
+    out["stance"] = ("hike" if (last_dir > 0 and mk_dir >= 0) or (last_dir == 0 and mk_dir > 0)
+                     else "cut" if (last_dir < 0 and mk_dir <= 0) or (last_dir == 0 and mk_dir < 0)
+                     else "mixed")
+    return out
+
+
+# 升息循環裡不該出現的說法（反之亦然）。命中就帶原因重寫；重寫後仍有就換備用句。
+_POLICY_CUT_TALK = re.compile(r"(?:繼續|持續|延續|進一步|再度|再次|支持(?:聯準會)?(?:繼續)?)降息|降息(?:步伐|週期|循環|路徑)")
+_POLICY_HIKE_TALK = re.compile(r"(?:繼續|持續|延續|進一步|再度|再次|支持(?:聯準會)?(?:繼續)?)升息|升息(?:步伐|週期|循環|路徑)")
+
+
+def _policy_hits(text: str, rc: dict | None) -> list:
+    pol = (rc or {}).get("policy") or {}
+    st = pol.get("stance")
+    pat = _POLICY_CUT_TALK if st == "hike" else _POLICY_HIKE_TALK if st == "cut" else None
+    return sorted(set(pat.findall(text or ""))) if pat else []
+
+
 def _rate_block(rc: dict | None) -> str:
     if not rc:
         return ""
     d30 = f"、30 年期 {rc['d30']:+d}bp" if rc.get("d30") is not None else ""
     lead = f"（{rc['lead']}）" if rc.get("lead") else ""
-    return (f"\n\n=== 網站利率判讀（官方日殖利率，{rc['from']}→{rc['to']}）===\n"
-            f"2 年期 {rc['d2']:+d}bp、10 年期 {rc['d10']:+d}bp{d30}；曲線型態：{rc['zh']}{lead}。")
+    out = (f"\n\n=== 網站利率判讀（官方日殖利率，{rc['from']}→{rc['to']}）===\n"
+           f"2 年期 {rc['d2']:+d}bp、10 年期 {rc['d10']:+d}bp{d30}；曲線型態：{rc['zh']}{lead}。")
+    pol = rc.get("policy") or {}
+    if pol:
+        md = lambda s: (f"{int(s[5:7])}/{int(s[8:10])}" if len(s or "") >= 10 else (s or ""))
+        last = pol.get("last")
+        act = ("" if not last else
+               f"最近一次決議 {md(last['date'])} {'升息' if last['bp'] > 0 else '降息'} {abs(last['bp'])}bp；")
+        nx = pol.get("next")
+        mk = "、".join(f"至{lb} {bp:+.0f}bp" for lb, bp in pol.get("market") or [])
+        out += (f"\n政策現況：聯邦基金利率目標區間 {pol['lo']:.2f}–{pol['hi']:.2f}%；{act}"
+                + (f"市場定價：{md(nx[0])} 會議{nx[1]}機率 {nx[2]}%" if nx else "")
+                + (f"、累計{mk}" if mk else "") + "。")
+        if pol.get("stance") == "hike":
+            out += "\n※ 目前是升息循環，不得寫「繼續降息」「降息步伐」這類說法；「對利率」的政策方向要與此一致。"
+        elif pol.get("stance") == "cut":
+            out += "\n※ 目前是降息循環，不得寫「繼續升息」「升息步伐」這類說法；「對利率」的政策方向要與此一致。"
+    return out
 
 
 _RATE_PHRASE = {
@@ -1667,13 +1735,22 @@ _RATE_PHRASE = {
 def _rate_fallback(rc: dict | None) -> str:
     if not rc:
         return ""
+    phrase = _RATE_PHRASE.get(rc.get("code"), "走勢待觀察")
+    st = ((rc.get("policy") or {}).get("stance"))
+    # 「短端降得更快」在升息循環裡是下修升息預期，不是定價降息（第十九批）
+    if rc.get("code") == "bull_steep" and st == "hike":
+        phrase = "短端降得更快，市場下修升息預期"
+    elif rc.get("code") == "bear_flat" and st == "cut":
+        phrase = "短端升得更快，市場下修降息預期"
     return (f"近一週（{rc['from']}→{rc['to']}）10 年期 {rc['d10']:+d}bp、2 年期 {rc['d2']:+d}bp，"
-            f"曲線{rc['zh']}，{_RATE_PHRASE.get(rc.get('code'), '走勢待觀察')}。")
+            f"曲線{rc['zh']}，{phrase}。")
 
 
 def _rate_consistent(note: str, rc: dict | None) -> bool:
     if not rc or not note:
         return True
+    if _policy_hits(note, rc):
+        return False
     up, dn = bool(_UP_WORDS.search(note)), bool(_DN_WORDS.search(note))
     if rc["d10"] >= 3 and dn and not up:
         return False
@@ -1824,7 +1901,14 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         if rate_ctx and not r["rate"]:
             why.append("缺少【對利率】那一句")
         elif not _rate_consistent(r["rate"], rate_ctx):
-            why.append("【對利率】的方向和網站利率判讀相反")
+            why.append("【對利率】的方向和網站利率判讀相反"
+                       + ("（政策現況是" + {"hike": "升息循環", "cut": "降息循環"}.get(
+                           ((rate_ctx or {}).get("policy") or {}).get("stance"), "") + "，不得寫"
+                          + "、".join(_policy_hits(r["rate"], rate_ctx)) + "）"
+                          if _policy_hits(r["rate"], rate_ctx) else ""))
+        _ph = _policy_hits(joined, rate_ctx)
+        if _ph:
+            why.append("正文的政策方向和現況相反（不得寫" + "、".join(_ph) + "）")
         media = _media_hits(joined)
         if media:
             why.append("正文寫了媒體名稱（" + "、".join(media[:3]) + "），來源會列在下方，直接寫事實")
@@ -1851,6 +1935,13 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     rate = fix(r["rate"])
     if rate_ctx and (not rate or not _rate_consistent(rate, rate_ctx)):
         rate = _rate_fallback(rate_ctx)
+    # 重寫後正文仍有方向相反的說法：拿掉那一句（寧可少一句，不留錯的政策方向）
+    if _policy_hits(main + "".join(supp), rate_ctx):
+        def _drop(t):
+            return "".join(x for x in re.split(r"(?<=[。！？])", t)
+                           if x and not _policy_hits(x, rate_ctx))
+        main = "¶".join(_drop(p) for p in main.split("¶"))
+        supp = [_drop(x) for x in supp]
     headline = fix(r["headline"]) if 6 <= cjk_len(r["headline"]) <= 40 else ""
     return {"text": "\n".join([main] + supp), "headline": headline, "rate": rate,
             "ids": r["ids"]}, ""
@@ -2988,7 +3079,7 @@ def _jump_suspect(pct: float, prev, src: str) -> bool:
 #     套用在主軸與其他主題）
 #   · 每則補充前面加主題標籤
 # ---------------------------------------------------------------------------
-TOPIC_PROMPT_VERSION = "t3-warsh-chair"
+TOPIC_PROMPT_VERSION = "t4-policy-semi"
 TOPIC_CHARS, TOPIC_MIN = 80, 40
 # 公開RSS提供直接文章連結與出版社摘要；全部主題缺少可讀內容時補入。
 TOPIC_HARD = int(TOPIC_CHARS * HARD_MULT_SUPP)          # 100 字
@@ -3164,6 +3255,8 @@ _TOPIC_SYSTEM = (
     "該區塊材料裡的資訊，不得補充材料以外的事實或數字；只有標題的新聞只能轉述"
     "標題與摘要字面上的事；不得自行推論來源沒有寫的因果關係；不做預測、不下投資"
     "結論；繁體中文；不要評論材料本身，不要出現「材料」「區塊」這類字眼。"
+    "「AI 與半導體」只寫國際大廠與產業趨勢（輝達、台積電、博通、雲端大廠的資本支出等），"
+    "不寫台股個股的股價、法人買賣超或概念股。"
     + _NEWS_RULES +
     "輸出格式：每個主題一行，「代號｜內容〔用到的報導編號〕」，例如"
     "「oil｜…〔1,3〕」，不要其他文字、不要編號開頭、不要粗體記號。")
@@ -3231,7 +3324,7 @@ def _parse_topic_lines(text: str) -> dict:
 
 
 def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
-                     meta_markers=None, name_map=None) -> dict:
+                     meta_markers=None, name_map=None, rate_ctx=None) -> dict:
     """
     一次 AI 呼叫寫完所有主題；逐則驗證（後設字眼、數字鎖對該主題自己的
     材料、長度、跟主軸重複、媒體名、相對時間）。有問題的主題帶原因**只重寫
@@ -3242,6 +3335,10 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
         return {}
     system = _TOPIC_SYSTEM.format(min=TOPIC_MIN, cap=TOPIC_CHARS)
     head = "=== 今日主軸（不要重複）===\n" + (main_text or "").replace(MAIN_PARA, "\n")
+    _pol = ((rate_ctx or {}).get("policy") or {}).get("stance")
+    if _pol in ("hike", "cut"):
+        head += ("\n※ 政策現況：目前是" + ("升息" if _pol == "hike" else "降息")
+                 + "循環，任何主題都不得寫相反方向的「繼續" + ("降息" if _pol == "hike" else "升息") + "」這類說法。")
     srcs = {tid: _topic_block(tid, labels.get(tid, tid), m)
             for tid, m in material.items()}
     good: dict = {}
@@ -3265,6 +3362,8 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
                 bad[tid] = "在評論材料而不是寫新聞"
             elif not _digits_ok(s, srcs[tid]):
                 bad[tid] = "出現該主題材料裡沒有的數字"
+            elif _policy_hits(s, rate_ctx):
+                bad[tid] = "政策方向跟現況相反（不得寫" + "、".join(_policy_hits(s, rate_ctx)) + "）"
             elif _dup_with_main(s, main_text):
                 bad[tid] = "跟主軸講同一件事，請寫同主題的另一件事，沒有就輸出略"
             elif cjk_len(s) < int(TOPIC_MIN * SHORT_TOL) and attempt == 1:
@@ -3305,7 +3404,7 @@ def summarize_topics(material: dict, labels: dict, main_text: str, env=None,
 
 def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
                  main_titles, state: dict, env=None, now=None,
-                 meta_markers=None) -> dict:
+                 meta_markers=None, rate_ctx=None) -> dict:
     """
     主題補充的整條流程（含快取）：回傳 {"items": [...], "map": {chip: tid}}。
     快取鍵＝提示詞版本＋主軸＋各主題入選標題；12 小時內相同就沿用。
@@ -3320,7 +3419,8 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
     mat = gather_topic_material(
         specs, pool, global_exclude=(cfg or {}).get("exclude_keywords") or [],
         main_titles=main_titles, now=now)
-    key = hashlib.sha256((TOPIC_PROMPT_VERSION + "|" + (main_text or "") + "|" + "|".join(
+    _stance = ((rate_ctx or {}).get("policy") or {}).get("stance") or ""
+    key = hashlib.sha256((TOPIC_PROMPT_VERSION + "|" + _stance + "|" + (main_text or "") + "|" + "|".join(
         f"{tid}:" + ",".join(x["title"] for x in _topic_mats(m))
         for tid, m in sorted(mat.items()))).encode("utf-8")).hexdigest()[:16]
     old = state.get("topics") or {}
@@ -3331,7 +3431,7 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
         res["items"] = old["items"]
         return res
     texts = summarize_topics(mat, labels, main_text, env, meta_markers,
-                             name_map=_name_map(cfg))
+                             name_map=_name_map(cfg), rate_ctx=rate_ctx)
     items = []
     for tid in res["order"]:
         if tid not in texts:
@@ -3487,6 +3587,10 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     name_map = _name_map(cfg)
     try:
         rate_ctx = rate_context(rates_series)
+        if rate_ctx is not None:
+            rate_ctx["policy"] = policy_context(rates_series, out.get("fedwatch"))
+            if rate_ctx["policy"]:
+                log.info("市場焦點：政策現況 %s", rate_ctx["policy"])
     except Exception as e:                         # noqa: BLE001
         log.warning("市場焦點：利率判讀計算失敗（%s），本次不附對利率", e)
         rate_ctx = None
@@ -3655,7 +3759,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             _tp = build_topics(cfg, _raw_pool, (out.get("text") or "").split("\n")[0],
                                out.get("main_source_titles") or [],
                                state, env, now=dt.datetime.now(dt.timezone.utc),
-                               meta_markers=meta_markers)
+                               meta_markers=meta_markers, rate_ctx=rate_ctx)
             out["topics"], out["topic_map"] = _tp["items"], _tp["map"]
         except Exception as e:                     # noqa: BLE001
             log.warning("主題補充失敗（%s），補充維持一般內容", e)

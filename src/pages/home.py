@@ -1412,8 +1412,8 @@ def _hm_changes(cs, regime: str = "") -> str:
 
 
 def _hm_when(tpe: dt.datetime, d_et: dt.date, today: dt.date) -> str:
-    tw = "台灣隔天 " if tpe.date() > d_et else "台灣 "
-    return f"{'今天 ' if d_et == today else ''}{tw}{tpe.strftime('%H:%M')}"
+    # 第十九批：日期一律寫台灣日期，不再出現「台灣隔天」（美東日期＋隔天容易看錯）
+    return f"{'今天 ' if tpe.date() == today else ''}台灣 {tpe.strftime('%H:%M')}"
 
 
 def _hm_label(d: dt.date) -> str:
@@ -1454,6 +1454,12 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
     def _wk(d):
         return (d - start).days // 7
 
+    # 數據列也改用台灣日期：標籤、時間、週別都依台北時間重算
+    for e in rows:
+        _td = e["tpe"].date()
+        e["label"], e["week"] = _hm_label(_td), _wk(_td)
+        e["when"] = _hm_when(e["tpe"], e["date"], today)
+
     supply = []
     for a in wx.get("auctions") or []:
         try:
@@ -1465,7 +1471,7 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
             continue
         sub = ("已公告" + (f"・{a['amount']}" if a.get("amount") else "")
                if a.get("src") == "財政部公告" else "財政部暫定時程")
-        supply.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+        supply.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                        "when": _hm_when(tpe, d, today), "name": a.get("name", "公債標售"),
                        "sub": sub, "tag": "標售"})
     for b in wx.get("buybacks") or []:
@@ -1476,7 +1482,7 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         tpe = wc.taipei_time(d, tuple(b.get("end") or (14, 0)))
         if tpe <= now or not start <= d <= end:
             continue
-        supply.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+        supply.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                        "when": _hm_when(tpe, d, today),
                        "name": f"國債回購・{b.get('segment', '')}",
                        "sub": f"{b.get('purpose', '')}・{b.get('max', '')}・財政部暫定時程",
@@ -1493,9 +1499,10 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         tpe = wc.taipei_time(d, (et.hour, et.minute))
         if tpe <= now or not start <= d <= end:
             continue
-        who = f"{x.get('role', '')} {x.get('zh', '')}".strip()
+        # 第十九批（使用者指定）：官員名字寫英文
+        who = f"{x.get('role', '')} {x.get('name', '') or x.get('zh', '')}".strip()
         sub = "・".join(v for v in (x.get("kind", ""), x.get("topic", "")) if v)
-        speeches.append({"week": _wk(d), "tpe": tpe, "label": _hm_label(d),
+        speeches.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                          "when": _hm_when(tpe, d, today) if x.get("time_known", True) else "時間未定",
                          "name": who, "sub": sub, "voter": x.get("voter"),
                          "src": x.get("src", "")})
@@ -1565,7 +1572,9 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         body = "".join(
             f'<div class="hm-hi"><div class="hm-hi-d"><b>{esc(e["label"])}</b><span>{esc(e["when"])}</span></div>'
             f'<div class="hm-hi-b"><b>{esc(e["name"])}<em>高影響</em></b>'
-            + (f'<p>{esc(e["desc"])}</p>' if e["desc"] else "") + _hi_extra(e) + '</div></div>' for e in hi)
+            # 第十九批（使用者：數據這裡不用解釋這麼多文字）：只留市場預估／前值與走勢，
+            # 轉格條件的完整說明在情境頁
+            + _hi_extra(e) + '</div></div>' for e in hi)
         if mid:
             body += ('<div class="hm-mids-h">其他發布（影響中）</div><div class="hm-mids">'
                      + "".join(_mrow(e) for e in mid) + '</div>')

@@ -553,6 +553,39 @@ topics:
   - 人工智慧
   - 資料中心
   - AI 伺服器
+  # 第十九批（使用者指定）：只看國際大廠與產業趨勢——Hyperscaler、台積電、輝達等。
+  # 標題必須點名其中一家或產業用詞；台股個股盤勢（法人買賣超、概念股）一律排除。
+  require:
+  - Nvidia
+  - 輝達
+  - TSMC
+  - 台積電
+  - AMD
+  - Broadcom
+  - 博通
+  - ASML
+  - Micron
+  - 美光
+  - SK Hynix
+  - 海力士
+  - Samsung
+  - 三星
+  - Microsoft
+  - 微軟
+  - Alphabet
+  - Google
+  - 谷歌
+  - Amazon
+  - 亞馬遜
+  - Meta
+  - Oracle
+  - 甲骨文
+  - OpenAI
+  - hyperscaler
+  - hyperscalers
+  - AI capex
+  - AI 資本支出
+  - 雲端 資本支出
   exclude:
   - ETF
   - 存股
@@ -567,8 +600,23 @@ topics:
   - 黑馬
   - 飆股
   - 千金股
+  - 三大法人
+  - 買超
+  - 賣超
+  - 概念股
+  - 目標價
+  - 漲停
+  - 跌停
+  - 上市櫃
+  - 外資
+  - 投信
+  - 自營商
   search:
   - q: chip stocks OR semiconductor (site:reuters.com OR site:bloomberg.com)
+    lang: en
+  - q: (hyperscaler OR "data center") (capex OR spending) (Microsoft OR Alphabet OR Amazon OR Meta OR Oracle)
+    lang: en
+  - q: (Nvidia OR TSMC OR Broadcom OR AMD) (site:reuters.com OR site:bloomberg.com)
     lang: en
 - id: twf
   label: 台指期

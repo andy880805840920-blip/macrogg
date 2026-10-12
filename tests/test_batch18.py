@@ -268,6 +268,48 @@ _js = _home._CHIP_SELECT_JS
 check("G5 前端說明含日／MTD／YTD 漲跌幅與基準日", '"漲跌幅 "' in _js and "data-bmd" in _js
       and "data-byd" in _js and "前一交易日" in _js)
 
+# ---------------------------------------------------------------------------
+# H. 第十九批：對利率不得違反政策現況；AI 與半導體只看國際大廠
+# ---------------------------------------------------------------------------
+from unittest.mock import patch as _patch  # noqa: E402
+_rs = {"DFEDTARU": [{"date": "2026-09-15", "value": 3.75}, {"date": "2026-09-17", "value": 4.0},
+                    {"date": "2026-10-09", "value": 4.0}],
+       "DFEDTARL": [{"date": "2026-10-09", "value": 3.75}]}
+_fwx = {"next": {"date": "2026-10-28", "outcomes": [[0, 0.81], [25, 0.19]]},
+        "horizons": [{"label": "2026 年底", "cum_bp": 25.1}, {"label": "2027 年底", "cum_bp": 81.0}]}
+with _patch.object(ft.clock, "today", return_value=_dt.date(2026, 10, 12)):
+    _pol = ft.policy_context(_rs, _fwx)
+check("H1 政策現況：最近一次決議 9/17 升息 25bp、升息循環",
+      _pol["last"] == {"date": "2026-09-17", "bp": 25} and _pol["stance"] == "hike", _pol)
+_rc = {"d2": 0, "d10": 0, "d30": 0, "from": "10/2", "to": "10/9", "zh": "持平", "lead": "",
+       "code": "flat", "policy": _pol}
+_blk = ft._rate_block(_rc)
+check("H2 判讀段落帶政策現況與禁止說法", "最近一次決議 9/17 升息 25bp" in _blk and "升息循環" in _blk
+      and "3.75–4.00%" in _blk, _blk)
+_bad = "通膨數據若符合預期或低於預期，將支持聯準會繼續降息，與近期美債殖利率大致持平的走勢一致；若高於預期則可能延緩降息步伐。"
+check("H3 截圖那句被抓到（繼續降息、降息步伐）", not ft._rate_consistent(_bad, _rc)
+      and set(ft._policy_hits(_bad, _rc)) >= {"支持聯準會繼續降息", "降息步伐"}, ft._policy_hits(_bad, _rc))
+check("H4 合乎現況的寫法放行", ft._rate_consistent("通膨若高於預期，市場將加碼定價升息，短端承壓。", _rc))
+check("H5 升息循環下的備用句不寫「定價降息」",
+      "定價降息" not in ft._rate_fallback(dict(_rc, code="bull_steep"))
+      and "下修升息預期" in ft._rate_fallback(dict(_rc, code="bull_steep")))
+_specs = [x for x in ft.topic_specs(_cfg) if x["id"] == "semi"]
+_now = _dt.datetime(2026, 10, 12, 0, 0, tzinfo=_dt.timezone.utc)
+_pool = [{"title": t, "link": f"https://news.google.com/rss/articles/{i}", "source": "x", "at": "2026-10-11T12:00:00+00:00"}
+         for i, t in enumerate([
+             "台塑攜手創曦資訊在麥寮建置AI資料中心 三大法人買超逾8.2萬張",
+             "AI概念股飆漲 外資大買",
+             "Microsoft boosts AI capex as data center spending climbs",
+             "台積電法說會前夕 先進製程需求強勁",
+             "Nvidia to invest in new AI chip plant"])]
+_mat = ft.gather_topic_material(_specs, _pool, now=_now, _fetch=lambda *a, **k: [],
+                                _body=lambda *a, **k: "")
+_got = [x["title"] for x in ft._topic_mats(_mat.get("semi") or {})]
+check("H6 AI 與半導體：擋掉台股個股（台塑、概念股），留下國際大廠與台積電",
+      not any("台塑" in t or "概念股" in t for t in _got)
+      and any("Microsoft" in t for t in _got) and any("台積電" in t for t in _got)
+      and any("Nvidia" in t for t in _got), _got)
+
 print()
 print("全部通過" if not FAILED else f"有失敗（{len(FAILED)}）")
 sys.exit(1 if FAILED else 0)
