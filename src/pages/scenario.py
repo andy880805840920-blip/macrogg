@@ -6,7 +6,7 @@ import re
 
 from ..site import esc
 from ..analysis import scenario as scenario_mod
-from . import compact_full, focus_evidence, state_chip, teach
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
 
@@ -662,7 +662,7 @@ def _futures(d: dict, sc) -> tuple[str, str]:
                     "終端利率＝這段期間離現行利率最遠的那一點，代表市場認為這一輪會升（降）到哪裡。"
                     "期貨比點陣圖多定價，代表市場不相信聯準會會停在它說的地方。",
                     "近月合約流動性好，遠月（約半年以後）成交稀，數字會跳，只看方向。"
-                    "期貨資料取自交易所報價，可能有 15 分鐘以上延遲。"))
+                    "期貨資料取自交易所報價，可能有 15 分鐘以上延遲。", learn="terminal"))
     sm = (f'終端{fc["terminal"]:.2f}%（{term_m[:4]}/{int(term_m[5:7])}，{tbp:+.0f}bp）'
           + (f'　·　點陣圖{y1}年底{dots[y1]:.3f}%' if y1 in dots else ""))
     return body, sm
@@ -767,7 +767,7 @@ def _scenario_body_full(d: dict) -> str:
     {teach(
         "格子的位置是固定的計算：兩條軸各對照一個外部門檻、判定重心、再交叉。",
         "看得懂這套算法，你就能在數據公布的當下自己推出格子會不會動。門檻錨在 FOMC 自己的預測，不是本站選的數字。",
-        "格位只用水準判（失業率、核心 PCE 年增）；動能改看 PCE Supercore 三月年化，連兩個月越過 3.7%／2.1% 才推一格。")}
+        "格位只用水準判（失業率、核心 PCE 年增）；動能改看 PCE Supercore 三月年化，連兩個月越過 3.7%／2.1% 才推一格。", learn="grid9")}
   </div>
 </div>
 
@@ -874,6 +874,7 @@ def _scenario_body_full(d: dict) -> str:
       <dt>點陣圖</dt>
       <dd>每季的經濟預測摘要（SEP）裡，每位與會者對各年底政策利率的預測，一人一點；本頁取中位數。</dd>
     </dl>
+    {gloss_more()}
   </div>
 </div>
 """

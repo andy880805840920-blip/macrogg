@@ -154,7 +154,10 @@ def _light_card(lt, href: str = "") -> str:
 </div>"""
 
 
-def _flag_row(f) -> str:
+_IMPACT_CLASS = {"grid": "alert", "dir": "watch", "bg": "info"}
+
+
+def _flag_row(f, level: str = "") -> str:
     """每則訊號放在同一個淡底區塊；保留標題、影響與完整依據。"""
     impact = ""
     if f.impact:
@@ -174,9 +177,12 @@ def _flag_row(f) -> str:
     if chunk:
         paragraphs.append(chunk)
     detail = "".join(f'<p>{esc(part)}</p>' for part in paragraphs)
-    return f"""<article class="flag {esc(f.severity)}">
+    # 標籤與顏色跟著影響層級（rules.impact_level），不再用嚴重度
+    _cls = _IMPACT_CLASS.get(level, f.severity)
+    _tag = rules.IMPACT_LABEL.get(level) or SEV_TEXT.get(f.severity, "")
+    return f"""<article class="flag {esc(_cls)}">
   <div class="f-head"><span class="f-title">{esc(f.headline)}</span>
-    <span class="f-tag">{SEV_TEXT.get(f.severity, '')}</span></div>
+    <span class="f-tag">{esc(_tag)}</span></div>
   {impact}
   <details class="f-more"><summary>查看依據</summary>
     <div class="f-detail">{detail}</div></details>
@@ -318,7 +324,7 @@ def _claims_card(c: dict | None) -> str:
     {teach(
         "每週有多少人新申請失業補助（初領）、多少人還在領（續領）。",
         "這是兩次就業報告之間唯一會更新的勞動數據。初領量的是裁員的速度、續領量的是再就業的難度——兩者可以背離，而背離是勞動市場轉弱最早的形態。",
-        "別逐週反應：看四週平均與近一年的百分位。續領一直爬而初領沒動，就是「沒人被裁，但被裁的找不到下一份工作」。")}
+        "別逐週反應：看四週平均與近一年的百分位。續領一直爬而初領沒動，就是「沒人被裁，但被裁的找不到下一份工作」。", learn="claims")}
     <details class="f-more"><summary>初領與續領差在哪、為什麼看四週平均</summary>
       <div class="f-detail">
         <b>日期先講清楚</b>：這一區標的是「統計週的結束日」不是發布日——
@@ -504,14 +510,25 @@ def _labor_body_full(d: dict) -> str:
 
     rev, att, dec = d["revision"], d["attribution"], d["decomp"]
 
-    # 分層呈現（rules.TIERS）：先講改變頭條解讀的，再講趨勢轉折，最後是背景。
-    # 每層一個小標；同層內已由 run_rules 按嚴重度與強度排好。
-    _parts, _cur = [], None
-    for f in d["flags"]:
-        if f.tier != _cur:
-            _cur = f.tier
-            _parts.append(f'<div class="sig-tier">{esc(rules.TIERS.get(f.tier, ""))}</div>')
-        _parts.append(_flag_row(f))
+    # 分級（第二十二批）：只用一套「對結論的影響」——影響格位／影響方向／背景
+    # （規則見 rules.impact_level）。首段露出前三則，其餘收合。
+    _groups = rules.by_impact(d["flags"], d.get("axis"))
+    _ordered = [(k, f) for k, grp in _groups for f in grp]
+    _desc = {k: desc for k, _zh, desc in rules.IMPACT_LEVELS}
+
+    def _render(items):
+        out, cur = [], None
+        for k, f in items:
+            if k != cur:
+                cur = k
+                out.append(f'<div class="sig-tier">{esc(rules.IMPACT_LABEL[k])}'
+                           f'<span>　{esc(_desc[k])}</span></div>')
+            out.append(_flag_row(f, k))
+        return "".join(out)
+    _parts = [_render(_ordered[:3])]
+    if len(_ordered) > 3:
+        _parts.append(f'<details class="sig-rest"><summary>其餘 {len(_ordered) - 3} 則訊號</summary>'
+                      f'{_render(_ordered[3:])}</details>')
     flags_html = "".join(_parts) or '<div class="empty">本次沒有觸發任何訊號</div>'
     _fl = d.get("flow")
     flow_html = (
@@ -649,7 +666,7 @@ def _labor_body_full(d: dict) -> str:
 
     # 收合摘要：最嚴重的那一條訊號。收合狀態下這是讀者判斷
     # 「要不要點開」的唯一依據——只寫標題的話得逐一點開才知道哪張有事。
-    _top = (d["flags"] or [None])[0]          # 已按層級排好，第一條就是最該先看的
+    _top = (([f for _k, grp in rules.by_impact(d["flags"], d.get("axis")) for f in grp]) or [None])[0]
     _sig_sum = (f'{len(d["flags"])} 項　·　{_top.headline}' if _top
                 else "本次沒有觸發任何訊號")
     _kpi_sum = (f'非農 {k["nfp_display"]}　·　失業率 {k["u3_display"]}'
@@ -747,7 +764,7 @@ def _labor_body_full(d: dict) -> str:
     {teach(
         "失業率這個月的變動，是「更多人找到工作」還是「更多人放棄找工作」造成的。兩個原因拆開來各算一塊。",
         "放棄找工作的人不算在勞動力裡，所以失業率下降不一定是好消息：大家放棄找工作、退出勞動市場，失業率也會下降——但那其實是就業市場在轉弱。",
-        "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。")}
+        "看哪一塊比較大：就業那塊大，代表數字反映真實改善；退出那塊大，代表下降是假象，方向反而偏弱。另外，失業率只公布到小數一位，單月 ±0.1 的變動在統計上跟 0 分不出差別——方向可看，強度別當真。", learn="ur_decomp")}
   </div>
 </div>
 
@@ -771,7 +788,7 @@ def _labor_body_full(d: dict) -> str:
     {teach(
         "這個月新增（或減少）的就業，來自哪些行業。",
         "同樣是「+5 萬人」，全部來自醫療和政府、跟散佈在十個民間行業，意義完全不同——醫療與政府長期都在增加、跟景氣關係不大，民間的景氣敏感行業才反映整體經濟。",
-        "先看上面那條算式：景氣敏感行業是增是減。再看哪幾個行業在帶頭，以及有沒有標 ▲ 的——那代表它這次的變動比自己平常大很多，通常是產業出事或政策轉向的訊號。")}
+        "先看上面那條算式：景氣敏感行業是增是減。再看哪幾個行業在帶頭，以及有沒有標 ▲ 的——那代表它這次的變動比自己平常大很多，通常是產業出事或政策轉向的訊號。", learn="industry")}
     <details data-m-collapse><summary>全部 {att['total_count']} 個行業</summary>
       <div class="tscroll" style="margin-top:10px"><table>
         <thead><tr><th>行業</th><th>類別</th><th>增減（萬人）</th><th>自身變動</th></tr></thead>
@@ -793,7 +810,7 @@ def _labor_body_full(d: dict) -> str:
     {teach(
         "之前公布的就業數字，事後被改了多少。",
         "市場只對「第一次公布」的數字有反應，但那是估算值。如果初值總是被往下修，代表你在新聞上看到的就業一直比真實情況好——這正是判斷「數據可不可信」的地方。",
-        "看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。")}
+        "看兩件事：這次把前兩個月改了多少（幅度大代表初值很不準）；過去一年平均往哪個方向改（一直往下修＝初值系統性偏樂觀，看到新數字要先打折）。", learn="revisions")}
   </div>
 </div>
 

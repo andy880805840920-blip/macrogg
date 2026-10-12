@@ -5,7 +5,7 @@ from __future__ import annotations
 from .. import charts
 from ..site import esc
 from .labor import _kpi_card, _light_card, _flag_row, _stats
-from . import compact_full, focus_evidence, state_chip, teach
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 
 
 VERDICT_COPY = {
@@ -150,7 +150,7 @@ def _sticky_card(k: dict | None) -> str:
     {teach(
         "服務類（剔除住房）的物價還在以多快的速度上漲、已經連續多久降不下來。",
         "商品價格漲了會回落，服務價格漲了很難回頭——它的成本主要是人的薪水，而薪水幾乎不會降。這一塊不鬆，聯準會就不敢降息，所以它是降息時間表卡最久的關卡。",
-        "先看方向（在加速還是減速），再看連續高於門檻的月數——月數越多代表卡得越久，別只看單月數字。")}
+        "先看方向（在加速還是減速），再看連續高於門檻的月數——月數越多代表卡得越久，別只看單月數字。", learn="supercore")}
     {sf_html}
     {_gap_block(k.get('software'), k.get('diverge_txt', ''))}
     <details class="f-more"><summary>為什麼看三個時間尺度、為什麼是 2.5%</summary>
@@ -275,7 +275,7 @@ def _consumption_card(c: dict | None) -> str:
     {teach(
         "扣掉物價上漲後，民眾的消費量與收入各自成長多少，以及存下來的錢佔收入的比例。",
         "消費撐得住，服務類的需求就降不下來，通膨也比較難回落；消費如果是靠動用儲蓄撐，撐得了一時，之後通常會放慢。",
-        "先看消費三月年化：低於 0.5% 是明顯放緩。再看消費是不是比所得成長快很多、儲蓄率又在降——那代表在動用老本。")}
+        "先看消費三月年化：低於 0.5% 是明顯放緩。再看消費是不是比所得成長快很多、儲蓄率又在降——那代表在動用老本。", learn="real_consumption")}
   </div>
 </div>"""
 
@@ -341,7 +341,7 @@ def _passthrough(p) -> str:
 {teach(
     "薪資漲幅跟服務類物價漲幅的關係：薪資先動、物價多久之後跟上。",
     "服務業最大的成本是人。薪資一直漲，服務價格降不下來；反過來，薪資降溫是服務通膨要降的前提。看薪資等於提前看幾個月後的服務通膨。",
-    "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。")}
+    "兩條線的差距在縮小＝傳導壓力在減；薪資年增若降到 3% 附近，大致與 2% 通膨相容（差額靠生產力吸收）。", learn="wage_services")}
 <details data-m-collapse><summary>領先落後的相關性：薪資領先 {esc(str(p.get('best_lag', '—')))} 個月時最強（{esc(f"{p['best_corr']:+.2f}" if p.get('best_corr') is not None else '—')}）</summary>
   <p class="viz-sub" style="margin-top:10px">橫軸＝薪資領先幾個月，柱＝相關係數（−1 到 +1）；深色是最強的那一格。</p>
   {p.get('lag_chart', '')}
@@ -571,7 +571,7 @@ def _inflation_body_full(d: dict) -> str:
     {teach(
         "這個月物價的漲幅，是住房、食物、能源還是其他項目造成的。",
         "「CPI 漲 0.3%」看不出該擔心什麼。漲的若集中在能源，通常過幾個月自己回落；集中在住房與服務，才是聯準會頭痛的那種通膨。",
-        "看哪幾條在零線右邊（推升）、哪幾條在左邊（壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。")}
+        "看哪幾條在零線右邊（推升）、哪幾條在左邊（壓低）。分項加總與官方總數用不同方法計算，不會剛好相等，這是正常的。", learn="contrib")}
     <details data-m-collapse><summary>估算方法</summary>
     <p class="hint" style="margin-top:10px">
       估算貢獻 ≈ 該類別的 BLS Relative Importance × 該類別本月價格變化，
@@ -591,7 +591,7 @@ def _inflation_body_full(d: dict) -> str:
     {teach(
         "把幾百個品項攤開看：是大多數東西都在漲，還是只有少數幾樣在拉高平均。",
         "同樣是 3% 的通膨，「什麼都貴了 3%」跟「只有機票和蛋在暴漲」是兩回事。前者需要升息對付，後者等供給恢復就好。",
-        "中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。")}
+        "中位數與截尾平均高＝廣泛在漲；它們低但總數高＝少數項目拉的，讀總數時要打折。", learn="breadth")}
     <details data-m-collapse><summary>指標定義與算法</summary>
       <table class="lefty" style="margin-top:10px">
         <thead><tr><th>指標</th><th>目前</th><th>算法</th></tr></thead>
@@ -630,7 +630,7 @@ def _inflation_body_full(d: dict) -> str:
     {teach(
         "油價最近的變動，以及它大概會在一到兩個月後對總體 CPI 造成多大影響。",
         "能源只佔 CPI 約 6%，但波動極大，常常是單月 CPI 意外的主因。先知道油價動了多少，下個月 CPI 出爐時就不會被表面數字嚇到。",
-        "油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。")}
+        "油價大漲後的 CPI 若只是總數高、核心不高，別急著改判斷——聯準會看的也是剔除能源的核心。", learn="energy")}
   </div>
 </div>
 
@@ -674,6 +674,7 @@ def _inflation_body_full(d: dict) -> str:
       <dd>市場或民眾認為未來通膨會是多少。一旦大家「相信」通膨會一直高，
         就會反映在定價和薪資談判上，通膨會自我實現——這是聯準會最怕的事。</dd>
     </dl>
+    {gloss_more()}
   </div>
 </div>
 """
@@ -740,7 +741,7 @@ def _ppi_card(pp: dict | None) -> str:
     {teach(
         "企業賣給下游的價格（出廠價）漲了多少。CPI 是你我付的零售價，PPI 是它的上游。",
         "物價的傳導有順序：出廠價先動、幾個月後零售價跟上。PPI 還有一個特殊角色——PCE 的醫療與金融服務項直接取自 PPI（PCE 量的是含保險給付的全部費用，CPI 只量自付額），所以月底的 PCE 月中就能推出來。",
-        "看 PPI−CPI 差距：正值代表企業還沒轉嫁完、未來 CPI 有上行壓力。本站的核心 PCE 推估值就是從 CPI 與 PPI 組出來的，計算過程在情境頁的「這一格怎麼算」。")}
+        "看 PPI−CPI 差距：正值代表企業還沒轉嫁完、未來 CPI 有上行壓力。本站的核心 PCE 推估值就是從 CPI 與 PPI 組出來的，計算過程在情境頁的「這一格怎麼算」。", learn="ppi")}
   </div>
 </div>"""
 

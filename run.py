@@ -698,6 +698,22 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
         footer=home_page.home_footer(ctxs),
         banner=_banner(None)))
 
+    # ---- 偷懶頁（問答）：判讀索引內嵌在頁面，答案卡各自一個小檔 ----
+    try:
+        from src.analysis import ask as ask_mod
+        from src.pages import ask as ask_page
+        _ask = ask_mod.build(ctxs, ctxs.get("_all_series") or {})
+        write("ask/index.html", site.page("偷懶", "/ask/", ask_page.ask_body(_ask["index"])))
+        for _cid, _html in _ask["frags"].items():
+            write(f"ask/c/{_cid}.html", ask_page.fragment_page(_html))
+        log.info("偷懶頁：%d 張卡（有資料 %d、本次缺 %d），練習題可填 %d/%d",
+                 _ask["stats"]["cards"], _ask["stats"]["data_ok"], _ask["stats"]["data_missing"],
+                 _ask["stats"]["practice"], _ask["stats"]["learn"])
+    except Exception as e:                         # noqa: BLE001
+        log.warning("偷懶頁產生失敗（%s），本次不更新", e)
+        if not (OUT_DIR / "ask/index.html").exists():
+            write("ask/index.html", site.soon_page("偷懶", "/ask/", "問答頁本次產生失敗，下次更新會再試。", "P6"))
+
     # ---- 存檔 ----
     entries = []
     for p in sorted((OUT_DIR / "archive").glob("*/index.html"), reverse=True):
@@ -1116,6 +1132,7 @@ def main() -> int:
         log.warning("有 %d 條序列停止更新：%s", len(ctxs["_stale"]),
                     "、".join(f"{s['id']}（{s['days']} 天）"
                               for s in ctxs["_stale"]))
+    ctxs["_all_series"] = all_series
     written = write_site(ctxs, args.offline, only=args.only)
     if not args.only:
         chg.save(STATE_FILE, cur_state)

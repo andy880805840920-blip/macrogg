@@ -41,6 +41,7 @@ def _lang_btn(active: str) -> str:
 # 導覽列定義：(路徑, 名稱, 是否已完成)
 NAV = [
     ("/", "總覽", True),
+    ("/ask/", "偷懶", True),
     ("/labor/", "就業", True),
     ("/inflation/", "通膨", True),
     ("/fomc/", "聯準會", True),
@@ -636,6 +637,7 @@ td a[target="_blank"],.src a[target="_blank"]{
 .sig-rest>summary{font-weight:700}
 .sig-tier{margin:16px 0 2px;font-size:11.5px;font-weight:700;letter-spacing:.06em;
   color:var(--muted)}
+.sig-tier span{font-weight:500;letter-spacing:0}
 .flag.alert .f-icon{color:var(--critical)}
 .flag.watch .f-icon{color:var(--warning)}
 .flag.info .f-icon{color:var(--muted)}
@@ -986,6 +988,8 @@ details[data-m-collapse]>summary{list-style:none}
 .archive-list .a-meta{color:var(--muted);font-size:12.5px}
 
 /* ---------- 名詞解釋 ---------- */
+.teach-more{font-size:13px;margin:8px 0 0}
+.teach-more a{color:var(--brand-orange);font-weight:700;text-decoration:none}
 .gloss,.poslist{margin:6px 0 0}
 .gloss dt,.poslist dt{font-weight:700;font-size:13.5px;margin-top:13px}
 .gloss dt:first-child,.poslist dt:first-child{margin-top:0}

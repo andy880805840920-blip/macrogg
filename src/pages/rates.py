@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ..site import esc
 from .labor import _light_card, _stats
-from . import compact_full, focus_evidence, state_chip, teach
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 from . import longend as LE
 
 
@@ -173,7 +173,7 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。",
         "債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。",
-        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。")}
+        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。", learn="refunding")}
     <div class="src">單位：億美元。年化＝單季 × 4，只用來比較量級。</div>
   </div>
 </div>"""
@@ -461,7 +461,7 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
         "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
-        "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。")}
+        "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。", learn="hyperscaler")}
   </div>
 </div>
 
@@ -511,7 +511,7 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
-        "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。")}
+        "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。", learn="fiscal")}
     <details data-m-collapse><summary>名詞：有效利率與 r − g</summary>
       <dl class="gloss" style="margin-top:10px">
         <dt>有效利率</dt>
@@ -607,6 +607,7 @@ def _rates_body_full(d: dict) -> str:
         表格以正式季報的現金流量表為準，因此可能晚於新聞稿更新。
         可由公布日期與原文連結查看最新消息，並核對各公司的資料期別。</dd>
     </dl>
+    {gloss_more()}
   </div>
 </div>
 """

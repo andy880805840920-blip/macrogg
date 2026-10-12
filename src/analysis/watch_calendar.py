@@ -190,7 +190,9 @@ def _group(d: dt.date, mon: dt.date) -> str:
     k = (d - mon).days // 7
     a = mon + dt.timedelta(days=7 * k)
     b = a + dt.timedelta(days=6)
-    return (f"{_GROUPS[k]}　{a.month:02d}/{a.day:02d}–"
+    # 往後查超過五週（偷懶頁找下一次 CPI／非農）時不能越界
+    name = _GROUPS[k] if 0 <= k < len(_GROUPS) else f"第 {k + 1} 週"
+    return (f"{name}　{a.month:02d}/{a.day:02d}–"
             f"{b.month:02d}/{b.day:02d}")
 
 

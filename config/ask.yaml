@@ -1,0 +1,426 @@
+# 偷懶頁（/ask/）：問句判讀規則與答案卡清單。不經 AI，純關鍵字與句型。
+#
+# 判讀流程與計分見 src/pages/ask_match.js 開頭註解。這裡只放「詞」與「卡」。
+#
+# 卡片欄位
+#   id   卡片代號（網址 /ask/c/<id>.html）
+#   c    分類：總覽／指標報價／聯準會／就業／通膨／長端與債務／情境（名詞卡由 terms 自動產生）
+#   q    標題（也是清單上看到的問題）
+#   k    強詞：問句出現就 +3
+#   w    弱詞：+1
+#   m    修飾詞：出現 +2；卡片有 m 但問句沒有 −2（讓「CPI」不會跑到「CPI 月增」）
+#   n    這張卡回答的意圖
+#   x    範例問句（字面相似 +2）
+#   l    對應 config/learn.yaml 的教學主題
+#   h    跳轉連結
+#   r    相關問題（卡片 id）
+#   src  資料：{s: FRED 序列, tf: lv 水準／yoy 年增／mom 月增／d 差分／a3 三月年化, u: 單位, dg: 小數,
+#              sc: 倍數, lab: 名稱} 或 {chip: 首頁報價板代號} 或 {fn: src/analysis/ask.py 的函式}
+#   say  答案後面補一句；{ctx:路徑} 取 context 文字
+
+rules: {strong: 3, weak: 1, mod: 2, modMiss: -2, intent: 2, implicit: 1, ex: 2, exSim: 0.6,
+        direct: 4, lead: 2, guessN: 5, fuzzy: 0.25, termMiss: -2}
+
+# 簡轉繁（成對：簡繁簡繁…），只收常見字
+s2t: >-
+  业業务務资資产產经經济濟价價涨漲准準联聯储儲债債劳勞动動参參与與时時胀脹货貨币幣汇匯圆圓银銀国國会會议議么麼为為吗嗎现現长長点點阵陣图圖机機预預测測级級数數据據发發周週历歷开開关關门門们們这這个個对對应應该該还還说說话話选選举舉场場进進实實质質费費农農职職请請领領续續黄黃临臨业業财財政政赤赤字字税稅贷貸鸽鴿鹰鷹缩縮减減标標售售拍拍卖賣买買卖賣盘盤综綜合合标標普普纳納斯斯达達克克琼瓊费費城城导導体體恐恐慌慌波波动動率率原原油油金金欧歐日日元元台台臺台价價格格涨漲跌跌闻聞讯訊样樣怎怎么麼会會说說过過还還没沒问問题題几幾
+syn:
+  - [美聯儲, 聯準會]
+  - [聯儲, 聯準會]
+  - [美國央行, 聯準會]
+  - [fed, 聯準會]
+  - [加息, 升息]
+  - [調升利率, 升息]
+  - [減息, 降息]
+  - [調降利率, 降息]
+  - [通脹, 通膨]
+  - [通貨膨脹, 通膨]
+  - [inflation, 通膨]
+  - [非農就業人數, 非農]
+  - [非農業就業, 非農]
+  - [非農就業, 非農]
+  - [nfp, 非農]
+  - [payrolls, 非農]
+  - [u-3, 失業率]
+  - [u3, 失業率]
+  - [u-6, u6]
+  - [消費者物價指數, cpi]
+  - [消費者物價, cpi]
+  - [消費物價, cpi]
+  - [corepce, 核心pce]
+  - [corecpi, 核心cpi]
+  - [個人消費支出物價, pce]
+  - [超級核心, supercore]
+  - [超核心, supercore]
+  - [核心服務除住房, supercore]
+  - [核心服務扣除住房, supercore]
+  - [生產者物價指數, ppi]
+  - [生產者物價, ppi]
+  - [十年期, 10年期]
+  - [10年期公債, 10年期]
+  - [10年美債, 10年期]
+  - [10年債, 10年期]
+  - [十年債, 10年期]
+  - [us10y, 10年期]
+  - [10y, 10年期]
+  - [兩年期, 2年期]
+  - [二年期, 2年期]
+  - [2年債, 2年期]
+  - [2年期公債, 2年期]
+  - [2y, 2年期]
+  - [三十年期, 30年期]
+  - [30年債, 30年期]
+  - [30年期公債, 30年期]
+  - [30y, 30年期]
+  - [五年期, 5年期]
+  - [5年債, 5年期]
+  - [5y, 5年期]
+  - [三個月期, 3個月期]
+  - [3月期, 3個月期]
+  - [收益率, 殖利率]
+  - [yield, 殖利率]
+  - [spread, 利差]
+  - [期限溢價, 期限溢酬]
+  - [termpremium, 期限溢酬]
+  - [平衡通膨率, 損益兩平]
+  - [損益平衡, 損益兩平]
+  - [breakeven, 損益兩平]
+  - [台灣股市, 台股]
+  - [台灣加權指數, 台股]
+  - [加權指數, 台股]
+  - [taiex, 台股]
+  - [大盤, 台股]
+  - [台指夜盤, 台指期]
+  - [美國股市, 美股]
+  - [s&p500, 標普]
+  - [sp500, 標普]
+  - [標普500, 標普]
+  - [標準普爾, 標普]
+  - [spx, 標普]
+  - [s&p, 標普]
+  - [納斯達克, 那斯達克]
+  - [nasdaq, 那斯達克]
+  - [那指, 那斯達克]
+  - [ixic, 那斯達克]
+  - [道瓊工業, 道瓊]
+  - [dowjones, 道瓊]
+  - [dji, 道瓊]
+  - [道指, 道瓊]
+  - [費城半導體, 費半]
+  - [半導體指數, 費半]
+  - [sox, 費半]
+  - [恐慌指數, vix]
+  - [波動率指數, vix]
+  - [債市恐慌指數, move]
+  - [石油, 原油]
+  - [油價, 原油]
+  - [crude, 原油]
+  - [西德州, wti]
+  - [北海布蘭特, 布蘭特]
+  - [brent, 布蘭特]
+  - [金價, 黃金]
+  - [gold, 黃金]
+  - [美指, 美元指數]
+  - [dxy, 美元指數]
+  - [日元, 日圓]
+  - [日幣, 日圓]
+  - [usdjpy, 日圓]
+  - [eurusd, 歐元]
+  - [離岸人民幣, 人民幣]
+  - [usdcnh, 人民幣]
+  - [cnh, 人民幣]
+  - [新台幣, 台幣]
+  - [usdtwd, 台幣]
+  - [中期選舉, 期中選舉]
+  - [midterm, 期中選舉]
+  - [格位, 九宮格]
+  - [dotplot, 點陣圖]
+  - [點狀圖, 點陣圖]
+  - [初請, 初領]
+  - [首次申請失業金, 初領]
+  - [初次申請失業金, 初領]
+  - [續請, 續領]
+  - [失業救濟金, 失業金]
+  - [失業補助, 失業金]
+  - [失業保險, 失業金]
+  - [職位空缺, 職缺]
+  - [平均時薪, 時薪]
+  - [每小時薪資, 時薪]
+  - [勞動參與率, 勞參率]
+  - [勞動力參與率, 勞參率]
+  - [擔保隔夜融資利率, sofr]
+  - [隔夜逆回購, 逆回購]
+  - [onrrp, 逆回購]
+  - [rrp, 逆回購]
+  - [量化緊縮, 縮表]
+  - [qt, 縮表]
+  - [公債拍賣, 公債標售]
+  - [auction, 公債標售]
+  - [季度再融資, 再融資]
+  - [refunding, 再融資]
+  - [buyback, 回購]
+  - [公司債利差, 信用利差]
+  - [信用價差, 信用利差]
+  - [財政赤字, 赤字]
+  - [預算赤字, 赤字]
+  - [hyperscaler, 科技巨頭]
+  - [hyperscalers, 科技巨頭]
+  - [雲端巨頭, 科技巨頭]
+  - [科技大廠, 科技巨頭]
+  - [雲端大廠, 科技巨頭]
+  - [rate, 利率]
+  - [5年後5年, 5y5y]
+  - [五年後五年, 5y5y]
+  - [科技公司, 科技巨頭]
+  - [fomc會議, fomc]
+  - [利率會議, fomc]
+  - [議息會議, fomc]
+  - [央行會議, fomc]
+  - [聯準會會議, fomc]
+  - [降息機率, 升降息機率]
+  - [升息機率, 升降息機率]
+  - [fedwatch, 升降息機率]
+  - [期貨隱含, 升降息機率]
+
+ints:
+  定義: [什麼是, 是什麼, 甚麼是, 是啥, 什麼意思, 意思, 定義, 怎麼看, 怎麼算, 怎麼解讀, 如何解讀, 如何看, 解釋, 教我, 怎麼讀, 原理, 何謂, 是指]
+  數值: [多少, 幾%, 幾趴, 幾點, 現在, 最新, 目前, 數字, 報價, 多高, 多低, 是幾, 幾碼]
+  原因: [為什麼, 為何, 原因, 怎麼會, 導致, 驅動, 主因, 因為, 背後, 誰造成]
+  變化: [變化, 走勢, 趨勢, 漲, 跌, 上升, 下降, 上漲, 下跌, 漲了, 跌了, 漲幅, 跌幅, 增加, 減少, 變多, 變少, 怎麼變, 變動, 轉強, 轉弱, 升溫, 降溫, 加速, 放緩, 改了]
+  影響: [影響, 代表什麼, 意味, 利多, 利空, 好還是壞, 會怎樣, 傳導, 衝擊, 對股市, 對債市, 有什麼關係]
+  時間: [什麼時候, 何時, 幾號, 哪天, 哪一天, 日期, 時間, 行事曆, 日程, 公布時間, 幾點公布]
+  比較: [比較, 差多少, 差距, 差別, 不同, 相比, vs, 對比, 哪個高]
+  名單: [哪些, 有誰, 是誰, 誰是, 誰要, 名單, 清單, 列表, 有哪幾]
+
+per:
+  d: [今天, 今日, 昨天, 昨晚, 日變動, 單日]
+  m: [這個月, 本月, 月初至今, mtd, 這月]
+  y: [今年, 年初至今, ytd, 今年以來]
+  l: [長期, 歷史, 五年, 5年來, 十年來, 歷年, 多年]
+
+# 網站沒有的東西：問句有這些詞 → 「網站目前沒有這項資料」＋推薦三題（就算也提到失業率，台灣失業率仍不是本站的資料）
+oos: [比特幣, 加密貨幣, 以太幣, btc, eth, 狗狗幣, 虛擬貨幣, 房價, 天氣, 樂透, 彩券, 星座, 明牌, 目標價, 推薦股票,
+      報明牌, 港股, 陸股, a股, 日股, 韓股, 歐股, 個股, 基金推薦, 保險, 外匯存款, 定存利率, 台灣央行, 歐洲央行, 日本央行,
+      英國央行, 中國人民銀行, 台灣通膨, 台灣失業率, 中國gdp]
+
+# 問到網站沒有的東西時，字面上又猜不到，就推這幾張
+oos_near: [spx, dxy, gold]
+
+# 名詞卡：learn.yaml 每個主題各一張「什麼是…？」，這裡給判讀用的詞與短標題
+terms:
+  fed_funds: {t: 聯邦基金利率, k: [聯邦基金利率, 政策利率, 目標區間, effr, 基準利率]}
+  fomc_vote: {t: FOMC 投票, k: [fomc投票, 票委投票, 投票權, 反對票]}
+  fedwatch: {t: 升降息機率（FedWatch）, k: [升降息機率, 聯邦基金期貨]}
+  dots: {t: 點陣圖, k: [點陣圖, sep, 經濟預測摘要]}
+  statement: {t: 聲明、記者會與紀要, k: [聲明, 記者會, 會議紀要, 紀要]}
+  blackout: {t: 靜默期, k: [靜默期, 緘默期, 官員談話]}
+  mandate: {t: 雙重使命, k: [雙重使命, 政策重心, 最大就業, 物價穩定]}
+  terminal: {t: 終端利率, k: [終端利率, 利率終點, 中性利率]}
+  grid9: {t: 九宮格, k: [九宮格, 情境框架]}
+  triggers: {t: 情境轉換門檻, k: [轉換門檻, 換格條件, 換格, 情境轉換門檻]}
+  duration: {t: 存續期間, k: [存續期間, duration, 凸性]}
+  nfp: {t: 非農, k: [非農]}
+  unrate: {t: 失業率, k: [失業率]}
+  ur_decomp: {t: 失業率變動分解, k: [失業率分解, 失業率變動分解, 失業人口結構]}
+  lfpr: {t: 勞參率, k: [勞參率, 壯年勞參率]}
+  ahe: {t: 平均時薪, k: [時薪, eci, 就業成本指數]}
+  job_losers: {t: 失去工作者比重, k: [失去工作者, 被裁員比重, 失去工作]}
+  claims: {t: 失業金申請, k: [失業金, 初領, 續領, 失業金申請]}
+  jolts: {t: JOLTS, k: [jolts, 職缺, 離職率, 職缺失業比]}
+  industry: {t: 行業別貢獻, k: [行業別, 行業貢獻]}
+  revisions: {t: 數據修正, k: [數據修正, 下修, 上修, 基準修正]}
+  cpi: {t: CPI, k: [cpi]}
+  core_cpi: {t: 核心 CPI, k: [核心cpi]}
+  cpi_vs_pce: {t: CPI 與 PCE 的差異, k: [cpi和pce, cpi與pce, pce和cpi, cpi跟pce]}
+  core_pce: {t: 核心 PCE, k: [核心pce]}
+  supercore: {t: Supercore, k: [supercore]}
+  shelter: {t: 住房通膨, k: [住房, 房租, 租金, oer, 自有住宅等值租金]}
+  ppi: {t: PPI, k: [ppi]}
+  contrib: {t: 分項貢獻, k: [分項貢獻, 貢獻分解]}
+  breadth: {t: 通膨廣度, k: [通膨廣度, 截尾平均, 中位數cpi]}
+  wage_services: {t: 薪資到服務通膨, k: [薪資傳導, 薪資到服務]}
+  real_consumption: {t: 實質消費, k: [實質消費, 儲蓄率]}
+  energy: {t: 能源傳導, k: [能源傳導, 能源通膨]}
+  infl_expect: {t: 通膨預期, k: [通膨預期]}
+  yields: {t: 公債殖利率, k: [殖利率, 公債殖利率]}
+  curve_spread: {t: 殖利率曲線與利差, k: [殖利率曲線, 倒掛, 利差]}
+  curve_shape: {t: 牛陡、熊陡、牛平、熊平, k: [牛陡, 熊陡, 牛平, 熊平, 曲線型態]}
+  longend_parts: {t: 長端殖利率的組成, k: [長端組成, 長端拆解, 長端殖利率的組成, 殖利率的組成]}
+  term_premium: {t: 期限溢酬, k: [期限溢酬, acm]}
+  tips: {t: TIPS 與實質殖利率, k: [tips, 實質殖利率, 抗通膨債券]}
+  breakeven: {t: 損益兩平通膨率, k: [損益兩平]}
+  forwards: {t: 遠期利率（5y5y）, k: [5y5y, 遠期利率]}
+  auctions: {t: 公債標售, k: [公債標售, 投標倍數, 尾差]}
+  refunding: {t: 季度再融資, k: [再融資]}
+  buyback: {t: 公債回購, k: [回購]}
+  fed_bs: {t: 聯準會資產負債表與 WAM, k: [資產負債表, 縮表, wam]}
+  credit_spread: {t: 信用利差, k: [信用利差, 高收益債, 投資級]}
+  fiscal: {t: 政府財政, k: [赤字, 國債, 利息支出, 政府財政]}
+  global_long: {t: 全球長端殖利率, k: [全球長端, 日本公債, 德國公債, 英國公債]}
+  hyperscaler: {t: 科技巨頭資本支出與發債, k: [科技巨頭, 資本支出]}
+  sofr: {t: SOFR, k: [sofr]}
+  iorb_spread: {t: IORB 與 SOFR−IORB, k: [iorb, sofr-iorb, 準備金利率]}
+  onrrp: {t: 隔夜逆回購（ON RRP）, k: [逆回購]}
+  srf: {t: 常設附買回機制（SRF）, k: [srf, 常設附買回]}
+  us_stocks: {t: 美股指數, k: [美股]}
+  tw_stocks: {t: 台股與台指期, k: [台股, 台指期]}
+  vix: {t: VIX, k: [vix]}
+  move: {t: MOVE 指數, k: [move]}
+  oil: {t: 原油, k: [原油]}
+  gold: {t: 黃金, k: [黃金]}
+  dxy: {t: 美元指數, k: [美元指數]}
+  fx: {t: 匯率報價方向, k: [匯率]}
+  election: {t: 期中選舉預測市場, k: [期中選舉, 預測市場]}
+  calendar: {t: 經濟數據行事曆, k: [經濟數據, 行事曆, 市場預估]}
+  auction_cal: {t: 公債標售日程, k: [標售日程, 公債標售日程]}
+
+cards:
+# ---------------- 總覽 ----------------
+- {id: focus_today, c: 總覽, q: 今天市場主軸是什麼？, k: [市場主軸, 今日焦點, 市場焦點, 今天市場], w: [今天, 市場], n: [數值, 原因, 變化], x: [今天發生什麼事, 今天市場怎麼了, 今日重點], l: calendar, h: /#focus, r: [brief, week_data, spx], src: {fn: focus_today}}
+- {id: brief, c: 總覽, q: 現在整體情勢怎麼看？, k: [整體情勢, 總經情勢, 今日結論, 總結, 經濟現在, 美國經濟現在], w: [整體, 情勢], p: [經濟, 總經, 美國經濟], n: [數值, 影響, 原因], x: [現在經濟怎麼樣, 美國經濟現在如何, 總體經濟現況], l: grid9, h: /, r: [cell, focus_today, changes], src: {fn: brief}}
+- {id: changes, c: 總覽, q: 這次更新跟上次比有什麼變化？, k: [這次更新, 跟上次比, 本期變化, 有什麼變化, 改變了什麼, 數據改變], n: [變化, 數值], x: [最近有什麼新變化, 這次數據改變了什麼], l: grid9, h: /, r: [brief, cell], src: {fn: changes}}
+- {id: week_data, c: 總覽, q: 本週有哪些重要數據？, k: [重要數據, 本週數據, 這週數據, 經濟數據, 數據公布, 行事曆], w: [數據, 公布, 本週, 這週], n: [名單, 時間, 數值], x: [這週有什麼數據, 本週行事曆, 最近要公布什麼數據], l: calendar, h: /#hm-cat-data, r: [next_cpi, next_nfp, speakers], src: {fn: week_data}}
+- {id: next_cpi, c: 總覽, q: CPI 什麼時候公布？市場預估多少？, k: [cpi], w: [市場預估, 預估], m: [什麼時候, 何時, 幾號, 公布, 預估, 下一次, 下次, 日期], n: [時間, 數值], x: [下次cpi什麼時候, cpi公布日期, cpi預估多少], l: calendar, h: /#hm-cat-data, r: [cpi, core_cpi, week_data], src: {fn: next_release, key: cpi}}
+- {id: next_nfp, c: 總覽, q: 非農什麼時候公布？市場預估多少？, k: [非農, 就業報告], w: [市場預估, 預估], m: [什麼時候, 何時, 幾號, 公布, 預估, 下一次, 下次, 日期], n: [時間, 數值], x: [下次非農什麼時候, 就業報告哪天公布], l: calendar, h: /#hm-cat-data, r: [nfp, unrate, week_data], src: {fn: next_release, key: employment}}
+- {id: next_pce, c: 總覽, q: PCE 什麼時候公布？, k: [pce, 核心pce], w: [市場預估], m: [什麼時候, 何時, 幾號, 公布, 下一次, 下次, 日期], n: [時間, 數值], x: [下次pce什麼時候公布], l: calendar, h: /#hm-cat-data, r: [core_pce, pce_nowcast], src: {fn: next_release, key: pce}}
+- {id: speakers, c: 總覽, q: 近期有哪些聯準會官員談話？, k: [官員談話, 官員講話, 官員發言, 聯準會官員, 誰要演講, 誰要講話], w: [官員, 演講, 談話, 講話, 發言, 聯準會], n: [名單, 時間], x: [這週聯準會誰要講話, 有哪些官員要發言], l: blackout, h: /#hm-cat-spk, r: [blackout, next_fomc, officials], src: {fn: speakers}}
+- {id: election, c: 總覽, q: 期中選舉預測市場現在怎麼押？, k: [期中選舉, 預測市場, 眾議院, 參議院, polymarket], w: [選舉], n: [數值, 影響], x: [期中選舉誰會贏, 國會選舉機率], l: election, h: /#election, r: [deficit, term_premium], src: {fn: election}}
+# ---------------- 指標報價 ----------------
+- {id: spx, c: 指標報價, q: 標普 500 多少？今年漲多少？, k: [標普], w: [美股, 股市], n: [數值, 變化], x: [標普500今天, 美股今天漲跌], l: us_stocks, h: /#focus, r: [ixic, dji, vix], src: {chip: spx}}
+- {id: ixic, c: 指標報價, q: 那斯達克多少？, k: [那斯達克], w: [美股, 科技股], n: [數值, 變化], x: [那斯達克今天], l: us_stocks, h: /#focus, r: [spx, sox, real10], src: {chip: ixic}}
+- {id: dji, c: 指標報價, q: 道瓊多少？, k: [道瓊], w: [美股], n: [數值, 變化], x: [道瓊今天], l: us_stocks, h: /#focus, r: [spx, ixic], src: {chip: dji}}
+- {id: sox, c: 指標報價, q: 費城半導體指數多少？, k: [費半], w: [半導體, ai, 台積電, 輝達], n: [數值, 變化], x: [費半今天], l: us_stocks, h: /#focus, r: [twii, hs_capex, ixic], src: {chip: sox}}
+- {id: twii, c: 指標報價, q: 台股加權指數多少？, k: [台股], w: [台灣], n: [數值, 變化], x: [台股今天, 加權指數多少], l: tw_stocks, h: /#focus, r: [txf, twd, sox], src: {chip: twii}}
+- {id: txf, c: 指標報價, q: 台指期多少？, k: [台指期], w: [夜盤], n: [數值, 變化], x: [台指期夜盤多少], l: tw_stocks, h: /#focus, r: [twii, spx], src: {chip: txf}}
+- {id: vix, c: 指標報價, q: VIX 恐慌指數多少？, k: [vix], w: [波動], n: [數值, 變化], x: [vix多少, 恐慌指數現在], l: vix, h: /#focus, r: [move, spx], src: {chip: vix, s: VIXCLS}}
+- {id: move, c: 指標報價, q: MOVE 指數多少？, k: [move], w: [債市波動], n: [數值, 變化], x: [move指數多少], l: move, h: /#focus, r: [vix, dgs10, term_premium], src: {chip: move}}
+- {id: wti, c: 指標報價, q: 油價多少？, k: [wti], w: [能源], p: [原油], n: [數值, 變化], x: [油價現在多少, wti原油多少], l: oil, h: /#focus, r: [brent, energy_cpi, breakeven10], src: {chip: wti, s: DCOILWTICO}}
+- {id: brent, c: 指標報價, q: 布蘭特原油多少？, k: [布蘭特], w: [原油], n: [數值, 變化], x: [布蘭特油價], l: oil, h: /#focus, r: [wti, energy_cpi], src: {chip: brent, s: DCOILBRENTEU}}
+- {id: gold, c: 指標報價, q: 黃金多少？今年漲多少？, k: [黃金], w: [避險], n: [數值, 變化], x: [金價現在多少, 黃金今年漲多少], l: gold, h: /#focus, r: [real10, dxy], src: {chip: gold}}
+- {id: dxy, c: 指標報價, q: 美元指數多少？, k: [美元指數], p: [美元], n: [數值, 變化], x: [美元指數現在, 美元強還是弱], l: dxy, h: /#focus, r: [usdjpy, eurusd, twd], src: {chip: dxy}}
+- {id: twd, c: 指標報價, q: 台幣匯率多少？, k: [台幣], w: [匯率], n: [數值, 變化], x: [美元兌台幣多少, 台幣升值還是貶值], l: fx, h: /#focus, r: [dxy, twii], src: {chip: twd}}
+- {id: usdjpy, c: 指標報價, q: 日圓匯率多少？, k: [日圓], w: [匯率], n: [數值, 變化], x: [日圓現在多少, 美元兌日圓], l: fx, h: /#focus, r: [dxy, global_long], src: {chip: usdjpy, s: DEXJPUS}}
+- {id: eurusd, c: 指標報價, q: 歐元匯率多少？, k: [歐元], w: [匯率], n: [數值, 變化], x: [歐元兌美元], l: fx, h: /#focus, r: [dxy], src: {chip: eurusd, s: DEXUSEU}}
+- {id: usdcnh, c: 指標報價, q: 人民幣匯率多少？, k: [人民幣], w: [匯率], n: [數值, 變化], x: [離岸人民幣多少], l: fx, h: /#focus, r: [dxy], src: {chip: usdcnh}}
+- {id: dgs3mo, c: 指標報價, q: 3 個月期國庫券殖利率多少？, k: [3個月期, 國庫券], w: [短天期], n: [數值, 變化], x: [三個月國庫券利率], l: yields, h: /rates/#curve, r: [dgs2, fed_rate, sofr], src: {chip: dgs3mo, s: DGS3MO}}
+- {id: dgs2, c: 指標報價, q: 2 年期公債殖利率多少？, k: [2年期], w: [殖利率, 美債], n: [數值, 變化], x: [2年期殖利率多少, 兩年期美債], l: yields, h: /rates/#curve, r: [dgs10, fedwatch, spread_10_2], src: {chip: dgs2, s: DGS2}}
+- {id: dgs5, c: 指標報價, q: 5 年期公債殖利率多少？, k: [5年期], w: [殖利率], n: [數值, 變化], x: [5年期殖利率], l: yields, h: /rates/#curve, r: [dgs2, dgs10, breakeven5], src: {chip: dgs5, s: DGS5}}
+- {id: dgs10, c: 指標報價, q: 10 年期公債殖利率多少？, k: [10年期], w: [殖利率, 美債, 長端], n: [數值, 變化], x: [10年期殖利率多少, 十年期美債現在, 美債殖利率], l: yields, h: /rates/#decomp, r: [longend_why, term_premium, real10], src: {chip: dgs10, s: DGS10}, wy: longend_why}
+- {id: dgs30, c: 指標報價, q: 30 年期公債殖利率多少？, k: [30年期], w: [殖利率, 長端], n: [數值, 變化], x: [30年期殖利率多少], l: yields, h: /rates/#curve, r: [spread_30_2, term_premium, dgs10], src: {chip: dgs30, s: DGS30}, wy: longend_why}
+# ---------------- 聯準會 ----------------
+- {id: fed_rate, c: 聯準會, q: 現在政策利率多少？, k: [政策利率, 聯邦基金利率, 基準利率, 目標區間, 利率區間, 聯準會利率, 美國利率], w: [聯準會, 利率], n: [數值], x: [美國現在利率多少, 聯準會利率現在幾%, 現在利率多少], l: fed_funds, h: /fomc/#signals, r: [last_decision, fedwatch, next_fomc], src: {fn: fed_rate}}
+- {id: last_decision, c: 聯準會, q: 上次 FOMC 決議是什麼？, k: [上次fomc, 上次決議, fomc決議, 利率決議, 上次會議, 上次], w: [fomc, 聯準會, 決議], n: [數值, 變化, 原因], x: [上次聯準會做了什麼, fomc上次升息還是降息], l: fomc_vote, h: /fomc/#trend, r: [vote, statement_diff, fed_rate], src: {fn: last_decision}}
+- {id: next_fomc, c: 聯準會, q: 下次 FOMC 是什麼時候？, k: [下次fomc, 下次會議, 下一次fomc, fomc日期, fomc時間, 開會, 下次開會], w: [fomc], n: [時間], x: [下次聯準會開會是哪天, fomc什麼時候開會], l: fomc_vote, h: /fomc/#next, r: [fedwatch, blackout, speakers], src: {fn: next_fomc}}
+- {id: fedwatch, c: 聯準會, q: 下次 FOMC 升降息機率？, k: [升降息機率, 會不會降息, 會不會升息, 會降息嗎, 會升息嗎], w: [下次fomc, 降息, 升息, fomc, 機率, 下次會議], n: [數值, 變化], x: [下次會議會降息嗎, 降息機率多少, 市場預期升息機率], l: fedwatch, h: /#focus, r: [rate_path, next_fomc, dots], src: {fn: fedwatch}}
+- {id: rate_path, c: 聯準會, q: 到年底市場預期升降息幾碼？, k: [幾碼, 累計升息, 累計降息, 利率路徑, 年底利率, 明年利率], w: [年底, 明年, 降息, 升息], n: [數值, 變化], x: [今年還會降息幾次, 市場預期明年升息幾碼, 到年底會降幾碼], l: fedwatch, h: /scenario/#market, r: [fedwatch, dots, terminal], src: {fn: rate_path}}
+- {id: dots, c: 聯準會, q: 點陣圖中位數是多少？, k: [點陣圖, sep, 預測利率, 利率預測], w: [預測, 利率, 聯準會], n: [數值, 比較, 變化], x: [點陣圖怎麼說, 聯準會自己預測利率多少], l: dots, h: /fomc/#sep, r: [mvd, sep_macro, rate_path], src: {fn: dots}}
+- {id: mvd, c: 聯準會, q: 市場預期和點陣圖差多少？, k: [市場和點陣圖, 期貨和點陣圖, 市場vs點陣圖, 市場與點陣圖, 市場預期和點陣圖, 和點陣圖差, 跟點陣圖差, 點陣圖差多少], w: [點陣圖, 市場, 預期], n: [比較], x: [市場跟聯準會看法差多少], l: dots, h: /fomc/#market, r: [dots, rate_path], src: {fn: mvd}}
+- {id: sep_macro, c: 聯準會, q: 聯準會預測今年通膨、失業率、成長多少？, k: [聯準會預測, 經濟預測, sep預測], w: [預測, gdp, 成長, 失業率, 通膨, 明年, 今年, 聯準會], n: [數值], x: [聯準會預測明年通膨, 聯準會預測失業率], l: dots, h: /fomc/#sep, r: [dots, core_pce, unrate], src: {fn: sep_macro}}
+- {id: fed_focus, c: 聯準會, q: 聯準會現在比較在意就業還是通膨？, k: [政策重心, 比較在意, 在意就業, 在意通膨, 雙重使命, 怕通膨, 怕失業, 還是怕], w: [重心, 就業, 通膨, 失業, 聯準會], n: [數值, 比較], x: [聯準會現在怕通膨還是怕失業], l: mandate, h: /fomc/#focus, r: [shift_conds, cell, core_pce], src: {fn: fed_focus}}
+- {id: shift_conds, c: 聯準會, q: 什麼情況會讓聯準會轉向？, k: [轉向條件, 轉向, 什麼時候降息, 什麼時候升息, 何時降息, 何時升息, 才會降息, 才會升息, 降息條件, 升息條件, 需要什麼條件, 要怎樣], w: [轉鴿, 轉鷹, 聯準會, 降息, 升息], n: [原因, 時間, 影響], x: [聯準會要怎樣才會降息, 降息需要什麼條件], l: mandate, h: /fomc/#focus, r: [fed_focus, triggers, fedwatch], src: {fn: shift_conds}}
+- {id: statement_diff, c: 聯準會, q: 這次 FOMC 聲明改了什麼？, k: [聲明改了, 聲明差異, 聲明比對, 聲明], w: [措辭], n: [變化, 數值], x: [聯準會聲明有什麼不同], l: statement, h: /fomc/#diff, r: [last_decision, minutes, presser], src: {fn: statement_diff}}
+- {id: vote, c: 聯準會, q: 誰投了反對票？, k: [反對票, 投票結果, 票數, 投反對, 反對, 有人反對], w: [投票, 票委, fomc], n: [名單, 數值], x: [fomc有人反對嗎, 誰投反對票], l: fomc_vote, h: /fomc/#people, r: [last_decision, officials], src: {fn: vote}}
+- {id: minutes, c: 聯準會, q: 會議紀要說了什麼？, k: [會議紀要, 紀要, minutes], w: [共識, 分歧], n: [數值, 原因], x: [fomc紀要重點], l: statement, h: /fomc/#minutes, r: [statement_diff, presser], src: {fn: minutes}}
+- {id: presser, c: 聯準會, q: 主席記者會說了什麼？, k: [記者會, 主席說, 主席怎麼說], w: [主席, 華許], n: [數值, 原因], x: [主席記者會重點], l: statement, h: /fomc/#presser, r: [statement_diff, minutes], src: {fn: presser}}
+- {id: blackout, c: 聯準會, q: 現在是靜默期嗎？, k: [靜默期, 緘默期], w: [官員], n: [數值, 時間], x: [聯準會靜默期什麼時候開始], l: blackout, h: /fomc/#next, r: [speakers, next_fomc], src: {fn: blackout}}
+- {id: officials, c: 聯準會, q: 今年有投票權的委員是誰？, k: [票委, 投票委員, 有投票權, 委員名單], w: [委員, 理事], n: [名單], x: [今年fomc票委有誰], l: fomc_vote, h: /fomc/#people, r: [vote, speakers], src: {fn: officials}}
+- {id: terminal, c: 聯準會, q: 這一輪利率會停在哪？, k: [終端利率, 利率終點, 停在哪, 最後會到, 利率最後], w: [中性利率, 利率], n: [數值], x: [利率最後會到多少], l: terminal, h: /scenario/#market, r: [rate_path, dots], src: {fn: terminal}}
+# ---------------- 就業 ----------------
+- {id: labor_now, c: 就業, q: 就業現在是強、中、還是弱？, k: [就業狀態, 就業格位, 勞動市場現在, 就業現在], p: [就業, 勞動市場, 就業市場], n: [數值, 影響], x: [美國就業市場好不好, 勞動市場強還是弱], l: grid9, h: /labor/#signals, r: [unrate, nfp, cell], src: {fn: labor_now}}
+- {id: nfp, c: 就業, q: 非農新增多少？, k: [非農, 新增多少工作, 新增工作, 增加多少工作], w: [就業人數, 新增就業], n: [數值, 變化], x: [非農多少, 上個月新增多少工作, 非農就業人數], l: nfp, h: /labor/#kpi, r: [nfp_why, unrate, revisions], src: {dg: 1, lab: 非農就業月增, s: PAYEMS, sc: 0.1, tf: d, u: 萬人}, say: '{ctx:labor.kpi.nfp_plain}', wy: nfp_why}
+- {id: nfp_why, c: 就業, q: 非農為什麼變多／變少？哪些行業在增加？, k: [非農], w: [行業別, 行業, 就業], m: [為什麼, 原因, 哪些行業, 行業, 誰在增加, 誰帶動], n: [原因, 名單], x: [非農為什麼這麼少, 哪些行業在增加就業], l: industry, h: /labor/#industry, r: [nfp, gov_jobs, private_jobs], src: {fn: industry}}
+- {id: private_jobs, c: 就業, q: 民間部門新增多少工作？, k: [民間就業, 民間部門, 私人部門, 私人企業], w: [民間, 就業, 新增多少工作, 增加多少工作], n: [數值, 變化], x: [私人企業增加多少工作], l: nfp, h: /labor/#kpi, r: [nfp, gov_jobs], src: {dg: 1, lab: 民間就業月增, s: USPRIV, sc: 0.1, tf: d, u: 萬人}}
+- {id: gov_jobs, c: 就業, q: 政府部門就業增減多少？, k: [政府就業, 政府部門, 公部門], w: [政府, 就業, 新增多少工作, 增加多少工作], n: [數值, 變化], x: [政府裁員多少], l: industry, h: /labor/#industry, r: [nfp, private_jobs], src: {dg: 1, lab: 政府就業月增, s: USGOVT, sc: 0.1, tf: d, u: 萬人}}
+- {id: manuf_jobs, c: 就業, q: 製造業就業增減多少？, k: [製造業就業, 製造業], w: [工廠, 就業, 新增多少工作, 增加多少工作], n: [數值, 變化], x: [製造業工作有增加嗎], l: industry, h: /labor/#industry, r: [nfp, nfp_why], src: {dg: 1, lab: 製造業就業月增, s: MANEMP, sc: 0.1, tf: d, u: 萬人}}
+- {id: health_jobs, c: 就業, q: 醫療業就業增加多少？, k: [醫療就業, 醫療業, 醫療保健, 醫療業新增], w: [醫療, 就業, 新增多少工作, 增加多少工作], n: [數值, 變化], x: [醫療業新增多少工作], l: industry, h: /labor/#industry, r: [nfp_why, gov_jobs], src: {dg: 1, lab: 醫療保健就業月增, s: CES6562000001, sc: 0.1, tf: d, u: 萬人}}
+- {id: unrate, c: 就業, q: 失業率多少？, k: [失業率], w: [失業], n: [數值, 變化], x: [失業率現在幾%, 美國失業率], l: unrate, h: /labor/#kpi, r: [unrate_why, lfpr, sahm], src: {dg: 1, lab: 失業率, s: UNRATE, tf: lv, u: '%'}, say: '{ctx:labor.kpi.u3_plain}', wy: unrate_why}
+- {id: unrate_why, c: 就業, q: 失業率為什麼上升／下降？, k: [失業率], w: [失業], m: [為什麼, 原因, 為何, 怎麼會, 分解, 誰造成], n: [原因], x: [失業率為什麼上升, 失業率為什麼下降], l: ur_decomp, h: /labor/#unrate, r: [unemp_structure, lfpr, unrate], src: {fn: unrate_why}}
+- {id: unemp_structure, c: 就業, q: 失業的人是被裁員還是自己離職？, k: [失業人口結構, 失業原因, 失業結構, 被裁員還是, 自願離職, 怎麼失業, 怎麼失業的], w: [失業者, 失業, 失業率], n: [數值, 原因, 名單], x: [失業的人是怎麼失業的], l: ur_decomp, h: /labor/#unrate, r: [job_losers, unrate_why], src: {fn: unemp_structure}}
+- {id: job_losers, c: 就業, q: 失去工作者比重多少？（衰退訊號）, k: [失去工作者, 被裁員比重, 衰退訊號], w: [裁員, 衰退, 失業率], n: [數值, 變化, 影響], x: [被裁員的人變多了嗎, 失去工作者比重], l: job_losers, h: /labor/#signals, r: [unemp_structure, claims, sahm], src: {fn: job_losers}}
+- {id: sahm, c: 就業, q: 薩姆規則觸發了嗎？, k: [薩姆, sahm, 薩姆規則], w: [衰退, 失業率], n: [數值, 影響], x: [薩姆規則現在多少], l: unrate, h: /labor/#kpi, r: [unrate, job_losers], src: {fn: sahm}}
+- {id: u6, c: 就業, q: U-6 廣義失業率多少？, k: [u6, 廣義失業率], w: [失業, 失業率], n: [數值, 變化], x: [u6失業率], l: unrate, h: /labor/#kpi, r: [unrate, lfpr], src: {dg: 1, lab: U-6 廣義失業率, s: U6RATE, tf: lv, u: '%'}, wy: unrate_why}
+- {id: lt_unemp, c: 就業, q: 長期失業人數多少？, k: [長期失業], w: [失業, 失業率], n: [數值, 變化], x: [失業超過半年的人有多少], l: ur_decomp, h: /labor/#unrate, r: [unemp_structure, unrate], src: {dg: 1, lab: 失業 27 週以上人數, s: UEMP27OV, sc: 0.1, tf: lv, u: 萬人}}
+- {id: ustar, c: 就業, q: 失業率離充分就業多遠？, k: [充分就業, 自然失業率, 失業缺口], w: [nairu, 失業率], n: [數值, 比較], x: [現在算充分就業嗎], l: unrate, h: /labor/#kpi, r: [unrate, sep_macro], src: {fn: ustar}}
+- {id: lfpr, c: 就業, q: 勞動參與率多少？, k: [勞參率], w: [勞動力], n: [數值, 變化], x: [勞參率現在多少], l: lfpr, h: /labor/#kpi, r: [prime_lfpr, unrate_why], src: {dg: 1, lab: 勞動參與率, s: CIVPART, tf: lv, u: '%'}, say: '{ctx:labor.kpi.lfpr_plain}', wy: unrate_why}
+- {id: prime_lfpr, c: 就業, q: 壯年（25–54 歲）勞參率多少？, k: [壯年就業率, 25-54歲, 壯年, 壯年勞參率], w: [勞參率], n: [數值, 變化], x: [壯年勞動參與率], l: lfpr, h: /labor/#kpi, r: [lfpr, epop], src: {dg: 1, lab: 壯年勞參率, s: LNS11300060, tf: lv, u: '%'}}
+- {id: epop, c: 就業, q: 壯年就業人口比多少？, k: [就業人口比, epop, 就業率], w: [壯年], n: [數值, 變化], x: [壯年就業人口比], l: lfpr, h: /labor/#kpi, r: [prime_lfpr, lfpr], src: {dg: 1, lab: 壯年就業人口比, s: LNS12300060, tf: lv, u: '%'}}
+- {id: ahe, c: 就業, q: 平均時薪年增多少？, k: [時薪], w: [薪資, 薪水, 工資], n: [數值, 變化], x: [薪水漲多少, 時薪年增率], l: ahe, h: /labor/#kpi, r: [real_wage, eci, wage_pass], src: {dg: 1, lab: 平均時薪年增, s: CES0500000003, tf: yoy, u: '%'}, say: '{ctx:labor.kpi.ahe_plain}'}
+- {id: real_wage, c: 就業, q: 扣掉通膨後實質薪資有增加嗎？, k: [實質薪資, 實質時薪, 跟上物價, 扣掉通膨], w: [購買力, 通膨, 物價, 薪水, 時薪], n: [數值, 變化], x: [薪水有跟上物價嗎], l: ahe, h: /labor/#kpi, r: [ahe, cpi], src: {fn: real_wage}}
+- {id: eci, c: 就業, q: 就業成本指數（ECI）年增多少？, k: [eci, 就業成本指數], w: [人力成本], n: [數值, 變化], x: [eci多少], l: ahe, h: /inflation/#passthrough, r: [ahe, wage_pass], src: {dg: 1, lab: 就業成本指數年增, s: ECIALLCIV, tf: yoy, u: '%'}}
+- {id: claims, c: 就業, q: 每週初領失業金多少人？, k: [初領, 每週失業金, 失業金申請], w: [失業, 裁員, 失業金], p: [失業金], n: [數值, 變化], x: [初領失業金人數, 每週失業金申請], l: claims, h: /labor/#claims, r: [cont_claims, job_losers], src: {dg: 1, lab: 初領失業金, lab2: 四週平均, s: ICSA, s2: IC4WSA, sc: 0.0001, tf: lv, u: 萬人}, say: '{ctx:labor.claims.verdict}', wy: job_losers}
+- {id: cont_claims, c: 就業, q: 續領失業金多少人？, k: [續領], w: [失業金], n: [數值, 變化], x: [續領失業金人數], l: claims, h: /labor/#claims, r: [claims, unrate], src: {dg: 1, lab: 續領失業金, s: CCSA, sc: 0.0001, tf: lv, u: 萬人}}
+- {id: jolts_open, c: 就業, q: JOLTS 職缺有多少？, k: [職缺, jolts], w: [招聘], n: [數值, 變化], x: [美國現在有多少職缺], l: jolts, h: /labor/#signals, r: [quits, vu, hires_layoffs], src: {dg: 1, lab: 職缺數, s: JTSJOL, sc: 0.1, tf: lv, u: 萬個}, wy: hires_layoffs}
+- {id: vu, c: 就業, q: 職缺／失業比是多少？, k: [職缺失業比, 職缺比失業, 職缺對失業, 職缺失業, 幾個職缺], w: [職缺, 失業, 失業者], n: [數值, 變化], x: [一個失業者有幾個職缺], l: jolts, h: /labor/#signals, r: [jolts_open, unrate], src: {fn: vu}}
+- {id: quits, c: 就業, q: 離職率多少？, k: [離職率, 辭職率, 主動離職], w: [辭職], n: [數值, 變化], x: [主動辭職的人多嗎], l: jolts, h: /labor/#signals, r: [ahe, jolts_open], src: {dg: 1, lab: 離職率, s: JTSQUR, tf: lv, u: '%'}}
+- {id: hires_layoffs, c: 就業, q: 招聘率和裁員率多少？, k: [招聘率, 裁員率, 聘僱率, 解僱率, 招人, 還在招人], w: [裁員, 招聘], n: [數值, 變化], x: [企業還在招人嗎, 裁員率多少], l: jolts, h: /labor/#signals, r: [jolts_open, claims], src: {fn: hires_layoffs}}
+- {id: revisions, c: 就業, q: 非農數據被修正多少？, k: [非農修正, 數據修正, 下修, 上修, 修正], w: [非農], n: [數值, 變化], x: [非農下修多少, 前兩個月修正], l: revisions, h: /labor/#revision, r: [nfp, nfp_why], src: {fn: revisions}}
+- {id: labor_tilt, c: 就業, q: 這次就業數據偏寬鬆還是偏緊縮？, k: [就業數據偏, 就業偏鷹, 就業偏鴿, 就業報告利多, 就業數據利多, 就業報告利空], w: [偏鷹, 偏鴿, 鷹派, 鴿派, 偏寬鬆, 偏緊縮, 就業報告], n: [影響, 數值], x: [就業報告利多還是利空], l: grid9, h: /labor/#signals, r: [labor_now, infl_tilt], src: {fn: labor_tilt}}
+# ---------------- 通膨 ----------------
+- {id: infl_now, c: 通膨, q: 通膨現在是升溫、黏著、還是降溫？, k: [通膨狀態, 通膨現在, 通膨格位, 通膨判定, 通膨有下來, 通膨下來], w: [物價, 黏著], p: [通膨], n: [數值, 影響, 變化], x: [美國通膨現在怎樣, 通膨有下來嗎], l: grid9, h: /inflation/#signals, r: [core_pce, supercore, cell], src: {fn: infl_now}, wy: infl_why}
+- {id: cpi, c: 通膨, q: CPI 年增多少？, k: [cpi], w: [物價, 通膨], n: [數值, 變化], x: [cpi多少, 美國cpi], l: cpi, h: /inflation/#kpi, r: [core_cpi, cpi_mom, next_cpi], src: {dg: 1, lab: CPI 年增, s: CPIAUCSL, tf: yoy, u: '%'}, wy: infl_why}
+- {id: cpi_mom, c: 通膨, q: CPI 月增多少？, k: [cpi], w: [通膨], m: [月增, 單月, 月變動, 比上月, 上個月], n: [數值, 變化], x: [cpi月增率], l: cpi, h: /inflation/#kpi, r: [cpi, core_cpi_pace], src: {dg: 1, lab: CPI 月增, s: CPIAUCSL, tf: mom, u: '%'}, say: '{ctx:inflation.kpi.headline_plain}', wy: infl_why}
+- {id: core_cpi, c: 通膨, q: 核心 CPI 多少？, k: [核心cpi], w: [核心, 通膨], n: [數值, 變化], x: [核心cpi年增], l: core_cpi, h: /inflation/#kpi, r: [core_cpi_pace, cpi, supercore], src: {dg: 1, lab: 核心 CPI 年增, s: CPILFESL, tf: yoy, u: '%'}, say: '{ctx:inflation.kpi.core_plain}', wy: infl_why}
+- {id: core_cpi_pace, c: 通膨, q: 核心 CPI 最近三個月的步速多快？, k: [核心cpi], w: [通膨], m: [月增, 步速, 三個月, 3個月, 年化, 月步速], n: [數值, 變化], x: [核心cpi三個月年化], l: core_cpi, h: /inflation/#kpi, r: [core_cpi, core_pce_3m], src: {dg: 1, lab: 核心 CPI 三個月年化, s: CPILFESL, tf: a3, u: '%'}, wy: infl_why}
+- {id: pce, c: 通膨, q: PCE 物價年增多少？, k: [pce], w: [物價, 通膨], n: [數值, 變化], x: [pce多少, 整體pce], l: cpi_vs_pce, h: /inflation/#kpi, r: [core_pce, cpi_vs_pce], src: {dg: 1, lab: PCE 年增, s: PCEPI, tf: yoy, u: '%'}, wy: infl_why}
+- {id: core_pce, c: 通膨, q: 核心 PCE 多少？, k: [核心pce, 最看的通膨, 聯準會目標], w: [核心, 聯準會目標, 通膨, 聯準會], n: [數值, 變化], x: [核心pce年增, 聯準會最看的通膨], l: core_pce, h: /inflation/#kpi, r: [core_pce_3m, pce_nowcast, target_gap], src: {dg: 1, lab: 核心 PCE 年增, s: PCEPILFE, tf: yoy, u: '%'}, say: '{ctx:inflation.kpi.pce_plain}', wy: infl_why}
+- {id: core_pce_3m, c: 通膨, q: 核心 PCE 三個月年化多少？, k: [核心pce], w: [通膨], m: [三個月, 3個月, 年化, 步速, 動能], n: [數值, 變化], x: [核心pce三個月年化], l: core_pce, h: /inflation/#kpi, r: [core_pce, supercore], src: {dg: 1, lab: 核心 PCE 三個月年化, s: PCEPILFE, tf: a3, u: '%'}, wy: infl_why}
+- {id: pce_nowcast, c: 通膨, q: 這個月核心 PCE 預估多少？, k: [pce預估, 核心pce預估, pce推估, 還沒公布, pce會是多少], w: [預估, 核心pce, pce], n: [數值], x: [還沒公布的核心pce會是多少], l: ppi, h: /scenario/#grid, r: [core_pce, ppi, next_pce], src: {fn: pce_nowcast}}
+- {id: cpi_vs_pce, c: 通膨, q: CPI 和 PCE 差多少？, k: [cpi和pce, cpi與pce, pce和cpi, cpi跟pce, cpi比pce, pce比cpi], n: [比較, 數值], x: [為什麼cpi比pce高], l: cpi_vs_pce, h: /inflation/#kpi, r: [cpi, core_pce], src: {fn: cpi_vs_pce}}
+- {id: target_gap, c: 通膨, q: 離 2% 目標還有多遠？, k: [2%目標, 通膨目標, 離目標, 回到2%], w: [目標, 通膨], n: [數值, 比較], x: [通膨什麼時候回到2%], l: mandate, h: /inflation/#kpi, r: [core_pce, infl_now], src: {fn: target_gap}}
+- {id: supercore, c: 通膨, q: Supercore（核心服務除住房）多少？, k: [supercore], w: [服務通膨, 通膨, 服務], n: [數值, 變化], x: [超級核心通膨多少], l: supercore, h: /inflation/#sticky, r: [wage_pass, shelter, core_pce], src: {fn: supercore}, wy: wage_pass}
+- {id: shelter, c: 通膨, q: 住房通膨多少？, k: [住房, 房租, 租金], w: [居住, cpi, 通膨], n: [數值, 變化], x: [房租漲多少, 住房cpi], l: shelter, h: /inflation/#contrib, r: [rent, oer, contrib], src: {dg: 1, lab: 住房 CPI 年增, s: CUSR0000SAH1, tf: yoy, u: '%'}}
+- {id: rent, c: 通膨, q: 房租 CPI 年增多少？, k: [房租], w: [租金, cpi, 通膨], m: [房租cpi, 主要住所租金, 租金cpi], n: [數值, 變化], x: [主要住所租金年增], l: shelter, h: /inflation/#contrib, r: [shelter, oer], src: {dg: 1, lab: 主要住所租金年增, s: CUSR0000SEHA, tf: yoy, u: '%'}}
+- {id: oer, c: 通膨, q: 自有住宅等值租金（OER）多少？, k: [oer, 自有住宅等值租金, 等值租金], w: [cpi, 通膨], n: [數值, 變化], x: [oer年增], l: shelter, h: /inflation/#contrib, r: [shelter, rent], src: {dg: 1, lab: OER 年增, s: CUSR0000SEHC, tf: yoy, u: '%'}}
+- {id: core_goods, c: 通膨, q: 核心商品價格漲多少？, k: [核心商品, 商品通膨], w: [商品, 關稅, cpi, 通膨], n: [數值, 變化], x: [關稅有推高物價嗎, 商品價格], l: contrib, h: /inflation/#contrib, r: [contrib, cpi], src: {dg: 1, lab: 核心商品 CPI 年增, s: CUSR0000SACL1E, tf: yoy, u: '%'}}
+- {id: energy_cpi, c: 通膨, q: 能源價格對通膨的影響多大？, k: [能源通膨, 能源cpi, 能源價格, 能源傳導, 油價對cpi, 油價對通膨], w: [能源, 原油, 汽油, cpi, 通膨], n: [數值, 影響], x: [油價對cpi影響多少], l: energy, h: /inflation/#energy, r: [wti, gasoline, cpi], src: {fn: energy}}
+- {id: gasoline, c: 通膨, q: 美國汽油價格多少？, k: [汽油, 油價零售, 汽油價格], n: [數值, 變化], x: [美國加油一加侖多少], l: energy, h: /inflation/#energy, r: [energy_cpi, wti], src: {dg: 2, lab: 汽油零售價, s: GASREGW, tf: lv, u: 美元／加侖}}
+- {id: food_cpi, c: 通膨, q: 食物價格漲多少？, k: [食物, 食品, 雞蛋, 菜價, 食物價格, 食品價格, 食物cpi], w: [cpi, 通膨], n: [數值, 變化], x: [食物cpi年增], l: cpi, h: /inflation/#contrib, r: [cpi, core_goods], src: {dg: 1, lab: 食物 CPI 年增, s: CPIUFDSL, tf: yoy, u: '%'}}
+- {id: ppi, c: 通膨, q: PPI 生產者物價多少？, k: [ppi], w: [上游, 出廠價, 通膨], n: [數值, 變化], x: [ppi年增多少], l: ppi, h: /inflation/#ppi, r: [core_ppi, pce_nowcast], src: {dg: 1, lab: 最終需求 PPI 年增, s: PPIFIS, tf: yoy, u: '%'}}
+- {id: core_ppi, c: 通膨, q: 核心 PPI 多少？, k: [核心ppi], w: [通膨], n: [數值, 變化], x: [核心ppi年增], l: ppi, h: /inflation/#ppi, r: [ppi], src: {dg: 1, lab: 核心 PPI 年增, s: PPIFES, tf: yoy, u: '%'}}
+- {id: contrib, c: 通膨, q: 通膨主要是什麼在漲？, k: [分項貢獻, 貢獻分解, 什麼在漲, 誰在漲, 漲最多], w: [分項, 通膨], n: [原因, 名單], x: [哪些東西漲最多], l: contrib, h: /inflation/#contrib, r: [shelter, supercore, core_goods], src: {fn: contrib}}
+- {id: infl_why, c: 通膨, q: 通膨為什麼升溫／降溫？, k: [通膨], w: [通膨, cpi, 核心cpi, pce, 核心pce, 物價, ppi], m: [為什麼, 原因, 為何, 怎麼會], n: [原因], x: [通膨為什麼還這麼高, 通膨為什麼下來], l: contrib, h: /inflation/#signals, r: [contrib, infl_now, supercore], src: {fn: infl_why}}
+- {id: breadth, c: 通膨, q: 漲價是普遍還是集中少數項目？, k: [通膨廣度, 截尾平均, 中位數cpi, 普遍, 漲價範圍, 範圍廣], w: [廣度, cpi, 通膨], n: [數值, 比較], x: [漲價範圍廣嗎], l: breadth, h: /inflation/#trend, r: [sticky, contrib], src: {fn: breadth}}
+- {id: sticky, c: 通膨, q: 黏性通膨多少？, k: [黏性通膨, 黏性cpi, 黏著, stickycpi, sticky], w: [黏性, cpi, 通膨], n: [數值, 變化], x: [sticky cpi], l: breadth, h: /inflation/#sticky, r: [supercore, breadth], src: {dg: 1, lab: 核心黏性 CPI 年增, s: CORESTICKM159SFRBATL, tf: lv, u: '%'}}
+- {id: wage_pass, c: 通膨, q: 薪資有在推高服務業通膨嗎？, k: [薪資傳導, 薪資到服務, 薪資推高, 造成通膨, 推高通膨], w: [薪資, 服務業, 通膨, 薪水], n: [影響, 原因], x: [薪水上漲會造成通膨嗎], l: wage_services, h: /inflation/#passthrough, r: [supercore, ahe, eci], src: {fn: wage_pass}}
+- {id: consumption, c: 通膨, q: 實質消費力道如何？, k: [實質消費, 消費力道, 消費支出], w: [消費], n: [數值, 變化], x: [美國人還在消費嗎], l: real_consumption, h: /inflation/#consumption, r: [saving, real_wage], src: {dg: 1, lab: 實質個人消費年增, s: PCEC96, tf: yoy, u: '%'}, say: '{ctx:inflation.consumption.desc}。'}
+- {id: saving, c: 通膨, q: 個人儲蓄率多少？, k: [儲蓄率], w: [儲蓄], n: [數值, 變化], x: [美國人儲蓄率], l: real_consumption, h: /inflation/#consumption, r: [consumption], src: {dg: 1, lab: 個人儲蓄率, s: PSAVERT, tf: lv, u: '%'}}
+- {id: infl_expect, c: 通膨, q: 通膨預期多少？, k: [通膨預期, 預期通膨, 民眾預期], w: [預期, 密西根, 通膨], n: [數值, 變化], x: [民眾預期通膨多少, 長期通膨預期], l: infl_expect, h: /inflation/#kpi, r: [be5y5y, breakeven5, core_pce], src: {fn: infl_expect}}
+- {id: infl_tilt, c: 通膨, q: 這次通膨數據偏寬鬆還是偏緊縮？, k: [通膨數據偏, 通膨偏鷹, 通膨偏鴿, cpi利多, 通膨數據利多, cpi利空], w: [偏鷹, 偏鴿, 偏寬鬆, 偏緊縮, cpi], n: [影響, 數值], x: [cpi利多還是利空], l: grid9, h: /inflation/#signals, r: [infl_now, labor_tilt], src: {fn: infl_tilt}}
+# ---------------- 長端與債務 ----------------
+- {id: longend_why, c: 長端與債務, q: 長天期殖利率為什麼上升／下降？, k: [長端, 10年期, 長天期], w: [殖利率, 美債], m: [為什麼, 原因, 為何, 怎麼會, 拆解, 組成], n: [原因], x: [美債殖利率為什麼上升, 長端利率為什麼漲], l: longend_parts, h: /rates/#decomp, r: [term_premium, real10, breakeven10], src: {fn: longend_why}}
+- {id: spread_10_2, c: 長端與債務, q: 10−2 年利差多少？有倒掛嗎？, k: [10-2, 10年減2年, 10年和2年, 倒掛], w: [利差, 殖利率曲線], n: [數值, 變化], x: [殖利率曲線有倒掛嗎, 十年減兩年利差], l: curve_spread, h: /rates/#curve, r: [spread_30_2, curve_shape, dgs2], src: {fn: spread, key: 10-2}, wy: curve_shape}
+- {id: spread_30_2, c: 長端與債務, q: 30−2 年利差這週怎麼變？, k: [30-2, 30年減2年, 30年和2年], w: [利差], n: [數值, 變化], x: [30-2利差這週], l: curve_shape, h: /rates/#curve, r: [spread_10_2, spread_30_10, curve_shape], src: {fn: spread, key: 30-2}, wy: curve_shape}
+- {id: spread_30_10, c: 長端與債務, q: 30−10 年利差多少？, k: [30-10, 30年減10年, 30年和10年], w: [利差], n: [數值, 變化], x: [30年減10年利差], l: curve_spread, h: /rates/#curve, r: [spread_30_2, term_premium], src: {fn: spread, key: 30-10}, wy: curve_shape}
+- {id: curve_shape, c: 長端與債務, q: 殖利率曲線是牛陡還是熊陡？, k: [牛陡, 熊陡, 牛平, 熊平, 曲線型態, 殖利率曲線], w: [曲線, 變陡, 變平], n: [數值, 變化], x: [最近殖利率曲線怎麼動], l: curve_shape, h: /rates/#curve, r: [spread_30_2, spread_10_2], src: {fn: curve_shape}}
+- {id: term_premium, c: 長端與債務, q: 期限溢酬多少？, k: [期限溢酬], w: [acm, 10年期], n: [數值, 變化], x: [10年期期限溢酬], l: term_premium, h: /rates/#decomp, r: [longend_why, supply], src: {dg: 2, lab: 10 年期期限溢酬, s: THREEFYTP10, tf: lv, u: '%'}, wy: longend_why}
+- {id: real10, c: 長端與債務, q: 10 年期實質殖利率（TIPS）多少？, k: [實質殖利率, tips, 實質利率], w: [抗通膨債券, 10年期, 殖利率], n: [數值, 變化], x: [tips殖利率多少], l: tips, h: /rates/#decomp, r: [breakeven10, gold, longend_why], src: {dg: 2, lab: 10 年期 TIPS 實質殖利率, s: DFII10, tf: lv, u: '%'}, wy: longend_why}
+- {id: breakeven10, c: 長端與債務, q: 10 年期損益兩平通膨率多少？, k: [損益兩平], w: [通膨預期, 10年期, 通膨], n: [數值, 變化], x: [10年損益兩平], l: breakeven, h: /rates/#decomp, r: [breakeven5, be5y5y, real10], src: {dg: 2, lab: 10 年期損益兩平, s: T10YIE, tf: lv, u: '%'}}
+- {id: breakeven5, c: 長端與債務, q: 5 年期損益兩平通膨率多少？, k: [損益兩平], w: [5年期, 通膨], m: [5年, 五年], n: [數值, 變化], x: [5年損益兩平], l: breakeven, h: /rates/#decomp, r: [breakeven10, be5y5y], src: {dg: 2, lab: 5 年期損益兩平, s: T5YIE, tf: lv, u: '%'}}
+- {id: be5y5y, c: 長端與債務, q: 5y5y 遠期通膨預期多少？, k: [5y5y, 遠期通膨, 遠期利率, 遠期通膨預期], w: [通膨預期], n: [數值, 變化], x: [五年後五年通膨預期], l: forwards, h: /rates/#decomp, r: [breakeven5, infl_expect], src: {dg: 2, lab: 5 年後 5 年遠期通膨, s: T5YIFR, tf: lv, u: '%'}}
+- {id: auctions, c: 長端與債務, q: 最近公債標售結果好不好？, k: [公債標售, 投標倍數, 尾差, 標售結果], w: [標售, 10年期, 30年期, 20年期, 2年期, 5年期, 7年期, 美債], m: [結果, 好不好, 需求, 強弱, 最近], n: [數值, 影響], x: [美債標售需求如何, 10年期標售結果], l: auctions, h: /rates/#auctions, r: [auction_next, supply], src: {fn: auctions}}
+- {id: auction_next, c: 長端與債務, q: 接下來有哪些公債標售？, k: [公債標售, 標售日程], w: [標售, 10年期, 30年期, 20年期, 2年期, 5年期, 7年期, 美債], m: [接下來, 下一場, 哪天, 什麼時候, 日程, 下週, 這週, 本週], n: [時間, 名單], x: [下一場10年期標售是哪天], l: auction_cal, h: /#hm-cat-sup, r: [auctions, buyback, refunding], src: {fn: auction_next}}
+- {id: refunding, c: 長端與債務, q: 季度再融資說了什麼？, k: [再融資], w: [財政部發債, 發債規模], n: [數值, 時間], x: [財政部下次再融資公告], l: refunding, h: /rates/#supply, r: [supply, auctions, buyback], src: {fn: refunding}}
+- {id: buyback, c: 長端與債務, q: 財政部公債回購排在什麼時候？, k: [回購], w: [買回], n: [時間, 名單, 數值], x: [財政部買回公債], l: buyback, h: /#hm-cat-sup, r: [refunding, auction_next], src: {fn: buyback}}
+- {id: supply, c: 長端與債務, q: 債券供給壓力大嗎？, k: [供給壓力, 債券供給, 發債壓力, 美債供給], w: [供給, 殖利率, 美債], n: [數值, 影響], x: [美債供給會推高殖利率嗎], l: refunding, h: /rates/#supply, r: [term_premium, refunding, fed_bs], src: {fn: supply}}
+- {id: fed_bs, c: 長端與債務, q: 聯準會還在縮表嗎？, k: [縮表, 資產負債表, wam, 擴表], w: [qe], n: [數值, 變化], x: [聯準會資產負債表], l: fed_bs, h: /rates/#supply, r: [supply, onrrp], src: {fn: fed_bs}}
+- {id: ig_spread, c: 長端與債務, q: 投資級公司債利差多少？, k: [信用利差, 投資級], w: [公司債, 利差], n: [數值, 變化], x: [公司債利差現在多少], l: credit_spread, h: /rates/#demand, r: [hy_spread, hs_debt], src: {dg: 2, lab: 投資級利差, s: BAMLC0A0CM, tf: lv, u: '%'}}
+- {id: hy_spread, c: 長端與債務, q: 高收益債利差多少？, k: [高收益債, 垃圾債, 非投資級], w: [信用利差, 利差], n: [數值, 變化], x: [垃圾債利差], l: credit_spread, h: /rates/#demand, r: [ig_spread, vix], src: {dg: 2, lab: 高收益債利差, s: BAMLH0A0HYM2, tf: lv, u: '%'}}
+- {id: debt, c: 長端與債務, q: 美國國債佔 GDP 多少？, k: [國債, 債務佔gdp, 政府債務, 欠多少錢, 欠多少], w: [債務], n: [數值, 變化], x: [美國欠多少錢], l: fiscal, h: /rates/#debt, r: [deficit, interest_cost], src: {fn: debt}}
+- {id: deficit, c: 長端與債務, q: 財政赤字多大？, k: [赤字], w: [財政], n: [數值, 變化], x: [美國財政赤字佔gdp], l: fiscal, h: /rates/#debt, r: [debt, interest_cost], src: {fn: deficit}}
+- {id: interest_cost, c: 長端與債務, q: 政府利息支出有多重？, k: [利息支出, 利息負擔, r-g], w: [利息], n: [數值, 影響], x: [利息佔稅收多少], l: fiscal, h: /rates/#debt, r: [debt, deficit], src: {fn: interest_cost}}
+- {id: global_long, c: 長端與債務, q: 全球長端殖利率怎麼走？, k: [全球長端, 日本公債, 德國公債, 英國公債, 日債, 日本30年], w: [全球, 殖利率, 公債殖利率, 30年期, 10年期], n: [數值, 比較], x: [日本30年公債殖利率], l: global_long, h: /rates/#global, r: [dgs30, usdjpy], src: {fn: global_long}}
+- {id: hs_capex, c: 長端與債務, q: 科技巨頭 AI 資本支出多少？, k: [科技巨頭, 資本支出, ai資本支出, capex], w: [ai, 台積電, 輝達, 微軟, 谷歌, 亞馬遜, meta], n: [數值, 變化], x: [ai投資有多大, hyperscaler資本支出], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_debt, sox], src: {fn: hs_capex}}
+- {id: hs_debt, c: 長端與債務, q: 科技巨頭發了多少債？, k: [科技巨頭], w: [發債], m: [發債, 公司債, 債券, 舉債, 發了, 多少債], n: [數值, 影響], x: [科技公司發債規模], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_capex, ig_spread], src: {fn: hs_debt}}
+- {id: mortgage, c: 長端與債務, q: 房貸利率多少？, k: [房貸利率, 房貸], n: [數值, 變化], x: [美國30年房貸利率], l: yields, h: /rates/#decomp, r: [dgs10], src: {fn: mortgage}}
+- {id: sofr, c: 長端與債務, q: SOFR 多少？, k: [sofr], w: [資金市場, 附買回], n: [數值, 變化], x: [sofr利率], l: sofr, h: /#focus, r: [iorb_spread, onrrp, fed_rate], src: {chip: sofr, s: SOFR}}
+- {id: iorb_spread, c: 長端與債務, q: SOFR−IORB 利差多少？資金緊不緊？, k: [sofr-iorb, iorb, 資金緊不緊, 準備金利率], w: [資金市場, sofr, 利差], n: [數值, 變化], x: [資金市場緊嗎], l: iorb_spread, h: /#focus, r: [sofr, onrrp, srf], src: {chip: sofr_iorb}}
+- {id: onrrp, c: 長端與債務, q: 逆回購（ON RRP）餘額多少？, k: [逆回購], w: [流動性], n: [數值, 變化], x: [逆回購還剩多少], l: onrrp, h: /#focus, r: [iorb_spread, fed_bs], src: {chip: onrrp, s: RRPONTSYD}}
+- {id: srf, c: 長端與債務, q: SRF 常設附買回有人用嗎？, k: [srf, 常設附買回], n: [數值], x: [srf動用多少], l: srf, h: /#focus, r: [iorb_spread, sofr], src: {chip: srf}}
+# ---------------- 情境 ----------------
+- {id: cell, c: 情境, q: 現在在九宮格哪一格？, k: [九宮格, 哪一格, 情境], w: [格], n: [數值], x: [現在是什麼情境, 九宮格位置], l: grid9, h: /scenario/#grid, r: [triggers, sc_lean, trail], src: {fn: cell}}
+- {id: sc_lean, c: 情境, q: 現在情境偏升息還是偏降息？, k: [偏升息, 偏降息, 偏緊縮, 偏寬鬆, 情境方向, 應該升息, 應該降息], w: [方向, 升息, 降息, 情境], n: [數值, 影響], x: [現在應該升息還是降息], l: grid9, h: /scenario/#grid, r: [cell, fedwatch, divergence], src: {fn: sc_lean}}
+- {id: triggers, c: 情境, q: 要換到別格需要什麼條件？, k: [換格, 轉換門檻, 換格條件, 下一格, 換情境, 會換, 才算轉弱, 才算轉強, 多弱, 多強, 換到別格, 別格], w: [門檻, 條件, 情境, 就業, 通膨, 需要什麼條件], n: [數值, 原因], x: [什麼情況會換情境, 就業要多弱才算轉弱], l: triggers, h: /scenario/#triggers, r: [cell, sc_next], src: {fn: triggers}}
+- {id: sc_next, c: 情境, q: 接下來哪個數據可能讓格子移動？, k: [哪個數據, 關鍵數據, 移動格子, 下一個重要數據], w: [下一個數據, 重要數據], n: [時間, 名單], x: [下一個重要數據是什麼], l: triggers, h: /scenario/#triggers, r: [triggers, week_data], src: {fn: sc_next}}
+- {id: trail, c: 情境, q: 過去幾個月格子怎麼移動？, k: [格子路徑, 過去幾個月, 情境變化, 歷史格位, 過去怎麼變, 情境過去], w: [路徑, 情境], n: [變化], x: [情境過去怎麼變], l: grid9, h: /scenario/#grid, r: [cell, triggers], src: {fn: trail}}
+- {id: duration_card, c: 情境, q: 該拉長還是縮短存續期間？, k: [存續期間, duration, 拉長, 縮短, 長債, 短債], w: [債券, 配置], n: [數值, 影響], x: [現在該買長債還是短債], l: duration, h: /scenario/#positioning, r: [cell, dgs10], src: {fn: duration}}
+- {id: divergence, c: 情境, q: 本站判讀和市場定價一致嗎？, k: [市場定價, 本站判讀, 判讀和市場, 背離, 看法一樣, 一致嗎], w: [市場, 九宮格], n: [比較], x: [市場跟九宮格看法一樣嗎], l: fedwatch, h: /scenario/#market, r: [sc_lean, fedwatch, rate_path], src: {fn: divergence}}

@@ -718,6 +718,58 @@ def run_rules(ctx: RuleContext) -> list[Flag]:
     return flags
 
 
+# ---------------------------------------------------------------------------
+# 就業頁的訊號分級（第二十二批，使用者指定）：只看「對結論的影響」一套
+# ---------------------------------------------------------------------------
+# 先前就業頁同時有兩套：小標（改變頭條數字的解讀／趨勢轉折／結構背景）＋
+# 每則的嚴重度標籤（重要／留意／參考），而「留意」又跟下方指標燈的
+# 「正常／留意／警戒」同字。現在只留一套（名稱沿用使用者習慣的重要／留意／參考，
+# 但分級改看「對結論的影響」，不再是各規則寫死的嚴重度）：
+#   重要　已經或即將改變就業的強／中／弱
+#   留意　會改變動能判讀（轉弱／轉強），但格位還沒動
+#   參考　解讀時要知道，但不改變結論
+# 只改「顯示」：Flag.severity 不動（鷹鴿淨值的權重靠它，九宮格與首頁不受影響）。
+IMPACT_LEVELS = (
+    ("grid", "重要", "已經或即將改變就業的強／中／弱"),
+    ("dir", "留意", "會改變動能判讀，格位還沒動"),
+    ("bg", "參考", "解讀時要知道，但不改變結論"),
+)
+IMPACT_LABEL = {k: zh for k, zh, _ in IMPACT_LEVELS}
+# 失業率變動成因的四條：失業率貼近格位門檻（±EDGE_PP 以內）或已在區間外時，
+# 這個月的變動「是真是假」直接決定格位該不該動 → 影響格位；其餘時候影響方向。
+UNRATE_KEYS = frozenset({"bad_decline", "good_decline", "bad_rise", "supply_rise"})
+EDGE_PP = 0.1
+DIR_KEYS = frozenset({"jl_watch", "continuing_claims_high", "claims_divergence", "duration_high",
+                      "narrow_growth", "cyclical_negative", "openings_vs_hiring", "prime_age_slide",
+                      "temp_help_falling", "factory_hours_cut"})
+
+
+def impact_level(f: Flag, axis: dict | None = None) -> str:
+    """一則就業訊號的影響層級：grid／dir／bg。"""
+    if f.key == "jl_alert":
+        return "grid"                      # 九宮格規則：警戒時格位往弱推一格
+    if f.key in UNRATE_KEYS:
+        ax = axis or {}
+        u, lo, hi = ax.get("unrate"), ax.get("u_lo"), ax.get("u_hi")
+        if u is not None and lo is not None and hi is not None:
+            if u < lo + EDGE_PP + 1e-9 or u > hi - EDGE_PP - 1e-9:
+                return "grid"
+        return "dir"
+    if f.key in DIR_KEYS:
+        return "dir"
+    return "bg"
+
+
+def by_impact(flags: list[Flag], axis: dict | None = None) -> list[tuple[str, list[Flag]]]:
+    """依影響層級分組；同一層內維持 run_rules 的先後。"""
+    out = []
+    for key, _zh, _desc in IMPACT_LEVELS:
+        grp = [f for f in flags if impact_level(f, axis) == key]
+        if grp:
+            out.append((key, grp))
+    return out
+
+
 def lean_balance(flags: list[Flag]) -> dict:
     """統計旗標的利率傾向 — 這也是情境合成層（P4）的輸入接口。"""
     w = {"alert": 2.0, "watch": 1.0, "info": 0.5}

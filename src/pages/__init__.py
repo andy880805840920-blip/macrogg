@@ -25,7 +25,46 @@ def compact_full(html: str, label: str = "完整分析與方法") -> str:
     return _drop_first_verdict(html)
 
 
-def teach(what: str, why: str, how: str = "") -> str:
+_TERMS: dict | None = None
+
+
+def _terms() -> dict:
+    """config/ask.yaml 的名詞卡短標題（偷懶頁的「什麼是…？」）。讀不到就回空。"""
+    global _TERMS
+    if _TERMS is None:
+        try:
+            import yaml
+            from pathlib import Path
+            p = Path(__file__).resolve().parents[2] / "config" / "ask.yaml"
+            _TERMS = (yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("terms") or {}
+        except Exception:                          # noqa: BLE001
+            _TERMS = {}
+    return _TERMS
+
+
+def learn_link(key: str) -> str:
+    """
+    連到偷懶頁的名詞卡。教學內容（一句話、怎麼來的、怎麼看、傳導鏈、常見誤讀、
+    小測驗）只在 config/learn.yaml 維護一份；各頁的「這在看什麼？」只講這一塊
+    圖在看什麼，完整教學一律連過去。
+    """
+    t = _terms().get(key)
+    if not t:
+        return ""
+    from urllib.parse import quote
+    from ..site import esc
+    q = f"什麼是{t.get('t')}？"
+    return (f'<p class="teach-more"><a href="/ask/?q={quote(q)}">完整教學：{esc(q)}'
+            f'（怎麼來的、常見誤讀、小測驗）→</a></p>')
+
+
+def gloss_more() -> str:
+    """名詞解釋區塊底下一行：每個名詞的完整教學都在偷懶頁。"""
+    return ('<p class="teach-more">每個名詞的完整教學（怎麼來的、怎麼看、常見誤讀、小測驗）'
+            '都在<a href="/ask/">偷懶頁</a>，直接打「什麼是＋名詞」就找得到。</p>')
+
+
+def teach(what: str, why: str, how: str = "", learn: str = "") -> str:
     """
     「這在看什麼？」——每個複雜區塊固定一塊的教學層。
 
@@ -40,7 +79,8 @@ def teach(what: str, why: str, how: str = "") -> str:
     from ..site import esc
     body = (f'<p><b>在量什麼：</b>{esc(what)}</p>'
             f'<p><b>為什麼重要：</b>{esc(why)}</p>'
-            + (f'<p><b>怎麼判讀：</b>{esc(how)}</p>' if how else ""))
+            + (f'<p><b>怎麼判讀：</b>{esc(how)}</p>' if how else "")
+            + (learn_link(learn) if learn else ""))
     return (f'<details class="teach"><summary>這在看什麼？</summary>'
             f'<div class="teach-body">{body}</div></details>')
 

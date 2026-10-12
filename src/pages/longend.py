@@ -694,7 +694,7 @@ def supply(d: dict) -> str:
     {teach(
         "財政部接下來要賣多少長債、Fed 手上的公債組成往哪個方向調整。",
         "長端的供給不只看財政部發多少，也看誰在買：Fed 把到期的 MBS 換成 T-Bills、縮短持有年限，等於把長天期的風險留給私人市場。",
-        "盯兩件事：再融資聲明是否改掉「維持規模」的指引，以及 Fed 與市場 WAM 的差距是否持續縮小。")}
+        "盯兩件事：再融資聲明是否改掉「維持規模」的指引，以及 Fed 與市場 WAM 的差距是否持續縮小。", learn="fed_bs")}
     <div class="src">拍賣規模：TreasuryDirect　·　SOMA：紐約聯儲　·　流通在外明細：財政部 MSPD（每月）。
       WAM 由逐券到期日與面額自行計算（不含 MBS）。</div>"""
 
@@ -747,7 +747,7 @@ def auctions(d: dict) -> str:
     {teach(
         "財政部每一場長債拍賣的需求強弱：誰買了、買得多踴躍、交易商被迫接了多少。",
         "供給要有人吃得下。需求弱的拍賣會讓得標殖利率高於市場價（tail），交易商被迫承接更多，長端就得再往上找買盤。",
-        "看三件事：Tail≈ 是正還是負、投標倍數比近 6 場高還是低、交易商承接比例是否偏高。連續幾場偏弱才是訊號。")}
+        "看三件事：Tail≈ 是正還是負、投標倍數比近 6 場高還是低、交易商承接比例是否偏高。連續幾場偏弱才是訊號。", learn="auctions")}
     <details data-m-collapse><summary>判定規則與 tail 的近似</summary>
       <p class="hint" style="margin-top:10px">{esc(L.get('auction_rule', ''))}</p>
       <p class="hint">Tail 標準算法是得標殖利率減拍賣截止（下午 1 點）當下的 when-issued 殖利率，那是付費報價。
