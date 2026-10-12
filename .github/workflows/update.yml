@@ -194,18 +194,32 @@ jobs:
           git config user.email "dashboard-bot@users.noreply.github.com"
           # state/ 在第一次成功執行前不存在，直接 git add 會讓整步失敗
           mkdir -p state
-          git add output state
-          if git diff --staged --quiet; then
-            echo "資料沒有變化，跳過 commit"
-          else
-            # 把產出的時間戳印進 log，方便跟網站上的「更新於」對照：
-            # 兩者不一致就代表這次的產出沒有上線。
-            grep -o '更新於 [0-9: -]*' output/labor/index.html | head -1 || true
+          # 把產出的時間戳印進 log，方便跟網站上的「更新於」對照：
+          # 兩者不一致就代表這次的產出沒有上線。
+          grep -o '更新於 [0-9: -]*' output/labor/index.html | head -1 || true
+          # 2026-10-12 修正：先前是 commit 後 `git pull --rebase`。執行期間若
+          # 遠端也有一次產出（例如連續上傳觸發了兩次執行），output/ 與 state/
+          # 兩邊都改過就會衝突，整次失敗。產出檔本來就該以「這次剛算好的」為準，
+          # 所以改成：接到遠端最新的那一版之上（程式與設定用遠端的，
+          # 不會蓋掉期間新上傳的檔案），只把這次的 output/、state/ 放上去。
+          # push 被拒（又有人搶先）就重來，最多三次。
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          for i in 1 2 3; do
+            git fetch -q origin "$BRANCH"
+            git reset -q "origin/$BRANCH"
+            git add output state
+            if git diff --staged --quiet; then
+              echo "資料沒有變化，跳過 commit"
+              break
+            fi
             # commit 訊息也用台北時間。runner 的時鐘是 UTC，不指定 TZ 的話
             # git log 是 UTC、網站上是台北時間，同一次執行兩個數字差 8 小時。
-            git commit -m "更新儀表板 $(TZ=Asia/Taipei date +%Y-%m-%d\ %H:%M) 台北"
-            # 期間若有手動 commit（例如改了 config），先接上去再推，
-            # 否則這次的產出會因為落後遠端而整個失敗。
-            git pull --rebase --autostash
-            git push
-          fi
+            git commit -q -m "更新儀表板 $(TZ=Asia/Taipei date +%Y-%m-%d\ %H:%M) 台北"
+            if git push -q origin "HEAD:$BRANCH"; then
+              echo "已推送（第 $i 次嘗試）"
+              break
+            fi
+            if [ "$i" = 3 ]; then echo "::error::連續三次推送失敗"; exit 1; fi
+            echo "推送被拒（遠端有新的 commit），重新接上後再試"
+            sleep 5
+          done
