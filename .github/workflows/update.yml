@@ -95,7 +95,7 @@ jobs:
       - name: 核心規則測試
         run: |
           set -e
-          for t in test_news_rules test_curve_window test_curve_weekly test_future_outlook test_topics_election; do
+          for t in test_news_rules test_curve_window test_curve_weekly test_future_outlook test_topics_election test_batch18 test_grid_bands test_brief test_signal_order test_hyperscaler_data test_hyperscaler_forward test_treasury_yields test_inflation_verdict test_ask test_signal_impact; do
             if [ ! -f "tests/$t.py" ]; then echo "::warning::找不到 tests/$t.py，略過"; continue; fi
             echo "::group::$t"
             python tests/$t.py
