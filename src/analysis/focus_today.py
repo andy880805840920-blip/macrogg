@@ -1091,11 +1091,17 @@ _FOCUS_CONTENT_SYSTEM_A = (
     "報導（優先彭博、路透；同一件事的多篇報導合併），綜合成一篇完整論述：①發生了"
     "什麼（誰、做了什麼、數字）②為什麼（背景與原因）③官員、分析師或市場怎麼解讀"
     "（只寫材料裡有的說法）。不要每則各講一句拼起來。\n"
-    "【對利率】一句話，30–60 個中文字，說明這件事對美國利率的意思；方向必須和"
-    "「網站利率判讀」一致，可以引用判讀裡的數字。\n"
+    "【對利率】一句話，40–90 個中文字，**以主軸這件事為主**：說明它對美國利率"
+    "（短端、長端或升降息預期）偏向推升還是壓低、為什麼；再用「網站利率判讀」的"
+    "官方數字對照市場實際走勢——方向一致就說市場已在反映，不一致就**明講落差**"
+    "（例如「不過近一週 10 年期 -4bp，市場還沒反映」）。只能寫「偏向」「若…則…」，"
+    "不要寫「將會」「勢必」這類預測；事件對利率的方向不明確（例如油價、地緣衝突"
+    "兩面都說得通）時，直接寫方向不明確、取決於什麼。數字只能用材料或網站判讀裡有的。\n"
     "【補充】{ns} 行，每行一件**主軸以外**的事件、{supp} 個中文字以內：寫出發生了"
     "什麼，再加一個具體細節（數字、時間、誰說的或原因）。\n"
-    "【來源】主軸實際用到的報導代號，用逗號分隔，例如「1,4」。\n"
+    "【來源】主軸用到的報導代號，用逗號分隔，例如「1,4」。主軸寫的事件若有彭博、"
+    "路透的報導（含「只有標題」的），把那幾則的代號**排在最前面**（最多 3 則），即使細節是從"
+    "其他報導補的——它們是原始出處；再列實際提供細節的報導。\n"
     "硬性規則：只能使用材料已有的資訊，不得補充材料以外的事實或數字；只有標題的"
     "報導只能轉述字面上的事，不得推測其內文；不得自行推論來源沒有寫的因果關係；"
     "不做預測、不下投資結論；繁體中文。**絕對禁止評論材料本身**：不要說明材料的"
@@ -1296,7 +1302,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f9-policy-stance"
+FOCUS_PROMPT_VERSION = "f11-rate-from-main"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1482,7 +1488,8 @@ def _generate_items(src_text: str, system: str, env, *, item_cap: int = 0,
 # 第十七批（2026-10）：主軸的材料、檢查與後處理
 # ---------------------------------------------------------------------------
 MIN_MAIN_STORIES = 3          # 主軸至少要有幾則「不同的報導」（轉載只算一則）
-MAX_MAIN_LINKS = 3
+MAX_MAIN_LINKS = 6            # 主軸來源最多 6 則：原文（彭博／路透）與其他各最多 3 則
+MAIN_LINKS_PER_TIER = 3
 
 # 人名、公司名統一用台灣常用中文譯名：{標準寫法: (別名…)}。
 # config 的 name_map 可以追加或覆寫（同樣的格式）。
@@ -1746,17 +1753,48 @@ def _rate_fallback(rc: dict | None) -> str:
             f"曲線{rc['zh']}，{phrase}。")
 
 
-def _rate_consistent(note: str, rc: dict | None) -> bool:
+# 2026-10（使用者：「對利率能不能用主軸新聞去分析」）：對利率改以主軸事件的意涵
+# 為主、官方殖利率為對照。新聞方向與近一週走勢不同是常態（官方資料比新聞晚
+# 一到三天），所以不再要求「方向一致」，改成：不一致時必須點出落差並引用實際
+# 的 10 年期變動；仍禁止違反政策現況、禁止預測口吻、數字必須出自材料。
+_RATE_GAP = re.compile(r"尚未|還沒|未反映|沒有反映|反而|相反|落差|未跟進|消化|然而|不過|但")
+_RATE_UNCLEAR = re.compile(r"方向不明|不明確|取決於|兩面")
+_RATE_PREDICT = re.compile(r"將會|必將|勢必|一定會|必然")
+
+
+def _rate_issues(note: str, rc: dict | None, src: str = "") -> list[str]:
+    """對利率那一句的問題清單（空＝通過）。src＝給 AI 的材料全文（含網站判讀）。"""
     if not rc or not note:
-        return True
-    if _policy_hits(note, rc):
-        return False
+        return []
+    why = []
+    ph = _policy_hits(note, rc)
+    if ph:
+        st = {"hike": "升息循環", "cut": "降息循環"}.get((rc.get("policy") or {}).get("stance"), "")
+        why.append(f"政策方向和現況相反（目前是{st}，不得寫" + "、".join(ph) + "）")
+    pr = sorted(set(_RATE_PREDICT.findall(note)))
+    if pr:
+        why.append("用了預測口吻（" + "、".join(pr) + "），請改成「偏向」「若…則…」")
     up, dn = bool(_UP_WORDS.search(note)), bool(_DN_WORDS.search(note))
-    if rc["d10"] >= 3 and dn and not up:
-        return False
-    if rc["d10"] <= -3 and up and not dn:
-        return False
-    return True
+    d10 = rc.get("d10") or 0
+    # 明講方向不明確（「取決於…」）的句子不判方向：「油價上漲」的上漲說的是油價
+    unclear = bool(_RATE_UNCLEAR.search(note))
+    against = not unclear and ((d10 >= 3 and dn and not up) or (d10 <= -3 and up and not dn))
+    if against:
+        flat = note.replace(" ", "").replace("−", "-")
+        if not (_RATE_GAP.search(note) and f"{abs(d10)}bp" in flat):
+            why.append(f"新聞意涵和近一週走勢（10 年期 {d10:+d}bp）方向不同，卻沒有點出落差"
+                       "（要寫出實際變動，並說明市場還沒反映或反向）")
+    if src:
+        _nums = lambda t: re.findall(r"\d+(?:\.\d+)?", t.replace(",", ""))
+        have = set(_nums(src))
+        bad = [n for n in _nums(note) if n not in have]
+        if bad:
+            why.append("用了材料裡沒有的數字（" + "、".join(bad[:3]) + "）")
+    return why
+
+
+def _rate_consistent(note: str, rc: dict | None, src: str = "") -> bool:
+    return not _rate_issues(note, rc, src)
 
 
 _TAG_ANY = re.compile(r"^\s*【\s*(標題|主軸|對利率|補充\s*\d?|來源)\s*】\s*(.*)$")
@@ -1826,19 +1864,26 @@ def _link_of(x: dict) -> dict:
             "link": x["link"], "source": x.get("source", ""), "at": x.get("at", "")}
 
 
-def _pick_links(mats: list[dict], ids: list[int], n: int) -> list[dict]:
+def _pick_links(mats: list[dict], ids: list[int], n: int,
+                per_tier: int | None = None) -> list[dict]:
     """主軸下方的來源＝AI 回報實際用到的報導；彭博、路透排前面。
-    AI 沒回報代號時，退回材料裡排名最前的幾則。"""
+    AI 沒回報代號時，退回材料裡排名最前的幾則。
+    per_tier：原文（彭博、路透）與其他來源**各自**最多幾則——只是上限、
+    不硬湊；避免原文把實際提供細節的報導擠掉（2026-10）。"""
     used = [mats[i - 1] for i in dict.fromkeys(ids) if 1 <= i <= len(mats)]
     if not used:
         used = list(mats)
     used = [x for x in used if x.get("link")]
     used.sort(key=lambda x: -_src_weight(x))       # 穩定排序：同級維持原順序
-    out, seen = [], []
+    out, seen, tier_n = [], [], {True: 0, False: 0}
     for x in used:
         c = _norm_title(x["title"])
         if any(_sim(c, s) > 0.55 for s in seen):    # 同一則的轉載只列一次
             continue
+        orig = _src_weight(x) >= 3.0
+        if per_tier is not None and tier_n[orig] >= per_tier:
+            continue
+        tier_n[orig] += 1
         seen.append(c)
         out.append(_link_of(x))
         if len(out) >= n:
@@ -1900,12 +1945,8 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
             why.append("缺少一句 14–28 字的【標題】")
         if rate_ctx and not r["rate"]:
             why.append("缺少【對利率】那一句")
-        elif not _rate_consistent(r["rate"], rate_ctx):
-            why.append("【對利率】的方向和網站利率判讀相反"
-                       + ("（政策現況是" + {"hike": "升息循環", "cut": "降息循環"}.get(
-                           ((rate_ctx or {}).get("policy") or {}).get("stance"), "") + "，不得寫"
-                          + "、".join(_policy_hits(r["rate"], rate_ctx)) + "）"
-                          if _policy_hits(r["rate"], rate_ctx) else ""))
+        else:
+            why += ["【對利率】" + x for x in _rate_issues(r["rate"], rate_ctx, src_text)]
         _ph = _policy_hits(joined, rate_ctx)
         if _ph:
             why.append("正文的政策方向和現況相反（不得寫" + "、".join(_ph) + "）")
@@ -1933,7 +1974,7 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     supp = [_trim_item(fix(s), hards[i + 1] if i + 1 < len(hards) else hards[-1])
             for i, s in enumerate(r["supp"])]
     rate = fix(r["rate"])
-    if rate_ctx and (not rate or not _rate_consistent(rate, rate_ctx)):
+    if rate_ctx and (not rate or not _rate_consistent(rate, rate_ctx, src_text)):
         rate = _rate_fallback(rate_ctx)
     # 重寫後正文仍有方向相反的說法：拿掉那一句（寧可少一句，不留錯的政策方向）
     if _policy_hits(main + "".join(supp), rate_ctx):
@@ -1965,7 +2006,8 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
                               rate_ctx=rate_ctx, name_map=name_map)
     if not res:
         return None, err
-    res["links"] = _pick_links(mats, res.pop("ids"), MAX_MAIN_LINKS)
+    res["links"] = _pick_links(mats, res.pop("ids"), MAX_MAIN_LINKS,
+                                MAIN_LINKS_PER_TIER)
     res["source"] = "model-content" if mode == "content" else "model"
     return res, ""
 

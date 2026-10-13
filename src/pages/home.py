@@ -861,7 +861,7 @@ _CHIP_SELECT_JS = r"""
 var D=FS_CONFIG.defaults,TM=FS_CONFIG.topicMap,TA=FS_CONFIG.available,TOPT=FS_CONFIG.topicOptions;
 var st=document.querySelector('.focus-strip'),box=document.querySelector('.fs-chips');if(!box||!st)return;
 var ids=Array.prototype.map.call(box.querySelectorAll('[data-chip]'),function(c){return c.dataset.chip;});
-var news=[];
+var news=[],GT='主軸補充';
 function each(q,f){Array.prototype.forEach.call(document.querySelectorAll(q),f);}
 function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lss(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){}}
@@ -872,9 +872,14 @@ function showTopics(w){news=w.slice(0,2);var ul=document.querySelector('.fs-news
   var tg=li.querySelector('.fs-tag');if(!tg)return;tg.classList.add('fs-tagsel');var s=tg.querySelector('select');
   if(!s){s=document.createElement('select');s.innerHTML=TOPT;s.setAttribute('aria-label','換一個補充新聞主題');tg.appendChild(s);
    s.addEventListener('change',function(){var i=+s.dataset.slot,j=news.indexOf(s.value),next=news.slice();
+    if(!s.value){next.splice(i,1);showTopics(next);saveNews();return;}
     if(j>=0&&j!==i)next[j]=news[i];next[i]=s.value;showTopics(next);saveNews();});}
+  if(!s.querySelector('option[value=""]')&&document.querySelector('.fs-news [data-gen]'))s.insertAdjacentHTML('afterbegin','<option value="">'+GT+'</option>');
   s.value=t;s.dataset.slot=k;});
- var n=0;each('.fs-news [data-gen]',function(li){var on=n<2-news.length;li.classList.toggle('fs-off',!on);if(on)n++;ul.appendChild(li);});
+ var n=0;each('.fs-news [data-gen]',function(li){var on=n<2-news.length;li.classList.toggle('fs-off',!on);if(on)n++;ul.appendChild(li);
+  var tg=li.querySelector('.fs-tag');if(!tg||tg.querySelector('select'))return;tg.classList.add('fs-tagsel');
+  var g=document.createElement('select');g.innerHTML='<option value="">'+GT+'</option>'+TOPT;g.setAttribute('aria-label','換一個補充新聞主題');g.value='';tg.appendChild(g);
+  g.addEventListener('change',function(){var v=g.value;g.value='';if(!v||news.indexOf(v)>=0)return;showTopics(news.concat([v]));saveNews();});});
  each('.fs-news [data-tlink]',function(a){a.classList.toggle('fs-off',news.indexOf(a.dataset.tlink)<0);});
  var xs=[];each('.fs-news .fs-link:not(.fs-off) .fs-src',function(q){var x=q.textContent.trim();if(x&&xs.indexOf(x)<0)xs.push(x);});
  var sp=document.querySelector('.fs-srcs');if(sp)sp.textContent=xs.length?'　·　新聞：'+xs.slice(0,3).join('、'):'';}
@@ -882,22 +887,40 @@ function tp(sel){var w=[];sel.forEach(function(c){var t=TM[c];if(t&&TA.indexOf(t
 // 第十八批：勾幾個顯示幾個（不設上限），勾選順序＝顯示順序；至少留一個
 function fill(selected){var o=[];(selected||[]).forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});
  if(!o.length)D.forEach(function(x){if(ids.indexOf(x)>=0&&o.indexOf(x)<0)o.push(x);});return o;}
-function ap(selected){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),function(ch){ch.classList.toggle('fs-off',selected.indexOf(ch.dataset.chip)<0);ch.classList.remove('slot1','slot2');});
+function ap(selected,keepNews){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),function(ch){ch.classList.toggle('fs-off',selected.indexOf(ch.dataset.chip)<0);ch.classList.remove('slot1','slot2');});
  selected.forEach(function(id,i){var ch=box.querySelector('[data-chip="'+id+'"]');if(!ch)return;box.appendChild(ch);if(i<2)ch.classList.add('slot'+(i+1));});
  each('.fs-pickp input[type=checkbox]',function(cb){var k=selected.indexOf(cb.value);cb.checked=k>=0;cb.disabled=(k>=0&&selected.length===1);
   var o=cb.parentNode.querySelector('.fs-pk-n');if(o)o.textContent=k>=0?String(k+1):'';});
- var c=st.querySelector('.fs-pk-cnt');if(c)c.textContent='已選 '+selected.length+' 個';tp(selected);}
+ var c=st.querySelector('.fs-pk-cnt');if(c)c.textContent='已選 '+selected.length+' 個';if(!keepNews)tp(selected);}
 function save(){lss(K,JSON.stringify(sel));}
 var sel=null;try{sel=JSON.parse(lsg(K)||'null');}catch(e){}
 sel=fill(sel instanceof Array?sel:D);ap(sel);
 try{var saved=JSON.parse(lsg(NK)||'null');if(saved&&JSON.stringify(saved.chips)===JSON.stringify(sel)&&Array.isArray(saved.topics)){
- var valid=saved.topics.filter(function(t,i,a){return TA.indexOf(t)>=0&&a.indexOf(t)===i;});if(valid.length)showTopics(valid);}}catch(e){}
+ var valid=saved.topics.filter(function(t,i,a){return TA.indexOf(t)>=0&&a.indexOf(t)===i;});if(valid.length||!saved.topics.length)showTopics(valid);}}catch(e){}
 each('.fs-pickp input[type=checkbox]',function(cb){cb.addEventListener('change',function(){var k=sel.indexOf(cb.value);
  if(cb.checked&&k<0)sel.push(cb.value);else if(!cb.checked&&k>=0&&sel.length>1)sel.splice(k,1);
  save();lss(NK,null);ap(sel);});});
 var eb=st.querySelector('.fs-edit-btn');function ed(on){st.classList.toggle('fs-editing',on);if(eb)eb.setAttribute('aria-pressed',on?'true':'false');}
 if(eb)eb.addEventListener('click',function(){ed(!st.classList.contains('fs-editing'));});
 var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function(){ed(false);});
+// 2026-10：編輯狀態下，按住每行左邊的 ≡ 上下拖曳調整順序。只改報價板順序，
+// 補充新聞維持原本的主題（讀者要換新聞用新聞標籤的 ▾）。
+Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),function(row){
+ var g=document.createElement('span');g.className='fs-grip';g.textContent='≡';g.setAttribute('aria-hidden','true');row.appendChild(g);
+ var off=0,on=false;
+ function vis(){return Array.prototype.filter.call(box.querySelectorAll('[data-chip]'),function(x){return !x.classList.contains('fs-off');});}
+ function place(y){row.style.transform='';var top=row.getBoundingClientRect().top;row.style.transform='translateY('+(y-off-top)+'px)';}
+ g.addEventListener('pointerdown',function(e){if(!st.classList.contains('fs-editing'))return;e.preventDefault();e.stopPropagation();
+  try{g.setPointerCapture(e.pointerId);}catch(x){}on=true;off=e.clientY-row.getBoundingClientRect().top;row.classList.add('fs-drag');});
+ g.addEventListener('pointermove',function(e){if(!on)return;e.preventDefault();var y=e.clientY,v=vis(),k=v.indexOf(row),r;
+  if(k>0){r=v[k-1].getBoundingClientRect();if(y<r.top+r.height/2)box.insertBefore(row,v[k-1]);}
+  if(k<v.length-1){r=v[k+1].getBoundingClientRect();if(y>r.top+r.height/2)box.insertBefore(v[k+1],row);}
+  if(y<56)window.scrollBy(0,-14);else if(y>window.innerHeight-56)window.scrollBy(0,14);
+  place(y);});
+ function end(){if(!on)return;on=false;row.style.transform='';row.classList.remove('fs-drag');
+  var o=vis().map(function(x){return x.dataset.chip;});if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
+ g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+ g.addEventListener('click',function(e){e.stopPropagation();});});
 var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);lss(K,null);lss(NK,null);ap(sel);});
 Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
 // 第十八批：變動欄可切「日／MTD／YTD」（上月底、去年底收盤為基準）
@@ -943,6 +966,7 @@ am();
 
 TOPIC_REP = {"fed": "fedwatch", "long": "dgs10", "funding": "sofr", "oil": "wti",
              "equity": "dji", "semi": "sox", "twf": "txf", "election": "pm_senate", "gold": "gold", "fx": "dxy"}
+GEN_TAG = "主軸補充"   # 一般補充（主軸那次一起寫的）的標籤
 TOPIC_REP_ORDER = ("fed", "long", "funding", "oil", "equity", "semi", "twf", "election", "gold", "fx")
 TOPIC_LABEL = {"fed": "聯準會", "long": "長天期美債", "funding": "資金市場", "oil": "油價",
                "equity": "美股", "semi": "AI 與半導體", "twf": "台指期", "election": "期中選舉", "gold": "黃金", "fx": "匯率"}
@@ -1138,8 +1162,8 @@ def _focus_strip(f: dict | None) -> str:
         # 第十八批：改成勾選清單——勾幾個顯示幾個（不設上限），勾選順序就是
         # 顯示順序；前兩個決定補充新聞。
         picker = ('<button type="button" class="fs-edit-btn">選擇指標</button>')
-        editbar = ('<div class="fs-editbar"><span>勾選要顯示的指標，不限數量；勾選順序＝顯示順序，'
-                   '前兩個決定補充新聞<b class="fs-pk-cnt"></b></span>'
+        editbar = ('<div class="fs-editbar"><span>勾選要顯示的指標，不限數量；按住左邊的 ≡ 上下拖曳調整順序'
+                   '（不影響補充新聞，新聞用標籤的 ▾ 換）<b class="fs-pk-cnt"></b></span>'
                    '<button type="button" class="fs-reset">恢復預設</button>'
                    '<button type="button" class="fs-done">完成</button>'
                    + _indicator_checks(cat) + '</div>')
@@ -1180,8 +1204,11 @@ def _focus_strip(f: dict | None) -> str:
         _tl += [f'<li class="fs-text fs-topic fs-off" data-topic="{esc(x["id"])}">'
                 f'<span class="fs-tag">{esc(x["label"])}</span>{esc(x["text"])}</li>'
                 for x in topics if x["id"] not in shown]
+        # 一般補充也掛標籤「主軸補充 ▾」（2026-10）：主題新聞不足兩則時由它遞補，
+        # 以前沒有標籤、換不了；現在一樣可以從選單換成有新聞的主題。
         _gl = [f'<li class="fs-text{"" if i < 2 - len(shown) else " fs-off"}"'
-               f' data-gen="1">{esc(s)}</li>' for i, s in enumerate(_paras[1:])]
+               f' data-gen="1"><span class="fs-tag">{GEN_TAG}</span>{esc(s)}</li>'
+               for i, s in enumerate(_paras[1:])]
         _items = _tl + _gl
         _hl = (f.get("headline") or "").strip()
         _rn = (f.get("rate_note") or "").strip()

@@ -3,7 +3,7 @@
 
   ① 英文關鍵字要完整單字      ② 三則報導計數（轉載只算一次）
   ③ 主軸來源＝AI 實際用到的報導（彭博、路透排前面）
-  ④ 粗體標題＋對利率（方向跟網站判讀一致，否則改用規則句）
+  ④ 粗體標題＋對利率（以主軸事件為主、官方殖利率對照；方向不同要點出落差，否則改用規則句）
   ⑤ 正文不寫媒體名、不寫相對時間、人名統一中文譯名
   ⑥ 數據日鎖定主軸、前一兩次寫過的事件扣分
   ⑦ 補充不重複主軸、失敗主題不顯示（選單變灰）、沒有「暫時無法取得」
@@ -75,6 +75,16 @@ check("③ 來源只列實際用到的（1、3），路透排第一、沒用到�
 check("③ 連結標題去掉尾巴的「 - 來源」", _lk[0]["title"] == "Fed hike talk", _lk[0])
 check("③ AI 沒回報代號 → 退回材料排名（彭博、路透先）",
       [x["source"] for x in ft._pick_links(_mats, [], 3)] == ["Reuters", "Bloomberg", "CNBC"])
+_T6 = ["Fed hikes rates again", "Oil jumps on Gulf attack", "Dollar hits 18-month high",
+       "Gold slips as yields climb", "Payrolls beat forecasts", "Chipmakers slide on memory glut",
+       "Treasury auction draws weak demand", "Housing starts tumble"]
+_m6 = [{"title": _T6[i], "link": f"https://news.google.com/{i}", "source": s}
+       for i, s in enumerate(["Reuters", "Bloomberg", "Reuters", "Bloomberg"])] + \
+      [{"title": _T6[4 + i], "link": f"https://d/{i}", "source": "CNBC"} for i in range(4)]
+_l6 = [x["source"] for x in ft._pick_links(_m6, list(range(1, 9)), ft.MAX_MAIN_LINKS, ft.MAIN_LINKS_PER_TIER)]
+check("③ 主軸來源最多 6 則：原文與其他各最多 3 則", _l6.count("CNBC") == 3 and len(_l6) == 6, _l6)
+check("③ 每層只是上限、不硬湊（只用到 1 則原文＋1 則其他 → 2 則）",
+      len(ft._pick_links(_m6, [1, 5], ft.MAX_MAIN_LINKS, ft.MAIN_LINKS_PER_TIER)) == 2)
 
 # ---------------------------------------------------------------- ⑤ 文字規則
 check("⑤ 人名：Trump → 川普、Bessent → 貝森特、鮑威爾 → 鮑爾",
@@ -104,6 +114,16 @@ check("④ 網站利率判讀：10Y +12bp、2Y +5bp → 熊陡",
 check("④ 方向檢查：利率上行時寫「回落」算相反", not ft._rate_consistent("長端利率回落", _rc)
       and ft._rate_consistent("長端上行壓力未退", _rc))
 check("④ 規則句含數字與型態", "+12bp" in ft._rate_fallback(_rc) and "熊陡" in ft._rate_fallback(_rc))
+_rcd = dict(_rc, d10=-4, d2=-3)
+_src = ft._rate_block(_rcd) + " 哈瑪克主張升息，12月升息機率接近88%"
+check("④ 新聞偏推升、利率卻下行：點出落差並引用實際變動 → 放行",
+      ft._rate_consistent("哈瑪克放鷹，偏向推升短端利率與12月升息預期；不過近一週 10 年期 -4bp，市場還沒反映。", _rcd, _src))
+check("④ 方向不同卻沒點出落差 → 退回", not ft._rate_consistent("哈瑪克放鷹，偏向推升短端利率。", _rcd, _src))
+check("④ 預測口吻（將會）→ 退回",
+      any("預測" in x for x in ft._rate_issues("鷹派言論將會推升利率；不過 10 年期 -4bp，市場還沒反映。", _rcd, _src)))
+check("④ 材料沒有的數字 → 退回",
+      any("沒有的數字" in x for x in ft._rate_issues("偏向推升利率；不過 10 年期 -4bp、2 年期 -7bp，市場還沒反映。", _rcd, _src)))
+check("④ 方向不明確的寫法放行", ft._rate_consistent("油價上漲對利率方向不明確，取決於通膨預期與避險需求孰強。", _rcd, _src))
 
 # ---------------------------------------------------------------- ⑥ 排序
 _h = {"title": "CPI rises 0.4% in September", "source": "CNBC", "at": ISO(2)}
