@@ -1,24 +1,18 @@
 {
- "hash": "8afa5619724d2ff9",
- "text": "美國債市交易員正密切關注10/9（美國時間）公布的9月消費者價格指數，以判斷聯準會後續升息速度。預測市場認為9月CPI年增率將達3.6%，較8月的3.4%上升，但交易員估計通膨已在2026年見頂，核心通膨預期維持在2.4%。不過，若CPI數據高於預期，將增加聯準會加快升息步伐的壓力，可能重新引發債券拋售；若數據符合或低於預期，則會強化聯準會謹慎行事的理由。\n美債殖利率飆升至24年高點，削弱無孳息資產黃金的吸引力，哈薩克央行宣布從全球最大黃金買家轉為賣家，計畫在年底前將黃金占外匯存底比重從78%降至75%。",
+ "hash": "0571ea2d8d1d69f3",
+ "text": "克里夫蘭聯邦準備銀行總裁哈馬克於10/12表示，為防止「高通膨心態」根深蒂固，應維持限制性貨幣政策，並在必要時迅速進行小幅調整，而非等待後來需要大幅修正。她指出，考量各項因素，限制性政策立場對確保通膨及時回到2%目標是必要的。此言暗示聯準會可能進一步升息，與9月會議紀錄中官員暗示可能再度升息的信號相符。¶中東局勢升溫加劇通膨風險。伊朗支持的胡塞武裝襲擊沙烏地阿拉伯機場後，布蘭特原油價格升至近每桶106美元。市場交易員預期9/12公布的9月CPI將達3.6%年增率，較8月的3.4%上升；預測市場認為通膨可能已在2026年見頂，但核心通膨將維持高位，今年底前跌破2.2%的機率僅6%。油價上升與粘性通膨並存，增強市場對聯準會維持緊縮政策的預期。\n國際貨幣基金上調2026年全球通膨率至4.70%，並將平均油價預測從每桶89美元上調至96美元，反映中東局勢對能源供應的持續威脅。\n",
  "links": [
   {
-   "title": "Dollar holds 18-month high as Gulf tension, US inflation keep investors on edge",
-   "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNZnNEOHo2NzVEYW5MOEcybTVjN2xsbXBOSkdScUFqckU4R0VES0JjaGNnSE1RbkJWWEI5SnpuOWxBNTNUVHhqUEtGdjRPdmtHZ0hYOWl1VkZYQXJoWDI5WFJ6MER1OWlvVVVVWFdXb3JFZklJQUNQNjJ5NUpObkVSMkh3ZTZ1NWpRXzcwbFBwb1lFSkYzYktRd3FtTjIwRW9wZElFU0lRNkZvTnZlWk5fb2VuNGFlaXFxd0dxSkN1OTE0Zw?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-12T01:51:00+00:00"
-  },
-  {
-   "title": "Inflation likely peaked for 2026 but will remain sticky, according to prediction markets",
-   "link": "https://www.cnbc.com/2026/10/12/inflation-will-remain-sticky-in-2026-according-to-prediction-markets.html",
+   "title": "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+   "link": "https://www.cnbc.com/2026/10/12/beth-hammack-fed-inflation-policy.html",
    "source": "CNBC",
-   "at": "2026-10-12T15:37:26+00:00"
+   "at": "2026-10-12T17:15:21+00:00"
   },
   {
-   "title": "聯準會進入10月會議靜默期前夕，美債市場緊盯華許講話與通膨報告",
-   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E9%80%B2%E5%85%A510%E6%9C%88%E6%9C%83%E8%AD%B0%E9%9D%9C%E9%BB%98%E6%9C%9F%E5%89%8D%E5%A4%95-%E7%BE%8E%E5%82%B5%E5%B8%82%E5%A0%B4%E7%B7%8A%E7%9B%AF%E8%8F%AF%E8%A8%B1%E8%AC%9B%E8%A9%B1%E8%88%87%E9%80%9A%E8%86%A8%E5%A0%B1%E5%91%8A-005707925.html",
+   "title": "中東衝突蔓延不止推升通膨與升息憂慮，亞洲黃金現貨盤中下滑0.10%",
+   "link": "https://tw.stock.yahoo.com/news/%E4%B8%AD%E6%9D%B1%E8%A1%9D%E7%AA%81%E8%94%93%E5%BB%B6%E4%B8%8D%E6%AD%A2%E6%8E%A8%E5%8D%87%E9%80%9A%E8%86%A8%E8%88%87%E5%8D%87%E6%81%AF%E6%86%82%E6%85%AE-%E4%BA%9E%E6%B4%B2%E9%BB%83%E9%87%91%E7%8F%BE%E8%B2%A8%E7%9B%A4%E4%B8%AD%E4%B8%8B%E6%BB%910-10-020135351.html",
    "source": "Yahoo奇摩新聞",
-   "at": "2026-10-13T00:57:07+08:00"
+   "at": "2026-10-13T02:01:35+08:00"
   }
  ],
  "fedwatch": {
@@ -296,53 +290,34 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-13T01:34:23.705880+00:00",
+ "at": "2026-10-13T02:38:25.465824+00:00",
  "layout": "main",
  "topics": {
-  "hash": "457bee86c006f7b5",
+  "hash": "61dd6c7b51ff077b",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "克里夫蘭聯邦準備銀行行長哈馬克表示，為防止「通膨心態」形成，可能需要更高利率，並主張央行應快速進行小幅調整而非等待後才大幅修正；市場預期12月升息機率近88%",
+    "text": "聯準會官員暗示可能進一步升息以冷卻需求與通膨，同時希望避免對就業市場造成痛苦。債券交易員關注即將公布的消費者物價指數與華許的言論，以尋求對聯準會利率路徑的洞察",
     "links": [
+     {
+      "title": "US Bond Traders Await CPI, Warsh For Insight on Fed’s Rate Path",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPM3lYa092MnRSV0FXYUtRRjVRSHN2akl0ZzM3UWlJcjh6bXNpbVE4dHJQUDM0bS1iWklWekQ0aENwMDRCdWhZbUZMTHFOMmVrZzZzYmFIMG5BamMzSTFfTE0wVjZsWjFBZ2ZQTmFWM0h4NUZkZlVseDlCM05QSFNyczJfdk5BV1IzVmd1NXlnaTdVVnNyOXV0TmxjSW9IRFZWWkEtZlZ1c25jcXU4WXQ1QmRNbw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-11T19:00:00+00:00"
+     },
      {
       "title": "Fed's Hammack: Hope to cool demand, and inflation, without job market pain",
       "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOVnpPOF8zbF9Ja0ZiR2lhdU5wUjR0SUhoS01ZU1d4SjVOeTZDZVBjdGs1RjBqaWhPcENod0Nja1J3bjIzQkdyN3dZcW5MNzhCZ2V2YVJKWnJwVXNabi1KOTIwLWwxVGF4dFRIbFRZM1VtNmpDNmRWd0t4THRhT0xuYUhnRzZwUlMzN2hmX2MydWtkcFZkQ0xQUUQ5cVVCWWdhaTQ5TmhheXlyOU92?oc=5",
       "source": "Reuters",
       "at": "2026-10-12T21:37:00+00:00"
-     },
-     {
-      "title": "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
-      "link": "https://www.cnbc.com/2026/10/12/beth-hammack-fed-inflation-policy.html",
-      "source": "CNBC",
-      "at": "2026-10-12T17:15:21+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "美債殖利率飆升至24年高點，削弱無孳息資產黃金的吸引力，哈薩克央行因此從全球最大黃金買家轉為賣家，計畫年底前將黃金占外匯存底比重從78%降至75%",
-    "links": [
-     {
-      "title": "Kazakhstan Starts Gold Sales as Treasuries Burnish Dollar Appeal",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOMHVjMXcwT3kzaG5yQXhsbkpwcEZPZmJOQ2VwLWthRGYzclFYNHhpOXNuaVpRbXo3MGNubWVsVFdwcVVhZDlOdWNsOFlKTGEwVXoxM2EwNklRSXhCWHVmeUwyckdBNjd2VDZrZXQyNThiYmxmVjBrUVRIWExBUVdFcE5aNWZZeVQwNWpKLVNacXB1ZzdBUjZuS3VyaTlfcEJ5aWg5TmZmQ2RneVpWU19FNkItTGQyQQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-12T14:16:46+00:00"
-     },
-     {
-      "title": "美債殖利率飆升增強美元吸引力，哈薩克央行轉向賣方降黃金儲備占比",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E9%A3%86%E5%8D%87%E5%A2%9E%E5%BC%B7%E7%BE%8E%E5%85%83%E5%90%B8%E5%BC%95%E5%8A%9B-%E5%93%88%E8%96%A9%E5%85%8B%E5%A4%AE%E8%A1%8C%E8%BD%89%E5%90%91%E8%B3%A3%E6%96%B9%E9%99%8D%E9%BB%83%E9%87%91%E5%84%B2%E5%82%99%E5%8D%A0%E6%AF%94-004524676.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-13T00:45:24+08:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價攀升至兩週高點，布蘭特原油升至每桶106美元以上，主要受俄烏能源停火協議破裂及伊朗在荷莫茲海峽襲擊油輪影響；中油已協調供應商改至其他港口裝運並增購非中東原油，確保年底前供應無虞",
+    "text": "沙烏地阿拉伯機場遭胡塞武裝襲擊後，布蘭特原油升至每桶106美元，沙烏地為加速出口，改採現貨交易向亞洲煉油業者出售11月裝船原油，中國已購入至少1200萬桶，部分交易價格較官方售價每桶高出約20美元，反映荷姆茲海峽航運風險",
     "links": [
      {
       "title": "Tech slumps as oil prices rise, focus turns to earnings season kickoff: AlphaCheck",
@@ -351,18 +326,24 @@
       "at": "2026-10-12T13:42:02+00:00"
      },
      {
-      "title": "因應紅海封鎖 中油協調改港裝運、增購非封鎖原油",
-      "link": "https://tw.news.yahoo.com/%E5%9B%A0%E6%87%89%E7%B4%85%E6%B5%B7%E5%B0%81%E9%8E%96-%E4%B8%AD%E6%B2%B9%E5%8D%94%E8%AA%BF%E6%94%B9%E6%B8%AF%E8%A3%9D%E9%81%8B-%E5%A2%9E%E8%B3%BC%E9%9D%9E%E5%B0%81%E9%8E%96%E5%8E%9F%E6%B2%B9-010714954.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-13T01:07:14+08:00"
+      "title": "台灣也買到了！沙烏地急售11月原油「交貨到港」亞洲買家狂掃 一策略減少衝擊",
+      "link": "https://tw.news.yahoo.com/%E6%B2%99%E7%83%8F%E5%9C%B0%E6%80%A5%E5%94%AE11%E6%9C%88%E5%8E%9F%E6%B2%B9-%E8%BD%89%E5%BE%80%E4%BA%9E%E6%B4%B2%E7%8F%BE%E8%B2%A8%E5%B8%82%E5%A0%B4-015024668.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-13T02:17:03+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "標普500下跌0.1%、那斯達克100下跌0.7%，芯片股領跌，美光下跌3.9%受中國長鑫存儲DRAM技術突破影響；銷售軟體公司上漲2%獲銀行美國分行雙升評級，道瓊上漲0.4%",
+    "text": "美股10/12(美國時間)漲跌互見，標普500跌0.1%、那斯達克跌0.7%、道瓊漲0.4%，半導體類股領跌，費城半導體指數跌2.5%至3%，中國長鑫存儲宣布DRAM技術突破引發供應鏈疑慮，惟Salesforce因銀行美國分析師雙升至買進而漲2%",
     "links": [
+     {
+      "title": "Stocks making the biggest moves premarket: Salesforce, First Solar, Biogen & more",
+      "link": "https://www.cnbc.com/2026/10/12/stocks-making-the-biggest-moves-premarket-crm-fslr-biib.html",
+      "source": "CNBC",
+      "at": "2026-10-12T12:20:13+00:00"
+     },
      {
       "title": "S&P 500, Nasdaq 100 End Lower On Chipmaker Weakness, While Salesforce Gains Aid Dow — META, MSFT, BMBL, CRM, SNAP In Focus",
       "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-100-end-lower-on-chipmaker-weakness/cZxIpqHRB8Y?.tsrc=rss",
@@ -374,46 +355,71 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "博通執行長陳福陽警告，資本短缺已取代芯片與電力短缺，成為AI產業擴張最大瓶頸，許多AI投資者對技術缺乏認知卻期望高回報；微軟市值重返4兆美元，推出自主研發Azure Maia 300芯片以降低對輝達與超微依賴",
+    "text": "微軟推出自有AI晶片以減少對輝達依賴，輝達Vera CPU MGX機架開始出貨，仁寶等台廠列為合作夥伴，法人看好明年第一季Vera Rubin產品放量",
     "links": [
      {
-      "title": "博通CEO警示AI投資狂熱！坦言資本瓶頸超越晶片與電力缺口",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8D%9A%E9%80%9Aceo%E8%AD%A6%E7%A4%BAai%E6%8A%95%E8%B3%87%E7%8B%82%E7%86%B1-%E5%9D%A6%E8%A8%80%E8%B3%87%E6%9C%AC%E7%93%B6%E9%A0%B8%E8%B6%85%E8%B6%8A%E6%99%B6%E7%89%87%E8%88%87%E9%9B%BB%E5%8A%9B%E7%BC%BA%E5%8F%A3-004014716.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-13T00:40:14+00:00"
+      "title": "S&P 500, Nasdaq 100 End Lower On Chipmaker Weakness, While Salesforce Gains Aid Dow — META, MSFT, BMBL, CRM, SNAP In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-100-end-lower-on-chipmaker-weakness/cZxIpqHRB8Y?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-12T23:10:18+00:00"
      },
      {
-      "title": "微軟市值重返 4 兆美元大關 AI 晶片與筆電推動科技巨頭再創里程碑",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9F%E5%B8%82%E5%80%BC%E9%87%8D%E8%BF%94-4-%E5%85%86%E7%BE%8E%E5%85%83%E5%A4%A7%E9%97%9C-ai-%E6%99%B6%E7%89%87%E8%88%87%E7%AD%86%E9%9B%BB%E6%8E%A8%E5%8B%95%E7%A7%91%E6%8A%80%E5%B7%A8%E9%A0%AD%E5%86%8D%E5%89%B5%E9%87%8C%E7%A8%8B%E7%A2%91-003641833.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-13T00:36:41+00:00"
+      "title": "昔缺席兆元宴！仁寶打進輝達Vera MGX供應鏈　利多失靈股價逆跌2%、爆量2萬張",
+      "link": "https://tw.stock.yahoo.com/news/%E6%98%94%E7%BC%BA%E5%B8%AD%E5%85%86%E5%85%83%E5%AE%B4-%E4%BB%81%E5%AF%B6%E6%89%93%E9%80%B2%E8%BC%9D%E9%81%94vera-mgx%E4%BE%9B%E6%87%89%E9%8F%88-%E5%88%A9%E5%A4%9A%E5%A4%B1%E9%9D%88%E8%82%A1%E5%83%B9%E9%80%86%E8%B7%8C2-%E7%88%86%E9%87%8F2%E8%90%AC%E5%BC%B5-020500896.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-13T02:05:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股開盤重挫逾900點失守4萬9千點，台積電下跌35元至2,505元，電子股普遍走弱，Google TPU概念股下跌3.18%，記憶體族群下跌2.52%，主要受美股科技股走弱及國際油價上漲影響",
+    "text": "台股10/13(台灣時間)開低走低，早盤一度跌逾1000點失守49000點，台積電下探2500元，費半指數重挫逾2%，中國DRAM廠商技術突破引發供應鏈衝擊疑慮",
     "links": [
      {
-      "title": "台股開盤／台積電重挫35元！台股殺逾700點　4萬9失守科技股成重災區",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%87%8D%E6%8C%AB35%E5%85%83-%E5%8F%B0%E8%82%A1%E6%AE%BA%E9%80%BE700%E9%BB%9E-4%E8%90%AC9%E5%A4%B1%E5%AE%88%E7%A7%91%E6%8A%80%E8%82%A1%E6%88%90%E9%87%8D%E7%81%BD%E5%8D%80-011400116.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-13T01:14:00+08:00"
+      "title": "〈台股開盤〉電子權值承壓台積電陷2500元保衛戰 早盤挫逾900點",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4-%E9%9B%BB%E5%AD%90%E6%AC%8A%E5%80%BC%E6%89%BF%E5%A3%93%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%99%B72500%E5%85%83%E4%BF%9D%E8%A1%9B%E6%88%B0-%E6%97%A9%E7%9B%A4%E6%8C%AB%E9%80%BE900%E9%BB%9E-014436675.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-13T01:44:36+00:00"
      },
      {
-      "title": "台股開盤殺破4萬9！早盤一度狂瀉逾900點　台積電跌35元、電子股重挫",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4%E6%AE%BA%E7%A0%B44%E8%90%AC9-%E6%97%A9%E7%9B%A4-%E5%BA%A6%E7%8B%82%E7%80%89%E9%80%BE900%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%B7%8C35%E5%85%83-%E9%9B%BB%E5%AD%90%E8%82%A1%E9%87%8D%E6%8C%AB-010900815.html",
+      "title": "股匯雙殺　台股重挫逾千點新台幣摜破32元",
+      "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA-%E5%8F%B0%E8%82%A1%E9%87%8D%E6%8C%AB%E9%80%BE%E5%8D%83%E9%BB%9E%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%91%9C%E7%A0%B432%E5%85%83-020500872.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-13T01:09:00+08:00"
+      "at": "2026-10-13T02:05:00+08:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "馬斯克為幫助共和黨保持國會控制權，在期中選舉上投入鉅資。參議院與眾議院在席次、任期與權力分工上存在差異，這些差異將影響2026年期中選舉",
+    "links": [
+     {
+      "title": "Musk has spent $276 million on midterms to help Republicans retain control of Congress",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZWhUR01GVWhzbTNaQnQwQzFIczJfNFdORnVIOTl1bkV1YmtRdC1TcjJrM3ZOeU1peENNenU1SXg3c1ZERDY0T2htbXpVQW5nY2dSQzFMRDR2SzFUNl9iUTVMaG9RakYxeGVXZ1V0UTJxeE1hakJWM256M2pfWTRQNEpOam5uTE9CcEZoa2hnZENJUTdCUWhsNlVKbF84ZVI3TzZVeE1FVVpiMldxdjJYZnlFaEJHX0J1Y2FpeW1BZjYyaVVs?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-12T20:44:29+00:00"
+     },
+     {
+      "title": "US Midterm Elections Shake Up Wall Street! JPMorgan Breaks D... - Futubull Community",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQa3d6dzJRTkl2REQ5ZV8zM21uRDllSTJUU001Z0ZIZHBpcGh6Yk9wSFRkQmxSVllydkJQRjRjN2IzU1BDa0d6RXRGcjNXVk45OTZmbFU2TkZod3lxQ1psRmptQTQ3TEJ5UmNOczZKc2tiVnlOS2hkTWt2SmluSjQzNGJDNzhCV0Y2?oc=5",
+      "source": "富途牛牛",
+      "at": "2026-10-12T08:53:17+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金跌破4200美元，美元走強與油價上漲施壓；但中央銀行連續23個月增持黃金，商品交易顧問平倉空頭部位，可能支撐金價",
+    "text": "黃金因中東局勢升溫推升油價、強化聯準會升息預期而承壓，10/12(美國時間)跌至4160美元附近，高利率使非收益資產吸引力下降，惟中國央行9月連續第23個月增加黃金儲備，黃金支持ETF淨流入達四年高位",
     "links": [
+     {
+      "title": "Gold slips near $4,160 as Middle East tensions fuel rate",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-slips-near-4-160-015039835.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-13T01:50:39+00:00"
+     },
      {
       "title": "Gold tumbles below $4,200 on higher oil prices, firmer US Dollar",
       "link": "https://www.fxstreet.com/news/gold-tumbles-below-4-200-on-higher-oil-prices-firmer-us-dollar-202610122318",
@@ -425,42 +431,32 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數升至17個月高點102.60，逼近4月2025年高點103.30，主要受中東局勢升溫、油價上漲及聯準會官員鷹派言論推升；歐元兌美元跌至17個月低點1.1152",
+    "text": "新台幣10/13(台灣時間)因中東局勢升溫、美元避險需求及台股下跌而貶破32元整數關卡，最低觸及32.044元、重貶1.5角，美元指數升至102.61，聯準會鷹派訊號與油價高位增強升息預期支撐美元",
     "links": [
      {
-      "title": "Forex Today: US Dollar hits 17-month high, RBA minutes and Fed speaking up next",
-      "link": "https://www.fxstreet.com/news/fx-today-us-dollar-hits-17-month-high-rba-minutes-and-fed-speaking-up-next-202610121934",
-      "source": "www.fxstreet.com",
-      "at": "2026-10-12T19:34:42+00:00"
+      "title": "美元走高、台股跌　新台幣早盤貶回32字頭了",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E5%85%83%E8%B5%B0%E9%AB%98-%E5%8F%B0%E8%82%A1%E8%B7%8C-%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%97%A9%E7%9B%A4%E8%B2%B6%E5%9B%9E32%E5%AD%97%E9%A0%AD%E4%BA%86-014732861.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-13T01:47:32+08:00"
      },
      {
-      "title": "Dollar Index hits an 18-month high as the energy ceasefire fails",
-      "link": "https://www.fxstreet.com/news/dollar-index-hits-an-18-month-high-as-the-energy-ceasefire-fails-202610121554",
-      "source": "www.fxstreet.com",
-      "at": "2026-10-12T15:54:22+00:00"
+      "title": "股匯雙殺　台股重挫逾千點新台幣摜破32元",
+      "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA-%E5%8F%B0%E8%82%A1%E9%87%8D%E6%8C%AB%E9%80%BE%E5%8D%83%E9%BB%9E%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%91%9C%E7%A0%B432%E5%85%83-020500872.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-13T02:05:00+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-13T01:34:44.068531+00:00"
+  "at": "2026-10-13T02:38:45.197305+00:00"
  },
  "main_source_titles": [
-  "Dollar holds 18-month high as Gulf tension, US inflation keep investors on edge",
-  "Inflation likely peaked for 2026 but will remain sticky, according to prediction markets",
-  "聯準會進入10月會議靜默期前夕，美債市場緊盯華許講話與通膨報告"
+  "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+  "中東衝突蔓延不止推升通膨與升息憂慮，亞洲黃金現貨盤中下滑0.10%"
  ],
- "headline": "9月CPI將決定升息步伐，市場靜待華許講話判斷聯準會政策方向",
- "rate_note": "CPI數據對利率方向的影響取決於實際數字：若高於預期的3.6%，偏向推升長端殖利率並加快升息預期；若符合或低於預期，則偏向壓低殖利率。近一週10年期 -4bp，市場尚未完全反映CPI前的不確定性。",
+ "headline": "中東衝突推升油價與通膨預期，聯準會官員主張維持緊縮政策",
+ "rate_note": "聯準會官員鷹派立場與油價上升推升通膨預期，偏向支撐短端利率維持高位、長端殖利率上升；若9月CPI高於預期，將強化升息預期。近一週10年期殖利率下跌4bp，市場尚未充分反映通膨與升息風險。",
  "recent_mains": [
-  {
-   "headline": "聯準會官員主張快速小幅升息，市場靜待通膨數據決定政策路徑",
-   "titles": [
-    "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
-    "利率小步快調 別等以後大幅升息！Fed哈瑪克釋鷹派訊號",
-    "高殖利率該出手了？華爾街看見美債價值 仍提醒別急著抄底"
-   ],
-   "at": "2026-10-12T22:18:30.740938+00:00"
-  },
   {
    "headline": "美債殖利率觸及24年高點，市場靜待CPI與華許講話判斷升息步伐",
    "titles": [
@@ -479,6 +475,14 @@
     "聯準會進入10月會議靜默期前夕，美債市場緊盯華許講話與通膨報告"
    ],
    "at": "2026-10-13T01:34:23.705880+00:00"
+  },
+  {
+   "headline": "中東衝突推升油價與通膨預期，聯準會官員主張維持緊縮政策",
+   "titles": [
+    "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
+    "中東衝突蔓延不止推升通膨與升息憂慮，亞洲黃金現貨盤中下滑0.10%"
+   ],
+   "at": "2026-10-13T02:38:25.465824+00:00"
   }
  ]
 }
