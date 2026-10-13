@@ -3534,6 +3534,38 @@ def _todays_events(events: dict | None, cfg: dict | None,
     return out
 
 
+ARCHIVE_DAYS = 5
+_TPE = dt.timezone(dt.timedelta(hours=8))
+
+
+def update_archive(arch, st: dict) -> dict:
+    """
+    主軸存檔（2026-10）：{台灣日期: {headline, text, rate_note, links, at}}。
+    同一天跑三次，後面的蓋掉前面的＝保留「當天最後一版」；只留最近 ARCHIVE_DAYS 天
+    （週日不跑，所以是「最近 5 個有發布的日子」）。沒有主軸（退回列標題）不存。
+    """
+    arch = dict(arch) if isinstance(arch, dict) else {}
+    if st.get("text") and st.get("layout") == "main" and st.get("at"):
+        try:
+            at = dt.datetime.fromisoformat(str(st["at"]))
+            if at.tzinfo is None:
+                at = at.replace(tzinfo=dt.timezone.utc)
+            day = at.astimezone(_TPE).date().isoformat()
+            arch[day] = {"headline": st.get("headline", ""), "text": st.get("text", ""),
+                         "rate_note": st.get("rate_note", ""), "links": st.get("links") or [],
+                         "at": st["at"]}
+        except (TypeError, ValueError):
+            pass
+    keep = sorted(arch, reverse=True)[:ARCHIVE_DAYS]
+    return {k: arch[k] for k in keep}
+
+
+def archive_list(arch) -> list[dict]:
+    """新→舊的清單，每筆多一個 date 欄位，給首頁畫日期列。"""
+    return [dict(v, date=k) for k, v in sorted((arch or {}).items(), reverse=True)
+            if isinstance(v, dict)]
+
+
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
           state_path: Path, env=None, liq_series: dict | None = None,
           events: dict | None = None, election: dict | None = None) -> dict:
@@ -3806,6 +3838,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         except Exception as e:                     # noqa: BLE001
             log.warning("主題補充失敗（%s），補充維持一般內容", e)
 
+    # 2026-10：每天保留一篇主軸（當天最後一版），連同今天最多 5 天
+    state["archive"] = update_archive(state.get("archive"), state)
+    out["archive"] = archive_list(state["archive"])
     try:
         state_path.parent.mkdir(parents=True, exist_ok=True)
         state_path.write_text(json.dumps(state, ensure_ascii=False, indent=1),

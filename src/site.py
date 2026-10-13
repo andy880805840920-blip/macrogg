@@ -1785,6 +1785,18 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fs-news .fs-body{margin:0;max-width:none;flex:1;padding:13px 15px}
 .fs-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;
   color:var(--series-1);margin-bottom:4px}
+/* 主軸存檔（2026-10）：今天＋過去 4 天 */
+.fs-days{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin:2px 0 10px;padding-bottom:2px}
+.fs-days::-webkit-scrollbar{display:none}
+.fs-days button{flex:none;font:inherit;font-size:12px;font-weight:700;color:var(--text-secondary);background:var(--surface-1);
+  border:1px solid var(--border);border-radius:999px;padding:3px 11px;cursor:pointer;white-space:nowrap}
+.fs-days button.on{color:#fff;background:var(--brand-orange);border-color:var(--brand-orange)}
+.fs-day-src{margin-top:10px;font-size:13px}
+.fs-day-src b{font-size:12px;color:var(--muted)}
+.fs-day-src ul{margin:4px 0 0;padding-left:18px}
+.fs-day-src li{margin:3px 0;line-height:1.5}
+.fs-day-src .fs-src{margin-left:6px;font-size:11.5px;color:var(--muted)}
+.focus-strip.fs-past .fs-reflinks{display:none}
 .fs-news .fs-main{font-size:14.5px;line-height:1.85}
 .fs-main+.fs-main{margin-top:8px}
 /* 主軸標題（2026-10）：一句粗體點出今天的核心事件，只看標題也知道重點 */

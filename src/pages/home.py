@@ -11,6 +11,7 @@ import datetime as dt
 import re
 
 from .. import clock
+from .story_ui import STORY_BTN, story_html
 
 from ..site import esc, next_first_friday, next_cpi_release
 from . import compact_full, state_chip
@@ -1111,6 +1112,51 @@ def _indicator_checks(cat: list[dict]) -> str:
     return '<div class="fs-pickp">' + "".join(groups) + '</div>'
 
 
+def _archive_days(f: dict) -> tuple[str, str]:
+    """
+    主軸存檔（2026-10）：今天＋過去最多 4 個有發布的日子。回傳 (日期列, 過去幾天的面板)。
+    只有一天（還沒累積）就不顯示日期列。
+    """
+    arch = [x for x in (f.get("archive") or []) if x.get("text")]
+    if not arch:
+        return "", ""
+    cur = next((x for x in arch if x.get("text") == f.get("text")), None)
+    past = [x for x in arch if x is not cur][:4]
+    if not past:
+        return "", ""
+    today = clock.today().isoformat()
+
+    def lab(d):
+        dd = dt.date.fromisoformat(d)
+        return f"{dd.month}/{dd.day}（{'一二三四五六日'[dd.weekday()]}）"
+    cur_lab = "今天" if (cur and cur["date"] == today) or not cur else lab(cur["date"])
+    btns = (f'<button type="button" class="on" data-day="cur" aria-pressed="true">{esc(cur_lab)}</button>'
+            + "".join(f'<button type="button" data-day="{esc(x["date"])}" aria-pressed="false">'
+                      f'{esc(lab(x["date"]))}</button>' for x in past))
+    panels = ""
+    for x in past:
+        paras = [p.strip() for p in (x.get("text") or "").split("\n") if p.strip()]
+        mains = [m.strip() for m in (paras[0] if paras else "").split("¶") if m.strip()]
+        lk = "".join(f'<li><a href="{esc(l.get("link", ""))}" rel="noopener">{esc(l.get("title", ""))}</a>'
+                     f'<span class="fs-src">{esc(l.get("source", ""))}</span></li>'
+                     for l in (x.get("links") or []) if l.get("link"))
+        panels += (f'<div class="fs-day-p" data-day="{esc(x["date"])}" hidden>'
+                   + (f'<p class="fs-headline">{esc(x.get("headline", ""))}</p>' if x.get("headline") else "")
+                   + "".join(f'<p class="fs-main">{esc(m)}</p>' for m in mains)
+                   + (f'<p class="fs-rate"><b>對利率</b>{esc(x["rate_note"])}</p>' if x.get("rate_note") else "")
+                   + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else "")
+                   + '</div>')
+    js = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
+          "var bar=st.querySelector('.fs-days');if(!bar)return;"
+          "bar.addEventListener('click',function(e){var b=e.target.closest('button[data-day]');if(!b)return;"
+          "var d=b.getAttribute('data-day');"
+          "Array.prototype.forEach.call(bar.querySelectorAll('button'),function(x){var on=x===b;"
+          "x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});"
+          "Array.prototype.forEach.call(st.querySelectorAll('.fs-day-p'),function(p){p.hidden=p.getAttribute('data-day')!==d;});"
+          "st.classList.toggle('fs-past',d!=='cur');});})();</script>")
+    return (f'<div class="fs-days" role="group" aria-label="主軸日期">{btns}</div>{js}', panels)
+
+
 def _focus_strip(f: dict | None) -> str:
     """
     今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
@@ -1225,13 +1271,15 @@ def _focus_strip(f: dict | None) -> str:
         _items = _tl + _gl
         _hl = (f.get("headline") or "").strip()
         _rn = (f.get("rate_note") or "").strip()
-        text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>'
+        _days, _past = _archive_days(f)
+        text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>' + _days
+                + '<div class="fs-day-p" data-day="cur">'
                 + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
                 + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)
                 + (f'<p class="fs-rate"><b>對利率</b>{esc(_rn)}</p>' if _rn else "")
                 + ('<ul class="fs-list">' + "".join(_items) + '</ul>'
                    if _items else "")
-                + '</div>')
+                + '</div>' + _past + '</div>')
     else:
         text = ('<ul class="fs-body fs-list">'
                 + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
@@ -1270,7 +1318,7 @@ def _focus_strip(f: dict | None) -> str:
         rows = ("".join(_lk(x) for x in f.get("links") or [])
                 + "".join(_lk(x, t["id"]) for t in topics
                           for x in (t.get("links") or [])[:1]))
-        links = (f'<details class="f-more"{" open" if _headline_mode else ""}>'
+        links = (f'<details class="f-more fs-reflinks"{" open" if _headline_mode else ""}>'
                  f'<summary>參考報導</summary>'
                  f'<div class="f-detail">{rows}</div></details>')
     # 機率的來源標示跟著實際走的那一層：期貨自算是可驗算的規則、
@@ -1312,7 +1360,7 @@ def _focus_strip(f: dict | None) -> str:
     # 手機上下堆疊。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
             '<div class="fs-head">今日市場焦點'
-            + picker + '</div>' + editbar +
+            + STORY_BTN + picker + '</div>' + editbar +
             '<div class="fs-grid">'
             '<div class="fs-chips"><div class="fs-hd"><span>指標</span>'
             '<span>變動</span><span>數值</span></div>' + "".join(chips) + '</div>'
@@ -1694,6 +1742,30 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
             '<label for="hm-cat-spk">官員談話</label><label for="hm-cat-hol">休市</label></div>')
     listing = (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
                f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
+    # 今日快報（限時動態）第五則：存「完整日期與時間」，由瀏覽器依當下台灣時間判斷
+    # 哪些是今天／明天、哪些已經過了（週日不更新、或過了午夜才打開，日期才不會錯一天）。
+    # 多帶一天備用。
+    _up = []
+    for k_ in range(3):
+        d_ = today + dt.timedelta(days=k_)
+        for e in rows:
+            if e["tpe"].date() == d_:
+                _up.append({"date": d_.isoformat(), "at": e["tpe"].isoformat(), "k": "d",
+                            "t": e["tpe"].strftime("%H:%M"), "name": e["name"],
+                            "hi": e.get("impact") == "high"})
+        for e in supply:
+            if e["tpe"].date() == d_:
+                _up.append({"date": d_.isoformat(), "at": e["tpe"].isoformat(), "k": "s",
+                            "t": e["tpe"].strftime("%H:%M"), "name": e["name"]})
+        for e in speeches:
+            if e["tpe"].date() == d_:
+                _known = e.get("when") != "時間未定"
+                _up.append({"date": d_.isoformat(), "at": e["tpe"].isoformat() if _known else "",
+                            "k": "p", "t": e["tpe"].strftime("%H:%M") if _known else "", "name": e["name"]})
+        for e in _hgroups([h for h in hols if h["date"] == d_]):
+            _up.append({"date": d_.isoformat(), "at": "", "k": "h", "t": "",
+                        "name": f'{e["mk_zh"]}{mh.status_text(e)[0]}', "sub": e["name"]})
+    ctxs["_story_up"] = _up
     # 2026-10：「列表／月曆」切換（使用者：做一個總月曆，四種內容都要表示）
     cal = _hm_calendar(today, start, end, rows, supply, speeches, hols,
                        _mrow, _xrow, _hrow, _hgroups)
@@ -1848,6 +1920,17 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols,
               '<p class="home-empty">這一天沒有排定的事項。</p></div></div></div>')
 
 
+def _story(ctxs: dict) -> str:
+    """今日快報（限時動態）。資料組不出來就不放，不影響首頁。"""
+    try:
+        from ..analysis.stories import build_story
+        return story_html(build_story(ctxs))
+    except Exception as e:                         # noqa: BLE001
+        import logging
+        logging.getLogger(__name__).warning("今日快報組裝失敗（%s），本次不顯示", e)
+        return ""
+
+
 def home_body(ctxs: dict) -> str:
     sd = ctxs.get("scenario") or {}
     sc = sd.get("scenario")
@@ -1917,6 +2000,7 @@ def home_body(ctxs: dict) -> str:
       <p>未來四週，台灣時間</p></div>
     {_hm_watch(ctxs, sc)}
   </section>
+  {_story(ctxs)}
 
   <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>
     <span>明天過後，帶你看總經</span></div><small>資料期別　{esc(dates)}</small></div>
