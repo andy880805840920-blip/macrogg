@@ -903,24 +903,37 @@ each('.fs-pickp input[type=checkbox]',function(cb){cb.addEventListener('change',
 var eb=st.querySelector('.fs-edit-btn');function ed(on){st.classList.toggle('fs-editing',on);if(eb)eb.setAttribute('aria-pressed',on?'true':'false');}
 if(eb)eb.addEventListener('click',function(){ed(!st.classList.contains('fs-editing'));});
 var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function(){ed(false);});
-// 2026-10：編輯狀態下，按住每行左邊的 ≡ 上下拖曳調整順序。只改報價板順序，
-// 補充新聞維持原本的主題（讀者要換新聞用新聞標籤的 ▾）。
-Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),function(row){
- var g=document.createElement('span');g.className='fs-grip';g.textContent='≡';g.setAttribute('aria-hidden','true');row.appendChild(g);
- var off=0,on=false;
+// 2026-10：編輯狀態下長按一行（手機約 0.3 秒；電腦按住直接拖）上下拖曳調整順序。
+// 只改報價板順序，補充新聞維持原本的主題（讀者要換新聞用新聞標籤的 ▾）。
+// iPhone Safari：手指一動就會被判成捲動、pointer 事件被中斷，所以觸控改用
+// touch 事件＋非被動 touchmove：長按成立前移動超過 8px 視為捲動（照常捲），
+// 成立後 preventDefault 擋住捲動。
+(function(){var row=null,act=false,off=0,timer=null,sx=0,sy=0,pend=null,my=0;
+ function editing(){return st.classList.contains('fs-editing');}
  function vis(){return Array.prototype.filter.call(box.querySelectorAll('[data-chip]'),function(x){return !x.classList.contains('fs-off');});}
+ function rowOf(t){while(t&&t!==box){if(t.dataset&&t.dataset.chip)return t.classList.contains('fs-off')?null:t;t=t.parentNode;}return null;}
  function place(y){row.style.transform='';var top=row.getBoundingClientRect().top;row.style.transform='translateY('+(y-off-top)+'px)';}
- g.addEventListener('pointerdown',function(e){if(!st.classList.contains('fs-editing'))return;e.preventDefault();e.stopPropagation();
-  try{g.setPointerCapture(e.pointerId);}catch(x){}on=true;off=e.clientY-row.getBoundingClientRect().top;row.classList.add('fs-drag');});
- g.addEventListener('pointermove',function(e){if(!on)return;e.preventDefault();var y=e.clientY,v=vis(),k=v.indexOf(row),r;
+ function lift(r,y){row=r;act=true;off=y-r.getBoundingClientRect().top;r.classList.add('fs-drag');
+  try{if(navigator.vibrate)navigator.vibrate(12);}catch(e){}}
+ function move(y){var v=vis(),k=v.indexOf(row),r;
   if(k>0){r=v[k-1].getBoundingClientRect();if(y<r.top+r.height/2)box.insertBefore(row,v[k-1]);}
   if(k<v.length-1){r=v[k+1].getBoundingClientRect();if(y>r.top+r.height/2)box.insertBefore(v[k+1],row);}
   if(y<56)window.scrollBy(0,-14);else if(y>window.innerHeight-56)window.scrollBy(0,14);
-  place(y);});
- function end(){if(!on)return;on=false;row.style.transform='';row.classList.remove('fs-drag');
-  var o=vis().map(function(x){return x.dataset.chip;});if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
- g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
- g.addEventListener('click',function(e){e.stopPropagation();});});
+  place(y);}
+ function drop(){clearTimeout(timer);timer=null;pend=null;if(!act)return;act=false;row.style.transform='';row.classList.remove('fs-drag');
+  var o=vis().map(function(x){return x.dataset.chip;});row=null;
+  if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
+ box.addEventListener('touchstart',function(e){if(!editing()||e.touches.length!==1)return;var r=rowOf(e.target);if(!r)return;
+  sx=e.touches[0].clientX;sy=e.touches[0].clientY;clearTimeout(timer);timer=setTimeout(function(){timer=null;lift(r,sy);},300);},{passive:true});
+ box.addEventListener('touchmove',function(e){var t=e.touches[0];
+  if(act){if(e.cancelable)e.preventDefault();move(t.clientY);return;}
+  if(timer&&(Math.abs(t.clientX-sx)>8||Math.abs(t.clientY-sy)>8)){clearTimeout(timer);timer=null;}},{passive:false});
+ box.addEventListener('touchend',drop);box.addEventListener('touchcancel',drop);
+ box.addEventListener('contextmenu',function(e){if(editing()&&rowOf(e.target))e.preventDefault();});
+ box.addEventListener('mousedown',function(e){if(!editing()||e.button!==0)return;var r=rowOf(e.target);if(!r)return;pend=r;my=e.clientY;e.preventDefault();});
+ document.addEventListener('mousemove',function(e){if(act){move(e.clientY);return;}
+  if(pend&&Math.abs(e.clientY-my)>4){lift(pend,my);pend=null;move(e.clientY);}});
+ document.addEventListener('mouseup',drop);})();
 var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);lss(K,null);lss(NK,null);ap(sel);});
 Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
 // 第十八批：變動欄可切「日／MTD／YTD」（上月底、去年底收盤為基準）
@@ -1162,7 +1175,7 @@ def _focus_strip(f: dict | None) -> str:
         # 第十八批：改成勾選清單——勾幾個顯示幾個（不設上限），勾選順序就是
         # 顯示順序；前兩個決定補充新聞。
         picker = ('<button type="button" class="fs-edit-btn">選擇指標</button>')
-        editbar = ('<div class="fs-editbar"><span>勾選要顯示的指標，不限數量；按住左邊的 ≡ 上下拖曳調整順序'
+        editbar = ('<div class="fs-editbar"><span>勾選要顯示的指標，不限數量；長按一行、上下拖曳調整順序'
                    '（不影響補充新聞，新聞用標籤的 ▾ 換）<b class="fs-pk-cnt"></b></span>'
                    '<button type="button" class="fs-reset">恢復預設</button>'
                    '<button type="button" class="fs-done">完成</button>'

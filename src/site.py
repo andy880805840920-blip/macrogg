@@ -3484,15 +3484,10 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   border-radius:9px;min-width:18px;text-align:center;padding:0 5px;line-height:17px}
 .fs-pk-n:empty{display:none}
 .viz-root:not(#_) .hm .fs-editing .fs-chip:not(.fs-off)>b::after{content:none}
-/* 2026-10：編輯狀態的拖曳把手 ≡（按住上下拖曳排序）；排序不再綁補充新聞，拿掉「補充新聞」小標 */
-.fs-grip{display:none}
-.viz-root:not(#_) .hm .fs-editing .fs-chip:not(.fs-off){padding-left:44px}
-.viz-root:not(#_) .hm .fs-editing .fs-hd{padding-left:44px}
-.fs-editing .fs-chip:not(.fs-off) .fs-grip{display:flex;align-items:center;justify-content:center;position:absolute;left:4px;top:0;bottom:0;
-  width:36px;font-size:22px;line-height:1;color:var(--muted);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;z-index:2}
-.fs-editing .fs-chip.fs-drag{z-index:5;position:relative;background:var(--surface-1);box-shadow:0 6px 20px rgba(18,35,59,.18),inset 3px 0 0 var(--brand-orange);
-  opacity:.97}
-.fs-editing .fs-chip.fs-drag .fs-grip{cursor:grabbing;color:var(--brand-orange)}
+/* 2026-10：編輯狀態長按拖曳排序（不顯示把手）；排序不再綁補充新聞，拿掉「補充新聞」小標 */
+.fs-editing .fs-chip:not(.fs-off){-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:grab}
+.fs-editing .fs-chip.fs-drag{z-index:5;position:relative;background:var(--surface-1);cursor:grabbing;
+  box-shadow:0 8px 22px rgba(18,35,59,.20),inset 3px 0 0 var(--brand-orange);opacity:.97}
 .viz-root:not(#_) .hm .fs-editing .fs-chip.slot1 .fs-nm>span::after,
 .viz-root:not(#_) .hm .fs-editing .fs-chip.slot2 .fs-nm>span::after{content:none}
 .fs-mode{position:relative;display:inline-flex;align-items:center}
