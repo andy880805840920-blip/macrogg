@@ -903,13 +903,13 @@ each('.fs-pickp input[type=checkbox]',function(cb){cb.addEventListener('change',
 var eb=st.querySelector('.fs-edit-btn');function ed(on){st.classList.toggle('fs-editing',on);if(eb)eb.setAttribute('aria-pressed',on?'true':'false');}
 if(eb)eb.addEventListener('click',function(){ed(!st.classList.contains('fs-editing'));});
 var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function(){ed(false);});
-// 2026-10：編輯狀態下長按一行（手機約 0.3 秒；電腦按住直接拖）上下拖曳調整順序。
+// 2026-10：長按一行（手機約 0.3 秒；電腦按住直接拖）上下拖曳調整順序——平常畫面
+// 與編輯狀態都可以（使用者：「非編輯情況也能拖移」）。
 // 只改報價板順序，補充新聞維持原本的主題（讀者要換新聞用新聞標籤的 ▾）。
 // iPhone Safari：手指一動就會被判成捲動、pointer 事件被中斷，所以觸控改用
 // touch 事件＋非被動 touchmove：長按成立前移動超過 8px 視為捲動（照常捲），
 // 成立後 preventDefault 擋住捲動。
 (function(){var row=null,act=false,off=0,timer=null,sx=0,sy=0,pend=null,my=0;
- function editing(){return st.classList.contains('fs-editing');}
  function vis(){return Array.prototype.filter.call(box.querySelectorAll('[data-chip]'),function(x){return !x.classList.contains('fs-off');});}
  function rowOf(t){while(t&&t!==box){if(t.dataset&&t.dataset.chip)return t.classList.contains('fs-off')?null:t;t=t.parentNode;}return null;}
  function place(y){row.style.transform='';var top=row.getBoundingClientRect().top;row.style.transform='translateY('+(y-off-top)+'px)';}
@@ -922,20 +922,20 @@ var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function()
   place(y);}
  function drop(){clearTimeout(timer);timer=null;pend=null;if(!act)return;act=false;row.style.transform='';row.classList.remove('fs-drag');
   var o=vis().map(function(x){return x.dataset.chip;});row=null;
-  if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
- box.addEventListener('touchstart',function(e){if(!editing()||e.touches.length!==1)return;var r=rowOf(e.target);if(!r)return;
+  box._dg=Date.now();if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
+ box.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;var r=rowOf(e.target);if(!r)return;
   sx=e.touches[0].clientX;sy=e.touches[0].clientY;clearTimeout(timer);timer=setTimeout(function(){timer=null;lift(r,sy);},300);},{passive:true});
  box.addEventListener('touchmove',function(e){var t=e.touches[0];
   if(act){if(e.cancelable)e.preventDefault();move(t.clientY);return;}
   if(timer&&(Math.abs(t.clientX-sx)>8||Math.abs(t.clientY-sy)>8)){clearTimeout(timer);timer=null;}},{passive:false});
  box.addEventListener('touchend',drop);box.addEventListener('touchcancel',drop);
- box.addEventListener('contextmenu',function(e){if(editing()&&rowOf(e.target))e.preventDefault();});
- box.addEventListener('mousedown',function(e){if(!editing()||e.button!==0)return;var r=rowOf(e.target);if(!r)return;pend=r;my=e.clientY;e.preventDefault();});
+ box.addEventListener('contextmenu',function(e){if(rowOf(e.target))e.preventDefault();});
+ box.addEventListener('mousedown',function(e){if(e.button!==0)return;var r=rowOf(e.target);if(!r)return;pend=r;my=e.clientY;e.preventDefault();});
  document.addEventListener('mousemove',function(e){if(act){move(e.clientY);return;}
   if(pend&&Math.abs(e.clientY-my)>4){lift(pend,my);pend=null;move(e.clientY);}});
  document.addEventListener('mouseup',drop);})();
 var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);lss(K,null);lss(NK,null);ap(sel);});
-Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
+Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(Date.now()-(box._dg||0)<500)return;if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
 // 第十八批：變動欄可切「日／MTD／YTD」（上月底、去年底收盤為基準）
 var mode=lsg(MK)||"d";if(["d","m","y"].indexOf(mode)<0)mode="d";
 function grp(x){return x.replace(/\B(?=(\d{3})+(?!\d))/g,",");}
@@ -1463,7 +1463,7 @@ def _hm_label(d: dt.date) -> str:
 def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
     """
     接下來看什麼：一次一週，‹ › 換週（純 CSS radio，不靠 JS）。
-    第十八批：上方三個篩選——數據（原本的）、發債（標售＋回購）、官員談話；
+    第十八批：上方篩選——數據（原本的）、發債（標售＋回購）、官員談話、休市（2026-10）；
     數據列帶市場預估與前值（ForexFactory，只有本週），沒有預估時給前值＋近 6 期走勢。
     """
     from ..analysis import watch_calendar as wc
@@ -1601,6 +1601,44 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                 + (f'<small class="hm-x-sub">{esc(e["sub"])}</small>' if e.get("sub") else "")
                 + f'</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
 
+    # 休市（2026-10）：七個市場的休市與提早收盤，分股／債／匯
+    from ..analysis import market_holidays as mh
+    hols = mh.market_events(start, end)
+
+    def _hgroups(evs):
+        """同一天、全部休市、沒有額外說明的市場併成一列（「中國、香港、日本 元旦」）。"""
+        out = []
+        for e in evs:
+            tag, _ = mh.status_text(e)
+            plain = tag == "全部休市" and not e.get("note")
+            g = next((x for x in out if plain and x.get("_plain") and x["date"] == e["date"]), None)
+            if g:
+                g["mk_zh"] += "、" + e["mk_zh"]
+                if e["name"] not in g["_names"]:
+                    g["_names"].append(e["name"])
+                    g["name"] = "、".join(g["_names"])
+                continue
+            out.append(dict(e, _plain=plain, _names=[e["name"]]))
+        return out
+
+    def _st_html(t):
+        """「＝台灣 隔日 02:00」整段不斷行。"""
+        head, sep, tw = t.partition("＝台灣")
+        return esc(head) + (f'<span class="hm-hol-tw">{esc(sep + tw)}</span>' if sep else "")
+
+    def _hrow(e, same):
+        tag, st_ = mh.status_text(e)
+        cls = {"全部休市": "all", "部分休市": "part"}.get(tag, "early")
+        note = e.get("note") or ""
+        when = ""
+        return (f'<div class="hm-mid hm-x hm-hol{" hm-same" if same else ""}">'
+                f'<span class="hm-mid-d">{esc(_hm_label(e["date"]))}</span>'
+                f'<b><em class="hm-hol-tag hm-hol-{cls}">{esc(tag)}</em>{esc(e["mk_zh"])}'
+                f'<span class="hm-hol-nm">{esc(e["name"])}</span>'
+                + (f'<small class="hm-x-sub">{_st_html(st_)}</small>' if st_ else "")
+                + (f'<small class="hm-x-sub hm-hol-note">{esc(note)}</small>' if note else "")
+                + f'</b><span class="hm-mid-t">{esc(when)}</span></div>')
+
     radios, panels = [], []
     for w in range(weeks):
         a_ = start + dt.timedelta(days=7 * w)
@@ -1627,6 +1665,9 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         spk_html = ("".join(_xrow(e, "") for e in pw) if pw else
                     '<p class="home-empty">' + ("目前只排得到理事會成員的行程；地區聯儲總裁的談話要到該週才公布。"
                                                 if w >= 1 else "這一週沒有排定的官員談話。") + '</p>')
+        hw = _hgroups([e for e in hols if a_ <= e["date"] <= b_])
+        hol_html = ("".join(_hrow(e, i > 0 and hw[i - 1]["date"] == e["date"]) for i, e in enumerate(hw))
+                    if hw else '<p class="home-empty">這一週七個市場都正常交易。</p>')
         prev_l = (f'<label class="hm-wk-a" for="hm-wk-{w - 1}" aria-label="上一週">‹</label>'
                   if w else '<span class="hm-wk-a off">‹</span>')
         next_l = (f'<label class="hm-wk-a" for="hm-wk-{w + 1}" aria-label="下一週">›</label>'
@@ -1634,22 +1675,177 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         dots = "".join(f'<i class="{"on" if j == w else ""}"></i>' for j in range(weeks))
         cnt = (f'<span class="hm-cnt hm-cnt-data">{len(wk)} 場</span>'
                f'<span class="hm-cnt hm-cnt-sup">{len(sw)} 場</span>'
-               f'<span class="hm-cnt hm-cnt-spk">{len(pw)} 場</span>')
+               f'<span class="hm-cnt hm-cnt-spk">{len(pw)} 場</span>'
+               f'<span class="hm-cnt hm-cnt-hol">{len(hw)} 項</span>')
         radios.append(f'<input type="radio" name="hm-wk" id="hm-wk-{w}" class="hm-wk-in"{" checked" if w == 0 else ""}>')
         panels.append(f'<div class="hm-wk-p"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t"><b>{esc(name)}</b>'
                       f'<span>{a_.month}/{a_.day}–{b_.month}/{b_.day}　·　{cnt}</span>'
                       f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>'
                       f'<div class="hm-cat hm-cat-data">{body}</div>'
                       f'<div class="hm-cat hm-cat-sup">{sup_html}</div>'
-                      f'<div class="hm-cat hm-cat-spk">{spk_html}</div></div>')
+                      f'<div class="hm-cat hm-cat-spk">{spk_html}</div>'
+                      f'<div class="hm-cat hm-cat-hol">{hol_html}</div></div>')
     cats = ('<input type="radio" name="hm-cat" id="hm-cat-data" class="hm-cat-in" checked>'
             '<input type="radio" name="hm-cat" id="hm-cat-sup" class="hm-cat-in">'
             '<input type="radio" name="hm-cat" id="hm-cat-spk" class="hm-cat-in">'
+            '<input type="radio" name="hm-cat" id="hm-cat-hol" class="hm-cat-in">'
             '<div class="hm-cats" role="group" aria-label="篩選">'
             '<label for="hm-cat-data">數據</label><label for="hm-cat-sup">發債</label>'
-            '<label for="hm-cat-spk">官員談話</label></div>')
-    return (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
-            f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
+            '<label for="hm-cat-spk">官員談話</label><label for="hm-cat-hol">休市</label></div>')
+    listing = (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
+               f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
+    # 2026-10：「列表／月曆」切換（使用者：做一個總月曆，四種內容都要表示）
+    cal = _hm_calendar(today, start, end, rows, supply, speeches, hols,
+                       _mrow, _xrow, _hrow, _hgroups)
+    return ('<div class="hm-view">'
+            '<input type="radio" name="hm-view" id="hm-view-list" class="hm-view-in" checked>'
+            '<input type="radio" name="hm-view" id="hm-view-cal" class="hm-view-in">'
+            '<div class="hm-view-sw" role="group" aria-label="顯示方式">'
+            '<label for="hm-view-list">列表</label><label for="hm-view-cal">月曆</label></div>'
+            + listing + cal + _hm_notes(end) + '</div>' + _HM_CAL_JS)
+
+
+def _hm_notes(end) -> str:
+    """「接下來看什麼」底下的解釋文字全部收進「說明」（2026-10，使用者指定）。
+    月曆專用的那段只在月曆模式顯示。"""
+    return ('<details class="f-more hm-notes"><summary>說明</summary>'
+            '<p class="hm-foot hc-note">月曆：● 數據（實心＝高影響、空心＝中影響）、■ 發債、▲ 官員談話，'
+            f'數字＝當天場數；數據、發債、官員談話排到 {end.month}/{end.day}。「休」＝美國或台灣全部休市、'
+            '「半」＝部分休市或提早收盤，其他市場點日期看。點圖例可隱藏該類。</p>'
+            '<p class="hm-foot">高影響：可能改變整體經濟與利率判讀；中影響：主要影響個別指標。'
+            '市場預估與地區聯儲總裁行程取自 ForexFactory（非官方，只有本週）；標售與回購取自美國財政部；'
+            '理事會行程取自聯準會官網。</p>'
+            '<p class="hm-foot">休市：涵蓋美、英、台、中、港、日、韓；匯市＝當地貨幣交割。'
+            '依交易所與各國假日表計算，颱風等臨時休市不列。</p></details>')
+
+
+# 月曆：點日期看當天全部內容；記住讀者上次選的是列表還是月曆
+_HM_CAL_JS = r"""<script>
+(function(){var root=document.querySelector('.hm-cal');if(!root)return;
+function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+var vl=document.getElementById('hm-view-list'),vc=document.getElementById('hm-view-cal');
+if(lsg('hmView')==='cal'&&vc)vc.checked=true;
+[vl,vc].forEach(function(r){if(r)r.addEventListener('change',function(){lss('hmView',vc.checked?'cal':'list');});});
+var dds=root.querySelectorAll('.hc-dd'),empty=root.querySelector('.hc-dd-none');
+function pick(d,btn){Array.prototype.forEach.call(root.querySelectorAll('.hc-d.hc-sel'),function(x){x.classList.remove('hc-sel');});
+ if(btn)btn.classList.add('hc-sel');var hit=false;
+ Array.prototype.forEach.call(dds,function(x){var on=x.getAttribute('data-d')===d;x.hidden=!on;if(on)hit=true;});
+ if(empty){empty.hidden=hit;var h=empty.querySelector('b');if(h&&btn)h.textContent=btn.getAttribute('data-l')||'';}}
+root.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.hc-d[data-d]'):null;if(!b)return;
+ pick(b.getAttribute('data-d'),b);});
+var first=root.querySelector('.hc-d.hc-today')||root.querySelector('.hc-d[data-d]');
+if(first)pick(first.getAttribute('data-d'),first);})();
+</script>"""
+
+
+def _hm_calendar(today, start, end, rows, supply, speeches, hols,
+                 _mrow, _xrow, _hrow, _hgroups) -> str:
+    """
+    月曆（2026-10）：數據 ●（高影響實心、中影響空心）、發債 ■、官員談話 ▲；
+    美國或台灣全部休市＝整格淺灰＋「休」，部分休市或提早收盤＝「半」
+    （其他五個市場點日期才看得到）。上方圖例兼篩選（純 CSS checkbox）。
+    """
+    import calendar as _cal
+    by: dict = {}
+
+    def put(d, k, e):
+        by.setdefault(d, {"d": [], "s": [], "p": [], "h": []})[k].append(e)
+    for e in rows:
+        put(e["tpe"].date(), "d", e)
+    for e in supply:
+        put(e["tpe"].date(), "s", e)
+    for e in speeches:
+        put(e["tpe"].date(), "p", e)
+    from ..analysis import market_holidays as mh
+    m0 = dt.date(start.year, start.month, 1)
+    last_m = dt.date(end.year, end.month, 1)
+    months = []
+    m = m0
+    while m <= last_m:
+        months.append(m)
+        m = dt.date(m.year + (m.month == 12), m.month % 12 + 1, 1)
+    h_end = dt.date(last_m.year, last_m.month, _cal.monthrange(last_m.year, last_m.month)[1])
+    hol_all = mh.market_events(m0, h_end)
+    for e in hol_all:
+        put(e["date"], "h", e)
+
+    def mark(k, items):
+        if not items:
+            return ""
+        cls = "mk-" + k
+        if k == "d" and not any(x.get("impact") == "high" for x in items):
+            cls += " mk-o"
+        n = f"<small>{len(items)}</small>" if len(items) > 1 else ""
+        return f'<span class="mk-w"><i class="mk {cls}"></i>{n}</span>'
+
+    wd = "一二三四五六日"
+    radios, panels = [], []
+    for i, m in enumerate(months):
+        weeks_ = _cal.Calendar(firstweekday=0).monthdatescalendar(m.year, m.month)
+        cells = "".join(f'<span class="hc-wd{" hc-we" if j >= 5 else ""}">{wd[j]}</span>' for j in range(7))
+        for wk in weeks_:
+            for j, d in enumerate(wk):
+                if d.month != m.month:
+                    cells += '<span class="hc-d hc-out"></span>'
+                    continue
+                ev = by.get(d) or {"d": [], "s": [], "p": [], "h": []}
+                ust = [x for x in ev["h"] if x["mk"] in ("US", "TW")]
+                full = any(len(x["closed"]) == 3 for x in ust)
+                badge = ("休" if full else "半") if ust else ""
+                cls = ["hc-d"]
+                if j >= 5:
+                    cls.append("hc-we")
+                if d == today:
+                    cls.append("hc-today")
+                if d < today:
+                    cls.append("hc-past")
+                if full:
+                    cls.append("hc-gray")
+                summ = "、".join(f"{n} {len(ev[k])}" for k, n in (("d", "數據"), ("s", "發債"), ("p", "談話"))
+                                if ev[k])
+                if ev["h"]:
+                    summ += ("、" if summ else "") + "休市 " + "、".join(dict.fromkeys(x["mk_zh"] for x in ev["h"]))
+                lab = _hm_label(d)
+                cells += (f'<button type="button" class="{" ".join(cls)}" data-d="{d.isoformat()}"'
+                          f' data-l="{esc(lab)}" aria-label="{esc(lab + ("：" + summ if summ else ""))}">'
+                          f'<span class="hc-n">{d.day}</span>'
+                          + (f'<em class="hc-h">{badge}</em>' if badge else "")
+                          + '<span class="hc-m">' + mark("d", ev["d"]) + mark("s", ev["s"])
+                          + mark("p", ev["p"]) + '</span></button>')
+        prev_l = (f'<label class="hm-wk-a" for="hc-m-{i - 1}" aria-label="上個月">‹</label>'
+                  if i else '<span class="hm-wk-a off">‹</span>')
+        next_l = (f'<label class="hm-wk-a" for="hc-m-{i + 1}" aria-label="下個月">›</label>'
+                  if i < len(months) - 1 else '<span class="hm-wk-a off">›</span>')
+        radios.append(f'<input type="radio" name="hc-m" id="hc-m-{i}" class="hc-m-in"{" checked" if i == 0 else ""}>')
+        panels.append(f'<div class="hc-mp"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t">'
+                      f'<b>{m.year} 年 {m.month} 月</b></div>{next_l}</div>'
+                      f'<div class="hc-grid">{cells}</div></div>')
+    # 每一天的明細（點日期才顯示）
+    dds = []
+    for d in sorted(by):
+        ev = by[d]
+        parts = ([f'<div class="hc-row hc-k-d{"" if e.get("impact") == "high" else " hc-lo"}">{_mrow(e)}</div>'
+                  for e in ev["d"]]
+                 + [f'<div class="hc-row hc-k-s">{_xrow(e, "")}</div>' for e in ev["s"]]
+                 + [f'<div class="hc-row hc-k-p">{_xrow(e, "")}</div>' for e in ev["p"]]
+                 + [f'<div class="hc-row hc-k-h">{_hrow(e, False)}</div>' for e in _hgroups(ev["h"])])
+        dds.append(f'<div class="hc-dd" data-d="{d.isoformat()}" hidden>'
+                   f'<div class="hc-dd-h">{esc(_hm_label(d))}</div>{"".join(parts)}</div>')
+    filt = ('<input type="checkbox" id="hc-f-d" class="hc-f-in" checked>'
+            '<input type="checkbox" id="hc-f-s" class="hc-f-in" checked>'
+            '<input type="checkbox" id="hc-f-p" class="hc-f-in" checked>'
+            '<input type="checkbox" id="hc-f-h" class="hc-f-in" checked>'
+            '<div class="hc-lg" role="group" aria-label="圖例與篩選">'
+            '<label for="hc-f-d"><i class="mk mk-d"></i>數據</label>'
+            '<label for="hc-f-s"><i class="mk mk-s"></i>發債</label>'
+            '<label for="hc-f-p"><i class="mk mk-p"></i>官員談話</label>'
+            '<label for="hc-f-h"><em class="hc-h">休</em>休市</label></div>')
+    return ('<div class="hm-cal">' + filt + "".join(radios)
+            + f'<div class="hc-ms">{"".join(panels)}</div>'
+            + f'<div class="hc-dds">{"".join(dds)}'
+            + '<div class="hc-dd hc-dd-none" hidden><div class="hc-dd-h"><b></b></div>'
+              '<p class="home-empty">這一天沒有排定的事項。</p></div></div></div>')
 
 
 def home_body(ctxs: dict) -> str:
@@ -1720,7 +1916,6 @@ def home_body(ctxs: dict) -> str:
     <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
       <p>未來四週，台灣時間</p></div>
     {_hm_watch(ctxs, sc)}
-    <p class="hm-foot">高影響：可能改變整體經濟與利率判讀；中影響：主要影響個別指標。市場預估與地區聯儲總裁行程取自 ForexFactory（非官方，只有本週）；標售與回購取自美國財政部；理事會行程取自聯準會官網。</p>
   </section>
 
   <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>

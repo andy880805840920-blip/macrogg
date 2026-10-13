@@ -161,7 +161,8 @@ def run_node(qs):
             "const fs=require('fs');const ix=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));"
             "const qs=JSON.parse(fs.readFileSync(process.argv[3],'utf8'));const m=new M(ix);"
             "process.stdout.write(JSON.stringify(qs.map(q=>{const r=m.ask(q);"
-            "return {mode:r.mode,card:r.card,list:r.list.map(x=>x.id)};})));", encoding="utf-8")
+            "const rl=m.related(q).ids;"
+            "return {mode:r.mode,card:r.card,list:r.list.map(x=>x.id),rel:rl};})));", encoding="utf-8")
         out = subprocess.run([node, str(jp), str(ixp), str(qp)], capture_output=True, text=True,
                              encoding="utf-8", check=True).stdout
         return json.loads(out)
@@ -188,6 +189,16 @@ else:
     # 我猜你想問：至少三題
     gg = [g for (q, e), g in zip(BANK, got[len(SELF):]) if e == "guess"]
     check("我猜你想問至少三題", all(len(g["list"]) >= 3 for g in gg), gg)
+    # 2026-10：泛稱詞（「利率」）列出所有相關題目——包含式比對，名詞卡排最後
+    rr = run_node(["利率", "政策利率", "殖利率"])
+    r0 = rr[0]["rel"]
+    tcards = {c["i"] for c in res["index"]["cards"] if c.get("t")}
+    check("「利率」相關題目至少 20 題，含房貸利率、10 年期殖利率、SOFR",
+          len(r0) >= 20 and {"fed_rate", "mortgage", "dgs10", "sofr"} <= set(r0), r0)
+    check("名詞卡排在一般題目之後",
+          all(r0.index(t) > max(r0.index(x) for x in r0 if x not in tcards) for t in r0 if t in tcards), r0)
+    check("打得具體時第一題仍是直接命中（政策利率 → fed_rate）", rr[1]["rel"][:1] == ["fed_rate"], rr[1]["rel"][:3])
+    check("殖利率的相關題目不含政策利率卡", "fed_rate" not in rr[2]["rel"], rr[2]["rel"])
 
 # ---------------------------------------------------------------------------
 # 5. 頁面

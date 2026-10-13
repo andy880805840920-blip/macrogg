@@ -4,3 +4,5 @@ PyYAML>=6.0
 pdfplumber>=0.11
 # 新聞正文擷取（純本機解析 HTML，不連外）：Yahoo Finance 改版後舊的 <p> 抽法只抽到選單
 trafilatura==2.3.1
+# 首頁「接下來看什麼・休市」：各交易所與各國假日表（純本機計算、不連網）
+holidays>=0.106

@@ -21,7 +21,8 @@ CSS = """
 .ask-box button{font:inherit;font-weight:700;padding:0 18px;border:0;border-radius:12px;background:var(--brand-orange);color:#fff;cursor:pointer}
 .ask-hint{font-size:12.5px;color:var(--muted);margin:0 0 14px}
 .ask .ask-box{position:relative}
-.ask-sug{border:1px solid var(--border);border-radius:12px;background:var(--surface-1);margin:-2px 0 8px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.ask-sug{border:1px solid var(--border);border-radius:12px;background:var(--surface-1);margin:-2px 0 8px;overflow-x:hidden;overflow-y:auto;max-height:262px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.ask-sug a.ask-sug-all{justify-content:center;color:var(--brand-orange,#E67143);font-weight:700;font-size:14px;background:var(--surface-2)}
 .ask-sug a{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--grid);color:var(--text-primary);text-decoration:none;font-size:15px;cursor:pointer}
 .ask-sug a:last-child{border-bottom:0}
 .ask-sug a.on,.ask-sug a:hover{background:var(--surface-2)}
@@ -76,14 +77,20 @@ CSS = """
 .ask-guess{border:1px solid var(--border);border-radius:14px;background:var(--surface-1);padding:16px 18px}
 .ask-guess h2{font-size:18px;margin:0 0 10px;color:var(--brand-ink)}
 .ask-none{font-size:14.5px;line-height:1.8;margin:0 0 6px}
-.ask-flt{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--grid);margin:22px 0 10px;-webkit-overflow-scrolling:touch}
+/* 2026-10：只准左右滑。overflow-x:auto 會讓 y 也變成可捲，按鈕底線外推 1px 就讓 iPhone 能在框裡上下捲、字被切掉 */
+.ask-flt{display:flex;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:none;box-shadow:inset 0 -1px 0 var(--grid);margin:22px 0 10px;-webkit-overflow-scrolling:touch}
 .ask-flt::-webkit-scrollbar{display:none}
-.ask-flt button{flex:none;font:inherit;padding:9px 13px;font-size:14px;font-weight:700;color:var(--muted);border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;white-space:nowrap;cursor:pointer}
-.ask-flt button.on{color:var(--brand-ink);border-bottom-color:var(--brand-orange)}
-.ask-list{position:relative;max-height:138px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+.ask-flt.fr{-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent)}
+.ask-flt.fl{-webkit-mask-image:linear-gradient(to left,#000 82%,transparent);mask-image:linear-gradient(to left,#000 82%,transparent)}
+.ask-flt.fl.fr{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+.ask-flt button{flex:none;font:inherit;padding:9px 13px 11px;font-size:14px;font-weight:700;color:var(--muted);border:0;margin:0;background:none;white-space:nowrap;cursor:pointer}
+.ask-flt button.on{color:var(--brand-ink);box-shadow:inset 0 -2px 0 var(--brand-orange)}
+.ask-list{position:relative;max-height:276px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   border:1px solid var(--border);border-radius:12px;background:var(--surface-1);padding:0 12px}
 .ask-list.fade{-webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent);mask-image:linear-gradient(to bottom,#000 76%,transparent)}
 .ask-guess .ask-list{border:0;padding:0;border-radius:0}
+.ask-all .ask-list{max-height:min(60vh,440px)}
+#ask-lst .ask-list{height:276px;max-height:none;box-sizing:border-box}
 .ask-list a{display:flex;justify-content:space-between;gap:10px;padding:11px 2px;border-bottom:1px solid var(--grid);color:var(--text-primary);text-decoration:none;font-size:15px;cursor:pointer}
 .ask-list a:last-child{border-bottom:0}
 .ask-list a span{flex:1;min-width:0}
@@ -124,8 +131,8 @@ function row(c, ents, showCat){
   return '<a data-id="' + esc(c.id || c.i) + '"><span>' + mark(c.q, ents) + '</span>' + (showCat ? '<small>' + esc(c.cat || c.c) + '</small>' : '') + '</a>';
 }
 function listBox(items, ents, showCat){
-  var h = '<div class="ask-list' + (items.length > 3 ? ' fade' : '') + '">' + items.map(function(c){ return row(c, ents, showCat); }).join("") + '</div>';
-  if(items.length > 3) h += '<div class="ask-more">還有 ' + (items.length - 3) + ' 題 ↓</div>';
+  var h = '<div class="ask-list' + (items.length > 6 ? ' fade' : '') + '">' + items.map(function(c){ return row(c, ents, showCat); }).join("") + '</div>';
+  h += '<div class="ask-more"' + (items.length > 6 ? '' : ' style="visibility:hidden"') + '>還有 ' + Math.max(0, items.length - 6) + ' 題 ↓</div>';
   return h;
 }
 function wireList(root){
@@ -142,10 +149,11 @@ function setURL(q){
   try { var u = new URL(location.href); if(q) u.searchParams.set("q", q); else u.searchParams.delete("q"); history.replaceState(null, "", u); } catch(e) {}
 }
 function parseLine(r, card){
-  var p = r.parse, bits = [];
-  if(p.ents.length) bits.push("主體 <b>" + esc(p.ents.join("、")) + "</b>");
-  bits.push("意圖 <b>" + esc(p.ints.length ? p.ints.join("、") : "數值") + "</b>");
-  return '<div class="ask-parse">判讀：' + bits.join("　·　") + (card ? "　→　" + esc(card.q) : "") + '</div>';
+  // 2026-10：原本的「判讀：主體…・意圖…」像除錯訊息，改成一行小字；問法跟題目一樣就不顯示
+  if(!card) return "";
+  var q = (inp.value || "").trim();
+  if(!q || q === card.q) return "";
+  return '<div class="ask-parse">依「<b>' + esc(q) + '</b>」找到這題</div>';
 }
 function fetchCard(id){
   if(cache[id]) return Promise.resolve(cache[id]);
@@ -182,20 +190,22 @@ function showCard(id, r){
     res.innerHTML = '<div class="ask-guess"><p class="ask-none">這張卡暫時載入不了（網路或網站更新中），請稍後再試，或直接看<a href="' + "/" + '">總覽</a>。</p></div>';
   });
 }
-function run(q, push){
+function run(q, push, listAll){
   q = (q || "").trim();
   if(push !== false) setURL(q);
   if(!q){ res.innerHTML = ""; return; }
-  var r = M.ask(q);
-  if(r.mode === "direct"){ showCard(r.card, r); return; }
-  var ents = r.parse.ents;
+  var rel = M.related(q), r = rel.res;
+  if(r.mode === "direct" && !listAll){ showCard(r.card, r); return; }
+  var ents = r.parse.ents.length ? r.parse.ents : [r.parse.s];
+  var full = rel.ids.filter(function(id){ return byId[id]; }).map(function(id){ var c = byId[id]; return {id: c.i, q: c.q, cat: c.c}; });
   var h = "";
   if(r.mode === "oos"){
     h = '<div class="ask-guess"><h2>網站目前沒有這項資料</h2><p class="ask-none">本站涵蓋美國就業、通膨、聯準會、美債與資金市場，以及總覽報價板的股市、匯率、原物料。最接近的問題：</p>' + listBox(r.list.slice(0, 3), [], true) + '</div>';
-  } else if(r.mode === "none" || !r.list.length){
+  } else if((r.mode === "none" || !r.list.length) && !full.length){
     h = '<div class="ask-guess"><h2>沒有找到相關問題</h2><p class="ask-none">換個說法試試，或從下面的分類找。</p></div>';
   } else {
-    h = parseLine(r) + '<div class="ask-guess"><h2>我猜你想問？</h2>' + listBox(r.list, ents, true) + '</div>';
+    h = parseLine(r) + '<div class="ask-guess' + (listAll ? ' ask-all' : '') + '"><h2>' + (listAll ? '「' + esc(q) + '」相關的 ' + full.length + ' 題' : '我猜你想問？') + '</h2>'
+      + listBox(full.length ? full : r.list, ents, true) + '</div>';
   }
   res.innerHTML = h; wireList(res);
 }
@@ -208,7 +218,12 @@ function drawCat(cat){
   var items = IX.cards.filter(function(c){ return cat === "全部" ? !c.t : c.c === cat; });
   lst.innerHTML = listBox(items, [], cat === "全部"); wireList(lst);
 }
-flt.addEventListener("click", function(e){ var b = e.target.closest("button"); if(b) drawCat(b.getAttribute("data-c")); });
+flt.addEventListener("click", function(e){ var b = e.target.closest("button"); if(!b) return; drawCat(b.getAttribute("data-c"));
+  var nb = flt.querySelector("button.on"); if(nb && nb.scrollIntoView) nb.scrollIntoView({block: "nearest", inline: "nearest", behavior: "smooth"}); });
+// 選單列放不下時，左右邊緣淡出，提示還能滑（2026-10）
+function edge(){ var m = flt.scrollWidth - flt.clientWidth;
+  flt.classList.toggle("fl", flt.scrollLeft > 4); flt.classList.toggle("fr", m > 4 && flt.scrollLeft < m - 4); }
+flt.addEventListener("scroll", edge, {passive: true}); window.addEventListener("resize", edge);
 document.addEventListener("click", function(e){
   var a = e.target.closest("a[data-id]");
   if(a && byId[a.getAttribute("data-id")]){
@@ -234,19 +249,22 @@ document.addEventListener("click", function(e){
     ch.querySelectorAll(".ask-cv").forEach(function(x){ x.hidden = x.getAttribute("data-v") !== v; });
   }
 });
-// 打字時即時提示：最可能的三題，方向鍵選、Enter 送出、Esc 關閉
+// 打字時即時提示：最多八題（清單內可捲動），超過再給「看全部 N 題」；方向鍵選、Enter 送出、Esc 關閉
 var sug = $("#ask-sug"), sugI = -1, sugT = null;
-function hideSug(){ sug.hidden = true; sug.innerHTML = ""; sugI = -1; }
+function hideSug(){ clearTimeout(sugT); sug.hidden = true; sug.innerHTML = ""; sugI = -1; }
+// 送出後收起手機鍵盤（答案卡才不會被擋住），也取消還沒跑的即時提示
+function done(){ hideSug(); inp.blur(); }
 function drawSug(){
+  if(document.activeElement !== inp) return;   // 已經送出、鍵盤收起，就不再跳出提示
   var q = inp.value.trim();
   if(!q){ hideSug(); return; }
-  var r = M.ask(q), ids = [];
-  if(r.mode === "direct") ids.push(r.card);
-  r.list.forEach(function(x){ if(ids.indexOf(x.id) < 0) ids.push(x.id); });
-  ids = ids.slice(0, 3);
+  var rel = M.related(q), r = rel.res, all = rel.ids.filter(function(id){ return byId[id]; });
+  var ids = all.slice(0, 8);
   if(!ids.length){ hideSug(); return; }
-  sug.innerHTML = ids.map(function(id, i){ var c = byId[id]; return '<a data-sug="' + esc(id) + '" class="' + (i === sugI ? "on" : "") + '"><span>' + mark(c.q, r.parse.ents) + '</span><small>' + esc(c.c) + '</small></a>'; }).join("");
-  sug.hidden = false;
+  var hl = r.parse.ents.length ? r.parse.ents : [r.parse.s];
+  sug.innerHTML = ids.map(function(id, i){ var c = byId[id]; return '<a data-sug="' + esc(id) + '" class="' + (i === sugI ? "on" : "") + '"><span>' + mark(c.q, hl) + '</span><small>' + esc(c.c) + '</small></a>'; }).join("")
+    + (all.length > ids.length ? '<a data-all="1" class="ask-sug-all">看全部 ' + all.length + ' 題 →</a>' : '');
+  sug.hidden = false; sug.scrollTop = 0;
 }
 inp.addEventListener("input", function(){ sugI = -1; clearTimeout(sugT); sugT = setTimeout(drawSug, 120); });
 inp.addEventListener("keydown", function(e){
@@ -256,20 +274,23 @@ inp.addEventListener("keydown", function(e){
   else if(e.key === "Escape"){ hideSug(); return; }
   else return;
   items.forEach(function(a, i){ a.classList.toggle("on", i === sugI); });
+  if(items[sugI] && items[sugI].scrollIntoView) items[sugI].scrollIntoView({block: "nearest"});
 });
 sug.addEventListener("mousedown", function(e){
+  if(e.target.closest("a[data-all]")){ e.preventDefault(); done(); run(inp.value, true, true); return; }
   var a = e.target.closest("a[data-sug]"); if(!a) return;
   e.preventDefault(); var c = byId[a.getAttribute("data-sug")];
-  inp.value = c.q; hideSug(); setURL(c.q); showCard(c.i, null);
+  inp.value = c.q; done(); setURL(c.q); showCard(c.i, null);
 });
 inp.addEventListener("blur", function(){ setTimeout(hideSug, 150); });
 $("#ask-form").addEventListener("submit", function(e){
   e.preventDefault();
   var items = sug.hidden ? [] : sug.querySelectorAll("a");
-  if(sugI >= 0 && items[sugI]){ var c = byId[items[sugI].getAttribute("data-sug")]; inp.value = c.q; hideSug(); setURL(c.q); showCard(c.i, null); return; }
-  hideSug(); run(inp.value);
+  if(sugI >= 0 && items[sugI] && items[sugI].hasAttribute("data-all")){ done(); run(inp.value, true, true); return; }
+  if(sugI >= 0 && items[sugI]){ var c = byId[items[sugI].getAttribute("data-sug")]; inp.value = c.q; done(); setURL(c.q); showCard(c.i, null); return; }
+  done(); run(inp.value);
 });
-drawCat("全部");
+drawCat("全部"); edge();
 var q0 = ""; try { q0 = new URL(location.href).searchParams.get("q") || ""; } catch(e) {}
 if(q0){ inp.value = q0; run(q0, false); }
 })();

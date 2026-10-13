@@ -33,7 +33,7 @@ PAGE_NAMES = {"/": "總覽", "/labor/": "就業", "/inflation/": "通膨", "/fom
               "/rates/": "長端與債務", "/scenario/": "情境合成"}
 ANCHOR_NAMES = {
     "focus": "今日市場焦點", "election": "期中選舉", "hm-cat-data": "接下來看什麼・數據",
-    "hm-cat-spk": "接下來看什麼・官員談話", "hm-cat-sup": "接下來看什麼・發債",
+    "hm-cat-spk": "接下來看什麼・官員談話", "hm-cat-sup": "接下來看什麼・發債", "hm-cat-hol": "接下來看什麼・休市",
     "signals": "本期關鍵訊號", "kpi": "關鍵數字", "unrate": "失業率變動分解", "claims": "每週失業金申請",
     "industry": "行業別貢獻分解", "revision": "歷史數據修正", "sticky": "超級核心服務",
     "ppi": "生產者物價 PPI", "contrib": "分項貢獻分解", "trend": "通膨廣度", "passthrough": "薪資到服務業通膨",

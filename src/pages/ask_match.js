@@ -173,6 +173,35 @@
     }
     return out("guess", rows);
   };
+  /* 相關題目的完整清單（2026-10，使用者：打「利率」不該只有三題）：
+   *   ① 直接命中的那張卡 ② 計分命中的（照分數）
+   *   ③ 包含式：打的字是某張卡題目或關鍵詞的一部分（「利率」→ 政策利率、房貸利率、殖利率…），
+   *      題目裡出現的排前面、名詞卡排最後 ④ 只靠字面相似補進來的
+   * 回傳 {res: ask() 的結果, ids: [卡片 id…]}。不影響 ask() 的判讀。 */
+  Matcher.prototype.related = function (q) {
+    var r = this.ask(q), self = this, p = r.parse, ids = [], seen = {};
+    function add(id) { if (id && !seen[id]) { seen[id] = 1; ids.push(id); } }
+    if (r.mode === "empty") return { res: r, ids: [] };
+    if (r.mode === "oos") { r.list.forEach(function (x) { add(x.id); }); return { res: r, ids: ids }; }
+    if (r.mode === "direct") add(r.card);
+    r.list.forEach(function (x) { if (x.sc > 0) add(x.id); });
+    var keys = [p.s].concat(p.ents).filter(function (k, i, a) { return k && k.length >= 2 && a.indexOf(k) === i; });
+    var cand = [];
+    if (keys.length) this.cards.forEach(function (c) {
+      if (seen[c.id]) return;
+      var nq = self.norm(c.q), best = 0;
+      keys.forEach(function (k) {
+        var inQ = nq.indexOf(k) >= 0;
+        var inK = c.k.concat(c.w, c.p, c.x).some(function (t) { return t && t.indexOf(k) >= 0; });
+        if (inQ || inK) best = Math.max(best, (inQ ? 2 : 1) + (k === p.s ? 1 : 0));
+      });
+      if (best) cand.push({ c: c, sc: best, sim: sim(p.s, nq) });
+    });
+    cand.sort(function (a, b) { return (a.c.t ? 1 : 0) - (b.c.t ? 1 : 0) || b.sc - a.sc || b.sim - a.sim; });
+    cand.forEach(function (x) { add(x.c.id); });
+    r.list.forEach(function (x) { add(x.id); });
+    return { res: r, ids: ids };
+  };
   Matcher.prototype.fuzzy = function (s) {
     return this.cards.map(function (c) {
       var best = 0;
