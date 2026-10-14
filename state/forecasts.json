@@ -1,0 +1,83 @@
+{
+ "releases": {
+  "cpi|2026-09": {
+   "key": "cpi",
+   "period": "2026-09",
+   "date": "2026-10-14",
+   "cons": {
+    "core_mom": 0.2,
+    "core_yoy": 2.5,
+    "cpi_mom": 0.6,
+    "cpi_yoy": 3.6
+   },
+   "cons_at": "2026-10-14T12:05+08:00",
+   "clev": {
+    "cpi_mom": 0.53,
+    "core_mom": 0.2,
+    "cpi_yoy": 3.6,
+    "core_yoy": 2.39
+   },
+   "clev_asof": "10/13",
+   "banks": {},
+   "bad": [],
+   "recon": {
+    "at": "2026-10-14T12:06+08:00",
+    "titles": [
+     "Wall St Week Ahead Bank earnings, CPI headline busy markets week as S&P 500 hovers near records - Reuters",
+     "US CPI preview: 14 investment bank forecasters see energy lifting headline to 3.6%, core held near 0.2% - investingLive",
+     "JPMorgan Chase, Goldman and other big banks report earnings this week. What to expect - CNBC",
+     "CPI Forecasts Show Moderated Inflation in September, Keeping the Fed on Hold - Morningstar",
+     "US Q3 Earnings Season Kicks Off With Big Banks; Futures Steady Ahead of CPI/PPI - Gotrade",
+     "JPMorgan's David Kelly Expects Fed To Keep Interest Rates Unchanged After In-Line CPI Report — 'We Essentially Have Got Teflon Inflation In ",
+     "The Week Ahead: US CPI, eurozone CPI, JPMorgan earnings - CMC Markets",
+     "What To Expect In Markets This Week: JPM, GS, C Bank Earnings, CPI Report, Kevin Warsh's Speech And More - TradingView",
+     "Inflation likely worsened in September, according to Goldman Sachs - Yahoo Finance",
+     "The Week Ahead: JPMorgan, Goldman Sachs Earnings and CPI Test Stock Market Strength - FXEmpire",
+     "Wells Fargo, Bank of America, Domino’s, Johnson & Johnson, Inflation Data, and More to Watch This Week - Barron's",
+     "Morgan Stanley: Preview: What We Expect from the US September CPI Report on Wednesday - eFXdata",
+     "Dow Jones Industrial (DJI) Average Index forecast: CPI and bank earnings in focus - Beinsure",
+     "Investment bank sees September core CPI easing as supercore cools, while inflation risks persist - VT Markets",
+     "JPMorgan and Goldman Sachs Earnings: Q3 2026 Bank Earnings Season Preview - Admirals",
+     "Dow Jones, Nasdaq, S&P 500 preview: Markets brace for CPI, Q3 earnings kick-off - Investing.com",
+     "Week Ahead: US CPI, Big Bank Earnings and TSMC in Focus - Gotrade",
+     "Bank of America (NYSE: BAC) stock price forecast: $30.6 bn in revenue - Beinsure",
+     "Ibovespa Drops as Inflation Forecast Rises - TradingView",
+     "CPI isn't expected to show much progress on inflation in September - TradingView"
+    ],
+    "access": {
+     "investingLive": 200,
+     "eFXdata": 200,
+     "FXStreet": 200
+    },
+    "bodies": [
+     {
+      "title": "China September CPI 0.9% y/y (expected 1%, prior 0.8%)",
+      "link": "https://investinglive.com/news/china-september-cpi-0-9-y-y-expected-1-prior-0-8/",
+      "chars": 456,
+      "banks": {
+       "BofA": 0,
+       "Citi": 0,
+       "JPM": 0,
+       "MS": 0,
+       "GS": 0
+      },
+      "numbers": 12
+     },
+     {
+      "title": "US CPI preview: 14 investment bank forecasters see energy lifting headline to 3.6%, core held near 0.2%",
+      "link": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "chars": 4538,
+      "banks": {
+       "BofA": 1,
+       "Citi": 2,
+       "JPM": 3,
+       "MS": 5,
+       "GS": 3
+      },
+      "numbers": 36
+     }
+    ]
+   }
+  }
+ }
+}
