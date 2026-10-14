@@ -61,6 +61,7 @@ CSS = r"""
 .fc-lb td:nth-child(2){font-weight:700}
 .fc-lb .fc-base td{background:var(--surface-2)}
 .fc-lb .fc-n{font-size:12px;color:var(--muted);margin:6px 0 0}
+.fc-log ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--text-secondary)}.fc-log li{margin:4px 0}.fc-log li span{color:var(--muted)}
 .fc-empty{font-size:13.5px;color:var(--muted);margin:6px 0}
 @media(max-width:480px){.fc-tb th,.fc-tb td{font-size:12.5px}.fc-c{padding:8px 4px}.fc-tb thead th{padding:6px 4px;font-size:11px;letter-spacing:-.01em}.fc-tb tbody th,.fc-tb tfoot th{width:70px;font-size:12px}.fc-na{font-size:11px}.fc-tb tfoot td{font-size:11px;padding:7px 4px;white-space:normal}}
 """
@@ -217,7 +218,25 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
             f'<div class="fc-tw"><table class="fc-tb"><thead><tr><th></th>{head}</tr></thead>'
             f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table></div>'
             '<p class="fc-src" aria-live="polite">點任一格看數字的出處；★＝最接近實際值。</p>'
-            + bad + _board(rel, key) + '</div>')
+            + bad + _autolog(e) + _board(rel, key) + '</div>')
+
+
+def _autolog(e: dict) -> str:
+    """自動擷取紀錄（收合）：讀了哪些文章／圖、結果與原因——資料沒填上時先看這裡。"""
+    lg = list(reversed(e.get("auto_log") or []))[:6]
+    if not lg:
+        return ""
+    lis = ""
+    for x in lg:
+        got = x.get("got") or {}
+        got_t = "、".join(f"{b} {len(v)} 格" for b, v in got.items())
+        res = x.get("result") or ("採用 " + got_t if got_t else "沒有可採用的數字")
+        if x.get("result") == "採用" and got_t:
+            res = "採用 " + got_t
+        extra = "；".join((x.get("bad") or [])[:3] + [n for n in (x.get("notes") or []) if "不" in n][:3])
+        lis += (f'<li><b>{_esc(_hm(x.get("at", "")))}</b>　{_esc(x.get("src", ""))}　{_esc(res)}'
+                + (f'<br><span>{_esc(extra)}</span>' if extra else "") + '</li>')
+    return (f'<details class="f-more fc-log"><summary>自動擷取紀錄</summary><ul>{lis}</ul></details>')
 
 
 def _board(rel: dict, key: str) -> str:

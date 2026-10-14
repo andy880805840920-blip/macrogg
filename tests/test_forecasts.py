@@ -334,6 +334,63 @@ if HAVE_TF:
         _FF.clock.now = _now
 check("㊴ 讀圖沒金鑰：回報原因、不呼叫", F.vision_ai(b"x", "image/png", "p", env={}) == ("", "沒有 AI 金鑰"))
 
+# ㊵–㊷ 第 42 批：別國 CPI 不算、複讀換模型備援、擷取紀錄
+check("㊵ 別國的 CPI（China September CPI … expected）不算預覽文章",
+      not F.is_preview("cpi", {"title": "China September CPI 0.9% y/y (expected 1%, prior 0.8%)", "pub": None}, None)
+      and F.is_preview("cpi", {"title": "US CPI preview: banks expect core 0.2%", "pub": None}, None))
+import src.analysis.polish as _P  # noqa: E402
+_orig_http = _P._http
+HCALLS = []
+
+
+def fake_http(method, url, *, label, **kw):
+    HCALLS.append(label)
+    if "generativelanguage" in url:
+        return types.SimpleNamespace(status_code=429, raise_for_status=lambda: (_ for _ in ()).throw(RuntimeError("429 Too Many Requests")))
+    return types.SimpleNamespace(status_code=200, raise_for_status=lambda: None,
+                                 json=lambda: {"content": [{"text": '{"table": false}'}]})
+
+
+_P._http = fake_http
+try:
+    out = F.vision_ai(b"x", "image/png", "p", True, env={"ANTHROPIC_API_KEY": "a", "GEMINI_API_KEY": "g"})
+finally:
+    _P._http = _orig_http
+check("㊶ 複讀：優先用 Claude Sonnet（跟初讀的 Haiku 不同模型），不碰 Gemini",
+      out == ('{"table": false}', "") and len(HCALLS) == 1 and "sonnet" in HCALLS[0], (out, HCALLS))
+HCALLS.clear()
+
+
+def fake_http2(method, url, *, label, **kw):
+    HCALLS.append(label)
+    if url.endswith("/models"):                    # 模型清單：只剩新的 flash
+        return types.SimpleNamespace(status_code=200, raise_for_status=lambda: None, json=lambda: {"models": [
+            {"name": "models/gemini-3.1-flash", "supportedGenerationMethods": ["generateContent"]},
+            {"name": "models/text-embedding-004", "supportedGenerationMethods": ["embedContent"]}]})
+    HCALLS.append(("body", kw.get("json", {}).get("generationConfig")))
+    return types.SimpleNamespace(status_code=200, raise_for_status=lambda: None,
+                                 json=lambda: {"candidates": [{"content": {"parts": [{"text": "{}"}]}}]})
+
+
+_P._http = fake_http2
+try:
+    out2 = F.vision_ai(b"x", "image/png", "p", True, env={"GEMINI_API_KEY": "g"})
+finally:
+    _P._http = _orig_http
+check("㊶b Gemini 模型被汰換（404）的對策：先問金鑰能用哪些模型，3.x 不送 thinkingConfig",
+      out2 == ("{}", "") and any("gemini-3.1-flash" in str(h) for h in HCALLS)
+      and ("body", {"temperature": 0, "maxOutputTokens": 3000}) in HCALLS, HCALLS)
+check("㊶c 外匯走勢圖（EURUSD-bullish-chart）不送 AI；檔名有 USD 的預測表照讀",
+      [d["url"] for d in F.body_images('<html><body><article><p>' + "US CPI preview text. " * 30 + '</p>'
+       '<img src="https://editorial.fxsstatic.com/images/i/EURUSD-bullish-chart.png" alt="">'
+       '<p>' + "More text here. " * 30 + '</p><img src="https://x.com/i/USD-forecast-table.png" alt=""></article></body></html>')]
+      == ["https://x.com/i/USD-forecast-table.png"])
+e_log = {"key": "cpi", "period": "2026-09", "date": "2026-10-14", "cons": {},
+         "auto_log": [{"at": "2026-10-14T12:43+08:00", "src": "investingLive（圖表）", "img": "x", "link": "y",
+                       "result": "複讀失敗，下次再試：Gemini 429"}]}
+html = forecasts_ui.section({"releases": {"cpi|2026-09": e_log}}, dt.date(2026, 10, 14))
+check("㊷ 04 區有「自動擷取紀錄」（收合），看得到失敗原因", "自動擷取紀錄" in html and "複讀失敗" in html)
+
 print()
 print("有失敗" if FAIL else "全部通過")
 sys.exit(1 if FAIL else 0)

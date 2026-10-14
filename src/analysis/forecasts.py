@@ -181,8 +181,8 @@ def fetch_cleveland(_get_fn=None) -> dict:
 #   手動設定檔（config/bank_forecasts.yaml）永遠優先。
 # ---------------------------------------------------------------------------
 FEEDS = (("investingLive", "https://investinglive.com/feed"),
-         ("FXStreet", "https://www.fxstreet.com/rss/news"),
-         ("eFXdata", "https://efxdata.com/feed"))
+         ("FXStreet", "https://www.fxstreet.com/rss/news"))
+# eFXdata 的 RSS 實測 404（2026-10），先拿掉
 TITLE_KW = {"employment": r"payroll|\bNFP\b|jobs report|non-?farm|employment report",
             "cpi": r"\bCPI\b", "pce": r"\bPCE\b"}
 TITLE_PREVIEW = r"preview|forecast|expect|bank|forecaster|\bsees?\b|estimate|what to"
@@ -247,10 +247,17 @@ def release_dt(key: str, iso: str) -> dt.datetime | None:
         return None
 
 
+NON_US = (r"China|Chinese|Japan|Tokyo|\bUK\b|Britain|British|Canada|Canadian|Euro|Eurozone|German|France|French|"
+          r"Ital|Spain|Spanish|Australia|\bAus\b|New Zealand|\bNZ\b|Swiss|Switzerland|Sweden|Norway|India|Korea|"
+          r"Mexic|Brazil|Turkey|South Africa|Singapore|Hong Kong|Taiwan")
+
+
 def is_preview(key: str, it: dict, rel_at: dt.datetime | None) -> bool:
     t = it.get("title", "")
     if not (re.search(TITLE_KW[key], t, re.I) and re.search(TITLE_PREVIEW, t, re.I)):
         return False
+    if re.search(NON_US, t) and not re.search(r"\bUS\b|U\.S\.|United States", t):
+        return False                               # 別國的 CPI（例：China September CPI … expected）
     pub = it.get("pub")
     if rel_at and pub:
         return rel_at - dt.timedelta(days=10) <= pub < rel_at
@@ -401,18 +408,19 @@ def extract(key: str, period: str, text: str, cons: dict, ai=None) -> tuple[dict
 #   讀完驗證  標題要對上這一期的月份與數據、至少有五家中的兩家、
 #             重算的中位數要等於表上印的 Median（抓欄位錯置、漏讀）、
 #             中位數要跟市場共識接近（防讀到上個月的表）
-#   複讀比對  通過驗證的表再讀一次（有兩家金鑰就換另一家），五家的格子要一模一樣
+#   複讀比對  通過驗證的表再用 Claude 另一個模型（Sonnet）讀一次，五家的格子要一模一樣
 #             ——中位數抓不到「整列錯位」，複讀才抓得到；文章文字有原句的，
 #             跟圖表不一致時以原文為準
 #   不重讀    每張圖讀過就記下（不管結果），之後不再讀；
 #             每篇最多 2 張、每次執行最多 3 張、每一期最多 10 張
 # ---------------------------------------------------------------------------
 IMG_SKIP = (r"/featured/|logo|icon|avatar|banner|sprite|emoji|\.svg|\.gif|author|profile|"
-            r"broker|premium|livebytes|/_next/|advert|sponsor")
+            r"broker|premium|livebytes|/_next/|advert|sponsor|"
+            r"\b(?:EUR|GBP|USD|AUD|NZD|CAD|CHF|JPY|XAU|XAG|BTC)(?:USD|JPY|CHF|CAD|EUR|GBP)[-_]|bullish|bearish|chart-screenshot|technical")
 IMG_HINT = r"forecast|foreacst|survey|table|estimate|preview|consensus|\bcpi\b|\bpce\b|payroll|nfp|jobs"
 IMG_MIN = (500, 250)
 IMG_PER_ARTICLE, IMG_PER_RUN, IMG_PER_RELEASE = 2, 3, 10
-VISION_MODEL = {"anthropic": "claude-haiku-4-5", "gemini": "gemini-2.5-flash"}
+VISION_MODEL = {"anthropic": "claude-haiku-4-5", "anthropic2": "claude-sonnet-4-5", "gemini": "gemini-2.5-flash"}
 VISION_PROMPT = """This image comes from a news article previewing the US %(release)s for %(month)s.
 If the image is NOT a table that lists individual institutions' forecasts, reply exactly {"table": false} and nothing else.
 Otherwise reply ONLY with JSON (no prose, no code fences):
@@ -502,7 +510,8 @@ def img_info(b: bytes) -> tuple[int, int, str]:
 def vision_ai(img: bytes, mime: str, prompt: str, second: bool = False, env=None) -> tuple[str, str]:
     """
     讀圖：Anthropic 主力 → Gemini 備援。回傳 (文字, 失敗原因)。
-    second=True 是「複讀」：兩把金鑰都有時換另一家讀（錯法不同才抓得到錯）。
+    second=True 是「複讀」：改用 Claude 的另一個模型（Sonnet）讀，錯法不同才抓得到錯；
+    Gemini 只當最後備援（免費額度常 429、模型會被汰換）。
     """
     import base64
     import os
@@ -514,34 +523,52 @@ def vision_ai(img: bytes, mime: str, prompt: str, second: bool = False, env=None
         return "", "沒有 AI 金鑰"
     data = base64.b64encode(img).decode()
     errs = []
-    if second and a_key and g_key:
-        a_key = ""                                 # 複讀交給 Gemini
-    if a_key:
-        model = (env.get("FC_VISION_MODEL") or VISION_MODEL["anthropic"]).strip()
+
+    def anth(model):
+        r = _http("POST", "https://api.anthropic.com/v1/messages", label=f"Anthropic {model}（讀圖）",
+                  headers={"x-api-key": a_key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                  json={"model": model, "max_tokens": 2500, "temperature": 0,
+                        "messages": [{"role": "user", "content": [
+                            {"type": "image", "source": {"type": "base64", "media_type": mime, "data": data}},
+                            {"type": "text", "text": prompt}]}]})
+        r.raise_for_status()
+        return r.json()["content"][0]["text"]
+
+    def gem(model):
+        body = {"temperature": 0, "maxOutputTokens": 3000}
+        if re.search(r"gemini-2\.", model):
+            body["thinkingConfig"] = {"thinkingBudget": 0}     # 2.x 才收；3.x 送了會 400
+        r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent", label=f"Gemini {model}（讀圖）",
+                  headers={"x-goog-api-key": g_key, "content-type": "application/json"},
+                  json={"contents": [{"parts": [{"inline_data": {"mime_type": mime, "data": data}}, {"text": prompt}]}],
+                        "generationConfig": body})
+        r.raise_for_status()
+        return "".join(p_.get("text", "") for p_ in r.json()["candidates"][0]["content"]["parts"])
+
+    def gem_model():
+        """Gemini 會汰換模型（汰換的回 404）：問這把金鑰實際能用哪些，挑 flash 系列。"""
+        if env.get("FC_VISION_GEMINI"):
+            return env["FC_VISION_GEMINI"].strip()
         try:
-            r = _http("POST", "https://api.anthropic.com/v1/messages", label=f"Anthropic {model}（讀圖）",
-                      headers={"x-api-key": a_key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-                      json={"model": model, "max_tokens": 2500, "temperature": 0,
-                            "messages": [{"role": "user", "content": [
-                                {"type": "image", "source": {"type": "base64", "media_type": mime, "data": data}},
-                                {"type": "text", "text": prompt}]}]})
-            r.raise_for_status()
-            return r.json()["content"][0]["text"], ""
-        except Exception as ex:                    # noqa: BLE001
-            errs.append(f"Anthropic：{ex}")
-    if g_key:
-        model = VISION_MODEL["gemini"]
+            from .polish import _gemini_models, _gemini_pick
+            return _gemini_pick(_gemini_models(g_key)) or VISION_MODEL["gemini"]
+        except Exception:                          # noqa: BLE001
+            return VISION_MODEL["gemini"]
+
+    a1 = (env.get("FC_VISION_MODEL") or VISION_MODEL["anthropic"]).strip()
+    a2 = (env.get("FC_VISION_MODEL2") or VISION_MODEL["anthropic2"]).strip()
+    # 初讀：Claude Haiku → Gemini；複讀：換一個「不同的模型」讀（Claude Sonnet → Claude Haiku → Gemini），
+    # 任何一家失敗（例如 Gemini 免費額度 429）就換下一個，不要整個卡住
+    # 複讀的最後一招是同一個模型再讀一次（仍比完全不讀好；整列錯位多半不會重現）
+    chain = ([("Anthropic", anth, a2), ("Anthropic", anth, a1)] if a_key else []) + ([("Gemini", gem, None)] if g_key else []) \
+        if second else ([("Anthropic", anth, a1)] if a_key else []) + ([("Gemini", gem, None)] if g_key else [])
+    for who, fn, model in chain:
+        if model is None:
+            model = gem_model()
         try:
-            r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent", label=f"Gemini {model}（讀圖）",
-                      headers={"x-goog-api-key": g_key, "content-type": "application/json"},
-                      json={"contents": [{"parts": [{"inline_data": {"mime_type": mime, "data": data}}, {"text": prompt}]}],
-                            "generationConfig": {"temperature": 0, "maxOutputTokens": 3000,
-                                                 "thinkingConfig": {"thinkingBudget": 0}}})
-            r.raise_for_status()
-            parts = r.json()["candidates"][0]["content"]["parts"]
-            return "".join(p_.get("text", "") for p_ in parts), ""
+            return fn(model), ""
         except Exception as ex:                    # noqa: BLE001
-            errs.append(f"Gemini：{ex}")
+            errs.append(f"{who} {model}：{str(ex)[:160]}")
     return "", "；".join(errs)
 
 
@@ -625,6 +652,12 @@ def check_table(key: str, period: str, d: dict, cons: dict) -> tuple[dict, list,
     return got, notes, ""
 
 
+def _note(e: dict, now, src: str, img: str, link: str, result: str) -> None:
+    lg = e.setdefault("auto_log", [])
+    lg.append({"at": now.isoformat(timespec="minutes"), "src": src, "img": img, "link": link, "result": result[:300]})
+    del lg[:-12]
+
+
 def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget: list, now) -> None:
     """讀一篇文章內文的圖片（有上限、讀過不重讀），通過驗證的寫進 e["auto"]（圖表優先於文字）。"""
     key, per = e["key"], e["period"]
@@ -641,9 +674,7 @@ def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget
         "fields": "; ".join(FIELD_DESC[f] for f in fields),
         "fields_json": ", ".join(f'"{f}": <number or null>' for f in fields)}
     n = 0
-    for im in body_images(html):
-        if n >= IMG_PER_ARTICLE or budget[0] <= 0 or len(img_seen) >= IMG_PER_RELEASE:
-            break
+    for im in body_images(html)[:8]:
         k_ = _norm_img(im["url"])
         if k_ in img_seen:
             continue
@@ -657,11 +688,16 @@ def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget
         if not mime or w < IMG_MIN[0] or h < IMG_MIN[1] or len(b) > 5_000_000:
             img_seen[k_] = f"skip：{w}x{h} {mime or '格式不明'}"
             continue
+        if (n >= IMG_PER_ARTICLE or budget[0] <= 0
+                or sum(1 for v_ in img_seen.values() if not str(v_).startswith("skip")) >= IMG_PER_RELEASE):
+            break                                  # 送 AI 的上限：每篇／每次／每期（小圖跳過不算）
         n += 1
         budget[0] -= 1
-        text, err = vision(b, mime, prompt)
+        pend = e.setdefault("img_pending", {})
+        text, err = (pend[k_], "") if k_ in pend else vision(b, mime, prompt)   # 初讀過、複讀失敗的不重讀
         if err:
             log.warning("投行預估讀圖：AI 失敗（%s）", err)
+            _note(e, now, f"{name}（圖表）", k_, link, f"AI 失敗，下次再試：{err}")
             continue                               # 不記，下次再試（仍受每次與每期上限）
         got, notes, why = check_table(key, per, _parse_json(text), e.get("cons") or {})
         if got:
@@ -669,7 +705,10 @@ def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget
             text2, err2 = vision(b, mime, prompt, True)
             if err2:
                 log.warning("投行預估讀圖：複讀失敗（%s），下次再試", err2)
+                _note(e, now, f"{name}（圖表）", k_, link, f"複讀失敗，下次再試：{err2}")
+                pend[k_] = text
                 continue
+            pend.pop(k_, None)
             d2 = _parse_json(text2)
             rows2 = {}
             for r2 in d2.get("rows") or [] if isinstance(d2, dict) else []:
