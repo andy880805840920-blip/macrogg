@@ -509,7 +509,13 @@
     "cpi_yoy": 3.7,
     "core_yoy": 2.6
    },
-   "actual_at": "2026-10-14T20:51+08:00"
+   "actual_at": "2026-10-14T20:51+08:00",
+   "actual_raw": {
+    "cpi_mom": 0.65,
+    "core_mom": 0.33,
+    "cpi_yoy": 3.74,
+    "core_yoy": 2.56
+   }
   }
  }
 }
