@@ -5,10 +5,10 @@
   公布前：每次更新都重抓市場共識（ForexFactory）與 Cleveland Fed 即時預測，
           只保留「公布前的最後一版」；投行預估自動擷取自預覽文章（見 auto_update），
           config/bank_forecasts.yaml 的手動值逐欄優先
-  公布後：記下**首次公布值**（之後的修正不算），凍結各家預估，計分
+  公布後：記下**首次公布值**（之後的修正不算；另記未四捨五入的兩位小數），凍結各家預估，計分
 
 計分規則（「誰最準」）：
-  - 先把每家預估四捨五入到實際值的位數再比（投行多寫到 0.1，Cleveland Fed 有兩位小數）
+  - 原始數字直接比、不四捨五入（共識 0.6 當 0.60）；實際值用未四捨五入的兩位小數（2026-10 改）
   - 每個指標離實際值最近的記一次「命中」，同樣近就一起算
   - 方向命中：預估高於／低於共識，實際也在同一邊
   - 市場共識與 Cleveland Fed 一起排，當作基準
@@ -102,8 +102,13 @@ def _shift(ym: str, n: int) -> str:
     return f"{t // 12:04d}-{t % 12 + 1:02d}"
 
 
-def actuals(series: dict, key: str) -> tuple[str, dict]:
-    """最新一期（資料月份 YYYY-MM）與各欄位的實際值；序列缺就少那一欄。"""
+def actuals(series: dict, key: str, raw: bool = False) -> tuple[str, dict]:
+    """
+    最新一期（資料月份 YYYY-MM）與各欄位的實際值；序列缺就少那一欄。
+    raw=True：月增／年增改回傳「未四捨五入」的兩位小數（用指數直接算，市場說的 unrounded），
+    計分用這個；畫面同時列官方公布的一位小數。失業率、非農本來就沒有更多位數，兩者相同。
+    """
+    nd_r = 2 if raw else 1
     out, period = {}, ""
     for k, _, sid, how in INDICATORS[key]:
         rows = [r for r in (series or {}).get(sid) or [] if r.get("value") is not None]
@@ -120,10 +125,10 @@ def actuals(series: dict, key: str) -> tuple[str, dict]:
             v = None if prev is None else round(cur - prev)
         elif how == "mom":
             prev = by.get(_shift(p, -1))
-            v = None if not prev else round_half((cur / prev - 1) * 100, 1)
+            v = None if not prev else round_half((cur / prev - 1) * 100, nd_r)
         else:
             prev = by.get(_shift(p, -12))
-            v = None if not prev else round_half((cur / prev - 1) * 100, 1)
+            v = None if not prev else round_half((cur / prev - 1) * 100, nd_r)
         if v is not None:
             out[k] = {"p": p, "v": v}
     # 只回傳「最新那一期」的欄位（各序列月份可能不同步）
@@ -936,11 +941,15 @@ def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
     # 3. 首次公布值：資料月份對上、還沒記過才記
     for key in RELEASES:
         per, vals = actuals(series, key)
+        _, raw = actuals(series, key, raw=True)
         e = rel.get(f"{key}|{per}")
         if e and vals and not e.get("actual"):
             e["actual"] = vals
+            e["actual_raw"] = raw
             e["actual_at"] = clock.now().isoformat(timespec="minutes")
-            log.info("各家預測：%s %s 首次公布值 %s", RELEASES[key], per, vals)
+            log.info("各家預測：%s %s 首次公布值 %s（未四捨五入 %s）", RELEASES[key], per, vals, raw)
+        elif e and e.get("actual") and not e.get("actual_raw") and raw:
+            e["actual_raw"] = raw                  # 補記（第 45 批之前記下的期別）：仍是同一期的首次公布資料
     # 4. 投行預估自動擷取：10 天內要公布、還沒公布的那一期；擷取完重新合併
     if do_auto and not offline:
         for eid, e in rel.items():
@@ -979,14 +988,25 @@ def forecasters(e: dict) -> dict:
     return out
 
 
+def actual_for_score(e: dict) -> dict:
+    """計分用的實際值：有未四捨五入的（兩位小數）就用它，否則用官方公布值。"""
+    act = dict(e.get("actual") or {})
+    for k, v in (e.get("actual_raw") or {}).items():
+        if k in act and v is not None:
+            act[k] = v
+    return act
+
+
 def score(e: dict) -> dict:
-    """單一期：{欄位: {"best": [名稱…], "err": {名稱: 誤差}, "dir": {名稱: True/False}}}"""
-    act = e.get("actual") or {}
+    """
+    單一期：{欄位: {"best": [名稱…], "err": {名稱: 誤差}, "dir": {名稱: True/False}}}
+    原始數字直接比、不四捨五入：共識 0.6 就是 0.60；實際值用未四捨五入的兩位小數。
+    """
+    act = actual_for_score(e)
     fc = forecasters(e)
     out = {}
     for k, a in act.items():
-        nd = decimals(k)
-        errs = {n: abs(round_half(v[k], nd) - a) for n, v in fc.items() if v.get(k) is not None}
+        errs = {n: round(abs(v[k] - a), 6) for n, v in fc.items() if v.get(k) is not None}
         if not errs:
             continue
         lo = min(errs.values())
@@ -997,9 +1017,8 @@ def score(e: dict) -> dict:
             for n, v in fc.items():
                 if n == CONS or v.get(k) is None:
                     continue
-                f = round_half(v[k], nd)
-                if abs(f - c) > 1e-9:
-                    dirs[n] = (f > c) == (a > c)
+                if abs(v[k] - c) > 1e-9:
+                    dirs[n] = (v[k] > c) == (a > c)
         out[k] = {"best": best, "err": errs, "dir": dirs}
     return out
 

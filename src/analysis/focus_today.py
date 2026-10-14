@@ -1082,7 +1082,7 @@ _NEWS_RULES = (
 _FOCUS_CONTENT_SYSTEM_A = (
     "你是財經記者，負責一個美國利率與總經儀表板的「今日主軸」。輸入是幾篇新聞，"
     "每篇有代號，例如【報導3｜Reuters｜10/9】；標「只有標題」的只有標題與官方摘要、"
-    "沒有內文。最後一段「網站利率判讀」是本站用官方殖利率算出的近期走勢。"
+    "沒有內文。最後一段「網站利率判讀」是本站用官方殖利率算出的近期走勢，另附 10 年期即時報價。"
     "主題範圍：{kws}。主軸以利率主線為優先：聯準會、通膨、就業、美債、財政與發債、"
     "關稅、美元；AI、油價、黃金、地緣政治只有在它們明確牽動利率或聯準會、或是"
     "材料裡最重大的事件時才當主軸。{event}{recent}依下面的格式輸出：\n"
@@ -1092,9 +1092,11 @@ _FOCUS_CONTENT_SYSTEM_A = (
     "什麼（誰、做了什麼、數字）②為什麼（背景與原因）③官員、分析師或市場怎麼解讀"
     "（只寫材料裡有的說法）。不要每則各講一句拼起來。\n"
     "【對利率】一句話，40–90 個中文字，**以主軸這件事為主**：說明它對美國利率"
-    "（短端、長端或升降息預期）偏向推升還是壓低、為什麼；再用「網站利率判讀」的"
-    "官方數字對照市場實際走勢——方向一致就說市場已在反映，不一致就**明講落差**"
-    "（例如「不過近一週 10 年期 -4bp，市場還沒反映」）。只能寫「偏向」「若…則…」，"
+    "（短端、長端或升降息預期）偏向推升還是壓低、為什麼——解讀的是**主軸這則新聞**，"
+    "不是數據本身；再用「網站利率判讀」的 **10 年期**數字對照市場實際走勢：方向一致就說"
+    "市場已在反映（例如「10 年期今日 +Xbp 至 Y%，市場已在反映」，X、Y 填網站判讀的數字），"
+    "不一致就**明講落差**（例如「不過 10 年期今日 -Xbp，市場還沒反映」）。只引用 10 年期這一組數字，不要另外"
+    "混用其他期間或天期；寫「收盤」的不要說成盤中。只能寫「偏向」「若…則…」，"
     "不要寫「將會」「勢必」這類預測；事件對利率的方向不明確（例如油價、地緣衝突"
     "兩面都說得通）時，直接寫方向不明確、取決於什麼。數字只能用材料或網站判讀裡有的。\n"
     "【補充】{ns} 行，每行一件**主軸以外**的事件、{supp} 個中文字以內：寫出發生了"
@@ -1302,7 +1304,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f11-rate-from-main"
+FOCUS_PROMPT_VERSION = "f13-rate-main-10y"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1630,6 +1632,61 @@ def _story_count(items: list[dict]) -> int:
     return len(seen)
 
 
+# ---------------------------------------------------------------------------
+# 「對利率」的 10 年期即時對照（2026-10）：原本用 FRED 官方日資料（要隔一個交易日
+# 才有值），寫的時候看到的常是前一兩天的走勢。改成以 10 年期（benchmark）的 Yahoo
+# 報價（延遲約 15 分鐘）對照：最新報價較前一交易日收盤。「對利率」本身仍是解讀
+# **主軸新聞**對利率的意思，10 年期只是拿來對照市場有沒有反映。
+# 抓不到就退回官方近 5 日的寫法。
+# ---------------------------------------------------------------------------
+YQ_URL_5M = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=5d&interval=5m"
+
+
+def _et(t_utc: dt.datetime) -> dt.datetime:
+    return (t_utc + dt.timedelta(hours=clock.ny_offset(t_utc))).replace(tzinfo=None)
+
+
+def live_10y(now_utc: dt.datetime | None = None, _get=None) -> dict | None:
+    """
+    10 年期即時：{"now", "d_today", "at_et", "date_et", "open"}。
+    open＝報價是不是當下盤中（最新成交在 40 分鐘內）；不是就是最近一個交易日的收盤。
+    """
+    get = _get or (lambda url: requests.get(
+        url, timeout=TIMEOUT, headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    now_utc = now_utc or dt.datetime.now(dt.timezone.utc)
+    try:
+        r = get(YQ_URL_5M.format(sym=quote("^TNX")))
+        r.raise_for_status()
+        res = ((r.json().get("chart") or {}).get("result") or [None])[0] or {}
+        meta = res.get("meta") or {}
+        ts = res.get("timestamp") or []
+        cl = (((res.get("indicators") or {}).get("quote") or [{}])[0] or {}).get("close") or []
+        bars = [(dt.datetime.fromtimestamp(int(t), dt.timezone.utc), float(v))
+                for t, v in zip(ts, cl) if v is not None]
+        cur = meta.get("regularMarketPrice")
+        if not bars or cur is None:
+            return None
+        sc = lambda v: v / 10.0 if v > 20.0 else v          # noqa: E731  ×10 慣例
+        cur = sc(float(cur))
+        last_t = dt.datetime.fromtimestamp(int(meta.get("regularMarketTime") or bars[-1][0].timestamp()),
+                                           dt.timezone.utc)
+        # 前一交易日收盤：最新那個美東交易日之前，最後一根 5 分鐘線
+        d_last = _et(last_t).date()
+        before = [v for t, v in bars if _et(t).date() < d_last]
+        if not before:
+            return None
+        prev = sc(before[-1])
+        if not (0.1 <= cur <= 15 and 0.1 <= prev <= 15):
+            return None
+        out = {"now": round(cur, 2), "d_today": round((cur - prev) * 100),
+               "at_et": f"{_et(last_t):%H:%M}", "date_et": d_last.isoformat(),
+               "open": (now_utc - last_t) <= dt.timedelta(minutes=40)}
+        return out
+    except Exception as e:                         # noqa: BLE001
+        log.warning("市場焦點：10 年期即時報價抓取失敗（%s），對利率只用官方日資料", e)
+        return None
+
+
 def rate_context(rates_series: dict | None, n: int = 5) -> dict | None:
     """網站自己的利率判讀：近 n 個交易日 2Y／10Y／30Y 的變動與曲線型態。"""
     from .longend import regime
@@ -1706,10 +1763,19 @@ def _policy_hits(text: str, rc: dict | None) -> list:
 def _rate_block(rc: dict | None) -> str:
     if not rc:
         return ""
-    d30 = f"、30 年期 {rc['d30']:+d}bp" if rc.get("d30") is not None else ""
-    lead = f"（{rc['lead']}）" if rc.get("lead") else ""
-    out = (f"\n\n=== 網站利率判讀（官方日殖利率，{rc['from']}→{rc['to']}）===\n"
-           f"2 年期 {rc['d2']:+d}bp、10 年期 {rc['d10']:+d}bp{d30}；曲線型態：{rc['zh']}{lead}。")
+    lv = rc.get("live10")
+    if lv:
+        # 有 10 年期即時就只給它（benchmark），不再列近 5 日的 2 年／30 年，
+        # 免得 AI 混用兩組數字寫出「近一週上升，但 -10bp」這種自相矛盾的句子
+        md_ = f"{int(lv['date_et'][5:7])}/{int(lv['date_et'][8:10])}"
+        when = (f"美東 {md_} {lv['at_et']} 盤中" if lv.get("open") else f"美東 {md_} 收盤")
+        out = (f"\n\n=== 網站利率判讀（10 年期殖利率 benchmark；Yahoo 報價，延遲約 15 分鐘，{when}）===\n"
+               f"10 年期 {lv['now']:.2f}%，今日 {lv['d_today']:+d}bp（較前一交易日收盤）。")
+    else:
+        d30 = f"、30 年期 {rc['d30']:+d}bp" if rc.get("d30") is not None else ""
+        lead = f"（{rc['lead']}）" if rc.get("lead") else ""
+        out = (f"\n\n=== 網站利率判讀（官方日殖利率，{rc['from']}→{rc['to']}）===\n"
+               f"2 年期 {rc['d2']:+d}bp、10 年期 {rc['d10']:+d}bp{d30}；曲線型態：{rc['zh']}{lead}。")
     pol = rc.get("policy") or {}
     if pol:
         md = lambda s: (f"{int(s[5:7])}/{int(s[8:10])}" if len(s or "") >= 10 else (s or ""))
@@ -1742,6 +1808,12 @@ _RATE_PHRASE = {
 def _rate_fallback(rc: dict | None) -> str:
     if not rc:
         return ""
+    lv = rc.get("live10")
+    if lv:
+        when = f"美東 {lv['at_et']} 盤中" if lv.get("open") else "前一交易日收盤"
+        d = lv["d_today"]
+        mv = "持平" if abs(d) < 2 else ("上升" if d > 0 else "下降")
+        return f"10 年期殖利率今日 {d:+d}bp 至 {lv['now']:.2f}%（{when}），{mv}。"
     phrase = _RATE_PHRASE.get(rc.get("code"), "走勢待觀察")
     st = ((rc.get("policy") or {}).get("stance"))
     # 「短端降得更快」在升息循環裡是下修升息預期，不是定價降息（第十九批）
@@ -1775,14 +1847,16 @@ def _rate_issues(note: str, rc: dict | None, src: str = "") -> list[str]:
     if pr:
         why.append("用了預測口吻（" + "、".join(pr) + "），請改成「偏向」「若…則…」")
     up, dn = bool(_UP_WORDS.search(note)), bool(_DN_WORDS.search(note))
-    d10 = rc.get("d10") or 0
+    lv = rc.get("live10")
+    d10 = (lv["d_today"] if lv else rc.get("d10")) or 0
+    span = "今日" if lv else "近一週"
     # 明講方向不明確（「取決於…」）的句子不判方向：「油價上漲」的上漲說的是油價
     unclear = bool(_RATE_UNCLEAR.search(note))
     against = not unclear and ((d10 >= 3 and dn and not up) or (d10 <= -3 and up and not dn))
     if against:
         flat = note.replace(" ", "").replace("−", "-")
         if not (_RATE_GAP.search(note) and f"{abs(d10)}bp" in flat):
-            why.append(f"新聞意涵和近一週走勢（10 年期 {d10:+d}bp）方向不同，卻沒有點出落差"
+            why.append(f"新聞意涵和{span}走勢（10 年期 {d10:+d}bp）方向不同，卻沒有點出落差"
                        "（要寫出實際變動，並說明市場還沒反映或反向）")
     if src:
         _nums = lambda t: re.findall(r"\d+(?:\.\d+)?", t.replace(",", ""))
@@ -3662,6 +3736,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
     try:
         rate_ctx = rate_context(rates_series)
         if rate_ctx is not None:
+            rate_ctx["live10"] = live_10y()
+            if rate_ctx["live10"]:
+                log.info("市場焦點：10 年期即時 %s", rate_ctx["live10"])
             rate_ctx["policy"] = policy_context(rates_series, out.get("fedwatch"))
             if rate_ctx["policy"]:
                 log.info("市場焦點：政策現況 %s", rate_ctx["policy"])

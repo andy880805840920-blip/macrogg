@@ -4,7 +4,7 @@
   分頁：就業報告｜CPI｜PCE（純 CSS radio）
   表格：機構放列（BofA、Citi、JPM、MS、GS、市場共識、Cleveland Fed、實際值）、指標放欄
         沒有的數字一律「無資料」；公布後最接近的標 ★
-        下方兩列：預估區間（分歧度）、對共識（實際值高於／低於共識，超出所有預測另外標）
+        下方一列：對共識（實際值高於／低於共識）；超出所有預測寫在表格上方的提示
   點格子：表格下方顯示那個數字的出處（哪裡來、什麼時候抓的）
   誰最準：收合；就業與通膨分開排，市場共識與 Cleveland Fed 一起排當基準
 """
@@ -29,29 +29,37 @@ CSS = r"""
 .fc-st.done{color:var(--brand-ink);border-color:var(--brand-navy)}
 .fc-tw{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 .fc-tb{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums}
-.fc-tb th,.fc-tb td{padding:0;border-bottom:1px solid var(--grid);text-align:right;font-size:13.5px;white-space:nowrap}
-.fc-tb thead th{font-size:12px;font-weight:700;color:var(--muted);padding:6px 6px 7px;vertical-align:bottom}
-.fc-tb tbody th,.fc-tb tfoot th{text-align:left;font-weight:700;padding:8px 6px 8px 2px;color:var(--text-primary);font-family:"Montserrat",system-ui,sans-serif;font-size:13px;white-space:normal;line-height:1.2;width:84px}
+.fc-tb th,.fc-tb td{padding:0;border-bottom:1px solid var(--grid);text-align:right;font-size:14px;white-space:nowrap;vertical-align:middle}
+.fc-tb thead th{font-size:11.5px;font-weight:700;color:var(--muted);padding:4px 6px 7px;vertical-align:bottom;line-height:1.25}
+.fc-tb tbody th,.fc-tb tfoot th{text-align:left;font-weight:700;padding:0 4px 0 2px;color:var(--text-primary);font-family:"Montserrat",system-ui,sans-serif;font-size:13px;white-space:nowrap;line-height:1.2;width:84px}
 /* 第一欄（機構）固定在左邊，表格左右滑時不會被捲走 */
 .fc-tb th:first-child{position:sticky;left:0;z-index:1;background:var(--surface-1)}
 .fc-tb tr.fc-base th:first-child{background:var(--surface-2)}
-.fc-tb tr.fc-act th:first-child{background:#fbeee8}
-:root[data-theme=dark] .fc-tb tr.fc-act th:first-child{background:#3a2a26}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .fc-tb tr.fc-act th:first-child{background:#3a2a26}}
+.fc-tb tr.fc-act th,.fc-tb tr.fc-act td{background:#fbeee8}
+:root[data-theme=dark] .fc-tb tr.fc-act th,:root[data-theme=dark] .fc-tb tr.fc-act td{background:#3a2a26}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .fc-tb tr.fc-act th,:root:not([data-theme=light]) .fc-tb tr.fc-act td{background:#3a2a26}}
 .fc-tb tbody tr.fc-base th{font-family:inherit}
 .fc-tb tbody tr.fc-base{background:var(--surface-2)}
-.fc-tb tbody tr.fc-act{background:rgba(230,113,67,.08)}
-.fc-tb tbody tr.fc-act th,.fc-tb tbody tr.fc-act .fc-c{font-weight:800;color:var(--brand-ink)}
-.fc-c{all:unset;box-sizing:border-box;display:block;width:100%;padding:8px 6px;cursor:pointer;text-align:right;border-radius:4px}
+.fc-tb tbody tr.fc-act th{font-weight:800;color:var(--brand-ink)}
+.fc-c{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:flex-end;gap:3px;width:calc(100% - 2px);min-height:38px;margin:2px 1px;padding:0 6px;cursor:pointer;text-align:right;border-radius:5px}
+.fc-win .fc-c{background:rgba(230,113,67,.13);font-weight:700}
+.fc-tb tr.fc-act .fc-c{color:var(--brand-ink)}
+.fc-tb tbody tr:last-child td{padding-bottom:0;border-bottom:1px solid var(--grid)}   /* 全站表格最後一列會多 15px 底距 */
+.fc-tb tr.fc-act .fc-c b{font-size:15.5px;font-weight:800}
+.fc-tb tr.fc-act .fc-c small{font-size:10.5px;font-weight:600;color:var(--muted)}
+.fc-alert{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px;padding:8px 10px;border-left:3px solid var(--brand-orange);border-radius:6px;background:rgba(230,113,67,.10);font-size:12.5px;line-height:1.45;color:var(--text-primary)}
+.fc-alert b{color:#b5532c}
+:root[data-theme=dark] .fc-alert b{color:#f0a07e}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .fc-alert b{color:#f0a07e}}
+.fc-unit{font-size:11px;color:var(--muted);text-align:right;margin:0 2px 2px}
 .fc-c:hover,.fc-c.on{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border)}
 .fc-c:focus-visible{outline:2px solid var(--brand-orange)}
 .fc-na{color:var(--faint,var(--muted));font-size:12px}
-.fc-star{font-style:normal;color:var(--brand-orange);margin-right:3px}
-.fc-tb tfoot th,.fc-tb tfoot td{font-size:12px;color:var(--text-secondary);padding:7px 6px;font-weight:600;border-bottom:0}
-.fc-tb tfoot th{font-family:inherit}
+.fc-star{font-style:normal;color:var(--brand-orange);font-size:11px}
+.fc-tb tfoot th,.fc-tb tfoot td{font-size:12px;color:var(--text-secondary);padding:9px 6px;font-weight:600;border-bottom:0}
+.fc-tb tfoot th{font-family:inherit;padding-left:2px}
 .fc-sp{color:var(--muted)}
-.fc-hot{color:var(--critical)}.fc-cool{color:var(--good)}
-.fc-out{display:inline-block;margin-top:3px;font-size:10.5px;font-weight:800;color:#fff;background:var(--brand-orange);border-radius:4px;padding:0 5px}
+.fc-tb tfoot .fc-hot{color:var(--critical);font-weight:700}.fc-tb tfoot .fc-cool{color:var(--good);font-weight:700}
 .fc-src{margin:8px 0 0;font-size:12.5px;color:var(--text-secondary);min-height:1.5em}
 .fc-src b{color:var(--brand-ink)}
 .fc-lb table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;margin-top:6px}
@@ -63,7 +71,9 @@ CSS = r"""
 .fc-lb .fc-n{font-size:12px;color:var(--muted);margin:6px 0 0}
 .fc-log ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--text-secondary)}.fc-log li{margin:4px 0}.fc-log li span{color:var(--muted)}
 .fc-empty{font-size:13.5px;color:var(--muted);margin:6px 0}
-@media(max-width:480px){.fc-tb th,.fc-tb td{font-size:12.5px}.fc-c{padding:8px 4px}.fc-tb thead th{padding:6px 4px;font-size:11px;letter-spacing:-.01em}.fc-tb tbody th,.fc-tb tfoot th{width:70px;font-size:12px}.fc-na{font-size:11px}.fc-tb tfoot td{font-size:11px;padding:7px 4px;white-space:normal}}
+@media(max-width:480px){.fc-tb th,.fc-tb td{font-size:13px}.fc-c{padding:0 3px;gap:2px}.fc-tb thead th{padding:4px 3px 7px;font-size:11px}
+.fc-tb tbody th,.fc-tb tfoot th{width:auto;font-size:12px;padding-right:2px}.fc-tb tbody tr.fc-base th{font-size:11.5px;letter-spacing:-.01em}
+.fc-na{font-size:10.5px}.fc-star{font-size:9.5px}.fc-tb tfoot td{font-size:11px;padding:9px 2px;letter-spacing:-.02em}.fc-tb tr.fc-act .fc-c b{font-size:14.5px}.fc-tb tr.fc-act .fc-c small{font-size:10px}}
 """
 
 JS = r"""<script>(function(){var root=document.querySelector('.fc');if(!root)return;
@@ -98,13 +108,32 @@ def _nd(v: float, default: int = 1) -> int:
     return default if abs(v * 10 - round(v * 10)) < 1e-9 else 2
 
 
+def _num(k: str, v: float, nd: int | None = None) -> str:
+    """表格裡的數字：不帶 %（單位寫在表格右上角）；非農用萬人。"""
+    if k == "nfp":
+        return f"{v / 10:+.1f}"
+    nd = _nd(v) if nd is None else nd
+    return f"{v:.{nd}f}"
+
+
 def _cell(k, v, who, src, url="", star=False, nd=None) -> str:
     if v is None:
         return f'<td><button type="button" class="fc-c" data-who="{_esc(who)}" data-s="這一期沒有取得這個數字"><span class="fc-na">無資料</span></button></td>'
-    txt = F.fmt(k, v, nd if nd is not None else _nd(v))
-    return (f'<td><button type="button" class="fc-c" data-who="{_esc(who)}" data-s="{_esc(src)}"'
+    txt = _num(k, v, nd)
+    return (f'<td{" class=fc-win" if star else ""}><button type="button" class="fc-c" data-who="{_esc(who)}" data-s="{_esc(src)}"'
             + (f' data-u="{_esc(url)}"' if url else "") + '>'
             + ('<i class="fc-star" aria-label="最接近">★</i>' if star else "") + f'{_esc(txt)}</button></td>')
+
+
+def _head(lab: str) -> str:
+    """表頭固定兩行，手機上欄寬才窄得下來：「CPI 月增」→ CPI／月增、「核心月增」→ 核心／月增。"""
+    if " " in lab:
+        a, b = lab.split(" ", 1)
+    elif len(lab) >= 4:
+        a, b = lab[:-2], lab[-2:]
+    else:
+        return _esc(lab)
+    return f"{_esc(a)}<br>{_esc(b)}"
 
 
 def _period_label(key: str, per: str) -> str:
@@ -148,7 +177,7 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
         st = '<span class="fc-st">已公布・等待本站資料更新</span>'
     else:
         st = f'<span class="fc-st up">即將公布・{_esc(_release_time(key, e.get("date", "")))}</span>'
-    head = "".join(f'<th scope="col">{_esc(lab)}</th>' for _, lab, _, _ in inds)
+    head = "".join(f'<th scope="col">{_head(lab)}</th>' for _, lab, _, _ in inds)
     rows = ""
     for name in list(F.BANKS) + [F.CONS, F.CLEV]:
         vals = fc.get(name) or {}
@@ -180,44 +209,55 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
                         for k, lab, _, _ in inds)
         cls = ' class="fc-base"' if name in (F.CONS, F.CLEV) else ""
         rows += f'<tr{cls}><th scope="row">{_esc(name)}</th>{cells}</tr>'
-    a_cells = "".join(_cell(k, act.get(k), f"實際值・{lab}", "首次公布值（之後的修正不計入排名）・BLS／BEA 經 FRED")
-                      if act.get(k) is not None else
-                      f'<td><button type="button" class="fc-c" data-who="實際值・{_esc(lab)}" data-s="還沒公布">—</button></td>'
-                      for k, lab, _, _ in inds)
+    raw = F.actual_for_score(e) if act else {}
+    a_cells = ""
+    for k, lab, _, _ in inds:
+        if act.get(k) is None:
+            a_cells += f'<td><button type="button" class="fc-c" data-who="實際值・{_esc(lab)}" data-s="還沒公布">—</button></td>'
+            continue
+        r_, o_ = raw.get(k, act[k]), act[k]
+        two = k not in ("nfp", "u3") and k in (e.get("actual_raw") or {})
+        big = _num(k, r_, 2 if two else None)
+        # 只顯示一組：有兩位小數就顯示兩位（計分用的就是它），官方一位小數放在點開的出處裡
+        src = (f"官方公布 {_num(k, o_, 1)}；表格顯示用指數直接算的未四捨五入值（★ 與誤差都用它）・" if two else "") + \
+            "首次公布值（之後的修正不計入排名）・BLS／BEA 經 FRED"
+        a_cells += (f'<td><button type="button" class="fc-c" data-who="實際值・{_esc(lab)}" data-s="{_esc(src)}">'
+                    f'<b>{_esc(big)}</b></button></td>')
     rows += f'<tr class="fc-act"><th scope="row">實際值</th>{a_cells}</tr>'
-    # 預估區間（分歧度）與對共識
-    sp, sur = "", ""
-    for k, _, _, _ in inds:
-        # 區間用各家原本寫的數字（不先四捨五入，0.18 與 0.24 才看得出分歧）
+    # 對共識、超出所有預測：都用原始數字，不四捨五入
+    sur, ups, dns = "", [], []
+    for k, lab, _, _ in inds:
         vs = [v[k] for n, v in fc.items() if v.get(k) is not None]
-        if len(vs) >= 2:
-            lo, hi = min(vs), max(vs)
-            sp += f'<td class="fc-sp">{_esc(F.fmt(k, lo, _nd(lo)))}～{_esc(F.fmt(k, hi, _nd(hi)))}</td>' if lo != hi else \
-                f'<td class="fc-sp">一致 {_esc(F.fmt(k, lo, _nd(lo)))}</td>'
-        else:
-            sp += '<td class="fc-sp">—</td>'
-        a, c = act.get(k), fc[F.CONS].get(k)
+        a, c = raw.get(k), fc[F.CONS].get(k)
+        if a is not None and vs:
+            two = k in (e.get("actual_raw") or {}) and k not in ("nfp", "u3")
+            if a > max(vs) + 1e-9:
+                ups.append(f"{lab} {_num(k, a, 2 if two else None)}")
+            elif a < min(vs) - 1e-9:
+                dns.append(f"{lab} {_num(k, a, 2 if two else None)}")
         if a is None or c is None:
             sur += "<td>—</td>"
             continue
-        d = a - F.round_half(c, F.decimals(k))
+        d = round(a - c, 6)
         if abs(d) < 1e-9:
-            txt, cls = "符合", ""
+            txt, cls = "＝", ""
         else:
             hot = (d > 0) != (F.HOT.get(k) == "dovish")
             cls = "fc-hot" if hot else "fc-cool"
-            txt = ("高於 " if d > 0 else "低於 ") + (f"{d / 10:+.1f} 萬" if k == "nfp" else f"{d:+.1f}")
-        out = ""
-        if vs and (a < min(vs) - 1e-9 or a > max(vs) + 1e-9):
-            out = '<br><span class="fc-out">超出所有預測</span>'
-        sur += f'<td class="{cls}">{_esc(txt)}{out}</td>'
-    foot = f'<tr><th scope="row">預估區間</th>{sp}</tr>' + (f'<tr><th scope="row">對共識</th>{sur}</tr>' if act else "")
+            txt = ("▲" if d > 0 else "▼") + (f"{abs(d) / 10:.1f} 萬" if k == "nfp" else f"{abs(d):.{max(_nd(a), _nd(c))}f}")
+        sur += f'<td class="{cls}">{_esc(txt)}</td>'
+    foot = f'<tr><th scope="row">對共識</th>{sur}</tr>' if act else ""   # 預估區間一列已移除（2026-10）
+    parts = ([f"<b>{_esc('、'.join(ups))}</b> 高於所有預測"] if ups else []) + \
+            ([f"<b>{_esc('、'.join(dns))}</b> 低於所有預測"] if dns else [])
+    alert = (f'<p class="fc-alert"><span aria-hidden="true">⚠</span><span>{"；".join(parts)}</span></p>' if parts else "")
+    unit = "單位：非農萬人、其餘 %" if key == "employment" else "單位：%"
     bad = (f'<p class="fc-n">設定檔有 {len(e["bad"])} 個數字跟市場共識差太多，判定打錯、未採用。</p>'
            if e.get("bad") else "")
     return (f'<div class="fc-p fc-p-{key}"><div class="fc-h"><b>{_esc(_period_label(key, e.get("period", "")))}</b>{st}</div>'
+            + alert + f'<div class="fc-unit">{unit}</div>'
             f'<div class="fc-tw"><table class="fc-tb"><thead><tr><th></th>{head}</tr></thead>'
-            f'<tbody>{rows}</tbody><tfoot>{foot}</tfoot></table></div>'
-            '<p class="fc-src" aria-live="polite">點任一格看數字的出處；★＝最接近實際值。</p>'
+            f'<tbody>{rows}</tbody>{"<tfoot>" + foot + "</tfoot>" if foot else ""}</table></div>'
+            '<p class="fc-src" aria-live="polite">點任一格看數字的出處；★＝最接近實際值（原始數字直接比，共識 0.6 當 0.60）。</p>'
             + bad + _autolog(e) + _board(rel, key) + '</div>')
 
 
