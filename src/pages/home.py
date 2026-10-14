@@ -12,6 +12,7 @@ import re
 
 from .. import clock
 from .story_ui import STORY_BTN, story_html
+from .forecasts_ui import section as _fc_section
 
 from ..site import esc, next_first_friday, next_cpi_release
 from . import compact_full, state_chip
@@ -1920,6 +1921,16 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols,
               '<p class="home-empty">這一天沒有排定的事項。</p></div></div></div>')
 
 
+def forecasts_section(fc: dict | None) -> str:
+    """總覽 04 各家預測。組不出來就不放，不影響首頁。"""
+    try:
+        return _fc_section(fc)
+    except Exception as e:                         # noqa: BLE001
+        import logging
+        logging.getLogger(__name__).warning("04 各家預測組裝失敗（%s），本次不顯示", e)
+        return ""
+
+
 def _story(ctxs: dict) -> str:
     """今日快報（限時動態）。資料組不出來就不放，不影響首頁。"""
     try:
@@ -2000,6 +2011,7 @@ def home_body(ctxs: dict) -> str:
       <p>未來四週，台灣時間</p></div>
     {_hm_watch(ctxs, sc)}
   </section>
+  {forecasts_section(ctxs.get('_forecasts'))}
   {_story(ctxs)}
 
   <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>

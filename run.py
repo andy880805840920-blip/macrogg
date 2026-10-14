@@ -1133,6 +1133,13 @@ def main() -> int:
                     "、".join(f"{s['id']}（{s['days']} 天）"
                               for s in ctxs["_stale"]))
     ctxs["_all_series"] = all_series
+    # 總覽「04 各家預測」：共識／Cleveland Fed／投行（手動）／首次公布值與計分
+    try:
+        from src.analysis import forecasts as _fc
+        ctxs["_forecasts"] = _fc.update(ctxs, args.offline)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("各家預測更新失敗（%s），04 區本次不顯示", e)
+        ctxs["_forecasts"] = {}
     written = write_site(ctxs, args.offline, only=args.only)
     if not args.only:
         chg.save(STATE_FILE, cur_state)
