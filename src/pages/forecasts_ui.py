@@ -42,7 +42,7 @@ CSS = r"""
 .fc-tb tbody tr.fc-base{background:var(--surface-2)}
 .fc-tb tbody tr.fc-act th{font-weight:800;color:var(--brand-ink)}
 .fc-c{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:flex-end;gap:3px;width:calc(100% - 2px);min-height:38px;margin:2px 1px;padding:0 6px;cursor:pointer;text-align:right;border-radius:5px}
-.fc-win .fc-c{background:rgba(230,113,67,.13);font-weight:700}
+.fc-win .fc-c{font-weight:700}
 .fc-tb tr.fc-act .fc-c{color:var(--brand-ink)}
 .fc-tb tbody tr:last-child td{padding-bottom:0;border-bottom:1px solid var(--grid)}   /* 全站表格最後一列會多 15px 底距 */
 .fc-tb tr.fc-act .fc-c b{font-size:15.5px;font-weight:800}
@@ -215,14 +215,9 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
         if act.get(k) is None:
             a_cells += f'<td><button type="button" class="fc-c" data-who="實際值・{_esc(lab)}" data-s="還沒公布">—</button></td>'
             continue
-        r_, o_ = raw.get(k, act[k]), act[k]
-        two = k not in ("nfp", "u3") and k in (e.get("actual_raw") or {})
-        big = _num(k, r_, 2 if two else None)
-        # 只顯示一組：有兩位小數就顯示兩位（計分用的就是它），官方一位小數放在點開的出處裡
-        src = (f"官方公布 {_num(k, o_, 1)}；表格顯示用指數直接算的未四捨五入值（★ 與誤差都用它）・" if two else "") + \
-            "首次公布值（之後的修正不計入排名）・BLS／BEA 經 FRED"
+        src = "首次公布值（之後的修正不計入排名；比較時 0.6 當 0.60）・BLS／BEA 經 FRED"
         a_cells += (f'<td><button type="button" class="fc-c" data-who="實際值・{_esc(lab)}" data-s="{_esc(src)}">'
-                    f'<b>{_esc(big)}</b></button></td>')
+                    f'<b>{_esc(_num(k, act[k]))}</b></button></td>')
     rows += f'<tr class="fc-act"><th scope="row">實際值</th>{a_cells}</tr>'
     # 對共識、超出所有預測：都用原始數字，不四捨五入
     sur, ups, dns = "", [], []
@@ -230,11 +225,10 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
         vs = [v[k] for n, v in fc.items() if v.get(k) is not None]
         a, c = raw.get(k), fc[F.CONS].get(k)
         if a is not None and vs:
-            two = k in (e.get("actual_raw") or {}) and k not in ("nfp", "u3")
             if a > max(vs) + 1e-9:
-                ups.append(f"{lab} {_num(k, a, 2 if two else None)}")
+                ups.append(f"{lab} {_num(k, a)}")
             elif a < min(vs) - 1e-9:
-                dns.append(f"{lab} {_num(k, a, 2 if two else None)}")
+                dns.append(f"{lab} {_num(k, a)}")
         if a is None or c is None:
             sur += "<td>—</td>"
             continue
@@ -244,7 +238,7 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
         else:
             hot = (d > 0) != (F.HOT.get(k) == "dovish")
             cls = "fc-hot" if hot else "fc-cool"
-            txt = ("▲" if d > 0 else "▼") + (f"{abs(d) / 10:.1f} 萬" if k == "nfp" else f"{abs(d):.{max(_nd(a), _nd(c))}f}")
+            txt = ("▲" if d > 0 else "▼") + (f"{abs(d) / 10:.1f} 萬" if k == "nfp" else f"{abs(d):.{_nd(abs(d))}f}")
         sur += f'<td class="{cls}">{_esc(txt)}</td>'
     foot = f'<tr><th scope="row">對共識</th>{sur}</tr>' if act else ""   # 預估區間一列已移除（2026-10）
     parts = ([f"<b>{_esc('、'.join(ups))}</b> 高於所有預測"] if ups else []) + \
@@ -257,7 +251,7 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
             + alert + f'<div class="fc-unit">{unit}</div>'
             f'<div class="fc-tw"><table class="fc-tb"><thead><tr><th></th>{head}</tr></thead>'
             f'<tbody>{rows}</tbody>{"<tfoot>" + foot + "</tfoot>" if foot else ""}</table></div>'
-            '<p class="fc-src" aria-live="polite">點任一格看數字的出處；★＝最接近實際值（原始數字直接比，共識 0.6 當 0.60）。</p>'
+            '<p class="fc-src" aria-live="polite">點任一格看數字的出處；★＝最接近實際值（原始數字直接比，0.6 當 0.60）。</p>'
             + bad + _autolog(e) + _board(rel, key) + '</div>')
 
 

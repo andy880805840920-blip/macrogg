@@ -81,14 +81,12 @@ sc = F.score(e)["core_mom"]
 check("⑩ 原始數字直接比、不四捨五入：GS 0.3 誤差 0 唯一命中；Cleveland 0.26 不再進位成 0.3",
       sc["best"] == ["GS"] and sc["err"]["Cleveland Fed"] == 0.04, sc)
 check("⑪ 方向命中：GS、JPM、Cleveland 高於共識且實際也高於 → 對", sc["dir"] == {"GS": True, "JPM": True, "Cleveland Fed": True}, sc["dir"])
-e_raw = {"key": "cpi", "actual": {"cpi_mom": 0.6}, "actual_raw": {"cpi_mom": 0.57}, "cons": {"cpi_mom": 0.6},
+e_raw = {"key": "cpi", "actual": {"cpi_mom": 0.6}, "cons": {"cpi_mom": 0.6},
          "clev": {"cpi_mom": 0.53}, "banks": {"BofA": {"cpi_mom": 0.58}, "JPM": {"cpi_mom": 0.55}, "MS": {"cpi_mom": 0.62},
                                               "GS": {"cpi_mom": 0.59}}}
 s2 = F.score(e_raw)["cpi_mom"]
-check("⑪b 實際值用未四捨五入 0.57：只有 BofA 0.58 命中（不再一欄五顆星）；共識 0.6 當 0.60",
-      s2["best"] == ["BofA"] and s2["err"]["市場共識"] == 0.03, s2)
-check("⑪c 方向：實際 0.57 低於共識 0.60；BofA 0.58、JPM 0.55 低於 → 對，MS 0.62 → 錯",
-      s2["dir"]["BofA"] and s2["dir"]["JPM"] and not s2["dir"]["MS"], s2["dir"])
+check("⑪b 官方 0.6 當 0.60 直接比：GS 0.59 誤差 0.01、共識 0.6 誤差 0 → 共識命中；不再一欄五顆星",
+      s2["best"] == ["市場共識"] and s2["err"]["GS"] == 0.01 and s2["err"]["MS"] == 0.02, s2)
 lb = F.leaderboard({"a": e}, "inflation")
 check("⑫ 排行榜：命中數排序、市場共識與 Cleveland Fed 一起排",
       lb["periods"] == 1 and lb["rows"][0]["name"] in ("GS", "Cleveland Fed") and
@@ -400,17 +398,9 @@ e_log = {"key": "cpi", "period": "2026-09", "date": "2026-10-14", "cons": {},
 html = forecasts_ui.section({"releases": {"cpi|2026-09": e_log}}, dt.date(2026, 10, 14))
 check("㊷ 04 區有「自動擷取紀錄」（收合），看得到失敗原因", "自動擷取紀錄" in html and "複讀失敗" in html)
 
-# ㊸–㊺ 第 45 批：未四捨五入的實際值、版面
-per_r, a_r = F.actuals(S, "cpi", raw=True)
-check("㊸ 未四捨五入實際值：月增與年增兩位小數", per_r == "2026-09" and a_r["cpi_mom"] == round(F.round_half((100 + 12 * .3 + .52) / (100 + 12 * .3) * 100 - 100, 2), 2)
-      and a_r["cpi_yoy"] == 0.5, a_r)
-tmp6 = Path(tempfile.mkdtemp()) / "fc.json"
-r6 = F.update(dict(ctxa, _all_series=S), False, tmp6, manual={}, clev={}, today=dt.date(2026, 10, 15), do_auto=False)
-e6 = r6["releases"]["cpi|2026-09"]
-check("㊹ 公布後同時記官方值與未四捨五入值", e6["actual"]["cpi_mom"] == 0.5 and e6["actual_raw"] == a_r and e6["actual_raw"]["core_yoy"] == 2.4, (e6["actual"], e6["actual_raw"]))
+# ㊸–㊺ 第 45／48 批：版面（實際值用官方公布值，0.6 當 0.60 比）
 e7 = {"key": "cpi", "period": "2026-09", "date": "2026-10-14",
       "actual": {"cpi_mom": 0.6, "core_mom": 0.3, "cpi_yoy": 3.7, "core_yoy": 2.6},
-      "actual_raw": {"cpi_mom": 0.57, "core_mom": 0.27, "cpi_yoy": 3.66, "core_yoy": 2.58},
       "cons": {"cpi_mom": 0.6, "core_mom": 0.2, "cpi_yoy": 3.6, "core_yoy": 2.5},
       "clev": {"cpi_mom": 0.53, "core_mom": 0.2, "cpi_yoy": 3.6, "core_yoy": 2.39},
       "banks": {"BofA": {"cpi_mom": 0.58, "core_mom": 0.23, "cpi_yoy": 3.6, "core_yoy": 2.5},
@@ -419,9 +409,13 @@ e7 = {"key": "cpi", "period": "2026-09", "date": "2026-10-14",
                 "MS": {"cpi_mom": 0.62, "core_mom": 0.24, "cpi_yoy": 3.7, "core_yoy": 2.5},
                 "GS": {"cpi_mom": 0.59, "core_mom": 0.24, "cpi_yoy": 3.7, "core_yoy": 2.5}}}
 h7 = forecasts_ui.section({"releases": {"cpi|2026-09": e7}}, dt.date(2026, 10, 15))
-check("㊺ 版面：超出所有預測移到上方提示、實際值只顯示兩位小數（官方值在出處）、對共識 ▼0.03、格子不帶 %、沒有預估區間",
-      "核心月增 0.27、核心年增 2.58</b> 高於所有預測" in h7 and "<b>0.57</b></button>" in h7 and "官方公布 0.6" in h7
-      and "▼0.03" in h7 and "▲0.07" in h7 and "0.58%" not in h7 and "單位：%" in h7 and "預估區間" not in h7, h7[:0])
+check("㊺ 版面：超出所有預測在上方提示、實際值顯示官方值、對共識 ▲0.1／＝、格子不帶 %、沒有預估區間",
+      "核心月增 0.3、核心年增 2.6</b> 高於所有預測" in h7 and "<b>0.6</b></button>" in h7
+      and "▲0.1" in h7 and "＝" in h7 and "0.58%" not in h7 and "單位：%" in h7 and "預估區間" not in h7, h7[:0])
+sc7 = F.score(e7)
+check("㊻ 9 月 CPI 實例：CPI 月增共識命中；核心月增 MS／GS 0.24 最接近 0.30；CPI 年增 MS／GS 3.7 命中",
+      sc7["cpi_mom"]["best"] == ["市場共識"] and sorted(sc7["core_mom"]["best"]) == ["GS", "MS"]
+      and sorted(sc7["cpi_yoy"]["best"]) == ["GS", "MS"], {k: v["best"] for k, v in sc7.items()})
 
 print()
 print("有失敗" if FAIL else "全部通過")
