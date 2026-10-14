@@ -10,7 +10,7 @@
     "cpi_mom": 0.6,
     "cpi_yoy": 3.6
    },
-   "cons_at": "2026-10-14T12:22+08:00",
+   "cons_at": "2026-10-14T12:43+08:00",
    "clev": {
     "cpi_mom": 0.53,
     "core_mom": 0.2,
@@ -28,7 +28,8 @@
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
+       "kind": "text"
       }
      }
     },
@@ -42,14 +43,16 @@
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%.",
+       "kind": "text"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
+       "kind": "text"
       }
      }
     },
@@ -63,14 +66,16 @@
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%.",
+       "kind": "text"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
+       "kind": "text"
       }
      }
     },
@@ -84,14 +89,16 @@
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley",
+       "kind": "text"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
+       "kind": "text"
       }
      }
     },
@@ -105,14 +112,16 @@
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley",
+       "kind": "text"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
        "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
+       "kind": "text"
       }
      }
     }
@@ -226,8 +235,30 @@
       }
      },
      "bad": []
+    },
+    {
+     "at": "2026-10-14T12:43+08:00",
+     "src": "FXStreet（圖表）",
+     "img": "https://editorial.fxsstatic.com/images/i/EURUSD-bullish-chart.png",
+     "link": "https://www.fxstreet.com/news/eur-usd-price-forecast-gains-ground-near-11150-us-cpi-awaited-202610140335",
+     "result": "不是逐家預測表",
+     "got": {},
+     "notes": []
+    },
+    {
+     "at": "2026-10-14T12:43+08:00",
+     "src": "FXStreet（圖表）",
+     "img": "https://editorial.fxsstatic.com/miscelaneous/chart-screenshot%20-%202026-10-14T085832-1791948738744.579.png",
+     "link": "https://www.fxstreet.com/news/eur-usd-price-forecast-gains-ground-near-11150-us-cpi-awaited-202610140335",
+     "result": "不是逐家預測表",
+     "got": {},
+     "notes": []
     }
-   ]
+   ],
+   "img_seen": {
+    "https://editorial.fxsstatic.com/images/i/EURUSD-bullish-chart.png": "不是逐家預測表",
+    "https://editorial.fxsstatic.com/miscelaneous/chart-screenshot%20-%202026-10-14T085832-1791948738744.579.png": "不是逐家預測表"
+   }
   }
  }
 }
