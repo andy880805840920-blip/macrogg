@@ -160,7 +160,18 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
             url = "https://www.clevelandfed.org/indicators-and-data/inflation-nowcasting"
             src = (f"Inflation Nowcasting・{e.get('clev_asof', '')} 更新" if key in F.CLEV_MAP
                    else "Cleveland Fed 不預測就業數據")
-        cells = "".join(_cell(k, vals.get(k), f"{name}・{lab}", src, url,
+        meta = ((e.get("banks") or {}).get(name) or {}).get("meta") or {} if name in F.BANKS else {}
+
+        def _src(k, src=src, url=url, meta=meta):
+            m = meta.get(k)
+            if not m:
+                return src, url
+            if m.get("via") == "auto":
+                q = m.get("q", "")
+                return (f"自動擷取・{m.get('name', '')}・{_hm(m.get('at', ''))}"
+                        + (f"　原文：「{q}」" if q else "")), m.get("src", "")
+            return "手動輸入" + ("・點「原文」看出處" if m.get("src") else "（未附出處）"), m.get("src", "")
+        cells = "".join(_cell(k, vals.get(k), f"{name}・{lab}", *_src(k),
                               star=bool(sc.get(k) and name in sc[k]["best"]),
                               nd=2 if name == F.CLEV and k != "nfp" else None)
                         for k, lab, _, _ in inds)
@@ -240,7 +251,7 @@ def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
     panels = "".join(_panel(k, F.pick(rel, k, today), rel, today) for k in F.RELEASES)
     notes = ('<details class="f-more"><summary>說明</summary>'
              '<p class="hm-foot">投行：BofA＝Bank of America、Citi＝Citigroup、JPM＝JPMorgan、MS＝Morgan Stanley、GS＝Goldman Sachs；'
-             '數字整理自公開報導與手動輸入，非官方。市場共識取自 ForexFactory；Cleveland Fed 為克里夫蘭聯儲的 Inflation Nowcasting（只預測通膨）。</p>'
+             '投行數字由程式從公開的預覽報導自動擷取（數字須出現在提到該機構的原句、且與共識差距合理才採用），或手動輸入，非官方。市場共識取自 ForexFactory；Cleveland Fed 為克里夫蘭聯儲的 Inflation Nowcasting（只預測通膨）。</p>'
              '<p class="hm-foot">計分：每家預估先四捨五入到實際值的位數再比，最接近的記一次命中（同樣近一起算）；'
              '方向命中＝預估高於或低於共識，實際也落在同一邊。實際值用首次公布值，之後的修正不計；各家只保留公布前的最後一版。</p>'
              '<p class="hm-foot">對共識：通膨、就業、時薪高於共識以紅色表示（偏緊縮），失業率高於共識以綠色表示。'
