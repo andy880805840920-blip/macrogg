@@ -1,6 +1,6 @@
 {
- "hash": "656c3076179b4ab1",
- "text": "美國9月消費者物價指數將於10/16公布，經濟學家預期頭條CPI月增0.6%、年增3.6%，顯示物價漲幅加速且遠離聯準會2%目標。油價是主要推升因素，布蘭特原油9月上漲逾14%，第三季漲幅約42%，目前交易價格在每桶105美元以上，能源成本自美伊衝突升溫以來一直是通膨主要驅動力。經濟學家警告，油價上升可能溢出至非能源類別，使聯準會難以將能源價格視為短期衝擊而不採取升息行動。¶聯準會官員對升息前景態度分歧。紐約聯邦準備銀行總裁威廉斯表示今年可能還需升息一次，但預期2027年不會進一步升息；聯準會理事沃勒則指通膨預期穩定錨定。國際貨幣基金組織警告，全球政府債券殖利率可能出現「無序」飆升，因債務、通膨與AI相關借貸壓力加劇，主權債務風險惡化。\n紐約聯邦準備銀行總裁威廉斯10/13表示今年可能還需升息一次，但預期2027年不會進一步升息，其評論幫助黃金止跌，美債殖利率小幅下行。\n菲律賓央行總裁雷莫洛納10/14在IMF年會表示，菲律賓正為「哥吉拉級」聖嬰現象做準備，該國9月通膨加速至7.2%，米價上漲18%，央行8月升息25個基點至5%。",
+ "hash": "7aa933f57b0aa6b9",
+ "text": "美國9月消費者物價指數（CPI）預期將加速上升至3.6%年增率，較8月的3.4%明顯攀升，遠離聯準會2%目標。油價是主要推手——布蘭特原油9月上漲逾14%，第三季累計漲幅約42%，目前交易價格在每桶105美元以上，能源成本自美伊衝突升溫以來一直是通膨的最大驅動力。經濟學家警告，油價上升可能不僅推高能源類商品，還會透過運輸與生產成本溢出至其他非能源商品，使聯準會難以將能源衝擊視為短期衝擊而不採取升息行動。¶聯準會官員對升息前景發出混合訊號。紐約聯邦準備銀行總裁威廉斯表示今年可能還需一次升息，但預期2027年不再升息；聯邦理事會成員沃勒則強調通膨預期仍然穩定。市場目前定價10月28日會議維持機率約77%，但若CPI數據強於預期，可能提高本月升息機率。\n國際貨幣基金組織警告，全球政府公債殖利率面臨「無序」飆升風險，因通膨、債務與AI企業借貸壓力加重，高槓桿與展期風險使債市易受財政與通膨衝擊。\n菲律賓央行因應「哥吉拉級」聖嬰現象與油價衝擊，9月通膨加速至7.2%，米價上漲18%，央行已於8月升息至5%，預期10月再升息至5.25%。",
  "links": [
   {
    "title": "The latest inflation data is expected to show price increases are accelerating",
@@ -296,41 +296,53 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-14T04:42:06.283163+00:00",
+ "at": "2026-10-14T05:17:15.556762+00:00",
  "layout": "main",
  "topics": {
-  "hash": "0e8ea125802ad539",
+  "hash": "36387e27acf59757",
   "items": [
    {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "克里夫蘭聯邦準備銀行總裁哈默克表示，應採取限制性貨幣政策以確保通膨及時回到2%目標，暗示可能需要更多升息，並主張採取較小幅度但快速的調整，以避免日後需要更大幅度的政策修正",
+    "id": "long",
+    "label": "長天期美債",
+    "text": "長天期美債殖利率面臨上行壓力。PIMCO投資人士指出聯準會可能進一步升息，美債殖利率高點仍未出現；黑石則轉向看好短期美債，冷卻對美股的態度，反映市場對長期利率走勢的分歧",
     "links": [
      {
-      "title": "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
-      "link": "https://www.cnbc.com/2026/10/12/beth-hammack-fed-inflation-policy.html",
-      "source": "CNBC",
-      "at": "2026-10-13T02:58:11+00:00"
+      "title": "US Treasury yield peak still ahead as Fed likely to tighten again, PIMCO's Ivascyn says",
+      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQckVkLTFFNXNKUmlRWTVjWE1tOWZ5OXYxU3NFSWU3V0w0dkk3WEVsamFRVWY5Y0FlNVgzV1dZQlJtNWoyY1ByVlVWT0dBNEp6QnlRVG9HTXpKTENiMXlNT0gtYXRnbHFHRk5TUFREaWZmUEk2WElGUDJfY3d3dHc2ZEh5QUdoQlMzZVBKcUlXamtqTmlsQ1kxZXI2MTV6dGVDU1p3QXQwWVJjN1dkVTc3NXlBRm96SVRkQVE?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-13T16:28:58+00:00"
+     },
+     {
+      "title": "BlackRock cools on US stocks, turns bullish on short-dated Treasuries",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOWHlTeUJyODlNSGNJVjRKdzloTDJOZUZmb1NWN0xsRW05VkJETkJQejVsNTFVUG05N0FKZEJDaWhMb0JYMmc2dWk4QjdmRFpNUGQ1TEVmbGRPS2F2cmxjR1RsdEpoY3ZVYUFzWUtOeVpDMmxzam13X0dkNG1nZnMtWDlqNzQ1dEdxVFdNWm5Rb1F2b1loeU9JMzFzV2pFbGk0RTdRNnYzMUMtMTQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-13T07:55:44+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗部署新戰術針對荷姆茲海峽船隻，意圖推升油價並干預美國期中選舉。過去48小時海峽周邊至少發生五起涉及油輪的事件，攻擊頻率升至開戰以來最高水準，伊朗官員表示目標是讓違反限制的船隻無法通過",
+    "text": "伊朗支持的胡塞武裝與沙烏地阿拉伯衝突升溫，引發中東地緣政治風險。伊朗在荷莫茲海峽採取新戰術針對過往船隻，油價因供應擔憂攀升至近兩週高點",
     "links": [
      {
-      "title": "伊朗不讓川普壓低油價 加強荷姆茲襲船攻勢、劍指美國期中選情",
-      "link": "https://tw.stock.yahoo.com/news/%E4%BC%8A%E6%9C%97%E4%B8%8D%E8%AE%93%E5%B7%9D%E6%99%AE%E5%A3%93%E4%BD%8E%E6%B2%B9%E5%83%B9-%E5%8A%A0%E5%BC%B7%E8%8D%B7%E5%A7%86%E8%8C%B2%E8%A5%B2%E8%88%B9%E6%94%BB%E5%8B%A2-%E5%8A%8D%E6%8C%87%E7%BE%8E%E5%9C%8B%E6%9C%9F%E4%B8%AD%E9%81%B8%E6%83%85-034955812.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-14T03:49:55+00:00"
+      "title": "Oil prices climb as Iran deploys new tactics to target ships transiting Hormuz",
+      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxON0hPaGRDOW9haXRKcUJ3WVU5dVdwSjB2ZzNMZTVWd0lRYV9ZUjRNRTI4VjVXeERGeW1XVU1GanZidjZneXhKeFh1dWM0OUJ6ZGltVXFXdHJNVk52MDN5M3NvRnhUUWN6aEFiSldFUWxfeHNPYmQ2R21JMGlhaUNaWEFNckc0T0ItSFpYcHA3MmM4UUdnTVd0VFg0NWhtbm91MllPWllha0pqdVBjZlRldDgxaG5PclVud0xtNQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-14T01:27:00+00:00"
+     },
+     {
+      "title": "Dow, S&P 500, Nasdaq Futures Mixed Amid Rising Oil Prices Ahead Of CPI Data: BAC, RIVN, SLS, GME Stocks In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-amid-rising-oil-prices-ahead-of-cpi-data-bac-rivn-sls-gme-stocks-in-focus/cZxf7zfRBpG?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-14T02:31:58+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "第三季財報季啟動，高盛營收超預期、花旗獲利超預期，但摩根大通獲利與營收均未達華爾街預期；美銀遭罰12億美元，因反洗錢與制裁合規出現系統性失敗",
+    "text": "第三季財報季啟動，摩根大通未達華爾街預期，股價下跌0.9%；高盛營收超預期但股價微跌0.2%；美銀遭罰12億美元後將公布季報。半導體類股連跌六日，應用材料下滑近7%",
     "links": [
      {
       "title": "Dow, S&P 500, Nasdaq Futures Mixed Amid Rising Oil Prices Ahead Of CPI Data: BAC, RIVN, SLS, GME Stocks In Focus",
@@ -349,87 +361,59 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Google推出旗艦AI模型Gemini 4 Argon，定價策略積極搶市：11月30日前每百萬輸入Token 2美元、輸出Token 10美元，之後翻倍至4美元與20美元；內部測試顯示採用Google編碼工具Antigravity的團隊程式碼提交量提升逾35%",
+    "text": "微軟單季新增逾1,300億美元資料中心租約承諾，計畫2032年前將全球資料中心容量從12吉瓦提升至38吉瓦以上，增幅超過兩倍；該公司未啟動租約承諾總額達3,291億美元，創單季新高，反映客戶對雲端與AI服務需求持續強勁",
     "links": [
      {
-      "title": "Google發表Gemini 4 Argon旗艦AI模型 瞄準開發者與企業市場",
-      "link": "https://tw.stock.yahoo.com/news/google%E7%99%BC%E8%A1%A8gemini-4-argon%E6%97%97%E8%89%A6ai%E6%A8%A1%E5%9E%8B-%E7%9E%84%E6%BA%96%E9%96%8B%E7%99%BC%E8%80%85%E8%88%87%E4%BC%81%E6%A5%AD%E5%B8%82%E5%A0%B4-035213375.html",
+      "title": "微軟砸千億美元擴建資料中心！2032年算力容量拚增逾2倍",
+      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9F%E7%A0%B8%E5%8D%83%E5%84%84%E7%BE%8E%E5%85%83%E6%93%B4%E5%BB%BA%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83-2032%E5%B9%B4%E7%AE%97%E5%8A%9B%E5%AE%B9%E9%87%8F%E6%8B%9A%E5%A2%9E%E9%80%BE2%E5%80%8D-041006050.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-14T03:52:13+00:00"
+      "at": "2026-10-14T04:10:06+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股13日重挫960點，外資賣超1653億元創史上單日賣超第三大紀錄；14日強勢反彈，加權指數最高衝上49059點，漲幅逾1%，散戶交易人數創2.5個月新高",
+    "text": "台股10/14上午反彈逾600點，台積電上漲35元至2,525元；分析師預估年底有機會挑戰5萬點，明年上看6.2萬點，但強調短線下跌不代表多頭結束，投資人應分散布局具基本面的個股或市值型ETF",
     "links": [
      {
-      "title": "台股單日遭提款近2000億！外資狂殺1653億創史上第3大　專家一句話全說了",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%96%AE%E6%97%A5%E9%81%AD%E6%8F%90%E6%AC%BE%E8%BF%912000%E5%84%84-%E5%A4%96%E8%B3%87%E7%8B%82%E6%AE%BA1653%E5%84%84%E5%89%B5%E5%8F%B2%E4%B8%8A%E7%AC%AC3%E5%A4%A7-%E5%B0%88%E5%AE%B6-%E5%8F%A5%E8%A9%B1%E5%85%A8%E8%AA%AA%E4%BA%86-035600737.html",
+      "title": "台股暴跌960點、外資狂砍1653億！郭哲榮仍喊年底衝5萬點　曝布局策略",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9A%B4%E8%B7%8C960%E9%BB%9E-%E5%A4%96%E8%B3%87%E7%8B%82%E7%A0%8D1653%E5%84%84-%E9%83%AD%E5%93%B2%E6%A6%AE%E4%BB%8D%E5%96%8A%E5%B9%B4%E5%BA%95%E8%A1%9D5%E8%90%AC%E9%BB%9E-%E6%9B%9D%E5%B8%83%E5%B1%80%E7%AD%96%E7%95%A5-045500542.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-14T03:55:00+08:00"
-     }
-    ]
-   },
-   {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "川普聲稱胡塞武裝試圖推升油價以影響美國期中選舉。伊朗高層官員向媒體透露，新的攻擊策略旨在挫敗美國及盟友壓抑全球油價的努力，這項決策由伊朗最高領導階層親自下達",
-    "links": [
-     {
-      "title": "Trump says Houthis trying to drive up oil prices ahead of US midterm elections",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPUjJueXpwNnRLbk1Db0NkZzBZS0tqUGF4NHU3ZWYxcWRHdVU0WW9uYVZJeUlpUVR2amR3Q0dyd1ZwYTFwZjRkUXU2VWRmX2otWUh5dHBmTW1Tak1iczg5a3pzR21oZTk3S3lzN0NfWmZ4TWRFalFNLVBsdU5vVTFkSDQ4TnNGVDZOcnVTS2FWTzBTbW1pN0ZoamZrRG5fQlc2QXpZWjV3?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-13T16:38:26+00:00"
-     },
-     {
-      "title": "Watch Morgan Stanley's Wilson on Midterm Elections, Fed Policy, Bond Volatility",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQc19DMTBRbk1wZVVBNXlxTG1XaWJSMWF3Vy1qNnJPcy01bThhR3B0dDEyWi1odkh6LUg2b0hNS0dfa3NQODZ3MEViZ245ZXozdlRPVUpybURWNTlwTVBEOTMzeHNGbEhKekJNY05KZkxCUXk5ZWhzUkVhVzVoVFZGRUc0cWNkZ21UdTE1NVhYellxV3JjMFRVNENYUVFNODh4bmMwRmxDVnFjNm9ad3c?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-13T00:00:00+00:00"
+      "at": "2026-10-14T04:55:00+08:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元午盤重貶1.31角至32.216元，受外資匯出壓力；美元指數在威廉斯表示2027年無需升息後走弱至102.15附近",
+    "text": "新台幣13日盤中重貶逾3角至32.237元，外資前日賣超台股1,653億元創史上第三大紀錄，後續資金匯出壓力持續。美元指數自18個月高點回落至102，亞幣走勢分化",
     "links": [
      {
-      "title": "新台幣午盤重貶1.31角　暫收32.216元",
-      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%8D%88%E7%9B%A4%E9%87%8D%E8%B2%B61-31%E8%A7%92-%E6%9A%AB%E6%94%B632-216%E5%85%83-040734189.html",
+      "title": "新台幣持續消化外資匯出壓力 中午暫收32.216元、重貶1.31角",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%8C%81%E7%BA%8C%E6%B6%88%E5%8C%96%E5%A4%96%E8%B3%87%E5%8C%AF%E5%87%BA%E5%A3%93%E5%8A%9B-%E4%B8%AD%E5%8D%88%E6%9A%AB%E6%94%B632-216%E5%85%83-%E9%87%8D%E8%B2%B61-31%E8%A7%92-043928208.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-14T04:07:34+08:00"
+      "at": "2026-10-14T04:39:28+08:00"
      },
      {
-      "title": "United States Dollar Index weakens to near 102.00 ahead of US CPI release",
-      "link": "https://www.fxstreet.com/news/united-states-dollar-index-weakens-to-near-10200-ahead-of-us-cpi-release-202610140243",
-      "source": "www.fxstreet.com",
-      "at": "2026-10-14T02:43:40+00:00"
+      "title": "台股強彈、新台幣回貶逾1角！午盤暫收32.216元　央行調節成焦點",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%BC%B7%E5%BD%88-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%9B%9E%E8%B2%B6%E9%80%BE1%E8%A7%92-%E5%8D%88%E7%9B%A4%E6%9A%AB%E6%94%B632-216%E5%85%83-%E5%A4%AE%E8%A1%8C%E8%AA%BF%E7%AF%80%E6%88%90%E7%84%A6%E9%BB%9E-044138733.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-14T04:41:38+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-14T04:42:29.656639+00:00"
+  "at": "2026-10-14T05:17:25.746376+00:00"
  },
  "main_source_titles": [
   "The latest inflation data is expected to show price increases are accelerating",
   "IMF warns bond yields could see a 'disorderly' spike as debt, inflation risks worsen",
   "Gold holds two-day slide as Fed signals one more hike, U.S. CPI in focus"
  ],
- "headline": "9月CPI數據將至，油價高企推升通膨預期，聯準會升息前景受考驗",
- "rate_note": "CPI加速上升偏向推升利率，特別是若油價溢出效應擴大至核心物價，將強化聯準會升息立場。不過近一週10年期殖利率下跌10bp，市場尚未充分反映通膨加速風險，反而定價10/28會議維持機率77%，顯示市場對升息前景仍保持謹慎態度。",
+ "headline": "9月CPI通膨加速至3.6%，油價飆升推高長期升息預期",
+ "rate_note": "通膨加速與油價高企偏向推升長端利率，因市場可能調升對聯準會進一步升息的預期；不過近一週10年期下行10bp，市場尚未充分反映升息風險——待9月CPI公布後走勢將更明朗。",
  "recent_mains": [
-  {
-   "headline": "9月CPI料加速上升，能源成本飆升威脅聯準會降息預期",
-   "titles": [
-    "The latest inflation data is expected to show price increases are accelerating",
-    "IMF warns bond yields could see a 'disorderly' spike as debt, inflation risks worsen",
-    "US stocks dip ahead of inflation data as tech sell"
-   ],
-   "at": "2026-10-14T01:51:14.062804+00:00"
-  },
   {
    "headline": "9月CPI數據前夕，通膨與債市風險升溫，聯準會升息預期分歧",
    "titles": [
@@ -447,13 +431,22 @@
     "Gold holds two-day slide as Fed signals one more hike, U.S. CPI in focus"
    ],
    "at": "2026-10-14T04:42:06.283163+00:00"
+  },
+  {
+   "headline": "9月CPI通膨加速至3.6%，油價飆升推高長期升息預期",
+   "titles": [
+    "The latest inflation data is expected to show price increases are accelerating",
+    "IMF warns bond yields could see a 'disorderly' spike as debt, inflation risks worsen",
+    "Gold holds two-day slide as Fed signals one more hike, U.S. CPI in focus"
+   ],
+   "at": "2026-10-14T05:17:15.556762+00:00"
   }
  ],
  "archive": {
   "2026-10-14": {
-   "headline": "9月CPI數據將至，油價高企推升通膨預期，聯準會升息前景受考驗",
-   "text": "美國9月消費者物價指數將於10/16公布，經濟學家預期頭條CPI月增0.6%、年增3.6%，顯示物價漲幅加速且遠離聯準會2%目標。油價是主要推升因素，布蘭特原油9月上漲逾14%，第三季漲幅約42%，目前交易價格在每桶105美元以上，能源成本自美伊衝突升溫以來一直是通膨主要驅動力。經濟學家警告，油價上升可能溢出至非能源類別，使聯準會難以將能源價格視為短期衝擊而不採取升息行動。¶聯準會官員對升息前景態度分歧。紐約聯邦準備銀行總裁威廉斯表示今年可能還需升息一次，但預期2027年不會進一步升息；聯準會理事沃勒則指通膨預期穩定錨定。國際貨幣基金組織警告，全球政府債券殖利率可能出現「無序」飆升，因債務、通膨與AI相關借貸壓力加劇，主權債務風險惡化。\n紐約聯邦準備銀行總裁威廉斯10/13表示今年可能還需升息一次，但預期2027年不會進一步升息，其評論幫助黃金止跌，美債殖利率小幅下行。\n菲律賓央行總裁雷莫洛納10/14在IMF年會表示，菲律賓正為「哥吉拉級」聖嬰現象做準備，該國9月通膨加速至7.2%，米價上漲18%，央行8月升息25個基點至5%。",
-   "rate_note": "CPI加速上升偏向推升利率，特別是若油價溢出效應擴大至核心物價，將強化聯準會升息立場。不過近一週10年期殖利率下跌10bp，市場尚未充分反映通膨加速風險，反而定價10/28會議維持機率77%，顯示市場對升息前景仍保持謹慎態度。",
+   "headline": "9月CPI通膨加速至3.6%，油價飆升推高長期升息預期",
+   "text": "美國9月消費者物價指數（CPI）預期將加速上升至3.6%年增率，較8月的3.4%明顯攀升，遠離聯準會2%目標。油價是主要推手——布蘭特原油9月上漲逾14%，第三季累計漲幅約42%，目前交易價格在每桶105美元以上，能源成本自美伊衝突升溫以來一直是通膨的最大驅動力。經濟學家警告，油價上升可能不僅推高能源類商品，還會透過運輸與生產成本溢出至其他非能源商品，使聯準會難以將能源衝擊視為短期衝擊而不採取升息行動。¶聯準會官員對升息前景發出混合訊號。紐約聯邦準備銀行總裁威廉斯表示今年可能還需一次升息，但預期2027年不再升息；聯邦理事會成員沃勒則強調通膨預期仍然穩定。市場目前定價10月28日會議維持機率約77%，但若CPI數據強於預期，可能提高本月升息機率。\n國際貨幣基金組織警告，全球政府公債殖利率面臨「無序」飆升風險，因通膨、債務與AI企業借貸壓力加重，高槓桿與展期風險使債市易受財政與通膨衝擊。\n菲律賓央行因應「哥吉拉級」聖嬰現象與油價衝擊，9月通膨加速至7.2%，米價上漲18%，央行已於8月升息至5%，預期10月再升息至5.25%。",
+   "rate_note": "通膨加速與油價高企偏向推升長端利率，因市場可能調升對聯準會進一步升息的預期；不過近一週10年期下行10bp，市場尚未充分反映升息風險——待9月CPI公布後走勢將更明朗。",
    "links": [
     {
      "title": "The latest inflation data is expected to show price increases are accelerating",
@@ -474,7 +467,7 @@
      "at": "2026-10-14T02:13:07+00:00"
     }
    ],
-   "at": "2026-10-14T04:42:06.283163+00:00"
+   "at": "2026-10-14T05:17:15.556762+00:00"
   },
   "2026-10-13": {
    "headline": "IMF警告債市風險升高，通膨與高債務威脅美債殖利率",

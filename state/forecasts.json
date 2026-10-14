@@ -10,7 +10,7 @@
     "cpi_mom": 0.6,
     "cpi_yoy": 3.6
    },
-   "cons_at": "2026-10-14T12:43+08:00",
+   "cons_at": "2026-10-14T13:18+08:00",
    "clev": {
     "cpi_mom": 0.53,
     "core_mom": 0.2,
@@ -21,107 +21,197 @@
    "banks": {
     "BofA": {
      "core_yoy": 2.5,
+     "cpi_mom": 0.58,
+     "core_mom": 0.23,
+     "cpi_yoy": 3.6,
      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
      "meta": {
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "core_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       }
      }
     },
     "Citi": {
      "core_mom": 0.18,
      "core_yoy": 2.4,
+     "cpi_yoy": 3.6,
      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
      "meta": {
       "core_mom": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%.",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       }
      }
     },
     "JPM": {
      "core_mom": 0.18,
      "core_yoy": 2.4,
+     "cpi_mom": 0.55,
+     "cpi_yoy": 3.6,
      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
      "meta": {
       "core_mom": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%.",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       }
      }
     },
     "MS": {
      "core_mom": 0.24,
      "core_yoy": 2.5,
+     "cpi_mom": 0.62,
+     "cpi_yoy": 3.7,
      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
      "meta": {
       "core_mom": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       }
      }
     },
     "GS": {
      "core_mom": 0.24,
      "core_yoy": 2.5,
+     "cpi_mom": 0.59,
+     "cpi_yoy": 3.7,
      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
      "meta": {
       "core_mom": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       },
       "core_yoy": {
        "via": "auto",
        "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
        "name": "investingLive",
-       "at": "2026-10-14T12:22+08:00",
-       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank ",
-       "kind": "text"
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
+      },
+      "cpi_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T13:18+08:00",
+       "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+       "kind": "image"
       }
      }
     }
@@ -138,15 +228,37 @@
       "v": 0.24,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      },
      "core_yoy": {
       "v": 2.5,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_mom": {
+      "v": 0.59,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_yoy": {
+      "v": 3.7,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      }
     },
     "JPM": {
@@ -154,15 +266,37 @@
       "v": 0.18,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      },
      "core_yoy": {
       "v": 2.4,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_mom": {
+      "v": 0.55,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_yoy": {
+      "v": 3.6,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      }
     },
     "MS": {
@@ -170,15 +304,37 @@
       "v": 0.24,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      },
      "core_yoy": {
       "v": 2.5,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_mom": {
+      "v": 0.62,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_yoy": {
+      "v": 3.7,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      }
     },
     "Citi": {
@@ -186,15 +342,28 @@
       "v": 0.18,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      },
      "core_yoy": {
       "v": 2.4,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_yoy": {
+      "v": 3.6,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      }
     },
     "BofA": {
@@ -202,8 +371,37 @@
       "v": 2.5,
       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
       "name": "investingLive",
-      "at": "2026-10-14T12:22+08:00",
-      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_mom": {
+      "v": 0.58,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "core_mom": {
+      "v": 0.23,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
+     },
+     "cpi_yoy": {
+      "v": 3.6,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T13:18+08:00",
+      "q": "圖表「September CPI forecasts」・14 家、中位數驗算通過",
+      "kind": "image",
+      "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg"
      }
     }
    },
@@ -253,12 +451,58 @@
      "result": "不是逐家預測表",
      "got": {},
      "notes": []
+    },
+    {
+     "at": "2026-10-14T13:18+08:00",
+     "src": "investingLive（圖表）",
+     "img": "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg",
+     "link": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "result": "採用",
+     "got": {
+      "BofA": {
+       "cpi_mom": 0.58,
+       "core_mom": 0.23,
+       "cpi_yoy": 3.6,
+       "core_yoy": 2.5
+      },
+      "Citi": {
+       "core_mom": 0.18,
+       "cpi_yoy": 3.6,
+       "core_yoy": 2.4
+      },
+      "GS": {
+       "cpi_mom": 0.59,
+       "core_mom": 0.24,
+       "cpi_yoy": 3.7,
+       "core_yoy": 2.5
+      },
+      "JPM": {
+       "cpi_mom": 0.55,
+       "core_mom": 0.18,
+       "cpi_yoy": 3.6,
+       "core_yoy": 2.4
+      },
+      "MS": {
+       "cpi_mom": 0.62,
+       "core_mom": 0.24,
+       "cpi_yoy": 3.7,
+       "core_yoy": 2.5
+      }
+     },
+     "notes": [
+      "cpi_mom：驗算通過（12 家，中位數 0.58）",
+      "core_mom：驗算通過（14 家，中位數 0.22）",
+      "cpi_yoy：驗算通過（13 家，中位數 3.6）",
+      "core_yoy：驗算通過（13 家，中位數 2.4）"
+     ]
     }
    ],
    "img_seen": {
     "https://editorial.fxsstatic.com/images/i/EURUSD-bullish-chart.png": "不是逐家預測表",
-    "https://editorial.fxsstatic.com/miscelaneous/chart-screenshot%20-%202026-10-14T085832-1791948738744.579.png": "不是逐家預測表"
-   }
+    "https://editorial.fxsstatic.com/miscelaneous/chart-screenshot%20-%202026-10-14T085832-1791948738744.579.png": "不是逐家預測表",
+    "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg": "ok"
+   },
+   "img_pending": {}
   }
  }
 }
