@@ -391,10 +391,322 @@ def extract(key: str, period: str, text: str, cons: dict, ai=None) -> tuple[dict
     return got, bad
 
 
-def auto_update(e: dict, *, get_fn=None, ai=None, now: dt.datetime | None = None) -> None:
-    """公布前：讀預覽文章、擷取、通過檢查的寫進 e["auto"]（逐欄覆蓋）。"""
+# ---------------------------------------------------------------------------
+# 圖表自動讀取（2026-10）：預覽文章裡常附 WSJ 等整理的「逐家預測表」圖片
+#
+# 怎麼確保讀對圖、不浪費：
+#   免費篩選  只看內文圖片（trafilatura 判定的正文），排除主視覺／logo／廣告／
+#             圖示；寬 < 500 或高 < 250 像素的跳過；檔名／alt 有 forecast 等字排前面
+#   一次呼叫  AI 先判斷是不是逐家預測表，不是就只回 {"table": false}（幾個字）
+#   讀完驗證  標題要對上這一期的月份與數據、至少有五家中的兩家、
+#             重算的中位數要等於表上印的 Median（抓欄位錯置、漏讀）、
+#             中位數要跟市場共識接近（防讀到上個月的表）
+#   複讀比對  通過驗證的表再讀一次（有兩家金鑰就換另一家），五家的格子要一模一樣
+#             ——中位數抓不到「整列錯位」，複讀才抓得到；文章文字有原句的，
+#             跟圖表不一致時以原文為準
+#   不重讀    每張圖讀過就記下（不管結果），之後不再讀；
+#             每篇最多 2 張、每次執行最多 3 張、每一期最多 10 張
+# ---------------------------------------------------------------------------
+IMG_SKIP = (r"/featured/|logo|icon|avatar|banner|sprite|emoji|\.svg|\.gif|author|profile|"
+            r"broker|premium|livebytes|/_next/|advert|sponsor")
+IMG_HINT = r"forecast|foreacst|survey|table|estimate|preview|consensus|\bcpi\b|\bpce\b|payroll|nfp|jobs"
+IMG_MIN = (500, 250)
+IMG_PER_ARTICLE, IMG_PER_RUN, IMG_PER_RELEASE = 2, 3, 10
+VISION_MODEL = {"anthropic": "claude-haiku-4-5", "gemini": "gemini-2.5-flash"}
+VISION_PROMPT = """This image comes from a news article previewing the US %(release)s for %(month)s.
+If the image is NOT a table that lists individual institutions' forecasts, reply exactly {"table": false} and nothing else.
+Otherwise reply ONLY with JSON (no prose, no code fences):
+{"table": true, "title": "<table title as printed>", "release": "<CPI|PCE|jobs report|other>", "month": "<month printed in the image's title/header, or null if none is printed>",
+ "rows": [{"name": "<institution exactly as printed>", %(fields_json)s}],
+ "median": {%(fields_json)s} or null}
+Columns to fill: %(fields)s
+Rules: copy numbers exactly as printed, keep every decimal, drop the %% sign; nfp in thousands of jobs.
+Use null for a blank cell. Include every institution row. The median / consensus / average row goes in "median", not in "rows".
+Skip previous-month or actual rows. If a column is not in the table, use null for it.
+Read title and month only from the image itself; never fill them from this message."""
+
+
+def _norm_img(u: str) -> str:
+    return re.sub(r"[?#].*$", "", u or "")
+
+
+def body_images(html: str) -> list[dict]:
+    """文章正文裡的圖片 [{"url", "alt"}]，像表格的排前面。"""
+    try:
+        import trafilatura
+        x = trafilatura.extract(html or "", include_images=True, output_format="xml") or ""
+    except Exception:                              # noqa: BLE001
+        return []
+    out, seen = [], set()
+    for g in re.findall(r"<graphic\b[^>]*>", x):
+        import html as _h
+        src = _h.unescape((re.search(r'src="([^"]+)"', g) or [None, ""])[1])
+        alt = _h.unescape((re.search(r'alt="([^"]*)"', g) or [None, ""])[1])
+        if not src.startswith("http") or re.search(IMG_SKIP, src + " " + alt, re.I):
+            continue
+        if _norm_img(src) in seen:
+            continue
+        seen.add(_norm_img(src))
+        out.append({"url": src, "alt": alt})
+    out.sort(key=lambda d: 0 if re.search(IMG_HINT, d["url"] + " " + d["alt"], re.I) else 1)
+    return out
+
+
+def _fetch_url(u: str) -> str:
+    """investingLive 的圖可以指定尺寸與格式：要 1024 寬的 JPEG（夠讀、token 少）。"""
+    if "investinglive.com/cms/" in u:
+        return _norm_img(u) + "?width=1024&format=jpeg"
+    return u
+
+
+def img_info(b: bytes) -> tuple[int, int, str]:
+    """不靠 Pillow 讀圖片寬高與格式：PNG／JPEG／WebP／GIF；看不懂回 (0, 0, "")。"""
+    import struct
+    try:
+        if b[:8] == b"\x89PNG\r\n\x1a\n":
+            w, h = struct.unpack(">II", b[16:24])
+            return w, h, "image/png"
+        if b[:6] in (b"GIF87a", b"GIF89a"):
+            w, h = struct.unpack("<HH", b[6:10])
+            return w, h, "image/gif"
+        if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+            c = b[12:16]
+            if c == b"VP8 ":
+                w, h = struct.unpack("<HH", b[26:30])
+                return w & 0x3FFF, h & 0x3FFF, "image/webp"
+            if c == b"VP8L":
+                v = int.from_bytes(b[21:25], "little")
+                return (v & 0x3FFF) + 1, ((v >> 14) & 0x3FFF) + 1, "image/webp"
+            if c == b"VP8X":
+                return int.from_bytes(b[24:27], "little") + 1, int.from_bytes(b[27:30], "little") + 1, "image/webp"
+        if b[:2] == b"\xff\xd8":
+            i = 2
+            while i < len(b) - 9:
+                if b[i] != 0xFF:
+                    i += 1
+                    continue
+                m = b[i + 1]
+                if m in (0xD8, 0x01) or 0xD0 <= m <= 0xD7:
+                    i += 2
+                    continue
+                ln = struct.unpack(">H", b[i + 2:i + 4])[0]
+                if m in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+                    h, w = struct.unpack(">HH", b[i + 5:i + 9])
+                    return w, h, "image/jpeg"
+                i += 2 + ln
+    except (struct.error, IndexError):
+        pass
+    return 0, 0, ""
+
+
+def vision_ai(img: bytes, mime: str, prompt: str, second: bool = False, env=None) -> tuple[str, str]:
+    """
+    讀圖：Anthropic 主力 → Gemini 備援。回傳 (文字, 失敗原因)。
+    second=True 是「複讀」：兩把金鑰都有時換另一家讀（錯法不同才抓得到錯）。
+    """
+    import base64
+    import os
+    from .polish import _http, GEMINI_BASE
+    env = env or os.environ
+    a_key = (env.get("ANTHROPIC_API_KEY") or "").strip()
+    g_key = (env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY") or "").strip()
+    if not a_key and not g_key:
+        return "", "沒有 AI 金鑰"
+    data = base64.b64encode(img).decode()
+    errs = []
+    if second and a_key and g_key:
+        a_key = ""                                 # 複讀交給 Gemini
+    if a_key:
+        model = (env.get("FC_VISION_MODEL") or VISION_MODEL["anthropic"]).strip()
+        try:
+            r = _http("POST", "https://api.anthropic.com/v1/messages", label=f"Anthropic {model}（讀圖）",
+                      headers={"x-api-key": a_key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                      json={"model": model, "max_tokens": 2500, "temperature": 0,
+                            "messages": [{"role": "user", "content": [
+                                {"type": "image", "source": {"type": "base64", "media_type": mime, "data": data}},
+                                {"type": "text", "text": prompt}]}]})
+            r.raise_for_status()
+            return r.json()["content"][0]["text"], ""
+        except Exception as ex:                    # noqa: BLE001
+            errs.append(f"Anthropic：{ex}")
+    if g_key:
+        model = VISION_MODEL["gemini"]
+        try:
+            r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent", label=f"Gemini {model}（讀圖）",
+                      headers={"x-goog-api-key": g_key, "content-type": "application/json"},
+                      json={"contents": [{"parts": [{"inline_data": {"mime_type": mime, "data": data}}, {"text": prompt}]}],
+                            "generationConfig": {"temperature": 0, "maxOutputTokens": 3000,
+                                                 "thinkingConfig": {"thinkingBudget": 0}}})
+            r.raise_for_status()
+            parts = r.json()["candidates"][0]["content"]["parts"]
+            return "".join(p_.get("text", "") for p_ in parts), ""
+        except Exception as ex:                    # noqa: BLE001
+            errs.append(f"Gemini：{ex}")
+    return "", "；".join(errs)
+
+
+def _bank_of(name: str) -> str:
+    n = re.sub(r"J\.\s?P\.\s?Morgan", "JPMorgan", str(name or ""))
+    for b, pat in ALIASES.items():
+        if re.search(pat, n):
+            return b
+    return ""
+
+
+def _dec(v: float) -> int:
+    s = f"{v:.6f}".rstrip("0")
+    return len(s.split(".")[1]) if "." in s else 0
+
+
+def check_table(key: str, period: str, d: dict, cons: dict) -> tuple[dict, list, str]:
+    """
+    AI 讀出的表 → ({bank: {欄位: (數值, 說明)}}, [逐欄說明], 整張不採用的原因)。
+    整張不採用：不是表、數據或月份不符、五家不到兩家、每一欄都驗算不過。
+    """
+    import statistics
+    if not isinstance(d, dict) or d.get("table") is not True:
+        return {}, [], "不是逐家預測表"
+    title = str(d.get("title") or "")
+    head = f"{title} {d.get('release') or ''}"
+    if not re.search(TITLE_KW[key], head, re.I):
+        return {}, [], f"數據不符（{title or d.get('release')}）"
+    try:
+        mi = int(period[5:7]) - 1
+        mon = rf"\b(?:{_MONTHS[mi]}|{_MONTHS[mi][:3]})\b"
+    except (ValueError, IndexError):
+        mon = r"$^"
+    if not re.search(mon, f"{title} {d.get('month') or ''}", re.I):
+        return {}, [], f"月份不符（{title}／{d.get('month')}）"
+    rows = [r for r in d.get("rows") or [] if isinstance(r, dict)]
+    mine = {}
+    for r in rows:
+        b = _bank_of(r.get("name"))
+        if b and b not in mine:
+            mine[b] = r
+    if len(mine) < 2:
+        return {}, [], f"五家只找到 {len(mine)} 家"
+    med = d.get("median") if isinstance(d.get("median"), dict) else {}
+    ok_fields, notes = [], []
+    for k in [x[0] for x in INDICATORS[key]]:
+        vals = []
+        for r in rows:
+            try:
+                if r.get(k) is not None:
+                    vals.append(float(r[k]))
+            except (TypeError, ValueError):
+                pass
+        m = med.get(k)
+        if m is None or len(vals) < 3:
+            notes.append(f"{k}：沒有中位數可驗算，不採用" if vals else f"{k}：表上沒有")
+            continue
+        m = float(m)
+        calc = statistics.median(vals)
+        tol = 0.5 * 10 ** -_dec(m) + 0.0005
+        if abs(calc - m) > tol:
+            notes.append(f"{k}：中位數驗算不過（重算 {calc:g}、表上 {m:g}）")
+            continue
+        if not _sane(key, k, m, cons):
+            notes.append(f"{k}：表上中位數 {m:g} 跟市場共識差太多（可能是別期的表）")
+            continue
+        ok_fields.append(k)
+        notes.append(f"{k}：驗算通過（{len(vals)} 家，中位數 {m:g}）")
+    if not ok_fields:
+        return {}, notes, "每一欄都驗算不過"
+    got = {}
+    q = f"圖表「{title}」・{len(rows)} 家、中位數驗算通過"
+    for b, r in mine.items():
+        for k in ok_fields:
+            try:
+                v = None if r.get(k) is None else float(r[k])
+            except (TypeError, ValueError):
+                v = None
+            if v is not None and _sane(key, k, v, cons):
+                got.setdefault(b, {})[k] = (v, q)
+    return got, notes, ""
+
+
+def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget: list, now) -> None:
+    """讀一篇文章內文的圖片（有上限、讀過不重讀），通過驗證的寫進 e["auto"]（圖表優先於文字）。"""
+    key, per = e["key"], e["period"]
+    img_seen = e.setdefault("img_seen", {})
+    auto = e.setdefault("auto", {})
+    log_ = e.setdefault("auto_log", [])
+    try:
+        month = _MONTHS[int(per[5:7]) - 1] + " " + per[:4]
+    except (ValueError, IndexError):
+        month = per
+    fields = [x[0] for x in INDICATORS[key]]
+    prompt = VISION_PROMPT % {
+        "release": {"employment": "jobs report", "cpi": "CPI", "pce": "PCE price index"}[key], "month": month,
+        "fields": "; ".join(FIELD_DESC[f] for f in fields),
+        "fields_json": ", ".join(f'"{f}": <number or null>' for f in fields)}
+    n = 0
+    for im in body_images(html):
+        if n >= IMG_PER_ARTICLE or budget[0] <= 0 or len(img_seen) >= IMG_PER_RELEASE:
+            break
+        k_ = _norm_img(im["url"])
+        if k_ in img_seen:
+            continue
+        try:
+            r = get(_fetch_url(im["url"]))
+            b = r.content if getattr(r, "status_code", 200) == 200 else b""
+        except Exception as ex:                    # noqa: BLE001
+            log.info("投行預估讀圖：圖片下載失敗 %s（%s）", k_, ex)
+            continue
+        w, h, mime = img_info(b)
+        if not mime or w < IMG_MIN[0] or h < IMG_MIN[1] or len(b) > 5_000_000:
+            img_seen[k_] = f"skip：{w}x{h} {mime or '格式不明'}"
+            continue
+        n += 1
+        budget[0] -= 1
+        text, err = vision(b, mime, prompt)
+        if err:
+            log.warning("投行預估讀圖：AI 失敗（%s）", err)
+            continue                               # 不記，下次再試（仍受每次與每期上限）
+        got, notes, why = check_table(key, per, _parse_json(text), e.get("cons") or {})
+        if got:
+            # 複讀：中位數驗算抓不到「整列錯位」（數字對、銀行錯），所以再讀一次逐格比對
+            text2, err2 = vision(b, mime, prompt, True)
+            if err2:
+                log.warning("投行預估讀圖：複讀失敗（%s），下次再試", err2)
+                continue
+            d2 = _parse_json(text2)
+            rows2 = {}
+            for r2 in d2.get("rows") or [] if isinstance(d2, dict) else []:
+                if isinstance(r2, dict) and _bank_of(r2.get("name")) and _bank_of(r2.get("name")) not in rows2:
+                    rows2[_bank_of(r2.get("name"))] = r2
+            for bk in list(got):
+                for f in list(got[bk]):
+                    try:
+                        v2 = float((rows2.get(bk) or {}).get(f))
+                    except (TypeError, ValueError):
+                        v2 = None
+                    if v2 is None or abs(v2 - got[bk][f][0]) > 1e-6:
+                        notes.append(f"{bk} {f}：兩次讀圖不一致（{got[bk][f][0]:g}／{v2 if v2 is not None else '空'}），不採用")
+                        del got[bk][f]
+                if not got[bk]:
+                    del got[bk]
+            if not got:
+                why = "兩次讀圖對不上"
+        img_seen[k_] = why or "ok"
+        at = now.isoformat(timespec="minutes")
+        for bk, vals in got.items():
+            for f, (v, q) in vals.items():
+                auto.setdefault(bk, {})[f] = {"v": v, "src": link, "name": name, "at": at, "q": q,
+                                              "kind": "image", "img": k_}
+        msg = {"at": at, "src": f"{name}（圖表）", "img": k_, "link": link, "result": why or "採用",
+               "got": {bk: {f: x[0] for f, x in vals.items()} for bk, vals in got.items()}, "notes": notes}
+        log_.append(msg)
+        del log_[:-12]
+        log.info("投行預估讀圖（%s %s）：%s → %s；%s；採用 %s", RELEASES[key], per, k_, why or "採用",
+                 "、".join(notes) or "—", msg["got"] or "無")
+
+
+def auto_update(e: dict, *, get_fn=None, ai=None, vision=None, now: dt.datetime | None = None) -> None:
+    """公布前：讀預覽文章（文字＋內文圖表）、擷取、通過檢查的寫進 e["auto"]。"""
     import hashlib
     get = get_fn or _get
+    vision = vision or vision_ai
     key, per = e["key"], e["period"]
     rel_at = release_dt(key, e.get("date", ""))
     now = now or clock.now()
@@ -403,7 +715,7 @@ def auto_update(e: dict, *, get_fn=None, ai=None, now: dt.datetime | None = None
     seen = e.setdefault("auto_seen", {})
     auto = e.setdefault("auto", {})
     log_ = e.setdefault("auto_log", [])
-    asked = 0
+    asked, budget = 0, [IMG_PER_RUN]
     for name, url in FEEDS:
         try:
             r = get(url)
@@ -414,16 +726,19 @@ def auto_update(e: dict, *, get_fn=None, ai=None, now: dt.datetime | None = None
             log.info("投行預估自動擷取：%s 讀不到（%s）", name, ex)
             continue
         for it in items[:8]:
-            if asked >= MAX_AI_ARTICLES:
-                break
             try:
                 import trafilatura
-                text = trafilatura.extract(get(it["link"]).text) or ""
+                html = get(it["link"]).text
+                text = trafilatura.extract(html) or ""
             except Exception as ex:                # noqa: BLE001
                 log.info("投行預估自動擷取：內文抓取失敗 %s（%s）", it["link"], ex)
                 continue
-            if not any(re.search(p, text) for p in ALIASES.values()):
-                seen[it["link"]] = "nobank"
+            # 圖表：先讀（比文字完整、有中位數可驗算），文字不覆蓋圖表的值
+            try:
+                read_images(e, html, it["link"], name, get=get, vision=vision, budget=budget, now=now)
+            except Exception as ex:                # noqa: BLE001
+                log.warning("投行預估讀圖失敗（%s）：%s", it["link"], ex)
+            if asked >= MAX_AI_ARTICLES or not any(re.search(p, text) for p in ALIASES.values()):
                 continue
             h = hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
             if seen.get(it["link"]) == h:
@@ -435,14 +750,21 @@ def auto_update(e: dict, *, get_fn=None, ai=None, now: dt.datetime | None = None
                 continue                           # 沒記雜湊，下次再試
             seen[it["link"]] = h
             at = now.isoformat(timespec="minutes")
+            kept = {}
             for b, vals in got.items():
                 for k, (v, q) in vals.items():
-                    auto.setdefault(b, {})[k] = {"v": v, "src": it["link"], "name": name, "at": at, "q": q}
-            msg = {"at": at, "src": name, "title": it["title"][:140], "link": it["link"],
-                   "got": {b: {k: x[0] for k, x in vals.items()} for b, vals in got.items()}, "bad": bad}
+                    old = (auto.get(b) or {}).get(k) or {}
+                    if old.get("kind") == "image":
+                        if abs(round_half(old["v"], _dec(v)) - v) < 1e-9:
+                            continue               # 一致（圖表四捨五入到原文位數相同）：留圖表的
+                        # 不一致：文字有原句佐證，圖表可能讀錯位——改用文字
+                        bad.append(f"{b} {k}：圖表 {old['v']:g} 跟原文 {v:g} 不一致，改用原文")
+                    auto.setdefault(b, {})[k] = {"v": v, "src": it["link"], "name": name, "at": at, "q": q, "kind": "text"}
+                    kept.setdefault(b, {})[k] = v
+            msg = {"at": at, "src": name, "title": it["title"][:140], "link": it["link"], "got": kept, "bad": bad}
             log_.append(msg)
             del log_[:-12]
-            log.info("投行預估自動擷取（%s %s）：%s 採用 %s；擋下 %s", RELEASES[key], per, name, msg["got"], bad or "無")
+            log.info("投行預估自動擷取（%s %s）：%s 採用 %s；擋下 %s", RELEASES[key], per, name, kept, bad or "無")
 
 
 def load_manual(path: Path | None = None) -> dict:
@@ -495,7 +817,7 @@ def merge_banks(key: str, e: dict, man: dict) -> tuple[dict, list]:
             if k in fields and isinstance(x, dict) and _sane(key, k, x["v"], cons):
                 row[k] = x["v"]
                 meta[k] = {"via": "auto", "src": x.get("src", ""), "name": x.get("name", ""),
-                           "at": x.get("at", ""), "q": x.get("q", "")}
+                           "at": x.get("at", ""), "q": x.get("q", ""), "kind": x.get("kind", "text")}
         mv = man.get(b) or {}
         for k, v in mv.items():
             if k == "src" or k not in fields:
@@ -513,7 +835,7 @@ def merge_banks(key: str, e: dict, man: dict) -> tuple[dict, list]:
 
 def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
            manual: dict | None = None, clev: dict | None = None, today: dt.date | None = None,
-           do_auto: bool = True, get_fn=None, ai=None) -> dict:
+           do_auto: bool = True, get_fn=None, ai=None, vision=None) -> dict:
     """更新 state/forecasts.json 並回傳 {"releases": {...}, "manual_bad": [...]}（給首頁畫表格）。"""
     sp = state_path or STATE_FILE
     try:
@@ -590,7 +912,7 @@ def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
             if e.get("key") in RELEASES and not e.get("actual") and today <= dd <= today + dt.timedelta(days=10):
                 e.pop("recon", None)
                 try:
-                    auto_update(e, get_fn=get_fn, ai=ai)
+                    auto_update(e, get_fn=get_fn, ai=ai, vision=vision)
                 except Exception as ex:            # noqa: BLE001
                     log.warning("投行預估自動擷取失敗（%s）：%s", eid, ex)
                 e["banks"], e["bad"] = merge_banks(e["key"], e, manual.get(eid) or {})

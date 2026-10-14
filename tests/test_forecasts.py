@@ -195,6 +195,145 @@ check("㉗ 同一句多家：數字要跟該家在同一子句（JPM 0.24、GS 0
       not F.evidence("cpi", "JPM", "core_mom", 0.24, _S) and not F.evidence("cpi", "GS", "core_mom", 0.16, _S)
       and not F.evidence("cpi", "GS", "core_yoy", 2.4, _S) and F.evidence("cpi", "JPM", "core_mom", 0.18, _S))
 
+# ㉘–㊱ 圖表自動讀取（假圖片、假 AI；表格數字照 WSJ 9 月 CPI 預測表）
+import struct  # noqa: E402
+IMG_TABLE = "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg?width=1024&format=webp"
+IMG_FEAT = "https://investinglive.com/cms/media/Processed/Categories/featured/cpi-featured.jpg?width=768"
+IMG_SMALL = "https://investinglive.com/cms/media/images/chart-small.jpg"
+IMG_PHOTO = "https://investinglive.com/cms/media/images/trader-photo.jpg"
+
+
+def png(w, h):
+    return b"\x89PNG\r\n\x1a\n" + b"\x00\x00\x00\rIHDR" + struct.pack(">II", w, h) + b"\x08\x02\x00\x00\x00" + b"\x00" * 64
+
+
+def jpg(w, h):
+    return b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00" + b"\xff\xc0\x00\x11\x08" + struct.pack(">HH", h, w) + b"\x03" + b"\x00" * 40
+
+
+check("㉘ 不靠 Pillow 讀圖片尺寸（PNG、JPEG）", F.img_info(png(1024, 1183))[:2] == (1024, 1183)
+      and F.img_info(jpg(1024, 1183)) == (1024, 1183, "image/jpeg"))
+PAGE2 = ("<html><body><article><h1>US CPI preview</h1>"
+         f'<figure><img src="{IMG_FEAT}" alt="A quiet trading desk"></figure>'
+         + "".join(f"<p>{l}</p>" for l in ART.splitlines() if l)
+         + f'<figure><img src="{IMG_PHOTO}" alt="trader at desk"></figure>'
+         + f'<figure><img src="{IMG_SMALL}" alt="small"></figure>'
+         + f'<figure><img src="{IMG_TABLE}" alt="us-september-2026-cpi-foreacsts-14-october-2026.jpg"></figure>'
+         + "<p>The table above lists each forecaster's call.</p></article></body></html>")
+imgs = [d["url"] for d in F.body_images(PAGE2)]
+check("㉙ 只取內文圖片、排除主視覺；像預測表的排第一", imgs and imgs[0] == IMG_TABLE and IMG_FEAT not in imgs, imgs)
+
+WSJ = [("Bank of America", .58, 3.6, .23, 2.5), ("Barclays", .58, 3.7, .24, 2.5), ("BNP Paribas", .56, 3.6, .23, 2.5),
+       ("Citadel Securities", None, 3.6, .19, 2.4), ("Citigroup", None, 3.6, .18, 2.4), ("Deutsche Bank", .57, 3.6, .16, 2.4),
+       ("Employ America", .63, None, .26, None), ("Goldman Sachs", .59, 3.7, .24, 2.5), ("Jefferies", .56, 3.6, .19, 2.4),
+       ("JP Morgan", .55, 3.6, .18, 2.4), ("Morgan Stanley", .62, 3.7, .24, 2.5), ("Nomura", .58, 3.6, .23, 2.5),
+       ("TD Securities", .57, 3.6, .20, 2.4), ("UBS", .56, 3.6, .19, 2.4)]
+
+
+def table_json(rows=WSJ, median=(.58, 3.6, .22, 2.4), title="September CPI forecasts"):
+    ks = ("cpi_mom", "cpi_yoy", "core_mom", "core_yoy")
+    return json.dumps({"table": True, "title": title, "release": "CPI", "month": "September",
+                       "rows": [dict(name=r[0], **dict(zip(ks, r[1:]))) for r in rows],
+                       "median": dict(zip(ks, median))})
+
+
+VCALLS = []
+
+
+def make_vision(first, second=None):
+    def v(img, mime, prompt, second_read=False):
+        VCALLS.append((mime, second_read))
+        if "trader" in prompt:
+            pass
+        return ((second if second is not None else first) if second_read else first), ""
+    return v
+
+
+def get2(url, **kw):
+    if "feed" in url:
+        return types.SimpleNamespace(status_code=200, text=FEED, content=FEED.encode())
+    if url == LINK:
+        return types.SimpleNamespace(status_code=200, text=PAGE2, content=PAGE2.encode())
+    if "foreacsts" in url:
+        return types.SimpleNamespace(status_code=200, content=jpg(1024, 1183), text="")
+    if "small" in url:
+        return types.SimpleNamespace(status_code=200, content=png(300, 120), text="")
+    if "trader" in url:
+        return types.SimpleNamespace(status_code=200, content=jpg(1200, 800), text="")
+    return types.SimpleNamespace(status_code=404, text="", content=b"")
+
+
+def vis_router(table, table2=None):
+    """照片回 table:false；表格回 table。"""
+    calls = []
+
+    def v(img, mime, prompt, second_read=False):
+        calls.append(second_read)
+        if F.img_info(img)[:2] == (1200, 800):
+            return '{"table": false}', ""
+        return ((table2 if table2 is not None else table) if second_read else table), ""
+    v.calls = calls
+    return v
+
+
+tables = {}
+for name_, rows_, med_, title_ in [("ok", WSJ, (.58, 3.6, .22, 2.4), "September CPI forecasts")]:
+    tables[name_] = table_json(rows_, med_, title_)
+d0 = json.loads(tables["ok"])
+got, notes, why = F.check_table("cpi", "2026-09", d0, {"cpi_mom": 0.6, "cpi_yoy": 3.6, "core_mom": 0.2, "core_yoy": 2.5})
+check("㉚ 驗算：四欄中位數都對得上；Citi 整體月增空白→不收", not why and got["GS"]["cpi_mom"][0] == 0.59
+      and "cpi_mom" not in got["Citi"] and got["BofA"]["core_mom"][0] == 0.23, (why, notes))
+bad_cols = [r[:3] + (r[4], r[3]) for r in WSJ]           # 核心月增、年增兩欄對調
+_, n2, why2 = F.check_table("cpi", "2026-09", json.loads(table_json(bad_cols)), {"core_mom": 0.2, "core_yoy": 2.5})
+check("㉛ 欄位錯置：核心兩欄中位數驗算不過→那兩欄不採用", not why2 and any("core_mom：中位數驗算不過" in x for x in n2), n2)
+_, _, why3 = F.check_table("cpi", "2026-09", json.loads(table_json(title="August CPI forecasts")) | {"month": "August"}, {})
+check("㉜ 讀到上個月的表（August）→整張不採用", "月份不符" in why3, why3)
+_, _, why4 = F.check_table("cpi", "2026-09", {"table": False}, {})
+check("㉝ 不是表格→不採用", why4 == "不是逐家預測表", why4)
+
+if HAVE_TF:
+    _FF.clock.now = lambda: dt.datetime(2026, 10, 14, 7, 3, tzinfo=_FF.clock.TAIPEI)
+    try:
+        tmp3 = Path(tempfile.mkdtemp()) / "fc.json"
+        vr = vis_router(tables["ok"])
+        r = F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2, ai=fake_ai, vision=vr)
+        e = r["releases"]["cpi|2026-09"]
+        b = e["banks"]
+        vals = {n: {k: v for k, v in row.items() if k not in ("src", "meta")} for n, row in b.items()}
+        check("㉞ 圖表讀到：五家整體月增／年增（Citi 無整體月增）、BofA 核心月增 0.23；照片判定非表格；小圖不送 AI",
+              vals["GS"] == {"cpi_mom": 0.59, "cpi_yoy": 3.7, "core_mom": 0.24, "core_yoy": 2.5}
+              and vals["MS"]["cpi_mom"] == 0.62 and vals["JPM"]["cpi_mom"] == 0.55 and "cpi_mom" not in vals["Citi"]
+              and vals["BofA"]["core_mom"] == 0.23 and b["GS"]["meta"]["cpi_mom"]["kind"] == "image"
+              and e["img_seen"].get(F._norm_img(IMG_PHOTO)) == "不是逐家預測表"
+              and e["img_seen"].get(F._norm_img(IMG_SMALL), "").startswith("skip")
+              and vr.calls.count(True) == 1, (vals, e["img_seen"], vr.calls))
+        n = len(vr.calls)
+        F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2, ai=fake_ai, vision=vr)
+        check("㉟ 讀過的圖不再讀（不浪費 token）", len(vr.calls) == n, vr.calls)
+        html = forecasts_ui.section({"releases": {"cpi|2026-09": e}}, dt.date(2026, 10, 14))
+        check("㊱ 頁面：出處顯示「自動讀圖」與中位數驗算", "自動讀圖・investingLive" in html and "中位數驗算通過" in html)
+        # 整列錯位：GS 與 MS 的列互換（中位數不變）→ 複讀（另一家）讀對 → 不一致的格子不採用
+        shift = [r if r[0] not in ("Goldman Sachs", "Morgan Stanley") else
+                 ((r[0],) + (WSJ[10][1:] if r[0] == "Goldman Sachs" else WSJ[7][1:])) for r in WSJ]
+        tmp4 = Path(tempfile.mkdtemp()) / "fc.json"
+        vr2 = vis_router(table_json(shift), tables["ok"])
+        e4 = F.update(ctxa, False, tmp4, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2,
+                      ai=lambda t, s_: ("{}", ""), vision=vr2)["releases"]["cpi|2026-09"]
+        g4 = e4["banks"].get("GS") or {}
+        check("㊲ 整列錯位（中位數驗算抓不到）→ 複讀比對抓到，GS 整體月增不採用、其他家照收",
+              "cpi_mom" not in g4 and e4["banks"]["JPM"]["cpi_mom"] == 0.55, (g4, [x.get("notes") for x in e4["auto_log"]]))
+        # 圖表讀錯、文字有原句：以原文為準
+        tmp5 = Path(tempfile.mkdtemp()) / "fc.json"
+        wrong = [r if r[0] != "JP Morgan" else (r[0], .55, 3.6, .16, 2.4) for r in WSJ]  # JPM 核心月增讀成 0.16（中位數不變）
+        e5 = F.update(ctxa, False, tmp5, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2,
+                      ai=fake_ai, vision=vis_router(table_json(wrong)))["releases"]["cpi|2026-09"]
+        check("㊳ 圖表跟原文不一致（JPM 0.16 vs 原文 0.18）→ 以原文為準",
+              e5["banks"]["JPM"]["core_mom"] == 0.18 and e5["banks"]["JPM"]["meta"]["core_mom"]["kind"] == "text",
+              e5["banks"]["JPM"])
+    finally:
+        _FF.clock.now = _now
+check("㊴ 讀圖沒金鑰：回報原因、不呼叫", F.vision_ai(b"x", "image/png", "p", env={}) == ("", "沒有 AI 金鑰"))
+
 print()
 print("有失敗" if FAIL else "全部通過")
 sys.exit(1 if FAIL else 0)

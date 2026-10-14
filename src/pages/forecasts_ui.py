@@ -166,6 +166,8 @@ def _panel(key: str, e: dict | None, rel: dict, today: dt.date) -> str:
             m = meta.get(k)
             if not m:
                 return src, url
+            if m.get("via") == "auto" and m.get("kind") == "image":
+                return (f"自動讀圖・{m.get('name', '')}・{_hm(m.get('at', ''))}　{m.get('q', '')}"), m.get("src", "")
             if m.get("via") == "auto":
                 q = m.get("q", "")
                 return (f"自動擷取・{m.get('name', '')}・{_hm(m.get('at', ''))}"
@@ -251,7 +253,7 @@ def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
     panels = "".join(_panel(k, F.pick(rel, k, today), rel, today) for k in F.RELEASES)
     notes = ('<details class="f-more"><summary>說明</summary>'
              '<p class="hm-foot">投行：BofA＝Bank of America、Citi＝Citigroup、JPM＝JPMorgan、MS＝Morgan Stanley、GS＝Goldman Sachs；'
-             '投行數字由程式從公開的預覽報導自動擷取（數字須出現在提到該機構的原句、且與共識差距合理才採用），或手動輸入，非官方。市場共識取自 ForexFactory；Cleveland Fed 為克里夫蘭聯儲的 Inflation Nowcasting（只預測通膨）。</p>'
+             '投行數字由程式從公開的預覽報導自動擷取：文字須出現在提到該機構的原句；文章附的逐家預測表由 AI 讀圖，重算的中位數須等於表上的中位數；兩者都須與共識差距合理才採用。也可手動輸入。非官方。市場共識取自 ForexFactory；Cleveland Fed 為克里夫蘭聯儲的 Inflation Nowcasting（只預測通膨）。</p>'
              '<p class="hm-foot">計分：每家預估先四捨五入到實際值的位數再比，最接近的記一次命中（同樣近一起算）；'
              '方向命中＝預估高於或低於共識，實際也落在同一邊。實際值用首次公布值，之後的修正不計；各家只保留公布前的最後一版。</p>'
              '<p class="hm-foot">對共識：通膨、就業、時薪高於共識以紅色表示（偏緊縮），失業率高於共識以綠色表示。'
