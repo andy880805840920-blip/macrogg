@@ -299,12 +299,12 @@
  "at": "2026-10-14T04:05:06.271476+00:00",
  "layout": "main",
  "topics": {
-  "hash": "2e943bb52a7d998e",
+  "hash": "85f723181535b5a3",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "紐約聯準會總裁威廉斯表示今年可能還需升息一次，但預期2027年無需進一步升息，與市場預期不同。克里夫蘭聯準會總裁哈馬克則認為應維持緊縮政策立場，以防止通膨心態根深蒂固，並主張採取較小幅度但快速的調整",
+    "text": "威廉斯預期今年還需升息一次，但2027年無需進一步升息，與市場預期及多數聯準會官員看法不同；市場目前給予12月升息機率近88%",
     "links": [
      {
       "title": "Williams says Fed may not have to hike rates in 2027, at odds with traders",
@@ -323,7 +323,7 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率面臨上升壓力。PIMCO投資長伊瓦申認為美債殖利率高點仍未到來，因聯準會可能繼續緊縮；達里奧則警告美債市場下跌還有很長的路要走",
+    "text": "PIMCO投資長認為美債殖利率仍有上升空間，聯準會可能進一步升息；同時債市因避險需求回升而獲得支撐，但橋水基金創辦人達利歐警告，美債市場下滑還有很長的路要走",
     "links": [
      {
       "title": "US Treasury yield peak still ahead as Fed likely to tighten again, PIMCO's Ivascyn says",
@@ -332,36 +332,36 @@
       "at": "2026-10-13T16:28:58+00:00"
      },
      {
-      "title": "Ray Dalio Warns Slump in Treasuries Market Has ‘Long Way to Go’",
-      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQUnltcWR3Q1MwQUFpck9OQ3lVZm5SUnZzbld3c3FRMXpsemplOURpYTdpUDBQdHJpNzltdDIyTzhtWXB4R19OOVBGVXV2RE8tLXdVU1NjZ0dVQ2g1SVRfNFhwbFpfMGM2OTVWRjFzdlhZNV9Va2N0Mk1mYjl2SzVMNXU1S1pXbWJqcHZ1cndPZ0Z0TlNYSE1FR2FaS3VzYUhSU1A0RERTdDNfd1BqdzlFb0xn?oc=5",
+      "title": "Treasuries Gain on Haven Demand as Trading Resumes After Holiday",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPNzl2UEFwekVQU3RpQ0FBNVluZnhXaHNyS0tFbFowazFUaXVVT2lVVWZNWUZyX1N5czRXMlY3am10TG5BNmdhZFVqS0VpaDZSNW9fQnBWMlhtSnlZMVZlZ3ptS1RYQnpUUlgxZlh2WVp0a3VVRkdzTHFzaS02cTFXeVh4NDZxWmw0VG1RdlZtX3duUFdNdV9zS2tqME00YVZ5VjVxX3RYZmV6QldEZ1BMa3NuZ3E3UQ?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-13T16:48:44+00:00"
+      "at": "2026-10-13T18:56:16+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東局勢升溫推升油價。葉門胡塞武裝分子攻擊沙烏地阿拉伯，市場擔憂供應中斷；中國煉油企業預計11月起啟動原油補庫存，日均增加約40萬桶，此舉反映北京將能源安全置於出口利潤之上",
+    "text": "中東衝突升溫推升油價，胡塞武裝分子攻擊沙烏地阿拉伯；中國煉油企業預計11月起啟動補庫存，日均增加約40萬桶原油",
     "links": [
      {
-      "title": "Saudi leads jump in OPEC+ oil output in September, despite Iran war disruption",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNWWdiOFh3ZXNEdWNtbEZLVlFDZ2dJQTZaanZ3dUtaNVgycEpwX0tDZWVYVF9PQlpRX085YWNwTkdtZVNmY0R2S0hHcllmRVlxcnAyYm9fTEZQa3YtYlljLXd6ZlROZ3VOTFktSmZnNFFkdGkxUkwyRmJ0R1JiQ0FtLXUzZTdSZGY1dlJCUndmd2FjQkxrT2dWRGFvMmcteFU0VVNQMEdxQVN4eVE5QjdBYg?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-13T13:58:40+00:00"
+      "title": "Dow, S&P 500, Nasdaq Futures Mixed Amid Rising Oil Prices Ahead Of CPI Data: BAC, RIVN, SLS, GME Stocks In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-amid-rising-oil-prices-ahead-of-cpi-data-bac-rivn-sls-gme-stocks-in-focus/cZxf7zfRBpG?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-14T02:31:58+00:00"
      },
      {
-      "title": "Oil prices climb as traders weigh Saudi supply risk, Russian diesel flow",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxON0hPaGRDOW9haXRKcUJ3WVU5dVdwSjB2ZzNMZTVWd0lRYV9ZUjRNRTI4VjVXeERGeW1XVU1GanZidjZneXhKeFh1dWM0OUJ6ZGltVXFXdHJNVk52MDN5M3NvRnhUUWN6aEFiSldFUWxfeHNPYmQ2R21JMGlhaUNaWEFNckc0T0ItSFpYcHA3MmM4UUdnTVd0VFg0NWhtbm91MllPWllha0pqdVBjZlRldDgxaG5PclVud0xtNQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-14T01:27:00+00:00"
+      "title": "歐亞集團估，中國煉油企業11月起將啟動原油庫存補充",
+      "link": "https://tw.stock.yahoo.com/news/%E6%AD%90%E4%BA%9E%E9%9B%86%E5%9C%98%E4%BC%B0-%E4%B8%AD%E5%9C%8B%E7%85%89%E6%B2%B9%E4%BC%81%E6%A5%AD11%E6%9C%88%E8%B5%B7%E5%B0%87%E5%95%9F%E5%8B%95%E5%8E%9F%E6%B2%B9%E5%BA%AB%E5%AD%98%E8%A3%9C%E5%85%85-035502073.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-14T03:55:02+08:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股面臨修正壓力。",
+    "text": "美股10/13收盤道瓊跌0.35%、標普500跌0.02%、那斯達克跌0.15%；銀行股財報表現不一，美光跌3.6%、應用材料跌近7%，半導體類股連跌六日",
     "links": [
      {
       "title": "Dow, S&P 500, Nasdaq Futures Mixed Amid Rising Oil Prices Ahead Of CPI Data: BAC, RIVN, SLS, GME Stocks In Focus",
@@ -380,33 +380,45 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Google推出旗艦AI模型Gemini 4 Argon，定價策略具競爭力。",
+    "text": "Google推出旗艦AI模型Gemini 4 Argon，定價策略具競爭力，11月30日前享優惠價每百萬輸入Token 2美元、輸出Token 10美元，之後將翻倍；輝達在中國AI晶片市占率因華為追趕而下滑",
     "links": [
      {
-      "title": "從挖礦轉 AI：GMI Cloud 聯手輝達深耕亞洲市場",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BE%9E%E6%8C%96%E7%A4%A6%E8%BD%89-ai-gmi-cloud-%E8%81%AF%E6%89%8B%E8%BC%9D%E9%81%94%E6%B7%B1%E8%80%95%E4%BA%9E%E6%B4%B2%E5%B8%82%E5%A0%B4-030922898.html",
+      "title": "Nvidia's China AI-chip share falls as Huawei closes gap, report finds",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOZ2lCcTJZLWVsU3NJWjJRV2xZd0RXM1NtbWNnQUtfb1RsSjlNVmFEWnVxYVJ5Y0pXS0lWV284NlVCWkp2Qy1jbm5na2ZFeE5BYmNlWFVaVGttNElacjE1SGlaeVBOc1J5Z042bUlOS3JPbWpHcloxVDF5X3B2NG5hSEdCcHp0SGswU3d5VWNNWE02bE1KS0VyTVROTlJxUTRFUzNQM3hrbERWWWh5X21pSFg2ajBBOG02cXdzS1UyV09MY0k?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-13T02:33:00+00:00"
+     },
+     {
+      "title": "Google發表Gemini 4 Argon旗艦AI模型 瞄準開發者與企業市場",
+      "link": "https://tw.stock.yahoo.com/news/google%E7%99%BC%E8%A1%A8gemini-4-argon%E6%97%97%E8%89%A6ai%E6%A8%A1%E5%9E%8B-%E7%9E%84%E6%BA%96%E9%96%8B%E7%99%BC%E8%80%85%E8%88%87%E4%BC%81%E6%A5%AD%E5%B8%82%E5%A0%B4-035213375.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-14T03:09:22+00:00"
+      "at": "2026-10-14T03:52:13+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股10/13（台灣時間）重挫960點，外資賣超1,653億元創史上第三大紀錄，三大法人合計賣超1,984億元；記憶體族群慘遭血洗，南亞科、華邦電、旺宏跌幅逾7%，儘管南亞科第三季EPS達25.4元、毛利率85.7%，市場仍不買單，主因中國記憶體廠技術突圍與國際大廠護盤力道減弱",
+    "text": "台股10/13外資賣超1,653億元創史上第三高，加權指數跌960點；10/14反彈717點至48,915點，台塑四寶同步起飛，南亞漲停破350元，市值一日增加4,400億元",
     "links": [
      {
       "title": "台股單日遭提款近2000億！外資狂殺1653億創史上第3大　專家一句話全說了",
       "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%96%AE%E6%97%A5%E9%81%AD%E6%8F%90%E6%AC%BE%E8%BF%912000%E5%84%84-%E5%A4%96%E8%B3%87%E7%8B%82%E6%AE%BA1653%E5%84%84%E5%89%B5%E5%8F%B2%E4%B8%8A%E7%AC%AC3%E5%A4%A7-%E5%B0%88%E5%AE%B6-%E5%8F%A5%E8%A9%B1%E5%85%A8%E8%AA%AA%E4%BA%86-035600737.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-14T03:56:00+08:00"
+      "at": "2026-10-14T03:55:00+08:00"
+     },
+     {
+      "title": "【Hot台股】南亞一度漲停飆破350元 網喊「祖傳南亞賣掉了阿嬤對不起」 分析師勸：別追高",
+      "link": "https://tw.stock.yahoo.com/news/%E3%80%90hot%E5%8F%B0%E8%82%A1%E3%80%91%E5%8D%97%E4%BA%9E%E4%B8%80%E5%BA%A6%E6%BC%B2%E5%81%9C%E9%A3%86%E7%A0%B4350%E5%85%83-%E7%B6%B2%E5%96%8A%E3%80%8C%E7%A5%96%E5%82%B3%E5%8D%97%E4%BA%9E%E8%B3%A3%E6%8E%89%E4%BA%86%E9%98%BF%E5%AC%A4%E5%B0%8D%E4%B8%8D%E8%B5%B7%E3%80%8D-%E5%88%86%E6%9E%90%E5%B8%AB%E5%8B%B8%EF%BC%9A%E5%88%A5%E8%BF%BD%E9%AB%98-034942400.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-14T03:48:11+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "川普聲稱胡塞武裝分子試圖在美國期中選舉前推高油價。摩根士丹利分析師威爾遜就期中選舉、聯準會政策與債券波動性發表看法。馬斯克成為共和黨在期中選舉中最大捐獻者",
+    "text": "川普指控胡塞武裝分子試圖推高油價以影響美國期中選舉；馬斯克成為共和黨期中選舉最大捐款人",
     "links": [
      {
       "title": "Trump says Houthis trying to drive up oil prices ahead of US midterm elections",
@@ -415,34 +427,53 @@
       "at": "2026-10-13T16:38:26+00:00"
      },
      {
-      "title": "Watch Morgan Stanley's Wilson on Midterm Elections, Fed Policy, Bond Volatility",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQc19DMTBRbk1wZVVBNXlxTG1XaWJSMWF3Vy1qNnJPcy01bThhR3B0dDEyWi1odkh6LUg2b0hNS0dfa3NQODZ3MEViZ245ZXozdlRPVUpybURWNTlwTVBEOTMzeHNGbEhKekJNY05KZkxCUXk5ZWhzUkVhVzVoVFZGRUc0cWNkZ21UdTE1NVhYellxV3JjMFRVNENYUVFNODh4bmMwRmxDVnFjNm9ad3c?oc=5",
+      "title": "Elon Musk becomes Republicans’ biggest donor for US midterm elections",
+      "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPQXVjeHAzZUNrZlQwNjBNWVduRTk4eWg3YzJIWkRwRE04dzVndWhCYkVLRHZyXzFTWUt5bWVGQ0huMk1KVzFXNnN5VmhWRTdoYzl1UVUxdGdmUmMwelJiR1lUM1BCSzZwZzA2b3ZYYVpuTkVwSXk1UXdpUE1LOUNiUFBJbUY?oc=5",
+      "source": "Financial Times",
+      "at": "2026-10-13T13:21:41+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金10/14亞盤站穩4,150美元上方，市場等待美國CPI數據；聯準會官員言論抑制升息預期，美元走軟提供支撐",
+    "links": [
+     {
+      "title": "Gold Steady as Fed Official’s Remarks Temper Rate-Hike Bets",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQazViUHl2SmRiSUdDb0dNelo2Y2JjdkNLOG40Q0FpMnFBZ1JPNUNBc3pMeGlWbE5CQlUwcEVJWE93WmlJRkZTbzllQ1pfNV9HYXVHLUV2YVdkWW1TMWVJTElsNklvSzVYdTZPXzhIV0JHdHBCQzhhcklUSHhQaTFXUUNjNVlZTVZQNWd0UHM5LTlwRmpobUdiR1RiWDhTYUNTUGloY256S1l2blk0M0JZ?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-13T00:00:00+00:00"
+      "at": "2026-10-14T00:08:00+00:00"
+     },
+     {
+      "title": "Gold draws support from retreating USD; holds above $4,150 as traders await US CPI report",
+      "link": "https://www.fxstreet.com/news/gold-draws-support-from-retreating-usd-holds-above-4-150-as-traders-await-us-cpi-report-202610140409",
+      "source": "www.fxstreet.com",
+      "at": "2026-10-14T04:09:37+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/13（台灣時間）重貶至32.085元，5天貶逾4角。外資大舉賣超1,600億元引發股匯雙殺，央行尾盤進場調節仍難擋熱錢匯出；美元指數近102.15，威廉斯言論使美元走弱，市場等待9月CPI數據以判斷聯準會升息路徑",
+    "text": "新台幣10/13午盤重貶1.31角至32.216元，五日累計貶值超過4角；美元指數高檔強勢，分析師預期匯價將在32.2至32.6元區間震盪",
     "links": [
+     {
+      "title": "新台幣午盤重貶1.31角　暫收32.216元",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%8D%88%E7%9B%A4%E9%87%8D%E8%B2%B61-31%E8%A7%92-%E6%9A%AB%E6%94%B632-216%E5%85%83-040734189.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-14T04:07:34+08:00"
+     },
      {
       "title": "股匯脫鉤！新台幣5天貶逾4角 分析師：下一步恐回測32.6關卡",
       "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E8%84%AB%E9%89%A4%EF%BC%81%E6%96%B0%E5%8F%B0%E5%B9%A35%E5%A4%A9%E8%B2%B6%E9%80%BE4%E8%A7%92-%E5%88%86%E6%9E%90%E5%B8%AB%EF%BC%9A%E4%B8%8B%E4%B8%80%E6%AD%A5%E6%81%90%E5%9B%9E%E6%B8%AC326%E9%97%9C%E5%8D%A1-033629816.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-14T03:33:41+08:00"
-     },
-     {
-      "title": "United States Dollar Index weakens to near 102.00 ahead of US CPI release",
-      "link": "https://www.fxstreet.com/news/united-states-dollar-index-weakens-to-near-10200-ahead-of-us-cpi-release-202610140243",
-      "source": "www.fxstreet.com",
-      "at": "2026-10-14T02:43:40+00:00"
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-14T03:33:41+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-14T04:05:16.732334+00:00"
+  "at": "2026-10-14T04:22:17.990721+00:00"
  },
  "main_source_titles": [
   "The latest inflation data is expected to show price increases are accelerating",

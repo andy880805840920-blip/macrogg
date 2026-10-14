@@ -10,7 +10,7 @@
     "cpi_mom": 0.6,
     "cpi_yoy": 3.6
    },
-   "cons_at": "2026-10-14T12:05+08:00",
+   "cons_at": "2026-10-14T12:22+08:00",
    "clev": {
     "cpi_mom": 0.53,
     "core_mom": 0.2,
@@ -18,66 +18,216 @@
     "core_yoy": 2.39
    },
    "clev_asof": "10/13",
-   "banks": {},
-   "bad": [],
-   "recon": {
-    "at": "2026-10-14T12:06+08:00",
-    "titles": [
-     "Wall St Week Ahead Bank earnings, CPI headline busy markets week as S&P 500 hovers near records - Reuters",
-     "US CPI preview: 14 investment bank forecasters see energy lifting headline to 3.6%, core held near 0.2% - investingLive",
-     "JPMorgan Chase, Goldman and other big banks report earnings this week. What to expect - CNBC",
-     "CPI Forecasts Show Moderated Inflation in September, Keeping the Fed on Hold - Morningstar",
-     "US Q3 Earnings Season Kicks Off With Big Banks; Futures Steady Ahead of CPI/PPI - Gotrade",
-     "JPMorgan's David Kelly Expects Fed To Keep Interest Rates Unchanged After In-Line CPI Report — 'We Essentially Have Got Teflon Inflation In ",
-     "The Week Ahead: US CPI, eurozone CPI, JPMorgan earnings - CMC Markets",
-     "What To Expect In Markets This Week: JPM, GS, C Bank Earnings, CPI Report, Kevin Warsh's Speech And More - TradingView",
-     "Inflation likely worsened in September, according to Goldman Sachs - Yahoo Finance",
-     "The Week Ahead: JPMorgan, Goldman Sachs Earnings and CPI Test Stock Market Strength - FXEmpire",
-     "Wells Fargo, Bank of America, Domino’s, Johnson & Johnson, Inflation Data, and More to Watch This Week - Barron's",
-     "Morgan Stanley: Preview: What We Expect from the US September CPI Report on Wednesday - eFXdata",
-     "Dow Jones Industrial (DJI) Average Index forecast: CPI and bank earnings in focus - Beinsure",
-     "Investment bank sees September core CPI easing as supercore cools, while inflation risks persist - VT Markets",
-     "JPMorgan and Goldman Sachs Earnings: Q3 2026 Bank Earnings Season Preview - Admirals",
-     "Dow Jones, Nasdaq, S&P 500 preview: Markets brace for CPI, Q3 earnings kick-off - Investing.com",
-     "Week Ahead: US CPI, Big Bank Earnings and TSMC in Focus - Gotrade",
-     "Bank of America (NYSE: BAC) stock price forecast: $30.6 bn in revenue - Beinsure",
-     "Ibovespa Drops as Inflation Forecast Rises - TradingView",
-     "CPI isn't expected to show much progress on inflation in September - TradingView"
-    ],
-    "access": {
-     "investingLive": 200,
-     "eFXdata": 200,
-     "FXStreet": 200
-    },
-    "bodies": [
-     {
-      "title": "China September CPI 0.9% y/y (expected 1%, prior 0.8%)",
-      "link": "https://investinglive.com/news/china-september-cpi-0-9-y-y-expected-1-prior-0-8/",
-      "chars": 456,
-      "banks": {
-       "BofA": 0,
-       "Citi": 0,
-       "JPM": 0,
-       "MS": 0,
-       "GS": 0
-      },
-      "numbers": 12
-     },
-     {
-      "title": "US CPI preview: 14 investment bank forecasters see energy lifting headline to 3.6%, core held near 0.2%",
-      "link": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
-      "chars": 4538,
-      "banks": {
-       "BofA": 1,
-       "Citi": 2,
-       "JPM": 3,
-       "MS": 5,
-       "GS": 3
-      },
-      "numbers": 36
+   "banks": {
+    "BofA": {
+     "core_yoy": 2.5,
+     "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "meta": {
+      "core_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      }
      }
-    ]
-   }
+    },
+    "Citi": {
+     "core_mom": 0.18,
+     "core_yoy": 2.4,
+     "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "meta": {
+      "core_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+      },
+      "core_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      }
+     }
+    },
+    "JPM": {
+     "core_mom": 0.18,
+     "core_yoy": 2.4,
+     "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "meta": {
+      "core_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+      },
+      "core_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      }
+     }
+    },
+    "MS": {
+     "core_mom": 0.24,
+     "core_yoy": 2.5,
+     "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "meta": {
+      "core_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+      },
+      "core_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      }
+     }
+    },
+    "GS": {
+     "core_mom": 0.24,
+     "core_yoy": 2.5,
+     "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "meta": {
+      "core_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+      },
+      "core_yoy": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+       "name": "investingLive",
+       "at": "2026-10-14T12:22+08:00",
+       "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+      }
+     }
+    }
+   },
+   "bad": [],
+   "auto_seen": {
+    "https://investinglive.com/news/china-september-cpi-0-9-y-y-expected-1-prior-0-8/": "nobank",
+    "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/": "d4eb2e0c4155",
+    "https://www.fxstreet.com/news/breaking-chinas-cpi-inflation-rises-to-09-yoy-in-september-vs-10-expected-202610140131": "nobank"
+   },
+   "auto": {
+    "GS": {
+     "core_mom": {
+      "v": 0.24,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+     },
+     "core_yoy": {
+      "v": 2.5,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+     }
+    },
+    "JPM": {
+     "core_mom": {
+      "v": 0.18,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+     },
+     "core_yoy": {
+      "v": 2.4,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+     }
+    },
+    "MS": {
+     "core_mom": {
+      "v": 0.24,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "Core forecasts range from 0.16% at Deutsche Bank to 0.24% at Goldman Sachs, Barclays and Morgan Stanley"
+     },
+     "core_yoy": {
+      "v": 2.5,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+     }
+    },
+    "Citi": {
+     "core_mom": {
+      "v": 0.18,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "Deutsche Bank has the softest call at 0.16%, with Citigroup and JPMorgan both at 0.18%, while Goldman Sachs, Barclays and Morgan Stanley sit at 0.24%."
+     },
+     "core_yoy": {
+      "v": 2.4,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+     }
+    },
+    "BofA": {
+     "core_yoy": {
+      "v": 2.5,
+      "src": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+      "name": "investingLive",
+      "at": "2026-10-14T12:22+08:00",
+      "q": "The difference matters for the annual rate: roughly half of forecasters, including Bank of America, Goldman Sachs, Barclays and Morgan Stanley, expect core to edge up to 2.5% year on year, while the rest, including Citigroup, Deutsche Bank "
+     }
+    }
+   },
+   "auto_log": [
+    {
+     "at": "2026-10-14T12:22+08:00",
+     "src": "investingLive",
+     "title": "US CPI preview: 14 investment bank forecasters see energy lifting headline to 3.6%, core held near 0.2%",
+     "link": "https://investinglive.com/news/us-cpi-preview-14-investment-bank-forecasters-see-energy-lifting-headline-to-3-6-core-held-near-0-2/",
+     "got": {
+      "GS": {
+       "core_mom": 0.24,
+       "core_yoy": 2.5
+      },
+      "JPM": {
+       "core_mom": 0.18,
+       "core_yoy": 2.4
+      },
+      "MS": {
+       "core_mom": 0.24,
+       "core_yoy": 2.5
+      },
+      "Citi": {
+       "core_mom": 0.18,
+       "core_yoy": 2.4
+      },
+      "BofA": {
+       "core_yoy": 2.5
+      }
+     },
+     "bad": []
+    }
+   ]
   }
  }
 }
