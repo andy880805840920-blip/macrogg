@@ -97,7 +97,7 @@
     "key": "mix2",
     "label": "民主黨拿參院、共和黨守眾院",
     "p": 0.0095,
-    "d1": -0.0015
+    "d1": -0.001
    },
    {
     "key": "mix",
@@ -249,7 +249,7 @@
      "other": {
       "name": "Mark Baisley",
       "party": "R",
-      "p": 0.014
+      "p": 0.0135
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -265,7 +265,7 @@
      "lead": {
       "name": "Democrat",
       "party": "D",
-      "p": 0.986
+      "p": 0.9865
      },
      "other": {
       "name": "Republican",
@@ -274,7 +274,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.1,
+     "gap": 97.2,
      "vol": 31882.234893000008,
      "url": "https://polymarket.com/event/delaware-senate-election-winner"
     },
@@ -312,11 +312,11 @@
      "other": {
       "name": "Todd Achilles",
       "party": "I",
-      "p": 0.039
+      "p": 0.0385
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.4,
+     "gap": 91.5,
      "vol": 141770.18714599998,
      "url": "https://polymarket.com/event/idaho-senate-election-winner"
     },
@@ -585,7 +585,7 @@
      "other": {
       "name": "Michael Whatley",
       "party": "R",
-      "p": 0.043
+      "p": 0.0425
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -664,7 +664,7 @@
      "lead": {
       "name": "Mike Rounds",
       "party": "R",
-      "p": 0.9425
+      "p": 0.942
      },
      "other": {
       "name": "Brian Bengs",
@@ -690,11 +690,11 @@
      "other": {
       "name": "Marquita Bradshaw",
       "party": "D",
-      "p": 0.053
+      "p": 0.0515
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 88.9,
+     "gap": 89.0,
      "vol": 96412.95886099999,
      "url": "https://polymarket.com/event/tennessee-senate-election-winner"
     },
@@ -748,7 +748,7 @@
      "lead": {
       "name": "Shelley Moore Capito",
       "party": "R",
-      "p": 0.9805
+      "p": 0.978
      },
      "other": {
       "name": "Rachel Fetty Anderson",
@@ -757,7 +757,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.0,
+     "gap": 96.8,
      "vol": 16467.482610000003,
      "url": "https://polymarket.com/event/west-virginia-senate-election-winner"
     },
@@ -1095,7 +1095,7 @@
      "lead": {
       "name": "Tommy Tuberville",
       "party": "R",
-      "p": 0.94
+      "p": 0.9405
      },
      "other": {
       "name": "Doug Jones",
@@ -1104,7 +1104,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 88.0,
+     "gap": 88.1,
      "vol": 40387.102612999995,
      "url": "https://polymarket.com/event/alabama-governor-winner-2026"
     },
@@ -1142,11 +1142,11 @@
      "other": {
       "name": "Victor Marx",
       "party": "R",
-      "p": 0.028
+      "p": 0.029
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.0,
+     "gap": 93.8,
      "vol": 17195.706288999998,
      "url": "https://polymarket.com/event/colorado-governor-winner-2026"
     },
@@ -1389,7 +1389,7 @@
      "lead": {
       "name": "Jocelyn Benson",
       "party": "D",
-      "p": 0.957
+      "p": 0.9565
      },
      "other": {
       "name": "John James",
@@ -1398,7 +1398,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.5,
+     "gap": 91.4,
      "vol": 307262.46891299996,
      "url": "https://polymarket.com/event/michigan-governor-winner-2026"
     },
@@ -1478,11 +1478,11 @@
      "other": {
       "name": "Cinde Warmington",
       "party": "D",
-      "p": 0.0605
+      "p": 0.0595
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 87.0,
+     "gap": 87.1,
      "vol": 47476.805756,
      "url": "https://polymarket.com/event/new-hampshire-governor-winner-2026"
     },
@@ -1520,11 +1520,11 @@
      "other": {
       "name": "Bruce Blakeman",
       "party": "R",
-      "p": 0.0495
+      "p": 0.0485
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 90.4,
+     "gap": 90.5,
      "vol": 208238.34255599996,
      "url": "https://polymarket.com/event/new-york-governor-winner-2026"
     },
@@ -1599,7 +1599,7 @@
      "lead": {
       "name": "Josh Shapiro",
       "party": "D",
-      "p": 0.979
+      "p": 0.9795
      },
      "other": {
       "name": "Stacy Garrity",
@@ -1725,16 +1725,16 @@
      "lead": {
       "name": "Phil Scott",
       "party": "R",
-      "p": 0.755
+      "p": 0.745
      },
      "other": {
       "name": "Amanda Janoo",
       "party": "D",
-      "p": 0.2485
+      "p": 0.2495
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 50.6,
+     "gap": 49.5,
      "vol": 235204.92134200002,
      "url": "https://polymarket.com/event/vermont-governor-winner-2026"
     },
