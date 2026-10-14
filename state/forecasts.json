@@ -10,7 +10,7 @@
     "cpi_mom": 0.6,
     "cpi_yoy": 3.6
    },
-   "cons_at": "2026-10-14T13:18+08:00",
+   "cons_at": "2026-10-14T20:51+08:00",
    "clev": {
     "cpi_mom": 0.53,
     "core_mom": 0.2,
@@ -502,7 +502,14 @@
     "https://editorial.fxsstatic.com/miscelaneous/chart-screenshot%20-%202026-10-14T085832-1791948738744.579.png": "不是逐家預測表",
     "https://investinglive.com/cms/media/images/us-september-2026-cpi-foreacsts-14-october-2026.jpg": "ok"
    },
-   "img_pending": {}
+   "img_pending": {},
+   "actual": {
+    "cpi_mom": 0.6,
+    "core_mom": 0.3,
+    "cpi_yoy": 3.7,
+    "core_yoy": 2.6
+   },
+   "actual_at": "2026-10-14T20:51+08:00"
   }
  }
 }
