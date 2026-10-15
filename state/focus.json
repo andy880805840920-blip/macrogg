@@ -1,412 +1,246 @@
 {
- "hash": "ef13ba43e4456754",
- "text": "美國9月消費者物價指數（CPI）年增率達3.7%，超出預期，引發市場對聯準會維持高利率的擔憂。這是CPI連續65個月（超過5年）維持在2%以上的紀錄，創下21世紀最長的持續高通膨期間。聯準會官員對消費者開始將高通膨視為「生活常態」感到警惕，克里夫蘭聯邦準備銀行總裁漢馬克在社群媒體上表示「這令人擔憂」。紐約聯邦準備銀行消費者預期調查顯示，一年期通膨預期在9月升至3.9%，為三年多來最高。\n財政部新任財政部長顧問澤瓦斯10/15駁斥國際貨幣基金組織對美國債務的警告，指IMF過去預測紀錄不佳，並列舉2008年全球金融危機、1997年亞洲金融危機等IMF預測失誤案例。\n聯準會褐皮書報告指出，美國經濟在過去數週呈現溫和成長，12個轄區中2個報告中度成長、3個溫和成長、4個輕微成長，但消費者對持續上漲的價格展現抵抗，導致面向消費者的企業利潤空間受壓。",
+ "hash": "622319ff208d58b0",
+ "text": "美國9月生產者物價指數（PPI）月增1.3%，創2022年3月以來最大漲幅，年增6.3%更是2022年12月來最大升幅，遠超市場預期的0.6%。扣除食品、能源與貿易服務的核心PPI仍月增0.5%，顯示通膨壓力廣泛存在，不僅限於能源。華爾街經濟學家據此預估9月核心個人消費支出（PCE）將月增0.32%，高於8月的0.25%，將使年增核心通膨率升至3.1%。¶PPI數據公布後，市場對聯準會升息預期重新升溫。儘管聯準會官員近期表示無需急著升息，但多數華爾街券商預期年底前仍需升息，其中12家預測12月升息25個基點，美國銀行則為唯一預期10月與12月各升息一次的大型券商。聯準會下次政策會議訂於10/27至10/28舉行。\nAI股拋售引發避險買盤，10年期與30年期公債殖利率分別下跌14bp與13bp至5.05%與5.40%，美元兌加幣轉弱。\n華許10/15在IMF場合就熱通膨與升息預期發表看法；財政部長貝森特則被華爾街關注是否再度就公債殖利率高企採取行動。",
  "links": [
   {
-   "title": "Fed’s Goolsbee Says Inflation Discouraging, Warns of Overheating",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPRWo5aHVNS2FlaVhUU3hyV2FvM19LeGFCdEN5Ml9KLXZJVFVTNVNTV193U2JqTHZlN0xJOWt6UFBHRGI4alltNUxFaC0xSVdja1c1QUdLSXcyaFNnaG5SMXFoY2hnVEdQUVBvWXVQY21nNzNiekQ4ejU4Qk1IcWYyTU9fUnl2LU9VSG92NGlpUU1xNkd4XzdCWGp5R05VNU9mSE9Ta0piXzhsOFVGb0x6R09ZRng?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-14T20:24:07+00:00"
-  },
-  {
-   "title": "Citi turns hawkish on Fed after inflation surprise, expects December rate hike",
-   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQaTlWWnFXTFVrM3lHcHBOZF9YMzFUQkx5WmJXNE5ieXJoY29tVkZKZGRGT3JoX3NBNGNPSERqeW5CTnlDdWh0SWZDZ3gtcGQyOTBFSW90dmgwOEJTdV85SVJxV2dQUmtETDc1RlR4RFNXSzRDZTY2ZFNQTk4tajdmNWZST0FRd1BmaG5kSjhrbWdnVHY2MFNrcFNiaHF6aU1BOEZCSkNCOFZHTGV4TFNmS2czNWg1RHZnOHZN?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-14T14:42:53+00:00"
-  },
-  {
-   "title": "How high inflation became a 'fact of life' in the U.S.",
-   "link": "https://www.cnbc.com/2026/10/14/high-inflation-fed-expectations.html",
+   "title": "Economists: Hot PPI shows Fed's work is not done",
+   "link": "https://www.cnbc.com/2026/10/15/pce-ppi-september-fed-reserve-rate-hike.html",
    "source": "CNBC",
-   "at": "2026-10-14T17:20:23+00:00"
+   "at": "2026-10-15T15:37:59+00:00"
   },
   {
-   "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-   "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-   "source": "CNBC",
-   "at": "2026-10-15T12:11:15+00:00"
+   "title": "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+   "link": "https://finance.yahoo.com/markets/article/ai-trade-rout-sparks-flight-to-treasurys-bond-yields-sink-chart-of-the-day-151821305.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-15T15:18:21+00:00"
   },
   {
-   "title": "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting",
-   "link": "https://www.cnbc.com/2026/10/15/zervos-imf-us-debt-warning.html",
-   "source": "CNBC",
-   "at": "2026-10-15T12:40:58+00:00"
+   "title": "Stock market today: Dow, S&P 500 rise, Nasdaq trims losses as Treasury yields sink",
+   "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-rise-nasdaq-trims-losses-as-treasury-yields-sink-153611834.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-15T12:20:56+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-15",
+  "date": "2026-10-16",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-15",
+   "date": "2026-10-16",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.879196,
-     "end": 3.965,
-     "move_bp": 8.58,
+     "start": 3.881339,
+     "end": 3.945,
+     "move_bp": 6.366,
      "outcomes": [
       [
        0,
-       0.6568
+       0.7454
       ],
       [
        25,
-       0.3432
+       0.2546
       ]
      ],
      "how": "2026-11 合約平均"
     },
     {
      "date": "2026-12-09",
-     "start": 3.965,
-     "end": 4.176364,
-     "move_bp": 21.136,
+     "start": 3.945,
+     "end": 4.163409,
+     "move_bp": 21.841,
      "outcomes": [
       [
        25,
-       0.8455
+       0.8736
       ],
       [
        0,
-       0.1545
+       0.1264
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-    },
-    {
-     "date": "2027-01-27",
-     "start": 4.176364,
-     "end": 4.285,
-     "move_bp": 10.864,
-     "outcomes": [
-      [
-       0,
-       0.5655
-      ],
-      [
-       25,
-       0.4345
-      ]
-     ],
-     "how": "2027-02 合約平均"
-    },
-    {
-     "date": "2027-03-17",
-     "start": 4.285,
-     "end": 4.462143,
-     "move_bp": 17.714,
-     "outcomes": [
-      [
-       25,
-       0.7086
-      ],
-      [
-       0,
-       0.2914
-      ]
-     ],
-     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
-    },
-    {
-     "date": "2027-04-28",
-     "start": 4.462143,
-     "end": 4.55,
-     "move_bp": 8.786,
-     "outcomes": [
-      [
-       0,
-       0.6486
-      ],
-      [
-       25,
-       0.3514
-      ]
-     ],
-     "how": "2027-05 合約平均"
-    },
-    {
-     "date": "2027-06-09",
-     "start": 4.55,
-     "end": 4.635714,
-     "move_bp": 8.571,
-     "outcomes": [
-      [
-       0,
-       0.6571
-      ],
-      [
-       25,
-       0.3429
-      ]
-     ],
-     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
-    },
-    {
-     "date": "2027-07-28",
-     "start": 4.635714,
-     "end": 4.67,
-     "move_bp": 3.429,
-     "outcomes": [
-      [
-       0,
-       0.8629
-      ],
-      [
-       25,
-       0.1371
-      ]
-     ],
-     "how": "2027-08 合約平均"
-    },
-    {
-     "date": "2027-09-15",
-     "start": 4.67,
-     "end": 4.7,
-     "move_bp": 3.0,
-     "outcomes": [
-      [
-       0,
-       0.88
-      ],
-      [
-       25,
-       0.12
-      ]
-     ],
-     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
-    },
-    {
-     "date": "2027-10-27",
-     "start": 4.7,
-     "end": 4.7,
-     "move_bp": 0.0,
-     "outcomes": [
-      [
-       0,
-       1.0
-      ],
-      [
-       25,
-       0.0
-      ]
-     ],
-     "how": "2027-11 合約平均"
-    },
-    {
-     "date": "2027-12-08",
-     "start": 4.7,
-     "end": 4.915652,
-     "move_bp": 21.565,
-     "outcomes": [
-      [
-       25,
-       0.8626
-      ],
-      [
-       0,
-       0.1374
-      ]
-     ],
-     "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
     }
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.879196,
-    "end": 3.965,
-    "move_bp": 8.58,
+    "start": 3.881339,
+    "end": 3.945,
+    "move_bp": 6.366,
     "outcomes": [
      [
       0,
-      0.6568
+      0.7454
      ],
      [
       25,
-      0.3432
+      0.2546
      ]
     ],
     "how": "2026-11 合約平均"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.965,
-    "end": 4.176364,
-    "move_bp": 21.136,
+    "start": 3.945,
+    "end": 4.163409,
+    "move_bp": 21.841,
     "outcomes": [
      [
       25,
-      0.8455
+      0.8736
      ],
      [
       0,
-      0.1545
+      0.1264
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 29.717,
-   "r0": 3.879196,
+   "cum_bp": 28.207,
+   "r0": 3.881339,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 29.717,
-     "prev_cum_bp": 26.672
-    },
-    {
-     "date": "2027-06-09",
-     "label": "2027 年中",
-     "cum_bp": 75.652,
-     "prev_cum_bp": 74.25
-    },
-    {
-     "date": "2027-12-08",
-     "label": "2027 年底",
-     "cum_bp": 103.646,
-     "prev_cum_bp": 81.362
+     "cum_bp": 28.207,
+     "prev_cum_bp": 30.145
     }
    ],
    "prev": {
     "next": {
      "date": "2026-10-28",
-     "start": 3.879643,
-     "end": 3.935,
-     "move_bp": 5.536,
+     "start": 3.881964,
+     "end": 3.965,
+     "move_bp": 8.304,
      "outcomes": [
       [
        0,
-       0.7786
+       0.6679
       ],
       [
        25,
-       0.2214
+       0.3321
       ]
      ],
      "how": "2026-11 合約平均"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.935,
-     "end": 4.146364,
-     "move_bp": 21.136,
+     "start": 3.965,
+     "end": 4.183409,
+     "move_bp": 21.841,
      "outcomes": [
       [
        25,
-       0.8455
+       0.8736
       ],
       [
        0,
-       0.1545
+       0.1264
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 26.672
+    "cum_bp": 30.145
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-10-15T13:24:20.421426+00:00",
+ "at": "2026-10-15T18:44:07.054661+00:00",
  "layout": "main",
  "topics": {
-  "hash": "eb3629929e8453ef",
+  "hash": "5638b32d379fed57",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會褐皮書指美國經濟溫和成長，但通膨壓力持續。12個轄區中4個觀察到物價上漲加速，油價上漲影響廣泛，企業回報柴油價格居高不下，燃料附加費已轉嫁供應鏈；消費者對持續漲價展現抵抗，導致面向消費者企業利潤空間縮減",
+    "text": "聯準會主席華許表示通膨壓力廣泛存在，芝加哥聯邦準備銀行總裁古斯比指出美國消費支出來自各收入階層的廣泛基礎，而非僅由股市上漲推動，底層90%收入者佔美國消費支出約75%",
     "links": [
      {
-      "title": "美國聯準會褐皮書：經濟溫和擴張 通膨壓力仍揮之不去",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E8%81%AF%E6%BA%96%E6%9C%83%E8%A4%90%E7%9A%AE%E6%9B%B8-%E7%B6%93%E6%BF%9F%E6%BA%AB%E5%92%8C%E6%93%B4%E5%BC%B5-%E9%80%9A%E8%86%A8%E5%A3%93%E5%8A%9B%E4%BB%8D%E6%8F%AE%E4%B9%8B%E4%B8%8D%E5%8E%BB-124347342.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-15T12:43:47+00:00"
+      "title": "Fed's Goolsbee says the stock market isn't propping up consumer spending",
+      "link": "https://finance.yahoo.com/economy/policy/article/feds-goolsbee-says-the-stock-market-isnt-propping-up-consumer-spending--its-strong-on-its-own-171352872.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-15T17:13:52+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "10年期美債殖利率在9月通膨數據公布後上升9個基點至5.3%，因能源成本推高物價。布蘭特原油期貨徘徊在每桶105美元附近",
+    "text": "紐約梅隆銀行執行長文斯認為10年期美債殖利率約5.25%在歷史上並非異常，反映利率曲線正常化，美國經濟強韌是推升通膨與利率的主要因素，該行第三季淨利年增20%至16.1億美元，受惠於利息收入成長",
     "links": [
      {
-      "title": "10-year Treasury yield rises following hot inflation data: AlphaCheck",
-      "link": "https://finance.yahoo.com/markets/article/10-year-treasury-yield-rises-following-hot-inflation-data-alphacheck-135815482.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-14T13:58:15+00:00"
-     }
-    ]
-   },
-   {
-    "id": "oil",
-    "label": "油價",
-    "text": "中國承諾2027年和2028年每年從美國進口至少1,000萬公噸煤炭，約佔中國煤炭進口總量的2%。中國轉向美國採購主因是國內產量不足，加上最大海外供應商印尼供應不確定性升高，今年中國從印尼進口煤炭暴跌25%",
-    "links": [
-     {
-      "title": "中國承諾年購千萬噸美煤 能源供應多元化兼促中美貿易轉圜",
-      "link": "https://tw.stock.yahoo.com/news/%E4%B8%AD%E5%9C%8B%E6%89%BF%E8%AB%BE%E5%B9%B4%E8%B3%BC%E5%8D%83%E8%90%AC%E5%99%B8%E7%BE%8E%E7%85%A4-%E8%83%BD%E6%BA%90%E4%BE%9B%E6%87%89%E5%A4%9A%E5%85%83%E5%8C%96%E5%85%BC%E4%BF%83%E4%B8%AD%E7%BE%8E%E8%B2%BF%E6%98%93%E8%BD%89%E5%9C%9C-120051770.html",
+      "title": "美債殖利率5.25%很高？BNY執行長：歷史上不罕見 正在回歸正常",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%875-25-%E5%BE%88%E9%AB%98-bny%E5%9F%B7%E8%A1%8C%E9%95%B7-%E6%AD%B7%E5%8F%B2%E4%B8%8A%E4%B8%8D%E7%BD%95%E8%A6%8B-153008577.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-15T12:00:51+00:00"
+      "at": "2026-10-15T15:30:08+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "半導體股領跌拖累美股，台積電儘管創紀錄獲利且超越預期，仍因全球晶片股拋售而開低。輝達跌2%、超微跌約4%，AI相關債務風險引發擔憂，CoreWeave等新興雲端業者因高利率壓力股價承壓",
+    "text": "醫療保健類股在科技股拋售潮中逆勢走強，沃爾瑪獲德銀升評至買進，預期2027年邊際利潤改善，並指出目前通膨水準有利吸引消費者；克羅克斯鞋類獲巴克萊升評，看好產品創新與國際業務成長",
     "links": [
      {
-      "title": "Stock market today: S&P 500, Nasdaq futures slip as semiconductor sell",
-      "link": "https://finance.yahoo.com/markets/live/copy-stock-market-today-hot-inflation-report-drops-tech-drives-sp-500-nasdaq-down-122056767.html?.tsrc=rss",
+      "title": "Why Healthcare Stocks Are Hot When the AI Trade Runs Cold",
+      "link": "https://finance.yahoo.com/m/a375414b-e74e-3611-9458-2340976c760a/why-healthcare-stocks-are-hot.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-15T12:20:56+00:00"
+      "at": "2026-10-15T18:14:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "AI雲端大廠CoreWeave股債雙殺，股價重挫15%至65.78美元，長期債券殖利率飆升至15%。公司第二季利息支出年增逾1倍達6.4億美元，總債務攀升至520億美元，遠高於一年前150億美元，反映市場對其償債風險疑慮",
+    "text": "輝達與台積電等晶片股因升息疑慮與融資成本擔憂遭拋售，台積電ADR重挫逾4%至409美元，輝達下跌2.59%至215美元，市場憂慮高利率將拖累企業AI投資動能",
     "links": [
      {
-      "title": "【美股盤前】「輝達親兒子」股債雙殺！執行長親曝原因",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E8%BC%9D%E9%81%94%E8%A6%AA%E5%85%92%E5%AD%90-%E8%82%A1%E5%82%B5%E9%9B%99%E6%AE%BA-%E5%9F%B7%E8%A1%8C%E9%95%B7%E8%A6%AA%E6%9B%9D%E5%8E%9F%E5%9B%A0-121500632.html",
+      "title": "升息恐拖累AI產業！那斯達克跌近1個月低點　台積電ADR重挫逾4％",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8D%87%E6%81%AF%E6%81%90%E6%8B%96%E7%B4%AFai%E7%94%A2%E6%A5%AD-%E9%82%A3%E6%96%AF%E9%81%94%E5%85%8B%E8%B7%8C%E8%BF%911%E5%80%8B%E6%9C%88%E4%BD%8E%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E9%87%8D%E6%8C%AB%E9%80%BE4-145628733.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-15T12:15:00+08:00"
+      "at": "2026-10-15T14:56:28+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股10/15下跌1,655點收46,969點，失守4萬7千點，創史上第6大跌點。三大法人合計賣超3,700.76億元，外資單日賣超3,025.55億元創歷史新高",
+    "text": "台股融資餘額減少51.41億元至6464.15億元，法人認為若能連續3天超百億減肥較有利籌碼安定，聯電、元大台灣50反1融資減幅最大",
     "links": [
      {
-      "title": "台股大跌1張不賣！瑤池金母砸逾10億買爆「這3檔」",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%A4%A7%E8%B7%8C1%E5%BC%B5%E4%B8%8D%E8%B3%A3-%E7%91%A4%E6%B1%A0%E9%87%91%E6%AF%8D%E7%A0%B8%E9%80%BE10%E5%84%84%E8%B2%B7%E7%88%86-%E9%80%993%E6%AA%94-122200295.html",
+      "title": "台股跌1655點外資賣超創新高　融資減51.41億",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E8%B7%8C1655%E9%BB%9E%E5%A4%96%E8%B3%87%E8%B3%A3%E8%B6%85%E5%89%B5%E6%96%B0%E9%AB%98-%E8%9E%8D%E8%B3%87%E6%B8%9B51-41%E5%84%84-142007441.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-15T12:22:00+08:00"
-     },
+      "at": "2026-10-15T14:20:07+08:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "美國Blue Gold公司完成黃金數位資產平台測試版開發，將實體黃金整合至現代金融服務，平台上數位單位均由獨立託管機構保管的實體黃金擔保，公司正評估美國監管框架並洽談銀行合作夥伴關係",
+    "links": [
      {
-      "title": "美股全面承壓、台股重挫1600逾點！原因非通膨？專家這樣說",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E5%85%A8%E9%9D%A2%E6%89%BF%E5%A3%93-%E5%8F%B0%E8%82%A1%E9%87%8D%E6%8C%AB1600%E9%80%BE%E9%BB%9E-%E5%8E%9F%E5%9B%A0%E9%9D%9E%E9%80%9A%E8%86%A8-%E5%B0%88%E5%AE%B6%E9%80%99%E6%A8%A3%E8%AA%AA-120300121.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-15T12:03:00+08:00"
+      "title": "美國Blue Gold完成黃金金融服務平台測試 推進數位化黃金運用",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8Bblue-gold%E5%AE%8C%E6%88%90%E9%BB%83%E9%87%91%E9%87%91%E8%9E%8D%E6%9C%8D%E5%8B%99%E5%B9%B3%E5%8F%B0%E6%B8%AC%E8%A9%A6-%E6%8E%A8%E9%80%B2%E6%95%B8%E4%BD%8D%E5%8C%96%E9%BB%83%E9%87%91%E9%81%8B%E7%94%A8-143644825.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-15T14:36:44+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元大幅貶值，晶片股拋售衝擊亞洲貨幣，韓元同步下滑。新台幣盤中重貶3.79角，成交量創91.15億美元歷史新高",
+    "text": "新台幣兌美元重貶1.92角，匯市成交量近百億美元創歷史天量，反映晶片股拋售與外資大幅撤出台灣",
     "links": [
      {
-      "title": "Taiwan Dollar, Won Slump as Chip Stock Selloff Hurts Sentiment",
-      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOTU5yU2ZpaEZUd2lKZWZvWU5RdEdRTFRMaUM2NXplMnN3ak9CSTMwWTFTWXp1bnZla2VFTzlfeUxhNzNuTVV1Qmx6a1A0elpNekVGMndFUUl2Z2E4R2UtN3BDNU5JZVMzWWI3b1NURlEzQ0lsMVIwQ1NZT1JBRzh2U3ZqeGk4ZFdVVEE2UmNKUXhsRl9sU1ZGOTVOZzFHUU9fdFgwVEtuUTNpOTRGaWo2dUJB?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-15T06:12:00+00:00"
+      "title": "新台幣重貶1.92角 匯市成交量近百億美元爆歷史天量",
+      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE0zNTRzenJYTWswSXRXYkJNRkV1MWVwejl1RUYwR0U1ek1zNEh0MEwxdTh0ZzI0X3NmelFwUVVxLWFocThVSXluN2NNQmhVSmVK0gFWQVVfeXFMTUVrcTA2X0JhTjN5emZGemdMWTF6ZzhmcXNMcWltTm43eGZ5MWRRWjcwMFA5MVBsVXZQS0gzRkQtODZ4VlZydlZBNGg5R3BLalphRnBlcUE?oc=5",
+      "source": "UDN",
+      "at": "2026-10-15T13:23:00+00:00"
      },
      {
       "title": "熱錢大逃殺！新台幣盤中重貶3.79角 爆出91.15億美元史上巨量",
@@ -417,29 +251,16 @@
     ]
    }
   ],
-  "at": "2026-10-15T13:24:41.513876+00:00"
+  "at": "2026-10-15T18:44:25.831100+00:00"
  },
  "main_source_titles": [
-  "Fed’s Goolsbee Says Inflation Discouraging, Warns of Overheating",
-  "Citi turns hawkish on Fed after inflation surprise, expects December rate hike",
-  "How high inflation became a 'fact of life' in the U.S.",
-  "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-  "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting"
+  "Economists: Hot PPI shows Fed's work is not done",
+  "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+  "Stock market today: Dow, S&P 500 rise, Nasdaq trims losses as Treasury yields sink"
  ],
- "headline": "9月CPI升至3.7%超預期，聯準會升息預期重燃，長期公債殖利率走高",
- "rate_note": "10 年期殖利率今日 -12bp 至 5.07%（美東 09:09 盤中），下降。",
+ "headline": "9月PPI創四年半最大漲幅，聯準會升息預期重燃",
+ "rate_note": "PPI超預期升溫強化聯準會維持高利率更長時間的必要性，偏向推升短端升息預期；不過10年期今日下跌11bp至5.08%，市場反而因AI股拋售引發避險買盤而走低，尚未充分反映通膨升溫對長端的推升壓力。",
  "recent_mains": [
-  {
-   "headline": "9月CPI超預期升至3.7%，聯準會升息壓力重燃，10月決策成焦點",
-   "titles": [
-    "Treasuries Slump as Hot Inflation Lifts Fed Rate-Hike Bets",
-    "US inflation heats up in September; Fed rate hike this month back on table",
-    "How high inflation became a 'fact of life' in the U.S.",
-    "10-year Treasury yield rises following hot inflation data: AlphaCheck",
-    "Fed10月升息重回討論！華爾街憂通膨擴散 有人喊12月升2碼"
-   ],
-   "at": "2026-10-14T18:58:42.020947+00:00"
-  },
   {
    "headline": "9月CPI升至3.7%超預期，聯準會10月升息預期重燃",
    "titles": [
@@ -462,9 +283,44 @@
     "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting"
    ],
    "at": "2026-10-15T13:24:20.421426+00:00"
+  },
+  {
+   "headline": "9月PPI創四年半最大漲幅，聯準會升息預期重燃",
+   "titles": [
+    "Economists: Hot PPI shows Fed's work is not done",
+    "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+    "Stock market today: Dow, S&P 500 rise, Nasdaq trims losses as Treasury yields sink"
+   ],
+   "at": "2026-10-15T18:44:07.054661+00:00"
   }
  ],
  "archive": {
+  "2026-10-16": {
+   "headline": "9月PPI創四年半最大漲幅，聯準會升息預期重燃",
+   "text": "美國9月生產者物價指數（PPI）月增1.3%，創2022年3月以來最大漲幅，年增6.3%更是2022年12月來最大升幅，遠超市場預期的0.6%。扣除食品、能源與貿易服務的核心PPI仍月增0.5%，顯示通膨壓力廣泛存在，不僅限於能源。華爾街經濟學家據此預估9月核心個人消費支出（PCE）將月增0.32%，高於8月的0.25%，將使年增核心通膨率升至3.1%。¶PPI數據公布後，市場對聯準會升息預期重新升溫。儘管聯準會官員近期表示無需急著升息，但多數華爾街券商預期年底前仍需升息，其中12家預測12月升息25個基點，美國銀行則為唯一預期10月與12月各升息一次的大型券商。聯準會下次政策會議訂於10/27至10/28舉行。\nAI股拋售引發避險買盤，10年期與30年期公債殖利率分別下跌14bp與13bp至5.05%與5.40%，美元兌加幣轉弱。\n華許10/15在IMF場合就熱通膨與升息預期發表看法；財政部長貝森特則被華爾街關注是否再度就公債殖利率高企採取行動。",
+   "rate_note": "PPI超預期升溫強化聯準會維持高利率更長時間的必要性，偏向推升短端升息預期；不過10年期今日下跌11bp至5.08%，市場反而因AI股拋售引發避險買盤而走低，尚未充分反映通膨升溫對長端的推升壓力。",
+   "links": [
+    {
+     "title": "Economists: Hot PPI shows Fed's work is not done",
+     "link": "https://www.cnbc.com/2026/10/15/pce-ppi-september-fed-reserve-rate-hike.html",
+     "source": "CNBC",
+     "at": "2026-10-15T15:37:59+00:00"
+    },
+    {
+     "title": "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+     "link": "https://finance.yahoo.com/markets/article/ai-trade-rout-sparks-flight-to-treasurys-bond-yields-sink-chart-of-the-day-151821305.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-15T15:18:21+00:00"
+    },
+    {
+     "title": "Stock market today: Dow, S&P 500 rise, Nasdaq trims losses as Treasury yields sink",
+     "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-rise-nasdaq-trims-losses-as-treasury-yields-sink-153611834.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-15T12:20:56+00:00"
+    }
+   ],
+   "at": "2026-10-15T18:44:07.054661+00:00"
+  },
   "2026-10-15": {
    "headline": "9月CPI升至3.7%超預期，聯準會升息預期重燃，長期公債殖利率走高",
    "text": "美國9月消費者物價指數（CPI）年增率達3.7%，超出預期，引發市場對聯準會維持高利率的擔憂。這是CPI連續65個月（超過5年）維持在2%以上的紀錄，創下21世紀最長的持續高通膨期間。聯準會官員對消費者開始將高通膨視為「生活常態」感到警惕，克里夫蘭聯邦準備銀行總裁漢馬克在社群媒體上表示「這令人擔憂」。紐約聯邦準備銀行消費者預期調查顯示，一年期通膨預期在9月升至3.9%，為三年多來最高。\n財政部新任財政部長顧問澤瓦斯10/15駁斥國際貨幣基金組織對美國債務的警告，指IMF過去預測紀錄不佳，並列舉2008年全球金融危機、1997年亞洲金融危機等IMF預測失誤案例。\n聯準會褐皮書報告指出，美國經濟在過去數週呈現溫和成長，12個轄區中2個報告中度成長、3個溫和成長、4個輕微成長，但消費者對持續上漲的價格展現抵抗，導致面向消費者的企業利潤空間受壓。",
