@@ -1442,7 +1442,7 @@ def _hm_changes(cs, regime: str = "") -> str:
         items.append((2, f.get("change_lean") or "neutral", f.get("module", "訊號"), f.get("title", "—")))
     for f in cs.resolved_flags:
         items.append((3, f.get("change_lean") or "neutral", f.get("module", "訊號"), "解除：" + f.get("title", "—")))
-    _ml = {"labor": "就業", "inflation": "物價", "claims": "就業", "jolts": "就業", "market": "市場"}
+    _ml = {"labor": "就業", "inflation": "物價", "claims": "就業", "jolts": "就業", "ppi": "物價", "market": "市場"}
     moves = sorted(cs.metric_moves, key=lambda m: -abs(m.get("delta", 0)) / (m.get("threshold") or 1))
     for i, m in enumerate(moves):
         u = m.get("unit", "")

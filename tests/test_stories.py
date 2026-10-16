@@ -59,16 +59,15 @@ check("⑬ 早上準時（07:03）與延遲（08:40）都算當天",
 check("⑭ 晚上那次拖過午夜（00:30）仍算前一天", E(2026, 10, 15, 0, 30) == "2026-10-14")
 check("⑮ 22:45 算當天", E(2026, 10, 14, 22, 45) == "2026-10-14")
 
-# ⑪ 最新數據：初領失業金、JOLTS 也有顯示
+# ⑪ 最新數據：初領失業金不放（每週公布，會蓋掉更重要的數據）；JOLTS 照常
 c2 = {"labor": {"claims": {"machine": {"week": "2026-10-10", "ic_now": 228000, "ic_ma": 224500}},
                 "jolts": [{"label": "職缺數", "value": "720.0 萬個"}, {"label": "招聘率", "value": "3.4%"}],
                 "jolts_month": "2026-08"},
       "_watch_extra": {"consensus": {"claims|2026-10-16": [{"label": "初領失業金", "forecast": "22.0 萬", "previous": "21.8 萬"}]}}}
 L3 = sto.latest_release(c2, {"claims": {"first_seen": "2026-10-16T22:45:00+08:00"},
                               "jolts": {"first_seen": "2026-10-08T07:05:00+08:00"}})
-check("⑪ 初領失業金：統計週、人數、四週平均、高於預估",
-      L3 and L3["name"] == "初領失業金（統計週至 10/10）" and L3["rows"][0]["actual"] == "22.8 萬人"
-      and L3["rows"][0]["vs"] == "高於預估" and L3["rows"][1]["label"] == "四週平均", L3)
+check("⑪ 初領失業金不放進快報（2026-10）：週四公布後仍顯示前一次的 JOLTS",
+      L3 and L3["name"].startswith("JOLTS 職缺（8 月）"), L3)
 L4 = sto.latest_release(c2, {"jolts": {"first_seen": "2026-10-08T07:05:00+08:00"}})
 check("⑫ JOLTS：職缺數與招聘率", L4 and L4["name"].startswith("JOLTS 職缺（8 月）")
       and L4["rows"][0]["actual"] == "720.0 萬個", L4)

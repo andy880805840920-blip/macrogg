@@ -1497,6 +1497,9 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
         "ppi": {
             "headline_yoy": summ.ppi_headline_yoy,
             "headline_3m": summ.ppi_headline_3m,
+            # 月增（新聞標題講的那個數字）；官方口徑的一位小數由 ppi_watch 補
+            "headline_mom": summ.ppi_headline_mom,
+            "core_mom": summ.ppi_core_mom,
             "core_yoy": summ.ppi_core_yoy,
             "core_3m": summ.ppi_core_3m,
             # 出廠價漲得比零售價快 → 企業還沒轉嫁完，未來 CPI 有上行壓力；

@@ -188,6 +188,9 @@ _RELEASES = {
     # PCE 由 BEA 月底發布：推估值換成實際值、九宮格通膨軸重判——
     # 對讀者是一個月裡最值得知道的更新之一
     "pce": {"module": "inflation", "label": " PCE", "keys": {"core_pce"}},
+    # PPI（2026-10）：自己一個期別，常在 CPI 前後一天公布
+    "ppi": {"module": "ppi", "label": " PPI",
+            "keys": {"ppi_mom", "core_ppi_mom", "core_ppi_yoy"}},
     "claims": {"module": "claims", "label": " 失業金申請",
                "keys": {"ic_ma", "cc"}},
     "jolts": {"module": "jolts", "label": " JOLTS",

@@ -371,6 +371,8 @@ def _fresh_releases(ctxs: dict) -> dict:
         "labor": lab.get("data_month", ""),
         "inflation": inf.get("data_month", ""),
         "pce": ((inf.get("asof") or {}).get("pce") or "")[:7],
+        "ppi": str(((inf.get("ppi") or {}).get("period")
+                    or (inf.get("ppi") or {}).get("asof") or ""))[:7],
         "claims": ((lab.get("claims") or {}).get("machine") or {}).get("week", ""),
         "jolts": lab.get("jolts_month", ""),
         "fomc": (fom.get("latest_date", "") if not fom.get("empty") else ""),
@@ -840,6 +842,13 @@ def main() -> int:
             log.info("通膨模組完成：%s，%d 項訊號",
                      ctxs["inflation"]["data_month"],
                      len(ctxs["inflation"]["flags"]))
+            # PPI 發布日的機制（2026-10）：月增、市場預估（存檔）、高於／低於預期的訊號。
+            # 要在變化比對之前跑，訊號才進得了「本期變化」
+            try:
+                from src.analysis import ppi_watch
+                ppi_watch.update(ctxs, args.offline)
+            except Exception as e:                 # noqa: BLE001
+                log.warning("PPI 補充失敗（%s），本次只有原本的 PPI 卡", e)
 
     # ---- 長端利率與債務供給 ----
     if want("rates"):

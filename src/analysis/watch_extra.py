@@ -100,8 +100,16 @@ def _ff_value(s: str, unit: str) -> str:
     return s
 
 
+_FF_MEMO: list = []
+
+
 def fetch_ff(_get=None) -> list[dict]:
-    """ForexFactory 本週＋下週的美國事件（下週還沒出來時只有本週）。"""
+    """
+    ForexFactory 本週＋下週的美國事件（下週還沒出來時只有本週）。
+    同一次執行抓一次就好（PPI 模組與「接下來看什麼」都要用；那個端點會限流）。
+    """
+    if _get is None and _FF_MEMO:
+        return list(_FF_MEMO[0])
     get = _get or _get_default
     out = []
     for url in FF_URLS:
@@ -115,6 +123,8 @@ def fetch_ff(_get=None) -> list[dict]:
         except Exception as e:                       # noqa: BLE001
             log.info("ForexFactory 週曆抓取失敗（%s）：%s", url.rsplit("/", 1)[-1], e)
     log.info("ForexFactory：美國事件 %d 筆", len(out))
+    if _get is None and out:
+        _FF_MEMO[:] = [list(out)]
     return out
 
 

@@ -68,7 +68,8 @@ headline:
     label: 核心 PCE
     enabled: true
     note: 剔除食物與能源；用來辨識基礎通膨趨勢，也是九宮格通膨水準軸
-  # PPI 是企業端上游壓力，只參與「通膨動能」，不直接改變九宮格格位。
+  # PPI 是企業端上游壓力，不直接改變九宮格格位（通膨動能 2026-10 起改看核心 PCE）。
+  # 用在：PPI 卡、管線壓力訊號、PPI 高於／低於預期訊號（ppi_watch）、核心 PCE 推估的醫療與金融分項。
   - id: PPIFIS
     label: 總體 PPI（最終需求）
     enabled: true

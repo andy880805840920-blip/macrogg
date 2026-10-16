@@ -180,6 +180,32 @@ def snapshot(ctxs: dict) -> dict:
             "method": METHOD_VERSION, "metrics_prev": {},
         }
 
+    # ---- PPI：常在 CPI 前後一天公布，自己一個期別（2026-10）----
+    # 綁進通膨的複合期別的話，PPI 一出來就會把 CPI 的基準往前推，
+    # 前一天 CPI 的變化會從「本期變化」消失——所以跟失業金、JOLTS 一樣獨立。
+    _pp = (inf or {}).get("ppi") or {}
+    _pper = str(_pp.get("period") or _pp.get("asof") or "")[:7]
+    if inf and _pper:
+        def _r1(v):
+            return None if v is None else round(v, 1)
+        mods["ppi"] = {
+            "vintage": _pper, "released": today,
+            "flags": [], "flag_titles": {}, "flag_leans": {},
+            "metrics": {
+                "ppi_mom": {"label": "PPI 月增", "value": _pp.get("mom", _r1(_pp.get("headline_mom"))),
+                            "unit": "%", "delta_unit": " 個百分點",
+                            "threshold": 0.1, "up_is": "hawkish"},
+                "core_ppi_mom": {"label": "核心 PPI 月增",
+                                 "value": _pp.get("core_mom_1d", _r1(_pp.get("core_mom"))),
+                                 "unit": "%", "delta_unit": " 個百分點",
+                                 "threshold": 0.1, "up_is": "hawkish"},
+                "core_ppi_yoy": {"label": "核心 PPI 年增", "value": _r1(_pp.get("core_yoy")),
+                                 "unit": "%", "delta_unit": " 個百分點",
+                                 "threshold": 0.1, "up_is": "hawkish"},
+            },
+            "method": METHOD_VERSION, "metrics_prev": {},
+        }
+
     # ---- 市場價格：日頻資料按「週」輪替基準（逐日比會全是雜訊）；
     #      供給壓力等級做成旗標，翻轉時走既有的新增/解除機制即時報 ----
     rts = ctxs.get("rates")
@@ -409,7 +435,7 @@ def _invert(lean: str) -> str:
 
 
 MODULE_LABEL = {"labor": "就業", "inflation": "物價", "fomc": "聯準會",
-                "claims": "失業金", "jolts": "JOLTS", "market": "市場"}
+                "claims": "失業金", "jolts": "JOLTS", "ppi": "PPI", "market": "市場"}
 
 
 def _side(state: dict, which: str) -> dict:
@@ -460,7 +486,7 @@ def compare(state: dict) -> ChangeSet:
 
     # ---- 每個模組各自的對照基準 ----
     today = clock.today()
-    for mod in ("labor", "inflation", "fomc", "claims", "jolts", "market"):
+    for mod in ("labor", "inflation", "fomc", "claims", "jolts", "ppi", "market"):
         c, p = cur.get(mod), prev.get(mod)
         if not (c and p):
             continue
@@ -533,7 +559,7 @@ def compare(state: dict) -> ChangeSet:
         cs.infl_tilt_to = cur["inflation"]["tilt"]
 
     # ---- 關鍵數字的移動 ----
-    for mod in ("labor", "inflation", "claims", "jolts", "market"):
+    for mod in ("labor", "inflation", "claims", "jolts", "ppi", "market"):
         p, c = prev.get(mod), cur.get(mod)
         if not (p and c):
             continue

@@ -4,7 +4,7 @@
   1 你的指標    問候＋依兩個指標漲跌自動寫的一句＋數值與變動（瀏覽器端讀報價板）
   2 今日主軸    主軸標題＋第一句
   3 對利率      主軸的「對利率」，並判斷偏向推升／壓低／不明確
-  4 最新數據    最近一次公布的重要數據；有市場預估就標高於／低於預估
+  4 最新數據    最近一次公布的重要數據（不含每週的初領失業金）；有市場預估就標高於／低於預估
   5 今明兩天    數據、發債、官員談話、休市
 
 這裡只組資料（JSON），畫面與動畫在 pages/home.py。
@@ -81,7 +81,9 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
     fom = ctxs.get("fomc") or {}
     lk, ik = lab.get("kpi") or {}, inf.get("kpi") or {}
     cons = (ctxs.get("_watch_extra") or {}).get("consensus") or {}
-    order = ("labor", "inflation", "pce", "fomc", "jolts", "claims")
+    # 初領失業金不放（2026-10）：每週四都公布，放進來會蓋掉前幾天更重要的
+    # CPI、PPI、就業報告；它在就業頁與本期變化照常更新
+    order = ("labor", "inflation", "pce", "ppi", "fomc", "jolts")
 
     def seen_at(k):
         r = (releases or {}).get(k)
@@ -110,13 +112,12 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
         elif k == "pce" and ik.get("pce_display", "—") != "—":
             name = f"PCE 物價（{mon((inf.get('asof') or {}).get('pce', ''))}）"
             rows = [("核心 PCE 年增", ik["pce_display"], "pce", "核心 PCE 年增")]
-        elif k == "claims" and ((lab.get("claims") or {}).get("machine") or {}).get("ic_now"):
-            mc = lab["claims"]["machine"]
-            wk = str(mc.get("week", ""))
-            name = "初領失業金" + (f"（統計週至 {int(wk[5:7])}/{int(wk[8:10])}）" if len(wk) >= 10 else "")
-            rows = [("初領人數", f"{mc['ic_now'] / 10000:.1f} 萬人", "claims", "初領失業金")]
-            if mc.get("ic_ma"):
-                rows.append(("四週平均", f"{mc['ic_ma'] / 10000:.1f} 萬人", "", ""))
+        elif k == "ppi" and (inf.get("ppi") or {}).get("mom") is not None:
+            pp = inf["ppi"]
+            name = f"PPI 生產者物價（{mon(pp.get('period') or pp.get('asof', ''))}）"
+            rows = [("PPI 月增", f"{pp['mom']:.1f}%", "ppi", "PPI 月增")]
+            if pp.get("core_mom_1d") is not None:
+                rows.append(("核心 PPI 月增", f"{pp['core_mom_1d']:.1f}%", "ppi", "核心 PPI 月增"))
         elif k == "jolts" and lab.get("jolts"):
             jr = lab["jolts"]
             name = f"JOLTS 職缺（{mon(lab.get('jolts_month', ''))}）"

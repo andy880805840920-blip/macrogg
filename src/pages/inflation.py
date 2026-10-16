@@ -704,6 +704,29 @@ def _ppi_card(pp: dict | None) -> str:
         _gl = ("hawkish" if gap > 0.3 else
                "dovish" if gap < -0.3 else "neutral")
         _gap_impact = f'<div class="impact {_gl}">{esc(gap_note)}</div>'
+    # 月增（2026-10）：新聞標題講的是月增，並對照市場預估（ppi_watch 存檔的 ForexFactory 預估）
+    cons = pp.get("cons") or {}
+
+    def _m(v):
+        return f"{v:.1f}%" if v is not None else "—"
+
+    def _vs(a, c):
+        if a is None or c is None:
+            return ""
+        d = round(a - c, 2)
+        return "符合預估" if abs(d) < 1e-9 else (f"高於預估 {d:+.1f}" if d > 0 else f"低於預估 {d:+.1f}")
+    mom_stats = []
+    if pp.get("mom") is not None:
+        mom_stats = [
+            {"label": "PPI 月增", "value": _m(pp.get("mom")),
+             "note": (f"預估 {_m(cons.get('ppi_mom'))}・{_vs(pp.get('mom'), cons.get('ppi_mom'))}"
+                      if cons.get("ppi_mom") is not None else "官方口徑一位小數")},
+            {"label": "核心 PPI 月增", "value": _m(pp.get("core_mom_1d")),
+             "note": (f"預估 {_m(cons.get('core_ppi_mom'))}・{_vs(pp.get('core_mom_1d'), cons.get('core_ppi_mom'))}"
+                      if cons.get("core_ppi_mom") is not None else "剔除食物與能源")},
+        ]
+    mom_html = (f'<div class="stat-row" style="margin-top:10px">{_stats(mom_stats)}</div>'
+                if mom_stats else "")
     stats = _stats([
         {"label": "核心 PPI 年增", "value": pv(pp["core_yoy"]),
          "note": f'三月年化 {pv(pp.get("core_3m"))}'},
@@ -728,6 +751,7 @@ def _ppi_card(pp: dict | None) -> str:
     <h2 id="ppi" data-sum="核心 PPI {esc(pv(pp['core_yoy']))}　·　PPI−CPI {esc(f'{gap:+.1f}pp' if gap is not None else '—')}">生產者物價 PPI（上游）</h2>
     <p class="hint">企業的出廠價。資料至 {esc((pp.get('asof') or '—')[:7])}。</p>
     {_gap_impact}
+    {mom_html}
     {_ppi_chain(pp)}
     <div class="viz-block">
       <div class="viz-h">上游 vs 零售：核心 PPI − 核心 CPI 年增差距（近 24 個月）</div>
