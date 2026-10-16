@@ -1,6 +1,6 @@
 {
- "hash": "fd73e54a8551ab2d",
- "text": "9月生產者物價指數（PPI）月增1.3%，創2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，為2022年12月以來最高。華爾街經濟學家據此預估9月核心個人消費支出（PCE）月增0.32%，將推升年增率至3.1%，顯示通膨壓力超越能源範疇而更為廣泛。儘管聯準會官員近期表示無需急於升息，但市場定價10月底會議升息機率為29%，12月前至少升息一次的機率達91%。¶同時，美國2兆美元財政赤字與5%以上的長期美債殖利率正對經濟造成壓力。10年期美債殖利率自2月底以來累計上升123個基點至5.19%，推高30年期固定房貸利率至7.5%，導致9月待售房屋數月減4%，創三年最大跌幅。財政部顧問澤爾沃斯10/15駁斥國際貨幣基金對美國債務的警告，辯稱IMF過去預測紀錄不佳，但經濟學家普遍警告，利息支出攀升與高赤字已提高債務螺旋失控的風險。\n聯準會主席華許10/15在國際貨幣基金年會發言中表示已與全球央行討論通膨壓力，並對美國經濟韌性感到驚訝，但未提供10月政策會議的具體指引。",
+ "hash": "71a17bad94346a86",
+ "text": "美國9月生產者物價指數（PPI）月增1.3%，為2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，創2022年12月以來新高；同時核心消費者物價指數（CPI）月增0.33%，連續第二個月偏強。華爾街經濟學家預估9月核心個人消費支出（PCE）將月增0.32%，若實現將推升年增率至3.1%，暗示通膨壓力仍未緩解。¶聯準會主席華許10/16在曼谷出席國際貨幣基金會議時，既未認同也未反駁同僚近期「不急於升息」的訊號，並表示不會預先判斷會議結果或說明今年剩餘會議的政策行動，拒絕對10/28決策會議給出明確指引。華許強調AI基礎建設擴張最終將帶來正面供給衝擊，目前需求增加只是轉型過程中的現象。經濟學家認為通膨數據足以支撐進一步升息的理由，但華許的沉默讓市場面臨更大不確定性。\nAI股票拋售引發避險買盤湧入美債，10/15美債殖利率大幅下跌，10年期單日下滑14bp至5.05%、30年期下滑13bp至5.40%，但隨後10/16反彈至5.11%。\n黃金價格10/16開盤上漲0.5%至4,192美元/盎司，受惠於美債殖利率回落與美元走弱，市場預期聯準會10/28維持利率機率約85%。",
  "links": [
   {
    "title": "Economists: Hot PPI shows Fed's work is not done",
@@ -9,16 +9,16 @@
    "at": "2026-10-15T15:37:59+00:00"
   },
   {
-   "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-   "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-   "source": "CNBC",
-   "at": "2026-10-15T12:11:15+00:00"
+   "title": "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+   "link": "https://finance.yahoo.com/markets/article/ai-trade-rout-sparks-flight-to-treasurys-bond-yields-sink-chart-of-the-day-151821305.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-15T15:18:21+00:00"
   },
   {
-   "title": "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting",
-   "link": "https://www.cnbc.com/2026/10/15/zervos-imf-us-debt-warning.html",
-   "source": "CNBC",
-   "at": "2026-10-15T13:42:32+00:00"
+   "title": "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白",
+   "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E5%81%8F%E7%86%B1%E4%BB%8D%E4%B8%8D%E7%B5%A6%E5%8D%87%E6%81%AF%E6%9A%97%E7%A4%BA-fed%E5%82%B3%E8%81%B2%E7%AD%92-%E8%A7%A3%E6%9E%90%E8%8F%AF%E8%A8%B110%E6%9C%88%E6%94%BF%E7%AD%96%E7%95%99%E7%99%BD-113120640.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-10-16T11:31:20+00:00"
   }
  ],
  "fedwatch": {
@@ -148,41 +148,67 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-16T09:06:30.663016+00:00",
+ "at": "2026-10-16T13:15:41.579563+00:00",
  "layout": "main",
  "topics": {
-  "hash": "257c87a70b5e0952",
+  "hash": "c002fdfc438fed09",
   "items": [
    {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "華許10/16表示美國經濟韌性超乎預期，並稱已與全球央行討論通膨壓力升高的問題，但未對10月政策會議提供具體利率指引。市場因此調整預期，認為10月按兵不動機率上升",
+    "id": "long",
+    "label": "長天期美債",
+    "text": "黃金價格10/16上漲至每盎司4,204.40美元，受惠於10年期美債殖利率下滑與美元走弱，市場預期聯準會10/28會議將維持利率不變，機率達85%",
     "links": [
      {
-      "title": "Fed's Warsh sees US resilience, mum on rate-path view",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPbUpNSUtZSU1FYnJCSDNWNnJRMmF3bmQ1QkdEaVhZb3I3c0lpYWhyQjNSemVVdGttRHE3UTFNOXg0enZ6eHAzcDY3UXBmQUJJRzl1T3gtMEZad0Z0Xy12TTlFcVRGeVdNYmVkZ3NPQThlUWRLUTh5c2J0UHFPVVRKT0hpR2RyU2tlRnJhVnBZZkxxUFhaTzRBVUlkbWFUUQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-16T03:57:00+00:00"
+      "title": "Gold price today, Friday, October 16, 2026: Gold lifts as Treasury yields and dollar fall back",
+      "link": "https://finance.yahoo.com/personal-finance/investing/article/gold-price-today-friday-october-16-2026-gold-lifts-as-treasury-yields-and-dollar-fall-back-110651322.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-16T11:06:51+00:00"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "聯準會準備金管理購買暫停期延至11月中旬，同時貨幣市場收益率維持高檔，BNY與Citadel Securities完成首筆代幣化美債回購交易",
+    "links": [
+     {
+      "title": "3 U.S. Money Market Yield Plays As High Rates Keep Cash In Focus",
+      "link": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPeWluQkxNMjByOFZJX25KTkkzekpNRkhJZjREdE1BSVZGWFQ3S0liQ1JmdEJmTUp4aHZ3VU5XQ3RXVUVUSWg5YXZBaUlxQnBnVVg0TzY0SEFNajItaFpxbUdJZHk0Nm1jQkZjd051cjZQMTQzU0pxaUJReFFwVkg1UHBkWmNWdy0tbThEQXU5VGZrMWZCdGNabDVhUUlFT3dTVnBNaWJ2TnMxLTk4YjJMWkN5SkxFOHEya25nTmZacFMzUldJNXgzWDBPQ2FoVUVrWFJtM082bU5ubXVhai1jUVBrTkjSAeoBQVVfeXFMT2g5RXliVlJjcDZQTTFSdWJDOXA0Nkt6TkIwOUlmMXlKcGFFLWwzdFcwT3gtZ00zY0pyNFRhc3VOV3BWSzFXX1FleS01WXpzalJCRTJPMjNlVDAzSnlDZTI4ZkNodUlRV2U3aWo3amV2bkpUTmpJWHotLXlGcG9oMjBYbmlqUGVCTWtBLXJTeEtHa2lhUkpOdTFGNDFaMERxUUlxVTRqU0RUOThaYUdGU0U0UlJfY1FEdER4clRCZWZ2ZHlpUnNET1hQNkw1OWlySERSSHRtUkZnLWE0bGRtd3lTNFFiNFN0eTJn?oc=5",
+      "source": "Simply Wall Street",
+      "at": "2026-10-15T17:43:16+00:00"
      },
      {
-      "title": "Warsh Boosts Market Expectations of Fed Rate Hold in October",
-      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQdHZhMDY1QkVFRU1NQ0c1NkxlNzR2cDR4NEgwbVFMSkQ3RzFSNlFYT1Q0d1BzOWpRUGtLcTg1YUk0UkxOc2tKWENkTGxkRWc5SFAwWDFMS3JxdXJfWUIyNmwzR1Z0T3B5SmF0R2hjc0lDdXppV0wzQmw2bHh0a0FZS1BsUXVJdkdyZF9YcWIxMlZ3RnMwOVZ0YlFDeHdFWE5nTXdSdlQwb2NfZw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-16T06:20:00+00:00"
+      "title": "BNY and Citadel Securities Use Tokenised Treasury in Repo Deal",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOWWxESkduR2U1UjhkNkhXcTd1b2NQZ1Y5Wm5rN2VpeGxsN0xkRUItUlRhei1Nc1Y3cDFKMzJzTUZUQXlrUUxhWUpBX3hJc1JDY2hkVW5FVjB6Tmt3STNDYUtiX0M3akt5NzlRY2RzYkNWRUV4ZjNpejdKZnZwcjRwSmpoZ25DTzV0X1owWTJ0MWdvS0p5QWJoLW1wSWZmay1NMTNSMmpFUXlKNU0?oc=5",
+      "source": "Kalkine Media",
+      "at": "2026-10-15T15:01:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "oil",
+    "label": "油價",
+    "text": "油價10/16暴衝4%，荷姆茲海峽遭襲導致伊朗供應中斷130萬桶，引發新一波供應危機；美國考慮對全球「影子艦隊」放寬制裁，布倫特原油價格持穩",
+    "links": [
+     {
+      "title": "油價暴衝4%！荷姆茲海峽遇襲、伊朗戰火升溫、130萬桶停產，供應危機再引爆！",
+      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE92MS14UnQtU0V3MHQtQUxWaVo2ZUVjYWR1Zzc0MjRLUWZNR3pfM2M0VUlVcEZHTXA0dGZ4Ti1UMjBmLWt0RkZ4S0lDcVI?oc=5",
+      "source": "聚財網",
+      "at": "2026-10-16T10:07:53+00:00"
+     },
+     {
+      "title": "美考慮對全球「影子艦隊」放寬制裁　布倫特原油價格持穩",
+      "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNNnVXSmZPTnpFdEVkd3UyanhNMlRaUi1ERFFpTG9wZ1NHX3dEUXB0WGpWM1JGdm9DbGpOWlFiUHc0SnpXYm96OUhRNmQzNnRic3RFbkFsTTd1MzJhUHdQLXVWbVkzeVF5dFZOcmp2eDhMZl95eWV0RktlNlVXakdMamhqOG9YM2s0TVZza1VSdHHSAV9BVV95cUxNa0d1V2lJak0ybncwZ0FwWmpLSmx5dFdubFJBSUN1NDZuRl9mN0pZOW5jLXdSQmJiTnNTcVZsTHNqWTJYc0tBWk5hRl9kdmM1NWFMWXdtTDl5YzdVVFMwQQ?oc=5",
+      "source": "經濟日報",
+      "at": "2026-10-15T20:45:27+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股10/15反彈，道瓊漲1.1%，投資人從科技股轉向防守性產業如醫療與消費品，10年期美債殖利率跌至5.09%緩解升息憂慮，但半導體指數連跌7個交易日",
+    "text": "美股10/15收高，道瓊漲1.1%、標普500漲0.3%，科技股跌幅收斂，10年期美債殖利率下滑至5.09%，台積電股價跌2%但仍創紀錄獲利",
     "links": [
-     {
-      "title": "S&P 500 ends higher as traders shift from AI to healthcare",
-      "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOZTRob0s4X3hCYkZQZzFfeUxuU1ZlN0tPT2hvelcwcW9QdU9yeVN1ZUZfR253ZUNoN3NjUlRHbG9aS0wzMmVGLUpNOVcyTUlHOWo3WERDX1psTXlmWGthb0JPN19GMGxnT2pkYkRWQ0R1THEyODhoWnZTd1NIQjdZbm5fLXNYb0M2c1g2YU02TENSSi1xSFZMQzRuUTc?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-15T23:24:51+00:00"
-     },
      {
       "title": "Stock market today: Dow jumps, S&P 500, Nasdaq gain as AI jitters fade",
       "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-rise-nasdaq-trims-losses-as-treasury-yields-sink-153611834.html?.tsrc=rss",
@@ -194,93 +220,53 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "沃爾沃與輝達擴大十年合作，將導入輝達Hyperion感測器與運算架構以及Halos作業系統，逐步推進自動駕駛的「無須持續注視路況」與「無須持續專注於駕駛任務」功能",
+    "text": "輝達執行長黃仁勳為陷入融資困境的AI雲端新秀CoreWeave背書，強調該公司資金成本下降無需輝達財務支持，CoreWeave股價隨後由跌15.5%翻紅漲6%，但其2030年到期債券殖利率仍高達15%",
     "links": [
      {
-      "title": "Volvo Cars與NVIDIA擴大合作　推進安全自駕",
-      "link": "https://tw.news.yahoo.com/volvo-cars%E8%88%87nvidia%E6%93%B4%E5%A4%A7%E5%90%88%E4%BD%9C-%E6%8E%A8%E9%80%B2%E5%AE%89%E5%85%A8%E8%87%AA%E9%A7%95-082715548.html",
+      "title": "【美股盤前】「輝達親兒子」違約機率飆6成　黃仁勳發聲了",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E8%BC%9D%E9%81%94%E8%A6%AA%E5%85%92%E5%AD%90-%E9%81%95%E7%B4%84%E6%A9%9F%E7%8E%87%E9%A3%866%E6%88%90-%E9%BB%83%E4%BB%81%E5%8B%B3%E7%99%BC%E8%81%B2%E4%BA%86-121500211.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T08:27:15+08:00"
+      "at": "2026-10-16T12:15:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股10/16小漲141點收47111點，外資連八日賣超、10/16賣超461億元，台積電遭砍2.2萬張提款539億元，但投信買超117.5億元撐盤，聯發科漲2.04%、鴻海漲1.88%",
+    "text": "台股10/16收在47,111.26點、漲141.39點，穩住4萬7千點大關，成交金額9,378.94億元；台積電收2,420元、跌0.82%，中信00406A成交爆量近80萬張居冠",
     "links": [
      {
-      "title": "外資繼續賣台積電、賣超461億　股民、投信聯手把台股買回4萬7千點",
-      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E7%B9%BC%E7%BA%8C%E8%B3%A3%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E8%B3%A3%E8%B6%85461%E5%84%84-%E8%82%A1%E6%B0%91-%E6%8A%95%E4%BF%A1%E8%81%AF%E6%89%8B%E6%8A%8A%E5%8F%B0%E8%82%A1%E8%B2%B7%E5%9B%9E4%E8%90%AC7%E5%8D%83%E9%BB%9E-083212777.html",
+      "title": "台股收漲低空飛過4萬7千點　中信00406A成交爆量近80萬張居冠",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%94%B6%E6%BC%B2%E4%BD%8E%E7%A9%BA%E9%A3%9B%E9%81%8E4%E8%90%AC7%E5%8D%83%E9%BB%9E-%E4%B8%AD%E4%BF%A100406a%E6%88%90%E4%BA%A4%E7%88%86%E9%87%8F%E8%BF%9180%E8%90%AC%E5%BC%B5%E5%B1%85%E5%86%A0-115719832.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T08:32:12+08:00"
-     },
-     {
-      "title": "台股反攻141點收復4萬7失土！三大法人賣超678億元擋不下　股民笑：小兒再賣啊",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%8D%E6%94%BB141%E9%BB%9E%E6%94%B6%E5%BE%A94%E8%90%AC7%E5%A4%B1%E5%9C%9F-%E4%B8%89%E5%A4%A7%E6%B3%95%E4%BA%BA%E8%B3%A3%E8%B6%85678%E5%84%84%E5%85%83%E6%93%8B%E4%B8%8D%E4%B8%8B-%E8%82%A1%E6%B0%91%E7%AC%91-%E5%B0%8F%E5%85%92%E5%86%8D%E8%B3%A3%E5%95%8A-084500686.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T08:45:00+08:00"
-     }
-    ]
-   },
-   {
-    "id": "gold",
-    "label": "黃金",
-    "text": "華許10/16未釋鷹派訊號致升息預期大幅降溫，減輕持有無息黃金的利率阻力，金價維持平穩約每盎司4,175美元；10/15美債殖利率下跌12-15個基點，支撐金價上漲1.6%創兩週最大漲幅",
-    "links": [
-     {
-      "title": "Gold steadies as bond rally supports bullion, weaker dollar offers further support",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-steadies-near-4-160-015611640.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-16T01:56:11+00:00"
-     },
-     {
-      "title": "華許未釋鷹派訊號 10月升息預期顯著降溫 美股指反彈、金價回穩",
-      "link": "https://tw.stock.yahoo.com/news/%E8%8F%AF%E8%A8%B1%E6%9C%AA%E9%87%8B%E9%B7%B9%E6%B4%BE%E8%A8%8A%E8%99%9F-10%E6%9C%88%E5%8D%87%E6%81%AF%E9%A0%90%E6%9C%9F%E9%A1%AF%E8%91%97%E9%99%8D%E6%BA%AB-%E7%BE%8E%E8%82%A1%E6%8C%87%E5%8F%8D%E5%BD%88-%E9%87%91%E5%83%B9%E5%9B%9E%E7%A9%A9-081003956.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-16T08:10:03+00:00"
+      "at": "2026-10-16T11:57:19+08:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/16收32.338元貶7.3分，外資持續匯出壓低台幣，盤中一度貶破32.5元；儘管台積電財報優於預期，但AI建設可持續性疑慮未消，美台利差仍不利台幣",
+    "text": "法國今年夏季野火造成約2萬2,500件保險理賠申請，估計總損失最高達5億6,300萬歐元（約新台幣205億元），創衛星監測20年來最高紀錄",
     "links": [
      {
-      "title": "外資賣股匯出壓不住！新台幣週五盤中貶破32.5元，收盤仍貶7.3分",
-      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E8%B3%A3%E8%82%A1%E5%8C%AF%E5%87%BA%E5%A3%93%E4%B8%8D%E4%BD%8F-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%80%B1%E4%BA%94%E7%9B%A4%E4%B8%AD%E8%B2%B6%E7%A0%B432-5%E5%85%83-%E6%94%B6%E7%9B%A4%E4%BB%8D%E8%B2%B67-3%E5%88%86-081520902.html",
+      "title": "法國夏季野火肆虐  保險損失恐達205億台幣",
+      "link": "https://tw.news.yahoo.com/%E6%B3%95%E5%9C%8B%E5%A4%8F%E5%AD%A3%E9%87%8E%E7%81%AB%E8%82%86%E8%99%90-%E4%BF%9D%E9%9A%AA%E6%90%8D%E5%A4%B1%E6%81%90%E9%81%94205%E5%84%84%E5%8F%B0%E5%B9%A3-121943028.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-16T08:15:20+00:00"
-     },
-     {
-      "title": "新台幣貶7.3分　收32.338元",
-      "link": "https://tw.stock.yahoo.com/news/%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%B2%B67-3%E5%88%86-%E6%94%B632-338%E5%85%83-080702810.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-16T08:07:02+00:00"
+      "at": "2026-10-16T12:19:43+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-16T09:06:50.330372+00:00"
+  "at": "2026-10-16T13:16:01.575774+00:00"
  },
  "main_source_titles": [
   "Economists: Hot PPI shows Fed's work is not done",
-  "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-  "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting"
+  "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+  "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白"
  ],
- "headline": "通膨再度升溫與財政赤字擴大，聯準會升息預期與美債殖利率面臨拉鋸",
- "rate_note": "通膨數據升溫偏向推升聯準會升息預期與長期利率，但華許10/15未提供明確升息指引，市場對10月決議的升息預期仍低（29%），反映政策立場仍存不確定性；10年期今日-10bp至5.09%，市場對升息預期的反映方向不明確，取決於後續官員發言與通膨數據走向。",
+ "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
+ "rate_note": "通膨數據偏熱原應推升升息預期，但華許拒絕政策指引、市場對10月升息押注維持低位，反映市場預期聯準會傾向觀望；不過10年期今日+2bp至5.11%，顯示市場尚未完全反映通膨風險對長端利率的壓力。",
  "recent_mains": [
-  {
-   "headline": "9月PPI創四年半最大漲幅，聯準會升息預期重燃",
-   "titles": [
-    "Economists: Hot PPI shows Fed's work is not done",
-    "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
-    "Stock market today: Dow, S&P 500 rise, Nasdaq trims losses as Treasury yields sink"
-   ],
-   "at": "2026-10-15T18:44:07.054661+00:00"
-  },
   {
    "headline": "美國通膨再度升溫，聯準會升息預期重燃，美債殖利率承壓",
    "titles": [
@@ -298,13 +284,22 @@
     "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting"
    ],
    "at": "2026-10-16T09:06:30.663016+00:00"
+  },
+  {
+   "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
+   "titles": [
+    "Economists: Hot PPI shows Fed's work is not done",
+    "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+    "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白"
+   ],
+   "at": "2026-10-16T13:15:41.579563+00:00"
   }
  ],
  "archive": {
   "2026-10-16": {
-   "headline": "通膨再度升溫與財政赤字擴大，聯準會升息預期與美債殖利率面臨拉鋸",
-   "text": "9月生產者物價指數（PPI）月增1.3%，創2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，為2022年12月以來最高。華爾街經濟學家據此預估9月核心個人消費支出（PCE）月增0.32%，將推升年增率至3.1%，顯示通膨壓力超越能源範疇而更為廣泛。儘管聯準會官員近期表示無需急於升息，但市場定價10月底會議升息機率為29%，12月前至少升息一次的機率達91%。¶同時，美國2兆美元財政赤字與5%以上的長期美債殖利率正對經濟造成壓力。10年期美債殖利率自2月底以來累計上升123個基點至5.19%，推高30年期固定房貸利率至7.5%，導致9月待售房屋數月減4%，創三年最大跌幅。財政部顧問澤爾沃斯10/15駁斥國際貨幣基金對美國債務的警告，辯稱IMF過去預測紀錄不佳，但經濟學家普遍警告，利息支出攀升與高赤字已提高債務螺旋失控的風險。\n聯準會主席華許10/15在國際貨幣基金年會發言中表示已與全球央行討論通膨壓力，並對美國經濟韌性感到驚訝，但未提供10月政策會議的具體指引。",
-   "rate_note": "通膨數據升溫偏向推升聯準會升息預期與長期利率，但華許10/15未提供明確升息指引，市場對10月決議的升息預期仍低（29%），反映政策立場仍存不確定性；10年期今日-10bp至5.09%，市場對升息預期的反映方向不明確，取決於後續官員發言與通膨數據走向。",
+   "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
+   "text": "美國9月生產者物價指數（PPI）月增1.3%，為2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，創2022年12月以來新高；同時核心消費者物價指數（CPI）月增0.33%，連續第二個月偏強。華爾街經濟學家預估9月核心個人消費支出（PCE）將月增0.32%，若實現將推升年增率至3.1%，暗示通膨壓力仍未緩解。¶聯準會主席華許10/16在曼谷出席國際貨幣基金會議時，既未認同也未反駁同僚近期「不急於升息」的訊號，並表示不會預先判斷會議結果或說明今年剩餘會議的政策行動，拒絕對10/28決策會議給出明確指引。華許強調AI基礎建設擴張最終將帶來正面供給衝擊，目前需求增加只是轉型過程中的現象。經濟學家認為通膨數據足以支撐進一步升息的理由，但華許的沉默讓市場面臨更大不確定性。\nAI股票拋售引發避險買盤湧入美債，10/15美債殖利率大幅下跌，10年期單日下滑14bp至5.05%、30年期下滑13bp至5.40%，但隨後10/16反彈至5.11%。\n黃金價格10/16開盤上漲0.5%至4,192美元/盎司，受惠於美債殖利率回落與美元走弱，市場預期聯準會10/28維持利率機率約85%。",
+   "rate_note": "通膨數據偏熱原應推升升息預期，但華許拒絕政策指引、市場對10月升息押注維持低位，反映市場預期聯準會傾向觀望；不過10年期今日+2bp至5.11%，顯示市場尚未完全反映通膨風險對長端利率的壓力。",
    "links": [
     {
      "title": "Economists: Hot PPI shows Fed's work is not done",
@@ -313,19 +308,19 @@
      "at": "2026-10-15T15:37:59+00:00"
     },
     {
-     "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-     "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-     "source": "CNBC",
-     "at": "2026-10-15T12:11:15+00:00"
+     "title": "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
+     "link": "https://finance.yahoo.com/markets/article/ai-trade-rout-sparks-flight-to-treasurys-bond-yields-sink-chart-of-the-day-151821305.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-15T15:18:21+00:00"
     },
     {
-     "title": "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting",
-     "link": "https://www.cnbc.com/2026/10/15/zervos-imf-us-debt-warning.html",
-     "source": "CNBC",
-     "at": "2026-10-15T13:42:32+00:00"
+     "title": "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白",
+     "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E5%81%8F%E7%86%B1%E4%BB%8D%E4%B8%8D%E7%B5%A6%E5%8D%87%E6%81%AF%E6%9A%97%E7%A4%BA-fed%E5%82%B3%E8%81%B2%E7%AD%92-%E8%A7%A3%E6%9E%90%E8%8F%AF%E8%A8%B110%E6%9C%88%E6%94%BF%E7%AD%96%E7%95%99%E7%99%BD-113120640.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-16T11:31:20+00:00"
     }
    ],
-   "at": "2026-10-16T09:06:30.663016+00:00"
+   "at": "2026-10-16T13:15:41.579563+00:00"
   },
   "2026-10-15": {
    "headline": "9月CPI升至3.7%超預期，聯準會升息預期重燃，長期公債殖利率走高",
