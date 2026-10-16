@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-16T09:14:51+08:00",
+  "at": "2026-10-16T17:06:19+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -200,6 +200,7 @@
           "pce_cooling",
           "cpi_reheating",
           "supercore_hot",
+          "ppi_hot",
           "shelter_drag",
           "above_target",
           "ppi_pipeline",
@@ -209,6 +210,7 @@
           "pce_cooling": "核心 PCE 在降溫：三月年化 2.0%，低於年增 3.0%",
           "cpi_reheating": "近三月年化高於年增率 0.4 個百分點以上",
           "supercore_hot": "超級核心服務仍高於目標區間",
+          "ppi_hot": "PPI 明顯高於預期",
           "shelter_drag": "住房落後項推升整體讀數",
           "above_target": "核心 PCE 顯著高於目標",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
@@ -218,6 +220,7 @@
           "pce_cooling": "dovish",
           "cpi_reheating": "hawkish",
           "supercore_hot": "hawkish",
+          "ppi_hot": "hawkish",
           "shelter_drag": "dovish",
           "above_target": "hawkish",
           "ppi_pipeline": "hawkish",
@@ -589,6 +592,43 @@
         "metrics_prev": {}
       }
     },
+    "ppi": {
+      "current": {
+        "vintage": "2026-09",
+        "released": "2026-10-16",
+        "flags": [],
+        "flag_titles": {},
+        "flag_leans": {},
+        "metrics": {
+          "ppi_mom": {
+            "label": "PPI 月增",
+            "value": 1.3,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.1,
+            "up_is": "hawkish"
+          },
+          "core_ppi_mom": {
+            "label": "核心 PPI 月增",
+            "value": 0.7,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.1,
+            "up_is": "hawkish"
+          },
+          "core_ppi_yoy": {
+            "label": "核心 PPI 年增",
+            "value": 5.0,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.1,
+            "up_is": "hawkish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      }
+    },
     "market": {
       "current": {
         "vintage": "2026-W42",
@@ -792,7 +832,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-16T09:14:51+08:00",
+      "at": "2026-10-16T17:06:19+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",

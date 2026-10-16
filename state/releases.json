@@ -14,6 +14,11 @@
   "first_seen": "2026-10-01T02:37:20+08:00",
   "advanced": true
  },
+ "ppi": {
+  "month": "2026-09",
+  "first_seen": "2026-10-16T17:06:19+08:00",
+  "advanced": false
+ },
  "claims": {
   "month": "2026-10-10",
   "first_seen": "2026-10-15T21:24:02+08:00",
