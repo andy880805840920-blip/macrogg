@@ -1,135 +1,295 @@
 {
- "hash": "71a17bad94346a86",
- "text": "美國9月生產者物價指數（PPI）月增1.3%，為2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，創2022年12月以來新高；同時核心消費者物價指數（CPI）月增0.33%，連續第二個月偏強。華爾街經濟學家預估9月核心個人消費支出（PCE）將月增0.32%，若實現將推升年增率至3.1%，暗示通膨壓力仍未緩解。¶聯準會主席華許10/16在曼谷出席國際貨幣基金會議時，既未認同也未反駁同僚近期「不急於升息」的訊號，並表示不會預先判斷會議結果或說明今年剩餘會議的政策行動，拒絕對10/28決策會議給出明確指引。華許強調AI基礎建設擴張最終將帶來正面供給衝擊，目前需求增加只是轉型過程中的現象。經濟學家認為通膨數據足以支撐進一步升息的理由，但華許的沉默讓市場面臨更大不確定性。\nAI股票拋售引發避險買盤湧入美債，10/15美債殖利率大幅下跌，10年期單日下滑14bp至5.05%、30年期下滑13bp至5.40%，但隨後10/16反彈至5.11%。\n黃金價格10/16開盤上漲0.5%至4,192美元/盎司，受惠於美債殖利率回落與美元走弱，市場預期聯準會10/28維持利率機率約85%。",
+ "hash": "a0c3266c56bc77a3",
+ "text": "聯準會主席華許10/15在國際貨幣基金組織年會上表示，不會預判會議結果或說明未來行動，延續其上任以來刻意保持政策神秘的作風。儘管華許未釋出任何鷹派訊號，市場將此解讀為支持10/28會議維持利率不變，聯邦基金期貨反映升息機率已降至約13%，遠低於發言前的水準。副主席傑佛森與紐約聯準銀行總裁威廉斯等重要決策官員也強調無急於升息的必要。\n美國長期債務與高殖利率環境開始衝擊經濟：30年期固定房貸利率徘徊在7.5%左右，9月待售房屋銷售月減4%，創三年來最大跌幅；10年期公債殖利率自2月底以來已上升114個基點至5.1%。",
  "links": [
   {
-   "title": "Economists: Hot PPI shows Fed's work is not done",
-   "link": "https://www.cnbc.com/2026/10/15/pce-ppi-september-fed-reserve-rate-hike.html",
+   "title": "Warsh’s Missing Words Fuel Bets Fed Will Hold Rates",
+   "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNZms1aGNrLWRUb1BHWjJSSS1lOHdqODlJSlB0eDFHd1FDdjZyNEdBejdTZkc1ODhrcTZJUGhidWVpNE05Rm5wLThoT2ktb1BIcFhEWVhGLTV2V2R1S2FjZVNfZEFkNC1PXy1ibkt5YnU5ZkY1ODg1a0w3b0ZPQm9ROEt3ZlhSc25TcmthLUhiMXpObGNUMXlIcTVqMUZTdVNMQ19iUzM2NFk?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-16T17:23:43+00:00"
+  },
+  {
+   "title": "Warsh Boosts Market Expectations of Fed Rate Hold in October",
+   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQdHZhMDY1QkVFRU1NQ0c1NkxlNzR2cDR4NEgwbVFMSkQ3RzFSNlFYT1Q0d1BzOWpRUGtLcTg1YUk0UkxOc2tKWENkTGxkRWc5SFAwWDFMS3JxdXJfWUIyNmwzR1Z0T3B5SmF0R2hjc0lDdXppV0wzQmw2bHh0a0FZS1BsUXVJdkdyZF9YcWIxMlZ3RnMwOVZ0YlFDeHdFWE5nTXdSdlQwb2NfZw?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-16T14:23:04+00:00"
+  },
+  {
+   "title": "Analysis: Everyone expects the Fed to hold rates in October. Kevin Warsh could surprise us all",
+   "link": "https://www.cnbc.com/2026/10/16/kevin-warsh-fed-october-rate-hike-interest-rates-markets.html",
    "source": "CNBC",
-   "at": "2026-10-15T15:37:59+00:00"
+   "at": "2026-10-16T16:27:31+00:00"
   },
   {
-   "title": "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
-   "link": "https://finance.yahoo.com/markets/article/ai-trade-rout-sparks-flight-to-treasurys-bond-yields-sink-chart-of-the-day-151821305.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-15T15:18:21+00:00"
-  },
-  {
-   "title": "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白",
-   "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E5%81%8F%E7%86%B1%E4%BB%8D%E4%B8%8D%E7%B5%A6%E5%8D%87%E6%81%AF%E6%9A%97%E7%A4%BA-fed%E5%82%B3%E8%81%B2%E7%AD%92-%E8%A7%A3%E6%9E%90%E8%8F%AF%E8%A8%B110%E6%9C%88%E6%94%BF%E7%AD%96%E7%95%99%E7%99%BD-113120640.html",
+   "title": "華許夜間談話說了什麼、又沒說什麼？一文掌握Fed政策線索",
+   "link": "https://tw.stock.yahoo.com/news/%E8%8F%AF%E8%A8%B1%E5%A4%9C%E9%96%93%E8%AB%87%E8%A9%B1%E8%AA%AA%E4%BA%86%E4%BB%80%E9%BA%BC-%E5%8F%88%E6%B2%92%E8%AA%AA%E4%BB%80%E9%BA%BC-%E6%96%87%E6%8E%8C%E6%8F%A1fed%E6%94%BF%E7%AD%96%E7%B7%9A%E7%B4%A2-170006780.html",
    "source": "Yahoo奇摩股市",
-   "at": "2026-10-16T11:31:20+00:00"
+   "at": "2026-10-16T17:00:06+00:00"
+  },
+  {
+   "title": "10月先停、12月最後一升？高盛預測Fed升息路徑",
+   "link": "https://tw.stock.yahoo.com/news/10%E6%9C%88%E5%85%88%E5%81%9C-12%E6%9C%88%E6%9C%80%E5%BE%8C-%E5%8D%87-%E9%AB%98%E7%9B%9B%E9%A0%90%E6%B8%ACfed%E5%8D%87%E6%81%AF%E8%B7%AF%E5%BE%91-152005276.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-10-16T15:20:05+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-16",
+  "date": "2026-10-17",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-16",
+   "date": "2026-10-17",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.881339,
-     "end": 3.945,
-     "move_bp": 6.366,
+     "start": 3.877946,
+     "end": 3.925,
+     "move_bp": 4.705,
      "outcomes": [
       [
        0,
-       0.7454
+       0.8118
       ],
       [
        25,
-       0.2546
+       0.1882
       ]
      ],
      "how": "2026-11 合約平均"
     },
     {
      "date": "2026-12-09",
-     "start": 3.945,
-     "end": 4.163409,
-     "move_bp": 21.841,
+     "start": 3.925,
+     "end": 4.136364,
+     "move_bp": 21.136,
      "outcomes": [
       [
        25,
-       0.8736
+       0.8455
       ],
       [
        0,
-       0.1264
+       0.1545
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+    },
+    {
+     "date": "2027-01-27",
+     "start": 4.136364,
+     "end": 4.24,
+     "move_bp": 10.364,
+     "outcomes": [
+      [
+       0,
+       0.5855
+      ],
+      [
+       25,
+       0.4145
+      ]
+     ],
+     "how": "2027-02 合約平均"
+    },
+    {
+     "date": "2027-03-17",
+     "start": 4.24,
+     "end": 4.406071,
+     "move_bp": 16.607,
+     "outcomes": [
+      [
+       25,
+       0.6643
+      ],
+      [
+       0,
+       0.3357
+      ]
+     ],
+     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
+    },
+    {
+     "date": "2027-04-28",
+     "start": 4.406071,
+     "end": 4.495,
+     "move_bp": 8.893,
+     "outcomes": [
+      [
+       0,
+       0.6443
+      ],
+      [
+       25,
+       0.3557
+      ]
+     ],
+     "how": "2027-05 合約平均"
+    },
+    {
+     "date": "2027-06-09",
+     "start": 4.495,
+     "end": 4.587857,
+     "move_bp": 9.286,
+     "outcomes": [
+      [
+       0,
+       0.6286
+      ],
+      [
+       25,
+       0.3714
+      ]
+     ],
+     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
+    },
+    {
+     "date": "2027-07-28",
+     "start": 4.587857,
+     "end": 4.615,
+     "move_bp": 2.714,
+     "outcomes": [
+      [
+       0,
+       0.8914
+      ],
+      [
+       25,
+       0.1086
+      ]
+     ],
+     "how": "2027-08 合約平均"
+    },
+    {
+     "date": "2027-09-15",
+     "start": 4.615,
+     "end": 4.635,
+     "move_bp": 2.0,
+     "outcomes": [
+      [
+       0,
+       0.92
+      ],
+      [
+       25,
+       0.08
+      ]
+     ],
+     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
+    },
+    {
+     "date": "2027-10-27",
+     "start": 4.635,
+     "end": 4.64,
+     "move_bp": 0.5,
+     "outcomes": [
+      [
+       0,
+       0.98
+      ],
+      [
+       25,
+       0.02
+      ]
+     ],
+     "how": "2027-11 合約平均"
+    },
+    {
+     "date": "2027-12-08",
+     "start": 4.64,
+     "end": 4.55913,
+     "move_bp": -8.087,
+     "outcomes": [
+      [
+       0,
+       0.6765
+      ],
+      [
+       -25,
+       0.3235
+      ]
+     ],
+     "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
     }
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.881339,
-    "end": 3.945,
-    "move_bp": 6.366,
+    "start": 3.877946,
+    "end": 3.925,
+    "move_bp": 4.705,
     "outcomes": [
      [
       0,
-      0.7454
+      0.8118
      ],
      [
       25,
-      0.2546
+      0.1882
      ]
     ],
     "how": "2026-11 合約平均"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.945,
-    "end": 4.163409,
-    "move_bp": 21.841,
+    "start": 3.925,
+    "end": 4.136364,
+    "move_bp": 21.136,
     "outcomes": [
      [
       25,
-      0.8736
+      0.8455
      ],
      [
       0,
-      0.1264
+      0.1545
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 28.207,
-   "r0": 3.881339,
+   "cum_bp": 25.842,
+   "r0": 3.877946,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 28.207,
-     "prev_cum_bp": 30.145
+     "cum_bp": 25.842,
+     "prev_cum_bp": 28.76
+    },
+    {
+     "date": "2027-06-09",
+     "label": "2027 年中",
+     "cum_bp": 70.991,
+     "prev_cum_bp": 70.991
+    },
+    {
+     "date": "2027-12-08",
+     "label": "2027 年底",
+     "cum_bp": 68.118,
+     "prev_cum_bp": 74.572
     }
    ],
    "prev": {
     "next": {
      "date": "2026-10-28",
-     "start": 3.881964,
-     "end": 3.965,
-     "move_bp": 8.304,
+     "start": 3.880804,
+     "end": 3.95,
+     "move_bp": 6.92,
      "outcomes": [
       [
        0,
-       0.6679
+       0.7232
       ],
       [
        25,
-       0.3321
+       0.2768
       ]
      ],
      "how": "2026-11 合約平均"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.965,
-     "end": 4.183409,
+     "start": 3.95,
+     "end": 4.168409,
      "move_bp": 21.841,
      "outcomes": [
       [
@@ -143,139 +303,113 @@
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 30.145
+    "cum_bp": 28.76
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-10-16T13:15:41.579563+00:00",
+ "at": "2026-10-16T18:27:59.517864+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c002fdfc438fed09",
+  "hash": "b5e11642a01ca8c8",
   "items": [
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "黃金價格10/16上漲至每盎司4,204.40美元，受惠於10年期美債殖利率下滑與美元走弱，市場預期聯準會10/28會議將維持利率不變，機率達85%",
+    "text": "美債殖利率與聯邦赤字問題日益嚴峻，10年期公債殖利率自2月底迄今已上升114個基點至5.1%，聯邦赤字達2兆美元，兩者結合正對經濟造成實質衝擊；房市已現放緩跡象，9月待售房屋銷售月跌4%創3年來最大跌幅，30年期固定房貸利率徘徊在7.5%附近",
     "links": [
      {
-      "title": "Gold price today, Friday, October 16, 2026: Gold lifts as Treasury yields and dollar fall back",
-      "link": "https://finance.yahoo.com/personal-finance/investing/article/gold-price-today-friday-october-16-2026-gold-lifts-as-treasury-yields-and-dollar-fall-back-110651322.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-16T11:06:51+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "聯準會準備金管理購買暫停期延至11月中旬，同時貨幣市場收益率維持高檔，BNY與Citadel Securities完成首筆代幣化美債回購交易",
-    "links": [
-     {
-      "title": "3 U.S. Money Market Yield Plays As High Rates Keep Cash In Focus",
-      "link": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPeWluQkxNMjByOFZJX25KTkkzekpNRkhJZjREdE1BSVZGWFQ3S0liQ1JmdEJmTUp4aHZ3VU5XQ3RXVUVUSWg5YXZBaUlxQnBnVVg0TzY0SEFNajItaFpxbUdJZHk0Nm1jQkZjd051cjZQMTQzU0pxaUJReFFwVkg1UHBkWmNWdy0tbThEQXU5VGZrMWZCdGNabDVhUUlFT3dTVnBNaWJ2TnMxLTk4YjJMWkN5SkxFOHEya25nTmZacFMzUldJNXgzWDBPQ2FoVUVrWFJtM082bU5ubXVhai1jUVBrTkjSAeoBQVVfeXFMT2g5RXliVlJjcDZQTTFSdWJDOXA0Nkt6TkIwOUlmMXlKcGFFLWwzdFcwT3gtZ00zY0pyNFRhc3VOV3BWSzFXX1FleS01WXpzalJCRTJPMjNlVDAzSnlDZTI4ZkNodUlRV2U3aWo3amV2bkpUTmpJWHotLXlGcG9oMjBYbmlqUGVCTWtBLXJTeEtHa2lhUkpOdTFGNDFaMERxUUlxVTRqU0RUOThaYUdGU0U0UlJfY1FEdER4clRCZWZ2ZHlpUnNET1hQNkw1OWlySERSSHRtUkZnLWE0bGRtd3lTNFFiNFN0eTJn?oc=5",
-      "source": "Simply Wall Street",
-      "at": "2026-10-15T17:43:16+00:00"
-     },
-     {
-      "title": "BNY and Citadel Securities Use Tokenised Treasury in Repo Deal",
-      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOWWxESkduR2U1UjhkNkhXcTd1b2NQZ1Y5Wm5rN2VpeGxsN0xkRUItUlRhei1Nc1Y3cDFKMzJzTUZUQXlrUUxhWUpBX3hJc1JDY2hkVW5FVjB6Tmt3STNDYUtiX0M3akt5NzlRY2RzYkNWRUV4ZjNpejdKZnZwcjRwSmpoZ25DTzV0X1owWTJ0MWdvS0p5QWJoLW1wSWZmay1NMTNSMmpFUXlKNU0?oc=5",
-      "source": "Kalkine Media",
-      "at": "2026-10-15T15:01:00+00:00"
+      "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
+      "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
+      "source": "CNBC",
+      "at": "2026-10-16T18:04:20+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價10/16暴衝4%，荷姆茲海峽遭襲導致伊朗供應中斷130萬桶，引發新一波供應危機；美國考慮對全球「影子艦隊」放寬制裁，布倫特原油價格持穩",
+    "text": "伊拉克外長胡笙表示，該國在美伊戰爭期間已損失約600億美元，因伊朗封鎖荷莫茲海峽導致缺乏儲油能力的伊拉克停止大部分石油生產，改以卡車與管道經敘利亞、土耳其出口有限石油",
     "links": [
      {
-      "title": "油價暴衝4%！荷姆茲海峽遇襲、伊朗戰火升溫、130萬桶停產，供應危機再引爆！",
-      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE92MS14UnQtU0V3MHQtQUxWaVo2ZUVjYWR1Zzc0MjRLUWZNR3pfM2M0VUlVcEZHTXA0dGZ4Ti1UMjBmLWt0RkZ4S0lDcVI?oc=5",
-      "source": "聚財網",
-      "at": "2026-10-16T10:07:53+00:00"
-     },
-     {
-      "title": "美考慮對全球「影子艦隊」放寬制裁　布倫特原油價格持穩",
-      "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNNnVXSmZPTnpFdEVkd3UyanhNMlRaUi1ERFFpTG9wZ1NHX3dEUXB0WGpWM1JGdm9DbGpOWlFiUHc0SnpXYm96OUhRNmQzNnRic3RFbkFsTTd1MzJhUHdQLXVWbVkzeVF5dFZOcmp2eDhMZl95eWV0RktlNlVXakdMamhqOG9YM2s0TVZza1VSdHHSAV9BVV95cUxNa0d1V2lJak0ybncwZ0FwWmpLSmx5dFdubFJBSUN1NDZuRl9mN0pZOW5jLXdSQmJiTnNTcVZsTHNqWTJYc0tBWk5hRl9kdmM1NWFMWXdtTDl5YzdVVFMwQQ?oc=5",
-      "source": "經濟日報",
-      "at": "2026-10-15T20:45:27+00:00"
+      "title": "中東戰爭衝擊石油出口　伊拉克：約損失1.9兆",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%AD%E6%9D%B1%E6%88%B0%E7%88%AD%E8%A1%9D%E6%93%8A%E7%9F%B3%E6%B2%B9%E5%87%BA%E5%8F%A3-%E4%BC%8A%E6%8B%89%E5%85%8B-%E7%B4%84%E6%90%8D%E5%A4%B11-9%E5%85%86-141138316.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-16T14:11:38+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股10/15收高，道瓊漲1.1%、標普500漲0.3%，科技股跌幅收斂，10年期美債殖利率下滑至5.09%，台積電股價跌2%但仍創紀錄獲利",
+    "text": "費城半導體指數本周下跌3%，科技股遭沉重賣壓，投資人對AI基礎建設成本與融資能力疑慮加深。儘管特斯拉發表新款Roadster提供支撐，但台積電ADR跌近1.8%，市場擔心企業獲利前景能否支撐目前估值，下周企業財報將成關鍵催化因素",
     "links": [
      {
-      "title": "Stock market today: Dow jumps, S&P 500, Nasdaq gain as AI jitters fade",
-      "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-rise-nasdaq-trims-losses-as-treasury-yields-sink-153611834.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-15T12:20:56+00:00"
+      "title": "〈美股早盤〉AI疑慮壓抑晶片股、特斯拉撐盤 主要指數漲跌互現",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%97%A9%E7%9B%A4-ai%E7%96%91%E6%85%AE%E5%A3%93%E6%8A%91%E6%99%B6%E7%89%87%E8%82%A1-%E7%89%B9%E6%96%AF%E6%8B%89%E6%92%90%E7%9B%A4-%E4%B8%BB%E8%A6%81%E6%8C%87%E6%95%B8%E6%BC%B2%E8%B7%8C%E4%BA%92%E7%8F%BE-134151758.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-16T13:41:51+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達執行長黃仁勳為陷入融資困境的AI雲端新秀CoreWeave背書，強調該公司資金成本下降無需輝達財務支持，CoreWeave股價隨後由跌15.5%翻紅漲6%，但其2030年到期債券殖利率仍高達15%",
+    "text": "輝達RTX Spark個人電腦16日開賣，首度將台積電CoWoS先進封裝技術導入PC產品；輝達主管指出儘管零組件與記憶體價格飆漲，但早期需求高度集中在64GB與128GB高階版本，預期RTX Spark將成為「輝達有史以來最成功的產品之一」",
     "links": [
      {
-      "title": "【美股盤前】「輝達親兒子」違約機率飆6成　黃仁勳發聲了",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E8%BC%9D%E9%81%94%E8%A6%AA%E5%85%92%E5%AD%90-%E9%81%95%E7%B4%84%E6%A9%9F%E7%8E%87%E9%A3%866%E6%88%90-%E9%BB%83%E4%BB%81%E5%8B%B3%E7%99%BC%E8%81%B2%E4%BA%86-121500211.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T12:15:00+08:00"
+      "title": "台積電CoWoS助力　輝達RTX Spark電腦強攻高階市場",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BBcowos%E5%8A%A9%E5%8A%9B-%E8%BC%9D%E9%81%94rtx-spark%E9%9B%BB%E8%85%A6%E5%BC%B7%E6%94%BB%E9%AB%98%E9%9A%8E%E5%B8%82%E5%A0%B4-134124493.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-16T13:41:24+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股10/16收在47,111.26點、漲141.39點，穩住4萬7千點大關，成交金額9,378.94億元；台積電收2,420元、跌0.82%，中信00406A成交爆量近80萬張居冠",
+    "text": "台指期夜盤受美股半導體走弱拖累，一度探至46507點，深夜12時26分報46628點，重挫656點或1.39%，市場關注資金從AI與半導體流出的趨勢能否緩解",
     "links": [
      {
-      "title": "台股收漲低空飛過4萬7千點　中信00406A成交爆量近80萬張居冠",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%94%B6%E6%BC%B2%E4%BD%8E%E7%A9%BA%E9%A3%9B%E9%81%8E4%E8%90%AC7%E5%8D%83%E9%BB%9E-%E4%B8%AD%E4%BF%A100406a%E6%88%90%E4%BA%A4%E7%88%86%E9%87%8F%E8%BF%9180%E8%90%AC%E5%BC%B5%E5%B1%85%E5%86%A0-115719832.html",
+      "title": "快訊／科技股賣壓擴大費半下探　台指期夜盤重挫逾650點",
+      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E7%A7%91%E6%8A%80%E8%82%A1%E8%B3%A3%E5%A3%93%E6%93%B4%E5%A4%A7%E8%B2%BB%E5%8D%8A%E4%B8%8B%E6%8E%A2-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB%E9%80%BE650%E9%BB%9E-164100894.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T11:57:19+08:00"
+      "at": "2026-10-16T16:41:00+08:00"
      }
     ]
    },
    {
-    "id": "fx",
-    "label": "匯率",
-    "text": "法國今年夏季野火造成約2萬2,500件保險理賠申請，估計總損失最高達5億6,300萬歐元（約新台幣205億元），創衛星監測20年來最高紀錄",
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金12月期貨開盤於每盎司4,192.10美元，較前日上漲0.5%。儘管9月CPI與PPI數據高於預期初期施壓金價，但隨著通膨風險成為投資人主要關注，加上10年期美債殖利率與美元指數回軟，黃金重獲買盤支撐，周五上升至4,204.40美元",
     "links": [
      {
-      "title": "法國夏季野火肆虐  保險損失恐達205億台幣",
-      "link": "https://tw.news.yahoo.com/%E6%B3%95%E5%9C%8B%E5%A4%8F%E5%AD%A3%E9%87%8E%E7%81%AB%E8%82%86%E8%99%90-%E4%BF%9D%E9%9A%AA%E6%90%8D%E5%A4%B1%E6%81%90%E9%81%94205%E5%84%84%E5%8F%B0%E5%B9%A3-121943028.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-16T12:19:43+00:00"
+      "title": "Gold price today, Friday, October 16, 2026: Gold lifts as Treasury yields and dollar fall back",
+      "link": "https://finance.yahoo.com/personal-finance/investing/article/gold-price-today-friday-october-16-2026-gold-lifts-as-treasury-yields-and-dollar-fall-back-110651322.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-16T11:06:51+00:00"
+     },
+     {
+      "title": "Hot Inflation Hits Gold, but Safe",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/hot-inflation-hits-gold-safe-174205122.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-16T17:42:05+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-16T13:16:01.575774+00:00"
+  "at": "2026-10-16T18:28:21.252621+00:00"
  },
  "main_source_titles": [
-  "Economists: Hot PPI shows Fed's work is not done",
-  "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
-  "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白"
+  "Warsh’s Missing Words Fuel Bets Fed Will Hold Rates",
+  "Warsh Boosts Market Expectations of Fed Rate Hold in October",
+  "Analysis: Everyone expects the Fed to hold rates in October. Kevin Warsh could surprise us all",
+  "華許夜間談話說了什麼、又沒說什麼？一文掌握Fed政策線索",
+  "10月先停、12月最後一升？高盛預測Fed升息路徑"
  ],
- "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
- "rate_note": "通膨數據偏熱原應推升升息預期，但華許拒絕政策指引、市場對10月升息押注維持低位，反映市場預期聯準會傾向觀望；不過10年期今日+2bp至5.11%，顯示市場尚未完全反映通膨風險對長端利率的壓力。",
+ "headline": "華許拒絕升息暗示，市場押注10月維持不變，通膨數據偏熱成隱憂",
+ "rate_note": "華許拒絕升息暗示偏向壓低升息預期，但通膨數據偏熱為未來升息保留空間，方向相對混雜；市場傾向解讀為支持維持現狀。10年期今日+2bp至5.11%，反映市場對升息預期下降的反應有限。",
  "recent_mains": [
-  {
-   "headline": "美國通膨再度升溫，聯準會升息預期重燃，美債殖利率承壓",
-   "titles": [
-    "Wall Street on Alert for Bessent to Act on Bond Yields Again",
-    "Fed’s Warsh to Get Final Word in Bangkok as Inflation Roars Back",
-    "Watch What Hot US Inflation Means for Bonds, Warsh in Asia"
-   ],
-   "at": "2026-10-16T01:15:06.648152+00:00"
-  },
   {
    "headline": "通膨再度升溫與財政赤字擴大，聯準會升息預期與美債殖利率面臨拉鋸",
    "titles": [
@@ -293,9 +427,58 @@
     "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白"
    ],
    "at": "2026-10-16T13:15:41.579563+00:00"
+  },
+  {
+   "headline": "華許拒絕升息暗示，市場押注10月維持不變，通膨數據偏熱成隱憂",
+   "titles": [
+    "Warsh’s Missing Words Fuel Bets Fed Will Hold Rates",
+    "Warsh Boosts Market Expectations of Fed Rate Hold in October",
+    "Analysis: Everyone expects the Fed to hold rates in October. Kevin Warsh could surprise us all",
+    "華許夜間談話說了什麼、又沒說什麼？一文掌握Fed政策線索",
+    "10月先停、12月最後一升？高盛預測Fed升息路徑"
+   ],
+   "at": "2026-10-16T18:27:59.517864+00:00"
   }
  ],
  "archive": {
+  "2026-10-17": {
+   "headline": "華許拒絕升息暗示，市場押注10月維持不變，通膨數據偏熱成隱憂",
+   "text": "聯準會主席華許10/15在國際貨幣基金組織年會上表示，不會預判會議結果或說明未來行動，延續其上任以來刻意保持政策神秘的作風。儘管華許未釋出任何鷹派訊號，市場將此解讀為支持10/28會議維持利率不變，聯邦基金期貨反映升息機率已降至約13%，遠低於發言前的水準。副主席傑佛森與紐約聯準銀行總裁威廉斯等重要決策官員也強調無急於升息的必要。\n美國長期債務與高殖利率環境開始衝擊經濟：30年期固定房貸利率徘徊在7.5%左右，9月待售房屋銷售月減4%，創三年來最大跌幅；10年期公債殖利率自2月底以來已上升114個基點至5.1%。",
+   "rate_note": "華許拒絕升息暗示偏向壓低升息預期，但通膨數據偏熱為未來升息保留空間，方向相對混雜；市場傾向解讀為支持維持現狀。10年期今日+2bp至5.11%，反映市場對升息預期下降的反應有限。",
+   "links": [
+    {
+     "title": "Warsh’s Missing Words Fuel Bets Fed Will Hold Rates",
+     "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNZms1aGNrLWRUb1BHWjJSSS1lOHdqODlJSlB0eDFHd1FDdjZyNEdBejdTZkc1ODhrcTZJUGhidWVpNE05Rm5wLThoT2ktb1BIcFhEWVhGLTV2V2R1S2FjZVNfZEFkNC1PXy1ibkt5YnU5ZkY1ODg1a0w3b0ZPQm9ROEt3ZlhSc25TcmthLUhiMXpObGNUMXlIcTVqMUZTdVNMQ19iUzM2NFk?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-16T17:23:43+00:00"
+    },
+    {
+     "title": "Warsh Boosts Market Expectations of Fed Rate Hold in October",
+     "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQdHZhMDY1QkVFRU1NQ0c1NkxlNzR2cDR4NEgwbVFMSkQ3RzFSNlFYT1Q0d1BzOWpRUGtLcTg1YUk0UkxOc2tKWENkTGxkRWc5SFAwWDFMS3JxdXJfWUIyNmwzR1Z0T3B5SmF0R2hjc0lDdXppV0wzQmw2bHh0a0FZS1BsUXVJdkdyZF9YcWIxMlZ3RnMwOVZ0YlFDeHdFWE5nTXdSdlQwb2NfZw?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-16T14:23:04+00:00"
+    },
+    {
+     "title": "Analysis: Everyone expects the Fed to hold rates in October. Kevin Warsh could surprise us all",
+     "link": "https://www.cnbc.com/2026/10/16/kevin-warsh-fed-october-rate-hike-interest-rates-markets.html",
+     "source": "CNBC",
+     "at": "2026-10-16T16:27:31+00:00"
+    },
+    {
+     "title": "華許夜間談話說了什麼、又沒說什麼？一文掌握Fed政策線索",
+     "link": "https://tw.stock.yahoo.com/news/%E8%8F%AF%E8%A8%B1%E5%A4%9C%E9%96%93%E8%AB%87%E8%A9%B1%E8%AA%AA%E4%BA%86%E4%BB%80%E9%BA%BC-%E5%8F%88%E6%B2%92%E8%AA%AA%E4%BB%80%E9%BA%BC-%E6%96%87%E6%8E%8C%E6%8F%A1fed%E6%94%BF%E7%AD%96%E7%B7%9A%E7%B4%A2-170006780.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-16T17:00:06+00:00"
+    },
+    {
+     "title": "10月先停、12月最後一升？高盛預測Fed升息路徑",
+     "link": "https://tw.stock.yahoo.com/news/10%E6%9C%88%E5%85%88%E5%81%9C-12%E6%9C%88%E6%9C%80%E5%BE%8C-%E5%8D%87-%E9%AB%98%E7%9B%9B%E9%A0%90%E6%B8%ACfed%E5%8D%87%E6%81%AF%E8%B7%AF%E5%BE%91-152005276.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-16T15:20:05+00:00"
+    }
+   ],
+   "at": "2026-10-16T18:27:59.517864+00:00"
+  },
   "2026-10-16": {
    "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
    "text": "美國9月生產者物價指數（PPI）月增1.3%，為2022年3月以來最大漲幅，遠超預期的0.6%，年增率達6.3%，創2022年12月以來新高；同時核心消費者物價指數（CPI）月增0.33%，連續第二個月偏強。華爾街經濟學家預估9月核心個人消費支出（PCE）將月增0.32%，若實現將推升年增率至3.1%，暗示通膨壓力仍未緩解。¶聯準會主席華許10/16在曼谷出席國際貨幣基金會議時，既未認同也未反駁同僚近期「不急於升息」的訊號，並表示不會預先判斷會議結果或說明今年剩餘會議的政策行動，拒絕對10/28決策會議給出明確指引。華許強調AI基礎建設擴張最終將帶來正面供給衝擊，目前需求增加只是轉型過程中的現象。經濟學家認為通膨數據足以支撐進一步升息的理由，但華許的沉默讓市場面臨更大不確定性。\nAI股票拋售引發避險買盤湧入美債，10/15美債殖利率大幅下跌，10年期單日下滑14bp至5.05%、30年期下滑13bp至5.40%，但隨後10/16反彈至5.11%。\n黃金價格10/16開盤上漲0.5%至4,192美元/盎司，受惠於美債殖利率回落與美元走弱，市場預期聯準會10/28維持利率機率約85%。",
