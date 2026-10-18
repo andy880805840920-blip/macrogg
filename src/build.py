@@ -3444,17 +3444,13 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         aria="Fed 利率走廊與 SRF 動用量")
         if (srf_filled or corridor_filled) else "")
 
-    # Fed 每月國庫券購買量（T-Bills），拆 RMP（主動維持準備金）vs MBS 到期再投入
-    # （全額轉進國庫券）。拆分方法見 lq.tbill_purchase_split 的註解——操作紀錄本身
-    # 不分誰是誰，MBS 部分是用 SOMA 持有量的月減少量估計。
-    reinvest = lq.tbill_purchase_split((treasury or {}).get("tbill_purchases") or [],
-                                       (treasury or {}).get("soma") or [])
-    _mbs_label = ("MBS 到期再投入（估計）" if reinvest.get("estimated")
-                 else "MBS 到期再投入")
+    # Fed 每期國庫券購買量（T-Bills），拆 RMP vs MBS 到期再投入——兩個金額都是
+    # 紐約聯儲官方逐期公布的拆分（treasury_source.rmp_schedule），不是估計值。
+    reinvest = lq.tbill_purchase_flows((treasury or {}).get("rmp_schedule") or [])
     reinvest_chart = (charts.stacked_columns(
         reinvest["flows"],
         [("rmp", "RMP（準備金管理購買）", "var(--line-1)"),
-         ("mbs", _mbs_label, "var(--muted-bar)")],
+         ("mbs", "MBS 到期再投入", "var(--muted-bar)")],
         unit=" 十億美元", digits=1)
         if reinvest.get("flows") else "")
     _last_flow = (reinvest.get("flows") or [{}])[-1]

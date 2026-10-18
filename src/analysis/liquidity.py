@@ -229,65 +229,28 @@ def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None) -> dict:
     return {"level": "unknown", "label": "資料不足", "text": ""}
 
 
-# Fed 自這個月起暫停 RMP（使用者提供的事實，對應 FOMC 公告）。該月起購買的國庫券
-# 全部視為「MBS 到期再投入」，不再用 SOMA 估計去反推。
-RMP_PAUSED_FROM = "2026-09"
-
-
-def tbill_purchase_split(bill_purchases: list, soma: list) -> dict:
+def tbill_purchase_flows(schedule: list) -> dict:
     """
-    Fed 每月買進的國庫券（十億美元，近 12 個月），拆成兩個來源：
+    Fed 每期（約一個月，起訖日不對齊月曆）計畫購買的國庫券，RMP（準備金管理
+    購買）與 MBS 到期再投入兩個金額——直接來自紐約聯儲官方逐期公布的拆分
+    （treasury_source.rmp_schedule），不是用別的資料反推出來的估計值。
 
-        rmp   準備金管理購買（RMP）——主動為了維持準備金水準而買的量。
-              RMP_PAUSED_FROM 起已暫停，該月起直接視為 0，不必再用 SOMA 估計反推。
-        mbs   MBS 到期再投入——國庫券購買總額扣掉 RMP 之後剩下的量。不含長端
-              公債：長端公債在 Fed 持有部位到期後**不會**被重新投入國庫券，
-              只會直接從資產負債表上消失（或透過另一套獨立機制在標售時加碼
-              認購，那不算在這裡）；真正「全額再投入國庫券」的只有機構證券
-              （MBS）到期收到的本金（見下方 FAQ 原文）。
+    不含長端公債：長端公債在 Fed 持有部位到期後**不會**被重新投入國庫券，
+    只會直接從資產負債表上消失；「全額再投入國庫券」的政策只適用機構證券
+    （MBS）到期收到的本金（紐約聯儲 FAQ 原文：「continue to reinvest all
+    principal payments received from the Federal Reserve's holdings of
+    agency securities into Treasury bills」，agency securities＝MBS，
+    沒有提到 Treasury notes/bonds）。
 
-    bill_purchases 是紐約聯儲「Outright Bill Purchase」操作逐月加總
-    （treasury_source.tsy_bill_purchases）——這是**購買國庫券的總額**，RMP 與
-    MBS 到期再投入都在裡面，操作紀錄本身不分誰是誰。
-
-    紐約聯儲 FAQ 原文確認了兩件事（https://www.newyorkfed.org/markets/
-    reserve-management-reinvestment-purchases-faq）：
-    1. 「the monthly amount of secondary market purchases in Treasuries
-       will consist of reserve management purchases (RMPs)... and
-       reinvestment of proceeds from principal payments of agency
-       securities」——公布的月度金額本來就是兩者的合計數，FAQ 全文沒有另外
-       公布純 RMP 的金額，所以 RMP 欄位這裡**只能用總額減掉 MBS 估計值反推**，
-       不是逐月都有的官方確定數字（RMP_PAUSED_FROM 之後例外：暫停了，
-       RMP 直接等於 0 是確定的，不必反推）。
-    2. 「continue to reinvest all principal payments received from the
-       Federal Reserve's holdings of agency securities into Treasury
-       bills」——明白寫「agency securities」（機構證券＝MBS／機構債），
-       沒有提到公債（Treasury notes/bonds）的到期本金；要再投入的只有
-       MBS 這一塊。這裡用 SOMA 持有明細的 MBS 月減少量（＝到期本金，
-       政策是全額再投入）當估計值，理論上就等於 MBS 再投入金額。
+    這是**計畫金額**（Planned Operation Amount），不是逐筆結算金額——頁面
+    原文也寫「RMP amounts are not on a preset course and may vary from
+    month to month」，可能跟實際成交有落差，但這是官方唯一公布拆分的地方。
     """
-    total_map = {r["date"][:7]: r["value"] for r in (bill_purchases or [])}
-    me: dict = {}
-    for r in soma or []:
-        me[r["date"][:7]] = r
-    som_months = sorted(me)
-    mbs_decline: dict = {}
-    for a, b in zip(som_months, som_months[1:]):
-        delta = me[b].get("mbs", 0) - me[a].get("mbs", 0)
-        if delta < 0:
-            mbs_decline[b] = -delta
-    months = sorted(set(total_map) | set(mbs_decline))[-12:]
-    if not months:
+    if not schedule:
         return {}
-    flows, estimated = [], False
-    for m in months:
-        total = total_map.get(m, 0.0)
-        if m >= RMP_PAUSED_FROM:
-            rmp, mbs = 0.0, total
-        else:
-            mbs = min(total, mbs_decline.get(m, 0.0))
-            rmp = max(0.0, total - mbs)
-            estimated = True
-        flows.append({"date": m + "-01", "mbs": round(mbs, 3), "rmp": round(rmp, 3),
-                      "total": round(total, 3)})
-    return {"flows": flows, "asof": months[-1], "estimated": estimated}
+    rows = schedule[-12:]
+    flows = [{"date": r["end"], "mbs": r["mbs"], "rmp": r["rmp"],
+             "total": round(r["mbs"] + r["rmp"], 3),
+             "period": f'{r["start"][5:].replace("-", "/")}–{r["end"][5:].replace("-", "/")}'}
+            for r in rows]
+    return {"flows": flows, "asof": flows[-1]["date"]}

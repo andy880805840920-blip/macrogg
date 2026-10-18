@@ -17,6 +17,7 @@ import datetime as dt
 import json
 import logging
 import pathlib
+import re
 
 import requests
 
@@ -249,32 +250,49 @@ def srf_operations(start: str, end: str) -> list[dict]:
            for d, v in sorted(by_day.items())]
 
 
-def tsy_bill_purchases(start: str, end: str) -> list[dict]:
-    """
-    紐約聯儲「Outright Bill Purchase」操作逐月加總得標金額（十億美元）——
-    國庫券購買的**總額**，不是純 RMP。
+RMP_DETAILS_URL = ("https://www.newyorkfed.org/markets/domestic-market-operations/"
+                   "monetary-policy-implementation/treasury-securities/"
+                   "treasury-securities-operational-details")
+_RMP_DATE = re.compile(r"(\d{1,2}/\d{1,2}/\d{4})\s*-\s*\|?(\d{1,2}/\d{1,2}/\d{4})")
+_RMP_REINVEST = re.compile(r"approximately \$([\d.]+) billion in reinvestment purchases")
+_RMP_RMP = re.compile(r"(no reserve management purchases"
+                      r"|approximately \$([\d.]+) billion in reserve management purchases)")
 
-    紐約聯儲官方 FAQ 原文：「the monthly amount of secondary market
-    purchases in Treasuries will consist of reserve management purchases
-    (RMPs)... and reinvestment of proceeds from principal payments of
-    agency securities」——國庫券購買總額裡同時包含 RMP（主動維持準備金）
-    與 MBS 到期本金的再投入（全額轉進國庫券），操作紀錄本身不分誰是誰。
-    兩者要拆開看 analysis.liquidity.tbill_purchase_split（用 SOMA 持有量
-    的 MBS 月減少量估計再投入部分，剩下的才算 RMP）。
 
-    https://www.newyorkfed.org/markets/reserve-management-reinvestment-purchases-faq
+def rmp_schedule() -> list[dict]:
     """
-    js = _get(f"https://markets.newyorkfed.org/api/tsy/purchases/results/summary/"
-             f"search.json?startDate={start}&endDate={end}&securityType=treasury")
-    ops = ((js or {}).get("treasury") or {}).get("auctions") or []
-    by_month: dict[str, float] = {}
-    for o in ops:
-        d = o.get("operationDate")
-        amt = _f(o.get("totalParAmtAccepted"))
-        if not d or amt is None:
+    每期（約一個月，起訖日不對齊月曆，例如 7/14–8/13）Fed 計畫購買的國庫券，
+    拆成 RMP（準備金管理購買）與 MBS 到期再投入兩個官方分開公布的金額
+    （十億美元）。
+
+    這是唯一有逐期拆開兩者的官方來源——紐約聯儲 Markets Data API 的操作
+    紀錄（原本這裡呼叫的 tsy/purchases 端點）只給購買總額，不分誰是誰；
+    這個頁面的「Planned Operation Amount」欄位直接寫成一句英文，例如
+    「The Desk plans to conduct approximately $17.6 billion in reinvestment
+    purchases and an additional approximately $10 billion in reserve
+    management purchases」，用正則表達式解析這句話取兩個數字。
+
+    是**計畫金額**不是逐筆結算金額——頁面本身也寫「RMP amounts are not on
+    a preset course and may vary from month to month」，所以跟實際成交
+    金額可能有落差；但這仍是官方唯一公布 RMP／MBS 拆分的地方。
+    """
+    r = requests.get(RMP_DETAILS_URL, timeout=40, headers=UA)
+    r.raise_for_status()
+    rows = re.findall(r"<tr[^>]*>.*?</tr>", r.text, re.S)
+    out = []
+    for row in rows:
+        txt = re.sub(r"<[^>]+>", "|", row)
+        dm = _RMP_DATE.search(txt)
+        rm = _RMP_REINVEST.search(txt)
+        pm = _RMP_RMP.search(txt)
+        if not (dm and rm and pm):
             continue
-        by_month[d[:7]] = by_month.get(d[:7], 0.0) + amt / 1e9
-    return [{"date": f"{m}-01", "value": round(v, 3)} for m, v in sorted(by_month.items())]
+        rmp_amt = 0.0 if pm.group(1) == "no reserve management purchases" else float(pm.group(2))
+        start = dt.datetime.strptime(dm.group(1), "%m/%d/%Y").date().isoformat()
+        end = dt.datetime.strptime(dm.group(2), "%m/%d/%Y").date().isoformat()
+        out.append({"start": start, "end": end, "mbs": float(rm.group(1)), "rmp": rmp_amt})
+    out.sort(key=lambda r: r["start"])
+    return out
 
 
 def rate_volume(secured: bool, ratetype: str, start: str, end: str) -> list[dict]:
@@ -302,7 +320,7 @@ def rate_volume(secured: bool, ratetype: str, start: str, end: str) -> list[dict
 # ---------------------------------------------------------------------------
 def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None = None) -> dict:
     """
-    {auctions, upcoming, soma, wam, srf, tbill_purchases, sofr_vol, effr_vol, failed}。
+    {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -328,7 +346,6 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
     from . import clock
     end = clock.today()
     start200 = (end - dt.timedelta(days=200)).isoformat()
-    start400 = (end - dt.timedelta(days=400)).isoformat()      # RMP／MBS 要近 12 個月的月資料，抓寬一點
     end_iso = end.isoformat()
     try:
         out["srf"] = srf_operations(start200, end_iso)
@@ -337,11 +354,11 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         out["srf"] = []
         failed.append("srf")
     try:
-        out["tbill_purchases"] = tsy_bill_purchases(start400, end_iso)
+        out["rmp_schedule"] = rmp_schedule()
     except Exception as e:                         # noqa: BLE001
-        log.warning("Fed 國庫券購買量取得失敗（%s）", e)
-        out["tbill_purchases"] = []
-        failed.append("tbill_purchases")
+        log.warning("RMP／MBS 再投入排程取得失敗（%s）", e)
+        out["rmp_schedule"] = []
+        failed.append("rmp_schedule")
     try:
         out["sofr_vol"] = rate_volume(True, "sofr", start200, end_iso)
         out["effr_vol"] = rate_volume(False, "effr", start200, end_iso)
