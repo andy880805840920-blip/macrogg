@@ -3449,8 +3449,8 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
     # 不分誰是誰，MBS 部分是用 SOMA 持有量的月減少量估計。
     reinvest = lq.tbill_purchase_split((treasury or {}).get("tbill_purchases") or [],
                                        (treasury or {}).get("soma") or [])
-    _mbs_label = ("長端公債／MBS 到期不再投入，改買 Bills（估計）" if reinvest.get("estimated")
-                 else "長端公債／MBS 到期不再投入，改買 Bills")
+    _mbs_label = ("MBS 到期再投入（估計）" if reinvest.get("estimated")
+                 else "MBS 到期再投入")
     reinvest_chart = (charts.stacked_columns(
         reinvest["flows"],
         [("rmp", "RMP（準備金管理購買）", "var(--line-1)"),

@@ -136,7 +136,18 @@ def _rmp_concept() -> str:
         '（primary dealers）交易；標的以 1–12 個月期的國庫券為主（1–4 個月占 75%、4–12 個月占'
         '25%），市況需要時也可能納入 3 年期以內的其他公債。每月購買金額約在當月第 9 個工作日'
         '公布。<b>Fed 自 2026 年 9 月起暫停 RMP</b>——當月起的國庫券購買量全部來自'
-        '長端公債、MBS 到期不再投入、改買 Bills，不是主動維持準備金的操作。</p>'
+        'MBS 到期不再投入、改買 Bills，不是主動維持準備金的操作。</p>'
+        '<p class="hint"><b>RMP 跟長端公債無關：</b>紐約聯儲 FAQ 寫得很明確——會「全額再投入'
+        '國庫券」的只有<b>機構證券（agency securities，即 MBS 與機構債）</b>到期收到的本金，'
+        '完全沒提到公債（Treasury notes/bonds）的到期本金。Fed 持有的長端公債到期後，本金'
+        '就直接從資產負債表上消失、不會被拿去買 Bills——長端部位的縮減走的是另一套邏輯'
+        '（縮表或到期不續作），不是 RMP／再投入機制的一部分。</p>'
+        '<p class="hint"><b>這一頁「RMP」數字是推算出來的：</b>紐約聯儲公布的「每月國庫券'
+        '購買金額」本來就是 RMP 與 MBS 再投入的<b>合計數</b>，官方沒有另外公布純 RMP 的金額'
+        '（FAQ 原文：monthly amount... will consist of RMPs... and reinvestment of'
+        ' proceeds...）。這一頁的 RMP＝官方公布的購買總額，減去用 SOMA 持有量反推出來的'
+        'MBS 再投入估計值——RMP 暫停後（2026-09 起）這條反推就不需要了，暫停期間的購買量'
+        '全部確定歸 MBS 再投入。</p>'
         '<p class="hint">RMP、MBS 到期再投入都是在管理 Fed 資產端的存量與到期結構——'
         '跟<a href="/rates/#supply">長端與債務頁「債券供給：財政部與 Fed」</a>'
         '一節的 WAM（加權平均到期年限）管理是同一件事的兩面：那裡看的是 Fed 持有公債的'
@@ -243,7 +254,7 @@ def liquidity_body(d: dict) -> str:
     <p class="hint">Fed T-Bills 購買量</p>
     {rc}
     {(f'<div class="src">最新月（{esc(rl["date"][5:7])}月）：'
-      f'RMP {_yi(rl.get("rmp"))}　長端公債／MBS 到期改買 Bills'
+      f'RMP {_yi(rl.get("rmp"))}　MBS 到期再投入'
       f'{"（估計）" if (d.get("reinvest") or {}).get("estimated") else ""} {_yi(rl.get("mbs"))}　'
       f'合計 {_yi(rl.get("total"))}。資料至 {esc(_reinvest_asof[:7])}。</div>'
       if rl else "")}
@@ -264,12 +275,15 @@ def liquidity_footer(d: dict) -> str:
          ("SRF 動用量（常備回購機制）", "紐約聯儲逐日操作結果；FRED（RPONTSYD）後備", "每日"),
          ("ON RRP 餘額", "FRED（RRPONTSYD）", "每日"),
          ("Fed T-Bills 購買量（總額）", "紐約聯儲 Treasury Securities Operations", "每次操作"),
-         ("其中 RMP 部分", "2026-09 起暫停，該月起視為 0", "每月公布"),
-         ("其中長端公債／MBS 改買 Bills 部分", "RMP 暫停後＝總額減 RMP；暫停前用 SOMA 持有量"
-          "的 MBS 月減少量估計", "每週")],
+         ("其中 RMP 部分", "2026-09 起暫停，確定為 0；暫停前無官方分拆數字，用總額減"
+          "MBS 估計值反推", "總額每次操作公布"),
+         ("其中 MBS 到期再投入部分", "用 SOMA 持有量的 MBS 月減少量估計（不含長端公債——"
+          "公債到期不會被再投入國庫券）", "每週")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
-         "Fed T-Bills 購買量拆 RMP／長端公債與 MBS 改買 Bills：2026-09 起 RMP 暫停，"
-         "該月起購買量全部歸於後者；暫停前沒有逐月公布的 RMP 金額，改用 SOMA 持有量"
-         "的月減少量估計，標示為估計值。"],
+         "Fed T-Bills 購買量拆 RMP／MBS 到期再投入：紐約聯儲只公布兩者合計的月度總額，"
+         "沒有單獨公布 RMP 金額。2026-09 起 RMP 暫停，該月起購買量全部確定歸 MBS 再投入；"
+         "暫停前沒有官方分拆數字，改用 SOMA 持有量的月減少量估計 MBS 部分，RMP 為總額減"
+         "估計值的餘數，標示為估計值。再投入只適用 MBS（機構證券），不含長端公債——"
+         "公債到期後直接從資產負債表消失，不會被拿去買回 Bills。"],
         head="<b>資料來源</b> 紐約聯儲、FRED")

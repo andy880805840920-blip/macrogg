@@ -230,7 +230,7 @@ def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None) -> dict:
 
 
 # Fed 自這個月起暫停 RMP（使用者提供的事實，對應 FOMC 公告）。該月起購買的國庫券
-# 全部視為「長端公債與 MBS 到期不再投入、改買 Bills」，不再用 SOMA 估計去反推。
+# 全部視為「MBS 到期再投入」，不再用 SOMA 估計去反推。
 RMP_PAUSED_FROM = "2026-09"
 
 
@@ -239,19 +239,32 @@ def tbill_purchase_split(bill_purchases: list, soma: list) -> dict:
     Fed 每月買進的國庫券（十億美元，近 12 個月），拆成兩個來源：
 
         rmp   準備金管理購買（RMP）——主動為了維持準備金水準而買的量。
-              Fed 公布當月 RMP 宣布金額（約當月第 9 個工作日），RMP_PAUSED_FROM
-              起已暫停，該月起直接視為 0，不必再用 SOMA 估計反推。
-        mbs   長端公債、MBS 到期不再投入、改買 Bills 的部分——國庫券購買總額
-              扣掉 RMP 之後剩下的量。RMP 暫停之前沒有逐月公布的 RMP 金額可拿，
-              這段只能退回用 SOMA 持有明細的 MBS 月減少量（＝到期本金，現行政策
-              全額再投入國庫券）當估計值，標示為 estimated。
+              RMP_PAUSED_FROM 起已暫停，該月起直接視為 0，不必再用 SOMA 估計反推。
+        mbs   MBS 到期再投入——國庫券購買總額扣掉 RMP 之後剩下的量。不含長端
+              公債：長端公債在 Fed 持有部位到期後**不會**被重新投入國庫券，
+              只會直接從資產負債表上消失（或透過另一套獨立機制在標售時加碼
+              認購，那不算在這裡）；真正「全額再投入國庫券」的只有機構證券
+              （MBS）到期收到的本金（見下方 FAQ 原文）。
 
     bill_purchases 是紐約聯儲「Outright Bill Purchase」操作逐月加總
     （treasury_source.tsy_bill_purchases）——這是**購買國庫券的總額**，RMP 與
-    到期再投入都在裡面，操作紀錄本身不分誰是誰（紐約聯儲 FAQ：
-    「monthly amount of secondary market purchases in Treasuries will
-    consist of RMPs... and reinvestment of proceeds from... agency
-    securities」）。
+    MBS 到期再投入都在裡面，操作紀錄本身不分誰是誰。
+
+    紐約聯儲 FAQ 原文確認了兩件事（https://www.newyorkfed.org/markets/
+    reserve-management-reinvestment-purchases-faq）：
+    1. 「the monthly amount of secondary market purchases in Treasuries
+       will consist of reserve management purchases (RMPs)... and
+       reinvestment of proceeds from principal payments of agency
+       securities」——公布的月度金額本來就是兩者的合計數，FAQ 全文沒有另外
+       公布純 RMP 的金額，所以 RMP 欄位這裡**只能用總額減掉 MBS 估計值反推**，
+       不是逐月都有的官方確定數字（RMP_PAUSED_FROM 之後例外：暫停了，
+       RMP 直接等於 0 是確定的，不必反推）。
+    2. 「continue to reinvest all principal payments received from the
+       Federal Reserve's holdings of agency securities into Treasury
+       bills」——明白寫「agency securities」（機構證券＝MBS／機構債），
+       沒有提到公債（Treasury notes/bonds）的到期本金；要再投入的只有
+       MBS 這一塊。這裡用 SOMA 持有明細的 MBS 月減少量（＝到期本金，
+       政策是全額再投入）當估計值，理論上就等於 MBS 再投入金額。
     """
     total_map = {r["date"][:7]: r["value"] for r in (bill_purchases or [])}
     me: dict = {}
