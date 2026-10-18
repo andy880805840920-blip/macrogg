@@ -20,11 +20,16 @@ import datetime as dt
 
 # 利率走廊四條線：EFFR／SOFR 貼著走廊內部，IORB 是名目上緣、ON RRP 得標利率是下緣。
 CORRIDOR = [
-    ("IORB", "準備金利率（IORB，走廊上緣）", "var(--muted)"),
+    ("IORB", "準備金利率（IORB，走廊實質上緣）", "var(--muted)"),
     ("EFFR", "聯邦資金有效利率（EFFR）", "var(--series-2)"),
     ("SOFR", "擔保隔夜融資利率（SOFR）", "var(--series-1)"),
     ("RRPONTSYAWARD", "ON RRP 利率（走廊下緣）", "var(--line-1)"),
 ]
+# SRF 利率不在 FRED（走 NY Fed 操作紀錄，見 srf_rows 的 rate 欄位），跟上面四條
+# 不同資料來源，corridor_series() 管不到，呼叫端（build.build_liquidity_context）
+# 自己組好這條線再併進 lines 清單。
+SRF_RATE_LABEL = "SRF 利率（走廊名目上緣）"
+SRF_RATE_COLOR = "var(--critical)"
 
 # SRF 動用視為「有在用」的門檻（十億美元）。5000 萬美元以下視為雜訊（操作尾差）。
 SRF_USE_FLOOR = 0.05
@@ -65,6 +70,16 @@ def ffill_series(rows: list, days: list[str]) -> list[dict]:
         if last is not None:
             out.append({"date": d, "value": last})
     return out
+
+
+def srf_rate_series(srf_rows: list) -> list[dict]:
+    """
+    SRF 利率（走廊名目上緣）——srf_rows 來自 treasury_source.srf_operations，
+    每筆已經帶 rate 欄位（公債擔保那一檔的得標利率），這裡只是轉成
+    [{date, value}] 讓 charts.rate_corridor 當一般的線用。
+    """
+    return [{"date": r["date"], "value": r["rate"]}
+           for r in (srf_rows or []) if r.get("rate") is not None]
 
 
 def _avgs(rows: list) -> tuple:

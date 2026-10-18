@@ -3432,6 +3432,12 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
     # 「Liquidity Now」主圖：SRF 動用量（柱狀，左軸）疊利率走廊四條線（右軸）。
     # 假日（或任何缺值的平日）沿用最近一筆公布值補成連續曲線，不留斷點。
     corridor = lq.corridor_series(series, months=6)
+    # SRF 利率（走廊名目上緣）跟其他四條線不同來源（NY Fed 操作紀錄，不是
+    # FRED），單獨組好這條線再併進去——格式比照其他線，一樣進假日補值。
+    srf_rate_pts = lq.srf_rate_series(srf_rows)
+    if srf_rate_pts:
+        corridor = corridor + [{"label": lq.SRF_RATE_LABEL, "color": lq.SRF_RATE_COLOR,
+                                "points": srf_rate_pts}]
     _cal_dates = [p["date"] for p in srf_rows] + [p["date"] for s in corridor for p in s["points"]]
     if _cal_dates:
         _cal = lq.business_days(min(_cal_dates), max(_cal_dates))

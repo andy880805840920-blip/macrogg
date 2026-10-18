@@ -125,6 +125,32 @@ def _tgcr_detail(chart: str) -> str:
         '參考利率的理由。</p>')
 
 
+def _other_liquidity_tools() -> str:
+    return (
+        '<p class="hint"><b>貼現窗口（Discount Window）：</b>12 家地區聯邦準備銀行各自'
+        '經營的放款窗口，對象是銀行等存款機構（不是像 SRF 那樣開放更廣泛的交易對手），'
+        '主要項目「Primary Credit」只給財務狀況健全的銀行使用，利率參照聯邦資金目標'
+        '區間訂定、要用合格擔保品抵押，動用沒有用途限制。它存在的目的是讓單一銀行的'
+        '短期流動性缺口不會演變成被迫拋售資產或倒閉；但因為歷史上跟「這家銀行出問題」'
+        '畫上等號，銀行即使真的缺錢也會盡量避免使用（所謂的「汙名化」stigma），這跟'
+        'SRF 刻意設計成「不帶汙名、對所有合格交易對手開放」的常態操作正好相反。</p>'
+        '<p class="hint"><b>FIMA 附買回機制（FIMA Repo Facility）：</b>對象是外國與國際'
+        '貨幣當局（FIMA，各國央行、主權基金等在紐約聯儲開戶的機構），讓它們把帳上的'
+        '美國公債暫時換成美元現金，到期再換回來並支付利息——用途是應付全球美元融資'
+        '市場的壓力，讓這些機構不必在市場緊張時直接拋售公債換現金（那樣反而會加重'
+        '公債市場的賣壓、波及美國國內的金融狀況）。換句話說，SRF 服務的是美國國內的'
+        '金融機構，FIMA 服務的是海外央行，兩者用同一套「公債換現金」邏輯處理不同'
+        '對象的美元荒。</p>'
+        '<p class="hint"><b>央行流動性互換（Central Bank Liquidity Swaps）：</b>Fed 跟'
+        '另外五家主要央行（歐洲央行、日本銀行、英格蘭銀行、加拿大銀行、瑞士央行）'
+        '之間常態互設的雙邊換匯額度。運作方式是兩家央行暫時互換本國貨幣：外國央行'
+        '用本國貨幣跟 Fed 換美元，再把美元撥貸給自己轄下、缺美元的銀行，到期後換'
+        '回來並支付利息。市場壓力大時啟用，用意是讓美元融資壓力不必集中湧回美國'
+        '公債與貨幣市場，由外國央行就近紓解自己轄下機構的美元缺口——是跟 FIMA 互補'
+        '的另一條管道：FIMA 讓外國央行拿既有的公債部位換美元，換匯額度則是讓外國'
+        '央行完全不需要持有美元資產也能取得美元。</p>')
+
+
 def _rmp_concept() -> str:
     return (
         '<p class="hint">RMP（Reserve Management Purchases，準備金管理購買）是紐約聯儲在'
@@ -250,6 +276,9 @@ def liquidity_body(d: dict) -> str:
           從「後台技術」變成系統性風險觀察重點的原因。</p></div></details>
     <details class="f-more"><summary>TGCR（三方一般擔保利率）</summary>
       <div class="f-detail">{_tgcr_detail(tc)}</div>
+    </details>
+    <details class="f-more"><summary>其他流動性管理工具</summary>
+      <div class="f-detail">{_other_liquidity_tools()}</div>
     </details>
   </div>
 </div>"""
