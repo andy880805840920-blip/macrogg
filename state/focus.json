@@ -311,31 +311,31 @@
  "at": "2026-10-18T08:42:43.765419+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c35d7213921bb53d",
+  "hash": "1012e6cdf02ec85e",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "華許對AI前景樂觀態度提振新興市場股票，同時聯準會面臨如何在對抗通膨同時保護農民的挑戰，反映政策制定的複雜性",
+    "text": "聯準會面臨農民警告，需要在對抗通膨與保護農業部門間取得平衡",
     "links": [
-     {
-      "title": "Emerging-Market Stocks Gain as Fed’s Warsh Backs AI Optimism",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPVVl2dHcyRGc2LWRmSVNPdW12aGxGMHBlVC13RTBGY3BNSW5vd3I0S2VRa01VRjhUbTdELUNBYS03RmpVNmRSblBNMERMaEJjQlRzT1FoMHhaVTk2MENIZk5FdUxmenE2WGJ4Q3hLRWt6YWxUNXd2WVJfNjdDN2Z6c2R0THprdGZFV1lnai1PRnFlbnZxQ05vbXZtX2lQVXQwWEZ0ZzRWRTByMERRM2Y0QQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-16T20:54:24+00:00"
-     },
      {
       "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
       "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
       "source": "Bloomberg",
       "at": "2026-10-17T14:07:37+00:00"
+     },
+     {
+      "title": "Watch Wall Street Week | America’s Relationship Woes, Battery Pivot, Farmers’ Fed Warning",
+      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNbzdMNHItS0lhbGZHcVg3Uk1WNWRsX2NoRC1HSDMxS0FwVUp4a0phZ2x3WDVZYWFWZWIwOVItUDZYdDFOUFZpTU9ucDNKSjNoUE1CVTFZaGdwSnJmUHM3S3RrNS1HblQ1X3Vld09IZ1Y4NVFkT0xpOEVCUmdNa2ZzbnBGWUdrQlNaRjVMa3JHV0ZVaGk1cUhfdi1qMVVQMXFRTUdaSzVaVVY?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-16T23:30:39+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "長天期美債殖利率受熱通膨數據與AI投機熱潮降溫雙重打擊，油價飆升與通膨預期上升推高殖利率至數十年高位",
+    "text": "長天期美債殖利率受熱通膨與AI投資熱潮冷卻雙重壓力，觸及數十年高位，油價上升與市場風險情緒轉變推升殖利率波動",
     "links": [
      {
       "title": "Watch AI Selloff, Oil & Treasury Yields Pressure Markets",
@@ -354,7 +354,7 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "貨幣市場基金規模激增至7.9兆美元，短期國庫券殖利率因大規模發行而上升，測試資金市場承載能力",
+    "text": "貨幣市場基金規模激增至7.9兆美元，短期國債殖利率因大規模發行而上升，測試資金市場承載能力",
     "links": [
      {
       "title": "Money Market Funds: A Proven, Smart $7.9tn Surge",
@@ -373,7 +373,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI交易反轉衝擊亞洲相關個股，市場擔憂AI泡沫與高油價風險，美股面臨調整壓力",
+    "text": "美股標普500與那斯達克跌破支撐位，Meta等科技股財報表現成為市場焦點，AI投資熱潮冷卻引發修正疑慮",
     "links": [
      {
       "title": "AI Trade Reversal Pierces Asia’s Star Picks-and-Shovels Stocks",
@@ -392,7 +392,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Salesforce遭銀行美國分行雙升至買進評等，分析師認為AI將深化企業對其平台的依賴，目標價從160美元調升至285美元",
+    "text": "Meta獲Truist調升至街頭最高目標價1000美元，看好其Muse AI助手商機，預期2030年可貢獻285億美元增量收入；美銀雙升Salesforce至買進評級，認為AI將深化企業對其平台的依賴",
     "links": [
      {
       "title": "5 big analyst AI moves: Meta gets Street-high PT; Salesforce double upgraded",
@@ -405,7 +405,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤暴跌1144點逼近季線46100點，外資單周累計賣超6817億元，市場焦點轉向AI資本支出能否轉化為實際獲利，高利率環境同時降低企業現金流現值並拉高融資成本",
+    "text": "台指期夜盤下殺1144點逼近季線46100點；台股周線重挫2202點跌幅4.47%，10/15單日暴跌1655點創史上第六大跌點，外資單周狂賣5862億元",
     "links": [
      {
       "title": "台指期夜盤下殺逾千點　台股本周開盤陷46k保衛戰",
@@ -422,9 +422,28 @@
     ]
    },
    {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "川普批評幕僚表現，共和黨期中選舉前景黯淡，汽油價格接近拜登任期平均水準成為政治焦點",
+    "links": [
+     {
+      "title": "Trump faults aides as Republican midterm prospects dim",
+      "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQYTNjQm5xUlNLTTVIZHJ5eXBnMUZlY211OWQzdjJSLWFqMDRrMVZlaXFjUmUtVDFkVXYyVUwzajB4TXNQNE1NblU4RFhGeDNyak4tX1FsZXZtTXpYamZValBXUHc0RXNhc2J6Vk4wZEFNV2FxNHBlYmNvOFVEdThjakZ5Q0g3UXpySk9maHZhYTFXSzVMeXdxMXZ5c1M?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-17T13:58:21+00:00"
+     },
+     {
+      "title": "Trump Faces Midterm Fuel Reckoning as Gas Prices Near Biden’s Average",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOWGJLZ1Rxcm83b0JILUMtTGptU1J2eWVvNkJ1REI1TTg4cDk4U0xscER4cUJKcUtmdnZBbkdsZGg0ZkJDbEZlODlUdnpXTno3MHNEc3llVE5QV1RiNlFWLUw0NDNHaDE1NUpmb3RqNXI5dmZ0d2ttNkFBSWlHbVBydlBKY2dmRmlwUXEzNkhudkc5WFVuSkk2YktKYXF3RUo0ZVIxVW82UjlXdkFEZXhjbTF0cVA?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-17T13:00:00+00:00"
+     }
+    ]
+   },
+   {
     "id": "fx",
     "label": "匯率",
-    "text": "台美利差擴大導致外資拋售新台幣，單週貶值幅度達4.63角，美日央行干預後新台幣短暫回升至31.7元附近",
+    "text": "新台幣單週重貶4.63角，台美利差擴大導致外資急甩新台幣恐探33元；日圓升值帶動新台幣止貶回到31.7元附近",
     "links": [
      {
       "title": "台美利差擴大　外資急甩新台幣恐探33元 | 財經 | CTWANT",
@@ -441,7 +460,7 @@
     ]
    }
   ],
-  "at": "2026-10-18T08:43:01.631598+00:00"
+  "at": "2026-10-18T08:58:16.837655+00:00"
  },
  "main_source_titles": [
   "Bank of Canada sees sharply higher inflation outlook as oil surges, Macklem says",
