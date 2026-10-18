@@ -1,13 +1,7 @@
 {
- "hash": "de6f5ce51d0063b3",
- "text": "",
+ "hash": "4ec229299665e95e",
+ "text": "美國10年期公債殖利率10/16收盤升至5.10%，較前一交易日上升1個基點。市場對聯準會政策路徑的預期保持謹慎，根據期貨定價，10/28會議維持利率機率達84%，顯示市場認為聯準會短期內不會改變政策立場。從更長期來看，市場預期聯準會至2026年底累計升息26個基點，至2027年中升息69個基點，反映市場對未來通膨與經濟前景的複雜預期。¶美債殖利率的溫和上升，在全球央行對通膨態度分化的背景下出現。歐洲央行總裁拉加德表示債券拋售將有助於放緩通膨，暗示歐洲央行對更高利率環境的接納；日本央行則面臨IMF建議若通膨超預期應加快緊縮的壓力。這些全球央行動向與美國聯準會維持觀望的姿態形成對比，反映各央行在通膨與經濟增長間的平衡考量。\n人工智能公司Anthropic執行長克拉克向政策制定者表示AI快速進步可能大幅提升美國GDP，暗示科技進展可能成為支撐經濟成長的因素。川普政府10/17豁免俄羅斯能源關稅與制裁，可能對能源價格與通膨預期產生影響。",
  "links": [
-  {
-   "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
-   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-17T14:07:37+00:00"
-  },
   {
    "title": "ECB's Lagarde says bond selloff will slow inflation",
    "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxORnNpbWFQTVJFZTQ1NDEzNVA1QlMyNThGdl8tR19Bd0UtQTAyVnBGRFBldDVOMFFnRHR0WkRHaS1CODVMSUFvSTZJdzN5a2NSbHFLbHA2bnZ0ZVBXYUprYS1oeGN6eF9lakVpVmRTSVB6VkpwUzlOVXZCME5ldGVmNmZPTUtuSGVnRTZzbENrQ1pGcFlScVZ1Sl9rQ1pHWUo1c1l4VUJn?oc=5",
@@ -15,10 +9,16 @@
    "at": "2026-10-17T08:01:43+00:00"
   },
   {
-   "title": "Watch AI Selloff, Oil & Treasury Yields Pressure Markets",
-   "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOTnpyRzNhemRIbVpkWDdwaU9Cb0xnbXNmdkdJa3Z3aFdYZndZbXU5SVV2d3pMUzQ4TTNyMGFnTVVtMUFUOHMxcjY5b2JNSTA3aEszNmRJY3Z2ZUZ5bjFGX1c0SUxLV1RkemktU25CWEFOZ2dwbmUzN1RXV0o2SFFodQ?oc=5",
+   "title": "BOJ may need to tighten faster if inflation beats forecast, IMF says",
+   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPdWdXNFVpZFpPVGFROEVHcjFiWGdDU1BQdDlMaTJOLWllcnNNazRiSEx4M0RjZUthU09iQzQ1YTNxckczM0dWYVR0LTJwSFpEU1pzV0EzM0x5X3AzaDJVLTM2VmU1cVZnLUQ1Y1FITGE0aXNZa0N0R2ppMGt3TWUybG15QUZlY2dteFFUemdEbU51M0pIMC05MDQ0X253QXp4bEFOZjJfcW1JaUVkb05KbE1PczdQUTNlcVZR?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-17T04:47:00+00:00"
+  },
+  {
+   "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
+   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
    "source": "Bloomberg",
-   "at": "2026-10-16T22:29:21+00:00"
+   "at": "2026-10-17T14:07:37+00:00"
   }
  ],
  "fedwatch": {
@@ -295,16 +295,16 @@
    }
   }
  },
- "text_source": "headlines",
- "at": "2026-10-18T03:57:46.057194+00:00",
- "layout": "",
+ "text_source": "model",
+ "at": "2026-10-18T04:20:14.593035+00:00",
+ "layout": "main",
  "topics": {
-  "hash": "a5d43ecf8d226b6f",
+  "hash": "fb375c6cf05bcc8c",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "韓國央行10/22會議預期維持利率3%不變，但保留進一步升息空間，市場稱為「鷹式暫停」；央行總裁申鉉松表示未來每場會議都有升息可能，接下來物價、GDP與景氣信心指標將是10月決策重要參考，券商預估終點利率可能落在3.50至3.75%",
+    "text": "韓國央行10/22會議預期維持利率3%不變，但保留進一步升息空間，市場稱為「鷹式暫停」；央行總裁申鉉松指出通膨將「一段時間」保持在目標水平之上，未來每場會議都有升息可能，終點利率可能落在3.50至3.75%",
     "links": [
      {
       "title": "韓國央行22日會再升息？市場料「鷹式暫停」 11月仍可能接著升",
@@ -315,41 +315,22 @@
     ]
    },
    {
-    "id": "oil",
-    "label": "油價",
-    "text": "布蘭特原油期貨突破110美元，創5月以來首次，反映中東與烏克蘭衝突升溫帶來的風險溢價。油價上漲促使債券交易員預期聯準會可能維持高利率以對抗通膨壓力",
-    "links": [
-     {
-      "title": "Brent Oil Taps $110 for First Time Since May as Risks Swirl",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPTGpNaEJ4bFlQS3h1ZVFqZU42ZG1vdUMyaFBQd3M4V1I0SkRSeXEyT0drSlUyM3ItODNSN2ktWENEUjRoUTNRMHJCNHZkdDlEWmx5eG5HX3kwakpaX0FUaUo4TXFrOU5WME5vU2FMTjhBTXFyaW56eVM1dTFILWliUVpnVi1pcE5wZVNRTjdFU2F0aXlCYnRRcWI1VHVoejZhN29EQXE4TWIyMHkwUkE?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-16T20:09:38+00:00"
-     }
-    ]
-   },
-   {
     "id": "equity",
     "label": "美股",
-    "text": "美股費城半導體指數連續八個交易日收黑，創2008年以來最長連跌紀錄；市場主要憂慮借貸成本上升恐壓抑AI基礎設施資本支出，輝達執行長黃仁勳強調AI帶來效益很快會化解市場疑慮，大規模硬體投資最終將展現回報",
+    "text": "美股費城半導體指數連續8個交易日收黑創2008年來最長連跌紀錄，市場憂慮借貸成本上升將壓抑AI基礎設施資本支出，輝達執行長黃仁勳強調AI帶來的效益將快速化解市場疑慮，大規模硬體投資最終將展現回報",
     "links": [
      {
       "title": "算力不是唯一瓶頸 AI搶電大戰升溫！電力需求暴增 5檔美股獲關注",
       "link": "https://tw.news.yahoo.com/%E7%AE%97%E5%8A%9B%E4%B8%8D%E6%98%AF%E5%94%AF-%E7%93%B6%E9%A0%B8-ai%E6%90%B6%E9%9B%BB%E5%A4%A7%E6%88%B0%E5%8D%87%E6%BA%AB-%E9%9B%BB%E5%8A%9B%E9%9C%80%E6%B1%82%E6%9A%B4%E5%A2%9E-5%E6%AA%94%E7%BE%8E%E8%82%A1%E7%8D%B2%E9%97%9C%E6%B3%A8-231000456.html",
       "source": "Yahoo奇摩股市",
       "at": "2026-10-17T23:10:00+00:00"
-     },
-     {
-      "title": "美股繁榮是假象？AI泡沫疑慮升溫 標普500恐面臨30%修正",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GREdKdWhGX0lqcDBTOVRnMXROQmlUYmhkNmhUS2tCdTdHeTNPUlNQbE5RcWFNR25tc1Y0WFNGUjVqbzJ0UURmOUtaMTFWcDg?oc=5",
-      "source": "鉅亨網",
-      "at": "2026-10-18T02:00:05+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Cboe自10/19起延長25檔熱門股票與5檔ETF選擇權交易時段，盤前交易時段為美東時間上午7點30分至9點25分，部分個股選擇權增加盤後15分鐘交易，台積電ADR與美股七巨頭及半導體相關類股皆包含在內",
+    "text": "芝加哥選擇權交易所自10/19起延長選擇權交易時段，盤前交易自美東時間上午7點30分至9點25分，部分個股盤後交易延長至下午4點15分，涵蓋輝達、台積電等25檔熱門股票與5檔ETF，讓海外投資人更容易交易美國公司股票",
     "links": [
      {
       "title": "明天執行！包括台積電在內　Cboe延長選擇權交易時段",
@@ -362,26 +343,20 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤10/17大跌1,144點至46,140點，跌幅2.42%；分析師指出止跌需滿足技術面「缺口起攻」與MACD指標收腳轉折，籌碼面上需等待融資減幅擴大、散戶多單認賠停損後籌碼徹底洗淨才能迎來反彈",
+    "text": "台指期10/17夜盤暴跌1,144點至46,140點，面臨季線保衛戰。分析師指出波段止跌需滿足兩大訊號：技術面觀察缺口起攻與MACD轉折，籌碼面須等融資減幅擴大、散戶多單認賠離場後才能反彈，建議投資人避開高基期股票，改尋求利空打底的低基期標的",
     "links": [
      {
       "title": "恐慌殺盤不用怕？台股面臨季線保衛戰專家揭「2重要訊號」止跌　台積電長線買點曝光",
       "link": "https://tw.stock.yahoo.com/news/%E6%81%90%E6%85%8C%E6%AE%BA%E7%9B%A4%E4%B8%8D%E7%94%A8%E6%80%95-%E5%8F%B0%E8%82%A1%E9%9D%A2%E8%87%A8%E5%AD%A3%E7%B7%9A%E4%BF%9D%E8%A1%9B%E6%88%B0%E5%B0%88%E5%AE%B6%E6%8F%AD-2%E9%87%8D%E8%A6%81%E8%A8%8A%E8%99%9F-%E6%AD%A2%E8%B7%8C-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%95%B7%E7%B7%9A%E8%B2%B7%E9%BB%9E%E6%9B%9D%E5%85%89-031000832.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-18T03:10:00+08:00"
-     },
-     {
-      "title": "費半指數續跌　法人看台股短線面臨補跌壓力",
-      "link": "https://tw.news.yahoo.com/%E8%B2%BB%E5%8D%8A%E6%8C%87%E6%95%B8%E7%BA%8C%E8%B7%8C-%E6%B3%95%E4%BA%BA%E7%9C%8B%E5%8F%B0%E8%82%A1%E7%9F%AD%E7%B7%9A%E9%9D%A2%E8%87%A8%E8%A3%9C%E8%B7%8C%E5%A3%93%E5%8A%9B-022324587.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-18T02:23:24+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "全美10/17估計有3千場「無王日」示威活動，推動11/3期中選舉提前投票，民主黨人士呼籲合格選民行使投票權；川普長期質疑郵寄投票並聲稱2020年選舉舞弊導致其敗選",
+    "text": "全美17日估計3千場「無王日」示威活動推動期中選舉提前投票，活動形式包括車隊鳴笛、音樂會與社區聚會，目的在鼓勵合格選民在11/3期中選舉前提前投票",
     "links": [
      {
       "title": "全美「無王日」活動遍地開花 推動期中選舉提前投票",
@@ -394,7 +369,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣16日盤中摜破32.5元關卡，單周大貶4.63角成為「最弱亞幣」；美台利差擴大至約3.08%至3.36%高檔，美元走強加上國際資金對AI產業投資回報疑慮，出現對高估值科技股無差別調節，預計新台幣初步先觀察32.5元關卡，若跌破將測試32.8元支撐點，甚至可能下探33元整數關卡",
+    "text": "新台幣16日盤中摜破32.5元關卡單週大貶4.63角成為「最弱亞幣」，美台利差擴大至3.08%至3.36%高檔，市場預期美國年底前仍可能升息推升美元指數，若新台幣快速跌破32.5元支撐，測試點將落在32.8元甚至33元整數關卡",
     "links": [
      {
       "title": "台美利差擴大　外資急甩新台幣恐探33元",
@@ -405,25 +380,16 @@
     ]
    }
   ],
-  "at": "2026-10-18T03:58:07.603099+00:00"
+  "at": "2026-10-18T04:20:37.993872+00:00"
  },
  "main_source_titles": [
-  "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
   "ECB's Lagarde says bond selloff will slow inflation",
-  "Watch AI Selloff, Oil & Treasury Yields Pressure Markets"
+  "BOJ may need to tighten faster if inflation beats forecast, IMF says",
+  "Watch Can the Fed Fight Inflation Without Hurting Farmers?"
  ],
- "headline": "",
- "rate_note": "",
+ "headline": "美債殖利率升至5.1%，市場押注聯準會年底前維持利率不變",
+ "rate_note": "美債殖利率小幅上升1個基點至5.10%，市場已在反映聯準會短期維持政策不變的預期；長期升息預期溫和，取決於後續通膨數據與經濟成長表現是否支持進一步緊縮。",
  "recent_mains": [
-  {
-   "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
-   "titles": [
-    "Economists: Hot PPI shows Fed's work is not done",
-    "AI trade rout sparks flight to Treasurys, bond yields sink: Chart of the Day",
-    "通膨偏熱仍不給升息暗示！「Fed傳聲筒」解析華許10月政策留白"
-   ],
-   "at": "2026-10-16T13:15:41.579563+00:00"
-  },
   {
    "headline": "華許拒絕升息暗示，市場押注10月維持不變，通膨數據偏熱成隱憂",
    "titles": [
@@ -444,9 +410,44 @@
     "Stocktwits Weekly Spread: What Shaped Treasury Yields And The Dollar This Week"
    ],
    "at": "2026-10-17T01:18:11.640791+00:00"
+  },
+  {
+   "headline": "美債殖利率升至5.1%，市場押注聯準會年底前維持利率不變",
+   "titles": [
+    "ECB's Lagarde says bond selloff will slow inflation",
+    "BOJ may need to tighten faster if inflation beats forecast, IMF says",
+    "Watch Can the Fed Fight Inflation Without Hurting Farmers?"
+   ],
+   "at": "2026-10-18T04:20:14.593035+00:00"
   }
  ],
  "archive": {
+  "2026-10-18": {
+   "headline": "美債殖利率升至5.1%，市場押注聯準會年底前維持利率不變",
+   "text": "美國10年期公債殖利率10/16收盤升至5.10%，較前一交易日上升1個基點。市場對聯準會政策路徑的預期保持謹慎，根據期貨定價，10/28會議維持利率機率達84%，顯示市場認為聯準會短期內不會改變政策立場。從更長期來看，市場預期聯準會至2026年底累計升息26個基點，至2027年中升息69個基點，反映市場對未來通膨與經濟前景的複雜預期。¶美債殖利率的溫和上升，在全球央行對通膨態度分化的背景下出現。歐洲央行總裁拉加德表示債券拋售將有助於放緩通膨，暗示歐洲央行對更高利率環境的接納；日本央行則面臨IMF建議若通膨超預期應加快緊縮的壓力。這些全球央行動向與美國聯準會維持觀望的姿態形成對比，反映各央行在通膨與經濟增長間的平衡考量。\n人工智能公司Anthropic執行長克拉克向政策制定者表示AI快速進步可能大幅提升美國GDP，暗示科技進展可能成為支撐經濟成長的因素。川普政府10/17豁免俄羅斯能源關稅與制裁，可能對能源價格與通膨預期產生影響。",
+   "rate_note": "美債殖利率小幅上升1個基點至5.10%，市場已在反映聯準會短期維持政策不變的預期；長期升息預期溫和，取決於後續通膨數據與經濟成長表現是否支持進一步緊縮。",
+   "links": [
+    {
+     "title": "ECB's Lagarde says bond selloff will slow inflation",
+     "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxORnNpbWFQTVJFZTQ1NDEzNVA1QlMyNThGdl8tR19Bd0UtQTAyVnBGRFBldDVOMFFnRHR0WkRHaS1CODVMSUFvSTZJdzN5a2NSbHFLbHA2bnZ0ZVBXYUprYS1oeGN6eF9lakVpVmRTSVB6VkpwUzlOVXZCME5ldGVmNmZPTUtuSGVnRTZzbENrQ1pGcFlScVZ1Sl9rQ1pHWUo1c1l4VUJn?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-17T08:01:43+00:00"
+    },
+    {
+     "title": "BOJ may need to tighten faster if inflation beats forecast, IMF says",
+     "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPdWdXNFVpZFpPVGFROEVHcjFiWGdDU1BQdDlMaTJOLWllcnNNazRiSEx4M0RjZUthU09iQzQ1YTNxckczM0dWYVR0LTJwSFpEU1pzV0EzM0x5X3AzaDJVLTM2VmU1cVZnLUQ1Y1FITGE0aXNZa0N0R2ppMGt3TWUybG15QUZlY2dteFFUemdEbU51M0pIMC05MDQ0X253QXp4bEFOZjJfcW1JaUVkb05KbE1PczdQUTNlcVZR?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-17T04:47:00+00:00"
+    },
+    {
+     "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
+     "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-17T14:07:37+00:00"
+    }
+   ],
+   "at": "2026-10-18T04:20:14.593035+00:00"
+  },
   "2026-10-17": {
    "headline": "聯準會主席華許拒絕升息暗示，市場押注10月維持不變，財政赤字創新高成隱憂",
    "text": "聯準會主席華許於10/16在國際貨幣基金組織曼谷會議上拒絕提供利率前景指引，市場將其沉默解讀為10月28日會議維持利率的信號，將升息機率從更高水位壓低至20%。華許強調美國經濟強勁，但對利率軌跡隻字未提，交易員認為這暗示10月不會升息。同時，美國財政部10/16公布2026財年預算赤字達1.992兆美元，較前年增加12%，創歷史第三高，僅次於疫情期間的2020與2021年。赤字擴大推升長期公債殖利率，10年期與30年期美債殖利率上週觸及24年高點，加重債市交易員的焦慮。儘管通膨數據（PPI）高於預期，但市場預期聯準會將維持觀望，反映出華許的政策立場已逐漸主導市場預期。\n美國30年固定房貸利率徘徊在7.5%，9月待售房屋銷售環比下跌4%，創三年最大月度跌幅，高利率對房市的冷卻效應已現。財政部未提供減少長期債券發行或取消20年期標售的明確方案，令原本預期政策調整的主要交易商失望。",
@@ -574,38 +575,6 @@
     }
    ],
    "at": "2026-10-14T13:40:54.451096+00:00"
-  },
-  "2026-10-13": {
-   "headline": "IMF警告債市風險升高，通膨與高債務威脅美債殖利率",
-   "text": "國際貨幣基金組織在 10/13 警告，政府公債殖利率可能出現「無序」飆升，原因是通膨、高債務與 AI 相關借貸對主權債市造成壓力。多個先進經濟體的公債殖利率已攀升至數十年高位，受中東衝突推高能源成本與央行緊縮預期驅動。IMF 指出高債務與展期風險使債市「容易受到更頻繁的財政與通膨衝擊」，全球公債已達二戰以來最高水準附近，即將超過 GDP 的 100%。殖利率急升將透過更高折現率壓低資產價值，包括 AI 相關資產，並侵蝕作為擔保品的政府公債價值。\n聯準會理事沃勒 10/13 表示美國通膨預期錨定良好，暗示當前政策立場適當。PIMCO 投資長伊瓦申 10/13 指出美債殖利率尚未見頂，聯準會可能進一步緊縮政策。",
-   "rate_note": "IMF 債市風險警告與聯準會官員升息傾向均指向利率上升壓力，偏向推升長端殖利率；不過近一週 10 年期 -4bp，市場尚未充分反映這些風險升高的訊號。",
-   "links": [
-    {
-     "title": "US inflation expectations are well anchored, Fed's Waller says",
-     "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQVFBFRTZLXzRkVnlnU0FveXV5eHd5NHpLdGZ6VjY5NFBJYVUzUWJCMnAzUTJjbTVNN19yYldxQUM0M1BEQUVPRUZscFB4dTJRNUo4UlJBVzF6VE9JTDdVU1NBYVBkYlpLNE0yU2QwRkVCR21YZW5wd3ZUejdyMUhmNW82OFdlZ0RaQVlSRl9ZengxNkU0YS1WMjR6cHhGcnJjZUk0RERFSlBtT0FKLUE?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-13T11:21:33+00:00"
-    },
-    {
-     "title": "US Treasury yields yet to peak as Fed may tighten further, PIMCO's Ivascyn says",
-     "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQckVkLTFFNXNKUmlRWTVjWE1tOWZ5OXYxU3NFSWU3V0w0dkk3WEVsamFRVWY5Y0FlNVgzV1dZQlJtNWoyY1ByVlVWT0dBNEp6QnlRVG9HTXpKTENiMXlNT0gtYXRnbHFHRk5TUFREaWZmUEk2WElGUDJfY3d3dHc2ZEh5QUdoQlMzZVBKcUlXamtqTmlsQ1kxZXI2MTV6dGVDU1p3QXQwWVJjN1dkVTc3NXlBRm96SVRkQVE?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-13T15:52:45+00:00"
-    },
-    {
-     "title": "IMF warns bond yields could see a 'disorderly' spike as debt, inflation risks worsen",
-     "link": "https://www.cnbc.com/2026/10/13/treasury-yields-imf-debt-inflation-.html",
-     "source": "CNBC",
-     "at": "2026-10-13T04:54:07+00:00"
-    },
-    {
-     "title": "Higher rates could be needed to avoid 'inflationary mindset' taking hold, says Fed's Hammack",
-     "link": "https://www.cnbc.com/2026/10/12/beth-hammack-fed-inflation-policy.html",
-     "source": "CNBC",
-     "at": "2026-10-13T02:58:11+00:00"
-    }
-   ],
-   "at": "2026-10-13T15:56:21.111390+00:00"
   }
  }
 }
