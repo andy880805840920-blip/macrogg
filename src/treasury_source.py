@@ -56,8 +56,11 @@ def normalize_auction(a: dict) -> dict:
     """TreasuryDirect 一筆拍賣 → 頁面要用的欄位（金額一律換成十億美元）。"""
     b = 1e9
     term = a.get("originalSecurityTerm") or a.get("securityTerm") or ""
+    # auctionDate 現在普遍是空的（TreasuryDirect 這支端點的資料品質問題，
+    # 不分 Note／Bond／Bill 都一樣）——retain 用 issueDate 當後備，不然
+    # 這裡的 date 全空，下游的日期篩選會把每一筆都濾掉。
     return {
-        "date": (a.get("auctionDate") or "")[:10],
+        "date": (a.get("auctionDate") or a.get("issueDate") or "")[:10],
         "announce": (a.get("announcementDate") or "")[:10],
         "issue": (a.get("issueDate") or "")[:10],
         "maturity": (a.get("maturityDate") or "")[:10],
@@ -98,6 +101,36 @@ def upcoming_auctions() -> list[dict]:
     js = _get(f"{TD}/upcoming?format=json")
     out = [normalize_auction(a) for a in js or []]
     return sorted([r for r in out if r["date"]], key=lambda r: r["date"])
+
+
+FISCAL_AUCTIONS = ("https://api.fiscaldata.treasury.gov/services/api/fiscal_service/"
+                   "v1/accounting/od/auctions_query")
+
+
+def _bill_rows_all(start: str) -> list[dict]:
+    """
+    Bill（含現金管理票券 CMB）逐筆拍賣，{date, term, offering}（十億美元）。
+
+    改走財政部 Fiscal Data（跟 MSPD 同一個 API 家族），不是 TreasuryDirect
+    的 /auctioned：TreasuryDirect 那支端點對 type=Bill 有兩個問題——
+    auctionDate 欄位普遍是空的（Note／Bond 才有），且不管 pagesize／
+    startDate 怎麼設，實測回來的筆數都被卡在約 90 筆，拿不到完整一年的
+    週頻資料。Fiscal Data 的 auctions_query 兩個問題都沒有：issue_date
+    每筆都有，filter 真的有在篩，一次查過去一年＋近期已公告的未來拍賣
+    （還沒結標但金額已公布的），一次抓齊不用分開呼叫兩支端點。
+    """
+    js = _get(f"{FISCAL_AUCTIONS}?filter=issue_date:gte:{start},security_type:eq:Bill"
+             f"&page%5Bsize%5D=1000&fields=issue_date,security_term,offering_amt,"
+             f"cash_management_bill_cmb")
+    out = []
+    for r in (js or {}).get("data") or []:
+        d = (r.get("issue_date") or "")[:10]
+        amt = _f(r.get("offering_amt"))
+        if not d or not amt:
+            continue
+        out.append({"date": d, "term": r.get("security_term") or "", "offering": amt / 1e9})
+    out.sort(key=lambda r: r["date"])
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -320,7 +353,8 @@ def rate_volume(secured: bool, ratetype: str, start: str, end: str) -> list[dict
 # ---------------------------------------------------------------------------
 def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None = None) -> dict:
     """
-    {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol, failed}。
+    {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol,
+    bill_auctions, upcoming_bills, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -366,5 +400,16 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("SOFR／EFFR 成交量取得失敗（%s）", e)
         out["sofr_vol"], out["effr_vol"] = [], []
         failed.append("rate_volume")
+    try:
+        # 抓過去約 13 個月（RMP 近 12 期的回溯範圍再加一點緩衝）＋近期已公告的
+        # 未來拍賣，一次查完後用「今天」切成已結束／尚未舉行兩份。
+        _bill_start = (end - dt.timedelta(days=400)).isoformat()
+        _bill_all = _bill_rows_all(_bill_start)
+        out["bill_auctions"] = [r for r in _bill_all if r["date"] <= end_iso]
+        out["upcoming_bills"] = [r for r in _bill_all if r["date"] > end_iso]
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Bill 拍賣資料取得失敗（%s）", e)
+        out["bill_auctions"], out["upcoming_bills"] = [], []
+        failed.append("bill_auctions")
     out["failed"] = failed
     return out

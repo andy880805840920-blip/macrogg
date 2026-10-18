@@ -104,8 +104,7 @@ def _corridor_rungs_html() -> str:
         f'<summary><b>{esc(name)}</b>　{esc(sub)}</summary>'
         f'<div class="f-detail">{esc(body)}</div></details>'
         for name, sub, body in _CORRIDOR_RUNGS)
-    return (f'<p class="hint">由上（名目上限）到下（名目下限）點開看定義——'
-            f'正常時 EFFR、SOFR 貼在中間，SRF 動用量該是零。</p>{rows}')
+    return f'<p class="hint">由上到下點開看定義。</p>{rows}'
 
 
 def _tgcr_detail(chart: str) -> str:
@@ -152,6 +151,27 @@ def _rmp_concept() -> str:
 def _yi(v) -> str:
     """十億美元 → 億美元字串（台灣慣用單位，1 億＝1e8）。"""
     return "—" if v is None else f"{v * 10:,.0f} 億美元"
+
+
+def _md(iso: str) -> str:
+    try:
+        return f"{int(iso[5:7])}/{int(iso[8:10])}"
+    except (TypeError, ValueError, IndexError):
+        return iso or "—"
+
+
+def _upcoming_bills_html(rows) -> str:
+    """已公告金額的 Bill 拍賣清單——視野通常只有一到兩週，是官方本來就還沒
+    公布，不是本站漏抓。"""
+    if not rows:
+        return '<p class="hint">目前沒有已公告金額的 Bill 拍賣。</p>'
+    items = "".join(
+        f'<div style="display:flex;justify-content:space-between;gap:10px;'
+        f'padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px">'
+        f'<span>{esc(_md(r["date"]))}</span><span>{esc(r["term"])}</span>'
+        f'<span style="font-weight:700">{_yi(r["offering"])}</span></div>'
+        for r in rows)
+    return f'<div style="margin-top:6px">{items}</div>'
 
 
 def _note_html(s: dict) -> str:
@@ -242,10 +262,20 @@ def liquidity_body(d: dict) -> str:
 </div>"""
 
     _supply_sum = (f'最新一期 RMP {_yi(rl.get("rmp"))}' if rl else "Fed T-Bills 購買量")
+    bo = d.get("bill_overview") or {}
     supply_section = f"""<div class="grid">
   <div class="card">
     <h2 id="supply_demand" data-sum="{esc(_supply_sum)}">市場供需</h2>
-    <p class="hint">Fed T-Bills 購買量</p>
+    <p class="hint">財政部 T-Bills 發行時程{
+      (f'　·　占整體發行量 <b>{bo["share"]:.0f}%</b>' if bo.get("share") is not None else "")}</p>
+    {d.get("bill_trend_chart") or ""}
+    {_upcoming_bills_html(d.get("upcoming_bills") or [])}
+    <details class="f-more"><summary>T-Bills 占比怎麼看</summary>
+      <div class="f-detail">比例越高，代表財政部越依賴短端融資；對照
+      <a href="/rates/#supply">長端與債務頁「債券供給：財政部與 Fed」</a>的 Coupon 發行路徑。</div>
+    </details>
+
+    <p class="hint" style="margin-top:18px">Fed T-Bills 購買量</p>
     {rc}
     {(f'<div class="src">最新一期（{esc(rl.get("period", ""))}）：'
       f'RMP {_yi(rl.get("rmp"))}　MBS 到期再投入 {_yi(rl.get("mbs"))}　'
@@ -253,6 +283,15 @@ def liquidity_body(d: dict) -> str:
       if rl else "")}
     <details class="f-more"><summary>RMP（準備金管理購買）</summary>
       <div class="f-detail">{_rmp_concept()}</div></details>
+
+    <p class="hint" style="margin-top:18px">Fed vs 私人市場</p>
+    {d.get("bill_flows_chart") or ""}
+    <details class="f-more"><summary>私人市場融資怎麼算</summary>
+      <div class="f-detail">毛發行量減掉 Fed RMP 與 MBS 再投入買走的部分，剩下才是財政部短端
+      融資真正需要貨幣市場吸收的量。時間段跟著 Fed RMP 的公布期別走；還在進行中的最後一期，
+      連同更晚已公告的拍賣，合併列成一塊「已公告、Fed 分配未知」（單一顏色），不假裝知道
+      Fed 會分走多少。</div>
+    </details>
   </div>
 </div>"""
 
@@ -268,10 +307,14 @@ def liquidity_footer(d: dict) -> str:
          ("SRF 動用量（常備回購機制）", "紐約聯儲逐日操作結果；FRED（RPONTSYD）後備", "每日"),
          ("ON RRP 餘額", "FRED（RRPONTSYD）", "每日"),
          ("Fed T-Bills 購買量：RMP、MBS 到期再投入", "紐約聯儲 Treasury Securities "
-          "Operational Details（計畫金額，逐期公布）", "每期（約一個月）")],
+          "Operational Details（計畫金額，逐期公布）", "每期（約一個月）"),
+         ("T-Bills 發行時程與已公告拍賣", "TreasuryDirect（已完成拍賣＋已公告的即將拍賣）",
+          "拍賣前幾天公布金額")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
          "RMP、MBS 到期再投入兩個金額直接來自紐約聯儲官方逐期公布的拆分，不是本站"
          "推算的估計值；是計畫金額，可能跟實際成交有落差。再投入只適用 MBS（機構"
-         "證券），不含長端公債——公債到期後直接從資產負債表消失，不會被拿去買回 Bills。"],
-        head="<b>資料來源</b> 紐約聯儲、FRED")
+         "證券），不含長端公債——公債到期後直接從資產負債表消失，不會被拿去買回 Bills。",
+         "私人市場融資＝T-Bills 毛發行量減掉 Fed RMP 與 MBS 再投入買走的部分；"
+         "最新一期之後 Fed 分配未知，只列財政部已公告的毛發行量。"],
+        head="<b>資料來源</b> 紐約聯儲、財政部 TreasuryDirect、FRED")

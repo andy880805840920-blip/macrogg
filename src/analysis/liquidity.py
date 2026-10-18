@@ -269,3 +269,77 @@ def tbill_purchase_flows(schedule: list) -> dict:
              "period": f'{r["start"][5:].replace("-", "/")}–{r["end"][5:].replace("-", "/")}'}
             for r in rows]
     return {"flows": flows, "asof": rows[-1]["end"]}
+
+
+def _sum_in_range(rows: list, start: str, end: str) -> float:
+    return sum(r["offering"] for r in (rows or []) if start <= r["date"] <= end)
+
+
+def bill_period_flows(bill_auctions: list, upcoming_bills: list, schedule: list,
+                      today: str) -> dict:
+    """
+    財政部 T-Bills 毛發行量，拆成「Fed RMP 買走」「Fed MBS 到期再投入買走」
+    「賣給私人市場」三塊——私人市場的部分＝毛發行量減掉 Fed 這兩塊，就是財政部
+    短端融資真正需要貨幣市場吸收的量。
+
+    時間段切割跟著 Fed RMP 的公布期別走（跟 tbill_purchase_flows 同一組，
+    起訖日不對齊月曆）。只有「已經走完」的期別（結束日早於 today）才拆這
+    三塊——還在進行中的最後一期，本期還沒結束就不該當成「已知結果」，連同
+    更晚的已公告拍賣，合併成一塊「已公告但 Fed 分配未知」的毛發行量，不假裝
+    知道 Fed 會買多少、也不假裝一個還沒走完的期別已經有完整的毛發行量。
+    這塊的視野通常只有一到兩週（Bill 拍賣金額本來就是拍賣前幾天才公布）。
+    """
+    rows = [r for r in (schedule or []) if r["start"] >= RMP_PROGRAM_START][-12:]
+    complete = [r for r in rows if r["end"] < today]
+    past = []
+    for r in complete:
+        gross = _sum_in_range(bill_auctions, r["start"], r["end"])
+        rmp, mbs = r["rmp"], r["mbs"]
+        private = max(0.0, gross - rmp - mbs)
+        past.append({"date": r["start"], "gross": round(gross, 3), "rmp": round(rmp, 3),
+                     "mbs": round(mbs, 3), "private": round(private, 3),
+                     "period": f'{r["start"][5:].replace("-", "/")}–{r["end"][5:].replace("-", "/")}',
+                     "future": False})
+    incomplete = [r for r in rows if r["end"] >= today]
+    fut_start = incomplete[0]["start"] if incomplete else (rows[-1]["end"] if rows else None)
+    future = None
+    if fut_start:
+        fut_rows = [b for b in (bill_auctions or []) + (upcoming_bills or [])
+                   if b["date"] >= fut_start]
+        if fut_rows:
+            gross = sum(b["offering"] for b in fut_rows)
+            d0 = min(b["date"] for b in fut_rows)
+            d1 = max(b["date"] for b in fut_rows)
+            future = {"date": fut_start, "gross": round(gross, 3),
+                     "rmp": 0.0, "mbs": 0.0, "private": 0.0,
+                     "period": f'{d0[5:].replace("-", "/")}–{d1[5:].replace("-", "/")}'
+                               '（本期未結束／已公告）',
+                     "future": True}
+    flows = past + ([future] if future else [])
+    if not flows:
+        return {}
+    return {"flows": flows, "asof": (future or past[-1])["date"]}
+
+
+def bill_issuance_overview(bill_auctions: list, coupon_auctions: list, months: int = 12) -> dict:
+    """
+    財政部 T-Bills 發行概況（供「財政部 T-Bills 發行時程」窗格用）：近 N 個月
+    的月度毛發行量走勢，與 T-Bills 占整體（Bills＋Coupon）發行量的比例——
+    比例越高，代表財政部越依賴短端融資。
+    """
+    bill_m: dict[str, float] = {}
+    for r in bill_auctions or []:
+        bill_m[r["date"][:7]] = bill_m.get(r["date"][:7], 0.0) + r["offering"]
+    coup_m: dict[str, float] = {}
+    for r in coupon_auctions or []:
+        if r.get("offering"):
+            coup_m[r["date"][:7]] = coup_m.get(r["date"][:7], 0.0) + r["offering"]
+    months_list = sorted(set(bill_m) | set(coup_m))[-months:]
+    if not months_list:
+        return {}
+    trend = [{"date": m + "-01", "value": round(bill_m.get(m, 0.0), 3)} for m in months_list]
+    bill_total = sum(bill_m.get(m, 0.0) for m in months_list)
+    coup_total = sum(coup_m.get(m, 0.0) for m in months_list)
+    share = (bill_total / (bill_total + coup_total) * 100) if (bill_total + coup_total) else None
+    return {"trend": trend, "share": share, "bill_total": bill_total, "coupon_total": coup_total,
+           "asof": months_list[-1]}

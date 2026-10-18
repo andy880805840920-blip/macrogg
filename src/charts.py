@@ -1028,7 +1028,7 @@ def dual_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
 
 
 def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
-                    digits: int = 0, fmt_date=None) -> str:
+                    digits: int = 0, fmt_date=None, future_key: tuple | None = None) -> str:
     """
     每期一根柱，分段由下往上堆疊（例：RMP＋到期不再投入改買 Bills，相加＝總額）。
     rows：[{date, k1, k2, ...}]（只接受非負值——這是「組成」不是「漲跌」）；
@@ -1037,16 +1037,28 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
     rows 若帶 period（例如「10/15–11/13」，給起訖日不對齊月曆的期別用），
     滑過柱狀圖跳出的提示會顯示完整期間，不是容易誤讀的單一月份數字；
     沒有 period 欄位的呼叫（例如真正逐月的資料）才退回 date[:7]。
+
+    future_key：(key, label, color)，給 row.get("future") 為真的列用——這種列
+    只畫 future_key 這一個單色區段（通常是「已知毛額，但還不知道怎麼拆」的
+    gross 欄位），不套用 keys 的正常拆解；用來區分「已經知道組成」跟
+    「只知道有這筆、還不知道細節」的資料，不是硬湊一個假的拆解給它。
     """
-    rows = [r for r in rows if any((r.get(k) or 0) > 0 for k, _, _ in keys)]
+    def _has_value(r):
+        if r.get("future") and future_key:
+            return (r.get(future_key[0]) or 0) > 0
+        return any((r.get(k) or 0) > 0 for k, _, _ in keys)
+    rows = [r for r in rows if _has_value(r)]
     if not rows:
         return '<div class="empty">資料不足</div>'
-    m = max(sum(max(0.0, r.get(k) or 0) for k, _, _ in keys) for r in rows) or 1
+    m = max(sum(max(0.0, r.get(k) or 0)
+               for k, _, _ in ([future_key] if (r.get("future") and future_key) else keys))
+           for r in rows) or 1
     cols = []
     for r in rows:
         segs, bottom = "", 0.0
         tip_when = r.get("period") or r["date"][:7]
-        for k, lab, col in keys:
+        row_keys = [future_key] if (r.get("future") and future_key) else keys
+        for k, lab, col in row_keys:
             v = max(0.0, r.get(k) or 0)
             h = v / m * 100
             segs += (f'<span class="dc2-bar" style="bottom:{bottom:.2f}%;height:{h:.2f}%;'
@@ -1057,6 +1069,9 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
         cols.append(f'<div class="dc2-col">{segs}<span class="gc-lab">{_esc(lab)}</span></div>')
     leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
                   for _, l, c in keys)
+    if future_key:
+        leg += (f'<span><i style="width:10px;height:10px;background:{future_key[2]}"></i>'
+               f'{_esc(future_key[1])}</span>')
     return (f'<div class="gc"><div class="gc-plot lbl"><span class="gc-mx">{m:,.{digits}f}{_esc(unit)}</span>'
             f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')
 
