@@ -299,12 +299,12 @@
  "at": "2026-10-18T07:08:09.929521+00:00",
  "layout": "main",
  "topics": {
-  "hash": "0533d0543be29f66",
+  "hash": "d6226ebd54b282d8",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "黃金自1月高點回落27%，現貨價格在4165美元附近，市場聚焦10/27-28聯準會會議能否透露利率政策方向。凱投宏觀分析師認為，聯準會將持續升息導致金價年底逐步走低，因為高利率降低不孳息黃金的吸引力",
+    "text": "黃金因升息預期走弱，自1月高點5608美元跌至10月中旬約4112美元，跌幅27%；白銀跌幅更超過50%。華許對美國經濟樂觀但未透露利率政策方向，市場預期聯準會10/27-28會議將成關鍵，因高利率降低不孳息黃金吸引力",
     "links": [
      {
       "title": "緊盯聯準會升息訊號　金價自年初高點回落27%",
@@ -315,28 +315,9 @@
     ]
    },
    {
-    "id": "equity",
-    "label": "美股",
-    "text": "標普500本週下跌約2%，10/6觸及近7,845點後回落，跌破8月高點，形成空頭陷阱；納斯達克本週下跌約4.5%，科技股與輝達等近期強勢股票跌幅最深，但約72%成分股仍收高〔2〕；市場擔憂AI交易反轉與油價高企〔5〕。",
-    "links": [
-     {
-      "title": "Dow Jones Futures Loom After S&P 500, Nasdaq Break Support; Will Meta Earnings Save AI?",
-      "link": "https://finance.yahoo.com/m/4342d021-69d3-3aa1-9753-76f72c9ba95d/dow-jones-futures-loom-after.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-18T02:57:39+00:00"
-     },
-     {
-      "title": "AI Trade Reversal Pierces Asia’s Star Picks-and-Shovels Stocks",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOREtWM3dzNTRIb29DY2pnS3JHYmJpLVRURzBlT1RQX0FSZGMzWkFuS0w0dXVhXzlSQTR3MVhZdm9nTm90S21JWWp1UjhLTjdPamxGSUMxVFd1ekZVWGp4bXBsTlFyVDJLRWpvalFqMlpldURMUXpPbFR5MlY0RWNMc3dTdW9BaFFEemc5bEJIbnBseEJkN3hlbGhMTEpaenVzMGJpa052RmZKbzU4bTF3cGpIQQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-18T00:00:00+00:00"
-     }
-    ]
-   },
-   {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "雲端大廠資本支出爆發成長，2026年預估達9570億美元（年增106%），2027年衝破1.5兆美元（年增60%）；AI伺服器產值明年預計躍升至9200億美元，年增率超過90%，占整體伺服器產值81%",
+    "text": "超大型雲端服務商2026年資本支出預估突破9570億美元、年增106%，2027年衝破1.5兆美元、年增60%；AI伺服器產值明年預計躍升至近9200億美元、年增率逾90%，占整體伺服器產值81%",
     "links": [
      {
       "title": "科技巨頭瘋砸錢！CSP資本支出2027年直奔1.5兆美元　AI伺服器產值暴增9成",
@@ -349,7 +330,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤暴跌1144點至46140點附近，恐慌指數（VIX）盤中突破22創4個月新高；市場焦點從AI商機規模轉向龐大資本支出能否轉化獲利，高利率既降低企業現金流現值，同時拉高融資成本",
+    "text": "台股本周重挫2,202點（跌幅4.47%），10/15單日暴跌1,655.96點創史上第六大單日跌點，台指期夜盤再跌1,144點逼近季線46,000點，市場對AI投資回報時間拉長與通膨升溫疑慮升溫，恐慌指數創四個月新高",
     "links": [
      {
       "title": "台指期夜盤下殺逾千點　台股本周開盤陷46k保衛戰",
@@ -358,22 +339,9 @@
       "at": "2026-10-18T04:51:50+08:00"
      }
     ]
-   },
-   {
-    "id": "gold",
-    "label": "黃金",
-    "text": "黃金自1月高點回落27%，現貨價格在4165美元附近，市場聚焦10/27-28聯準會會議能否透露利率政策方向。凱投宏觀分析師認為，聯準會將持續升息導致金價年底逐步走低，因為高利率降低不孳息黃金的吸引力",
-    "links": [
-     {
-      "title": "緊盯聯準會升息訊號　金價自年初高點回落27%",
-      "link": "https://tw.news.yahoo.com/%E7%B7%8A%E7%9B%AF%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%87%E6%81%AF%E8%A8%8A%E8%99%9F-%E9%87%91%E5%83%B9%E8%87%AA%E5%B9%B4%E5%88%9D%E9%AB%98%E9%BB%9E%E5%9B%9E%E8%90%BD27-055839673.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-18T05:58:39+08:00"
-     }
-    ]
    }
   ],
-  "at": "2026-10-18T07:36:21.859237+00:00"
+  "at": "2026-10-18T07:50:40.728176+00:00"
  },
  "main_source_titles": [
   "Bank of Canada sees sharply higher inflation outlook as oil surges, Macklem says",
