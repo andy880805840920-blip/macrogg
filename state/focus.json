@@ -1,94 +1,88 @@
 {
- "hash": "33d8826cfc54897f",
- "text": "聯準會主席華許於10/16在國際貨幣基金組織曼谷會議上拒絕提供利率前景指引，市場將其沉默解讀為10月28日會議維持利率的信號，將升息機率從更高水位壓低至20%。華許強調美國經濟強勁，但對利率軌跡隻字未提，交易員認為這暗示10月不會升息。同時，美國財政部10/16公布2026財年預算赤字達1.992兆美元，較前年增加12%，創歷史第三高，僅次於疫情期間的2020與2021年。赤字擴大推升長期公債殖利率，10年期與30年期美債殖利率上週觸及24年高點，加重債市交易員的焦慮。儘管通膨數據（PPI）高於預期，但市場預期聯準會將維持觀望，反映出華許的政策立場已逐漸主導市場預期。\n美國30年固定房貸利率徘徊在7.5%，9月待售房屋銷售環比下跌4%，創三年最大月度跌幅，高利率對房市的冷卻效應已現。財政部未提供減少長期債券發行或取消20年期標售的明確方案，令原本預期政策調整的主要交易商失望。",
+ "hash": "de6f5ce51d0063b3",
+ "text": "",
  "links": [
   {
-   "title": "Fed chief Warsh: economy robust, but don't ask me about rates",
-   "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE43QW5EMmVnOGg5Z0JaQWl0S2FyalctWkdiNVNrQzJ1d0JwMnBwVFAxYm5JbGlIZ0dWWmxPUnhHSWswT3JRZlUyMDZNb0t2UzNHUkNURVhaUjI1NkpxaGVsUGNfYndlQkE?oc=5",
+   "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
+   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-17T14:07:37+00:00"
+  },
+  {
+   "title": "ECB's Lagarde says bond selloff will slow inflation",
+   "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxORnNpbWFQTVJFZTQ1NDEzNVA1QlMyNThGdl8tR19Bd0UtQTAyVnBGRFBldDVOMFFnRHR0WkRHaS1CODVMSUFvSTZJdzN5a2NSbHFLbHA2bnZ0ZVBXYUprYS1oeGN6eF9lakVpVmRTSVB6VkpwUzlOVXZCME5ldGVmNmZPTUtuSGVnRTZzbENrQ1pGcFlScVZ1Sl9rQ1pHWUo1c1l4VUJn?oc=5",
    "source": "Reuters",
-   "at": "2026-10-16T11:43:31+00:00"
+   "at": "2026-10-17T08:01:43+00:00"
   },
   {
-   "title": "U.S. budget deficit swells to almost $2 trillion for fiscal 2026, up 12% in a single year",
-   "link": "https://www.cnbc.com/2026/10/16/us-budget-deficit-2026.html",
-   "source": "CNBC",
-   "at": "2026-10-16T22:34:29+00:00"
-  },
-  {
-   "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-   "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-   "source": "CNBC",
-   "at": "2026-10-16T22:33:05+00:00"
-  },
-  {
-   "title": "Stocktwits Weekly Spread: What Shaped Treasury Yields And The Dollar This Week",
-   "link": "https://stocktwits.com/news-articles/markets/equity/stocktwits-weekly-spread-what-shaped-treasury-yields-and-the-dollar-this-week-1/cZxjAkARBt3?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-17T00:45:16+00:00"
+   "title": "Watch AI Selloff, Oil & Treasury Yields Pressure Markets",
+   "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOTnpyRzNhemRIbVpkWDdwaU9Cb0xnbXNmdkdJa3Z3aFdYZndZbXU5SVV2d3pMUzQ4TTNyMGFnTVVtMUFUOHMxcjY5b2JNSTA3aEszNmRJY3Z2ZUZ5bjFGX1c0SUxLV1RkemktU25CWEFOZ2dwbmUzN1RXV0o2SFFodQ?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-16T22:29:21+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-17",
+  "date": "2026-10-18",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-17",
+   "date": "2026-10-18",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.877946,
-     "end": 3.925,
-     "move_bp": 4.705,
+     "start": 3.88125,
+     "end": 3.92,
+     "move_bp": 3.875,
      "outcomes": [
       [
        0,
-       0.8118
+       0.845
       ],
       [
        25,
-       0.1882
+       0.155
       ]
      ],
      "how": "2026-11 合約平均"
     },
     {
      "date": "2026-12-09",
-     "start": 3.925,
-     "end": 4.136364,
-     "move_bp": 21.136,
+     "start": 3.92,
+     "end": 4.145455,
+     "move_bp": 22.545,
      "outcomes": [
       [
        25,
-       0.8455
+       0.9018
       ],
       [
        0,
-       0.1545
+       0.0982
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
     {
      "date": "2027-01-27",
-     "start": 4.136364,
-     "end": 4.24,
-     "move_bp": 10.364,
+     "start": 4.145455,
+     "end": 4.235,
+     "move_bp": 8.955,
      "outcomes": [
       [
        0,
-       0.5855
+       0.6418
       ],
       [
        25,
-       0.4145
+       0.3582
       ]
      ],
      "how": "2027-02 合約平均"
     },
     {
      "date": "2027-03-17",
-     "start": 4.24,
-     "end": 4.406071,
+     "start": 4.235,
+     "end": 4.401071,
      "move_bp": 16.607,
      "outcomes": [
       [
@@ -104,84 +98,84 @@
     },
     {
      "date": "2027-04-28",
-     "start": 4.406071,
-     "end": 4.495,
-     "move_bp": 8.893,
+     "start": 4.401071,
+     "end": 4.485,
+     "move_bp": 8.393,
      "outcomes": [
       [
        0,
-       0.6443
+       0.6643
       ],
       [
        25,
-       0.3557
+       0.3357
       ]
      ],
      "how": "2027-05 合約平均"
     },
     {
      "date": "2027-06-09",
-     "start": 4.495,
-     "end": 4.587857,
-     "move_bp": 9.286,
+     "start": 4.485,
+     "end": 4.570714,
+     "move_bp": 8.571,
      "outcomes": [
       [
        0,
-       0.6286
+       0.6571
       ],
       [
        25,
-       0.3714
+       0.3429
       ]
      ],
      "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
     },
     {
      "date": "2027-07-28",
-     "start": 4.587857,
-     "end": 4.615,
-     "move_bp": 2.714,
+     "start": 4.570714,
+     "end": 4.595,
+     "move_bp": 2.429,
      "outcomes": [
       [
        0,
-       0.8914
+       0.9029
       ],
       [
        25,
-       0.1086
+       0.0971
       ]
      ],
      "how": "2027-08 合約平均"
     },
     {
      "date": "2027-09-15",
-     "start": 4.615,
-     "end": 4.635,
-     "move_bp": 2.0,
+     "start": 4.595,
+     "end": 4.625,
+     "move_bp": 3.0,
      "outcomes": [
       [
        0,
-       0.92
+       0.88
       ],
       [
        25,
-       0.08
+       0.12
       ]
      ],
      "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
     },
     {
      "date": "2027-10-27",
-     "start": 4.635,
-     "end": 4.64,
-     "move_bp": 0.5,
+     "start": 4.625,
+     "end": 4.62,
+     "move_bp": -0.5,
      "outcomes": [
       [
        0,
        0.98
       ],
       [
-       25,
+       -25,
        0.02
       ]
      ],
@@ -189,17 +183,17 @@
     },
     {
      "date": "2027-12-08",
-     "start": 4.64,
-     "end": 4.55913,
-     "move_bp": -8.087,
+     "start": 4.62,
+     "end": 4.606522,
+     "move_bp": -1.348,
      "outcomes": [
       [
        0,
-       0.6765
+       0.9461
       ],
       [
        -25,
-       0.3235
+       0.0539
       ]
      ],
      "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
@@ -207,58 +201,58 @@
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.877946,
-    "end": 3.925,
-    "move_bp": 4.705,
+    "start": 3.88125,
+    "end": 3.92,
+    "move_bp": 3.875,
     "outcomes": [
      [
       0,
-      0.8118
+      0.845
      ],
      [
       25,
-      0.1882
+      0.155
      ]
     ],
     "how": "2026-11 合約平均"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.925,
-    "end": 4.136364,
-    "move_bp": 21.136,
+    "start": 3.92,
+    "end": 4.145455,
+    "move_bp": 22.545,
     "outcomes": [
      [
       25,
-      0.8455
+      0.9018
      ],
      [
       0,
-      0.1545
+      0.0982
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 25.842,
-   "r0": 3.877946,
+   "cum_bp": 26.421,
+   "r0": 3.88125,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 25.842,
+     "cum_bp": 26.421,
      "prev_cum_bp": 28.76
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 70.991,
+     "cum_bp": 68.946,
      "prev_cum_bp": 70.991
     },
     {
      "date": "2027-12-08",
      "label": "2027 年底",
-     "cum_bp": 68.118,
+     "cum_bp": 72.527,
      "prev_cum_bp": 74.572
     }
    ],
@@ -301,107 +295,125 @@
    }
   }
  },
- "text_source": "model-content",
- "at": "2026-10-17T01:18:11.640791+00:00",
- "layout": "main",
+ "text_source": "headlines",
+ "at": "2026-10-18T03:57:46.057194+00:00",
+ "layout": "",
  "topics": {
-  "hash": "36abb72c72cfc8dd",
+  "hash": "a5d43ecf8d226b6f",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "華許在IMF曼谷會議上拒絕提供利率前景指引，市場解讀為10月28日維持利率的信號；但分析指出，華許打破聯準會過往慣例，不再讓副主席與地區聯邦準備銀行總裁代言政策立場，保留了升息的迴旋空間，投資人可能過度樂觀",
+    "text": "韓國央行10/22會議預期維持利率3%不變，但保留進一步升息空間，市場稱為「鷹式暫停」；央行總裁申鉉松表示未來每場會議都有升息可能，接下來物價、GDP與景氣信心指標將是10月決策重要參考，券商預估終點利率可能落在3.50至3.75%",
     "links": [
      {
-      "title": "Analysis: Everyone expects the Fed to hold rates in October. Kevin Warsh could surprise us all",
-      "link": "https://www.cnbc.com/2026/10/16/kevin-warsh-fed-october-rate-hike-interest-rates-markets.html",
-      "source": "CNBC",
-      "at": "2026-10-16T16:27:31+00:00"
+      "title": "韓國央行22日會再升息？市場料「鷹式暫停」 11月仍可能接著升",
+      "link": "https://tw.stock.yahoo.com/news/%E9%9F%93%E5%9C%8B%E5%A4%AE%E8%A1%8C22%E6%97%A5%E6%9C%83%E5%86%8D%E5%8D%87%E6%81%AF-%E5%B8%82%E5%A0%B4%E6%96%99-%E9%B7%B9%E5%BC%8F%E6%9A%AB%E5%81%9C-11%E6%9C%88%E4%BB%8D%E5%8F%AF%E8%83%BD%E6%8E%A5%E8%91%97%E5%8D%87-235330718.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-17T23:53:30+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "布倫特原油12月期貨上漲3.7%至每桶109.86美元，盤中觸及110美元，為5月以來首次，供應緩解前景黯淡推升油價，西德州中級原油11月期貨上漲3.5%至每桶101.41美元",
+    "text": "布蘭特原油期貨突破110美元，創5月以來首次，反映中東與烏克蘭衝突升溫帶來的風險溢價。油價上漲促使債券交易員預期聯準會可能維持高利率以對抗通膨壓力",
     "links": [
      {
-      "title": "供應緩解前景黯淡　油價上漲",
-      "link": "https://tw.stock.yahoo.com/news/%E4%BE%9B%E6%87%89%E7%B7%A9%E8%A7%A3%E5%89%8D%E6%99%AF%E9%BB%AF%E6%B7%A1-%E6%B2%B9%E5%83%B9%E4%B8%8A%E6%BC%B2-001453668.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-17T00:14:53+00:00"
+      "title": "Brent Oil Taps $110 for First Time Since May as Risks Swirl",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPTGpNaEJ4bFlQS3h1ZVFqZU42ZG1vdUMyaFBQd3M4V1I0SkRSeXEyT0drSlUyM3ItODNSN2ktWENEUjRoUTNRMHJCNHZkdDlEWmx5eG5HX3kwakpaX0FUaUo4TXFrOU5WME5vU2FMTjhBTXFyaW56eVM1dTFILWliUVpnVi1pcE5wZVNRTjdFU2F0aXlCYnRRcWI1VHVoejZhN29EQXE4TWIyMHkwUkE?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-16T20:09:38+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股遭大幅拋售，那斯達克指數下跌2.15%至26,140點，AI軟體股估值反轉，高盛指出對沖基金以逾一年來次快速度拋售AI股，轉向穩定型AI公司或非AI股，CoreWeave暴跌近12%，債券殖利率升至15%以上",
+    "text": "美股費城半導體指數連續八個交易日收黑，創2008年以來最長連跌紀錄；市場主要憂慮借貸成本上升恐壓抑AI基礎設施資本支出，輝達執行長黃仁勳強調AI帶來效益很快會化解市場疑慮，大規模硬體投資最終將展現回報",
     "links": [
      {
-      "title": "Stock Market Today, Oct. 16: Tech Stocks Plunge as AI Software Valuations Reverse",
-      "link": "https://www.fool.com/coverage/stock-market-today/2026/10/16/stock-market-today-oct-16-tech-stocks-plunge-as-ai-software-valuations-reverse/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-16T22:09:48+00:00"
+      "title": "算力不是唯一瓶頸 AI搶電大戰升溫！電力需求暴增 5檔美股獲關注",
+      "link": "https://tw.news.yahoo.com/%E7%AE%97%E5%8A%9B%E4%B8%8D%E6%98%AF%E5%94%AF-%E7%93%B6%E9%A0%B8-ai%E6%90%B6%E9%9B%BB%E5%A4%A7%E6%88%B0%E5%8D%87%E6%BA%AB-%E9%9B%BB%E5%8A%9B%E9%9C%80%E6%B1%82%E6%9A%B4%E5%A2%9E-5%E6%AA%94%E7%BE%8E%E8%82%A1%E7%8D%B2%E9%97%9C%E6%B3%A8-231000456.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-17T23:10:00+00:00"
+     },
+     {
+      "title": "美股繁榮是假象？AI泡沫疑慮升溫 標普500恐面臨30%修正",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9GREdKdWhGX0lqcDBTOVRnMXROQmlUYmhkNmhUS2tCdTdHeTNPUlNQbE5RcWFNR25tc1Y0WFNGUjVqbzJ0UURmOUtaMTFWcDg?oc=5",
+      "source": "鉅亨網",
+      "at": "2026-10-18T02:00:05+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "費城半導體指數連續第8個交易日下跌，累計跌幅11.4%為2025年4月以來最大單週跌幅，市場擔憂企業為建置AI基礎設施大舉發債帶來財務負擔，同時關注中國長鑫存儲技術進展",
+    "text": "Cboe自10/19起延長25檔熱門股票與5檔ETF選擇權交易時段，盤前交易時段為美東時間上午7點30分至9點25分，部分個股選擇權增加盤後15分鐘交易，台積電ADR與美股七巨頭及半導體相關類股皆包含在內",
     "links": [
      {
-      "title": "美股收盤／晶片、記憶體全面下殺「費半連8黑」　台積電ADR續跌",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E6%94%B6%E7%9B%A4-%E6%99%B6%E7%89%87-%E8%A8%98%E6%86%B6%E9%AB%94%E5%85%A8%E9%9D%A2%E4%B8%8B%E6%AE%BA-%E8%B2%BB%E5%8D%8A%E9%80%A38%E9%BB%91-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E7%BA%8C%E8%B7%8C-234900065.html",
+      "title": "明天執行！包括台積電在內　Cboe延長選擇權交易時段",
+      "link": "https://tw.news.yahoo.com/%E6%98%8E%E5%A4%A9%E5%9F%B7%E8%A1%8C-%E5%8C%85%E6%8B%AC%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%9C%A8%E5%85%A7-cboe%E5%BB%B6%E9%95%B7%E9%81%B8%E6%93%87%E6%AC%8A%E4%BA%A4%E6%98%93%E6%99%82%E6%AE%B5-015152012.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T23:49:00+08:00"
+      "at": "2026-10-18T01:51:52+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "美股因油價飆升與科技公司融資風險疑慮全面收黑，那斯達克指數重挫572.99點跌幅2.14%至26,140點，費城半導體指數下跌443.93點跌幅3.83%；台指期夜盤隨之下滑1,144點至46,140點，跌幅2.42%",
+    "text": "台指期夜盤10/17大跌1,144點至46,140點，跌幅2.42%；分析師指出止跌需滿足技術面「缺口起攻」與MACD指標收腳轉折，籌碼面上需等待融資減幅擴大、散戶多單認賠停損後籌碼徹底洗淨才能迎來反彈",
     "links": [
      {
-      "title": "星期一恐慘了！台指期夜盤崩跌1144點　台積電期貨同步跳水",
-      "link": "https://tw.stock.yahoo.com/news/%E6%98%9F%E6%9C%9F-%E6%85%98%E4%BA%86-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%B4%A9%E8%B7%8C1144%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%9C%9F%E8%B2%A8%E5%90%8C%E6%AD%A5%E8%B7%B3%E6%B0%B4-223318480.html",
+      "title": "恐慌殺盤不用怕？台股面臨季線保衛戰專家揭「2重要訊號」止跌　台積電長線買點曝光",
+      "link": "https://tw.stock.yahoo.com/news/%E6%81%90%E6%85%8C%E6%AE%BA%E7%9B%A4%E4%B8%8D%E7%94%A8%E6%80%95-%E5%8F%B0%E8%82%A1%E9%9D%A2%E8%87%A8%E5%AD%A3%E7%B7%9A%E4%BF%9D%E8%A1%9B%E6%88%B0%E5%B0%88%E5%AE%B6%E6%8F%AD-2%E9%87%8D%E8%A6%81%E8%A8%8A%E8%99%9F-%E6%AD%A2%E8%B7%8C-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%95%B7%E7%B7%9A%E8%B2%B7%E9%BB%9E%E6%9B%9D%E5%85%89-031000832.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T22:33:18+08:00"
+      "at": "2026-10-18T03:10:00+08:00"
      },
      {
-      "title": "AI、科技股持續承壓！美股收黑、那指摔逾2%　記憶體大廠全跌、台指期夜盤下滑1144點",
-      "link": "https://tw.stock.yahoo.com/news/ai-%E7%A7%91%E6%8A%80%E8%82%A1%E6%8C%81%E7%BA%8C%E6%89%BF%E5%A3%93-%E7%BE%8E%E8%82%A1%E6%94%B6%E9%BB%91-%E9%82%A3%E6%8C%87%E6%91%94%E9%80%BE2-%E8%A8%98%E6%86%B6%E9%AB%94%E5%A4%A7%E5%BB%A0%E5%85%A8%E8%B7%8C-233000389.html",
+      "title": "費半指數續跌　法人看台股短線面臨補跌壓力",
+      "link": "https://tw.news.yahoo.com/%E8%B2%BB%E5%8D%8A%E6%8C%87%E6%95%B8%E7%BA%8C%E8%B7%8C-%E6%B3%95%E4%BA%BA%E7%9C%8B%E5%8F%B0%E8%82%A1%E7%9F%AD%E7%B7%9A%E9%9D%A2%E8%87%A8%E8%A3%9C%E8%B7%8C%E5%A3%93%E5%8A%9B-022324587.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-16T23:30:00+08:00"
+      "at": "2026-10-18T02:23:24+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "美國11月3日舉行期中選舉，民主黨可能重奪眾議院多數席次，但歷史數據顯示期中選舉隔年股市平均漲幅14.4%，專家建議投資人為所有可能結果做準備，勿單一押注選舉結果",
+    "text": "全美10/17估計有3千場「無王日」示威活動，推動11/3期中選舉提前投票，民主黨人士呼籲合格選民行使投票權；川普長期質疑郵寄投票並聲稱2020年選舉舞弊導致其敗選",
     "links": [
      {
-      "title": "美期中選舉投資攻略！3套劇本布局財富　數據說話: 選後隔年總是大漲",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E6%8A%95%E8%B3%87%E6%94%BB%E7%95%A5-3%E5%A5%97%E5%8A%87%E6%9C%AC%E5%B8%83%E5%B1%80%E8%B2%A1%E5%AF%8C-%E6%95%B8%E6%93%9A%E8%AA%AA%E8%A9%B1-%E9%81%B8%E5%BE%8C%E9%9A%94%E5%B9%B4%E7%B8%BD%E6%98%AF%E5%A4%A7%E6%BC%B2-003000174.html",
+      "title": "全美「無王日」活動遍地開花 推動期中選舉提前投票",
+      "link": "https://tw.news.yahoo.com/%E5%85%A8%E7%BE%8E-%E7%84%A1%E7%8E%8B%E6%97%A5-%E6%B4%BB%E5%8B%95%E9%81%8D%E5%9C%B0%E9%96%8B%E8%8A%B1-%E6%8E%A8%E5%8B%95%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E6%8F%90%E5%89%8D%E6%8A%95%E7%A5%A8-231422890.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-17T23:14:22+00:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣16日盤中摜破32.5元關卡，單周大貶4.63角成為「最弱亞幣」；美台利差擴大至約3.08%至3.36%高檔，美元走強加上國際資金對AI產業投資回報疑慮，出現對高估值科技股無差別調節，預計新台幣初步先觀察32.5元關卡，若跌破將測試32.8元支撐點，甚至可能下探33元整數關卡",
+    "links": [
+     {
+      "title": "台美利差擴大　外資急甩新台幣恐探33元",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%BE%8E%E5%88%A9%E5%B7%AE%E6%93%B4%E5%A4%A7-%E5%A4%96%E8%B3%87%E6%80%A5%E7%94%A9%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%81%90%E6%8E%A233%E5%85%83-025116908.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-17T00:30:00+08:00"
+      "at": "2026-10-18T02:51:16+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-17T01:18:29.233475+00:00"
+  "at": "2026-10-18T03:58:07.603099+00:00"
  },
  "main_source_titles": [
-  "Fed chief Warsh: economy robust, but don't ask me about rates",
-  "U.S. budget deficit swells to almost $2 trillion for fiscal 2026, up 12% in a single year",
-  "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-  "Stocktwits Weekly Spread: What Shaped Treasury Yields And The Dollar This Week"
+  "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
+  "ECB's Lagarde says bond selloff will slow inflation",
+  "Watch AI Selloff, Oil & Treasury Yields Pressure Markets"
  ],
- "headline": "聯準會主席華許拒絕升息暗示，市場押注10月維持不變，財政赤字創新高成隱憂",
- "rate_note": "華許的沉默與拒絕升息暗示偏向壓低短端升息預期，但龐大赤字與高殖利率對長端構成支撐；方向混雜。10年期今日+1bp至5.10%，市場對華許言論的反應有限，可能因赤字擴大的長期隱憂已部分反映在殖利率中。",
+ "headline": "",
+ "rate_note": "",
  "recent_mains": [
   {
    "headline": "通膨數據偏熱與華許政策留白，聯準會10月升息懸念未解",
