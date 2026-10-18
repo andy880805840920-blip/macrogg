@@ -1033,6 +1033,10 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
     每期一根柱，分段由下往上堆疊（例：RMP＋到期不再投入改買 Bills，相加＝總額）。
     rows：[{date, k1, k2, ...}]（只接受非負值——這是「組成」不是「漲跌」）；
     keys：[(key, label, color)]。
+
+    rows 若帶 period（例如「10/15–11/13」，給起訖日不對齊月曆的期別用），
+    滑過柱狀圖跳出的提示會顯示完整期間，不是容易誤讀的單一月份數字；
+    沒有 period 欄位的呼叫（例如真正逐月的資料）才退回 date[:7]。
     """
     rows = [r for r in rows if any((r.get(k) or 0) > 0 for k, _, _ in keys)]
     if not rows:
@@ -1041,12 +1045,13 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
     cols = []
     for r in rows:
         segs, bottom = "", 0.0
+        tip_when = r.get("period") or r["date"][:7]
         for k, lab, col in keys:
             v = max(0.0, r.get(k) or 0)
             h = v / m * 100
             segs += (f'<span class="dc2-bar" style="bottom:{bottom:.2f}%;height:{h:.2f}%;'
                      f'left:20%;width:60%;background:{col}" '
-                     f'data-tip="{_esc(r["date"][:7])}｜{_esc(lab)} {v:,.{digits}f}{_esc(unit)}"></span>')
+                     f'data-tip="{_esc(tip_when)}｜{_esc(lab)} {v:,.{digits}f}{_esc(unit)}"></span>')
             bottom += h
         lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
         cols.append(f'<div class="dc2-col">{segs}<span class="gc-lab">{_esc(lab)}</span></div>')

@@ -229,11 +229,23 @@ def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None) -> dict:
     return {"level": "unknown", "label": "資料不足", "text": ""}
 
 
+# RMP 計畫從這一期開始（2025-12-12 起生效，使用者提供的事實，對應 FOMC 公告）。
+# 紐約聯儲那個頁面往回還留著 2019–2020 另一輪操作的紀錄，用詞幾乎一樣（同樣是
+# 「reinvestment purchases」＋「reserve management purchases」兩個詞），解析
+# 的正則表達式會一併撈到——用起始日期把那些無關的舊資料擋在外面，不只是單純
+# 取「最後 12 筆」（那樣在 RMP 計畫不滿 12 期時會混進不相干的舊資料）。
+RMP_PROGRAM_START = "2025-12-01"
+
+
 def tbill_purchase_flows(schedule: list) -> dict:
     """
     Fed 每期（約一個月，起訖日不對齊月曆）計畫購買的國庫券，RMP（準備金管理
     購買）與 MBS 到期再投入兩個金額——直接來自紐約聯儲官方逐期公布的拆分
     （treasury_source.rmp_schedule），不是用別的資料反推出來的估計值。
+
+    只取 RMP_PROGRAM_START（這一輪 RMP 計畫開始）之後的期別，近 12 期——
+    之後隨時間往前捲動，回溯上限固定 12 期，不會再往更早的（不相干的）
+    舊操作撈資料。
 
     不含長端公債：長端公債在 Fed 持有部位到期後**不會**被重新投入國庫券，
     只會直接從資產負債表上消失；「全額再投入國庫券」的政策只適用機構證券
@@ -246,11 +258,14 @@ def tbill_purchase_flows(schedule: list) -> dict:
     原文也寫「RMP amounts are not on a preset course and may vary from
     month to month」，可能跟實際成交有落差，但這是官方唯一公布拆分的地方。
     """
-    if not schedule:
+    rows = [r for r in (schedule or []) if r["start"] >= RMP_PROGRAM_START]
+    if not rows:
         return {}
-    rows = schedule[-12:]
-    flows = [{"date": r["end"], "mbs": r["mbs"], "rmp": r["rmp"],
+    rows = rows[-12:]
+    # x 軸位置用起始日（跟頁面本身「起始日在前」的寫法一致）；「資料至」用
+    # 最新一期的結束日——那才是目前涵蓋到的最新日期。
+    flows = [{"date": r["start"], "mbs": r["mbs"], "rmp": r["rmp"],
              "total": round(r["mbs"] + r["rmp"], 3),
              "period": f'{r["start"][5:].replace("-", "/")}–{r["end"][5:].replace("-", "/")}'}
             for r in rows]
-    return {"flows": flows, "asof": flows[-1]["date"]}
+    return {"flows": flows, "asof": rows[-1]["end"]}

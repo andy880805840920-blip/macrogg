@@ -3447,11 +3447,14 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
     # Fed 每期國庫券購買量（T-Bills），拆 RMP vs MBS 到期再投入——兩個金額都是
     # 紐約聯儲官方逐期公布的拆分（treasury_source.rmp_schedule），不是估計值。
     reinvest = lq.tbill_purchase_flows((treasury or {}).get("rmp_schedule") or [])
+    # 期別起訖日不對齊月曆（例如 10/15–11/13），x 軸標起始日的「月/日」而不是
+    # 單一月份數字，才不會讓人誤讀成「這整個 11 月」；完整期間在滑過時的提示顯示。
     reinvest_chart = (charts.stacked_columns(
         reinvest["flows"],
         [("rmp", "RMP（準備金管理購買）", "var(--line-1)"),
          ("mbs", "MBS 到期再投入", "var(--muted-bar)")],
-        unit=" 十億美元", digits=1)
+        unit=" 十億美元", digits=1,
+        fmt_date=lambda d: d[5:].replace("-", "/"))
         if reinvest.get("flows") else "")
     _last_flow = (reinvest.get("flows") or [{}])[-1]
 
