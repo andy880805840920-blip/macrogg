@@ -299,12 +299,12 @@
  "at": "2026-10-18T07:08:09.929521+00:00",
  "layout": "main",
  "topics": {
-  "hash": "0aa8f697c78ad88c",
+  "hash": "0533d0543be29f66",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "黃金自年初高點回落27%，市場聚焦聯準會10/27-28會議能否維持升息立場。黃金於1月觸及每盎司5608美元後跳水至10月中旬的4112美元，白銀跌幅更超過一半；利率上升降低不孳息黃金吸引力，凱投宏觀經濟學家預期今年金價可能逐步走低",
+    "text": "黃金自1月高點回落27%，現貨價格在4165美元附近，市場聚焦10/27-28聯準會會議能否透露利率政策方向。凱投宏觀分析師認為，聯準會將持續升息導致金價年底逐步走低，因為高利率降低不孳息黃金的吸引力",
     "links": [
      {
       "title": "緊盯聯準會升息訊號　金價自年初高點回落27%",
@@ -317,26 +317,26 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "標普500突破8月高點後反轉下跌，本週下跌約2%，科技股與AI相關個股跌幅最深，輝達、帕蘭提爾等近期強勢股跌幅逾10%，顯示投資人獲利了結",
+    "text": "標普500本週下跌約2%，10/6觸及近7,845點後回落，跌破8月高點，形成空頭陷阱；納斯達克本週下跌約4.5%，科技股與輝達等近期強勢股票跌幅最深，但約72%成分股仍收高〔2〕；市場擔憂AI交易反轉與油價高企〔5〕。",
     "links": [
+     {
+      "title": "Dow Jones Futures Loom After S&P 500, Nasdaq Break Support; Will Meta Earnings Save AI?",
+      "link": "https://finance.yahoo.com/m/4342d021-69d3-3aa1-9753-76f72c9ba95d/dow-jones-futures-loom-after.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-18T02:57:39+00:00"
+     },
      {
       "title": "AI Trade Reversal Pierces Asia’s Star Picks-and-Shovels Stocks",
       "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOREtWM3dzNTRIb29DY2pnS3JHYmJpLVRURzBlT1RQX0FSZGMzWkFuS0w0dXVhXzlSQTR3MVhZdm9nTm90S21JWWp1UjhLTjdPamxGSUMxVFd1ekZVWGp4bXBsTlFyVDJLRWpvalFqMlpldURMUXpPbFR5MlY0RWNMc3dTdW9BaFFEemc5bEJIbnBseEJkN3hlbGhMTEpaenVzMGJpa052RmZKbzU4bTF3cGpIQQ?oc=5",
       "source": "Bloomberg",
       "at": "2026-10-18T00:00:00+00:00"
-     },
-     {
-      "title": "Wall Street ends down; worries about AI trade and high oil prices weigh",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5zNFQ5WTNJaDBidWE3NnZpNVpRdHR0V1hhUFA2MUwyaWY4aUVXOEw1ekZyTUlYb09rRHRITGNGZGI0alpmUWtvcXlEakVMbDNzamRLTE01UUhOb0Q5bHhNSnRlSWlMdFU?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-17T00:00:51+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "雲端服務商資本支出預估2026年突破9570億美元、年增106%，2027年衝破1.5兆美元、年增60%；AI伺服器2026年出貨量年增32.2%，2027年再增36%，產值明年首度突破1兆美元，其中AI伺服器占比達81%、產值近9200億美元年增90%以上",
+    "text": "雲端大廠資本支出爆發成長，2026年預估達9570億美元（年增106%），2027年衝破1.5兆美元（年增60%）；AI伺服器產值明年預計躍升至9200億美元，年增率超過90%，占整體伺服器產值81%",
     "links": [
      {
       "title": "科技巨頭瘋砸錢！CSP資本支出2027年直奔1.5兆美元　AI伺服器產值暴增9成",
@@ -349,7 +349,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤17日暴跌1144點至46140點，恐慌指數創4個月新高逾22；市場焦點從AI商機規模轉向龐大資本支出能否轉化獲利，高利率既降低企業未來現金流現值、同時拉高融資成本",
+    "text": "台指期夜盤暴跌1144點至46140點附近，恐慌指數（VIX）盤中突破22創4個月新高；市場焦點從AI商機規模轉向龐大資本支出能否轉化獲利，高利率既降低企業現金流現值，同時拉高融資成本",
     "links": [
      {
       "title": "台指期夜盤下殺逾千點　台股本周開盤陷46k保衛戰",
@@ -360,26 +360,20 @@
     ]
    },
    {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣單週貶值4.63角，外資因台美利差擴大而拋售新台幣，市場擔憂匯率可能探向33元，日圓則因央行干預而急升",
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金自1月高點回落27%，現貨價格在4165美元附近，市場聚焦10/27-28聯準會會議能否透露利率政策方向。凱投宏觀分析師認為，聯準會將持續升息導致金價年底逐步走低，因為高利率降低不孳息黃金的吸引力",
     "links": [
      {
-      "title": "台美利差擴大　外資急甩新台幣恐探33元 | 財經 | CTWANT",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE95clkyWFJKZ25vSkxnLWxIR2FOaWw4ekx6M1ZDUnNNc18xOHFNN3p6MERxMVRpOGF4a2lVNEcyYV95Ykk4QUVSUThFblRFSTjSAVRBVV95cUxOaWU3cG5HZWxsbzN1MkExaGJ6SW1CdHl4eUlqZ3J3VVgzZVdvUnVZYjlDWHc1VU9WWHB2Mm90bm9RMVVjd1BWSkhxUVM5QzNTXzJ4Mkc?oc=5",
-      "source": "CTWANT",
-      "at": "2026-10-18T02:51:16+00:00"
-     },
-     {
-      "title": "亞幣最弱 新台幣單週重貶4.63角",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBDMWI2clNFek5IWEVfTWFtZ01pLWxaaTFqclp0eTQwUVNGYVJmQkxia0pteW5TUUpfRFNRaFhyOWVVcXV3UDRSRGJZYjZsWnVoMmZ5UzNJQVNpSEnSAVtBVV95cUxQQzFiNnJTRXpOSFhFX01hbWdNaS1sWmkxanJadHk0MFFTRmFSZkJMYmtKbXluU1FKX0RTUWhYcjllVXF1d1A0UkRiWWI2bFp1aDJmeVMzSUFTaUhJ?oc=5",
-      "source": "自由財經",
-      "at": "2026-10-16T21:30:00+00:00"
+      "title": "緊盯聯準會升息訊號　金價自年初高點回落27%",
+      "link": "https://tw.news.yahoo.com/%E7%B7%8A%E7%9B%AF%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%87%E6%81%AF%E8%A8%8A%E8%99%9F-%E9%87%91%E5%83%B9%E8%87%AA%E5%B9%B4%E5%88%9D%E9%AB%98%E9%BB%9E%E5%9B%9E%E8%90%BD27-055839673.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-18T05:58:39+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-18T07:08:25.812399+00:00"
+  "at": "2026-10-18T07:36:21.859237+00:00"
  },
  "main_source_titles": [
   "Bank of Canada sees sharply higher inflation outlook as oil surges, Macklem says",
