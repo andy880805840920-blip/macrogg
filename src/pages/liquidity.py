@@ -109,11 +109,12 @@ def _corridor_rungs_html() -> str:
 
 
 def _tgcr_detail(chart: str) -> str:
+    chart = chart or '<div class="empty">資料不足</div>'
     return (
         '<p class="hint">TGCR 只計入「三方回購」（主要由少數清算銀行撮合、交易對手集中在'
         '大型銀行與主要交易商），是擔保隔夜融資市場裡樣本較小的工具，但也因此對資金吃緊'
         '反應得比涵蓋範圍更廣的 SOFR 更快——這是它被拿來當流動性觀察指標的原因。</p>'
-        f'{chart or "<div class=\"empty\">資料不足</div>"}'
+        f'{chart}'
         '<p class="hint"><b>TGCR 與 SOFR 的差異：</b>SOFR 把三方回購（TGCR 的範圍）、雙邊回購'
         '與 GCF 回購都算進去，交易對手涵蓋避險基金等非銀行機構，樣本遠比 TGCR 廣，'
         '日成交量也因此遠大於 TGCR（見上方「SOFR vs EFFR」成交量對照的數量級）；'
