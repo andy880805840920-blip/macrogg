@@ -23,7 +23,7 @@ import functools
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "output"
-PAGES = ["/", "/labor/", "/inflation/", "/fomc/", "/rates/",
+PAGES = ["/", "/labor/", "/inflation/", "/fomc/", "/liquidity/", "/rates/",
          "/scenario/", "/archive/"]
 WIDTHS = [int(a) for a in sys.argv[1:]] or [360, 390, 760, 1040, 1280]
 

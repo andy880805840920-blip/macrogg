@@ -19,7 +19,8 @@ from . import charts, fmt, clock
 from .analysis import (attribution, regime, revisions, rules,
                        inflation as infl_an, rules_inflation, fomc_text,
                        scenario, surprise as sp,
-                       passthrough as pt, job_losers)
+                       passthrough as pt, job_losers,
+                       liquidity as lq)
 from .analysis.core import (diff_series, moving_avg, value_at, yoy, diff,
                            annualized, yoy_series, annualized_series,
                            since, span_label, since_year_start)
@@ -3384,4 +3385,149 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         },
         # 2026-10 改版：三股力量拆解、曲線、供給、拍賣、全球長端
         "le": _longend_block(series, treasury or {}, cfg, hs, debt),
+    }
+
+
+# ---------------------------------------------------------------------------
+# 流動性（P7）
+# ---------------------------------------------------------------------------
+def _liq_yi(v: float | None) -> str:
+    """十億美元 → 億美元字串（台灣慣用單位，1 億＝1e8）。"""
+    return "—" if v is None else f"{v * 10:,.0f} 億美元"
+
+
+def _liq_yi_short(v: float | None) -> str:
+    """同 _liq_yi，但不帶「美元」——近 5／30 日均已經跟主數字同一張卡，不必每行重複單位。"""
+    return "—" if v is None else f"{v * 10:,.0f} 億"
+
+
+def _liq_md(iso: str | None) -> str:
+    try:
+        return f"{int(iso[5:7])}/{int(iso[8:10])}"
+    except (TypeError, ValueError, IndexError):
+        return iso or "—"
+
+
+def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool,
+                            treasury: dict | None = None) -> dict:
+    """
+    「Liquidity Now」摘要窗格：三個趨勢訊號（SRF 動用量、SOFR−IORB、ON RRP
+    餘額）判斷流動性轉緊或轉鬆、利率走廊（SRF 動用量疊 EFFR／SOFR／IORB／
+    ON RRP 利率）、Fed 每月再投入實際金額（RMP、MBS）。
+
+    treasury 是長端模組已經抓好的紐約聯儲資料（見 build_rates_context）；
+    長端模組沒跑（例如 --only labor）時傳 None，SRF 退回 FRED 後備、
+    再投入圖空白，其餘摘要不受影響——跟全站「逐區塊容錯」的原則一致。
+    """
+    # SRF 動用量：優先用紐約聯儲逐日操作結果，拿不到才退回 FRED 的 RPONTSYD
+    # （後備序列沒有 rate 欄位，SOFR 是否衝出走廊上限那一項判定會略過）。
+    srf_rows = (treasury or {}).get("srf") or series.get("RPONTSYD") or []
+    srf = lq.srf_state(srf_rows)
+    si = lq.sofr_iorb_state(series)
+    rrp = lq.rrp_state(series)
+    sofr_over_srf = lq.sofr_vs_srf_rate(value_at(series.get("SOFR") or []), srf.get("rate"))
+    verdict = lq.verdict(srf, si, rrp, sofr_over_srf)
+    headline = lq.headline(srf, rrp, verdict)
+
+    # 「Liquidity Now」主圖：SRF 動用量（柱狀，左軸）疊利率走廊四條線（右軸）。
+    # 假日（或任何缺值的平日）沿用最近一筆公布值補成連續曲線，不留斷點。
+    corridor = lq.corridor_series(series, months=6)
+    _cal_dates = [p["date"] for p in srf_rows] + [p["date"] for s in corridor for p in s["points"]]
+    if _cal_dates:
+        _cal = lq.business_days(min(_cal_dates), max(_cal_dates))
+        srf_filled = lq.ffill_series(srf_rows, _cal)
+        corridor_filled = [{**s, "points": lq.ffill_series(s["points"], _cal)} for s in corridor]
+    else:
+        srf_filled, corridor_filled = srf_rows, corridor
+    corridor_chart = (charts.rate_corridor(
+        srf_filled, corridor_filled, months=6, bar_label="SRF 動用量",
+        aria="Fed 利率走廊與 SRF 動用量")
+        if (srf_filled or corridor_filled) else "")
+
+    # Fed 每月國庫券購買量（T-Bills），拆 RMP（主動維持準備金）vs MBS 到期再投入
+    # （全額轉進國庫券）。拆分方法見 lq.tbill_purchase_split 的註解——操作紀錄本身
+    # 不分誰是誰，MBS 部分是用 SOMA 持有量的月減少量估計。
+    reinvest = lq.tbill_purchase_split((treasury or {}).get("tbill_purchases") or [],
+                                       (treasury or {}).get("soma") or [])
+    _mbs_label = ("長端公債／MBS 到期不再投入，改買 Bills（估計）" if reinvest.get("estimated")
+                 else "長端公債／MBS 到期不再投入，改買 Bills")
+    reinvest_chart = (charts.stacked_columns(
+        reinvest["flows"],
+        [("rmp", "RMP（準備金管理購買）", "var(--line-1)"),
+         ("mbs", _mbs_label, "var(--muted-bar)")],
+        unit=" 十億美元", digits=1)
+        if reinvest.get("flows") else "")
+    _last_flow = (reinvest.get("flows") or [{}])[-1]
+
+    # 補充：TGCR 近 6 個月，疊 SOFR 當對照（兩者都是擔保隔夜利率，樣本範圍不同）。
+    tgcr_pts = series.get("TGCRRATE") or []
+    sofr_pts = series.get("SOFR") or []
+    tgcr_lines = [s for s in (
+        {"label": "TGCR（三方一般擔保利率）", "color": "var(--series-1)", "points": tgcr_pts},
+        {"label": "SOFR（擔保隔夜融資利率）", "color": "var(--series-2)", "points": sofr_pts},
+    ) if s["points"]]
+    tgcr_chart = (charts.compact_lines(tgcr_lines, unit="%", months=6, digits=2,
+                                       aria="TGCR 與 SOFR 近 6 個月對照")
+                 if tgcr_lines else "")
+
+    # 官方逐日成交量：SOFR 遠大於 EFFR，是利率走廊補充要講的敘事。
+    # SOFR 量級是兆美元、EFFR 是百億美元級，各自換算成讀起來順的單位。
+    sofr_vol = (treasury or {}).get("sofr_vol") or []
+    effr_vol = (treasury or {}).get("effr_vol") or []
+    vol_compare = {}
+    if sofr_vol and effr_vol:
+        sv, ev = sofr_vol[-1]["value"], effr_vol[-1]["value"]
+        vol_compare = {"sofr_zh": f"{sv / 1000:.2f} 兆美元", "effr_zh": f"{ev * 10:,.0f} 億美元",
+                       "date": sofr_vol[-1]["date"], "ratio": (sv / ev) if ev else None}
+
+    as_of = (srf.get("date") or si.get("date") or rrp.get("date")
+            or clock.today().isoformat())
+
+    def _trend_note(avg5, avg30, unit_fn, md: str, lag: str) -> dict:
+        """三行式備註：近 5／30 日均各一行，資料日期與時效另成一行（畫面上字體更小）。"""
+        if avg5 is None or avg30 is None:
+            return {"avg5": "", "avg30": "", "asof": f"資料 {md}"}
+        return {"avg5": f"近5日均 {unit_fn(avg5)}", "avg30": f"近30日均 {unit_fn(avg30)}",
+               "asof": f"資料 {md}（{lag}）"}
+
+    stats = []
+    if si:
+        stats.append({
+            "label": "SOFR − IORB", "value": f"{si['spread']:+.0f}bp",
+            "color": "var(--serious)" if si.get("tight") else "inherit",
+            **_trend_note(si.get("avg5"), si.get("avg30"), lambda v: f"{v:+.0f}bp",
+                         _liq_md(si.get("date")), "台北 T-2")})
+    if srf:
+        stats.append({
+            "label": "SRF 動用量", "value": _liq_yi(srf["latest"]),
+            "color": ("var(--critical)" if sofr_over_srf else
+                     "var(--serious)" if srf.get("tight") else "inherit"),
+            **_trend_note(srf.get("avg5"), srf.get("avg30"), _liq_yi_short,
+                         _liq_md(srf.get("date")), "台北 T-1")})
+    if rrp:
+        stats.append({
+            "label": "ON RRP 交易量", "value": _liq_yi(rrp["latest"]),
+            "color": "var(--pos)" if rrp.get("trend") == "up" else "inherit",
+            **_trend_note(rrp.get("avg5"), rrp.get("avg30"), _liq_yi_short,
+                         _liq_md(rrp.get("date")), "台北 T-1")})
+
+    return {
+        "release_name": cfg.get("meta", {}).get("release_name", "Liquidity"),
+        "as_of": as_of,
+        "offline": offline,
+        "failed": failed,
+        "headline": headline,
+        "verdict": verdict,
+        "stats": stats,
+        "srf": srf,
+        "sofr_iorb": si,
+        "rrp": rrp,
+        "sofr_over_srf": sofr_over_srf,
+        "corridor_chart": corridor_chart,
+        "reinvest": reinvest,
+        "reinvest_chart": reinvest_chart,
+        "reinvest_last": _last_flow,
+        "tgcr_chart": tgcr_chart,
+        "vol_compare": vol_compare,
+        "srf_live": bool((treasury or {}).get("srf")),
     }

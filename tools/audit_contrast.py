@@ -19,7 +19,7 @@ import threading
 import functools
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "output"
-PAGES = ["/", "/labor/", "/inflation/", "/fomc/", "/rates/",
+PAGES = ["/", "/labor/", "/inflation/", "/fomc/", "/liquidity/", "/rates/",
          "/scenario/", "/archive/"]
 
 PROBE = r"""

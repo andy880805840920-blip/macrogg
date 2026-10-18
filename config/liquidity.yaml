@@ -19,15 +19,28 @@ series:
   - id: IORB
     label: 準備金利率（IORB）
     enabled: true
+  # 聯邦資金有效利率——利率走廊頁跟 SOFR／IORB 並列，三者才拼出
+  # 「擔保 vs 無擔保」的全貌。
+  - id: EFFR
+    label: 聯邦資金有效利率（EFFR）
+    enabled: true
   # ON RRP：貨幣基金停泊在聯準會的隔夜逆回購量——體系多餘現金的緩衝池。
   - id: RRPONTSYD
     label: ON RRP 餘額
     enabled: true
-  # 隔夜回購操作（含 SRF 動用）。FRED 沒有獨立的 SRF 序列；
-  # 2021 年 7 月起日常隔夜回購即透過常備回購機制（SRF）進行，
-  # 這條就是市場慣用的動用量指標。多數日子接近零——零本身就是資訊。
+  # ON RRP 得標利率——名目利率走廊的下緣，跟 IORB（上緣）配對畫圖才有意義。
+  - id: RRPONTSYAWARD
+    label: ON RRP 利率（走廊下緣）
+    enabled: true
+  # SRF 動用量的 FRED 後備（主要來源是紐約聯儲逐日操作結果，見
+  # src/treasury_source.srf_operations；這條只在那個來源失敗時頂上）。
   - id: RPONTSYD
-    label: 隔夜回購動用（SRF）
+    label: 隔夜回購動用（SRF，FRED 後備）
+    enabled: true
+  # 三方一般擔保利率（TGCR）——擔保隔夜融資市場最窄的一段，常被視為
+  # SOFR 未來可能的替代／對照指標。
+  - id: TGCRRATE
+    label: TGCR（三方一般擔保利率）
     enabled: true
   # ---- Yahoo 即時報價的 FRED 後備（EIA／CBOE 轉載，落後數天）----
   - id: DCOILWTICO

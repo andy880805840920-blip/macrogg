@@ -24,6 +24,7 @@ log = logging.getLogger(__name__)
 
 TD = "https://www.treasurydirect.gov/TA_WS/securities"
 NYF = "https://markets.newyorkfed.org/api/soma"
+RP_RESULTS = "https://markets.newyorkfed.org/api/rp/results/search.json"
 MSPD = ("https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/"
         "debt/mspd/mspd_table_3_market")
 UA = {"User-Agent": "MACROGG dashboard (macrogg.netlify.app)"}
@@ -217,10 +218,93 @@ def wam_history(cache_path: pathlib.Path, months: int = 24,
 
 
 # ---------------------------------------------------------------------------
+# 常備回購機制（SRF）：紐約聯儲逐日操作結果
+# ---------------------------------------------------------------------------
+def srf_operations(start: str, end: str) -> list[dict]:
+    """
+    SRF（常備回購機制）逐日動用量（十億美元）與當日利率（名目利率走廊上限）：
+    紐約聯儲公開市場操作台每天上午、下午各辦一場隔夜回購操作，這裡把同一天
+    的動用金額加總，利率取公債擔保那一檔的得標利率（兩場原則上同一天同利率）。
+
+    https://www.newyorkfed.org/markets/desk-operations/repo 背後的資料來源；
+    比 FRED 的 RPONTSYD（同一件事的轉載）快，也是這裡的權威版本——
+    FRED 序列只在這個來源失敗時當後備（見 build_liquidity_context）。
+    """
+    js = _get(f"{RP_RESULTS}?startDate={start}&endDate={end}&operationTypes=Repo")
+    ops = ((js or {}).get("repo") or {}).get("operations") or []
+    by_day: dict[str, float] = {}
+    rate_by_day: dict[str, float] = {}
+    for o in ops:
+        d = o.get("operationDate")
+        amt = _f(o.get("totalAmtAccepted"))
+        if not d or amt is None:
+            continue
+        by_day[d] = by_day.get(d, 0.0) + amt / 1e9
+        for detail in o.get("details") or []:
+            if detail.get("securityType") == "Treasury":
+                r = _f(detail.get("percentOfferingRate"))
+                if r is not None:
+                    rate_by_day[d] = r
+    return [{"date": d, "value": round(v, 3), "rate": rate_by_day.get(d)}
+           for d, v in sorted(by_day.items())]
+
+
+def tsy_bill_purchases(start: str, end: str) -> list[dict]:
+    """
+    紐約聯儲「Outright Bill Purchase」操作逐月加總得標金額（十億美元）——
+    國庫券購買的**總額**，不是純 RMP。
+
+    紐約聯儲官方 FAQ 原文：「the monthly amount of secondary market
+    purchases in Treasuries will consist of reserve management purchases
+    (RMPs)... and reinvestment of proceeds from principal payments of
+    agency securities」——國庫券購買總額裡同時包含 RMP（主動維持準備金）
+    與 MBS 到期本金的再投入（全額轉進國庫券），操作紀錄本身不分誰是誰。
+    兩者要拆開看 analysis.liquidity.tbill_purchase_split（用 SOMA 持有量
+    的 MBS 月減少量估計再投入部分，剩下的才算 RMP）。
+
+    https://www.newyorkfed.org/markets/reserve-management-reinvestment-purchases-faq
+    """
+    js = _get(f"https://markets.newyorkfed.org/api/tsy/purchases/results/summary/"
+             f"search.json?startDate={start}&endDate={end}&securityType=treasury")
+    ops = ((js or {}).get("treasury") or {}).get("auctions") or []
+    by_month: dict[str, float] = {}
+    for o in ops:
+        d = o.get("operationDate")
+        amt = _f(o.get("totalParAmtAccepted"))
+        if not d or amt is None:
+            continue
+        by_month[d[:7]] = by_month.get(d[:7], 0.0) + amt / 1e9
+    return [{"date": f"{m}-01", "value": round(v, 3)} for m, v in sorted(by_month.items())]
+
+
+def rate_volume(secured: bool, ratetype: str, start: str, end: str) -> list[dict]:
+    """
+    官方逐日成交量（十億美元）：SOFR／TGCR／BGCR 走 secured，EFFR／OBFR 走
+    unsecured。這是 SOFR 成交量遠大於 EFFR 的出處——2008 年後大型商業銀行
+    的監管收緊，全球融資擴張轉向非銀行金融機構（NBFI），這些機構主要透過
+    SOFR 這類擔保回購管道融資，使 SOFR 日均成交量達數兆美元，是 EFFR（銀行
+    間無擔保拆借，監管收緊後規模萎縮）的二十幾倍。
+    """
+    base = "secured" if secured else "unsecured"
+    js = _get(f"https://markets.newyorkfed.org/api/rates/{base}/{ratetype}/search.json"
+             f"?startDate={start}&endDate={end}&type=volume")
+    rows = (js or {}).get("refRates") or []
+    out = []
+    for r in rows:
+        d, v = r.get("effectiveDate"), _f(r.get("volumeInBillions"))
+        if d and v is not None:
+            out.append({"date": d, "value": v})
+    return sorted(out, key=lambda r: r["date"])
+
+
+# ---------------------------------------------------------------------------
 # 一次抓齊（給 run.py）
 # ---------------------------------------------------------------------------
 def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None = None) -> dict:
-    """{auctions, upcoming, soma, wam, failed}。離線時讀 fixture（沒有就是空的）。"""
+    """
+    {auctions, upcoming, soma, wam, srf, tbill_purchases, sofr_vol, effr_vol, failed}。
+    離線時讀 fixture（沒有就是空的）。
+    """
     if offline:
         try:
             return json.loads(fixture.read_text(encoding="utf-8")) if fixture else {}
@@ -241,5 +325,29 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("WAM 計算失敗（%s）", e)
         out["wam"] = {"soma": [], "market": []}
         failed.append("wam")
+    from . import clock
+    end = clock.today()
+    start200 = (end - dt.timedelta(days=200)).isoformat()
+    start400 = (end - dt.timedelta(days=400)).isoformat()      # RMP／MBS 要近 12 個月的月資料，抓寬一點
+    end_iso = end.isoformat()
+    try:
+        out["srf"] = srf_operations(start200, end_iso)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("SRF 動用量取得失敗（%s），流動性頁改用 FRED 後備", e)
+        out["srf"] = []
+        failed.append("srf")
+    try:
+        out["tbill_purchases"] = tsy_bill_purchases(start400, end_iso)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Fed 國庫券購買量取得失敗（%s）", e)
+        out["tbill_purchases"] = []
+        failed.append("tbill_purchases")
+    try:
+        out["sofr_vol"] = rate_volume(True, "sofr", start200, end_iso)
+        out["effr_vol"] = rate_volume(False, "effr", start200, end_iso)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("SOFR／EFFR 成交量取得失敗（%s）", e)
+        out["sofr_vol"], out["effr_vol"] = [], []
+        failed.append("rate_volume")
     out["failed"] = failed
     return out

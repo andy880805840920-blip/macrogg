@@ -48,6 +48,11 @@
     X-Robots-Tag = "noindex, nofollow, noarchive"
 
 [[headers]]
+  for = "/liquidity/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
   for = "/rates/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"

@@ -1025,3 +1025,141 @@ def dual_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
     return (f'<div class="gc"><div class="gc-plot lbl"><span class="gc-zero" style="top:50%"></span>'
             f'<span class="gc-mx">+{m:,.{digits}f}</span><span class="gc-mn">−{m:,.{digits}f}</span>'
             f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')
+
+
+def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
+                    digits: int = 0, fmt_date=None) -> str:
+    """
+    每期一根柱，分段由下往上堆疊（例：RMP＋到期不再投入改買 Bills，相加＝總額）。
+    rows：[{date, k1, k2, ...}]（只接受非負值——這是「組成」不是「漲跌」）；
+    keys：[(key, label, color)]。
+    """
+    rows = [r for r in rows if any((r.get(k) or 0) > 0 for k, _, _ in keys)]
+    if not rows:
+        return '<div class="empty">資料不足</div>'
+    m = max(sum(max(0.0, r.get(k) or 0) for k, _, _ in keys) for r in rows) or 1
+    cols = []
+    for r in rows:
+        segs, bottom = "", 0.0
+        for k, lab, col in keys:
+            v = max(0.0, r.get(k) or 0)
+            h = v / m * 100
+            segs += (f'<span class="dc2-bar" style="bottom:{bottom:.2f}%;height:{h:.2f}%;'
+                     f'left:20%;width:60%;background:{col}" '
+                     f'data-tip="{_esc(r["date"][:7])}｜{_esc(lab)} {v:,.{digits}f}{_esc(unit)}"></span>')
+            bottom += h
+        lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
+        cols.append(f'<div class="dc2-col">{segs}<span class="gc-lab">{_esc(lab)}</span></div>')
+    leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
+                  for _, l, c in keys)
+    return (f'<div class="gc"><div class="gc-plot lbl"><span class="gc-mx">{m:,.{digits}f}{_esc(unit)}</span>'
+            f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')
+
+
+def rate_corridor(bars: Sequence[dict], lines: Sequence[dict], months: int = 6,
+                  height: int = 190, bar_label: str = "SRF 動用量",
+                  bar_unit: str = "十億美元", bar_digits: int = 2,
+                  line_unit: str = "%", line_digits: int = 2,
+                  aria: str = "流動性走勢") -> str:
+    """
+    雙軸疊圖：柱狀（左軸，例如 SRF 動用量，十億美元）＋ 數條折線（右軸，例如
+    利率走廊的四條線，%）。兩軸各自獨立比例尺、不共用零點——左軸只服務柱狀，
+    右軸只服務線，疊在一起只是為了共用同一段時間軸，不是要比較兩者的水準。
+
+    bars：[{date, value}]；lines：[{label, color, points:[{date, value}]}]
+    柱狀半透明，確保疊在上層的線仍然讀得出來。
+    """
+    b = [p for p in last_months(bars, months) if p.get("value") is not None]
+    ser = []
+    for s in lines:
+        pts = last_months(s.get("points") or [], months)
+        if len(pts) >= 2:
+            ser.append({**s, "points": pts})
+    if not b and not ser:
+        return '<div class="empty">資料不足</div>'
+
+    all_dates = [p["date"] for p in b] + [p["date"] for s in ser for p in s["points"]]
+    x0, x1 = min(_mkey(d) for d in all_dates), max(_mkey(d) for d in all_dates)
+    xr = (x1 - x0) or 1
+    W, H = 600, height
+
+    def X(d):
+        return (_mkey(d) - x0) / xr * W
+
+    bar_max = (max((p["value"] for p in b), default=0) * 1.15) or 1.0
+    line_vals = [p["value"] for s in ser for p in s["points"]]
+    lo, hi = (min(line_vals), max(line_vals)) if line_vals else (0.0, 1.0)
+    pad = ((hi - lo) or 1) * 0.12
+    lo, hi = lo - pad, hi + pad
+    rng = (hi - lo) or 1
+
+    def YLp(v):            # 線：右軸，百分比座標（由上往下）
+        return (1 - (v - lo) / rng) * 100
+
+    def YL(v):
+        return YLp(v) / 100 * H
+
+    def YBp(v):             # 柱：左軸，柱頂的百分比座標（由上往下，跟 YLp 同一套方向）
+        return 100 - max(0.0, v) / bar_max * 100
+
+    bw = max(1.0, 70 / max(1, len(b)))          # 柱寬（plot 寬度的 %）
+    bars_html = "".join(
+        f'<span style="position:absolute;left:{X(p["date"]) / W * 100 - bw / 2:.2f}%;'
+        f'width:{bw:.2f}%;bottom:0;height:{max(0.0, p["value"]) / bar_max * 100:.2f}%;'
+        f'background:var(--line-2);opacity:.45;border-radius:1px 1px 0 0"></span>'
+        for p in b)
+
+    svg = []
+    for s in ser:
+        poly = " ".join(f'{X(p["date"]):.1f},{YL(p["value"]):.1f}' for p in s["points"])
+        svg.append(f'<polyline points="{poly}" fill="none" stroke="{s["color"]}" '
+                   f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round" '
+                   f'vector-effect="non-scaling-stroke"/>')
+
+    over = []
+    for s in ser:
+        p = s["points"][-1]
+        over.append(f'<span class="ldot" style="left:{X(p["date"]) / W * 100:.2f}%;'
+                    f'top:{YLp(p["value"]):.2f}%;background:{s["color"]}"></span>')
+
+    # 滑鼠／觸控/鍵盤共用的十字線：柱狀跟每條線都是一個 series，當天缺值就標「無資料」。
+    bar_map = {p["date"]: p["value"] for p in b}
+    line_maps = [{p["date"]: p["value"] for p in s["points"]} for s in ser]
+    dates = sorted(set(bar_map).union(*(set(m) for m in line_maps)))
+    inspect = []
+    for date in dates:
+        values = []
+        if b:
+            v = bar_map.get(date)
+            values.append({"label": bar_label,
+                           "text": "當日無資料" if v is None else f"{v:,.{bar_digits}f}{bar_unit}",
+                           "y": None if v is None else YBp(v), "color": "var(--line-2)"})
+        for s_, m in zip(ser, line_maps):
+            v = m.get(date)
+            values.append({"label": s_["label"],
+                           "text": "當日無資料" if v is None else f"{v:,.{line_digits}f}{line_unit}",
+                           "y": None if v is None else YLp(v), "color": s_["color"]})
+        inspect.append({"date": date, "x": X(date) / W * 100, "values": values})
+    over.append(_inspect_layer(inspect))
+
+    first = min(all_dates)
+    last = max(all_dates)
+    xaxis = (f'<div class="cl-x"><span>{_esc(first[:7].replace("-", "/"))}</span>'
+             f'<span>{_esc(last[:7].replace("-", "/"))}</span></div>')
+
+    legend = ""
+    if b:
+        legend += (f'<span><i style="background:var(--line-2);opacity:.45"></i>{_esc(bar_label)} '
+                  f'<b>{b[-1]["value"]:,.{bar_digits}f}{_esc(bar_unit)}</b>'
+                  f'<em>（{_esc(b[-1]["date"][5:].replace("-", "/"))}）</em></span>')
+    for s in ser:
+        p = s["points"][-1]
+        legend += (f'<span><i style="background:{s["color"]}"></i>{_esc(s["label"])} '
+                  f'<b>{p["value"]:,.{line_digits}f}{_esc(line_unit)}</b>'
+                  f'<em>（{_esc(p["date"][5:].replace("-", "/"))}）</em></span>')
+
+    return (f'<div class="cl"><div class="cl-plot" style="height:{H}px;margin-left:0">'
+            f'{bars_html}'
+            f'<svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" role="img" '
+            f'aria-label="{_esc(aria)}">{"".join(svg)}</svg>{"".join(over)}</div>'
+            f'{xaxis}<div class="cl-leg">{legend}</div></div>')

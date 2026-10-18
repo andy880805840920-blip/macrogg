@@ -24,7 +24,8 @@ import pathlib
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "output"
 PAGES = ["index.html", "labor/index.html", "inflation/index.html",
-         "fomc/index.html", "rates/index.html", "scenario/index.html"]
+         "fomc/index.html", "liquidity/index.html", "rates/index.html",
+         "scenario/index.html"]
 
 # 方法層的 class。這些是「解釋怎麼算的、名詞是什麼意思、資料哪裡來的」。
 #

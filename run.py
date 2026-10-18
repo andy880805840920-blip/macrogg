@@ -45,6 +45,7 @@ from src.pages import labor as labor_page, home as home_page      # noqa: E402
 from src.pages import inflation as infl_page, fomc as fomc_page   # noqa: E402
 from src.pages import scenario as scen_page                       # noqa: E402
 from src.pages import rates as rates_page                         # noqa: E402
+from src.pages import liquidity as liq_page                       # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger("run")
@@ -674,6 +675,18 @@ def write_site(ctxs: dict, offline: bool, only: str | None = None) -> list[Path]
             subtitle=(f"{rts['release_name']}　·　資料截止 {rts['as_of']}"),
             footer=rates_page.rates_footer(rts), banner=_banner("rates")))
 
+    # ---- 流動性 ----
+    liq = ctxs.get("liquidity")
+    if not liq and not (OUT_DIR / "liquidity/index.html").exists():
+        write("liquidity/index.html", site.soon_page(
+            "流動性", "/liquidity/",
+            "設定檔 config/liquidity.yaml 未載入，或本次為局部重跑。", "P7"))
+    if liq:
+        write("liquidity/index.html", site.page(
+            "流動性", "/liquidity/", liq_page.liquidity_body(liq),
+            subtitle=(f"{liq['release_name']}　·　資料截止 {liq['as_of']}"),
+            footer=liq_page.liquidity_footer(liq), banner=_banner("liquidity")))
+
     # ---- 情境合成 ----
     if not scn and not (OUT_DIR / "scenario/index.html").exists():
         write("scenario/index.html", site.soon_page(
@@ -806,6 +819,9 @@ def main() -> int:
     # 三個模組抓到的序列合在一起做新鮮度檢查。分開檢查會漏掉
     # 「只有長端那組停更」這種情況，而那組的讀者最不會去別頁確認。
     all_series: dict = {}
+    # 紐約聯儲 SOMA 資料（長端模組抓的）：流動性頁的「每月到期再投入」要用。
+    # --only 不含 rates 時維持空字典，該圖就空白，不擋其餘摘要。
+    _tr: dict = {}
 
     # ---- 勞動市場 ----
     if want("labor"):
@@ -894,6 +910,10 @@ def main() -> int:
             if _lfail:
                 log.warning("流動性群組缺 %d 條：%s",
                             len(_lfail), "、".join(_lfail))
+            ctxs["liquidity"] = build.build_liquidity_context(
+                _liq_cfg, liq_series, _lfail, args.offline, treasury=_tr)
+            _lv = ctxs["liquidity"]["verdict"]
+            log.info("流動性模組完成：%s", _lv.get("label", "—"))
         except Exception as e:                     # noqa: BLE001
             log.warning("流動性群組抓取失敗（%s），相關 chip 本次標缺", e)
 
