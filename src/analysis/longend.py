@@ -19,6 +19,7 @@ TIPS 實質利率與損益兩平是市場口徑，只當參考：兩者各自混
 from __future__ import annotations
 
 import datetime as dt
+import re
 
 COMP = [  # key, 中文, 壓力名稱, 性質
     ("real", "預期實質路徑", "政策壓力", "市場預先替 Fed 定價；Fed 跟上之前只是預告"),
@@ -1055,3 +1056,76 @@ def events(today: dt.date, upcoming: list[dict], refunding_next: str | None,
             ev.append({"date": d.isoformat(), "kind": "債務月報", "text": "財政部 MSPD（流通在外公債明細）"})
     ev.sort(key=lambda e: e["date"])
     return ev
+
+
+# ---------------------------------------------------------------------------
+# 財政部買回（Buybacks）
+# ---------------------------------------------------------------------------
+BB_TYPE_ZH = {"Liquidity Support": "流動性支援", "Cash Management": "現金管理"}
+
+
+def bucket_zh(b: str) -> str:
+    """'Nominal Coupons 10Y to 20Y'／'10Y to 20Y' → '10–20 年'；TIPS 加前綴。"""
+    tips = "TIPS" in b
+    core = b.replace("Nominal Coupons", "").replace("TIPS", "").strip()
+    m = re.match(r"(\d+)(Mo|Y) to (\d+)Y", core)
+    if not m:
+        return b
+    lo = f'{m.group(1)} 個月' if m.group(2) == "Mo" else m.group(1)
+    txt = f"{lo}–{m.group(3)} 年"
+    return ("TIPS " if tips else "") + txt
+
+
+def buyback_view(ops: list[dict], schedule: dict, reactions: dict, today: dt.date,
+                 n: int = 24) -> dict:
+    """
+    買回區塊要用的資料：
+      rows      近 n 場（新到舊）：上限、實際買回、投標、投標倍數（投標 ÷ 上限）、
+                上限公布後與結果後 1 小時的 10／20／30 年殖利率變化
+      latest    最新一場
+      caps      各天期目前的每場上限（取該天期最近一場實際操作；比暫定排程準，
+                因為排程公布後財政部可能另行調整，例如 2026-08-19 加倍長端上限）
+      upcoming  暫定排程裡還沒到的場次（上限若低於該天期最近實際上限，一併列出）
+      quarter   本次再融資季（排程起日之後）累計買回，依類型
+    """
+    if not ops:
+        return {}
+    iso = today.isoformat()
+    done = sorted((o for o in ops if o.get("accepted") is not None and o["date"] <= iso),
+                  key=lambda o: o["date"])
+    rows = []
+    for o in done[-n:][::-1]:
+        rx = reactions.get(o["date"]) or {}
+        rows.append({**o, "bucket_zh": bucket_zh(f'{o["sec"]} {o["bucket"]}'),
+                     "type_zh": BB_TYPE_ZH.get(o["type"], o["type"]),
+                     "cover": (o["offered"] / o["max"]) if o.get("offered") and o.get("max") else None,
+                     "announce_at": rx.get("announce_at"), "announce": rx.get("announce") or {},
+                     "result": rx.get("result") or {}})
+    caps: dict = {}
+    for o in done:
+        caps[(o["type"], o["sec"], o["bucket"])] = o
+    cap_rows = sorted(({"bucket_zh": bucket_zh(f'{s} {b}'), "max": o["max"], "date": o["date"],
+                        "type_zh": BB_TYPE_ZH.get(o["type"], o["type"]), "sec": s}
+                       for (_, s, b), o in caps.items() if o["date"] >= (today - dt.timedelta(days=120)).isoformat()),
+                      key=lambda r: (r["type_zh"] != "流動性支援", "TIPS" in r["bucket_zh"],
+                                     float(re.match(r"[\d.]+", r["bucket_zh"].replace("TIPS ", "")).group())
+                                     if re.match(r"[\d.]+", r["bucket_zh"].replace("TIPS ", "")) else 0))
+    up = []
+    for s in (schedule or {}).get("ops") or []:
+        if s["date"] < iso:
+            continue
+        sec = "TIPS" if "TIPS" in s["bucket"] else "Nominal Coupons"
+        b = s["bucket"].replace("Nominal Coupons", "").replace("TIPS", "").strip()
+        recent = caps.get((s["type"], sec, b))
+        up.append({**s, "bucket_zh": bucket_zh(s["bucket"]),
+                   "type_zh": BB_TYPE_ZH.get(s["type"], s["type"]),
+                   "recent_max": recent["max"] if recent and recent["max"] > s["max"] else None})
+    q0 = (schedule or {}).get("ops", [{}])[0].get("date", "") if (schedule or {}).get("ops") else ""
+    quarter = {}
+    for o in done:
+        if q0 and o["date"] >= q0:
+            k = BB_TYPE_ZH.get(o["type"], o["type"])
+            quarter[k] = quarter.get(k, 0.0) + (o["accepted"] or 0)
+    return {"rows": rows, "latest": rows[0] if rows else None, "caps": cap_rows,
+            "upcoming": up, "quarter": quarter, "quarter_from": q0,
+            "schedule_name": (schedule or {}).get("name", ""), "schedule_url": (schedule or {}).get("url", "")}

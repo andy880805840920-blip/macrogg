@@ -6,7 +6,7 @@
 `<h2 id data-sum>` 收合卡區，不是塞在首卡裡的下拉）：
     Fed 利率走廊   SRF×利率走廊圖、五個名詞的定義、SOFR vs EFFR、RP／RRP、TGCR
     Fed 負債端結構 待補
-    市場供需       Fed T-Bills 購買量、RMP 概念
+    市場供需       T-Bills 淨發行（Fed vs 私人市場）、Fed T-Bills 購買量、RMP 概念
 """
 
 from __future__ import annotations
@@ -186,6 +186,58 @@ def _md(iso: str) -> str:
         return iso or "—"
 
 
+def _sgn_yi(v) -> str:
+    """十億美元 → 帶正負號的億美元字串。"""
+    return "—" if v is None else f"{v * 10:+,.0f} 億美元"
+
+
+def _bill_net_stats(last, mtd, qra) -> str:
+    cells = []
+    if last:
+        cells.append(f'<div class="stat"><div class="s-label">{esc(last["period"])} 淨發行</div>'
+                     f'<div class="s-value">{esc(_sgn_yi(last["net"]))}</div>'
+                     f'<div class="s-note">私人市場 {esc(_sgn_yi(last["private"]))}</div>'
+                     f'<div class="s-note">Fed 買下 {esc(_yi(last["fed"]))}</div></div>')
+    if mtd:
+        cells.append(f'<div class="stat"><div class="s-label">{esc(mtd["month"].replace("-", "/"))} 月初至今</div>'
+                     f'<div class="s-value">{esc(_sgn_yi(mtd["net"]))}</div>'
+                     f'<div class="s-note">私人市場 {esc(_sgn_yi(mtd["private"]))}</div>'
+                     f'<div class="s-note">DTS 至 {esc(_md(mtd["end"]))}</div></div>')
+    if qra:
+        cells.append(f'<div class="stat"><div class="s-label">{esc(qra["quarter"][:7])} QRA 隱含</div>'
+                     f'<div class="s-value">{esc(_sgn_yi(qra["bills"]))}</div>'
+                     f'<div class="s-note">整季、未計買回</div>'
+                     f'<div class="s-note">本站推算</div></div>')
+    return f'<div class="stat-row">{"".join(cells)}</div>' if cells else ""
+
+
+def _bill_net_method(rows, qra) -> str:
+    tbl = "".join(
+        f'<tr><td>{esc(r["period"])}</td><td>{r["net"] * 10:+,.0f}</td>'
+        f'<td>{r["rmp"] * 10:,.0f}</td><td>{r["mbs"] * 10:,.0f}</td>'
+        f'<td><b>{r["private"] * 10:+,.0f}</b></td></tr>'
+        for r in reversed(rows))
+    q = ""
+    if qra:
+        q = (f'<p class="hint"><b>未來：</b>財政部 {esc(qra["date"][5:].replace("-", "/"))} 公布 {esc(qra["quarter"])}'
+             f'私人持有淨借款 {qra["borrowing"] * 10:,.0f} 億美元（假設季末現金 {qra["cash_end"] * 10:,.0f} 億）。'
+             f'本站以暫定拍賣排程 × 現行規模推算本季 coupon 毛發行約 {qra["gross_coupon"] * 10:,.0f} 億、'
+             f'私人持有到期約 {qra["coupon_maturing"] * 10:,.0f} 億，coupon 淨發行約 {qra["net_coupon"] * 10:,.0f} 億，'
+             f'剩下約 <b>{qra["bills"] * 10:,.0f} 億</b>要靠 T-Bills。買回的舊券也由新發行補上，'
+             f'所以實際 T-Bills 淨發行會再加上本季買回金額。下一次再融資 {esc(_md(qra.get("next", "")))}，'
+             f'<a href="{esc(qra["url"])}" target="_blank" rel="noopener">財政部原文</a>。</p>')
+    return (f'<p class="hint">財政部每週發行的 T-Bills 毛額超過 4,000 億美元，但大部分只是償還同週到期的舊券；'
+            f'真正新增的供給是<b>發行 − 到期贖回</b>，也就是月底 Bills 存量的變化。'
+            f'再扣掉 Fed 在次級市場實際買走的量（RMP＋MBS 到期再投入），剩下才是私人市場（貨幣基金、'
+            f'銀行、海外等）要淨吸收的量。4 月、9 月等稅收月財政部現金充裕，淨發行常是負的，'
+            f'這時私人市場是拿回現金的一方。</p>'
+            f'<p class="hint">Fed 的實際成交只公布總額；RMP／MBS 的拆分依該筆購買所在期別的官方計畫金額比例分配。'
+            f'日曆月口徑，跟上方 Fed 計畫金額的期別（例如 10/15–11/13）不同。</p>'
+            f'<div class="tscroll"><table><thead><tr><th>月份</th><th>淨發行</th><th>Fed RMP</th>'
+            f'<th>Fed MBS</th><th>私人市場</th></tr></thead><tbody>{tbl}</tbody></table></div>'
+            f'<p class="hint">單位：億美元。</p>{q}')
+
+
 def _upcoming_bills_html(rows) -> str:
     """已公告金額的 Bill 拍賣清單——視野通常只有一到兩週，是官方本來就還沒
     公布，不是本站漏抓。"""
@@ -290,21 +342,36 @@ def liquidity_body(d: dict) -> str:
   </div>
 </div>"""
 
-    _supply_sum = (f'最新一期 RMP {_yi(rl.get("rmp"))}' if rl else "Fed T-Bills 購買量")
-    bo = d.get("bill_overview") or {}
+    bn = d.get("bill_net") or {}
+    _last, _mtd, qra = bn.get("last"), bn.get("mtd"), d.get("qra")
+    _supply_sum = (f'{int(_last["month"][5:])} 月 T-Bills 淨發行 {_last["net"] * 10:+,.0f} 億'
+                   f'　·　私人 {_last["private"] * 10:+,.0f} 億'
+                   if _last else "T-Bills 淨發行與 Fed 購買")
     supply_section = f"""<div class="grid">
   <div class="card">
     <h2 id="supply_demand" data-sum="{esc(_supply_sum)}">市場供需</h2>
-    <p class="hint">財政部 T-Bills 發行時程{
-      (f'　·　占整體發行量 <b>{bo["share"]:.0f}%</b>' if bo.get("share") is not None else "")}</p>
-    {d.get("bill_trend_chart") or ""}
-    {_upcoming_bills_html(d.get("upcoming_bills") or [])}
+    <p class="hint">財政部 T-Bills 淨發行（發行 − 到期贖回）{
+      (f'　·　占可交易公債 <b>{bn["share"]:.1f}%</b>（{_md(bn["share_asof"])}）'
+       if bn.get("share") is not None else "")}</p>
+    {_bill_net_stats(_last, _mtd, qra)}
+    <div class="viz-block"><div class="viz-h">T-Bills 每月淨發行：Fed vs 私人市場</div>
+      {d.get("bill_net_chart") or '<div class="empty">資料本次取得失敗</div>'}</div>
+    <div class="src">淨發行：財政部 MSPD 月底 Bills 存量的月變動（當月：每日國庫報表 DTS 月初至今）。
+      Fed：紐約聯儲國庫券購買實際成交額（依交割日歸月）。</div>
+    <details class="f-more"><summary>淨發行與私人市場怎麼算</summary>
+      <div class="f-detail">{_bill_net_method(bn.get("rows") or [], qra)}</div>
+    </details>
+    <details class="f-more"><summary>已公告的 T-Bills 拍賣（毛額）</summary>
+      <div class="f-detail">{_upcoming_bills_html(d.get("upcoming_bills") or [])}
+      <p class="hint">這是每場拍賣的毛額，大部分用來償還同一週到期的舊券；淨增加多少要看上方的淨發行。</p></div>
+    </details>
     <details class="f-more"><summary>T-Bills 占比怎麼看</summary>
-      <div class="f-detail">比例越高，代表財政部越依賴短端融資；對照
+      <div class="f-detail">分母是全部可交易公債（MSPD 表一 Total Marketable）。財政部借款顧問委員會（TBAC）
+      長期建議的區間是 15%–20%；高於區間代表財政部更依賴短端融資，長天期供給相對受控，對照
       <a href="/rates/#supply">長端與債務頁「債券供給：財政部與 Fed」</a>的 Coupon 發行路徑。</div>
     </details>
 
-    <p class="hint" style="margin-top:18px">Fed T-Bills 購買量</p>
+    <p class="hint" style="margin-top:18px">Fed T-Bills 購買量（計畫金額）</p>
     {rc}
     {(f'<div class="src">最新一期（{esc(rl.get("period", ""))}）：'
       f'RMP {_yi(rl.get("rmp"))}　MBS 到期再投入 {_yi(rl.get("mbs"))}　'
@@ -312,15 +379,6 @@ def liquidity_body(d: dict) -> str:
       if rl else "")}
     <details class="f-more"><summary>RMP（準備金管理購買）</summary>
       <div class="f-detail">{_rmp_concept()}</div></details>
-
-    <p class="hint" style="margin-top:18px">Fed vs 私人市場</p>
-    {d.get("bill_flows_chart") or ""}
-    <details class="f-more"><summary>私人市場融資怎麼算</summary>
-      <div class="f-detail">毛發行量減掉 Fed RMP 與 MBS 再投入買走的部分，剩下才是財政部短端
-      融資真正需要貨幣市場吸收的量。時間段跟著 Fed RMP 的公布期別走；還在進行中的最後一期，
-      連同更晚已公告的拍賣，合併列成一塊「已公告、Fed 分配未知」（單一顏色），不假裝知道
-      Fed 會分走多少。</div>
-    </details>
   </div>
 </div>"""
 
@@ -337,13 +395,16 @@ def liquidity_footer(d: dict) -> str:
          ("ON RRP 餘額", "FRED（RRPONTSYD）", "每日"),
          ("Fed T-Bills 購買量：RMP、MBS 到期再投入", "紐約聯儲 Treasury Securities "
           "Operational Details（計畫金額，逐期公布）", "每期（約一個月）"),
-         ("T-Bills 發行時程與已公告拍賣", "TreasuryDirect（已完成拍賣＋已公告的即將拍賣）",
-          "拍賣前幾天公布金額")],
+         ("T-Bills 淨發行（月底存量差）、占可交易公債比例", "財政部 MSPD 表一", "每月（次月初）"),
+         ("T-Bills 當月至今發行與贖回", "財政部每日國庫報表（DTS）表 IIIA", "每日"),
+         ("Fed 國庫券購買實際成交", "紐約聯儲 Treasury Securities Purchases 結果", "每筆操作"),
+         ("已公告的 T-Bills 拍賣", "財政部 Fiscal Data（auctions_query）", "拍賣前幾天公布金額"),
+         ("私人持有淨借款估計", "財政部每季再融資（QRA）借款估計", "每季")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
-         "RMP、MBS 到期再投入兩個金額直接來自紐約聯儲官方逐期公布的拆分，不是本站"
-         "推算的估計值；是計畫金額，可能跟實際成交有落差。再投入只適用 MBS（機構"
-         "證券），不含長端公債——公債到期後直接從資產負債表消失，不會被拿去買回 Bills。",
-         "私人市場融資＝T-Bills 毛發行量減掉 Fed RMP 與 MBS 再投入買走的部分；"
-         "最新一期之後 Fed 分配未知，只列財政部已公告的毛發行量。"],
-        head="<b>資料來源</b> 紐約聯儲、財政部 TreasuryDirect、FRED")
+         "RMP、MBS 到期再投入兩個計畫金額直接來自紐約聯儲官方逐期公布的拆分。再投入只適用 MBS"
+         "（機構證券），不含長端公債——公債到期後直接從資產負債表消失，不會被拿去買回 Bills。",
+         "私人市場淨吸收＝T-Bills 淨發行（發行 − 到期贖回）減掉 Fed 實際買走的量，日曆月口徑；"
+         "Fed 實際成交只有總額，RMP／MBS 依該期計畫金額比例拆分。QRA 隱含的季度 T-Bills "
+         "淨發行是本站推算（私人持有淨借款 − 推算的 coupon 淨發行），未計買回。"],
+        head="<b>資料來源</b> 紐約聯儲、財政部 Fiscal Data／MSPD／DTS、FRED")

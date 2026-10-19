@@ -128,6 +128,53 @@ check("⑥j 遠期四組都有，2y3y 對照內插的 3 年期",
 _sn = le.curve_snapshots(_ser)
 check("⑥k 曲線快照：現在／1 週前／1 個月前／年初", [x["label"] for x in _sn][:3] == ["現在", "1 週前", "1 個月前"])
 
+# ---- 2026-10：Fiscal Data 拍賣、T-Bills 淨發行、買回 ----
+fa = ts.normalize_fiscal_auction({"auction_date": "2026-10-07", "issue_date": "2026-10-15",
+                                  "original_security_term": "10-Year", "security_term": "9-Year 10-Month",
+                                  "security_type": "Note", "high_yield": "5.012", "avg_med_yield": "4.95",
+                                  "offering_amt": "39000000000", "primary_dealer_accepted": "3900000000",
+                                  "comp_accepted": "38800000000", "reopening": "Yes", "soma_accepted": "null"})
+check("⑦a Fiscal Data：日期用 auction_date、增發、十億美元",
+      fa["date"] == "2026-10-07" and fa["reopening"] and fa["offering"] == 39.0
+      and round(fa["pd"], 1) == 3.9 and fa["median"] == 4.95 and fa["soma"] == 0, fa)
+from src.analysis import liquidity as lq   # noqa: E402
+_m = [{"date": "2026-08-31", "bills": 7248.07, "marketable": 31828.0},
+      {"date": "2026-09-30", "bills": 7118.15, "marketable": 31834.9}]
+_fed = [{"date": "2026-09-10", "value": 10.0}, {"date": "2026-09-24", "value": 6.0},
+        {"date": "2026-10-09", "value": 4.0}, {"date": "2026-10-20", "value": 9.0}]
+_sch = [{"start": "2026-08-14", "end": "2026-09-14", "mbs": 15.0, "rmp": 5.0},
+        {"start": "2026-09-15", "end": "2026-10-14", "mbs": 16.0, "rmp": 0.0}]
+_bn = lq.bill_net_monthly(_m, {"date": "2026-10-15", "net": 94.9}, _fed, _sch)
+_r9 = _bn["rows"][0]
+check("⑦b 淨發行＝月底存量差；Fed 依期別比例拆 RMP／MBS；私人＝淨 − Fed（可為負）",
+      round(_r9["net"], 1) == -129.9 and round(_r9["rmp"], 1) == 2.5 and round(_r9["mbs"], 1) == 13.5
+      and round(_r9["private"], 1) == -145.9, _r9)
+_r10 = _bn["rows"][-1]
+check("⑦c 當月至今：DTS 淨額、Fed 只算到 DTS 日期", _r10["partial"] and _r10["fed"] == 4.0
+      and round(_r10["private"], 1) == 90.9 and _bn["mtd"] is _r10, _r10)
+check("⑦d QRA 隱含 T-Bills＝私人持有借款 − coupon 淨發行",
+      lq.qra_bill_implied({"borrowing": 628, "net_coupon": 360})["bills"] == 268)
+check("⑦e 買回天期中文", le.bucket_zh("Nominal Coupons 10Y to 20Y") == "10–20 年"
+      and le.bucket_zh("1Mo to 2Y") == "1 個月–2 年" and le.bucket_zh("TIPS 1Y to 10Y") == "TIPS 1–10 年")
+_bars = {"10:50": 5.00, "10:55": 5.01, "11:00": 5.02, "11:50": 5.03, "11:55": 5.05, "12:00": 5.20}
+check("⑦f 1 小時窗口：公告前最後一根 → ＋55 那根收盤", ts._window_bp(_bars, "11:00") == 4.0
+      and ts._window_bp({"11:05": 1.0}, "11:00") is None)
+_ops = [{"date": "2026-10-08", "type": "Liquidity Support", "sec": "Nominal Coupons", "bucket": "20Y to 30Y",
+         "max": 6.0, "accepted": 6.0, "offered": 14.9},
+        {"date": "2026-09-09", "type": "Cash Management", "sec": "Nominal Coupons", "bucket": "1Mo to 2Y",
+         "max": 12.5, "accepted": 12.5, "offered": 28.0}]
+_sch2 = {"name": "x", "ops": [{"date": "2026-08-18", "announce": "2026-08-17", "bucket": "Nominal Coupons 20Y to 30Y",
+                               "type": "Liquidity Support", "max": 2.0},
+                              {"date": "2026-10-27", "announce": "2026-10-26", "bucket": "Nominal Coupons 20Y to 30Y",
+                               "type": "Liquidity Support", "max": 2.0},
+                              {"date": "2026-11-05", "announce": "2026-11-04", "bucket": "Nominal Coupons 1Mo to 2Y",
+                               "type": "Liquidity Support", "max": 4.0}]}
+_bv = le.buyback_view(_ops, _sch2, {"2026-10-08": {"announce": {"10Y": 1.1}}}, dt.date(2026, 10, 19))
+check("⑦g 買回：新到舊、投標倍數、排程上限低於近期實際時標出、現金管理不混入流動性支援",
+      _bv["latest"]["date"] == "2026-10-08" and round(_bv["latest"]["cover"], 2) == 2.48
+      and _bv["upcoming"][0]["recent_max"] == 6.0 and _bv["upcoming"][1]["recent_max"] is None
+      and _bv["quarter"] == {"流動性支援": 6.0, "現金管理": 12.5}, _bv["upcoming"])
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

@@ -1076,6 +1076,61 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
             f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')
 
 
+def diverging_stacked(rows: Sequence[dict], keys: Sequence[tuple], net: tuple,
+                      unit: str = "", digits: int = 0, scale: float = 1.0,
+                      fmt_date=None, partial_note: str = "") -> str:
+    """
+    每期一根柱，分段可正可負（零軸以上往上疊、以下往下疊），再用一條橫線標出
+    net（各段相加的合計）。例：T-Bills 淨發行＝Fed RMP＋Fed MBS 再投入＋私人市場，
+    私人市場那段在淨發行為負的月份會掉到零軸以下。
+    rows：[{date, period?, partial?, k1, k2, …, net}]；keys：[(key, label, color)]；
+    net：(key, label, color)。scale 只影響顯示（例如十億 → 億美元 ×10）。
+    partial 為真的列（當月至今）整根降低不透明度並加斜線，代表還沒走完。
+    """
+    rows = [r for r in rows if r.get(net[0]) is not None]
+    if not rows:
+        return '<div class="empty">資料不足</div>'
+    pos = [sum(max(0.0, r.get(k) or 0) for k, _, _ in keys) for r in rows]
+    neg = [sum(max(0.0, -(r.get(k) or 0)) for k, _, _ in keys) for r in rows]
+    top = max(max(pos), max(r[net[0]] for r in rows), 0.0)
+    bot = max(max(neg), max(-r[net[0]] for r in rows), 0.0)
+    span = (top + bot) or 1
+    z = top / span * 100                      # 零軸距離頂端的百分比
+    cols = []
+    for r in rows:
+        when = r.get("period") or r["date"][:7]
+        up = dn = 0.0
+        segs = ""
+        tip = [f'{when}', f'{net[1]} {r[net[0]] * scale:+,.{digits}f}{unit}']
+        for k, lab, col in keys:
+            v = r.get(k) or 0
+            h = abs(v) / span * 100
+            if v >= 0:
+                st = f"bottom:{100 - z + up:.2f}%;height:{h:.2f}%"
+                up += h
+            else:
+                st = f"top:{z + dn:.2f}%;height:{h:.2f}%"
+                dn += h
+            segs += (f'<span class="dc2-bar" style="{st};left:18%;width:64%;background:{col}"></span>')
+            tip.append(f'{lab} {v * scale:+,.{digits}f}{unit}')
+        nt = z - r[net[0]] / span * 100
+        segs += (f'<span class="dv-net" style="top:{nt:.2f}%;background:{net[2]}"></span>')
+        lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
+        cls = " dv-part" if r.get("partial") else ""
+        cols.append(f'<div class="dc2-col{cls}" data-tip="{_esc("｜".join(tip))}">{segs}'
+                    f'<span class="gc-lab">{_esc(lab)}</span></div>')
+    leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
+                  for _, l, c in keys)
+    leg += (f'<span><i style="width:12px;height:3px;background:{net[2]}"></i>{_esc(net[1])}</span>')
+    if partial_note:
+        leg += f'<span><i class="dv-part-i"></i>{_esc(partial_note)}</span>'
+    return (f'<div class="gc"><div class="gc-plot lbl dv">'
+            f'<span class="gc-zero" style="top:{z:.2f}%"></span>'
+            f'<span class="gc-mx">{top * scale:+,.{digits}f}</span>'
+            f'<span class="gc-mn">{-bot * scale:+,.{digits}f}</span>'
+            f'{"".join(cols)}</div><div class="cl-leg">{leg}</div></div>')
+
+
 def rate_corridor(bars: Sequence[dict], lines: Sequence[dict], months: int = 6,
                   height: int = 190, bar_label: str = "SRF 動用量",
                   bar_unit: str = "十億美元", bar_digits: int = 2,

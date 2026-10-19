@@ -40,7 +40,7 @@ ANCHOR_NAMES = {
     "consumption": "實質消費力道", "energy": "能源價格與傳導", "next": "下次會議與靜默期",
     "people": "投票委員與官員", "sep": "點陣圖與經濟預測", "market": "市場路徑 vs 點陣圖", "diff": "聲明逐句比對",
     "minutes": "會議紀要", "presser": "記者會", "decomp": "長端利率的組成", "hyperscalers": "科技巨頭",
-    "curve": "殖利率曲線", "global": "全球長端", "supply": "債券供給", "auctions": "Coupon 拍賣結果",
+    "curve": "殖利率曲線", "global": "全球長端", "supply": "債券供給", "auctions": "Coupon 拍賣結果", "buybacks": "財政部 Buybacks",
     "demand": "信用利差", "debt": "政府財政", "grid": "九宮格定位", "triggers": "情境轉換門檻",
     "positioning": "固定收益對照",
 }

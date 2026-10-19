@@ -421,7 +421,7 @@ refunding:
   url: "https://home.treasury.gov/news/press-releases/sb0590"
   guidance_en: "Treasury anticipates maintaining nominal coupon and FRN auction sizes for at least the next several quarters."
   guidance_zh: "財政部預期至少未來數季維持名目 coupon 與 FRN 的拍賣規模不變；9 月縮減較短天期 bill 的規模，10 月起依季節性增加整條 bill 曲線的規模。"
-  buybacks_zh: "本季最多買回 380 億美元的舊券（流動性支援），以及最多 250 億美元的 1 個月至 2 年期（現金管理）。"
+  buybacks_zh: "本季最多買回 380 億美元的舊券（流動性支援），以及最多 250 億美元的 1 個月至 2 年期（現金管理）；8/19 另宣布 9/9 起 10–20 年、20–30 年的每場上限至少加倍（sb0607）。"
 
 # ---------------------------------------------------------------------------
 # 十、Fed 資產負債表的政策方向（文字說明，政策改變時手動更新）

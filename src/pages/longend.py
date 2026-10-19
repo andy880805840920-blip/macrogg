@@ -651,8 +651,8 @@ def supply(d: dict) -> str:
         f'<div class="le-up"><span class="ev-d">{esc(_md(a["date"]))}</span>'
         f'<b>{esc(tz.get(a["term"], a["term"]))}{" TIPS" if a.get("tips") else ""}</b>'
         f'<span>{"增發舊券" if a.get("reopening") else "新券"}</span>'
-        f'<span>{_amt(a)}</span></div>'
-        for a in up) or '<div class="hint">目前沒有已公告的 coupon 拍賣</div>'
+        f'<span>{"暫定排程" if a.get("tentative") else _amt(a)}</span></div>'
+        for a in up[:14]) or '<div class="hint">目前沒有已公告的 coupon 拍賣</div>'
     # Fed
     fp = L.get("fed_policy") or {}
     sm = L.get("soma") or {}
@@ -695,7 +695,7 @@ def supply(d: dict) -> str:
         "財政部接下來要賣多少長債、Fed 手上的公債組成往哪個方向調整。",
         "長端的供給不只看財政部發多少，也看誰在買：Fed 把到期的 MBS 換成 T-Bills、縮短持有年限，等於把長天期的風險留給私人市場。",
         "盯兩件事：再融資聲明是否改掉「維持規模」的指引，以及 Fed 與市場 WAM 的差距是否持續縮小。", learn="fed_bs")}
-    <div class="src">拍賣規模：TreasuryDirect　·　SOMA：紐約聯儲　·　流通在外明細：財政部 MSPD（每月）。
+    <div class="src">拍賣規模與已公告拍賣：財政部 Fiscal Data（auctions_query）＋暫定拍賣排程　·　SOMA：紐約聯儲　·　流通在外明細：財政部 MSPD（每月）。
       WAM 由逐券到期日與面額自行計算（不含 MBS）。</div>"""
 
 
@@ -754,7 +754,100 @@ def auctions(d: dict) -> str:
         這裡用<b>當日收盤</b>的固定期限殖利率近似，會混進 1 點之後的市場波動，所以標「≈」，只看方向與大小級距。
         「分散度」是得標殖利率減中位得標殖利率，不需要 when-issued，越大代表投標越分歧。</p>
     </details>
-    <div class="src">TreasuryDirect 拍賣結果。比例的分母是競標得標量。</div>"""
+    <div class="src">財政部 Fiscal Data 拍賣結果（auctions_query）。比例的分母是競標得標量。</div>"""
+
+
+# ---------------------------------------------------------------------------
+# 財政部買回（Buybacks）
+# ---------------------------------------------------------------------------
+def _yi_b(v, sign=False) -> str:
+    """十億美元 → 億美元。"""
+    if v is None:
+        return "—"
+    nd = 0 if abs(v * 10 - round(v * 10)) < 0.05 else 1      # TIPS 7.5 億這種要留小數
+    return f"{v * 10:+,.{nd}f}" if sign else f"{v * 10:,.{nd}f}"
+
+
+def _rx(r: dict) -> str:
+    vals = [r.get(k) for k in ("10Y", "20Y", "30Y")]
+    if all(v is None for v in vals):
+        return '<span class="muted">—</span>'
+    return "／".join(f'<b class="{"up" if (v or 0) > 0 else "dn" if (v or 0) < 0 else ""}">'
+                     f'{"—" if v is None else f"{v:+.1f}"}</b>' for v in vals)
+
+
+def buyback_summary(d: dict) -> str:
+    b = (d.get("le") or {}).get("buybacks") or {}
+    x = b.get("latest")
+    if not x:
+        return "財政部買回"
+    return (f'{_md(x["date"])} {x["bucket_zh"]}：買回 {_yi_b(x["accepted"])} 億／上限 {_yi_b(x["max"])} 億')
+
+
+def buybacks(d: dict) -> str:
+    b = (d.get("le") or {}).get("buybacks") or {}
+    rows = b.get("rows") or []
+    if not rows:
+        return '<div class="empty">買回資料本次取得失敗</div>'
+    x = b["latest"]
+    q = b.get("quarter") or {}
+    stats = (
+        f'<div class="stat-row">'
+        f'<div class="stat"><div class="s-label">最新一場　{esc(_md(x["date"]))} {esc(x["bucket_zh"])}</div>'
+        f'<div class="s-value">{_yi_b(x["accepted"])}<small> 億美元</small></div>'
+        f'<div class="s-note">上限 {_yi_b(x["max"])} 億　·　{esc(x["type_zh"])}</div></div>'
+        f'<div class="stat"><div class="s-label">投標 ÷ 上限</div>'
+        f'<div class="s-value">{(x["cover"] or 0):.1f}<small> 倍</small></div>'
+        f'<div class="s-note">投標 {_yi_b(x["offered"])} 億</div></div>'
+        f'<div class="stat"><div class="s-label">本季累計（{esc(_md(b.get("quarter_from", "")))} 起）</div>'
+        f'<div class="s-value">{_yi_b(sum(q.values()))}<small> 億美元</small></div>'
+        f'<div class="s-note">' + "　".join(f'{esc(k)} {_yi_b(v)} 億' for k, v in q.items()) + '</div></div>'
+        f'</div>')
+    caps = "".join(f'<span class="bb-cap"><b>{esc(c["bucket_zh"])}'
+                   f'{"" if c["type_zh"] == "流動性支援" else "（" + c["type_zh"] + "）"}</b>{_yi_b(c["max"])} 億</span>'
+                   for c in b.get("caps") or [])
+    how = f"""<dl class="gloss">
+      <dt>操作天期</dt><dd>流動性支援：名目 coupon 依剩餘年限分段輪流買回（1 個月–2 年、2–3、3–5、5–7、7–10、10–20、20–30 年）與 TIPS 兩段；
+        現金管理：1 個月–2 年，集中在 4、6、9、12 月稅收日前後。</dd>
+      <dt>每場上限</dt><dd><div class="bb-caps">{caps}</div>
+        2026-08-19 宣布：9/9 起到 11/4 本季結束，10–20 年與 20–30 年的每場上限由 20 億提高到至少 40 億（實際操作為 60 億）。</dd>
+      <dt>執行方式</dt><dd>反向拍賣：操作前一個營業日 11:00（美東）初步公告上限與合格券，當日 11:00 最終公告；
+        13:40–14:00 接受一級交易商報價（每 100 美元面額的價格），多重價格得標，截止後公布結果；T+1 交割，買回的券直接註銷。</dd>
+      <dt>融資來源</dt><dd>財政部的現金與新發行公債（31 U.S.C. §3111）。QRA 原文：「buybacks are not expected to significantly
+        affect privately-held net marketable borrowing as new issuance replaces securities that are bought back」——買回多少就多發多少，
+        實務上由 T-Bills 補上，所以買回是把長天期舊券換成短天期 bill，不改變總借款。</dd>
+    </dl>"""
+    trs = "".join(
+        f'<tr><td>{esc(_md(r["date"]))}</td><td>{esc(r["bucket_zh"])}</td><td>{esc(r["type_zh"])}</td>'
+        f'<td>{_yi_b(r["max"])}</td><td><b>{_yi_b(r["accepted"])}</b></td><td>{_yi_b(r["offered"])}</td>'
+        f'<td class="bb-rx">{_rx(r["announce"])}</td><td class="bb-rx">{_rx(r["result"])}</td></tr>'
+        for r in rows)
+    table = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>天期</th><th>類型</th>'
+             f'<th>上限</th><th>實際買回</th><th>投標</th><th>上限公布後 1 小時<br><small>10／20／30 年，bp</small></th>'
+             f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table></div>')
+    up = b.get("upcoming") or []
+    ups = "".join(
+        f'<tr><td>{esc(_md(u["date"]))}</td><td>{esc(_md(u["announce"]))}</td><td>{esc(u["bucket_zh"])}</td>'
+        f'<td>{esc(u["type_zh"])}</td><td>{_yi_b(u["max"])}'
+        + (f'<small class="muted">（近期實際 {_yi_b(u["recent_max"])}）</small>' if u.get("recent_max") else "")
+        + '</td></tr>' for u in up)
+    up_html = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>上限公布</th><th>天期</th>'
+               f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table></div>'
+               if ups else '<p class="hint">本季暫定排程已全部執行完畢，下一季排程隨再融資公布。</p>')
+    return f"""
+    <p class="hint">買回流動性較差的舊券、用新發行補上——長端供給的減法。</p>
+    {stats}
+    {how}
+    <div class="viz-block"><div class="viz-h">歷次買回結果（億美元）與殖利率反應</div>{table}</div>
+    <details data-m-collapse open><summary>未來排程（{esc(b.get("schedule_name") or "暫定買回排程")}）</summary>
+      {up_html}</details>
+    <details data-m-collapse><summary>殖利率反應怎麼量</summary>
+      <p class="hint" style="margin-top:10px">上限公布：初步公告時間（操作前一個營業日 11:00 美東）前最後一根 5 分鐘 K 棒收盤 →
+        公告後 60 分鐘那根的收盤。結果公布：操作截止 14:00 → 15:00，結果在截止後幾分鐘內公布，落在這個窗口裡。
+        正值＝殖利率上升（價格下跌）。同一小時內也可能有其他消息（經濟數據、拍賣、Fed 官員談話），
+        單一場的變化不能全部歸因於買回；要看的是同一類操作反覆出現的方向。</p>
+    </details>
+    <div class="src">財政部 Fiscal Data、TreasuryDirect 公告 XML、暫定買回排程；盤中殖利率：CNBC 5 分 K。</div>"""
 
 
 # ---------------------------------------------------------------------------

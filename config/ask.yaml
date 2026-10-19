@@ -400,7 +400,7 @@ cards:
 - {id: auctions, c: 長端與債務, q: 最近公債標售結果好不好？, k: [公債標售, 投標倍數, 尾差, 標售結果], w: [標售, 10年期, 30年期, 20年期, 2年期, 5年期, 7年期, 美債], m: [結果, 好不好, 需求, 強弱, 最近], n: [數值, 影響], x: [美債標售需求如何, 10年期標售結果], l: auctions, h: /rates/#auctions, r: [auction_next, supply], src: {fn: auctions}}
 - {id: auction_next, c: 長端與債務, q: 接下來有哪些公債標售？, k: [公債標售, 標售日程], w: [標售, 10年期, 30年期, 20年期, 2年期, 5年期, 7年期, 美債], m: [接下來, 下一場, 哪天, 什麼時候, 日程, 下週, 這週, 本週], n: [時間, 名單], x: [下一場10年期標售是哪天], l: auction_cal, h: /#hm-cat-sup, r: [auctions, buyback, refunding], src: {fn: auction_next}}
 - {id: refunding, c: 長端與債務, q: 季度再融資說了什麼？, k: [再融資], w: [財政部發債, 發債規模], n: [數值, 時間], x: [財政部下次再融資公告], l: refunding, h: /rates/#supply, r: [supply, auctions, buyback], src: {fn: refunding}}
-- {id: buyback, c: 長端與債務, q: 財政部公債回購排在什麼時候？, k: [回購], w: [買回], n: [時間, 名單, 數值], x: [財政部買回公債], l: buyback, h: /#hm-cat-sup, r: [refunding, auction_next], src: {fn: buyback}}
+- {id: buyback, c: 長端與債務, q: 財政部公債回購排在什麼時候？, k: [回購], w: [買回], n: [時間, 名單, 數值], x: [財政部買回公債], l: buyback, h: /rates/#buybacks, r: [refunding, auction_next], src: {fn: buyback}}
 - {id: supply, c: 長端與債務, q: 債券供給壓力大嗎？, k: [供給壓力, 債券供給, 發債壓力, 美債供給], w: [供給, 殖利率, 美債], n: [數值, 影響], x: [美債供給會推高殖利率嗎], l: refunding, h: /rates/#supply, r: [term_premium, refunding, fed_bs], src: {fn: supply}}
 - {id: fed_bs, c: 長端與債務, q: 聯準會還在縮表嗎？, k: [縮表, 資產負債表, wam, 擴表], w: [qe], n: [數值, 變化], x: [聯準會資產負債表], l: fed_bs, h: /rates/#supply, r: [supply, onrrp], src: {fn: fed_bs}}
 - {id: ig_spread, c: 長端與債務, q: 投資級公司債利差多少？, k: [信用利差, 投資級], w: [公司債, 利差], n: [數值, 變化], x: [公司債利差現在多少], l: credit_spread, h: /rates/#demand, r: [hy_spread, hs_debt], src: {dg: 2, lab: 投資級利差, s: BAMLC0A0CM, tf: lv, u: '%'}}

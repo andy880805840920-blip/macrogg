@@ -1,8 +1,10 @@
 """
 長端頁的財政部／紐約聯儲資料（2026-10 新增）。
 
-    TreasuryDirect 拍賣 API     coupon 拍賣結果（得標殖利率、投標倍數、得標者組成）
-                                與未來已排程的拍賣
+    財政部 Fiscal Data          coupon 拍賣結果（得標殖利率、投標倍數、得標者組成）、
+                                已公告的拍賣、MSPD 月底存量、DTS 每日發行／贖回、買回結果
+    財政部暫定排程 XML          再融資公布的拍賣與買回排程
+    CNBC 5 分鐘 K 棒            買回公告／結果後 1 小時的 10／20／30 年殖利率
     紐約聯儲 SOMA API           Fed 持有資產的組成（週）與逐券明細（算 WAM）
     財政部 Fiscal Data（MSPD）  流通在外可交易公債逐券明細（月，算 WAM）
 
@@ -85,26 +87,119 @@ def normalize_auction(a: dict) -> dict:
     }
 
 
-def coupon_auctions(pagesize: int = 250) -> list[dict]:
-    """近兩年的 Note／Bond 拍賣（含 TIPS 標記），日期由舊到新。"""
-    rows = []
-    for typ in ("Note", "Bond"):
-        js = _get(f"{TD}/auctioned?format=json&type={typ}&pagesize={pagesize}")
-        rows += [normalize_auction(a) for a in js or []]
-    rows = [r for r in rows if r["date"] and r["high"] is not None]
-    rows.sort(key=lambda r: r["date"])
-    return rows
+FISCAL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
+FISCAL_AUCTIONS = f"{FISCAL}/v1/accounting/od/auctions_query"
+
+
+def normalize_fiscal_auction(a: dict) -> dict:
+    """
+    財政部 Fiscal Data auctions_query 一筆 → 跟 normalize_auction 相同的欄位。
+
+    2026-10 起 coupon 拍賣改走這裡：TreasuryDirect TA_WS 的 auctionDate
+    普遍是空的（只好拿 issueDate 頂替，日期整整差了一週以上），得標者組成
+    （primaryDealer／direct／indirect）與中位殖利率也大多是 0 或空的，
+    拍賣卡片的交易商比例、分散度因此全錯。Fiscal Data 是同一份官方結標
+    紀錄，auction_date 與各欄位都齊。
+    """
+    b = 1e9
+    f = lambda k: _f(None if a.get(k) in (None, "null", "") else a.get(k))
+    term = a.get("original_security_term") or a.get("security_term") or ""
+    sterm = a.get("security_term") or term
+    return {
+        "date": (a.get("auction_date") or "")[:10],
+        "announce": (a.get("announcemt_date") or "")[:10],
+        "issue": (a.get("issue_date") or "")[:10],
+        "maturity": (a.get("maturity_date") or "")[:10],
+        "term": term,
+        "security_term": sterm,
+        "reopening": a.get("reopening") == "Yes" or sterm != term,
+        "tips": a.get("inflation_index_security") == "Yes",
+        "frn": a.get("floating_rate") == "Yes",
+        "type": a.get("security_type") or "",
+        "cusip": a.get("cusip") or "",
+        "offering": (f("offering_amt") or 0) / b or None,
+        "high": f("high_yield"),
+        "median": f("avg_med_yield"),
+        "low": f("low_yield"),
+        "btc": f("bid_to_cover_ratio"),
+        "comp_acc": (f("comp_accepted") or 0) / b or None,
+        "pd": (f("primary_dealer_accepted") or 0) / b,
+        "direct": (f("direct_bidder_accepted") or 0) / b,
+        "indirect": (f("indirect_bidder_accepted") or 0) / b,
+        "soma": (f("soma_accepted") or 0) / b,
+    }
+
+
+def _fiscal_rows(path: str, flt: str, sort: str = "", size: int = 1000) -> list[dict]:
+    """Fiscal Data 分頁全抓（filter 用原始字串，逗號分隔多條件）。"""
+    out, page = [], 1
+    while True:
+        js = _get(f"{FISCAL}/{path}?filter={flt}&page%5Bsize%5D={size}&page%5Bnumber%5D={page}"
+                  + (f"&sort={sort}" if sort else ""))
+        data = (js or {}).get("data") or []
+        out += data
+        total = int(((js or {}).get("meta") or {}).get("total-pages") or 1)
+        if page >= total or not data:
+            return out
+        page += 1
+
+
+def coupon_auctions(days: int = 730) -> list[dict]:
+    """近兩年已結標的 Note／Bond 拍賣（含 TIPS、FRN 標記），日期由舊到新。"""
+    from . import clock
+    start = (clock.today() - dt.timedelta(days=days)).isoformat()
+    rows = _fiscal_rows("v1/accounting/od/auctions_query",
+                        f"security_type:in:(Note,Bond),auction_date:gte:{start}", "auction_date")
+    out = [normalize_fiscal_auction(a) for a in rows]
+    out = [r for r in out if r["date"] and r["high"] is not None]
+    out.sort(key=lambda r: r["date"])
+    return out
+
+
+TENTATIVE_AUCTIONS = "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.xml"
+
+
+def _xml_items(text: str, tag: str) -> list[dict]:
+    """把 <tag>…</tag> 的平坦子元素轉成 dict（財政部的排程 XML 都是這種形狀）。"""
+    out = []
+    for blk in re.findall(rf"<{tag}>(.*?)</{tag}>", text, re.S):
+        out.append({k: v.strip() for k, v in re.findall(r"<(\w+)>([^<]*)</\1>", blk)})
+    return out
 
 
 def upcoming_auctions() -> list[dict]:
-    """已排程的拍賣（含 bill）；金額在公告日之前可能是空的。"""
-    js = _get(f"{TD}/upcoming?format=json")
-    out = [normalize_auction(a) for a in js or []]
-    return sorted([r for r in out if r["date"]], key=lambda r: r["date"])
-
-
-FISCAL_AUCTIONS = ("https://api.fiscaldata.treasury.gov/services/api/fiscal_service/"
-                   "v1/accounting/od/auctions_query")
+    """
+    還沒結標的拍賣：
+      ① Fiscal Data 已公告的（含金額，通常是未來一週內，含 bill）
+      ② 財政部每季再融資公布的暫定拍賣排程 XML（只有日期與天期，沒有金額），
+         補上①還沒涵蓋到的 coupon 拍賣，標 tentative。
+    """
+    from . import clock
+    today = clock.today().isoformat()
+    rows = _fiscal_rows("v1/accounting/od/auctions_query", f"auction_date:gte:{today}", "auction_date")
+    out = [normalize_fiscal_auction(a) for a in rows]
+    out = [r for r in out if r["date"] and r["high"] is None]
+    seen = {(r["date"], r["term"], r["tips"]) for r in out}
+    try:
+        r = requests.get(TENTATIVE_AUCTIONS, timeout=40, headers=UA)
+        r.raise_for_status()
+        for it in _xml_items(r.text, "AuctionCalendarDate"):
+            d = it.get("AuctionDate") or ""
+            typ = (it.get("SecurityType") or "").title()
+            if d < today or typ not in ("Note", "Bond"):
+                continue
+            term = it.get("SecurityTermWeekYear") or ""
+            key = (d, term, it.get("TIPS") == "Y")
+            if key in seen:
+                continue
+            out.append({"date": d, "announce": it.get("AnnouncementDate") or "",
+                        "issue": it.get("SettlementDate") or "", "term": term,
+                        "security_term": term, "reopening": it.get("ReOpeningIndicator") == "Y",
+                        "tips": it.get("TIPS") == "Y", "frn": it.get("FloatingRate") == "Y",
+                        "type": typ, "offering": None, "tentative": True})
+    except Exception as e:                         # noqa: BLE001
+        log.warning("暫定拍賣排程取得失敗（%s）", e)
+    return sorted(out, key=lambda r: r["date"])
 
 
 def _bill_rows_all(start: str) -> list[dict]:
@@ -131,6 +226,221 @@ def _bill_rows_all(start: str) -> list[dict]:
         out.append({"date": d, "term": r.get("security_term") or "", "offering": amt / 1e9})
     out.sort(key=lambda r: r["date"])
     return out
+
+
+# ---------------------------------------------------------------------------
+# T-Bills 淨發行：MSPD（月底存量）＋ DTS（當月至今）＋ Fed 實際購買
+# ---------------------------------------------------------------------------
+def mspd_marketable(months: int = 18) -> list[dict]:
+    """
+    MSPD 表一逐月月底存量（十億美元）：{date, bills, marketable}。
+    相鄰兩個月 bills 相減＝當月 T-Bills 淨發行（發行 − 到期贖回），
+    這是財政部口徑的精確數字（跟 Barclays 等賣方報告用的是同一個）。
+    """
+    from . import clock
+    start = (clock.today() - dt.timedelta(days=31 * (months + 1))).isoformat()
+    rows = _fiscal_rows("v1/debt/mspd/mspd_table_1", f"record_date:gte:{start}", "record_date")
+    by: dict = {}
+    for r in rows:
+        d = r.get("record_date") or ""
+        v = _f(r.get("total_mil_amt"))
+        if not d or v is None:
+            continue
+        if r.get("security_type_desc") == "Marketable" and r.get("security_class_desc") == "Bills":
+            by.setdefault(d, {})["bills"] = v / 1e3
+        elif r.get("security_type_desc") == "Total Marketable":
+            by.setdefault(d, {})["marketable"] = v / 1e3
+    return [{"date": d, **v} for d, v in sorted(by.items())
+            if "bills" in v and "marketable" in v]
+
+
+def dts_bills_mtd() -> dict | None:
+    """
+    每日國庫報表（DTS）表 IIIA：當月至今 T-Bills 發行與贖回（十億美元）。
+    MSPD 要到次月初才出，當月的淨發行只能從這裡看到「月初至今」。
+    """
+    from . import clock
+    start = (clock.today() - dt.timedelta(days=10)).isoformat()
+    rows = _fiscal_rows("v1/accounting/dts/public_debt_transactions",
+                        f"record_date:gte:{start},security_market:eq:Marketable,security_type:eq:Bills",
+                        "-record_date", size=100)
+    if not rows:
+        return None
+    last = max(r["record_date"] for r in rows)
+    iss = sum(_f(r.get("transaction_mtd_amt")) or 0 for r in rows
+              if r["record_date"] == last and r.get("transaction_type") == "Issues")
+    red = sum(_f(r.get("transaction_mtd_amt")) or 0 for r in rows
+              if r["record_date"] == last and r.get("transaction_type") == "Redemptions")
+    return {"date": last, "issues": iss / 1e3, "redemptions": red / 1e3, "net": (iss - red) / 1e3}
+
+
+NYF_TSY_PURCHASES = ("https://markets.newyorkfed.org/api/tsy/purchases/results/summary/"
+                     "search.json?securityType=treasury")
+
+
+def fed_bill_purchases(start: str) -> list[dict]:
+    """
+    紐約聯儲逐筆國庫券購買結果（RMP＋MBS 再投入合在一起，十億美元），
+    {date: 交割日, value}。依交割日歸月，才跟 MSPD 月底存量對得上。
+    """
+    from . import clock
+    js = _get(f"{NYF_TSY_PURCHASES}&startDate={start}&endDate={clock.today().isoformat()}")
+    ops = ((js or {}).get("treasury") or {}).get("auctions") or []
+    out = []
+    for o in ops:
+        if o.get("operationType") != "Outright Bill Purchase" or o.get("auctionStatus") != "Results":
+            continue
+        v, d = _f(o.get("totalParAmtAccepted")), o.get("settlementDate")
+        if d and v is not None:
+            out.append({"date": d, "value": v / 1e9})
+    return sorted(out, key=lambda r: r["date"])
+
+
+# ---------------------------------------------------------------------------
+# 財政部買回（Buybacks）
+# ---------------------------------------------------------------------------
+BB_XML = "https://www.treasurydirect.gov/instit/annceresult/press/preanre/{y}/{f}"
+BB_SCHEDULE = "https://home.treasury.gov/system/files/221/Tentative-Buyback-Schedule{q}.xml"
+
+
+def buyback_operations(start: str) -> list[dict]:
+    """
+    Fiscal Data buybacks_operations：逐場買回結果（十億美元）。
+    {date, type（Liquidity Support／Cash Management）, sec（Nominal Coupons／TIPS）,
+     bucket, max, accepted, offered, eligible, n_accepted, start, close, settle, prelim_xml}
+    """
+    rows = _fiscal_rows("v1/accounting/od/buybacks_operations", f"operation_date:gte:{start}",
+                        "operation_date", size=500)
+    out = []
+    for r in rows:
+        g = lambda k: _f(r.get(k))
+        out.append({
+            "date": r.get("operation_date") or "", "type": r.get("operation_type") or "",
+            "sec": r.get("security_type") or "", "bucket": r.get("maturity_bucket") or "",
+            "max": (g("max_par_amt_redeemed") or 0) / 1e9,
+            "accepted": (g("total_par_amt_accepted") / 1e9) if g("total_par_amt_accepted") is not None else None,
+            "offered": (g("total_par_amt_offered") / 1e9) if g("total_par_amt_offered") is not None else None,
+            "eligible": int(g("nbr_issues_eligible") or 0), "n_accepted": int(g("nbr_issues_accepted") or 0),
+            "start": r.get("operation_start_time_est") or "", "close": r.get("operation_close_time_est") or "",
+            "settle": r.get("settlement_date") or "", "prelim_xml": r.get("preliminary_ann_xml") or "",
+        })
+    return [r for r in out if r["date"]]
+
+
+def buyback_announce_time(prelim_xml: str, date: str) -> str | None:
+    """初步公告（BBPA_*.xml）的 announcementDTM：買回上限第一次公布的時間（ET，ISO）。"""
+    if not prelim_xml or prelim_xml == "null":
+        return None
+    r = requests.get(BB_XML.format(y=date[:4], f=prelim_xml), timeout=30, headers=UA)
+    r.raise_for_status()
+    m = re.search(r"<announcementDTM>([^<]+)</announcementDTM>", r.text)
+    return m.group(1)[:19] if m else None
+
+
+def buyback_schedule(today: dt.date) -> dict:
+    """
+    再融資公布的暫定買回排程（XML）。檔名用日曆季（Q32026＝8 月再融資那一份，
+    涵蓋到下一次再融資），從本季往前找到第一份抓得到的。
+    """
+    y, q = today.year, (today.month - 1) // 3 + 1
+    for _ in range(3):
+        try:
+            r = requests.get(BB_SCHEDULE.format(q=f"Q{q}{y}"), timeout=30, headers=UA)
+            if r.ok and "<BuyBackCalendar>" in r.text:
+                name = (re.search(r"<BuybackCalendarName>([^<]*)<", r.text) or [None, ""])[1]
+                ops = []
+                for it in _xml_items(r.text, "BuybackCalendarDate"):
+                    ops.append({"date": it.get("OperationDate") or "",
+                                "announce": it.get("AnnouncementDate") or "",
+                                "bucket": it.get("PurchaseBucketName") or "",
+                                "type": it.get("OperationType") or "",
+                                "max": (_f(it.get("MaximumPurchaseAmountDollars")) or 0) / 1e9})
+                return {"name": name, "url": BB_SCHEDULE.format(q=f"Q{q}{y}"),
+                        "ops": sorted(ops, key=lambda o: o["date"])}
+        except Exception as e:                     # noqa: BLE001
+            log.warning("買回排程 Q%s%s 取得失敗（%s）", q, y, e)
+        q -= 1
+        if q == 0:
+            y, q = y - 1, 4
+    return {}
+
+
+CNBC_BARS = ("https://ts-api.cnbc.com/harmony/app/bars/{sym}/5M/{a}/{b}/adjusted/EST5EDT.json")
+YIELD_SYMS = {"10Y": "US10Y", "20Y": "US20Y", "30Y": "US30Y"}
+
+
+def _bars_5m(sym: str, day: str) -> dict:
+    """CNBC 5 分鐘殖利率 K 棒（美東時間），{'HH:MM': close}。"""
+    d = day.replace("-", "")
+    js = requests.get(CNBC_BARS.format(sym=sym, a=f"{d}000000", b=f"{d}235959"),
+                      timeout=30, headers={"User-Agent": "Mozilla/5.0"}).json()
+    out = {}
+    for b in ((js or {}).get("barData") or {}).get("priceBars") or []:
+        t, c = b.get("tradeTime") or "", _f(b.get("close"))
+        if t[:8] == d and c is not None:
+            out[f"{t[8:10]}:{t[10:12]}"] = c
+    return out
+
+
+def _window_bp(bars: dict, t0: str, minutes: int = 60):
+    """
+    t0 之前最後一根 K 棒的收盤 → t0＋minutes 之前最後一根的收盤，殖利率變化（bp）。
+    K 棒時間是該根的開始時間，所以「t0 之前」是開始時間 < t0、「＋60 分鐘」是
+    開始時間 ≤ t0＋55（那根在 t0＋60 收）。沒成交的 5 分鐘不會有 K 棒，取最近的。
+    """
+    h, m = map(int, t0.split(":"))
+    m0 = h * 60 + m
+    hm = lambda x: f"{x // 60:02d}:{x % 60:02d}"
+    pre = [k for k in bars if k < hm(m0)]
+    post = [k for k in bars if hm(m0) <= k <= hm(m0 + minutes - 5)]
+    if not pre or not post:
+        return None
+    return round((bars[max(post)] - bars[max(pre)]) * 100, 1)
+
+
+def buyback_reactions(ops: list[dict], cache_path: pathlib.Path) -> dict:
+    """
+    每場買回兩個時點後 1 小時的 10／20／30 年殖利率變化（bp），結果快取在 state/：
+      announce  初步公告（公布買回上限）：公告時間 → ＋60 分鐘
+      result    操作截止（14:00 ET，結果隨即公布）→ ＋60 分鐘
+    {date: {"announce_at": iso, "announce": {10Y,20Y,30Y}, "result": {…}}}
+    """
+    from . import clock
+    try:
+        cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        cache = {}
+    today = clock.today().isoformat()
+    for o in ops:
+        if o["date"] >= today or o.get("accepted") is None:
+            continue
+        c = cache.get(o["date"]) or {}
+        if c.get("done"):
+            continue
+        try:
+            if not c.get("announce_at"):
+                c["announce_at"] = buyback_announce_time(o.get("prelim_xml"), o["date"])
+            close = dt.datetime.strptime(o.get("close") or "02:00 PM", "%I:%M %p").strftime("%H:%M")
+            c["close_at"] = f'{o["date"]}T{close}:00'
+            for kind, iso in (("announce", c.get("announce_at")), ("result", c["close_at"])):
+                if not iso:
+                    continue
+                res = {}
+                for k, sym in YIELD_SYMS.items():
+                    res[k] = _window_bp(_bars_5m(sym, iso[:10]), iso[11:16])
+                c[kind] = res
+            c["done"] = (all(v is not None for kind in ("announce", "result")
+                             for v in (c.get(kind) or {"x": None}).values())
+                         or o["date"] < (clock.today() - dt.timedelta(days=10)).isoformat())
+        except Exception as e:                     # noqa: BLE001
+            log.warning("買回 %s 殖利率反應取得失敗（%s）", o["date"], e)
+        cache[o["date"]] = c
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
+    except OSError:
+        pass
+    return cache
 
 
 # ---------------------------------------------------------------------------
@@ -354,7 +664,8 @@ def rate_volume(secured: bool, ratetype: str, start: str, end: str) -> list[dict
 def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None = None) -> dict:
     """
     {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol,
-    bill_auctions, upcoming_bills, failed}。
+    bill_auctions, upcoming_bills, mspd, dts_bills, fed_bills, buybacks,
+    buyback_schedule, buyback_reactions, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -411,5 +722,31 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("Bill 拍賣資料取得失敗（%s）", e)
         out["bill_auctions"], out["upcoming_bills"] = [], []
         failed.append("bill_auctions")
+    # T-Bills 淨發行（MSPD 月底存量差＋DTS 當月至今）與 Fed 實際購買
+    for key, fn in (("mspd", lambda: mspd_marketable(18)), ("dts_bills", dts_bills_mtd),
+                    ("fed_bills", lambda: fed_bill_purchases(
+                        (end - dt.timedelta(days=560)).isoformat()))):
+        try:
+            out[key] = fn()
+        except Exception as e:                     # noqa: BLE001
+            log.warning("%s 取得失敗（%s）", key, e)
+            out[key] = [] if key != "dts_bills" else None
+            failed.append(key)
+    # 財政部買回：近一年逐場結果＋暫定排程＋每場公告／結果後 1 小時殖利率反應
+    try:
+        out["buybacks"] = buyback_operations((end - dt.timedelta(days=370)).isoformat())
+    except Exception as e:                         # noqa: BLE001
+        log.warning("買回結果取得失敗（%s）", e)
+        out["buybacks"] = []
+        failed.append("buybacks")
+    out["buyback_schedule"] = buyback_schedule(end)
+    try:
+        recent = [o for o in out["buybacks"]
+                  if o["date"] >= (end - dt.timedelta(days=150)).isoformat()]
+        out["buyback_reactions"] = buyback_reactions(recent, state_dir / "buyback_yields.json")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("買回殖利率反應計算失敗（%s）", e)
+        out["buyback_reactions"] = {}
+        failed.append("buyback_reactions")
     out["failed"] = failed
     return out

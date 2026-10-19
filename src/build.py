@@ -3015,6 +3015,9 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
                                         kind="change", n=8, fmt=lambda v: f"{v:,.0f}",
                                         unit="億美元", head="每月拍賣規模（含增發）",
                                         en=f"{t} 每月拍賣規模", short_dates=True)})
+    # 財政部買回：Fiscal Data 逐場結果＋暫定排程＋公告／結果後 1 小時殖利率（CNBC 5 分 K）
+    out["buybacks"] = le.buyback_view(tr.get("buybacks") or [], tr.get("buyback_schedule") or {},
+                                      tr.get("buyback_reactions") or {}, clock.today())
     out["refunding"] = cfg.get("refunding") or {}
     out["upcoming"] = [a for a in (tr.get("upcoming") or []) if a.get("type") != "Bill"]
     out["events"] = le.events(clock.today(), tr.get("upcoming") or [],
@@ -3464,34 +3467,24 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         if reinvest.get("flows") else "")
     _last_flow = (reinvest.get("flows") or [{}])[-1]
 
-    # 財政部 T-Bills 發行時程：近 12 個月毛發行量走勢＋占整體（Bills＋Coupon）
-    # 發行量的比例——比例越高，代表財政部越依賴短端融資，對照「長端與債務」
-    # 頁 05「債券供給：財政部與 Fed」的 Coupon 發行路徑。
-    bill_overview = lq.bill_issuance_overview(
-        (treasury or {}).get("bill_auctions") or [], (treasury or {}).get("auctions") or [])
-    bill_trend_chart = (charts.kpi_history(
-        [{"date": p["date"], "value": p["value"] * 10} for p in bill_overview["trend"]],
-        kind="change", n=8, fmt=lambda v: f"{v:,.0f}", unit="億美元",
-        head="每月毛發行量（含 CMB）", en="T-Bills 每月毛發行量", short_dates=True)
-        if bill_overview.get("trend") else "")
-    _upcoming_bills = sorted((treasury or {}).get("upcoming_bills") or [], key=lambda r: r["date"])[:8]
-
-    # 財政部 T-Bills 毛發行量，拆 Fed RMP／Fed MBS 再投入／賣給私人市場三塊——
-    # 私人市場的部分才是財政部短端融資真正需要貨幣市場吸收的量。時間段切割
-    # 跟著 Fed RMP 公布期別走；最後一期之後 Fed 下一期分配未知，只列已公告的
-    # 毛發行量（future_key 用單一顏色標示，不假裝知道怎麼拆）。
-    bill_flows = lq.bill_period_flows(
-        (treasury or {}).get("bill_auctions") or [], (treasury or {}).get("upcoming_bills") or [],
-        (treasury or {}).get("rmp_schedule") or [], clock.today().isoformat())
-    bill_flows_chart = (charts.stacked_columns(
-        bill_flows["flows"],
-        [("private", "賣給私人市場", "var(--series-2)"),
-         ("rmp", "Fed RMP 買下", "var(--line-1)"),
-         ("mbs", "Fed MBS 再投入買下", "var(--muted-bar)")],
-        unit=" 十億美元", digits=1,
-        fmt_date=lambda d: d[5:].replace("-", "/"),
-        future_key=("gross", "已公告，Fed 分配未知", "var(--muted)"))
-        if bill_flows.get("flows") else "")
+    # 財政部 T-Bills 淨發行（發行 − 到期贖回，日曆月）：MSPD 月底存量差＋DTS
+    # 當月至今；扣掉紐約聯儲實際成交的國庫券購買（依 RMP 期別計畫金額比例拆
+    # RMP／MBS 再投入）＝私人市場實際要吸收的淨供給。可以是負的。
+    _tr = treasury or {}
+    bill_net = lq.bill_net_monthly(_tr.get("mspd") or [], _tr.get("dts_bills"),
+                                   _tr.get("fed_bills") or [], _tr.get("rmp_schedule") or [])
+    bill_net_chart = (charts.diverging_stacked(
+        bill_net["rows"],
+        [("rmp", "Fed RMP 買下", "var(--line-1)"),
+         ("mbs", "Fed MBS 再投入買下", "var(--muted-bar)"),
+         ("private", "私人市場淨吸收", "var(--series-2)")],
+        ("net", "財政部淨發行", "var(--text-primary)"),
+        unit=" 億美元", digits=0, scale=10,
+        fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}",
+        partial_note="當月至今（DTS）")
+        if bill_net.get("rows") else "")
+    qra = lq.qra_bill_implied(cfg.get("qra"))
+    _upcoming_bills = sorted(_tr.get("upcoming_bills") or [], key=lambda r: r["date"])[:8]
 
     # 補充：TGCR 近 6 個月，疊 SOFR 當對照（兩者都是擔保隔夜利率，樣本範圍不同）。
     tgcr_pts = series.get("TGCRRATE") or []
@@ -3564,8 +3557,8 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "tgcr_chart": tgcr_chart,
         "vol_compare": vol_compare,
         "srf_live": bool((treasury or {}).get("srf")),
-        "bill_overview": bill_overview,
-        "bill_trend_chart": bill_trend_chart,
+        "bill_net": bill_net,
+        "bill_net_chart": bill_net_chart,
+        "qra": qra,
         "upcoming_bills": _upcoming_bills,
-        "bill_flows_chart": bill_flows_chart,
     }

@@ -495,6 +495,13 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
+    <h2 id="buybacks" data-sum="{esc(LE.buyback_summary(d))}">財政部 Buybacks</h2>
+    {LE.buybacks(d)}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
     <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
     {LE.credit(d)}
   </div>

@@ -57,3 +57,22 @@ series:
   - id: DEXTAUS
     label: 台幣兌美元（FRED 備援）
     enabled: true
+
+# ---------------------------------------------------------------------------
+# 財政部每季再融資（QRA）的借款估計——每季手動更新一次（跟 rates.yaml 的
+# refunding 同一個時點）。borrowing、cash_end 是財政部原文數字（十億美元）；
+# net_coupon 是本站推算的本季私人持有 coupon 淨發行：
+#   暫定拍賣排程（本季交割）× 各天期現行規模（含 FRN、TIPS）≈ 1,109
+#   − 本季到期的 coupon 扣掉 Fed SOMA 持有（MSPD 表三逐券 − SOMA 逐券）≈ 749
+# 兩者相減約 360。T-Bills 隱含淨發行＝borrowing − net_coupon（未計買回）。
+# ---------------------------------------------------------------------------
+qra:
+  quarter: "2026 Q4（10–12 月）"
+  date: "2026-08-03"
+  borrowing: 628
+  cash_end: 850
+  net_coupon: 360
+  gross_coupon: 1109
+  coupon_maturing: 749
+  url: "https://home.treasury.gov/news/press-releases/sb0584"
+  next: "2026-11-04"

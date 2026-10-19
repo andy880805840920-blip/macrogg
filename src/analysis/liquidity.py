@@ -286,75 +286,73 @@ def tbill_purchase_flows(schedule: list) -> dict:
     return {"flows": flows, "asof": rows[-1]["end"]}
 
 
-def _sum_in_range(rows: list, start: str, end: str) -> float:
-    return sum(r["offering"] for r in (rows or []) if start <= r["date"] <= end)
+def _period_of(schedule: list, date: str):
+    for r in schedule or []:
+        if r["start"] <= date <= r["end"]:
+            return r
+    return None
 
 
-def bill_period_flows(bill_auctions: list, upcoming_bills: list, schedule: list,
-                      today: str) -> dict:
+def bill_net_monthly(mspd: list, dts: dict | None, fed_bills: list, schedule: list,
+                     months: int = 12) -> dict:
     """
-    財政部 T-Bills 毛發行量，拆成「Fed RMP 買走」「Fed MBS 到期再投入買走」
-    「賣給私人市場」三塊——私人市場的部分＝毛發行量減掉 Fed 這兩塊，就是財政部
-    短端融資真正需要貨幣市場吸收的量。
+    T-Bills 每月**淨**發行（發行 − 到期贖回），以及扣掉 Fed 買走的部分之後、
+    私人市場實際要吸收的淨供給。全部是日曆月口徑（十億美元）：
 
-    時間段切割跟著 Fed RMP 的公布期別走（跟 tbill_purchase_flows 同一組，
-    起訖日不對齊月曆）。只有「已經走完」的期別（結束日早於 today）才拆這
-    三塊——還在進行中的最後一期，本期還沒結束就不該當成「已知結果」，連同
-    更晚的已公告拍賣，合併成一塊「已公告但 Fed 分配未知」的毛發行量，不假裝
-    知道 Fed 會買多少、也不假裝一個還沒走完的期別已經有完整的毛發行量。
-    這塊的視野通常只有一到兩週（Bill 拍賣金額本來就是拍賣前幾天才公布）。
+      net      MSPD 表一月底 Bills 存量的月變動（財政部精確口徑，與 Barclays
+               等賣方報告同一個數字）；當月還沒有 MSPD，改用 DTS 的
+               「月初至今」發行 − 贖回，標 partial。
+      rmp/mbs  紐約聯儲實際成交的國庫券購買（依交割日歸月），再依該筆所在的
+               RMP 期別「計畫金額」比例拆成 RMP 與 MBS 到期再投入——官方只公布
+               計畫金額的拆分，實際成交只有總額，所以拆分是按比例分配。
+      private  net − Fed 實際購買。可以是負的：淨發行為負（例如 4 月、9 月
+               稅收月財政部減發 bill）時，私人市場是被「還錢」的一方。
+
+    跟先前「毛發行量 − Fed」的算法差在把財政部自己到期贖回的部分扣掉了——
+    毛發行量每月 2 兆美元以上，絕大部分只是舊券到期換新券，不是新的供給。
     """
-    rows = [r for r in (schedule or []) if r["start"] >= RMP_PROGRAM_START][-12:]
-    complete = [r for r in rows if r["end"] < today]
-    past = []
-    for r in complete:
-        gross = _sum_in_range(bill_auctions, r["start"], r["end"])
-        rmp, mbs = r["rmp"], r["mbs"]
-        private = max(0.0, gross - rmp - mbs)
-        past.append({"date": r["start"], "gross": round(gross, 3), "rmp": round(rmp, 3),
-                     "mbs": round(mbs, 3), "private": round(private, 3),
-                     "period": f'{r["start"][5:].replace("-", "/")}–{r["end"][5:].replace("-", "/")}',
-                     "future": False})
-    incomplete = [r for r in rows if r["end"] >= today]
-    fut_start = incomplete[0]["start"] if incomplete else (rows[-1]["end"] if rows else None)
-    future = None
-    if fut_start:
-        fut_rows = [b for b in (bill_auctions or []) + (upcoming_bills or [])
-                   if b["date"] >= fut_start]
-        if fut_rows:
-            gross = sum(b["offering"] for b in fut_rows)
-            d0 = min(b["date"] for b in fut_rows)
-            d1 = max(b["date"] for b in fut_rows)
-            future = {"date": fut_start, "gross": round(gross, 3),
-                     "rmp": 0.0, "mbs": 0.0, "private": 0.0,
-                     "period": f'{d0[5:].replace("-", "/")}–{d1[5:].replace("-", "/")}'
-                               '（本期未結束／已公告）',
-                     "future": True}
-    flows = past + ([future] if future else [])
-    if not flows:
+    if not mspd or len(mspd) < 2:
         return {}
-    return {"flows": flows, "asof": (future or past[-1])["date"]}
+    sched = [r for r in (schedule or []) if r["start"] >= RMP_PROGRAM_START]
+    rows = []
+    for a, b in zip(mspd, mspd[1:]):
+        rows.append({"month": b["date"][:7], "net": b["bills"] - a["bills"],
+                     "share": b["bills"] / b["marketable"] * 100 if b.get("marketable") else None,
+                     "end": b["date"], "partial": False})
+    if dts and dts.get("date", "")[:7] > rows[-1]["month"]:
+        rows.append({"month": dts["date"][:7], "net": dts["net"], "share": None,
+                     "end": dts["date"], "partial": True})
+    rows = rows[-(months + (1 if rows[-1]["partial"] else 0)):]
+    for r in rows:
+        rmp = mbs = 0.0
+        for p in fed_bills or []:
+            if p["date"][:7] != r["month"] or p["date"] > r["end"]:
+                continue
+            per = _period_of(sched, p["date"])
+            tot = (per["rmp"] + per["mbs"]) if per else 0
+            w = per["rmp"] / tot if per and tot else 0.0
+            rmp += p["value"] * w
+            mbs += p["value"] * (1 - w)
+        r["rmp"], r["mbs"] = round(rmp, 3), round(mbs, 3)
+        r["fed"] = round(rmp + mbs, 3)
+        r["private"] = round(r["net"] - rmp - mbs, 3)
+        r["net"] = round(r["net"], 3)
+        r["date"] = r["month"] + "-01"
+        r["period"] = (f'{r["month"].replace("-", "/")}（月初至 {r["end"][5:].replace("-", "/")}）'
+                       if r["partial"] else r["month"].replace("-", "/"))
+    last_full = [r for r in rows if not r["partial"]]
+    return {"rows": rows, "last": last_full[-1] if last_full else None,
+            "mtd": rows[-1] if rows[-1]["partial"] else None,
+            "share": next((r["share"] for r in reversed(rows) if r.get("share") is not None), None),
+            "share_asof": last_full[-1]["end"] if last_full else ""}
 
 
-def bill_issuance_overview(bill_auctions: list, coupon_auctions: list, months: int = 12) -> dict:
+def qra_bill_implied(qra: dict | None) -> dict | None:
     """
-    財政部 T-Bills 發行概況（供「財政部 T-Bills 發行時程」窗格用）：近 N 個月
-    的月度毛發行量走勢，與 T-Bills 占整體（Bills＋Coupon）發行量的比例——
-    比例越高，代表財政部越依賴短端融資。
+    再融資（QRA）隱含的本季 T-Bills 淨發行＝財政部公布的私人持有淨借款
+    － 本季私人持有 coupon 淨發行（本站以拍賣排程×現行規模－私人持有到期推算，
+    寫在設定檔），未計買回（買回的舊券由新發行補上，買多少、bill 就多發多少）。
     """
-    bill_m: dict[str, float] = {}
-    for r in bill_auctions or []:
-        bill_m[r["date"][:7]] = bill_m.get(r["date"][:7], 0.0) + r["offering"]
-    coup_m: dict[str, float] = {}
-    for r in coupon_auctions or []:
-        if r.get("offering"):
-            coup_m[r["date"][:7]] = coup_m.get(r["date"][:7], 0.0) + r["offering"]
-    months_list = sorted(set(bill_m) | set(coup_m))[-months:]
-    if not months_list:
-        return {}
-    trend = [{"date": m + "-01", "value": round(bill_m.get(m, 0.0), 3)} for m in months_list]
-    bill_total = sum(bill_m.get(m, 0.0) for m in months_list)
-    coup_total = sum(coup_m.get(m, 0.0) for m in months_list)
-    share = (bill_total / (bill_total + coup_total) * 100) if (bill_total + coup_total) else None
-    return {"trend": trend, "share": share, "bill_total": bill_total, "coupon_total": coup_total,
-           "asof": months_list[-1]}
+    if not qra or qra.get("borrowing") is None or qra.get("net_coupon") is None:
+        return None
+    return {**qra, "bills": qra["borrowing"] - qra["net_coupon"]}
