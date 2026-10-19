@@ -585,6 +585,137 @@ def ofr_mmf() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 每季再融資（QRA）：借款估計＋本站推算的 coupon 淨發行（每次更新自動重算）
+# ---------------------------------------------------------------------------
+QRA_PAGE = ("https://home.treasury.gov/policy-issues/financing-the-government/"
+            "quarterly-refunding/most-recent-quarterly-refunding-documents")
+_MONTHS = {m: i for i, m in enumerate(["January", "February", "March", "April", "May", "June", "July",
+                                       "August", "September", "October", "November", "December"], 1)}
+_EST_RE = re.compile(r"During the ([A-Z][a-z]+)\W+([A-Z][a-z]+) (\d{4}) quarter, Treasury expects to borrow "
+                     r"\$([\d,]+) billion in privately-held net marketable debt, assuming an end-of-"
+                     r"([A-Z][a-z]+) cash balance of \$([\d,]+) billion")
+_NEXT_RE = re.compile(r"next quarterly refunding announcement will take place on [A-Z][a-z]+, "
+                      r"([A-Z][a-z]+) (\d{1,2}), (\d{4})")
+
+
+def _page_text(url: str) -> str:
+    import html as _html
+    r = requests.get(url, timeout=40, headers={"User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    t = re.sub(r"<script.*?</script>", " ", r.text, flags=re.S)
+    return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", t)))
+
+
+def _coupon_sizes(start: str) -> list[dict]:
+    """
+    Note／Bond 每一場的規模（含 TIPS、FRN），不篩得標殖利率——FRN 沒有 high_yield，
+    coupon_auctions() 為了拍賣卡片會把它濾掉，這裡算發行量不能少掉它。
+    """
+    rows = _fiscal_rows("v1/accounting/od/auctions_query",
+                        f"security_type:in:(Note,Bond),issue_date:gte:{start}", "issue_date")
+    out = []
+    for a in rows:
+        n = normalize_fiscal_auction(a)
+        if n["issue"] and n["offering"]:
+            out.append(n)
+    return out
+
+
+def qra_estimate(today: dt.date | None = None) -> dict:
+    """
+    最新一次再融資的財政部原文數字（本季私人持有淨借款、季底現金假設、下一次公告日），
+    與本站推算的本季 coupon 淨發行：
+      毛發行  本季交割的 coupon 拍賣：已公告／已結標用實際規模，其餘用暫定排程 × 同天期最近一場規模
+      到期    本季到期的 coupon（MSPD 表三，取本季開始前最後一個月底）扣掉 Fed SOMA 持有＝私人持有到期
+      淨發行  毛發行 − 私人持有到期；T-Bills 隱含淨發行＝淨借款 − coupon 淨發行（未計買回）
+    """
+    from . import clock
+    today = today or clock.today()
+    page = requests.get(QRA_PAGE, timeout=40, headers={"User-Agent": "Mozilla/5.0"})
+    page.raise_for_status()
+    ids = list(dict.fromkeys(re.findall(r"/news/press-releases/(sb\d+)", page.text)))
+    ests, nxt, est_url, est_date = [], None, "", ""
+    for sid in ids:
+        url = f"https://home.treasury.gov/news/press-releases/{sid}"
+        try:
+            t = _page_text(url)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("QRA 新聞稿 %s 取得失敗（%s）", sid, e)
+            continue
+        found = _EST_RE.findall(t)
+        if found and not ests:
+            ests, est_url = found, url
+            m = re.search(r"Borrowing Estimates\s+([A-Z][a-z]+ \d{1,2}, \d{4})", t)
+            if m:
+                est_date = dt.datetime.strptime(m.group(1), "%B %d, %Y").date().isoformat()
+        n = _NEXT_RE.search(t)
+        if n and not nxt:
+            nxt = dt.date(int(n.group(3)), _MONTHS[n.group(1)], int(n.group(2))).isoformat()
+    if not ests:
+        raise ValueError("QRA 頁面找不到借款估計新聞稿")
+    quarters = []
+    for m1, m2, y, bor, cm, cash in ests:
+        y = int(y)
+        q0 = dt.date(y, _MONTHS[m1], 1)
+        e_m = _MONTHS[m2]
+        q1 = (dt.date(y + (e_m == 12), e_m % 12 + 1, 1) - dt.timedelta(days=1))
+        quarters.append({"start": q0.isoformat(), "end": q1.isoformat(),
+                         "quarter": f"{y} Q{(q0.month - 1) // 3 + 1}（{q0.month}–{e_m} 月）",
+                         "borrowing": float(bor.replace(",", "")), "cash_end": float(cash.replace(",", "")),
+                         "cash_end_date": q1.isoformat()})
+    iso = today.isoformat()
+    cur = next((q for q in quarters if q["start"] <= iso <= q["end"]), quarters[-1])
+    out = {**cur, "date": est_date, "url": est_url, "next": nxt}
+    # ---- coupon 毛發行 ----
+    hist = _coupon_sizes((dt.date.fromisoformat(cur["start"]) - dt.timedelta(days=400)).isoformat())
+    last: dict = {}
+    for a in sorted(hist, key=lambda r: r["date"] or r["issue"]):
+        last[(a["term"], a["tips"], a["frn"], a["reopening"])] = a["offering"]
+        last[(a["term"], a["tips"], a["frn"])] = a["offering"]
+    known = [a for a in hist if cur["start"] <= a["issue"] <= cur["end"]]
+    gross = sum(a["offering"] for a in known)
+    seen = {(a["issue"], a["term"], a["tips"], a["frn"]) for a in known}
+    r = requests.get(TENTATIVE_AUCTIONS, timeout=40, headers=UA)
+    r.raise_for_status()
+    for it in _xml_items(r.text, "AuctionCalendarDate"):
+        st = it.get("SettlementDate") or ""
+        if not (cur["start"] <= st <= cur["end"]) or it.get("SecurityType") not in ("NOTE", "BOND"):
+            continue
+        key = (it.get("SecurityTermWeekYear") or "", it.get("TIPS") == "Y", it.get("FloatingRate") == "Y")
+        if (st, *key) in seen:
+            continue
+        size = last.get(key + (it.get("ReOpeningIndicator") == "Y",)) or last.get(key)
+        gross += size or 0
+    # ---- 私人持有到期 ----
+    q0 = dt.date.fromisoformat(cur["start"])
+    rec = (q0 - dt.timedelta(days=1)).isoformat()
+    mrows = _fiscal_rows("v1/debt/mspd/mspd_table_3_market",
+                         f"record_date:eq:{rec},maturity_date:gte:{cur['start']},maturity_date:lte:{cur['end']}")
+    mat = {}
+    for m in mrows:
+        if (m.get("security_class1_desc") or "") in ("Notes", "Bonds", "Inflation-Protected Securities",
+                                                     "Floating Rate Notes"):
+            v = _f(m.get("outstanding_amt"))
+            if v:
+                mat[m.get("security_class2_desc") or ""] = mat.get(m.get("security_class2_desc") or "", 0) + v / 1e3
+    soma = {}
+    try:
+        sd = [d for d in soma_dates() if d <= cur["start"]]
+        if sd:
+            js = _get(f"{NYF}/tsy/get/asof/{sd[-1]}.json")
+            for h in ((js or {}).get("soma") or {}).get("holdings") or []:
+                soma[h.get("cusip")] = (_f(h.get("parValue")) or 0) / 1e9
+    except Exception as e:                         # noqa: BLE001
+        log.warning("SOMA 逐券持有取得失敗（%s），到期量不扣 Fed 持有", e)
+    maturing = sum(max(0.0, v - soma.get(c, 0.0)) for c, v in mat.items())
+    if not mrows:
+        raise ValueError(f"MSPD {rec} 尚無資料")
+    out.update({"gross_coupon": round(gross, 1), "coupon_maturing": round(maturing, 1),
+                "net_coupon": round(gross - maturing, 1), "mspd_date": rec})
+    return out
+
+
+# ---------------------------------------------------------------------------
 # 財政部買回（Buybacks）
 # ---------------------------------------------------------------------------
 BB_XML = "https://www.treasurydirect.gov/instit/annceresult/press/preanre/{y}/{f}"
@@ -1050,5 +1181,44 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("買回殖利率反應計算失敗（%s）", e)
         out["buyback_reactions"] = {}
         failed.append("buyback_reactions")
+    try:
+        out["qra"] = qra_estimate(end)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("QRA 借款估計取得失敗（%s）", e)
+        out["qra"] = {}
+        failed.append("qra")
+    _with_last_good(out, failed, state_dir / "treasury_cache.json", end.isoformat())
     out["failed"] = failed
     return out
+
+
+# 週／月頻、改版少的來源：抓取失敗或回空時沿用上一次成功的版本，頁面不會整區空白
+# （畫面上各數字本來就標資料日期，沿用舊值時日期自然是舊的）。只在內容有變時才
+# 寫檔，避免每次更新都產生一個大的 state 差異。
+LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra",
+                  "mspd", "fed_bills", "buybacks", "buyback_schedule", "auctions", "soma")
+
+
+def _with_last_good(out: dict, failed: list, path: pathlib.Path, today: str) -> None:
+    try:
+        cache = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        cache = {}
+    changed = False
+    for k in LAST_GOOD_KEYS:
+        v = out.get(k)
+        empty = not v or (isinstance(v, dict) and not any(v.values()))
+        if k in failed or empty:
+            if k in cache:
+                out[k] = cache[k]["value"]
+                out.setdefault("stale", {})[k] = cache[k]["saved"]
+                log.warning("%s 沿用 %s 的最後成功版本", k, cache[k]["saved"])
+        elif (cache.get(k) or {}).get("value") != json.loads(json.dumps(v)):
+            cache[k] = {"saved": today, "value": v}
+            changed = True
+    if changed:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(cache, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        except OSError:
+            pass

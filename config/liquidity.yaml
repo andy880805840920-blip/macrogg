@@ -64,8 +64,9 @@ series:
     enabled: true
 
 # ---------------------------------------------------------------------------
-# 財政部每季再融資（QRA）的借款估計——每季手動更新一次（跟 rates.yaml 的
-# refunding 同一個時點）。borrowing、cash_end 是財政部原文數字（十億美元）；
+# 財政部每季再融資（QRA）的借款估計——【後備值】。每次更新會自動從財政部
+# 最新再融資新聞稿抓借款估計與下一次公告日，並重算 coupon 淨發行
+# （treasury_source.qra_estimate）；只有自動抓取失敗、且 state 快取也沒有時才用這裡。borrowing、cash_end 是財政部原文數字（十億美元）；
 # net_coupon 是本站推算的本季私人持有 coupon 淨發行：
 #   暫定拍賣排程（本季交割）× 各天期現行規模（含 FRN、TIPS）≈ 1,109
 #   − 本季到期的 coupon 扣掉 Fed SOMA 持有（MSPD 表三逐券 − SOMA 逐券）≈ 749

@@ -3019,10 +3019,13 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     # 財政部買回：Fiscal Data 逐場結果＋暫定排程＋公告／結果後 1 小時殖利率（CNBC 5 分 K）
     out["buybacks"] = le.buyback_view(tr.get("buybacks") or [], tr.get("buyback_schedule") or {},
                                       tr.get("buyback_reactions") or {}, clock.today())
-    out["refunding"] = cfg.get("refunding") or {}
+    out["refunding"] = dict(cfg.get("refunding") or {})
+    # 下一次再融資日期以財政部最新政策聲明為準（自動抓），設定檔的手填值只當後備
+    if (tr.get("qra") or {}).get("next"):
+        out["refunding"]["next"] = tr["qra"]["next"]
     out["upcoming"] = [a for a in (tr.get("upcoming") or []) if a.get("type") != "Bill"]
     out["events"] = le.events(clock.today(), tr.get("upcoming") or [],
-                              (cfg.get("refunding") or {}).get("next"))
+                              out["refunding"].get("next"))
     # Fed 資產端
     out["soma"] = le.soma_mix(tr.get("soma") or [])
     if out["soma"].get("flows"):
@@ -3484,7 +3487,9 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}",
         partial_note="當月至今（DTS）")
         if bill_net.get("rows") else "")
-    qra = lq.qra_bill_implied(cfg.get("qra"))
+    # QRA：每次更新自動抓財政部最新再融資（treasury_source.qra_estimate）；
+    # 抓不到才用設定檔的手填值當後備
+    qra = lq.qra_bill_implied(_tr.get("qra") or cfg.get("qra"))
 
     # Fed 負債端（H.4.1 週三水位，近 5 年）：四大項同一張圖（億美元），
     # 逆回購另一張拆國內（ON RRP）／國外（外國官方與國際帳戶）。

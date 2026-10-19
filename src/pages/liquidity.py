@@ -354,6 +354,19 @@ def _demand_curve_svg() -> str:
               f'transform="rotate(-90 14 108)">聯邦資金利率</text></svg>')
 
 
+def _rmp_status(d: dict) -> str:
+    """RMP 現況一句話（跟著紐約聯儲最新一期公布走）。"""
+    rl, since = d.get("rmp_last") or {}, d.get("rmp_paused_since") or ""
+    if not rl:
+        return ""
+    per = f'{_md(rl.get("start", ""))}–{_md(rl.get("end", ""))}'
+    if since:
+        return (f'<p><b>RMP 現況：</b>自 {_md(since)} 起的那一期暫停 RMP，最新一期（{per}）只有 MBS 到期再投入 '
+                f'{rl.get("mbs", 0) * 10:,.0f} 億美元——代表 Fed 暫時不認為需要額外補準備金。</p>')
+    return (f'<p><b>RMP 現況：</b>最新一期（{per}）RMP {rl.get("rmp", 0) * 10:,.0f} 億美元，'
+            f'加上 MBS 到期再投入 {rl.get("mbs", 0) * 10:,.0f} 億美元。</p>')
+
+
 def _reserve_adequacy(d: dict) -> str:
     rv, dv = d.get("ratio_view") or {}, d.get("rde_view") or {}
     lo, s19 = rv.get("low2019") or {}, dv.get("sep2019") or {}
@@ -392,7 +405,8 @@ def _reserve_adequacy(d: dict) -> str:
       問題是準備金不會自己停在原地：流通在外貨幣、TGA 這些其他負債會隨經濟與財政規模長期成長，每成長一塊就從準備金抽走一塊。
       縮表結束後如果什麼都不做，準備金會慢慢從充足滑向稀缺，重演 2019 年的情況。
       所以 Fed 在 2025 年 12 月停止縮表後，改做<b>準備金管理購買（RMP）</b>：在次級市場買國庫券，補上被其他負債吃掉的準備金，
-      讓準備金停在充足區——目的不是像 QE 那樣壓低長期利率，而是維持貨幣市場的運作（見下方「市場供需」的 RMP 說明）。</p>"""
+      讓準備金停在充足區——目的不是像 QE 那樣壓低長期利率，而是維持貨幣市場的運作（見下方「市場供需」的 RMP 說明）。</p>
+      {_rmp_status(d)}"""
     return f"""<details class="f-more"><summary>準備金 ÷ 商業銀行總資產</summary><div class="f-detail">
       {_ratio_cells(rv)}
       <div class="viz-block"><div class="viz-h">近 15 年（%，週）</div>{d.get("ratio_chart") or ""}</div>
@@ -512,13 +526,18 @@ def _core_detail(d: dict) -> str:
         if v >= 100:
             break
         since = m
+    srf_now = L["srf"].value if L.get("srf") else None
+    srf_note = (f"近 5 日均 {srf_now * 10:,.0f} 億，有機構在向 Fed 借錢" if (srf_now or 0) > 0.05
+                else "近期未動用")
+    rrp_now = L["rrp"].value if L.get("rrp") else None
     rows = [
         ("sofr_iorb", "價格", "錢有沒有變貴？",
          f"近 3 月月均 {si_recent}bp；最緊 {peak('sofr_iorb', lambda v: f'{v:+.1f}bp')}"),
         ("srf", "後援", "有人借不到錢、只好找 Fed？",
-         f"月均最高 {peak('srf', lambda v: f'{v * 10:,.0f} 億')}；近期未動用"),
+         f"月均最高 {peak('srf', lambda v: f'{v * 10:,.0f} 億')}；{srf_note}"),
         ("rrp", "緩衝", "還有閒置現金可以先被抽走？",
-         (f"{_ym(since)} 起月均都 < 1,000 億，已見底" if since else "仍有餘額")),
+         (f"{_ym(since)} 起月均都 < 1,000 億，已見底" if since
+          else f"仍有約 {(rrp_now or 0) * 10:,.0f} 億可先被抽走")),
     ]
     trs = "".join(
         f'<tr><td class="k" data-label="指標">{_split_label(L[k].label)}</td>'
@@ -526,57 +545,125 @@ def _core_detail(d: dict) -> str:
         f'<td data-label="現在"><span class="st {L[k].status}">{esc(L[k].display)}</span></td>'
         f'<td data-label="近期">{esc(note)}</td></tr>'
         for k, role, q, note in rows if k in L)
-    ok = lambda k: L.get(k) and L[k].status == "good"
-    steps = [
-        (ok("sofr_iorb"), "價格", "未轉正，錢不貴" if ok("sofr_iorb") else "已轉正，錢變貴"),
-        (ok("srf"), "後援", "沒人找 Fed 借錢" if ok("srf") else "開始向 Fed 借錢"),
-        (ok("rrp"), "緩衝", "還有閒置現金" if ok("rrp") else "見底，下一次抽水直接扣準備金"),
-    ]
+    st = lambda k: L[k].status if L.get(k) else "unknown"
+    ok = lambda k: st(k) == "good"
+    PRICE = {"good": "SOFR 低於 IORB，錢不貴", "warning": "SOFR 貼近或略高於 IORB，錢開始變貴",
+             "critical": "SOFR 明顯高於 IORB，資金緊俏", "unknown": "資料不足"}
+    BACK = {"good": "沒有人向 Fed 借錢", "warning": "開始有機構向 Fed 借錢",
+            "critical": "大量向 Fed 借錢，市場的錢不夠", "unknown": "資料不足"}
+    BUF = {"good": "還有閒置現金可以先被抽走", "warning": "見底，下一次抽水直接扣準備金",
+           "critical": "見底，下一次抽水直接扣準備金", "unknown": "資料不足"}
+    steps = [(ok("sofr_iorb"), "價格", PRICE[st("sofr_iorb")]),
+             (ok("srf"), "後援", BACK[st("srf")]),
+             (ok("rrp"), "緩衝", BUF[st("rrp")])]
+    lab = vd.get("label", "")
+    if lab in ("嚴重轉緊", "轉緊"):
+        concl = ("資金已經變貴或有機構開始向 Fed 借錢——看季底、繳稅日是否讓情況擴大，"
+                 "以及 Fed 是否重啟或加大 RMP、動用其他工具。")
+    elif lab == "充裕穩定":
+        concl = "價格、後援、緩衝都正常：資金不貴、沒人找 Fed，體系還有閒置現金可以吸收下一次抽水。"
+    else:
+        concl = (f"現在沒有資金緊俏（{PRICE[st('sofr_iorb')]}、{BACK[st('srf')]}），"
+                 f"但{vd.get('reason', '緩衝偏薄')}，體系承受下一次抽水的能力較低。")
+    si3 = [v for _, v in _last_n(si, 3)]
+    pk = max(si.values()) if si else None
+    if si3 and pk is not None and pk > 5 and max(si3) < pk - 3:
+        bg = (f"背景：資料期間內最緊的是 {peak('sofr_iorb', lambda v: f'{v:+.1f}bp')}（2025 年第四季 SOFR 經常高於 IORB，"
+              f"Fed 因此在 2025 年 12 月停止縮表、改做 RMP）；近 3 個月月均 {si_recent}bp，已明顯低於那段高點。")
+    else:
+        bg = ""
     chk = "".join(f'<li class="{"ok" if g else "ng"}"><span>{"✓" if g else "✕"}</span><b>{t}</b>{esc(x)}</li>'
                   for g, t, x in steps)
     return f"""<details class="f-more"><summary>三個指標怎麼讀、怎麼推出結論</summary><div class="f-detail">
       <p><b>讀法順序：</b>價格最先反應 → 後援被動用代表已經不只是變貴 → 緩衝決定下一次抽水（T-Bills 淨發行、TGA 回補、季底）先吃閒置現金還是直接扣準備金。</p>
       <table class="lq-tbl"><thead><tr><th>指標</th><th>角色</th><th>現在</th><th>近期</th></tr></thead><tbody>{trs}</tbody></table>
       <ul class="lq-check">{chk}</ul>
-      <p class="lq-concl">結論：<b>{esc(vd.get("label", "—"))}</b>——現在沒有資金緊俏，但緩衝已用完，體系承受下一次抽水的能力比 2022–24 年低。
-        背景：2025 年第四季 SOFR 經常高於 IORB，Fed 於 2025 年 12 月停止縮表、改做 RMP；之後利差回到 0 以下，但未回到準備金充裕時的約 −8bp。</p>
+      <p class="lq-concl">結論：<b>{esc(lab or "—")}</b>——{esc(concl)}{(" " + esc(bg)) if bg else ""}</p>
     </div></details>"""
 
 
 def _support_detail(d: dict) -> str:
-    """輔助指標的下拉補充：左邊是抽走現金的壓力，右邊是讓資金仍穩定的支撐。"""
+    """
+    輔助指標的下拉補充：把每一項依「當下的數值」分到「抽走現金的壓力」或「支撐資金的力量」，
+    標題與結論句跟著綜合判定走——不預設現在是哪一種情況。
+    """
     L = {l.key: l for l in d.get("liq_lights") or []}
+    vd = d.get("liq_verdict") or {}
     qra, bn = d.get("qra") or {}, d.get("bill_net") or {}
-    mtd = bn.get("mtd") or {}
+    mtd = bn.get("mtd") or bn.get("last") or {}
     rl, rmp_since = d.get("rmp_last") or {}, d.get("rmp_paused_since") or ""
     rv, dv = d.get("ratio_view") or {}, d.get("rde_view") or {}
     wl = (d.get("mmf") or {}).get("wam_last") or {}
-    press = []
+    tga = next((it for it in (d.get("liab") or {}).get("items") or [] if it["key"] == "tga"), None)
+    press, hold = [], []
     if mtd:
-        press.append(f"<b>T-Bills 淨發行增加</b>：{int(mtd['month'][5:])} 月至今 {mtd['net'] * 10:+,.0f} 億，私人市場要吸收 {mtd['private'] * 10:+,.0f} 億")
+        lab = f"{int(mtd['month'][5:])} 月" + ("至今" if mtd.get("partial") else "")
+        if mtd["private"] > 0:
+            press.append(f"<b>T-Bills 淨供給</b>：{lab}淨發行 {mtd['net'] * 10:+,.0f} 億，私人市場要吸收 {mtd['private'] * 10:+,.0f} 億")
+        else:
+            hold.append(f"<b>T-Bills 淨贖回</b>：{lab}私人市場淨拿回 {-mtd['private'] * 10:,.0f} 億現金")
     if qra.get("bills") is not None:
-        press.append(f"<b>本季還有更多</b>：再融資隱含 T-Bills 淨發行約 {qra['bills'] * 10:,.0f} 億（未計買回）")
+        (press if qra["bills"] > 0 else hold).append(
+            f"<b>本季 T-Bills</b>：再融資隱含淨發行約 {qra['bills'] * 10:+,.0f} 億（未計買回）")
     if rmp_since:
-        press.append(f"<b>Fed 暫停 RMP</b>：{_md(rmp_since)} 起的那一期起只剩 MBS 到期再投入（最新一期約 {rl.get('mbs', 0) * 10:,.0f} 億）")
+        press.append(f"<b>Fed 暫停 RMP</b>：自 {_md(rmp_since)} 那一期起只剩 MBS 到期再投入（最新一期約 {rl.get('mbs', 0) * 10:,.0f} 億）")
+    elif rl:
+        hold.append(f"<b>Fed 持續 RMP</b>：最新一期（{esc(rl.get('period', '') or _md(rl.get('start', '')))}）"
+                    f"RMP {rl.get('rmp', 0) * 10:,.0f} 億＋MBS 再投入 {rl.get('mbs', 0) * 10:,.0f} 億")
+    if tga and qra.get("cash_end") is not None:
+        diff = (qra["cash_end"] - tga["value"]) * 10
+        if diff > 50:
+            press.append(f"<b>TGA 要回補</b>：目前 {tga['value'] * 10:,.0f} 億、季底目標 {qra['cash_end'] * 10:,.0f} 億，還要從市場抽走約 {diff:,.0f} 億")
+        elif diff < -50:
+            hold.append(f"<b>TGA 會降低</b>：目前 {tga['value'] * 10:,.0f} 億、季底目標 {qra['cash_end'] * 10:,.0f} 億，約 {-diff:,.0f} 億準備金會還給市場")
+    if L.get("rrp"):
+        (hold if L["rrp"].status == "good" else press).append(
+            f"<b>ON RRP 緩衝</b>：近 5 日均 {esc(L['rrp'].display)}"
+            + ("，還有閒置現金可以先被抽走" if L["rrp"].status == "good" else "，已見底"))
     if rv:
-        press.append(f"<b>準備金不算多</b>：占銀行總資產 {rv['value']:.2f}%，低於 13%（RDE 幾乎為 0 的水位）")
-    hold = []
-    if wl.get("gov") is not None and wl.get("gov_3m") is not None:
-        hold.append(f"<b>MMF 把錢留在短端</b>：Government MMF 平均持有期限 {wl['gov']:.1f} 天（3 個月 {wl['gov'] - wl['gov_3m']:+.1f} 天）——"
-                    "面對 Fed 升息路徑的不確定，資金留在隔夜回購與短天期，同時接住新的 T-Bills 與回購需求")
-    if L.get("tgcr"):
-        hold.append(f"<b>現金提供端平靜</b>：TGCR − IORB {esc(L['tgcr'].display)}")
+        r = rv["value"]
+        if r >= 13:
+            hold.append(f"<b>準備金充足</b>：占銀行總資產 {r:.2f}%，高於 13%")
+        else:
+            press.append(f"<b>準備金偏低</b>：占銀行總資產 {r:.2f}%，低於 13%"
+                         + ("、已跌破 2019 年危機的 10%" if r < 10 else "（仍高於 2019 年危機的 10%）"))
     if dv:
-        hold.append(f"<b>仍在需求曲線平坦段</b>：RDE {dv['value']:+.2f}，95% 信賴區間 {dv['lo95']:+.2f}～{dv['hi95']:+.2f} 含 0（但比半年前更接近陡段）")
-    if rv:
-        hold.append(f"<b>離危險區還有距離</b>：準備金占比 {rv['value']:.2f}% 仍高於 2019 年危機的 10%")
-    li = lambda xs: "".join(f"<li>{x}</li>" for x in xs)
-    return f"""<details class="f-more"><summary>為什麼供給增加、RMP 暫停，短端資金仍然穩定？</summary><div class="f-detail">
+        txt = f"RDE {dv['value']:+.2f}，95% 信賴區間 {dv['lo95']:+.2f}～{dv['hi95']:+.2f}"
+        (hold if dv.get("zero_in_ci") else press).append(
+            (f"<b>仍在需求曲線平坦段</b>：{txt} 含 0" if dv.get("zero_in_ci")
+             else f"<b>已進入需求曲線斜坡</b>：{txt} 整段 < 0，準備金少一點利率就會被推動"))
+    if wl.get("gov") is not None and wl.get("gov_3m") is not None:
+        dch = wl["gov"] - wl["gov_3m"]
+        base = f"Government MMF 平均持有期限 {wl['gov']:.1f} 天（3 個月 {dch:+.1f} 天）"
+        if dch <= -2:
+            hold.insert(0, f"<b>MMF 把錢留在短端</b>：{base}——面對利率路徑的不確定，資金留在隔夜回購與短天期，接住新的 T-Bills 與回購需求")
+        elif dch >= 2:
+            press.append(f"<b>MMF 拉長期限</b>：{base}——押注降息、把現金鎖進較長天期，隔夜市場的現金供給變少")
+    if L.get("tgcr"):
+        (hold if L["tgcr"].status == "good" else press).append(
+            f"<b>三方回購</b>：TGCR − IORB {esc(L['tgcr'].display)}"
+            + ("，現金提供端平靜" if L["tgcr"].status == "good" else "，現金提供端開始收緊"))
+    lab = vd.get("label", "")
+    head = lambda x: x.split("</b>")[0][3:]
+    # 不比項數（一項的份量差很多），結論只講「判定是什麼、主要靠什麼／主要壓力是什麼」。
+    # 支撐的排序：MMF 配置（決定隔夜現金供給）放第一，其餘依上面加入的順序。
+    if lab in ("嚴重轉緊", "轉緊"):
+        title = "資金為什麼轉緊？壓力與支撐"
+        concl = (f"判定<b>{esc(lab)}</b>：壓力已經壓過支撐，最需要盯的是「{esc(head(press[0]))}」。"
+                 if press else f"判定<b>{esc(lab)}</b>。")
+    else:
+        title = "抽走現金的壓力 vs 支撐資金的力量"
+        concl = (f"判定<b>{esc(lab or '—')}</b>：壓力仍在（{'、'.join(esc(head(x)) for x in press[:3]) or '不明顯'}），"
+                 f"但短端資金沒有變貴，主要靠「{esc(head(hold[0])) if hold else '—'}」撐住。"
+                 + ("準備金與 ON RRP 的緩衝都偏薄，這個平衡比較依賴市場參與者的配置選擇，不是體系有多餘的錢。"
+                    if lab == "穩定，但緩衝偏薄" else ""))
+    li = lambda xs: "".join(f"<li>{x}</li>" for x in xs) or "<li>目前沒有</li>"
+    return f"""<details class="f-more"><summary>{esc(title)}</summary><div class="f-detail">
       <div class="lq-2col">
         <div class="lq-box press"><div class="lq-box-h">抽走現金的壓力</div><ul>{li(press)}</ul></div>
-        <div class="lq-box hold"><div class="lq-box-h">讓資金仍然穩定的原因</div><ul>{li(hold)}</ul></div>
+        <div class="lq-box hold"><div class="lq-box-h">支撐資金的力量</div><ul>{li(hold)}</ul></div>
       </div>
-      <p class="lq-concl">一句話：<b>MMF 願意把錢留在最短端</b>，替新增的 T-Bills 與回購市場同時提供了現金；但準備金與 ON RRP 的緩衝都偏薄，這個平衡靠的是 MMF 的配置選擇，不是體系有多餘的錢。</p>
+      <p class="lq-concl">{concl}</p>
     </div></details>"""
 
 
@@ -586,30 +673,46 @@ def _watch_detail(d: dict) -> str:
     qra = d.get("qra") or {}
     asof = (d.get("as_of") or "")[:10]
     tga = next((it for it in (d.get("liab") or {}).get("items") or [] if it["key"] == "tga"), None)
+    LL = {l.key: l for l in d.get("liq_lights") or []}
+    rrp_thin = (LL.get("rrp") and LL["rrp"].status != "good")
+    lab = (d.get("liq_verdict") or {}).get("label", "")
+    rmp_paused = bool(d.get("rmp_paused_since"))
     items = []   # (排序日期, 顯示日期, 重要性, 標題, 內容)
     if qra.get("next") and qra["next"] >= asof:
         items.append((qra["next"], _md(qra["next"]), "高", "季度再融資（QRA）",
                       "下一季 T-Bills 與 coupon 規模、買回上限、季底 TGA 目標——決定未來三個月要從市場抽走多少現金"))
     if asof:
         y, m = int(asof[:4]), int(asof[5:7])
-        ny, nm = (y + (m == 12), m % 12 + 1)
-        d0 = _dt.date(ny, nm, 1)
-        third_thu = d0 + _dt.timedelta(days=(3 - d0.weekday()) % 7 + 14)
+        # 紐約聯儲 RDE：每月第三個週四更新；本月那一天還沒到就是本月，過了就是下個月
+        def _third_thu(yy, mm):
+            d0 = _dt.date(yy, mm, 1)
+            return d0 + _dt.timedelta(days=(3 - d0.weekday()) % 7 + 14)
+        third_thu = _third_thu(y, m)
+        if third_thu.isoformat() < asof:
+            third_thu = _third_thu(y + (m == 12), m % 12 + 1)
         items.append((third_thu.isoformat(), _md(third_thu.isoformat()), "中", "紐約聯儲 RDE 月更新",
                       "看信賴區間是否轉為整段 < 0——那是準備金從充裕滑向充足的第一個統計訊號"))
         # 下一個「季中繳稅日＋季底」窗口（3／6／9／12 月 15 日到月底）；當月還沒過完就算當月
         qm = next((x for x in (3, 6, 9, 12) if x >= m), 3)
         qy = y + (1 if qm < m else 0)
-        items.append((f"{qy}-{qm:02d}-15", f"{qm}/15–{qm}/31", "高", "企業繳稅日＋季底",
-                      "稅款湧入 TGA、外國銀行季底縮減回購借款；緩衝見底下最容易讓 SOFR 短暫衝高"))
+        _last_day = (_dt.date(qy + (qm == 12), qm % 12 + 1, 1) - _dt.timedelta(days=1)).day
+        items.append((f"{qy}-{qm:02d}-15", f"{qm}/15–{qm}/{_last_day}", "高", "企業繳稅日＋季底",
+                      "稅款湧入 TGA、外國銀行季底縮減回購借款"
+                      + ("；ON RRP 緩衝見底，最容易讓 SOFR 短暫衝高" if rrp_thin else "；ON RRP 還有緩衝可先吸收")))
     if tga and qra.get("cash_end") is not None:
         diff = (qra["cash_end"] - tga["value"]) * 10
         items.append(((qra.get("cash_end_date") or "9999"), f"至 {_md(qra.get('cash_end_date', ''))}", "中", "TGA 走向季底目標",
                       f"目前 {tga['value'] * 10:,.0f} 億、目標 {qra['cash_end'] * 10:,.0f} 億（差 {diff:+,.0f} 億）——"
                       + ("TGA 降低會把準備金還給市場" if diff < 0 else "TGA 回補會從市場抽走準備金")))
     items.sort(key=lambda x: x[0])
-    items.append(("~", "隨時", "最高", "轉緊的觸發條件",
-                  "SOFR − IORB 轉正並擴大、SRF 連續多日動用——判定會轉為「轉緊」，接著看 Fed 是否重啟 RMP"))
+    if lab in ("嚴重轉緊", "轉緊"):
+        items.append(("~", "隨時", "最高", "回到穩定的條件",
+                      "SOFR − IORB 回到 0 以下、SRF 停止連續動用；同時看 Fed 是否"
+                      + ("重啟 RMP" if rmp_paused else "加大 RMP") + "或動用其他工具"))
+    else:
+        items.append(("~", "隨時", "最高", "轉緊的觸發條件",
+                      "SOFR − IORB 轉正並擴大、SRF 連續多日動用——判定會轉為「轉緊」，接著看 Fed 是否"
+                      + ("重啟 RMP" if rmp_paused else "加大 RMP")))
     lis = "".join(f'<li><span class="lq-when">{esc(w)}</span><span class="lq-imp i{ {"最高": 3, "高": 2, "中": 1}.get(imp, 1)}">{esc(imp)}</span>'
                   f'<div><b>{esc(t)}</b><p>{esc(x)}</p></div></li>' for _, w, imp, t, x in items)
     return f"""<details class="f-more"><summary>接下來要盯</summary><div class="f-detail">
