@@ -361,12 +361,15 @@ ig_market:
 # 八、紅綠燈門檻
 # ---------------------------------------------------------------------------
 regime_lights:
+  # 期限溢酬：NY Fed ACM 10 年（2026-10 v4 起取代 Kim-Wright）。門檻依 ACM 2015 年以來的分布：
+  #   0.20% ≈ 第 75 百分位（2015 年的水準）、0.60% ≈ 第 90 百分位（2025–26 年才出現的高檔）
   - key: term_premium
-    label: 期限溢酬
-    desc: 投資人持有長債要求的額外補償。上升代表市場不想抱長債
+    label: 期限溢酬（NY Fed ACM）
+    desc: 投資人因需長期持有債券而要求的額外補償（政策與通膨路徑的不確定性、供給、財政、流動性等風險）。
+      偏高代表市場自行收緊金融條件。門檻依 ACM 2015 年以來的分布：0.20% 約第 75 百分位、0.60% 約第 90 百分位
     direction: higher_is_worse
-    green_below: 0.40
-    red_above: 0.90
+    green_below: 0.20
+    red_above: 0.60
   - key: curve_10_2
     label: 10 年減 2 年
     desc: 曲線斜率。負值（倒掛）歷史上是衰退的領先訊號
@@ -380,14 +383,16 @@ regime_lights:
     green_below: 0.60
     red_above: 0.90
   - key: real_10y
-    label: 10 年期實質利率
-    desc: 剔除通膨補償後的真實資金成本。高於潛在成長率會壓抑投資
+    label: 實質利率（10 年 TIPS）
+    desc: 政策預期——市場對 Fed 未來政策路徑的預估（含實質期限溢酬）。真實的資金成本，
+      高於潛在成長率（約 1.8%）會壓抑投資
     direction: higher_is_worse
     green_below: 1.80
     red_above: 2.40
   - key: breakeven_10y
-    label: 10 年通膨損益兩平
-    desc: 市場對未來十年平均通膨的定價
+    label: 損益兩平通膨率（10 年）
+    desc: 通膨預期（長期）＝10Y 名目 − TIPS，含預期平均通膨與通膨風險溢酬。長期通膨的錨定，
+      也是市場對 Fed 獨立性的信心；持續走高代表錨定鬆動
     direction: higher_is_worse
     green_below: 2.40
     red_above: 2.70

@@ -1372,6 +1372,24 @@ def _liq(C):
     return C.get("liquidity") or {}
 
 
+@fn("tp_acm")
+def _tp_acm(card, S, C):
+    """期限溢酬：NY Fed ACM 為主，舊金山聯儲與 Kim-Wright 對照（跟長端頁同一份數字）。"""
+    D = (((C.get("rates") or {}).get("le") or {}).get("drv") or {})
+    a = D.get("tp") or {}
+    if a.get("value") is None:
+        return None
+    val = f"{a['value']:.2f}%"
+    ans = (f"10 年期期限溢酬（NY Fed ACM）{_b(val)}（{esc(a['date'][5:].replace('-', '/'))}），"
+           f"本月 {esc(fnum(a.get('mtd'), 0, sign=True))} bp、年初至今 {esc(fnum(a.get('ytd'), 0, sign=True))} bp。"
+           "期限溢酬跟實質利率、損益兩平都有重疊（含實質期限溢酬與通膨風險溢酬），只能靠模型估計。")
+    rows = [[n, f"{D[k]['value']:.2f}%", fnum(D[k].get("mtd"), 0, sign=True), fnum(D[k].get("ytd"), 0, sign=True),
+             D[k]["date"][5:].replace("-", "/")]
+            for k, n in (("tp", "NY Fed ACM"), ("tp_sf", "San Francisco Fed"), ("tp_kw", "Kim-Wright")) if D.get(k)]
+    return Out(ans=ans, date=a["date"], table=(["模型", "最新", "MTD bp", "YTD bp", "資料日"], rows),
+               note="三個模型的水準差很多，看變化方向比看水準重要。")
+
+
 @fn("liq_now")
 def _liq_now(card, S, C):
     Q = _liq(C)
@@ -1892,10 +1910,14 @@ def practice_vals(C: dict, S: dict) -> dict:
         put("d2", fnum((br["lv"].get("2") or {}).get("d"), 0, sign=True))
         put("regime", "、".join(f"{k} {x.get('zh')}" for k, x in br["sp"].items()))
     put("real10", fnum(last("DFII10"), 2))
-    put("tp10", fnum(last("THREEFYTP10"), 2))
+    # 期限溢酬用 NY Fed ACM（跟長端頁同一個數字）；抓不到才退回 Kim-Wright
+    _acm = ((((C.get("rates") or {}).get("le") or {}).get("drv") or {}).get("tp") or {})
+    put("tp10", fnum(_acm["value"], 2) if _acm.get("value") is not None else fnum(last("THREEFYTP10"), 2))
     tp = rows_of(S, "THREEFYTP10")
     y = _ago(tp, 12)
-    if y:
+    if _acm.get("y1") is not None:
+        put("tp10_y", fnum(_acm["y1"], 2))
+    elif y:
         put("tp10_y", fnum(y["value"], 2))
     rr = rows_of(S, "DFII10")
     ys = [r for r in rr if rr and r["date"][:4] < rr[-1]["date"][:4]]

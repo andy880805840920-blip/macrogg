@@ -2893,6 +2893,11 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     out: dict = {"failed": list(tr.get("failed") or [])}
     # 10Y 拆解（2026-10 v4）：名目 ＝ TIPS ＋ BEI（恆等）；期限溢酬（ACM）並列、不相加
     ds = le.driver_series(series, tr.get("term_premia"))
+    # 曲線區（期間拆解、自選期間、週報）的期限溢酬也改用 ACM：給它們一份把 THREEFYTP10
+    # 那一格換成 ACM 日資料的序列（程式與 JS 端同一套規則不動，只換資料來源）
+    _sx = dict(series)
+    if ds["tp"]:
+        _sx["THREEFYTP10"] = ds["tp"]
     out["drv"] = {k: le.level_changes(ds[k]) for k in ("y10", "y20", "y30", "real", "infl", "tp", "tp_sf", "tp_kw")}
     out["contrib"] = {k: le.contribution_window(ds, k) for k in ("mtd", 1, 3, 12, "ytd")}
     c1 = out["contrib"]["mtd"]
@@ -2986,18 +2991,18 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
             unit="", height=120, digits=0, zero=_lo <= 0 <= _hi, months=12, yrange=(_lo, _hi),
             step=_st, xmonths=True, show_legend=False, aria=f"{r['key']} 利差（bp）")
     # 自選期間：嵌入頁面的對齊日資料（去年 12 月起，年初至今要用到 12/31）＋ 2／10／30 年走勢
-    out["cw"] = le.curve_data(series, f"{clock.today().year - 1}-12-01")
+    out["cw"] = le.curve_data(_sx, f"{clock.today().year - 1}-12-01")
     out["cw_year"] = clock.today().year
     out["yield_chart"] = charts.compact_lines(
         [{"label": zh, "color": col, "points": [r for r in (series.get(sid) or []) if r["date"] >= _since]}
          for zh, sid, col in (("2 年", "DGS2", "var(--y2)"), ("10 年", "DGS10", "var(--y10)"),
                               ("30 年", "DGS30", "var(--y30)"))],
         unit="%", height=170, digits=2, months=12, xmonths=True, aria="2、10、30 年期殖利率")
-    out["curve_drivers"] = le.curve_drivers(series)
+    out["curve_drivers"] = le.curve_drivers(_sx)
     out["forwards"] = le.forwards(series)
     # 30−2 週報（滾動一週）＋ 2Y／10Y／30Y 的 1 年後、5 年後遠期
     try:
-        out["brief"] = le.curve_brief(series)
+        out["brief"] = le.curve_brief(_sx)
     except Exception as e:                         # noqa: BLE001
         log.warning("殖利率曲線週報計算失敗：%s", e)
         out["brief"] = None
@@ -3124,6 +3129,15 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     from .analysis import rates as rt
 
     curve = rt.curve_state(series)
+    # 期限溢酬全站統一用 NY Fed ACM（2026-10 v4）：首卡、01 拆解、燈號、壓力分數、首頁／情境頁
+    # 讀的都是 curve.term_premium。ACM 抓不到時才保留 Kim-Wright（FRED）。
+    _acm = ((treasury or {}).get("term_premia") or {}).get("acm") or []
+    curve.term_premium_src = "Kim-Wright"
+    if _acm:
+        curve.term_premium = _acm[-1]["value"]
+        curve.term_premium_src = "NY Fed ACM"
+        if len(_acm) > 64:
+            curve.tp_change_3m = _acm[-1]["value"] - _acm[-64]["value"]
     real10 = (curve.decomposition or {}).get("real")
     debt = rt.debt_state(series, real_10y=real10, real_growth=real_growth or 1.8)
     _hs_cfg = cfg.get("hyperscalers") or {}
@@ -3137,7 +3151,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     ig_oas = value_at(series.get("BAMLC0A0CM") or [])
     qt = rt.fed_holdings_pace(series)
     # 2026-10：拿掉「供給壓力」合成分數。首頁、情境頁沿用 pressure 物件，但等級改由
-    # **期限溢酬的水準**對照燈號門檻決定（0.40% 以下偏低、0.90% 以上偏高），
+    # **期限溢酬（NY Fed ACM）的水準**對照燈號門檻決定（0.20% 以下偏低、0.60% 以上偏高），
     # score 就是期限溢酬本身；parts 換成本月三股力量的貢獻（bp）。只有事實，沒有加權。
     press = rt.supply_pressure(curve, debt, hs, ig_oas, qt_monthly=qt)
     _tpc = next((c for c in (cfg.get("regime_lights") or []) if c.get("key") == "term_premium"), {})
@@ -3155,20 +3169,30 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     press.main_bp = (_c1["parts"][_c1["main"]] if _c1 and _c1.get("main") else None)
 
     # ---- 燈號 ----
+    # 實質利率、損益兩平、期限溢酬三顆燈跟首卡同一組數字（10Y＝TIPS＋BEI、ACM），
+    # prev＝上月最後一個交易日（箭頭看本月方向），軌跡條＝近 12 個月的月底值。
     computed = {}
+    _ds = _le.driver_series(series, (treasury or {}).get("term_premia"))
+    _lc = {k: _le.level_changes(_ds[k]) for k in ("real", "infl", "tp")}
+
+    def _prev(k):
+        c = _lc.get(k) or {}
+        return (c["value"] - c["mtd"] / 100) if c.get("mtd") is not None else None
+    _tp_rows = _ds["tp"] if _acm else (series.get("THREEFYTP10") or [])
     if curve.term_premium is not None:
-        tp = series.get("THREEFYTP10") or []
-        computed["term_premium"] = (curve.term_premium, value_at(tp, 1),
+        computed["term_premium"] = (curve.term_premium,
+                                    _prev("tp") if _acm else value_at(_tp_rows, 1),
                                     f"{curve.term_premium:+.2f}%")
     if curve.slope_10_2 is not None:
         computed["curve_10_2"] = (curve.slope_10_2, None, f"{curve.slope_10_2:+.2f}%")
     if curve.slope_30_10 is not None:
         computed["curve_30_10"] = (curve.slope_30_10, None, f"{curve.slope_30_10:+.2f}%")
-    if real10 is not None:
+    if _lc["real"]:
+        computed["real_10y"] = (_lc["real"]["value"], _prev("real"), f'{_lc["real"]["value"]:.2f}%')
+    elif real10 is not None:
         computed["real_10y"] = (real10, None, f"{real10:.2f}%")
-    be10 = value_at(series.get("T10YIE") or [])
-    if be10 is not None:
-        computed["breakeven_10y"] = (be10, None, f"{be10:.2f}%")
+    if _lc["infl"]:
+        computed["breakeven_10y"] = (_lc["infl"]["value"], _prev("infl"), f'{_lc["infl"]["value"]:.2f}%')
     if debt.interest_to_revenue is not None:
         computed["interest_to_revenue"] = (debt.interest_to_revenue, None,
                                            f"{debt.interest_to_revenue:.1f}%")
@@ -3178,6 +3202,19 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         computed["ig_spread"] = (ig_oas, value_at(series.get("BAMLC0A0CM") or [], 1),
                                  f"{ig_oas:.2f}%")
     lights = _lights_from(computed, cfg.get("regime_lights") or [])
+    # 三顆拆解燈的狀態軌跡（近 12 個月月底）
+    _hist_src = {"term_premium": _tp_rows, "real_10y": _ds["real"], "breakeven_10y": _ds["infl"]}
+    _cfgs = {c["key"]: c for c in cfg.get("regime_lights") or []}
+    for _l in lights:
+        rows = _hist_src.get(_l.key)
+        if not rows or _l.key not in _cfgs:
+            continue
+        me: dict = {}
+        for r in rows:
+            if r.get("value") is not None:
+                me[r["date"][:7]] = r["value"]
+        _l.history = [{"date": m.replace("-", "/"), "status": regime._classify(v, _cfgs[_l.key]),
+                       "label": f"{v:.2f}%"} for m, v in list(me.items())[-12:]]
 
     # ---- 曲線 ----
     # 這一頁講的是長端，3M／2Y／5Y 對供給壓力沒有直接作用。

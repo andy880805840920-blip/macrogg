@@ -499,10 +499,10 @@ def supply_pressure(curve: CurveState, debt: DebtState,
     # ---- 結果：價格已經反映多少 ----
     priced = 0.0
     if curve.term_premium is not None:
-        v = (curve.term_premium - 0.4) * 2.0
+        v = (curve.term_premium - 0.2) * 2.0
         priced += v
         sp.priced.append({"label": "期限溢酬",
-                          "detail": f"{curve.term_premium:+.2f}%（中性參考 0.40%）",
+                          "detail": f"{curve.term_premium:+.2f}%（中性參考 0.20%，NY Fed ACM）",
                           "score": v})
     if curve.slope_30_10 is not None:
         v = (curve.slope_30_10 - 0.6) * 2.0
@@ -541,13 +541,13 @@ def supply_pressure(curve: CurveState, debt: DebtState,
 
 PRESSURE_TEXT = {
     "high": ("期限溢酬：偏高",
-             "期限溢酬高於 0.90% 的警戒線：投資人要求更高的補償才願意持有長天期債券，"
+             "期限溢酬（NY Fed ACM）高於 0.60% 的警戒線：投資人要求更高的補償才願意持有長天期債券，"
              "反映財政與供給壓力。這種環境下即使聯準會降息，長端殖利率也可能不跟著下降——"
              "曲線會走陡而非平行下移。"),
     "moderate": ("期限溢酬：中性",
-                 "期限溢酬在 0.40%–0.90% 之間，長端主要跟隨政策與通膨預期移動。"),
+                 "期限溢酬（NY Fed ACM）在 0.20%–0.60% 之間，長端主要跟隨政策與通膨預期移動。"),
     "low": ("期限溢酬：偏低",
-            "期限溢酬低於 0.40%，市場對持有長債沒有要求額外補償，長端有下行空間。"),
+            "期限溢酬（NY Fed ACM）低於 0.20%，市場對持有長債沒有要求額外補償，長端有下行空間。"),
     "unknown": ("期限溢酬：資料不足", ""),
 }
 # 首頁／情境頁上的短標籤

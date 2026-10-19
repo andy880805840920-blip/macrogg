@@ -99,6 +99,8 @@ def level_changes(rows: list[dict]) -> dict:
                       ("ytd", _before(rows, d[:4] + "-01-01"))):
         out[tag] = (last["value"] - base["value"]) * 100 if base else None
         out[tag + "_from"] = base["date"] if base else ""
+    y1 = _before(rows, (dt.date.fromisoformat(d) - dt.timedelta(days=364)).isoformat())
+    out["y1"] = y1["value"] if y1 else None
     return out
 
 

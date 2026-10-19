@@ -28,9 +28,19 @@ def _rates_body_full(d: dict) -> str:
                      + "。") if d["lights"] else ""
     # 檢核卡的一句結論：只由紅黃燈數量推出，跟勞動頁的檢核卡同一套做法。
     _crit, _warn = _lc.get("critical", 0), _lc.get("warning", 0)
+    # 警戒的是哪幾顆、各代表什麼（依三個組成份的新定義，2026-10 v4）
+    _CRIT_MEAN = {"term_premium": "長端要求的補償偏高，市場自行收緊金融條件",
+                  "curve_30_10": "長端斜率走陡，供給或財政疑慮升溫",
+                  "interest_to_revenue": "利息負擔吃掉的稅收偏高",
+                  "r_minus_g": "實質利率高於成長，債務會自我累積",
+                  "real_10y": "實質利率偏高，壓抑投資",
+                  "breakeven_10y": "長期通膨預期的錨定鬆動",
+                  "curve_10_2": "曲線倒掛，衰退訊號",
+                  "ig_spread": "企業融資成本上升"}
+    _crit_ls = [l for l in d["lights"] if l.status == "critical"]
     if _crit:
         _li_lean = "hawkish"
-        _li_txt = "供給端的壓力已經反映在市場指標上，不只是算出來的。"
+        _li_txt = "；".join(f"{l.label}：{_CRIT_MEAN.get(l.key, '越過警戒線')}" for l in _crit_ls) + "。"
     elif _warn:
         _li_lean = "neutral"
         _li_txt = "壓力在累積，但還沒有越線。"
@@ -124,7 +134,7 @@ def _rates_body_full(d: dict) -> str:
         if _tp > 0.6:
             decomp_impact = (
                 f'<div class="impact hawkish">期限溢酬 {_tp:+.2f}%{esc(_chg)}，'
-                f'高於 0.40% 的中性參考——市場對長期持債要求的補償偏高，'
+                f'高於 0.60% 的警戒線（ACM 2015 年以來約第 90 百分位）——市場對長期持債要求的補償偏高，'
                 f'這一段降息壓不下來。</div>')
         elif _tp < 0.2:
             decomp_impact = (
