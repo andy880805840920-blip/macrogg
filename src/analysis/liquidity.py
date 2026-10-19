@@ -29,7 +29,7 @@ CORRIDOR = [
 # 不同資料來源，corridor_series() 管不到，呼叫端（build.build_liquidity_context）
 # 自己組好這條線再併進 lines 清單。
 SRF_RATE_LABEL = "SRF 利率（走廊名目上緣）"
-SRF_RATE_COLOR = "var(--critical)"
+SRF_RATE_COLOR = "var(--line-3)"   # 紫色：跟 EFFR 的橘棕、SOFR／ON RRP 的藍都拉得開
 
 # SRF 動用視為「有在用」的門檻（十億美元）。5000 萬美元以下視為雜訊（操作尾差）。
 SRF_USE_FLOOR = 0.05

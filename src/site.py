@@ -74,7 +74,7 @@ CSS = """
      而「展開…」這種連結、燈號狀態字全都用它。圖表線條另外留一組亮色，
      線條屬於圖形元素，門檻是 3:1，不必跟著壓深。 */
   --series-1:#1f5fae; --series-2:#a94420;
-  --line-1:#2a78d6; --line-2:#eb6834;
+  --line-1:#2a78d6; --line-2:#eb6834; --line-3:#7b3fb5;
   --pos:#2a78d6; --neg:#e34948; --muted-bar:#b8b7af;
   /* --warning 從 #936400 再壓深一級：它在白底上是 5.17，剛好過關，
      但疊在有色底（例如 .k-surp 的紅色淡底）上只剩 4.39，掉到 AA 以下。
@@ -4143,7 +4143,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
   --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
-  --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c;
+  --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
   --good:#5ccb78; --warning:#e3b552; --serious:#f29a72; --critical:#f47b7b;
   --tint-dov:rgba(100,167,244,.15); --tint-haw:rgba(242,154,114,.16);
@@ -4155,7 +4155,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
   --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
-  --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c;
+  --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
   --good:#5ccb78; --warning:#e3b552; --serious:#f29a72; --critical:#f47b7b;
   --tint-dov:rgba(100,167,244,.15); --tint-haw:rgba(242,154,114,.16);
