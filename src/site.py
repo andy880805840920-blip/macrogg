@@ -2335,6 +2335,7 @@ details.home-module[open]{padding-bottom:0}
 @media(min-width:620px){.lq-cards{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1000px){.lq-cards{grid-template-columns:repeat(3,1fr)}}
 .lq-card{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.lq-note{margin-top:12px;padding:11px 14px;border-radius:10px;background:var(--surface-2);font-size:13.5px;line-height:1.75}
 .lq-card b{font-size:13.5px}.lq-card p{margin:4px 0 0;font-size:13px;line-height:1.65;color:var(--text-secondary)}
 .l-link{display:block;width:fit-content;margin-top:2px;padding:12px 0;font-size:12px;
   font-weight:600;color:var(--series-1);text-decoration:none}
