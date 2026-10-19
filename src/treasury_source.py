@@ -537,7 +537,7 @@ def sec_mmf() -> dict:
     url = "https://www.sec.gov" + m.group(1)
     blob = requests.get(url, timeout=90, headers=hdr)
     blob.raise_for_status()
-    sh = _xlsx_sheets(blob.content, {"Tab.2.1", "Tab.3.9", "Tab.4.3", "Tab.4.3H"})
+    sh = _xlsx_sheets(blob.content, {"Tab.2.1", "Tab.3.9", "Tab.4.3", "Tab.4.3H", "Tab.5.1", "Tab.5.1H"})
     keymap = {("Government", "Government"): "gov", ("Government", "Treasury"): "treasury",
               ("Prime", "Institutional"): "prime_inst", ("Prime", "Retail"): "prime_retail",
               ("Prime", "Subtotal"): "prime", ("Tax Exempt", "Subtotal"): "taxex", ("Total", "Total"): "total"}
@@ -551,20 +551,27 @@ def sec_mmf() -> dict:
                     out.setdefault(mo, {})[k] = v
         return out
     assets, flows = by_month("Tab.2.1"), by_month("Tab.3.9")
-    yields: dict = {}
-    for (name,), ser in _sec_table(sh.get("Tab.4.3H") or [], 1).items():
-        k = {"Government": "gov", "Treasury": "treasury", "Prime": "prime"}.get(name)
-        for mo, v in (ser.items() if k else []):
-            yields.setdefault(mo, {})[k] = v
-    for mo, v in by_month("Tab.4.3").items():
-        y = {"gov": v.get("gov"), "treasury": v.get("treasury")}
-        a = assets.get(mo) or {}
-        wi, wr = a.get("prime_inst") or 0, a.get("prime_retail") or 0
-        if v.get("prime_inst") is not None and v.get("prime_retail") is not None and wi + wr:
-            y["prime"] = (v["prime_inst"] * wi + v["prime_retail"] * wr) / (wi + wr)
-        yields.setdefault(mo, {}).update({k: x for k, x in y.items() if x is not None})
-    return {"url": url, "report": f"{m.group(3)}-{m.group(2)}",
-            "assets": assets, "flows": flows, "yields": yields}
+    def by_type(hist_tab, tab):
+        """
+        Government／Treasury／Prime 三條：2016-10 以前用 *H 表（Prime 不分機構／零售），
+        之後 Prime 用機構型與零售型的淨資產加權（SEC 2016 年後才分開申報）。
+        """
+        out: dict = {}
+        for (name,), ser in _sec_table(sh.get(hist_tab) or [], 1).items():
+            k = {"Government": "gov", "Treasury": "treasury", "Prime": "prime"}.get(name)
+            for mo, v in (ser.items() if k else []):
+                out.setdefault(mo, {})[k] = v
+        for mo, v in by_month(tab).items():
+            y = {"gov": v.get("gov"), "treasury": v.get("treasury")}
+            a = assets.get(mo) or {}
+            wi, wr = a.get("prime_inst") or 0, a.get("prime_retail") or 0
+            if v.get("prime_inst") and v.get("prime_retail") and wi + wr:
+                y["prime"] = (v["prime_inst"] * wi + v["prime_retail"] * wr) / (wi + wr)
+            out.setdefault(mo, {}).update({k: x for k, x in y.items() if x is not None})
+        return out
+    # 7 日淨收益率（%）；WAM 加權平均到期天數（天，Tab.5.1：資產加權）
+    return {"url": url, "report": f"{m.group(3)}-{m.group(2)}", "assets": assets, "flows": flows,
+            "yields": by_type("Tab.4.3H", "Tab.4.3"), "wam": by_type("Tab.5.1H", "Tab.5.1")}
 
 
 def ofr_mmf() -> dict:

@@ -3551,6 +3551,14 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         ("net", "合計淨流量", "var(--text-primary)"),
         unit=" 億美元", digits=0, scale=10, fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}")
         if mmf.get("flows") else "")
+    _wp = lambda k: [{"date": r["date"], "value": r[k]} for r in mmf.get("wam") or [] if r.get(k) is not None]
+    mmf_wam_chart = (charts.compact_lines([
+        {"label": "Government MMF", "color": "var(--line-1)", "points": _wp("gov")},
+        {"label": "Treasury MMF", "color": "var(--series-2)", "points": _wp("treasury")},
+        {"label": "Prime MMF", "color": "var(--line-2)", "points": _wp("prime")},
+    ], unit=" 天", height=170, digits=1, months=190, xmonths=True, zero=True, step=10,
+        refs=[{"value": 60.0, "label": "法規上限 60 天"}],
+        aria="MMF 加權平均到期天數（WAM）") if mmf.get("wam") else "")
     _yp = lambda k: [{"date": r["date"], "value": r[k]} for r in mmf.get("yields") or [] if r.get(k) is not None]
     mmf_yield_chart = (charts.compact_lines([
         {"label": "Government MMF", "color": "var(--line-1)", "points": _yp("gov")},
@@ -3672,6 +3680,8 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "mmf_ytd_chart": mmf_ytd_chart,
         "mmf_flow_chart": mmf_flow_chart,
         "mmf_yield_chart": mmf_yield_chart,
+        "mmf_wam_chart": mmf_wam_chart,
+        "mmf_wam_text": lq.wam_reading(mmf.get("wam_last")),
         "mmf_spread_chart": mmf_spread_chart,
         "mmf_hold_chart": mmf_hold_chart,
         "mmf_repo_chart": mmf_repo_chart,

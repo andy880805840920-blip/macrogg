@@ -462,19 +462,16 @@ def _mmf_explain(v: dict, bills_out: float | None) -> str:
          "升息循環裡兩者差距拉大，錢從銀行流向 MMF；降息時 MMF 收益率先降、差距收窄，流入就會放緩——"
          "差距收窄到接近 0 時，MMF 的資金來源就可能轉為流出。</p>"
          "<p><b>政策預期：</b>市場預期降息時，MMF 會拉長持有期限（買較長的 T-Bills、定期回購）鎖住收益，"
-         "隔夜回購的現金供給變少；預期升息或不確定時則縮短期限，偏好隔夜回購與 ON RRP。</p>"
+         "隔夜回購的現金供給變少；預期升息或不確定時則縮短期限，偏好隔夜回購與 ON RRP。"
+         "上方的加權平均到期天數（WAM）就是這個態度的量化：法規上限 60 天，"
+         "2022 年 Fed 快速升息時，Government MMF 的 WAM 從年初約 30 天一路縮到 2023 年 1 月的 9 天；"
+         "2023 年下半年市場判斷升息到頂，WAM 又拉回 30 天以上，提前鎖住高利率。"
+         "看的是方向與變化速度：連續幾個月拉長＝押注降息，快速縮短＝防範升息或不確定性升高。</p>"
          "<p><b>風險偏好：</b>Prime 資產與流量的變化反映投資人對信用風險的胃口；壓力時期錢會從 Prime 逃向 Government／Treasury，"
          "銀行的 CD 與商業本票融資跟著收緊。</p>"
          "<p><b>部位配置：</b>看回購的交易對手——ON RRP 幾乎歸零代表緩衝已用完，MMF 的每一塊錢都已經在市場上；"
          "FICC 集中清算回購快速增加，則反映 SEC 公債集中清算新規逐步上路，回購交易往清算所集中。"
          "季底外國銀行為了美化資產負債表縮減回購借款，MMF 的現金會暫時回流 ON RRP。</p>"),
-        ("資料來源與限制",
-         "<p>你附圖的三個來源：ICI 每週 MMF 資產可以免費瀏覽，但網站會擋程式自動下載，無法穩定每天更新；"
-         "Crane Data 是付費資料。所以這裡改用兩個同樣來自 MMF 向 SEC 申報的 Form N-MFP、而且免費開放下載的官方來源："
-         "<b>SEC Money Market Fund Statistics</b>（淨資產、淨流量、7 日收益率，分 Government／Treasury／Prime／Tax Exempt，"
-         "約晚 6 週）與 <b>OFR 美國 MMF Monitor</b>（持有部位與回購交易對手，約晚 2 週）。"
-         "缺點是只有月資料；附圖 1 的週資料與附圖 3 的 T-Bills／coupon／FRN 細分，這兩個來源沒有。"
-         "銀行存款利率用 FDIC 全國儲蓄存款利率（2021 年 4 月起 FDIC 改了算法，前後兩段在那裡接起來）。</p>"),
     ]
     return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}</div></details>'
                    for t, b in items)
@@ -691,6 +688,9 @@ def liquidity_body(d: dict) -> str:
     {_mmf_cells(mv, _bills_out)}
     <div class="viz-block"><div class="viz-h">年初至今累計淨流量（億美元）</div>{d.get("mmf_ytd_chart") or ""}</div>
     <div class="viz-block"><div class="viz-h">各類型每月淨流量（億美元）</div>{d.get("mmf_flow_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">平均持有期限：加權平均到期天數（WAM，天）</div>
+      {(f'<p class="viz-sub">{esc(d["mmf_wam_text"])}</p>' if d.get("mmf_wam_text") else "")}
+      {d.get("mmf_wam_chart") or ""}</div>
     <div class="viz-block"><div class="viz-h">7 日淨收益率 vs 銀行儲蓄存款（%）</div>{d.get("mmf_yield_chart") or ""}</div>
     <div class="viz-block"><div class="viz-h">MMF 比銀行存款多賺多少（百分點）</div>{d.get("mmf_spread_chart") or ""}</div>
     <div class="viz-block"><div class="viz-h">持有部位月變動（億美元）</div>{d.get("mmf_hold_chart") or ""}</div>

@@ -466,6 +466,32 @@ def _prev_month(m: str) -> str:
     return f"{y - 1}-12" if mo == 0 else f"{y}-{mo:02d}"
 
 
+def _shift_months(m: str, n: int) -> str:
+    y, mo = int(m[:4]), int(m[5:7]) + n
+    while mo <= 0:
+        y, mo = y - 1, mo + 12
+    while mo > 12:
+        y, mo = y + 1, mo - 12
+    return f"{y}-{mo:02d}"
+
+
+def wam_reading(w: dict | None) -> str:
+    """WAM 最新值對 3 個月前的方向 → 一句白話（門檻 ±2 天，小於這個算持平）。"""
+    if not w or w.get("gov") is None or w.get("gov_3m") is None:
+        return ""
+    d = w["gov"] - w["gov_3m"]
+    mo = f'{int(w["month"][5:])} 月'
+    if d <= -2:
+        tilt = "縮短期限、留在隔夜，傾向不押注降息（或防範升息）"
+    elif d >= 2:
+        tilt = "拉長期限、鎖住收益，傾向押注未來降息"
+    else:
+        tilt = "期限大致不變，對利率方向沒有明顯押注"
+    return (f'{mo} Government MMF 平均到期 {w["gov"]:.1f} 天，比 3 個月前 {d:+.1f} 天'
+            + (f'、比 1 年前 {w["gov"] - w["gov_12m"]:+.1f} 天' if w.get("gov_12m") is not None else "")
+            + f"：{tilt}。")
+
+
 def fdic_savings(sndr_rows: list, legacy: dict) -> dict:
     """{'YYYY-MM': %}：2021-04 以前用停發的舊序列（固定存檔），之後用 SNDR。"""
     out = {m: v for m, v in ((legacy or {}).get("data") or {}).items() if m < "2021-04"}
@@ -530,6 +556,17 @@ def mmf_view(sec: dict, ofr: dict, fdic: dict, today: str) -> dict:
                    "prime": v.get("prime"), "fdic": fd,
                    "spread": (v["gov"] - fd) if v.get("gov") is not None and fd is not None else None})
     out["yields"] = ys
+    # 加權平均到期天數（WAM）：MMF 對未來利率的押注。拉長＝預期降息、想鎖住收益；
+    # 縮短＝預期升息或不確定，留在隔夜。法規上限 60 天。
+    wam = sec.get("wam") or {}
+    out["wam"] = [{"date": k + "-01", **wam[k]} for k in sorted(wam)]
+    wk = sorted(wam)
+    if wk and wam[wk[-1]].get("gov") is not None:
+        last = wk[-1]
+        ref = lambda n: next((wam[k] for k in reversed(wk) if k <= _shift_months(last, -n)), None)
+        w3, w12 = ref(3), ref(12)
+        out["wam_last"] = {"month": last, **wam[last],
+                           "gov_3m": (w3 or {}).get("gov"), "gov_12m": (w12 or {}).get("gov")}
     om = sorted(ofr or {})
     hold = []
     for k in om[-19:]:
