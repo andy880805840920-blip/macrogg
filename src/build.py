@@ -3139,6 +3139,9 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         if len(_acm) > 64:
             curve.tp_change_3m = _acm[-1]["value"] - _acm[-64]["value"]
     real10 = (curve.decomposition or {}).get("real")
+    if real10 is None:
+        # TIPS 晚名目一天公布：當天拆解湊不齊時，用 TIPS 自己最新一筆（r − g 燈號才不會變成無資料）
+        real10 = value_at(series.get("DFII10") or [])
     debt = rt.debt_state(series, real_10y=real10, real_growth=real_growth or 1.8)
     _hs_cfg = cfg.get("hyperscalers") or {}
     _ig_cfg = cfg.get("ig_market") or {}
