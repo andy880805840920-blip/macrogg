@@ -1,7 +1,13 @@
 {
- "hash": "322a58e9b09bb043",
- "text": "聯準會主席華許的發言被市場解讀為支持 10/28 會議維持利率不變，投資人隨即調降本月升息預期至 20% 以下。這項轉變打斷了先前強勢通膨數據帶來的升息預期，也扭轉美元的上升動能。黃金價格應聲上漲，現貨金 10/18 上升 0.4% 至 4180.29 美元，期貨更突破 4200 美元關卡至 4200.92 美元；白銀、鉑金、鈀金也同步走高。¶分析人士指出，更高的借貸成本通常對不計息的黃金不利，但財政與債務永續性疑慮正改變市場對高殖利率的解讀——投資人不再視其為經濟成長強勁的信號，反而將其視為持有黃金避險的理由。中國投資人也因股市與房地產疲弱而持續買進黃金，進一步支撐金價。\n中國第三季 GDP 年增 4.5%，超越 4.4% 預期並加速自前季 4.3%，帶動人民幣升至 2022 年 7 月以來高點，美元指數 10/18 小幅下滑 0.04% 至 101.80。\n高盛警告 AI 超大型雲端廠商信貸利差創年內新高但股價未充分反映，若利差續擴恐面臨 15% 補跌空間，建議投資人對沖或放空台灣半導體部位。",
+ "hash": "ed30fba647c655f2",
+ "text": "聯準會主席華許的言論持續降溫升息預期，市場將 10/28 會議維持利率的機率定價至 87%，升息機率跌至不足 20%。受此影響，黃金價格 10/18 上漲，現貨金突破 4200 美元，美國黃金期貨更漲至 4200.92 美元，銀、鉑、鈀等貴金屬也同步上揚。¶先前 10 月中旬公布的美國通膨數據強於預期，一度重燃升息預期並推升美元，但華許的評論打斷了這波升勢。分析師指出，財政與債務永續性疑慮正使高殖利率看起來不像經濟成長強勁的信號，反而成為持有黃金作為對沖的理由，支撐貴金屬的長期前景，儘管短期仍面臨高殖利率與強勢美元的壓力。\n中國第三季 GDP 成長 4.5%，超越 4.4% 預期，9 月零售銷售與工業產出也優於預期，人民幣升至四年高點，但亞股整體仍小幅下跌，AI 融資與獲利疑慮持續拖累科技股。\n高盛警告 AI 超大型雲端廠商信貸利差創年內新高但股價未反映，若利差擴大恐面臨 15% 補跌空間，並建議投資人對沖或做空台灣半導體部位，因資本支出增速已見頂。",
  "links": [
+  {
+   "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-19T06:23:00+00:00"
+  },
   {
    "title": "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
    "link": "https://finance.yahoo.com/markets/commodities/articles/gold-rises-warsh-remarks-curb-013418779.html?.tsrc=rss",
@@ -13,6 +19,12 @@
    "link": "https://finance.yahoo.com/markets/currencies/articles/asia-fx-ticks-higher-yuan-044735096.html?.tsrc=rss",
    "source": "Yahoo Finance",
    "at": "2026-10-19T04:47:35+00:00"
+  },
+  {
+   "title": "Asia stocks edge lower despite stronger China growth as AI jitters persist",
+   "link": "https://finance.yahoo.com/markets/stocks/articles/asia-stocks-edge-lower-despite-050922473.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-19T05:09:22+00:00"
   }
  ],
  "fedwatch": {
@@ -290,15 +302,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-19T07:11:11.129259+00:00",
+ "at": "2026-10-19T07:51:05.506971+00:00",
  "layout": "main",
  "topics": {
-  "hash": "b93364aa67e62af5",
+  "hash": "c046d57381f42c2d",
   "items": [
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，維持在 110 美元附近，但供應接近戰前水準限制漲幅",
+    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，10/19維持在110美元附近，儘管全球供應已接近戰前水準，但地緣政治風險持續推升油價",
     "links": [
      {
       "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
@@ -307,17 +319,17 @@
       "at": "2026-10-19T05:07:00+00:00"
      },
      {
-      "title": "油價：權衡中東衝突與供應接近戰前水準，WTI、布油亞洲盤中齊跌",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNR1JwTkp4RTRkU2ctTE5iOTQwM0xYNUNYQVRrXzc3Ui1oaTc5NV9LOWN3WkdiMndCb211akpnMUFXN2JZblF4bnkzNGlWQlZrZkpFbWM0bFFUODhBSkNRVmpjQ3hFUEQtR0FwUGJLVDdZTlJyRDdjLXVTRnVhb0ZIVDZZcnFDUWNN?oc=5",
+      "title": "《國際油價》美取消對俄制裁 10/19周一歐美原油期貨電子盤回吐",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNdThzTFVua1ltV2ZhTUNNWG1CNWt4bzBvdkJGaU1zY09xejdlSzRHM1lyeTA4bTA0d2FsMndDZWtlSWJSMWRHMmxqMlFRakNtcFdwZGF2M0JyUWVpN0ZfWlRvRUx4SmJiNHZUeXVJZ2JlM1pxekd2clNfUlA5a0t4T09CbnJGR2FPd241ejBIdVZhdw?oc=5",
       "source": "富聯網",
-      "at": "2026-10-19T01:17:00+00:00"
+      "at": "2026-10-19T03:31:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨 10/19 反彈，標普 500 期貨上漲 0.8%、那斯達克期貨漲逾 1%，投資人期待本周大科技公司財報能恢復動能，那斯達克上周跌幅達 4.5%，創 6 月以來最差單周表現",
+    "text": "美股期貨 10/19 盤前反彈，標普 500 期貨漲 0.8%、那斯達克期貨漲逾 1%，投資人期待本週 Netflix、特斯拉、Meta 等科技大廠財報能恢復市場動能，此前那斯達克上週跌 4.5%，創 6 月初以來最差週表現",
     "links": [
      {
       "title": "No ‘Black Monday’? Nasdaq, S&P 500, Dow Futures Spike As Big Tech Earnings Loom This Week",
@@ -330,24 +342,30 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "三星傳將採用台積電技術製造輝達下一代記憶晶片，顯示台積電在高階晶片製造的主導地位",
+    "text": "賓士與輝達延長策略合作，結合賓士MB.OS作業系統與輝達加速運算技術開發新一代自動駕駛系統，支援城市點對點駕駛與未來SAE-Level 4標準應用",
     "links": [
      {
-      "title": "Samsung to use TSMC technology for Nvidia's next-generation memory chips, Seoul newspaper reports",
-      "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQLVd3RU5QdzNwZHd0cUNCbUQxM3B6M2JOTXZZbEE4b3Y4czkxSjBuNklIRXU2S1VyRld6WTlRQUdlZkN3TGNRcng5cjR6ZEViNXNqcHh2RnlRU2hWVXRPUVFjVXRvd2FaaTVkd002aUk4WHlEQ2wxTGk3alF5S0FUTGNMUXF2dV9QUjk4eThjcWVPaVBLYzc2c0NUaUN4UUVMcVZTSERiMDE5VXp0NDdoVFpuS2E0TGZoUnBrRTExcnZDRlJia1VNcU40SUxQcE1y?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-18T12:09:43+00:00"
+      "title": "Mercedes",
+      "link": "https://tw.stock.yahoo.com/news/mercedes-benz%E8%88%87nvidia%E5%BB%B6%E9%95%B7%E7%AD%96%E7%95%A5%E5%90%88%E4%BD%9C-%E8%87%B4%E5%8A%9B%E7%99%BC%E5%B1%95%E6%96%B0-%E4%BB%A3%E8%87%AA%E9%A7%95%E7%B3%BB%E7%B5%B1-073145694.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T07:31:45+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "外資連續 9 個交易日賣超台股，10/19 再砍 767.43 億元，累計賣超 7585.25 億元，期貨淨空單仍在 9 萬口以上，台股跌 289 點至 46822 點",
+    "text": "台股10/19下跌289點收46,822點，外資連9日賣超累計7,585億元，期貨淨空單仍在91,145口高檔，分析師指出若結算前後能降至8萬口以下，現貨賣壓才有機會減輕",
     "links": [
      {
-      "title": "【Follow法人】外資再砍767億元！連9日提款台股逾7585億元",
-      "link": "https://tw.stock.yahoo.com/news/%E3%80%90follow%E6%B3%95%E4%BA%BA%E3%80%91%E5%A4%96%E8%B3%87%E5%86%8D%E7%A0%8D767%E5%84%84%E5%85%83%EF%BC%81%E9%80%A39%E6%97%A5%E6%8F%90%E6%AC%BE%E5%8F%B0%E8%82%A1%E9%80%BE7585%E5%84%84%E5%85%83-070339089.html",
+      "title": "台股盤中重挫941點 台積電尾盤爆量收平",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E7%9B%A4%E4%B8%AD%E9%87%8D%E6%8C%AB941%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%B0%BE%E7%9B%A4%E7%88%86%E9%87%8F%E6%94%B6%E5%B9%B3-074000966.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T07:40:00+08:00"
+     },
+     {
+      "title": "【Follow法人】外資再砍767億元！連9日提款台股逾7585億元 分析師：盯緊期貨空單",
+      "link": "https://tw.stock.yahoo.com/news/%E3%80%90follow%E6%B3%95%E4%BA%BA%E3%80%91%E5%A4%96%E8%B3%87%E5%86%8D%E7%A0%8D767%E5%84%84%E5%85%83%EF%BC%81%E9%80%A39%E6%97%A5%E6%8F%90%E6%AC%BE%E5%8F%B0%E8%82%A1%E9%80%BE7585%E5%84%84%E5%85%83-%E5%88%86%E6%9E%90%E5%B8%AB%EF%BC%9A%E7%9B%AF%E7%B7%8A%E6%9C%9F%E8%B2%A8%E7%A9%BA%E5%96%AE-073628844.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T07:03:39+08:00"
      }
@@ -356,8 +374,14 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "美國小企業主對經營狀況保持信心，72% 對現金流滿意，但通膨與勞工品質仍是主要隱憂，經濟表現能否轉化為川普選票支持成為變數",
+    "text": "儘管美國小企業主對經營狀況保持信心，72%滿意現金流、費城地區92%企業主認為表現符合預期，但川普民意支持度仍低迷，凸顯經濟表現與選民感受的矛盾",
     "links": [
+     {
+      "title": "US Chamber of Commerce Endorses Paxton in Texas Senate Race",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOMGVaRkJWcUowOGl1YUtINmR3X2dDb01iUlB6bWdUTGo3ZVhLLU1PZ1RoYkhFN1pTVE1jb0k1Q2QxT183RGRFeTc2OWVKR2RONjdBb2hiNDU4c3B5ZVVFNWlxU3VTaXRFUk1NdS1US19TU3NsR1NKWlV1NGduUm1UeUxUY3BnSWFlMEZ4OEZkZ2hFSV9zWk54V1J3MHR6TFA2TWJ4SjN0clBfeGFZaWln?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T16:28:28+00:00"
+     },
      {
       "title": "美小企業主信心穩健難助川普 民調低迷挑戰選情",
       "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%B0%8F%E4%BC%81%E6%A5%AD%E4%B8%BB%E4%BF%A1%E5%BF%83%E7%A9%A9%E5%81%A5%E9%9B%A3%E5%8A%A9%E5%B7%9D%E6%99%AE-%E6%B0%91%E8%AA%BF%E4%BD%8E%E8%BF%B7%E6%8C%91%E6%88%B0%E9%81%B8%E6%83%85-065455254.html",
@@ -369,8 +393,14 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "荷蘭央行因地緣政治風險升高，將 78 噸紐約黃金與 7 噸加拿大黃金移至倫敦，稱倫敦作為全球最大黃金交易樞紐能提升危機應變能力",
+    "text": "荷蘭央行因「地緣政治局勢升溫」將78噸紐約黃金與7噸加拿大黃金移至倫敦，稱倫敦作為全球最大黃金交易樞紐能提升危機應變能力，反映全球央行重新調整黃金儲備的趨勢",
     "links": [
+     {
+      "title": "Gold edges higher as softer oil eases inflation woes",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T03:11:00+00:00"
+     },
      {
       "title": "Europe sent its gold to the U.S. for safe keeping during World War II. Central banks are now reshuffling their reserves for a new era of uncertainty",
       "link": "https://finance.yahoo.com/economy/policy/articles/europe-sent-gold-u-safe-232939141.html?.tsrc=rss",
@@ -378,41 +408,19 @@
       "at": "2026-10-18T23:29:39+00:00"
      }
     ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣 10/12 至 10/16 貶值 1.37%，從 31.895 元貶至 32.338 元，央行指出主要因國際股市動盪與外資賣超台股併匯出股利，同期外資淨匯出 179.61 億美元",
-    "links": [
-     {
-      "title": "新台幣摜破32.5元！央行罕見盤中發布三點說明穩定匯市",
-      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%91%9C%E7%A0%B432-5%E5%85%83-%E5%A4%AE%E8%A1%8C%E7%BD%95%E8%A6%8B%E7%9B%A4%E4%B8%AD%E7%99%BC%E5%B8%83%E4%B8%89%E9%BB%9E%E8%AA%AA%E6%98%8E%E7%A9%A9%E5%AE%9A%E5%8C%AF%E5%B8%82-062508357.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T06:25:08+08:00"
-     }
-    ]
    }
   ],
-  "at": "2026-10-19T07:36:59.010571+00:00"
+  "at": "2026-10-19T07:51:24.019534+00:00"
  },
  "main_source_titles": [
+  "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
   "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
-  "Dollar holds losses; yuan hits 4-yr high after China Q3 GDP beat"
+  "Dollar holds losses; yuan hits 4-yr high after China Q3 GDP beat",
+  "Asia stocks edge lower despite stronger China growth as AI jitters persist"
  ],
  "headline": "華許降溫升息預期後，美債長端小幅走高，黃金突破 4200 美元",
- "rate_note": "華許降溫升息預期偏向壓低短端利率與升息預期，長端則因避險需求與財政疑慮而受支撐。10 年期 10/16 收盤 +1bp 至 5.10%，市場已在反映升息預期降溫帶來的長端支撐。",
+ "rate_note": "華許降溫升息預期偏向壓低短端利率與升息預期，但對長端殖利率的直接影響不明確，取決於市場如何權衡降息預期與財政風險。10 年期 10/16 收盤 5.10%，今日 +1bp，市場對長端的反應有限。",
  "recent_mains": [
-  {
-   "headline": "華許降溫升息預期，黃金與債市受惠，美債長端小幅走高",
-   "titles": [
-    "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
-    "Gold edges higher as softer oil eases inflation woes",
-    "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
-    "Asia FX ticks higher; yuan hits 4-yr high after China Q3 GDP beat",
-    "Asia stocks edge lower despite stronger China growth as AI jitters persist"
-   ],
-   "at": "2026-10-19T05:37:34.171209+00:00"
-  },
   {
    "headline": "華許降溫升息預期，黃金與債市受惠，美股科技股反彈",
    "titles": [
@@ -429,14 +437,30 @@
     "Dollar holds losses; yuan hits 4-yr high after China Q3 GDP beat"
    ],
    "at": "2026-10-19T07:11:11.129259+00:00"
+  },
+  {
+   "headline": "華許降溫升息預期後，美債長端小幅走高，黃金突破 4200 美元",
+   "titles": [
+    "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+    "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
+    "Dollar holds losses; yuan hits 4-yr high after China Q3 GDP beat",
+    "Asia stocks edge lower despite stronger China growth as AI jitters persist"
+   ],
+   "at": "2026-10-19T07:51:05.506971+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
    "headline": "華許降溫升息預期後，美債長端小幅走高，黃金突破 4200 美元",
-   "text": "聯準會主席華許的發言被市場解讀為支持 10/28 會議維持利率不變，投資人隨即調降本月升息預期至 20% 以下。這項轉變打斷了先前強勢通膨數據帶來的升息預期，也扭轉美元的上升動能。黃金價格應聲上漲，現貨金 10/18 上升 0.4% 至 4180.29 美元，期貨更突破 4200 美元關卡至 4200.92 美元；白銀、鉑金、鈀金也同步走高。¶分析人士指出，更高的借貸成本通常對不計息的黃金不利，但財政與債務永續性疑慮正改變市場對高殖利率的解讀——投資人不再視其為經濟成長強勁的信號，反而將其視為持有黃金避險的理由。中國投資人也因股市與房地產疲弱而持續買進黃金，進一步支撐金價。\n中國第三季 GDP 年增 4.5%，超越 4.4% 預期並加速自前季 4.3%，帶動人民幣升至 2022 年 7 月以來高點，美元指數 10/18 小幅下滑 0.04% 至 101.80。\n高盛警告 AI 超大型雲端廠商信貸利差創年內新高但股價未充分反映，若利差續擴恐面臨 15% 補跌空間，建議投資人對沖或放空台灣半導體部位。",
-   "rate_note": "華許降溫升息預期偏向壓低短端利率與升息預期，長端則因避險需求與財政疑慮而受支撐。10 年期 10/16 收盤 +1bp 至 5.10%，市場已在反映升息預期降溫帶來的長端支撐。",
+   "text": "聯準會主席華許的言論持續降溫升息預期，市場將 10/28 會議維持利率的機率定價至 87%，升息機率跌至不足 20%。受此影響，黃金價格 10/18 上漲，現貨金突破 4200 美元，美國黃金期貨更漲至 4200.92 美元，銀、鉑、鈀等貴金屬也同步上揚。¶先前 10 月中旬公布的美國通膨數據強於預期，一度重燃升息預期並推升美元，但華許的評論打斷了這波升勢。分析師指出，財政與債務永續性疑慮正使高殖利率看起來不像經濟成長強勁的信號，反而成為持有黃金作為對沖的理由，支撐貴金屬的長期前景，儘管短期仍面臨高殖利率與強勢美元的壓力。\n中國第三季 GDP 成長 4.5%，超越 4.4% 預期，9 月零售銷售與工業產出也優於預期，人民幣升至四年高點，但亞股整體仍小幅下跌，AI 融資與獲利疑慮持續拖累科技股。\n高盛警告 AI 超大型雲端廠商信貸利差創年內新高但股價未反映，若利差擴大恐面臨 15% 補跌空間，並建議投資人對沖或做空台灣半導體部位，因資本支出增速已見頂。",
+   "rate_note": "華許降溫升息預期偏向壓低短端利率與升息預期，但對長端殖利率的直接影響不明確，取決於市場如何權衡降息預期與財政風險。10 年期 10/16 收盤 5.10%，今日 +1bp，市場對長端的反應有限。",
    "links": [
+    {
+     "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-19T06:23:00+00:00"
+    },
     {
      "title": "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-rises-warsh-remarks-curb-013418779.html?.tsrc=rss",
@@ -448,9 +472,15 @@
      "link": "https://finance.yahoo.com/markets/currencies/articles/asia-fx-ticks-higher-yuan-044735096.html?.tsrc=rss",
      "source": "Yahoo Finance",
      "at": "2026-10-19T04:47:35+00:00"
+    },
+    {
+     "title": "Asia stocks edge lower despite stronger China growth as AI jitters persist",
+     "link": "https://finance.yahoo.com/markets/stocks/articles/asia-stocks-edge-lower-despite-050922473.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-19T05:09:22+00:00"
     }
    ],
-   "at": "2026-10-19T07:11:11.129259+00:00"
+   "at": "2026-10-19T07:51:05.506971+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",
