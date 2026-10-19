@@ -393,3 +393,66 @@ def liability_view(rows: list) -> dict:
     rrp["dom"], rrp["for"] = last["rrp_dom"], last["rrp_for"]
     total = sum(last[k] for k, _ in LIAB_ITEMS)
     return {"items": items, "date": last["date"], "total": total}
+
+
+# ---------------------------------------------------------------------------
+# 準備金充足度：準備金 ÷ 商業銀行總資產、準備金需求彈性（RDE）
+# ---------------------------------------------------------------------------
+RATIO_ALERT = 10.0          # 2019/9 回購危機前後跌破的水位（週資料最低 7.9%）
+
+
+def _snap(rows: list, key: str) -> dict:
+    """最新值、約 1 個月前、約半年前（≤ 最新 − 28／182 天的最近一筆）與淨變化。"""
+    import datetime as _dt
+    if not rows:
+        return {}
+    last = rows[-1]
+    d0 = _dt.date.fromisoformat(last["date"])
+    out = {"date": last["date"], "value": last[key]}
+    for tag, days in (("m1", 28), ("m6", 182)):
+        ref = _at_or_before(rows, (d0 - _dt.timedelta(days=days)).isoformat())
+        if ref:
+            out[tag] = {"date": ref["date"], "value": ref[key], "chg": last[key] - ref[key]}
+    return out
+
+
+def reserve_ratio(h41_rows: list, assets: list) -> list[dict]:
+    """
+    準備金（H.4.1 週三水位）÷ 全體商業銀行總資產（H.8 季調週三），%。
+    兩份週報都以週三為日期，只取兩邊都有的週（H.8 比 H.4.1 晚約一週公布，
+    所以最新一筆通常落後 H.4.1 一週）。
+    """
+    ta = {a["date"]: a["value"] for a in assets or []}
+    return [{"date": r["date"], "ratio": r["reserves"] / ta[r["date"]] * 100,
+             "reserves": r["reserves"], "assets": ta[r["date"]]}
+            for r in h41_rows or [] if ta.get(r["date"])]
+
+
+def reserve_ratio_view(rows: list) -> dict:
+    if not rows:
+        return {}
+    v = _snap(rows, "ratio")
+    low = min((r for r in rows if "2019-01-01" <= r["date"] <= "2019-12-31"),
+              key=lambda r: r["ratio"], default=None)
+    v["low2019"] = low
+    v["alert"] = RATIO_ALERT
+    v["below_alert"] = v["value"] < RATIO_ALERT
+    return v
+
+
+def rde_view(rde: dict) -> dict:
+    rows = (rde or {}).get("rows") or []
+    if not rows:
+        return {}
+    v = _snap(rows, "median")
+    last = rows[-1]
+    v["lo95"], v["hi95"] = last["lo95"], last["hi95"]
+    v["zero_in_ci"] = last["lo95"] <= 0 <= last["hi95"]
+    low = min((r for r in rows if "2019-01-01" <= r["date"] <= "2019-12-31"),
+              key=lambda r: r["median"], default=None)
+    v["low2019"] = low
+    v["sep2019"] = _at_or_before(rows, "2019-09-30")
+    v["release"] = rde.get("release", "")
+    v["update"] = rde.get("update", "")
+    v["bullets"] = rde.get("bullets") or []
+    return v

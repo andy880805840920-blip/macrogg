@@ -314,25 +314,46 @@ H41_KEYS = {"currency": ("RESTBC_N.WW", "WCICL"),       # 流通在外貨幣
             "rrp_for": ("RESPPLLRF_N.WW", "WLRRAFOIAL")}  # 國外官方與國際帳戶
 
 
-def h41_liabilities(weeks: int = 270) -> dict:
+def _ddp_csv(url: str, tries: int = 4) -> list[list[str]]:
+    """
+    理事會 DDP 下載。實測這個端點偶爾回 200 但內容是空的（連續請求時常見），
+    重試幾次就會拿到完整檔案；全部失敗才往外丟。
+    """
+    import csv
+    import io
+    import time
+    for i in range(tries):
+        r = requests.get(url, timeout=60, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        if r.text.strip():
+            return list(csv.reader(io.StringIO(r.text)))
+        time.sleep(2 + i * 2)
+    raise ValueError("DDP 回傳空內容")
+
+
+def _ddp_columns(rows: list[list[str]], keys: dict) -> list[dict]:
+    """DDP 的 seriescolumn 格式 → [{date, key: 原始數值}]（缺任何一欄的日期略過）。"""
+    hdr = next(row for row in rows if row and row[0] == "Time Period")
+    ix = {k: hdr.index(v) for k, v in keys.items()}
+    out = []
+    for row in rows[rows.index(hdr) + 1:]:
+        if not row or not re.match(r"\d{4}-\d{2}-\d{2}$", row[0]):
+            continue
+        vals = {k: _f(row[i]) for k, i in ix.items()}
+        if all(v is not None for v in vals.values()):
+            out.append({"date": row[0], **vals})
+    return out
+
+
+def h41_liabilities(weeks: int = 820) -> dict:
     """
     逐週（週三水位）Fed 負債端主要項目，十億美元：
     {"source": "H.4.1"|"FRED", "rows": [{date, currency, reserves, tga, rrp, rrp_dom, rrp_for}]}
     先抓理事會官方 DDP；失敗才用 FRED 同一組序列（FRED 是 H.4.1 的轉載）。
     """
-    import csv
-    import io
     try:
-        r = requests.get(H41_DDP.format(n=weeks), timeout=60, headers={"User-Agent": "Mozilla/5.0"})
-        r.raise_for_status()
-        rows = list(csv.reader(io.StringIO(r.text)))
-        hdr = next(row for row in rows if row and row[0] == "Time Period")
-        ix = {k: hdr.index(v[0]) for k, v in H41_KEYS.items()}
-        out = []
-        for row in rows[rows.index(hdr) + 1:]:
-            vals = {k: _f(row[i]) for k, i in ix.items()}
-            if row and re.match(r"\d{4}-\d{2}-\d{2}$", row[0]) and all(v is not None for v in vals.values()):
-                out.append({"date": row[0], **{k: v / 1e3 for k, v in vals.items()}})
+        raw = _ddp_columns(_ddp_csv(H41_DDP.format(n=weeks)), {k: v[0] for k, v in H41_KEYS.items()})
+        out = [{"date": r["date"], **{k: r[k] / 1e3 for k in H41_KEYS}} for r in raw]
         if len(out) > 50:
             return {"source": "H.4.1", "rows": out}
         raise ValueError(f"DDP 只回來 {len(out)} 筆")
@@ -350,6 +371,67 @@ def h41_liabilities(weeks: int = 270) -> dict:
                 by.setdefault(d, {})[k] = _f(v) / 1e3
     rows = [{"date": d, **v} for d, v in sorted(by.items()) if len(v) == len(H41_KEYS)]
     return {"source": "FRED", "rows": rows}
+
+
+# H.8（商業銀行資產負債）：全體商業銀行、季調、週資料的總資產（B1151NCBA，
+# 單位百萬美元）。紐約聯儲 RDE 用的分母就是這一條（FRED 的 TLAACBW027SBOG）。
+H8_DDP = ("https://www.federalreserve.gov/datadownload/Output.aspx?rel=H8"
+          "&series=17951c643555bee48d63bb6957a4a92e&lastobs={n}&from=&to="
+          "&filetype=csv&label=include&layout=seriescolumn&type=package")
+
+
+def bank_assets(weeks: int = 820) -> list[dict]:
+    """全體商業銀行總資產（季調，週三），[{date, value}]，十億美元。官方失敗才用 FRED。"""
+    try:
+        raw = _ddp_columns(_ddp_csv(H8_DDP.format(n=weeks)), {"v": "B1151NCBA"})
+        if len(raw) > 50:
+            return [{"date": r["date"], "value": r["v"] / 1e3} for r in raw]
+    except Exception as e:                         # noqa: BLE001
+        log.warning("H.8 官方下載失敗（%s），改用 FRED 轉載", e)
+    txt = requests.get("https://fred.stlouisfed.org/graph/fredgraph.csv?id=TLAACBW027SBOG",
+                       timeout=40, headers=UA).text
+    out = []
+    for line in txt.splitlines()[1:]:
+        d, _, v = line.partition(",")
+        if _f(v) is not None:
+            out.append({"date": d, "value": _f(v)})
+    return out[-weeks:]
+
+
+# 紐約聯儲「Reserve Demand Elasticity」：每月第三個週四 10:00（美東）更新，
+# 檔內是約每 5 個營業日一筆的即時估計（2010 年起），單位 bp／百分點。
+RDE_CSV = "https://www.newyorkfed.org/medialibrary/research/interactives/data/elasticity/elasticity-data.csv"
+RDE_CONTENT = ("https://www.newyorkfed.org/medialibrary/research/interactives/data/"
+               "elasticity/elasticity-content.json")
+
+
+def rde() -> dict:
+    """
+    {"rows": [{date, median, lo95, hi95, lo68, hi68}], "release": 'October 15, 2026',
+     "update": 'October 2026 Update', "bullets": [...英文原文]}
+    """
+    import csv
+    import io
+    r = requests.get(RDE_CSV, timeout=40, headers={"User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    rows = []
+    for x in list(csv.reader(io.StringIO(r.text)))[1:]:
+        try:
+            d = dt.datetime.strptime(x[0], "%m/%d/%Y").date().isoformat()
+            rows.append({"date": d, "median": float(x[1]), "lo95": float(x[2]), "hi95": float(x[3]),
+                         "lo68": float(x[4]), "hi68": float(x[5])})
+        except (ValueError, IndexError):
+            continue
+    out = {"rows": sorted(rows, key=lambda q: q["date"])}
+    try:
+        c = requests.get(RDE_CONTENT, timeout=30, headers={"User-Agent": "Mozilla/5.0"}).json()
+        it = c.get("interactive") or {}
+        out["release"] = ((it.get("latestRelease") or {}).get("info") or "").strip()
+        out["update"] = ((it.get("bullets") or {}).get("title") or "").strip()
+        out["bullets"] = [b.strip() for b in (it.get("bullets") or {}).get("items") or []]
+    except Exception as e:                         # noqa: BLE001
+        log.warning("RDE 說明文字取得失敗（%s）", e)
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -721,7 +803,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
     """
     {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol,
     bill_auctions, upcoming_bills, mspd, dts_bills, fed_bills, buybacks,
-    buyback_schedule, buyback_reactions, h41, failed}。
+    buyback_schedule, buyback_reactions, h41, bank_assets, rde, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -794,6 +876,13 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("Fed 負債端（H.4.1）取得失敗（%s）", e)
         out["h41"] = {}
         failed.append("h41")
+    for key, fn in (("bank_assets", bank_assets), ("rde", rde)):
+        try:
+            out[key] = fn()
+        except Exception as e:                     # noqa: BLE001
+            log.warning("%s 取得失敗（%s）", key, e)
+            out[key] = [] if key == "bank_assets" else {}
+            failed.append(key)
     # 財政部買回：近一年逐場結果＋暫定排程＋每場公告／結果後 1 小時殖利率反應
     try:
         out["buybacks"] = buyback_operations((end - dt.timedelta(days=370)).isoformat())

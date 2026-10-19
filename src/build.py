@@ -3505,6 +3505,26 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         {"label": "國外（外國官方與國際帳戶）", "color": "var(--series-2)", "points": _yi_pts("rrp_for")},
     ], unit="", height=140, digits=0, months=62, xmonths=True, zero=True, step=5000,
         aria="逆回購國內與國外拆分（億美元）") if _hr else "")
+
+    # 準備金充足度（近 15 年）：準備金 ÷ 商業銀行總資產（H.4.1 ÷ H.8），以及
+    # 紐約聯儲的準備金需求彈性（RDE）。兩張圖都標出 2019/9 回購危機。
+    _crisis = [{"date": "2019-09-17", "label": "2019/9 回購危機"}]
+    _ratio_rows = lq.reserve_ratio(_hr, _tr.get("bank_assets") or [])
+    ratio_view = lq.reserve_ratio_view(_ratio_rows)
+    ratio_chart = (charts.compact_lines(
+        [{"label": "準備金 ÷ 商業銀行總資產", "color": "var(--line-1)",
+          "points": [{"date": r["date"], "value": r["ratio"]} for r in _ratio_rows]}],
+        unit="%", height=170, digits=1, months=181, xmonths=True, step=2,
+        refs=[{"value": lq.RATIO_ALERT, "label": "10% 警戒線"}], marks=_crisis,
+        aria="準備金占商業銀行總資產比例（近 15 年）") if _ratio_rows else "")
+    _rde = _tr.get("rde") or {}
+    rde_view = lq.rde_view(_rde)
+    rde_chart = (charts.compact_lines(
+        [{"label": "RDE（中位數估計）", "color": "var(--line-2)",
+          "points": [{"date": r["date"], "value": r["median"]} for r in _rde.get("rows") or []]}],
+        unit="", height=170, digits=2, months=181, xmonths=True, step=0.5, zero=True,
+        refs=[{"value": 0.0, "label": "0：利率對準備金變動不敏感"}], marks=_crisis,
+        aria="準備金需求彈性 RDE（近 15 年，bp／百分點）") if _rde.get("rows") else "")
     _upcoming_bills = sorted(_tr.get("upcoming_bills") or [], key=lambda r: r["date"])[:8]
 
     # 補充：TGCR 近 6 個月，疊 SOFR 當對照（兩者都是擔保隔夜利率，樣本範圍不同）。
@@ -3585,4 +3605,8 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "liab": liab,
         "liab_chart": liab_chart,
         "rrp_split_chart": rrp_chart,
+        "ratio_view": ratio_view,
+        "ratio_chart": ratio_chart,
+        "rde_view": rde_view,
+        "rde_chart": rde_chart,
     }

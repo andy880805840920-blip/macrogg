@@ -11,6 +11,8 @@
 
 from __future__ import annotations
 
+import re
+
 from ..site import esc
 from . import teach, focus_evidence, state_chip
 
@@ -270,6 +272,142 @@ def _liab_note(it: dict, qra: dict | None, source: str) -> str:
             + f'<br><span style="font-size:10px;color:var(--muted)">{esc(asof)}</span>')
 
 
+def _small(txt: str) -> str:
+    return f'<span style="font-size:10px;color:var(--muted)">{esc(txt)}</span>'
+
+
+def _ratio_cells(v: dict) -> str:
+    if not v:
+        return '<div class="empty">H.4.1／H.8 資料本次取得失敗</div>'
+    lines = []
+    for tag, name in (("m1", "1 個月前"), ("m6", "半年前")):
+        r = v.get(tag)
+        if r:
+            lines.append(f'{name} {r["value"]:.2f}%（{r["chg"]:+.2f} 個百分點）')
+    note = "<br>".join(esc(x) for x in lines) + "<br>" + _small(f'資料 {_md(v["date"])}（H.8 比 H.4.1 晚約一週）')
+    cells = state_chip("準備金 ÷ 商業銀行總資產", f'{v["value"]:.2f}%', note,
+                       "watch" if v.get("below_alert") else "neutral")
+    lo = v.get("low2019")
+    if lo:
+        cells += state_chip("2019 年最低", f'{lo["ratio"]:.2f}%',
+                            esc(f'{lo["date"][:4]}/{_md(lo["date"])} 當週') + "<br>"
+                            + esc(f'距警戒線 {v["alert"]:.0f}%：目前高 {v["value"] - v["alert"]:+.2f} 個百分點'),
+                            "neutral")
+    return f'<div class="focus-grid liab-grid">{cells}</div>'
+
+
+_REGIME_ZH = (("abundant", "充裕（Abundant）"), ("ample", "充足（Ample）"), ("scarce", "稀缺（Scarce）"))
+
+
+def _rde_cells(v: dict) -> str:
+    if not v:
+        return '<div class="empty">紐約聯儲 RDE 資料本次取得失敗</div>'
+    lines = []
+    for tag, name in (("m1", "1 個月前"), ("m6", "半年前")):
+        r = v.get(tag)
+        if r:
+            lines.append(f'{name} {r["value"]:+.2f}（{r["chg"]:+.2f}）')
+    lines.append(f'95% 信賴區間 {v["lo95"]:+.2f} ～ {v["hi95"]:+.2f}')
+    rel = re.sub(r"^.*?ET\s*", "", v.get("release") or "")
+    note = ("<br>".join(esc(x) for x in lines) + "<br>"
+            + _small(f'估計日 {_md(v["date"])}・紐約聯儲 {rel} 發布（每月更新）'))
+    cells = state_chip("準備金需求彈性（RDE）", f'{v["value"]:+.2f}', note, "neutral")
+    verdict = next((zh for en, zh in _REGIME_ZH
+                    if any(en in b.lower() for b in (v.get("bullets") or [])[1:2])), "")
+    sig = ("統計上與 0 無差異：利率對準備金變動不敏感" if v.get("zero_in_ci")
+           else "顯著為負：利率已開始對準備金變動有反應")
+    cells += state_chip("紐約聯儲判讀", verdict or "—",
+                        esc(sig) + "<br>" + _small(v.get("update") or ""), "neutral")
+    return f'<div class="focus-grid liab-grid">{cells}</div>'
+
+
+def _demand_curve_svg() -> str:
+    """示意的準備金需求曲線：x＝準備金供給，y＝聯邦資金利率；三個區段＋同樣的供給減少在兩端造成的利率變化。"""
+    import math
+    W, H, x0, y0 = 640, 240, 48, 200
+    f = lambda x: 200 - 140 / (1 + math.exp((x - 190) / 38))   # x：48–620
+    pts = " ".join(f"{x},{f(x):.1f}" for x in range(x0, 621, 4))
+    reg = [(x0, 250, "稀缺 Scarce", "var(--neg)"), (250, 420, "充足 Ample", "var(--muted-bar)"),
+           (420, 620, "充裕 Abundant", "var(--pos)")]
+    bands = "".join(f'<rect x="{a}" y="16" width="{b - a}" height="{y0 - 16}" fill="{c}" opacity=".10"/>'
+                    f'<text x="{(a + b) / 2}" y="34" text-anchor="middle" font-size="13" font-weight="700" '
+                    f'fill="var(--text-primary)">{t}</text>' for a, b, t, c in reg)
+
+    def shift(xa, xb, lab, ly):
+        ya, yb = f(xa), f(xb)
+        return (f'<line x1="{xa}" y1="{y0}" x2="{xa}" y2="{ya:.1f}" stroke="var(--text-secondary)" stroke-dasharray="3 3"/>'
+                f'<line x1="{xb}" y1="{y0}" x2="{xb}" y2="{yb:.1f}" stroke="var(--text-secondary)" stroke-dasharray="3 3"/>'
+                f'<circle cx="{xa}" cy="{ya:.1f}" r="4" fill="var(--line-2)"/>'
+                f'<circle cx="{xb}" cy="{yb:.1f}" r="4" fill="var(--line-1)"/>'
+                f'<text x="{(xa + xb) / 2}" y="{ly}" text-anchor="middle" font-size="11.5" '
+                f'fill="var(--text-secondary)">{lab}</text>')
+    return (f'<svg viewBox="0 0 {W} {H}" width="100%" role="img" aria-label="準備金需求曲線示意圖" '
+            f'style="max-width:680px;display:block;margin:8px auto">'
+            f'{bands}'
+            f'<line x1="{x0}" y1="{y0}" x2="626" y2="{y0}" stroke="var(--text-secondary)"/>'
+            f'<line x1="{x0}" y1="16" x2="{x0}" y2="{y0}" stroke="var(--text-secondary)"/>'
+            f'<polyline points="{pts}" fill="none" stroke="var(--line-1)" stroke-width="3"/>'
+            + shift(170, 210, "準備金少一點 → 利率大跳", 64)
+            + shift(500, 540, "準備金少一點 → 利率幾乎不動", 168)
+            + f'<text x="337" y="226" text-anchor="middle" font-size="12" fill="var(--text-secondary)">'
+              f'準備金供給（右邊＝越多）</text>'
+              f'<text x="14" y="108" text-anchor="middle" font-size="12" fill="var(--text-secondary)" '
+              f'transform="rotate(-90 14 108)">聯邦資金利率</text></svg>')
+
+
+def _reserve_adequacy(d: dict) -> str:
+    rv, dv = d.get("ratio_view") or {}, d.get("rde_view") or {}
+    lo, s19 = rv.get("low2019") or {}, dv.get("sep2019") or {}
+    ratio_txt = f"""
+      <p><b>定義：</b>銀行存在 Fed 的準備金（H.4.1 週三水位）÷ 全體商業銀行總資產（H.8，季調週資料）。
+      看的是銀行資產裡有多少是「隨時能拿來付款清算」的最高流動性資產。用比例而不用絕對金額，是因為銀行體系規模每年在長大，
+      同樣 3 兆美元的準備金，在 17 兆資產和 26 兆資產的銀行體系裡，寬鬆程度完全不同；紐約聯儲估算 RDE 也是用同一個分母。</p>
+      <p><b>判斷邏輯：</b>比例越低，銀行手上的「緩衝現金」越薄，越容易為了湊足每日清算需要的準備金而互相搶錢。
+      2019 年 9 月回購危機發生時，這個比例一度降到 10% 以下（週資料最低 {lo.get("ratio", 0):.1f}%，{lo.get("date", "")[:4]}/{_md(lo.get("date", ""))} 當週）：
+      9/16 企業季中繳稅與公債交割同時抽走大量準備金，9/17 SOFR 從 2% 出頭一天跳到 5.25%，Fed 被迫重啟回購操作注資，
+      之後再開始買國庫券把準備金補回來。紐約聯儲的研究也發現，比例高於約 13% 時（2012–17 年、2020 年中以後）RDE 幾乎是 0。
+      所以實務上：<b>13% 以上很寬鬆、10%–13% 要開始留意、10% 以下就是 2019 年那種危險區</b>。</p>"""
+    verdict = next((zh for en, zh in _REGIME_ZH
+                    if any(en in b.lower() for b in (dv.get("bullets") or [])[1:2])), "")
+    rde_txt = f"""
+      <p><b>定義：</b>RDE 是紐約聯儲估計的「準備金需求曲線斜率」：當準備金增加相當於銀行總資產 1% 時，
+      聯邦資金利率相對 IORB 的利差會變動幾個 bp（單位：bp／百分點）。數值接近 0＝準備金多到利率不在乎增減；
+      負得越深＝曲線越陡，準備金少一點點，借錢成本就會明顯上升。紐約聯儲每月第三個週四更新，檔內是約每 5 個營業日一筆的即時估計。</p>
+      <p><b>判斷邏輯：</b>同時看數值與信賴區間。中位數接近 0、95% 信賴區間包含 0 → 準備金充裕；
+      持續為負且區間不含 0 → 已進入充足區、往稀缺靠近。2019 年 9 月回購危機前後，RDE 降到約 {s19.get("median", 0):.2f}
+      （當年最低 {(dv.get("low2019") or {}).get("median", 0):.2f}，{_md((dv.get("low2019") or {}).get("date", ""))}），95% 信賴區間整段都在 0 以下——
+      準備金已經進入曲線陡峭的那一段，所以一次繳稅加公債交割就足以讓回購利率暴衝。
+      目前 RDE {dv.get("value", 0):+.2f}，信賴區間 {dv.get("lo95", 0):+.2f} ～ {dv.get("hi95", 0):+.2f}；紐約聯儲本月判讀為「{verdict or "—"}」。</p>
+      <p><b>三種準備金狀態</b>（下圖是示意的準備金需求曲線，橫軸是準備金供給、縱軸是聯邦資金利率）：</p>
+      {_demand_curve_svg()}
+      <dl class="gloss">
+        <dt>稀缺（Scarce）</dt><dd>曲線最陡的左段。銀行手上準備金不夠，供給少一點利率就大漲、多一點就大跌，
+          Fed 必須每天用公開市場操作精準調整準備金數量，才能把利率壓在目標上——這是 2008 年以前的做法，也是 2019 年 9 月差點滑進去的區域。</dd>
+        <dt>充足（Ample）</dt><dd>曲線開始變平但還有一點斜度的中段。準備金的日常增減（繳稅、TGA 進出）只會讓利率小幅移動，
+          Fed 不需要每天調整準備金，只要設定 IORB、ON RRP 等「行政利率」就能把政策利率控制在目標區間內。</dd>
+        <dt>充裕（Abundant）</dt><dd>曲線完全平坦的右段。銀行對準備金的需求已經飽和，供給增減對利率幾乎沒有影響；
+          利率控制最穩，但代價是 Fed 的資產負債表很大，持有大量公債與 MBS（期限風險、對市場的影響、政治上的質疑）。</dd>
+      </dl>
+      <p><b>Fed 目前的政策框架：</b>維持準備金在<b>充足（Ample）</b>的水準——「充足準備金框架」（ample reserves framework）：
+      準備金多到利率不受日常波動影響，靠行政利率就能控制政策利率，但不需要多到充裕區那麼大的資產負債表。
+      問題是準備金不會自己停在原地：流通在外貨幣、TGA 這些其他負債會隨經濟與財政規模長期成長，每成長一塊就從準備金抽走一塊。
+      縮表結束後如果什麼都不做，準備金會慢慢從充足滑向稀缺，重演 2019 年的情況。
+      所以 Fed 在 2025 年 12 月停止縮表後，改做<b>準備金管理購買（RMP）</b>：在次級市場買國庫券，補上被其他負債吃掉的準備金，
+      讓準備金停在充足區——目的不是像 QE 那樣壓低長期利率，而是維持貨幣市場的運作（見下方「市場供需」的 RMP 說明）。</p>"""
+    return f"""<details class="f-more"><summary>準備金 ÷ 商業銀行總資產</summary><div class="f-detail">
+      {_ratio_cells(rv)}
+      <div class="viz-block"><div class="viz-h">近 15 年（%，週）</div>{d.get("ratio_chart") or ""}</div>
+      {ratio_txt}
+      <p class="hint">準備金：Fed 理事會 H.4.1；總資產：H.8 全體商業銀行（季調，B1151NCBA）。</p>
+    </div></details>
+    <details class="f-more"><summary>準備金需求彈性（RDE）</summary><div class="f-detail">
+      {_rde_cells(dv)}
+      <div class="viz-block"><div class="viz-h">近 15 年（bp／百分點，中位數估計）</div>{d.get("rde_chart") or ""}</div>
+      {rde_txt}
+      <p class="hint">紐約聯儲 Reserve Demand Elasticity（Afonso、Giannone、La Spada、Williams 方法）。</p>
+    </div></details>"""
+
+
 def _liab_defs() -> str:
     items = [
         ("流通在外貨幣（Currency in circulation）",
@@ -425,6 +563,7 @@ def liquidity_body(d: dict) -> str:
       {d.get("rrp_split_chart") or ""}</div>
     <div class="src">Fed 理事會 H.4.1（Factors Affecting Reserve Balances）表 1，週三水位，每週四美東 16:30 公布。</div>
     {_liab_defs()}
+    {_reserve_adequacy(d)}
   </div>
 </div>"""
 
@@ -487,7 +626,9 @@ def liquidity_footer(d: dict) -> str:
          ("已公告的 T-Bills 拍賣", "財政部 Fiscal Data（auctions_query）", "拍賣前幾天公布金額"),
          ("私人持有淨借款估計、TGA 季底目標", "財政部每季再融資（QRA）借款估計", "每季"),
          ("Fed 負債端：流通在外貨幣、準備金、TGA、逆回購（國內／國外）",
-          "Fed 理事會 H.4.1 Data Download Program（週三水位）；FRED 轉載後備", "每週四")],
+          "Fed 理事會 H.4.1 Data Download Program（週三水位）；FRED 轉載後備", "每週四"),
+         ("商業銀行總資產（準備金占比的分母）", "Fed 理事會 H.8 全體商業銀行（季調，週）；FRED 後備", "每週五"),
+         ("準備金需求彈性（RDE）", "紐約聯儲 Reserve Demand Elasticity", "每月第三個週四")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
          "RMP、MBS 到期再投入兩個計畫金額直接來自紐約聯儲官方逐期公布的拆分。再投入只適用 MBS"
