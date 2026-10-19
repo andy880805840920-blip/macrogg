@@ -22,7 +22,7 @@ CSS = """
 .ask-hint{font-size:12.5px;color:var(--muted);margin:0 0 14px}
 .ask .ask-box{position:relative}
 .ask-sug{border:1px solid var(--border);border-radius:12px;background:var(--surface-1);margin:-2px 0 8px;overflow-x:hidden;overflow-y:auto;max-height:262px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-.ask-sug a.ask-sug-all{justify-content:center;color:var(--brand-orange,#E67143);font-weight:700;font-size:14px;background:var(--surface-2)}
+.ask-sug a.ask-sug-all{justify-content:center;color:var(--brand-orange-ink,#ad4f27);font-weight:700;font-size:14px;background:var(--surface-2)}
 .ask-sug a{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--grid);color:var(--text-primary);text-decoration:none;font-size:15px;cursor:pointer}
 .ask-sug a:last-child{border-bottom:0}
 .ask-sug a.on,.ask-sug a:hover{background:var(--surface-2)}

@@ -588,7 +588,7 @@ def supply_pressure(curve: CurveState, debt: DebtState,
 
 PRESSURE_TEXT = {
     "high": ("期限溢酬：偏高",
-             "期限溢酬（NY Fed ACM）高於 0.60% 的警戒線：投資人要求更高的補償才願意持有長天期債券，"
+             "期限溢酬（NY Fed ACM）高於 0.60%（2015 年以來約第 90 百分位）：投資人要求更高的補償才願意持有長天期債券，"
              "反映財政與供給壓力。這種環境下即使聯準會降息，長端殖利率也可能不跟著下降——"
              "曲線會走陡而非平行下移。"),
     "moderate": ("期限溢酬：中性",
@@ -599,3 +599,88 @@ PRESSURE_TEXT = {
 }
 # 首頁／情境頁上的短標籤
 PRESSURE_LABEL_ZH = {"high": "偏高", "moderate": "中性", "low": "偏低"}
+
+
+# ---------------------------------------------------------------------------
+# 燈號規則（2026-10 第二版）：實質利率看「離中性多遠」、期限溢酬看「漲多快」
+# ---------------------------------------------------------------------------
+# 實質利率：10Y TIPS − 中性實質利率（點陣圖長期利率中位數 − 2% 通膨目標）。
+# 歷次升息循環結束時 10Y TIPS 高於中性：2018/12 +0.2pp（0.97% vs 2.75%−2%）、
+# 2006/06 +0.55pp（2.61% vs 2003–07 平均 2.06%，當時沒有長期點陣圖）、2023/07 +1.0pp（1.50% vs 2.5%−2%）；
+# 只有 2023/10 高點（2.52%，+2.0pp）超過 +1pp。所以 +0.5pp 內正常、+0.5～+1.0pp 留意、> +1.0pp 警戒。
+REAL_GOOD_GAP, REAL_RED_GAP, INFL_TARGET = 0.5, 1.0, 2.0
+REAL_CYCLES = [
+    ("升息結束", "2006/06", 2.61, "+0.55pp（對 2003–07 平均 2.06%）"),
+    ("升息結束", "2018/12", 0.97, "+0.2pp（長期點陣圖 2.75%）"),
+    ("升息結束", "2023/07", 1.50, "+1.0pp（長期點陣圖 2.5%）"),
+    ("循環後高點", "2023/10", 2.52, "+2.0pp"),
+    ("降息起點", "2007/09、2019/07、2024/09", "2.19%、0.26%、1.58%", "—"),
+]
+REAL_LONG_AVG = 1.01      # 10Y TIPS 2003 年以來平均
+
+
+def neutral_real(sep: dict | None, fallback: float | None = None) -> tuple[float | None, str]:
+    """點陣圖長期政策利率中位數 − 2%。回傳（數值、來源說明）。"""
+    try:
+        v = sep["vars"]["ffr"]["median"]
+        yrs = sep.get("years") or []
+        lr = v[yrs.index("Longer run")] if "Longer run" in yrs else v[-1]
+        if lr is not None:
+            return lr - INFL_TARGET, f'{sep.get("date", "")[:7].replace("-", "/")} 點陣圖長期利率 {lr:.2f}% − 2%'
+    except (KeyError, TypeError, ValueError, IndexError):
+        pass
+    if fallback is not None:
+        return fallback, "最近一次點陣圖長期利率 − 2%"
+    return None, ""
+
+
+def real_rate_status(v: float | None, n: float | None) -> str:
+    if v is None or n is None:
+        return "unknown"
+    g = v - n
+    return "good" if g <= REAL_GOOD_GAP else ("critical" if g > REAL_RED_GAP else "warning")
+
+
+def real_rate_levels(n: float) -> list[str]:
+    return [f"≤ {n + REAL_GOOD_GAP:.2f}%（中性 +0.5pp 以內）",
+            f"{n + REAL_GOOD_GAP:.2f}～{n + REAL_RED_GAP:.2f}%（約等於歷次升息循環結束時的緊度）",
+            f"> {n + REAL_RED_GAP:.2f}%（比歷次升息尾聲更緊）"]
+
+
+# 期限溢酬：看上升速度。五次財政／供給事件（2009 赤字、2016 選後財政擴張、2023 再融資加量＋Fitch 降評、
+# 2024–25 選後財政疑慮、2025 關稅＋Moody's 降評）期間，ACM 最快的單月升幅 +45～+97bp、三個月 +67～+134bp；
+# 1990 年以來單月 +25bp／+40bp 約第 90／95 百分位，三個月 +45bp／+65bp 約第 90／95 百分位。
+TP_1M_WARN, TP_1M_RED, TP_3M_WARN, TP_3M_RED = 0.25, 0.40, 0.45, 0.65
+TP_EPISODES = [
+    ("2009 上半年", "赤字擴大、公債大量發行", "+172bp／5 個月", "+97bp"),
+    ("2016 下半年", "選後財政擴張預期", "+102bp／5 個月", "+54bp"),
+    ("2023 年 8–10 月", "再融資加量＋Fitch 降評", "+140bp／3 個月", "+73bp"),
+    ("2024/9–2025/1", "選後財政疑慮", "+95bp／4 個月", "+55bp"),
+    ("2025 年 4–5 月", "關稅＋Moody's 降評＋減稅法案", "+66bp／1.5 個月", "+45bp"),
+]
+
+
+def tp_speed(rows: list[dict], i: int | None = None) -> dict | None:
+    """近 1 個月（21 個交易日）與近 3 個月（63 個交易日）的變動與狀態。i＝截至第幾筆（歷史軌跡用）。"""
+    vals = [r for r in rows if r.get("value") is not None]
+    i = len(vals) - 1 if i is None else i
+    if i < 63:
+        return None
+    v = vals[i]["value"]
+    d1, d3 = v - vals[i - 21]["value"], v - vals[i - 63]["value"]
+    accel = d1 >= d3 / 3            # 最近一個月的速度不低於三個月平均＝沒有放緩
+    if d1 >= TP_1M_RED or (d3 >= TP_3M_RED and accel):
+        st = "critical"
+    elif d1 >= TP_1M_WARN or d3 >= TP_3M_WARN:
+        st = "warning"
+    else:
+        st = "good"
+    return {"value": v, "d1": d1, "d3": d3, "accel": accel, "status": st, "date": vals[i]["date"]}
+
+
+def tp_speed_text(sp: dict, high_level: float = 0.60) -> str:
+    pace = ("上升速度已接近過去財政／供給事件，留意長端被動收緊" if sp["status"] == "critical" else
+            "上升速度高於平常，但還沒到過去財政／供給事件的速度" if sp["status"] == "warning" else
+            "上升速度在正常範圍")
+    lvl = f"；水準 {sp['value']:.2f}% 偏高，但沒有加速" if sp["status"] == "good" and sp["value"] > high_level else ""
+    return f"近 1 個月 {sp['d1'] * 100:+.0f}bp、近 3 個月 {sp['d3'] * 100:+.0f}bp——{pace}{lvl}。"

@@ -75,7 +75,7 @@ def hero(d: dict) -> str:
         from .. import charts
         shade = {"real": "var(--brand-navy)", "infl": "#8b97a8"}
         if main in shade:
-            shade[main] = "var(--brand-orange)"
+            shade[main] = "var(--brand-orange-fill)"
         seg = charts.segbar([{"label": "實質利率（TIPS）", "value": comp["real"]["value"], "color": shade["real"]},
                              {"label": "損益兩平通膨率（BEI）", "value": comp["infl"]["value"], "color": shade["infl"]}])
         tpv = comp["tp"].get("value")
@@ -84,7 +84,7 @@ def hero(d: dict) -> str:
         if tpv is not None:
             w = max(0.0, min(100.0, tpv / tot * 100))
             tpbar = (f'<div class="le2-tpbar"><div class="le2-tpt"><span style="width:{w:.2f}%;'
-                     f'background:{"var(--brand-orange)" if main == "tp" else "#1baf7a"}"'
+                     f'background:{"var(--brand-orange-fill)" if main == "tp" else "#1baf7a"}"'
                      f' data-tip="期限溢酬（NY Fed ACM）｜{tpv:.2f}%"></span></div>'
                      f'<div class="le2-tpl">期限溢酬（NY Fed ACM）<b>{tpv:.2f}%</b>'
                      f'<small>與 TIPS、BEI 重疊（TIPS 含實質期限溢酬、BEI 含通膨風險溢酬），長度依占 10Y 的比例</small></div></div>')
@@ -103,7 +103,7 @@ def hero(d: dict) -> str:
             src = {"real": "TIPS", "infl": "BEI", "tp": "ACM"}[k]
             rows += (f'<div class="le2-r{" main" if is_main else ""}" title="{esc(le.NATURE[k])}">'
                      f'<div class="le2-n"><span><i class="le2-sw" style="background:'
-                     f'{shade.get(k, "#1baf7a") if k != "tp" else ("var(--brand-orange)" if is_main else "#1baf7a")}"></i>'
+                     f'{shade.get(k, "#1baf7a") if k != "tp" else ("var(--brand-orange-fill)" if is_main else "#1baf7a")}"></i>'
                      f'{esc(le.COMP_ZH[k])}<em class="le2-src">{src}</em>'
                      + ('<em>本月驅動</em>' if is_main else "") + '</span>'
                      f'<small>{esc(le.PRESSURE_ZH[k])}</small></div>'
@@ -921,11 +921,15 @@ def buybacks(d: dict) -> str:
         affect privately-held net marketable borrowing as new issuance replaces securities that are bought back」——買回多少就多發多少，
         實務上由 T-Bills 補上，所以買回是把長天期舊券換成短天期 bill，不改變總借款。</dd>
     </dl>"""
+    # 歷次結果只列近 90 天（約一季），更早的操作留在資料裡、不上頁面
+    import datetime as _dt
+    _cut = (_dt.date.today() - _dt.timedelta(days=90)).isoformat()
+    recent = [r for r in rows if str(r.get("date") or "") >= _cut]
     trs = "".join(
         f'<tr><td>{esc(_md(r["date"]))}</td><td>{esc(r["bucket_zh"])}</td><td>{esc(r["type_zh"])}</td>'
         f'<td>{_yi_b(r["max"])}</td><td><b>{_yi_b(r["accepted"])}</b></td><td>{_yi_b(r["offered"])}</td>'
         f'<td class="bb-rx">{_rx(r["announce"])}</td><td class="bb-rx">{_rx(r["result"])}</td></tr>'
-        for r in rows)
+        for r in recent)
     table = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>天期</th><th>類型</th>'
              f'<th>上限</th><th>實際買回</th><th>投標</th><th>上限公布後 1 小時<br><small>10／20／30 年，bp</small></th>'
              f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table></div>')
@@ -942,7 +946,8 @@ def buybacks(d: dict) -> str:
     <p class="hint">買回流動性較差的舊券、用新發行補上——長端供給的減法。</p>
     {stats}
     {how}
-    <div class="viz-block"><div class="viz-h">歷次買回結果（億美元）與殖利率反應</div>{table}</div>
+    <details data-m-collapse><summary>近 90 天買回結果與殖利率反應（{len(recent)} 場，億美元）</summary>
+      {table if recent else '<p class="hint">近 90 天沒有買回操作。</p>'}</details>
     <details data-m-collapse open><summary>未來排程（{esc(b.get("schedule_name") or "暫定買回排程")}）</summary>
       {up_html}</details>
     <details data-m-collapse><summary>殖利率反應怎麼量</summary>

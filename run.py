@@ -1171,6 +1171,19 @@ def main() -> int:
                     _l.desc = _l.note + _l.desc
         except Exception as e:                     # noqa: BLE001
             log.warning("期貨 vs 點陣圖差距計算失敗（%s）", e)
+        # 實質利率燈：中性實質利率改用當期 SEP 的長期政策利率 − 2%
+        try:
+            from src.analysis import rates as _rt
+            _rc = ctxs.get("rates") or {}
+            _n, _nsrc = _rt.neutral_real((ctxs.get("fomc") or {}).get("sep"))
+            if _n is not None:
+                for _l in _rc.get("lights") or []:
+                    if _l.key == "real_10y":
+                        build.rates_real_apply(_l, _n, _nsrc, _rc.get("real_rows") or [],
+                                               _rc.setdefault("light_explain", {}))
+                log.info("中性實質利率 %.2f%%（%s）", _n, _nsrc)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("實質利率燈中性值更新失敗（%s）", e)
         _scx["next_releases"] = build.scenario_next_releases(
             ctxs.get("_schedule") or {},
             (((ctxs.get("fomc") or {}).get("next_meeting")) or {}).get("date"))

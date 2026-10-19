@@ -7,6 +7,17 @@ from .labor import _light_card, _stats, STATUS_ICON, STATUS_TEXT
 from .. import charts
 
 
+def _ref_table(ref: dict | None) -> str:
+    """燈卡裡的歷史對照小表（期限溢酬的財政／供給事件、實質利率的升降息循環）。"""
+    if not ref or not ref.get("rows"):
+        return ""
+    head = ref.get("head") or []
+    th = "".join(f"<th>{esc(h)}</th>" for h in head)
+    trs = "".join("<tr>" + "".join(f'<td data-label="{esc(head[j] if j < len(head) else "")}">{esc(str(c))}</td>'
+                                   for j, c in enumerate(r)) + "</tr>" for r in ref["rows"])
+    return f'<table class="lq-tbl lx-ref"><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table>'
+
+
 def _explained_card(lt, href: str, ex: dict | None) -> str:
     """長端頁燈卡：說明拆成「現況／量什麼／為什麼重要／門檻／依據」，目前所在的門檻列標亮。
     沒有 explain 設定的燈退回共用燈卡。"""
@@ -25,6 +36,7 @@ def _explained_card(lt, href: str, ex: dict | None) -> str:
              f'<div class="lx-k">為什麼重要</div><p>{esc(ex.get("why", ""))}</p>' if ex.get("why") else "",
              f'<div class="lx-k">門檻</div><ul class="lx-lv">{rows}</ul>' if rows else "",
              f'<p class="lx-basis">依據：{esc(ex["basis"])}</p>' if ex.get("basis") else "",
+             _ref_table(ex.get("ref")),
              f'<a class="l-link" href="{href}">完整脈絡 →</a>' if href else ""]
     return f"""<div class="light {lt.status}">
   <div class="l-top"><span class="l-icon">{STATUS_ICON[lt.status]}</span>{esc(lt.label)}</div>
@@ -58,29 +70,44 @@ def _rates_body_full(d: dict) -> str:
                      + "。") if d["lights"] else ""
     # 檢核卡的一句結論：只由紅黃燈數量推出，跟勞動頁的檢核卡同一套做法。
     _crit, _warn = _lc.get("critical", 0), _lc.get("warning", 0)
-    # 警戒的是哪幾顆、各代表什麼（依三個組成份的新定義，2026-10 v4）
-    _CRIT_MEAN = {"term_premium": "長端要求的補償偏高，市場自行收緊金融條件",
-                  "curve_30_10": "長端斜率走陡，供給或財政疑慮升溫",
-                  "interest_to_revenue": "利息負擔吃掉的稅收偏高",
-                  "r_minus_g": "實質利率高於成長，債務會自我累積",
-                  "real_10y": "實質利率偏高，壓抑投資",
-                  "breakeven_10y": "長期通膨預期的錨定鬆動",
-                  "curve_10_2": "曲線倒掛，衰退訊號",
-                  "dots_gap": "期貨與點陣圖分歧超過兩碼，之後一方得大幅修正",
-                  "ig_spread": "企業融資成本上升"}
-    _crit_ls = [l for l in d["lights"] if l.status == "critical"]
-    if _crit:
-        _li_lean = "hawkish"
-        _li_txt = "；".join(f"{l.label}：{_CRIT_MEAN.get(l.key, '越過警戒線')}" for l in _crit_ls) + "。"
-    elif _warn:
-        _li_lean = "neutral"
-        _li_txt = "壓力在累積，但還沒有越線。"
-    else:
-        _li_lean = "neutral"
-        _li_txt = "長端目前沒有額外的供給警訊。"
-    lights_impact = (f'<div class="impact {_li_lean}">'
-                     f'{esc(light_summary.rstrip("。"))}——{esc(_li_txt)}</div>'
-                     if d["lights"] else "")
+    # 檢核結論（2026-10 改版）：條列警戒與留意的燈，各配一句原因；正常的燈收成一行。
+    # 顏色用狀態色（--critical／--warning），底色維持中性，白底與深色模式都讀得清楚。
+    _MEAN = {
+        "critical": {"term_premium": "上升速度接近過去財政／供給事件，長端被動收緊",
+                     "real_10y": "比中性高出 1pp 以上，緊度超過歷次升息尾聲",
+                     "curve_30_10": "長端斜率走陡，供給或財政疑慮升溫",
+                     "interest_to_revenue": "利息吃掉超過兩成稅收",
+                     "r_minus_g": "利率明顯高於成長，債務會自我累積",
+                     "breakeven_10y": "長期通膨預期的錨定鬆動",
+                     "curve_10_2": "曲線倒掛，歷史上的衰退前兆",
+                     "dots_gap": "期貨與點陣圖分歧超過兩碼，之後一方得大幅修正",
+                     "ig_spread": "企業融資成本明顯上升"},
+        "warning": {"term_premium": "上升速度高於平常，但還沒到財政事件的速度",
+                    "real_10y": "比中性高 0.5～1pp，約等於升息尾聲的緊度",
+                    "curve_30_10": "長端斜率偏陡",
+                    "interest_to_revenue": "利息負擔逐步加重",
+                    "r_minus_g": "利率逼近成長，債務自我消化的空間變小",
+                    "breakeven_10y": "通膨預期略高於與 2% 相符的區間",
+                    "curve_10_2": "曲線偏平，或倒掛後剛轉正",
+                    "dots_gap": "期貨與點陣圖差半碼到兩碼",
+                    "ig_spread": "信用利差略為走闊"},
+    }
+    _rows = []
+    for _st, _zh in (("critical", "警戒"), ("warning", "留意")):
+        for l in d["lights"]:
+            if l.status == _st:
+                _rows.append(f'<li class="{_st}"><span class="lsum-tag">{STATUS_ICON[_st]} {_zh}</span>'
+                             f'<span class="lsum-txt"><b>{esc(l.label)}</b> <span class="lsum-v">{esc(l.display)}</span>'
+                             f'<span class="lsum-why">{esc(_MEAN[_st].get(l.key, "越過門檻"))}</span></span></li>')
+    _ok = [l.label for l in d["lights"] if l.status == "good"]
+    _li_head = ("壓力集中在下面幾項：" if _crit else
+                "沒有越過警戒線，但有幾項在累積壓力：" if _warn else "所有指標都在正常範圍，長端沒有額外警訊。")
+    lights_impact = (f'<div class="lsum"><p class="lsum-head"><b>{esc(light_summary.rstrip("。"))}</b>'
+                     f'<span>{esc(_li_head)}</span></p>'
+                     + (f'<ul class="lsum-list">{"".join(_rows)}</ul>' if _rows else "")
+                     + (f'<p class="lsum-ok"><span class="lsum-tag good">{STATUS_ICON["good"]} 正常</span>'
+                        f'{esc("、".join(_ok))}</p>' if _ok and _rows else "")
+                     + '</div>') if d["lights"] else ""
 
     # 收合摘要：一律取這一區已經算出來的結論。
     _dh = d.get("decomp_head") or {}
@@ -165,7 +192,7 @@ def _rates_body_full(d: dict) -> str:
         if _tp > 0.6:
             decomp_impact = (
                 f'<div class="impact hawkish">期限溢酬 {_tp:+.2f}%{esc(_chg)}，'
-                f'高於 0.60% 的警戒線（ACM 2015 年以來約第 90 百分位）——市場對長期持債要求的補償偏高，'
+                f'水準偏高（高於 0.60%，ACM 2015 年以來約第 90 百分位）——市場對長期持債要求的補償偏高，'
                 f'這一段降息壓不下來。</div>')
         elif _tp < 0.2:
             decomp_impact = (

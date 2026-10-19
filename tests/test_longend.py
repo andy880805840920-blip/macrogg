@@ -249,6 +249,30 @@ check("⑩a Buybacks 卡 div 開關成對", len(_re.findall(r"<div\b", _h)) == _
 _w = _site._collapse_sections(f'<div class="grid"><div class="card"><h2 id="buybacks" data-sum="x">財政部 Buybacks</h2>{_h}</div></div>')
 check("⑩b Buybacks 卡會被包成可收合的區塊", '<details class="card sect"' in _w and '<div class="card">' not in _w)
 
+# ⑪ 卡片裡的 <script> 字串含 "</div><div>" 時，不能把卡片結尾找錯（長端頁 04～11 被包進 03 的原因）
+_body = ('<div class="grid"><div class="card"><h2 id="a">A</h2><div>x</div>'
+         '<script>var s=\'</div><div class="w">\';</script></div></div>'
+         '<div class="grid"><div class="card"><h2 id="b">B</h2><p>y</p></div></div>')
+_w = _site._collapse_sections(_body)
+check("⑪ script 內的 div 字串不影響卡片邊界",
+      _w.count('<details class="card sect"') == 2 and "</script></div></details>" in _w, _w)
+
+# ⑫ 期限溢酬看上升速度、實質利率看離中性多遠
+from src.analysis import rates as _rt              # noqa: E402
+_mk = lambda vals: [{"date": f"2026-{1 + i // 22:02d}-{1 + i % 22:02d}", "value": v} for i, v in enumerate(vals)]
+_flat = _mk([0.75] * 70)
+check("⑫a 水準高但沒有上升＝正常", _rt.tp_speed(_flat)["status"] == "good")
+_jump = _mk([0.30] * 49 + [0.30 + 0.45 * k / 20 for k in range(1, 21)])
+check("⑫b 單月 +45bp＝警戒", _rt.tp_speed(_jump)["status"] == "critical", _rt.tp_speed(_jump))
+_slow = _mk([0.30 + 0.50 * k / 69 for k in range(70)])
+_sp = _rt.tp_speed(_slow)
+check("⑫c 三個月 +45bp 左右、單月不到 +25bp＝留意", _sp["status"] == "warning", _sp)
+check("⑫d 資料不足 63 個交易日回 None", _rt.tp_speed(_mk([0.5] * 40)) is None)
+check("⑫e 實質利率：中性 +0.5pp 內正常、+1pp 以上警戒",
+      [_rt.real_rate_status(v, 1.2) for v in (1.6, 2.0, 2.3)] == ["good", "warning", "critical"])
+_sep = {"date": "2026-09-16", "years": ["2026", "Longer run"], "vars": {"ffr": {"median": [4.1, 3.2]}}}
+check("⑫f 中性實質利率＝長期點陣圖 − 2%", abs(_rt.neutral_real(_sep)[0] - 1.2) < 1e-9)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

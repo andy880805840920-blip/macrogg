@@ -3123,6 +3123,27 @@ def _shift_iso_year(iso: str, n: int) -> str:
     return f"{int(iso[:4]) + n}{iso[4:]}"
 
 
+def rates_real_apply(light, n: float, src: str, rows: list, explain: dict) -> None:
+    """實質利率燈：狀態＝10Y TIPS 對中性實質利率的距離；軌跡用同一個中性值重算。"""
+    from .analysis import rates as rt
+    if light.value is not None:
+        light.status = rt.real_rate_status(light.value, n)
+        g = light.value - n
+        light.note = (f"中性實質利率約 {n:.2f}%（{src}），10Y TIPS 高出 {g:+.2f}pp——"
+                      + ("在中性附近。" if light.status == "good" else
+                         "約等於歷次升息循環結束時的緊度。" if light.status == "warning" else
+                         "比歷次升息循環結束時更緊，壓抑投資與需求。"))
+    me: dict = {}
+    for r in rows or []:
+        if r.get("value") is not None:
+            me[r["date"][:7]] = r["value"]
+    if me:
+        light.history = [{"date": m.replace("-", "/"), "status": rt.real_rate_status(v, n),
+                          "label": f"{v:.2f}%"} for m, v in list(me.items())[-12:]]
+    if "real_10y" in explain:
+        explain["real_10y"] = {**explain["real_10y"], "levels": rt.real_rate_levels(n)}
+
+
 def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                         real_growth: float | None = None,
                         treasury: dict | None = None) -> dict:
@@ -3239,6 +3260,34 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                 me[r["date"][:7]] = r["value"]
         _l.history = [{"date": m.replace("-", "/"), "status": regime._classify(v, _cfgs[_l.key]),
                        "label": f"{v:.2f}%"} for m, v in list(me.items())[-12:]]
+    # 期限溢酬看上升速度、實質利率看離中性多遠（2026-10 第二版，規則見 analysis/rates.py）。
+    # 中性先用設定檔的最近一次點陣圖值，run.py 拿到當期 SEP 後再覆寫。
+    _light_explain = {c["key"]: dict(c["explain"]) for c in cfg.get("regime_lights") or [] if c.get("explain")}
+    if "term_premium" in _light_explain:
+        _light_explain["term_premium"]["ref"] = {"head": ["期間", "背景", "期限溢酬上升", "最快單月"],
+                                                 "rows": [list(e) for e in rt.TP_EPISODES]}
+    if "real_10y" in _light_explain:
+        _light_explain["real_10y"]["ref"] = {"head": ["時點", "階段", "10Y TIPS", "高於中性"],
+                                             "rows": [[w, t, f"{v:.2f}%" if isinstance(v, float) else v, g]
+                                                      for t, w, v, g in rt.REAL_CYCLES]}
+    _rcfg = _cfgs.get("real_10y") or {}
+    _n_fb = _rcfg.get("neutral_fallback")
+    for _l in lights:
+        if _l.key == "term_premium":
+            _sp = rt.tp_speed(_tp_rows)
+            if _sp:
+                _l.status, _l.note = _sp["status"], rt.tp_speed_text(_sp, _cfgs["term_premium"].get("red_above", 0.6))
+                _vals = [r for r in _tp_rows if r.get("value") is not None]
+                _me: dict = {}
+                for _i in range(63, len(_vals)):
+                    _me[_vals[_i]["date"][:7]] = _i
+                _l.history = []
+                for _m, _i in list(_me.items())[-12:]:
+                    _h = rt.tp_speed(_vals, _i)
+                    _l.history.append({"date": _m.replace("-", "/"), "status": _h["status"],
+                                       "label": f'{_h["value"]:.2f}%（近 1 月 {_h["d1"] * 100:+.0f}bp）'})
+        if _l.key == "real_10y" and _n_fb is not None:
+            rates_real_apply(_l, _n_fb, "最近一次點陣圖長期利率 − 2%", _ds["real"], _light_explain)
 
     # ---- 曲線 ----
     # 這一頁講的是長端，3M／2Y／5Y 對供給壓力沒有直接作用。
@@ -3461,7 +3510,8 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                   "as_of": _ig_cfg.get("as_of", ""),
                   "verified": bool(_ig_cfg.get("verified"))},
         "lights": lights,
-        "light_explain": {c["key"]: c["explain"] for c in cfg.get("regime_lights") or [] if c.get("explain")},
+        "light_explain": _light_explain,
+        "real_rows": _ds["real"],
         "curve_stats": curve_stats,
         "curve_short": curve_short,
         "decomp_stats": decomp_stats,
