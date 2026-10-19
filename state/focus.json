@@ -293,25 +293,12 @@
  "at": "2026-10-19T02:04:35.195435+00:00",
  "layout": "main",
  "topics": {
-  "hash": "fc43bcad39baebee",
+  "hash": "ed890e8309a017a1",
   "items": [
-   {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "聯準會主席華許近期發言被解讀為傾向維持利率不變，但農業部門面臨通膨與利率上升的雙重壓力，聯準會在對抗通膨時需要平衡對農民的衝擊",
-    "links": [
-     {
-      "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
-      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-17T14:07:37+00:00"
-     }
-    ]
-   },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "10年期美債殖利率10/15（美國時間）升至5.06%，創近20年新高，歷史上上次突破5%是2007年7月，當時後續12個月標普500下跌19%，目前美債殖利率過去12個月漲幅同樣達26%，反映聯準會升息週期與經濟強勁成長",
+    "text": "10年期美債殖利率 10/15 升至 5.06%，創近 20 年新高，為全球金融市場最重要指標，影響房貸、企業借貸成本與資產估值；歷史上 2007 年 7 月殖利率最後一次站上 5% 時，隨後 12 個月標普 500 指數下跌 19%",
     "links": [
      {
       "title": "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
@@ -324,26 +311,20 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東衝突升級但原油供應維持穩定，布蘭特原油與西德州中級原油雙雙下跌。",
+    "text": "WTI 與布蘭特原油 10/18 亞洲盤雙雙下跌，WTI 跌 0.65 美元至 100.76 美元、布油跌 1.72 美元至 108.14 美元，市場權衡中東衝突升級與該地區供應已接近戰前水準；沙烏地阿拉伯偵察直升機在與葉門邊境墜毀造成 2 人死亡，為胡塞武裝衝突以來首次報告人員傷亡",
     "links": [
      {
       "title": "權衡中東衝突與供應接近戰前水準，WTI、布油亞洲盤中齊跌",
       "link": "https://tw.stock.yahoo.com/news/%E6%AC%8A%E8%A1%A1%E4%B8%AD%E6%9D%B1%E8%A1%9D%E7%AA%81%E8%88%87%E4%BE%9B%E6%87%89%E6%8E%A5%E8%BF%91%E6%88%B0%E5%89%8D%E6%B0%B4%E6%BA%96-wti-%E5%B8%83%E6%B2%B9%E4%BA%9E%E6%B4%B2%E7%9B%A4%E4%B8%AD%E9%BD%8A%E8%B7%8C-011730239.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T01:17:30+08:00"
-     },
-     {
-      "title": "伊朗革命衛隊：未獲授權油輪在荷莫茲海峽觸雷起火",
-      "link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E9%9D%A9%E5%91%BD%E8%A1%9B%E9%9A%8A-%E6%9C%AA%E7%8D%B2%E6%8E%88%E6%AC%8A%E6%B2%B9%E8%BC%AA%E5%9C%A8%E8%8D%B7%E8%8E%AB%E8%8C%B2%E6%B5%B7%E5%B3%BD%E8%A7%B8%E9%9B%B7%E8%B5%B7%E7%81%AB-005419237.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T00:54:19+00:00"
+      "at": "2026-10-19T01:17:30+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI基礎設施融資成本飆升引發市場擔憂，CoreWeave與Nebius股價單週跌逾25%。輝達執行長黃仁勳表示AI帶來效益將快速化解疑慮，強調大規模硬體投資最終展現回報，但分析師指出這類融資壓力反映市場對AI投資回報的高度關注",
+    "text": "CoreWeave 與 Nebius 股價本週各跌逾 25%，引發市場對 AI 基礎設施融資成本上升的擔憂，但輝達執行長黃仁勳表示樂觀看待 CoreWeave 前景，輝達持有該公司約 10% 股權；分析師認為這波拋售只是週期性恐慌，AI 交易基本面仍強勁",
     "links": [
      {
       "title": "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
@@ -356,50 +337,50 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達點名台郡為NVLink PTFE交換器合作夥伴，台郡因此入列下一代AI伺服器供應鏈，PTFE被視為有望取代玻纖布與石英布，成為PCB上游材料的新替代方案",
+    "text": "台積電第 3 季營收年增 51% 達近 470 億美元、淨利年增 69% 達近 240 億美元，晶圓代工市占率逼近 73%，儘管財報亮眼但股價仍遭拋售，市場擔憂超大規模雲端業者資本支出與利率上升將影響 AI 資料中心擴張速度",
     "links": [
      {
-      "title": "焦點股》台郡：輝達點名  市場很捧場",
-      "link": "https://tw.news.yahoo.com/%E7%84%A6%E9%BB%9E%E8%82%A1-%E5%8F%B0%E9%83%A1-%E8%BC%9D%E9%81%94%E9%BB%9E%E5%90%8D-%E5%B8%82%E5%A0%B4%E5%BE%88%E6%8D%A7%E5%A0%B4-014916386.html",
+      "title": "AI泡沫破裂也不怕？美媒點名台積電：兼具安全與成長",
+      "link": "https://tw.news.yahoo.com/ai%E6%B3%A1%E6%B2%AB%E7%A0%B4%E8%A3%82%E4%B9%9F%E4%B8%8D%E6%80%95-%E7%BE%8E%E5%AA%92%E9%BB%9E%E5%90%8D%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E5%85%BC%E5%85%B7%E5%AE%89%E5%85%A8%E8%88%87%E6%88%90%E9%95%B7-022100198.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T01:49:16+08:00"
+      "at": "2026-10-19T02:21:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股上週單周重挫2,202點、跌幅4.47%，收在46,969.87點，10/15（台灣時間）單日暴跌1,655.96點創史上第六大單日跌點，成交量放大至1.31兆元，外資上週大舉賣超5,862億元",
+    "text": "台股 10/19 開低走低，盤中跌逾 800 點至 46,243 點失守 47,000 點關卡，台積電跌破季線至 2,390 元；外資上週賣超 5,862 億元，費城半導體指數連八個交易日收黑創 2008 年來最長連跌紀錄，市場擔憂借貸成本上升將壓抑 AI 基礎設施資本支出",
     "links": [
+     {
+      "title": "台股止跌2大指標！5檔低基期搶先布局 台積電破2400元能買？",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%AD%A2%E8%B7%8C2%E5%A4%A7%E6%8C%87%E6%A8%99-5%E6%AA%94%E4%BD%8E%E5%9F%BA%E6%9C%9F%E6%90%B6%E5%85%88%E5%B8%83%E5%B1%80-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%A0%B42400%E5%85%83%E8%83%BD%E8%B2%B7-015458785.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T01:54:58+08:00"
+     },
      {
       "title": "台股下跌668點 台積電破季線 台塑化逆勢漲3％",
       "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E4%B8%8B%E8%B7%8C668%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%A0%B4%E5%AD%A3%E7%B7%9A-%E5%8F%B0%E5%A1%91%E5%8C%96%E9%80%86%E5%8B%A2%E6%BC%B23-011500767.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T01:15:00+08:00"
-     },
-     {
-      "title": "台股開低跌逾860點回測46200點　台積電挫30元",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E4%BD%8E%E8%B7%8C%E9%80%BE860%E9%BB%9E%E5%9B%9E%E6%B8%AC46200%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%8C%AB30%E5%85%83-011431607.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T01:14:31+08:00"
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-19T01:15:00+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元10/19早盤重貶逾1角至32.49元，美元指數一度跌破102至101.58後反彈至101.77，在台股走跌帶動下新台幣進一步貶破32.4元",
+    "text": "新台幣 10/19 盤中重貶逾 2 角至 32.55 元，創近 1 年半盤中新低，主因美股重挫引發台股跟跌、外資持續賣超並匯出資金；預估近期新台幣將在 32 至 32.6 元區間震盪",
     "links": [
      {
-      "title": "股匯齊挫　新台幣再重貶逾1角見32.49元",
-      "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%BD%8A%E6%8C%AB-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%86%8D%E9%87%8D%E8%B2%B6%E9%80%BE1%E8%A7%92%E8%A6%8B32-49%E5%85%83-012825511.html",
+      "title": "股匯雙殺！新台幣貶逾2角跌破32.5關卡 匯價探1年半盤中最低",
+      "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA%EF%BC%81%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%B2%B6%E9%80%BE2%E8%A7%92%E8%B7%8C%E7%A0%B4325%E9%97%9C%E5%8D%A1-%E5%8C%AF%E5%83%B9%E6%8E%A21%E5%B9%B4%E5%8D%8A%E7%9B%A4%E4%B8%AD%E6%9C%80%E4%BD%8E-022323713.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T01:28:25+08:00"
+      "at": "2026-10-19T02:23:23+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T02:04:52.531083+00:00"
+  "at": "2026-10-19T02:36:42.463054+00:00"
  },
  "main_source_titles": [
   "Gold rises as Warsh remarks curb Fed hike bets",
