@@ -54,7 +54,7 @@
   --good:#077c07; --warning:#7a5100; --serious:#93401f; --critical:#b82828;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
-  --bg:#fff; --faint:#a3a29c; --brand-ink:#12233B;
+  --bg:#fff; --faint:#6e6d68; --brand-ink:#12233B;
   --y2:#9aa6b8; --y10:#4f6383; --y30:#12233B;
 }
 
@@ -967,6 +967,7 @@ details[data-m-collapse]>summary{list-style:none}
 
 /* ---------- 名詞解釋 ---------- */
 .teach-more{font-size:13px;margin:8px 0 0}
+.le-src-link{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;color:var(--series-1);text-decoration:none}
 .teach-more a{color:var(--brand-orange-ink);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .gloss,.poslist{margin:6px 0 0}
 .gloss dt,.poslist dt{font-weight:700;font-size:13.5px;margin-top:13px}
@@ -3741,6 +3742,12 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .lsum-v{font-variant-numeric:tabular-nums;color:var(--text-primary);margin-right:6px}
 .viz-root:not(#_) .lsum-why{display:block}
 .viz-root:not(#_) .lsum-ok{margin:8px 0 0;font-size:var(--fs-small);color:var(--text-secondary);line-height:1.6}
+.viz-root:not(#_) .lx-ref{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--grid)}
+.viz-root:not(#_) .lx-ref li{padding:8px 0;border-bottom:1px solid var(--grid);line-height:1.55;font-size:var(--fs-small)}
+.viz-root:not(#_) .lx-ref li>b{color:var(--text-primary);margin-right:6px}
+.viz-root:not(#_) .lx-ref-ctx{color:var(--text-secondary)}
+.viz-root:not(#_) .lx-ref-n{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:2px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.viz-root:not(#_) .lx-ref-n em{font-style:normal;color:var(--muted);margin-right:5px;font-size:var(--fs-micro)}
 /* 長端頁燈卡說明（2026-10）：現況／量什麼／為什麼重要／門檻／依據，目前所在的門檻列標亮 */
 .viz-root:not(#_) .l-desc.lx{color:var(--text-secondary);line-height:1.7;margin-top:10px}
 .viz-root:not(#_) .lx p{margin:0 0 12px}
@@ -4270,7 +4277,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]),:root:not([data-theme="light"]) .viz-root{color-scheme:dark;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
-  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
+  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#8a93a1;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
   --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
@@ -4282,7 +4289,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 }
 :root[data-theme="dark"],:root[data-theme="dark"] .viz-root{color-scheme:dark;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
-  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
+  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#8a93a1;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
   --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
@@ -4549,8 +4556,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-19 23:41（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>23:41</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>11:41</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>16:41</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-20 00:17（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>00:17</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>12:17</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>17:17</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/" class="on" aria-current="page">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>流動性</h1><div class="sub">Liquidity　·　資料截止 2026-10-19</div></div>
@@ -4660,7 +4667,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
       <div class="f-detail"><p class="hint">財政部每週發行的 T-Bills 毛額超過 4,000 億美元，但大部分只是償還同週到期的舊券；真正新增的供給是<b>發行 − 到期贖回</b>，也就是月底 Bills 存量的變化。再扣掉 Fed 在次級市場實際買走的量（RMP＋MBS 到期再投入），剩下才是私人市場（貨幣基金、銀行、海外等）要淨吸收的量。4 月、9 月等稅收月財政部現金充裕，淨發行常是負的，這時私人市場是拿回現金的一方。</p><p class="hint">Fed 的實際成交只公布總額；RMP／MBS 的拆分依該筆購買所在期別的官方計畫金額比例分配。日曆月口徑，跟上方 Fed 計畫金額的期別（例如 10/15–11/13）不同。</p><div class="tscroll"><table><thead><tr><th>月份</th><th>淨發行</th><th>Fed RMP</th><th>Fed MBS</th><th>私人市場</th></tr></thead><tbody><tr><td>2026/10（月初至 10/15）</td><td>+949</td><td>0</td><td>58</td><td><b>+891</b></td></tr><tr><td>2026/09</td><td>-1,299</td><td>0</td><td>161</td><td><b>-1,460</b></td></tr><tr><td>2026/08</td><td>+2,592</td><td>50</td><td>194</td><td><b>+2,348</b></td></tr><tr><td>2026/07</td><td>+2,982</td><td>113</td><td>191</td><td><b>+2,678</b></td></tr><tr><td>2026/06</td><td>-681</td><td>75</td><td>123</td><td><b>-879</b></td></tr><tr><td>2026/05</td><td>+1,368</td><td>203</td><td>189</td><td><b>+976</b></td></tr><tr><td>2026/04</td><td>-1,976</td><td>229</td><td>109</td><td><b>-2,314</b></td></tr><tr><td>2026/03</td><td>+115</td><td>450</td><td>154</td><td><b>-489</b></td></tr><tr><td>2026/02</td><td>+2,124</td><td>400</td><td>143</td><td><b>+1,581</b></td></tr><tr><td>2026/01</td><td>+484</td><td>350</td><td>132</td><td><b>+2</b></td></tr><tr><td>2025/12</td><td>-1,760</td><td>280</td><td>101</td><td><b>-2,141</b></td></tr><tr><td>2025/11</td><td>+1,301</td><td>0</td><td>0</td><td><b>+1,301</b></td></tr><tr><td>2025/10</td><td>+1,961</td><td>0</td><td>0</td><td><b>+1,961</b></td></tr></tbody></table></div><p class="hint">單位：億美元。</p><p class="hint"><b>未來：</b>財政部 08/03 公布 2026 Q4（10–12 月）私人持有淨借款 6,280 億美元（假設季末現金 8,500 億）。本站以暫定拍賣排程 × 現行規模推算本季 coupon 毛發行約 11,090 億、私人持有到期約 7,486 億，coupon 淨發行約 3,604 億，剩下約 <b>2,676 億</b>要靠 T-Bills。買回的舊券也由新發行補上，所以實際 T-Bills 淨發行會再加上本季買回金額。下一次再融資 11/4，<a href="https://home.treasury.gov/news/press-releases/sb0584" target="_blank" rel="noopener">財政部原文</a>。</p><p class="teach-more"><a href="/ask/?q=%E4%BB%80%E9%BA%BC%E6%98%AFT-Bills%20%E6%B7%A8%E7%99%BC%E8%A1%8C%E8%88%87%E7%A7%81%E4%BA%BA%E5%B8%82%E5%A0%B4%E5%90%B8%E6%94%B6%EF%BC%9F">完整教學：什麼是T-Bills 淨發行與私人市場吸收？（怎麼來的、常見誤讀、小測驗）→</a></p></div>
     </details>
     <details class="f-more"><summary>已公告的 T-Bills 拍賣（毛額）</summary>
-      <div class="f-detail"><div style="margin-top:6px"><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/20</span><span>8-Week</span><span style="font-weight:700">1,050 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/20</span><span>17-Week</span><span style="font-weight:700">750 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/20</span><span>4-Week</span><span style="font-weight:700">1,100 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>13-Week</span><span style="font-weight:700">950 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>6-Week</span><span style="font-weight:700">950 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>26-Week</span><span style="font-weight:700">820 億美元</span></div></div>
+      <div class="f-detail"><div style="margin-top:6px"><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>13-Week</span><span style="font-weight:700">950 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>6-Week</span><span style="font-weight:700">950 億美元</span></div><div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--grid);font-size:13.5px"><span>10/22</span><span>26-Week</span><span style="font-weight:700">820 億美元</span></div></div>
       <p class="hint">這是每場拍賣的毛額，大部分用來償還同一週到期的舊券；淨增加多少要看上方的淨發行。</p></div>
     </details>
     <details class="f-more"><summary>T-Bills 占比怎麼看</summary>

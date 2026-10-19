@@ -54,7 +54,7 @@
   --good:#077c07; --warning:#7a5100; --serious:#93401f; --critical:#b82828;
   --tint-dov:rgba(42,120,214,.11); --tint-haw:rgba(180,85,43,.12);
   --shadow:0 1px 2px rgba(11,11,11,.05),0 1px 8px rgba(11,11,11,.04);
-  --bg:#fff; --faint:#a3a29c; --brand-ink:#12233B;
+  --bg:#fff; --faint:#6e6d68; --brand-ink:#12233B;
   --y2:#9aa6b8; --y10:#4f6383; --y30:#12233B;
 }
 
@@ -967,6 +967,7 @@ details[data-m-collapse]>summary{list-style:none}
 
 /* ---------- 名詞解釋 ---------- */
 .teach-more{font-size:13px;margin:8px 0 0}
+.le-src-link{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;color:var(--series-1);text-decoration:none}
 .teach-more a{color:var(--brand-orange-ink);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .gloss,.poslist{margin:6px 0 0}
 .gloss dt,.poslist dt{font-weight:700;font-size:13.5px;margin-top:13px}
@@ -3741,6 +3742,12 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .lsum-v{font-variant-numeric:tabular-nums;color:var(--text-primary);margin-right:6px}
 .viz-root:not(#_) .lsum-why{display:block}
 .viz-root:not(#_) .lsum-ok{margin:8px 0 0;font-size:var(--fs-small);color:var(--text-secondary);line-height:1.6}
+.viz-root:not(#_) .lx-ref{list-style:none;margin:0 0 12px;padding:0;border-top:1px solid var(--grid)}
+.viz-root:not(#_) .lx-ref li{padding:8px 0;border-bottom:1px solid var(--grid);line-height:1.55;font-size:var(--fs-small)}
+.viz-root:not(#_) .lx-ref li>b{color:var(--text-primary);margin-right:6px}
+.viz-root:not(#_) .lx-ref-ctx{color:var(--text-secondary)}
+.viz-root:not(#_) .lx-ref-n{display:flex;flex-wrap:wrap;gap:2px 14px;margin-top:2px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.viz-root:not(#_) .lx-ref-n em{font-style:normal;color:var(--muted);margin-right:5px;font-size:var(--fs-micro)}
 /* 長端頁燈卡說明（2026-10）：現況／量什麼／為什麼重要／門檻／依據，目前所在的門檻列標亮 */
 .viz-root:not(#_) .l-desc.lx{color:var(--text-secondary);line-height:1.7;margin-top:10px}
 .viz-root:not(#_) .lx p{margin:0 0 12px}
@@ -4270,7 +4277,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]),:root:not([data-theme="light"]) .viz-root{color-scheme:dark;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
-  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
+  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#8a93a1;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
   --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
@@ -4282,7 +4289,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 }
 :root[data-theme="dark"],:root[data-theme="dark"] .viz-root{color-scheme:dark;
   --page:#0d1219; --bg:#0d1219; --surface-1:#141b25; --surface-2:#1c2532;
-  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#737c8a;
+  --text-primary:#e9ecf1; --text-secondary:#b8bfca; --muted:#929baa; --faint:#8a93a1;
   --grid:#283242; --baseline:#3d4859; --border:rgba(255,255,255,.12);
   --series-1:#86b6f2; --series-2:#f2a07a; --line-1:#64a7f4; --line-2:#f28c5c; --line-3:#c49bf0;
   --pos:#64a7f4; --neg:#f2706f; --muted-bar:#5e6878;
@@ -4549,21 +4556,21 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-19 23:41（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>23:41</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>11:41</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>16:41</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/fomc/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-20 00:17（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>00:17</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>12:17</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>17:17</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/fomc/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/" class="on" aria-current="page">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>聯準會</h1><div class="sub">最新決議 2026-09-16</div></div>
 
 <div class="anav"><nav class="anchors"><a href="#signals">政策訊號</a><a href="#next">下次會議與靜默期</a><a href="#people">投票委員與官員</a><a href="#sep">點陣圖與經濟預測（SEP）</a><a href="#market">市場路徑 vs 點陣圖</a><a href="#diff">聲明逐句比對</a><a href="#minutes">會議紀要：共識與分歧</a><a href="#presser">記者會：主席怎麼說</a><a href="#focus">目前重心與轉向條件</a><a href="#trend">歷次決議</a></nav></div>
-<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC 決議｜2026-09-16 會議</div><h2 class="focus-title">升息一碼至 3.75–4.00%</h2><p class="focus-sub">投票 12:0，全體一致。前次 7/29：維持不變，3 票主張升息。<br>下次會議 10/27–28（9 天後）　·　靜默期中（至 10/29），官員不公開談政策</p><div class="focus-grid"><div class="focus-metric hawkish"><span>政策方向</span><b>偏升息</b><small>只看決議與反對票</small></div><div class="focus-metric neutral"><span>點陣圖（2026 年底）</span><b>4.1%</b><small>16 人預期再升、2 人不動</small></div><div class="focus-metric neutral"><span>市場（2026 年底）</span><b>4.13%</b><small>市場路徑與點陣圖大致一致</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>聲明制式句、反對票、主席表態</small></div></div><details class="focus-evidence"><summary>看決議原文與標示規則</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>聲明原文</b><span>The Committee decided to raise the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent, in support of the Federal Reserve&#x27;s dual mandate.</span></div><div class="logic-step"><b>投票</b><span>12:0，全體一致</span></div><div class="logic-step"><b>政策方向怎麼標</b><span>有升息就是偏升息、有降息就是偏降息；維持不變時看反對票主張的方向。不加權、不打分數。</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-09-16</span><span class="data-tag">利率區間取自 FRED</span><span class="data-tag">政策依據：利率決議、投票與會後聲明</span></div></div></div>
+<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">FOMC 決議｜2026-09-16 會議</div><h2 class="focus-title">升息一碼至 3.75–4.00%</h2><p class="focus-sub">投票 12:0，全體一致。前次 7/29：維持不變，3 票主張升息。<br>下次會議 10/27–28（8 天後）　·　靜默期中（至 10/29），官員不公開談政策</p><div class="focus-grid"><div class="focus-metric hawkish"><span>政策方向</span><b>偏升息</b><small>只看決議與反對票</small></div><div class="focus-metric neutral"><span>點陣圖（2026 年底）</span><b>4.1%</b><small>16 人預期再升、2 人不動</small></div><div class="focus-metric neutral"><span>市場（2026 年底）</span><b>4.16%</b><small>市場路徑與點陣圖大致一致</small></div><div class="focus-metric neutral"><span>目前重心</span><b>通膨優先</b><small>聲明制式句、反對票、主席表態</small></div></div><details class="focus-evidence"><summary>看決議原文與標示規則</summary><div class="focus-evidence-body"><div class="logic-strip"><div class="logic-step"><b>聲明原文</b><span>The Committee decided to raise the target range for the federal funds rate by 1/4 percentage point to 3-3/4 to 4 percent, in support of the Federal Reserve&#x27;s dual mandate.</span></div><div class="logic-step"><b>投票</b><span>12:0，全體一致</span></div><div class="logic-step"><b>政策方向怎麼標</b><span>有升息就是偏升息、有降息就是偏降息；維持不變時看反對票主張的方向。不加權、不打分數。</span></div></div></div></details><div class="data-line"><span class="data-tag">聲明 2026-09-16</span><span class="data-tag">利率區間取自 FRED</span><span class="data-tag">政策依據：利率決議、投票與會後聲明</span></div></div></div>
 <div class="sect-tools"><button type="button" data-all="open">展開全部</button><button type="button" data-all="close">收合全部</button></div>
 <div class="grid">
   <details class="card sect" open><summary><h2 id="signals">政策訊號</h2><span class="sect-sum">升息一碼，全體一致　·　點陣圖：年底前再升約 1 碼　·　市場：與點陣圖大致一致</span></summary><div class="sect-body">
     <p class="hint">每一列是一件文件裡的事實，各自指向一個方向。<b>不加總、不打分數</b>——
       先看它們是不是指向同一邊。</p>
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>把聯準會這次「做了什麼、誰不同意、自己預期什麼、市場信不信」拆成幾件可以核對的事實。</p><p><b>為什麼重要：</b>聯準會不會直接說「我們下次要升息」，方向藏在決議、反對票與點陣圖裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。</p><p><b>怎麼判讀：</b>幾列都指向同一邊，方向就很清楚；互相矛盾時，矛盾本身就是重點（例如委員會說還要升、市場卻不太信）。</p><p class="teach-more"><a href="/ask/?q=%E4%BB%80%E9%BA%BC%E6%98%AFFOMC%20%E6%8A%95%E7%A5%A8%EF%BC%9F">完整教學：什麼是FOMC 投票？（怎麼來的、常見誤讀、小測驗）→</a></p></div></details>
-    <div class="fx-list"><div class="fx-row"><div class="fx-k">政策行動</div><div class="fx-v">升息一碼，目標區間 3.75–4.00%</div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">反對票</div><div class="fx-v">12:0，全體一致<small>反對票要看主張的方向，不是只看張數</small></div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">聲明的風險用語</div><div class="fx-v">沒有點名風險方向（Warsh 任內的聲明不再寫這一句）</div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">點陣圖（2026 年底）vs 現在</div><div class="fx-v">中位數 4.1%，比現行中點高約 1 碼——委員會自己預期 2026 年底前還要再升<small>16 人高於現在、2 人持平、0 人低於現在</small></div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">市場路徑 vs 點陣圖</div><div class="fx-v">市場路徑與點陣圖大致一致<small>期貨推算 2026 年底 4.13%，點陣圖 4.125%</small></div><div class="fx-dir neutral">— 中性</div></div></div>
+    <div class="fx-list"><div class="fx-row"><div class="fx-k">政策行動</div><div class="fx-v">升息一碼，目標區間 3.75–4.00%</div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">反對票</div><div class="fx-v">12:0，全體一致<small>反對票要看主張的方向，不是只看張數</small></div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">聲明的風險用語</div><div class="fx-v">沒有點名風險方向（Warsh 任內的聲明不再寫這一句）</div><div class="fx-dir neutral">— 中性</div></div><div class="fx-row"><div class="fx-k">點陣圖（2026 年底）vs 現在</div><div class="fx-v">中位數 4.1%，比現行中點高約 1 碼——委員會自己預期 2026 年底前還要再升<small>16 人高於現在、2 人持平、0 人低於現在</small></div><div class="fx-dir hawkish">↑ 偏升息</div></div><div class="fx-row"><div class="fx-k">市場路徑 vs 點陣圖</div><div class="fx-v">市場路徑與點陣圖大致一致<small>期貨推算 2026 年底 4.16%，點陣圖 4.125%</small></div><div class="fx-dir neutral">— 中性</div></div></div>
     <details data-m-collapse><summary>本次投票明細</summary>
       <div style="margin-top:12px"><div class="votes"><span class="vchip">全體一致，沒有反對票</span></div></div>
     </details>
@@ -4571,7 +4578,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </div>
 
 <div class="grid">
-  <details class="card sect"><summary><h2 id="next">下次會議與靜默期</h2><span class="sect-sum">10/27–28（9 天後）　·　靜默期中（至 10/29），官員不公開談政策</span></summary><div class="sect-body">
+  <details class="card sect"><summary><h2 id="next">下次會議與靜默期</h2><span class="sect-sum">10/27–28（8 天後）　·　靜默期中（至 10/29），官員不公開談政策</span></summary><div class="sect-body">
     <p class="hint">靜默期從會議開始前的第二個週六起，到會後隔天結束。這段期間官員不公開談政策，
       所以靜默期前的最後幾場演講特別受注意。</p>
     <div class="fx-bo in">靜默期中（至 10/29），官員不公開談政策</div><ol class="fx-tl"><li class="tl-key"><span class="tl-d">10/17</span><b>靜默期開始</b><span class="tl-b">官員不再公開談貨幣政策，直到會後隔天</span></li><li class="tl-key"><span class="tl-d">10/28</span><b>FOMC 會議</b><span class="tl-b">10/27–28，美東 14:00 公布決議（台北隔天 02:00）</span></li><li class="tl-ev"><span class="tl-d">10/29</span><b>靜默期結束</b><span class="tl-b">會後隔天起，官員恢復公開發言</span></li></ol><p class="hint" style="margin-top:10px">之後的會議：12/9、1/27、3/17</p><p class="src">理事的演講與作證取自聯準會官網行事曆；地方聯儲總裁的行程沒有統一的官方來源，這裡不列（他們的近期發言見「官員最新發言」）。</p>
@@ -4594,7 +4601,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 <div class="grid">
   <details class="card sect"><summary><h2 id="market">市場路徑 vs 點陣圖</h2><span class="sect-sum">市場路徑與點陣圖大致一致</span></summary><div class="sect-body">
     <details class="teach"><summary>這在看什麼？</summary><div class="teach-body"><p><b>在量什麼：</b>聯邦基金期貨推算的每一場會議後的利率，對照點陣圖的年底中位數。</p><p><b>為什麼重要：</b>期貨是真金白銀押的利率路徑。它跟點陣圖不一致，代表市場不完全相信委員會的預期。</p><p><b>怎麼判讀：</b>落差的方向就是之後「有一方要修正」的方向——不是市場改押，就是聯準會改口。</p><p class="teach-more"><a href="/ask/?q=%E4%BB%80%E9%BA%BC%E6%98%AF%E5%8D%87%E9%99%8D%E6%81%AF%E6%A9%9F%E7%8E%87%EF%BC%88FedWatch%EF%BC%89%EF%BC%9F">完整教學：什麼是升降息機率（FedWatch）？（怎麼來的、常見誤讀、小測驗）→</a></p></div></details>
-    <div class="tscroll"><table><thead><tr><th>會議</th><th>會後隱含利率</th><th>單場隱含變動</th><th>機率最高的結果</th></tr></thead><tbody><tr><td>10/28</td><td>3.92%</td><td>+3 bp</td><td>維持 87%、升一碼 13%</td></tr><tr><td>12/9</td><td>4.13%</td><td>+21 bp</td><td>升一碼 85%、維持 15%</td></tr></tbody></table></div><div class="verdict neutral" style="margin-top:14px"><div class="v-main" style="font-size:18px">市場路徑與點陣圖大致一致</div><div class="v-why" style="margin-top:6px">2026 年底：期貨推算 4.13%，點陣圖中位數 4.125%，差 +0 bp。</div></div><p class="src">聯邦基金期貨逐場推算（2026-10-19），與首頁 FedWatch chip 同一套算法；短天期內與 OIS 定價等價。期貨只推到今年最後一場會議，明年以後只看點陣圖。</p><p class="src">參考：2 年期公債殖利率 4.74%，比政策利率中點高 +0.87 個百分點。2 年期含期限溢酬，不能直接讀成政策路徑，只列為參考。</p>
+    <div class="tscroll"><table><thead><tr><th>會議</th><th>會後隱含利率</th><th>單場隱含變動</th><th>機率最高的結果</th></tr></thead><tbody><tr><td>10/28</td><td>3.92%</td><td>+5 bp</td><td>維持 81%、升一碼 19%</td></tr><tr><td>12/9</td><td>4.16%</td><td>+23 bp</td><td>升一碼 93%、維持 7%</td></tr></tbody></table></div><div class="verdict neutral" style="margin-top:14px"><div class="v-main" style="font-size:18px">市場路徑與點陣圖大致一致</div><div class="v-why" style="margin-top:6px">2026 年底：期貨推算 4.16%，點陣圖中位數 4.125%，差 +3 bp。</div></div><p class="src">聯邦基金期貨逐場推算（2026-10-20），與首頁 FedWatch chip 同一套算法；短天期內與 OIS 定價等價。期貨只推到今年最後一場會議，明年以後只看點陣圖。</p><p class="src">參考：2 年期公債殖利率 4.74%，比政策利率中點高 +0.87 個百分點。2 年期含期限溢酬，不能直接讀成政策路徑，只列為參考。</p>
   </div></details>
 </div>
 
