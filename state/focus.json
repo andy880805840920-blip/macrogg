@@ -299,12 +299,12 @@
  "at": "2026-10-19T03:17:54.373263+00:00",
  "layout": "main",
  "topics": {
-  "hash": "891c870dbf27dc67",
+  "hash": "2d3a249193c69489",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "華許主席言論降低市場對本月升息預期，交易員將升息機率壓低至20%以下，金價因此上漲0.2%至每盎司4,173.59美元。強勢美元與高殖利率通常打壓黃金，但避險需求與央行持續買進提供支撐",
+    "text": "華許談話降低升息預期，金價上漲至4173美元，交易員將10月升息機率壓至20%以下，反映市場對聯準會按兵不動的預期增強",
     "links": [
      {
       "title": "Gold edges higher on softer oil; Fed rate outlook in focus",
@@ -323,26 +323,45 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，維持在每桶110美元附近，但川普可能豁免對俄羅斯制裁引發供應增加疑慮，油價面臨下行壓力",
+    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，維持在110美元附近，但油價軟化對黃金構成溫和利空",
     "links": [
      {
       "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
       "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZW11ZjRDTUdpUHpzY1JpNFZtWjZ1bGhZejdHX2h3Q0NTb1pKU0pxM0NtSDR5QlA4YnQ5NHUybkxGS0VxSWJQcHo0NWcyb3A4S21SbVNld2cyLTQ5eFowV2lqRlh1QUMteG1taWQ5b0dPUGg1SnpxVUlRYmlDWkkxZzBQWVpBTjlwdzEyZDBTRWRacVU1ZFhZMjhrMGd5dw?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-18T22:02:51+00:00"
+      "at": "2026-10-19T00:26:00+00:00"
      },
      {
-      "title": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
+      "title": "Gold edges higher on softer oil; Fed rate outlook in focus",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
       "source": "Reuters",
-      "at": "2026-10-18T23:52:29+00:00"
+      "at": "2026-10-19T03:11:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "equity",
+    "label": "美股",
+    "text": "美股科技股賣壓持續，標普500指數跌逾1%，費半指數連8個交易日下跌，市場對AI投資回報疑慮升溫，高盛警告若AI大廠信貸利差續擴，概念股恐補跌",
+    "links": [
+     {
+      "title": "AI Trade Reversal Pierces Asia’s Star Picks-and-Shovels Stocks",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOREtWM3dzNTRIb29DY2pnS3JHYmJpLVRURzBlT1RQX0FSZGMzWkFuS0w0dXVhXzlSQTR3MVhZdm9nTm90S21JWWp1UjhLTjdPamxGSUMxVFd1ekZVWGp4bXBsTlFyVDJLRWpvalFqMlpldURMUXpPbFR5MlY0RWNMc3dTdW9BaFFEemc5bEJIbnBseEJkN3hlbGhMTEpaenVzMGJpa052RmZKbzU4bTF3cGpIQQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T00:00:00+00:00"
+     },
+     {
+      "title": "《美股》AI科技股賣壓 標普500指數跌逾1%",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQMU5TUk5Va2VzbEw2SkJYLXlWZFJNT204RHBGazZSeHpBUERzT1ZpRU5OSHVIcFJkQ2c2QW51TE5aMTBpeTFsdzNtODBpUExQVWVnVUtnWVVTY1I0NTZRbHBHdExiM1pob0ZYd1lPQVdES21nZmFZRi1mZUxLTS1DaG5mWVFndEJXclBPVXNDWWRXUQ?oc=5",
+      "source": "MoneyDJ",
+      "at": "2026-10-18T22:15:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "微軟推出搭載輝達RTX Spark晶片的Surface Laptop Ultra，具備1 petaflops運算能力，納德拉強調Windows將成為AI代理人最安全的運算平台，該筆電硬體開發耗時四年",
+    "text": "微軟推出搭載輝達RTX Spark晶片的Surface Laptop Ultra，強調Windows將成AI代理人最安全平台，該筆電具備1 petaflops運算能力，採用Blackwell架構支援128GB整合式記憶體",
     "links": [
      {
       "title": "微軟Surface AI筆電登場 納德拉宣示打造最安全AI平台",
@@ -355,7 +374,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股19日開低走低，盤中跌逾800點下探46243點，台積電跌至2390元、聯電跌逾5%至126元，記憶體族群因中國長鑫存儲年底推出伺服器記憶體引發產能過剩疑慮，南亞科、華邦電跌幅超過6%",
+    "text": "台股開低走低，盤中跌逾940點，台積電跌至2390元、聯電跌逾5%至126元，中國長鑫存儲預計年底推伺服器記憶體引發產能過剩疑慮，南亞科、華邦電跌逾6%",
     "links": [
      {
       "title": "台股盤中跌逾800點　台積電聯電承壓記憶體走弱",
@@ -364,17 +383,17 @@
       "at": "2026-10-19T02:48:19+08:00"
      },
      {
-      "title": "台股祭禁空令？金管會主委彭金隆說話了",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%A5%AD%E7%A6%81%E7%A9%BA%E4%BB%A4-%E9%87%91%E7%AE%A1%E6%9C%83%E4%B8%BB%E5%A7%94%E5%BD%AD%E9%87%91%E9%9A%86%E8%AA%AA%E8%A9%B1%E4%BA%86-023800244.html",
+      "title": "台股盤中一度重挫940點　記憶體股跌逾6％",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E7%9B%A4%E4%B8%AD-%E5%BA%A6%E9%87%8D%E6%8C%AB940%E9%BB%9E-%E8%A8%98%E6%86%B6%E9%AB%94%E8%82%A1%E8%B7%8C%E9%80%BE6-031345873.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T02:38:00+08:00"
+      "at": "2026-10-19T03:13:45+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "荷蘭央行因「地緣政治局勢升溫」將78噸紐約黃金與7噸加拿大黃金移至倫敦，央行行長表示倫敦作為全球最大黃金交易樞紐，儲存於英格蘭銀行更便於取用，反映全球央行重新調配黃金儲備應對不確定性",
+    "text": "荷蘭央行將78噸紐約黃金與7噸加拿大黃金移至倫敦，理由是應對地緣政治不穩定，倫敦作為全球最大黃金交易樞紐可提升危機應變能力，反映全球央行重新調整黃金儲備位置",
     "links": [
      {
       "title": "Europe sent its gold to the U.S. for safe keeping during World War II. Central banks are now reshuffling their reserves for a new era of uncertainty",
@@ -387,24 +406,24 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "外資大舉賣超並匯出資金，新台幣10/19盤中重貶至32.55元，創近18個月新低，單週貶幅4.63角為逾1年最大。美股費半指數10/16下挫3.83%引發台股補跌，外資賣壓何時停歇成關鍵",
+    "text": "新台幣兌美元貶至32.55元創近18個月新低，外資10月12至16日淨匯出179.61億美元，央行表示新台幣仍較其他主要貨幣穩定，將視匯市供需適時調節",
     "links": [
      {
-      "title": "股匯雙殺！新台幣貶逾2角跌破32.5關卡 匯價探1年半盤中最低",
-      "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA%EF%BC%81%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%B2%B6%E9%80%BE2%E8%A7%92%E8%B7%8C%E7%A0%B4325%E9%97%9C%E5%8D%A1-%E5%8C%AF%E5%83%B9%E6%8E%A21%E5%B9%B4%E5%8D%8A%E7%9B%A4%E4%B8%AD%E6%9C%80%E4%BD%8E-022323713.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T02:23:23+00:00"
+      "title": "外資匯出壓力未解！新台幣下探32.55元 創近18個月新低",
+      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E5%8C%AF%E5%87%BA%E5%A3%93%E5%8A%9B%E6%9C%AA%E8%A7%A3-%E6%96%B0%E5%8F%B0%E5%B9%A3%E4%B8%8B%E6%8E%A232-55%E5%85%83-%E5%89%B5%E8%BF%9118%E5%80%8B%E6%9C%88%E6%96%B0%E4%BD%8E-025704575.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T02:57:04+08:00"
      },
      {
-      "title": "台股挫逾800點　新台幣重貶逾2角摜破32.5元關卡",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%8C%AB%E9%80%BE800%E9%BB%9E-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B6%E9%80%BE2%E8%A7%92%E6%91%9C%E7%A0%B432-5%E5%85%83%E9%97%9C%E5%8D%A1-021753355.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T02:17:53+00:00"
+      "title": "熱錢大出走！新台幣10月已貶逾7角 央行3大喊話：還很穩",
+      "link": "https://tw.stock.yahoo.com/news/%E7%86%B1%E9%8C%A2%E5%A4%A7%E5%87%BA%E8%B5%B0%EF%BC%81%E6%96%B0%E5%8F%B0%E5%B9%A310%E6%9C%88%E5%B7%B2%E8%B2%B6%E9%80%BE7%E8%A7%92-%E5%A4%AE%E8%A1%8C3%E5%A4%A7%E5%96%8A%E8%A9%B1%EF%BC%9A%E9%82%84%E5%BE%88%E7%A9%A9-032418893.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T03:22:37+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T03:18:13.150581+00:00"
+  "at": "2026-10-19T03:28:07.070423+00:00"
  },
  "main_source_titles": [
   "中國2026年前3季GDP年增4.6%",
