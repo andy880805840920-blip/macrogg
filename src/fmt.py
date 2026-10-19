@@ -64,3 +64,9 @@ def change_verb(v: float | None) -> str:
     if v is None:
         return "變動"
     return "增加" if v >= 0 else "減少"
+
+
+def signed(v, nd: int = 0) -> str:
+    """帶正負號的數字；四捨五入後是 0 就寫 0（不出現「-0」「+0」）。"""
+    r = round(float(v), nd) + 0.0
+    return f"{0:.{nd}f}" if r == 0 else f"{r:+.{nd}f}"

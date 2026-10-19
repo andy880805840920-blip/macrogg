@@ -273,6 +273,37 @@ check("⑫e 實質利率：中性 +0.5pp 內正常、+1pp 以上警戒",
 _sep = {"date": "2026-09-16", "years": ["2026", "Longer run"], "vars": {"ffr": {"median": [4.1, 3.2]}}}
 check("⑫f 中性實質利率＝長期點陣圖 − 2%", abs(_rt.neutral_real(_sep)[0] - 1.2) < 1e-9)
 
+# ⑬ 再融資聲明自動擷取、公眾持有債務動態、年底期貨口徑
+_t = ("Quarterly Refunding Statement of Deputy Assistant Secretary for Federal Finance Brian Smith August 5, 2026 WASHINGTON — "
+      "Based on current projected borrowing needs, Treasury anticipates maintaining nominal coupon and FRN auction sizes "
+      "for at least the next several quarters. Treasury anticipates that, over the course of the upcoming quarter, it will "
+      "purchase up to $38 billion in off-the-run securities across buckets for liquidity support and up to $25 billion in "
+      "the 1-month to 2-year maturity bucket for cash management purposes.")
+_orig = ts._page_text
+ts._page_text = lambda url: _t
+try:
+    _st = ts.refunding_statement(["sb0590"])
+finally:
+    ts._page_text = _orig
+check("⑬a 聲明：日期、指引原句、買回額度", _st.get("date") == "2026-08-05" and _st.get("bb_liq") == 38.0
+      and _st.get("bb_cash") == 25.0 and "several quarters" in _st.get("guidance_en", ""), _st)
+check("⑬b 指引中文對照", le.refunding_guidance_zh(_st["guidance_en"]).startswith("財政部預期至少未來數季"))
+_q = ["2025-01-01", "2025-04-01", "2025-07-01", "2025-10-01", "2026-01-01"]
+_s = {"FYGFGDQ188S": [{"date": q, "value": v} for q, v in zip(_q, [96.3, 95.0, 97.4, 98.2, 98.7])],
+      "FYGFDPUN": [{"date": q, "value": 29e6 + i * 5e5} for i, q in enumerate(_q)],
+      "GDP": [{"date": q, "value": 30000 * (1.014 ** i)} for i, q in enumerate(_q)],
+      "A091RC1Q027SBEA": [{"date": q, "value": 1200 + i * 10} for i, q in enumerate(_q)],
+      "MTSDS133FMS": [{"date": f"{2024 + (m + 9) // 12}-{(m + 9) % 12 + 1:02d}-01", "value": -150000} for m in range(18)]}
+_d = _rt.DebtState(); _d.nominal_growth = 5.7
+check("⑬c 公眾持有債務動態可計算", _rt._public_debt_dynamics(_d, _s, _s["GDP"], _s["A091RC1Q027SBEA"]))
+_a = _d.dd_actual
+check("⑬d 實際變化＝基本赤字＋利息＋成長＋其他", bool(_a) and abs(_a["primary"] + _a["interest"] + _a["growth"] + _a["other"] - _a["actual"]) < 1e-9, _a)
+_fc2 = {"r0": 3.875, "points": [{"month": "2026-12", "rate": 4.08}, {"month": "2027-01", "rate": 4.20}, {"month": "2027-12", "rate": 4.55}]}
+_g2 = le.dots_gap(_fc2, {2026: 4.125, 2027: 4.125}, {"year": 2026, "market_end": 4.13, "dot_median": 4.125, "gap_bp": 0.5, "r0": 3.875})
+check("⑬e 當年度用 mvd（與上方年底政策利率同一數字）", _g2["rows"][0]["market"] == 4.13 and not _g2["rows"][0]["partial"], _g2["rows"][0])
+check("⑬f 隔年沒有 1 月合約時用 12 月並標示", _g2["rows"][1]["partial"] and _g2["rows"][1]["month"] == "2027-12", _g2["rows"][1])
+check("⑬g 短端：3 個月升、2 年不動＝近期升息定價增加", le.short_end_verdict(0, 12).startswith("3 個月期上升"))
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

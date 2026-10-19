@@ -548,9 +548,9 @@ def window_view(r: dict) -> dict:
     if aligned and max(abs(dy), abs(be), abs(real)) < 0.5:
         verdict = "10 年期與拆解指標大致持平。"
     elif aligned and abs(dy) < 0.5:
-        verdict = "通膨補償與實質利率的變動大致抵銷，10 年期接近持平。"
+        verdict = "損益兩平與實質利率的變動大致抵銷，10 年期接近持平。"
     elif aligned:
-        verdict = "10 年期主要由" + ("通膨補償" if abs(be) > abs(real) else "實質利率") + "變動帶動。"
+        verdict = "10 年期主要由" + ("損益兩平" if abs(be) > abs(real) else "實質利率") + "變動帶動。"
     elif None in (be, real, dy):
         verdict = "所選期間的拆解資料不足，暫不判定主要原因。"
     else:
@@ -559,7 +559,7 @@ def window_view(r: dict) -> dict:
         "label": label, "value": "—" if v is None else _sgn(v, unit), "note": note}
     dd = D.get("dates") or [None, None]
     dnote = f"拆解資料 {_md2(dd[0])} → {_md2(dd[1])}" if dd[0] and dd[1] else "拆解資料不足"
-    lm = [metric("10 年期", dy, note=dnote), metric("通膨補償", be, note=dnote),
+    lm = [metric("10 年期", dy, note=dnote), metric("損益兩平", be, note=dnote),
           metric("實質利率", real, note=dnote)]
     td = D.get("tp_dates") or [None, None]
     lm.append(metric("期限溢酬（參考）", D.get("tp"),
@@ -568,13 +568,10 @@ def window_view(r: dict) -> dict:
     if D.get("oil") is not None:
         lm.append(metric("油價（參考）", D["oil"], "%"))
     panels.append({"title": "10 年期為什麼變", "verdict": verdict, "metrics": lm,
-                   "note": "實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到通膨補償與實質利率之上。"})
+                   "note": "實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到損益兩平與實質利率之上。"})
     dy2, y3m = T["y2"]["d"], D.get("y3m")
     path = None if dy2 is None or y3m is None else dy2-y3m
-    verdict = ("資料不足，暫不判定短端定價方向。" if path is None else
-               "2 年期相對短端走高，未來利率偏高的定價增強。" if path > 5 else
-               "2 年期相對短端走低，未來利率偏低的定價增強。" if path < -5 else
-               "2 年期與短端的相對變化不大，定價方向大致未變。")
+    verdict = short_end_verdict(dy2, y3m)
     panels.append({"title": "短端定價怎麼變", "verdict": verdict,
                    "metrics": [metric("2 年期", dy2), metric("3 個月期", y3m), metric("2 年 − 3 個月利差", path)],
                    "note": "這是公債短端的相對變化；年底政策利率方向另看下方期貨定價。"})
@@ -894,8 +891,29 @@ def forwards(series: dict) -> list[dict]:
 
 
 def _bp(v) -> str:
-    return "—" if v is None else f"{v:+.0f}bp".replace("-", "−")
+    from .. import fmt as _f
+    return "—" if v is None else f"{_f.signed(v)}bp".replace("-", "−")
 
+
+
+def short_end_verdict(dy2, y3m) -> str:
+    """
+    短端定價：看 2 年 − 3 個月利差怎麼變，並點出是哪一端在動（瀏覽器端 shortEndVerdict 同一套規則）。
+    3 個月期反映未來一季的政策利率、2 年期反映未來兩年；只看利差會把「近端升息定價增加」
+    誤讀成「未來利率偏低」。
+    """
+    if dy2 is None or y3m is None:
+        return "資料不足，暫不判定短端定價方向。"
+    path = dy2 - y3m
+    if abs(path) <= 5:
+        return "2 年期與 3 個月期同步變動，短端定價方向大致未變。"
+    if path < 0:
+        if y3m > 5 and dy2 > -5:
+            return "3 個月期上升、2 年期沒跟上：近期升息的定價增加，但市場不認為利率會一路走高。"
+        return "2 年期下跌多於 3 個月期：未來兩年的利率定價下修。"
+    if y3m < -5 and dy2 < 5:
+        return "3 個月期下跌、2 年期沒跟著降：近期降息的定價增加，但之後的利率定價沒有一起下修。"
+    return "2 年期上升多於 3 個月期：未來兩年的利率定價上修。"
 
 def curve_story(rows: list[dict], drv: dict, fwd: list[dict], *, fomc_next: str = "",
                 refunding_next: str = "") -> dict:
@@ -1263,15 +1281,24 @@ def dots_gap(fc: dict | None, dots: dict | None, mvd: dict | None = None) -> dic
     fc, dots = fc or {}, dots or {}
     r0, pts = fc.get("r0"), fc.get("points") or []
     if r0 is not None and pts:
+        bym = {p["month"]: p for p in pts}
         for y in sorted(dots):
-            yp = [p for p in pts if p["month"][:4] == str(y)]
-            if not yp:
-                continue
-            p = next((q for q in yp if q["month"][5:7] == "12"), yp[-1])
+            # 年底＝當年最後一次 FOMC（12 月中）之後的利率：
+            #   當年度優先用 mvd（與上方「年底政策利率」同一個數字）；
+            #   之後的年度用隔年 1 月合約（全月都在 12 月會議之後），沒有才退回 12 月合約（含會議前的天數）
+            if mvd and str(mvd.get("year")) == str(y) and mvd.get("market_end") is not None:
+                p, partial = {"month": f"{y}-12", "rate": mvd["market_end"]}, False
+            elif f"{int(y) + 1}-01" in bym:
+                p, partial = bym[f"{int(y) + 1}-01"], False
+            else:
+                yp = [q for q in pts if q["month"][:4] == str(y)]
+                if not yp:
+                    continue
+                p = bym.get(f"{y}-12") or yp[-1]
+                partial = True
             fed, mkt = (dots[y] - r0) * 100, (p["rate"] - r0) * 100
             rows.append({"year": str(y), "month": p["month"], "market": p["rate"], "dots": dots[y],
-                         "fed_bp": fed, "mkt_bp": mkt, "gap_bp": mkt - fed,
-                         "partial": p["month"][5:7] != "12"})
+                         "fed_bp": fed, "mkt_bp": mkt, "gap_bp": mkt - fed, "partial": partial})
     if not rows and mvd and mvd.get("market_end") is not None and mvd.get("dot_median") is not None:
         r0 = mvd.get("r0")
         fed = (mvd["dot_median"] - r0) * 100 if r0 is not None else 0.0
@@ -1297,3 +1324,35 @@ def dots_gap(fc: dict | None, dots: dict | None, mvd: dict | None = None) -> dic
         stance = "Lead the Curve（市場領先）" if lead else "Behind the Curve（市場落後）"
     return {"rows": rows, "main": m, "gap_bp": g, "status": status, "stance": stance, "why": why,
             "rule": DOTS_GAP_RULE, "history": DOTS_GAP_HISTORY}
+
+
+# ---------------------------------------------------------------------------
+# 再融資聲明的中文摘要（自動更新用）：常見句型對照；對不上就只放原文
+# ---------------------------------------------------------------------------
+_GUIDE_ZH = [
+    (r"anticipates maintaining nominal coupon and FRN auction sizes for at least the next several quarters",
+     "財政部預期至少未來數季維持名目 coupon 與 FRN 的拍賣規模不變。"),
+    (r"anticipates maintaining nominal coupon and FRN auction sizes for at least the next (?:quarter|couple of quarters)",
+     "財政部預期近一兩季維持名目 coupon 與 FRN 的拍賣規模不變——指引期間縮短，留意之後增發。"),
+    (r"(?:anticipates|expects|plans)[^.]*increas\w* (?:nominal )?coupon",
+     "財政部表示將（或預期）增加名目 coupon 的拍賣規模——長端供給上升。"),
+    (r"(?:anticipates|expects|plans)[^.]*(?:decreas|reduc)\w* (?:nominal )?coupon",
+     "財政部表示將（或預期）減少名目 coupon 的拍賣規模。"),
+]
+
+
+def refunding_guidance_zh(en: str) -> str:
+    import re as _re
+    for pat, zh in _GUIDE_ZH:
+        if _re.search(pat, en or "", _re.I):
+            return zh
+    return ""
+
+
+def refunding_buybacks_zh(liq: float | None, cash: float | None) -> str:
+    if liq is None:
+        return ""
+    s = f"本季最多買回 {liq * 10:,.0f} 億美元的舊券（流動性支援）"
+    if cash is not None:
+        s += f"，以及最多 {cash * 10:,.0f} 億美元的 1 個月至 2 年期（現金管理）"
+    return s + "。"

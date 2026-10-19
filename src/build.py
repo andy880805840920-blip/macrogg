@@ -3054,6 +3054,19 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     # 下一次再融資日期以財政部最新政策聲明為準（自動抓），設定檔的手填值只當後備
     if (tr.get("qra") or {}).get("next"):
         out["refunding"]["next"] = tr["qra"]["next"]
+    # 再融資聲明自動更新（2026-10）：財政部發了比設定檔新的聲明，就改用聲明原文與買回額度，
+    # 設定檔的中文摘要與當季補充（bb_note）不再顯示——避免新一季還掛著上一季的文字。
+    _st = (tr.get("qra") or {}).get("statement") or {}
+    _rf = out["refunding"]
+    if _st.get("date") and _st["date"] > str(_rf.get("date") or ""):
+        _rf.update({"date": _st["date"], "url": _st.get("url") or _rf.get("url"), "auto": True})
+        if _st.get("guidance_en"):
+            _rf["guidance_en"] = _st["guidance_en"]
+            _rf["guidance_zh"] = le.refunding_guidance_zh(_st["guidance_en"])
+        _rf["buybacks_zh"] = le.refunding_buybacks_zh(_st.get("bb_liq"), _st.get("bb_cash"))
+        _rf.pop("bb_note", None)
+    elif _rf.get("bb_note") and str((_rf["bb_note"] or {}).get("until") or "") < clock.today().isoformat():
+        _rf.pop("bb_note", None)
     out["upcoming"] = [a for a in (tr.get("upcoming") or []) if a.get("type") != "Bill"]
     out["events"] = le.events(clock.today(), tr.get("upcoming") or [],
                               out["refunding"].get("next"))
@@ -3121,6 +3134,12 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
 
 def _shift_iso_year(iso: str, n: int) -> str:
     return f"{int(iso[:4]) + n}{iso[4:]}"
+
+
+def _qlabel(date: str) -> str:
+    """2026-04-01 → 2026Q2（季資料標季別，不標月份，避免被讀成「4 月」）。"""
+    d = str(date or "")
+    return f"{d[:4]}Q{(int(d[5:7]) - 1) // 3 + 1}" if len(d) >= 7 and d[4] == "-" else d
 
 
 def rates_real_apply(light, n: float, src: str, rows: list, explain: dict) -> None:
@@ -3264,10 +3283,10 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     # 中性先用設定檔的最近一次點陣圖值，run.py 拿到當期 SEP 後再覆寫。
     _light_explain = {c["key"]: dict(c["explain"]) for c in cfg.get("regime_lights") or [] if c.get("explain")}
     if "term_premium" in _light_explain:
-        _light_explain["term_premium"]["ref"] = {"head": ["期間", "背景", "期限溢酬上升", "最快單月"],
+        _light_explain["term_premium"]["ref"] = {"title": "過去財政／供給事件的期限溢酬上升", "head": ["期間", "背景", "累計上升", "最快單月"],
                                                  "rows": [list(e) for e in rt.TP_EPISODES]}
     if "real_10y" in _light_explain:
-        _light_explain["real_10y"]["ref"] = {"head": ["時點", "階段", "10Y TIPS", "高於中性"],
+        _light_explain["real_10y"]["ref"] = {"title": "歷次升降息循環的 10Y TIPS", "head": ["時點", "階段", "10Y TIPS", "高於中性"],
                                              "rows": [[w, t, f"{v:.2f}%" if isinstance(v, float) else v, g]
                                                       for t, w, v, g in rt.REAL_CYCLES]}
     _rcfg = _cfgs.get("real_10y") or {}
@@ -3378,9 +3397,11 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
     # 這也代表實際起點可能早於 CHART_START，所以期間要標出來。
     debt_rows = since(series.get("GFDEGDQ188S") or [], CHART_START, 6)
     debt_chart = charts.compact_lines(
-        [{"label": "聯邦債務佔 GDP", "color": "var(--line-2)",
+        [{"label": "公眾持有債務佔 GDP", "color": "var(--line-1)",
+          "points": series.get("FYGFGDQ188S") or []},
+         {"label": "總債務佔 GDP（含政府內部持有）", "color": "var(--muted-bar)",
           "points": series.get("GFDEGDQ188S") or []}],
-        unit="%", height=130, digits=1, months=36, aria="聯邦債務佔 GDP")
+        unit="%", height=150, digits=1, months=36, aria="聯邦債務佔 GDP")
     debt_span = span_label(debt_rows)
     # r − g 歷史（季）：10Y 季均 − 名目 GDP 年增，1962 年起抓得到多少畫多少（序列多從 2023 起，畫近 3 年）
     _gq = series.get("GDP") or []
@@ -3528,7 +3549,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         "debt_growth_note": (
             (f"r＝10 年期殖利率 {debt.r_month.replace('-', '/')} 月均 {debt.r_nom:.2f}%；"
              if debt.r_nom is not None else "")
-            + (f"g＝名目 GDP 年增 {debt.nominal_growth:.1f}%（{debt.debt_gdp_asof[:7].replace('-', '/')} 前後的季資料）"
+            + (f"g＝名目 GDP 年增 {debt.nominal_growth:.1f}%（{_qlabel(debt.gdp_asof)}）"
                if debt.nominal_growth is not None else "")),
         "rg_chart": rg_chart,
         "hs_stats": hs_stats,

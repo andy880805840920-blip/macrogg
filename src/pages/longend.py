@@ -13,13 +13,14 @@ log = logging.getLogger(__name__)
 
 from ..analysis import longend as le
 from ..site import esc
+from .. import fmt
 from . import teach
 
 CCOL = {"real": "var(--line-1)", "infl": "var(--line-2)", "tp": "#1baf7a"}
 
 
 def _bp(v, d=0) -> str:
-    return "—" if v is None else f"{v:+.{d}f}bp"
+    return "—" if v is None else f"{fmt.signed(v, d)}bp"
 
 
 def _md(iso: str) -> str:
@@ -63,10 +64,10 @@ def hero(d: dict) -> str:
         top = (f'<div class="le2-q">{_q("10 年期", y10)}{_q("20 年期", D.get("y20"))}{_q("30 年期", D.get("y30"))}</div>'
                f'<div class="le2-asof">資料 {esc(y10.get("date", ""))}（{esc(d.get("yield_source", "FRED"))} 官方日殖利率）</div>')
     main = (c1 or {}).get("main")
-    title = (f'本月驅動因素：{le.COMP_ZH[main]} {c1["parts"][main]:+.0f}bp' if main else "長端殖利率的組成")
+    title = (f'本月驅動因素：{le.COMP_ZH[main]} {_bp(c1["parts"][main])}' if main else "長端殖利率的組成")
     sub = ""
     if c1 and main:
-        sub = (f'10Y 本月 {c1["nominal"]:+.0f}bp ＝ 實質利率 {_bp(c1["parts"]["real"])} ＋ 損益兩平 {_bp(c1["parts"]["infl"])}'
+        sub = (f'10Y 本月（至 {_md(c1.get("to") or "")}）{_bp(c1["nominal"])} ＝ 實質利率 {_bp(c1["parts"]["real"])} ＋ 損益兩平 {_bp(c1["parts"]["infl"])}'
                + (f'；期限溢酬（ACM）{_bp(c1["parts"]["tp"])}' if c1["parts"].get("tp") is not None else "")
                + "。")
     table = ""
@@ -287,7 +288,7 @@ _RG_CLS = {"bear_steep": "bear", "bear_flat": "bear", "bull_steep": "bull", "bul
 
 
 def _sbp(v) -> str:
-    return "—" if v is None else f"{v:+.0f}".replace("-", "−")
+    return "—" if v is None else fmt.signed(v).replace("-", "−")
 
 
 _TEN = (("y2", "2", "2Y"), ("y10", "10", "10Y"), ("y30", "30", "30Y"))
@@ -483,15 +484,16 @@ function headline(S){var x=S['30-2'],a=S['10-2'],b=S['30-10'];if(!x||!a||!b)retu
 function view(r){
  var T={},S={};r.tenors.forEach(function(t){T[t.k]=t;});r.spreads.forEach(function(s){S[s.key]=s;});var D=r.drivers,panels=[];
  var be=D.be,real=D.real,dy=D.d10,has=be!==null&&real!==null&&dy!==null,aligned=has&&Math.abs(dy-be-real)<=2;
- var verdict=aligned&&Math.max(Math.abs(dy),Math.abs(be),Math.abs(real))<0.5?'10 年期與拆解指標大致持平。':aligned&&Math.abs(dy)<0.5?'通膨補償與實質利率的變動大致抵銷，10 年期接近持平。':aligned?'10 年期主要由'+(Math.abs(be)>Math.abs(real)?'通膨補償':'實質利率')+'變動帶動。':!has?'所選期間的拆解資料不足，暫不判定主要原因。':'參考指標與 10 年期變動尚未吻合，暫不判定主要原因。';
+ var verdict=aligned&&Math.max(Math.abs(dy),Math.abs(be),Math.abs(real))<0.5?'10 年期與拆解指標大致持平。':aligned&&Math.abs(dy)<0.5?'損益兩平與實質利率的變動大致抵銷，10 年期接近持平。':aligned?'10 年期主要由'+(Math.abs(be)>Math.abs(real)?'損益兩平':'實質利率')+'變動帶動。':!has?'所選期間的拆解資料不足，暫不判定主要原因。':'參考指標與 10 年期變動尚未吻合，暫不判定主要原因。';
  function metric(label,v,u,note){return{label:label,value:v===null?'—':sgn(v,u===undefined?'bp':u),note:note||'所選期間變動'};}
  var dd=D.dates||[null,null],dn=(dd[0]&&dd[1])?'拆解資料 '+md2(dd[0])+' → '+md2(dd[1]):'拆解資料不足',td=D.tp_dates||[null,null];
- var lm=[metric('10 年期',dy,'bp',dn),metric('通膨補償',be,'bp',dn),metric('實質利率',real,'bp',dn),
+ var lm=[metric('10 年期',dy,'bp',dn),metric('損益兩平',be,'bp',dn),metric('實質利率',real,'bp',dn),
   metric('期限溢酬（參考）',D.tp,'bp',D.tp!==null?'資料日 '+md2(td[0])+' → '+md2(td[1]):'所選期間尚無新資料（約晚一週公布）')];
  if(D.oil!==null)lm.push(metric('油價（參考）',D.oil,'%'));
- panels.push({title:'10 年期為什麼變',verdict:verdict,metrics:lm,note:'實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到通膨補償與實質利率之上。'});
+ panels.push({title:'10 年期為什麼變',verdict:verdict,metrics:lm,note:'實質利率比殖利率晚一天公布，拆解改用兩端最近都有資料的日子；期限溢酬僅作參考，不加到損益兩平與實質利率之上。'});
+ function shortEndVerdict(dy2,y3m){if(dy2===null||y3m===null)return '資料不足，暫不判定短端定價方向。';var p=dy2-y3m;if(Math.abs(p)<=5)return '2 年期與 3 個月期同步變動，短端定價方向大致未變。';if(p<0){if(y3m>5&&dy2>-5)return '3 個月期上升、2 年期沒跟上：近期升息的定價增加，但市場不認為利率會一路走高。';return '2 年期下跌多於 3 個月期：未來兩年的利率定價下修。';}if(y3m< -5&&dy2<5)return '3 個月期下跌、2 年期沒跟著降：近期降息的定價增加，但之後的利率定價沒有一起下修。';return '2 年期上升多於 3 個月期：未來兩年的利率定價上修。';}
  var dy2=T.y2.d,y3m=D.y3m,path=dy2===null||y3m===null?null:dy2-y3m;
- verdict=path===null?'資料不足，暫不判定短端定價方向。':path>5?'2 年期相對短端走高，未來利率偏高的定價增強。':path< -5?'2 年期相對短端走低，未來利率偏低的定價增強。':'2 年期與短端的相對變化不大，定價方向大致未變。';
+ verdict=shortEndVerdict(dy2,y3m);
  panels.push({title:'短端定價怎麼變',verdict:verdict,metrics:[metric('2 年期',dy2),metric('3 個月期',y3m),metric('2 年 − 3 個月利差',path)],note:'這是公債短端的相對變化；年底政策利率方向另看下方期貨定價。'});
  return{headline:headline(S),panels:panels};}
 function startFor(k,end){if(k==='ytd')return(Y-1)+'-12-31';var n={'1w':7,'1m':30,'3m':91}[k];
@@ -622,7 +624,7 @@ def curve(d: dict) -> str:
     if dg:
         _tag = {"good": "正常", "warning": "留意", "critical": "警戒"}[dg["status"]]
         _rows = "".join(
-            f'<tr><td data-label="年底">{esc(r["year"])} 年底{"（期貨只到 " + esc(r["month"]) + "）" if r["partial"] else ""}</td>'
+            f'<tr><td data-label="年底">{esc(r["year"])} 年底{"（用 " + esc(r["month"].replace("-", "/")) + " 合約，含 12 月會議前的天數）" if r["partial"] else ""}</td>'
             f'<td data-label="點陣圖">{r["dots"]:.2f}%</td><td data-label="期貨">{r["market"]:.2f}%</td><td data-label="差距"><b>{_sbp(r["gap_bp"])}bp</b></td></tr>'
             for r in dg["rows"])
         _hist = "".join(f'<tr><td data-label="時點">{esc(a)}</td><td data-label="當時">{esc(b)}</td><td data-label="差距">{esc(c)}</td><td data-label="結果">{esc(e)}</td></tr>'
@@ -687,10 +689,10 @@ def curve(d: dict) -> str:
         <p><b>30−2 週報</b>：最新官方收盤比 5 個交易日前（滾動一週），每天都是最新的一週；下方「每週變化」長條圖則固定週五比週五。分段：30−2＝10−2＋30−10，貢獻同方向且較大的那一段標為主要來源。</p>
         <p><b>型態</b>：利差擴大＝變陡、收窄＝變平；看兩端誰動得多決定由哪一端帶動，殖利率上升為熊、下降為牛；兩端反向為扭轉。利差變動 2bp 以內視為持平。</p>
         <p><b>遠期（1 年後、5 年後）</b>：用同一天的官方曲線推算。1 年後的 2Y＝1y2y（1Y、3Y）；10Y、30Y 因沒有 11 年、31 年期，以 1y9y、1y29y 近似。5 年後的 2Y＝5y2y（5Y、7Y）；10Y＝5y10y（15Y 由 10Y、20Y 內插）；30Y 以 5y25y 近似。官方殖利率是平價收益率，結果為近似值；遠期含期限溢酬，是市場已定價的路徑、不是預測。</p>
-        <p><b>原因</b>：用市場口徑的損益兩平（T10YIE）與 TIPS 實質利率（DFII10），兩者相加約等於 10 年期；實質利率晚一天公布，拆解用兩端最近都有資料的日子。期限溢酬（NY Fed ACM，約晚一個交易日）跟實質利率、損益兩平都有重疊，當旁證看；起訖退到同一天時顯示「—」。</p>
+        <p><b>原因</b>：用損益兩平（FRED T10YIE，即 DGS10 − DFII10）與 TIPS 實質利率（DFII10），兩者相加等於 10 年期；實質利率晚一天公布，拆解用兩端最近都有資料的日子。期限溢酬（NY Fed ACM，約晚一個交易日）跟實質利率、損益兩平都有重疊，當旁證看；起訖退到同一天時顯示「—」。</p>
         <p><b>市場定價的未來</b>：遠期差距及月變動在 ±5bp 內視為接近；年底期貨與現行利率差距在 ±12.5bp 內視為大致持平。</p>
         <p><b>資料口徑</b>：2Y、10Y、30Y 與利差使用美國財政部官方日殖利率，部分資料由 FRED 提供；各天期比較採同一天資料。財政部按約美東 15:30 的指示性買方報價估算固定期限殖利率，與 Bloomberg USGG 指數的 PX_LAST 口徑不同。</p>
-        <p><b>自選期間</b>：可查看 2026 年起的資料；遇假日採前一個有資料的日期，監控表欄位標題會標出實際使用的日期。</p>
+        <p><b>自選期間</b>：可查看 {year} 年起的資料；遇假日採前一個有資料的日期，監控表欄位標題會標出實際使用的日期。</p>
         <p><b>事件標記</b>：FOMC 用全年會議日；非農、CPI、PCE 用官方發布行事曆（目前自 2026 年 8 月起）；公債再融資公告用財政部公布的日期。只標有出處的日期，不用慣例推估。週報的「主要變化集中在…」挑這一週最大的單日變動（天期或利差，4bp 以上才寫），同一天有上述事件就一併點出。</p>
         <p><b>年內位置</b>：今年 1/1 起各標的的最低與最高，圓點是現在的位置。</p>
       </div>
@@ -726,9 +728,12 @@ def supply(d: dict) -> str:
         guide = (f'<div class="le-quote"><div class="le-qh">最新每季再融資（{esc(rf.get("date", ""))}）'
                  + (f'　·　下一次 {esc(rf.get("next", ""))}' if rf.get("next") else "")
                  + f'</div><blockquote>{esc(rf.get("guidance_en", ""))}</blockquote>'
-                 f'<p>{esc(rf.get("guidance_zh", ""))}</p>'
-                 + (f'<p class="hint">{esc(rf["buybacks_zh"])}</p>' if rf.get("buybacks_zh") else "")
-                 + (f'<a href="{esc(rf["url"])}" target="_blank" rel="noopener">財政部原文</a>' if rf.get("url") else "")
+                 + (f'<p>{esc(rf["guidance_zh"])}</p>' if rf.get("guidance_zh") else
+                    ('<p class="hint">本季聲明為自動擷取，句型與過去不同，請以上方原文為準。</p>' if rf.get("auto") else ""))
+                 + (f'<p class="hint">{esc(rf["buybacks_zh"])}'
+                    + (f'{esc((rf.get("bb_note") or {}).get("text") or "")}' if rf.get("bb_note") else "")
+                    + '</p>' if rf.get("buybacks_zh") else "")
+                 + (f'<a class="le-src-link" href="{esc(rf["url"])}" target="_blank" rel="noopener">財政部原文 →</a>' if rf.get("url") else "")
                  + '</div>')
     # 七個天期一張表：一列一個天期，右邊是近 8 個月的迷你柱。規模幾乎不動時，
     # 七張大圖只會重複同一件事（先前「畫面很亂」的主因之一）。
@@ -910,11 +915,12 @@ def buybacks(d: dict) -> str:
     caps = "".join(f'<span class="bb-cap"><b>{esc(c["bucket_zh"])}'
                    f'{"" if c["type_zh"] == "流動性支援" else "（" + c["type_zh"] + "）"}</b>{_yi_b(c["max"])} 億</span>'
                    for c in b.get("caps") or [])
+    _bbn = ((d.get("le") or {}).get("refunding") or {}).get("bb_note") or {}
     how = f"""<dl class="gloss">
       <dt>操作天期</dt><dd>流動性支援：名目 coupon 依剩餘年限分段輪流買回（1 個月–2 年、2–3、3–5、5–7、7–10、10–20、20–30 年）與 TIPS 兩段；
         現金管理：1 個月–2 年，集中在 4、6、9、12 月稅收日前後。</dd>
       <dt>每場上限</dt><dd><div class="bb-caps">{caps}</div>
-        2026-08-19 宣布：9/9 起到 11/4 本季結束，10–20 年與 20–30 年的每場上限由 20 億提高到至少 40 億（實際操作為 60 億）。</dd>
+        {esc(_bbn.get("text") or "")}</dd>
       <dt>執行方式</dt><dd>反向拍賣：操作前一個營業日 11:00（美東）初步公告上限與合格券，當日 11:00 最終公告；
         13:40–14:00 接受一級交易商報價（每 100 美元面額的價格），多重價格得標，截止後公布結果；T+1 交割，買回的券直接註銷。</dd>
       <dt>融資來源</dt><dd>財政部的現金與新發行公債（31 U.S.C. §3111）。QRA 原文：「buybacks are not expected to significantly
@@ -1004,7 +1010,10 @@ def guidance_stale(d: dict) -> str:
     gd = d.get("guidance") or {}
     hs = d.get("hyperscalers")
     asof = gd.get("as_of") or ""
-    ends = [c.get("period_end") for c in (getattr(hs, "companies", None) or []) if c.get("period_end")]
+    # 只比有年度計畫的公司：Oracle 不給年度指引、會計年度也不同，它的新季報不代表計畫過時
+    _has = {r.get("name") for r in gd.get("rows") or []}
+    ends = [c.get("period_end") for c in (getattr(hs, "companies", None) or [])
+            if c.get("period_end") and (not _has or c.get("name") in _has)]
     if not asof or not ends:
         return ""
     late = max(ends)

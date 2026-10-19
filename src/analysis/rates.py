@@ -99,6 +99,14 @@ class DebtState:
     dd_eff: float | None = None               # 一年債務率變化估計（有效利率口徑，pp）
     dd_mkt: float | None = None               # 一年債務率變化估計（全部按市場利率再融資，pp）
     paths: list = field(default_factory=list)  # 三條路徑：赤字、利率、成長（現在 vs 一年前）
+    # 2026-10 第二版：公眾持有債務口徑（市場實際要吸收的部分）＋MTS 現金赤字
+    gdp_asof: str = ""                         # 名目 GDP 最新一季
+    pub_gdp: float | None = None               # 公眾持有債務佔 GDP（%）
+    pub_gdp_asof: str = ""
+    cash_deficit_gdp: float | None = None      # 近 12 個月 MTS 現金赤字佔 GDP（%，正值＝赤字）
+    cash_deficit_asof: str = ""
+    i_pub: float | None = None                 # 公眾持有債務的有效利率（利息 ÷ 公眾持有債務）
+    dd_actual: dict = field(default_factory=dict)  # 過去一年實際變化與拆解（pp）
     i_minus_g: float | None = None            # 目前：有效利率 − 名目成長
     gap_divergence: str = ""                  # 兩個缺口方向不一致時的說明
     stabilizing_pb: float | None = None       # 穩定債務比所需的基本盈餘（% GDP）
@@ -106,6 +114,63 @@ class DebtState:
     pb_gap: float | None = None               # 實際減穩定水準；負值才是缺口
     verdict: str = "unknown"
     note: str = ""
+
+
+def _q_index(rows: list[dict], date: str) -> int | None:
+    for k in range(len(rows) - 1, -1, -1):
+        if rows[k]["date"] <= date:
+            return k
+    return None
+
+
+def _public_debt_dynamics(d: "DebtState", s: dict, gdp: list, interest: list) -> bool:
+    """
+    公眾持有債務的債務動態（pp of GDP）：
+      過去一年實際：Δd ＝ 基本赤字 ＋ 利息 − d₀·g/(1+g) ＋ 其他（主要是財政部現金餘額 TGA 變動）
+        基本赤字＝近四季 MTS 現金赤字 − 利息；「其他」是實際變化扣掉前三項的殘差。
+      未來一年推估（條件不變）：基本赤字 ＋ d·(i − g)/(1 + g)，i＝利息 ÷ 公眾持有債務；
+        另用 r（10Y 月均）取代 i，得到「全部按今天利率再融資」的上限。
+    """
+    pg = [r for r in s.get("FYGFGDQ188S") or [] if r.get("value") is not None]
+    pub = [r for r in s.get("FYGFDPUN") or [] if r.get("value") is not None]     # 百萬美元
+    mts = [r for r in s.get("MTSDS133FMS") or [] if r.get("value") is not None]  # 百萬美元，負值＝赤字
+    if len(pg) < 5 or len(mts) < 12 or len(gdp) < 5 or not interest or d.nominal_growth is None:
+        return False
+    d.pub_gdp, d.pub_gdp_asof = pg[-1]["value"], pg[-1]["date"]
+    y = value_at(gdp)
+    d.cash_deficit_gdp = -sum(r["value"] for r in mts[-12:]) / 1000 / y * 100
+    d.cash_deficit_asof = mts[-1]["date"]
+    int_gdp = value_at(interest) / y * 100
+    if pub:
+        d.i_pub = value_at(interest) / (value_at(pub) / 1000) * 100
+    g = d.nominal_growth / 100
+    pb = d.cash_deficit_gdp - int_gdp                     # 基本赤字（正值＝赤字）
+    if d.i_pub is not None:
+        d.dd_eff = pb + d.pub_gdp * (d.i_pub / 100 - g) / (1 + g)
+    if d.r_nom is not None:
+        d.dd_mkt = pb + d.pub_gdp * (d.r_nom / 100 - g) / (1 + g)
+    d.actual_pb = -pb
+    # 過去一年實際（以公眾持有債務佔 GDP 的最新一季對一年前同季）
+    q1, q0 = pg[-1]["date"], pg[-5]["date"]
+    k1, k0 = _q_index(gdp, q1), _q_index(gdp, q0)
+    if k1 is None or k0 is None or not gdp[k0]["value"]:
+        return True
+    y1, y0 = gdp[k1]["value"], gdp[k0]["value"]
+    gw = y1 / y0 - 1
+    d0 = pg[-5]["value"]
+    # 四季的現金赤字：q0 之後到 q1 季末（月資料，含 q1 那一季的三個月）
+    end_m = q1[:5] + f"{int(q1[5:7]) + 2:02d}"
+    win = [r for r in mts if q0[:5] + f"{int(q0[5:7]) + 2:02d}" < r["date"][:7] <= end_m]
+    ints = [r for r in interest if q0 < r["date"] <= q1]
+    if len(win) < 12 or len(ints) < 4:
+        return True
+    defi = -sum(r["value"] for r in win[-12:]) / 1000 / y1 * 100
+    intr = sum(r["value"] for r in ints[-4:]) / 4 / y1 * 100
+    growth = -d0 * gw / (1 + gw)
+    actual = pg[-1]["value"] - d0
+    d.dd_actual = {"from": q0, "to": q1, "actual": actual, "primary": defi - intr, "interest": intr,
+                   "growth": growth, "other": actual - (defi - intr) - intr - growth, "g": gw * 100}
+    return True
 
 
 def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
@@ -141,6 +206,8 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
         if debt_bn:
             d.effective_rate = value_at(interest) / debt_bn * 100
 
+    if gdp:
+        d.gdp_asof = gdp[-1]["date"]
     # 名目 GDP 成長（年增）
     if len(gdp) > 4:
         old = gdp[-5]["value"]
@@ -189,7 +256,11 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
     if real_10y is not None and d.real_growth is not None:
         d.r_minus_g_real = real_10y - d.real_growth
     # 一年後債務率變化的估計（pp）＝基本赤字 ＋ 利率與成長的滾動
-    if d.debt_gdp is not None and d.actual_pb is not None and d.nominal_growth is not None:
+    # 優先用公眾持有債務＋MTS 現金赤字（一致的口徑）；缺資料才退回總債務＋NIPA。
+    # 舊版用總債務（含社安信託基金等政府內部持有）配 NIPA 赤字，兩者口徑不同，
+    # 2026 年實測估出「一年 −2.2pp」，實際卻是 +2.4pp。
+    _pub_ok = _public_debt_dynamics(d, s, gdp, interest)
+    if not _pub_ok and d.debt_gdp is not None and d.actual_pb is not None and d.nominal_growth is not None:
         g = d.nominal_growth / 100
         if d.effective_rate is not None:
             d.dd_eff = -d.actual_pb + d.debt_gdp * (d.effective_rate / 100 - g) / (1 + g)
@@ -217,6 +288,13 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
         {"key": "rate", "label": "利率 r（10Y 月均）", "now": d.r_nom, "ago": r_ago, "better": "down"},
         {"key": "growth", "label": "成長 g（名目 GDP 年增）", "now": d.nominal_growth, "ago": g_ago, "better": "up"},
     ]
+    # 赤字改用 MTS 近 12 個月現金赤字（月資料，比 NIPA 季資料新、也是實際要發債填補的口徑）
+    _mts = [r for r in s.get("MTSDS133FMS") or [] if r.get("value") is not None]
+    if d.cash_deficit_gdp is not None and len(_mts) >= 24 and gdp:
+        k = _q_index(gdp, _mts[-13]["date"])
+        y_ago = gdp[k]["value"] if k is not None else None
+        d.paths[0].update({"label": "財政赤字（近 12 個月現金，佔 GDP）", "now": d.cash_deficit_gdp,
+                           "ago": (-sum(r["value"] for r in _mts[-24:-12]) / 1000 / y_ago * 100) if y_ago else None})
 
     # 兩個缺口方向不一致時要講清楚，否則同一頁上兩個數字互相打臉。
     # i−g 是「已發行債務的當前成本」，r−g 是「用市場現在的利率再融資後」——

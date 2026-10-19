@@ -127,6 +127,10 @@ def build() -> dict[str, list[dict]]:
                               [x["value"] for x in s["GDP"]])
     ]
 
+    # 公眾持有債務：約為總債務的 80%（示範值）
+    s["FYGFDPUN"] = [{"date": x["date"], "value": round(x["value"] * 0.8, 0)} for x in s["GFDEBTN"]]
+    s["FYGFGDQ188S"] = [{"date": x["date"], "value": round(x["value"] * 0.8, 2)} for x in s["GFDEGDQ188S"]]
+
     # 利息支出：這幾年是財政壓力的主要來源
     interest, v = [], 1_240.0            # 十億，年率
     for _ in q:

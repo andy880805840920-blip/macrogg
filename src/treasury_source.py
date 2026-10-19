@@ -596,6 +596,36 @@ _EST_RE = re.compile(r"During the ([A-Z][a-z]+)\W+([A-Z][a-z]+) (\d{4}) quarter,
                      r"([A-Z][a-z]+) cash balance of \$([\d,]+) billion")
 _NEXT_RE = re.compile(r"next quarterly refunding announcement will take place on [A-Z][a-z]+, "
                       r"([A-Z][a-z]+) (\d{1,2}), (\d{4})")
+# 再融資聲明（Quarterly Refunding Statement）：日期、coupon 指引原句、買回額度
+_STMT_DATE_RE = re.compile(r"Quarterly Refunding Statement of [^|]{0,120}?([A-Z][a-z]+ \d{1,2}, \d{4}) WASHINGTON")
+_GUIDE_RE = re.compile(r"((?:Based on [^.]{0,80}, )?Treasury (?:anticipates|intends|expects|plans)[^.]{0,200}"
+                       r"(?:coupon|FRN)[^.]{0,160}auction sizes[^.]*\.)")
+_BB_RE = re.compile(r"purchase up to \$([\d.,]+) billion[^.]{0,80}?liquidity support"
+                    r"(?:[^.]{0,40}?up to \$([\d.,]+) billion[^.]{0,80}?cash management)?")
+
+
+def refunding_statement(ids: list[str]) -> dict:
+    """最新一次再融資聲明：{date, url, guidance_en, bb_liq, bb_cash}（十億美元）。找不到回空。"""
+    for sid in ids:
+        url = f"https://home.treasury.gov/news/press-releases/{sid}"
+        try:
+            t = _page_text(url)
+        except Exception:                          # noqa: BLE001
+            continue
+        m = _STMT_DATE_RE.search(t)
+        if not m:
+            continue
+        out = {"date": dt.datetime.strptime(m.group(1), "%B %d, %Y").date().isoformat(), "url": url}
+        g = _GUIDE_RE.search(t)
+        if g:
+            out["guidance_en"] = g.group(1).strip()
+        b = _BB_RE.search(t)
+        if b:
+            out["bb_liq"] = float(b.group(1).replace(",", ""))
+            if b.group(2):
+                out["bb_cash"] = float(b.group(2).replace(",", ""))
+        return out
+    return {}
 
 
 def _page_text(url: str) -> str:
@@ -666,6 +696,10 @@ def qra_estimate(today: dt.date | None = None) -> dict:
     iso = today.isoformat()
     cur = next((q for q in quarters if q["start"] <= iso <= q["end"]), quarters[-1])
     out = {**cur, "date": est_date, "url": est_url, "next": nxt}
+    try:
+        out["statement"] = refunding_statement(ids)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("再融資聲明解析失敗（%s）", e)
     # ---- coupon 毛發行 ----
     hist = _coupon_sizes((dt.date.fromisoformat(cur["start"]) - dt.timedelta(days=400)).isoformat())
     last: dict = {}

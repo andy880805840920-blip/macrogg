@@ -11,11 +11,17 @@ def _ref_table(ref: dict | None) -> str:
     """燈卡裡的歷史對照小表（期限溢酬的財政／供給事件、實質利率的升降息循環）。"""
     if not ref or not ref.get("rows"):
         return ""
+    # 燈卡很窄（桌機四欄、手機一欄），四欄表格會撐破卡片；改成一筆一塊：
+    # 第一行「時點 · 背景」，第二行把數字欄配上欄名。
     head = ref.get("head") or []
-    th = "".join(f"<th>{esc(h)}</th>" for h in head)
-    trs = "".join("<tr>" + "".join(f'<td data-label="{esc(head[j] if j < len(head) else "")}">{esc(str(c))}</td>'
-                                   for j, c in enumerate(r)) + "</tr>" for r in ref["rows"])
-    return f'<table class="lq-tbl lx-ref"><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table>'
+    items = []
+    for r in ref["rows"]:
+        r = [str(c) for c in r]
+        nums = "".join(f'<span><em>{esc(head[j])}</em>{esc(r[j])}</span>'
+                       for j in range(2, len(r)) if j < len(head) and r[j] and r[j] != "—")
+        items.append(f'<li><b>{esc(r[0])}</b><span class="lx-ref-ctx">{esc(r[1])}</span>'
+                     f'<div class="lx-ref-n">{nums}</div></li>')
+    return f'<div class="lx-k">{esc(ref.get("title") or "歷史對照")}</div><ul class="lx-ref">{"".join(items)}</ul>'
 
 
 def _explained_card(lt, href: str, ex: dict | None) -> str:
@@ -339,7 +345,7 @@ def _rates_body_full(d: dict) -> str:
     fresh_html = (f'<div class="hs4-sec"><div class="hs4-h">資料時效</div>'
                   f'<div class="hs5 hs5-f"><div class="hs5-r hs5-hd"><span>公司</span>'
                   f'<span class="hs5-m"><span>表格季末</span><span>{esc(str(gd.get("year", "")))} 計畫（億美元）</span></span>'
-                  f'<span>狀態</span></div>{_fresh_rows}</div>'
+                  f'<span>財報狀態</span></div>{_fresh_rows}</div>'
                   + (f'<p class="hs4-n">計畫更新於 {esc(_md(gd.get("as_of", "")))}；表格只用 10-Q（約比財報稿晚兩週）。</p>'
                      if gd.get("available") else "")
                   + '</div>')
@@ -458,10 +464,10 @@ def _rates_body_full(d: dict) -> str:
     # ---- 2026-10 改版：各區收合摘要與財政三張事實卡 ----
     _L = d.get("le") or {}
     _c1 = (_L.get("contrib") or {}).get("mtd")
-    _dec_sum = (f'本月驅動：{LE.le.COMP_ZH[_c1["main"]]} {_c1["parts"][_c1["main"]]:+.0f}bp'
-                f'　·　10Y MTD {_c1["nominal"]:+.0f}bp' if _c1 and _c1.get("main") else "10Y＝TIPS＋BEI 與期限溢酬")
+    _dec_sum = (f'本月驅動：{LE.le.COMP_ZH[_c1["main"]]} {LE._bp(_c1["parts"][_c1["main"]])}'
+                f'　·　10Y MTD {LE._bp(_c1["nominal"])}' if _c1 and _c1.get("main") else "10Y＝TIPS＋BEI 與期限溢酬")
     _sl = {x["label"]: x for x in _L.get("slopes") or []}
-    _crv_sum = "　·　".join(f'{k} {v["value"]:+.0f}bp' for k, v in _sl.items()) or "殖利率曲線"
+    _crv_sum = "　·　".join(f'{k} {LE._bp(v["value"])}' for k, v in _sl.items()) or "殖利率曲線"
     _gr = (_L.get("global") or {}).get("rows") or []
     _glb_sum = "　·　".join(f'{r["name"]} {r["value"]:.2f}%' for r in _gr[:3]) or "全球長端"
     _wm = _L.get("wam") or {}
@@ -477,30 +483,59 @@ def _rates_body_full(d: dict) -> str:
     _itr = getattr(_db, "interest_to_revenue", None)
     _rg = getattr(_db, "r_minus_g", None)
     _dfg = getattr(_db, "deficit_gdp", None)
+    _cdg = getattr(_db, "cash_deficit_gdp", None)
+    _pg = getattr(_db, "pub_gdp", None)
+    _da = getattr(_db, "dd_actual", None) or {}
+    _q = lambda x: (f"{str(x)[:4]}Q{(int(str(x)[5:7]) - 1) // 3 + 1}" if x and len(str(x)) >= 7 else "")
+    _m = lambda x: (str(x)[:7].replace("-", "/") if x else "")
     _debt_stats = [
         {"label": "利息佔稅收", "value": f"{_itr:.1f}%" if _itr is not None else "—",
          "color": ("var(--critical)" if (_itr or 0) > 20 else "inherit"),
          "note": "每收 100 元稅拿去付利息的比例（警戒線 20%）"},
-        {"label": "赤字佔 GDP", "value": f"{abs(_dfg):.1f}%" if _dfg is not None else "—",
-         "note": "需靠淨發行公債填補的部分"},
+        ({"label": "赤字佔 GDP", "value": f"{_cdg:.1f}%",
+          "note": f"近 12 個月現金赤字（月報至 {_m(getattr(_db, 'cash_deficit_asof', ''))}），要靠淨發債填補"}
+         if _cdg is not None else
+         {"label": "赤字佔 GDP", "value": f"{abs(_dfg):.1f}%" if _dfg is not None else "—",
+          "note": "需靠淨發行公債填補的部分"}),
         {"label": "r − g", "value": f"{_rg:+.2f}pp" if _rg is not None else "—",
          "color": ("var(--critical)" if (_rg or -1) > 1 else "var(--warning)" if (_rg or -1) > 0 else "var(--good)"),
          "note": "10Y 殖利率月均 − 名目 GDP 年增；大於零＝債務自我累積"},
     ]
+    if _pg is not None:
+        _debt_stats.append({"label": "公眾持有債務佔 GDP", "value": f"{_pg:.1f}%",
+                            "color": "var(--critical)" if (_da.get("actual") or 0) > 1 else "inherit",
+                            "note": (f"{_q(_da['to'])}，一年 {_da['actual']:+.1f}pp" if _da else
+                                     _q(getattr(_db, "pub_gdp_asof", "")))})
     _dde = getattr(_db, "dd_eff", None)
     _ddm = getattr(_db, "dd_mkt", None)
+    debt_decomp = ""
+    if _da:
+        _parts = [("基本赤字", _da["primary"], "近四季現金赤字扣掉利息"),
+                  ("利息", _da["interest"], "舊債的實際付息"),
+                  ("名目成長", _da["growth"], f"GDP 一年 +{_da['g']:.1f}%，把既有債務比稀釋掉"),
+                  ("其他", _da["other"], "主要是財政部現金餘額（TGA）變動、借款時點")]
+        _rows = "".join(f'<tr><td class="k" data-label="來源"><b>{esc(n)}</b></td>'
+                        f'<td data-label="貢獻"><b class="{"up" if v > 0.05 else "dn" if v < -0.05 else ""}">{v:+.1f}pp</b></td>'
+                        f'<td data-label="說明">{esc(t)}</td></tr>' for n, v, t in _parts)
+        debt_decomp = (f'<table class="lq-tbl"><thead><tr><th colspan="3">過去一年實際：{_q(_da["from"])} → {_q(_da["to"])} '
+                       f'公眾持有債務佔 GDP {_da["actual"]:+.1f}pp</th></tr></thead><tbody>{_rows}</tbody></table>')
     if _dde is not None:
-        _debt_stats.append({"label": "債務率一年變化（估）", "value": f"{_dde:+.1f}pp",
-                            "color": "var(--critical)" if _dde > 1 else "inherit",
-                            "note": (f"全部按今天的 10Y 再融資：{_ddm:+.1f}pp" if _ddm is not None else "")})
+        debt_decomp += (f'<p class="hint">條件不變的未來一年（用公眾持有債務的平均付息率 '
+                        f'{getattr(_db, "i_pub", 0) or 0:.1f}%）：約 <b>{_dde:+.1f}pp</b>'
+                        + (f'；若全部按今天的 10Y（{getattr(_db, "r_nom", 0):.2f}%）再融資：約 <b>{_ddm:+.1f}pp</b>'
+                           if _ddm is not None else "")
+                        + '。舊債還鎖在較低利率，所以實際付息率低於市場利率，差距會隨舊債到期慢慢收斂。</p>')
     if _itr is not None and _rg is not None:
-        _dl = "hawkish" if (_rg > 0 or _itr > 20 or (_dde or 0) > 1) else "neutral"
-        _pb = getattr(_db, "actual_pb", None)
-        _why = (f"債務率一年約 {_dde:+.1f}pp：基本赤字 {(-_pb):.1f}pp 加上利率與成長的滾動"
-                f" {_dde + _pb:+.1f}pp（滾動用實際平均付息率，舊債還鎖在較低利率）。" if _dde is not None and _pb is not None else "")
+        _dl = "hawkish" if (_rg > 0 or _itr > 20 or (_dde or 0) > 1 or (_da.get("actual") or 0) > 1) else "neutral"
+        _why = ""
+        if _da:
+            _why = (f"過去一年公眾持有債務佔 GDP {_da['actual']:+.1f}pp：基本赤字 {_da['primary']:+.1f}、利息 {_da['interest']:+.1f}、"
+                    f"名目成長 {_da['growth']:+.1f}、其他 {_da['other']:+.1f}（主要是財政部現金餘額變動）。")
+        if _dde is not None:
+            _why += f"條件不變下，未來一年約 {_dde:+.1f}pp。"
         debt_impact = (f'<div class="impact {_dl}">r − g {_rg:+.2f}pp、利息佔稅收 {_itr:.1f}%——'
                        + ("利率高於成長，即使收支平衡債務比也會自我累積。" if _rg > 0 else
-                          "成長仍跑贏利率，債務問題的壓力主要來自赤字本身，不是利率滾動。")
+                          "成長仍跑贏利率，利息造成的增加大多被名目成長抵掉；債務比能不能降，取決於基本赤字。")
                        + esc(_why) + '</div>')
     _debt_sum = (f'r − g {_rg:+.2f}pp　·　利息佔稅收 {_itr:.1f}%'
                  if _itr is not None and _rg is not None else "政府財政")
@@ -608,9 +643,10 @@ def _rates_body_full(d: dict) -> str:
     {debt_impact}
     <div class="stat-row" style="margin-top:14px">{_stats(_debt_stats)}</div>
     <div class="le-eq">債務率變化 ≈ 基本赤字率 ＋ (r − g) × 債務率</div>
+    {debt_decomp}
     {debt_paths}
     <div class="viz-block"><div class="viz-h">r − g（季資料：10Y 季均 − 名目 GDP 年增）</div>{d.get('rg_chart') or ''}</div>
-    <div class="viz-block"><div class="viz-h">聯邦債務佔 GDP（季資料，近 3 年）</div></div>
+    <div class="viz-block"><div class="viz-h">聯邦債務佔 GDP（季資料，近 3 年）：公眾持有 vs 總債務</div></div>
     {d['debt_chart']}
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
@@ -626,8 +662,14 @@ def _rates_body_full(d: dict) -> str:
           r 低於 g，成長就能逐步消化既有債務——1990 年代末生產力推升名目成長，即使 10 年期長期在 5%～6%，
           債務比仍快速下降；r 高於 g，就算收支平衡債務比也會自我累積。</dd>
         <dt>有效利率（i）</dt>
-        <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。新債換舊債時它會慢慢往市場利率靠攏，
-          所以「一年變化（估）」用 i 算現況、另用 r 算「全部按今天利率再融資」的上限。</dd>
+        <dd>政府實際付出的平均利率＝利息支出 ÷ 公眾持有債務。新債換舊債時它會慢慢往市場利率靠攏，
+          所以「條件不變的未來一年」用 i 推估、另用 r 算「全部按今天利率再融資」的上限。</dd>
+        <dt>公眾持有債務 vs 總債務</dt>
+        <dd>總債務含社安等信託基金持有的部分（政府欠自己），不需要市場吸收；公眾持有債務（含 Fed 持有）
+          才是債券市場實際要消化的量，債務動態一律用這個口徑。</dd>
+        <dt>過去一年實際的拆解</dt>
+        <dd>實際變化＝基本赤字＋利息−名目成長的稀釋（d₀·g/(1+g)）＋其他。赤字用財政部月報（MTS）的現金赤字，
+          「其他」是扣掉前三項的差額，主要來自財政部現金餘額（TGA）的增減與借款時點。</dd>
       </dl>
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
@@ -687,9 +729,6 @@ def _rates_body_full(d: dict) -> str:
       <dd>政府發公債、科技巨頭發投資級公司債，兩者搶的是同一批買盤——
         退休基金、保險公司、外國央行。Fed 雖然已停止縮表，但把到期的 MBS 換成 T-Bills、縮短持有年限，
         長天期的部分一樣要由私人市場吸收。</dd>
-      <dt>科技巨頭的年化發債</dt>
-      <dd>把單季發債乘以四。發債是機會式的（挑市場條件好的時候一次發）、
-        不是每季均勻，所以這個數字只用來比較<b>量級</b>，不宜當成精確預測。</dd>
       <dt>近期發債交易怎麼來的</dt>
       <dd>來源是 SEC EDGAR 的申報清單，只收 424B2／424B5（定價當日的債券發行
         說明書）與配不到說明書的 8-K 項目 2.03（銀行貸款、私募這一類）。
@@ -701,16 +740,14 @@ def _rates_body_full(d: dict) -> str:
         但同一個數字重複出現（重新申報、預估與定價金額相同）只算一次。<br>
         金額採債券說明書確認的實際發行規模；貨架註冊額度不計入。
         尚無法確認的交易標示「待確認」，不計入合計。<br>
-        這些交易<b>不進</b>供給壓力分數：分數維持由經審核的季報數字決定，
-        否則同一筆發債下一季會被算第二次，歷史可比性也會斷掉。</dd>
+        這些交易<b>不進</b>上方表格的「單季發債」：表格只用經審核的季報數字，
+        否則同一筆發債下一季會被算第二次。</dd>
       <dt>資本支出指引</dt>
       <dd>各公司在法說會上對<b>整年</b>資本支出的公開承諾，跟下方表格的
         「上一季實際花掉的」是兩件事。長端供給壓力來自還沒花的那一段——
         承諾要花而現金流不夠，差額就得到債市籌。<br>
         年度指引取自公司法說會，來源與更新日標在指引區塊裡。
-        未公布指引的公司另列，不計入合計。<br>
-        跟實績的對照用的是<b>最新一季 × 4</b> 的年化推估。資本支出有季節性
-        （第四季通常最重），所以這個倍數是量級參考，不是精確的年對年。</dd>
+        未公布指引的公司另列，不計入合計。微軟的會計年度到 6 月，這裡用的是它對日曆年的說明。</dd>
       <dt>財報新聞稿的時效</dt>
       <dd>公司通常先公布財報新聞稿，再提交正式季報。
         表格以正式季報的現金流量表為準，因此可能晚於新聞稿更新。
@@ -739,12 +776,14 @@ def rates_footer(d: dict) -> str:
          ("期限溢酬", "紐約聯儲 ACM（主要）、舊金山聯儲、Kim-Wright（FRED）", "每日・ACM 晚約一個交易日"),
          ("油價", "EIA（FRED）", "每日"),
          ("信用利差", "ICE BofA 指數（FRED）", "每日"),
-         ("拍賣結果", "TreasuryDirect", "每次拍賣"),
+         ("拍賣結果、買回結果", "財政部 Fiscal Data（auctions_query、buybacks）、TreasuryDirect 暫定排程", "每次拍賣／買回"),
+         ("每季再融資聲明", "財政部新聞稿（自動擷取 coupon 指引與買回額度）", "每季"),
          ("流通在外、WAM、Fed 持有", "財政部 MSPD、紐約聯儲 SOMA", "每月／每週"),
-         ("政府財政", "財政部、BEA（FRED）", "每月／每季"),
+         ("聯邦基金期貨、點陣圖", "CBOT 聯邦基金期貨（ZQ）結算價，經 Yahoo Finance 取得；Fed SEP", "每日／每季"),
+         ("政府財政", "財政部月報 MTS、公眾持有債務、BEA（FRED）", "每月／每季"),
          ("全球長端", "OECD（FRED）", "每月・晚約一個月"),
          ("科技巨頭資本支出與發債", "SEC EDGAR（XBRL 申報、說明書）", "財報一申報即更新")],
         ["利率判讀依據通膨、實質利率與期限溢酬的變化；詳細方法見各區說明。",
          "科技巨頭的年度資本支出計畫來自公司法說會。"],
-        head="<b>資料來源</b> FRED、TreasuryDirect、紐約聯儲、SEC EDGAR")
+        head="<b>資料來源</b> FRED、財政部、紐約聯儲、Fed、SEC EDGAR")
 
