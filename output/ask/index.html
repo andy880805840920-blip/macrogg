@@ -2639,6 +2639,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le-hs .kh-vals span{font-size:10.5px}
 .le-lgs{display:grid;gap:4px 10px;grid-template-columns:1fr}
 .le-lgc{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:559px){.le-lgc{grid-template-columns:1fr}}
 @media(min-width:760px){.le-lgs{grid-template-columns:repeat(4,minmax(0,1fr))}
   .le-lg{grid-column:span var(--k)}.le-lgc{grid-template-columns:repeat(var(--k),minmax(0,1fr))}}
 .le-hero .focus-title{font-size:22px}
@@ -3724,6 +3725,33 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le2-n em.le2-src{background:var(--surface-2);color:var(--text-secondary);font-weight:600}
 .le-eq{margin:14px 0 4px;padding:8px 12px;border-radius:8px;background:var(--surface-2);font-weight:700;
   font-size:14px;text-align:center}
+/* 長端頁燈卡說明（2026-10）：現況／量什麼／為什麼重要／門檻／依據，目前所在的門檻列標亮 */
+.viz-root:not(#_) .l-desc.lx{color:var(--text-secondary);line-height:1.7;margin-top:10px}
+.viz-root:not(#_) .lx p{margin:0 0 12px}
+.viz-root:not(#_) .lx .lx-what{color:var(--text-primary)}
+.viz-root:not(#_) .lx .lx-now{padding:9px 11px;border-radius:8px;background:var(--surface-2);
+  border-left:3px solid var(--brand-orange);color:var(--text-primary)}
+.viz-root:not(#_) .lx .lx-now b,.viz-root:not(#_) .lx .lx-k{display:block;font-size:var(--fs-micro);font-weight:700;
+  color:var(--muted);letter-spacing:.06em;margin:0 0 3px}
+.viz-root:not(#_) .lx-lv{list-style:none;margin:0 0 12px;padding:0;border:1px solid var(--grid);border-radius:8px;overflow:hidden}
+.viz-root:not(#_) .lx-lv li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:baseline;
+  padding:7px 10px;border-top:1px solid var(--grid);line-height:1.5}
+.viz-root:not(#_) .lx-lv li:first-child{border-top:0}
+.viz-root:not(#_) .lx-lv li.on{color:var(--text-primary);font-weight:600;box-shadow:inset 3px 0 0 var(--st)}
+.viz-root:not(#_) .lx-lv li.good{--st:var(--good)}.viz-root:not(#_) .lx-lv li.warning{--st:var(--warning)}
+.viz-root:not(#_) .lx-lv li.critical{--st:var(--critical)}
+.viz-root:not(#_) .lx-lv li.on{background:color-mix(in srgb,var(--st) 11%,transparent)}
+@media(min-width:560px) and (max-width:759px){.viz-root:not(#_) .lx-lv li{grid-template-columns:minmax(0,1fr) auto;padding:7px 9px}
+  .viz-root:not(#_) .lx-lv .lx-rng{grid-row:2;grid-column:1/-1}
+  .viz-root:not(#_) .lx-lv em{grid-row:1;grid-column:2}}
+.viz-root:not(#_) .lx-tag{font-weight:700;white-space:nowrap}
+.viz-root:not(#_) .lx-lv li.good .lx-tag{color:var(--good)}
+.viz-root:not(#_) .lx-lv li.warning .lx-tag{color:var(--warning)}
+.viz-root:not(#_) .lx-lv li.critical .lx-tag{color:var(--critical)}
+.viz-root:not(#_) .lx-rng{font-variant-numeric:tabular-nums}
+.viz-root:not(#_) .lx-lv em{font-style:normal;font-size:var(--fs-micro);font-weight:700;color:var(--brand-ink);
+  border:1px solid currentColor;border-radius:999px;padding:0 7px;white-space:nowrap}
+.viz-root:not(#_) .lx .lx-basis{font-size:var(--fs-micro);color:var(--muted)}
 .br-h{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary);margin:14px 0 4px}
 .le-deriv{margin:6px 0 10px;padding-left:20px}
 .le-deriv li{margin:10px 0}
@@ -4505,8 +4533,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-19 16:52（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>16:52</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>04:52</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>09:52</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-19 17:07（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>17:07</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>05:07</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>10:07</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/" class="on" aria-current="page">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>偷懶</h1></div>
