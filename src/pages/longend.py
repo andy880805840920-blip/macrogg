@@ -68,7 +68,7 @@ def hero(d: dict) -> str:
     if c1 and main:
         sub = (f'10Y 本月 {c1["nominal"]:+.0f}bp ＝ 實質利率 {_bp(c1["parts"]["real"])} ＋ 損益兩平 {_bp(c1["parts"]["infl"])}'
                + (f'；期限溢酬（ACM）{_bp(c1["parts"]["tp"])}' if c1["parts"].get("tp") is not None else "")
-               + f'。{le.NATURE[main]}。')
+               + "。")
     table = ""
     comp = {k: D.get(k) or {} for k in ("real", "infl", "tp")}
     if comp["real"] and comp["infl"]:
@@ -133,9 +133,10 @@ def _evidence() -> str:
             ("損益兩平通膨率＝10Y 名目 − TIPS", "DGS10 − DFII10（同一天），含預期平均通膨＋通膨風險溢酬；兩項相加恰好等於名目"),
             ("期限溢酬＝NY Fed ACM 10 年", "紐約聯儲 ACM 模型每日估計；含實質期限溢酬＋通膨風險溢酬，跟上面兩項重疊、不相加")))
     return focus_evidence(f'<div class="logic-strip">{steps}</div>'
-                          '<p class="hint" style="margin-top:8px">MTD 基期＝上月最後一個交易日、YTD 基期＝去年最後一個交易日；'
-                          'TIPS 晚一天公布，拆解的終點取名目與 TIPS 都有資料的最後一天。'
-                          '本月驅動因素＝三項中跟 10Y 同方向、MTD 變動最大的那一項（10Y 幾乎沒動時三項一起比）。</p>',
+                          '<p class="hint" style="margin-top:8px">MTD 基期＝上月最後一個交易日、YTD 基期＝去年最後一個交易日；<br>'
+                          'TIPS 晚一天公布，拆解的終點取名目與 TIPS 都有資料的最後一天。<br>'
+                          '本月驅動因素＝三項中跟 10Y 同方向、MTD 變動最大的那一項（10Y 幾乎沒動時三項一起比）。</p>'
+                          '<p class="teach-more"><a href="#decomp">更詳細的解析：01 長端利率的組成 →</a></p>',
                           "查看三個組成份怎麼量")
 
 
