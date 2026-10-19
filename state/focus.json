@@ -311,32 +311,52 @@
  "at": "2026-10-19T05:37:34.171209+00:00",
  "layout": "main",
  "topics": {
-  "hash": "35c84125f6a658fe",
+  "hash": "dcbe6d5722db6330",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "凱文·哈塞特表達對聯準會官員近期升息呼聲的擔憂",
+    "links": [
+     {
+      "title": "Kevin Hassett Voices Concern Against Fed Officials' Recent Call For Rate Hikes",
+      "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxQVWRCcDBDckFaWEJyeDQtT0tfQWpRaTlUQ1ZYU0ZLNnJTdThqZzBldG9RUXJiYlREbFhPMFppTnFDbTZranZIdUVtR2IzUDNBMUxkenFmUWNxMEd0WE50Rk40Zk1UUWFWSUFTQnpaZ3hkdG1vR19jRDhLQ2xDRE9pZG9EancxaU10SS1LRXEwVk5aZ0VZVUd1ZkJ3RTFQVmV1Zk9tN05LM1BwRDZ1cGxvbE8yWnlMQUZQRzk2TXRISDdULVh6NFNoWTY4eDUzdTdEZll4bDY0SVo?oc=5",
+      "source": "Stocktwits",
+      "at": "2026-10-18T21:15:48+00:00"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "印度央行宣布透過回購協議注入10.5億美元流動性",
+    "links": [
+     {
+      "title": "RBI announces $10.5 billion liquidity infusion via repo",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUE1aRTVIZGpZU29GcGt0NjMxUzdlVUpEd0piQmtWOFFlaGZ5WnRYRHJBUVlVeTctZ0JBdTRaVG02ZkZsMkNheDYzT1I0THFIbllXeEtaa2VxMFBkRldjWlJ4Wk9DYzFqQTUtN3h4Y0VzbnFrR3pOZFRzSHlnWktQMmp6eXdsQ2NCemEtSktLdWhxdnFYYzJWeUFpdFVtNFFHTjUxclRieVdNVFdpalBzMkdmbVpNTlhHYjhuWHNNd9IBxAFBVV95cUxOSEIyLWpLQzhKUFczbGFXVkhmemVURUNwcjVGNmplOHA5czFnV28tYV9vTGxFRW1aTU00eWt4QjZHWWtWS2RsZ29tcFp0YkRZSFRZcXV3R2hrNVc0XzZ1dWJpZlhLWU5xeUFkSTg4TkZ5dlFuSDcwLWNJc25MN2VmbXB4SFQ3TzY4VzJ3cWtwU29oYmIwVmlqdU1WRmxKUERSME5SN3RXblBkRGZNVDZsLUZYNHdxeS1KWF9mYnl0eUhib1ZR?oc=5",
+      "source": "The Economic Times",
+      "at": "2026-10-19T03:33:42+00:00"
+     }
+    ]
+   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "全球煉廠秋季密集檢修、歐美冬季備貨及中東俄羅斯部分煉廠未恢復正常運轉，導致柴油供給持續吃緊，亞洲柴油價差預期至年底維持高檔，優於往年同期；美國煉廠為提高柴油產量減少汽油供給，預期汽油庫存將降至約2億桶，較去年同期減少",
+    "text": "中國9月原油生產增速加快，月產量1,821萬噸年增2.2%，增速較8月加快1.4個百分點；同期電力生產下降1.2%，火電降幅收斂但水電下降18.1%",
     "links": [
      {
-      "title": "汽柴油價差維持高檔，台塑化Q4煉製毛利續強",
-      "link": "https://tw.stock.yahoo.com/news/%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E5%B7%AE%E7%B6%AD%E6%8C%81%E9%AB%98%E6%AA%94-%E5%8F%B0%E5%A1%91%E5%8C%96q4%E7%85%89%E8%A3%BD%E6%AF%9B%E5%88%A9%E7%BA%8C%E5%BC%B7-040500210.html",
+      "title": "陸9月原油生產增速加快，電力生產下降",
+      "link": "https://tw.stock.yahoo.com/news/%E9%99%B89%E6%9C%88%E5%8E%9F%E6%B2%B9%E7%94%9F%E7%94%A2%E5%A2%9E%E9%80%9F%E5%8A%A0%E5%BF%AB-%E9%9B%BB%E5%8A%9B%E7%94%9F%E7%94%A2%E4%B8%8B%E9%99%8D-041800018.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T04:05:00+00:00"
+      "at": "2026-10-19T04:18:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨10/19夜盤反彈，標普500期貨漲0.8%、那斯達克期貨漲逾1%，投資人押注Meta、特斯拉、Netflix等科技大廠本週財報將提振市場，此前那斯達克上週跌4.5%創6月來最差單週表現。",
+    "text": "美股期貨隔夜上漲，標普500期貨漲0.8%、那斯達克期貨漲超1%，投資人期待Meta、特斯拉與Netflix等科技大廠本週財報能恢復市場動能，此前那斯達克上週跌近4.5%，創6月初以來最差單週表現",
     "links": [
-     {
-      "title": "AI Trade Reversal Pierces Asia’s Star Picks-and-Shovels Stocks",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOREtWM3dzNTRIb29DY2pnS3JHYmJpLVRURzBlT1RQX0FSZGMzWkFuS0w0dXVhXzlSQTR3MVhZdm9nTm90S21JWWp1UjhLTjdPamxGSUMxVFd1ekZVWGp4bXBsTlFyVDJLRWpvalFqMlpldURMUXpPbFR5MlY0RWNMc3dTdW9BaFFEemc5bEJIbnBseEJkN3hlbGhMTEpaenVzMGJpa052RmZKbzU4bTF3cGpIQQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-19T02:49:00+00:00"
-     },
      {
       "title": "No ‘Black Monday’? Nasdaq, S&P 500, Dow Futures Spike As Big Tech Earnings Loom This Week",
       "link": "https://stocktwits.com/news-articles/markets/equity/no-black-monday-nasdaq-s-and-p-500-dow-futures-spike-as-big-tech-earnings-loom-this-week-retail-stays-cautious/cZx8aBfRBt6?.tsrc=rss",
@@ -348,7 +368,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "賓士與輝達擴大策略合作，整合賓士MB.OS作業系統與輝達Hyperion車載運算架構，共同開發新一代自動駕駛系統，涵蓋城市點對點駕駛輔助與SAE-Level 4自動駕駛應用",
+    "text": "賓士與輝達擴大自動駕駛合作，結合賓士MB.OS作業系統與輝達Hyperion車載運算架構，共同開發城市點對點駕駛輔助與SAE-Level 4自動駕駛應用",
     "links": [
      {
       "title": "Mercedes",
@@ -361,7 +381,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "新台幣10/19盤中失守32.5元心理關卡，單週貶幅達1.37%創逾1年新高；央行指出外資10/12至10/16賣超台股194.02億美元並淨匯出179.61億美元，是新台幣走貶主因",
+    "text": "新台幣10/19盤中失守32.5元心理關卡，台股一度暴跌逾900點；央行罕見盤中發聲明指出10/12至10/16外資淨匯出179.61億美元，新台幣同期貶值1.37%",
     "links": [
      {
       "title": "新台幣失守32.5元！台股一度暴跌逾900點　央行罕見急發3點說明",
@@ -380,7 +400,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "荷蘭央行因應地緣政治風險升高，將逾78噸黃金從紐約與加拿大轉運至倫敦，理由是倫敦作為全球最大黃金交易樞紐，儲存於英格蘭銀行將提升危機應對能力；此舉延續歐洲央行近年重新配置黃金儲備的趨勢",
+    "text": "荷蘭央行將逾78噸紐約黃金與7噸加拿大黃金移至倫敦，理由是應對「地緣政治局勢升溫」並強化危機應變能力，倫敦作為全球最大黃金交易樞紐，黃金存放於英格蘭銀行將更易取用",
     "links": [
      {
       "title": "Europe sent its gold to the U.S. for safe keeping during World War II. Central banks are now reshuffling their reserves for a new era of uncertainty",
@@ -393,18 +413,24 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣對美元匯率10/12至10/16貶值1.37%，主要反映全球科技股回檔、外資賣超台股並匯出股利；央行強調新台幣長期表現相對穩定，將視匯市供需變化適時調節",
+    "text": "新台幣兌美元10/19盤中再貶逾2角失守32.5元，央行指出外資10/12至10/16賣超台股194.02億美元並匯出179.61億美元，是台幣走貶主因",
     "links": [
      {
-      "title": "股匯雙殺　央行：新台幣表現相對穩定、將視情況調節",
-      "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA-%E5%A4%AE%E8%A1%8C-%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%A1%A8%E7%8F%BE%E7%9B%B8%E5%B0%8D%E7%A9%A9%E5%AE%9A-%E5%B0%87%E8%A6%96%E6%83%85%E6%B3%81%E8%AA%BF%E7%AF%80-040935864.html",
+      "title": "新台幣失守32.5元！台股一度暴跌逾900點　央行罕見急發3點說明",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%A4%B1%E5%AE%8832-5%E5%85%83-%E5%8F%B0%E8%82%A1-%E5%BA%A6%E6%9A%B4%E8%B7%8C%E9%80%BE900%E9%BB%9E-%E5%A4%AE%E8%A1%8C%E7%BD%95%E8%A6%8B%E6%80%A5%E7%99%BC3%E9%BB%9E%E8%AA%AA%E6%98%8E-051352928.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T05:13:52+08:00"
+     },
+     {
+      "title": "台幣急挫 央行罕見盤中發聲：外資5天匯出180億美元",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E5%B9%A3%E6%80%A5%E6%8C%AB-%E5%A4%AE%E8%A1%8C%E7%BD%95%E8%A6%8B%E7%9B%A4%E4%B8%AD%E7%99%BC%E8%81%B2-%E5%A4%96%E8%B3%875%E5%A4%A9%E5%8C%AF%E5%87%BA180%E5%84%84%E7%BE%8E%E5%85%83-041800937.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T04:09:35+00:00"
+      "at": "2026-10-19T04:18:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T05:37:54.236560+00:00"
+  "at": "2026-10-19T05:48:02.489791+00:00"
  },
  "main_source_titles": [
   "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
