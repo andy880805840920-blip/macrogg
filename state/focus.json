@@ -293,37 +293,18 @@
  "at": "2026-10-19T07:11:11.129259+00:00",
  "layout": "main",
  "topics": {
-  "hash": "42261688e0425298",
+  "hash": "b93364aa67e62af5",
   "items": [
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "印度央行透過逆回購操作注入 10.5 億美元流動性，印度國家銀行預期第三季淨利差將因逆回購升息而擴大 7–9 個基點。",
-    "links": [
-     {
-      "title": "RBI announces $10.5 billion liquidity infusion via repo",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUE1aRTVIZGpZU29GcGt0NjMxUzdlVUpEd0piQmtWOFFlaGZ5WnRYRHJBUVlVeTctZ0JBdTRaVG02ZkZsMkNheDYzT1I0THFIbllXeEtaa2VxMFBkRldjWlJ4Wk9DYzFqQTUtN3h4Y0VzbnFrR3pOZFRzSHlnWktQMmp6eXdsQ2NCemEtSktLdWhxdnFYYzJWeUFpdFVtNFFHTjUxclRieVdNVFdpalBzMkdmbVpNTlhHYjhuWHNNd9IBxAFBVV95cUxOSEIyLWpLQzhKUFczbGFXVkhmemVURUNwcjVGNmplOHA5czFnV28tYV9vTGxFRW1aTU00eWt4QjZHWWtWS2RsZ29tcFp0YkRZSFRZcXV3R2hrNVc0XzZ1dWJpZlhLWU5xeUFkSTg4TkZ5dlFuSDcwLWNJc25MN2VmbXB4SFQ3TzY4VzJ3cWtwU29oYmIwVmlqdU1WRmxKUERSME5SN3RXblBkRGZNVDZsLUZYNHdxeS1KWF9mYnl0eUhib1ZR?oc=5",
-      "source": "The Economic Times",
-      "at": "2026-10-19T03:33:42+00:00"
-     },
-     {
-      "title": "PNB expects 7-9 bps NIM expansion in Q3 after repo rate hike - bfsi.economictimes.indiatimes.com",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPNmJub3dOVXdNeW5lTGw5cEJrbXBhOVpqNUkzN3I0VUlXcDc4R2RSTFB5V0NDXzJoRlNYbDVoWFRtNjhCcjVhQjBBMzcxdFFVb0RYS2lKdU5KT0RybXlRZ3ZseXVDMGFRcEo2ZHk5ZTRYY0NFOU8wUDZYbzdoNUhOSW1vYzVmMEpCOTlVdGdfeTNSMFdDV3BycnZJRmVCOTRKVThwZWpKdFJDOWJiM2Q5TVZ1M2k3dktJMkRRRnFpSEVrZU3SAcMBQVVfeXFMTzZibm93TlV3TXluZUxsOXBCa21wYTlaajVJMzdyNFVJV3A3OEdkUkxQeVdDQ18yaEZTWGw1aFhUbTY4QnI1YUIwQTM3MXRRVW9EWEtpSnVOSk9Ecm15UWd2bHl1QzBhUXBKNmR5OWU0WGNDRTlPMFA2WG83aDVITkltb2M1ZjBKQjk5VXRnX3kzUjBXQ1dwcnJ2SUZlQjk0SlU4cGVqSnRSQzliYjNkOU1WdTNpN3ZLSTJEUUZxaUhFa2VN?oc=5",
-      "source": "bfsi.economictimes.indiatimes",
-      "at": "2026-10-19T01:14:29+00:00"
-     }
-    ]
-   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，維持在每桶110美元附近；市場權衡地緣政治風險與全球供應接近戰前水準",
+    "text": "布蘭特原油在中東與烏克蘭衝突支撐下，維持在 110 美元附近，但供應接近戰前水準限制漲幅",
     "links": [
      {
       "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
       "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZW11ZjRDTUdpUHpzY1JpNFZtWjZ1bGhZejdHX2h3Q0NTb1pKU0pxM0NtSDR5QlA4YnQ5NHUybkxGS0VxSWJQcHo0NWcyb3A4S21SbVNld2cyLTQ5eFowV2lqRlh1QUMteG1taWQ5b0dPUGg1SnpxVUlRYmlDWkkxZzBQWVpBTjlwdzEyZDBTRWRacVU1ZFhZMjhrMGd5dw?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-18T22:02:51+00:00"
+      "at": "2026-10-19T05:07:00+00:00"
      },
      {
       "title": "油價：權衡中東衝突與供應接近戰前水準，WTI、布油亞洲盤中齊跌",
@@ -336,58 +317,46 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨反彈，標普500期貨上漲0.8%、那斯達克期貨漲超1%，投資人等待Meta、特斯拉、Netflix等大型科技股財報；上週那斯達克跌4.5%、標普500跌1.95%，為6月以來最差週表現",
+    "text": "美股期貨 10/19 反彈，標普 500 期貨上漲 0.8%、那斯達克期貨漲逾 1%，投資人期待本周大科技公司財報能恢復動能，那斯達克上周跌幅達 4.5%，創 6 月以來最差單周表現",
     "links": [
      {
       "title": "No ‘Black Monday’? Nasdaq, S&P 500, Dow Futures Spike As Big Tech Earnings Loom This Week",
       "link": "https://stocktwits.com/news-articles/markets/equity/no-black-monday-nasdaq-s-and-p-500-dow-futures-spike-as-big-tech-earnings-loom-this-week-retail-stays-cautious/cZx8aBfRBt6?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-19T04:07:56+00:00"
-     },
-     {
-      "title": "Dow Jones Futures Rebound After AI Sell-Off; Meta, SpaceX, Tesla Earnings Key",
-      "link": "https://finance.yahoo.com/m/4342d021-69d3-3aa1-9753-76f72c9ba95d/dow-jones-futures-rebound.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-19T03:08:11+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達執行長黃仁勳揭露與台積電30年合作基礎，強調信任與長期共同成長勝於詳細合約條款；馬斯克轉發表示認同",
+    "text": "三星傳將採用台積電技術製造輝達下一代記憶晶片，顯示台積電在高階晶片製造的主導地位",
     "links": [
      {
-      "title": "輝達與台積電合作30年不靠鐵約，黃仁勳為何說「合約訂愈細，關係反而愈脆弱？」...馬斯克轉發說什麼？",
-      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94%E8%88%87%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%90%88%E4%BD%9C30%E5%B9%B4%E4%B8%8D%E9%9D%A0%E9%90%B5%E7%B4%84-%E9%BB%83%E4%BB%81%E5%8B%B3%E7%82%BA%E4%BD%95%E8%AA%AA-%E5%90%88%E7%B4%84%E8%A8%82%E6%84%88%E7%B4%B0-%E9%97%9C%E4%BF%82%E5%8F%8D%E8%80%8C%E6%84%88%E8%84%86%E5%BC%B1-%E9%A6%AC%E6%96%AF%E5%85%8B%E8%BD%89%E7%99%BC%E8%AA%AA%E4%BB%80%E9%BA%BC-060001151.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T06:00:01+00:00"
+      "title": "Samsung to use TSMC technology for Nvidia's next-generation memory chips, Seoul newspaper reports",
+      "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQLVd3RU5QdzNwZHd0cUNCbUQxM3B6M2JOTXZZbEE4b3Y4czkxSjBuNklIRXU2S1VyRld6WTlRQUdlZkN3TGNRcng5cjR6ZEViNXNqcHh2RnlRU2hWVXRPUVFjVXRvd2FaaTVkd002aUk4WHlEQ2wxTGk3alF5S0FUTGNMUXF2dV9QUjk4eThjcWVPaVBLYzc2c0NUaUN4UUVMcVZTSERiMDE5VXp0NDdoVFpuS2E0TGZoUnBrRTExcnZDRlJia1VNcU40SUxQcE1y?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-18T12:09:43+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "外資連9日賣超台股，10/19單日再砍767億元、累計賣超7585億元；台股盤中重挫逾900點，央行罕見盤中發布聲明穩定匯市，終場下跌289點收46822點",
+    "text": "外資連續 9 個交易日賣超台股，10/19 再砍 767.43 億元，累計賣超 7585.25 億元，期貨淨空單仍在 9 萬口以上，台股跌 289 點至 46822 點",
     "links": [
      {
       "title": "【Follow法人】外資再砍767億元！連9日提款台股逾7585億元",
       "link": "https://tw.stock.yahoo.com/news/%E3%80%90follow%E6%B3%95%E4%BA%BA%E3%80%91%E5%A4%96%E8%B3%87%E5%86%8D%E7%A0%8D767%E5%84%84%E5%85%83%EF%BC%81%E9%80%A39%E6%97%A5%E6%8F%90%E6%AC%BE%E5%8F%B0%E8%82%A1%E9%80%BE7585%E5%84%84%E5%85%83-070339089.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T07:03:39+08:00"
-     },
-     {
-      "title": "央行盤中聲明奏效！台股收盤跌289點　台積電回平盤2420元",
-      "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C%E7%9B%A4%E4%B8%AD%E8%81%B2%E6%98%8E%E5%A5%8F%E6%95%88-%E5%8F%B0%E8%82%A1%E6%94%B6%E7%9B%A4%E8%B7%8C289%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%9B%9E%E5%B9%B3%E7%9B%A42420%E5%85%83-064107709.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T06:41:07+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "美國小企業主對經營狀況保持信心，72%滿意現金流、66%預計未來一年成長，但通膨與勞工品質仍是主要隱憂；經濟韌性未能有效轉化為川普民調支持",
+    "text": "美國小企業主對經營狀況保持信心，72% 對現金流滿意，但通膨與勞工品質仍是主要隱憂，經濟表現能否轉化為川普選票支持成為變數",
     "links": [
      {
       "title": "美小企業主信心穩健難助川普 民調低迷挑戰選情",
@@ -400,7 +369,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "荷蘭央行因地緣政治風險升溫，將78噸紐約黃金與7噸加拿大黃金移至倫敦，強化危機應變準備；歐洲央行近年持續調整黃金儲備配置",
+    "text": "荷蘭央行因地緣政治風險升高，將 78 噸紐約黃金與 7 噸加拿大黃金移至倫敦，稱倫敦作為全球最大黃金交易樞紐能提升危機應變能力",
     "links": [
      {
       "title": "Europe sent its gold to the U.S. for safe keeping during World War II. Central banks are now reshuffling their reserves for a new era of uncertainty",
@@ -413,24 +382,18 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣盤中跌破32.5元，10/12至10/16貶值1.37%至32.338元；外資同期賣超台股194億美元並淨匯出179.61億美元，央行強調新台幣相對其他主要貨幣仍較穩定",
+    "text": "新台幣 10/12 至 10/16 貶值 1.37%，從 31.895 元貶至 32.338 元，央行指出主要因國際股市動盪與外資賣超台股併匯出股利，同期外資淨匯出 179.61 億美元",
     "links": [
      {
       "title": "新台幣摜破32.5元！央行罕見盤中發布三點說明穩定匯市",
       "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%91%9C%E7%A0%B432-5%E5%85%83-%E5%A4%AE%E8%A1%8C%E7%BD%95%E8%A6%8B%E7%9B%A4%E4%B8%AD%E7%99%BC%E5%B8%83%E4%B8%89%E9%BB%9E%E8%AA%AA%E6%98%8E%E7%A9%A9%E5%AE%9A%E5%8C%AF%E5%B8%82-062508357.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T06:25:08+08:00"
-     },
-     {
-      "title": "新台幣一週貶值1.37%！外資狂賣台股194億美元，央行揭匯率走弱3 大原因",
-      "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBERTdQSjZmc1laVExtMERub3ZtNFRuc25fRVhqaUUzUGtqX21uU09Hd1pYTGIyT2pqY0RtRUoxRnAwMVMzd3pVUXB6WktlUQ?oc=5",
-      "source": "風傳媒",
-      "at": "2026-10-19T05:36:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T07:11:29.645810+00:00"
+  "at": "2026-10-19T07:36:59.010571+00:00"
  },
  "main_source_titles": [
   "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
