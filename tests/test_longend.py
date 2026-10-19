@@ -234,6 +234,21 @@ _g = le.dots_gap(None, {}, {"year": 2026, "market_end": 3.5, "dot_median": 3.625
 check("⑨e 沒有期貨路徑時退回 mvd", bool(_g) and _g["rows"][0]["year"] == "2026" and _g["status"] == "warning", _g)
 check("⑨f 都沒有資料時回 None", le.dots_gap(None, None, None) is None)
 
+# ⑩ 財政部 Buybacks 卡：div 必須成對，否則 _collapse_sections 包不起來（07 編號與收合會掉）
+import re as _re                                    # noqa: E402
+from src.pages import longend as _LEp               # noqa: E402
+from src import site as _site                       # noqa: E402
+_r = {"date": "2026-10-15", "bucket_zh": "10–20 年", "type_zh": "流動性支援", "max": 6.0, "accepted": 6.0,
+      "offered": 40.8, "cover": 6.8, "announce": {"10Y": 0.5}, "result": {}}
+_bb = {"le": {"buybacks": {"rows": [_r], "latest": _r, "quarter": {"流動性支援": 37.1}, "quarter_from": "2026-08-18",
+                           "caps": [], "upcoming": [{"date": "2026-10-22", "announce": "2026-10-21", "bucket_zh": "20–30 年",
+                                                     "type_zh": "流動性支援", "max": 6.0}]}}}
+_h = _LEp.buybacks(_bb)
+check("⑩a Buybacks 卡 div 開關成對", len(_re.findall(r"<div\b", _h)) == _h.count("</div>"),
+      (len(_re.findall(r"<div\b", _h)), _h.count("</div>")))
+_w = _site._collapse_sections(f'<div class="grid"><div class="card"><h2 id="buybacks" data-sum="x">財政部 Buybacks</h2>{_h}</div></div>')
+check("⑩b Buybacks 卡會被包成可收合的區塊", '<details class="card sect"' in _w and '<div class="card">' not in _w)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

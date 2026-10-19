@@ -928,7 +928,7 @@ def buybacks(d: dict) -> str:
         for r in rows)
     table = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>天期</th><th>類型</th>'
              f'<th>上限</th><th>實際買回</th><th>投標</th><th>上限公布後 1 小時<br><small>10／20／30 年，bp</small></th>'
-             f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table>')
+             f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table></div>')
     up = b.get("upcoming") or []
     ups = "".join(
         f'<tr><td>{esc(_md(u["date"]))}</td><td>{esc(_md(u["announce"]))}</td><td>{esc(u["bucket_zh"])}</td>'
@@ -936,7 +936,7 @@ def buybacks(d: dict) -> str:
         + (f'<small class="muted">（近期實際 {_yi_b(u["recent_max"])}）</small>' if u.get("recent_max") else "")
         + '</td></tr>' for u in up)
     up_html = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>上限公布</th><th>天期</th>'
-               f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table>'
+               f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table></div>'
                if ups else '<p class="hint">本季暫定排程已全部執行完畢，下一季排程隨再融資公布。</p>')
     return f"""
     <p class="hint">買回流動性較差的舊券、用新發行補上——長端供給的減法。</p>
