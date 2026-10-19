@@ -497,7 +497,7 @@ def _rates_body_full(d: dict) -> str:
     return f"""
 <div class="grid">
   <div class="card">
-    <h2 id="decomp" data-open="1" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
+    <h2 id="decomp" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
     {LE.decomp(d)}
   </div>
 </div>
