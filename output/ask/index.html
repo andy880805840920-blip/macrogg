@@ -2606,11 +2606,29 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .bb-rx b.up{color:var(--neg)}.bb-rx b.dn{color:var(--pos)}
 .bb-rx b{font-weight:600}
 .bb-tb .muted{color:var(--muted)}
+.bb-k>span{display:none}
+.bb-m-note{display:none;font-size:var(--fs-micro);color:var(--muted);margin:6px 0 2px}
+@media(max-width:759px){.bb-m-note{display:block}}
+/* 手機：買回表一列一塊（日期＋天期當標題，其餘欄位配欄名），不必左右滑 */
+@media(max-width:759px){
+  .bb-tb,.bb-tb tbody,.bb-tb tr,.bb-tb td{display:block;width:100%}
+  .tscroll>table.bb-tb{width:100%;min-width:0}
+  .bb-tb thead{display:none}
+  .bb-tb tr{padding:8px 0;border-bottom:1px solid var(--grid)}
+  .bb-tb td{white-space:normal;border:0;padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:var(--fs-small)}
+  .bb-tb td>.bb-v{text-align:right;white-space:nowrap}
+  .bb-tb td::before{content:attr(data-label);color:var(--muted);flex:0 1 auto}
+  .bb-tb td.bb-k{display:block;font-size:var(--fs-body);padding-bottom:4px}
+  .bb-tb td.bb-k::before{content:none}
+  .bb-tb td.bb-k>span{display:inline;color:var(--text-secondary);margin-left:6px}
+  .bb-tb td.bb-hide-m{display:none}
+  .bb-tb small.muted{margin-left:4px}}
 .dv-net{position:absolute;left:8%;right:8%;height:3px;margin-top:-1px;border-radius:2px;pointer-events:none}
 .dv-part .dc2-bar{opacity:.55;background-image:repeating-linear-gradient(45deg,transparent 0 3px,rgba(255,255,255,.45) 3px 5px)!important}
 .cl-leg i.dv-part-i{width:10px;height:10px;background:var(--muted-bar);opacity:.55;background-image:repeating-linear-gradient(45deg,transparent 0 3px,rgba(255,255,255,.6) 3px 5px)}
-.aus{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
-@media(min-width:760px){.aus{grid-template-columns:repeat(4,1fr)}}
+.aus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+@media(min-width:760px){.aus{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1000px){.aus{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .au{border:1px solid var(--border);border-top:4px solid var(--muted-bar);border-radius:10px;padding:9px 11px;background:var(--surface-1)}
 .au.weak{border-top-color:var(--critical)}.au.strong{border-top-color:var(--good)}
 .au-h{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
@@ -2638,11 +2656,23 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le-hsr b{font-size:15px}.le-hsr b.up{color:var(--critical)}
 .le-hsd{font-size:12px;color:var(--muted);margin-top:4px}
 .le-hs .kh-vals span{font-size:10.5px}
-.le-lgs{display:grid;gap:4px 10px;grid-template-columns:1fr}
-.le-lgc{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
-@media(max-width:559px){.le-lgc{grid-template-columns:1fr}}
-@media(min-width:760px){.le-lgs{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .le-lg{grid-column:span var(--k)}.le-lgc{grid-template-columns:repeat(var(--k),minmax(0,1fr))}}
+/* 長端燈號（2026-10 第三版）：一組一列，卡片至少 300px 寬——展開說明後每行至少約 20 個字。
+   先前桌機四欄均分，1080px 的內容寬度下每張只剩約 250px，說明一行十幾個字、門檻與歷史對照擠成多行。
+   align-items:start：只展開一張時，同列其他卡不被撐高出一大塊空白。 */
+.le-lgs{display:grid;gap:14px;grid-template-columns:1fr}
+.le-lgc{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));align-items:start}
+/* 平板以上：組與組拼進同一張格線（dense），單張卡的組補進大組旁邊的空格，不會一組獨佔一整列。
+   桌機三欄：4 張＝2×2 區塊（跨兩欄兩列）、3 張＝整列、2 張＝兩欄、1 張＝一欄。總數 9 張剛好排滿三列。
+   平板兩欄：2 張以上的組佔整列（內部兩欄），1 張的兩組並排。卡片最窄約 320px。 */
+@media(min-width:760px){
+  .le-lgs{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;align-items:start;gap:16px 10px}
+  .le-lg[data-k="1"]{grid-column:span 1}.le-lg:not([data-k="1"]){grid-column:span 2}
+  .le-lgc{grid-template-columns:repeat(2,minmax(0,1fr))}.le-lg[data-k="1"] .le-lgc{grid-template-columns:1fr}}
+@media(min-width:1000px){
+  .le-lgs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .le-lg[data-k="2"]{grid-column:span 2}.le-lg[data-k="3"]{grid-column:span 3}
+  .le-lg[data-k="4"]{grid-column:span 2;grid-row:span 2}
+  .le-lg[data-k="3"] .le-lgc{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .le-hero .focus-title{font-size:22px}
 @media(min-width:760px){.le-hero .focus-title{font-size:26px}}
 
@@ -3780,7 +3810,9 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le-deriv li{margin:10px 0}
 .le-deriv li p{margin:3px 0;font-size:13px;color:var(--text-secondary);line-height:1.65}
 .eq{font-family:"Times New Roman",Georgia,serif;font-size:15px;line-height:2.2;padding:6px 12px;margin-top:4px;
-  background:var(--surface-2);border-radius:8px;overflow-x:auto;white-space:nowrap}
+  background:var(--surface-2);border-radius:8px;overflow-x:auto}
+.eq-t{display:inline-block;white-space:nowrap;margin-right:.35em}
+@media(max-width:600px){.eq{font-size:14px;line-height:1.9;padding:6px 10px}}
 .eq sub,.eq sup{font-size:.7em}
 .eq-l{display:inline-block;font-family:inherit;font-size:10.5px;color:var(--muted);margin:0 4px;vertical-align:-3px;
   border-bottom:1px solid var(--grid)}
@@ -4469,11 +4501,11 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 
 /* ---------- 殖利率曲線 v4（2026-10）：白話週報＋監控表 ---------- */
 .cwb-h{position:relative;padding-right:64px}
-.cwb-copy{position:absolute;right:0;top:-4px;font:inherit;font-size:var(--fs-micro);font-weight:600;padding:5px 12px;min-height:32px;
+.cwb-copy{position:absolute;right:0;top:-4px;font:inherit;font-size:var(--fs-micro);font-weight:600;padding:5px 12px;min-height:40px;
   border:1px solid var(--border);border-radius:999px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer}
 .cwb-copy:hover{color:var(--text-primary);border-color:var(--text-secondary)}
 .viz-root:not(#_) .cwb .cwb-prose{font-size:16px;line-height:1.9;font-weight:500;margin:4px 0 8px;color:var(--text-primary)}
-.cwb-more>summary{cursor:pointer;font-size:var(--fs-small);color:var(--muted);list-style:none;padding:4px 0;min-height:32px;display:flex;align-items:center}
+.cwb-more>summary{cursor:pointer;font-size:var(--fs-small);color:var(--muted);list-style:none;padding:4px 0;min-height:40px;display:flex;align-items:center}
 .cwb-more>summary::-webkit-details-marker{display:none}
 .cwb-more>summary::before{content:"▸";margin-right:6px}.cwb-more[open]>summary::before{content:"▾"}
 .viz-root:not(#_) .cwb-more ul{margin:4px 0 2px;padding-left:18px}
@@ -4526,7 +4558,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .cw .cw-ctl,.viz-root:not(#_) .cw-weekly .cw-ctl{display:inline-flex;flex-wrap:nowrap;gap:0;padding:3px;
   border:1px solid var(--border);border-radius:9px;background:var(--surface-2);max-width:100%;overflow-x:auto}
 .viz-root:not(#_) .cw .cw-ctl .cw-btn,.viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn{border:0;border-radius:6px;background:transparent;
-  color:var(--text-secondary);padding:6px 12px;min-height:34px;font-size:var(--fs-small);font-weight:600;white-space:nowrap;box-shadow:none}
+  color:var(--text-secondary);padding:6px 12px;min-height:40px;font-size:var(--fs-small);font-weight:600;white-space:nowrap;box-shadow:none}
 .viz-root:not(#_) .cw .cw-ctl .cw-btn.on,.viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn.on,
 .viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn[aria-pressed="true"]{background:var(--surface-1);color:var(--text-primary);
   box-shadow:0 1px 2px rgba(0,0,0,.14),0 0 0 1px var(--border)}
@@ -4542,22 +4574,26 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .cw-tabs .tabp{border-top:1px solid var(--grid);padding-top:12px;margin-top:-1px}
 .viz-root:not(#_) .cwc-modes{margin:0 0 6px}
 /* 說明文字收合 */
-.cw-note>summary{cursor:pointer;list-style:none;font-size:var(--fs-micro);color:var(--muted);padding:4px 0;min-height:28px;display:inline-flex;align-items:center}
+.cw-note>summary{cursor:pointer;list-style:none;font-size:var(--fs-micro);color:var(--muted);padding:4px 0;min-height:40px;display:inline-flex;align-items:center}
 .cw-note>summary::-webkit-details-marker{display:none}
 .cw-note>summary::before{content:"ⓘ";margin-right:5px;font-size:12px}
 .viz-root:not(#_) .cw-note .cwm-note,.viz-root:not(#_) .cw-note .ww-note{margin:2px 0 6px}
 .ww-legend{margin-bottom:10px}
+/* 近期發債表的「424B5」原文連結：表格裡的獨立連結，撐到觸控下限 */
+.viz-root:not(#_) .hs5-m a{display:inline-flex;align-items:center;min-height:40px}
 @media(max-width:759px){
   .viz-root:not(#_) .cw .cw-ctl .cw-btn,.viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn{padding:6px 9px;font-size:13px}
   .viz-root:not(#_) .cw-tabs>label{margin-right:14px;font-size:15px}}
+/* 320–360px 的手機：五顆期間按鈕要擠進約 260px，再收一點左右內距 */
+@media(max-width:360px){.viz-root:not(#_) .cw .cw-ctl .cw-btn,.viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn{padding:6px 6px}}
 </style>
 <script type="speculationrules">
 {"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-20 00:17（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>00:17</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>12:17</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>17:17</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-20 00:36（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>00:36</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>12:36</b><i>10/19</i></div><div class="upd-c"><span>倫敦</span><b>17:36</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/" class="on" aria-current="page">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>偷懶</h1></div>
