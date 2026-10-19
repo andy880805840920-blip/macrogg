@@ -2266,7 +2266,9 @@ details.home-module[open]{padding-bottom:0}
 .teach-body p{margin:6px 0}
 /* 關鍵指標檢核：格子等高。高度不一的原因是各格的說明文長度不同，
    說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
-.l-link{display:inline-block;margin-top:4px;padding:12px 0;font-size:12px;
+/* 獨立成最後一行：inline-block 的上下 padding 會把它所在那一行撐高，
+   說明文中間突然出現一段大行距。padding 保留，觸控高度仍 ≥ 40px。 */
+.l-link{display:block;width:fit-content;margin-top:2px;padding:12px 0;font-size:12px;
   font-weight:600;color:var(--series-1);text-decoration:none}
 .lights{align-items:stretch}
 .light{display:flex;flex-direction:column}
