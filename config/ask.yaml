@@ -262,6 +262,20 @@ terms:
   iorb_spread: {t: IORB 與 SOFR−IORB, k: [iorb, sofr-iorb, 準備金利率]}
   onrrp: {t: 隔夜逆回購（ON RRP）, k: [逆回購]}
   srf: {t: 常設附買回機制（SRF）, k: [srf, 常設附買回]}
+  liq_corridor: {t: 利率走廊, k: [利率走廊, 走廊, 政策執行, 行政利率]}
+  ample_reserves: {t: 準備金的三種狀態與充足準備金框架, k: [充足準備金, 準備金三種狀態, 稀缺, 充裕, 準備金需求曲線, ample, abundant, scarce]}
+  reserves: {t: 銀行準備金與貨幣乘數, k: [準備金, 貨幣乘數, 存款準備]}
+  tga: {t: 財政部一般帳戶（TGA）, k: [tga, 財政部帳戶, 財政部一般帳戶]}
+  reserve_ratio: {t: 準備金 ÷ 商業銀行總資產, k: [準備金÷商業銀行總資產, 商業銀行總資產, 準備金占比, 準備金比例, 準備金除以總資產]}
+  rde: {t: 準備金需求彈性（RDE）, k: [rde, 準備金需求彈性]}
+  rmp: {t: 準備金管理購買（RMP）, k: [rmp, 準備金管理購買, mbs再投入, 再投入]}
+  tgcr: {t: TGCR, k: [tgcr, 三方回購, 三方一般擔保]}
+  repo: {t: 回購市場（RP／RRP）, k: [回購市場, 附買回市場, 正回購, 基差交易]}
+  bills_net: {t: T-Bills 淨發行與私人市場吸收, k: [國庫券淨發行, t-bills淨發行, bills淨發行, 淨發行]}
+  mmf: {t: 貨幣市場基金（MMF）, k: [mmf, 貨幣市場基金, 貨幣基金]}
+  liq_tools: {t: 其他流動性管理工具, k: [其他流動性管理工具, 流動性管理工具, 貼現窗口, fima, 換匯額度, 流動性工具]}
+  liq_judge: {t: 流動性怎麼判斷, k: [流動性怎麼判斷, 流動性判斷, 流動性怎麼看, 判讀邏輯]}
+  liq_transmission: {t: 流動性緊缺的跨資產傳導, k: [流動性危機, 跨資產傳導, 流動性緊縮]}
   us_stocks: {t: 美股指數, k: [美股]}
   tw_stocks: {t: 台股與台指期, k: [台股, 台指期]}
   vix: {t: VIX, k: [vix]}
@@ -412,10 +426,16 @@ cards:
 - {id: hs_capex, c: 長端與債務, q: 科技巨頭 AI 資本支出多少？, k: [科技巨頭, 資本支出, ai資本支出, capex], w: [ai, 台積電, 輝達, 微軟, 谷歌, 亞馬遜, meta], n: [數值, 變化], x: [ai投資有多大, hyperscaler資本支出], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_debt, sox], src: {fn: hs_capex}}
 - {id: hs_debt, c: 長端與債務, q: 科技巨頭發了多少債？, k: [科技巨頭], w: [發債], m: [發債, 公司債, 債券, 舉債, 發了, 多少債], n: [數值, 影響], x: [科技公司發債規模], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_capex, ig_spread], src: {fn: hs_debt}}
 - {id: mortgage, c: 長端與債務, q: 房貸利率多少？, k: [房貸利率, 房貸], n: [數值, 變化], x: [美國30年房貸利率], l: yields, h: /rates/#decomp, r: [dgs10], src: {fn: mortgage}}
-- {id: sofr, c: 長端與債務, q: SOFR 多少？, k: [sofr], w: [資金市場, 附買回], n: [數值, 變化], x: [sofr利率], l: sofr, h: /#focus, r: [iorb_spread, onrrp, fed_rate], src: {chip: sofr, s: SOFR}}
-- {id: iorb_spread, c: 長端與債務, q: SOFR−IORB 利差多少？資金緊不緊？, k: [sofr-iorb, iorb, 資金緊不緊, 準備金利率], w: [資金市場, sofr, 利差], n: [數值, 變化], x: [資金市場緊嗎], l: iorb_spread, h: /#focus, r: [sofr, onrrp, srf], src: {chip: sofr_iorb}}
-- {id: onrrp, c: 長端與債務, q: 逆回購（ON RRP）餘額多少？, k: [逆回購], w: [流動性], n: [數值, 變化], x: [逆回購還剩多少], l: onrrp, h: /#focus, r: [iorb_spread, fed_bs], src: {chip: onrrp, s: RRPONTSYD}}
-- {id: srf, c: 長端與債務, q: SRF 常設附買回有人用嗎？, k: [srf, 常設附買回], n: [數值], x: [srf動用多少], l: srf, h: /#focus, r: [iorb_spread, sofr], src: {chip: srf}}
+- {id: sofr, c: 流動性, q: SOFR 多少？, k: [sofr], w: [資金市場, 附買回], n: [數值, 變化], x: [sofr利率], l: sofr, h: /liquidity/#corridor, r: [iorb_spread, onrrp, fed_rate], src: {chip: sofr, s: SOFR}}
+- {id: iorb_spread, c: 流動性, q: SOFR−IORB 利差多少？資金緊不緊？, k: [sofr-iorb, iorb, 資金緊不緊, 準備金利率], w: [資金市場, sofr, 利差], n: [數值, 變化], x: [資金市場緊嗎], l: iorb_spread, h: /liquidity/#corridor, r: [sofr, onrrp, srf], src: {chip: sofr_iorb}}
+- {id: onrrp, c: 流動性, q: 逆回購（ON RRP）餘額多少？, k: [逆回購], w: [流動性], n: [數值, 變化], x: [逆回購還剩多少], l: onrrp, h: /liquidity/#liabilities, r: [iorb_spread, fed_bs], src: {chip: onrrp, s: RRPONTSYD}}
+- {id: srf, c: 流動性, q: SRF 常設附買回有人用嗎？, k: [srf, 常設附買回], n: [數值], x: [srf動用多少], l: srf, h: /liquidity/#corridor, r: [iorb_spread, sofr], src: {chip: srf}}
+- {id: liq_now, c: 流動性, q: 現在流動性怎麼樣？, k: [流動性, 資金鬆緊, 流動性現況, 流動性怎麼樣, 流動性好嗎], w: [資金市場, 準備金, 緊不緊], n: [數值, 影響], x: [流動性現在怎麼樣, 美元流動性好嗎], l: liq_judge, h: /liquidity/#lights, r: [iorb_spread, srf, onrrp, reserves_now], src: {fn: liq_now}}
+- {id: reserves_now, c: 流動性, q: 銀行準備金多少？夠不夠用？, k: [準備金多少, 準備金夠嗎, 準備金水位], w: [準備金, rde, 準備金占比], n: [數值, 變化], x: [準備金夠不夠, 準備金剩多少], l: reserve_ratio, h: /liquidity/#liabilities, r: [tga_now, liq_now, rmp_now], src: {fn: reserves_now}}
+- {id: tga_now, c: 流動性, q: 財政部 TGA 餘額多少？會抽走多少資金？, k: [tga餘額, tga多少, 財政部帳戶餘額], w: [tga, 季底目標], n: [數值, 變化], x: [tga現在多少], l: tga, h: /liquidity/#liabilities, r: [reserves_now, bills_now], src: {fn: tga_now}}
+- {id: rmp_now, c: 流動性, q: RMP（準備金管理購買）這期買多少？, k: [準備金管理購買這期, rmp這期, rmp多少, rmp金額, rmp還在買, 準備金管理購買多少], w: [mbs再投入], n: [數值], x: [rmp還在買嗎], l: rmp, h: /liquidity/#supply_demand, r: [bills_now, reserves_now], src: {fn: rmp_now}}
+- {id: bills_now, c: 流動性, q: T-Bills 淨發行多少？私人市場要吸收多少？, k: [t-bills淨發行多少, 淨發行多少, 私人市場要吸收, 國庫券發多少, t-bills供給, 國庫券供給, bills供給], w: [淨發行, 國庫券, qra], n: [數值, 變化], x: [國庫券發多少], l: bills_net, h: /liquidity/#supply_demand, r: [rmp_now, mmf_now, tga_now], src: {fn: bills_now}}
+- {id: mmf_now, c: 流動性, q: MMF 資金流向、收益率與持有期限？, k: [mmf資金流向, mmf流向, 貨幣基金流向, 貨幣基金資金, mmf資金], w: [mmf, 貨幣市場基金, wam], n: [數值, 變化], x: [貨幣基金資金流入嗎], l: mmf, h: /liquidity/#mmf, r: [bills_now, liq_now], src: {fn: mmf_now}}
 # ---------------- 情境 ----------------
 - {id: cell, c: 情境, q: 現在在九宮格哪一格？, k: [九宮格, 哪一格, 情境], w: [格], n: [數值], x: [現在是什麼情境, 九宮格位置], l: grid9, h: /scenario/#grid, r: [triggers, sc_lean, trail], src: {fn: cell}}
 - {id: sc_lean, c: 情境, q: 現在情境偏升息還是偏降息？, k: [偏升息, 偏降息, 偏緊縮, 偏寬鬆, 情境方向, 應該升息, 應該降息], w: [方向, 升息, 降息, 情境], n: [數值, 影響], x: [現在應該升息還是降息], l: grid9, h: /scenario/#grid, r: [cell, fedwatch, divergence], src: {fn: sc_lean}}

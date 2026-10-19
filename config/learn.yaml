@@ -1073,7 +1073,7 @@ hyperscaler:
     why: ''
 sofr:
   title: SOFR（擔保隔夜融資利率）
-  section: 資金市場
+  section: 流動性
   one: 以公債為抵押品借一天錢的利率，是美元資金市場最主要的基準利率。
   origin: 紐約聯準會每個營業日美東上午公布前一日的數字，由每天數兆美元的公債附買回（repo）交易計算。LIBOR 停用後，大量貸款與衝生品以 SOFR 計價。
   read: 平時貼近政策區間；月底、季底、納稅日、公債交割日常短暫跳升，屬正常季節性。
@@ -1094,7 +1094,7 @@ sofr:
     why: ''
 iorb_spread:
   title: IORB 與 SOFR−IORB 利差
-  section: 資金市場
+  section: 流動性
   one: 聯準會付給銀行準備金的利率（IORB），以及市場附買回利率與它的差距。
   origin: IORB 由聯準會設定，通常在政策區間內。本站計算 SOFR 減 IORB。
   read: 準備金充足時，SOFR 低於 IORB；SOFR 持續高於 IORB，代表銀行體系現金變得不那麼寬裕，是聯準會調整資產負債表的重要參考。
@@ -1115,7 +1115,7 @@ iorb_spread:
     why: ''
 onrrp:
   title: 隔夜逆回購（ON RRP）
-  section: 資金市場
+  section: 流動性
   one: 貨幣市場基金等機構把錢「放在聯準會」過夜的工具，利率為政策區間下緣。
   origin: 紐約聯準會每天公布使用量。
   read: ON RRP 餘額是金融體系「多餘現金」的緩衝；當它接近零，之後的縮表或公債發行就會直接抽走銀行準備金。
@@ -1136,7 +1136,7 @@ onrrp:
     why: ''
 srf:
   title: 常設附買回機制（SRF）
-  section: 資金市場
+  section: 流動性
   one: 合格機構可用公債等抵押品向聯準會借錢的常設窗口，利率為政策區間上緣。
   origin: 2021 年設立，紐約聯準會每天公布使用量。
   read: 平時幾乎不用；使用量增加，代表市場借不到比區間上緣更便宜的錢，是資金緊縮的訊號。
@@ -1389,3 +1389,311 @@ auction_cal:
     - 是去年的金額
     ans: 1
     why: ''
+# ---------------------------------------------------------------------------
+# 流動性（2026-10）：流動性頁的政策架構、工具、判讀邏輯。各頁的「完整教學」連到這裡。
+# ---------------------------------------------------------------------------
+liq_corridor:
+  title: 利率走廊（Fed 怎麼控制利率）
+  section: 流動性
+  one: Fed 用幾個「行政利率」把市場隔夜利率框在目標區間裡：上方是 IORB 與 SRF 利率，下方是 ON RRP 利率。
+  origin: 2008 年後準備金大增，Fed 不再每天調整準備金數量，改設定三個價格：付給銀行準備金的 IORB、收受閒置資金的 ON RRP 利率（地板）、借出資金的 SRF 利率（天花板）。市場利率（EFFR、SOFR）由供需決定，但被這些價格夾住。
+  read: 看市場利率在走廊裡的位置。SOFR、EFFR 貼在 IORB 下方幾個 bp 是常態；SOFR 高過 IORB 代表準備金偏緊；碰到 SRF 利率代表市場借不到錢、要靠 Fed。
+  chain:
+  - 準備金變少
+  - SOFR 往 IORB、SRF 利率靠近
+  - 機構動用 SRF
+  - Fed 補準備金（RMP）。
+  myth: 「Fed 直接規定市場利率」。Fed 只設定自己願意借出、收受資金的價格，市場利率是交易出來的，只是被這些價格夾在區間內。
+  practice: SOFR − IORB 近 20 日平均 {spread20}bp；SRF 最新動用 {srf}。
+  source: Federal Reserve Board〈Policy Tools〉；New York Fed〈Monetary Policy Implementation〉。
+  quiz:
+    q: 哪一個是利率走廊的「地板」？
+    opts:
+    - IORB
+    - ON RRP 利率
+    - SRF 利率
+    ans: 1
+    why: 有閒錢的機構可以把錢放在 Fed 的 ON RRP 拿到這個利率，就不會用更低的價格借給別人。
+ample_reserves:
+  title: 準備金的三種狀態與充足準備金框架
+  section: 流動性
+  one: 依準備金多寡，需求曲線分成稀缺、充足、充裕三段；Fed 的政策是把準備金維持在「充足」。
+  origin: 紐約聯儲用「準備金需求曲線」描述：稀缺時曲線很陡，準備金少一點利率就大跳；充足時曲線平緩，日常增減只讓利率小動；充裕時完全平坦。FOMC 2019 年 1 月宣布長期採行充足準備金框架。
+  read: 看準備金占銀行資產的比例與 RDE：比例高、RDE 接近 0＝充裕；比例下滑、RDE 轉負＝往稀缺靠近。流通在外貨幣與 TGA 會長期成長、吃掉準備金，所以 Fed 停止縮表後要用 RMP 補回。
+  chain:
+  - 其他負債（現金、TGA）成長
+  - 準備金被吃掉
+  - 往稀缺滑動
+  - Fed 以 RMP 買國庫券補回。
+  myth: 「準備金越多越好」。太多代表 Fed 資產負債表過大（期限風險、對市場的扭曲）；Fed 要的是剛好充足，不是越多越好。
+  practice: 準備金占銀行總資產 {reserve_ratio}%；RDE {rde}，紐約聯儲判讀「{rde_view}」。
+  source: FOMC〈Statement Regarding Monetary Policy Implementation and Balance Sheet Normalization〉(2019-01-30)；New York Fed Staff Report 1019。
+  quiz:
+    q: 準備金在「充足」區時，日常的準備金增減對政策利率的影響？
+    opts:
+    - 很大，要每天調整
+    - 很小，靠行政利率就能控制
+    - 完全沒有影響
+    ans: 1
+    why: 完全沒影響的是「充裕」區；充足區曲線平緩但仍有一點斜度。
+reserves:
+  title: 銀行準備金與貨幣乘數
+  section: 流動性
+  one: 商業銀行存在 Fed 的存款，是銀行間付款清算的最終工具，也是整個信用體系的地基。
+  origin: Fed 對準備金支付 IORB。2020 年 3 月起法定準備率降為 0，銀行持有多少準備金改由流動性需求與監管決定。數字在 Fed 每週四公布的 H.4.1。
+  read: 看水位與占銀行資產的比例；水位下滑、占比跌向 10% 時，回購市場容易出現壓力（2019 年 9 月）。現金、TGA、ON RRP 增加都會等量擠壓準備金。
+  chain:
+  - 準備金減少
+  - 銀行惜借、回購利率上升
+  - 放款與信用收縮。
+  myth: 「準備金多，銀行就一定多放款」。準備金充足時，放款更受資本、監管比率與貸款需求限制；貨幣乘數（例如準備率 10% 時 1 元撐 10 元存款）是理論上限，不是機械關係。
+  practice: 最新準備金 {reserves} 兆美元，一個月變化 {reserves_m1} 億美元。
+  source: Federal Reserve Board H.4.1。
+  quiz:
+    q: 法定準備率 10% 時，理論上 1 元準備金最多支撐幾元存款？
+    opts:
+    - 1 元
+    - 10 元
+    - 100 元
+    ans: 1
+    why: 1 ÷ 10%＝10 倍，這就是貨幣乘數的上限。
+tga:
+  title: 財政部一般帳戶（TGA）
+  section: 流動性
+  one: 財政部在 Fed 的支票帳戶；餘額增加會等量抽走市場上的準備金（或 ON RRP）。
+  origin: 稅收、發債收入流入，政府支出流出。財政部每季再融資（QRA）公布季底目標餘額；數字在 Fed 每週 H.4.1 與財政部每日國庫報表（DTS）。
+  read: TGA 上升＝錢從銀行體系流進 Fed，準備金或 ON RRP 減少；下降＝把錢還給市場。4、6、9、12 月繳稅日，以及債務上限解除後的回補期特別明顯。
+  chain:
+  - 稅收／發債
+  - TGA 上升
+  - 準備金（或 ON RRP）下降
+  - 資金變緊。
+  myth: 「財政部發債只影響長端」。發 T-Bills 回補 TGA，一樣會從短端抽走資金。
+  practice: TGA 目前 {tga} 億美元，本季季底目標 {tga_target} 億美元。
+  source: Federal Reserve Board H.4.1；U.S. Treasury Quarterly Refunding。
+  quiz:
+    q: 其他條件不變，TGA 增加 1,000 億美元，準備金＋ON RRP 會？
+    opts:
+    - 增加約 1,000 億
+    - 減少約 1,000 億
+    - 不變
+    ans: 1
+    why: Fed 資產端不變時，負債端加總不變，TGA 多一塊，其他負債就少一塊。
+reserve_ratio:
+  title: 準備金 ÷ 商業銀行總資產
+  section: 流動性
+  one: 銀行資產中最高流動性的準備金占比，衡量準備金夠不夠用。
+  origin: 本站以 H.4.1 準備金除以 H.8 全體商業銀行總資產（季調、週資料）；紐約聯儲估算 RDE 用的也是這個分母。
+  read: 13% 以上寬鬆（紐約聯儲發現此時 RDE 幾乎為 0）；10%–13% 留意；跌破 10% 是 2019 年 9 月回購危機時的水位（週資料最低約 7.9%）。
+  chain:
+  - 占比下降
+  - 銀行為湊足清算所需的準備金互搶資金
+  - 回購利率跳升。
+  myth: 「看準備金金額就夠了」。銀行體系每年在長大，同樣金額的寬鬆程度不同，要看比例。
+  practice: 最新占比 {reserve_ratio}%（{reserve_ratio_date}），半年前 {reserve_ratio_6m}%。
+  source: Federal Reserve Board H.4.1、H.8；New York Fed〈Reserve Demand Elasticity〉FAQ。
+  site_rule: true
+  quiz:
+    q: 2019 年 9 月回購危機時，這個比例大約是？
+    opts:
+    - 約 8%
+    - 約 13%
+    - 約 18%
+    ans: 0
+    why: 週資料最低約 7.9%（2019/9/18 當週）。
+rde:
+  title: 準備金需求彈性（RDE）
+  section: 流動性
+  one: 準備金增加相當於銀行總資產 1% 時，聯邦資金利率相對 IORB 會變動幾 bp；越負代表越接近稀缺。
+  origin: 紐約聯儲每月第三個週四更新，檔內是約每 5 個營業日一筆的即時估計；方法來自 Afonso、Giannone、La Spada、Williams。
+  read: 看中位數與 95% 信賴區間：區間含 0＝充裕；整段小於 0＝已在需求曲線的斜坡上；2019 年 9 月約 −1.4。
+  chain:
+  - RDE 轉負
+  - 利率開始對準備金增減敏感
+  - 準備金往稀缺靠近
+  - Fed 需要補準備金。
+  myth: 「RDE 是即時數字」。一個月更新一次，而且是統計估計，要看信賴區間，不能只看中位數。
+  practice: 最新 RDE {rde}，95% 信賴區間 {rde_ci}。
+  source: New York Fed〈Reserve Demand Elasticity〉；Staff Report 1019。
+  quiz:
+    q: RDE 接近 0 代表？
+    opts:
+    - 準備金充裕，利率不在乎準備金增減
+    - 準備金稀缺
+    - Fed 剛升息
+    ans: 0
+    why: ''
+rmp:
+  title: 準備金管理購買（RMP）與 MBS 再投入
+  section: 流動性
+  one: Fed 在次級市場買短天期國庫券，補上被其他負債吃掉的準備金、維持在充足區；不是 QE。
+  origin: Fed 2025 年 12 月停止縮表後開始 RMP。紐約聯儲每月中公布下一期 RMP 與 MBS 到期再投入的計畫金額（Treasury Securities Operational Details），只跟一級交易商交易。
+  read: RMP 金額提高＝Fed 認為準備金需要補；暫停＝暫時夠用。MBS 到期本金一律轉買國庫券；Fed 持有的公債到期不在此列。
+  chain:
+  - RMP 買國庫券
+  - 準備金增加
+  - 回購利率回落。
+  myth: 「RMP 就是 QE」。QE 買長天期債券、壓低長端利率；RMP 只買短天期國庫券、管理準備金水位。
+  practice: 最新一期（{rmp_period}）RMP {rmp} 億美元、MBS 再投入 {rmp_mbs} 億美元。
+  source: New York Fed〈Treasury Securities Operational Details〉、〈Reserve Management Purchases FAQ〉。
+  quiz:
+    q: RMP 主要買什麼？
+    opts:
+    - 長天期公債
+    - 短天期國庫券
+    - 股票
+    ans: 1
+    why: ''
+tgcr:
+  title: TGCR（三方一般擔保利率）
+  section: 流動性
+  one: 三方回購（tri-party）裡、以公債為擔保的隔夜利率，主要反映貨幣基金把現金借給交易商的價格。
+  origin: 紐約聯儲每天公布。它是 SOFR 的一部分——SOFR 還包含 FICC 集中清算的雙邊回購，樣本更大。
+  read: TGCR 通常比 SOFR 低幾 bp；連 TGCR 都高過 IORB，代表現金提供端（貨幣基金）也變緊。
+  chain:
+  - 貨幣基金現金減少
+  - TGCR 上升
+  - 交易商融資變貴。
+  myth: 「TGCR 和 SOFR 一樣」。TGCR 樣本較小、不含集中清算交易，兩者的差反映不同管道的鬆緊。
+  practice: TGCR − IORB 近 5 日平均 {tgcr_iorb}bp。
+  source: New York Fed〈Reference Rates〉。
+  quiz:
+    q: TGCR 和 SOFR 的關係？
+    opts:
+    - TGCR 是 SOFR 的一部分
+    - 兩者無關
+    - SOFR 是 TGCR 的一部分
+    ans: 0
+    why: ''
+repo:
+  title: 回購市場（RP／RRP）
+  section: 流動性
+  one: 以公債為抵押的短期借貸，是美元流動性最核心的管線：交易商、避險基金借錢，貨幣基金與銀行出借現金。
+  origin: 每天成交量以兆美元計（SOFR 成交量遠大於 EFFR）。Fed 的 RP 是把錢借給市場（注入流動性），RRP 是向市場收回資金（抽走流動性）。
+  read: 回購利率上升時，靠回購融資的槓桿部位成本上升；典型是「基差交易」——買現貨公債、放空期貨，用回購借錢支應。
+  chain:
+  - 回購利率上升
+  - 槓桿部位融資變貴
+  - 被迫賣出公債
+  - 公債流動性惡化。
+  myth: 「回購是長期借款」。大部分是隔夜，每天都要重新借，所以資金一緊就馬上反映在價格上。
+  practice: 最新 SOFR 單日成交量 {sofr_vol}，約是 EFFR 的 {sofr_effr_ratio}。
+  source: New York Fed〈Reference Rates〉、〈Repo and Reverse Repo Operations〉。
+  quiz:
+    q: Fed 做 RP（正回購）時，對市場是？
+    opts:
+    - 注入流動性
+    - 抽走流動性
+    - 沒有影響
+    ans: 0
+    why: Fed 收下公債、把資金借給市場。
+bills_net:
+  title: T-Bills 淨發行與私人市場吸收
+  section: 流動性
+  one: T-Bills 發行減掉到期贖回才是新增的供給；再扣掉 Fed 買走的部分，就是貨幣市場要自己拿出來的現金。
+  origin: 淨發行看財政部 MSPD 月底存量變化（當月用每日國庫報表），Fed 購買看紐約聯儲成交紀錄；財政部每季再融資（QRA）公布借款估計。
+  read: 私人市場淨吸收越大，越會把錢從回購與 ON RRP 抽走；4、9 月等稅收月常是淨贖回，私人市場拿回現金。每週數千億美元的毛發行大多只是借新還舊。
+  chain:
+  - T-Bills 淨發行增加
+  - 貨幣基金把錢從回購／ON RRP 移去買 Bills
+  - 回購的現金供給減少。
+  myth: 「每週拍賣規模越大，資金越緊」。毛額大多是借新還舊，要看淨發行。
+  practice: '{bill_net_month} T-Bills 淨發行 {bill_net} 億美元，私人市場淨吸收 {bill_priv} 億美元；本季再融資隱含淨發行約 {qra_bills} 億美元。'
+  source: U.S. Treasury MSPD、DTS、Quarterly Refunding；New York Fed。
+  site_rule: true
+  quiz:
+    q: 毛發行 4,000 億、同期到期 3,800 億、Fed 買 50 億，私人市場要淨吸收？
+    opts:
+    - 4,000 億
+    - 200 億
+    - 150 億
+    ans: 2
+    why: 4,000 − 3,800 − 50＝150 億。
+mmf:
+  title: 貨幣市場基金（MMF）
+  section: 流動性
+  one: 回購市場最大的現金借出方、T-Bills 最大的買家；它的錢往哪走，貨幣市場的流動性就在哪。
+  origin: 分 Treasury、Government、Prime 三類，每月向 SEC 申報 Form N-MFP；SEC 與 OFR 彙整流量、收益率、持有部位與加權平均到期天數（WAM）。
+  read: 看四件事——資金流向（流入代表更多現金找短期出路）、收益率對銀行存款的優勢、WAM（拉長＝押注降息，縮短＝防範升息、資金留在隔夜）、部位配置（ON RRP、回購、T-Bills 之間的移動）。
+  chain:
+  - MMF 縮短期限、留在隔夜
+  - 隔夜回購的現金供給增加
+  - 短端資金穩定。
+  myth: 「MMF 資產創新高代表股市資金充沛」。MMF 的錢主要在貨幣市場打轉，反映的是短端利率吸引力與避險需求。
+  practice: '{mmf_month} MMF 淨流量 {mmf_flow} 億美元；Government MMF 7 日淨收益率 {mmf_yield}%、平均到期 {mmf_wam} 天。'
+  source: SEC〈Money Market Fund Statistics〉；OFR〈U.S. Money Market Fund Monitor〉。
+  quiz:
+    q: Government MMF 的 WAM 快速縮短，通常代表？
+    opts:
+    - 押注降息
+    - 防範升息或不確定性升高
+    - 股市要大漲
+    ans: 1
+    why: 預期降息時才會拉長期限鎖住收益。
+liq_tools:
+  title: 其他流動性管理工具（貼現窗口、FIMA、換匯額度）
+  section: 流動性
+  one: Fed 對不同對象的後援：銀行用貼現窗口，外國央行用 FIMA 回購與央行換匯額度。
+  origin: 貼現窗口是最傳統的最後貸款人工具；FIMA 回購 2021 年常設化，讓外國央行拿持有的美國公債換美元；換匯額度讓外國央行不必持有美元資產也能借到美元。
+  read: 平時幾乎不用；這些工具的用量突然上升，代表銀行或海外的美元缺口浮現，通常伴隨市場壓力。
+  chain:
+  - 美元融資壓力
+  - 動用貼現窗口／FIMA／換匯額度
+  - Fed 把美元送到需要的地方。
+  myth: 「動用就代表有機構要倒」。工具設計就是要讓壓力時有地方借錢，避免被迫拋售資產。
+  practice: ''
+  source: Federal Reserve Board〈Policy Tools〉；New York Fed〈FIMA Repo Facility〉、〈Central Bank Liquidity Swaps〉。
+  quiz:
+    q: 外國央行想用手上的美國公債換美元，可以用？
+    opts:
+    - FIMA 回購
+    - SRF
+    - 貼現窗口
+    ans: 0
+    why: ''
+liq_judge:
+  title: 流動性怎麼判斷（本站的判讀邏輯）
+  section: 流動性
+  one: 看三個核心指標——價格（SOFR − IORB）、後援（SRF 動用量）、緩衝（ON RRP）——再用準備金、MMF、T-Bills 供給輔助判斷。
+  origin: 價格最先反應；後援被動用代表已經不只是變貴；緩衝決定下一次抽水（T-Bills 淨發行、TGA 回補、季底）先吃閒置現金，還是直接扣到準備金。
+  read: 判定四級：SOFR 衝出 SRF 利率＝嚴重轉緊；核心指標警戒或 SRF 連續動用＝轉緊；核心平靜但緩衝見底、準備金偏低＝穩定但緩衝偏薄；全部正常＝充裕穩定。
+  chain:
+  - 價格（SOFR − IORB）
+  - 後援（SRF）
+  - 緩衝（ON RRP）
+  - 綜合判定。
+  myth: 「只看 SOFR 一天的數字」。季底、繳稅日常有一兩天的跳動，要看近 5 日對近 30 日的趨勢。
+  practice: 目前綜合判定：{liq_verdict}（{liq_reason}）。
+  source: 本站整理（門檻依 2019 年 9 月回購危機與 2025 年第四季準備金轉緊校準）。
+  site_rule: true
+  quiz:
+    q: 三個核心指標裡，哪一個代表「緩衝」？
+    opts:
+    - SOFR − IORB
+    - SRF 動用量
+    - ON RRP 交易量
+    ans: 2
+    why: ''
+liq_transmission:
+  title: 流動性緊缺的跨資產傳導
+  section: 流動性
+  one: 準備金不足時，回購利率飆升會迫使槓桿部位去化，從貨幣市場擴散到公債、信用、股市與美元。
+  origin: 2019 年 9 月回購利率一天跳到 5% 以上；2020 年 3 月公債市場流動性崩壞，連最安全的資產都被拋售，Fed 被迫大量介入。
+  read: 先看貨幣市場（SOFR、SRF），再看公債流動性與信用利差、美元融資（換匯基差、換匯額度用量）；Fed 出手前，資產價格往往已先修正一輪。現在 Fed 有更多常設工具，非黑天鵝情境下發生機率較低。
+  chain:
+  - 準備金與緩衝不足
+  - 回購利率飆升
+  - 槓桿部位被迫去化
+  - 公債流動性惡化
+  - 信用、股市、美元同步承壓。
+  myth: 「流動性危機一定伴隨經濟衰退」。2019 年 9 月是純粹的管線問題，基本面並沒有惡化。
+  practice: ''
+  source: 本站整理；New York Fed、Federal Reserve Board 相關研究。
+  quiz:
+    q: 流動性緊縮時，公債殖利率一定下降嗎？
+    opts:
+    - 一定下降（避險買盤）
+    - 不一定，被迫賣出時殖利率可能上升
+    - 一定上升
+    ans: 1
+    why: 2020 年 3 月就是被迫賣出讓公債殖利率上升。

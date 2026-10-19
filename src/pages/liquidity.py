@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 
 from ..site import esc
-from . import teach, focus_evidence, state_chip
+from . import teach, focus_evidence, state_chip, learn_link
 
 
 _LEVEL_COLOR = {"severe": "var(--critical)", "tight": "var(--serious)", "easing": "var(--pos)"}
@@ -412,12 +412,14 @@ def _reserve_adequacy(d: dict) -> str:
       <div class="viz-block"><div class="viz-h">近 15 年（%，週）</div>{d.get("ratio_chart") or ""}</div>
       {ratio_txt}
       <p class="hint">準備金：Fed 理事會 H.4.1；總資產：H.8 全體商業銀行（季調，B1151NCBA）。</p>
+      {learn_link("reserve_ratio")}
     </div></details>
     <details class="f-more"><summary>準備金需求彈性（RDE）</summary><div class="f-detail">
       {_rde_cells(dv)}
       <div class="viz-block"><div class="viz-h">近 15 年（bp／百分點，中位數估計）</div>{d.get("rde_chart") or ""}</div>
       {rde_txt}
       <p class="hint">紐約聯儲 Reserve Demand Elasticity（Afonso、Giannone、La Spada、Williams 方法）。</p>
+      {learn_link("rde")}{learn_link("ample_reserves")}
     </div></details>"""
 
 
@@ -486,7 +488,8 @@ def _mmf_explain(v: dict, bills_out: float | None) -> str:
          "FICC 集中清算回購快速增加，則反映 SEC 公債集中清算新規逐步上路，回購交易往清算所集中。"
          "季底外國銀行為了美化資產負債表縮減回購借款，MMF 的現金會暫時回流 ON RRP。</p>"),
     ]
-    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}</div></details>'
+    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}'
+                   f'{learn_link(_LEARN_BY_TITLE.get(t, "")) if _LEARN_BY_TITLE.get(t) else ""}</div></details>'
                    for t, b in items)
 
 
@@ -579,6 +582,7 @@ def _core_detail(d: dict) -> str:
       <table class="lq-tbl"><thead><tr><th>指標</th><th>角色</th><th>現在</th><th>近期</th></tr></thead><tbody>{trs}</tbody></table>
       <ul class="lq-check">{chk}</ul>
       <p class="lq-concl">結論：<b>{esc(lab or "—")}</b>——{esc(concl)}{(" " + esc(bg)) if bg else ""}</p>
+      {learn_link("liq_judge")}
     </div></details>"""
 
 
@@ -763,10 +767,17 @@ def _liq_transmission() -> str:
       準備金一旦不夠，市場利率會衝出 Fed 的利率走廊，政策利率失去控制力；而且流動性問題通常比經濟數據更早、更快反映在價格上，幾天內就從貨幣市場擴散到所有資產。</p>
     <ol class="lq-flow">{flow}</ol>
     <div class="lq-cards">{cards}</div>
+    {learn_link("liq_transmission")}
     <div class="lq-note"><b>這一頁在情境分析裡的定位：</b>基本面沒有出現黑天鵝衝擊的情況下，流動性危機發生的機率已比 2019、2020 年低——
       Fed 這幾年補上了多項常設工具：SRF 常設化並改為每天上午、下午各辦一場，Fed 官員也公開鼓勵機構把它當成日常資金來源、降低「向 Fed 借錢」的污名；
       外國央行有 FIMA 回購與換匯額度可借美元；停止縮表後再以 RMP 維持準備金在充足區。
       因此本頁用來<b>檢視流動性的現況</b>，正常情境下不納入情境分析的判斷；但當市場出現黑天鵝事件時，可以透過這一頁迅速掌握資金是否開始緊俏、緊俏到什麼程度。</div>"""
+
+
+# 下拉說明 → 偷懶頁對應的名詞卡（完整教學：怎麼來的、常見誤讀、小測驗）
+_LEARN_BY_TITLE = {"準備金（Reserve balances）": "reserves", "財政部一般帳戶（TGA）": "tga",
+                   "逆回購（RRP：國內 ON RRP＋國外）": "onrrp",
+                   "為什麼 MMF 是貨幣市場最重要的參與者": "mmf"}
 
 
 def _liab_defs() -> str:
@@ -805,7 +816,8 @@ def _liab_defs() -> str:
          "所以 Fed 縮了好幾年都沒有引發資金危機。ON RRP 耗盡之後緩衝就沒了，"
          "這也是 Fed 2025 年底停止縮表、改做準備金管理購買（RMP）的原因。</p>"),
     ]
-    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}</div></details>'
+    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}'
+                   f'{learn_link(_LEARN_BY_TITLE.get(t, "")) if _LEARN_BY_TITLE.get(t) else ""}</div></details>'
                    for t, b in items)
 
 
@@ -886,6 +898,7 @@ def liquidity_body(d: dict) -> str:
     {('<div class="src">SRF 動用量本次取得失敗，改用 FRED 後備序列（RPONTSYD）。</div>'
       if not d.get("srf_live") else "")}
     {_corridor_rungs_html()}
+    {learn_link("liq_corridor")}
     <details class="f-more"><summary>SOFR vs EFFR</summary>
       <div class="f-detail">{_vol_compare(d.get("vol_compare") or {})}</div></details>
     <details class="f-more"><summary>RP（正回購）與 RRP（逆回購）</summary>
@@ -896,12 +909,12 @@ def liquidity_body(d: dict) -> str:
           用回購市場借來的錢支應現貨部位、賺取槓桿後的微小價差。這類交易規模已達
           數千億美元，一旦回購市場流動性抽緊（例如 2019 年 9 月的回購利率飆升），
           這些槓桿部位被迫平倉會反過來重創公債市場本身——這是回購市場的管線
-          從「後台技術」變成系統性風險觀察重點的原因。</p></div></details>
+          從「後台技術」變成系統性風險觀察重點的原因。</p>{learn_link("repo")}</div></details>
     <details class="f-more"><summary>TGCR（三方一般擔保利率）</summary>
-      <div class="f-detail">{_tgcr_detail(tc)}</div>
+      <div class="f-detail">{_tgcr_detail(tc)}{learn_link("tgcr")}</div>
     </details>
     <details class="f-more"><summary>其他流動性管理工具</summary>
-      <div class="f-detail">{_other_liquidity_tools()}</div>
+      <div class="f-detail">{_other_liquidity_tools()}{learn_link("liq_tools")}</div>
     </details>
   </div>
 </div>"""
@@ -945,7 +958,7 @@ def liquidity_body(d: dict) -> str:
     <div class="src">淨發行：財政部 MSPD 月底 Bills 存量的月變動（當月：每日國庫報表 DTS 月初至今）。
       Fed：紐約聯儲國庫券購買實際成交額（依交割日歸月）。</div>
     <details class="f-more"><summary>淨發行與私人市場怎麼算</summary>
-      <div class="f-detail">{_bill_net_method(bn.get("rows") or [], qra)}</div>
+      <div class="f-detail">{_bill_net_method(bn.get("rows") or [], qra)}{learn_link("bills_net")}</div>
     </details>
     <details class="f-more"><summary>已公告的 T-Bills 拍賣（毛額）</summary>
       <div class="f-detail">{_upcoming_bills_html(d.get("upcoming_bills") or [])}
@@ -964,7 +977,7 @@ def liquidity_body(d: dict) -> str:
       f'合計 {_yi(rl.get("total"))}。</div>'
       if rl else "")}
     <details class="f-more"><summary>RMP（準備金管理購買）</summary>
-      <div class="f-detail">{_rmp_concept()}</div></details>
+      <div class="f-detail">{_rmp_concept()}{learn_link("rmp")}</div></details>
   </div>
 </div>"""
 

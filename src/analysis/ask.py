@@ -27,10 +27,12 @@ from .. import charts, clock
 log = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parents[2]
-CATS = ("總覽", "指標報價", "聯準會", "就業", "通膨", "長端與債務", "情境", "名詞")
+CATS = ("總覽", "指標報價", "聯準會", "就業", "通膨", "流動性", "長端與債務", "情境", "名詞")
+# 名詞卡也出現在對應的主題分頁（learn.yaml 的 section 跟分頁同名時）
+TERM_TABS = {"流動性"}
 
 PAGE_NAMES = {"/": "總覽", "/labor/": "就業", "/inflation/": "通膨", "/fomc/": "聯準會",
-              "/rates/": "長端與債務", "/scenario/": "情境合成"}
+              "/rates/": "長端與債務", "/scenario/": "情境合成", "/liquidity/": "流動性"}
 ANCHOR_NAMES = {
     "focus": "今日市場焦點", "election": "期中選舉", "hm-cat-data": "接下來看什麼・數據",
     "hm-cat-spk": "接下來看什麼・官員談話", "hm-cat-sup": "接下來看什麼・發債", "hm-cat-hol": "接下來看什麼・休市",
@@ -46,7 +48,10 @@ ANCHOR_NAMES = {
 }
 # fomc 頁的 #trend 是「歷次決議」，跟通膨頁同名錨點不同義
 _ANCHOR_BY_PAGE = {("/fomc/", "trend"): "歷次決議", ("/fomc/", "focus"): "目前重心與轉向條件",
-                   ("/scenario/", "market"): "市場定價：期貨路徑與點陣圖"}
+                   ("/scenario/", "market"): "市場定價：期貨路徑與點陣圖",
+                   ("/liquidity/", "corridor"): "Fed 利率走廊", ("/liquidity/", "liabilities"): "Fed 負債端結構",
+                   ("/liquidity/", "supply_demand"): "市場供需", ("/liquidity/", "mmf"): "MMF 動向",
+                   ("/liquidity/", "lights"): "關鍵指標檢核與綜合判定"}
 
 # 圖表期間（依資料頻率）：日 1 年、週 6 個月、月 2 年、季 3 年；「長期」一律 5 年
 WINDOW_MONTHS = {"d": 12, "w": 6, "m": 24, "q": 36}
@@ -1360,6 +1365,134 @@ def _refunding(card, S, C):
     return Out(ans=ans, date=rf["date"], note=("原文：" + rf.get("guidance_en")) if rf.get("guidance_en") else "")
 
 
+# ---------------------------------------------------------------------------
+# 流動性（2026-10）：資料全部取自流動性頁的 context，跟頁面同一份數字
+# ---------------------------------------------------------------------------
+def _liq(C):
+    return C.get("liquidity") or {}
+
+
+@fn("liq_now")
+def _liq_now(card, S, C):
+    Q = _liq(C)
+    lv, ls = Q.get("liq_verdict") or {}, Q.get("liq_lights") or []
+    if not lv.get("label") or not ls:
+        return None
+    rows = [[l.label, l.display, {"good": "正常", "warning": "留意", "critical": "警戒"}.get(l.status, "無資料")]
+            for l in ls]
+    ans = (f"綜合判定：{_b(lv['label'])}（{esc(lv.get('reason', ''))}）。"
+           f"{esc(Q.get('headline') or '')}。核心三指標看價格（SOFR − IORB）、後援（SRF）、緩衝（ON RRP）。")
+    return Out(ans=ans, date=Q.get("as_of", ""), table=(["指標", "最新", "燈號"], rows),
+               note="門檻是本站依 2019 年 9 月回購危機與 2025 年第四季準備金轉緊校準的規則。")
+
+
+@fn("reserves_now")
+def _reserves_now(card, S, C):
+    Q = _liq(C)
+    items = {it["key"]: it for it in (Q.get("liab") or {}).get("items") or []}
+    rs, rv, dv = items.get("reserves"), Q.get("ratio_view") or {}, Q.get("rde_view") or {}
+    if not rs:
+        return None
+    rows = []
+    for tag, nm in (("m1", "1 個月前"), ("m6", "半年前")):
+        if rs.get(tag):
+            rows.append([nm, f'{rs[tag]["value"] / 1000:.2f} 兆', f'{rs[tag]["chg"] * 10:+,.0f} 億'])
+    lvl = f"{rs['value'] / 1000:.2f} 兆美元"
+    ans = f"銀行準備金 {_b(lvl)}（{esc(rs['date'][5:].replace('-', '/'))}）。"
+    if rv.get("value") is not None:
+        pct = f"{rv['value']:.2f}%"
+        ans += (f"占銀行總資產 {_b(pct)}——"
+                + ("高於 13%，寬鬆。" if rv["value"] >= 13 else
+                   "低於 13%、但仍高於 2019 年危機時的 10%。" if rv["value"] >= 10 else "已跌破 2019 年危機時的 10%。"))
+    if dv.get("value") is not None:
+        ans += (f"RDE {_b(fnum(dv['value'], 2, sign=True))}，95% 信賴區間"
+                + ("含 0（還在需求曲線平坦段）。" if dv.get("zero_in_ci") else "整段 < 0（已在需求曲線斜坡上）。"))
+    return Out(ans=ans, date=rs["date"], table=(["比較", "水位", "變化"], rows) if rows else None)
+
+
+@fn("tga_now")
+def _tga_now(card, S, C):
+    Q = _liq(C)
+    tg = next((it for it in (Q.get("liab") or {}).get("items") or [] if it["key"] == "tga"), None)
+    if not tg:
+        return None
+    qra = Q.get("qra") or {}
+    bal = f"{tg['value'] * 10:,.0f} 億美元"
+    ans = f"TGA {_b(bal)}（{esc(tg['date'][5:].replace('-', '/'))}）。"
+    if qra.get("cash_end") is not None:
+        diff = (qra["cash_end"] - tg["value"]) * 10
+        tgt = f"{qra['cash_end'] * 10:,.0f} 億"
+        ans += (f"財政部本季季底目標 {_b(tgt)}，"
+                + (f"還要回補約 {diff:,.0f} 億——會從市場抽走等量的準備金。" if diff > 0
+                   else f"預計降低約 {-diff:,.0f} 億——把準備金還給市場。"))
+    rows = [[nm, f'{tg[t]["value"] * 10:,.0f} 億', f'{tg[t]["chg"] * 10:+,.0f} 億']
+            for t, nm in (("m1", "1 個月前"), ("m6", "半年前")) if tg.get(t)]
+    return Out(ans=ans, date=tg["date"], table=(["比較", "餘額", "變化"], rows) if rows else None)
+
+
+@fn("rmp_now")
+def _rmp_now(card, S, C):
+    Q = _liq(C)
+    rl, since = Q.get("rmp_last") or {}, Q.get("rmp_paused_since") or ""
+    if not rl:
+        return None
+    md = lambda s: f"{int(s[5:7])}/{int(s[8:10])}"
+    per = f'{md(rl["start"])}–{md(rl["end"])}'
+    rmp_s, mbs_s = f"{rl['rmp'] * 10:,.0f} 億美元", f"{rl['mbs'] * 10:,.0f} 億美元"
+    ans = (f"最新一期（{esc(per)}）RMP {_b(rmp_s)}，"
+           f"MBS 到期再投入 {_b(mbs_s)}。"
+           + (f"自 {int(since[5:7])}/{int(since[8:10])} 那一期起 RMP 暫停。" if since else ""))
+    flows = (Q.get("reinvest") or {}).get("flows") or []
+    rows = [[f["period"], f'{f["rmp"] * 10:,.0f} 億', f'{f["mbs"] * 10:,.0f} 億'] for f in flows[-6:][::-1]]
+    return Out(ans=ans, date=rl["start"], table=(["期別", "RMP", "MBS 再投入"], rows) if rows else None,
+               note="紐約聯儲公布的計畫金額。")
+
+
+@fn("bills_now")
+def _bills_now(card, S, C):
+    Q = _liq(C)
+    bn, qra = Q.get("bill_net") or {}, Q.get("qra") or {}
+    rows = bn.get("rows") or []
+    if not rows:
+        return None
+    last, mtd = bn.get("last") or {}, bn.get("mtd") or {}
+    ans = ""
+    if last:
+        net_s, priv_s = f"{last['net'] * 10:+,.0f} 億美元", f"{last['private'] * 10:+,.0f} 億"
+        ans += (f"{esc(last['period'])} T-Bills 淨發行 {_b(net_s)}，"
+                f"扣掉 Fed 買走的，私人市場淨吸收 {_b(priv_s)}。")
+    if mtd:
+        ans += f"{esc(mtd['period'])} 淨發行 {mtd['net'] * 10:+,.0f} 億、私人 {mtd['private'] * 10:+,.0f} 億。"
+    if qra.get("bills") is not None:
+        ans += f"本季再融資隱含淨發行約 {qra['bills'] * 10:+,.0f} 億（未計買回）。"
+    tb = [[r["period"], f'{r["net"] * 10:+,.0f}', f'{r["private"] * 10:+,.0f}'] for r in rows[-6:][::-1]]
+    return Out(ans=ans, date=(mtd or last).get("end", ""), table=(["月份", "淨發行（億）", "私人市場（億）"], tb))
+
+
+@fn("mmf_now")
+def _mmf_now(card, S, C):
+    Q = _liq(C)
+    mv = Q.get("mmf") or {}
+    ml, wl = mv.get("latest") or {}, mv.get("wam_last") or {}
+    if not ml:
+        return None
+    f, y, a = ml["flows"], ml["yields"], ml["assets"]
+    tot_s, flow_s = f"{(a.get('total') or 0) / 1000:.2f} 兆美元", f"{(f.get('total') or 0) * 10:+,.0f} 億"
+    ans = (f"{esc(ml['month'].replace('-', '/'))} MMF 總資產 {_b(tot_s)}，"
+           f"當月淨流量 {_b(flow_s)}；"
+           f"Government MMF 7 日淨收益率 {fnum(y.get('gov'), 2)}%"
+           + (f"，比銀行儲蓄存款多 {fnum(ml.get('spread'), 2)} 個百分點" if ml.get("spread") is not None else "") + "。")
+    if wl.get("gov") is not None and wl.get("gov_3m") is not None:
+        d = wl["gov"] - wl["gov_3m"]
+        ans += (f"平均持有期限 {fnum(wl['gov'], 1)} 天（3 個月 {d:+.1f} 天）——"
+                + ("縮短，資金留在隔夜與短天期。" if d <= -2 else "拉長，押注降息、鎖住收益。" if d >= 2 else "大致不變。"))
+    rows = [["Government", f'{(f.get("gov") or 0) * 10:+,.0f}', fnum(y.get("gov"), 2)],
+            ["Treasury", f'{(f.get("treasury") or 0) * 10:+,.0f}', fnum(y.get("treasury"), 2)],
+            ["Prime", f'{(f.get("prime") or 0) * 10:+,.0f}', fnum(y.get("prime"), 2)]]
+    return Out(ans=ans, date=ml["month"], table=(["類型", "淨流量（億）", "7 日淨收益率 %"], rows),
+               note="SEC Money Market Fund Statistics（月資料，約晚 6 週）。")
+
+
 @fn("buyback")
 def _buyback(card, S, C):
     bb = (C.get("_watch_extra") or {}).get("buybacks") or []
@@ -1957,7 +2090,67 @@ def practice_vals(C: dict, S: dict) -> dict:
         rest = [r for r in rows_w if r is not hi[0]]
         put("event1", hi[0]["name"]), put("time1", _tpe(hi[0]))
         put("event2", rest[0]["name"]), put("time2", _tpe(rest[0]))
+    _liq_vals(C.get("liquidity") or {}, put)
     return v
+
+
+def _liq_vals(Q: dict, put) -> None:
+    """流動性頁 context → 名詞卡「用今天的數字練習」的欄位。"""
+    items = {it["key"]: it for it in (Q.get("liab") or {}).get("items") or []}
+    rs = items.get("reserves")
+    if rs:
+        put("reserves", fnum(rs["value"] / 1000, 2))
+        if rs.get("m1"):
+            put("reserves_m1", fnum(rs["m1"]["chg"] * 10, 0, sign=True))
+    tg = items.get("tga")
+    if tg:
+        put("tga", fnum(tg["value"] * 10, 0))
+    qra = Q.get("qra") or {}
+    if qra.get("cash_end") is not None:
+        put("tga_target", fnum(qra["cash_end"] * 10, 0))
+    if qra.get("bills") is not None:
+        put("qra_bills", fnum(qra["bills"] * 10, 0, sign=True))
+    rv = Q.get("ratio_view") or {}
+    if rv.get("value") is not None:
+        put("reserve_ratio", fnum(rv["value"], 2))
+        put("reserve_ratio_date", (rv.get("date") or "")[5:].replace("-", "/"))
+        if rv.get("m6"):
+            put("reserve_ratio_6m", fnum(rv["m6"]["value"], 2))
+    dv = Q.get("rde_view") or {}
+    if dv.get("value") is not None:
+        put("rde", fnum(dv["value"], 2, sign=True))
+        put("rde_ci", f'{fnum(dv["lo95"], 2, sign=True)} ～ {fnum(dv["hi95"], 2, sign=True)}')
+        b = " ".join(dv.get("bullets") or []).lower()
+        put("rde_view", "充裕" if "abundant" in b else "充足" if "ample" in b else "稀缺" if "scarce" in b else None)
+    rl = Q.get("rmp_last") or {}
+    if rl:
+        put("rmp_period", f'{rl.get("start", "")[5:].replace("-", "/")}–{rl.get("end", "")[5:].replace("-", "/")}')
+        put("rmp", fnum(rl.get("rmp", 0) * 10, 0))
+        put("rmp_mbs", fnum(rl.get("mbs", 0) * 10, 0))
+    bl = (Q.get("bill_net") or {}).get("last") or {}
+    if bl:
+        put("bill_net_month", bl.get("period"))
+        put("bill_net", fnum(bl["net"] * 10, 0, sign=True))
+        put("bill_priv", fnum(bl["private"] * 10, 0, sign=True))
+    ml = (Q.get("mmf") or {}).get("latest") or {}
+    if ml:
+        put("mmf_month", ml["month"].replace("-", "/"))
+        put("mmf_flow", fnum((ml["flows"].get("total") or 0) * 10, 0, sign=True))
+        put("mmf_yield", fnum(ml["yields"].get("gov"), 2))
+    wl = (Q.get("mmf") or {}).get("wam_last") or {}
+    if wl.get("gov") is not None:
+        put("mmf_wam", fnum(wl["gov"], 1))
+    L = {l.key: l for l in Q.get("liq_lights") or []}
+    if L.get("tgcr") and L["tgcr"].value is not None:
+        put("tgcr_iorb", fnum(L["tgcr"].value, 1, sign=True))
+    vc = Q.get("vol_compare") or {}
+    if vc.get("sofr_zh"):
+        put("sofr_vol", vc["sofr_zh"])
+        if vc.get("ratio"):
+            put("sofr_effr_ratio", f'{vc["ratio"]:.0f} 倍')
+    lv = Q.get("liq_verdict") or {}
+    if lv.get("label"):
+        put("liq_verdict", lv["label"]), put("liq_reason", lv.get("reason") or "")
 
 
 class _Strict(string.Formatter):
@@ -2082,10 +2275,11 @@ def index_cards(cfg: dict, L: dict) -> list[dict]:
         if key not in L:
             continue
         dc = [c for c in cfg.get("cards") or [] if c.get("l") == key]
+        sec = L[key].get("section", "")
         out.append({"i": f"t_{key}", "q": f"什麼是{term.get('t') or L[key]['title']}？", "c": "名詞",
                     "k": term.get("k") or [], "w": [], "m": [], "n": ["定義"],
                     "x": [f"{k}是什麼" for k in (term.get("k") or [])[:2]], "r": [c["id"] for c in dc[:3]],
-                    "l": key, "t": 1})
+                    "l": key, "t": 1, **({"c2": sec} if sec in TERM_TABS else {})})
     return out
 
 

@@ -215,7 +215,7 @@ var flt = $("#ask-flt"), lst = $("#ask-lst"), curCat = "全部";
 function drawCat(cat){
   curCat = cat;
   flt.innerHTML = CATS.map(function(c){ return '<button type="button" class="' + (c === cat ? "on" : "") + '" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join("");
-  var items = IX.cards.filter(function(c){ return cat === "全部" ? !c.t : c.c === cat; });
+  var items = IX.cards.filter(function(c){ return cat === "全部" ? !c.t : (c.c === cat || c.c2 === cat); });
   lst.innerHTML = listBox(items, [], cat === "全部"); wireList(lst);
 }
 flt.addEventListener("click", function(e){ var b = e.target.closest("button"); if(!b) return; drawCat(b.getAttribute("data-c"));
