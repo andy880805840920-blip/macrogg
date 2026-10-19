@@ -441,10 +441,13 @@ def _dlabel5(i: int, date: str, daily: bool = False) -> str:
 
 
 def _nice_step(span: float, target: int = 3) -> float:
-    for s in (0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10, 20, 25, 50, 100):
+    # 2026-10：加上 200 以上的級距。原本超過就固定回 200，億美元口徑的圖
+    # （數值上萬）會畫出幾十條刻度線擠成一團。
+    for s in (0.05, 0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10, 20, 25, 50, 100, 200, 250, 500,
+              1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000):
         if span / s <= target:
             return s
-    return 200.0
+    return 100000.0
 
 
 def last_months(rows: Sequence[dict], months: int = 24) -> list[dict]:

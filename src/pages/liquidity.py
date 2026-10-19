@@ -408,6 +408,78 @@ def _reserve_adequacy(d: dict) -> str:
     </div></details>"""
 
 
+def _mmf_cells(v: dict, bills_out: float | None) -> str:
+    L = (v or {}).get("latest")
+    if not L:
+        return '<div class="empty">SEC MMF 統計本次取得失敗</div>'
+    a, f, y = L["assets"], L["flows"], L["yields"]
+    mo = L["month"].replace("-", "/")
+    sm = lambda t: _small(t)
+    gov_all = (a.get("gov") or 0) + (a.get("treasury") or 0)
+    c1 = state_chip("MMF 總資產", f'{(a.get("total") or 0) / 1000:,.2f} 兆美元',
+                    esc(f'Government {(a.get("gov") or 0) / 1000:.2f} 兆｜Treasury {(a.get("treasury") or 0) / 1000:.2f} 兆')
+                    + "<br>" + esc(f'Prime {(a.get("prime") or 0) * 10:,.0f} 億｜政府型占 {gov_all / (a.get("total") or 1) * 100:.0f}%')
+                    + "<br>" + sm(f"資料 {mo}（SEC，月）"), "neutral")
+    c2 = state_chip(f"{int(L['month'][5:])} 月淨流量", f'{(f.get("total") or 0) * 10:+,.0f} 億美元',
+                    esc(f'Government {(f.get("gov") or 0) * 10:+,.0f}｜Treasury {(f.get("treasury") or 0) * 10:+,.0f}')
+                    + "<br>" + esc(f'Prime {(f.get("prime") or 0) * 10:+,.0f}｜Tax Exempt {(f.get("taxex") or 0) * 10:+,.0f}')
+                    + "<br>" + sm(f"資料 {mo}（申購 − 贖回）"), "neutral")
+    c3 = state_chip("7 日淨收益率（Government）", f'{y.get("gov", 0):.2f}%',
+                    esc(f'Treasury {y.get("treasury", 0):.2f}%｜Prime {y.get("prime", 0):.2f}%')
+                    + "<br>" + sm(f"資料 {mo}（資產加權，扣費後）"), "neutral")
+    sp = L.get("spread")
+    c4 = state_chip("比銀行存款多賺", f'{sp:+.2f} 個百分點' if sp is not None else "—",
+                    esc(f'FDIC 全國儲蓄存款利率 {L["fdic"]:.2f}%' if L.get("fdic") is not None else "FDIC 資料缺")
+                    + "<br>" + sm(f"資料 {mo}（Government MMF − 儲蓄存款）"), "neutral")
+    return f'<div class="focus-grid liab-grid">{c1}{c2}{c3}{c4}</div>'
+
+
+def _mmf_explain(v: dict, bills_out: float | None) -> str:
+    h = (v or {}).get("hold_last") or {}
+    hold_txt = ""
+    if h:
+        hold_txt = (f'以 {h["month"].replace("-", "/")} 為例，MMF 持有美國公債 {h["treasury"] / 1000:.2f} 兆美元'
+                    + (f'（同期流通在外 T-Bills {bills_out / 1000:.2f} 兆）' if bills_out else "")
+                    + f'，借出回購 {h["repo"] / 1000:.2f} 兆美元，其中放在 Fed ON RRP 的只剩 {h["rp_fed"] * 10:,.0f} 億。')
+    items = [
+        ("為什麼 MMF 是貨幣市場最重要的參與者",
+         f"<p>MMF 把企業、個人與機構的閒置現金集中起來，只能投資期限很短、信用很高的資產：T-Bills、隔夜與短期回購、"
+         f"銀行 CD 與商業本票，以及 Fed 的 ON RRP。這讓它同時是<b>T-Bills 最大的買家</b>和<b>回購市場最大的現金借出方</b>。"
+         f"{esc(hold_txt)}</p>"
+         f"<p>所以 MMF 的錢往哪裡走，就決定了貨幣市場哪裡有錢：MMF 把錢從 ON RRP 移去買 T-Bills 或借給交易商，"
+         f"等於把「閒置在 Fed 的錢」送回市場；反過來，MMF 被贖回或集體縮手，交易商在回購市場就借不到錢，"
+         f"SOFR 會被推高，甚至要轉向 Fed 的 SRF。</p>"),
+        ("三種 MMF：Treasury、Government、Prime",
+         "<dl class=\"gloss\"><dt>Treasury MMF</dt><dd>幾乎只投資美國公債與以公債為擔保的回購，最保守，T-Bills 供給變化對它的影響最直接。</dd>"
+         "<dt>Government MMF</dt><dd>至少 99.5% 投資政府證券（公債、機構債）、現金與以這些為擔保的回購，是目前規模最大的一類，"
+         "也是 ON RRP 與 FICC 集中清算回購的主要參與者。（SEC 統計裡的 Government 不含 Treasury，兩者分開列。）</dd>"
+         "<dt>Prime MMF</dt><dd>可以買銀行 CD、商業本票等民間短期債務，收益率較高但有信用風險；"
+         "機構型 Prime 在壓力時期會被大量贖回（2008 年、2020 年 3 月），是銀行短期美元融資的重要來源。</dd></dl>"),
+        ("怎麼從這些數據判斷",
+         "<p><b>資金流向：</b>持續淨流入代表市場上有更多現金要找短期出路，回購與 T-Bills 需求穩健；"
+         "4、6、9、12 月的報稅日前後常見淨流出（企業提款繳稅），這時 MMF 的回購放款縮手，SOFR 容易季節性走高。</p>"
+         "<p><b>收益率 vs 銀行存款：</b>MMF 收益率幾乎跟著政策利率即時變動，銀行存款利率調得又慢又少。"
+         "升息循環裡兩者差距拉大，錢從銀行流向 MMF；降息時 MMF 收益率先降、差距收窄，流入就會放緩——"
+         "差距收窄到接近 0 時，MMF 的資金來源就可能轉為流出。</p>"
+         "<p><b>政策預期：</b>市場預期降息時，MMF 會拉長持有期限（買較長的 T-Bills、定期回購）鎖住收益，"
+         "隔夜回購的現金供給變少；預期升息或不確定時則縮短期限，偏好隔夜回購與 ON RRP。</p>"
+         "<p><b>風險偏好：</b>Prime 資產與流量的變化反映投資人對信用風險的胃口；壓力時期錢會從 Prime 逃向 Government／Treasury，"
+         "銀行的 CD 與商業本票融資跟著收緊。</p>"
+         "<p><b>部位配置：</b>看回購的交易對手——ON RRP 幾乎歸零代表緩衝已用完，MMF 的每一塊錢都已經在市場上；"
+         "FICC 集中清算回購快速增加，則反映 SEC 公債集中清算新規逐步上路，回購交易往清算所集中。"
+         "季底外國銀行為了美化資產負債表縮減回購借款，MMF 的現金會暫時回流 ON RRP。</p>"),
+        ("資料來源與限制",
+         "<p>你附圖的三個來源：ICI 每週 MMF 資產可以免費瀏覽，但網站會擋程式自動下載，無法穩定每天更新；"
+         "Crane Data 是付費資料。所以這裡改用兩個同樣來自 MMF 向 SEC 申報的 Form N-MFP、而且免費開放下載的官方來源："
+         "<b>SEC Money Market Fund Statistics</b>（淨資產、淨流量、7 日收益率，分 Government／Treasury／Prime／Tax Exempt，"
+         "約晚 6 週）與 <b>OFR 美國 MMF Monitor</b>（持有部位與回購交易對手，約晚 2 週）。"
+         "缺點是只有月資料；附圖 1 的週資料與附圖 3 的 T-Bills／coupon／FRN 細分，這兩個來源沒有。"
+         "銀行存款利率用 FDIC 全國儲蓄存款利率（2021 年 4 月起 FDIC 改了算法，前後兩段在那裡接起來）。</p>"),
+    ]
+    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}</div></details>'
+                   for t, b in items)
+
+
 def _liab_defs() -> str:
     items = [
         ("流通在外貨幣（Currency in circulation）",
@@ -607,7 +679,29 @@ def liquidity_body(d: dict) -> str:
   </div>
 </div>"""
 
-    main = hero + corridor_section + liabilities_section + supply_section
+    mv = d.get("mmf") or {}
+    _ml = mv.get("latest") or {}
+    _bills_out = ((d.get("bill_net") or {}).get("last") or {}).get("bills")
+    _mmf_sum = (f'{int(_ml["month"][5:])} 月淨流量 {(_ml["flows"].get("total") or 0) * 10:+,.0f} 億'
+                f'　·　Government 收益率 {_ml["yields"].get("gov", 0):.2f}%' if _ml else "MMF 資金流向與部位")
+    mmf_section = f"""<div class="grid">
+  <div class="card">
+    <h2 id="mmf" data-sum="{esc(_mmf_sum)}">MMF 動向</h2>
+    <p class="hint">貨幣市場基金（MMF）是回購市場最大的現金借出方、T-Bills 最大的買家——它的錢往哪走，貨幣市場的流動性就在哪裡。</p>
+    {_mmf_cells(mv, _bills_out)}
+    <div class="viz-block"><div class="viz-h">年初至今累計淨流量（億美元）</div>{d.get("mmf_ytd_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">各類型每月淨流量（億美元）</div>{d.get("mmf_flow_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">7 日淨收益率 vs 銀行儲蓄存款（%）</div>{d.get("mmf_yield_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">MMF 比銀行存款多賺多少（百分點）</div>{d.get("mmf_spread_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">持有部位月變動（億美元）</div>{d.get("mmf_hold_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">公債與回購部位：交易對手（億美元，近 5 年）</div>{d.get("mmf_repo_chart") or ""}</div>
+    <div class="src">流量、淨資產、收益率：SEC Money Market Fund Statistics（{esc(mv.get("report", ""))} 版）；
+      持有部位：OFR MMF Monitor；存款利率：FDIC。</div>
+    {_mmf_explain(mv, _bills_out)}
+  </div>
+</div>"""
+
+    main = hero + corridor_section + liabilities_section + supply_section + mmf_section
     return main
 
 
@@ -628,7 +722,10 @@ def liquidity_footer(d: dict) -> str:
          ("Fed 負債端：流通在外貨幣、準備金、TGA、逆回購（國內／國外）",
           "Fed 理事會 H.4.1 Data Download Program（週三水位）；FRED 轉載後備", "每週四"),
          ("商業銀行總資產（準備金占比的分母）", "Fed 理事會 H.8 全體商業銀行（季調，週）；FRED 後備", "每週五"),
-         ("準備金需求彈性（RDE）", "紐約聯儲 Reserve Demand Elasticity", "每月第三個週四")],
+         ("準備金需求彈性（RDE）", "紐約聯儲 Reserve Demand Elasticity", "每月第三個週四"),
+         ("MMF 淨資產、淨流量、7 日淨收益率", "SEC Money Market Fund Statistics（Form N-MFP）", "每月（約晚 6 週）"),
+         ("MMF 持有部位與回購交易對手", "OFR U.S. Money Market Fund Monitor（Form N-MFP）", "每月（約晚 2 週）"),
+         ("銀行儲蓄存款利率", "FDIC 全國儲蓄存款利率（經 FRED：SNDR；2021 年前 SAVNRNJ）", "每月")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
          "RMP、MBS 到期再投入兩個計畫金額直接來自紐約聯儲官方逐期公布的拆分。再投入只適用 MBS"

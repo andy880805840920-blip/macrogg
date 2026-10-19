@@ -316,7 +316,7 @@ def bill_net_monthly(mspd: list, dts: dict | None, fed_bills: list, schedule: li
     sched = [r for r in (schedule or []) if r["start"] >= RMP_PROGRAM_START]
     rows = []
     for a, b in zip(mspd, mspd[1:]):
-        rows.append({"month": b["date"][:7], "net": b["bills"] - a["bills"],
+        rows.append({"month": b["date"][:7], "net": b["bills"] - a["bills"], "bills": b["bills"],
                      "share": b["bills"] / b["marketable"] * 100 if b.get("marketable") else None,
                      "end": b["date"], "partial": False})
     if dts and dts.get("date", "")[:7] > rows[-1]["month"]:
@@ -456,3 +456,97 @@ def rde_view(rde: dict) -> dict:
     v["update"] = rde.get("update", "")
     v["bullets"] = rde.get("bullets") or []
     return v
+
+
+# ---------------------------------------------------------------------------
+# MMF 動向（SEC Money Market Fund Statistics＋OFR MMF Monitor＋FDIC）
+# ---------------------------------------------------------------------------
+def _prev_month(m: str) -> str:
+    y, mo = int(m[:4]), int(m[5:7]) - 1
+    return f"{y - 1}-12" if mo == 0 else f"{y}-{mo:02d}"
+
+
+def fdic_savings(sndr_rows: list, legacy: dict) -> dict:
+    """{'YYYY-MM': %}：2021-04 以前用停發的舊序列（固定存檔），之後用 SNDR。"""
+    out = {m: v for m, v in ((legacy or {}).get("data") or {}).items() if m < "2021-04"}
+    for r in sndr_rows or []:
+        if r["date"][:7] >= "2021-04":
+            out[r["date"][:7]] = r["value"]
+    return dict(sorted(out.items()))
+
+
+def mmf_view(sec: dict, ofr: dict, fdic: dict, today: str) -> dict:
+    """
+    MMF 區塊的全部數字（十億美元／%）：
+      latest   SEC 最新月：各類型淨資產、當月淨流量、7 日淨收益率；FDIC 儲蓄利率與利差
+      ytd      近三年逐月累計淨流量 {year: [(月, 累計)]}
+      flows    近 24 個月各類型淨流量（Government 已扣掉 Treasury，兩者分開）
+      yields   2010-12 起逐月：gov、treasury、prime、fdic、spread（gov − fdic）
+      hold     OFR 近 18 個月持有部位月變動（回購拆 Fed／FICC／其他交易對手）
+      hold_last OFR 最新月水位；repo_lines 近 5 年回購交易對手水位
+    """
+    sec = sec or {}
+    assets, flows, yields = sec.get("assets") or {}, sec.get("flows") or {}, sec.get("yields") or {}
+    out: dict = {"report": sec.get("report", ""), "url": sec.get("url", "")}
+    months = sorted(m for m in flows if flows[m].get("total") is not None)
+    if months:
+        m = months[-1]
+        a, f, y = assets.get(m) or {}, flows.get(m) or {}, yields.get(m) or {}
+        out["latest"] = {
+            "month": m, "assets": a, "flows": f, "yields": y,
+            "fdic": fdic.get(m), "fdic_month": max((k for k in fdic if k <= m), default=""),
+        }
+        if y.get("gov") is not None and out["latest"]["fdic"] is not None:
+            out["latest"]["spread"] = y["gov"] - out["latest"]["fdic"]
+        prev = assets.get(_prev_month(m)) or {}
+        out["latest"]["assets_prev"] = prev
+    # 年初至今累計：今年與前兩年
+    yr = int((months or [today])[-1][:4])
+    ytd = {}
+    for year in (yr - 2, yr - 1, yr):
+        acc, pts = 0.0, []
+        for mo in range(1, 13):
+            k = f"{year}-{mo:02d}"
+            if k not in flows or flows[k].get("total") is None:
+                break
+            acc += flows[k]["total"]
+            pts.append((f"{mo}月", acc))
+        if pts:
+            ytd[year] = pts
+    out["ytd"] = ytd
+    rows = []
+    for k in months[-24:]:
+        f = flows[k]
+        gov_only = (f.get("gov") or 0)
+        rows.append({"date": k + "-01", "gov": gov_only, "treasury": f.get("treasury") or 0,
+                     "prime": f.get("prime") or 0, "taxex": f.get("taxex") or 0, "net": f["total"],
+                     "period": k.replace("-", "/")})
+    out["flows"] = rows
+    ys = []
+    for k in sorted(yields):
+        v = yields[k]
+        fd = fdic.get(k)
+        ys.append({"date": k + "-01", "gov": v.get("gov"), "treasury": v.get("treasury"),
+                   "prime": v.get("prime"), "fdic": fd,
+                   "spread": (v["gov"] - fd) if v.get("gov") is not None and fd is not None else None})
+    out["yields"] = ys
+    om = sorted(ofr or {})
+    hold = []
+    for k in om[-19:]:
+        p = (ofr or {}).get(_prev_month(k))
+        if not p:
+            continue
+        c = ofr[k]
+        priv = lambda d: d["rp_us"] + d["rp_foreign"] + d["rp_other"]
+        hold.append({"date": k + "-01", "period": k.replace("-", "/"),
+                     "treasury": c["treasury"] - p["treasury"], "agency": c["agency"] - p["agency"],
+                     "rp_fed": c["rp_fed"] - p["rp_fed"], "rp_ficc": c["rp_ficc"] - p["rp_ficc"],
+                     "rp_priv": priv(c) - priv(p), "bank": c["bank"] - p["bank"],
+                     "other": c["other"] - p["other"], "net": c["total"] - p["total"]})
+    out["hold"] = hold
+    if om:
+        out["hold_last"] = {"month": om[-1], **ofr[om[-1]]}
+    out["repo_lines"] = [{"date": k + "-01", "fed": ofr[k]["rp_fed"], "ficc": ofr[k]["rp_ficc"],
+                          "priv": ofr[k]["rp_us"] + ofr[k]["rp_foreign"] + ofr[k]["rp_other"],
+                          "treasury": ofr[k]["treasury"]} for k in om]
+    return out

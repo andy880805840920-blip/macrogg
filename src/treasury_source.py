@@ -435,6 +435,149 @@ def rde() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 貨幣市場基金（MMF）
+# ---------------------------------------------------------------------------
+# 三個免費官方來源（ICI 週資料可免費瀏覽，但網站擋自動下載；Crane Data 是付費的）：
+#   SEC Money Market Fund Statistics  依 Form N-MFP 彙整，月資料、約晚 6 週：
+#       各類型淨資產、淨流量、7 日淨收益率（Government／Treasury／Prime／Tax Exempt）
+#   OFR U.S. Money Market Fund Monitor（API）  同樣來自 N-MFP、約晚 2 週：
+#       持有部位（公債、機構債、回購、銀行相關、其他），回購再拆交易對手（Fed、FICC…）
+#   FDIC 全國儲蓄存款利率：2021-04 起的 SNDR 走 FRED 主流程（config/liquidity.yaml），
+#       之前停發的 SAVNRNJ 固定存在 config/fdic_savings_legacy.json
+SEC_MMF_PAGE = "https://www.sec.gov/data-research/investment-management-data/money-market-fund-statistics"
+OFR_API = "https://data.financialresearch.gov/v1/series/timeseries?mnemonic={m}"
+OFR_MMF = {"treasury": "MMF-MMF_T_TOT-M", "agency": "MMF-MMF_AG_TOT-M", "repo": "MMF-MMF_RP_TOT-M",
+           "bank": "MMF-MMF_BRA_TOT-M", "other": "MMF-MMF_OA_TOT-M", "total": "MMF-MMF_TOT-M",
+           "rp_fed": "MMF-MMF_RP_wFR-M", "rp_ficc": "MMF-MMF_RP_wFICC-M",
+           "rp_us": "MMF-MMF_RP_wDFI-M", "rp_foreign": "MMF-MMF_RP_wFFI-M", "rp_other": "MMF-MMF_RP_wOCP-M"}
+
+
+def _xlsx_sheets(blob: bytes, want: set) -> dict:
+    """
+    只用標準函式庫讀 .xlsx 指定工作表 → {name: [[儲存格值…], …]}。
+    SEC 的檔案一個月一份、約 1MB，為這一個用途加一個套件依賴不划算。
+    數字回 float、文字回 str；日期是 Excel 序號（1900 系統），由呼叫端轉。
+    """
+    import io
+    import zipfile
+    from xml.etree import ElementTree as ET
+    ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+          "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships"}
+    t_tag = "{%s}t" % ns["m"]
+    z = zipfile.ZipFile(io.BytesIO(blob))
+    ss = []
+    if "xl/sharedStrings.xml" in z.namelist():
+        for si in ET.fromstring(z.read("xl/sharedStrings.xml")).findall("m:si", ns):
+            ss.append("".join(t.text or "" for t in si.iter(t_tag)))
+    rmap = {r.get("Id"): r.get("Target")
+            for r in ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))}
+    out = {}
+    for sh in ET.fromstring(z.read("xl/workbook.xml")).find("m:sheets", ns):
+        name = sh.get("name")
+        if name not in want:
+            continue
+        tgt = rmap[sh.get("{%s}id" % ns["r"])].lstrip("/")
+        tgt = tgt if tgt.startswith("xl/") else "xl/" + tgt
+        rows = []
+        for row in ET.fromstring(z.read(tgt)).iter("{%s}row" % ns["m"]):
+            vals = {}
+            for c in row.findall("m:c", ns):
+                col = 0
+                for ch in re.match(r"[A-Z]+", c.get("r")).group(0):
+                    col = col * 26 + ord(ch) - 64
+                v = c.find("m:v", ns)
+                if v is None:
+                    isv = c.find("m:is", ns)
+                    vals[col] = "".join(t.text or "" for t in isv.iter(t_tag)) if isv is not None else None
+                    continue
+                typ = c.get("t")
+                vals[col] = (ss[int(v.text)] if typ == "s"
+                             else v.text if typ in ("str", "inlineStr") else float(v.text))
+            if vals:
+                rows.append([vals.get(i) for i in range(1, max(vals) + 1)])
+        out[name] = rows
+    return out
+
+
+def _xl_month(serial) -> str | None:
+    if not isinstance(serial, float):
+        return None
+    return (dt.date(1899, 12, 30) + dt.timedelta(days=int(serial))).isoformat()[:7]
+
+
+def _sec_table(rows: list, key_cols: int) -> dict:
+    """SEC 表格（第一列是月份）→ {('Government','Treasury'): {'2026-08': v, …}}。"""
+    if not rows:
+        return {}
+    months = [_xl_month(c) for c in rows[0]]
+    out = {}
+    for r in rows[1:]:
+        if not r or not isinstance(r[0], str) or r[0].startswith("Return"):
+            continue
+        key = tuple(r[:key_cols])
+        out[key] = {m: r[i] for i, m in enumerate(months)
+                    if m and i < len(r) and isinstance(r[i], float)}
+    return out
+
+
+def sec_mmf() -> dict:
+    """
+    SEC 最新一份 supporting data（xlsx）→ 月資料（十億美元／%）：
+      assets  {month: {gov, treasury, prime_inst, prime_retail, taxex, total}}  淨資產（Tab.2.1）
+      flows   同上的淨流量（Tab.3.9）
+      yields  {month: {gov, treasury, prime}}  資產加權 7 日淨收益率（Tab.4.3H＋4.3）
+    """
+    from .sec import USER_AGENT
+    hdr = {"User-Agent": USER_AGENT}
+    page = requests.get(SEC_MMF_PAGE, timeout=40, headers=hdr)
+    page.raise_for_status()
+    m = re.search(r'href="(/files/investment/mmf-statistics-supporting-data-(\d{2})-(\d{4})\.xlsx)"', page.text)
+    if not m:
+        raise ValueError("SEC 頁面找不到 supporting data 連結")
+    url = "https://www.sec.gov" + m.group(1)
+    blob = requests.get(url, timeout=90, headers=hdr)
+    blob.raise_for_status()
+    sh = _xlsx_sheets(blob.content, {"Tab.2.1", "Tab.3.9", "Tab.4.3", "Tab.4.3H"})
+    keymap = {("Government", "Government"): "gov", ("Government", "Treasury"): "treasury",
+              ("Prime", "Institutional"): "prime_inst", ("Prime", "Retail"): "prime_retail",
+              ("Prime", "Subtotal"): "prime", ("Tax Exempt", "Subtotal"): "taxex", ("Total", "Total"): "total"}
+
+    def by_month(tab):
+        out: dict = {}
+        for key, ser in _sec_table(sh.get(tab) or [], 2).items():
+            k = keymap.get(key)
+            if k:
+                for mo, v in ser.items():
+                    out.setdefault(mo, {})[k] = v
+        return out
+    assets, flows = by_month("Tab.2.1"), by_month("Tab.3.9")
+    yields: dict = {}
+    for (name,), ser in _sec_table(sh.get("Tab.4.3H") or [], 1).items():
+        k = {"Government": "gov", "Treasury": "treasury", "Prime": "prime"}.get(name)
+        for mo, v in (ser.items() if k else []):
+            yields.setdefault(mo, {})[k] = v
+    for mo, v in by_month("Tab.4.3").items():
+        y = {"gov": v.get("gov"), "treasury": v.get("treasury")}
+        a = assets.get(mo) or {}
+        wi, wr = a.get("prime_inst") or 0, a.get("prime_retail") or 0
+        if v.get("prime_inst") is not None and v.get("prime_retail") is not None and wi + wr:
+            y["prime"] = (v["prime_inst"] * wi + v["prime_retail"] * wr) / (wi + wr)
+        yields.setdefault(mo, {}).update({k: x for k, x in y.items() if x is not None})
+    return {"url": url, "report": f"{m.group(3)}-{m.group(2)}",
+            "assets": assets, "flows": flows, "yields": yields}
+
+
+def ofr_mmf() -> dict:
+    """OFR MMF Monitor：月底持有部位（十億美元），{month: {treasury, agency, repo, …}}。"""
+    out: dict = {}
+    for k, mn in OFR_MMF.items():
+        for d, v in _get(OFR_API.format(m=mn)) or []:
+            if v is not None:
+                out.setdefault(d[:7], {})[k] = v / 1e9
+    return {m: v for m, v in sorted(out.items()) if len(v) == len(OFR_MMF)}
+
+
+# ---------------------------------------------------------------------------
 # 財政部買回（Buybacks）
 # ---------------------------------------------------------------------------
 BB_XML = "https://www.treasurydirect.gov/instit/annceresult/press/preanre/{y}/{f}"
@@ -803,7 +946,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
     """
     {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol,
     bill_auctions, upcoming_bills, mspd, dts_bills, fed_bills, buybacks,
-    buyback_schedule, buyback_reactions, h41, bank_assets, rde, failed}。
+    buyback_schedule, buyback_reactions, h41, bank_assets, rde, sec_mmf, ofr_mmf, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -876,7 +1019,8 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("Fed 負債端（H.4.1）取得失敗（%s）", e)
         out["h41"] = {}
         failed.append("h41")
-    for key, fn in (("bank_assets", bank_assets), ("rde", rde)):
+    for key, fn in (("bank_assets", bank_assets), ("rde", rde), ("sec_mmf", sec_mmf),
+                    ("ofr_mmf", ofr_mmf)):
         try:
             out[key] = fn()
         except Exception as e:                     # noqa: BLE001

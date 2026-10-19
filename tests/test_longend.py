@@ -175,6 +175,33 @@ check("⑦g 買回：新到舊、投標倍數、排程上限低於近期實際�
       and _bv["upcoming"][0]["recent_max"] == 6.0 and _bv["upcoming"][1]["recent_max"] is None
       and _bv["quarter"] == {"流動性支援": 6.0, "現金管理": 12.5}, _bv["upcoming"])
 
+# ---- 2026-10：MMF ----
+_sec = {"assets": {"2026-07": {"total": 8000.0}, "2026-08": {"total": 8100.0}},
+        "flows": {"2026-01": {"total": 10.0, "gov": 5.0, "treasury": 5.0, "prime": 0.0, "taxex": 0.0},
+                  "2026-02": {"total": -4.0, "gov": -2.0, "treasury": -2.0, "prime": 0.0, "taxex": 0.0}},
+        "yields": {"2026-02": {"gov": 3.5, "treasury": 3.5, "prime": 3.6}}}
+_fd = lq.fdic_savings([{"date": "2026-02-01", "value": 0.4}], {"data": {"2021-03": 0.04, "2021-05": 9.9}})
+check("⑧a FDIC：2021-04 前用舊序列、之後只用 SNDR", _fd == {"2021-03": 0.04, "2026-02": 0.4}, _fd)
+_mv = lq.mmf_view(_sec, {}, _fd, "2026-10-19")
+check("⑧b MMF：年初至今累計、利差＝Government − 存款",
+      _mv["ytd"][2026] == [("1月", 10.0), ("2月", 6.0)] and round(_mv["latest"]["spread"], 2) == 3.1, _mv["ytd"])
+import io, zipfile                                    # noqa: E402
+_buf = io.BytesIO()
+with zipfile.ZipFile(_buf, "w") as z:
+    z.writestr("xl/workbook.xml", '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+               'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'
+               '<sheet name="Tab.3.9" sheetId="1" r:id="rId1"/></sheets></workbook>')
+    z.writestr("xl/_rels/workbook.xml.rels", '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+               '<Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>')
+    z.writestr("xl/sharedStrings.xml", '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+               '<si><t>Total</t></si></sst>')
+    z.writestr("xl/worksheets/sheet1.xml", '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'
+               '<row r="1"><c r="C1"><v>46235</v></c></row>'
+               '<row r="2"><c r="A2" t="s"><v>0</v></c><c r="B2" t="s"><v>0</v></c><c r="C2"><v>55.1</v></c></row>'
+               '</sheetData></worksheet>')
+_t = ts._sec_table(ts._xlsx_sheets(_buf.getvalue(), {"Tab.3.9"})["Tab.3.9"], 2)
+check("⑧c 標準函式庫讀 xlsx：Excel 序號轉月份", _t == {("Total", "Total"): {"2026-08": 55.1}}, _t)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
 import logging
 from pathlib import Path
 import re
@@ -3525,6 +3526,64 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         unit="", height=170, digits=2, months=181, xmonths=True, step=0.5, zero=True,
         refs=[{"value": 0.0, "label": "0：利率對準備金變動不敏感"}], marks=_crisis,
         aria="準備金需求彈性 RDE（近 15 年，bp／百分點）") if _rde.get("rows") else "")
+
+    # MMF 動向：SEC（流量、淨資產、7 日淨收益率，月）＋OFR（持有部位，月）＋FDIC 儲蓄利率
+    try:
+        _legacy = json.loads((Path(__file__).resolve().parent.parent / "config"
+                              / "fdic_savings_legacy.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        _legacy = {}
+    _fdic = lq.fdic_savings(series.get("SNDR") or [], _legacy)
+    mmf = lq.mmf_view(_tr.get("sec_mmf") or {}, _tr.get("ofr_mmf") or {}, _fdic,
+                      clock.today().isoformat())
+    _ycol = {0: "var(--muted-bar)", 1: "var(--line-1)", 2: "var(--line-2)"}
+    _ytd = sorted((mmf.get("ytd") or {}).items())
+    mmf_ytd_chart = (charts.cat_lines(
+        [{"label": f"{y} 年", "color": _ycol.get(i, "var(--line-3)"), "dash": i == 0,
+          "points": [(x, v * 10) for x, v in pts]} for i, (y, pts) in enumerate(_ytd)],
+        unit="", digits=0, aria="MMF 年初至今累計淨流量（億美元）") if _ytd else "")
+    mmf_flow_chart = (charts.diverging_stacked(
+        mmf["flows"],
+        [("gov", "Government（不含 Treasury）", "var(--line-1)"),
+         ("treasury", "Treasury", "var(--series-2)"),
+         ("prime", "Prime", "var(--line-2)"),
+         ("taxex", "Tax Exempt", "var(--muted-bar)")],
+        ("net", "合計淨流量", "var(--text-primary)"),
+        unit=" 億美元", digits=0, scale=10, fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}")
+        if mmf.get("flows") else "")
+    _yp = lambda k: [{"date": r["date"], "value": r[k]} for r in mmf.get("yields") or [] if r.get(k) is not None]
+    mmf_yield_chart = (charts.compact_lines([
+        {"label": "Government MMF", "color": "var(--line-1)", "points": _yp("gov")},
+        {"label": "Treasury MMF", "color": "var(--series-2)", "points": _yp("treasury")},
+        {"label": "Prime MMF", "color": "var(--line-2)", "points": _yp("prime")},
+        {"label": "FDIC 全國儲蓄存款利率", "color": "var(--muted-bar)", "points": _yp("fdic")},
+    ], unit="%", height=170, digits=2, months=190, xmonths=True, zero=True,
+        aria="MMF 7 日淨收益率 vs 銀行儲蓄存款利率") if mmf.get("yields") else "")
+    mmf_spread_chart = (charts.compact_lines(
+        [{"label": "Government MMF − 儲蓄存款利率", "color": "var(--line-1)", "points": _yp("spread")}],
+        unit="", height=130, digits=2, months=190, xmonths=True, zero=True,
+        refs=[{"value": 0.0, "label": "0"}],
+        aria="MMF 收益率相對銀行存款的利差（百分點）") if mmf.get("yields") else "")
+    mmf_hold_chart = (charts.diverging_stacked(
+        mmf["hold"],
+        [("rp_fed", "回購：Fed（ON RRP）", "var(--line-3)"),
+         ("rp_ficc", "回購：FICC 集中清算", "#4d8fd6"),
+         ("rp_priv", "回購：交易商與銀行", "var(--line-1)"),
+         ("treasury", "美國公債", "var(--series-2)"),
+         ("agency", "機構債", "#1baf7a"),
+         ("bank", "銀行相關（CD、CP）", "var(--line-2)"),
+         ("other", "其他", "var(--muted-bar)")],
+        ("net", "持有部位合計變動", "var(--text-primary)"),
+        unit=" 億美元", digits=0, scale=10, fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}")
+        if mmf.get("hold") else "")
+    _rl = mmf.get("repo_lines") or []
+    mmf_repo_chart = (charts.compact_lines([
+        {"label": "持有美國公債", "color": "var(--series-2)", "points": [{"date": r["date"], "value": r["treasury"] * 10} for r in _rl]},
+        {"label": "回購：Fed（ON RRP）", "color": "var(--line-3)", "points": [{"date": r["date"], "value": r["fed"] * 10} for r in _rl]},
+        {"label": "回購：FICC 集中清算", "color": "#4d8fd6", "points": [{"date": r["date"], "value": r["ficc"] * 10} for r in _rl]},
+        {"label": "回購：交易商與銀行", "color": "var(--line-1)", "points": [{"date": r["date"], "value": r["priv"] * 10} for r in _rl]},
+    ], unit="", height=170, digits=0, months=62, xmonths=True, zero=True, step=10000,
+        aria="MMF 公債與回購部位（億美元）") if _rl else "")
     _upcoming_bills = sorted(_tr.get("upcoming_bills") or [], key=lambda r: r["date"])[:8]
 
     # 補充：TGCR 近 6 個月，疊 SOFR 當對照（兩者都是擔保隔夜利率，樣本範圍不同）。
@@ -3609,4 +3668,11 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "ratio_chart": ratio_chart,
         "rde_view": rde_view,
         "rde_chart": rde_chart,
+        "mmf": mmf,
+        "mmf_ytd_chart": mmf_ytd_chart,
+        "mmf_flow_chart": mmf_flow_chart,
+        "mmf_yield_chart": mmf_yield_chart,
+        "mmf_spread_chart": mmf_spread_chart,
+        "mmf_hold_chart": mmf_hold_chart,
+        "mmf_repo_chart": mmf_repo_chart,
     }

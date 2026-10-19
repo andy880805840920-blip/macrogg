@@ -42,6 +42,11 @@ series:
   - id: TGCRRATE
     label: TGCR（三方一般擔保利率）
     enabled: true
+  # FDIC 全國儲蓄存款利率（月）：MMF 頁「MMF 收益率 vs 銀行存款」的對照組。
+  # 2021-04 以前的舊算法序列（SAVNRNJ）已停發，固定存在 config/fdic_savings_legacy.json。
+  - id: SNDR
+    label: FDIC 全國儲蓄存款利率
+    enabled: true
   # ---- Yahoo 即時報價的 FRED 後備（EIA／CBOE 轉載，落後數天）----
   - id: DCOILWTICO
     label: WTI 原油（FRED 後備）
