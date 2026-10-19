@@ -225,8 +225,8 @@ debt:
     label: 月度財政赤字
     unit: millions
     frequency: monthly
-    enabled: false
-    note: 尚未接上分析（待辦：月度赤字的季節性與年度赤字的對照）
+    enabled: true
+    # 09 政府財政：近 12 個月現金赤字（債務動態的基本赤字、三條路的赤字）
   # 聯準會持有的公債（週頻，百萬美元）。縮表是第三個供給來源：
   # 到期不續作的部分，等於改由私人市場吸收，效果跟財政部多發債一樣。
   - id: TREAST

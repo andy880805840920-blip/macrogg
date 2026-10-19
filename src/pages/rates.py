@@ -519,9 +519,9 @@ def _rates_body_full(d: dict) -> str:
                         f'<td data-label="說明">{esc(t)}</td></tr>' for n, v, t in _parts)
         debt_decomp = (f'<table class="lq-tbl"><thead><tr><th colspan="3">過去一年實際：{_q(_da["from"])} → {_q(_da["to"])} '
                        f'公眾持有債務佔 GDP {_da["actual"]:+.1f}pp</th></tr></thead><tbody>{_rows}</tbody></table>')
-    if _dde is not None:
+    if _dde is not None and getattr(_db, "i_pub", None) is not None and _da:
         debt_decomp += (f'<p class="hint">條件不變的未來一年（用公眾持有債務的平均付息率 '
-                        f'{getattr(_db, "i_pub", 0) or 0:.1f}%）：約 <b>{_dde:+.1f}pp</b>'
+                        f'{_db.i_pub:.1f}%）：約 <b>{_dde:+.1f}pp</b>'
                         + (f'；若全部按今天的 10Y（{getattr(_db, "r_nom", 0):.2f}%）再融資：約 <b>{_ddm:+.1f}pp</b>'
                            if _ddm is not None else "")
                         + '。舊債還鎖在較低利率，所以實際付息率低於市場利率，差距會隨舊債到期慢慢收斂。</p>')
@@ -531,7 +531,7 @@ def _rates_body_full(d: dict) -> str:
         if _da:
             _why = (f"過去一年公眾持有債務佔 GDP {_da['actual']:+.1f}pp：基本赤字 {_da['primary']:+.1f}、利息 {_da['interest']:+.1f}、"
                     f"名目成長 {_da['growth']:+.1f}、其他 {_da['other']:+.1f}（主要是財政部現金餘額變動）。")
-        if _dde is not None:
+        if _dde is not None and _da:
             _why += f"條件不變下，未來一年約 {_dde:+.1f}pp。"
         debt_impact = (f'<div class="impact {_dl}">r − g {_rg:+.2f}pp、利息佔稅收 {_itr:.1f}%——'
                        + ("利率高於成長，即使收支平衡債務比也會自我累積。" if _rg > 0 else
