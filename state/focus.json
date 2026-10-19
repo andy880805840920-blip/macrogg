@@ -1,6 +1,6 @@
 {
  "hash": "bd4e1f492df2f708",
- "text": "布蘭特原油自5月以來首次觸及每桶110美元，加上市場對人工智能基礎設施融資能力的擔憂升溫，推動美國股市與債市出現分化走勢。10/15美國10年期公債殖利率一度觸及5.35%高峰後急速回落至5.04%，反映投資人在通膨與經濟成長前景間的搖擺。AI雲端運算公司CoreWeave債券殖利率飆升至15%，股價下跌15%，引發市場對高槓桿融資數據中心建設能否產生足夠收益的質疑。高盛警告，若AI超大型雲端廠商信貸利差持續擴大，相關概念股恐面臨補跌壓力。同時，費城半導體指數連續八個交易日下跌，創2008年以來最長連跌紀錄，市場焦點已從AI需求轉向資本支出與折舊能否回收。\n華許（華許）近日發表演講，市場據此調降升息預期，推動黃金上漲。法國財政赤字問題引發歐元區債務擔憂，法國政府公債與德國公債利差擴大至歐元區債務危機以來新高，美元因避險情緒支撐而保持強勢。",
+ "text": "布蘭特原油自5月以來首次觸及每桶110美元，加上美國9月CPI與零售銷售均超預期，重新引發通膨擔憂，推升美債殖利率。10/15美國10年期公債殖利率一度觸及5.35%的高峰，但隨即回落至5.04%，反映市場情緒劇烈波動。¶同時，AI融資成本急升成為另一股下行壓力。雲端運算公司CoreWeave的債券殖利率本週飆升至15%，股價應聲下跌15%，投資者開始懷疑這些由巨額債務融資的資料中心建設能否產生足夠收入。這類擔憂促使部分投資人轉向債券市場避險，推動公債價格上漲、殖利率回落。美元指數也從10/14的高點102.60回落至10/16收盤的101.59，反映市場風險情緒轉變。\n華許（華許）發表談話，市場據此緩和升息預期，金價上揚。日本央行總裁植田和男表示基礎通膨「相當接近」2%目標，暗示日本貨幣政策可能轉向。",
  "links": [
   {
    "title": "美債殖利率與美元指數現轉折 市場現關鍵變數",
@@ -290,15 +290,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-19T01:05:42.607533+00:00",
+ "at": "2026-10-19T01:17:10.983110+00:00",
  "layout": "main",
  "topics": {
-  "hash": "2b3513e333c625b7",
+  "hash": "bde88cce4835d580",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "華許在曼谷講話後，市場對聯準會本月稍晚維持利率不變的預期未改，投資人升息押注降溫",
+    "text": "華許發言緩解升息預期，黃金應聲上揚。交易員根據聯準會主席華許的言論調整對升息的押注，推動金價走高，反映市場對貨幣政策立場的重新評估",
     "links": [
      {
       "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
@@ -311,7 +311,7 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "10年期美債殖利率10/15觸及5.06%，為近20年首次突破5%關卡，這是全球金融市場的風險基準利率，影響房貸、企業借貸成本與資產估值",
+    "text": "10年期美債殖利率20年來首次站上5%，上次出現在2007年7月。歷史數據顯示，該年後續12個月標普500下跌19%，隨後5年下跌11%，但當前情況與當時背景相似，都是聯準會積極升息對抗通膨、經濟強勁成長的環境",
     "links": [
      {
       "title": "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
@@ -324,13 +324,13 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油10/18仍在110美元附近，美國議員提案阻止川普允許俄羅斯向市場投放數億桶柴油的計畫，油價因此獲得提振",
+    "text": "布蘭特原油維持在每桶110美元附近，受中東與烏克蘭衝突支撐。川普可能對俄羅斯制裁豁免的預期引發供應增加疑慮，油價承受下行壓力",
     "links": [
      {
       "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
       "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZW11ZjRDTUdpUHpzY1JpNFZtWjZ1bGhZejdHX2h3Q0NTb1pKU0pxM0NtSDR5QlA4YnQ5NHUybkxGS0VxSWJQcHo0NWcyb3A4S21SbVNld2cyLTQ5eFowV2lqRlh1QUMteG1taWQ5b0dPUGg1SnpxVUlRYmlDWkkxZzBQWVpBTjlwdzEyZDBTRWRacVU1ZFhZMjhrMGd5dw?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-18T22:02:51+00:00"
+      "at": "2026-10-19T00:26:00+00:00"
      },
      {
       "title": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies",
@@ -341,79 +341,90 @@
     ]
    },
    {
-    "id": "equity",
-    "label": "美股",
-    "text": "CoreWeave與Nebius本週跌幅均超過25%，兩家公司因資本支出高但自由現金流低，面臨融資成本上升的壓力，市場擔憂高槓桿數據中心建設能否產生足夠收益",
-    "links": [
-     {
-      "title": "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
-      "link": "https://finance.yahoo.com/markets/article/just-another-scare-wall-street-sees-the-ai-trade-strong-despite-techs-latest-rout-155930040.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-18T15:59:30+00:00"
-     }
-    ]
-   },
-   {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電執行長魏哲家表示AI晶片需求「非常極度強勁」，先前預估2024至2029年AI相關晶片營收年複合成長率50%，但目前強勁需求可能使實際成長率更高",
+    "text": "輝達要求三星、SK海力士、美光統一高頻寬記憶體製程，三星將首度採用台積電3奈米製造底層晶片，台積電可望通吃三大供應商訂單，為已滿載的3奈米產能再添需求",
     "links": [
      {
-      "title": "台積電展現頂尖AI投資實力 執行長魏哲家看旺晶片需求",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%B1%95%E7%8F%BE%E9%A0%82%E5%B0%96ai%E6%8A%95%E8%B3%87%E5%AF%A6%E5%8A%9B-%E5%9F%B7%E8%A1%8C%E9%95%B7%E9%AD%8F%E5%93%B2%E5%AE%B6%E7%9C%8B%E6%97%BA%E6%99%B6%E7%89%87%E9%9C%80%E6%B1%82-234039692.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-18T23:40:39+00:00"
+      "title": "Samsung to use TSMC technology for Nvidia's next-generation memory chips, Seoul newspaper reports",
+      "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQLVd3RU5QdzNwZHd0cUNCbUQxM3B6M2JOTXZZbEE4b3Y4czkxSjBuNklIRXU2S1VyRld6WTlRQUdlZkN3TGNRcng5cjR6ZEViNXNqcHh2RnlRU2hWVXRPUVFjVXRvd2FaaTVkd002aUk4WHlEQ2wxTGk3alF5S0FUTGNMUXF2dV9QUjk4eThjcWVPaVBLYzc2c0NUaUN4UUVMcVZTSERiMDE5VXp0NDdoVFpuS2E0TGZoUnBrRTExcnZDRlJia1VNcU40SUxQcE1y?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-18T12:09:43+00:00"
+     },
+     {
+      "title": "1分鐘讀財經》輝達出手！三星HBM破天荒用台積電3奈米 內幕曝光",
+      "link": "https://tw.stock.yahoo.com/news/1%E5%88%86%E9%90%98%E8%AE%80%E8%B2%A1%E7%B6%93-%E8%BC%9D%E9%81%94%E5%87%BA%E6%89%8B-%E4%B8%89%E6%98%9Fhbm%E7%A0%B4%E5%A4%A9%E8%8D%92%E7%94%A8%E5%8F%B0%E7%A9%8D%E9%9B%BB3%E5%A5%88%E7%B1%B3-%E5%85%A7%E5%B9%95%E6%9B%9D%E5%85%89-004111689.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T00:41:11+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期10/18夜盤重挫1,144點，台股面臨46,000點季線支撐，法人表示受中東戰事升級、AI業者高利率舉債疑慮影響",
+    "text": "台指期10/18夜盤重挫1,144點，費城半導體指數連續8個交易日收黑創2008年來最長連跌紀錄，單週下跌11.4%。外資上週狂賣5,862億元，三大法人合計賣超678.07億元，台股面臨46,000點季線支撐考驗",
     "links": [
      {
       "title": "台指期夜盤挫逾千點　法人：台股面臨賣壓回防季線",
       "link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%8C%AB%E9%80%BE%E5%8D%83%E9%BB%9E-%E6%B3%95%E4%BA%BA-%E5%8F%B0%E8%82%A1%E9%9D%A2%E8%87%A8%E8%B3%A3%E5%A3%93%E5%9B%9E%E9%98%B2%E5%AD%A3%E7%B7%9A-002817314.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T00:28:17+08:00"
+     },
+     {
+      "title": "外資提款5862億 台股沒崩誰在接？ 專家揭5大觀察重點",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E6%8F%90%E6%AC%BE5862%E5%84%84-%E5%8F%B0%E8%82%A1%E6%B2%92%E5%B4%A9%E8%AA%B0%E5%9C%A8%E6%8E%A5-%E5%B0%88%E5%AE%B6%E6%8F%AD5%E5%A4%A7%E8%A7%80%E5%AF%9F%E9%87%8D%E9%BB%9E-005000806.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T00:50:00+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "紐約黃金期貨10/18上漲11美元或0.26%至每盎司4,181.10美元，投資人評估聯準會升息押注降溫，但油價走高推動美債殖利率上升抑制金價",
+    "text": "華許發言推動交易員調降升息預期，黃金價格上揚。中東局勢與通膨升溫支撐金價在4100美元附近震盪",
     "links": [
      {
-      "title": "紐約金價上週五漲跌互見，現貨金下跌0.14%、週線滑落0.68%",
-      "link": "https://tw.stock.yahoo.com/news/%E7%B4%90%E7%B4%84%E9%87%91%E5%83%B9%E4%B8%8A%E9%80%B1%E4%BA%94%E6%BC%B2%E8%B7%8C%E4%BA%92%E8%A6%8B-%E7%8F%BE%E8%B2%A8%E9%87%91%E4%B8%8B%E8%B7%8C0-14-%E9%80%B1%E7%B7%9A%E6%BB%91%E8%90%BD0-68-233342644.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-18T23:33:42+08:00"
+      "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T23:47:43+00:00"
+     },
+     {
+      "title": "黃金價格上漲，Warsh言論壓低聯準會升息預期 作者 Investing.com - Investing.com 香港",
+      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1uWHBlT19fd0tzWEJzc2xZNXMwWl9VRDJ3aTlNWlFmSzBGcGdBWHNPLUZIVEdxdEFFSkVOSHlDUzBOdmtFTGJGeVBITFRnajB6Zkg0MXU5a3VjcjdLV3F0YnRrMEU3T2w1UTZJSThwbw?oc=5",
+      "source": "股市報價& 財經新聞",
+      "at": "2026-10-19T01:09:35+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元上週五盤中貶破32.5元，外資因AI科技股賣壓而匯出資金，但分析師預期新台幣將在年底前反彈，認為貿易條件變化支撐匯率",
+    "text": "新台幣10/16盤中貶破32.5元關鍵價位，外資單日賣超3026億元創新高。儘管短期承壓，外銀預期強勁出口與經常帳順差將支撐新台幣年底前升至31.5至31.8元",
     "links": [
      {
-      "title": "國內匯市：外資賣股匯出壓不住！新台幣上週五盤中貶破32.5元，收盤仍貶7.3分",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxONUp1MG5KRFd1N3lYTzFiR3NrTzJkVXVKUmtXdkZHNHlFSm5aTjROWU8yN0lybjZwWDVxcDhWbkNJM2lqVGhnaFREZDJGN2swLVRwSTNOdWpHa2JtODl0bkFHcTlSQXQxNXlDOUFLQXVDeUVXNTAwTFYxR05DcEhjN0xaT3hBY082?oc=5",
-      "source": "富聯網",
+      "title": "Taiwan Dollar Bulls Look Past AI-Led Selloff to Year-End Rally",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPdllCaHBIdzY1OVhGakdCR1BtUFV1alFEb2pWZU14TUxpTE1zcHFqR2tvUXMyVzFRR1F0eUgta2Y0LS1sdFI1M1dsdWpJY3pKY0N4TndyTXNqNHhFb2tzSDdyRzE5dHVpaTROWW9LSm9RWnY3bWF6V0ljNVhHMm5OOVNraVowUnhQaEYwVHRVc2hCN2FjVjRZMUpaTFZLOWJ0bWtyOUhnbGJ3NHJIekRzeDFzcw?oc=5",
+      "source": "Bloomberg",
       "at": "2026-10-18T23:00:00+00:00"
+     },
+     {
+      "title": "台幣逼近32.5元還會貶？外銀看好強勁出口支撐 年底反攻31.5元",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E5%B9%A3%E9%80%BC%E8%BF%9132-5%E5%85%83%E9%82%84%E6%9C%83%E8%B2%B6-%E5%A4%96%E9%8A%80%E7%9C%8B%E5%A5%BD%E5%BC%B7%E5%8B%81%E5%87%BA%E5%8F%A3%E6%94%AF%E6%92%90-%E5%B9%B4%E5%BA%95%E5%8F%8D%E6%94%BB31-5%E5%85%83-002543718.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-19T00:25:43+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T01:06:01.491358+00:00"
+  "at": "2026-10-19T01:17:33.485788+00:00"
  },
  "main_source_titles": [
   "美債殖利率與美元指數現轉折 市場現關鍵變數",
   "通膨與AI融資疑慮夾擊，那指重挫2.15%、費半連八黑，財報成後市關鍵"
  ],
- "headline": "油價飆升與AI融資疑慮夾擊，美債殖利率高位震盪、市場避險情緒升溫",
- "rate_note": "油價上漲與通膨擔憂偏向推升長端殖利率，但AI融資疑慮與經濟成長前景不確定性則推低殖利率，方向不明確、取決於通膨與衰退風險孰輕孰重的市場評估；10年期今日+1bp至5.10%，市場在高位震盪尚未明確定向。",
+ "headline": "油價飆升與AI融資疑慮夾擊，美債長端殖利率高檔震盪",
+ "rate_note": "油價飆升偏向推升長端殖利率，但AI融資疑慮引發的避險買盤則壓低殖利率，方向不明確、取決於通膨與金融穩定性的相對權重。10年期今日+1bp至5.10%，市場在兩股力量間尋求平衡。",
  "recent_mains": [
   {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",
@@ -436,19 +447,19 @@
    "at": "2026-10-19T00:07:19.996717+00:00"
   },
   {
-   "headline": "油價飆升與AI融資疑慮夾擊，美債殖利率高位震盪、市場避險情緒升溫",
+   "headline": "油價飆升與AI融資疑慮夾擊，美債長端殖利率高檔震盪",
    "titles": [
     "美債殖利率與美元指數現轉折 市場現關鍵變數",
     "通膨與AI融資疑慮夾擊，那指重挫2.15%、費半連八黑，財報成後市關鍵"
    ],
-   "at": "2026-10-19T01:05:42.607533+00:00"
+   "at": "2026-10-19T01:17:10.983110+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
-   "headline": "油價飆升與AI融資疑慮夾擊，美債殖利率高位震盪、市場避險情緒升溫",
-   "text": "布蘭特原油自5月以來首次觸及每桶110美元，加上市場對人工智能基礎設施融資能力的擔憂升溫，推動美國股市與債市出現分化走勢。10/15美國10年期公債殖利率一度觸及5.35%高峰後急速回落至5.04%，反映投資人在通膨與經濟成長前景間的搖擺。AI雲端運算公司CoreWeave債券殖利率飆升至15%，股價下跌15%，引發市場對高槓桿融資數據中心建設能否產生足夠收益的質疑。高盛警告，若AI超大型雲端廠商信貸利差持續擴大，相關概念股恐面臨補跌壓力。同時，費城半導體指數連續八個交易日下跌，創2008年以來最長連跌紀錄，市場焦點已從AI需求轉向資本支出與折舊能否回收。\n華許（華許）近日發表演講，市場據此調降升息預期，推動黃金上漲。法國財政赤字問題引發歐元區債務擔憂，法國政府公債與德國公債利差擴大至歐元區債務危機以來新高，美元因避險情緒支撐而保持強勢。",
-   "rate_note": "油價上漲與通膨擔憂偏向推升長端殖利率，但AI融資疑慮與經濟成長前景不確定性則推低殖利率，方向不明確、取決於通膨與衰退風險孰輕孰重的市場評估；10年期今日+1bp至5.10%，市場在高位震盪尚未明確定向。",
+   "headline": "油價飆升與AI融資疑慮夾擊，美債長端殖利率高檔震盪",
+   "text": "布蘭特原油自5月以來首次觸及每桶110美元，加上美國9月CPI與零售銷售均超預期，重新引發通膨擔憂，推升美債殖利率。10/15美國10年期公債殖利率一度觸及5.35%的高峰，但隨即回落至5.04%，反映市場情緒劇烈波動。¶同時，AI融資成本急升成為另一股下行壓力。雲端運算公司CoreWeave的債券殖利率本週飆升至15%，股價應聲下跌15%，投資者開始懷疑這些由巨額債務融資的資料中心建設能否產生足夠收入。這類擔憂促使部分投資人轉向債券市場避險，推動公債價格上漲、殖利率回落。美元指數也從10/14的高點102.60回落至10/16收盤的101.59，反映市場風險情緒轉變。\n華許（華許）發表談話，市場據此緩和升息預期，金價上揚。日本央行總裁植田和男表示基礎通膨「相當接近」2%目標，暗示日本貨幣政策可能轉向。",
+   "rate_note": "油價飆升偏向推升長端殖利率，但AI融資疑慮引發的避險買盤則壓低殖利率，方向不明確、取決於通膨與金融穩定性的相對權重。10年期今日+1bp至5.10%，市場在兩股力量間尋求平衡。",
    "links": [
     {
      "title": "美債殖利率與美元指數現轉折 市場現關鍵變數",
@@ -463,7 +474,7 @@
      "at": "2026-10-19T00:03:11+08:00"
     }
    ],
-   "at": "2026-10-19T01:05:42.607533+00:00"
+   "at": "2026-10-19T01:17:10.983110+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",
