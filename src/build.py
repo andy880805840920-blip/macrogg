@@ -3205,6 +3205,27 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         computed["ig_spread"] = (ig_oas, value_at(series.get("BAMLC0A0CM") or [], 1),
                                  f"{ig_oas:.2f}%")
     lights = _lights_from(computed, cfg.get("regime_lights") or [])
+    # 10−2：近 24 個月曾倒掛、現在已轉正（倒掛後重新變陡）＝歷史上衰退最常開始的階段，至少列「留意」
+    _s2 = {r["date"]: r["value"] for r in series.get("DGS2") or [] if r.get("value") is not None}
+    _sp = [(r["date"], r["value"] - _s2[r["date"]]) for r in series.get("DGS10") or []
+           if r.get("value") is not None and r["date"] in _s2]
+    for _l in lights:
+        if _l.key != "curve_10_2" or not _sp or _l.value is None:
+            continue
+        _since = (dt.date.fromisoformat(_sp[-1][0]) - dt.timedelta(days=730)).isoformat()
+        _inv = [d for d, v in _sp if d >= _since and v < 0]
+        if _l.value >= 0 and _inv:
+            if _l.status == "good":
+                _l.status = "warning"
+            _l.desc = (f"近 24 個月曾倒掛（最近一次 {_inv[-1]}），目前已重新轉正——歷史上衰退多在這個階段開始。"
+                       + _l.desc)
+        me: dict = {}
+        for d, v in _sp:
+            me[d[:7]] = v
+        _cf = next((c for c in cfg.get("regime_lights") or [] if c.get("key") == "curve_10_2"), None)
+        if _cf:
+            _l.history = [{"date": m.replace("-", "/"), "status": regime._classify(v, _cf),
+                           "label": f"{v:+.2f}%"} for m, v in list(me.items())[-12:]]
     # 三顆拆解燈的狀態軌跡（近 12 個月月底）
     _hist_src = {"term_premium": _tp_rows, "real_10y": _ds["real"], "breakeven_10y": _ds["infl"]}
     _cfgs = {c["key"]: c for c in cfg.get("regime_lights") or []}

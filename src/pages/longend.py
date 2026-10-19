@@ -997,6 +997,12 @@ GROUPS = [("tp", "期限溢酬：不確定性補償", ("term_premium", "curve_30
           ("demand", "需求", ("ig_spread",))]
 
 
+# 每顆燈的「完整脈絡」：連回本頁對應的區塊（比照流動性頁）
+LIGHT_ANCHOR = {"term_premium": "#decomp", "real_10y": "#decomp", "breakeven_10y": "#decomp",
+                "curve_10_2": "#curve", "curve_30_10": "#curve",
+                "interest_to_revenue": "#debt", "r_minus_g": "#debt", "ig_spread": "#demand"}
+
+
 def lights_grouped(d: dict, card_fn) -> str:
     L = d.get("le") or {}
     c1 = (L.get("contrib") or {}).get("mtd")
@@ -1010,7 +1016,7 @@ def lights_grouped(d: dict, card_fn) -> str:
             continue
         badge = '<span class="le-badge">本月驅動</span>' if key == main else ""
         out.append(f'<div class="le-lg" style="--k:{len(ls)}"><div class="sig-tier">{esc(name)}{badge}</div>'
-                   f'<div class="le-lgc">{"".join(card_fn(l) for l in ls)}</div></div>')
+                   f'<div class="le-lgc">{"".join(card_fn(l, LIGHT_ANCHOR.get(l.key, "")) for l in ls)}</div></div>')
     return f'<div class="le-lgs">{"".join(out)}</div>'
 
 

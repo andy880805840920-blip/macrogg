@@ -15,7 +15,7 @@ def _rates_body_full(d: dict) -> str:
     hs = d["hyperscalers"]
     hs_title, hs_desc = d["hs_text"]
     debt_title, debt_desc = d["debt_text"]
-    lights_html = "".join(_light_card(l) for l in d["lights"])
+    lights_html = "".join(_light_card(l, LE.LIGHT_ANCHOR.get(l.key, "")) for l in d["lights"])
     # 摺疊起來時摘要列要講出狀態分布，否則卡片看起來是空的
     _lc = {}
     for l in d["lights"]:
