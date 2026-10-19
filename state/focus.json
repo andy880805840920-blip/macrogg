@@ -1,18 +1,30 @@
 {
- "hash": "e920e774b1f038cd",
- "text": "美國科技IPO市場預期大幅下修。年初投資人期待SpaceX、Anthropic、OpenAI等大型私募公司在2026年上市，但OpenAI已排除今年上市計畫，多家公司推遲IPO時程。根據預測市場Kalshi的數據，在23家追蹤的公司中，只有Anthropic的2026年IPO官方宣布機率超過50%，達75%；相比之下，金融科技公司Plaid從1月的50%跌至10%，人資平台Deel從2月的五五波跌至3%，Databricks更從超過50%跌至1%。Anthropic已在6月向美國證管會秘密提交招股說明書，成為年內最可能上市的大型科技公司。\n加州AI新創Anthropic已在6月秘密提交招股說明書，成為年內最可能官方宣布IPO的大型科技公司，預測市場給予75%機率。\n密集AI泡沫警告聲浪中，Galaxy Digital創辦人兼執行長Novogratz仍力勸投資人持續買進，認為這波泡沫尚未達到歷史高點，AI股票本益比仍具吸引力，且中美競爭使政策制定者不太可能放慢AI發展。",
+ "hash": "d2de94ffab3604f7",
+ "text": "AI產業面臨運算成本危機。輝達投資的以色列新創doubleAI推出程式碼執行模型Maxwell，聲稱可幫客戶節省67%運算費用，反映出AI業者對成本攀升的迫切需求——輝達H100算力租金過去一年上漲60%，OpenAI、Anthropic等大型AI實驗室每年訓練與推論支出龐大。高盛警告AI超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐面臨補跌壓力；CoreWeave債券殖利率升至15%左右，顯示AI融資壓力已擴散至整個產業。¶聯準會則從另一角度警示：AI繁榮可能加重通膨負擔。官員指出CPI數據顯示通膨仍需「進一步改善」，暗示降息空間有限。市場預期10/28會議維持利率機率達87%，至2026年底累計升息24bp，反映出聯準會對通膨與AI投資帶來的經濟結構性壓力的謹慎態度。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，石油鏈相關產業明顯改善是主要驅動力，前3季貨物貿易總額年增18.8%創歷史同期新高。\n匈牙利計畫在2027年將預算赤字削減至GDP的4.9%，作為加入歐元區的條件之一，反映歐洲財政整頓壓力升溫。",
  "links": [
   {
-   "title": "Anthropic is AI trade's last big hope for a major IPO this year",
-   "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
-   "source": "CNBC",
-   "at": "2026-10-19T15:25:27+00:00"
+   "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
+   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-19T11:35:47+00:00"
   },
   {
-   "title": "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt",
-   "link": "https://247wallst.com/investing/2026/10/19/billionaire-ceo-ai-is-the-biggest-bubble-of-our-lifetime-but-investors-should-keep-buying-during-the-melt-up/?.tsrc=rss",
+   "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-19T14:04:26+00:00"
+  },
+  {
+   "title": "Tech rebounds as semiconductor stocks jump: AlphaCheck",
+   "link": "https://finance.yahoo.com/markets/article/tech-rebounds-as-semiconductor-stocks-jump-alphacheck-135003909.html?.tsrc=rss",
    "source": "Yahoo Finance",
-   "at": "2026-10-19T14:14:21+00:00"
+   "at": "2026-10-19T13:50:03+00:00"
+  },
+  {
+   "title": "AI太燒錢？輝達投資新創出招 稱幫客戶省67%運算費",
+   "link": "https://tw.stock.yahoo.com/news/ai%E5%A4%AA%E7%87%92%E9%8C%A2-%E8%BC%9D%E9%81%94%E6%8A%95%E8%B3%87%E6%96%B0%E5%89%B5%E5%87%BA%E6%8B%9B-%E7%A8%B1%E5%B9%AB%E5%AE%A2%E6%88%B6%E7%9C%8167-%E9%81%8B%E7%AE%97%E8%B2%BB-132002001.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-10-19T13:20:02+00:00"
   }
  ],
  "fedwatch": {
@@ -290,15 +302,34 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-19T15:34:59.545879+00:00",
+ "at": "2026-10-19T15:41:08.323942+00:00",
  "layout": "main",
  "topics": {
-  "hash": "84bc022daf7ca4c7",
+  "hash": "fdf49ac3b75f432a",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "華許在IMF年會表示近期經濟發展「大致符合」9月會議預期，未釋出急於升息訊號，市場對聯準會政策轉向鷹派的擔憂降溫，但高通膨仍將壓抑科技股評價〔twf-1〕",
+    "links": [
+     {
+      "title": "3 Words From Fed Chair Kevin Warsh Suggest the Worst Is Yet to Come for Wall Street",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQUjZpVlpmM3N2YU1BRngtSmVMdGdCSmx5eGJwUFZTMkxpODVaNEhsQTNLYnpxcm16c3hmRlJ4MHJub0xXVlZVNU14a29KNEZyRUV3b0FGUjdXNHhtbmVDeC1icTZsSTNkMU4zazhId3ZkaC04YUdDS3pXQzhPUTVLb21FcXpDR3I1V1ZnUTloQ3pwaFNHZ1UzQ0RLb3p2Y29oaFNrWHNGa2RCTlhNS2NJRzRnSTNhRDBy?oc=5",
+      "source": "The Motley Fool",
+      "at": "2026-10-19T09:06:00+00:00"
+     },
+     {
+      "title": "Gold steady ahead of Fed meeting, lower oil prices limit downside",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T03:11:00+00:00"
+     }
+    ]
+   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗主要油港因美國封鎖而空置，全球油市供應受限；同時油價下跌為美股提供支撐，投資人在企業財報高峰期前持續觀望〔equity-2,twf-1〕",
+    "text": "伊朗主要油港因美國封鎖而閒置，布倫特原油價格受中東與烏克蘭衝突支撑，在每桶110美元附近波動；油價下跌同時限制了黃金下行空間",
     "links": [
      {
       "title": "Iran’s Main Oil Terminals Remain Empty as US Blockade Bites",
@@ -317,7 +348,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI概念股在上週大幅拋售後反彈，標普500與那斯達克開盤走高。不過高盛警告，超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐進一步補跌",
+    "text": "AI概念股經歷上週大幅拋售後反彈，10/19美股開盤時標普500與那斯達克同步走高，油價下跌也為市場提供支撑；截稿前標普500漲幅0.57%至7,702.77點，那斯達克漲幅0.98%至26,395.287點",
     "links": [
      {
       "title": "S&P 500, Nasdaq open higher as AI stocks rebound ahead of major earnings",
@@ -326,17 +357,17 @@
       "at": "2026-10-19T13:35:35+00:00"
      },
      {
-      "title": "AI概念股經歷拋售潮後反彈　美股標普500、那指開盤同步走高",
-      "link": "https://tw.stock.yahoo.com/news/ai%E6%A6%82%E5%BF%B5%E8%82%A1%E7%B6%93%E6%AD%B7%E6%8B%8B%E5%94%AE%E6%BD%AE%E5%BE%8C%E5%8F%8D%E5%BD%88-%E7%BE%8E%E8%82%A1%E6%A8%99%E6%99%AE500-%E9%82%A3%E6%8C%87%E9%96%8B%E7%9B%A4%E5%90%8C%E6%AD%A5%E8%B5%B0%E9%AB%98-140628056.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T14:06:28+08:00"
+      "title": "Watch Nasdaq 100 Climbs on AI Trade Revival After Rout",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOTTNZVlE0MVR6aGgtazNPUkgxamQ1QlFwdnFJTFVjZ2QwSmxrdFBMUGtGN2ZxaGticW1ENEFtb2JERzRHbnpZYTAwLTMtTC1CQXZYQmItOWg3c2F3SHM2UmI4X3l5bG5hSWVuT0dKdUtrMkN4UXJZYW92X0JkcU5INHN5VG9HaE92b0R1N1gwMFZuaXNoSGhLSFlXZzFWMkhoMG9BVDl3?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T00:00:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "亞馬遜宣布其AI晶片將支援熱門編程語言，挑戰輝達；輝達同時贏得快速成長的AI新創公司Modal作為新中央處理器客戶，台積電與三星合作為輝達下一代記憶體晶片製造〔semi-2,semi-4,semi-3〕",
+    "text": "輝達與AMD芯片股10/19走強；亞馬遜宣布其AI芯片將支援熱門編程語言以挑戰輝達，三星據報將採用台積電技術製造輝達下一代記憶體芯片，輝達並收購新創AI公司Modal的中央處理器技術",
     "links": [
      {
       "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
@@ -355,7 +386,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤反彈，川普暫緩對俄羅斯制裁推低油價與美債殖利率，摩根士丹利釋出美股回調可能接近尾聲訊號，台積電ADR同步上漲1.98%〔twf-1,twf-2〕",
+    "text": "台指期夜盤反彈，截至晚間10點15分上漲109點至46,878點，跟隨美股科技股反彈；台積電ADR同步上漲1.98%至420.79美元，美銀策略師哈奈特指出半導體價格走勢將牽動2027年科技股、債券與其他資產表現〔twf-1,2〕",
     "links": [
      {
       "title": "台股反彈訊號來了？美股科技股反攻、台積電ADR同步走高　台指期夜盤逼近47K",
@@ -374,60 +405,53 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金在聯準會會議前交投清淡，油價下跌限制黃金下行空間，金價在4,200美元下方靜待時機〔gold-1,gold-3〕",
+    "text": "黃金價格在聯準會會議前交投清淡，在每盎司4,200美元下方徘徊，油價下跌限制了黃金進一步下行",
     "links": [
+     {
+      "title": "Gold steady ahead of Fed meeting, lower oil prices limit downside",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T03:11:00+00:00"
+     },
      {
       "title": "黃金價格預測：週初交投清淡，XAU/USD在4,200美元下方靜待時機",
       "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQVlBzWkt1VjdiOFhSb2Rqc3Bsc1VUaS1VMlJGOTZKWmgta0wtbTNtQkgzVEVpc1owUTZlUnpfSXF6M3gtMW1WcHpsaWl5NFQ0SW5MVk9XVkx2ZXVPZ1BwNVBrRmswNDBuLTIyN1NSMTBWYzdEdHNSSnJmQTFBQTN1S01QNGVORXNTVU11eGlOblFYeGRPcjA3cFVIZnlwd2VCcklWZnZhblM5ZGxBWHlsWDB6X2dDd0YxQnpBQlZBQTBMazhJVWc1cTVxeUtWejZvUDE3RnNFR2dZX2c?oc=5",
       "source": "www.tmgm",
       "at": "2026-10-19T11:33:37+00:00"
-     },
-     {
-      "title": "今日黃金價格分析｜今日外匯黃金分析｜今日 XAU/USD 分析－2026 年 10 月 19 日",
-      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPSjMwYmhmbXhZVk9wUUZmU2FDa3FVYnhRaXctenFiQXNlZHlHREttVFlGTXRUYVpVTV9vd2pjc3lhN29qUTA2VHRYdlVJMVNrYnVVZVpzSEdQSUt6Wll0UFBvV1ZwZzNfWUNqSUxicEdVVmFsM2tjb2lxNDNHTUwtWERZSzVJSjhSdGprcV9aalBwcTF3?oc=5",
-      "source": "Mitrade",
-      "at": "2026-10-19T03:48:35+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣對美元連續7個交易日貶值，12至16日貶幅達1.37%。外資因AI股拋售而淨匯出179.61億美元，央行喊話難以阻擋貶勢",
+    "text": "新台幣對美元連跌7個交易日，10/12至10/16期間貶幅達1.37%；央行分析外資因賣出台股而淨匯出179.61億美元，儘管央行喊話但難以阻擋貶勢",
     "links": [
+     {
+      "title": "Taiwan Dollar Bulls Look Past AI-Led Drop to Year-End Rally",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPdllCaHBIdzY1OVhGakdCR1BtUFV1alFEb2pWZU14TUxpTE1zcHFqR2tvUXMyVzFRR1F0eUgta2Y0LS1sdFI1M1dsdWpJY3pKY0N4TndyTXNqNHhFb2tzSDdyRzE5dHVpaTROWW9LSm9RWnY3bWF6V0ljNVhHMm5OOVNraVowUnhQaEYwVHRVc2hCN2FjVjRZMUpaTFZLOWJ0bWtyOUhnbGJ3NHJIekRzeDFzcw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T03:45:00+00:00"
+     },
      {
       "title": "央行喊話難擋外資匯出！新台幣連7黑 匯銀揭止貶關鍵",
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ScGZiZlRfZjhmVWxiMDg3VnJuWTE4NzFIdHh6SWtXcG5pVm90VVFDTW1weGpvOFQzRWpFankwekNwVlBmYWxKcU5QY0kwR2tVZUR3ZTlWVG4?oc=5",
       "source": "自由時報",
       "at": "2026-10-19T10:23:23+00:00"
-     },
-     {
-      "title": "新台幣對美元12日到16日貶幅達1.37% 央行分析：外資賣台股淨匯出179.61億美元",
-      "link": "https://news.google.com/rss/articles/CBMitANBVV95cUxNLTJodFBDLXZLSjBFb3dQUU1fU0lVT2MtUGxUdmlGS0NDYS1lX0VuZkQ1RER1WmJkUlRwWjQyOWdnaHkzME1rN0dENGdpX0xYc0pTQ2ZxaUdYQkJLRHNJUjAwbGZ5cng4R1ZNUlJzVU9jdUJNTEhkXy1nRlNzMm03UHpaQ1ZmZDdHeWNrOFhXTGRsb1FNS1JqV2loaGRrb2MtSWRMX3ZYd1NCcDZxNHpOc28zMWtEb0NXQUdFYVN6WWZDQWQyLWx1ZmhzSmFiY1I2U0xDd3lfRFFKYXJlOUtaeEN1QlYySkZsN0N0NEFKWU1jQnhuNjNDaHVraHpJZDFkQTNLcmpoaVdQc3NUS2RxOEpoM3VIb1V2SUNNaFNIbEUycnZnZEZsVFdZUG52NktOdmtobVhQUDNMZGhRd211b3IyanhCTW9VWXBYRkhmRGNXeGF4dmc2MXdkMmYzdDZGSkxfN0t2SmtoeVIydjRLcEtBbFNDNWFvcWZvNlFDVEJWOFJRR1NMb21DWmRFa2JadnYxMko0SkV1MWtaaVNzeS1ySmtRNnJzYjczVU55NE1vQTJ6?oc=5",
-      "source": "Yahoo股市",
-      "at": "2026-10-19T09:20:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T15:35:15.236992+00:00"
+  "at": "2026-10-19T15:41:25.310617+00:00"
  },
  "main_source_titles": [
-  "Anthropic is AI trade's last big hope for a major IPO this year",
-  "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt"
+  "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
+  "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+  "Tech rebounds as semiconductor stocks jump: AlphaCheck",
+  "AI太燒錢？輝達投資新創出招 稱幫客戶省67%運算費"
  ],
- "headline": "AI IPO潮退燒，Anthropic成年內唯一主要上市希望",
- "rate_note": "科技IPO延遲反映市場對高利率環境的擔憂，可能偏向壓低長期利率預期——投資人對融資成本敏感度上升，但這項事件本身對聯準會政策方向影響有限。10年期今日+3bp至5.13%，市場未明顯反映IPO延遲的利率壓力。",
+ "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
+ "rate_note": "AI運算成本與融資壓力升高，加上聯準會對通膨的持續警示，偏向推升利率預期——企業資本支出與融資成本上升可能延緩降息時程；10年期今日+3bp至5.13%，市場已在反映這些風險。",
  "recent_mains": [
-  {
-   "headline": "AI繁榮恐加劇通膨，聯準會面臨政策兩難",
-   "titles": [
-    "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-    "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-    "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines"
-   ],
-   "at": "2026-10-19T14:59:12.570801+00:00"
-  },
   {
    "headline": "AI衝擊就業結構浮現，女性職位風險最高",
    "titles": [
@@ -442,28 +466,50 @@
     "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt"
    ],
    "at": "2026-10-19T15:34:59.545879+00:00"
+  },
+  {
+   "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
+   "titles": [
+    "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
+    "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+    "Tech rebounds as semiconductor stocks jump: AlphaCheck",
+    "AI太燒錢？輝達投資新創出招 稱幫客戶省67%運算費"
+   ],
+   "at": "2026-10-19T15:41:08.323942+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
-   "headline": "AI IPO潮退燒，Anthropic成年內唯一主要上市希望",
-   "text": "美國科技IPO市場預期大幅下修。年初投資人期待SpaceX、Anthropic、OpenAI等大型私募公司在2026年上市，但OpenAI已排除今年上市計畫，多家公司推遲IPO時程。根據預測市場Kalshi的數據，在23家追蹤的公司中，只有Anthropic的2026年IPO官方宣布機率超過50%，達75%；相比之下，金融科技公司Plaid從1月的50%跌至10%，人資平台Deel從2月的五五波跌至3%，Databricks更從超過50%跌至1%。Anthropic已在6月向美國證管會秘密提交招股說明書，成為年內最可能上市的大型科技公司。\n加州AI新創Anthropic已在6月秘密提交招股說明書，成為年內最可能官方宣布IPO的大型科技公司，預測市場給予75%機率。\n密集AI泡沫警告聲浪中，Galaxy Digital創辦人兼執行長Novogratz仍力勸投資人持續買進，認為這波泡沫尚未達到歷史高點，AI股票本益比仍具吸引力，且中美競爭使政策制定者不太可能放慢AI發展。",
-   "rate_note": "科技IPO延遲反映市場對高利率環境的擔憂，可能偏向壓低長期利率預期——投資人對融資成本敏感度上升，但這項事件本身對聯準會政策方向影響有限。10年期今日+3bp至5.13%，市場未明顯反映IPO延遲的利率壓力。",
+   "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
+   "text": "AI產業面臨運算成本危機。輝達投資的以色列新創doubleAI推出程式碼執行模型Maxwell，聲稱可幫客戶節省67%運算費用，反映出AI業者對成本攀升的迫切需求——輝達H100算力租金過去一年上漲60%，OpenAI、Anthropic等大型AI實驗室每年訓練與推論支出龐大。高盛警告AI超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐面臨補跌壓力；CoreWeave債券殖利率升至15%左右，顯示AI融資壓力已擴散至整個產業。¶聯準會則從另一角度警示：AI繁榮可能加重通膨負擔。官員指出CPI數據顯示通膨仍需「進一步改善」，暗示降息空間有限。市場預期10/28會議維持利率機率達87%，至2026年底累計升息24bp，反映出聯準會對通膨與AI投資帶來的經濟結構性壓力的謹慎態度。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，石油鏈相關產業明顯改善是主要驅動力，前3季貨物貿易總額年增18.8%創歷史同期新高。\n匈牙利計畫在2027年將預算赤字削減至GDP的4.9%，作為加入歐元區的條件之一，反映歐洲財政整頓壓力升溫。",
+   "rate_note": "AI運算成本與融資壓力升高，加上聯準會對通膨的持續警示，偏向推升利率預期——企業資本支出與融資成本上升可能延緩降息時程；10年期今日+3bp至5.13%，市場已在反映這些風險。",
    "links": [
     {
-     "title": "Anthropic is AI trade's last big hope for a major IPO this year",
-     "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
-     "source": "CNBC",
-     "at": "2026-10-19T15:25:27+00:00"
+     "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
+     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-19T11:35:47+00:00"
     },
     {
-     "title": "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt",
-     "link": "https://247wallst.com/investing/2026/10/19/billionaire-ceo-ai-is-the-biggest-bubble-of-our-lifetime-but-investors-should-keep-buying-during-the-melt-up/?.tsrc=rss",
+     "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-19T14:04:26+00:00"
+    },
+    {
+     "title": "Tech rebounds as semiconductor stocks jump: AlphaCheck",
+     "link": "https://finance.yahoo.com/markets/article/tech-rebounds-as-semiconductor-stocks-jump-alphacheck-135003909.html?.tsrc=rss",
      "source": "Yahoo Finance",
-     "at": "2026-10-19T14:14:21+00:00"
+     "at": "2026-10-19T13:50:03+00:00"
+    },
+    {
+     "title": "AI太燒錢？輝達投資新創出招 稱幫客戶省67%運算費",
+     "link": "https://tw.stock.yahoo.com/news/ai%E5%A4%AA%E7%87%92%E9%8C%A2-%E8%BC%9D%E9%81%94%E6%8A%95%E8%B3%87%E6%96%B0%E5%89%B5%E5%87%BA%E6%8B%9B-%E7%A8%B1%E5%B9%AB%E5%AE%A2%E6%88%B6%E7%9C%8167-%E9%81%8B%E7%AE%97%E8%B2%BB-132002001.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-19T13:20:02+00:00"
     }
    ],
-   "at": "2026-10-19T15:34:59.545879+00:00"
+   "at": "2026-10-19T15:41:08.323942+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",

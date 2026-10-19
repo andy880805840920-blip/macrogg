@@ -42,7 +42,7 @@
    0.905
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
-  "vol": 18544558.575723004
+  "vol": 18544563.575723004
  },
  "senate": {
   "dem": 0.645,
@@ -264,7 +264,7 @@
      "lead": {
       "name": "Democrat",
       "party": "D",
-      "p": 0.9775
+      "p": 0.9715
      },
      "other": {
       "name": "Republican",
@@ -273,7 +273,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.8,
+     "gap": 95.2,
      "vol": 32327.51489300001,
      "url": "https://polymarket.com/event/delaware-senate-election-winner"
     },
@@ -773,11 +773,11 @@
      "other": {
       "name": "James W. Byrd",
       "party": "D",
-      "p": 0.012
+      "p": 0.011
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.4,
+     "gap": 97.5,
      "vol": 20601.245523,
      "url": "https://polymarket.com/event/wyoming-senate-election-winner"
     },
@@ -1309,11 +1309,11 @@
      "other": {
       "name": "Robert Charles",
       "party": "R",
-      "p": 0.044
+      "p": 0.045
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 90.9,
+     "gap": 90.8,
      "vol": 46221.534565,
      "url": "https://polymarket.com/event/maine-governor-winner-2026"
     },
@@ -1351,11 +1351,11 @@
      "other": {
       "name": "Michael Minogue",
       "party": "R",
-      "p": 0.0425
+      "p": 0.0435
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.5,
+     "gap": 91.3,
      "vol": 115349.36611599999,
      "url": "https://polymarket.com/event/massachusetts-governor-winner-2026"
     },
@@ -1372,11 +1372,11 @@
      "other": {
       "name": "John James",
       "party": "R",
-      "p": 0.0625
+      "p": 0.062
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 87.4,
+     "gap": 87.5,
      "vol": 373523.465444,
      "url": "https://polymarket.com/event/michigan-governor-winner-2026"
     },
@@ -1561,11 +1561,11 @@
      "other": {
       "name": "Christine Drazan",
       "party": "R",
-      "p": 0.205
+      "p": 0.2
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 58.0,
+     "gap": 58.5,
      "vol": 95708.755155,
      "url": "https://polymarket.com/event/oregon-governor-winner-2026"
     },
@@ -1708,11 +1708,11 @@
      "other": {
       "name": "Amanda Janoo",
       "party": "D",
-      "p": 0.2475
+      "p": 0.248
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 50.8,
+     "gap": 50.7,
      "vol": 239549.53260099998,
      "url": "https://polymarket.com/event/vermont-governor-winner-2026"
     },
