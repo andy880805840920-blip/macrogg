@@ -62,7 +62,8 @@ HISTORY_START = "2023-01-01"
 # 需要完整歷史的序列（其他一律從 HISTORY_START 起抓）：
 #   LNS13023622 失去工作者比重——z 值要 60 個月窗口、歷次衰退對照要 1967 起
 #   JTSHIR／JTSLDR 招聘率、裁員率——人力流動總結要對照疫情前 2015–2019 平均
-LONG_HISTORY = {"LNS13023622": "1967-01-01",
+LONG_HISTORY = {"THREEFYTP10": "2015-01-01",    # 長端頁：三個期限溢酬模型的 10 年對照圖
+                "LNS13023622": "1967-01-01",
                 "JTSHIR": "2015-01-01", "JTSLDR": "2015-01-01"}
 SAVE_FIXTURES = False
 REAL_MODULES: list[str] = []

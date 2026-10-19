@@ -32,79 +32,111 @@ def _md(iso: str) -> str:
 # ---------------------------------------------------------------------------
 # 頂部結論卡
 # ---------------------------------------------------------------------------
+def _chg3(c: dict) -> str:
+    """DTD／MTD／YTD 三行小字（bp）。"""
+    def one(tag, lab):
+        v = c.get(tag)
+        cls = "up" if (v or 0) > 0 else "dn" if (v or 0) < 0 else ""
+        return f'<em class="{cls}">{lab} {_bp(v)}</em>'
+    return one("dtd", "DTD") + one("mtd", "MTD") + one("ytd", "YTD")
+
+
 def hero(d: dict) -> str:
     """
-    首卡（2026-10 第三版，使用者：「畫得亂七八糟、文字太多」）：
-      一行報價（10Y／30Y）→ 本月主因一句 → 三段組成的小表（點一行看白話）。
-    顏色只在主因那一行（品牌橘左邊線）；藍橘綠三色與大卡全部拿掉。
+    首卡「Long End Driver」（2026-10 v4）：
+      10／20／30 年報價（DTD／MTD／YTD）→ 本月驅動因素一句 →
+      10Y ＝ TIPS ＋ BEI 組成條，下方平行一條 ACM 期限溢酬（長度依實際數字對比）→
+      三個組成份的小表（最新值＋MTD／YTD，點一行看白話）→ 近 12 個月日資料走勢。
     """
     L = d.get("le") or {}
-    curve = d.get("curve")
-    y10 = curve.levels.get("10Y") if curve else None
-    y30 = curve.levels.get("30Y") if curve else None
-    ch10 = (curve.changes_1m.get("10Y") * 100) if curve and "10Y" in curve.changes_1m else None
-    ch30 = (curve.changes_1m.get("30Y") * 100) if curve and "30Y" in curve.changes_1m else None
-    c1 = (L.get("contrib") or {}).get(1)
-    dec = (L.get("dec") or [None])[-1] if L.get("dec") else None
-    asof = (f'{d.get("as_of", "—")}（盤中）' if d.get("as_of_live")
-            else f'{d.get("as_of", "—")}（{d.get("yield_source", "FRED")} 官方日殖利率）')
+    D = L.get("drv") or {}
+    c1 = (L.get("contrib") or {}).get("mtd")
+    y10 = D.get("y10") or {}
 
-    def _q(name, v, ch):
-        cls = "up" if (ch or 0) > 0 else "dn" if (ch or 0) < 0 else ""
-        return (f'<div class="le2-qi"><span>{name}</span><b>{v:.2f}%</b>'
-                f'<em class="{cls}">近 1 月 {_bp(ch)}</em></div>')
+    def _q(name, c):
+        if not c:
+            return ""
+        return (f'<div class="le2-qi"><span>{name}</span><b>{c["value"]:.2f}%</b>'
+                f'<div class="le2-chg">{_chg3(c)}</div></div>')
     top = ""
-    if y10 is not None and y30 is not None:
-        top = (f'<div class="le2-q">{_q("10 年期", y10, ch10)}{_q("30 年期", y30, ch30)}</div>'
-               f'<div class="le2-asof">資料 {esc(asof)}</div>')
-    title = (f'本月主因：{le.COMP_ZH[c1["main"]]} {c1["parts"][c1["main"]]:+.0f}bp' if c1
-             else "長端利率的三股力量")
-    sub = (f'{le.PRESSURE_ZH[c1["main"]]}推高長端——{le.NATURE[c1["main"]]}。' if c1 else "")
+    if y10:
+        top = (f'<div class="le2-q">{_q("10 年期", y10)}{_q("20 年期", D.get("y20"))}{_q("30 年期", D.get("y30"))}</div>'
+               f'<div class="le2-asof">資料 {esc(y10.get("date", ""))}（{esc(d.get("yield_source", "FRED"))} 官方日殖利率）</div>')
+    main = (c1 or {}).get("main")
+    title = (f'本月驅動因素：{le.COMP_ZH[main]} {c1["parts"][main]:+.0f}bp' if main else "長端殖利率的組成")
+    sub = ""
+    if c1 and main:
+        sub = (f'10Y 本月 {c1["nominal"]:+.0f}bp ＝ 實質利率 {_bp(c1["parts"]["real"])} ＋ 損益兩平 {_bp(c1["parts"]["infl"])}'
+               + (f'；期限溢酬（ACM）{_bp(c1["parts"]["tp"])}' if c1["parts"].get("tp") is not None else "")
+               + f'。{le.NATURE[main]}。')
     table = ""
-    if dec:
+    comp = {k: D.get(k) or {} for k in ("real", "infl", "tp")}
+    if comp["real"] and comp["infl"]:
         from .. import charts
-        # 組成比例條保留（使用者 2026-10）：只用品牌色——主因那段橘、其餘兩段藏青深淺
-        _main = c1["main"] if c1 else None
-        _shade = iter(("var(--brand-navy)", "#8b97a8"))
-        col = {k: ("var(--brand-orange)" if k == _main else next(_shade)) for k in ("real", "infl", "tp")}
-        seg = charts.segbar([{"label": le.COMP_ZH[k], "value": dec[k], "color": col[k]}
-                             for k in ("real", "infl", "tp")])
+        shade = {"real": "var(--brand-navy)", "infl": "#8b97a8"}
+        if main in shade:
+            shade[main] = "var(--brand-orange)"
+        seg = charts.segbar([{"label": "實質利率（TIPS）", "value": comp["real"]["value"], "color": shade["real"]},
+                             {"label": "損益兩平通膨率（BEI）", "value": comp["infl"]["value"], "color": shade["infl"]}])
+        tpv = comp["tp"].get("value")
+        tot = (comp["real"]["value"] + comp["infl"]["value"]) or 1
+        tpbar = ""
+        if tpv is not None:
+            w = max(0.0, min(100.0, tpv / tot * 100))
+            tpbar = (f'<div class="le2-tpbar"><div class="le2-tpt"><span style="width:{w:.2f}%;'
+                     f'background:{"var(--brand-orange)" if main == "tp" else "#1baf7a"}"'
+                     f' data-tip="期限溢酬（NY Fed ACM）｜{tpv:.2f}%"></span></div>'
+                     f'<div class="le2-tpl">期限溢酬（NY Fed ACM）<b>{tpv:.2f}%</b>'
+                     f'<small>與 TIPS、BEI 重疊（TIPS 含實質期限溢酬、BEI 含通膨風險溢酬），長度依占 10Y 的比例</small></div></div>')
         rows = ""
+        cy = (L.get("contrib") or {}).get("ytd") or {}
         for k in ("real", "infl", "tp"):
-            dv = c1["parts"][k] if c1 else None
-            main = bool(c1 and c1["main"] == k)
-            cls = "up" if (dv or 0) > 0 else "dn" if (dv or 0) < 0 else "fl"
-            rows += (f'<div class="le2-r{" main" if main else ""}" title="{esc(le.NATURE[k])}">'
-                     f'<div class="le2-n"><span><i class="le2-sw" style="background:{col[k]}"></i>{esc(le.COMP_ZH[k])}'
-                     + ('<em>本月主因</em>' if main else "") + '</span>'
+            c = dict(comp[k])
+            if not c:
+                continue
+            # MTD／YTD 用跟標題同一組起訖（名目與 TIPS 對齊的那一天），表格與標題的數字才會一致
+            if c1 and (c1.get("parts") or {}).get(k) is not None:
+                c["mtd"] = c1["parts"][k]
+            if (cy.get("parts") or {}).get(k) is not None:
+                c["ytd"] = cy["parts"][k]
+            is_main = main == k
+            src = {"real": "TIPS", "infl": "BEI", "tp": "ACM"}[k]
+            rows += (f'<div class="le2-r{" main" if is_main else ""}" title="{esc(le.NATURE[k])}">'
+                     f'<div class="le2-n"><span><i class="le2-sw" style="background:'
+                     f'{shade.get(k, "#1baf7a") if k != "tp" else ("var(--brand-orange)" if is_main else "#1baf7a")}"></i>'
+                     f'{esc(le.COMP_ZH[k])}<em class="le2-src">{src}</em>'
+                     + ('<em>本月驅動</em>' if is_main else "") + '</span>'
                      f'<small>{esc(le.PRESSURE_ZH[k])}</small></div>'
-                     f'<b>{dec[k]:.2f}%</b><i class="{cls}">{_bp(dv)}</i></div>')
-        mo = int(dec["month"][5:])
-        chg_h = (f'{int(c1["from"][5:])}→{int(c1["to"][5:])} 月' if c1 else "變動")
-        table = (f'<div class="le2-seg">{seg}</div><div class="le2-t"><div class="le2-h"><span>10Y 三段組成（{mo} 月均）</span>'
-                 f'<span>水準</span><span>{chg_h}</span></div>{rows}</div>'
-                 '<p class="le2-tip">點一行看白話說明</p>')
+                     f'<div class="le2-v"><b>{c["value"]:.2f}%</b>'
+                     f'<small>MTD {_bp(c.get("mtd"))}　YTD {_bp(c.get("ytd"))}</small></div></div>')
+        table = (f'<div class="le2-seg">{seg}{tpbar}</div><div class="le2-t"><div class="le2-h">'
+                 f'<span>10Y 組成（{esc(_md(comp["real"].get("date", "")))}）</span><span>最新｜MTD／YTD</span></div>{rows}</div>'
+                 '<p class="le2-tip">點一行看白話說明</p>'
+                 f'<div class="viz-block"><div class="viz-h">10Y 名目殖利率與三個組成份（日資料，近 12 個月）</div>'
+                 f'{L.get("drv_chart", "")}</div>')
     js = ('<script>(function(){document.querySelectorAll(".le2-r[title]").forEach(function(r){'
           'r.addEventListener("click",function(){r.classList.toggle("tip-on");});});})();</script>')
-    return (f'<div class="grid"><div class="card focus-card"><div class="le-hero le2">'
+    return (f'<div class="grid"><div class="card focus-card"><div class="focus-eyebrow">Long End Driver</div>'
+            f'<div class="le-hero le2">'
             f'{top}<h2 class="focus-title">{esc(title)}</h2>'
             + (f'<p class="focus-sub">{esc(sub)}</p>' if sub else "")
             + f'{table}{_evidence()}{events(L)}</div></div></div>{js}')
 
 
 def _evidence() -> str:
-    """首卡的「判斷依據」：三股力量各自用什麼量、為什麼這樣分。"""
+    """首卡的「判斷依據」：三個組成份各自用什麼量、怎麼判斷驅動因素。"""
     from . import focus_evidence
     steps = "".join(
-        f'<div class="logic-step"><b>{esc(p)}＝{esc(zh)}</b><span>{esc(src)}</span></div>'
-        for p, zh, src in (
-            ("政策壓力", "預期實質路徑", "Kim-Wright 擬合殖利率 − 期限溢酬 − 預期通膨；市場對未來實質短率的平均預期"),
-            ("通膨壓力", "預期通膨", "克里夫蘭聯儲 10 年預期通膨（模型值，已扣風險溢酬）"),
-            ("財政與供給壓力", "期限溢酬", "Kim-Wright 10 年期限溢酬")))
+        f'<div class="logic-step"><b>{esc(p)}</b><span>{esc(src)}</span></div>'
+        for p, src in (
+            ("實質利率＝10 年期 TIPS 殖利率", "財政部實質殖利率曲線（FRED DFII10），每日；含預期實質利率路徑＋實質期限溢酬"),
+            ("損益兩平通膨率＝10Y 名目 − TIPS", "DGS10 − DFII10（同一天），含預期平均通膨＋通膨風險溢酬；兩項相加恰好等於名目"),
+            ("期限溢酬＝NY Fed ACM 10 年", "紐約聯儲 ACM 模型每日估計；含實質期限溢酬＋通膨風險溢酬，跟上面兩項重疊、不相加")))
     return focus_evidence(f'<div class="logic-strip">{steps}</div>'
-                          '<p class="hint" style="margin-top:8px">三段一律用月均相加，剩下的差列為殘差；'
-                          'TIPS 與損益兩平只當參考。本月主因＝三段中變動絕對值最大的那一段。</p>',
-                          "查看三股力量怎麼量")
+                          '<p class="hint" style="margin-top:8px">MTD 基期＝上月最後一個交易日、YTD 基期＝去年最後一個交易日；'
+                          'TIPS 晚一天公布，拆解的終點取名目與 TIPS 都有資料的最後一天。'
+                          '本月驅動因素＝三項中跟 10Y 同方向、MTD 變動最大的那一項（10Y 幾乎沒動時三項一起比）。</p>',
+                          "查看三個組成份怎麼量")
 
 
 def events(L: dict) -> str:
@@ -142,16 +174,16 @@ def _trend_line(L: dict) -> str:
     m1, m3, m12 = mains[1], mains[3], mains[12]
     z = le.COMP_ZH
     if m1 == m3 == m12:
-        txt, cls = (f"<b>趨勢</b>：{z[m1]}在 1、3、12 個月都是最大推力，"
+        txt, cls = (f"<b>趨勢</b>：{z[m1]}在 1、3、12 個月都是主要驅動因素，"
                     f"這不是單月雜訊。"), "trend"
     elif m3 == m12:
-        txt, cls = (f"<b>本月偏雜訊</b>：這個月主因是{z[m1]}，但 3 與 12 個月的主因都是"
+        txt, cls = (f"<b>近期偏雜訊</b>：近 1 個月的驅動因素是{z[m1]}，但 3 與 12 個月都是"
                     f"{z[m3]}——趨勢仍是後者。"), "noise"
     elif m1 == m3:
-        txt, cls = (f"<b>新趨勢成形中</b>：近 1、3 個月主因都是{z[m1]}，"
+        txt, cls = (f"<b>新趨勢成形中</b>：近 1、3 個月的驅動因素都是{z[m1]}，"
                     f"12 個月看則是{z[m12]}。"), "turn"
     else:
-        txt, cls = (f"<b>方向未定</b>：1、3、12 個月的主因各不相同"
+        txt, cls = (f"<b>方向未定</b>：1、3、12 個月的驅動因素各不相同"
                     f"（{z[m1]}／{z[m3]}／{z[m12]}）。"), "mixed"
     chips = "".join(f'<span><em>{k} 個月</em>{z[mains[k]]}</span>' for k in (1, 3, 12))
     if cls == "trend":            # 三個窗都同一段：標籤列只是重複，不放
@@ -160,40 +192,88 @@ def _trend_line(L: dict) -> str:
             + (f'<div class="le3-trc">{chips}</div>' if chips else "") + '</div>')
 
 
+def _derivation() -> str:
+    """長端殖利率拆解推導（Fisher、Lutz、Hicks）——公式用 HTML，不靠外部數學套件。"""
+    E = '<i>E</i><sub>t</sub>'
+    S = '∑<sub>j=0</sub><sup>n−1</sup>'
+    y = 'y<sub>t</sub><sup>(n)</sup>'
+    path_i = f'(1/n)·{E}[{S} i<sub>t+j</sub>]'
+    path_r = f'(1/n)·{E}[{S} r<sub>t+j</sub>]'
+    path_p = f'(1/n)·{E}[{S} π<sub>t+j+1</sub>]'
+    tp, rtp, irp = 'TP<sub>t</sub><sup>(n)</sup>', 'RTP<sub>t</sub><sup>(n)</sup>', 'IRP<sub>t</sub><sup>(n)</sup>'
+    steps = [
+        ("純粹預期理論（Fisher 1896、Lutz 1940）",
+         "沒有套利時，長天期殖利率等於各期短期利率的複利結果，近似於預期短率的平均。",
+         f'(1 + {y})<sup>n</sup> = {E}[(1+i<sub>t</sub>)(1+i<sub>t+1</sub>)…(1+i<sub>t+n−1</sub>)]　⇒　{y} ≈ {path_i}'),
+        ("流動性溢酬理論（Hicks 1939）",
+         "持有長債要承擔較大的價格風險（加上違約、通膨風險），需要額外補償＝期限溢酬。",
+         f'{y} = {path_i}<span class="eq-l">預期利率路徑</span> ＋ {tp}<span class="eq-l">期限溢酬</span>'),
+        ("費雪關係式（Fisher 1930）拆預期利率路徑",
+         "名目利率＝實質利率＋預期通膨。",
+         f'{path_i} = {path_r}<span class="eq-l">預期實質利率路徑</span> ＋ {path_p}<span class="eq-l">預期平均通膨</span>'),
+        ("TIPS 殖利率也有自己的期限溢酬",
+         "TIPS 是實質殖利率；持有長天期實質債同樣要求補償＝實質期限溢酬（RTP）。",
+         f'y<sub>t</sub><sup>(n),R</sup> = {path_r} ＋ {rtp}'),
+        ("通膨風險溢酬",
+         "名目期限溢酬與實質期限溢酬的差＝通膨風險溢酬（IRP）。",
+         f'{irp} ≡ {tp} − {rtp}'),
+        ("名目殖利率拆成四項",
+         "代回第 2 步：預期利率路徑與期限溢酬兩項裡，都有「通膨」的影子。",
+         f'{y} = {path_r} ＋ {path_p} ＋ {rtp} ＋ {irp}'),
+        ("損益兩平通膨率（BEI）",
+         "同天期名目殖利率減 TIPS 殖利率；忽略 TIPS 相對名目公債的流動性溢酬（正常市況下很小）。",
+         f'BEI<sub>t</sub><sup>(n)</sup> ≡ {y} − y<sub>t</sub><sup>(n),R</sup> = {path_p} ＋ {irp}'),
+    ]
+    rows = "".join(f'<li><b>{esc(t)}</b><p>{esc(x)}</p><div class="eq">{f}</div></li>' for t, x, f in steps)
+    return (f'<details class="f-more"><summary>推導：長端殖利率怎麼拆（Fisher、Hicks）</summary><div class="f-detail">'
+            f'<ol class="le-deriv">{rows}</ol>'
+            '<table class="lq-tbl le-map"><thead><tr><th>市場看得到的</th><th>包含的成分</th></tr></thead><tbody>'
+            '<tr><td class="k" data-label="價格"><b>TIPS 實質殖利率</b></td><td data-label="成分">預期實質利率路徑 ＋ 實質期限溢酬</td></tr>'
+            '<tr><td class="k" data-label="價格"><b>損益兩平通膨率（BEI）</b></td><td data-label="成分">預期平均通膨 ＋ 通膨風險溢酬</td></tr>'
+            '<tr><td class="k" data-label="價格"><b>期限溢酬（模型估計）</b></td><td data-label="成分">實質期限溢酬 ＋ 通膨風險溢酬（再細分可含流動性、財政溢價）</td></tr>'
+            '</tbody></table>'
+            '<p class="hint">所以實際可觀察、而且能恆等相加的拆法是 <b>名目 ＝ TIPS ＋ BEI</b>；期限溢酬只能靠模型估計，'
+            '跟 TIPS、BEI 都有重疊，另外並列。在 Fed 預期長期通膨維持 2% 的背景下，BEI 穩定代表通膨風險溢酬沒有上揚、'
+            'Fed 對抗通膨的公信力仍在。</p></div></details>')
+
+
 def decomp(d: dict) -> str:
     """
-    長端利率的組成（2026-10 v3，使用者：點開太多層）：
-    這一區只回答「本月的主因是趨勢還是雜訊」。首卡已經講了這個月是誰在推，
-    這裡不再重複主因句；房貸拿掉；「Fed 跟上曲線」搬到殖利率曲線；
-    市場口徑、教學與方法併成一個收合。
+    長端利率的組成（2026-10 v4）：
+      推導（收合）→ 1／3／12 個月／年初至今的利率橋（市場拆解＋模型拆解）→
+      年初至今變化分解（Fig. 5 樣式）→ 三個模型的期限溢酬（近 10 年日資料）。
     """
     L = d.get("le") or {}
     br = L.get("bridges") or {}
     if not br:
         return '<div class="empty">拆解資料不足</div>'
-    tabs = ""
-    for i, k in enumerate((1, 3, 12)):
-        if k not in br:
-            continue
+    labs = {1: "1 個月", 3: "3 個月", 12: "12 個月", "ytd": "年初至今"}
+    tabs, panes = "", ""
+    for i, k in enumerate(k for k in (1, 3, 12, "ytd") if k in br):
         tabs += (f'<input type="radio" name="le-br" id="le-br{k}"{" checked" if i == 0 else ""}>'
-                 f'<label for="le-br{k}">{k} 個月</label>')
-    panes = "".join(f'<div class="tabp p{k}">{br[k]}</div>' for k in (1, 3, 12) if k in br)
-    mr = L.get("market_ref") or {}
-    ref = (f'<p><b>市場口徑</b>：TIPS 實質利率 {mr.get("real") or 0:.2f}%、損益兩平 {mr.get("be") or 0:.2f}%。'
-           '兩者各自混了風險溢酬與流動性溢酬，加不出三股力量，只當參考。</p>') if mr.get("real") is not None else ""
+                 f'<label for="le-br{k}">{labs[k]}</label>')
+        panes += f'<div class="tabp p{k}">{br[k]}</div>'
+    D = L.get("drv") or {}
+    tpn = "　·　".join(f'{n} {D[k]["value"]:.2f}%（{_md(D[k]["date"])}）'
+                      for k, n in (("tp", "ACM"), ("tp_sf", "SF Fed"), ("tp_kw", "Kim-Wright")) if D.get(k))
     return f"""
     {_trend_line(L)}
+    {_derivation()}
     <div class="tabs le-tabs">{tabs}{panes}</div>
-    <div class="viz-block"><div class="viz-h">三段的走勢（月均，近 24 個月）</div>
-      {L.get('dec_lines', '')}</div>
+    <div class="viz-block"><div class="viz-h">年初至今變化分解：市場拆解（bp）</div>
+      <p class="viz-sub">10Y 的變化恰好等於 TIPS 與 BEI 變化的和。</p>{L.get('ytd_market', '')}</div>
+    <div class="viz-block"><div class="viz-h">年初至今變化分解：模型拆解（bp）</div>
+      <p class="viz-sub">預期利率路徑＝10Y − ACM 期限溢酬；兩者變化相加等於 10Y 的變化。</p>{L.get('ytd_model', '')}</div>
+    <div class="viz-block"><div class="viz-h">10 年期期限溢酬：三個模型（日資料，近 10 年）</div>
+      {(f'<p class="viz-sub">最新：{esc(tpn)}</p>' if tpn else "")}{L.get('tp_models', '')}</div>
     <details class="f-more"><summary>怎麼讀・方法與資料</summary>
       <div class="f-detail le3-how">
-        <p><b>怎麼讀</b>：10 年期殖利率拆成三段相加——預期實質路徑（政策）、預期通膨、期限溢酬（財政與供給）。
-        先看首卡的「本月主因」，再看這裡 1、3、12 個月是否同一段：一致才是趨勢。</p>
-        <p><b>期限溢酬</b>：Kim-Wright 模型（FRED THREEFYTP10）。<b>預期通膨</b>：克里夫蘭聯儲 EXPINF10YR（月頻，已扣風險溢酬）。
-        <b>預期實質路徑</b>：擬合殖利率 − 期限溢酬 − 預期通膨。<b>殘差</b>：實際 10 年期與模型擬合值的差，照實列出。</p>
-        <p>預期通膨是月頻，三段一律用月均對齊，所以跟頁首的日資料變動不會完全一樣；兩個模型出自不同機構，相加是近似。</p>
-        {ref}
+        <p><b>怎麼讀</b>：先看首卡的「本月驅動因素」，再看這裡 1、3、12 個月的驅動因素是否同一項：一致才是趨勢。
+        市場拆解（TIPS＋BEI）是可交易價格、恆等相加；模型拆解（預期利率路徑＋期限溢酬）回答「是預期在變，還是補償在變」。</p>
+        <p><b>資料</b>：名目殖利率 DGS10（財政部）；TIPS 實質殖利率 DFII10（財政部實質殖利率曲線）；BEI＝DGS10 − DFII10。
+        期限溢酬：紐約聯儲 ACM（每日，主要口徑）、舊金山聯儲 Christensen–Rudebusch 模型（每日）、Kim-Wright（FRED THREEFYTP10）。
+        三個模型的水準差很多，看變化方向比看水準重要。</p>
+        <p><b>時間</b>：TIPS 晚名目一天公布；ACM 約晚一個交易日、Kim-Wright 約晚一週。利率橋的終點各自標出資料日期。</p>
       </div>
     </details>"""
 
@@ -910,16 +990,16 @@ def guidance_stale(d: dict) -> str:
 # ---------------------------------------------------------------------------
 # 指標檢核：依三股力量分組
 # ---------------------------------------------------------------------------
-GROUPS = [("tp", "財政與供給壓力", ("term_premium", "curve_30_10", "interest_to_revenue", "r_minus_g")),
-          ("real", "政策壓力", ("real_10y", "curve_10_2")),
-          ("infl", "通膨壓力", ("breakeven_10y",)),
+GROUPS = [("tp", "期限溢酬：不確定性補償", ("term_premium", "curve_30_10", "interest_to_revenue", "r_minus_g")),
+          ("real", "實質利率：政策預期", ("real_10y", "curve_10_2")),
+          ("infl", "損益兩平：通膨預期", ("breakeven_10y",)),
           ("demand", "需求", ("ig_spread",))]
 
 
 def lights_grouped(d: dict, card_fn) -> str:
     L = d.get("le") or {}
-    c1 = (L.get("contrib") or {}).get(1)
-    main = c1["main"] if c1 else None
+    c1 = (L.get("contrib") or {}).get("mtd")
+    main = c1.get("main") if c1 else None
     by = {l.key: l for l in d.get("lights") or []}
     order = sorted(GROUPS, key=lambda g: 0 if g[0] == main else 1)
     out = []
@@ -927,7 +1007,7 @@ def lights_grouped(d: dict, card_fn) -> str:
         ls = [by[k] for k in keys if k in by]
         if not ls:
             continue
-        badge = '<span class="le-badge">本月主因</span>' if key == main else ""
+        badge = '<span class="le-badge">本月驅動</span>' if key == main else ""
         out.append(f'<div class="le-lg" style="--k:{len(ls)}"><div class="sig-tier">{esc(name)}{badge}</div>'
                    f'<div class="le-lgc">{"".join(card_fn(l) for l in ls)}</div></div>')
     return f'<div class="le-lgs">{"".join(out)}</div>'

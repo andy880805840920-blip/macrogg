@@ -389,9 +389,9 @@ def _rates_body_full(d: dict) -> str:
 
     # ---- 2026-10 改版：各區收合摘要與財政三張事實卡 ----
     _L = d.get("le") or {}
-    _c1 = (_L.get("contrib") or {}).get(1)
-    _dec_sum = (f'主因：{LE.le.COMP_ZH[_c1["main"]]} {_c1["parts"][_c1["main"]]:+.0f}bp'
-                f'　·　10Y 月均 {_c1["nominal"]:+.0f}bp' if _c1 else "三股力量的拆解")
+    _c1 = (_L.get("contrib") or {}).get("mtd")
+    _dec_sum = (f'本月驅動：{LE.le.COMP_ZH[_c1["main"]]} {_c1["parts"][_c1["main"]]:+.0f}bp'
+                f'　·　10Y MTD {_c1["nominal"]:+.0f}bp' if _c1 and _c1.get("main") else "10Y＝TIPS＋BEI 與期限溢酬")
     _sl = {x["label"]: x for x in _L.get("slopes") or []}
     _crv_sum = "　·　".join(f'{k} {v["value"]:+.0f}bp' for k, v in _sl.items()) or "殖利率曲線"
     _gr = (_L.get("global") or {}).get("rows") or []
@@ -536,7 +536,7 @@ def _rates_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
-    <p class="hint">依三股力量分組；本月推動 10Y 最多的那一組排第一。不另設權重——權重由市場這個月的貢獻決定。</p>
+    <p class="hint">依三個組成份分組；本月驅動 10Y 的那一組排第一。不另設權重——權重由市場這個月的變化決定。</p>
     {lights_impact}
     {LE.lights_grouped(d, _light_card)}
     {teach(
@@ -622,8 +622,8 @@ def _rates_body_full(d: dict) -> str:
 
 def rates_body(d: dict) -> str:
     """
-    首卡（2026-10 改版）：10Y／30Y 與近 1 月變動、本月主因一句話、10Y 由三段組成的分段條、
-    三股力量各一張小卡、接下來 4 週的事件。其餘完整內容收在下方。
+    首卡「Long End Driver」（2026-10 v4）：10／20／30Y 與 DTD／MTD／YTD、本月驅動因素、
+    10Y＝TIPS＋BEI 組成條與 ACM 期限溢酬、三個組成份小表與走勢、接下來 4 週的事件。
     """
     return LE.hero(d) + compact_full(_rates_body_full(d), "長端拆解、供給、拍賣與財政")
 
@@ -633,9 +633,8 @@ def rates_footer(d: dict) -> str:
     _ten = "官方每日資料；與盤中報價分開呈現"
     return source_footer(
         [("公債殖利率", "美國財政部／FRED 每日殖利率", "每日・" + _ten),
-         ("損益兩平、TIPS", "FRED（T10YIE、DFII 系列）", "每日・依實際資料日"),
-         ("期限溢酬", "聯準會 Kim-Wright 模型（FRED）", "每日・約晚一週"),
-         ("預期通膨（模型）", "克里夫蘭聯儲（FRED）", "每月"),
+         ("TIPS 實質殖利率、損益兩平", "財政部實質殖利率曲線（FRED DFII10）；BEI＝DGS10 − DFII10", "每日・晚名目一天"),
+         ("期限溢酬", "紐約聯儲 ACM（主要）、舊金山聯儲、Kim-Wright（FRED）", "每日・ACM 晚約一個交易日"),
          ("油價", "EIA（FRED）", "每日"),
          ("信用利差", "ICE BofA 指數（FRED）", "每日"),
          ("拍賣結果", "TreasuryDirect", "每次拍賣"),

@@ -2872,6 +2872,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .focus-eyebrow{font-weight:700}
 .viz-root:not(#_) .sg-seg b,.viz-root:not(#_) .le-mixb span{font-size:var(--fs-small);font-weight:700}
 .viz-root:not(#_) .logic-step b,.viz-root:not(#_) .tabs>label{font-size:var(--fs-body)}
+.tabs>label{min-height:40px;display:inline-flex;align-items:center}
 .viz-root:not(#_) .logic-step span,.viz-root:not(#_) .le-up span,.viz-root:not(#_) .focus-metric>span,.viz-root:not(#_) .focus-metric>small,
 .viz-root:not(#_) .tlines-k,.viz-root:not(#_) .l-more>summary,.viz-root:not(#_) .pagenav a{font-size:var(--fs-small)}
 .viz-root:not(#_) .br-val small,.viz-root:not(#_) .wf-val small{font-size:var(--fs-micro);font-weight:400}
@@ -3732,6 +3733,32 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(max-width:400px){.le2-h,.le2-r{grid-template-columns:minmax(0,1fr) 66px 76px;padding-left:12px;padding-right:12px}}
 .le2-seg{margin-top:16px}.le2-seg .cl-leg{display:none}.le2-seg+.le2-t{margin-top:8px}
 .le2-sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:1px}
+/* 2026-10 v4：Long End Driver——三檔報價、DTD／MTD／YTD 三行、期限溢酬平行條、表格兩欄 */
+.le2-q{grid-template-columns:repeat(3,minmax(0,1fr))}
+.le2-chg{grid-area:c;display:flex;flex-direction:column;gap:1px;align-self:end}
+.le2-chg em{font-style:normal;font-size:11px;color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
+.le2-chg em.up::before{content:"▲ ";color:var(--critical);font-size:9px}
+.le2-chg em.dn::before{content:"▼ ";color:var(--good);font-size:9px}
+@media(max-width:560px){.le2-q .le2-qi{grid-template-areas:"k" "v" "c";grid-template-columns:1fr;padding:10px}}
+.le2-tpbar{margin-top:8px}
+.le2-tpt{height:22px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.le2-tpt span{display:block;height:100%;border-radius:6px 0 0 6px}
+.le2-tpl{font-size:var(--fs-small);color:var(--text-secondary);margin-top:4px;line-height:1.5}
+.le2-tpl b{margin-left:6px;color:var(--text-primary)}
+.le2-tpl small{display:block;font-size:var(--fs-micro);color:var(--faint)}
+.le2-h,.le2-r{grid-template-columns:minmax(0,1fr) auto}
+.le2-v{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.le2-v small{font-size:11px;color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
+.le2-n em.le2-src{background:var(--surface-2);color:var(--text-secondary);font-weight:600}
+.br-h{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary);margin:14px 0 4px}
+.le-deriv{margin:6px 0 10px;padding-left:20px}
+.le-deriv li{margin:10px 0}
+.le-deriv li p{margin:3px 0;font-size:13px;color:var(--text-secondary);line-height:1.65}
+.eq{font-family:"Times New Roman",Georgia,serif;font-size:15px;line-height:2.2;padding:6px 12px;margin-top:4px;
+  background:var(--surface-2);border-radius:8px;overflow-x:auto;white-space:nowrap}
+.eq sub,.eq sup{font-size:.7em}
+.eq-l{display:inline-block;font-family:inherit;font-size:10.5px;color:var(--muted);margin:0 4px;vertical-align:-3px;
+  border-bottom:1px solid var(--grid)}
 .el-mpane[hidden],.el-msum[hidden]{display:none!important}
 .el-mpane>.el-more-k:first-child{margin-top:4px}
 /* 關鍵數字卡 2026-10：判讀小表取代膠囊；日期右上淺灰；白話收進收合層 */

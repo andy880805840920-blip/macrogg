@@ -2891,31 +2891,57 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     from .analysis import longend as le
     from .treasury_source import TENOR_ZH
     out: dict = {"failed": list(tr.get("failed") or [])}
-    dec = le.decompose(series)
-    out["dec"] = dec
-    out["contrib"] = {k: le.contribution(dec, k) for k in (1, 3, 12)}
-    c1 = out["contrib"][1]
+    # 10Y 拆解（2026-10 v4）：名目 ＝ TIPS ＋ BEI（恆等）；期限溢酬（ACM）並列、不相加
+    ds = le.driver_series(series, tr.get("term_premia"))
+    out["drv"] = {k: le.level_changes(ds[k]) for k in ("y10", "y20", "y30", "real", "infl", "tp", "tp_sf", "tp_kw")}
+    out["contrib"] = {k: le.contribution_window(ds, k) for k in ("mtd", 1, 3, 12, "ytd")}
+    c1 = out["contrib"]["mtd"]
     out["main_sentence"] = le.main_sentence(c1)
-    out["dec_lines"] = charts.compact_lines([
-        {"label": "預期實質路徑", "color": "var(--line-1)",
-         "points": [{"date": d["month"] + "-01", "value": d["real"]} for d in dec]},
-        {"label": "預期通膨", "color": "var(--line-2)",
-         "points": [{"date": d["month"] + "-01", "value": d["infl"]} for d in dec]},
-        {"label": "期限溢酬", "color": "#1baf7a",
-         "points": [{"date": d["month"] + "-01", "value": d["tp"]} for d in dec]},
-    ], unit="%", height=150, digits=2, aria="10 年利率三段組成（月均）")
+    _C = {"y10": "var(--text-primary)", "real": "var(--line-1)", "infl": "var(--line-2)",
+          "tp": "#1baf7a", "path": "var(--line-3)"}
+    out["drv_chart"] = charts.compact_lines([
+        {"label": "10Y 名目殖利率", "color": _C["y10"], "dash": True, "points": ds["y10"]},
+        {"label": "實質利率（TIPS）", "color": _C["real"], "points": ds["real"]},
+        {"label": "損益兩平通膨率（BEI）", "color": _C["infl"], "points": ds["infl"]},
+        {"label": "期限溢酬（NY Fed ACM）", "color": _C["tp"], "points": ds["tp"]},
+    ], unit="%", height=180, digits=2, months=12, xmonths=True, zero=True,
+        aria="10 年期名目殖利率與三個組成份（日資料，近 12 個月）")
+    fd = lambda iso: f"{iso[:4]}/{int(iso[5:7])}/{int(iso[8:10])}" if iso else ""
     out["bridges"] = {}
-    for k, c in out["contrib"].items():
+    for k in (1, 3, 12, "ytd"):
+        c = out["contrib"].get(k)
         if not c:
             continue
-        parts = [{"label": le.COMP_ZH[key], "bp": c["parts"][key],
-                  "note": le.PRESSURE_ZH[key], "main": key == c["main"]}
-                 for key in ("real", "infl", "tp")]
-        parts.append({"label": "殘差", "bp": c["resid"], "note": "實際 10Y − 模型擬合值",
-                      "muted": True})
-        fm = lambda m: f"{m[:4]}/{int(m[5:7])}"
-        out["bridges"][k] = charts.bridge(c["start"], f"{fm(c['from'])} 10Y（月均）",
-                                          parts, c["end"], f"{fm(c['to'])} 10Y（月均）")
+        mk = [{"label": le.COMP_ZH[key], "bp": c["parts"][key], "note": le.PRESSURE_ZH[key],
+               "main": key == c["main"]} for key in ("real", "infl") if c["parts"].get(key) is not None]
+        html = ('<div class="br-h">市場拆解：名目 ＝ TIPS ＋ BEI</div>'
+                + charts.bridge(c["start"], f"{fd(c['from'])} 10Y", mk, c["end"], f"{fd(c['to'])} 10Y"))
+        if c.get("m_start") is not None and c.get("m_end") is not None and c.get("path") is not None:
+            md = [{"label": "預期利率路徑", "bp": c["path"], "note": "名目 − ACM 期限溢酬"},
+                  {"label": "期限溢酬（ACM）", "bp": c["parts"]["tp"], "note": "實質期限溢酬＋通膨風險溢酬",
+                   "main": c["main"] == "tp"}]
+            html += ('<div class="br-h">模型拆解：名目 ＝ 預期利率路徑 ＋ 期限溢酬</div>'
+                     + charts.bridge(c["m_start"], f"{fd(c['tp_from'])} 10Y", md, c["m_end"], f"{fd(c['tp_to'])} 10Y"))
+        out["bridges"][k] = html
+    yp = le.ytd_paths(ds)
+    out["ytd_market"] = charts.compact_lines([
+        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": yp.get("y10") or []},
+        {"label": "實質利率（TIPS）", "color": _C["real"], "points": yp.get("real") or []},
+        {"label": "損益兩平通膨率（BEI）", "color": _C["infl"], "points": yp.get("infl") or []},
+    ], unit="", height=170, digits=0, months=12, xmonths=True, zero=True,
+        aria="10 年期殖利率年初至今變化：TIPS 與 BEI（bp）") if yp.get("y10") else ""
+    out["ytd_model"] = charts.compact_lines([
+        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": yp.get("y10") or []},
+        {"label": "預期利率路徑（名目 − ACM）", "color": _C["path"], "points": yp.get("path") or []},
+        {"label": "期限溢酬（ACM）", "color": _C["tp"], "points": yp.get("tp") or []},
+    ], unit="", height=170, digits=0, months=12, xmonths=True, zero=True,
+        aria="10 年期殖利率年初至今變化：預期利率路徑與期限溢酬（bp）") if yp.get("path") else ""
+    out["tp_models"] = charts.compact_lines([
+        {"label": "NY Fed ACM", "color": "#1baf7a", "points": ds["tp"]},
+        {"label": "San Francisco Fed", "color": "var(--line-2)", "points": ds["tp_sf"]},
+        {"label": "Kim-Wright", "color": "var(--line-1)", "points": ds["tp_kw"]},
+    ], unit="%", height=180, digits=2, months=124, xmonths=True, zero=True, step=0.5,
+        aria="10 年期期限溢酬：三個模型（日資料，近 10 年）") if (ds["tp"] or ds["tp_sf"]) else ""
     # TIPS／損益兩平（參考：市場口徑）
     out["market_ref"] = {"real": value_at(series.get("DFII10") or []),
                          "be": value_at(series.get("T10YIE") or [])}
@@ -3121,12 +3147,12 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                    "low" if _tp is not None and _tp < _tpc.get("green_below", 0.4) else
                    "moderate" if _tp is not None else "unknown")
     from .analysis import longend as _le
-    _c1 = _le.contribution(_le.decompose(series), 1)
+    _c1 = _le.contribution_window(_le.driver_series(series, (treasury or {}).get("term_premia")), "mtd")
     press.parts = ([{"label": _le.COMP_ZH[k], "detail": _le.PRESSURE_ZH[k],
-                     "score": _c1["parts"][k] / 100} for k in ("tp", "infl", "real")]
-                   if _c1 else [])
-    press.main = (_le.COMP_ZH[_c1["main"]] if _c1 else "")
-    press.main_bp = (_c1["parts"][_c1["main"]] if _c1 else None)
+                     "score": (_c1["parts"][k] or 0) / 100} for k in ("tp", "infl", "real")]
+                   if _c1 and _c1.get("main") else [])
+    press.main = (_le.COMP_ZH[_c1["main"]] if _c1 and _c1.get("main") else "")
+    press.main_bp = (_c1["parts"][_c1["main"]] if _c1 and _c1.get("main") else None)
 
     # ---- 燈號 ----
     computed = {}

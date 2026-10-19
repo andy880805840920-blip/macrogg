@@ -1,17 +1,15 @@
 """
-長端利率的三股力量與供給、拍賣（2026-10 改版）。
+長端利率的組成與供給、拍賣（2026-10 改版；2026-10 v4 改用 TIPS＋BEI 與 ACM 期限溢酬拆解）。
 
-拆解（模型三段相加）
---------------------
-    10 年擬合殖利率（Kim-Wright）＝ 預期實質路徑 ＋ 預期通膨 ＋ 期限溢酬
-      期限溢酬    Kim-Wright THREEFYTP10                 → 財政與供給壓力
-      預期通膨    克里夫蘭聯儲 EXPINF10YR（已扣風險溢酬）→ 通膨壓力
-      預期實質路徑 擬合殖利率 − 期限溢酬 − 預期通膨        → 政策壓力
-    實際 10Y（DGS10）與擬合殖利率的差列為「殘差」，照實顯示。
-
-預期通膨是月頻，所以三段一律用**月均**對齊，貢獻＝月均對月均的變動。
-TIPS 實質利率與損益兩平是市場口徑，只當參考：兩者各自混了風險溢酬，
-三段加不起來，也分不出誰是主因。
+拆解（2026-10 v4，依 Fisher／Hicks 的推導）
+--------------------------------------------
+    名目殖利率 ＝ 預期利率路徑 ＋ 期限溢酬
+              ＝（預期實質利率路徑 ＋ 預期平均通膨）＋（實質期限溢酬 ＋ 通膨風險溢酬）
+    市場上看得到的兩個價格剛好把四項重新分組：
+      TIPS 實質殖利率（DFII10）＝ 預期實質利率路徑 ＋ 實質期限溢酬
+      損益兩平通膨率（BEI＝DGS10 − DFII10）＝ 預期平均通膨 ＋ 通膨風險溢酬
+    所以 名目 ＝ TIPS ＋ BEI（逐日恆等，沒有殘差）；期限溢酬由模型估計
+    （NY Fed ACM 為主，舊金山聯儲、Kim-Wright 對照），跟 TIPS／BEI 重疊、不相加。
 
 所有判定都只做「哪一段動得最多」這種事實比較，不做加權總分。
 """
@@ -21,10 +19,15 @@ from __future__ import annotations
 import datetime as dt
 import re
 
-COMP = [  # key, 中文, 壓力名稱, 性質
-    ("real", "預期實質路徑", "政策壓力", "市場預先替 Fed 定價；Fed 跟上之前只是預告"),
-    ("infl", "預期通膨", "通膨壓力", "名目緊縮、實質未收緊：借貸成本變高，但實質利率沒動"),
-    ("tp", "期限溢酬", "財政與供給壓力", "不靠 Fed 也會收緊金融條件"),
+# 10 年期名目殖利率的拆解（2026-10 v4）：
+#   名目 ＝ TIPS 實質殖利率 ＋ 損益兩平通膨率（BEI＝名目 − TIPS），兩項相加恰好等於名目
+#   期限溢酬（NY Fed ACM）跟上面兩項重疊：TIPS 含實質期限溢酬、BEI 含通膨風險溢酬，
+#   所以它單獨並列，不跟另外兩項相加。
+# key 沿用 real／infl／tp（其他區塊與燈號分組用這三個 key）。
+COMP = [  # key, 中文, 灰字（白話定位）, 白話說明
+    ("real", "實質利率", "政策預期", "市場對 Fed 未來政策路徑的預估"),
+    ("infl", "損益兩平通膨率", "通膨預期；長期", "長期通膨水準的錨定，也是市場對 Fed 獨立性的信心"),
+    ("tp", "期限溢酬", "因為不確定性所要求的額外補償", "來自政策與通膨預期，是市場自行收緊金融條件的機制"),
 ]
 COMP_ZH = {k: zh for k, zh, _, _ in COMP}
 PRESSURE_ZH = {k: p for k, _, p, _ in COMP}
@@ -41,44 +44,147 @@ def monthly_avg(rows: list[dict]) -> dict:
     return {k: sum(v) / len(v) for k, v in acc.items()}
 
 
-def decompose(series: dict) -> list[dict]:
-    """逐月：{month, fitted, tp, infl, real, nominal, resid}，由舊到新。"""
-    fy = monthly_avg(series.get("THREEFY10") or [])
-    tp = monthly_avg(series.get("THREEFYTP10") or [])
-    ei = monthly_avg(series.get("EXPINF10YR") or [])
-    nom = monthly_avg(series.get("DGS10") or [])
-    out = []
-    for m in sorted(set(fy) & set(tp) & set(ei)):
-        real = fy[m] - tp[m] - ei[m]
-        out.append({"month": m, "fitted": fy[m], "tp": tp[m], "infl": ei[m], "real": real,
-                    "nominal": nom.get(m), "resid": (nom[m] - fy[m]) if m in nom else None})
+def _clean(rows) -> list[dict]:
+    return [r for r in rows or [] if r.get("value") is not None]
+
+
+def driver_series(series: dict, tp: dict | None) -> dict:
+    """
+    日資料（%）：y10／y20／y30（名目）、real（TIPS，DFII10）、infl（BEI＝DGS10 − DFII10，
+    同一天兩者都有才算）、tp（ACM）、tp_sf（舊金山聯儲）、tp_kw（Kim-Wright）、
+    path（預期利率路徑＝名目 − ACM 期限溢酬）。
+    """
+    y10 = _clean(series.get("DGS10"))
+    tips = {r["date"]: r["value"] for r in _clean(series.get("DFII10"))}
+    acm = _clean((tp or {}).get("acm"))
+    acm_m = {r["date"]: r["value"] for r in acm}
+    return {
+        "y10": y10, "y20": _clean(series.get("DGS20")), "y30": _clean(series.get("DGS30")),
+        "real": [{"date": d, "value": v} for d, v in sorted(tips.items())],
+        "infl": [{"date": r["date"], "value": r["value"] - tips[r["date"]]} for r in y10 if r["date"] in tips],
+        "tp": acm, "tp_sf": _clean((tp or {}).get("sf")), "tp_kw": _clean(series.get("THREEFYTP10")),
+        "path": [{"date": r["date"], "value": r["value"] - acm_m[r["date"]]} for r in y10 if r["date"] in acm_m],
+    }
+
+
+def _before(rows: list[dict], iso: str):
+    """iso 之前（不含）最後一筆。"""
+    best = None
+    for r in rows:
+        if r["date"] < iso:
+            best = r
+        else:
+            break
+    return best
+
+
+def _shift_m(iso: str, k: int) -> str:
+    y, m = int(iso[:4]), int(iso[5:7]) - k
+    while m <= 0:
+        y, m = y - 1, m + 12
+    import calendar
+    return f"{y}-{m:02d}-{min(int(iso[8:10]), calendar.monthrange(y, m)[1]):02d}"
+
+
+def level_changes(rows: list[dict]) -> dict:
+    """最新值與 DTD／MTD／YTD 變化（bp）。MTD 基期＝上月最後一筆；YTD 基期＝去年最後一筆。"""
+    rows = _clean(rows)
+    if not rows:
+        return {}
+    last = rows[-1]
+    d = last["date"]
+    out = {"value": last["value"], "date": d}
+    for tag, base in (("dtd", rows[-2] if len(rows) > 1 else None),
+                      ("mtd", _before(rows, d[:8] + "01")),
+                      ("ytd", _before(rows, d[:4] + "-01-01"))):
+        out[tag] = (last["value"] - base["value"]) * 100 if base else None
+        out[tag + "_from"] = base["date"] if base else ""
     return out
 
 
-def contribution(dec: list[dict], k: int) -> dict | None:
-    """最新一個月 對 k 個月前：各段變動（bp）與主因。"""
-    if len(dec) <= k:
+def pick_main(parts: dict, nominal: float | None) -> str | None:
+    """
+    驅動因素：跟名目同方向、變動絕對值最大的那一項（名目幾乎沒動時三項都算）。
+    期限溢酬跟另外兩項重疊，但它若是最大的同向變動，代表這個月主要是「補償」在變。
+    """
+    cand = {k: v for k, v in parts.items() if v is not None}
+    if not cand:
         return None
-    a, b = dec[-1 - k], dec[-1]
-    d = {key: (b[key] - a[key]) * 100 for key in ("real", "infl", "tp")}
-    d_res = ((b["resid"] - a["resid"]) * 100
-             if b.get("resid") is not None and a.get("resid") is not None else 0.0)
-    d_nom = ((b["nominal"] - a["nominal"]) * 100
-             if b.get("nominal") is not None and a.get("nominal") is not None
-             else sum(d.values()) + d_res)
-    main = max(d, key=lambda x: abs(d[x]))
-    return {"k": k, "from": a["month"], "to": b["month"], "parts": d, "resid": d_res,
-            "nominal": d_nom, "start": a.get("nominal") or a["fitted"],
-            "end": b.get("nominal") or b["fitted"], "main": main,
-            "main_bp": d[main], "same_sign_share": (abs(d[main]) / (sum(abs(v) for v in d.values()) or 1))}
+    if nominal is not None and abs(nominal) >= 1:
+        same = {k: v for k, v in cand.items() if v * nominal > 0}
+        cand = same or cand
+    return max(cand, key=lambda k: abs(cand[k]))
+
+
+def contribution_window(ds: dict, mode) -> dict | None:
+    """
+    一段期間的變動（bp）：mode＝"mtd"、"ytd" 或整數月數（滾動 k 個月）。
+    回傳沿用舊結構：parts{real, infl, tp}、nominal、start／end（10Y 水準）、main、path。
+    """
+    y10 = ds.get("y10") or []
+    if not y10:
+        return None
+    # 終點取名目與 TIPS 都有資料的最後一天（TIPS 晚一天公布），名目 ＝ TIPS ＋ BEI 才會恆等
+    common = (ds.get("infl") or [{}])[-1].get("date") or y10[-1]["date"]
+    y10 = [r for r in y10 if r["date"] <= common]
+    end = y10[-1]
+    if mode == "mtd":
+        start_iso = end["date"][:8] + "01"
+    elif mode == "ytd":
+        start_iso = end["date"][:4] + "-01-01"
+    else:
+        start_iso = _shift_m(end["date"], int(mode))
+        nxt = [r for r in y10 if r["date"] > start_iso]
+        start_iso = nxt[0]["date"] if nxt else start_iso
+    b = _before(y10, start_iso)
+    if not b:
+        return None
+
+    def chg(key):
+        rows = ds.get(key) or []
+        if key in ("real", "infl", "path"):
+            rows = [r for r in rows if r["date"] <= common]
+        e = rows[-1] if rows else None
+        s = _before(rows, start_iso)
+        return (e["value"] - s["value"]) * 100 if e and s else None
+    parts = {"real": chg("real"), "infl": chg("infl"), "tp": chg("tp")}
+    # 模型口徑（預期利率路徑＋期限溢酬）的起訖 10Y：ACM 有資料的那兩天
+    pr, tr_ = ds.get("path") or [], ds.get("tp") or []
+    ps, ts_ = _before(pr, start_iso), _before(tr_, start_iso)
+    m_start = (ps["value"] + ts_["value"]) if ps and ts_ and ps["date"] == ts_["date"] else None
+    m_end = (pr[-1]["value"] + tr_[-1]["value"]) if pr and tr_ and pr[-1]["date"] == tr_[-1]["date"] else None
+    nominal = (end["value"] - b["value"]) * 100
+    main = pick_main(parts, nominal)
+    return {"k": mode, "from": b["date"], "to": end["date"], "parts": parts, "resid": 0.0,
+            "nominal": nominal, "start": b["value"], "end": end["value"], "main": main,
+            "main_bp": parts.get(main) if main else None, "path": chg("path"),
+            "m_start": m_start, "m_end": m_end,
+            "tp_from": (_before(ds.get("tp") or [], start_iso) or {}).get("date", ""),
+            "tp_to": ((ds.get("tp") or [{}])[-1]).get("date", "")}
+
+
+def ytd_paths(ds: dict, keys=("y10", "real", "infl", "tp", "path")) -> dict:
+    """年初至今的逐日累積變化（bp），基期＝去年最後一筆；{key: [{date, value}]}。"""
+    y10 = ds.get("y10") or []
+    if not y10:
+        return {}
+    start = y10[-1]["date"][:4] + "-01-01"
+    out = {}
+    for k in keys:
+        rows = ds.get(k) or []
+        base = _before(rows, start)
+        if base:
+            out[k] = [{"date": r["date"], "value": (r["value"] - base["value"]) * 100}
+                      for r in rows if r["date"] >= start]
+    return out
 
 
 def main_sentence(c: dict | None) -> str:
-    if not c:
+    if not c or not c.get("main"):
         return "資料不足，無法拆解"
     m = c["main"]
-    return (f"{_mz(c['from'])}→{_mz(c['to'])} 10Y 月均 {c['nominal']:+.0f}bp，"
-            f"主因：{COMP_ZH[m]} {c['parts'][m]:+.0f}bp（{PRESSURE_ZH[m]}）")
+    return (f"{_md2(c['from'])}→{_md2(c['to'])} 10Y {c['nominal']:+.0f}bp，"
+            f"驅動因素：{COMP_ZH[m]} {c['parts'][m]:+.0f}bp")
 
 
 def _mz(m: str) -> str:

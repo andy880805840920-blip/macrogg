@@ -716,6 +716,78 @@ def qra_estimate(today: dt.date | None = None) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 期限溢酬模型（2026-10）：紐約聯儲 ACM、舊金山聯儲（Christensen–Rudebusch）
+# Kim-Wright 走 FRED（THREEFYTP10），不在這裡
+# ---------------------------------------------------------------------------
+ACM_XLS = "https://www.newyorkfed.org/medialibrary/media/research/data_indicators/ACMTermPremium.xls"
+SF_TP_XLSX = "https://www.frbsf.org/wp-content/uploads/FRBSF_Term_Web_Chart_Data.xlsx"
+
+
+def term_premia(years: int = 11) -> dict:
+    """
+    10 年期期限溢酬日資料（%）：{"acm": [{date, value}], "sf": [{date, value}],
+    "sf_exp": [{date, value}]（舊金山聯儲同一模型的 10 年預期短率平均）}。
+    ACM 只有舊版 .xls（約 10MB，「ACM Daily」工作表、ACMTP10 欄），用 xlrd 讀；
+    舊金山聯儲的網站圖表資料是 .xlsx（Ten_year_decomposition 工作表），用標準函式庫讀。
+    """
+    from . import clock
+    start = dt.date(clock.today().year - years, 1, 1).isoformat()
+    out: dict = {}
+    try:
+        import xlrd
+        blob = None
+        for i_try in range(3):                     # 約 10MB，偶爾讀到一半逾時，重試即可
+            try:
+                r = requests.get(ACM_XLS, timeout=(20, 240),
+                                 headers={"User-Agent": "Mozilla/5.0 (Macintosh) AppleWebKit/537.36 Chrome/130.0"})
+                r.raise_for_status()
+                blob = r.content
+                break
+            except requests.RequestException:
+                if i_try == 2:
+                    raise
+        sh = xlrd.open_workbook(file_contents=blob).sheet_by_name("ACM Daily")
+        hdr = [str(c).strip() for c in sh.row_values(0)]
+        i = hdr.index("ACMTP10")
+        rows = []
+        for n in range(1, sh.nrows):
+            row = sh.row_values(n)
+            try:
+                d = dt.datetime.strptime(str(row[0]).strip(), "%d-%b-%Y").date().isoformat()
+            except ValueError:
+                continue
+            v = _f(row[i])
+            if d >= start and v is not None:
+                rows.append({"date": d, "value": round(v, 4)})
+        out["acm"] = rows
+    except Exception as e:                         # noqa: BLE001
+        log.warning("ACM 期限溢酬取得失敗（%s）", e)
+    try:
+        r = requests.get(SF_TP_XLSX, timeout=90, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        rows = _xlsx_sheets(r.content, {"Ten_year_decomposition"}).get("Ten_year_decomposition") or []
+        hdr = [str(c or "").strip() for c in rows[0]]
+        it, ie = hdr.index("ZCTERM10YR"), hdr.index("AVGEXP10YR")
+        tp, ex = [], []
+        for row in rows[1:]:
+            if not row or not isinstance(row[0], float):
+                continue
+            d = (dt.date(1899, 12, 30) + dt.timedelta(days=int(row[0]))).isoformat()
+            if d < start:
+                continue
+            if it < len(row) and isinstance(row[it], float):
+                tp.append({"date": d, "value": round(row[it], 4)})
+            if ie < len(row) and isinstance(row[ie], float):
+                ex.append({"date": d, "value": round(row[ie], 4)})
+        out["sf"], out["sf_exp"] = tp, ex
+    except Exception as e:                         # noqa: BLE001
+        log.warning("舊金山聯儲期限溢酬取得失敗（%s）", e)
+    if not out.get("acm") and not out.get("sf"):
+        raise ValueError("兩個期限溢酬模型都取得失敗")
+    return out
+
+
+# ---------------------------------------------------------------------------
 # 財政部買回（Buybacks）
 # ---------------------------------------------------------------------------
 BB_XML = "https://www.treasurydirect.gov/instit/annceresult/press/preanre/{y}/{f}"
@@ -1182,6 +1254,12 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         out["buyback_reactions"] = {}
         failed.append("buyback_reactions")
     try:
+        out["term_premia"] = term_premia()
+    except Exception as e:                         # noqa: BLE001
+        log.warning("期限溢酬模型取得失敗（%s）", e)
+        out["term_premia"] = {}
+        failed.append("term_premia")
+    try:
         out["qra"] = qra_estimate(end)
     except Exception as e:                         # noqa: BLE001
         log.warning("QRA 借款估計取得失敗（%s）", e)
@@ -1195,7 +1273,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
 # 週／月頻、改版少的來源：抓取失敗或回空時沿用上一次成功的版本，頁面不會整區空白
 # （畫面上各數字本來就標資料日期，沿用舊值時日期自然是舊的）。只在內容有變時才
 # 寫檔，避免每次更新都產生一個大的 state 差異。
-LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra",
+LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia",
                   "mspd", "fed_bills", "buybacks", "buyback_schedule", "auctions", "soma")
 
 

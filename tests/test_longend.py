@@ -1,4 +1,4 @@
-"""長端頁 2026-10 改版：三股力量拆解、拍賣判定、WAM、事件、Fed 跟上曲線。"""
+"""長端頁 2026-10 改版：10Y 拆解（TIPS＋BEI、ACM）、拍賣判定、WAM、事件、Fed 跟上曲線。"""
 import sys
 import pathlib
 import datetime as dt
@@ -26,22 +26,39 @@ def daily(month_vals: dict) -> list:
     return out
 
 
-S = {
-    "THREEFY10": daily({"2026-07": 4.6, "2026-08": 4.7, "2026-09": 5.0}),
-    "THREEFYTP10": daily({"2026-07": 0.7, "2026-08": 0.8, "2026-09": 1.0}),
-    "EXPINF10YR": [{"date": "2026-07-01", "value": 2.4}, {"date": "2026-08-01", "value": 2.45},
-                   {"date": "2026-09-01", "value": 2.5}],
-    "DGS10": daily({"2026-07": 4.62, "2026-08": 4.72, "2026-09": 5.05}),
-}
-dec = le.decompose(S)
-check("① 三段相加＝擬合殖利率", all(abs(d["real"] + d["infl"] + d["tp"] - d["fitted"]) < 1e-9 for d in dec))
-c = le.contribution(dec, 1)
-check("① 本月主因是動最多的那段（期限溢酬 +20bp）", c["main"] == "tp" and round(c["parts"]["tp"]) == 20,
-      c["parts"])
-check("① 殘差＝實際 − 擬合的變動", round(c["resid"]) == 3, c["resid"])
-check("① 一句話寫出主因與壓力", "期限溢酬" in le.main_sentence(c) and "財政與供給壓力" in le.main_sentence(c))
-check("① 資料不足回 None", le.contribution(dec, 5) is None)
-check("① 預期通膨的措辭：名目緊縮、實質未收緊", "名目緊縮、實質未收緊" in le.NATURE["infl"])
+# ---- 10Y 拆解（2026-10 v4）：名目 ＝ TIPS ＋ BEI；ACM 期限溢酬並列 ----
+def bdays(start, n, f):
+    d0, out, i = dt.date.fromisoformat(start), [], 0
+    while len(out) < n:
+        d = d0 + dt.timedelta(days=i)
+        i += 1
+        if d.weekday() < 5:
+            out.append({"date": d.isoformat(), "value": f(len(out))})
+    return out
+
+
+y10 = bdays("2025-12-01", 230, lambda i: 4.0 + i * 0.002)
+tips = bdays("2025-12-01", 229, lambda i: 1.8 + i * 0.0015)          # 晚一天：少最後一筆
+acm = bdays("2025-12-01", 228, lambda i: 0.5 + i * 0.0005)
+S = {"DGS10": y10, "DFII10": tips, "DGS20": y10, "DGS30": y10, "THREEFYTP10": acm}
+ds = le.driver_series(S, {"acm": acm, "sf": acm})
+check("① BEI＝名目 − TIPS（同一天）", all(abs(r["value"] - (y["value"] - t["value"])) < 1e-12
+                                         for r, y, t in zip(ds["infl"], y10, tips)))
+c = le.contribution_window(ds, "mtd")
+check("① 名目變動＝TIPS 變動＋BEI 變動（恆等，終點取兩者共同的最後一天）",
+      abs(c["nominal"] - c["parts"]["real"] - c["parts"]["infl"]) < 1e-6 and c["to"] == tips[-1]["date"], c)
+check("① 模型拆解：預期利率路徑＋期限溢酬＝名目",
+      abs((c["m_end"] - c["m_start"]) * 100 - c["path"] - c["parts"]["tp"]) < 1e-6)
+check("① 驅動因素取與名目同向、變動最大的一項",
+      le.pick_main({"real": -5, "infl": 14, "tp": 20}, 8) == "tp"
+      and le.pick_main({"real": -5, "infl": 14, "tp": -20}, 8) == "infl"
+      and le.pick_main({"real": -5, "infl": 3, "tp": 1}, 0.5) == "real")
+lc = le.level_changes(y10)
+check("① MTD／YTD 基期＝上月、去年最後一筆", lc["mtd_from"][:7] < lc["date"][:7]
+      and lc["ytd_from"][:4] == str(int(lc["date"][:4]) - 1))
+check("① 年初至今路徑從 0 附近起算", abs(le.ytd_paths(ds)["y10"][0]["value"] - 0.2) < 1e-6)
+check("① 一句話寫出驅動因素", "驅動因素" in le.main_sentence(c))
+check("① 白話說明（使用者指定）", "Fed 獨立性" in le.NATURE["infl"] and "Fed 未來政策路徑" in le.NATURE["real"])
 
 # ---- 拍賣 ----
 def auc(date, high, med, btc, pd, ind, dr, term="10-Year"):
