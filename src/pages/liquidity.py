@@ -265,7 +265,7 @@ def _liab_note(it: dict, qra: dict | None, source: str) -> str:
                      f'（差 {(qra["cash_end"] - it["value"]) * 10:+,.0f}）')
     if it["key"] == "rrp":
         lines.append(f'國內 ON RRP {it["dom"] * 10:,.0f}｜國外 {it["for"] * 10:,.0f}')
-    asof = f'資料 {_md(it["date"])}（週三水位）' + ("" if source in ("", "H.4.1") else f"・{source}")
+    asof = f'資料 {_md(it["date"])}' + ("" if source in ("", "H.4.1") else f"・{source}")
     return ("<br>".join(esc(x) for x in lines)
             + f'<br><span style="font-size:10px;color:var(--muted)">{esc(asof)}</span>')
 
