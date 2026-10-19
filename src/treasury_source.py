@@ -297,6 +297,62 @@ def fed_bill_purchases(start: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Fed 負債端（H.4.1，週三水位）
+# ---------------------------------------------------------------------------
+# 聯準會理事會 Data Download Program：H.4.1「Factors absorbing reserve funds」
+# 那一包（package id 是理事會網站產生的固定雜湊）。逆回購拆成 Others（國內：
+# 貨幣基金、GSE、交易商的 ON RRP）與 Foreign official and international
+# accounts（外國央行與國際機構的 foreign repo pool）兩條，相加＝總額。
+H41_DDP = ("https://www.federalreserve.gov/datadownload/Output.aspx?rel=H41"
+           "&series=f52e72511be65e16f71d4f5858951312&lastobs={n}&from=&to="
+           "&filetype=csv&label=include&layout=seriescolumn&type=package")
+H41_KEYS = {"currency": ("RESTBC_N.WW", "WCICL"),       # 流通在外貨幣
+            "reserves": ("RESH4R_N.WW", "WRBWFRBL"),    # 存款機構準備金
+            "tga": ("RESPPLLDT_N.WW", "WTREGEN"),       # 財政部一般帳戶
+            "rrp": ("RESPPLLR_N.WW", "WLRRAL"),         # 逆回購總額
+            "rrp_dom": ("RESPPLLRD_N.WW", "WLRRAOL"),   # 國內（ON RRP）
+            "rrp_for": ("RESPPLLRF_N.WW", "WLRRAFOIAL")}  # 國外官方與國際帳戶
+
+
+def h41_liabilities(weeks: int = 270) -> dict:
+    """
+    逐週（週三水位）Fed 負債端主要項目，十億美元：
+    {"source": "H.4.1"|"FRED", "rows": [{date, currency, reserves, tga, rrp, rrp_dom, rrp_for}]}
+    先抓理事會官方 DDP；失敗才用 FRED 同一組序列（FRED 是 H.4.1 的轉載）。
+    """
+    import csv
+    import io
+    try:
+        r = requests.get(H41_DDP.format(n=weeks), timeout=60, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        rows = list(csv.reader(io.StringIO(r.text)))
+        hdr = next(row for row in rows if row and row[0] == "Time Period")
+        ix = {k: hdr.index(v[0]) for k, v in H41_KEYS.items()}
+        out = []
+        for row in rows[rows.index(hdr) + 1:]:
+            vals = {k: _f(row[i]) for k, i in ix.items()}
+            if row and re.match(r"\d{4}-\d{2}-\d{2}$", row[0]) and all(v is not None for v in vals.values()):
+                out.append({"date": row[0], **{k: v / 1e3 for k, v in vals.items()}})
+        if len(out) > 50:
+            return {"source": "H.4.1", "rows": out}
+        raise ValueError(f"DDP 只回來 {len(out)} 筆")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("H.4.1 官方下載失敗（%s），改用 FRED 轉載", e)
+    from . import clock
+    start = (clock.today() - dt.timedelta(weeks=weeks)).isoformat()
+    by: dict = {}
+    for k, (_, fid) in H41_KEYS.items():
+        txt = requests.get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={fid}&cosd={start}",
+                           timeout=40, headers=UA).text
+        for line in txt.splitlines()[1:]:
+            d, _, v = line.partition(",")
+            if _f(v) is not None:
+                by.setdefault(d, {})[k] = _f(v) / 1e3
+    rows = [{"date": d, **v} for d, v in sorted(by.items()) if len(v) == len(H41_KEYS)]
+    return {"source": "FRED", "rows": rows}
+
+
+# ---------------------------------------------------------------------------
 # 財政部買回（Buybacks）
 # ---------------------------------------------------------------------------
 BB_XML = "https://www.treasurydirect.gov/instit/annceresult/press/preanre/{y}/{f}"
@@ -665,7 +721,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
     """
     {auctions, upcoming, soma, wam, srf, rmp_schedule, sofr_vol, effr_vol,
     bill_auctions, upcoming_bills, mspd, dts_bills, fed_bills, buybacks,
-    buyback_schedule, buyback_reactions, failed}。
+    buyback_schedule, buyback_reactions, h41, failed}。
     離線時讀 fixture（沒有就是空的）。
     """
     if offline:
@@ -732,6 +788,12 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
             log.warning("%s 取得失敗（%s）", key, e)
             out[key] = [] if key != "dts_bills" else None
             failed.append(key)
+    try:
+        out["h41"] = h41_liabilities()
+    except Exception as e:                         # noqa: BLE001
+        log.warning("Fed 負債端（H.4.1）取得失敗（%s）", e)
+        out["h41"] = {}
+        failed.append("h41")
     # 財政部買回：近一年逐場結果＋暫定排程＋每場公告／結果後 1 小時殖利率反應
     try:
         out["buybacks"] = buyback_operations((end - dt.timedelta(days=370)).isoformat())

@@ -702,8 +702,11 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
             xp = X(f"{y_}-{m_:02d}-01") / W * 100
             if -4 <= xp < 0:          # 資料從 1/2 開始：1 月的刻度貼齊左緣
                 xp = 0.0
-            if 0 <= xp <= 100:
-                labs.append(f'<span style="left:{xp:.2f}%">{f"{y_ % 100}/1" if m_ == 1 else m_}</span>')
+            # 跨度超過兩年時只標每年 1 月（寫完整年份），不然 60 個月份數字擠成一團
+            _long = (int(last[:4]) - int(first[:4])) * 12 + int(last[5:7]) - int(first[5:7]) > 24
+            if 0 <= xp <= 100 and (not _long or m_ == 1):
+                labs.append(f'<span style="left:{xp:.2f}%">'
+                            f'{y_ if _long else (f"{y_ % 100}/1" if m_ == 1 else m_)}</span>')
             m_ += 1
             if m_ > 12:
                 y_, m_ = y_ + 1, 1

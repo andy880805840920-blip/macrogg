@@ -71,6 +71,7 @@ qra:
   date: "2026-08-03"
   borrowing: 628
   cash_end: 850
+  cash_end_date: "2026-12-31"
   net_coupon: 360
   gross_coupon: 1109
   coupon_maturing: 749

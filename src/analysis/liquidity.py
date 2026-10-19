@@ -356,3 +356,40 @@ def qra_bill_implied(qra: dict | None) -> dict | None:
     if not qra or qra.get("borrowing") is None or qra.get("net_coupon") is None:
         return None
     return {**qra, "bills": qra["borrowing"] - qra["net_coupon"]}
+
+
+# ---------------------------------------------------------------------------
+# Fed 負債端（H.4.1 週三水位）
+# ---------------------------------------------------------------------------
+LIAB_ITEMS = [("currency", "流通在外貨幣"), ("reserves", "準備金"),
+              ("tga", "財政部 TGA"), ("rrp", "逆回購 RRP")]
+
+
+def _at_or_before(rows: list, iso: str):
+    cand = [r for r in rows if r["date"] <= iso]
+    return cand[-1] if cand else None
+
+
+def liability_view(rows: list) -> dict:
+    """
+    每一項：最新週三水位、約 1 個月前（≤ 最新 − 28 天的最近一週）與約半年前
+    （≤ 最新 − 182 天）的水位與淨變化，十億美元。RRP 另附國內／國外拆分。
+    """
+    if not rows:
+        return {}
+    import datetime as _dt
+    last = rows[-1]
+    d0 = _dt.date.fromisoformat(last["date"])
+    m1 = _at_or_before(rows, (d0 - _dt.timedelta(days=28)).isoformat())
+    m6 = _at_or_before(rows, (d0 - _dt.timedelta(days=182)).isoformat())
+    items = []
+    for k, zh in LIAB_ITEMS:
+        it = {"key": k, "label": zh, "value": last[k], "date": last["date"]}
+        for tag, ref in (("m1", m1), ("m6", m6)):
+            if ref:
+                it[tag] = {"date": ref["date"], "value": ref[k], "chg": last[k] - ref[k]}
+        items.append(it)
+    rrp = items[-1]
+    rrp["dom"], rrp["for"] = last["rrp_dom"], last["rrp_for"]
+    total = sum(last[k] for k, _ in LIAB_ITEMS)
+    return {"items": items, "date": last["date"], "total": total}

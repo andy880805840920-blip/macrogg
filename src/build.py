@@ -3484,6 +3484,27 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         partial_note="當月至今（DTS）")
         if bill_net.get("rows") else "")
     qra = lq.qra_bill_implied(cfg.get("qra"))
+
+    # Fed 負債端（H.4.1 週三水位，近 5 年）：四大項同一張圖（億美元），
+    # 逆回購另一張拆國內（ON RRP）／國外（外國官方與國際帳戶）。
+    _h41 = _tr.get("h41") or {}
+    _hr = _h41.get("rows") or []
+    liab = lq.liability_view(_hr)
+    if liab:
+        liab["source"] = _h41.get("source", "")
+    _yi_pts = lambda k: [{"date": r["date"], "value": r[k] * 10} for r in _hr]
+    liab_chart = (charts.compact_lines([
+        {"label": "流通在外貨幣", "color": "var(--muted-bar)", "points": _yi_pts("currency")},
+        {"label": "準備金", "color": "var(--line-1)", "points": _yi_pts("reserves")},
+        {"label": "財政部 TGA", "color": "var(--line-2)", "points": _yi_pts("tga")},
+        {"label": "逆回購 RRP（國內＋國外）", "color": "var(--line-3)", "points": _yi_pts("rrp")},
+    ], unit="", height=190, digits=0, months=62, xmonths=True, zero=True, step=10000,
+        aria="Fed 負債端四大項（億美元，週三水位）") if _hr else "")
+    rrp_chart = (charts.compact_lines([
+        {"label": "國內（ON RRP：貨幣基金、GSE、交易商）", "color": "var(--line-3)", "points": _yi_pts("rrp_dom")},
+        {"label": "國外（外國官方與國際帳戶）", "color": "var(--series-2)", "points": _yi_pts("rrp_for")},
+    ], unit="", height=140, digits=0, months=62, xmonths=True, zero=True, step=5000,
+        aria="逆回購國內與國外拆分（億美元）") if _hr else "")
     _upcoming_bills = sorted(_tr.get("upcoming_bills") or [], key=lambda r: r["date"])[:8]
 
     # 補充：TGCR 近 6 個月，疊 SOFR 當對照（兩者都是擔保隔夜利率，樣本範圍不同）。
@@ -3561,4 +3582,7 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "bill_net_chart": bill_net_chart,
         "qra": qra,
         "upcoming_bills": _upcoming_bills,
+        "liab": liab,
+        "liab_chart": liab_chart,
+        "rrp_split_chart": rrp_chart,
     }

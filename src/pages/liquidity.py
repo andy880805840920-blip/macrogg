@@ -5,7 +5,7 @@
 一句判斷邏輯＋三格關鍵數據。其餘內容分三個獨立頁面區塊（跟其他頁面同一套
 `<h2 id data-sum>` 收合卡區，不是塞在首卡裡的下拉）：
     Fed 利率走廊   SRF×利率走廊圖、五個名詞的定義、SOFR vs EFFR、RP／RRP、TGCR
-    Fed 負債端結構 待補
+    Fed 負債端結構 H.4.1 四大項（貨幣、準備金、TGA、RRP）＋白話定義
     市場供需       T-Bills 淨發行（Fed vs 私人市場）、Fed T-Bills 購買量、RMP 概念
 """
 
@@ -238,6 +238,64 @@ def _bill_net_method(rows, qra) -> str:
             f'<p class="hint">單位：億美元。</p>{q}')
 
 
+def _liab_note(it: dict, qra: dict | None, source: str) -> str:
+    """最新值下方：1 個月前、半年前的水位與淨變化（小字）；資料日期（更小字）。"""
+    lines = []
+    for tag, name in (("m1", "1 個月前"), ("m6", "半年前")):
+        r = it.get(tag)
+        if r:
+            lines.append(f'{name} {r["value"] * 10:,.0f}（{r["chg"] * 10:+,.0f}）')
+    if it["key"] == "tga" and qra and qra.get("cash_end") is not None:
+        mo = int((qra.get("cash_end_date") or "0000-12")[5:7])
+        lines.append(f'QRA {mo} 月底目標 {qra["cash_end"] * 10:,.0f}'
+                     f'（差 {(qra["cash_end"] - it["value"]) * 10:+,.0f}）')
+    if it["key"] == "rrp":
+        lines.append(f'國內 ON RRP {it["dom"] * 10:,.0f}｜國外 {it["for"] * 10:,.0f}')
+    asof = f'資料 {_md(it["date"])}（週三水位）' + ("" if source in ("", "H.4.1") else f"・{source}")
+    return ("<br>".join(esc(x) for x in lines)
+            + f'<br><span style="font-size:10px;color:var(--muted)">{esc(asof)}</span>')
+
+
+def _liab_defs() -> str:
+    items = [
+        ("流通在外貨幣（Currency in circulation）",
+         "<p>Fed 印的紙鈔，在民眾、企業與海外手上的現金。現金要多少是大眾決定的，Fed 被動供應："
+         "民眾從銀行提領現金時，銀行要用自己在 Fed 的準備金去換，所以<b>現金增加 1 元、準備金就少 1 元</b>。"
+         "它長期穩定成長、年底節慶前季節性升高，很少是流動性變化的主因，但它是負債端最大、最穩定的一塊。</p>"),
+        ("準備金（Reserve balances）",
+         "<p>商業銀行存在 Fed 的存款，是銀行之間付款清算的最終工具，Fed 對它付準備金利率（IORB）。"
+         "這是整個銀行體系最底層的流動性：準備金不夠時，銀行彼此搶錢，回購利率就會往上衝"
+         "（2019 年 9 月回購利率飆升就是準備金降到不夠用）。</p>"
+         "<p><b>貨幣乘數效果：</b>銀行拿到 1 元準備金，可以把其中大部分放款出去；借款人把錢存進另一家銀行，"
+         "那家銀行又能再放款——一輪一輪下來，1 元準備金可以撐起好幾元的存款與放款。舊制下若法定準備率 10%，"
+         "理論上限是 10 倍（1 ÷ 10%）。所以準備金的增減，會被放大成整體貨幣與信用的增減。"
+         "2020 年起美國法定準備率降為 0、準備金又充裕，乘數實際上更受銀行資本、監管比率與放款需求限制，"
+         "但準備金仍是這座信用金字塔的地基——地基變薄時，上面整座金字塔都會收縮。</p>"),
+        ("財政部一般帳戶（TGA）",
+         "<p>財政部在 Fed 開的支票帳戶。稅收、發債拿到的錢流進來，政府支出、還債付出去。</p>"
+         "<p><b>與準備金的抵換關係：</b>Fed 資產端不變時，負債端加總也不變，所以 TGA 多 1 元，"
+         "其他負債（準備金或 ON RRP）就得少 1 元——民眾繳稅、投資人買新發的公債，錢從銀行帳戶轉進 TGA，"
+         "銀行的準備金就被抽走；反過來，財政部花錢時，錢從 TGA 回到銀行，準備金增加。"
+         "所以 4 月、9 月、12 月稅收日，以及財政部大量發債「回補 TGA」時（例如 2023 年債務上限解除後，"
+         "TGA 從不到 1,000 億美元補回 7,000 億以上），都是準備金被抽走的時點。"
+         "財政部每季在再融資（QRA）公布季底目標餘額，目標比現在高多少，就代表接下來要從市場抽走多少。</p>"),
+        ("逆回購（RRP：國內 ON RRP＋國外）",
+         "<p>國內部分是隔夜逆回購（ON RRP）：貨幣基金、GSE、交易商把多餘現金借給 Fed 一晚，拿公債當抵押，"
+         "賺 ON RRP 利率（利率走廊下緣）。國外部分是外國央行與國際機構放在紐約聯儲的 foreign repo pool，"
+         "金額穩定（約 3,000 多億），跟國內貨幣市場的鬆緊關係不大。看流動性主要看國內那一條。</p>"
+         "<p><b>緩衝效果：</b>ON RRP 裡有錢時，等於體系裡有一筆「閒置的多餘現金」。財政部回補 TGA 或 Fed 縮表"
+         "需要市場拿出錢時，貨幣基金會先把錢從 ON RRP 拿出來去買新發的國庫券，抽走的是 ON RRP，"
+         "<b>準備金不必下降</b>；等 ON RRP 見底，接下來的抽水才會直接扣到準備金。</p>"
+         "<p><b>經典例子：2022–2025 年縮表（QT）。</b>疫情期間大規模 QE 讓貨幣市場資金過剩，多出來的錢停在 ON RRP，"
+         "國內 ON RRP 在 2022 年 9 月底（週三水位）達 2.37 兆美元。從 2022 年 6 月縮表開始到 2025 年 11 月底，"
+         "國內 ON RRP 從約 1.97 兆降到幾乎為 0，準備金只從約 3.36 兆降到約 2.90 兆——縮表的衝擊絕大部分先由 ON RRP 吸收，"
+         "所以 Fed 縮了好幾年都沒有引發資金危機。ON RRP 耗盡之後緩衝就沒了，"
+         "這也是 Fed 2025 年底停止縮表、改做準備金管理購買（RMP）的原因。</p>"),
+    ]
+    return "".join(f'<details class="f-more"><summary>{esc(t)}</summary><div class="f-detail">{b}</div></details>'
+                   for t, b in items)
+
+
 def _upcoming_bills_html(rows) -> str:
     """已公告金額的 Bill 拍賣清單——視野通常只有一到兩週，是官方本來就還沒
     公布，不是本站漏抓。"""
@@ -335,10 +393,24 @@ def liquidity_body(d: dict) -> str:
   </div>
 </div>"""
 
-    liabilities_section = """<div class="grid">
+    lb = d.get("liab") or {}
+    _li = {it["key"]: it for it in lb.get("items") or []}
+    _liab_sum = ("　·　".join(f'{it["label"]} {it["value"] * 10:,.0f} 億'
+                             for it in (lb.get("items") or [])[1:3]) or "Fed 負債端")
+    liab_cells = "".join(state_chip(it["label"], f'{it["value"] * 10:,.0f} 億美元',
+                                    _liab_note(it, d.get("qra"), lb.get("source", "")), "neutral")
+                         for it in lb.get("items") or [])
+    liabilities_section = f"""<div class="grid">
   <div class="card">
-    <h2 id="liabilities" data-sum="內容製作中">Fed 負債端結構</h2>
-    <p class="hint">內容製作中。</p>
+    <h2 id="liabilities" data-sum="{esc(_liab_sum)}">Fed 負債端結構</h2>
+    {(f'<div class="focus-grid liab-grid">{liab_cells}</div>' if liab_cells
+      else '<div class="empty">H.4.1 資料本次取得失敗</div>')}
+    <div class="viz-block"><div class="viz-h">四大項近 5 年（億美元，週三水位）</div>
+      {d.get("liab_chart") or ""}</div>
+    <div class="viz-block"><div class="viz-h">逆回購拆分：國內 ON RRP vs 國外（億美元）</div>
+      {d.get("rrp_split_chart") or ""}</div>
+    <div class="src">Fed 理事會 H.4.1（Factors Affecting Reserve Balances）表 1，週三水位，每週四美東 16:30 公布。</div>
+    {_liab_defs()}
   </div>
 </div>"""
 
@@ -399,7 +471,9 @@ def liquidity_footer(d: dict) -> str:
          ("T-Bills 當月至今發行與贖回", "財政部每日國庫報表（DTS）表 IIIA", "每日"),
          ("Fed 國庫券購買實際成交", "紐約聯儲 Treasury Securities Purchases 結果", "每筆操作"),
          ("已公告的 T-Bills 拍賣", "財政部 Fiscal Data（auctions_query）", "拍賣前幾天公布金額"),
-         ("私人持有淨借款估計", "財政部每季再融資（QRA）借款估計", "每季")],
+         ("私人持有淨借款估計、TGA 季底目標", "財政部每季再融資（QRA）借款估計", "每季"),
+         ("Fed 負債端：流通在外貨幣、準備金、TGA、逆回購（國內／國外）",
+          "Fed 理事會 H.4.1 Data Download Program（週三水位）；FRED 轉載後備", "每週四")],
         ["三個趨勢訊號（近 5 日均 vs 近 30 日均）：SRF 動用量升溫、SOFR−IORB 走闊、"
          "ON RRP 交易量回升。SOFR 衝出 SRF 利率（走廊上限）視為最嚴重的轉緊訊號。",
          "RMP、MBS 到期再投入兩個計畫金額直接來自紐約聯儲官方逐期公布的拆分。再投入只適用 MBS"
