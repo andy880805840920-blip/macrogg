@@ -477,6 +477,133 @@ def _mmf_explain(v: dict, bills_out: float | None) -> str:
                    for t, b in items)
 
 
+def _ym(m: str) -> str:
+    return f"{m[:4]}/{int(m[5:7])}"
+
+
+def _last_n(d: dict, n: int) -> list:
+    return list((d or {}).items())[-n:]
+
+
+def _liq_analysis(d: dict) -> str:
+    L = {l.key: l for l in d.get("liq_lights") or []}
+    T = d.get("liq_trend") or {}
+    vd = d.get("liq_verdict") or {}
+    ps = []
+    ps.append("<p><b>為什麼是這三個指標：</b>它們分別回答流動性的三個問題——"
+              "<b>SOFR − IORB 是價格</b>（錢有沒有變貴），<b>SRF 動用量是後援</b>（有沒有人在市場上借不到錢、只好找 Fed），"
+              "<b>ON RRP 交易量是緩衝</b>（體系還有沒有多餘的現金可以先被抽走）。價格會最先反應，後援被動用代表已經不只是變貴，"
+              "而緩衝決定下一次 TGA 回補、T-Bills 發行這類抽水，會先吃掉閒置現金，還是直接扣到準備金。</p>")
+    si = T.get("sofr_iorb") or {}
+    if si and L.get("sofr_iorb"):
+        recent = _last_n(si, 3)
+        peak_m, peak_v = max(si.items(), key=lambda kv: kv[1])
+        ps.append(
+            f"<p><b>SOFR − IORB：</b>近 5 日均 {esc(L['sofr_iorb'].display)}；近三個月月均 "
+            + "、".join(f"{_ym(m)} {v:+.1f}bp" for m, v in recent)
+            + f"。對照資料期間內最緊的 {_ym(peak_m)}（月均 {peak_v:+.1f}bp）——2025 年第四季 SOFR 經常高於 IORB，"
+            "Fed 因此在 2025 年 12 月停止縮表、改做 RMP；之後利差回到 0 以下，但也沒有回到 2022–24 年準備金充裕時約 −8bp 的水準，"
+            "代表錢不貴，但也不再「多到用不完」。</p>")
+    srf = T.get("srf") or {}
+    if srf and L.get("srf"):
+        pm, pv = max(srf.items(), key=lambda kv: kv[1])
+        ps.append(f"<p><b>SRF 動用量：</b>近 5 日均 {esc(L['srf'].display)}；"
+                  f"資料期間內月均最高是 {_ym(pm)} 的 {pv * 10:,.0f} 億美元。"
+                  "近期沒有機構需要向 Fed 的後援借錢，市場上的資金分配是順暢的。</p>")
+    rr = T.get("rrp") or {}
+    if rr and L.get("rrp"):
+        since = ""
+        for m, v in reversed(list(rr.items())):
+            if v >= 100:
+                break
+            since = m
+        ps.append(f"<p><b>ON RRP 交易量：</b>近 5 日均 {esc(L['rrp'].display)}"
+                  + (f"，{_ym(since)} 起月均都低於 1,000 億美元" if since else "")
+                  + "。疫情 QE 留下的閒置現金已經在縮表期間被用完，緩衝見底——"
+                  "從現在起，任何抽走市場現金的事（T-Bills 淨發行、TGA 回補、季底銀行縮表）都會直接扣到準備金。</p>")
+    ps.append(f"<p><b>推導結論：</b>價格貼近但沒有超過 IORB、後援沒有被動用，所以<b>現在沒有資金緊俏</b>；"
+              f"但緩衝已經用完，代表體系對下一次抽水的承受力比 2022–24 年低。綜合判定：<b>{esc(vd.get('label', '—'))}</b>"
+              + (f"（{esc(vd.get('reason', ''))}）" if vd.get("reason") else "") + "。</p>")
+    # 輔助指標：為什麼 T-Bills 供給增加、RMP 暫停，短端資金仍然穩定
+    sup = []
+    if L.get("tgcr"):
+        sup.append(f"三方回購 TGCR − IORB {esc(L['tgcr'].display)}，現金提供端（主要是 MMF）同樣平靜")
+    rv, dv = d.get("ratio_view") or {}, d.get("rde_view") or {}
+    if rv:
+        sup.append(f"準備金占銀行總資產 {rv['value']:.2f}%，低於紐約聯儲認為「幾乎不影響利率」的 13%、但仍在 2019 年危機時的 10% 之上")
+    if dv:
+        sup.append(f"RDE {dv['value']:+.2f}，95% 信賴區間 {dv['lo95']:+.2f}～{dv['hi95']:+.2f} 仍含 0——還在需求曲線平坦的那一段，"
+                   f"但比半年前更往陡的方向移動")
+    wl = (d.get("mmf") or {}).get("wam_last") or {}
+    if wl.get("gov") is not None and wl.get("gov_3m") is not None:
+        sup.append(f"Government MMF 平均持有期限 {wl['gov']:.1f} 天，比 3 個月前 {wl['gov'] - wl['gov_3m']:+.1f} 天——"
+                   "MMF 面對 Fed 升息路徑的不確定，把資金留在隔夜回購與短天期、甚至持有現金，"
+                   "隔夜市場的現金供給因此比較充足")
+    sup_txt = "；".join(sup)
+    qra, bn = d.get("qra") or {}, d.get("bill_net") or {}
+    mtd = bn.get("mtd") or {}
+    rmp_since = d.get("rmp_paused_since") or ""
+    rl = d.get("rmp_last") or {}
+    tga = next((it for it in (d.get("liab") or {}).get("items") or [] if it["key"] == "tga"), None)
+    supply = []
+    if mtd:
+        supply.append(f"{int(mtd['month'][5:])} 月至今 T-Bills 淨發行 {mtd['net'] * 10:+,.0f} 億、私人市場淨吸收 {mtd['private'] * 10:+,.0f} 億")
+    if qra.get("bills") is not None:
+        supply.append(f"再融資隱含本季 T-Bills 淨發行約 {qra['bills'] * 10:,.0f} 億（未計買回）")
+    if rmp_since:
+        supply.append(f"Fed 自 {_md(rmp_since)} 起的那一期暫停 RMP，只剩 MBS 到期再投入（最新一期約 {rl.get('mbs', 0) * 10:,.0f} 億）")
+    ps.append("<p><b>輔助指標：為什麼供給增加、RMP 暫停，短端資金仍然穩定？</b>"
+              + esc("；".join(supply)) + "。在這樣的供給壓力下資金仍然平穩，原因在於：" + esc(sup_txt) + "。"
+              "簡單說，MMF 願意把錢留在最短端，等於替 T-Bills 新增的供給與回購市場同時提供了現金。</p>")
+    asof = (d.get("as_of") or "")[:10]
+    watch = []
+    if qra.get("next") and qra["next"] >= asof:
+        watch.append(f"{_md(qra['next'])} 再融資公布下一季 T-Bills 與買回規模")
+    # 季中企業繳稅日（3／6／9／12 月 15 日前後）與季底：只列接下來那一個
+    m = int(asof[5:7]) if asof else 0
+    if m:
+        qm = next(x for x in (3, 6, 9, 12, 15) if x >= m + (1 if asof[8:10] > "15" and m in (3, 6, 9, 12) else 0))
+        qm = 3 if qm == 15 else qm
+        watch.append(f"{qm}/15 企業繳稅日與 {qm} 月底季底（銀行縮表、TGA 進帳）")
+    if tga and qra.get("cash_end") is not None:
+        diff = qra["cash_end"] - tga["value"]
+        watch.insert(0, f"TGA 目前 {tga['value'] * 10:,.0f} 億、12 月底目標 {qra['cash_end'] * 10:,.0f} 億"
+                        + ("，接下來降低會把準備金還給市場" if diff < 0 else "，回補時會從市場抽走準備金"))
+    watch.append("若 SOFR − IORB 轉正且 SRF 開始連續動用，判定會轉為「轉緊」，屆時看 Fed 是否重啟 RMP")
+    ps.append("<p><b>接下來要盯：</b>" + esc("；".join(watch)) + "。</p>")
+    return "".join(ps)
+
+
+def _liq_transmission() -> str:
+    from .. import charts
+    ch = charts.chain([
+        {"label": "準備金與緩衝不足", "value": "銀行不願借出", "tone": "up"},
+        {"label": "回購利率飆升", "value": "SOFR、TGCR 衝過 IORB", "tone": "up"},
+        {"label": "槓桿部位被迫去化", "value": "基差交易、交易商庫存", "tone": "up"},
+        {"label": "公債流動性惡化", "value": "殖利率與利差亂跳", "tone": "up"},
+        {"label": "跨資產同步承壓", "value": "信用、股市、美元", "tone": "up"},
+    ], ["", "融資成本上升", "被迫賣券", "風險外溢"])
+    return f"""{ch}
+    <p><b>為什麼要關注流動性：</b>利率決定錢的價格，流動性決定錢<b>借不借得到</b>。
+      Fed 調整政策利率靠的是 IORB、ON RRP 這些「行政利率」把市場利率框在走廊裡；準備金一旦不夠，
+      市場利率會衝出走廊，政策利率就失去控制力。而且流動性問題通常比經濟數據更早、更快地反映在價格上，
+      往往在幾天內就從貨幣市場擴散到所有資產。</p>
+    <dl class="gloss">
+      <dt>短端利率</dt><dd>回購利率、SOFR、EFFR 跳升，浮動利率貸款與短期融資成本立刻上升；
+        T-Bills 收益率相對 OIS 走高（賣方增加、買方縮手）。</dd>
+      <dt>美國公債</dt><dd>避險基金的「基差交易」（買現貨公債、放空期貨，用回購借錢支應）融資成本暴增，被迫平倉賣出現貨，
+        交易商資產負債表又塞不下——2019 年 9 月、2020 年 3 月都是這樣讓「最安全的資產」也出現流動性危機，殖利率反而上升。</dd>
+      <dt>信用市場</dt><dd>銀行 CD、商業本票利率上升，Prime MMF 被贖回，企業改提用銀行信用額度；
+        信用利差走闊，評等較低的發行人最先借不到錢。</dd>
+      <dt>股市與風險資產</dt><dd>融資成本上升與保證金追繳迫使槓桿投資人降低部位，波動率上升、高評價與高槓桿的資產跌最多；
+        股債可能同時下跌，平常的分散效果失靈。</dd>
+      <dt>美元與海外</dt><dd>全球美元融資變貴，美元走強、換匯（cross-currency basis）更負，新興市場資金外流；
+        外國央行轉向 Fed 的換匯額度與 FIMA 回購借美元。</dd>
+      <dt>Fed 的回應</dt><dd>先由 SRF 等常設工具接住，再視情況停止縮表、買進國庫券（RMP）補準備金，嚴重時推出緊急工具。
+        Fed 一出手通常能壓住貨幣市場，但在出手之前，資產價格往往已經先修正一輪——這就是要提前追蹤這些指標的原因。</dd>
+    </dl>"""
+
+
 def _liab_defs() -> str:
     items = [
         ("流通在外貨幣（Currency in circulation）",
@@ -701,7 +828,42 @@ def liquidity_body(d: dict) -> str:
   </div>
 </div>"""
 
-    main = hero + corridor_section + liabilities_section + supply_section + mmf_section
+    from .labor import _light_card
+    _lights = d.get("liq_lights") or []
+    _anchor = {"sofr_iorb": "#corridor", "srf": "#corridor", "rrp": "#liabilities", "tgcr": "#corridor",
+               "ratio": "#liabilities", "rde": "#liabilities", "wam": "#mmf", "bills": "#supply_demand"}
+    _lt = {}
+    for _l in _lights:
+        _lt[_l.status] = _lt.get(_l.status, 0) + 1
+    _light_sum = "、".join(f"{_n} 項{_lab}" for _k, _lab in
+                           (("critical", "警戒"), ("warning", "留意"), ("good", "正常"), ("unknown", "無資料"))
+                           if (_n := _lt.get(_k)))
+    _lv = d.get("liq_verdict") or {}
+    _cards = lambda ls: "".join(_light_card(l, _anchor.get(l.key, "")) for l in ls)
+    from ..analysis.liquidity import LIGHT_RULES
+    _rules = "".join(f"<dt>{esc(l.label)}</dt><dd>{esc(LIGHT_RULES.get(l.key, ''))}</dd>" for l in _lights)
+    lights_section = f"""<div class="grid">
+  <div class="card">
+    <h2 id="lights" data-sum="{esc(_light_sum)}{('　·　綜合判定：' + esc(_lv['label'])) if _lv.get('label') else ''}">關鍵指標檢核與綜合判定</h2>
+    <p class="hint">目前的整體狀態：逐項對照警戒線，再下結論。</p>
+    {(f'<div class="impact {_lv.get("lean", "neutral")}">綜合判定：{esc(_lv["label"])}（{esc(_lv.get("reason", ""))}）　·　{esc(_light_sum)}</div>'
+      if _lv.get("label") else "")}
+    <details data-m-collapse open><summary>核心三指標（Liquidity Now）</summary>
+      <div class="lights" style="margin-top:12px">{_cards(_lights[:3])}</div></details>
+    <details data-m-collapse open><summary>輔助指標：準備金、回購、MMF、T-Bills 供給</summary>
+      <div class="lights" style="margin-top:12px">{_cards(_lights[3:])}</div></details>
+    <div class="liq-analysis">{_liq_analysis(d)}</div>
+    <details class="f-more"><summary>判定規則與各指標門檻</summary><div class="f-detail">
+      <p>綜合判定：SOFR 衝出 SRF 利率＝嚴重轉緊；核心三指標任一警戒，或首卡判定轉緊＝轉緊；
+        核心平靜但 ON RRP 見底、準備金占比、RDE 或 T-Bills 淨供給落在留意區＝穩定，但緩衝偏薄；全部正常＝充裕穩定。
+        門檻是本站依 2019 年 9 月回購危機與 2025 年第四季準備金轉緊校準的規則，不是 Fed 公布的數字。</p>
+      <dl class="gloss">{_rules}</dl></div></details>
+    <h3 class="le-h3" style="margin-top:20px">為什麼要關注流動性：緊缺時的跨資產傳導</h3>
+    {_liq_transmission()}
+  </div>
+</div>"""
+
+    main = hero + corridor_section + liabilities_section + supply_section + mmf_section + lights_section
     return main
 
 

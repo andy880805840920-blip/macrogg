@@ -587,3 +587,184 @@ def mmf_view(sec: dict, ofr: dict, fdic: dict, today: str) -> dict:
                           "priv": ofr[k]["rp_us"] + ofr[k]["rp_foreign"] + ofr[k]["rp_other"],
                           "treasury": ofr[k]["treasury"]} for k in om]
     return out
+
+
+# ---------------------------------------------------------------------------
+# 關鍵指標檢核與綜合判定（2026-10）
+# ---------------------------------------------------------------------------
+# 門檻是本站規則（不是 Fed 公布的數字），依 2025-10～12 那段準備金轉緊
+# （SOFR−IORB 月均 +6～+8bp、單日最高 +32bp）與 2019-09 回購危機校準。
+LIGHT_RULES = {
+    "sofr_iorb": "近 5 日均 < 0bp 正常；0～+5bp 留意；> +5bp 警戒（2025 年 10–11 月月均約 +7bp）",
+    "srf": "近 5 日均 < 10 億美元正常；10～100 億留意；> 100 億或 SOFR 衝出 SRF 利率警戒",
+    "rrp": "國內 ON RRP 近 5 日均 ≥ 1,000 億美元正常（還有緩衝）；低於此留意（緩衝耗盡）",
+    "tgcr": "TGCR − IORB 近 5 日均 < 0bp 正常；0～+5bp 留意；> +5bp 警戒",
+    "ratio": "≥ 13% 正常（紐約聯儲：此時 RDE 幾乎為 0）；10%～13% 留意；< 10% 警戒（2019/9 水位）",
+    "rde": "95% 信賴區間含 0 正常；區間整段 < 0 留意；中位數 ≤ −1 且區間 < 0 警戒（2019/9 約 −1.4）",
+    "wam": "Government MMF WAM 對 3 個月前縮短或持平正常（資金留在隔夜）；拉長 2 天以上留意（現金被鎖進較長天期）",
+    "bills": "私人市場 T-Bills 月淨吸收 < 1,000 億美元正常；1,000～2,500 億留意；> 2,500 億警戒",
+}
+
+
+def _monthly_avg(rows: list) -> dict:
+    acc: dict = {}
+    for r in rows or []:
+        if r.get("value") is not None:
+            acc.setdefault(r["date"][:7], []).append(r["value"])
+    return {m: sum(v) / len(v) for m, v in sorted(acc.items())}
+
+
+def _spread_rows(series: dict, a: str, b: str) -> list[dict]:
+    am = {r["date"]: r["value"] for r in series.get(a) or [] if r.get("value") is not None}
+    bm = {r["date"]: r["value"] for r in series.get(b) or [] if r.get("value") is not None}
+    return [{"date": d, "value": (am[d] - bm[d]) * 100} for d in sorted(set(am) & set(bm))]
+
+
+def _band(v, good_below, crit_above):
+    if v is None:
+        return "unknown"
+    return "good" if v < good_below else ("critical" if v > crit_above else "warning")
+
+
+def _hist(monthly: dict, fn, fmt, n: int = 12) -> list[dict]:
+    return [{"date": m.replace("-", "/"), "status": fn(v), "label": fmt(v)}
+            for m, v in list(monthly.items())[-n:]]
+
+
+def _dir(a, b, tol):
+    if a is None or b is None:
+        return "flat"
+    return "up" if a > b + tol else ("down" if a < b - tol else "flat")
+
+
+def liquidity_lights(series: dict, srf: dict, si: dict, rrp: dict, sofr_over_srf,
+                     ratio_rows: list, rde_rows: list, mmf: dict, bill_net: dict) -> list:
+    """回傳 regime.Light 清單：三個核心（價格、後援、緩衝）＋五個輔助。"""
+    from .regime import Light
+    out = []
+    # ① SOFR − IORB
+    sp = _spread_rows(series, "SOFR", "IORB")
+    st = lambda v: _band(v, 0, 5)
+    v = (si or {}).get("avg5")
+    out.append(Light("sofr_iorb", "SOFR − IORB（近 5 日均）",
+                     "擔保隔夜資金的市場價格相對 Fed 付給準備金的利率。正常時 SOFR 低於 IORB；"
+                     "轉正代表銀行寧可把準備金借到回購市場也不放在 Fed，準備金開始不夠用。",
+                     v, (si or {}).get("avg30"), st(v), "—" if v is None else f"{v:+.1f}bp",
+                     _dir(v, (si or {}).get("avg30"), 1),
+                     _hist(_monthly_avg(sp), st, lambda x: f"月均 {x:+.1f}bp")))
+    # ② SRF 動用量（億美元）
+    srf_hist = _monthly_avg(series.get("RPONTSYD") or [])
+    sv = (srf or {}).get("avg5")
+    sst = lambda x: "critical" if x is not None and x > 10 else _band(None if x is None else x, 1, 10)
+    s_now = "critical" if sofr_over_srf else sst(sv)
+    out.append(Light("srf", "SRF 動用量（近 5 日均）",
+                     "機構向 Fed 常備回購機制借錢的金額。SRF 利率是走廊上限，只有市場借不到或比這更貴時才會用；"
+                     "持續有量代表市場的錢不夠，要靠 Fed 的後援。",
+                     sv, (srf or {}).get("avg30"), s_now,
+                     "—" if sv is None else f"{sv * 10:,.0f} 億美元",
+                     _dir(sv, (srf or {}).get("avg30"), 0.3),
+                     _hist(srf_hist, sst, lambda x: f"月均 {x * 10:,.0f} 億")))
+    # ③ ON RRP（國內）
+    rv = (rrp or {}).get("avg5")
+    rst = lambda x: "unknown" if x is None else ("good" if x >= 100 else "warning")
+    out.append(Light("rrp", "ON RRP 交易量（近 5 日均）",
+                     "貨幣基金等機構停在 Fed 的多餘現金，是準備金被抽走前的緩衝。"
+                     "有量時 TGA 回補或縮表先吃 ON RRP；見底後就直接扣準備金。",
+                     rv, (rrp or {}).get("avg30"), rst(rv),
+                     "—" if rv is None else f"{rv * 10:,.0f} 億美元",
+                     _dir(rv, (rrp or {}).get("avg30"), 5),
+                     _hist(_monthly_avg(series.get("RRPONTSYD") or []), rst, lambda x: f"月均 {x * 10:,.0f} 億")))
+    # ④ TGCR − IORB
+    tg = _spread_rows(series, "TGCRRATE", "IORB")
+    tv = sum(r["value"] for r in tg[-5:]) / len(tg[-5:]) if tg else None
+    t30 = sum(r["value"] for r in tg[-30:]) / len(tg[-30:]) if tg else None
+    out.append(Light("tgcr", "TGCR − IORB（近 5 日均）",
+                     "三方回購（貨幣基金借錢給交易商的主要管道）的利率相對 IORB。"
+                     "比 SOFR 少了集中清算的部分，更貼近「現金提供者」那一端的鬆緊。",
+                     tv, t30, st(tv), "—" if tv is None else f"{tv:+.1f}bp", _dir(tv, t30, 1),
+                     _hist(_monthly_avg(tg), st, lambda x: f"月均 {x:+.1f}bp")))
+    # ⑤ 準備金 ÷ 商業銀行總資產
+    rat = {}
+    for r in ratio_rows or []:
+        rat[r["date"][:7]] = r["ratio"]
+    ras = lambda x: "unknown" if x is None else ("good" if x >= 13 else ("critical" if x < 10 else "warning"))
+    rlast = (ratio_rows or [{}])[-1].get("ratio") if ratio_rows else None
+    rprev = list(rat.values())[-4] if len(rat) >= 4 else None
+    out.append(Light("ratio", "準備金 ÷ 商業銀行總資產",
+                     "銀行資產中最高流動性的準備金占比。比例越低，銀行越容易為了湊足清算所需的準備金互搶資金。",
+                     rlast, rprev, ras(rlast), "—" if rlast is None else f"{rlast:.2f}%", _dir(rlast, rprev, 0.2),
+                     _hist(rat, ras, lambda x: f"{x:.2f}%")))
+    # ⑥ RDE
+    rde_m = {}
+    for r in rde_rows or []:
+        rde_m[r["date"][:7]] = r
+
+    def rdes(r):
+        if not r:
+            return "unknown"
+        if r["hi95"] < 0 and r["median"] <= -1:
+            return "critical"
+        return "warning" if r["hi95"] < 0 else "good"
+    rl = (rde_rows or [None])[-1]
+    rp = list(rde_m.values())[-4] if len(rde_m) >= 4 else None
+    out.append(Light("rde", "準備金需求彈性（RDE）",
+                     "紐約聯儲估計的準備金需求曲線斜率：準備金變動時政策利率會被推動多少。接近 0＝充裕，負得越深越接近稀缺。",
+                     rl["median"] if rl else None, rp["median"] if rp else None, rdes(rl),
+                     "—" if not rl else f'{rl["median"]:+.2f}',
+                     _dir(rl["median"] if rl else None, rp["median"] if rp else None, 0.05),
+                     [{"date": m.replace("-", "/"), "status": rdes(r), "label": f'{r["median"]:+.2f}'}
+                      for m, r in list(rde_m.items())[-12:]]))
+    # ⑦ MMF 平均持有期限（Government WAM 對 3 個月前）
+    wam = {r["date"][:7]: r.get("gov") for r in (mmf or {}).get("wam") or [] if r.get("gov") is not None}
+    wk = list(wam)
+    wchg = {k: wam[k] - wam[wk[i - 3]] for i, k in enumerate(wk) if i >= 3}
+    ws = lambda x: "unknown" if x is None else ("warning" if x >= 2 else "good")
+    wl = (mmf or {}).get("wam_last") or {}
+    wv = (wl.get("gov") - wl["gov_3m"]) if wl.get("gov") is not None and wl.get("gov_3m") is not None else None
+    out.append(Light("wam", "MMF 平均持有期限（對 3 個月前）",
+                     "Government MMF 的加權平均到期天數變化。縮短＝資金留在隔夜回購與短天期，支撐隔夜融資；"
+                     "拉長＝押注降息、把現金鎖進較長天期，隔夜的現金供給變少。",
+                     wv, None, ws(wv),
+                     "—" if wv is None else f'{wl["gov"]:.1f} 天（{wv:+.1f}）',
+                     "up" if (wv or 0) >= 2 else ("down" if (wv or 0) <= -2 else "flat"),
+                     _hist(dict(list(wchg.items())[-12:]), ws, lambda x: f"對 3 個月前 {x:+.1f} 天")))
+    # ⑧ 私人市場 T-Bills 淨吸收
+    rows = (bill_net or {}).get("rows") or []
+    full = [r for r in rows if not r.get("partial")]
+    bs = lambda x: "unknown" if x is None else ("good" if x < 100 else ("critical" if x > 250 else "warning"))
+    bl = full[-1] if full else None
+    out.append(Light("bills", "私人市場 T-Bills 淨吸收（上月）",
+                     "T-Bills 淨發行扣掉 Fed 買走的部分，也就是貨幣市場要自己拿出來的現金。"
+                     "淨吸收越大，越會把錢從回購與 ON RRP 抽走。",
+                     bl["private"] if bl else None, full[-2]["private"] if len(full) > 1 else None,
+                     bs(bl["private"] if bl else None),
+                     "—" if not bl else f'{bl["private"] * 10:+,.0f} 億美元',
+                     _dir(bl["private"] if bl else None, full[-2]["private"] if len(full) > 1 else None, 20),
+                     [{"date": r["month"].replace("-", "/"), "status": bs(r["private"]),
+                       "label": f'{r["private"] * 10:+,.0f} 億'} for r in full[-12:]]))
+    return out
+
+
+def liquidity_verdict(lights: list, base: dict) -> dict:
+    """
+    綜合判定：先看三個核心（沿用首卡 verdict 的 severe／tight／easing），
+    都平靜時再看輔助指標有沒有「緩衝變薄」的訊號。
+        嚴重轉緊   SOFR 衝出 SRF 利率
+        轉緊       核心任一警戒，或首卡判定 tight
+        穩定但緩衝偏薄  核心平靜，但 ON RRP 見底、準備金占比或 RDE 在留意區
+        充裕穩定   全部正常
+    """
+    S = {l.key: l.status for l in lights}
+    lvl = (base or {}).get("level")
+    if lvl == "severe":
+        return {"label": "嚴重轉緊", "lean": "hawkish", "reason": (base or {}).get("label", "")}
+    core_bad = [l.label for l in lights[:3] if l.status == "critical"]
+    if lvl == "tight" or core_bad:
+        return {"label": "轉緊", "lean": "hawkish",
+                "reason": "、".join(core_bad) or (base or {}).get("text", "")[:40]}
+    thin = [n for k, n in (("rrp", "ON RRP 緩衝見底"), ("ratio", "準備金占比低於 13%"),
+                           ("rde", "RDE 顯著為負"), ("bills", "T-Bills 淨供給偏大"))
+            if S.get(k) in ("warning", "critical")]
+    if thin:
+        return {"label": "穩定，但緩衝偏薄", "lean": "neutral", "reason": "、".join(thin)}
+    return {"label": "充裕穩定", "lean": "dovish", "reason": "核心與輔助指標都在正常區"}

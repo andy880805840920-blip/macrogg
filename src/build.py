@@ -3551,6 +3551,23 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         ("net", "合計淨流量", "var(--text-primary)"),
         unit=" 億美元", digits=0, scale=10, fmt_date=lambda d: f"{d[2:4]}/{int(d[5:7])}")
         if mmf.get("flows") else "")
+    # 關鍵指標檢核與綜合判定：三個核心（Liquidity Now）＋五個輔助
+    liq_lights = lq.liquidity_lights(series, srf, si, rrp, sofr_over_srf, _ratio_rows,
+                                     _rde.get("rows") or [], mmf, bill_net)
+    liq_verdict = lq.liquidity_verdict(liq_lights, verdict)
+    liq_trend = {
+        "sofr_iorb": lq._monthly_avg(lq._spread_rows(series, "SOFR", "IORB")),
+        "tgcr_iorb": lq._monthly_avg(lq._spread_rows(series, "TGCRRATE", "IORB")),
+        "srf": lq._monthly_avg(series.get("RPONTSYD") or []),
+        "rrp": lq._monthly_avg(series.get("RRPONTSYD") or []),
+    }
+    _sched = [r for r in (_tr.get("rmp_schedule") or []) if r["start"] >= lq.RMP_PROGRAM_START]
+    _rmp_last = _sched[-1] if _sched else {}
+    _rmp_paused_since = ""
+    for r in reversed(_sched):
+        if r["rmp"] > 0:
+            break
+        _rmp_paused_since = r["start"]
     _wp = lambda k: [{"date": r["date"], "value": r[k]} for r in mmf.get("wam") or [] if r.get(k) is not None]
     mmf_wam_chart = (charts.compact_lines([
         {"label": "Government MMF", "color": "var(--line-1)", "points": _wp("gov")},
@@ -3677,6 +3694,11 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
         "rde_view": rde_view,
         "rde_chart": rde_chart,
         "mmf": mmf,
+        "liq_lights": liq_lights,
+        "liq_verdict": liq_verdict,
+        "liq_trend": liq_trend,
+        "rmp_last": _rmp_last,
+        "rmp_paused_since": _rmp_paused_since,
         "mmf_ytd_chart": mmf_ytd_chart,
         "mmf_flow_chart": mmf_flow_chart,
         "mmf_yield_chart": mmf_yield_chart,
