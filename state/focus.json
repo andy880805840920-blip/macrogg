@@ -1,24 +1,12 @@
 {
- "hash": "e3630eb3c3381ffe",
- "text": "聯準會警示AI熱潮可能推升通膨壓力，但政策應對面臨兩難。聯準會指出，AI投資與應用的快速擴張可能對物價造成上行風險，同時也承認經濟中存在其他抵銷因素。\n聯邦基金期貨市場定價10/28會議維持利率機率87%，顯示市場預期聯準會近期不會改變政策方向。中國第3季GDP年增率回升至4.5%，石油相關產業改善與進出口強勁成長為主要支撐，惟內需仍存改善空間。",
+ "hash": "14128677c846ae88",
+ "text": "人工智能對勞動市場的衝擊開始具體化。國際勞工組織3月研究指出，高收入國家近十分之一的女性從事AI風險最高的職業。專家分析，AI聚焦於例行性任務、數字處理與模式識別，這些正是女性集中的文書與行政工作——秘書與文書人員仍有90%為女性。歷史提供了警示：1940年代，美國95%的電話接線員為女性，這是當時女性薪資相對較好的工作，需要數月訓練才能應對尖峰時段每小時數百通來電。AT&T推出自動電話交換機後，這個曾是20歲以下美國白人女性最大單一職業的工作隨之消失。¶當前AI浪潮重演類似模式：AI的目標正是這些例行性、需要精確度與速度的工作。與洗衣機、個人電腦等過往技術進步不同，AI對特定職業結構的衝擊更為直接，女性勞動力面臨的風險最為突出。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，前3季累計年增4.6%符合全年目標；石油相關產業改善與進出口強勁（前3季貨物貿易額年增18.8%創同期新高）是主要支撐。\n美國長期借貸成本上升背景下，聯邦赤字仍維持高位；10年期殖利率在5%上方，市場定價10/28聯準會維持利率機率87%。",
  "links": [
   {
-   "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-19T11:35:47+00:00"
-  },
-  {
-   "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-19T14:04:26+00:00"
-  },
-  {
-   "title": "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines",
-   "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQX2k0LXNpeGdYYmZRRW5hSjNyaFd1NU9vaTNYQ2E4dzg2VHNfckJBcHhQcE9aRVhvQ0Q2NG16bkh3aEdKQktmcTdRd2pOeURNY3ZkQTdPWWlheHVkcUhseHhMYnBtUExSRmc1eDgxQ3p4d2pOV2cwM0thYlZDWHVscEFjaVNnWHY5WDZqLV9MelZMX1NXSkp6Zzhvek5xRi1fS2ZBUA?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-19T00:00:00+00:00"
+   "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
+   "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
+   "source": "CNBC",
+   "at": "2026-10-19T14:20:08+00:00"
   }
  ],
  "fedwatch": {
@@ -296,28 +284,85 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-19T14:59:12.570801+00:00",
+ "at": "2026-10-19T15:06:10.635171+00:00",
  "layout": "main",
  "topics": {
-  "hash": "b1597b2911d89228",
+  "hash": "0deae8265e4d3e51",
   "items": [
+   {
+    "id": "long",
+    "label": "長天期美債",
+    "text": "美元強勢與長天期美債殖利率出現脫節，美債殖利率在油價下跌與企業財報季前維持高檔震盪，投資人持續關注聯準會會議與重要經濟數據對殖利率的影響",
+    "links": [
+     {
+      "title": "US dollar strength masks growing disconnect with Treasury yields",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOdmlxSV9DX3o5MUlyTGg5eWo0d3VTTGhINmF5cXU4MHBjdjIxSGc2VHRCS1M4cnlMekN3T1Q4NXZyQVNlNzctcDZTTm1OT0JyRGJKUlcxTEs1VFY5UHZ6ejhZWmxPZW9ROEJOS0xLSHRTTVBTc1VJQjdsaEJ5NzlxSlZhZGVYQ1RNczNyem9fQlVWRzVkMmZ5UDNuM2lnejBZUXlLUnFTUVp4SzQ4LTBzT3lR?oc=5",
+      "source": "StoneX",
+      "at": "2026-10-19T11:54:18+00:00"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "肯亞貨幣市場報酬率下滑，促使投資人轉向特殊基金；印度央行升息後，民眾面臨房貸月付額增加或延長貸款期限的選擇",
+    "links": [
+     {
+      "title": "Falling money market returns push Kenyan investors towards special funds",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFAtbDE0VU9vbFRfM0pWcy02VjNMQ3lFOW5sU1Y1b21qQVlnSTkwWFFkcXk5YUJCOUxvMFY2Rko3U1Q4TEhMREY5dHF0cGRGdVpvVzNFMlNGSU1BcDlUbjhPbVFyZWhMWmJadFZJdmdVM3gtVFBHWEhEYXZB?oc=5",
+      "source": "TechTrendsKE",
+      "at": "2026-10-19T10:46:57+00:00"
+     },
+     {
+      "title": "RBI Repo Rate Hike: Should You Pay More EMI Or Extend Home Loan Tenure?",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQZGFjV0g0Vjh4Qk4yUHNJWGlpb2RualdPcWVObFFpYk1ZaWpfZW44MEt0elYxTVZkdXZhM0QtMVJLTWwxd3hXdzkxQVJETDRnTEIweWloTUJOWklXeXlpSnBhanFLLWVSRXFaQ2ltR0Z6T2VLQTJHdllpZUMzdVVVeDUwZVR4V0lfb0IxOGRqXy1XSDZ4UkY5eW9xbzZQOTk0UHJJY2N0alY3cG1fNEFfOWp3cWhkbTdFRXBBb3hiUUNncknSAcMBQVVfeXFMUGRhY1dINFY4eEJOMlBzSVhpaW9kbmpXT3FlTmxRaWJNWWlqX2VuODBLdHpWMU1WZHV2YTNELTFSS01sMXd4V3c5MUFSREw0Z0xCMHlpaE1CTlpJV3l5aUpwYWpxSy1lUkVxWkNpbUdGek9lS0EyR3ZZaWVDM3VVVXg1MGVUeFdJX29CMThkal8tV0g2eFJGOXlvcW82UDk5NFBySWNjdGpWN3BtXzRBXzlqd3FoZG03RUVwQW94YlFDZ3JJ?oc=5",
+      "source": "NDTV",
+      "at": "2026-10-19T06:44:10+00:00"
+     }
+    ]
+   },
+   {
+    "id": "oil",
+    "label": "油價",
+    "text": "伊朗主要油港因美國封鎖而保持空置狀態，布蘭特原油在中東與烏克蘭衝突支撐下維持在110美元附近",
+    "links": [
+     {
+      "title": "Iran’s Main Oil Terminals Remain Empty as US Blockade Bites",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOenB5TFdsTXhmTGFUbGdfNE9KemRReTJPZlp1WUdsaGh6VkZOMUZtMWhGRXRJd0tVLUh2WU9OMzhwQ21NOFRRaHBROFg1SVIyUHItRl9GNE1nYUJrQW4xNXd3REZVbURTem9SQ2VFcHJzeHVtV3VJTk9oYnh6ajlINU5XZU1tMDdXV0xNLXFkY1JXcTZyVGNiWGk4QVZtODR0MmNHZGN1Z1JjMkFNakRN?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T11:02:24+00:00"
+     },
+     {
+      "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZW11ZjRDTUdpUHpzY1JpNFZtWjZ1bGhZejdHX2h3Q0NTb1pKU0pxM0NtSDR5QlA4YnQ5NHUybkxGS0VxSWJQcHo0NWcyb3A4S21SbVNld2cyLTQ5eFowV2lqRlh1QUMteG1taWQ5b0dPUGg1SnpxVUlRYmlDWkkxZzBQWVpBTjlwdzEyZDBTRWRacVU1ZFhZMjhrMGd5dw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T22:02:51+00:00"
+     }
+    ]
+   },
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI概念股經歷上周大幅拋售後反彈，標普500與那斯達克同步開高，高盛警示AI超大型雲端廠商信貸利差創年內新高，若利差續擴恐進一步補跌",
+    "text": "AI概念股經歷上週大幅拋售後反彈，標普500與那斯達克10/19開盤同步走高，惟高盛警告AI超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐進一步補跌",
     "links": [
      {
       "title": "AI概念股經歷拋售潮後反彈　美股標普500、那指開盤同步走高",
       "link": "https://tw.stock.yahoo.com/news/ai%E6%A6%82%E5%BF%B5%E8%82%A1%E7%B6%93%E6%AD%B7%E6%8B%8B%E5%94%AE%E6%BD%AE%E5%BE%8C%E5%8F%8D%E5%BD%88-%E7%BE%8E%E8%82%A1%E6%A8%99%E6%99%AE500-%E9%82%A3%E6%8C%87%E9%96%8B%E7%9B%A4%E5%90%8C%E6%AD%A5%E8%B5%B0%E9%AB%98-140628056.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T14:06:28+08:00"
+     },
+     {
+      "title": "美股開盤：AI股回神，標普500與那斯達克走高、道瓊小跌",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBSTGVfZXlEUW9sS2ZKZmNxMWFpZUNISlNQdHMxLUhKQ0RpR3g2N3RaMkFlVkJ4aGJ6eUNpNGhIV2IzQlZfWGJhRkZvYk9LcUxkM3JGNDBDUUZTTkc2bDVycUM4LVVfcmxNMkRFb1psanN6WVgtMl9uRmF3?oc=5",
+      "source": "BigGo 財經",
+      "at": "2026-10-19T14:25:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "亞馬遜宣布其AI晶片將支援熱門編程語言，挑戰輝達市場地位；輝達贏得快速成長的AI新創公司Modal，用於新一代中央處理器〔semi 2, 4〕",
+    "text": "亞馬遜宣布其AI晶片將支援熱門程式語言以挑戰輝達；輝達贏得新興AI新創公司Modal，用於新中央處理器；三星將採用台積電技術製造輝達下一代記憶體晶片",
     "links": [
      {
       "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
@@ -336,7 +381,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤反彈，川普暫緩對俄羅斯制裁推低油價與美債殖利率，加上美股進入財報高峰期，摩根士丹利釋出美股回調可能接近尾聲訊號，費半指數盤中上漲350點〔twf 1, 2〕",
+    "text": "台指期夜盤反彈，川普暫緩對俄羅斯制裁推低油價與美債殖利率，摩根士丹利釋出美股回調可能接近尾聲訊號；英特爾執行長陳立武透露公司已完成約80%大規模重整",
     "links": [
      {
       "title": "台股反彈訊號來了？美股科技股反攻、台積電ADR同步走高　台指期夜盤逼近47K",
@@ -353,9 +398,28 @@
     ]
    },
    {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "2026年美國期中選舉結果可能影響川普最後兩年任期；Z世代投資人在期中選舉前調整投資組合",
+    "links": [
+     {
+      "title": "The midterm election outcomes that could shape Trump's final two years",
+      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQaEV4NHdWNVNlYU41Q0ZMbVJEbGl1bC1Sb3Y1aW9pWE5pR083em1jeXphd1RfSlkxdW4ySzR1ekdpMUNta3JXenJQOGR4VkNMektwRXlhcVRISTZqci1sNDRMYTNzbk5aRWc4WTJKaWZfazFGRXNMdG1fR1BjWnJRdHNoZ3NMWjVMU0tzTTNsNTUyWEhIc0FvN2tleXFlemx6RFBqWE9vRUtFWU91V3JxRHE3UUphdUoyV0E?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T10:16:33+00:00"
+     },
+     {
+      "title": "Gen Z Investors Are Switching up Their Portfolios Ahead of The Midterms",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQd2FUclBPcG50V0xYRlBNMWg0cTNIRzcxbkFoN3JSVktZVy1Ca1NJcU5nNkxlYy1WcHpfb29zWHlwWFdXRHF4ZDR1bTBpUFBWVHJPbEVfeTdneXJ2dDh2c01XX3ZkenJxaTFkVktFbTBaTWNMaHJIM3RVRlFZcXpvOG9QQWgwZVpTeldqYWNzZWs4aEZRU1ZRLU1Yd2RoN0dpVHo0Vm0yZE1kSUVheS0tbW9yYmdVdDBQOVlLOEdzOA?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T11:00:14+00:00"
+     }
+    ]
+   },
+   {
     "id": "gold",
     "label": "黃金",
-    "text": "交易員因華許演講而調降升息預期，黃金隨之小幅上揚，油價下跌則限制了黃金進一步上漲空間",
+    "text": "黃金在聯準會會議前保持穩定，油價下跌限制下行空間；華許演講推低升息預期後，黃金小幅上揚",
     "links": [
      {
       "title": "Gold steady ahead of Fed meeting, lower oil prices limit downside",
@@ -374,7 +438,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "外資因AI股拋售淨匯出新台幣179.61億美元，新台幣12至16日貶幅達1.37%，連續7個交易日下跌",
+    "text": "新台幣對美元12至16日貶幅達1.37%，央行分析外資賣台股淨匯出179.61億美元；央行喊話難擋外資匯出，新台幣連跌7個交易日",
     "links": [
      {
       "title": "新台幣對美元12日到16日貶幅達1.37% 央行分析：外資賣台股淨匯出179.61億美元",
@@ -391,25 +455,14 @@
     ]
    }
   ],
-  "at": "2026-10-19T14:59:27.931421+00:00"
+  "at": "2026-10-19T15:06:28.481739+00:00"
  },
  "main_source_titles": [
-  "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-  "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-  "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines"
+  "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why"
  ],
- "headline": "AI繁榮恐加劇通膨，聯準會面臨政策兩難",
- "rate_note": "聯準會對AI通膨風險的警示與哈塞特對通膨進展的保留態度，均偏向支撐較高利率預期，但方向不明確——取決於AI對短期物價與長期生產力的淨效應如何演變。10年期今日+3bp至5.12%，市場對聯準會維持謹慎立場已有所反映。",
+ "headline": "AI衝擊就業結構浮現，女性職位風險最高",
+ "rate_note": "此事主要涉及勞動市場結構變化而非短期經濟數據，對利率方向影響不明確；若AI加速導致失業率上升，則偏向壓低升息預期，但材料未提供足以判斷時間表的資訊。10年期10/19盤中5.13%，較前一交易日 +3bp，市場反映的主要是其他因素。",
  "recent_mains": [
-  {
-   "headline": "進口物價飆升引發黏性通膨憂慮，華許降溫升息預期支撐債市",
-   "titles": [
-    "US Stock Market Today: S&P 500 Futures Drop On Sticky Trade Inflation Concerns",
-    "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
-    "Dollar holds losses; yuan hits 4-yr high after China Q3 GDP beat"
-   ],
-   "at": "2026-10-19T08:51:21.826890+00:00"
-  },
   {
    "headline": "華許降溫升息預期，黏性通膨與全球供應衝擊支撐美債長端",
    "titles": [
@@ -429,34 +482,29 @@
     "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines"
    ],
    "at": "2026-10-19T14:59:12.570801+00:00"
+  },
+  {
+   "headline": "AI衝擊就業結構浮現，女性職位風險最高",
+   "titles": [
+    "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why"
+   ],
+   "at": "2026-10-19T15:06:10.635171+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
-   "headline": "AI繁榮恐加劇通膨，聯準會面臨政策兩難",
-   "text": "聯準會警示AI熱潮可能推升通膨壓力，但政策應對面臨兩難。聯準會指出，AI投資與應用的快速擴張可能對物價造成上行風險，同時也承認經濟中存在其他抵銷因素。\n聯邦基金期貨市場定價10/28會議維持利率機率87%，顯示市場預期聯準會近期不會改變政策方向。中國第3季GDP年增率回升至4.5%，石油相關產業改善與進出口強勁成長為主要支撐，惟內需仍存改善空間。",
-   "rate_note": "聯準會對AI通膨風險的警示與哈塞特對通膨進展的保留態度，均偏向支撐較高利率預期，但方向不明確——取決於AI對短期物價與長期生產力的淨效應如何演變。10年期今日+3bp至5.12%，市場對聯準會維持謹慎立場已有所反映。",
+   "headline": "AI衝擊就業結構浮現，女性職位風險最高",
+   "text": "人工智能對勞動市場的衝擊開始具體化。國際勞工組織3月研究指出，高收入國家近十分之一的女性從事AI風險最高的職業。專家分析，AI聚焦於例行性任務、數字處理與模式識別，這些正是女性集中的文書與行政工作——秘書與文書人員仍有90%為女性。歷史提供了警示：1940年代，美國95%的電話接線員為女性，這是當時女性薪資相對較好的工作，需要數月訓練才能應對尖峰時段每小時數百通來電。AT&T推出自動電話交換機後，這個曾是20歲以下美國白人女性最大單一職業的工作隨之消失。¶當前AI浪潮重演類似模式：AI的目標正是這些例行性、需要精確度與速度的工作。與洗衣機、個人電腦等過往技術進步不同，AI對特定職業結構的衝擊更為直接，女性勞動力面臨的風險最為突出。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，前3季累計年增4.6%符合全年目標；石油相關產業改善與進出口強勁（前3季貨物貿易額年增18.8%創同期新高）是主要支撐。\n美國長期借貸成本上升背景下，聯邦赤字仍維持高位；10年期殖利率在5%上方，市場定價10/28聯準會維持利率機率87%。",
+   "rate_note": "此事主要涉及勞動市場結構變化而非短期經濟數據，對利率方向影響不明確；若AI加速導致失業率上升，則偏向壓低升息預期，但材料未提供足以判斷時間表的資訊。10年期10/19盤中5.13%，較前一交易日 +3bp，市場反映的主要是其他因素。",
    "links": [
     {
-     "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-19T11:35:47+00:00"
-    },
-    {
-     "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-19T14:04:26+00:00"
-    },
-    {
-     "title": "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines",
-     "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQX2k0LXNpeGdYYmZRRW5hSjNyaFd1NU9vaTNYQ2E4dzg2VHNfckJBcHhQcE9aRVhvQ0Q2NG16bkh3aEdKQktmcTdRd2pOeURNY3ZkQTdPWWlheHVkcUhseHhMYnBtUExSRmc1eDgxQ3p4d2pOV2cwM0thYlZDWHVscEFjaVNnWHY5WDZqLV9MelZMX1NXSkp6Zzhvek5xRi1fS2ZBUA?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-19T00:00:00+00:00"
+     "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
+     "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
+     "source": "CNBC",
+     "at": "2026-10-19T14:20:08+00:00"
     }
    ],
-   "at": "2026-10-19T14:59:12.570801+00:00"
+   "at": "2026-10-19T15:06:10.635171+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",

@@ -243,16 +243,16 @@
      "lead": {
       "name": "John Hickenlooper",
       "party": "D",
-      "p": 0.9885
+      "p": 0.988
      },
      "other": {
       "name": "Mark Baisley",
       "party": "R",
-      "p": 0.0125
+      "p": 0.0135
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.6,
+     "gap": 97.5,
      "vol": 51467.616015,
      "url": "https://polymarket.com/event/colorado-senate-election-winner"
     },
@@ -264,16 +264,16 @@
      "lead": {
       "name": "Democrat",
       "party": "D",
-      "p": 0.9775
+      "p": 0.9715
      },
      "other": {
       "name": "Republican",
       "party": "R",
-      "p": 0.02
+      "p": 0.0245
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.8,
+     "gap": 94.7,
      "vol": 32327.51489300001,
      "url": "https://polymarket.com/event/delaware-senate-election-winner"
     },
@@ -1346,7 +1346,7 @@
      "lead": {
       "name": "Maura Healey",
       "party": "D",
-      "p": 0.9565
+      "p": 0.957
      },
      "other": {
       "name": "Michael Minogue",
@@ -1355,7 +1355,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.4,
+     "gap": 91.5,
      "vol": 115349.366116,
      "url": "https://polymarket.com/event/massachusetts-governor-winner-2026"
     },
@@ -1645,7 +1645,7 @@
      "other": {
       "name": "Dan Ahlers",
       "party": "D",
-      "p": 0.019
+      "p": 0.0185
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -1666,11 +1666,11 @@
      "other": {
       "name": "Jerri Green",
       "party": "D",
-      "p": 0.048
+      "p": 0.0475
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 88.9,
+     "gap": 89.0,
      "vol": 21486.981953,
      "url": "https://polymarket.com/event/tennessee-governor-winner-2026"
     },
