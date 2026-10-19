@@ -194,6 +194,22 @@ def _trend_line(L: dict) -> str:
             + (f'<div class="le3-trc">{chips}</div>' if chips else "") + '</div>')
 
 
+
+def _eq_terms(f: str) -> str:
+    """
+    把公式切成一項一項（在 = ≈ ≡ ⇒ ＋ − 前斷開），每項不可再斷、項與項之間可以換行。
+    手機寬度下長公式改成兩三行，不必左右滑；桌機寬度仍是一行。
+    運算子留在下一項的開頭（數學排版慣例），一眼看得出是接續上一行。
+    """
+    import re as _re
+    parts = _re.split(r"(\s(?:=|≈|≡|＋|−)\s|　⇒　)", f)
+    out, cur = [], parts[0]
+    for k in range(1, len(parts), 2):
+        out.append(cur)
+        cur = parts[k].strip() + " " + parts[k + 1]
+    out.append(cur)
+    return "".join(f'<span class="eq-t">{t}</span>' for t in out if t.strip())
+
 def _derivation() -> str:
     """長端殖利率拆解推導（Fisher、Lutz、Hicks）——公式用 HTML，不靠外部數學套件。"""
     E = '<i>E</i><sub>t</sub>'
@@ -226,7 +242,7 @@ def _derivation() -> str:
          "同天期名目殖利率減 TIPS 殖利率；忽略 TIPS 相對名目公債的流動性溢酬（正常市況下很小）。",
          f'BEI<sub>t</sub><sup>(n)</sup> ≡ {y} − y<sub>t</sub><sup>(n),R</sup> = {path_p} ＋ {irp}'),
     ]
-    rows = "".join(f'<li><b>{esc(t)}</b><p>{esc(x)}</p><div class="eq">{f}</div></li>' for t, x, f in steps)
+    rows = "".join(f'<li><b>{esc(t)}</b><p>{esc(x)}</p><div class="eq">{_eq_terms(f)}</div></li>' for t, x, f in steps)
     return (f'<details class="f-more"><summary>推導：長端殖利率怎麼拆（Fisher、Hicks）</summary><div class="f-detail">'
             f'<ol class="le-deriv">{rows}</ol>'
             '<table class="lq-tbl le-map"><thead><tr><th>市場看得到的</th><th>包含的成分</th></tr></thead><tbody>'
@@ -932,19 +948,23 @@ def buybacks(d: dict) -> str:
     _cut = (_dt.date.today() - _dt.timedelta(days=90)).isoformat()
     recent = [r for r in rows if str(r.get("date") or "") >= _cut]
     trs = "".join(
-        f'<tr><td>{esc(_md(r["date"]))}</td><td>{esc(r["bucket_zh"])}</td><td>{esc(r["type_zh"])}</td>'
-        f'<td>{_yi_b(r["max"])}</td><td><b>{_yi_b(r["accepted"])}</b></td><td>{_yi_b(r["offered"])}</td>'
-        f'<td class="bb-rx">{_rx(r["announce"])}</td><td class="bb-rx">{_rx(r["result"])}</td></tr>'
+        f'<tr><td class="bb-k" data-label="操作日"><b>{esc(_md(r["date"]))}</b> <span>{esc(r["bucket_zh"])}・{esc(r["type_zh"])}</span></td>'
+        f'<td class="bb-hide-m" data-label="天期"><span class="bb-v">{esc(r["bucket_zh"])}</span></td><td class="bb-hide-m" data-label="類型"><span class="bb-v">{esc(r["type_zh"])}</span></td>'
+        f'<td data-label="上限"><span class="bb-v">{_yi_b(r["max"])}</span></td><td data-label="實際買回"><span class="bb-v"><b>{_yi_b(r["accepted"])}</b></span></td>'
+        f'<td data-label="投標"><span class="bb-v">{_yi_b(r["offered"])}</span></td>'
+        f'<td class="bb-rx" data-label="公布後 1 小時"><span class="bb-v">{_rx(r["announce"])}</span></td>'
+        f'<td class="bb-rx" data-label="結果後 1 小時"><span class="bb-v">{_rx(r["result"])}</span></td></tr>'
         for r in recent)
     table = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>天期</th><th>類型</th>'
              f'<th>上限</th><th>實際買回</th><th>投標</th><th>上限公布後 1 小時<br><small>10／20／30 年，bp</small></th>'
              f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table></div>')
     up = b.get("upcoming") or []
     ups = "".join(
-        f'<tr><td>{esc(_md(u["date"]))}</td><td>{esc(_md(u["announce"]))}</td><td>{esc(u["bucket_zh"])}</td>'
-        f'<td>{esc(u["type_zh"])}</td><td>{_yi_b(u["max"])}'
+        f'<tr><td class="bb-k" data-label="操作日"><b>{esc(_md(u["date"]))}</b> <span>{esc(u["bucket_zh"])}</span></td>'
+        f'<td data-label="上限公布"><span class="bb-v">{esc(_md(u["announce"]))}</span></td><td class="bb-hide-m" data-label="天期"><span class="bb-v">{esc(u["bucket_zh"])}</span></td>'
+        f'<td data-label="類型"><span class="bb-v">{esc(u["type_zh"])}</span></td><td data-label="排程上限"><span class="bb-v">{_yi_b(u["max"])}'
         + (f'<small class="muted">（近期實際 {_yi_b(u["recent_max"])}）</small>' if u.get("recent_max") else "")
-        + '</td></tr>' for u in up)
+        + '</span></td></tr>' for u in up)
     up_html = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>上限公布</th><th>天期</th>'
                f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table></div>'
                if ups else '<p class="hint">本季暫定排程已全部執行完畢，下一季排程隨再融資公布。</p>')
@@ -953,7 +973,7 @@ def buybacks(d: dict) -> str:
     {stats}
     {how}
     <details data-m-collapse><summary>近 90 天買回結果與殖利率反應（{len(recent)} 場，億美元）</summary>
-      {table if recent else '<p class="hint">近 90 天沒有買回操作。</p>'}</details>
+      {('<p class="bb-m-note">殖利率反應依序為 10／20／30 年，單位 bp；正值＝殖利率上升。</p>' + table) if recent else '<p class="hint">近 90 天沒有買回操作。</p>'}</details>
     <details data-m-collapse open><summary>未來排程（{esc(b.get("schedule_name") or "暫定買回排程")}）</summary>
       {up_html}</details>
     <details data-m-collapse><summary>殖利率反應怎麼量</summary>
@@ -1052,7 +1072,7 @@ def lights_grouped(d: dict, card_fn) -> str:
         if not ls:
             continue
         badge = '<span class="le-badge">本月驅動</span>' if key == main else ""
-        out.append(f'<div class="le-lg" style="--k:{len(ls)}"><div class="sig-tier">{esc(name)}{badge}</div>'
+        out.append(f'<div class="le-lg" data-k="{min(len(ls), 4)}" style="--k:{len(ls)}"><div class="sig-tier">{esc(name)}{badge}</div>'
                    f'<div class="le-lgc">{"".join(card_fn(l, LIGHT_ANCHOR.get(l.key, "")) for l in ls)}</div></div>')
     return f'<div class="le-lgs">{"".join(out)}</div>'
 
