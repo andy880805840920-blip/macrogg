@@ -995,7 +995,7 @@ details[data-m-collapse]>summary{list-style:none}
 
 /* ---------- 名詞解釋 ---------- */
 .teach-more{font-size:13px;margin:8px 0 0}
-.teach-more a{color:var(--brand-orange);font-weight:700;text-decoration:none}
+.teach-more a{color:var(--brand-orange);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .gloss,.poslist{margin:6px 0 0}
 .gloss dt,.poslist dt{font-weight:700;font-size:13.5px;margin-top:13px}
 .gloss dt:first-child,.poslist dt:first-child{margin-top:0}
@@ -3750,6 +3750,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le2-v{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
 .le2-v small{font-size:11px;color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
 .le2-n em.le2-src{background:var(--surface-2);color:var(--text-secondary);font-weight:600}
+.le-eq{margin:14px 0 4px;padding:8px 12px;border-radius:8px;background:var(--surface-2);font-weight:700;
+  font-size:14px;text-align:center}
 .br-h{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary);margin:14px 0 4px}
 .le-deriv{margin:6px 0 10px;padding-left:20px}
 .le-deriv li{margin:10px 0}
@@ -4209,8 +4211,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .cw-panels{display:grid;gap:12px;margin-top:12px}
 @media(min-width:1000px){.cw-panels{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}}
 .cw-panel,.future-policy,.future-bonds{border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface-1)}
-.viz-root:not(#_) .cw-panel h3,.viz-root:not(#_) .future-policy h3,.viz-root:not(#_) .future-bonds h3{margin:0 0 8px;font-size:var(--fs-body);color:var(--text-primary)}
-.viz-root:not(#_) .cw-panel p,.viz-root:not(#_) .future-policy p,.viz-root:not(#_) .future-bonds p{font-size:var(--fs-small);font-weight:400;line-height:1.7;margin:6px 0 10px}
+.viz-root:not(#_) .cw-panel h3,.viz-root:not(#_) .future-policy h3,.viz-root:not(#_) .future-bonds h3,.viz-root:not(#_) .future-dots h3{margin:0 0 8px;font-size:var(--fs-body);color:var(--text-primary)}
+.viz-root:not(#_) .cw-panel p,.viz-root:not(#_) .future-policy p,.viz-root:not(#_) .future-bonds p,.viz-root:not(#_) .future-dots p{font-size:var(--fs-small);font-weight:400;line-height:1.7;margin:6px 0 10px}
 .cw-metrics{margin:10px 0}
 .cw-metrics>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 14px;padding:9px 0;border-top:1px solid var(--grid);align-items:baseline}
 .cw-metrics dt{font-size:var(--fs-small);color:var(--text-secondary)}
@@ -4388,9 +4390,9 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .ww-error{color:var(--series-2)}
 @media(max-width:759px){.cw-panel-content,.cw-weekly{padding-left:24px;padding-right:0}.viz-root:not(#_) .cw-fold>summary{padding:16px 0;gap:9px}.ww-custom input{font-size:16px}.ww-chart{height:205px}}
 .viz-root:not(#_) details.future-section{margin-top:18px;border-top:1px solid var(--grid);padding-top:8px}
-.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds{border:0;border-radius:0;background:transparent;padding:0 0 16px 30px}
+.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds,.viz-root:not(#_) .future-section .future-dots{border:0;border-radius:0;background:transparent;padding:0 0 16px 30px}
 .viz-root:not(#_) .cw-fold>summary:focus-visible{outline:2px solid var(--brand-orange);outline-offset:3px}
-@media(max-width:759px){.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds{padding-left:24px}}
+@media(max-width:759px){.viz-root:not(#_) .future-section .future-policy,.viz-root:not(#_) .future-section .future-bonds,.viz-root:not(#_) .future-section .future-dots{padding-left:24px}}
 
 
 /* ---------- 殖利率曲線 v3（2026-10）：30−2 週報、2Y/10Y/30Y 總表、累積變動圖 ---------- */

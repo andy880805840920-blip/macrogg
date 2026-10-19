@@ -92,7 +92,13 @@ class DebtState:
     nominal_growth: float | None = None       # 名目 GDP 成長 g
     real_growth: float | None = None          # 實質 GDP 成長（r−g 的 g）
     real_growth_assumed: bool = False         # True = 取不到實質 GDP，用了假設值
-    r_minus_g: float | None = None            # 前瞻：市場實質利率 − 實質成長
+    r_minus_g: float | None = None            # 前瞻：10Y 名目殖利率（當月月均）− 名目 GDP 年增
+    r_nom: float | None = None                # r：10Y 名目殖利率當月月均
+    r_month: str = ""
+    r_minus_g_real: float | None = None       # 參考：TIPS 實質利率 − 實質 GDP 年增
+    dd_eff: float | None = None               # 一年債務率變化估計（有效利率口徑，pp）
+    dd_mkt: float | None = None               # 一年債務率變化估計（全部按市場利率再融資，pp）
+    paths: list = field(default_factory=list)  # 三條路徑：赤字、利率、成長（現在 vs 一年前）
     i_minus_g: float | None = None            # 目前：有效利率 − 名目成長
     gap_divergence: str = ""                  # 兩個缺口方向不一致時的說明
     stabilizing_pb: float | None = None       # 穩定債務比所需的基本盈餘（% GDP）
@@ -168,8 +174,49 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
         d.real_growth = real_growth
         d.real_growth_assumed = True
 
+    # r − g（2026-10 改版，依 MacroMicro〈一文看懂債務三大解法〉的口徑）：
+    #   債務率變化 ≈ 基本赤字率 ＋ (r − g)/(1 + g) × 債務率
+    #   r＝10 年期公債殖利率（當月月均，代表新發債的融資成本）、g＝名目 GDP 年增。
+    #   兩邊都用名目，跟有效利率版本的 i − g 同一口徑，可以直接比。
+    y10 = s.get("DGS10") or []
+    if y10:
+        mo = y10[-1]["date"][:7]
+        vs = [r["value"] for r in y10 if r["date"][:7] == mo and r.get("value") is not None]
+        if vs:
+            d.r_nom, d.r_month = sum(vs) / len(vs), mo
+    if d.r_nom is not None and d.nominal_growth is not None:
+        d.r_minus_g = d.r_nom - d.nominal_growth
     if real_10y is not None and d.real_growth is not None:
-        d.r_minus_g = real_10y - d.real_growth
+        d.r_minus_g_real = real_10y - d.real_growth
+    # 一年後債務率變化的估計（pp）＝基本赤字 ＋ 利率與成長的滾動
+    if d.debt_gdp is not None and d.actual_pb is not None and d.nominal_growth is not None:
+        g = d.nominal_growth / 100
+        if d.effective_rate is not None:
+            d.dd_eff = -d.actual_pb + d.debt_gdp * (d.effective_rate / 100 - g) / (1 + g)
+        if d.r_nom is not None:
+            d.dd_mkt = -d.actual_pb + d.debt_gdp * (d.r_nom / 100 - g) / (1 + g)
+    # 三條路徑（降低赤字、壓低利率、提高成長）：現在 vs 約一年前
+    def _yoy_growth(rows, back):
+        if len(rows) > 4 + back and rows[-5 - back]["value"]:
+            return (rows[-1 - back]["value"] / rows[-5 - back]["value"] - 1) * 100
+        return None
+    def_now = d.deficit_gdp
+    def_ago = None
+    if len(receipts) > 4 and len(outlays) > 4 and len(gdp) > 4 and gdp[-5]["value"]:
+        def_ago = (receipts[-5]["value"] - outlays[-5]["value"]) / gdp[-5]["value"] * 100
+    r_ago = None
+    if y10:
+        import datetime as _dt
+        ago = (_dt.date.fromisoformat(y10[-1]["date"]) - _dt.timedelta(days=365)).isoformat()[:7]
+        vs = [r["value"] for r in y10 if r["date"][:7] == ago and r.get("value") is not None]
+        r_ago = sum(vs) / len(vs) if vs else None
+    g_ago = _yoy_growth(gdp, 4)
+    d.paths = [
+        {"key": "deficit", "label": "財政赤字（佔 GDP）", "now": -def_now if def_now is not None else None,
+         "ago": -def_ago if def_ago is not None else None, "better": "down"},
+        {"key": "rate", "label": "利率 r（10Y 月均）", "now": d.r_nom, "ago": r_ago, "better": "down"},
+        {"key": "growth", "label": "成長 g（名目 GDP 年增）", "now": d.nominal_growth, "ago": g_ago, "better": "up"},
+    ]
 
     # 兩個缺口方向不一致時要講清楚，否則同一頁上兩個數字互相打臉。
     # i−g 是「已發行債務的當前成本」，r−g 是「用市場現在的利率再融資後」——
@@ -179,7 +226,7 @@ def debt_state(s: dict[str, list[dict]], real_10y: float | None = None,
             worse = "前瞻" if d.r_minus_g > d.i_minus_g else "當前"
             d.gap_divergence = (
                 "兩個缺口方向不同：當前缺口用的是已發行債務的平均利率（存量），"
-                "前瞻缺口用的是市場現在的實質利率（增量）。"
+                "前瞻缺口用的是市場現在的 10 年期殖利率（新發債的成本）。"
                 f"{worse}的那個為正，代表壓力還在後面——"
                 "舊債每到期換成新利率，存量利率就往市場利率靠攏一步。")
 

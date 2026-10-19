@@ -1154,6 +1154,22 @@ def main() -> int:
         except Exception as e:                     # noqa: BLE001
             log.warning("情境頁期貨路徑產生失敗（%s），該區塊本次不顯示", e)
         _scx["mvd"] = (ctxs.get("fomc") or {}).get("mvd") or _scx.get("mvd")
+        # 長端頁 10 燈號＋03「市場怎麼看未來利率」：期貨定價 vs 點陣圖（Lead／Behind the Curve）
+        try:
+            from src.analysis import longend as _le
+            _dg = _le.dots_gap(_scx.get("futures_curve"), _scx.get("dots"), _scx.get("mvd"))
+            _rc = ctxs.get("rates") or {}
+            if _rc.get("le") is not None:
+                _rc["le"]["dots_gap"] = _dg
+            for _l in _rc.get("lights") or []:
+                if _l.key == "dots_gap" and _dg:
+                    _m = _dg["main"]
+                    _l.value, _l.status = _dg["gap_bp"], _dg["status"]
+                    _l.display = f'{_dg["gap_bp"]:+.0f} bp'
+                    _l.desc = (f'{_m["year"]} 年底：期貨 {_m["market"]:.2f}%、點陣圖 {_m["dots"]:.2f}%——'
+                               f'{_dg["stance"]}，{_dg["why"]}。' + _l.desc)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("期貨 vs 點陣圖差距計算失敗（%s）", e)
         _scx["next_releases"] = build.scenario_next_releases(
             ctxs.get("_schedule") or {},
             (((ctxs.get("fomc") or {}).get("next_meeting")) or {}).get("date"))

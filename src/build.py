@@ -3333,6 +3333,24 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
           "points": series.get("GFDEGDQ188S") or []}],
         unit="%", height=130, digits=1, months=36, aria="聯邦債務佔 GDP")
     debt_span = span_label(debt_rows)
+    # r − g 歷史（季）：10Y 季均 − 名目 GDP 年增，1962 年起抓得到多少畫多少（序列多從 2023 起，畫近 3 年）
+    _gq = series.get("GDP") or []
+    _yq: dict = {}
+    for _r in series.get("DGS10") or []:
+        if _r.get("value") is not None:
+            _q = f'{_r["date"][:4]}-{(int(_r["date"][5:7]) - 1) // 3 * 3 + 1:02d}'
+            _yq.setdefault(_q, []).append(_r["value"])
+    _rg_pts = []
+    for _i in range(4, len(_gq)):
+        _q = _gq[_i]["date"][:7]
+        if _q in _yq and _gq[_i - 4]["value"]:
+            _g = (_gq[_i]["value"] / _gq[_i - 4]["value"] - 1) * 100
+            _rg_pts.append({"date": _gq[_i]["date"], "value": sum(_yq[_q]) / len(_yq[_q]) - _g})
+    rg_chart = (charts.compact_lines(
+        [{"label": "r − g（10Y 季均 − 名目 GDP 年增）", "color": "var(--line-1)", "points": _rg_pts}],
+        unit="pp", height=130, digits=2, months=60, zero=True,
+        refs=[{"value": 0.0, "label": "0：成長剛好抵消利率"}, {"value": 1.0, "label": "+1pp 警戒"}],
+        aria="r − g（季資料）") if len(_rg_pts) >= 3 else "")
 
     # ---- Hyperscaler ----
     # 單位一律換算成「億美元」。原始財報是 billion，但中文語境讀 10 億／十億
@@ -3457,10 +3475,11 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         "debt_note": debt.note,
         "debt_divergence": debt.gap_divergence,
         "debt_growth_note": (
-            f"r 減 g 的成長率用實質 GDP 年增 {debt.real_growth:.1f}%"
-            if debt.real_growth is not None and not debt.real_growth_assumed
-            else (f"取不到實質 GDP，r 減 g 的成長率暫用 {debt.real_growth:.1f}% 假設值"
-                  if debt.real_growth is not None else "")),
+            (f"r＝10 年期殖利率 {debt.r_month.replace('-', '/')} 月均 {debt.r_nom:.2f}%；"
+             if debt.r_nom is not None else "")
+            + (f"g＝名目 GDP 年增 {debt.nominal_growth:.1f}%（{debt.debt_gdp_asof[:7].replace('-', '/')} 前後的季資料）"
+               if debt.nominal_growth is not None else "")),
+        "rg_chart": rg_chart,
         "hs_stats": hs_stats,
         "offerings": _offerings_block(offerings, hs, series),
         "earnings": _earnings_block(earnings),

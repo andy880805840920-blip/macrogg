@@ -1598,7 +1598,7 @@ def _interest_cost(card, S, C):
     if d is None or d.interest_to_revenue is None:
         return None
     ans = (f"利息支出佔聯邦稅收 {_b(fnum(d.interest_to_revenue, 1) + '%')}、佔 GDP {esc(fnum(d.interest_gdp, 1))}%；"
-           f"已發行債務平均利率 {esc(fnum(d.effective_rate, 2))}%。r−g（實質利率減實質成長）{esc(fnum(d.r_minus_g, 2, sign=True))} 個百分點。"
+           f"已發行債務平均利率 {esc(fnum(d.effective_rate, 2))}%。r − g（10 年期殖利率月均減名目 GDP 年增）{esc(fnum(d.r_minus_g, 2, sign=True))} 個百分點。"
            f" {esc(d.gap_divergence or '')}")
     return Out(ans=ans, date=period_label(d.debt_gdp_asof or "", "q"),
                table=(["項目", "數值"], [["利息／稅收", f"{fnum(d.interest_to_revenue, 1)}%"], ["有效利率", f"{fnum(d.effective_rate, 2)}%"],

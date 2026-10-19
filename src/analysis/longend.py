@@ -1237,3 +1237,63 @@ def buyback_view(ops: list[dict], schedule: dict, reactions: dict, today: dt.dat
     return {"rows": rows, "latest": rows[0] if rows else None, "caps": cap_rows,
             "upcoming": up, "quarter": quarter, "quarter_from": q0,
             "schedule_name": (schedule or {}).get("name", ""), "schedule_url": (schedule or {}).get("url", "")}
+
+
+# ---------------------------------------------------------------------------
+# 期貨市場定價 vs 點陣圖（2026-10）：市場 Lead／Behind the Curve
+# ---------------------------------------------------------------------------
+# 歷史上市場與點陣圖顯著分歧的量級（約略值，取自當時的 SEP 與期貨定價）：
+DOTS_GAP_HISTORY = [
+    ("2015/12", "點陣圖 2016 年底 1.375%（升 4 碼），期貨只定價約 2 碼", "市場落後約 50bp", "2016 年實際只升 1 碼"),
+    ("2022 年初", "點陣圖 2022 年底 0.9%（升 3 碼），期貨 2 月已定價約 6 碼", "市場領先約 75bp 以上", "2022 年實際升 17 碼（425bp）"),
+    ("2023/12", "點陣圖 2024 年底 4.6%（降 3 碼），期貨定價降約 6 碼", "市場領先（往降息）約 75bp", "2024 年實際降 4 碼（100bp）"),
+]
+DOTS_GAP_RULE = ("差距＝期貨隱含利率 − 點陣圖中位數（同一個年底）。|差距| < 12.5bp（半碼）正常：兩者一致；"
+                 "12.5～50bp 留意：差半碼到兩碼；> 50bp 警戒：差兩碼以上，跟 2015 年底、2022 年初、2023 年底"
+                 "幾次顯著分歧的量級相當。")
+
+
+def dots_gap(fc: dict | None, dots: dict | None, mvd: dict | None = None) -> dict | None:
+    """
+    期貨隱含利率對點陣圖年底中位數，每個兩者都有的年底一列；主判讀用最遠的那個年底。
+      Lead the Curve：市場定價的動作比點陣圖大（同方向走得更遠）——市場走在 Fed 前面
+      Behind the Curve：市場定價的動作比點陣圖小，或方向相反——市場不買單點陣圖的路徑
+    """
+    rows = []
+    fc, dots = fc or {}, dots or {}
+    r0, pts = fc.get("r0"), fc.get("points") or []
+    if r0 is not None and pts:
+        for y in sorted(dots):
+            yp = [p for p in pts if p["month"][:4] == str(y)]
+            if not yp:
+                continue
+            p = next((q for q in yp if q["month"][5:7] == "12"), yp[-1])
+            fed, mkt = (dots[y] - r0) * 100, (p["rate"] - r0) * 100
+            rows.append({"year": str(y), "month": p["month"], "market": p["rate"], "dots": dots[y],
+                         "fed_bp": fed, "mkt_bp": mkt, "gap_bp": mkt - fed,
+                         "partial": p["month"][5:7] != "12"})
+    if not rows and mvd and mvd.get("market_end") is not None and mvd.get("dot_median") is not None:
+        r0 = mvd.get("r0")
+        fed = (mvd["dot_median"] - r0) * 100 if r0 is not None else 0.0
+        mkt = (mvd["market_end"] - r0) * 100 if r0 is not None else mvd["gap_bp"]
+        rows.append({"year": str(mvd.get("year")), "month": f'{mvd.get("year")}-12', "market": mvd["market_end"],
+                     "dots": mvd["dot_median"], "fed_bp": fed, "mkt_bp": mkt, "gap_bp": mvd["gap_bp"],
+                     "partial": False})
+    if not rows:
+        return None
+    m = rows[-1]
+    g, fed = m["gap_bp"], m["fed_bp"]
+    status = "good" if abs(g) < 12.5 else ("critical" if abs(g) > 50 else "warning")
+    if abs(g) < 12.5:
+        stance, why = "一致", "期貨與點陣圖大致相同，市場跟 Fed 的路徑沒有分歧"
+    else:
+        if abs(fed) >= 12.5:
+            lead = (g > 0) == (fed > 0)
+            move = "升息" if fed > 0 else "降息"
+            why = (f"點陣圖預期{move} {abs(fed) / 25:.1f} 碼，期貨定價{'更多' if lead else '較少'}（{m['mkt_bp']:+.0f}bp）")
+        else:
+            lead = True
+            why = f"點陣圖預期利率大致不動，期貨已定價{'升息' if g > 0 else '降息'} {abs(g) / 25:.1f} 碼"
+        stance = "Lead the Curve（市場領先）" if lead else "Behind the Curve（市場落後）"
+    return {"rows": rows, "main": m, "gap_bp": g, "status": status, "stance": stance, "why": why,
+            "rule": DOTS_GAP_RULE, "history": DOTS_GAP_HISTORY}

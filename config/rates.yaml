@@ -398,6 +398,14 @@ regime_lights:
     direction: higher_is_worse
     green_below: 1.80
     red_above: 2.40
+  # 期貨市場定價 vs 點陣圖（狀態由 run.py 依 |差距| 判定：< 12.5bp 正常、12.5～50bp 留意、> 50bp 警戒）
+  - key: dots_gap
+    label: 期貨定價與點陣圖差距
+    desc: 期貨隱含的年底政策利率減點陣圖中位數（同一個年底）。期貨的動作比點陣圖大＝市場 Lead the Curve（走在 Fed 前面），
+      比點陣圖小或方向相反＝Behind the Curve（不買單點陣圖）。差距越大，之後一方被迫修正的幅度越大。
+      門檻：|差距| < 12.5bp 正常、12.5～50bp 留意、> 50bp 警戒——跟 2015 年底（約 50bp）、2022 年初（約 75bp 以上）、
+      2023 年底（約 75bp）幾次顯著分歧的量級相當
+    direction: custom
   - key: breakeven_10y
     label: 損益兩平通膨率（10 年）
     desc: 通膨預期（長期）＝10Y 名目 − TIPS，含預期平均通膨與通膨風險溢酬。長期通膨的錨定，
@@ -411,13 +419,18 @@ regime_lights:
     direction: higher_is_worse
     green_below: 14.0
     red_above: 20.0
+  # r − g（2026-10 改版）：r＝10 年期殖利率當月月均、g＝名目 GDP 年增（同 MacroMicro 的口徑）。
+  # 門檻依 1962 年以來季資料（10Y 季均 − 名目 GDP 年增）：中位數 −0.73pp、第 75 百分位 +0.95pp；
+  # 1980 年代（98% 的季度 > 0）與 1990 年代（78%）是債務比快速上升的時期，1960 與 2010 年代幾乎都 < 0。
   - key: r_minus_g
     label: 前瞻缺口 r 減 g
-    desc: 市場現在的實質利率減實質 GDP 成長。看的是「舊債換成今天的利率之後」
-      會不會自我累積；表格裡的當前缺口用的是已發行債務的平均利率，兩者不同
+    desc: 10 年期公債殖利率（當月月均，新發債的融資成本）減名目 GDP 年增。債務率變化 ≈ 基本赤字率 ＋
+      (r − g) × 債務率：r 低於 g 時，經濟成長就能逐步消化既有債務；r 高於 g 時，即使收支平衡債務比也會自我累積。
+      門檻依 1962 年以來的季資料：< 0 正常（成長跑贏利率，如 1960、2010 年代）、0～+1pp 留意（約第 50～75 百分位）、
+      > +1pp 警戒（1980～90 年代債務比快速上升時的水準）
     direction: higher_is_worse
-    green_below: -0.5
-    red_above: 0.5
+    green_below: 0.0
+    red_above: 1.0
   - key: ig_spread
     label: 投資級利差
     desc: 投資級公司債相對公債的風險補償。走闊代表企業融資成本上升

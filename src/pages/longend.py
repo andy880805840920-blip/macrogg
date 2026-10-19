@@ -417,7 +417,7 @@ def _cw_matrix(b: dict | None, r0: dict, win_label: str) -> str:
            '<button type="button" class="cw-btn on" data-v="ch" aria-pressed="true">變化</button>'
            '<button type="button" class="cw-btn" data-v="fw" aria-pressed="false">遠期</button></div>')
     return (f'<div class="cwm" data-v="ch">{tog}<div class="cwm-wrap"><table class="cwm-t" aria-label="2Y、10Y、30Y 與利差監控表">'
-            f'{head}<tbody>{"".join(body)}</tbody></table></div>'
+            f'{head}<tbody>{"".join(body)}</tbody></table>'
             f'<details class="cw-note"><summary>表格說明</summary><p class="cwm-note">{esc(note)}</p></details></div>')
 
 
@@ -617,8 +617,31 @@ def curve(d: dict) -> str:
                       f'<div><dt>年底相對現在</dt><dd><b>{policy["change"]}</b></dd></div></dl>'
                       f'<p>{esc(policy["text"])}</p></section>')
     mt = L.get("match")
+    dg = L.get("dots_gap")
     compare_html = ""
-    if mt and mt.get("dot_median") is not None:
+    if dg:
+        _tag = {"good": "正常", "warning": "留意", "critical": "警戒"}[dg["status"]]
+        _rows = "".join(
+            f'<tr><td data-label="年底">{esc(r["year"])} 年底{"（期貨只到 " + esc(r["month"]) + "）" if r["partial"] else ""}</td>'
+            f'<td data-label="點陣圖">{r["dots"]:.2f}%</td><td data-label="期貨">{r["market"]:.2f}%</td><td data-label="差距"><b>{_sbp(r["gap_bp"])}bp</b></td></tr>'
+            for r in dg["rows"])
+        _hist = "".join(f'<tr><td data-label="時點">{esc(a)}</td><td data-label="當時">{esc(b)}</td><td data-label="差距">{esc(c)}</td><td data-label="結果">{esc(e)}</td></tr>'
+                        for a, b, c, e in dg["history"])
+        compare_html = (
+            f'<section class="future-dots"><h3>期貨定價 vs 點陣圖：{esc(dg["stance"])}</h3>'
+            f'<p><span class="st {dg["status"]}">{_tag}</span> 差距 <b>{_sbp(dg["gap_bp"])}bp</b>'
+            f'（{esc(dg["main"]["year"])} 年底）——{esc(dg["why"])}。'
+            f'{"市場與 Fed 的路徑大致一致，之後不太需要誰去修正。" if dg["status"] == "good" else "差距越大，之後不是期貨往點陣圖靠（短端利率跳動），就是 Fed 在下一份點陣圖往市場靠。"}</p>'
+            f'<table class="lq-tbl"><thead><tr><th>年底</th><th>點陣圖中位數</th><th>期貨隱含</th><th>差距</th></tr></thead>'
+            f'<tbody>{_rows}</tbody></table>'
+            f'<details class="f-more"><summary>判定標準與歷史量級</summary><div class="f-detail">'
+            f'<p>{esc(dg["rule"])}Lead the Curve＝期貨定價的動作比點陣圖大（同方向走得更遠）；'
+            f'Behind the Curve＝動作比點陣圖小或方向相反。</p>'
+            f'<table class="lq-tbl"><thead><tr><th>時點</th><th>當時</th><th>差距</th><th>結果</th></tr></thead>'
+            f'<tbody>{_hist}</tbody></table>'
+            f'<p class="cw-panel-note">歷史量級為當時 SEP 與期貨定價的約略值；公開免費資料沒有逐日的期貨 vs 點陣圖序列，'
+            f'這裡只拿幾次顯著分歧當刻度。</p></div></details></section>')
+    elif mt and mt.get("dot_median") is not None:
         compare_html = (f'<details class="f-more"><summary>與 Fed 點陣圖比較</summary>'
                        f'<p>期貨隱含年底 {mt["market_end"]:.2f}%；點陣圖中位數 {mt["dot_median"]:.2f}%。'
                        f'兩者差距 {_sbp((mt["market_end"]-mt["dot_median"])*100)}bp。</p></details>')
@@ -651,12 +674,12 @@ def curve(d: dict) -> str:
       <script>{_CW_JS}</script>
     </div>
     <details class="f-more future-section cw-fold"><summary><span class="cw-fold-number">03</span><span class="cw-fold-title"><b>市場怎麼看未來利率</b><span class="cw-fold-reading">{esc(policy["text"] if policy else future["headline"])}</span></span></summary>
-      {match_html}
+      {match_html}{compare_html if dg else ""}
       <section class="future-bonds"><h3>公債遠期定價方向</h3>
         <p class="future-headline">{esc(future["headline"])}</p><p>{esc(future["recent"])}</p>
         <div class="le3-ft" style="margin-top:6px">{frows or '<p>遠期資料不足</p>'}</div>
         <p class="cw-panel-note">各列代表不同的未來區間與期限，不是連續的升降息路徑；遠期值含期限溢酬，不能直接當作 Fed 的未來政策利率。</p>
-      </section>{compare_html}</details>
+      </section>{"" if dg else compare_html}</details>
     <details class="f-more"><summary>曲線形狀：現在、1 週前、1 個月前、年初</summary>{L.get('curve_chart', '')}</details>
     <details class="f-more"><summary>接下來看什麼</summary><ul class="le3-ol">{outl}</ul></details>
     <details class="f-more"><summary>方法與限制</summary>
@@ -905,7 +928,7 @@ def buybacks(d: dict) -> str:
         for r in rows)
     table = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>天期</th><th>類型</th>'
              f'<th>上限</th><th>實際買回</th><th>投標</th><th>上限公布後 1 小時<br><small>10／20／30 年，bp</small></th>'
-             f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table></div>')
+             f'<th>結果公布後 1 小時<br><small>10／20／30 年，bp</small></th></tr></thead><tbody>{trs}</tbody></table>')
     up = b.get("upcoming") or []
     ups = "".join(
         f'<tr><td>{esc(_md(u["date"]))}</td><td>{esc(_md(u["announce"]))}</td><td>{esc(u["bucket_zh"])}</td>'
@@ -913,7 +936,7 @@ def buybacks(d: dict) -> str:
         + (f'<small class="muted">（近期實際 {_yi_b(u["recent_max"])}）</small>' if u.get("recent_max") else "")
         + '</td></tr>' for u in up)
     up_html = (f'<div class="tscroll"><table class="bb-tb"><thead><tr><th>操作日</th><th>上限公布</th><th>天期</th>'
-               f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table></div>'
+               f'<th>類型</th><th>排程上限</th></tr></thead><tbody>{ups}</tbody></table>'
                if ups else '<p class="hint">本季暫定排程已全部執行完畢，下一季排程隨再融資公布。</p>')
     return f"""
     <p class="hint">買回流動性較差的舊券、用新發行補上——長端供給的減法。</p>
@@ -992,14 +1015,14 @@ def guidance_stale(d: dict) -> str:
 # 指標檢核：依三股力量分組
 # ---------------------------------------------------------------------------
 GROUPS = [("tp", "期限溢酬：不確定性補償", ("term_premium", "curve_30_10", "interest_to_revenue", "r_minus_g")),
-          ("real", "實質利率：政策預期", ("real_10y", "curve_10_2")),
+          ("real", "實質利率：政策預期", ("real_10y", "curve_10_2", "dots_gap")),
           ("infl", "損益兩平：通膨預期", ("breakeven_10y",)),
           ("demand", "需求", ("ig_spread",))]
 
 
 # 每顆燈的「完整脈絡」：連回本頁對應的區塊（比照流動性頁）
 LIGHT_ANCHOR = {"term_premium": "#decomp", "real_10y": "#decomp", "breakeven_10y": "#decomp",
-                "curve_10_2": "#curve", "curve_30_10": "#curve",
+                "curve_10_2": "#curve", "curve_30_10": "#curve", "dots_gap": "#curve",
                 "interest_to_revenue": "#debt", "r_minus_g": "#debt", "ig_spread": "#demand"}
 
 

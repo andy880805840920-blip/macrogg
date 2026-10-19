@@ -219,6 +219,21 @@ with zipfile.ZipFile(_buf, "w") as z:
 _t = ts._sec_table(ts._xlsx_sheets(_buf.getvalue(), {"Tab.3.9"})["Tab.3.9"], 2)
 check("⑧c 標準函式庫讀 xlsx：Excel 序號轉月份", _t == {("Total", "Total"): {"2026-08": 55.1}}, _t)
 
+# ⑨ 期貨 vs 點陣圖：Lead／Behind the Curve
+_fc = {"r0": 3.875, "points": [{"month": "2026-12", "rate": 3.60}, {"month": "2027-06", "rate": 3.30},
+                               {"month": "2027-12", "rate": 3.10}]}
+_g = le.dots_gap(_fc, {2026: 3.625, 2027: 3.375}, None)
+check("⑨a 每個年底一列、主判讀取最遠", [r["year"] for r in _g["rows"]] == ["2026", "2027"], _g["rows"])
+check("⑨b 降得比點陣圖多＝Lead、27.5bp 留意",
+      round(_g["gap_bp"], 1) == -27.5 and _g["status"] == "warning" and _g["stance"].startswith("Lead"), _g)
+_g = le.dots_gap(_fc, {2027: 2.375}, None)
+check("⑨c 降得比點陣圖少＝Behind、> 50bp 警戒", _g["stance"].startswith("Behind") and _g["status"] == "critical", _g)
+_g = le.dots_gap(_fc, {2027: 3.15}, None)
+check("⑨d < 12.5bp＝一致", _g["status"] == "good" and _g["stance"] == "一致", _g)
+_g = le.dots_gap(None, {}, {"year": 2026, "market_end": 3.5, "dot_median": 3.625, "gap_bp": -12.6, "r0": 3.875})
+check("⑨e 沒有期貨路徑時退回 mvd", bool(_g) and _g["rows"][0]["year"] == "2026" and _g["status"] == "warning", _g)
+check("⑨f 都沒有資料時回 None", le.dots_gap(None, None, None) is None)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

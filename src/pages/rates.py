@@ -36,6 +36,7 @@ def _rates_body_full(d: dict) -> str:
                   "real_10y": "實質利率偏高，壓抑投資",
                   "breakeven_10y": "長期通膨預期的錨定鬆動",
                   "curve_10_2": "曲線倒掛，衰退訊號",
+                  "dots_gap": "期貨與點陣圖分歧超過兩碼，之後一方得大幅修正",
                   "ig_spread": "企業融資成本上升"}
     _crit_ls = [l for l in d["lights"] if l.status == "critical"]
     if _crit:
@@ -425,17 +426,43 @@ def _rates_body_full(d: dict) -> str:
          "note": "每收 100 元稅拿去付利息的比例（警戒線 20%）"},
         {"label": "赤字佔 GDP", "value": f"{abs(_dfg):.1f}%" if _dfg is not None else "—",
          "note": "需靠淨發行公債填補的部分"},
-        {"label": "r − g（前瞻）", "value": f"{_rg:+.2f}%" if _rg is not None else "—",
-         "color": ("var(--critical)" if (_rg or -1) > 0 else "var(--good)"),
-         "note": "市場實質利率 − 實質成長；大於零＝債務自我累積"},
+        {"label": "r − g", "value": f"{_rg:+.2f}pp" if _rg is not None else "—",
+         "color": ("var(--critical)" if (_rg or -1) > 1 else "var(--warning)" if (_rg or -1) > 0 else "var(--good)"),
+         "note": "10Y 殖利率月均 − 名目 GDP 年增；大於零＝債務自我累積"},
     ]
+    _dde = getattr(_db, "dd_eff", None)
+    _ddm = getattr(_db, "dd_mkt", None)
+    if _dde is not None:
+        _debt_stats.append({"label": "債務率一年變化（估）", "value": f"{_dde:+.1f}pp",
+                            "color": "var(--critical)" if _dde > 1 else "inherit",
+                            "note": (f"全部按今天的 10Y 再融資：{_ddm:+.1f}pp" if _ddm is not None else "")})
     if _itr is not None and _rg is not None:
-        _dl = "hawkish" if (_rg > 0 or _itr > 20) else "neutral"
-        debt_impact = (f'<div class="impact {_dl}">利息佔稅收 {_itr:.1f}%，r − g {_rg:+.2f}%——'
-                       + ("利率高於成長，債務比會自我累積，長端供給的壓力是結構性的。" if _rg > 0 else
-                          "成長仍高於實質利率，債務比不會自己滾大。") + '</div>')
-    _debt_sum = (f'利息佔稅收 {_itr:.1f}%　·　r − g {_rg:+.2f}%'
+        _dl = "hawkish" if (_rg > 0 or _itr > 20 or (_dde or 0) > 1) else "neutral"
+        _pb = getattr(_db, "actual_pb", None)
+        _why = (f"債務率一年約 {_dde:+.1f}pp：基本赤字 {(-_pb):.1f}pp 加上利率與成長的滾動"
+                f" {_dde + _pb:+.1f}pp（滾動用實際平均付息率，舊債還鎖在較低利率）。" if _dde is not None and _pb is not None else "")
+        debt_impact = (f'<div class="impact {_dl}">r − g {_rg:+.2f}pp、利息佔稅收 {_itr:.1f}%——'
+                       + ("利率高於成長，即使收支平衡債務比也會自我累積。" if _rg > 0 else
+                          "成長仍跑贏利率，債務問題的壓力主要來自赤字本身，不是利率滾動。")
+                       + esc(_why) + '</div>')
+    _debt_sum = (f'r − g {_rg:+.2f}pp　·　利息佔稅收 {_itr:.1f}%'
                  if _itr is not None and _rg is not None else "政府財政")
+    # 三條路徑：降低赤字、壓低利率、提高成長——現在 vs 一年前，往好的方向還是壞的方向
+    _prow = ""
+    for _p in getattr(_db, "paths", None) or []:
+        if _p.get("now") is None:
+            continue
+        _chg = (_p["now"] - _p["ago"]) if _p.get("ago") is not None else None
+        _good = (_chg is not None and ((_chg < -0.05) if _p["better"] == "down" else (_chg > 0.05)))
+        _bad = (_chg is not None and ((_chg > 0.05) if _p["better"] == "down" else (_chg < -0.05)))
+        _tag = "改善" if _good else "惡化" if _bad else "持平"
+        _ago_s = f'{_p["ago"]:.2f}%' if _p.get("ago") is not None else "—"
+        _prow += (f'<tr><td class="k" data-label="路徑"><b>{esc(_p["label"])}</b></td>'
+                  f'<td data-label="現在">{_p["now"]:.2f}%</td>'
+                  f'<td data-label="一年前">{_ago_s}</td>'
+                  f'<td data-label="方向"><span class="st {"good" if _good else "critical" if _bad else "warning"}">{_tag}</span></td></tr>')
+    debt_paths = (f'<table class="lq-tbl"><thead><tr><th>壓低債務率的三條路</th><th>現在</th><th>一年前</th><th>方向</th></tr></thead>'
+                  f'<tbody>{_prow}</tbody></table>') if _prow else ""
 
     return f"""
 <div class="grid">
@@ -523,19 +550,27 @@ def _rates_body_full(d: dict) -> str:
     <p class="hint">重點不是債務總額，是<b>利息負擔會不會自我累積</b>。</p>
     {debt_impact}
     <div class="stat-row" style="margin-top:14px">{_stats(_debt_stats)}</div>
+    <div class="le-eq">債務率變化 ≈ 基本赤字率 ＋ (r − g) × 債務率</div>
+    {debt_paths}
+    <div class="viz-block"><div class="viz-h">r − g（季資料：10Y 季均 − 名目 GDP 年增）</div>{d.get('rg_chart') or ''}</div>
     <div class="viz-block"><div class="viz-h">聯邦債務佔 GDP（季資料，近 3 年）</div></div>
     {d['debt_chart']}
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
         "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。", learn="fiscal")}
-    <details data-m-collapse><summary>名詞：有效利率與 r − g</summary>
+    <details data-m-collapse><summary>公式與名詞：債務率怎麼變、r − g 怎麼看</summary>
       <dl class="gloss" style="margin-top:10px">
-        <dt>有效利率</dt>
-        <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。
-          新債換舊債時它會慢慢往市場利率靠攏，所以升息的痛是分好幾年到的。</dd>
+        <dt>債務率變化</dt>
+        <dd>債務率變化 ≈ 基本赤字率 ＋ (r − g)/(1 + g) × 債務率（皆為佔 GDP 比例）。要壓下債務率只有三條路：
+          降低赤字、壓低利率、提高成長。上表看三條路各自比一年前好還是壞。</dd>
         <dt>r − g</dt>
-        <dd>市場實質利率減實質經濟成長。大於零時，就算財政收支平衡，債務佔 GDP 也會自我累積。</dd>
+        <dd>r 用 10 年期公債殖利率的當月月均（新發債的融資成本），g 用名目 GDP 年增，兩邊都是名目。
+          r 低於 g，成長就能逐步消化既有債務——1990 年代末生產力推升名目成長，即使 10 年期長期在 5%～6%，
+          債務比仍快速下降；r 高於 g，就算收支平衡債務比也會自我累積。</dd>
+        <dt>有效利率（i）</dt>
+        <dd>政府整體債務實際付出的平均利率＝利息支出 ÷ 債務總額。新債換舊債時它會慢慢往市場利率靠攏，
+          所以「一年變化（估）」用 i 算現況、另用 r 算「全部按今天利率再融資」的上限。</dd>
       </dl>
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
