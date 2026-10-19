@@ -1,18 +1,24 @@
 {
- "hash": "77d1ac042d9cb2e5",
- "text": "聯準會主席華許於 10/18 發表演講，市場據此調整對升息路徑的預期。根據交易員反應，華許的言論被解讀為對進一步升息持謹慎態度，推動交易員下修升息預期，黃金與債券因此受惠——黃金價格上揚，美債長端殖利率承壓。¶這一發展反映市場對聯準會政策立場的重新評估。當前聯邦基金利率目標區間為 3.75–4.00%，市場定價顯示 10/28 會議維持機率高達 87%，累計至 2026 年底預期僅增加 24bp。華許的發言進一步強化了市場對維持現有利率水準的預期，減弱了近期升息預期的強度。\n油價下滑帶動全球風險資產承壓，亞股下跌但美債與黃金獲得支撐，顯示市場風險偏好下降。\n日本央行總裁上田和幸於 10/18 表示基礎通膨「相當接近」2% 目標，暗示日本央行可能繼續推進貨幣政策正常化。",
+ "hash": "d9ec2c6d9b40cbee",
+ "text": "美國10年期公債殖利率10/15突破5.06%，創近20年新高。這波上升反映市場對AI基礎設施投資回報的擔憂升溫：CoreWeave等AI雲端廠商融資成本大幅上升，CoreWeave債券殖利率升至15%左右，信貸利差創年內新高，顯示市場對這類企業償債能力的信心下滑。過去12個月10年期殖利率已上升26%，幅度與2007年7月那次突破5%時相近，當時聯準會正在積極升息對抗通膨。分析師指出，市場焦點已從AI需求轉向資本支出與折舊能否回收，若利差續擴，AI概念股恐進一步補跌，進而對整體經濟前景造成壓力。\n日本央行行長植田和男表示潛在通膨率正在上升，非常接近央行2%目標，工資與物價上漲機制已恢復，強調隨著利率上升步伐適當，長期殖利率將趨於穩定。\n美國費城半導體指數連續八個交易日收黑，創2008年以來最長連跌紀錄，輝達執行長黃仁勳強調AI帶來的效益很快會化解市場疑慮，大規模硬體投資最終將展現回報。",
  "links": [
   {
-   "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-18T23:47:43+00:00"
+   "title": "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
+   "link": "https://finance.yahoo.com/markets/article/just-another-scare-wall-street-sees-the-ai-trade-strong-despite-techs-latest-rout-155930040.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-18T15:59:30+00:00"
   },
   {
-   "title": "Asian stocks skid, Wall Street and bonds aided by oil slip",
-   "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOLVFWRVZxMkJLTnJJaThPRWdnNTFRbmc2V1FTYW1CbUNZc1hNYkZKd0xCbHJTeUpzYnNzYmx6RS1aZS1FNnBUcGx0VHY5bFZmY2xTMU1nZHlJNTNpWmliOE0tcmJ5d0JpeVJlZmw3Y1RuRnJvQWZSQXJraTNtN1pGOTJ4RQ?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-19T00:38:00+00:00"
+   "title": "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
+   "link": "https://www.fool.com/investing/2026/10/18/10-year-treasury-5-20-years-history-says-sp500/?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-18T15:07:00+00:00"
+  },
+  {
+   "title": "植田和男直言潛在通膨率上升中，非常接近日本央行2%目標",
+   "link": "https://tw.stock.yahoo.com/news/%E6%A4%8D%E7%94%B0%E5%92%8C%E7%94%B7%E7%9B%B4%E8%A8%80%E6%BD%9B%E5%9C%A8%E9%80%9A%E8%86%A8%E7%8E%87%E4%B8%8A%E5%8D%87%E4%B8%AD-%E9%9D%9E%E5%B8%B8%E6%8E%A5%E8%BF%91%E6%97%A5%E6%9C%AC%E5%A4%AE%E8%A1%8C2-%E7%9B%AE%E6%A8%99-013318492.html",
+   "source": "Yahoo奇摩新聞",
+   "at": "2026-10-19T01:33:18+08:00"
   }
  ],
  "fedwatch": {
@@ -289,29 +295,16 @@
    }
   }
  },
- "text_source": "model",
- "at": "2026-10-19T01:33:47.228112+00:00",
+ "text_source": "model-content",
+ "at": "2026-10-19T01:42:38.466983+00:00",
  "layout": "main",
  "topics": {
-  "hash": "8a1836af1c422304",
+  "hash": "fac239f36c34de1d",
   "items": [
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "10年期美債殖利率於10/15突破5%，創近20年新高，為全球金融市場最重要指標，影響房貸、企業借貸成本與資產估值。歷史上10年期美債殖利率上次在2007年7月超過5%，隨後12個月標普500下跌19%",
-    "links": [
-     {
-      "title": "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
-      "link": "https://www.fool.com/investing/2026/10/18/10-year-treasury-5-20-years-history-says-sp500/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-18T15:07:00+00:00"
-     }
-    ]
-   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東衝突升級與供應恢復之間形成拉鋸。10/18亞洲盤WTI跌至100.76美元、布油跌至108.14美元，因沙烏地阿拉伯直升機墜毀、油輪遭攻擊，但美軍上週末護送超過1億桶石油通過荷莫茲海峽，顯示供應接近戰前水準；分析師指布油可能在100美元附近波動",
+    "text": "WTI與布蘭特原油10/18亞洲盤雙雙下跌，分別跌至100.76美元與108.14美元，市場權衡中東衝突升級與該地區供應接近戰前水準；伊朗革命衛隊稱一艘未獲授權油輪在荷莫茲海峽觸雷起火",
     "links": [
      {
       "title": "權衡中東衝突與供應接近戰前水準，WTI、布油亞洲盤中齊跌",
@@ -328,22 +321,9 @@
     ]
    },
    {
-    "id": "equity",
-    "label": "美股",
-    "text": "AI基礎設施融資成本上升引發市場疑慮，CoreWeave與Nebius周五收盤下跌逾25%。輝達執行長黃仁勳表示AI帶來的效益將快速化解市場疑慮，強調大規模硬體投資最終將展現回報",
-    "links": [
-     {
-      "title": "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
-      "link": "https://finance.yahoo.com/markets/article/just-another-scare-wall-street-sees-the-ai-trade-strong-despite-techs-latest-rout-155930040.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-18T15:59:30+00:00"
-     }
-    ]
-   },
-   {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達要求三星、SK海力士及美光統一高頻寬記憶體製程，三星將採用台積電3奈米製程生產輝達下一代客製化HBM底層晶片，為雙方首次在HBM製造階段合作，台積電可望通吃三大記憶體供應商訂單",
+    "text": "三星將採用台積電3奈米製程生產輝達下一代HBM底層晶片，為雙方首次在此階段合作，輝達推動三大記憶體供應商統一製程，台積電可望通吃三星、SK海力士及美光訂單，進一步增加已滿載的3奈米產能需求",
     "links": [
      {
       "title": "Samsung to use TSMC technology for Nvidia's next-generation memory chips, Seoul newspaper reports",
@@ -362,7 +342,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股19日開低失守47000點，下跌668點至46354點，台積電跌破季線至2395元；外資連8賣、自營商連7賣，三大法人合計賣超678億元；記憶體、被動元件集體走弱，華邦電、南亞科跌逾5%",
+    "text": "台指期10/18夜盤重挫1144點，台股10/19開盤下跌668點至46354點失守47000點關卡，台積電跌破季線至2395元，外資連8賣超461.47億元",
     "links": [
      {
       "title": "台指期夜盤挫逾千點　法人：台股面臨賣壓回防季線",
@@ -381,27 +361,33 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "華許10/18言論壓低聯準會升息預期，黃金價格因此上漲，受惠於降息預期與中東局勢緊張雙重支撐",
+    "text": "黃金10/18上漲，華許談話壓低升息預期，中東局勢與通膨升溫支撐金價在4100美元附近震盪",
     "links": [
+     {
+      "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T23:47:43+00:00"
+     },
      {
       "title": "黃金價格上漲，Warsh言論壓低聯準會升息預期 作者 Investing.com - Investing.com 香港",
       "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1uWHBlT19fd0tzWEJzc2xZNXMwWl9VRDJ3aTlNWlFmSzBGcGdBWHNPLUZIVEdxdEFFSkVOSHlDUzBOdmtFTGJGeVBITFRnajB6Zkg0MXU5a3VjcjdLV3F0YnRrMEU3T2w1UTZJSThwbw?oc=5",
       "source": "股市報價& 財經新聞",
       "at": "2026-10-19T01:09:35+00:00"
-     },
-     {
-      "title": "中東局勢、通膨加劇 國際金價4100美元上下震盪 - 商傳媒",
-      "link": "https://news.google.com/rss/articles/CBMixAJBVV95cUxQSXVyakdvWnlEX3liVDN2MGQ5d1g0djVmMGdvb2NUam9ocmloNlVjYWlXR1Q5SjF3SWF3ZkRZOVVSeHEzUFNnNzJNRm5XMmhyalppSUNmUnpkV19xSlNJNFd1X2ZVa3NpWjEzVE0taWtnZHduYUdDLUdFVXYzM3MwNjdpRmpoWVNBbmlwWjU3Ynd2Y2xER0lJUkJlUWVaS3l5N3c3S2twSElPSVgtd3dtd1o0R3ZfNnJlRnlpZjBLOWdpTnNycm1abGVRNi1PVmtZYkNicnF1RExWd1prWlhrUmNXU2tCV3BTZ1M1b1dNVXhoV1NaNnBPTWp0WnZGZzA2d1lqdHhhRXZ2aXdyMzBjX3J1X2l3dnJkeU1Za2JMRFVjQjJZTkkxWE5aYUxNS0hPT2RxX0lXU25wOHd1dlV2QjhEaDI?oc=5",
-      "source": "SUN MEDIA",
-      "at": "2026-10-18T23:06:39+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣近期承受沉重壓力逼近32.5元，但外銀預期基本面支撐將占上風。華僑銀行與荷蘭國際集團預期新台幣年底前分別回升至31.60元與31.50元，三菱日聯銀行預期年底升至31.8元。",
+    "text": "新台幣10/19早盤重貶逾1角至32.49元，台股走跌加劇貶值壓力；儘管外資撤離，華僑銀行與荷蘭國際集團預期新台幣年底前將升至31.50至31.60元，認為台灣強勁出口與經常帳順差提供中期支撐",
     "links": [
+     {
+      "title": "股匯齊挫　新台幣再重貶逾1角見32.49元",
+      "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%BD%8A%E6%8C%AB-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%86%8D%E9%87%8D%E8%B2%B6%E9%80%BE1%E8%A7%92%E8%A6%8B32-49%E5%85%83-012825511.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-19T01:28:25+08:00"
+     },
      {
       "title": "台幣逼近32.5元還會貶？外銀看好強勁出口支撐 年底反攻31.5元",
       "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E5%B9%A3%E9%80%BC%E8%BF%9132-5%E5%85%83%E9%82%84%E6%9C%83%E8%B2%B6-%E5%A4%96%E9%8A%80%E7%9C%8B%E5%A5%BD%E5%BC%B7%E5%8B%81%E5%87%BA%E5%8F%A3%E6%94%AF%E6%92%90-%E5%B9%B4%E5%BA%95%E5%8F%8D%E6%94%BB31-5%E5%85%83-002543718.html",
@@ -411,24 +397,16 @@
     ]
    }
   ],
-  "at": "2026-10-19T01:34:06.796852+00:00"
+  "at": "2026-10-19T01:42:56.779485+00:00"
  },
  "main_source_titles": [
-  "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
-  "Asian stocks skid, Wall Street and bonds aided by oil slip"
+  "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
+  "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
+  "植田和男直言潛在通膨率上升中，非常接近日本央行2%目標"
  ],
- "headline": "華許發言推低升息預期，美債長端殖利率小幅回落",
- "rate_note": "華許發言推低升息預期，偏向壓低美債長端殖利率；不過 10 年期 10/18 收盤 +1bp 至 5.10%，市場尚未充分反映這一訊號，可能反映其他因素（如油價下滑）的抵消作用。",
+ "headline": "AI融資疑慮擴散推升美債殖利率，10年期突破5%創近20年高位",
+ "rate_note": "AI融資成本上升與市場對投資回報的疑慮推升長端殖利率，反映升息預期升溫；10年期今日+1bp至5.10%，市場已在反映這波擔憂。",
  "recent_mains": [
-  {
-   "headline": "油價飆升至110美元推高通膨預期，美債長端殖利率上揚升息憂慮復燃",
-   "titles": [
-    "美國公債上週五報價漲跌互見，長端殖利率受油價飆升推高",
-    "中東局勢、通膨加劇 國際金價4100美元上下震盪",
-    "通膨與AI融資疑慮夾擊，那指重挫2.15%、費半連八黑，財報成後市關鍵"
-   ],
-   "at": "2026-10-19T00:07:19.996717+00:00"
-  },
   {
    "headline": "油價飆升與AI融資疑慮夾擊，美債長端殖利率高檔震盪",
    "titles": [
@@ -444,28 +422,43 @@
     "Asian stocks skid, Wall Street and bonds aided by oil slip"
    ],
    "at": "2026-10-19T01:33:47.228112+00:00"
+  },
+  {
+   "headline": "AI融資疑慮擴散推升美債殖利率，10年期突破5%創近20年高位",
+   "titles": [
+    "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
+    "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
+    "植田和男直言潛在通膨率上升中，非常接近日本央行2%目標"
+   ],
+   "at": "2026-10-19T01:42:38.466983+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
-   "headline": "華許發言推低升息預期，美債長端殖利率小幅回落",
-   "text": "聯準會主席華許於 10/18 發表演講，市場據此調整對升息路徑的預期。根據交易員反應，華許的言論被解讀為對進一步升息持謹慎態度，推動交易員下修升息預期，黃金與債券因此受惠——黃金價格上揚，美債長端殖利率承壓。¶這一發展反映市場對聯準會政策立場的重新評估。當前聯邦基金利率目標區間為 3.75–4.00%，市場定價顯示 10/28 會議維持機率高達 87%，累計至 2026 年底預期僅增加 24bp。華許的發言進一步強化了市場對維持現有利率水準的預期，減弱了近期升息預期的強度。\n油價下滑帶動全球風險資產承壓，亞股下跌但美債與黃金獲得支撐，顯示市場風險偏好下降。\n日本央行總裁上田和幸於 10/18 表示基礎通膨「相當接近」2% 目標，暗示日本央行可能繼續推進貨幣政策正常化。",
-   "rate_note": "華許發言推低升息預期，偏向壓低美債長端殖利率；不過 10 年期 10/18 收盤 +1bp 至 5.10%，市場尚未充分反映這一訊號，可能反映其他因素（如油價下滑）的抵消作用。",
+   "headline": "AI融資疑慮擴散推升美債殖利率，10年期突破5%創近20年高位",
+   "text": "美國10年期公債殖利率10/15突破5.06%，創近20年新高。這波上升反映市場對AI基礎設施投資回報的擔憂升溫：CoreWeave等AI雲端廠商融資成本大幅上升，CoreWeave債券殖利率升至15%左右，信貸利差創年內新高，顯示市場對這類企業償債能力的信心下滑。過去12個月10年期殖利率已上升26%，幅度與2007年7月那次突破5%時相近，當時聯準會正在積極升息對抗通膨。分析師指出，市場焦點已從AI需求轉向資本支出與折舊能否回收，若利差續擴，AI概念股恐進一步補跌，進而對整體經濟前景造成壓力。\n日本央行行長植田和男表示潛在通膨率正在上升，非常接近央行2%目標，工資與物價上漲機制已恢復，強調隨著利率上升步伐適當，長期殖利率將趨於穩定。\n美國費城半導體指數連續八個交易日收黑，創2008年以來最長連跌紀錄，輝達執行長黃仁勳強調AI帶來的效益很快會化解市場疑慮，大規模硬體投資最終將展現回報。",
+   "rate_note": "AI融資成本上升與市場對投資回報的疑慮推升長端殖利率，反映升息預期升溫；10年期今日+1bp至5.10%，市場已在反映這波擔憂。",
    "links": [
     {
-     "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
-     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-18T23:47:43+00:00"
+     "title": "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
+     "link": "https://finance.yahoo.com/markets/article/just-another-scare-wall-street-sees-the-ai-trade-strong-despite-techs-latest-rout-155930040.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-18T15:59:30+00:00"
     },
     {
-     "title": "Asian stocks skid, Wall Street and bonds aided by oil slip",
-     "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOLVFWRVZxMkJLTnJJaThPRWdnNTFRbmc2V1FTYW1CbUNZc1hNYkZKd0xCbHJTeUpzYnNzYmx6RS1aZS1FNnBUcGx0VHY5bFZmY2xTMU1nZHlJNTNpWmliOE0tcmJ5d0JpeVJlZmw3Y1RuRnJvQWZSQXJraTNtN1pGOTJ4RQ?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-19T00:38:00+00:00"
+     "title": "The 10-Year Treasury Is Above 5% for the First Time in Almost 20 Years. History Says This Is How the S&P 500 Index Will Perform Over the Next 12 Months.",
+     "link": "https://www.fool.com/investing/2026/10/18/10-year-treasury-5-20-years-history-says-sp500/?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-18T15:07:00+00:00"
+    },
+    {
+     "title": "植田和男直言潛在通膨率上升中，非常接近日本央行2%目標",
+     "link": "https://tw.stock.yahoo.com/news/%E6%A4%8D%E7%94%B0%E5%92%8C%E7%94%B7%E7%9B%B4%E8%A8%80%E6%BD%9B%E5%9C%A8%E9%80%9A%E8%86%A8%E7%8E%87%E4%B8%8A%E5%8D%87%E4%B8%AD-%E9%9D%9E%E5%B8%B8%E6%8E%A5%E8%BF%91%E6%97%A5%E6%9C%AC%E5%A4%AE%E8%A1%8C2-%E7%9B%AE%E6%A8%99-013318492.html",
+     "source": "Yahoo奇摩新聞",
+     "at": "2026-10-19T01:33:18+08:00"
     }
    ],
-   "at": "2026-10-19T01:33:47.228112+00:00"
+   "at": "2026-10-19T01:42:38.466983+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",
