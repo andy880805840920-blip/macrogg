@@ -3217,8 +3217,8 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         if _l.value >= 0 and _inv:
             if _l.status == "good":
                 _l.status = "warning"
-            _l.desc = (f"近 24 個月曾倒掛（最近一次 {_inv[-1]}），目前已重新轉正——歷史上衰退多在這個階段開始。"
-                       + _l.desc)
+            _l.note = f"近 24 個月曾倒掛（最近一次 {_inv[-1]}），目前已重新轉正——歷史上衰退多在這個階段開始。"
+            _l.desc = _l.note + _l.desc
         me: dict = {}
         for d, v in _sp:
             me[d[:7]] = v
@@ -3461,6 +3461,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                   "as_of": _ig_cfg.get("as_of", ""),
                   "verified": bool(_ig_cfg.get("verified"))},
         "lights": lights,
+        "light_explain": {c["key"]: c["explain"] for c in cfg.get("regime_lights") or [] if c.get("explain")},
         "curve_stats": curve_stats,
         "curve_short": curve_short,
         "decomp_stats": decomp_stats,

@@ -3,7 +3,37 @@
 from __future__ import annotations
 
 from ..site import esc
-from .labor import _light_card, _stats
+from .labor import _light_card, _stats, STATUS_ICON, STATUS_TEXT
+from .. import charts
+
+
+def _explained_card(lt, href: str, ex: dict | None) -> str:
+    """長端頁燈卡：說明拆成「現況／量什麼／為什麼重要／門檻／依據」，目前所在的門檻列標亮。
+    沒有 explain 設定的燈退回共用燈卡。"""
+    if not ex:
+        return _light_card(lt, href)
+    arrow = {"up": "↑", "down": "↓", "flat": "→"}[lt.delta_dir]
+    strip = charts.status_strip(getattr(lt, "history", []) or [])
+    note = getattr(lt, "note", "") or ""
+    lv = ex.get("levels") or []
+    rows = "".join(
+        f'<li class="{st}{" on" if st == lt.status else ""}"><span class="lx-tag">{STATUS_ICON[st]} {STATUS_TEXT[st]}</span>'
+        f'<span class="lx-rng">{esc(rng)}</span>{"<em>目前</em>" if st == lt.status else ""}</li>'
+        for st, rng in zip(("good", "warning", "critical"), lv))
+    parts = [f'<p class="lx-now"><b>現況</b>{esc(note)}</p>' if note else "",
+             f'<p class="lx-what">{esc(ex.get("what", ""))}</p>',
+             f'<div class="lx-k">為什麼重要</div><p>{esc(ex.get("why", ""))}</p>' if ex.get("why") else "",
+             f'<div class="lx-k">門檻</div><ul class="lx-lv">{rows}</ul>' if rows else "",
+             f'<p class="lx-basis">依據：{esc(ex["basis"])}</p>' if ex.get("basis") else "",
+             f'<a class="l-link" href="{href}">完整脈絡 →</a>' if href else ""]
+    return f"""<div class="light {lt.status}">
+  <div class="l-top"><span class="l-icon">{STATUS_ICON[lt.status]}</span>{esc(lt.label)}</div>
+  <div class="l-value">{esc(lt.display)} <span style="font-size:13px;color:var(--muted)">{arrow}</span></div>
+  <div class="l-state">{STATUS_TEXT[lt.status]}</div>
+  {strip}
+  <details class="l-more"><summary>這在量什麼</summary>
+    <div class="l-desc lx">{"".join(parts)}</div></details>
+</div>"""
 from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 from . import longend as LE
 
@@ -580,10 +610,10 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
-    <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核</h2>
+    <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核與綜合判定</h2>
     <p class="hint">依三個組成份分組；本月驅動 10Y 的那一組排第一。不另設權重——權重由市場這個月的變化決定。</p>
     {lights_impact}
-    {LE.lights_grouped(d, _light_card)}
+    {LE.lights_grouped(d, lambda l, a: _explained_card(l, a, (d.get("light_explain") or {}).get(l.key)))}
     {teach(
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",

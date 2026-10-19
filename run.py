@@ -1166,8 +1166,9 @@ def main() -> int:
                     _m = _dg["main"]
                     _l.value, _l.status = _dg["gap_bp"], _dg["status"]
                     _l.display = f'{_dg["gap_bp"]:+.0f} bp'
-                    _l.desc = (f'{_m["year"]} 年底：期貨 {_m["market"]:.2f}%、點陣圖 {_m["dots"]:.2f}%——'
-                               f'{_dg["stance"]}，{_dg["why"]}。' + _l.desc)
+                    _l.note = (f'{_m["year"]} 年底：期貨 {_m["market"]:.2f}%、點陣圖 {_m["dots"]:.2f}%——'
+                               f'{_dg["stance"]}，{_dg["why"]}。')
+                    _l.desc = _l.note + _l.desc
         except Exception as e:                     # noqa: BLE001
             log.warning("期貨 vs 點陣圖差距計算失敗（%s）", e)
         _scx["next_releases"] = build.scenario_next_releases(

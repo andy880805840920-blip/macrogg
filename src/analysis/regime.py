@@ -32,6 +32,8 @@ class Light:
     delta_dir: str = "flat"   # up | down | flat
     # 歷史狀態軌跡。只看當期無法分辨「連續惡化」與「剛轉黃」。
     history: list = field(default_factory=list)   # [{date, status, label}]
+    # 現況補充（計算端給的一句話，例如「近 24 個月曾倒掛、剛轉正」）。長端頁燈卡放在說明最上方。
+    note: str = ""
 
 
 def _classify(value: float | None, cfg: dict) -> str:

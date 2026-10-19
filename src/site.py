@@ -2667,6 +2667,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le-hs .kh-vals span{font-size:10.5px}
 .le-lgs{display:grid;gap:4px 10px;grid-template-columns:1fr}
 .le-lgc{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:559px){.le-lgc{grid-template-columns:1fr}}
 @media(min-width:760px){.le-lgs{grid-template-columns:repeat(4,minmax(0,1fr))}
   .le-lg{grid-column:span var(--k)}.le-lgc{grid-template-columns:repeat(var(--k),minmax(0,1fr))}}
 .le-hero .focus-title{font-size:22px}
@@ -3752,6 +3753,33 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le2-n em.le2-src{background:var(--surface-2);color:var(--text-secondary);font-weight:600}
 .le-eq{margin:14px 0 4px;padding:8px 12px;border-radius:8px;background:var(--surface-2);font-weight:700;
   font-size:14px;text-align:center}
+/* 長端頁燈卡說明（2026-10）：現況／量什麼／為什麼重要／門檻／依據，目前所在的門檻列標亮 */
+.viz-root:not(#_) .l-desc.lx{color:var(--text-secondary);line-height:1.7;margin-top:10px}
+.viz-root:not(#_) .lx p{margin:0 0 12px}
+.viz-root:not(#_) .lx .lx-what{color:var(--text-primary)}
+.viz-root:not(#_) .lx .lx-now{padding:9px 11px;border-radius:8px;background:var(--surface-2);
+  border-left:3px solid var(--brand-orange);color:var(--text-primary)}
+.viz-root:not(#_) .lx .lx-now b,.viz-root:not(#_) .lx .lx-k{display:block;font-size:var(--fs-micro);font-weight:700;
+  color:var(--muted);letter-spacing:.06em;margin:0 0 3px}
+.viz-root:not(#_) .lx-lv{list-style:none;margin:0 0 12px;padding:0;border:1px solid var(--grid);border-radius:8px;overflow:hidden}
+.viz-root:not(#_) .lx-lv li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:baseline;
+  padding:7px 10px;border-top:1px solid var(--grid);line-height:1.5}
+.viz-root:not(#_) .lx-lv li:first-child{border-top:0}
+.viz-root:not(#_) .lx-lv li.on{color:var(--text-primary);font-weight:600;box-shadow:inset 3px 0 0 var(--st)}
+.viz-root:not(#_) .lx-lv li.good{--st:var(--good)}.viz-root:not(#_) .lx-lv li.warning{--st:var(--warning)}
+.viz-root:not(#_) .lx-lv li.critical{--st:var(--critical)}
+.viz-root:not(#_) .lx-lv li.on{background:color-mix(in srgb,var(--st) 11%,transparent)}
+@media(min-width:560px) and (max-width:759px){.viz-root:not(#_) .lx-lv li{grid-template-columns:minmax(0,1fr) auto;padding:7px 9px}
+  .viz-root:not(#_) .lx-lv .lx-rng{grid-row:2;grid-column:1/-1}
+  .viz-root:not(#_) .lx-lv em{grid-row:1;grid-column:2}}
+.viz-root:not(#_) .lx-tag{font-weight:700;white-space:nowrap}
+.viz-root:not(#_) .lx-lv li.good .lx-tag{color:var(--good)}
+.viz-root:not(#_) .lx-lv li.warning .lx-tag{color:var(--warning)}
+.viz-root:not(#_) .lx-lv li.critical .lx-tag{color:var(--critical)}
+.viz-root:not(#_) .lx-rng{font-variant-numeric:tabular-nums}
+.viz-root:not(#_) .lx-lv em{font-style:normal;font-size:var(--fs-micro);font-weight:700;color:var(--brand-ink);
+  border:1px solid currentColor;border-radius:999px;padding:0 7px;white-space:nowrap}
+.viz-root:not(#_) .lx .lx-basis{font-size:var(--fs-micro);color:var(--muted)}
 .br-h{font-size:var(--fs-small);font-weight:700;color:var(--text-secondary);margin:14px 0 4px}
 .le-deriv{margin:6px 0 10px;padding-left:20px}
 .le-deriv li{margin:10px 0}
