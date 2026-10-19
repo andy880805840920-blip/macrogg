@@ -238,13 +238,27 @@ def _bill_net_method(rows, qra) -> str:
             f'<p class="hint">單位：億美元。</p>{q}')
 
 
+# 這兩項以兆美元顯示（規模都在 2–3 兆，億美元的五位數不好讀）
+_TRILLION = ("currency", "reserves")
+
+
+def _liab_value(it: dict, short: bool = False) -> str:
+    if it["key"] in _TRILLION:
+        return f'{it["value"] / 1000:,.2f} 兆' + ("" if short else "美元")
+    return f'{it["value"] * 10:,.0f} 億' + ("" if short else "美元")
+
+
 def _liab_note(it: dict, qra: dict | None, source: str) -> str:
     """最新值下方：1 個月前、半年前的水位與淨變化（小字）；資料日期（更小字）。"""
     lines = []
     for tag, name in (("m1", "1 個月前"), ("m6", "半年前")):
         r = it.get(tag)
         if r:
-            lines.append(f'{name} {r["value"] * 10:,.0f}（{r["chg"] * 10:+,.0f}）')
+            if it["key"] in _TRILLION:
+                # 水位用兆，淨變化仍用億——幾十億的週變化換成兆只剩 +0.01，看不出大小
+                lines.append(f'{name} {r["value"] / 1000:,.2f} 兆（{r["chg"] * 10:+,.0f} 億）')
+            else:
+                lines.append(f'{name} {r["value"] * 10:,.0f}（{r["chg"] * 10:+,.0f}）')
     if it["key"] == "tga" and qra and qra.get("cash_end") is not None:
         mo = int((qra.get("cash_end_date") or "0000-12")[5:7])
         lines.append(f'QRA {mo} 月底目標 {qra["cash_end"] * 10:,.0f}'
@@ -395,9 +409,9 @@ def liquidity_body(d: dict) -> str:
 
     lb = d.get("liab") or {}
     _li = {it["key"]: it for it in lb.get("items") or []}
-    _liab_sum = ("　·　".join(f'{it["label"]} {it["value"] * 10:,.0f} 億'
+    _liab_sum = ("　·　".join(f'{it["label"]} {_liab_value(it, short=True)}'
                              for it in (lb.get("items") or [])[1:3]) or "Fed 負債端")
-    liab_cells = "".join(state_chip(it["label"], f'{it["value"] * 10:,.0f} 億美元',
+    liab_cells = "".join(state_chip(it["label"], _liab_value(it),
                                     _liab_note(it, d.get("qra"), lb.get("source", "")), "neutral")
                          for it in lb.get("items") or [])
     liabilities_section = f"""<div class="grid">
