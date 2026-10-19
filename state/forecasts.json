@@ -516,6 +516,23 @@
     "cpi_yoy": 3.74,
     "core_yoy": 2.56
    }
+  },
+  "pce|2026-09": {
+   "key": "pce",
+   "period": "2026-09",
+   "date": "2026-10-29",
+   "clev": {
+    "pce_mom": 0.47,
+    "core_mom": 0.28,
+    "pce_yoy": 3.6,
+    "core_yoy": 3.05
+   },
+   "clev_asof": "10/16",
+   "banks": {},
+   "bad": [],
+   "auto_seen": {},
+   "auto": {},
+   "auto_log": []
   }
  }
 }
