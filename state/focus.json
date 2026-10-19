@@ -1,12 +1,18 @@
 {
- "hash": "14128677c846ae88",
- "text": "人工智能對勞動市場的衝擊開始具體化。國際勞工組織3月研究指出，高收入國家近十分之一的女性從事AI風險最高的職業。專家分析，AI聚焦於例行性任務、數字處理與模式識別，這些正是女性集中的文書與行政工作——秘書與文書人員仍有90%為女性。歷史提供了警示：1940年代，美國95%的電話接線員為女性，這是當時女性薪資相對較好的工作，需要數月訓練才能應對尖峰時段每小時數百通來電。AT&T推出自動電話交換機後，這個曾是20歲以下美國白人女性最大單一職業的工作隨之消失。¶當前AI浪潮重演類似模式：AI的目標正是這些例行性、需要精確度與速度的工作。與洗衣機、個人電腦等過往技術進步不同，AI對特定職業結構的衝擊更為直接，女性勞動力面臨的風險最為突出。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，前3季累計年增4.6%符合全年目標；石油相關產業改善與進出口強勁（前3季貨物貿易額年增18.8%創同期新高）是主要支撐。\n美國長期借貸成本上升背景下，聯邦赤字仍維持高位；10年期殖利率在5%上方，市場定價10/28聯準會維持利率機率87%。",
+ "hash": "e920e774b1f038cd",
+ "text": "美國科技IPO市場預期大幅下修。年初投資人期待SpaceX、Anthropic、OpenAI等大型私募公司在2026年上市，但OpenAI已排除今年上市計畫，多家公司推遲IPO時程。根據預測市場Kalshi的數據，在23家追蹤的公司中，只有Anthropic的2026年IPO官方宣布機率超過50%，達75%；相比之下，金融科技公司Plaid從1月的50%跌至10%，人資平台Deel從2月的五五波跌至3%，Databricks更從超過50%跌至1%。Anthropic已在6月向美國證管會秘密提交招股說明書，成為年內最可能上市的大型科技公司。\n加州AI新創Anthropic已在6月秘密提交招股說明書，成為年內最可能官方宣布IPO的大型科技公司，預測市場給予75%機率。\n密集AI泡沫警告聲浪中，Galaxy Digital創辦人兼執行長Novogratz仍力勸投資人持續買進，認為這波泡沫尚未達到歷史高點，AI股票本益比仍具吸引力，且中美競爭使政策制定者不太可能放慢AI發展。",
  "links": [
   {
-   "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
-   "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
+   "title": "Anthropic is AI trade's last big hope for a major IPO this year",
+   "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
    "source": "CNBC",
-   "at": "2026-10-19T14:20:08+00:00"
+   "at": "2026-10-19T15:25:27+00:00"
+  },
+  {
+   "title": "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt",
+   "link": "https://247wallst.com/investing/2026/10/19/billionaire-ceo-ai-is-the-biggest-bubble-of-our-lifetime-but-investors-should-keep-buying-during-the-melt-up/?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-19T14:14:21+00:00"
   }
  ],
  "fedwatch": {
@@ -284,47 +290,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-19T15:06:10.635171+00:00",
+ "at": "2026-10-19T15:34:59.545879+00:00",
  "layout": "main",
  "topics": {
-  "hash": "0deae8265e4d3e51",
+  "hash": "84bc022daf7ca4c7",
   "items": [
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "美元強勢與長天期美債殖利率出現脫節，美債殖利率在油價下跌與企業財報季前維持高檔震盪，投資人持續關注聯準會會議與重要經濟數據對殖利率的影響",
-    "links": [
-     {
-      "title": "US dollar strength masks growing disconnect with Treasury yields",
-      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOdmlxSV9DX3o5MUlyTGg5eWo0d3VTTGhINmF5cXU4MHBjdjIxSGc2VHRCS1M4cnlMekN3T1Q4NXZyQVNlNzctcDZTTm1OT0JyRGJKUlcxTEs1VFY5UHZ6ejhZWmxPZW9ROEJOS0xLSHRTTVBTc1VJQjdsaEJ5NzlxSlZhZGVYQ1RNczNyem9fQlVWRzVkMmZ5UDNuM2lnejBZUXlLUnFTUVp4SzQ4LTBzT3lR?oc=5",
-      "source": "StoneX",
-      "at": "2026-10-19T11:54:18+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "肯亞貨幣市場報酬率下滑，促使投資人轉向特殊基金；印度央行升息後，民眾面臨房貸月付額增加或延長貸款期限的選擇",
-    "links": [
-     {
-      "title": "Falling money market returns push Kenyan investors towards special funds",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFAtbDE0VU9vbFRfM0pWcy02VjNMQ3lFOW5sU1Y1b21qQVlnSTkwWFFkcXk5YUJCOUxvMFY2Rko3U1Q4TEhMREY5dHF0cGRGdVpvVzNFMlNGSU1BcDlUbjhPbVFyZWhMWmJadFZJdmdVM3gtVFBHWEhEYXZB?oc=5",
-      "source": "TechTrendsKE",
-      "at": "2026-10-19T10:46:57+00:00"
-     },
-     {
-      "title": "RBI Repo Rate Hike: Should You Pay More EMI Or Extend Home Loan Tenure?",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQZGFjV0g0Vjh4Qk4yUHNJWGlpb2RualdPcWVObFFpYk1ZaWpfZW44MEt0elYxTVZkdXZhM0QtMVJLTWwxd3hXdzkxQVJETDRnTEIweWloTUJOWklXeXlpSnBhanFLLWVSRXFaQ2ltR0Z6T2VLQTJHdllpZUMzdVVVeDUwZVR4V0lfb0IxOGRqXy1XSDZ4UkY5eW9xbzZQOTk0UHJJY2N0alY3cG1fNEFfOWp3cWhkbTdFRXBBb3hiUUNncknSAcMBQVVfeXFMUGRhY1dINFY4eEJOMlBzSVhpaW9kbmpXT3FlTmxRaWJNWWlqX2VuODBLdHpWMU1WZHV2YTNELTFSS01sMXd4V3c5MUFSREw0Z0xCMHlpaE1CTlpJV3l5aUpwYWpxSy1lUkVxWkNpbUdGek9lS0EyR3ZZaWVDM3VVVXg1MGVUeFdJX29CMThkal8tV0g2eFJGOXlvcW82UDk5NFBySWNjdGpWN3BtXzRBXzlqd3FoZG03RUVwQW94YlFDZ3JJ?oc=5",
-      "source": "NDTV",
-      "at": "2026-10-19T06:44:10+00:00"
-     }
-    ]
-   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗主要油港因美國封鎖而保持空置狀態，布蘭特原油在中東與烏克蘭衝突支撐下維持在110美元附近",
+    "text": "伊朗主要油港因美國封鎖而空置，全球油市供應受限；同時油價下跌為美股提供支撐，投資人在企業財報高峰期前持續觀望〔equity-2,twf-1〕",
     "links": [
      {
       "title": "Iran’s Main Oil Terminals Remain Empty as US Blockade Bites",
@@ -333,36 +307,36 @@
       "at": "2026-10-19T11:02:24+00:00"
      },
      {
-      "title": "Brent Crude Holds Near $110 on Mideast and Ukraine Conflicts",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZW11ZjRDTUdpUHpzY1JpNFZtWjZ1bGhZejdHX2h3Q0NTb1pKU0pxM0NtSDR5QlA4YnQ5NHUybkxGS0VxSWJQcHo0NWcyb3A4S21SbVNld2cyLTQ5eFowV2lqRlh1QUMteG1taWQ5b0dPUGg1SnpxVUlRYmlDWkkxZzBQWVpBTjlwdzEyZDBTRWRacVU1ZFhZMjhrMGd5dw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-18T22:02:51+00:00"
+      "title": "Gold steady ahead of Fed meeting, lower oil prices limit downside",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T03:11:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI概念股經歷上週大幅拋售後反彈，標普500與那斯達克10/19開盤同步走高，惟高盛警告AI超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐進一步補跌",
+    "text": "AI概念股在上週大幅拋售後反彈，標普500與那斯達克開盤走高。不過高盛警告，超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐進一步補跌",
     "links": [
+     {
+      "title": "S&P 500, Nasdaq open higher as AI stocks rebound ahead of major earnings",
+      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPX21SVVhfUjZRQ255YlFzVWVEZ3BFMmt3aWlDdkVPVENFOExuRE9KOXZ6WjNqbzdHelUwdzZudy02TjlyNkxVZWcxQmFzZF9NaUE0SFZYaWI3dmxlYTBVdjdULWhLMkNQNnlMUXFaM1J5T1dPMEo3ajhkb0RQLUM3M0pkYlFqbHNKQ1U1c3k5WlUtdjR1UkNCV0JkdjJZTzdIa2c?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T13:35:35+00:00"
+     },
      {
       "title": "AI概念股經歷拋售潮後反彈　美股標普500、那指開盤同步走高",
       "link": "https://tw.stock.yahoo.com/news/ai%E6%A6%82%E5%BF%B5%E8%82%A1%E7%B6%93%E6%AD%B7%E6%8B%8B%E5%94%AE%E6%BD%AE%E5%BE%8C%E5%8F%8D%E5%BD%88-%E7%BE%8E%E8%82%A1%E6%A8%99%E6%99%AE500-%E9%82%A3%E6%8C%87%E9%96%8B%E7%9B%A4%E5%90%8C%E6%AD%A5%E8%B5%B0%E9%AB%98-140628056.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T14:06:28+08:00"
-     },
-     {
-      "title": "美股開盤：AI股回神，標普500與那斯達克走高、道瓊小跌",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBSTGVfZXlEUW9sS2ZKZmNxMWFpZUNISlNQdHMxLUhKQ0RpR3g2N3RaMkFlVkJ4aGJ6eUNpNGhIV2IzQlZfWGJhRkZvYk9LcUxkM3JGNDBDUUZTTkc2bDVycUM4LVVfcmxNMkRFb1psanN6WVgtMl9uRmF3?oc=5",
-      "source": "BigGo 財經",
-      "at": "2026-10-19T14:25:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "亞馬遜宣布其AI晶片將支援熱門程式語言以挑戰輝達；輝達贏得新興AI新創公司Modal，用於新中央處理器；三星將採用台積電技術製造輝達下一代記憶體晶片",
+    "text": "亞馬遜宣布其AI晶片將支援熱門編程語言，挑戰輝達；輝達同時贏得快速成長的AI新創公司Modal作為新中央處理器客戶，台積電與三星合作為輝達下一代記憶體晶片製造〔semi-2,semi-4,semi-3〕",
     "links": [
      {
       "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
@@ -381,7 +355,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤反彈，川普暫緩對俄羅斯制裁推低油價與美債殖利率，摩根士丹利釋出美股回調可能接近尾聲訊號；英特爾執行長陳立武透露公司已完成約80%大規模重整",
+    "text": "台指期夜盤反彈，川普暫緩對俄羅斯制裁推低油價與美債殖利率，摩根士丹利釋出美股回調可能接近尾聲訊號，台積電ADR同步上漲1.98%〔twf-1,twf-2〕",
     "links": [
      {
       "title": "台股反彈訊號來了？美股科技股反攻、台積電ADR同步走高　台指期夜盤逼近47K",
@@ -398,82 +372,53 @@
     ]
    },
    {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "2026年美國期中選舉結果可能影響川普最後兩年任期；Z世代投資人在期中選舉前調整投資組合",
-    "links": [
-     {
-      "title": "The midterm election outcomes that could shape Trump's final two years",
-      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQaEV4NHdWNVNlYU41Q0ZMbVJEbGl1bC1Sb3Y1aW9pWE5pR083em1jeXphd1RfSlkxdW4ySzR1ekdpMUNta3JXenJQOGR4VkNMektwRXlhcVRISTZqci1sNDRMYTNzbk5aRWc4WTJKaWZfazFGRXNMdG1fR1BjWnJRdHNoZ3NMWjVMU0tzTTNsNTUyWEhIc0FvN2tleXFlemx6RFBqWE9vRUtFWU91V3JxRHE3UUphdUoyV0E?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-19T10:16:33+00:00"
-     },
-     {
-      "title": "Gen Z Investors Are Switching up Their Portfolios Ahead of The Midterms",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQd2FUclBPcG50V0xYRlBNMWg0cTNIRzcxbkFoN3JSVktZVy1Ca1NJcU5nNkxlYy1WcHpfb29zWHlwWFdXRHF4ZDR1bTBpUFBWVHJPbEVfeTdneXJ2dDh2c01XX3ZkenJxaTFkVktFbTBaTWNMaHJIM3RVRlFZcXpvOG9QQWgwZVpTeldqYWNzZWs4aEZRU1ZRLU1Yd2RoN0dpVHo0Vm0yZE1kSUVheS0tbW9yYmdVdDBQOVlLOEdzOA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-19T11:00:14+00:00"
-     }
-    ]
-   },
-   {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金在聯準會會議前保持穩定，油價下跌限制下行空間；華許演講推低升息預期後，黃金小幅上揚",
+    "text": "黃金在聯準會會議前交投清淡，油價下跌限制黃金下行空間，金價在4,200美元下方靜待時機〔gold-1,gold-3〕",
     "links": [
      {
-      "title": "Gold steady ahead of Fed meeting, lower oil prices limit downside",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOcHBoaXFtRmhELVpxR3BOYzNDX3IzS1Y1UHZaZUlWRnBiY0Y3WWxwa19vSlVRUENyTGtpZVJFSEFSLW9hVWhEaktYRTVhVWpObTFOYThBVXNRX19VY0phaUJjSkdSMjFZQ19FUFZGMm44UnNpZkZGSnNCeUc2SFZ4c1ZZUU9lV2tiUk1odm44Wmc2WGVjSG5pYUU3QnE2NGYx?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-19T03:11:00+00:00"
+      "title": "黃金價格預測：週初交投清淡，XAU/USD在4,200美元下方靜待時機",
+      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQVlBzWkt1VjdiOFhSb2Rqc3Bsc1VUaS1VMlJGOTZKWmgta0wtbTNtQkgzVEVpc1owUTZlUnpfSXF6M3gtMW1WcHpsaWl5NFQ0SW5MVk9XVkx2ZXVPZ1BwNVBrRmswNDBuLTIyN1NSMTBWYzdEdHNSSnJmQTFBQTN1S01QNGVORXNTVU11eGlOblFYeGRPcjA3cFVIZnlwd2VCcklWZnZhblM5ZGxBWHlsWDB6X2dDd0YxQnpBQlZBQTBMazhJVWc1cTVxeUtWejZvUDE3RnNFR2dZX2c?oc=5",
+      "source": "www.tmgm",
+      "at": "2026-10-19T11:33:37+00:00"
      },
      {
-      "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-18T23:47:43+00:00"
+      "title": "今日黃金價格分析｜今日外匯黃金分析｜今日 XAU/USD 分析－2026 年 10 月 19 日",
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPSjMwYmhmbXhZVk9wUUZmU2FDa3FVYnhRaXctenFiQXNlZHlHREttVFlGTXRUYVpVTV9vd2pjc3lhN29qUTA2VHRYdlVJMVNrYnVVZVpzSEdQSUt6Wll0UFBvV1ZwZzNfWUNqSUxicEdVVmFsM2tjb2lxNDNHTUwtWERZSzVJSjhSdGprcV9aalBwcTF3?oc=5",
+      "source": "Mitrade",
+      "at": "2026-10-19T03:48:35+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣對美元12至16日貶幅達1.37%，央行分析外資賣台股淨匯出179.61億美元；央行喊話難擋外資匯出，新台幣連跌7個交易日",
+    "text": "新台幣對美元連續7個交易日貶值，12至16日貶幅達1.37%。外資因AI股拋售而淨匯出179.61億美元，央行喊話難以阻擋貶勢",
     "links": [
+     {
+      "title": "央行喊話難擋外資匯出！新台幣連7黑 匯銀揭止貶關鍵",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ScGZiZlRfZjhmVWxiMDg3VnJuWTE4NzFIdHh6SWtXcG5pVm90VVFDTW1weGpvOFQzRWpFankwekNwVlBmYWxKcU5QY0kwR2tVZUR3ZTlWVG4?oc=5",
+      "source": "自由時報",
+      "at": "2026-10-19T10:23:23+00:00"
+     },
      {
       "title": "新台幣對美元12日到16日貶幅達1.37% 央行分析：外資賣台股淨匯出179.61億美元",
       "link": "https://news.google.com/rss/articles/CBMitANBVV95cUxNLTJodFBDLXZLSjBFb3dQUU1fU0lVT2MtUGxUdmlGS0NDYS1lX0VuZkQ1RER1WmJkUlRwWjQyOWdnaHkzME1rN0dENGdpX0xYc0pTQ2ZxaUdYQkJLRHNJUjAwbGZ5cng4R1ZNUlJzVU9jdUJNTEhkXy1nRlNzMm03UHpaQ1ZmZDdHeWNrOFhXTGRsb1FNS1JqV2loaGRrb2MtSWRMX3ZYd1NCcDZxNHpOc28zMWtEb0NXQUdFYVN6WWZDQWQyLWx1ZmhzSmFiY1I2U0xDd3lfRFFKYXJlOUtaeEN1QlYySkZsN0N0NEFKWU1jQnhuNjNDaHVraHpJZDFkQTNLcmpoaVdQc3NUS2RxOEpoM3VIb1V2SUNNaFNIbEUycnZnZEZsVFdZUG52NktOdmtobVhQUDNMZGhRd211b3IyanhCTW9VWXBYRkhmRGNXeGF4dmc2MXdkMmYzdDZGSkxfN0t2SmtoeVIydjRLcEtBbFNDNWFvcWZvNlFDVEJWOFJRR1NMb21DWmRFa2JadnYxMko0SkV1MWtaaVNzeS1ySmtRNnJzYjczVU55NE1vQTJ6?oc=5",
       "source": "Yahoo股市",
       "at": "2026-10-19T09:20:00+00:00"
-     },
-     {
-      "title": "央行喊話難擋外資匯出！新台幣連7黑 匯銀揭止貶關鍵",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFB2Vmt0NWZuQUpRVUhrazVxTXRwVTlKUktFTjVSR1VZcVh2S0M5Ynhrci1GeGpEYlN4V3NuOHBJckNpSkdEU0NTM0g1bWppRS1QUU01MHZ3NVNRUDB2OTBlYU1iYk3SAWRBVV95cUxQdlZrdDVmbkFKUVVIa2s1cU10cFU5SlJLRU41UkdVWXFYdktDOWJ4a3ItRnhqRGJTeFdzbjhwSXJDaUpHRFNDUzNINW1qaUUtUFFNNTB2dzVTUVAwdjkwZWFNYmJN?oc=5",
-      "source": "自由財經",
-      "at": "2026-10-19T09:18:43+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T15:06:28.481739+00:00"
+  "at": "2026-10-19T15:35:15.236992+00:00"
  },
  "main_source_titles": [
-  "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why"
+  "Anthropic is AI trade's last big hope for a major IPO this year",
+  "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt"
  ],
- "headline": "AI衝擊就業結構浮現，女性職位風險最高",
- "rate_note": "此事主要涉及勞動市場結構變化而非短期經濟數據，對利率方向影響不明確；若AI加速導致失業率上升，則偏向壓低升息預期，但材料未提供足以判斷時間表的資訊。10年期10/19盤中5.13%，較前一交易日 +3bp，市場反映的主要是其他因素。",
+ "headline": "AI IPO潮退燒，Anthropic成年內唯一主要上市希望",
+ "rate_note": "科技IPO延遲反映市場對高利率環境的擔憂，可能偏向壓低長期利率預期——投資人對融資成本敏感度上升，但這項事件本身對聯準會政策方向影響有限。10年期今日+3bp至5.13%，市場未明顯反映IPO延遲的利率壓力。",
  "recent_mains": [
-  {
-   "headline": "華許降溫升息預期，黏性通膨與全球供應衝擊支撐美債長端",
-   "titles": [
-    "Watch Anti-AI Trade Drives Buyers Into Bonds: Market Analysis",
-    "Bond Market’s Big Short Bet Gets Wakeup Call as AI Trade Wobbles",
-    "Gold rises as Warsh remarks temper Fed hike bets, futures top $4,200",
-    "US Stock Market Today: S&P 500 Futures Drop On Sticky Trade Inflation Concerns",
-    "多重供應衝擊 全球糧食通膨恐加劇 並持續至2027年"
-   ],
-   "at": "2026-10-19T09:06:26.701211+00:00"
-  },
   {
    "headline": "AI繁榮恐加劇通膨，聯準會面臨政策兩難",
    "titles": [
@@ -489,22 +434,36 @@
     "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why"
    ],
    "at": "2026-10-19T15:06:10.635171+00:00"
+  },
+  {
+   "headline": "AI IPO潮退燒，Anthropic成年內唯一主要上市希望",
+   "titles": [
+    "Anthropic is AI trade's last big hope for a major IPO this year",
+    "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt"
+   ],
+   "at": "2026-10-19T15:34:59.545879+00:00"
   }
  ],
  "archive": {
   "2026-10-19": {
-   "headline": "AI衝擊就業結構浮現，女性職位風險最高",
-   "text": "人工智能對勞動市場的衝擊開始具體化。國際勞工組織3月研究指出，高收入國家近十分之一的女性從事AI風險最高的職業。專家分析，AI聚焦於例行性任務、數字處理與模式識別，這些正是女性集中的文書與行政工作——秘書與文書人員仍有90%為女性。歷史提供了警示：1940年代，美國95%的電話接線員為女性，這是當時女性薪資相對較好的工作，需要數月訓練才能應對尖峰時段每小時數百通來電。AT&T推出自動電話交換機後，這個曾是20歲以下美國白人女性最大單一職業的工作隨之消失。¶當前AI浪潮重演類似模式：AI的目標正是這些例行性、需要精確度與速度的工作。與洗衣機、個人電腦等過往技術進步不同，AI對特定職業結構的衝擊更為直接，女性勞動力面臨的風險最為突出。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，前3季累計年增4.6%符合全年目標；石油相關產業改善與進出口強勁（前3季貨物貿易額年增18.8%創同期新高）是主要支撐。\n美國長期借貸成本上升背景下，聯邦赤字仍維持高位；10年期殖利率在5%上方，市場定價10/28聯準會維持利率機率87%。",
-   "rate_note": "此事主要涉及勞動市場結構變化而非短期經濟數據，對利率方向影響不明確；若AI加速導致失業率上升，則偏向壓低升息預期，但材料未提供足以判斷時間表的資訊。10年期10/19盤中5.13%，較前一交易日 +3bp，市場反映的主要是其他因素。",
+   "headline": "AI IPO潮退燒，Anthropic成年內唯一主要上市希望",
+   "text": "美國科技IPO市場預期大幅下修。年初投資人期待SpaceX、Anthropic、OpenAI等大型私募公司在2026年上市，但OpenAI已排除今年上市計畫，多家公司推遲IPO時程。根據預測市場Kalshi的數據，在23家追蹤的公司中，只有Anthropic的2026年IPO官方宣布機率超過50%，達75%；相比之下，金融科技公司Plaid從1月的50%跌至10%，人資平台Deel從2月的五五波跌至3%，Databricks更從超過50%跌至1%。Anthropic已在6月向美國證管會秘密提交招股說明書，成為年內最可能上市的大型科技公司。\n加州AI新創Anthropic已在6月秘密提交招股說明書，成為年內最可能官方宣布IPO的大型科技公司，預測市場給予75%機率。\n密集AI泡沫警告聲浪中，Galaxy Digital創辦人兼執行長Novogratz仍力勸投資人持續買進，認為這波泡沫尚未達到歷史高點，AI股票本益比仍具吸引力，且中美競爭使政策制定者不太可能放慢AI發展。",
+   "rate_note": "科技IPO延遲反映市場對高利率環境的擔憂，可能偏向壓低長期利率預期——投資人對融資成本敏感度上升，但這項事件本身對聯準會政策方向影響有限。10年期今日+3bp至5.13%，市場未明顯反映IPO延遲的利率壓力。",
    "links": [
     {
-     "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
-     "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
+     "title": "Anthropic is AI trade's last big hope for a major IPO this year",
+     "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
      "source": "CNBC",
-     "at": "2026-10-19T14:20:08+00:00"
+     "at": "2026-10-19T15:25:27+00:00"
+    },
+    {
+     "title": "Billionaire CEO: AI Is “The Biggest Bubble Of Our Lifetime,” But Investors Should Keep Buying During The Melt",
+     "link": "https://247wallst.com/investing/2026/10/19/billionaire-ceo-ai-is-the-biggest-bubble-of-our-lifetime-but-investors-should-keep-buying-during-the-melt-up/?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-19T14:14:21+00:00"
     }
    ],
-   "at": "2026-10-19T15:06:10.635171+00:00"
+   "at": "2026-10-19T15:34:59.545879+00:00"
   },
   "2026-10-18": {
    "headline": "加拿大央行示警油價飆升推高通膨，美債殖利率面臨上行壓力",
