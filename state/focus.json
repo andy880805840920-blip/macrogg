@@ -299,12 +299,31 @@
  "at": "2026-10-19T01:42:38.466983+00:00",
  "layout": "main",
  "topics": {
-  "hash": "fac239f36c34de1d",
+  "hash": "4001aa983bcac15d",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "華許發表言論後，交易員調降聯準會升息預期，黃金隨之上漲",
+    "links": [
+     {
+      "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPREhDWC00MVloSzQ4QWFaYzl1MTdFTG1fRURVRmZzZF8yTms3MGpaYkhYSWd6Z2V6U1U2a1pNVDVKRl80OHdZY0YxSklldWVPR1g0YklVTGQ1MVhNdDJlUXh4dDNsQm1TQnBrMkp5NV9CTzlnS2VEeGR2a3V0bFhNNVBRejRlZlVRUE9sSUtEakxmMUlyQlQzdEYyanI1WXJaVjV2WXFUQjd1Tm9NR29tZUJCMWRGZw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-18T23:47:43+00:00"
+     },
+     {
+      "title": "Watch Can the Fed Fight Inflation Without Hurting Farmers?",
+      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOaGk2Mm41cEFQS3RJbHpCOE1mUnRjb0RaT21fYVJZUGJoSDg5ZUtoVXUzVmpHODluVXFuZVRtay1DdklRLUNhcXp3aXBUaW5FelppMkR2ZlVuTFE1NDAyMTJKZExMdFNsZGFDS2pFaHozRWl3ZTZEaXpsZ1RLTHQzenp0dmkzZXZrQ0J4OXdNUV9nQ3Z6ejBMMG9nRzdmZWwtWDhqTmRyWWE5Zw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-17T14:07:37+00:00"
+     }
+    ]
+   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "WTI與布蘭特原油10/18亞洲盤雙雙下跌，分別跌至100.76美元與108.14美元，市場權衡中東衝突升級與該地區供應接近戰前水準；伊朗革命衛隊稱一艘未獲授權油輪在荷莫茲海峽觸雷起火",
+    "text": "中東衝突升溫與供應恢復拉扯油價。沙烏地阿拉伯直升機墜毀造成人員傷亡、油輪遭攻擊，但美軍上週護送超過1億桶石油通過荷莫茲海峽，10/18亞洲盤WTI跌0.65美元至100.76美元、布油跌1.72美元至108.14美元",
     "links": [
      {
       "title": "權衡中東衝突與供應接近戰前水準，WTI、布油亞洲盤中齊跌",
@@ -321,9 +340,22 @@
     ]
    },
    {
+    "id": "equity",
+    "label": "美股",
+    "text": "AI科技股賣壓加重，標普500指數10/18下跌逾1%",
+    "links": [
+     {
+      "title": "《美股》AI科技股賣壓 標普500指數跌逾1%",
+      "link": "https://news.google.com/rss/articles/CBMiggJBVV95cUxQTzJPU1JHbDlmTDBJNnpyWjBBZzVLeEJkWkMxWWFkQVZwV1diTXhoWS1ydGJqMVFrTVp4VW13SGhpdjRiUFhQNmxlSUktb2w4eUhfdENIT3hjQTZ6WURTbmxYQ1UxRkk1Q2R2NkJSRXozX0hOV3A5UjJVWHNwUDZJcFZkVXJxdEhHWEw4RmRyZTR2clNXcGhzT0VEUGRWYmRoSk5RRTVCVk5lX2NEcDF2MUREdEZTZUZCbHhJMG9hSW9jWEJOa2NpZ1ZKZHoxbHRzeHloNUlwRENsMFBMY3YwQWhLdVA3MHRPVTNlWGRES2pBZkVNbkFQR1IyaFlfNDBhMVE?oc=5",
+      "source": "Yahoo股市",
+      "at": "2026-10-18T22:15:00+00:00"
+     }
+    ]
+   },
+   {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "三星將採用台積電3奈米製程生產輝達下一代HBM底層晶片，為雙方首次在此階段合作，輝達推動三大記憶體供應商統一製程，台積電可望通吃三星、SK海力士及美光訂單，進一步增加已滿載的3奈米產能需求",
+    "text": "輝達推動統一HBM製程標準，三星將採用台積電3奈米製造高頻寬記憶體底層晶片，為雙方首度在HBM階段合作，台積電可望獲得三星、SK海力士及美光的代工訂單",
     "links": [
      {
       "title": "Samsung to use TSMC technology for Nvidia's next-generation memory chips, Seoul newspaper reports",
@@ -342,14 +374,8 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期10/18夜盤重挫1144點，台股10/19開盤下跌668點至46354點失守47000點關卡，台積電跌破季線至2395元，外資連8賣超461.47億元",
+    "text": "台股19日開低走低，加權指數下跌668點至46354點，失守47000點關卡，台積電跌破季線至2395元；記憶體與被動元件集體走弱，華邦電、南亞科、旺宏、力積電跌逾5%",
     "links": [
-     {
-      "title": "台指期夜盤挫逾千點　法人：台股面臨賣壓回防季線",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%8C%AB%E9%80%BE%E5%8D%83%E9%BB%9E-%E6%B3%95%E4%BA%BA-%E5%8F%B0%E8%82%A1%E9%9D%A2%E8%87%A8%E8%B3%A3%E5%A3%93%E5%9B%9E%E9%98%B2%E5%AD%A3%E7%B7%9A-002817314.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-19T00:28:17+08:00"
-     },
      {
       "title": "台股下跌668點 台積電破季線 台塑化逆勢漲3％",
       "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E4%B8%8B%E8%B7%8C668%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%A0%B4%E5%AD%A3%E7%B7%9A-%E5%8F%B0%E5%A1%91%E5%8C%96%E9%80%86%E5%8B%A2%E6%BC%B23-011500767.html",
@@ -361,7 +387,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金10/18上漲，華許談話壓低升息預期，中東局勢與通膨升溫支撐金價在4100美元附近震盪",
+    "text": "華許言論緩和升息預期後，黃金10/18小幅上漲，國際金價在4100美元上下震盪，受中東局勢與通膨升溫支撐",
     "links": [
      {
       "title": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech",
@@ -370,34 +396,28 @@
       "at": "2026-10-18T23:47:43+00:00"
      },
      {
-      "title": "黃金價格上漲，Warsh言論壓低聯準會升息預期 作者 Investing.com - Investing.com 香港",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1uWHBlT19fd0tzWEJzc2xZNXMwWl9VRDJ3aTlNWlFmSzBGcGdBWHNPLUZIVEdxdEFFSkVOSHlDUzBOdmtFTGJGeVBITFRnajB6Zkg0MXU5a3VjcjdLV3F0YnRrMEU3T2w1UTZJSThwbw?oc=5",
-      "source": "股市報價& 財經新聞",
-      "at": "2026-10-19T01:09:35+00:00"
+      "title": "中東局勢、通膨加劇 國際金價4100美元上下震盪 - 商傳媒",
+      "link": "https://news.google.com/rss/articles/CBMixAJBVV95cUxQSXVyakdvWnlEX3liVDN2MGQ5d1g0djVmMGdvb2NUam9ocmloNlVjYWlXR1Q5SjF3SWF3ZkRZOVVSeHEzUFNnNzJNRm5XMmhyalppSUNmUnpkV19xSlNJNFd1X2ZVa3NpWjEzVE0taWtnZHduYUdDLUdFVXYzM3MwNjdpRmpoWVNBbmlwWjU3Ynd2Y2xER0lJUkJlUWVaS3l5N3c3S2twSElPSVgtd3dtd1o0R3ZfNnJlRnlpZjBLOWdpTnNycm1abGVRNi1PVmtZYkNicnF1RExWd1prWlhrUmNXU2tCV3BTZ1M1b1dNVXhoV1NaNnBPTWp0WnZGZzA2d1lqdHhhRXZ2aXdyMzBjX3J1X2l3dnJkeU1Za2JMRFVjQjJZTkkxWE5aYUxNS0hPT2RxX0lXU25wOHd1dlV2QjhEaDI?oc=5",
+      "source": "SUN MEDIA",
+      "at": "2026-10-18T23:06:39+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/19早盤重貶逾1角至32.49元，台股走跌加劇貶值壓力；儘管外資撤離，華僑銀行與荷蘭國際集團預期新台幣年底前將升至31.50至31.60元，認為台灣強勁出口與經常帳順差提供中期支撐",
+    "text": "新台幣19日早盤再重貶逾1角至32.49元，台股走跌帶動資金匯出；美元指數一度跌破102但隨後反彈至101.77附近",
     "links": [
      {
       "title": "股匯齊挫　新台幣再重貶逾1角見32.49元",
       "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%BD%8A%E6%8C%AB-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%86%8D%E9%87%8D%E8%B2%B6%E9%80%BE1%E8%A7%92%E8%A6%8B32-49%E5%85%83-012825511.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-19T01:28:25+08:00"
-     },
-     {
-      "title": "台幣逼近32.5元還會貶？外銀看好強勁出口支撐 年底反攻31.5元",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E5%B9%A3%E9%80%BC%E8%BF%9132-5%E5%85%83%E9%82%84%E6%9C%83%E8%B2%B6-%E5%A4%96%E9%8A%80%E7%9C%8B%E5%A5%BD%E5%BC%B7%E5%8B%81%E5%87%BA%E5%8F%A3%E6%94%AF%E6%92%90-%E5%B9%B4%E5%BA%95%E5%8F%8D%E6%94%BB31-5%E5%85%83-002543718.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-19T00:25:43+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-19T01:42:56.779485+00:00"
+  "at": "2026-10-19T01:50:26.347714+00:00"
  },
  "main_source_titles": [
   "'Just another scare': Wall Street sees the AI trade strong despite tech's latest rout",
