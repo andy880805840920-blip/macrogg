@@ -181,6 +181,8 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
   .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px;column-gap:8px}
   .brand .logo-full{display:none}
   .brand .logo-compact{display:block}
+  /* 觸控區撐到 40px（logo 只有 30px 高），負邊距抵銷、版面高度不變 */
+  .brand{padding:5px 0;margin:-5px 0}
   .brandbar .theme-btn{margin-left:auto;width:44px;height:44px;align-self:center}
   .brandbar .lang-btn{margin-left:0;min-width:44px;align-self:center}
   .upd{order:3;width:100%;margin-left:0;grid-template-columns:auto 1fr 1fr 1fr;
@@ -320,7 +322,7 @@ details.banner[open]>summary::after{content:"▴"}
 .sect-tools{display:flex;gap:8px;margin:12px 0 0}
 .sect-tools button{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
   color:var(--text-secondary);background:var(--surface-1);
-  border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+  border:1px solid var(--border);border-radius:8px;padding:13px 13px}
 .sect-tools button:hover{border-color:var(--text-secondary);
   color:var(--text-primary)}
 .sect-tools button:focus-visible{outline:2px solid var(--series-1);
@@ -421,8 +423,9 @@ details.banner[open]>summary::after{content:"▴"}
 .spark{margin-top:11px;display:block;width:100%;height:64px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
-.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;
+.stat-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px;
   margin-bottom:4px}
+.stat-row>.stat{min-width:0}
 @media(min-width:760px){
   .stat-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px}
 }
@@ -533,10 +536,11 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* 手機兩欄時每張卡不再被拉高到同列最高——說明文字長度差很多，
    齊高會讓短的那張有三到四成是空白，八張燈累積起來是一整個螢幕。
    ≥1040px 四欄時仍然齊高：那裡卡片小、齊高才看得出是一組。 */
-.lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
+.lights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
   align-items:start}
+.light{min-width:0}
 @media(max-width:430px){.light{min-height:148px}}
-@media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr);
+@media(min-width:1040px){.lights{grid-template-columns:repeat(4,minmax(0,1fr));
   align-items:stretch}}
 .light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
   border:1px solid var(--border);display:flex;flex-direction:column}
@@ -553,6 +557,7 @@ td a[target="_blank"],.src a[target="_blank"]{
 .light .l-value{font-size:22px;font-weight:700;margin-top:8px;
   font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
 @media(max-width:420px){.light .l-value{font-size:19px}}
+@media(max-width:360px){.light .l-value{white-space:normal;font-size:17px}}
 .light .l-state{font-size:12px;margin-top:5px;font-weight:700}
 .light .l-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55;
   margin-bottom:0}
@@ -2240,6 +2245,69 @@ details.home-module[open]{padding-bottom:0}
    說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
 /* 獨立成最後一行：inline-block 的上下 padding 會把它所在那一行撐高，
    說明文中間突然出現一段大行距。padding 保留，觸控高度仍 ≥ 40px。 */
+/* 流動性頁「關鍵指標檢核」：表格在窄螢幕改成一列一張卡（data-label 當欄名），
+   兩欄比較框、事件清單、傳導流程、跨資產卡片都隨寬度自動換排。 */
+/* RP／RRP 圖解：手機改單欄，流向中間那段文字可換行（原本兩欄＋不換行，390px 溢出 120px） */
+.rp-row{grid-template-columns:1fr!important}
+@media(min-width:640px){.rp-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.rp-row .stat{min-width:0}
+.rp-flow-mid{flex:1;min-width:0;text-align:center;font-size:12px;line-height:1.35}
+.lq-tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;table-layout:auto}
+.lq-tbl th,.lq-tbl td{padding:9px 10px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top;line-height:1.55}
+.lq-tbl th{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.lq-tbl td.k{min-width:9em}
+.lq-tbl td.k b{display:block;white-space:nowrap}
+.lq-tbl td.k small{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+.lq-tbl td.k em{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:2px}
+.st{font-weight:600;white-space:normal}
+.st.good{color:var(--good)}.st.warning{color:var(--warning)}.st.critical{color:var(--critical)}
+.lq-rules td:not(.k){width:22%}
+@media(max-width:640px){
+  .lq-tbl thead{display:none}
+  .lq-tbl,.lq-tbl tbody,.lq-tbl tr{display:block;width:100%}
+  .lq-tbl tr{border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:10px}
+  .lq-tbl td{display:grid;grid-template-columns:4.5em 1fr;gap:10px;border:0;padding:4px 0;width:auto!important}
+  .lq-tbl td::before{content:attr(data-label);font-size:12px;color:var(--muted)}
+  .lq-tbl td.k{display:block;border-bottom:1px solid var(--grid);padding-bottom:6px;margin-bottom:4px}
+  .lq-tbl td.k::before{content:none}
+}
+.lq-check{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.lq-check li{display:flex;gap:8px;align-items:baseline;padding:9px 12px;border-radius:10px;background:var(--surface-2);font-size:13.5px;line-height:1.5}
+.lq-check li span{font-weight:700}.lq-check li.ok span{color:var(--good)}.lq-check li.ng span{color:var(--warning)}
+.lq-check li b{white-space:nowrap;margin-right:4px}
+.lq-concl{margin:10px 0 2px;line-height:1.75}
+.lq-2col{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.lq-2col{grid-template-columns:1fr 1fr}}
+.lq-box{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.lq-box.press{border-top:3px solid var(--warning)}.lq-box.hold{border-top:3px solid var(--good)}
+.lq-box-h{font-weight:700;font-size:13.5px;margin-bottom:4px}
+.lq-box ul{margin:0;padding-left:18px}.lq-box li{margin:6px 0;line-height:1.65;font-size:13.5px}
+.lq-watch{list-style:none;padding:0;margin:6px 0;display:grid;gap:10px}
+.lq-watch li{display:grid;grid-template-columns:6.5em 3.2em 1fr;gap:10px;align-items:baseline;
+  padding:10px 0;border-bottom:1px solid var(--grid)}
+.lq-watch li p{margin:3px 0 0;font-size:13px;color:var(--text-secondary);line-height:1.65}
+.lq-when{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lq-imp{font-size:11.5px;font-weight:700;text-align:center;border-radius:6px;padding:1px 0}
+.lq-imp.i3{background:var(--critical);color:#fff}.lq-imp.i2{background:var(--warning);color:#fff}
+.lq-imp.i1{background:var(--surface-2);color:var(--text-secondary)}
+@media(max-width:520px){.lq-watch li{grid-template-columns:auto auto;justify-content:start}
+  .lq-watch li>div{grid-column:1/-1}}
+.lq-rule{margin:6px 0 10px;padding-left:20px;line-height:1.8;font-size:13.5px}
+.lq-rule .st{margin-right:8px}
+.lq-lead{line-height:1.75;margin:8px 0 12px}
+.lq-flow{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px;grid-template-columns:1fr;counter-reset:none}
+@media(min-width:560px){.lq-flow{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.lq-flow{grid-template-columns:repeat(5,1fr)}}
+.lq-flow li{position:relative;border:1px solid var(--border);border-radius:10px;padding:10px 12px 10px 42px;min-width:0}
+.lq-flow li .n{position:absolute;left:12px;top:10px;width:22px;height:22px;border-radius:50%;
+  background:var(--critical);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lq-flow li b{display:block;font-size:13.5px;line-height:1.4}
+.lq-flow li small{display:block;font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.45}
+.lq-cards{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:620px){.lq-cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.lq-cards{grid-template-columns:repeat(3,1fr)}}
+.lq-card{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.lq-card b{font-size:13.5px}.lq-card p{margin:4px 0 0;font-size:13px;line-height:1.65;color:var(--text-secondary)}
 .l-link{display:block;width:fit-content;margin-top:2px;padding:12px 0;font-size:12px;
   font-weight:600;color:var(--series-1);text-decoration:none}
 .lights{align-items:stretch}
@@ -2670,7 +2738,9 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .fx-rot td small{display:block;font-size:11px;color:var(--muted)}
 /* SEP 小卡 */
 .scs{display:grid;gap:10px;margin-top:14px;grid-template-columns:1fr 1fr}
-@media(min-width:760px){.scs{grid-template-columns:repeat(5,1fr)}}
+@media(min-width:760px){.scs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1100px){.scs{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.scs .sc{min-width:0}
 @media(max-width:340px){.scs{grid-template-columns:1fr}}
 @media(max-width:759px){.scs .sc:last-child:nth-child(odd){grid-column:1/-1}
   .sc-v{font-size:22px}.sc-x b{font-size:11px}.sc-x span{font-size:9.5px}}
@@ -3773,7 +3843,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
    卡內（各種 details）：整列＋上方細線，左邊標題（可帶灰色結論），右邊細箭頭；
    全部同一套，不再有 ▸ 前綴、「展開 ▾」字樣、？圓章、膠囊底色。 */
 .viz-root:not(#_) .sect-tools{justify-content:flex-end;gap:0;margin:10px 0 0}
-.viz-root:not(#_) .sect-tools button{border:0;background:none;padding:8px 10px;font-size:var(--fs-small);color:var(--muted);border-radius:6px}
+.viz-root:not(#_) .sect-tools button{border:0;background:none;padding:8px 10px;min-height:40px;font-size:var(--fs-small);color:var(--muted);border-radius:6px}
 .viz-root:not(#_) .sect-tools button+button{border-left:1px solid var(--grid);border-radius:0}
 .viz-root:not(#_) .sect-tools button:hover{color:var(--text-primary)}
 .viz-root:not(#_) :is(.f-more,details[data-m-collapse],.k-more,.l-more,.el-more,.hm-modx,.hm-new,.foot-fold,.teach,
@@ -4405,8 +4475,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-19 11:28（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>11:28</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>23:28</b><i>10/18</i></div><div class="upd-c"><span>倫敦</span><b>04:28</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-19 11:54（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>11:54</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>23:54</b><i>10/18</i></div><div class="upd-c"><span>倫敦</span><b>04:54</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/" class="on" aria-current="page">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>流動性</h1><div class="sub">Liquidity　·　資料截止 2026-10-16</div></div>
@@ -4431,7 +4501,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
     <details class="f-more"><summary>SOFR vs EFFR</summary>
       <div class="f-detail"><div class="stat-row" style="margin:10px 0"><div class="stat"><div class="s-label">SOFR 單日成交量</div><div class="s-value">3.02 兆美元</div><div class="s-note">10/15</div></div><div class="stat"><div class="s-label">EFFR 單日成交量</div><div class="s-value">1,180 億美元</div><div class="s-note">10/15</div></div><div class="stat"><div class="s-label">SOFR ／ EFFR</div><div class="s-value">約 26 倍</div><div class="s-note">交易量比例</div></div></div><p class="hint">2008 年金融海嘯後，大型商業銀行的監管收緊，全球融資擴張因而轉向非銀行金融機構（NBFIs，如避險基金、資產管理公司）；這些機構的融資管道主要透過SOFR 代表的擔保回購市場，而非銀行間無擔保拆借（EFFR 的範疇）。適用對象更廣泛、規模更大，使 SOFR 的實際成交量遠高於 EFFR——這是 SOFR 被視為比政策利率 EFFR更能代表「市場實際成交」隔夜融資成本的原因。</p></div></details>
     <details class="f-more"><summary>RP（正回購）與 RRP（逆回購）</summary>
-      <div class="f-detail"><div class="stat-row"><div class="stat" style="text-align:left"><div class="s-label" style="font-size:14.5px;color:var(--brand-ink)">RP（正回購）</div><div class="s-note" style="margin-bottom:8px">銀行抵押公債、向 Fed 借入資金——Fed 把資金放出去，對體系是<b>注入</b>流動性。</div><div style="font-size:11.5px;color:var(--muted);margin:8px 0 2px">期初（Value Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span><span style="flex:1;text-align:center;color:var(--muted);font-size:12px;white-space:nowrap">— 抵押公債 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span style="flex:1;text-align:center;color:var(--pos);font-size:12px;white-space:nowrap">— 撥付資金 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span></div><div style="font-size:11.5px;color:var(--muted);margin:10px 0 2px">期末（Maturity Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span><span style="flex:1;text-align:center;color:var(--neg);font-size:12px;white-space:nowrap">— 償還資金＋利息 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span style="flex:1;text-align:center;color:var(--muted);font-size:12px;white-space:nowrap">— 交還公債 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span></div></div><div class="stat" style="text-align:left"><div class="s-label" style="font-size:14.5px;color:var(--brand-ink)">RRP（逆回購）</div><div class="s-note" style="margin-bottom:8px">Fed 抵押國庫券、向交易對手借出資金——Fed 把資金收回來，對體系是<b>抽走</b>流動性。</div><div style="font-size:11.5px;color:var(--muted);margin:8px 0 2px">期初（Value Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span style="flex:1;text-align:center;color:var(--muted);font-size:12px;white-space:nowrap">— 抵押國庫券 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span><span style="flex:1;text-align:center;color:var(--neg);font-size:12px;white-space:nowrap">— 撥付資金 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="font-size:11.5px;color:var(--muted);margin:10px 0 2px">期末（Maturity Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span style="flex:1;text-align:center;color:var(--pos);font-size:12px;white-space:nowrap">— 償還資金＋利息 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span><span style="flex:1;text-align:center;color:var(--muted);font-size:12px;white-space:nowrap">— 交還國庫券 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div></div></div>
+      <div class="f-detail"><div class="stat-row rp-row"><div class="stat" style="text-align:left"><div class="s-label" style="font-size:14.5px;color:var(--brand-ink)">RP（正回購）</div><div class="s-note" style="margin-bottom:8px">銀行抵押公債、向 Fed 借入資金——Fed 把資金放出去，對體系是<b>注入</b>流動性。</div><div style="font-size:11.5px;color:var(--muted);margin:8px 0 2px">期初（Value Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span><span class="rp-flow-mid" style="color:var(--muted)">— 抵押公債 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span class="rp-flow-mid" style="color:var(--pos)">— 撥付資金 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span></div><div style="font-size:11.5px;color:var(--muted);margin:10px 0 2px">期末（Maturity Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span><span class="rp-flow-mid" style="color:var(--neg)">— 償還資金＋利息 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span class="rp-flow-mid" style="color:var(--muted)">— 交還公債 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">銀行</span></div></div><div class="stat" style="text-align:left"><div class="s-label" style="font-size:14.5px;color:var(--brand-ink)">RRP（逆回購）</div><div class="s-note" style="margin-bottom:8px">Fed 抵押國庫券、向交易對手借出資金——Fed 把資金收回來，對體系是<b>抽走</b>流動性。</div><div style="font-size:11.5px;color:var(--muted);margin:8px 0 2px">期初（Value Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span class="rp-flow-mid" style="color:var(--muted)">— 抵押國庫券 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span><span class="rp-flow-mid" style="color:var(--neg)">— 撥付資金 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div><div style="font-size:11.5px;color:var(--muted);margin:10px 0 2px">期末（Maturity Date）</div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span><span class="rp-flow-mid" style="color:var(--pos)">— 償還資金＋利息 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span></div><div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">交易對手</span><span class="rp-flow-mid" style="color:var(--muted)">— 交還國庫券 →</span><span style="font-weight:700;background:var(--surface-2);padding:3px 10px;border-radius:8px;white-space:nowrap;font-size:13px">Fed</span></div></div></div>
         <p class="hint" style="margin-top:12px"><b>為什麼回購市場是當今流動性的根基：</b>
           2008 年後銀行資產負債表受限，避險基金等槓桿機構轉而大量透過回購市場融資，
           最典型的是「國庫券基差交易」——買進現貨公債、放空對應期貨鎖定價差，
@@ -4548,7 +4618,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   <details class="card sect"><summary><h2 id="lights">關鍵指標檢核與綜合判定</h2><span class="sect-sum">2 項留意、6 項正常　·　綜合判定：穩定，但緩衝偏薄</span></summary><div class="sect-body">
     <p class="hint">目前的整體狀態：逐項對照警戒線，再下結論。</p>
     <div class="impact neutral">綜合判定：穩定，但緩衝偏薄（ON RRP 緩衝見底、準備金占比低於 13%）　·　2 項留意、6 項正常</div>
-    <details data-m-collapse open><summary>核心三指標（Liquidity Now）</summary>
+    <details data-m-collapse open><summary>核心三指標</summary>
       <div class="lights" style="margin-top:12px"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>SOFR − IORB（近 5 日均）</div>
   <div class="l-value">-2.0bp <span style="font-size:13px;color:var(--muted)">→</span></div>
@@ -4570,7 +4640,14 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   <div class="sstrip"><span class="sq warning" data-tip="2025/11｜月均 64 億"></span><span class="sq warning" data-tip="2025/12｜月均 100 億"></span><span class="sq warning" data-tip="2026/01｜月均 32 億"></span><span class="sq warning" data-tip="2026/02｜月均 27 億"></span><span class="sq warning" data-tip="2026/03｜月均 15 億"></span><span class="sq warning" data-tip="2026/04｜月均 15 億"></span><span class="sq warning" data-tip="2026/05｜月均 40 億"></span><span class="sq warning" data-tip="2026/06｜月均 42 億"></span><span class="sq warning" data-tip="2026/07｜月均 15 億"></span><span class="sq warning" data-tip="2026/08｜月均 11 億"></span><span class="sq warning" data-tip="2026/09｜月均 23 億"></span><span class="sq warning" data-tip="2026/10｜月均 7 億"></span></div><div class="sstrip-note">近 12 期</div>
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">貨幣基金等機構停在 Fed 的多餘現金，是準備金被抽走前的緩衝。有量時 TGA 回補或縮表先吃 ON RRP；見底後就直接扣準備金。<a class="l-link" href="#liabilities">完整脈絡 →</a></div></details>
-</div></div></details>
+</div></div>
+      <details class="f-more"><summary>三個指標怎麼讀、怎麼推出結論</summary><div class="f-detail">
+      <p><b>讀法順序：</b>價格最先反應 → 後援被動用代表已經不只是變貴 → 緩衝決定下一次抽水（T-Bills 淨發行、TGA 回補、季底）先吃閒置現金還是直接扣準備金。</p>
+      <table class="lq-tbl"><thead><tr><th>指標</th><th>角色</th><th>現在</th><th>近期</th></tr></thead><tbody><tr><td class="k" data-label="指標"><b>SOFR − IORB</b><small>近 5 日均</small></td><td data-label="角色"><b>價格</b>：錢有沒有變貴？</td><td data-label="現在"><span class="st good">-2.0bp</span></td><td data-label="近期">近 3 月月均 8月 -0.8、9月 -1.8、10月 -1.8bp；最緊 2025/11 +7.8bp</td></tr><tr><td class="k" data-label="指標"><b>SRF 動用量</b><small>近 5 日均</small></td><td data-label="角色"><b>後援</b>：有人借不到錢、只好找 Fed？</td><td data-label="現在"><span class="st good">0 億美元</span></td><td data-label="近期">月均最高 2025/12 34 億；近期未動用</td></tr><tr><td class="k" data-label="指標"><b>ON RRP 交易量</b><small>近 5 日均</small></td><td data-label="角色"><b>緩衝</b>：還有閒置現金可以先被抽走？</td><td data-label="現在"><span class="st warning">4 億美元</span></td><td data-label="近期">2025/8 起月均都 &lt; 1,000 億，已見底</td></tr></tbody></table>
+      <ul class="lq-check"><li class="ok"><span>✓</span><b>價格</b>未轉正，錢不貴</li><li class="ok"><span>✓</span><b>後援</b>沒人找 Fed 借錢</li><li class="ng"><span>✕</span><b>緩衝</b>見底，下一次抽水直接扣準備金</li></ul>
+      <p class="lq-concl">結論：<b>穩定，但緩衝偏薄</b>——現在沒有資金緊俏，但緩衝已用完，體系承受下一次抽水的能力比 2022–24 年低。
+        背景：2025 年第四季 SOFR 經常高於 IORB，Fed 於 2025 年 12 月停止縮表、改做 RMP；之後利差回到 0 以下，但未回到準備金充裕時的約 −8bp。</p>
+    </div></details></details>
     <details data-m-collapse open><summary>輔助指標：準備金、回購、MMF、T-Bills 供給</summary>
       <div class="lights" style="margin-top:12px"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>TGCR − IORB（近 5 日均）</div>
@@ -4607,33 +4684,33 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   <div class="sstrip"><span class="sq warning" data-tip="2025/10｜+1,961 億"></span><span class="sq warning" data-tip="2025/11｜+1,301 億"></span><span class="sq good" data-tip="2025/12｜-2,141 億"></span><span class="sq good" data-tip="2026/01｜+2 億"></span><span class="sq warning" data-tip="2026/02｜+1,581 億"></span><span class="sq good" data-tip="2026/03｜-489 億"></span><span class="sq good" data-tip="2026/04｜-2,314 億"></span><span class="sq good" data-tip="2026/05｜+976 億"></span><span class="sq good" data-tip="2026/06｜-879 億"></span><span class="sq critical" data-tip="2026/07｜+2,678 億"></span><span class="sq warning" data-tip="2026/08｜+2,348 億"></span><span class="sq good" data-tip="2026/09｜-1,460 億"></span></div><div class="sstrip-note">近 12 期</div>
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc">T-Bills 淨發行扣掉 Fed 買走的部分，也就是貨幣市場要自己拿出來的現金。淨吸收越大，越會把錢從回購與 ON RRP 抽走。<a class="l-link" href="#supply_demand">完整脈絡 →</a></div></details>
-</div></div></details>
-    <div class="liq-analysis"><p><b>為什麼是這三個指標：</b>它們分別回答流動性的三個問題——<b>SOFR − IORB 是價格</b>（錢有沒有變貴），<b>SRF 動用量是後援</b>（有沒有人在市場上借不到錢、只好找 Fed），<b>ON RRP 交易量是緩衝</b>（體系還有沒有多餘的現金可以先被抽走）。價格會最先反應，後援被動用代表已經不只是變貴，而緩衝決定下一次 TGA 回補、T-Bills 發行這類抽水，會先吃掉閒置現金，還是直接扣到準備金。</p><p><b>SOFR − IORB：</b>近 5 日均 -2.0bp；近三個月月均 2026/8 -0.8bp、2026/9 -1.8bp、2026/10 -1.8bp。對照資料期間內最緊的 2025/11（月均 +7.8bp）——2025 年第四季 SOFR 經常高於 IORB，Fed 因此在 2025 年 12 月停止縮表、改做 RMP；之後利差回到 0 以下，但也沒有回到 2022–24 年準備金充裕時約 −8bp 的水準，代表錢不貴，但也不再「多到用不完」。</p><p><b>SRF 動用量：</b>近 5 日均 0 億美元；資料期間內月均最高是 2025/12 的 34 億美元。近期沒有機構需要向 Fed 的後援借錢，市場上的資金分配是順暢的。</p><p><b>ON RRP 交易量：</b>近 5 日均 4 億美元，2025/8 起月均都低於 1,000 億美元。疫情 QE 留下的閒置現金已經在縮表期間被用完，緩衝見底——從現在起，任何抽走市場現金的事（T-Bills 淨發行、TGA 回補、季底銀行縮表）都會直接扣到準備金。</p><p><b>推導結論：</b>價格貼近但沒有超過 IORB、後援沒有被動用，所以<b>現在沒有資金緊俏</b>；但緩衝已經用完，代表體系對下一次抽水的承受力比 2022–24 年低。綜合判定：<b>穩定，但緩衝偏薄</b>（ON RRP 緩衝見底、準備金占比低於 13%）。</p><p><b>輔助指標：為什麼供給增加、RMP 暫停，短端資金仍然穩定？</b>10 月至今 T-Bills 淨發行 +949 億、私人市場淨吸收 +891 億；再融資隱含本季 T-Bills 淨發行約 2,680 億（未計買回）；Fed 自 8/14 起的那一期暫停 RMP，只剩 MBS 到期再投入（最新一期約 146 億）。在這樣的供給壓力下資金仍然平穩，原因在於：三方回購 TGCR − IORB -3.8bp，現金提供端（主要是 MMF）同樣平靜；準備金占銀行總資產 11.58%，低於紐約聯儲認為「幾乎不影響利率」的 13%、但仍在 2019 年危機時的 10% 之上；RDE -0.37，95% 信賴區間 -0.73～+0.03 仍含 0——還在需求曲線平坦的那一段，但比半年前更往陡的方向移動；Government MMF 平均持有期限 35.7 天，比 3 個月前 -5.6 天——MMF 面對 Fed 升息路徑的不確定，把資金留在隔夜回購與短天期、甚至持有現金，隔夜市場的現金供給因此比較充足。簡單說，MMF 願意把錢留在最短端，等於替 T-Bills 新增的供給與回購市場同時提供了現金。</p><p><b>接下來要盯：</b>TGA 目前 8,858 億、12 月底目標 8,500 億，接下來降低會把準備金還給市場；11/4 再融資公布下一季 T-Bills 與買回規模；12/15 企業繳稅日與 12 月底季底（銀行縮表、TGA 進帳）；若 SOFR − IORB 轉正且 SRF 開始連續動用，判定會轉為「轉緊」，屆時看 Fed 是否重啟 RMP。</p></div>
+</div></div>
+      <details class="f-more"><summary>為什麼供給增加、RMP 暫停，短端資金仍然穩定？</summary><div class="f-detail">
+      <div class="lq-2col">
+        <div class="lq-box press"><div class="lq-box-h">抽走現金的壓力</div><ul><li><b>T-Bills 淨發行增加</b>：10 月至今 +949 億，私人市場要吸收 +891 億</li><li><b>本季還有更多</b>：再融資隱含 T-Bills 淨發行約 2,680 億（未計買回）</li><li><b>Fed 暫停 RMP</b>：8/14 起的那一期起只剩 MBS 到期再投入（最新一期約 146 億）</li><li><b>準備金不算多</b>：占銀行總資產 11.58%，低於 13%（RDE 幾乎為 0 的水位）</li></ul></div>
+        <div class="lq-box hold"><div class="lq-box-h">讓資金仍然穩定的原因</div><ul><li><b>MMF 把錢留在短端</b>：Government MMF 平均持有期限 35.7 天（3 個月 -5.6 天）——面對 Fed 升息路徑的不確定，資金留在隔夜回購與短天期，同時接住新的 T-Bills 與回購需求</li><li><b>現金提供端平靜</b>：TGCR − IORB -3.8bp</li><li><b>仍在需求曲線平坦段</b>：RDE -0.37，95% 信賴區間 -0.73～+0.03 含 0（但比半年前更接近陡段）</li><li><b>離危險區還有距離</b>：準備金占比 11.58% 仍高於 2019 年危機的 10%</li></ul></div>
+      </div>
+      <p class="lq-concl">一句話：<b>MMF 願意把錢留在最短端</b>，替新增的 T-Bills 與回購市場同時提供了現金；但準備金與 ON RRP 的緩衝都偏薄，這個平衡靠的是 MMF 的配置選擇，不是體系有多餘的錢。</p>
+    </div></details></details>
+    <details class="f-more"><summary>接下來要盯</summary><div class="f-detail">
+      <ol class="lq-watch"><li><span class="lq-when">11/4</span><span class="lq-imp i2">高</span><div><b>季度再融資（QRA）</b><p>下一季 T-Bills 與 coupon 規模、買回上限、季底 TGA 目標——決定未來三個月要從市場抽走多少現金</p></div></li><li><span class="lq-when">11/19</span><span class="lq-imp i1">中</span><div><b>紐約聯儲 RDE 月更新</b><p>看信賴區間是否轉為整段 &lt; 0——那是準備金從充裕滑向充足的第一個統計訊號</p></div></li><li><span class="lq-when">12/15–12/31</span><span class="lq-imp i2">高</span><div><b>企業繳稅日＋季底</b><p>稅款湧入 TGA、外國銀行季底縮減回購借款；緩衝見底下最容易讓 SOFR 短暫衝高</p></div></li><li><span class="lq-when">至 12/31</span><span class="lq-imp i1">中</span><div><b>TGA 走向季底目標</b><p>目前 8,858 億、目標 8,500 億（差 -358 億）——TGA 降低會把準備金還給市場</p></div></li><li><span class="lq-when">隨時</span><span class="lq-imp i3">最高</span><div><b>轉緊的觸發條件</b><p>SOFR − IORB 轉正並擴大、SRF 連續多日動用——判定會轉為「轉緊」，接著看 Fed 是否重啟 RMP</p></div></li></ol></div></details>
     <details class="f-more"><summary>判定規則與各指標門檻</summary><div class="f-detail">
-      <p>綜合判定：SOFR 衝出 SRF 利率＝嚴重轉緊；核心三指標任一警戒，或首卡判定轉緊＝轉緊；
-        核心平靜但 ON RRP 見底、準備金占比、RDE 或 T-Bills 淨供給落在留意區＝穩定，但緩衝偏薄；全部正常＝充裕穩定。
-        門檻是本站依 2019 年 9 月回購危機與 2025 年第四季準備金轉緊校準的規則，不是 Fed 公布的數字。</p>
-      <dl class="gloss"><dt>SOFR − IORB（近 5 日均）</dt><dd>近 5 日均 &lt; 0bp 正常；0～+5bp 留意；&gt; +5bp 警戒（2025 年 10–11 月月均約 +7bp）</dd><dt>SRF 動用量（近 5 日均）</dt><dd>近 5 日均 &lt; 10 億美元正常；10～100 億留意；&gt; 100 億或 SOFR 衝出 SRF 利率警戒</dd><dt>ON RRP 交易量（近 5 日均）</dt><dd>國內 ON RRP 近 5 日均 ≥ 1,000 億美元正常（還有緩衝）；低於此留意（緩衝耗盡）</dd><dt>TGCR − IORB（近 5 日均）</dt><dd>TGCR − IORB 近 5 日均 &lt; 0bp 正常；0～+5bp 留意；&gt; +5bp 警戒</dd><dt>準備金 ÷ 商業銀行總資產</dt><dd>≥ 13% 正常（紐約聯儲：此時 RDE 幾乎為 0）；10%～13% 留意；&lt; 10% 警戒（2019/9 水位）</dd><dt>準備金需求彈性（RDE）</dt><dd>95% 信賴區間含 0 正常；區間整段 &lt; 0 留意；中位數 ≤ −1 且區間 &lt; 0 警戒（2019/9 約 −1.4）</dd><dt>MMF 平均持有期限（對 3 個月前）</dt><dd>Government MMF WAM 對 3 個月前縮短或持平正常（資金留在隔夜）；拉長 2 天以上留意（現金被鎖進較長天期）</dd><dt>私人市場 T-Bills 淨吸收（上月）</dt><dd>私人市場 T-Bills 月淨吸收 &lt; 1,000 億美元正常；1,000～2,500 億留意；&gt; 2,500 億警戒</dd></dl></div></details>
-    <h3 class="le-h3" style="margin-top:20px">為什麼要關注流動性：緊缺時的跨資產傳導</h3>
-    <div class="chain"><div class="ch-step up"><div class="ch-lab">準備金與緩衝不足</div><div class="ch-val">銀行不願借出</div></div><div class="ch-arrow"><span></span></div><div class="ch-step up"><div class="ch-lab">回購利率飆升</div><div class="ch-val">SOFR、TGCR 衝過 IORB</div></div><div class="ch-arrow"><span>融資成本上升</span></div><div class="ch-step up"><div class="ch-lab">槓桿部位被迫去化</div><div class="ch-val">基差交易、交易商庫存</div></div><div class="ch-arrow"><span>被迫賣券</span></div><div class="ch-step up"><div class="ch-lab">公債流動性惡化</div><div class="ch-val">殖利率與利差亂跳</div></div><div class="ch-arrow"><span>風險外溢</span></div><div class="ch-step up"><div class="ch-lab">跨資產同步承壓</div><div class="ch-val">信用、股市、美元</div></div></div>
-    <p><b>為什麼要關注流動性：</b>利率決定錢的價格，流動性決定錢<b>借不借得到</b>。
-      Fed 調整政策利率靠的是 IORB、ON RRP 這些「行政利率」把市場利率框在走廊裡；準備金一旦不夠，
-      市場利率會衝出走廊，政策利率就失去控制力。而且流動性問題通常比經濟數據更早、更快地反映在價格上，
-      往往在幾天內就從貨幣市場擴散到所有資產。</p>
-    <dl class="gloss">
-      <dt>短端利率</dt><dd>回購利率、SOFR、EFFR 跳升，浮動利率貸款與短期融資成本立刻上升；
-        T-Bills 收益率相對 OIS 走高（賣方增加、買方縮手）。</dd>
-      <dt>美國公債</dt><dd>避險基金的「基差交易」（買現貨公債、放空期貨，用回購借錢支應）融資成本暴增，被迫平倉賣出現貨，
-        交易商資產負債表又塞不下——2019 年 9 月、2020 年 3 月都是這樣讓「最安全的資產」也出現流動性危機，殖利率反而上升。</dd>
-      <dt>信用市場</dt><dd>銀行 CD、商業本票利率上升，Prime MMF 被贖回，企業改提用銀行信用額度；
-        信用利差走闊，評等較低的發行人最先借不到錢。</dd>
-      <dt>股市與風險資產</dt><dd>融資成本上升與保證金追繳迫使槓桿投資人降低部位，波動率上升、高評價與高槓桿的資產跌最多；
-        股債可能同時下跌，平常的分散效果失靈。</dd>
-      <dt>美元與海外</dt><dd>全球美元融資變貴，美元走強、換匯（cross-currency basis）更負，新興市場資金外流；
-        外國央行轉向 Fed 的換匯額度與 FIMA 回購借美元。</dd>
-      <dt>Fed 的回應</dt><dd>先由 SRF 等常設工具接住，再視情況停止縮表、買進國庫券（RMP）補準備金，嚴重時推出緊急工具。
-        Fed 一出手通常能壓住貨幣市場，但在出手之前，資產價格往往已經先修正一輪——這就是要提前追蹤這些指標的原因。</dd>
-    </dl>
+      <ol class="lq-rule">
+        <li><span class="st critical">嚴重轉緊</span>SOFR 衝出 SRF 利率（走廊上限）</li>
+        <li><span class="st critical">轉緊</span>核心三指標任一警戒，或 SRF 連續動用／SOFR − IORB 轉正擴大</li>
+        <li><span class="st warning">穩定，但緩衝偏薄</span>核心平靜，但 ON RRP、準備金占比、RDE、T-Bills 淨供給任一落在留意區</li>
+        <li><span class="st good">充裕穩定</span>全部正常</li>
+      </ol>
+      <table class="lq-tbl lq-rules"><thead><tr><th>指標</th><th><span class="st good">● 正常</span></th>
+        <th><span class="st warning">▲ 留意</span></th><th><span class="st critical">■ 警戒</span></th></tr></thead>
+        <tbody><tr><td class="k" data-label="指標"><b>SOFR − IORB</b><small>近 5 日均</small><em>2025 年 10–11 月月均約 +7bp</em></td><td data-label="正常"><span class="st good">&lt; 0bp</span></td><td data-label="留意"><span class="st warning">0～+5bp</span></td><td data-label="警戒"><span class="st critical">&gt; +5bp</span></td></tr><tr><td class="k" data-label="指標"><b>SRF 動用量</b><small>近 5 日均</small></td><td data-label="正常"><span class="st good">&lt; 10 億美元</span></td><td data-label="留意"><span class="st warning">10～100 億</span></td><td data-label="警戒"><span class="st critical">&gt; 100 億，或 SOFR 衝出 SRF 利率</span></td></tr><tr><td class="k" data-label="指標"><b>ON RRP 交易量</b><small>近 5 日均</small><em>只計國內 ON RRP</em></td><td data-label="正常"><span class="st good">≥ 1,000 億美元</span></td><td data-label="留意"><span class="st warning">&lt; 1,000 億（緩衝耗盡）</span></td><td data-label="警戒"><span class="st critical">—</span></td></tr><tr><td class="k" data-label="指標"><b>TGCR − IORB</b><small>近 5 日均</small></td><td data-label="正常"><span class="st good">&lt; 0bp</span></td><td data-label="留意"><span class="st warning">0～+5bp</span></td><td data-label="警戒"><span class="st critical">&gt; +5bp</span></td></tr><tr><td class="k" data-label="指標"><b>準備金 ÷ 商業銀行總資產</b><em>13%：紐約聯儲觀察 RDE 幾乎為 0；10%：2019/9 水位</em></td><td data-label="正常"><span class="st good">≥ 13%</span></td><td data-label="留意"><span class="st warning">10%～13%</span></td><td data-label="警戒"><span class="st critical">&lt; 10%</span></td></tr><tr><td class="k" data-label="指標"><b>準備金需求彈性</b><small>RDE</small><em>2019/9 約 −1.4</em></td><td data-label="正常"><span class="st good">95% 信賴區間含 0</span></td><td data-label="留意"><span class="st warning">區間整段 &lt; 0</span></td><td data-label="警戒"><span class="st critical">中位數 ≤ −1 且區間 &lt; 0</span></td></tr><tr><td class="k" data-label="指標"><b>MMF 平均持有期限</b><small>對 3 個月前</small><em>Government MMF，對 3 個月前</em></td><td data-label="正常"><span class="st good">縮短或持平</span></td><td data-label="留意"><span class="st warning">拉長 ≥ 2 天</span></td><td data-label="警戒"><span class="st critical">—</span></td></tr><tr><td class="k" data-label="指標"><b>私人市場 T-Bills 淨吸收</b><small>上月</small><em>上個完整月份</em></td><td data-label="正常"><span class="st good">&lt; 1,000 億美元</span></td><td data-label="留意"><span class="st warning">1,000～2,500 億</span></td><td data-label="警戒"><span class="st critical">&gt; 2,500 億</span></td></tr></tbody></table>
+      <p class="hint">門檻是本站依 2019 年 9 月回購危機與 2025 年第四季準備金轉緊校準的規則，不是 Fed 公布的數字。</p>
+    </div></details>
+    <h3 class="le-h3" style="margin-top:22px">為什麼要關注流動性：緊缺時的跨資產傳導</h3>
+    <p class="lq-lead"><b>利率決定錢的價格，流動性決定錢借不借得到。</b>
+      準備金一旦不夠，市場利率會衝出 Fed 的利率走廊，政策利率失去控制力；而且流動性問題通常比經濟數據更早、更快反映在價格上，幾天內就從貨幣市場擴散到所有資產。</p>
+    <ol class="lq-flow"><li><span class="n">1</span><b>準備金與緩衝不足</b><small>銀行不願借出準備金</small></li><li><span class="n">2</span><b>回購利率飆升</b><small>SOFR、TGCR 衝過 IORB</small></li><li><span class="n">3</span><b>槓桿部位被迫去化</b><small>基差交易、交易商庫存</small></li><li><span class="n">4</span><b>公債流動性惡化</b><small>殖利率與利差亂跳</small></li><li><span class="n">5</span><b>跨資產同步承壓</b><small>信用、股市、美元</small></li></ol>
+    <div class="lq-cards"><div class="lq-card"><b>短端利率</b><p>SOFR、EFFR 跳升，浮動利率貸款與短期融資立刻變貴；T-Bills 相對 OIS 走高。</p></div><div class="lq-card"><b>美國公債</b><p>基差交易的回購融資暴增、被迫賣出現貨，交易商又接不住——2019/9、2020/3 連最安全的資產都出現流動性危機。</p></div><div class="lq-card"><b>信用市場</b><p>CD、商業本票利率上升，Prime MMF 被贖回，企業改提用銀行額度；信用利差走闊，低評等先借不到錢。</p></div><div class="lq-card"><b>股市與風險資產</b><p>融資成本與保證金追繳迫使去槓桿，波動率上升；股債可能同跌，分散效果失靈。</p></div><div class="lq-card"><b>美元與海外</b><p>全球美元融資變貴，美元走強、換匯基差更負，新興市場資金外流；外國央行轉向 Fed 換匯額度與 FIMA。</p></div><div class="lq-card"><b>Fed 的回應</b><p>SRF 先接住 → 停止縮表、RMP 補準備金 → 嚴重時推出緊急工具。出手前，資產價格往往已先修正一輪。</p></div></div>
   </div></details>
 </div>
 

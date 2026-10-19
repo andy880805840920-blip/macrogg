@@ -181,6 +181,8 @@ h1{font-size:21px;margin:0;font-weight:700;line-height:1.35}
   .brandbar{padding:12px 14px;flex-wrap:wrap;row-gap:10px;column-gap:8px}
   .brand .logo-full{display:none}
   .brand .logo-compact{display:block}
+  /* 觸控區撐到 40px（logo 只有 30px 高），負邊距抵銷、版面高度不變 */
+  .brand{padding:5px 0;margin:-5px 0}
   .brandbar .theme-btn{margin-left:auto;width:44px;height:44px;align-self:center}
   .brandbar .lang-btn{margin-left:0;min-width:44px;align-self:center}
   .upd{order:3;width:100%;margin-left:0;grid-template-columns:auto 1fr 1fr 1fr;
@@ -320,7 +322,7 @@ details.banner[open]>summary::after{content:"▴"}
 .sect-tools{display:flex;gap:8px;margin:12px 0 0}
 .sect-tools button{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
   color:var(--text-secondary);background:var(--surface-1);
-  border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+  border:1px solid var(--border);border-radius:8px;padding:13px 13px}
 .sect-tools button:hover{border-color:var(--text-secondary);
   color:var(--text-primary)}
 .sect-tools button:focus-visible{outline:2px solid var(--series-1);
@@ -421,8 +423,9 @@ details.banner[open]>summary::after{content:"▴"}
 .spark{margin-top:11px;display:block;width:100%;height:64px}
 
 /* ---------- 數字組（改用網格，手機兩欄對齊） ---------- */
-.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 14px;
+.stat-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px;
   margin-bottom:4px}
+.stat-row>.stat{min-width:0}
 @media(min-width:760px){
   .stat-row{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px}
 }
@@ -533,10 +536,11 @@ td a[target="_blank"],.src a[target="_blank"]{
 /* 手機兩欄時每張卡不再被拉高到同列最高——說明文字長度差很多，
    齊高會讓短的那張有三到四成是空白，八張燈累積起來是一整個螢幕。
    ≥1040px 四欄時仍然齊高：那裡卡片小、齊高才看得出是一組。 */
-.lights{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
+.lights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
   align-items:start}
+.light{min-width:0}
 @media(max-width:430px){.light{min-height:148px}}
-@media(min-width:1040px){.lights{grid-template-columns:repeat(4,1fr);
+@media(min-width:1040px){.lights{grid-template-columns:repeat(4,minmax(0,1fr));
   align-items:stretch}}
 .light{background:var(--surface-2);border-radius:10px;padding:12px 12px;
   border:1px solid var(--border);display:flex;flex-direction:column}
@@ -553,6 +557,7 @@ td a[target="_blank"],.src a[target="_blank"]{
 .light .l-value{font-size:22px;font-weight:700;margin-top:8px;
   font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
 @media(max-width:420px){.light .l-value{font-size:19px}}
+@media(max-width:360px){.light .l-value{white-space:normal;font-size:17px}}
 .light .l-state{font-size:12px;margin-top:5px;font-weight:700}
 .light .l-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55;
   margin-bottom:0}
@@ -2240,6 +2245,69 @@ details.home-module[open]{padding-bottom:0}
    說明移進收合層之後，剩下的固定四行（名稱／數值／狀態／歷史條）自然等高。 */
 /* 獨立成最後一行：inline-block 的上下 padding 會把它所在那一行撐高，
    說明文中間突然出現一段大行距。padding 保留，觸控高度仍 ≥ 40px。 */
+/* 流動性頁「關鍵指標檢核」：表格在窄螢幕改成一列一張卡（data-label 當欄名），
+   兩欄比較框、事件清單、傳導流程、跨資產卡片都隨寬度自動換排。 */
+/* RP／RRP 圖解：手機改單欄，流向中間那段文字可換行（原本兩欄＋不換行，390px 溢出 120px） */
+.rp-row{grid-template-columns:1fr!important}
+@media(min-width:640px){.rp-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.rp-row .stat{min-width:0}
+.rp-flow-mid{flex:1;min-width:0;text-align:center;font-size:12px;line-height:1.35}
+.lq-tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;table-layout:auto}
+.lq-tbl th,.lq-tbl td{padding:9px 10px;border-bottom:1px solid var(--grid);text-align:left;vertical-align:top;line-height:1.55}
+.lq-tbl th{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.lq-tbl td.k{min-width:9em}
+.lq-tbl td.k b{display:block;white-space:nowrap}
+.lq-tbl td.k small{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+.lq-tbl td.k em{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:2px}
+.st{font-weight:600;white-space:normal}
+.st.good{color:var(--good)}.st.warning{color:var(--warning)}.st.critical{color:var(--critical)}
+.lq-rules td:not(.k){width:22%}
+@media(max-width:640px){
+  .lq-tbl thead{display:none}
+  .lq-tbl,.lq-tbl tbody,.lq-tbl tr{display:block;width:100%}
+  .lq-tbl tr{border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:10px}
+  .lq-tbl td{display:grid;grid-template-columns:4.5em 1fr;gap:10px;border:0;padding:4px 0;width:auto!important}
+  .lq-tbl td::before{content:attr(data-label);font-size:12px;color:var(--muted)}
+  .lq-tbl td.k{display:block;border-bottom:1px solid var(--grid);padding-bottom:6px;margin-bottom:4px}
+  .lq-tbl td.k::before{content:none}
+}
+.lq-check{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.lq-check li{display:flex;gap:8px;align-items:baseline;padding:9px 12px;border-radius:10px;background:var(--surface-2);font-size:13.5px;line-height:1.5}
+.lq-check li span{font-weight:700}.lq-check li.ok span{color:var(--good)}.lq-check li.ng span{color:var(--warning)}
+.lq-check li b{white-space:nowrap;margin-right:4px}
+.lq-concl{margin:10px 0 2px;line-height:1.75}
+.lq-2col{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.lq-2col{grid-template-columns:1fr 1fr}}
+.lq-box{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.lq-box.press{border-top:3px solid var(--warning)}.lq-box.hold{border-top:3px solid var(--good)}
+.lq-box-h{font-weight:700;font-size:13.5px;margin-bottom:4px}
+.lq-box ul{margin:0;padding-left:18px}.lq-box li{margin:6px 0;line-height:1.65;font-size:13.5px}
+.lq-watch{list-style:none;padding:0;margin:6px 0;display:grid;gap:10px}
+.lq-watch li{display:grid;grid-template-columns:6.5em 3.2em 1fr;gap:10px;align-items:baseline;
+  padding:10px 0;border-bottom:1px solid var(--grid)}
+.lq-watch li p{margin:3px 0 0;font-size:13px;color:var(--text-secondary);line-height:1.65}
+.lq-when{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lq-imp{font-size:11.5px;font-weight:700;text-align:center;border-radius:6px;padding:1px 0}
+.lq-imp.i3{background:var(--critical);color:#fff}.lq-imp.i2{background:var(--warning);color:#fff}
+.lq-imp.i1{background:var(--surface-2);color:var(--text-secondary)}
+@media(max-width:520px){.lq-watch li{grid-template-columns:auto auto;justify-content:start}
+  .lq-watch li>div{grid-column:1/-1}}
+.lq-rule{margin:6px 0 10px;padding-left:20px;line-height:1.8;font-size:13.5px}
+.lq-rule .st{margin-right:8px}
+.lq-lead{line-height:1.75;margin:8px 0 12px}
+.lq-flow{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px;grid-template-columns:1fr;counter-reset:none}
+@media(min-width:560px){.lq-flow{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.lq-flow{grid-template-columns:repeat(5,1fr)}}
+.lq-flow li{position:relative;border:1px solid var(--border);border-radius:10px;padding:10px 12px 10px 42px;min-width:0}
+.lq-flow li .n{position:absolute;left:12px;top:10px;width:22px;height:22px;border-radius:50%;
+  background:var(--critical);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lq-flow li b{display:block;font-size:13.5px;line-height:1.4}
+.lq-flow li small{display:block;font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.45}
+.lq-cards{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:620px){.lq-cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.lq-cards{grid-template-columns:repeat(3,1fr)}}
+.lq-card{border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.lq-card b{font-size:13.5px}.lq-card p{margin:4px 0 0;font-size:13px;line-height:1.65;color:var(--text-secondary)}
 .l-link{display:block;width:fit-content;margin-top:2px;padding:12px 0;font-size:12px;
   font-weight:600;color:var(--series-1);text-decoration:none}
 .lights{align-items:stretch}
@@ -2670,7 +2738,9 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .fx-rot td small{display:block;font-size:11px;color:var(--muted)}
 /* SEP 小卡 */
 .scs{display:grid;gap:10px;margin-top:14px;grid-template-columns:1fr 1fr}
-@media(min-width:760px){.scs{grid-template-columns:repeat(5,1fr)}}
+@media(min-width:760px){.scs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1100px){.scs{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.scs .sc{min-width:0}
 @media(max-width:340px){.scs{grid-template-columns:1fr}}
 @media(max-width:759px){.scs .sc:last-child:nth-child(odd){grid-column:1/-1}
   .sc-v{font-size:22px}.sc-x b{font-size:11px}.sc-x span{font-size:9.5px}}
@@ -3773,7 +3843,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
    卡內（各種 details）：整列＋上方細線，左邊標題（可帶灰色結論），右邊細箭頭；
    全部同一套，不再有 ▸ 前綴、「展開 ▾」字樣、？圓章、膠囊底色。 */
 .viz-root:not(#_) .sect-tools{justify-content:flex-end;gap:0;margin:10px 0 0}
-.viz-root:not(#_) .sect-tools button{border:0;background:none;padding:8px 10px;font-size:var(--fs-small);color:var(--muted);border-radius:6px}
+.viz-root:not(#_) .sect-tools button{border:0;background:none;padding:8px 10px;min-height:40px;font-size:var(--fs-small);color:var(--muted);border-radius:6px}
 .viz-root:not(#_) .sect-tools button+button{border-left:1px solid var(--grid);border-radius:0}
 .viz-root:not(#_) .sect-tools button:hover{color:var(--text-primary)}
 .viz-root:not(#_) :is(.f-more,details[data-m-collapse],.k-more,.l-more,.el-more,.hm-modx,.hm-new,.foot-fold,.teach,
@@ -4405,8 +4475,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-19 11:28（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>11:28</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>23:28</b><i>10/18</i></div><div class="upd-c"><span>倫敦</span><b>04:28</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/labor/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-19 11:54（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/19</span></span><div class="upd-c"><span>台北</span><b>11:54</b><i>10/19</i></div><div class="upd-c"><span>紐約</span><b>23:54</b><i>10/18</i></div><div class="upd-c"><span>倫敦</span><b>04:54</b><i>10/19</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/labor/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/" class="on" aria-current="page">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>勞動市場</h1><div class="sub">Employment Situation　·　資料月份 2026-09</div></div>
