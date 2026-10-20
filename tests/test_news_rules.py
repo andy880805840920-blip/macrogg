@@ -321,6 +321,28 @@ check("⑥b 隔天下午 16:00 不再鎖定", ft._lock_events(_ev, {}, dt.dateti
 check("⑥b FOMC 從 config 的 fomc_dates 也認得",
       ft._lock_events({}, {"fomc_dates": ["2026-10-28"]}, dt.datetime(2026, 10, 29, 7, 0, tzinfo=_tw)) == ["fomc"])
 
+
+# ⑦ 官方數據發布日：報導日期不是公布日（事故：「BLS 10/19 公布九月 CPI」，實際 10/14）
+_cal = {"cpi": {"2026-08": "2026-09-11", "2026-09": "2026-10-14"}, "ppi": {"2026-09": "2026-10-15"},
+        "pce": {"2026-09": "2026-10-29"}}
+_rd = ft.release_dates(_cal)
+_today = dt.date(2026, 10, 20)
+_bad = "美國勞動統計局 10/19 公布九月消費者物價指數（CPI），月增率 0.6%。數據公布當天，標普 500 重挫。"
+_iss = ft._release_date_issues(_bad, _rd, _today)
+check("⑦a 抓到 CPI 公布日寫錯（10/19→10/14）", [(x["kind"], x["wrong"], x["right"]) for x in _iss]
+      == [("cpi", "10/19", "10/14")], str(_iss))
+check("⑦b 機械改正成官方日期", ft._fix_release_dates(_bad, _iss).startswith("美國勞動統計局 10/14 公布九月"))
+check("⑦c 正確日期不報", ft._release_date_issues("9 月 CPI 已於 10/14 公布。", _rd, _today) == [])
+check("⑦d 同句兩種數據，各自的官方日都放行",
+      ft._release_date_issues("CPI 與 PPI 分別在 10/14、10/15 公布。", _rd, _today) == [])
+check("⑦e 不是公布日的日期（官員發言）不報",
+      ft._release_date_issues("華許 10/19 表示 CPI 顯示通膨仍需改善。", _rd, _today) == [])
+_f = ft.release_facts(_cal, _today, {"cpi": ("2026-09", "整體月增 +0.6%")})
+_blk = ft._facts_block(_f)
+check("⑦f 權威區塊：已公布／將公布、數字只附在期別相同的那筆",
+      "9 月 CPI：美東 10/14（三）已公布；整體月增 +0.6%" in _blk and "9 月 PCE：美東 10/29（四）將公布" in _blk
+      and "8 月 CPI" not in _blk, _blk)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

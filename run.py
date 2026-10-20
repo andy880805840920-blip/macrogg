@@ -1083,6 +1083,26 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("期中選舉預測產生失敗（%s），該卡片本次不顯示", e)
         ctxs["_election"] = None
+    # 今日主軸的權威數字：官方數據的期別與本站算好的主要數值（期別對得上才附，見 focus_today.release_facts）
+    _fv = {}
+    try:
+        _inf = ctxs.get("inflation") or {}
+        _sm, _kp, _dm = _inf.get("summary"), _inf.get("kpi") or {}, str(_inf.get("data_month") or "")
+        _pct = lambda v: f"{v:.1f}%" if isinstance(v, (int, float)) else None
+        if _sm is not None and _dm[:4].isdigit():
+            _parts = [f"整體月增 {_kp['headline_display']}" if _kp.get("headline_display") else None,
+                      f"整體年增 {_pct(_sm.headline_yoy)}" if _pct(getattr(_sm, "headline_yoy", None)) else None,
+                      f"核心月增 {_kp['core_display']}" if _kp.get("core_display") else None,
+                      f"核心年增 {_pct(_sm.core_yoy)}" if _pct(getattr(_sm, "core_yoy", None)) else None]
+            _fv["cpi"] = (_dm, "、".join(x for x in _parts if x))
+        _lab = ctxs.get("labor") or {}
+        _nfp = (((_lab.get("key_metrics") or {}).get("nfp") or {}).get("value"))
+        _u3 = (((_lab.get("key_metrics") or {}).get("u3") or {}).get("value"))
+        if _nfp is not None and str(_lab.get("data_month") or "")[:4].isdigit():
+            _fv["employment"] = (str(_lab["data_month"])[:7],
+                                 f"非農新增 {_nfp:+.1f} 萬人" + (f"、失業率 {_u3:.1f}%" if _u3 is not None else ""))
+    except Exception as e:                         # noqa: BLE001
+        log.warning("今日主軸權威數字整理失敗（%s），只給發布日期", e)
     # 今日市場焦點（首頁 hero 之上的窄條）。任何一步失敗都不擋主流程。
     try:
         ctxs["_focus"] = focus_today.build(
@@ -1090,7 +1110,8 @@ def main() -> int:
             STATE_FILE.parent / "focus.json", liq_series=liq_series,
             # 今天／昨天有哪些發布：發布當天相關新聞加分
             events=watch_calendar.event_dates(ctxs["_schedule"]),
-            election=ctxs["_election"])
+            election=ctxs["_election"],
+            calendar=ctxs.get("_calendar"), fact_values=_fv)
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None

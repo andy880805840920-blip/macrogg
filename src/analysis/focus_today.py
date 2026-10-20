@@ -1304,7 +1304,7 @@ DEFAULT_VAGUE_MARKERS = (
 
 # 版式或提示詞一改就要讓快取失效：快取鍵含這個版本字串，
 # 否則舊版的三段散文會一直被沿用到標題換掉為止。
-FOCUS_PROMPT_VERSION = "f13-rate-main-10y"
+FOCUS_PROMPT_VERSION = "f14-official-release-dates"
 
 # 快取時效：標題沒變也不能永遠沿用（使用者回報過「今日市場焦點都沒更新」
 # ——來源池小、標題變得慢，雜湊天天一樣，同一段文字掛了好幾天）。
@@ -1966,7 +1966,8 @@ def _pick_links(mats: list[dict], ids: list[int], n: int,
 
 
 def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=None,
-                   vague_markers=None, rate_ctx=None, name_map=None) -> tuple[dict | None, str]:
+                   vague_markers=None, rate_ctx=None, name_map=None,
+                   release_dates_: dict | None = None) -> tuple[dict | None, str]:
     """
     版式 A 的生成＋驗證。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
       後設字眼   重試一次，再犯就失敗
@@ -2030,6 +2031,11 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         rel = sorted(set(_REL_DATE.findall(joined)))
         if rel:
             why.append("用了相對時間（" + "、".join(rel[:3]) + "），請改寫成月/日")
+        _rd = _release_date_issues(joined, release_dates_)
+        if _rd:
+            why.append("數據公布日期錯誤（" + "、".join(
+                f"{FACT_NAMES[x['kind']]}寫成「{x['wrong']}」，官方是 {x['right']}" for x in _rd[:3])
+                + "；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）")
         r["main_text"] = main
         if attempt == 1 and why:
             best = r
@@ -2043,7 +2049,9 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     if not best:
         return None, "輸出反覆評論材料本身（後設字眼）"
     r = best
-    fix = lambda s: normalize_names(_strip_media(s), name_map)
+    # 公布日期仍錯：機械改成官方日期（寧可改日期，不留錯的公布日）
+    fix = lambda s: _fix_release_dates(normalize_names(_strip_media(s), name_map),
+                                       _release_date_issues(s, release_dates_))
     main = _trim_item(fix(r["main_text"]), hards[0])
     supp = [_trim_item(fix(s), hards[i + 1] if i + 1 < len(hards) else hards[-1])
             for i, s in enumerate(r["supp"])]
@@ -2065,19 +2073,21 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
 def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=None, *,
                caps, mins, meta_markers=None, vague_markers=None, rate_ctx=None,
                name_map=None, event_note: str = "", recent_note: str = "",
-               mode: str = "content") -> tuple[dict | None, str]:
+               mode: str = "content", facts_block: str = "",
+               release_dates_: dict | None = None) -> tuple[dict | None, str]:
     """主軸（內文模式或標題模式共用）：材料編號 → AI → 驗證 → 來源連結。"""
     if not arts and not briefs:
         return None, "沒有任何材料"
     body, mats = _material_text(arts, briefs)
-    src_text = body + _rate_block(rate_ctx)
+    src_text = body + _rate_block(rate_ctx) + facts_block
     system = _FOCUS_CONTENT_SYSTEM_A.format(
         kws="、".join(keywords), main=caps[0], supp=caps[1] if len(caps) > 1 else 0,
         ns=len(caps) - 1, min=(mins or [DEFAULT_MAIN_MIN])[0],
         event=event_note, recent=recent_note)
     res, err = _generate_main(src_text, system, env, caps=caps, mins=mins,
                               meta_markers=meta_markers, vague_markers=vague_markers,
-                              rate_ctx=rate_ctx, name_map=name_map)
+                              rate_ctx=rate_ctx, name_map=name_map,
+                              release_dates_=release_dates_)
     if not res:
         return None, err
     res["links"] = _pick_links(mats, res.pop("ids"), MAX_MAIN_LINKS,
@@ -2310,6 +2320,103 @@ _FOCUS_SYSTEM = (
 # 規則不放寬：仍只能轉述標題與摘要字面上有的事。
 # 標題模式（一篇內文都抓不到時）：同一套格式，材料全部是「只有標題」。
 _FOCUS_SYSTEM_A = _FOCUS_CONTENT_SYSTEM_A
+
+
+# ---------------------------------------------------------------------------
+# 官方數據發布日（2026-10）
+# 事故：主軸寫「美國勞動統計局 10/19 公布九月 CPI」——實際是 10/14。材料是一篇 10/19 的報導
+# （談 CPI 的後續評論），模型把「報導日期」當成「數據公布日」；數字鎖只檢查數字有沒有出現在
+# 材料裡，報導標頭本來就有 10/19，所以放行。
+# 修法：①把官方行事曆（config/releases_calendar.yaml）與本站算好的數字當成權威區塊交給模型；
+#       ②產出後檢查「M/D 公布」這類日期，跟該數據的官方日期對不上就退回重寫，仍錯就機械改正。
+# ---------------------------------------------------------------------------
+FACT_NAMES = {"cpi": "CPI", "ppi": "PPI", "pce": "PCE", "employment": "非農就業報告",
+              "jolts": "JOLTS 職缺", "gdp": "GDP", "retail": "零售銷售", "umich": "密大消費者信心"}
+FACT_ALIASES = {"cpi": ("CPI", "消費者物價"), "ppi": ("PPI", "生產者物價"),
+                "pce": ("PCE", "個人消費支出"), "employment": ("非農", "就業報告"),
+                "jolts": ("JOLTS", "職缺"), "gdp": ("GDP", "國內生產毛額"),
+                "retail": ("零售銷售",), "umich": ("密大", "密西根")}
+_PUB = r"(?:公布|公佈|發布|發佈|出爐|釋出)"
+_WD7 = "一二三四五六日"
+
+
+def _period_zh(kind: str, period: str) -> str:
+    m = re.match(r"(\d{4})Q(\d)-?(\w*)", period)
+    if m:
+        stage = {"advance": "初估", "second": "第二次估計", "third": "第三次估計"}.get(m[3], "")
+        return f"第{'一二三四'[int(m[2]) - 1]}季{stage}"
+    m = re.match(r"\d{4}-(\d{2})", period)
+    return f"{int(m[1])} 月" if m else period
+
+
+def release_facts(calendar: dict | None, today: dt.date, values: dict | None = None,
+                  back: int = 21, ahead: int = 14) -> list[dict]:
+    """官方行事曆中，今天往前 back 天、往後 ahead 天內的發布：[{kind, period, date, done, values}]。
+    values＝{kind: (period, 文字)}：本站算好的數字，只附在期別相同的那一筆。"""
+    out = []
+    for kind, per in (calendar or {}).items():
+        if kind not in FACT_NAMES or not isinstance(per, dict):
+            continue
+        for period, d in per.items():
+            try:
+                dd = dt.date.fromisoformat(str(d)[:10])
+            except ValueError:
+                continue
+            if today - dt.timedelta(days=back) <= dd <= today + dt.timedelta(days=ahead):
+                v = (values or {}).get(kind)
+                out.append({"kind": kind, "period": str(period), "date": dd.isoformat(),
+                            "done": dd <= today,
+                            "values": v[1] if v and str(v[0]) == str(period)[:7] else ""})
+    return sorted(out, key=lambda f: f["date"])
+
+
+def release_dates(calendar: dict | None) -> dict[str, list[str]]:
+    """{kind: [ISO…]}：行事曆裡每種數據的所有官方發布日（驗證用）。"""
+    return {k: sorted(str(d)[:10] for d in v.values())
+            for k, v in (calendar or {}).items() if k in FACT_NAMES and isinstance(v, dict)}
+
+
+def _facts_block(facts: list[dict]) -> str:
+    if not facts:
+        return ""
+    md = lambda s: f"{int(s[5:7])}/{int(s[8:10])}（{_WD7[dt.date.fromisoformat(s).weekday()]}）"
+    lines = [f"- {_period_zh(f['kind'], f['period'])} {FACT_NAMES[f['kind']]}：美東 {md(f['date'])}"
+             + ("已公布" if f["done"] else "將公布") + (f"；{f['values']}" if f["values"] else "")
+             for f in facts]
+    return ("\n\n=== 官方數據發布日（美東時間；來源：官方行事曆與本站資料，以此為準）===\n"
+            + "\n".join(lines)
+            + "\n※ 報導標頭的日期是「報導發布日」，不是數據公布日。寫到任何數據的公布日期，一律以上表為準；"
+              "上表沒有的數據不要寫公布日期。上表有數字的，以上表的數字為準。"
+              "報導若是數據公布之後的評論（官員發言、市場反應），要寫清楚是哪一天的事，不要跟公布當天混在一起。")
+
+
+def _release_date_issues(text: str, dates: dict[str, list[str]] | None, today: dt.date | None = None) -> list[dict]:
+    """找出「M/D 公布」與官方日期對不上的地方。同一句提到多種數據時，日期只要是其中任一種的官方日就放行。"""
+    if not dates:
+        return []
+    today = today or dt.date.today()
+    out = []
+    for sent in re.split(r"(?<=[。！？；\n¶])", text or ""):
+        kinds = [k for k, al in FACT_ALIASES.items() if k in dates and any(a in sent for a in al)]
+        if not kinds:
+            continue
+        ok = {f"{int(d[5:7])}/{int(d[8:10])}" for k in kinds for d in dates[k]}
+        for m in re.finditer(r"(\d{1,2})/(\d{1,2})(?=[^。，；！？]{0,10}?" + _PUB + ")", sent):
+            tok = f"{int(m[1])}/{int(m[2])}"
+            if tok in ok:
+                continue
+            past = [d for d in dates[kinds[0]] if d <= today.isoformat()]
+            right = past[-1] if past else dates[kinds[0]][0]
+            out.append({"kind": kinds[0], "wrong": m.group(0), "right": f"{int(right[5:7])}/{int(right[8:10])}",
+                        "sent": sent})
+    return out
+
+
+def _fix_release_dates(text: str, issues: list[dict]) -> str:
+    for it in issues:
+        if it["sent"] in text:
+            text = text.replace(it["sent"], it["sent"].replace(it["wrong"], it["right"], 1), 1)
+    return text
 
 
 def _digits_ok(text: str, source: str) -> bool:
@@ -3642,7 +3749,8 @@ def archive_list(arch) -> list[dict]:
 
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
           state_path: Path, env=None, liq_series: dict | None = None,
-          events: dict | None = None, election: dict | None = None) -> dict:
+          events: dict | None = None, election: dict | None = None,
+          calendar: dict | None = None, fact_values: dict | None = None) -> dict:
     cfg = cfg or {}
     keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
     # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
@@ -3790,9 +3898,13 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         # 快取鍵＝**未扣分**的標題池排名＋事件＋利率判讀。不能用扣分後的
         # 排名：「前一次寫過的扣分」會讓每次排名都不同，材料沒變也會被迫
         # 換寫別的事、來回翻寫。材料沒變、12 小時內 → 直接沿用，連內文都不抓。
+        # 官方數據發布日（權威區塊＋產出後的日期檢查）
+        _facts = release_facts(calendar, clock.today(), fact_values)
+        _fblk = _facts_block(_facts)
+        _rel_dates = release_dates(calendar)
         _key_sel = _pick(heads, 12, recent=None)
         h = hashlib.sha256((FOCUS_PROMPT_VERSION + "|" + mode + "|" + "|".join(
-            x["title"] for x in _key_sel) + "|" + _ev_note
+            x["title"] for x in _key_sel) + "|" + _ev_note + "|" + _fblk
             + "|" + json.dumps(rate_ctx or {}, sort_keys=True))
                            .encode("utf-8")).hexdigest()[:16]
         _age = _age_hours({"at": state.get("at")}, _now)
@@ -3858,7 +3970,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 arts.sort(key=lambda a: -_src_weight(a))
             _w = dict(caps=caps, mins=mins, meta_markers=meta_markers,
                       vague_markers=vague_markers, rate_ctx=rate_ctx,
-                      name_map=name_map, event_note=_ev_note, recent_note=_recent_note)
+                      name_map=name_map, event_note=_ev_note, recent_note=_recent_note,
+                      facts_block=_fblk, release_dates_=_rel_dates)
             res, err = None, ""
             if mode == "content" and arts:
                 log.info("市場焦點：內文擷取 %d 篇＋標題快訊 %d 則，共 %d 則不同報導（%s）",
