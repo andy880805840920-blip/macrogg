@@ -2533,6 +2533,38 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .tabs>input:focus-visible+label{outline:2px solid var(--series-1)}
 .tabp{display:none}
 #le-br1:checked~.tabp.p1,#le-br3:checked~.tabp.p3,#le-br12:checked~.tabp.p12{display:block}
+/* 情境頁「金融條件」（FCI-G 分解圖，2026-10）：調色盤＝dataviz 參考調色盤前七格（已驗證：堆疊相鄰色、深淺模式都過） */
+:root{--fci-1:#2a78d6;--fci-2:#eb6834;--fci-3:#1baf7a;--fci-4:#eda100;--fci-5:#e87ba4;--fci-6:#008300;--fci-7:#6250d6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}}
+:root[data-theme="dark"]{--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}
+#fci-r10:checked~.tabp.p10,#fci-r5:checked~.tabp.p5,#fci-r1:checked~.tabp.p1{display:block}
+.ic{margin-top:10px}
+.ic-plot{position:relative;margin:6px 0 22px 40px}
+.ic-grid{position:absolute;left:0;right:0;border-top:1px solid var(--grid)}
+.ic-grid.z{border-top:1px solid var(--text-secondary)}
+.ic-tick{position:absolute;right:calc(100% + 6px);transform:translateY(-50%);font-size:11px;color:var(--muted);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ic-cols{position:absolute;inset:0;display:flex}
+.ic-col{position:relative;flex:1 1 0;min-width:0;cursor:crosshair}
+.ic-col:hover,.ic-col[data-chart-selected]{background:color-mix(in srgb,var(--text-primary) 7%,transparent)}
+.ic-col>i{position:absolute;left:12%;right:12%;display:block}
+.ic-x{position:absolute;top:calc(100% + 4px);left:0;font-size:10.5px;color:var(--muted);white-space:nowrap}
+/* 手機上十年的年份標籤太擠：只標偶數年（讀數框仍可查每個月） */
+@media(max-width:600px){.ic-plot .ic-x.odd{display:none}}
+.ic-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.ic-leg-line{display:inline-block;width:14px;height:0!important;border-top:2px solid var(--text-primary);vertical-align:middle;background:none!important}
+.viz-root:not(#_) .fci-head{margin:2px 0 8px;font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
+.fci-tot{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:10px 0 4px}
+.fci-tot b{font-size:26px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.fci-tot span{font-size:var(--fs-small);color:var(--text-secondary)}
+.fci-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+@media(min-width:620px){.fci-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:1000px){.fci-cards{grid-template-columns:repeat(7,minmax(0,1fr))}}
+.fci-c{border:1px solid var(--border);border-radius:10px;padding:8px 10px;box-shadow:inset 0 3px 0 var(--c)}
+.fci-c.main{border-color:var(--text-secondary)}
+.fci-c>span{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);line-height:1.35;min-height:2.7em}
+.fci-c>b{display:block;font-size:19px;font-variant-numeric:tabular-nums;color:var(--text-primary);margin:2px 0}
+.fci-c>small{display:block;font-size:11.5px;color:var(--muted);line-height:1.5;font-variant-numeric:tabular-nums}
 .br{margin-top:4px}
 .br-row{display:grid;grid-template-columns:minmax(96px,32%) 1fr 70px;gap:10px;align-items:center;padding:6px 4px;border-radius:6px}
 .br-row:hover{background:var(--surface-2)}
@@ -4614,8 +4646,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-20 16:17（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>16:17</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>04:17</b><i>10/20</i></div><div class="upd-c"><span>倫敦</span><b>09:17</b><i>10/20</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-20 16:30（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>16:30</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>04:30</b><i>10/20</i></div><div class="upd-c"><span>倫敦</span><b>09:30</b><i>10/20</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/" class="on" aria-current="page">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>偷懶</h1></div>

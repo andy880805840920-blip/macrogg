@@ -299,12 +299,12 @@
  "at": "2026-10-20T08:17:02.622414+00:00",
  "layout": "main",
  "topics": {
-  "hash": "94a1584ba02c3d20",
+  "hash": "9d1b2a39211ad162",
   "items": [
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債失去避險光環。長天期美債殖利率升至多年高位，投資人轉向風險資產，減少對美債作為避險工具的需求；同時美國財政部融資計畫引發華爾街焦慮",
+    "text": "美債避險功能減弱，科技股反彈時長天期公債下跌，投資人對美債作為風險對沖工具的信心下滑；同時美國財政部融資計畫引發華爾街擔憂",
     "links": [
      {
       "title": "Treasuries Losing Luster as Hedge Tool, Citi Australia CEO Says",
@@ -323,7 +323,7 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "黑石推出代幣化貨幣市場基金。資產管理巨頭黑石為其311億美元貨幣市場基金增加代幣化通道，反映傳統資金市場規模已達7.9兆美元",
+    "text": "黑石集團為旗下311億美元貨幣市場基金增加代幣化交易管道，貨幣市場基金規模達7.9兆美元，反映機構投資者對流動性資產的持續需求",
     "links": [
      {
       "title": "BlackRock Adds Tokenized Access to $311B Money Market Funds",
@@ -342,7 +342,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "美國推動受制裁油輪重返合法市場以增加運力。政府計畫讓被制裁油輪恢復營運以緩解供應壓力，但既有合約、複雜合規審查及高運費恐限制參與意願，實際效果可能低於預期；此舉為11/3期中選舉前抑制能源價格的措施",
+    "text": "美國擬讓受制裁油輪重返合法市場以增加運力，但既有合約、高運費與複雜合規審查等障礙，恐限制參與船隻數量，實際對油價與運費的緩解幅度可能低於預期",
     "links": [
      {
       "title": "美國擬讓受制裁油輪重返合法市場，高運費與合規門檻恐削弱成效",
@@ -355,7 +355,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "科技股反彈帶動美股走高。那斯達克上漲1.11%，半導體股領漲，輝達、美光、超微等個股上揚，反映投資人對第三季財報季的期待；惟亞股多數下跌，日經225下跌1.3%，南韓Kospi重挫4%",
+    "text": "科技股反彈帶動美股上揚，輝達、美光等晶片股領漲，標普500上升0.41%、那斯達克上升1.11%，但市場仍關注本週科技大廠財報能否確認AI需求持續強勁",
     "links": [
      {
       "title": "Asian shares mostly decline after AI stocks lead a rebound on Wall Street",
@@ -374,7 +374,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達助桑坦德銀行降低AI成本。西班牙桑坦德銀行透過輝達基礎設施，將客服互動成本從5歐元大幅降至0.03歐元，並建立Model Arena平台評估開放權重模型，展示小型專用模型在特定任務的效能；亞馬遜推出AI晶片相容熱門程式語言，挑戰輝達",
+    "text": "桑坦德銀行與輝達合作，利用輝達AI基礎設施將大型通用模型轉向小型專用模型，客戶服務成本從約5歐元大幅降至0.03歐元，降幅超過50%；亞馬遜宣布其AI晶片將支援熱門程式語言以挑戰輝達",
     "links": [
      {
       "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
@@ -391,52 +391,26 @@
     ]
    },
    {
-    "id": "twf",
-    "label": "台指期",
-    "text": "外資連10日賣超台股。外資10/20賣超795.39億元，累計賣超838億元，台指期淨空單仍在8.9萬口高水位；台股終場下跌529點至46,292點，投信逆勢買超183.15億元",
-    "links": [
-     {
-      "title": "外資又狂倒795億！ 台股再跌529點 網哀：還要賣多久",
-      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E5%8F%88%E7%8B%82%E5%80%92795%E5%84%84-%E5%8F%B0%E8%82%A1%E5%86%8D%E8%B7%8C529%E9%BB%9E-%E7%B6%B2%E5%93%80-%E9%82%84%E8%A6%81%E8%B3%A3%E5%A4%9A%E4%B9%85-074800603.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-20T07:48:00+08:00"
-     },
-     {
-      "title": "台股不只5萬點？張錫估2028年挑戰7萬點 台積電看5千元",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E4%B8%8D%E5%8F%AA5%E8%90%AC%E9%BB%9E%EF%BC%9F%E5%BC%B5%E9%8C%AB%E4%BC%B02028%E5%B9%B4%E6%8C%91%E6%88%B07%E8%90%AC%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%9C%8B5%E5%8D%83%E5%85%83-073839418.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-20T07:38:39+08:00"
-     }
-    ]
-   },
-   {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "歷史數據顯示期中選舉後一年美股上漲。自1950年以來19次期中選舉中，選舉後一年標普500均收高於選舉日，平均漲幅約15%；選舉前兩週平均漲1.4%，等待選舉結果的收益有限",
-    "links": [
-     {
-      "title": "Should You Wait Until After the Midterm Elections to Buy the S&P 500?",
-      "link": "https://www.fool.com/investing/2026/10/20/should-you-wait-until-after-the-midterm-elections-to-buy-the-s-and-p-500/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-20T07:36:02+00:00"
-     }
-    ]
-   },
-   {
     "id": "fx",
     "label": "匯率",
-    "text": "人民幣升至四年高位。中國人民銀行公布強勢定盤後，人民幣兌美元跌至6.6775，創2022年7月以來最強水準，反映中國第三季GDP成長4.5%及零售銷售加速；美元指數下跌0.2%至101.78",
+    "text": "新台幣10/20貶至32.617元，單日貶1.72角，外資連10日賣超台股累計8,380億元，美元升值與台幣貶勢推升匯出壓力，市場期待本週科技廠財報能提供支撐",
     "links": [
      {
-      "title": "Asian currencies firm as dollar retreats; yuan hits four",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-firm-dollar-retreats-054434934.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-20T05:44:34+00:00"
+      "title": "股匯持續承壓，新台幣重貶1.72角收32.617元，外資連十賣壓力加劇",
+      "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E6%8C%81%E7%BA%8C%E6%89%BF%E5%A3%93-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92%E6%94%B632-617%E5%85%83-%E5%A4%96%E8%B3%87%E9%80%A3%E5%8D%81%E8%B3%A3%E5%A3%93%E5%8A%9B%E5%8A%A0%E5%8A%87-081632880.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-20T08:16:32+00:00"
+     },
+     {
+      "title": "新台幣重貶1.72角　收32.617元",
+      "link": "https://tw.stock.yahoo.com/news/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92-%E6%94%B632-617%E5%85%83-080621653.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-20T08:06:21+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-20T08:17:18.959163+00:00"
+  "at": "2026-10-20T08:30:00.960190+00:00"
  },
  "main_source_titles": [
   "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
