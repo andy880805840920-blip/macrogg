@@ -1,24 +1,18 @@
 {
- "hash": "b777068151bfaca2",
- "text": "聯準會官員警告，人工智慧帶動的投資熱潮可能推升通膨，加重貨幣政策的挑戰。同時，德國央行也發出通膨風險信號，指出大宗商品價格居高不下、食品與服務價格上升等因素，使通膨風險明顯偏向上升，儘管重演2021至2022年高通膨的可能性不大。美國方面，官員表示最新CPI數據顯示通膨仍需「進一步改善」，暗示短期內降息空間有限。這些發言反映出全球央行對通膨持續性的擔憂，特別是在AI資本支出激增、能源與商品價格波動的背景下，長期升息壓力正在浮現。\nAI融資壓力升高威脅科技股。高盛指出AI超大型雲端廠商信貸利差創年內新高，CoreWeave債券殖利率升至15%左右，若利差續擴AI概念股恐補跌，市場焦點已從AI需求轉向資本支出與折舊能否回收。\n關稅預期支撐部分產業。美國鋼鐵公司克利夫蘭克利夫斯預期2027年將是「非常好的一年」，主要受惠於關稅政策，反映市場對貿易政策變化的定價。",
+ "hash": "a43a45e82bb4e2db",
+ "text": "美國科技股近期面臨多重壓力。那斯達克指數上週重挫約4.5%，創6月底以來最大單週跌幅，AI雲端廠商CoreWeave債券殖利率升至15%左右，反映融資成本急劇上升。高盛警告AI超大型雲端廠商信貸利差創年內新高，股價尚未充分反映壓力；市場焦點已從AI需求轉向資本支出與折舊能否回收。儘管9月CPI與PPI雙雙高於預期，但聯準會主席華許在IMF年會表示經濟發展「大致符合」9月會議預期，未釋出急於升息訊號，市場定價10/28會議維持機率達81%，升息預期反而降至約12%。\n油價升至近五個月高點附近，伊朗表示為控制荷姆茲海峽別無選擇，美國議員不支持川普與俄羅斯的柴油出口協議，加劇通膨隱憂。",
  "links": [
   {
-   "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-19T18:39:36+00:00"
-  },
-  {
-   "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-19T14:04:26+00:00"
-  },
-  {
-   "title": "德國央行示警，通膨風險明顯偏向上升",
-   "link": "https://tw.stock.yahoo.com/news/%E5%BE%B7%E5%9C%8B%E5%A4%AE%E8%A1%8C%E7%A4%BA%E8%AD%A6-%E9%80%9A%E8%86%A8%E9%A2%A8%E9%9A%AA%E6%98%8E%E9%A1%AF%E5%81%8F%E5%90%91%E4%B8%8A%E5%8D%87-005535496.html",
+   "title": "聯準會升息效應浮現 金融條件趨緊市場自發降溫",
+   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%87%E6%81%AF%E6%95%88%E6%87%89%E6%B5%AE%E7%8F%BE-%E9%87%91%E8%9E%8D%E6%A2%9D%E4%BB%B6%E8%B6%A8%E7%B7%8A%E5%B8%82%E5%A0%B4%E8%87%AA%E7%99%BC%E9%99%8D%E6%BA%AB-020900827.html",
    "source": "Yahoo奇摩股市",
-   "at": "2026-10-20T00:55:35+00:00"
+   "at": "2026-10-20T02:09:00+00:00"
+  },
+  {
+   "title": "油價高漲加劇通膨隱憂，亞洲黃金現貨價盤中下跌0.41%",
+   "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E9%AB%98%E6%BC%B2%E5%8A%A0%E5%8A%87%E9%80%9A%E8%86%A8%E9%9A%B1%E6%86%82-%E4%BA%9E%E6%B4%B2%E9%BB%83%E9%87%91%E7%8F%BE%E8%B2%A8%E5%83%B9%E7%9B%A4%E4%B8%AD%E4%B8%8B%E8%B7%8C0-41-020042734.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-10-20T02:00:42+00:00"
   }
  ],
  "fedwatch": {
@@ -296,34 +290,34 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-20T01:48:43.539685+00:00",
+ "at": "2026-10-20T03:10:05.021928+00:00",
  "layout": "main",
  "topics": {
-  "hash": "147789b22570c614",
+  "hash": "e6125d3b1ce180e1",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "AI推升通膨引發聯準會關注，加拿大央行升息預期升溫，加幣創近四週高點；同時黃金因投資人評估聯準會利率前景而下滑",
+    "text": "聯準會對AI熱潮帶來通膨壓力感到擔憂，但市場對升息預期已降溫。華許在IMF年會表示經濟發展符合預期，未釋出急於升息訊號，加拿大央行升息預期升溫，反映各國央行對通膨態度有異",
     "links": [
+     {
+      "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T18:39:36+00:00"
+     },
      {
       "title": "Canadian dollar notches nearly four-week high on BoC rate hike bets",
       "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQejFjMHFhbTY3RGNrb3ZLNnZvd2QtWjl4eDg5cG9vRmR3Qk9zbGNBWXM1VXE5Z0ZWamFZYUptd0RwTmdieTRjQXVjWE5YVEhlVzFOUEo3WnF4aVRqSmNvUUFTZnVwVHo2aHVuTXZybk5UT0ZqSmtGNHdfRXZhNWdzVnpDRWRja2ExdFFHNTYwUDg2bmxzWjdRekRHeUtKU3RuY1Z3M2FZSktjdXliQlpZZjBn?oc=5",
       "source": "Reuters",
       "at": "2026-10-19T17:41:13+00:00"
-     },
-     {
-      "title": "Gold slips as investors weigh Fed rate outlook",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOLVJCYm9CRFhWY01aUkRqYnVXb0RzRC1RUnhfOEFicHItalFBMnRMc0ZjcWRVcGNnZVg3ZXQ3WXNXeUZLN183enN0NFAtdmxuUHJhRU5jOHlQbTg1TldhNVdtbF9IWU1GZ1BfOEZvTnJpUEhGTE5xUkRSbl9FZVR4NlFJMEE2V1VYZ1hVRzk3SmpJMi1qelE?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-20T01:33:00+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債因科技股反彈避險需求減弱而下跌，花旗澳洲執行長指出美債作為避險工具的吸引力下降",
+    "text": "長天期美債因科技股反彈而需求下滑，債券作為避險工具的吸引力減弱。財政部融資計畫引發華爾街焦慮，投資人對美債前景存疑",
     "links": [
      {
       "title": "Treasuries Fall as Tech Shares Rebound, Weakening Haven Demand",
@@ -340,141 +334,110 @@
     ]
    },
    {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "貨幣市場基金規模激增至7.9兆美元，反映投資人對流動性與安全資產的需求上升；同時印度央行透過回購協議注入10.5億美元流動性",
-    "links": [
-     {
-      "title": "Money Market Funds: A Proven, Smart $7.9tn Surge",
-      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE42VUJwQWhUb3NHVHFNbjF6UG9mQWV6MDhSeUxweGZVWVpYY2VFR3VGbnpnb2tkNkJwTF9KNlFEaWdGMnVuLWx0MUUzTGg1SWY2V3dJeldzanFDZHFKTkFfZEdGTkdyb2thaWVyZHM2aXlkWFE?oc=5",
-      "source": "Global Brands Magazine",
-      "at": "2026-10-19T20:55:28+00:00"
-     },
-     {
-      "title": "RBI announces $10.5 billion liquidity infusion via repo",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUE1aRTVIZGpZU29GcGt0NjMxUzdlVUpEd0piQmtWOFFlaGZ5WnRYRHJBUVlVeTctZ0JBdTRaVG02ZkZsMkNheDYzT1I0THFIbllXeEtaa2VxMFBkRldjWlJ4Wk9DYzFqQTUtN3h4Y0VzbnFrR3pOZFRzSHlnWktQMmp6eXdsQ2NCemEtSktLdWhxdnFYYzJWeUFpdFVtNFFHTjUxclRieVdNVFdpalBzMkdmbVpNTlhHYjhuWHNNd9IBxAFBVV95cUxOSEIyLWpLQzhKUFczbGFXVkhmemVURUNwcjVGNmplOHA5czFnV28tYV9vTGxFRW1aTU00eWt4QjZHWWtWS2RsZ29tcFp0YkRZSFRZcXV3R2hrNVc0XzZ1dWJpZlhLWU5xeUFkSTg4TkZ5dlFuSDcwLWNJc25MN2VmbXB4SFQ3TzY4VzJ3cWtwU29oYmIwVmlqdU1WRmxKUERSME5SN3RXblBkRGZNVDZsLUZYNHdxeS1KWF9mYnl0eUhib1ZR?oc=5",
-      "source": "The Economic Times",
-      "at": "2026-10-19T03:33:42+00:00"
-     }
-    ]
-   },
-   {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗主要油輪碼頭因美國封鎖而空置，但布蘭特原油仍因沙烏地阿拉伯基礎設施遭胡塞武裝攻擊而承壓",
+    "text": "油價在伊朗威脅與波灣原油供應充足的拉扯中震盪。伊朗主要油輪碼頭因美國封鎖而空置，胡塞武裝攻擊沙烏地基礎設施未能推高油價，反映供應面壓力大於地緣政治風險",
     "links": [
+     {
+      "title": "Oil Wavers as Iran Threats Vie With Robust Gulf Crude Flows",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOdTg3VzlWcDBwMEpkaGtLOW0wN2VROGM3RDdVZ1JpY0toSUNqS0JVNHlmQkNTa0d3SEg1bkFjektMYUd0ZFVrM0JKcnY3bWo4QlViYlpUdXNRWTZEVTRfR20wZ0VLUjVKT1dVWUtVTjhSaTlqcFZsS1gyRC1kcXdfVHhGUUctV1FJVzNDUUUzRkp5dENkUTRsQmpuXzFRQQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T22:04:11+00:00"
+     },
      {
       "title": "Iran’s Main Oil Terminals Remain Empty as US Blockade Bites",
       "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOenB5TFdsTXhmTGFUbGdfNE9KemRReTJPZlp1WUdsaGh6VkZOMUZtMWhGRXRJd0tVLUh2WU9OMzhwQ21NOFRRaHBROFg1SVIyUHItRl9GNE1nYUJrQW4xNXd3REZVbURTem9SQ2VFcHJzeHVtV3VJTk9oYnh6ajlINU5XZU1tMDdXV0xNLXFkY1JXcTZyVGNiWGk4QVZtODR0MmNHZGN1Z1JjMkFNakRN?oc=5",
       "source": "Bloomberg",
       "at": "2026-10-19T11:02:24+00:00"
-     },
-     {
-      "title": "Brent crude edges lower, even after Houthi attacks on Saudi infrastructure",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-18T22:23:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股反彈，那斯達克漲1.11%，標普500漲0.66%，惟道瓊小跌0.07%；AI股經歷一週大幅下跌後回升，但Anthropic第三季營收16.8億美元雖較第二季11.6億美元成長，仍引發投資人對AI擴張永續性的疑慮",
+    "text": "美股科技股10/19反彈，那斯達克漲1.11%、標普500漲0.66%，那斯達克100創近一月最佳表現，AI晶片股如輝達、博通等漲逾2%，但市場仍擔憂AI融資成本與資本支出回收問題",
     "links": [
+     {
+      "title": "AI stocks bounce back after bruising selloff, CoreWeave gets Goldman upgrade",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQQnRpUlhFSVItYXlyM2JtRDAxZFNzc1owV1VBSFM4VERhS3dYOW1wVWtOeERTaDRrWlZyQVJTVVdvNFktdG5oSGpjY0ZwY1hBbnllN2d6Qkg4aExFcWdNT3F3dWlxdTFtbU92WV9WTC1NVEw0QmlWb201cXB6NGJCajVtbmZjYnJ4MWZ3TDZYR1l3ZmZFRFJORzhlNE1Yb0QtNDlyc3ZnY2tuenV1OFgwVQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T15:16:52+00:00"
+     },
      {
       "title": "Nasdaq Jumps Past 1 Percent as VIX Swings While Dow Dips Below Its 50",
       "link": "https://finance.yahoo.com/markets/stocks/articles/nasdaq-jumps-past-1-percent-221100911.html?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-19T22:11:00+00:00"
-     },
-     {
-      "title": "Nasdaq 100 Sees Best Day In Nearly A Month As AI Rout Cools — AMZN, BE, CRWV, AAPL, PLTR In Focus",
-      "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-100-sees-best-day-in-nearly-a-month-as-ai-rout-cools-amzn-be-crwv-aapl-pltr-in-focus/cZxo2SbRBu5?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-19T23:00:23+00:00"
      }
     ]
    },
    {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "川普在期中選舉前提名兩位法官，期中選舉結果將影響其最後兩年任期的政策走向",
+    "id": "semi",
+    "label": "AI 與半導體",
+    "text": "微軟推出Surface Laptop Ultra搭輝達晶片，強調在地AI運算與隱私保護，起價2,599美元；亞馬遜AI晶片支援熱門編程語言挑戰輝達",
     "links": [
      {
-      "title": "Trump nominates two more judges ahead of US midterm elections",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOdHVHQmhNWmdQcTVpZWtycUZJSllNY2QwU1dNa2lCd3oxdzZGV3Y4blI3MWZlQTRnaHJfOXFBMHY3OGU2Zlp4U2QzYXNCb0Zjb0cwRFpPeERpYkE3Zk0yZGpZS1FLbkN2U1BfOXhmNktWVHRTN0ZqUUdnUERkTHBvRmFlOFhwTEt1STFCUS1Ud0JBb0J4d01EQndmX0syQldkUGFrNllMdHhwSXRDU1Jfdg?oc=5",
+      "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
+      "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOUGVNVWtyU1BHU0pGZFJTZk9RV3NHOXBoSHVqaHVEeXN1TEJveTNIVzQ4eGkxZ2RWbER1clItSk16ODNaVnBFbWhKamR1RURGdG90X3F0ZEF2bko3SW5mUGxjZzBKVm50UFI5eUp2ampsV08ySWlMUEZyQmRUd1M1NF91UGJoZWxiVmR5NGRCMmNNM0V2R3pLMVhBT05EbmRjY0dxMXlSNklIVE9xeG5DQWNPcjVXY1ZBRTBrVU9RMTNPaVJOUHpjS2RrZ3huLXlZa2c?oc=5",
       "source": "Reuters",
-      "at": "2026-10-19T20:23:43+00:00"
+      "at": "2026-10-19T15:36:43+00:00"
      },
      {
-      "title": "The midterm election outcomes that could shape Trump's final two years",
-      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQaEV4NHdWNVNlYU41Q0ZMbVJEbGl1bC1Sb3Y1aW9pWE5pR083em1jeXphd1RfSlkxdW4ySzR1ekdpMUNta3JXenJQOGR4VkNMektwRXlhcVRISTZqci1sNDRMYTNzbk5aRWc4WTJKaWZfazFGRXNMdG1fR1BjWnJRdHNoZ3NMWjVMU0tzTTNsNTUyWEhIc0FvN2tleXFlemx6RFBqWE9vRUtFWU91V3JxRHE3UUphdUoyV0E?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-19T10:16:33+00:00"
+      "title": "微軟Surface Laptop Ultra旗艦AI筆電上市 鎖定在地AI運算需求",
+      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9Fsurface-laptop-ultra%E6%97%97%E8%89%A6ai%E7%AD%86%E9%9B%BB%E4%B8%8A%E5%B8%82-%E9%8E%96%E5%AE%9A%E5%9C%A8%E5%9C%B0ai%E9%81%8B%E7%AE%97%E9%9C%80%E6%B1%82-025034745.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-20T02:50:34+00:00"
      }
     ]
    },
    {
-    "id": "gold",
-    "label": "黃金",
-    "text": "黃金價格在4,200美元下方震盪，投資人靜待聯準會利率政策訊號，週初交投清淡",
+    "id": "twf",
+    "label": "台指期",
+    "text": "台股跟隨美股反彈，早盤翻紅後震盪，但外資持續大舉賣超，新台幣貶勢未止。外資上週單日匯出達91.15億美元創史高，央行盤中喊話穩定情緒，但需等AI疑慮降溫才能真正止貶",
     "links": [
      {
-      "title": "Gold slips as investors weigh Fed rate outlook",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOLVJCYm9CRFhWY01aUkRqYnVXb0RzRC1RUnhfOEFicHItalFBMnRMc0ZjcWRVcGNnZVg3ZXQ3WXNXeUZLN183enN0NFAtdmxuUHJhRU5jOHlQbTg1TldhNVdtbF9IWU1GZ1BfOEZvTnJpUEhGTE5xUkRSbl9FZVR4NlFJMEE2V1VYZ1hVRzk3SmpJMi1qelE?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-20T01:33:00+00:00"
+      "title": "美股反彈助台股跌勢趨緩　新台幣難擋外資賣壓貶逾1.6角",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E5%8F%8D%E5%BD%88%E5%8A%A9%E5%8F%B0%E8%82%A1%E8%B7%8C%E5%8B%A2%E8%B6%A8%E7%B7%A9-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%9B%A3%E6%93%8B%E5%A4%96%E8%B3%87%E8%B3%A3%E5%A3%93%E8%B2%B6%E9%80%BE1-6%E8%A7%92-025028925.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T02:50:28+08:00"
      },
      {
-      "title": "黃金價格預測：週初交投清淡，XAU/USD在4,200美元下方靜待時機",
-      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQVlBzWkt1VjdiOFhSb2Rqc3Bsc1VUaS1VMlJGOTZKWmgta0wtbTNtQkgzVEVpc1owUTZlUnpfSXF6M3gtMW1WcHpsaWl5NFQ0SW5MVk9XVkx2ZXVPZ1BwNVBrRmswNDBuLTIyN1NSMTBWYzdEdHNSSnJmQTFBQTN1S01QNGVORXNTVU11eGlOblFYeGRPcjA3cFVIZnlwd2VCcklWZnZhblM5ZGxBWHlsWDB6X2dDd0YxQnpBQlZBQTBMazhJVWc1cTVxeUtWejZvUDE3RnNFR2dZX2c?oc=5",
-      "source": "www.tmgm",
-      "at": "2026-10-19T11:33:37+00:00"
+      "title": "台股開低走高震盪　電子零組件、塑膠族群交投熱絡",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E4%BD%8E%E8%B5%B0%E9%AB%98%E9%9C%87%E7%9B%AA-%E9%9B%BB%E5%AD%90%E9%9B%B6%E7%B5%84%E4%BB%B6-%E5%A1%91%E8%86%A0%E6%97%8F%E7%BE%A4%E4%BA%A4%E6%8A%95%E7%86%B1%E7%B5%A1-024322906.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T02:43:22+08:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣連跌7個交易日，12至16日貶幅達1.37%；外資因台股賣超而淨匯出179.61億美元，央行喊話難以阻止貶勢",
+    "text": "新台幣兌美元貶破32.6元，貶值逾1.6角，創近期新低。外資因AI產業融資風險升溫而大舉撤退，匯出壓力凶猛，央行喊話難以阻止，需待市場對AI疑慮降溫才能緩解",
     "links": [
      {
-      "title": "新台幣對美元12日到16日貶幅達1.37% 央行分析：外資賣台股淨匯出179.61億美元",
-      "link": "https://news.google.com/rss/articles/CBMitANBVV95cUxNLTJodFBDLXZLSjBFb3dQUU1fU0lVT2MtUGxUdmlGS0NDYS1lX0VuZkQ1RER1WmJkUlRwWjQyOWdnaHkzME1rN0dENGdpX0xYc0pTQ2ZxaUdYQkJLRHNJUjAwbGZ5cng4R1ZNUlJzVU9jdUJNTEhkXy1nRlNzMm03UHpaQ1ZmZDdHeWNrOFhXTGRsb1FNS1JqV2loaGRrb2MtSWRMX3ZYd1NCcDZxNHpOc28zMWtEb0NXQUdFYVN6WWZDQWQyLWx1ZmhzSmFiY1I2U0xDd3lfRFFKYXJlOUtaeEN1QlYySkZsN0N0NEFKWU1jQnhuNjNDaHVraHpJZDFkQTNLcmpoaVdQc3NUS2RxOEpoM3VIb1V2SUNNaFNIbEUycnZnZEZsVFdZUG52NktOdmtobVhQUDNMZGhRd211b3IyanhCTW9VWXBYRkhmRGNXeGF4dmc2MXdkMmYzdDZGSkxfN0t2SmtoeVIydjRLcEtBbFNDNWFvcWZvNlFDVEJWOFJRR1NMb21DWmRFa2JadnYxMko0SkV1MWtaaVNzeS1ySmtRNnJzYjczVU55NE1vQTJ6?oc=5",
-      "source": "Yahoo股市",
-      "at": "2026-10-19T09:20:00+00:00"
+      "title": "新台幣難擋外資賣壓 貶逾1.6角",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%9B%A3%E6%93%8B%E5%A4%96%E8%B3%87%E8%B3%A3%E5%A3%93-%E8%B2%B6%E9%80%BE16%E8%A7%92-030325514.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T03:03:25+08:00"
      },
      {
-      "title": "央行喊話難擋外資匯出！新台幣連7黑 匯銀揭止貶關鍵",
-      "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFB2Vmt0NWZuQUpRVUhrazVxTXRwVTlKUktFTjVSR1VZcVh2S0M5Ynhrci1GeGpEYlN4V3NuOHBJckNpSkdEU0NTM0g1bWppRS1QUU01MHZ3NVNRUDB2OTBlYU1iYk3SAWRBVV95cUxQdlZrdDVmbkFKUVVIa2s1cU10cFU5SlJLRU41UkdVWXFYdktDOWJ4a3ItRnhqRGJTeFdzbjhwSXJDaUpHRFNDUzNINW1qaUUtUFFNNTB2dzVTUVAwdjkwZWFNYmJN?oc=5",
-      "source": "自由財經",
-      "at": "2026-10-19T09:18:43+00:00"
+      "title": "美股反彈助台股跌勢趨緩　新台幣難擋外資賣壓貶逾1.6角",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E5%8F%8D%E5%BD%88%E5%8A%A9%E5%8F%B0%E8%82%A1%E8%B7%8C%E5%8B%A2%E8%B6%A8%E7%B7%A9-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%9B%A3%E6%93%8B%E5%A4%96%E8%B3%87%E8%B3%A3%E5%A3%93%E8%B2%B6%E9%80%BE1-6%E8%A7%92-025028925.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T02:50:28+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-20T01:48:59.558618+00:00"
+  "at": "2026-10-20T03:10:21.293553+00:00"
  },
  "main_source_titles": [
-  "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-  "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-  "德國央行示警，通膨風險明顯偏向上升"
+  "聯準會升息效應浮現 金融條件趨緊市場自發降溫",
+  "油價高漲加劇通膨隱憂，亞洲黃金現貨價盤中下跌0.41%"
  ],
- "headline": "聯準會示警AI熱潮加劇通膨壓力，長期升息預期浮現",
- "rate_note": "聯準會與德國央行的通膨警告偏向推升長端利率，因為市場預期若通膨粘性較強，央行升息循環可能延長；10年期今日+4bp至5.14%，市場已在反映這一擔憂。",
+ "headline": "AI融資壓力升高、科技股超買風險浮現，聯準會升息預期反而降溫",
+ "rate_note": "AI融資壓力升高與科技股超買風險偏向推升長端利率，但聯準會升息預期降溫則偏向壓低；整體方向不明確，取決於通膨與金融穩定性孰輕孰重。10年期今日+4bp至5.14%，市場對升息預期的降溫尚未充分反映在長端利率上。",
  "recent_mains": [
-  {
-   "headline": "美債殖利率攀升至數十年新高，聯準會10月底按兵不動但長期升息壓力浮現",
-   "titles": [
-    "Watch Inflation Jolt to Fade, Fed to Stay on Sidelines",
-    "Watch Anti-AI Trade Drives Buyers Into Bonds: Market Analysis",
-    "Bond Market’s Big Short Bet Gets Wakeup Call as AI Trade Wobbles",
-    "美股兩大力量死鬥！美債殖利率狂飆 AI股賺翻也難漲",
-    "通膨才見降溫又升溫！哈塞特坦言仍需下功夫 Fed須留意消費熱度"
-   ],
-   "at": "2026-10-19T20:23:02.338346+00:00"
-  },
   {
    "headline": "美國債務突破40兆美元、赤字創新高，房貸利率升至7.4%加重選民負擔",
    "titles": [
@@ -491,34 +454,36 @@
     "德國央行示警，通膨風險明顯偏向上升"
    ],
    "at": "2026-10-20T01:48:43.539685+00:00"
+  },
+  {
+   "headline": "AI融資壓力升高、科技股超買風險浮現，聯準會升息預期反而降溫",
+   "titles": [
+    "聯準會升息效應浮現 金融條件趨緊市場自發降溫",
+    "油價高漲加劇通膨隱憂，亞洲黃金現貨價盤中下跌0.41%"
+   ],
+   "at": "2026-10-20T03:10:05.021928+00:00"
   }
  ],
  "archive": {
   "2026-10-20": {
-   "headline": "聯準會示警AI熱潮加劇通膨壓力，長期升息預期浮現",
-   "text": "聯準會官員警告，人工智慧帶動的投資熱潮可能推升通膨，加重貨幣政策的挑戰。同時，德國央行也發出通膨風險信號，指出大宗商品價格居高不下、食品與服務價格上升等因素，使通膨風險明顯偏向上升，儘管重演2021至2022年高通膨的可能性不大。美國方面，官員表示最新CPI數據顯示通膨仍需「進一步改善」，暗示短期內降息空間有限。這些發言反映出全球央行對通膨持續性的擔憂，特別是在AI資本支出激增、能源與商品價格波動的背景下，長期升息壓力正在浮現。\nAI融資壓力升高威脅科技股。高盛指出AI超大型雲端廠商信貸利差創年內新高，CoreWeave債券殖利率升至15%左右，若利差續擴AI概念股恐補跌，市場焦點已從AI需求轉向資本支出與折舊能否回收。\n關稅預期支撐部分產業。美國鋼鐵公司克利夫蘭克利夫斯預期2027年將是「非常好的一年」，主要受惠於關稅政策，反映市場對貿易政策變化的定價。",
-   "rate_note": "聯準會與德國央行的通膨警告偏向推升長端利率，因為市場預期若通膨粘性較強，央行升息循環可能延長；10年期今日+4bp至5.14%，市場已在反映這一擔憂。",
+   "headline": "AI融資壓力升高、科技股超買風險浮現，聯準會升息預期反而降溫",
+   "text": "美國科技股近期面臨多重壓力。那斯達克指數上週重挫約4.5%，創6月底以來最大單週跌幅，AI雲端廠商CoreWeave債券殖利率升至15%左右，反映融資成本急劇上升。高盛警告AI超大型雲端廠商信貸利差創年內新高，股價尚未充分反映壓力；市場焦點已從AI需求轉向資本支出與折舊能否回收。儘管9月CPI與PPI雙雙高於預期，但聯準會主席華許在IMF年會表示經濟發展「大致符合」9月會議預期，未釋出急於升息訊號，市場定價10/28會議維持機率達81%，升息預期反而降至約12%。\n油價升至近五個月高點附近，伊朗表示為控制荷姆茲海峽別無選擇，美國議員不支持川普與俄羅斯的柴油出口協議，加劇通膨隱憂。",
+   "rate_note": "AI融資壓力升高與科技股超買風險偏向推升長端利率，但聯準會升息預期降溫則偏向壓低；整體方向不明確，取決於通膨與金融穩定性孰輕孰重。10年期今日+4bp至5.14%，市場對升息預期的降溫尚未充分反映在長端利率上。",
    "links": [
     {
-     "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-19T18:39:36+00:00"
-    },
-    {
-     "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-19T14:04:26+00:00"
-    },
-    {
-     "title": "德國央行示警，通膨風險明顯偏向上升",
-     "link": "https://tw.stock.yahoo.com/news/%E5%BE%B7%E5%9C%8B%E5%A4%AE%E8%A1%8C%E7%A4%BA%E8%AD%A6-%E9%80%9A%E8%86%A8%E9%A2%A8%E9%9A%AA%E6%98%8E%E9%A1%AF%E5%81%8F%E5%90%91%E4%B8%8A%E5%8D%87-005535496.html",
+     "title": "聯準會升息效應浮現 金融條件趨緊市場自發降溫",
+     "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%87%E6%81%AF%E6%95%88%E6%87%89%E6%B5%AE%E7%8F%BE-%E9%87%91%E8%9E%8D%E6%A2%9D%E4%BB%B6%E8%B6%A8%E7%B7%8A%E5%B8%82%E5%A0%B4%E8%87%AA%E7%99%BC%E9%99%8D%E6%BA%AB-020900827.html",
      "source": "Yahoo奇摩股市",
-     "at": "2026-10-20T00:55:35+00:00"
+     "at": "2026-10-20T02:09:00+00:00"
+    },
+    {
+     "title": "油價高漲加劇通膨隱憂，亞洲黃金現貨價盤中下跌0.41%",
+     "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E9%AB%98%E6%BC%B2%E5%8A%A0%E5%8A%87%E9%80%9A%E8%86%A8%E9%9A%B1%E6%86%82-%E4%BA%9E%E6%B4%B2%E9%BB%83%E9%87%91%E7%8F%BE%E8%B2%A8%E5%83%B9%E7%9B%A4%E4%B8%AD%E4%B8%8B%E8%B7%8C0-41-020042734.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-20T02:00:42+00:00"
     }
    ],
-   "at": "2026-10-20T01:48:43.539685+00:00"
+   "at": "2026-10-20T03:10:05.021928+00:00"
   },
   "2026-10-19": {
    "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
