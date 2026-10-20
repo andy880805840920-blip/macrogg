@@ -469,9 +469,11 @@ def _rates_body_full(d: dict) -> str:
     _sl = {x["label"]: x for x in _L.get("slopes") or []}
     _crv_sum = "　·　".join(f'{k} {LE._bp(v["value"])}' for k, v in _sl.items()) or "殖利率曲線"
     _gr = (_L.get("global") or {}).get("rows") or []
-    # 10 年期最新值（日資料）；退回 OECD 月均的國家標「月均」，避免跟頁首的每日 10Y 看起來互相矛盾
-    _glb_sum = ("　·　".join(f'{r["name"]} {r["value"]:.2f}%' + ("" if r.get("daily", True) else "（月均）")
-                            for r in _gr[:4]) if _gr else "全球長端")
+    # 收合摘要：八國中 MTD 變化（絕對值）最大的前四檔；沒有日資料（退回月均）的國家不參與排名
+    _gm = sorted([r for r in _gr if r.get("daily") and r.get("mtd") is not None],
+                 key=lambda r: -abs(round(r["mtd"])))[:4]
+    _glb_sum = ("MTD 變化最大：" + "　·　".join(f'{r["name"]} {LE._bp(r["mtd"])}' for r in _gm)
+                if _gm else "全球長端")
     _wm = _L.get("wam") or {}
     _sup_sum = ((f'Fed WAM {_wm["soma"]["value"]:.1f} 年　·　市場 {_wm["market"]["value"]:.1f} 年')
                 if (_wm.get("soma") or {}).get("value") is not None
