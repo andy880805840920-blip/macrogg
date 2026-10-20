@@ -1,7 +1,19 @@
 {
- "hash": "795cb5660c3909d7",
- "text": "聯準會10/28會議維持利率不變的機率達81%，但經濟學家對年底升息的預期大幅轉變。路透10/16至20日調查顯示，100名經濟學家中94人預期10月維持利率在3.75%至4%不變，全部受訪者則預期12月升息，與上月不到半數持此看法形成鮮明對比。瑞穗證券美國資深經濟學家指出，經濟強勁且通膨居高不下理應支持升息，但聯準會目前勉強應對，10月不升息是錯誤決策，12月升息1碼雖料實現，但升息2碼的風險高於完全不升息。\n通膨預期延後。調查預估聯準會偏好的個人消費支出物價指數年增率未來幾季仍將高於3%，至少要到2028年才可能回到2%目標，較前期預期明顯推後。\n美伊戰爭推升能源成本加劇通膨。油價維持每桶100美元以上，加上進口商品新關稅，生活成本上漲已成共和黨期中選舉前的政治弱點。",
+ "hash": "1021becaa446f8a3",
+ "text": "美國房市數據在10/20惡化，待售房屋指數創2001年以來新低、月跌7.3%，遠低於預期的0.4%跌幅；新屋開工月跌5.2%、建築許可月跌0.2%，均遠超預期。經濟學家調查顯示，94%預期聯準會在10/27–28會議維持利率不變，但全數預期12月升息，與上月不到半數持此看法形成鮮明對比。房市疲軟與升息預期反轉形成矛盾：若聯準會如預期升息，當前7.43%的房貸利率恐進一步上升，加劇房市困境。¶與此同時，美債作為避險工具的吸引力正在減弱。儘管10年期殖利率達5%，但供給增加、通膨居高不下、中性利率上升等因素，已削弱投資人對美債的避險需求。市場對避險商品需求增加，但美債不像過去週期那樣能輕易發揮避險作用，促使部分投資人轉向避險基金、信用債與大宗商品。\n聯準會面臨通膨與房市的政策困境：調查顯示經濟學家預估個人消費支出年增率未來幾季仍高於3%，至少要到2028年才可能回到2%目標，加上能源成本與進口商品新關稅推升生活成本，但房市已陷入深度困境。\nAI融資壓力擴散至債市，CoreWeave債券殖利率升至15%左右，高盛示警若信用利差續擴，AI概念股恐補跌，反映市場焦點已從AI需求轉向資本支出與折舊能否回收。",
  "links": [
+  {
+   "title": "Fed to skip October but raise rates again in December, nearly all economists say",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOZUFYOUZFZXZ4UWJSN1J6RkRxM1lkdGJsUFZRZ2puQkFnRk9rczVQZF9iUS12amVsUl9ESnA4MmNlUmFuVnBVY3BoeVZoVWx1dmwtSWdCa2tGUUlXeXdWR0o0U2o5NHdUend5d2o3c1NoUlZTQUNyWFFEalBHY25QMVptcnFoRnZiSk1JVDFyb1VFYkg0NGRJaXhWemlUY3gxX3YxeVh0YkNMSHNQU21pWkc0OVQ?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-20T13:27:27+00:00"
+  },
+  {
+   "title": "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+   "link": "https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html",
+   "source": "CNBC",
+   "at": "2026-10-20T18:03:57+00:00"
+  },
   {
    "title": "百名經濟學家全押12月升息！Fed本月料先按兵不動",
    "link": "https://tw.stock.yahoo.com/news/%E7%99%BE%E5%90%8D%E7%B6%93%E6%BF%9F%E5%AD%B8%E5%AE%B6%E5%85%A8%E6%8A%BC12%E6%9C%88%E5%8D%87%E6%81%AF-fed%E6%9C%AC%E6%9C%88%E6%96%99%E5%85%88%E6%8C%89%E5%85%B5%E4%B8%8D%E5%8B%95-141005158.html",
@@ -290,15 +302,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-20T16:24:42.308692+00:00",
+ "at": "2026-10-20T18:49:02.610776+00:00",
  "layout": "main",
  "topics": {
-  "hash": "46f2f582abbda39e",
+  "hash": "56c506daa1386648",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "美股多頭走勢尚未破壞，但AI概念股重挫、銀行股財報疲弱、信用市場壓力升高，投資人重新檢視年底行情；標普500指數7,500點成關鍵支撐，若失守將意味跌勢超出例行回檔",
+    "text": "標普500指數7,500點成關鍵支撐，若失守恐預告更廣泛同步下跌；摩根大通技術策略師指出市場內部與動能出現多項背離，可能意味AI交易退潮與金融環境收緊正降溫過度樂觀情緒",
     "links": [
      {
       "title": "美股多頭還能撐？財報與Fed成考驗 標普7500點是關鍵防線",
@@ -309,28 +321,9 @@
     ]
    },
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "長天期美債因油價回落而上漲，同時成為股市下跌時的避險工具，但其作為避險工具的效能正在減弱",
-    "links": [
-     {
-      "title": "Treasuries Rise as Oil Retreats From Highest Levels in Weeks",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQbVh3cElYclhQX1FDWUkyZE13cmhpclJpYlRieDFCLVczY3h6aS1TYjFJUHJfbWNFM3lHSC1VN0RkTjNmX1VaSlZEZmRHU2ZIZjdQWjg0VWd2b1VtM2paMXpheHNjSFdqUTZzbklMOER6dVJtN1JMblN5Y0hBbTdtT3RxRlZVSVV3d0Nra2pxYTJFanMwWW9QYjR3TnltNDRWTk81eHZFd2lEVVRFR3pQeA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T15:36:52+00:00"
-     },
-     {
-      "title": "Watch Stocks Fall as AI Worries Trigger Treasury Gains",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNeTJ1dnFBeTUwcUZrcFNnMi1PU2NDQ09uODNEcHEzWlZPOWtaRzg4ekN1dkRpSlRUYUNSRjR3V3I5SFY1SkJyRnZ1a3ExYkV3dk16VFdlS0toZXBuYTBFeUJFZ1E0azBXYm94cTBEemZMb0g4bEdfcVhYM2pNMURKdUxwNEY5Wm1XYUx2RDZ0aUNsU0I5Z2VVdTJPZ0I3VlJESXJseTJR?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T00:00:00+00:00"
-     }
-    ]
-   },
-   {
     "id": "funding",
     "label": "資金市場",
-    "text": "黑石集團為旗下311億美元貨幣市場基金增加代幣化交易管道；貨幣市場基金規模達7.9兆美元",
+    "text": "黑石集團為旗下311億美元貨幣市場基金增加代幣化接入管道；全球貨幣市場基金規模達7.9兆美元",
     "links": [
      {
       "title": "BlackRock Adds Tokenized Access to $311B Money Market Funds",
@@ -349,39 +342,39 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價回落帶動航空股上漲，美國三大航空公司中美國航空漲幅最大達5%，因燃油成本是航空業最大開支之一",
+    "text": "布蘭特原油期貨逼近五個月高點110美元，西德州原油接近100美元，受中東衝突與胡塞武裝攻擊沙烏地阿拉伯影響；美伊談判進展成為油價關鍵變數",
     "links": [
      {
-      "title": "American Airlines Rises 5% Ahead of Earnings as Oil Prices Ease; United Airlines and Delta Climb 3%",
-      "link": "https://247wallst.com/investing/2026/10/20/american-airlines-rises-5-ahead-of-earnings-as-oil-prices-ease-united-airlines-and-delta-climb-3/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-20T15:49:28+00:00"
+      "title": "Oil Wavers as Iran Threats Vie With Robust Gulf Crude Flows",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOdTg3VzlWcDBwMEpkaGtLOW0wN2VROGM3RDdVZ1JpY0toSUNqS0JVNHlmQkNTa0d3SEg1bkFjektMYUd0ZFVrM0JKcnY3bWo4QlViYlpUdXNRWTZEVTRfR20wZ0VLUjVKT1dVWUtVTjhSaTlqcFZsS1gyRC1kcXdfVHhGUUctV1FJVzNDUUUzRkp5dENkUTRsQmpuXzFRQQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T22:04:11+00:00"
      },
      {
-      "title": "Stock Market Today: Dow Surges, Oil Eases On U.S.-Iran Hopes; This Pharma Stock Clears Entry (Live Coverage)",
-      "link": "https://finance.yahoo.com/m/f3498525-5b31-3702-9e4b-aa8f358f4086/stock-market-today%3A-dow.html?.tsrc=rss",
+      "title": "Chips lead Nasdaq lower, oil tops 5",
+      "link": "https://finance.yahoo.com/markets/article/chips-lead-nasdaq-lower-oil-tops-5-month-high-alphacheck-134325052.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-20T15:45:52+00:00"
+      "at": "2026-10-20T13:43:25+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "S&P 500中41家AI相關公司佔指數總市值近49%，濃度創19世紀鐵路熱潮以來最高。上周科技股重挫近8%，拖累指數下跌近2%，創6月以來最差單周表現，顯示AI股波動已足以撼動整體市場",
+    "text": "企業財報成為推升行情重要支柱，3M公布優於預期獲利並上調全年財測，諾斯洛普格拉曼與RTX也因獲利超預期分別上漲6%與1%",
     "links": [
      {
-      "title": "AI Swings Rock the S&P 500. Time to Buy in Thirds?",
-      "link": "https://www.fool.com/coverage/stock-market-today/2026/10/20/ai-swings-rock-the-s-and-p-500-time-to-buy-in-thirds/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-20T15:50:02+00:00"
+      "title": "美股逆轉秀！企業財報助攻、國際油價跳水 道瓊盤中一度飆逾700點",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E9%80%86%E8%BD%89%E7%A7%80-%E4%BC%81%E6%A5%AD%E8%B2%A1%E5%A0%B1%E5%8A%A9%E6%94%BB-%E5%9C%8B%E9%9A%9B%E6%B2%B9%E5%83%B9%E8%B7%B3%E6%B0%B4-%E9%81%93%E7%93%8A%E7%9B%A4%E4%B8%AD-%E5%BA%A6%E9%A3%86%E9%80%BE700%E9%BB%9E-152005697.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-20T15:20:05+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達推出RTX PRO 6000 Blackwell工作站系列，搭載最新Blackwell架構GPU，單一系統最多可配置4個GPU、提供14.2 petaflops AI運算能力與384GB記憶體，鎖定專業創作與AI開發者",
+    "text": "輝達推出RTX PRO 6000 Blackwell工作站系列，配備最新Blackwell架構GPU，單一系統最多可搭載四個GPU提供14.2 petaflops運算能力與384GB記憶體",
     "links": [
      {
       "title": "輝達RTX PRO 6000 Blackwell工作站問世，必恩威助攻專業AI創作",
@@ -392,9 +385,22 @@
     ]
    },
    {
+    "id": "twf",
+    "label": "台指期",
+    "text": "AI融資壓力升溫與油價回彈雙重夾擊下，台指期夜盤逆勢上漲377點至46,718點；美股四大指數盤中翻紅，費半指數一度回升至11,322點",
+    "links": [
+     {
+      "title": "AI投資風險、油價雙重夾擊！台指期夜盤再戰47K　美股4大指數上演大反攻",
+      "link": "https://tw.stock.yahoo.com/news/ai%E6%8A%95%E8%B3%87%E9%A2%A8%E9%9A%AA-%E6%B2%B9%E5%83%B9%E9%9B%99%E9%87%8D%E5%A4%BE%E6%93%8A-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%86%8D%E6%88%B047k-%E7%BE%8E%E8%82%A14%E5%A4%A7%E6%8C%87%E6%95%B8%E4%B8%8A%E6%BC%94%E5%A4%A7%E5%8F%8D%E6%94%BB-142000506.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T14:20:00+08:00"
+     }
+    ]
+   },
+   {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/20再貶1.72角至32.617元，創18個月收盤新低，連續4日走貶。外資上周淨匯出179.61億美元，本月累計貶幅達7.65角，在亞洲主要貨幣中表現最弱，貶值幅度0.53%遠高於韓元、新幣等升值表現",
+    "text": "新台幣兌美元20日重貶1.72角至32.617元，創逾18個月收盤新低；外資連續10日站在賣方，上周淨匯出179.61億美元，累計提款超過8,300億元",
     "links": [
      {
       "title": "匯價連4黑再探底！新台幣重貶1.72角　破32.6元創18個月新低",
@@ -411,25 +417,17 @@
     ]
    }
   ],
-  "at": "2026-10-20T16:25:01.857416+00:00"
+  "at": "2026-10-20T18:49:23.259586+00:00"
  },
  "main_source_titles": [
+  "Fed to skip October but raise rates again in December, nearly all economists say",
+  "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
   "百名經濟學家全押12月升息！Fed本月料先按兵不動",
   "殖利率5%仍難吸引買盤 花旗直指美債避險效果減弱"
  ],
- "headline": "升息預期反轉，12月升息機率飆升但10月按兵不動，美債避險吸引力減弱",
- "rate_note": "升息預期反轉推升長端殖利率，但美債避險吸引力減弱可能限制進一步上升空間；10年期今日-1bp至5.12%，市場尚未充分反映升息預期轉變，方向不明確。",
+ "headline": "房市急凍、升息預期反轉，美債避險效果減弱但殖利率仍高企",
+ "rate_note": "房市惡化與升息預期反轉形成利率政策兩難：房市數據支持暫停升息，但經濟強勁與通膨高企推升12月升息預期，偏向長期維持高利率環境；10年期10/20收盤5.12%、較前一交易日-2bp，市場已在反映升息預期的短期回落，但避險需求減弱意味殖利率高企難以吸引新買盤。",
  "recent_mains": [
-  {
-   "headline": "AI融資壓力升溫，聯準會升息預期面臨通膨與金融穩定的兩難",
-   "titles": [
-    "CoreWeave’s Bond Rout Should Make the Fed Cautious",
-    "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-    "Fed to skip October but raise rates again in December, nearly all economists say",
-    "法國10年期公債殖利率飆至4.94%　與德債利差創14年新高"
-   ],
-   "at": "2026-10-20T13:36:18.878218+00:00"
-  },
   {
    "headline": "通膨頑強、升息預期升溫，美債殖利率創十年新高但避險吸引力減弱",
    "titles": [
@@ -445,14 +443,36 @@
     "殖利率5%仍難吸引買盤 花旗直指美債避險效果減弱"
    ],
    "at": "2026-10-20T16:24:42.308692+00:00"
+  },
+  {
+   "headline": "房市急凍、升息預期反轉，美債避險效果減弱但殖利率仍高企",
+   "titles": [
+    "Fed to skip October but raise rates again in December, nearly all economists say",
+    "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+    "百名經濟學家全押12月升息！Fed本月料先按兵不動",
+    "殖利率5%仍難吸引買盤 花旗直指美債避險效果減弱"
+   ],
+   "at": "2026-10-20T18:49:02.610776+00:00"
   }
  ],
  "archive": {
   "2026-10-21": {
-   "headline": "升息預期反轉，12月升息機率飆升但10月按兵不動，美債避險吸引力減弱",
-   "text": "聯準會10/28會議維持利率不變的機率達81%，但經濟學家對年底升息的預期大幅轉變。路透10/16至20日調查顯示，100名經濟學家中94人預期10月維持利率在3.75%至4%不變，全部受訪者則預期12月升息，與上月不到半數持此看法形成鮮明對比。瑞穗證券美國資深經濟學家指出，經濟強勁且通膨居高不下理應支持升息，但聯準會目前勉強應對，10月不升息是錯誤決策，12月升息1碼雖料實現，但升息2碼的風險高於完全不升息。\n通膨預期延後。調查預估聯準會偏好的個人消費支出物價指數年增率未來幾季仍將高於3%，至少要到2028年才可能回到2%目標，較前期預期明顯推後。\n美伊戰爭推升能源成本加劇通膨。油價維持每桶100美元以上，加上進口商品新關稅，生活成本上漲已成共和黨期中選舉前的政治弱點。",
-   "rate_note": "升息預期反轉推升長端殖利率，但美債避險吸引力減弱可能限制進一步上升空間；10年期今日-1bp至5.12%，市場尚未充分反映升息預期轉變，方向不明確。",
+   "headline": "房市急凍、升息預期反轉，美債避險效果減弱但殖利率仍高企",
+   "text": "美國房市數據在10/20惡化，待售房屋指數創2001年以來新低、月跌7.3%，遠低於預期的0.4%跌幅；新屋開工月跌5.2%、建築許可月跌0.2%，均遠超預期。經濟學家調查顯示，94%預期聯準會在10/27–28會議維持利率不變，但全數預期12月升息，與上月不到半數持此看法形成鮮明對比。房市疲軟與升息預期反轉形成矛盾：若聯準會如預期升息，當前7.43%的房貸利率恐進一步上升，加劇房市困境。¶與此同時，美債作為避險工具的吸引力正在減弱。儘管10年期殖利率達5%，但供給增加、通膨居高不下、中性利率上升等因素，已削弱投資人對美債的避險需求。市場對避險商品需求增加，但美債不像過去週期那樣能輕易發揮避險作用，促使部分投資人轉向避險基金、信用債與大宗商品。\n聯準會面臨通膨與房市的政策困境：調查顯示經濟學家預估個人消費支出年增率未來幾季仍高於3%，至少要到2028年才可能回到2%目標，加上能源成本與進口商品新關稅推升生活成本，但房市已陷入深度困境。\nAI融資壓力擴散至債市，CoreWeave債券殖利率升至15%左右，高盛示警若信用利差續擴，AI概念股恐補跌，反映市場焦點已從AI需求轉向資本支出與折舊能否回收。",
+   "rate_note": "房市惡化與升息預期反轉形成利率政策兩難：房市數據支持暫停升息，但經濟強勁與通膨高企推升12月升息預期，偏向長期維持高利率環境；10年期10/20收盤5.12%、較前一交易日-2bp，市場已在反映升息預期的短期回落，但避險需求減弱意味殖利率高企難以吸引新買盤。",
    "links": [
+    {
+     "title": "Fed to skip October but raise rates again in December, nearly all economists say",
+     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOZUFYOUZFZXZ4UWJSN1J6RkRxM1lkdGJsUFZRZ2puQkFnRk9rczVQZF9iUS12amVsUl9ESnA4MmNlUmFuVnBVY3BoeVZoVWx1dmwtSWdCa2tGUUlXeXdWR0o0U2o5NHdUend5d2o3c1NoUlZTQUNyWFFEalBHY25QMVptcnFoRnZiSk1JVDFyb1VFYkg0NGRJaXhWemlUY3gxX3YxeVh0YkNMSHNQU21pWkc0OVQ?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-20T13:27:27+00:00"
+    },
+    {
+     "title": "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+     "link": "https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html",
+     "source": "CNBC",
+     "at": "2026-10-20T18:03:57+00:00"
+    },
     {
      "title": "百名經濟學家全押12月升息！Fed本月料先按兵不動",
      "link": "https://tw.stock.yahoo.com/news/%E7%99%BE%E5%90%8D%E7%B6%93%E6%BF%9F%E5%AD%B8%E5%AE%B6%E5%85%A8%E6%8A%BC12%E6%9C%88%E5%8D%87%E6%81%AF-fed%E6%9C%AC%E6%9C%88%E6%96%99%E5%85%88%E6%8C%89%E5%85%B5%E4%B8%8D%E5%8B%95-141005158.html",
@@ -466,7 +486,7 @@
      "at": "2026-10-20T14:30:38+00:00"
     }
    ],
-   "at": "2026-10-20T16:24:42.308692+00:00"
+   "at": "2026-10-20T18:49:02.610776+00:00"
   },
   "2026-10-20": {
    "headline": "AI融資壓力升溫，聯準會升息預期面臨通膨與金融穩定的兩難",
