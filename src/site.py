@@ -2603,6 +2603,24 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .le-g span{display:flex!important;justify-content:space-between;align-items:baseline;gap:6px}
 .le-g span small{font-weight:400;font-size:11.5px;color:var(--muted)}
 .le-g b{display:block;margin:2px 0 4px}
+/* 04 全球長端圖下說明：來源一國一列＋變化定義＋時效（桌機左右兩欄、手機上下） */
+.viz-root:not(#_) .gsrc{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--grid)}
+@media(min-width:760px){.viz-root:not(#_) .gsrc{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px}}
+.viz-root:not(#_) .gsrc-h{font-size:var(--fs-micro);font-weight:700;color:var(--muted);letter-spacing:.04em;margin-bottom:6px}
+.viz-root:not(#_) .gsrc-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;column-gap:20px}
+@media(min-width:520px){.viz-root:not(#_) .gsrc-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.viz-root:not(#_) .gsrc-list li{display:grid;grid-template-columns:3.6em minmax(0,1fr) auto;gap:8px;align-items:baseline;
+  padding:5px 0;border-bottom:1px solid var(--grid);font-size:var(--fs-small);line-height:1.45}
+.viz-root:not(#_) .gsrc-list b{color:var(--text-primary);font-weight:600}
+.viz-root:not(#_) .gsrc-list span{color:var(--text-secondary)}
+.viz-root:not(#_) .gsrc-list em{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums;font-size:var(--fs-micro)}
+.viz-root:not(#_) .gsrc-list em.late{color:var(--warning);font-weight:600}
+.viz-root:not(#_) .gsrc-def{margin:0}
+.viz-root:not(#_) .gsrc-def>div{display:grid;grid-template-columns:3.2em 1fr;gap:8px;padding:5px 0;border-bottom:1px solid var(--grid);
+  font-size:var(--fs-small);line-height:1.45}
+.viz-root:not(#_) .gsrc-def dt{font-weight:700;color:var(--text-primary);font-variant-numeric:tabular-nums}
+.viz-root:not(#_) .gsrc-def dd{margin:0;color:var(--text-secondary)}
+.viz-root:not(#_) .gsrc-note{margin:8px 0 0;font-size:var(--fs-micro);color:var(--muted);line-height:1.6}
 .le-h3{font-size:15px;margin:18px 0 8px;padding-top:10px;border-top:1px solid var(--grid)}
 .le-h3:first-child{border-top:0;padding-top:0;margin-top:4px}
 .le-quote{border-left:4px solid #12233B;background:var(--surface-2);border-radius:0 10px 10px 0;padding:10px 14px;font-size:13.5px;line-height:1.65}

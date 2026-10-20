@@ -733,14 +733,31 @@ def global_(d: dict) -> str:
         return (f'<div class="le-g"><span>{esc(r["name"])}<small>{when}</small></span>'
                 f'<b>{r["value"]:.2f}%</b>{chg}</div>')
     cards = "".join(_card(r) for r in rows)
-    srcs = "、".join(f'{r["name"]}：{r["src"]}' for r in rows)
-    lag = [r["name"] for r in rows if r.get("daily") and r["date"] < max(x["date"] for x in rows if x.get("daily"))]
+    # 圖下說明（2026-10 改版）：來源一國一列（含最新資料日）、變化定義條列、時效另起一行
+    _latest = max((x["date"] for x in rows if x.get("daily")), default="")
+    lag = [r["name"] for r in rows if r.get("daily") and r["date"] < _latest]
+    src_rows = "".join(
+        f'<li><b>{esc(r["name"])}</b><span>{esc(r["src"])}</span>'
+        f'<em class="{"late" if r["name"] in lag else ""}">{esc(_md(r["date"]) if r.get("daily") else r["date"][:7].replace("-", "/") + " 月均")}</em></li>'
+        for r in rows)
+    lag_note = ("、".join(lag) + "的最新資料日較早（左表黃字）" + ("；英國央行約晚 2～3 個營業日公布" if "英國" in lag else "") + "。") if lag else ""
     return f"""
     <p class="hint">期限溢酬如果是全球一起漲，原因多半是全球的財政與供給；只有美國在漲，才是美國自己的問題。</p>
     <div class="le-gs">{cards}</div>
     <div class="viz-block"><div class="viz-h">10 年期公債殖利率（日資料，近一年）</div>{g.get('chart', '')}</div>
-    <div class="src">10 年期公債殖利率，日資料：{esc(srcs)}。DTD＝比前一個交易日、MTD＝比上月最後一個交易日、YTD＝比去年最後一個交易日（bp）。
-      各國休市日與公布時間不同，最新一筆的日期標在各卡右上{("；" + "、".join(lag) + "的最新資料日較早" + ("（英國央行約晚 2～3 個營業日公布）" if "英國" in lag else "")) if lag else ""}。</div>"""
+    <div class="gsrc">
+      <div class="gsrc-col">
+        <div class="gsrc-h">資料來源（10 年期公債，日資料）</div>
+        <ul class="gsrc-list">{src_rows}</ul>
+      </div>
+      <div class="gsrc-col">
+        <div class="gsrc-h">變化怎麼算（bp）</div>
+        <dl class="gsrc-def"><div><dt>DTD</dt><dd>比前一個交易日</dd></div>
+          <div><dt>MTD</dt><dd>比上月最後一個交易日</dd></div>
+          <div><dt>YTD</dt><dd>比去年最後一個交易日</dd></div></dl>
+        <p class="gsrc-note">各國休市日與公布時間不同，各卡右上是該國最新一筆的日期。{esc(lag_note)}</p>
+      </div>
+    </div>"""
 
 
 # ---------------------------------------------------------------------------
