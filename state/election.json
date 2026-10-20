@@ -206,7 +206,7 @@
      "other": {
       "name": "Everett Wess",
       "party": "D",
-      "p": 0.0275
+      "p": 0.0285
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -285,7 +285,7 @@
      "lead": {
       "name": "Jon Ossoff",
       "party": "D",
-      "p": 0.9615
+      "p": 0.962
      },
      "other": {
       "name": "Mike Collins",
@@ -294,7 +294,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 92.3,
+     "gap": 92.4,
      "vol": 247684.67546600002,
      "url": "https://polymarket.com/event/georgia-senate-election-winner"
     },
@@ -537,16 +537,16 @@
      "lead": {
       "name": "Cory Booker",
       "party": "D",
-      "p": 0.9705
+      "p": 0.9695
      },
      "other": {
       "name": "Justin Murphy",
       "party": "R",
-      "p": 0.0315
+      "p": 0.033
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 93.9,
+     "gap": 93.7,
      "vol": 23811.524943,
      "url": "https://polymarket.com/event/new-jersey-senate-election-winner"
     },
@@ -563,7 +563,7 @@
      "other": {
       "name": "Larry Marker",
       "party": "R",
-      "p": 0.0205
+      "p": 0.02
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -600,7 +600,7 @@
      "lead": {
       "name": "Jeff Merkley",
       "party": "D",
-      "p": 0.9815
+      "p": 0.982
      },
      "other": {
       "name": "David Brock Smith",
@@ -621,7 +621,7 @@
      "lead": {
       "name": "Jack Reed",
       "party": "D",
-      "p": 0.984
+      "p": 0.9835
      },
      "other": {
       "name": "Raymond McKay",
@@ -747,16 +747,16 @@
      "lead": {
       "name": "Shelley Moore Capito",
       "party": "R",
-      "p": 0.981
+      "p": 0.9795
      },
      "other": {
       "name": "Rachel Fetty Anderson",
       "party": "D",
-      "p": 0.013
+      "p": 0.0135
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.8,
+     "gap": 96.6,
      "vol": 17615.431777000005,
      "url": "https://polymarket.com/event/west-virginia-senate-election-winner"
     },
@@ -1120,7 +1120,7 @@
      "other": {
       "name": "Fredrick Love",
       "party": "D",
-      "p": 0.023
+      "p": 0.0235
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -1262,7 +1262,7 @@
      "lead": {
       "name": "JB Pritzker",
       "party": "D",
-      "p": 0.975
+      "p": 0.9745
      },
      "other": {
       "name": "Darren Bailey",
@@ -1271,7 +1271,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.1,
+     "gap": 95.0,
      "vol": 18367.381909,
      "url": "https://polymarket.com/event/illinois-governor-winner-2026"
     },
@@ -1330,11 +1330,11 @@
      "other": {
       "name": "Robert Charles",
       "party": "R",
-      "p": 0.042
+      "p": 0.044
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.1,
+     "gap": 90.9,
      "vol": 46221.534565,
      "url": "https://polymarket.com/event/maine-governor-winner-2026"
     },
@@ -1393,7 +1393,7 @@
      "other": {
       "name": "John James",
       "party": "R",
-      "p": 0.073
+      "p": 0.0735
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -1514,16 +1514,16 @@
      "lead": {
       "name": "Kathy Hochul",
       "party": "D",
-      "p": 0.9495
+      "p": 0.9485
      },
      "other": {
       "name": "Bruce Blakeman",
       "party": "R",
-      "p": 0.0535
+      "p": 0.054
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 89.6,
+     "gap": 89.5,
      "vol": 270624.241553,
      "url": "https://polymarket.com/event/new-york-governor-winner-2026"
     },
@@ -1619,16 +1619,16 @@
      "lead": {
       "name": "Helena Foulkes",
       "party": "D",
-      "p": 0.968
+      "p": 0.9625
      },
      "other": {
       "name": "Independent",
       "party": "I",
-      "p": 0.025
+      "p": 0.026
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.3,
+     "gap": 93.7,
      "vol": 72219.578456,
      "url": "https://polymarket.com/event/rhode-island-governor-winner-2026"
     },
@@ -1682,7 +1682,7 @@
      "lead": {
       "name": "Marsha Blackburn",
       "party": "R",
-      "p": 0.933
+      "p": 0.9335
      },
      "other": {
       "name": "Jerri Green",
