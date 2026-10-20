@@ -287,12 +287,12 @@
  "at": "2026-10-20T03:21:54.937589+00:00",
  "layout": "main",
  "topics": {
-  "hash": "9518ada318767f00",
+  "hash": "68fa54426ff8f6d0",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會認為AI熱潮可能加劇通膨壓力，但應對措施的成本可能由其他經濟部門承擔",
+    "text": "聯準會看好AI發展但憂慮通膨壓力。聯準會認為AI繁榮可能加重通膨負擔，意味著即使經濟成長強勁，仍需維持較高利率以控制物價",
     "links": [
      {
       "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
@@ -303,9 +303,28 @@
     ]
    },
    {
+    "id": "long",
+    "label": "長天期美債",
+    "text": "長天期美債因科技股反彈而承壓。隨著科技類股走高，投資人減少對避險資產的需求，美債吸引力下降，同時華爾街對美國財政部融資計畫感到焦慮",
+    "links": [
+     {
+      "title": "Treasuries Fall as Tech Shares Rebound, Weakening Haven Demand",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPSWVWX2tkb0V0dUlpT21xa2hDNjFBUWdYSzNNeTllOGdPaWhCT2x2NVV6ZG5wdDFLZ2dyb2VmNGR4c3pkNl9vZlc0Nm5VY1ZzamtwMUFSc1FIRktEbUJGZDdnNXBUT0IwMjZCTGQ5Y3EtajE5YzhQbElVeDZKcTFYVkZTaks1QjhBbHN6aFFFdjVMVTJtZlM0LWZVWjFCellVOEtYRm5QQkI0ZllKQVVtNWdB?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-19T16:34:56+00:00"
+     },
+     {
+      "title": "The Treasury’s financing plans are sparking anxiety on Wall Street",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNMnQwbVJRb1FGQS1VelJUa2xieE5STU5sZTBVY3BVVjRES1FBZzE4R2Q3d1RQYmJvbXhkOTZaa3NYUVM0cXFMZVRYWDdyOXVZRU5BM0FMNUxPbDBjVUZ1NGZTRFR2bXdCTmhwdExGMndTNzFQN2pObko2OHhCTDY2NWZONjRUamE4U3QtWUNMeW8wSlRad0xvS1RYbFg4ODd6Nl83VVdsQkcyZkRabmxNNXFn?oc=5",
+      "source": "MarketWatch",
+      "at": "2026-10-19T19:45:00+00:00"
+     }
+    ]
+   },
+   {
     "id": "funding",
     "label": "資金市場",
-    "text": "貨幣市場基金規模激增至7.9兆美元，反映投資人在高利率環境下尋求安全停泊點。高利率使貨幣市場基金成為吸引資金的避險工具",
+    "text": "貨幣市場基金規模激增至7.9兆美元。高利率環境下，投資人持續將資金轉向貨幣市場基金尋求更高報酬",
     "links": [
      {
       "title": "Money Market Funds: A Proven, Smart $7.9tn Surge",
@@ -318,7 +337,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗主要油輪碼頭因美國封鎖而閒置，但波斯灣原油供應仍保持充足，油價在地緣政治威脅與供應充沛間震盪",
+    "text": "油價在伊朗威脅與海灣原油供應充足間震盪。美國對伊朗的封鎖導致伊朗主要油輪終端空置，但海灣地區原油流量仍保持穩健，抵銷地緣政治風險",
     "links": [
      {
       "title": "Oil Wavers as Iran Threats Vie With Robust Gulf Crude Flows",
@@ -337,7 +356,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "科技股跌深反彈，那指數上漲1.11%、費城半導體指數終止連8黑，但市場對AI產業融資風險與高利率環境的疑慮未消",
+    "text": "美股科技股反彈帶動指數上揚。那斯達克漲1.11%、標普500漲0.66%，AI與晶片股領軍回升，但道瓊跌0.07%，顯示漲勢集中於大型科技股，VIX下跌至18.44",
     "links": [
      {
       "title": "Nasdaq Jumps Past 1 Percent as VIX Swings While Dow Dips Below Its 50",
@@ -356,20 +375,20 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "微軟推出Surface Laptop Ultra搭載輝達晶片，主打在地AI運算與隱私保護。起售價2,599美元，但執行大型AI模型需32GB記憶體版本價格達3,699美元，反映高階AI筆電成本壓力",
+    "text": "亞馬遜AI晶片相容熱門編程語言，挑戰輝達主導地位。亞馬遜宣布其AI晶片將支援廣泛使用的編程語言，試圖打破輝達在AI基礎設施市場的壟斷",
     "links": [
      {
-      "title": "微軟Surface Laptop Ultra旗艦AI筆電上市 鎖定在地AI運算需求",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BE%AE%E8%BB%9Fsurface-laptop-ultra%E6%97%97%E8%89%A6ai%E7%AD%86%E9%9B%BB%E4%B8%8A%E5%B8%82-%E9%8E%96%E5%AE%9A%E5%9C%A8%E5%9C%B0ai%E9%81%8B%E7%AE%97%E9%9C%80%E6%B1%82-025034745.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-20T02:50:34+00:00"
+      "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
+      "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOUGVNVWtyU1BHU0pGZFJTZk9RV3NHOXBoSHVqaHVEeXN1TEJveTNIVzQ4eGkxZ2RWbER1clItSk16ODNaVnBFbWhKamR1RURGdG90X3F0ZEF2bko3SW5mUGxjZzBKVm50UFI5eUp2ampsV08ySWlMUEZyQmRUd1M1NF91UGJoZWxiVmR5NGRCMmNNM0V2R3pLMVhBT05EbmRjY0dxMXlSNklIVE9xeG5DQWNPcjVXY1ZBRTBrVU9RMTNPaVJOUHpjS2RrZ3huLXlZa2c?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T15:36:43+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股跌勢趨緩但新台幣貶勢延續，匯價跌破32.6元、貶逾1.6角，外資匯出壓力仍大，需待市場對AI產業疑慮降溫才能真正止貶",
+    "text": "台股跌勢趨緩但外資賣壓未歇。美股反彈帶動台股早盤翻紅，惟外資持續淨匯出，新台幣貶破32.6元創18個月新低，央行盤中喊話效果有限",
     "links": [
      {
       "title": "美股反彈助台股跌勢趨緩　新台幣難擋外資賣壓貶逾1.6角",
@@ -382,7 +401,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "高盛維持2027年底金價5,400美元目標，央行購金加速成結構性支撐。全球央行8月購金79噸高於7月44噸，年化速度約1,000噸遠超2022年水準，但高利率仍可能壓抑ETF需求",
+    "text": "央行購金加速支撐金價長期走勢。全球央行8月購金79噸創新高，高盛維持2027年底5,400美元目標，央行將黃金轉存倫敦反映對儲備安全的重視",
     "links": [
      {
       "title": "高盛維持明年底金價5400美元目標，央行購金加速、黃金轉存倫敦受矚",
@@ -395,7 +414,7 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元貶破32.6元關卡創逾18個月新低，外資資金匯出洶湧。央行喊話未能扭轉貶勢，後續走向取決於外資態度、台股能否止跌及美元強弱",
+    "text": "新台幣貶勢洶洶創逾年半新低，外資匯出成主因。新台幣兌美元跌破32.6元關卡，10月12至16日外資淨匯出179.61億美元，央行喊話難以扭轉市場趨勢",
     "links": [
      {
       "title": "央行喊話仍股匯雙殺！新台幣再貶1.74角破32.6元關卡 刷新一年半新低",
@@ -412,7 +431,7 @@
     ]
    }
   ],
-  "at": "2026-10-20T03:22:15.181895+00:00"
+  "at": "2026-10-20T03:28:02.724362+00:00"
  },
  "main_source_titles": [
   "聯準會升息效應浮現 金融條件趨緊市場自發降溫"
