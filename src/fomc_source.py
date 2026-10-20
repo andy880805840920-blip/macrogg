@@ -297,6 +297,10 @@ class FomcSource:
         policy_markers = ("target range", "federal funds rate",
                           "monetary policy action")
         if not any(marker in low for marker in policy_markers):
+            # 已知的非利率聲明（長期目標與策略框架公告，例如 2025-08-22）：預期內的跳過，不算抓取失敗
+            if "longer-run goals" in low or "monetary policy strategy" in low:
+                log.info("%s 是長期目標／策略框架公告，不是利率決議聲明，跳過", d)
+                return None
             log.warning("%s 抓到的內容不像聲明（缺 Committee／target range），跳過", d)
             self.failed.append((STATEMENT_URL.format(ymd=d.strftime("%Y%m%d")),
                                 "內容不像聲明，可能是頁面改版"))
