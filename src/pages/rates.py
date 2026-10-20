@@ -52,7 +52,7 @@ def _explained_card(lt, href: str, ex: dict | None) -> str:
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc lx">{"".join(parts)}</div></details>
 </div>"""
-from . import compact_full, focus_evidence, state_chip, teach, gloss_more, learn_links
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 from . import longend as LE
 
 
@@ -704,7 +704,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="decomp" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
     {LE.decomp(d)}
-    {learn_links("longend_parts", "term_premium", "tips", "breakeven")}
   </div>
 </div>
 
@@ -735,7 +734,6 @@ def _rates_body_full(d: dict) -> str:
         "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
         "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
         "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。")}
-    {learn_links("hyperscaler", "credit_spread")}
   </div>
 </div>
 
@@ -743,7 +741,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="curve" data-sum="{esc(_crv_sum)}">殖利率曲線</h2>
     {LE.curve(d)}
-    {learn_links("curve_spread", "curve_shape", "forwards", "fedwatch", "dots")}
   </div>
 </div>
 
@@ -751,7 +748,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="global" data-sum="{esc(_glb_sum)}">全球長端</h2>
     {LE.global_(d)}
-    {learn_links("global_long", "term_premium")}
   </div>
 </div>
 
@@ -759,7 +755,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="supply" data-sum="{esc(_sup_sum)}">債券供給：財政部與 Fed</h2>
     {LE.supply(d)}
-    {learn_links("refunding", "fed_bs", "bills_net")}
   </div>
 </div>
 
@@ -767,7 +762,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="auctions" data-sum="{esc(_auc_sum)}">Coupon 拍賣結果</h2>
     {LE.auctions(d)}
-    {learn_links("auctions", "auction_cal")}
   </div>
 </div>
 
@@ -775,7 +769,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="buybacks" data-sum="{esc(LE.buyback_summary(d))}">財政部 Buybacks</h2>
     {LE.buybacks(d)}
-    {learn_links("buyback", "refunding")}
   </div>
 </div>
 
@@ -783,7 +776,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
     {LE.credit(d)}
-    {learn_links("credit_spread")}
   </div>
 </div>
 
@@ -825,7 +817,6 @@ def _rates_body_full(d: dict) -> str:
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
     </details>
-    {learn_links("fiscal")}
   </div>
 </div>
 
@@ -833,7 +824,6 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="flows" data-sum="{esc(_flw_sum)}">市場籌碼</h2>
     {_flw_html}
-    {learn_links("positioning", "eslr", "dealer_inv", "auctions")}
   </div>
 </div>
 
@@ -847,7 +837,6 @@ def _rates_body_full(d: dict) -> str:
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",
         "紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。")}
-    {learn_links("term_premium", "tips", "breakeven", "curve_spread", "dots", "fiscal")}
   </div>
 </div>
 

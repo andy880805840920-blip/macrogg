@@ -62,7 +62,7 @@ CSS = """
 .ask-l{display:grid;grid-template-columns:118px 1fr;gap:4px 14px;padding:10px 0;border-top:1px dashed var(--grid)}
 .ask-l h4{margin:0;font-size:13px;color:var(--brand-orange);font-weight:800}
 .ask-l p{margin:0;font-size:14.5px;line-height:1.8}
-.ask-chain{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px}
+.ask-chain{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px}.ask-chain+.ask-chain{margin-top:6px}
 .ask-chain i{font-style:normal;padding:3px 8px;border-radius:6px;background:var(--surface-2)}
 .ask-chain em{font-style:normal;color:var(--brand-orange);font-weight:700}
 .ask-src{font-size:11.5px;color:var(--muted);margin:8px 0 6px;line-height:1.6}

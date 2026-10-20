@@ -1,0 +1,80 @@
+# 各分頁區塊最下方「完整教學」一行要連到哪幾張偷懶名詞卡（config/learn.yaml 的 key）。
+#
+# 為什麼集中在這裡
+# ----------------
+# 先前只有長端頁逐區手寫 learn_links(...)，其他頁只有「這在看什麼？」裡的單一連結，
+# 而且收合著、讀者不一定看得到。集中成一張表之後：
+#   · site.page 收合區塊時自動把這一行接在每一區最下方，各頁不用再手寫；
+#   · 新增名詞卡、新增區塊時只改這一個檔案；
+#   · tests/test_ask.py 檢查每個 key 都有名詞卡與偷懶頁條目，連結不會斷。
+# 順序＝顯示順序：先放這一區的主題，再放判讀時會用到的相關概念。
+# 首頁版面不是卡區（沒有收合），由 pages/home.py 直接讀 "/" 這一組。
+
+"/":
+  home-now: [grid9, mandate, triggers]
+  home-changes: [changes, key_signals]
+  home-next: [calendar, auction_cal, blackout]
+  home-fc: [forecasts, nfp, cpi, core_pce]
+
+/labor/:
+  signals: [key_signals, ur_decomp, ahe]
+  kpi: [nfp, unrate, ahe, lfpr]
+  unrate: [ur_decomp, unrate, lfpr]
+  claims: [claims, job_losers]
+  industry: [industry, nfp]
+  revision: [revisions, nfp]
+  lights: [labor_judge, job_losers, jolts, claims]
+
+/inflation/:
+  signals: [key_signals, annualized, supercore, ppi]
+  kpi: [cpi, core_cpi, core_pce, cpi_vs_pce, annualized, infl_expect]
+  sticky: [supercore, shelter, annualized]
+  ppi: [ppi, core_pce]
+  contrib: [contrib, shelter]
+  trend: [breadth]
+  passthrough: [wage_services, ahe]
+  consumption: [real_consumption]
+  energy: [energy, oil]
+  lights: [infl_judge, core_pce, supercore, infl_expect, breakeven]
+
+/fomc/:
+  signals: [fomc_vote, mandate, statement]
+  next: [blackout, calendar]
+  people: [fomc_vote, blackout]
+  sep: [dots, core_pce, unrate]
+  market: [fedwatch, fed_curve, terminal, dots]
+  diff: [statement]
+  minutes: [statement]
+  presser: [statement, mandate]
+  focus: [mandate, grid9]
+  trend: [fomc_vote, fed_funds]
+  howto: [fed_funds, fedwatch, fomc_vote, statement]
+
+/liquidity/:
+  corridor: [liq_corridor, sofr, iorb_spread, onrrp, srf, repo, tgcr]
+  liabilities: [reserves, tga, onrrp, reserve_ratio, rde, ample_reserves]
+  supply_demand: [bills_net, rmp, fed_bs]
+  mmf: [mmf]
+  lights: [liq_judge, liq_transmission]
+
+/rates/:
+  decomp: [longend_parts, term_premium, tips, breakeven, neutral_rate]
+  hyperscalers: [hyperscaler, credit_spread]
+  curve: [curve_spread, curve_shape, forwards, fedwatch, fed_curve, dots]
+  global: [global_long, term_premium]
+  supply: [refunding, fed_bs, bills_net]
+  auctions: [auctions, auction_cal]
+  buybacks: [buyback, refunding]
+  demand: [credit_spread]
+  debt: [fiscal]
+  flows: [positioning, eslr, dealer_inv, auctions]
+  lights: [term_premium, neutral_rate, tips, breakeven, curve_spread, fed_curve, fiscal]
+
+/scenario/:
+  grid: [grid9, mandate]
+  drivers: [key_signals, fomc_vote, longend_parts]
+  triggers: [triggers, supercore, core_pce, unrate, job_losers]
+  positioning: [duration, curve_spread, tips, breakeven, credit_spread]
+  fci: [fci, credit_spread, us_stocks]
+  market: [fedwatch, fed_curve, terminal, dots]
+  howto: [grid9, mandate, supercore, triggers]

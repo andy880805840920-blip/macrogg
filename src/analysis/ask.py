@@ -2194,6 +2194,35 @@ def practice_vals(C: dict, S: dict) -> dict:
         rest = [r for r in rows_w if r is not hi[0]]
         put("event1", hi[0]["name"]), put("time1", _tpe(hi[0]))
         put("event2", rest[0]["name"]), put("time2", _tpe(rest[0]))
+    # 新名詞卡（2026-10）：判定規則類的練習——直接讀各頁同一份判定，數字跟畫面一致
+    put("jl_rise", fnum(ax.get("jl_rise"), 1) if ax.get("jl_rise") is not None else None)
+    try:
+        from . import regime as _rg
+        _lv = _rg.verdict(lab.get("lights") or []) if lab.get("lights") else {}
+    except Exception:                              # noqa: BLE001
+        _lv = {}
+    if _lv.get("label"):
+        put("lab_verdict", _lv["label"]), put("lab_reason", _lv.get("reason"))
+    _v3 = inf.get("verdict3") or {}
+    if _v3.get("label"):
+        put("infl_verdict", _v3["label"]), put("infl_reason", (_v3.get("reason") or "").rstrip("。"))
+    _dg = ((C.get("rates") or {}).get("le") or {}).get("dots_gap") or {}
+    _dm = _dg.get("main") or {}
+    if _dm.get("market") is not None and _dm.get("dots") is not None:
+        put("dg_year", _dm.get("year")), put("dg_mkt", fnum(_dm["market"], 2)), put("dg_dots", fnum(_dm["dots"], 2))
+        put("dg_gap", fnum(_dg.get("gap_bp"), 0, sign=True)), put("dg_stance", _dg.get("stance"))
+    from . import rates as _rt
+    _n, _ = _rt.neutral_real(sep)
+    _r10 = last("DFII10")
+    if _n is not None:
+        put("neutral", fnum(_n, 2)), put("lr2", fnum(_n + _rt.INFL_TARGET, 2))
+        if _r10 is not None:
+            put("real_gap", fnum(_r10 - _n, 2, sign=True))
+            put("real_zone", {"good": "正常", "warning": "留意", "critical": "警戒"}.get(_rt.real_rate_status(_r10, _n)))
+    _pc = sd.get("pos_compare") or []
+    if _pc:
+        for _k in ("same", "off", "opp"):
+            put(f"pos_{_k}", sum(1 for r in _pc if r.get("match") == _k))
     _liq_vals(C.get("liquidity") or {}, put)
     return v
 
@@ -2285,10 +2314,17 @@ def learn_html(key: str, L: dict, vals: dict, open_: bool = False, flat: bool = 
     t = L.get(key)
     if not t:
         return ""
-    chain = "".join(f"<i>{esc(s.rstrip('。'))}</i>" + ("<em>→</em>" if i < len(t["chain"]) - 1 else "")
-                    for i, s in enumerate(t.get("chain") or []))
+    # 「；」分隔兩條因果鏈（例如利率升／利率降各一條），拆成兩行，免得箭頭跨過分號接錯
+    chains: list[list[str]] = [[]]
+    for s in t.get("chain") or []:
+        head, *rest = str(s).split("；")
+        chains[-1].append(head)
+        chains.extend([r] for r in rest)
+    chain = "".join(
+        '<span class="ask-chain">' + "<em>→</em>".join(f"<i>{esc(x.strip().rstrip('。'))}</i>" for x in c if x.strip())
+        + "</span>" for c in chains if any(x.strip() for x in c))
     rows = [("① 一句話", esc(t.get("one", ""))), ("② 怎麼來的", esc(t.get("origin", ""))),
-            ("③ 怎麼看", esc(t.get("read", ""))), ("④ 跟利率的關係", f'<span class="ask-chain">{chain}</span>'),
+            ("③ 怎麼看", esc(t.get("read", ""))), ("④ 跟利率的關係", chain),
             ("⑤ 常見誤讀", esc(t.get("myth", "")))]
     pr = fill_practice(t.get("practice", ""), vals)
     if pr:

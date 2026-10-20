@@ -215,10 +215,10 @@ terms:
   statement: {t: 聲明、記者會與紀要, k: [聲明, 記者會, 會議紀要, 紀要]}
   blackout: {t: 靜默期, k: [靜默期, 緘默期, 官員談話]}
   mandate: {t: 雙重使命, k: [雙重使命, 政策重心, 最大就業, 物價穩定]}
-  terminal: {t: 終端利率, k: [終端利率, 利率終點, 中性利率]}
+  terminal: {t: 終端利率, k: [終端利率, 利率終點]}
   grid9: {t: 九宮格, k: [九宮格, 情境框架]}
   triggers: {t: 情境轉換門檻, k: [轉換門檻, 換格條件, 換格, 情境轉換門檻]}
-  duration: {t: 存續期間, k: [存續期間, duration, 凸性]}
+  duration: {t: 固定收益對照, k: [固定收益對照, 存續期間, duration, 凸性]}
   nfp: {t: 非農, k: [非農]}
   unrate: {t: 失業率, k: [失業率]}
   ur_decomp: {t: 失業率變動分解, k: [失業率分解, 失業率變動分解, 失業人口結構]}
@@ -261,6 +261,14 @@ terms:
   eslr: {t: 補充槓桿率（eSLR）, k: [eslr, slr, 補充槓桿率, 槓桿率]}
   dealer_inv: {t: 初級交易商公債庫存, k: [交易商庫存, 初級交易商, 交易商持倉, primary dealer]}
   fci: {t: 金融條件（FCI-G）, k: [金融條件, fci, fci-g, 金融情勢]}
+  annualized: {t: 三月年化, k: [三月年化, 六月年化, 3個月年化, 年化]}
+  key_signals: {t: 本期關鍵訊號, k: [關鍵訊號, 訊號分級, 利緊縮, 利寬鬆]}
+  labor_judge: {t: 就業綜合判定, k: [就業綜合判定, 就業綜合強弱, 明確轉弱, 轉弱跡象]}
+  infl_judge: {t: 通膨綜合判定, k: [通膨綜合判定, 明確升溫, 黏著不降, 穩定降溫]}
+  fed_curve: {t: 期貨與點陣圖落差, k: [lead the curve, behind the curve, 點陣圖落差, 市場領先, 市場落後]}
+  neutral_rate: {t: 中性利率, k: [中性利率, r*, rstar, 中性實質利率, 實質利率緊度]}
+  changes: {t: 本期變化, k: [本期變化, 鷹鴿加權, 整體偏鷹, 整體偏鴿]}
+  forecasts: {t: 各家預測, k: [各家預測, 誰最準, 市場共識, 預測誤差]}
   hyperscaler: {t: 科技巨頭資本支出與發債, k: [科技巨頭, 資本支出]}
   sofr: {t: SOFR, k: [sofr]}
   iorb_spread: {t: IORB 與 SOFR−IORB, k: [iorb, sofr-iorb, 準備金利率]}

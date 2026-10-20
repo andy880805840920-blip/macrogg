@@ -58,10 +58,33 @@ def learn_link(key: str) -> str:
             f'（怎麼來的、常見誤讀、小測驗）→</a></p>')
 
 
+_LEARN_MAP: dict | None = None
+
+
+def learn_map() -> dict:
+    """config/learn_map.yaml：{分頁路徑: {區塊 id: [名詞卡 key, ...]}}。讀不到就回空。"""
+    global _LEARN_MAP
+    if _LEARN_MAP is None:
+        try:
+            import yaml
+            from pathlib import Path
+            p = Path(__file__).resolve().parents[2] / "config" / "learn_map.yaml"
+            _LEARN_MAP = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except Exception:                          # noqa: BLE001
+            _LEARN_MAP = {}
+    return _LEARN_MAP
+
+
+def section_learn(page: str, sid: str) -> str:
+    """某一頁某一區最下方的「完整教學」一行（依 config/learn_map.yaml）。"""
+    return learn_links(*((learn_map().get(page) or {}).get(sid) or []))
+
+
 def learn_links(*keys: str) -> str:
     """
-    區塊最下方一行「延伸學習」：連到偷懶頁對應的名詞卡（可多張）。
-    名詞卡不存在就略過，全部不存在就不輸出。
+    區塊最下方一行「完整教學」：連到偷懶頁對應的名詞卡（可多張）。
+    名詞卡不存在就略過，全部不存在就不輸出。各區要連哪幾張統一寫在
+    config/learn_map.yaml，由 site.page 收合區塊時自動接上。
     """
     from urllib.parse import quote
     from ..site import esc
@@ -70,7 +93,7 @@ def learn_links(*keys: str) -> str:
     if not items:
         return ""
     links = "".join(f'<a href="/ask/?q={quote("什麼是" + t + "？")}">{esc(t)}</a>' for _, t in items)
-    return f'<p class="learn-more"><span>延伸學習（偷懶）</span>{links}</p>'
+    return f'<p class="learn-more"><span>完整教學</span>{links}</p>'
 
 
 def gloss_more() -> str:

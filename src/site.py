@@ -1002,6 +1002,7 @@ details[data-m-collapse]>summary{list-style:none}
 .learn-more span{color:var(--muted);font-weight:600;margin-right:2px}
 .learn-more a{display:inline-flex;align-items:center;min-height:40px;color:var(--brand-orange-ink);font-weight:600;text-decoration:none}
 .learn-more a::after{content:" →"}
+.hm-hero>.learn-more{margin:0;padding:10px 20px 6px}
 .le-src-link{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;color:var(--series-1);text-decoration:none}
 .teach-more a{color:var(--brand-orange-ink);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .gloss,.poslist{margin:6px 0 0}
@@ -5206,7 +5207,7 @@ def card_div_imbalance(body: str) -> list[tuple[str, int]]:
     return out
 
 
-def _collapse_sections(body: str) -> str:
+def _collapse_sections(body: str, active: str = "") -> str:
     """
     把每一個「卡片 ＋ 標題」轉成可收合的 <details>。
 
@@ -5239,6 +5240,10 @@ def _collapse_sections(body: str) -> str:
         summ = _glue(attrs.get("data-sum", ""))
         is_open = attrs.get("data-open") == "1"
         inner = body[m.end():end]
+        if 'class="learn-more"' not in inner:
+            # 每一區最下方的「完整教學」：連到哪幾張名詞卡統一在 config/learn_map.yaml
+            from .pages import section_learn
+            inner += section_learn(active, sid)
 
         head = (f'<h2 id="{sid}">{title}</h2>'
                 + (f'<span class="sect-sum">{summ}</span>' if summ else ""))
@@ -5370,7 +5375,7 @@ def page(title: str, active: str, body: str, subtitle: str = "",
         # 卡片內 <div> 開關不成對：收合轉換會把卡片結尾找錯，後面的卡區被包進這一張，
         # 區塊之間就斷開（2026-10 長端頁 03 的 cwm-wrap 少一個結尾）。寫進執行紀錄的警告。
         _log.warning("版面結構：%s 頁的「%s」卡 <div> 開關不成對（差 %+d），區塊銜接會斷開", title, _sid, _n)
-    body = _insert_tools(_collapse_sections(body))
+    body = _insert_tools(_collapse_sections(body, active))
     # <title>：分頁是「頁名｜站名」；首頁不要「MACRO GG｜MACRO GG」，
     # 用標語當後綴。
     doc_title = (f"{SITE_NAME}｜{TAGLINE}" if title == SITE_NAME

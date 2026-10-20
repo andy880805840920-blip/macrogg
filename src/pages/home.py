@@ -15,7 +15,7 @@ from .story_ui import STORY_BTN, story_html
 from .forecasts_ui import section as _fc_section
 
 from ..site import esc, next_first_friday, next_cpi_release
-from . import compact_full, state_chip
+from . import compact_full, state_chip, section_learn
 from ..analysis import changes as chg_mod
 from ..analysis import brief as brief_mod
 from ..analysis import scenario as scenario_mod
@@ -2005,18 +2005,21 @@ def home_body(ctxs: dict) -> str:
         <span class="hm-modx-s hm-ms4">{_mod_strip}</span></summary>
       <div class="hm-modx-b">{_hm_modules(ctxs, sc, f_text, f_dir, p_text, p_level)}</div></details>
     </div>
+    {section_learn("/", "home-now")}
   </section>
 
   <section class="home-zone hm-zone" aria-labelledby="home-changes">
     <div class="hm-zh"><div><span class="hm-num">02</span><h2 id="home-changes">本期變化</h2></div>
       <p>跟上一期比，新增或解除的訊號</p></div>
     <div class="hm-chs">{_hm_changes(ctxs.get('changes'), getattr(sc, "regime", ""))}</div>
+    {section_learn("/", "home-changes")}
   </section>
 
   <section class="home-zone hm-zone" aria-labelledby="home-next">
     <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
       <p>未來四週，台灣時間</p></div>
     {_hm_watch(ctxs, sc)}
+    {section_learn("/", "home-next")}
   </section>
   {forecasts_section(ctxs.get('_forecasts'))}
   {_story(ctxs)}

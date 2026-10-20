@@ -6,7 +6,7 @@ import re
 
 from ..site import esc
 from ..analysis import scenario as scenario_mod
-from . import compact_full, focus_evidence, state_chip, teach, gloss_more, learn_links
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息", "neutral": "中性"}
 
@@ -625,8 +625,7 @@ def _fci(d: dict) -> tuple[str, str]:
             f'<p>標題的「主要來自」＝與指數同方向、貢獻最大的成份；佔比是它在同方向成份中的比重。'
             f'點選或滑過圖中任一個月，讀數框列出該月的指數與七個成份。</p>'
             f'<p>資料：聯準會 FEDS Notes「Financial Conditions Impulse on Growth」公開月資料'
-            f'（fci_g_public_monthly_3yr.csv），每月更新，約落後一個月。</p></div></details>'
-            + learn_links("fci", "credit_spread", "us_stocks"))
+            f'（fci_g_public_monthly_3yr.csv），每月更新，約落後一個月。</p></div></details>')
     return html, sm["headline"]
 
 

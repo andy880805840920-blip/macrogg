@@ -213,5 +213,20 @@ check("索引不會提早結束 script", "</script>" not in body.split('id="ask-
 from src import site  # noqa: E402
 check("導覽列：偷懶在總覽後面", [n[1] for n in site.NAV][:2] == ["總覽", "偷懶"])
 
+# 各頁區塊最下方「完整教學」（config/learn_map.yaml）：每個 key 都要有名詞卡與偷懶頁條目
+from src import pages as _pg  # noqa: E402
+_lm = _pg.learn_map()
+_lm_keys = {k for secs in _lm.values() for ks in (secs or {}).values() for k in ks or []}
+check("完整教學：每頁都有對照表", {"/", "/labor/", "/inflation/", "/fomc/", "/liquidity/", "/rates/", "/scenario/"} <= set(_lm))
+check("完整教學：key 都有名詞卡", _lm_keys <= set(L), sorted(_lm_keys - set(L)))
+check("完整教學：key 都有偷懶頁條目", _lm_keys <= set(cfg.get("terms") or {}), sorted(_lm_keys - set(cfg.get("terms") or {})))
+_ll = _pg.section_learn("/rates/", "debt")
+check("完整教學：標籤一致", "<span>完整教學</span>" in _ll and "延伸學習" not in _ll, _ll[:120])
+check("完整教學：沒有對照的區塊不輸出", _pg.section_learn("/rates/", "no-such-section") == "")
+_ch = ask.learn_html("duration", L, {})
+check("傳導鏈：分號拆成兩條", _ch.count('class="ask-chain"') == 2 and "；" not in _ch.split("④", 1)[1].split("⑤", 1)[0])
+check("名詞卡：沒有殘留的分號串接鏈",
+      not [k for k, t in L.items() for c in t.get("chain") or [] if str(c).endswith("；")])
+
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
