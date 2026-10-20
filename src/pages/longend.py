@@ -434,7 +434,7 @@ def _cw_matrix(b: dict | None, r0: dict, win_label: str) -> str:
            '<button type="button" class="cw-btn on" data-v="ch" aria-pressed="true">變化</button>'
            '<button type="button" class="cw-btn" data-v="fw" aria-pressed="false">遠期</button></div>')
     return (f'<div class="cwm" data-v="ch">{tog}<div class="cwm-wrap"><table class="cwm-t" aria-label="2Y、10Y、30Y 與利差監控表">'
-            f'{head}<tbody>{"".join(body)}</tbody></table>'
+            f'{head}<tbody>{"".join(body)}</tbody></table></div>'
             f'<details class="cw-note"><summary>表格說明</summary><p class="cwm-note">{esc(note)}</p></details></div>')
 
 

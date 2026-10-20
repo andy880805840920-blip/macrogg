@@ -14,6 +14,8 @@ import html
 import datetime as dt
 
 from . import clock
+import logging as _logging
+_log = _logging.getLogger(__name__)
 
 # 站名與標語。站名進每一頁的 <title> 後綴與首頁大標；
 # 標語只出現在首頁大標下方一行（小副標）。
@@ -5076,6 +5078,23 @@ def _close_of(s: str, start: int) -> int | None:
     return None
 
 
+def card_div_imbalance(body: str) -> list[tuple[str, int]]:
+    """
+    每張「卡片＋標題」的 <div> 開關差（略過 <script>）。卡片範圍取到下一張卡片的開頭為止，
+    所以一張卡少寫結尾時，差值會是正的。回傳 [(卡片 id, 差值)]，只列不為零的。
+    """
+    out = []
+    ms = list(_SECT_OPEN.finditer(body))
+    for k, m in enumerate(ms):
+        seg = body[m.start():(ms[k + 1].start() if k + 1 < len(ms) else len(body))]
+        seg = re.sub(r"<script\b.*?</script>", "", seg, flags=re.S)
+        n = len(re.findall(r"<div\b", seg)) - seg.count("</div>")
+        sid = dict(_ATTR.findall(m.group(1))).get("id", "?")
+        if n > 0:
+            out.append((sid, n))
+    return out
+
+
 def _collapse_sections(body: str) -> str:
     """
     把每一個「卡片 ＋ 標題」轉成可收合的 <details>。
@@ -5236,6 +5255,10 @@ def page(title: str, active: str, body: str, subtitle: str = "",
     # 錨點導覽要在轉換**前**產生：轉換後 <h2> 會被包進 <summary>，
     # 屬性順序也可能改變，用轉換前的原文抓最穩。
     anchors = _anchor_nav(body)
+    for _sid, _n in card_div_imbalance(body):
+        # 卡片內 <div> 開關不成對：收合轉換會把卡片結尾找錯，後面的卡區被包進這一張，
+        # 區塊之間就斷開（2026-10 長端頁 03 的 cwm-wrap 少一個結尾）。寫進執行紀錄的警告。
+        _log.warning("版面結構：%s 頁的「%s」卡 <div> 開關不成對（差 %+d），區塊銜接會斷開", title, _sid, _n)
     body = _insert_tools(_collapse_sections(body))
     # <title>：分頁是「頁名｜站名」；首頁不要「MACRO GG｜MACRO GG」，
     # 用標語當後綴。

@@ -238,12 +238,24 @@ class _Nest(_HP):
 
 for _p in ("", "labor/", "inflation/", "fomc/", "rates/", "scenario/"):
     _h = (OUT / _p / "index.html").read_text(encoding="utf-8")
-    _b = _h[_h.find("<body"):_h.find("<script")]
+    # 整頁（不只第一個 <script> 之前）；script 內容拿掉——字串裡的 "<div" 不是標籤
+    _b = re.sub(r"<script\b.*?</script>", "", _h[_h.find("<body"):], flags=re.S)
     _c = _Nest()
     _c.feed(_b)
     check(f"㉜ {_p or 'index'}：div/details 巢狀嚴格配對",
           not _c.problems and not _c.stack,
           str(_c.problems[:2]) + (f" 未關閉:{_c.stack}" if _c.stack else ""))
+
+
+# ---------------------------------------------------------------------------
+# 卡片內 <div> 少寫結尾：要被偵測出來（2026-10 長端頁 03 的 cwm-wrap）
+# ---------------------------------------------------------------------------
+_ok = ('<div class="grid"><div class="card"><h2 id="a">A</h2><div>x</div>'
+       '<script>var s="</div><div>";</script></div></div>'
+       '<div class="grid"><div class="card"><h2 id="b">B</h2><p>y</p></div></div>')
+_bad = _ok.replace('<div>x</div>', '<div class="wrap"><div>x</div>')
+check("偵測：成對的卡片不報", site.card_div_imbalance(_ok) == [])
+check("偵測：少一個結尾的卡片要報出 id", site.card_div_imbalance(_bad) == [("a", 1)], str(site.card_div_imbalance(_bad)))
 
 print()
 print("全部通過" if ok else "有失敗")

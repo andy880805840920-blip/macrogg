@@ -2929,14 +2929,21 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
                      + charts.bridge(c["m_start"], f"{fd(c['tp_from'])} 10Y", md, c["m_end"], f"{fd(c['tp_to'])} 10Y"))
         out["bridges"][k] = html
     yp = le.ytd_paths(ds)
+    # 10Y 線截到與組成份同一天：TIPS 晚一天、ACM 也晚一天，不截的話 10Y 的終點
+    # 比兩個組成份的和多出最新一天的變動，跟圖下「恰好等於和」的說明對不上。
+    def _upto(rows, other):
+        last = min((r["date"] for r in other[-1:]), default=None) if other else None
+        return [r for r in rows if last is None or r["date"] <= last]
+    _y10_mkt = _upto(yp.get("y10") or [], [r for r in (yp.get("real") or [])] if yp.get("real") else [])
+    _y10_mod = _upto(yp.get("y10") or [], yp.get("path") or [])
     out["ytd_market"] = charts.compact_lines([
-        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": yp.get("y10") or []},
+        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": _y10_mkt},
         {"label": "實質利率（TIPS）", "color": _C["real"], "points": yp.get("real") or []},
         {"label": "損益兩平通膨率（BEI）", "color": _C["infl"], "points": yp.get("infl") or []},
     ], unit="", height=170, digits=0, months=12, xmonths=True, zero=True,
         aria="10 年期殖利率年初至今變化：TIPS 與 BEI（bp）") if yp.get("y10") else ""
     out["ytd_model"] = charts.compact_lines([
-        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": yp.get("y10") or []},
+        {"label": "10Y 名目", "color": _C["y10"], "dash": True, "points": _y10_mod},
         {"label": "預期利率路徑（名目 − ACM）", "color": _C["path"], "points": yp.get("path") or []},
         {"label": "期限溢酬（ACM）", "color": _C["tp"], "points": yp.get("tp") or []},
     ], unit="", height=170, digits=0, months=12, xmonths=True, zero=True,

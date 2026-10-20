@@ -469,7 +469,9 @@ def _rates_body_full(d: dict) -> str:
     _sl = {x["label"]: x for x in _L.get("slopes") or []}
     _crv_sum = "　·　".join(f'{k} {LE._bp(v["value"])}' for k, v in _sl.items()) or "殖利率曲線"
     _gr = (_L.get("global") or {}).get("rows") or []
-    _glb_sum = "　·　".join(f'{r["name"]} {r["value"]:.2f}%' for r in _gr[:3]) or "全球長端"
+    # OECD 月均（落後約一個月）：標出月份，否則會跟頁首的每日 10Y 看起來互相矛盾
+    _gm = (f'{int(_gr[0]["date"][5:7])} 月均：' if _gr and len(str(_gr[0].get("date") or "")) >= 7 else "")
+    _glb_sum = (_gm + "　·　".join(f'{r["name"]} {r["value"]:.2f}%' for r in _gr[:3])) if _gr else "全球長端"
     _wm = _L.get("wam") or {}
     _sup_sum = ((f'Fed WAM {_wm["soma"]["value"]:.1f} 年　·　市場 {_wm["market"]["value"]:.1f} 年')
                 if (_wm.get("soma") or {}).get("value") is not None
