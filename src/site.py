@@ -997,7 +997,7 @@ details[data-m-collapse]>summary{list-style:none}
 
 /* ---------- 名詞解釋 ---------- */
 .teach-more{font-size:13px;margin:8px 0 0}
-/* 區塊最下方的「延伸學習」：連到偷懶頁的名詞卡，一行可多張 */
+/* 區塊最下方的「完整教學」：連到偷懶頁的名詞卡，一行可多張 */
 .learn-more{display:flex;flex-wrap:wrap;align-items:center;gap:0 14px;margin:16px 0 0;padding-top:10px;border-top:1px solid var(--grid);font-size:13px}
 .learn-more span{color:var(--muted);font-weight:600;margin-right:2px}
 .learn-more a{display:inline-flex;align-items:center;min-height:40px;color:var(--brand-orange-ink);font-weight:600;text-decoration:none}
