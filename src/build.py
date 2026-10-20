@@ -3023,21 +3023,25 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     glb = [("美國", "us", series.get("DGS10") or [], "IRLTLT01USM156N", "var(--line-1)", "財政部"),
            ("德國", "de", _g10.get("de") or [], "IRLTLT01DEM156N", "var(--line-2)", "Bundesbank"),
            ("英國", "uk", _g10.get("uk") or [], "IRLTLT01GBM156N", "#1baf7a", "Bank of England"),
-           ("日本", "jp", _g10.get("jp") or [], "IRLTLT01JPM156N", "#eda100", "財務省")]
+           ("日本", "jp", _g10.get("jp") or [], "IRLTLT01JPM156N", "#eda100", "財務省"),
+           ("法國", "fr", _g10.get("fr") or [], "IRLTLT01FRM156N", "#8e6bd8", "CNBC 收盤報價"),
+           ("加拿大", "ca", _g10.get("ca") or [], "IRLTLT01CAM156N", "#d6455d", "Bank of Canada"),
+           ("澳洲", "au", _g10.get("au") or [], "IRLTLT01AUM156N", "#1f9fb4", "CNBC 收盤報價"),
+           ("中國", "cn", _g10.get("cn") or [], "", "#8a6d4b", "中國財政部（中債編製）")]
     _grows, _gser = [], []
     for n, key, daily, oecd, col, src in glb:
         daily = [r for r in daily if r.get("value") is not None]
         if len(daily) > 20:
             _grows.append({"name": n, "key": key, **le.dtd_mtd_ytd(daily), "src": src, "daily": True})
             _gser.append({"label": n, "color": col, "points": daily})
-        elif series.get(oecd):
+        elif oecd and series.get(oecd):
             m = series[oecd]
             _grows.append({"name": n, "key": key, "value": m[-1]["value"], "date": m[-1]["date"],
                            "dtd": None, "mtd": None, "ytd": None, "src": "OECD 月均", "daily": False})
             _gser.append({"label": n + "（月均）", "color": col, "points": m})
     out["global"] = {
-        "chart": charts.compact_lines(_gser, unit="%", height=180, digits=2, months=12, xmonths=True,
-                                      aria="美國、德國、英國、日本 10 年期公債殖利率（日資料，近一年）") if _gser else "",
+        "chart": charts.compact_lines(_gser, unit="%", height=220, digits=2, months=12, xmonths=True,
+                                      aria="主要國家 10 年期公債殖利率（日資料，近一年）") if _gser else "",
         "rows": _grows,
     }
     # 拍賣

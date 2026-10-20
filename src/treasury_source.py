@@ -1295,12 +1295,14 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         failed.append("term_premia")
     # 全球 10 年期公債（日資料）：德國 Bundesbank、英國 BoE、日本財務省；各自獨立，一個失敗不影響其他
     out["global10"] = {}
-    for key, fn in (("de", bund_10y), ("uk", gilt_10y), ("jp", jgb_10y)):
+    for key, fn in (("de", bund_10y), ("uk", gilt_10y), ("jp", jgb_10y), ("ca", boc_10y),
+                    ("fr", lambda e: cnbc_daily("FR10Y-FR", e)), ("au", lambda e: cnbc_daily("AU10Y-AU", e)),
+                    ("cn", cgb_10y)):
         try:
             out["global10"][key] = fn(end)
         except Exception as e:                     # noqa: BLE001
             log.warning("%s 10 年期日資料取得失敗（%s）", key.upper(), e)
-    if len(out["global10"]) < 3:
+    if len(out["global10"]) < 7:
         failed.append("global10")
     try:
         out["qra"] = qra_estimate(end)
@@ -1438,3 +1440,68 @@ def jgb_10y(end: dt.date) -> list[dict]:
     if not by:
         raise ValueError("財務省 JGB 檔案沒有資料")
     return [by[d] for d in sorted(by)]
+
+# 加拿大：Bank of Canada Valet（BD.CDN.10YR.DQ.YLD，基準 10 年期公債殖利率，每日）
+BOC_URL = "https://www.bankofcanada.ca/valet/observations/BD.CDN.10YR.DQ.YLD/csv?start_date={start}"
+
+
+def boc_10y(end: dt.date) -> list[dict]:
+    start = min(_g_start(end), end - dt.timedelta(days=400)).isoformat()
+    out = []
+    for line in _g_get(BOC_URL.format(start=start)).splitlines():
+        p = [x.strip().strip('"') for x in line.split(",")]
+        if len(p) >= 2 and re.match(r"\d{4}-\d{2}-\d{2}$", p[0]) and p[1]:
+            try:
+                out.append({"date": p[0], "value": float(p[1])})
+            except ValueError:
+                pass
+    if not out:
+        raise ValueError("Bank of Canada 回傳沒有資料")
+    return out
+
+
+# 法國、澳洲：沒有可直接取用的官方日資料 API（澳洲央行擋自動抓取、ECB 沒有法國日序列），
+# 改用 CNBC 的每日收盤報價。已與 OECD 月均比對：法國差約 1bp、澳洲約 2bp。
+# CNBC 會在週末與假日補一筆與前一日相同的值，要濾掉，否則 DTD 會變成 0。
+CNBC_DAILY = "https://ts-api.cnbc.com/harmony/app/charts/1Y.json?symbol={sym}"
+
+
+def cnbc_daily(sym: str, end: dt.date) -> list[dict]:
+    start = min(_g_start(end), end - dt.timedelta(days=400)).isoformat()
+    js = json.loads(_g_get(CNBC_DAILY.format(sym=sym)))
+    out, prev = [], None
+    for b in ((js.get("barData") or {}).get("priceBars") or []):
+        t = str(b.get("tradeTime") or "")
+        try:
+            d = dt.date(int(t[:4]), int(t[4:6]), int(t[6:8]))
+            ohlc = tuple(float(b[k]) for k in ("open", "high", "low", "close"))
+        except (ValueError, KeyError, TypeError):
+            continue
+        if d.weekday() >= 5 or d.isoformat() < start or ohlc == prev:
+            prev = ohlc
+            continue
+        prev = ohlc
+        out.append({"date": d.isoformat(), "value": ohlc[3]})
+    if not out:
+        raise ValueError(f"CNBC {sym} 回傳沒有資料")
+    return out
+
+# 中國：財政部「中國國債收益率曲線」（中債估值中心編製）10 年，每日。
+# 不用 CNBC：它的中國報價是零星成交價，單日跳 5～8bp，而且調休的週六上班日會被當成週末濾掉。
+# 這個查詢一次最多一年。
+CGB_URL = ("https://yield.chinabond.com.cn/cbweb-czb-web/czb/historyQuery?startDate={a}&endDate={b}"
+           "&gjqx=10&locale=cn_ZH&qxmc=1")
+
+
+def cgb_10y(end: dt.date) -> list[dict]:
+    a = (end - dt.timedelta(days=364)).isoformat()
+    js = json.loads(_g_get(CGB_URL.format(a=a, b=end.isoformat())))
+    out = []
+    for r in js.get("heList") or []:
+        try:
+            out.append({"date": str(r["workTime"])[:10], "value": float(r["tenYear"])})
+        except (KeyError, TypeError, ValueError):
+            continue
+    if not out:
+        raise ValueError("財政部國債收益率曲線回傳沒有資料")
+    return sorted(out, key=lambda r: r["date"])

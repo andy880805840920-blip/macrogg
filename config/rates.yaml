@@ -157,6 +157,16 @@ longend:
   - id: IRLTLT01GBM156N
     label: 英國 10 年期（月均，OECD）
     frequency: monthly
+  # 以下三個只當 04 全球長端的後備（日資料抓不到又沒有快取時）
+  - id: IRLTLT01FRM156N
+    label: 法國 10 年期（月均，OECD）
+    frequency: monthly
+  - id: IRLTLT01CAM156N
+    label: 加拿大 10 年期（月均，OECD）
+    frequency: monthly
+  - id: IRLTLT01AUM156N
+    label: 澳洲 10 年期（月均，OECD）
+    frequency: monthly
 
 credit:
   - id: BAMLC0A0CM

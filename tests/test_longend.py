@@ -329,6 +329,35 @@ _rows = [{"date": "2025-12-30", "value": 4.10}, {"date": "2025-12-31", "value": 
 _c = le.dtd_mtd_ytd(_rows)
 check("⑭d DTD／MTD／YTD 基期正確", round(_c["dtd"]) == -1 and round(_c["mtd"]) == -20 and round(_c["ytd"]) == 91, _c)
 
+# ⑮ 法國／澳洲（CNBC）濾掉週末與重複報價；中國（財政部曲線）與加拿大（BoC）解析
+import json as _json                                # noqa: E402
+_bars = {"barData": {"priceBars": [
+    {"tradeTime": "20261016000000", "open": "4.80", "high": "4.82", "low": "4.77", "close": "4.78"},
+    {"tradeTime": "20261017000000", "open": "4.78", "high": "4.78", "low": "4.78", "close": "4.78"},
+    {"tradeTime": "20261019000000", "open": "4.85", "high": "4.94", "low": "4.81", "close": "4.92"}]}}
+ts._g_get = lambda url: _json.dumps(_bars)
+try:
+    _r = ts.cnbc_daily("FR10Y-FR", dt.date(2026, 10, 20))
+finally:
+    ts._g_get = _orig
+check("⑮a CNBC：週末補值濾掉，DTD 對前一個交易日", [x["date"] for x in _r] == ["2026-10-16", "2026-10-19"]
+      and round(le.dtd_mtd_ytd(_r)["dtd"]) == 14, _r)
+ts._g_get = lambda url: _json.dumps({"heList": [{"workTime": "2026-10-19", "tenYear": "1.65"},
+                                                {"workTime": "2026-10-10", "tenYear": "1.68"},
+                                                {"workTime": "2026-10-16", "tenYear": ""}]})
+try:
+    _r = ts.cgb_10y(dt.date(2026, 10, 20))
+finally:
+    ts._g_get = _orig
+check("⑮b 中國：保留調休的週六上班日、跳過空值、依日期排序", _r == [{"date": "2026-10-10", "value": 1.68},
+                                                    {"date": "2026-10-19", "value": 1.65}], _r)
+ts._g_get = lambda url: '"TERMS AND CONDITIONS"\n\n"date","BD.CDN.10YR.DQ.YLD"\n"2026-10-15","3.83"\n"2026-10-16","3.84"\n'
+try:
+    _r = ts.boc_10y(dt.date(2026, 10, 20))
+finally:
+    ts._g_get = _orig
+check("⑮c 加拿大：Valet CSV", _r[-1] == {"date": "2026-10-16", "value": 3.84}, _r)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")
