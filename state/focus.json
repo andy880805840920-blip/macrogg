@@ -1,6 +1,6 @@
 {
  "hash": "a5f1c2d574a8c420",
- "text": "聯準會官員與分析機構近日發出升息信號，推升長期利率。星展銀行預期美國聯準會至2027年可能再升息2碼（50個基點），其中12月升息1碼、2027年第1季再升1碼，各25個基點；聯準會官員指出在通膨持續、政府及私人部門借貸需求偏高的背景下，全球債券殖利率仍面臨上行壓力。同時，超大規模雲端業者面臨現金流壓力升高，全球利率走高推升投資成本，AI驅動的成長可能由超高速擴張逐步轉向更成熟的擴張階段，大型科技企業將愈來愈依賴發債及其他外部融資。市場對超大規模雲端業者融資壓力的關注明顯升溫，反映在科技股近期回檔，美國費城半導體指數10/7至10/16連續8個交易日下跌，累計跌幅達15.7%。\n中國人民銀行維持基準貸款利率不變，一年期與五年期分別為3.00%與3.50%，反映中國經濟成長4.5%、零售銷售加速後，北京降低激進刺激的必要性（10/20）。美元指數10/20下跌0.2%至101.78，中國人民幣兌美元升至6.6781，創2022年7月以來最強水準，受人民銀行強勢定價與中國經濟數據支撐（10/20）。",
+ "text": "聯準會面臨通膨與融資成本雙重壓力，升息預期升溫。星展銀行預測美國聯準會至2027年可能再升息2碼（50個基點），其中12月升息1碼、2027年第1季再升1碼，各為25個基點；此預測反映在通膨持續、政府及私人部門借貸需求偏高的背景下，全球債券殖利率面臨上行壓力。同時，AI產業融資風險升溫成為新隱憂：超大規模雲端業者現金流壓力升高，全球利率走高推升投資成本，AI驅動的成長可能由超高速擴張轉向更成熟的擴張階段，大型科技企業將愈來愈依賴發債及其他外部融資。此外，能源價格居高不下也加劇通膨風險，美國原油價格升至每桶105.87美元，國際布蘭特原油升至110.75美元，不確定性圍繞伊朗戰爭何時結束。\n美元走弱帶動亞洲貨幣升值，中國人民幣兌美元升至近四年高點6.6775元，反映人民銀行維持基準貸款利率不變、中國經濟成長4.5%的支撐；美元指數10/20下跌至101.78。\n美股科技股持續承壓，費城半導體指數10/7至16日連跌8個交易日、累計跌幅15.7%，帶動台股外資淨匯出179.61億美元，新台幣貶值1.37%至32.338元。",
  "links": [
   {
    "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
@@ -13,6 +13,12 @@
    "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
    "source": "Bloomberg",
    "at": "2026-10-19T14:04:26+00:00"
+  },
+  {
+   "title": "Gold eases as elevated oil prices keep inflation risks in focus",
+   "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOLVJCYm9CRFhWY01aUkRqYnVXb0RzRC1RUnhfOEFicHItalFBMnRMc0ZjcWRVcGNnZVg3ZXQ3WXNXeUZLN183enN0NFAtdmxuUHJhRU5jOHlQbTg1TldhNVdtbF9IWU1GZ1BfOEZvTnJpUEhGTE5xUkRSbl9FZVR4NlFJMEE2V1VYZ1hVRzk3SmpJMi1qelE?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-20T01:33:00+00:00"
   },
   {
    "title": "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
@@ -296,15 +302,34 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-20T09:17:13.749853+00:00",
+ "at": "2026-10-20T09:21:57.712745+00:00",
  "layout": "main",
  "topics": {
-  "hash": "e3a7ee0c995ce93b",
+  "hash": "c98b9b7d66694d6e",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "聯準會市場對升息預期仍有分歧，評論指出市場對聯準會政策的反應還不夠明確，同時AI驅動的通膨成為聯準會面臨的新挑戰，升息可能對其他經濟部門造成傷害",
+    "links": [
+     {
+      "title": "COMMENTARY: Markets' squeal is music to Fed ears — but still too faint",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOanNEc3U3RUp6cGJ5a2hycUVSd2ZoYkJfSl9Qd1JEWkx5OFlOMTE5TjVXLUZNLUh0ZkZab0JSN1BHVHAteGI1cFRkckUycldMNHFPbWljOFMxNHVDcFFpMjlvRVpQclZnTWU4cTZVUUlkOExfMDEyVjItaC1GMTlKX0RNRzRGRnpacmo3QXlnclAxNWZsd1lpSUpCQWtqYllaZFhDTkdfRDRsTVhQdmplX1gyVEwzb3ow?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-20T06:00:00+00:00"
+     },
+     {
+      "title": "AI is driving inflation. The Fed's fix may hurt everyone else.",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1ZdVRWYWJEWDBsUmR0bmVCblc1eTZXOENZYVRkejd0aHdSbVBxVURnUGhGcTViOHZ0NE1QTGtNQjNKaUpwWWpPNzJzLUNVV1UyR3hmcG5nQ19DYUxTMy1DTVhHNXJ6R0E?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T21:41:17+00:00"
+     }
+    ]
+   },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債作為避險工具的吸引力下降，科技股反彈後避險需求減弱，導致債券下跌。同時，美國財政部的融資計畫引發華爾街焦慮，市場擔憂政府債務融資規模對債券市場的衝擊",
+    "text": "長天期美債美債作為避險工具的吸引力下降，科技股反彈削弱債券避險需求；同時美國財政部融資計畫引發華爾街擔憂",
     "links": [
      {
       "title": "Treasuries Losing Luster as Hedge Tool, Citi Australia CEO Says",
@@ -321,9 +346,28 @@
     ]
    },
    {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "資金市場貝萊德將代幣化接取通道擴展至311億美元貨幣市場基金，貨幣市場基金規模已達7.9兆美元",
+    "links": [
+     {
+      "title": "BlackRock Adds Tokenized Access to $311B Money Market Funds",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxONXNfX1JTMkFzZWtfWm1JMFZ3ZUwtbmZSTjNwYXRyTTZ4MVpZTDhqRl9vbVFpVjdRMXVPVzBGZFp3Ul85akd6SjBlT0ZHX2FIT1Axa1o0WUt4YXdIUUt5MG40WHR4UXZ6Z3JmOGtwWVNTeW5xRnFSa2NScFpkX28zQlhHcDhaX2U3RDNhTDBrYWdUNGpSdGlyX2ctVmI1WnlHeXhIcFRScHZSUzA?oc=5",
+      "source": "FinanceFeeds",
+      "at": "2026-10-20T05:07:09+00:00"
+     },
+     {
+      "title": "Money Market Funds: A Proven, Smart $7.9tn Surge",
+      "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE42VUJwQWhUb3NHVHFNbjF6UG9mQWV6MDhSeUxweGZVWVpYY2VFR3VGbnpnb2tkNkJwTF9KNlFEaWdGMnVuLWx0MUUzTGg1SWY2V3dJeldzanFDZHFKTkFfZEdGTkdyb2thaWVyZHM2aXlkWFE?oc=5",
+      "source": "Global Brands Magazine",
+      "at": "2026-10-19T20:55:28+00:00"
+     }
+    ]
+   },
+   {
     "id": "oil",
     "label": "油價",
-    "text": "中東運輸風險升高推升油輪運費至歷史高點，亞洲煉油廠改用小型油輪、長期租賃或向中東產油國購買包含運費的原油以降低成本，台灣中油近期改採6批中型油輪取代過去的超大型油輪",
+    "text": "油價中東運輸風險推升油輪運費至歷史高點，亞洲煉油廠改變採購策略，改用較小型油輪或向中東產油商購買包含運費的原油，台灣中油近期改採6批中型油輪取代超大型油輪",
     "links": [
      {
       "title": "油輪運費貴到受不了！亞洲等國急改採購策略",
@@ -336,7 +380,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "科技股從上週大跌中反彈，半導體類股領漲，輝達、美光、超微等晶片股走高，那斯達克漲1.11%；市場關注本週約70家標普500公司的第三季財報，其中Meta與特斯拉將公布業績，分析師認為科技類股走勢取決於財報表現",
+    "text": "科技股反彈帶動美股走高，那斯達克漲1.11%、標普500漲0.41%，晶片類股領漲，半導體ETF漲逾1.6%；市場聚焦本週約70家標普500公司的第三季財報，Meta與特斯拉將於週內公布成績，分析師認為科技類股基本面未變，但短期技術面脆弱，需守住支撐位",
     "links": [
      {
       "title": "Nasdaq climbs as chip and AI-linked stocks bounce back",
@@ -355,7 +399,7 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達在台灣首度開設「政府事務總監」職缺，要求15年以上政府事務經驗與5年團隊領導資歷，配合輝達在北投士林科技園區興建新總部、預計2030年完工的計畫",
+    "text": "輝達在台灣首度開設「政府事務總監」職缺，工作地點台北，需15年以上政府事務經驗與5年團隊領導資歷，並具備AI、半導體或科技政策專業背景；此舉配合輝達在北投士林科技園區興建新總部計畫，預計2026年底動工、2030年完工，強化與台灣政府的政策溝通效",
     "links": [
      {
       "title": "輝達在台首開政府事務總監職缺　深化政策溝通拚新總部布局",
@@ -374,8 +418,14 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "外資連續10個交易日賣超台股累計8,380億元，台股10月迄今累計賣超7,416億元，今年以來外資賣超規模超過2.11兆元",
+    "text": "台指期外資連續10個交易日賣超台股累計8380億元，10月迄今賣超達7416億元，今年累計賣超規模超過2.11兆元，主要受美國利率變化不確定性影響，市場預期12月升息機率升高",
     "links": [
+     {
+      "title": "外資十連砍台股V轉沒力摔529點！緯創拉半根漲停「光學雙雄」亮燈放閃領族群開趴｜Yahoo財經掃描",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E5%8D%81%E9%80%A3%E7%A0%8D%E5%8F%B0%E8%82%A1v%E8%BD%89%E6%B2%92%E5%8A%9B%E6%91%94529%E9%BB%9E%EF%BC%81%E7%B7%AF%E5%89%B5%E6%8B%89%E5%8D%8A%E6%A0%B9%E6%BC%B2%E5%81%9C%E3%80%8C%E5%85%89%E5%AD%B8%E9%9B%99%E9%9B%84%E3%80%8D%E4%BA%AE%E7%87%88%E6%94%BE%E9%96%83%E9%A0%98%E6%97%8F%E7%BE%A4%E9%96%8B%E8%B6%B4%EF%BD%9Cyahoo%E8%B2%A1%E7%B6%93%E6%8E%83%E6%8F%8F-091248471.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T09:12:48+08:00"
+     },
      {
       "title": "外資連10賣台股　今年累計賣超規模逾2.1兆元",
       "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E9%80%A310%E8%B3%A3%E5%8F%B0%E8%82%A1-%E4%BB%8A%E5%B9%B4%E7%B4%AF%E8%A8%88%E8%B3%A3%E8%B6%85%E8%A6%8F%E6%A8%A1%E9%80%BE2-1%E5%85%86%E5%85%83-084832229.html",
@@ -387,7 +437,7 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "歷史數據顯示，自1950年以來19次期中選舉後一年內，標普500指數均高於選舉日水準，平均漲幅約15%；即使在最差的1986年選舉後，指數仍上漲約1%，顯示選舉結果對長期股市影響有限",
+    "text": "期中選舉歷史數據顯示，美國1950年以來19次期中選舉後一年內，標普500指數均收高於選舉日，過去兩週平均漲幅約1.4%，即使最差的年份也未出現虧損",
     "links": [
      {
       "title": "Should You Wait Until After the Midterm Elections to Buy the S&P 500?",
@@ -400,26 +450,27 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元匯率貶至32.617元，單日貶1.72角，外資連10日賣超台股推升美元匯出壓力，央行總裁楊金龍重申通膨2%左右為中長期目標",
+    "text": "人民幣兌美元升至四年高點6.6775，受人民銀行強勢定價及中國第三季經濟成長4.5%、9月零售銷售加速帶動；美元指數下跌0.2%至101.78，歐元兌美元升0.2%至1.1233",
     "links": [
      {
-      "title": "股匯持續承壓，新台幣重貶1.72角收32.617元，外資連十賣壓力加劇",
-      "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E6%8C%81%E7%BA%8C%E6%89%BF%E5%A3%93-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92%E6%94%B632-617%E5%85%83-%E5%A4%96%E8%B3%87%E9%80%A3%E5%8D%81%E8%B3%A3%E5%A3%93%E5%8A%9B%E5%8A%A0%E5%8A%87-081632880.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-20T08:16:32+00:00"
+      "title": "Asian currencies firm as dollar retreats; yuan hits four",
+      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-firm-dollar-retreats-054434934.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-20T05:44:34+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-20T09:17:30.540334+00:00"
+  "at": "2026-10-20T09:22:17.027468+00:00"
  },
  "main_source_titles": [
   "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
   "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+  "Gold eases as elevated oil prices keep inflation risks in focus",
   "星展銀估Fed至明年再升息2碼　明年金價上看5300美元"
  ],
- "headline": "聯準會升息預期升溫，長期利率續升壓制科技股融資成本",
- "rate_note": "聯準會升息預期升溫偏向推升長期利率，因通膨與借貸需求支撐升息空間；10年期今日+4bp至5.14%，市場已在反映升息預期。",
+ "headline": "通膨與融資壓力升溫，聯準會升息預期重燃長期利率",
+ "rate_note": "聯準會升息預期與AI融資成本上升雙重推升長期利率。10/19收盤10年期美債殖利率升至5.14%，較前一交易日上升4個基點，市場已在反映升息預期與通膨風險。",
  "recent_mains": [
   {
    "headline": "AI融資成本飆升、超大型雲端廠商信貸利差創年高，長期利率承壓",
@@ -439,20 +490,21 @@
    "at": "2026-10-20T08:58:58.885030+00:00"
   },
   {
-   "headline": "聯準會升息預期升溫，長期利率續升壓制科技股融資成本",
+   "headline": "通膨與融資壓力升溫，聯準會升息預期重燃長期利率",
    "titles": [
     "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
     "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
+    "Gold eases as elevated oil prices keep inflation risks in focus",
     "星展銀估Fed至明年再升息2碼　明年金價上看5300美元"
    ],
-   "at": "2026-10-20T09:17:13.749853+00:00"
+   "at": "2026-10-20T09:21:57.712745+00:00"
   }
  ],
  "archive": {
   "2026-10-20": {
-   "headline": "聯準會升息預期升溫，長期利率續升壓制科技股融資成本",
-   "text": "聯準會官員與分析機構近日發出升息信號，推升長期利率。星展銀行預期美國聯準會至2027年可能再升息2碼（50個基點），其中12月升息1碼、2027年第1季再升1碼，各25個基點；聯準會官員指出在通膨持續、政府及私人部門借貸需求偏高的背景下，全球債券殖利率仍面臨上行壓力。同時，超大規模雲端業者面臨現金流壓力升高，全球利率走高推升投資成本，AI驅動的成長可能由超高速擴張逐步轉向更成熟的擴張階段，大型科技企業將愈來愈依賴發債及其他外部融資。市場對超大規模雲端業者融資壓力的關注明顯升溫，反映在科技股近期回檔，美國費城半導體指數10/7至10/16連續8個交易日下跌，累計跌幅達15.7%。\n中國人民銀行維持基準貸款利率不變，一年期與五年期分別為3.00%與3.50%，反映中國經濟成長4.5%、零售銷售加速後，北京降低激進刺激的必要性（10/20）。美元指數10/20下跌0.2%至101.78，中國人民幣兌美元升至6.6781，創2022年7月以來最強水準，受人民銀行強勢定價與中國經濟數據支撐（10/20）。",
-   "rate_note": "聯準會升息預期升溫偏向推升長期利率，因通膨與借貸需求支撐升息空間；10年期今日+4bp至5.14%，市場已在反映升息預期。",
+   "headline": "通膨與融資壓力升溫，聯準會升息預期重燃長期利率",
+   "text": "聯準會面臨通膨與融資成本雙重壓力，升息預期升溫。星展銀行預測美國聯準會至2027年可能再升息2碼（50個基點），其中12月升息1碼、2027年第1季再升1碼，各為25個基點；此預測反映在通膨持續、政府及私人部門借貸需求偏高的背景下，全球債券殖利率面臨上行壓力。同時，AI產業融資風險升溫成為新隱憂：超大規模雲端業者現金流壓力升高，全球利率走高推升投資成本，AI驅動的成長可能由超高速擴張轉向更成熟的擴張階段，大型科技企業將愈來愈依賴發債及其他外部融資。此外，能源價格居高不下也加劇通膨風險，美國原油價格升至每桶105.87美元，國際布蘭特原油升至110.75美元，不確定性圍繞伊朗戰爭何時結束。\n美元走弱帶動亞洲貨幣升值，中國人民幣兌美元升至近四年高點6.6775元，反映人民銀行維持基準貸款利率不變、中國經濟成長4.5%的支撐；美元指數10/20下跌至101.78。\n美股科技股持續承壓，費城半導體指數10/7至16日連跌8個交易日、累計跌幅15.7%，帶動台股外資淨匯出179.61億美元，新台幣貶值1.37%至32.338元。",
+   "rate_note": "聯準會升息預期與AI融資成本上升雙重推升長期利率。10/19收盤10年期美債殖利率升至5.14%，較前一交易日上升4個基點，市場已在反映升息預期與通膨風險。",
    "links": [
     {
      "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
@@ -467,13 +519,19 @@
      "at": "2026-10-19T14:04:26+00:00"
     },
     {
+     "title": "Gold eases as elevated oil prices keep inflation risks in focus",
+     "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOLVJCYm9CRFhWY01aUkRqYnVXb0RzRC1RUnhfOEFicHItalFBMnRMc0ZjcWRVcGNnZVg3ZXQ3WXNXeUZLN183enN0NFAtdmxuUHJhRU5jOHlQbTg1TldhNVdtbF9IWU1GZ1BfOEZvTnJpUEhGTE5xUkRSbl9FZVR4NlFJMEE2V1VYZ1hVRzk3SmpJMi1qelE?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-20T01:33:00+00:00"
+    },
+    {
      "title": "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
      "link": "https://tw.news.yahoo.com/%E6%98%9F%E5%B1%95%E9%8A%80%E4%BC%B0fed%E8%87%B3%E6%98%8E%E5%B9%B4%E5%86%8D%E5%8D%87%E6%81%AF2%E7%A2%BC-%E6%98%8E%E5%B9%B4%E9%87%91%E5%83%B9%E4%B8%8A%E7%9C%8B5300%E7%BE%8E%E5%85%83-083523666.html",
      "source": "Yahoo奇摩新聞",
      "at": "2026-10-20T08:35:23+08:00"
     }
    ],
-   "at": "2026-10-20T09:17:13.749853+00:00"
+   "at": "2026-10-20T09:21:57.712745+00:00"
   },
   "2026-10-19": {
    "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
