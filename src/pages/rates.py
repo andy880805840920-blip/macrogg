@@ -606,8 +606,12 @@ def _rates_body_full(d: dict) -> str:
     # 收合摘要：八國中 MTD 變化（絕對值）最大的前四檔；沒有日資料（退回月均）的國家不參與排名
     _gm = sorted([r for r in _gr if r.get("daily") and r.get("mtd") is not None],
                  key=lambda r: -abs(round(r["mtd"])))[:4]
-    _glb_sum = ("MTD 變化最大：" + "　·　".join(f'{r["name"]} {LE._bp(r["mtd"])}' for r in _gm)
-                if _gm else "全球長端")
+    _glb_sum = "全球長端"
+    for _n in (4, 3, 2):     # 收合摘要上限 45 字：放不下就少列一檔
+        _t = "MTD 變化最大（bp）：" + "、".join(f'{r["name"]} {LE.fmt.signed(r["mtd"])}' for r in _gm[:_n])
+        if _gm and len(_t) <= 45:
+            _glb_sum = _t
+            break
     _wm = _L.get("wam") or {}
     _sup_sum = ((f'Fed WAM {_wm["soma"]["value"]:.1f} 年　·　市場 {_wm["market"]["value"]:.1f} 年')
                 if (_wm.get("soma") or {}).get("value") is not None
