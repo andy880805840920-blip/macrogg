@@ -469,9 +469,9 @@ def _rates_body_full(d: dict) -> str:
     _sl = {x["label"]: x for x in _L.get("slopes") or []}
     _crv_sum = "　·　".join(f'{k} {LE._bp(v["value"])}' for k, v in _sl.items()) or "殖利率曲線"
     _gr = (_L.get("global") or {}).get("rows") or []
-    # OECD 月均（落後約一個月）：標出月份，否則會跟頁首的每日 10Y 看起來互相矛盾
-    _gm = (f'{int(_gr[0]["date"][5:7])} 月均：' if _gr and len(str(_gr[0].get("date") or "")) >= 7 else "")
-    _glb_sum = (_gm + "　·　".join(f'{r["name"]} {r["value"]:.2f}%' for r in _gr[:3])) if _gr else "全球長端"
+    # 10 年期最新值（日資料）；退回 OECD 月均的國家標「月均」，避免跟頁首的每日 10Y 看起來互相矛盾
+    _glb_sum = ("　·　".join(f'{r["name"]} {r["value"]:.2f}%' + ("" if r.get("daily", True) else "（月均）")
+                            for r in _gr[:4]) if _gr else "全球長端")
     _wm = _L.get("wam") or {}
     _sup_sum = ((f'Fed WAM {_wm["soma"]["value"]:.1f} 年　·　市場 {_wm["market"]["value"]:.1f} 年')
                 if (_wm.get("soma") or {}).get("value") is not None
@@ -783,7 +783,7 @@ def rates_footer(d: dict) -> str:
          ("流通在外、WAM、Fed 持有", "財政部 MSPD、紐約聯儲 SOMA", "每月／每週"),
          ("聯邦基金期貨、點陣圖", "CBOT 聯邦基金期貨（ZQ）結算價，經 Yahoo Finance 取得；Fed SEP", "每日／每季"),
          ("政府財政", "財政部月報 MTS、公眾持有債務、BEA（FRED）", "每月／每季"),
-         ("全球長端", "OECD（FRED）", "每月・晚約一個月"),
+         ("全球長端（10 年期）", "財政部、Bundesbank、Bank of England、日本財務省", "每日・英國晚約 2～3 個營業日"),
          ("科技巨頭資本支出與發債", "SEC EDGAR（XBRL 申報、說明書）", "財報一申報即更新")],
         ["利率判讀依據通膨、實質利率與期限溢酬的變化；詳細方法見各區說明。",
          "科技巨頭的年度資本支出計畫來自公司法說會。"],

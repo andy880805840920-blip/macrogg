@@ -1356,3 +1356,18 @@ def refunding_buybacks_zh(liq: float | None, cash: float | None) -> str:
     if cash is not None:
         s += f"，以及最多 {cash * 10:,.0f} 億美元的 1 個月至 2 年期（現金管理）"
     return s + "。"
+
+def dtd_mtd_ytd(rows: list[dict]) -> dict:
+    """日資料的最新值與 DTD／MTD／YTD（bp）。MTD 基期＝上月最後一筆、YTD 基期＝去年最後一筆。"""
+    rows = [r for r in rows if r.get("value") is not None]
+    if not rows:
+        return {"value": None, "date": "", "dtd": None, "mtd": None, "ytd": None}
+    last = rows[-1]
+    def _base(prefix_before):
+        prev = [r for r in rows if r["date"] < prefix_before]
+        return prev[-1]["value"] if prev else None
+    m0, y0 = _base(last["date"][:7] + "-01"), _base(last["date"][:4] + "-01-01")
+    return {"value": last["value"], "date": last["date"],
+            "dtd": (last["value"] - rows[-2]["value"]) * 100 if len(rows) > 1 else None,
+            "mtd": (last["value"] - m0) * 100 if m0 is not None else None,
+            "ytd": (last["value"] - y0) * 100 if y0 is not None else None}

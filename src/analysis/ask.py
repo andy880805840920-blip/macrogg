@@ -1612,10 +1612,13 @@ def _global_long(card, S, C):
     rows = [r for r in g.get("rows") or [] if r.get("value") is not None]
     if not rows:
         return None
-    tb = [[r["name"], f"{fnum(r['value'], 2)}%", fnum(r.get("chg12"), 0, sign=True), r.get("date", "")[:7]] for r in rows]
-    ans = "主要國家 10 年期公債殖利率（月資料）：" + "、".join(f"{esc(r[0])} {_b(r[1])}" for r in tb) + "。"
+    tb = [[r["name"], f"{fnum(r['value'], 2)}%", fnum(r.get("dtd"), 0, sign=True),
+           fnum(r.get("mtd"), 0, sign=True), fnum(r.get("ytd"), 0, sign=True), r.get("date", "")]
+          for r in rows]
+    ans = "主要國家 10 年期公債殖利率（日資料）：" + "、".join(f"{esc(r[0])} {_b(r[1])}" for r in tb) + "。"
     ch = g.get("chart") or ""
-    return Out(ans=ans, date=rows[0].get("date", "")[:7], table=(["", "殖利率", "一年變動 bp", "月份"], tb),
+    return Out(ans=ans, date=max(r.get("date", "") for r in rows),
+               table=(["", "殖利率", "DTD bp", "MTD bp", "YTD bp", "資料日"], tb),
                chart="" if "empty" in ch[:40] else ch)
 
 

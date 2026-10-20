@@ -304,6 +304,31 @@ check("⑬e 當年度用 mvd（與上方年底政策利率同一數字）", _g2[
 check("⑬f 隔年沒有 1 月合約時用 12 月並標示", _g2["rows"][1]["partial"] and _g2["rows"][1]["month"] == "2027-12", _g2["rows"][1])
 check("⑬g 短端：3 個月升、2 年不動＝近期升息定價增加", le.short_end_verdict(0, 12).startswith("3 個月期上升"))
 
+# ⑭ 全球 10 年期日資料：三個來源的解析與 DTD／MTD／YTD
+_jp = ("Interest Rate (October 2026),,,\nDate,1Y,2Y,3Y,4Y,5Y,6Y,7Y,8Y,9Y,10Y,15Y\n"
+       "2026/10/1,1.668,1.939,2.077,2.274,2.407,2.534,2.657,2.82,2.952,3.092,3.62\n"
+       "2026/10/2,1.6,1.9,2.0,2.2,2.4,2.5,2.6,2.8,2.9,-,3.6\n,,,\n")
+_r = ts._jgb_parse(_jp)
+check("⑭a JGB：取 10Y 欄、跳過「-」", _r == [{"date": "2026-10-01", "value": 3.092}], _r)
+_orig = ts._g_get
+ts._g_get = lambda url: ('\ufeff"",BBSIS.D\n"",Term structure\nComment,,\n2026-10-16,3.48,\n'
+                         '2026-10-17,.,No value available\n2026-10-19,3.49,\n')
+try:
+    _r = ts.bund_10y(dt.date(2026, 10, 20))
+finally:
+    ts._g_get = _orig
+check("⑭b Bundesbank：跳過假日的「.」", [x["value"] for x in _r] == [3.48, 3.49], _r)
+ts._g_get = lambda url: "DATE,IUDMNPY\n14 Oct 2026,5.383\n15 Oct 2026,5.3092\n"
+try:
+    _r = ts.gilt_10y(dt.date(2026, 10, 20))
+finally:
+    ts._g_get = _orig
+check("⑭c BoE：日期格式「15 Oct 2026」", _r[-1] == {"date": "2026-10-15", "value": 5.3092}, _r)
+_rows = [{"date": "2025-12-30", "value": 4.10}, {"date": "2025-12-31", "value": 4.18},
+         {"date": "2026-09-30", "value": 5.29}, {"date": "2026-10-15", "value": 5.10}, {"date": "2026-10-16", "value": 5.09}]
+_c = le.dtd_mtd_ytd(_rows)
+check("⑭d DTD／MTD／YTD 基期正確", round(_c["dtd"]) == -1 and round(_c["mtd"]) == -20 and round(_c["ytd"]) == 91, _c)
+
 if not ok:
     sys.exit(1)
 print("\n全部通過")

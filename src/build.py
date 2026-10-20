@@ -3016,18 +3016,29 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     # 舊欄位（收合摘要用）：沿用 spreads
     out["slopes"] = [{"label": r["key"], "value": r["value"], "chg": r.get("mom")}
                      for r in out["spreads"]]
-    # 全球長端
-    glb = [("美國", "IRLTLT01USM156N", "var(--line-1)"), ("德國", "IRLTLT01DEM156N", "var(--line-2)"),
-           ("英國", "IRLTLT01GBM156N", "#1baf7a"), ("日本", "IRLTLT01JPM156N", "#eda100")]
+    # 全球長端（2026-10 第二版）：10 年期公債日資料。美國＝財政部 DGS10，德國＝Bundesbank，
+    # 英國＝Bank of England，日本＝財務省。某一國的日資料抓不到（且沒有快取）時，
+    # 那一國退回 OECD 月均並標示，其他國不受影響。
+    _g10 = tr.get("global10") or {}
+    glb = [("美國", "us", series.get("DGS10") or [], "IRLTLT01USM156N", "var(--line-1)", "財政部"),
+           ("德國", "de", _g10.get("de") or [], "IRLTLT01DEM156N", "var(--line-2)", "Bundesbank"),
+           ("英國", "uk", _g10.get("uk") or [], "IRLTLT01GBM156N", "#1baf7a", "Bank of England"),
+           ("日本", "jp", _g10.get("jp") or [], "IRLTLT01JPM156N", "#eda100", "財務省")]
+    _grows, _gser = [], []
+    for n, key, daily, oecd, col, src in glb:
+        daily = [r for r in daily if r.get("value") is not None]
+        if len(daily) > 20:
+            _grows.append({"name": n, "key": key, **le.dtd_mtd_ytd(daily), "src": src, "daily": True})
+            _gser.append({"label": n, "color": col, "points": daily})
+        elif series.get(oecd):
+            m = series[oecd]
+            _grows.append({"name": n, "key": key, "value": m[-1]["value"], "date": m[-1]["date"],
+                           "dtd": None, "mtd": None, "ytd": None, "src": "OECD 月均", "daily": False})
+            _gser.append({"label": n + "（月均）", "color": col, "points": m})
     out["global"] = {
-        "chart": charts.compact_lines([{"label": n, "color": c, "points": series.get(sid) or []}
-                                       for n, sid, c in glb], unit="%", height=150, digits=2,
-                                      aria="全球 10 年期公債殖利率"),
-        "rows": [{"name": n, "value": value_at(series.get(sid) or []),
-                  "chg12": ((series[sid][-1]["value"] - series[sid][-13]["value"]) * 100
-                            if len(series.get(sid) or []) > 13 else None),
-                  "date": (series.get(sid) or [{}])[-1].get("date", "")}
-                 for n, sid, _ in glb if series.get(sid)],
+        "chart": charts.compact_lines(_gser, unit="%", height=180, digits=2, months=12, xmonths=True,
+                                      aria="美國、德國、英國、日本 10 年期公債殖利率（日資料，近一年）") if _gser else "",
+        "rows": _grows,
     }
     # 拍賣
     auc = tr.get("auctions") or []

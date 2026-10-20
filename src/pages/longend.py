@@ -723,14 +723,24 @@ def global_(d: dict) -> str:
     rows = g.get("rows") or []
     if not rows:
         return '<div class="empty">資料不足</div>'
-    cards = "".join(f'<div class="le-g"><span>{esc(r["name"])}</span><b>{r["value"]:.2f}%</b>'
-                    f'<em>近 12 月 {_bp(r["chg12"])}</em></div>' for r in rows)
-    asof = rows[0]["date"][:7].replace("-", "/")
+    def _card(r):
+        if r.get("daily"):
+            chg = "".join(f'<em><i>{k}</i>{_bp(r.get(f))}</em>' for k, f in (("DTD", "dtd"), ("MTD", "mtd"), ("YTD", "ytd")))
+            when = f'{esc(_md(r["date"]))}'
+        else:
+            chg = '<em><i>月均</i>無日資料</em>'
+            when = esc(r["date"][:7].replace("-", "/")) + " 月均"
+        return (f'<div class="le-g"><span>{esc(r["name"])}<small>{when}</small></span>'
+                f'<b>{r["value"]:.2f}%</b>{chg}</div>')
+    cards = "".join(_card(r) for r in rows)
+    srcs = "、".join(f'{r["name"]}：{r["src"]}' for r in rows)
+    lag = [r["name"] for r in rows if r.get("daily") and r["date"] < max(x["date"] for x in rows if x.get("daily"))]
     return f"""
     <p class="hint">期限溢酬如果是全球一起漲，原因多半是全球的財政與供給；只有美國在漲，才是美國自己的問題。</p>
     <div class="le-gs">{cards}</div>
-    <div class="viz-block">{g.get('chart', '')}</div>
-    <div class="src">OECD 長期利率（10 年期公債月均），經 FRED 取得，資料至 {esc(asof)}。月資料落後約一個月。</div>"""
+    <div class="viz-block"><div class="viz-h">10 年期公債殖利率（日資料，近一年）</div>{g.get('chart', '')}</div>
+    <div class="src">10 年期公債殖利率，日資料：{esc(srcs)}。DTD＝比前一個交易日、MTD＝比上月最後一個交易日、YTD＝比去年最後一個交易日（bp）。
+      各國休市日與公布時間不同，最新一筆的日期標在各卡右上{("；" + "、".join(lag) + "的資料較晚（英國央行約晚 2～3 個營業日）") if lag else ""}。</div>"""
 
 
 # ---------------------------------------------------------------------------

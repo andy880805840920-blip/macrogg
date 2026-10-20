@@ -1293,6 +1293,15 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
         log.warning("期限溢酬模型取得失敗（%s）", e)
         out["term_premia"] = {}
         failed.append("term_premia")
+    # 全球 10 年期公債（日資料）：德國 Bundesbank、英國 BoE、日本財務省；各自獨立，一個失敗不影響其他
+    out["global10"] = {}
+    for key, fn in (("de", bund_10y), ("uk", gilt_10y), ("jp", jgb_10y)):
+        try:
+            out["global10"][key] = fn(end)
+        except Exception as e:                     # noqa: BLE001
+            log.warning("%s 10 年期日資料取得失敗（%s）", key.upper(), e)
+    if len(out["global10"]) < 3:
+        failed.append("global10")
     try:
         out["qra"] = qra_estimate(end)
     except Exception as e:                         # noqa: BLE001
@@ -1307,7 +1316,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
 # 週／月頻、改版少的來源：抓取失敗或回空時沿用上一次成功的版本，頁面不會整區空白
 # （畫面上各數字本來就標資料日期，沿用舊值時日期自然是舊的）。只在內容有變時才
 # 寫檔，避免每次更新都產生一個大的 state 差異。
-LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia",
+LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia", "global10",
                   "mspd", "fed_bills", "buybacks", "buyback_schedule", "auctions", "soma")
 
 
@@ -1334,3 +1343,98 @@ def _with_last_good(out: dict, failed: list, path: pathlib.Path, today: str) -> 
             path.write_text(json.dumps(cache, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         except OSError:
             pass
+
+
+# ---------------------------------------------------------------------------
+# 全球 10 年期公債殖利率（日資料，2026-10）：取代 OECD 月均（落後約一個月）
+#   德國：Bundesbank 上市聯邦證券利率期限結構（Svensson），剩餘 10 年，每日
+#   英國：Bank of England 名目平價殖利率 10 年（IUDMNPY），每日，約晚 2–3 個營業日
+#   日本：財務省 JGB 各天期利率（當月檔＋歷史檔），10 年，每日
+#   回傳 [{date, value}]，從去年 12 月起（算 YTD 要去年最後一筆）
+# ---------------------------------------------------------------------------
+BUND_URL = ("https://api.statistiken.bundesbank.de/rest/data/BBSIS/"
+            "D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A?format=csv&lang=en&startPeriod={start}")
+GILT_URL = ("https://www.bankofengland.co.uk/boeapps/database/_iadb-fromshowcolumns.asp?csv.x=yes"
+            "&Datefrom={start}&Dateto=now&SeriesCodes=IUDMNPY&CSVF=TN&UsingCodes=Y&VPD=Y&VFD=N")
+JGB_CUR = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv"
+JGB_ALL = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/historical/jgbcme_all.csv"
+
+
+def _g_start(end: dt.date) -> dt.date:
+    return dt.date(end.year - 1, 12, 1) if end.month > 1 else dt.date(end.year - 2, 12, 1)
+
+
+def _g_get(url: str) -> str:
+    for k in range(3):
+        try:
+            r = requests.get(url, timeout=(20, 90), headers={"User-Agent": "Mozilla/5.0"})
+            r.raise_for_status()
+            return r.content.decode("utf-8-sig", "ignore")
+        except Exception:                          # noqa: BLE001
+            if k == 2:
+                raise
+    return ""
+
+
+def bund_10y(end: dt.date) -> list[dict]:
+    start = min(_g_start(end), end - dt.timedelta(days=400)).isoformat()
+    out = []
+    for line in _g_get(BUND_URL.format(start=start)).splitlines():
+        p = [x.strip('"') for x in line.split(",")]
+        if len(p) >= 2 and re.match(r"\d{4}-\d{2}-\d{2}$", p[0]):
+            try:
+                out.append({"date": p[0], "value": float(p[1])})
+            except ValueError:
+                pass                               # 假日是「.」
+    if not out:
+        raise ValueError("Bundesbank 回傳沒有資料")
+    return out
+
+
+def gilt_10y(end: dt.date) -> list[dict]:
+    st = min(_g_start(end), end - dt.timedelta(days=400))
+    out = []
+    for line in _g_get(GILT_URL.format(start=st.strftime("%d/%b/%Y"))).splitlines():
+        p = [x.strip() for x in line.split(",")]
+        if len(p) >= 2:
+            try:
+                d = dt.datetime.strptime(p[0], "%d %b %Y").date()
+                out.append({"date": d.isoformat(), "value": float(p[1])})
+            except ValueError:
+                pass
+    if not out:
+        raise ValueError("BoE 回傳沒有資料（可能被阻擋）")
+    return sorted(out, key=lambda r: r["date"])
+
+
+def _jgb_parse(text: str) -> list[dict]:
+    rows, col = [], None
+    for line in text.splitlines():
+        p = [x.strip() for x in line.split(",")]
+        if p and p[0] == "Date":
+            col = p.index("10Y") if "10Y" in p else None
+            continue
+        if col is None or len(p) <= col:
+            continue
+        m = re.match(r"(\d{4})/(\d{1,2})/(\d{1,2})$", p[0])
+        if not m:
+            continue
+        try:
+            rows.append({"date": dt.date(int(m[1]), int(m[2]), int(m[3])).isoformat(), "value": float(p[col])})
+        except ValueError:
+            pass                                   # 「-」＝沒有報價
+    return rows
+
+
+def jgb_10y(end: dt.date) -> list[dict]:
+    start = min(_g_start(end), end - dt.timedelta(days=400)).isoformat()
+    hist = [r for r in _jgb_parse(_g_get(JGB_ALL)) if r["date"] >= start]
+    try:
+        cur = _jgb_parse(_g_get(JGB_CUR))          # 當月（歷史檔只到上個月底）
+    except Exception as e:                         # noqa: BLE001
+        log.warning("JGB 當月檔取得失敗（%s），只用歷史檔", e)
+        cur = []
+    by = {r["date"]: r for r in hist + cur}
+    if not by:
+        raise ValueError("財務省 JGB 檔案沒有資料")
+    return [by[d] for d in sorted(by)]
