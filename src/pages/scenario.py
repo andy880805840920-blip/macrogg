@@ -586,6 +586,49 @@ def _duration(rows: list) -> str:
             '±25bp 是情境試算：凸性讓下跌比上漲少一點。</div>')
 
 
+# ---- 金融條件：聯準會 FCI-G（2026-10） ----
+def _fci(d: dict) -> tuple[str, str]:
+    """回傳（區塊 HTML, 收合摘要）。"""
+    from .. import charts
+    from ..analysis import fci as F
+    f = d.get("fci") or {}
+    rows, sm = f.get("rows") or [], f.get("summary")
+    if not rows or not sm:
+        return '<div class="empty">FCI-G 資料本次取得失敗</div>', "聯準會 FCI-G"
+    cols = [(k, lab, f"var(--fci-{i + 1})") for i, (k, lab) in enumerate(F.COMPS)]
+    from .. import fmt as _fmt
+    bp = lambda v: "—" if v is None else _fmt.signed(v, 2)
+    ym = lambda s_: f"{s_[:4]}/{s_[5:7]}"
+    def panel(n_months, years):
+        sub = rows[-n_months:]
+        return charts.impulse_chart(sub, cols, total_label="FCI-G 指數", label_years=years)
+    tabs = (f'<div class="tabs fci-tabs">'
+            f'<input type="radio" name="fci-r" id="fci-r10" checked><label for="fci-r10">近 10 年</label>'
+            f'<input type="radio" name="fci-r" id="fci-r5"><label for="fci-r5">近 5 年</label>'
+            f'<input type="radio" name="fci-r" id="fci-r1"><label for="fci-r1">近 1 年</label>'
+            f'<div class="tabp p10">{panel(120, True)}</div><div class="tabp p5">{panel(60, True)}</div>'
+            f'<div class="tabp p1">{panel(13, False)}</div></div>')
+    cards = "".join(
+        f'<div class="fci-c{" main" if c["key"] == sm["main"]["key"] else ""}" style="--c:var(--fci-{i + 1})">'
+        f'<span>{esc(c["label"])}</span><b>{_fmt.signed(c["value"], 2)}</b>'
+        f'<small>較上月 {bp(c["m1"])}</small><small>較一年前 {bp(c["y1"])}</small></div>'
+        for i, c in enumerate(sm["comps"]))
+    word = {"tight": "偏緊・成長逆風", "loose": "偏鬆・成長順風", "neutral": "大致中性"}[sm["stance"]]
+    html = (f'<p class="hint">聯準會的「金融條件對成長的衝擊」：利率、信用、股市、房價、美元的變化，'
+            f'預計在未來一年對實質 GDP 成長的拖累（正）或助力（負），單位為百分點。七個成份相加＝指數。</p>'
+            f'<div class="fci-tot"><b>{_fmt.signed(sm["total"], 2)}pp</b><span>{word}　·　{ym(sm["date"])}</span>'
+            f'<span>較上月 {bp(sm["m1"])}　·　較一年前 {bp(sm["y1"])}</span></div>'
+            f'<div class="fci-cards">{cards}</div>{tabs}'
+            f'<details class="f-more"><summary>怎麼讀・資料來源</summary><div class="f-detail">'
+            f'<p><b>正值＝逆風</b>：金融條件比過去三年平均更緊，壓低未來一年的成長；<b>負值＝順風</b>。'
+            f'各成份是該市場變數過去三年的變化，經聯準會總體模型換算成對成長的影響（baseline、三年回溯）。</p>'
+            f'<p>標題的「主要來自」＝與指數同方向、貢獻最大的成份；佔比是它在同方向成份中的比重。'
+            f'點選或滑過圖中任一個月，讀數框列出該月的指數與七個成份。</p>'
+            f'<p>資料：聯準會 FEDS Notes「Financial Conditions Impulse on Growth」公開月資料'
+            f'（fci_g_public_monthly_3yr.csv），每月更新，約落後一個月。</p></div></details>')
+    return html, sm["headline"]
+
+
 # ---- 市場定價：期貨路徑 vs 點陣圖 ----
 def _futures(d: dict, sc) -> tuple[str, str]:
     fc = d.get("futures_curve") or {}
@@ -723,6 +766,7 @@ def _scenario_body_full(d: dict) -> str:
     pos_rows = d.get("pos_compare") or []
     _pos_sum, _pos_line = _pos_summary(pos_rows) if pos_rows else ("尚無資料", "")
     market_html, _mkt_sum = _futures(d, sc)
+    _fci_html, _fci_sum = _fci(d)
     _mkt_sum = _mkt_sum.replace(" ", NB)
 
     focus = sc.focus or {}
@@ -801,6 +845,14 @@ def _scenario_body_full(d: dict) -> str:
         預期與實際同向＝一致；一邊有方向、另一邊區間＝偏離；方向相反＝相反。</div>
     </details>
     {_duration(d.get('duration') or [])}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2 id="fci" data-sum="{esc(_fci_sum)}">金融條件</h2>
+    <p class="fci-head"><b>{esc(_fci_sum)}</b></p>
+    {_fci_html}
   </div>
 </div>
 
@@ -934,7 +986,8 @@ def scenario_footer(d: dict) -> str:
         [("就業格位", "失業率相對 FOMC 長期區間", "每月"),
          ("通膨格位", "核心 PCE 年增；Supercore 三月年化連兩月越過門檻才推一格", "每月"),
          ("用哪一張九宮格", "聯準會重心：聲明制式句、反對票、記者會表態", "每次會議"),
-         ("固定收益對照", "框架預期是教科書式映射；期貨路徑取自交易所報價", "每日")],
+         ("固定收益對照", "框架預期是教科書式映射；期貨路徑取自交易所報價", "每日"),
+         ("金融條件", "聯準會 FCI-G（Financial Conditions Impulse on Growth，三年回溯）", "每月・約落後一個月")],
         ["情境依據就業、通膨與聯準會政策資料判讀，詳細條件見各區說明。"],
         cols=("項目", "依據", "更新"),
         head="<b>判讀依據</b> 就業、通膨與聯準會政策",

@@ -2563,6 +2563,38 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .tabs>input:focus-visible+label{outline:2px solid var(--series-1)}
 .tabp{display:none}
 #le-br1:checked~.tabp.p1,#le-br3:checked~.tabp.p3,#le-br12:checked~.tabp.p12{display:block}
+/* 情境頁「金融條件」（FCI-G 分解圖，2026-10）：調色盤＝dataviz 參考調色盤前七格（已驗證：堆疊相鄰色、深淺模式都過） */
+:root{--fci-1:#2a78d6;--fci-2:#eb6834;--fci-3:#1baf7a;--fci-4:#eda100;--fci-5:#e87ba4;--fci-6:#008300;--fci-7:#6250d6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}}
+:root[data-theme="dark"]{--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}
+#fci-r10:checked~.tabp.p10,#fci-r5:checked~.tabp.p5,#fci-r1:checked~.tabp.p1{display:block}
+.ic{margin-top:10px}
+.ic-plot{position:relative;margin:6px 0 22px 40px}
+.ic-grid{position:absolute;left:0;right:0;border-top:1px solid var(--grid)}
+.ic-grid.z{border-top:1px solid var(--text-secondary)}
+.ic-tick{position:absolute;right:calc(100% + 6px);transform:translateY(-50%);font-size:11px;color:var(--muted);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ic-cols{position:absolute;inset:0;display:flex}
+.ic-col{position:relative;flex:1 1 0;min-width:0;cursor:crosshair}
+.ic-col:hover,.ic-col[data-chart-selected]{background:color-mix(in srgb,var(--text-primary) 7%,transparent)}
+.ic-col>i{position:absolute;left:12%;right:12%;display:block}
+.ic-x{position:absolute;top:calc(100% + 4px);left:0;font-size:10.5px;color:var(--muted);white-space:nowrap}
+/* 手機上十年的年份標籤太擠：只標偶數年（讀數框仍可查每個月） */
+@media(max-width:600px){.ic-plot .ic-x.odd{display:none}}
+.ic-line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.ic-leg-line{display:inline-block;width:14px;height:0!important;border-top:2px solid var(--text-primary);vertical-align:middle;background:none!important}
+.viz-root:not(#_) .fci-head{margin:2px 0 8px;font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
+.fci-tot{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:10px 0 4px}
+.fci-tot b{font-size:26px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.fci-tot span{font-size:var(--fs-small);color:var(--text-secondary)}
+.fci-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+@media(min-width:620px){.fci-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(min-width:1000px){.fci-cards{grid-template-columns:repeat(7,minmax(0,1fr))}}
+.fci-c{border:1px solid var(--border);border-radius:10px;padding:8px 10px;box-shadow:inset 0 3px 0 var(--c)}
+.fci-c.main{border-color:var(--text-secondary)}
+.fci-c>span{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);line-height:1.35;min-height:2.7em}
+.fci-c>b{display:block;font-size:19px;font-variant-numeric:tabular-nums;color:var(--text-primary);margin:2px 0}
+.fci-c>small{display:block;font-size:11.5px;color:var(--muted);line-height:1.5;font-variant-numeric:tabular-nums}
 .br{margin-top:4px}
 .br-row{display:grid;grid-template-columns:minmax(96px,32%) 1fr 70px;gap:10px;align-items:center;padding:6px 4px;border-radius:6px}
 .br-row:hover{background:var(--surface-2)}

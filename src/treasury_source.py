@@ -1305,6 +1305,12 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
     if len(out["global10"]) < 7:
         failed.append("global10")
     try:
+        out["fci_g"] = fci_g()
+    except Exception as e:                         # noqa: BLE001
+        log.warning("FCI-G 取得失敗（%s）", e)
+        out["fci_g"] = []
+        failed.append("fci_g")
+    try:
         out["qra"] = qra_estimate(end)
     except Exception as e:                         # noqa: BLE001
         log.warning("QRA 借款估計取得失敗（%s）", e)
@@ -1318,7 +1324,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
 # 週／月頻、改版少的來源：抓取失敗或回空時沿用上一次成功的版本，頁面不會整區空白
 # （畫面上各數字本來就標資料日期，沿用舊值時日期自然是舊的）。只在內容有變時才
 # 寫檔，避免每次更新都產生一個大的 state 差異。
-LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia", "global10",
+LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia", "global10", "fci_g",
                   "mspd", "fed_bills", "buybacks", "buyback_schedule", "auctions", "soma")
 
 
@@ -1505,3 +1511,40 @@ def cgb_10y(end: dt.date) -> list[dict]:
     if not out:
         raise ValueError("財政部國債收益率曲線回傳沒有資料")
     return sorted(out, key=lambda r: r["date"])
+
+
+# ---------------------------------------------------------------------------
+# 聯準會 Financial Conditions Impulse on Growth（FCI-G，2026-10）
+#   baseline＝三年回溯（Fed 官網圖用的版本）；單位＝對未來一年實質 GDP 成長的拖累／助力（百分點）。
+#   正值＝逆風（金融條件偏緊）、負值＝順風（偏鬆）。每月一筆，各成份相加＝指數。
+# ---------------------------------------------------------------------------
+FCI_G_URL = "https://www.federalreserve.gov/econres/notes/feds-notes/fci_g_public_monthly_3yr.csv"
+FCI_G_COLS = {"FFR": "ffr", "10Yr Treasury": "t10", "Mortgage Rate": "mort", "BBB": "bbb",
+              "Stock Market": "stock", "House Prices": "house", "Dollar": "dollar"}
+
+
+def fci_g() -> list[dict]:
+    """[{date, total, ffr, t10, mort, bbb, stock, house, dollar}]，近 11 年（圖最長看 10 年，留一年算年比）。"""
+    import csv as _csv
+    import io as _io
+    text = _g_get(FCI_G_URL)
+    rd = _csv.reader(_io.StringIO(text))
+    head = next(rd)
+    idx_total = next(i for i, h in enumerate(head) if h.startswith("FCI-G"))
+    cols = {FCI_G_COLS[h]: i for i, h in enumerate(head) if h in FCI_G_COLS}
+    if len(cols) != len(FCI_G_COLS):
+        raise ValueError(f"FCI-G 欄位改了：{head}")
+    out = []
+    for row in rd:
+        if not row or not re.match(r"\d{4}-\d{2}-\d{2}$", row[0]):
+            continue
+        try:
+            r = {"date": row[0], "total": float(row[idx_total])}
+            r.update({k: float(row[i]) for k, i in cols.items()})
+        except (ValueError, IndexError):
+            continue
+        out.append(r)
+    if not out:
+        raise ValueError("FCI-G 檔案沒有資料")
+    cut = f"{int(out[-1]['date'][:4]) - 11}{out[-1]['date'][4:]}"
+    return [r for r in out if r["date"] >= cut]

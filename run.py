@@ -890,6 +890,7 @@ def main() -> int:
             except Exception as e:                 # noqa: BLE001
                 log.warning("財政部／SOMA 資料取得失敗（%s），相關區塊本次不顯示", e)
                 _tr = {}
+            ctxs["_fci_rows"] = _tr.get("fci_g") or []
             ctxs["rates"] = build.build_rates_context(
                 cfg, series, failed, args.offline, treasury=_tr)
             p = ctxs["rates"]["pressure"]
@@ -1175,6 +1176,13 @@ def main() -> int:
         except Exception as e:                     # noqa: BLE001
             log.warning("情境頁期貨路徑產生失敗（%s），該區塊本次不顯示", e)
         _scx["mvd"] = (ctxs.get("fomc") or {}).get("mvd") or _scx.get("mvd")
+        # 金融條件（聯準會 FCI-G）：月資料＋最新一期的分解與標題
+        try:
+            from src.analysis import fci as _fci
+            _fr = ctxs.get("_fci_rows") or []
+            _scx["fci"] = {"rows": _fr, "summary": _fci.summarize(_fr)}
+        except Exception as e:                     # noqa: BLE001
+            log.warning("金融條件（FCI-G）整理失敗（%s），該區塊本次不顯示", e)
         # 長端頁 10 燈號＋03「市場怎麼看未來利率」：期貨定價 vs 點陣圖（Lead／Behind the Curve）
         try:
             from src.analysis import longend as _le

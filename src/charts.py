@@ -1244,3 +1244,68 @@ def rate_corridor(bars: Sequence[dict], lines: Sequence[dict], months: int = 6,
             f'<svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" role="img" '
             f'aria-label="{_esc(aria)}">{"".join(svg)}</svg>{"".join(over)}</div>'
             f'{xaxis}<div class="cl-leg">{legend}</div></div>')
+
+
+def impulse_chart(rows: Sequence[dict], comps: Sequence[tuple], total_key: str = "total",
+                  total_label: str = "指數", unit: str = "pp", digits: int = 2, height: int = 220,
+                  label_years: bool = True) -> str:
+    """
+    分解圖：每月一根柱，正值由零軸往上堆、負值往下堆（各成份貢獻），疊一條指數折線。
+    rows：[{date, total, k1, k2, …}]；comps：[(key, 標籤, 顏色)]，顏色依序＝堆疊順序。
+    滑過／點選一個月，讀數框列出該月指數與每個成份（.gc 是全站圖表讀數框的容器之一）。
+    """
+    rows = [r for r in rows if r.get(total_key) is not None]
+    if len(rows) < 2:
+        return '<div class="empty">資料不足</div>'
+    hi = max(max(sum(max(r[k], 0) for k, _, _ in comps), r[total_key]) for r in rows)
+    lo = min(min(sum(min(r[k], 0) for k, _, _ in comps), r[total_key]) for r in rows)
+    step = next(s for s in (0.1, 0.25, 0.5, 1.0, 2.0, 5.0) if (hi - lo) / s <= 6)
+    import math as _m
+    top, bot = _m.ceil(hi / step) * step, _m.floor(lo / step) * step
+    span = (top - bot) or 1.0
+    y = lambda v: (top - v) / span * 100                      # 由上往下的百分比
+    _dec = 2 if step < 0.5 else (1 if step < 1 else 0)          # 0.25 的格線要兩位小數才不會被捨入成錯的數字
+    ticks = []
+    t = bot
+    while t <= top + 1e-9:
+        ticks.append(round(t, 6))
+        t += step
+    grid = "".join(f'<span class="ic-grid{" z" if abs(v) < 1e-9 else ""}" style="top:{y(v):.2f}%"></span>'
+                   f'<span class="ic-tick" style="top:{y(v):.2f}%">{"0" if abs(v) < 1e-9 else f"{v:+.{_dec}f}"}</span>'
+                   .replace("+0.0<", "0<").replace("+0<", "0<") for v in ticks)
+    cols = []
+    n = len(rows)
+    for i, r in enumerate(rows):
+        segs, up, dn = "", 0.0, 0.0
+        for k, lab, col in comps:
+            v = r[k]
+            if v >= 0:
+                a, b = up, up + v
+                up = b
+            else:
+                a, b = dn + v, dn
+                dn = a
+            if abs(v) < 1e-9:
+                continue
+            segs += (f'<i style="top:{y(b):.3f}%;height:{max((b - a) / span * 100, 0.15):.3f}%;'
+                     f'background:{col}"></i>')
+        from . import fmt as _fmt
+        tip = (f'{r["date"][:7].replace("-", "/")}｜{total_label} {_fmt.signed(r[total_key], digits)}{unit}｜'
+               + "｜".join(f"{lab} {_fmt.signed(r[k], digits)}" for k, lab, _ in comps))
+        lab = ""
+        if label_years and r["date"][5:7] == "01":
+            lab = f'<span class="ic-x{" odd" if int(r["date"][:4]) % 2 else ""}">{r["date"][:4]}</span>'
+        elif not label_years and i % 2 == (n - 1) % 2:
+            lab = f'<span class="ic-x">{int(r["date"][5:7])}月</span>'
+        cols.append(f'<div class="ic-col" data-tip="{_esc(tip)}">{segs}{lab}</div>')
+    pts = " ".join(f"{(i + 0.5) / n * 100:.3f},{y(r[total_key]):.3f}" for i, r in enumerate(rows))
+    line = (f'<svg class="ic-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
+            f'<polyline points="{pts}" fill="none" stroke="var(--text-primary)" stroke-width="2" '
+            f'vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>')
+    leg = (f'<span><i class="ic-leg-line"></i>{_esc(total_label)}</span>'
+           + "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
+                     for _, l, c in comps))
+    return (f'<div class="gc ic"><div class="ic-plot" style="height:{height}px" role="img" '
+            f'aria-label="{_esc(total_label)}與各成份貢獻（每月）">{grid}<div class="ic-cols">{"".join(cols)}</div>{line}</div>'
+            f'<div class="cl-leg">{leg}</div></div>')
+
