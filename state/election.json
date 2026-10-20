@@ -45,9 +45,9 @@
   "vol": 18675277.433218002
  },
  "senate": {
-  "dem": 0.635,
+  "dem": 0.645,
   "rep": 0.365,
-  "d1": -0.01,
+  "d1": null,
   "closed": false,
   "hist": [
    0.605,
@@ -222,7 +222,7 @@
      "lead": {
       "name": "Tom Cotton",
       "party": "R",
-      "p": 0.948
+      "p": 0.9485
      },
      "other": {
       "name": "Hallie Shoffner",
@@ -231,7 +231,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 89.3,
+     "gap": 89.4,
      "vol": 40630.55574199998,
      "url": "https://polymarket.com/event/arkansas-senate-election-winner"
     },
@@ -248,7 +248,7 @@
      "other": {
       "name": "Mark Baisley",
       "party": "R",
-      "p": 0.0135
+      "p": 0.013
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -285,7 +285,7 @@
      "lead": {
       "name": "Jon Ossoff",
       "party": "D",
-      "p": 0.962
+      "p": 0.9605
      },
      "other": {
       "name": "Mike Collins",
@@ -294,7 +294,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 92.4,
+     "gap": 92.2,
      "vol": 247684.67546600004,
      "url": "https://polymarket.com/event/georgia-senate-election-winner"
     },
@@ -563,7 +563,7 @@
      "other": {
       "name": "Larry Marker",
       "party": "R",
-      "p": 0.02
+      "p": 0.0205
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -600,7 +600,7 @@
      "lead": {
       "name": "Jeff Merkley",
       "party": "D",
-      "p": 0.983
+      "p": 0.982
      },
      "other": {
       "name": "David Brock Smith",
@@ -609,7 +609,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.6,
+     "gap": 96.5,
      "vol": 7545.577216,
      "url": "https://polymarket.com/event/oregon-senate-election-winner"
     },
@@ -747,7 +747,7 @@
      "lead": {
       "name": "Shelley Moore Capito",
       "party": "R",
-      "p": 0.98
+      "p": 0.9815
      },
      "other": {
       "name": "Rachel Fetty Anderson",
@@ -756,7 +756,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.8,
+     "gap": 96.9,
      "vol": 17615.431777000005,
      "url": "https://polymarket.com/event/west-virginia-senate-election-winner"
     },
@@ -1078,11 +1078,11 @@
      "other": {
       "name": "Andy Biggs",
       "party": "R",
-      "p": 0.075
+      "p": 0.085
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 85.0,
+     "gap": 84.0,
      "vol": 185890.66661599997,
      "url": "https://polymarket.com/event/arizona-governor-winner-2026"
     },
@@ -1115,16 +1115,16 @@
      "lead": {
       "name": "Sarah Huckabee Sanders",
       "party": "R",
-      "p": 0.9685
+      "p": 0.969
      },
      "other": {
       "name": "Fredrick Love",
       "party": "D",
-      "p": 0.025
+      "p": 0.022
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.3,
+     "gap": 94.7,
      "vol": 11284.715005999999,
      "url": "https://polymarket.com/event/arkansas-governor-winner-2026"
     },
@@ -1262,7 +1262,7 @@
      "lead": {
       "name": "JB Pritzker",
       "party": "D",
-      "p": 0.9745
+      "p": 0.975
      },
      "other": {
       "name": "Darren Bailey",
@@ -1330,7 +1330,7 @@
      "other": {
       "name": "Robert Charles",
       "party": "R",
-      "p": 0.045
+      "p": 0.0455
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -1367,7 +1367,7 @@
      "lead": {
       "name": "Maura Healey",
       "party": "D",
-      "p": 0.9575
+      "p": 0.957
      },
      "other": {
       "name": "Michael Minogue",
@@ -1477,11 +1477,11 @@
      "other": {
       "name": "Cinde Warmington",
       "party": "D",
-      "p": 0.0535
+      "p": 0.0525
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 88.4,
+     "gap": 88.5,
      "vol": 48513.001154,
      "url": "https://polymarket.com/event/new-hampshire-governor-winner-2026"
     },
@@ -1619,16 +1619,16 @@
      "lead": {
       "name": "Helena Foulkes",
       "party": "D",
-      "p": 0.963
+      "p": 0.964
      },
      "other": {
       "name": "Independent",
       "party": "I",
-      "p": 0.027
+      "p": 0.026
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 93.6,
+     "gap": 93.8,
      "vol": 72219.578456,
      "url": "https://polymarket.com/event/rhode-island-governor-winner-2026"
     },
@@ -1682,7 +1682,7 @@
      "lead": {
       "name": "Marsha Blackburn",
       "party": "R",
-      "p": 0.9335
+      "p": 0.933
      },
      "other": {
       "name": "Jerri Green",
