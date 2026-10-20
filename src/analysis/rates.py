@@ -531,6 +531,24 @@ class SupplyPressure:
     main: str = ""                    # 本月推動 10Y 最多的那一段（2026-10）
     main_bp: float | None = None
     gap_note: str = ""                # 原因與結果背離時的說明
+    # 2026-10：長端燈號改看「上升速度」後，首頁與情境頁同時呈現水準與速度，避免一邊寫偏高、一邊寫正常
+    speed: str = ""                   # good | warning | critical（同燈號）
+    speed_d1: float | None = None     # 近 1 個月變動（百分點）
+    speed_d3: float | None = None     # 近 3 個月變動（百分點）
+
+
+SPEED_ZH = {"good": "未加速", "warning": "上升偏快", "critical": "急升"}
+
+
+def pressure_label(p) -> tuple[str, str]:
+    """（短標籤, 色調）：水準＋速度，例如「水準偏高・未加速」。色調只在速度偏快時轉為警示。"""
+    lvl = {"high": "偏高", "moderate": "中性", "low": "偏低"}.get(getattr(p, "level", ""), "")
+    sp = SPEED_ZH.get(getattr(p, "speed", ""), "")
+    if not lvl:
+        return "資料不足", "neutral"
+    tone = ("hawkish" if getattr(p, "speed", "") in ("warning", "critical")
+            else "dovish" if getattr(p, "level", "") == "low" else "neutral")
+    return (f"水準{lvl}" + (f"・{sp}" if sp else "")), tone
 
 
 def fed_holdings_pace(series: dict) -> float | None:

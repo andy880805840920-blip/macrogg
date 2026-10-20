@@ -1372,6 +1372,16 @@ def _liq(C):
     return C.get("liquidity") or {}
 
 
+def _tp_speed_sentence(C) -> str:
+    """本站判讀：期限溢酬看上升速度（與長端頁燈號同一套）。"""
+    from .rates import pressure_label
+    pr = (C.get("rates") or {}).get("pressure")
+    if pr is None or not getattr(pr, "speed", ""):
+        return ""
+    lab, _ = pressure_label(pr)
+    return f"本站判讀：{esc(lab)}——水準偏高但沒有加速不算警訊，急升才是財政或供給壓力的訊號。"
+
+
 @fn("tp_acm")
 def _tp_acm(card, S, C):
     """期限溢酬：NY Fed ACM 為主，舊金山聯儲與 Kim-Wright 對照（跟長端頁同一份數字）。"""
@@ -1382,7 +1392,8 @@ def _tp_acm(card, S, C):
     val = f"{a['value']:.2f}%"
     ans = (f"10 年期期限溢酬（NY Fed ACM）{_b(val)}（{esc(a['date'][5:].replace('-', '/'))}），"
            f"本月 {esc(fnum(a.get('mtd'), 0, sign=True))} bp、年初至今 {esc(fnum(a.get('ytd'), 0, sign=True))} bp。"
-           "期限溢酬跟實質利率、損益兩平都有重疊（含實質期限溢酬與通膨風險溢酬），只能靠模型估計。")
+           "期限溢酬跟實質利率、損益兩平都有重疊（含實質期限溢酬與通膨風險溢酬），只能靠模型估計。"
+           + _tp_speed_sentence(C))
     rows = [[n, f"{D[k]['value']:.2f}%", fnum(D[k].get("mtd"), 0, sign=True), fnum(D[k].get("ytd"), 0, sign=True),
              D[k]["date"][5:].replace("-", "/")]
             for k, n in (("tp", "NY Fed ACM"), ("tp_sf", "San Francisco Fed"), ("tp_kw", "Kim-Wright")) if D.get(k)]
@@ -1528,11 +1539,59 @@ def _supply(card, S, C):
     pr = (C.get("rates") or {}).get("pressure")
     if pr is None:
         return None
-    lv = {"high": "偏高", "medium": "中等", "low": "偏低"}.get(getattr(pr, "level", ""), getattr(pr, "level", ""))
-    ans = f"本站的債券供給壓力分數 {_b(fnum(pr.score, 2))}（{esc(lv)}）。{esc(pr.gap_note or '')}"
-    rows = [[p.get("label"), p.get("detail")] for p in (pr.priced or [])] + [[p.get("label"), p.get("detail")] for p in (pr.demand or [])]
-    return Out(ans=ans, date=(C.get("rates") or {}).get("as_of", ""), table=(["項目", "現況"], rows) if rows else None,
-               note="壓力分數是本站規則。")
+    # 2026-10：不再有合成的「供給壓力分數」。期限溢酬（ACM）同時看水準與上升速度，跟長端頁燈號一致
+    from .rates import pressure_label
+    lab, _ = pressure_label(pr)
+    d1 = getattr(pr, "speed_d1", None)
+    d3 = getattr(pr, "speed_d3", None)
+    spd = (f"近 1 個月 {fnum(d1 * 100, 0, sign=True)} bp、近 3 個月 {fnum(d3 * 100, 0, sign=True)} bp"
+           if d1 is not None and d3 is not None else "")
+    ans = (f"期限溢酬（NY Fed ACM）{_b(fnum(pr.score, 2) + '%')}：{esc(lab)}"
+           + (f"（{esc(spd)}）" if spd else "") + "。"
+           "供給壓力真正推升殖利率時，期限溢酬通常在幾週到幾個月內急升；水準偏高但沒有加速，不算警訊。")
+    rows = [[p.get("label"), f'{fnum(p.get("score", 0) * 100, 0, sign=True)} bp'] for p in (pr.parts or [])]
+    return Out(ans=ans, date=(C.get("rates") or {}).get("as_of", ""),
+               table=(["本月 10 年期的組成", "貢獻"], rows) if rows else None,
+               note="水準門檻 0.20%／0.60%（ACM 2015 年以來約第 75／90 百分位）；速度門檻見長端頁「關鍵指標檢核」。")
+
+
+@fn("positioning")
+def _positioning(card, S, C):
+    fut = (((C.get("rates") or {}).get("flows")) or {}).get("fut")
+    if not fut:
+        return None
+    sh = fut.get("share") or {}
+    ans = esc(fut.get("head") or "")
+    rows = [[r["label"]] + [fnum(c["v"], 0, sign=True) for c in r["cells"]] for r in fut.get("matrix") or []]
+    head = ["參與者"] + [c["label"] for c in (fut.get("matrix") or [{}])[0].get("cells", [])]
+    return Out(ans=ans, date=fut.get("date", ""), table=(head, rows) if rows else None,
+               note="淨 DV01（百萬美元／bp），正＝淨多、負＝淨空；每口 DV01 為本站近似。")
+
+
+@fn("dealer_inv")
+def _dealer_inv(card, S, C):
+    inv = (((C.get("rates") or {}).get("flows")) or {}).get("inv")
+    if not inv:
+        return None
+    L = inv["last"]
+    ans = (f"初級交易商公債 coupon 淨持倉 {_b(fnum(L['coupons'], 0) + ' 十億美元')}（近 3 年第 {fnum(inv['pct3y'] * 100, 0)} 百分位），"
+           f"T-Bills {esc(fnum(L.get('bills'), 0))} 十億美元。{esc(inv.get('read') or '')}")
+    rows = [[b["label"], fnum(b["v"], 1), fnum(b.get("w4"), 1, sign=True), fnum(b.get("y1"), 1, sign=True)]
+            for b in inv.get("buckets") or []]
+    return Out(ans=ans, date=inv.get("date", ""), table=(["剩餘年限", "淨持倉", "4 週", "一年"], rows))
+
+
+@fn("fci")
+def _fci_card(card, S, C):
+    sm = ((((C.get("scenario") or {}).get("fci")) or {}).get("summary"))
+    if not sm:
+        return None
+    ans = (f"聯準會 FCI-G {_b(fnum(sm['total'], 2, sign=True) + ' 個百分點')}（{esc(sm['date'][:7].replace('-', '/'))}）："
+           f"{esc(sm['headline'])}。")
+    rows = [[c["label"], fnum(c["value"], 2, sign=True), fnum(c.get("m1"), 2, sign=True), fnum(c.get("y1"), 2, sign=True)]
+            for c in sm.get("comps") or []]
+    return Out(ans=ans, date=sm["date"][:7], table=(["成份", "貢獻", "較上月", "較一年前"], rows),
+               note="正＝成長逆風（偏緊）、負＝順風（偏鬆）。")
 
 
 @fn("fed_bs")
@@ -2091,6 +2150,26 @@ def practice_vals(C: dict, S: dict) -> dict:
         put("debt_gdp", fnum(dbt.debt_gdp, 1) if dbt.debt_gdp is not None else None)
         put("deficit_gdp", fnum(abs(dbt.deficit_gdp), 1) if dbt.deficit_gdp is not None else None)
         put("int_rev", fnum(dbt.interest_to_revenue, 1) if dbt.interest_to_revenue is not None else None)
+    if dbt is not None:
+        put("pub_gdp", fnum(dbt.pub_gdp, 1) if getattr(dbt, "pub_gdp", None) is not None else None)
+        put("cash_def", fnum(dbt.cash_deficit_gdp, 1) if getattr(dbt, "cash_deficit_gdp", None) is not None else None)
+        put("rmg", fnum(dbt.r_minus_g, 2, sign=True) if dbt.r_minus_g is not None else None)
+    _fl = (C.get("rates") or {}).get("flows") or {}
+    _fu, _iv = _fl.get("fut") or {}, _fl.get("inv") or {}
+    _sh = _fu.get("share") or {}
+    if _sh.get("now") is not None:
+        put("dlr_share", f"{_sh['now']:.0%}")
+        put("dlr_share_y", f"{_sh['ago']:.0%}" if _sh.get("ago") is not None else None)
+        _tot = {r["key"]: r["cells"][-1]["v"] for r in _fu.get("matrix") or []}
+        put("am_dv01", fnum(_tot.get("am"), 0, sign=True)), put("lev_dv01", fnum(_tot.get("lev"), 0, sign=True))
+        put("dlr_dv01", fnum(_tot.get("dlr"), 0, sign=True))
+    if _iv.get("last"):
+        put("pd_coupons", fnum(_iv["last"]["coupons"], 0)), put("pd_bills", fnum(_iv["last"].get("bills"), 0))
+        put("pd_pct", fnum((_iv.get("pct3y") or 0) * 100, 0))
+    _fs = ((C.get("scenario") or {}).get("fci") or {}).get("summary")
+    if _fs:
+        put("fci_total", fnum(_fs["total"], 2, sign=True))
+        put("fci_main", f"{_fs['main']['label']} {fnum(_fs['main']['value'], 2, sign=True)}")
     gr = [r for r in (((C.get("rates") or {}).get("le") or {}).get("global") or {}).get("rows") or [] if r.get("value") is not None]
     if gr:
         put("global_rows", "、".join(f"{r['name']} {fnum(r['value'], 2)}%" for r in gr))

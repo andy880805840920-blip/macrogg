@@ -89,7 +89,7 @@ def futures_view(tff: list[dict], series: dict) -> dict | None:
     # 參考圖口徑：資產管理＝淨多 DV01、槓桿基金與交易商＝淨空 DV01（都以正值呈現）
     sign = {"am": 1, "lev": -1, "dlr": -1}
     chart = {p: [{"date": d, "value": sign[p] * tot(d, p)} for d in ds] for p in sign}
-    head, chg, share = "", {}, {}
+    head, chg, share, verdict = "", {}, {}, ""
     if y1:
         chg = {p: sign[p] * (tot(last, p) - tot(y1, p)) for p in sign}
         # 空方結構：交易商佔（交易商＋槓桿基金）淨空 DV01 的比重——對做資產管理多單的是誰
@@ -101,17 +101,20 @@ def futures_view(tff: list[dict], series: dict) -> dict | None:
         flow = f"資產管理淨多 {am:+.0f}、槓桿基金淨空 {lev:+.0f}、交易商淨空 {dlr:+.0f}（百萬美元／bp）"
         if share["now"] is not None and share["ago"] is not None:
             if share["now"] > share["ago"] + 0.03:
+                verdict = "空方由槓桿基金轉向交易商"
                 head = (f"空方由槓桿基金轉向交易商：交易商佔兩者淨空 DV01 的比重一年內由 "
                         f"{share['ago']:.0%} 升到 {share['now']:.0%}；{flow}")
             elif share["now"] < share["ago"] - 0.03:
+                verdict = "空方回到槓桿基金"
                 head = (f"空方回到槓桿基金：交易商佔兩者淨空 DV01 的比重一年內由 "
                         f"{share['ago']:.0%} 降到 {share['now']:.0%}；{flow}")
             else:
+                verdict = "空方結構大致不變"
                 head = f"空方結構大致不變（交易商佔兩者淨空 DV01 約 {share['now']:.0%}）；{flow}"
         else:
             head = f"近一年{flow}"
     return {"date": last, "w1": w1, "w4": w4, "y1": y1, "matrix": matrix, "chart": chart, "head": head,
-            "chg_1y": chg, "share": share, "per": {CONTRACTS[c][0]: by[last][c]["per"] for c in CONTRACTS}}
+            "chg_1y": chg, "share": share, "verdict": verdict, "per": {CONTRACTS[c][0]: by[last][c]["per"] for c in CONTRACTS}}
 
 
 def dealer_inventory(pd: dict, auctions: list[dict] | None = None) -> dict | None:

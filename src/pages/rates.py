@@ -52,7 +52,7 @@ def _explained_card(lt, href: str, ex: dict | None) -> str:
   <details class="l-more"><summary>這在量什麼</summary>
     <div class="l-desc lx">{"".join(parts)}</div></details>
 </div>"""
-from . import compact_full, focus_evidence, state_chip, teach, gloss_more
+from . import compact_full, focus_evidence, state_chip, teach, gloss_more, learn_links
 from . import longend as LE
 
 
@@ -88,6 +88,30 @@ X_ESLR = (
     'FDIC 理事會資料。</p></div></details>')
 
 
+def _flw_summary(fut: dict) -> str:
+    """市場籌碼的結論區：一句結論、交易商佔淨空比重（一年前 → 現在）、三個參與者的一年變化。"""
+    from .. import fmt as _fmt
+    sh, chg = fut.get("share") or {}, fut.get("chg_1y") or {}
+    if not fut.get("verdict") or sh.get("now") is None:
+        return f'<p class="flw-head"><b>{esc(fut.get("head") or "")}</b></p>'
+    now, ago = sh["now"], sh.get("ago")
+    bar = (f'<div class="flw-bar" role="img" aria-label="交易商佔淨空比重：一年前 {ago:.0%}，現在 {now:.0%}">'
+           f'<i class="now" style="width:{now * 100:.1f}%"></i>'
+           + (f'<i class="ago" style="left:{ago * 100:.1f}%"></i>' if ago is not None else "") + '</div>'
+           f'<div class="flw-bar-lab"><span>交易商 <b>{now:.0%}</b>'
+           + (f'<em>（一年前 {ago:.0%}）</em>' if ago is not None else "") + '</span><span>槓桿基金 '
+           f'<b>{1 - now:.0%}</b></span></div>')
+    def chip(label, side, v, good_up):
+        cls = "up" if v > 0.5 else "dn" if v < -0.5 else ""
+        return (f'<div class="flw-chip"><span>{esc(label)}</span><em>{side}</em>'
+                f'<b class="{cls}">{_fmt.signed(v, 0)}</b></div>')
+    chips = "".join(chip(l, s_, chg.get(k, 0), True) for k, l, s_ in
+                    (("am", "資產管理", "淨多"), ("lev", "槓桿基金", "淨空"), ("dlr", "交易商", "淨空")))
+    return (f'<div class="flw-sum"><div class="flw-verdict">{esc(fut["verdict"])}</div>'
+            f'<div class="flw-sum-k">誰在對做資產管理的多單：交易商佔「交易商＋槓桿基金」淨空 DV01 的比重</div>{bar}'
+            f'<div class="flw-sum-k">近一年 DV01 變化（百萬美元／bp）</div><div class="flw-chips">{chips}</div></div>')
+
+
 def _flows(d: dict) -> tuple[str, str]:
     """市場籌碼：期貨 DV01 矩陣＋三年變化圖、eSLR 說明、初級交易商現券庫存。回傳（HTML, 收合摘要）。"""
     from .. import fmt as _fmt
@@ -114,7 +138,7 @@ def _flows(d: dict) -> tuple[str, str]:
             body += f'<tr><th scope="row">{esc(r["label"])}</th>{tds}</tr>'
         per = "、".join(f"{k} ${v:.0f}" for k, v in fut["per"].items())
         parts.append(
-            f'<p class="flw-head"><b>{esc(fut["head"])}</b></p>'
+            _flw_summary(fut) +
             f'<p class="hint">公債期貨上，誰在做多久期、誰在對做。DV01＝殖利率每變動 1bp 的部位損益（百萬美元）；'
             f'正＝淨多（利率下跌獲利）、負＝淨空。期貨一多一空，每一欄加總為零。</p>'
             f'<div class="viz-h">公債期貨淨 DV01：參與者 × 天期（CFTC，{md(fut["date"])} 部位，百萬美元／bp）</div>'
@@ -357,7 +381,7 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "最近誰在大量發行長天期債券：政府（財政赤字）與科技巨頭（AI 資本支出）。",
         "債券多到買不完，價格就跌、殖利率就升——跟任何市場一樣是供需。長端的供給壓力大，降息也壓不下長端利率。",
-        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。", learn="refunding")}
+        "把政府與企業的發行量加起來看方向：兩邊同時放量，長端承壓最重；這也是「降息但房貸利率不降」的常見原因。")}
     <div class="src">單位：億美元。年化＝單季 × 4，只用來比較量級。</div>
   </div>
 </div>"""
@@ -676,6 +700,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="decomp" data-sum="{esc(_dec_sum)}">長端利率的組成</h2>
     {LE.decomp(d)}
+    {learn_links("longend_parts", "term_premium", "tips", "breakeven")}
   </div>
 </div>
 
@@ -705,7 +730,8 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "幾家大型科技公司為了 AI 基礎建設花多少錢、自己的現金流夠不夠、缺口是不是靠發債補。",
         "這些公司過去是債券市場的買方（現金太多），AI 資本支出讓它們變成賣方。買方變賣方是雙重打擊——少了買盤、多了供給。",
-        "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。", learn="hyperscaler")}
+        "盯加總圖裡「柱子追上橫線」：資本支出超過營運現金流，缺口只能靠發債，供給壓力就會持續。")}
+    {learn_links("hyperscaler", "credit_spread")}
   </div>
 </div>
 
@@ -713,6 +739,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="curve" data-sum="{esc(_crv_sum)}">殖利率曲線</h2>
     {LE.curve(d)}
+    {learn_links("curve_spread", "curve_shape", "forwards", "fedwatch", "dots")}
   </div>
 </div>
 
@@ -720,6 +747,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="global" data-sum="{esc(_glb_sum)}">全球長端</h2>
     {LE.global_(d)}
+    {learn_links("global_long", "term_premium")}
   </div>
 </div>
 
@@ -727,6 +755,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="supply" data-sum="{esc(_sup_sum)}">債券供給：財政部與 Fed</h2>
     {LE.supply(d)}
+    {learn_links("refunding", "fed_bs", "bills_net")}
   </div>
 </div>
 
@@ -734,6 +763,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="auctions" data-sum="{esc(_auc_sum)}">Coupon 拍賣結果</h2>
     {LE.auctions(d)}
+    {learn_links("auctions", "auction_cal")}
   </div>
 </div>
 
@@ -741,6 +771,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="buybacks" data-sum="{esc(LE.buyback_summary(d))}">財政部 Buybacks</h2>
     {LE.buybacks(d)}
+    {learn_links("buyback", "refunding")}
   </div>
 </div>
 
@@ -748,6 +779,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="demand" data-sum="{esc(_dem_sum)}">債券需求：信用利差</h2>
     {LE.credit(d)}
+    {learn_links("credit_spread")}
   </div>
 </div>
 
@@ -766,7 +798,7 @@ def _rates_body_full(d: dict) -> str:
     {teach(
         "美國政府的赤字規模、利息負擔，以及由此推算的公債發行需求。",
         "財政赤字是長端供給的最大來源，而且跟景氣循環脫鉤了——就算經濟好赤字也降不下來，代表這股供給壓力是結構性的。",
-        "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。", learn="fiscal")}
+        "盯「利息支出佔比」：利息越滾越大會迫使發債更多，形成自我強化；那是長端利率的長期地心引力。")}
     <details data-m-collapse><summary>公式與名詞：債務率怎麼變、r − g 怎麼看</summary>
       <dl class="gloss" style="margin-top:10px">
         <dt>債務率變化</dt>
@@ -789,6 +821,7 @@ def _rates_body_full(d: dict) -> str:
       {(f'<p class="hint" style="margin-top:8px">{esc(d["debt_growth_note"])}</p>'
         if d.get('debt_growth_note') else '')}
     </details>
+    {learn_links("fiscal")}
   </div>
 </div>
 
@@ -796,6 +829,7 @@ def _rates_body_full(d: dict) -> str:
   <div class="card">
     <h2 id="flows" data-sum="{esc(_flw_sum)}">市場籌碼</h2>
     {_flw_html}
+    {learn_links("positioning", "eslr", "dealer_inv", "auctions")}
   </div>
 </div>
 
@@ -809,6 +843,7 @@ def _rates_body_full(d: dict) -> str:
         "長端市場的幾個壓力指標逐一對照警戒線。",
         "單看殖利率水準分不出「經濟強」還是「供給壓垮」，一排指標一起看才分得出漲的原因。",
         "紅燈集中在供給類（發行量、期限溢酬）＝結構性壓力；集中在預期類＝在賭政策，兩者的應對完全不同。")}
+    {learn_links("term_premium", "tips", "breakeven", "curve_spread", "dots", "fiscal")}
   </div>
 </div>
 

@@ -256,7 +256,11 @@ terms:
   fed_bs: {t: 聯準會資產負債表與 WAM, k: [資產負債表, 縮表, wam]}
   credit_spread: {t: 信用利差, k: [信用利差, 高收益債, 投資級]}
   fiscal: {t: 政府財政, k: [赤字, 國債, 利息支出, 政府財政]}
-  global_long: {t: 全球長端殖利率, k: [全球長端, 日本公債, 德國公債, 英國公債]}
+  global_long: {t: 全球長端殖利率, k: [全球長端, 日本公債, 德國公債, 英國公債, 法國公債, 中國公債, 加拿大公債, 澳洲公債]}
+  positioning: {t: 公債期貨持倉與 DV01, k: [期貨持倉, dv01, cftc, 基差交易, 槓桿基金, 資產管理部位]}
+  eslr: {t: 補充槓桿率（eSLR）, k: [eslr, slr, 補充槓桿率, 槓桿率]}
+  dealer_inv: {t: 初級交易商公債庫存, k: [交易商庫存, 初級交易商, 交易商持倉, primary dealer]}
+  fci: {t: 金融條件（FCI-G）, k: [金融條件, fci, fci-g, 金融情勢]}
   hyperscaler: {t: 科技巨頭資本支出與發債, k: [科技巨頭, 資本支出]}
   sofr: {t: SOFR, k: [sofr]}
   iorb_spread: {t: IORB 與 SOFR−IORB, k: [iorb, sofr-iorb, 準備金利率]}
@@ -423,6 +427,8 @@ cards:
 - {id: deficit, c: 長端與債務, q: 財政赤字多大？, k: [赤字], w: [財政], n: [數值, 變化], x: [美國財政赤字佔gdp], l: fiscal, h: /rates/#debt, r: [debt, interest_cost], src: {fn: deficit}}
 - {id: interest_cost, c: 長端與債務, q: 政府利息支出有多重？, k: [利息支出, 利息負擔, r-g], w: [利息], n: [數值, 影響], x: [利息佔稅收多少], l: fiscal, h: /rates/#debt, r: [debt, deficit], src: {fn: interest_cost}}
 - {id: global_long, c: 長端與債務, q: 全球長端殖利率怎麼走？, k: [全球長端, 日本公債, 德國公債, 英國公債, 日債, 日本30年], w: [全球, 殖利率, 公債殖利率, 30年期, 10年期], n: [數值, 比較], x: [日本30年公債殖利率], l: global_long, h: /rates/#global, r: [dgs30, usdjpy], src: {fn: global_long}}
+- {id: positioning, c: 長端與債務, q: 公債期貨誰在做多、誰在做空？, k: [期貨持倉, 公債期貨部位, 基差交易, 槓桿基金, 資產管理], w: [期貨, 部位, dv01], n: [數值, 變化], x: [誰在對做公債期貨], l: positioning, h: /rates/#flows, r: [dealer_inv, t_eslr, term_premium], src: {fn: positioning}}
+- {id: dealer_inv, c: 長端與債務, q: 交易商的公債庫存多少？, k: [交易商庫存, 初級交易商, 交易商持倉], w: [庫存, 交易商], n: [數值, 變化], x: [交易商還吃得下公債嗎], l: dealer_inv, h: /rates/#flows, r: [positioning, auctions, t_eslr], src: {fn: dealer_inv}}
 - {id: hs_capex, c: 長端與債務, q: 科技巨頭 AI 資本支出多少？, k: [科技巨頭, 資本支出, ai資本支出, capex], w: [ai, 台積電, 輝達, 微軟, 谷歌, 亞馬遜, meta], n: [數值, 變化], x: [ai投資有多大, hyperscaler資本支出], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_debt, sox], src: {fn: hs_capex}}
 - {id: hs_debt, c: 長端與債務, q: 科技巨頭發了多少債？, k: [科技巨頭], w: [發債], m: [發債, 公司債, 債券, 舉債, 發了, 多少債], n: [數值, 影響], x: [科技公司發債規模], l: hyperscaler, h: /rates/#hyperscalers, r: [hs_capex, ig_spread], src: {fn: hs_debt}}
 - {id: mortgage, c: 長端與債務, q: 房貸利率多少？, k: [房貸利率, 房貸], n: [數值, 變化], x: [美國30年房貸利率], l: yields, h: /rates/#decomp, r: [dgs10], src: {fn: mortgage}}
@@ -438,6 +444,7 @@ cards:
 - {id: mmf_now, c: 流動性, q: MMF 資金流向、收益率與持有期限？, k: [mmf資金流向, mmf流向, 貨幣基金流向, 貨幣基金資金, mmf資金], w: [mmf, 貨幣市場基金, wam], n: [數值, 變化], x: [貨幣基金資金流入嗎], l: mmf, h: /liquidity/#mmf, r: [bills_now, liq_now], src: {fn: mmf_now}}
 # ---------------- 情境 ----------------
 - {id: cell, c: 情境, q: 現在在九宮格哪一格？, k: [九宮格, 哪一格, 情境], w: [格], n: [數值], x: [現在是什麼情境, 九宮格位置], l: grid9, h: /scenario/#grid, r: [triggers, sc_lean, trail], src: {fn: cell}}
+- {id: fci, c: 情境, q: 金融條件現在偏鬆還是偏緊？, k: [金融條件, fci, 金融情勢, 金融條件指數], w: [寬鬆, 緊縮], n: [數值, 影響], x: [金融條件對成長的影響], l: fci, h: /scenario/#fci, r: [cell, spx, ig_spread], src: {fn: fci}}
 - {id: sc_lean, c: 情境, q: 現在情境偏升息還是偏降息？, k: [偏升息, 偏降息, 偏緊縮, 偏寬鬆, 情境方向, 應該升息, 應該降息], w: [方向, 升息, 降息, 情境], n: [數值, 影響], x: [現在應該升息還是降息], l: grid9, h: /scenario/#grid, r: [cell, fedwatch, divergence], src: {fn: sc_lean}}
 - {id: triggers, c: 情境, q: 要換到別格需要什麼條件？, k: [換格, 轉換門檻, 換格條件, 下一格, 換情境, 會換, 才算轉弱, 才算轉強, 多弱, 多強, 換到別格, 別格], w: [門檻, 條件, 情境, 就業, 通膨, 需要什麼條件], n: [數值, 原因], x: [什麼情況會換情境, 就業要多弱才算轉弱], l: triggers, h: /scenario/#triggers, r: [cell, sc_next], src: {fn: triggers}}
 - {id: sc_next, c: 情境, q: 接下來哪個數據可能讓格子移動？, k: [哪個數據, 關鍵數據, 移動格子, 下一個重要數據], w: [下一個數據, 重要數據], n: [時間, 名單], x: [下一個重要數據是什麼], l: triggers, h: /scenario/#triggers, r: [triggers, week_data], src: {fn: sc_next}}

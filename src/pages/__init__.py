@@ -58,6 +58,21 @@ def learn_link(key: str) -> str:
             f'（怎麼來的、常見誤讀、小測驗）→</a></p>')
 
 
+def learn_links(*keys: str) -> str:
+    """
+    區塊最下方一行「延伸學習」：連到偷懶頁對應的名詞卡（可多張）。
+    名詞卡不存在就略過，全部不存在就不輸出。
+    """
+    from urllib.parse import quote
+    from ..site import esc
+    T = _terms()
+    items = [(k, T[k].get("t")) for k in keys if k in T and T[k].get("t")]
+    if not items:
+        return ""
+    links = "".join(f'<a href="/ask/?q={quote("什麼是" + t + "？")}">{esc(t)}</a>' for _, t in items)
+    return f'<p class="learn-more"><span>延伸學習（偷懶）</span>{links}</p>'
+
+
 def gloss_more() -> str:
     """名詞解釋區塊底下一行：每個名詞的完整教學都在偷懶頁。"""
     return ('<p class="teach-more">每個名詞的完整教學（怎麼來的、怎麼看、常見誤讀、小測驗）'

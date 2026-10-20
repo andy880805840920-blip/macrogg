@@ -997,6 +997,11 @@ details[data-m-collapse]>summary{list-style:none}
 
 /* ---------- 名詞解釋 ---------- */
 .teach-more{font-size:13px;margin:8px 0 0}
+/* 區塊最下方的「延伸學習」：連到偷懶頁的名詞卡，一行可多張 */
+.learn-more{display:flex;flex-wrap:wrap;align-items:center;gap:0 14px;margin:16px 0 0;padding-top:10px;border-top:1px solid var(--grid);font-size:13px}
+.learn-more span{color:var(--muted);font-weight:600;margin-right:2px}
+.learn-more a{display:inline-flex;align-items:center;min-height:40px;color:var(--brand-orange-ink);font-weight:600;text-decoration:none}
+.learn-more a::after{content:" →"}
 .le-src-link{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;color:var(--series-1);text-decoration:none}
 .teach-more a{color:var(--brand-orange-ink);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .gloss,.poslist{margin:6px 0 0}
@@ -2571,6 +2576,22 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 /* 長端頁「市場籌碼」（2026-10）：期貨 DV01 矩陣（手機一個參與者一張卡）、交易商庫存 */
 #flw-t1:checked~.tabp.p1,#flw-t2:checked~.tabp.p2{display:block}
 .viz-root:not(#_) .flw-head{margin:2px 0 8px;font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
+.flw-sum{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:4px 0 14px;background:var(--surface-2)}
+.flw-verdict{margin:0 0 12px;font-size:22px;font-weight:700;line-height:1.35;color:var(--text-primary)}
+@media(max-width:600px){.flw-verdict{font-size:19px}}
+.flw-sum-k{font-size:12px;font-weight:600;color:var(--muted);margin:0 0 6px}
+.flw-bar{position:relative;height:14px;border-radius:7px;background:var(--fci-2);overflow:hidden}
+.flw-bar i{position:absolute;top:0;bottom:0;display:block}
+.flw-bar i.now{left:0;background:var(--fci-3)}
+.flw-bar i.ago{width:0;border-left:2px dashed var(--surface-1)}
+.flw-bar-lab{display:flex;justify-content:space-between;gap:8px;margin:6px 0 14px;font-size:13px;color:var(--text-secondary)}
+.flw-bar-lab b{font-size:16px;color:var(--text-primary);font-variant-numeric:tabular-nums;margin:0 2px}
+.flw-bar-lab em{font-style:normal;color:var(--muted);font-size:12px}
+.flw-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.flw-chip{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:8px 10px}
+.flw-chip span{display:block;font-size:12.5px;font-weight:600;color:var(--text-secondary)}
+.flw-chip em{display:block;font-style:normal;font-size:11.5px;color:var(--muted);line-height:1.3}
+.flw-chip b{display:block;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text-primary)}
 .flw-wrap{margin:8px 0 6px}
 .flw-mx{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed}
 .flw-mx th,.flw-mx td{padding:7px 6px;border-bottom:1px solid var(--grid);text-align:right;vertical-align:top;line-height:1.35}

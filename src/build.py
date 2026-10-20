@@ -3318,6 +3318,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             _sp = rt.tp_speed(_tp_rows)
             if _sp:
                 _l.status, _l.note = _sp["status"], rt.tp_speed_text(_sp, _cfgs["term_premium"].get("red_above", 0.6))
+                press.speed, press.speed_d1, press.speed_d3 = _sp["status"], _sp["d1"], _sp["d3"]
                 _vals = [r for r in _tp_rows if r.get("value") is not None]
                 _me: dict = {}
                 for _i in range(63, len(_vals)):

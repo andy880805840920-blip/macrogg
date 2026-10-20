@@ -320,12 +320,14 @@ def _home_body_full(ctxs: dict) -> str:
     rat = ctxs.get("rates")
     if rat:
         sp = rat["pressure"]
-        lvl = {"high": "偏高", "moderate": "中性", "low": "偏低"}.get(sp.level, "—")
+        from ..analysis.rates import pressure_label as _pl
+        lvl, _tone = _pl(sp)
         c = rat["curve"]
         y30 = (c.levels or {}).get("30Y")
         # 長端的「方向」講的是供給壓力，不是政策利率——壓力大＝
         # 長端不容易跟著降，效果上與利升息同向，所以對應到同一組詞。
-        _d = {"high": "hawkish", "low": "dovish"}.get(sp.level, "neutral")
+        # 2026-10：色調改看期限溢酬的上升速度（與長端頁燈號一致），水準偏高但沒加速不再標成警示
+        _d = _tone
         # 長端不進共識票數：曲線形狀不是政策方向。它在總述的最後一句
         # 單獨交代（財政與 AI 一起推長端供給）。
         cards.append(_module_card(
@@ -558,7 +560,8 @@ def _home_body_legacy(ctxs: dict) -> str:
     rt = ctxs.get("rates") or {}
     pressure = rt.get("pressure")
     p_level = getattr(pressure, "level", "") if pressure else ""
-    p_text = {"high": "偏高", "moderate": "中等", "low": "偏低"}.get(p_level, "資料不足")
+    from ..analysis.rates import pressure_label as _pl
+    p_text, p_tone = _pl(pressure) if pressure else ("資料不足", "neutral")
     f_dir = shift.get("direction", "neutral")
     f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
     lean = LEAN_TEXT.get(sc.lean, "中性")
@@ -573,7 +576,7 @@ def _home_body_legacy(ctxs: dict) -> str:
         state_chip("FOMC 會議結論", f_text, shift.get("decision_label", ""), f_dir),
         state_chip("期限溢酬（財政與供給）", p_text,
                    (f"本月主因：{pressure.main}；不進九宮格" if getattr(pressure, "main", "") else "不進九宮格"),
-                   "watch" if p_level == "high" else "neutral"),
+                   "watch" if p_tone == "hawkish" else "neutral"),
     ])
     parts = brief_mod.compose(ctxs).get("parts", [])
     wanted = [p for p in parts if p.get("key") in ("labor", "inflation", "fomc", "supply")][:3]
@@ -682,7 +685,7 @@ def _module_rows(ctxs: dict, sc, f_text: str, f_dir: str,
                       else f"{int(_fnm['blackout_start'][5:7])}/{int(_fnm['blackout_start'][8:])} 起")
                      if _fnm.get("blackout_start") else "—"))]),
         ("/rates/", "財政與長端", p_text,
-         "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
+         p_tone,
          f"10 年期 {_fmt_pct(levels.get('10Y'), 2)}、30 年期 {_fmt_pct(levels.get('30Y'), 2)}；期限溢酬{p_text}。",
          [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("30 年期", _fmt_pct(levels.get("30Y"), 2)),
           ("期限溢酬", _fmt_pct(term, 2)),
@@ -1379,6 +1382,9 @@ _TONE_DOT = {"hawkish": "haw", "dovish": "dov"}
 
 
 def _hm_modules(ctxs: dict, sc, f_text: str, f_dir: str, p_text: str, p_level: str) -> str:
+    from ..analysis.rates import pressure_label as _pl
+    _pr = (ctxs.get("rates") or {}).get("pressure")
+    p_tone = _pl(_pr)[1] if _pr is not None else "neutral"
     lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
     fom, rates = ctxs.get("fomc") or {}, ctxs.get("rates") or {}
     lk, ik = lab.get("kpi") or {}, inf.get("kpi") or {}
@@ -1399,7 +1405,7 @@ def _hm_modules(ctxs: dict, sc, f_text: str, f_dir: str, p_text: str, p_level: s
          [("政策利率", fom.get("rate_range", "—")),
           ("下次會議", _fnm.get("span") or _fnm.get("date") or "—")]),
         ("/rates/", "長端與債務", f"期限溢酬{p_text}",
-         "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "neutral",
+         p_tone,
          [("10 年期", _fmt_pct(levels.get("10Y"), 2)), ("期限溢酬", _fmt_pct(term, 2))]),
     ]
     out = []
@@ -1953,7 +1959,8 @@ def home_body(ctxs: dict) -> str:
     f_text = {"hawkish": "偏鷹", "dovish": "偏鴿", "neutral": "中性"}.get(f_dir, "資料不足")
     pressure = rates.get("pressure")
     p_level = getattr(pressure, "level", "") if pressure else ""
-    p_text = {"high": "偏高", "moderate": "中性", "low": "偏低"}.get(p_level, "資料不足")
+    from ..analysis.rates import pressure_label as _pl
+    p_text, p_tone = _pl(pressure) if pressure else ("資料不足", "neutral")
     lean = LEAN_TEXT.get(sc.lean, "中性")
     labor_label = {"弱": "偏弱", "中": "中性", "強": "偏強"}.get(sc.labor_state, sc.labor_state)
     infl_label = {"低": "偏低", "中": "中性", "高": "偏高"}.get(sc.infl_state, sc.infl_state)
@@ -1969,7 +1976,7 @@ def home_body(ctxs: dict) -> str:
         f'<span><i class="hm-dot {_TONE_DOT.get(t, "")}"></i>{esc(n)} {esc(v)}</span>'
         for n, v, t in (("就業", labor_label, "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else ""),
                         ("通膨", infl_label, "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else ""),
-                        ("聯準會", f_text, f_dir), ("期限溢酬", p_text, "hawkish" if p_level == "high" else "dovish" if p_level == "low" else "")))
+                        ("聯準會", f_text, f_dir), ("期限溢酬", p_text.replace("水準", ""), p_tone if p_tone != "neutral" else "")))
     asof = inf.get("asof") or {}
     dates = "　·　".join([
         f"就業 {lab.get('data_month', '—')}", f"CPI {(asof.get('cpi') or '—')[:7]}",
