@@ -42,7 +42,7 @@
    0.915
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
-  "vol": 18674028.539506
+  "vol": 18675277.433218002
  },
  "senate": {
   "dem": 0.635,
@@ -79,10 +79,10 @@
    0.645,
    0.645,
    0.635,
-   0.635
+   0.645
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-senate-in-2026",
-  "vol": 7213294.926234
+  "vol": 7213296.466234
  },
  "balance": {
   "rows": [
@@ -118,7 +118,7 @@
    }
   ],
   "url": "https://polymarket.com/event/balance-of-power-2026-midterms",
-  "vol": 25203035.623473
+  "vol": 25376842.367842
  },
  "races": [
   {
@@ -1808,7 +1808,7 @@
      "lead": {
       "name": "Xavier Becerra",
       "party": "D",
-      "p": 0.962
+      "p": 0.958
      },
      "other": {
       "name": "Steve Hilton",
@@ -1817,8 +1817,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 92.7,
-     "vol": 42062805.312236995,
+     "gap": 92.2,
+     "vol": 42062805.312237,
      "url": "https://polymarket.com/event/california-governor-election-2026"
     }
    },
