@@ -2538,6 +2538,42 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}}
 :root[data-theme="dark"]{--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}
 #fci-r10:checked~.tabp.p10,#fci-r5:checked~.tabp.p5,#fci-r1:checked~.tabp.p1{display:block}
+/* 長端頁「市場籌碼」（2026-10）：期貨 DV01 矩陣（手機一個參與者一張卡）、交易商庫存 */
+#flw-t1:checked~.tabp.p1,#flw-t2:checked~.tabp.p2{display:block}
+.viz-root:not(#_) .flw-head{margin:2px 0 8px;font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
+.flw-wrap{margin:8px 0 6px}
+.flw-mx{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed}
+.flw-mx th,.flw-mx td{padding:7px 6px;border-bottom:1px solid var(--grid);text-align:right;vertical-align:top;line-height:1.35}
+.flw-mx thead th{font-size:12px;color:var(--muted);font-weight:600}
+.flw-mx thead th:first-child,.flw-mx tbody th{text-align:left}
+.flw-mx thead th:first-child{width:22%}
+.flw-mx tbody th{font-size:13px;font-weight:600;color:var(--text-primary)}
+.flw-mx td b{display:block;font-size:15px;color:var(--text-primary)}
+.flw-mx td b.pos{color:var(--series-1)}.flw-mx td b.neg{color:var(--series-2)}
+.flw-mx td small{display:block;font-size:11px;color:var(--muted);white-space:nowrap}
+.flw-mx td.tot{background:var(--surface-2)}
+@media(max-width:899px){
+  .flw-mx,.flw-mx tbody,.flw-mx tr,.flw-mx th,.flw-mx td{display:block;width:auto}
+  .flw-mx thead{display:none}
+  .flw-mx tr{border:1px solid var(--border);border-radius:10px;margin:0 0 10px;padding:4px 10px}
+  .flw-mx tbody th{padding:8px 0 4px;border-bottom:1px solid var(--grid)}
+  .flw-mx td{display:grid;grid-template-columns:5.5em auto 1fr;gap:4px 10px;align-items:baseline;text-align:left;padding:6px 0}
+  .flw-mx td::before{content:attr(data-label);font-size:12.5px;color:var(--text-secondary);font-weight:600}
+  .flw-mx td b{display:inline;font-size:15px}
+  .flw-mx td small{display:inline;text-align:right}
+  .flw-mx td.tot{background:none;font-weight:600}
+  .flw-mx tr td:last-child{border-bottom:0}}
+.viz-root:not(#_) .flw-h3{margin:22px 0 6px;font-size:var(--fs-body);color:var(--text-primary)}
+.viz-root:not(#_) .flw-read{margin:0 0 10px;font-size:var(--fs-small);line-height:1.65;color:var(--text-primary)}
+.flw-stats{display:grid;grid-template-columns:1fr;gap:8px;margin:8px 0 12px}
+@media(min-width:620px){.flw-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.flw-stats>div{border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+.flw-stats span{display:block;font-size:12px;font-weight:600;color:var(--text-secondary)}
+.flw-stats b{display:block;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text-primary);margin:2px 0}
+.flw-stats b small{font-size:12px;font-weight:400;color:var(--muted)}
+.flw-stats em{display:block;font-style:normal;font-size:11.5px;color:var(--muted);line-height:1.5}
+.flw-eslr h4{margin:12px 0 4px;font-size:var(--fs-small);color:var(--text-primary)}
+.flw-eslr ul{margin:4px 0 8px;padding-left:18px}.flw-eslr li{margin:3px 0;line-height:1.65}
 .ic{margin-top:10px}
 .ic-plot{position:relative;margin:6px 0 22px 40px}
 .ic-grid{position:absolute;left:0;right:0;border-top:1px solid var(--grid)}
@@ -4646,8 +4682,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-20 16:30（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>16:30</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>04:30</b><i>10/20</i></div><div class="upd-c"><span>倫敦</span><b>09:30</b><i>10/20</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-20 16:59（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/20</span></span><div class="upd-c"><span>台北</span><b>16:59</b><i>10/20</i></div><div class="upd-c"><span>紐約</span><b>04:59</b><i>10/20</i></div><div class="upd-c"><span>倫敦</span><b>09:59</b><i>10/20</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/" class="on" aria-current="page">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>流動性</h1><div class="sub">Liquidity　·　資料截止 2026-10-19</div></div>

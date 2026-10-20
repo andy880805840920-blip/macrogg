@@ -1,24 +1,18 @@
 {
- "hash": "be8074a4240137d4",
- "text": "全球利率走高推升AI投資成本，超大型雲端業者融資壓力升溫。高盛指出，AI超大型雲端廠商信貸利差創年內新高，股價尚未充分反映壓力；7月接近此水準時股價約低15%。AI融資壓力擴散至更廣泛的領域，專業AI基礎設施公司CoreWeave債券殖利率升至15%左右。隨著自由現金流轉為負值，大型科技企業將愈來愈依賴發債及外部融資，全球長期利率持續承壓。市場焦點已從AI需求轉向資本支出與折舊能否回收，若信貸利差續擴，AI概念股恐補跌。\nAnthropic成為2026年AI產業最後的IPO希望，在Kalshi預測市場上獲得75%的上市機率，遠高於OpenAI的3%與其他科技公司；OpenAI執行長已排除2026年上市計畫。",
+ "hash": "8e5328f5d92ae7c6",
+ "text": "聯準會升息預期升溫。星展銀行預期聯準會將在12月升息1碼、2027年第1季再升1碼，累計至2027年底升息2碼，聯邦基金利率將升至4.5%。這一預期反映在美債市場上：10年期殖利率在10/19收盤升至5.14%，較前一交易日上升4個基點。升息預期的重燃源於通膨持續與政府及私人部門借貸需求偏高，全球債券殖利率面臨上行壓力。\n日本央行可能加速貨幣政策正常化。星展銀行預期日本央行將加速貨幣政策正常化進程，反映即將實施的消費稅減免措施及戰略產業財政支出增加的正面效益；日本20年期公債標售創下紀錄最強認購。\n中國經濟成長超預期支撐人民幣。中國第3季GDP年增4.5%、9月零售銷售加速，人民幣兌美元升至近4年高位6.6775，中國人民銀行維持基準貸款利率不變。",
  "links": [
   {
-   "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
-   "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
-   "source": "CNBC",
-   "at": "2026-10-19T18:36:21+00:00"
-  },
-  {
-   "title": "Anthropic is AI trade's last big hope for a major IPO this year",
-   "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
-   "source": "CNBC",
-   "at": "2026-10-19T16:42:14+00:00"
-  },
-  {
-   "title": "看好AI產生經濟溢出效應 星展估台今年GDP為11.6％",
-   "link": "https://tw.stock.yahoo.com/news/%E7%9C%8B%E5%A5%BDai%E7%94%A2%E7%94%9F%E7%B6%93%E6%BF%9F%E6%BA%A2%E5%87%BA%E6%95%88%E6%87%89-%E6%98%9F%E5%B1%95%E4%BC%B0%E5%8F%B0%E4%BB%8A%E5%B9%B4gdp%E7%82%BA11-6-074431048.html",
+   "title": "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
+   "link": "https://tw.news.yahoo.com/%E6%98%9F%E5%B1%95%E9%8A%80%E4%BC%B0fed%E8%87%B3%E6%98%8E%E5%B9%B4%E5%86%8D%E5%8D%87%E6%81%AF2%E7%A2%BC-%E6%98%8E%E5%B9%B4%E9%87%91%E5%83%B9%E4%B8%8A%E7%9C%8B5300%E7%BE%8E%E5%85%83-083523666.html",
    "source": "Yahoo奇摩新聞",
-   "at": "2026-10-20T07:44:31+08:00"
+   "at": "2026-10-20T08:35:23+08:00"
+  },
+  {
+   "title": "〈星展投資展望〉美國經濟強勁 陳昱嘉：估Fed再升息2碼 金價上看5300美元",
+   "link": "https://tw.stock.yahoo.com/news/%E6%98%9F%E5%B1%95%E6%8A%95%E8%B3%87%E5%B1%95%E6%9C%9B-%E7%BE%8E%E5%9C%8B%E7%B6%93%E6%BF%9F%E5%BC%B7%E5%8B%81-%E9%99%B3%E6%98%B1%E5%98%89-%E4%BC%B0fed%E5%86%8D%E5%8D%87%E6%81%AF2%E7%A2%BC-%E9%87%91%E5%83%B9%E4%B8%8A%E7%9C%8B5300%E7%BE%8E%E5%85%83-080342495.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-10-20T08:03:42+00:00"
   }
  ],
  "fedwatch": {
@@ -296,15 +290,28 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-20T08:17:02.622414+00:00",
+ "at": "2026-10-20T08:58:58.885030+00:00",
  "layout": "main",
  "topics": {
-  "hash": "9d1b2a39211ad162",
+  "hash": "1c0120562ef45003",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "聯準會市場預期升息將對金融環境造成壓力。市場關注AI是否推高通膨，聯準會可能面臨在控制物價與避免傷害其他產業間的取捨",
+    "links": [
+     {
+      "title": "AI is driving inflation. The Fed's fix may hurt everyone else.",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1ZdVRWYWJEWDBsUmR0bmVCblc1eTZXOENZYVRkejd0aHdSbVBxVURnUGhGcTViOHZ0NE1QTGtNQjNKaUpwWWpPNzJzLUNVV1UyR3hmcG5nQ19DYUxTMy1DTVhHNXJ6R0E?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-19T21:41:17+00:00"
+     }
+    ]
+   },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債避險功能減弱，科技股反彈時長天期公債下跌，投資人對美債作為風險對沖工具的信心下滑；同時美國財政部融資計畫引發華爾街擔憂",
+    "text": "長天期美債美債作為避險工具的吸引力下降。科技股反彈削弱債券避險需求，同時美國財政部融資計畫引發華爾街擔憂",
     "links": [
      {
       "title": "Treasuries Losing Luster as Hedge Tool, Citi Australia CEO Says",
@@ -323,7 +330,7 @@
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "黑石集團為旗下311億美元貨幣市場基金增加代幣化交易管道，貨幣市場基金規模達7.9兆美元，反映機構投資者對流動性資產的持續需求",
+    "text": "資金市場黑石為其311億美元貨幣市場基金增加代幣化接取管道。全球貨幣市場基金規模已達7.9兆美元",
     "links": [
      {
       "title": "BlackRock Adds Tokenized Access to $311B Money Market Funds",
@@ -342,20 +349,20 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "美國擬讓受制裁油輪重返合法市場以增加運力，但既有合約、高運費與複雜合規審查等障礙，恐限制參與船隻數量，實際對油價與運費的緩解幅度可能低於預期",
+    "text": "油價中東運輸瓶頸迫使亞洲煉油廠改變採購策略。荷姆茲海峽油輪運費飆升至接近歷史高點，亞洲買家改用中型油輪、長期租賃或向中東產油國購買包含運費的原油，台灣中油近期改採6批中型油輪取代過去的超大型油輪",
     "links": [
      {
-      "title": "美國擬讓受制裁油輪重返合法市場，高運費與合規門檻恐削弱成效",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E6%93%AC%E8%AE%93%E5%8F%97%E5%88%B6%E8%A3%81%E6%B2%B9%E8%BC%AA%E9%87%8D%E8%BF%94%E5%90%88%E6%B3%95%E5%B8%82%E5%A0%B4-%E9%AB%98%E9%81%8B%E8%B2%BB%E8%88%87%E5%90%88%E8%A6%8F%E9%96%80%E6%AA%BB%E6%81%90%E5%89%8A%E5%BC%B1%E6%88%90%E6%95%88-075111313.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-20T07:51:11+08:00"
+      "title": "油輪運費貴到受不了！亞洲等國急改採購策略",
+      "link": "https://tw.news.yahoo.com/%E6%B2%B9%E8%BC%AA%E9%81%8B%E8%B2%BB%E8%B2%B4%E5%88%B0%E5%8F%97%E4%B8%8D%E4%BA%86-%E4%BA%9E%E6%B4%B2%E7%AD%89%E5%9C%8B%E6%80%A5%E6%94%B9%E6%8E%A1%E8%B3%BC%E7%AD%96%E7%95%A5-084733104.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-20T08:47:33+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "科技股反彈帶動美股上揚，輝達、美光等晶片股領漲，標普500上升0.41%、那斯達克上升1.11%，但市場仍關注本週科技大廠財報能否確認AI需求持續強勁",
+    "text": "美股科技股反彈帶動美股上漲，但亞洲股市多數下跌。美股第3季財報季展開，輝達、美光、超微等晶片股領漲，惟市場仍觀望Meta、特斯拉等重量級企業本週財報",
     "links": [
      {
       "title": "Asian shares mostly decline after AI stocks lead a rebound on Wall Street",
@@ -374,61 +381,83 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "桑坦德銀行與輝達合作，利用輝達AI基礎設施將大型通用模型轉向小型專用模型，客戶服務成本從約5歐元大幅降至0.03歐元，降幅超過50%；亞馬遜宣布其AI晶片將支援熱門程式語言以挑戰輝達",
+    "text": "AI與半導體輝達在台灣首度開設政府事務總監職缺，深化與政府政策溝通。該職位要求15年以上台灣政府事務經驗與5年團隊領導資歷，反映輝達在台投資規模擴大與新總部布局需求",
     "links": [
      {
-      "title": "Amazon says its AI chips will work with popular coding language, challenging Nvidia",
-      "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOUGVNVWtyU1BHU0pGZFJTZk9RV3NHOXBoSHVqaHVEeXN1TEJveTNIVzQ4eGkxZ2RWbER1clItSk16ODNaVnBFbWhKamR1RURGdG90X3F0ZEF2bko3SW5mUGxjZzBKVm50UFI5eUp2ampsV08ySWlMUEZyQmRUd1M1NF91UGJoZWxiVmR5NGRCMmNNM0V2R3pLMVhBT05EbmRjY0dxMXlSNklIVE9xeG5DQWNPcjVXY1ZBRTBrVU9RMTNPaVJOUHpjS2RrZ3huLXlZa2c?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-19T15:36:43+00:00"
+      "title": "輝達在台首開政府事務總監職缺　深化政策溝通拚新總部布局",
+      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94%E5%9C%A8%E5%8F%B0%E9%A6%96%E9%96%8B%E6%94%BF%E5%BA%9C%E4%BA%8B%E5%8B%99%E7%B8%BD%E7%9B%A3%E8%81%B7%E7%BC%BA-%E6%B7%B1%E5%8C%96%E6%94%BF%E7%AD%96%E6%BA%9D%E9%80%9A%E6%8B%9A%E6%96%B0%E7%B8%BD%E9%83%A8%E5%B8%83%E5%B1%80-083825731.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:38:25+08:00"
      },
      {
-      "title": "桑坦德銀行AI升級：輝達助陣 每互動成本降至0.03歐元",
-      "link": "https://tw.stock.yahoo.com/news/%E6%A1%91%E5%9D%A6%E5%BE%B7%E9%8A%80%E8%A1%8Cai%E5%8D%87%E7%B4%9A-%E8%BC%9D%E9%81%94%E5%8A%A9%E9%99%A3-%E6%AF%8F%E4%BA%92%E5%8B%95%E6%88%90%E6%9C%AC%E9%99%8D%E8%87%B30-03%E6%AD%90%E5%85%83-075351445.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-20T07:53:51+00:00"
+      "title": "文組出頭天？輝達台灣招募政府事務總監條件曝光",
+      "link": "https://tw.news.yahoo.com/%E6%96%87%E7%B5%84%E5%87%BA%E9%A0%AD%E5%A4%A9-%E8%BC%9D%E9%81%94%E5%8F%B0%E7%81%A3%E6%8B%9B%E5%8B%9F%E6%94%BF%E5%BA%9C%E4%BA%8B%E5%8B%99%E7%B8%BD%E7%9B%A3%E6%A2%9D%E4%BB%B6%E6%9B%9D%E5%85%89-083529000.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:35:29+08:00"
+     }
+    ]
+   },
+   {
+    "id": "twf",
+    "label": "台指期",
+    "text": "台指期外資連10日賣超台股，10/20再賣超795億元，累計賣超8380億元。台股下跌529點至46292點，台積電跌破季均線至2405元，聯發科跌近半年線，記憶體族群南亞科首度跌破半年線",
+    "links": [
+     {
+      "title": "外資本周2天已賣超1562億　台股下跌529.15點、收46292點　南亞科跌破半年線",
+      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E6%9C%AC%E5%91%A82%E5%A4%A9%E5%B7%B2%E8%B3%A3%E8%B6%851562%E5%84%84-%E5%8F%B0%E8%82%A1%E4%B8%8B%E8%B7%8C529-15%E9%BB%9E-%E6%94%B646292%E9%BB%9E-%E5%8D%97%E4%BA%9E%E7%A7%91%E8%B7%8C%E7%A0%B4%E5%8D%8A%E5%B9%B4%E7%B7%9A-082000941.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:20:00+08:00"
+     },
+     {
+      "title": "三大法人出貨捲968億離場！台股黑翻紅後下挫529點　股民叫苦：小兒的貨賣不完啊",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%89%E5%A4%A7%E6%B3%95%E4%BA%BA%E5%87%BA%E8%B2%A8%E6%8D%B2968%E5%84%84%E9%9B%A2%E5%A0%B4-%E5%8F%B0%E8%82%A1%E9%BB%91%E7%BF%BB%E7%B4%85%E5%BE%8C%E4%B8%8B%E6%8C%AB529%E9%BB%9E-%E8%82%A1%E6%B0%91%E5%8F%AB%E8%8B%A6-%E5%B0%8F%E5%85%92%E7%9A%84%E8%B2%A8%E8%B3%A3%E4%B8%8D%E5%AE%8C%E5%95%8A-082000511.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:20:00+08:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "期中選舉歷史數據顯示，美國期中選舉後一年標普500指數平均上漲約15%，過去19個選舉週期中有18個年度收高。即使最差的年份也仍以正報酬作收，選舉前兩週平均漲幅約1.4%",
+    "links": [
+     {
+      "title": "Should You Wait Until After the Midterm Elections to Buy the S&P 500?",
+      "link": "https://www.fool.com/investing/2026/10/20/should-you-wait-until-after-the-midterm-elections-to-buy-the-s-and-p-500/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-20T07:36:02+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/20貶至32.617元，單日貶1.72角，外資連10日賣超台股累計8,380億元，美元升值與台幣貶勢推升匯出壓力，市場期待本週科技廠財報能提供支撐",
+    "text": "匯率新台幣兌美元重貶1.72角至32.617元。外資連10日淨賣超台股，累計超過8380億元，加重美元換匯匯出壓力，台幣貶勢未止",
     "links": [
      {
       "title": "股匯持續承壓，新台幣重貶1.72角收32.617元，外資連十賣壓力加劇",
       "link": "https://tw.stock.yahoo.com/news/%E8%82%A1%E5%8C%AF%E6%8C%81%E7%BA%8C%E6%89%BF%E5%A3%93-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92%E6%94%B632-617%E5%85%83-%E5%A4%96%E8%B3%87%E9%80%A3%E5%8D%81%E8%B3%A3%E5%A3%93%E5%8A%9B%E5%8A%A0%E5%8A%87-081632880.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-20T08:16:32+00:00"
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:16:32+08:00"
      },
      {
       "title": "新台幣重貶1.72角　收32.617元",
-      "link": "https://tw.stock.yahoo.com/news/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92-%E6%94%B632-617%E5%85%83-080621653.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-20T08:06:21+00:00"
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B61-72%E8%A7%92-%E6%94%B632-617%E5%85%83-080546547.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-20T08:05:46+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-20T08:30:00.960190+00:00"
+  "at": "2026-10-20T08:59:18.266261+00:00"
  },
  "main_source_titles": [
-  "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
-  "Anthropic is AI trade's last big hope for a major IPO this year",
-  "看好AI產生經濟溢出效應 星展估台今年GDP為11.6％"
+  "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
+  "〈星展投資展望〉美國經濟強勁 陳昱嘉：估Fed再升息2碼 金價上看5300美元"
  ],
- "headline": "AI融資成本飆升、超大型雲端廠商信貸利差創年高，長期利率承壓",
- "rate_note": "AI融資成本上升反映全球利率走高對投資成本的衝擊，偏向推升長期利率；但若融資壓力導致科技股補跌、經濟成長預期下修，則可能反向壓低長期利率，方向取決於後續企業獲利能否支撐高利率環境。10年期10/19收盤5.14%，今日+4bp，市場已在反映利率走高對融資成本的衝擊。",
+ "headline": "聯準會升息預期重燃，長期利率續升壓制科技股融資成本",
+ "rate_note": "聯準會升息預期升溫與利率上行壓力並行，偏向推升長期利率。10年期今日+4bp至5.14%，市場已在反映升息預期與通膨持續的壓力。",
  "recent_mains": [
-  {
-   "headline": "AI融資壓力升高、科技股信用風險浮現，長期利率續升",
-   "titles": [
-    "Asian shares mostly decline after AI stocks lead a rebound on Wall Street",
-    "美股潛藏信用風險未爆彈 專家示警博通輝達甲骨文遭點名",
-    "高盛維持明年底金價5400美元目標，央行購金加速、黃金轉存倫敦受矚"
-   ],
-   "at": "2026-10-20T03:42:18.723392+00:00"
-  },
   {
    "headline": "九月通膨超預期升溫，聯準會升息預期重燃但華許未釋鷹派訊號",
    "titles": [
@@ -446,34 +475,36 @@
     "看好AI產生經濟溢出效應 星展估台今年GDP為11.6％"
    ],
    "at": "2026-10-20T08:17:02.622414+00:00"
+  },
+  {
+   "headline": "聯準會升息預期重燃，長期利率續升壓制科技股融資成本",
+   "titles": [
+    "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
+    "〈星展投資展望〉美國經濟強勁 陳昱嘉：估Fed再升息2碼 金價上看5300美元"
+   ],
+   "at": "2026-10-20T08:58:58.885030+00:00"
   }
  ],
  "archive": {
   "2026-10-20": {
-   "headline": "AI融資成本飆升、超大型雲端廠商信貸利差創年高，長期利率承壓",
-   "text": "全球利率走高推升AI投資成本，超大型雲端業者融資壓力升溫。高盛指出，AI超大型雲端廠商信貸利差創年內新高，股價尚未充分反映壓力；7月接近此水準時股價約低15%。AI融資壓力擴散至更廣泛的領域，專業AI基礎設施公司CoreWeave債券殖利率升至15%左右。隨著自由現金流轉為負值，大型科技企業將愈來愈依賴發債及外部融資，全球長期利率持續承壓。市場焦點已從AI需求轉向資本支出與折舊能否回收，若信貸利差續擴，AI概念股恐補跌。\nAnthropic成為2026年AI產業最後的IPO希望，在Kalshi預測市場上獲得75%的上市機率，遠高於OpenAI的3%與其他科技公司；OpenAI執行長已排除2026年上市計畫。",
-   "rate_note": "AI融資成本上升反映全球利率走高對投資成本的衝擊，偏向推升長期利率；但若融資壓力導致科技股補跌、經濟成長預期下修，則可能反向壓低長期利率，方向取決於後續企業獲利能否支撐高利率環境。10年期10/19收盤5.14%，今日+4bp，市場已在反映利率走高對融資成本的衝擊。",
+   "headline": "聯準會升息預期重燃，長期利率續升壓制科技股融資成本",
+   "text": "聯準會升息預期升溫。星展銀行預期聯準會將在12月升息1碼、2027年第1季再升1碼，累計至2027年底升息2碼，聯邦基金利率將升至4.5%。這一預期反映在美債市場上：10年期殖利率在10/19收盤升至5.14%，較前一交易日上升4個基點。升息預期的重燃源於通膨持續與政府及私人部門借貸需求偏高，全球債券殖利率面臨上行壓力。\n日本央行可能加速貨幣政策正常化。星展銀行預期日本央行將加速貨幣政策正常化進程，反映即將實施的消費稅減免措施及戰略產業財政支出增加的正面效益；日本20年期公債標售創下紀錄最強認購。\n中國經濟成長超預期支撐人民幣。中國第3季GDP年增4.5%、9月零售銷售加速，人民幣兌美元升至近4年高位6.6775，中國人民銀行維持基準貸款利率不變。",
+   "rate_note": "聯準會升息預期升溫與利率上行壓力並行，偏向推升長期利率。10年期今日+4bp至5.14%，市場已在反映升息預期與通膨持續的壓力。",
    "links": [
     {
-     "title": "Women may be at greater risk of AI job losses. Telephone switch operators and PCs show why",
-     "link": "https://www.cnbc.com/2026/10/19/ai-job-losses-women-automation-risk.html",
-     "source": "CNBC",
-     "at": "2026-10-19T18:36:21+00:00"
-    },
-    {
-     "title": "Anthropic is AI trade's last big hope for a major IPO this year",
-     "link": "https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html",
-     "source": "CNBC",
-     "at": "2026-10-19T16:42:14+00:00"
-    },
-    {
-     "title": "看好AI產生經濟溢出效應 星展估台今年GDP為11.6％",
-     "link": "https://tw.stock.yahoo.com/news/%E7%9C%8B%E5%A5%BDai%E7%94%A2%E7%94%9F%E7%B6%93%E6%BF%9F%E6%BA%A2%E5%87%BA%E6%95%88%E6%87%89-%E6%98%9F%E5%B1%95%E4%BC%B0%E5%8F%B0%E4%BB%8A%E5%B9%B4gdp%E7%82%BA11-6-074431048.html",
+     "title": "星展銀估Fed至明年再升息2碼　明年金價上看5300美元",
+     "link": "https://tw.news.yahoo.com/%E6%98%9F%E5%B1%95%E9%8A%80%E4%BC%B0fed%E8%87%B3%E6%98%8E%E5%B9%B4%E5%86%8D%E5%8D%87%E6%81%AF2%E7%A2%BC-%E6%98%8E%E5%B9%B4%E9%87%91%E5%83%B9%E4%B8%8A%E7%9C%8B5300%E7%BE%8E%E5%85%83-083523666.html",
      "source": "Yahoo奇摩新聞",
-     "at": "2026-10-20T07:44:31+08:00"
+     "at": "2026-10-20T08:35:23+08:00"
+    },
+    {
+     "title": "〈星展投資展望〉美國經濟強勁 陳昱嘉：估Fed再升息2碼 金價上看5300美元",
+     "link": "https://tw.stock.yahoo.com/news/%E6%98%9F%E5%B1%95%E6%8A%95%E8%B3%87%E5%B1%95%E6%9C%9B-%E7%BE%8E%E5%9C%8B%E7%B6%93%E6%BF%9F%E5%BC%B7%E5%8B%81-%E9%99%B3%E6%98%B1%E5%98%89-%E4%BC%B0fed%E5%86%8D%E5%8D%87%E6%81%AF2%E7%A2%BC-%E9%87%91%E5%83%B9%E4%B8%8A%E7%9C%8B5300%E7%BE%8E%E5%85%83-080342495.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-10-20T08:03:42+00:00"
     }
    ],
-   "at": "2026-10-20T08:17:02.622414+00:00"
+   "at": "2026-10-20T08:58:58.885030+00:00"
   },
   "2026-10-19": {
    "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
