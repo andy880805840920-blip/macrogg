@@ -1304,6 +1304,15 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
             log.warning("%s 10 年期日資料取得失敗（%s）", key.upper(), e)
     if len(out["global10"]) < 7:
         failed.append("global10")
+    # 市場籌碼（2026-10）：CFTC 金融期貨持倉（TFF）六檔公債期貨、紐約聯儲初級交易商持倉
+    for key, fn in (("tff", lambda: cftc_tff((end - dt.timedelta(days=3 * 365 + 120)).isoformat())),
+                    ("pd_pos", pd_positions)):
+        try:
+            out[key] = fn()
+        except Exception as e:                     # noqa: BLE001
+            log.warning("%s 取得失敗（%s）", key, e)
+            out[key] = [] if key == "tff" else {}
+            failed.append(key)
     try:
         out["fci_g"] = fci_g()
     except Exception as e:                         # noqa: BLE001
@@ -1325,6 +1334,7 @@ def gather(offline: bool, state_dir: pathlib.Path, fixture: pathlib.Path | None 
 # （畫面上各數字本來就標資料日期，沿用舊值時日期自然是舊的）。只在內容有變時才
 # 寫檔，避免每次更新都產生一個大的 state 差異。
 LAST_GOOD_KEYS = ("h41", "bank_assets", "rde", "sec_mmf", "ofr_mmf", "rmp_schedule", "qra", "term_premia", "global10", "fci_g",
+                  "tff", "pd_pos",
                   "mspd", "fed_bills", "buybacks", "buyback_schedule", "auctions", "soma")
 
 
@@ -1548,3 +1558,65 @@ def fci_g() -> list[dict]:
         raise ValueError("FCI-G 檔案沒有資料")
     cut = f"{int(out[-1]['date'][:4]) - 11}{out[-1]['date'][4:]}"
     return [r for r in out if r["date"] >= cut]
+
+
+# ---------------------------------------------------------------------------
+# CFTC Traders in Financial Futures（期貨部分，週資料，週二部位、週五公布）：六檔公債期貨
+#   Dealer＝交易商／中介、Asset manager＝資產管理／機構、Leveraged funds＝槓桿基金、Other＝其他申報者；
+#   未申報者＝總持倉扣掉申報者。口數為多、空各自的持倉。
+# ---------------------------------------------------------------------------
+TFF_URL = "https://publicreporting.cftc.gov/resource/gpe5-46if.json"
+TFF_CODES = ("042601", "044601", "043602", "043607", "020601", "020604")   # 2Y、5Y、10Y、Ultra 10Y、Bond、Ultra Bond
+_TFF_FIELDS = ("report_date_as_yyyy_mm_dd,cftc_contract_market_code,dealer_positions_long_all,"
+               "dealer_positions_short_all,asset_mgr_positions_long,asset_mgr_positions_short,"
+               "lev_money_positions_long,lev_money_positions_short,other_rept_positions_long,"
+               "other_rept_positions_short,nonrept_positions_long_all,nonrept_positions_short_all,open_interest_all")
+
+
+def cftc_tff(start: str) -> list[dict]:
+    """[{date, code, dlr, am, lev, oth, nr, oi}]，各參與者為淨口數（多 − 空）。"""
+    codes = ",".join(f"'{c}'" for c in TFF_CODES)
+    q = {"$where": f"cftc_contract_market_code in({codes}) AND report_date_as_yyyy_mm_dd>='{start}'",
+         "$order": "report_date_as_yyyy_mm_dd", "$limit": "20000", "$select": _TFF_FIELDS}
+    r = requests.get(TFF_URL, params=q, timeout=(20, 120), headers=UA)
+    r.raise_for_status()
+    out = []
+    for x in r.json():
+        try:
+            n = lambda a, b: int(float(x[a])) - int(float(x[b]))
+            out.append({"date": x["report_date_as_yyyy_mm_dd"][:10], "code": x["cftc_contract_market_code"],
+                        "dlr": n("dealer_positions_long_all", "dealer_positions_short_all"),
+                        "am": n("asset_mgr_positions_long", "asset_mgr_positions_short"),
+                        "lev": n("lev_money_positions_long", "lev_money_positions_short"),
+                        "oth": n("other_rept_positions_long", "other_rept_positions_short"),
+                        "nr": n("nonrept_positions_long_all", "nonrept_positions_short_all"),
+                        "oi": int(float(x["open_interest_all"]))})
+        except (KeyError, ValueError, TypeError):
+            continue
+    if not out:
+        raise ValueError("CFTC TFF 沒有回傳公債期貨資料")
+    return out
+
+
+# 紐約聯儲初級交易商統計（FR 2004，週資料，週三部位）：公債（不含 TIPS）淨持倉（多 − 空），百萬美元
+PD_URL = "https://markets.newyorkfed.org/api/pd/get/{k}.json"
+PD_KEYS = {"bills": "PDPOSGS-B", "l2": "PDPOSGSC-L2", "g2l3": "PDPOSGSC-G2L3", "g3l6": "PDPOSGSC-G3L6",
+           "g6l7": "PDPOSGSC-G6L7", "g7l11": "PDPOSGSC-G7L11", "g11l21": "PDPOSGSC-G11L21", "g21": "PDPOSGSC-G21"}
+
+
+def pd_positions() -> dict:
+    """{bucket: [{date, value(十億美元)}]}；11–21 年、21 年以上自 2022 年起才分開申報。"""
+    out = {}
+    for k, key in PD_KEYS.items():
+        r = requests.get(PD_URL.format(k=key), timeout=(20, 90), headers=UA)
+        r.raise_for_status()
+        rows = []
+        for x in ((r.json().get("pd") or {}).get("timeseries") or []):
+            try:
+                rows.append({"date": x["asofdate"][:10], "value": float(x["value"]) / 1000})
+            except (KeyError, ValueError, TypeError):
+                continue
+        out[k] = sorted([x for x in rows if x["date"] >= "2021-01-01"], key=lambda x: x["date"])
+    if not any(out.values()):
+        raise ValueError("紐約聯儲初級交易商持倉沒有資料")
+    return out

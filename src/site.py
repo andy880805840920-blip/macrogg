@@ -2568,6 +2568,42 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}}
 :root[data-theme="dark"]{--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}
 #fci-r10:checked~.tabp.p10,#fci-r5:checked~.tabp.p5,#fci-r1:checked~.tabp.p1{display:block}
+/* 長端頁「市場籌碼」（2026-10）：期貨 DV01 矩陣（手機一個參與者一張卡）、交易商庫存 */
+#flw-t1:checked~.tabp.p1,#flw-t2:checked~.tabp.p2{display:block}
+.viz-root:not(#_) .flw-head{margin:2px 0 8px;font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
+.flw-wrap{margin:8px 0 6px}
+.flw-mx{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed}
+.flw-mx th,.flw-mx td{padding:7px 6px;border-bottom:1px solid var(--grid);text-align:right;vertical-align:top;line-height:1.35}
+.flw-mx thead th{font-size:12px;color:var(--muted);font-weight:600}
+.flw-mx thead th:first-child,.flw-mx tbody th{text-align:left}
+.flw-mx thead th:first-child{width:22%}
+.flw-mx tbody th{font-size:13px;font-weight:600;color:var(--text-primary)}
+.flw-mx td b{display:block;font-size:15px;color:var(--text-primary)}
+.flw-mx td b.pos{color:var(--series-1)}.flw-mx td b.neg{color:var(--series-2)}
+.flw-mx td small{display:block;font-size:11px;color:var(--muted);white-space:nowrap}
+.flw-mx td.tot{background:var(--surface-2)}
+@media(max-width:899px){
+  .flw-mx,.flw-mx tbody,.flw-mx tr,.flw-mx th,.flw-mx td{display:block;width:auto}
+  .flw-mx thead{display:none}
+  .flw-mx tr{border:1px solid var(--border);border-radius:10px;margin:0 0 10px;padding:4px 10px}
+  .flw-mx tbody th{padding:8px 0 4px;border-bottom:1px solid var(--grid)}
+  .flw-mx td{display:grid;grid-template-columns:5.5em auto 1fr;gap:4px 10px;align-items:baseline;text-align:left;padding:6px 0}
+  .flw-mx td::before{content:attr(data-label);font-size:12.5px;color:var(--text-secondary);font-weight:600}
+  .flw-mx td b{display:inline;font-size:15px}
+  .flw-mx td small{display:inline;text-align:right}
+  .flw-mx td.tot{background:none;font-weight:600}
+  .flw-mx tr td:last-child{border-bottom:0}}
+.viz-root:not(#_) .flw-h3{margin:22px 0 6px;font-size:var(--fs-body);color:var(--text-primary)}
+.viz-root:not(#_) .flw-read{margin:0 0 10px;font-size:var(--fs-small);line-height:1.65;color:var(--text-primary)}
+.flw-stats{display:grid;grid-template-columns:1fr;gap:8px;margin:8px 0 12px}
+@media(min-width:620px){.flw-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.flw-stats>div{border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+.flw-stats span{display:block;font-size:12px;font-weight:600;color:var(--text-secondary)}
+.flw-stats b{display:block;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text-primary);margin:2px 0}
+.flw-stats b small{font-size:12px;font-weight:400;color:var(--muted)}
+.flw-stats em{display:block;font-style:normal;font-size:11.5px;color:var(--muted);line-height:1.5}
+.flw-eslr h4{margin:12px 0 4px;font-size:var(--fs-small);color:var(--text-primary)}
+.flw-eslr ul{margin:4px 0 8px;padding-left:18px}.flw-eslr li{margin:3px 0;line-height:1.65}
 .ic{margin-top:10px}
 .ic-plot{position:relative;margin:6px 0 22px 40px}
 .ic-grid{position:absolute;left:0;right:0;border-top:1px solid var(--grid)}

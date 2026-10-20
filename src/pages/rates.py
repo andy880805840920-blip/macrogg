@@ -56,6 +56,116 @@ from . import compact_full, focus_evidence, state_chip, teach, gloss_more
 from . import longend as LE
 
 
+# eSLR 說明（2026-10；規則有變動時要更新這段，日期與數字取自聯邦公報與 FDIC）
+X_ESLR = (
+    '<details class="f-more flw-eslr"><summary>eSLR 是什麼、2025 年的改革與對市場的影響</summary><div class="f-detail">'
+    '<h4>定義</h4>'
+    '<p><b>補充槓桿率（SLR）</b>＝第一類資本 ÷ 總槓桿曝險。曝險包含資產負債表上所有資產（公債、存在 Fed 的準備金也算）'
+    '與部分表外項目，<b>不看風險權重</b>。大型銀行最低 3%；美國 8 家全球系統性重要銀行（GSIB）另有加碼要求——'
+    '控股公司再加 2% 緩衝（合計 5%）、旗下銀行要 6% 才算資本適足，這就是「強化版」SLR（eSLR）。</p>'
+    '<p>問題在於：公債、準備金這類低風險資產，吃的槓桿資本跟其他資產一樣。當 eSLR 變成銀行真正綁住的限制時，'
+    '交易商就少了持有公債、做附買回中介與造市的空間——2020 年 3 月公債市場失序時特別明顯'
+    '（當時曾暫時把公債與準備金排除在曝險之外，2021 年 3 月到期）。</p>'
+    '<h4>2025 年的改革</h4>'
+    '<ul><li>2025 年 6 月提案，<b>2025/11/25</b> 聯準會、FDIC、OCC 定案（2025/12/1 刊登聯邦公報），'
+    '<b>2026/4/1 生效</b>，銀行可自 2026/1/1 提前適用。</li>'
+    '<li>控股公司：固定 2% 緩衝改為<b>GSIB 方法一附加資本的 50%</b>。</li>'
+    '<li>旗下銀行：資本適足門檻由 6% 改為 3%＋同樣的緩衝，<b>緩衝上限 1%</b>。</li>'
+    '<li>總損失吸收能力（TLAC）的槓桿緩衝與長期債要求同步改用這個緩衝。</li>'
+    '<li><b>公債與準備金沒有被排除</b>在曝險之外——放寬的是門檻，不是計算方式。</li>'
+    '<li>FDIC 估計：GSIB 控股公司第一類資本要求減少約 130 億美元（不到 2%），主要銀行子公司約 2,190 億美元（28%）。</li></ul>'
+    '<h4>可能的市場影響</h4>'
+    '<ul><li><b>現券承接</b>：資本限制鬆綁後，交易商可以持有更多公債現券、擴大附買回中介，造市深度與壓力時吸收拋售的能力提高。</li>'
+    '<li><b>期貨的對手換人</b>：資產管理在期貨上做多久期，過去主要由避險基金的基差交易對做（買現券、空期貨）。'
+    '2025 年 4 月關稅衝擊時，市場普遍認為部分基差交易被迫平倉；之後空方逐漸有更多由交易商承接。'
+    '交易商受資本與風控約束，但不像槓桿基金那樣在保證金升高時被迫平倉，對價格波動相對沒那麼敏感，'
+    '有助降低「踩踏式」去槓桿的風險。上方矩陣與圖的「交易商佔淨空比重」就是在量這件事。</li>'
+    '<li><b>長端供給</b>：交易商能多吸收一些新債，邊際上減輕發債對期限溢酬的壓力。</li>'
+    '<li><b>限制</b>：公債仍計入曝險；釋出的資本空間是否真的用在公債中介（而不是其他業務），要看銀行自己的選擇，'
+    '也受 GSIB 附加資本計算的變動影響。所以要搭配下方的交易商庫存與拍賣承接比例一起看。</li></ul>'
+    '<p class="cw-panel-note">來源：<a href="https://www.federalregister.gov/documents/2025/12/01/2025-21626" target="_blank" rel="noopener">聯邦公報 2025-21626</a>、'
+    '<a href="https://www.occ.gov/news-issuances/news-releases/2025/nr-ia-2025-112a.pdf" target="_blank" rel="noopener">OCC／聯準會／FDIC 新聞稿</a>、'
+    'FDIC 理事會資料。</p></div></details>')
+
+
+def _flows(d: dict) -> tuple[str, str]:
+    """市場籌碼：期貨 DV01 矩陣＋三年變化圖、eSLR 說明、初級交易商現券庫存。回傳（HTML, 收合摘要）。"""
+    from .. import fmt as _fmt
+    f = d.get("flows") or {}
+    fut, inv = f.get("fut"), f.get("inv")
+    if not fut and not inv:
+        return '<div class="empty">CFTC／紐約聯儲資料本次取得失敗</div>', "期貨持倉與交易商庫存"
+    sg = lambda v, n=0: "—" if v is None else _fmt.signed(v, n)
+    _v1 = lambda v: "—" if v is None else format(v, ",.1f")
+    _p1 = lambda v: "—" if v is None else format(v, ".1f") + "%"
+    md = lambda x: f"{int(x[5:7])}/{int(x[8:10])}" if x else ""
+    parts, summ = [], []
+    if fut:
+        sh = fut.get("share") or {}
+        if sh.get("now") is not None:
+            summ.append(f'交易商佔淨空 {sh["now"]:.0%}' + (f'（一年前 {sh["ago"]:.0%}）' if sh.get("ago") is not None else ""))
+        head = "".join(f'<th>{esc(c["label"])}</th>' for c in fut["matrix"][0]["cells"])
+        body = ""
+        for r in fut["matrix"]:
+            tds = "".join(
+                f'<td data-label="{esc(c["label"])}" class="{"tot" if c["code"] == "tot" else ""}">'
+                f'<b class="{"pos" if c["v"] > 0.5 else "neg" if c["v"] < -0.5 else ""}">{sg(c["v"])}</b>'
+                f'<small>週 {sg(c["w1"])}・4 週 {sg(c["w4"])}</small></td>' for c in r["cells"])
+            body += f'<tr><th scope="row">{esc(r["label"])}</th>{tds}</tr>'
+        per = "、".join(f"{k} ${v:.0f}" for k, v in fut["per"].items())
+        parts.append(
+            f'<p class="flw-head"><b>{esc(fut["head"])}</b></p>'
+            f'<p class="hint">公債期貨上，誰在做多久期、誰在對做。DV01＝殖利率每變動 1bp 的部位損益（百萬美元）；'
+            f'正＝淨多（利率下跌獲利）、負＝淨空。期貨一多一空，每一欄加總為零。</p>'
+            f'<div class="viz-h">公債期貨淨 DV01：參與者 × 天期（CFTC，{md(fut["date"])} 部位，百萬美元／bp）</div>'
+            f'<div class="flw-wrap"><table class="flw-mx"><thead><tr><th>參與者</th>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+            f'<p class="cw-panel-note">週＝比前一週（{md(fut["w1"])}）、4 週＝比 {md(fut["w4"])}。每口 DV01 為近似值（{esc(per)}）：'
+            f'以該週對應天期殖利率估算最便宜交割券的 DV01，再除以轉換因子。</p>'
+            f'<div class="tabs flw-tabs">'
+            f'<input type="radio" name="flw-t" id="flw-t1" checked><label for="flw-t1">累積變化（{esc(md(fut.get("base_date", "")))}＝0）</label>'
+            f'<input type="radio" name="flw-t" id="flw-t2"><label for="flw-t2">水準</label>'
+            f'<div class="tabp p1"><div class="viz-h">近 3 年：資產管理淨多 vs 槓桿基金、交易商淨空（DV01，百萬美元／bp）</div>{fut.get("chart_chg", "")}</div>'
+            f'<div class="tabp p2"><div class="viz-h">近 3 年 DV01 水準（百萬美元／bp）</div>{fut.get("chart_level", "")}</div></div>'
+            f'<p class="cw-panel-note">三條線都以正值呈現：資產管理是淨多、槓桿基金與交易商是淨空。資產管理多單增加時，'
+            f'看是哪一條空單跟著增加，就知道是誰在對做。</p>')
+    parts.append(X_ESLR)
+    if inv:
+        L = inv["last"]
+        summ.append(f'交易商 coupon 庫存 {L["coupons"] * 10:,.0f} 億')
+        _y1i = inv.get("y1") or {}
+        _bill_y1 = sg(L["bills"] - _y1i["bills"]) if _y1i.get("bills") is not None and L.get("bills") is not None else "—"
+        tk = inv.get("take") or {}
+        tnow, tago = (tk.get("now") or (None, 0)), (tk.get("ago") or (None, 0))
+        stats = (
+            f'<div class="flw-stats">'
+            f'<div><span>coupon 淨持倉</span><b>{L["coupons"]:,.0f}<small> 十億美元</small></b>'
+            f'<em>4 週 {sg(inv.get("chg_4w"))}・一年 {sg(inv.get("chg_1y"))}</em>'
+            f'<em>近 3 年第 {inv["pct3y"] * 100:.0f} 百分位</em></div>'
+            f'<div><span>T-Bills 淨持倉</span><b>{L["bills"]:,.0f}<small> 十億美元</small></b>'
+            f'<em>一年 {_bill_y1}</em></div>'
+            f'<div><span>coupon 拍賣交易商承接</span><b>{_p1(tnow[0])}</b>'
+            f'<em>{(f"近 3 個月 {tnow[1]} 場；一年前同期 {_p1(tago[0])}") if tnow[1] else "近 3 個月無拍賣資料"}</em></div></div>')
+        rows = "".join(
+            f'<tr><td data-label="期別"><b>{esc(b["label"])}</b></td><td data-label="淨持倉">{_v1(b["v"])}</td>'
+            f'<td data-label="4 週">{sg(b["w4"], 1)}</td><td data-label="一年">{sg(b["y1"], 1)}</td></tr>'
+            for b in inv["buckets"])
+        parts.append(
+            f'<h3 class="flw-h3">初級交易商現券庫存：造市與承接新債的能力</h3>'
+            f'<p class="flw-read">{esc(inv["read"])}</p>{stats}'
+            f'<table class="lq-tbl flw-inv"><thead><tr><th>剩餘年限</th><th>淨持倉（十億美元，{md(inv["date"])}）</th>'
+            f'<th>4 週變化</th><th>一年變化</th></tr></thead><tbody>{rows}</tbody></table>'
+            f'<div class="viz-block"><div class="viz-h">近 3 年 coupon 淨持倉，依剩餘年限（十億美元，週資料）</div>{inv.get("chart", "")}</div>'
+            f'<details class="f-more"><summary>怎麼讀交易商庫存</summary><div class="f-detail">'
+            f'<p>庫存是交易商自己資產負債表上的公債淨部位。<b>庫存上升＋拍賣承接比例上升</b>＝終端需求不足、交易商被迫接手（壓力訊號）；'
+            f'<b>庫存上升但承接比例沒升</b>＝交易商主動持有（資產負債表有空間，造市深度變好）；<b>庫存下降</b>＝交易商在去化部位，承接新債的空間相對充裕。</p>'
+            f'<p>水位分位以近 3 年 coupon 淨持倉排序；拍賣承接比例＝初級交易商得標量 ÷ 競標得標量，取近 3 個月名目 coupon 拍賣的平均。'
+            f'11–21 年與 21 年以上自 2022 年起才分開申報，「3 年以內」＝2 年以內＋2–3 年。</p>'
+            f'<p>資料：紐約聯儲初級交易商統計（FR 2004，週三部位、隔週四公布）；財政部 Fiscal Data 拍賣結果。</p></div></details>')
+    parts.append('<div class="src">期貨：CFTC Traders in Financial Futures（期貨部分；週二部位、週五公布）。'
+                 '現券：紐約聯儲初級交易商統計。殖利率：美國財政部（FRED）。</div>')
+    return "".join(parts), "　·　".join(summ) or "期貨持倉與交易商庫存"
+
+
 def _rates_body_full(d: dict) -> str:
     sp = d["pressure"]
     title, why = d["pressure_text"]
@@ -541,6 +651,7 @@ def _rates_body_full(d: dict) -> str:
                        + ("利率高於成長，即使收支平衡債務比也會自我累積。" if _rg > 0 else
                           "成長仍跑贏利率，利息造成的增加大多被名目成長抵掉；債務比能不能降，取決於基本赤字。")
                        + esc(_why) + '</div>')
+    _flw_html, _flw_sum = _flows(d)
     _debt_sum = (f'r − g {_rg:+.2f}pp　·　利息佔稅收 {_itr:.1f}%'
                  if _itr is not None and _rg is not None else "政府財政")
     # 三條路徑：降低赤字、壓低利率、提高成長——現在 vs 一年前，往好的方向還是壞的方向
@@ -683,6 +794,13 @@ def _rates_body_full(d: dict) -> str:
 
 <div class="grid">
   <div class="card">
+    <h2 id="flows" data-sum="{esc(_flw_sum)}">市場籌碼</h2>
+    {_flw_html}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
     <h2 id="lights" data-sum="{esc(light_summary.rstrip('。').replace('項指標：', '項：'))}">關鍵指標檢核與綜合判定</h2>
     <p class="hint">依三個組成份分組；本月驅動 10Y 的那一組排第一。不另設權重——權重由市場這個月的變化決定。</p>
     {lights_impact}
@@ -785,6 +903,8 @@ def rates_footer(d: dict) -> str:
          ("流通在外、WAM、Fed 持有", "財政部 MSPD、紐約聯儲 SOMA", "每月／每週"),
          ("聯邦基金期貨、點陣圖", "CBOT 聯邦基金期貨（ZQ）結算價，經 Yahoo Finance 取得；Fed SEP", "每日／每季"),
          ("政府財政", "財政部月報 MTS、公眾持有債務、BEA（FRED）", "每月／每季"),
+         ("公債期貨持倉（市場籌碼）", "CFTC Traders in Financial Futures；DV01 為本站以殖利率近似換算", "每週・週二部位、週五公布"),
+         ("初級交易商現券庫存", "紐約聯儲初級交易商統計（FR 2004）", "每週・約晚一週"),
          ("全球長端（10 年期）", "財政部、Bundesbank、Bank of England、日本財務省", "每日・英國晚約 2～3 個營業日"),
          ("科技巨頭資本支出與發債", "SEC EDGAR（XBRL 申報、說明書）", "財報一申報即更新")],
         ["利率判讀依據通膨、實質利率與期限溢酬的變化；詳細方法見各區說明。",

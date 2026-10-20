@@ -3438,6 +3438,46 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
         if _q in _yq and _gq[_i - 4]["value"]:
             _g = (_gq[_i]["value"] / _gq[_i - 4]["value"] - 1) * 100
             _rg_pts.append({"date": _gq[_i]["date"], "value": sum(_yq[_q]) / len(_yq[_q]) - _g})
+    # ---- 市場籌碼（2026-10）：期貨 DV01（CFTC TFF）＋初級交易商現券庫存（紐約聯儲）----
+    flows = {}
+    try:
+        from .analysis import flows as _fl
+        from .analysis import longend as _lex
+        _tq = treasury or {}
+        _fut = _fl.futures_view(_tq.get("tff") or [], series)
+        _inv = _fl.dealer_inventory(_tq.get("pd_pos") or {},
+                                    _lex.auction_rows(_tq.get("auctions") or [], series))
+        _fc = [("am", "資產管理（淨多）", "var(--fci-1)"), ("lev", "槓桿基金（淨空）", "var(--fci-2)"),
+               ("dlr", "交易商（淨空）", "var(--fci-3)")]
+        if _fut:
+            _c3 = (dt.date.fromisoformat(_fut["date"]) - dt.timedelta(days=3 * 365)).isoformat()
+            _lv = {k: [r for r in _fut["chart"][k] if r["date"] >= _c3] for k, _, _ in _fc}
+            _base = {k: (v[0]["value"] if v else 0) for k, v in _lv.items()}
+            _fut["chart_level"] = charts.compact_lines(
+                [{"label": lab, "color": col, "points": _lv[k]} for k, lab, col in _fc],
+                unit="", height=200, digits=0, months=36, xmonths=False,
+                aria="公債期貨淨 DV01：資產管理淨多、槓桿基金與交易商淨空（百萬美元／bp，週資料）")
+            _fut["chart_chg"] = charts.compact_lines(
+                [{"label": lab, "color": col,
+                  "points": [{"date": r["date"], "value": r["value"] - _base[k]} for r in _lv[k]]}
+                 for k, lab, col in _fc],
+                unit="", height=200, digits=0, months=36, xmonths=False, zero=True,
+                aria="公債期貨淨 DV01 相對三年前的累積變化（百萬美元／bp）")
+            _fut["base_date"] = _lv["am"][0]["date"] if _lv["am"] else ""
+        if _inv:
+            _c3 = (dt.date.fromisoformat(_inv["date"]) - dt.timedelta(days=3 * 365)).isoformat()
+            _ic = [("lt3", "3 年以內"), ("g3l6", "3–6 年"), ("g6l7", "6–7 年"), ("g7l11", "7–11 年"),
+                   ("g11l21", "11–21 年"), ("g21", "21 年以上")]
+            _inv["chart"] = charts.compact_lines(
+                [{"label": lab, "color": f"var(--fci-{i + 1})",
+                  "points": [{"date": r["date"], "value": r[k]} for r in _inv["rows"]
+                             if r["date"] >= _c3 and r.get(k) is not None]}
+                 for i, (k, lab) in enumerate(_ic)],
+                unit="", height=200, digits=0, months=36, xmonths=False, zero=True,
+                aria="初級交易商公債 coupon 淨持倉，依剩餘年限（十億美元，週資料）")
+        flows = {"fut": _fut, "inv": _inv}
+    except Exception as e:                         # noqa: BLE001
+        log.warning("市場籌碼計算失敗（%s），該區塊本次不顯示", e)
     rg_chart = (charts.compact_lines(
         [{"label": "r − g（10Y 季均 − 名目 GDP 年增）", "color": "var(--line-1)", "points": _rg_pts}],
         unit="pp", height=130, digits=2, months=60, zero=True,
@@ -3574,6 +3614,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
             + (f"g＝名目 GDP 年增 {debt.nominal_growth:.1f}%（{_qlabel(debt.gdp_asof)}）"
                if debt.nominal_growth is not None else "")),
         "rg_chart": rg_chart,
+        "flows": flows,
         "hs_stats": hs_stats,
         "offerings": _offerings_block(offerings, hs, series),
         "earnings": _earnings_block(earnings),
