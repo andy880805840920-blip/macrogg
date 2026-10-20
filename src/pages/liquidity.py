@@ -571,8 +571,12 @@ def _core_detail(d: dict) -> str:
     si3 = [v for _, v in _last_n(si, 3)]
     pk = max(si.values()) if si else None
     if si3 and pk is not None and pk > 5 and max(si3) < pk - 3:
-        bg = (f"背景：資料期間內最緊的是 {peak('sofr_iorb', lambda v: f'{v:+.1f}bp')}（2025 年第四季 SOFR 經常高於 IORB，"
-              f"Fed 因此在 2025 年 12 月停止縮表、改做 RMP）；近 3 個月月均 {si_recent}bp，已明顯低於那段高點。")
+        # 括號裡的歷史說明只在高點真的落在 2025 年第四季時才附——高點換了月份就不能沿用這段故事
+        _pm = max(si.items(), key=lambda kv: kv[1])[0]
+        _ctx = ("（2025 年第四季 SOFR 經常高於 IORB，Fed 因此在 2025 年 12 月停止縮表、改做 RMP）"
+                if "2025-10" <= _pm[:7] <= "2025-12" else "")
+        bg = (f"背景：資料期間內最緊的是 {peak('sofr_iorb', lambda v: f'{v:+.1f}bp')}{_ctx}；"
+              f"近 3 個月月均 {si_recent}bp，已明顯低於那段高點。")
     else:
         bg = ""
     chk = "".join(f'<li class="{"ok" if g else "ng"}"><span>{"✓" if g else "✕"}</span><b>{t}</b>{esc(x)}</li>'

@@ -3109,7 +3109,8 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
              "points": [{"date": r["date"], "value": r["value"]} for r in wam.get("market") or []]},
         ], unit=" 年", height=120, digits=2, aria="加權平均剩餘年限") if wam.get("soma") else "",
     }
-    out["fed_policy"] = cfg.get("fed_balance_sheet") or {}
+    # Fed 政策方向：由 SOMA 實際持有變化推（le.fed_policy_from_soma）；抓不到 SOMA 才退回設定檔的文字
+    out["fed_policy"] = le.fed_policy_from_soma(tr.get("soma") or []) or cfg.get("fed_balance_sheet") or {}
     # 信用利差
     out["credit"] = {
         "ig": charts.compact_lines([{"label": "投資級", "color": "var(--line-1)",

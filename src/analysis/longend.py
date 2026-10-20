@@ -1371,3 +1371,46 @@ def dtd_mtd_ytd(rows: list[dict]) -> dict:
             "dtd": (last["value"] - rows[-2]["value"]) * 100 if len(rows) > 1 else None,
             "mtd": (last["value"] - m0) * 100 if m0 is not None else None,
             "ytd": (last["value"] - y0) * 100 if y0 is not None else None}
+
+
+def fed_policy_from_soma(rows: list[dict], months: int = 3) -> dict | None:
+    """
+    Fed 資產負債表的政策方向（2026-10）：由 SOMA 持有的實際變化推，不再手寫在設定檔。
+      近 3 個月總持有減少超過 300 億美元＝縮表中；增加超過 300 億＝擴大持有；其餘＝大致持平。
+      同時點出組成怎麼換：MBS 到期多少、T-Bills 買了多少（WAM 往哪個方向）。
+    """
+    if not rows or len(rows) < 2:
+        return None
+    rows = sorted(rows, key=lambda r: r["date"])
+    now = rows[-1]
+    def ago(days):
+        t = (dt.date.fromisoformat(now["date"]) - dt.timedelta(days=days)).isoformat()
+        p = [r for r in rows if r["date"] <= t]
+        return p[-1] if p else None
+    a3, a12 = ago(months * 30), ago(365)
+    if a3 is None:
+        return None
+    tot = lambda r: sum(r.get(k) or 0 for k, _ in SOMA_PARTS)
+    d_tot, d_mbs, d_bill = tot(now) - tot(a3), now["mbs"] - a3["mbs"], now["bills"] - a3["bills"]
+    d_cpn = (now["notesbonds"] + now.get("tips", 0)) - (a3["notesbonds"] + a3.get("tips", 0))
+    yi = lambda v: f"{v * 10:+,.0f} 億美元"
+    if d_tot < -30:
+        qt, lead = True, f"Fed 正在縮表：近 3 個月 SOMA 持有 {yi(d_tot)}（公債 coupon {yi(d_cpn)}、MBS {yi(d_mbs)}）。"
+    elif d_tot > 30:
+        qt = False
+        lead = (f"Fed 已停止縮表、持有規模回升：近 3 個月 SOMA {yi(d_tot)}，主要是買入 T-Bills（{yi(d_bill)}），"
+                f"到期的 MBS 本金（{yi(d_mbs)}）也改買 T-Bills。")
+    else:
+        qt = False
+        lead = f"Fed 持有規模大致持平（近 3 個月 {yi(d_tot)}）：到期的 MBS 本金（{yi(d_mbs)}）改買 T-Bills（{yi(d_bill)}）。"
+    tail = ""
+    if a12 is not None:
+        s_now = now["bills"] / tot(now) if tot(now) else 0
+        s_ago = a12["bills"] / tot(a12) if tot(a12) else 0
+        if s_now > s_ago + 0.01:
+            tail = (f"T-Bills 佔 SOMA 由一年前 {s_ago:.0%} 升到 {s_now:.0%}，持有公債的方向是縮短平均剩餘年限（WAM）"
+                    "——長天期公債要由私人市場吸收的比例因此變高。")
+        elif s_now < s_ago - 0.01:
+            tail = f"T-Bills 佔 SOMA 由一年前 {s_ago:.0%} 降到 {s_now:.0%}，持有公債的 WAM 拉長。"
+    return {"qt": qt, "text_zh": lead + tail, "date": now["date"], "auto": True}
+

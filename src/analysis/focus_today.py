@@ -2370,6 +2370,46 @@ def release_facts(calendar: dict | None, today: dt.date, values: dict | None = N
     return sorted(out, key=lambda f: f["date"])
 
 
+# FRED 官方行事曆只有日期、沒有資料期別：依各數據的慣例落後推期別（只用在手動行事曆沒有的日期）
+_FACT_LAG = {"employment": 1, "cpi": 1, "ppi": 1, "retail": 1, "pce": 1, "jolts": 2, "umich": 0}
+
+
+def _infer_period(kind: str, d: dt.date) -> str | None:
+    if kind == "gdp":
+        k = (d.month - 1) % 3 + 1                       # 季末後第幾個月：1 初估、2 第二次、3 第三次
+        end_m, y = d.month - k, d.year
+        if end_m <= 0:
+            end_m, y = end_m + 12, y - 1
+        return f"{y}Q{(end_m - 1) // 3 + 1}-" + {1: "advance", 2: "second", 3: "third"}[k]
+    if kind not in _FACT_LAG:
+        return None
+    m, y = d.month - _FACT_LAG[kind], d.year
+    if m <= 0:
+        m, y = m + 12, y - 1
+    return f"{y}-{m:02d}"
+
+
+def merge_calendar(calendar: dict | None, fred: dict | None) -> dict:
+    """手動行事曆＋FRED 官方行事曆：同一個日期以手動檔的期別為準；FRED 有、手動檔沒有的日期補進來。
+    手動檔一年校準一次，FRED 會自動延伸到下一年，兩者合併後不會在年底「用完」。"""
+    out = {k: dict(v) for k, v in (calendar or {}).items() if isinstance(v, dict)}
+    for kind, ds in (fred or {}).items():
+        if kind not in FACT_NAMES:
+            continue
+        have = {str(x)[:10] for x in (out.get(kind) or {}).values()}
+        for iso in ds:
+            iso = str(iso)[:10]
+            if iso in have:
+                continue
+            try:
+                per = _infer_period(kind, dt.date.fromisoformat(iso))
+            except ValueError:
+                continue
+            if per and per not in (out.get(kind) or {}):
+                out.setdefault(kind, {})[per] = iso
+    return out
+
+
 def release_dates(calendar: dict | None) -> dict[str, list[str]]:
     """{kind: [ISO…]}：行事曆裡每種數據的所有官方發布日（驗證用）。"""
     return {k: sorted(str(d)[:10] for d in v.values())
@@ -3750,7 +3790,8 @@ def archive_list(arch) -> list[dict]:
 def build(rates_series: dict | None, offline: bool, cfg: dict | None,
           state_path: Path, env=None, liq_series: dict | None = None,
           events: dict | None = None, election: dict | None = None,
-          calendar: dict | None = None, fact_values: dict | None = None) -> dict:
+          calendar: dict | None = None, fact_values: dict | None = None,
+          fred_releases: dict | None = None) -> dict:
     cfg = cfg or {}
     keywords = cfg.get("keywords") or DEFAULT_KEYWORDS
     # 版式：N 則重點 × 每則 item_cap 字（使用者指定 3 則、每則 100 字內）
@@ -3899,6 +3940,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         # 排名：「前一次寫過的扣分」會讓每次排名都不同，材料沒變也會被迫
         # 換寫別的事、來回翻寫。材料沒變、12 小時內 → 直接沿用，連內文都不抓。
         # 官方數據發布日（權威區塊＋產出後的日期檢查）
+        calendar = merge_calendar(calendar, fred_releases)
         _facts = release_facts(calendar, clock.today(), fact_values)
         _fblk = _facts_block(_facts)
         _rel_dates = release_dates(calendar)

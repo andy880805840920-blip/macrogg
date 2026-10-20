@@ -1053,6 +1053,17 @@ def main() -> int:
     # PPI／PCE 的唯一日期來源，也是 FRED 行事曆問不到時的後備。
     # 離線模式也載——日期是靜態檔案，不打任何 API。
     ctxs["_calendar"] = load_config("releases_calendar.yaml")
+    # 手動行事曆快用完時提醒（FRED 官方行事曆仍會自動補日期，但 PPI／PCE 的期別與首頁後備要靠這份）
+    try:
+        import datetime as _dtc
+        _lim = (clock.today() + _dtc.timedelta(days=45)).isoformat()
+        _short = [k for k, v in (ctxs["_calendar"] or {}).items()
+                  if isinstance(v, dict) and v and max(str(x)[:10] for x in v.values()) < _lim]
+        if _short:
+            log.warning("手動行事曆（config/releases_calendar.yaml）在 45 天內用完：%s——請補上下一年的發布日",
+                        "、".join(_short))
+    except Exception:                              # noqa: BLE001
+        pass
     # 首頁「接下來看什麼」：九種數據＋公債標售的本週／下週行事曆
     from src.analysis import watch_calendar
     ctxs["_schedule"] = watch_calendar.merge_schedule(
@@ -1112,7 +1123,7 @@ def main() -> int:
             # 今天／昨天有哪些發布：發布當天相關新聞加分
             events=watch_calendar.event_dates(ctxs["_schedule"]),
             election=ctxs["_election"],
-            calendar=ctxs.get("_calendar"), fact_values=_fv)
+            calendar=ctxs.get("_calendar"), fact_values=_fv, fred_releases=_rel_all)
     except Exception as e:                         # noqa: BLE001
         log.warning("今日市場焦點產生失敗（%s），該區塊本次不顯示", e)
         ctxs["_focus"] = None
@@ -1234,7 +1245,8 @@ def main() -> int:
         chg.save(STATE_FILE, cur_state)
     log.info("已產出 %d 個頁面至 %s", len(written), OUT_DIR)
     if all_failed:
-        log.warning("有 %d 個資料來源抓取失敗，詳見頁面底部清單", len(all_failed))
+        log.warning("有 %d 個資料來源抓取失敗：%s", len(all_failed),
+                    "、".join(str(x[0] if isinstance(x, (list, tuple)) else x) for x in all_failed[:20]))
 
     # latest.json 是給其他程式吃的，代表全站狀態。局部重跑的 context 殘缺
     # （缺的模組會退回預設值），寫下去會用一份方向可能相反的情境覆蓋掉
