@@ -1,24 +1,24 @@
 {
- "hash": "b620c30473e61cf1",
- "text": "美國房市數據在10/20惡化，待售房屋銷售指數跌至2001年以來新低，9月環比下滑7.3%、年比下滑11.3%，遠超華爾街預期的0.4%跌幅；同期房屋開工也意外下滑5.2%、建築許可下滑0.2%，均遠低於預期。房市困境源於抵押貸款利率已升至7.43%，若聯準會如市場預期在未來數月繼續升息，房貸成本將進一步上升，加劇購房負擔。經濟學家警告，房市正陷入「深度冰凍」，除非政策轉向，否則市場將持續惡化。¶這一困境凸顯聯準會面臨的政策兩難：通膨壓力仍存，但房市已顯示明顯衰退跡象。華許在10/18的發言未能改變市場預期，市場定價10/28會議維持利率機率達81%，但預計12月仍將升息。房市數據與升息預期的矛盾，使聯準會下一步決策面臨更大複雜性。\n美國聯邦預算赤字約佔GDP的6%，聯邦政府利息支付已佔總支出約14%，財政部長葉倫對日本財政政策表達擔憂，認為其潛在影響可能波及美國公債市場；三菱UFJ研究諮詢公司指出美國債市面臨發行期限縮短、避險基金持有量增加等多重風險。\n美國信用卡債務總額近期飆升至1.246兆美元，年增5.4%，Z世代消費者成為主要推手，其平均信用卡使用率達35%，高於千禧世代的34%和X世代的32%。",
+ "hash": "ab690f75b3adb6d3",
+ "text": "美國房市數據在10/20惡化，待成交房屋指數創2001年以來新低，月跌7.3%、年跌11.3%，遠超預期的0.4%跌幅；房屋開工月跌5.2%、建築許可月跌0.2%，均遠低於預期。同時，英國10/21公布9月通膨年增3.5%，超過預期的3.4%，創近一年新高，主要由燃油成本飆升驅動，燃油年增29.8%創2022年8月以來新高。分析師指出，若聯準會如預期在未來數月升息，美國房貸利率已達7.43%恐進一步上升，加劇房市困境；英國央行則面臨服務業通膨加速的壓力，市場定價英國央行10月升息機率達98%。聯準會陷入兩難：通膨仍需對抗，但房市已陷入「深度冰凍」，升息空間受限。\n英國央行升息預期升溫，英鎊兌美元10/21上漲0.07%至1.3392，但漲幅主要源於美元走軟而非英鎊基本面；美元指數小幅上升至101.80，受AI相關拋售與油價下跌影響。\n美伊衝突持續牽動能源與黃金走勢，現貨黃金10/21跌0.2%至4,117.31美元/盎司，自衝突升溫以來已下跌逾20%；油價10/21穩定在99.77美元/桶，外交談判傳聞曾短暫推低布蘭特油價至101.50美元。",
  "links": [
-  {
-   "title": "Fed to skip October but raise rates again in December, nearly all economists say",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOZUFYOUZFZXZ4UWJSN1J6RkRxM1lkdGJsUFZRZ2puQkFnRk9rczVQZF9iUS12amVsUl9ESnA4MmNlUmFuVnBVY3BoeVZoVWx1dmwtSWdCa2tGUUlXeXdWR0o0U2o5NHdUend5d2o3c1NoUlZTQUNyWFFEalBHY25QMVptcnFoRnZiSk1JVDFyb1VFYkg0NGRJaXhWemlUY3gxX3YxeVh0YkNMSHNQU21pWkc0OVQ?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-20T13:27:27+00:00"
-  },
-  {
-   "title": "COMMENTARY: Markets' squeal is music to Fed ears — but still too faint",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOanNEc3U3RUp6cGJ5a2hycUVSd2ZoYkJfSl9Qd1JEWkx5OFlOMTE5TjVXLUZNLUh0ZkZab0JSN1BHVHAteGI1cFRkckUycldMNHFPbWljOFMxNHVDcFFpMjlvRVpQclZnTWU4cTZVUUlkOExfMDEyVjItaC1GMTlKX0RNRzRGRnpacmo3QXlnclAxNWZsd1lpSUpCQWtqYllaZFhDTkdfRDRsTVhQdmplX1gyVEwzb3ow?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-20T06:00:00+00:00"
-  },
   {
    "title": "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
    "link": "https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html",
    "source": "CNBC",
    "at": "2026-10-20T19:28:43+00:00"
+  },
+  {
+   "title": "UK inflation jumps to 3.5% — cementing rate hike expectations",
+   "link": "https://www.cnbc.com/2026/10/21/inflation-uk-cpi-interest-rates.html",
+   "source": "CNBC",
+   "at": "2026-10-21T07:50:10+00:00"
+  },
+  {
+   "title": "Sterling today: Pound climbs on hot UK CPI as dollar weakens",
+   "link": "https://finance.yahoo.com/markets/currencies/articles/sterling-today-pound-climbs-hot-093949012.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-21T09:39:49+00:00"
   }
  ],
  "fedwatch": {
@@ -296,53 +296,34 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-21T05:45:53.857367+00:00",
+ "at": "2026-10-21T11:06:15.093294+00:00",
  "layout": "main",
  "topics": {
-  "hash": "255f1098e6126e47",
+  "hash": "f00909240c2ab656",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "日銀副總裁冰見野表示趨勢通膨已接近2%目標，金融環境仍寬鬆，若延誤必要的貨幣政策調整恐使通膨風險實現，因此日銀維持逐步減少寬鬆的立場；日銀前理事前田榮治預計12月升息，之後約每三個月升息一次，隔夜交換市場顯示日銀不晚於12月",
+    "text": "美元走強推高商品成本，黃金跌至4,117美元，銀、鉑、鈀等貴金屬同步下滑；美元指數升至101.80，加重以美元計價商品的賣壓，高利率環保資產吸引力勝過無息黃金",
     "links": [
      {
-      "title": "日銀前理事前田榮治：為防通膨偏離，日本央行或每三個月升息一次",
-      "link": "https://tw.stock.yahoo.com/news/%E6%97%A5%E9%8A%80%E5%89%8D%E7%90%86%E4%BA%8B%E5%89%8D%E7%94%B0%E6%A6%AE%E6%B2%BB-%E7%82%BA%E9%98%B2%E9%80%9A%E8%86%A8%E5%81%8F%E9%9B%A2-%E6%97%A5%E6%9C%AC%E5%A4%AE%E8%A1%8C%E6%88%96%E6%AF%8F%E4%B8%89%E5%80%8B%E6%9C%88%E5%8D%87%E6%81%AF-%E6%AC%A1-051141501.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-21T05:11:41+08:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "長天期美債在10/20上漲，油價從五個月高點回落、房屋開工與待售銷售數據疲軟，均指向經濟軟化，推升長期美債價格",
-    "links": [
-     {
-      "title": "Treasuries Rise as Oil Retreats From Highest Levels in Weeks",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQbVh3cElYclhQX1FDWUkyZE13cmhpclJpYlRieDFCLVczY3h6aS1TYjFJUHJfbWNFM3lHSC1VN0RkTjNmX1VaSlZEZmRHU2ZIZjdQWjg0VWd2b1VtM2paMXpheHNjSFdqUTZzbklMOER6dVJtN1JMblN5Y0hBbTdtT3RxRlZVSVV3d0Nra2pxYTJFanMwWW9QYjR3TnltNDRWTk81eHZFd2lEVVRFR3pQeA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T19:23:11+00:00"
-     },
-     {
-      "title": "Watch Stocks Fall as AI Worries Trigger Treasury Gains",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNeTJ1dnFBeTUwcUZrcFNnMi1PU2NDQ09uODNEcHEzWlZPOWtaRzg4ekN1dkRpSlRUYUNSRjR3V3I5SFY1SkJyRnZ1a3ExYkV3dk16VFdlS0toZXBuYTBFeUJFZ1E0azBXYm94cTBEemZMb0g4bEdfcVhYM2pNMURKdUxwNEY5Wm1XYUx2RDZ0aUNsU0I5Z2VVdTJPZ0I3VlJESXJseTJR?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T00:00:00+00:00"
+      "title": "Gold Declines Towards $4,120 as Iran Conflict and Federal Reserve Outlook Remain in Focus",
+      "link": "https://investorshub.advfn.com/market-news/article/38401/gold-declines-towards-4120-as-iran-conflict-and-federal-reserve-outlook-remain-in-focus?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-21T09:50:44+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "布蘭特原油期貨在10/20盤中觸及五個月高點每桶110美元，西德州原油期貨接近每桶100美元，受中東衝突與胡塞武裝分子對沙烏地阿拉伯攻擊影響；伊朗和談前景不明朗，油價波動加劇",
+    "text": "中東衝突推升油價至五個月高點，布蘭特原油徘徊110美元附近，美國西德州原油接近100美元，主因胡塞武裝攻擊沙烏地阿拉伯及伊朗可能封鎖荷莫茲海峽，供應風險支撐能源價格",
     "links": [
      {
-      "title": "Oil Steadies as Traders Weigh Conflicting Signals on Iran Talks",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNblJWeWlxaDBENVkyZVNvTWhzNVFvNldZd01GVE9venlBdk5IRkw1RHpJQ2UtaWFrQmtnR1NNbVpsb0hzcTR2X0VBaWdhckRVd3BwYkphakFYcWJtZk1IZWZlcDAwMmxGbkpOaTk0M1hiaTFpMmZPVFRMUXhEZFpoazZtSnoyczE5akRHNVpBYnBPcHl6dDFoSHV6MjJ4UQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T22:04:52+00:00"
+      "title": "Brent oil prices near 5-month high on Middle East supply fears, US inventory drawdowns",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPNTdIRmp3MTB3c3JZNGxXMUl1Wk5haXFwcjdJNXgtQnJkOEM4aWVVWG5tai03TmhHSWZidkliV1VlRkRvOVJCX3Q3QXhCWVdZeXlYQmViOUdOaU85anVWMXpSWFNCOHAtVU5id3Fad1BhX1BzVEt6S1A4N2s1YjJocFh6QXFTVXhHdDJJVzZBX21WUQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-21T00:50:00+00:00"
      },
      {
       "title": "Chips lead Nasdaq lower, oil tops 5",
@@ -355,107 +336,79 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "SpaceX第三季獲利創新高，AI相關營收首度超越衛星網路服務，達7.56億美元，超越預期的13億美元營收；同時能源股因馬斯克提及電力需求而上漲，帶動科技股期貨走高",
+    "text": "美股期貨小幅上揚，標普500期貨漲0.2%、那斯達克期貨漲0.5%，馬斯克提及SpaceX與特斯拉可能合併及Meta財報在即，但能源價格波動與中東局勢不確定性仍制約漲幅",
     "links": [
      {
-      "title": "AI Stocks Rally After Super Micro Preliminary Sales Bring Relief",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNNXV6SV9KdFBtdTBlYnZjb0RObThaNS1VcHRDSDZYUFNXemJYbGVHYklKSGdkenJGUEJmTzVTRU9pbHJMLWVOa0xxN3A5bFc1cDQtUlZ0TXRWLUpKcnEyTXRQRGZIR1NCeDV5THBsV011WDZQME5rbmdCcW96OGxrQW5CMUdtcVNPdFNUNlpETl9UR25EX1h6LXMyWWFQdmdESWZMc0hhWThTZF82X2g3bTAxWnRVQQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-20T22:14:09+00:00"
-     },
-     {
-      "title": "Nasdaq, S&P 500 Futures Climb After SpaceX’s Blowout Quarter: SMCI, NFLX, GE Stocks In Focus",
-      "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-s-and-p-500-futures-climb-after-space-x-s-blowout-quarter-smci-nflx-ge-stocks-in-focus/cZxtFA9RBHZ?.tsrc=rss",
+      "title": "US Stock Futures Edge Higher as SpaceX and Tesla Explore Merger and Meta Earnings Approach: Dow Jones, S&P, Nasdaq, Wall Street",
+      "link": "https://investorshub.advfn.com/market-news/article/38398/us-stock-futures-edge-higher-as-spacex-and-tesla-explore-merger-and-meta-earnings-approach-dow-jones-sp-nasdaq-wall-street?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-21T03:38:05+00:00"
+      "at": "2026-10-21T09:47:45+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電在全球半導體產業的領先地位帶動周邊材料與設備商發展，形成完整產業聚落，與聯發科、聯電、日月光等廠商共同交織出專業分工網；相比之下，南韓仍高度仰賴三星與SK海力士兩大巨頭，整體供應鏈深度與廣度明顯不足",
+    "text": "SpaceX首次單季獲利激勵AI晶片股，馬斯克指電力與冷卻基礎設施而非晶片成為AI運算擴張主要瓶頸，打消市場對運算過剩的擔憂，超微電腦上調展望、輝達等芯片股應聲上漲2-4%",
     "links": [
      {
-      "title": "韓媒認了台積電太強！再點名「3台廠」擴大半導體優勢　嘆三星、SK海力士恐難追上",
-      "link": "https://tw.stock.yahoo.com/news/%E9%9F%93%E5%AA%92%E8%AA%8D%E4%BA%86%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A4%AA%E5%BC%B7-%E5%86%8D%E9%BB%9E%E5%90%8D-3%E5%8F%B0%E5%BB%A0-%E6%93%B4%E5%A4%A7%E5%8D%8A%E5%B0%8E%E9%AB%94%E5%84%AA%E5%8B%A2-%E5%98%86%E4%B8%89%E6%98%9F-050000304.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-21T05:00:00+08:00"
+      "title": "Nasdaq Futures Rise Premarket As SpaceX AI Boom Lifts Chip Stocks: SMCI, TSLA, META, IBM, CRWV, NFLX, BE In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-futures-rise-premarket-spacex-ai-boom-lifts-chip-stocks-smci-tsla-meta-ibm-crwv-nflx-be-in-focus/cZxtvuZRBHU?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-21T08:41:06+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股在10/21開盤大漲780點收復4萬7大關，台積電盤中最高升至2,435元，惟半導體與電子類股出現震盪，漲勢收斂至400多點，大盤回落至4萬6700多點；台指期夜盤上漲634點",
+    "text": "台股強彈594點收46,887點，台積電上漲15元、電子與金融股聯手反攻，PCB族群受TPCA展會激勵景碩漲6.88%重返千金，投信大舉買超129.19億元成為主力買盤",
     "links": [
      {
-      "title": "台股47K得而復失！台積電開紅走弱　賣壓漸出籠、恐抑制漲勢",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4%E7%8B%82%E9%A3%86780%E9%BB%9E-%E5%BC%B7%E5%8B%A2%E9%87%8D%E8%BF%9447k-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%B8%B6%E9%A0%AD%E8%A1%9D%E4%B8%8A2420%E5%85%83-011556501.html",
+      "title": "外資終於轉買五日線搶回、4萬7沒守住！台股漲594點「電金」聯手放紅色煙火｜Yahoo財經掃描",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E7%B5%82%E6%96%BC%E8%BD%89%E8%B2%B7%E4%BA%94%E6%97%A5%E7%B7%9A%E6%90%B6%E5%9B%9E%E3%80%814%E8%90%AC7%E6%B2%92%E5%AE%88%E4%BD%8F%EF%BC%81%E5%8F%B0%E8%82%A1%E6%BC%B2594%E9%BB%9E%E3%80%8C%E9%9B%BB%E9%87%91%E3%80%8D%E8%81%AF%E6%89%8B%E6%94%BE%E7%B4%85%E8%89%B2%E7%85%99%E7%81%AB%EF%BD%9Cyahoo%E8%B2%A1%E7%B6%93%E6%8E%83%E6%8F%8F-094330511.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-21T04:55:40+08:00"
-     },
+      "at": "2026-10-21T09:43:30+08:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "黑岩執行長芬克警告，若政府對AI資料中心實施禁令，將導致經濟衰退，因美國經濟成長高度仰賴AI基礎設施資本支出，輝達與博通等科技股近三年漲幅逾290%",
+    "links": [
      {
-      "title": "台股4萬7大關得而復失！「瑤池金母師兄弟」止跌回升轟17萬 00406A上揚狂炸32.7萬張",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A14%E8%90%AC7%E5%A4%A7%E9%97%9C%E5%BE%97%E8%80%8C%E5%BE%A9%E5%A4%B1-%E7%91%A4%E6%B1%A0%E9%87%91%E6%AF%8D%E5%B8%AB%E5%85%84%E5%BC%9F-%E6%AD%A2%E8%B7%8C%E5%9B%9E%E5%8D%87%E8%BD%9F17%E8%90%AC-00406a%E4%B8%8A%E6%8F%9A%E7%8B%82%E7%82%B832-7%E8%90%AC%E5%BC%B5-043500753.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-21T04:35:00+08:00"
+      "title": "BlackRock CEO Larry Fink Thinks This Midterm Election Issue Could Lead to a Recession",
+      "link": "https://www.fool.com/investing/2026/10/21/blackrock-ceo-larry-fink-thinks-this-midterm-election-issue-could-lead-to-a-recession/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-21T09:20:02+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金跌至4,108美元附近，伊朗和平談判信號混亂打亂通膨預期，加上聯準會升息預期持續壓低金價；油價從五個月高點回落後反彈，美元指數小幅上升至101.80",
+    "text": "黃金跌0.2%至4,117美元，美元升值與高利率環境打壓需求，金價較2月中東衝突爆發時下跌約20%，貴金屬整體承壓",
     "links": [
      {
-      "title": "Gold dips for fourth session as oil rally fans inflation concerns",
-      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNY2dJZXdfdnptbDVvajUtNHBONy13T1Z5aEtVc3d2d2VDYUNpUEpTM1JxNGVZRFhiQmh1b1U2RWpOaW0zVndyQk9uSFZ6b0pQXzVvNUhRMFVXeEMzS3BrU1FkdE9tNEYxY21PdDFEWGplNkkwMkJ2Rkk5VVg2VUVDcXFIUmp4cUR4SnhqQ2h6b3hYTExtTkhCNGtqZWt6WUtUYURrc3owUUptdw?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-21T03:45:00+00:00"
-     },
-     {
-      "title": "Gold falls near $4,110 as Iran peace hopes fade, Fed rate outlook clouds demand",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-falls-near-4-110-015830474.html?.tsrc=rss",
+      "title": "Gold Declines Towards $4,120 as Iran Conflict and Federal Reserve Outlook Remain in Focus",
+      "link": "https://investorshub.advfn.com/market-news/article/38401/gold-declines-towards-4120-as-iran-conflict-and-federal-reserve-outlook-remain-in-focus?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-21T01:58:30+00:00"
-     }
-    ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣在10/21早盤一度貶破32.7元，隨後止貶回升至32.51元升值1.07角，匯銀人士指出新台幣受對美投資需求與外資匯出壓力，但出口商因出口暢旺囤積美元，逢高出脫支撐新台幣；央行態度與外資動向為關鍵",
-    "links": [
-     {
-      "title": "新台幣回升逾1角暫收32.51元　專家點出關鍵",
-      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%9B%9E%E5%8D%87%E9%80%BE1%E8%A7%92%E6%9A%AB%E6%94%B632-51%E5%85%83-%E5%B0%88%E5%AE%B6%E9%BB%9E%E5%87%BA%E9%97%9C%E9%8D%B5-045308845.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-21T04:53:08+08:00"
+      "at": "2026-10-21T09:50:44+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-21T05:46:13.174545+00:00"
+  "at": "2026-10-21T11:06:35.723065+00:00"
  },
  "main_source_titles": [
-  "Fed to skip October but raise rates again in December, nearly all economists say",
-  "COMMENTARY: Markets' squeal is music to Fed ears — but still too faint",
-  "Housing is flashing warning signs just as the Fed weighs more interest rate hikes"
+  "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+  "UK inflation jumps to 3.5% — cementing rate hike expectations",
+  "Sterling today: Pound climbs on hot UK CPI as dollar weakens"
  ],
- "headline": "房市急凍疊加升息預期，聯準會政策兩難加劇",
- "rate_note": "房市急凍數據偏向壓低長端利率，因衰退風險升高會削弱升息需求；不過10年期今日-2bp至5.12%，市場反映幅度有限，仍未充分消化房市惡化對升息預期的衝擊。",
+ "headline": "房市急凍與能源衝擊夾擊，聯準會升息與通膨控制陷入兩難",
+ "rate_note": "房市急凍與能源驅動的通膨壓力形成矛盾，短期偏向壓低升息預期（房市衰退風險制約），但能源衝擊與英國通膨升溫可能延長全球通膨粘性，對長端殖利率偏向推升；10年期今日-2bp至5.12%，市場尚未充分反映房市惡化對聯準會政策的制約。",
  "recent_mains": [
-  {
-   "headline": "房市急凍疊加歐債風險，美債避險需求升溫但升息預期仍存",
-   "titles": [
-    "French bond yields dip but remain near 24-year high in volatile trading",
-    "Bessent Sees No Spillover From France Bond Market’s Turmoil",
-    "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
-    "法德利差一度擴至159基點，貝森特淡化外溢風險、確認資金轉進美債"
-   ],
-   "at": "2026-10-21T00:18:14.204868+00:00"
-  },
   {
    "headline": "房市急凍疊加油價飆升，聯準會升息預期與通膨壓力陷入兩難",
    "titles": [
@@ -473,34 +426,43 @@
     "Housing is flashing warning signs just as the Fed weighs more interest rate hikes"
    ],
    "at": "2026-10-21T05:45:53.857367+00:00"
+  },
+  {
+   "headline": "房市急凍與能源衝擊夾擊，聯準會升息與通膨控制陷入兩難",
+   "titles": [
+    "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
+    "UK inflation jumps to 3.5% — cementing rate hike expectations",
+    "Sterling today: Pound climbs on hot UK CPI as dollar weakens"
+   ],
+   "at": "2026-10-21T11:06:15.093294+00:00"
   }
  ],
  "archive": {
   "2026-10-21": {
-   "headline": "房市急凍疊加升息預期，聯準會政策兩難加劇",
-   "text": "美國房市數據在10/20惡化，待售房屋銷售指數跌至2001年以來新低，9月環比下滑7.3%、年比下滑11.3%，遠超華爾街預期的0.4%跌幅；同期房屋開工也意外下滑5.2%、建築許可下滑0.2%，均遠低於預期。房市困境源於抵押貸款利率已升至7.43%，若聯準會如市場預期在未來數月繼續升息，房貸成本將進一步上升，加劇購房負擔。經濟學家警告，房市正陷入「深度冰凍」，除非政策轉向，否則市場將持續惡化。¶這一困境凸顯聯準會面臨的政策兩難：通膨壓力仍存，但房市已顯示明顯衰退跡象。華許在10/18的發言未能改變市場預期，市場定價10/28會議維持利率機率達81%，但預計12月仍將升息。房市數據與升息預期的矛盾，使聯準會下一步決策面臨更大複雜性。\n美國聯邦預算赤字約佔GDP的6%，聯邦政府利息支付已佔總支出約14%，財政部長葉倫對日本財政政策表達擔憂，認為其潛在影響可能波及美國公債市場；三菱UFJ研究諮詢公司指出美國債市面臨發行期限縮短、避險基金持有量增加等多重風險。\n美國信用卡債務總額近期飆升至1.246兆美元，年增5.4%，Z世代消費者成為主要推手，其平均信用卡使用率達35%，高於千禧世代的34%和X世代的32%。",
-   "rate_note": "房市急凍數據偏向壓低長端利率，因衰退風險升高會削弱升息需求；不過10年期今日-2bp至5.12%，市場反映幅度有限，仍未充分消化房市惡化對升息預期的衝擊。",
+   "headline": "房市急凍與能源衝擊夾擊，聯準會升息與通膨控制陷入兩難",
+   "text": "美國房市數據在10/20惡化，待成交房屋指數創2001年以來新低，月跌7.3%、年跌11.3%，遠超預期的0.4%跌幅；房屋開工月跌5.2%、建築許可月跌0.2%，均遠低於預期。同時，英國10/21公布9月通膨年增3.5%，超過預期的3.4%，創近一年新高，主要由燃油成本飆升驅動，燃油年增29.8%創2022年8月以來新高。分析師指出，若聯準會如預期在未來數月升息，美國房貸利率已達7.43%恐進一步上升，加劇房市困境；英國央行則面臨服務業通膨加速的壓力，市場定價英國央行10月升息機率達98%。聯準會陷入兩難：通膨仍需對抗，但房市已陷入「深度冰凍」，升息空間受限。\n英國央行升息預期升溫，英鎊兌美元10/21上漲0.07%至1.3392，但漲幅主要源於美元走軟而非英鎊基本面；美元指數小幅上升至101.80，受AI相關拋售與油價下跌影響。\n美伊衝突持續牽動能源與黃金走勢，現貨黃金10/21跌0.2%至4,117.31美元/盎司，自衝突升溫以來已下跌逾20%；油價10/21穩定在99.77美元/桶，外交談判傳聞曾短暫推低布蘭特油價至101.50美元。",
+   "rate_note": "房市急凍與能源驅動的通膨壓力形成矛盾，短期偏向壓低升息預期（房市衰退風險制約），但能源衝擊與英國通膨升溫可能延長全球通膨粘性，對長端殖利率偏向推升；10年期今日-2bp至5.12%，市場尚未充分反映房市惡化對聯準會政策的制約。",
    "links": [
-    {
-     "title": "Fed to skip October but raise rates again in December, nearly all economists say",
-     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOZUFYOUZFZXZ4UWJSN1J6RkRxM1lkdGJsUFZRZ2puQkFnRk9rczVQZF9iUS12amVsUl9ESnA4MmNlUmFuVnBVY3BoeVZoVWx1dmwtSWdCa2tGUUlXeXdWR0o0U2o5NHdUend5d2o3c1NoUlZTQUNyWFFEalBHY25QMVptcnFoRnZiSk1JVDFyb1VFYkg0NGRJaXhWemlUY3gxX3YxeVh0YkNMSHNQU21pWkc0OVQ?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-20T13:27:27+00:00"
-    },
-    {
-     "title": "COMMENTARY: Markets' squeal is music to Fed ears — but still too faint",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOanNEc3U3RUp6cGJ5a2hycUVSd2ZoYkJfSl9Qd1JEWkx5OFlOMTE5TjVXLUZNLUh0ZkZab0JSN1BHVHAteGI1cFRkckUycldMNHFPbWljOFMxNHVDcFFpMjlvRVpQclZnTWU4cTZVUUlkOExfMDEyVjItaC1GMTlKX0RNRzRGRnpacmo3QXlnclAxNWZsd1lpSUpCQWtqYllaZFhDTkdfRDRsTVhQdmplX1gyVEwzb3ow?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-20T06:00:00+00:00"
-    },
     {
      "title": "Housing is flashing warning signs just as the Fed weighs more interest rate hikes",
      "link": "https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html",
      "source": "CNBC",
      "at": "2026-10-20T19:28:43+00:00"
+    },
+    {
+     "title": "UK inflation jumps to 3.5% — cementing rate hike expectations",
+     "link": "https://www.cnbc.com/2026/10/21/inflation-uk-cpi-interest-rates.html",
+     "source": "CNBC",
+     "at": "2026-10-21T07:50:10+00:00"
+    },
+    {
+     "title": "Sterling today: Pound climbs on hot UK CPI as dollar weakens",
+     "link": "https://finance.yahoo.com/markets/currencies/articles/sterling-today-pound-climbs-hot-093949012.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-21T09:39:49+00:00"
     }
    ],
-   "at": "2026-10-21T05:45:53.857367+00:00"
+   "at": "2026-10-21T11:06:15.093294+00:00"
   },
   "2026-10-20": {
    "headline": "AI融資壓力升溫，聯準會升息預期面臨通膨與金融穩定的兩難",
