@@ -2,30 +2,34 @@ name: 更新儀表板
 
 # 排程對準「台灣讀者看盤的三個時間點」，不對準個別發布日。
 #
-#   台灣 07:00（週一～週六）：美股收盤後——前一晚美國的發布、收盤價、
-#                            FedWatch 都已定案。週六這次收週五的盤。
-#   台灣 16:00（週一～週五）：倫敦盤中、台股收盤後——亞洲時段的新聞與
-#                            台指期日盤收盤。
-#   台灣 22:45（週一～週五）：美股盤中——美東 08:30 的數據（就業、CPI、
-#                            PPI、PCE、零售、失業金）已經發布：夏令是美東
-#                            10:45、冬令 09:45。冬令時美東 10:00 的 JOLTS
-#                            與密大信心還沒出來，隔天 07:00 那次會補上。
-#   週日不跑：美國沒有發布、市場休市，週六那次的頁面已是最新。
+#   台灣 05:03（每天）：     美股收盤後——前一晚美國的發布、收盤價、
+#                            FedWatch 都已定案。週六這次收週五的盤；週日這次
+#                            數字與週六相同，主要更新日期與「今明兩天」（預告週一）。
+#                            （2026-10 由 07:03 提前：GitHub 早上的排程常延遲
+#                            一個多小時，提前才能讓讀者 7 點前看到新版）
+#   台灣 15:03（週一～週五）：台股、台指期日盤收盤後——亞洲時段的新聞與收盤。
+#                            （2026-10 由 16:05 提前；冬令時倫敦 16:00 才開盤，
+#                            歐洲開盤後的報價由晚上那次補上）
+#   台灣 20:33（週一～週五）：晚間版——當天亞洲、歐洲時段的新聞與報價。
+#                            （2026-10 由 22:45 提前。注意：美東 08:30 的數據在台北
+#                            夏令 20:30、冬令 21:30 才公布，這次通常還抓不到，
+#                            發布日的新數字會由隔天 05:03 那次補上）
+#   週日只跑早上那次（2026-10 起）。
 #
 # GitHub Actions 的 cron 一律是 UTC、沒有時區支援；台灣沒有夏令時間，
 # 所以這三個時間點全年固定，不必隨美國換季調整。
 # 分鐘刻意不排在 :00——整點是全 GitHub 排程最擠的時刻，延遲常達數十分鐘。
 #
 # 執行是冪等的：非發布日跑起來只是重新產生同一份頁面（資料沒變就跳過
-# commit）。一個月約 70 次執行，public repo 的 Actions 不計分鐘數。
+# commit）。一個月約 95 次執行，public repo 的 Actions 不計分鐘數。
 on:
   schedule:
-    # 台灣週一～週六 07:03 ＝ UTC 前一天（週日～週五）23:03
-    - cron: '3 23 * * 0-5'
-    # 台灣週一～週五 16:05 ＝ UTC 08:05
-    - cron: '5 8 * * 1-5'
-    # 台灣週一～週五 22:45 ＝ UTC 14:45
-    - cron: '45 14 * * 1-5'
+    # 台灣每天 05:03 ＝ UTC 前一天 21:03
+    - cron: '3 21 * * *'
+    # 台灣週一～週五 15:03 ＝ UTC 07:03
+    - cron: '3 7 * * 1-5'
+    # 台灣週一～週五 20:33 ＝ UTC 12:33
+    - cron: '33 12 * * 1-5'
   workflow_dispatch:        # 也可以在 Actions 頁面手動觸發
   # 改了程式或設定就重新產生一次。沒有這一段的話，push 完網站不會有任何
   # 反應——要等到下一次排程才會套用新的版面。
@@ -95,7 +99,7 @@ jobs:
       - name: 核心規則測試
         run: |
           set -e
-          for t in test_news_rules test_curve_window test_curve_weekly test_future_outlook test_topics_election test_batch18 test_grid_bands test_brief test_signal_order test_hyperscaler_data test_hyperscaler_forward test_treasury_yields test_inflation_verdict test_ask test_signal_impact test_liquidity_narrative test_longend test_fci test_flows; do
+          for t in test_news_rules test_curve_window test_curve_weekly test_future_outlook test_topics_election test_batch18 test_grid_bands test_brief test_signal_order test_hyperscaler_data test_hyperscaler_forward test_treasury_yields test_inflation_verdict test_ask test_signal_impact test_liquidity_narrative test_longend test_fci test_flows test_forecasts test_ppi test_rate_live test_stories test_market_holidays test_ui_batch_1021; do
             if [ ! -f "tests/$t.py" ]; then echo "::warning::找不到 tests/$t.py，略過"; continue; fi
             echo "::group::$t"
             python tests/$t.py
