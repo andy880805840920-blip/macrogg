@@ -191,7 +191,7 @@ EDITION_CUTOFF_HOURS = 5
 def edition_day(t: dt.datetime) -> str:
     """
     這份內容算哪一天的版本：台灣時間往前推 5 小時取日期。
-    早上那次延到 08:40 也算當天；晚上 22:45 那次拖過午夜（00:30）仍算前一天。
+    早上 05:03 那次（延遲到幾點都）算當天；晚上 20:33 那次拖過午夜（00:30）仍算前一天。
     """
     if t.tzinfo is None:
         t = t.replace(tzinfo=dt.timezone.utc)
@@ -202,11 +202,13 @@ def build_story(ctxs: dict) -> dict:
     f = ctxs.get("_focus") or {}
     paras = [p.strip() for p in (f.get("text") or "").split("\n") if p.strip()]
     first = para = ""
+    chunks = []
     if paras and f.get("layout") == "main":
         m = [x for x in paras[0].split("¶") if x.strip()]
         if m:
             # 今日市場圖（9:16 圖卡）用整段第一段，畫面上最多五行
             para = m[0].strip()
+            chunks = [x.strip() for x in m if x.strip()][:4]
             para = para if len(para) <= 240 else para[:238] + "…"
             first = re.split(r"(?<=[。！？])", m[0].strip())[0]
             first = first if len(first) <= 70 else first[:68] + "…"
@@ -215,12 +217,13 @@ def build_story(ctxs: dict) -> dict:
     return {
         "day": clock.today().isoformat(),
         # 版本日期：每天播一次是看「內容是哪一天的版本」，不看讀者打開的時間
-        # （GitHub 排程常延遲，早上那次不一定 07:03 準時上線）
+        # （GitHub 排程常延遲，早上那次不一定 05:03 準時上線）
         "edition": edition_day(now),
         "stamp": now.strftime("%m/%d %H:%M"),
         "headline": (f.get("headline") or "").strip(),
         "lead": first,
         "para": para,
+        "paras": chunks,          # 今日快報圖卡：原文本身的分段（只有一段時由瀏覽器依句號分段）
         "rate": rn,
         "rate_dir": rate_direction(rn),
         "latest": latest_release(ctxs),

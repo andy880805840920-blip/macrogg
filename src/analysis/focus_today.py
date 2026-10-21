@@ -3715,8 +3715,8 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
 def _lock_events(events: dict | None, cfg: dict | None, now_tw: dt.datetime) -> list[str]:
     """
     主軸鎖定的事件：當天（台北）有發布，或**前一天有發布且現在是台北中午前**。
-    台北早上 07:00 那次對應美國前一天的 CPI／FOMC，要鎖；到了下午 16:00、
-    晚上 22:45 就該換寫別的事，不再鎖（排序加分仍照 _todays_events）。
+    台北早上 05:03 那次對應美國前一天的 CPI／FOMC，要鎖；到了下午 15:03、
+    晚上 20:33 就該換寫別的事，不再鎖（排序加分仍照 _todays_events）。
     """
     today = now_tw.date()
     days = {today.isoformat()}
@@ -3737,7 +3737,7 @@ def _lock_events(events: dict | None, cfg: dict | None, now_tw: dt.datetime) -> 
 def _todays_events(events: dict | None, cfg: dict | None,
                    today: dt.date) -> list[str]:
     """
-    今天（或前一天）有哪些發布事件。前一天也算：台灣早上 07:00 那次
+    今天（或前一天）有哪些發布事件。前一天也算：台灣早上 05:03 那次
     對應的是美國前一天的發布（CPI 美東 08:30＝台灣當晚，隔天早上才是
     第一次完整的收盤後執行）。events 是 {種類: [ISO 日期, …]}；FOMC
     會議日直接讀 config 的 fomc_dates（會後聲明在美東下午兩點，同理）。
@@ -3763,7 +3763,7 @@ def update_archive(arch, st: dict) -> dict:
     """
     主軸存檔（2026-10）：{台灣日期: {headline, text, rate_note, links, at}}。
     同一天跑三次，後面的蓋掉前面的＝保留「當天最後一版」；只留最近 ARCHIVE_DAYS 天
-    （週日不跑，所以是「最近 5 個有發布的日子」）。沒有主軸（退回列標題）不存。
+    （2026-10 起週日也跑一次，週日版與週六內容相近）。沒有主軸（退回列標題）不存。
     """
     arch = dict(arch) if isinstance(arch, dict) else {}
     if st.get("text") and st.get("layout") == "main" and st.get("at"):

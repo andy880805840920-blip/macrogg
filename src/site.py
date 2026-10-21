@@ -4383,11 +4383,13 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .zoomed>svg:not(.zsvg),.zoomed>.cl-tick:not(.zt),.zoomed>.ldot,.zoomed>.lmark,.zoomed>.cl-reflab,.zoomed>.glab,.zoomed>.cl-band{visibility:hidden}
 .zsvg{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .zt.ztl{position:absolute;left:4px;transform:translateY(-50%);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none;background:color-mix(in srgb,var(--surface-1) 80%,transparent);padding:0 2px;border-radius:2px}
-.zchip{position:absolute;top:-4px;right:0;z-index:5;font:inherit;font-size:12px;font-weight:600;padding:4px 10px;min-height:32px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.zbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:0 0 6px;font-size:11.5px;color:var(--brand-orange-ink,#B4532A);font-weight:600}
+.cl>.zbar{margin-left:38px}
+.zchip{font:inherit;font-size:12px;font-weight:600;padding:4px 12px;min-height:32px;border-radius:999px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-primary);cursor:pointer}
 .zchip::before{content:"↺ "}
 .zx{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:11.5px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums;position:relative}
 .cl>.zx{margin-left:38px}
-.zx{flex-wrap:wrap}.zx em{order:5;flex-basis:100%;text-align:center;font-style:normal;font-size:10.5px;color:var(--brand-orange-ink,#B4532A);white-space:nowrap;margin-top:2px}
+
 .zx-hidden{display:none!important}
 .chart-cursor{position:absolute;top:0;bottom:0;border-left:1px solid var(--text-secondary);pointer-events:none;z-index:4}
 .chart-selected-dot{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--surface-1);pointer-events:none;z-index:4}
@@ -5122,9 +5124,9 @@ JS = """
   function ztime(s){s=String(s);if(s.length===7)s+='-01';else if(s.length===4)s+='-01-01';return Date.parse(s.slice(0,10)+'T00:00:00Z');}
   function zfmt(t,daily){var d=new Date(t);return d.getUTCFullYear()+'/'+(d.getUTCMonth()+1)+(daily?'/'+d.getUTCDate():'');}
   function zstep(r){var raw=r/4,m=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)),f=raw/m;return (f<1.5?1:f<3?2:f<7?5:10)*m;}
-  function zclear(el){var plot=el.parentElement;plot.querySelectorAll(':scope > .zsvg, :scope > .zt, :scope > .zchip').forEach(function(x){x.remove();});
-    var host=plot.parentElement;if(host){host.querySelectorAll(':scope > .zx').forEach(function(x){x.remove();});host.querySelectorAll(':scope > .zx-hidden').forEach(function(x){x.classList.remove('zx-hidden');});}}
-  function zoomOut(el){if(!el._fullPoints)return;var prev=(points(el)[el._index||0]||{}).date;zclear(el);el.parentElement.classList.remove('zoomed');
+  function zclear(el){var plot=el.parentElement;plot.querySelectorAll(':scope > .zsvg, :scope > .zt').forEach(function(x){x.remove();});
+    var host=plot.parentElement;if(host){host.querySelectorAll(':scope > .zx, :scope > .zbar').forEach(function(x){x.remove();});host.querySelectorAll(':scope > .zx-hidden').forEach(function(x){x.classList.remove('zx-hidden');});}}
+  function zoomOut(el){if(!el._fullPoints)return;var prev=(points(el)[el._index||0]||{}).date,pl=el.parentElement,py1=pl.getBoundingClientRect().top;zclear(el);var dy1=pl.getBoundingClientRect().top-py1;if(dy1<-1)window.scrollBy(0,dy1);el.parentElement.classList.remove('zoomed');
     el._chartPoints=el._fullPoints;el._fullPoints=null;el.setAttribute('aria-valuemax',el._chartPoints.length-1);
     var j=el._chartPoints.length-1;el._chartPoints.forEach(function(p,i){if(p.date===prev)j=i;});choose(el,j);}
   function zoomIn(el,clientX){
@@ -5154,11 +5156,15 @@ JS = """
     zs.setAttribute('class','zsvg');zs.setAttribute('aria-hidden','true');zs.innerHTML=g;plot.insertBefore(zs,svg.nextSibling);
     var isCl=plot.classList.contains('cl-plot');
     ticks.forEach(function(tv){var sp=document.createElement('span');sp.className=isCl?'cl-tick zt':'zt ztl';sp.style.top=Y(tv)+'%';sp.textContent=(+tv.toFixed(nd)).toFixed(nd).replace('-','−')+(Z.unit||'');plot.appendChild(sp);});
-    var chip=document.createElement('button');chip.type='button';chip.className='zchip';chip.textContent='顯示全部';chip.setAttribute('aria-label','取消放大，顯示全部期間');
-    chip.addEventListener('click',function(ev){ev.stopPropagation();zoomOut(el);el.focus({preventScroll:true});});plot.appendChild(chip);
+    // 「顯示全部」放在圖表上方獨立一列（2026-10：放在圖裡會壓到線）
     var host=plot.parentElement,xa=host.querySelector(':scope > .cl-xm, :scope > .cl-x, :scope > .lxaxis');
+    var bar=document.createElement('div');bar.className='zbar';
+    var lab=document.createElement('span');lab.textContent=daily?'已放大：前後 2 個月':'已放大：前後 6 個月';bar.appendChild(lab);
+    var chip=document.createElement('button');chip.type='button';chip.className='zchip';chip.textContent='顯示全部';chip.setAttribute('aria-label','取消放大，顯示全部期間');
+    chip.addEventListener('click',function(ev){ev.stopPropagation();zoomOut(el);el.focus({preventScroll:true});});bar.appendChild(chip);
+    var py0=plot.getBoundingClientRect().top;host.insertBefore(bar,plot);
+    var dy0=plot.getBoundingClientRect().top-py0;if(dy0>1)window.scrollBy(0,dy0);   // 圖表留在手指下，不往下跳
     var zx=document.createElement('div');zx.className='zx';[a,(a+b)/2,b].forEach(function(t){var sp=document.createElement('span');sp.textContent=zfmt(t,daily);zx.appendChild(sp);});
-    var lab=document.createElement('em');lab.textContent=daily?'放大：前後 2 個月':'放大：前後 6 個月';zx.appendChild(lab);
     if(xa){xa.classList.add('zx-hidden');xa.parentNode.insertBefore(zx,xa);}else plot.parentNode.insertBefore(zx,plot.nextSibling);
     plot.classList.add('zoomed');el._chartPoints=zp;el.setAttribute('aria-valuemax',zp.length-1);
     var ci=0;zp.forEach(function(p,i){if(p.date===cur[best].date)ci=i;});choose(el,ci);}

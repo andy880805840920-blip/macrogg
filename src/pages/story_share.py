@@ -1,14 +1,17 @@
 """
-今日快報最後一則（05）的「存成今日市場圖」（2026-10）：在瀏覽器用 canvas 畫一張
+「今日快報」圖卡（2026-10）：離開快報時跳出，在瀏覽器用 canvas 畫一張
 1080×1920（9:16）的 PNG，可直接分享到 IG 限動或存到相簿。版面＝設計稿 dir1_face7：
 
-  頂端色條 → 刊頭（LOGO＋日期）→ 主軸標題＋第一段（最多 5 行）
+  頂端色條 → 刊頭（LOGO＋日期）→ 主軸標題＋導言（分段、最多 8 行，放不下整段拿掉）
   → 對利率（方向徽章、10 年期、說明、壓低↔推升刻度）
   → 今日數據 2×2（讀者報價板的前兩個指標＋最新公布的數據）＋右側線條人像
-  → 今明兩天（依重要性挑 4 項、依時間排；其餘寫「另有 N 項」）→ 頁尾網址與更新時間
+  → 今明兩天（依重要性挑 4 項、依時間排；其餘寫「另有 N 項」）→ 頁尾 QR code、網址與更新時間
+  區塊間距預設 56px；內容少時多出的高度平均加回間距（每處最多 +40px），
+  太多時先把今明兩天減到 3 項、再拿掉導言最後一段。
 
 不用 SVG foreignObject（Safari 會把 canvas 標成跨來源、匯不出 PNG），全部用 canvas 2D 畫。
-分享要在點按的當下呼叫（Safari 要求使用者手勢），所以進到 05 那一刻就先在背景把圖畫好。
+分享要在點按的當下呼叫（Safari 要求使用者手勢），所以打開快報 1.5 秒後就先在背景把圖畫好。
+跳出的動畫（風把圖吹進來）在 story_ui.py 的 showPaper。
 """
 from __future__ import annotations
 
@@ -25,20 +28,60 @@ def _face_svg() -> str:
 
 
 CSS = r"""
-.sty-save{border:1.5px solid rgba(18,35,59,.55);border-radius:999px;background:transparent;color:#12233B;font:inherit;font-size:14px;font-weight:800;
-  padding:9px 22px;cursor:pointer;position:relative;z-index:7;display:inline-flex;align-items:center;gap:8px}
-.sty-save::before{content:"";width:14px;height:14px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v9M4 6l4 4 4-4M2 13h12' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v9M4 6l4 4 4-4M2 13h12' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
-.sty-save[disabled]{opacity:.6;cursor:progress}
-.sty-save:focus-visible{outline:3px solid #E67143;outline-offset:2px}
-.sty-shot{position:absolute;inset:0;z-index:20;background:rgba(8,14,26,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:56px 18px 22px}
-.sty-shot[hidden]{display:none}
-.sty-shot img{max-width:100%;max-height:calc(100% - 70px);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto}
-.sty-shot p{margin:0;color:#fff;font-size:14px;font-weight:700;text-align:center}
-.sty-shot button{position:absolute;top:14px;right:10px;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:6px 10px;cursor:pointer}
+/* 離開快報時跳出的今日快報圖：風把圖吹進來 → 落定 → 下方操作列 */
+.sty-pp{position:absolute;inset:0;z-index:30;color:#fff;--pw:290px;--ph:515px}
+.sty-pp-dim{position:absolute;inset:0;background:rgba(10,16,28,0);animation:ppdim .3s ease forwards}
+@keyframes ppdim{to{background:rgba(10,16,28,.9)}}
+.sty-pp-wind{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sty-pp-wind i{position:absolute;left:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);opacity:0}
+.sty-pp.go .sty-pp-wind i{animation:ppgust .7s ease-in forwards}
+@keyframes ppgust{0%{opacity:0;transform:translateX(-260px)}20%{opacity:1}100%{opacity:0;transform:translateX(560px)}}
+.sty-pp-st{position:absolute;inset:0;perspective:900px;pointer-events:none}
+.sty-pp-fly{position:absolute;left:50%;top:56px;width:var(--pw);height:var(--ph);margin-left:calc(var(--pw) / -2);transform-style:preserve-3d;opacity:0}
+.sty-pp.go .sty-pp-fly{animation:ppfly 1.3s cubic-bezier(.3,.55,.35,1) forwards,pphide .01s linear 1.32s forwards}
+@keyframes ppfly{
+ 0%{opacity:1;transform:translate(-470px,330px) rotate(-40deg) rotateX(55deg) rotateY(30deg) scale(.55)}
+ 22%{transform:translate(-170px,-80px) rotate(18deg) rotateX(-35deg) rotateY(28deg) scale(.75)}
+ 45%{transform:translate(110px,-10px) rotate(-14deg) rotateX(25deg) rotateY(-24deg) scale(.88)}
+ 66%{transform:translate(-40px,30px) rotate(7deg) rotateX(-12deg) rotateY(10deg) scale(.95)}
+ 84%{transform:translate(10px,-6px) rotate(-3deg) rotateX(5deg) rotateY(-3deg) scale(1)}
+ 100%{opacity:1;transform:none}}
+@keyframes pphide{to{opacity:0}}
+.sty-pp-s{position:absolute;left:0;top:0;height:var(--ph);transform-origin:0 50%;background-size:var(--pw) var(--ph);background-repeat:no-repeat}
+/* 落定後換成一張真的圖片（手機可長按儲存） */
+.sty-pp-img{position:absolute;left:50%;top:56px;width:var(--pw);height:var(--ph);margin-left:calc(var(--pw) / -2);border-radius:3px;
+  box-shadow:0 16px 36px rgba(0,0,0,.5);opacity:0;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto}
+.sty-pp.go .sty-pp-img{animation:ppshow .01s linear 1.3s forwards}
+.sty-pp.still .sty-pp-img{animation:ppshow .35s ease forwards}
+@keyframes ppshow{to{opacity:1}}
+.sty-pp-x{position:absolute;top:14px;right:8px;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:6px 10px;cursor:pointer;opacity:0;animation:ppshow .3s ease 1.3s forwards}
+.sty-pp.still .sty-pp-x{animation-delay:0s}
+.sty-pp-sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:#12233B;border-radius:22px 22px 0 0;padding:14px 18px 20px;transform:translateY(105%);box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+.sty-pp.go .sty-pp-sheet{animation:ppup .35s cubic-bezier(.2,.9,.3,1) 1.4s forwards}
+.sty-pp.still .sty-pp-sheet{animation:ppup .3s ease forwards}
+@keyframes ppup{to{transform:none}}
+.sty-pp-grab{display:block;width:40px;height:4px;border-radius:2px;background:#d8d4cc;margin:0 auto 10px}
+.sty-pp-sheet h4{margin:0;font-size:15px;font-weight:900}.sty-pp-sheet p{margin:2px 0 12px;font-size:12px;color:#6b6a64}
+.sty-pp-btns{display:flex;gap:10px}
+.sty-pp-btns button{flex:1;height:48px;border-radius:999px;font:inherit;font-size:15px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.sty-pp-btns .sty-pp-dl{flex:1.4;background:#E67143;color:#fff;border:0}
+.sty-pp-dl::before{content:"";width:15px;height:15px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v9M4 6l4 4 4-4M2 13h12' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v9M4 6l4 4 4-4M2 13h12' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.sty-pp-btns .sty-pp-share{background:#fff;color:#12233B;border:1.5px solid #12233B}
+.sty-pp-btns .sty-pp-share[hidden]{display:none}
+.sty-pp-go{display:block;margin:10px auto 0;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:#12233B;opacity:.8;cursor:pointer;padding:6px 10px}
+.sty-pp button:focus-visible{outline:3px solid #E67143;outline-offset:2px}
+.sty-pp-toast{position:absolute;left:50%;bottom:190px;transform:translate(-50%,10px);background:#12233B;color:#fff;font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:999px;opacity:0;white-space:nowrap;pointer-events:none}
+.sty-pp-toast.on{animation:pptoast 2.2s ease forwards}
+@keyframes pptoast{12%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0}}
 """
+
+# 頁尾小 QR code：https://macrogg.netlify.app/（ECC M；用 segno 預先算好，瀏覽器只負責畫方格，
+# 不必載入 QR 函式庫）。網址改了要重算：segno.make(url, error="m").matrix
+QR_ROWS = ['11111110111010011101101111111', '10000010111000110100101000001', '10111010010011110010101011101', '10111010111100001110001011101', '10111010010111000001001011101', '10000010000100100111101000001', '11111110101010101010101111111', '00000000110101100100100000000', '10110111010001101110001001011', '01001001001010011011111110001', '11110111101010110100111110110', '00011001011011110011110000001', '10001110001000001101000101100', '10111000110001000111001000111', '01011110000100100001011110111', '00111000100101010010101010010', '10000010000110000010010111010', '00100100110111000010100101110', '10010010001110000010100110100', '00001000100010011100011100100', '01110111110011010101111111100', '00000000111111110110100011111', '11111110110111001011101011010', '10000010111010001010100011001', '10111010010110110010111110101', '10111010110110101100000111010', '10111010111110111000100100101', '10000010000110001010101111010', '11111110111011010101101010010']
 
 JS = r"""
 var MG_FACE = %%FACE%%;
+var MG_QR = %%QR%%;
 function mgShot(D){
   var W = 1080, H = 1920, M = 72, CW = W - 2 * M;
   var INK = "#12233B", OR = "#E67143", PAPER = "#f7f4ed", RULE = "#ddd6c8", MUTE = "#6b6a64", UP = "#b82828", DN = "#0b7a3b", SOFT = "#55585e";
@@ -102,7 +145,24 @@ function mgShot(D){
   function label(t, y){ g.fillStyle = OR; font(800, 23); g.textBaseline = "middle"; var x = spaced(t, M, y + 16, 23 * .22);
     g.fillStyle = RULE; g.fillRect(x + 10, y + 16, W - M - x - 10, 1.5); g.textBaseline = "top"; return y + 33; }
   var rateTxt = (D.rate || "").trim(), dir = D.rate_dir || "flat";
-  function layout(draw, leadMax, evMax, imgs){
+  // 導言分段（2026-10）：最多 8 行；優先用原文段落，只有一段時依句號切，每段最多 3 行。
+  // 放不下就整段拿掉（不在句子中間截斷）；只有第一段也放不下時才加「…」。
+  var LEAD_MAX = 8, PGAP = 14, LH = 46.4;
+  function leadParas(){
+    font(500, 29);
+    var src = (D.paras && D.paras.length > 1) ? D.paras.slice() : [((D.paras && D.paras[0]) || D.para || D.lead || "").trim()];
+    var out = [];
+    src.forEach(function(t){
+      if(!t) return;
+      if(src.length > 1){ out.push(t); return; }
+      var ss = t.match(/[^。！？]+[。！？」）]*/g) || [t], cur = "";
+      ss.forEach(function(x){ var nx = cur + x; if(cur && wrap(nx, CW).length > 3){ out.push(cur); cur = x; } else cur = nx; });
+      if(cur) out.push(cur);
+    });
+    return out;
+  }
+  var PARAS = null;
+  function layout(draw, leadMax, evMax, imgs, G){
     g.textBaseline = "top"; var y;
     if(draw){ g.fillStyle = PAPER; g.fillRect(0, 0, W, H); g.fillStyle = INK; g.fillRect(0, 0, W * .7, 14); g.fillStyle = OR; g.fillRect(W * .7, 0, W * .3, 14);
       // 刊頭
@@ -117,15 +177,20 @@ function mgShot(D){
     font(900, 64); var hl = wrap(D.headline || "今日市場重點", CW, 3);
     if(draw){ g.fillStyle = INK; hl.forEach(function(t, i){ g.fillText(t, M, y + i * 81 + 8); }); }
     y += hl.length * 81;
-    var lead = (D.para || D.lead || "").trim();
-    if(lead && leadMax > 0){ y += 16; font(500, 29); var ll = wrap(lead, CW, leadMax);
-      if(draw){ g.fillStyle = "#2d3a4d"; ll.forEach(function(t, i){ g.fillText(t, M, y + i * 46.4 + 8); }); } y += ll.length * 46.4; }
+    if(!PARAS) PARAS = leadParas();
+    if(PARAS.length && leadMax > 0){ y += 16; font(500, 29); var used = 0;
+      for(var pi = 0; pi < Math.min(leadMax, PARAS.length); pi++){
+        var ll = wrap(PARAS[pi], CW);
+        if(used + ll.length > LEAD_MAX){ if(pi) break; ll = wrap(PARAS[pi], CW, LEAD_MAX); }
+        if(pi) y += PGAP;
+        if(draw){ g.fillStyle = "#2d3a4d"; ll.forEach(function(t, i){ g.fillText(t, M, y + i * LH + 8); }); }
+        y += ll.length * LH; used += ll.length; } }
     // 對利率
-    if(rateTxt){ y += 70; if(draw) label("對利率", y); y += 33 + 16;
-      font(600, 28); var rl = wrap(rateTxt, CW - 8 - 48, 3), bh = 20 + 40 + 10 + rl.length * 42 + 14 + 6 + 8 + 26 + 16;
+    if(rateTxt){ y += G; if(draw) label("對利率", y); y += 33 + 16;
+      font(600, 28); var rl = wrap(rateTxt, CW - 8 - 48, 3), bh = 16 + 40 + 8 + rl.length * 42 + 12 + 6 + 8 + 26 + 12;
       if(draw){
         g.fillStyle = "#efebe2"; rrect(M, y, CW, bh, [0, 18, 18, 0]); g.fill(); g.fillStyle = INK; g.fillRect(M, y, 8, bh);
-        var bx = M + 8 + 24, by = y + 20;
+        var bx = M + 8 + 24, by = y + 16;
         var B = {up: ["↑", "偏向推升利率", UP, "#f3dede"], down: ["↓", "偏向壓低利率", DN, "#dcefe3"], flat: ["→", "利率大致持平", "#8a8880", "#e6e3dc"], unclear: ["?", "方向不明確", "#8a8880", "#e6e3dc"]}[dir] || ["→", "利率大致持平", "#8a8880", "#e6e3dc"];
         font(800, 22); var bw = 6 + 28 + 8 + g.measureText(B[1]).width + 14;
         g.fillStyle = B[3]; rrect(bx, by + 2, bw, 36, [18, 18, 18, 18]); g.fill();
@@ -137,8 +202,8 @@ function mgShot(D){
           if(ten.c){ font(800, 26, MS); g.fillStyle = dc; g.fillText(ten.c, rx, by + 21); rx -= g.measureText(ten.c).width + 8; }
           font(800, 32, MS); g.fillStyle = INK; g.fillText(ten.v, rx, by + 20); rx -= g.measureText(ten.v).width + 6;
           font(700, 22); g.fillStyle = MUTE; g.fillText("10 年期", rx, by + 21); g.textAlign = "left"; }
-        g.textBaseline = "top"; g.fillStyle = INK; font(600, 28); rl.forEach(function(t, i){ g.fillText(t, bx, by + 40 + 10 + i * 42 + 6); });
-        var gy = by + 40 + 10 + rl.length * 42 + 14, gw = CW - 8 - 48, gr = g.createLinearGradient(bx, 0, bx + gw, 0);
+        g.textBaseline = "top"; g.fillStyle = INK; font(600, 28); rl.forEach(function(t, i){ g.fillText(t, bx, by + 40 + 8 + i * 42 + 6); });
+        var gy = by + 40 + 8 + rl.length * 42 + 12, gw = CW - 8 - 48, gr = g.createLinearGradient(bx, 0, bx + gw, 0);
         gr.addColorStop(0, "#3f9f6a"); gr.addColorStop(.5, "#a3a7ae"); gr.addColorStop(1, "#d0574f");
         g.fillStyle = gr; rrect(bx, gy, gw, 6, [3, 3, 3, 3]); g.fill();
         var pos = dir === "up" ? .82 : dir === "down" ? .18 : .5;
@@ -146,7 +211,7 @@ function mgShot(D){
         font(700, 19); g.fillStyle = MUTE; g.fillText("壓低", bx, gy + 6 + 8); g.textAlign = "right"; g.fillText("推升", bx + gw, gy + 6 + 8); g.textAlign = "left"; }
       y += bh; }
     // 今日數據＋人像
-    if(cells.length){ y += 70; if(draw) label("今日數據", y); y += 33;
+    if(cells.length){ y += G; if(draw) label("今日數據", y); y += 33;
       var FW = 300, FH = 375, GW = CW - FW - 24, half = GW / 2, CH = 174, rows = Math.ceil(cells.length / 2), gh = 6 + rows * CH, blk = Math.max(gh, FH);
       if(draw){
         var gy0 = y + 6 + (blk - gh) / 2;
@@ -159,7 +224,7 @@ function mgShot(D){
         if(imgs.face) g.drawImage(imgs.face, W - M - FW, y + (blk - FH) / 2, FW, FH); }
       y += blk; }
     // 今明兩天
-    y += 70; if(draw) label("今明兩天", y); y += 33;
+    y += G; if(draw) label("今明兩天", y); y += 33;
     var shown = pick.slice(0, evMax), extra = more + (pick.length - shown.length), lastD = "";
     if(!shown.length){ if(draw){ font(400, 24); g.fillStyle = SOFT; g.fillText("今明兩天沒有排定的重要事項。", M, y + 14); } y += 56; }
     shown.forEach(function(x){
@@ -172,17 +237,28 @@ function mgShot(D){
         g.fillStyle = RULE; g.fillRect(M, y + 55, CW, 1); }
       lastD = x.date; y += 56; });
     if(extra > 0){ if(draw){ font(400, 22); g.fillStyle = MUTE; g.fillText("另有 " + extra + " 項，詳見網站「接下來看什麼」", M, y + 14); } y += 50; }
-    // 頁尾
-    var fy = H - 34 - 30 - 18;
-    if(draw){ g.fillStyle = INK; g.fillRect(M, fy, CW, 1.5); font(700, 24, MS); var hn = location.hostname; if(!hn || /^(localhost|127\.|0\.0\.0\.0)/.test(hn)) hn = "macrogg.netlify.app"; g.fillText(hn, M, fy + 18 + 2);
-      font(600, 21); g.fillStyle = MUTE; g.textAlign = "right"; g.fillText("台北時間 " + (D.stamp || "") + " 更新", W - M, fy + 18 + 4); g.textAlign = "left"; }
+    // 頁尾：左下小 QR code＋網址，右下更新時間
+    var QS = 108, fy = H - 34 - QS - 18;
+    if(draw){ g.fillStyle = INK; g.fillRect(M, fy, CW, 1.5);
+      var qy = fy + 18, n = MG_QR.length, cell = QS / (n + 2);
+      g.fillStyle = "#fff"; g.fillRect(M, qy, QS, QS); g.fillStyle = INK;
+      for(var r2 = 0; r2 < n; r2++) for(var c2 = 0; c2 < n; c2++) if(MG_QR[r2].charAt(c2) === "1")
+        g.fillRect(Math.round(M + (c2 + 1) * cell), Math.round(qy + (r2 + 1) * cell), Math.ceil(cell), Math.ceil(cell));
+      var hn = location.hostname; if(!hn || /^(localhost|127\.|0\.0\.0\.0)/.test(hn)) hn = "macrogg.netlify.app";
+      font(700, 24, MS); g.fillStyle = INK; g.fillText(hn, M + QS + 20, qy + 26);
+      font(600, 20); g.fillStyle = MUTE; g.fillText("掃描看完整內容", M + QS + 20, qy + 62);
+      font(600, 21); g.textAlign = "right"; g.fillText("台北時間 " + (D.stamp || "") + " 更新", W - M, qy + 62); g.textAlign = "left"; }
     return {end: y, limit: fy - 24};
   }
   return Promise.all([fonts(), load("/brand/logo-full.svg"), MG_FACE ? load("data:image/svg+xml;charset=utf-8," + encodeURIComponent(MG_FACE)) : Promise.resolve(null)]).then(function(r){
-    var imgs = {logo: r[1], face: r[2]}, lm = 5, em = 4;
-    // 太長就先縮第一段、再少列事件，確保頁尾不被蓋到
-    for(var k = 0; k < 12; k++){ var m = layout(false, lm, em, imgs); if(m.end <= m.limit) break; if(lm > 2) lm--; else if(em > 2) em--; else break; }
-    layout(true, lm, em, imgs);
+    var imgs = {logo: r[1], face: r[2]}, lm = 9, em = 4, G0 = 56, m;
+    // 太長：先把今明兩天減到 3 項，再拿掉導言最後一段（標題、數據不動）
+    for(var k = 0; k < 16; k++){ m = layout(false, lm, em, imgs, G0); if(m.end <= m.limit) break;
+      if(em > 3) em--; else if(lm > 1){ lm = Math.min(lm, (PARAS || []).length) - 1; if(lm < 1) lm = 1; } else if(em > 1) em--; else break; }
+    // 太短：多出來的高度平均加回區塊間距（每處最多 +40），再多就留在底部
+    var nG = (rateTxt ? 1 : 0) + (cells.length ? 1 : 0) + 1, G = G0;
+    if(m.end < m.limit) G = G0 + Math.min(40, Math.floor((m.limit - m.end) / nG));
+    layout(true, lm, em, imgs, G);
     return new Promise(function(ok){ cv.toBlob(function(b){ ok(b); }, "image/png"); });
   });
 }
@@ -191,4 +267,4 @@ function mgShot(D){
 
 def js() -> str:
     import json
-    return JS.replace("%%FACE%%", json.dumps(_face_svg()))
+    return JS.replace("%%FACE%%", json.dumps(_face_svg())).replace("%%QR%%", json.dumps(QR_ROWS))

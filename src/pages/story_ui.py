@@ -171,7 +171,7 @@ function lss(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
 function tpeDate(ms){ try{ return new Intl.DateTimeFormat("en-CA", {timeZone: "Asia/Taipei"}).format(new Date(ms)); }catch(e){ return D.day; } }
 // 每天播一次：比對「這份內容的版本日期」和讀者上次看過的版本日期，不一樣才播。
-// 不看讀者打開的時間——GitHub 排程常延遲，早上那次不一定 07:03 準時上線。
+// 不看讀者打開的時間——GitHub 排程常延遲，早上那次不一定 05:03 準時上線。
 // 版本日期由網站產生時決定（台灣時間往前推 5 小時取日期）。
 function tpeDay(){ return D.edition || D.day; }
 function addDay(iso, n){ var p = iso.split("-").map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2] + n)); return d.toISOString().slice(0, 10); }
@@ -269,7 +269,7 @@ function slides(){
   push('<div class="sty-s s5"><i class="sty-dots"></i>' + kick(5, "今明兩天") + dayBox(0, "今天") + dayBox(1, "明天")
     + '<div class="sty-end"><img class="sty-a" style="--d:1s" src="/brand/logo-full.svg" alt="MACRO GG 明天過後，帶你看總經">'
     + '<button type="button" class="sty-cta">進入網站</button><div class="sty-foot sty-a" style="--d:1.4s">● 數據　■ 發債　▲ 官員談話　休 休市</div>'
-    + '<button type="button" class="sty-save sty-a" style="--d:1.6s">存成今日市場圖</button></div></div>', 8000);
+    + '</div></div>', 8000);
   DUR = DURS;
   return S;
 }
@@ -294,7 +294,6 @@ function go(i){
   stage.classList.toggle("sty-intro", i === 0); stage.classList.toggle("sty-light", i === ss.length - 1);
   if(cur >= 0 && i !== cur && i > 1){ sweep.classList.remove("go"); void sweep.offsetWidth; sweep.classList.add("go"); }
   cur = i; acc = 0; t0 = performance.now();
-  if(i === ss.length - 1) prepShot();
   setTimeout(function(){ Array.prototype.forEach.call(ss[i].querySelectorAll("[data-count]"), countUp); }, 350);
 }
 function tick(now){
@@ -315,11 +314,9 @@ function open(){
     document.body.appendChild(root); bars = root.querySelectorAll(".sty-bars b"); stage = root.querySelector(".sty-stage"); sweep = root.querySelector(".sty-sweep"); live = root.querySelector(".sty-live");
     var downT = 0, sx = 0, sy = 0, held = null;
     root.querySelector(".sty-x").addEventListener("click", close);
-    root.addEventListener("click", function(e){ if(e.target === root) close(); if(e.target.closest(".sty-cta")) close();
-      if(e.target.closest(".sty-save")) saveShot(e.target.closest(".sty-save"));
-      if(e.target.closest(".sty-shot button")){ var sh = root.querySelector(".sty-shot"); if(sh) sh.hidden = true; } });
-    stage.addEventListener("pointerdown", function(e){ if(e.target.closest(".sty-x,.sty-cta,.sty-save,.sty-shot")) return; downT = performance.now(); sx = e.clientX; sy = e.clientY; held = setTimeout(function(){ pause(true); }, 220); });
-    stage.addEventListener("pointerup", function(e){ if(!downT || e.target.closest(".sty-save,.sty-shot")) return; clearTimeout(held); var dt = performance.now() - downT, dy = e.clientY - sy, dx = e.clientX - sx; downT = 0;
+    root.addEventListener("click", function(e){ if(e.target === root) close(); if(e.target.closest(".sty-cta")) close(); });
+    stage.addEventListener("pointerdown", function(e){ if(paperOn || e.target.closest(".sty-x,.sty-cta,.sty-pp")) return; downT = performance.now(); sx = e.clientX; sy = e.clientY; held = setTimeout(function(){ pause(true); }, 220); });
+    stage.addEventListener("pointerup", function(e){ if(!downT || paperOn) return; clearTimeout(held); var dt = performance.now() - downT, dy = e.clientY - sy, dx = e.clientX - sx; downT = 0;
       if(dy > 90 && Math.abs(dx) < 80){ close(); return; }
       if(paused){ pause(false); if(dt > 220) return; }
       if(Math.abs(dx) > 60){ go(cur + (dx < 0 ? 1 : -1)); return; }
@@ -327,47 +324,82 @@ function open(){
     stage.addEventListener("pointercancel", function(){ clearTimeout(held); downT = 0; pause(false); });
   }
   back = document.activeElement;
+  paperOn = false; var oldPP = stage.querySelector(".sty-pp"); if(oldPP) oldPP.remove();
+  setTimeout(prepShot, 1500);   // 離開時要跳出的今日快報圖，先在背景畫好
   root.hidden = false; document.documentElement.style.overflow = "hidden"; paused = false; root.classList.remove("sty-paused");
   try{ root.querySelector(".sty-x").focus({preventScroll: true}); }catch(e){}
   cur = -1; go(0); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick);
   lss("mgStoryDay", tpeDay()); if(btn) btn.classList.add("seen");
   document.addEventListener("keydown", key);
 }
-// 今日市場圖：進到最後一則就先在背景畫好（分享必須在點按的當下呼叫，Safari 才允許）
-var shot = null, shotP = null;
+// 今日快報圖（2026-10）：不論按 ✕、往下滑、Esc、點外面、「進入網站」或播完，離開快報時
+// 先讓一陣風把今天的圖吹進來，落定後下方滑出「下載圖片／分享／進入網站」。再按 ✕ 才真的離開。
+// 圖在打開快報 1.5 秒後就開始在背景畫（分享必須在點按的當下呼叫，Safari 才允許）。
+var shot = null, shotP = null, shotURL = "", paperOn = false;
 function shotName(){ return "MACROGG-" + (D.edition || D.day || "").replace(/-/g, "") + ".png"; }
-function prepShot(){ if(shotP || typeof mgShot !== "function") return shotP; shotP = mgShot(D).then(function(b){ shot = b; return b; }, function(){ shotP = null; return null; }); return shotP; }
-function showShot(b){ var sh = root.querySelector(".sty-shot");
-  if(!sh){ sh = document.createElement("div"); sh.className = "sty-shot"; sh.innerHTML = '<button type="button" aria-label="關閉預覽">×</button><img alt="今日市場圖"><p>長按圖片即可儲存或分享</p>'; stage.appendChild(sh); }
-  var im = sh.querySelector("img"); if(im.src) try{ URL.revokeObjectURL(im.src); }catch(e){}
-  im.src = URL.createObjectURL(b); sh.hidden = false; }
-function saveShot(el){
-  pause(true);
-  var touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
-  function deliver(b){
-    if(!b){ el.textContent = "產生失敗，請再試一次"; el.disabled = false; return; }
-    var f = null; try{ f = new File([b], shotName(), {type: "image/png"}); }catch(e){}
-    if(f && navigator.canShare && navigator.canShare({files: [f]})){
-      navigator.share({files: [f], title: "MACRO GG 今日市場圖"}).catch(function(err){ if(!err || err.name !== "AbortError") showShot(b); });
-      return; }
-    if(touch){ showShot(b); return; }
-    var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = shotName(); document.body.appendChild(a); a.click();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 2000);
-  }
-  if(shot){ deliver(shot); return; }
-  el.disabled = true; var o = el.textContent; el.textContent = "產生中…";
-  (prepShot() || Promise.resolve(null)).then(function(b){ el.disabled = false; el.textContent = o;
-    // 等太久，分享的手勢已失效：手機改顯示預覽（長按存圖），桌機直接下載
-    if(b && navigator.canShare){ showShot(b); return; } deliver(b); });
-}
-function close(){ if(!root) return; root.hidden = true; document.documentElement.style.overflow = ""; cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
+function prepShot(){ if(shotP || typeof mgShot !== "function") return shotP;
+  shotP = mgShot(D).then(function(b){ shot = b; try{ shotURL = URL.createObjectURL(b); }catch(e){} return b; }, function(){ shotP = null; return null; }); return shotP; }
+function finish(){ if(!root) return; paperOn = false; root.hidden = true; document.documentElement.style.overflow = ""; cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
   if(back && back.focus) try{ back.focus({preventScroll: true}); }catch(e){} }
+function close(){ if(!root || root.hidden) return;
+  if(paperOn){ finish(); return; }
+  var p = shot ? Promise.resolve(shot) : prepShot();
+  if(!p){ finish(); return; }
+  paperOn = true; cancelAnimationFrame(raf); pause(true);
+  var pp = document.createElement("div"); pp.className = "sty-pp"; pp.innerHTML = '<div class="sty-pp-dim"></div>'; stage.appendChild(pp);
+  var guard = setTimeout(function(){ if(paperOn && !shot) finish(); }, 6000);
+  p.then(function(b){ clearTimeout(guard); if(!paperOn) return; if(!b || !shotURL){ finish(); return; } showPaper(pp); });
+}
+function ppToast(t){ var el = stage.querySelector(".sty-pp-toast"); if(!el) return; el.textContent = t; el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); }
+function shotFile(){ try{ return new File([shot], shotName(), {type: "image/png"}); }catch(e){ return null; } }
+function canShareFile(f){ try{ return !!(f && navigator.canShare && navigator.canShare({files: [f]})); }catch(e){ return false; } }
+function showPaper(pp){
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var sw = stage.clientWidth, sh = stage.clientHeight, ph = Math.min(sh - 56 - 214, (sw - 56) * 16 / 9), pw = ph * 9 / 16, N = 10, w = pw / N;
+  var dd = String(D.edition || D.day || "").split("-"), md = dd.length === 3 ? parseInt(dd[1], 10) + "/" + parseInt(dd[2], 10) : "";
+  pp.style.setProperty("--pw", pw + "px"); pp.style.setProperty("--ph", ph + "px");
+  pp.innerHTML = '<div class="sty-pp-dim"></div><div class="sty-pp-wind" aria-hidden="true"></div>'
+    + '<div class="sty-pp-st" aria-hidden="true"><div class="sty-pp-fly"></div></div>'
+    + '<img class="sty-pp-img" alt="今日快報・' + esc(md) + '" src="' + shotURL + '">'
+    + '<button type="button" class="sty-pp-x" aria-label="關閉">×</button>'
+    + '<div class="sty-pp-sheet"><i class="sty-pp-grab"></i><h4>今日快報・' + esc(md) + '</h4><p>1080×1920，可直接發 IG 限動</p>'
+    + '<div class="sty-pp-btns"><button type="button" class="sty-pp-dl">下載圖片</button><button type="button" class="sty-pp-share">分享</button></div>'
+    + '<button type="button" class="sty-pp-go">進入網站 →</button></div><div class="sty-pp-toast" role="status" aria-live="polite"></div>';
+  // 圖切成 10 條並排（不巢狀：巢狀 3D 在部分瀏覽器會破洞），每一條的角度＝前面各個「關節」角度
+  // 相加，位置一路接上去——疊起來就是被風吹得翻捲的紙；1.3 秒內擺動衰減到攤平。
+  var fly = pp.querySelector(".sty-pp-fly"), strips = [];
+  for(var i = 0; i < N; i++){ var d = document.createElement("div"); d.className = "sty-pp-s";
+    d.style.cssText = "width:" + (w + .5) + "px;background-image:url(" + shotURL + ");background-position:" + (-i * w) + "px 0";
+    fly.appendChild(d); strips.push(d); }
+  function damp(t){ return t < 0 ? 1.4 : t > 1.3 ? 0 : 1.4 * Math.cos(2 * Math.PI * t / .36) * Math.exp(-2.6 * t) * (1 - t / 1.3); }
+  function flap(t){ var th = 0, X = 0, Z = 0;
+    for(var k = 0; k < N; k++){ if(k){ X += w * Math.cos(th); Z -= w * Math.sin(th); th += (6 + k * .9) * damp(t - k * .03) * Math.PI / 180; }
+      strips[k].style.transform = "translate3d(" + X.toFixed(2) + "px,0," + Z.toFixed(2) + "px) rotateY(" + th.toFixed(4) + "rad)"; } }
+  if(!reduce){ var t0f = performance.now(); flap(0);
+    (function step(now){ var t = (now - t0f) / 1000; flap(t); if(t < 1.35 && paperOn) requestAnimationFrame(step); })(t0f); }
+  var wind = pp.querySelector(".sty-pp-wind");
+  [[.22, 0, 150], [.36, .05, 220], [.5, .15, 120], [.62, .1, 260], [.74, .25, 180], [.3, .4, 200], [.56, .55, 140], [.44, .7, 230]].forEach(function(r){
+    var l = document.createElement("i"); l.style.cssText = "top:" + (r[0] * 100) + "%;width:" + r[2] + "px;animation-delay:" + r[1] + "s"; wind.appendChild(l); });
+  if(!canShareFile(shotFile())) pp.querySelector(".sty-pp-share").hidden = true;
+  pp.classList.add(reduce ? "still" : "go");
+  pp.addEventListener("click", function(e){
+    if(e.target.closest(".sty-pp-x,.sty-pp-go")){ finish(); return; }
+    if(e.target.closest(".sty-pp-share")){ var f = shotFile(); if(canShareFile(f)) navigator.share({files: [f], title: "MACRO GG 今日快報"}).catch(function(){}); return; }
+    if(e.target.closest(".sty-pp-dl")){
+      var f2 = shotFile(), ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      // iPhone：分享選單裡的「儲存影像」才會進相簿；其他裝置直接下載檔案
+      if(ios){ if(canShareFile(f2)) navigator.share({files: [f2]}).catch(function(){}); else ppToast("長按圖片即可儲存"); return; }
+      var a = document.createElement("a"); a.href = shotURL; a.download = shotName(); document.body.appendChild(a); a.click(); a.remove(); ppToast("已下載 " + shotName()); }
+  });
+  setTimeout(function(){ try{ pp.querySelector(".sty-pp-dl").focus({preventScroll: true}); }catch(e){} }, reduce ? 300 : 1700);
+}
 function key(e){
   // Tab 只在快報裡循環（關閉鈕、最後一則的「進入網站」）
-  if(e.key === "Tab"){ var f = [root.querySelector(".sty-x")], c = root.querySelector(".sty-s.on .sty-cta"), sv = root.querySelector(".sty-s.on .sty-save"); if(c) f.push(c); if(sv) f.push(sv);
+  if(e.key === "Tab"){ var f = paperOn ? Array.prototype.filter.call(stage.querySelectorAll(".sty-pp button"), function(x){ return !x.hidden; })
+      : [root.querySelector(".sty-x")], c = paperOn ? null : root.querySelector(".sty-s.on .sty-cta"); if(c) f.push(c); if(!f.length) return;
     var k = f.indexOf(document.activeElement); e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); return; }
-  if(e.key === "Escape") close(); else if(e.key === "ArrowRight") go(cur + 1); else if(e.key === "ArrowLeft") go(cur - 1); else if(e.key === " "){ e.preventDefault(); pause(!paused); } }
-document.addEventListener("visibilitychange", function(){ if(root && !root.hidden) pause(document.hidden); });
+  if(e.key === "Escape") close(); else if(paperOn) return; else if(e.key === "ArrowRight") go(cur + 1); else if(e.key === "ArrowLeft") go(cur - 1); else if(e.key === " "){ e.preventDefault(); pause(!paused); } }
+document.addEventListener("visibilitychange", function(){ if(root && !root.hidden && !paperOn) pause(document.hidden); });
 if(btn){ btn.hidden = false; if(lsg("mgStoryDay") === tpeDay()) btn.classList.add("seen"); btn.addEventListener("click", open); }
 var force = /[?&]story=1/.test(location.search);
 var skip = location.hash || /[?&]q=/.test(location.search) || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
