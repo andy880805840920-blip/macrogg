@@ -25,13 +25,30 @@ def _esc(s) -> str:
     return html.escape(str(s), quote=True)
 
 
-def _inspect_layer(points: list[dict]) -> str:
-    """共享滑鼠／觸控資料層：保存所有資料日，不抽樣、不跨日期補值。"""
+def _thin(i: int, n: int, mobile: int = 6, desktop: int = 12) -> str:
+    """x 軸標籤疏化（2026-10 手機年份／月份重疊）：從最後一個往回每 k 個留一個。
+    回傳 class：" xm"＝手機隱藏、" xd"＝桌機也隱藏（site.py CSS）。"""
+    back = n - 1 - i
+    kd = max(1, -(-n // desktop))
+    km = max(1, -(-n // mobile))
+    if back % kd:
+        return " xd"
+    if back % km:
+        return " xm"
+    return ""
+
+
+def _inspect_layer(points: list[dict], zoom: dict | None = None) -> str:
+    """共享滑鼠／觸控資料層：保存所有資料日，不抽樣、不跨日期補值。
+    zoom＝{unit, digits}：折線圖可雙擊／雙點／兩指放大（site.py 的瀏覽器端重畫），
+    數值要帶 v（原始值）。"""
     payload = json.dumps(points, ensure_ascii=False, separators=(",", ":"))
+    z = (f' data-zoom="{_esc(json.dumps(zoom, ensure_ascii=False, separators=(",", ":")))}"'
+         if zoom else "")
     return (f'<span class="chart-inspector" tabindex="0" role="slider" '
-            f'aria-label="選擇圖表資料點，可用左右方向鍵" '
+            f'aria-label="選擇圖表資料點，可用左右方向鍵；雙擊或兩指張開可放大" '
             f'aria-valuemin="0" aria-valuemax="{len(points)-1}" aria-valuenow="0" '
-            f'data-points="{_esc(payload)}"></span>')
+            f'data-points="{_esc(payload)}"{z}></span>')
 
 
 # ---------------------------------------------------------------------------
@@ -282,8 +299,8 @@ def line_chart(points: Sequence[dict], unit: str = "", height: int = 150,
     inspect = _inspect_layer([
         {"date": p["date"], "x": i / (len(pts)-1) * 100,
          "values": [{"label": "數值", "text": f'{p["value"]:,.{digits}f}{unit}',
-                     "y": y_pct(p["value"]), "color": color}]}
-        for i, p in enumerate(pts)])
+                     "y": y_pct(p["value"]), "color": color, "v": round(p["value"], 6)}]}
+        for i, p in enumerate(pts)], zoom={"unit": unit, "digits": digits, "area": color})
     return (
         f'<div class="lwrap">'
         f'<div class="lplot">{svg}{glabs}{mark_labels}{end_dot}{inspect}</div>'
@@ -683,9 +700,11 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
             v = m.get(date)
             values.append({"label": s_["label"],
                            "text": "當日無資料" if v is None else f"{v:,.{digits}f}{unit}",
-                           "y": None if v is None else Yp(v), "color": s_["color"]})
+                           "y": None if v is None else Yp(v), "color": s_["color"],
+                           "v": None if v is None else round(v, 6)})
         inspect.append({"date": date, "x": X(date) / W * 100, "values": values})
-    over.append(_inspect_layer(inspect))
+    over.append(_inspect_layer(inspect, zoom={"unit": unit, "digits": digits,
+                                              "dash": [bool(s_.get("dash")) for s_ in ser]}))
     first = min((s["points"][0]["date"] for s in ser))
     last = max((s["points"][-1]["date"] for s in ser))
     legend = "".join(
@@ -708,12 +727,15 @@ def compact_lines(series: Sequence[dict], unit: str = "%", height: int = 150,
             # 跨度超過兩年時只標每年 1 月（寫完整年份），不然 60 個月份數字擠成一團
             _long = (int(last[:4]) - int(first[:4])) * 12 + int(last[5:7]) - int(first[5:7]) > 24
             if 0 <= xp <= 100 and (not _long or m_ == 1):
-                labs.append(f'<span style="left:{xp:.2f}%">'
-                            f'{y_ if _long else (f"{y_ % 100}/1" if m_ == 1 else m_)}</span>')
+                labs.append((xp, f'{y_ if _long else (f"{y_ % 100}/1" if m_ == 1 else m_)}'))
             m_ += 1
             if m_ > 12:
                 y_, m_ = y_ + 1, 1
-        xaxis = f'<div class="cl-xm">{"".join(labs)}</div>'
+        # 年份標籤手機上最多 5 個、桌機 12 個；月份標籤手機最多 7 個
+        nl = len(labs)
+        xaxis = ('<div class="cl-xm">' + "".join(
+            f'<span class="{_thin(i, nl, 5 if _long else 7, 12 if _long else 13).strip()}" style="left:{xp:.2f}%">{t}</span>'
+            for i, (xp, t) in enumerate(labs)) + '</div>')
     else:
         xaxis = (f'<div class="cl-x"><span>{_esc(first[:7].replace("-", "/"))}</span>'
                  f'<span>{_esc(last[:7].replace("-", "/"))}</span></div>')
@@ -994,7 +1016,8 @@ def cat_lines(series: Sequence[dict], unit: str = "%", height: int = 170,
             v = dict(s_["points"]).get(x)
             values.append({"label": s_["label"],
                            "text": "此天期無資料" if v is None else f"{v:.{digits}f}{unit}",
-                           "y": None if v is None else Yp(v), "color": s_["color"]})
+                           "y": None if v is None else Yp(v), "color": s_["color"],
+                           "v": None if v is None else round(v, 6)})
         inspect.append({"date": x, "x": X(x) / W * 100, "values": values})
     over.append(_inspect_layer(inspect))
     xl = "".join(f'<span>{_esc(x)}</span>' for x in xs)
@@ -1103,7 +1126,8 @@ def diverging_stacked(rows: Sequence[dict], keys: Sequence[tuple], net: tuple,
     span = (top + bot) or 1
     z = top / span * 100                      # 零軸距離頂端的百分比
     cols = []
-    for r in rows:
+    n_rows = len(rows)
+    for ri, r in enumerate(rows):
         when = r.get("period") or r["date"][:7]
         up = dn = 0.0
         segs = ""
@@ -1124,7 +1148,7 @@ def diverging_stacked(rows: Sequence[dict], keys: Sequence[tuple], net: tuple,
         lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
         cls = " dv-part" if r.get("partial") else ""
         cols.append(f'<div class="dc2-col{cls}" data-tip="{_esc("｜".join(tip))}">{segs}'
-                    f'<span class="gc-lab">{_esc(lab)}</span></div>')
+                    f'<span class="gc-lab{_thin(ri, n_rows)}">{_esc(lab)}</span></div>')
     leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
                   for _, l, c in keys)
     leg += (f'<span><i style="width:12px;height:3px;background:{net[2]}"></i>{_esc(net[1])}</span>')

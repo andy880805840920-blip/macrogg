@@ -70,6 +70,39 @@ def _cons_for(cons: dict, key: str, seen: dt.date | None) -> list:
     return []
 
 
+def _fmt_like(actual: str, v: float) -> str:
+    """存檔的預估是數字：照實際值的寫法（小數位、% 或 K）補上單位。"""
+    a = str(actual or "")
+    m = re.search(r"\d+(?:\.(\d+))?", a.replace(",", ""))
+    nd = len(m.group(1)) if m and m.group(1) else (1 if "%" in a else 0)
+    unit = "%" if "%" in a else ("K" if a.rstrip().endswith("K") else ("萬" if a.rstrip().endswith("萬") else ""))
+    return f"{v:.{nd}f}{unit}"
+
+
+def _stored_cons(ctxs: dict, ck: str, cl: str, period: str) -> float | None:
+    """ForexFactory 週曲只放本週與下週，過了一週就查不到——改用存檔的預估（2026-10）：
+    PPI 用 state/ppi.json（通膨模組 ppi.cons）；CPI、非農、PCE 用各家預測的市場共識。"""
+    if ck == "ppi":
+        from .ppi_watch import FF_LABEL
+        pp = (ctxs.get("inflation") or {}).get("ppi") or {}
+        if period and str(pp.get("period") or "")[:7] not in ("", period[:7]):
+            return None
+        return (pp.get("cons") or {}).get(FF_LABEL.get(cl, ""))
+    try:
+        from .forecasts import FF
+    except Exception:                              # noqa: BLE001
+        return None
+    field = (FF.get(ck) or {}).get(cl)
+    rel = ((ctxs.get("_forecasts") or {}).get("releases") or {})
+    if not field or not rel:
+        return None
+    es = [e for e in rel.values() if e.get("key") == ck and (e.get("cons") or {}).get(field) is not None]
+    if period:
+        es = [e for e in es if str(e.get("period") or "")[:7] == period[:7]]
+    es.sort(key=lambda e: str(e.get("date") or ""))
+    return es[-1]["cons"][field] if es else None
+
+
 def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
     """最近一次公布的重要數據（依 state/releases.json 第一次看到的時間）。"""
     if releases is None:
@@ -100,21 +133,25 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
     for k in keys:
         at = seen_at(k)
         d = at.astimezone(_TPE).date() if at else None
-        rows, name = [], ""
+        rows, name, per = [], "", ""
         if k == "labor" and lk.get("nfp_display", "—") != "—":
             name = f"就業報告（{mon(lab.get('data_month', ''))}）"
+            per = str(lab.get("data_month") or "")
             rows = [("非農新增", lk["nfp_display"], "employment", "非農新增"),
                     ("失業率", lk.get("u3_display", "—"), "employment", "失業率")]
         elif k == "inflation" and ik.get("core_display", "—") != "—":
             name = f"CPI 物價（{mon(inf.get('data_month', ''))}）"
+            per = str(inf.get("data_month") or "")
             rows = [("核心 CPI 月增", ik["core_display"], "cpi", "核心 CPI 月增"),
                     ("CPI 月增", ik.get("headline_display", "—"), "cpi", "CPI 月增")]
         elif k == "pce" and ik.get("pce_display", "—") != "—":
             name = f"PCE 物價（{mon((inf.get('asof') or {}).get('pce', ''))}）"
+            per = str((inf.get("asof") or {}).get("pce") or "")
             rows = [("核心 PCE 年增", ik["pce_display"], "pce", "核心 PCE 年增")]
         elif k == "ppi" and (inf.get("ppi") or {}).get("mom") is not None:
             pp = inf["ppi"]
             name = f"PPI 生產者物價（{mon(pp.get('period') or pp.get('asof', ''))}）"
+            per = str(pp.get("period") or pp.get("asof") or "")
             rows = [("PPI 月增", f"{pp['mom']:.1f}%", "ppi", "PPI 月增")]
             if pp.get("core_mom_1d") is not None:
                 rows.append(("核心 PPI 月增", f"{pp['core_mom_1d']:.1f}%", "ppi", "核心 PPI 月增"))
@@ -134,6 +171,11 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
             if not actual or actual == "—":
                 continue
             c = next((x for x in _cons_for(cons, ck, d) if x.get("label") == cl), None) if ck else None
+            if ck and not (c or {}).get("forecast"):
+                sv = _stored_cons(ctxs, ck, cl, per)
+                if sv is not None:
+                    fc = f"{sv / 10:+,.1f} 萬" if cl == "非農新增" else _fmt_like(actual, sv)
+                    c = {"forecast": fc, "previous": (c or {}).get("previous", "")}
             out.append({"label": label, "actual": actual,
                         "forecast": (c or {}).get("forecast", ""),
                         "previous": (c or {}).get("previous", ""),
@@ -159,10 +201,13 @@ def edition_day(t: dt.datetime) -> str:
 def build_story(ctxs: dict) -> dict:
     f = ctxs.get("_focus") or {}
     paras = [p.strip() for p in (f.get("text") or "").split("\n") if p.strip()]
-    first = ""
+    first = para = ""
     if paras and f.get("layout") == "main":
         m = [x for x in paras[0].split("¶") if x.strip()]
         if m:
+            # 今日市場圖（9:16 圖卡）用整段第一段，畫面上最多五行
+            para = m[0].strip()
+            para = para if len(para) <= 240 else para[:238] + "…"
             first = re.split(r"(?<=[。！？])", m[0].strip())[0]
             first = first if len(first) <= 70 else first[:68] + "…"
     rn = (f.get("rate_note") or "").strip()
@@ -175,6 +220,7 @@ def build_story(ctxs: dict) -> dict:
         "stamp": now.strftime("%m/%d %H:%M"),
         "headline": (f.get("headline") or "").strip(),
         "lead": first,
+        "para": para,
         "rate": rn,
         "rate_dir": rate_direction(rn),
         "latest": latest_release(ctxs),

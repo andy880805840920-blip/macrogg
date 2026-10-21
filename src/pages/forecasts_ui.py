@@ -77,6 +77,24 @@ CSS = r"""
 .fc-na{font-size:10.5px}.fc-star{font-size:9.5px}.fc-tb tfoot td{font-size:11px;padding:9px 2px;letter-spacing:-.02em}.fc-tb tr.fc-act .fc-c b{font-size:14.5px}.fc-tb tr.fc-act .fc-c small{font-size:10px}}
 """
 
+FOLD_CSS = r"""
+.fc-fold>summary{list-style:none;cursor:pointer;position:relative;padding-right:30px}
+.fc-fold>summary::-webkit-details-marker{display:none}
+.fc-fold>summary::after{content:"▾";position:absolute;right:2px;top:2px;font-size:15px;color:var(--muted)}
+.fc-fold[open]>summary::after{content:"▴"}
+.fc-fold>summary .hm-zh{margin-bottom:6px}
+.fc-fold[open]>summary .hm-zh{margin-bottom:16px}
+.fc-sum{margin:0;font-size:var(--fs-small);line-height:1.6;color:var(--text-secondary)}
+.fc-fold[open] .fc-sum{display:none}
+.fc-fold>summary:focus-visible{outline:2px solid var(--brand-orange);outline-offset:4px;border-radius:6px}
+"""
+
+# 頁面是靜態的（一天更新三次）：瀏覽器端再用台灣日期判斷一次，隔天打開舊頁也對
+FOLD_JS = r"""<script>(function(){var d=document.querySelector('.fc-fold');if(!d)return;var m={};try{m=JSON.parse(d.dataset.openDays||'{}');}catch(e){}
+var t='';try{t=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Taipei'});}catch(e){}
+var k=m[t];if(k){if(!d.open){d.open=true;var r=document.getElementById('fc-t-'+k);if(r)r.checked=true;}}
+else if(d.open&&!location.hash)d.open=false;})();</script>"""
+
 JS = r"""<script>(function(){var root=document.querySelector('.fc');if(!root)return;
 root.addEventListener('click',function(e){var c=e.target.closest('.fc-c');if(!c)return;var p=c.closest('.fc-p');
  Array.prototype.forEach.call(p.querySelectorAll('.fc-c.on'),function(x){x.classList.remove('on');});c.classList.add('on');
@@ -297,6 +315,54 @@ def _board(rel: dict, key: str) -> str:
     return (f'<details class="f-more fc-lb"><summary>誰最準・{gname}（累計 {n} 期）</summary>{body}</details>')
 
 
+def _tpe_date(key: str, iso: str) -> dt.date | None:
+    """公布日（台灣時間的日期）。"""
+    try:
+        from ..analysis import watch_calendar as wc
+        return wc.taipei_time(dt.date.fromisoformat(iso), wc.EVENTS[key][2]).date()
+    except Exception:                              # noqa: BLE001
+        try:
+            return dt.date.fromisoformat(iso[:10])
+        except ValueError:
+            return None
+
+
+def open_days(rel: dict) -> dict:
+    """{台灣日期: key}：CPI、非農、PCE 公布當天與隔天自動展開（2026-10）。"""
+    out = {}
+    for e in sorted(rel.values(), key=lambda e: str(e.get("date") or "")):
+        k = e.get("key")
+        if k not in F.RELEASES or not e.get("date"):
+            continue
+        d = _tpe_date(k, e["date"])
+        if d:
+            for x in (d, d + dt.timedelta(days=1)):
+                out[x.isoformat()] = k
+    return out
+
+
+def summary_line(rel: dict, today: dt.date) -> str:
+    """收合時的一句話：三項數據各自的期別、公布日、狀態、幾家投行。"""
+    parts = []
+    for k, zh in F.RELEASES.items():
+        e = F.pick(rel, k, today)
+        if not e:
+            continue
+        n = sum(1 for b in F.BANKS if (F.forecasters(e).get(b) or {}))
+        d = _tpe_date(k, e.get("date", ""))
+        when = f"{d.month}/{d.day}" if d else ""
+        if e.get("actual"):
+            st = "已公布"
+        elif d and d == today:
+            st = "今天公布"
+        elif d and d == today + dt.timedelta(days=1):
+            st = "明天公布"
+        else:
+            st = "即將公布" if d and d >= today else "待更新"
+        parts.append(f"{zh} {when} {st}" + (f"（{n} 家投行）" if n else ""))
+    return "・".join(parts) or "公布前一週開始收集各家預測"
+
+
 def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
     from .. import clock
     today = today or clock.today()
@@ -312,9 +378,17 @@ def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
              '方向命中＝預估高於或低於共識，實際也落在同一邊。實際值用首次公布值，之後的修正不計；各家只保留公布前的最後一版。</p>'
              '<p class="hm-foot">對共識：通膨、就業、時薪高於共識以紅色表示（偏緊縮），失業率高於共識以綠色表示。'
              '任何預估跟共識差太多（非農 15 萬、其他 0.3 個百分點）會被判定抓錯、不顯示。</p></details>')
-    return (f'<style>{CSS}</style>'
+    days = open_days(rel)
+    auto = days.get(today.isoformat())
+    if auto:                                       # 公布當天／隔天：展開並切到那一項
+        radios = "".join(f'<input type="radio" name="fc-t" id="fc-t-{k}" class="fc-in"{" checked" if k == auto else ""}>'
+                         for k in F.RELEASES)
+    import json as _json
+    return (f'<style>{CSS}{FOLD_CSS}</style>'
             '<section class="home-zone hm-zone" aria-labelledby="home-fc">'
-            '<div class="hm-zh"><div><span class="hm-num">04</span><h2 id="home-fc">各家預測</h2></div>'
+            f'<details class="fc-fold"{" open" if auto else ""} data-open-days="{_esc(_json.dumps(days, separators=(",", ":")))}">'
+            '<summary><div class="hm-zh"><div><span class="hm-num">04</span><h2 id="home-fc">各家預測</h2></div>'
             '<p>失業與通膨・各家投行 vs 市場共識</p></div>'
+            f'<p class="fc-sum">{_esc(summary_line(rel, today))}</p></summary>'
             f'<div class="fc">{radios}<div class="fc-tabs" role="group" aria-label="數據">{tabs}</div>'
-            f'<div class="fc-ps">{panels}</div>{notes}</div>{section_learn("/", "home-fc")}</section>' + JS)
+            f'<div class="fc-ps">{panels}</div>{notes}</div></details>{section_learn("/", "home-fc")}</section>' + JS + FOLD_JS)

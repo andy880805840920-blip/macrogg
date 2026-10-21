@@ -315,19 +315,135 @@ def _cls(v) -> str:
     return "flat" if v is None or abs(v) < 0.5 else "up" if v > 0 else "dn"
 
 
-def _cw_brief(b: dict | None, events=None) -> str:
-    """最上方：一段白話（少數關鍵數字）＋「數字明細」收合＋複製按鈕。固定滾動一週。"""
+# 30−2 週報的自訂期間：跟 analysis/longend.brief_window／brief_prose／_brief_text 同一套規則
+# （tests/test_curve_window.py 逐字比對；改一邊就要改另一邊）
+_CWB_CORE_JS = r"""
+function cwBrief(BD){
+var TEN=['2','10','30'],SPS=[['10-2','10','2'],['30-10','30','10'],['30-2','30','2']],IDS=['1','2','3','5','7','10','20','30'];
+var RGP={bear_steep:'長端升幅大於短端',bull_steep:'短端降幅大於長端',bear_flat:'短端升幅大於長端',bull_flat:'長端降幅大於短端',twist_steep:'短端降、長端升',twist_flat:'短端升、長端降'};
+function hu(v,nd){var f=Math.pow(10,nd);return Math.floor(v*f+0.5+1e-10)/f;}
+function num(v,nd){nd=nd||0;var r=hu(v,nd);if(r===0)r=0;return r.toFixed(nd).replace('-','−');}
+function sgn(v,u,nd){if(u===undefined)u='bp';nd=nd||0;var r=hu(v,nd);if(r===0)return (0).toFixed(nd)+u;return (r>0?'+':'')+num(v,nd)+u;}
+function md2(s){return parseInt(s.slice(5,7),10)+'/'+parseInt(s.slice(8,10),10);}
+function r6(v){return Math.floor(v*1e6+0.5)/1e6;}
+function regime(dl,ds){var x=r6(dl-ds);
+ if(Math.abs(x)<2)return{code:'flat',zh:'大致持平',lead:''};
+ if(x>0){if(dl>0&&ds<0)return{code:'twist_steep',zh:'扭轉變陡',lead:'兩端反向'};
+  if(Math.abs(dl)>=Math.abs(ds))return dl>0?{code:'bear_steep',zh:'熊陡',lead:'長端帶動'}:{code:'bull_steep',zh:'牛陡',lead:'短端帶動'};
+  return ds<0?{code:'bull_steep',zh:'牛陡',lead:'短端帶動'}:{code:'bear_steep',zh:'熊陡',lead:'長端帶動'};}
+ if(dl<0&&ds>0)return{code:'twist_flat',zh:'扭轉變平',lead:'兩端反向'};
+ if(Math.abs(ds)>=Math.abs(dl))return ds>0?{code:'bear_flat',zh:'熊平',lead:'短端帶動'}:{code:'bull_flat',zh:'牛平',lead:'長端帶動'};
+ return dl<0?{code:'bull_flat',zh:'牛平',lead:'長端帶動'}:{code:'bear_flat',zh:'熊平',lead:'短端帶動'};}
+function fw(y1,n1,y2,n2){var a=Math.pow(1+y1/100,n1),b=Math.pow(1+y2/100,n2);return (Math.pow(b/a,1/(n2-n1))-1)*100;}
+function fset(y){var need=['1','2','5','7','10','20','30'];for(var i=0;i<need.length;i++)if(y[need[i]]===null||y[need[i]]===undefined)return null;
+ var y3=y['3'],ip=(y3===null||y3===undefined);if(ip)y3=y['2']+(y['5']-y['2'])/3;var y15=(y['10']+y['20'])/2;
+ return{'1':{'2':fw(y['1'],1,y3,3),'10':fw(y['1'],1,y['10'],10),'30':fw(y['1'],1,y['30'],30)},
+  '5':{'2':fw(y['5'],5,y['7'],7),'10':fw(y['5'],5,y15,15),'30':fw(y['5'],5,y['30'],30)},interp3:ip};}
+function day(i){var o={};IDS.forEach(function(k){o[k]=BD.y[k][i];});return o;}
+function idx(dt){var i=0;for(var j=0;j<BD.d.length;j++){if(BD.d[j]<=dt)i=j;else break;}return i;}
+function win(i0,i1){var Y=BD.y,lv={},sp={},fwd={};
+ TEN.forEach(function(k){var a=Y[k][i0],b=Y[k][i1];lv[k]={a:a,b:b,d:(b-a)*100};});
+ SPS.forEach(function(p){var a=(lv[p[1]].a-lv[p[2]].a)*100,b=(lv[p[1]].b-lv[p[2]].b)*100,g=regime(lv[p[1]].d,lv[p[2]].d);
+  sp[p[0]]={a:a,b:b,d:b-a,code:g.code,zh:g.zh,lead:g.lead};});
+ var fn=fset(day(i1)),fp=fset(day(i0));
+ if(fn)['1','5'].forEach(function(h){var L=fn[h],spr={},prev=null;SPS.forEach(function(p){spr[p[0]]=(L[p[1]]-L[p[2]])*100;});
+  if(fp){prev={};SPS.forEach(function(p){prev[p[0]]=(fp[h][p[1]]-fp[h][p[2]])*100;});}
+  fwd[h]={lv:L,sp:spr,prev_sp:prev};});
+ var best=null;for(var c=i0+1;c<=i1;c++){var q=c-1,cands=TEN.map(function(k){return[k+' 年',(Y[k][c]-Y[k][q])*100];});
+  SPS.forEach(function(p){cands.push([p[0].replace('-','−'),((Y[p[1]][c]-Y[p[2]][c])-(Y[p[1]][q]-Y[p[2]][q]))*100]);});
+  cands.forEach(function(x){if(best===null||Math.abs(x[1])>Math.abs(best.d)+1e-9)best={date:BD.d[c],name:x[0],d:x[1]};});}
+ return{from:BD.d[i0],to:BD.d[i1],lv:lv,sp:sp,fwd:fwd,move:best,days:i1-i0};}
+function verb(v){return Math.abs(r6(v))<1?'幾乎不動':(v>0?'上升 '+num(Math.abs(v))+'bp':'下跌 '+num(Math.abs(v))+'bp');}
+function prose(b,events,per,prev){per=per||'本週';prev=prev||'上週';var lv=b.lv,sp=b.sp,fwd=b.fwd,x=sp['30-2'],d2=lv['2'].d,d10=lv['10'].d,d30=lv['30'].d,now=num(x.b),s1;
+ if(Math.abs(r6(x.d))<2){var ds=[d2,d10,d30];
+  if(ds.every(function(v){return Math.abs(r6(v))<2;}))s1=per+'曲線幾乎沒動：2 年、10 年、30 年變動都在 2bp 以內，30−2 停在 '+now+'bp。';
+  else if(ds.every(function(v){return v>0;})||ds.every(function(v){return v<0;})){var ab=ds.map(Math.abs),lo=Math.min.apply(null,ab),hi=Math.max.apply(null,ab);
+   var rng=num(lo)!==num(hi)?num(lo)+'–'+num(hi):num(lo);
+   s1=per+'曲線大致平行'+(d2>0?'上移':'下移')+'：2 年、10 年、30 年都'+(d2>0?'上升':'下跌')+' '+rng+'bp，形狀幾乎不變，30−2 停在 '+now+'bp。';}
+  else s1=per+'曲線形狀幾乎沒變：各天期漲跌互見，30−2 停在 '+now+'bp。';
+  var a=sp['10-2'].d,c=sp['30-10'].d;
+  if(Math.abs(r6(a))>=2&&Math.abs(r6(c))>=2&&a*c<0)s1=s1.slice(0,-1)+'；不過中段與長段反向（10−2 '+sgn(a)+'、30−10 '+sgn(c)+'），互相抵銷。';}
+ else{s1=per+'曲線'+(Math.abs(x.d)>=8?'明顯':'小幅')+(x.d>0?'變陡':'變平')+'：30 年'+verb(d30)+'、2 年'+verb(d2)+(x.lead?'，'+x.lead:'')+'，30−2 '+(x.d>0?'擴大':'收窄')+'到 '+now+'bp。';}
+ var out=[s1],mv=b.move;
+ if(mv&&Math.abs(mv.d)>=4){var names=[];(events||[]).forEach(function(e){if(e[0]===mv.date&&names.indexOf(e[1])<0)names.push(e[1]);});
+  out.push('主要變化集中在 '+md2(mv.date)+'：'+mv.name+'單日'+(mv.d>0?'上升':'下跌')+' '+num(Math.abs(mv.d))+'bp'+(names.length?'，當天有'+names.join('、'):'')+'。');}
+ if(fwd['1']&&fwd['5']){var f1=fwd['1'].sp['30-2'],f5=fwd['5'].sp['30-2'],g1=f1-x.b,g5=f5-x.b;
+  var c1=g1>5?'up':g1<-5?'dn':'eq',c5=g5>5?'up':g5<-5?'dn':'eq';
+  var view={'dn,dn':'市場仍押注曲線未來回平','up,up':'市場押注曲線未來續陡','up,dn':'市場押注一年內續陡、長期回平','dn,up':'市場押注一年內回平、長期再陡',
+   'eq,dn':'市場押注一年內大致維持、長期回平','eq,up':'市場押注一年內大致維持、長期更陡','dn,eq':'市場押注一年內回平、之後大致維持','up,eq':'市場押注一年內續陡、之後大致維持','eq,eq':'市場預期曲線大致維持現在的陡度'}[c1+','+c5];
+  var s3='市場定價方面，遠期顯示 30−2 一年後約 '+num(f1)+'bp、五年後約 '+num(f5)+'bp，'+view,pv=fwd['1'].prev_sp;
+  if(pv){var r=f1-pv['30-2'];s3+=r>2?'；比'+prev+'往變陡修正了 '+num(Math.abs(r))+'bp':r<-2?'；比'+prev+'往變平修正了 '+num(Math.abs(r))+'bp':'，與'+prev+'相近';}
+  out.push(s3+'。');}
+ return out.join('');}
+function text(b,prev){prev=prev||'上週';var lv=b.lv,sp=b.sp,fwd=b.fwd,x=sp['30-2'];
+ var move=Math.abs(r6(x.d))<2?'大致持平':x.d>0?'擴大 '+num(Math.abs(x.d))+'bp':'收窄 '+num(Math.abs(x.d))+'bp';
+ var s1='30−2 利差 '+num(x.a)+' → '+num(x.b)+'bp（'+move+'）',how;
+ var tenors='2Y '+sgn(lv['2'].d)+'、10Y '+sgn(lv['10'].d)+'、30Y '+sgn(lv['30'].d);
+ if(x.code==='flat'){var d2=lv['2'].d,d30=lv['30'].d;how=(Math.abs(r6(d2))<2&&Math.abs(r6(d30))<2)?'各天期變動都不大':'兩端同步'+(d2+d30>0?'上行':'下行')+'（大致平行）';}
+ else how=x.zh+'：'+(RGP[x.code]||'')+(x.lead&&x.code.indexOf('twist')!==0?'，'+x.lead:'');
+ var a=sp['10-2'].d,c=sp['30-10'].d,seg='分段：10−2 '+sgn(a)+'、30−10 '+sgn(c),s3;
+ if(Math.abs(r6(x.d))<2)s3=seg+((Math.abs(r6(a))>=2&&Math.abs(r6(c))>=2&&a*c<0)?'，兩段互相抵銷。':'，兩段都沒什麼動。');
+ else{var same=[];if(a*x.d>0)same.push([Math.abs(a),'2→10 年段']);if(c*x.d>0)same.push([Math.abs(c),'10→30 年段']);
+  var top=same.reduce(function(m,s){return m===null||s[0]>m[0]||(s[0]===m[0]&&s[1]>m[1])?s:m;},null);s3=seg+(top?'，主要來自 '+top[1]+'。':'。');}
+ var out=[s1,tenors+'；'+how+'。',s3];
+ if(fwd['1']&&fwd['5']){function part(h,zh){var f=fwd[h].sp['30-2'],g=f-x.b,pv=fwd[h].prev_sp;return zh+' 30−2 約 '+num(f)+'bp（比現在 '+sgn(g)+(pv?'，較'+prev+' '+sgn(f-pv['30-2']):'')+'）';}
+  out.push('市場隱含：'+part('1','1 年後')+'；'+part('5','5 年後')+'。');
+  var g1=fwd['1'].sp['30-2']-x.b,g5=fwd['5'].sp['30-2']-x.b;
+  var p1=g1>5?'未來一年續陡':g1<-5?'未來一年回平':'未來一年大致維持',p5=g5>5?'五年後更陡':g5<-5?'五年後更平':'五年後與現在接近',pv=fwd['1'].prev_sp;
+  if(pv){var r=fwd['1'].sp['30-2']-pv['30-2'];out.push('定價偏向'+p1+'、'+p5+'；'+(r>2?'較'+prev+'往更陡修正':r<-2?'較'+prev+'往更平修正':'與'+prev+'相近')+'。');}
+  else out.push('定價偏向'+p1+'、'+p5+'。');}
+ return out;}
+return{win:win,prose:prose,text:text,idx:idx,md2:md2};}
+"""
+
+_CWB_JS = _CWB_CORE_JS + r"""
+(function(){var box=document.querySelector('.cwb');if(!box)return;var el=document.getElementById('cwb-data');if(!el)return;
+var BD=JSON.parse(el.textContent),B=cwBrief(BD),fa=box.querySelector('.cwb-from'),fb=box.querySelector('.cwb-to'),cu=box.querySelector('.cwb-cust'),err=box.querySelector('.cwb-err');
+var keep={span:box.querySelector('.cwb-span').textContent,prose:box.querySelector('.cwb-prose').textContent,list:box.querySelector('.cwb-more ul').innerHTML};
+function safe(v){return String(v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function press(on){box.querySelectorAll('.cwb-mode').forEach(function(b){b.classList.toggle('on',b===on);b.setAttribute('aria-pressed',String(b===on));});}
+function apply(){err.hidden=true;var a=fa.value,b=fb.value;if(!a||!b){err.textContent='請選擇開始與結束日期。';err.hidden=false;return;}
+ if(a>b){var t=a;a=b;b=t;}var i0=B.idx(a),i1=B.idx(b);
+ if(i1<=i0){err.textContent='期間內至少要有兩個交易日。';err.hidden=false;return;}
+ var r=B.win(i0,i1),ev=BD.ev||[];
+ box.querySelector('.cwb-span').textContent=B.md2(r.from)+' → '+B.md2(r.to)+'・自訂期間（'+r.from+' 收盤比 '+r.to+' 收盤，'+r.days+' 個交易日）';
+ box.querySelector('.cwb-prose').textContent=B.prose(r,ev,'這段期間','期初');
+ box.querySelector('.cwb-more ul').innerHTML=B.text(r,'期初').map(function(x){return '<li>'+safe(x)+'</li>';}).join('');}
+box.querySelectorAll('.cwb-mode').forEach(function(b){b.addEventListener('click',function(){press(b);
+ if(b.dataset.m==='custom'){cu.hidden=false;if(!fa.value){fa.value=BD.d[Math.max(0,BD.d.length-22)];fb.value=BD.d[BD.d.length-1];}apply();}
+ else{cu.hidden=true;err.hidden=true;box.querySelector('.cwb-span').textContent=keep.span;box.querySelector('.cwb-prose').textContent=keep.prose;box.querySelector('.cwb-more ul').innerHTML=keep.list;}});});
+box.querySelector('.cwb-apply').addEventListener('click',apply);
+})();
+"""
+
+
+def _cw_brief(b: dict | None, events=None, bd: dict | None = None) -> str:
+    """最上方：一段白話（少數關鍵數字）＋「數字明細」收合。預設滾動一週；可改自訂期間（瀏覽器重算）。"""
     if not b:
         return ""
+    import json as _json
     prose = le.brief_prose(b, events)
     detail = "".join(f"<li>{esc(x)}</li>" for x in b["text"])
     span = f"{le._md2(b['from'])} → {le._md2(b['to'])}"
+    ctl = cust = data = js = ""
+    if bd and len(bd.get("d") or []) > 2:
+        lo, hi = bd["d"][0], bd["d"][-1]
+        ctl = ('<div class="cw-ctl cwb-modes" role="group" aria-label="週報期間">'
+               '<button type="button" class="cw-btn cwb-mode on" data-m="week" aria-pressed="true">最近一週</button>'
+               '<button type="button" class="cw-btn cwb-mode" data-m="custom" aria-pressed="false">自訂日期</button></div>')
+        cust = (f'<div class="cwb-cust" hidden><label>從 <input type="date" class="cwb-from" min="{lo}" max="{hi}"></label>'
+                f'<label>到 <input type="date" class="cwb-to" min="{lo}" max="{hi}"></label>'
+                f'<button type="button" class="cwb-apply">套用</button></div><p class="cwb-err" role="alert" hidden></p>')
+        payload = {**bd, "ev": [list(e) for e in (events or [])]}
+        data = (f'<script type="application/json" id="cwb-data">'
+                f'{_json.dumps(payload, ensure_ascii=False, separators=(",", ":"))}</script>')
+        js = f"<script>{_CWB_JS}</script>"
     return (f'<section class="cwb" aria-label="30−2 週報"><div class="cwb-h"><b>30−2 週報</b>'
-            f'<span>{span}・滾動一週（最新收盤比 5 個交易日前）</span>'
-            f'<button type="button" class="cwb-copy" data-copy="{esc(prose + "（30−2 週報 " + span + "，MACRO GG）")}">複製</button></div>'
-            f'<p class="cwb-prose">{esc(prose)}</p>'
+            f'<span class="cwb-span">{span}・滾動一週（最新收盤比 5 個交易日前）</span></div>'
+            f'{ctl}{cust}'
+            f'<p class="cwb-prose" aria-live="polite">{esc(prose)}</p>'
             f'<details class="cwb-more"><summary>數字明細（各天期、分段、遠期）</summary><ul>{detail}</ul></details>'
-            f'</section>')
+            f'{data}{js}</section>')
 
 
 _ROWS = (("ten", "y2", "2", "2Y"), ("ten", "y10", "10", "10Y"), ("ten", "y30", "30", "30Y"),
@@ -583,10 +699,6 @@ root.querySelectorAll('.cw-btn[data-w]').forEach(function(b){b.addEventListener(
 [fa,fb].forEach(function(e){e.addEventListener('change',function(){if(fa.value&&fb.value)show(analysis(fa.value<fb.value?fa.value:fb.value,fa.value<fb.value?fb.value:fa.value));});});
 pick(root.dataset.w||'1m');
 })();
-(function(){var b=document.querySelector('.cwb-copy');if(!b)return;b.addEventListener('click',function(){var t=b.dataset.copy||'';
- function done(){var o=b.textContent;b.textContent='已複製';setTimeout(function(){b.textContent=o;},1500);}
- if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){fb();});}else fb();
- function fb(){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(a);}});})();
 """
 
 CW_DEFAULT = "1m"      # 預設期間：最上方週報已是「最近一週」，下面預設看 1 個月才不重複
@@ -669,7 +781,7 @@ def curve(d: dict) -> str:
                     f'aria-pressed="{"true" if m == "ten" else "false"}">{zh}</button>'
                     for m, zh in (("ten", "2Y／10Y／30Y"), ("sp", "三條利差")))
     return f"""
-    {_cw_brief(brief, events)}
+    {_cw_brief(brief, events, L.get("brief_data"))}
     <div class="cw" data-w="{CW_DEFAULT}">
       <div class="cw-ctl" role="group" aria-label="比較期間">{btns}</div>
       <div class="cw-cust" hidden><label>從 <input type="date" class="cw-from" min="{first}" max="{last}"></label>

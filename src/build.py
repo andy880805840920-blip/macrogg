@@ -3010,6 +3010,7 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
     # 30−2 週報（滾動一週）＋ 2Y／10Y／30Y 的 1 年後、5 年後遠期
     try:
         out["brief"] = le.curve_brief(_sx)
+        out["brief_data"] = le.brief_data(_sx, f"{clock.today().year - 1}-12-01")
     except Exception as e:                         # noqa: BLE001
         log.warning("殖利率曲線週報計算失敗：%s", e)
         out["brief"] = None

@@ -1772,6 +1772,9 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         for e in _hgroups([h for h in hols if h["date"] == d_]):
             _up.append({"date": d_.isoformat(), "at": "", "k": "h", "t": "",
                         "name": f'{e["mk_zh"]}{mh.status_text(e)[0]}', "sub": e["name"]})
+    # 依時間排序（2026-10：先前是「數據→發債→談話→休市」分類疊在一起，時間前後顛倒）。
+    # 休市（整天）排在當天最前面，時間未定的談話排最後。
+    _up.sort(key=lambda x: (x["date"], 0 if x["k"] == "h" else 1 if x.get("at") else 2, x.get("at") or ""))
     ctxs["_story_up"] = _up
     # 2026-10：「列表／月曆」切換（使用者：做一個總月曆，四種內容都要表示）
     cal = _hm_calendar(today, start, end, rows, supply, speeches, hols,

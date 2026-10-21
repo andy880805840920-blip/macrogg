@@ -147,6 +147,7 @@ CSS = r"""
 .sty-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .sty-x:focus-visible,.sty-cta:focus-visible{outline:3px solid #E67143;outline-offset:2px}
 .sty-end{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:3;padding-bottom:6px}
+.sty-s.on .sty-end{z-index:5}   /* 蓋過左右點按區，「進入網站」「存成今日市場圖」才按得到 */
 .sty-end img{width:62%;max-width:250px;height:auto}
 .sty-cta{border:0;border-radius:999px;background:#E67143;color:#fff;font:inherit;font-size:16px;font-weight:900;
   padding:12px 34px;cursor:pointer;box-shadow:0 10px 24px rgba(230,113,67,.35);position:relative;z-index:7}
@@ -256,7 +257,8 @@ function slides(){
     var day = addDay(today, k);
     var it = (D.up || []).filter(function(x){ return x.date === day; }).map(function(x){
       var ms = x.at ? Date.parse(x.at) : NaN; return {x: x, past: isFinite(ms) && ms < nowMs}; });
-    it.sort(function(a, b){ return (a.past ? 1 : 0) - (b.past ? 1 : 0); });
+    var rk = function(x){ return x.k === "h" ? 0 : x.at ? 1 : 2; };   // 休市（整天）→ 有時間的依時間 → 時間未定
+    it.sort(function(a, b){ return ((a.past ? 1 : 0) - (b.past ? 1 : 0)) || (rk(a.x) - rk(b.x)) || String(a.x.at || "").localeCompare(String(b.x.at || "")); });
     var show = it.slice(0, 4), more = it.length - show.length;
     return '<div class="sty-day sty-a" style="--d:' + (.2 + k * .35) + 's"><h4>' + title + '<small>' + (it.length ? it.length + ' 項' : '') + '</small></h4>'
       + (show.length ? show.map(function(o){ var x = o.x; return '<div class="sty-it' + (o.past ? ' past' : '') + '">' + icon(x) + '<span>' + esc(x.name) + (x.sub ? '<small>' + esc(x.sub) + '</small>' : '') + '</span>'
@@ -266,7 +268,8 @@ function slides(){
   };
   push('<div class="sty-s s5"><i class="sty-dots"></i>' + kick(5, "今明兩天") + dayBox(0, "今天") + dayBox(1, "明天")
     + '<div class="sty-end"><img class="sty-a" style="--d:1s" src="/brand/logo-full.svg" alt="MACRO GG 明天過後，帶你看總經">'
-    + '<button type="button" class="sty-cta">進入網站</button><div class="sty-foot sty-a" style="--d:1.4s">● 數據　■ 發債　▲ 官員談話　休 休市</div></div></div>', 8000);
+    + '<button type="button" class="sty-cta">進入網站</button><div class="sty-foot sty-a" style="--d:1.4s">● 數據　■ 發債　▲ 官員談話　休 休市</div>'
+    + '<button type="button" class="sty-save sty-a" style="--d:1.6s">存成今日市場圖</button></div></div>', 8000);
   DUR = DURS;
   return S;
 }
@@ -291,6 +294,7 @@ function go(i){
   stage.classList.toggle("sty-intro", i === 0); stage.classList.toggle("sty-light", i === ss.length - 1);
   if(cur >= 0 && i !== cur && i > 1){ sweep.classList.remove("go"); void sweep.offsetWidth; sweep.classList.add("go"); }
   cur = i; acc = 0; t0 = performance.now();
+  if(i === ss.length - 1) prepShot();
   setTimeout(function(){ Array.prototype.forEach.call(ss[i].querySelectorAll("[data-count]"), countUp); }, 350);
 }
 function tick(now){
@@ -311,9 +315,11 @@ function open(){
     document.body.appendChild(root); bars = root.querySelectorAll(".sty-bars b"); stage = root.querySelector(".sty-stage"); sweep = root.querySelector(".sty-sweep"); live = root.querySelector(".sty-live");
     var downT = 0, sx = 0, sy = 0, held = null;
     root.querySelector(".sty-x").addEventListener("click", close);
-    root.addEventListener("click", function(e){ if(e.target === root) close(); if(e.target.closest(".sty-cta")) close(); });
-    stage.addEventListener("pointerdown", function(e){ if(e.target.closest(".sty-x,.sty-cta")) return; downT = performance.now(); sx = e.clientX; sy = e.clientY; held = setTimeout(function(){ pause(true); }, 220); });
-    stage.addEventListener("pointerup", function(e){ if(!downT) return; clearTimeout(held); var dt = performance.now() - downT, dy = e.clientY - sy, dx = e.clientX - sx; downT = 0;
+    root.addEventListener("click", function(e){ if(e.target === root) close(); if(e.target.closest(".sty-cta")) close();
+      if(e.target.closest(".sty-save")) saveShot(e.target.closest(".sty-save"));
+      if(e.target.closest(".sty-shot button")){ var sh = root.querySelector(".sty-shot"); if(sh) sh.hidden = true; } });
+    stage.addEventListener("pointerdown", function(e){ if(e.target.closest(".sty-x,.sty-cta,.sty-save,.sty-shot")) return; downT = performance.now(); sx = e.clientX; sy = e.clientY; held = setTimeout(function(){ pause(true); }, 220); });
+    stage.addEventListener("pointerup", function(e){ if(!downT || e.target.closest(".sty-save,.sty-shot")) return; clearTimeout(held); var dt = performance.now() - downT, dy = e.clientY - sy, dx = e.clientX - sx; downT = 0;
       if(dy > 90 && Math.abs(dx) < 80){ close(); return; }
       if(paused){ pause(false); if(dt > 220) return; }
       if(Math.abs(dx) > 60){ go(cur + (dx < 0 ? 1 : -1)); return; }
@@ -327,11 +333,38 @@ function open(){
   lss("mgStoryDay", tpeDay()); if(btn) btn.classList.add("seen");
   document.addEventListener("keydown", key);
 }
+// 今日市場圖：進到最後一則就先在背景畫好（分享必須在點按的當下呼叫，Safari 才允許）
+var shot = null, shotP = null;
+function shotName(){ return "MACROGG-" + (D.edition || D.day || "").replace(/-/g, "") + ".png"; }
+function prepShot(){ if(shotP || typeof mgShot !== "function") return shotP; shotP = mgShot(D).then(function(b){ shot = b; return b; }, function(){ shotP = null; return null; }); return shotP; }
+function showShot(b){ var sh = root.querySelector(".sty-shot");
+  if(!sh){ sh = document.createElement("div"); sh.className = "sty-shot"; sh.innerHTML = '<button type="button" aria-label="關閉預覽">×</button><img alt="今日市場圖"><p>長按圖片即可儲存或分享</p>'; stage.appendChild(sh); }
+  var im = sh.querySelector("img"); if(im.src) try{ URL.revokeObjectURL(im.src); }catch(e){}
+  im.src = URL.createObjectURL(b); sh.hidden = false; }
+function saveShot(el){
+  pause(true);
+  var touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
+  function deliver(b){
+    if(!b){ el.textContent = "產生失敗，請再試一次"; el.disabled = false; return; }
+    var f = null; try{ f = new File([b], shotName(), {type: "image/png"}); }catch(e){}
+    if(f && navigator.canShare && navigator.canShare({files: [f]})){
+      navigator.share({files: [f], title: "MACRO GG 今日市場圖"}).catch(function(err){ if(!err || err.name !== "AbortError") showShot(b); });
+      return; }
+    if(touch){ showShot(b); return; }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = shotName(); document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  }
+  if(shot){ deliver(shot); return; }
+  el.disabled = true; var o = el.textContent; el.textContent = "產生中…";
+  (prepShot() || Promise.resolve(null)).then(function(b){ el.disabled = false; el.textContent = o;
+    // 等太久，分享的手勢已失效：手機改顯示預覽（長按存圖），桌機直接下載
+    if(b && navigator.canShare){ showShot(b); return; } deliver(b); });
+}
 function close(){ if(!root) return; root.hidden = true; document.documentElement.style.overflow = ""; cancelAnimationFrame(raf); document.removeEventListener("keydown", key);
   if(back && back.focus) try{ back.focus({preventScroll: true}); }catch(e){} }
 function key(e){
   // Tab 只在快報裡循環（關閉鈕、最後一則的「進入網站」）
-  if(e.key === "Tab"){ var f = [root.querySelector(".sty-x")], c = root.querySelector(".sty-s.on .sty-cta"); if(c) f.push(c);
+  if(e.key === "Tab"){ var f = [root.querySelector(".sty-x")], c = root.querySelector(".sty-s.on .sty-cta"), sv = root.querySelector(".sty-s.on .sty-save"); if(c) f.push(c); if(sv) f.push(sv);
     var k = f.indexOf(document.activeElement); e.preventDefault(); f[(k + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus(); return; }
   if(e.key === "Escape") close(); else if(e.key === "ArrowRight") go(cur + 1); else if(e.key === "ArrowLeft") go(cur - 1); else if(e.key === " "){ e.preventDefault(); pause(!paused); } }
 document.addEventListener("visibilitychange", function(){ if(root && !root.hidden) pause(document.hidden); });
@@ -345,7 +378,8 @@ window.mgStory = open;
 
 
 def story_html(data: dict) -> str:
+    from . import story_share
     js_data = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
-    return (f'<style>{CSS}</style>'
+    return (f'<style>{CSS}{story_share.CSS}</style>'
             f'<script type="application/json" id="story-data">{js_data}</script>'
-            f'<script>{JS}</script>')
+            f'<script>{story_share.js()}{JS}</script>')

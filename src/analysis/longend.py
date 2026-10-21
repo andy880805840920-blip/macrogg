@@ -610,19 +610,32 @@ def _fwd_set(y: dict) -> dict | None:
             "interp3": interp3}
 
 
-def curve_brief(series: dict, n: int = 5) -> dict | None:
-    """最上方的 30−2 週報資料＋文字。最新共同資料日比 n 個交易日前。"""
-    ids = {"1": "DGS1", "2": "DGS2", "3": "DGS3", "5": "DGS5", "7": "DGS7",
-           "10": "DGS10", "20": "DGS20", "30": "DGS30"}
+BRIEF_IDS = {"1": "DGS1", "2": "DGS2", "3": "DGS3", "5": "DGS5", "7": "DGS7",
+             "10": "DGS10", "20": "DGS20", "30": "DGS30"}
+
+
+def _brief_maps(series: dict):
     m = {k: {r["date"][:10]: r["value"] for r in series.get(sid) or []
-             if r.get("value") is not None and not r.get("live")} for k, sid in ids.items()}
+             if r.get("value") is not None and not r.get("live")} for k, sid in BRIEF_IDS.items()}
     axis = sorted(set(m["2"]) & set(m["10"]) & set(m["30"]))
-    if len(axis) <= n:
-        return None
-    d1, d0 = axis[-1], axis[-1 - n]
+    return m, axis
+
+
+def brief_data(series: dict, since: str = "") -> dict:
+    """自訂期間的 30−2 週報要在瀏覽器重算：2／10／30 年共同資料日為軸，8 個天期對齊（缺值 None）。"""
+    m, axis = _brief_maps(series)
+    axis = [d for d in axis if d >= since]
+    return {"d": axis, "y": {k: [m[k].get(d) for d in axis] for k in BRIEF_IDS}}
+
+
+def brief_window(bd: dict, i0: int, i1: int) -> dict:
+    """bd（brief_data 格式）第 i0 天 → 第 i1 天：天期、利差、遠期、最大單日變動。
+    瀏覽器端 _CWB_JS 的 bw() 是同一套規則（tests/test_curve_window.py 逐字比對）。"""
+    D, Y = bd["d"], bd["y"]
+    d0, d1 = D[i0], D[i1]
     lv = {}
     for k, _ in BRIEF_TENORS:
-        a, b = m[k][d0], m[k][d1]
+        a, b = Y[k][i0], Y[k][i1]
         lv[k] = {"a": a, "b": b, "d": (b - a) * 100}
     sp = {}
     for key, lk, sk in BRIEF_SPREADS:
@@ -630,8 +643,8 @@ def curve_brief(series: dict, n: int = 5) -> dict | None:
         b = (lv[lk]["b"] - lv[sk]["b"]) * 100
         g = regime(lv[lk]["d"], lv[sk]["d"])
         sp[key] = {"a": a, "b": b, "d": b - a, **g}
-    curves = {d: {k: m[k].get(d) for k in ids} for d in (d0, d1)}
-    f_now, f_prev = _fwd_set(curves[d1]), _fwd_set(curves[d0])
+    f_now = _fwd_set({k: Y[k][i1] for k in BRIEF_IDS})
+    f_prev = _fwd_set({k: Y[k][i0] for k in BRIEF_IDS})
     fwd = {}
     if f_now:
         for h in ("1", "5"):
@@ -641,8 +654,29 @@ def curve_brief(series: dict, n: int = 5) -> dict | None:
                     if f_prev else None)
             fwd[h] = {"lv": lvls, "sp": spr, "prev_sp": prev,
                       "prev_lv": f_prev[h] if f_prev else None}
-    out = {"from": d0, "to": d1, "lv": lv, "sp": sp, "fwd": fwd,
-           "interp3": bool(f_now and f_now["interp3"])}
+    # 期間內每天的變動：找出最大的單日變動（天期或利差），給白話段落點名
+    best = None
+    for i in range(i0 + 1, i1 + 1):
+        p, c = i - 1, i
+        cands = [(f"{k} 年", (Y[k][c] - Y[k][p]) * 100) for k, _ in BRIEF_TENORS]
+        cands += [(key.replace("-", "−"), ((Y[lk][c] - Y[sk][c]) - (Y[lk][p] - Y[sk][p])) * 100)
+                  for key, lk, sk in BRIEF_SPREADS]
+        for name, v in cands:
+            if best is None or abs(v) > abs(best["d"]) + 1e-9:
+                best = {"date": D[c], "name": name, "d": v}
+    return {"from": d0, "to": d1, "lv": lv, "sp": sp, "fwd": fwd,
+            "interp3": bool(f_now and f_now["interp3"]), "move": best, "days": i1 - i0}
+
+
+def curve_brief(series: dict, n: int = 5) -> dict | None:
+    """最上方的 30−2 週報資料＋文字。最新共同資料日比 n 個交易日前。"""
+    ids = BRIEF_IDS
+    m, axis = _brief_maps(series)
+    if len(axis) <= n:
+        return None
+    bd = {"d": axis, "y": {k: [m[k].get(d) for d in axis] for k in ids}}
+    out = brief_window(bd, len(axis) - 1 - n, len(axis) - 1)
+    d1 = out["to"]
     # 年內區間（監控表「現在」欄的位置條）：今年 1/1 起的最低、最高
     year = d1[:4] + "-01-01"
     ytd_days = [d for d in axis if d >= year] or axis
@@ -654,18 +688,6 @@ def curve_brief(series: dict, n: int = 5) -> dict | None:
         vals = [(m[lk][d] - m[sk][d]) * 100 for d in ytd_days]
         rng[key] = {"lo": min(vals), "hi": max(vals)}
     out["ytd"] = rng
-    # 這一週每天的變動：找出最大的單日變動（天期或利差），給白話段落點名
-    week = axis[-1 - n:]
-    best = None
-    for i in range(1, len(week)):
-        p, c = week[i - 1], week[i]
-        cands = [(f"{k} 年", (m[k][c] - m[k][p]) * 100) for k, _ in BRIEF_TENORS]
-        cands += [(key.replace("-", "−"), ((m[lk][c] - m[sk][c]) - (m[lk][p] - m[sk][p])) * 100)
-                  for key, lk, sk in BRIEF_SPREADS]
-        for name, v in cands:
-            if best is None or abs(v) > abs(best["d"]) + 1e-9:
-                best = {"date": c, "name": name, "d": v}
-    out["move"] = best
     # 遠期歷史（近 3 個月，給監控表的小走勢線）
     hist = {"1": {k: [] for k in ("2", "10", "30", "10-2", "30-10", "30-2")},
             "5": {k: [] for k in ("2", "10", "30", "10-2", "30-10", "30-2")}}
@@ -687,7 +709,7 @@ def _verb(v: float) -> str:
     return "幾乎不動" if abs(_r6(v)) < 1 else (f"上升 {_num(abs(v))}bp" if v > 0 else f"下跌 {_num(abs(v))}bp")
 
 
-def brief_prose(b: dict, events: list | None = None) -> str:
+def brief_prose(b: dict, events: list | None = None, per: str = "本週", prev: str = "上週") -> str:
     """
     最上方的白話段落：2–3 句、只帶幾個關鍵數字（2026-10 使用者：「純文字加少數
     關鍵數字」）。逐項數字放在下方「數字明細」收合區（_brief_text）。
@@ -702,14 +724,14 @@ def brief_prose(b: dict, events: list | None = None) -> str:
     if abs(_r6(x["d"])) < FLAT_BP:
         ds = [d2, d10, d30]
         if all(abs(_r6(v)) < FLAT_BP for v in ds):
-            s1 = f"本週曲線幾乎沒動：2 年、10 年、30 年變動都在 2bp 以內，30−2 停在 {now}bp。"
+            s1 = f"{per}曲線幾乎沒動：2 年、10 年、30 年變動都在 2bp 以內，30−2 停在 {now}bp。"
         elif all(v > 0 for v in ds) or all(v < 0 for v in ds):
             lo, hi = min(abs(v) for v in ds), max(abs(v) for v in ds)
             rng = f"{_num(lo)}–{_num(hi)}" if _num(lo) != _num(hi) else _num(lo)
-            s1 = (f"本週曲線大致平行{'上移' if d2 > 0 else '下移'}：2 年、10 年、30 年"
+            s1 = (f"{per}曲線大致平行{'上移' if d2 > 0 else '下移'}：2 年、10 年、30 年"
                   f"都{'上升' if d2 > 0 else '下跌'} {rng}bp，形狀幾乎不變，30−2 停在 {now}bp。")
         else:
-            s1 = f"本週曲線形狀幾乎沒變：各天期漲跌互見，30−2 停在 {now}bp。"
+            s1 = f"{per}曲線形狀幾乎沒變：各天期漲跌互見，30−2 停在 {now}bp。"
         a, c = sp["10-2"]["d"], sp["30-10"]["d"]
         if abs(_r6(a)) >= FLAT_BP and abs(_r6(c)) >= FLAT_BP and a * c < 0:
             s1 = s1[:-1] + f"；不過中段與長段反向（10−2 {_sgn(a)}、30−10 {_sgn(c)}），互相抵銷。"
@@ -717,7 +739,7 @@ def brief_prose(b: dict, events: list | None = None) -> str:
         size = "明顯" if abs(x["d"]) >= 8 else "小幅"
         shape = "變陡" if x["d"] > 0 else "變平"
         lead = f"，{x['lead']}" if x.get("lead") else ""
-        s1 = (f"本週曲線{size}{shape}：30 年{_verb(d30)}、2 年{_verb(d2)}{lead}，"
+        s1 = (f"{per}曲線{size}{shape}：30 年{_verb(d30)}、2 年{_verb(d2)}{lead}，"
               f"30−2 {'擴大' if x['d'] > 0 else '收窄'}到 {now}bp。")
     out = [s1]
     mv = b.get("move")
@@ -744,13 +766,13 @@ def brief_prose(b: dict, events: list | None = None) -> str:
         pv = fwd["1"].get("prev_sp")
         if pv:
             r = f1 - pv["30-2"]
-            s3 += ("；比上週往變陡修正了 " + _num(abs(r)) + "bp" if r > 2 else
-                   "；比上週往變平修正了 " + _num(abs(r)) + "bp" if r < -2 else "，與上週相近")
+            s3 += (f"；比{prev}往變陡修正了 " + _num(abs(r)) + "bp" if r > 2 else
+                   f"；比{prev}往變平修正了 " + _num(abs(r)) + "bp" if r < -2 else f"，與{prev}相近")
         out.append(s3 + "。")
     return "".join(out)
 
 
-def _brief_text(b: dict) -> list[str]:
+def _brief_text(b: dict, prev: str = "上週") -> list[str]:
     lv, sp, fwd = b["lv"], b["sp"], b["fwd"]
     x = sp["30-2"]
     move = ("大致持平" if abs(_r6(x["d"])) < FLAT_BP else
@@ -783,7 +805,7 @@ def _brief_text(b: dict) -> list[str]:
             f = fwd[h]["sp"]["30-2"]
             g = f - x["b"]
             pv = fwd[h]["prev_sp"]
-            wk = f"，較上週 {_sgn(f - pv['30-2'])}" if pv else ""
+            wk = f"，較{prev} {_sgn(f - pv['30-2'])}" if pv else ""
             return f"{zh} 30−2 約 {_num(f)}bp（比現在 {_sgn(g)}{wk}）"
         out.append("市場隱含：" + part("1", "1 年後") + "；" + part("5", "5 年後") + "。")
         g1 = fwd["1"]["sp"]["30-2"] - x["b"]
@@ -793,7 +815,7 @@ def _brief_text(b: dict) -> list[str]:
         pv = fwd["1"]["prev_sp"]
         if pv:
             r = fwd["1"]["sp"]["30-2"] - pv["30-2"]
-            rev = ("較上週往更陡修正" if r > 2 else "較上週往更平修正" if r < -2 else "與上週相近")
+            rev = (f"較{prev}往更陡修正" if r > 2 else f"較{prev}往更平修正" if r < -2 else f"與{prev}相近")
             out.append(f"定價偏向{p1}、{p5}；{rev}。")
         else:
             out.append(f"定價偏向{p1}、{p5}。")

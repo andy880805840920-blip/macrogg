@@ -82,7 +82,9 @@ wk_cases = [(None, last, k) for k in ("10-2", "30-10", "30-2")] + [
     (days[40], days[120], "30-2"), (days[10], days[-1], "10-2")]
 cut = last
 pyw = [CWK.weekly_spreads(cd, a, b, cutoff=cut, key=k) for a, b, k in wk_cases]
-check("⑥ 每週變化以週五為一週終點", all(dt.date.fromisoformat(r["end"]).weekday() == 4 for r in pyw),
+check("⑥ 每週變化：預設以週五為一週終點；自訂從開始日起算、到結束日為止",
+      all(dt.date.fromisoformat(r["end"]).weekday() == 4 for r, c in zip(pyw, wk_cases) if c[0] is None)
+      and all(r["start"] == c[0] and r["end"] == c[1] for r, c in zip(pyw, wk_cases) if c[0]),
       [r["end"] for r in pyw])
 if node:
     js = CWP.WEEKLY_CORE_JS + """
@@ -148,12 +150,64 @@ pf = le.brief_prose(le.curve_brief(flat))
 check("㉑ 白話：完全沒動 → 「幾乎沒動」、不寫單日變動", "幾乎沒動" in pf and "主要變化" not in pf, pf)
 html = LP.curve({"le": {"cw": cd, "cw_year": 2026, "brief": b, "cw_events": [["2026-10-08", "CPI"]],
                         "yield_chart": "", "curve_chart": "", "spreads": []}})
-check("㉒ 頁面：白話段落＋數字明細收合＋複製按鈕", 'class="cwb-prose"' in html and "數字明細" in html
-      and 'class="cwb-copy"' in html)
+check("㉒ 頁面：白話段落＋數字明細收合，已移除複製按鈕", 'class="cwb-prose"' in html and "數字明細" in html
+      and 'cwb-copy' not in html and "複製" not in html)
 check("㉓ 監控表：一張表六列（2Y／10Y／30Y、三條利差），有年內位置條與遠期小走勢線",
       html.count('<th scope="row">') == 6 and "cwm-rng" in html and "cwm-spark" in html and "cwm-bar" in html)
 check("㉔ 移除重複的判讀句與「實際使用…」小字", 'class="cw-headline"' not in html and 'cw-when"' not in html.replace("cwm-when", ""))
 check("㉕ 事件日期進到圖表資料", '"ev":[["2026-10-08","CPI"]]' in html.replace(" ", ""))
+
+# ---------------------------------------------------------------- 週報自訂期間：Python 與瀏覽器逐字一致
+from src.pages.curve_weekly import WEEKLY_CORE_JS  # noqa: E402,F401
+import random as _rnd
+_rnd.seed(11)
+full = {}
+for k, sid in le.BRIEF_IDS.items():
+    if sid in series:
+        full[sid] = series[sid]
+    else:                                          # fixture 沒有的天期：用 10 年期加上偏移、偶爾缺值
+        full[sid] = [{"date": r["date"], "value": None if _rnd.random() < .03 else round(r["value"] + int(k) * .02 - .3, 3)}
+                     for r in series["DGS10"]]
+bd = le.brief_data(full, "2025-12-01")
+wins = [(len(bd["d"]) - 6, len(bd["d"]) - 1)]
+for i in range(0, len(bd["d"]) - 5, 7):
+    wins.append((i, min(len(bd["d"]) - 1, i + 3 + (i * 7) % 40)))
+ev = [[bd["d"][j], "CPI"] for j in range(5, len(bd["d"]), 17)]
+py = []
+for i0, i1 in wins:
+    w = le.brief_window(bd, i0, i1)
+    per, prev = ("本週", "上週") if (i0, i1) == wins[0] else ("這段期間", "期初")
+    py.append([le.brief_prose(w, ev, per, prev), le._brief_text(w, prev)])
+node = shutil.which("node")
+if node:
+    with tempfile.TemporaryDirectory() as td:
+        jp = pathlib.Path(td) / "b.js"
+        jp.write_text(LP._CWB_CORE_JS + "\nconst BD=" + json.dumps(bd) + ",W=" + json.dumps(wins) + ",EV=" + json.dumps(ev, ensure_ascii=False)
+                      + ";const B=cwBrief(BD);console.log(JSON.stringify(W.map((w,k)=>{const r=B.win(w[0],w[1]);const pp=k===0?['本週','上週']:['這段期間','期初'];return [B.prose(r,EV,pp[0],pp[1]),B.text(r,pp[1])];})));",
+                      encoding="utf-8")
+        js = json.loads(subprocess.run([node, str(jp)], capture_output=True, text=True, encoding="utf-8", check=True).stdout)
+    bad = [k for k in range(len(py)) if py[k] != js[k]]
+    check(f"㉖ 週報自訂期間：{len(py)} 個區間 Python／JS 白話與明細一字不差", not bad, bad[:1] and (py[bad[0]], js[bad[0]]))
+else:
+    print("略過  ㉖（沒有 node）")
+b5 = le.curve_brief(full)
+w5 = le.brief_window(bd, len(bd["d"]) - 6, len(bd["d"]) - 1)
+check("㉗ 預設週報＝brief_window 最後 5 個交易日", le.brief_prose(b5) == le.brief_prose(w5) and b5["text"] == le._brief_text(w5))
+check("㉘ 自訂期間用語：這段期間／期初", "這段期間" in py[1][0] and "本週" not in py[1][0] and "上週" not in "".join(py[1][1]))
+h2 = LP.curve({"le": {"cw": cd, "cw_year": 2026, "brief": b, "brief_data": bd, "cw_events": [], "yield_chart": "", "spreads": []}})
+check("㉙ 頁面：週報有「最近一週／自訂日期」切換與資料", 'data-m="custom"' in h2 and 'id="cwb-data"' in h2 and "cwBrief" in h2)
+
+# 每週變化：自訂期間從開始日起每 7 天一根、最後不足 7 天另標
+from src.analysis.curve_weekly import weekly_spreads  # noqa: E402
+ws = weekly_spreads(cd, start="2026-09-03", end="2026-10-06", cutoff="2026-10-06")
+check("㉚ 自訂：9/3 起每 7 天一根，最後一根 9/24→10/1→10/6（5 天）",
+      [r["begin"] for r in ws["rows"]][:3] == ["2026-09-03", "2026-09-10", "2026-09-17"]
+      and ws["rows"][-1]["begin"] == "2026-10-01" and ws["rows"][-1]["days"] == 5 and ws["rows"][-1]["target"] == "2026-10-06", ws["rows"])
+try:
+    weekly_spreads(cd, start="2025-12-01", end="2026-12-31", cutoff="2026-12-31"); _too = False
+except ValueError:
+    _too = True
+check("㉛ 自訂超過 52 根 → 擋下", _too)
 
 print()
 print("全部通過" if ok else "有失敗")
