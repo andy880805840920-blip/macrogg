@@ -299,45 +299,26 @@
  "at": "2026-10-22T07:08:28.638017+00:00",
  "layout": "main",
  "topics": {
-  "hash": "43506e5b260c5998",
+  "hash": "370abd52583e3a67",
   "items": [
    {
-    "id": "oil",
-    "label": "油價",
-    "text": "中東局勢升溫推升油價。美國國務院下令非緊急政府人員撤離沙烏地阿拉伯，沙國油田遭無人機攻擊造成2人喪生，引發能源供應中斷與通膨延續的擔憂，油價面臨上行壓力",
+    "id": "fed",
+    "label": "聯準會",
+    "text": "聯準會升息與監管趨嚴打擊併購市場，第三季北美併購交易額降至5604億美元，年減23%，超過100億美元的大型案件從第二季19件驟降至6件；同時監管審查日趨嚴格，依HSR法案呈報的交易數量年增31%",
     "links": [
      {
-      "title": "Elevated oil prices, delicate housing market put more pressure on the Fed",
-      "link": "https://finance.yahoo.com/video/elevated-oil-prices-delicate-housing-market-put-more-pressure-on-the-fed-140921336.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-21T14:09:21+00:00"
-     }
-    ]
-   },
-   {
-    "id": "equity",
-    "label": "美股",
-    "text": "美股財報季帶動指數反彈。Meta第三季營收達64.6億美元超預期，但每股盈餘3.83美元遜於預期5.46美元，因9.89億美元法律費用；特斯拉與SpaceX等科技股表現亮眼，帶動那斯達克漲1.05%、標普500漲0.58%、道瓊漲0.69%",
-    "links": [
-     {
-      "title": "How Are Dow, S&P 500, Nasdaq Futures Trading After META, TSLA Earnings?",
-      "link": "https://stocktwits.com/news-articles/markets/equity/how-are-dow-s-and-p-500-nasdaq-futures-trading-after-meta-tsla-earnings/cZxvH4HRBwI?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-22T03:11:10+00:00"
+      "title": "聯準會升息、監管趨嚴 美國第三季併購市場交易額年減逾兩成",
+      "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%87%E6%81%AF-%E7%9B%A3%E7%AE%A1%E8%B6%A8%E5%9A%B4-%E7%BE%8E%E5%9C%8B%E7%AC%AC%E4%B8%89%E5%AD%A3%E4%BD%B5%E8%B3%BC%E5%B8%82%E5%A0%B4%E4%BA%A4%E6%98%93%E9%A1%8D%E5%B9%B4%E6%B8%9B%E9%80%BE%E5%85%A9%E6%88%90-070715308.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-22T07:07:15+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達執行長訪歐推廣AI應用。輝達執行長黃仁勳在歐洲宣傳該公司AI潛力，同時自動駕駛卡車公司Einride擴大與輝達合作，部署其AI推理模型",
+    "text": "輝達執行長黃仁勳在柏林GTC大會宣布矽光子與共同封裝光學（CPO）量產，惟相關概念股隨後仍出現多殺多走勢，市場等待第三季財報公布以鈍化利空",
     "links": [
-     {
-      "title": "Einride expands Nvidia partnership to deploy AI reasoning model for self-driving trucks",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOZEFIVWxsdm9QSkVrWDY4UTgzc3RXRUE5YWZTVmRkaWlzZHR2THozNnA0Rkx6dWp2QndzaXdoMllsM0V4WDZEZW9XZUVKVnFicHp5eEhEbkNNNXVvZFlJZW5hVjhMcklwY0tnWHhsTWx2amd6V2RZSGY2RmVGNFpJVnRIcG1jQ2ZEYWZNd0xfeTRmRGhRSkN5WWpoQjhqM00tenZ3U3VvUXdmTUhpTVNvUVZXWUQ4aW9yVlFvWHNmdXpKeEk?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-21T10:57:43+00:00"
-     },
      {
       "title": "Nvidia's Huang hails Europe's AI potential, flanked by robot ducks",
       "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOdUI3QU5iX211d3BmcjFoa3dpWXROZjd4bm5rZ0ZaVkRQaEtlVmdUdkhoWlVTQzd4NkJ3Y1NBQWF0WXBtRklveXBhNzRuUHlsdnVCXzNGVzR4MG9TRU5QMUoyTzUtc0UtZEZJdVl6VGpKY05ZV2tBbEJwc0o2M2VnUHVaR1dlOE5pcU5pNWUweHZHMFkweDNXTUpzUWtJUDkwTmhqZ2dqRjZ2blhTMlE?oc=5",
@@ -349,18 +330,37 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股高低震盪逾1300點收跌。10/22台股開高走低，終場下跌846點至46041點，跌幅1.81%；台積電下跌35元至2385元，聯發科跌130元至4010元；PCB、記憶體、矽晶圓等早盤強勢族群同步翻黑",
+    "text": "台股10/22開高走低，早盤漲逾400點後受韓股重挫逾3%及颱風假變現賣壓衝擊，終場下跌846點至46041點；外資轉買為賣、賣超816.56億元，期指仍維持約200點正價差，尚未出現恐慌氣氛",
     "links": [
      {
-      "title": "狂殺1300點破季線！台股收跌846點 PCB、記憶體齊翻黑",
-      "link": "https://tw.stock.yahoo.com/news/%E7%8B%82%E6%AE%BA1300%E9%BB%9E%E7%A0%B4%E5%AD%A3%E7%B7%9A-%E5%8F%B0%E8%82%A1%E6%94%B6%E8%B7%8C846%E9%BB%9E-pcb-%E8%A8%98%E6%86%B6%E9%AB%94%E9%BD%8A%E7%BF%BB%E9%BB%91-062200332.html",
+      "title": "【Follow法人】台股高點跳水近1300點兇手找到了？外資再轉賣今砍816億元",
+      "link": "https://tw.stock.yahoo.com/news/%E3%80%90follow%E6%B3%95%E4%BA%BA%E3%80%91%E5%8F%B0%E8%82%A1%E9%AB%98%E9%BB%9E%E8%B7%B3%E6%B0%B4%E8%BF%911300%E9%BB%9E%E5%85%87%E6%89%8B%E6%89%BE%E5%88%B0%E4%BA%86%EF%BC%9F%E5%A4%96%E8%B3%87%E5%86%8D%E8%BD%89%E8%B3%A3%E4%BB%8A%E7%A0%8D816%E5%84%84%E5%85%83-071002785.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-22T06:22:00+08:00"
+      "at": "2026-10-22T07:09:35+08:00"
+     },
+     {
+      "title": "盤後／台股急墜846點還有利空　原因曝光",
+      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%BE%8C-%E5%8F%B0%E8%82%A1%E6%80%A5%E5%A2%9C846%E9%BB%9E%E9%82%84%E6%9C%89%E5%88%A9%E7%A9%BA-%E5%8E%9F%E5%9B%A0%E6%9B%9D%E5%85%89-065500847.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-22T06:55:00+08:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金價格下跌1.2%至4091.66美元，中東緊張局勢引發能源驅動通膨與升息預期的矛盾。美國國務院下令撤離沙烏地非緊急人員，無人機襲擊油田，推升美債殖利率並施壓金價，投資人權衡通膨風險與聯準會維持利率的預期",
+    "links": [
+     {
+      "title": "Gold slides toward $4,090 as Middle East tensions fuel inflation fears",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-falls-near-4-115-013120980.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-22T01:31:20+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-22T07:08:50.485957+00:00"
+  "at": "2026-10-22T07:14:44.995525+00:00"
  },
  "main_source_titles": [
   "Yen rallies as dollar wobbles toward Fed meeting",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T15:09:26+08:00",
+  "generated_at": "2026-10-22T15:15:16+08:00",
   "labor": {
     "month": "2026-09",
     "score": 0.03281354841260312,
@@ -134,11 +134,11 @@
     ]
   },
   "scenario": {
-    "name": "傾向緊縮",
+    "name": "忍受通膨",
     "labor": "中",
     "inflation": "高",
-    "lean": "hawkish",
-    "regime": "inflation",
+    "lean": "neutral",
+    "regime": "employment",
     "regime_assumed": false
   }
 }
