@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-22T15:14:28+08:00",
+  "at": "2026-10-22T15:35:47+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -429,18 +429,18 @@
     },
     "fomc": {
       "current": {
-        "vintage": "2025-09-17",
-        "released": "2025-09-17",
-        "focus": "employment",
-        "focus_label": "就業優先",
-        "decision": "降息一碼，1 票主張降息"
-      },
-      "previous": {
         "vintage": "2026-09-16",
         "released": "2026-09-16",
         "focus": "inflation",
         "focus_label": "通膨優先",
         "decision": "升息一碼，全體一致"
+      },
+      "previous": {
+        "vintage": "2025-09-17",
+        "released": "2025-09-17",
+        "focus": "employment",
+        "focus_label": "就業優先",
+        "decision": "降息一碼，1 票主張降息"
       }
     },
     "claims": {
@@ -750,20 +750,20 @@
     },
     "scenario": {
       "current": {
+        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
+        "released": "2026-10-22",
+        "name": "傾向緊縮",
+        "grid_name": "傾向緊縮",
+        "regime": "inflation",
+        "labor": "中",
+        "inflation": "高"
+      },
+      "previous": {
         "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2025-09-17",
         "released": "2026-10-22",
         "name": "忍受通膨",
         "grid_name": "忍受通膨",
         "regime": "employment",
-        "labor": "中",
-        "inflation": "高"
-      },
-      "previous": {
-        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
-        "released": "2026-10-14",
-        "name": "傾向緊縮",
-        "grid_name": "傾向緊縮",
-        "regime": "inflation",
         "labor": "中",
         "inflation": "高"
       }
@@ -847,6 +847,14 @@
       "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2025-09-17",
       "name": "忍受通膨",
       "regime": "employment",
+      "labor": "中",
+      "inflation": "高"
+    },
+    {
+      "at": "2026-10-22T15:35:47+08:00",
+      "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
+      "name": "傾向緊縮",
+      "regime": "inflation",
       "labor": "中",
       "inflation": "高"
     }
