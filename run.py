@@ -1046,6 +1046,12 @@ def main() -> int:
     # 官方發布行事曆：能問到就用官方的，問不到才退回慣例推估。
     # 離線模式不打 API（也沒有 key），一律走慣例。
     _rel_all = {} if args.offline else fetch_release_dates()
+    # 2026-10：補上 BEA 官方行事曆（PCE／GDP），並存檔——FRED 維護時沿用上次存的官方日期
+    try:
+        from src import schedule_auto
+        _rel_all = schedule_auto.merge_release_dates(_rel_all, offline=args.offline)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("自動行事曆合併失敗（%s），只用 FRED 這次問到的", e)
     # 各分頁倒數沿用舊格式 {key: 下一個 ISO}
     _tdy = clock.today().isoformat()
     ctxs["_releases"] = {k: d for k, d in (
@@ -1058,9 +1064,9 @@ def main() -> int:
     # 手動行事曆快用完時提醒（FRED 官方行事曆仍會自動補日期，但 PPI／PCE 的期別與首頁後備要靠這份）
     try:
         import datetime as _dtc
-        _lim = (clock.today() + _dtc.timedelta(days=45)).isoformat()
-        _short = [k for k, v in (ctxs["_calendar"] or {}).items()
-                  if isinstance(v, dict) and v and max(str(x)[:10] for x in v.values()) < _lim]
+        # 自動行事曆（FRED／BEA，含上次存的）已經排到更後面的項目不提醒
+        from src import schedule_auto as _sa
+        _short = _sa.short_calendar(ctxs["_calendar"] or {}, _rel_all if isinstance(_rel_all, dict) else {})
         if _short:
             log.warning("手動行事曆（config/releases_calendar.yaml）在 45 天內用完：%s——請補上下一年的發布日",
                         "、".join(_short))
@@ -1083,6 +1089,12 @@ def main() -> int:
     # 美國期中選舉預測（Polymarket）：首頁卡片＋焦點條的眾院／參院 chip。
     # 先跑，焦點條的 chip 目錄要用到。失敗只少一張卡片。
     _focus_cfg = load_config("focus.yaml")
+    # 2026-10：FOMC 會議日與票委名單改由聯準會官網自動抓（focus.yaml 的手動值變成後備）
+    try:
+        from src import schedule_auto as _sa2
+        _focus_cfg = _sa2.apply_fomc(_focus_cfg, offline=args.offline)
+    except Exception as e:                         # noqa: BLE001
+        log.warning("FOMC 會議日／名單自動更新失敗（%s），沿用 focus.yaml", e)
     # 第十八批：接下來看什麼的三個篩選（數據／發債／官員談話）與市場預估
     try:
         from src.analysis import watch_extra as _wx
