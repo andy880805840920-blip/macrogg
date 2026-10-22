@@ -910,8 +910,10 @@ def main() -> int:
                                                 "liquidity")
             all_series.update(liq_series)
             if _lfail:
+                # _lfail 是 (序列, 原因) 的清單（2026-10-22 修正：直接 join 會丟例外，
+                # 整個流動性模組跟著不見）
                 log.warning("流動性群組缺 %d 條：%s",
-                            len(_lfail), "、".join(_lfail))
+                            len(_lfail), "、".join(f[0] if isinstance(f, (tuple, list)) else str(f) for f in _lfail))
             ctxs["liquidity"] = build.build_liquidity_context(
                 _liq_cfg, liq_series, _lfail, args.offline, treasury=_tr)
             _lv = ctxs["liquidity"]["verdict"]

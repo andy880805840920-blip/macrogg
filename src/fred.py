@@ -38,6 +38,16 @@ class FredAuthError(FredError):
     """API key 本身被 FRED 拒絕。這種錯誤重試沒有意義，也不該逐序列吞掉。"""
 
 
+class FredMaintenanceError(FredError):
+    """FRED 整站維護中（回 200＋HTML 維護頁，而不是 JSON）。"""
+
+
+# 維護中的判定一旦成立，同一次執行裡其餘的請求直接放棄（不重試、不等待）：
+# 2026-10-22 實例——FRED 維護約數小時，141 條序列各重試三次、再整批補抓一輪，
+# 白白多跑好幾分鐘，log 也被「Expecting value」洗版、看不出原因。
+_MAINTENANCE = {"on": False}
+
+
 class FredClient:
     def __init__(self, api_key: str | None = None, session: requests.Session | None = None):
         # 一定要 strip()。從網頁複製 key 時很容易帶到尾端空白或換行，
@@ -59,9 +69,17 @@ class FredClient:
         url = f"{FRED_BASE}/{endpoint}"
         last_err: Exception | None = None
 
+        if _MAINTENANCE["on"]:
+            raise FredMaintenanceError("FRED 維護中，本次略過")
         for attempt in range(MAX_RETRIES):
             try:
                 r = self.session.get(url, params=params, timeout=DEFAULT_TIMEOUT)
+                ctype = (r.headers.get("Content-Type") or "").lower()
+                if "html" in ctype and "maintenance" in (r.text or "")[:3000].lower():
+                    _MAINTENANCE["on"] = True
+                    log.warning("FRED 正在維護（api.stlouisfed.org 回傳維護頁），"
+                                "本次所有 FRED 序列改用上次的本機快照")
+                    raise FredMaintenanceError("FRED 維護中")
                 if r.status_code == 429:
                     # 觸發限流。FRED 的窗口是「每分鐘」——等 4～8 秒
                     # 多半還在同一個窗口裡再撞一次（Actions 上實測），
@@ -85,7 +103,7 @@ class FredClient:
                         )
                 r.raise_for_status()
                 return r.json()
-            except FredAuthError:                 # 直接往上拋，不重試也不記錄
+            except (FredAuthError, FredMaintenanceError):   # 直接往上拋，不重試
                 raise
             except Exception as e:                # noqa: BLE001
                 last_err = e
@@ -130,6 +148,9 @@ class FredClient:
             return rows
         except FredAuthError:                     # key 有問題就不必再試其他序列
             raise
+        except FredMaintenanceError as e:         # 已經整體警告過一次，不再逐條洗版
+            self.failed.append((series_id, str(e)))
+            return []
         except Exception as e:                    # noqa: BLE001
             log.warning("序列 %s 抓取失敗：%s", series_id, e)
             self.failed.append((series_id, str(e)))
@@ -306,6 +327,9 @@ def fetch_all(client: FredClient, series_ids: list[str], start: str,
     # 打撈段：還是有失敗的話，等限流窗口過去再逐條補抓一次。
     # 一條序列缺值的代價是整組下游指標連鎖缺值，值得多等這 20 秒。
     misses = [sid for sid, rows in out.items() if not rows]
+    if misses and _MAINTENANCE["on"]:
+        log.warning("FRED 維護中：%d 條序列不補抓，改用本機快照", len(misses))
+        misses = []
     if misses:
         log.warning("有 %d 條序列第一輪抓失敗，20 秒後補抓：%s",
                     len(misses), "、".join(misses))
