@@ -18,8 +18,10 @@ enabled: true
 # 否則年底過後第三個節點會排不出來（log 會警告）。
 fedwatch_meeting: 2026-12-09
 
-# 該年度的 FOMC 決策日（兩天會議的第二天）。每年一月照官方行事曆
-# 更新一次：https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+# 該年度的 FOMC 決策日（兩天會議的第二天）。
+# 2026-10-22 起由 src/schedule_auto.py 每次執行自動從聯準會官網行事曆抓（列到明年），
+# 官網有列的年份以官網為準；這裡只是抓不到時的後備，不必再每年手動更新。
+# 來源：https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
 # 算法靠它分辨「哪個月沒有會議」（錨月）與日曆日加權的 N/M/D。
 fomc_dates:
   - 2026-01-28
@@ -43,12 +45,14 @@ fomc_dates:
 # 首頁「接下來看什麼 → 官員談話」的票委標記（第十八批）。
 # fomc_board：理事會成員（英文姓氏），永遠有投票權。
 # fomc_voters：各年度有投票權的地區聯儲總裁（紐約聯儲總裁每年都投）。
-# ⚠️ 每年一月照聯準會官網更新；人事異動（例如新總裁上任）也要改這裡。
-fomc_board: [Warsh, Jefferson, Bowman, Waller, Cook, Barr, Miran, Powell]
+# 2026-10-22 起由 src/schedule_auto.py 自動從聯準會 FOMC 頁抓：今年票委＝Committee Members、
+# 明年票委＝Alternate Members（紐約聯儲的候補是第一副總裁，不算）。這裡只是抓不到時的後備。
+# 來源：https://www.federalreserve.gov/monetarypolicy/fomc.htm
+fomc_board: [Warsh, Jefferson, Bowman, Waller, Cook, Barr, Powell]
 fomc_voters:
   2026: [Williams, Hammack, Paulson, Logan, Kashkari]
-  # 2027 輪值：里奇蒙、芝加哥、亞特蘭大、舊金山（亞特蘭大新總裁的姓氏上任後補上）
-  2027: [Williams, Barkin, Goolsbee, Daly]
+  # 2027 輪值：里奇蒙、芝加哥、亞特蘭大、舊金山（亞特蘭大目前是代理總裁 Venable，官網列為 2026 候補）
+  2027: [Williams, Barkin, Goolsbee, Daly, Venable]
 
 # 報價鏈健康檢查用的「當月合約」由程式按月份自動推，逐月自動滾；
 # 要固定時才設 fedwatch_health_contract（例：ZQQ26.CBT）。
