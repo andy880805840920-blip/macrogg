@@ -1,30 +1,12 @@
 {
- "hash": "a31648288287dfbb",
- "text": "10/22美國債市大幅上漲，10年期公債殖利率下跌19個基點至4.95%，創近一個月新低，跌破5%關卡。推動殖利率下行的主要因素是投資人對AI投資前景的疑慮升溫：Meta宣布未來支出承諾達8250億美元，創下歷史新高，引發市場對科技巨頭舉債規模擴大的擔憂，Meta五年期信用違約交換報價創約一年來新高；同時中東局勢升溫推升油價，但債市並未因油價上漲而擔心通膨，五年期通膨預期保持在2.4%不變。¶在此背景下，聯準會升息預期大幅退縮。10/28會議升息機率從9月底的37%跌至約5%，市場現已完全排除10月升息可能；年底前升息機率也從週三的100%降至約75%。債市投資人轉向避險，資金從股票與高風險資產流向公債，帶動長期利率明顯回落。\n川普經濟評分創歷史新低，8成美國人認為經濟狀況不佳，共和黨內對經濟的悲觀比例達35%，為川普兩任期間最高，民主黨在國會控制權民調上領先7個百分點。\n歐洲央行理事帕內塔表示，公債殖利率上升將抑制經濟；法國公債殖利率升高引發歐元區弱勢國家警戒，債市壓力加劇。",
+ "hash": "6292463ddbc1293a",
+ "text": "Meta財報揭露龐大AI資本支出承諾與十多年來首見的現金淨流出，引發市場對融資與投資報酬率的嚴重焦慮，10/22（美國時間）美股科技與晶片族群慘遭血洗，那斯達克指數重挫2.6%、費城半導體指數狂瀉6.7%。受此衝擊，投資人大舉轉向美債避險，10年期美債殖利率創兩年多來最大單日跌幅，跌破5%。¶聯準會升息預期隨之大幅退溫。儘管油價飆升至每桶112美元（較2月中東衝突前上漲逾50%），通常會引發通膨擔憂，但債市對未來五年平均通膨預期（TIPS與常規美債殖利率差）維持在2.4%，與戰爭前水準相同。聯邦基金期貨顯示，10/28會議升息機率從10/21的15%跌至約5%，12月升息機率則從完全定價下滑至約75%。\n日本9月核心CPI年增2.1%，首度突破日銀2%目標，強化年底升息預期；日銀9月已升息25bp至1.25%創30年新高，市場預期下次升息落在12月。\nSpaceX第三季營收年增161%至145.8億美元、首度虧轉盈，但財務長表示第四季資本支出將達350至400億美元（遠高於第三季196億美元），引發市場對巨額融資壓力的擔憂，股價10/22下跌9.14%。",
  "links": [
   {
-   "title": "Stocks drop as Meta dampens AI optimism; Treasury yields fall",
-   "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQNmlzbXFUNWNXc3U3RHRac2lYVEhXNjZmZGw0Q19yNVRORUEtak91QlJnTEVqcGhWT2xuT2RmOHdTVHlyN1JmSHRVZEpfMzgtNEVMT1RCWk1VNGswaVFYTXI4WlFpUE95aEJid1NxNVNBdzBGX0pzOUQwMnZnQ25kOVNXQQ?oc=5",
+   "title": "Asian shares wobble as tech rout boosts bonds, dents rate hike bets",
+   "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQMG5uTk9BQ2lzbUtHT1k4Nlp4RlRCcXFvVXR5YUhCamhubGQ1SlB0c2FYczVLdl9ESzJBRzdkNmVuYU1ISVc2MndXWnBZTzBDNFdzeHBEQTNPTGU2SGhBTmtKM3Z1SWUxR2szN20yYWIySGIzUXlZcXVhdGNtTlJNMGN1WQ?oc=5",
    "source": "Reuters",
-   "at": "2026-10-22T02:15:00+00:00"
-  },
-  {
-   "title": "ECB’s Panetta Says Rising Bond Yields Will Restrain Economy",
-   "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOQkpvQUx6Nm1yVG1hNVJhY25ZU0RYeUxYSFVxV1dVVWZZc0VTQnI4SzJkdjcxQXVEbDBrUmctUXRudEwwQzBqS0VvcWd6ZDlxaUZMbTIxSzlkdW1QRUE1TTZaemRabVpXNEdReDgyUjJYYW9WREx4ajBUeFd1anBXbzB3ZjZMRUdYbGZlaFA0Z2lnWWRBdVRScDJCOWt1dllZbDF0SmE4dEpPQUtuejFJ?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-22T16:58:03+00:00"
-  },
-  {
-   "title": "French bond pain puts euro zone's weak links on notice",
-   "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOQTZkYXJBbWNfVFRidzIxNDh2aDRva0x2Q05TTlROaTBOLTRhR3RZcTBqbm96d2dKWU8xVDRBMGN2TXR3Uzh5QWg2T3I1UDhILTl4TnBqdFA5bWlxZi0wWG1KWTcyQi0taWJvbjNSRExHRzNfamlwSFN1U3Z2QTYyYm1FT1Y5WjB5R3dOZ2RDdzdjcFVkSVdpeG1hdw?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-22T17:32:58+00:00"
-  },
-  {
-   "title": "Trump's approval rating on economy hits all-time low as midterm looms: CNBC survey",
-   "link": "https://www.cnbc.com/2026/10/22/trump-economic-approval-rating-midterms-poll.html",
-   "source": "CNBC",
-   "at": "2026-10-22T13:18:36+00:00"
+   "at": "2026-10-23T01:50:00+00:00"
   },
   {
    "title": "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
@@ -33,10 +15,16 @@
    "at": "2026-10-22T18:05:07+00:00"
   },
   {
-   "title": "AI疑慮與戰火風險升溫！資金轉抱美債 10年期殖利率跌破5%",
-   "link": "https://tw.stock.yahoo.com/news/ai%E7%96%91%E6%85%AE%E8%88%87%E6%88%B0%E7%81%AB%E9%A2%A8%E9%9A%AA%E5%8D%87%E6%BA%AB-%E8%B3%87%E9%87%91%E8%BD%89%E6%8A%B1%E7%BE%8E%E5%82%B5-10%E5%B9%B4%E6%9C%9F%E6%AE%96%E5%88%A9%E7%8E%87%E8%B7%8C%E7%A0%B45-163114820.html",
+   "title": "Update: US Equity Indexes Mixed as Investors Rotate From AI Trade to Government Bonds; Crude Oil Surges",
+   "link": "https://finance.yahoo.com/markets/stocks/articles/us-equity-indexes-mixed-investors-211833642.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-22T21:18:33+00:00"
+  },
+  {
+   "title": "一日反轉！SpaceX大跌9%  成市場AI資本支出焦慮犧牲品",
+   "link": "https://tw.stock.yahoo.com/news/%E6%97%A5%E5%8F%8D%E8%BD%89-spacex%E5%A4%A7%E8%B7%8C9-%E6%88%90%E5%B8%82%E5%A0%B4ai%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E7%84%A6%E6%85%AE%E7%8A%A7%E7%89%B2%E5%93%81-021004155.html",
    "source": "Yahoo奇摩股市",
-   "at": "2026-10-22T16:31:14+00:00"
+   "at": "2026-10-23T02:10:04+00:00"
   }
  ],
  "fedwatch": {
@@ -314,186 +302,131 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-22T23:06:03.455240+00:00",
+ "at": "2026-10-23T03:44:17.780375+00:00",
  "layout": "main",
  "topics": {
-  "hash": "fe922806b8d43b74",
+  "hash": "b04660cfe89773b1",
   "items": [
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "美國財政部考慮調整長天期公債發行計畫，市場討論是否應停止20年期公債銷售；同時交易員對大幅債券上漲的避險成本飆升，反映市場預期長期利率可能進一步下行",
+    "id": "fed",
+    "label": "聯準會",
+    "text": "日本9月核心通膨升至2.1%，超越央行2%目標，強化年底升息預期；烏干達央行升息後仍未能遏止先令貶值",
     "links": [
      {
-      "title": "US Treasury drops Venezuela from countries facing outbound US investment restrictions",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOOHpQWm5nQmJpYnlpNkloZEdBcWdKYmV2dkhOcFhuVEdtVUJBNlo4bVFZSkM0NmNVb3N3WEJ0QjYzekhrOEFvVmgzaEMtTUxtVnBpd0VIZm83RFpPOXpPV3FpVmtmZzNfRWphcjkwNURkMnk4MkhSQVI2NDgzRjFveWg3ang0VFlQY0thTzVybzdkYWRSeFUxdDYzMjBWU2k3UU1HamdFRVoySEJYeFJYd0h5X3hrY1l0dEtXelpCNA?oc=5",
+      "title": "Japan's core inflation exceeds BOJ target, cements near-term rate hike chance",
+      "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQOTJqdzA2UHpkbmExTlVYbWgxX2VuMGQ3ck9XcUpfUEgxQURja19JdmlfLURneW9HUWpZbzNPMFJ3bS15Zk5DYlNTWU1teWprbW1hOHlJNXdDNWxYbExYRUU0bTIyVzFPLVlRZjY2cFk0THZTb094X2FrM3lPZ005THBHczdTdEl4WEhIUXVCdnA2TE9qTEtFWHh4aHloeWZFU0RuQmhlR0VRSDRCTURWZDB2eTNnWDloNWJIWktsNG5Pak5NSEdtSQ?oc=5",
       "source": "Reuters",
-      "at": "2026-10-22T21:05:43+00:00"
+      "at": "2026-10-22T23:48:00+00:00"
      },
      {
-      "title": "COMMENTARY: Will US Treasury scrap 20-year bond sales?",
-      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNUmV2bzNCVUc2cFdEcWVzRU5BVExNcWFpODRDM2pUQThfYnRQdkFOVzRJMERXaVNsVXo3OTJLSV9rZDI5dDhDUTY1UXVOZjJKdVZnZ0ZRbEIxLUh2ajhBLURIM1NGYlhZREJKdjB5eGk0SkhVeWZpTnJKLWFMX2pFYWQ5N0lIRmtUVHBneTVCLS1yVU5BM2E4QWtnal8tU2puOXJYN25BRkFQZWJTMHNULUxtZkVMTlVoS2xB?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T13:02:23+00:00"
+      "title": "今年首度突破央行2%目標！日本9月核心CPI年增2.1% 強化年底升息預期",
+      "link": "https://tw.stock.yahoo.com/news/%E4%BB%8A%E5%B9%B4%E9%A6%96%E5%BA%A6%E7%AA%81%E7%A0%B4%E5%A4%AE%E8%A1%8C2-%E7%9B%AE%E6%A8%99-%E6%97%A5%E6%9C%AC9%E6%9C%88%E6%A0%B8%E5%BF%83cpi%E5%B9%B4%E5%A2%9E2-1-%E5%BC%B7%E5%8C%96%E5%B9%B4%E5%BA%95%E5%8D%87%E6%81%AF%E9%A0%90%E6%9C%9F-024002729.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-23T02:40:02+00:00"
      }
     ]
    },
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "摩根大通在Solana區塊鏈推出兩支代幣化貨幣市場基金MONY和JLTXX，初始最低投資額各為100萬美元，費用為0.16%，主要投資美國國庫證券與附買回協議，反映傳統金融機構積極探索區塊鏈技術提供多元產品",
+    "text": "摩根大通在Solana區塊鏈上推出代幣化貨幣市場基金，將傳統金融工具與加密生態連結",
     "links": [
      {
-      "title": "JPMorgan 攜手 Solana 為美國投資者推代幣化貨幣市場基金",
-      "link": "https://tw.stock.yahoo.com/news/jpmorgan-%E6%94%9C%E6%89%8B-solana-%E7%82%BA%E7%BE%8E%E5%9C%8B%E6%8A%95%E8%B3%87%E8%80%85%E6%8E%A8%E4%BB%A3%E5%B9%A3%E5%8C%96%E8%B2%A8%E5%B9%A3%E5%B8%82%E5%A0%B4%E5%9F%BA%E9%87%91-225953053.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-22T22:59:53+00:00"
+      "title": "What Does JPMorgan Chase (JPM) Putting Tokenized Money Market Funds On Solana Mean?",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZ1NrN0gtUHdSc1BlbHJCOF9ndy1rcVJHTElIX3dWXzFzV080MzlWUVJTb0pNUTJ6bTdVWjFHRk11amtINnIxMlAtZVoyNlhBNlMtdUl1SWVBbTlrZWllTXZ2THIybjIwUy16U1c5Y1o4QjUyQjgtTVVlUzhNeG9lNHlBNGJleENmekpJQV9hbkpTSml0MTdEUm1SYlNMWnFlMVZUenpYeldmRG5xWDFCdDl6ZG52Z0JybUFBdmlQV0dFOWpx0gHKAUFVX3lxTE81MTVtVVdQeVdCekJ1b2tJTzVIZDk1N3pvaG9Fc0lGM3JpYmp4UWgzallqYVRPd0RRUTZtYmtVYTc4RU1iTmFqSXdJR1pMQXQ0TmJiY3NZU0ZrejFzU0RmWnVDWUl6ZlBkbzZMYlRQbmZ3UDA0RVZnZDE0Z2UtRFdqemwxU1ZKbnBCUHRid3pGRzdZcVNLZkhNb0NkaE1QUG51eXBoZkVxN0lYNHRIeXRXRWVfSTJHQnFCR294anhldlNxaUxjQUNNMlE?oc=5",
+      "source": "Simply Wall Street",
+      "at": "2026-10-23T01:10:29+00:00"
      },
      {
-      "title": "J.P. Morgan Brings Tokenized Money Market Funds to Solana",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeUxsaUdPeTc5aXJoR2ZaQlJIdTlxZ1kzQXdsUFlsWGhFTE52TkxyOGpvTGU5RlB3RXNZY05FLTFoajM0a2lUYUhzVGFzb0lZZXpXM0VOVk5SNHZ0Zk92V0czd2swNnliRWZUYTNoX09KS3R6Mm5Wa01jSkFYNkZZUkRENFZXVXNh?oc=5",
-      "source": "Coinfomania",
-      "at": "2026-10-22T20:37:30+00:00"
-     }
-    ]
-   },
-   {
-    "id": "oil",
-    "label": "油價",
-    "text": "胡塞武裝攻擊沙烏地阿拉伯能源設施，布蘭特原油上漲4.35美元至每桶113.17美元創5月新高，WTI上漲2.32美元至99.47美元；沙烏地阿美已要求員工撤離波斯灣沿岸達蘭總部，市場擔憂曼德海峽與荷姆茲海峽航運受阻影響全球能源運輸",
-    "links": [
-     {
-      "title": "〈能源盤後〉沙國能源設施遇襲、阿美要求員工撤離 Brent原油飆4%創5個月新高",
-      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E6%B2%99%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%E9%81%87%E8%A5%B2-%E9%98%BF%E7%BE%8E%E8%A6%81%E6%B1%82%E5%93%A1%E5%B7%A5%E6%92%A4%E9%9B%A2-brent%E5%8E%9F%E6%B2%B9%E9%A3%864-%E5%89%B55%E5%80%8B%E6%9C%88%E6%96%B0%E9%AB%98-215002663.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-22T21:50:02+00:00"
-     },
-     {
-      "title": "布蘭特油價漲至111美元 WTI 也快破百 伊朗又攻擊油輪 沙國油田遇襲2死",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1VSW81VVlSY180TUpad0k5V2ZCc3BmQzc0MnFqVUtZZ1NNNmVxc1VsSExKNDRxbEJqMEFjVXViZGg5X0tTY2lxREVLd19OMHA3Q0J0QWtfblViQdIBX0FVX3lxTE9lMjduZ0RCd3BtSHV6U3FUMFJ2Ty03enZCRWo4eDVqWkNpN3dRaThrQUpfZFpwSWMyeGdXVUZJbnFlb21oWFpXRGhKLW1lTVljWWtLcjluaUREM1ZEYVc4?oc=5",
-      "source": "經濟日報",
-      "at": "2026-10-22T05:38:12+00:00"
+      "title": "JPMorgan's Tokenized Money Market Funds Go Live on Solana",
+      "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5DZzQ0SWg4a3ZlY2l2Q2JnaFU5NlZ1c1VIenczdVplUUUzWTZFTlhUcEhEQXVHWVptTElrWURqVGIzVWNGU2kyWG15aHI5MGlnd1dDcTlRb2tmLXF3MV9mSEFCYV9odFJBTjB4eXVCY3dlVTFiUUp4X2NBNWTSAYIBQVVfeXFMTXNNZTVDU1FHSGRjZmpEV0duMERUVnJvU281UWswN2V5aERvTTlDbXdQS3NOdUNpb1BmSmxJVUdlZFk3WFBWdzlrMjBMUnpsWWplam5qSzRUN0VZY2xRSGJHMEx4a3pfanoyOHB4Y3RhN2ZKdHRnT3NZaFVDUkF3NXZVQQ?oc=5",
+      "source": "U.Today",
+      "at": "2026-10-22T21:27:26+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI投資前景疑慮升溫引發科技股拋售，那斯達克指數下跌694點（2.6%）創6月以來最大單日跌幅，標普500下跌1.21%創7月以來最差表現，道瓊小漲11.89點；資金從股票流向公債避險",
+    "text": "半導體股重挫後，那斯達克期貨小幅反彈0.18%，費城半導體ETF（SOXX）跌近7%，晶片類股P/E跌至14.2倍，市場對獲利預測信心不足",
     "links": [
      {
-      "title": "S&P 500, Nasdaq end sharply lower as revived AI doubts ignite tech selloff",
-      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNTWxDZDg5X0padGNvb2k2V2ZkX2tEWW9YWkdjeVdMZHNUTlg1MXY4TmUyTDZHdUhNTHFRNWRPRjc2VFlEN3RXTDhNSjhDYmRfTWZGXzdKYXdLejRHNGgwRVdNbmZRUkFhSm9GakxMek56UUZ2OUtqajd6NVkzRkR1VzBNWlo5VWp5NUFkX2phUjlSSFlndUlNNGxvUXlHSm1wMlpTbkRR?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T20:48:22+00:00"
+      "title": "Nasdaq Futures Rise After Chip Selloff While S&P 500, Dow Track Mixed Open: SLV, GLD, SOXL, BE In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-futures-rise-after-chip-selloff-while-s-and-p-500-dow-track-mixed-open-slv-gld-soxl-be-in-focus/cZxyG6qRBDq?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-23T02:59:55+00:00"
      },
      {
-      "title": "AI發展疑慮血洗美股！費半大跌773點　那指下挫694點今年6月以來最慘",
-      "link": "https://tw.news.yahoo.com/ai%E7%99%BC%E5%B1%95%E7%96%91%E6%85%AE%E8%A1%80%E6%B4%97%E7%BE%8E%E8%82%A1-%E8%B2%BB%E5%8D%8A%E5%A4%A7%E8%B7%8C773%E9%BB%9E-%E9%82%A3%E6%8C%87%E4%B8%8B%E6%8C%AB694%E9%BB%9E%E4%BB%8A%E5%B9%B46%E6%9C%88%E4%BB%A5%E4%BE%86%E6%9C%80%E6%85%98-215100853.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-22T21:51:00+08:00"
+      "title": "Dow Jones Futures: Moderna Crashes, Meta Fuels AI Meltdown, But Warren Buffett Market Thriving",
+      "link": "https://finance.yahoo.com/m/47e878bb-824d-3243-a8e9-b86b1c3f85d3/dow-jones-futures%3A-moderna.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-23T03:12:31+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Meta宣布第3季自由現金流轉負創IPO以來首次，並上調全年資本支出預估中間值，引發市場對科技巨頭舉債規模與AI投資回報的擔憂，Meta五年期信用違約交換報價創約一年新高；費城半導體指數暴跌6.72%，輝達跌4.4%、AMD跌8.1%、台積電ADR跌4.52%",
+    "text": "輝達執行長敦促歐洲加快AI競賽步伐；三星電子機械公司獲得特斯拉與輝達合計2.8億美元晶片投資",
     "links": [
      {
-      "title": "〈美股盤後〉Meta重燃AI交易恐慌 費半狂瀉近7% 台積電ADR跌超4.5%",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%BE%8C-meta%E9%87%8D%E7%87%83ai%E4%BA%A4%E6%98%93%E6%81%90%E6%85%8C-%E8%B2%BB%E5%8D%8A%E7%8B%82%E7%80%89%E8%BF%917-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%B7%8C%E8%B6%854-5-220609266.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-22T22:06:09+00:00"
+      "title": "Samsung Electro-Mechanics gets $2.8 billion chip investment from Tesla, Nvidia, report says",
+      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOdTVKdGwtT1Q1eW9NVV8zZG9kakgxTk5vendNTS1NcEZYMEZGNE5ERVNCRkM3Qk5XMlZaY0xMeXIwQlYwMzJvQmpxc2M5SVlMbEVKYWpCMEsxSjA1Y1k5b1RkcXRKSFRSeUhQSmVhV2JvZ2V4STZzdmg2YURIOXd2dUVkTDdLQllVTmlNYjB3b0xkY09YMmd0b2ZNcTZSb00xc0R0VW5yZ1l6UkdTREIyTk1zZnVCS3RqcDE4Q0llaGF1UFEtanVTc1VLcF9XVVJyQ0wycmUzbnJZRTQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-22T07:37:51+00:00"
      },
      {
-      "title": "AMD股價重挫7.6% 晶片股全面遭拋售 AI投資回報疑慮升溫",
-      "link": "https://tw.stock.yahoo.com/news/amd%E8%82%A1%E5%83%B9%E9%87%8D%E6%8C%AB7-6-%E6%99%B6%E7%89%87%E8%82%A1%E5%85%A8%E9%9D%A2%E9%81%AD%E6%8B%8B%E5%94%AE-ai%E6%8A%95%E8%B3%87%E5%9B%9E%E5%A0%B1%E7%96%91%E6%85%AE%E5%8D%87%E6%BA%AB-220003925.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-22T22:00:03+00:00"
-     }
-    ]
-   },
-   {
-    "id": "twf",
-    "label": "台指期",
-    "text": "台股10/22開高走低，早盤最高47332點後急轉直下，終場暴跌846點（1.81%）收46041點失守季線46207點，外資狂砍816.56億元，三大法人合計賣超1001.59億元；台積電ADR下跌19.54美元至412.35美元，折台股2680.93元",
-    "links": [
-     {
-      "title": "台積電ADR22日下跌19.54美元跌幅4.52%折台股2680.93元",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BBadr22%E6%97%A5%E4%B8%8B%E8%B7%8C19-54%E7%BE%8E%E5%85%83%E8%B7%8C%E5%B9%854-52-%E6%8A%98%E5%8F%B0%E8%82%A12680-93%E5%85%83-214653544.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-22T21:46:53+00:00"
-     },
-     {
-      "title": "名師操盤》台股崩盤怎麼辦？蔡正華：鎖定3大多頭火種",
-      "link": "https://tw.stock.yahoo.com/news/%E5%90%8D%E5%B8%AB%E6%93%8D%E7%9B%A4-%E5%8F%B0%E8%82%A1%E5%B4%A9%E7%9B%A4%E6%80%8E%E9%BA%BC%E8%BE%A6-%E8%94%A1%E6%AD%A3%E8%8F%AF-%E9%8E%96%E5%AE%9A3%E5%A4%A7%E5%A4%9A%E9%A0%AD%E7%81%AB%E7%A8%AE-220530305.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-22T22:05:30+08:00"
+      "title": "Nvidia’s Huang Goads Europe to Pick Up The Pace in AI Race",
+      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOYUc4Q2Q4cURubnQ0aVFkdlF0dUxEQWN5Q1hadi05TXhzX2VaZnhIM1JRakRXVzdxNHIwZHdIazdQaDZ5YUJvbS1NbVNBY0hwTnNIYlZZUjl4T0lZbkdqZ25pdHg3SGgtNXpNMUhFZ1JWakpCNVRCcWxWOFZob045ZGQ2Q3JKLW1kZnJNNTZhdVItTDJxbjBUNHMxbnEzNW5tRXc?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-22T11:02:01+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格在中東局勢升溫與聯準會升息預期退縮的背景下測試4070美元關鍵支撐位，市場權衡地緣政治風險與聯準會政策路徑",
+    "text": "黃金在AI市場波動加劇下跌至三個月低點附近，測試4070美元關鍵支撐位",
     "links": [
      {
-      "title": "Gold Edges Lower as Traders Weigh Middle East Signals, Fed Rate Path",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPcm9iTkZnZUdhMG5jYWozVjdVVnFsNDFKbmNoSGZMMkZINmxkNkRzNU1MTVdCaDhlQms1S2F4OTVuaHkyWmpLQ1JjNnFfS3M1bDE1RlZ6Zm1saUVURXJKcmRhWVNkV292Sl9PYWlJVkdFVHdSZnREOGpHeno0dVZ2V19BWE9JbXdSYkh1VzVvMU14T1BrbW5rZkxiZWxueVRYQktRaGRPTTZyRExYRUZfOHpWaGc?oc=5",
+      "title": "Gold Holds Near Three-Month Low as AI Jitters Fuel Volatility",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNOU1IOHpFcF9sV2ZnV2huTy1tVGV0SF9zVFNPLXh5cHdlNU9zS1FWamtyd2ZIcUZMT2YxRE5OZmdCdzUxQ3ZQbHV6bmE4aW85ejVKZWt4SzZHcDhNcHVWNkJ5X3VFSnVvSVVvS0xfX2ZQQVFpTklWZlNIUGVhdEdDbk1sRC1PNWFHZ1lRaFREMzFpTHNoQUZwQVJuTmw1V29ZMU5sSi1Ld0FyOGNXVllVRWdn?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-22T15:07:59+00:00"
-     },
-     {
-      "title": "黃金價格預測：油價高漲之際，XAU/USD 測試 4,070 美元關鍵支撐位",
-      "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxQOEdzVzNvREt5V2NpaTVaTFhUMGpvSWJZOGpMTDJwTGx1RTVQRmxfeVBTUHk0U25pYzk2dVV0c1NVTExzZkJsUHBsWnBBbWtfMmNWYmE4R0Y3MGF0TjhuZUZ3eDkyakhleXVDOGJIWWQzUEgwOWduX3BoRHB2ZWoxX1ctenBFQm5ZaEEtdUZ6bVJQV2MwdExfSFpXZl9FX3c3S2VRRUZYNlhvanFIMkdpbGdXNS1CSTlYeVBLNUxIRm9xSjVkVDh2VG9iVktmbV9XNWJERFU0SHJiMHd0anNv?oc=5",
-      "source": "www.tmgm",
-      "at": "2026-10-22T10:31:55+00:00"
+      "at": "2026-10-23T03:13:00+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣10/22貶至32.508元失守32.5元關卡，貶值2分，周線連四黑；外資整日買進美元匯出資金，成為新台幣主要貶值壓力，成交量35.71億美元",
+    "text": "新台幣在外資匯出壓力下重貶，盤中失守32.6元關卡，貶值幅度達1.5角",
     "links": [
-     {
-      "title": "台幣失守32.5 周線連四黑",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%B9%A3%E5%A4%B1%E5%AE%8832-5-%E5%91%A8%E7%B7%9A%E9%80%A3%E5%9B%9B%E9%BB%91-225122055.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-22T22:51:22+08:00"
-     },
      {
       "title": "外資匯出壓力未解！新台幣下探32.55元 重貶2.12角",
       "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBSSHVRQ3ZQTFQ1a3JTcWJTeV8zQWJPVDNQX1BVbjJRUkVDVG5sbk9tWWxsUk12WjFBRkpuX2NBeGZwQTFyTVZ4bkFqdGRIR2VwTWllOGw4X24?oc=5",
       "source": "自由時報",
       "at": "2026-10-22T06:36:25+00:00"
+     },
+     {
+      "title": "新台幣反彈僅一天！盤中重貶1.5角 失守32.6關卡",
+      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5MV21XVHhfTS05MzdWWDhnVHdULW5uTGF3VEV4U0Nua0I1YlNPU2FBNE55T2xMZkNLampCYlJkYTMtNkhjUTY5bFoxMA?oc=5",
+      "source": "三立新聞",
+      "at": "2026-10-22T14:12:30+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-22T23:06:24.116245+00:00"
+  "at": "2026-10-23T03:44:36.150775+00:00"
  },
  "main_source_titles": [
-  "Stocks drop as Meta dampens AI optimism; Treasury yields fall",
-  "ECB’s Panetta Says Rising Bond Yields Will Restrain Economy",
-  "French bond pain puts euro zone's weak links on notice",
-  "Trump's approval rating on economy hits all-time low as midterm looms: CNBC survey",
+  "Asian shares wobble as tech rout boosts bonds, dents rate hike bets",
   "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
-  "AI疑慮與戰火風險升溫！資金轉抱美債 10年期殖利率跌破5%"
+  "Update: US Equity Indexes Mixed as Investors Rotate From AI Trade to Government Bonds; Crude Oil Surges",
+  "一日反轉！SpaceX大跌9%  成市場AI資本支出焦慮犧牲品"
  ],
- "headline": "AI投資疑慮與中東風險夾擊，美債殖利率跌破5%、聯準會升息預期大幅退溫",
- "rate_note": "AI投資疑慮與信用風險升溫偏向壓低美債殖利率，市場對聯準會升息的預期也隨之大幅下修；10年期今日-19bp至4.95%，市場已在反映這波避險情緒與升息預期的轉變。",
+ "headline": "AI支出焦慮引發科技股拋售，美債殖利率跌破5%、聯準會升息預期大幅退溫",
+ "rate_note": "AI支出焦慮驅動避險買盤湧入美債，偏向壓低利率；10年期今日-19bp至4.95%，市場已在反映科技股拋售與升息預期退溫的雙重衝擊。",
  "recent_mains": [
-  {
-   "headline": "歐洲債市承壓、美債殖利率走高，聯準會升息預期面臨外圍風險",
-   "titles": [
-    "Euro zone bond yields rise as French borrowing costs hit 24-year high",
-    "French 10-year bond yields hit 5%, highest since 2002",
-    "Brookings paper offers broad plan to shrink Fed balance sheet"
-   ],
-   "at": "2026-10-22T09:36:43.685213+00:00"
-  },
   {
    "headline": "英國通膨超預期升至3.5%，全球央行緊縮預期延長衝擊美債",
    "titles": [
@@ -514,37 +447,29 @@
     "AI疑慮與戰火風險升溫！資金轉抱美債 10年期殖利率跌破5%"
    ],
    "at": "2026-10-22T23:06:03.455240+00:00"
+  },
+  {
+   "headline": "AI支出焦慮引發科技股拋售，美債殖利率跌破5%、聯準會升息預期大幅退溫",
+   "titles": [
+    "Asian shares wobble as tech rout boosts bonds, dents rate hike bets",
+    "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
+    "Update: US Equity Indexes Mixed as Investors Rotate From AI Trade to Government Bonds; Crude Oil Surges",
+    "一日反轉！SpaceX大跌9%  成市場AI資本支出焦慮犧牲品"
+   ],
+   "at": "2026-10-23T03:44:17.780375+00:00"
   }
  ],
  "archive": {
   "2026-10-23": {
-   "headline": "AI投資疑慮與中東風險夾擊，美債殖利率跌破5%、聯準會升息預期大幅退溫",
-   "text": "10/22美國債市大幅上漲，10年期公債殖利率下跌19個基點至4.95%，創近一個月新低，跌破5%關卡。推動殖利率下行的主要因素是投資人對AI投資前景的疑慮升溫：Meta宣布未來支出承諾達8250億美元，創下歷史新高，引發市場對科技巨頭舉債規模擴大的擔憂，Meta五年期信用違約交換報價創約一年來新高；同時中東局勢升溫推升油價，但債市並未因油價上漲而擔心通膨，五年期通膨預期保持在2.4%不變。¶在此背景下，聯準會升息預期大幅退縮。10/28會議升息機率從9月底的37%跌至約5%，市場現已完全排除10月升息可能；年底前升息機率也從週三的100%降至約75%。債市投資人轉向避險，資金從股票與高風險資產流向公債，帶動長期利率明顯回落。\n川普經濟評分創歷史新低，8成美國人認為經濟狀況不佳，共和黨內對經濟的悲觀比例達35%，為川普兩任期間最高，民主黨在國會控制權民調上領先7個百分點。\n歐洲央行理事帕內塔表示，公債殖利率上升將抑制經濟；法國公債殖利率升高引發歐元區弱勢國家警戒，債市壓力加劇。",
-   "rate_note": "AI投資疑慮與信用風險升溫偏向壓低美債殖利率，市場對聯準會升息的預期也隨之大幅下修；10年期今日-19bp至4.95%，市場已在反映這波避險情緒與升息預期的轉變。",
+   "headline": "AI支出焦慮引發科技股拋售，美債殖利率跌破5%、聯準會升息預期大幅退溫",
+   "text": "Meta財報揭露龐大AI資本支出承諾與十多年來首見的現金淨流出，引發市場對融資與投資報酬率的嚴重焦慮，10/22（美國時間）美股科技與晶片族群慘遭血洗，那斯達克指數重挫2.6%、費城半導體指數狂瀉6.7%。受此衝擊，投資人大舉轉向美債避險，10年期美債殖利率創兩年多來最大單日跌幅，跌破5%。¶聯準會升息預期隨之大幅退溫。儘管油價飆升至每桶112美元（較2月中東衝突前上漲逾50%），通常會引發通膨擔憂，但債市對未來五年平均通膨預期（TIPS與常規美債殖利率差）維持在2.4%，與戰爭前水準相同。聯邦基金期貨顯示，10/28會議升息機率從10/21的15%跌至約5%，12月升息機率則從完全定價下滑至約75%。\n日本9月核心CPI年增2.1%，首度突破日銀2%目標，強化年底升息預期；日銀9月已升息25bp至1.25%創30年新高，市場預期下次升息落在12月。\nSpaceX第三季營收年增161%至145.8億美元、首度虧轉盈，但財務長表示第四季資本支出將達350至400億美元（遠高於第三季196億美元），引發市場對巨額融資壓力的擔憂，股價10/22下跌9.14%。",
+   "rate_note": "AI支出焦慮驅動避險買盤湧入美債，偏向壓低利率；10年期今日-19bp至4.95%，市場已在反映科技股拋售與升息預期退溫的雙重衝擊。",
    "links": [
     {
-     "title": "Stocks drop as Meta dampens AI optimism; Treasury yields fall",
-     "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQNmlzbXFUNWNXc3U3RHRac2lYVEhXNjZmZGw0Q19yNVRORUEtak91QlJnTEVqcGhWT2xuT2RmOHdTVHlyN1JmSHRVZEpfMzgtNEVMT1RCWk1VNGswaVFYTXI4WlFpUE95aEJid1NxNVNBdzBGX0pzOUQwMnZnQ25kOVNXQQ?oc=5",
+     "title": "Asian shares wobble as tech rout boosts bonds, dents rate hike bets",
+     "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQMG5uTk9BQ2lzbUtHT1k4Nlp4RlRCcXFvVXR5YUhCamhubGQ1SlB0c2FYczVLdl9ESzJBRzdkNmVuYU1ISVc2MndXWnBZTzBDNFdzeHBEQTNPTGU2SGhBTmtKM3Z1SWUxR2szN20yYWIySGIzUXlZcXVhdGNtTlJNMGN1WQ?oc=5",
      "source": "Reuters",
-     "at": "2026-10-22T02:15:00+00:00"
-    },
-    {
-     "title": "ECB’s Panetta Says Rising Bond Yields Will Restrain Economy",
-     "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOQkpvQUx6Nm1yVG1hNVJhY25ZU0RYeUxYSFVxV1dVVWZZc0VTQnI4SzJkdjcxQXVEbDBrUmctUXRudEwwQzBqS0VvcWd6ZDlxaUZMbTIxSzlkdW1QRUE1TTZaemRabVpXNEdReDgyUjJYYW9WREx4ajBUeFd1anBXbzB3ZjZMRUdYbGZlaFA0Z2lnWWRBdVRScDJCOWt1dllZbDF0SmE4dEpPQUtuejFJ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-22T16:58:03+00:00"
-    },
-    {
-     "title": "French bond pain puts euro zone's weak links on notice",
-     "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOQTZkYXJBbWNfVFRidzIxNDh2aDRva0x2Q05TTlROaTBOLTRhR3RZcTBqbm96d2dKWU8xVDRBMGN2TXR3Uzh5QWg2T3I1UDhILTl4TnBqdFA5bWlxZi0wWG1KWTcyQi0taWJvbjNSRExHRzNfamlwSFN1U3Z2QTYyYm1FT1Y5WjB5R3dOZ2RDdzdjcFVkSVdpeG1hdw?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-22T17:32:58+00:00"
-    },
-    {
-     "title": "Trump's approval rating on economy hits all-time low as midterm looms: CNBC survey",
-     "link": "https://www.cnbc.com/2026/10/22/trump-economic-approval-rating-midterms-poll.html",
-     "source": "CNBC",
-     "at": "2026-10-22T13:18:36+00:00"
+     "at": "2026-10-23T01:50:00+00:00"
     },
     {
      "title": "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
@@ -553,13 +478,19 @@
      "at": "2026-10-22T18:05:07+00:00"
     },
     {
-     "title": "AI疑慮與戰火風險升溫！資金轉抱美債 10年期殖利率跌破5%",
-     "link": "https://tw.stock.yahoo.com/news/ai%E7%96%91%E6%85%AE%E8%88%87%E6%88%B0%E7%81%AB%E9%A2%A8%E9%9A%AA%E5%8D%87%E6%BA%AB-%E8%B3%87%E9%87%91%E8%BD%89%E6%8A%B1%E7%BE%8E%E5%82%B5-10%E5%B9%B4%E6%9C%9F%E6%AE%96%E5%88%A9%E7%8E%87%E8%B7%8C%E7%A0%B45-163114820.html",
+     "title": "Update: US Equity Indexes Mixed as Investors Rotate From AI Trade to Government Bonds; Crude Oil Surges",
+     "link": "https://finance.yahoo.com/markets/stocks/articles/us-equity-indexes-mixed-investors-211833642.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-22T21:18:33+00:00"
+    },
+    {
+     "title": "一日反轉！SpaceX大跌9%  成市場AI資本支出焦慮犧牲品",
+     "link": "https://tw.stock.yahoo.com/news/%E6%97%A5%E5%8F%8D%E8%BD%89-spacex%E5%A4%A7%E8%B7%8C9-%E6%88%90%E5%B8%82%E5%A0%B4ai%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E7%84%A6%E6%85%AE%E7%8A%A7%E7%89%B2%E5%93%81-021004155.html",
      "source": "Yahoo奇摩股市",
-     "at": "2026-10-22T16:31:14+00:00"
+     "at": "2026-10-23T02:10:04+00:00"
     }
    ],
-   "at": "2026-10-22T23:06:03.455240+00:00"
+   "at": "2026-10-23T03:44:17.780375+00:00"
   },
   "2026-10-22": {
    "headline": "英國通膨超預期升至3.5%，全球央行緊縮預期延長衝擊美債",
