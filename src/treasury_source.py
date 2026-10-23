@@ -605,7 +605,7 @@ _BB_RE = re.compile(r"purchase up to \$([\d.,]+) billion[^.]{0,80}?liquidity sup
 
 
 def refunding_statement(ids: list[str]) -> dict:
-    """最新一次再融資聲明：{date, url, guidance_en, bb_liq, bb_cash}（十億美元）。找不到回空。"""
+    """最新一次再融資聲明：{date, url, text, guidance_en, bb_liq, bb_cash}（十億美元）。找不到回空。"""
     for sid in ids:
         url = f"https://home.treasury.gov/news/press-releases/{sid}"
         try:
@@ -616,6 +616,8 @@ def refunding_statement(ids: list[str]) -> dict:
         if not m:
             continue
         out = {"date": dt.datetime.strptime(m.group(1), "%B %d, %Y").date().isoformat(), "url": url}
+        # 聲明本文（給 refunding_zh 寫中文摘要）：從標題起取一段，夠涵蓋指引、T-Bills 與新措施
+        out["text"] = t[m.start():m.start() + 8000]
         g = _GUIDE_RE.search(t)
         if g:
             out["guidance_en"] = g.group(1).strip()

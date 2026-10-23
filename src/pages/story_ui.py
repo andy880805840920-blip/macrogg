@@ -240,7 +240,8 @@ function slides(){
     + '<span class="sty-tag sty-a" style="--d:.6s">' + tag + '</span>'
     + '<p class="sty-p sty-a" style="--d:.9s">' + esc(D.rate) + '</p></div>', 6000);
   // 4 最新數據
-  var L = D.latest;
+  // 48 小時內公布的第一筆（建置端已排好優先順序；這裡用打開當下的時間再篩一次）
+  var L = (D.rels || []).filter(function(x){ var t = Date.parse(x.at || ""), a = Date.now() - t; return isFinite(t) && a >= 0 && a <= 48 * 3600e3; })[0] || null;
   push('<div class="sty-s s4">' + deco() + kick(4, "最新數據")
     + (L ? '<h2 class="sty-h sty-a" style="--d:.1s">' + esc(L.name) + '</h2>'
       + (L.date ? '<p class="sty-p sty-a" style="--d:.2s;margin-top:4px">' + esc(L.date) + ' 公布</p>' : '')
@@ -248,7 +249,7 @@ function slides(){
         + '<div class="v" data-count="' + esc(r.actual) + '">' + esc(r.actual) + '</div>'
         + ((r.forecast || r.previous) ? '<div class="sty-pills">' + (r.forecast ? '<span>預估 ' + esc(r.forecast) + '</span>' : '') + (r.previous ? '<span>前值 ' + esc(r.previous) + '</span>' : '') + '</div>' : '')
         + (r.vs ? '<span class="sty-stamp">' + esc(r.vs) + '</span>' : '') + '</div>'; }).join("")
-      : '<p class="sty-p sty-a">最近沒有新公布的重要數據。</p>') + '</div>', 6000);
+      : '<p class="sty-p sty-a">最近兩天沒有新公布的重要數據。</p>') + '</div>', 6000);
   // 5 今明兩天＋品牌收尾（米白紙底）
   var icon = function(x){ return x.k === "h" ? '<i class="sty-ic h">休</i>' : '<i class="sty-ic ' + x.k + (x.k === "d" && !x.hi ? " lo" : "") + '"></i>'; };
   // 今天／明天依「打開的這一刻」的台灣日期決定；時間已過的變灰、標已公布／已結束、排到後面

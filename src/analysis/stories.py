@@ -4,7 +4,8 @@
   1 你的指標    問候＋依兩個指標漲跌自動寫的一句＋數值與變動（瀏覽器端讀報價板）
   2 今日主軸    主軸標題＋第一句
   3 對利率      主軸的「對利率」，並判斷偏向推升／壓低／不明確
-  4 最新數據    最近一次公布的重要數據（不含每週的初領失業金）；有市場預估就標高於／低於預估
+  4 最新數據    48 小時內公布的重要數據（初領失業金只當備選）；有市場預估就標高於／低於預估；
+               日期用官方公布日（美東）
   5 今明兩天    數據、發債、官員談話、休市
 
 這裡只組資料（JSON），畫面與動畫在 pages/home.py。
@@ -15,11 +16,13 @@ import datetime as dt
 import json
 import re
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from .. import clock
 
 ROOT = Path(__file__).resolve().parents[2]
 RELEASES_FILE = ROOT / "state" / "releases.json"
+RDATES_FILE = ROOT / "state" / "release_dates.json"
 _TPE = dt.timezone(dt.timedelta(hours=8))
 
 _UNCLEAR = re.compile(r"方向不明|不明確|取決於|兩面")
@@ -103,19 +106,73 @@ def _stored_cons(ctxs: dict, ck: str, cl: str, period: str) -> float | None:
     return es[-1]["cons"][field] if es else None
 
 
-def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
-    """最近一次公布的重要數據（依 state/releases.json 第一次看到的時間）。"""
+# 官方公布時間（美東）：多數 08:30，JOLTS 10:00，FOMC 聲明 14:00
+_ET = ZoneInfo("America/New_York")
+_REL_KEY = {"labor": "employment", "inflation": "cpi", "pce": "pce", "ppi": "ppi",
+            "jolts": "jolts", "claims": "claims"}
+_REL_TIME = {"jolts": (10, 0), "fomc": (14, 0)}
+FRESH_HOURS = 48          # 快報「今日數據」／「最新數據」只放 48 小時內公布的
+
+
+def _load_rdates() -> dict:
+    try:
+        d = json.loads(RDATES_FILE.read_text(encoding="utf-8"))
+        return d.get("dates") or {} if isinstance(d, dict) else {}
+    except Exception:                              # noqa: BLE001
+        return {}
+
+
+def official_at(k: str, seen: dt.datetime | None, ctxs: dict, rdates: dict) -> dt.datetime | None:
+    """
+    這一期的官方公布時間（2026-10-23）。以前用「程式第一次看到」的時間當公布日，
+    10/22 聯準會頁抓取失敗又恢復，9/16 的決議就被當成 10/22 才公布。
+      FOMC  會議決議日 14:00（美東）
+      其他  發布行事曆（state/release_dates.json）裡、第一次看到之前 4 天內最近的發布日
+    找不到回 None（呼叫端退回第一次看到的時間）。
+    """
+    hh, mm = _REL_TIME.get(k, (8, 30))
+    if k == "fomc":
+        try:
+            d = dt.date.fromisoformat(str((ctxs.get("fomc") or {}).get("latest_date") or "")[:10])
+        except ValueError:
+            return None
+    else:
+        if not seen:
+            return None
+        sd = seen.astimezone(_ET).date()
+        ds = []
+        for x in rdates.get(_REL_KEY.get(k, ""), []) or []:
+            try:
+                ds.append(dt.date.fromisoformat(str(x)[:10]))
+            except ValueError:
+                continue
+        ds = [x for x in ds if sd - dt.timedelta(days=4) <= x <= sd]
+        if not ds:
+            return None
+        d = max(ds)
+    return dt.datetime(d.year, d.month, d.day, hh, mm, tzinfo=_ET)
+
+
+def release_candidates(ctxs: dict, releases: dict | None = None, now: dt.datetime | None = None,
+                       rdates: dict | None = None) -> list[dict]:
+    """
+    快報可以放的「最新公布數據」，依優先順序：
+      ① 就業報告、CPI、PCE、PPI、FOMC、JOLTS——新的在前
+      ② 初領失業金（每週四都公布）只當備選，排在最後
+    每筆帶官方公布時間 at（ISO）。now 有給時只留 FRESH_HOURS 小時內公布的；
+    瀏覽器打開時會再用當下時間篩一次（網頁可能是好幾小時前建置的）。
+    """
     if releases is None:
         try:
             releases = json.loads(RELEASES_FILE.read_text(encoding="utf-8"))
         except Exception:                          # noqa: BLE001
             releases = {}
+    if rdates is None:
+        rdates = _load_rdates()
     lab, inf = ctxs.get("labor") or {}, ctxs.get("inflation") or {}
     fom = ctxs.get("fomc") or {}
     lk, ik = lab.get("kpi") or {}, inf.get("kpi") or {}
     cons = (ctxs.get("_watch_extra") or {}).get("consensus") or {}
-    # 初領失業金不放（2026-10）：每週四都公布，放進來會蓋掉前幾天更重要的
-    # CPI、PPI、就業報告；它在就業頁與本期變化照常更新
     order = ("labor", "inflation", "pce", "ppi", "fomc", "jolts")
 
     def seen_at(k):
@@ -124,15 +181,27 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
             return dt.datetime.fromisoformat(r["first_seen"]) if isinstance(r, dict) else None
         except (KeyError, TypeError, ValueError):
             return None
-    cand = [(seen_at(k), -i, k) for i, k in enumerate(order) if seen_at(k)]
-    keys = [k for _, _, k in sorted(cand, reverse=True)] or list(order)
+
+    def when(k):
+        s = seen_at(k)
+        o = official_at(k, s, ctxs, rdates)
+        return o or s
+
+    cand = [(when(k), -i, k) for i, k in enumerate(order) if when(k)]
+    keys = [k for _, _, k in sorted(cand, reverse=True)]
+    if now is None:   # 沒給時間（舊呼叫端與測試）：沒有任何紀錄時依序找第一個有資料的
+        keys = keys or list(order)
+    keys.append("claims")
 
     def mon(s):
         return f"{int(str(s)[5:7])} 月" if len(str(s)) >= 7 else ""
 
+    out_all = []
     for k in keys:
-        at = seen_at(k)
-        d = at.astimezone(_TPE).date() if at else None
+        at = when(k)
+        if now is not None and (not at or not (dt.timedelta(0) <= now - at <= dt.timedelta(hours=FRESH_HOURS))):
+            continue
+        d = at.astimezone(_ET).date() if at else None
         rows, name, per = [], "", ""
         if k == "labor" and lk.get("nfp_display", "—") != "—":
             name = f"就業報告（{mon(lab.get('data_month', ''))}）"
@@ -164,6 +233,15 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
             name = f"FOMC 決議（{str(fom.get('latest_date', ''))[5:].replace('-', '/')}）"
             rows = [("決議", fom["decision_label"], "", ""),
                     ("目標區間", fom.get("rate_range", "—"), "", "")]
+        elif k == "claims" and (lab.get("claims") or {}).get("machine", {}).get("ic_now"):
+            mc = lab["claims"]["machine"]
+            wk = str(mc.get("week") or "")
+            name = "初領失業金" + (f"（{int(wk[5:7])}/{int(wk[8:10])} 當週）" if len(wk) >= 10 else "")
+            rows = [("初領失業金", f"{mc['ic_now'] / 10000:.1f} 萬", "claims", "初領失業金")]
+            if mc.get("ic_ma"):
+                rows.append(("4 週平均", f"{mc['ic_ma'] / 10000:.1f} 萬", "", ""))
+            if not at:
+                continue
         if not rows:
             continue
         out = []
@@ -181,8 +259,16 @@ def latest_release(ctxs: dict, releases: dict | None = None) -> dict | None:
                         "previous": (c or {}).get("previous", ""),
                         "vs": _vs(actual, (c or {}).get("forecast", "")) if c else ""})
         if out:
-            return {"name": name, "date": f"{d.month}/{d.day}" if d else "", "rows": out[:2]}
-    return None
+            out_all.append({"name": name, "key": k, "date": f"{d.month}/{d.day}" if d else "",
+                            "at": at.isoformat() if at else "", "rows": out[:2]})
+    return out_all
+
+
+def latest_release(ctxs: dict, releases: dict | None = None, now: dt.datetime | None = None,
+                   rdates: dict | None = None) -> dict | None:
+    """最優先的一筆（沒有就 None）。"""
+    c = release_candidates(ctxs, releases, now, rdates)
+    return c[0] if c else None
 
 
 EDITION_CUTOFF_HOURS = 5
@@ -226,6 +312,7 @@ def build_story(ctxs: dict) -> dict:
         "paras": chunks,          # 今日快報圖卡：原文本身的分段（只有一段時由瀏覽器依句號分段）
         "rate": rn,
         "rate_dir": rate_direction(rn),
-        "latest": latest_release(ctxs),
+        # 候選清單（含官方公布時間 at）；瀏覽器打開時再挑 48 小時內的第一筆
+        "rels": release_candidates(ctxs, now=now),
         "up": ctxs.get("_story_up") or [],
     }

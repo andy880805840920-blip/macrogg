@@ -883,7 +883,9 @@ def supply(d: dict) -> str:
         guide = (f'<div class="le-quote"><div class="le-qh">最新每季再融資（{esc(rf.get("date", ""))}）'
                  + (f'　·　下一次 {esc(rf.get("next", ""))}' if rf.get("next") else "")
                  + f'</div><blockquote>{esc(rf.get("guidance_en", ""))}</blockquote>'
-                 + (f'<p>{esc(rf["guidance_zh"])}</p>' if rf.get("guidance_zh") else
+                 + (f'<p>{esc(rf["guidance_zh"])}'
+                    + ('<span class="hint">（AI 摘要，以上方原文為準）</span>' if rf.get("zh_ai") else "")
+                    + '</p>' if rf.get("guidance_zh") else
                     ('<p class="hint">本季聲明為自動擷取，句型與過去不同，請以上方原文為準。</p>' if rf.get("auto") else ""))
                  + (f'<p class="hint">{esc(rf["buybacks_zh"])}'
                     + (f'{esc((rf.get("bb_note") or {}).get("text") or "")}' if rf.get("bb_note") else "")

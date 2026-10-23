@@ -388,6 +388,14 @@ def _fresh_releases(ctxs: dict) -> dict:
         rec = rec if isinstance(rec, dict) else {}
         if rec.get("month") == month and rec.get("first_seen"):
             state[key] = rec                       # 沿用第一次看到的時間
+        elif rec.get("month") and rec.get("first_seen") and month < str(rec["month"]):
+            # 期別只能往前走（2026-10-23）：這次抓到比上次還舊的期別＝這次抓取不完整
+            #（實例：10/22 聯準會行事曆頁沒抓到，最新決議退回 2025-09-17，下一次又恢復
+            # 2026-09-16，於是 9/16 的決議被記成 10/22 才看到）。沿用舊紀錄，不重新計時。
+            log.warning("發布紀錄：%s 這次的期別 %s 比上次的 %s 還舊，視為抓取不完整，沿用舊紀錄",
+                        key, month, rec["month"])
+            state[key] = rec
+            continue
         else:
             # `advanced` 記的是「這個 first_seen 是不是真的看到期別往前推」。
             #
@@ -544,6 +552,33 @@ def release_next(releases: dict, calendar: dict) -> dict:
     return out
 
 
+class FomcStale(RuntimeError):
+    """抓到的最新決議比已知已開過的最近一場還舊（聯準會頁抓取不完整）。"""
+
+
+def check_fomc_latest(src, statements: list[dict], known=None, now=None) -> list[dict]:
+    """
+    最新決議不能倒退（2026-10-23）。10/22 15:14 那次行事曆頁沒抓到，聯準會頁整頁
+    退回 2025-09-17「降息一碼」，過了 21 分鐘才恢復。現在：
+      ① 依已知會議日，應該已公布的最近一場不在清單裡 → 直接補抓那一場的聲明
+      ② 補抓不到 → 丟 FomcStale，main() 停止發布（網站維持上一版，下次排程再試）
+    """
+    from src.fomc_source import expected_latest, known_meetings
+    exp = expected_latest(known if known is not None else known_meetings(), now)
+    got = statements[-1]["date"] if statements else ""
+    if not exp or got >= exp.isoformat():
+        return statements
+    log.warning("聯準會：最新決議只抓到 %s，應有 %s，補抓那一場", got or "（無）", exp.isoformat())
+    st = src.statement(exp)
+    if st:
+        try:
+            st["presser"], st["presser_error"] = src.presser(exp)
+        except Exception as e:                     # noqa: BLE001
+            st["presser"], st["presser_error"] = None, str(e)
+        return sorted([x for x in statements if x["date"] != st["date"]] + [st], key=lambda x: x["date"])
+    raise FomcStale(f"最新決議只抓到 {got or '（無）'}，應有 {exp.isoformat()}")
+
+
 def gather_fomc(offline: bool, fetch_cfg: dict, notes: dict | None = None):
     """回傳 (statements, upcoming, failed, extras)"""
     if offline:
@@ -558,6 +593,7 @@ def gather_fomc(offline: bool, fetch_cfg: dict, notes: dict | None = None):
                              with_presser=fetch_cfg.get("with_presser", True),
                              start=fetch_cfg.get("start"),
                              presser_recent_n=fetch_cfg.get("presser_recent_n", 4))
+    statements = check_fomc_latest(src, statements)
     # 未來會議要另外解析行事曆表格：collect() 抓的是聲明連結，
     # 而還沒開的會議沒有聲明，連結不存在。
     upcoming = src.upcoming_meetings(3)
@@ -936,8 +972,13 @@ def main() -> int:
         else:
             log.info("聯準會文本：抓取近 %d 年的會後聲明與投票紀錄",
                      fetch_cfg.get("years_back", FOMC_YEARS_BACK))
-        statements, upcoming, failed, fextras = gather_fomc(
-            args.offline, fetch_cfg, fcfg.get("official_notes") or {})
+        try:
+            statements, upcoming, failed, fextras = gather_fomc(
+                args.offline, fetch_cfg, fcfg.get("official_notes") or {})
+        except FomcStale as e:
+            # 寧可這次不更新，也不要把舊的決議當最新的發布出去
+            log.error("聯準會：%s；停止發布，網站維持上一版，下次排程再試", e)
+            return 2
         all_failed += failed
         ctxs["fomc"] = build.build_fomc_context(
             statements, fcfg.get("policy_rate") or {},

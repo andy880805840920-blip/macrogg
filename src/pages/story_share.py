@@ -4,7 +4,8 @@
 
   頂端色條 → 刊頭（LOGO＋日期）→ 主軸標題＋導言（分段、最多 8 行，放不下整段拿掉）
   → 對利率（方向徽章、10 年期、說明、壓低↔推升刻度）
-  → 今日數據 2×2（讀者報價板的前兩個指標＋最新公布的數據）＋右側線條人像
+  → 今日數據 2×2（讀者報價板的前兩個指標＋48 小時內公布的數據；都沒有就放報價板前四個；
+               「對利率」有 10 年期時格子跳過 10 年期；讀者勾的不到四個就用報價板其他指標補滿）＋右側線條人像
   → 今明兩天（依重要性挑 4 項、依時間排；其餘寫「另有 N 項」）→ 頁尾 QR code、網址與更新時間
   區塊間距預設 56px；內容少時多出的高度平均加回間距（每處最多 +40px），
   太多時先把今明兩天減到 3 項、再拿掉導言最後一段。
@@ -82,6 +83,16 @@ QR_ROWS = ['11111110111010011101101111111', '10000010111000110100101000001', '10
 JS = r"""
 var MG_FACE = %%FACE%%;
 var MG_QR = %%QR%%;
+// 圖卡格子用的指標（最多四個）：先放讀者勾選的（照報價板順序），扣掉 10 年期後不到四個，
+// 再用報價板上其他指標依序補滿；沒有數值的、重複的跳過
+function mgPickChips(list, skip10){
+  var on = [], off = [], seen = {};
+  (list || []).forEach(function(c){
+    if(!c || !c.x || seen[c.id]) return;
+    if(skip10 && (c.id === "dgs10" || c.id === "live_dgs10")) return;
+    seen[c.id] = 1; (c.off ? off : on).push(c.x); });
+  return on.concat(off).slice(0, 4);
+}
 function mgShot(D){
   var W = 1080, H = 1920, M = 72, CW = W - 2 * M;
   var INK = "#12233B", OR = "#E67143", PAPER = "#f7f4ed", RULE = "#ddd6c8", MUTE = "#6b6a64", UP = "#b82828", DN = "#0b7a3b", SOFT = "#55585e";
@@ -98,12 +109,15 @@ function mgShot(D){
   function chip(el){ if(!el) return null; var l = el.querySelector(".fs-nm span"), b = el.querySelector("b"), i = el.querySelector("i");
     var v = b ? b.textContent.trim() : ""; if(!v || v === "—") return null;
     return {l: l ? l.textContent.trim() : "", v: v, c: i ? i.textContent.trim() : "", dir: i ? (i.classList.contains("up") ? "up" : i.classList.contains("dn") ? "dn" : "") : ""}; }
-  var mine = [];
-  Array.prototype.forEach.call(document.querySelectorAll(".fs-chips [data-chip]:not(.fs-off)"), function(c){ var x = chip(c); if(x && mine.length < 4) mine.push(x); });
   var ten = chip(document.querySelector('.fs-chips [data-chip="live_dgs10"]')) || chip(document.querySelector('.fs-chips [data-chip="dgs10"]'));
-  // ---- 2×2：前兩格＝讀者的指標，後兩格＝最新公布的數據（沒有就用報價板第 3、4 個）----
+  // 「對利率」已經畫了 10 年期，格子就跳過 10 年期（官方與盤中都跳），免得同一張圖兩個 10 年期數字
+  var skip10 = !!(ten && (D.rate || "").trim());
+  var mine = mgPickChips(Array.prototype.map.call(document.querySelectorAll(".fs-chips [data-chip]"), function(c){
+    return {id: c.getAttribute("data-chip"), off: c.classList.contains("fs-off"), x: chip(c)}; }), skip10);
+  // ---- 2×2：前兩格＝讀者的指標，後兩格＝48 小時內公布的數據（沒有就用報價板第 3、4 個）----
   var cells = mine.slice(0, 2).map(function(x){ return {l: x.l, v: x.v, c: x.c || "持平", cls: x.dir === "up" ? "up" : x.dir === "dn" ? "dn" : "fl"}; });
-  var L = D.latest, mo = L && /（(\d+) 月）/.exec(L.name || "");
+  // 48 小時內公布的第一筆（建置端已排好：重要數據新的在前、初領失業金最後）；都沒有就四格全放讀者的指標
+  var L = (D.rels || []).filter(function(x){ var t = Date.parse(x.at || ""), a = Date.now() - t; return isFinite(t) && a >= 0 && a <= 48 * 3600e3; })[0] || null, mo = L && /（(\d+) 月）/.exec(L.name || "");
   (L ? L.rows : []).slice(0, 2).forEach(function(r){
     var c = r.vs && r.forecast ? r.vs + " " + r.forecast : r.forecast ? "預估 " + r.forecast : r.previous ? "前值 " + r.previous : (L.date ? L.date + " 公布" : "");
     cells.push({l: (mo ? mo[1] + " 月" + (/^[A-Za-z0-9]/.test(r.label) ? " " : "") : "") + r.label, v: r.actual, c: c, cls: /高於/.test(r.vs) ? "up" : /低於/.test(r.vs) ? "dn" : "fl"}); });

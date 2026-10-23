@@ -104,6 +104,47 @@ class Vote:
         return sum(1 for d in self.dissents if d["direction"] == "cut")
 
 
+def known_meetings() -> list[dt.date]:
+    """
+    已知的會議決策日（2026-10-23）：自動抓到存下的官網行事曆（state/fomc_roster.json）
+    ＋config/focus.yaml 的 fomc_dates。行事曆頁抓不到時用它，不再用寫死的推估日期——
+    10/22 那次就是推估日期（其實是 2025 年的日子）對不上 2026 年的會議，
+    聯準會頁的「最新決議」整個退回 2025-09-17。
+    """
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    out: set[dt.date] = set()
+    raw: list = []
+    try:
+        raw += list(json.loads((root / "state" / "fomc_roster.json").read_text(encoding="utf-8")).get("meetings") or [])
+    except Exception:                              # noqa: BLE001
+        pass
+    try:
+        import yaml
+        raw += list((yaml.safe_load((root / "config" / "focus.yaml").read_text(encoding="utf-8")) or {}).get("fomc_dates") or [])
+    except Exception:                              # noqa: BLE001
+        pass
+    for x in raw:
+        try:
+            out.add(dt.date.fromisoformat(str(x)[:10]))
+        except ValueError:
+            continue
+    return sorted(out)
+
+
+def expected_latest(known: list[dt.date], now: dt.datetime | None = None) -> dt.date | None:
+    """
+    依已知會議日，現在「應該已經公布」的最近一場決議。聲明在決策日美東 14:00 發布，
+    留到 UTC 21:00（美東 16:00／17:00）才算數，避免剛好在發布前後誤判。
+    """
+    now = now or clock.now()
+    now_utc = now.astimezone(dt.timezone.utc)
+    past = [d for d in known
+            if dt.datetime(d.year, d.month, d.day, 21, 0, tzinfo=dt.timezone.utc) <= now_utc]
+    return past[-1] if past else None
+
+
 class FomcSource:
     def __init__(self, session: requests.Session | None = None):
         self.session = session or requests.Session()
@@ -160,8 +201,10 @@ class FomcSource:
                 except ValueError:
                     continue
         if not dates:
-            log.warning("行事曆抓取失敗，改用推估日期（由 404 過濾）")
-            dates = self._guess_dates(years_back)
+            # 已存的官網會議日（只存今年起）＋推估日期（補較早的年份）；不存在的由 404 過濾
+            known = known_meetings()
+            log.warning("行事曆抓取失敗，改用已存的官網會議日（%d 場）＋推估日期", len(known))
+            dates = sorted(set(known) | set(self._guess_dates(years_back)))
 
         if start:
             try:
@@ -200,7 +243,13 @@ class FomcSource:
     def upcoming_spans(self, n: int = 3) -> list[tuple[dt.date, dt.date]]:
         """接下來 n 場會議的 (第一天, 最後一天)。靜默期要用第一天推算。"""
         today = clock.today()
-        out = [(a, b) for a, b in self.calendar_spans() if b > today]
+        spans = self.calendar_spans()
+        if not spans:
+            # 行事曆頁抓不到：用已存的官網會議日（兩天會議，第一天＝決策日前一天）
+            spans = [(b - dt.timedelta(days=1), b) for b in known_meetings()]
+            if spans:
+                log.warning("行事曆抓取失敗，未來會議改用已存的官網會議日")
+        out = [(a, b) for a, b in spans if b > today]
         # 合理性檢查：下一場會議不可能在半年之後（一年開八次，間隔約 6–8 週）。
         # 抓到離譜的東西就整組丟掉，不要印出去。
         if not out or (out[0][1] - today).days > 180:
