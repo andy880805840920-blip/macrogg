@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-23T21:12:41+08:00",
+  "at": "2026-10-24T07:12:24+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -205,7 +205,6 @@
           "oil_up",
           "above_target",
           "ppi_pipeline",
-          "expect_low",
           "expect_anchored"
         ],
         "flag_titles": {
@@ -217,7 +216,6 @@
           "oil_up": "油價上行，未來一至兩月推升總體 CPI",
           "above_target": "核心 PCE 顯著高於目標",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
-          "expect_low": "長期通膨預期錨定良好",
           "expect_anchored": "短期預期偏高，但長期仍錨定"
         },
         "flag_leans": {
@@ -229,7 +227,6 @@
           "oil_up": "hawkish",
           "above_target": "hawkish",
           "ppi_pipeline": "hawkish",
-          "expect_low": "dovish",
           "expect_anchored": "neutral"
         },
         "metrics": {
@@ -309,7 +306,7 @@
             "value": 2.763842436104702
           },
           "exp5y5y": {
-            "value": 2.34
+            "value": 2.19
           }
         }
       },
@@ -651,7 +648,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.96,
+            "value": 5.0,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -659,7 +656,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.29,
+            "value": 5.33,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -667,7 +664,7 @@
           },
           "tp": {
             "label": "期限溢酬",
-            "value": 0.718,
+            "value": 0.6387,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -675,7 +672,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.88,
+            "value": 0.89,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -683,7 +680,7 @@
           },
           "exp5y5y": {
             "label": "長期通膨預期",
-            "value": 2.19,
+            "value": 2.2,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -854,7 +851,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-23T21:12:41+08:00",
+      "at": "2026-10-24T07:12:24+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",

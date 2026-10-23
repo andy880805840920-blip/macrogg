@@ -1,26 +1,32 @@
 {
- "hash": "271cd51d16645e63",
- "text": "布倫特原油價格較2月伊朗戰爭前上漲超過50%，交易價格約每桶112美元，但債市投資人對通膨的擔憂並未隨之升溫。10/22（美國時間），美債殖利率創兩年多來最大單日跌幅，10年期殖利率回落至5%以下。衡量市場通膨預期的指標——5年期美債與通膨保護債券（TIPS）的殖利率差距（即通膨保護債券的殖利率差）維持在2.4%左右，與伊朗戰爭開始前水平相同，顯示投資人預期未來5年平均通膨率仍保持溫和。¶聯準會升息預期隨之大幅下修。聯準會將於10/28召開會議，市場原先預期該月升息機率達37%（截至9月底），但到10/22已跌至約5%。對於12月升息的預期也明顯轉變，從週三（10/22）的完全定價升息，降至目前約75%的升息機率。這反映出儘管油價上漲，債市交易員對聯準會進一步收緊政策的押注已大幅消退。\n日本公債殖利率因AI投資焦慮引發避險需求而下跌，10/22（美國時間）日債收益率走低。歐洲央行執委帕內塔表示，公債殖利率上升將對經濟造成抑制作用，10/22發表此評論。",
+ "hash": "8625d3a38cb0b369",
+ "text": "中東地緣政治緊張升溫推升油價，布蘭特原油突破每桶 116 美元、創 4 月下旬以來新高，西德克薩斯中間基原油（WTI）也攀升至 100 美元上方。美國總統川普對伊朗採取強硬立場、葉門胡塞武裝對沙烏地阿拉伯發射飛彈、伊朗伊斯蘭革命衛隊威脅襲擊美國基地等事件加劇了區域緊張局勢，市場預期供應可能受影響，推升全球能源成本。¶油價上漲引發市場對通膨持續的擔憂。能源價格飆升強化了投資人對利率可能上升並維持高位的預期，儘管聯準會定於 10/28 召開會議，市場目前定價該會議維持利率機率達 92%，但長期升息預期有所升溫。科技股因此承壓，資金轉進美債避險，但 10/23 收盤 10 年期美債殖利率反彈至 4.99%，較前一交易日上升 3bp，反映市場對通膨與利率前景的重新評估。\n台灣 9 月失業率降至 3.36%，寫 26 年來同月最低，終止連續三個月升勢；失業人數 40.5 萬人，較上月減少 6,000 人，主要因應屆畢業生陸續找到工作。\n川普宣布在共和黨人壓力下調降加拿大關稅，以幫助面臨激烈美國參議院選戰的候選人。",
  "links": [
   {
-   "title": "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
-   "link": "https://finance.yahoo.com/markets/article/bond-traders-are-backing-off-fed-rate-hike-bets--heres-what-it-means-for-mortgage-rates-180507914.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-22T18:05:07+00:00"
+   "title": "Oil hits $117 for first time since April on fears of flare",
+   "link": "https://www.ft.com/content/8948193b-438b-4d71-a0b1-31dff56fc308?syn-25a6b1a6=1",
+   "source": "Financial Times",
+   "at": "2026-10-23T20:13:21+00:00"
   },
   {
-   "title": "Why the 10-year Treasury yield finally fell below 5%",
-   "link": "https://finance.yahoo.com/video/why-the-10-year-treasury-yield-finally-fell-below-5-131155706.html?.tsrc=rss",
+   "title": "S&P 500, Dow Drop As Elevated Oil Prices Stoke Inflation Fears Ahead Of Fed Meeting Next Week",
+   "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-dow-drop-as-elevated-oil-prices-stoke-inflation-fears-ahead-of-fed-meeting-next-week-aapl-axp-cart-uber-in-focus/cZxyHWvRBU4?.tsrc=rss",
    "source": "Yahoo Finance",
-   "at": "2026-10-23T13:11:55+00:00"
+   "at": "2026-10-23T22:35:57+00:00"
+  },
+  {
+   "title": "Gold Breaks Below $4,000 as Oil Surge Fuels Fed Rate Fears",
+   "link": "https://finance.yahoo.com/markets/commodities/articles/gold-breaks-below-4-000-200321300.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-23T20:03:21+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-23",
+  "date": "2026-10-24",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-23",
+   "date": "2026-10-24",
    "meetings": [
     {
      "date": "2026-10-28",
@@ -59,24 +65,24 @@
     {
      "date": "2027-01-27",
      "start": 4.090227,
-     "end": 4.165,
-     "move_bp": 7.477,
+     "end": 4.18,
+     "move_bp": 8.977,
      "outcomes": [
       [
        0,
-       0.7009
+       0.6409
       ],
       [
        25,
-       0.2991
+       0.3591
       ]
      ],
      "how": "2027-02 合約平均"
     },
     {
      "date": "2027-03-17",
-     "start": 4.165,
-     "end": 4.297857,
+     "start": 4.18,
+     "end": 4.312857,
      "move_bp": 13.286,
      "outcomes": [
       [
@@ -92,102 +98,102 @@
     },
     {
      "date": "2027-04-28",
-     "start": 4.297857,
-     "end": 4.375,
-     "move_bp": 7.714,
+     "start": 4.312857,
+     "end": 4.405,
+     "move_bp": 9.214,
      "outcomes": [
       [
        0,
-       0.6914
+       0.6314
       ],
       [
        25,
-       0.3086
+       0.3686
       ]
      ],
      "how": "2027-05 合約平均"
     },
     {
      "date": "2027-06-09",
-     "start": 4.375,
-     "end": 4.453571,
-     "move_bp": 7.857,
+     "start": 4.405,
+     "end": 4.497857,
+     "move_bp": 9.286,
      "outcomes": [
       [
        0,
-       0.6857
+       0.6286
       ],
       [
        25,
-       0.3143
+       0.3714
       ]
      ],
      "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
     },
     {
      "date": "2027-07-28",
-     "start": 4.453571,
-     "end": 4.49,
-     "move_bp": 3.643,
+     "start": 4.497857,
+     "end": 4.525,
+     "move_bp": 2.714,
      "outcomes": [
       [
        0,
-       0.8543
+       0.8914
       ],
       [
        25,
-       0.1457
+       0.1086
       ]
      ],
      "how": "2027-08 合約平均"
     },
     {
      "date": "2027-09-15",
-     "start": 4.49,
-     "end": 4.52,
-     "move_bp": 3.0,
+     "start": 4.525,
+     "end": 4.565,
+     "move_bp": 4.0,
      "outcomes": [
       [
        0,
-       0.88
+       0.84
       ],
       [
        25,
-       0.12
+       0.16
       ]
      ],
      "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
     },
     {
      "date": "2027-10-27",
-     "start": 4.52,
-     "end": 4.54,
-     "move_bp": 2.0,
+     "start": 4.565,
+     "end": 4.56,
+     "move_bp": -0.5,
      "outcomes": [
       [
        0,
-       0.92
+       0.98
       ],
       [
-       25,
-       0.08
+       -25,
+       0.02
       ]
      ],
      "how": "2027-11 合約平均"
     },
     {
      "date": "2027-12-08",
-     "start": 4.54,
-     "end": 4.486087,
-     "move_bp": -5.391,
+     "start": 4.56,
+     "end": 4.539783,
+     "move_bp": -2.022,
      "outcomes": [
       [
        0,
-       0.7843
+       0.9191
       ],
       [
        -25,
-       0.2157
+       0.0809
       ]
      ],
      "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
@@ -235,226 +241,141 @@
      "date": "2026-12-09",
      "label": "2026 年底",
      "cum_bp": 20.96,
-     "prev_cum_bp": 26.421
+     "prev_cum_bp": 21.111
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 57.295,
-     "prev_cum_bp": 77.089
+     "cum_bp": 61.723,
+     "prev_cum_bp": 56.455
     },
     {
      "date": "2027-12-08",
      "label": "2027 年底",
-     "cum_bp": 60.546,
-     "prev_cum_bp": 83.027
+     "cum_bp": 65.916,
+     "prev_cum_bp": 61.036
     }
    ],
    "prev": {
     "next": {
      "date": "2026-10-28",
-     "start": 3.88125,
-     "end": 3.92,
-     "move_bp": 3.875,
+     "start": 3.881161,
+     "end": 3.895,
+     "move_bp": 1.384,
      "outcomes": [
       [
        0,
-       0.845
+       0.9446
       ],
       [
        25,
-       0.155
+       0.0554
       ]
      ],
      "how": "2026-11 合約平均"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.92,
-     "end": 4.145455,
-     "move_bp": 22.545,
+     "start": 3.895,
+     "end": 4.092273,
+     "move_bp": 19.727,
      "outcomes": [
       [
        25,
-       0.9018
+       0.7891
       ],
       [
        0,
-       0.0982
+       0.2109
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 26.421
+    "cum_bp": 21.111
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-10-23T13:12:57.399255+00:00",
+ "at": "2026-10-23T23:13:18.175701+00:00",
  "layout": "main",
  "topics": {
-  "hash": "a7305e556ccd55f8",
+  "hash": "7ea5d639157333c0",
   "items": [
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "長天期美債美債殖利率急跌後，投資人重新關注美債與AI交易的連動關係，以及政策制定者對長天期債券的態度",
-    "links": [
-     {
-      "title": "Treasuries’ AI Link Shows Sharp Shift as Haven Trade Returns",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOV0dULXFaUm9nREVVNEJjUFlvODVTbkwyV21vZXJ1eVJveDc4cEd4SG5lWEZsRjNxVWNkZWlvRFJPMi10cXhjcldVUkxGd2wtMWtQbzVpYXJLR29taWlmQThpZE5ObWhFSXFpX0VYZlJMZFQ1WFdKYnF4cWhwUDE3b2NueThFenpCWEJSeDg4UzNfRDZleS1qcmpxY2sxWjhwV3ZnUjZqLTRBT2k4bDJoOVc4Zw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-23T09:21:56+00:00"
-     },
-     {
-      "title": "COMMENTARY: Will US Treasury scrap 20-year bond sales?: McGeever",
-      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNUmV2bzNCVUc2cFdEcWVzRU5BVExNcWFpODRDM2pUQThfYnRQdkFOVzRJMERXaVNsVXo3OTJLSV9rZDI5dDhDUTY1UXVOZjJKdVZnZ0ZRbEIxLUh2ajhBLURIM1NGYlhZREJKdjB5eGk0SkhVeWZpTnJKLWFMX2pFYWQ5N0lIRmtUVHBneTVCLS1yVU5BM2E4QWtnal8tU2puOXJYN25BRkFQZWJTMHNULUxtZkVMTlVoS2xB?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T23:30:47+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "資金市場摩根大通在Solana區塊鏈上推出代幣化貨幣市場基金，供美國投資人使用，標誌傳統金融機構進一步擁抱加密資產",
-    "links": [
-     {
-      "title": "What Does JPMorgan Chase (JPM) Putting Tokenized Money Market Funds On Solana Mean?",
-      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOZ1NrN0gtUHdSc1BlbHJCOF9ndy1rcVJHTElIX3dWXzFzV080MzlWUVJTb0pNUTJ6bTdVWjFHRk11amtINnIxMlAtZVoyNlhBNlMtdUl1SWVBbTlrZWllTXZ2THIybjIwUy16U1c5Y1o4QjUyQjgtTVVlUzhNeG9lNHlBNGJleENmekpJQV9hbkpTSml0MTdEUm1SYlNMWnFlMVZUenpYeldmRG5xWDFCdDl6ZG52Z0JybUFBdmlQV0dFOWpx0gHKAUFVX3lxTE81MTVtVVdQeVdCekJ1b2tJTzVIZDk1N3pvaG9Fc0lGM3JpYmp4UWgzallqYVRPd0RRUTZtYmtVYTc4RU1iTmFqSXdJR1pMQXQ0TmJiY3NZU0ZrejFzU0RmWnVDWUl6ZlBkbzZMYlRQbmZ3UDA0RVZnZDE0Z2UtRFdqemwxU1ZKbnBCUHRid3pGRzdZcVNLZkhNb0NkaE1QUG51eXBoZkVxN0lYNHRIeXRXRWVfSTJHQnFCR294anhldlNxaUxjQUNNMlE?oc=5",
-      "source": "Simply Wall Street",
-      "at": "2026-10-23T01:10:29+00:00"
-     },
-     {
-      "title": "J.P. Morgan launches two tokenized money market funds on Solana for US investors.",
-      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQaV90aXpKdE9waEtzQThTb3BZOEdNVVZ4YWRSRmU4SkZRMnNMdlJHb0I2ZnJMaWRBZVF4ZHZ5TXFjNmlnUlNCNDE3MnRYRHhOa3VVRk5aRE9yUldoa3ZyQm4zbkdQV3lLcVhxeTBDNEJUejZWTzBiU29IZGNDRFhHMU8yNGtGS25EWTk4NDV0Q19zSDB2dkhRZG5R?oc=5",
-      "source": "Pluang",
-      "at": "2026-10-23T12:41:31+00:00"
-     }
-    ]
-   },
-   {
-    "id": "oil",
-    "label": "油價",
-    "text": "油價上漲衝擊企業成本，寶僑警告油價上升將帶來更大成本壓力，儘管消費者需求仍保持穩定；布倫特原油觸及五個月高點，主要受中東局勢升級疑慮推升",
-    "links": [
-     {
-      "title": "P&G warns of bigger cost hit from oil prices, even as consumer demand holds up",
-      "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOeXZkVkhTMUxoaW8wOXZWUC1TbzdCbXlXbUVoWWVZdGZSN1FzdGdrb0VjcW1IZWtLR0JuUWx1RWdGNFpVTHgzYXVjeURmX3RPUVlxYVlNT1hvREZSLWVOR2NVN0sxZTZFMzNDcXFLbUQ2bjJVZUhzdGRSaFY4MTRKeGhuQ09fTFlfVVVVZmo3c24wTnBhZVlGckVPdXBodjF5UnR1RFFhRUtFXzZKVG56LTRoYlFja0pVbUV3OFFyX05zUTE4djJYUTYzQXVBY0s3TjlkdFk2cjA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T15:44:37+00:00"
-     },
-     {
-      "title": "Brent crude hits more than five-month high on concern over Middle East escalation",
-      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPR2dZUC10TmJYRUk2RmM5WWpxaUx2XzBPZ0ZTV3hIR3BkaGFvZ3B2T1hhd0xEcXZOWk5LdXhLLUF5QU9XdTRQdnRyTk9jcmVNMEZvZlZBRW8xcG1TVW1fTkY2UnFrcXlVWlUwbDhRYk9pcW1fdEdzMVNRR2ZhYVl2T0RZa09uZTktZGFWRVRWSEpGeFhYVXVPR09zNDVaTVdiNDdRRHg3VFNyZWNNWVBmdkxGMWFOa05yN2NBRnRVZjF3eF9i?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-23T01:04:00+00:00"
-     }
-    ]
-   },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股拋售潮持續，輝達與AMD等晶片巨頭下跌逾4%，投資人擔憂AI融資成本上升與資本支出放緩，10年期美債殖利率跌破5%成避險資金流向",
+    "text": "美股10/23道瓊下跌652.82點（1.23%）至52,215點，標普500跌0.52%，那斯達克跌0.21%，科技股拋售壓力擴大至運輸類股，聯合航空、達美航空與美國航空因能源成本上升預期而下跌，但網路安全股逆勢上揚超過7%",
     "links": [
      {
-      "title": "Stock market today: Dow, S&P 500, Nasdaq futures slip after sharp tech sell",
-      "link": "https://finance.yahoo.com/markets/live/stock-market-today-friday-october-23-dow-sp-500-nasdaq-tesla-meta-093000521.html?.tsrc=rss",
+      "title": "Stock market today: Dow sinks 600 points, S&P 500, Nasdaq drop to cap a volatile week, oil prices rise",
+      "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-drop-nasdaq-rises-after-sharp-tech-sell-off-160940864.html?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-23T09:30:00+00:00"
+     },
+     {
+      "title": "川普再提對伊朗動武！美股道瓊大跌652點、台積電ADR漲1.49％",
+      "link": "https://tw.stock.yahoo.com/news/%E5%B7%9D%E6%99%AE%E5%86%8D%E6%8F%90%E5%B0%8D%E4%BC%8A%E6%9C%97%E5%8B%95%E6%AD%A6-%E7%BE%8E%E8%82%A1%E9%81%93%E7%93%8A%E5%A4%A7%E8%B7%8C652%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E6%BC%B21-49-220951743.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-23T22:09:51+08:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "AI與半導體英特爾技術長指出全球先進晶圓產能即使資金無限也最多翻倍，瓶頸在EUV曝光機與製程設備供應速度，而中國科技巨頭持續向輝達採購符合出口管制的RTX PRO 5500顯示卡",
+    "text": "Anthropic推出AI代理Claude Duet搶攻企業市場，以Claude Opus 5.5為基礎並搭載虛擬機器執行複雜網路操作，直接挑戰Meta與OpenAI的類似服務，預示AI代理市場競爭白熱化",
     "links": [
      {
-      "title": "Chinese tech giants are buying Nvidia gaming chips for AI. Here's why.",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5WU2ZyUlNRZm5FbVVqUngtQWc2eGczUWhFdnNPUEM3aVlXX1VKem9lZXpwWFphVVZ2U1gwOVh4UW85VlNQa29pYXFTYmxvd3FPNGRheXR0ZjFXRE55eHQ0Snc4UUpQT2s?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T14:57:43+00:00"
-     },
-     {
-      "title": "External evaluators find flaws in OpenAI's AI monitoring system in pilot review",
-      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPa2JvMy1McnRUdXBvVGlqSDhtMERqUGQyczh4TzJpTGFLX21ncWdQMXZOLW9YNW01b3hvWm1iWnVEQmtfQWowX1JRdzgzZFBlZVk4d0pxbFFnX3p0andwR09xWU9Fb2gtQ2hBZXI0QmlKZU1OWGlLQW1RdEtJTlM1WUVIdk15U0xQYU00eVl5UThUX2M3N0ZZOFJKM3R1RVF5RUpoTTRFZ05EQmw5WG8tS2ZB?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-22T18:14:36+00:00"
+      "title": "Anthropic推Claude Duet搶攻AI代理市場 挑戰Meta與OpenAI",
+      "link": "https://tw.stock.yahoo.com/news/anthropic%E6%8E%A8claude-duet%E6%90%B6%E6%94%BBai%E4%BB%A3%E7%90%86%E5%B8%82%E5%A0%B4-%E6%8C%91%E6%88%B0meta%E8%88%87openai-225026746.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-23T22:50:26+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股22日大幅震盪，開盤漲逾400點後翻黑，終場重挫846.34點至46,041.43點，盤中高低震幅達1,290.75點；費城半導體指數暴跌近7%，台積電ADR下跌逾4%，拖累台指期夜盤下殺580點",
+    "text": "台股 10/22 盤中高低震盪 1,290.75 點，終場大跌 846.34 點，分析師認為屬健康洗盤，預期 11 月 3 日及 11 月 26-28 日為關鍵轉折點，第四季與第一季歷年超過六至七成上漲勝率",
     "links": [
      {
-      "title": "台股跌破季線原因找到了？陳龍喊「5萬點前最後洗盤」　預測下周報復性上漲",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E8%B7%8C%E7%A0%B4%E5%AD%A3%E7%B7%9A%E5%8E%9F%E5%9B%A0%E6%89%BE%E5%88%B0%E4%BA%86-%E9%99%B3%E9%BE%8D%E5%96%8A-5%E8%90%AC%E9%BB%9E%E5%89%8D%E6%9C%80%E5%BE%8C%E6%B4%97%E7%9B%A4-%E9%A0%90%E6%B8%AC%E4%B8%8B%E5%91%A8%E5%A0%B1%E5%BE%A9%E6%80%A7%E4%B8%8A%E6%BC%B2-123000775.html",
+      "title": "外資大提款別怕！杜金龍曝「這時間」台股上看5萬3",
+      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E5%A4%A7%E6%8F%90%E6%AC%BE%E5%88%A5%E6%80%95-%E6%9D%9C%E9%87%91%E9%BE%8D%E6%9B%9D-%E9%80%99%E6%99%82%E9%96%93-%E5%8F%B0%E8%82%A1%E4%B8%8A%E7%9C%8B5%E8%90%AC3-200500392.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-23T12:30:00+08:00"
+      "at": "2026-10-23T20:05:00+08:00"
      },
      {
-      "title": "薔琵颱風假恐成台股惡夢？台指期夜盤暴跌580點 專家示警下週恐殺向4萬5",
-      "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFA1WWZZWjhhRmZEMFBkOVptazdZelV0cUNjZUZyMHMxanBIdFBCQWVHUmxJeDc2R0dBcGViUTRKcjFxd3lnVlhOZWNpbw?oc=5",
-      "source": "FTNN 新聞網",
-      "at": "2026-10-23T03:20:00+00:00"
+      "title": "台股震盪回測季線！這3檔受益人增萬人　1年含息報酬全翻倍",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%9C%87%E7%9B%AA%E5%9B%9E%E6%B8%AC%E5%AD%A3%E7%B7%9A-%E9%80%993%E6%AA%94%E5%8F%97%E7%9B%8A%E4%BA%BA%E5%A2%9E%E8%90%AC%E4%BA%BA-1%E5%B9%B4%E5%90%AB%E6%81%AF%E5%A0%B1%E9%85%AC%E5%85%A8%E7%BF%BB%E5%80%8D-202500398.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-23T20:25:00+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金黃金從三個月低點反彈，油價上漲重燃通膨擔憂支撐金價，但AI交易波動與美債殖利率下跌帶來的避險需求相互抵消",
+    "text": "黃金跌破 4,000 美元，本週價格大幅下跌，儘管投資人湧向美債等避險資產",
     "links": [
      {
-      "title": "Gold off three-month lows as oil rally fans inflation worries",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOWE1LcUgzRWRwVDZmX3FEaWszVHF0cFQ1ekt6M1pyQ0lfc05PQm9DekdZcXprdm1vQk00SlNEZjEwQllCd1VwMUJySnIxcF9ZblFaRHFsV3BzSU52SlJSSi1TeWxoTmdYc1h6UHhPQTFQYU41ZEdQTFRNY3l0N1Q2bnRDV2x1MjlveGtxTk1oQWlGd3ExcUZEd2QzdF9TUkVKcXotUlIycUgtb1RrZjJ3?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-23T04:14:00+00:00"
-     }
-    ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣兌美元貶值，10/22收盤報32.508元，較前日貶值2分；外資匯出壓力未解，新台幣盤中下探32.55元，重貶2.12角",
-    "links": [
-     {
-      "title": "《國內匯市》收盤 ，新台幣兌美元為32.508元，貶值2分",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOandQck5PYVBILUNkZWV2ZW1od2tHTnMwUmtOMUtlTXZHbldvUWhZSWU2QXFka0x6dlkwUjJPUl9vVXZKTW5TZ0ZHZ2RPRHZ4WUtXR0thSlhMclZIRm53Wk0tUUhsaXl2VGVyRy1BZ2tjNVdsaXVRcmFiZldhM08wdTl6dzBXU216?oc=5",
-      "source": "富聯網",
-      "at": "2026-10-22T08:07:00+00:00"
-     },
-     {
-      "title": "外資匯出壓力未解！新台幣下探32.55元 重貶2.12角",
-      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBSSHVRQ3ZQTFQ1a3JTcWJTeV8zQWJPVDNQX1BVbjJRUkVDVG5sbk9tWWxsUk12WjFBRkpuX2NBeGZwQTFyTVZ4bkFqdGRIR2VwTWllOGw4X24?oc=5",
-      "source": "自由時報",
-      "at": "2026-10-22T06:36:25+00:00"
+      "title": "Gold drops below $4,000 as ‘haven’ asset joins market sell",
+      "link": "https://www.ft.com/content/5a6e15e9-249d-4d59-a140-c51302930a9f?syn-25a6b1a6=1",
+      "source": "Financial Times",
+      "at": "2026-10-23T14:37:46+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-23T13:13:15.632953+00:00"
+  "at": "2026-10-23T23:13:36.379076+00:00"
  },
  "main_source_titles": [
-  "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
-  "Why the 10-year Treasury yield finally fell below 5%"
+  "Oil hits $117 for first time since April on fears of flare",
+  "S&P 500, Dow Drop As Elevated Oil Prices Stoke Inflation Fears Ahead Of Fed Meeting Next Week",
+  "Gold Breaks Below $4,000 as Oil Surge Fuels Fed Rate Fears"
  ],
- "headline": "油價飆升通膨憂慮未現，聯準會升息預期大幅退溫、10年期美債殖利率跌破5%",
- "rate_note": "油價上漲通常會推升通膨預期與長期利率，但市場對通膨的實際預期並未隨之上升，導致升息預期大幅下修，偏向壓低利率；10年期今日 +1bp 至 4.96%，與殖利率跌破5%的趨勢方向不一致，顯示市場已在反映更強的降息預期，但盤中報價尚未完全跟上。",
+ "headline": "油價飆升至四月來新高激發通膨憂慮，聯準會升息預期升溫、美債殖利率反彈",
+ "rate_note": "油價飆升激發通膨憂慮，偏向推升長端利率預期；不過 10 年期 10/23 收盤 4.99%、較前一交易日 +3bp，市場對通膨推升利率的反應仍相對溫和，取決於未來能源價格走勢與聯準會對通膨的評估。",
  "recent_mains": [
-  {
-   "headline": "AI支出焦慮引發科技股拋售，美債殖利率跌破5%、聯準會升息預期大幅退溫",
-   "titles": [
-    "Asian shares wobble as tech rout boosts bonds, dents rate hike bets",
-    "Bond traders are backing off Fed rate hike bets — here's what it means for mortgage rates",
-    "Update: US Equity Indexes Mixed as Investors Rotate From AI Trade to Government Bonds; Crude Oil Surges",
-    "一日反轉！SpaceX大跌9%  成市場AI資本支出焦慮犧牲品"
-   ],
-   "at": "2026-10-23T03:44:17.780375+00:00"
-  },
   {
    "headline": "AI投資成本焦慮與油價上漲夾擊，美債殖利率跌破5%、聯準會升息預期大幅退溫",
    "titles": [
@@ -470,9 +391,44 @@
     "Why the 10-year Treasury yield finally fell below 5%"
    ],
    "at": "2026-10-23T13:12:57.399255+00:00"
+  },
+  {
+   "headline": "油價飆升至四月來新高激發通膨憂慮，聯準會升息預期升溫、美債殖利率反彈",
+   "titles": [
+    "Oil hits $117 for first time since April on fears of flare",
+    "S&P 500, Dow Drop As Elevated Oil Prices Stoke Inflation Fears Ahead Of Fed Meeting Next Week",
+    "Gold Breaks Below $4,000 as Oil Surge Fuels Fed Rate Fears"
+   ],
+   "at": "2026-10-23T23:13:18.175701+00:00"
   }
  ],
  "archive": {
+  "2026-10-24": {
+   "headline": "油價飆升至四月來新高激發通膨憂慮，聯準會升息預期升溫、美債殖利率反彈",
+   "text": "中東地緣政治緊張升溫推升油價，布蘭特原油突破每桶 116 美元、創 4 月下旬以來新高，西德克薩斯中間基原油（WTI）也攀升至 100 美元上方。美國總統川普對伊朗採取強硬立場、葉門胡塞武裝對沙烏地阿拉伯發射飛彈、伊朗伊斯蘭革命衛隊威脅襲擊美國基地等事件加劇了區域緊張局勢，市場預期供應可能受影響，推升全球能源成本。¶油價上漲引發市場對通膨持續的擔憂。能源價格飆升強化了投資人對利率可能上升並維持高位的預期，儘管聯準會定於 10/28 召開會議，市場目前定價該會議維持利率機率達 92%，但長期升息預期有所升溫。科技股因此承壓，資金轉進美債避險，但 10/23 收盤 10 年期美債殖利率反彈至 4.99%，較前一交易日上升 3bp，反映市場對通膨與利率前景的重新評估。\n台灣 9 月失業率降至 3.36%，寫 26 年來同月最低，終止連續三個月升勢；失業人數 40.5 萬人，較上月減少 6,000 人，主要因應屆畢業生陸續找到工作。\n川普宣布在共和黨人壓力下調降加拿大關稅，以幫助面臨激烈美國參議院選戰的候選人。",
+   "rate_note": "油價飆升激發通膨憂慮，偏向推升長端利率預期；不過 10 年期 10/23 收盤 4.99%、較前一交易日 +3bp，市場對通膨推升利率的反應仍相對溫和，取決於未來能源價格走勢與聯準會對通膨的評估。",
+   "links": [
+    {
+     "title": "Oil hits $117 for first time since April on fears of flare",
+     "link": "https://www.ft.com/content/8948193b-438b-4d71-a0b1-31dff56fc308?syn-25a6b1a6=1",
+     "source": "Financial Times",
+     "at": "2026-10-23T20:13:21+00:00"
+    },
+    {
+     "title": "S&P 500, Dow Drop As Elevated Oil Prices Stoke Inflation Fears Ahead Of Fed Meeting Next Week",
+     "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-dow-drop-as-elevated-oil-prices-stoke-inflation-fears-ahead-of-fed-meeting-next-week-aapl-axp-cart-uber-in-focus/cZxyHWvRBU4?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-23T22:35:57+00:00"
+    },
+    {
+     "title": "Gold Breaks Below $4,000 as Oil Surge Fuels Fed Rate Fears",
+     "link": "https://finance.yahoo.com/markets/commodities/articles/gold-breaks-below-4-000-200321300.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-23T20:03:21+00:00"
+    }
+   ],
+   "at": "2026-10-23T23:13:18.175701+00:00"
+  },
   "2026-10-23": {
    "headline": "油價飆升通膨憂慮未現，聯準會升息預期大幅退溫、10年期美債殖利率跌破5%",
    "text": "布倫特原油價格較2月伊朗戰爭前上漲超過50%，交易價格約每桶112美元，但債市投資人對通膨的擔憂並未隨之升溫。10/22（美國時間），美債殖利率創兩年多來最大單日跌幅，10年期殖利率回落至5%以下。衡量市場通膨預期的指標——5年期美債與通膨保護債券（TIPS）的殖利率差距（即通膨保護債券的殖利率差）維持在2.4%左右，與伊朗戰爭開始前水平相同，顯示投資人預期未來5年平均通膨率仍保持溫和。¶聯準會升息預期隨之大幅下修。聯準會將於10/28召開會議，市場原先預期該月升息機率達37%（截至9月底），但到10/22已跌至約5%。對於12月升息的預期也明顯轉變，從週三（10/22）的完全定價升息，降至目前約75%的升息機率。這反映出儘管油價上漲，債市交易員對聯準會進一步收緊政策的押注已大幅消退。\n日本公債殖利率因AI投資焦慮引發避險需求而下跌，10/22（美國時間）日債收益率走低。歐洲央行執委帕內塔表示，公債殖利率上升將對經濟造成抑制作用，10/22發表此評論。",
@@ -576,38 +532,6 @@
     }
    ],
    "at": "2026-10-20T13:36:18.878218+00:00"
-  },
-  "2026-10-19": {
-   "headline": "AI運算成本飆升引發融資壓力，聯準會警告通膨風險難消",
-   "text": "AI產業面臨運算成本危機。輝達投資的以色列新創doubleAI推出程式碼執行模型Maxwell，聲稱可幫客戶節省67%運算費用，反映出AI業者對成本攀升的迫切需求——輝達H100算力租金過去一年上漲60%，OpenAI、Anthropic等大型AI實驗室每年訓練與推論支出龐大。高盛警告AI超大型雲端廠商信貸利差創年內新高，若利差續擴，AI概念股恐面臨補跌壓力；CoreWeave債券殖利率升至15%左右，顯示AI融資壓力已擴散至整個產業。¶聯準會則從另一角度警示：AI繁榮可能加重通膨負擔。官員指出CPI數據顯示通膨仍需「進一步改善」，暗示降息空間有限。市場預期10/28會議維持利率機率達87%，至2026年底累計升息24bp，反映出聯準會對通膨與AI投資帶來的經濟結構性壓力的謹慎態度。\n中國第3季GDP年增率回升至4.5%，較第2季上升0.2個百分點，石油鏈相關產業明顯改善是主要驅動力，前3季貨物貿易總額年增18.8%創歷史同期新高。\n匈牙利計畫在2027年將預算赤字削減至GDP的4.9%，作為加入歐元區的條件之一，反映歐洲財政整頓壓力升溫。",
-   "rate_note": "AI運算成本與融資壓力升高，加上聯準會對通膨的持續警示，偏向推升利率預期——企業資本支出與融資成本上升可能延緩降息時程；10年期今日+3bp至5.13%，市場已在反映這些風險。",
-   "links": [
-    {
-     "title": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbWZLVGpmVmN6M1o1UUJnRXhSMmVWdjY2Mm4tR0IyeXk0OHZzOVRPamx6eEdEVjhEUHVXMlkzeFhoWkg4Qnl0a3lYQ0xJdWNzVHcydDA0NFdVb0ctbEVoMExGek50RHoxWF9TRThVMXRENDhWV2RUbVRGOVhvOEtoTmlTS1NlZGk0UldmSEY4N0tRVVRBeWc5SmJqRGlaVWwzeHRPa1hHZDNHZ3UxUjhwZHBGQXo0YlIw?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-19T11:35:47+00:00"
-    },
-    {
-     "title": "Hassett Says CPI Data Shows Inflation Needs ‘Some Work’",
-     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNNHpBeXNZRzZUWjFaWVFQYXNocF9YZjRMd3Z3UWF6MjJiU0hIWERYYWxYc1EyZlVqcGY5ZDFhUUp1b2QyOHdMcTlMckMwNzBWYlNrNXZIWk1nbGtYOTg5QVo4RTdPOTFaR3dYSUVneUtZT3YtcVg1ZjB4Tjd1M1h0T0hTLTNwVnczbW4zV01KZWZ5Z0xtVXJrYzZkZEFBdnNqRDBuNW55RQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-19T14:04:26+00:00"
-    },
-    {
-     "title": "Tech rebounds as semiconductor stocks jump: AlphaCheck",
-     "link": "https://finance.yahoo.com/markets/article/tech-rebounds-as-semiconductor-stocks-jump-alphacheck-135003909.html?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-10-19T13:50:03+00:00"
-    },
-    {
-     "title": "AI太燒錢？輝達投資新創出招 稱幫客戶省67%運算費",
-     "link": "https://tw.stock.yahoo.com/news/ai%E5%A4%AA%E7%87%92%E9%8C%A2-%E8%BC%9D%E9%81%94%E6%8A%95%E8%B3%87%E6%96%B0%E5%89%B5%E5%87%BA%E6%8B%9B-%E7%A8%B1%E5%B9%AB%E5%AE%A2%E6%88%B6%E7%9C%8167-%E9%81%8B%E7%AE%97%E8%B2%BB-132002001.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-19T13:20:02+00:00"
-    }
-   ],
-   "at": "2026-10-19T15:41:08.323942+00:00"
   }
  }
 }
