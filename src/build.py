@@ -2886,7 +2886,7 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
 # ===========================================================================
 # 長端利率與債務供給（P5）
 # ===========================================================================
-def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
+def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt, offline: bool = False) -> dict:
     """長端頁 2026-10 改版的全部新資料（純事實與規則判定，不做加權總分）。"""
     from .analysis import longend as le
     from .treasury_source import TENOR_ZH
@@ -3086,6 +3086,12 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt) -> dict:
         if _st.get("guidance_en"):
             _rf["guidance_en"] = _st["guidance_en"]
             _rf["guidance_zh"] = le.refunding_guidance_zh(_st["guidance_en"])
+        # 中文摘要：模型讀聲明本文寫（一季一次、數字鎖定）；做不出來就沿用上面的句型版／原文
+        from .analysis import refunding_zh
+        _zh = refunding_zh.summarize(_st, offline)
+        if _zh:
+            _rf["guidance_zh"] = _zh
+            _rf["zh_ai"] = True
         _rf["buybacks_zh"] = le.refunding_buybacks_zh(_st.get("bb_liq"), _st.get("bb_cash"))
         _rf.pop("bb_note", None)
     elif _rf.get("bb_note") and str((_rf["bb_note"] or {}).get("until") or "") < clock.today().isoformat():
@@ -3635,7 +3641,7 @@ def build_rates_context(cfg: dict, series: dict, failed: list, offline: bool,
                        "unit": "%", "threshold": 0.05},
         },
         # 2026-10 改版：三股力量拆解、曲線、供給、拍賣、全球長端
-        "le": _longend_block(series, treasury or {}, cfg, hs, debt),
+        "le": _longend_block(series, treasury or {}, cfg, hs, debt, offline),
     }
 
 
