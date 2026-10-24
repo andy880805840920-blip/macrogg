@@ -2568,7 +2568,11 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .tabs>input:checked+label{background:var(--brand-navy);color:#fff;border-color:var(--brand-ink)}
 .tabs>input:focus-visible+label{outline:2px solid var(--series-1)}
 .tabp{display:none}
-#le-br1:checked~.tabp.p1,#le-br3:checked~.tabp.p3,#le-br12:checked~.tabp.p12{display:block}
+#le-br1:checked~.tabp.p1,#le-br3:checked~.tabp.p3,#le-br12:checked~.tabp.p12,#le-brytd:checked~.tabp.pytd,#le-brc:checked~.tabp.pc{display:block}
+/* 利率橋「自訂」期間（2026-10-24）：起訖日跟曲線區的自選期間同一個樣式 */
+.lebr-cust{display:flex;flex-wrap:wrap;gap:8px 16px;margin:2px 0 6px;font-size:var(--fs-small);color:var(--text-secondary)}
+.lebr-cust input{font:inherit;font-size:var(--fs-small);padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-primary);margin-left:6px}
+.lebr-note{margin:0 0 4px}
 /* 情境頁「金融條件」（FCI-G 分解圖，2026-10）：調色盤＝dataviz 參考調色盤前七格（已驗證：堆疊相鄰色、深淺模式都過） */
 :root{--fci-1:#2a78d6;--fci-2:#eb6834;--fci-3:#1baf7a;--fci-4:#eda100;--fci-5:#e87ba4;--fci-6:#008300;--fci-7:#6250d6}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--fci-1:#3987e5;--fci-2:#d95926;--fci-3:#199e70;--fci-4:#c98500;--fci-5:#d55181;--fci-6:#008300;--fci-7:#9085e9}}

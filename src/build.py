@@ -2886,6 +2886,23 @@ def _passthrough_block(labor_series: dict, infl_series: dict) -> dict:
 # ===========================================================================
 # 長端利率與債務供給（P5）
 # ===========================================================================
+def bridge_html(c: dict) -> str:
+    """一段期間的利率橋（市場拆解＋模型拆解）。瀏覽器端 leBridgeHtml 照這裡逐字輸出。"""
+    from .analysis import longend as le
+    fd = lambda iso: f"{iso[:4]}/{int(iso[5:7])}/{int(iso[8:10])}" if iso else ""
+    mk = [{"label": le.COMP_ZH[key], "bp": c["parts"][key], "note": le.PRESSURE_ZH[key],
+           "main": key == c["main"]} for key in ("real", "infl") if c["parts"].get(key) is not None]
+    html = ('<div class="br-h">市場拆解：名目 ＝ TIPS ＋ BEI</div>'
+            + charts.bridge(c["start"], f"{fd(c['from'])} 10Y", mk, c["end"], f"{fd(c['to'])} 10Y"))
+    if c.get("m_start") is not None and c.get("m_end") is not None and c.get("path") is not None:
+        md = [{"label": "預期利率路徑", "bp": c["path"], "note": "名目 − ACM 期限溢酬"},
+              {"label": "期限溢酬（ACM）", "bp": c["parts"]["tp"], "note": "實質期限溢酬＋通膨風險溢酬",
+               "main": c["main"] == "tp"}]
+        html += ('<div class="br-h">模型拆解：名目 ＝ 預期利率路徑 ＋ 期限溢酬</div>'
+                 + charts.bridge(c["m_start"], f"{fd(c['tp_from'])} 10Y", md, c["m_end"], f"{fd(c['tp_to'])} 10Y"))
+    return html
+
+
 def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt, offline: bool = False) -> dict:
     """長端頁 2026-10 改版的全部新資料（純事實與規則判定，不做加權總分）。"""
     from .analysis import longend as le
@@ -2911,23 +2928,13 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt, offline: bool = 
         {"label": "期限溢酬（NY Fed ACM）", "color": _C["tp"], "points": ds["tp"]},
     ], unit="%", height=180, digits=2, months=12, xmonths=True, zero=True,
         aria="10 年期名目殖利率與三個組成份（日資料，近 12 個月）")
-    fd = lambda iso: f"{iso[:4]}/{int(iso[5:7])}/{int(iso[8:10])}" if iso else ""
     out["bridges"] = {}
     for k in (1, 3, 12, "ytd"):
         c = out["contrib"].get(k)
-        if not c:
-            continue
-        mk = [{"label": le.COMP_ZH[key], "bp": c["parts"][key], "note": le.PRESSURE_ZH[key],
-               "main": key == c["main"]} for key in ("real", "infl") if c["parts"].get(key) is not None]
-        html = ('<div class="br-h">市場拆解：名目 ＝ TIPS ＋ BEI</div>'
-                + charts.bridge(c["start"], f"{fd(c['from'])} 10Y", mk, c["end"], f"{fd(c['to'])} 10Y"))
-        if c.get("m_start") is not None and c.get("m_end") is not None and c.get("path") is not None:
-            md = [{"label": "預期利率路徑", "bp": c["path"], "note": "名目 − ACM 期限溢酬"},
-                  {"label": "期限溢酬（ACM）", "bp": c["parts"]["tp"], "note": "實質期限溢酬＋通膨風險溢酬",
-                   "main": c["main"] == "tp"}]
-            html += ('<div class="br-h">模型拆解：名目 ＝ 預期利率路徑 ＋ 期限溢酬</div>'
-                     + charts.bridge(c["m_start"], f"{fd(c['tp_from'])} 10Y", md, c["m_end"], f"{fd(c['tp_to'])} 10Y"))
-        out["bridges"][k] = html
+        if c:
+            out["bridges"][k] = bridge_html(c)
+    # 自訂期間（2026-10-24）：近 2 年日資料嵌進頁面，瀏覽器端用同一套規則算
+    out["br_data"] = le.bridge_data(ds)
     yp = le.ytd_paths(ds)
     # 10Y 線截到與組成份同一天：TIPS 晚一天、ACM 也晚一天，不截的話 10Y 的終點
     # 比兩個組成份的和多出最新一天的變動，跟圖下「恰好等於和」的說明對不上。
