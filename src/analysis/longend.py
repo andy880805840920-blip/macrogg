@@ -118,6 +118,85 @@ def pick_main(parts: dict, nominal: float | None) -> str | None:
     return max(cand, key=lambda k: abs(cand[k]))
 
 
+def _at_or_before(rows: list[dict], iso: str):
+    """iso 當天或之前最後一筆（假日用前一個有資料的日子）。"""
+    best = None
+    for r in rows:
+        if r["date"] <= iso:
+            best = r
+        else:
+            break
+    return best
+
+
+BR_KEYS = ("y10", "real", "infl", "tp", "path")
+
+
+def bridge_data(ds: dict, years: int = 2) -> dict:
+    """
+    利率橋「自訂」期間的瀏覽器端資料（2026-10-24）：最近 years 年＋前面 15 天
+    （起日選在最早那天時，要有當天或之前的一筆當基期）。數值四捨五入到 4 位小數，
+    瀏覽器端與 contribution_range 用同一份資料算，結果才會一致。
+    """
+    y10 = ds.get("y10") or []
+    if not y10:
+        return {}
+    last = y10[-1]["date"]
+    lo = (dt.date.fromisoformat(last) - dt.timedelta(days=365 * years + 1)).isoformat()
+    lo = max(lo, y10[0]["date"])          # 資料不滿 2 年時，最早只能選到第一筆
+    since = (dt.date.fromisoformat(lo) - dt.timedelta(days=15)).isoformat()
+    out = {k: [[r["date"], round(r["value"], 4)] for r in (ds.get(k) or []) if r["date"] >= since]
+           for k in BR_KEYS}
+    out.update({"min": lo, "max": last,
+                "zh": {k: COMP_ZH[k] for k in ("real", "infl")},
+                "note": {k: PRESSURE_ZH[k] for k in ("real", "infl")}})
+    return out
+
+
+def bridge_ds(bd: dict) -> dict:
+    """bridge_data 還原成 ds 結構（測試用：跟瀏覽器端吃同一份四捨五入後的資料）。"""
+    return {k: [{"date": d, "value": v} for d, v in bd.get(k) or []] for k in BR_KEYS}
+
+
+def contribution_range(ds: dict, start: str, end: str) -> dict | None:
+    """
+    自訂起訖日的利率橋（2026-10-24）：基期＝起日當天或之前最後一筆，終點＝迄日當天或之前
+    名目與 TIPS 都有資料的最後一天（名目 ＝ TIPS ＋ BEI 恆等）。結構同 contribution_window。
+    瀏覽器端 leBridgeCalc（pages/longend.py）是同一套規則，tests/test_bridge_custom.py 逐字比對。
+    """
+    y10 = ds.get("y10") or []
+    if not y10 or not start or not end:
+        return None
+    if start > end:
+        start, end = end, start
+    common = min((ds.get("infl") or [{}])[-1].get("date") or y10[-1]["date"], end)
+    # 市場拆解（名目、TIPS、BEI）截到名目與 TIPS 都有的那天；模型拆解（預期路徑＝名目 − ACM、
+    # 期限溢酬）只需要名目與 ACM，截到迄日（跟既有分頁一樣）
+    cut = lambda key: [r for r in (ds.get(key) or []) if r["date"] <= (end if key in ("tp", "path") else common)]
+    yc = cut("y10")
+    b = _at_or_before(yc, start)
+    if not yc or not b or b["date"] >= yc[-1]["date"]:
+        return None
+    e = yc[-1]
+
+    def chg(key):
+        rows = cut(key)
+        s = _at_or_before(rows, start)
+        return (rows[-1]["value"] - s["value"]) * 100 if rows and s else None
+    parts = {"real": chg("real"), "infl": chg("infl"), "tp": chg("tp")}
+    pr, tr_ = cut("path"), cut("tp")
+    ps, ts_ = _at_or_before(pr, start), _at_or_before(tr_, start)
+    m_start = (ps["value"] + ts_["value"]) if ps and ts_ and ps["date"] == ts_["date"] else None
+    m_end = (pr[-1]["value"] + tr_[-1]["value"]) if pr and tr_ and pr[-1]["date"] == tr_[-1]["date"] else None
+    nominal = (e["value"] - b["value"]) * 100
+    main = pick_main(parts, nominal)
+    return {"k": "custom", "from": b["date"], "to": e["date"], "parts": parts, "resid": 0.0,
+            "nominal": nominal, "start": b["value"], "end": e["value"], "main": main,
+            "main_bp": parts.get(main) if main else None, "path": chg("path"),
+            "m_start": m_start, "m_end": m_end,
+            "tp_from": (ts_ or {}).get("date", ""), "tp_to": (tr_[-1] if tr_ else {}).get("date", "")}
+
+
 def contribution_window(ds: dict, mode) -> dict | None:
     """
     一段期間的變動（bp）：mode＝"mtd"、"ytd" 或整數月數（滾動 k 個月）。
@@ -144,7 +223,9 @@ def contribution_window(ds: dict, mode) -> dict | None:
 
     def chg(key):
         rows = ds.get(key) or []
-        if key in ("real", "infl", "path"):
+        # 預期路徑不截到 TIPS 那天（2026-10-24）：模型拆解只用名目與 ACM，終點要跟 m_end 同一天，
+        # 「預期路徑＋期限溢酬＝模型起訖差」才會恆等
+        if key in ("real", "infl"):
             rows = [r for r in rows if r["date"] <= common]
         e = rows[-1] if rows else None
         s = _before(rows, start_iso)

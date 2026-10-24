@@ -255,6 +255,69 @@ def _derivation() -> str:
             'Fed 對抗通膨的公信力仍在。</p></div></details>')
 
 
+def _md_full(iso: str) -> str:
+    return f"{iso[:4]}/{int(iso[5:7])}/{int(iso[8:10])}" if len(iso or "") >= 10 else ""
+
+
+# 利率橋「自訂」期間的瀏覽器端（2026-10-24）：
+#   leBridgeCalc ＝ analysis/longend.contribution_range；leBridgeHtml ＝ build.bridge_html＋charts.bridge
+#   tests/test_bridge_custom.py 用 node 逐字比對兩邊的輸出，改一邊就要改另一邊
+_BR_CORE_JS = r"""
+function lePickMain(parts,nominal){var ks=['real','infl','tp'],c=ks.filter(function(k){return parts[k]!==null&&parts[k]!==undefined;});
+ if(!c.length)return null;
+ if(nominal!==null&&Math.abs(nominal)>=1){var s=c.filter(function(k){return parts[k]*nominal>0;});if(s.length)c=s;}
+ var best=c[0];c.forEach(function(k){if(Math.abs(parts[k])>Math.abs(parts[best]))best=k;});return best;}
+function leBridgeCalc(BD,start,end){
+ if(!start||!end)return null;if(start>end){var t=start;start=end;end=t;}
+ var y=BD.y10||[];if(!y.length)return null;var inf=BD.infl||[];
+ var common=inf.length?inf[inf.length-1][0]:y[y.length-1][0];if(end<common)common=end;
+ function cut(k){var lim=(k==='tp'||k==='path')?end:common;return (BD[k]||[]).filter(function(r){return r[0]<=lim;});}
+ function ab(rs,iso){var b=null;for(var i=0;i<rs.length;i++){if(rs[i][0]<=iso)b=rs[i];else break;}return b;}
+ var yc=cut('y10'),b=ab(yc,start);if(!yc.length||!b||b[0]>=yc[yc.length-1][0])return null;var e=yc[yc.length-1];
+ function chg(k){var rs=cut(k),s=ab(rs,start);return rs.length&&s?(rs[rs.length-1][1]-s[1])*100:null;}
+ var parts={real:chg('real'),infl:chg('infl'),tp:chg('tp')},pr=cut('path'),tr=cut('tp'),ps=ab(pr,start),ts=ab(tr,start);
+ var mS=ps&&ts&&ps[0]===ts[0]?ps[1]+ts[1]:null,mE=pr.length&&tr.length&&pr[pr.length-1][0]===tr[tr.length-1][0]?pr[pr.length-1][1]+tr[tr.length-1][1]:null;
+ var nominal=(e[1]-b[1])*100;
+ return {from:b[0],to:e[0],parts:parts,nominal:nominal,start:b[1],end:e[1],main:lePickMain(parts,nominal),path:chg('path'),
+  m_start:mS,m_end:mE,tp_from:ts?ts[0]:'',tp_to:tr.length?tr[tr.length-1][0]:''};}
+function leEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');}
+function leBp(v){var s=v.toFixed(0);return s.charAt(0)==='-'?s:'+'+s;}
+function leBridge(start,sl,parts,end,el){
+ var vals=[start],cum=start,spans=[];parts.forEach(function(p){var a=cum,b=cum+p.bp/100;spans.push([p,a,b]);cum=b;vals.push(b);});vals.push(end);
+ var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals),pad=((hi-lo)||0.1)*0.12;lo-=pad;hi+=pad;
+ function P(v){return (v-lo)/(hi-lo)*100;}
+ var h='<div class="br-row br-end" data-tip="'+leEsc(sl)+'｜'+start.toFixed(2)+'%"><div class="br-name">'+leEsc(sl)+'</div><div class="br-track"><span class="br-tick" style="left:'+P(start).toFixed(2)+'%"></span></div><div class="br-val">'+start.toFixed(2)+'%</div></div>';
+ spans.forEach(function(x){var p=x[0],a=P(x[1]),b=P(x[2]),l=Math.min(a,b),r=Math.max(a,b),up=p.bp>=0,ud=up?'up':'dn';
+  h+='<div class="br-row'+(p.main?' main':'')+'" data-tip="'+leEsc(p.label+'｜'+leBp(p.bp)+'bp')+'"><div class="br-name">'+leEsc(p.label)
+   +(p.note?'<span class="br-note">'+leEsc(p.note)+'</span>':'')+'</div><div class="br-track"><span class="br-guide" style="left:'+a.toFixed(2)+'%"></span>'
+   +'<span class="br-seg '+ud+'" style="left:'+l.toFixed(2)+'%;width:'+Math.max(r-l,0.7).toFixed(2)+'%"></span></div>'
+   +'<div class="br-val '+ud+'">'+leBp(p.bp)+'<small>bp</small></div></div>';});
+ h+='<div class="br-row br-end last" data-tip="'+leEsc(el)+'｜'+end.toFixed(2)+'%"><div class="br-name">'+leEsc(el)+'</div><div class="br-track"><span class="br-tick now" style="left:'+P(end).toFixed(2)+'%"></span></div><div class="br-val">'+end.toFixed(2)+'%</div></div>';
+ return '<div class="br">'+h+'<div class="wf-leg"><span><i class="up"></i>推高 10Y</span><span><i class="dn"></i>壓低 10Y</span><span class="wf-hint">每段從上一段結束處接著畫</span></div></div>';}
+function leFd(iso){return iso?iso.slice(0,4)+'/'+parseInt(iso.slice(5,7),10)+'/'+parseInt(iso.slice(8,10),10):'';}
+function leBridgeHtml(BD,c){
+ var mk=['real','infl'].filter(function(k){return c.parts[k]!==null&&c.parts[k]!==undefined;}).map(function(k){return {label:BD.zh[k],bp:c.parts[k],note:BD.note[k],main:k===c.main};});
+ var h='<div class="br-h">市場拆解：名目 ＝ TIPS ＋ BEI</div>'+leBridge(c.start,leFd(c.from)+' 10Y',mk,c.end,leFd(c.to)+' 10Y');
+ if(c.m_start!==null&&c.m_end!==null&&c.path!==null){
+  var md=[{label:'預期利率路徑',bp:c.path,note:'名目 − ACM 期限溢酬'},{label:'期限溢酬（ACM）',bp:c.parts.tp,note:'實質期限溢酬＋通膨風險溢酬',main:c.main==='tp'}];
+  h+='<div class="br-h">模型拆解：名目 ＝ 預期利率路徑 ＋ 期限溢酬</div>'+leBridge(c.m_start,leFd(c.tp_from)+' 10Y',md,c.m_end,leFd(c.tp_to)+' 10Y');}
+ return h;}
+"""
+
+_BR_JS = _BR_CORE_JS + r"""
+(function(){
+var el=document.getElementById('le-br-data');if(!el)return;var BD=JSON.parse(el.textContent),box=el.parentNode;
+var fa=box.querySelector('.lebr-from'),fb=box.querySelector('.lebr-to'),out=box.querySelector('.lebr-out');
+function draw(){var a=fa.value,b=fb.value;if(!a||!b)return;var c=leBridgeCalc(BD,a,b);
+ out.innerHTML=c?leBridgeHtml(BD,c):'<div class="empty">這段期間資料不足，請換一段（起日要早於最新資料日）。</div>';}
+// 預設：上月最後一個交易日 → 最新（與首卡「本月」同一個基期）
+var y=BD.y10,last=y[y.length-1][0],m0=last.slice(0,8)+'01',pm=null;for(var i=0;i<y.length;i++){if(y[i][0]<m0)pm=y[i][0];else break;}
+fa.value=pm&&pm>=BD.min?pm:BD.min;fb.value=last;
+[fa,fb].forEach(function(e){e.addEventListener('change',draw);});draw();
+})();
+"""
+
+
 def decomp(d: dict) -> str:
     """
     長端利率的組成（2026-10 v4）：
@@ -271,6 +334,22 @@ def decomp(d: dict) -> str:
         tabs += (f'<input type="radio" name="le-br" id="le-br{k}"{" checked" if i == 0 else ""}>'
                  f'<label for="le-br{k}">{labs[k]}</label>')
         panes += f'<div class="tabp p{k}">{br[k]}</div>'
+    # 自訂期間（2026-10-24）：近 2 年內任選起訖日，瀏覽器端計算（規則同 analysis/longend.contribution_range）
+    bd = L.get("br_data") or {}
+    if bd.get("y10"):
+        import json as _json
+        lo, hi = esc(bd.get("min", "")), esc(bd.get("max", ""))
+        bd_json = _json.dumps(bd, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+        tabs += '<input type="radio" name="le-br" id="le-brc"><label for="le-brc">自訂</label>'
+        panes += (f'<div class="tabp pc"><div class="lebr-cust">'
+                  f'<label>從 <input type="date" class="lebr-from" min="{lo}" max="{hi}"></label>'
+                  f'<label>到 <input type="date" class="lebr-to" min="{lo}" max="{hi}"></label></div>'
+                  f'<p class="hint lebr-note">可選近 2 年（{esc(_md_full(bd.get("min", "")))} 起）；遇假日採前一個有資料的日期，'
+                  f'起點與終點標出實際使用的日期。預設從上月最後一個交易日起，與首卡「本月」同一個基期。</p>'
+                  f'<div class="lebr-out" aria-live="polite"><noscript>需要 JavaScript 才能計算自訂期間。</noscript></div>'
+                  f'<script type="application/json" id="le-br-data">'
+                  f'{bd_json}</script>'
+                  f'<script>{_BR_JS}</script></div>')
     D = L.get("drv") or {}
     tpn = "　·　".join(f'{n} {D[k]["value"]:.2f}%（{_md(D[k]["date"])}）'
                       for k, n in (("tp", "ACM"), ("tp_sf", "SF Fed"), ("tp_kw", "Kim-Wright")) if D.get(k))
