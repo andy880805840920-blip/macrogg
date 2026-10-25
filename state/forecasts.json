@@ -532,7 +532,11 @@
    "bad": [],
    "auto_seen": {},
    "auto": {},
-   "auto_log": []
+   "auto_log": [],
+   "cons": {
+    "core_mom": 0.3
+   },
+   "cons_at": "2026-10-25T22:13+08:00"
   }
  }
 }

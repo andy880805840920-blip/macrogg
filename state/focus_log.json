@@ -1,0 +1,73 @@
+[
+ {
+  "at": "2026-10-25T14:11+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {
+   "oil": "油價 +3.8%"
+  },
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 8.5,
+    "sources": 1,
+    "titles": [
+     "UAE Shuts More Beaches as It Deals with Oil Spill in Gulf - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "RBA’s Hunter Says Rate ‘Not Quite Yet’ Done Fighting Inflation - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "French Bond Rout Puts Crisis at Heart of ECB Succession Endgame - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "Trump Defends Tariffs at Rally as He Touts New US Audi Plant - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 6.5,
+    "sources": 1,
+    "titles": [
+     "Watch Fed Looks Set to Pause After September Rate Hike - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 6.0,
+    "sources": 1,
+    "titles": [
+     "How Ukraine's strikes on Russian energy sites deepened the rift with Trump - Reuters"
+    ]
+   },
+   {
+    "score": 6.0,
+    "sources": 1,
+    "titles": [
+     "Trump Prepares for Iran Escalation After US, Israeli Elections - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "UAE Shuts More Beaches as It Deals with Oil Spill in Gulf - Bloomberg.com",
+  "result": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向"
+ }
+]

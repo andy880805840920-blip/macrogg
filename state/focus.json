@@ -1,24 +1,12 @@
 {
- "hash": "c05c879d86ce9185",
- "text": "川普政府對加拿大進口商品祭出 50% 關稅，涵蓋棺材與獨木舟等日用品，標誌著關稅政策從高科技產品擴大至消費品領域。此舉引發市場對進口成本上升、進而推高通膨的擔憂。關稅政策若導致物價上漲，將對聯準會的降息決策造成壓力，可能延緩或縮小未來降息幅度。\nKalshi 交易平台推出 CPI 期貨合約，試圖成為「通膨交易所」，為投資人提供直接對賭通膨走勢的工具；此舉反映市場對通膨波動性的關注升溫。\nEvercore 策略師指出，信用市場與公債殖利率的特定水位可能預示 AI 相關股票的更大幅度修正，投資人應留意這些指標信號。",
+ "hash": "",
+ "text": "新興市場債券近期表現優於美國公債，投資人對富裕國家財政狀況的擔憂加劇成為推動因素。已開發國家持續擴大的財政赤字與債務水準，促使部分資金流向新興市場尋求相對價值。¶這波資金轉向反映市場對成熟經濟體財政紀律的信心動搖。美國、歐洲主要國家面臨結構性赤字壓力，而部分新興市場反而展現較佳的財政管理，吸引追求收益的投資人重新配置資產。¶市場關注焦點從單純的利率政策轉向各國財政可持續性。富裕國家龐大的債務負擔與發債需求，可能持續對其公債市場形成壓力，相對提升新興市場債券的吸引力。\n阿拉伯聯合大公國因應波斯灣漏油事件關閉更多海灘，持續處理油污染問題。\n澳洲央行副總裁杭特表示利率「尚未」完成對抗通膨的任務，暗示仍有進一步緊縮空間。",
  "links": [
   {
-   "title": "Coffins and Canoes From Canada Get 50% Tariff Under New Trump Order",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQcExTdkQyc3dXRlpQSGVfXy1teVdtTUpMRTQ5bW9LRlU4ZFhXUFRNZlVKTDZwVEREdi1GVDlMNWxMTm93bWpCdkUwdno5VlZSaWJneWpQVXVpTmxoRFNqVWtJVnBNNVVmbnRQT1dMQWw5SlNBMXgyRTVPMjRka0xfa0k0Vml2d1B6NXF6cFpuR2dvc205Q2pZc2NvZmUtMEtSZVJJbGEyanFsakVFRmJjRkZaQV8xdTFO?oc=5",
+   "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
    "source": "Bloomberg",
-   "at": "2026-10-23T20:54:50+00:00"
-  },
-  {
-   "title": "Kalshi Courts Wall Street in Bid to Be the ‘Inflation Exchange’ With CPI Futures",
-   "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQazRCOHdwbnp4ZW5wZnNfUTJKaG0ybzVnblpka3lDb1ZjTno2X2hCRExkRnVoX2RncHV5SVFFWXZ1Q1lrR0hpdU05LWZnUTJaaEJ4VjFGT0toNk1QaFNUUjN0ODg2MWkxOW9tVFZzUDZaTF9ZU1RCYXUtbmNYMWRZWGYtR1FXa21zemg1c0hKdW9yb1NKa0t5OFpkN2d0UllWYTc0VXd1RUhYY0JSSUppbGxBTVFUd1VnTlpVUWNZN19qb1h0N1hyZw?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-23T17:15:41+00:00"
-  },
-  {
-   "title": "Evercore Identifies Credit and Bond Yield Levels That Could Signal an AI Market Correction",
-   "link": "https://investorshub.advfn.com/market-news/article/38468/evercore-identifies-credit-and-bond-yield-levels-that-could-signal-an-ai-market-correction?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-10-24T11:47:00+00:00"
+   "at": "2026-10-25T12:30:00+00:00"
   }
  ],
  "fedwatch": {
@@ -296,177 +284,128 @@
   }
  },
  "text_source": "model",
- "at": "2026-10-24T23:08:17.007731+00:00",
+ "at": "2026-10-25T14:11:57.818242+00:00",
  "layout": "main",
  "topics": {
-  "hash": "f2289dfb268761f2",
+  "hash": "d46dd2093881cd72",
   "items": [
-   {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "聯準會在10/23以全票通過升息25個基點至3.75%-4.00%，華許主席頂住白宮壓力啟動緊縮循環。同時10月FOMC會議預期將再次升息，市場擔憂升息與油價上漲將打擊股市，科技股與AI股遭拋售",
-    "links": [
-     {
-      "title": "Federal Reserve Votes Unanimously to Raise Rates 25 Basis Points to 3.75%-4.00%; Warsh Defies White House Pressure to Launch Tightening Cycle",
-      "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBiUlVZRmEyWHF1andZbE5mUUV6TmFIX1VZZkVQd0RkbDJDRTlqMGVGRzg5ZV90QjV4dWU2Z012eWhpYkxyYkE3UDdJSFZWcXhnSjMyek5ycVViRVNQZmNtMGh5MF9VQmpTWGhXd1RCUUNGejZ3M0E?oc=5",
-      "source": "BigGo Finance",
-      "at": "2026-10-23T19:35:00+00:00"
-     },
-     {
-      "title": "S&P 500 Today LIVE: Index Falls 1.21% as AI Stock Sell-Off, Rising Oil Prices & Fed Rate Hike Fears Hit Wall Street; Nvidia, Microsoft & Amazon in Focus; Check What Investors Should Watch",
-      "link": "https://news.google.com/rss/articles/CBMiywJBVV95cUxQcEY4bzNCVEc0UWxPempma2NjT3R1V1daVVNXdUxVNEEySG5oVW1ITERQY1c3eGdzaDAtWm4zSEtDMi1QRDZjeUFmSnl6bUhUaXNrMGNXc3lKMnZ5eEpqMnRDdEp3N3RpRWpzRGJHbDN5ZUc3YnZ4eTFBNm9ZYWIybUpMcURFaEdody1YM0pmWXZ0czRHX0ZQY01RQUxGQzBOYTNJa0t6VjZCVk5tem9ONERrbEpRRjVkQTJZUHlXV3BEUEpIbkE2QmVya3VUbmVYRDZEeW04MHNUdXJ4QjdVVTU0cG1sc0lfWHpncUdkR1ZFbFVPbW9rT1dDRjRrMW8zeEcxWWhjLWtCZXZWZ3dlaEpJSkZqSFkyYlFCSTMteXBYSm82OFBMZFBwYjdObGp1X1BjTzBMODF0Qy0wWF9lX21TYVNJNUpHTzI40gHLAkFVX3lxTFBwRjhvM0JURzRRbE96amZrY2NPdHVXV1pVU1d1TFU0QTJIbmhVbUhMRFBjVzd4Z3NoMC1abjNIS0MyLVBENmN5QWZKeXptSFRpc2swY1dzeUoydnl4SmoydEN0Snc3dGlFanNEYkdsM3llRzdidnh5MUE2b1lhYjJtSkxxREVoR2h3LVgzSmZZdnRzNEdfRlBjTVFBTEZDME5hM0lrS3pWNkJWTm16b040RGtsSlFGNWRBMllQeVdXcERQSkhuQTZCZXJrdVRuZVhENkR5bTgwc1R1cnhCN1VVNTRwbWxzSV9YemdxR2RHVkVsVU9tb2tPV0NGNGsxbzN4RzFZaGMta0JldlZnd2VoSklKRmpIWTJiUUJJMy15cFhKbzY4UExkUHBiN05sanVfUGNPMEw4MXRDLTBYX2VfbVNhU0k1SkdPMjg?oc=5",
-      "source": "The Sunday Guardian",
-      "at": "2026-10-23T16:39:11+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "投資人因AI股拋售風險升溫，轉向美債尋求避險，長天期美債與科技股的關聯性出現明顯轉變",
-    "links": [
-     {
-      "title": "Treasuries’ Link to AI Shows Sharp Shift as Haven Trade Returns",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOV0dULXFaUm9nREVVNEJjUFlvODVTbkwyV21vZXJ1eVJveDc4cEd4SG5lWEZsRjNxVWNkZWlvRFJPMi10cXhjcldVUkxGd2wtMWtQbzVpYXJLR29taWlmQThpZE5ObWhFSXFpX0VYZlJMZFQ1WFdKYnF4cWhwUDE3b2NueThFenpCWEJSeDg4UzNfRDZleS1qcmpxY2sxWjhwV3ZnUjZqLTRBT2k4bDJoOVc4Zw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-23T19:20:02+00:00"
-     },
-     {
-      "title": "AI Trade Stumbles Again as Investors Rediscover Treasury Haven",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQa1NPZWhQZW05ODAxWnE1dTNYbDJaVVNzbGxjcERRMkRGUnk3OE9jdUE2VGJWRXpTY0VqVnhSeWtYdXhTNGlSM1V3NkVXbFI0RmMweFJqcXZlc0FYdWt5QmtHaWpHQWN5Vzc4aW55cnlqYjdwblM0R04tUUFlRU1ESGk0VnprWjNPRFpWaXJEVkJGMTdab0RtTTlNVWFwN2ZOcF9iVTdDSDhKQnVzNlNqWDdEZw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-23T20:32:42+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "資金市場面臨月底結算期波動，投資人回流現金部位，同時金融機構擴大代幣化貨幣市場基金應用",
-    "links": [
-     {
-      "title": "Repo Market Set for Volatility in Late Clearing Push, CIBC Says",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPblppT1BWZV9wNk9nSEQ2bDhXR1BSLXpNVXBoVHgtOHNmWTdHMHdGX2JTSXZuN05EejgybE85UHJGbkFOcE9Va21COFJOcnhzbWVNdXlrbTI2SDFBZ3Zpci1LTG1GMGdKRTkxV0RPZk1rdTU0emIwaHVoNnBudEp1Qlc3d1R3TTZtUGc5eFRNM05HOU9scVlERzdUWktkejE2ZWtya19pcXU3N3pNZFZ1aXBLYw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-23T17:20:58+00:00"
-     },
-     {
-      "title": "3 Stocks Tied To Money Market Flows As Investors Move Back To Cash",
-      "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxQR1RrMGViOTl4X2hDYkYtQXR4TnRvNnB2aUxDck4zSEZZanFDb1FLdE1Qc2xfbXFiUzAxeEIwaDZFdkxiX1U4bmw0VHZWVzBLUHNLaG9nbXpDcXZ2d3dBUUFJeGlWeDFHSUswd3MwSngtMXJWc25VNExnUkRDa1BvdE5UVDk1RVJ4c1dMOVZrMENSOC1OTHZfcjVlT1EzU3FNdnV5VGotdExuWlRIR1B4TklPVmlwYU0zSjVjRTVLcjRYTVJCYm5NQi11QWppZkhyWlFHN2tJd2pyWHpLbVU00gHkAUFVX3lxTE53LVd6eE9HdkNvdE9pVElZWk55REFOZl9KRUdjUHpEaU5Mc2xkSk1PMENNakprVjB3UVhYZzFjYlA4WF9oXzh6aDhkRVNEWGdZb0xVLVBOaURVS0oxUzM5RkVGbXYtdk00ekszZnZpUmhYdE9KS0ZQTjlIZnoyODJvZ3lXX2U4MlAzSTlXYl9LQ2NiZzNoR1dHUVlHd0t4NUZ3Nm1FN1FjcnNQdVBUMlBnY3MtR21ZamhILWFPbmpuN3BNWFJ2X2ROd2dHdkRVajdHcVRWWmNxODktQ0pCYjRBaC13WQ?oc=5",
-      "source": "Simply Wall Street",
-      "at": "2026-10-24T01:56:32+00:00"
-     }
-    ]
-   },
-   {
-    "id": "oil",
-    "label": "油價",
-    "text": "葉門反叛軍襲擊沙烏地阿拉伯石油設施與機場，加上美國威脅對伊朗軍事行動，10/23紐約原油收103.27美元、布蘭特收116.72美元，周漲幅分別達1.83%與6.24%；台灣中油吸收成本維持油價凍漲",
-    "links": [
-     {
-      "title": "Oil prices jump $3 on Houthi attacks, oil spill, highest settlement since April",
-      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPR2dZUC10TmJYRUk2RmM5WWpxaUx2XzBPZ0ZTV3hIR3BkaGFvZ3B2T1hhd0xEcXZOWk5LdXhLLUF5QU9XdTRQdnRyTk9jcmVNMEZvZlZBRW8xcG1TVW1fTkY2UnFrcXlVWlUwbDhRYk9pcW1fdEdzMVNRR2ZhYVl2T0RZa09uZTktZGFWRVRWSEpGeFhYVXVPR09zNDVaTVdiNDdRRHg3VFNyZWNNWVBmdkxGMWFOa05yN2NBRnRVZjF3eF9i?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-23T22:33:45+00:00"
-     },
-     {
-      "title": "連假過後油價不上漲　汽柴油連續6週凍價",
-      "link": "https://tw.news.yahoo.com/%E9%80%A3%E5%81%87%E9%81%8E%E5%BE%8C%E6%B2%B9%E5%83%B9%E4%B8%8D%E4%B8%8A%E6%BC%B2-%E6%B1%BD%E6%9F%B4%E6%B2%B9%E9%80%A3%E7%BA%8C6%E9%80%B1%E5%87%8D%E5%83%B9-193154723.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-24T19:31:54+00:00"
-     }
-    ]
-   },
    {
     "id": "equity",
     "label": "美股",
-    "text": "S&P 500 10/22出現337檔個股上漲但指數仍下跌的罕見現象，反映大型科技股（輝達、蘋果、Alphabet、微軟）市值過度集中的風險；Meta因第三季EPS不及預期32.79%，股價遭重挫",
+    "text": "美股內部結構出現警訊，10/6創高時僅15檔標普500成分股創新高、97檔在10年高點10%內，與2000年網路泡沫時期的23%與32%「破產股」占比相近，領導股票中58%已較高點下跌5-10%，顯示漲勢基礎脆弱",
     "links": [
      {
-      "title": "Two-Thirds of S&P 500 Stocks Rose on Thursday, but the Index Still Fell — Exposing the Risk Hiding in Your Portfolio",
-      "link": "https://247wallst.com/investing/2026/10/24/two-thirds-of-sp-500-stocks-rose-on-thursday-but-the-index-still-fell-exposing-the-risk-hiding-in-your-portfolio/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-24T15:20:07+00:00"
+      "title": "Swiss Stocks Are Becoming a Haven From AI Fears Roiling Markets",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNbzFYQ092SkZUUExOVUVnU3YwbHJ5UWdxUHVSNjRDOFlaZGs2RUs2RTBMMG9WaDVNcHFzb2xhd0pkSHF6TnpEekxtR01iUFVWekJVTjg3blVMZlZ2MlB5Nmo1RjlsYV8xRFF5VWZBWHBhVWtQYTJXdHV6bkV2Y1lGOWNFSG9CUHFnUDQ3TU9DNTNlMEhVdm5STnpwM3FHUVMtaE5ib184NmdqUHVycFpOTC1oV3k?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-24T07:00:00+00:00"
      },
      {
-      "title": "The AI Trade Is Shifting From Chip Stocks to Cybersecurity",
-      "link": "https://finance.yahoo.com/m/3ca16b67-0147-386a-a235-2de67164740d/the-ai-trade-is-shifting-from.html?.tsrc=rss",
+      "title": "Michael Burry Says S&P 500 Looks ‘Uncannily Close’ To 2000 — And ‘Busted’ Stocks Could Be The Winners",
+      "link": "https://stocktwits.com/news-articles/markets/equity/michael-burry-sp-500-most-troubling-signs-2000-busted-stocks-winners/cZUcojyRBUl?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-24T15:44:00+00:00"
+      "at": "2026-10-25T09:22:42+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達推出DSX POD模組化AI工廠系統，將供應鏈組裝時間從6個月縮至14天，預計2027年初交付，台廠欣興、京元電、矽品等受惠；Meta因AI基礎設施鉅額投資導致第三季自由現金流轉負，加入亞馬遜、Alphabet等「負現金流俱樂部」",
+    "text": "輝達與日月光、京元電子、Amkor簽署40億美元產能協議，目標2027年中期將光學引擎產能提升至現在的15倍；美銀預估該業務2028年可為日月光貢獻10億美元營收，並看好封裝光學（CPO）相關設備需求在2027年成長10倍",
     "links": [
      {
-      "title": "輝達攻AI工廠 台鏈湧商機",
-      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94%E6%94%BBai%E5%B7%A5%E5%BB%A0-%E5%8F%B0%E9%8F%88%E6%B9%A7%E5%95%86%E6%A9%9F-220709846.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-24T22:07:09+08:00"
+      "title": "Meta AI Spending Could Lift Rambus Stock And Other Data Center Plays",
+      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPY09fWjFpWmpsVnZNMThpQ2RrY2hHek04bmw5Sng1QUpSQnBudHlLbXViNENDTmo5d2s0MkRPTndJOEZUN1h3YTZJLUs0SVhRakF6Ul9WRnRBZEZ6LXZuWHdDbGpsOGRjOF9NOVZxbkU3UUFxYmlPVjVoZW82ZEFnc0pJNGlQQmEzTkFSaE9vakdpcXBFVkpGQ3VMZmpHc2VHQ2VqMGFuVkJock5zZkk4alhJdU1sbVE3SHdHNlNmOVotbjJnSzk5UWtaY9IB0AFBVV95cUxOWXRpYjRPTklTcDFOd1ZlNG02SXA3YjBpYThrYXdRZlU5YmZFeXRJb2FwOU5uVVMyUkFTbGlfNlExUHhJOVRFaXFwR0lhbkwzVWpsdU9idzdJRU5OVVI4RHVZYTBOT3hkMFpBczZWakNkMnhNRTdVaFJ6enZ6eGJfbzRnWUNkRDhldUJnQldWemN2QkNmT2RxQ0VDUUc5d2xZcVZHWGZ3S1g4LWJ2U29aQW83R3ZOa1MzdnEySE1HR2dBRFdNN0FYVnNVNEVzcEJT?oc=5",
+      "source": "Simply Wall Street",
+      "at": "2026-10-24T22:04:44+00:00"
      },
      {
-      "title": "AI燒錢燒到現金流轉負！Meta股價一週跌9％",
-      "link": "https://tw.news.yahoo.com/ai%E7%87%92%E9%8C%A2%E7%87%92%E5%88%B0%E7%8F%BE%E9%87%91%E6%B5%81%E8%BD%89%E8%B2%A0-meta%E8%82%A1%E5%83%B9-%E9%80%B1%E8%B7%8C9-141439857.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-24T14:14:39+00:00"
+      "title": "Amazon (AMZN) Stock Could Be Undervalued As AI Spending Builds",
+      "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPcWs3RVNqNXJuLTk5NFU1Zkp0aUdQa3VpRzUxa055U1dxSGhiWUZDQzZSNi00eFpIS3oya1ZnYXVIdldRQnEtdnlIOWhKaV9KYW1FbWVvVjBick9ZVmhjWGNRQVZTeGZkcy03OTNzNUxrMTJnU3pYTUIxcU5VT1N3UGlKQ2ljd05xRkJSeGpiS0RWLUhNbURldUxWTndrMFNPWlZXZnZzMnVGWFMzNkt6dzJ5UWdkdUdReDltZHlocEo2QkhqOGo5cDdR0gHKAUFVX3lxTE9xazdFU2o1cm4tOTk0VTVmSnRpR1BrdWlHNTFrTnlTV3FIaGJZRkNDNlI2LTR4WkhLejJrVmdhdUh2V1FCcS12eUg5aEppX0phbUVtZW9WMGJyT1lWaGNYY1FBVlN4ZmRzLTc5M3M1TGsxMmdTelhNQjFxTlVPU3dQaUpDaWN3TnFGQlJ4amJLRFYtSE1tRGV1TFZOd2swU09aVldmdnMydUZYUzM2S3p3MnlRZ2R1R1F4OW1keWhwSjZCSGo4ajlwN1E?oc=5",
+      "source": "Simply Wall Street",
+      "at": "2026-10-25T07:41:18+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股10/22盤中高低震盪1290.75點，終場大跌846.34點至46,021點，跌破季線46,207點；外資10月賣超逾8,200億元，16檔績優股遭錯殺，包括台積電、聯發科、台達電等，KD進入超賣區",
+    "text": "台股22日跌破季線收46041點，跌幅1.81%，外資賣超816.57億元，法人合計賣超1001.6億元，技術面轉弱下檔支撐挪至46000點整數關卡，下周二開盤面臨補跌壓力，惟聯準會、日本央行、歐洲央行10/27起召開會議及美股超級財報周可望帶來轉機",
     "links": [
      {
-      "title": "台股連假後危險了？16檔績優股遭錯殺　反攻名單曝光",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%A3%E5%81%87%E5%BE%8C%E5%8D%B1%E9%9A%AA%E4%BA%86-16%E6%AA%94%E7%B8%BE%E5%84%AA%E8%82%A1%E9%81%AD%E9%8C%AF%E6%AE%BA-%E5%8F%8D%E6%94%BB%E5%90%8D%E5%96%AE%E6%9B%9D%E5%85%89-120709972.html",
+      "title": "台股多軍周二能挺住嗎？黑天鵝連假不講武德搞偷襲 短線恐湧補跌壓力",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%A4%9A%E8%BB%8D%E5%91%A8%E4%BA%8C%E8%83%BD%E6%8C%BA%E4%BD%8F%E5%97%8E-%E9%BB%91%E5%A4%A9%E9%B5%9D%E9%80%A3%E5%81%87%E4%B8%8D%E8%AC%9B%E6%AD%A6%E5%BE%B7%E6%90%9E%E5%81%B7%E8%A5%B2-%E7%9F%AD%E7%B7%9A%E6%81%90%E6%B9%A7%E8%A3%9C%E8%B7%8C%E5%A3%93%E5%8A%9B-083328039.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-24T12:07:09+00:00"
+      "at": "2026-10-25T08:33:28+00:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "民調顯示若現在舉行國會選舉，47%選民支持民主黨、35%支持共和黨，川普支持率跌至31%；但民主黨缺乏經濟政策共識，僅成立五個工作小組卻未整合出完整立法方案，恐難將反川普情緒轉化為實際選票",
+    "links": [
+     {
+      "title": "Divided over Israel, Detroit Democrats unite on rising costs for midterm elections",
+      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNZDJidU1HVGRwVWptSzkxQS1DNndyczhuNTQ1Uzd3QzNpNUlCc05yVzJFdUlEQkhDbGhHRWMwSHNhUi1lWVFobHdaZ0p6TkZlXzZFUjNaLWhxUGZEaW50WTY2NVVNYzgwS2lMeHlTRl8tcW8wY0ZjVk9YLWkyTnp0cEY3cXcwM2puZUt1TlR5aS1lMU1DVjMxMHczT2xJelhXc0phZmI4Mk5BSUMwV3Vvb2dMMXhXSERwRC0w?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-24T17:45:07+00:00"
      },
      {
-      "title": "台股失守季線別慌！杜金龍揭5萬點主升段：這3族群拉回閉眼買",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%A4%B1%E5%AE%88%E5%AD%A3%E7%B7%9A%E5%88%A5%E6%85%8C-%E6%9D%9C%E9%87%91%E9%BE%8D%E6%8F%AD5%E8%90%AC%E9%BB%9E%E4%B8%BB%E5%8D%87%E6%AE%B5-%E9%80%993%E6%97%8F%E7%BE%A4%E6%8B%89%E5%9B%9E%E9%96%89%E7%9C%BC%E8%B2%B7-183100411.html",
+      "title": "Obama unloads on Trump while stumping for Democrats ahead of midterms",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPYUdEaVdfMFowR19ySTVVTVhyUkxlV2d0VDB5VFlxLS10TzJzRTV4ajZDV1F6UjVTUW5RYVVCTEhSVy0wdGdfRGdYWVpqMWxiTkd2NVhtV0lZRkpYTWhSMUY3aE5KTUcxN1VxNEJ2djlPbjFxY1ZhYVZpYmxRVUlya2tvUGdWLUhsMGlDakYwX3YzTnJNUlBrMlNZbng5WVhvRnZnMm05Sm45N3VuVUNqLU9n?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-25T02:40:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "現貨黃金跌破4,000美元大關至3,975美元，較年內高點5,598美元回檔逾28%；儘管美債殖利率跌破5%通常利好黃金，但投機資金獲利了結導致金價疲弱，Berenberg分析師指出這是2008年金融海嘯以來罕見的背離現象，恐觸發黃金ETF資金外流",
+    "links": [
+     {
+      "title": "Gold Reserve Ltd (97Z.SG) | Stock Price & Latest News",
+      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1hN3k2aW9wRGxoZmZpQzdlcHZ2TUtMNVVrdGtRNHo1ZUNPY1FYSEJuWUtwckticHZiSkZNbHNJdDBCYWFYMXF4SXR3aXVEMnQtZHBSM1M5RnFxODRoTy1kWkpYLWtPNTFGUlpZ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-24T15:52:51+00:00"
+     },
+     {
+      "title": "海嘯級背離！黃金價格跌破4千美元　高盛點名改買「它」避險",
+      "link": "https://tw.news.yahoo.com/%E6%B5%B7%E5%98%AF%E7%B4%9A%E8%83%8C%E9%9B%A2-%E9%BB%83%E9%87%91%E5%83%B9%E6%A0%BC%E8%B7%8C%E7%A0%B44%E5%8D%83%E7%BE%8E%E5%85%83-%E9%AB%98%E7%9B%9B%E9%BB%9E%E5%90%8D%E6%94%B9%E8%B2%B7-%E5%AE%83-%E9%81%BF%E9%9A%AA-120400857.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-24T18:31:00+08:00"
+      "at": "2026-10-25T12:04:00+08:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣受外資調節台股及科技業出口商不結匯影響，預估未來三個月維持31.5至32.5元區間偏弱整理；強勢美元格局至少延續至明年4月，主因中東緊張推升油價、歐洲經濟疲弱、避險資金湧入",
+    "text": "新台幣在外資匯出壓力下波動，24日一度貶至32.55元創新低重貶2.12角，隨後反彈翻紅升值1.29角收32.488元，美股下跌與聯準會會議在即加劇匯市不確定性",
     "links": [
      {
-      "title": "台幣將偏弱整理三個月 強勢美元格局至少延續至明年4月",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%B9%A3%E5%B0%87%E5%81%8F%E5%BC%B1%E6%95%B4%E7%90%86%E4%B8%89%E5%80%8B%E6%9C%88-%E5%BC%B7%E5%8B%A2%E7%BE%8E%E5%85%83%E6%A0%BC%E5%B1%80%E8%87%B3%E5%B0%91%E5%BB%B6%E7%BA%8C%E8%87%B3%E6%98%8E%E5%B9%B44%E6%9C%88-220709397.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-24T22:07:09+08:00"
+      "title": "外資匯出壓力未解！新台幣下探32.55元 重貶2.12角",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBSSHVRQ3ZQTFQ1a3JTcWJTeV8zQWJPVDNQX1BVbjJRUkVDVG5sbk9tWWxsUk12WjFBRkpuX2NBeGZwQTFyTVZ4bkFqdGRIR2VwTWllOGw4X24?oc=5",
+      "source": "自由時報",
+      "at": "2026-10-24T11:37:24+00:00"
+     },
+     {
+      "title": "股匯齊反彈！新台幣翻紅強升1.29角、收32.488元",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE05WGdsSFlsdTY5MVVTbUNMRFBBdEJPdUlxRjVpMWN6ZUN4LS1uMFV4OGE1LWFGb0VlQWlzendTVnhPTTB4S3hmNG5DMGVvTXRMbTU5amhSVFU?oc=5",
+      "source": "自由時報",
+      "at": "2026-10-25T00:26:46+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-24T23:08:39.812395+00:00"
+  "at": "2026-10-25T14:12:29.417724+00:00"
  },
  "main_source_titles": [
-  "Coffins and Canoes From Canada Get 50% Tariff Under New Trump Order",
-  "Kalshi Courts Wall Street in Bid to Be the ‘Inflation Exchange’ With CPI Futures",
-  "Evercore Identifies Credit and Bond Yield Levels That Could Signal an AI Market Correction"
+  "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow"
  ],
- "headline": "川普關稅令擴及日用品，市場關注通膨與聯準會政策影響",
- "rate_note": "關稅擴大至日用品可能推升通膨預期，偏向支撐長端利率；10 年期今日 +3bp 至 4.99%，市場已在反映通膨憂慮。",
+ "headline": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向",
+ "rate_note": "富裕國家財政疑慮升溫理論上偏向推升美債殖利率——財政赤字擴大增加發債供給、削弱債券需求，不過10年期今日+3bp至4.99%的漲幅有限，顯示市場對財政風險的反映仍在觀望，資金轉向新興市場的規模可能尚未大到明顯衝擊美債。",
  "recent_mains": [
-  {
-   "headline": "油價飆升至四月來新高激發通膨憂慮，聯準會升息預期升溫、美債殖利率反彈",
-   "titles": [
-    "Oil hits $117 for first time since April on fears of flare",
-    "S&P 500, Dow Drop As Elevated Oil Prices Stoke Inflation Fears Ahead Of Fed Meeting Next Week",
-    "Gold Breaks Below $4,000 as Oil Surge Fuels Fed Rate Fears"
-   ],
-   "at": "2026-10-23T23:13:18.175701+00:00"
-  },
   {
    "headline": "AI資本支出疑慮引發避險潮，美債重拾安全資產地位、10年期殖利率跌破5%",
    "titles": [
@@ -484,34 +423,30 @@
     "Evercore Identifies Credit and Bond Yield Levels That Could Signal an AI Market Correction"
    ],
    "at": "2026-10-24T23:08:17.007731+00:00"
+  },
+  {
+   "headline": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向",
+   "titles": [
+    "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow"
+   ],
+   "at": "2026-10-25T14:11:57.818242+00:00"
   }
  ],
  "archive": {
   "2026-10-25": {
-   "headline": "川普關稅令擴及日用品，市場關注通膨與聯準會政策影響",
-   "text": "川普政府對加拿大進口商品祭出 50% 關稅，涵蓋棺材與獨木舟等日用品，標誌著關稅政策從高科技產品擴大至消費品領域。此舉引發市場對進口成本上升、進而推高通膨的擔憂。關稅政策若導致物價上漲，將對聯準會的降息決策造成壓力，可能延緩或縮小未來降息幅度。\nKalshi 交易平台推出 CPI 期貨合約，試圖成為「通膨交易所」，為投資人提供直接對賭通膨走勢的工具；此舉反映市場對通膨波動性的關注升溫。\nEvercore 策略師指出，信用市場與公債殖利率的特定水位可能預示 AI 相關股票的更大幅度修正，投資人應留意這些指標信號。",
-   "rate_note": "關稅擴大至日用品可能推升通膨預期，偏向支撐長端利率；10 年期今日 +3bp 至 4.99%，市場已在反映通膨憂慮。",
+   "headline": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向",
+   "text": "新興市場債券近期表現優於美國公債，投資人對富裕國家財政狀況的擔憂加劇成為推動因素。已開發國家持續擴大的財政赤字與債務水準，促使部分資金流向新興市場尋求相對價值。¶這波資金轉向反映市場對成熟經濟體財政紀律的信心動搖。美國、歐洲主要國家面臨結構性赤字壓力，而部分新興市場反而展現較佳的財政管理，吸引追求收益的投資人重新配置資產。¶市場關注焦點從單純的利率政策轉向各國財政可持續性。富裕國家龐大的債務負擔與發債需求，可能持續對其公債市場形成壓力，相對提升新興市場債券的吸引力。\n阿拉伯聯合大公國因應波斯灣漏油事件關閉更多海灘，持續處理油污染問題。\n澳洲央行副總裁杭特表示利率「尚未」完成對抗通膨的任務，暗示仍有進一步緊縮空間。",
+   "rate_note": "富裕國家財政疑慮升溫理論上偏向推升美債殖利率——財政赤字擴大增加發債供給、削弱債券需求，不過10年期今日+3bp至4.99%的漲幅有限，顯示市場對財政風險的反映仍在觀望，資金轉向新興市場的規模可能尚未大到明顯衝擊美債。",
    "links": [
     {
-     "title": "Coffins and Canoes From Canada Get 50% Tariff Under New Trump Order",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQcExTdkQyc3dXRlpQSGVfXy1teVdtTUpMRTQ5bW9LRlU4ZFhXUFRNZlVKTDZwVEREdi1GVDlMNWxMTm93bWpCdkUwdno5VlZSaWJneWpQVXVpTmxoRFNqVWtJVnBNNVVmbnRQT1dMQWw5SlNBMXgyRTVPMjRka0xfa0k0Vml2d1B6NXF6cFpuR2dvc205Q2pZc2NvZmUtMEtSZVJJbGEyanFsakVFRmJjRkZaQV8xdTFO?oc=5",
+     "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
+     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
      "source": "Bloomberg",
-     "at": "2026-10-23T20:54:50+00:00"
-    },
-    {
-     "title": "Kalshi Courts Wall Street in Bid to Be the ‘Inflation Exchange’ With CPI Futures",
-     "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQazRCOHdwbnp4ZW5wZnNfUTJKaG0ybzVnblpka3lDb1ZjTno2X2hCRExkRnVoX2RncHV5SVFFWXZ1Q1lrR0hpdU05LWZnUTJaaEJ4VjFGT0toNk1QaFNUUjN0ODg2MWkxOW9tVFZzUDZaTF9ZU1RCYXUtbmNYMWRZWGYtR1FXa21zemg1c0hKdW9yb1NKa0t5OFpkN2d0UllWYTc0VXd1RUhYY0JSSUppbGxBTVFUd1VnTlpVUWNZN19qb1h0N1hyZw?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-23T17:15:41+00:00"
-    },
-    {
-     "title": "Evercore Identifies Credit and Bond Yield Levels That Could Signal an AI Market Correction",
-     "link": "https://investorshub.advfn.com/market-news/article/38468/evercore-identifies-credit-and-bond-yield-levels-that-could-signal-an-ai-market-correction?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-10-24T11:47:00+00:00"
+     "at": "2026-10-25T12:30:00+00:00"
     }
    ],
-   "at": "2026-10-24T23:08:17.007731+00:00"
+   "at": "2026-10-25T14:11:57.818242+00:00",
+   "weekly": false
   },
   "2026-10-24": {
    "headline": "AI資本支出疑慮引發避險潮，美債重拾安全資產地位、10年期殖利率跌破5%",
@@ -611,5 +546,12 @@
    ],
    "at": "2026-10-21T11:06:15.093294+00:00"
   }
- }
+ },
+ "fw_hist": {
+  "2026-10-25": {
+   "meeting": "2026-10-28",
+   "p": 0.0996
+  }
+ },
+ "weekly": false
 }
