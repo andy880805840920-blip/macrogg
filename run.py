@@ -1172,11 +1172,15 @@ def main() -> int:
         log.warning("今日主軸權威數字整理失敗（%s），只給發布日期", e)
     # 今日市場焦點（首頁 hero 之上的窄條）。任何一步失敗都不擋主流程。
     try:
+        _fev = watch_calendar.event_dates(ctxs["_schedule"])
+        # v2：季度再融資公告也是鎖定事件（日期來自 rates.yaml，跟殖利率曲線的事件標記同一份）
+        _frf = (((ctxs.get("rates") or {}).get("le") or {}).get("refunding") or {})
+        _fev["refunding"] = sorted({str(_d)[:10] for _d in (_frf.get("date"), _frf.get("next")) if _d})
         ctxs["_focus"] = focus_today.build(
             rates_series, args.offline, _focus_cfg,
             STATE_FILE.parent / "focus.json", liq_series=liq_series,
             # 今天／昨天有哪些發布：發布當天相關新聞加分
-            events=watch_calendar.event_dates(ctxs["_schedule"]),
+            events=_fev,
             election=ctxs["_election"],
             calendar=ctxs.get("_calendar"), fact_values=_fv, fred_releases=_rel_all)
     except Exception as e:                         # noqa: BLE001
