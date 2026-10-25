@@ -1144,8 +1144,9 @@ def _archive_days(f: dict) -> tuple[str, str]:
         lk = "".join(f'<li><a href="{esc(l.get("link", ""))}" rel="noopener">{esc(l.get("title", ""))}</a>'
                      f'<span class="fs-src">{esc(l.get("source", ""))}</span></li>'
                      for l in (x.get("links") or []) if l.get("link"))
+        _hx = ("本週回顧｜" if x.get("weekly") else "") + (x.get("headline") or "")
         panels += (f'<div class="fs-day-p" data-day="{esc(x["date"])}" hidden>'
-                   + (f'<p class="fs-headline">{esc(x.get("headline", ""))}</p>' if x.get("headline") else "")
+                   + (f'<p class="fs-headline">{esc(_hx)}</p>' if _hx else "")
                    + "".join(f'<p class="fs-main">{esc(m)}</p>' for m in mains)
                    + (f'<p class="fs-rate"><b>對利率</b>{esc(x["rate_note"])}</p>' if x.get("rate_note") else "")
                    + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else "")
@@ -1273,10 +1274,16 @@ def _focus_strip(f: dict | None) -> str:
                f' data-gen="1"><span class="fs-tag">{GEN_TAG}</span>{esc(s)}</li>'
                for i, s in enumerate(_paras[1:])]
         _items = _tl + _gl
+        _weekly = bool(f.get("weekly"))
+        if _weekly:
+            # v2 星期天早上：主軸＝本週回顧，補充＝下週重點（全部顯示、不跟主題選單互換）
+            _items = [f'<li class="fs-text fs-next"><span class="fs-tag">下週重點</span>{esc(s)}</li>'
+                      for s in _paras[1:]] + _tl
         _hl = (f.get("headline") or "").strip()
         _rn = (f.get("rate_note") or "").strip()
         _days, _past = _archive_days(f)
-        text = ('<div class="fs-body"><div class="fs-kicker">今日主軸</div>' + _days
+        text = ('<div class="fs-body"><div class="fs-kicker">'
+                + ("本週回顧與下週重點" if _weekly else "今日主軸") + '</div>' + _days
                 + '<div class="fs-day-p" data-day="cur">'
                 + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
                 + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)

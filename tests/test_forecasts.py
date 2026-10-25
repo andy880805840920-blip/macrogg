@@ -363,8 +363,10 @@ try:
     out = F.vision_ai(b"x", "image/png", "p", True, env={"ANTHROPIC_API_KEY": "a", "GEMINI_API_KEY": "g"})
 finally:
     _P._http = _orig_http
-check("㊶ 複讀：優先用 Claude Sonnet（跟初讀的 Haiku 不同模型），不碰 Gemini",
-      out == ('{"table": false}', "") and len(HCALLS) == 1 and "sonnet" in HCALLS[0], (out, HCALLS))
+# v2（2026-10-25）：初讀改 Sonnet，複讀換另一個模型＝Haiku
+check("㊶ 複讀：優先用 Claude Haiku（跟初讀的 Sonnet 不同模型），不碰 Gemini",
+      out == ('{"table": false}', "") and len(HCALLS) == 1 and "haiku" in HCALLS[0], (out, HCALLS))
+check("㊶a 初讀用 Sonnet", F.VISION_MODEL["anthropic"].startswith("claude-sonnet"), F.VISION_MODEL)
 HCALLS.clear()
 
 

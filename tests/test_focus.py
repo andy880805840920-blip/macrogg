@@ -747,7 +747,7 @@ check("⑰c 沒有 live 標記 → 回 None（照舊走抓取）",
 # 標題快訊進材料包＋數字鎖涵蓋快訊文字
 _orig_ca = ft._call_ai
 _seen_src = {}
-def _ca17(src, system, env=None):
+def _ca17(src, system, env=None, **_kw):
     _seen_src["src"] = src
     return "路透報導稱聯準會官員關注殖利率走勢，會後再評估。", ""
 ft._call_ai = _ca17
@@ -761,7 +761,7 @@ check("⑰d 標題快訊進材料包（帶來源與分節標記）",
       _s17 == "model-content" and "標題快訊" in _seen_src["src"]
       and "Reuters" in _seen_src["src"]
       and "Officials signal patience" in _seen_src["src"], _s17)
-ft._call_ai = (lambda src, system, env=None:
+ft._call_ai = (lambda src, system, env=None, **_kw:
                ("彭博稱目標利率 5.25%。", ""))
 _t17e, _s17e = ft.summarize_content(
     [{"title": "t", "body": "內文沒有那個數字。", "source": "y"}],
@@ -770,7 +770,7 @@ _t17e, _s17e = ft.summarize_content(
              "summary": ""}])
 check("⑰e 數字鎖涵蓋快訊：快訊沒有的數字照樣擋",
       _t17e == "" and "沒有的數字" in _s17e, _s17e)
-ft._call_ai = (lambda src, system, env=None:
+ft._call_ai = (lambda src, system, env=None, **_kw:
                ("彭博報導稱聯準會維持利率於 3.75% 不變，市場靜待後續。", ""))
 _t17f, _s17f = ft.summarize_content(
     [{"title": "t", "body": "內文一段。", "source": "y"}],
@@ -846,7 +846,7 @@ check("⑲c 排版清理去掉粗體、保留分段",
 # meta 命中 → 帶原因重試；第二次乾淨 → 過
 _orig_ca19 = ft._call_ai
 _calls19 = []
-def _ca19(src, system, env=None):
+def _ca19(src, system, env=None, **_kw):
     _calls19.append(src)
     if len(_calls19) == 1:
         return _META_TXT, ""
@@ -860,7 +860,7 @@ check("⑲d meta 命中重試一次、第二次乾淨 → 過",
       and "被退回" in _calls19[1], _s19)
 # 兩次都 meta → 退回（列標題模式的原因）
 _calls19.clear()
-ft._call_ai = (lambda src, system, env=None: (_META_TXT, ""))
+ft._call_ai = (lambda src, system, env=None, **_kw: (_META_TXT, ""))
 _t19e, _s19e = ft.summarize_content(
     [{"title": "t", "body": "內文一段。", "source": "y"}], ["聯準會"], 300)
 check("⑲e 兩次都後設 → 退回列標題", _t19e == "" and "後設" in _s19e, _s19e)
@@ -889,7 +889,7 @@ def _run20(replies, item_cap=100, n=3, fn="content", heads=None):
     """replies 依序回傳；回傳 (結果, 來源標記, 送出的 (提示詞, system) 列表)。"""
     seen = []
 
-    def _ca(src, system, env=None):
+    def _ca(src, system, env=None, **_kw):
         seen.append((src, system))
         return replies[min(len(seen) - 1, len(replies) - 1)], ""
 
@@ -1039,7 +1039,7 @@ ft.fetch_feed_headlines = lambda *a, **k: [
 ft.fetch_article_text = lambda url, *a, **k: _body24["v"]
 
 
-def _ca24(src, system, env=None):
+def _ca24(src, system, env=None, **_kw):
     _calls24.append(system)
     return "財政部宣布擴大十年期公債標售。", ""
 
@@ -1066,10 +1066,11 @@ try:
     _o1 = ft.build({}, False, _cfg24, _sp, env={})
     _n1 = len(_calls24)
     _o2 = ft.build({}, False, _cfg24, _sp, env={})
-    check("㉔ 標題沒變、未滿 12 小時 → 沿用快取、不呼叫 AI",
-          _o2["text_source"] == "cache" and len(_calls24) == _n1, _o2["text_source"])
-    check("㉔b 快取命中會印 log（先前完全隱形）",
-          any("沿用" in m for m in _cap.msgs), _cap.msgs[-3:])
+    # v2（2026-10-25）：主軸每次執行都重寫，不再沿用快取
+    check("㉔ v2：標題沒變、未滿 12 小時 → 仍然重寫（不沿用快取）",
+          _o2["text_source"] != "cache" and len(_calls24) > _n1, _o2["text_source"])
+    check("㉔b v2：主軸不再印「沿用」的快取 log",
+          not any("入選標題與上次相同" in m for m in _cap.msgs), _cap.msgs[-3:])
     _st = _json24.loads(_sp.read_text(encoding="utf-8"))
     _st["at"] = (_dt23.datetime.now(_dt23.timezone.utc)
                  - _dt23.timedelta(hours=13)).isoformat()
@@ -1256,7 +1257,7 @@ def _runA(replies):
     seen = []
     replies = [_HL + r for r in replies]
 
-    def _ca(src, system, env=None):
+    def _ca(src, system, env=None, **_kw):
         seen.append((src, system))
         return replies[min(len(seen) - 1, len(replies) - 1)], ""
     _orig = ft._call_ai

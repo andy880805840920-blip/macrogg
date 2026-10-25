@@ -72,7 +72,7 @@ class CoverageTests(unittest.TestCase):
         mat={k:mat[k] for k in ['gold','fx']}
         for m in mat.values():m['briefs'][0]['summary']=good
         calls=[]
-        def ai(src,system,env=None):
+        def ai(src,system,env=None,**_kw):
             calls.append(src)
             return ('gold｜'+good if len(calls)==1 else 'fx｜'+good),''
         with patch.object(ft,'_call_ai',side_effect=ai):
@@ -114,7 +114,7 @@ class CoverageTests(unittest.TestCase):
     def test_minimum_reaches_headline_prompt_and_retry(self):
         long='美國公債殖利率上升，市場重新評估通膨與利率前景。'*10
         seen=[]
-        def ai(src,system,env=None):
+        def ai(src,system,env=None,**_kw):
             seen.append((src,system))
             return ('美國公債殖利率上升。' if len(seen)==1 else long),''
         with patch.object(ft,'_call_ai',side_effect=ai):

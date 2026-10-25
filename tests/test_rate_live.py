@@ -43,7 +43,10 @@ def fake(bs):
 now = dt.datetime(2026, 10, 14, 12, 50, tzinfo=U)
 lv = F.live_10y(now, _get=fake(B))
 check("① 盤中：5.30%、今日 +9bp（較前一交易日收盤）、美東 08:40 盤中",
-      lv == {"now": 5.30, "d_today": 9, "at_et": "08:40", "date_et": "2026-10-14", "open": True}, lv)
+      {k: v for k, v in (lv or {}).items() if k != "ts"}
+      == {"now": 5.30, "d_today": 9, "at_et": "08:40", "date_et": "2026-10-14", "open": True}, lv)
+# v2：多帶報價時間（UTC），給市場訊號判斷「超過 12 小時不加分」
+check("①b 報價時間 ts＝美東 08:40＝UTC 12:40", lv and lv.get("ts") == dt.datetime(2026, 10, 14, 12, 40, tzinfo=U), lv)
 lv2 = F.live_10y(dt.datetime(2026, 10, 14, 23, 3, tzinfo=U), _get=fake(B))
 check("② 隔天早上：標示收盤", lv2 and not lv2["open"] and lv2["d_today"] == 9, lv2)
 

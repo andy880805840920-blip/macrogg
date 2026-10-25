@@ -420,7 +420,8 @@ IMG_SKIP = (r"/featured/|logo|icon|avatar|banner|sprite|emoji|\.svg|\.gif|author
 IMG_HINT = r"forecast|foreacst|survey|table|estimate|preview|consensus|\bcpi\b|\bpce\b|payroll|nfp|jobs"
 IMG_MIN = (500, 250)
 IMG_PER_ARTICLE, IMG_PER_RUN, IMG_PER_RELEASE = 2, 3, 10
-VISION_MODEL = {"anthropic": "claude-haiku-4-5", "anthropic2": "claude-sonnet-4-5", "gemini": "gemini-2.5-flash"}
+# 2026-10-25 v2：初讀改 Sonnet（讀表較準）；複讀換另一個模型＝Haiku
+VISION_MODEL = {"anthropic": "claude-sonnet-4-5", "anthropic2": "claude-haiku-4-5", "gemini": "gemini-2.5-flash"}
 VISION_PROMPT = """This image comes from a news article previewing the US %(release)s for %(month)s.
 If the image is NOT a table that lists individual institutions' forecasts, reply exactly {"table": false} and nothing else.
 Otherwise reply ONLY with JSON (no prose, no code fences):
@@ -557,7 +558,7 @@ def vision_ai(img: bytes, mime: str, prompt: str, second: bool = False, env=None
 
     a1 = (env.get("FC_VISION_MODEL") or VISION_MODEL["anthropic"]).strip()
     a2 = (env.get("FC_VISION_MODEL2") or VISION_MODEL["anthropic2"]).strip()
-    # 初讀：Claude Haiku → Gemini；複讀：換一個「不同的模型」讀（Claude Sonnet → Claude Haiku → Gemini），
+    # 初讀：Claude Sonnet → Gemini；複讀：換一個「不同的模型」讀（Claude Haiku → Claude Sonnet → Gemini），
     # 任何一家失敗（例如 Gemini 免費額度 429）就換下一個，不要整個卡住
     # 複讀的最後一招是同一個模型再讀一次（仍比完全不讀好；整列錯位多半不會重現）
     chain = ([("Anthropic", anth, a2), ("Anthropic", anth, a1)] if a_key else []) + ([("Gemini", gem, None)] if g_key else []) \

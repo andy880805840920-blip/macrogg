@@ -1042,7 +1042,9 @@ def ai_notes(payload: dict, cache_path, offline: bool, call=None) -> dict:
     if offline:
         return {}
     if call is None:
-        from .focus_today import _call_ai as call
+        # 2026-10-25 v2：FOMC 筆記改用 Sonnet（主軸同一顆）
+        from .focus_today import _call_ai, FOCUS_MODEL
+        call = lambda s, sy: _call_ai(s, sy, model=FOCUS_MODEL)   # noqa: E731
     text, err = call(json.dumps(payload, ensure_ascii=False), AI_SYSTEM)
     if err or not text:
         log.warning("聯準會頁 AI 說明失敗（%s），只顯示原文", err or "空回應")

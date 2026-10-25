@@ -117,7 +117,7 @@ _seen = []
 
 
 def _fake_ai(replies):
-    def _ca(src, system, env=None):
+    def _ca(src, system, env=None, **_kw):
         _seen.append((src, system))
         return replies[min(len(_seen) - 1, len(replies) - 1)], ""
     return _ca
