@@ -142,7 +142,7 @@ _seen = []
 
 
 def _fake(replies):
-    def _ca(src, system, env=None):
+    def _ca(src, system, env=None, **_kw):
         _seen.append((src, system))
         return replies[min(len(_seen) - 1, len(replies) - 1)], ""
     return _ca
@@ -232,18 +232,18 @@ try:
     _st = json.loads(_sp.read_text(encoding="utf-8"))
     check("build：狀態記下最近一次主軸（給下次避免重複）",
           _st.get("recent_mains") and _st["recent_mains"][-1]["headline"] == _o["headline"])
-    # 同一批新聞、12 小時內再跑 → 沿用快取（不能因為「上一次寫過」被迫換寫）
+    # v2（2026-10-25）：同一批新聞、12 小時內再跑 → 仍然重寫（主軸不沿用快取）
     _seen.clear()
     _o2 = ft.build(_rs, False, _cfg, _sp, env={}, events={"cpi": [_today.isoformat()]})
-    check("build：材料沒變、12 小時內 → 沿用快取，不呼叫 AI",
-          _o2["text_source"] == "cache" and not _seen and _o2.get("headline") == _o["headline"])
+    check("build v2：材料沒變也每次重寫（呼叫 AI、不是 cache）",
+          _o2["text_source"] != "cache" and _seen)
     _st = json.loads(_sp.read_text(encoding="utf-8"))
     # 下一次：不是鎖定日 → 提示詞帶「前一兩次已經寫過」
     _st["at"] = (NOW - dt.timedelta(hours=13)).isoformat()
     _sp.write_text(json.dumps(_st, ensure_ascii=False), encoding="utf-8")
     _seen.clear()
     ft.build(_rs, False, _cfg, _sp, env={}, events={})
-    check("build：下一次提示詞提醒前一次寫過的主軸", _seen and "前一兩次主軸已經寫過" in _seen[0][1])
+    check("build v2：提示詞不再要求「前一兩次寫過就換題」", _seen and "前一兩次主軸已經寫過" not in _seen[0][1])
 finally:
     (ft.fetch_feed_headlines, ft.fetch_article_text, ft._call_ai, ft.build_catalog,
      ft.fedwatch_path, ft.fetch_atlanta_fedwatch, ft.build_topics) = _orig
