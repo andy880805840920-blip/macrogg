@@ -69,5 +69,75 @@
   ],
   "main": "UAE Shuts More Beaches as It Deals with Oil Spill in Gulf - Bloomberg.com",
   "result": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向"
+ },
+ {
+  "at": "2026-10-25T23:09+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 9.0,
+    "sources": 1,
+    "titles": [
+     "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "titles": [
+     "油價衝擊加劇通膨壓力 加拿大央行本週料升息、聯準會十二月行動受矚"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "RBA’s Hunter Says It’s ‘Not Quite Yet’ Done Fighting Inflation - Bloomberg.com",
+     "RBA Official Says Inflation Fight Not Quite Done Yet - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "titles": [
+     "Chumporn Palm Oil Industry PCL (CPI.BK) | Stock Price & Latest News - Reuters"
+    ]
+   },
+   {
+    "score": 6.5,
+    "sources": 1,
+    "titles": [
+     "The Fed, Inflation, Verizon, Boeing, Alphabet, GE Vernova, Amazon, and Many More Stocks to Watch This Week"
+    ]
+   },
+   {
+    "score": 6.5,
+    "sources": 1,
+    "titles": [
+     "French Bond Rout Puts Crisis at Heart of ECB Succession Endgame - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 6.0,
+    "sources": 1,
+    "titles": [
+     "US Equity Futures Climb as Crude Oil Price Dips: Markets Wrap - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com",
+  "result": "華許要求交易員關注數據本身，市場仍緊盯聯準會動向"
  }
 ]
