@@ -139,5 +139,74 @@
   ],
   "main": "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com",
   "result": "華許要求交易員關注數據本身，市場仍緊盯聯準會動向"
+ },
+ {
+  "at": "2026-10-26T12:10+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 9.5,
+    "sources": 1,
+    "titles": [
+     "Oil prices, Fed policy decision to steer rupee, bonds this week - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "titles": [
+     "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "titles": [
+     "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "titles": [
+     "Gold gains as oil slide cools some inflation concerns - Reuters"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "Trump’s Trade General Fights Back as Tariffs Become Toxic - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "US futures steady as oil retreats ahead of earnings deluge, Fed decision - Reuters"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "Oil prices, Fed policy decision to steer rupee, bonds this week - Reuters",
+  "result": "列標題：輸出出現材料裡沒有的數字"
  }
 ]
