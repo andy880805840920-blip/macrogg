@@ -1,6 +1,6 @@
 {
  "hash": "",
- "text": "聯準會將於 10/25（美國時間）召開貨幣政策會議，市場焦點轉向主席華許的政策訊息，特別是對 12/9 會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，累計至 2026 年底升息 22bp、至 2027 年底升息 66bp，反映市場預期聯準會將維持緊縮立場。¶會議前夕，油價下滑緩解部分通膨疑慮，黃金因此上漲。9 月 CPI 數據顯示整體年增 3.7%、核心年增 2.6%，通膨仍高於聯準會目標。市場關注華許將如何解讀近期數據，以及是否對 12 月政策路徑提供指引。\n油價下滑緩解通膨疑慮，帶動黃金上漲，反映市場對通膨壓力的評估出現變化，但具體價格變動幅度材料未提供。\n亞洲銀行因通膨與債市動盪面臨資本壓力，顯示全球貨幣緊縮政策的外溢效應持續影響區域金融穩定。",
+ "text": "聯準會將於 10/28（美國時間）召開會議，市場焦點轉向主席華許的政策訊息，特別是對 12 月會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，但累計至 2026 年底仍預期升息 22bp，至 2027 年底升息 66bp，反映市場預期升息循環尚未結束。¶華許自 2026 年 5 月接任主席以來，市場持續關注其政策立場。在 9 月 CPI 顯示整體年增 3.7%、核心年增 2.6% 的背景下，通膨壓力仍存。10/29 即將公布的 9 月 PCE 與第三季初估 GDP 數據，將為聯準會提供更多政策依據。¶此外，油價走勢與債市波動也牽動本週市場情緒。油價下滑緩解部分通膨疑慮，黃金因此受惠上漲；亞洲銀行則因通膨與債市動盪面臨資本壓力。\n油價 10/26 下滑，緩解部分通膨疑慮，黃金因此受惠上漲；市場關注油價走勢對聯準會政策評估的影響，以及能源成本變化是否反映在即將公布的 PCE 數據中。\n亞洲銀行因通膨與債市動盪面臨資本壓力；債市波動加劇銀行資產負債表管理難度，在升息循環尚未結束的環境下，資本適足率面臨考驗。",
  "links": [
   {
    "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
@@ -9,16 +9,16 @@
    "at": "2026-10-26T10:00:00+00:00"
   },
   {
-   "title": "Gold gains as oil slide cools some inflation concerns",
+   "title": "Oil prices, Fed policy decision to steer rupee, bonds this week",
+   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPelJyN3JpclF1bWk1YzFhM1prRER2SmsyZ0tLbEYyVnZxb0JhbV9sVEplUzhvbnFydkUtdURhektCU2Z1a3VNVk8xaGRBZXZSanpsYWkzMkh1RDBpQktlR25CeEZabmZLWTdfN0QwYUZWQjQ2VmVGdENPSm04Z1BwUF83am40bVlTYjVjV0REZWdUS3E3cUNLaFZCaEFoQzhBemhoRkFxa3hSUQ?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-26T01:31:00+00:00"
+  },
+  {
+   "title": "Gold gains as oil price slide cools some inflation concerns",
    "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
    "source": "Reuters",
    "at": "2026-10-26T05:56:00+00:00"
-  },
-  {
-   "title": "Asia-focused banks face capital squeeze due to inflation, bond turbulence",
-   "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQQ3c0Nl9IZUxGNGlIRFlNSW0xRUIzUTkxZlZJYVhtWjI5NXlGNFVJcm1IMnNMNVFWZVV4c0toYkxQYjB5Z3VXanB2ZE5ycUxERkRObDhkYUw3RGlrbFlzMVM3OXpyRVZhLTNnMkZhMkhHRU9oeGpuOHBDUWtkNkprSkZuQWVlSWtxYllmX1NlWkdqOHVWZzlubGs0WExDR29iVl95S1paMEhzOEFob1JkQWxpeTlGcnZO?oc=5",
-   "source": "Reuters",
-   "at": "2026-10-26T10:26:27+00:00"
   }
  ],
  "fedwatch": {
@@ -296,22 +296,16 @@
   }
  },
  "text_source": "model",
- "at": "2026-10-26T12:30:38.250028+00:00",
+ "at": "2026-10-26T14:16:06.873825+00:00",
  "layout": "main",
  "topics": {
-  "hash": "67cc5119381077e0",
+  "hash": "b836351713553585",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "市場預期聯準會10/25會議維持利率不變，90%機率反映在期貨定價中。科技股因AI基礎設施融資成本與投資回報期限擔憂而承壓，10年期美債殖利率跌破5%，顯示投資人對經濟前景與利率前景的謹慎態度",
+    "text": "科技大廠財報引發市場對人工智能長期投資成本的擔憂，導致股市大幅下跌，10/25（美國時間）標普 500 指數跌近 2%，10 年期美債殖利率跌破 5%，市場隨之大幅調整對聯準會政策的預期",
     "links": [
-     {
-      "title": "US Stock Futures Rise Ahead of Federal Reserve Decision and Major Technology Earnings",
-      "link": "https://investorshub.advfn.com/market-news/article/38551/us-stock-futures-rise-ahead-of-federal-reserve-decision-and-major-technology-earnings?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T11:42:10+00:00"
-     },
      {
       "title": "Google, Microsoft, Amazon, and the Fed step up to a skittish market: What to watch this week",
       "link": "https://finance.yahoo.com/markets/article/google-microsoft-amazon-and-the-fed-step-up-to-a-skittish-market-what-to-watch-this-week-100000081.html?.tsrc=rss",
@@ -321,93 +315,74 @@
     ]
    },
    {
-    "id": "oil",
-    "label": "油價",
-    "text": "油價從5月高點回落，10/26下跌至約100美元附近，緩解通膨壓力。下跌反映外交努力可能緩和美伊緊張局勢，儘管中東地緣政治風險仍存",
-    "links": [
-     {
-      "title": "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQNFpHYTlFcXR2RGt0NHhpMWtQcTRwdTktRHJKZGJIODZ4RldHbUFZODFIMXBRZkRObXAzN3lxZE1NV0QtOVlmaDc3S0R1YWV0S2ExZmpJTWlYb1RITGIzZTYyR0xkT0c0WXdvNHExUVZJUURPbEZ2MWoyc3NyNkRWNzB5c3VUVVFwMHppaWRIWmxoaDVNRjM5dndha3hTZw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T05:02:00+00:00"
-     },
-     {
-      "title": "US Equity Futures Rise Pre-Bell as Traders Assess Declining Oil Prices, Await Fed Rate Decision This Week",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/us-equity-futures-rise-pre-115912697.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T11:59:12+00:00"
-     }
-    ]
-   },
-   {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨走高，投資人關注本週企業財報與聯準會決議，科技股與晶片股前週跌幅後出現反彈；標普 500 期貨上漲 23 點、那斯達克 100 期貨上漲 64 點，道瓊期貨上漲 241 點",
+    "text": "科技大廠財報顯示長期人工智能專案需要龐大資本支出，打擊投資人信心，導致趨勢對沖基金經歷 2024 年以來最差週表現",
     "links": [
      {
-      "title": "US Stock Futures Rise as Investors Await Earnings, Central Bank Decisions and Middle East Developments: Dow Jones, S&P, Nasdaq, Wall Street",
-      "link": "https://investorshub.advfn.com/market-news/article/38545/us-stock-futures-rise-as-investors-await-earnings-central-bank-decisions-and-middle-east-developments-dow-jones-sp-nasdaq-wall-street?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T11:11:35+00:00"
-     },
-     {
-      "title": "Dow Jones, Nasdaq, S&P 500 weekly preview: Markets brace for pivotal earnings week",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/dow-jones-nasdaq-p-500-120359447.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T12:03:59+00:00"
+      "title": "Trend hedge funds saw worst week since 2024 as AI stocks fell, Goldman says",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNaXVkNFhCYXZGZWdiZXZLTHFHMnJoN1VHWlc5QWNRSTcwRThfV2lvejJsdDdzbzE3S09XVzVneWJOVmJTSWJRRFliSVNFTzc2TEJxYlZKZ2tEVTM1dG5OR2h6MkVFUE9OM04yY1Jjd3B2VUVXSmtsTjMxQzUtd2JfZy1JbVBpYmg5bHR6Tm1PQzBrdWxkbWV1MjFfTkdlYlozSXlfaWt2X3UxUl9BV0tkN3kyNW5HeXZRREVmcEdwWQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-26T11:25:43+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達與鴻海合作深化，導入最新DGX SuperPOD可提升AI訓練效能2.48倍，鴻海運用DGX GB200訓練FoxBrain模型12天處理1兆Tokens。馬斯克宣布SpaceX完成400億美元融資採購GPU，規劃2027年底前算力擴大至20吉瓦，分析師預估輝達2028年營收可達8500億美元，遠超市場預期",
+    "text": "Meta計畫籌資最多950億美元支應AI投資，輝達、超微與博通有意合計認購50億美元A類普通股。Meta第三季自由現金流轉為負21.2億美元，為逾十年首見負值，反映AI競賽加重財務負擔",
     "links": [
      {
-      "title": "鴻海輝達綁做伙秀AI進度　期待月底科技日放大絕！",
-      "link": "https://tw.news.yahoo.com/%E9%B4%BB%E6%B5%B7%E8%BC%9D%E9%81%94%E7%B6%81%E5%81%9A%E4%BC%99%E7%A7%80ai%E9%80%B2%E5%BA%A6-%E6%9C%9F%E5%BE%85%E6%9C%88%E5%BA%95%E7%A7%91%E6%8A%80%E6%97%A5%E6%94%BE%E5%A4%A7%E7%B5%95-113800186.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-26T11:38:00+08:00"
-     },
-     {
-      "title": "【美股盤前】馬斯克送「1大利多」　分析師喊：輝達股價翻倍",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E9%A6%AC%E6%96%AF%E5%85%8B%E9%80%81-1%E5%A4%A7%E5%88%A9%E5%A4%9A-%E5%88%86%E6%9E%90%E5%B8%AB%E5%96%8A-%E8%BC%9D%E9%81%94%E8%82%A1%E5%83%B9%E7%BF%BB%E5%80%8D-121500207.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-26T12:15:00+08:00"
+      "title": "AI太燒錢！Meta擬籌950億美元 輝達等三巨頭有意買單",
+      "link": "https://tw.stock.yahoo.com/news/ai%E5%A4%AA%E7%87%92%E9%8C%A2-meta%E6%93%AC%E7%B1%8C950%E5%84%84%E7%BE%8E%E5%85%83-%E8%BC%9D%E9%81%94%E7%AD%89%E4%B8%89%E5%B7%A8%E9%A0%AD%E6%9C%89%E6%84%8F%E8%B2%B7%E5%96%AE-121125926.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-26T12:11:25+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股 10/22 下跌 846 點至 46,041 點，三大法人賣超 2,832 億元，但 AI 族群緯創逆勢獲買超 136 億元，外資與自營商 5 日累計買超 7.12 萬張",
+    "text": "台指期夜盤10/23暴跌580點失守季線，但美股10/26開盤反彈，費半漲幅近0.8%、台積電ADR小漲0.5%，可望為台股10/27開盤帶來支撐",
     "links": [
      {
-      "title": "台股大跌1069點！三大法人殺近3千億元卻136億元「搶這檔」　外資、自營商掃瘋了…群創、仁寶也中",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%A4%A7%E8%B7%8C1069%E9%BB%9E-%E4%B8%89%E5%A4%A7%E6%B3%95%E4%BA%BA%E6%AE%BA%E8%BF%913%E5%8D%83%E5%84%84%E5%85%83%E5%8D%BB136%E5%84%84%E5%85%83-%E6%90%B6%E9%80%99%E6%AA%94-%E5%A4%96%E8%B3%87-%E8%87%AA%E7%87%9F%E5%95%86%E6%8E%83%E7%98%8B%E4%BA%86-111000976.html",
+      "title": "台股明天還有救？ 美股4大指數齊揚 台積電ADR小漲0.5％",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%98%8E%E5%A4%A9%E9%82%84%E6%9C%89%E6%95%91-%E7%BE%8E%E8%82%A14%E5%A4%A7%E6%8C%87%E6%95%B8%E9%BD%8A%E6%8F%9A-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E5%B0%8F%E6%BC%B20-5-134533689.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-26T11:10:00+08:00"
+      "at": "2026-10-26T13:45:33+08:00"
+     },
+     {
+      "title": "台股月跌3700點! 連假前夜盤再瀉 週二面臨補跌壓力?週二開盤剉咧等",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9C%88%E8%B7%8C3700%E9%BB%9E-%E9%80%A3%E5%81%87%E5%89%8D%E5%A4%9C%E7%9B%A4%E5%86%8D%E7%80%89-%E9%80%B1%E4%BA%8C%E9%9D%A2%E8%87%A8%E8%A3%9C%E8%B7%8C%E5%A3%93%E5%8A%9B-%E9%80%B1%E4%BA%8C%E9%96%8B%E7%9B%A4%E5%89%89%E5%92%A7%E7%AD%89-121637862.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-26T12:16:37+08:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "標普500在期中選舉前後8個交易日窗口內歷史上漲頻率達94.7%，平均漲幅2.8%。10/27至11/6交易區間將匯聚聯準會決議、科技巨頭財報與PCE數據，成為市場情緒轉向的觀察窗口",
+    "links": [
+     {
+      "title": "美股重摔　迎反攻行情？期中選舉倒數　黃金勝率曝光",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E9%87%8D%E6%91%94-%E8%BF%8E%E5%8F%8D%E6%94%BB%E8%A1%8C%E6%83%85-%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E5%80%92%E6%95%B8-%E9%BB%83%E9%87%91%E5%8B%9D%E7%8E%87%E6%9B%9D%E5%85%89-122300183.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-26T12:23:00+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-26T12:31:14.846835+00:00"
+  "at": "2026-10-26T14:16:45.960315+00:00"
  },
  "main_source_titles": [
   "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
-  "Gold gains as oil slide cools some inflation concerns",
-  "Asia-focused banks face capital squeeze due to inflation, bond turbulence"
+  "Oil prices, Fed policy decision to steer rupee, bonds this week",
+  "Gold gains as oil price slide cools some inflation concerns"
  ],
- "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
- "rate_note": "10/28 會議預期維持利率不變，但華許的政策訊息若暗示 12 月仍有升息空間，將偏向推升長端利率；若強調觀望數據、淡化進一步緊縮，則偏壓低利率。10 年期 10/23 收 4.99%，較前一交易日 +3bp，市場已在反映聯準會維持緊縮立場的預期。",
+ "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
+ "rate_note": "10/28 會議若華許釋出偏鷹派訊息、暗示 12 月可能繼續升息，將偏向推升長端利率，因市場目前定價的升息幅度仍有限；若強調觀望數據、淡化近期升息必要性，則偏向壓低長端。10 年期 10/26 盤中 4.97%、-1bp，市場在會議前保持觀望。",
  "recent_mains": [
-  {
-   "headline": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向",
-   "titles": [
-    "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow"
-   ],
-   "at": "2026-10-25T14:11:57.818242+00:00"
-  },
   {
    "headline": "華許要求交易員關注數據本身，市場仍緊盯聯準會動向",
    "titles": [
@@ -426,13 +401,22 @@
     "Asia-focused banks face capital squeeze due to inflation, bond turbulence"
    ],
    "at": "2026-10-26T12:30:38.250028+00:00"
+  },
+  {
+   "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
+   "titles": [
+    "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+    "Oil prices, Fed policy decision to steer rupee, bonds this week",
+    "Gold gains as oil price slide cools some inflation concerns"
+   ],
+   "at": "2026-10-26T14:16:06.873825+00:00"
   }
  ],
  "archive": {
   "2026-10-26": {
-   "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
-   "text": "聯準會將於 10/25（美國時間）召開貨幣政策會議，市場焦點轉向主席華許的政策訊息，特別是對 12/9 會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，累計至 2026 年底升息 22bp、至 2027 年底升息 66bp，反映市場預期聯準會將維持緊縮立場。¶會議前夕，油價下滑緩解部分通膨疑慮，黃金因此上漲。9 月 CPI 數據顯示整體年增 3.7%、核心年增 2.6%，通膨仍高於聯準會目標。市場關注華許將如何解讀近期數據，以及是否對 12 月政策路徑提供指引。\n油價下滑緩解通膨疑慮，帶動黃金上漲，反映市場對通膨壓力的評估出現變化，但具體價格變動幅度材料未提供。\n亞洲銀行因通膨與債市動盪面臨資本壓力，顯示全球貨幣緊縮政策的外溢效應持續影響區域金融穩定。",
-   "rate_note": "10/28 會議預期維持利率不變，但華許的政策訊息若暗示 12 月仍有升息空間，將偏向推升長端利率；若強調觀望數據、淡化進一步緊縮，則偏壓低利率。10 年期 10/23 收 4.99%，較前一交易日 +3bp，市場已在反映聯準會維持緊縮立場的預期。",
+   "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
+   "text": "聯準會將於 10/28（美國時間）召開會議，市場焦點轉向主席華許的政策訊息，特別是對 12 月會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，但累計至 2026 年底仍預期升息 22bp，至 2027 年底升息 66bp，反映市場預期升息循環尚未結束。¶華許自 2026 年 5 月接任主席以來，市場持續關注其政策立場。在 9 月 CPI 顯示整體年增 3.7%、核心年增 2.6% 的背景下，通膨壓力仍存。10/29 即將公布的 9 月 PCE 與第三季初估 GDP 數據，將為聯準會提供更多政策依據。¶此外，油價走勢與債市波動也牽動本週市場情緒。油價下滑緩解部分通膨疑慮，黃金因此受惠上漲；亞洲銀行則因通膨與債市動盪面臨資本壓力。\n油價 10/26 下滑，緩解部分通膨疑慮，黃金因此受惠上漲；市場關注油價走勢對聯準會政策評估的影響，以及能源成本變化是否反映在即將公布的 PCE 數據中。\n亞洲銀行因通膨與債市動盪面臨資本壓力；債市波動加劇銀行資產負債表管理難度，在升息循環尚未結束的環境下，資本適足率面臨考驗。",
+   "rate_note": "10/28 會議若華許釋出偏鷹派訊息、暗示 12 月可能繼續升息，將偏向推升長端利率，因市場目前定價的升息幅度仍有限；若強調觀望數據、淡化近期升息必要性，則偏向壓低長端。10 年期 10/26 盤中 4.97%、-1bp，市場在會議前保持觀望。",
    "links": [
     {
      "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
@@ -441,19 +425,19 @@
      "at": "2026-10-26T10:00:00+00:00"
     },
     {
-     "title": "Gold gains as oil slide cools some inflation concerns",
+     "title": "Oil prices, Fed policy decision to steer rupee, bonds this week",
+     "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPelJyN3JpclF1bWk1YzFhM1prRER2SmsyZ0tLbEYyVnZxb0JhbV9sVEplUzhvbnFydkUtdURhektCU2Z1a3VNVk8xaGRBZXZSanpsYWkzMkh1RDBpQktlR25CeEZabmZLWTdfN0QwYUZWQjQ2VmVGdENPSm04Z1BwUF83am40bVlTYjVjV0REZWdUS3E3cUNLaFZCaEFoQzhBemhoRkFxa3hSUQ?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-26T01:31:00+00:00"
+    },
+    {
+     "title": "Gold gains as oil price slide cools some inflation concerns",
      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
      "source": "Reuters",
      "at": "2026-10-26T05:56:00+00:00"
-    },
-    {
-     "title": "Asia-focused banks face capital squeeze due to inflation, bond turbulence",
-     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQQ3c0Nl9IZUxGNGlIRFlNSW0xRUIzUTkxZlZJYVhtWjI5NXlGNFVJcm1IMnNMNVFWZVV4c0toYkxQYjB5Z3VXanB2ZE5ycUxERkRObDhkYUw3RGlrbFlzMVM3OXpyRVZhLTNnMkZhMkhHRU9oeGpuOHBDUWtkNkprSkZuQWVlSWtxYllmX1NlWkdqOHVWZzlubGs0WExDR29iVl95S1paMEhzOEFob1JkQWxpeTlGcnZO?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-26T10:26:27+00:00"
     }
    ],
-   "at": "2026-10-26T12:30:38.250028+00:00",
+   "at": "2026-10-26T14:16:06.873825+00:00",
    "weekly": false
   },
   "2026-10-25": {
