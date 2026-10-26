@@ -173,6 +173,37 @@ check("⑪ 主題補充快取鍵改用主軸來源標題", '_stance + "|" + _mk 
 check("⑪ 提示詞版本已更新", ft.FOCUS_PROMPT_VERSION != "f14-official-release-dates")
 check("⑪ 不再有「前一兩次寫過就換題」", "前一兩次主軸已經寫過" not in src2)
 
+# ⑫ 2026-10-26：數字鎖放寬、月份對照、FOMC 日程進材料、全文 6 篇、盧比算外國
+check("⑫ 英文月份算數字：December → 12 月不算編造",
+      ft._missing_digits("聯準會 12 月會議受關注", "Fed Meeting Focus Turns to Warsh With December in Mind") == [])
+check("⑫ Dec. 縮寫也認得", ft._missing_digits("12 月", "Fed eyes Dec. hike") == [])
+check("⑫ 真的沒出處的數字照樣列出", ft._missing_digits("殖利率升到 9.99%", "Yields rise") == ["9.99"])
+_fb = ft._fomc_block({"fomc_dates": ["2026-10-28", "2026-12-09", "2027-03-17"]}, dt.date(2026, 10, 26))
+check("⑫ 近 45 天的 FOMC 會議日放進材料", "10/28" in _fb and "12/9" in _fb and "3/17" not in _fb, _fb)
+check("⑫ 全文篇數恢復 6 篇", ft.BODY_SLOTS == 6)
+check("⑫ 盧比、澳洲央行算外國新聞（扣分）",
+      ft._FOREIGN.search("Oil prices, Fed policy decision to steer rupee") and ft._FOREIGN.search("RBA's Hunter says"))
+
+_calls = []
+_bad = ("【標題】聯準會本週會議聚焦華許的訊息傳遞\n【主軸】" + "聯準會本週召開會議，市場關注主席華許如何傳達政策訊息，並評估後續升息的可能。" * 3
+        + "，殖利率升到 9.99%。\n【對利率】偏向推升短端利率，取決於會後聲明。\n【補充】\n金價走穩，市場等待聯準會會議結果。\n銅價延續跌勢，人工智慧類股走弱拖累。\n【來源】1")
+
+
+def _ca12(src, system, env=None, **kw):
+    _calls.append(src)
+    return _bad, ""
+
+
+_o12 = ft._call_ai
+ft._call_ai = _ca12
+try:
+    _r12, _e12 = ft._generate_main("【報導1】Fed meeting focus turns to Warsh", "sys", {},
+                                   caps=[250, 80, 80], mins=[200, 40, 40])
+finally:
+    ft._call_ai = _o12
+check("⑫ 數字鎖不再一票否決：第一次帶原因重寫", len(_calls) == 2 and "9.99" in _calls[1], len(_calls))
+check("⑫ 重寫後仍有 → 照樣採用（不退回列標題）", _r12 is not None and _e12 == "", _e12)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)
