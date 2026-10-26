@@ -1,24 +1,24 @@
 {
  "hash": "",
- "text": "",
+ "text": "聯準會將於 10/25（美國時間）召開貨幣政策會議，市場焦點轉向主席華許的政策訊息，特別是對 12/9 會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，累計至 2026 年底升息 22bp、至 2027 年底升息 66bp，反映市場預期聯準會將維持緊縮立場。¶會議前夕，油價下滑緩解部分通膨疑慮，黃金因此上漲。9 月 CPI 數據顯示整體年增 3.7%、核心年增 2.6%，通膨仍高於聯準會目標。市場關注華許將如何解讀近期數據，以及是否對 12 月政策路徑提供指引。\n油價下滑緩解通膨疑慮，帶動黃金上漲，反映市場對通膨壓力的評估出現變化，但具體價格變動幅度材料未提供。\n亞洲銀行因通膨與債市動盪面臨資本壓力，顯示全球貨幣緊縮政策的外溢效應持續影響區域金融穩定。",
  "links": [
   {
-   "title": "Oil prices, Fed policy decision to steer rupee, bonds this week",
-   "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPelJyN3JpclF1bWk1YzFhM1prRER2SmsyZ0tLbEYyVnZxb0JhbV9sVEplUzhvbnFydkUtdURhektCU2Z1a3VNVk8xaGRBZXZSanpsYWkzMkh1RDBpQktlR25CeEZabmZLWTdfN0QwYUZWQjQ2VmVGdENPSm04Z1BwUF83am40bVlTYjVjV0REZWdUS3E3cUNLaFZCaEFoQzhBemhoRkFxa3hSUQ?oc=5",
+   "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNMDN2QU9ONF9jVUh4ekxPeEhZTU04WjZGaDRMZ2h6al8yQXNCVGhGWkZTVmc1aG5fN1pYUEVtcTFDVjQtZThOUFVXdGFqU3UtZ3pJeEZtVU10X3VRWDRnUmlxdy01MnBYSlR0a1JOQ2FZYUM1eG42TzhnZ20zYzVRMVlQaFU2Mzg3dTZmbDNNV0cwTHhSS3BmSFlXWk1ON0ZyWEQ4cXo1b2pPT1I4RC1YY3ByZEwyUQ?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-26T10:00:00+00:00"
+  },
+  {
+   "title": "Gold gains as oil slide cools some inflation concerns",
+   "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
    "source": "Reuters",
-   "at": "2026-10-26T01:31:00+00:00"
+   "at": "2026-10-26T05:56:00+00:00"
   },
   {
    "title": "Asia-focused banks face capital squeeze due to inflation, bond turbulence",
    "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQQ3c0Nl9IZUxGNGlIRFlNSW0xRUIzUTkxZlZJYVhtWjI5NXlGNFVJcm1IMnNMNVFWZVV4c0toYkxQYjB5Z3VXanB2ZE5ycUxERkRObDhkYUw3RGlrbFlzMVM3OXpyRVZhLTNnMkZhMkhHRU9oeGpuOHBDUWtkNkprSkZuQWVlSWtxYllmX1NlWkdqOHVWZzlubGs0WExDR29iVl95S1paMEhzOEFob1JkQWxpeTlGcnZO?oc=5",
    "source": "Reuters",
    "at": "2026-10-26T10:26:27+00:00"
-  },
-  {
-   "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
-   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNMDN2QU9ONF9jVUh4ekxPeEhZTU04WjZGaDRMZ2h6al8yQXNCVGhGWkZTVmc1aG5fN1pYUEVtcTFDVjQtZThOUFVXdGFqU3UtZ3pJeEZtVU10X3VRWDRnUmlxdy01MnBYSlR0a1JOQ2FZYUM1eG42TzhnZ20zYzVRMVlQaFU2Mzg3dTZmbDNNV0cwTHhSS3BmSFlXWk1ON0ZyWEQ4cXo1b2pPT1I4RC1YY3ByZEwyUQ?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-10-26T10:00:00+00:00"
   }
  ],
  "fedwatch": {
@@ -295,22 +295,41 @@
    }
   }
  },
- "text_source": "headlines",
- "at": "2026-10-26T12:10:53.533117+00:00",
- "layout": "",
+ "text_source": "model",
+ "at": "2026-10-26T12:30:38.250028+00:00",
+ "layout": "main",
  "topics": {
-  "hash": "3a69491b3fff9278",
+  "hash": "67cc5119381077e0",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會主席華許本週三宣布利率決策前夕，市場預期聯準會將維持利率不變，交易員已將此機率定價至90%，但通膨仍高於目標、中東局勢升溫，華許的措辭將成為焦點，市場關注他是否傾向「鷹派暫停」立場",
+    "text": "市場預期聯準會10/25會議維持利率不變，90%機率反映在期貨定價中。科技股因AI基礎設施融資成本與投資回報期限擔憂而承壓，10年期美債殖利率跌破5%，顯示投資人對經濟前景與利率前景的謹慎態度",
     "links": [
+     {
+      "title": "US Stock Futures Rise Ahead of Federal Reserve Decision and Major Technology Earnings",
+      "link": "https://investorshub.advfn.com/market-news/article/38551/us-stock-futures-rise-ahead-of-federal-reserve-decision-and-major-technology-earnings?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-26T11:42:10+00:00"
+     },
      {
       "title": "Google, Microsoft, Amazon, and the Fed step up to a skittish market: What to watch this week",
       "link": "https://finance.yahoo.com/markets/article/google-microsoft-amazon-and-the-fed-step-up-to-a-skittish-market-what-to-watch-this-week-100000081.html?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-26T10:00:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "oil",
+    "label": "油價",
+    "text": "油價從5月高點回落，10/26下跌至約100美元附近，緩解通膨壓力。下跌反映外交努力可能緩和美伊緊張局勢，儘管中東地緣政治風險仍存",
+    "links": [
+     {
+      "title": "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQNFpHYTlFcXR2RGt0NHhpMWtQcTRwdTktRHJKZGJIODZ4RldHbUFZODFIMXBRZkRObXAzN3lxZE1NV0QtOVlmaDc3S0R1YWV0S2ExZmpJTWlYb1RITGIzZTYyR0xkT0c0WXdvNHExUVZJUURPbEZ2MWoyc3NyNkRWNzB5c3VUVVFwMHppaWRIWmxoaDVNRjM5dndha3hTZw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T05:02:00+00:00"
      },
      {
       "title": "US Equity Futures Rise Pre-Bell as Traders Assess Declining Oil Prices, Await Fed Rate Decision This Week",
@@ -321,60 +340,9 @@
     ]
    },
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "長天期美債新興市場債券表現超越美國公債，反映富裕國家財政風險升溫；英國經銷商預期政府將發行更多短期公債以降低債務成本",
-    "links": [
-     {
-      "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T08:08:38+00:00"
-     },
-     {
-      "title": "UK Dealers See More Treasury Bills Coming to Cut Debt Costs",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOYXRWc2YxSFQwQTVsbElEcUo0eVZfWkdvUXdUSHlJVXZVNnJka210ZVRxZ1MtU0g2ZG5KTlE5ak44a2U1bG5qdmtNYkh2c2tsS3pyeHhqUWFaWHEyQ1pKazhSbkx1Q1lldkxkcXlCNWRCWVE1T0ZrZk1SbkV3dEdHR1I5Z3lyX1d4dGJ3U1NQalYwVmpKMlp0cmswT0MtdFFoVHBtVk1uN25BRndqQXI4?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T07:15:00+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "資金市場英國政府擬增加短期公債發行以降低融資成本；印度央行研究指銀行在升息時傳導速度更快，降息時則傳導較慢",
-    "links": [
-     {
-      "title": "UK Dealers See More Treasury Bills Coming to Cut Debt Costs",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOYXRWc2YxSFQwQTVsbElEcUo0eVZfWkdvUXdUSHlJVXZVNnJka210ZVRxZ1MtU0g2ZG5KTlE5ak44a2U1bG5qdmtNYkh2c2tsS3pyeHhqUWFaWHEyQ1pKazhSbkx1Q1lldkxkcXlCNWRCWVE1T0ZrZk1SbkV3dEdHR1I5Z3lyX1d4dGJ3U1NQalYwVmpKMlp0cmswT0MtdFFoVHBtVk1uN25BRndqQXI4?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T07:15:00+00:00"
-     },
-     {
-      "title": "Banks Pass On Repo Rate Hikes More Completely Than Rate Cuts: RBI Study",
-      "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxOMUR6TGlYeG4wakwyS25jYTZ2SXpGTGZhMzkyOXFZc19oUG9vVkVmOEtZdi1VU2FRZ1pob3E2Q3NWX1llTnIwcmF3YTEwX3Z5b0M2bEdvdVdldE1mUDRPMGstYlBndXVsLUdxR2Z2V00wRUMyaG5CVGIzMVdyd2hJblpKTHI5U0tXZ2VMUnR1S0xvLWtuSGxkLXNCQTJ5dnR4WVN4aDNzemQyWUlLMHlhZlNvMlB4UUNLWUFWVHF6ZkV3eW9lcHBUX01HUXEyRm90QUHSAdIBQVVfeXFMTjFEekxpWHhuMGpMMktuY2E2dkl6RkxmYTM5MjlxWXNfaFBvb1ZFZjhLWXYtVVNhUWdaaG9xNkNzVl9ZZU5yMHJhd2ExMF92eW9DNmxHb3VXZXRNZlA0TzBrLWJQZ3V1bC1HcUdmdldNMEVDMmhuQlRiMzFXcndoSW5aSkxyOVNLV2dlTFJ0dUtMby1rbkhsZC1zQkEyeXZ0eFlTeGgzc3pkMllJSzB5YWZTbzJQeFFDS1lBVlRxemZFd3lvZXBwVF9NR1FxMkZvdEFB?oc=5",
-      "source": "News18",
-      "at": "2026-10-26T07:03:02+00:00"
-     }
-    ]
-   },
-   {
-    "id": "oil",
-    "label": "油價",
-    "text": "油價布蘭特原油跌破110美元、西德州原油跌至100美元附近，跌幅各近2%與2.4%，伊朗與沙烏地阿拉伯、巴基斯坦、土耳其高層官員10/26在德黑蘭會談討論區域議題，外交努力緩和中東緊張局勢；惟中東航線運費仍高達每桶35美元，亞洲煉油廠採購11月裝船美國原油較9",
-    "links": [
-     {
-      "title": "油價突然下跌！伊朗將與沙國、土耳其、巴基斯坦會談  川普保留攻伊選項",
-      "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E7%AA%81%E7%84%B6%E4%B8%8B%E8%B7%8C-%E4%BC%8A%E6%9C%97%E5%B0%87%E8%88%87%E6%B2%99%E5%9C%8B-%E5%9C%9F%E8%80%B3%E5%85%B6-%E5%B7%B4%E5%9F%BA%E6%96%AF%E5%9D%A6%E6%9C%83%E8%AB%87-%E5%B7%9D%E6%99%AE%E4%BF%9D%E7%95%99%E6%94%BB%E4%BC%8A%E9%81%B8%E9%A0%85-111233014.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-26T11:12:33+00:00"
-     }
-    ]
-   },
-   {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨週一上漲，投資人評估AI基礎設施投資的財務影響，包括債務融資與專案回報時間，同時關注利率可能長期維持高檔對股票估值的影響，油價下跌緩解部分地緣政治風險",
+    "text": "美股期貨走高，投資人關注本週企業財報與聯準會決議，科技股與晶片股前週跌幅後出現反彈；標普 500 期貨上漲 23 點、那斯達克 100 期貨上漲 64 點，道瓊期貨上漲 241 點",
     "links": [
      {
       "title": "US Stock Futures Rise as Investors Await Earnings, Central Bank Decisions and Middle East Developments: Dow Jones, S&P, Nasdaq, Wall Street",
@@ -383,36 +351,36 @@
       "at": "2026-10-26T11:11:35+00:00"
      },
      {
-      "title": "Stock market today: Dow, S&P 500, Nasdaq futures rise ahead of busy week of earnings, Fed rate decision",
-      "link": "https://finance.yahoo.com/markets/live/stock-market-today-monday-october-26-dow-sp-500-nasdaq-101153035.html?.tsrc=rss",
+      "title": "Dow Jones, Nasdaq, S&P 500 weekly preview: Markets brace for pivotal earnings week",
+      "link": "https://finance.yahoo.com/markets/stocks/articles/dow-jones-nasdaq-p-500-120359447.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-26T10:11:53+00:00"
+      "at": "2026-10-26T12:03:59+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "AI與半導體輝達與鴻海推進AI合作，導入最新DGX SuperPOD可提升AI訓練效能2.48倍，鴻海運用輝達技術優化製造流程，SMT產線異常改善率逾90%；Meta計畫95億美元股票發行以融資AI擴張，輝達、AMD、博通將擔任基石投資人",
+    "text": "輝達與鴻海合作深化，導入最新DGX SuperPOD可提升AI訓練效能2.48倍，鴻海運用DGX GB200訓練FoxBrain模型12天處理1兆Tokens。馬斯克宣布SpaceX完成400億美元融資採購GPU，規劃2027年底前算力擴大至20吉瓦，分析師預估輝達2028年營收可達8500億美元，遠超市場預期",
     "links": [
-     {
-      "title": "Meta plans $95bn stock offering to bankroll AI expansion",
-      "link": "https://www.ft.com/content/94e5a0ae-874d-447a-bbfc-cd465a1a7555?syn-25a6b1a6=1",
-      "source": "Financial Times",
-      "at": "2026-10-26T11:58:00+00:00"
-     },
      {
       "title": "鴻海輝達綁做伙秀AI進度　期待月底科技日放大絕！",
       "link": "https://tw.news.yahoo.com/%E9%B4%BB%E6%B5%B7%E8%BC%9D%E9%81%94%E7%B6%81%E5%81%9A%E4%BC%99%E7%A7%80ai%E9%80%B2%E5%BA%A6-%E6%9C%9F%E5%BE%85%E6%9C%88%E5%BA%95%E7%A7%91%E6%8A%80%E6%97%A5%E6%94%BE%E5%A4%A7%E7%B5%95-113800186.html",
       "source": "Yahoo奇摩新聞",
       "at": "2026-10-26T11:38:00+08:00"
+     },
+     {
+      "title": "【美股盤前】馬斯克送「1大利多」　分析師喊：輝達股價翻倍",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E9%A6%AC%E6%96%AF%E5%85%8B%E9%80%81-1%E5%A4%A7%E5%88%A9%E5%A4%9A-%E5%88%86%E6%9E%90%E5%B8%AB%E5%96%8A-%E8%BC%9D%E9%81%94%E8%82%A1%E5%83%B9%E7%BF%BB%E5%80%8D-121500207.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-26T12:15:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股上週跌1069點，三大法人賣超2832億元，但緯創逆勢獲外資與自營商買超7.12萬張、共136億元，顯示AI族群仍獲青睞；台股10月初觸及歷史高點49968點後快速回檔，上週四跌至46041點",
+    "text": "台股 10/22 下跌 846 點至 46,041 點，三大法人賣超 2,832 億元，但 AI 族群緯創逆勢獲買超 136 億元，外資與自營商 5 日累計買超 7.12 萬張",
     "links": [
      {
       "title": "台股大跌1069點！三大法人殺近3千億元卻136億元「搶這檔」　外資、自營商掃瘋了…群創、仁寶也中",
@@ -421,59 +389,18 @@
       "at": "2026-10-26T11:10:00+08:00"
      }
     ]
-   },
-   {
-    "id": "gold",
-    "label": "黃金",
-    "text": "黃金上漲，因油價下跌緩解通膨疑慮，投資人在地緣政治風險與央行政策決策前夕尋求避險資產",
-    "links": [
-     {
-      "title": "Gold gains as oil slide cools some inflation concerns",
-      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-26T05:56:00+00:00"
-     }
-    ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣持續貶值，上週跌破31.5元，重貶逾1角，美元走強反映中東戰火升溫與全球風險資產拋售，新台幣預估在1,320韓元區間震盪",
-    "links": [
-     {
-      "title": "川普警告再空襲伊朗，油價衝破117美元；新台幣匯率預估在1,320韓元區間震盪",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE1qdFV5S0FKZV9GNW5xLVFLTC1SRG9mcUd6SFpkREtlVjhJbzVVNmJOaDNxcGJEOWNkV3FIMVg5UHlJYlJLa01sQ2RNNUp2bFR2RVozX0pnUVJtcjJwdFBwbHUxbE5jYks4TkMtQ3pIQjZzSXZDTVhCRU13?oc=5",
-      "source": "BigGo 財經",
-      "at": "2026-10-26T00:55:00+00:00"
-     },
-     {
-      "title": "中東戰火升溫、美元強彈！新台幣帶量摜破31.5元、重貶逾1角",
-      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1sQk1BVFhFY0pIbjVJdHBxUTZUXzNWcHBuTDVpYW9LdGswS1F5dUJmaUltdWk3aVRiQ0FvVGpKNTJjZlFDVDkzQ0Iya0ZBcmhvZFZqaVlqSUg?oc=5",
-      "source": "自由時報",
-      "at": "2026-10-25T08:01:40+00:00"
-     }
-    ]
    }
   ],
-  "at": "2026-10-26T12:11:15.559917+00:00"
+  "at": "2026-10-26T12:31:14.846835+00:00"
  },
  "main_source_titles": [
-  "Oil prices, Fed policy decision to steer rupee, bonds this week",
-  "Asia-focused banks face capital squeeze due to inflation, bond turbulence",
-  "Fed Meeting Focus Turns to Warsh Messaging With December in Mind"
+  "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+  "Gold gains as oil slide cools some inflation concerns",
+  "Asia-focused banks face capital squeeze due to inflation, bond turbulence"
  ],
- "headline": "",
- "rate_note": "",
+ "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
+ "rate_note": "10/28 會議預期維持利率不變，但華許的政策訊息若暗示 12 月仍有升息空間，將偏向推升長端利率；若強調觀望數據、淡化進一步緊縮，則偏壓低利率。10 年期 10/23 收 4.99%，較前一交易日 +3bp，市場已在反映聯準會維持緊縮立場的預期。",
  "recent_mains": [
-  {
-   "headline": "川普關稅令擴及日用品，市場關注通膨與聯準會政策影響",
-   "titles": [
-    "Coffins and Canoes From Canada Get 50% Tariff Under New Trump Order",
-    "Kalshi Courts Wall Street in Bid to Be the ‘Inflation Exchange’ With CPI Futures",
-    "Evercore Identifies Credit and Bond Yield Levels That Could Signal an AI Market Correction"
-   ],
-   "at": "2026-10-24T23:08:17.007731+00:00"
-  },
   {
    "headline": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向",
    "titles": [
@@ -490,40 +417,43 @@
     "油價衝擊加劇通膨壓力 加拿大央行本週料升息、聯準會十二月行動受矚"
    ],
    "at": "2026-10-25T23:09:55.338944+00:00"
+  },
+  {
+   "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
+   "titles": [
+    "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+    "Gold gains as oil slide cools some inflation concerns",
+    "Asia-focused banks face capital squeeze due to inflation, bond turbulence"
+   ],
+   "at": "2026-10-26T12:30:38.250028+00:00"
   }
  ],
  "archive": {
   "2026-10-26": {
-   "headline": "華許要求交易員關注數據本身，市場仍緊盯聯準會動向",
-   "text": "聯準會主席華許 10/25 呼籲交易員應更關注經濟數據本身，而非過度解讀聯準會的每一句話。這番發言凸顯華許試圖引導市場回歸基本面分析，減少對政策信號的過度依賴。自華許 5 月接任以來，聯準會已在 9/17 升息 25bp，將聯邦基金利率目標區間推升至 3.75–4.00%，延續升息循環以對抗通膨。¶然而市場仍高度關注聯準會的政策走向。目前市場定價顯示 10/28 會議維持利率機率達 90%，但預期 2026 年底前累計升息 22bp、2027 年中累計升息 64bp。華許的呼籲反映出聯準會希望市場更獨立判斷經濟情勢，而非單純跟隨政策預期交易，這也可能是為即將公布的 9 月 PCE 與第三季 GDP（10/29）鋪路，讓市場做好準備依數據調整預期。\n澳洲央行副主席 Hunter 10/25 表示對抗通膨的任務「尚未完成」，暗示澳洲仍可能進一步收緊貨幣政策，反映全球主要央行面對通膨壓力仍維持謹慎立場。\n新興市場債券表現優於美國公債，因已開發國家財政擔憂加劇，投資人尋求相對價值，資金流向新興市場固定收益資產。",
-   "rate_note": "10 年期殖利率今日 +3bp 至 4.99%（前一交易日收盤），上升。",
+   "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
+   "text": "聯準會將於 10/25（美國時間）召開貨幣政策會議，市場焦點轉向主席華許的政策訊息，特別是對 12/9 會議的暗示。目前市場定價顯示 10/28 會議維持利率機率達 90%，累計至 2026 年底升息 22bp、至 2027 年底升息 66bp，反映市場預期聯準會將維持緊縮立場。¶會議前夕，油價下滑緩解部分通膨疑慮，黃金因此上漲。9 月 CPI 數據顯示整體年增 3.7%、核心年增 2.6%，通膨仍高於聯準會目標。市場關注華許將如何解讀近期數據，以及是否對 12 月政策路徑提供指引。\n油價下滑緩解通膨疑慮，帶動黃金上漲，反映市場對通膨壓力的評估出現變化，但具體價格變動幅度材料未提供。\n亞洲銀行因通膨與債市動盪面臨資本壓力，顯示全球貨幣緊縮政策的外溢效應持續影響區域金融穩定。",
+   "rate_note": "10/28 會議預期維持利率不變，但華許的政策訊息若暗示 12 月仍有升息空間，將偏向推升長端利率；若強調觀望數據、淡化進一步緊縮，則偏壓低利率。10 年期 10/23 收 4.99%，較前一交易日 +3bp，市場已在反映聯準會維持緊縮立場的預期。",
    "links": [
     {
-     "title": "Warsh Tells Traders to Watch the Data. They Still Follow the Fed",
-     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOZW9LMWRyT2twSklnZmlGUkxQV3RHTzg1dDVXcVdRUWJuUHdqUWdjS1J6YXVNdEY4SDRXWXBhcnZ1VlhHTDNlck9ySXM4SlhvMTkwZVBYaHI0LWFBQ2lRdjVMdENfNHRwU0N4Yk9nTTJjM0RxcEhnMndDVDl3dS15QUIzejNORm1yWkQ3UWVqZGZXOWt3NnRxeTVKdE9Gbm9Ic2kzaTNBcVIyNE5xdzR6STFUcEg?oc=5",
+     "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNMDN2QU9ONF9jVUh4ekxPeEhZTU04WjZGaDRMZ2h6al8yQXNCVGhGWkZTVmc1aG5fN1pYUEVtcTFDVjQtZThOUFVXdGFqU3UtZ3pJeEZtVU10X3VRWDRnUmlxdy01MnBYSlR0a1JOQ2FZYUM1eG42TzhnZ20zYzVRMVlQaFU2Mzg3dTZmbDNNV0cwTHhSS3BmSFlXWk1ON0ZyWEQ4cXo1b2pPT1I4RC1YY3ByZEwyUQ?oc=5",
      "source": "Bloomberg",
-     "at": "2026-10-25T15:00:00+00:00"
+     "at": "2026-10-26T10:00:00+00:00"
     },
     {
-     "title": "RBA’s Hunter Says It’s ‘Not Quite Yet’ Done Fighting Inflation",
-     "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQTFlTcUlTeWlQYjFDaGxjNkFGamVSTWxkOFN0Zk50RXN4eWc5UjJIbEcyeXU4N3dGRHFyUkU1WkhsRG5aaG5Nc19aY1hjbUlZaW15XzBaM2JtS2lRcEJ4aWp2ZlpGSGM0azhsWF95Rno4MFFqaWxUR2MxWVplOFhzX1ZyWDhPLXZpQ1dZSloxdmhoYVptQzZKUjBqMEZRS2hoSTJwZ3lUbklQUmZUaUNLaQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-25T22:17:35+00:00"
+     "title": "Gold gains as oil slide cools some inflation concerns",
+     "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-26T05:56:00+00:00"
     },
     {
-     "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
-     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-10-25T12:30:00+00:00"
-    },
-    {
-     "title": "油價衝擊加劇通膨壓力 加拿大央行本週料升息、聯準會十二月行動受矚",
-     "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E8%A1%9D%E6%93%8A%E5%8A%A0%E5%8A%87%E9%80%9A%E8%86%A8%E5%A3%93%E5%8A%9B-%E5%8A%A0%E6%8B%BF%E5%A4%A7%E5%A4%AE%E8%A1%8C%E6%9C%AC%E9%80%B1%E6%96%99%E5%8D%87%E6%81%AF-%E8%81%AF%E6%BA%96%E6%9C%83%E5%8D%81%E4%BA%8C%E6%9C%88%E8%A1%8C%E5%8B%95%E5%8F%97%E7%9F%9A-224113087.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-25T22:41:13+00:00"
+     "title": "Asia-focused banks face capital squeeze due to inflation, bond turbulence",
+     "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQQ3c0Nl9IZUxGNGlIRFlNSW0xRUIzUTkxZlZJYVhtWjI5NXlGNFVJcm1IMnNMNVFWZVV4c0toYkxQYjB5Z3VXanB2ZE5ycUxERkRObDhkYUw3RGlrbFlzMVM3OXpyRVZhLTNnMkZhMkhHRU9oeGpuOHBDUWtkNkprSkZuQWVlSWtxYllmX1NlWkdqOHVWZzlubGs0WExDR29iVl95S1paMEhzOEFob1JkQWxpeTlGcnZO?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-26T10:26:27+00:00"
     }
    ],
-   "at": "2026-10-25T23:09:55.338944+00:00",
+   "at": "2026-10-26T12:30:38.250028+00:00",
    "weekly": false
   },
   "2026-10-25": {
