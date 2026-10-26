@@ -1987,7 +1987,7 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     """
     版式 A 的生成＋驗證。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
       後設字眼   重試一次，再犯就失敗
-      數字鎖     一票否決（第一版已通過時保留第一版）
+      數字鎖     2026-10-26 放寬：帶著缺出處的數字重寫一次，第二次照樣採用（只記 log）
       其他       長度、空話、標題、對利率、媒體名、相對時間 → 帶原因重寫一次，
                  第二次照樣採用並機械修正（裁長度、刪媒體說法、對利率改用規則句）
     """
@@ -2013,12 +2013,16 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
             note = ("\n\n（上一次的輸出在評論材料本身，被退回。請直接輸出重點，不要解釋"
                     "材料的多寡或你的處理過程。）")
             continue
-        if not _digits_ok(joined, src_text):
-            if best:
-                log.warning("市場焦點：重寫出現材料沒有的數字，保留第一版")
-                break
-            return None, "輸出出現材料裡沒有的數字"
+        # 數字鎖（2026-10-26 放寬）：不再一票否決——第一次帶著是哪些數字重寫，
+        # 第二次仍有就照樣採用、只記 log（使用者：模型夠強，寧可出稿也不要退回列標題）
+        _miss = _missing_digits(joined, src_text)
         why = []
+        if _miss:
+            if attempt == 1:
+                why.append("出現材料裡沒有的數字（" + "、".join(_miss[:5])
+                           + "）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述")
+            else:
+                log.warning("市場焦點：重寫後仍有材料沒有的數字（%s），照樣採用", "、".join(_miss[:5]))
         if cjk_len(main) > hards[0]:
             why.append(f"主軸超過 {hards[0]} 字")
         if mins and mins[0] and cjk_len(main) < int(mins[0] * SHORT_TOL):
@@ -2195,7 +2199,7 @@ EVENT_WORDS = {
 _FOREIGN = re.compile(r"(?<![A-Za-z])(?:Egypt|India|Indian|Pakistan|Bangladesh|Turkey|Turkish|Brazil|"
                       r"Nigeria|Kenya|Argentina|Mexico|Indonesia|Philippines|Vietnam|Thailand|Malaysia|"
                       r"South Africa|Poland|Hungary|Australia|New Zealand|Canada|UK|Britain|Korea|Korean|"
-                      r"Sri Lanka|Ghana)(?![A-Za-z])|埃及|印度|巴基斯坦|孟加拉|土耳其|巴西|奈及利亞|阿根廷|"
+                      r"Sri Lanka|Ghana|rupee|rupiah|ringgit|baht|RBA|RBI)(?![A-Za-z])|埃及|印度|巴基斯坦|孟加拉|土耳其|巴西|奈及利亞|阿根廷|盧比|"
                       r"墨西哥|印尼|菲律賓|越南|泰國|馬來西亞|南非|波蘭|澳洲|紐西蘭|加拿大|英國|南韓|韓國|斯里蘭卡")
 _US_WORDS = re.compile(r"(?<![A-Za-z])(?:US|U\.S\.|Fed|FOMC|Treasury|Treasuries|Wall Street|"
                        r"American|Warsh|Powell|Trump|dollar)(?![A-Za-z])|美國|美債|聯準會|美股|美元|川普|華許")
@@ -2703,13 +2707,29 @@ def _fix_release_dates(text: str, issues: list[dict]) -> str:
     return text
 
 
-def _digits_ok(text: str, source: str) -> bool:
-    """輸出裡的每一串數字都必須出現在來源標題裡（防 AI 編數字）。"""
+_MONTHS_EN = ("january", "february", "march", "april", "may", "june", "july", "august",
+              "september", "october", "november", "december")
+_MONTH_RE = re.compile(r"(?<![A-Za-z])(" + "|".join(m[:3] for m in _MONTHS_EN) + r")[a-z]*\.?(?![A-Za-z])", re.I)
+
+
+def _missing_digits(text: str, source: str) -> list[str]:
+    """
+    輸出裡不在來源的數字串（防 AI 編數字）。英文月份（December、Dec.）算成對應的數字，
+    「12 月」不會因為材料只寫英文月份而被當成編造（2026-10-26）。
+    """
     src = re.sub(r"[\s,，]", "", source)
-    for num in re.findall(r"\d+(?:\.\d+)?", text.replace(",", "")):
-        if num not in src:
-            return False
-    return True
+    months = {str(_MONTHS_EN.index(next(x for x in _MONTHS_EN if x.startswith(m.group(1).lower()))) + 1)
+              for m in _MONTH_RE.finditer(source or "")}
+    out = []
+    for num in re.findall(r"\d+(?:\.\d+)?", (text or "").replace(",", "")):
+        if num not in src and num not in months and num not in out:
+            out.append(num)
+    return out
+
+
+def _digits_ok(text: str, source: str) -> bool:
+    """輸出裡的每一串數字都必須出現在來源裡（月份對照見 _missing_digits）。"""
+    return not _missing_digits(text, source)
 
 
 def summarize(headlines: list[dict], item_cap: int = DEFAULT_ITEM_CHARS,
@@ -4036,6 +4056,17 @@ def archive_list(arch) -> list[dict]:
 
 # ---- v2（2026-10-25）：時間窗、FedWatch 變化、選題紀錄、星期天週報 ----
 WINDOW_STEPS = (18, 30, 60)      # 小時；不到 MIN_MAIN_STORIES 則不同報導就放寬
+BODY_SLOTS = 6                   # 內文擷取篇數上限（2026-10-26 恢復成 v1 的 6 篇）
+
+
+def _fomc_block(cfg: dict | None, today: dt.date, days: int = 45) -> str:
+    """近期 FOMC 會議日（官方日程，美東）放進材料：主軸寫「10/28 會議」時有出處。"""
+    lo, hi = today.isoformat(), (today + dt.timedelta(days=days)).isoformat()
+    ds = sorted({str(d)[:10] for d in (cfg or {}).get("fomc_dates") or [] if lo <= str(d)[:10] <= hi})
+    if not ds:
+        return ""
+    return ("\n\n=== 近期 FOMC 會議日（官方日程，美東；利率決策在最後一天下午 2 點）===\n"
+            + "、".join(f"{int(d[5:7])}/{int(d[8:10])}" for d in ds))
 FOCUS_LOG_KEEP = 30
 
 
@@ -4312,7 +4343,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         rate_ctx = None
     calendar = merge_calendar(calendar, fred_releases)
     _facts = release_facts(calendar, clock.today(), fact_values)
-    _fblk = _facts_block(_facts)
+    _fblk = _facts_block(_facts) + _fomc_block(cfg, clock.today())
     _rel_dates = release_dates(calendar)
     _ev_all = derive_events(events, cfg)
     _w = dict(caps=caps, mins=mins, meta_markers=meta_markers,
@@ -4389,9 +4420,11 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             main_body = [x for x in main_c["items"] if _body(x)][:4]
             main_brief = [x for x in main_c["items"] if not _body(x)][:4]
             oth_body, oth_brief = [], []
-            for g in others[:6]:
+            # 全文總共最多 BODY_SLOTS 篇（同 v1 的 6 篇）：主軸那件事先用，剩下的給其他事件
+            _oth_cap = max(BODY_SLOTS - len(main_body), 2)
+            for g in others[:10]:
                 b = [x for x in g["items"] if _body(x)][:1]
-                if b and len(oth_body) < 3:
+                if b and len(oth_body) < _oth_cap:
                     oth_body += b
                 elif len(oth_brief) < 3:
                     oth_brief += [x for x in g["items"] if not _body(x)][:1] or b
