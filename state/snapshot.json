@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-26T22:15:56+08:00",
+  "at": "2026-10-27T07:14:33+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -306,7 +306,7 @@
             "value": 2.763842436104702
           },
           "exp5y5y": {
-            "value": 2.19
+            "value": 2.2
           }
         }
       },
@@ -634,6 +634,63 @@
     },
     "market": {
       "current": {
+        "vintage": "2026-W44",
+        "released": "2026-10-27",
+        "flags": [
+          "pressure_high"
+        ],
+        "flag_titles": {
+          "pressure_high": "期限溢酬偏高"
+        },
+        "flag_leans": {
+          "pressure_high": "hawkish"
+        },
+        "metrics": {
+          "dgs10": {
+            "label": "10 年期殖利率",
+            "value": 5.0,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "dgs30": {
+            "label": "30 年期殖利率",
+            "value": 5.31,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "tp": {
+            "label": "期限溢酬",
+            "value": 0.6735,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.08,
+            "up_is": "hawkish"
+          },
+          "ig": {
+            "label": "投資級利差",
+            "value": 0.91,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.05,
+            "up_is": ""
+          },
+          "exp5y5y": {
+            "label": "長期通膨預期",
+            "value": 2.21,
+            "unit": "%",
+            "delta_unit": " 個百分點",
+            "threshold": 0.03,
+            "up_is": "hawkish"
+          }
+        },
+        "method": 2,
+        "metrics_prev": {}
+      },
+      "previous": {
         "vintage": "2026-W43",
         "released": "2026-10-20",
         "flags": [
@@ -681,63 +738,6 @@
           "exp5y5y": {
             "label": "長期通膨預期",
             "value": 2.2,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.03,
-            "up_is": "hawkish"
-          }
-        },
-        "method": 2,
-        "metrics_prev": {}
-      },
-      "previous": {
-        "vintage": "2026-W42",
-        "released": "2026-10-14",
-        "flags": [
-          "pressure_high"
-        ],
-        "flag_titles": {
-          "pressure_high": "期限溢酬偏高"
-        },
-        "flag_leans": {
-          "pressure_high": "hawkish"
-        },
-        "metrics": {
-          "dgs10": {
-            "label": "10 年期殖利率",
-            "value": 5.09,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.08,
-            "up_is": "hawkish"
-          },
-          "dgs30": {
-            "label": "30 年期殖利率",
-            "value": 5.43,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.08,
-            "up_is": "hawkish"
-          },
-          "tp": {
-            "label": "期限溢酬",
-            "value": 0.7475,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.08,
-            "up_is": "hawkish"
-          },
-          "ig": {
-            "label": "投資級利差",
-            "value": 0.85,
-            "unit": "%",
-            "delta_unit": " 個百分點",
-            "threshold": 0.05,
-            "up_is": ""
-          },
-          "exp5y5y": {
-            "label": "長期通膨預期",
-            "value": 2.33,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -851,7 +851,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-10-26T22:15:56+08:00",
+      "at": "2026-10-27T07:14:33+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
       "name": "傾向緊縮",
       "regime": "inflation",

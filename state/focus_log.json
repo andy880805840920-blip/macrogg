@@ -346,5 +346,74 @@
   ],
   "main": "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters",
   "result": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向"
+ },
+ {
+  "at": "2026-10-26T23:14+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "titles": [
+     "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？"
+    ]
+   },
+   {
+    "score": 9.5,
+    "sources": 1,
+    "titles": [
+     "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
+    ]
+   },
+   {
+    "score": 9.5,
+    "sources": 1,
+    "titles": [
+     "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "titles": [
+     "Watch Markets Have 'Misunderstanding' of Warsh Fed, Says Axel Merk - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "titles": [
+     "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "titles": [
+     "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "titles": [
+     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？",
+  "result": "10/28 會議前美債殖利率回落，華許面臨溝通考驗：如何解釋按兵不動又守住抗通膨決心"
  }
 ]
