@@ -204,6 +204,83 @@ finally:
 check("⑫ 數字鎖不再一票否決：第一次帶原因重寫", len(_calls) == 2 and "9.99" in _calls[1], len(_calls))
 check("⑫ 重寫後仍有 → 照樣採用（不退回列標題）", _r12 is not None and _e12 == "", _e12)
 
+# ⑬ 2026-10-27 v2.2：選題與寫作修正
+# 多字關鍵字整段比對
+check("⑬ 多字關鍵字整段比對：Wall Street 不會因為 street 命中", ft._kw_hit("Wall Street", "Stocks slump on Wall Street")
+      and not ft._kw_hit("Wall Street", "Street protests in Paris") and ft._kw_words(["debt ceiling"]) == ["debt ceiling"])
+# 轉載重複保留權重高的來源
+_feed = lambda items: type("R", (), {"content": ("<rss><channel>" + "".join(
+    f"<item><title>{t}</title><link>{l}</link><pubDate>{dt.datetime.now(U).strftime('%a, %d %b %Y %H:%M:%S +0000')}</pubDate></item>"
+    for t, l in items) + "</channel></rss>").encode(), "raise_for_status": lambda self: None})()
+_urls = {"https://tw.news.yahoo.com/rss/finance": [("Fed holds rates as inflation cools", "https://tw.news.yahoo.com/a")],
+         "https://news.google.com/rss/search?q=site:reuters.com": [("Fed holds rates as inflation cools", "https://news.google.com/x")]}
+_hs = ft.fetch_feed_headlines(list(_urls), ["Fed"], hours=30, _get=lambda u: _feed(_urls[u]))
+check("⑬ 同一則轉載只留一則、保留權重高的路透", len(_hs) == 1 and _hs[0]["link"] == "https://news.google.com/x",
+      [(h["source"], h["link"]) for h in _hs])
+# 雜訊頁
+check("⑬ 股價頁、影片頁、個股清單直接排除",
+      ft.is_junk("Chumporn Palm Oil Industry PCL (CPI.BK) | Stock Price & Latest News - Reuters")
+      and ft.is_junk("Watch Fed Looks Set to Pause After September Rate Hike - Bloomberg.com")
+      and ft.is_junk("The Fed, Inflation, Verizon, Boeing, Alphabet, and Many More Stocks to Watch")
+      and not ft.is_junk("Fed Meeting Focus Turns to Warsh Messaging With December in Mind"))
+# 外國新聞清單擴充；鎖定 +8 不給外國
+check("⑬ 法國、歐洲央行、中國算外國（沒提美國）", ft.is_foreign("French Bond Rout Puts Crisis at Heart of ECB Succession")
+      and not ft.is_foreign("European selloff drags US Treasuries"))
+_p = {}
+ft.rank_score({"title": "Euro zone GDP grows 0.3% in third quarter"}, ["GDP"], events=["gdp_adv"],
+              lock_events=["gdp_adv"], parts=_p)
+_p2 = {}
+ft.rank_score({"title": "US GDP grows 2.8% in third quarter"}, ["GDP"], events=["gdp_adv"],
+              lock_events=["gdp_adv"], parts=_p2)
+check("⑬ 外國的同類數據只拿 +2，美國的拿鎖定 +8", _p.get("發布日") == 2.0 and "鎖定" not in _p and _p2.get("鎖定") == 8.0, (_p, _p2))
+check("⑬ 分數明細的加總＝分數", abs(sum(_p2.values()) - ft.rank_score({"title": "US GDP grows 2.8% in third quarter"}, ["GDP"],
+      events=["gdp_adv"], lock_events=["gdp_adv"])) < 1e-9)
+ft.apply_selection_cfg({"selection": {"foreign_extra": ["Narnia"], "junk_patterns": ["Sponsored"]}})
+check("⑬ config 的 selection 區可以追加清單", ft.is_foreign("Narnia central bank hikes") and ft.is_junk("Sponsored: buy gold"))
+ft.apply_selection_cfg({})
+# 油價訊號要有價格字樣
+check("⑬ 油價訊號只給提到價格的標題", ft.signal_bonus("Oil prices jump 4% on supply cut", {"oil": "x"}) == 3.0
+      and ft.signal_bonus("UAE Shuts More Beaches as It Deals with Oil Spill in Gulf", {"oil": "x"}) == 0.0)
+# 證詞預告
+check("⑬ 「下週將赴國會作證」不算今天的證詞",
+      not ft.testimony_today([{"title": "Warsh will testify to Senate Banking next week"}, {"title": "華許下週將赴國會聽證"}])
+      and ft.testimony_today([{"title": "Warsh testifies to Senate Banking committee"}, {"title": "華許國會聽證：通膨仍高"}]))
+# 事件日期
+check("⑬ 事件提示寫明美東日期（隔天早上那次寫前一天）",
+      ft.event_day("cpi", {"cpi": ["2026-10-14"]}, {}, dt.datetime(2026, 10, 15, 7, 0, tzinfo=TPE)) == "10/14")
+# 同主題相關報導
+_mc = {"lead": {"title": "美債殖利率回落！Fed暫停升息理由受考驗 Warsh如何說服市場？", "link": "m"}, "items": []}
+_oth = [{"lead": {"title": "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting", "link": "g"}},
+        {"lead": {"title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind", "link": "f"}},
+        {"lead": {"title": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting", "link": "c"}}]
+_rel, _rest = ft.related_items(_mc, _oth, 3)
+check("⑬ 相關報導只收標題主角相同的（Fed 會議那則收，黃金、銅不收）",
+      [x["link"] for x in _rel] == ["f"] and len(_rest) == 2, [x["link"] for x in _rel])
+check("⑬ 主軸材料最多 4 則、只有標題時下限 120 字", ft.MAIN_MAX_ITEMS == 4 and ft.HEADLINE_ONLY_MIN == 120)
+# 寫作：媒體名、指示用語、對利率長度、補充則數
+check("⑬ 「CNBC 報導指出，」（中間有空白）會被刪掉", ft._strip_media("CNBC 報導指出，10 年期殖利率升至 5.1%") == "10 年期殖利率升至 5.1%")
+check("⑬ 「主軸這件事」會被拿掉", ft._strip_leak("主軸這件事對利率方向不明確：暫停升息") == "方向不明確：暫停升息")
+_calls13 = []
+_long_rate = "Warsh 暗示暫停升息，偏向壓低短端利率預期" + "，但若市場質疑聯準會抗通膨決心則可能推升長端殖利率" * 5 + "。"
+_out13 = ("【標題】聯準會會議前市場聚焦 Warsh 的政策訊息\n【主軸】" + "聯準會會議在即，市場關注主席 Warsh 如何說明暫停升息的理由與後續路徑。" * 4
+          + "\n【對利率】" + _long_rate + "\n【補充】\n金價走穩，市場等待聯準會會議結果，投資人觀望氣氛濃厚。\n【來源】1")
+ft._call_ai, _o13 = (lambda s, sy, env=None, **k: (_calls13.append(s) or (_out13, ""))), ft._call_ai
+try:
+    _r13, _ = ft._generate_main("【報導1】Fed meeting focus turns to Warsh", "sys", {}, caps=[250, 80, 80], mins=[200, 40, 40])
+finally:
+    ft._call_ai = _o13
+check("⑬ 對利率超過 90 字、補充少於 2 則 → 帶原因重寫一次",
+      len(_calls13) == 2 and "超過 90 字" in _calls13[1] and "補充只有 1 則" in _calls13[1], _calls13[-1][-200:])
+check("⑬ 重寫後仍有 → 照樣採用", _r13 is not None)
+# Warsh 一律英文
+check("⑬ Warsh 一律用英文、跟中文之間留空白",
+      ft.normalize_names("聯準會主席華許表示，沃許與Kevin Warsh是同一人") == "聯準會主席 Warsh 表示，Warsh 與 Warsh 是同一人")
+check("⑬ 提示詞要求主席寫 Warsh", "一律寫英文 Warsh" in ft._NEWS_RULES and ft.FED_CHAIR == "Warsh")
+# 分享圖：導言一行一行填、至少 3 行；對利率保留 10 年期對照
+_ss = (ROOT / "src/pages/story_share.py").read_text(encoding="utf-8")
+check("⑬ 分享圖導言至少 3 行、逐行遞減", "LEAD_MIN = 3" in _ss and "else if(lm > LEAD_MIN) lm--" in _ss)
+check("⑬ 分享圖對利率保留「10 年期」那句", "function rateLines" in _ss and "rateLines(rateTxt" in _ss)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

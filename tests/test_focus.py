@@ -612,7 +612,7 @@ _EN_XML = """<rss><channel>
   <link>http://f</link><pubDate>{new}</pubDate></item>
 </channel></rss>""".format(new=_new)
 fe2 = ft.fetch_feed_headlines(["https://www.ft.com/rss/home"],
-                              ["Fed rate", "Treasury yields"],
+                              ["Fed", "rate", "Treasury", "yields"],   # v2.2：英文多字詞改整段比對，這裡列單字
                               _get=lambda u: _Fake(_EN_XML))
 check("⑭d 英文標題命中關鍵字進標題池", len(fe2) == 1
       and fe2[0]["source"] == "Financial Times", fe2)
@@ -1086,7 +1086,7 @@ try:
     _o4 = ft.build({}, False, _cfg24, _sp2, env={})
     check("㉔d 沒抓到內文 → 標題模式也套用字數下限並重寫過短摘要",
           _o4["text_source"] == "model" and len(_calls24) == 2
-          and "200–250" in _calls24[0]
+          and "120–250" in _calls24[0]          # v2.2：主軸材料只有標題 → 下限 120 字
           and "只有標題" in _calls24[0], (_o4["text_source"], len(_calls24)))
 finally:
     for _k, _v in _saved.items():
@@ -1282,8 +1282,9 @@ _tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U * 2,   # 補充 150 �
 check("㉚e 補充超過 80×1.25＝100 字 → 帶原因重寫（訊息標出是第 2 行）",
       len(_seenb) == 2 and "第 1 則補充超過 100 字" in _seenb[1][0], _seenb[-1][0][-80:])
 _tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U * 2])           # 主軸 275 字（底線 275）
-check("㉚f 主軸在底線內 → 直接採用、只補一則也可以",
-      len(_seenc) == 1 and len(_tc.splitlines()) == 2)
+# v2.2（2026-10-27）：補充少於 2 則 → 帶原因重寫一次，仍只有一則就照樣採用
+check("㉚f 主軸在底線內、只補一則 → 重寫一次後照樣採用",
+      len(_seenc) == 2 and len(_tc.splitlines()) == 2)
 # 2026-10-05：主軸 200–250 字、可分段；補充不能只列標題
 _td, _, _seend = _runA(["【主軸】\n" + _U * 4 + "\n" + _U * 4 + "\n【補充】\n"
                         + _U * 2 + "\n" + _U * 2])

@@ -103,12 +103,12 @@ from src.analysis import focus_today as ft  # noqa: E402
 
 for src, want in (("聯準會主席鮑爾表示", "前主席鮑爾表示"), ("Fed Chair Powell said", None),
                   ("鮑爾主席", "前主席鮑爾"), ("前主席鮑爾", "前主席鮑爾"),
-                  ("前聯準會主席鮑爾", "前聯準會主席鮑爾"), ("主席華許", "主席華許")):
+                  ("前聯準會主席鮑爾", "前聯準會主席鮑爾"), ("主席華許", "主席 Warsh")):   # v2.2：Warsh 一律英文
     got = ft.normalize_names(src)
     if want:
         check(f"B1 稱謂修正：{src}", got == want, got)
-check("B2 提示詞寫明現任主席華許、鮑爾不得稱主席",
-      "現任主席是華許" in ft._NEWS_RULES and "不要稱他為主席" in ft._NEWS_RULES)
+check("B2 提示詞寫明現任主席 Warsh、鮑爾不得稱主席",
+      "現任主席是 Warsh" in ft._NEWS_RULES and "不要稱他為主席" in ft._NEWS_RULES)
 check("B3 FOMC 事件詞改用 Warsh／華許", "Warsh" in ft.EVENT_WORDS["fomc"]
       and "Powell" not in ft.EVENT_WORDS["fomc"])
 import yaml  # noqa: E402
@@ -202,7 +202,7 @@ _fed = [{"name": "Warsh", "role": "主席", "et": _dt.datetime(2026, 10, 15, 23,
 _sp = wx.merge_speeches(_fed, wx.ff_speeches(_ff), {2026: ["Hammack"]}, ["Warsh"],
                         _dt.date(2026, 10, 11))
 check("E3 官網＋ForexFactory 合併、同人同日不重複、票委標記、地區聯儲加銀行名",
-      [(x["zh"], x["voter"]) for x in _sp] == [("哈瑪克", True), ("華許", True)]
+      [(x["zh"], x["voter"]) for x in _sp] == [("哈瑪克", True), ("Warsh", True)]   # v2.2：Warsh 一律英文
       and _sp[0]["role"] == "克里夫蘭聯儲總裁", [(x["zh"], x["role"], x["voter"]) for x in _sp])
 check("E4 增發期別正規化：19 年 10 個月 → 20 年期（增發）",
       wx._term_label("19-Year 10-Month") == ("20 年期", True))

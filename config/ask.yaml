@@ -347,7 +347,7 @@ cards:
 - {id: statement_diff, c: 聯準會, q: 這次 FOMC 聲明改了什麼？, k: [聲明改了, 聲明差異, 聲明比對, 聲明], w: [措辭], n: [變化, 數值], x: [聯準會聲明有什麼不同], l: statement, h: /fomc/#diff, r: [last_decision, minutes, presser], src: {fn: statement_diff}}
 - {id: vote, c: 聯準會, q: 誰投了反對票？, k: [反對票, 投票結果, 票數, 投反對, 反對, 有人反對], w: [投票, 票委, fomc], n: [名單, 數值], x: [fomc有人反對嗎, 誰投反對票], l: fomc_vote, h: /fomc/#people, r: [last_decision, officials], src: {fn: vote}}
 - {id: minutes, c: 聯準會, q: 會議紀要說了什麼？, k: [會議紀要, 紀要, minutes], w: [共識, 分歧], n: [數值, 原因], x: [fomc紀要重點], l: statement, h: /fomc/#minutes, r: [statement_diff, presser], src: {fn: minutes}}
-- {id: presser, c: 聯準會, q: 主席記者會說了什麼？, k: [記者會, 主席說, 主席怎麼說], w: [主席, 華許], n: [數值, 原因], x: [主席記者會重點], l: statement, h: /fomc/#presser, r: [statement_diff, minutes], src: {fn: presser}}
+- {id: presser, c: 聯準會, q: 主席記者會說了什麼？, k: [記者會, 主席說, 主席怎麼說], w: [主席, Warsh, 華許], n: [數值, 原因], x: [主席記者會重點], l: statement, h: /fomc/#presser, r: [statement_diff, minutes], src: {fn: presser}}
 - {id: blackout, c: 聯準會, q: 現在是靜默期嗎？, k: [靜默期, 緘默期], w: [官員], n: [數值, 時間], x: [聯準會靜默期什麼時候開始], l: blackout, h: /fomc/#next, r: [speakers, next_fomc], src: {fn: blackout}}
 - {id: officials, c: 聯準會, q: 今年有投票權的委員是誰？, k: [票委, 投票委員, 有投票權, 委員名單], w: [委員, 理事], n: [名單], x: [今年fomc票委有誰], l: fomc_vote, h: /fomc/#people, r: [vote, speakers], src: {fn: officials}}
 - {id: terminal, c: 聯準會, q: 這一輪利率會停在哪？, k: [終端利率, 利率終點, 停在哪, 最後會到, 利率最後], w: [中性利率, 利率], n: [數值], x: [利率最後會到多少], l: terminal, h: /scenario/#market, r: [rate_path, dots], src: {fn: terminal}}

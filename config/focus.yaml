@@ -172,6 +172,37 @@ keywords_secondary:
   - 中東
   - Ukraine
   - 俄烏
+  # v2.2（2026-10-27）：重大事件常不帶 Fed／yields 字樣，沒列就連候選都進不來。
+  # 多字詞整段比對（不會拆成 street、debt 單字）；次級詞最多加 1 分，
+  # 真的發生時靠市場訊號（S&P ±1.5%、10Y ±6bp）的 +3 推上來。
+  - Wall Street
+  - stocks
+  - S&P 500
+  - 美股
+  - recession
+  - 衰退
+  - government shutdown
+  - shutdown
+  - 政府關門
+  - debt ceiling
+  - 債務上限
+  - credit rating
+  - rating downgrade
+  - 降評
+  - bank failure
+  - 銀行倒閉
+
+# v2.2（2026-10-27）：選題清單（程式內建預設，這裡寫的是「追加」）
+#   foreign_extra    外國新聞名單：標題沒提到美國 → −2；鎖定事件的 +8 改成一般的 +2
+#                    （內建已含 France、Germany、Europe、euro zone、ECB、China 與中文；
+#                    日本、日本央行刻意不列，它們是次級關鍵字）
+#   junk_patterns    雜訊頁（正規式）：直接排除。內建：股價頁（Stock Price & Latest News、
+#                    括號股票代號如 CPI.BK）、影片頁（Watch 開頭）、個股清單（Stocks to Watch、and Many More）
+#   oil_price_words  油價訊號只加給同時提到價格的標題（內建 price、futures、Brent、WTI、barrel、油價…）
+selection:
+  foreign_extra: []
+  junk_patterns: []
+  oil_price_words: []
 
 # 後設偵測：AI 輸出含任一詞組＝在評論材料而不是寫新聞（實際發生過：
 # 整篇「材料相關內容極為有限…無法按要求綜合改寫」上了線）。
@@ -260,6 +291,9 @@ feeds:
   - https://news.google.com/rss/search?q=site:bloomberg.com%20(Fed%20OR%20FOMC%20OR%20Powell%20OR%20Warsh%20OR%20%22rate%20cut%22%20OR%20%22rate%20hike%22)%20when:2d&hl=en-US&gl=US&ceid=US:en
   - https://news.google.com/rss/search?q=site:bloomberg.com%20(Treasury%20OR%20Treasuries%20OR%20yields%20OR%20inflation%20OR%20CPI%20OR%20PCE%20OR%20payrolls%20OR%20jobs)%20when:2d&hl=en-US&gl=US&ceid=US:en
   - https://news.google.com/rss/search?q=site:bloomberg.com%20(dollar%20OR%20tariffs%20OR%20Trump%20OR%20BOJ%20OR%20yen%20OR%20oil%20OR%20gold%20OR%20Nvidia)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  # v2.2：美股重挫、政府關門、債務上限、降評、衰退（這類標題常沒有 Fed／yields）
+  - https://news.google.com/rss/search?q=site:reuters.com%20(%22Wall%20Street%22%20OR%20stocks%20OR%20shutdown%20OR%20%22debt%20ceiling%22%20OR%20recession%20OR%20downgrade)%20when:2d&hl=en-US&gl=US&ceid=US:en
+  - https://news.google.com/rss/search?q=site:bloomberg.com%20(%22Wall%20Street%22%20OR%20stocks%20OR%20shutdown%20OR%20%22debt%20ceiling%22%20OR%20recession%20OR%20downgrade)%20when:2d&hl=en-US&gl=US&ceid=US:en
 
 # ============================================================================
 # 主題補充（2026-10）：主軸下方的兩則補充，依讀者在「選擇」裡排的前兩個
