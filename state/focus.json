@@ -1,42 +1,42 @@
 {
  "hash": "",
- "text": "債券投資人的關注重心正從聯準會政策轉向 AI 發展與美國財政赤字問題。隨著升息循環進入後期，市場開始更關注結構性因素對長期利率的影響。¶AI 產業的快速擴張帶動企業資本支出與經濟成長預期，同時美國財政赤字持續擴大，兩者都對長期債券殖利率形成上行壓力。投資人評估這些因素對利率曲線的影響，可能超過短期貨幣政策調整的作用。\n強勢美元與高殖利率拖累黃金展望，但各國央行購金需求提供支撐。調查顯示美元走強與利率維持高位壓低金價，不過新興市場央行持續增持黃金作為外匯儲備多元化策略。\n全球高通膨將持續至明年。調查顯示各國通膨率仍處高位，預計延續至 2026 年，反映能源、食品價格與薪資成長壓力尚未完全消退。",
+ "text": "債市投資人正將注意力從聯準會政策轉向 AI 投資熱潮與美國財政赤字問題。隨著科技業大舉投入 AI 基礎設施建設，相關融資需求推升企業債發行，而聯邦政府持續擴大的財政赤字也加重公債供給壓力。¶市場關注 AI 投資能否持續帶來實際回報。Meta 在 10/27 宣布將發行 950 億美元股票支應 AI 投資後股價下跌，凸顯投資人對支出效益的疑慮。那斯達克指數已從 10 月初高點回落約 5%，費城半導體指數過去一個月下跌 12%。¶財政赤字擴大使公債供給增加，加上 AI 相關企業債發行升溫，債市面臨雙重供給壓力。這些結構性因素正取代短期政策預期，成為影響殖利率走勢的主要力量。\n看多美債的投資人面臨立場逆轉風險，若聯準會在 10/28 會議釋出鷹派訊號，可能觸發部位調整。\n黃金在 10/27 站穩 4,000 美元上方，市場等待聯準會利率決策；油價走軟提供支撐。",
  "links": [
   {
    "title": "Bond investors are thinking less about the Fed and more about AI, deficits",
    "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOTVZDTFViUjF0VS1rM2FQX1ZjYmpIQncyQi1pMldoZ1N2U2JXUjIydVFJUGN1dXV4STlvYlVEM3FPSEZaSEt3Rnkxc0R5c3JrOEg2b0g2d2pUemFMbXpKNjZ6M1NabkwxcmJrbE5sdWtnU2pDd3R0X3ZkakhTNTZraUU0ejJKdDVRR0NheWhzcXBLUnU2dGxGUXFURnJZaExIM1hTRW9LWE5KbkNJN2RZ?oc=5",
    "source": "Reuters",
-   "at": "2026-10-27T10:15:01+00:00"
+   "at": "2026-10-27T19:55:40+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-10-27",
+  "date": "2026-10-28",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-10-27",
+   "date": "2026-10-28",
    "meetings": [
     {
      "date": "2026-10-28",
-     "start": 3.880089,
-     "end": 3.905,
-     "move_bp": 2.491,
+     "start": 3.880625,
+     "end": 3.9,
+     "move_bp": 1.938,
      "outcomes": [
       [
        0,
-       0.9004
+       0.9225
       ],
       [
        25,
-       0.0996
+       0.0775
       ]
      ],
      "how": "2026-11 合約平均"
     },
     {
      "date": "2026-12-09",
-     "start": 3.905,
-     "end": 4.109318,
+     "start": 3.9,
+     "end": 4.104318,
      "move_bp": 20.432,
      "outcomes": [
       [
@@ -52,93 +52,93 @@
     },
     {
      "date": "2027-01-27",
-     "start": 4.109318,
-     "end": 4.195,
-     "move_bp": 8.568,
+     "start": 4.104318,
+     "end": 4.205,
+     "move_bp": 10.068,
      "outcomes": [
       [
        0,
-       0.6573
+       0.5973
       ],
       [
        25,
-       0.3427
+       0.4027
       ]
      ],
      "how": "2027-02 合約平均"
     },
     {
      "date": "2027-03-17",
-     "start": 4.195,
-     "end": 4.361071,
-     "move_bp": 16.607,
+     "start": 4.205,
+     "end": 4.382143,
+     "move_bp": 17.714,
      "outcomes": [
       [
        25,
-       0.6643
+       0.7086
       ],
       [
        0,
-       0.3357
+       0.2914
       ]
      ],
      "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
     },
     {
      "date": "2027-04-28",
-     "start": 4.361071,
-     "end": 4.445,
-     "move_bp": 8.393,
+     "start": 4.382143,
+     "end": 4.48,
+     "move_bp": 9.786,
      "outcomes": [
       [
        0,
-       0.6643
+       0.6086
       ],
       [
        25,
-       0.3357
+       0.3914
       ]
      ],
      "how": "2027-05 合約平均"
     },
     {
      "date": "2027-06-09",
-     "start": 4.445,
-     "end": 4.545,
-     "move_bp": 10.0,
+     "start": 4.48,
+     "end": 4.565714,
+     "move_bp": 8.571,
      "outcomes": [
       [
        0,
-       0.6
+       0.6571
       ],
       [
        25,
-       0.4
+       0.3429
       ]
      ],
      "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
     },
     {
      "date": "2027-07-28",
-     "start": 4.545,
-     "end": 4.57,
-     "move_bp": 2.5,
+     "start": 4.565714,
+     "end": 4.6,
+     "move_bp": 3.429,
      "outcomes": [
       [
        0,
-       0.9
+       0.8629
       ],
       [
        25,
-       0.1
+       0.1371
       ]
      ],
      "how": "2027-08 合約平均"
     },
     {
      "date": "2027-09-15",
-     "start": 4.57,
-     "end": 4.6,
+     "start": 4.6,
+     "end": 4.63,
      "move_bp": 3.0,
      "outcomes": [
       [
@@ -154,8 +154,8 @@
     },
     {
      "date": "2027-10-27",
-     "start": 4.6,
-     "end": 4.595,
+     "start": 4.63,
+     "end": 4.625,
      "move_bp": -0.5,
      "outcomes": [
       [
@@ -171,8 +171,8 @@
     },
     {
      "date": "2027-12-08",
-     "start": 4.595,
-     "end": 4.574783,
+     "start": 4.625,
+     "end": 4.604783,
      "move_bp": -2.022,
      "outcomes": [
       [
@@ -189,25 +189,25 @@
    ],
    "next": {
     "date": "2026-10-28",
-    "start": 3.880089,
-    "end": 3.905,
-    "move_bp": 2.491,
+    "start": 3.880625,
+    "end": 3.9,
+    "move_bp": 1.938,
     "outcomes": [
      [
       0,
-      0.9004
+      0.9225
      ],
      [
       25,
-      0.0996
+      0.0775
      ]
     ],
     "how": "2026-11 合約平均"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.905,
-    "end": 4.109318,
+    "start": 3.9,
+    "end": 4.104318,
     "move_bp": 20.432,
     "outcomes": [
      [
@@ -221,236 +221,179 @@
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 22.923,
-   "r0": 3.880089,
+   "cum_bp": 22.369,
+   "r0": 3.880625,
    "r0_src": "2026-10 與 2026-11 合約反推",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 22.923,
-     "prev_cum_bp": 21.514
+     "cum_bp": 22.369,
+     "prev_cum_bp": 23.2
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 66.491,
-     "prev_cum_bp": 61.277
+     "cum_bp": 68.509,
+     "prev_cum_bp": 66.054
     },
     {
      "date": "2027-12-08",
      "label": "2027 年底",
-     "cum_bp": 69.469,
-     "prev_cum_bp": 66.143
+     "cum_bp": 72.416,
+     "prev_cum_bp": 68.572
     }
    ],
    "prev": {
     "next": {
      "date": "2026-10-28",
-     "start": 3.880089,
-     "end": 3.905,
-     "move_bp": 2.491,
+     "start": 3.882321,
+     "end": 3.91,
+     "move_bp": 2.768,
      "outcomes": [
       [
        0,
-       0.9004
+       0.8893
       ],
       [
        25,
-       0.0996
+       0.1107
       ]
      ],
      "how": "2026-11 合約平均"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.905,
-     "end": 4.095227,
-     "move_bp": 19.023,
+     "start": 3.91,
+     "end": 4.114318,
+     "move_bp": 20.432,
      "outcomes": [
       [
        25,
-       0.7609
+       0.8173
       ],
       [
        0,
-       0.2391
+       0.1827
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 21.514
+    "cum_bp": 23.2
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-10-27T14:56:49.849436+00:00",
+ "at": "2026-10-27T23:06:46.587238+00:00",
  "layout": "main",
  "topics": {
-  "hash": "40c7dd71b02185eb",
+  "hash": "be052d3377a4c8d8",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會決策前夕，30位基金經理人與經濟學家中76%預期12月升息，40%認為聯準會必須放緩經濟成長以解決通膨問題；名義GDP成長6-8%、通膨領先指標普遍偏熱，但部分人士擔憂經濟走弱",
+    "text": "聯準會主席 Warsh 拒絕提供前瞻指引，將利率決策權交由市場判斷。調查顯示 93% 受訪者預期 10/27 會議維持利率不變，76% 預期 12 月升息機率達 73%。Warsh 強調每次會議前不預設決策，與其他官員的溝通風格形成對比，迫使投資人自行評估哪些訊號最重要",
     "links": [
      {
       "title": "Fed rate hikes are coming, but not this week: CNBC survey",
       "link": "https://www.cnbc.com/2026/10/27/federal-reserve-rate-hike-timing-expectations.html",
       "source": "CNBC",
-      "at": "2026-10-27T11:10:01+00:00"
+      "at": "2026-10-27T15:51:00+00:00"
      },
      {
-      "title": "Canadian dollar slips as investors await Bank of Canada, Fed rate decisions",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/canadian-dollar-slips-investors-await-133012268.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-27T13:30:12+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "長天期美債殖利率居高不下，美國銀行重新評估債券投資組合策略，同時新興市場債券表現超越美債，反映投資人對已開發國家財政風險的擔憂",
-    "links": [
-     {
-      "title": "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios",
-      "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOZlRoclI1cWxjMnVMUDNDMU1HYXoyOWRGTjlpOGs1ejBTNzRxNGtJQVJ5NVYxM2d2cjlXOThnX3dvQ0Nld2JGVWdmRmZpTjhmLTlUVlVoU0FnNENXb1pydXVQNlpaZy0zZjVfdXlOSWtwbW9KZlAybzRfNlBsNVc4VmVhSFhBajIzcTl6Y0QwR0pvWEtVbjNxTTJPdHNWcFNwakFOZE05Tk4wSTJOa2JOTWpobXFNR01WUHlqVEViaS1selhWTWc?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-27T10:11:08+00:00"
-     },
-     {
-      "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T08:08:38+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "代幣化貨幣市場基金在香港獲得24小時零售交易許可，貝萊德、SBI控股與Startale簽署合作備忘錄，計畫連結代幣化貨幣市場基金與日圓穩定幣，英國交易商預期發行更多短期國債以降低債務成本",
-    "links": [
-     {
-      "title": "UK Dealers See More Treasury Bills Coming to Cut Debt Costs",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOYXRWc2YxSFQwQTVsbElEcUo0eVZfWkdvUXdUSHlJVXZVNnJka210ZVRxZ1MtU0g2ZG5KTlE5ak44a2U1bG5qdmtNYkh2c2tsS3pyeHhqUWFaWHEyQ1pKazhSbkx1Q1lldkxkcXlCNWRCWVE1T0ZrZk1SbkV3dEdHR1I5Z3lyX1d4dGJ3U1NQalYwVmpKMlp0cmswT0MtdFFoVHBtVk1uN25BRndqQXI4?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T07:15:00+00:00"
-     },
-     {
-      "title": "Tokenised Money Market Funds Gain 24/7 Retail Trading in Hong Kong",
-      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNR0dXejQtZGVUeUlpb0QyN0NNZ1dMXzAwdkNkSmNqTTl1TjhPSkUzLUNaUVRTNHpfSU0yTmxFTVRGNXE2VE1hNERQT3NHUklaMHVpZHRBdnNfZVdwZmxtVUl3SnFUVGZheDRybWlaeko3VUNTQzFFLUJRTlo2TkpSXzhnZU1ueTZpY1hqQU5kV1YwMHVlTnotcm1vU3hTYzRwWUF6OEFVUQ?oc=5",
-      "source": "FinanceX Magazine",
-      "at": "2026-10-27T12:42:45+00:00"
+      "title": "本周科技巨頭財報牽動Fed 12月升息？華許拒釋前瞻指引 留給市場自己找答案",
+      "link": "https://tw.stock.yahoo.com/news/%E6%9C%AC%E5%91%A8%E7%A7%91%E6%8A%80%E5%B7%A8%E9%A0%AD%E8%B2%A1%E5%A0%B1%E7%89%BD%E5%8B%95fed-12%E6%9C%88%E5%8D%87%E6%81%AF-%E8%8F%AF%E8%A8%B1%E6%8B%92%E9%87%8B%E5%89%8D%E7%9E%BB%E6%8C%87%E5%BC%95-%E7%95%99%E7%B5%A6%E5%B8%82%E5%A0%B4%E8%87%AA%E5%B7%B1%E6%89%BE%E7%AD%94%E6%A1%88-200003047.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T20:00:03+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東局勢緩和帶來外交解決曙光，伊朗最高領袖重申結束戰爭條件，沙烏地阿拉伯、巴基斯坦與土耳其官員赴德黑蘭協商，油價因此回落，布蘭特原油從逼近117美元跌至115美元以下",
+    "text": "中東外交談判釋出降溫訊號，布蘭特原油跌1.93美元至113.88美元；惟胡塞武裝持續攻擊沙烏地阿拉伯煉油廠、荷姆茲海峽商船遇襲事件創2017年來新高，供應風險仍存，瑞銀上調年底油價預估至110美元",
     "links": [
      {
-      "title": "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting",
-      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-26T05:56:00+00:00"
-     },
-     {
-      "title": "〈美股早盤〉油價回落、晶片股續揚 主要指數開高靜待Fed決策",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%97%A9%E7%9B%A4-%E6%B2%B9%E5%83%B9%E5%9B%9E%E8%90%BD-%E6%99%B6%E7%89%87%E8%82%A1%E7%BA%8C%E6%8F%9A-%E4%B8%BB%E8%A6%81%E6%8C%87%E6%95%B8%E9%96%8B%E9%AB%98%E9%9D%9C%E5%BE%85fed%E6%B1%BA%E7%AD%96-134115842.html",
+      "title": "〈能源盤後〉中東和談釋出降溫訊號 油價跌近2美元但仍處半年高檔",
+      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E4%B8%AD%E6%9D%B1%E5%92%8C%E8%AB%87%E9%87%8B%E5%87%BA%E9%99%8D%E6%BA%AB%E8%A8%8A%E8%99%9F-%E6%B2%B9%E5%83%B9%E8%B7%8C%E8%BF%912%E7%BE%8E%E5%85%83%E4%BD%86%E4%BB%8D%E8%99%95%E5%8D%8A%E5%B9%B4%E9%AB%98%E6%AA%94-205135228.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-27T13:41:15+00:00"
+      "at": "2026-10-27T20:51:35+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "Anthropic正式遞交IPO文件，AI股票重新獲得買盤追捧；但Alphabet儘管在AI投入數百億美元，股價表現仍落後標普500超過10個百分點，反映市場對其AI商業化成效的疑慮",
+    "text": "Anthropic上市申請重燃AI投資熱情，費半漲3.6%；Meta股票發行認購超額5倍、輝達與AMD各投30億美元參與，惟Meta股價跌1.64%，凸顯投資人對支出效益仍有疑慮",
     "links": [
      {
-      "title": "AI stocks rise as Anthropic nears Wall Street debut amid investor caution",
-      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQNVdGRWF4eUpFNlQ2QkxGSWVrdlZZMU9OVlgtNkduS1JrMVdzQ0VJRVJPak4xcERFNENPWGE3YUM3VHpSSnFybzZJRWRTSW53eWwzTW1jLTR5dmpjelcxam96czEycUZ3a1piY2kwcC15WTR3ZFJUeGdIUkxuLXl6b0d4dGJ0T0hWcUl0ejVSMzI1UlpJdzRnZ09Td05wRDlJbVJaT0ktM3Z4Q2ZNdnNSWnA1bkZGVl9iYVI1TEtCc0VhRjRJ?oc=5",
+      "title": "Wall Street ends higher on revived AI momentum",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNR21qQWZsLUZqbWRjR2YtQ3FGakpEWWVjSUVFNjVDSi01MnRiWmV3Z2pPQUsyVGhJR3UxQ1o4RjRVa2tCLXNXbnJjNE9fbE5KVzlKTEZtNHpZb3lPR0hXcFFSVGVydlpnR3RQdVM5bDE3aVI3aVowN0NqY3NHb3VDN3hlaXpLTmxkeFc3NE13dUNqYUtIMHNxRFR5M3VYZmpKUDRzVE5WLUdwRHJCeEpQM1pKaw?oc=5",
       "source": "Reuters",
-      "at": "2026-10-26T15:34:00+00:00"
+      "at": "2026-10-27T21:11:24+00:00"
      },
      {
-      "title": "US stocks end higher as Anthropic's IPO filing buoys AI stocks",
-      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9Rc1dUclA2M1BONXVBekQtQUNPblBuWl9IYktac3RJWDdWeE9yQ2ZkMzRoejNzNFFnT2R5ZXBpYkRvQm10YU9RSTVkWWtoUU5jZWxaSUs2S0JTT29vYmRlbXJXdTVaQTQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-27T03:06:06+00:00"
+      "title": "〈美股盤後〉Anthropic IPO熱潮延燒 費半漲3.6% 波音崩逾10%壓抑道瓊",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%BE%8C-anthropic-ipo%E7%86%B1%E6%BD%AE%E5%BB%B6%E7%87%92-%E8%B2%BB%E5%8D%8A%E6%BC%B23-6-212649535.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T21:26:49+00:00"
+     }
+    ]
+   },
+   {
+    "id": "semi",
+    "label": "AI 與半導體",
+    "text": "Anthropic披露現金與短期投資合計1317億美元，超越輝達與蘋果總和；上半年虧損800億美元，其中724億為一次性費用，未來租賃義務達3214億美元，IPO最快11月16日上市",
+    "links": [
+     {
+      "title": "AI新創Anthropic現金逾1300億美元 超越輝達蘋果總和",
+      "link": "https://tw.stock.yahoo.com/news/ai%E6%96%B0%E5%89%B5anthropic%E7%8F%BE%E9%87%91%E9%80%BE1300%E5%84%84%E7%BE%8E%E5%85%83-%E8%B6%85%E8%B6%8A%E8%BC%9D%E9%81%94%E8%98%8B%E6%9E%9C%E7%B8%BD%E5%92%8C-225413708.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T22:54:13+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "美股27日開盤走高，費城半導體指數上漲1.93%，台積電ADR漲1.46%至430.6美元，台指期夜盤漲452點報46558點；聯準會本週維持利率不變機率達90.6%，主席 Warsh 的談話成市場焦點",
+    "text": "台指期夜盤勁揚774點，台積電期貨上漲42元；美股費半大漲3.6%、博通獲升評至「買進」目標價400美元、AMD漲5.45%，帶動台股電子權值股反彈",
     "links": [
      {
-      "title": "晶片股飆漲！美股27日走高費半漲1.93%　台指期夜盤漲452點",
-      "link": "https://tw.news.yahoo.com/%E6%99%B6%E7%89%87%E8%82%A1%E9%A3%86%E6%BC%B2-%E7%BE%8E%E8%82%A127%E6%97%A5%E8%B5%B0%E9%AB%98%E8%B2%BB%E5%8D%8A%E6%BC%B21-93-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%BC%B2452%E9%BB%9E-140617644.html",
+      "title": "台股盤前／台指夜盤飆774點！融資大減104億　台股今要噴了",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E7%9B%A4%E5%89%8D-%E5%8F%B0%E6%8C%87%E5%A4%9C%E7%9B%A4%E9%A3%86774%E9%BB%9E-%E8%9E%8D%E8%B3%87%E5%A4%A7%E6%B8%9B104%E5%84%84-%E5%8F%B0%E8%82%A1%E4%BB%8A%E8%A6%81%E5%99%B4%E4%BA%86-225300659.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T14:06:17+08:00"
+      "at": "2026-10-27T22:53:00+08:00"
      },
      {
-      "title": "快訊／美股開紅盤　費半漲175點、台指期夜盤也衝逾500點",
-      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E7%BE%8E%E8%82%A1%E9%96%8B%E7%B4%85%E7%9B%A4-%E8%B2%BB%E5%8D%8A%E6%BC%B2175%E9%BB%9E-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E4%B9%9F%E8%A1%9D%E9%80%BE500%E9%BB%9E-134700726.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T13:47:00+08:00"
-     }
-    ]
-   },
-   {
-    "id": "gold",
-    "label": "黃金",
-    "text": "黃金在美元走強與高殖利率壓力下回落，但央行持續需求提供支撐，金價在4000美元上方震盪，投資人等待聯準會決策",
-    "links": [
-     {
-      "title": "Gold retreats on stronger dollar; traders brace for Fed",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQQWIyeWVhRnVBaHZfV05HanpZVFJzZDZiaC1MTEFVX0JEbWc5RVhRV3htMnJFMDNCVjBPWTJISkhha3ZWc3otaXBCTGloREJidmlqOWtXMTQ4Zks2aTA5czBzNC1OdGNuVXlqLVZ4TTk3M1VUSEZvdVdCLXV3bHJsZXBHSktGcXR0dk1wS2VYdWYxTm9ueGc?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-27T05:46:00+00:00"
-     },
-     {
-      "title": "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support",
-      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNY2N0dGg4Q1VsMUJXaTJYb1J4cjJiQjRGYS16djR0Nnh5VGVsQmFRZXctU0w3UUpfclljaFp4ZW5DVFZTLVYzTUlSWDY5Q0JsQ0JLYjF5aFJoVDBpOGhrWnkxdEZKdUtpQzNPc1kxRGdGRkdTZENtM25LLUNYNTdlMjNnMHdUcU52VVlFTkNXRUJKMDFhWEhFalptcGZvQ0FZeUl1UHF5T3Z2UmpWOUR6ekJmMnlHblRWQU1MUzFUaXZiUzA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-27T13:30:00+00:00"
+      "title": "台積電ADR27日上漲12.50美元漲幅2.95%折台股2835.46元",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BBadr27%E6%97%A5%E4%B8%8A%E6%BC%B212-50%E7%BE%8E%E5%85%83%E6%BC%B2%E5%B9%852-95-%E6%8A%98%E5%8F%B0%E8%82%A12835-46%E5%85%83-214140549.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T21:41:40+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元匯率31.85元，壽險業外匯避險比率降至40.95%，外價金四桶金累計1兆1109億元，極端情況下可緩衝新台幣升值11.9%至28.05元",
+    "text": "新台幣午盤爆量反彈升值5.6分至32.452元；央行報告指外資今年迄10月21日淨匯出776億美元，聯準會年底前可能再升息1碼",
     "links": [
      {
-      "title": "保險業前三季賺3977億 壽險業外價金4桶金約1.1兆、極端情境可緩衝新臺幣升值11.9%",
-      "link": "https://tw.news.yahoo.com/%E4%BF%9D%E9%9A%AA%E6%A5%AD%E5%89%8D%E4%B8%89%E5%AD%A3%E8%B3%BA3977%E5%84%84-%E5%A3%BD%E9%9A%AA%E6%A5%AD%E5%A4%96%E5%83%B9%E9%87%914%E6%A1%B6%E9%87%91%E7%B4%841-1%E5%85%86-%E6%A5%B5%E7%AB%AF%E6%83%85%E5%A2%83%E5%8F%AF%E7%B7%A9%E8%A1%9D%E6%96%B0%E8%87%BA%E5%B9%A3%E5%8D%87%E5%80%BC11-9-140805575.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T14:08:05+08:00"
+      "title": "〈台股盤前要聞〉新台幣爆量轉升5.6分收32.452元、旺宏Q3 EPS 5.52元史上最賺一季",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%9B%A4%E5%89%8D%E8%A6%81%E8%81%9E-%E6%96%B0%E5%8F%B0%E5%B9%A3%E7%88%86%E9%87%8F%E8%BD%89%E5%8D%875-6%E5%88%86%E6%94%B632-452%E5%85%83-%E6%97%BA%E5%AE%8Fq3-211002830.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T21:10:02+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-27T14:57:25.751359+00:00"
+  "at": "2026-10-27T23:07:35.658224+00:00"
  },
  "main_source_titles": [
   "Bond investors are thinking less about the Fed and more about AI, deficits"
  ],
- "headline": "債市焦點從聯準會轉向 AI 與財政赤字",
- "rate_note": "債市焦點轉向 AI 與財政赤字，偏向推升長端利率——AI 帶動成長預期、財政赤字增加供給壓力，都會拉高長期殖利率；若聯準會政策影響力相對減弱，長端對基本面與供需的敏感度上升。10 年期今日 +0bp 至 4.99%，維持高檔，市場已在反映。",
+ "headline": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字",
+ "rate_note": "AI 投資與財政赤字推升債市供給，偏向推高長端利率——前者增加企業債發行、後者加重公債供給壓力，兩者都會排擠買盤、壓低債券價格。不過 10 年期 10/27 收盤僅 +1bp 至 4.99%，市場尚未充分反映這些結構性壓力。",
  "recent_mains": [
-  {
-   "headline": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字",
-   "titles": [
-    "Bond investors are thinking less about the Fed and more about AI, deficits"
-   ],
-   "at": "2026-10-27T13:00:57.858882+00:00"
-  },
   {
    "headline": "債市投資人焦點從聯準會轉向 AI 與財政赤字",
    "titles": [
@@ -464,9 +407,32 @@
     "Bond investors are thinking less about the Fed and more about AI, deficits"
    ],
    "at": "2026-10-27T14:56:49.849436+00:00"
+  },
+  {
+   "headline": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字",
+   "titles": [
+    "Bond investors are thinking less about the Fed and more about AI, deficits"
+   ],
+   "at": "2026-10-27T23:06:46.587238+00:00"
   }
  ],
  "archive": {
+  "2026-10-28": {
+   "headline": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字",
+   "text": "債市投資人正將注意力從聯準會政策轉向 AI 投資熱潮與美國財政赤字問題。隨著科技業大舉投入 AI 基礎設施建設，相關融資需求推升企業債發行，而聯邦政府持續擴大的財政赤字也加重公債供給壓力。¶市場關注 AI 投資能否持續帶來實際回報。Meta 在 10/27 宣布將發行 950 億美元股票支應 AI 投資後股價下跌，凸顯投資人對支出效益的疑慮。那斯達克指數已從 10 月初高點回落約 5%，費城半導體指數過去一個月下跌 12%。¶財政赤字擴大使公債供給增加，加上 AI 相關企業債發行升溫，債市面臨雙重供給壓力。這些結構性因素正取代短期政策預期，成為影響殖利率走勢的主要力量。\n看多美債的投資人面臨立場逆轉風險，若聯準會在 10/28 會議釋出鷹派訊號，可能觸發部位調整。\n黃金在 10/27 站穩 4,000 美元上方，市場等待聯準會利率決策；油價走軟提供支撐。",
+   "rate_note": "AI 投資與財政赤字推升債市供給，偏向推高長端利率——前者增加企業債發行、後者加重公債供給壓力，兩者都會排擠買盤、壓低債券價格。不過 10 年期 10/27 收盤僅 +1bp 至 4.99%，市場尚未充分反映這些結構性壓力。",
+   "links": [
+    {
+     "title": "Bond investors are thinking less about the Fed and more about AI, deficits",
+     "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOTVZDTFViUjF0VS1rM2FQX1ZjYmpIQncyQi1pMldoZ1N2U2JXUjIydVFJUGN1dXV4STlvYlVEM3FPSEZaSEt3Rnkxc0R5c3JrOEg2b0g2d2pUemFMbXpKNjZ6M1NabkwxcmJrbE5sdWtnU2pDd3R0X3ZkakhTNTZraUU0ejJKdDVRR0NheWhzcXBLUnU2dGxGUXFURnJZaExIM1hTRW9LWE5KbkNJN2RZ?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-27T19:55:40+00:00"
+    }
+   ],
+   "at": "2026-10-27T23:06:46.587238+00:00",
+   "weekly": false,
+   "points": 1
+  },
   "2026-10-27": {
    "headline": "債市焦點從聯準會轉向 AI 與財政赤字",
    "text": "債券投資人的關注重心正從聯準會政策轉向 AI 發展與美國財政赤字問題。隨著升息循環進入後期，市場開始更關注結構性因素對長期利率的影響。¶AI 產業的快速擴張帶動企業資本支出與經濟成長預期，同時美國財政赤字持續擴大，兩者都對長期債券殖利率形成上行壓力。投資人評估這些因素對利率曲線的影響，可能超過短期貨幣政策調整的作用。\n強勢美元與高殖利率拖累黃金展望，但各國央行購金需求提供支撐。調查顯示美元走強與利率維持高位壓低金價，不過新興市場央行持續增持黃金作為外匯儲備多元化策略。\n全球高通膨將持續至明年。調查顯示各國通膨率仍處高位，預計延續至 2026 年，反映能源、食品價格與薪資成長壓力尚未完全消退。",
@@ -636,6 +602,10 @@
   "2026-10-27": {
    "meeting": "2026-10-28",
    "p": 0.0996
+  },
+  "2026-10-28": {
+   "meeting": "2026-10-28",
+   "p": 0.0775
   }
  },
  "weekly": false,

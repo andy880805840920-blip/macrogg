@@ -911,5 +911,98 @@
   "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
   "points": 1,
   "result": "債市焦點從聯準會轉向 AI 與財政赤字"
+ },
+ {
+  "at": "2026-10-27T23:06+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [
+   "fomc"
+  ],
+  "locks": [
+   "fomc"
+  ],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
+    "titles": [
+     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
+    ]
+   },
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、時效+2、來源+3、鎖定+8、主題熱度+0.5",
+    "titles": [
+     "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 18.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+1",
+    "titles": [
+     "The Fed, Growth-Stock Woes and Downside Gaps: Macro Man Podcast - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 16.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+1.5、鎖定+8、主題熱度+1",
+    "titles": [
+     "Fed rate hikes are coming, but not this week: CNBC survey"
+    ]
+   },
+   {
+    "score": 15.5,
+    "sources": 1,
+    "why": "主題+1、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+1",
+    "titles": [
+     "Gold Steadies Above $4,000 With Fed Rate Decision in Focus - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 15.5,
+    "sources": 1,
+    "why": "主題+1、次級+1、時效+1.5、來源+3、鎖定+8、主題熱度+1",
+    "titles": [
+     "Gold gains on softer oil prices ahead of Fed meeting - Reuters"
+    ]
+   },
+   {
+    "score": 15.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、鎖定+8、主題熱度+1",
+    "titles": [
+     "本周科技巨頭財報牽動Fed 12月升息？華許拒釋前瞻指引 留給市場自己找答案"
+    ]
+   },
+   {
+    "score": 14.5,
+    "sources": 1,
+    "why": "主題+1、次級+0.5、時效+2、來源+3、鎖定+8",
+    "titles": [
+     "Bloomberg Surveillance: Fed and AI - Bloomberg.com"
+    ]
+   }
+  ],
+  "second": "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
+  "related": [
+   "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
+  ],
+  "copy_miss": [
+   "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+   "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
+   "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
+  ],
+  "second_dropped": "重點二沒有內文",
+  "headline_only": true,
+  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+  "points": 1,
+  "result": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字"
  }
 ]
