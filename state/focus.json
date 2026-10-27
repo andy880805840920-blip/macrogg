@@ -1,12 +1,18 @@
 {
  "hash": "",
- "text": "10 年期公債殖利率 10/26 收在 5.1%，自 2 月底以來累計上升 114bp，2 兆美元財政赤字與聯邦政府大量發債正推高長端利率。房市已開始受衝擊：30 年期房貸利率徘徊在 7.5% 附近，9 月待完成房屋銷售月減 4%，創三年來最大單月跌幅；房貸利率追蹤 10 年期殖利率走勢。¶推升 10 年期的因素包括 2/28 爆發的美伊戰爭，油價與柴油價格大漲，債市交易員要求更高殖利率以反映聯準會可能升息的風險。此外投資人要求更多風險溢酬持有長天期公債，部分原因是預期美國政府將持續大量發債；企業債與公債市場相互連動，企業為建設 AI 基礎設施發行數千億美元新債，加劇資本競爭。11/3 期中選舉後兩黨高度不可能在財政問題上合作，任何解決方案都要等數年之後。\n亞洲銀行因通膨與債市動盪面臨資本壓力，路透 10/26 報導指出區域性金融機構受長端利率上升與資產負債表壓力影響。\n銅價延續跌勢，10/28 聯準會會議前 AI 類股走弱拖累工業金屬需求預期，彭博 10/26 報導銅價下跌反映市場對科技業資本支出的疑慮。",
+ "text": "摩根資產管理固定收益部門主管 10/26 表示債市目前是買點。此說法出現在聯準會 10/28 會議前夕，市場定價顯示維持利率 3.75–4.00% 機率達 90%，累計至 2026 年底升息 23bp、至 2027 年中升息 66bp。同日銅價延續跌勢，AI 概念股走弱拖累工業金屬需求預期，銅價下滑反映市場對科技業資本支出放緩的擔憂，儘管 AI 基礎建設融資需求推動美國投資級債券銷售創年度新高，但 AI 股價修正仍對相關原物料形成壓力。\n日銀 10/29–30 會議預計維持政策利率 1.25% 不變，但 CNBC 訪問的 16 名專家認為 12 月或明年 1 月升息機率高，因日本 9 月核心 CPI 年增 2.1%、創今年新高，8 月實質薪資連續第 8 個月成長、年增 1.5%。",
  "links": [
   {
-   "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-   "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-   "source": "CNBC",
-   "at": "2026-10-26T18:33:51+00:00"
+   "title": "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPc3VRRFNCaDlHTDliTGZNZ0RPWldLbXpjeWljeVducGNXVTd4VVBoRy1VaVVNX0RlLUM2UFpJQW5wUlMyMmxLZHhiSXkwZXlXU25NekNoMmx3b0hlVjF1RDNSck9GU3VHaFdCYU13OV8xaVVmRWJFbWpsX211VkkwLXBISG9XVG9UdVlCdXVQSlp0OEdpbVc2aENGdXFoQkp4R1dLU0gyc1ZGcGNCeXJabkF6bWpFZkloaU1tZXhheHB6dmVC?oc=5",
+   "source": "Reuters",
+   "at": "2026-10-27T02:43:00+00:00"
+  },
+  {
+   "title": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting",
+   "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOcXNPdGpiZHFxRGtsZzJXa1NWQ2ZtRW1YMENlQ0JFWEtoTmI2S245dEdHS194RXg1V05veUVWOGl3TFcwNmZUTzA3dzY5akhZX01xNV94eWwxNkdtZEQ4bkdmSFhQQ252a1p6Q1dWUVllLXFyQWFkZzNFLXIydXJmdnFtVXQ5MG1tNjJuNkQxNFZfOFduOTQ4TmZJZHk5UzhJVU1SVi1jSmJ3aEowcFBR?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-26T18:54:10+00:00"
   }
  ],
  "fedwatch": {
@@ -284,53 +290,41 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-27T04:05:05.705276+00:00",
+ "at": "2026-10-27T04:52:28.484857+00:00",
  "layout": "main",
  "topics": {
-  "hash": "8e6c0abebbd12bac",
+  "hash": "251f094b8d271718",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會10/26期間市場預期聯準會維持利率不變，機率達90%，投資人關注 Warsh 主席的政策訊號與12月決策方向",
+    "text": "日銀維持利率1.25%不動，但專家預期12月或明年1月升息機率高，因日本通膨與薪資持續上升；9月核心CPI年增2.1%創今年新高，8月實質薪資連續第8個月成長年增1.5%",
     "links": [
      {
-      "title": "Watch Markets Have 'Misunderstanding' of Warsh Fed, Says Axel Merk",
-      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZnRNTk9yOEY5blBsRnR2V1ZZVjEyelNGSUZwVW5tMy1lVWtFTVVNMDQyWU14ZlVQZm82elo3M19Fb19iSXFwX3J1cVZ6Mi1VakFLVUN1VUJKYlVlRjg0WDRKLThyakd4elo2VFJzek9PUmpEajBlNHBKbFBTN0RTSEI3S21GalRJLXdNd3ktSTZRU1JFQV9DUTJkRDA1dUozMG5mcjU2MkZRRDA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T19:53:09+00:00"
-     },
-     {
-      "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNMDN2QU9ONF9jVUh4ekxPeEhZTU04WjZGaDRMZ2h6al8yQXNCVGhGWkZTVmc1aG5fN1pYUEVtcTFDVjQtZThOUFVXdGFqU3UtZ3pJeEZtVU10X3VRWDRnUmlxdy01MnBYSlR0a1JOQ2FZYUM1eG42TzhnZ20zYzVRMVlQaFU2Mzg3dTZmbDNNV0cwTHhSS3BmSFlXWk1ON0ZyWEQ4cXo1b2pPT1I4RC1YY3ByZEwyUQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T10:00:00+00:00"
+      "title": "CNBC：日銀擬維持利率　但未來升息機率高",
+      "link": "https://tw.stock.yahoo.com/news/cnbc-%E6%97%A5%E9%8A%80%E6%93%AC%E7%B6%AD%E6%8C%81%E5%88%A9%E7%8E%87-%E4%BD%86%E6%9C%AA%E4%BE%86%E5%8D%87%E6%81%AF%E6%A9%9F%E7%8E%87%E9%AB%98-035326703.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T03:53:26+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "新興市場債券相對於美國公債表現更佳，因投資人對富裕國家財政狀況的擔憂升溫；英國政府考慮增加短期公債發行以降低債務成本",
+    "text": "長天期美債殖利率突破5%與2兆美元赤字成為美國經濟最大挑戰，聯邦債務發行激增推高長期利率，已開始衝擊房市，9月待售屋銷售環比下跌4%創3年最大月跌幅",
     "links": [
      {
-      "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T08:08:38+00:00"
-     },
-     {
-      "title": "UK Dealers See More Treasury Bills Coming to Cut Debt Costs",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOYXRWc2YxSFQwQTVsbElEcUo0eVZfWkdvUXdUSHlJVXZVNnJka210ZVRxZ1MtU0g2ZG5KTlE5ak44a2U1bG5qdmtNYkh2c2tsS3pyeHhqUWFaWHEyQ1pKazhSbkx1Q1lldkxkcXlCNWRCWVE1T0ZrZk1SbkV3dEdHR1I5Z3lyX1d4dGJ3U1NQalYwVmpKMlp0cmswT0MtdFFoVHBtVk1uN25BRndqQXI4?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T07:15:00+00:00"
+      "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
+      "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
+      "source": "CNBC",
+      "at": "2026-10-26T18:33:51+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價在六個月高點附近震盪，10/26跌幅溫和，美伊外交談判進展帶來緩解，但能源價格居高不下仍支撐通膨預期",
+    "text": "油價從六個月高點回落，市場評估中東衝突風險；同時金價上漲，因低油價緩解通膨擔憂，為聯準會會議前夕提供支撐",
     "links": [
      {
       "title": "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks",
@@ -349,7 +343,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "Anthropic 提交 IPO 申請書，顯示過去一年有超過 1,900 名客戶每年支付至少 100 萬美元，較 4 月時的數量幾乎翻倍，帶動 AI 與科技股上漲",
+    "text": "美股開盤走高，Anthropic 提交 IPO 申請重燃 AI 樂觀情緒，該公司去年付費客戶超過 1,900 家、較 4 月增加近一倍，目標 11 月上市、估值達 1.5–2 兆美元；科技股與半導體 ETF 漲幅逾 2%",
     "links": [
      {
       "title": "Dow, S&P 500, Nasdaq Futures Climb As Tech Stocks Get A Boost From Anthropic IPO Listing: SOFI, BB, PYPL, CLS In Focus",
@@ -368,104 +362,71 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "SK海力士受惠AI記憶體需求，10/28將公布第三季財報時宣布50至60兆韓元股東回報，加上已完成的40兆韓元庫藏股，今年總回饋達90至100兆韓元、創歷史新高",
+    "text": "華碩推商用筆電ASUS ExpertBook A7搭英特爾 Core 7/5處理器，上半年商用產品價格漲近三成，預期下半年再漲接近一成；輝達RTX Spark筆電10月中旬開始鋪貨但配貨量少，月底才再到貨，訂單需求紓解預期須到明年首季",
     "links": [
      {
-      "title": "AI記憶體賺翻了！SK海力士擬砸60兆韓元回饋股東　全年上看100兆創新高",
-      "link": "https://tw.stock.yahoo.com/news/ai%E8%A8%98%E6%86%B6%E9%AB%94%E8%B3%BA%E7%BF%BB%E4%BA%86-sk%E6%B5%B7%E5%8A%9B%E5%A3%AB%E6%93%AC%E7%A0%B860%E5%85%86%E9%9F%93%E5%85%83%E5%9B%9E%E9%A5%8B%E8%82%A1%E6%9D%B1-%E5%85%A8%E5%B9%B4%E4%B8%8A%E7%9C%8B100%E5%85%86%E5%89%B5%E6%96%B0%E9%AB%98-033000722.html",
+      "title": "華碩推商用新筆電下半年價格再漲一成　輝達RTX Spark創配貨制月底才到貨",
+      "link": "https://tw.news.yahoo.com/%E8%8F%AF%E7%A2%A9%E6%8E%A8%E5%95%86%E7%94%A8%E6%96%B0%E7%AD%86%E9%9B%BB%E4%B8%8B%E5%8D%8A%E5%B9%B4%E5%83%B9%E6%A0%BC%E5%86%8D%E6%BC%B2-%E6%88%90-%E8%BC%9D%E9%81%94rtx-spark%E5%89%B5%E9%85%8D%E8%B2%A8%E5%88%B6%E6%9C%88%E5%BA%95%E6%89%8D%E5%88%B0%E8%B2%A8-041754487.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T03:30:00+08:00"
-     }
-    ]
-   },
-   {
-    "id": "twf",
-    "label": "台指期",
-    "text": "台股 10/27 早盤跳高開出後翻黑，台光電盤中跌破 4,700 元、跌幅超過 7%，CCL 族群重挫 4.29%，台燿跌停，權值股台達電也跌破 1,500 元關卡",
-    "links": [
-     {
-      "title": "台股5萬點不遠了？童子賢看好台積電全年EPS衝百元：本益比不算高",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A15%E8%90%AC%E9%BB%9E%E4%B8%8D%E9%81%A0%E4%BA%86%EF%BC%9F%E7%AB%A5%E5%AD%90%E8%B3%A2%E7%9C%8B%E5%A5%BD%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%85%A8%E5%B9%B4eps%E8%A1%9D%E7%99%BE%E5%85%83%EF%BC%9A%E6%9C%AC%E7%9B%8A%E6%AF%94%E4%B8%8D%E7%AE%97%E9%AB%98-032115993.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T03:16:45+08:00"
-     },
-     {
-      "title": "台光電跌破4800元關卡　台達電跌破1500元　台股盤中翻黑",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%85%89%E9%9B%BB%E8%B7%8C%E7%A0%B44800%E5%85%83%E9%97%9C%E5%8D%A1-%E5%8F%B0%E9%81%94%E9%9B%BB%E8%B7%8C%E7%A0%B41500%E5%85%83-%E5%8F%B0%E8%82%A1%E7%9B%A4%E4%B8%AD%E7%BF%BB%E9%BB%91-033033622.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-27T03:30:33+08:00"
+      "at": "2026-10-27T04:17:54+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "川普支持度從歷史低點回升至 32%，距離期中選舉投票日近在咫尺；德州參議院選舉被視為勢均力敵的競爭",
+    "text": "川普26日宣布懸賞100萬美元給舉報過去或期中選舉舞弊並促成定罪的舉報人，期中選舉定於11/3舉行",
     "links": [
      {
-      "title": "Trump approval rises from record low to 32% ahead of midterm election, Reuters Ipsos poll finds",
-      "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPTlF1QkdkM3ZoYlE2Qmh4Qjl3bTViNGQteUtzeTR0Sno0OVc2Ri1sMDRJS2J5SVpULW5oNzlTdmVwdVNsRHNPMDh1dEdLT1R4UVpuaUQ2eEdnOUh1TXk0ZENtYWxZYXFBRUdnX0tfT3FveUI5aFRvZkZBVUNuNTExa01ucmR3UE1YQUpQbVEtWkg4cTJPUElPN0dHZ1RpdWlJaGh3d2VQU3pQUUdRWGljaEdLRXhlLVRUT21IZWhR?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-26T23:04:25+00:00"
-     },
-     {
-      "title": "Midterm elections 2026: Texas Senate race expected to be photo finish - FOX 9 Minneapolis",
-      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5GWnpoNlZfWkRyQnQ2YzdTU3pjZm1GcW01bklMcVNlN2hDT0JVdHh2d29tTGhvel9vekdFU283azlDcFI0YXk1NDhLdzNvZXhfWEwxeU1NUVhLcWPSAWBBVV95cUxPVU5kbjhBamFrXzZ1UkFRU0JaQ0YxQXBiT2RfX0JZalVEVnQ3T2Y5RjhnVEE3dVk1V0ZjUWVPOVVNNDRHTnBVNUNzTDRfc1Bzcm1XMzBTblJIU3FHTTI0U1Y?oc=5",
-      "source": "news.google.com",
-      "at": "2026-10-26T23:38:31+00:00"
+      "title": "100萬美元！期中選舉在即 川普重金徵集選舉舞弊線索",
+      "link": "https://tw.stock.yahoo.com/news/100%E8%90%AC%E7%BE%8E%E5%85%83-%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E5%9C%A8%E5%8D%B3-%E5%B7%9D%E6%99%AE%E9%87%8D%E9%87%91%E5%BE%B5%E9%9B%86%E9%81%B8%E8%88%89%E8%88%9E%E5%BC%8A%E7%B7%9A%E7%B4%A2-034752329.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-27T03:47:52+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金10/26小幅下跌至4,010美元，聯準會決策與美伊外交進展為主要關注焦點，油價下跌緩解通膨擔憂但能源價格仍高",
+    "text": "黃金跌至4010美元附近，投資人等待聯準會決策，油價下跌緩解通膨擔憂但能源價格仍居高不下持續支撐金價",
     "links": [
      {
-      "title": "Gold Steadies Above $4,000 With Fed Rate Decision in Focus",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNLTRVUHViYXZZWTg4WHdFSXgxV1ZMS2FqdHgtUUxQSlJxN0JzbG5ZNXdOVTJFMUR2VmEtaU9MUGl5T2VXUHg0YmliUFdIOEIzVjhYdHNmUmo2aXVtMll3eGp6WkJCTVRtUl9SQmd0NmFTZXBma1VrVDNXZDVSc3V4M3hrVlFFeU9iV3VmNDhGM2FVQnRvZnA1bFBpSjRfZmRYeGJDX2ZWVEk4OXhE?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T23:55:24+00:00"
-     },
-     {
-      "title": "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPSlpQTVJTaWJGcUtSSm42dGtDT0wyU3VQeHlmbURBb2VDbmhIUjA0TlR1cmVPNC1lOUFvNDdGSXlYSW5xeldkQ29hbk52blVmUndSOEhTY0ZoNnR5MWtPZzdDdEMwWkJ1ZldKeHRCc0JBVVZSTXktdnlpd1BHN1VVaEFCa1hodEpERVZKRFFUdGZQRldZekhrTGNzR2p1Mlp2c3hXd0R2bXRrRW1zd0dxTkpnNA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-26T20:09:10+00:00"
+      "title": "Gold slips near $4,010 as traders await Fed decision, Iran diplomacy offers hope",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-slips-near-4-010-013656079.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-27T01:36:56+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數升至102.05，日圓貶值至157.73兌1美元，印尼盾跌至歷史低點18,129.1，央行決策週將重塑全球利率前景",
+    "text": "新台幣兌美元貶至32.536元，貶值2.8分，外資持續賣股資金匯出壓力未解，美元指數反彈重返102大關加重新台幣貶勢",
     "links": [
      {
-      "title": "Asian currencies mixed as dollar holds firm, yen retreats ahead of Fed decision",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-dollar-holds-035839585.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-27T03:58:39+00:00"
+      "title": "台股開高走低！新台幣一度貶破32.6元 中午暫收32.536元",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E9%AB%98%E8%B5%B0%E4%BD%8E-%E6%96%B0%E5%8F%B0%E5%B9%A3-%E5%BA%A6%E8%B2%B6%E7%A0%B432-6%E5%85%83-%E4%B8%AD%E5%8D%88%E6%9A%AB%E6%94%B632-042213614.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-27T04:22:13+08:00"
+     },
+     {
+      "title": "新台幣午盤貶2.8分　暫收32.536元",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%8D%88%E7%9B%A4%E8%B2%B62-8%E5%88%86-%E6%9A%AB%E6%94%B632-536%E5%85%83-040449549.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-27T04:04:49+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-27T04:05:46.061148+00:00"
+  "at": "2026-10-27T04:53:15.155004+00:00"
  },
  "main_source_titles": [
-  "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
+  "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says",
+  "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting"
  ],
- "headline": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率",
- "rate_note": "2 兆美元赤字與大量發債推升長端利率，加上美伊戰爭與油價上漲強化升息預期，偏向持續推高 10 年期殖利率；10 年期 10/26 收 4.99%，較前一交易日持平，市場已在反映這些壓力。",
+ "headline": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低",
+ "rate_note": "摩根資產管理認為債市是買點，暗示當前殖利率水準具吸引力，偏向壓低長端利率；AI 股下跌若持續可能降低通膨壓力、減緩升息預期。不過 10 年期 10/26 收 4.99%、+0bp，市場還沒反映。",
  "recent_mains": [
-  {
-   "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
-   "titles": [
-    "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
-    "Oil prices, Fed policy decision to steer rupee, bonds this week",
-    "Gold gains as oil price slide cools some inflation concerns"
-   ],
-   "at": "2026-10-26T14:16:06.873825+00:00"
-  },
   {
    "headline": "10/28 會議前美債殖利率回落，華許面臨溝通考驗：如何解釋按兵不動又守住抗通膨決心",
    "titles": [
@@ -479,23 +440,38 @@
     "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
    ],
    "at": "2026-10-27T04:05:05.705276+00:00"
+  },
+  {
+   "headline": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低",
+   "titles": [
+    "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says",
+    "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting"
+   ],
+   "at": "2026-10-27T04:52:28.484857+00:00"
   }
  ],
  "archive": {
   "2026-10-27": {
-   "headline": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率",
-   "text": "10 年期公債殖利率 10/26 收在 5.1%，自 2 月底以來累計上升 114bp，2 兆美元財政赤字與聯邦政府大量發債正推高長端利率。房市已開始受衝擊：30 年期房貸利率徘徊在 7.5% 附近，9 月待完成房屋銷售月減 4%，創三年來最大單月跌幅；房貸利率追蹤 10 年期殖利率走勢。¶推升 10 年期的因素包括 2/28 爆發的美伊戰爭，油價與柴油價格大漲，債市交易員要求更高殖利率以反映聯準會可能升息的風險。此外投資人要求更多風險溢酬持有長天期公債，部分原因是預期美國政府將持續大量發債；企業債與公債市場相互連動，企業為建設 AI 基礎設施發行數千億美元新債，加劇資本競爭。11/3 期中選舉後兩黨高度不可能在財政問題上合作，任何解決方案都要等數年之後。\n亞洲銀行因通膨與債市動盪面臨資本壓力，路透 10/26 報導指出區域性金融機構受長端利率上升與資產負債表壓力影響。\n銅價延續跌勢，10/28 聯準會會議前 AI 類股走弱拖累工業金屬需求預期，彭博 10/26 報導銅價下跌反映市場對科技業資本支出的疑慮。",
-   "rate_note": "2 兆美元赤字與大量發債推升長端利率，加上美伊戰爭與油價上漲強化升息預期，偏向持續推高 10 年期殖利率；10 年期 10/26 收 4.99%，較前一交易日持平，市場已在反映這些壓力。",
+   "headline": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低",
+   "text": "摩根資產管理固定收益部門主管 10/26 表示債市目前是買點。此說法出現在聯準會 10/28 會議前夕，市場定價顯示維持利率 3.75–4.00% 機率達 90%，累計至 2026 年底升息 23bp、至 2027 年中升息 66bp。同日銅價延續跌勢，AI 概念股走弱拖累工業金屬需求預期，銅價下滑反映市場對科技業資本支出放緩的擔憂，儘管 AI 基礎建設融資需求推動美國投資級債券銷售創年度新高，但 AI 股價修正仍對相關原物料形成壓力。\n日銀 10/29–30 會議預計維持政策利率 1.25% 不變，但 CNBC 訪問的 16 名專家認為 12 月或明年 1 月升息機率高，因日本 9 月核心 CPI 年增 2.1%、創今年新高，8 月實質薪資連續第 8 個月成長、年增 1.5%。",
+   "rate_note": "摩根資產管理認為債市是買點，暗示當前殖利率水準具吸引力，偏向壓低長端利率；AI 股下跌若持續可能降低通膨壓力、減緩升息預期。不過 10 年期 10/26 收 4.99%、+0bp，市場還沒反映。",
    "links": [
     {
-     "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-     "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-     "source": "CNBC",
-     "at": "2026-10-26T18:33:51+00:00"
+     "title": "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says",
+     "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPc3VRRFNCaDlHTDliTGZNZ0RPWldLbXpjeWljeVducGNXVTd4VVBoRy1VaVVNX0RlLUM2UFpJQW5wUlMyMmxLZHhiSXkwZXlXU25NekNoMmx3b0hlVjF1RDNSck9GU3VHaFdCYU13OV8xaVVmRWJFbWpsX211VkkwLXBISG9XVG9UdVlCdXVQSlp0OEdpbVc2aENGdXFoQkp4R1dLU0gyc1ZGcGNCeXJabkF6bWpFZkloaU1tZXhheHB6dmVC?oc=5",
+     "source": "Reuters",
+     "at": "2026-10-27T02:43:00+00:00"
+    },
+    {
+     "title": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting",
+     "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOcXNPdGpiZHFxRGtsZzJXa1NWQ2ZtRW1YMENlQ0JFWEtoTmI2S245dEdHS194RXg1V05veUVWOGl3TFcwNmZUTzA3dzY5akhZX01xNV94eWwxNkdtZEQ4bkdmSFhQQ252a1p6Q1dWUVllLXFyQWFkZzNFLXIydXJmdnFtVXQ5MG1tNjJuNkQxNFZfOFduOTQ4TmZJZHk5UzhJVU1SVi1jSmJ3aEowcFBR?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-26T18:54:10+00:00"
     }
    ],
-   "at": "2026-10-27T04:05:05.705276+00:00",
-   "weekly": false
+   "at": "2026-10-27T04:52:28.484857+00:00",
+   "weekly": false,
+   "points": 1
   },
   "2026-10-26": {
    "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
@@ -652,5 +628,6 @@
    "p": 0.0996
   }
  },
- "weekly": false
+ "weekly": false,
+ "points": 1
 }

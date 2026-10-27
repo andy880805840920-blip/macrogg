@@ -492,5 +492,89 @@
   ],
   "main": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
   "result": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率"
+ },
+ {
+  "at": "2026-10-27T04:52+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+1、次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 2,
+    "why": "次級+0.5、時效+2、來源+3、多家+1.5、主題熱度+2",
+    "titles": [
+     "Trump administration's firing of prosecutor Maurene Comey was unlawful, judge rules - Reuters",
+     "Trump administration illegally fired Maurene Comey, judge rules"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+2、主題熱度+2",
+    "titles": [
+     "AI通膨推升3C價格 耐久財購買信心創17年新低"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Indian shares open lower as oil stays near six-month high, Fed in focus - Reuters"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "AI Funding Needs Drive US High-Grade Bond Sales to Annual Record - Bloomberg.com",
+     "AI Funding Drives US High-Grade Bond Sales to Annual Record - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Netanyahu touts Trump endorsement on eve of vote, suggests they may restart war on Iran - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks - Bloomberg.com"
+    ]
+   }
+  ],
+  "second": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com",
+  "related": [
+   "AI通膨推升3C價格 耐久財購買信心創17年新低"
+  ],
+  "main": "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters",
+  "points": 2,
+  "result": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低"
  }
 ]
