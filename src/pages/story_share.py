@@ -159,9 +159,10 @@ function mgShot(D){
   function label(t, y){ g.fillStyle = OR; font(800, 23); g.textBaseline = "middle"; var x = spaced(t, M, y + 16, 23 * .22);
     g.fillStyle = RULE; g.fillRect(x + 10, y + 16, W - M - x - 10, 1.5); g.textBaseline = "top"; return y + 33; }
   var rateTxt = (D.rate || "").trim(), dir = D.rate_dir || "flat";
-  // 導言分段（2026-10）：最多 8 行；優先用原文段落，只有一段時依句號切，每段最多 3 行。
-  // 放不下就整段拿掉（不在句子中間截斷）；只有第一段也放不下時才加「…」。
-  var LEAD_MAX = 8, PGAP = 14, LH = 46.4;
+  // 導言（2026-10-27 v2.2）：一行一行往下填，最多 8 行、至少 3 行（主軸內文夠長時）。
+  // 原本是整段整段拿掉，一段 4 行放不下就只剩 2 行、下面留一大片空白。
+  // 分段只是視覺上的段距；最後放不完的那句在行尾加「…」。
+  var LEAD_MAX = 8, LEAD_MIN = 3, PGAP = 14, LH = 46.4;
   function leadParas(){
     font(500, 29);
     var src = (D.paras && D.paras.length > 1) ? D.paras.slice() : [((D.paras && D.paras[0]) || D.para || D.lead || "").trim()];
@@ -176,6 +177,17 @@ function mgShot(D){
     return out;
   }
   var PARAS = null;
+  // 對利率最多 3 行：放不下時保留最後那句「10 年期 …bp」的市場對照，從前面的說明開始刪（2026-10-27）
+  function rateLines(t, w, n){
+    var all = wrap(t, w);
+    if(all.length <= n) return all;
+    var ss = t.match(/[^。；]+[。；]?/g) || [t], k = -1;
+    for(var i = ss.length - 1; i >= 0; i--){ if(/10\s*年期|bp/.test(ss[i])){ k = i; break; } }
+    if(k <= 0) return wrap(t, w, n);
+    var tail = ss.slice(k).join("").trim(), tl = wrap(tail, w);
+    if(tl.length >= n) return wrap(t, w, n);
+    return wrap(ss.slice(0, k).join(""), w, n - tl.length).concat(tl);
+  }
   function layout(draw, leadMax, evMax, imgs, G){
     g.textBaseline = "top"; var y;
     if(draw){ g.fillStyle = PAPER; g.fillRect(0, 0, W, H); g.fillStyle = INK; g.fillRect(0, 0, W * .7, 14); g.fillStyle = OR; g.fillRect(W * .7, 0, W * .3, 14);
@@ -192,16 +204,16 @@ function mgShot(D){
     if(draw){ g.fillStyle = INK; hl.forEach(function(t, i){ g.fillText(t, M, y + i * 81 + 8); }); }
     y += hl.length * 81;
     if(!PARAS) PARAS = leadParas();
-    if(PARAS.length && leadMax > 0){ y += 16; font(500, 29); var used = 0;
-      for(var pi = 0; pi < Math.min(leadMax, PARAS.length); pi++){
+    if(PARAS.length && leadMax > 0){ y += 16; font(500, 29); var used = 0, budget = Math.min(leadMax, LEAD_MAX);
+      for(var pi = 0; pi < PARAS.length && used < budget; pi++){
         var ll = wrap(PARAS[pi], CW);
-        if(used + ll.length > LEAD_MAX){ if(pi) break; ll = wrap(PARAS[pi], CW, LEAD_MAX); }
+        if(used + ll.length > budget) ll = wrap(PARAS[pi], CW, budget - used);
         if(pi) y += PGAP;
         if(draw){ g.fillStyle = "#2d3a4d"; ll.forEach(function(t, i){ g.fillText(t, M, y + i * LH + 8); }); }
         y += ll.length * LH; used += ll.length; } }
     // 對利率
     if(rateTxt){ y += G; if(draw) label("對利率", y); y += 33 + 16;
-      font(600, 28); var rl = wrap(rateTxt, CW - 8 - 48, 3), bh = 16 + 40 + 8 + rl.length * 42 + 12 + 6 + 8 + 26 + 12;
+      font(600, 28); var rl = rateLines(rateTxt, CW - 8 - 48, 3), bh = 16 + 40 + 8 + rl.length * 42 + 12 + 6 + 8 + 26 + 12;
       if(draw){
         g.fillStyle = "#efebe2"; rrect(M, y, CW, bh, [0, 18, 18, 0]); g.fill(); g.fillStyle = INK; g.fillRect(M, y, 8, bh);
         var bx = M + 8 + 24, by = y + 16;
@@ -265,10 +277,10 @@ function mgShot(D){
     return {end: y, limit: fy - 24};
   }
   return Promise.all([fonts(), load("/brand/logo-full.svg"), MG_FACE ? load("data:image/svg+xml;charset=utf-8," + encodeURIComponent(MG_FACE)) : Promise.resolve(null)]).then(function(r){
-    var imgs = {logo: r[1], face: r[2]}, lm = 9, em = 4, G0 = 56, m;
-    // 太長：先把今明兩天減到 3 項，再拿掉導言最後一段（標題、數據不動）
-    for(var k = 0; k < 16; k++){ m = layout(false, lm, em, imgs, G0); if(m.end <= m.limit) break;
-      if(em > 3) em--; else if(lm > 1){ lm = Math.min(lm, (PARAS || []).length) - 1; if(lm < 1) lm = 1; } else if(em > 1) em--; else break; }
+    var imgs = {logo: r[1], face: r[2]}, lm = LEAD_MAX, em = 4, G0 = 56, m;
+    // 太長（2026-10-27）：今明兩天減到 3 項 → 導言一行一行減到 3 行 → 今明兩天減到 1 項 → 最後才再減導言
+    for(var k = 0; k < 24; k++){ m = layout(false, lm, em, imgs, G0); if(m.end <= m.limit) break;
+      if(em > 3) em--; else if(lm > LEAD_MIN) lm--; else if(em > 1) em--; else if(lm > 1) lm--; else break; }
     // 太短：多出來的高度平均加回區塊間距（每處最多 +40），再多就留在底部
     var nG = (rateTxt ? 1 : 0) + (cells.length ? 1 : 0) + 1, G = G0;
     if(m.end < m.limit) G = G0 + Math.min(40, Math.floor((m.limit - m.end) / nG));
