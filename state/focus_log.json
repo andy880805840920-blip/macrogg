@@ -415,5 +415,82 @@
   ],
   "main": "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？",
   "result": "10/28 會議前美債殖利率回落，華許面臨溝通考驗：如何解釋按兵不動又守住抗通膨決心"
+ },
+ {
+  "at": "2026-10-27T04:05+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 9.5,
+    "sources": 1,
+    "why": "主題+6、時效+2、來源+1.5",
+    "titles": [
+     "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+4、時效+1.5、來源+3",
+    "titles": [
+     "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主題+2、次級+1、時效+2、來源+3",
+    "titles": [
+     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "主題+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Indian shares seen lower as oil stays near six-month high, Fed in focus - Reuters"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "主題+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Gold Steadies Above $4,000 With Fed Rate Decision in Focus - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "主題+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "AI Funding Needs Drive US High-Grade Bond Sales to Annual Record - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "主題+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Colombia to Sell New Dollar Bonds Amid Fiscal Pressures - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "主題+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
+  "result": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率"
  }
 ]

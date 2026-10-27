@@ -1,12 +1,12 @@
 {
  "hash": "",
- "text": "聯準會將在 10/27 至 10/28 會議維持基準利率於 3.75% 至 4%，利率期貨反映按兵不動機率達 90%。9 月升息後，10 年期公債殖利率曾攀至近四分之一世紀高點，讓決策官員擔心金融環境收緊過快，成為暫停升息的重要考量；紐約聯準銀行總裁 Williams 與副主席 Jefferson 隨後釋出願意等待更多數據的訊號。但 10 月下旬股市重挫、資金轉向公債避險，帶動殖利率回落，讓華許面臨更棘手的溝通考驗。\nCNBC 報導指出，10 年期殖利率自 2 月底以來已攀升 114bp 至 5.1%（10/26 盤中），推升 30 年期房貸利率至 7.5% 附近；9 月待售房屋銷售月減 4%，創三年來最大跌幅。",
+ "text": "10 年期公債殖利率 10/26 收在 5.1%，自 2 月底以來累計上升 114bp，2 兆美元財政赤字與聯邦政府大量發債正推高長端利率。房市已開始受衝擊：30 年期房貸利率徘徊在 7.5% 附近，9 月待完成房屋銷售月減 4%，創三年來最大單月跌幅；房貸利率追蹤 10 年期殖利率走勢。¶推升 10 年期的因素包括 2/28 爆發的美伊戰爭，油價與柴油價格大漲，債市交易員要求更高殖利率以反映聯準會可能升息的風險。此外投資人要求更多風險溢酬持有長天期公債，部分原因是預期美國政府將持續大量發債；企業債與公債市場相互連動，企業為建設 AI 基礎設施發行數千億美元新債，加劇資本競爭。11/3 期中選舉後兩黨高度不可能在財政問題上合作，任何解決方案都要等數年之後。\n亞洲銀行因通膨與債市動盪面臨資本壓力，路透 10/26 報導指出區域性金融機構受長端利率上升與資產負債表壓力影響。\n銅價延續跌勢，10/28 聯準會會議前 AI 類股走弱拖累工業金屬需求預期，彭博 10/26 報導銅價下跌反映市場對科技業資本支出的疑慮。",
  "links": [
   {
-   "title": "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？",
-   "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E5%9B%9E%E8%90%BD-fed%E6%9A%AB%E5%81%9C%E5%8D%87%E6%81%AF%E7%90%86%E7%94%B1%E5%8F%97%E8%80%83%E9%A9%97-%E8%8F%AF%E8%A8%B1%E5%A6%82%E4%BD%95%E8%AA%AA%E6%9C%8D%E5%B8%82%E5%A0%B4-190006187.html",
-   "source": "Yahoo奇摩股市",
-   "at": "2026-10-26T19:00:06+00:00"
+   "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
+   "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
+   "source": "CNBC",
+   "at": "2026-10-26T18:33:51+00:00"
   }
  ],
  "fedwatch": {
@@ -284,163 +284,179 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-26T23:14:41.603623+00:00",
+ "at": "2026-10-27T04:05:05.705276+00:00",
  "layout": "main",
  "topics": {
-  "hash": "467b1e99e8d984a2",
+  "hash": "8e6c0abebbd12bac",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "華許面臨市場溝通挑戰，投資人對其決策聲明與後續評論存在不確定性，導致聯準會決策前夕風險資產承壓，加密貨幣市場延續跌勢，比特幣一度跌破 8 萬美元",
+    "text": "聯準會10/26期間市場預期聯準會維持利率不變，機率達90%，投資人關注 Warsh 主席的政策訊號與12月決策方向",
     "links": [
      {
-      "title": "Google, Microsoft, Amazon, and the Fed step up to a skittish market: What to watch this week",
-      "link": "https://finance.yahoo.com/markets/article/google-microsoft-amazon-and-the-fed-step-up-to-a-skittish-market-what-to-watch-this-week-100000081.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T10:00:00+00:00"
+      "title": "Watch Markets Have 'Misunderstanding' of Warsh Fed, Says Axel Merk",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOZnRNTk9yOEY5blBsRnR2V1ZZVjEyelNGSUZwVW5tMy1lVWtFTVVNMDQyWU14ZlVQZm82elo3M19Fb19iSXFwX3J1cVZ6Mi1VakFLVUN1VUJKYlVlRjg0WDRKLThyakd4elo2VFJzek9PUmpEajBlNHBKbFBTN0RTSEI3S21GalRJLXdNd3ktSTZRU1JFQV9DUTJkRDA1dUozMG5mcjU2MkZRRDA?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T19:53:09+00:00"
      },
      {
-      "title": "聯準會決策前夕氣氛凝重 比特幣跌破 8 萬美元關卡",
-      "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E6%B1%BA%E7%AD%96%E5%89%8D%E5%A4%95%E6%B0%A3%E6%B0%9B%E5%87%9D%E9%87%8D-%E6%AF%94%E7%89%B9%E5%B9%A3%E8%B7%8C%E7%A0%B4-8-%E8%90%AC%E7%BE%8E%E5%85%83%E9%97%9C%E5%8D%A1-225813248.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-26T22:58:13+00:00"
+      "title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNMDN2QU9ONF9jVUh4ekxPeEhZTU04WjZGaDRMZ2h6al8yQXNCVGhGWkZTVmc1aG5fN1pYUEVtcTFDVjQtZThOUFVXdGFqU3UtZ3pJeEZtVU10X3VRWDRnUmlxdy01MnBYSlR0a1JOQ2FZYUM1eG42TzhnZ20zYzVRMVlQaFU2Mzg3dTZmbDNNV0cwTHhSS3BmSFlXWk1ON0ZyWEQ4cXo1b2pPT1I4RC1YY3ByZEwyUQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T10:00:00+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國長期公債殖利率高企與聯邦赤字擴大成為經濟隱憂。10年期公債自2月底以來累計上升114個基點至5.1%，推高房貸利率至7.5%附近，9月待售房屋銷售環比下跌4%創三年新高，而聯邦赤字達2兆美元，因期中選舉後政府分裂，財政改革前景渺茫",
+    "text": "新興市場債券相對於美國公債表現更佳，因投資人對富裕國家財政狀況的擔憂升溫；英國政府考慮增加短期公債發行以降低債務成本",
     "links": [
      {
-      "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-      "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
-      "source": "CNBC",
-      "at": "2026-10-26T18:33:51+00:00"
+      "title": "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNYzZNQk5wdXJObmtzQTQ4bmphZl96bHp5VldRY3dhdTI4eVVEa2JLdjVxTjJwTVF6bW9TbXFnYl9remY0SGhzcHNvRkpiRHI2Z1ZiVWg3Wkl2TWtJb1RoRG9GTXUzQ3lYdngzZVVfTkMzM0dtSDlIemN5S0NvVkhDMmhjMnF6WVlRa0pOZUM3SkRDS1VTVm5pV2Qzb3BPNkZhM2NvTHRWUWlBd2k4NC1odFdCTFFXdw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T08:08:38+00:00"
+     },
+     {
+      "title": "UK Dealers See More Treasury Bills Coming to Cut Debt Costs",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOYXRWc2YxSFQwQTVsbElEcUo0eVZfWkdvUXdUSHlJVXZVNnJka210ZVRxZ1MtU0g2ZG5KTlE5ak44a2U1bG5qdmtNYkh2c2tsS3pyeHhqUWFaWHEyQ1pKazhSbkx1Q1lldkxkcXlCNWRCWVE1T0ZrZk1SbkV3dEdHR1I5Z3lyX1d4dGJ3U1NQalYwVmpKMlp0cmswT0MtdFFoVHBtVk1uN25BRndqQXI4?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T07:15:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "oil",
+    "label": "油價",
+    "text": "油價在六個月高點附近震盪，10/26跌幅溫和，美伊外交談判進展帶來緩解，但能源價格居高不下仍支撐通膨預期",
+    "links": [
+     {
+      "title": "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQNFpHYTlFcXR2RGt0NHhpMWtQcTRwdTktRHJKZGJIODZ4RldHbUFZODFIMXBRZkRObXAzN3lxZE1NV0QtOVlmaDc3S0R1YWV0S2ExZmpJTWlYb1RITGIzZTYyR0xkT0c0WXdvNHExUVZJUURPbEZ2MWoyc3NyNkRWNzB5c3VUVVFwMHppaWRIWmxoaDVNRjM5dndha3hTZw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T19:32:11+00:00"
+     },
+     {
+      "title": "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting",
+      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZml1aC0yS2NrLUloeEFPZnYyeExpazhPVExTT1BLcV9HZGxEZWFzcHFUMTJFbDhUTjgyaE5EbGRja1BRX0p2UzlDSmEzUUpzTG9ZT2xKZEZMczFvb1pzU2xrdXlNT0dDUXYtQnhoLUFpT09xQmF5Q25FQXdKNGpjOERVdTB1UTk4NkhSd2k3cUNBSTJRMVVsUlpSWQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-26T05:56:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "Anthropic 提交 IPO 申請文件，過去一年超過 1,900 名客戶支付至少 100 萬美元，較 4 月時近乎翻倍，公司目標 11 月上市，估值介於 1.5 兆至 2 兆美元，激勵科技股反彈",
+    "text": "Anthropic 提交 IPO 申請書，顯示過去一年有超過 1,900 名客戶每年支付至少 100 萬美元，較 4 月時的數量幾乎翻倍，帶動 AI 與科技股上漲",
     "links": [
+     {
+      "title": "Dow, S&P 500, Nasdaq Futures Climb As Tech Stocks Get A Boost From Anthropic IPO Listing: SOFI, BB, PYPL, CLS In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-climb-as-tech-stocks-get-a-boost-from-anthropic-ipo-sofi-bb-pypl-cls-in-focus/cZUIteBRBzL?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-27T02:45:54+00:00"
+     },
      {
       "title": "S&P 500, Nasdaq, Dow Begin Week Higher As Anthropic IPO Filing Rekindles AI Enthusiasm",
       "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-dow-begin-week-higher-as-anthropic-ipo-filing-rekindles-ai-enthusiasm-msft-aapl-cart-vz-in-focus/cZU3LuaRBz7?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-26T22:35:16+00:00"
-     },
-     {
-      "title": "Stock Market Today, Oct. 26: AI Optimism Lifts Nasdaq as Tech Stocks Rebound",
-      "link": "https://www.fool.com/coverage/stock-market-today/2026/10/26/stock-market-today-oct-26-ai-optimism-lifts-nasdaq-as-tech-stocks-rebound/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T21:50:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "SpaceX確定400億美元融資購輝達晶片，與阿波羅全球管理簽署設備融資租約預計年底前完成，預計帶動台積電、鴻海、廣達等供應鏈訂單；鴻海與輝達合作成果顯現，透過Blackwell架構將1200億參數模型訓練速度提升2.48倍，製造現場自動化排程工時減少25%、SMT產線異常改善率",
+    "text": "SK海力士受惠AI記憶體需求，10/28將公布第三季財報時宣布50至60兆韓元股東回報，加上已完成的40兆韓元庫藏股，今年總回饋達90至100兆韓元、創歷史新高",
     "links": [
      {
-      "title": "SpaceX狂掃輝達晶片 台積、廣達等有望迎新一波訂單",
-      "link": "https://tw.news.yahoo.com/spacex%E7%8B%82%E6%8E%83%E8%BC%9D%E9%81%94%E6%99%B6%E7%89%87-%E5%8F%B0%E7%A9%8D-%E5%BB%A3%E9%81%94%E7%AD%89%E6%9C%89%E6%9C%9B%E8%BF%8E%E6%96%B0-%E6%B3%A2%E8%A8%82%E5%96%AE-223841619.html",
+      "title": "AI記憶體賺翻了！SK海力士擬砸60兆韓元回饋股東　全年上看100兆創新高",
+      "link": "https://tw.stock.yahoo.com/news/ai%E8%A8%98%E6%86%B6%E9%AB%94%E8%B3%BA%E7%BF%BB%E4%BA%86-sk%E6%B5%B7%E5%8A%9B%E5%A3%AB%E6%93%AC%E7%A0%B860%E5%85%86%E9%9F%93%E5%85%83%E5%9B%9E%E9%A5%8B%E8%82%A1%E6%9D%B1-%E5%85%A8%E5%B9%B4%E4%B8%8A%E7%9C%8B100%E5%85%86%E5%89%B5%E6%96%B0%E9%AB%98-033000722.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-26T22:38:41+08:00"
-     },
-     {
-      "title": "鴻海AI工廠轉型成果顯現，攜輝達提升製造效率",
-      "link": "https://tw.stock.yahoo.com/news/%E9%B4%BB%E6%B5%B7ai%E5%B7%A5%E5%BB%A0%E8%BD%89%E5%9E%8B%E6%88%90%E6%9E%9C%E9%A1%AF%E7%8F%BE-%E6%94%9C%E8%BC%9D%E9%81%94%E6%8F%90%E5%8D%87%E8%A3%BD%E9%80%A0%E6%95%88%E7%8E%87-211400419.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-26T21:14:00+00:00"
+      "at": "2026-10-27T03:30:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股上週四下跌至 46,041.43 點，單週跌 1,069.83 點、跌幅 2.27%，外資連 4 週減碼，累計賣超 2,356.26 億元，其中力積電、台積電、聯電遭調節逾 13 萬張，半導體族群承受籌碼壓力",
+    "text": "台股 10/27 早盤跳高開出後翻黑，台光電盤中跌破 4,700 元、跌幅超過 7%，CCL 族群重挫 4.29%，台燿跌停，權值股台達電也跌破 1,500 元關卡",
     "links": [
      {
-      "title": "台股週報》外資再砍2300億　半導體族群承壓",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1%E5%A0%B1-%E5%A4%96%E8%B3%87%E5%86%8D%E7%A0%8D2300%E5%84%84-%E5%8D%8A%E5%B0%8E%E9%AB%94%E6%97%8F%E7%BE%A4%E6%89%BF%E5%A3%93-173735309.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-26T17:37:35+00:00"
+      "title": "台股5萬點不遠了？童子賢看好台積電全年EPS衝百元：本益比不算高",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A15%E8%90%AC%E9%BB%9E%E4%B8%8D%E9%81%A0%E4%BA%86%EF%BC%9F%E7%AB%A5%E5%AD%90%E8%B3%A2%E7%9C%8B%E5%A5%BD%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%85%A8%E5%B9%B4eps%E8%A1%9D%E7%99%BE%E5%85%83%EF%BC%9A%E6%9C%AC%E7%9B%8A%E6%AF%94%E4%B8%8D%E7%AE%97%E9%AB%98-032115993.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-27T03:16:45+08:00"
+     },
+     {
+      "title": "台光電跌破4800元關卡　台達電跌破1500元　台股盤中翻黑",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%85%89%E9%9B%BB%E8%B7%8C%E7%A0%B44800%E5%85%83%E9%97%9C%E5%8D%A1-%E5%8F%B0%E9%81%94%E9%9B%BB%E8%B7%8C%E7%A0%B41500%E5%85%83-%E5%8F%B0%E8%82%A1%E7%9B%A4%E4%B8%AD%E7%BF%BB%E9%BB%91-033033622.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-27T03:30:33+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "川普民調支持率從歷史低點回升至32%，期中選舉前夕政治氣氛升溫。華爾街一家主要機構預測科技股修正可能在期中選舉後結束，市場認為選舉結果將鎖定美國分裂政府局面",
+    "text": "川普支持度從歷史低點回升至 32%，距離期中選舉投票日近在咫尺；德州參議院選舉被視為勢均力敵的競爭",
     "links": [
      {
       "title": "Trump approval rises from record low to 32% ahead of midterm election, Reuters Ipsos poll finds",
       "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPTlF1QkdkM3ZoYlE2Qmh4Qjl3bTViNGQteUtzeTR0Sno0OVc2Ri1sMDRJS2J5SVpULW5oNzlTdmVwdVNsRHNPMDh1dEdLT1R4UVpuaUQ2eEdnOUh1TXk0ZENtYWxZYXFBRUdnX0tfT3FveUI5aFRvZkZBVUNuNTExa01ucmR3UE1YQUpQbVEtWkg4cTJPUElPN0dHZ1RpdWlJaGh3d2VQU3pQUUdRWGljaEdLRXhlLVRUT21IZWhR?oc=5",
       "source": "Reuters",
-      "at": "2026-10-26T22:27:47+00:00"
+      "at": "2026-10-26T23:04:25+00:00"
      },
      {
-      "title": "The Nasdaq Crashed 700 Points in a Day Last Week. One Major Wall Street Firm is Predicting the Correction Will End After Midterms.",
-      "link": "https://247wallst.com/videos/the-nasdaq-crashed-700-points-in-a-day-last-week-one-major-wall-street-firm-is-predicting-the-correction-will-end-after-midterms/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-26T21:18:41+00:00"
+      "title": "Midterm elections 2026: Texas Senate race expected to be photo finish - FOX 9 Minneapolis",
+      "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5GWnpoNlZfWkRyQnQ2YzdTU3pjZm1GcW01bklMcVNlN2hDT0JVdHh2d29tTGhvel9vekdFU283azlDcFI0YXk1NDhLdzNvZXhfWEwxeU1NUVhLcWPSAWBBVV95cUxPVU5kbjhBamFrXzZ1UkFRU0JaQ0YxQXBiT2RfX0JZalVEVnQ3T2Y5RjhnVEE3dVk1V0ZjUWVPOVVNNDRHTnBVNUNzTDRfc1Bzcm1XMzBTblJIU3FHTTI0U1Y?oc=5",
+      "source": "news.google.com",
+      "at": "2026-10-26T23:38:31+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格在油價回軟與聯準會決策前夕保持穩定。隨著油價下跌緩解通膨擔憂，黃金週線下跌後於10/26止穩，市場等待聯準會會議結果以判斷後續走勢",
+    "text": "黃金10/26小幅下跌至4,010美元，聯準會決策與美伊外交進展為主要關注焦點，油價下跌緩解通膨擔憂但能源價格仍高",
     "links": [
+     {
+      "title": "Gold Steadies Above $4,000 With Fed Rate Decision in Focus",
+      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNLTRVUHViYXZZWTg4WHdFSXgxV1ZMS2FqdHgtUUxQSlJxN0JzbG5ZNXdOVTJFMUR2VmEtaU9MUGl5T2VXUHg0YmliUFdIOEIzVjhYdHNmUmo2aXVtMll3eGp6WkJCTVRtUl9SQmd0NmFTZXBma1VrVDNXZDVSc3V4M3hrVlFFeU9iV3VmNDhGM2FVQnRvZnA1bFBpSjRfZmRYeGJDX2ZWVEk4OXhE?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-26T23:55:24+00:00"
+     },
      {
       "title": "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting",
       "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPSlpQTVJTaWJGcUtSSm42dGtDT0wyU3VQeHlmbURBb2VDbmhIUjA0TlR1cmVPNC1lOUFvNDdGSXlYSW5xeldkQ29hbk52blVmUndSOEhTY0ZoNnR5MWtPZzdDdEMwWkJ1ZldKeHRCc0JBVVZSTXktdnlpd1BHN1VVaEFCa1hodEpERVZKRFFUdGZQRldZekhrTGNzR2p1Mlp2c3hXd0R2bXRrRW1zd0dxTkpnNA?oc=5",
       "source": "Bloomberg",
       "at": "2026-10-26T20:09:10+00:00"
-     },
-     {
-      "title": "Relevant Gold Corp (RGC.V) | Stock Price & Latest News",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9HdEtTbEJwVEZQazlCNmctNWF0bk1ETTlBeEJnZmNYZmlPbGNBeUx3eURIN0pkbFRlc291eHd4UTNuTWN0aUNVVUx1QnFIa3ZKTVVTVVlFbTRkdEpIMDMxa21nZEI1V2xUQWFndA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-26T13:57:35+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣高利存款利率競爭激烈，將來銀行推出8天期年利率16.8%吸引新戶，元大銀行、王道銀行、台新銀行等也推出年利率10%至12%的活儲優惠方案，反映民眾對短期資金配置需求升溫",
+    "text": "美元指數升至102.05，日圓貶值至157.73兌1美元，印尼盾跌至歷史低點18,129.1，央行決策週將重塑全球利率前景",
     "links": [
      {
-      "title": "台幣優利存款年息衝16.8% 將來銀吸引新戶",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%B9%A3%E5%84%AA%E5%88%A9%E5%AD%98%E6%AC%BE%E5%B9%B4%E6%81%AF%E8%A1%9D16-8-%E5%B0%87%E4%BE%86%E9%8A%80%E5%90%B8%E5%BC%95%E6%96%B0%E6%88%B6-224141962.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-26T22:41:41+08:00"
+      "title": "Asian currencies mixed as dollar holds firm, yen retreats ahead of Fed decision",
+      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-dollar-holds-035839585.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-27T03:58:39+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-26T23:15:31.026197+00:00"
+  "at": "2026-10-27T04:05:46.061148+00:00"
  },
  "main_source_titles": [
-  "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？"
+  "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
  ],
- "headline": "10/28 會議前美債殖利率回落，華許面臨溝通考驗：如何解釋按兵不動又守住抗通膨決心",
- "rate_note": "主軸這件事對利率方向不明確：暫停升息本身偏向壓低短端利率預期，但若華許未能說服市場聯準會仍有抗通膨決心，可能引發市場質疑、推升長端殖利率；取決於 10/28 會後聲明與記者會的溝通效果。10 年期在 10/26 收 4.99%、+0bp，市場尚未明顯反映這項溝通風險。",
+ "headline": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率",
+ "rate_note": "2 兆美元赤字與大量發債推升長端利率，加上美伊戰爭與油價上漲強化升息預期，偏向持續推高 10 年期殖利率；10 年期 10/26 收 4.99%，較前一交易日持平，市場已在反映這些壓力。",
  "recent_mains": [
-  {
-   "headline": "聯準會 10/28 會議在即，市場聚焦華許政策訊息與 12 月動向",
-   "titles": [
-    "Fed Meeting Focus Turns to Warsh Messaging With December in Mind",
-    "Gold gains as oil slide cools some inflation concerns",
-    "Asia-focused banks face capital squeeze due to inflation, bond turbulence"
-   ],
-   "at": "2026-10-26T12:30:38.250028+00:00"
-  },
   {
    "headline": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向",
    "titles": [
@@ -456,22 +472,29 @@
     "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？"
    ],
    "at": "2026-10-26T23:14:41.603623+00:00"
+  },
+  {
+   "headline": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率",
+   "titles": [
+    "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
+   ],
+   "at": "2026-10-27T04:05:05.705276+00:00"
   }
  ],
  "archive": {
   "2026-10-27": {
-   "headline": "10/28 會議前美債殖利率回落，華許面臨溝通考驗：如何解釋按兵不動又守住抗通膨決心",
-   "text": "聯準會將在 10/27 至 10/28 會議維持基準利率於 3.75% 至 4%，利率期貨反映按兵不動機率達 90%。9 月升息後，10 年期公債殖利率曾攀至近四分之一世紀高點，讓決策官員擔心金融環境收緊過快，成為暫停升息的重要考量；紐約聯準銀行總裁 Williams 與副主席 Jefferson 隨後釋出願意等待更多數據的訊號。但 10 月下旬股市重挫、資金轉向公債避險，帶動殖利率回落，讓華許面臨更棘手的溝通考驗。\nCNBC 報導指出，10 年期殖利率自 2 月底以來已攀升 114bp 至 5.1%（10/26 盤中），推升 30 年期房貸利率至 7.5% 附近；9 月待售房屋銷售月減 4%，創三年來最大跌幅。",
-   "rate_note": "主軸這件事對利率方向不明確：暫停升息本身偏向壓低短端利率預期，但若華許未能說服市場聯準會仍有抗通膨決心，可能引發市場質疑、推升長端殖利率；取決於 10/28 會後聲明與記者會的溝通效果。10 年期在 10/26 收 4.99%、+0bp，市場尚未明顯反映這項溝通風險。",
+   "headline": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率",
+   "text": "10 年期公債殖利率 10/26 收在 5.1%，自 2 月底以來累計上升 114bp，2 兆美元財政赤字與聯邦政府大量發債正推高長端利率。房市已開始受衝擊：30 年期房貸利率徘徊在 7.5% 附近，9 月待完成房屋銷售月減 4%，創三年來最大單月跌幅；房貸利率追蹤 10 年期殖利率走勢。¶推升 10 年期的因素包括 2/28 爆發的美伊戰爭，油價與柴油價格大漲，債市交易員要求更高殖利率以反映聯準會可能升息的風險。此外投資人要求更多風險溢酬持有長天期公債，部分原因是預期美國政府將持續大量發債；企業債與公債市場相互連動，企業為建設 AI 基礎設施發行數千億美元新債，加劇資本競爭。11/3 期中選舉後兩黨高度不可能在財政問題上合作，任何解決方案都要等數年之後。\n亞洲銀行因通膨與債市動盪面臨資本壓力，路透 10/26 報導指出區域性金融機構受長端利率上升與資產負債表壓力影響。\n銅價延續跌勢，10/28 聯準會會議前 AI 類股走弱拖累工業金屬需求預期，彭博 10/26 報導銅價下跌反映市場對科技業資本支出的疑慮。",
+   "rate_note": "2 兆美元赤字與大量發債推升長端利率，加上美伊戰爭與油價上漲強化升息預期，偏向持續推高 10 年期殖利率；10 年期 10/26 收 4.99%，較前一交易日持平，市場已在反映這些壓力。",
    "links": [
     {
-     "title": "美債殖利率回落！Fed暫停升息理由受考驗 華許如何說服市場？",
-     "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87%E5%9B%9E%E8%90%BD-fed%E6%9A%AB%E5%81%9C%E5%8D%87%E6%81%AF%E7%90%86%E7%94%B1%E5%8F%97%E8%80%83%E9%A9%97-%E8%8F%AF%E8%A8%B1%E5%A6%82%E4%BD%95%E8%AA%AA%E6%9C%8D%E5%B8%82%E5%A0%B4-190006187.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-26T19:00:06+00:00"
+     "title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
+     "link": "https://www.cnbc.com/2026/10/15/treasury-yields-deficit-national-debt-ai.html",
+     "source": "CNBC",
+     "at": "2026-10-26T18:33:51+00:00"
     }
    ],
-   "at": "2026-10-26T23:14:41.603623+00:00",
+   "at": "2026-10-27T04:05:05.705276+00:00",
    "weekly": false
   },
   "2026-10-26": {
