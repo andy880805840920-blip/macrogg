@@ -295,6 +295,8 @@ def build_story(ctxs: dict) -> dict:
             # 今日市場圖（9:16 圖卡）用整段第一段，畫面上最多五行
             para = m[0].strip()
             chunks = [x.strip() for x in m if x.strip()][:4]
+            if int(f.get("points") or 1) == 2:
+                chunks = chunks[:1]          # v2.3 兩個重點：分享圖導言只用重點一
             para = para if len(para) <= 240 else para[:238] + "…"
             first = re.split(r"(?<=[。！？])", m[0].strip())[0]
             first = first if len(first) <= 70 else first[:68] + "…"
