@@ -58,7 +58,7 @@ FF_MAP = {
 
 # 官員中文名（姓氏）。沒列到的照英文顯示。
 OFFICIAL_ZH = {
-    "Warsh": "華許", "Jefferson": "傑佛遜", "Bowman": "鮑曼", "Waller": "沃勒",
+    "Warsh": "Warsh", "Jefferson": "傑佛遜", "Bowman": "鮑曼", "Waller": "沃勒",
     "Cook": "庫克", "Barr": "巴爾", "Miran": "米蘭", "Powell": "鮑爾",
     "Williams": "威廉斯", "Hammack": "哈瑪克", "Paulson": "保爾森", "Logan": "洛根",
     "Kashkari": "卡什卡利", "Barkin": "巴爾金", "Goolsbee": "古爾斯比", "Daly": "戴莉",
