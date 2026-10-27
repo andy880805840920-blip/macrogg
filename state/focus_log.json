@@ -576,5 +576,85 @@
   "main": "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters",
   "points": 2,
   "result": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低"
+ },
+ {
+  "at": "2026-10-27T12:19+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
+    ]
+   },
+   {
+    "score": 9.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "US stock futures muted as oil holds near April highs ahead of Fed decision - Reuters"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+1、次級+1、時效+1.5、來源+3、主題熱度+2",
+    "titles": [
+     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主題+1、次級+1、時效+2、來源+3、主題熱度+1",
+    "titles": [
+     "Gold retreats on stronger dollar; traders brace for Fed - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Nvidia, Meta deepen AI ties with $3 billion investment deal - Reuters"
+    ]
+   }
+  ],
+  "second": "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters",
+  "headline_only": true,
+  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+  "points": 2,
+  "result": "CNBC 調查：93% 預期聯準會 10/28 會議維持利率、76% 預期 12 月升息"
  }
 ]
