@@ -305,8 +305,9 @@ check("⑧ 主軸來源拿掉衛報、BBC、自由時報、FXStreet",
 check("⑧ FXStreet 只給匯率與黃金", specs["fx"]["feeds"] and specs["gold"]["feeds"]
       and not specs["oil"]["feeds"])
 _gn = [f for f in cfg["feeds"] if isinstance(f, str) and "news.google.com" in f]
-check("⑧ 彭博、路透各拆成三組短搜尋（每組 ≤ 8 個詞）",
-      sum("reuters.com" in f for f in _gn) == 3 and sum("bloomberg.com" in f for f in _gn) == 3
+# v2.2（2026-10-27）：各加一組美股／政府關門／債務上限／降評／衰退 → 四組
+check("⑧ 彭博、路透各拆成四組短搜尋（每組 ≤ 8 個詞）",
+      sum("reuters.com" in f for f in _gn) == 4 and sum("bloomberg.com" in f for f in _gn) == 4
       and all(f.count("%20OR%20") <= 7 for f in _gn))
 check("⑧ 主軸關鍵字：利率主線是主級，AI／油價／黃金是次級",
       "Fed" in cfg["keywords"] and "AI" not in cfg["keywords"]

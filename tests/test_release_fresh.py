@@ -113,7 +113,7 @@ try:
     check("⑱ 行事曆抓不到：會議日用已存的官網日期（含 2026-09-16）＋推估補較早年份",
           dt.date(2026, 9, 16) in md and dt.date(2025, 9, 17) in md, md)
     up = src.upcoming_spans(3)
-    check("⑲ 行事曆抓不到：下次會議用已存的日期（不再「日期待更新」）", up and up[0][1] > dt.date.today() - dt.timedelta(days=400), up)
+    check("⑲ 行事曆抓不到：下次會議用已存的日期（不再「日期待更新」）", up and up[0][1] > __import__("src.clock", fromlist=["today"]).today() - dt.timedelta(days=400), up)
 finally:
     fs.known_meetings = fs_known
 
