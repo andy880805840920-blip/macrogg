@@ -826,5 +826,90 @@
   "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
   "points": 1,
   "result": "債市投資人焦點從聯準會轉向 AI 與財政赤字"
+ },
+ {
+  "at": "2026-10-27T14:56+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+1、時效+2、來源+3",
+    "titles": [
+     "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主題+3、主角+2、時效+2、來源+3",
+    "titles": [
+     "Bond-Market Doubts Grow Over Gridlock as Cure for Deficit Angst - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、主題熱度+1",
+    "titles": [
+     "The Fed, Growth-Stock Woes and Downside Gaps: Macro Man Podcast - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "High inflation to persist globally into next year, Reuters poll shows - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+1.5、來源+3",
+    "titles": [
+     "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters"
+    ]
+   },
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+1.5、來源+3",
+    "titles": [
+     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
+    ]
+   }
+  ],
+  "second": "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support - Reuters",
+  "copy_miss": [
+   "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+   "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support - Reuters"
+  ],
+  "second_dropped": "重點二沒有內文",
+  "headline_only": true,
+  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+  "points": 1,
+  "result": "債市焦點從聯準會轉向 AI 與財政赤字"
  }
 ]
