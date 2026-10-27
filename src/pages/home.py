@@ -1116,6 +1116,13 @@ def _indicator_checks(cat: list[dict]) -> str:
     return '<div class="fs-pickp">' + "".join(groups) + '</div>'
 
 
+def _point_tag(f: dict, i: int) -> str:
+    """v2.3 兩個重點：主軸兩段各加小標「重點一」「重點二」。"""
+    if int(f.get("points") or 1) == 2 and i < 2:
+        return f'<span class="fs-tag fs-pt">重點{"一二"[i]}</span>'
+    return ""
+
+
 def _archive_days(f: dict) -> tuple[str, str]:
     """
     主軸存檔（2026-10）：今天＋過去最多 4 個有發布的日子。回傳 (日期列, 過去幾天的面板)。
@@ -1141,13 +1148,14 @@ def _archive_days(f: dict) -> tuple[str, str]:
     for x in past:
         paras = [p.strip() for p in (x.get("text") or "").split("\n") if p.strip()]
         mains = [m.strip() for m in (paras[0] if paras else "").split("¶") if m.strip()]
+        _ptg = lambda i: _point_tag(x, i)   # noqa: E731
         lk = "".join(f'<li><a href="{esc(l.get("link", ""))}" rel="noopener">{esc(l.get("title", ""))}</a>'
                      f'<span class="fs-src">{esc(l.get("source", ""))}</span></li>'
                      for l in (x.get("links") or []) if l.get("link"))
         _hx = ("本週回顧｜" if x.get("weekly") else "") + (x.get("headline") or "")
         panels += (f'<div class="fs-day-p" data-day="{esc(x["date"])}" hidden>'
                    + (f'<p class="fs-headline">{esc(_hx)}</p>' if _hx else "")
-                   + "".join(f'<p class="fs-main">{esc(m)}</p>' for m in mains)
+                   + "".join(f'<p class="fs-main">{_ptg(i)}{esc(m)}</p>' for i, m in enumerate(mains))
                    + (f'<p class="fs-rate"><b>對利率</b>{esc(x["rate_note"])}</p>' if x.get("rate_note") else "")
                    + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else "")
                    + '</div>')
@@ -1286,7 +1294,7 @@ def _focus_strip(f: dict | None) -> str:
                 + ("本週回顧與下週重點" if _weekly else "今日主軸") + '</div>' + _days
                 + '<div class="fs-day-p" data-day="cur">'
                 + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
-                + "".join('<p class="fs-main">' + esc(s) + '</p>' for s in _mp)
+                + "".join('<p class="fs-main">' + _point_tag(f, i) + esc(s) + '</p>' for i, s in enumerate(_mp))
                 + (f'<p class="fs-rate"><b>對利率</b>{esc(_rn)}</p>' if _rn else "")
                 + ('<ul class="fs-list">' + "".join(_items) + '</ul>'
                    if _items else "")
@@ -1319,6 +1327,8 @@ def _focus_strip(f: dict | None) -> str:
             return (f'<div class="fs-link{"" if not tid or tid in shown else " fs-off"}"'
                     + (f' data-tlink="{esc(tid)}"' if tid else "") + '>'
                     + (f'<span class="fs-tag">{esc(_lbl.get(tid, ""))}</span>' if tid else "")
+                    + (f'<span class="fs-tag fs-pt">重點{"一二"[x["point"] - 1]}</span>'
+                       if not tid and x.get("point") in (1, 2) else "")
                     + f'<a href="{esc(x["link"])}" rel="noopener">{esc(x["title"])}</a>'
                     + (f'<span class="fs-src">{esc(x["source"])}</span>'
                        if x.get("source") else "")

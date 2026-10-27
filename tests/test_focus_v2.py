@@ -39,9 +39,9 @@ check("② 中英文共享數字＋專有名詞 → 同一件事", ft.same_story
 check("② 不同事件不歸一組", not ft.same_story(H[0]["title"], H[3]["title"]))
 cl = ft.cluster_events(H, lambda h: 5.0 if "CPI" in h["title"] else 4.0)
 check("② CPI 三則歸一組、排第一", len(cl[0]["items"]) >= 2 and "CPI" in cl[0]["lead"]["title"], cl[0])
-check("② 事件分數＝領頭分＋min(來源−1,3)", cl[0]["score"] == 5.0 + min(cl[0]["sources"] - 1, 3), cl[0])
+check("② 事件分數＝領頭分＋1.5×min(來源−1,3)（v2.3）", cl[0]["score"] == 5.0 + 1.5 * min(cl[0]["sources"] - 1, 3), cl[0])
 cl2 = ft.cluster_events([dict(H[0], source=f"S{i}", link=str(i)) for i in range(6)], lambda h: 1.0)
-check("② 來源加成最多 +3", cl2[0]["score"] == 4.0, cl2[0]["score"])
+check("② 來源加成最多 +4.5（v2.3）", cl2[0]["score"] == 5.5, cl2[0]["score"])
 
 # ③ 市場訊號：門檻、12 小時、油價照常算
 now = dt.datetime(2026, 10, 14, 13, 0, tzinfo=U)
@@ -280,6 +280,89 @@ check("⑬ 提示詞要求主席寫 Warsh", "一律寫英文 Warsh" in ft._NEWS_
 _ss = (ROOT / "src/pages/story_share.py").read_text(encoding="utf-8")
 check("⑬ 分享圖導言至少 3 行、逐行遞減", "LEAD_MIN = 3" in _ss and "else if(lm > LEAD_MIN) lm--" in _ss)
 check("⑬ 分享圖對利率保留「10 年期」那句", "function rateLines" in _ss and "rateLines(rateTxt" in _ss)
+
+# ⑭ 2026-10-27 v2.3：概念組、舊文、主題熱度、兩個重點、PCE 各家預估
+_p14 = {}
+ft.rank_score({"title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming a challenge"},
+              ["deficit", "Treasury", "yields", "Fed"], parts=_p14)
+check("⑭ 同一概念組只算一次（Treasury、yields＝美債）；deficit 在前半段 +2、美債在後半段 +1（原本 +6）",
+      _p14.get("主題") == 3.0 and _p14.get("主角") == 2.0, _p14)
+_pg, _pf = {}, {}
+ft.rank_score({"title": "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting - Reuters", "source": "Reuters"},
+              ["inflation", "Fed", "Warsh"], secondary=["gold", "oil"], parts=_pg)
+ft.rank_score({"title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com", "source": "Bloomberg"},
+              ["inflation", "Fed", "Warsh"], secondary=["gold", "oil"], parts=_pf)
+check("⑭ 主角位置：Fed 是主角的標題贏過只在句尾提到 Fed 的金價新聞", sum(_pf.values()) > sum(_pg.values()), (_pf, _pg))
+check("⑭ 亞洲算外國新聞", ft.is_foreign("Asia-focused banks face capital squeeze due to inflation, bond turbulence"))
+_p14b = {}
+ft.rank_score({"title": "Fed, CPI, payrolls and Treasury yields all in focus"}, ["Fed", "CPI", "payrolls", "Treasury"], parts=_p14b)
+check("⑭ 最多算兩組（+4）", _p14b.get("主題") == 4.0, _p14b)
+_cl = [{"lead": {"title": "Fed Meeting Focus Turns to Warsh Messaging"}, "score": 7.0, "items": []},
+       {"lead": {"title": "Fed decision looms as gold steadies"}, "score": 7.0, "items": []},
+       {"lead": {"title": "Fed officials weigh pause"}, "score": 7.0, "items": []},
+       {"lead": {"title": "Asia-focused banks face capital squeeze"}, "score": 8.0, "items": []}]
+_cl = ft.apply_theme_heat(_cl)
+check("⑭ 主題熱度：三則主角都是聯準會 → 各 +1，排到亞洲銀行前面",
+      _cl[0]["lead"]["title"].startswith("Fed") and _cl[0]["score"] == 8.0 and _cl[-1]["theme"] == 0, [(g["lead"]["title"][:20], g["score"]) for g in _cl])
+_now14 = dt.datetime(2026, 10, 27, 4, 0, tzinfo=U)
+_old = {"lead": {"title": "Analysis: deficit", "link": "https://www.cnbc.com/a", "at": "2026-10-26T18:33:00+00:00"},
+        "items": [{"title": "Analysis: deficit", "link": "https://www.cnbc.com/a", "at": "2026-10-26T18:33:00+00:00"}],
+        "score": 9.5}
+_new = {"lead": {"title": "Fed news", "link": "https://www.cnbc.com/b", "at": "2026-10-27T02:00:00+00:00"},
+        "items": [{"title": "Fed news", "link": "https://www.cnbc.com/b", "at": "2026-10-27T02:00:00+00:00"}],
+        "score": 8.0}
+_pubs = {"https://www.cnbc.com/a": dt.datetime(2026, 10, 15, 9, 30, tzinfo=U), "https://www.cnbc.com/b": dt.datetime(2026, 10, 27, 1, 0, tzinfo=U)}
+_ms = ft.mark_stale([_old, _new], _now14, _pub=lambda u: _pubs.get(u))
+check("⑭ RSS 寫 10/26 更新、原始發布 10/15 → 舊文：拿掉時效分、標記 stale", _old.get("stale") and _old["score"] == 7.5 and not _new.get("stale"), (_old.get("stale"), _old["score"]))
+_html14 = '<html><head><script type="application/ld+json">{"datePublished":"2026-10-15T09:30:00+0000"}</script></head></html>'
+check("⑭ 從網頁讀原始發布時間（datePublished）",
+      ft.published_at("x", _get=lambda u: type("R", (), {"text": _html14, "raise_for_status": lambda s: None})()) == dt.datetime(2026, 10, 15, 9, 30, tzinfo=U))
+# 重點二
+_m = {"lead": {"title": "Fed Meeting Focus Turns to Warsh"}, "score": 10.0}
+_o = [{"lead": {"title": "Fed officials weigh pause"}, "score": 9.0},
+      {"lead": {"title": "Oil prices jump 4% on OPEC cut"}, "score": 8.0},
+      {"lead": {"title": "Gold steadies"}, "score": 7.0}]
+check("⑭ 重點二：主角不同（跳過另一則 Fed），挑油價", ft.pick_second(_m, _o)["lead"]["title"].startswith("Oil"))
+check("⑭ 重點二分數不到重點一的一半 → 不硬湊", ft.pick_second(_m, [{"lead": {"title": "Oil prices jump"}, "score": 4.0}]) is None)
+check("⑭ 撞期被降級的鎖定事件優先放重點二",
+      ft.pick_second({"lead": {"title": "Treasury refunding: bigger auctions"}, "score": 20.0},
+                     [{"lead": {"title": "Oil prices jump"}, "score": 15.0}, {"lead": {"title": "CPI rises 0.4%"}, "score": 3.0}],
+                     demoted=["cpi"])["lead"]["title"].startswith("CPI"))
+_sys2 = ft._two_point_system(ft._FOCUS_CONTENT_SYSTEM_A)
+check("⑭ 兩個重點的提示詞替換全部成功", all(b in _sys2 for a, b in ft._TWO_POINT_SWAPS) and "{min}" in _sys2)
+_r14 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件。\n乙事件。\n【對利率】r\n【補充】\na\nb\n【來源】1,4｜6", 2)
+check("⑭ 來源分重點：1,4｜6", _r14["ids"] == [1, 4] and _r14.get("ids2") == [6] and len(_r14["main"]) == 2, _r14)
+_calls14 = []
+_two = ("【標題】聯準會會議前市場聚焦 Warsh 的政策訊息\n【主軸】\n" + "聯準會會議在即，市場關注主席 Warsh 如何說明暫停升息的理由與後續路徑。" * 2
+        + "\n" + "油價因石油輸出國組織減產消息上漲，能源類股走強，投資人評估通膨壓力是否再起。" * 2
+        + "\n【對利率】Warsh 暗示暫停升息，偏向壓低短端利率預期。\n【補充】\n金價走穩，市場等待聯準會會議結果，投資人觀望。\n銅價延續跌勢，人工智慧類股走弱拖累金屬需求。\n【來源】1｜2")
+ft._call_ai, _o14 = (lambda s, sy, env=None, **k: (_calls14.append(sy) or (_two, ""))), ft._call_ai
+try:
+    _wr, _we = ft.write_main([{"title": "Fed meeting focus turns to Warsh", "body": "Fed Warsh meeting", "source": "Bloomberg", "link": "https://b/1"},
+                              {"title": "Oil prices jump on OPEC cut", "body": "oil OPEC", "source": "Reuters", "link": "https://r/2"}],
+                             [], ["Fed"], {}, caps=[250, 80, 80], mins=[200, 40, 40], two_points=True, point_ids=([1], [2]))
+finally:
+    ft._call_ai = _o14
+check("⑭ 兩個重點：產出 points=2、來源標記重點一／重點二", _wr and _wr["points"] == 2
+      and [x.get("point") for x in _wr["links"]] == [1, 2], (_we, _wr and _wr.get("links")))
+check("⑭ 兩個重點用的提示詞", _calls14 and "剛好兩段" in _calls14[0])
+_h14 = _home._focus_strip({"yields": [], "links": [dict(_wr["links"][0]), dict(_wr["links"][1])], "fedwatch": None,
+                           "layout": "main", "points": 2, "headline": "h", "rate_note": "r",
+                           "text": "甲事件。¶乙事件。\n補一。\n補二。", "text_source": "model-content", "topics": [], "chips": []})
+check("⑭ 首頁：兩段各有「重點一」「重點二」小標，參考報導也標重點", _h14.count(">重點一</span>") == 2 and _h14.count(">重點二</span>") == 2)
+from src.analysis import stories as _S
+_sto = _S.build_story({"_focus": {"layout": "main", "points": 2, "text": "甲事件。¶乙事件。\n補一。", "headline": "h"}})
+check("⑭ 分享圖導言只用重點一", _sto["paras"] == ["甲事件。"], _sto["paras"])
+# PCE 各家預估
+from src.analysis import forecasts as _F
+_rel = dt.datetime(2026, 10, 29, 20, 30, tzinfo=TPE)
+_st14 = _F.window_start({"key": "pce", "period": "2026-09"}, {"cpi|2026-09": {"date": "2026-10-14"}})
+check("⑭ PCE 時間窗從同一期 CPI 公布開始", _st14 is not None and _st14.date() == dt.date(2026, 10, 14), _st14)
+_it = {"title": "Post-PPI sell-side commentary: economists lift core estimates", "pub": dt.datetime(2026, 10, 15, 13, 48, tzinfo=U)}
+check("⑭ PCE：標題是 PPI／CPI 評論文也收（10/15，比公布早兩週）",
+      _F.is_preview("pce", _it, _rel, _st14) and not _F.is_preview("pce", _it, _rel))
+check("⑭ CPI 不受影響：評論文不收", not _F.is_preview("cpi", _it, _rel, None))
+check("⑭ PCE 那一期提早 20 天建立", "ahead = 20 if key == \"pce\" else 10" in (ROOT / "src/analysis/forecasts.py").read_text(encoding="utf-8"))
 
 print()
 print("全部通過" if ok else "有失敗")

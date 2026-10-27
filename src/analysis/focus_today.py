@@ -999,6 +999,57 @@ _JUNK_PARA = re.compile(r"Oops, something went wrong|將 ?Yahoo ?加入|設為�
                         r"All rights reserved|版權所有|請勿轉載|訂閱電子報|點我加入")
 
 
+_PAGE_CACHE: dict = {}      # v2.3：同一次執行同一個網址只抓一次（查發布時間與抽內文共用）
+
+
+def _fetch_page(url: str, _get=None) -> str:
+    if _get is None and url in _PAGE_CACHE:
+        return _PAGE_CACHE[url]
+    get = _get or (lambda u: requests.get(
+        u, timeout=TIMEOUT,
+        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
+    r = get(url)
+    r.raise_for_status()
+    page = r.text
+    if _get is None:
+        _PAGE_CACHE[url] = page
+    return page
+
+
+_PUB_PATS = (r'"datePublished"\s*:\s*"([^"]+)"',
+             r'<meta[^>]+property=["\']article:published_time["\'][^>]+content=["\']([^"\']+)',
+             r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']article:published_time',
+             r'<meta[^>]+itemprop=["\']datePublished["\'][^>]+content=["\']([^"\']+)',
+             r'<meta[^>]+name=["\'](?:pubdate|publishdate|date)["\'][^>]+content=["\']([^"\']+)')
+
+
+def published_at(url: str, _get=None) -> dt.datetime | None:
+    """
+    文章頁裡的「原始發布時間」（2026-10-27 v2.3）。CNBC 等 RSS 給的是最後更新時間：
+    10/15 的分析文 10/26 更新，就被當成新文章選成主軸。讀不到回 None（不懲罰）。
+    """
+    try:
+        page = _fetch_page(url, _get)
+    except Exception:                              # noqa: BLE001
+        return None
+    for p in _PUB_PATS:
+        m = re.search(p, page, re.I)
+        if not m:
+            continue
+        s = m.group(1).strip().replace("Z", "+00:00")
+        try:
+            t = dt.datetime.fromisoformat(s[:25] if "+" in s[19:] or "-" in s[19:] else s[:19])
+        except ValueError:
+            try:
+                t = parsedate_to_datetime(s)
+            except (TypeError, ValueError):
+                continue
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=dt.timezone.utc)
+        return t
+    return None
+
+
 def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
     """
     抓文章頁、抽出正文（<p> 段落）。Yahoo 新聞頁的正文是伺服器渲染的，
@@ -1006,13 +1057,8 @@ def fetch_article_text(url: str, _get=None, cap: int = 1800) -> str:
     影音頁都會走到這裡，由呼叫端退回標題模式。
     """
     import html as _html
-    get = _get or (lambda u: requests.get(
-        u, timeout=TIMEOUT,
-        headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"}))
     try:
-        r = get(url)
-        r.raise_for_status()
-        page = r.text
+        page = _fetch_page(url, _get)
     except Exception as e:                         # noqa: BLE001
         log.warning("市場焦點：文章抓取失敗（%s：%s）", url[:60], e)
         return ""
@@ -1129,6 +1175,34 @@ _FOCUS_CONTENT_SYSTEM_A = (
     "一則就只寫一則。" + _NEWS_RULES +
     "輸出格式：【標題】【主軸】【對利率】【補充】【來源】各自單獨一行，內容接在"
     "下一行；不要編號、不要符號開頭、不要粗體記號、不要任何前言。")
+
+
+# v2.3（2026-10-27）兩個重點：在同一份提示詞上換掉【標題】【主軸】【對利率】【補充】【來源】的說明
+_TWO_POINT_SWAPS = (
+    ("點出主軸的核心事件，不加句號。", "點出重點一的核心事件（只寫重點一），不加句號。"),
+    ("【主軸】{min}–{main} 個中文字，分 2–3 段（每段一行）。挑最重要、彼此相關的"
+     "報導（優先彭博、路透；同一件事的多篇報導合併），綜合成一篇完整論述：①發生了"
+     "什麼（誰、做了什麼、數字）②為什麼（背景與原因）③官員、分析師或市場怎麼解讀"
+     "（只寫材料裡有的說法）。不要每則各講一句拼起來。",
+     "【主軸】剛好兩段（各一行），合計 {min}–{main} 個中文字、兩段各約一半：第一段是重點一、"
+     "第二段是重點二，兩件是不同的事；段首不要寫「重點一」這類標籤。每段把那件事講完整："
+     "發生了什麼（誰、做了什麼、數字）、為什麼、官員分析師或市場怎麼解讀（只寫材料裡有的說法；"
+     "同一件事的多篇報導合併，優先彭博、路透）。"),
+    ("解讀的是上面寫的那件事，", "解讀的是兩個重點中對利率影響較大的那件（必要時兩件一起說），"),
+    ("每行一件**主軸以外**的事件", "每行一件**兩個重點以外**的事件"),
+    ("【來源】主軸用到的報導代號，用逗號分隔，例如「1,4」。主軸寫的事件若有彭博、",
+     "【來源】兩個重點各自用到的報導代號，重點一和重點二之間用「｜」分開，例如「1,4｜6」。每個重點若有彭博、"),
+)
+
+
+def _two_point_system(tmpl: str) -> str:
+    """在 format 之前換掉樣板裡的說明（換不到的會記警告，測試會擋）。"""
+    for a, b in _TWO_POINT_SWAPS:
+        if a in tmpl:
+            tmpl = tmpl.replace(a, b)
+        else:
+            log.warning("市場焦點：兩個重點的提示詞替換失敗：%s", a[:20])
+    return tmpl
 
 
 def _post_gemini_hardy(key: str, model: str, src_text: str,
@@ -1289,6 +1363,7 @@ HARD_MULT_MAIN, HARD_MULT_SUPP, SHORT_TOL = 1.1, 1.25, 0.9
 # 快取與 log 都不用改）；首頁渲染時再拆回段落。
 MAIN_PARA = "¶"
 MAX_MAIN_PARAS = 3
+POINT_MIN = 60              # v2.3 兩個重點：每個重點至少幾個中文字（總長 250、各約一半）
 
 
 def focus_caps(cfg: dict | None) -> list[int]:
@@ -1944,7 +2019,10 @@ def _parse_main_output(text: str, n_supp: int) -> dict:
         elif tag == "對利率" and not out["rate"]:
             out["rate"] = _put
         elif tag == "來源":
-            out["ids"] += [int(x) for x in re.findall(r"\d+", _put)]
+            _pp = re.split(r"[｜|]", _put, maxsplit=1)
+            out["ids"] += [int(x) for x in re.findall(r"\d+", _pp[0])]
+            if len(_pp) > 1:
+                out["ids2"] = out.get("ids2", []) + [int(x) for x in re.findall(r"\d+", _pp[1])]
     items = _split_main("\n".join(rest), n_supp)
     if items:
         out["main"] = [p for p in items[0].split(MAIN_PARA) if p.strip()]
@@ -2004,7 +2082,7 @@ def _pick_links(mats: list[dict], ids: list[int], n: int,
 def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=None,
                    vague_markers=None, rate_ctx=None, name_map=None,
                    release_dates_: dict | None = None,
-                   model: str | None = None) -> tuple[dict | None, str]:
+                   model: str | None = None, two_points: bool = False) -> tuple[dict | None, str]:
     """
     版式 A 的生成＋驗證。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
       後設字眼   重試一次，再犯就失敗
@@ -2059,6 +2137,14 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
             why.append("用了空泛的套話")
         if not (8 <= cjk_len(r["headline"]) <= 34):
             why.append("缺少一句 14–28 字的【標題】")
+        if two_points:
+            _mp = r["main"]
+            if len(_mp) < 2:
+                why.append("【主軸】要剛好兩段：第一段寫重點一、第二段寫重點二（兩件不同的事）")
+            else:
+                for _i, _p in enumerate(_mp[:2], 1):
+                    if cjk_len(_p) < POINT_MIN:
+                        why.append(f"重點{'一二'[_i - 1]}只有 {cjk_len(_p)} 字，沒有把那件事講完整（各約 {caps[0] // 2} 字）")
         _leak = sorted(set(_PROMPT_LEAK.findall(joined)))
         if _leak:
             why.append("用了「" + "、".join(_leak[:2]) + "」這種寫給你的指示用語，讀者看不懂，直接寫事件本身")
@@ -2114,8 +2200,14 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         main = "¶".join(_drop(p) for p in main.split("¶"))
         supp = [_drop(x) for x in supp]
     headline = fix(r["headline"]) if 6 <= cjk_len(r["headline"]) <= 40 else ""
+    points = 1
+    if two_points:
+        _ps = [p for p in main.split(MAIN_PARA) if p.strip()]
+        if len(_ps) >= 2:
+            points = 2
+            main = _ps[0] + MAIN_PARA + "".join(_ps[1:])     # 第三段以後併進重點二
     return {"text": "\n".join([main] + supp), "headline": headline, "rate": rate,
-            "ids": r["ids"]}, ""
+            "ids": r["ids"], "ids2": r.get("ids2", []), "points": points}, ""
 
 
 def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=None, *,
@@ -2123,24 +2215,34 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
                name_map=None, event_note: str = "", recent_note: str = "",
                mode: str = "content", facts_block: str = "",
                release_dates_: dict | None = None,
-               model: str | None = None) -> tuple[dict | None, str]:
-    """主軸（內文模式或標題模式共用）：材料編號 → AI → 驗證 → 來源連結。"""
+               model: str | None = None, two_points: bool = False,
+               point_ids: tuple = ((), ())) -> tuple[dict | None, str]:
+    """主軸（內文模式或標題模式共用）：材料編號 → AI → 驗證 → 來源連結。
+    two_points（v2.3）：主軸寫兩個重點（各約一半字數），來源分重點列。"""
     if not arts and not briefs:
         return None, "沒有任何材料"
     body, mats = _material_text(arts, briefs)
     src_text = body + _rate_block(rate_ctx) + facts_block
-    system = _FOCUS_CONTENT_SYSTEM_A.format(
+    tmpl = _two_point_system(_FOCUS_CONTENT_SYSTEM_A) if two_points else _FOCUS_CONTENT_SYSTEM_A
+    system = tmpl.format(
         kws="、".join(keywords), main=caps[0], supp=caps[1] if len(caps) > 1 else 0,
         ns=len(caps) - 1, min=(mins or [DEFAULT_MAIN_MIN])[0],
         event=event_note, recent=recent_note)
     res, err = _generate_main(src_text, system, env, caps=caps, mins=mins,
                               meta_markers=meta_markers, vague_markers=vague_markers,
                               rate_ctx=rate_ctx, name_map=name_map,
-                              release_dates_=release_dates_, model=model)
+                              release_dates_=release_dates_, model=model, two_points=two_points)
     if not res:
         return None, err
-    res["links"] = _pick_links(mats, res.pop("ids"), MAX_MAIN_LINKS,
-                                MAIN_LINKS_PER_TIER)
+    ids, ids2 = res.pop("ids"), res.pop("ids2", [])
+    if res.get("points") == 2:
+        # 來源分重點列：AI 沒回報某個重點的代號，就用程式指定的那組
+        l1 = _pick_links(mats, ids or list(point_ids[0]), 3, 2)
+        l2 = [x for x in _pick_links(mats, ids2 or list(point_ids[1]), 3, 2)
+              if x["link"] not in {y["link"] for y in l1}]
+        res["links"] = [dict(x, point=1) for x in l1] + [dict(x, point=2) for x in l2]
+    else:
+        res["links"] = _pick_links(mats, ids, MAX_MAIN_LINKS, MAIN_LINKS_PER_TIER)
     res["source"] = "model-content" if mode == "content" else "model"
     return res, ""
 
@@ -2225,7 +2327,8 @@ EVENT_WORDS = {
     "testimony": ("testimony", "testify", "testifies", "聽證", "作證", "國會報告"),
 }
 FOREIGN_DEFAULT_EXTRA = ("France", "French", "Germany", "German", "Europe", "European", "euro zone",
-                         "eurozone", "ECB", "China", "Chinese", "法國", "德國", "歐洲", "歐元區", "歐洲央行", "中國")
+                         "eurozone", "ECB", "China", "Chinese", "法國", "德國", "歐洲", "歐元區", "歐洲央行", "中國",
+                         "Asia", "Asian", "亞洲")
 _FOREIGN_BASE = re.compile(r"(?<![A-Za-z])(?:Egypt|India|Indian|Pakistan|Bangladesh|Turkey|Turkish|Brazil|"
                       r"Nigeria|Kenya|Argentina|Mexico|Indonesia|Philippines|Vietnam|Thailand|Malaysia|"
                       r"South Africa|Poland|Hungary|Australia|New Zealand|Canada|UK|Britain|Korea|Korean|"
@@ -2421,19 +2524,100 @@ def cluster_events(items: list[dict], score) -> list[dict]:
         srcs = {(_src_name(y) or y.get("link", ""))for y in g["items"]}
         n = len(srcs)
         out.append({"items": g["items"], "lead": g["items"][0], "sources": n,
-                    "score": round(g["scores"][0] + min(max(n - 1, 0), 3), 2)})
+                    "score": round(g["scores"][0] + MULTI_SRC * min(max(n - 1, 0), 3), 2)})
     out.sort(key=lambda g: -g["score"])
     return out
 
+
+# ---- v2.3（2026-10-27）計分調整 ----
+# 主級關鍵字分概念組：同一組只算一次（+2），最多算 MAX_CONCEPTS 組。
+# 標題堆越多同義字分數越高的問題（CNBC「deficit、Treasury、yields」拿 +6）。
+CONCEPT_GROUPS = {
+    "聯準會": ("Fed", "FOMC", "Warsh", "華許", "聯準會", "升息", "降息"),
+    "通膨": ("inflation", "CPI", "PCE", "PPI", "通膨"),
+    "就業": ("payrolls", "unemployment", "非農", "失業率"),
+    "GDP": ("GDP",),
+    "美債": ("Treasury", "Treasuries", "yields", "bond", "美債", "美債殖利率", "公債殖利率", "美國公債",
+           "公債標售", "債市"),
+    "財政": ("deficit", "美國財政部", "財政赤字", "發債", "Bessent", "貝森特"),
+    "關稅": ("tariff", "關稅"),
+}
+_CONCEPT_OF = {w.lower(): g for g, ws in CONCEPT_GROUPS.items() for w in ws}
+MAX_CONCEPTS = 2
+LEAD_BONUS = 2.0            # 標題主角（前半段）是利率主線的主級詞
+MULTI_SRC = 1.5             # 同一件事每多一家媒體報導 +1.5（最多算 3 家，+4.5）
+THEME_HEAT, THEME_HEAT_MAX = 0.5, 2.0   # 其他事件的標題主角跟它相同，每個 +0.5，最多 +2
+STALE_HOURS = 48            # 原始發布超過 48 小時：不給時效分、不能當主軸（只能當補充）
+STALE_CHECK = 8             # 排名前幾的事件要查原始發布時間
 
 MAIN_MAX_ITEMS = 4          # v2.2：主軸材料（同一件事＋同主題相關報導）最多幾則
 HEADLINE_ONLY_MIN = 120     # v2.2：主軸材料全部只有標題時的字數下限（原本 200）
 _LEAD_FRAC = 0.45           # 標題「主角」＝標題前 45%（至少 20 字元）出現的專有名詞
 
 
+def _lead_part(title: str) -> str:
+    """標題的「主角」範圍：前 45%（至少 20 字元）；先拿掉 Google News 標題尾巴的「 - Bloomberg.com」。"""
+    t = re.sub(r"\s+[-–—|]\s+[^-–—|]{1,40}$", "", title or "")
+    return t[:max(int(len(t) * _LEAD_FRAC), 20)]
+
+
 def _lead_ents(title: str) -> set:
-    t = title or ""
-    return _story_tokens(t[:max(int(len(t) * _LEAD_FRAC), 20)])[1]
+    return _story_tokens(_lead_part(title))[1]
+
+
+SECOND_MIN_RATIO = 0.5      # 重點二的分數至少是重點一的一半，不夠就只寫重點一
+
+
+def pick_second(main_c: dict, others: list[dict], demoted=()) -> dict | None:
+    """
+    重點二（v2.3）：從剩下的事件挑分數最高、主角跟重點一不同、不是舊文的那件；
+    分數低於重點一的一半就不硬湊。鎖定事件撞期時，被降級的那件優先放這裡。
+    """
+    e1 = _lead_ents(main_c["lead"]["title"])
+    ok = [g for g in others if not g.get("stale")
+          and not (e1 and (_lead_ents(g["lead"]["title"]) & e1))]
+    for kind in demoted or ():
+        for g in ok:
+            t = _kw_text(g["lead"]["title"])
+            if any(_kw_hit(w, t) for w in EVENT_WORDS.get(kind, ())):
+                return g
+    for g in ok:
+        if g["score"] >= SECOND_MIN_RATIO * main_c["score"]:
+            return g
+        break
+    return None
+
+
+def apply_theme_heat(clusters: list[dict]) -> list[dict]:
+    """主題熱度（v2.3）：很多篇從不同角度寫同一個主角（例：會議週的金價、銅價、亞股都在寫 Fed 會議），
+    每多一個主角相同的事件 +0.5，最多 +2。回傳重新排序後的清單。"""
+    ents = [_lead_ents(g["lead"]["title"]) for g in clusters]
+    for i, g in enumerate(clusters):
+        n = sum(1 for j, e in enumerate(ents) if j != i and e and (e & ents[i]))
+        g["theme"] = min(THEME_HEAT * n, THEME_HEAT_MAX)
+        g["score"] = round(g["score"] + g["theme"], 2)
+    return sorted(clusters, key=lambda g: -g["score"])
+
+
+def mark_stale(clusters: list[dict], now: dt.datetime, *, _pub=None) -> list[dict]:
+    """
+    排名前 STALE_CHECK 的事件：抓得到內文的報導讀原始發布時間，超過 STALE_HOURS 就是舊文——
+    拿掉時效分、標記 stale（不能當主軸）。同一組有任何一則是新的就不算舊。
+    """
+    pub = _pub or published_at
+    for g in clusters[:STALE_CHECK]:
+        cand = [x for x in g["items"] if not _headline_only(x["link"])]
+        if not cand or len(cand) < len(g["items"]):
+            continue                               # 有只有標題的報導（彭博、路透）：時間由 Google 給，不檢查
+        ts = [pub(x["link"]) for x in cand[:2]]
+        if ts and all(t is not None and (now - t).total_seconds() > STALE_HOURS * 3600 for t in ts):
+            age = _age_hours(g["lead"], now)
+            tb = (2.0 if age is not None and age <= 12 else 1.5 if age is not None and age <= 24
+                  else 0.5 if age is not None and age <= 48 else 0.0)
+            g["stale"] = min(ts).astimezone(dt.timezone.utc).isoformat(timespec="minutes")
+            g["score"] = round(g["score"] - tb, 2)
+            log.info("市場焦點：舊文（原始發布 %s）不當主軸：%s", g["stale"], g["lead"]["title"][:50])
+    return sorted(clusters, key=lambda g: -g["score"])
 
 
 def related_items(main_c: dict, others: list[dict], n: int) -> tuple[list[dict], list[dict]]:
@@ -2634,7 +2818,17 @@ def rank_score(h: dict, keywords, secondary=None, *, heat=None, now=None,
     #（實測：週日的前六名全是 AI）。
     pt = {}                                         # v2.2：分數明細（寫進 focus_log）
     if hit_p:
-        pt["主題"] = 2.0 * len(hit_p)
+        # v2.3：同一個概念組只算一次（Treasury、yields 都是「美債」）；看關鍵字在標題的位置——
+        # 前半段（主角）每組 +2、只在後半段順帶提到每組 +1，最多兩組；主角是利率主線再 +2。
+        # （「Gold rises … ahead of Fed meeting」主角是黃金，不該贏過「Fed Meeting Focus Turns to Warsh」）
+        head = _kw_text(_lead_part(h.get("title") or ""))
+        g_of = lambda w: _CONCEPT_OF.get(w.lower(), w.lower())   # noqa: E731
+        lead_g = {g_of(w) for w in hit_p if _kw_hit(w, head)}
+        tail_g = {g_of(w) for w in hit_p} - lead_g
+        vals = sorted([2.0] * len(lead_g) + [1.0] * len(tail_g), reverse=True)[:MAX_CONCEPTS]
+        pt["主題"] = float(sum(vals))
+        if lead_g:
+            pt["主角"] = LEAD_BONUS
     if hit_s:
         pt["次級"] = min(0.5 * len(hit_s), 1.0)
     if heat:
@@ -4201,7 +4395,8 @@ def update_archive(arch, st: dict) -> dict:
             day = at.astimezone(_TPE).date().isoformat()
             arch[day] = {"headline": st.get("headline", ""), "text": st.get("text", ""),
                          "rate_note": st.get("rate_note", ""), "links": st.get("links") or [],
-                         "at": st["at"], "weekly": bool(st.get("weekly"))}
+                         "at": st["at"], "weekly": bool(st.get("weekly")),
+                         "points": int(st.get("points") or 1)}
         except (TypeError, ValueError):
             pass
     keep = sorted(arch, reverse=True)[:ARCHIVE_DAYS]
@@ -4572,33 +4767,59 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         _rk = dict(secondary=kw2, now=_now, events=_ev, lock_events=_lock)
         _score = lambda h: rank_score(h, keywords, **_rk) + signal_bonus(h["title"], sig)  # noqa: E731
         clusters = cluster_events([h for h in heads if not _excluded(h["title"], exclude)], _score)
+        # v2.3：主題熱度（很多事件的主角相同）＋舊文（原始發布超過 48 小時）
+        clusters = apply_theme_heat(clusters)
+        if mode == "content":
+            try:
+                clusters = mark_stale(clusters, _now)
+            except Exception as e:                 # noqa: BLE001
+                log.warning("市場焦點：原始發布時間檢查失敗（%s），略過", e)
 
         def _why(g):
-            """分數明細（v2.2）：哪一項加了幾分，focus_log 一看就知道為什麼排第一。"""
+            """分數明細：哪一項加了幾分，focus_log 一看就知道為什麼排第一。"""
             p = {}
             rank_score(g["lead"], keywords, parts=p, **_rk)
             if signal_bonus(g["lead"]["title"], sig):
                 p["訊號"] = SIGNAL_BONUS
             if g["sources"] > 1:
-                p["多家"] = float(min(g["sources"] - 1, 3))
+                p["多家"] = MULTI_SRC * min(g["sources"] - 1, 3)
+            if g.get("theme"):
+                p["主題熱度"] = g["theme"]
+            if g.get("stale"):
+                p.pop("時效", None)
+                p["舊文"] = 0.0
             return "、".join(f"{k}{v:+g}" for k, v in p.items())
         flog.update({"signals": sig, "events": _ev, "locks": _lock, "demoted": _demoted,
                      "clusters": [{"score": g["score"], "sources": g["sources"], "why": _why(g),
+                                   **({"stale": g["stale"]} if g.get("stale") else {}),
                                    "titles": [x["title"] for x in g["items"][:3]]} for g in clusters[:8]]})
-        if clusters:
-            main_c, others = clusters[0], clusters[1:]
-            # v2.2：主軸那件事不到 3 則 → 補同主題（標題主角相同）的相關報導，主軸材料最多 4 則
-            rel, others = related_items(main_c, others, MAIN_MAX_ITEMS - len(main_c["items"]))
-            main_items = main_c["items"][:MAIN_MAX_ITEMS] + rel
-            if rel:
-                flog["related"] = [x["title"] for x in rel]
-                log.info("市場焦點：主軸補 %d 則同主題報導（%s）", len(rel),
-                         "；".join(x["title"][:30] for x in rel))
+        fresh = [g for g in clusters if not g.get("stale")] or clusters
+        if fresh:
+            main_c = fresh[0]
+            others = [g for g in clusters if g is not main_c]
+            # v2.3 重點二：主角不同、分數至少重點一的一半、不是舊文；撞期被降級的鎖定事件優先
+            p2 = pick_second(main_c, others, demoted=_demoted)
+            if p2 is not None:
+                others = [g for g in others if g is not p2]
+            # 相關報導：重點一補到 3 則、重點二補到 2 則（不從對方那組拿）
+            cap1, cap2 = (3, 2) if p2 is not None else (MAIN_MAX_ITEMS, 0)
+            rel, others = related_items(main_c, others, cap1 - len(main_c["items"][:cap1]))
+            items1 = main_c["items"][:cap1] + rel
+            items2, rel2 = [], []
+            if p2 is not None:
+                rel2, others = related_items(p2, others, cap2 - len(p2["items"][:cap2]))
+                items2 = p2["items"][:cap2] + rel2
+                flog["second"] = p2["lead"]["title"]
+            if rel or rel2:
+                flog["related"] = [x["title"] for x in rel + rel2]
+                log.info("市場焦點：補 %d 則同主題報導（%s）", len(rel + rel2),
+                         "；".join(x["title"][:30] for x in rel + rel2))
             _body = lambda x: not _headline_only(x["link"])   # noqa: E731
-            main_body = [x for x in main_items if _body(x)][:4]
-            main_brief = [x for x in main_items if not _body(x)][:4]
+            pt_items = items1 + items2
+            main_body = [x for x in pt_items if _body(x)][:5]
+            main_brief = [x for x in pt_items if not _body(x)][:5]
             oth_body, oth_brief = [], []
-            # 全文總共最多 BODY_SLOTS 篇（同 v1 的 6 篇）：主軸那件事先用，剩下的給其他事件
+            # 全文總共最多 BODY_SLOTS 篇：兩個重點先用，剩下的給其他事件
             _oth_cap = max(BODY_SLOTS - len(main_body), 2)
             for g in others[:10]:
                 b = [x for x in g["items"] if _body(x)][:1]
@@ -4606,70 +4827,75 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                     oth_body += b
                 elif len(oth_brief) < 3:
                     oth_brief += [x for x in g["items"] if not _body(x)][:1] or b
-            top = main_items[:4] + [g["lead"] for g in others[:3]]
+            top = items1[:3] + items2[:2] + [g["lead"] for g in others[:3]]
             arts = []
+            _l1 = {x["link"] for x in items1}
+            _l2 = {x["link"] for x in items2}
             _ml = {x["link"] for x in main_c["items"]}
-            _rl = {x["link"] for x in rel}
             if mode == "content":
                 cand = main_body + oth_body
                 _bodies = _pmap(lambda x: fetch_article_text(x["link"]), cand)
                 arts = [{"title": x["title"], "body": b, "source": x.get("source", ""),
                          "link": x["link"], "at": x.get("at", "")}
                         for x, b in zip(cand, _bodies) if b]
-                # 主軸那件事的報導排前面、再來是相關報導；同一組裡彭博、路透優先
-                arts.sort(key=lambda a: (a["link"] not in _ml, a["link"] not in _rl, -_src_weight(a)))
+                # 重點一、重點二的報導排前面；同一組裡彭博、路透優先
+                arts.sort(key=lambda a: (a["link"] not in _l1, a["link"] not in _l2, -_src_weight(a)))
                 if not any(a["link"] in _ml for a in arts) and not any(x["link"] in _ml for x in main_brief):
-                    main_brief = [main_c["lead"]] + main_brief   # 主軸那件事的全文都抓不到：至少放標題
+                    main_brief = [main_c["lead"]] + main_brief   # 重點一的全文都抓不到：至少放標題
             briefs = main_brief + oth_brief
-            _mids = ([i for i, a in enumerate(arts, 1) if a["link"] in _ml]
-                     + [j for j, b in enumerate(briefs, len(arts) + 1) if b["link"] in _ml])
-            _rids = ([i for i, a in enumerate(arts, 1) if a["link"] in _rl]
-                     + [j for j, b in enumerate(briefs, len(arts) + 1) if b["link"] in _rl])
-            # 主軸的材料全部只有標題（沒有任何內文）→ 字數下限降到 HEADLINE_ONLY_MIN，寧可短也不要補
-            _main_has_body = any(a["link"] in (_ml | _rl) for a in arts)
+
+            def _ids(mats_a, mats_b, links):
+                return ([i for i, a in enumerate(mats_a, 1) if a["link"] in links]
+                        + [j for j, b in enumerate(mats_b, len(mats_a) + 1) if b["link"] in links])
+            _ids1, _ids2 = _ids(arts, briefs, _l1), _ids(arts, briefs, _l2)
+            # 主軸材料全部只有標題（沒有任何內文）→ 字數下限降到 HEADLINE_ONLY_MIN，寧可短也不要補
+            _main_has_body = any(a["link"] in (_l1 | _l2) for a in arts)
             _wm = dict(_w)
             if not _main_has_body and mins:
                 _wm["mins"] = [min(mins[0], HEADLINE_ONLY_MIN)] + list(mins[1:])
                 flog["headline_only"] = True
-            # 給 AI 的事件提示：鎖定事件（公布前寫預告）、撞期降級、本次主軸是哪件事（寫明美東日期）
+            # 給 AI 的事件提示：鎖定事件（公布前寫預告）、撞期降級、兩個重點各是哪件事（寫明美東日期）
             parts = []
             if _lock:
                 _k = _lock[0]
                 _d = event_day(_k, _ev_d, cfg, now_tw)
                 _nm = EVENT_NAMES.get(_k, _k)
                 if released_yet(_k, _ev_d, cfg, now_tw):
-                    parts.append(f"{_d}（美東）有{_nm}：材料裡有相關報導時，主軸必須以這件事為核心。")
+                    parts.append(f"{_d}（美東）有{_nm}：材料裡有相關報導時，重點一必須以這件事為核心。")
                 else:
-                    parts.append(f"{_nm}在 {_d}（美東）公布、目前尚未公布：主軸寫這次公布什麼、"
+                    parts.append(f"{_nm}在 {_d}（美東）公布、目前尚未公布：重點一寫這次公布什麼、"
                                  "市場關注哪些重點；不要寫任何預估值或市場共識數字。")
                 if _demoted:
                     parts.append("同時有" + "、".join(EVENT_NAMES.get(d, d) for d in _demoted)
-                                 + "，主軸不寫，放在補充。")
+                                 + "，寫在重點二（材料不足就放補充）。")
 
-            def _focus_note(mids, rids):
-                if not mids:
+            def _focus_note(i1, i2):
+                if not i1:
                     return ""
-                s = "本次主軸以代號 " + "、".join(map(str, mids)) + " 這件事為核心"
-                if rids:
-                    s += "，可以引用同主題的代號 " + "、".join(map(str, rids)) + " 補充背景或不同觀點"
-                return s + "；補充從其他代號挑，不要重複主軸的事。"
-            _ev_note = "".join(parts) + _focus_note(_mids, _rids)
+                s = "重點一以代號 " + "、".join(map(str, i1)) + " 這件事為核心"
+                if i2:
+                    s += "；重點二以代號 " + "、".join(map(str, i2)) + " 這件事為核心"
+                return s + "；補充從其他代號挑，不要重複兩個重點的事。"
+            _two = bool(_ids2)
+            _ev_note = "".join(parts) + _focus_note(_ids1, _ids2)
             flog["main"] = main_c["lead"]["title"]
+            flog["points"] = 2 if _two else 1
             if mode == "content" and arts:
-                log.info("市場焦點：內文擷取 %d 篇＋標題快訊 %d 則（主軸事件 %d 則、%d 家媒體、相關 %d 則）",
-                         len(arts), len(briefs), len(main_c["items"]), main_c["sources"], len(rel))
+                log.info("市場焦點：內文擷取 %d 篇＋標題快訊 %d 則（重點一 %d 則、重點二 %d 則）",
+                         len(arts), len(briefs), len(items1), len(items2))
                 res, err = write_main(arts, briefs, keywords, env, mode="content", rate_ctx=rate_ctx,
-                                      event_note=_ev_note, **_wm)
+                                      event_note=_ev_note, two_points=_two, point_ids=(_ids1, _ids2), **_wm)
                 if not res:
                     log.warning("市場焦點：內文重點退回標題模式（%s）", err)
             elif mode == "content":
                 log.warning("市場焦點：沒有抓到任何內文，直接用標題（含官方摘要）寫重點")
             if not res:
-                _tid = [i for i, x in enumerate(top, 1) if x["link"] in _ml]
-                _trid = [i for i, x in enumerate(top, 1) if x["link"] in _rl]
+                _t1 = [i for i, x in enumerate(top, 1) if x["link"] in _l1]
+                _t2 = [i for i, x in enumerate(top, 1) if x["link"] in _l2]
                 _wt = dict(_w, mins=[min(mins[0], HEADLINE_ONLY_MIN)] + list(mins[1:])) if mins else _w
                 res, err = write_main([], top, keywords, env, mode="title", rate_ctx=rate_ctx,
-                                      event_note="".join(parts) + _focus_note(_tid, _trid), **_wt)
+                                      event_note="".join(parts) + _focus_note(_t1, _t2),
+                                      two_points=bool(_t2), point_ids=(_t1, _t2), **_wt)
     elif not weekly:
         log.warning("市場焦點：沒有抓到任何標題")
     if res:
@@ -4678,6 +4904,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
         out["weekly"] = bool(weekly)
         out["headline"], out["rate_note"] = res["headline"], res["rate"]
         out["links"] = res["links"]
+        out["points"] = int(res.get("points") or 1)
         log.info("市場焦點：產出標題＋主軸＋%d 則%s（%s；來源 %s）",
                  len(res["text"].splitlines()) - 1, "下週重點" if weekly else "補充",
                  "內文" if res["source"] == "model-content" else "標題",
@@ -4694,6 +4921,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                       "text_source": out["text_source"],
                       "layout": out.get("layout", ""),
                       "weekly": bool(out.get("weekly")),
+                      "points": int(out.get("points") or 1),
                       "headline": out.get("headline", ""),
                       "rate_note": out.get("rate_note", ""),
                       "main_source_titles": out["main_source_titles"],

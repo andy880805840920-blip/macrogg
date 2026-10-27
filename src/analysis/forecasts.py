@@ -252,16 +252,34 @@ NON_US = (r"China|Chinese|Japan|Tokyo|\bUK\b|Britain|British|Canada|Canadian|Eur
           r"Mexic|Brazil|Turkey|South Africa|Singapore|Hong Kong|Taiwan")
 
 
-def is_preview(key: str, it: dict, rel_at: dt.datetime | None) -> bool:
+# PCE（2026-10-27）：各家的 PCE 預估是 CPI、PPI 一公布就算出來的，出現在「PPI 公布後賣方評論」
+# 「CPI 解讀」這類標題沒有 PCE 的文章裡（例：10/15〈Post-PPI sell-side commentary〉，比 PCE 早兩週）。
+# 所以 PCE 另外收「標題有 CPI／PPI＋評論字眼」的文章，內文要提到 PCE 才送去擷取。
+PCE_SIDE_TITLE = r"\b(?:CPI|PPI)\b"
+PCE_SIDE_WORDS = r"economist|sell-?side|reaction|react|estimate|tracking|implies|implied|takeaway|analyst|commentary"
+
+
+def is_preview(key: str, it: dict, rel_at: dt.datetime | None, start: dt.datetime | None = None) -> bool:
     t = it.get("title", "")
-    if not (re.search(TITLE_KW[key], t, re.I) and re.search(TITLE_PREVIEW, t, re.I)):
+    main_hit = re.search(TITLE_KW[key], t, re.I) and re.search(TITLE_PREVIEW, t, re.I)
+    side_hit = key == "pce" and re.search(PCE_SIDE_TITLE, t) and re.search(PCE_SIDE_WORDS, t, re.I)
+    if not (main_hit or side_hit):
         return False
     if re.search(NON_US, t) and not re.search(r"\bUS\b|U\.S\.|United States", t):
         return False                               # 別國的 CPI（例：China September CPI … expected）
     pub = it.get("pub")
     if rel_at and pub:
-        return rel_at - dt.timedelta(days=10) <= pub < rel_at
+        lo = start or (rel_at - dt.timedelta(days=10))
+        return lo <= pub < rel_at
     return True
+
+
+def window_start(e: dict, rel: dict | None) -> dt.datetime | None:
+    """擷取時間窗的起點：PCE＝同一期 CPI 公布的時間；其他＝公布前 10 天（None）。"""
+    if e.get("key") != "pce":
+        return None
+    c = (rel or {}).get(f"cpi|{e.get('period', '')}") or {}
+    return release_dt("cpi", c.get("date", "")) if c.get("date") else None
 
 
 def sentences(text: str) -> list[str]:
@@ -742,8 +760,10 @@ def read_images(e: dict, html: str, link: str, name: str, *, get, vision, budget
                  "、".join(notes) or "—", msg["got"] or "無")
 
 
-def auto_update(e: dict, *, get_fn=None, ai=None, vision=None, now: dt.datetime | None = None) -> None:
-    """公布前：讀預覽文章（文字＋內文圖表）、擷取、通過檢查的寫進 e["auto"]。"""
+def auto_update(e: dict, *, get_fn=None, ai=None, vision=None, now: dt.datetime | None = None,
+                start: dt.datetime | None = None) -> None:
+    """公布前：讀預覽文章（文字＋內文圖表）、擷取、通過檢查的寫進 e["auto"]。
+    擷取到的值存在 e["auto"]（state/forecasts.json），之後每次執行沿用到公布為止，文章離開 RSS 也不會消失。"""
     import hashlib
     get = get_fn or _get
     vision = vision or vision_ai
@@ -761,7 +781,7 @@ def auto_update(e: dict, *, get_fn=None, ai=None, vision=None, now: dt.datetime 
             r = get(url)
             if getattr(r, "status_code", 200) != 200:
                 raise ValueError(f"HTTP {r.status_code}")
-            items = [it for it in feed_items(r.text) if is_preview(key, it, rel_at)]
+            items = [it for it in feed_items(r.text) if is_preview(key, it, rel_at, start)]
         except Exception as ex:                    # noqa: BLE001
             log.info("投行預估自動擷取：%s 讀不到（%s）", name, ex)
             continue
@@ -780,6 +800,8 @@ def auto_update(e: dict, *, get_fn=None, ai=None, vision=None, now: dt.datetime 
                 log.warning("投行預估讀圖失敗（%s）：%s", it["link"], ex)
             if asked >= MAX_AI_ARTICLES or not any(re.search(p, text) for p in ALIASES.values()):
                 continue
+            if key == "pce" and not re.search(r"\bPCE\b", text):
+                continue                           # CPI／PPI 評論文：內文沒提到 PCE 就跳過
             h = hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
             if seen.get(it["link"]) == h:
                 continue
@@ -896,7 +918,9 @@ def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
                 dd = dt.date.fromisoformat(str(d)[:10])
             except ValueError:
                 continue
-            if not (today - dt.timedelta(days=40) <= dd <= today + dt.timedelta(days=10)):
+            # PCE 提早到公布前 20 天建立：CPI 一公布（約提早兩週）就要開始收各家的 PCE 預估
+            ahead = 20 if key == "pce" else 10
+            if not (today - dt.timedelta(days=40) <= dd <= today + dt.timedelta(days=ahead)):
                 continue
             per = _shift(dd.isoformat()[:7], -1)
             e = rel.setdefault(f"{key}|{per}", {"key": key, "period": per})
@@ -949,10 +973,13 @@ def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
                 dd = dt.date.fromisoformat(e.get("date", ""))
             except ValueError:
                 continue
-            if e.get("key") in RELEASES and not e.get("actual") and today <= dd <= today + dt.timedelta(days=10):
+            _st = window_start(e, rel)
+            _open = (today <= dd <= today + dt.timedelta(days=10)
+                     or (_st is not None and _st.date() <= today <= dd))   # PCE：CPI 公布後就開始收
+            if e.get("key") in RELEASES and not e.get("actual") and _open:
                 e.pop("recon", None)
                 try:
-                    auto_update(e, get_fn=get_fn, ai=ai, vision=vision)
+                    auto_update(e, get_fn=get_fn, ai=ai, vision=vision, start=_st)
                 except Exception as ex:            # noqa: BLE001
                     log.warning("投行預估自動擷取失敗（%s）：%s", eid, ex)
                 e["banks"], e["bad"] = merge_banks(e["key"], e, manual.get(eid) or {})
