@@ -144,15 +144,92 @@ def _fiscal_rows(path: str, flt: str, sort: str = "", size: int = 1000) -> list[
         page += 1
 
 
-def coupon_auctions(days: int = 730) -> list[dict]:
-    """近兩年已結標的 Note／Bond 拍賣（含 TIPS、FRN 標記），日期由舊到新。"""
+def normalize_td_auction(a: dict) -> dict:
+    """
+    TreasuryDirect TA_WS 一筆 → 跟 normalize_fiscal_auction 相同的欄位（2026-10-27）。
+
+    Fiscal Data 的結標結果要晚幾個營業日才補上（實例：10/21 的 20 年期、10/26 的 2 年期，
+    10/27 晚上 Fiscal Data 仍是空的或沒有這一筆，拍賣卡片就停在 9 月的那一場）。
+    TreasuryDirect 當天就有完整結果，只是欄位名稱跟舊程式讀的不同——auctionDate 是空的，
+    日期在 competitiveAuctionCloseDate；得標者在 ...CompetitiveParAwarded。
+    10/8 30 年期逐欄比對過，跟 Fiscal Data 完全一致。
+    """
+    b = 1e9
+    f = lambda k: _f(None if a.get(k) in (None, "null", "") else a.get(k))
+    term = a.get("originalSecurityTerm") or a.get("securityTerm") or ""
+    sterm = a.get("securityTerm") or term
+    return {
+        "date": (a.get("auctionDate") or a.get("competitiveAuctionCloseDate") or "")[:10],
+        "announce": (a.get("announcementDate") or "")[:10],
+        "issue": (a.get("issueDate") or "")[:10],
+        "maturity": (a.get("maturityDate") or "")[:10],
+        "term": term,
+        "security_term": sterm,
+        "reopening": a.get("reopening") == "Yes" or sterm != term,
+        "tips": a.get("inflationIndexSecurity") == "Yes" or a.get("inflationProtected") == "Yes",
+        "frn": a.get("floatingRate") == "Yes" or a.get("securityType") == "FRN",
+        "type": a.get("securityType") or "",
+        "cusip": a.get("cusip") or "",
+        "offering": (f("offeringAmount") or 0) / b or None,
+        "high": f("highYield"),
+        "median": f("medianYield") if f("medianYield") is not None else f("averageMedianYield"),
+        "low": f("lowYield"),
+        "btc": f("bidToCoverRatio"),
+        "comp_acc": (f("subtotalCompetitiveParAwardedInsideOfOfferingAmount") or 0) / b or None,
+        "pd": (f("primaryDealersCompetitiveParAwarded") or 0) / b,
+        "direct": (f("directBiddersCompetitiveParAwarded") or 0) / b,
+        "indirect": (f("indirectBiddersCompetitiveParAwarded") or 0) / b,
+        "soma": (f("somaNoncompetitiveParAwarded") or 0) / b,
+    }
+
+
+def td_recent_auctions(days: int = 45, _get_fn=None) -> list[dict]:
+    """TreasuryDirect 近期已結標的 Note／Bond（補 Fiscal Data 還沒更新的那幾場）。"""
+    get = _get_fn or _get
+    out = []
+    for typ in ("Note", "Bond", "TIPS", "FRN"):
+        try:
+            rows = get(f"{TD}/auctioned?format=json&type={typ}&days={days}") or []
+        except Exception as e:                     # noqa: BLE001
+            log.warning("TreasuryDirect %s 拍賣結果取得失敗（%s），只用 Fiscal Data", typ, e)
+            continue
+        out += [normalize_td_auction(a) for a in rows]
+    # 同一場可能同時出現在 Note 和 TIPS 清單：依 CUSIP＋日期去重
+    seen, uniq = set(), []
+    for r in out:
+        k = (r["cusip"], r["date"])
+        if k not in seen and r["date"] and r["high"] is not None:
+            seen.add(k)
+            uniq.append(r)
+    return uniq
+
+
+def merge_auctions(fiscal: list[dict], td: list[dict]) -> list[dict]:
+    """以 Fiscal Data 為主；同一場（CUSIP＋日期）Fiscal Data 還沒有結果、或根本還沒有那一筆，用 TreasuryDirect 補。"""
+    by = {(r["cusip"], r["date"]): r for r in fiscal}
+    for r in td:
+        k = (r["cusip"], r["date"])
+        if k not in by or by[k].get("high") is None:
+            by[k] = r
+    out = [r for r in by.values() if r["date"] and r["high"] is not None]
+    out.sort(key=lambda r: r["date"])
+    return out
+
+
+def coupon_auctions(days: int = 730, _td=None) -> list[dict]:
+    """近兩年已結標的 Note／Bond 拍賣（含 TIPS、FRN 標記），日期由舊到新。
+    Fiscal Data 為主，最近一個多月用 TreasuryDirect 補上還沒更新的場次（2026-10-27）。"""
     from . import clock
     start = (clock.today() - dt.timedelta(days=days)).isoformat()
     rows = _fiscal_rows("v1/accounting/od/auctions_query",
                         f"security_type:in:(Note,Bond),auction_date:gte:{start}", "auction_date")
-    out = [normalize_fiscal_auction(a) for a in rows]
-    out = [r for r in out if r["date"] and r["high"] is not None]
-    out.sort(key=lambda r: r["date"])
+    fiscal = [normalize_fiscal_auction(a) for a in rows]
+    td = _td() if _td else td_recent_auctions()
+    out = merge_auctions(fiscal, td)
+    added = sorted({f"{r['date']} {r['security_term']}" for r in out} - {f"{r['date']} {r['security_term']}" for r in fiscal
+                                                                       if r["high"] is not None})
+    if added:
+        log.info("拍賣結果：Fiscal Data 尚未更新，改用 TreasuryDirect 補上 %s", "、".join(added))
     return out
 
 
