@@ -656,5 +656,90 @@
   "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
   "points": 2,
   "result": "CNBC 調查：93% 預期聯準會 10/28 會議維持利率、76% 預期 12 月升息"
+ },
+ {
+  "at": "2026-10-27T13:00+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [],
+  "locks": [],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3",
+    "titles": [
+     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主題+3、主角+2、時效+2、來源+3",
+    "titles": [
+     "Bond-Market Doubts Grow Over Gridlock as Cure for Deficit Angst - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3",
+    "titles": [
+     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+1.5、來源+3",
+    "titles": [
+     "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主題+1、次級+1、時效+2、來源+3、主題熱度+1",
+    "titles": [
+     "Gold retreats on stronger dollar; traders brace for Fed - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Nvidia, Meta deepen AI ties with $3 billion investment deal - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "次級+1、時效+2、來源+3、主題熱度+2",
+    "titles": [
+     "Trump to Ease Oil Well Methane Curbs in Bid to Lower Costs - Bloomberg.com"
+    ]
+   }
+  ],
+  "second": "Bond-Market Doubts Grow Over Gridlock as Cure for Deficit Angst - Bloomberg.com",
+  "copy_miss": [
+   "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+   "Bond-Market Doubts Grow Over Gridlock as Cure for Deficit Angst - Bloomberg.com"
+  ],
+  "second_dropped": "重點二沒有內文",
+  "headline_only": true,
+  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+  "points": 1,
+  "result": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字"
  }
 ]
