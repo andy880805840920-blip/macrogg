@@ -1117,9 +1117,7 @@ def _indicator_checks(cat: list[dict]) -> str:
 
 
 def _point_tag(f: dict, i: int) -> str:
-    """v2.3 兩個重點：主軸兩段各加小標「重點一」「重點二」。"""
-    if int(f.get("points") or 1) == 2 and i < 2:
-        return f'<span class="fs-tag fs-pt">重點{"一二"[i]}</span>'
+    """兩個重點不加小標（2026-10-27 v2.4 使用者：主軸不用標示重點一、重點二）；保留函式讓呼叫端不用改。"""
     return ""
 
 
@@ -1327,8 +1325,7 @@ def _focus_strip(f: dict | None) -> str:
             return (f'<div class="fs-link{"" if not tid or tid in shown else " fs-off"}"'
                     + (f' data-tlink="{esc(tid)}"' if tid else "") + '>'
                     + (f'<span class="fs-tag">{esc(_lbl.get(tid, ""))}</span>' if tid else "")
-                    + (f'<span class="fs-tag fs-pt">重點{"一二"[x["point"] - 1]}</span>'
-                       if not tid and x.get("point") in (1, 2) else "")
+
                     + f'<a href="{esc(x["link"])}" rel="noopener">{esc(x["title"])}</a>'
                     + (f'<span class="fs-src">{esc(x["source"])}</span>'
                        if x.get("source") else "")

@@ -349,7 +349,8 @@ check("⑭ 兩個重點用的提示詞", _calls14 and "剛好兩段" in _calls14
 _h14 = _home._focus_strip({"yields": [], "links": [dict(_wr["links"][0]), dict(_wr["links"][1])], "fedwatch": None,
                            "layout": "main", "points": 2, "headline": "h", "rate_note": "r",
                            "text": "甲事件。¶乙事件。\n補一。\n補二。", "text_source": "model-content", "topics": [], "chips": []})
-check("⑭ 首頁：兩段各有「重點一」「重點二」小標，參考報導也標重點", _h14.count(">重點一</span>") == 2 and _h14.count(">重點二</span>") == 2)
+check("⑭ 首頁：兩段直接呈現，主軸和參考報導都不標「重點一／重點二」（v2.4）",
+      "重點一" not in _h14 and "重點二" not in _h14 and _h14.count('class="fs-main"') == 2)
 from src.analysis import stories as _S
 _sto = _S.build_story({"_focus": {"layout": "main", "points": 2, "text": "甲事件。¶乙事件。\n補一。", "headline": "h"}})
 check("⑭ 分享圖導言只用重點一", _sto["paras"] == ["甲事件。"], _sto["paras"])
@@ -363,6 +364,59 @@ check("⑭ PCE：標題是 PPI／CPI 評論文也收（10/15，比公布早兩�
       _F.is_preview("pce", _it, _rel, _st14) and not _F.is_preview("pce", _it, _rel))
 check("⑭ CPI 不受影響：評論文不收", not _F.is_preview("cpi", _it, _rel, None))
 check("⑭ PCE 那一期提早 20 天建立", "ahead = 20 if key == \"pce\" else 10" in (ROOT / "src/analysis/forecasts.py").read_text(encoding="utf-8"))
+
+# ⑮ 2026-10-27 v2.4：轉載搜尋、主軸只能用指定報導、兩段長度、標題不寫媒體名
+_n15 = dt.datetime(2026, 10, 27, 12, 30, tzinfo=U)
+_orig = {"title": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
+         "link": "https://news.google.com/rss/articles/x", "source": "Reuters", "at": "2026-10-27T10:00:00+00:00"}
+_pool = [{"title": "Analysis-Bond investors are thinking less about the Fed and more about AI, deficits",
+          "link": "https://finance.yahoo.com/news/bond-investors-1.html", "source": "Yahoo Finance", "at": "2026-10-27T10:30:00+00:00"},
+         {"title": "Gold steadies", "link": "https://finance.yahoo.com/news/gold.html", "at": "2026-10-27T10:00:00+00:00"}]
+_body15 = "Bond investors are increasingly focused on AI spending and US deficits rather than the Fed, as yields stay high." * 3
+_c = ft.find_copy(_orig, _pool, _n15, _text=lambda u: _body15, _pub=lambda u: None)
+check("⑮ 在新聞池找到同一篇的轉載（去掉 Analysis- 前綴比對）", _c and _c["link"].endswith("bond-investors-1.html")
+      and _c["source"] == "Yahoo Finance（Reuters）" and _c["orig_title"].startswith("Bond investors"), _c)
+check("⑮ 轉載內文沒有原標題的名字或數字 → 不採用",
+      ft.find_copy(_orig, _pool, _n15, _text=lambda u: "Unrelated text about sports. " * 10, _pub=lambda u: None) is None)
+check("⑮ 轉載頁原始發布超過 48 小時 → 不採用",
+      ft.find_copy(_orig, _pool, _n15, _text=lambda u: _body15, _pub=lambda u: dt.datetime(2026, 10, 20, tzinfo=U)) is None)
+_far = [dict(_pool[0], at="2026-10-25T10:00:00+00:00")]
+check("⑮ 轉載與原文發布時間相差超過 24 小時 → 不採用", ft.find_copy(_orig, _far, _n15, _text=lambda u: _body15, _pub=lambda u: None) is None)
+check("⑮ 參考報導保留原文標題（主題補充比對重複用）", ft._link_of(_c).get("orig_title", "").startswith("Bond investors"))
+# 主軸只能用指定報導、兩段長度
+_seen15 = []
+_bad15 = ("【標題】市場押注 10/28 按兵不動、12 月升息機率逾七成\n【主軸】\n" + "調查顯示多數受訪者預期聯準會在會議維持利率，並預期之後升息，市場重新評估路徑。" * 4
+          + "\n債券投資人關注焦點轉向 AI 與財政赤字。\n【對利率】偏向推升短端利率。\n【補充】\n甲事件發生了，細節是乙。\n丙事件發生了，細節是丁。\n【來源】3｜1")
+ft._call_ai, _o15 = (lambda s, sy, env=None, **k: (_seen15.append(s) or (_bad15, ""))), ft._call_ai
+try:
+    _r15, _e15 = ft.write_main([{"title": "Bond investors AI deficits", "body": "Bond investors AI deficits " * 5, "source": "Yahoo Finance（Reuters）", "link": "https://y/1"},
+                                {"title": "Japan inflation", "body": "Japan trend inflation " * 5, "source": "Reuters", "link": "https://y/2"},
+                                {"title": "Fed rate hikes are coming, but not this week: CNBC survey", "body": "93% expect hold, 76% expect December hike " * 3, "source": "CNBC", "link": "https://c/3"}],
+                               [], ["Fed"], {}, caps=[250, 80, 80], mins=[200, 40, 40], two_points=True, point_ids=([1], [2]))
+finally:
+    ft._call_ai = _o15
+_w15 = _seen15[1] if len(_seen15) > 1 else ""
+check("⑮ 主軸用了排名前兩名以外的報導（CNBC 問卷）→ 帶原因重寫", "主軸用了指定以外的報導（代號 1、3）" in _w15, _w15[-300:])
+check("⑮ 兩段長度差太多 → 帶原因重寫", "兩段長度差太多" in _w15)
+check("⑮ 標題的數字不是重點一的 → 帶原因重寫", "【標題】的數字" in _w15)
+check("⑮ 重寫後仍不符 → 參考報導只列指定的報導", _r15 and [x["link"] for x in _r15["links"]] == ["https://y/1", "https://y/2"],
+      _r15 and _r15["links"])
+check("⑮ 標題開頭「CNBC 調查：」會被刪掉", ft._strip_media("CNBC 調查：93% 預期聯準會維持利率") == "93% 預期聯準會維持利率")
+check("⑮ 每段至少 80 字、兩段相差不超過一倍；重點一只有標題時下限 50、不要求等長",
+      ft.POINT_MIN == 80 and ft.POINT_RATIO == 2.0 and ft.POINT_MIN_THIN == 50)
+_seen15b = []
+_thin = ("【標題】債券投資人關注點轉向 AI 與財政赤字\n【主軸】\n債券投資人關注焦點從聯準會轉向人工智慧支出與財政赤字，認為高殖利率反映的是財政與科技投資需求，而非單純的利率政策路徑。\n"
+         + "日本趨勢通膨指標升至三年高點，強化日本央行升息的理由，市場評估升息時點並調整日圓與日債部位，投資人關注後續數據。" * 2
+         + "\n【對利率】偏向推升長端利率。\n【補充】\n甲事件發生了，細節是乙丙丁戊己庚辛。\n丙事件發生了，細節是丁戊己庚辛壬癸。\n【來源】2｜1")
+ft._call_ai, _o15b = (lambda s, sy, env=None, **k: (_seen15b.append(s) or (_thin, ""))), ft._call_ai
+try:
+    _r15b, _ = ft.write_main([{"title": "Japan trend inflation index hits 3-year high", "body": "Japan trend inflation BOJ " * 5, "source": "Yahoo", "link": "https://y/2"}],
+                             [{"title": "Bond investors are thinking less about the Fed and more about AI, deficits", "source": "Reuters", "link": "https://news.google.com/1"}],
+                             ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], two_points=True, point_ids=([2], [1]), p1_thin=True)
+finally:
+    ft._call_ai = _o15b
+check("⑮ 重點一只有標題（50 字以上）、重點二有內文 → 不因長度不均重寫", _r15b and _r15b["points"] == 2
+      and not any("兩段長度差太多" in x or "重點一只有" in x for x in _seen15b[1:]), _seen15b[1:][:1])
 
 print()
 print("全部通過" if ok else "有失敗")
