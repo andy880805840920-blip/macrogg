@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-28T23:54:51+08:00",
+  "at": "2026-10-29T07:12:23+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -202,7 +202,6 @@
           "supercore_hot",
           "ppi_hot",
           "shelter_drag",
-          "oil_up",
           "above_target",
           "ppi_pipeline",
           "expect_anchored"
@@ -213,7 +212,6 @@
           "supercore_hot": "超級核心服務仍高於目標區間",
           "ppi_hot": "PPI 明顯高於預期",
           "shelter_drag": "住房落後項推升整體讀數",
-          "oil_up": "油價上行，未來一至兩月推升總體 CPI",
           "above_target": "核心 PCE 顯著高於目標",
           "ppi_pipeline": "上游漲價還沒轉嫁完",
           "expect_anchored": "短期預期偏高，但長期仍錨定"
@@ -224,7 +222,6 @@
           "supercore_hot": "hawkish",
           "ppi_hot": "hawkish",
           "shelter_drag": "dovish",
-          "oil_up": "hawkish",
           "above_target": "hawkish",
           "ppi_pipeline": "hawkish",
           "expect_anchored": "neutral"
@@ -306,7 +303,7 @@
             "value": 2.763842436104702
           },
           "exp5y5y": {
-            "value": 2.21
+            "value": 2.25
           }
         }
       },
@@ -429,18 +426,18 @@
     },
     "fomc": {
       "current": {
+        "vintage": "2026-10-28",
+        "released": "2026-10-28",
+        "focus": "inflation",
+        "focus_label": "通膨優先",
+        "decision": "維持不變，2 票主張升息"
+      },
+      "previous": {
         "vintage": "2026-09-16",
         "released": "2026-09-16",
         "focus": "inflation",
         "focus_label": "通膨優先",
         "decision": "升息一碼，全體一致"
-      },
-      "previous": {
-        "vintage": "2025-09-17",
-        "released": "2025-09-17",
-        "focus": "employment",
-        "focus_label": "就業優先",
-        "decision": "降息一碼，1 票主張降息"
       }
     },
     "claims": {
@@ -648,7 +645,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 4.99,
+            "value": 5.05,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -656,7 +653,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.3,
+            "value": 5.37,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -664,7 +661,7 @@
           },
           "tp": {
             "label": "期限溢酬",
-            "value": 0.63,
+            "value": 0.6061,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -680,7 +677,7 @@
           },
           "exp5y5y": {
             "label": "長期通膨預期",
-            "value": 2.25,
+            "value": 2.27,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -750,8 +747,8 @@
     },
     "scenario": {
       "current": {
-        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
-        "released": "2026-10-22",
+        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-10-28",
+        "released": "2026-10-29",
         "name": "傾向緊縮",
         "grid_name": "傾向緊縮",
         "regime": "inflation",
@@ -759,11 +756,11 @@
         "inflation": "高"
       },
       "previous": {
-        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2025-09-17",
+        "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
         "released": "2026-10-22",
-        "name": "忍受通膨",
-        "grid_name": "忍受通膨",
-        "regime": "employment",
+        "name": "傾向緊縮",
+        "grid_name": "傾向緊縮",
+        "regime": "inflation",
         "labor": "中",
         "inflation": "高"
       }
@@ -853,6 +850,14 @@
     {
       "at": "2026-10-28T23:54:51+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-09-16",
+      "name": "傾向緊縮",
+      "regime": "inflation",
+      "labor": "中",
+      "inflation": "高"
+    },
+    {
+      "at": "2026-10-29T07:12:23+08:00",
+      "vintage": "labor:2026-09|inflation:2026-09|2026-08|fomc:2026-10-28",
       "name": "傾向緊縮",
       "regime": "inflation",
       "labor": "中",

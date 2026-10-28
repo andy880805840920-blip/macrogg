@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T23:56:14+08:00",
+  "generated_at": "2026-10-29T07:14:10+08:00",
   "labor": {
     "month": "2026-09",
     "score": 0.011311659661338892,
@@ -36,8 +36,8 @@
     "month": "2026-09",
     "tilt": {
       "dovish": 3.0,
-      "hawkish": 9.0,
-      "net": 6.0,
+      "hawkish": 8.0,
+      "net": 5.0,
       "tilt": "hawkish"
     },
     "flags": [
@@ -92,16 +92,6 @@
         "strength": 1.0
       },
       {
-        "key": "oil_up",
-        "severity": "watch",
-        "headline": "油價上行，未來一至兩月推升總體 CPI",
-        "detail": "原油近一個月上漲 11%。油價通常兩到四週後反映到加油站價格，再進到 CPI 的能源項。以能源佔 CPI 約 6% 粗估，接下來一兩個月大約會推高整體 CPI 0.3 個百分點。注意這只影響總體，不影響核心。",
-        "lean": "hawkish",
-        "impact": "總體 CPI 的短期逆風",
-        "tier": 3,
-        "strength": 1.0
-      },
-      {
         "key": "above_target",
         "severity": "alert",
         "headline": "核心 PCE 顯著高於目標",
@@ -125,7 +115,7 @@
         "key": "expect_anchored",
         "severity": "info",
         "headline": "短期預期偏高，但長期仍錨定",
-        "detail": "密大 1 年期預期 4.6% 偏高，但五年後五年只有 2.25%——市場把眼前的物價壓力讀成暫時性，還相信聯準會最終會把通膨帶回目標。",
+        "detail": "密大 1 年期預期 4.6% 偏高，但五年後五年只有 2.27%——市場把眼前的物價壓力讀成暫時性，還相信聯準會最終會把通膨帶回目標。",
         "lean": "neutral",
         "impact": "市場仍給聯準會信任票",
         "tier": 4,
