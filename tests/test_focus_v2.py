@@ -418,6 +418,42 @@ finally:
 check("⑮ 重點一只有標題（50 字以上）、重點二有內文 → 不因長度不均重寫", _r15b and _r15b["points"] == 2
       and not any("兩段長度差太多" in x or "重點一只有" in x for x in _seen15b[1:]), _seen15b[1:][:1])
 
+# ⑯ 2026-10-28：鎖定事件公布前不准寫成已有結果、媒體名中間夾字、人物簡介頁
+_bad16 = ("【標題】聯準會 10/28 決議維持利率不變，官員對金融條件影響分歧\n【主軸】\n"
+          "聯準會 10/28（美國時間）公布利率決策，決定維持利率不變。聯準會官員對金融環境緊縮程度的評估並未達成一致看法，這影響了後續政策路徑的判斷。"
+          "¶市場關注聯準會接下來將進入觀望模式。路透另一篇報導指出，聯準會可能對利率政策採取等待觀察的態度，評估先前升息的累積效果，以及當前金融環境對經濟與通膨的實際影響。"
+          "官員們需要更多時間觀察數據，才能決定是否需要進一步緊縮。\n【對利率】偏向壓低短端利率預期。\n【補充】\n金價走穩，市場等待聯準會會議結果，投資人觀望氣氛濃厚。\n"
+          "銅價延續跌勢，人工智慧類股走弱拖累金屬需求，投資人觀望。\n【來源】1")
+_seen16 = []
+ft._call_ai, _o16 = (lambda s, sy, env=None, **k: (_seen16.append(s) or (_bad16, ""))), ft._call_ai
+try:
+    _r16, _e16 = ft.write_main([], [{"title": "The AI Fed Votes to Hold Interest Rates Steady", "source": "Bloomberg", "link": "https://news.google.com/1"},
+                                    {"title": "Fed officials not aligned on weight of financial conditions", "source": "Reuters", "link": "https://news.google.com/2"},
+                                    {"title": "Fed likely to go into wait-and-see mode on rates", "source": "Reuters", "link": "https://news.google.com/3"}],
+                               ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], mode="title", point_ids=([1, 2, 3], ()), preview="10/28")
+finally:
+    ft._call_ai = _o16
+check("⑯ 10/28 晚上實例：FOMC 尚未公布卻寫「決議維持利率不變」→ 帶原因重寫", len(_seen16) == 2 and "事件尚未公布" in _seen16[1], _seen16[-1][-200:])
+check("⑯ 重寫後仍有 → 刪掉那幾句、標題不用", _r16 and not ft._decided_hits(_r16["text"] + _r16["headline"], "10/28")
+      and _r16["headline"] == "" and "決定維持" not in _r16["text"], _r16)
+check("⑯ 「市場預期維持利率不變」「押注按兵不動」這類預期說法不受影響",
+      ft._decided_hits("市場預期聯準會將維持利率不變。市場押注按兵不動的機率達 93%。", "10/28") == [])
+check("⑯ 講過去的決議（9/16 升息一碼、先前已升息）不受影響",
+      ft._decided_hits("聯準會 9/16 決議升息一碼後，市場關注本次會議。聯準會先前已升息一碼。", "10/28") == [])
+check("⑯ 公布後（preview 空字串）不檢查", ft._decided_hits("") == [])
+check("⑯ 「路透另一篇報導指出，」會被刪掉", ft._strip_media("路透另一篇報導指出，聯準會可能觀望。") == "聯準會可能觀望。")
+check("⑯ 人物／公司簡介頁直接排除", ft.is_junk("John D Schipfer, Greenville Fed Financial Corp: Profile and Biography - Bloomberg"))
+
+# ⑯b 重點只有標題 → 補同主題、有內文的報導當背景
+_it16 = [{"title": "Fed officials not aligned on weight of financial conditions - Reuters", "link": "https://news.google.com/2"}]
+_oth16 = [{"lead": {"title": "Gold steadies ahead of Fed", "link": "https://finance.yahoo.com/g"}, "items": [{"title": "Gold steadies ahead of Fed", "link": "https://finance.yahoo.com/g"}], "score": 9},
+          {"lead": {"title": "Fed meeting preview: what to expect from Warsh", "link": "https://www.cnbc.com/f"}, "items": [{"title": "Fed meeting preview: what to expect from Warsh", "link": "https://www.cnbc.com/f"}], "score": 8},
+          {"lead": {"title": "Fed decision looms - Bloomberg", "link": "https://news.google.com/9"}, "items": [{"title": "Fed decision looms - Bloomberg", "link": "https://news.google.com/9"}], "score": 7}]
+_bf, _rest16 = ft.body_backfill(_it16, _oth16)
+check("⑯b 只補主角相同、抓得到內文的（CNBC Fed 會議前瞻），金價、只有標題的彭博不補",
+      [x["link"] for x in _bf] == ["https://www.cnbc.com/f"] and len(_rest16) == 2, [x["link"] for x in _bf])
+check("⑯b 重點本身已有內文 → 不補", ft.body_backfill([{"title": "Fed x", "link": "https://www.cnbc.com/a"}], _oth16)[0] == [])
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

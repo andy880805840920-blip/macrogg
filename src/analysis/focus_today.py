@@ -1699,8 +1699,10 @@ _MEDIA = (r"(?:路透社?|彭博社?|Reuters|Bloomberg|雅虎|Yahoo\s*(?:Finance
 _MEDIA_RE = re.compile(_MEDIA, re.I)
 # v2.2：媒體名和「報導指出」之間可以有空白（10/27「CNBC 報導指出」漏網）
 # v2.4：「CNBC 調查：」「彭博分析：」這類標題開頭也刪
-_MEDIA_STRIP = re.compile(r"(?:據|根據)\s*" + _MEDIA + r"\s*(?:的)?(?:報導|報道|消息|分析|調查|民調)?(?:指出|稱|顯示)?[，,]?\s*"
-                          r"|" + _MEDIA + r"\s*(?:報導|報道|引述消息人士|最新調查|調查|民調|分析)(?:指出|稱|顯示)?[，,：:]?\s*", re.I)
+# 2026-10-28：中間多了「另一篇」「最新」「稍早」也認得（「路透另一篇報導指出」漏網）
+_MEDIA_FILL = r"\s*(?:的)?(?:另一篇|另篇|一篇|最新|稍早|今日|日前|近日)?\s*"
+_MEDIA_STRIP = re.compile(r"(?:據|根據)\s*" + _MEDIA + _MEDIA_FILL + r"(?:報導|報道|消息|分析|調查|民調)?(?:指出|稱|顯示)?[，,]?\s*"
+                          r"|" + _MEDIA + _MEDIA_FILL + r"(?:報導|報道|引述消息人士|最新調查|調查|民調|分析)(?:指出|稱|顯示)?[，,：:]?\s*", re.I)
 # v2.2：寫給 AI 的用語跑進正文（10/27「主軸這件事對利率方向不明確」）——帶原因重寫，仍有就機械拿掉
 _PROMPT_LEAK = re.compile(r"主軸(?:這件事|的事件|這則新聞|新聞|事件)(?:本身)?(?:對利率)?|本次主軸|這則主軸")
 RATE_MAX = 90
@@ -2085,13 +2087,45 @@ def _pick_links(mats: list[dict], ids: list[int], n: int,
     return out
 
 
+# ---- 2026-10-28：鎖定事件公布前，不准寫成已經公布 ----
+# 實例：10/28 22:13（台北）FOMC 還沒公布，彭博只有標題的「The AI Fed Votes to Hold Interest Rates Steady」
+# （評論／模擬，不是實際決議）被寫成「聯準會 10/28 決議維持利率不變」。
+_DECIDED = re.compile(
+    r"(?:決議|決定|宣布|宣佈|拍板|公布|公佈|投票)[^。；！？\n]{0,14}?(?:維持|升息|降息|按兵不動|調升|調降|加息|減息|不變|暫停)"
+    r"|維持利率不變|利率維持不變|按兵不動|升息一碼|降息一碼|升息兩碼|降息兩碼"
+    r"|(?:數據|報告|CPI|PCE|非農|就業報告)[^。；！？\n]{0,8}?(?:顯示|公布為|公佈為|結果為|出爐為|優於預期|遜於預期|高於預期|低於預期)")
+_EXPECT = re.compile(r"預期|預料|預估|料將|可能|或將|將會|是否|押注|機率|定價|若|如果|假如|猜測|估計|關注|觀察|等待|"
+                     r"前瞻|預告|即將|尚未|未來|下次|將在|將於|恐|傳出|"
+                     r"上次|前次|上一次|先前|此前|之前|曾|上月|去年")    # 講過去的決議（背景）不算
+
+
+def _decided_hits(text: str, event_md: str = "") -> list[str]:
+    """公布前不該出現的「已成定局」說法：命中 _DECIDED、而且那一句沒有預期／條件／過去字眼。
+    那一句寫了別的日期（例：「9/16 決議升息一碼」）＝講過去的決議，不算。"""
+    out = []
+    for s in re.split(r"(?<=[。！？；])|\n|¶", text or ""):
+        m = _DECIDED.search(s)
+        if not m or _EXPECT.search(s):
+            continue
+        dates = set(re.findall(r"(?<!\d)(\d{1,2}/\d{1,2})(?!\d)", s))
+        if event_md and dates and event_md not in dates:
+            continue
+        out.append(m.group(0))
+    return out
+
+
+def _drop_decided(text: str, event_md: str = "") -> str:
+    return "".join(x for x in re.split(r"(?<=[。！？])", text or "") if x and not _decided_hits(x, event_md))
+
+
 def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=None,
                    vague_markers=None, rate_ctx=None, name_map=None,
                    release_dates_: dict | None = None,
                    model: str | None = None, two_points: bool = False,
-                   allowed: tuple = (), point_text: str = "", p1_thin: bool = False) -> tuple[dict | None, str]:
+                   allowed: tuple = (), point_text: str = "", p1_thin: bool = False,
+                   preview: str = "") -> tuple[dict | None, str]:
     """
-    版式 A 的生成＋驗證。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
+    版式 A 的生成＋驗證。preview＝鎖定事件尚未公布時的事件日期（美東 m/d），空字串＝不檢查。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
       後設字眼   重試一次，再犯就失敗
       數字鎖     2026-10-26 放寬：帶著缺出處的數字重寫一次，第二次照樣採用（只記 log）
       其他       長度、空話、標題、對利率、媒體名、相對時間 → 帶原因重寫一次，
@@ -2173,6 +2207,11 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
             _hm = _missing_digits(r["headline"], point_text)
             if _hm:
                 why.append("【標題】的數字（" + "、".join(_hm[:3]) + "）不是主軸那件事的，標題要寫主軸（重點一）那件事")
+        if preview:
+            _dh = _decided_hits(joined, preview)
+            if _dh:
+                why.append("事件尚未公布，不能寫成已經有結果（" + "、".join(sorted(set(_dh))[:3])
+                           + "）；只能寫這次公布什麼、市場預期與關注什麼。材料裡看起來像已公布結果的標題是預測、模擬或評論")
         _leak = sorted(set(_PROMPT_LEAK.findall(joined)))
         if _leak:
             why.append("用了「" + "、".join(_leak[:2]) + "」這種寫給你的指示用語，讀者看不懂，直接寫事件本身")
@@ -2228,6 +2267,17 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         main = "¶".join(_drop(p) for p in main.split("¶"))
         supp = [_drop(x) for x in supp]
     headline = fix(r["headline"]) if 6 <= cjk_len(r["headline"]) <= 40 else ""
+    # 公布前重寫後仍寫成已有結果：刪掉那幾句；標題有就不用標題；刪完主軸太短就放棄（退回列標題），寧可不寫也不寫錯
+    if preview and _decided_hits("\n".join([headline, main, rate] + supp), preview):
+        log.warning("市場焦點：公布前仍寫成已有結果（%s），刪掉那幾句", "、".join(_decided_hits(main, preview)[:3]))
+        if _decided_hits(headline, preview):
+            headline = ""
+        main = MAIN_PARA.join(p for p in (_drop_decided(p, preview) for p in main.split(MAIN_PARA)) if p.strip())
+        supp = [x for x in (_drop_decided(s, preview) for s in supp) if x.strip()]
+        if _decided_hits(rate, preview):
+            rate = _rate_fallback(rate_ctx) if rate_ctx else ""
+        if cjk_len(main) < POINT_MIN:
+            return None, "公布前把事件寫成已有結果，刪除後內容不足"
     points = 1
     if two_points:
         _ps = [p for p in main.split(MAIN_PARA) if p.strip()]
@@ -2244,7 +2294,8 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
                mode: str = "content", facts_block: str = "",
                release_dates_: dict | None = None,
                model: str | None = None, two_points: bool = False,
-               point_ids: tuple = ((), ()), p1_thin: bool = False) -> tuple[dict | None, str]:
+               point_ids: tuple = ((), ()), p1_thin: bool = False,
+               preview: str = "") -> tuple[dict | None, str]:
     """主軸（內文模式或標題模式共用）：材料編號 → AI → 驗證 → 來源連結。
     two_points（v2.3）：主軸寫兩個重點（各約一半字數），來源分重點列。"""
     if not arts and not briefs:
@@ -2264,7 +2315,8 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
                               meta_markers=meta_markers, vague_markers=vague_markers,
                               rate_ctx=rate_ctx, name_map=name_map,
                               release_dates_=release_dates_, model=model, two_points=two_points,
-                              allowed=tuple(point_ids), point_text=_pt_text, p1_thin=p1_thin)
+                              allowed=tuple(point_ids), point_text=_pt_text, p1_thin=p1_thin,
+                              preview=preview)
     if not res:
         return None, err
     ids, ids2 = res.pop("ids"), res.pop("ids2", [])
@@ -2382,7 +2434,7 @@ _US_WORDS = re.compile(r"(?<![A-Za-z])(?:US|U\.S\.|Fed|FOMC|Treasury|Treasuries|
 #   junk_patterns       雜訊頁（正規式，不分大小寫）：股價頁、影片頁、個股清單 → 直接排除
 #   oil_price_words     油價訊號只加給同時提到價格的標題（漏油、油輪事故不算）
 JUNK_DEFAULT = (r"Stock Price\s*&\s*Latest News", r"\([A-Z0-9]{1,6}\.[A-Z]{1,3}\)",
-                r"^Watch\s", r"Stocks to Watch", r"and Many More")
+                r"^Watch\s", r"Stocks to Watch", r"and Many More", r"Profile\s*(?:and|&)\s*Biography")
 OIL_PRICE_DEFAULT = ("price", "prices", "futures", "Brent", "WTI", "barrel", "油價", "原油價格", "油價格", "期貨")
 
 
@@ -2731,6 +2783,37 @@ def find_copy(orig: dict, pool: list[dict], now: dt.datetime, *, _text=None, _pu
                 "at": c.get("at") or orig.get("at", ""), "summary": "", "orig_title": orig.get("title", ""),
                 "orig_link": orig.get("link", ""), "_body": body}
     return None
+
+
+BACKFILL_MAX = 2            # 2026-10-28：重點只有標題時，補幾篇同主題、有內文的報導當背景
+
+
+def body_backfill(items: list[dict], others: list[dict], n: int = BACKFILL_MAX) -> tuple[list[dict], list[dict]]:
+    """
+    重點的報導全部只有標題（彭博、路透經 Google News 轉址、轉載也找不到）時，從其他事件裡挑
+    「標題主角相同、抓得到內文」的報導（CNBC、Yahoo 等）補進那個重點的材料，當背景與細節的出處。
+    只看主角相同的（例：重點一是 Fed 會議，補 CNBC 的 Fed 會議前瞻），不改變重點寫哪件事。
+    回傳 (補進來的報導, 剩下的事件)；被挑中的那個事件就不再當補充，避免重複。
+    """
+    if n <= 0 or any(not _headline_only(x["link"]) for x in items):
+        return [], others
+    ents = set().union(*[_lead_ents(x.get("orig_title") or x["title"]) for x in items]) if items else set()
+    if not ents:
+        return [], others
+    got, used = [], set()
+    for gi, g in enumerate(others):
+        for x in g["items"]:
+            if len(got) >= n:
+                break
+            if _headline_only(x["link"]) or x["link"] in {y["link"] for y in got}:
+                continue
+            if _lead_ents(x["title"]) & ents:
+                got.append(x)
+                used.add(gi)
+                break
+        if len(got) >= n:
+            break
+    return got, [g for i, g in enumerate(others) if i not in used]
 
 
 def related_items(main_c: dict, others: list[dict], n: int) -> tuple[list[dict], list[dict]]:
@@ -4929,6 +5012,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                          "；".join(x["title"][:30] for x in rel + rel2))
             # v2.4 轉載搜尋：兩個重點裡只有標題的報導（路透、彭博），在這次抓到的新聞池找同一篇的轉載全文
             _copies = 0
+            _bfl: set = set()
             if mode == "content":
                 def _swap(items):
                     nonlocal _copies
@@ -4950,6 +5034,15 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                         out_.append(x)
                     return out_
                 items1, items2 = _swap(items1), _swap(items2)
+                # 2026-10-28：轉載也找不到、整個重點都只有標題 → 補同主題、有內文的報導當背景
+                bf1, others = body_backfill(items1, others)
+                bf2, others = body_backfill(items2, others) if items2 else ([], others)
+                if bf1 or bf2:
+                    flog["backfill"] = [x["title"] for x in bf1 + bf2]
+                    log.info("市場焦點：重點只有標題，補 %d 篇同主題有內文的報導（%s）", len(bf1 + bf2),
+                             "；".join(x["title"][:30] for x in bf1 + bf2))
+                items1, items2 = items1 + bf1, items2 + bf2
+                _bfl = {x["link"] for x in bf1 + bf2}
             _body = lambda x: not _headline_only(x["link"])   # noqa: E731
             pt_items = items1 + items2
             main_body = [x for x in pt_items if _body(x)][:5]
@@ -5005,6 +5098,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 flog["headline_only"] = True
             # 給 AI 的事件提示：鎖定事件（公布前寫預告）、撞期降級、兩個重點各是哪件事（寫明美東日期）
             parts = []
+            _preview = ""          # 鎖定事件尚未公布：事件日期（美東 m/d）
             if _lock:
                 _k = _lock[0]
                 _d = event_day(_k, _ev_d, cfg, now_tw)
@@ -5012,8 +5106,10 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 if released_yet(_k, _ev_d, cfg, now_tw):
                     parts.append(f"{_d}（美東）有{_nm}：材料裡有相關報導時，重點一必須以這件事為核心。")
                 else:
+                    _preview = _d
                     parts.append(f"{_nm}在 {_d}（美東）公布、目前尚未公布：重點一寫這次公布什麼、"
-                                 "市場關注哪些重點；不要寫任何預估值或市場共識數字。")
+                                 "市場關注哪些重點；不要寫任何預估值或市場共識數字；絕對不能寫成已經有結果"
+                                 "（例如「決議維持利率不變」）——材料裡看起來像已公布結果的標題，是預測、模擬或評論。")
                 if _demoted:
                     parts.append("同時有" + "、".join(EVENT_NAMES.get(d, d) for d in _demoted)
                                  + "，寫在重點二（材料不足就放補充）。")
@@ -5034,6 +5130,10 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 parts.append("重點一的報導只有標題：只轉述標題與摘要字面上的事，寫短一點（約 50–80 字），"
                              "不要補材料以外的內容；重點二寫完整。")
             _ev_note = "".join(parts) + _focus_note(_ids1, _ids2, _supp_first)
+            _bfi = _ids(arts, briefs, _bfl)
+            if _bfi:
+                _ev_note += ("代號 " + "、".join(map(str, _bfi)) + " 是同主題的背景報導：只能用來補背景與細節，"
+                             "主軸寫的仍是重點本身那件事；背景報導裡的說法要寫清楚是誰說的。")
             flog["main"] = main_c["lead"]["title"]
             flog["points"] = 2 if _two else 1
             if mode == "content" and arts:
@@ -5043,7 +5143,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                     flog["p1_thin"] = True                 # 重點一只有標題：重點一可以短一點
                 res, err = write_main(arts, briefs, keywords, env, mode="content", rate_ctx=rate_ctx,
                                       event_note=_ev_note, two_points=_two, point_ids=(_ids1, _ids2),
-                                      p1_thin=_two and not _p1_body, **_wm)
+                                      p1_thin=_two and not _p1_body, preview=_preview, **_wm)
                 if not res:
                     log.warning("市場焦點：內文重點退回標題模式（%s）", err)
             elif mode == "content":
@@ -5054,7 +5154,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 _wt = dict(_w, mins=[min(mins[0], HEADLINE_ONLY_MIN)] + list(mins[1:])) if mins else _w
                 res, err = write_main([], top, keywords, env, mode="title", rate_ctx=rate_ctx,
                                       event_note="".join(parts) + _focus_note(_t1, []),
-                                      two_points=False, point_ids=(_t1, ()), **_wt)
+                                      two_points=False, point_ids=(_t1, ()), preview=_preview, **_wt)
     elif not weekly:
         log.warning("市場焦點：沒有抓到任何標題")
     if res:
