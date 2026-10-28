@@ -1489,5 +1489,104 @@
    ]
   },
   "result": "FOMC 10/28 決策前聯準會官員對金融情勢權重看法分歧"
+ },
+ {
+  "at": "2026-10-28T15:54+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "fomc"
+  ],
+  "locks": [
+   "fomc"
+  ],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed officials not aligned on weight of financial conditions - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed likely to go into wait-and-see mode on rates - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "投資人關注Fed決策和企業財報　美股開盤多上漲"
+    ]
+   }
+  ],
+  "background": [
+   "投資人關注Fed決策和企業財報　美股開盤多上漲",
+   "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
+   "盟友轉向？美國緊密夥伴大幅減購美債 亞洲資金轉投股市與日債"
+  ],
+  "main": "Fed officials not aligned on weight of financial conditions - Reuters",
+  "main_why": "鎖定事件 fomc",
+  "second": "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "正文寫了媒體名稱（CNBC、路透），來源會列在下方，直接寫事實",
+     "用了相對時間（今日、本週），請改寫成月/日"
+    ],
+    [
+     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
+    ]
+   ],
+   "重點二": []
+  },
+  "result": "聯準會 10/28 利率決策市場預期按兵不動，12 月升息機率達七成六"
  }
 ]
