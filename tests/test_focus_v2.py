@@ -269,25 +269,14 @@ _m = {"lead": {"title": "Fed Meeting Focus Turns to Warsh"}, "score": 10.0}
 _o = [{"lead": {"title": "Fed officials weigh pause"}, "score": 9.0},
       {"lead": {"title": "Oil prices jump 4% on OPEC cut"}, "score": 8.0},
       {"lead": {"title": "Gold steadies"}, "score": 7.0}]
-_sys2 = ft._two_point_system(ft._FOCUS_CONTENT_SYSTEM_A)
-check("⑭ 兩個重點的提示詞替換全部成功", all(b in _sys2 for a, b in ft._TWO_POINT_SWAPS) and "{min}" in _sys2)
-_r14 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件。\n乙事件。\n【對利率】r\n【補充】\na\nb\n【來源】1,4｜6", 2)
-check("⑭ 來源分重點：1,4｜6", _r14["ids"] == [1, 4] and _r14.get("ids2") == [6] and len(_r14["main"]) == 2, _r14)
-_calls14 = []
-_two = ("【標題】聯準會會議前市場聚焦 Warsh 的政策訊息\n【主軸】\n" + "聯準會會議在即，市場關注主席 Warsh 如何說明暫停升息的理由與後續路徑。" * 2
-        + "\n" + "油價因石油輸出國組織減產消息上漲，能源類股走強，投資人評估通膨壓力是否再起。" * 2
-        + "\n【對利率】Warsh 暗示暫停升息，偏向壓低短端利率預期。\n【補充】\n金價走穩，市場等待聯準會會議結果，投資人觀望。\n銅價延續跌勢，人工智慧類股走弱拖累金屬需求。\n【來源】1｜2")
-ft._call_ai, _o14 = (lambda s, sy, env=None, **k: (_calls14.append(sy) or (_two, ""))), ft._call_ai
-try:
-    _wr, _we = ft.write_main([{"title": "Fed meeting focus turns to Warsh", "body": "Fed Warsh meeting", "source": "Bloomberg", "link": "https://b/1"},
-                              {"title": "Oil prices jump on OPEC cut", "body": "oil OPEC", "source": "Reuters", "link": "https://r/2"}],
-                             [], ["Fed"], {}, caps=[250, 80, 80], mins=[200, 40, 40], two_points=True, point_ids=([1], [2]))
-finally:
-    ft._call_ai = _o14
-check("⑭ 兩個重點：產出 points=2、來源標記重點一／重點二", _wr and _wr["points"] == 2
-      and [x.get("point") for x in _wr["links"]] == [1, 2], (_we, _wr and _wr.get("links")))
-check("⑭ 兩個重點用的提示詞", _calls14 and "剛好兩段" in _calls14[0])
-_h14 = _home._focus_strip({"yields": [], "links": [dict(_wr["links"][0]), dict(_wr["links"][1])], "fedwatch": None,
+_lead = ft._lead_system(ft._FOCUS_CONTENT_SYSTEM_A, one_para=True)
+check("⑭ 重點一的提示詞：沒有【補充】、寫成一段、格式不含補充",
+      "【補充】" not in _lead and "寫成一段" in _lead and "【標題】【主軸】【對利率】【來源】" in _lead and "{min}" in _lead)
+check("⑭ 單一重點（250 字）仍可分段", "分 2–3 段" in ft._lead_system(ft._FOCUS_CONTENT_SYSTEM_A, one_para=False))
+_r14 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件。\n乙事件。\n【對利率】r\n【來源】1,4", 0)
+check("⑭ 來源代號：1,4", _r14["ids"] == [1, 4] and len(_r14["main"]) == 2, _r14)
+_h14 = _home._focus_strip({"yields": [], "links": [{"title": "a", "link": "https://b/1", "source": "Bloomberg"},
+                                                    {"title": "b", "link": "https://r/2", "source": "Reuters"}], "fedwatch": None,
                            "layout": "main", "points": 2, "headline": "h", "rate_note": "r",
                            "text": "甲事件。¶乙事件。\n補一。\n補二。", "text_source": "model-content", "topics": [], "chips": []})
 check("⑭ 首頁：兩段直接呈現，主軸和參考報導都不標「重點一／重點二」（v2.4）",
@@ -312,40 +301,9 @@ _pool = [{"title": "Analysis-Bond investors are thinking less about the Fed and 
          {"title": "Gold steadies", "link": "https://finance.yahoo.com/news/gold.html", "at": "2026-10-27T10:00:00+00:00"}]
 _body15 = "Bond investors are increasingly focused on AI spending and US deficits rather than the Fed, as yields stay high." * 3
 _far = [dict(_pool[0], at="2026-10-25T10:00:00+00:00")]
-# 主軸只能用指定報導、兩段長度
-_seen15 = []
-_bad15 = ("【標題】市場押注 10/28 按兵不動、12 月升息機率逾七成\n【主軸】\n" + "調查顯示多數受訪者預期聯準會在會議維持利率，並預期之後升息，市場重新評估路徑。" * 4
-          + "\n債券投資人關注焦點轉向 AI 與財政赤字。\n【對利率】偏向推升短端利率。\n【補充】\n甲事件發生了，細節是乙。\n丙事件發生了，細節是丁。\n【來源】3｜1")
-ft._call_ai, _o15 = (lambda s, sy, env=None, **k: (_seen15.append(s) or (_bad15, ""))), ft._call_ai
-try:
-    _r15, _e15 = ft.write_main([{"title": "Bond investors AI deficits", "body": "Bond investors AI deficits " * 5, "source": "Yahoo Finance（Reuters）", "link": "https://y/1"},
-                                {"title": "Japan inflation", "body": "Japan trend inflation " * 5, "source": "Reuters", "link": "https://y/2"},
-                                {"title": "Fed rate hikes are coming, but not this week: CNBC survey", "body": "93% expect hold, 76% expect December hike " * 3, "source": "CNBC", "link": "https://c/3"}],
-                               [], ["Fed"], {}, caps=[250, 80, 80], mins=[200, 40, 40], two_points=True, point_ids=([1], [2]))
-finally:
-    ft._call_ai = _o15
-_w15 = _seen15[1] if len(_seen15) > 1 else ""
-check("⑮ 主軸用了排名前兩名以外的報導（CNBC 問卷）→ 帶原因重寫", "主軸用了指定以外的報導（代號 1、3）" in _w15, _w15[-300:])
-check("⑮ 兩段長度差太多 → 帶原因重寫", "兩段長度差太多" in _w15)
-check("⑮ 標題的數字不是重點一的 → 帶原因重寫", "【標題】的數字" in _w15)
-check("⑮ 重寫後仍不符 → 參考報導只列指定的報導", _r15 and [x["link"] for x in _r15["links"]] == ["https://y/1", "https://y/2"],
-      _r15 and _r15["links"])
 check("⑮ 標題開頭「CNBC 調查：」會被刪掉", ft._strip_media("CNBC 調查：93% 預期聯準會維持利率") == "93% 預期聯準會維持利率")
-check("⑮ 每段至少 80 字、兩段相差不超過一倍；重點一只有標題時下限 50、不要求等長",
-      ft.POINT_MIN == 80 and ft.POINT_RATIO == 2.0 and ft.POINT_MIN_THIN == 50)
-_seen15b = []
-_thin = ("【標題】債券投資人關注點轉向 AI 與財政赤字\n【主軸】\n債券投資人關注焦點從聯準會轉向人工智慧支出與財政赤字，認為高殖利率反映的是財政與科技投資需求，而非單純的利率政策路徑。\n"
-         + "日本趨勢通膨指標升至三年高點，強化日本央行升息的理由，市場評估升息時點並調整日圓與日債部位，投資人關注後續數據。" * 2
-         + "\n【對利率】偏向推升長端利率。\n【補充】\n甲事件發生了，細節是乙丙丁戊己庚辛。\n丙事件發生了，細節是丁戊己庚辛壬癸。\n【來源】2｜1")
-ft._call_ai, _o15b = (lambda s, sy, env=None, **k: (_seen15b.append(s) or (_thin, ""))), ft._call_ai
-try:
-    _r15b, _ = ft.write_main([{"title": "Japan trend inflation index hits 3-year high", "body": "Japan trend inflation BOJ " * 5, "source": "Yahoo", "link": "https://y/2"}],
-                             [{"title": "Bond investors are thinking less about the Fed and more about AI, deficits", "source": "Reuters", "link": "https://news.google.com/1"}],
-                             ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], two_points=True, point_ids=([2], [1]), thin=(True, False))
-finally:
-    ft._call_ai = _o15b
-check("⑮ 重點一只有標題（50 字以上）、重點二有內文 → 不因長度不均重寫", _r15b and _r15b["points"] == 2
-      and not any("兩段長度差太多" in x or "重點一只有" in x for x in _seen15b[1:]), _seen15b[1:][:1])
+check("⑮ 每段字數：有內文 80–140、只有標題 50–80",
+      (ft.PARA_MIN, ft.PARA_CAP, ft.POINT_MIN_THIN, ft.THIN_CAP) == (80, 140, 50, 80))
 
 # ⑯ 2026-10-28：鎖定事件公布前不准寫成已有結果、媒體名中間夾字、人物簡介頁
 _bad16 = ("【標題】聯準會 10/28 決議維持利率不變，官員對金融條件影響分歧\n【主軸】\n"
@@ -359,7 +317,7 @@ try:
     _r16, _e16 = ft.write_main([], [{"title": "The AI Fed Votes to Hold Interest Rates Steady", "source": "Bloomberg", "link": "https://news.google.com/1"},
                                     {"title": "Fed officials not aligned on weight of financial conditions", "source": "Reuters", "link": "https://news.google.com/2"},
                                     {"title": "Fed likely to go into wait-and-see mode on rates", "source": "Reuters", "link": "https://news.google.com/3"}],
-                               ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], mode="title", point_ids=([1, 2, 3], ()), preview="10/28")
+                               ["Fed"], {}, caps=[250], mins=[120], mode="title", part="lead", preview="10/28")
 finally:
     ft._call_ai = _o16
 check("⑯ 10/28 晚上實例：FOMC 尚未公布卻寫「決議維持利率不變」→ 帶原因重寫", len(_seen16) == 2 and "事件尚未公布" in _seen16[1], _seen16[-1][-200:])
@@ -420,13 +378,9 @@ _st = {"lead": {"title": "Analysis: deficit", "link": "https://www.cnbc.com/z", 
        "items": [{"title": "Analysis: deficit", "link": "https://www.cnbc.com/z", "at": _at(5)}], "score": 9.0}
 ft.mark_stale_v25([_st], _N17, _pub=lambda u: dt.datetime(2026, 10, 15, tzinfo=U))
 check("⑰ 舊文：原始發布超過 48 小時 → 拿掉時效分", _st.get("stale") and _st["score"] == 7.0, _st)
-# 補充不能用主軸的報導、不能跟主軸重複
-_r17 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件發生了。\n【對利率】r\n【補充】\n乙事件發生了，細節是丙。〔4〕\n丁事件發生了，細節是戊。〔1〕\n【來源】1", 2)
-check("⑰ 補充最後的〔代號〕會被讀出並從正文拿掉", _r17["supp_ids"] == [[4], [1]] and not _r17["supp"][0].endswith("〕"), _r17)
-check("⑰ 補充用了主軸的報導（代號 1）→ 判定重複", ft._supp_overlap(_r17, "甲事件發生了。", ([1], ())) == [2])
-check("⑰ 提示要求補充標〔代號〕、不能用主軸用過的報導", "補充只能寫其他代號的事件" in (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8"))
 check("⑰ 拿掉的舊規則不存在了", not any(hasattr(ft, n) for n in ("market_signals", "rank_score", "find_copy", "body_backfill",
-                                                                 "resolve_locks", "apply_theme_heat", "pick_second")))
+                                                                 "resolve_locks", "apply_theme_heat", "pick_second",
+                                                                 "_supp_overlap", "_two_point_system", "POINT_RATIO")))
 
 # ⑱ 2026-10-28 漏洞修正：主角用關鍵字組辨識、外國形容詞、材料兩層、台指期排除
 check("⑱ 主角用關鍵字組：S&P 500 開高（Fed 在後半段）→ 美股；Treasury 部位 → 美債",
@@ -448,6 +402,36 @@ check("⑱ 這件事本身只有標題 → 補一則同主題有內文的當背�
       and _bgb == {"https://tw.news.yahoo.com/b"} and [o["lead"]["title"] for o in _lb] == ["Gold holds"])
 import yaml as _y
 check("⑱ 主軸排除台指期、夜盤盤勢文", {"台指期", "夜盤"} <= set(_y.safe_load(open(ROOT / "config/focus.yaml", encoding="utf-8"))["exclude_keywords"]))
+
+# ⑲ 2026-10-28：分三次寫（重點一＋對利率／重點二／補充），每次只給那件事的材料
+_p1t = "聯準會官員對金融條件的看法分歧，部分官員認為殖利率走高已替央行緊縮。" * 3
+_p2t = "財政部標售十年期公債得標殖利率高於預期，投資人擔心赤字擴大帶來的供給壓力。" * 3
+_tp = ft._trim_paras(_p1t + "¶" + _p2t, 120)
+check("⑲ 超長時逐段在句尾裁：兩段都留著、總長不超過上限",
+      _tp.count("¶") == 1 and ft.cjk_len(_tp.replace("¶", "")) <= 120 and "財政部" in _tp, _tp)
+_s19 = []
+ft._call_ai, _o19 = (lambda s, sy, env=None, **k: (_s19.append((s, sy, k.get("model"))) or (
+    "油價走高，中東供給受限的疑慮升溫，布蘭特原油漲逾百分之三並帶動能源股走強。\n"
+    "聯準會官員對金融條件的看法分歧，部分官員認為殖利率走高已替央行緊縮。", ""))), ft._call_ai
+try:
+    _d19 = []
+    _sp19 = ft.write_supps([{"title": "Oil rises on supply worries", "body": "Oil Brent supply " * 5, "source": "Reuters", "link": "https://r/o"}],
+                           [{"title": "Yen weakens as BOJ stays cautious", "source": "CNBC", "link": "https://c/y"}],
+                           None, main_text=_p1t, drops=_d19)
+finally:
+    ft._call_ai = _o19
+check("⑲ 補充只看得到其他事件的報導、用預設模型（Haiku）", _s19 and "Oil rises" in _s19[0][0]
+      and "金融條件" not in _s19[0][0] and _s19[0][2] is None and "【補充】" not in _s19[0][1])
+check("⑲ 補充跟主軸重複 → 帶原因重寫一次，仍重複就拿掉並記下原因",
+      len(_s19) == 2 and "跟主軸重複" in _s19[1][0] and len(_sp19) == 1 and _sp19[0].startswith("油價")
+      and _d19 and "跟主軸重複" in _d19[0], (_sp19, _d19))
+check("⑲ 重點二的提示詞只寫一段、沒有標題與對利率", "寫成一段" in ft._FOCUS_PARA_SYSTEM and "【對利率】" not in ft._FOCUS_PARA_SYSTEM)
+_src19 = (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8")
+check("⑲ build 分三次呼叫：part=lead、part=para、write_supps",
+      'part="lead"' in _src19 and 'part="para"' in _src19 and "supp = write_supps(arts_o, briefs_o" in _src19)
+check("⑲ 拿掉代號指定與兩段比例檢查", "只能寫代號" not in _src19 and "兩段長度差太多" not in _src19 and "〔代號〕" not in _src19)
+check("⑲ 台灣 ETF 代號推銷文排除", ft.is_junk("主動式ETF 009834 掛牌首日 投資人搶進") and ft.is_junk("0050 配息創新高")
+      and not ft.is_junk("10-year yield rises to 4.00% after Fed"))
 
 print()
 print("全部通過" if ok else "有失敗")
