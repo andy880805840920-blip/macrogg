@@ -1004,5 +1004,101 @@
   "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
   "points": 1,
   "result": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字"
+ },
+ {
+  "at": "2026-10-28T13:34+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [
+   "fomc"
+  ],
+  "locks": [
+   "fomc"
+  ],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 19.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed officials not aligned on weight of financial conditions - Reuters"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed likely to go into wait-and-see mode on rates - Reuters"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "John D Schipfer, Greenville Fed Financial Corp: Profile and Biography - Bloomberg",
+     "Annette M Ryan-Baker, Greenville Fed Financial Corp: Profile and Biography - Bloomberg"
+    ]
+   },
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
+    "titles": [
+     "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+1.5、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
+    ]
+   }
+  ],
+  "second": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com",
+  "related": [
+   "Fed officials not aligned on weight of financial conditions - Reuters",
+   "Fed likely to go into wait-and-see mode on rates - Reuters"
+  ],
+  "copy_miss": [
+   "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
+   "Fed officials not aligned on weight of financial conditions - Reuters",
+   "Fed likely to go into wait-and-see mode on rates - Reuters",
+   "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
+  ],
+  "second_dropped": "重點二沒有內文",
+  "headline_only": true,
+  "main": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
+  "points": 1,
+  "result": "聯準會 10/28 決議維持利率不變，官員對金融環境緊縮程度看法分歧"
  }
 ]
