@@ -38,7 +38,8 @@ hs = [
      "at": (now - dt.timedelta(hours=1)).isoformat()},
 ]
 kw = ["川普 聯準會", "Kevin Warsh", "貝森特", "美國財政部"]
-picked = ft.pick_fallback(hs, kw, n=2)
+# v2.5：排序改用 score_title（主角＋時效＋來源＋外國）
+picked = sorted(hs, key=lambda h: -ft.score_title(h, kw, now))[:2]
 check("③ 命中關鍵字的標題排前面", picked[0]["title"].startswith("川普點名"),
       [p["title"][:12] for p in picked])
 check("③b 不相關的標題被擠掉", all("美股" not in p["title"] for p in picked))
@@ -79,8 +80,8 @@ hs2 = [
     {"title": "貝森特談美國財政部發債計畫 - 中央社", "link": "", "source": "",
      "at": (now - dt.timedelta(hours=1)).isoformat()},
 ]
-p2 = ft.pick_fallback(hs2, ["川普 聯準會", "貝森特"], n=2)
-check("⑤ 近似重複標題只留一則", len(p2) == 2
+p2 = [g["lead"] for g in ft.group_events(hs2, ["川普 聯準會", "貝森特"], now)][:2]
+check("⑤ 近似重複標題歸成同一件事（只當一則）", len(p2) == 2
       and sum(1 for x in p2 if "川普" in x["title"]) == 1,
       [x["title"][:14] for x in p2])
 
@@ -418,12 +419,9 @@ check("⑨c 「毛利率」不算命中「利率」", len(ff) == 1 and "毛利�
 check("⑨d 「殖利率」不受假朋友過濾影響（本來就要抓）",
       ft._kw_text("美債殖利率走高") == "美債殖利率走高"
       and "利率" not in ft._kw_text("聯電毛利率上看36%"))
-check("⑨e 排序的命中數同一套規則",
-      ft.pick_fallback([{"title": "聯電Q3毛利率上看36%", "link": "", "source": "",
-                         "at": now.isoformat()},
-                        {"title": "Fed 官員談利率路徑", "link": "", "source": "",
-                         "at": (now - dt.timedelta(hours=1)).isoformat()}],
-                       ["Fed 利率"], n=1)[0]["title"].startswith("Fed"))
+check("⑨e 排序的命中數同一套規則（毛利率不算利率）",
+      ft.score_title({"title": "Fed 官員談利率路徑", "at": (now - dt.timedelta(hours=1)).isoformat()}, ["Fed 利率"], now)
+      > ft.score_title({"title": "聯電Q3毛利率上看36%", "at": now.isoformat()}, ["Fed 利率"], now))
 
 # ⑨f 排除關鍵字：真的含關鍵字、但不是總經新聞的標題要整條剔除
 #（實際發生過：「專家談美債布局：不如押0050或高股息」——含「美債」，
@@ -440,13 +438,9 @@ fe = ft.fetch_feed_headlines(["https://tw.news.yahoo.com/rss/finance"],
                              exclude=_EXC)
 check("⑨f feed 層剔除排除詞", len(fe) == 1 and "0050" not in fe[0]["title"],
       [x["title"][:16] for x in fe])
-check("⑨g 挑選層也剔除（標題模式不經過 feed 過濾）",
-      all("0050" not in x["title"] for x in ft.pick_fallback(
-          [{"title": "專家談美債布局：不如押0050或高股息", "link": "",
-            "source": "", "at": now.isoformat()},
-           {"title": "美債殖利率走高，市場關注財政部標售", "link": "",
-            "source": "", "at": (now - dt.timedelta(hours=1)).isoformat()}],
-          ["美債 殖利率"], n=2, exclude=_EXC)))
+check("⑨g 挑選層也剔除（標題模式不經過 feed 過濾；build 分組前先過 _excluded）",
+      ft._excluded("專家談美債布局：不如押0050或高股息", _EXC)
+      and not ft._excluded("美債殖利率走高，市場關注財政部標售", _EXC))
 check("⑨h 沒設排除清單時行為不變",
       not ft._excluded("專家談美債布局", None)
       and ft._excluded("不如押0050或高股息", _EXC))
@@ -871,8 +865,8 @@ _H = [{"title": "AI 資本支出暴增帶動發債", "link": "l1", "source": "y"
        "at": "2026-08-27T01:00:00+00:00", "kw": ""},
       {"title": "聯準會官員談降息路徑", "link": "l2", "source": "y",
        "at": "2026-08-27T00:00:00+00:00", "kw": ""}]
-_picked = ft.pick_fallback(_H, ["聯準會 降息"], n=2,
-                           secondary=["AI 資本支出", "發債"])
+_now19 = dt.datetime(2026, 8, 27, 2, tzinfo=dt.timezone.utc)
+_picked = [g["lead"] for g in ft.group_events(_H, ["聯準會 降息"], _now19)]
 check("⑲f 主級（聯準會）排在次級（AI 資本支出）前面",
       _picked[0]["link"] == "l2", [x["link"] for x in _picked])
 check("⑲g 次級仍會入選（不是排除，只是排後）",
@@ -988,23 +982,20 @@ _pool = [_h23("Fed holds rates", "CNBC", 3),
          _h23("Fed officials split", "Reuters", 4),
          _h23("Fed minutes due", "Yahoo Finance", 5),
          _h23("Treasury auction tails", "Yahoo奇摩新聞", 3)]
-_heat = ft._heat_map(_pool, ["Fed", "Treasury"])
-check("㉓ 熱度＝提到同一主題詞的不同來源數", _heat == {"Fed": 3, "Treasury": 1},
-      _heat)
-_a = ft.rank_score(_pool[0], ["Fed", "Treasury"], heat=_heat, now=_NOW)
-_b = ft.rank_score(_pool[3], ["Fed", "Treasury"], heat=_heat, now=_NOW)
-check("㉓b 大家都在報的（Fed，3 家）排在單一來源的前面", _a > _b, (_a, _b))
-_old = ft.rank_score(_h23("Fed holds rates", "CNBC", 60), ["Fed"], now=_NOW)
-_new = ft.rank_score(_h23("Fed holds rates", "CNBC", 3), ["Fed"], now=_NOW)
+# v2.5：熱度＝主角相同的不同媒體數（事件層），每多一家 +1、最多 +4
+_g23 = {g["lead"]["title"]: g for g in ft.group_events(_pool, ["Fed", "Treasury"], _NOW)}
+check("㉓ 熱度＝主角相同（Fed）的不同來源數 − 1", _g23["Fed holds rates"]["heat"] == 2
+      and _g23["Treasury auction tails"]["heat"] == 0, {k: v["heat"] for k, v in _g23.items()})
+check("㉓b 大家都在報的（Fed，3 家）排在單一來源的前面",
+      _g23["Fed holds rates"]["score"] > _g23["Treasury auction tails"]["score"])
+_old = ft.score_title(_h23("Fed holds rates", "CNBC", 60), ["Fed"], _NOW)
+_new = ft.score_title(_h23("Fed holds rates", "CNBC", 3), ["Fed"], _NOW)
 check("㉓c 時效：新的分數較高", _new > _old, (_new, _old))
 check("㉓d 來源權重：通訊社／財經媒體 > 一般轉載",
-      ft.rank_score(_h23("Fed", "Reuters", 3), ["Fed"], now=_NOW)
-      > ft.rank_score(_h23("Fed", "Yahoo奇摩新聞", 3), ["Fed"], now=_NOW))
-check("㉓e 發布日加分：CPI 當天提到 CPI 的新聞 +2",
-      ft.rank_score(_h23("CPI rises", "CNBC", 3), ["Fed"], now=_NOW,
-                    events=["cpi"])
-      - ft.rank_score(_h23("CPI rises", "CNBC", 3), ["Fed"], now=_NOW)
-      == 2.0)
+      ft.score_title(_h23("Fed", "Reuters", 3), ["Fed"], _NOW)
+      > ft.score_title(_h23("Fed", "Yahoo奇摩新聞", 3), ["Fed"], _NOW))
+check("㉓e v2.5：發布日不再另外加分（數據日的重要性由熱度反映）",
+      "events" not in ft.score_title.__code__.co_varnames)
 _today = _dt23.date(2026, 10, 15)
 check("㉓f 今天／前一天的發布都算（台灣早上對應美國前一天）",
       ft._todays_events({"cpi": "2026-10-14", "employment": "2026-11-06"},
@@ -1251,6 +1242,7 @@ check("㉚b config 可覆寫", ft.focus_caps({"main_chars": 180, "supp_items": 1
 
 
 _HL = "【標題】美債殖利率走高、財政部擴大發債\n"     # 第十七批起主軸要有一句標題
+_S = "銅價延續跌勢，人工智慧類股走弱拖累金屬需求，觀望氣氛濃。"   # v2.5：補充要跟主軸不同（重複會被拿掉）
 
 
 def _runA(replies):
@@ -1271,35 +1263,35 @@ def _runA(replies):
 
 
 _ma = _U * 8                                                  # 200 字主軸
-_ta, _sa, _seena = _runA(["主軸：" + _ma + "\n補充：" + _U * 3 + "\n" + _U * 2])
+_ta, _sa, _seena = _runA(["主軸：" + _ma + "\n補充：" + _S * 3 + "\n" + _S * 2])
 check("㉚c 主軸提示詞：要求彭博／路透優先、同一件事合併",
       "主軸" in _seena[0][1] and "彭博" in _seena[0][1] and "合併" in _seena[0][1])
 check("㉚d 「主軸：」「補充：」標籤被拿掉、三行都在",
       _ta.splitlines()[0] == _ma and len(_ta.splitlines()) == 3
       and not _ta.splitlines()[1].startswith("補充"), _ta[:40])
-_tb, _sb, _seenb = _runA([_ma + "\n" + _U * 6 + "\n" + _U * 2,   # 補充 150 字 > 100
+_tb, _sb, _seenb = _runA([_ma + "\n" + _S * 6 + "\n" + _S * 2,   # 補充 150 字 > 100
                           _ma + "\n" + _U * 3 + "\n" + _U * 2])
 check("㉚e 補充超過 80×1.25＝100 字 → 帶原因重寫（訊息標出是第 2 行）",
       len(_seenb) == 2 and "第 1 則補充超過 100 字" in _seenb[1][0], _seenb[-1][0][-80:])
-_tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _U * 2])           # 主軸 275 字（底線 275）
+_tc, _sc_, _seenc = _runA([_U * 11 + "\n" + _S * 2])           # 主軸 275 字（底線 275）
 # v2.2（2026-10-27）：補充少於 2 則 → 帶原因重寫一次，仍只有一則就照樣採用
 check("㉚f 主軸在底線內、只補一則 → 重寫一次後照樣採用",
       len(_seenc) == 2 and len(_tc.splitlines()) == 2)
 # 2026-10-05：主軸 200–250 字、可分段；補充不能只列標題
 _td, _, _seend = _runA(["【主軸】\n" + _U * 4 + "\n" + _U * 4 + "\n【補充】\n"
-                        + _U * 2 + "\n" + _U * 2])
+                        + _S * 2 + "\n" + _S * 2])
 check("㉚g 主軸分兩段 → 以 ¶ 串成第一行、補充兩則",
       len(_seend) == 1 and _td.splitlines()[0] == _U * 4 + "¶" + _U * 4
       and len(_td.splitlines()) == 3, _td[:60])
-_te, _, _seene = _runA([_U * 4 + "\n" + _U * 2, _ma + "\n" + _U * 2])
+_te, _, _seene = _runA([_U * 4 + "\n" + _S * 2, _ma + "\n" + _S * 2])
 check("㉚h 主軸只有 100 字 → 帶原因重寫（沒講完整）",
       len(_seene) == 2 and "主軸只有 100 字" in _seene[1][0]
       and _te.splitlines()[0] == _ma, _seene[-1][0][-90:])
-_tf, _, _seenf = _runA([_ma + "\n聯準會宣布降息\n" + _U * 2,
-                        _ma + "\n" + _U * 2 + "\n" + _U * 2])
+_tf, _, _seenf = _runA([_ma + "\n聯準會宣布降息\n" + _S * 2,
+                        _ma + "\n" + _S * 2 + "\n" + _S * 2])
 check("㉚i 補充只有幾個字（像標題）→ 帶原因重寫",
       len(_seenf) == 2 and "像在列標題" in _seenf[1][0], _seenf[-1][0][-90:])
-_tg, _, _ = _runA([_U * 4 + "\n" + _U * 4 + "\n" + _U * 2 + "\n" + _U * 2])
+_tg, _, _ = _runA([_U * 4 + "\n" + _U * 4 + "\n" + _S * 2 + "\n" + _S * 2])
 check("㉚j 沒寫標記：最後兩行是補充、前面都是主軸的段落",
       _tg.splitlines()[0] == _U * 4 + "¶" + _U * 4 and len(_tg.splitlines()) == 3)
 check("㉚k 提示詞寫明 200–250 字、可分段、標題、對利率、利率主線優先",

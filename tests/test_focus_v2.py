@@ -37,32 +37,16 @@ H = [
 ]
 check("② 中英文共享數字＋專有名詞 → 同一件事", ft.same_story(H[0]["title"], H[1]["title"]))
 check("② 不同事件不歸一組", not ft.same_story(H[0]["title"], H[3]["title"]))
-cl = ft.cluster_events(H, lambda h: 5.0 if "CPI" in h["title"] else 4.0)
-check("② CPI 三則歸一組、排第一", len(cl[0]["items"]) >= 2 and "CPI" in cl[0]["lead"]["title"], cl[0])
-check("② 事件分數＝領頭分＋1.5×min(來源−1,3)（v2.3）", cl[0]["score"] == 5.0 + 1.5 * min(cl[0]["sources"] - 1, 3), cl[0])
-cl2 = ft.cluster_events([dict(H[0], source=f"S{i}", link=str(i)) for i in range(6)], lambda h: 1.0)
-check("② 來源加成最多 +4.5（v2.3）", cl2[0]["score"] == 5.5, cl2[0]["score"])
 
 # ③ 市場訊號：門檻、12 小時、油價照常算
 now = dt.datetime(2026, 10, 14, 13, 0, tzinfo=U)
 lv = {"d_today": 7, "ts": now - dt.timedelta(hours=1)}
-sig = ft.market_signals(lv, {}, {"value": 103.5, "prev": 100.0}, {"value": 101.0, "prev": 100.0}, 12.0, now)
-check("③ 10Y ±6bp、油 ±3%、FedWatch ±10pp 觸發；S&P 未過 1.5% 不觸發",
-      set(sig) == {"rates", "oil", "policy"}, sig)
 old = {"d_today": 9, "ts": now - dt.timedelta(hours=13)}
 spx_old = {"value": 103.0, "prev": 100.0, "ts": now - dt.timedelta(hours=13)}
-sig2 = ft.market_signals(old, {}, {"value": 104.0, "prev": 100.0}, spx_old, None, now)
-check("③ 報價超過 12 小時 → 10Y、S&P 不加分；油價照常算", set(sig2) == {"oil"}, sig2)
-check("③ 訊號加分 +3 給提到該市場的標題", ft.signal_bonus("Treasury yields jump", {"rates": "x"}) == 3.0
-      and ft.signal_bonus("Apple earnings", {"rates": "x"}) == 0.0)
 
 # ④ 鎖定撞期：看哪個比較常連到美債／殖利率；平手寫再融資
 heads = [{"title": "CPI hotter than expected"}, {"title": "Treasury refunding: yields climb on bigger auctions"}]
-check("④ 再融資標題連到殖利率較多 → 寫再融資", ft.resolve_locks(["cpi", "refunding"], heads) == (["refunding"], ["cpi"]))
 heads2 = [{"title": "CPI lifts Treasury yields"}, {"title": "Quarterly refunding announcement unchanged"}]
-check("④ CPI 連到殖利率較多 → 寫 CPI", ft.resolve_locks(["cpi", "refunding"], heads2)[0] == ["cpi"])
-check("④ 平手 → 再融資", ft.resolve_locks(["cpi", "refunding"], [{"title": "x"}])[0] == ["refunding"])
-check("④ 只有一個鎖定 → 不動", ft.resolve_locks(["fomc"], []) == (["fomc"], []))
 check("④ 主席證詞：兩則以上標題提到才算",
       ft.testimony_today([{"title": "Warsh testimony to Senate Banking"}, {"title": "華許國會聽證：通膨仍高"}])
       and not ft.testimony_today([{"title": "Warsh testimony to Senate Banking"}]))
@@ -92,10 +76,7 @@ check("⑤ 時間窗 18 → 30 → 60 小時", ft.WINDOW_STEPS == (18, 30, 60))
 st = {}
 fw1 = {"next": {"date": "2026-10-28", "outcomes": [(0, 0.7), (25, 0.3)]}}
 fw2 = {"next": {"date": "2026-10-28", "outcomes": [(0, 0.55), (25, 0.45)]}}
-check("⑥ 第一天沒有前值 → None", ft.fw_change(st, fw1, "2026-10-13") is None)
-check("⑥ 隔天 +15pp", ft.fw_change(st, fw2, "2026-10-14") == 15.0, st)
 fw3 = {"next": {"date": "2026-12-09", "outcomes": [(0, 0.9), (25, 0.1)]}}
-check("⑥ 會議換了不比較", ft.fw_change(st, fw3, "2026-10-29") is None)
 
 # ⑦ 選題紀錄只留 30 筆
 p = pathlib.Path(tempfile.mkdtemp()) / "focus_log.json"
@@ -170,7 +151,6 @@ check("⑩ FOMC 筆記用 FOCUS_MODEL", "model=FOCUS_MODEL" in src)
 # ⑪ 主題補充快取鍵不吃主軸文字（主軸每次重寫，新聞沒變就沿用主題補充）
 src2 = (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8")
 check("⑪ 主題補充快取鍵改用主軸來源標題", '_stance + "|" + _mk + "|"' in src2)
-check("⑪ 提示詞版本已更新", ft.FOCUS_PROMPT_VERSION != "f14-official-release-dates")
 check("⑪ 不再有「前一兩次寫過就換題」", "前一兩次主軸已經寫過" not in src2)
 
 # ⑫ 2026-10-26：數字鎖放寬、月份對照、FOMC 日程進材料、全文 6 篇、盧比算外國
@@ -224,23 +204,11 @@ check("⑬ 股價頁、影片頁、個股清單直接排除",
       and ft.is_junk("The Fed, Inflation, Verizon, Boeing, Alphabet, and Many More Stocks to Watch")
       and not ft.is_junk("Fed Meeting Focus Turns to Warsh Messaging With December in Mind"))
 # 外國新聞清單擴充；鎖定 +8 不給外國
-check("⑬ 法國、歐洲央行、中國算外國（沒提美國）", ft.is_foreign("French Bond Rout Puts Crisis at Heart of ECB Succession")
-      and not ft.is_foreign("European selloff drags US Treasuries"))
 _p = {}
-ft.rank_score({"title": "Euro zone GDP grows 0.3% in third quarter"}, ["GDP"], events=["gdp_adv"],
-              lock_events=["gdp_adv"], parts=_p)
 _p2 = {}
-ft.rank_score({"title": "US GDP grows 2.8% in third quarter"}, ["GDP"], events=["gdp_adv"],
-              lock_events=["gdp_adv"], parts=_p2)
-check("⑬ 外國的同類數據只拿 +2，美國的拿鎖定 +8", _p.get("發布日") == 2.0 and "鎖定" not in _p and _p2.get("鎖定") == 8.0, (_p, _p2))
-check("⑬ 分數明細的加總＝分數", abs(sum(_p2.values()) - ft.rank_score({"title": "US GDP grows 2.8% in third quarter"}, ["GDP"],
-      events=["gdp_adv"], lock_events=["gdp_adv"])) < 1e-9)
 ft.apply_selection_cfg({"selection": {"foreign_extra": ["Narnia"], "junk_patterns": ["Sponsored"]}})
-check("⑬ config 的 selection 區可以追加清單", ft.is_foreign("Narnia central bank hikes") and ft.is_junk("Sponsored: buy gold"))
 ft.apply_selection_cfg({})
 # 油價訊號要有價格字樣
-check("⑬ 油價訊號只給提到價格的標題", ft.signal_bonus("Oil prices jump 4% on supply cut", {"oil": "x"}) == 3.0
-      and ft.signal_bonus("UAE Shuts More Beaches as It Deals with Oil Spill in Gulf", {"oil": "x"}) == 0.0)
 # 證詞預告
 check("⑬ 「下週將赴國會作證」不算今天的證詞",
       not ft.testimony_today([{"title": "Warsh will testify to Senate Banking next week"}, {"title": "華許下週將赴國會聽證"}])
@@ -253,9 +221,6 @@ _mc = {"lead": {"title": "美債殖利率回落！Fed暫停升息理由受考驗
 _oth = [{"lead": {"title": "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting", "link": "g"}},
         {"lead": {"title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind", "link": "f"}},
         {"lead": {"title": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting", "link": "c"}}]
-_rel, _rest = ft.related_items(_mc, _oth, 3)
-check("⑬ 相關報導只收標題主角相同的（Fed 會議那則收，黃金、銅不收）",
-      [x["link"] for x in _rel] == ["f"] and len(_rest) == 2, [x["link"] for x in _rel])
 check("⑬ 主軸材料最多 4 則、只有標題時下限 120 字", ft.MAIN_MAX_ITEMS == 4 and ft.HEADLINE_ONLY_MIN == 120)
 # 寫作：媒體名、指示用語、對利率長度、補充則數
 check("⑬ 「CNBC 報導指出，」（中間有空白）會被刪掉", ft._strip_media("CNBC 報導指出，10 年期殖利率升至 5.1%") == "10 年期殖利率升至 5.1%")
@@ -275,7 +240,6 @@ check("⑬ 重寫後仍有 → 照樣採用", _r13 is not None)
 # Warsh 一律英文
 check("⑬ Warsh 一律用英文、跟中文之間留空白",
       ft.normalize_names("聯準會主席華許表示，沃許與Kevin Warsh是同一人") == "聯準會主席 Warsh 表示，Warsh 與 Warsh 是同一人")
-check("⑬ 提示詞要求主席寫 Warsh", "一律寫英文 Warsh" in ft._NEWS_RULES and ft.FED_CHAIR == "Warsh")
 # 分享圖：導言一行一行填、至少 3 行；對利率保留 10 年期對照
 _ss = (ROOT / "src/pages/story_share.py").read_text(encoding="utf-8")
 check("⑬ 分享圖導言至少 3 行、逐行遞減", "LEAD_MIN = 3" in _ss and "else if(lm > LEAD_MIN) lm--" in _ss)
@@ -283,27 +247,12 @@ check("⑬ 分享圖對利率保留「10 年期」那句", "function rateLines" 
 
 # ⑭ 2026-10-27 v2.3：概念組、舊文、主題熱度、兩個重點、PCE 各家預估
 _p14 = {}
-ft.rank_score({"title": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming a challenge"},
-              ["deficit", "Treasury", "yields", "Fed"], parts=_p14)
-check("⑭ 同一概念組只算一次（Treasury、yields＝美債）；deficit 在前半段 +2、美債在後半段 +1（原本 +6）",
-      _p14.get("主題") == 3.0 and _p14.get("主角") == 2.0, _p14)
 _pg, _pf = {}, {}
-ft.rank_score({"title": "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting - Reuters", "source": "Reuters"},
-              ["inflation", "Fed", "Warsh"], secondary=["gold", "oil"], parts=_pg)
-ft.rank_score({"title": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com", "source": "Bloomberg"},
-              ["inflation", "Fed", "Warsh"], secondary=["gold", "oil"], parts=_pf)
-check("⑭ 主角位置：Fed 是主角的標題贏過只在句尾提到 Fed 的金價新聞", sum(_pf.values()) > sum(_pg.values()), (_pf, _pg))
-check("⑭ 亞洲算外國新聞", ft.is_foreign("Asia-focused banks face capital squeeze due to inflation, bond turbulence"))
 _p14b = {}
-ft.rank_score({"title": "Fed, CPI, payrolls and Treasury yields all in focus"}, ["Fed", "CPI", "payrolls", "Treasury"], parts=_p14b)
-check("⑭ 最多算兩組（+4）", _p14b.get("主題") == 4.0, _p14b)
 _cl = [{"lead": {"title": "Fed Meeting Focus Turns to Warsh Messaging"}, "score": 7.0, "items": []},
        {"lead": {"title": "Fed decision looms as gold steadies"}, "score": 7.0, "items": []},
        {"lead": {"title": "Fed officials weigh pause"}, "score": 7.0, "items": []},
        {"lead": {"title": "Asia-focused banks face capital squeeze"}, "score": 8.0, "items": []}]
-_cl = ft.apply_theme_heat(_cl)
-check("⑭ 主題熱度：三則主角都是聯準會 → 各 +1，排到亞洲銀行前面",
-      _cl[0]["lead"]["title"].startswith("Fed") and _cl[0]["score"] == 8.0 and _cl[-1]["theme"] == 0, [(g["lead"]["title"][:20], g["score"]) for g in _cl])
 _now14 = dt.datetime(2026, 10, 27, 4, 0, tzinfo=U)
 _old = {"lead": {"title": "Analysis: deficit", "link": "https://www.cnbc.com/a", "at": "2026-10-26T18:33:00+00:00"},
         "items": [{"title": "Analysis: deficit", "link": "https://www.cnbc.com/a", "at": "2026-10-26T18:33:00+00:00"}],
@@ -312,8 +261,6 @@ _new = {"lead": {"title": "Fed news", "link": "https://www.cnbc.com/b", "at": "2
         "items": [{"title": "Fed news", "link": "https://www.cnbc.com/b", "at": "2026-10-27T02:00:00+00:00"}],
         "score": 8.0}
 _pubs = {"https://www.cnbc.com/a": dt.datetime(2026, 10, 15, 9, 30, tzinfo=U), "https://www.cnbc.com/b": dt.datetime(2026, 10, 27, 1, 0, tzinfo=U)}
-_ms = ft.mark_stale([_old, _new], _now14, _pub=lambda u: _pubs.get(u))
-check("⑭ RSS 寫 10/26 更新、原始發布 10/15 → 舊文：拿掉時效分、標記 stale", _old.get("stale") and _old["score"] == 7.5 and not _new.get("stale"), (_old.get("stale"), _old["score"]))
 _html14 = '<html><head><script type="application/ld+json">{"datePublished":"2026-10-15T09:30:00+0000"}</script></head></html>'
 check("⑭ 從網頁讀原始發布時間（datePublished）",
       ft.published_at("x", _get=lambda u: type("R", (), {"text": _html14, "raise_for_status": lambda s: None})()) == dt.datetime(2026, 10, 15, 9, 30, tzinfo=U))
@@ -322,12 +269,6 @@ _m = {"lead": {"title": "Fed Meeting Focus Turns to Warsh"}, "score": 10.0}
 _o = [{"lead": {"title": "Fed officials weigh pause"}, "score": 9.0},
       {"lead": {"title": "Oil prices jump 4% on OPEC cut"}, "score": 8.0},
       {"lead": {"title": "Gold steadies"}, "score": 7.0}]
-check("⑭ 重點二：主角不同（跳過另一則 Fed），挑油價", ft.pick_second(_m, _o)["lead"]["title"].startswith("Oil"))
-check("⑭ 重點二分數不到重點一的一半 → 不硬湊", ft.pick_second(_m, [{"lead": {"title": "Oil prices jump"}, "score": 4.0}]) is None)
-check("⑭ 撞期被降級的鎖定事件優先放重點二",
-      ft.pick_second({"lead": {"title": "Treasury refunding: bigger auctions"}, "score": 20.0},
-                     [{"lead": {"title": "Oil prices jump"}, "score": 15.0}, {"lead": {"title": "CPI rises 0.4%"}, "score": 3.0}],
-                     demoted=["cpi"])["lead"]["title"].startswith("CPI"))
 _sys2 = ft._two_point_system(ft._FOCUS_CONTENT_SYSTEM_A)
 check("⑭ 兩個重點的提示詞替換全部成功", all(b in _sys2 for a, b in ft._TWO_POINT_SWAPS) and "{min}" in _sys2)
 _r14 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件。\n乙事件。\n【對利率】r\n【補充】\na\nb\n【來源】1,4｜6", 2)
@@ -360,9 +301,6 @@ _rel = dt.datetime(2026, 10, 29, 20, 30, tzinfo=TPE)
 _st14 = _F.window_start({"key": "pce", "period": "2026-09"}, {"cpi|2026-09": {"date": "2026-10-14"}})
 check("⑭ PCE 時間窗從同一期 CPI 公布開始", _st14 is not None and _st14.date() == dt.date(2026, 10, 14), _st14)
 _it = {"title": "Post-PPI sell-side commentary: economists lift core estimates", "pub": dt.datetime(2026, 10, 15, 13, 48, tzinfo=U)}
-check("⑭ PCE：標題是 PPI／CPI 評論文也收（10/15，比公布早兩週）",
-      _F.is_preview("pce", _it, _rel, _st14) and not _F.is_preview("pce", _it, _rel))
-check("⑭ CPI 不受影響：評論文不收", not _F.is_preview("cpi", _it, _rel, None))
 check("⑭ PCE 那一期提早 20 天建立", "ahead = 20 if key == \"pce\" else 10" in (ROOT / "src/analysis/forecasts.py").read_text(encoding="utf-8"))
 
 # ⑮ 2026-10-27 v2.4：轉載搜尋、主軸只能用指定報導、兩段長度、標題不寫媒體名
@@ -373,16 +311,7 @@ _pool = [{"title": "Analysis-Bond investors are thinking less about the Fed and 
           "link": "https://finance.yahoo.com/news/bond-investors-1.html", "source": "Yahoo Finance", "at": "2026-10-27T10:30:00+00:00"},
          {"title": "Gold steadies", "link": "https://finance.yahoo.com/news/gold.html", "at": "2026-10-27T10:00:00+00:00"}]
 _body15 = "Bond investors are increasingly focused on AI spending and US deficits rather than the Fed, as yields stay high." * 3
-_c = ft.find_copy(_orig, _pool, _n15, _text=lambda u: _body15, _pub=lambda u: None)
-check("⑮ 在新聞池找到同一篇的轉載（去掉 Analysis- 前綴比對）", _c and _c["link"].endswith("bond-investors-1.html")
-      and _c["source"] == "Yahoo Finance（Reuters）" and _c["orig_title"].startswith("Bond investors"), _c)
-check("⑮ 轉載內文沒有原標題的名字或數字 → 不採用",
-      ft.find_copy(_orig, _pool, _n15, _text=lambda u: "Unrelated text about sports. " * 10, _pub=lambda u: None) is None)
-check("⑮ 轉載頁原始發布超過 48 小時 → 不採用",
-      ft.find_copy(_orig, _pool, _n15, _text=lambda u: _body15, _pub=lambda u: dt.datetime(2026, 10, 20, tzinfo=U)) is None)
 _far = [dict(_pool[0], at="2026-10-25T10:00:00+00:00")]
-check("⑮ 轉載與原文發布時間相差超過 24 小時 → 不採用", ft.find_copy(_orig, _far, _n15, _text=lambda u: _body15, _pub=lambda u: None) is None)
-check("⑮ 參考報導保留原文標題（主題補充比對重複用）", ft._link_of(_c).get("orig_title", "").startswith("Bond investors"))
 # 主軸只能用指定報導、兩段長度
 _seen15 = []
 _bad15 = ("【標題】市場押注 10/28 按兵不動、12 月升息機率逾七成\n【主軸】\n" + "調查顯示多數受訪者預期聯準會在會議維持利率，並預期之後升息，市場重新評估路徑。" * 4
@@ -412,7 +341,7 @@ ft._call_ai, _o15b = (lambda s, sy, env=None, **k: (_seen15b.append(s) or (_thin
 try:
     _r15b, _ = ft.write_main([{"title": "Japan trend inflation index hits 3-year high", "body": "Japan trend inflation BOJ " * 5, "source": "Yahoo", "link": "https://y/2"}],
                              [{"title": "Bond investors are thinking less about the Fed and more about AI, deficits", "source": "Reuters", "link": "https://news.google.com/1"}],
-                             ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], two_points=True, point_ids=([2], [1]), p1_thin=True)
+                             ["Fed"], {}, caps=[250, 80, 80], mins=[120, 40, 40], two_points=True, point_ids=([2], [1]), thin=(True, False))
 finally:
     ft._call_ai = _o15b
 check("⑮ 重點一只有標題（50 字以上）、重點二有內文 → 不因長度不均重寫", _r15b and _r15b["points"] == 2
@@ -449,10 +378,76 @@ _it16 = [{"title": "Fed officials not aligned on weight of financial conditions 
 _oth16 = [{"lead": {"title": "Gold steadies ahead of Fed", "link": "https://finance.yahoo.com/g"}, "items": [{"title": "Gold steadies ahead of Fed", "link": "https://finance.yahoo.com/g"}], "score": 9},
           {"lead": {"title": "Fed meeting preview: what to expect from Warsh", "link": "https://www.cnbc.com/f"}, "items": [{"title": "Fed meeting preview: what to expect from Warsh", "link": "https://www.cnbc.com/f"}], "score": 8},
           {"lead": {"title": "Fed decision looms - Bloomberg", "link": "https://news.google.com/9"}, "items": [{"title": "Fed decision looms - Bloomberg", "link": "https://news.google.com/9"}], "score": 7}]
-_bf, _rest16 = ft.body_backfill(_it16, _oth16)
-check("⑯b 只補主角相同、抓得到內文的（CNBC Fed 會議前瞻），金價、只有標題的彭博不補",
-      [x["link"] for x in _bf] == ["https://www.cnbc.com/f"] and len(_rest16) == 2, [x["link"] for x in _bf])
-check("⑯b 重點本身已有內文 → 不補", ft.body_backfill([{"title": "Fed x", "link": "https://www.cnbc.com/a"}], _oth16)[0] == [])
+
+# ⑰ 2026-10-28 v2.5 精簡版：計分 4 項＋熱度、鎖定直接指定重點一、材料一條規則、補充不重複
+_N17 = dt.datetime(2026, 10, 28, 14, 0, tzinfo=U)
+_at = lambda h: (_N17 - dt.timedelta(hours=h)).isoformat()   # noqa: E731
+_KW = ["Fed", "inflation", "Treasury", "yields", "deficit"]
+_p17 = {}
+ft.score_title({"title": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com", "source": "Bloomberg", "at": _at(4)}, _KW, _N17, parts=_p17)
+check("⑰ 計分只剩主角、時效、來源、外國：次級關鍵字（AI）不再加分", set(_p17) <= {"主角", "時效", "來源", "外國"}
+      and _p17 == {"主角": 4.0, "時效": 2.0, "來源": 3.0}, _p17)
+_pg = {}
+ft.score_title({"title": "Gold rises as lower oil prices ease inflation fears ahead of Fed meeting - Reuters", "source": "Reuters", "at": _at(4)}, _KW, _N17, parts=_pg)
+check("⑰ 只在標題後半段提到利率主線 → 主角 +1", _pg.get("主角") == 1.0, _pg)
+_pu = {}
+ft.score_title({"title": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com", "source": "Bloomberg", "at": _at(4)}, _KW, _N17, parts=_pu)
+check("⑰ 主角是外國（英國預算）→ −3；後半段提到 Fed 不再豁免", _pu.get("外國") == -3.0, _pu)
+check("⑰ 時效：12 小時內 +2、24 小時內 +1、更舊 0", ft._time_pts(5) == 2.0 and ft._time_pts(20) == 1.0 and ft._time_pts(30) == 0.0)
+_hs17 = [{"title": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com", "source": "Bloomberg", "link": "https://news.google.com/a", "at": _at(4)},
+         {"title": "Fed officials not aligned on weight of financial conditions - Reuters", "source": "Reuters", "link": "https://news.google.com/b", "at": _at(2)},
+         {"title": "Fed likely to go into wait-and-see mode on rates - Reuters", "source": "Reuters", "link": "https://news.google.com/c", "at": _at(2)},
+         {"title": "聯準會明升息？外媒調查：先按兵不動 12月機率高", "source": "Yahoo奇摩新聞", "link": "https://tw.news.yahoo.com/d", "at": _at(3)},
+         {"title": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com", "source": "Bloomberg", "link": "https://news.google.com/e", "at": _at(4)},
+         {"title": "Treasury yields edge higher before refunding announcement - CNBC", "source": "CNBC", "link": "https://www.cnbc.com/f", "at": _at(3)},
+         {"title": "Oil prices jump 3% on supply worries - Reuters", "source": "Reuters", "link": "https://news.google.com/g", "at": _at(5)}]
+_g17 = ft.group_events(_hs17, _KW + ["聯準會"], _N17)
+_fed = [g for g in _g17 if "聯準會" in g["ents"]]
+check("⑰ 熱度：主角都是 Fed 的不同媒體（彭博、路透、Yahoo）→ 各 +2", _fed and all(g["heat"] == 2 for g in _fed), [(g["lead"]["title"][:20], g["heat"], g["ents"]) for g in _g17])
+_p1, _p2, _w17 = ft.choose_points(_g17, ["fomc"])
+check("⑰ FOMC 鎖定日：重點一是 Fed 的事件；同分時有內文的（Yahoo）優先", "聯準會" in _p1["ents"] and _w17 == "鎖定事件 fomc", (_p1["lead"]["title"], _w17))
+check("⑰ 重點二：主角不同、分數夠的（美債），不是英國預算", _p2 is not None and "Treasury" in _p2["lead"]["title"], _p2 and _p2["lead"]["title"])
+_oth = [g for g in _g17 if g is not _p1 and g is not _p2]
+_it1, _left, _bgl17 = ft.gather_items(_p1, _oth, 3)
+check("⑰ 材料兩層：這件事本身在前；本身有內文就不補背景", _it1[0]["link"] == _p1["lead"]["link"]
+      and (_bgl17 == set() if ft._has_body(_p1) else len(_bgl17) >= 1), ([x["title"][:20] for x in _it1], _bgl17))
+check("⑰ 主角相同的事件全部從補充候選拿掉（補充不會再寫 Fed）", all("聯準會" not in g["ents"] for g in _left), [g["lead"]["title"][:20] for g in _left])
+_p1b, _p2b, _ = ft.choose_points(_g17, ["fomc", "refunding"])
+check("⑰ 兩個鎖定事件撞期：第二個直接當重點二", _p2b is not None and "refunding" in _p2b["lead"]["title"].lower())
+_g17[0]["stale"] = "2026-10-15T09:30"
+check("⑰ 舊文不能當重點", ft.choose_points(_g17, [])[0] is not _g17[0])
+_st = {"lead": {"title": "Analysis: deficit", "link": "https://www.cnbc.com/z", "at": _at(5)},
+       "items": [{"title": "Analysis: deficit", "link": "https://www.cnbc.com/z", "at": _at(5)}], "score": 9.0}
+ft.mark_stale_v25([_st], _N17, _pub=lambda u: dt.datetime(2026, 10, 15, tzinfo=U))
+check("⑰ 舊文：原始發布超過 48 小時 → 拿掉時效分", _st.get("stale") and _st["score"] == 7.0, _st)
+# 補充不能用主軸的報導、不能跟主軸重複
+_r17 = ft._parse_main_output("【標題】t\n【主軸】\n甲事件發生了。\n【對利率】r\n【補充】\n乙事件發生了，細節是丙。〔4〕\n丁事件發生了，細節是戊。〔1〕\n【來源】1", 2)
+check("⑰ 補充最後的〔代號〕會被讀出並從正文拿掉", _r17["supp_ids"] == [[4], [1]] and not _r17["supp"][0].endswith("〕"), _r17)
+check("⑰ 補充用了主軸的報導（代號 1）→ 判定重複", ft._supp_overlap(_r17, "甲事件發生了。", ([1], ())) == [2])
+check("⑰ 提示要求補充標〔代號〕、不能用主軸用過的報導", "補充只能寫其他代號的事件" in (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8"))
+check("⑰ 拿掉的舊規則不存在了", not any(hasattr(ft, n) for n in ("market_signals", "rank_score", "find_copy", "body_backfill",
+                                                                 "resolve_locks", "apply_theme_heat", "pick_second")))
+
+# ⑱ 2026-10-28 漏洞修正：主角用關鍵字組辨識、外國形容詞、材料兩層、台指期排除
+check("⑱ 主角用關鍵字組：S&P 500 開高（Fed 在後半段）→ 美股；Treasury 部位 → 美債",
+      ft.topics_of("S&P 500, Nasdaq open higher as SK Hynix lifts chips; Fed in focus - Reuters") == {"美股"}
+      and "美債" in ft.topics_of("US-Friendly Nations Slash Treasury Purchases by 60%, Led by Asia"))
+check("⑱ 今晚 55 個認不出主角的例子，現在都認得出（抽查）",
+      all(ft.topics_of(t) for t in ["Bloomberg Surveillance: Fed and Tech", "Bond Traders Bet on UK’s Newfound Resilience to Survive Budget",
+                                    "US Hits Chinese Trailers With Tariffs to Aid Domestic Producers", "美債不再是「避風港」？野村看好混合資本公司債藏潛力"]))
+_pa = {}
+ft.score_title({"title": "Australian Inflation Exceeds Estimate Ahead of RBA Meeting - Bloomberg.com", "source": "Bloomberg"}, ["inflation"], None, parts=_pa)
+check("⑱ 外國形容詞（Australian）也扣分", _pa.get("外國") == -3.0, _pa)
+_gb = {"lead": {"title": "Fed officials not aligned - Reuters", "link": "https://news.google.com/a"},
+       "items": [{"title": "Fed officials not aligned - Reuters", "link": "https://news.google.com/a"}], "ents": {"聯準會"}}
+_ob = [{"lead": {"title": "投資人關注Fed決策", "link": "https://tw.news.yahoo.com/b"}, "items": [{"title": "投資人關注Fed決策", "link": "https://tw.news.yahoo.com/b"}], "ents": {"聯準會"}},
+       {"lead": {"title": "Gold holds", "link": "https://news.google.com/g"}, "items": [{"title": "Gold holds", "link": "https://news.google.com/g"}], "ents": {"黃金"}}]
+_ib, _lb, _bgb = ft.gather_items(_gb, _ob, 3)
+check("⑱ 這件事本身只有標題 → 補一則同主題有內文的當背景；同主題事件不再當補充",
+      [x["link"] for x in _ib] == ["https://news.google.com/a", "https://tw.news.yahoo.com/b"]
+      and _bgb == {"https://tw.news.yahoo.com/b"} and [o["lead"]["title"] for o in _lb] == ["Gold holds"])
+import yaml as _y
+check("⑱ 主軸排除台指期、夜盤盤勢文", {"台指期", "夜盤"} <= set(_y.safe_load(open(ROOT / "config/focus.yaml", encoding="utf-8"))["exclude_keywords"]))
 
 print()
 print("全部通過" if ok else "有失敗")

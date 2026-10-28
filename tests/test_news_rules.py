@@ -126,16 +126,13 @@ check("④ 材料沒有的數字 → 退回",
 check("④ 方向不明確的寫法放行", ft._rate_consistent("油價上漲對利率方向不明確，取決於通膨預期與避險需求孰強。", _rcd, _src))
 
 # ---------------------------------------------------------------- ⑥ 排序
-_h = {"title": "CPI rises 0.4% in September", "source": "CNBC", "at": ISO(2)}
-_base = ft.rank_score(_h, ["inflation"], now=NOW)
-check("⑥ 鎖定級事件（CPI 日）＋8，一般事件＋2",
-      ft.rank_score(_h, ["inflation"], now=NOW, events=["cpi"], lock_events=["cpi"]) == _base + 8
-      and ft.rank_score(_h, ["inflation"], now=NOW, events=["cpi"]) == _base + 2)
-_old = {"title": "10-year Treasury yields at risk of hitting 6%, Pimco says", "at": ISO(2)}
-_rec = [ft._norm_title("U.S. 10-year Treasury yields at risk of hitting 6%, Pimco tells FT")]
-check("⑥ 前一兩次寫過的同一則報導扣 4 分",
-      ft.rank_score(_old, ["Treasury"], now=NOW, recent=_rec)
-      == ft.rank_score(_old, ["Treasury"], now=NOW) - 4)
+# v2.5：鎖定事件不再加分，改成直接指定為重點一
+_gs = ft.group_events([{"title": "Oil prices jump 5% on supply shock", "source": "Reuters", "link": "o", "at": ISO(1)},
+                       {"title": "CPI preview: inflation seen cooling", "source": "CNBC", "link": "c", "at": ISO(5)}],
+                      ["inflation", "oil"], NOW)
+_p1, _p2, _why = ft.choose_points(_gs, ["cpi"])
+check("⑥ 鎖定日（CPI）：重點一直接是 CPI 那件事，不看分數", _p1["lead"]["link"] == "c" and "cpi" in _why, _why)
+check("⑥ 不再有「前一兩次寫過扣 4 分」", "recent" not in ft.score_title.__code__.co_varnames)
 
 # ---------------------------------------------------------------- write_main 整段
 _seen = []
@@ -155,8 +152,9 @@ _briefs = [{"title": "Fed's Waller backs another hike - Reuters", "source": "Reu
             "link": "https://news.google.com/w", "at": ISO(4), "summary": ""},
            {"title": "Bond selloff deepens - Bloomberg", "source": "Bloomberg",
             "link": "https://news.google.com/b", "at": ISO(5), "summary": ""}]
+_S = "銅價延續跌勢，人工智慧類股走弱拖累金屬需求，觀望氣氛濃。"   # v2.5：補充要跟主軸不同
 _good = ("【標題】美債殖利率升至5.22%、聯準會釋出升息訊號\n【主軸】\n" + _U * 4 + "\n" + _U * 4
-         + "\n【對利率】長端上行壓力未退，曲線熊陡。\n【補充】\n" + _U * 2 + "\n" + _U * 2
+         + "\n【對利率】長端上行壓力未退，曲線熊陡。\n【補充】\n" + _S * 2 + "\n" + _S * 2
          + "\n【來源】\n2,1")
 _bad = _good.replace("【主軸】\n", "【主軸】\n據路透報導，").replace("【標題】美債殖利率升至5.22%、聯準會釋出升息訊號\n", "")
 _orig_ai = ft._call_ai

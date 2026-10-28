@@ -192,17 +192,16 @@ keywords_secondary:
   - bank failure
   - 銀行倒閉
 
-# v2.2（2026-10-27）：選題清單（程式內建預設，這裡寫的是「追加」）
-#   foreign_extra    外國新聞名單：標題沒提到美國 → −2；鎖定事件的 +8 改成一般的 +2
-#                    （內建已含 France、Germany、Europe、euro zone、ECB、China 與中文；
+# 選題清單（程式內建預設，這裡寫的是「追加」）
+#   foreign_extra    外國新聞名單：標題主角（前半段）是外國、沒有美國字樣 → −3（v2.5）
+#                    （內建已含 France、Germany、Europe、euro zone、ECB、China、Asia 與中文；
 #                    日本、日本央行刻意不列，它們是次級關鍵字）
 #   junk_patterns    雜訊頁（正規式）：直接排除。內建：股價頁（Stock Price & Latest News、
-#                    括號股票代號如 CPI.BK）、影片頁（Watch 開頭）、個股清單（Stocks to Watch、and Many More）
-#   oil_price_words  油價訊號只加給同時提到價格的標題（內建 price、futures、Brent、WTI、barrel、油價…）
+#                    括號股票代號如 CPI.BK）、影片頁（Watch 開頭）、個股清單（Stocks to Watch、and Many More）、
+#                    人物／公司簡介（Profile and Biography）
 selection:
   foreign_extra: []
   junk_patterns: []
-  oil_price_words: []
 
 # 後設偵測：AI 輸出含任一詞組＝在評論材料而不是寫新聞（實際發生過：
 # 整篇「材料相關內容極為有限…無法按要求綜合改寫」上了線）。
@@ -244,6 +243,9 @@ exclude_keywords:
   - 定期定額
   - 台股
   - 金控
+  # 2026-10-28：台指期夜盤盤勢文不是美國總經新聞（曾被當成 Fed 主軸的背景）；主題補充的台指期主題有自己的排除設定，不受影響
+  - 台指期
+  - 夜盤
 
 # Yahoo 自家的 RSS（直達文章頁，AI 讀「內文」摘關鍵字相關重點）。
 # 逐一嘗試、失敗跳過；全部失敗才退回下方的 Google News 標題模式。
