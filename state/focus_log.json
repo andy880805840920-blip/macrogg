@@ -1196,5 +1196,103 @@
   "main": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
   "points": 1,
   "result": "聯準會 10/28 維持利率不變，官員對金融條件影響分歧"
+ },
+ {
+  "at": "2026-10-28T14:26+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "signals": {},
+  "events": [
+   "fomc"
+  ],
+  "locks": [
+   "fomc"
+  ],
+  "demoted": [],
+  "clusters": [
+   {
+    "score": 19.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed officials not aligned on weight of financial conditions - Reuters"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed likely to go into wait-and-see mode on rates - Reuters"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 19.0,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
+    "titles": [
+     "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 18.5,
+    "sources": 1,
+    "why": "主題+2、主角+2、時效+1.5、來源+3、鎖定+8、主題熱度+2",
+    "titles": [
+     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 18.0,
+    "sources": 1,
+    "why": "主題+3、主角+2、時效+2、來源+3、鎖定+8",
+    "titles": [
+     "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com"
+    ]
+   }
+  ],
+  "second": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com",
+  "related": [
+   "Fed officials not aligned on weight of financial conditions - Reuters",
+   "Fed likely to go into wait-and-see mode on rates - Reuters"
+  ],
+  "copy_miss": [
+   "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
+   "Fed officials not aligned on weight of financial conditions - Reuters",
+   "Fed likely to go into wait-and-see mode on rates - Reuters",
+   "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
+  ],
+  "backfill": [
+   "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
+   "Fed大考來襲 台指期夜盤又陷47K保衛戰 費半小漲1％"
+  ],
+  "second_dropped": "重點二沒有內文",
+  "main": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
+  "points": 1,
+  "result": "FOMC 10/28 會議市場預期維持利率不變，12 月升息機率達 76%"
  }
 ]
