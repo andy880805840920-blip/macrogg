@@ -1,6 +1,6 @@
 {
  "hash": "",
- "text": "聯準會 10/28（美國時間）公布利率決策，決定維持利率不變。聯準會官員對金融環境緊縮程度的評估並未達成一致看法，這影響了後續政策路徑的判斷。¶市場關注聯準會接下來將進入觀望模式。路透另一篇報導指出，聯準會可能對利率政策採取等待觀察的態度，評估先前升息的累積效果，以及當前金融環境對經濟與通膨的實際影響。官員們需要更多時間觀察數據，才能決定是否需要進一步緊縮。\n英國將公布財政預算案，債市面臨考驗，同時需應對聯準會決策、歐洲央行政策與油價風險等多重變數。\n市場人士準備進入 Warsh 主席任內的下一階段「發現過程」，觀察其政策立場與溝通風格如何演變。",
+ "text": "聯準會 10/28（美國時間）決議維持利率不變。聯準會官員對金融條件在政策制定中的權重看法並不一致，顯示內部對於市場環境如何影響貨幣政策路徑存在分歧。¶路透另一篇報導指出，聯準會可能進入觀望模式。市場關注 Warsh 在會後記者會如何解釋按兵不動的決定，特別是上次 9/17 會議官員一致投票支持升息 25bp 以應對通膨壓力，這次暫停升息的理由將成為焦點。\n英國預算案將測試債市，聯準會、歐洲央行決策與油價風險同時迫近，市場關注財政政策對殖利率的衝擊。\n市場關注 Warsh 主席記者會，分析師稱這是 Warsh「發現過程」的下一步，投資人試圖解讀新主席的政策思路。",
  "links": [
   {
    "title": "The AI Fed Votes to Hold Interest Rates Steady",
@@ -296,15 +296,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-28T13:34:31.206396+00:00",
+ "at": "2026-10-28T14:11:59.434003+00:00",
  "layout": "main",
  "topics": {
-  "hash": "cfa5168b3c1054ff",
+  "hash": "2e46aec45cbed217",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "市場預期聯準會本週維持利率不變，但對後續政策方向看法分歧。調查顯示76%受訪者認為12月將升息，但專家對緊縮必要性意見不一：部分人士認為名目GDP強勁、通膨仍熱，延後升息理由不足；另有人指薪資成長轉弱、金融風險升高，現非升息適當時機",
+    "text": "市場預期聯準會本週維持利率不變，但12月升息機率高達76%。調查顯示專家對抑制經濟以對抗通膨的必要性看法分歧，40%認為需要放緩經濟成長，27%反對，23%主張適度降溫。通膨仍是關鍵變數，消費者物價指數年增率預估從9月的3.7%降至3.6%",
     "links": [
      {
       "title": "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
@@ -317,20 +317,26 @@
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率居高不下，投資人轉向尋求替代資產。",
+    "text": "美國盟友大幅減購美債，1月至8月買超金額暴跌逾60%至1,743億美元，創2021年來最低。日本買超僅剩3.89億美元、年減99%，南韓賣超238億美元創新高；亞洲資金轉向股票與日債，反映央行外匯存底正轉移至年金基金等機構運用",
     "links": [
      {
-      "title": "美債不再是「避風港」？野村看好混合資本公司債藏潛力",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E5%82%B5%E4%B8%8D%E5%86%8D%E6%98%AF-%E9%81%BF%E9%A2%A8%E6%B8%AF-%E9%87%8E%E6%9D%91%E7%9C%8B%E5%A5%BD%E6%B7%B7%E5%90%88%E8%B3%87%E6%9C%AC%E5%85%AC%E5%8F%B8%E5%82%B5%E8%97%8F%E6%BD%9B%E5%8A%9B-124217028.html",
+      "title": "US-Friendly Nations Slash Treasury Purchases by 60%, Led by Asia",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPREk1Y2ZBdUtrREdLRGU0NVp0dmxKQTRxTE4xa0hfYmhQXzRwSGFrRmppc2xwRnVBVUV2SVdaZUpiZUU4eTlmRFVfVU5SWkh3dUdpQVFTYW9WQU5mV0psMC1admhCeTFZWDhYRzg3X3p4LWZfWk5pVTJfSEhYejA3Q2x6V2RLLVBJRjZfOGh0MU5TbmVERGZaRXFxSDY4SEZVSWpMVF9LS3l5QzcxRTlhWEdXRQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-28T09:32:09+00:00"
+     },
+     {
+      "title": "盟友轉向？美國緊密夥伴大幅減購美債 亞洲資金轉投股市與日債",
+      "link": "https://tw.stock.yahoo.com/news/%E7%9B%9F%E5%8F%8B%E8%BD%89%E5%90%91-%E7%BE%8E%E5%9C%8B%E7%B7%8A%E5%AF%86%E5%A4%A5%E4%BC%B4%E5%A4%A7%E5%B9%85%E6%B8%9B%E8%B3%BC%E7%BE%8E%E5%82%B5-%E4%BA%9E%E6%B4%B2%E8%B3%87%E9%87%91%E8%BD%89%E6%8A%95%E8%82%A1%E5%B8%82%E8%88%87%E6%97%A5%E5%82%B5-125002651.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-10-28T12:42:17+00:00"
+      "at": "2026-10-28T12:50:02+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價飆升衝擊運輸成本。美國郵輪「奧德塞號」因伊朗戰爭影響，亞洲港口每客艙月燃油費從平均1,800美元飆升至6,000至8,000美元，營運商無法承擔虧損，10/28在柬埔寨中止3年環球航行計畫，203名乘客被迫下船",
+    "text": "伊朗戰爭推升燃油成本，美國郵輪「奧德塞號」因每客艙月燃油費從1,800美元飆升至6,000至8,000美元，被迫在柬埔寨中止環球航行，203名乘客遭迫下船",
     "links": [
      {
       "title": "油價飆漲 美郵輪中止行程逾200遊客被迫柬埔寨下船",
@@ -343,7 +349,7 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "非AI股票10月表現異常強勁。標普500排除AI股的表現本月領先整體指數6.4個百分點，創下單月最佳相對表現紀錄；9月時該指標曾落後5.1個百分點，顯示資金配置出現明顯轉變",
+    "text": "10月非AI股票相對表現創紀錄，S&P 500排除AI股票的指數月度領先幅度達6.4個百分點，為有紀錄以來最佳；等權重ETF（RSP）較標普500（SPY）領先3.65個百分點，顯示資金正從科技巨頭分散至其他產業",
     "links": [
      {
       "title": "Stocks Without AI Are Beating the S&P 500 by 6 Points This Month",
@@ -356,40 +362,65 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "OpenAI計畫採購Google的AI晶片，作為其AI基礎設施建設的一部分。同時，甲骨文擴大與輝達的晶片供應協議，並新增Google和Cerebras的產品選項，反映雲端大廠多元化AI晶片來源的趨勢",
+    "text": "Google透過甲骨文擴大張量處理器（TPU）銷售，挑戰輝達主導的AI晶片市場。分析師估計TPU銷售營業利益率約20%，低於Google雲端整體35%利潤率；最新Ironwood TPU持有與營運成本比輝達GB200伺服器低約44%",
     "links": [
      {
-      "title": "OpenAI plans to buy Google's AI chips, The Information reports",
-      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPNElvX2Y3Ym5FZFdxRGVFMHpwNTRIc3lQUXRzNFNST0xVY2FjR2xoMmFCaDNMWFhtQnZuSXlSSF9zamY1aUY1a2JIX3hBWUFhQ19hb2w4a0JIQmtKRmJoNjRadWJnWmprNE50V2ZQSFRQWTI5aUhXRzkwMlhRNktVOWJwbjJnUk9EVVpiVEo1UjhwMWpvek9EYWpFNkRMTzA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-28T01:23:00+00:00"
+      "title": "不只賣自家雲端！Google找上甲骨文 搶輝達AI晶片生意",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E5%8F%AA%E8%B3%A3%E8%87%AA%E5%AE%B6%E9%9B%B2%E7%AB%AF-google%E6%89%BE%E4%B8%8A%E7%94%B2%E9%AA%A8%E6%96%87-%E6%90%B6%E8%BC%9D%E9%81%94ai%E6%99%B6%E7%89%87%E7%94%9F%E6%84%8F-132005583.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-28T13:20:05+00:00"
+     }
+    ]
+   },
+   {
+    "id": "twf",
+    "label": "台指期",
+    "text": "聯電追加32億美元資本支出預算擴產矽光子與先進封裝，第三季營收年增25.6%至742.4億元、毛利率34%；台指期夜盤在47,000點附近震盪，市場等待聯準會利率決策與科技巨頭財報",
+    "links": [
+     {
+      "title": "快訊／利率要出爐了！美股開盤費半上漲102點、台指期夜盤堅守47K",
+      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E5%88%A9%E7%8E%87%E8%A6%81%E5%87%BA%E7%88%90%E4%BA%86-%E7%BE%8E%E8%82%A1%E9%96%8B%E7%9B%A4%E8%B2%BB%E5%8D%8A%E4%B8%8A%E6%BC%B2102%E9%BB%9E-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%A0%85%E5%AE%8847k-134900611.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-28T13:49:00+08:00"
      },
      {
-      "title": "OpenAI Plans to Buy Google’s Chips as Part of Its AI Build-Out",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPNEpmdVROdmhkd0RpU0tZbEF2bkstVmxlcjRTZUJYNWV4VlFNU21tcmRaNW1ZUjdkT0N1b1JlMzA1NF9WUHR6WGpvS3BObGRQUm5Rc3Q1NjNpMkNpZzNoWWJGczJlWGVOQWpsZ0MwcEJrWHBBV3JrZHY0ZWREZngtRklId3lXbV9jLUM0a3JvRy1yUFV4SlpSOGo2VUlxWW04cTJIZlhuaWdnWDd1dExxSkJKVQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-28T01:19:00+00:00"
+      "title": "Fed大考來襲 台指期夜盤又陷47K保衛戰 費半小漲1％",
+      "link": "https://tw.stock.yahoo.com/news/fed%E5%A4%A7%E8%80%83%E4%BE%86%E8%A5%B2-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%8F%88%E9%99%B747k%E4%BF%9D%E8%A1%9B%E6%88%B0-%E8%B2%BB%E5%8D%8A%E5%B0%8F%E6%BC%B21-134429750.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-28T13:44:29+08:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣兌美元匯率走弱，一度摜破32.6元大關。外資近4個月淨匯出543億美元，央行總裁楊金龍表示將採柳樹理論因應匯率波動",
+    "links": [
+     {
+      "title": "新台幣重貶！外資近4個月淨匯出543億美元台幣一度摜破32.6元大關- 新聞",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNLWFPUVpyRWZ3dEdIZkxEZ0tkUms1WDBCb2xpbGQ0NkphS3Rac0F5T3hTV1k4MmNDeUMyZDloczhLU2JUdDFqRG1NcDRHWEJrUWIyWlBJWFE3a09DTW1FbURsVFZNX1lFQkU4YVA2dlFVWnJUVmhsTWRYVWlTRi1OREFXbkdJdVNYTXNmVmwxa01sUQ?oc=5",
+      "source": "MoneyDJ",
+      "at": "2026-10-28T05:35:00+00:00"
+     },
+     {
+      "title": "新台幣兌美元匯率走弱 楊金龍：央行採柳樹理論因應",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5NeDN3SkcxOERxOVNEaUlHNGh6NlJwYzk5b2tiNklTLWowVUZPblpqTTRsenJfZ0dNaUwyTXhSbUlia25aR3ZITTR0YnhLdXc?oc=5",
+      "source": "公視新聞",
+      "at": "2026-10-28T05:16:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-28T13:35:20.577564+00:00"
+  "at": "2026-10-28T14:12:41.314875+00:00"
  },
  "main_source_titles": [
   "The AI Fed Votes to Hold Interest Rates Steady",
   "Fed officials not aligned on weight of financial conditions",
   "Fed likely to go into wait-and-see mode on rates"
  ],
- "headline": "聯準會 10/28 決議維持利率不變，官員對金融環境緊縮程度看法分歧",
- "rate_note": "聯準會維持利率不變並轉向觀望，偏向壓低短端升息預期，因市場將重新評估 12 月與明年的升息路徑；不過 10 年期 10/28 +0bp 至 5.00%，市場還沒反映。",
+ "headline": "聯準會 10/28 維持利率不變，官員對金融條件影響分歧",
+ "rate_note": "聯準會維持利率不變並進入觀望，加上官員對金融條件影響分歧，偏向壓低短端升息預期，但長端取決於 Warsh 談話與後續數據；10 年期 10/28 盤中 +1bp 至 5.00%，市場尚未明顯反映。",
  "recent_mains": [
-  {
-   "headline": "債市焦點從聯準會轉向 AI 與財政赤字",
-   "titles": [
-    "Bond investors are thinking less about the Fed and more about AI, deficits"
-   ],
-   "at": "2026-10-27T14:56:49.849436+00:00"
-  },
   {
    "headline": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字",
    "titles": [
@@ -405,13 +436,22 @@
     "Fed likely to go into wait-and-see mode on rates"
    ],
    "at": "2026-10-28T13:34:31.206396+00:00"
+  },
+  {
+   "headline": "聯準會 10/28 維持利率不變，官員對金融條件影響分歧",
+   "titles": [
+    "The AI Fed Votes to Hold Interest Rates Steady",
+    "Fed officials not aligned on weight of financial conditions",
+    "Fed likely to go into wait-and-see mode on rates"
+   ],
+   "at": "2026-10-28T14:11:59.434003+00:00"
   }
  ],
  "archive": {
   "2026-10-28": {
-   "headline": "聯準會 10/28 決議維持利率不變，官員對金融環境緊縮程度看法分歧",
-   "text": "聯準會 10/28（美國時間）公布利率決策，決定維持利率不變。聯準會官員對金融環境緊縮程度的評估並未達成一致看法，這影響了後續政策路徑的判斷。¶市場關注聯準會接下來將進入觀望模式。路透另一篇報導指出，聯準會可能對利率政策採取等待觀察的態度，評估先前升息的累積效果，以及當前金融環境對經濟與通膨的實際影響。官員們需要更多時間觀察數據，才能決定是否需要進一步緊縮。\n英國將公布財政預算案，債市面臨考驗，同時需應對聯準會決策、歐洲央行政策與油價風險等多重變數。\n市場人士準備進入 Warsh 主席任內的下一階段「發現過程」，觀察其政策立場與溝通風格如何演變。",
-   "rate_note": "聯準會維持利率不變並轉向觀望，偏向壓低短端升息預期，因市場將重新評估 12 月與明年的升息路徑；不過 10 年期 10/28 +0bp 至 5.00%，市場還沒反映。",
+   "headline": "聯準會 10/28 維持利率不變，官員對金融條件影響分歧",
+   "text": "聯準會 10/28（美國時間）決議維持利率不變。聯準會官員對金融條件在政策制定中的權重看法並不一致，顯示內部對於市場環境如何影響貨幣政策路徑存在分歧。¶路透另一篇報導指出，聯準會可能進入觀望模式。市場關注 Warsh 在會後記者會如何解釋按兵不動的決定，特別是上次 9/17 會議官員一致投票支持升息 25bp 以應對通膨壓力，這次暫停升息的理由將成為焦點。\n英國預算案將測試債市，聯準會、歐洲央行決策與油價風險同時迫近，市場關注財政政策對殖利率的衝擊。\n市場關注 Warsh 主席記者會，分析師稱這是 Warsh「發現過程」的下一步，投資人試圖解讀新主席的政策思路。",
+   "rate_note": "聯準會維持利率不變並進入觀望，加上官員對金融條件影響分歧，偏向壓低短端升息預期，但長端取決於 Warsh 談話與後續數據；10 年期 10/28 盤中 +1bp 至 5.00%，市場尚未明顯反映。",
    "links": [
     {
      "title": "The AI Fed Votes to Hold Interest Rates Steady",
@@ -432,7 +472,7 @@
      "at": "2026-10-28T12:28:25+00:00"
     }
    ],
-   "at": "2026-10-28T13:34:31.206396+00:00",
+   "at": "2026-10-28T14:11:59.434003+00:00",
    "weekly": false,
    "points": 1
   },
