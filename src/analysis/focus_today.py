@@ -2003,23 +2003,6 @@ def _drop_decided(text: str, event_md: str = "") -> str:
     return "".join(x for x in re.split(r"(?<=[。！？])", text or "") if x and not _decided_hits(x, event_md))
 
 
-def _trim_paras(main: str, hard: int) -> str:
-    """主軸超長時逐段在句尾裁（從最長的那段裁起），不會把整段砍掉（2026-10-28：從尾巴整篇裁把重點二砍掉了）。"""
-    paras = [p for p in main.split(MAIN_PARA) if p.strip()]
-    for _ in range(40):
-        if sum(cjk_len(p) for p in paras) <= hard:
-            break
-        i = max(range(len(paras)), key=lambda k: cjk_len(paras[k]))
-        sents = [s for s in re.split(r"(?<=[。！？])", paras[i]) if s]
-        if len(sents) > 1 and cjk_len("".join(sents[:-1])) >= 40:
-            paras[i] = "".join(sents[:-1])
-        else:
-            excess = sum(cjk_len(p) for p in paras) - hard
-            paras[i] = _trim_item(paras[i], max(cjk_len(paras[i]) - excess, 40))
-            break
-    return MAIN_PARA.join(paras)
-
-
 def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=None,
                    vague_markers=None, rate_ctx=None, name_map=None,
                    release_dates_: dict | None = None,
@@ -2034,7 +2017,6 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     格式（字數、媒體名、相對時間、指示用語…）→ 重寫一次，仍有就機械修正後採用；數字沒有出處 → 只記錄。
     """
     n_supp = len(caps) - 1
-    hards = focus_hards(caps)
     vague_markers = vague_markers or DEFAULT_VAGUE_MARKERS
     best, note, why_log = None, "", []
     for attempt in (1, 2):
@@ -2062,14 +2044,11 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
                            + "）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述")
             else:
                 log.warning("市場焦點：重寫後仍有材料沒有的數字（%s），照樣採用", "、".join(_miss[:5]))
-        if cjk_len(main) > hards[0]:
-            why.append(f"主軸超過 {hards[0]} 字")
+        # 2026-10-28：超過字數不退回也不裁（提示詞已有規範，實際不會超過太多）
         if mins and mins[0] and cjk_len(main) < int(mins[0] * SHORT_TOL):
             why.append(f"主軸只有 {cjk_len(main)} 字，沒有把事情講完整（要 {mins[0]}–{caps[0]} 字）")
         for i, s in enumerate(r["supp"], 2):
-            if i - 1 < len(hards) and cjk_len(s) > hards[i - 1]:
-                why.append(f"第 {i - 1} 則補充超過 {hards[i - 1]} 字")
-            elif i - 1 < len(mins or []) and mins[i - 1] \
+            if i - 1 < len(mins or []) and mins[i - 1] \
                     and cjk_len(s) < int(mins[i - 1] * SHORT_TOL):
                 why.append(f"第 {i - 1} 則補充只有 {cjk_len(s)} 字，像在列標題"
                            "（要寫出發生了什麼再加一個具體細節）")
@@ -2124,9 +2103,8 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
     r = best
     fix = lambda s: _fix_release_dates(normalize_names(_strip_leak(_strip_media(s)), name_map),
                                        _release_date_issues(s, release_dates_))
-    main = _trim_paras(fix(r["main_text"]), hards[0])
-    supp = [_trim_item(fix(s), hards[i + 1] if i + 1 < len(hards) else hards[-1])
-            for i, s in enumerate(r["supp"])]
+    main = fix(r["main_text"])
+    supp = [fix(s) for s in r["supp"]]
     supp = [s for s in supp if not _dup_with_main(s, main)]       # 跟主軸重複的補充拿掉
     rate = fix(r["rate"]) if part != "para" else ""
     if part != "para" and rate_ctx and (not rate or not _rate_consistent(rate, rate_ctx, src_text)):
@@ -2145,7 +2123,7 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         main = MAIN_PARA.join(p for p in (_drop_decided(p, preview) for p in main.split(MAIN_PARA)) if p.strip())
         supp = [x for x in (_drop_decided(s, preview) for s in supp) if x.strip()]
         if _decided_hits(rate, preview):
-            rate = _rate_fallback(rate_ctx) if rate_ctx else ""
+            rate = ""          # 2026-10-28：不再換成只報漲跌的那句，直接不顯示（利率卡已有 10 年期數字）
         if cjk_len(main) < POINT_MIN_THIN:
             return None, "公布前把事件寫成已有結果，刪除後內容不足"
     return {"text": "\n".join([main] + supp), "headline": headline, "rate": rate,
@@ -2228,12 +2206,9 @@ def write_supps(arts: list[dict], briefs: list[dict], env=None, *, n: int = 2, l
         return []
     body, _ = _material_text(arts, briefs)
     system = SUPP_SYSTEM.format(n=n, lo=lo, hi=hi, avoid=avoid)
-    hard = int(hi * HARD_MULT_SUPP)
 
     def _bad(s):
         why = []
-        if cjk_len(s) > hard:
-            why.append(f"超過 {hard} 字")
         if cjk_len(s) < int(lo * SHORT_TOL):
             why.append("太短，像在列標題")
         if _REL_DATE.search(s):
@@ -2262,12 +2237,12 @@ def write_supps(arts: list[dict], briefs: list[dict], env=None, *, n: int = 2, l
         break
     out = []
     for s in lines:
-        _w = [x for x in _bad(s) if x not in (f"超過 {hard} 字", "太短，像在列標題")]   # 字數只是文風，裁或照用
+        _w = [x for x in _bad(s) if x != "太短，像在列標題"]   # 字數只是文風，照用
         if _w:
             if drops is not None:
                 drops.append(s[:20] + "…：" + "、".join(_w))
             continue
-        out.append(_trim_item(normalize_names(s, name_map), hard))
+        out.append(normalize_names(s, name_map))
     return out
 
 
@@ -4768,7 +4743,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                     _preview = _d
                     _ev_note = (f"{_nm}在 {_d}（美東）公布、目前尚未公布：寫這次公布什麼、市場關注哪些重點；"
                                 "不要寫任何預估值或市場共識數字；絕對不能寫成已經有結果（例如「決議維持利率不變」）"
-                                "——材料裡看起來像已公布結果的標題，是預測、模擬或評論。")
+                                "——材料裡看起來像已公布結果的標題，是預測、模擬或評論。"
+                                "【對利率】也一樣：結果還沒出來，要寫成條件句，例如「若決議維持不變、聲明偏鷹，"
+                                "偏向推升短端利率」，再對照 10 年期今日走勢。")
             _base = {k: v for k, v in _w.items() if k not in ("caps", "mins")}
             _mode1 = "content" if arts1 else "title"
             log.info("市場焦點：重點一 內文 %d／標題 %d、重點二 內文 %d／標題 %d、其他 內文 %d／標題 %d",

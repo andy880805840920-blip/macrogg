@@ -405,10 +405,8 @@ check("⑱ 主軸排除台指期、夜盤盤勢文", {"台指期", "夜盤"} <= 
 
 # ⑲ 2026-10-28：分三次寫（重點一＋對利率／重點二／補充），每次只給那件事的材料
 _p1t = "聯準會官員對金融條件的看法分歧，部分官員認為殖利率走高已替央行緊縮。" * 3
-_p2t = "財政部標售十年期公債得標殖利率高於預期，投資人擔心赤字擴大帶來的供給壓力。" * 3
-_tp = ft._trim_paras(_p1t + "¶" + _p2t, 120)
-check("⑲ 超長時逐段在句尾裁：兩段都留著、總長不超過上限",
-      _tp.count("¶") == 1 and ft.cjk_len(_tp.replace("¶", "")) <= 120 and "財政部" in _tp, _tp)
+check("⑲ 超過字數不裁、也不退回（提示詞已有規範）", not hasattr(ft, "_trim_paras")
+      and "主軸超過" not in (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8"))
 _s19 = []
 ft._call_ai, _o19 = (lambda s, sy, env=None, **k: (_s19.append((s, sy, k.get("model"))) or (
     "油價走高，中東供給受限的疑慮升溫，布蘭特原油漲逾百分之三並帶動能源股走強。\n"
@@ -430,6 +428,17 @@ _src19 = (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8")
 check("⑲ build 分三次呼叫：part=lead、part=para、write_supps",
       'part="lead"' in _src19 and 'part="para"' in _src19 and "supp = write_supps(arts_o, briefs_o" in _src19)
 check("⑲ 拿掉代號指定與兩段比例檢查", "只能寫代號" not in _src19 and "兩段長度差太多" not in _src19 and "〔代號〕" not in _src19)
+_out19 = ("【標題】聯準會利率決議前市場關注政策訊號\n【主軸】\n" + "聯準會利率決議前，市場關注官員對金融條件與通膨的看法，交易員評估後續路徑。" * 2
+          + "\n【對利率】聯準會維持利率不變，偏向壓低短端利率。\n【來源】1")
+ft._call_ai, _o19b = (lambda s, sy, env=None, **k: (_out19, "")), ft._call_ai
+try:
+    _r19, _ = ft.write_main([{"title": "Fed preview", "body": "Fed preview " * 10, "source": "Reuters", "link": "https://r/f"}], [], ["Fed"], {},
+                            caps=[140], mins=[80], part="lead", preview="10/28",
+                            rate_ctx={"live10": {"now": 5.03, "d_today": 3, "at_et": "11:20", "date_et": "2026-10-28", "open": True}})
+finally:
+    ft._call_ai = _o19b
+check("⑲ 公布前對利率寫成已有結果 → 不顯示（不再換成只報漲跌的那句）", _r19 and _r19["rate"] == "", _r19 and _r19["rate"])
+check("⑲ 公布前的提示：對利率要寫成條件句", "【對利率】也一樣：結果還沒出來，要寫成條件句" in _src19)
 check("⑲ 台灣 ETF 代號推銷文排除", ft.is_junk("主動式ETF 009834 掛牌首日 投資人搶進") and ft.is_junk("0050 配息創新高")
       and not ft.is_junk("10-year yield rises to 4.00% after Fed"))
 
