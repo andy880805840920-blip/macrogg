@@ -232,6 +232,32 @@ with tempfile.TemporaryDirectory() as tmp:
     check("⑬ 離線且沒有快取 → 空", fx.ai_notes({"x": {"text": "a"}}, pathlib.Path(tmp) / "n.json",
                                               offline=True) == {})
 
+# ⑬b 2026-10-29：逐項快取＋分批（整包一次送 Sonnet 逾時、連續失敗）
+with tempfile.TemporaryDirectory() as tmp:
+    cp = pathlib.Path(tmp) / "fomc_ai.json"
+    big = {f"m{i}": {"task": "翻譯", "text": f"Participant view number {i}."} for i in range(23)}
+    seen = []
+
+    def fake2(text, system):
+        d = json.loads(text)
+        seen.append(len(d))
+        return json.dumps({k: "與會者的看法" for k in d}, ensure_ascii=False), ""
+    n1 = fx.ai_notes(big, cp, offline=False, call=fake2)
+    check("⑬b 每批最多 10 項（23 項分 3 批）", seen == [10, 10, 3] and len(n1) == 23, seen)
+    big2 = dict(big, m23={"task": "翻譯", "text": "A new sentence."})
+    seen.clear()
+    n2 = fx.ai_notes(big2, cp, offline=False, call=fake2)
+    check("⑬b 只多一項新內容 → 只送那一項，其餘沿用", seen == [1] and len(n2) == 24, seen)
+
+    def boom(text, system):
+        seen.append("x")
+        return "", "逾時"
+    seen.clear()
+    big3 = dict(big2, m24={"task": "翻譯", "text": "Another."}, m25={"task": "翻譯", "text": "More."})
+    n3 = fx.ai_notes(big3, cp, offline=False, call=boom)
+    check("⑬b 呼叫失敗：已有快取的項目照常顯示中文、新項目只顯示原文，失敗一批就停",
+          len(n3) == 24 and "m24" not in n3 and seen == ["x"], (len(n3), seen))
+
 # ---- ⑭ 整頁：沒有任何分數字樣 ----
 from src import build, fixtures_fomc               # noqa: E402
 from src.pages import fomc as fp, home as hp        # noqa: E402
