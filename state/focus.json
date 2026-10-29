@@ -1,6 +1,6 @@
 {
  "hash": "",
- "text": "聯準會 10/28 決議維持聯邦基金利率目標區間在 3.75–4.00%，投票結果 10 比 2 通過，符合市場預期。聲明指出「通膨仍處高位」，委員會將累積更多資訊以決定適當政策立場，確保通膨及時回到 2% 目標。主席 Warsh 在會後記者會表示，聯準會並未設定既定路徑，「如果我們對貨幣政策有確定結論，今天就會大張旗鼓宣布」，但他也強調「雖然整體金融條件已收緊，但我不願也無法稱其為緊縮」，為 12/9 會議可能升息預留空間。市場對此次決議看法分歧：DoubleLine Capital 執行長 Gundlach 指出兩年期公債殖利率與殖利率曲線走陡，認為聯準會應升息；密西根大學經濟學家 Stevenson 與貝萊德 Rieder 則認為等待是合理的。9 月 PCE 與第三季初估 GDP 於 10/29（美國時間）公布。¶美國短期公債殖利率 10/28 下跌，因聯準會主席 Warsh 發出訊號，暗示未來聯準會會議次數可能減少。市場對此做出反應，短天期債券殖利率走低，反映投資人對聯準會政策調整步調的預期出現變化。\n財政部長貝森特10/28表示聯準會未來升息不一定是政策失誤，他說自己與川普都認為主席 Warsh 表現良好，能在充分就業與物價穩定間取得平衡。\n貝森特10/28指聯準會應對能源價格供給衝擊保持開放態度，認為其影響具暫時性，美國對伊朗的經濟孤立行動「非常成功」，內部估計伊朗經濟可能在一年內萎縮25%。",
+ "text": "聯準會 10/28 決議維持聯邦基金利率目標區間在 3.75–4.00%，兩名官員投票反對、主張立即升息 25bp。Warsh 在會後記者會表示，若對貨幣政策有明確結論會大張旗鼓宣布，拒絕承諾聯準會已設定固定路線；他同時強調雖然整體金融環境較緊，但不願也無法稱之為緊縮，為 12/9 可能升息預留空間。聲明將經濟活動評估升級為「以強勁步伐擴張」，Warsh 表達通膨可在不造成勞動市場顯著惡化下回到 2% 目標的信心。市場原本預期 12 月升息機率達 82%，但 Warsh 未給出明確指引後，交易員縮減 2027 年的升息押注；利率期貨仍定價 12 月升息機率 78%。美元指數從兩週高點回落至 102.17。9 月 PCE 物價數據與第三季初估 GDP 在 10/29（美東）公布，市場關注通膨是否持續頑固，將影響 12 月決策方向。¶聯準會主席 Warsh 在 10/28（美國時間）發出訊號，暗示未來聯準會會議次數可能減少，美國短期公債殖利率應聲下跌。市場解讀這項訊息意味著聯準會可能調整決策節奏，減少每年召開的利率決策會議場次，此舉可能影響貨幣政策的溝通頻率與市場預期的形成方式。\n財政部長貝森特10/28表示，聯準會未來進一步升息不一定是政策錯誤，回應CNBC主持人蘇利文的提問時說「不一定如此」，此言論發表在聯準會宣布10月維持利率不變數小時後。\n字母控股10/29財報引發市場對人工智能支出的擔憂，那斯達克期貨下跌1%，投資者對科技巨頭在AI領域的龐大資本支出前景感到不安。",
  "links": [
   {
    "title": "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
@@ -9,10 +9,10 @@
    "at": "2026-10-29T09:00:01+00:00"
   },
   {
-   "title": "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
-   "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-after-fed-holds-rates-steady-goog-googl-iova-msft-now-in-focus/cZUQ4vlR9Gz?.tsrc=rss",
+   "title": "Dollar pulls back as Warsh leaves tightening path murky; Euro tread water",
+   "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-dollar-steadies-043505178.html?.tsrc=rss",
    "source": "Yahoo Finance",
-   "at": "2026-10-29T02:59:32+00:00"
+   "at": "2026-10-29T04:35:05+00:00"
   },
   {
    "title": "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings",
@@ -279,41 +279,53 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-29T10:08:24.899986+00:00",
+ "at": "2026-10-29T10:50:11.565618+00:00",
  "layout": "main",
  "topics": {
-  "hash": "669b8c5aebd3e4ab",
+  "hash": "f765eec679600e07",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會宣布 2027 年起調整會議安排，將維持每年八次會議但其中一次不投票利率決策，另增加策略會議至兩場，使年度利率調整機會減至六次",
+    "text": "聯準會 2027 年起調整決策頻率，年度會議從八次減至六次，其中兩次為不投票的策略會議，旨在改變政策溝通節奏；Warsh 同時強調聯準會對人工智慧對經濟成長的影響進行評估",
     "links": [
      {
       "title": "Here are five key takeaways from the Fed rate decision and Warsh news conference",
       "link": "https://www.cnbc.com/2026/10/28/fed-rate-decision-warsh-takeaways.html",
       "source": "CNBC",
       "at": "2026-10-28T21:31:46+00:00"
+     },
+     {
+      "title": "Federal Reserve issues FOMC statement",
+      "link": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "source": "Federal Reserve",
+      "at": "2026-10-28T18:00:00+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價 10/29 下跌，交易員評估伊朗外交談判新進展的影響，此前中東地緣政治風險曾推高油價",
+    "text": "油價因伊朗外交談判跡象而下跌，市場交易員評估中東局勢發展；巴西國油公司石油產量創紀錄，反映中東衝突對全球油市的影響",
     "links": [
      {
       "title": "Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran",
       "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcWhmOUJoc0lkWEs5QlBSaDVpMjd4QlRILTVyTmk4dlRNU1FNRE0tS0N2NHdQZFZGQjZxZjlSOFVwSGhaQVhrUmJrb1JySXlhZDctVHdqMUIyU0gtUnFENDdoRkh4QnlxR1pfeGxMMU1UUWJydnhxSFJ1d3djdjZYQ1ZUcUxZMVBEVFFwaWN6VkhKYnNtMTdBWk4ycjJSaEczeXhONWtaN3ZXUjFZNW1aS3NMVQ?oc=5",
       "source": "Bloomberg",
       "at": "2026-10-29T05:23:00+00:00"
+     },
+     {
+      "title": "Petrobras Pumps at Record as Iran War Upends Oil Markets",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQTXNGeGQ2VmF4Vm9OY2RiSExjNHMxNFdIeGtZQXpjbUNoTmJzSXgtbktKMkl1QmdDN09mUGtTb2xXZWZaSUZ1ZVRYMjJKV3pYbXU5Z0Z6cE9kS3hjNWJ2X1A2U1l6SGlURHJnclIxZDhiSElCTzcwYlBHdnI5VGZxbFZadXBMN0o1OENtUFdOSUpSOUw4NG5KMTVRMElkazUzQV8tV0Y5VGdnUVU?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-28T23:06:04+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股 10/29 盤前走勢分歧，Alphabet 第三季財報不佳引發科技股賣壓，Google 廣告營收創五季最慢增速，投資人擔憂其龐大 AI 支出的投資報酬率",
+    "text": "美股期貨走勢分歧，Alphabet 第三季營收未達預期導致股價暴跌逾 10%，引發市場對科技大廠人工智慧投資報酬率的擔憂，拖累半導體類股；核心 PCE 物價指數預期上升 3.1%，將成為決定 12 月升息方向的關鍵數據",
     "links": [
      {
       "title": "Stock market today: Dow rises, S&P 500 and Nasdaq futures fall as Alphabet stock sells off, AI jitters return",
@@ -322,58 +334,39 @@
       "at": "2026-10-29T08:17:08+00:00"
      },
      {
-      "title": "2 S&P 500 stocks with competitive advantages and 1 we turn down",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/2-p-500-stocks-competitive-091525445.html?.tsrc=rss",
+      "title": "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-after-fed-holds-rates-steady-goog-googl-iova-msft-now-in-focus/cZUQ4vlR9Gz?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-10-29T09:15:25+00:00"
+      "at": "2026-10-29T02:59:32+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "Alphabet 第三季財報未達預期，Google 雲端成長雖達 103%，但自由現金流與 AI 投資回報疑慮成為拖累，引發市場對科技大廠 AI 支出效益的重新評估",
+    "text": "Alphabet 第三季雲端成長達 103% 但自由現金流與人工智慧投資回報引發疑慮，市場對科技大廠人工智慧支出效益的擔心蔓延至亞洲，南韓 Kospi 指數下跌；三星預警人工智慧晶片短缺惡化",
     "links": [
+     {
+      "title": "Samsung sees AI chip shortage worsening, keeps investors in suspense on returns",
+      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOZ2JmLWlsUUNaZ2g5VnF1TU1IZU5rWDV6T1ZLdXJBdmJrVnpHanBobFBiWjNkaXJGMjE1MUlqMlVrOGJOaHVrU18yVkRBWFVoOENmVjhqYVA3Vy1EdkdXTDN1REJPQWpVdFp5MFdlMzFhMXhEVUdBQS01STRwTW41R2RKWWloUHBhYUNVY2tyR19Geld5RHc?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-29T07:20:23+00:00"
+     },
      {
       "title": "Stock market today: Dow rises, S&P 500 and Nasdaq futures fall as Alphabet stock sells off, AI jitters return",
       "link": "https://finance.yahoo.com/markets/live/stock-market-today-thursday-october-29-dow-sp-500-nasdaq-alphabet-microsoft-081708101.html?.tsrc=rss",
       "source": "Yahoo Finance",
       "at": "2026-10-29T08:17:08+00:00"
-     },
-     {
-      "title": "Alphabet, Microsoft earnings in focus; Warsh on AI, rates",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/alphabet-microsoft-earnings-focus-warsh-092810907.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-29T09:28:10+00:00"
-     }
-    ]
-   },
-   {
-    "id": "twf",
-    "label": "台指期",
-    "text": "台股 10/29 重挫 667 點至 46,368 點，外資單日賣超 688 億元，分析師指出需經歷籌碼清洗，關鍵觀察點為 11 月初美國期中選舉與 11 月底台灣選舉",
-    "links": [
-     {
-      "title": "台股險殺破46K！季線收復1天就失守　分析師曝反彈關鍵：盯緊「兩個時間點」",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%9A%AA%E6%AE%BA%E7%A0%B446k-%E5%AD%A3%E7%B7%9A%E6%94%B6%E5%BE%A91%E5%A4%A9%E5%B0%B1%E5%A4%B1%E5%AE%88-%E5%88%86%E6%9E%90%E5%B8%AB%E6%9B%9D%E5%8F%8D%E5%BD%88%E9%97%9C%E9%8D%B5-%E7%9B%AF%E7%B7%8A-%E5%85%A9%E5%80%8B%E6%99%82%E9%96%93%E9%BB%9E-092800385.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-29T09:28:00+08:00"
-     },
-     {
-      "title": "外資狂賣688億！台股重挫跌破均線，資金轉進金融避險，台積電遇壓-財經焦點情報站",
-      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOdVRqX1Q4aXJvUmtZM0ZRSFh3cEp0bF9VRE94UlRnc2JjS3djRWZYVjk0a0s4c1VhV1BNb0dGMmx0Zk1PVHQ0Zm10VFFfLVpTOGJzZzU1OV9yMmtMV3NjSlZ1U1QtazZvNzhNOFd1NnFvUklrS1pwWFUwb2ViQ2YxUUFB?oc=5",
-      "source": "CMoney投資網誌",
-      "at": "2026-10-29T09:09:56+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格下跌至 4,038 美元附近，聯準會維持利率不變但未明確指引後續政策方向，投資人等待 9 月 PCE 通膨數據以判斷年底前是否升息；交易員仍預期 12 月升息，但 10 月黃金已下跌 2.5%",
+    "text": "黃金因聯準會未提供明確升息指引而下跌至 4,038 美元，交易員等待 9 月 PCE 物價數據以判斷 12 月升息機率；黃金 10 月累跌 2.5% 且面臨人工智慧股市拋售連累，但央行購買仍提供長期支撐",
     "links": [
      {
-      "title": "Gold drops 1% as markets assess Fed signals, await US inflation data",
+      "title": "Gold slides 1% as Fed hike bets linger ahead of US inflation data",
       "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQYlhrT3hjaWJ0VXJlcHYxRUdvdVJsVEpGN2lzQXA4a1pLNW5SdklwTFpMYmRNTGRNQ2w2MTRTR2g0UUJfMkx0c21Ja1Fqbzd4eVk1U1gySHF5cnYwQ0FqUzFWWVVMVXpWaUMtQ3d2VGs1TERHQ0dtbFpMWWgxbVpoVS13bGRORTByVkZaS0piSjNxYTk0eUtoZ0ItV2wxbzNnOXhCM2R1bW1Sa1laZUE?oc=5",
       "source": "Reuters",
       "at": "2026-10-29T04:25:00+00:00"
@@ -385,39 +378,18 @@
       "at": "2026-10-29T01:51:15+00:00"
      }
     ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "美元指數在聯準會決議後小幅回落至 102.17，日圓兌美元略升至 157.76；投資人關注 PCE 數據與日本央行決議，市場對 12 月升息機率定價為 78%",
-    "links": [
-     {
-      "title": "Asian currencies mixed as dollar steadies after Fed hold, PCE eyed",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-dollar-steadies-043505178.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-29T04:35:05+00:00"
-     }
-    ]
    }
   ],
-  "at": "2026-10-29T10:09:07.705110+00:00"
+  "at": "2026-10-29T10:50:56.207148+00:00"
  },
  "main_source_titles": [
   "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
-  "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+  "Dollar pulls back as Warsh leaves tightening path murky; Euro tread water",
   "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings"
  ],
- "headline": "聯準會 10/28 維持利率不變，Warsh 暗示 12 月可能升息",
- "rate_note": "Warsh 暗示若通膨持續頑強可能在 12 月升息，且強調金融條件尚未緊縮，偏向推升短端利率與升息預期，10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
+ "headline": "聯準會 10/28 維持利率不變、Warsh 不承諾 12 月路徑，市場降低遠期升息預期",
+ "rate_note": "聯準會維持利率不變但聲明偏鷹、Warsh 為 12 月升息預留空間，偏向推升短端利率，但他拒絕承諾固定路線、市場縮減遠期升息預期，長端方向較不明確；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映鷹派訊號。",
  "recent_mains": [
-  {
-   "headline": "",
-   "titles": [
-    "Gold slips after Fed holds rates, PCE inflation data in focus",
-    "Bessent says 'not necessarily' a mistake if the Fed hikes again"
-   ],
-   "at": "2026-10-29T05:42:04.522053+00:00"
-  },
   {
    "headline": "聯準會 10/28 維持利率不變、通膨仍高，Warsh 暗示明年減少決策會議次數",
    "titles": [
@@ -435,13 +407,22 @@
     "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings"
    ],
    "at": "2026-10-29T10:08:24.899986+00:00"
+  },
+  {
+   "headline": "聯準會 10/28 維持利率不變、Warsh 不承諾 12 月路徑，市場降低遠期升息預期",
+   "titles": [
+    "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
+    "Dollar pulls back as Warsh leaves tightening path murky; Euro tread water",
+    "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings"
+   ],
+   "at": "2026-10-29T10:50:11.565618+00:00"
   }
  ],
  "archive": {
   "2026-10-29": {
-   "headline": "聯準會 10/28 維持利率不變，Warsh 暗示 12 月可能升息",
-   "text": "聯準會 10/28 決議維持聯邦基金利率目標區間在 3.75–4.00%，投票結果 10 比 2 通過，符合市場預期。聲明指出「通膨仍處高位」，委員會將累積更多資訊以決定適當政策立場，確保通膨及時回到 2% 目標。主席 Warsh 在會後記者會表示，聯準會並未設定既定路徑，「如果我們對貨幣政策有確定結論，今天就會大張旗鼓宣布」，但他也強調「雖然整體金融條件已收緊，但我不願也無法稱其為緊縮」，為 12/9 會議可能升息預留空間。市場對此次決議看法分歧：DoubleLine Capital 執行長 Gundlach 指出兩年期公債殖利率與殖利率曲線走陡，認為聯準會應升息；密西根大學經濟學家 Stevenson 與貝萊德 Rieder 則認為等待是合理的。9 月 PCE 與第三季初估 GDP 於 10/29（美國時間）公布。¶美國短期公債殖利率 10/28 下跌，因聯準會主席 Warsh 發出訊號，暗示未來聯準會會議次數可能減少。市場對此做出反應，短天期債券殖利率走低，反映投資人對聯準會政策調整步調的預期出現變化。\n財政部長貝森特10/28表示聯準會未來升息不一定是政策失誤，他說自己與川普都認為主席 Warsh 表現良好，能在充分就業與物價穩定間取得平衡。\n貝森特10/28指聯準會應對能源價格供給衝擊保持開放態度，認為其影響具暫時性，美國對伊朗的經濟孤立行動「非常成功」，內部估計伊朗經濟可能在一年內萎縮25%。",
-   "rate_note": "Warsh 暗示若通膨持續頑強可能在 12 月升息，且強調金融條件尚未緊縮，偏向推升短端利率與升息預期，10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
+   "headline": "聯準會 10/28 維持利率不變、Warsh 不承諾 12 月路徑，市場降低遠期升息預期",
+   "text": "聯準會 10/28 決議維持聯邦基金利率目標區間在 3.75–4.00%，兩名官員投票反對、主張立即升息 25bp。Warsh 在會後記者會表示，若對貨幣政策有明確結論會大張旗鼓宣布，拒絕承諾聯準會已設定固定路線；他同時強調雖然整體金融環境較緊，但不願也無法稱之為緊縮，為 12/9 可能升息預留空間。聲明將經濟活動評估升級為「以強勁步伐擴張」，Warsh 表達通膨可在不造成勞動市場顯著惡化下回到 2% 目標的信心。市場原本預期 12 月升息機率達 82%，但 Warsh 未給出明確指引後，交易員縮減 2027 年的升息押注；利率期貨仍定價 12 月升息機率 78%。美元指數從兩週高點回落至 102.17。9 月 PCE 物價數據與第三季初估 GDP 在 10/29（美東）公布，市場關注通膨是否持續頑固，將影響 12 月決策方向。¶聯準會主席 Warsh 在 10/28（美國時間）發出訊號，暗示未來聯準會會議次數可能減少，美國短期公債殖利率應聲下跌。市場解讀這項訊息意味著聯準會可能調整決策節奏，減少每年召開的利率決策會議場次，此舉可能影響貨幣政策的溝通頻率與市場預期的形成方式。\n財政部長貝森特10/28表示，聯準會未來進一步升息不一定是政策錯誤，回應CNBC主持人蘇利文的提問時說「不一定如此」，此言論發表在聯準會宣布10月維持利率不變數小時後。\n字母控股10/29財報引發市場對人工智能支出的擔憂，那斯達克期貨下跌1%，投資者對科技巨頭在AI領域的龐大資本支出前景感到不安。",
+   "rate_note": "聯準會維持利率不變但聲明偏鷹、Warsh 為 12 月升息預留空間，偏向推升短端利率，但他拒絕承諾固定路線、市場縮減遠期升息預期，長端方向較不明確；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映鷹派訊號。",
    "links": [
     {
      "title": "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
@@ -450,10 +431,10 @@
      "at": "2026-10-29T09:00:01+00:00"
     },
     {
-     "title": "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
-     "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-after-fed-holds-rates-steady-goog-googl-iova-msft-now-in-focus/cZUQ4vlR9Gz?.tsrc=rss",
+     "title": "Dollar pulls back as Warsh leaves tightening path murky; Euro tread water",
+     "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-dollar-steadies-043505178.html?.tsrc=rss",
      "source": "Yahoo Finance",
-     "at": "2026-10-29T02:59:32+00:00"
+     "at": "2026-10-29T04:35:05+00:00"
     },
     {
      "title": "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings",
@@ -462,7 +443,7 @@
      "at": "2026-10-28T21:39:20+00:00"
     }
    ],
-   "at": "2026-10-29T10:08:24.899986+00:00",
+   "at": "2026-10-29T10:50:11.565618+00:00",
    "weekly": false,
    "points": 2
   },
