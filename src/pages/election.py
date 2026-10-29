@@ -7,6 +7,8 @@
 """
 from __future__ import annotations
 
+import re
+
 from ..site import esc
 
 
@@ -288,6 +290,37 @@ def _balance3(b: dict | None) -> str:
     return ('<div class="el-more-k">兩院權力組合（合計 100%）</div>'
             f'<a class="el-bal3" href="{esc(b.get("url", ""))}" rel="noopener" target="_blank">'
             f'<span class="el-b3">{segs}</span><ul class="el-legend">{leg}</ul></a>')
+
+
+def election_tile(e: dict | None) -> tuple[str, str]:
+    """
+    首頁小卡（2026-10-29）：縮小的參院地圖＋兩院民主黨機率，點了跳出視窗看完整內容。
+    回傳 (小卡, 視窗內容＝原本的選舉卡)。沒有資料時兩個都是空字串。
+    """
+    full = election_card(e)
+    if not full:
+        return "", ""
+    days = e.get("days_to")
+    ed = str(e.get("election_date") or "")
+    md = f"{int(ed[5:7])}/{int(ed[8:10])}" if len(ed) >= 10 else ""
+    kick = (f"{md}・開票後" if days is not None and days < 0 else
+            f"{md}・今天投票" if days == 0 else f"{md}・還有 {days} 天")
+    m = re.search(r'<svg class="el-svg".*?</svg>', map_section(e)[0], re.S)
+    art = (m.group(0).replace('class="el-svg"', 'class="el-svg duo-svg" aria-hidden="true" focusable="false"', 1)
+           .replace('role="img"', '') if m else "")
+
+    def one(name, d):
+        if not d:
+            return ""
+        dem, rep = d["dem"], d["rep"]
+        lead = "民主黨" if dem >= rep else "共和黨"
+        return f'<span>{name} <b class="{"dem" if dem >= rep else "rep"}">{lead} {_pct(max(dem, rep))}</b></span>'
+    tile = ('<button type="button" class="duo-card" data-t="el" aria-haspopup="dialog">'
+            f'<span class="duo-k">{esc(kick)}</span><span class="duo-t">美國期中選舉</span>'
+            f'<span class="duo-map">{art}</span>'
+            f'<span class="duo-sum">{one("眾院", e.get("house"))}{one("參院", e.get("senate"))}</span>'
+            '<span class="duo-more">看全部 ›</span></button>')
+    return tile, full
 
 
 def election_card(e: dict | None) -> str:

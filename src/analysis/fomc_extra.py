@@ -732,8 +732,7 @@ STANCE_ZH = {"hawkish": "鷹派", "dovish": "鴿派", "neutral": "中立"}
 
 
 def build_officials(roster: dict | None, board_titles: dict, docs: list,
-                    today: dt.date, notes: dict | None = None,
-                    stance: dict | None = None) -> list[dict]:
+                    today: dt.date, notes: dict | None = None) -> list[dict]:
     """
     依發言份量分層：
       1  主席
@@ -741,10 +740,8 @@ def build_officials(roster: dict | None, board_titles: dict, docs: list,
       3  其他投票委員——近 12 個月沒投過反對票的人，是決定多數落在哪邊的關鍵
       4  候補委員（今年不投票，但參與討論、也交點陣圖）
     lean＝已表態的事實（近 12 個月反對票的方向）。
-    stance（2026-10-29 使用者指定的「依立場」篩選）：近 12 個月投過反對票的依反對方向；
-    其餘照 config/fomc.yaml 的 official_stance（手動清單）；都沒有＝中立。
+    stance（「依立場」篩選）先填中立，由 decide_stance 依近 3 場反對票與近 90 天表態改寫。
     """
-    stance = {str(k): str(v) for k, v in (stance or {}).items()}
     if not roster:
         return []
     notes = notes or {}
@@ -764,12 +761,7 @@ def build_officials(roster: dict | None, board_titles: dict, docs: list,
             else:
                 tier = 3
             tag, lean = _dissent_tag(rec.get(sn))
-            if lean != "neutral":
-                st, st_src = lean, "依近 12 個月反對票"
-            elif stance.get(sn) in STANCE_ZH:
-                st, st_src = stance[sn], "依本站手動清單"
-            else:
-                st, st_src = "neutral", "清單未列，暫列中立"
+            st, st_src = "neutral", "近 3 場會議沒有反對票、近 90 天沒有明確表態"
             out.append({"name": m["name"], "surname": sn, "title": title,
                         "voter": voter, "tier": tier, "board": m["affil"] == "Board of Governors",
                         "affil": m["affil"], "city_zh": CITY_ZH.get(m["affil"], ""),
@@ -1085,3 +1077,145 @@ def ai_notes(payload: dict, cache_path, offline: bool, call=None) -> dict:
         except OSError:
             pass
     return notes
+
+
+# ---------------------------------------------------------------------------
+# 官員立場（2026-10-29 使用者指定：事實優先，AI 只判斷每一則發言）
+#   ① 近 3 場會議的反對票（最近一張為準）
+#   ② 沒有的話，近 90 天最近一則「明確表態」的發言（官方演講內容或新聞標題）
+#   ③ 都沒有＝中立
+# 方向相對於目前的政策循環：升息循環裡，主張再升＝鷹派，主張暫停／觀望／降息＝鴿派；
+# 降息循環反過來；沒有循環（12 個月內沒動過）時，暫停＝中立。
+# ---------------------------------------------------------------------------
+POLICY_TITLE = re.compile(r"econom|monetary|policy|inflation|outlook|labor|rates?\b|prices", re.I)
+_POLICY_SENT = re.compile(r"\b(policy rate|federal funds|rate (?:increase|hike|cut)s?|raise|rais|hike|tighten\w*|"
+                          r"further|pause|patient|restrictive|wait|on hold|hold (?:rates|steady)|"
+                          r"stance of (?:monetary )?policy|adjustments?)\b", re.I)
+STANCE_SYSTEM = (
+    "You read short excerpts of what a Federal Reserve official said (a speech excerpt or a news headline). "
+    "For each item, classify the official's own stated view on the NEXT move of the policy rate: "
+    "\"hike\" (more rate increases needed, even if not urgent), \"pause\" (hold, wait and see, no urgency, "
+    "no need for more hikes, assess carefully), \"cut\" (rate cuts), or \"none\" (no clear view on the next move, "
+    "e.g. only describes the economy, past decisions, regulation, or politics). Only count a clear statement. "
+    "For every non-none answer, q must be a short quote copied verbatim from the item text that shows the view. "
+    "Return only JSON: {\"<id>\": {\"s\": \"hike|pause|cut|none\", \"q\": \"...\"}, ...}")
+STANCE_VERSION = "v1"
+
+
+def policy_sentences(page_html: str, cap: int = 2000) -> str:
+    """演講網頁 → 只留談利率的句子（給 AI 判斷立場，也當引句的出處）。"""
+    t = re.sub(r"(?s)<script.*?</script>|<style.*?</style>", "", page_html or "")
+    t = re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", t)))
+    out = []
+    for x in re.split(r"(?<=[.!?])\s+", t):
+        if 30 <= len(x) <= 400 and _POLICY_SENT.search(x) and re.search(r"rate|policy|monetary", x, re.I):
+            out.append(x)
+        if sum(len(y) for y in out) > cap:
+            break
+    return " ".join(out)[:cap]
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"[\s\u2018\u2019\u201c\u201d'\"]+", " ", (s or "").lower()).strip()
+
+
+def stance_key(it: dict) -> str:
+    import hashlib
+    return hashlib.sha1(f"{STANCE_VERSION}|{it['who']}|{it['date']}|{it['text']}".encode()).hexdigest()[:16]
+
+
+def stance_ai(items: list[dict], cache_path, offline: bool, call=None) -> dict:
+    """
+    items：[{who, date, kind, text}] → {item_key: {"s", "q"}}。每則只判斷一次（快取以內容為鍵）。
+    引句必須真的出現在原文裡，否則當成沒表態。AI 失敗時這次沒判斷的就不算（下次再試）。
+    """
+    from pathlib import Path
+    key = stance_key
+    p = Path(cache_path) if cache_path else None
+    cache = {}
+    if p and p.exists():
+        try:
+            cache = json.loads(p.read_text(encoding="utf-8"))
+        except ValueError:
+            cache = {}
+    todo = {f"i{n}": it for n, it in enumerate(x for x in items if key(x) not in cache)}
+    if todo and not offline:
+        if call is None:
+            from .focus_today import _call_ai
+            call = lambda s, sy: _call_ai(s, sy)          # noqa: E731  預設模型（Haiku）
+        ids = list(todo)
+        for i in range(0, len(ids), 30):
+            chunk = {k: {"who": todo[k]["who"], "date": todo[k]["date"], "text": todo[k]["text"]}
+                     for k in ids[i:i + 30]}
+            text, err = call(json.dumps(chunk, ensure_ascii=False), STANCE_SYSTEM)
+            if err or not text:
+                log.warning("官員立場 AI 判斷失敗（%s），這次沒判斷的發言不列入", err or "空回應")
+                break
+            m = re.search(r"\{.*\}", text, re.S)
+            try:
+                raw = json.loads(m.group(0)) if m else {}
+            except ValueError:
+                raw = {}
+            for k in chunk:
+                r = raw.get(k) if isinstance(raw.get(k), dict) else {}
+                s_, q = str(r.get("s", "")).lower(), str(r.get("q", "")).strip()
+                if s_ not in ("hike", "pause", "cut", "none"):
+                    continue                              # 沒回答的下次再試
+                if s_ != "none" and (not q or _norm(q) not in _norm(todo[k]["text"])):
+                    s_, q = "none", ""                    # 引句不在原文裡＝不採用
+                cache[key(todo[k])] = {"s": s_, "q": q}
+        if p:
+            try:
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
+            except OSError:
+                pass
+    return {key(it): cache[key(it)] for it in items if key(it) in cache}
+
+
+def policy_cycle(docs: list, today: dt.date) -> str:
+    """12 個月內最近一次調整利率的方向：hike／cut；沒動過＝""。"""
+    lo = (today - dt.timedelta(days=365)).isoformat()
+    for d in reversed(docs or []):
+        act = (getattr(d, "decision", None) or {}).get("action")
+        if getattr(d, "date", "") >= lo and act in ("hike", "cut"):
+            return act
+    return ""
+
+
+def _rel(direction: str, cycle: str) -> str:
+    """主張的方向 → 鷹／鴿／中立（相對於目前的循環）。"""
+    if direction == "hike":
+        return "hawkish"
+    if direction == "cut":
+        return "dovish"
+    if direction in ("pause", "hold"):
+        return {"hike": "dovish", "cut": "hawkish"}.get(cycle, "neutral")
+    if direction == "no_easing_bias":
+        return "hawkish"
+    return ""
+
+
+def decide_stance(o: dict, statements: list[dict], cycle: str) -> tuple[str, str]:
+    """
+    o["votes"]（逐場投票，舊→新）＋ statements（[{date, kind, s, q}]，已排除 none）→ (stance, 依據)。
+    """
+    dir_zh = {"hike": "主張升息", "cut": "主張降息", "hold": "主張維持", "no_easing_bias": "反對寬鬆傾向"}
+    for v in reversed((o.get("votes") or [])[-3:]):
+        if v.get("v") == "against":
+            st = _rel(v.get("dir", ""), cycle)
+            if st:
+                return st, f"依 {_md(v['date'])} 反對票（{dir_zh.get(v.get('dir'), '反對')}）"
+    for x in sorted(statements, key=lambda x: x["date"], reverse=True):
+        st = _rel(x["s"], cycle)
+        if st:
+            return st, f"依 {_md(x['date'])} {x['kind']}：「{x['q']}」"
+    return "neutral", "近 3 場會議沒有反對票、近 90 天沒有明確表態"
+
+
+def _md(iso: str) -> str:
+    try:
+        d = dt.date.fromisoformat(str(iso)[:10])
+        return f"{d.month}/{d.day}"
+    except ValueError:
+        return str(iso)

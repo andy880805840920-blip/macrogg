@@ -885,6 +885,14 @@ topics:
     lang: en
   feeds:
   - https://www.fxstreet.com/rss/news
+# ---- AI 大事（首頁小卡，2026-10-29）：十家公司近 14 天的重大事件 ----
+# 公司與查詢關鍵字寫在 src/analysis/ai_events.py 的 DEFAULTS；要改公司清單可在這裡加 companies 覆蓋
+ai_events:
+  enabled: true
+  window_days: 14      # 事件保留天數
+  new_days: 3          # 幾天內算「新事件」（小圓點）
+  per_company: 8       # 每家每次最多送幾則新標題給 AI 判斷
+
 election:
   enabled: true
   election_date: 2026-11-03

@@ -302,8 +302,10 @@ _pool = [{"title": "Analysis-Bond investors are thinking less about the Fed and 
 _body15 = "Bond investors are increasingly focused on AI spending and US deficits rather than the Fed, as yields stay high." * 3
 _far = [dict(_pool[0], at="2026-10-25T10:00:00+00:00")]
 check("⑮ 標題開頭「CNBC 調查：」會被刪掉", ft._strip_media("CNBC 調查：93% 預期聯準會維持利率") == "93% 預期聯準會維持利率")
-check("⑮ 每段字數：有內文 80–140、只有標題 50–80",
-      (ft.PARA_MIN, ft.PARA_CAP, ft.POINT_MIN_THIN, ft.THIN_CAP) == (80, 140, 50, 80))
+check("⑮ 每段字數（2026-10-29）：兩個重點每段約 100、只有標題 50–80；一個重點約 150（只有標題 60–120）",
+      (ft.PARA_MIN, ft.PARA_CAP, ft.POINT_MIN_THIN, ft.THIN_CAP) == (60, 100, 50, 80)
+      and (ft.SINGLE_MIN, ft.SINGLE_CAP, ft.SINGLE_THIN_MIN, ft.SINGLE_THIN_CAP) == (100, 150, 60, 120))
+check("⑮ 提示詞要求全篇重寫", "全篇重寫" in ft._FOCUS_PARA_SYSTEM and "全篇重寫" in ft._lead_system(ft._FOCUS_CONTENT_SYSTEM_A, True))
 
 # ⑯ 2026-10-28：鎖定事件公布前不准寫成已有結果、媒體名中間夾字、人物簡介頁
 _bad16 = ("【標題】聯準會 10/28 決議維持利率不變，官員對金融條件影響分歧\n【主軸】\n"

@@ -1077,7 +1077,7 @@ try:
     _o4 = ft.build({}, False, _cfg24, _sp2, env={})
     check("㉔d 沒抓到內文 → 標題模式也套用字數下限並重寫過短摘要",
           _o4["text_source"] == "model" and len(_calls24) == 2
-          and "120–250" in _calls24[0]          # v2.2：主軸材料只有標題 → 下限 120 字
+          and "約 120 個中文字（至少 60 字）" in _calls24[0]   # 2026-10-29：只有一個重點且只有標題 → 60–120 字
           and "只有標題" in _calls24[0], (_o4["text_source"], len(_calls24)))
 finally:
     for _k, _v in _saved.items():

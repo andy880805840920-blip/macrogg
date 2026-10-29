@@ -19,7 +19,8 @@ from . import compact_full, state_chip, section_learn
 from ..analysis import changes as chg_mod
 from ..analysis import brief as brief_mod
 from ..analysis import scenario as scenario_mod
-from .election import election_card as _election_card
+from .election import election_tile as _election_tile
+from .ai_events import ai_tile as _ai_tile
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -1121,6 +1122,59 @@ def _point_tag(f: dict, i: int) -> str:
     return ""
 
 
+_FOLD_JS = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
+            "st.addEventListener('click',function(e){var b=e.target.closest('.fs-tog');if(!b)return;"
+            "var m=b.nextElementSibling;if(!m)return;m.hidden=!m.hidden;"
+            "b.setAttribute('aria-expanded',m.hidden?'false':'true');"
+            "b.textContent=m.hidden?'展開全文 ▾':'收合 ▴';});})();</script>")
+
+
+def _fold(body: str, fold: bool) -> str:
+    """今日主軸（2026-10-29）：預設只露標題，內容收進「展開全文」。沒有標題時不收合。"""
+    if not body or not fold:
+        return body
+    return ('<button type="button" class="fs-tog" aria-expanded="false">展開全文 ▾</button>'
+            f'<div class="fs-more" hidden>{body}</div>')
+
+
+_DUO_JS = r"""<script>(function(){
+var d=document.querySelector('.duo');if(!d)return;
+var md=document.createElement('div');md.className='duo-modal';md.hidden=true;md.setAttribute('role','dialog');md.setAttribute('aria-modal','true');
+md.innerHTML='<div class="duo-sheet"><div class="duo-sheet-h"><b></b><button type="button" class="duo-x" aria-label="關閉">✕</button></div><div class="duo-body"></div></div>';
+document.body.appendChild(md);
+var body=md.querySelector('.duo-body'),ttl=md.querySelector('.duo-sheet-h b'),cur=null,last=null;
+function shut(){if(md.hidden)return;md.hidden=true;document.body.classList.remove('duo-lock');
+ if(cur){while(body.firstChild)cur.appendChild(body.firstChild);}cur=null;if(last)last.focus();}
+d.querySelectorAll('.duo-card').forEach(function(c){c.addEventListener('click',function(){
+ var p=d.querySelector('.duo-panel[data-t="'+c.getAttribute('data-t')+'"]');if(!p)return;
+ cur=p;last=c;while(p.firstChild)body.appendChild(p.firstChild);
+ ttl.textContent=c.querySelector('.duo-t').textContent;md.hidden=false;document.body.classList.add('duo-lock');
+ md.querySelector('.duo-sheet').scrollTop=0;md.querySelector('.duo-x').focus();});});
+md.addEventListener('click',function(e){if(e.target===md||e.target.closest('.duo-x'))shut();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});
+md.addEventListener('click',function(e){
+ var t=e.target.closest('.ai-tile');
+ if(t){md.querySelectorAll('.ai-tile').forEach(function(x){var on=x===t;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
+  md.querySelectorAll('.ai-pane').forEach(function(p){p.hidden=p.getAttribute('data-co')!==t.getAttribute('data-co');});}});
+md.addEventListener('change',function(e){var s=e.target.closest('.ai-sel select');if(!s)return;
+ md.querySelectorAll('.ai-ev').forEach(function(r){r.hidden=!(s.value==='全部類型'||r.getAttribute('data-ty')===s.value);});
+ md.querySelectorAll('.ai-day').forEach(function(g){g.hidden=!g.querySelector('.ai-ev:not([hidden])');});});
+})();</script>"""
+
+
+def _duo(ctxs: dict) -> str:
+    """期中選舉＋AI 大事兩張小卡（2026-10-29）：左右並排、不包外層卡；點了跳出視窗看完整內容。"""
+    tiles, panels = [], []
+    for t, (tile, panel) in (("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events")))):
+        if tile:
+            tiles.append(tile)
+            panels.append(f'<div class="duo-panel" data-t="{t}" hidden>{panel}</div>')
+    if not tiles:
+        return ""
+    return (f'<section class="duo{" duo-1" if len(tiles) == 1 else ""}" aria-label="期中選舉與 AI 大事">'
+            f'<div class="duo-grid">{"".join(tiles)}</div>{"".join(panels)}{_DUO_JS}</section>')
+
+
 def _archive_days(f: dict) -> tuple[str, str]:
     """
     主軸存檔（2026-10）：今天＋過去最多 6 個有發布的日子（共 7 天）。回傳 (日期選單, 過去幾天的面板)。
@@ -1151,12 +1205,12 @@ def _archive_days(f: dict) -> tuple[str, str]:
                      f'<span class="fs-src">{esc(l.get("source", ""))}</span></li>'
                      for l in (x.get("links") or []) if l.get("link"))
         _hx = ("本週回顧｜" if x.get("weekly") else "") + (x.get("headline") or "")
+        _body = ("".join(f'<p class="fs-main">{_ptg(i)}{esc(m)}</p>' for i, m in enumerate(mains))
+                 + (f'<p class="fs-rate"><b>對利率</b>{esc(x["rate_note"])}</p>' if x.get("rate_note") else "")
+                 + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else ""))
         panels += (f'<div class="fs-day-p" data-day="{esc(x["date"])}" hidden>'
                    + (f'<p class="fs-headline">{esc(_hx)}</p>' if _hx else "")
-                   + "".join(f'<p class="fs-main">{_ptg(i)}{esc(m)}</p>' for i, m in enumerate(mains))
-                   + (f'<p class="fs-rate"><b>對利率</b>{esc(x["rate_note"])}</p>' if x.get("rate_note") else "")
-                   + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else "")
-                   + '</div>')
+                   + _fold(_body, bool(_hx)) + '</div>')
     js = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
           "var sel=st.querySelector('.fs-days select');if(!sel)return;"
           "sel.addEventListener('change',function(){var d=sel.value;"
@@ -1286,15 +1340,16 @@ def _focus_strip(f: dict | None) -> str:
         _hl = (f.get("headline") or "").strip()
         _rn = (f.get("rate_note") or "").strip()
         _days, _past = _archive_days(f)
-        text = ('<div class="fs-body"><div class="fs-kicker">'
-                + ("本週回顧與下週重點" if _weekly else "今日主軸") + '</div>' + _days
+        # 2026-10-29：日期選單移到「今日主軸」同一列右上；預設只露標題，其餘收合（沒有標題時全部展開）
+        _cur = ("".join('<p class="fs-main">' + _point_tag(f, i) + esc(s) + '</p>' for i, s in enumerate(_mp))
+                + (f'<p class="fs-rate"><b>對利率</b>{esc(_rn)}</p>' if _rn else "")
+                + ('<ul class="fs-list">' + "".join(_items) + '</ul>' if _items else ""))
+        text = ('<div class="fs-body"><div class="fs-top"><div class="fs-kicker">'
+                + ("本週回顧與下週重點" if _weekly else "今日主軸") + '</div>' + _days + '</div>'
                 + '<div class="fs-day-p" data-day="cur">'
                 + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
-                + "".join('<p class="fs-main">' + _point_tag(f, i) + esc(s) + '</p>' for i, s in enumerate(_mp))
-                + (f'<p class="fs-rate"><b>對利率</b>{esc(_rn)}</p>' if _rn else "")
-                + ('<ul class="fs-list">' + "".join(_items) + '</ul>'
-                   if _items else "")
-                + '</div>' + _past + '</div>')
+                + _fold(_cur, bool(_hl))
+                + '</div>' + _past + _FOLD_JS + '</div>')
     else:
         text = ('<ul class="fs-body fs-list">'
                 + "".join(f'<li class="fs-text">{esc(s)}</li>' for s in _paras)
@@ -2022,7 +2077,7 @@ def home_body(ctxs: dict) -> str:
     return f"""
 <main class="home-dashboard hm">
   {_focus_strip(ctxs.get('_focus'))}
-  {_election_card(ctxs.get('_election'))}
+  {_duo(ctxs)}
   <section class="home-hero hm-hero {esc(sc.lean)}" aria-labelledby="home-now">
     <div class="hm-band">
       <div class="hm-kick"><span class="hm-num">01</span>今日結論</div>

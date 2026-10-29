@@ -1256,8 +1256,11 @@ MAIN_PARA = "¶"
 MAX_MAIN_PARAS = 3
 POINT_MIN = 80              # v2.4 兩個重點：每個重點至少幾個中文字（總長 250、各約一半）
 # 2026-10-28：兩個重點分開寫，每段各自的字數（有內文 80–140、只有標題 50–80）
-PARA_CAP, PARA_MIN = 140, 80
+PARA_CAP, PARA_MIN = 100, 60          # 2026-10-29：兩個重點時每段約 100 字（超過不退回）
 THIN_CAP, POINT_MIN_THIN = 80, 50
+SINGLE_CAP, SINGLE_MIN = 150, 100      # 只有一個重點時約 150 字；只有標題時 60–120
+SINGLE_THIN_CAP, SINGLE_THIN_MIN = 120, 60
+_REWRITE = "讀完報導後用自己的話全篇重寫，不要逐句翻譯、不要每篇報導各講一句拼起來；"
 
 
 def focus_caps(cfg: dict | None) -> list[int]:
@@ -2150,7 +2153,7 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
 _FOCUS_PARA_SYSTEM = (
     "你是財經記者，負責一個美國利率與總經儀表板「今日主軸」的第二個重點。輸入是同一件事的幾篇報導，"
     "每篇有代號，例如【報導2｜Reuters｜10/9】；標「只有標題」的只有標題與官方摘要、沒有內文。"
-    "{event}只寫這件事，寫成一段 {min}–{main} 個中文字：發生了什麼（誰、做了什麼、數字）、為什麼、"
+    "{event}只寫這件事。" + _REWRITE + "寫成一段約 {main} 個中文字（至少 {min} 字）：發生了什麼（誰、做了什麼、數字）、為什麼、"
     "官員、分析師或市場怎麼解讀（只寫材料裡有的說法）。只有標題的報導只能轉述字面上的事，不得推測內文。"
     "硬性規則：只能使用材料已有的資訊，不得補充材料以外的事實或數字；不做預測、不下投資結論；繁體中文；"
     "不要評論材料本身，不要出現「材料」「代號」「重點二」這類字眼。" + _NEWS_RULES +
@@ -2197,9 +2200,10 @@ def _lead_system(tmpl: str, one_para: bool) -> str:
     out = re.sub(r'"【補充】\{ns\} 行.*?\n"', "", tmpl)
     out = re.sub(r"【補充】\{ns\} 行[^\n]*?\n", "", out)
     out = out.replace("——補充只夠寫一則就只寫一則", "")
+    out = out.replace("【主軸】{min}–{main} 個中文字，", "【主軸】約 {main} 個中文字（至少 {min} 字），")
     out = out.replace("【標題】【主軸】【對利率】【補充】【來源】", "【標題】【主軸】【對利率】【來源】")
     if one_para:
-        out = out.replace("分 2–3 段（每段一行）", "寫成一段")
+        out = out.replace("分 2–3 段（每段一行）", "寫成一段；" + _REWRITE.rstrip("；"))
     return out
 
 
@@ -4737,8 +4741,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 cap1 = THIN_CAP if _thin[0] else PARA_CAP
                 min1 = POINT_MIN_THIN if _thin[0] else PARA_MIN
             else:
-                cap1 = caps[0]
-                min1 = min(mins[0], HEADLINE_ONLY_MIN) if _thin[0] and mins else (mins or [DEFAULT_MAIN_MIN])[0]
+                cap1 = SINGLE_THIN_CAP if _thin[0] else SINGLE_CAP
+                min1 = SINGLE_THIN_MIN if _thin[0] else SINGLE_MIN
             flog["points"] = 2 if _two else 1
             if any(_thin[:2 if _two else 1]):
                 flog["thin"] = ["重點一" if _thin[0] else "", "重點二" if _two and _thin[1] else ""]
@@ -4774,8 +4778,8 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 log.warning("市場焦點：重點一用內文寫失敗（%s），改用標題再寫一次", err)
                 res, err = write_main([], items1[:3], keywords, env, mode="title", rate_ctx=rate_ctx,
                                       event_note=_ev_note + _thin_note, part="lead", preview=_preview,
-                                      caps=[THIN_CAP if _two else caps[0]],
-                                      mins=[POINT_MIN_THIN if _two else min(min1, HEADLINE_ONLY_MIN)], **_base)
+                                      caps=[THIN_CAP if _two else SINGLE_THIN_CAP],
+                                      mins=[POINT_MIN_THIN if _two else SINGLE_THIN_MIN], **_base)
             flog["retry"] = {"重點一": [w for w in (res or {}).get("why", []) if w]}
             top = items1[:3]
             if res and _two:

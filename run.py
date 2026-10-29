@@ -610,7 +610,7 @@ def gather_fomc(offline: bool, fetch_cfg: dict, notes: dict | None = None):
                 extras["roster"], extras.get("board_titles") or {},
                 statements, clock.today())
             extras["news"] = src.news(_offs)
-            log.info("官員新聞：%d 位投票委員有近期標題", len(extras["news"]))
+            log.info("官員新聞：%d 位委員有近 90 天標題", len(extras["news"]))
     except Exception as e:                         # noqa: BLE001
         log.warning("聯準會頁事實層抓取失敗（%s），相關區塊本次不顯示", e)
     return statements, upcoming, src.failed, extras
@@ -980,7 +980,6 @@ def main() -> int:
             log.error("聯準會：%s；停止發布，網站維持上一版，下次排程再試", e)
             return 2
         all_failed += failed
-        fextras["official_stance"] = fcfg.get("official_stance") or {}
         ctxs["fomc"] = build.build_fomc_context(
             statements, fcfg.get("policy_rate") or {},
             failed, args.offline, upcoming=upcoming,
@@ -1151,6 +1150,17 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("期中選舉預測產生失敗（%s），該卡片本次不顯示", e)
         ctxs["_election"] = None
+    # 2026-10-29：AI 大事（十家公司近 14 天的重大事件＋Anthropic IPO 進度）
+    try:
+        from src.analysis import ai_events as _aie
+        ctxs["_ai_events"] = _aie.build((_focus_cfg or {}).get("ai_events"),
+                                        STATE_FILE.parent / "ai_events.json", args.offline)
+        if ctxs["_ai_events"]:
+            log.info("AI 大事：%d 則事件（新增：%s）", len(ctxs["_ai_events"]["events"]),
+                     "、".join(ctxs["_ai_events"]["changed"]) or "無")
+    except Exception as e:                         # noqa: BLE001
+        log.warning("AI 大事產生失敗（%s），該卡片本次不顯示", e)
+        ctxs["_ai_events"] = None
     # 今日主軸的權威數字：官方數據的期別與本站算好的主要數值（期別對得上才附，見 focus_today.release_facts）
     _fv = {}
     try:
