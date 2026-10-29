@@ -1195,7 +1195,8 @@ def _archive_days(f: dict) -> tuple[str, str]:
     def lab(d):
         dd = dt.date.fromisoformat(d)
         return f"{dd.month}/{dd.day}（{'一二三四五六日'[dd.weekday()]}）"
-    cur_lab = "今天" if (cur and cur["date"] == today) or not cur else lab(cur["date"])
+    # 2026-10-29：選單一律寫日期（星期幾），預設選中最新一版（今天打開就是今天）
+    cur_lab = lab(cur["date"]) if cur else lab(today)
     opts = (f'<option value="cur" selected>{esc(cur_lab)}</option>'
             + "".join(f'<option value="{esc(x["date"])}">{esc(lab(x["date"]))}'
                       f'{"　本週回顧" if x.get("weekly") else ""}</option>' for x in past))
@@ -1351,7 +1352,7 @@ def _focus_strip(f: dict | None) -> str:
                 + ("本週回顧與下週重點" if _weekly else "今日主軸") + '</div>' + _days + '</div>'
                 + '<div class="fs-day-p" data-day="cur">'
                 + (f'<p class="fs-headline">{esc(_hl)}</p>' if _hl else "")
-                + _fold(_cur, bool(_hl))
+                + _fold(_cur + "<!--FS_BRAND-->", bool(_hl))
                 + '</div>' + _past + _FOLD_JS + '</div>')
     else:
         text = ('<ul class="fs-body fs-list">'
@@ -1430,6 +1431,12 @@ def _focus_strip(f: dict | None) -> str:
              + '<span class="fs-srcs">'
              + (f'　·　新聞：{esc("、".join(_srcs[:3]))}' if _srcs else "")
              + '</span></span></div>')
+    # 2026-10-29：品牌與來源說明收進「展開全文」；沒有收合（沒有標題）時照舊放在卡片最下方
+    _bn = f'{brand}<div class="fs-note">{esc(note)}</div>'
+    if "<!--FS_BRAND-->" in text:
+        _text, _tail = text.replace("<!--FS_BRAND-->", _bn, 1), ""
+    else:
+        _text, _tail = text, _bn
     # 桌機兩欄：左邊 2×2 數據磚、右邊新聞——截圖是一張緊湊的橫幅；
     # 手機上下堆疊。
     return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
@@ -1438,8 +1445,8 @@ def _focus_strip(f: dict | None) -> str:
             '<div class="fs-grid">'
             '<div class="fs-chips"><div class="fs-hd"><span>指標</span>'
             '<span>變動</span><span>數值</span></div>' + "".join(chips) + '</div>'
-            f'<div class="fs-news">{text}{links}</div></div>'
-            f'{brand}<div class="fs-note">{esc(note)}</div>'
+            f'<div class="fs-news">{_text}{links}</div></div>'
+            f'{_tail}'
             + script + '</section>')
 
 
@@ -1711,41 +1718,6 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
               "cpi": (ik.get("mini") or {}).get("core6", ""),
               "pce": (ik.get("mini") or {}).get("pcemom6", "")}
 
-    def _cons(e, short=False):
-        c = cons.get(f"{e['key']}|{e['date'].isoformat()}") or []
-        if not c:
-            return ""
-        if short:
-            x = c[0]
-            return (f'<span class="hm-cons-s">預估 {esc(x["forecast"] or "—")}'
-                    f'｜前值 {esc(x["previous"] or "—")}</span>')
-        return ('<div class="hm-cons"><span class="hm-cons-k">市場預估</span>'
-                + "".join(f'<span class="hm-cons-i"><span class="hm-cons-l">{esc(x["label"])}</span>'
-                          f'<b>{esc(x["forecast"] or "—")}</b>'
-                          f'<small>前值 {esc(x["previous"] or "—")}</small></span>' for x in c[:4])
-                + '</div>')
-
-    def _hi_extra(e):
-        out = _cons(e)
-        if not out and e["key"] in _prev:
-            out = f'<div class="hm-cons"><span class="hm-cons-k">尚無市場預估</span><span class="hm-cons-p">{esc(_prev[e["key"]])}</span></div>'
-        if _trend.get(e["key"]):
-            out += (f'<details class="hm-tr"><summary>近 6 期走勢</summary>'
-                    f'{_trend[e["key"]]}</details>')
-        return out
-
-    def _mrow(e):
-        return (f'<div class="hm-mid"><span class="hm-mid-d">{esc(e["label"])}</span>'
-                f'<b>{esc(e["name"])}{_cons(e, True)}</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
-
-    def _xrow(e, cls):
-        tag = (f'<em class="hm-x-tag">{esc(e["tag"])}</em>' if e.get("tag") else "")
-        vt = ('<em class="hm-x-vote">票委</em>' if e.get("voter") else "")
-        return (f'<div class="hm-mid hm-x {cls}"><span class="hm-mid-d">{esc(e["label"])}</span>'
-                f'<b>{tag}{esc(e["name"])}{vt}'
-                + (f'<small class="hm-x-sub">{esc(e["sub"])}</small>' if e.get("sub") else "")
-                + f'</b><span class="hm-mid-t">{esc(e["when"])}</span></div>')
-
     # 休市（2026-10）：七個市場的休市與提早收盤，分股／債／匯
     from ..analysis import market_holidays as mh
     hols = mh.market_events(start, end)
@@ -1771,18 +1743,53 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         head, sep, tw = t.partition("＝台灣")
         return esc(head) + (f'<span class="hm-hol-tw">{esc(sep + tw)}</span>' if sep else "")
 
-    def _hrow(e, same):
+    # ---- 2026-10-29：列表與月曆共用同一種事件列（時間・符號・名稱・預估前值），依日期分組 ----
+    def _wv_row(t, mk, name, sub="", tag="", extra=""):
+        return (f'<div class="wv-ev"><span class="wv-t">{esc(t)}</span>{mk}<div class="wv-b">'
+                f'<span class="wv-nm">{esc(name)}{tag}</span>'
+                + (f'<span class="wv-cs">{sub}</span>' if sub else "") + extra + '</div></div>')
+
+    def _wv_data(e):
+        c = cons.get(f"{e['key']}|{e['date'].isoformat()}") or []
+        if c:
+            def _lb(x):        # 項目名稱跟事件名稱重複（GDP、初領）就不寫
+                lb = x.get("label") or ""
+                return "" if not lb or lb in e["name"] or e["name"] in lb else lb + " "
+            sub = "・".join(f'{esc(_lb(x))}預估 <b>{esc(x["forecast"] or "—")}</b>・前值 {esc(x["previous"] or "—")}'
+                           for x in c[:2])
+        else:
+            sub = esc(_prev.get(e["key"], ""))
+        hi = e.get("impact") == "high"
+        extra = (f'<details class="wv-tr"><summary>近 6 期走勢</summary>{_trend[e["key"]]}</details>'
+                 if hi and _trend.get(e["key"]) else "")
+        return _wv_row(e["tpe"].strftime("%H:%M"), f'<i class="mk mk-d{"" if hi else " mk-o"}"></i>', e["name"], sub,
+                       '<em class="wv-hi">高影響</em>' if hi else "", extra)
+
+    def _wv_x(e, k):
+        t = "未定" if e.get("when") == "時間未定" else e["tpe"].strftime("%H:%M")
+        name = e["name"]
+        return _wv_row(t, f'<i class="mk mk-{k}"></i>', name, esc(e.get("sub") or ""),
+                       '<em class="wv-vt">票委</em>' if e.get("voter") else "")
+
+    def _wv_hol(e):
         tag, st_ = mh.status_text(e)
-        cls = {"全部休市": "all", "部分休市": "part"}.get(tag, "early")
-        note = e.get("note") or ""
-        when = ""
-        return (f'<div class="hm-mid hm-x hm-hol{" hm-same" if same else ""}">'
-                f'<span class="hm-mid-d">{esc(_hm_label(e["date"]))}</span>'
-                f'<b><em class="hm-hol-tag hm-hol-{cls}">{esc(tag)}</em>{esc(e["mk_zh"])}'
-                f'<span class="hm-hol-nm">{esc(e["name"])}</span>'
-                + (f'<small class="hm-x-sub">{_st_html(st_)}</small>' if st_ else "")
-                + (f'<small class="hm-x-sub hm-hol-note">{esc(note)}</small>' if note else "")
-                + f'</b><span class="hm-mid-t">{esc(when)}</span></div>')
+        sub = "・".join(x for x in (esc(e["name"]), _st_html(st_) if st_ else "", esc(e.get("note") or "")) if x)
+        return _wv_row("全天", '<em class="mk-h">休</em>', f'{e["mk_zh"]} {tag}', sub)
+
+    def _wv_days(items):
+        """items：[(日期, html)] → 依日期分組；今天在日期後加橘字「今天」。"""
+        out, cur = [], None
+        for d, h in sorted(items, key=lambda x: x[0]):
+            if d != cur:
+                if cur is not None:
+                    out.append('</div>')
+                cur = d
+                out.append(f'<div class="wv-day"><div class="wv-dh">{esc(_hm_label(d))}'
+                           + ('<span>今天</span>' if d == today else "") + '</div>')
+            out.append(h)
+        if cur is not None:
+            out.append('</div>')
+        return "".join(out)
 
     radios, panels = [], []
     for w in range(weeks):
@@ -1790,28 +1797,19 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         b_ = a_ + dt.timedelta(days=6)
         name = (wc._GROUPS[(a_ - mon).days // 7] if (a_ - mon).days // 7 < len(wc._GROUPS) else f"第 {w + 1} 週")
         wk = [e for e in rows if e.get("week") == w]
-        hi = [e for e in wk if e["impact"] == "high"]
-        mid = [e for e in wk if e["impact"] != "high"]
-        body = "".join(
-            f'<div class="hm-hi"><div class="hm-hi-d"><b>{esc(e["label"])}</b><span>{esc(e["when"])}</span></div>'
-            f'<div class="hm-hi-b"><b>{esc(e["name"])}<em>高影響</em></b>'
-            # 第十九批（使用者：數據這裡不用解釋這麼多文字）：只留市場預估／前值與走勢，
-            # 轉格條件的完整說明在情境頁
-            + _hi_extra(e) + '</div></div>' for e in hi)
-        if mid:
-            body += ('<div class="hm-mids-h">其他發布（影響中）</div><div class="hm-mids">'
-                     + "".join(_mrow(e) for e in mid) + '</div>')
+        # 2026-10-29：不再用大卡區分高影響，同一天的依時間排成同一種列
+        body = _wv_days([(e["tpe"].date(), _wv_data(e)) for e in sorted(wk, key=lambda e: e["tpe"])])
         if not wk:
             body = '<p class="home-empty">這一週沒有排定的重要發布。</p>'
         sw = [e for e in supply if e["week"] == w]
         pw = [e for e in speeches if e["week"] == w]
-        sup_html = ("".join(_xrow(e, "") for e in sw) if sw else
+        sup_html = (_wv_days([(e["tpe"].date(), _wv_x(e, "s")) for e in sw]) if sw else
                     '<p class="home-empty">這一週沒有排定的附息公債標售或國債回購。</p>')
-        spk_html = ("".join(_xrow(e, "") for e in pw) if pw else
+        spk_html = (_wv_days([(e["tpe"].date(), _wv_x(e, "p")) for e in pw]) if pw else
                     '<p class="home-empty">' + ("目前只排得到理事會成員的行程；地區聯儲總裁的談話要到該週才公布。"
                                                 if w >= 1 else "這一週沒有排定的官員談話。") + '</p>')
         hw = _hgroups([e for e in hols if a_ <= e["date"] <= b_])
-        hol_html = ("".join(_hrow(e, i > 0 and hw[i - 1]["date"] == e["date"]) for i, e in enumerate(hw))
+        hol_html = (_wv_days([(e["date"], _wv_hol(e)) for e in hw])
                     if hw else '<p class="home-empty">這一週七個市場都正常交易。</p>')
         prev_l = (f'<label class="hm-wk-a" for="hm-wk-{w - 1}" aria-label="上一週">‹</label>'
                   if w else '<span class="hm-wk-a off">‹</span>')
@@ -1824,19 +1822,19 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                f'<span class="hm-cnt hm-cnt-hol">{len(hw)} 項</span>')
         radios.append(f'<input type="radio" name="hm-wk" id="hm-wk-{w}" class="hm-wk-in"{" checked" if w == 0 else ""}>')
         panels.append(f'<div class="hm-wk-p"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t"><b>{esc(name)}</b>'
-                      f'<span>{a_.month}/{a_.day}–{b_.month}/{b_.day}　·　{cnt}</span>'
                       f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>'
                       f'<div class="hm-cat hm-cat-data">{body}</div>'
                       f'<div class="hm-cat hm-cat-sup">{sup_html}</div>'
                       f'<div class="hm-cat hm-cat-spk">{spk_html}</div>'
-                      f'<div class="hm-cat hm-cat-hol">{hol_html}</div></div>')
+                      f'<div class="hm-cat hm-cat-hol">{hol_html}</div>'
+                      f'<p class="wv-cnt">{esc(name)} {a_.month}/{a_.day}–{b_.month}/{b_.day}・{cnt}・台灣時間</p></div>')
     cats = ('<input type="radio" name="hm-cat" id="hm-cat-data" class="hm-cat-in" checked>'
             '<input type="radio" name="hm-cat" id="hm-cat-sup" class="hm-cat-in">'
             '<input type="radio" name="hm-cat" id="hm-cat-spk" class="hm-cat-in">'
             '<input type="radio" name="hm-cat" id="hm-cat-hol" class="hm-cat-in">'
             '<div class="hm-cats" role="group" aria-label="篩選">'
-            '<label for="hm-cat-data">數據</label><label for="hm-cat-sup">發債</label>'
-            '<label for="hm-cat-spk">官員談話</label><label for="hm-cat-hol">休市</label></div>')
+            '<label for="hm-cat-data"><i class="mk mk-d"></i>數據</label><label for="hm-cat-sup"><i class="mk mk-s"></i>發債</label>'
+            '<label for="hm-cat-spk"><i class="mk mk-p"></i>官員談話</label><label for="hm-cat-hol"><em class="mk-h">休</em>休市</label></div>')
     listing = (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
                f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
     # 今日快報（限時動態）第五則：存「完整日期與時間」，由瀏覽器依當下台灣時間判斷
@@ -1867,13 +1865,20 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
     _up.sort(key=lambda x: (x["date"], 0 if x["k"] == "h" else 1 if x.get("at") else 2, x.get("at") or ""))
     ctxs["_story_up"] = _up
     # 2026-10：「列表／月曆」切換（使用者：做一個總月曆，四種內容都要表示）
-    cal = _hm_calendar(today, start, end, rows, supply, speeches, hols,
-                       _mrow, _xrow, _hrow, _hgroups)
+    def _cal_day(d, ev):
+        items = ([(d, _wv_data(e)) for e in sorted(ev["d"], key=lambda e: e["tpe"])]
+                 + [(d, _wv_x(e, "s")) for e in ev["s"]] + [(d, _wv_x(e, "p")) for e in ev["p"]]
+                 + [(d, _wv_hol(e)) for e in _hgroups(ev["h"])])
+        kinds = ["d"] * len(ev["d"]) + ["s"] * len(ev["s"]) + ["p"] * len(ev["p"]) + ["h"] * len(_hgroups(ev["h"]))
+        html = _wv_days(items)
+        # 每一列標上種類，月曆的開關才隱藏得到
+        for k in kinds:
+            html = html.replace('<div class="wv-ev">', f'<div class="wv-ev hc-k-{k}">', 1)
+        return html
+    cal = _hm_calendar(today, start, end, rows, supply, speeches, hols, _cal_day)
     return ('<div class="hm-view">'
             '<input type="radio" name="hm-view" id="hm-view-list" class="hm-view-in" checked>'
             '<input type="radio" name="hm-view" id="hm-view-cal" class="hm-view-in">'
-            '<div class="hm-view-sw" role="group" aria-label="顯示方式">'
-            '<label for="hm-view-list">列表</label><label for="hm-view-cal">月曆</label></div>'
             + listing + cal + _hm_notes(end) + '</div>' + _HM_CAL_JS)
 
 
@@ -1911,8 +1916,7 @@ if(first)pick(first.getAttribute('data-d'),first);})();
 </script>"""
 
 
-def _hm_calendar(today, start, end, rows, supply, speeches, hols,
-                 _mrow, _xrow, _hrow, _hgroups) -> str:
+def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) -> str:
     """
     月曆（2026-10）：數據 ●（高影響實心、中影響空心）、發債 ■、官員談話 ▲；
     美國或台灣全部休市＝整格淺灰＋「休」，部分休市或提早收盤＝「半」
@@ -1991,19 +1995,12 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols,
                   if i < len(months) - 1 else '<span class="hm-wk-a off">›</span>')
         radios.append(f'<input type="radio" name="hc-m" id="hc-m-{i}" class="hc-m-in"{" checked" if i == 0 else ""}>')
         panels.append(f'<div class="hc-mp"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t">'
-                      f'<b>{m.year} 年 {m.month} 月</b></div>{next_l}</div>'
+                      f'<b>{m.month} 月</b></div>{next_l}</div>'
                       f'<div class="hc-grid">{cells}</div></div>')
     # 每一天的明細（點日期才顯示）
     dds = []
     for d in sorted(by):
-        ev = by[d]
-        parts = ([f'<div class="hc-row hc-k-d{"" if e.get("impact") == "high" else " hc-lo"}">{_mrow(e)}</div>'
-                  for e in ev["d"]]
-                 + [f'<div class="hc-row hc-k-s">{_xrow(e, "")}</div>' for e in ev["s"]]
-                 + [f'<div class="hc-row hc-k-p">{_xrow(e, "")}</div>' for e in ev["p"]]
-                 + [f'<div class="hc-row hc-k-h">{_hrow(e, False)}</div>' for e in _hgroups(ev["h"])])
-        dds.append(f'<div class="hc-dd" data-d="{d.isoformat()}" hidden>'
-                   f'<div class="hc-dd-h">{esc(_hm_label(d))}</div>{"".join(parts)}</div>')
+        dds.append(f'<div class="hc-dd" data-d="{d.isoformat()}" hidden>{render_day(d, by[d])}</div>')
     filt = ('<input type="checkbox" id="hc-f-d" class="hc-f-in" checked>'
             '<input type="checkbox" id="hc-f-s" class="hc-f-in" checked>'
             '<input type="checkbox" id="hc-f-p" class="hc-f-in" checked>'
@@ -2011,13 +2008,14 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols,
             '<div class="hc-lg" role="group" aria-label="圖例與篩選">'
             '<label for="hc-f-d"><i class="mk mk-d"></i>數據</label>'
             '<label for="hc-f-s"><i class="mk mk-s"></i>發債</label>'
-            '<label for="hc-f-p"><i class="mk mk-p"></i>官員談話</label>'
-            '<label for="hc-f-h"><em class="hc-h">休</em>休市</label></div>')
+            '<label for="hc-f-p"><i class="mk mk-p"></i>官員</label>'
+            '<label for="hc-f-h"><em class="mk-h">休</em>休市</label></div>')
     return ('<div class="hm-cal">' + filt + "".join(radios)
             + f'<div class="hc-ms">{"".join(panels)}</div>'
             + f'<div class="hc-dds">{"".join(dds)}'
-            + '<div class="hc-dd hc-dd-none" hidden><div class="hc-dd-h"><b></b></div>'
-              '<p class="home-empty">這一天沒有排定的事項。</p></div></div></div>')
+            + '<div class="hc-dd hc-dd-none" hidden><div class="wv-dh"><b></b></div>'
+              '<p class="home-empty">這一天沒有排定的事項。</p></div></div>'
+            + '<p class="wv-cnt">點類別隱藏／顯示・點日期看當天・台灣時間</p></div>')
 
 
 def forecasts_section(fc: dict | None) -> str:
@@ -2112,7 +2110,7 @@ def home_body(ctxs: dict) -> str:
 
   <section class="home-zone hm-zone" aria-labelledby="home-next">
     <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
-      <p>未來四週，台灣時間</p></div>
+      <p class="wv-sw"><label for="hm-view-list">列表</label>・<label for="hm-view-cal">月曆</label></p></div>
     {_hm_watch(ctxs, sc)}
     {section_learn("/", "home-next")}
   </section>

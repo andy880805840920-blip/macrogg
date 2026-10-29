@@ -36,7 +36,7 @@ f = {"yields": [], "links": [], "fedwatch": None, "layout": "main", "headline": 
 h = home._focus_strip(f)
 check("① ARCHIVE_SHOW＝7", ft.ARCHIVE_SHOW == 7)
 check("① 日期是下拉選單、預設今天、共 7 天（今天＋過去 6 天）",
-      '<select aria-label="主軸日期">' in h and '<option value="cur" selected>今天</option>' in h
+      '<select aria-label="主軸日期">' in h and '<option value="cur" selected>10/29（四）</option>' in h
       and h.count("<option") == 7 and h.count('class="fs-day-p"') == 7, h.count("<option"))
 check("① 不再列一排膠囊按鈕", 'data-day="cur" aria-pressed' not in h)
 check("① 週日版標「本週回顧」", "（日）　本週回顧" in h)
@@ -91,6 +91,44 @@ check("⑥ 沒帶種類時維持舊行為", ft._decided_hits("聯準會決議維
 check("⑥ 沒有對應規則的事件（例：國會證詞）不檢查", ft._decided_hits("聯準會決議維持利率不變", "10/29|testimony") == [])
 _src6 = (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8")
 check("⑥ build 傳入的 preview 帶事件種類", '_preview = f"{_d}|{_k}"' in _src6)
+
+# ⑦ 2026-10-29 晚：總覽清爽化
+_css7 = (ROOT / "src/site.py").read_text(encoding="utf-8")
+check("⑦ 說明與完整教學縮小、拿掉多餘分隔線、膠囊改底線、快報與選擇指標靠右",
+      "html body .learn-more{border-top:0" in _css7 and "html body details.hm-c2-more" in _css7
+      and "border-bottom:1.5px solid currentColor" in _css7 and ".fs-head .fs-story-btn{margin-left:auto" in _css7)
+f7 = {"yields": [], "links": [{"title": "t", "link": "https://x", "source": "CNBC"}], "fedwatch": None, "layout": "main",
+      "headline": "標題", "rate_note": "", "text": "主軸\n補充", "text_source": "model-content", "topics": [], "chips": []}
+h7 = home._focus_strip(f7)
+_m7 = h7.split('<div class="fs-more" hidden>', 1)[-1].split('</div></div><script>', 1)[0]
+check("⑦ 品牌與來源說明收進「展開全文」", 'class="fs-brand"' in _m7 and 'class="fs-note"' in _m7 and h7.count('class="fs-brand"') == 1)
+check("⑦ 沒有標題（不收合）時品牌照舊放卡片底部", 'class="fs-brand"' in home._focus_strip(dict(f7, headline="")))
+from src.pages import forecasts_ui as _FU
+_h7 = _FU.section({"releases": {"pce|2026-09": {"key": "pce", "period": "2026-09", "date": "2026-10-29"}}}, dt.date(2026, 10, 29))
+check("⑦ 各家預測公布當天也預設收合", 'class="fc-fold" open' not in _h7 and 'class="fc-fold"' in _h7)
+
+# ⑧ 2026-10-29 晚：03「接下來看什麼」列表與月曆一致
+from src.analysis import fomc_extra as _fx8
+_T8 = dt.datetime(2026, 10, 29, 18, 0, tzinfo=clock.TAIPEI)
+clock.now, clock.today = (lambda: _T8), (lambda: _T8.date())
+_c8 = {"fomc": {"next_meeting": _fx8.next_meeting_info([(dt.date(2026, 12, 8), dt.date(2026, 12, 9))], _T8.date()), "agenda": []},
+       "_schedule": {"pce": [("2026-10-29", "官方行事曆")], "gdp": [("2026-10-29", "官方行事曆")]}, "_calendar": {},
+       "_watch_extra": {"consensus": {"pce|2026-10-29": [{"label": "核心 PCE 月增", "forecast": "0.3%", "previous": "0.2%"}],
+                                      "gdp|2026-10-29": [{"label": "GDP", "forecast": "3.2%", "previous": "1.5%"}]},
+                        "auctions": [{"date": "2026-10-29", "name": "7 年期公債標售", "src": "財政部暫定"}],
+                        "speeches": [{"et": "2026-10-31T10:00:00", "name": "Daly", "role": "舊金山聯儲總裁", "kind": "談話"}]}}
+w8 = home._hm_watch(_c8, type("S", (), {"triggers": []})(), weeks=4)
+_hs8 = (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
+check("⑧ 列表・月曆改小字切換（標題列）", '<p class="wv-sw"><label for="hm-view-list">列表</label>・<label for="hm-view-cal">月曆</label></p>' in _hs8
+      and 'class="hm-view-sw"' not in _hs8)
+check("⑧ 列表分類有符號、沒有「全部」", '<i class="mk mk-d"></i>數據' in w8 and '<em class="mk-h">休</em>休市' in w8
+      and "hm-cat-all" not in w8 and ">全部<" not in w8)
+check("⑧ 不再有大卡片與「其他發布」", "其他發布" not in w8 and 'class="wv-ev"' in w8)
+check("⑧ 日期列「10/29（四）今天」", '10/29（四）<span>今天</span>' in w8)
+check("⑧ GDP 不重複寫成「GDP 預估」", "GDP 預估" not in w8)
+check("⑧ 發債名稱不加「標售・」前綴", "標售・7 年期" not in w8 and "7 年期公債標售" in w8)
+check("⑧ 月曆分類是顯示／隱藏、標籤為「官員」", 'type="checkbox"' in w8 and "點類別隱藏／顯示" in w8 and ">官員<" in w8)
+check("⑧ 月曆當天明細與列表同一套列", 'hc-k-d' in w8 and w8.count('class="wv-dh"') >= 2)
 
 clock.now, clock.today = _now0, _today0
 print()

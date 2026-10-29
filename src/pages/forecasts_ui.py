@@ -92,8 +92,8 @@ FOLD_CSS = r"""
 # 頁面是靜態的（一天更新三次）：瀏覽器端再用台灣日期判斷一次，隔天打開舊頁也對
 FOLD_JS = r"""<script>(function(){var d=document.querySelector('.fc-fold');if(!d)return;var m={};try{m=JSON.parse(d.dataset.openDays||'{}');}catch(e){}
 var t='';try{t=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Taipei'});}catch(e){}
-var k=m[t];if(k){if(!d.open){d.open=true;var r=document.getElementById('fc-t-'+k);if(r)r.checked=true;}}
-else if(d.open&&!location.hash)d.open=false;})();</script>"""
+var k=m[t];if(k){var r=document.getElementById('fc-t-'+k);if(r)r.checked=true;}})();</script>"""
+# 2026-10-29：預設一律收合（公布日只先切到那一項的分頁，不自動展開）
 
 JS = r"""<script>(function(){var root=document.querySelector('.fc');if(!root)return;
 root.addEventListener('click',function(e){var c=e.target.closest('.fc-c');if(!c)return;var p=c.closest('.fc-p');
@@ -386,7 +386,7 @@ def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
     import json as _json
     return (f'<style>{CSS}{FOLD_CSS}</style>'
             '<section class="home-zone hm-zone" aria-labelledby="home-fc">'
-            f'<details class="fc-fold"{" open" if auto else ""} data-open-days="{_esc(_json.dumps(days, separators=(",", ":")))}">'
+            f'<details class="fc-fold" data-open-days="{_esc(_json.dumps(days, separators=(",", ":")))}">'
             '<summary><div class="hm-zh"><div><span class="hm-num">04</span><h2 id="home-fc">各家預測</h2></div>'
             '<p>失業與通膨・各家投行 vs 市場共識</p></div>'
             f'<p class="fc-sum">{_esc(summary_line(rel, today))}</p></summary>'

@@ -52,8 +52,8 @@ check("⑤ 展開日：CPI 10/14、10/15；PCE 10/29、10/30",
       d5.get("2026-10-14") == "cpi" and d5.get("2026-10-15") == "cpi" and d5.get("2026-10-30") == "pce" and "2026-10-16" not in d5, d5)
 h_open = FU.section({"releases": rel5}, dt.date(2026, 10, 15))
 h_shut = FU.section({"releases": rel5}, dt.date(2026, 10, 21))
-check("⑥ 公布隔天展開並切到 CPI；平常收合、有摘要",
-      'class="fc-fold" open' in h_open and 'id="fc-t-cpi" class="fc-in" checked' in h_open
+check("⑥ 2026-10-29 起一律預設收合：公布隔天只先切到 CPI 分頁；平常收合、有摘要",
+      'class="fc-fold" open' not in h_open and 'class="fc-fold" data-open' in h_open and 'id="fc-t-cpi" class="fc-in" checked' in h_open
       and 'class="fc-fold" data-open' in h_shut and 'class="fc-sum"' in h_shut and "PCE 10/29" in h_shut)
 
 # ⑦ x 軸疏化：16 年的年份標籤，手機只留 ≤5 個
