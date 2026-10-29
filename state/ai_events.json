@@ -332,7 +332,79 @@
   "75e9c7c43290": "2026-10-28",
   "91178e375dbc": "2026-10-28",
   "c6629190578e": "2026-10-28",
-  "7aad1dbb137f": "2026-10-28"
+  "7aad1dbb137f": "2026-10-28",
+  "c97082e1ce67": "2026-10-29",
+  "dc386d130b0b": "2026-10-29",
+  "d936b19fe18f": "2026-10-29",
+  "b78eed3ea8e9": "2026-10-29",
+  "0a43f0aebe6d": "2026-10-29",
+  "c1d02165d2ab": "2026-10-29",
+  "b743e29218b8": "2026-10-29",
+  "d599439c10a6": "2026-10-29",
+  "0dd90172f844": "2026-10-29",
+  "45f389309fb9": "2026-10-29",
+  "063b8c4338cf": "2026-10-28",
+  "4d522641f355": "2026-10-28",
+  "df7e45f7dc78": "2026-10-28",
+  "3822a6b2b4fc": "2026-10-29",
+  "d05da7d30599": "2026-10-29",
+  "bfadecc9d09a": "2026-10-29",
+  "d650eeac77fc": "2026-10-29",
+  "d93c7f84466f": "2026-10-29",
+  "0e0430024564": "2026-10-29",
+  "f84d91ec6197": "2026-10-20",
+  "6b8a7dbf9be5": "2026-10-19",
+  "cdcc4ccae15f": "2026-10-29",
+  "90ead5c88695": "2026-10-28",
+  "cf1382792f83": "2026-10-28",
+  "749586c0a9bd": "2026-10-27",
+  "ec2e60b2031f": "2026-10-26",
+  "37aff3102702": "2026-10-26",
+  "75bb9718ebf6": "2026-10-26",
+  "6ff2320b6c71": "2026-10-23",
+  "7a788567d905": "2026-10-22",
+  "64ce118d7c05": "2026-10-22",
+  "74a242f365fc": "2026-10-22",
+  "0f4414a472fa": "2026-10-29",
+  "26aac03e4623": "2026-10-29",
+  "b4ec9266a052": "2026-10-28",
+  "24da587c32ac": "2026-10-28",
+  "ed78b3ad65db": "2026-10-28",
+  "c33db28c8f9f": "2026-10-28",
+  "cff6cdf68b96": "2026-10-28",
+  "553ab8d2f2ff": "2026-10-28",
+  "dd4ec00ee759": "2026-10-29",
+  "76b679ff2f26": "2026-10-28",
+  "39c2ad693bc5": "2026-10-27",
+  "7f8fb8b71863": "2026-10-27",
+  "a895d6d02f3e": "2026-10-27",
+  "c590596911d7": "2026-10-27",
+  "72004a24d5cb": "2026-10-27",
+  "d37e8a198d96": "2026-10-27",
+  "3439a4ef172a": "2026-10-17",
+  "8cd0403dd0db": "2026-10-17",
+  "d72bf1f86194": "2026-10-16",
+  "aeeb6875c030": "2026-10-16",
+  "34c9caa89119": "2026-10-16",
+  "a15eef534984": "2026-10-29",
+  "18da584778ba": "2026-10-29",
+  "a79b5f08f72c": "2026-10-29",
+  "5fb5cac2ed35": "2026-10-27",
+  "9a0cc2e383d3": "2026-10-26",
+  "ceff5992f239": "2026-10-26",
+  "b4e0d7f85cb4": "2026-10-26",
+  "dd1e4d207995": "2026-10-26",
+  "31e1d29ee573": "2026-10-26",
+  "488916a779d8": "2026-10-26",
+  "e52de0def702": "2026-10-26",
+  "8d391e46fa66": "2026-10-26",
+  "b820d0f69a31": "2026-10-24",
+  "e4b6e6243af2": "2026-10-24",
+  "5bb1542a0f97": "2026-10-23",
+  "b5858f152697": "2026-10-23",
+  "68dacdce0b6b": "2026-10-23",
+  "647baf9ccbc7": "2026-10-23",
+  "9354531bdf30": "2026-10-23"
  },
  "events": [
   {
@@ -526,6 +598,34 @@
    ]
   },
   {
+   "id": "d5e4392070c8",
+   "co": "微軟",
+   "type": "發債",
+   "zh": "微軟計畫發行至少250億美元美元債券。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Microsoft Looks to Raise at Least $25 Billion From US Bond Sale",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNVW1FNlVmV2VIM1BicUxLa0t2X2xDaDF5X0dScC0tVmlnX1Z3OGJYVWRVcGtJaGx4R3cwR3E3cFA0enExcXhNUE01bWdyYXl5Z1paeVYyV284SDFkVTFFeWdPYTVLODVMZ29UbzVkSzA0Vlhxc1JlNEhwMnVhMVMzQzU4cmVqdGJEY1I5X0tkaGdkZ1VTQm1JREFoYUV4Q183cFVKT1hQS3JhTkdYbHVwbw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "ca88aa0dbed1",
+   "co": "甲骨文",
+   "type": "融資／IPO",
+   "zh": "甲骨文限制2030年前外部AI融資上限為20億美元。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Oracle caps external AI funding at $20 billion through 2030",
+     "source": "Chosunbiz",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9sU3o3MUtIVWtfRGxtM3pPUzBkTWh3bmpZMEZBTzlra1dFU3ZDX1haR0loUVY1WW55R0Z0REVnUUdPM2YtOWNheVJSV1o5NW1OMjF4MEJHRWdCSjNLLVlvYTJfXzh2Tnh5VjdNRmVGYnJhaTBUd0kzdXFB0gGOAUFVX3lxTE5EVXBpUm5UNVhHX3N5cHNQSlh5VFdOaEx1aFIxX3VaSU82MDc5X1UzU2pibnAzYnV2a1d4cFNLVVUxV29pSTBhQ3lGc3ZMWElzX2VuaV9KZ3lRNE9FbTByVkc0U05EYkE4OXFXZXlldm1ncUJwSkxUQ1cwX3h2RDVCX1NUUUY0bmU5U1dqalE?oc=5"
+    }
+   ]
+  },
+  {
    "id": "e2a4cd8c3c8f",
    "co": "CoreWeave",
    "type": "發債",
@@ -650,6 +750,49 @@
      "title": "Nvidia faces DOJ antitrust scrutiny over $12.9B Hugging Face deal, Reuters says",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPVm55WFJSMlR2b1A5ZVNVei1rM05xdks5Q1dlMDBjdnRxNThZTmpBbGp3RVZRUjVwX2VWYjNoWHFiQXRQUGF1MDBDQnhxLTRTenhUWmptWjZhUC05YXZTR0dpcGN3ZXJzUzhjUTR0c2pIRWZ1Y2d5bWRHZ1dqajI1T2Q3VWNqMndlTmxxTURraktzWnBJNi1DNVVNRXNEc1Q3?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "66a4edbb73d7",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Alphabet第三季AI資本支出達51億美元，導致現金流壓力加大。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Google shares tumble 11% after $51bn AI outlay deepens cash burn",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNZFpfdm5ucU1pTmJEQ0l6bDliR09sZTFzV1lKVjZaWldRanU2cUFjVG1iY1hhZHFBcFpQZkh2S1VWaGpxc1M5Y1pvUGhsZnQ3SE4yTkZHT0dyQTNoR1Npb043NW1tRUlST0NEdE5qSVB2T1BiRGFiZFFpVzNXa1RVZXJCbWU?oc=5"
+    },
+    {
+     "title": "GOOGL Stock Slumps 11% After-Hours: Alphabet’s Surge in AI Spending Pressures Third-Quarter Profits And Cash Flows",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQd3h4MlBjNlBvOEhEUDh0REZXRENkMzU2N2RQbmIxLVlhM1BYemszZlF2YXdLN3BGaDRDX0ZuVkNvbHVSRzI1di1IR3p2VmVXSkNLQUFUTWJlcGxxeHU1REtMQ1JZYVhFTWdtMURjQ29NanllOHowSEJxYk40VWVTd1hWRENNRWdGY2RETUljeEtjcmFkeEVN?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "42896c210e63",
+   "co": "甲骨文",
+   "type": "算力合約",
+   "zh": "甲骨文雲端服務新增Google TPU及其他晶片選項，擴大AI運算能力。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Oracle adds Google TPUs to OCI to expand enterprise AI compute options",
+     "source": "Network World",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNSjMtb1dvTTF0T25HLThIZm1oakNHQWZkMFh1ekcyRDdSTUlnd2gtMFVSNUtTWGtQVnVDOHF5TWFha1k1bF9qTVdudDdxbnZIUmdGNTh6MHpXUW5LcmpIdTdzNktRdkg1dWVGdzBNMWFkMnZHbzZ4NkdkeWlZYW9VeXhPb2lvX2JUX3lFbDJPbEJOaGtidmw1SjZEM1k3UXFEZlgtLUY4b3BXbWxDcHl4aFdVUk1kLXJrMjZpeg?oc=5"
+    },
+    {
+     "title": "Oracle Cloud to Offer Google TPUs and New AI Chips",
+     "source": "Data Center Knowledge",
+     "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQOFFKU0dGWEdWMXNYTVM4TmhJTEFMRndMSHg2RkZFVkJDdFNkYXpMc1BBNFhSekdBWU52a2YwNk5laU5xWkJZc0VDajU3ZmE4c3Fsc2lrcG5UQWxiOWlCODlmeVotLVdmVVpza0t1S2pCR294Vjk1czAzNTNGaXZNNFlGR2ZlVFdJWkZrYlhxWVgyNnBQalFQemNLY1Q2S19mOHZtTVl0QQ?oc=5"
+    },
+    {
+     "title": "Oracle Makes the Supercluster Multi-Silicon at AI World 2026",
+     "source": "The Futurum Group",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPNVViZDZfM253VWpGT2JPQmowRFY2Ti1ja2c4TUNpc1F2TVFXZGliWWNtWG1tblV5dXJsTXFac21pSWRtMk5mSG5nQnJhVklxaElndWk4ZURaUHZtWXFQc3hwUFJQWjVMMW9XaGRjUDVkdzhxTXQtUWRhdHFGMTREWVNfRVpQTFVMaGxyQUs4UW5DY2Y2eGUwWHN1VQ?oc=5"
     }
    ]
   },
@@ -803,24 +946,43 @@
      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5fRGVTajlqaGI0cGJ0aXFYYXZHQmxmb01MLW50TW5mV3drRVFTZXIyRkxSZDV6b0p6Z1dsNnFXN29FZHYtUjJkam1saGdERkF6SXgyWVZ5dVlmbXRRbjhwc2NnVGlQTVlLVm9JVTMtOA?oc=5"
     }
    ]
+  },
+  {
+   "id": "2ce4a2b2d90e",
+   "co": "亞馬遜",
+   "type": "算力合約",
+   "zh": "亞馬遜與3M簽署60億美元數據中心合作協議。",
+   "date": "2026-10-20",
+   "links": [
+    {
+     "title": "3M expands Amazon data center partnership, shares gain",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNdFJFY2JqbjhtdTFfVDFUSkNrUHJhbWxWYjMzaG01Z1k5X005ZzFmWkJ5a0tUQjhjU0dkcHFBZjJzdGU0cUVBdEVBUmhXLXJTU1NHMUlmbHJfRkZ0WVFZWHpSN1h3MXpoTVZtaERMUll4NlJ0cHgyS1pWMHFVcldDUzFKQzVrdnVQbnFvOEdqNjE3WGxCdTNKemhjZnVKbW5tb3g3SnR3Qi1UN0gzNlEwZGV5NWE?oc=5"
+    },
+    {
+     "title": "3M stock rises 3% on $6B Amazon data center deal",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNUWwtdGRhOUxDMlR1QWZ2NFJuV1BlWjhmZjVlUmhtTUxtUlZFX0xMeXNSSzl1ZDQwNEJmcDlqVVJ3cjhYVWVFUi16UG05c1lFbkYyUmJYcVhyVmhTOWdFc0tFTmRyVUdKelV4bVJxZ3BtMzA1QXgwRkNVa0FDeEd2eVFobVl3VS1iNXNhUw?oc=5"
+    }
+   ]
   }
  ],
  "impact": {
   "微軟": {
-   "hash": "c8e7baf02435",
-   "text": "微軟雲端業績超預期但資本支出低於預期，偏向降低其近期融資需求；然而啟動八年來首次高級債券發行，暗示長期融資需求或利率環境考量。綜合來看，事件對公司債供給偏向增加，對長端利率偏向溫和上升壓力；雲端成長超預期則偏向支撐AI投資熱度。"
+   "hash": "67059619c265",
+   "text": "微軟雲端業務超預期成長支撐盈利，但資料中心資本支出延遲，偏向降低近期融資急迫性。然其啟動大規模債券發行（至少250億美元），偏向增加公司債供給，可能對長端利率形成溫和上行壓力。超預期獲利表現偏向支撐股市，但若市場解讀為AI投資步伐放緩，則偏向削弱AI相關投資熱度。"
   },
   "Alphabet": {
-   "hash": "4d46737b3e51",
-   "text": "Alphabet第三季營收未達預期引發AI支出效率疑慮，同時宣布增加AI資本支出，市場對其投資回報率存疑。此舉偏向增加公司債供給壓力，因資本支出擴大可能需融資；長端利率若市場重估科技公司風險溢價則偏向上升；股市偏向承壓，AI投資熱度則面臨降溫風險，若投資人對AI獲利能力信心動搖。"
+   "hash": "bd3d351c25c1",
+   "text": "Alphabet營收未達預期引發AI支出過度擔憂，同時宣布增加資本支出，現金流壓力加大。此偏向增加公司債供給需求，若市場對AI投資回報率疑慮加深，則長端利率承壓；股市偏向承受賣壓，AI投資熱度則面臨降溫壓力，因高支出與營收未達預期的落差引發效率質疑。"
   },
   "Meta": {
    "hash": "178925cb60de",
    "text": "Meta近期大規模融資與AI算力投資偏向提升公司債供給與AI投資熱度。發行27億美元數據中心債券直接增加債券市場供給；Nvidia、AMD合計70億美元投資則反映市場對Meta AI基礎設施的看好。若長端利率上升，可能抬高Meta後續融資成本；若AI投資熱度持續，則偏向支撐科技股表現。整體而言，這些事件指向AI資本支出競賽加劇。"
   },
   "甲骨文": {
-   "hash": "442193a2e835",
-   "text": "甲骨文限制新借款至20億美元、設定資本支出上限，偏向減輕公司債供給壓力；同時預計2029年實現300億美元正向現金流，若現金流改善則長端利率承壓減弱。擴大AI晶片供應協議、投資多元算力方案，偏向強化AI基礎設施競爭力，可能提升市場對其AI投資前景的信心，利好股市與AI投資熱度。"
+   "hash": "e0cc98a700d0",
+   "text": "甲骨文設定資本支出與融資上限，偏向降低公司債供給壓力，長端利率面臨減輕融資需求的下行因素。同時擴大多元晶片供應協議，強化AI基礎設施競爭力，若能實現預期現金流，則對股市與AI投資熱度偏向正面支撐；但融資規模受限，偏向緩和市場對科技巨頭無限融資的預期。"
   },
   "CoreWeave": {
    "hash": "a015ab60813a",
@@ -835,8 +997,8 @@
    "text": "OpenAI近期大幅擴張算力採購與融資，偏向增加公司債供給壓力。多筆晶片合約與三十億美元融資需求，若轉化為債券發行，將增加長端利率上行壓力；同時密集的基礎設施投資承諾強化AI產業景氣預期，偏向提升AI投資熱度。惟融資規模與債務結構仍需觀察，對股市影響取決於市場對其盈利能力評估。"
   },
   "亞馬遜": {
-   "hash": "c413d5eefa6b",
-   "text": "亞馬遜近期資本支出與AI算力合約擴張，偏向增加公司債供給需求。收購Globalstar與Verizon合作均涉及大額資本投入，若融資需求上升，則公司債發行壓力增加，長端利率面臨上行壓力。同時AI基礎設施投資熱度升溫，偏向支撐科技股表現，強化AI投資熱度。"
+   "hash": "e0992535cd55",
+   "text": "亞馬遜近期密集簽署AI基礎設施合約與衛星收購，反映其對算力資本支出的持續加碼。若此類大額投資持續，偏向增加公司債供給以融資；同時龐大資本支出可能拉升長端利率預期。AI算力需求旺盛的信號，偏向提振AI投資熱度與科技股表現。"
   },
   "Nvidia": {
    "hash": "82d52790e485",
@@ -847,5 +1009,5 @@
    "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
   }
  },
- "at": "2026-10-29 21:14（台北）"
+ "at": "2026-10-29 21:40（台北）"
 }
