@@ -82,8 +82,7 @@ check("④ config 的說明不點名機構、但附連結", "ING" not in _el["te
 
 # ⑤ 投票委員立場：手動清單在 config，反對票優先
 _fc = yaml.safe_load(open(ROOT / "config/fomc.yaml", encoding="utf-8"))
-check("⑤ config/fomc.yaml 有 official_stance，值只有三種",
-      _fc.get("official_stance") and set(_fc["official_stance"].values()) <= {"hawkish", "dovish", "neutral"})
+check("⑤ 立場改成事實優先（10/29 下午）：不再有手動清單", "official_stance" not in _fc)
 
 # ⑥ 公布前檢查只看「那件事」：10/29 PCE 公布前，標題「聯準會維持利率不變」（10/28 已公布）不該被刪
 check("⑥ PCE 公布前：FOMC 已公布的結果不算", ft._decided_hits("聯準會維持利率不變 Warsh 宣布每年僅 6 次利率表決", "10/29|pce") == [])
