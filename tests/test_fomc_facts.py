@@ -267,11 +267,8 @@ check("⑮ 每位官員兩個節點（依身分／依立場）、一個面板，
 check("⑮b 依立場：預設隱藏，分鷹派／中立／鴿派，附分法說明",
       'data-v="stance" hidden' in html and "st-hawkish" in html and "st-dovish" in html and "立場怎麼分" in html)
 from src.analysis import fomc_extra as _fx
-_offs = _fx.build_officials(fixtures_fomc.extras().get("roster"), {}, [], dt.date(2026, 10, 29),
-                            stance={"Logan": "hawkish", "Waller": "dovish"})
-_st = {o["surname"]: o["stance"] for o in _offs}
-check("⑮c 立場：沒有反對票照手動清單、沒列到的中立",
-      _st.get("Logan") in ("hawkish", None) and all(v in ("hawkish", "dovish", "neutral") for v in _st.values()), _st)
+check("⑮c 每位官員都有立場與依據（離線沒有發言判斷時，沒有近期反對票＝中立）",
+      all(o["stance"] in ("hawkish", "dovish", "neutral") and o.get("stance_src") for o in ctx["officials"]))
 check("⑮ FOMC 組成：事實卡＋輪值表", 'class="cfs"' in html and 'class="fx-rot"' in html)
 check("⑮ SEP 五張小卡、表格收進看完整數字",
       html.count('class="sc"') == 5 and "看完整數字" in html, html.count('class="sc"'))
