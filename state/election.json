@@ -27,7 +27,7 @@
  },
  "house": {
   "dem": 0.925,
-  "rep": 0.075,
+  "rep": 0.065,
   "d1": 0.01,
   "closed": false,
   "hist": [
@@ -60,7 +60,7 @@
    0.925
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
-  "vol": 26456483.641454004
+  "vol": 26864281.637108
  },
  "senate": {
   "dem": 0.675,
@@ -92,11 +92,10 @@
    0.685,
    0.675,
    0.655,
-   0.675,
    0.675
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-senate-in-2026",
-  "vol": 10626562.762919
+  "vol": 10658383.191218
  },
  "balance": {
   "rows": [
@@ -104,7 +103,7 @@
     "key": "dem",
     "label": "民主黨兩院全拿",
     "p": 0.665,
-    "d1": 0.01
+    "d1": null
    },
    {
     "key": "mix2",
@@ -121,20 +120,37 @@
    {
     "key": "rep",
     "label": "共和黨兩院全拿",
-    "p": 0.065,
-    "d1": -0.01
+    "p": 0.055,
+    "d1": -0.02
    },
    {
     "key": "oth",
     "label": "其他",
-    "p": 0.0005,
-    "d1": null
+    "p": 0.001,
+    "d1": 0.0005
    }
   ],
   "url": "https://polymarket.com/event/balance-of-power-2026-midterms",
-  "vol": 42151541.869479
+  "vol": 42641973.339864
  },
  "races": [
+  {
+   "state": "堪薩斯",
+   "state_en": "Kansas",
+   "lead": {
+    "name": "Roger Marshall",
+    "party": "共",
+    "p": 0.535
+   },
+   "other": {
+    "name": "Adam Hamilton",
+    "party": "民",
+    "p": 0.465
+   },
+   "close": 0.03500000000000003,
+   "vol": 1453918.1710710002,
+   "url": "https://polymarket.com/event/kansas-senate-election-winner"
+  },
   {
    "state": "愛荷華",
    "state_en": "Iowa",
@@ -149,25 +165,8 @@
     "p": 0.445
    },
    "close": 0.04500000000000004,
-   "vol": 1183696.459595,
+   "vol": 1184693.337283,
    "url": "https://polymarket.com/event/iowa-senate-election-winner"
-  },
-  {
-   "state": "堪薩斯",
-   "state_en": "Kansas",
-   "lead": {
-    "name": "Roger Marshall",
-    "party": "共",
-    "p": 0.56
-   },
-   "other": {
-    "name": "Adam Hamilton",
-    "party": "民",
-    "p": 0.45
-   },
-   "close": 0.06000000000000005,
-   "vol": 1449968.690554,
-   "url": "https://polymarket.com/event/kansas-senate-election-winner"
   },
   {
    "state": "緬因",
@@ -183,25 +182,25 @@
     "p": 0.365
    },
    "close": 0.135,
-   "vol": 2892452.5083410004,
+   "vol": 2892482.0083410004,
    "url": "https://polymarket.com/event/maine-senate-election-winner"
   },
   {
-   "state": "俄亥俄",
-   "state_en": "Ohio",
+   "state": "德州",
+   "state_en": "Texas",
    "lead": {
-    "name": "Sherrod Brown",
+    "name": "James Talarico",
     "party": "民",
     "p": 0.685
    },
    "other": {
-    "name": "Jon Husted",
+    "name": "Ken Paxton",
     "party": "共",
     "p": 0.315
    },
    "close": 0.18500000000000005,
-   "vol": 1990266.506703,
-   "url": "https://polymarket.com/event/ohio-senate-election-winner"
+   "vol": 7468927.21287,
+   "url": "https://polymarket.com/event/texas-senate-election-winner"
   }
  ],
  "maps": {
@@ -220,12 +219,12 @@
      "other": {
       "name": "Everett Wess",
       "party": "D",
-      "p": 0.011
+      "p": 0.0115
      },
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 97.9,
-     "vol": 14120.749705999997,
+     "vol": 14120.749705999999,
      "url": "https://polymarket.com/event/alabama-senate-election-winner-154"
     },
     "Arkansas": {
@@ -236,17 +235,17 @@
      "lead": {
       "name": "Tom Cotton",
       "party": "R",
-      "p": 0.9565
+      "p": 0.9555
      },
      "other": {
       "name": "Hallie Shoffner",
       "party": "D",
-      "p": 0.045
+      "p": 0.046
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.1,
-     "vol": 104133.25642300001,
+     "gap": 91.0,
+     "vol": 104133.256423,
      "url": "https://polymarket.com/event/arkansas-senate-election-winner"
     },
     "Colorado": {
@@ -283,11 +282,11 @@
      "other": {
       "name": "Republican",
       "party": "R",
-      "p": 0.025
+      "p": 0.0255
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.8,
+     "gap": 94.7,
      "vol": 33528.303425,
      "url": "https://polymarket.com/event/delaware-senate-election-winner"
     },
@@ -299,7 +298,7 @@
      "lead": {
       "name": "Jon Ossoff",
       "party": "D",
-      "p": 0.9675
+      "p": 0.967
      },
      "other": {
       "name": "Mike Collins",
@@ -308,8 +307,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 93.5,
-     "vol": 371743.3610750001,
+     "gap": 93.4,
+     "vol": 371965.361075,
      "url": "https://polymarket.com/event/georgia-senate-election-winner"
     },
     "Idaho": {
@@ -320,16 +319,16 @@
      "lead": {
       "name": "Jim Risch",
       "party": "R",
-      "p": 0.957
+      "p": 0.9575
      },
      "other": {
       "name": "Todd Achilles",
       "party": "I",
-      "p": 0.0385
+      "p": 0.038
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 91.8,
+     "gap": 92.0,
      "vol": 439392.1663500001,
      "url": "https://polymarket.com/event/idaho-senate-election-winner"
     },
@@ -341,16 +340,16 @@
      "lead": {
       "name": "Juliana Stratton",
       "party": "D",
-      "p": 0.983
+      "p": 0.9865
      },
      "other": {
       "name": "Don Tracy",
       "party": "R",
-      "p": 0.015
+      "p": 0.0145
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.8,
+     "gap": 97.2,
      "vol": 37704.090609000006,
      "url": "https://polymarket.com/event/illinois-senate-election-winner"
     },
@@ -372,7 +371,7 @@
      "tier": "toss",
      "tier_zh": "五五波",
      "gap": 10.0,
-     "vol": 1183696.459595,
+     "vol": 1184693.337283,
      "url": "https://polymarket.com/event/iowa-senate-election-winner"
     },
     "Kansas": {
@@ -383,17 +382,17 @@
      "lead": {
       "name": "Roger Marshall",
       "party": "R",
-      "p": 0.56
+      "p": 0.535
      },
      "other": {
       "name": "Adam Hamilton",
       "party": "D",
-      "p": 0.45
+      "p": 0.465
      },
-     "tier": "lean",
-     "tier_zh": "微幅",
-     "gap": 11.0,
-     "vol": 1449968.690554,
+     "tier": "toss",
+     "tier_zh": "五五波",
+     "gap": 7.0,
+     "vol": 1453918.1710710002,
      "url": "https://polymarket.com/event/kansas-senate-election-winner"
     },
     "Kentucky": {
@@ -404,16 +403,16 @@
      "lead": {
       "name": "Andy Barr",
       "party": "R",
-      "p": 0.976
+      "p": 0.974
      },
      "other": {
       "name": "Charles Booker",
       "party": "D",
-      "p": 0.0265
+      "p": 0.028
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.0,
+     "gap": 94.6,
      "vol": 38574.776065,
      "url": "https://polymarket.com/event/kentucky-senate-election-winner"
     },
@@ -435,7 +434,7 @@
      "tier": "lean",
      "tier_zh": "微幅",
      "gap": 27.0,
-     "vol": 2892452.5083410004,
+     "vol": 2892482.0083410004,
      "url": "https://polymarket.com/event/maine-senate-election-winner"
     },
     "Massachusetts": {
@@ -472,12 +471,12 @@
      "other": {
       "name": "Mike Rogers",
       "party": "R",
-      "p": 0.275
+      "p": 0.28
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 45.0,
-     "vol": 3060876.334148,
+     "gap": 44.5,
+     "vol": 3063187.7141719996,
      "url": "https://polymarket.com/event/michigan-senate-election-winner"
     },
     "Minnesota": {
@@ -498,7 +497,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 83.0,
-     "vol": 509014.5341030001,
+     "vol": 509019.96410300006,
      "url": "https://polymarket.com/event/minnesota-senate-election-winner"
     },
     "Montana": {
@@ -519,7 +518,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 82.0,
-     "vol": 283074.709147,
+     "vol": 283080.199147,
      "url": "https://polymarket.com/event/montana-senate-election-winner"
     },
     "New Hampshire": {
@@ -540,7 +539,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 83.0,
-     "vol": 516188.93060400005,
+     "vol": 516194.36060400004,
      "url": "https://polymarket.com/event/new-hampshire-senate-election-winner"
     },
     "New Jersey": {
@@ -551,17 +550,17 @@
      "lead": {
       "name": "Cory Booker",
       "party": "D",
-      "p": 0.9825
+      "p": 0.985
      },
      "other": {
       "name": "Justin Murphy",
       "party": "R",
-      "p": 0.0185
+      "p": 0.0155
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.4,
-     "vol": 29745.915871999998,
+     "gap": 97.0,
+     "vol": 29850.077947000005,
      "url": "https://polymarket.com/event/new-jersey-senate-election-winner"
     },
     "New Mexico": {
@@ -572,16 +571,16 @@
      "lead": {
       "name": "Ben Ray Luján",
       "party": "D",
-      "p": 0.983
+      "p": 0.984
      },
      "other": {
       "name": "Larry Marker",
       "party": "R",
-      "p": 0.0215
+      "p": 0.02
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.2,
+     "gap": 96.4,
      "vol": 33029.825845,
      "url": "https://polymarket.com/event/new-mexico-senate-election-winner"
     },
@@ -593,7 +592,7 @@
      "lead": {
       "name": "Roy Cooper",
       "party": "D",
-      "p": 0.976
+      "p": 0.9755
      },
      "other": {
       "name": "Michael Whatley",
@@ -602,7 +601,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.1,
+     "gap": 95.0,
      "vol": 289088.811647,
      "url": "https://polymarket.com/event/north-carolina-senate-election-winner"
     },
@@ -619,7 +618,7 @@
      "other": {
       "name": "David Brock Smith",
       "party": "R",
-      "p": 0.014
+      "p": 0.0135
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -635,7 +634,7 @@
      "lead": {
       "name": "Jack Reed",
       "party": "D",
-      "p": 0.981
+      "p": 0.9825
      },
      "other": {
       "name": "Raymond McKay",
@@ -644,7 +643,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.5,
+     "gap": 96.7,
      "vol": 26796.10648,
      "url": "https://polymarket.com/event/rhode-island-senate-election-winner"
     },
@@ -666,7 +665,7 @@
      "tier": "likely",
      "tier_zh": "傾向",
      "gap": 45.0,
-     "vol": 1354761.663545,
+     "vol": 1355095.082703,
      "url": "https://polymarket.com/event/south-carolina-senate-election-winner"
     },
     "South Dakota": {
@@ -682,11 +681,11 @@
      "other": {
       "name": "Brian Bengs",
       "party": "I",
-      "p": 0.0445
+      "p": 0.044
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 90.7,
+     "gap": 90.8,
      "vol": 74249.503631,
      "url": "https://polymarket.com/event/south-dakota-senate-election-winner"
     },
@@ -698,7 +697,7 @@
      "lead": {
       "name": "Bill Hagerty",
       "party": "R",
-      "p": 0.9625
+      "p": 0.963
      },
      "other": {
       "name": "Marquita Bradshaw",
@@ -707,8 +706,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 92.8,
-     "vol": 117195.99186100002,
+     "gap": 92.9,
+     "vol": 117195.99186099999,
      "url": "https://polymarket.com/event/tennessee-senate-election-winner"
     },
     "Texas": {
@@ -719,7 +718,7 @@
      "lead": {
       "name": "James Talarico",
       "party": "D",
-      "p": 0.69
+      "p": 0.685
      },
      "other": {
       "name": "Ken Paxton",
@@ -728,8 +727,8 @@
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 37.5,
-     "vol": 7448307.772980001,
+     "gap": 37.0,
+     "vol": 7468927.21287,
      "url": "https://polymarket.com/event/texas-senate-election-winner"
     },
     "Virginia": {
@@ -740,16 +739,16 @@
      "lead": {
       "name": "Mark Warner",
       "party": "D",
-      "p": 0.983
+      "p": 0.9865
      },
      "other": {
       "name": "Bert Mizusawa",
       "party": "R",
-      "p": 0.017
+      "p": 0.0145
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.6,
+     "gap": 97.2,
      "vol": 23939.609128,
      "url": "https://polymarket.com/event/virginia-senate-election-winner"
     },
@@ -761,17 +760,17 @@
      "lead": {
       "name": "Shelley Moore Capito",
       "party": "R",
-      "p": 0.987
+      "p": 0.9855
      },
      "other": {
       "name": "Rachel Fetty Anderson",
       "party": "D",
-      "p": 0.0155
+      "p": 0.016
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.2,
-     "vol": 19238.108582,
+     "gap": 97.0,
+     "vol": 19238.108582000004,
      "url": "https://polymarket.com/event/west-virginia-senate-election-winner"
     },
     "Wyoming": {
@@ -782,17 +781,17 @@
      "lead": {
       "name": "Harriet Hageman",
       "party": "R",
-      "p": 0.988
+      "p": 0.987
      },
      "other": {
       "name": "James W. Byrd",
       "party": "D",
-      "p": 0.0115
+      "p": 0.012
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.7,
-     "vol": 21450.16031,
+     "gap": 97.5,
+     "vol": 21450.160310000003,
      "url": "https://polymarket.com/event/wyoming-senate-election-winner"
     },
     "Mississippi": {
@@ -813,7 +812,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 73.0,
-     "vol": 469794.385332,
+     "vol": 470196.365332,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Oklahoma": {
@@ -824,16 +823,16 @@
      "lead": {
       "name": "Kevin Hern",
       "party": "R",
-      "p": 0.9805
+      "p": 0.979
      },
      "other": {
       "name": "N’Kiyla “Jasmine” Thomas",
       "party": "D",
-      "p": 0.0185
+      "p": 0.0195
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.2,
+     "gap": 96.0,
      "vol": 28254.152408,
      "url": "https://polymarket.com/event/oklahoma-senate-election-winner"
     },
@@ -845,17 +844,17 @@
      "lead": {
       "name": "Ashley Moody",
       "party": "R",
-      "p": 0.915
+      "p": 0.905
      },
      "other": {
       "name": "Angie Nixon",
       "party": "D",
-      "p": 0.085
+      "p": 0.095
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 83.0,
-     "vol": 402699.5205689999,
+     "gap": 81.0,
+     "vol": 418827.12668,
      "url": "https://polymarket.com/event/florida-senate-election-winner"
     },
     "Ohio": {
@@ -876,7 +875,7 @@
      "tier": "likely",
      "tier_zh": "傾向",
      "gap": 37.0,
-     "vol": 1990266.506703,
+     "vol": 1990595.3182980001,
      "url": "https://polymarket.com/event/ohio-senate-election-winner"
     },
     "Louisiana": {
@@ -918,7 +917,7 @@
      "tier": "likely",
      "tier_zh": "傾向",
      "gap": 41.0,
-     "vol": 1059977.716761,
+     "vol": 1060259.406902,
      "url": "https://polymarket.com/event/nebraska-senate-election-winner"
     },
     "Alaska": {
@@ -939,7 +938,7 @@
      "tier": "likely",
      "tier_zh": "傾向",
      "gap": 41.0,
-     "vol": 1987796.5125020002,
+     "vol": 1989178.331424,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -980,11 +979,32 @@
        "tier": "lean",
        "tier_zh": "微幅",
        "gap": 27.0,
-       "vol": 2892452.5083410004,
+       "vol": 2892482.0083410004,
        "url": "https://polymarket.com/event/maine-senate-election-winner"
       }
      ],
      "R": [
+      {
+       "kind": "senate",
+       "state_en": "Kansas",
+       "state": "堪薩斯",
+       "abbr": "KS",
+       "lead": {
+        "name": "Roger Marshall",
+        "party": "R",
+        "p": 0.535
+       },
+       "other": {
+        "name": "Adam Hamilton",
+        "party": "D",
+        "p": 0.465
+       },
+       "tier": "toss",
+       "tier_zh": "五五波",
+       "gap": 7.0,
+       "vol": 1453918.1710710002,
+       "url": "https://polymarket.com/event/kansas-senate-election-winner"
+      },
       {
        "kind": "senate",
        "state_en": "Iowa",
@@ -1003,29 +1023,8 @@
        "tier": "toss",
        "tier_zh": "五五波",
        "gap": 10.0,
-       "vol": 1183696.459595,
+       "vol": 1184693.337283,
        "url": "https://polymarket.com/event/iowa-senate-election-winner"
-      },
-      {
-       "kind": "senate",
-       "state_en": "Kansas",
-       "state": "堪薩斯",
-       "abbr": "KS",
-       "lead": {
-        "name": "Roger Marshall",
-        "party": "R",
-        "p": 0.56
-       },
-       "other": {
-        "name": "Adam Hamilton",
-        "party": "D",
-        "p": 0.45
-       },
-       "tier": "lean",
-       "tier_zh": "微幅",
-       "gap": 11.0,
-       "vol": 1449968.690554,
-       "url": "https://polymarket.com/event/kansas-senate-election-winner"
       }
      ],
      "I": [],
@@ -1033,7 +1032,7 @@
     },
     "n_up": 35
    },
-   "sentence": "3 個競爭州裡民主黨領先 1 州、共和黨領先 2 州，照目前領先者全拿，民主黨將以 52:48 翻轉參院；但愛荷華、堪薩斯的差距都在 20 個百分點內，結果仍可能翻盤。"
+   "sentence": "3 個競爭州裡民主黨領先 1 州、共和黨領先 2 州，照目前領先者全拿，民主黨將以 52:48 翻轉參院；但堪薩斯、愛荷華的差距都在 20 個百分點內，結果仍可能翻盤。"
   },
   "governor": {
    "races": {
@@ -1045,17 +1044,17 @@
      "lead": {
       "name": "Xavier Becerra",
       "party": "D",
-      "p": 0.9735
+      "p": 0.9775
      },
      "other": {
       "name": "Steve Hilton",
       "party": "R",
-      "p": 0.0265
+      "p": 0.0235
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.7,
-     "vol": 42932376.793536,
+     "gap": 95.4,
+     "vol": 42965430.622941,
      "url": "https://polymarket.com/event/california-governor-election-2026"
     },
     "Arizona": {
@@ -1076,7 +1075,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 83.0,
-     "vol": 434947.444327,
+     "vol": 434952.874327,
      "url": "https://polymarket.com/event/arizona-governor-winner-2026"
     },
     "Alabama": {
@@ -1087,17 +1086,17 @@
      "lead": {
       "name": "Tommy Tuberville",
       "party": "R",
-      "p": 0.9485
+      "p": 0.945
      },
      "other": {
       "name": "Doug Jones",
       "party": "D",
-      "p": 0.052
+      "p": 0.0545
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 89.6,
-     "vol": 52503.383538,
+     "gap": 89.0,
+     "vol": 52572.37205699999,
      "url": "https://polymarket.com/event/alabama-governor-winner-2026"
     },
     "Arkansas": {
@@ -1113,12 +1112,12 @@
      "other": {
       "name": "Fredrick Love",
       "party": "D",
-      "p": 0.0225
+      "p": 0.0205
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.0,
-     "vol": 12211.966732,
+     "gap": 95.2,
+     "vol": 12211.966731999999,
      "url": "https://polymarket.com/event/arkansas-governor-winner-2026"
     },
     "Colorado": {
@@ -1129,17 +1128,17 @@
      "lead": {
       "name": "Phil Weiser",
       "party": "D",
-      "p": 0.9715
+      "p": 0.9695
      },
      "other": {
       "name": "Victor Marx",
       "party": "R",
-      "p": 0.0255
+      "p": 0.0295
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.6,
-     "vol": 17359.572040000006,
+     "gap": 94.0,
+     "vol": 17359.572040000003,
      "url": "https://polymarket.com/event/colorado-governor-winner-2026"
     },
     "Connecticut": {
@@ -1150,17 +1149,17 @@
      "lead": {
       "name": "Ned Lamont",
       "party": "D",
-      "p": 0.969
+      "p": 0.9705
      },
      "other": {
       "name": "Ryan Fazio",
       "party": "R",
-      "p": 0.0295
+      "p": 0.029
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.0,
-     "vol": 10087.887821000002,
+     "gap": 94.2,
+     "vol": 10087.887821000004,
      "url": "https://polymarket.com/event/connecticut-governor-winner-2026"
     },
     "Florida": {
@@ -1171,7 +1170,7 @@
      "lead": {
       "name": "Byron Donalds",
       "party": "R",
-      "p": 0.705
+      "p": 0.695
      },
      "other": {
       "name": "David Jolly",
@@ -1180,8 +1179,8 @@
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 41.0,
-     "vol": 636557.518423,
+     "gap": 40.0,
+     "vol": 646534.5184230001,
      "url": "https://polymarket.com/event/florida-governor-winner-2026"
     },
     "Georgia": {
@@ -1213,7 +1212,7 @@
      "lead": {
       "name": "Josh Green",
       "party": "D",
-      "p": 0.983
+      "p": 0.9835
      },
      "other": {
       "name": "Gary Cordery",
@@ -1222,7 +1221,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.1,
+     "gap": 97.2,
      "vol": 18109.076924,
      "url": "https://polymarket.com/event/hawaii-governor-winner-2026"
     },
@@ -1234,17 +1233,17 @@
      "lead": {
       "name": "Brad Little",
       "party": "R",
-      "p": 0.977
+      "p": 0.9765
      },
      "other": {
       "name": "Terri Pickens",
       "party": "D",
-      "p": 0.0235
+      "p": 0.0205
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.3,
-     "vol": 26966.28844599999,
+     "gap": 95.6,
+     "vol": 26966.288446,
      "url": "https://polymarket.com/event/idaho-governor-winner-2026"
     },
     "Illinois": {
@@ -1255,16 +1254,16 @@
      "lead": {
       "name": "JB Pritzker",
       "party": "D",
-      "p": 0.9775
+      "p": 0.984
      },
      "other": {
       "name": "Darren Bailey",
       "party": "R",
-      "p": 0.022
+      "p": 0.0155
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.5,
+     "gap": 96.9,
      "vol": 29373.29551,
      "url": "https://polymarket.com/event/illinois-governor-winner-2026"
     },
@@ -1318,17 +1317,17 @@
      "lead": {
       "name": "Hannah Pingree",
       "party": "D",
-      "p": 0.9525
+      "p": 0.966
      },
      "other": {
       "name": "Robert Charles",
       "party": "R",
-      "p": 0.05
+      "p": 0.0315
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 90.2,
-     "vol": 47100.816043,
+     "gap": 93.5,
+     "vol": 58340.737221,
      "url": "https://polymarket.com/event/maine-governor-winner-2026"
     },
     "Maryland": {
@@ -1339,17 +1338,17 @@
      "lead": {
       "name": "Wes Moore",
       "party": "D",
-      "p": 0.9755
+      "p": 0.981
      },
      "other": {
       "name": "Dan Cox",
       "party": "R",
-      "p": 0.023
+      "p": 0.0195
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.2,
-     "vol": 24607.066231000004,
+     "gap": 96.2,
+     "vol": 25144.033229,
      "url": "https://polymarket.com/event/maryland-governor-winner-2026"
     },
     "Massachusetts": {
@@ -1360,17 +1359,17 @@
      "lead": {
       "name": "Maura Healey",
       "party": "D",
-      "p": 0.969
+      "p": 0.975
      },
      "other": {
       "name": "Michael Minogue",
       "party": "R",
-      "p": 0.031
+      "p": 0.026
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 93.8,
-     "vol": 168254.134085,
+     "gap": 94.9,
+     "vol": 172190.375916,
      "url": "https://polymarket.com/event/massachusetts-governor-winner-2026"
     },
     "Michigan": {
@@ -1381,17 +1380,17 @@
      "lead": {
       "name": "Jocelyn Benson",
       "party": "D",
-      "p": 0.939
+      "p": 0.9365
      },
      "other": {
       "name": "John James",
       "party": "R",
-      "p": 0.0605
+      "p": 0.0625
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 87.8,
-     "vol": 485942.605857,
+     "gap": 87.4,
+     "vol": 486012.215857,
      "url": "https://polymarket.com/event/michigan-governor-winner-2026"
     },
     "Minnesota": {
@@ -1402,17 +1401,17 @@
      "lead": {
       "name": "Amy Klobuchar",
       "party": "D",
-      "p": 0.967
+      "p": 0.9815
      },
      "other": {
       "name": "Lisa Demuth",
       "party": "R",
-      "p": 0.035
+      "p": 0.0185
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 93.2,
-     "vol": 106145.613857,
+     "gap": 96.3,
+     "vol": 112128.04514799999,
      "url": "https://polymarket.com/event/minnesota-governor-winner-2026"
     },
     "Nebraska": {
@@ -1444,17 +1443,17 @@
      "lead": {
       "name": "Aaron Ford",
       "party": "D",
-      "p": 0.8
+      "p": 0.805
      },
      "other": {
       "name": "Joe Lombardo",
       "party": "R",
-      "p": 0.205
+      "p": 0.195
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 59.5,
-     "vol": 926314.7296469999,
+     "gap": 61.0,
+     "vol": 926352.199647,
      "url": "https://polymarket.com/event/nevada-governor-winner-2026"
     },
     "New Hampshire": {
@@ -1470,7 +1469,7 @@
      "other": {
       "name": "Cinde Warmington",
       "party": "D",
-      "p": 0.07
+      "p": 0.0705
      },
      "tier": "safe",
      "tier_zh": "穩拿",
@@ -1486,17 +1485,17 @@
      "lead": {
       "name": "Deb Haaland",
       "party": "D",
-      "p": 0.9635
+      "p": 0.9605
      },
      "other": {
       "name": "Gregg Hull",
       "party": "R",
-      "p": 0.0235
+      "p": 0.0325
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.0,
-     "vol": 109908.42136499999,
+     "gap": 92.8,
+     "vol": 109908.421365,
      "url": "https://polymarket.com/event/new-mexico-governor-winner-2026"
     },
     "New York": {
@@ -1507,17 +1506,17 @@
      "lead": {
       "name": "Kathy Hochul",
       "party": "D",
-      "p": 0.9675
+      "p": 0.9705
      },
      "other": {
       "name": "Bruce Blakeman",
       "party": "R",
-      "p": 0.028
+      "p": 0.0295
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.0,
-     "vol": 360740.30326099996,
+     "gap": 94.1,
+     "vol": 362644.311599,
      "url": "https://polymarket.com/event/new-york-governor-winner-2026"
     },
     "Ohio": {
@@ -1533,12 +1532,12 @@
      "other": {
       "name": "Vivek Ramaswamy",
       "party": "R",
-      "p": 0.18
+      "p": 0.175
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 64.5,
-     "vol": 1145376.288088,
+     "gap": 65.0,
+     "vol": 1145867.785558,
      "url": "https://polymarket.com/event/ohio-governor-winner-2026"
     },
     "Oklahoma": {
@@ -1570,7 +1569,7 @@
      "lead": {
       "name": "Tina Kotek",
       "party": "D",
-      "p": 0.825
+      "p": 0.82
      },
      "other": {
       "name": "Christine Drazan",
@@ -1579,8 +1578,8 @@
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 65.0,
-     "vol": 130514.896234,
+     "gap": 64.5,
+     "vol": 130514.89623400001,
      "url": "https://polymarket.com/event/oregon-governor-winner-2026"
     },
     "Pennsylvania": {
@@ -1591,16 +1590,16 @@
      "lead": {
       "name": "Josh Shapiro",
       "party": "D",
-      "p": 0.98
+      "p": 0.983
      },
      "other": {
       "name": "Stacy Garrity",
       "party": "R",
-      "p": 0.0215
+      "p": 0.018
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 95.9,
+     "gap": 96.5,
      "vol": 64464.61372999999,
      "url": "https://polymarket.com/event/pennsylvania-governor-winner-2026"
     },
@@ -1612,17 +1611,17 @@
      "lead": {
       "name": "Helena Foulkes",
       "party": "D",
-      "p": 0.964
+      "p": 0.9665
      },
      "other": {
       "name": "Independent",
       "party": "I",
-      "p": 0.0355
+      "p": 0.035
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 92.8,
-     "vol": 76101.767602,
+     "gap": 93.2,
+     "vol": 76353.06172,
      "url": "https://polymarket.com/event/rhode-island-governor-winner-2026"
     },
     "South Carolina": {
@@ -1633,17 +1632,17 @@
      "lead": {
       "name": "Alan Wilson",
       "party": "R",
-      "p": 0.8925
+      "p": 0.893
      },
      "other": {
       "name": "Jermaine Johnson",
       "party": "D",
-      "p": 0.1085
+      "p": 0.107
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 78.4,
-     "vol": 69608.284462,
+     "gap": 78.6,
+     "vol": 69626.204462,
      "url": "https://polymarket.com/event/south-carolina-governor-winner-2026"
     },
     "South Dakota": {
@@ -1659,11 +1658,11 @@
      "other": {
       "name": "Dan Ahlers",
       "party": "D",
-      "p": 0.026
+      "p": 0.0285
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 94.8,
+     "gap": 94.5,
      "vol": 27519.828872000002,
      "url": "https://polymarket.com/event/south-dakota-governor-winner-2026"
     },
@@ -1675,16 +1674,16 @@
      "lead": {
       "name": "Marsha Blackburn",
       "party": "R",
-      "p": 0.9295
+      "p": 0.9345
      },
      "other": {
       "name": "Jerri Green",
       "party": "D",
-      "p": 0.0615
+      "p": 0.061
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 86.8,
+     "gap": 87.3,
      "vol": 69974.94747500001,
      "url": "https://polymarket.com/event/tennessee-governor-winner-2026"
     },
@@ -1696,7 +1695,7 @@
      "lead": {
       "name": "Greg Abbott",
       "party": "R",
-      "p": 0.6245
+      "p": 0.626
      },
      "other": {
       "name": "Gina Hinojosa",
@@ -1705,8 +1704,8 @@
      },
      "tier": "lean",
      "tier_zh": "微幅",
-     "gap": 25.0,
-     "vol": 1108925.041869,
+     "gap": 25.1,
+     "vol": 1109081.0418689998,
      "url": "https://polymarket.com/event/texas-governor-winner-2026"
     },
     "Vermont": {
@@ -1722,12 +1721,12 @@
      "other": {
       "name": "Amanda Janoo",
       "party": "D",
-      "p": 0.2185
+      "p": 0.221
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 55.6,
-     "vol": 295009.909838,
+     "gap": 55.4,
+     "vol": 295893.608279,
      "url": "https://polymarket.com/event/vermont-governor-winner-2026"
     },
     "Wisconsin": {
@@ -1748,7 +1747,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 71.0,
-     "vol": 918524.8328019999,
+     "vol": 918543.672802,
      "url": "https://polymarket.com/event/wisconsin-governor-winner-2026"
     },
     "Wyoming": {
@@ -1759,16 +1758,16 @@
      "lead": {
       "name": "Eric Barlow",
       "party": "R",
-      "p": 0.985
+      "p": 0.984
      },
      "other": {
       "name": "Kenneth Casner",
       "party": "D",
-      "p": 0.0135
+      "p": 0.013
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.2,
+     "gap": 97.1,
      "vol": 12176.844617,
      "url": "https://polymarket.com/event/wyoming-governor-winner-2026"
     },
@@ -1780,16 +1779,16 @@
      "lead": {
       "name": "Jonathan Kreiss-Tomkins",
       "party": "D",
-      "p": 0.8925
+      "p": 0.8905
      },
      "other": {
       "name": "Bernadette Wilson",
       "party": "R",
-      "p": 0.105
+      "p": 0.11
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 78.8,
+     "gap": 78.0,
      "vol": 1694828.2294690001,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     }
@@ -1844,7 +1843,7 @@
        "lead": {
         "name": "Greg Abbott",
         "party": "R",
-        "p": 0.6245
+        "p": 0.626
        },
        "other": {
         "name": "Gina Hinojosa",
@@ -1853,8 +1852,8 @@
        },
        "tier": "lean",
        "tier_zh": "微幅",
-       "gap": 25.0,
-       "vol": 1108925.041869,
+       "gap": 25.1,
+       "vol": 1109081.0418689998,
        "url": "https://polymarket.com/event/texas-governor-winner-2026"
       }
      ],
@@ -1868,7 +1867,7 @@
   "seats": {
    "senate": {
     "label": "≦47 席",
-    "p": 0.385,
+    "p": 0.395,
     "url": "https://polymarket.com/event/republican-senate-seats-after-the-2026-midterm-elections-927"
    },
    "house": {

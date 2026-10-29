@@ -260,7 +260,79 @@
   "bc2a994ca7e2": "2026-10-20",
   "e667db9e6bfb": "2026-10-20",
   "2d17d87fef50": "2026-10-19",
-  "5d136b2c04f2": "2026-10-19"
+  "5d136b2c04f2": "2026-10-19",
+  "2e5d735d7af3": "2026-10-29",
+  "be43cda4c0f9": "2026-10-28",
+  "ec6e78bf998a": "2026-10-28",
+  "08a78da98253": "2026-10-28",
+  "bd9f85d15a12": "2026-10-28",
+  "841f2889c26e": "2026-10-28",
+  "26c9d5faad84": "2026-10-28",
+  "aa832b5e3aeb": "2026-10-28",
+  "0c306d158c39": "2026-10-29",
+  "728e8b560c8d": "2026-10-29",
+  "6f971ff4ec09": "2026-10-29",
+  "5b7f4609b156": "2026-10-29",
+  "4957e0cde1c4": "2026-10-29",
+  "e5d6479b4566": "2026-10-29",
+  "83389ea25e6a": "2026-10-28",
+  "c84c2f844b3c": "2026-10-28",
+  "e07feeef216b": "2026-10-26",
+  "db681abcb068": "2026-10-26",
+  "64841efd0fe6": "2026-10-26",
+  "4ec1af9fa12e": "2026-10-26",
+  "6dd0d4927e4b": "2026-10-26",
+  "1be62da70f10": "2026-10-25",
+  "1c34681adea7": "2026-10-24",
+  "4b1bcb09317a": "2026-10-21",
+  "f113b9e9fa39": "2026-10-26",
+  "93823776408d": "2026-10-26",
+  "85706faef165": "2026-10-26",
+  "a93f55d69b64": "2026-10-26",
+  "52f9fc54684a": "2026-10-26",
+  "69c577781932": "2026-10-26",
+  "9334e4678ffd": "2026-10-25",
+  "264786b870ad": "2026-10-23",
+  "66455702bf1a": "2026-10-29",
+  "60044eaed262": "2026-10-29",
+  "5d6f7213aa57": "2026-10-29",
+  "4c26441007fa": "2026-10-29",
+  "8d38a6e15f56": "2026-10-29",
+  "6ba179afabf9": "2026-10-29",
+  "0f5c02acfca2": "2026-10-28",
+  "fbda4ee0fec5": "2026-10-28",
+  "49556bee0e2b": "2026-10-29",
+  "1bc7f53e6a57": "2026-10-26",
+  "81661568adc7": "2026-10-26",
+  "7e7927c97259": "2026-10-26",
+  "8f157bd442f8": "2026-10-24",
+  "ec309802ffb1": "2026-10-24",
+  "6adde32bb664": "2026-10-23",
+  "d9cb247a306c": "2026-10-23",
+  "6a967fe4a88d": "2026-10-28",
+  "870de99bd89d": "2026-10-20",
+  "ce5a023ab9a0": "2026-10-20",
+  "3424e6c26db2": "2026-10-19",
+  "40cebb6e286f": "2026-10-19",
+  "72ab7a2c72da": "2026-10-18",
+  "268e6269b0d4": "2026-10-18",
+  "49af79c3c931": "2026-10-18",
+  "5a4f21457339": "2026-10-29",
+  "3482918c105a": "2026-10-27",
+  "f3ae2ed16628": "2026-10-27",
+  "acaf366893bc": "2026-10-27",
+  "b9c0d73cf38c": "2026-10-27",
+  "0d34ad5f98f2": "2026-10-27",
+  "7c845b8bf99f": "2026-10-26",
+  "7cabc1f65ac6": "2026-10-26",
+  "8f676997d1dc": "2026-10-29",
+  "81e7627bea95": "2026-10-29",
+  "b91d244274ed": "2026-10-29",
+  "16de02b6f80c": "2026-10-29",
+  "75e9c7c43290": "2026-10-28",
+  "91178e375dbc": "2026-10-28",
+  "c6629190578e": "2026-10-28",
+  "7aad1dbb137f": "2026-10-28"
  },
  "events": [
   {
@@ -407,6 +479,49 @@
      "title": "Microsoft Kicks Off First US High-Grade Bond Sale Since 2017",
      "source": "Bloomberg",
      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNVW1FNlVmV2VIM1BicUxLa0t2X2xDaDF5X0dScC0tVmlnX1Z3OGJYVWRVcGtJaGx4R3cwR3E3cFA0enExcXhNUE01bWdyYXl5Z1paeVYyV284SDFkVTFFeWdPYTVLODVMZ29UbzVkSzA0Vlhxc1JlNEhwMnVhMVMzQzU4cmVqdGJEY1I5X0tkaGdkZ1VTQm1JREFoYUV4Q183cFVKT1hQS3JhTkdYbHVwbw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "1f4a599700c8",
+   "co": "甲骨文",
+   "type": "資本支出",
+   "zh": "甲骨文限制新借款上限為20億美元，用於AI基礎設施投資。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Oracle Just Promised $30 Billion in Free Cash Flow After Capping New Borrowing at $20 Billion",
+     "source": "24/7 Wall St.",
+     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOUHBmWUdpR0tubU9ydnA1MlVCUER1N2ZYUFRTeWQtUU9kTEJSekhVNldBMVVSWU1TOVlaOXJUdl9EZEJVWVVqX1lWWDN2MGgxUEE4TkJsd0x4WFZxQWRTRFUtSHlRMjhxMjV6U0tKQ05Xc0s5dHlrTE1NdzBVVHJseVF6eENWRlZ5MWgwNWNUenpab29UdkgzTEJkQ0ladWdZSWJqV1loeFlORUk0bUp3MjZxNEFWS2pmOHo4cmlHSTJ4aFRydFVaZk95ejEyU3N0?oc=5"
+    },
+    {
+     "title": "Oracle caps new AI funding at $20B, targets $30B cash flow by 2029",
+     "source": "Cryptopolitan",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQTGZCdkVNVEJRcmFWUlNNajhmVEtYT0VzcFZlY2FaLVFaODdTclNqcXI5Yno5MEJHTXhVZHdCcGQ3WEE5elJTNGtVaGVoNDJWT2ZERnY4SFJRekZyTUYwbDJyVDVRQ3NycDI2UWxXVHg1T3JEZlZ5M2t2ZmcxbVhBblVBbDdrR1VSMjJMMW9kTml0WkFTVU03dzZR?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "3ec8937b5944",
+   "co": "OpenAI",
+   "type": "算力合約",
+   "zh": "OpenAI採購Google AI晶片（TPU），作為三廠商晶片策略的一部分。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "OpenAI Eyes Google TPUs Amid AI Hardware Diversification",
+     "source": "KuCoin",
+     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOVVQ5eDlBTnU2OTlXd0ZWZzZ5UEhDRGktUjg1ak9jYk9ocldjNzY2UTQ5ZlFJT19XSkZrWXBrZ3NkaEVCNG02dl8zY3dEZUt3RmFRNG1kRTBBMDlIZFBUT3hGek1VMF8weWtGM2ZoMzBOU1R6c0ZqR1BldERxQjNld2NqMVd3RVhRZTJKazZ5a1ppUFhX?oc=5"
+    },
+    {
+     "title": "OpenAI Eyes Google Chip Ownership as Three-Vendor Silicon Strategy Takes Shape",
+     "source": "Tech Times",
+     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQallMdTdrTmJITXYzd21xMU1FbFB0RTBjOURqOEZkNFNxdUhlMllBdFZ5YWRzYmJpVWtGSHZVSkFYWTJMUzFEZFBHcXFmM043WVBHV3kzd2tEVjdxeUZxR3NyQThWN04wc1BsTlM0OXFpMndSbFVNQUw4M2NSbHpZWTVYRHNjZkNMSThvUFZ3VDB5bndzak1qYU5OM3VtZXlOQTB4cGEzV25PQ1R0Nlg0YUZBdm9DcVFwUFduTlRZeHlBU2ZTMmFWWDl3?oc=5"
+    },
+    {
+     "title": "OpenAI Is Buying Google’s AI Chips, a Hit to Nvidia’s Biggest Customer Bond",
+     "source": "24/7 Wall St.",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNOU41VEhZT0hhZFRRQXVmRWhKWml6Q3FSLVRxeXpRYU9xLW5xQ21MT080OTJvNEtmcmQ5ZW05Tl9XRG4zeVZ1VVhNLWphbXB3ODJpcTBaY0hXc2J4RHBtQm1wVFJHUTlBeC02YkJydmF2QUFTS0s4eFU5UVB1bkZhdmZpUlQ4NnJSZHFlTnpoVzVYVmZmbnJ3NkMtbHZfT2N6M1p1VXk1QUNsWjdWVmpUeU9VZ0dCWGs?oc=5"
     }
    ]
   },
@@ -704,8 +819,8 @@
    "text": "Meta近期大規模融資與AI算力投資偏向提升公司債供給與AI投資熱度。發行27億美元數據中心債券直接增加債券市場供給；Nvidia、AMD合計70億美元投資則反映市場對Meta AI基礎設施的看好。若長端利率上升，可能抬高Meta後續融資成本；若AI投資熱度持續，則偏向支撐科技股表現。整體而言，這些事件指向AI資本支出競賽加劇。"
   },
   "甲骨文": {
-   "hash": "2ec641d437a9",
-   "text": "甲骨文近期事件偏向支撐AI投資熱度與長端利率。擴大晶片供應協議與多元化算力合約，顯示對AI基礎設施需求的信心，帶動科技資本支出預期；同時設定資本支出上限並規劃達成正向現金流，偏向降低公司債融資需求。若營收與現金流目標達成，則長端利率面臨來自科技業強勁投資的上升壓力，但債券供給壓力相對緩解。"
+   "hash": "442193a2e835",
+   "text": "甲骨文限制新借款至20億美元、設定資本支出上限，偏向減輕公司債供給壓力；同時預計2029年實現300億美元正向現金流，若現金流改善則長端利率承壓減弱。擴大AI晶片供應協議、投資多元算力方案，偏向強化AI基礎設施競爭力，可能提升市場對其AI投資前景的信心，利好股市與AI投資熱度。"
   },
   "CoreWeave": {
    "hash": "a015ab60813a",
@@ -716,8 +831,8 @@
    "text": "Anthropic近期發債與IPO雙軌並行，偏向增加公司債供給。63億美元債務融資完成，表明市場對其信用評估相對正面，若此類大額融資成為AI新貴常態，則長端利率面臨上升壓力。IPO申請預示股市對AI領域持續看好，偏向維持AI投資熱度。債融與上市並舉反映資本市場對Anthropic成長前景的雙重認可。"
   },
   "OpenAI": {
-   "hash": "f4e174dfa85e",
-   "text": "OpenAI近期密集簽署算力合約並完成融資，偏向提升AI投資熱度。大規模採購晶片與擴展雲端合作，反映其資本支出需求上升，若融資規模持續擴大，則公司債供給偏向增加以支應建置成本。此舉強化市場對AI產業景氣的預期，偏向支撐科技股表現，進而對長端利率形成上升壓力。"
+   "hash": "b6be3147fe26",
+   "text": "OpenAI近期大幅擴張算力採購與融資，偏向增加公司債供給壓力。多筆晶片合約與三十億美元融資需求，若轉化為債券發行，將增加長端利率上行壓力；同時密集的基礎設施投資承諾強化AI產業景氣預期，偏向提升AI投資熱度。惟融資規模與債務結構仍需觀察，對股市影響取決於市場對其盈利能力評估。"
   },
   "亞馬遜": {
    "hash": "c413d5eefa6b",
@@ -732,5 +847,5 @@
    "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
   }
  },
- "at": "2026-10-29 20:10（台北）"
+ "at": "2026-10-29 21:14（台北）"
 }

@@ -1810,6 +1810,81 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fs-tag{display:inline-block;margin-right:6px;padding:0 6px;border-radius:5px;
   background:#e6eef8;color:var(--series-1);font-size:11.5px;font-weight:700;
   line-height:1.7;vertical-align:1px;white-space:nowrap}
+/* 總覽清爽化（2026-10-29）：說明與完整教學縮小、拿掉多餘分隔線、膠囊改底線 */
+/* 說明與完整教學縮小 */
+html body .learn-more{border-top:0;margin:8px 0 0;padding-top:0;font-size:12px;gap:0 10px}
+html body .learn-more span{font-weight:500;color:var(--muted)}
+html body .learn-more a{min-height:0;font-weight:500;color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+html body .learn-more a::after{content:""}
+html body details.f-more{border-top:0!important;margin-top:4px!important;padding-top:0!important}
+html body details.f-more>summary{font-size:12px!important;font-weight:500!important;color:var(--muted)!important;padding:4px 0!important;min-height:0!important}
+html body details.f-more>summary::after{transform:scale(.75)}
+html body details.fs-reflinks>summary{font-size:13px!important}
+/* ② 拿掉不必要的線 */
+html body details.hm-c2-more,html body details.hm-tr,html body details.fc-fold,html body .fs-brand{border-top:0!important}
+html body .fc-fold{margin-top:0!important;padding-top:0!important}
+/* ④ 快報、選擇指標、日變動：底線取代膠囊 */
+html body .fs-story-btn,html body .fs-story-ring{border:0!important;background:none!important;box-shadow:none!important;width:auto!important;height:auto!important;padding:0!important;border-radius:0!important;animation:none!important}
+html body .fs-story-ring::before,html body .fs-story-ring::after{display:none!important}
+html body .fs-story-ring span,html body .fs-edit-btn{font-size:13px!important;font-weight:700!important;color:var(--text-secondary)!important;background:none!important;border:0!important;border-bottom:1.5px solid currentColor!important;border-radius:0!important;padding:0 0 1px!important;box-shadow:none!important;min-height:0!important}
+html body .fs-head{gap:14px!important;align-items:baseline!important}
+html body .fs-mode-sel{border:0!important;border-bottom:1.5px solid currentColor!important;border-radius:0!important;background-color:transparent!important;padding:0 16px 1px 0!important;box-shadow:none!important}
+/* 品牌與來源說明收進展開全文 */
+html body .fs-more .fs-brand{margin-top:12px;padding-top:0}
+html body .fc-fold .hm-zh{display:block!important}html body .fc-fold .hm-zh>p{text-align:left!important;margin:2px 0 0!important}html body .fc-fold h2{white-space:nowrap}
+html body .fs-head .fs-story-btn{margin-left:auto!important}
+html body .fs-head .fs-story-btn[hidden]+.fs-edit-btn{margin-left:auto!important}
+/* 接下來看什麼（2026-10-29）：標題區兩層、列表與月曆共用同一種事件列 */
+html body .hm-zh p.wv-sw{font-size:13px;color:var(--muted);white-space:nowrap}
+html body .wv-sw label{cursor:pointer;font-weight:500}
+html body .hm-zone:not(:has(#hm-view-cal:checked)) .wv-sw label[for=hm-view-list],
+html body .hm-zone:has(#hm-view-cal:checked) .wv-sw label[for=hm-view-cal]{color:var(--brand-ink);font-weight:800}
+html body .hm-wkx,html body .hm-cal{position:relative}
+html body .hm-cats,html body .hc-lg{display:flex;flex-wrap:nowrap;gap:14px;margin:4px 0 0;padding-right:84px;border-bottom:1px solid var(--grid);overflow:hidden}
+html body .hm-cats label,html body .hc-lg label{display:inline-flex;align-items:center;gap:5px;padding:7px 0 8px;border:0;border-radius:0;background:none;
+  font-size:13.5px;font-weight:700;color:var(--muted);white-space:nowrap;box-shadow:none;margin:0}
+html body #hm-cat-data:checked~.hm-cats label[for=hm-cat-data],html body #hm-cat-sup:checked~.hm-cats label[for=hm-cat-sup],
+html body #hm-cat-spk:checked~.hm-cats label[for=hm-cat-spk],html body #hm-cat-hol:checked~.hm-cats label[for=hm-cat-hol]{color:var(--brand-ink);box-shadow:inset 0 -2px 0 var(--brand-orange)}
+html body .hc-lg label{color:var(--brand-ink)}
+html body .mk-h{display:inline-block;font-style:normal;font-size:9.5px;line-height:1;padding:1px 2px;border:1px solid var(--muted);border-radius:3px;color:var(--muted);flex:none}
+/* 期間切換：小箭頭，放在分類同一列右邊 */
+html body .hm-wk-h{position:absolute;top:4px;right:0;height:34px;margin:0;display:flex;align-items:center;gap:2px;grid-template-columns:none;border:0;padding:0}
+html body .hm-wk-t{flex-direction:row;gap:0}
+html body .hm-wk-t b{font-size:12.5px;font-weight:600;color:var(--text-secondary)}
+html body .hm-wk-dots{display:none}
+html body .hm-wk-a{width:22px;height:28px;border:0;border-radius:0;background:none;font-size:17px;color:var(--text-secondary)}
+html body .hm-wk-a.off{opacity:.25}
+/* 事件列（列表與月曆共用） */
+.wv-day{margin-top:4px}
+.wv-dh{font-size:13px;font-weight:800;padding:12px 0 4px;border-bottom:1px solid var(--grid);color:var(--brand-ink)}
+.wv-dh span{color:var(--brand-orange-fill);margin-left:6px}
+.wv-ev{display:grid;grid-template-columns:44px 14px minmax(0,1fr);gap:0 8px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--grid)}
+.wv-day .wv-ev:last-child{border-bottom:0}
+.wv-t{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.wv-ev{align-items:start}.wv-t{line-height:22px}
+.wv-ev>.mk,.wv-ev>.mk-h{justify-self:center;margin-top:7px}.wv-ev>.mk-h{margin-top:4px}
+.wv-nm{line-height:22px}
+.wv-nm{font-size:14.5px;font-weight:700;color:var(--brand-ink)}
+.wv-hi{font-style:normal;font-size:10.5px;font-weight:800;color:var(--brand-orange-ink);border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+.wv-vt{font-style:normal;font-size:10.5px;font-weight:700;color:var(--muted);border:1px solid var(--grid);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+.wv-cs{display:block;font-size:12.5px;color:var(--text-secondary);margin-top:1px}.wv-cs b{color:var(--brand-ink)}
+.wv-tr{margin-top:2px}.wv-tr>summary{list-style:none;cursor:pointer;font-size:12px;color:var(--series-1);font-weight:600}
+.wv-tr>summary::-webkit-details-marker{display:none}.wv-tr>summary::after{content:" ›"}
+.wv-cnt{font-size:11.5px;color:var(--muted);margin:8px 0 0}
+/* 月曆：拿掉格線與斜線底紋 */
+html body .hc-mp .hm-wk-h{top:4px}
+html body .hc-grid{border:0;grid-template-columns:repeat(7,1fr);margin-top:6px}
+html body .hc-wd{border:0;padding:4px 0;font-weight:500}
+html body .hc-d{border:0;min-height:46px;padding:5px 2px 4px;border-radius:10px;align-items:center;background:none}
+html body .hc-d.hc-gray{background:none}
+html body .hc-d .hc-n{font-size:13.5px;font-weight:600}
+html body .hc-d.hc-today .hc-n{background:none;color:var(--brand-orange-fill);padding:0;align-self:center}
+html body .hc-d.hc-sel{box-shadow:none;background:var(--brand-ink)}
+html body .hc-d.hc-sel .hc-n{color:#fff}
+html body .hc-d .hc-m{justify-content:center}
+html body .hc-d .hc-h{position:absolute;top:2px;right:3px;font-size:8.5px;font-style:normal;color:var(--muted);border:0;background:none;padding:0}
+html body .hc-d.hc-sel .hc-h{color:#cfd3dc}
+html body .hc-dd{margin-top:6px}
 /* 今日結論（2026-10-29）：只露標題與判讀膠囊，其餘收合 */
 .hm-tog{appearance:none;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--series-1);padding:2px 0;cursor:pointer;margin-top:10px;display:block}
 .hm-hero:not(.hm-open) .hm-key,.hm-hero:not(.hm-open) .hm-next,.hm-hero:not(.hm-open) .hm-layer,
@@ -4889,8 +4964,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-29 20:11（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>20:11</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>08:11</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>12:11</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-29 21:15（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>21:15</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>09:15</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>13:15</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/ask/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/" class="on" aria-current="page">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>偷懶</h1></div>

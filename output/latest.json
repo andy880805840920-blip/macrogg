@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-29T20:11:52+08:00",
+  "generated_at": "2026-10-29T21:15:49+08:00",
   "labor": {
     "month": "2026-09",
-    "score": 0.011311659661338892,
+    "score": 0.052817582802898985,
     "tilt": {
       "dovish": 0,
       "hawkish": 1.0,
@@ -35,22 +35,12 @@
   "inflation": {
     "month": "2026-09",
     "tilt": {
-      "dovish": 3.0,
+      "dovish": 1.0,
       "hawkish": 8.0,
-      "net": 5.0,
+      "net": 7.0,
       "tilt": "hawkish"
     },
     "flags": [
-      {
-        "key": "pce_cooling",
-        "severity": "alert",
-        "headline": "核心 PCE 在降溫：三月年化 2.0%，低於年增 3.0%",
-        "detail": "核心 PCE 年增 3.0%，最新月增 0.25%、三月年化 2.0%、六月年化 2.7%。短天期低於長天期＝最近幾個月漲得比一年平均慢，年增率之後會跟著往下。差距要 0.3 個百分點以上、六月年化沒有反向才算方向明確。",
-        "lean": "dovish",
-        "impact": "聯準會盯的指標在降溫",
-        "tier": 1,
-        "strength": 3.203991892924307
-      },
       {
         "key": "cpi_reheating",
         "severity": "alert",
@@ -95,7 +85,7 @@
         "key": "above_target",
         "severity": "alert",
         "headline": "核心 PCE 顯著高於目標",
-        "detail": "核心 PCE 年增 3.0%，高出目標 1.0 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
+        "detail": "核心 PCE 年增 3.1%，高出目標 1.1 個百分點。只要這個數字降不下來，就算就業轉弱，聯準會降息也會很猶豫。",
         "lean": "hawkish",
         "impact": "通膨仍是降息的阻力",
         "tier": 4,

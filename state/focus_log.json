@@ -2225,5 +2225,106 @@
    "重點二": []
   },
   "result": "聯準會 10/28 按兵不動、Warsh 拒給前瞻指引，殖利率曲線陡峭化"
+ },
+ {
+  "at": "2026-10-29T13:14+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims",
+   "gdp_adv",
+   "fomc"
+  ],
+  "locks": [
+   "pce",
+   "gdp_adv"
+  ],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed highlights economic strength but muddies outlook for Treasuries - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Gold slips as Fed hike bets linger ahead of US inflation data - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed Rates: Lord, Let Me Hike, Just Not Now - Bloomberg"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Indian shares rise after Fed holds rates steady; earnings-led gains boost optimism - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Wall Street ends higher as Fed holds key rate steady, focus turns to earnings - Reuters"
+    ]
+   }
+  ],
+  "main": "Q3 GDP Revs Up As PCE Inflation Gets Hotter (Live Coverage)",
+  "main_why": "鎖定事件 pce",
+  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（3.5、2.7、3.0、2.1、2.8）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "【對利率】118 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "出現材料裡沒有的數字（28）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述"
+    ]
+   ]
+  },
+  "result": "第三季 GDP 成長加速、9 月 PCE 通膨升溫，升息預期升高"
  }
 ]
