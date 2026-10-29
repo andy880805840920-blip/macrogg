@@ -85,6 +85,14 @@ _fc = yaml.safe_load(open(ROOT / "config/fomc.yaml", encoding="utf-8"))
 check("⑤ config/fomc.yaml 有 official_stance，值只有三種",
       _fc.get("official_stance") and set(_fc["official_stance"].values()) <= {"hawkish", "dovish", "neutral"})
 
+# ⑥ 公布前檢查只看「那件事」：10/29 PCE 公布前，標題「聯準會維持利率不變」（10/28 已公布）不該被刪
+check("⑥ PCE 公布前：FOMC 已公布的結果不算", ft._decided_hits("聯準會維持利率不變 Warsh 宣布每年僅 6 次利率表決", "10/29|pce") == [])
+check("⑥ FOMC 公布前：決議用語照樣擋", ft._decided_hits("聯準會決議維持利率不變", "10/28|fomc") != [])
+check("⑥ 沒帶種類時維持舊行為", ft._decided_hits("聯準會決議維持利率不變", "10/28") != [])
+check("⑥ 沒有對應規則的事件（例：國會證詞）不檢查", ft._decided_hits("聯準會決議維持利率不變", "10/29|testimony") == [])
+_src6 = (ROOT / "src/analysis/focus_today.py").read_text(encoding="utf-8")
+check("⑥ build 傳入的 preview 帶事件種類", '_preview = f"{_d}|{_k}"' in _src6)
+
 clock.now, clock.today = _now0, _today0
 print()
 print("全部通過" if ok else "有失敗")
