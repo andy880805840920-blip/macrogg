@@ -1979,6 +1979,16 @@ _DECIDED = re.compile(
     r"(?:決議|決定|宣布|宣佈|拍板|公布|公佈|投票)[^。；！？\n]{0,14}?(?:維持|升息|降息|按兵不動|調升|調降|加息|減息|不變|暫停)"
     r"|維持利率不變|利率維持不變|按兵不動|升息一碼|降息一碼|升息兩碼|降息兩碼"
     r"|(?:數據|報告|CPI|PCE|非農|就業報告)[^。；！？\n]{0,8}?(?:顯示|公布為|公佈為|結果為|出爐為|優於預期|遜於預期|高於預期|低於預期)")
+# 2026-10-29：只檢查「尚未公布的那件事」的結果說法。10/29 PCE 公布前，標題「聯準會維持利率不變」
+# （10/28 已公布的 FOMC 結果）被當成寫錯而刪掉。FOMC 只看決議用語；數據只看那項數據的名稱。
+_RESULT_WORDS = r"[^。；！？\n]{0,8}?(?:顯示|公布為|公佈為|結果為|出爐為|優於預期|遜於預期|高於預期|低於預期)"
+_DECIDED_BY_KIND = {
+    "fomc": re.compile(_DECIDED.pattern.rsplit("|(?:數據", 1)[0]),
+    "cpi": re.compile(r"(?:CPI|消費者物價)" + _RESULT_WORDS),
+    "pce": re.compile(r"(?:PCE|個人消費支出)" + _RESULT_WORDS),
+    "employment": re.compile(r"(?:非農|就業報告|失業率)" + _RESULT_WORDS),
+    "gdp_adv": re.compile(r"(?:GDP|國內生產毛額|經濟成長)" + _RESULT_WORDS),
+}
 _EXPECT = re.compile(r"預期|預料|預估|料將|可能|或將|將會|是否|押注|機率|定價|若|如果|假如|猜測|估計|關注|觀察|等待|"
                      r"前瞻|預告|即將|尚未|未來|下次|將在|將於|恐|傳出|"
                      r"上次|前次|上一次|先前|此前|之前|曾|上月|去年")    # 講過去的決議（背景）不算
@@ -1986,10 +1996,15 @@ _EXPECT = re.compile(r"預期|預料|預估|料將|可能|或將|將會|是否|�
 
 def _decided_hits(text: str, event_md: str = "") -> list[str]:
     """公布前不該出現的「已成定局」說法：命中 _DECIDED、而且那一句沒有預期／條件／過去字眼。
-    那一句寫了別的日期（例：「9/16 決議升息一碼」）＝講過去的決議，不算。"""
+    那一句寫了別的日期（例：「9/16 決議升息一碼」）＝講過去的決議，不算。
+    event_md 可帶事件種類「10/29|pce」：只檢查那件事的結果說法（沒有對應規則的事件不檢查）。"""
+    event_md, _, kind = (event_md or "").partition("|")
+    pat = _DECIDED_BY_KIND.get(kind) if kind else _DECIDED
+    if pat is None:
+        return []
     out = []
     for s in re.split(r"(?<=[。！？；])|\n|¶", text or ""):
-        m = _DECIDED.search(s)
+        m = pat.search(s)
         if not m or _EXPECT.search(s):
             continue
         dates = set(re.findall(r"(?<!\d)(\d{1,2}/\d{1,2})(?!\d)", s))
@@ -2117,7 +2132,8 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         supp = [_drop(x) for x in supp]
     headline = fix(r["headline"]) if part != "para" and 6 <= cjk_len(r["headline"]) <= 40 else ""
     if preview and _decided_hits("\n".join([headline, main, rate] + supp), preview):
-        log.warning("市場焦點：公布前仍寫成已有結果（%s），刪掉那幾句", "、".join(_decided_hits(main, preview)[:3]))
+        log.warning("市場焦點：公布前仍寫成已有結果（%s），刪掉那幾句",
+                    "、".join(_decided_hits("\n".join([headline, main, rate] + supp), preview)[:3]))
         if _decided_hits(headline, preview):
             headline = ""
         main = MAIN_PARA.join(p for p in (_drop_decided(p, preview) for p in main.split(MAIN_PARA)) if p.strip())
@@ -4740,7 +4756,7 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 if released_yet(_k, _ev_d, cfg, now_tw):
                     _ev_note = f"{_d}（美東）有{_nm}：寫這件事。"
                 else:
-                    _preview = _d
+                    _preview = f"{_d}|{_k}"      # 帶事件種類：只檢查這件事的結果說法
                     _ev_note = (f"{_nm}在 {_d}（美東）公布、目前尚未公布：寫這次公布什麼、市場關注哪些重點；"
                                 "不要寫任何預估值或市場共識數字；絕對不能寫成已經有結果（例如「決議維持利率不變」）"
                                 "——材料裡看起來像已公布結果的標題，是預測、模擬或評論。"
