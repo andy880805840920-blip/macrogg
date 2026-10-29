@@ -1,0 +1,363 @@
+{
+ "ipo": {
+  "name": "Anthropic",
+  "steps": [
+   {
+    "label": "遞交 S-1",
+    "date": "2026-10-26"
+   },
+   {
+    "label": "S-1 修正版",
+    "date": ""
+   },
+   {
+    "label": "定價",
+    "date": ""
+   },
+   {
+    "label": "掛牌",
+    "date": ""
+   }
+  ],
+  "listed": false,
+  "active": true
+ },
+ "seen": {
+  "361cdca004a3": "2026-10-29",
+  "5dd5f4056b64": "2026-10-29",
+  "5a9c944267f4": "2026-10-29",
+  "53083c39317f": "2026-10-29",
+  "fadd1b681df7": "2026-10-29",
+  "593fdd344e39": "2026-10-29",
+  "b1f16c60203c": "2026-10-28",
+  "e7f9a4a165df": "2026-10-28",
+  "f861fb156ff1": "2026-10-29",
+  "ece874dfc4eb": "2026-10-29",
+  "566c57befb14": "2026-10-29",
+  "cadaaf4186c3": "2026-10-29",
+  "9c2c0610f390": "2026-10-29",
+  "3c8952755152": "2026-10-29",
+  "2dd95d45d563": "2026-10-29",
+  "63b7eff2341b": "2026-10-29",
+  "7d43cae1f580": "2026-10-29",
+  "db47f04c9a75": "2026-10-28",
+  "bee8438c1df8": "2026-10-28",
+  "d2630a1da738": "2026-10-28",
+  "3ab7e11a2c02": "2026-10-28",
+  "d2f54d8926cb": "2026-10-28",
+  "e73daaa95d7d": "2026-10-28",
+  "c2e94b38a8fa": "2026-10-27",
+  "f8b1b5e428ca": "2026-10-28",
+  "51de984237d4": "2026-10-28",
+  "9d8eac323529": "2026-10-28",
+  "ee8d61c16ea6": "2026-10-27",
+  "554b20893bee": "2026-10-27",
+  "08b1979783d2": "2026-10-27",
+  "1548eedb7719": "2026-10-27",
+  "0243dab69bd1": "2026-10-27",
+  "b6df837cb94e": "2026-10-29",
+  "9acc2a8e8046": "2026-10-29",
+  "8168116a6847": "2026-10-28",
+  "8e0002630f05": "2026-10-28",
+  "e9aa0b59902d": "2026-10-28",
+  "3190371ba7e9": "2026-10-28",
+  "3d849a4a05f5": "2026-10-28",
+  "d8a571a2d321": "2026-10-28",
+  "cf31ba58dab2": "2026-10-29",
+  "78cec5a02a02": "2026-10-28",
+  "499a20785721": "2026-10-28",
+  "b22810f885c7": "2026-10-28",
+  "2adefb3dcde2": "2026-10-28",
+  "0c93faaf66d3": "2026-10-28",
+  "131568d13642": "2026-10-28",
+  "2c9bdc55ded1": "2026-10-28",
+  "51af2da40b98": "2026-10-28",
+  "0e7aebc632d7": "2026-10-28",
+  "c5dd8fe690fa": "2026-10-28",
+  "7ea9a4536173": "2026-10-28",
+  "5c22e1e3602b": "2026-10-28",
+  "c4dca214dd72": "2026-10-28",
+  "a3b86f649916": "2026-10-27",
+  "4f7c26fbedba": "2026-10-27",
+  "2f87d72a0a8e": "2026-10-29",
+  "e5bff900059e": "2026-10-28",
+  "f28585b1584d": "2026-10-28",
+  "5d02e26a52e8": "2026-10-28",
+  "ab67406a1a92": "2026-10-28",
+  "1584f9144f59": "2026-10-28",
+  "850726095666": "2026-10-28",
+  "0286e7d5557c": "2026-10-28",
+  "339b7bc6b00d": "2026-10-29",
+  "9a14d9bb9ed3": "2026-10-28",
+  "c09f2d481f5e": "2026-10-28",
+  "8b2547fe1e15": "2026-10-28",
+  "03285cbb455c": "2026-10-28",
+  "4f21b0414330": "2026-10-28",
+  "c27f5375bf4b": "2026-10-27",
+  "1e1ca123f69f": "2026-10-27",
+  "d60c2d0a8b08": "2026-10-27",
+  "d5e396806e85": "2026-10-20",
+  "7854a844953c": "2026-10-20",
+  "6572720369bb": "2026-10-28",
+  "7254940b6e81": "2026-10-28",
+  "f023ed9c8f4f": "2026-10-28",
+  "ee0221d92d6c": "2026-10-28",
+  "830aee9411c0": "2026-10-27"
+ },
+ "events": [
+  {
+   "id": "04e2d1a037eb",
+   "co": "微軟",
+   "type": "財報",
+   "zh": "微軟公布Q1財報，雲端成長帶動營收和盈利超預期。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "The major reason Microsoft’s stock is heading higher after earnings",
+     "source": "MarketWatch",
+     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQRGt3VmtmUGNnc3VOY1NTUnZIT2lROU5pbXptLTFFSXRkWFl0ZzF5SjhPVmRfVXQ5eFFMYU5VWjZTRFZrYzM3NHJyVFpfQ3ctYklCOHJndkgwR1d0bkZnb0xGaEhZejVmZUIxbnEyUHJaUXRJRVpmU0ZSTjA1MW4xc252VVhRX1V0dFkxcWRubnB0NzdvYnBDcTNOZmpqUlRaZENOMGxJOHBhUks2TlE?oc=5"
+    },
+    {
+     "title": "Microsoft and Alphabet Just Reported Earnings, Putting the AI Boom to the Test",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxObFpfZDBQNy1JbzJMVnAyQTNXeTdvWDZnSGpoQi03MkZfLU1NXzJyekZrbzl5WDl6SV83bFVuUm9qVGIzOWVydFdfdzVDdDgxTFB2c0k1T3l4MlVSRS1iV19MY25iOFhMSEpLYjVkQmZyR09xa1g2aHZoYUY5UXJXYTNleE52QkVtUzJPWU5XVmliLXhGYlNMb2FzZ3dYRHMzbkZKSlR0TXF5UQ?oc=5"
+    },
+    {
+     "title": "Microsoft (MSFT) Reports Q1 Earnings: What Key Metrics Have to Say",
+     "source": "Yahoo Finance Singapore",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNMGUtcVAxSGxTdFdjelZ3ZDdYOWZGZGozUGFsTXJsLUtxdWFyWnpzcC10VFg1NmhhSW51b1o4ak96dkh2VlBWSUNNdUIzbFVoeGhCR3VTTml3Q3dLT0M3bmc4RVJENmMwQ2Z5ZEwwTzZETHVUbjJQcktvWlBZZkN2RVdNdjk1MGZ5dFRZ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "729343719b38",
+   "co": "微軟",
+   "type": "資本支出",
+   "zh": "微軟因資料中心延遲，資本支出低於預期。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "CRWV, NBIS, IREN, APLD Stocks Drop After Microsoft Capex Falls Short On Delayed Third-Party Capacity",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNMl9xakY0LUUycHJHUThSdnlXc0ctUHRaXzZVQVN3WWxpcXJZa2taZ2FkdFRFd3g3YVBxQWhNVmtfUDI4VEpPUGNaZmdBT0lGSV9sVlFGZFUtWDVSZ0drZmlCb1l5VWVyWktBRV9mWjJEanBuUVI0eDhWcWRtUUJPUnV2SnYteEp6SjF5MExDTzJUMUNuUkE?oc=5"
+    },
+    {
+     "title": "Microsoft blames data centre delays for lower capital expenditure",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOY2RibWNSVm1SWDJYQ2RfaEplQWNvbFRpNGNwMkdDdGpuSVBCSTQ1WE91RE9BU0tEanFOd21XbnNDNTNYV1FpdXlIV3Fjb1RZTzNIdzFKZE55MG9vNThXZVdPNWljWUpqVzY5UENxVnRZZW5ZU0RXZU10b1YwRjJhSXVfSDQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "be8f09118bd1",
+   "co": "Alphabet",
+   "type": "財報",
+   "zh": "Alphabet公布第三季財報，營收未達預期，引發AI支出過度的擔憂。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Alphabet Q3 Earnings Call Highlights",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPcllaSGNUVkRXenRVM211dFEtbVc5Y0IwS1I2MVMwRjh1WDZaUFNWcVJmaWduY19MWVdqUlVJbzhNa0tRU0gtYlh0TUVzdmZ3NmNTZkZnUTFJdjdfc3RMamkwUmVpZzB2TEJ3UWZ5eGgtOFNjN0luUFNrR19hUTlFYVlVYlBGZFdOcXN4VjR1SmZTRGQ3M0pHMmp4VXdweW0wV3g0?oc=5"
+    },
+    {
+     "title": "Alphabet’s Revenue Miss Reignites Fears Over AI Spending Binge",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPNl94WE51TlQ2Q2dVVTBDNlZZbzF5Mk02UjZRaEJwQnhoM1lGX0dWODk3b1RwZDB1SDVHYmYtOUQzaWJyTEc0ZXlTNmpyQU50WVhaQUpJX3dyMkVFbmgyVXJFVy1fb21TQUxEOXFIWmtzdFEyYVk5SkU3ZGF4LTdnN0EyTlo1NklicFg4TzlpSHYwRE9VYzdUUTZ4N0ZLaG9XWUs1Nm5vM3FfSktn?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "86d2ea44495f",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Alphabet宣布增加AI資本支出。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Alphabet spells out more AI capex, China+1 doesn’t add up",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPaEJLbWUyMWlVWXlsYzVLRmpUYmRyZGE0T3dVanRaeHRwUE14aFZXdV9iUmZDUV9QS1BGUDlZMTFQODJrNzJoR29lT1R4T2lCWWFxLU50d2FiWFFRekhSbndVbXI2TTdNVmtKN1JCYk95czBQYnJON3pwVVdXT2l4ZW9sZmg?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "70728c1d4661",
+   "co": "甲骨文",
+   "type": "資本支出",
+   "zh": "甲骨文預計2030年營收達2250億美元，並計畫2029財年實現300億美元現金流。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Oracle Targets $225B Revenue by 2030 as AI Cloud Build-Out Accelerates",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOLVNuLXhYZHNDUzAyMzlnOG5BQk9fTF9xMXc5dmZWTFBvY0I1dTdGb3QyY2ZjNTlaNzktLUlnSnFsQU96ZDFBbm1Qb0RqNEFvN3dKM3pFZXM2dnYzWmFrV2tvT01ac2lEOTZTRHFLb0NWUzZwUGVZQnpPQTdKdGR3RHdLbTN6cTdRbzRiMU9wOEJocVhRa0FQdjhCUzg?oc=5"
+    },
+    {
+     "title": "Oracle Forecasts $30B Cash Flow By FY29, Helping Calm AI Capex Concerns, Pushing ORCL Stock To Its Best Day In Five Months",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPUm1BOWliVHA2VzRQVVRtVkVRQUxMUENKVVllVHBXRHAtWkRfWXIta3k5MGZ5UDBTMDVKb0I3c3RrWEJ6dTlXZldGa3Z3cU9DeE9CZDFDWmlJT2RaX2FVSEpKdTRSTjdNU1hRM3JtaU5JZlBTaGp4bzFXd3NaVXY1ZEtxQXF3NnVYeXpvbTI5bnFCV2tuN2Y4Z3l3WQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "688df8cca8a8",
+   "co": "Anthropic",
+   "type": "發債",
+   "zh": "Anthropic完成63億美元債務融資，由Broadcom CEO協助促成。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Exclusive | Broadcom CEO Intervened to Seal $63 Billion Anthropic Debt Deal",
+     "source": "WSJ",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNbkxxMllvRjN2M1VzSVJVSU5xNnJmamxXSTA3a3dWU2VLeW1sZjhLbDhLcXoyakFIYjFCVktFMFNfM3JaenA5UjFMRTE2cEVVTXdlN3l0eUpQN2d3cXM4VUhZc3owSGdUTDF2N01pT0U2WTVIXy12bDBtRS1ZUjNob3YtYUVkUU5hVEdxVVFjaEpHMVdfVHNHY1ktOEtLa2c5?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "9be48e79a654",
+   "co": "OpenAI",
+   "type": "算力合約",
+   "zh": "OpenAI計畫採購Google AI晶片，作為其AI建置計畫的一部分。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "OpenAI Reportedly Plans to Buy Google's AI Chips. Should You Sell Nvidia Stock?",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPWllUWVU1Q1pqUnY5NVlKOUJGc1N4SDUwaWpYNmg4T1J3Wjc3N1RNU0dwbkNVSElBRlBHc2NFa0lIMG5HajJGdjZTMXc3XzFONkxTZmxyNjJpYW9TVTA1eVBxcFpKMUlEM2tTLTlrbF9GbmJid3BTYUFkaktxRldvLVlOY3JxbmVzWUJMRHVDYzBLb1FkajRBTFVLUV8yNUtJ?oc=5"
+    },
+    {
+     "title": "OpenAI plans to buy Google's AI chips, The Information reports",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPNElvX2Y3Ym5FZFdxRGVFMHpwNTRIc3lQUXRzNFNST0xVY2FjR2xoMmFCaDNMWFhtQnZuSXlSSF9zamY1aUY1a2JIX3hBWUFhQ19hb2w4a0JIQmtKRmJoNjRadWJnWmprNE50V2ZQSFRQWTI5aUhXRzkwMlhRNktVOWJwbjJnUk9EVVpiVEo1UjhwMWpvek9EYWpFNkRMTzA?oc=5"
+    },
+    {
+     "title": "OpenAI Plans to Buy Google’s Chips as Part of Its AI Build-Out",
+     "source": "Yahoo Finance UK",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNU25GMmRnOHB4T2xPYS0xT3J6amwzdHU3R2xMVHg4YWxVLXNObWNnazVYX1RkUDA5Yl8yQkJtTXVtVzJsSHpJN1lvN3MtSzdoc0R0cFlsTzlGNWhQeVFjbHlfMG51MWFaNG44NkF2V2dLeThPckgxc2VkclUxTVlsMkZDMUM?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "e2a4cd8c3c8f",
+   "co": "CoreWeave",
+   "type": "發債",
+   "zh": "CoreWeave發債引發市場關注，高盛預測其債務可能於2028年達1000億美元。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Goldman Sachs says CoreWeave could rack up $100B in debt by 2028",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeTJsOXB6RHlFeDdyaFB4cjFqS2NCaTFma1QwXzBRWWhTckVCcjR4U1Z0SXp3b2dERVMxVVp1UmlUQ3ltUnpCNGwtRWtuYVBJWTRrZUt3UDlDTnRVOVF3SGFGOFg1Z2JtTW96X3AzQldoR3FuOVByRnRyMmtWdjNLZ0RmTXpoVFpW?oc=5"
+    },
+    {
+     "title": "CoreWeave’s Debt Service is The True Neocloud Litmus Test",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQWkZOREJrNjA4N1p4SE03QUcwT0JlNUcyN21zNjhVcVBTUVNvVlA5ek5HRTFmTFZjaS14b2dtY010NXJoLXZySElBNXJqdjhvaUZHckQ3b0wwVGJaenlPSFJwSzNjYWxUbG4xSThuVjBEVmx3eE5aQmxXaFFBWHp5Sk9pbHc4N1pPcVdxSDU4bHVVTkVoSXRIbmxIUGIxMnZyY0E?oc=5"
+    },
+    {
+     "title": "CoreWeave's Bond Selloff May Overstate Debt Risks, Oppenheimer Says",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQN2ZWRldwYlpTTm9Wc0lBdUgzMnZQRG5kOGtJZVdKdDc5UUx1RVVoSkMwSGFKbmotdHZlb081WkxLengyT09IcEhrdWRjMzlZV295cnQ3SHZsTHVuSTd3ZmxUcWR5enZER1k4SEo0Q3FxQkZlbU9NU0JaMnYyMi1ESXNNOVNqdFdIVmpkOW0xeXVrV3Z2ajN6UWFodDQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "f275239e0f41",
+   "co": "Anthropic",
+   "type": "融資／IPO",
+   "zh": "Anthropic提交IPO申請文件，計劃上市。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Anthropic filed to go public—what retail investors should weigh before its IPO",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9Vc2N5SUR3WmY1a1l1cWJRbFM1RXVLakdBUGc1YWZ0dWRjLVhfN2ZZX2lHUG9pcU1HVno0cnMyY096UWp5b1lmYmlSRTN6SnI5ZFhGTGE2NGtUWkM0cUhCazlDM0l1LTh6ZkNYWFlwbGZuQ3pDdUZjLUc2bU9JZ9IBgwFBVV95cUxPbnp1REdiQWJ3c1Vic0N1cEtITFRkbDlraEY0VzJhTVhLdmd5RHYweHVCWllTNlJsajJ3d3gxa2RhV0ZWRjZJNkRZYjFjQm0zZWJkTTRPSlBrRjZnQmk1RFlsUXpjc3NiakxuVlZfckNxcC1lbHUwMTZNQnJOR2FNbzMyRQ?oc=5"
+    },
+    {
+     "title": "Prediction market bets set the tone for Anthropic's much-awaited IPO",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQZ3hmM3czNEdSNnpYeVB5eGZpZVB5QzJSa3ZNdDVsVVd4WHVZTkhyMjFpM3J1czNvMFprVU1NZmN3cDJmT1FTN0ZCRXFkYzI4TFVpbkZ0alFuY2l1QmhXWmJ3V1duQVhaSThlSjY3djh6empxXzM3VGIxQmVsMUFXSGdEVjRZMW1EeXZnU2Q3cHRITE5XWElQbG4zOERNUW44WXd0RkdYVDdQc0xERGdPdWRn?oc=5"
+    },
+    {
+     "title": "What Robinhood's CFO found interesting about Anthropic's IPO prospectus",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNYTFUYlczNE9XenRKMzF5bXotSFhzQmVveURNenRkcThsTGQ1eENhZWRPUllNUEJneldxclh3NTdIZUtjdGxpeUxhQ2FlbFZqRDNLWlZWTDhwLUFWZUNkSjhGLTQxSE9SOXJXcXB4MlYyZGlwT0N5amo0M19jdWRmVWV6UE1ZZnFuM3EtS3ROV3I1ZkxLaXdwd3pEbEJKXzNzWS1RUnJWVE1HOXdHbTdSdVc0OFd3NEt1YWdBLXlaQ0NoOUI3?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "5a397aaf548e",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta發行27億美元數據中心債券。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "Why Meta Platforms’ $27 Billion Data Center Bond Is Slumping",
+     "source": "Barron's",
+     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQRUwxckg0MEZxUTdhek16LTFWUUFTdkZPU0FaNU5xQ1YtNFF6N2NZS2RnV2ZuNkM1VnNFNXlycmdoSzQ3U2NqSl8xam1OTjJpcGtNOU1lUVd1SjhXU0lPamo2NEdZTmpkdk91dFBmUWFZcm9PazdlSzJFUkZWNkplMDBn?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "8054e915c46b",
+   "co": "Meta",
+   "type": "算力合約",
+   "zh": "Nvidia和AMD向Meta投資40億美元，深化AI合作夥伴關係。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "Nvidia, AMD to invest $4 billion in Meta as tech giants deepen AI partnership",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9lRlJvNzJPYWpWVDdDUjQwTFZVZC1Ibk54Zk43SEc1LUE0ZXpweFJZcUo2TVYwYTVWcDZrdEVpMFFpeXNIUkU2MTVNa1FXaC1Pdm5yWkhUYlptVVUzbjNuWlZ2NlVVZ9IBa0FVX3lxTFBTQXJKZC1wR0l4eGtlcFlaODVRTGRvWlR0Y3dhZnhMZFFxbzRHSEJ0RjFMNVh3R1h4bnZzaWc0U2JIYWExUlZCRzRNZWlFcF9QcWhiZUFHRWM2VWwzd0lFUGhzSUFVd0lVREtN?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "dd48b1c0d1cc",
+   "co": "OpenAI",
+   "type": "算力合約",
+   "zh": "Oracle擴大與OpenAI的合作夥伴關係。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "Oracle expands OpenAI partnership, stock jumps on deal",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNSVRPQkhOWF9iLXVxeEVhci01ZV95V0NBb0NGanhIUkVfbEc3cnpiV25QYXlHSnNZWE1nX1RXd0Iyb0hkMFNnaElxVHBQcjZwYmlLbVZQVGx1OEk0Yk1VbzdxTEVVc2l2TmRxZXN5TnF5b3pZOXRfdGVCb0pvTjZ5VU56ZGlINUZ1QlFscWZYUlNuMVhwVkhrTUZ0Z28?oc=5"
+    }
+   ]
+  }
+ ],
+ "impact": {
+  "微軟": {
+   "hash": "8454d3e8dab5",
+   "text": "微軟Q1雲端成長超預期，偏向提升市場對其盈利穩定性的信心，可能緩解對科技公司債務風險的擔憂，利於公司債供給；資本支出低於預期則暗示AI基礎設施投資步伐放緩，若此趨勢持續，可能削弱市場對AI產業景氣的樂觀度，偏向降低AI相關投資熱度。整體而言，盈利強勁偏向支撐股市，但資本支出疲軟偏向對長端利率形成溫和下行壓力。"
+  },
+  "Alphabet": {
+   "hash": "4d46737b3e51",
+   "text": "Alphabet第三季營收未達預期引發AI支出效率疑慮，同時宣布增加AI資本支出，市場對其投資回報率存疑。此舉偏向增加公司債供給壓力，因資本支出擴大可能需融資；長端利率若市場重估科技公司風險溢價則偏向上升；股市偏向承壓，AI投資熱度則面臨降溫風險，若投資人對AI獲利能力信心動搖。"
+  },
+  "Meta": {
+   "hash": "748ceca79dc3",
+   "text": "Meta近期發行27億美元數據中心債券並獲Nvidia、AMD共40億美元投資，偏向增加公司債供給、推升長端利率。大規模資本支出需求反映AI基礎設施競爭加劇，若融資成本上升，則可能抑制邊際投資回報。同時芯片廠商直接投資Meta，偏向強化AI投資熱度，市場對科技巨頭算力擴張預期升溫。"
+  },
+  "甲骨文": {
+   "hash": "24ce49f91a63",
+   "text": "甲骨文宣布高營收目標與現金流承諾，偏向提升市場對其長期盈利能力的信心。若投資者認為目標可達成，則對公司債供給偏向寬鬆，因融資成本預期下降；同時該承諾反映AI基礎設施投資持續，偏向支撐科技股與AI投資熱度。惟高資本支出計畫若超預期，則可能對長端利率形成溫和上行壓力。"
+  },
+  "CoreWeave": {
+   "hash": "a015ab60813a",
+   "text": "CoreWeave發債事件偏向增加公司債供給。若高盛預測成立，未來債務規模擴大，則可能推高長端利率以吸引投資者承接更多債券。同時，該公司作為AI基礎設施供應商，融資用途若聚焦擴產能，則偏向支撐AI投資熱度；但債務快速累積也可能引發市場對償債能力的疑慮，進而對股市形成壓力。"
+  },
+  "Anthropic": {
+   "hash": "66c361456287",
+   "text": "Anthropic近期發債與IPO雙軌並行，偏向增加公司債供給。63億美元債務融資完成，表明市場對其信用評估相對正面，若此類大額融資成為AI新貴常態，則長端利率面臨上升壓力。IPO申請預示股市對AI領域持續看好，偏向維持AI投資熱度。債融與上市並舉反映資本市場對Anthropic成長前景的雙重認可。"
+  },
+  "OpenAI": {
+   "hash": "b2481e2eb093",
+   "text": "OpenAI近期加大算力採購與合作，偏向提升AI基礎設施投資。Google晶片採購與Oracle合作擴大，反映其對運算資源的持續需求，可能推高資本支出。若OpenAI後續融資或發債以支應這些投資，則偏向增加公司債供給；同時大型科技投資計畫可能強化市場對AI產業前景的信心，偏向提升AI投資熱度與相關股市表現。"
+  }
+ },
+ "at": "2026-10-29 18:08（台北）"
+}

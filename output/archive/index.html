@@ -1781,6 +1781,11 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fs-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;
   color:var(--series-1);margin-bottom:4px}
 /* 主軸存檔（2026-10-29）：今天＋過去 6 天，下拉選單 */
+.fs-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.fs-top .fs-kicker{margin:0}
+.fs-top .fs-days{margin:0}.fs-top .fs-days>span{display:none}
+.fs-tog{appearance:none;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--series-1);padding:2px 0;cursor:pointer;margin-top:2px}
+.fs-more[hidden]{display:none}
 .fs-days{display:inline-flex;align-items:center;gap:6px;margin:2px 0 10px;font-size:12px;font-weight:700;color:var(--muted)}
 .fs-days select{font:inherit;font-size:12.5px;font-weight:700;color:var(--text-secondary);background:var(--surface-1);
   border:1px solid var(--border);border-radius:8px;padding:3px 26px 3px 10px;cursor:pointer}
@@ -1805,6 +1810,101 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fs-tag{display:inline-block;margin-right:6px;padding:0 6px;border-radius:5px;
   background:#e6eef8;color:var(--series-1);font-size:11.5px;font-weight:700;
   line-height:1.7;vertical-align:1px;white-space:nowrap}
+/* 期中選舉＋AI 大事兩張小卡與視窗（2026-10-29） */
+.duo{margin:18px 0}
+.duo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.duo-card{appearance:none;justify-content:space-between;font:inherit;color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;
+ border:1px solid var(--border);border-radius:14px;background:var(--surface-1);padding:14px 16px 12px;position:relative}
+.duo-card:hover{border-color:var(--series-1)}
+.duo-k{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.duo-t{font-size:18px;font-weight:800}
+.duo-map{display:block;height:96px;margin:4px 0}
+.duo-map svg{width:100%;height:100%;pointer-events:none}
+.duo-sum{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px;color:var(--text-secondary)}
+.duo-sum b.dem{color:#2f6db5}.duo-sum b.rep{color:#c0392b}
+.duo-sum1 span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.duo-more{font-size:12.5px;font-weight:700;color:var(--series-1);margin-top:4px}
+
+.duo-panel{display:none}
+.duo-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.55)}
+.duo-modal[hidden]{display:none}
+.duo-sheet{position:relative;width:min(920px,94vw);max-height:88vh;overflow:auto;background:var(--surface-1);border-radius:16px;padding:18px 18px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.duo-sheet-h{position:sticky;top:-18px;z-index:2;display:flex;justify-content:space-between;align-items:center;background:var(--surface-1);margin:-18px -18px 10px;padding:14px 18px;border-bottom:1px solid var(--grid)}
+.duo-sheet-h b{font-size:18px}
+.duo-x{appearance:none;border:0;background:var(--surface-2);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer}
+@media(max-width:700px){.duo-modal{align-items:flex-end}.duo-sheet{width:100vw;max-height:92vh;border-radius:16px 16px 0 0;padding:14px 14px 28px}
+ .duo-sheet-h{margin:-14px -14px 10px;padding:12px 14px;top:-14px}}
+body.duo-lock{overflow:hidden}
+.ai-hl-c{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;background:var(--bg)}
+.ai-hl-k{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.ai-hl-n{font-size:12.5px;color:var(--text-secondary);margin-top:8px;line-height:1.5}
+.ai-ipo{display:flex;list-style:none;padding:0;margin:0}
+.ai-ipo li{flex:1;position:relative;padding:20px 2px 0;text-align:center;font-size:12.5px}
+.ai-ipo li::before{content:"";position:absolute;top:4px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;border:2px solid var(--baseline);background:var(--bg);z-index:1}
+.ai-ipo li::after{content:"";position:absolute;top:10px;left:-50%;width:100%;border-top:2px solid var(--grid)}
+.ai-ipo li:first-child::after{display:none}
+.ai-ipo li.done::before{background:var(--series-1);border-color:var(--series-1)}
+.ai-ipo b{display:block;white-space:nowrap}.ai-ipo span{font-size:11.5px;color:var(--muted)}
+.ai-sec-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 8px}
+.ai-sec-h h3{font-size:15px;margin:0}.ai-sec-h>span{font-size:12px;color:var(--muted)}
+ display:grid;grid-template-columns:1fr;gap:3px;padding:12px 2px}
+.ai-m{font-size:12px;color:var(--muted)}.ai-m b{color:var(--text-primary);font-size:13.5px}
+.ai-x{font-size:14px;line-height:1.6;margin-top:1px}
+.ai-src{font-size:12px;white-space:nowrap}
+.ai-ev{padding:8px 0}
+.ai-all{margin-top:14px;border-top:1px solid var(--grid)}
+.ai-all>summary{cursor:pointer;font-size:14px;font-weight:700;padding:12px 0;color:var(--series-1)}
+ border:0;border-bottom:1px solid var(--grid);background:none;padding:10px 6px;border-radius:0}
+@media(max-width:700px){.ai-tb{font-size:12.5px}.ai-tb th,.ai-tb td{padding:7px 5px}.ai-tb thead th{white-space:normal;font-size:11px}}
+.ai-sel select{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:var(--bg)}
+.ai-day{border-top:1px solid var(--grid)}
+.ai-dh{font-size:12px;font-weight:700;color:var(--muted);padding:10px 0 4px}
+.ai-src{font-size:12px}
+.ai-why{margin-top:14px;border-left:3px solid var(--series-1);padding:8px 12px;background:var(--bg);border-radius:0 8px 8px 0}
+.ai-why p{margin:4px 0 0;font-size:14px;line-height:1.7;color:var(--text-secondary)}
+@media(max-width:700px){
+ .ai-sec-h>span{display:none}
+}
+.duo-body .home-zone-head{display:flex;justify-content:flex-end;margin-bottom:6px}.duo-body .home-zone-head>div{display:none}
+.ai-wrap .ai-ev{display:block;padding:8px 0}
+
+.ai-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media(max-width:700px){.ai-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}}
+.ai-tile{appearance:none;font:inherit;color:inherit;cursor:pointer;text-align:left;border:1px solid var(--border);border-radius:10px;background:var(--bg);
+ padding:9px 10px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.ai-tile b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-tile:hover{border-color:var(--series-1)}
+.ai-tile.on{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
+.ai-tl-m{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.ai-tl-tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);white-space:nowrap}
+.ai-tl-tag.none{background:none;padding:0;color:var(--muted);font-weight:500}
+.ai-tl-d{font-size:11px;color:var(--muted)}
+.ai-tile.on .ai-tl-tag{background:rgba(255,255,255,.18);color:#fff}.ai-tile.on .ai-tl-d,.ai-tile.on .ai-tl-tag.none{color:rgba(255,255,255,.75)}
+@media(max-width:700px){.ai-tile{padding:8px}.ai-tile b{font-size:13px}.ai-tl-d{display:none}}
+.ai-panes{margin-top:10px}
+.ai-pane{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;background:var(--bg)}
+.ai-pane-h{font-size:17px;font-weight:800;display:flex;justify-content:space-between;align-items:baseline}
+.ai-pane-h span{font-size:12px;font-weight:500;color:var(--muted)}
+.ai-pane-k{font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 4px;letter-spacing:.04em}
+.ai-p-l{list-style:none;margin:0;padding:0}
+.ai-p-l li{display:grid;grid-template-columns:42px 64px 1fr;gap:4px 8px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--grid);font-size:14px;line-height:1.6}
+.ai-p-l li:last-child{border-bottom:0}.ai-p-l li.none{display:block;color:var(--muted);font-size:13px}
+.ai-p-d{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}.ai-p-t{font-size:12px;color:var(--text-secondary);font-weight:700}
+@media(max-width:700px){.ai-p-l li{grid-template-columns:40px 1fr}.ai-p-x{grid-column:1/-1}}
+.ai-p-imp{margin:0;font-size:14px;line-height:1.75;color:var(--text-secondary);border-left:3px solid var(--series-1);padding-left:10px}
+.ai-tl-tx{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
+.ai-new{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brand-orange-fill);flex:none}
+.ai-tile.on .ai-tl-tx{color:rgba(255,255,255,.8)}
+
+@media(max-width:700px){.duo-card{padding:10px 10px 9px;gap:2px}.duo-map{height:64px;margin:2px 0}.duo-t{font-size:15px}.duo-k{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .duo-sum{font-size:12px;gap:0 8px}.duo-more{font-size:11.5px}.duo-sum1 span{-webkit-line-clamp:2}}
+.duo-1 .duo-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.duo-body .home-zone{border:0;padding:0;margin:0;background:none;box-shadow:none}
+.duo-body .home-zone-head{display:flex;justify-content:flex-end;margin-bottom:6px}.duo-body .home-zone-head>div{display:none}
+.ai-pane-k em{font-style:normal;font-weight:500;margin-left:8px;letter-spacing:0}
+.ai-note{font-size:12px;color:var(--muted);margin:10px 0 0;line-height:1.6}
+.ai-x .ai-src,.ai-p-x .ai-src{margin-left:6px}
 /* ---------- 期中選舉預測卡（Polymarket） ---------- */
 .el-outlook{margin:4px 0 14px;padding:10px 12px;border-left:3px solid var(--series-1);background:var(--surface-1);border-radius:0 8px 8px 0}
 .el-outlook b{display:block;font-size:13px;margin-bottom:3px}
@@ -4765,8 +4865,8 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-29 14:24（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>14:24</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>02:24</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>06:24</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/archive/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-29 18:09（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>18:09</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>06:09</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>10:09</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/archive/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/" class="on" aria-current="page">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>存檔</h1><div class="sub">共 7 期</div></div>
