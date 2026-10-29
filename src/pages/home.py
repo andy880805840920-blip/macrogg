@@ -1141,7 +1141,7 @@ _DUO_JS = r"""<script>(function(){
 var d=document.querySelector('.duo');if(!d)return;
 var md=document.createElement('div');md.className='duo-modal';md.hidden=true;md.setAttribute('role','dialog');md.setAttribute('aria-modal','true');
 md.innerHTML='<div class="duo-sheet"><div class="duo-sheet-h"><b></b><button type="button" class="duo-x" aria-label="關閉">✕</button></div><div class="duo-body"></div></div>';
-document.body.appendChild(md);
+(d.closest('.viz-root')||document.body).appendChild(md);
 var body=md.querySelector('.duo-body'),ttl=md.querySelector('.duo-sheet-h b'),cur=null,last=null;
 function shut(){if(md.hidden)return;md.hidden=true;document.body.classList.remove('duo-lock');
  if(cur){while(body.firstChild)cur.appendChild(body.firstChild);}cur=null;if(last)last.focus();}
@@ -1153,12 +1153,15 @@ d.querySelectorAll('.duo-card').forEach(function(c){c.addEventListener('click',f
 md.addEventListener('click',function(e){if(e.target===md||e.target.closest('.duo-x'))shut();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});
 md.addEventListener('click',function(e){
+ if(e.target.closest('.ai-sel')){e.preventDefault();return;}
  var t=e.target.closest('.ai-tile');
  if(t){md.querySelectorAll('.ai-tile').forEach(function(x){var on=x===t;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
   md.querySelectorAll('.ai-pane').forEach(function(p){p.hidden=p.getAttribute('data-co')!==t.getAttribute('data-co');});}});
 md.addEventListener('change',function(e){var s=e.target.closest('.ai-sel select');if(!s)return;
- md.querySelectorAll('.ai-ev').forEach(function(r){r.hidden=!(s.value==='全部類型'||r.getAttribute('data-ty')===s.value);});
- md.querySelectorAll('.ai-day').forEach(function(g){g.hidden=!g.querySelector('.ai-ev:not([hidden])');});});
+ var rs=md.querySelectorAll('.ai-r'),seen={};rs.forEach(function(r){r.hidden=!(s.value==='全部類型'||r.getAttribute('data-ty')===s.value);});
+ rs.forEach(function(r){var d=r.querySelector('.ai-r-d');if(!d.dataset.d)d.dataset.d=d.textContent;});
+ var cur='';rs.forEach(function(r){var d=r.querySelector('.ai-r-d');if(d.dataset.d)cur=d.dataset.d;if(r.hidden)return;
+  var first=!seen[cur];seen[cur]=1;d.textContent=first?cur:'';r.classList.toggle('day',first);});});
 })();</script>"""
 
 
@@ -2083,6 +2086,8 @@ def home_body(ctxs: dict) -> str:
       <div class="hm-kick"><span class="hm-num">01</span>今日結論</div>
       <h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2>
       <div class="hm-verdict"><b>{esc(sc.name)}</b><span>{esc(lean)}</span></div>
+      <button type="button" class="hm-tog" aria-expanded="false"
+        onclick="var s=this.closest('.hm-hero'),o=s.classList.toggle('hm-open');this.setAttribute('aria-expanded',o?'true':'false');this.textContent=o?'收合 ▴':'展開 ▾';">展開 ▾</button>
       {f'<p class="hm-key">{esc(takeaway)}</p>' if takeaway else ''}
       <a class="hm-next" href="/scenario/"><span>可能下一格</span><b>{esc(next_name)}</b>
         <small>{esc(trigger_text)}</small><em>完整九宮格 →</em></a>
