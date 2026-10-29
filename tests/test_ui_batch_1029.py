@@ -130,6 +130,52 @@ check("⑧ 發債名稱不加「標售・」前綴", "標售・7 年期" not in 
 check("⑧ 月曆分類是顯示／隱藏、標籤為「官員」", 'type="checkbox"' in w8 and "點類別隱藏／顯示" in w8 and ">官員<" in w8)
 check("⑧ 月曆當天明細與列表同一套列", 'hc-k-d' in w8 and w8.count('class="wv-dh"') >= 2)
 
+# ⑨ 2026-10-29 晚：今天已公布的留在原位（不讓本週數據在 20:30 之後整個變空）
+_T9 = dt.datetime(2026, 10, 29, 21, 15, tzinfo=clock.TAIPEI)
+clock.now, clock.today = (lambda: _T9), (lambda: _T9.date())
+from src.analysis import watch_calendar as _wc9
+_r9 = _wc9.watch_rows({"pce": [("2026-10-29", "官方行事曆")]}, now=_T9, weeks=4)
+_r9k = _wc9.watch_rows({"pce": [("2026-10-29", "官方行事曆")]}, now=_T9, weeks=4, keep_today=True)
+check("⑨ watch_rows 預設照舊不列已發布；keep_today 才留著並標 done", _r9 == [] and len(_r9k) == 1 and _r9k[0]["done"])
+w9 = home._hm_watch(_c8, type("S", (), {"triggers": []})(), weeks=4)
+check("⑨ 總覽：今天已公布的留著、淡化、標「已公布」", 'class="wv-ev wv-done"' in w9 and "已公布" in w9 and "PCE" in w9)
+_c9 = dict(_c8, _schedule={"cpi": [("2026-11-10", "官方行事曆")]}, _watch_extra={})
+w9b = home._hm_watch(_c9, type("S", (), {"triggers": []})(), weeks=4)
+check("⑨ 本週沒有剩下的：說清楚並給「看下週」", "本週剩下沒有排定的附息公債標售或國債回購。" in w9b and 'for="hm-wk-1">看下週 ›' in w9b)
+check("⑨ 月曆空白日也標「今天」", '<div class="wv-dh"><b></b><span hidden>今天</span></div>' in w9b)
+
+# ⑩ 2026-10-29 晚：AI 逾時——Anthropic 讀取最多等 120 秒、最多 2 次；Gemini 每顆 90 秒、一次就換
+from src.analysis import polish as _pl10
+_seen10 = []
+_req0 = _pl10.requests.request
+
+
+class _R10:
+    status_code = 200
+
+
+def _fake10(method, url, **kw):
+    _seen10.append(kw.get("timeout"))
+    raise _pl10.requests.ReadTimeout("read timed out")
+
+
+_pl10.requests.request, _sl0 = _fake10, _pl10._SLEEP
+_pl10._SLEEP = lambda s: None
+try:
+    _pl10._http("POST", "https://x", label="t", timeout=(10, 120), tries=2)
+except Exception:
+    pass
+check("⑩ _http 可覆寫等待時間與次數", _seen10 == [(10, 120), (10, 120)])
+_seen10.clear()
+try:
+    _pl10._http("POST", "https://x", label="t")
+except Exception:
+    pass
+check("⑩ 沒指定時照舊（45 秒、3 次）", _seen10 == [45, 45, 45])
+_pl10.requests.request, _pl10._SLEEP = _req0, _sl0
+check("⑩ 焦點段 AI 呼叫：Anthropic 120 秒×2 次、Gemini 每顆 90 秒×1 次",
+      ft.ANTHROPIC_TIMEOUT == (10, 120) and ft.ANTHROPIC_TRIES == 2 and ft.GEMINI_TIMEOUT == (10, 90))
+
 clock.now, clock.today = _now0, _today0
 print()
 print("全部通過" if ok else "有失敗")

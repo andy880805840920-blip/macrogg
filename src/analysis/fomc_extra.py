@@ -1029,51 +1029,72 @@ def _check(item: dict, out: str) -> bool:
     return _digits(out) <= _digits(src) | {"1", "2"}
 
 
-def ai_notes(payload: dict, cache_path, offline: bool, call=None) -> dict:
+AI_CHUNK = 10        # 一次呼叫最多幾項（2026-10-29：整包一次送，Sonnet 寫超過 45 秒逾時，連續失敗）
+
+
+def ai_notes(payload: dict, cache_path, offline: bool, call=None, chunk: int = AI_CHUNK) -> dict:
     """
-    一次呼叫產生全部中文說明。快取以素材雜湊為鍵：素材沒變就不重打。
-    失敗（沒金鑰、限流、JSON 壞掉）一律回空 dict——畫面只顯示原文。
+    聯準會頁的中文說明。2026-10-29 改成「逐項快取＋分批呼叫」：
+      - 每一項以內容雜湊為鍵存快取：內容沒變的項目直接沿用，不再因為一項新內容整包重打
+      - 沒有快取的項目每 chunk 項一批送出；一批失敗就停（不拖長執行時間），已成功的照樣存
+      - 沒通過檢查的項目記成空字串，下次不再重問（畫面只顯示原文）
+    失敗（沒金鑰、逾時、JSON 壞掉）時，有快取的項目照常顯示中文。
     """
     import hashlib
     from pathlib import Path
     if not payload:
         return {}
-    key = hashlib.sha256((AI_PROMPT_VERSION + json.dumps(payload, sort_keys=True,
-                                                         ensure_ascii=False)).encode()).hexdigest()
-    cache = {}
+
+    def ih(v):
+        return hashlib.sha256((AI_PROMPT_VERSION + json.dumps(v, sort_keys=True, ensure_ascii=False))
+                              .encode()).hexdigest()[:20]
+    cache: dict = {}
     p = Path(cache_path) if cache_path else None
     if p and p.exists():
         try:
             cache = json.loads(p.read_text(encoding="utf-8"))
         except ValueError:
             cache = {}
-    if cache.get("key") == key:
-        return cache.get("notes") or {}
-    if offline:
-        return {}
-    if call is None:
-        # 2026-10-25 v2：FOMC 筆記改用 Sonnet（主軸同一顆）
-        from .focus_today import _call_ai, FOCUS_MODEL
-        call = lambda s, sy: _call_ai(s, sy, model=FOCUS_MODEL)   # noqa: E731
-    text, err = call(json.dumps(payload, ensure_ascii=False), AI_SYSTEM)
-    if err or not text:
-        log.warning("聯準會頁 AI 說明失敗（%s），只顯示原文", err or "空回應")
-        return {}
-    m = re.search(r"\{.*\}", text, re.S)
-    try:
-        raw = json.loads(m.group(0)) if m else {}
-    except ValueError:
-        raw = {}
-    notes = {k: v.strip() for k, v in raw.items()
-             if k in payload and _check(payload[k], v)}
-    dropped = len(payload) - len(notes)
-    if dropped:
-        log.info("聯準會頁 AI 說明：%d 則未通過檢查，該項只顯示原文", dropped)
+    items: dict = dict(cache.get("items") or {})
+    # 舊格式（整包一個 key）：內容一樣就整批轉進逐項快取
+    if cache.get("key") and cache.get("notes"):
+        old_key = hashlib.sha256((AI_PROMPT_VERSION + json.dumps(payload, sort_keys=True,
+                                                                 ensure_ascii=False)).encode()).hexdigest()
+        if cache["key"] == old_key:
+            items.update({ih(payload[k]): v for k, v in cache["notes"].items() if k in payload})
+    hashes = {k: ih(v) for k, v in payload.items()}
+    todo = [k for k in payload if hashes[k] not in items]
+    if todo and not offline:
+        if call is None:
+            # 2026-10-25 v2：FOMC 筆記改用 Sonnet（主軸同一顆）
+            from .focus_today import _call_ai, FOCUS_MODEL
+            call = lambda s, sy: _call_ai(s, sy, model=FOCUS_MODEL)   # noqa: E731
+        done = 0
+        for i in range(0, len(todo), max(1, chunk)):
+            sub = {k: payload[k] for k in todo[i:i + chunk]}
+            text, err = call(json.dumps(sub, ensure_ascii=False), AI_SYSTEM)
+            if err or not text:
+                log.warning("聯準會頁 AI 說明失敗（%s），已完成 %d／%d 項，其餘這次只顯示原文（下次再補）",
+                            err or "空回應", done, len(todo))
+                break
+            m = re.search(r"\{.*\}", text, re.S)
+            try:
+                raw = json.loads(m.group(0)) if m else {}
+            except ValueError:
+                raw = {}
+            for k in sub:
+                v = raw.get(k)
+                items[hashes[k]] = v.strip() if isinstance(v, str) and _check(payload[k], v) else ""
+            done += len(sub)
+        bad = sum(1 for k in todo if items.get(hashes[k]) == "")
+        if bad:
+            log.info("聯準會頁 AI 說明：%d 則未通過檢查，該項只顯示原文", bad)
+    notes = {k: items[h] for k, h in hashes.items() if items.get(h)}
     if p:
+        keep = {h: items[h] for h in hashes.values() if h in items}       # 只留這次還用得到的
         try:
             p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text(json.dumps({"key": key, "notes": notes}, ensure_ascii=False,
-                                    indent=1), encoding="utf-8")
+            p.write_text(json.dumps({"items": keep}, ensure_ascii=False, indent=1), encoding="utf-8")
         except OSError:
             pass
     return notes

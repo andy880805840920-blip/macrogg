@@ -492,7 +492,7 @@ def _pg_boom(*a, **k):
 
 
 ft._post_gemini_hardy = _pg_boom
-_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None, **k:
                        "財政部調整發債結構，市場關注十年期殖利率。")
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120,
@@ -502,14 +502,14 @@ check("⑫ 兩把都設 → Anthropic 主力產出（Gemini 掛著也沒差）",
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"GEMINI_API_KEY": "F"})
 check("⑫b 沒有備援金鑰就照舊失敗", t == "" and "Gemini" in s, s)
-_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None, **k:
                        "市場預期年底利率降至 2.75%。")
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120,
                             {"GEMINI_API_KEY": "F", "ANTHROPIC_API_KEY": "A"})
 check("⑫c 備援的輸出一樣要過數字鎖", t == "" and "沒有的數字" in s, s)
 # 只有 Anthropic 金鑰（沒有 Gemini）也能跑
-_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None:
+_pl._post_anthropic = (lambda key, model, text, system=None, temperature=None, **k:
                        "財政部調整發債結構，市場關注十年期殖利率。")
 t, s = ft.summarize_content([{"title": "x", "body": body, "source": "y"}],
                             ["美國財政部"], 120, {"ANTHROPIC_API_KEY": "A"})
@@ -548,7 +548,7 @@ def _he(code):
 def _mk_chain(fails):
     seq = []
 
-    def call(key, model, text, system=None, think=True, temperature=None):
+    def call(key, model, text, system=None, think=True, temperature=None, **k):
         seq.append(model)
         if model in fails:
             raise fails[model]
