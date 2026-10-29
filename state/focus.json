@@ -1,9 +1,15 @@
 {
  "hash": "",
- "text": "聯準會 10/28（美國時間）決議維持利率不變，投票結果 10 比 2，符合市場預期。主席 Warsh 表示聯準會可能從明年秋季起將每年政策會議次數從八次減為六次。市場持續預期 12 月升息，因能源價格居高不下使通膨降溫面臨挑戰。投資人將關注 10/29 公布的 9 月個人消費支出物價指數（PCE），這是聯準會偏好的通膨指標，以尋找年底前利率走向的線索。黃金在 10/28 下跌 0.4% 至每盎司 4,051.91 美元，結束連三日漲勢；10 月累計下跌 2.5%，可能連續第二個月收跌。上週 AI 概念股重挫引發投資人賣出黃金以彌補其他部位損失，金價一度跌至 7 月以來低點。¶財政部長貝森特 10/28 表示，聯準會未來若再升息「不一定」是錯誤。他在聯準會當天宣布維持利率不變數小時後受訪時說，他與川普總統都認為主席 Warsh 表現良好、能在充分就業與穩定物價間取得平衡，「我認為 Warsh 主席有個很好的開始，我對他有很大信心」。貝森特也說，希望聯準會對能源價格供給衝擊的「暫時性質」保持開放心態；美國與伊朗的戰爭導致全球原油產量大幅下降，使年度通膨數據進一步偏離聯準會 2% 目標。\n聯準會主席 Warsh 暗示聯準會會議次數將減少，美國短期殖利率隨之下跌，10/28當日市場對未來降息預期調整。\n全球債券發行量創紀錄，10/28報導指出此波增長由AI相關企業借貸潮推動，企業為AI投資與擴張融資需求激增。",
+ "text": "聯準會 10/28 以 10 比 2 票決議維持聯邦基金利率目標區間在 3.75–4.00%，符合市場預期。聲明指出「通膨仍處高位」，委員會將累積更多資訊以決定適當政策立場，確保通膨及時回到 2% 目標。主席 Warsh 表示聯準會可能從明年秋季起將每年政策決策會議從八次減至六次。市場對此次決議看法分歧：DoubleLine Capital 執行長 Gundlach 指出兩年期公債殖利率與殖利率曲線走陡，認為應升息；密西根大學經濟學家 Stevenson 與貝萊德 Rieder 則認為等待是合理的。市場持續預期 12 月升息，因能源價格居高不下使通膨難以控制。投資人關注 10/29 公布的 9 月 PCE 物價指數，這是聯準會偏好的通膨指標，將提供年底前利率走向的進一步線索。¶財長貝森特 10/28 表示，聯準會未來若再升息「不見得是錯誤」。他在聯準會當天宣布維持利率不變後受訪時說，他與川普總統都認為主席 Warsh 表現良好、能在充分就業與穩定物價間取得平衡，「我認為 Warsh 主席有個很好的開始，我對他很有信心」。貝森特說，希望聯準會對能源價格供給衝擊的「暫時性質」保持開放心態；美國與伊朗的戰爭導致全球原油產量大減，使年度通膨數據進一步偏離聯準會 2% 目標。他也說美國孤立伊朗經濟的「經濟放逐行動」非常成功，內部估計伊朗經濟可能在一年內萎縮達 25%。\n銀行暫停為與Anthropic相關的德州數據中心籌資債券，該項目原計畫透過債券市場融資以支持AI基礎設施建設。\n美國短期殖利率10/28下跌，聯準會主席 Warsh 暗示未來聯準會會議次數將減少，市場對降息預期隨之調整。",
  "links": [
   {
-   "title": "Gold slips after Fed holds rates, PCE inflation data in focus",
+   "title": "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+   "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-after-fed-holds-rates-steady-goog-googl-iova-msft-now-in-focus/cZUQ4vlR9Gz?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-29T02:59:32+00:00"
+  },
+  {
+   "title": "Gold falls toward $4,040 as Fed outlook leaves traders awaiting inflation data",
    "link": "https://finance.yahoo.com/markets/commodities/articles/gold-slips-fed-holds-rates-015115459.html?.tsrc=rss",
    "source": "Yahoo Finance",
    "at": "2026-10-29T01:51:15+00:00"
@@ -273,34 +279,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-29T05:42:04.522053+00:00",
+ "at": "2026-10-29T06:22:36.793792+00:00",
  "layout": "main",
  "topics": {
-  "hash": "6c79220ea4c461be",
+  "hash": "4c6d260eb0bbaf7b",
   "items": [
-   {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "聯準會決議維持利率不變後，Warsh 宣布程序性調整：2027 年起 FOMC 年度會議仍為八次，但其中一次將不進行利率投票或發布聲明，策略會議增至兩場，使利率調整機會減至六次",
-    "links": [
-     {
-      "title": "Fed's Warsh announces changes in how future FOMC meetings will go",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOc3k2UHRGbkFLQmRDN3h4WHJyQWoyWnkxOHVkY0JqNHRFSFBER25td3pVVEhJX0pRQnhXdzJiR2FnSG11cGpSYnlQeVRFSnFuTi1mVDNtSTRVOUVwWHVwN2E1SEhiRmVmMFVTcm5oaHl3Q1pLRHY3NUVmeTdEekk0UXVwOTBHREFkZTV1dVhuTG0wa2I1RDFndWFSQ2JEWGNqcjBDcnNLZXM3X280?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-28T23:32:40+00:00"
-     },
-     {
-      "title": "Here are five key takeaways from the Fed rate decision and Warsh news conference",
-      "link": "https://www.cnbc.com/2026/10/28/fed-rate-decision-warsh-takeaways.html",
-      "source": "CNBC",
-      "at": "2026-10-28T21:31:46+00:00"
-     }
-    ]
-   },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "長天期美債面臨前景不明，聯準會強調經濟強勁但對債市走向缺乏清晰指引；同時美國友邦減少美債購買，亞洲國家領頭削減購買量達 60%，可能對美債需求造成壓力。",
+    "text": "長天期美債走勢分化，聯準會維持利率不變但未提供明確後續指引，投資人對公債前景看法不一。美債殖利率曲線陡峭化，十年期公債殖利率上升約 1%，反映市場對經濟成長與通膨預期的重新評估",
     "links": [
      {
       "title": "Fed highlights economic strength but muddies outlook for Treasuries",
@@ -319,7 +306,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價下跌，因市場對中東和平談判抱持希望，抵銷了伊朗衝突升級的擔憂；巴西國家石油公司創紀錄產量，進一步緩解全球供應緊張局面。",
+    "text": "油價下跌，因市場對伊朗外交談判的希望抵銷中東衝突升級的擔憂。伊朗與美國的戰爭導致全球原油產量大幅下降，但近期外交信號緩解了供應中斷的恐慌",
     "links": [
      {
       "title": "Oil prices fall as peace hopes offset fears of growing Middle East conflict",
@@ -331,21 +318,15 @@
       "title": "Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran",
       "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcWhmOUJoc0lkWEs5QlBSaDVpMjd4QlRILTVyTmk4dlRNU1FNRE0tS0N2NHdQZFZGQjZxZjlSOFVwSGhaQVhrUmJrb1JySXlhZDctVHdqMUIyU0gtUnFENDdoRkh4QnlxR1pfeGxMMU1UUWJydnhxSFJ1d3djdjZYQ1ZUcUxZMVBEVFFwaWN6VkhKYnNtMTdBWk4ycjJSaEczeXhONWtaN3ZXUjFZNW1aS3NMVQ?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-29T03:42:00+00:00"
+      "at": "2026-10-29T05:23:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股小幅上漲，聯準會維持利率不變提振市場，但字母公司財報不如預期引發科技股盤後下跌；半導體 ETF 上漲約 2%，超越大盤表現。",
+    "text": "聯準會維持利率不變後，半導體類股表現強勁，VanEck 半導體 ETF 與 iShares 半導體 ETF 各漲約 2%，AMD、美光與博通等個股帶動漲幅。惟字母公司財報不如預期，引發市場對科技大廠 AI 支出的擔憂，那斯達克 100 期貨盤後下跌 1.2%。",
     "links": [
-     {
-      "title": "The Fed Holds Interest Rates in a 10–2 Vote. Here's What This Means for Artificial Intelligence (AI) Stocks.",
-      "link": "https://www.fool.com/investing/2026/10/28/the-fed-holds-interest-rates-in-a-102-vote-heres-what-this-means-for-artificial-intelligence-ai-stocks/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-10-29T01:36:42+00:00"
-     },
      {
       "title": "S&P 500, Nasdaq Futures Dip As Weaker-Than-Expected Alphabet Earnings Reignite AI Spending Worries —  GOOGL, MSFT, ORCL, NVDA, MRVL In Focus",
       "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-futures-dip-as-weaker-than-expected-alphabet-earnings-reignite-ai-spending-worries-googl-msft-orcl-nvda-mrvl-in-focus/cZUQ2gwR9Gq?.tsrc=rss",
@@ -357,64 +338,71 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "谷歌自研 AI 晶片 TPU 擴大外部市場，甲骨文宣布 2027 年導入，傳 OpenAI 也有意採購；三星 AI 晶片利潤超預期，但警告晶片短缺惡化，投資人對其回報率仍持觀望態度。",
+    "text": "司法部針對輝達以 129.3 億美元收購開源平台 Hugging Face 的交易展開調查，評估此舉是否讓輝達掌握 AI 發展的核心分發管道。輝達預計收購案將於 2027 年上半年完成，該公司表示 Hugging Face 將繼續與多家晶片與雲端供應商合作",
     "links": [
      {
-      "title": "Samsung Chip Profit Misses Estimates Lifted by Resurgent AI Hope",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxORGJsVE5PellOMG00OVVLbi1tLVFydl8ya3FJVXNadWo5NThCMFZocnFmUVBZZEVlTkJUNlJwYXFvWUtLRjdPNTJsT2lQZlZjWXc3SWY5QXpPWU5KQUJuQjdlOE5PTWFBbU9CeWV3WUVrWHJPMXZqVEVLU044OVpMVGJOelE4VkR6NkJsUzNjQmdfdUtKaW5aRHg3UzZoclFrWnVLRldHejhnWmstaTRhV3Z4MmUxQQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-29T03:43:00+00:00"
-     },
-     {
-      "title": "Samsung sees AI chip shortage worsening, keeps investors in suspense on returns",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOZ2JmLWlsUUNaZ2g5VnF1TU1IZU5rWDV6T1ZLdXJBdmJrVnpHanBobFBiWjNkaXJGMjE1MUlqMlVrOGJOaHVrU18yVkRBWFVoOENmVjhqYVA3Vy1EdkdXTDN1REJPQWpVdFp5MFdlMzFhMXhEVUdBQS01STRwTW41R2RKWWloUHBhYUNVY2tyR19Geld5RHc?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-29T00:56:00+00:00"
+      "title": "路透：輝達逾4千億併Hugging Face　面臨反壟斷調查",
+      "link": "https://tw.stock.yahoo.com/news/%E8%B7%AF%E9%80%8F-%E8%BC%9D%E9%81%94%E9%80%BE4%E5%8D%83%E5%84%84%E4%BD%B5hugging-face-%E9%9D%A2%E8%87%A8%E5%8F%8D%E5%A3%9F%E6%96%B7%E8%AA%BF%E6%9F%A5-051338866.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-10-29T05:13:38+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股盤中大幅下跌，一度跌至 46055 點，台積電失守 2400 元；台達電因泰國子公司存貨跌價損失，第三季毛利率下滑 2.4 個百分點至 27.5%，全年毛利率面臨失守 30% 風險。",
+    "text": "台股 10/29 大幅下跌，終場收在 46,368 點、下跌 667 點，失守 4 萬 7 千點整數關卡。台積電下跌 10 元至 2,415 元，聯發科暴跌 190 元至 4,045 元、跌幅 4.49%，台達電下跌 70 元至 1,480 元、跌幅 4.52%，成交額僅 7,891 億元",
     "links": [
      {
-      "title": "苦守46K！台股盤中跌980點　台積失守2400元",
-      "link": "https://tw.news.yahoo.com/%E8%8B%A6%E5%AE%8846k-%E5%8F%B0%E8%82%A1%E7%9B%A4%E4%B8%AD%E8%B7%8C980%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E5%A4%B1%E5%AE%882400%E5%85%83-043358603.html",
+      "title": "盤中驚崩近千點！台股終場挫667點　台積電跌10元、收2415元",
+      "link": "https://tw.stock.yahoo.com/news/%E7%9B%A4%E4%B8%AD%E9%A9%9A%E5%B4%A9%E8%BF%91%E5%8D%83%E9%BB%9E-%E5%8F%B0%E8%82%A1%E7%B5%82%E5%A0%B4%E6%8C%AB667%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%B7%8C10%E5%85%83-%E6%94%B62415%E5%85%83-055705652.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-29T04:33:58+08:00"
+      "at": "2026-10-29T05:57:05+08:00"
      },
      {
-      "title": "外資再度賣超台積電 台股盤中大跌979點 聯發科重跌5%",
-      "link": "https://news.google.com/rss/articles/CBMi1wJBVV95cUxOWjd2Rzhyb0hEVWhTV3Q1SnlNTkFPQVFJdkRMcmpWNU5kZTV3aWppNEs5a2JjZVZXQlpPbmlMUGtIR3NQZ25ORGx6WXQ0OEtod3N3WUhIV2VRODBIOEhxWGg2ZV9WeGlzQ0wzdl9lYkpqcGg4M1hkWDFvczNXMEI3aVpOQU82TVRWT3pIQWdMSjlDM2tiS29ZaUpYckNuNTB4Q2hseTl4Z3lDTGxVWm1ZSzZPOWsxa1pwemxHNXhudVBTZlo5dmZXX29EcElCaE1QajFsYzhTTzFuMjl5NVQ1LWRiQ1YtemlDMEwxRHkteDJzRUVMMGpmY3ZkUHZJYlluMGlDb3NCQ3M5angxMW5SZjVaVkNDSjRtZ2dyZThSWnR0TFY2cUNOOUVSNnM1aVI2VWpJYXBURlVlM1VlNkVIM2g0LVVrRTI1RkVqSm9YV2EzNFFiVm04?oc=5",
-      "source": "Yahoo新聞",
-      "at": "2026-10-29T03:46:59+00:00"
+      "title": "台股4萬7千點僅守1日！終場大跌667點、台積電領跌10元　台達電、聯發科齊挫逾4%",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A14%E8%90%AC7%E5%8D%83%E9%BB%9E%E5%83%85%E5%AE%881%E6%97%A5-%E7%B5%82%E5%A0%B4%E5%A4%A7%E8%B7%8C667%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%A0%98%E8%B7%8C10%E5%85%83-%E5%8F%B0%E9%81%94%E9%9B%BB-%E8%81%AF%E7%99%BC%E7%A7%91%E9%BD%8A%E6%8C%AB%E9%80%BE4-055500313.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-29T05:55:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "聯準會在期中選舉前夕維持利率不變，市場反應平淡；川普與歐巴馬在選舉最後一週互相攻擊，同時爆出網路攻擊隱匿大金主政治獻金事件。",
+    "text": "聯準會如預期維持利率不變，市場反應平淡，標普 500 指數漲幅不足 0.5%。聲明中經濟活動描述從 9 月的「穩健」改為「強勁」，反映聯準會認為經濟成長數據已改善，其餘經濟評估與 9 月相同。",
     "links": [
      {
-      "title": "Trump and Obama trade barbs in closing week of US midterm election",
-      "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQVGliVUEtTWswR19TNllzcEY1MkVwX2xIX1pIX0E0Zkl0bUVzYk8zcnNhWFVDY1VtMEx3bjJleHZpUUo3S2lFLVF2anF5TzNpT3RPZ2pHVk9wbUtoS1k4OXF2YU5WYWlKVlpYMUNDZUZvWjR3a3VzZGQ4Zm5DalpzWHpQLVEyZG5TTzk5Z1hKNkpNTkY3T1BXQUU3MVZFa3J5Z2w3MHZ6cUFmdmluRDV5Y0FLczk0dV9JTnc?oc=5",
+      "title": "Federal Reserve Holds Interest Rates Steady Ahead of Midterms. Here's What That Means for the Market.",
+      "link": "https://www.fool.com/investing/2026/10/28/federal-reserve-holds-interest-rates-steady-ahead-of-midterms-heres-what-that-means-for-the-market/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-29T00:03:01+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金小幅下滑，投資人評估聯準會政策信號與等待美國通膨數據。聯準會維持利率不變但未提供明確後續指引，限制了黃金的避險吸引力",
+    "links": [
+     {
+      "title": "Gold slips as markets assess Fed signals, await US inflation data",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQYlhrT3hjaWJ0VXJlcHYxRUdvdVJsVEpGN2lzQXA4a1pLNW5SdklwTFpMYmRNTGRNQ2w2MTRTR2g0UUJfMkx0c21Ja1Fqbzd4eVk1U1gySHF5cnYwQ0FqUzFWWVVMVXpWaUMtQ3d2VGs1TERHQ0dtbFpMWWgxbVpoVS13bGRORTByVkZaS0piSjNxYTk0eUtoZ0ItV2wxbzNnOXhCM2R1bW1Sa1laZUE?oc=5",
       "source": "Reuters",
-      "at": "2026-10-28T18:11:00+00:00"
+      "at": "2026-10-29T04:25:00+00:00"
      },
      {
-      "title": "Cyberattack concealed political spending by big donors before US midterm elections",
-      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPYnZZTVlBNFp4UHBwR0dYQ19GaGtNXzFtcExQamE5QmZkX2c0dGNkUkdtRXlHWDB6dnJKUDRWa3ZFeVliUmNUMlY3cEpEei1sWE5OX2ZYcnEydlozWFZ4b0p2M1dPQUR1NXowNEtuRmVhSl9RQVo5T3JSNGVyMWw0QnFkX2JiTjhycGVjZVFOb3ZzN3RwUWo4WlNvY3JmOFpPSVlTZHBQTzR1ZVJ6NUxCbjV4Vi0tQUhG?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-28T23:43:42+00:00"
+      "title": "Gold Edges Lower After Fed Holds Rates With Limited Guidance",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPQzc5eDBRUXkxOGFMamVVSDgwYW50VUV2anJjUGhKTzVTRjZpTDhoQWpTcXV6bXlWY19CMTF6cXBSenJMOGswaVFmVGtDeDNpcXowbG9XVExVN000aDMxMjZQWnJRbjQ0blBYTUwzclB6M3E3QS1zSEptcUR6elJZWUxVTHB2bFdJUWtrVjN3cDE1S2ZkRWhGWkhqbWh6VkJaTFIyN1BCZXpBd24xUEVrNw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-29T02:45:00+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數小幅下滑至 102.17，日圓兌美元小升 0.1% 至 157.76；新台幣貶破 32.5 元，早盤大幅貶值逾 1 角，央行採「柳樹理論」因應匯率波動。",
+    "text": "新台幣 10/29 再度貶破 32.5 元關卡，美元兌新台幣升至 32.56 元，貶幅約 0.44%。外資持續淨匯出，10 月中旬外資賣超台股 194 億美元、淨匯出 179.61 億美元，帶動新台幣同期貶值 1.37%，股匯同步承壓",
     "links": [
      {
       "title": "Asian currencies mixed as dollar steadies after Fed hold, PCE eyed",
@@ -423,32 +411,24 @@
       "at": "2026-10-29T04:35:05+00:00"
      },
      {
-      "title": "《新台幣匯率》今日美元兌新台幣最低為32.398元",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPN0ZDa0Nkck5YUUJFRGVaNXlmZ25wLVYxM1RYc29VTUVNYnZLb0I4LTFZMm5sdUhWaDRZVFh3NEhLLV9HSzVSazJmYmhQZW5mdmxoRXVRNklGaGNZWHdLcHJDQnMxN2xkMWMxSjh6VkhyYTE0RVhHcERKb3dFRFA4aUprV0ZDeUFW?oc=5",
-      "source": "富聯網",
-      "at": "2026-10-28T08:05:00+00:00"
+      "title": "股匯雙殺！台股一度失守4萬7　新台幣再度貶破32.5關卡",
+      "link": "https://tw.news.yahoo.com/%E8%82%A1%E5%8C%AF%E9%9B%99%E6%AE%BA-%E5%8F%B0%E8%82%A1-%E5%BA%A6%E5%A4%B1%E5%AE%884%E8%90%AC7-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%86%8D%E5%BA%A6%E8%B2%B6%E7%A0%B432-5%E9%97%9C%E5%8D%A1-053800344.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-29T05:38:00+08:00"
      }
     ]
    }
   ],
-  "at": "2026-10-29T05:42:52.823408+00:00"
+  "at": "2026-10-29T06:23:28.367788+00:00"
  },
  "main_source_titles": [
-  "Gold slips after Fed holds rates, PCE inflation data in focus",
+  "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+  "Gold falls toward $4,040 as Fed outlook leaves traders awaiting inflation data",
   "Bessent says 'not necessarily' a mistake if the Fed hikes again"
  ],
- "headline": "",
- "rate_note": "聯準會維持利率不變但未明確下一步動向，市場仍預期 12 月升息，偏向推升短端利率；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
+ "headline": "聯準會 10/28 維持利率不變、通膨仍高，Warsh 暗示明年減少決策會議次數",
+ "rate_note": "聯準會維持利率不變但強調通膨仍高，且 Warsh 未排除進一步緊縮，偏向推升短端利率與 12 月升息預期；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "聯準會 10/28 利率決策市場預期按兵不動，12 月升息機率達七成六",
-   "titles": [
-    "Fed officials not aligned on weight of financial conditions",
-    "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
-    "盟友轉向？美國緊密夥伴大幅減購美債 亞洲資金轉投股市與日債"
-   ],
-   "at": "2026-10-28T15:54:57.996885+00:00"
-  },
   {
    "headline": "聯準會維持利率不變 Warsh 宣布 2028 年起每年僅 6 次利率表決",
    "titles": [
@@ -466,16 +446,31 @@
     "Bessent says 'not necessarily' a mistake if the Fed hikes again"
    ],
    "at": "2026-10-29T05:42:04.522053+00:00"
+  },
+  {
+   "headline": "聯準會 10/28 維持利率不變、通膨仍高，Warsh 暗示明年減少決策會議次數",
+   "titles": [
+    "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+    "Gold falls toward $4,040 as Fed outlook leaves traders awaiting inflation data",
+    "Bessent says 'not necessarily' a mistake if the Fed hikes again"
+   ],
+   "at": "2026-10-29T06:22:36.793792+00:00"
   }
  ],
  "archive": {
   "2026-10-29": {
-   "headline": "",
-   "text": "聯準會 10/28（美國時間）決議維持利率不變，投票結果 10 比 2，符合市場預期。主席 Warsh 表示聯準會可能從明年秋季起將每年政策會議次數從八次減為六次。市場持續預期 12 月升息，因能源價格居高不下使通膨降溫面臨挑戰。投資人將關注 10/29 公布的 9 月個人消費支出物價指數（PCE），這是聯準會偏好的通膨指標，以尋找年底前利率走向的線索。黃金在 10/28 下跌 0.4% 至每盎司 4,051.91 美元，結束連三日漲勢；10 月累計下跌 2.5%，可能連續第二個月收跌。上週 AI 概念股重挫引發投資人賣出黃金以彌補其他部位損失，金價一度跌至 7 月以來低點。¶財政部長貝森特 10/28 表示，聯準會未來若再升息「不一定」是錯誤。他在聯準會當天宣布維持利率不變數小時後受訪時說，他與川普總統都認為主席 Warsh 表現良好、能在充分就業與穩定物價間取得平衡，「我認為 Warsh 主席有個很好的開始，我對他有很大信心」。貝森特也說，希望聯準會對能源價格供給衝擊的「暫時性質」保持開放心態；美國與伊朗的戰爭導致全球原油產量大幅下降，使年度通膨數據進一步偏離聯準會 2% 目標。\n聯準會主席 Warsh 暗示聯準會會議次數將減少，美國短期殖利率隨之下跌，10/28當日市場對未來降息預期調整。\n全球債券發行量創紀錄，10/28報導指出此波增長由AI相關企業借貸潮推動，企業為AI投資與擴張融資需求激增。",
-   "rate_note": "聯準會維持利率不變但未明確下一步動向，市場仍預期 12 月升息，偏向推升短端利率；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
+   "headline": "聯準會 10/28 維持利率不變、通膨仍高，Warsh 暗示明年減少決策會議次數",
+   "text": "聯準會 10/28 以 10 比 2 票決議維持聯邦基金利率目標區間在 3.75–4.00%，符合市場預期。聲明指出「通膨仍處高位」，委員會將累積更多資訊以決定適當政策立場，確保通膨及時回到 2% 目標。主席 Warsh 表示聯準會可能從明年秋季起將每年政策決策會議從八次減至六次。市場對此次決議看法分歧：DoubleLine Capital 執行長 Gundlach 指出兩年期公債殖利率與殖利率曲線走陡，認為應升息；密西根大學經濟學家 Stevenson 與貝萊德 Rieder 則認為等待是合理的。市場持續預期 12 月升息，因能源價格居高不下使通膨難以控制。投資人關注 10/29 公布的 9 月 PCE 物價指數，這是聯準會偏好的通膨指標，將提供年底前利率走向的進一步線索。¶財長貝森特 10/28 表示，聯準會未來若再升息「不見得是錯誤」。他在聯準會當天宣布維持利率不變後受訪時說，他與川普總統都認為主席 Warsh 表現良好、能在充分就業與穩定物價間取得平衡，「我認為 Warsh 主席有個很好的開始，我對他很有信心」。貝森特說，希望聯準會對能源價格供給衝擊的「暫時性質」保持開放心態；美國與伊朗的戰爭導致全球原油產量大減，使年度通膨數據進一步偏離聯準會 2% 目標。他也說美國孤立伊朗經濟的「經濟放逐行動」非常成功，內部估計伊朗經濟可能在一年內萎縮達 25%。\n銀行暫停為與Anthropic相關的德州數據中心籌資債券，該項目原計畫透過債券市場融資以支持AI基礎設施建設。\n美國短期殖利率10/28下跌，聯準會主席 Warsh 暗示未來聯準會會議次數將減少，市場對降息預期隨之調整。",
+   "rate_note": "聯準會維持利率不變但強調通膨仍高，且 Warsh 未排除進一步緊縮，偏向推升短端利率與 12 月升息預期；10 年期 10/28 收盤 +5bp 至 5.04%，市場已在反映。",
    "links": [
     {
-     "title": "Gold slips after Fed holds rates, PCE inflation data in focus",
+     "title": "Dow, S&P 500, Nasdaq Futures Mixed After Fed Holds Rates Steady: GOOG, GOOGL, IOVA, MSFT, NOW In Focus",
+     "link": "https://stocktwits.com/news-articles/markets/equity/dow-s-and-p-500-nasdaq-futures-mixed-after-fed-holds-rates-steady-goog-googl-iova-msft-now-in-focus/cZUQ4vlR9Gz?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-29T02:59:32+00:00"
+    },
+    {
+     "title": "Gold falls toward $4,040 as Fed outlook leaves traders awaiting inflation data",
      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-slips-fed-holds-rates-015115459.html?.tsrc=rss",
      "source": "Yahoo Finance",
      "at": "2026-10-29T01:51:15+00:00"
@@ -487,7 +482,7 @@
      "at": "2026-10-28T21:06:37+00:00"
     }
    ],
-   "at": "2026-10-29T05:42:04.522053+00:00",
+   "at": "2026-10-29T06:22:36.793792+00:00",
    "weekly": false,
    "points": 2
   },
