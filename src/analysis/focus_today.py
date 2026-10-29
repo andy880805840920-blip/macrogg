@@ -1125,7 +1125,8 @@ def _post_gemini_hardy(key: str, model: str, src_text: str,
         tried.append(cur)
         try:
             return _pl._gemini_call(key, cur, src_text, system,
-                                    think=False, temperature=temperature)
+                                    think=False, temperature=temperature,
+                                    timeout=GEMINI_TIMEOUT, tries=1)   # 每顆只試一次：失敗就換下一顆
         except _pl.TruncatedError as e:
             last_exc, prefer_lite = e, True
             log.warning("市場焦點：%s 回覆被截斷（%s）", cur, e)
@@ -1154,6 +1155,12 @@ def _post_gemini_hardy(key: str, model: str, src_text: str,
 
 # 2026-10-25 v2：主軸（含週日週報）與 FOMC 筆記改用 Sonnet；主題補充、總述潤稿維持 Haiku。
 FOCUS_MODEL = "claude-sonnet-4-5"
+# 2026-10-29：等待時間（連線 10 秒、讀取上限）。Sonnet 寫長文常要 45 秒以上，原本 45 秒一到就斷、
+# 再重送兩次同樣的長文（白等兩分多鐘）然後才換 Gemini。改成讀取最多等 120 秒、最多送 2 次；
+# Gemini 備援每顆 90 秒、每顆只試一次就換下一顆。
+ANTHROPIC_TIMEOUT = (10, 120)
+ANTHROPIC_TRIES = 2
+GEMINI_TIMEOUT = (10, 90)
 
 
 def _call_ai(src_text: str, system: str, env=None, model: str | None = None) -> tuple[str, str]:
@@ -1186,7 +1193,8 @@ def _call_ai(src_text: str, system: str, env=None, model: str | None = None) -> 
         a_model = model or PROVIDERS["anthropic"]["model"]
         try:
             out = _post_anthropic(a_key, a_model,
-                                  src_text, system=system, temperature=0.3)
+                                  src_text, system=system, temperature=0.3,
+                                  timeout=ANTHROPIC_TIMEOUT, tries=ANTHROPIC_TRIES)
             log.info("市場焦點：Anthropic（%s）產出", a_model)
             return (out or "").strip(), ""
         except Exception as e:                     # noqa: BLE001

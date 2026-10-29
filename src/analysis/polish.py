@@ -601,9 +601,10 @@ def maybe_polish(assembled: dict, cache_path, offline: bool = False,
 
 def _post_anthropic(key: str, model: str, source_text: str,
                     system: str | None = None,
-                    temperature: float | None = None) -> str:
+                    temperature: float | None = None,
+                    timeout=None, tries: int | None = None) -> str:
     r = _http("POST", "https://api.anthropic.com/v1/messages",
-              label=f"Anthropic {model}", headers={
+              label=f"Anthropic {model}", timeout=timeout, tries=tries, headers={
                           "x-api-key": key,
                           "anthropic-version": "2023-06-01",
                           "content-type": "application/json",
@@ -630,7 +631,7 @@ def _retry_after(resp) -> float:
     return v if 0 < v <= RETRY_AFTER_MAX else 0.0
 
 
-def _http(method: str, url: str, *, label: str, **kw):
+def _http(method: str, url: str, *, label: str, timeout=None, tries: int | None = None, **kw):
     """
     帶重試的 HTTP 呼叫。**不**自己判斷成功與否——回傳 response 讓呼叫端
     決定（Gemini 的 400 要看內容再決定要不要換參數重送）。
@@ -639,23 +640,25 @@ def _http(method: str, url: str, *, label: str, **kw):
     有 response 就回傳它（讓呼叫端用 raise_for_status 產生一致的訊息），
     連 response 都沒有才把最後一個例外丟出去。
     """
+    # timeout／tries：呼叫端可覆寫（2026-10-29：Sonnet 寫長文常超過 45 秒，焦點段改用較長的讀取等待、少重試）
+    n_try = tries or MAX_TRIES
     resp = None
     last_exc = None
-    for attempt in range(MAX_TRIES):
+    for attempt in range(n_try):
         try:
-            resp = requests.request(method, url, timeout=TIMEOUT, **kw)
+            resp = requests.request(method, url, timeout=timeout or TIMEOUT, **kw)
             last_exc = None
             if resp.status_code not in RETRY_STATUS:
                 return resp
         except requests.RequestException as e:      # noqa: PERF203
             resp, last_exc = None, e
-        if attempt == MAX_TRIES - 1:
+        if attempt == n_try - 1:
             break
         wait = (_retry_after(resp) if resp is not None else 0.0) \
             or BACKOFF[min(attempt, len(BACKOFF) - 1)]
         why = (f"HTTP {resp.status_code}" if resp is not None else last_exc)
         log.warning("%s 暫時失敗（%s），%.0f 秒後重試（第 %d／%d 次）",
-                    label, why, wait, attempt + 2, MAX_TRIES)
+                    label, why, wait, attempt + 2, n_try)
         _SLEEP(wait)
     if resp is not None:
         return resp
@@ -793,7 +796,8 @@ def _thinking(model: str) -> dict:
 
 def _gemini_call(key: str, model: str, source_text: str,
                  system: str | None = None, think: bool = True,
-                 temperature: float | None = None) -> str:
+                 temperature: float | None = None,
+                 timeout=None, tries: int | None = None) -> str:
     # 金鑰放 header 不放網址：放網址會跟著出現在錯誤訊息與代理的存取紀錄裡。
     cfg = {"temperature": (DEFAULT_TEMPERATURE if temperature is None
                            else temperature),
@@ -801,7 +805,7 @@ def _gemini_call(key: str, model: str, source_text: str,
     if think:
         cfg.update(_thinking(model))
     r = _http("POST", f"{GEMINI_BASE}/models/{model}:generateContent",
-              label=f"Gemini {model}", headers={
+              label=f"Gemini {model}", timeout=timeout, tries=tries, headers={
             "x-goog-api-key": key,
             "content-type": "application/json",
         }, json={
@@ -816,7 +820,7 @@ def _gemini_call(key: str, model: str, source_text: str,
     if r.status_code == 400 and think and _thinking(model):
         log.warning("Gemini 退回設定（%s），改成不指定推理層級再試一次",
                     r.text[:120])
-        return _gemini_call(key, model, source_text, system, False, temperature)
+        return _gemini_call(key, model, source_text, system, False, temperature, timeout, tries)
     r.raise_for_status()
 
     js = r.json()

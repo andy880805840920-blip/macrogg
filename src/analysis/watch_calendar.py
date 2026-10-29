@@ -200,12 +200,14 @@ def _group(d: dt.date, mon: dt.date) -> str:
 
 def watch_rows(schedule: dict, fomc_next: str | None = None,
                fomc_desc: str = "", trig: dict | None = None,
-               now: dt.datetime | None = None, weeks: int = 2) -> list[dict]:
+               now: dt.datetime | None = None, weeks: int = 2,
+               keep_today: bool = False) -> list[dict]:
     """
     本週＋下週（weeks＞2 時往後延伸，總覽日曆用 4 週）（週一起算，台北日期；週末改看下週＋下下週）尚未發布的事件，
     依時間排序。
     回傳 [{group, key, name, impact, date, tpe, when, src, desc}]。
     同一種事件第二次出現（例如每週的失業金）不重複說明——一頁一個意思講一次。
+    keep_today：今天（台北）已發布的也留著、標 done＝True（2026-10-29 總覽：發布後當天不會整週空掉）。
     """
     now = now or clock.now()
     today = now.date()
@@ -231,10 +233,10 @@ def watch_rows(schedule: dict, fomc_next: str | None = None,
                 continue
             tpe = taipei_time(d, hm)
             # 已經發布的不列（22:45 那次執行時，當晚 20:30 的 CPI 已經出來了）
-            if tpe <= now or d > end_next:
+            if (tpe <= now and not (keep_today and tpe.date() == today)) or d > end_next:
                 continue
             items.append({"key": key, "name": name, "impact": imp,
-                          "date": d, "tpe": tpe, "src": src, "desc": desc,
+                          "date": d, "tpe": tpe, "src": src, "desc": desc, "done": tpe <= now,
                           "group": _group(d, mon), "week": (d - start).days // 7})
     items.sort(key=lambda x: (x["tpe"], x["impact"] != "high"))
     seen = set()
