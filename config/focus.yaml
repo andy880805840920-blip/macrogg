@@ -897,6 +897,15 @@ election:
   min_volume: 100000         # 眾院／參院／權力組合的交易量下限（美元）
   race_min_volume: 300000    # 個別州選戰的交易量下限（美元）
   stale_days: 3              # 抓不到時沿用上次結果的最長天數
+  # ---- 標題下方的固定說明（2026-10-29 使用者指定；開票後不顯示，選後改寫或刪掉）----
+  outlook:
+    title: 若民主黨同時拿下參眾兩院
+    text: 川普後半任期的減稅與支出法案大多難以過關，國會調查與監督增加，參院也會讓人事提名審查更困難；關稅再升級將遭國會反對。市場看法：美元可能小幅走弱、短端殖利率仍有上行壓力；選後不確定性消除，市場常見反彈。
+    links:
+    - {t: ING, u: "https://think.ing.com/articles/us-midterm-elections-three-scenarios-for-markets/"}
+    - {t: Schwab, u: "https://www.schwab.com/learn/story/what-2026-midterms-could-mean-markets"}
+    - {t: Saxo, u: "https://www.home.saxo/learn/guides/us-election/2026-us-midterm-elections-what-different-outcomes-could-mean-for-markets"}
+    - {t: CNBC, u: "https://www.cnbc.com/2026/10/27/2026-midterms-prediction-markets-democrats-congress.html"}
   # ---- 各州地圖（選舉卡片下方，可收合）----
   map: true
   # 這次沒改選的席次（參院 65 席、州長 14 州）——選前狀態，選後就不用改

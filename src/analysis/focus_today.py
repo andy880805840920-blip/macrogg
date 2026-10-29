@@ -4036,7 +4036,7 @@ def _todays_events(events: dict | None, cfg: dict | None,
 
 
 ARCHIVE_DAYS = 8          # v2：留 8 天給星期天週報用；首頁只顯示最近 ARCHIVE_SHOW 天
-ARCHIVE_SHOW = 5
+ARCHIVE_SHOW = 7          # 2026-10-29：首頁保留 7 天（下拉選單）
 _TPE = dt.timezone(dt.timedelta(hours=8))
 
 

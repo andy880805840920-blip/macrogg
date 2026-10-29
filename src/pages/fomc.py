@@ -15,6 +15,9 @@ AI 只用在三個地方，畫面上一律標「AI」：聲明改動的中文說
 
 from __future__ import annotations
 
+import datetime as dt
+
+from .. import clock
 from ..analysis import fomc_extra as fx
 from ..analysis.fomc_text import _sentences as ft_sentences
 from ..site import esc
@@ -161,14 +164,17 @@ def _signal_rows(d: dict) -> list[tuple[str, str, str, str]]:
 
 
 def _signals_html(d: dict) -> str:
+    # 2026-10-29（使用者選方案 B）：單欄，左邊色條＋右上方向標籤，說明直接顯示
     out = []
     for name, fact, k, note in _signal_rows(d):
+        c = DIR_CLS.get(k, "neutral")
         out.append(
-            f'<div class="fx-row"><div class="fx-k">{esc(name)}</div>'
-            f'<div class="fx-v">{esc(fact)}'
-            + (f'<small>{esc(note)}</small>' if note else "")
-            + f'</div><div class="fx-dir {DIR_CLS.get(k, "neutral")}">{DIR_ARROW.get(k, "—")}</div></div>')
-    return f'<div class="fx-list">{"".join(out)}</div>'
+            f'<div class="ps-r {c}"><div class="ps-h"><span class="ps-k">{esc(name)}</span>'
+            f'<span class="ps-t {c}">{DIR_ARROW.get(k, "— 中性")}</span></div>'
+            f'<div class="ps-v">{esc(fact)}</div>'
+            + (f'<div class="ps-small">{esc(note)}</div>' if note else "")
+            + '</div>')
+    return f'<div class="ps-list">{"".join(out)}</div>'
 
 
 # ---------------------------------------------------------------------------
@@ -261,6 +267,9 @@ def _person_detail(o: dict, pid: str, show: bool) -> str:
     if not talk:
         talk.append('<div class="sp-i muted">近期沒有談利率的演講或報導</div>')
     tag_cls = DIR_CLS.get(o["lean"], "neutral")
+    _st = o.get("stance") or "neutral"
+    bl += (f'<span class="fx-tag {DIR_CLS.get(_st, "neutral")}">立場：{esc(fx.STANCE_ZH.get(_st, "中立"))}'
+           f'（{esc(o.get("stance_src", ""))}）</span>')
     return (f'<div class="od" id="od-{pid}" data-p="{pid}"{"" if show else " hidden"}>'
             f'<div class="od-head"><span class="ot-av big {tag_cls}">{esc(_initials(o))}</span>'
             f'<div><div class="od-name">{esc(o["name"])}</div>'
@@ -272,7 +281,7 @@ def _person_detail(o: dict, pid: str, show: bool) -> str:
             + '</div>')
 
 
-def _node(o: dict, pid: str, on: bool) -> str:
+def _node(o: dict, pid: str, on: bool, color: str = "lean") -> str:
     size = {1: "t1", 2: "t2"}.get(o["tier"], "")
     star = '<i class="ot-star" aria-hidden="true">★</i>' if o["tier"] == 1 else ""
     role = {1: "主席", 2: "副主席"}.get(o["tier"], "")
@@ -280,7 +289,7 @@ def _node(o: dict, pid: str, on: bool) -> str:
         role = "理事" if o["board"] else (o.get("city_zh") or "")
     return (f'<button type="button" class="ot-n {size}{" alt" if not o["voter"] else ""}" '
             f'data-p="{pid}" aria-controls="od-{pid}" aria-pressed="{"true" if on else "false"}">'
-            f'<span class="ot-av {DIR_CLS.get(o["lean"], "neutral")}">{esc(_initials(o))}{star}</span>'
+            f'<span class="ot-av {DIR_CLS.get(o.get(color) or "neutral", "neutral")}">{esc(_initials(o))}{star}</span>'
             f'<span class="ot-sn">{esc(o["surname"])}</span>'
             f'<span class="ot-role">{esc(role)}</span></button>')
 
@@ -310,16 +319,37 @@ def _people_html(d: dict) -> str:
         return (f'<div class="ot-br {cls}"><div class="ot-bh"><span class="ot-bt">{esc(head)} {cnt}</span>'
                 f'<span class="ot-bw">{esc(why)}</span></div><div class="ot-nodes">{nodes}</div></div>')
     n_vote = len(board) + len(banks)
+
+    # 2026-10-29：「依立場」篩選——鷹派／中立／鴿派（近 12 個月反對票優先，其餘照手動清單）
+    def sbranch(cls, head, grp):
+        nodes = "".join(_node(o, ids[id(o)], o is default, "stance") for o in grp)
+        nv = sum(1 for o in grp if o["voter"])
+        return (f'<div class="ot-br st-{cls}"><div class="ot-bh"><span class="ot-bt">{esc(head)} <b>{len(grp)}</b> 人</span>'
+                f'<span class="ot-bw">其中今年投票 {nv} 人</span></div><div class="ot-nodes">{nodes}</div></div>')
+    _ord = board + banks + alts
+    stance_tree = ('<div class="ot-brs ot-st" data-v="stance" hidden>'
+                   + sbranch("hawkish", "鷹派", [o for o in _ord if o.get("stance") == "hawkish"])
+                   + sbranch("neutral", "中立", [o for o in _ord if o.get("stance") not in ("hawkish", "dovish")])
+                   + sbranch("dovish", "鴿派", [o for o in _ord if o.get("stance") == "dovish"])
+                   + '<p class="ot-stn">立場怎麼分：近 12 個月投過反對票的，依反對方向（主張升息＝鷹派、主張降息＝鴿派）；'
+                     '其餘依本站整理的手動清單（參考 <a href="https://fattail.ai/fed-bias-board/" target="_blank" rel="noopener">'
+                     'FatTail Fed Bias Board</a>），不是聯準會的官方分類。虛線框＝今年不投票。</p></div>')
     tree = (f'<div class="ot" data-ot>'
+            '<div class="ot-view" role="group" aria-label="分組方式">'
+            '<button type="button" data-v="role" aria-pressed="true">依投票身分</button>'
+            '<button type="button" data-v="stance" aria-pressed="false">依立場（鷹／鴿／中立）</button></div>'
             f'<div class="ot-root"><span>FOMC</span><b>今年 {n_vote} 票</b></div>'
-            f'<div class="ot-brs">'
+            f'<div class="ot-brs" data-v="role">'
             + branch("board", "理事會", len(board), "總統提名、參議院同意；每場都投票", board)
             + branch("banks", "地方聯儲總裁", len(banks), "紐約常任＋其餘 11 家輪流 4 席", banks)
             + branch("alts", "候補委員", 0, "今年不投票，但參與討論、也交點陣圖", alts)
-            + '</div>'
-            + '<div class="ot-leg"><span><i class="ot-lg hawkish"></i>近 12 個月投過「主張升息／反對寬鬆」</span>'
+            + '</div>' + stance_tree
+            + '<div class="ot-leg" data-v="role"><span><i class="ot-lg hawkish"></i>近 12 個月投過「主張升息／反對寬鬆」</span>'
               '<span><i class="ot-lg dovish"></i>投過「主張降息」</span>'
               '<span><i class="ot-lg neutral"></i>未投反對票</span>'
+              '<span class="ot-hint">點人物看下方詳細資料</span></div>'
+            + '<div class="ot-leg" data-v="stance" hidden><span><i class="ot-lg hawkish"></i>鷹派</span>'
+              '<span><i class="ot-lg neutral"></i>中立</span><span><i class="ot-lg dovish"></i>鴿派</span>'
               '<span class="ot-hint">點人物看下方詳細資料</span></div>'
             + '<div class="ot-panel" aria-live="polite">'
             + "".join(_person_detail(o, ids[id(o)], o is default) for o in offs)
@@ -784,8 +814,6 @@ def _fomc_body_full(d: dict) -> str:
 <div class="grid">
   <div class="card">
     <h2 id="signals" data-open="1" data-sum="{esc(_sig_sum)}">政策訊號</h2>
-    <p class="hint">每一列是一件文件裡的事實，各自指向一個方向。<b>不加總、不打分數</b>——
-      先看它們是不是指向同一邊。</p>
     {teach(
         "把聯準會這次「做了什麼、誰不同意、自己預期什麼、市場信不信」拆成幾件可以核對的事實。",
         "聯準會不會直接說「我們下次要升息」，方向藏在決議、反對票與點陣圖裡。反對票尤其硬——委員用投票表達不同意，比任何形容詞都可信。",
@@ -932,12 +960,25 @@ def fomc_body(d: dict) -> str:
     title = f'{d.get("decision_label", "—")}至 {rng}'
     if dec.get("action") == "hold":
         title = f'維持 {rng} 不變'
-    prev_txt = ""
-    if sh.get("prev_date"):
-        prev_txt = f'前次 {_md(sh["prev_date"])}：{sh.get("prev_decision_label", "")}。'
-    vote_txt = f'投票 {vs.get("text", "—")}。'
-    next_txt = (f'下次會議 {nm["span"]}（{nm["days"]} 天後）　·　{nm["blackout_text"]}'
-                if nm else "下次會議日期待更新")
+    # 2026-10-29：投票／前次／下次拆成三列（原本擠在一段、手機上亂斷行）
+    _word = {"hike": "主張升息", "cut": "主張降息", "hold": "主張維持不變", **fx.OTHER_DISSENT}
+    _vc = "".join(f'<span class="fd-chip {DIR_CLS.get({"hike": "hawkish", "cut": "dovish"}.get(x.get("direction")), "neutral")}">'
+                  f'{esc(fx.surname(x.get("name", "")))} {esc(_word.get(x.get("direction"), "反對"))}</span>'
+                  for x in (d.get("vote") or {}).get("dissents") or [])
+    _vh = f'{vs["n_for"]}:{vs["n_against"]}' if vs.get("n_for") is not None else ""
+    vote_dd = (esc(_vh) + (" " + _vc if _vc else ("，全體一致" if _vh else esc(vs.get("text", "—")))))
+    prev_dd = (f'{_md(sh["prev_date"])} {esc(sh.get("prev_decision_label", ""))}' if sh.get("prev_date") else "")
+    if nm:
+        _bo = (f'靜默期中（至 {_md(nm["blackout_end"])}）' if nm.get("blackout_status") == "in"
+               else f'靜默期 {_md(nm["blackout_start"])} 起<small>{(dt.date.fromisoformat(nm["blackout_start"]) - clock.today()).days} 天後</small>')
+        next_dd = (f'<span class="fd-box">會議 {esc(nm["span"])}<small>{nm["days"]} 天後</small></span>'
+                   f'<span class="fd-box">{_bo}</span>')
+    else:
+        next_dd = "下次會議日期待更新"
+    meta = ('<dl class="fd-meta">'
+            + f'<div><dt>投票</dt><dd>{vote_dd}</dd></div>'
+            + (f'<div><dt>前次</dt><dd>{prev_dd}</dd></div>' if prev_dd else "")
+            + f'<div><dt>下次</dt><dd>{next_dd}</dd></div></dl>')
     direction = sh.get("direction", "neutral")
     sep = d.get("sep") or {}
     chips = [state_chip("政策方向", fx.DIR_ZH.get(direction, "中性"),
@@ -972,7 +1013,7 @@ def fomc_body(d: dict) -> str:
     hero = (f'<div class="grid"><div class="card focus-card">'
             f'<div class="focus-eyebrow">FOMC 決議｜{esc(date)} 會議</div>'
             f'<h2 class="focus-title">{esc(title)}</h2>'
-            f'<p class="focus-sub">{esc(vote_txt + prev_txt)}<br>{esc(next_txt)}</p>'
+            f'{meta}'
             f'<div class="focus-grid">{"".join(chips)}</div>{focus_evidence(_ev, "看決議原文與標示規則")}'
             f'{tags}</div></div>')
     # 不經過 compact_full：它會刪掉內文的第一個 verdict 框（舊版的重複結論卡），

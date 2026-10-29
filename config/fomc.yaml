@@ -33,6 +33,36 @@ official_notes:
   Williams: "紐約聯儲總裁是 FOMC 的常任副主席，市場通常把他的發言當成委員會共識的風向"
 
 # ---------------------------------------------------------------------------
+# 官員立場（「投票委員與官員」的「依立場」篩選，2026-10-29）
+# 判定順序：近 12 個月投過反對票的，直接依反對方向（主張升息＝鷹派、主張降息＝鴿派），
+# 這裡寫什麼都會被蓋過；其餘照這份手動清單；沒列到的暫列中立。
+# 值：hawkish（鷹派）／dovish（鴿派）／neutral（中立）。鍵是英文姓氏。
+# 初版參考 FatTail Fed Bias Board（2026-10-28 會前快照）：強烈偏鷹與偏鷹→鷹派、
+# 輕微偏鷹與中間→中立、輕微偏鴿→鴿派、證據不足→中立。需要時手動改。
+# 來源：https://fattail.ai/fed-bias-board/
+# ---------------------------------------------------------------------------
+official_stance:
+  Schmid: hawkish
+  Logan: hawkish
+  Hammack: hawkish
+  Kashkari: hawkish
+  Paulson: hawkish
+  Barkin: hawkish
+  Collins: hawkish
+  Jefferson: neutral
+  Williams: neutral
+  Daly: neutral
+  Goolsbee: neutral
+  Warsh: neutral
+  Waller: neutral
+  Bowman: dovish
+  Cook: dovish
+  Barr: neutral
+  Powell: neutral
+  Venable: neutral
+  Musalem: neutral
+
+# ---------------------------------------------------------------------------
 # 抓取設定
 # ---------------------------------------------------------------------------
 fetch:

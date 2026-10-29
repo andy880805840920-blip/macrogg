@@ -33,6 +33,8 @@ EVENTS: dict[str, tuple[str, str, tuple[int, int], str]] = {
     "pce": ("PCE 物價", "high", (8, 30),
             "推估值換回實際值，通膨格位以實際值重新判定。"),
     "fomc": ("FOMC 利率決策", "high", (14, 0), ""),
+    "fomc_minutes": ("FOMC 會議紀要", "mid", (14, 0),
+                     "上次會議的完整討論：委員對升降息的分歧，常讓市場重新評估下一步。"),
     "ppi": ("PPI", "mid", (8, 30),
             "更新上游成本壓力，也是核心 PCE 推估的原料之一。"),
     "jolts": ("JOLTS 職缺", "mid", (10, 0),

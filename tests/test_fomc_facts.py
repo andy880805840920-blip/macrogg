@@ -253,15 +253,25 @@ for good in ('id="signals"', 'id="next"', 'id="people"', 'id="sep"', 'id="market
              'id="minutes"', 'id="presser"', 'id="focus"', 'id="trend"'):
     check(f"⑭ 新區塊 {good}", good in html)
 check("⑭ 頂部決議卡寫日期", "FOMC 決議｜2026-09-16 會議" in html and "升息一碼至 3.75–4.00%" in html)
-check("⑭ 前次會議也寫出來", "前次 7/29：維持不變，3 票主張升息" in html)
+check("⑭ 前次會議也寫出來（2026-10-29 改成三列：投票／前次／下次）",
+      "<dt>前次</dt><dd>7/29 維持不變，3 票主張升息" in html and "<dt>投票</dt>" in html and "<dt>下次</dt>" in html)
 check("⑭ 離線沒有 AI 說明就不出現 AI 標籤內容", 'class="fx-ai"' not in html)
 check("⑭ 4 月的寬鬆傾向反對票照實寫", "3 票反對聲明加入寬鬆傾向" in html)
 check("⑮ 官員最新發言併進樹狀圖（不再有獨立區塊）",
       'id="speeches"' not in html and 'data-ot' in html and 'class="ot-panel"' in html)
 _n_nodes = len(re.findall(r'class="ot-n[ "]', html))
-check("⑮ 每位官員一個節點、一個面板，預設只展開主席",
-      _n_nodes == len(ctx["officials"]) == html.count('class="od"')
-      and html.count('aria-pressed="true"') == 1, (_n_nodes, len(ctx["officials"])))
+# 2026-10-29：多一個「依立場」分組，每位官員在兩種分組各一個節點、共用一個面板
+check("⑮ 每位官員兩個節點（依身分／依立場）、一個面板，預設只選主席與「依投票身分」",
+      _n_nodes == 2 * len(ctx["officials"]) and len(ctx["officials"]) == html.count('class="od"')
+      and html.count('aria-pressed="true"') == 3, (_n_nodes, len(ctx["officials"])))
+check("⑮b 依立場：預設隱藏，分鷹派／中立／鴿派，附分法說明",
+      'data-v="stance" hidden' in html and "st-hawkish" in html and "st-dovish" in html and "立場怎麼分" in html)
+from src.analysis import fomc_extra as _fx
+_offs = _fx.build_officials(fixtures_fomc.extras().get("roster"), {}, [], dt.date(2026, 10, 29),
+                            stance={"Logan": "hawkish", "Waller": "dovish"})
+_st = {o["surname"]: o["stance"] for o in _offs}
+check("⑮c 立場：沒有反對票照手動清單、沒列到的中立",
+      _st.get("Logan") in ("hawkish", None) and all(v in ("hawkish", "dovish", "neutral") for v in _st.values()), _st)
 check("⑮ FOMC 組成：事實卡＋輪值表", 'class="cfs"' in html and 'class="fx-rot"' in html)
 check("⑮ SEP 五張小卡、表格收進看完整數字",
       html.count('class="sc"') == 5 and "看完整數字" in html, html.count('class="sc"'))

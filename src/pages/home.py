@@ -1123,14 +1123,14 @@ def _point_tag(f: dict, i: int) -> str:
 
 def _archive_days(f: dict) -> tuple[str, str]:
     """
-    主軸存檔（2026-10）：今天＋過去最多 4 個有發布的日子。回傳 (日期列, 過去幾天的面板)。
-    只有一天（還沒累積）就不顯示日期列。
+    主軸存檔（2026-10）：今天＋過去最多 6 個有發布的日子（共 7 天）。回傳 (日期選單, 過去幾天的面板)。
+    2026-10-29 起日期改成下拉選單（預設今天），不再列一排膠囊。只有一天（還沒累積）就不顯示。
     """
     arch = [x for x in (f.get("archive") or []) if x.get("text")]
     if not arch:
         return "", ""
     cur = next((x for x in arch if x.get("text") == f.get("text")), None)
-    past = [x for x in arch if x is not cur][:4]
+    past = [x for x in arch if x is not cur][:6]
     if not past:
         return "", ""
     today = clock.today().isoformat()
@@ -1139,9 +1139,9 @@ def _archive_days(f: dict) -> tuple[str, str]:
         dd = dt.date.fromisoformat(d)
         return f"{dd.month}/{dd.day}（{'一二三四五六日'[dd.weekday()]}）"
     cur_lab = "今天" if (cur and cur["date"] == today) or not cur else lab(cur["date"])
-    btns = (f'<button type="button" class="on" data-day="cur" aria-pressed="true">{esc(cur_lab)}</button>'
-            + "".join(f'<button type="button" data-day="{esc(x["date"])}" aria-pressed="false">'
-                      f'{esc(lab(x["date"]))}</button>' for x in past))
+    opts = (f'<option value="cur" selected>{esc(cur_lab)}</option>'
+            + "".join(f'<option value="{esc(x["date"])}">{esc(lab(x["date"]))}'
+                      f'{"　本週回顧" if x.get("weekly") else ""}</option>' for x in past))
     panels = ""
     for x in past:
         paras = [p.strip() for p in (x.get("text") or "").split("\n") if p.strip()]
@@ -1158,14 +1158,12 @@ def _archive_days(f: dict) -> tuple[str, str]:
                    + (f'<div class="fs-day-src"><b>參考報導</b><ul>{lk}</ul></div>' if lk else "")
                    + '</div>')
     js = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
-          "var bar=st.querySelector('.fs-days');if(!bar)return;"
-          "bar.addEventListener('click',function(e){var b=e.target.closest('button[data-day]');if(!b)return;"
-          "var d=b.getAttribute('data-day');"
-          "Array.prototype.forEach.call(bar.querySelectorAll('button'),function(x){var on=x===b;"
-          "x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});"
+          "var sel=st.querySelector('.fs-days select');if(!sel)return;"
+          "sel.addEventListener('change',function(){var d=sel.value;"
           "Array.prototype.forEach.call(st.querySelectorAll('.fs-day-p'),function(p){p.hidden=p.getAttribute('data-day')!==d;});"
           "st.classList.toggle('fs-past',d!=='cur');});})();</script>")
-    return (f'<div class="fs-days" role="group" aria-label="主軸日期">{btns}</div>{js}', panels)
+    return (f'<label class="fs-days"><span>日期</span><select aria-label="主軸日期">{opts}</select></label>{js}',
+            panels)
 
 
 def _focus_strip(f: dict | None) -> str:
@@ -1549,8 +1547,13 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
             return ""
         t = min(c, key=lambda x: abs(float((_re.search(r"[-+]?\d+(?:\.\d+)?", x.distance or "") or [9e9])[0])))
         return f"{t.label}的條件：{t.plain or t.distance}。"
+    # 2026-10-29：FOMC 會議紀要列進「數據」，日期取自聯準會官網行事曆
+    _sched = dict(ctxs.get("_schedule") or wc.merge_schedule({}, ctxs.get("_calendar") or {}, {}, today))
+    _mins = sorted({a["date"] for a in fom.get("agenda") or [] if a.get("kind") == "會議紀要" and a.get("date")})
+    if _mins:
+        _sched["fomc_minutes"] = [(d, wc.SRC_FED) for d in _mins]
     rows = wc.watch_rows(
-        ctxs.get("_schedule") or wc.merge_schedule({}, ctxs.get("_calendar") or {}, {}, today),
+        _sched,
         fomc_next=((fom.get("next_meeting")) or {}).get("date"),
         fomc_desc="聲明與投票可能改變重心——重心一翻，同一格的結論就不同。",
         trig={"employment": _trig("就業轉"), "cpi": _trig("通膨轉"),
@@ -1615,6 +1618,21 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                          "when": _hm_when(tpe, d, today) if x.get("time_known", True) else "時間未定",
                          "name": who, "sub": sub, "voter": x.get("voter"),
                          "src": x.get("src", "")})
+    # 2026-10-29：靜默期開始列進「官員談話」（美東當天 00:00 起，官員不再公開談貨幣政策）
+    _nm = fom.get("next_meeting") or {}
+    if _nm.get("blackout_start"):
+        try:
+            _bd = dt.date.fromisoformat(_nm["blackout_start"])
+            _btp = wc.taipei_time(_bd, (0, 0))
+            if _btp > now and start <= _bd <= end:
+                _be = _nm.get("blackout_end", "")
+                speeches.append({"week": _wk(_btp.date()), "tpe": _btp, "label": _hm_label(_btp.date()),
+                                 "when": _hm_when(_btp, _bd, today) + " 起",
+                                 "name": "聯準會靜默期開始",
+                                 "sub": "官員不公開談貨幣政策" + (f"，至 {int(_be[5:7])}/{int(_be[8:10])}" if _be else ""),
+                                 "src": "聯準會規則"})
+        except (TypeError, ValueError):
+            pass
     # 10Y／30Y 標售原本混在數據列（財政部 upcoming＋yaml 暫定表）：搬到「發債」；
     # 附加資料抓不到時拿它們當後備
     _auc = [e for e in rows if str(e.get("key", "")).startswith("auction_")]

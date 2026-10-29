@@ -518,6 +518,8 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False,
     out: dict = {"election_date": str(c["election_date"]),
                  "days_to": _days_to(str(c["election_date"])),
                  "date": today.isoformat(), "source": "Polymarket"}
+    if isinstance(c.get("outlook"), dict) and c["outlook"].get("text"):
+        out["outlook"] = c["outlook"]              # 2026-10-29：標題下方的固定說明（config）
     try:
         for key in ("house", "senate"):
             ev = fetch_event(str(c[key]), _get)

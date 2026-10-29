@@ -1944,7 +1944,8 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
 
     # ---- 委員、發言、會議紀要 ----
     officials = fx.build_officials(extras.get("roster"), extras.get("board_titles") or {},
-                                   docs, today, extras.get("official_notes"))
+                                   docs, today, extras.get("official_notes"),
+                                   extras.get("official_stance"))
     feed = extras.get("speeches") or []
     news = extras.get("news") or {}
     # 只留談經濟與貨幣政策的：理事的監管演講（eSLR、支付）跟利率路徑無關，

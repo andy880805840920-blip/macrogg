@@ -980,6 +980,7 @@ def main() -> int:
             log.error("聯準會：%s；停止發布，網站維持上一版，下次排程再試", e)
             return 2
         all_failed += failed
+        fextras["official_stance"] = fcfg.get("official_stance") or {}
         ctxs["fomc"] = build.build_fomc_context(
             statements, fcfg.get("policy_rate") or {},
             failed, args.offline, upcoming=upcoming,

@@ -207,7 +207,12 @@ def blackout(first_day: dt.date, last_day: dt.date) -> tuple[dt.date, dt.date]:
 
 def next_meeting_info(spans: list, today: dt.date) -> dict:
     """spans＝[(first, last)]，回傳下次會議與靜默期的狀態。"""
-    fut = [(a, b) for a, b in spans or [] if b >= today]
+    # 2026-10-29：決議（美東 14:00）公布前都算下次會議（台北凌晨那段也是）
+    from .. import clock as _clock
+    from .watch_calendar import taipei_time
+    _now = _clock.now()
+    fut = [(a, b) for a, b in spans or []
+           if b >= today or (b >= today - dt.timedelta(days=1) and taipei_time(b, (14, 0)) > _now)]
     if not fut:
         return {}
     a, b = fut[0]
@@ -221,7 +226,7 @@ def next_meeting_info(spans: list, today: dt.date) -> dict:
     span = (f"{a.month}/{a.day}–{b.day}" if a.month == b.month
             else f"{a.month}/{a.day}–{b.month}/{b.day}")
     return {"first": a.isoformat(), "date": b.isoformat(), "span": span,
-            "days": (b - today).days, "blackout_start": bo_s.isoformat(),
+            "days": max((b - today).days, 0), "blackout_start": bo_s.isoformat(),
             "blackout_end": bo_e.isoformat(), "blackout_status": status,
             "blackout_text": txt,
             "later": [y.isoformat() for _, y in fut[1:4]]}
@@ -723,16 +728,23 @@ def _dissent_tag(r: dict | None) -> tuple[str, str]:
     return "近 12 個月反對：" + "、".join(bits), lean
 
 
+STANCE_ZH = {"hawkish": "鷹派", "dovish": "鴿派", "neutral": "中立"}
+
+
 def build_officials(roster: dict | None, board_titles: dict, docs: list,
-                    today: dt.date, notes: dict | None = None) -> list[dict]:
+                    today: dt.date, notes: dict | None = None,
+                    stance: dict | None = None) -> list[dict]:
     """
     依發言份量分層：
       1  主席
       2  FOMC 副主席（紐約聯儲總裁）與理事會副主席
       3  其他投票委員——近 12 個月沒投過反對票的人，是決定多數落在哪邊的關鍵
       4  候補委員（今年不投票，但參與討論、也交點陣圖）
-    只標**已表態的事實**（反對票），不替任何人貼鷹鴿標籤。
+    lean＝已表態的事實（近 12 個月反對票的方向）。
+    stance（2026-10-29 使用者指定的「依立場」篩選）：近 12 個月投過反對票的依反對方向；
+    其餘照 config/fomc.yaml 的 official_stance（手動清單）；都沒有＝中立。
     """
+    stance = {str(k): str(v) for k, v in (stance or {}).items()}
     if not roster:
         return []
     notes = notes or {}
@@ -752,10 +764,16 @@ def build_officials(roster: dict | None, board_titles: dict, docs: list,
             else:
                 tier = 3
             tag, lean = _dissent_tag(rec.get(sn))
+            if lean != "neutral":
+                st, st_src = lean, "依近 12 個月反對票"
+            elif stance.get(sn) in STANCE_ZH:
+                st, st_src = stance[sn], "依本站手動清單"
+            else:
+                st, st_src = "neutral", "清單未列，暫列中立"
             out.append({"name": m["name"], "surname": sn, "title": title,
                         "voter": voter, "tier": tier, "board": m["affil"] == "Board of Governors",
                         "affil": m["affil"], "city_zh": CITY_ZH.get(m["affil"], ""),
-                        "dissent_tag": tag, "lean": lean,
+                        "dissent_tag": tag, "lean": lean, "stance": st, "stance_src": st_src,
                         "votes": vote_history(docs, sn, today, roster_year=roster.get("year"),
                                               roster_voters=_rv),
                         "note": notes.get(sn, "")})

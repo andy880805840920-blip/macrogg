@@ -249,7 +249,11 @@ class FomcSource:
             spans = [(b - dt.timedelta(days=1), b) for b in known_meetings()]
             if spans:
                 log.warning("行事曆抓取失敗，未來會議改用已存的官網會議日")
-        out = [(a, b) for a, b in spans if b > today]
+        # 2026-10-29：決議（美東 14:00）公布前都還算「下次會議」——原本用 b > today（台北日期），
+        # 會議當天整天（台北 10/28 晚上、決議在台北 10/29 凌晨）就被當成已開過，首頁漏列 FOMC
+        now = clock.now()
+        from .analysis.watch_calendar import taipei_time
+        out = [(a, b) for a, b in spans if taipei_time(b, (14, 0)) > now]
         # 合理性檢查：下一場會議不可能在半年之後（一年開八次，間隔約 6–8 週）。
         # 抓到離譜的東西就整組丟掉，不要印出去。
         if not out or (out[0][1] - today).days > 180:

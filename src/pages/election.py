@@ -308,6 +308,16 @@ def election_card(e: dict | None) -> str:
     stale = (f"（最新資料暫缺，顯示 {esc(asof[5:])} 的資料）"
              if e.get("stale_from") else "")
     map_html, more_html = map_section(e)
+    # 2026-10-29：標題下方一段固定說明（config/focus.yaml election.outlook），開票後不顯示
+    _ol = e.get("outlook") or {}
+    outlook = ""
+    if _ol.get("text") and not after:
+        _lk = "".join(f'<a href="{esc(x.get("u", ""))}" rel="noopener" target="_blank">{esc(x.get("t", ""))}</a>'
+                      for x in _ol.get("links") or [] if isinstance(x, dict) and x.get("u"))
+        outlook = ('<div class="el-outlook">'
+                   + (f'<b>{esc(_ol["title"])}</b>' if _ol.get("title") else "")
+                   + f'<p>{esc(_ol["text"])}</p>'
+                   + (f'<div class="el-ol-src">參考：{_lk}</div>' if _lk else "") + '</div>')
     note = (f'<p class="el-note">價格＝下注者的看法，不是民調・資料日 {esc(asof[5:])}{stale}'
             '・交易量小的盤容易被少數人推動'
             + ("・開票後價格接近 100% 代表結果已底定" if after else "") + '</p>')
@@ -327,6 +337,6 @@ def election_card(e: dict | None) -> str:
             f'<h2 id="el-title">{title}</h2></div>'
             f'<a class="home-primary-link" href="{esc(_head_url(e))}"'
             ' rel="noopener" target="_blank">資料：Polymarket ↗</a></div>'
-            '<div class="el2-chs">'
+            + outlook + '<div class="el2-chs">'
             + _chamber2("眾議院", e.get("house")) + _chamber2("參議院", e.get("senate"))
             + '</div>' + map_html + note + more + '</section>')
