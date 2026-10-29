@@ -204,8 +204,8 @@ _fs11 = home._focus_strip(_f11, tabbed=True)
 check("⑪ 合併卡裡的焦點：不再有自己的標題列文字", _fs11.startswith('<div class="focus-strip fs-in"><div class="fs-head"><button'))
 _fx11 = home._fx_card(_fs11, "<b>總覽</b>")
 check("⑪ 合併卡：兩個分頁、預設焦點、記住上次、快報未看加橘點",
-      'id="fx-t-f" class="fx-in" checked' in _fx11 and "今日市場焦點<i class=\"fx-dot\"></i>" in _fx11
-      and "fxTab" in _fx11 and ".fx:has(.fs-story-btn:not([hidden]):not(.seen)) .fx-dot" in _css7)
+      'id="mgx-f" class="mgx-in" checked' in _fx11 and "今日市場焦點<i class=\"mgx-dot\"></i>" in _fx11
+      and "fxTab" in _fx11 and ".mgx:has(.fs-story-btn:not([hidden]):not(.seen)) .mgx-dot" in _css7)
 check("⑪ 六宮格：手機兩欄、電腦三欄、右上角 ›、摘要一行", ".duo-6 .duo-grid{grid-template-columns:repeat(2,minmax(0,1fr))" in _css7
       and ".duo-6 .duo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}" in _css7 and ".duo-6 .duo-card::after" in _css7
       and "text-overflow:ellipsis" in _css7.split(".duo-6 .duo-sum{", 1)[1].split("}", 1)[0])
@@ -220,13 +220,32 @@ _fc11 = {"releases": {"pce|2026-09": {"key": "pce", "period": "2026-09", "date":
                       "employment|2026-10": {"key": "employment", "period": "2026-10", "date": "2026-11-06", "banks": {}}}}
 _r11, _s11 = _fu11.tile(_fc11, dt.date(2026, 10, 29))
 check("⑪ 04 小卡：超出所有預測、還沒公布寫日期；摘要一行", ("PCE 9 月", "超出預測", True) in _r11
-      and ("就業 10 月", "11/6 公布", False) in _r11 and _s11 == "PCE 月增 0.5，超出所有預測", str((_r11, _s11)))
+      and ("就業 10 月", "11/6 公布", False) in _r11 and _s11 == "PCE 月增 0.5 超出預測", str((_r11, _s11)))
 check("⑪ 04 視窗直接展開（沒有收合）", "<details class=\"fc-fold\"" not in _fu11.section(_fc11, dt.date(2026, 10, 29), modal=True))
 from src.pages.labor import _kpi_card as _kc11
 _k11 = _kc11("核心 PCE 年增率", "3.1%", "", "白話", leans=[("水準：高於目標", "hawkish"), ("本期：比上月 +0.1", "hawkish")],
              en="Core PCE, y/y", compact=True)
 check("⑪ 通膨頁關鍵數字：中文標題、狀態變小標籤、沒有逐行判讀", "Core PCE" not in _k11 and '<span class="k-tag haw">比上月 +0.1</span>' in _k11
       and "kj-r" not in _k11)
+
+# ⑫ 2026-10-29 深夜：01 視窗兩塊預設展開、03 小月曆放大、視窗固定高度、電腦版焦點（一列 3 個、預設 6 個、主軸全文）
+_h12 = (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
+check("⑫ 01 視窗：整體情勢、四大模組預設展開", '<details class="hm-modx hm-briefx" open>' in _h12 and '<details class="hm-modx" open>' in _h12)
+_css12 = (ROOT / "src/site.py").read_text(encoding="utf-8")
+check("⑫ 六宮格圖區加高（月曆放大）、視窗固定高度", ".duo-6 .duo-map{height:124px" in _css12 and ".duo-sheet{height:86vh}" in _css12
+      and ".duo-sheet{height:90vh}" in _css12)
+check("⑫ 電腦版：儀表板一列 3 個、主軸在下方", "grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--border)" in _css12
+      and ".mgx .focus-strip .fs-grid{grid-template-columns:1fr" in _css12)
+check("⑫ 電腦版預設多兩個指標：費城半導體、美元指數", home.WIDE_EXTRA_CHIPS == ["sox", "dxy"] and "FS_CONFIG.wideExtra" in home._CHIP_SELECT_JS)
+check("⑫ 電腦版今日主軸預設全文", "min-width:760px" in home._FOLD_JS and "收合 ▴" in home._FOLD_JS)
+check("⑫ 手機點過的小卡不會一直反灰（hover 只給滑鼠）", "@media(hover:hover){.viz-root:not(#_) .duo-6 .duo-card:hover" in _css12)
+
+# ⑬ 2026-10-29 深夜：合併卡不再有內層卡（.fx-p 跟匯率頁撞名）、小卡內容撐滿寬
+_css13 = (ROOT / "src/site.py").read_text(encoding="utf-8")
+check("⑬ 合併卡改用 mgx- 前綴，不再套到匯率頁 .fx-p 的外框", 'class="mgx-p mgx-pf"' in home._fx_card("<i>f</i>", "<i>o</i>")
+      and ".fx-p,.fx-sp{border:1px solid var(--border)" in _css13 and "fx-p" not in home._fx_card("<i>f</i>", "<i>o</i>"))
+check("⑬ 小卡裡的區塊明確撐滿寬（有些瀏覽器的 button 不會）", ".duo-6 .duo-card>span{display:block;width:100%" in _css13
+      and "align-items:stretch;width:100%}" in _css13)
 
 clock.now, clock.today = _now0, _today0
 print()

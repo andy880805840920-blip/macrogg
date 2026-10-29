@@ -862,9 +862,13 @@ _LIVE_JS = ('<script>(function(){var box=document.querySelector(".fs-chips");'
 
 # 補充新聞主題選單：對應指標只用來建立選項，新聞選擇不反向改動指標。
 
+WIDE_EXTRA_CHIPS = ["sox", "dxy"]     # 電腦版預設多顯示的兩個指標（費城半導體、美元指數）
+
 _CHIP_SELECT_JS = r"""
 (function(){var K="fsChips",NK="fsNewsTopics",MK="fsMode";
 var D=FS_CONFIG.defaults,TM=FS_CONFIG.topicMap,TA=FS_CONFIG.available,TOPT=FS_CONFIG.topicOptions;
+// 2026-10-29：電腦版一列 3 個，預設 6 個——多放費城半導體與美元指數
+if(window.matchMedia&&matchMedia('(min-width:760px)').matches){D=D.slice();(FS_CONFIG.wideExtra||[]).forEach(function(x){if(D.indexOf(x)<0)D.push(x);});}
 var st=document.querySelector('.focus-strip'),box=document.querySelector('.fs-chips');if(!box||!st)return;
 var ids=Array.prototype.map.call(box.querySelectorAll('[data-chip]'),function(c){return c.dataset.chip;});
 var news=[],GT='主軸補充';
@@ -1125,7 +1129,10 @@ def _point_tag(f: dict, i: int) -> str:
 # 2026-10-29：固定露出四行內文（第四行淡出）再接「展開全文」；不到四行就整段顯示、不放按鈕。
 # 收著的面板（過去日期、另一個分頁）量不到高度，等它出現時再量（window.fsClip）。
 _FOLD_JS = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
+            "var wide=window.matchMedia&&matchMedia('(min-width:760px)').matches;"
             "window.fsClip=function(){Array.prototype.forEach.call(st.querySelectorAll('.fs-more.fs-clip:not([data-ck])'),function(m){"
+            "if(wide){m.setAttribute('data-ck','1');m.classList.remove('fs-clip');var t=m.nextElementSibling;"
+            "if(t&&t.classList.contains('fs-tog')){t.textContent='收合 ▴';t.setAttribute('aria-expanded','true');}return;}"
             "if(!m.offsetParent)return;m.setAttribute('data-ck','1');"
             "var p=m.querySelector('.fs-main');if(p){var lh=parseFloat(getComputedStyle(p).lineHeight)||0;"
             "if(lh)m.style.setProperty('--clip',(p.getBoundingClientRect().top-m.getBoundingClientRect().top+lh*4)+'px');}"
@@ -1276,18 +1283,18 @@ def _fx_card(focus: str, overview: str) -> str:
     選中的白字＋橘色短底線。預設焦點，記住上次選的；快報還沒看時焦點分頁右上角一個橘點。
     """
     if not focus:
-        return (f'<section class="fx fx-solo"><div class="fx-tabs"><span class="fx-l on">今日總覽</span></div>'
-                f'<div class="fx-p">{overview}</div></section>')
-    return ('<section class="fx" aria-label="今日市場焦點與今日總覽">'
-            '<input type="radio" name="fx-t" id="fx-t-f" class="fx-in" checked>'
-            '<input type="radio" name="fx-t" id="fx-t-o" class="fx-in">'
-            '<div class="fx-tabs" role="tablist"><label for="fx-t-f" class="fx-l fx-lf">今日市場焦點<i class="fx-dot"></i></label>'
-            '<b class="fx-sep"></b><label for="fx-t-o" class="fx-l fx-lo">今日總覽</label></div>'
-            f'<div class="fx-p fx-pf">{focus}</div><div class="fx-p fx-po">{overview}</div>'
+        return (f'<section class="mgx mgx-solo"><div class="mgx-tabs"><span class="mgx-l on">今日總覽</span></div>'
+                f'<div class="mgx-p">{overview}</div></section>')
+    return ('<section class="mgx" aria-label="今日市場焦點與今日總覽">'
+            '<input type="radio" name="fx-t" id="mgx-f" class="mgx-in" checked>'
+            '<input type="radio" name="fx-t" id="mgx-o" class="mgx-in">'
+            '<div class="mgx-tabs" role="tablist"><label for="mgx-f" class="mgx-l mgx-lf">今日市場焦點<i class="mgx-dot"></i></label>'
+            '<b class="mgx-sep"></b><label for="mgx-o" class="mgx-l mgx-lo">今日總覽</label></div>'
+            f'<div class="mgx-p mgx-pf">{focus}</div><div class="mgx-p mgx-po">{overview}</div>'
             + _FX_JS + '</section>')
 
 
-_FX_JS = r"""<script>(function(){var f=document.getElementById('fx-t-f'),o=document.getElementById('fx-t-o');if(!f||!o)return;
+_FX_JS = r"""<script>(function(){var f=document.getElementById('mgx-f'),o=document.getElementById('mgx-o');if(!f||!o)return;
 function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 if(lsg('fxTab')==='o')o.checked=true;
@@ -1415,7 +1422,7 @@ def _focus_strip(f: dict | None, tabbed: bool = False) -> str:
             f'<option value="{tid}"' + ("" if tid in avail else " disabled") + '>'
             + esc(_tl.get(tid) or TOPIC_LABEL.get(tid, tid)) + ("" if tid in avail else "（新聞暫缺）")
             + '</option>' for tid in TOPIC_REP_ORDER)
-        script = ('<script>var FS_CONFIG=' + _json.dumps({"defaults": defaults, "topicMap": topic_map,
+        script = ('<script>var FS_CONFIG=' + _json.dumps({"defaults": defaults, "wideExtra": WIDE_EXTRA_CHIPS, "topicMap": topic_map,
                   "available": avail, "topicOptions": _topt}, ensure_ascii=False)
                   + ';' + _CHIP_SELECT_JS + '</script>' + _LIVE_JS)
 
@@ -2245,10 +2252,10 @@ def home_body(ctxs: dict) -> str:
         <small>{esc(trigger_text)}</small><em>完整九宮格 →</em></a>
     </div>
     <div class="hm-layer">
-      <details class="hm-modx hm-briefx"><summary><span class="hm-modx-k">整體情勢</span>
+      <details class="hm-modx hm-briefx" open><summary><span class="hm-modx-k">整體情勢</span>
         <span class="hm-modx-s"><span>勞動市場・通膨・聯準會</span></span></summary>
       <div class="hm-modx-b">{brief_html}</div></details>
-      <details class="hm-modx"><summary><span class="hm-modx-k">四大模組</span>
+      <details class="hm-modx" open><summary><span class="hm-modx-k">四大模組</span>
         <span class="hm-modx-s hm-ms4">{_mod_strip}</span></summary>
       <div class="hm-modx-b">{_hm_modules(ctxs, sc, f_text, f_dir, p_text, p_level)}</div></details>
     </div>

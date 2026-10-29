@@ -90,7 +90,7 @@ check("④ 沒有事件的公司寫「無近期事件」、近 3 天的事件加
 e = {"election_date": "2026-11-03", "days_to": 5, "date": "2026-10-29",
      "house": {"dem": .925, "rep": .075, "hist": [], "url": "u"}, "senate": {"dem": .675, "rep": .325, "hist": [], "url": "u"}}
 et, ep = election.election_tile(e)
-check("④ 選舉小卡：還有幾天、兩院機率（一行）；視窗內是原本的選舉卡", "還有 5 天" in et and "民主黨　眾 <b>93%</b>・參 <b>68%</b>" in et and "el-card" in ep)
+check("④ 選舉小卡：還有幾天、兩院機率（一行）；視窗內是原本的選舉卡", "還有 5 天" in et and "民主黨 眾 <b>93%</b>・參 <b>68%</b>" in et and "el-card" in ep)
 duo = home._duo({"_election": e, "_ai_events": r})
 check("④ 首頁兩張小卡並排、內容藏在視窗用的面板裡", duo.count('class="duo-card"') == 2 and duo.count('class="duo-panel"') == 2
       and "duo-modal" in duo)

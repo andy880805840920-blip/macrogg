@@ -404,8 +404,8 @@ def tile(fc_ctx: dict | None, today: dt.date | None = None) -> tuple[list, str]:
         if ups or dns:
             lab, a, ik = (ups or dns)[0]
             rows.append((name, "超出預測" if ups else "低於預測", True))   # 實際值在所有預測之外
-            notes.append((e.get("date", ""), f"{zh + ' ' if lab.startswith(('核心', '非農', '失業', '時薪')) else ''}{lab} {_num(ik, a)}，"
-                         f"{'超出' if ups else '低於'}所有預測"))
+            notes.append((e.get("date", ""), f"{zh + ' ' if lab.startswith(('核心', '非農', '失業', '時薪')) else ''}{lab} {_num(ik, a)} "
+                         f"{'超出' if ups else '低於'}預測"))   # 手機一行放得下
             continue
         mk = _MAIN[k]
         a, c = act.get(mk), (fc.get(F.CONS) or {}).get(mk)

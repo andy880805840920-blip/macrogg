@@ -314,7 +314,7 @@ def election_tile(e: dict | None) -> tuple[str, str]:
         return ("民主黨" if d["dem"] >= d["rep"] else "共和黨"), f'{int(max(d["dem"], d["rep"]) * 100 + 0.5)}%'   # 四捨五入
     hs = [(n, lead(e[k])) for n, k in (("眾", "house"), ("參", "senate")) if e.get(k)]
     if len({p for _, (p, _) in hs}) == 1:
-        summ = f'{hs[0][1][0]}　' + "・".join(f'{n} <b>{v}</b>' for n, (_, v) in hs)
+        summ = f'{hs[0][1][0]} ' + "・".join(f'{n} <b>{v}</b>' for n, (_, v) in hs)
     else:
         summ = "・".join(f'{n} {p[:2]} <b>{v}</b>' for n, (p, v) in hs)
     tile = ('<button type="button" class="duo-card" data-t="el" data-title="美國期中選舉" aria-haspopup="dialog">'

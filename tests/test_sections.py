@@ -176,10 +176,11 @@ if (OUT / "labor" / "index.html").exists():
     # 首頁的卡區數與分頁不同（三張），但摘要的規則一樣要成立
     h = (OUT / "index.html").read_text(encoding="utf-8")
     hs = _sums(h)
-    check("㉙ index：主卡含結論、可能下一格、整體情勢、四大模組（收合）",
+    # 2026-10-29 深夜：01 視窗裡整體情勢、四大模組預設展開
+    check("㉙ index：主卡含結論、可能下一格、整體情勢、四大模組（展開）",
           h.count('<section class="home-hero') == 1
           and h.count('class="hm-next"') == 1
-          and h.count('<details class="hm-modx">') == 1)
+          and h.count('<details class="hm-modx" open>') == 1)
     # 2026-10 總覽改版：九宮格區塊併進主卡（「可能下一格」一行），
     # 五區變三區：01 今日結論、02 本期變化、03 接下來看什麼。
     # 2026-10-29：01–04 收進「今日總覽」六宮格，內容在視窗用的面板裡，順序照舊
