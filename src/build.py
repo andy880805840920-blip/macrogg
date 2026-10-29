@@ -1944,8 +1944,7 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
 
     # ---- 委員、發言、會議紀要 ----
     officials = fx.build_officials(extras.get("roster"), extras.get("board_titles") or {},
-                                   docs, today, extras.get("official_notes"),
-                                   extras.get("official_stance"))
+                                   docs, today, extras.get("official_notes"))
     feed = extras.get("speeches") or []
     news = extras.get("news") or {}
     # 只留談經濟與貨幣政策的：理事的監管演講（eSLR、支付）跟利率路徑無關，
@@ -1957,6 +1956,28 @@ def build_fomc_context(statements: list[dict], rate_cfg: dict,
                          and x["date"] >= (today - dt.timedelta(days=30)).isoformat()
                          and _pol.search(x["title"])][:1]
         o["news"] = [n for n in (news.get(o["surname"]) or []) if n.get("policy")][:2]
+
+    # ---- 官員立場（2026-10-29）：近 3 場反對票 → 近 90 天最近一則明確表態 → 中立 ----
+    _since = (today - dt.timedelta(days=90)).isoformat()
+    _texts = extras.get("speech_texts") or {}
+    _stm: dict = {}
+    for o in officials:
+        its = [{"who": o["surname"], "date": x["date"], "kind": "官方演講", "text": _texts[x["url"]]}
+               for x in feed if x["surname"] == o["surname"] and x.get("url") in _texts and x["date"] >= _since]
+        its += [{"who": o["surname"], "date": n["date"], "kind": "新聞標題", "text": n["title"]}
+                for n in (news.get(o["surname"]) or []) if n.get("date", "") >= _since]
+        _stm[o["surname"]] = its
+    _all = [it for v in _stm.values() for it in v]
+    _cache_st = Path(ai_cache).with_name("fomc_stance_ai.json") if ai_cache else None
+    _judged = fx.stance_ai(_all, _cache_st, offline) if _all else {}
+    _cycle = fx.policy_cycle(docs, today)
+    for o in officials:
+        sts = []
+        for it in _stm.get(o["surname"]) or []:
+            r = _judged.get(fx.stance_key(it))
+            if r and r["s"] != "none":
+                sts.append({**it, "s": r["s"], "q": r["q"]})
+        o["stance"], o["stance_src"] = fx.decide_stance(o, sts, _cycle)
     minutes = extras.get("minutes")
     minutes_groups = fx.minutes_by_topic(minutes["rows"]) if minutes else []
     _mrows = [r for _, rs in minutes_groups for r in rs]
