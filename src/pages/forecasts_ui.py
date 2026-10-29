@@ -363,7 +363,62 @@ def summary_line(rel: dict, today: dt.date) -> str:
     return "・".join(parts) or "公布前一週開始收集各家預測"
 
 
-def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
+_MAIN = {"employment": "nfp", "cpi": "core_mom", "pce": "core_mom"}
+
+
+def tile(fc_ctx: dict | None, today: dt.date | None = None) -> tuple[list, str]:
+    """
+    總覽六宮格「04 各家預測」小卡（2026-10-29）：三項數據各一行「名稱 期別｜結果」＋一行摘要。
+    結果：超出所有預測 → 「高於／低於所有預測」；否則主要欄位（非農、核心月增）對共識；還沒公布 → 「M/D 公布」。
+    回傳 ([(名稱, 結果, 是否強調)], 摘要)。
+    """
+    from .. import clock
+    today = today or clock.today()
+    rel = (fc_ctx or {}).get("releases") or {}
+    rows, notes, nxt = [], [], None
+    for k in ("cpi", "pce", "employment"):
+        zh = {"employment": "就業"}.get(k, F.RELEASES[k])
+        e = F.pick(rel, k, today)
+        if not e:
+            continue
+        per = str(e.get("period") or "")
+        name = f"{zh} {int(per[5:7])} 月" if len(per) >= 7 and per[5:7].isdigit() else zh
+        act = F.actual_for_score(e) if e.get("actual") else {}
+        if not act:
+            d = _tpe_date(k, e.get("date", ""))
+            rows.append((name, f"{d.month}/{d.day} 公布" if d else "待公布", False))
+            if d and d >= today and (nxt is None or d < nxt[1]):
+                nxt = (zh, d)
+            continue
+        fc = F.forecasters(e)
+        ups, dns = [], []
+        for ik, lab, _, _ in F.INDICATORS[k]:
+            vs = [v[ik] for v in fc.values() if v.get(ik) is not None]
+            a = act.get(ik)
+            if a is None or not vs:
+                continue
+            if a > max(vs) + 1e-9:
+                ups.append((lab, a, ik))
+            elif a < min(vs) - 1e-9:
+                dns.append((lab, a, ik))
+        if ups or dns:
+            lab, a, ik = (ups or dns)[0]
+            rows.append((name, "超出預測" if ups else "低於預測", True))   # 實際值在所有預測之外
+            notes.append((e.get("date", ""), f"{zh + ' ' if lab.startswith(('核心', '非農', '失業', '時薪')) else ''}{lab} {_num(ik, a)}，"
+                         f"{'超出' if ups else '低於'}所有預測"))
+            continue
+        mk = _MAIN[k]
+        a, c = act.get(mk), (fc.get(F.CONS) or {}).get(mk)
+        if a is None or c is None:
+            rows.append((name, "已公布", False))
+            continue
+        dd = round(a - c, 6)
+        rows.append((name, "符合共識" if abs(dd) < 1e-9 else ("高於共識" if dd > 0 else "低於共識"), abs(dd) >= 1e-9))
+    summ = max(notes)[1] if notes else (f"下一個：{nxt[0]} {nxt[1].month}/{nxt[1].day}" if nxt else "公布前一週開始收集")
+    return rows, summ
+
+
+def section(fc_ctx: dict | None, today: dt.date | None = None, modal: bool = False) -> str:
     from .. import clock
     today = today or clock.today()
     rel = (fc_ctx or {}).get("releases") or {}
@@ -384,6 +439,13 @@ def section(fc_ctx: dict | None, today: dt.date | None = None) -> str:
         radios = "".join(f'<input type="radio" name="fc-t" id="fc-t-{k}" class="fc-in"{" checked" if k == auto else ""}>'
                          for k in F.RELEASES)
     import json as _json
+    if modal:      # 2026-10-29：總覽六宮格的視窗裡直接展開，不再有收合
+        return (f'<style>{CSS}{FOLD_CSS}</style>'
+                '<section class="home-zone hm-zone hm-in" aria-label="各家預測">'
+                f'<div class="fc-fold" data-open-days="{_esc(_json.dumps(days, separators=(",", ":")))}">'
+                '<p class="hm-in-sub">失業與通膨・各家投行 vs 市場共識</p>'
+                f'<div class="fc">{radios}<div class="fc-tabs" role="group" aria-label="數據">{tabs}</div>'
+                f'<div class="fc-ps">{panels}</div>{notes}</div></div>{section_learn("/", "home-fc")}</section>' + JS + FOLD_JS)
     return (f'<style>{CSS}{FOLD_CSS}</style>'
             '<section class="home-zone hm-zone" aria-labelledby="home-fc">'
             f'<details class="fc-fold" data-open-days="{_esc(_json.dumps(days, separators=(",", ":")))}">'

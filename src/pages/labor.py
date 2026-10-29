@@ -52,7 +52,7 @@ def _surprise_line(s: dict | None) -> str:
 
 
 def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
-              mini="", asof="", surprise=None, en="", leans=(), fresh=False) -> str:
+              mini="", asof="", surprise=None, en="", leans=(), fresh=False, compact=False) -> str:
     """
     一張關鍵數字卡。**常駐固定三層**，其餘收合——跟全站的閱讀模型一致：
 
@@ -93,6 +93,21 @@ def _kpi_card(label, value, sub, plain, spark_html="", flag=None, flag_kind="",
                  f'<div class="k-more-body">{more_bits}</div></details>'
                  if more_bits.strip() else "")
     when = f'<span class="k-when">{esc(asof)}</span>' if asof else ""
+    if compact:
+        # 2026-10-29 通膨頁（使用者：太多線）：中文當標題、狀態改成數字右邊的小標籤，
+        # 「三月」等補充併進收合列那一行灰字；整張卡只剩卡與卡之間一條線。
+        tags = "".join(f'<span class="k-tag {d}">{esc(v)}</span>' for k, v, d in rows if k in ("水準", "本期", "補充"))
+        side = [f"{k}{v}" if k == "三月" else v for k, v, d in rows if k in ("三月", "原因")]
+        more2 = (f'<details class="k-more k-more2"><summary>{esc("・".join(side + ["白話說明與近 5 期"]))}</summary>'
+                 f'<div class="k-more-body">{more_bits}</div></details>' if more_bits.strip() else
+                 (f'<p class="k-side">{esc("・".join(side))}</p>' if side else ""))
+        return f"""<div class="card kpi kpi-c">
+  <div class="k-s1"><div class="k-label">{esc(label)}{when}</div>
+  <div class="k-vrow"><div class="k-value">{esc(value)}</div><div class="k-tags">{tags}</div></div></div>
+  <div class="k-s2">{surp_now}</div>
+  <div class="k-s3"></div>
+  <div class="k-s4">{more2}</div>
+</div>"""
     # 固定四格（標題＋數字／判讀／保留格／收合列）：桌機用 subgrid 讓同列卡片對齊
     return f"""<div class="card kpi">
   <div class="k-s1"><div class="k-label">{head}{when}</div>

@@ -216,6 +216,7 @@ class InflationSummary:
     pce_core_6m: float | None = None   # 核心 PCE 六個月年化（格位推格、結論用）
     pce_core_mom: float | None = None  # 核心 PCE 最新月增（%）
     pce_core_pace3: float | None = None  # 核心 PCE 近三月平均月增（動能）
+    pce_core_yoy_prev: float | None = None  # 核心 PCE 上一期年增（2026-10-29：年增上升時不寫「降溫」）
     ppi_headline_yoy: float | None = None
     ppi_headline_mom: float | None = None
     ppi_headline_3m: float | None = None
@@ -796,6 +797,8 @@ def summarize(series: dict[str, list[dict]], comp_meta: list[dict]) -> Inflation
     s.pce_core_6m = annualized(g("PCEPILFE", []), 6)
     s.pce_core_mom = mom_pct(g("PCEPILFE", []))
     s.pce_core_pace3 = monthly_pace(g("PCEPILFE", []))
+    _pc = g("PCEPILFE", [])
+    s.pce_core_yoy_prev = yoy(_pc[:-1]) if len(_pc) > 13 else None
     s.ppi_headline_yoy = yoy(g("PPIFIS", []))
     s.ppi_headline_mom = mom_pct(g("PPIFIS", []))
     s.ppi_headline_3m = annualized(g("PPIFIS", []), 3)
@@ -921,6 +924,21 @@ INFL_VERDICT_RULE = (
     "明確升溫＝長期通膨預期警戒，或核心 PCE 三月年化警戒、六月年化也高於 2.8%，"
     "且超級核心同時警戒或動能升溫；穩定降溫＝連續兩個月核心 PCE 三月年化正常、"
     "六月年化低於 2.8%、超級核心與短期預期都沒有警戒、動能不是升溫；其餘為黏著不降。")
+
+
+def pce_move(s) -> str:
+    """
+    通膨頁首卡的核心 PCE 動能（2026-10-29）：跟九宮格同一套（近三月平均月增 vs 0.17／0.27），
+    而且年增比上一期高時不寫「降溫」——先前用「三月年化 vs 年增差 0.2」，9 月年增 3.0→3.1、
+    月增 0.32 仍被寫成降溫，跟新聞相反。
+    """
+    if getattr(s, "pce_core_pace3", None) is None:
+        return "資料不足"
+    m = pce_momentum(s.pce_core_pace3)
+    y, yp = getattr(s, "pce_core_yoy", None), getattr(s, "pce_core_yoy_prev", None)
+    if m == "降溫" and y is not None and yp is not None and round(y, 1) > round(yp, 1):
+        return "持平"
+    return m
 
 
 def pce_momentum(pace: float | None) -> str:

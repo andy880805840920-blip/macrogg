@@ -90,7 +90,7 @@ check("④ 沒有事件的公司寫「無近期事件」、近 3 天的事件加
 e = {"election_date": "2026-11-03", "days_to": 5, "date": "2026-10-29",
      "house": {"dem": .925, "rep": .075, "hist": [], "url": "u"}, "senate": {"dem": .675, "rep": .325, "hist": [], "url": "u"}}
 et, ep = election.election_tile(e)
-check("④ 選舉小卡：還有幾天、兩院機率；視窗內是原本的選舉卡", "還有 5 天" in et and "民主黨 92.5%" in et and "el-card" in ep)
+check("④ 選舉小卡：還有幾天、兩院機率（一行）；視窗內是原本的選舉卡", "還有 5 天" in et and "民主黨　眾 <b>93%</b>・參 <b>68%</b>" in et and "el-card" in ep)
 duo = home._duo({"_election": e, "_ai_events": r})
 check("④ 首頁兩張小卡並排、內容藏在視窗用的面板裡", duo.count('class="duo-card"') == 2 and duo.count('class="duo-panel"') == 2
       and "duo-modal" in duo)
@@ -99,8 +99,8 @@ check("④ 都沒有資料時不出現", home._duo({}) == "")
 f = {"yields": [], "links": [], "fedwatch": None, "layout": "main", "headline": "標題", "rate_note": "r",
      "text": "主軸\n補充", "text_source": "model-content", "topics": [], "chips": []}
 h = home._focus_strip(f)
-check("⑤ 今日主軸：預設只露標題、其餘收進「展開全文」", 'class="fs-tog"' in h and '<div class="fs-more" hidden>' in h
-      and h.index("標題") < h.index("fs-more"))
+check("⑤ 今日主軸：標題下露出四行、再接「展開全文」", 'class="fs-tog"' in h and '<div class="fs-more fs-clip">' in h
+      and h.index("標題") < h.index("fs-more") < h.index('class="fs-tog"'))
 check("⑤ 沒有標題時不收合", 'class="fs-tog"' not in home._focus_strip(dict(f, headline="")))
 
 # ⑥ 2026-10-29 晚：一張卡中間一條線、時間軸、來源獨立一行、視窗放回頁面主體、今日結論收合
@@ -110,7 +110,7 @@ check("⑥ 公司面板的來源獨立一行", '<span class="ai-s">' in panel.sp
 check("⑥ 視窗掛在頁面主體內（兩院左右並排的規則才套得到）", "closest('.viz-root')" in home._DUO_JS)
 _css = (ROOT / "src/site.py").read_text(encoding="utf-8")
 check("⑥ 兩張小卡合成一張卡、中間一條線", ".duo-grid .duo-card+.duo-card{border-left:1px solid var(--grid)}" in _css)
-check("⑥ 今日結論只露標題與判讀，其餘收合", 'class="hm-tog"' in (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
+check("⑥ 今日結論改成六宮格小卡，點進去直接展開", 'class="home-hero hm-hero hm-open hm-in' in (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
       and ".hm-hero:not(.hm-open) .hm-layer" in _css)
 
 clock.now, clock.today = _n0, _t0

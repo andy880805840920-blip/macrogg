@@ -2691,9 +2691,12 @@ def choose_points(groups: list[dict], locks: list[str]) -> tuple[dict | None, di
             p1, why = c[0], f"鎖定事件 {locks[0]}"
     if p1 is None:
         p1, why = rank(fresh)[0], "最高分"
-    rest = [g for g in fresh if g is not p1]
+    # 2026-10-29：重點一已經涵蓋的鎖定事件（例：「Q3 GDP Revs Up As PCE Inflation Gets Hotter」同時涵蓋
+    # PCE 與 GDP），重點二不能再寫它——10/29 兩段都在寫 GDP＋PCE，第二段只是把數字再講一次。
+    covered = {k for k in locks if _lock_match(p1, k)}
+    rest = [g for g in fresh if g is not p1 and not any(_lock_match(g, k) for k in covered)]
     p2 = None
-    if len(locks) > 1:
+    if len(locks) > 1 and locks[1] not in covered:
         c = rank([g for g in rest if _lock_match(g, locks[1])])
         if c:
             p2 = c[0]

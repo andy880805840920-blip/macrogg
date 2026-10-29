@@ -364,24 +364,24 @@ def _inflation_body_full(d: dict) -> str:
                   k["headline_plain"], "",
                   mini=mini.get("headline", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("headline"), fresh=_fresh,
-                  en="Headline CPI, m/m", leans=lean.get("headline", ())),
+                  en="Headline CPI, m/m", compact=True, leans=lean.get("headline", ())),
         _kpi_card("核心 CPI 月增率", k["core_display"], k["core_sub"],
                   k["core_plain"], "",
                   k.get("core_flag"), k.get("core_flag_kind", ""),
                   mini=mini.get("core", ""), asof=(a.get("cpi") or "")[:7],
                   surprise=surp.get("core"), fresh=_fresh,
-                  en="Core CPI, m/m", leans=lean.get("core", ())),
+                  en="Core CPI, m/m", compact=True, leans=lean.get("core", ())),
         _kpi_card("核心 PCE 年增率", k["pce_display"], k["pce_sub"],
                   k["pce_plain"], "",
                   k.get("pce_flag"), k.get("pce_flag_kind", ""),
                   mini=mini.get("pce", ""), asof=(a.get("pce") or "")[:7],
                   fresh=_fresh,
-                  en="Core PCE, y/y", leans=lean.get("pce", ())),
+                  en="Core PCE, y/y", compact=True, leans=lean.get("pce", ())),
         _kpi_card("5年後5年期通膨預期", k["exp_display"], k["exp_sub"],
                   k["exp_plain"], "",
                   mini=mini.get("exp", ""), asof=(a.get("exp") or "")[:7],
                   fresh=_fresh,
-                  en="5y5y Inflation Breakeven", leans=lean.get("exp", ())),
+                  en="5y5y Inflation Breakeven", compact=True, leans=lean.get("exp", ())),
     ])
 
     # 分層呈現（2026-10，比照就業頁）：3M 動能 → 超級核心 → 整體與住房，
@@ -779,7 +779,8 @@ def inflation_body(d: dict) -> str:
         if short is None or long is None:
             return "資料不足"
         return "升溫" if short > long + .2 else ("降溫" if short < long - .2 else "持平")
-    pce_move = move(s.pce_core_3m, s.pce_core_yoy)
+    from ..analysis.inflation import pce_move as _pce_move
+    pce_move = _pce_move(s)        # 2026-10-29：跟九宮格同一套，年增上升不寫降溫
     ppi_move = move(s.ppi_core_3m, s.ppi_core_yoy)
     title = f"核心 PCE {pce_move}，PPI 壓力{ppi_move}"
     metrics = "".join([

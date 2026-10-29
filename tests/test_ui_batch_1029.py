@@ -100,7 +100,7 @@ check("⑦ 說明與完整教學縮小、拿掉多餘分隔線、膠囊改底線
 f7 = {"yields": [], "links": [{"title": "t", "link": "https://x", "source": "CNBC"}], "fedwatch": None, "layout": "main",
       "headline": "標題", "rate_note": "", "text": "主軸\n補充", "text_source": "model-content", "topics": [], "chips": []}
 h7 = home._focus_strip(f7)
-_m7 = h7.split('<div class="fs-more" hidden>', 1)[-1].split('</div></div><script>', 1)[0]
+_m7 = h7.split('<div class="fs-more fs-clip">', 1)[-1].split('<button type="button" class="fs-tog"', 1)[0]
 check("⑦ 品牌與來源說明收進「展開全文」", 'class="fs-brand"' in _m7 and 'class="fs-note"' in _m7 and h7.count('class="fs-brand"') == 1)
 check("⑦ 沒有標題（不收合）時品牌照舊放卡片底部", 'class="fs-brand"' in home._focus_strip(dict(f7, headline="")))
 from src.pages import forecasts_ui as _FU
@@ -119,8 +119,8 @@ _c8 = {"fomc": {"next_meeting": _fx8.next_meeting_info([(dt.date(2026, 12, 8), d
                         "speeches": [{"et": "2026-10-31T10:00:00", "name": "Daly", "role": "舊金山聯儲總裁", "kind": "談話"}]}}
 w8 = home._hm_watch(_c8, type("S", (), {"triggers": []})(), weeks=4)
 _hs8 = (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
-check("⑧ 列表・月曆改小字切換（標題列）", '<p class="wv-sw"><label for="hm-view-list">列表</label>・<label for="hm-view-cal">月曆</label></p>' in _hs8
-      and 'class="hm-view-sw"' not in _hs8)
+check("⑧ 列表｜月曆改成膠囊、預設月曆", '<p class="wv-sw wv-pill"><label for="hm-view-list">列表</label><label for="hm-view-cal">月曆</label></p>' in _hs8
+      and 'class="hm-view-sw"' not in _hs8 and 'id="hm-view-cal" class="hm-view-in" checked' in w8)
 check("⑧ 列表分類有符號、沒有「全部」", '<i class="mk mk-d"></i>數據' in w8 and '<em class="mk-h">休</em>休市' in w8
       and "hm-cat-all" not in w8 and ">全部<" not in w8)
 check("⑧ 不再有大卡片與「其他發布」", "其他發布" not in w8 and 'class="wv-ev"' in w8)
@@ -175,6 +175,58 @@ check("⑩ 沒指定時照舊（45 秒、3 次）", _seen10 == [45, 45, 45])
 _pl10.requests.request, _pl10._SLEEP = _req0, _sl0
 check("⑩ 焦點段 AI 呼叫：Anthropic 120 秒×2 次、Gemini 每顆 90 秒×1 次",
       ft.ANTHROPIC_TIMEOUT == (10, 120) and ft.ANTHROPIC_TRIES == 2 and ft.GEMINI_TIMEOUT == (10, 90))
+
+# ⑪ 2026-10-29 晚：核心 PCE 方向、本期變化說法、主軸不重複、今日市場焦點｜今日總覽、六宮格、通膨頁少線
+from src.analysis import inflation as _inf11
+_S = type("S", (), {})
+_s = _S(); _s.pce_core_pace3, _s.pce_core_yoy, _s.pce_core_yoy_prev = 0.15, 3.12, 3.01
+check("⑪ 年增上升時不寫「降溫」", _inf11.pce_move(_s) == "持平")
+_s.pce_core_yoy_prev = 3.3
+check("⑪ 年增下降、三月均月增低於 0.17 才算降溫", _inf11.pce_move(_s) == "降溫")
+_s.pce_core_pace3 = 0.24
+check("⑪ 三月均月增 0.24（9 月實況）＝持平，跟九宮格同一套", _inf11.pce_move(_s) == "持平")
+check("⑪ 通膨頁首卡改用同一套判斷", "_pce_move(s)" in (ROOT / "src/pages/inflation.py").read_text(encoding="utf-8"))
+check("⑪ 本期變化：解除改寫成「不再成立」", home._resolved_text("核心 PCE 在降溫：三月年化 2.0%，低於年增 3.0%")
+      == "不再成立：核心 PCE 在降溫（上期 三月年化 2.0%，低於年增 3.0%）")
+_NOW11 = dt.datetime(2026, 10, 29, 13, 0, tzinfo=dt.timezone.utc)
+_I11 = lambda h: (_NOW11 - dt.timedelta(hours=h)).isoformat()   # noqa: E731
+_g11 = ft.group_events([
+    {"title": "Q3 GDP Revs Up As PCE Inflation Gets Hotter", "source": "Bloomberg", "link": "a", "at": _I11(1)},
+    {"title": "Third-quarter U.S. GDP increases a better-than-expected 3.4%", "source": "Reuters", "link": "b", "at": _I11(1)},
+    {"title": "Oracle sells $18 billion of bonds to fund AI data centers", "source": "Reuters", "link": "c", "at": _I11(2)}],
+    ["GDP", "PCE", "bond"], _NOW11)
+_p1, _p2, _ = ft.choose_points(_g11, ["pce", "gdp_adv"])
+check("⑪ 重點一同時涵蓋 PCE 與 GDP 時，重點二不再寫 GDP", _p1["lead"]["link"] == "a" and (_p2 is None or _p2["lead"]["link"] == "c"),
+      str(_p2 and _p2["lead"]["title"]))
+_f11 = {"yields": [], "links": [], "fedwatch": None, "layout": "main", "headline": "標題", "rate_note": "",
+        "text": "主軸", "text_source": "model-content", "topics": [], "chips": []}
+_fs11 = home._focus_strip(_f11, tabbed=True)
+check("⑪ 合併卡裡的焦點：不再有自己的標題列文字", _fs11.startswith('<div class="focus-strip fs-in"><div class="fs-head"><button'))
+_fx11 = home._fx_card(_fs11, "<b>總覽</b>")
+check("⑪ 合併卡：兩個分頁、預設焦點、記住上次、快報未看加橘點",
+      'id="fx-t-f" class="fx-in" checked' in _fx11 and "今日市場焦點<i class=\"fx-dot\"></i>" in _fx11
+      and "fxTab" in _fx11 and ".fx:has(.fs-story-btn:not([hidden]):not(.seen)) .fx-dot" in _css7)
+check("⑪ 六宮格：手機兩欄、電腦三欄、右上角 ›、摘要一行", ".duo-6 .duo-grid{grid-template-columns:repeat(2,minmax(0,1fr))" in _css7
+      and ".duo-6 .duo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}" in _css7 and ".duo-6 .duo-card::after" in _css7
+      and "text-overflow:ellipsis" in _css7.split(".duo-6 .duo-sum{", 1)[1].split("}", 1)[0])
+_wt = {"today": dt.date(2026, 10, 29), "marks": {"2026-10-30": {"s"}, "2026-10-29": {"d"}}}
+_mc = home._mini_cal(_wt)
+check("⑪ 03 小月曆：今天深色、過去淡化、有事的日子一個點", '<span class="mc-to">29<i class="mc-d"></i></span>' in _mc
+      and '<span class="mc-ps">28</span>' in _mc and '<span class="">30<i class="mc-s"></i></span>' in _mc)
+from src.pages import forecasts_ui as _fu11
+_fc11 = {"releases": {"pce|2026-09": {"key": "pce", "period": "2026-09", "date": "2026-10-29", "cons": {"core_mom": 0.3},
+                                      "clev": {"pce_mom": 0.47, "core_mom": 0.28}, "banks": {},
+                                      "actual": {"pce_mom": 0.5, "core_mom": 0.3}},
+                      "employment|2026-10": {"key": "employment", "period": "2026-10", "date": "2026-11-06", "banks": {}}}}
+_r11, _s11 = _fu11.tile(_fc11, dt.date(2026, 10, 29))
+check("⑪ 04 小卡：超出所有預測、還沒公布寫日期；摘要一行", ("PCE 9 月", "超出預測", True) in _r11
+      and ("就業 10 月", "11/6 公布", False) in _r11 and _s11 == "PCE 月增 0.5，超出所有預測", str((_r11, _s11)))
+check("⑪ 04 視窗直接展開（沒有收合）", "<details class=\"fc-fold\"" not in _fu11.section(_fc11, dt.date(2026, 10, 29), modal=True))
+from src.pages.labor import _kpi_card as _kc11
+_k11 = _kc11("核心 PCE 年增率", "3.1%", "", "白話", leans=[("水準：高於目標", "hawkish"), ("本期：比上月 +0.1", "hawkish")],
+             en="Core PCE, y/y", compact=True)
+check("⑪ 通膨頁關鍵數字：中文標題、狀態變小標籤、沒有逐行判讀", "Core PCE" not in _k11 and '<span class="k-tag haw">比上月 +0.1</span>' in _k11
+      and "kj-r" not in _k11)
 
 clock.now, clock.today = _now0, _today0
 print()

@@ -1122,19 +1122,27 @@ def _point_tag(f: dict, i: int) -> str:
     return ""
 
 
+# 2026-10-29：固定露出四行內文（第四行淡出）再接「展開全文」；不到四行就整段顯示、不放按鈕。
+# 收著的面板（過去日期、另一個分頁）量不到高度，等它出現時再量（window.fsClip）。
 _FOLD_JS = ("<script>(function(){var st=document.querySelector('.focus-strip');if(!st)return;"
+            "window.fsClip=function(){Array.prototype.forEach.call(st.querySelectorAll('.fs-more.fs-clip:not([data-ck])'),function(m){"
+            "if(!m.offsetParent)return;m.setAttribute('data-ck','1');"
+            "var p=m.querySelector('.fs-main');if(p){var lh=parseFloat(getComputedStyle(p).lineHeight)||0;"
+            "if(lh)m.style.setProperty('--clip',(p.getBoundingClientRect().top-m.getBoundingClientRect().top+lh*4)+'px');}"
+            "if(m.scrollHeight<=m.clientHeight+4){m.classList.remove('fs-clip');var b=m.nextElementSibling;if(b&&b.classList.contains('fs-tog'))b.hidden=true;}});};"
+            "window.fsClip();"
             "st.addEventListener('click',function(e){var b=e.target.closest('.fs-tog');if(!b)return;"
-            "var m=b.nextElementSibling;if(!m)return;m.hidden=!m.hidden;"
-            "b.setAttribute('aria-expanded',m.hidden?'false':'true');"
-            "b.textContent=m.hidden?'展開全文 ▾':'收合 ▴';});})();</script>")
+            "var m=b.previousElementSibling;if(!m)return;var o=m.classList.toggle('fs-clip');"
+            "b.setAttribute('aria-expanded',o?'false':'true');"
+            "b.textContent=o?'展開全文 ▾':'收合 ▴';});})();</script>")
 
 
 def _fold(body: str, fold: bool) -> str:
     """今日主軸（2026-10-29）：預設只露標題，內容收進「展開全文」。沒有標題時不收合。"""
     if not body or not fold:
         return body
-    return ('<button type="button" class="fs-tog" aria-expanded="false">展開全文 ▾</button>'
-            f'<div class="fs-more" hidden>{body}</div>')
+    return (f'<div class="fs-more fs-clip">{body}</div>'
+            '<button type="button" class="fs-tog" aria-expanded="false">展開全文 ▾</button>')
 
 
 _DUO_JS = r"""<script>(function(){
@@ -1148,7 +1156,7 @@ function shut(){if(md.hidden)return;md.hidden=true;document.body.classList.remov
 d.querySelectorAll('.duo-card').forEach(function(c){c.addEventListener('click',function(){
  var p=d.querySelector('.duo-panel[data-t="'+c.getAttribute('data-t')+'"]');if(!p)return;
  cur=p;last=c;while(p.firstChild)body.appendChild(p.firstChild);
- ttl.textContent=c.querySelector('.duo-t').textContent;md.hidden=false;document.body.classList.add('duo-lock');
+ ttl.textContent=c.getAttribute('data-title')||c.querySelector('.duo-t').textContent;md.hidden=false;document.body.classList.add('duo-lock');
  md.querySelector('.duo-sheet').scrollTop=0;md.querySelector('.duo-x').focus();});});
 md.addEventListener('click',function(e){if(e.target===md||e.target.closest('.duo-x'))shut();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});
@@ -1165,17 +1173,126 @@ md.addEventListener('change',function(e){var s=e.target.closest('.ai-sel select'
 })();</script>"""
 
 
-def _duo(ctxs: dict) -> str:
-    """期中選舉＋AI 大事兩張小卡（2026-10-29）：左右並排、不包外層卡；點了跳出視窗看完整內容。"""
+def _duo(ctxs: dict, extra: list | None = None) -> str:
+    """
+    期中選舉＋AI 大事兩張小卡（2026-10-29）：點了跳出視窗看完整內容。
+    2026-10-29 晚：extra＝[(代號, 小卡, 視窗內容)]——01–04 也收進來，成為「今日總覽」六宮格
+    （手機 2×3、電腦 3×2，一張卡、線分隔、六格等大）。
+    """
     tiles, panels = [], []
-    for t, (tile, panel) in (("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events")))):
+    pairs = [("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events")))]
+    pairs += [(t, (tile, panel)) for t, tile, panel in (extra or [])]
+    for t, (tile, panel) in pairs:
         if tile:
             tiles.append(tile)
             panels.append(f'<div class="duo-panel" data-t="{t}" hidden>{panel}</div>')
     if not tiles:
         return ""
-    return (f'<section class="duo{" duo-1" if len(tiles) == 1 else ""}" aria-label="期中選舉與 AI 大事">'
+    return (f'<section class="duo{" duo-1" if len(tiles) == 1 else ""}{" duo-6" if extra else ""}" aria-label="今日總覽">'
             f'<div class="duo-grid">{"".join(tiles)}</div>{"".join(panels)}{_DUO_JS}</section>')
+
+
+def _tile(t: str, kick: str, title: str, gfx: str, summ: str, modal_title: str) -> str:
+    """六宮格的一格：上方小字・標題・圖區（固定高）・一行摘要；右上角 › 表示可點。"""
+    return (f'<button type="button" class="duo-card" data-t="{t}" data-title="{esc(modal_title)}" aria-haspopup="dialog">'
+            f'<span class="duo-k">{esc(kick)}</span><span class="duo-t">{esc(title)}</span>'
+            f'<span class="duo-map duo-gfx">{gfx}</span><span class="duo-sum">{summ}</span></button>')
+
+
+def _next_step(nx: dict, sc) -> str:
+    """01 小卡摘要：「可能下一格」那條門檻翻成一句白話（2026-10-29）。"""
+    t = nx.get("trigger")
+    if nx.get("mode") == "hold" or t is None:
+        return "兩軸都還離門檻很遠"
+    lb = t.label
+    if lb.startswith(("就業", "勞動")):
+        if "「弱」" in lb:
+            return "下一步：就業會不會轉弱"
+        if "「強」" in lb:
+            return "下一步：就業會不會轉強"
+        return "下一步：就業能否回穩" if sc.labor_state == "弱" else "下一步：就業會不會降溫"
+    if lb.startswith("通膨"):
+        if "「高」" in lb:
+            return "下一步：通膨會不會升溫"
+        if "「低」" in lb:
+            return "下一步：通膨能否降到目標"
+        return "下一步：通膨能否降溫" if sc.infl_state == "高" else "下一步：通膨會不會回升"
+    return ""
+
+
+def _mini_cal(wt: dict) -> str:
+    """03 小卡的小月曆：這個月、過去日期淡化、今天深色方塊、有事的日子下方一個小點。"""
+    import calendar as _cal
+    today = wt.get("today") or clock.today()
+    marks = wt.get("marks") or {}
+    out = "".join(f'<span class="mc-w">{w}</span>' for w in "一二三四五六日")
+    for wk in _cal.Calendar(firstweekday=0).monthdatescalendar(today.year, today.month):
+        for d in wk:
+            if d.month != today.month:
+                out += '<span></span>'
+                continue
+            ks = marks.get(d.isoformat()) or set()
+            k = next((x for x in ("d", "s", "p") if x in ks), "")
+            cls = "mc-to" if d == today else ("mc-ps" if d < today else "")
+            out += (f'<span class="{cls}">{d.day}' + (f'<i class="mc-{k}"></i>' if k and d >= today else "")
+                    + '</span>')
+    return f'<span class="mc">{out}</span>'
+
+
+def _overview_tiles(ctxs: dict, sc, lean: str, labor_label: str, infl_label: str, nx: dict, chg: dict) -> list:
+    """01–04 四格小卡（2026-10-29）。"""
+    t01 = _tile("n01", "01 今日結論", f"{sc.name}・{lean}",
+                f'<span class="ud2"><span><span>就業</span><span>{esc(labor_label)}</span></span><em>×</em>'
+                f'<span><span>通膨</span><span>{esc(infl_label)}</span></span></span>',
+                esc(_next_step(nx, sc)), "今日結論")
+    n = chg.get("n") or {}
+    if chg.get("total"):
+        bar = "".join(f'<i class="{k}" style="flex:{n[k]}"></i>' for k in ("dovish", "hawkish", "neutral") if n.get(k))
+        g02 = (f'<span class="t-bar">{bar}</span><span class="t-lg"><span class="dovish">鴿 {n.get("dovish", 0)}</span>'
+               f'<span class="hawkish">鷹 {n.get("hawkish", 0)}</span><span class="neutral">中性 {n.get("neutral", 0)}</span></span>')
+        t02 = _tile("n02", "02 本期變化", chg.get("tilt", ""), f'<span class="t-chg">{g02}</span>',
+                    f'本期 {chg["total"]} 項變動', "本期變化")
+    else:
+        t02 = _tile("n02", "02 本期變化", "沒有新變動", "", "跟上一期相同", "本期變化")
+    wt = ctxs.get("_watch_tile") or {}
+    td = wt.get("today") or clock.today()
+    t03 = _tile("n03", "03 接下來看什麼", f"{td.month} 月", _mini_cal(wt), esc(wt.get("next") or "近期沒有排定的事項"),
+                "接下來看什麼")
+    from .forecasts_ui import tile as _fc_tile
+    try:
+        rows, summ = _fc_tile(ctxs.get("_forecasts"))
+    except Exception:                              # noqa: BLE001
+        rows, summ = [], ""
+    _em = ' class="em"'
+    g04 = '<span class="t-rows">' + "".join(
+        f'<span><span>{esc(a)}</span><b{_em if em else ""}>{esc(b)}</b></span>' for a, b, em in rows) + '</span>'
+    t04 = _tile("n04", "04 各家預測", "預估 vs 實際", g04, esc(summ), "各家預測")
+    return [t01, t02, t03, t04]
+
+
+def _fx_card(focus: str, overview: str) -> str:
+    """
+    「今日市場焦點｜今日總覽」合併卡（2026-10-29）：深藍標題列左右兩個分頁，中間一條線；
+    選中的白字＋橘色短底線。預設焦點，記住上次選的；快報還沒看時焦點分頁右上角一個橘點。
+    """
+    if not focus:
+        return (f'<section class="fx fx-solo"><div class="fx-tabs"><span class="fx-l on">今日總覽</span></div>'
+                f'<div class="fx-p">{overview}</div></section>')
+    return ('<section class="fx" aria-label="今日市場焦點與今日總覽">'
+            '<input type="radio" name="fx-t" id="fx-t-f" class="fx-in" checked>'
+            '<input type="radio" name="fx-t" id="fx-t-o" class="fx-in">'
+            '<div class="fx-tabs" role="tablist"><label for="fx-t-f" class="fx-l fx-lf">今日市場焦點<i class="fx-dot"></i></label>'
+            '<b class="fx-sep"></b><label for="fx-t-o" class="fx-l fx-lo">今日總覽</label></div>'
+            f'<div class="fx-p fx-pf">{focus}</div><div class="fx-p fx-po">{overview}</div>'
+            + _FX_JS + '</section>')
+
+
+_FX_JS = r"""<script>(function(){var f=document.getElementById('fx-t-f'),o=document.getElementById('fx-t-o');if(!f||!o)return;
+function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+if(lsg('fxTab')==='o')o.checked=true;
+[f,o].forEach(function(r){r.addEventListener('change',function(){lss('fxTab',o.checked?'o':'f');if(window.fsClip)window.fsClip();});});
+})();</script>"""
 
 
 def _archive_days(f: dict) -> tuple[str, str]:
@@ -1219,12 +1336,12 @@ def _archive_days(f: dict) -> tuple[str, str]:
           "var sel=st.querySelector('.fs-days select');if(!sel)return;"
           "sel.addEventListener('change',function(){var d=sel.value;"
           "Array.prototype.forEach.call(st.querySelectorAll('.fs-day-p'),function(p){p.hidden=p.getAttribute('data-day')!==d;});"
-          "st.classList.toggle('fs-past',d!=='cur');});})();</script>")
+          "st.classList.toggle('fs-past',d!=='cur');if(window.fsClip)window.fsClip();});})();</script>")
     return (f'<label class="fs-days"><span>日期</span><select aria-label="主軸日期">{opts}</select></label>{js}',
             panels)
 
 
-def _focus_strip(f: dict | None) -> str:
+def _focus_strip(f: dict | None, tabbed: bool = False) -> str:
     """
     今日市場焦點：hero 之上的窄條。自選 chip 目錄＋一段焦點。
 
@@ -1434,20 +1551,24 @@ def _focus_strip(f: dict | None) -> str:
     # 2026-10-29：品牌與來源說明收進「展開全文」；沒有收合（沒有標題）時照舊放在卡片最下方
     _bn = f'{brand}<div class="fs-note">{esc(note)}</div>'
     if "<!--FS_BRAND-->" in text:
-        _text, _tail = text.replace("<!--FS_BRAND-->", _bn, 1), ""
+        # 2026-10-29：參考報導也收進「展開全文」（在品牌說明之上）
+        _text, _tail = text.replace("<!--FS_BRAND-->", links + _bn, 1), ""
+        links = ""
     else:
         _text, _tail = text, _bn
     # 桌機兩欄：左邊 2×2 數據磚、右邊新聞——截圖是一張緊湊的橫幅；
     # 手機上下堆疊。
-    return ('<section class="home-zone focus-strip" aria-label="今日市場焦點">'
-            '<div class="fs-head">今日市場焦點'
+    # 2026-10-29：tabbed＝放進「今日市場焦點｜今日總覽」合併卡，標題由分頁列負責，這裡只留快報與選擇指標
+    _open, _close = (('<div class="focus-strip fs-in">', '</div>') if tabbed else
+                     ('<section class="home-zone focus-strip" aria-label="今日市場焦點">', '</section>'))
+    return (_open + '<div class="fs-head">' + ("" if tabbed else "今日市場焦點")
             + STORY_BTN + picker + '</div>' + editbar +
             '<div class="fs-grid">'
             '<div class="fs-chips"><div class="fs-hd"><span>指標</span>'
             '<span>變動</span><span>數值</span></div>' + "".join(chips) + '</div>'
             f'<div class="fs-news">{_text}{links}</div></div>'
             f'{_tail}'
-            + script + '</section>')
+            + script + _close)
 
 
 # ===========================================================================
@@ -1510,7 +1631,14 @@ def _hm_brief(ctxs: dict) -> tuple[str, str]:
     return takeaway, f'<div class="hm-brs">{rows}</div>{new}'
 
 
-def _hm_changes(cs, regime: str = "") -> str:
+def _resolved_text(title: str) -> str:
+    """解除的訊號（2026-10-29）：「解除：核心 PCE 在降溫：三月年化 2.0%…」讀起來像「正在降溫」，
+    改成「不再成立：核心 PCE 在降溫（上期 三月年化 2.0%…）」。"""
+    head, sep, tail = str(title).partition("：")
+    return f"不再成立：{head}（上期 {tail}）" if sep and tail else f"不再成立：{title}"
+
+
+def _hm_changes(cs, regime: str = "", out: dict | None = None) -> str:
     """
     本期變化（2026-10 v2，使用者：太雜）：
       ① 一條比例條＋一句傾向（偏鴿／偏鷹／中性各幾項）
@@ -1524,7 +1652,7 @@ def _hm_changes(cs, regime: str = "") -> str:
     for f in cs.new_flags:
         items.append((2, f.get("change_lean") or "neutral", f.get("module", "訊號"), f.get("title", "—")))
     for f in cs.resolved_flags:
-        items.append((3, f.get("change_lean") or "neutral", f.get("module", "訊號"), "解除：" + f.get("title", "—")))
+        items.append((3, f.get("change_lean") or "neutral", f.get("module", "訊號"), _resolved_text(f.get("title", "—"))))
     _ml = {"labor": "就業", "inflation": "物價", "claims": "就業", "jolts": "就業", "ppi": "物價", "market": "市場"}
     moves = sorted(cs.metric_moves, key=lambda m: -abs(m.get("delta", 0)) / (m.get("threshold") or 1))
     for i, m in enumerate(moves):
@@ -1544,6 +1672,8 @@ def _hm_changes(cs, regime: str = "") -> str:
     wh = sum(_w(x) for x in items if x[1] == "hawkish")
     tilt = ("整體偏鴿" if wd > wh + 1 else "整體偏鷹" if wh > wd + 1 else "鷹鴿大致抵銷")
     _wnote = (f"{'通膨' if _pri == '物價' else '就業'}訊號加權 ×2（聯準會重心）" if _pri else "")
+    if out is not None:          # 六宮格小卡用
+        out.update(tilt=tilt, n=n, total=total)
     # 重點 5 項：重心那一軸優先（最多 3 項），其餘照原排序補滿
     if _pri:
         items.sort(key=lambda x: x[0])
@@ -1881,9 +2011,24 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
             html = html.replace('<div class="wv-ev">', f'<div class="wv-ev hc-k-{k}">', 1)
         return html
     cal = _hm_calendar(today, start, end, rows, supply, speeches, hols, _cal_day)
+    # 2026-10-29 六宮格小卡：這個月每天有哪些種類＋下一件事（一行）
+    _marks: dict = {}
+    for k_, evs_ in (("d", rows), ("s", supply), ("p", speeches)):
+        for e in evs_:
+            _marks.setdefault(e["tpe"].date().isoformat(), set()).add(k_)
+    _nxt = sorted([e for e in rows + supply + speeches if e["tpe"] > now], key=lambda e: e["tpe"])
+    if _nxt:
+        _d0 = _nxt[0]["tpe"].date()
+        _w0 = ("今天" if _d0 == today else "明天" if _d0 == today + dt.timedelta(days=1)
+               else f"{_d0.month}/{_d0.day}")
+        _nt = f"{_w0}：{_nxt[0]['name']}"
+    else:
+        _nt = ""
+    ctxs["_watch_tile"] = {"today": today, "marks": _marks, "next": _nt}
+    # 2026-10-29：預設月曆（記住讀者上次選列表的話照舊）
     return ('<div class="hm-view">'
-            '<input type="radio" name="hm-view" id="hm-view-list" class="hm-view-in" checked>'
-            '<input type="radio" name="hm-view" id="hm-view-cal" class="hm-view-in">'
+            '<input type="radio" name="hm-view" id="hm-view-list" class="hm-view-in">'
+            '<input type="radio" name="hm-view" id="hm-view-cal" class="hm-view-in" checked>'
             + listing + cal + _hm_notes(end) + '</div>' + _HM_CAL_JS)
 
 
@@ -1907,7 +2052,7 @@ _HM_CAL_JS = r"""<script>
 function lsg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lss(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 var vl=document.getElementById('hm-view-list'),vc=document.getElementById('hm-view-cal');
-if(lsg('hmView')==='cal'&&vc)vc.checked=true;
+if(lsg('hmView')==='list'&&vl)vl.checked=true;
 [vl,vc].forEach(function(r){if(r)r.addEventListener('change',function(){lss('hmView',vc.checked?'cal':'list');});});
 var dds=root.querySelectorAll('.hc-dd'),empty=root.querySelector('.hc-dd-none');
 function pick(d,btn){Array.prototype.forEach.call(root.querySelectorAll('.hc-d.hc-sel'),function(x){x.classList.remove('hc-sel');});
@@ -2024,10 +2169,10 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
             + '<p class="wv-cnt">點類別隱藏／顯示・點日期看當天・台灣時間</p></div>')
 
 
-def forecasts_section(fc: dict | None) -> str:
+def forecasts_section(fc: dict | None, modal: bool = False) -> str:
     """總覽 04 各家預測。組不出來就不放，不影響首頁。"""
     try:
-        return _fc_section(fc)
+        return _fc_section(fc, modal=modal)
     except Exception as e:                         # noqa: BLE001
         import logging
         logging.getLogger(__name__).warning("04 各家預測組裝失敗（%s），本次不顯示", e)
@@ -2080,18 +2225,21 @@ def home_body(ctxs: dict) -> str:
         f"PCE {(asof.get('pce') or '—')[:7]}", f"FOMC {fom.get('latest_date', '—')}",
         f"利率 {rates.get('as_of', '—')}"])
     # 下一格距離條已移除（2026-10 使用者：橘線沒有意義）
-
-    return f"""
-<main class="home-dashboard hm">
-  {_focus_strip(ctxs.get('_focus'))}
-  {_duo(ctxs)}
-  <section class="home-hero hm-hero {esc(sc.lean)}" aria-labelledby="home-now">
+    # ---- 2026-10-29：「今日市場焦點｜今日總覽」合併卡；01–04 收成六宮格，點了跳視窗 ----
+    _chg: dict = {}
+    _regime = getattr(sc, "regime", "")
+    # 整體情勢三段各加狀態點（跟四大模組同一套顏色）
+    for _nm, _tn in (("勞動市場", "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else ""),
+                     ("通膨", "hawkish" if sc.infl_state == "高" else "dovish" if sc.infl_state == "低" else ""),
+                     ("聯準會", f_dir)):
+        brief_html = brief_html.replace(f'<div class="hm-br"><b>{_nm}</b>',
+                                        f'<div class="hm-br"><b><i class="hm-dot {_TONE_DOT.get(_tn, "")}"></i>{_nm}</b>', 1)
+    changes_html = _hm_changes(ctxs.get('changes'), _regime, _chg)
+    watch_html = _hm_watch(ctxs, sc)
+    s01 = f"""<section class="home-hero hm-hero hm-open hm-in {esc(sc.lean)}" aria-label="今日結論">
     <div class="hm-band">
-      <div class="hm-kick"><span class="hm-num">01</span>今日結論</div>
-      <h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2>
-      <div class="hm-verdict"><b>{esc(sc.name)}</b><span>{esc(lean)}</span></div>
-      <button type="button" class="hm-tog" aria-expanded="false"
-        onclick="var s=this.closest('.hm-hero'),o=s.classList.toggle('hm-open');this.setAttribute('aria-expanded',o?'true':'false');this.textContent=o?'收合 ▴':'展開 ▾';">展開 ▾</button>
+      <div class="hm-vrow"><h2 id="home-now">就業{esc(labor_label)} × 通膨{esc(infl_label)}</h2>
+        <div class="hm-verdict"><b>{esc(sc.name)}</b><span>{esc(lean)}</span></div></div>
       {f'<p class="hm-key">{esc(takeaway)}</p>' if takeaway else ''}
       <a class="hm-next" href="/scenario/"><span>可能下一格</span><b>{esc(next_name)}</b>
         <small>{esc(trigger_text)}</small><em>完整九宮格 →</em></a>
@@ -2105,22 +2253,26 @@ def home_body(ctxs: dict) -> str:
       <div class="hm-modx-b">{_hm_modules(ctxs, sc, f_text, f_dir, p_text, p_level)}</div></details>
     </div>
     {section_learn("/", "home-now")}
-  </section>
-
-  <section class="home-zone hm-zone" aria-labelledby="home-changes">
-    <div class="hm-zh"><div><span class="hm-num">02</span><h2 id="home-changes">本期變化</h2></div>
-      <p>跟上一期比，新增或解除的訊號</p></div>
-    <div class="hm-chs">{_hm_changes(ctxs.get('changes'), getattr(sc, "regime", ""))}</div>
+  </section>"""
+    s02 = f"""<section class="home-zone hm-zone hm-in" aria-label="本期變化">
+    <p class="hm-in-sub">跟上一期比，新增或解除的訊號</p>
+    <div class="hm-chs">{changes_html}</div>
     {section_learn("/", "home-changes")}
-  </section>
-
-  <section class="home-zone hm-zone" aria-labelledby="home-next">
-    <div class="hm-zh"><div><span class="hm-num">03</span><h2 id="home-next">接下來看什麼</h2></div>
-      <p class="wv-sw"><label for="hm-view-list">列表</label>・<label for="hm-view-cal">月曆</label></p></div>
-    {_hm_watch(ctxs, sc)}
+  </section>"""
+    s03 = f"""<section class="home-zone hm-zone hm-in" aria-label="接下來看什麼">
+    <p class="wv-sw wv-pill"><label for="hm-view-list">列表</label><label for="hm-view-cal">月曆</label></p>
+    {watch_html}
     {section_learn("/", "home-next")}
-  </section>
-  {forecasts_section(ctxs.get('_forecasts'))}
+  </section>"""
+    s04 = forecasts_section(ctxs.get('_forecasts'), modal=True)
+    tiles = _overview_tiles(ctxs, sc, lean, labor_label, infl_label, _nx, _chg)
+    overview = _duo(ctxs, extra=[("n01", tiles[0], s01), ("n02", tiles[1], s02),
+                                 ("n03", tiles[2], s03), ("n04", tiles[3], s04)])
+    focus = _focus_strip(ctxs.get('_focus'), tabbed=True)
+
+    return f"""
+<main class="home-dashboard hm">
+  {_fx_card(focus, overview)}
   {_story(ctxs)}
 
   <div class="hm-sign"><span class="hm-sign-gg">GG</span><div><b>MACRO GG</b>

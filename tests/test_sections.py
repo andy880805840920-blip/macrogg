@@ -182,9 +182,11 @@ if (OUT / "labor" / "index.html").exists():
           and h.count('<details class="hm-modx">') == 1)
     # 2026-10 總覽改版：九宮格區塊併進主卡（「可能下一格」一行），
     # 五區變三區：01 今日結論、02 本期變化、03 接下來看什麼。
-    check("㉙b index：三區順序完整",
-          all(f'id="{sid}"' in h for sid in ("home-now", "home-changes", "home-next"))
-          and h.index('id="home-now"') < h.index('id="home-changes"') < h.index('id="home-next"'))
+    # 2026-10-29：01–04 收進「今日總覽」六宮格，內容在視窗用的面板裡，順序照舊
+    check("㉙b index：四區順序完整",
+          all(f'class="duo-panel" data-t="{t}"' in h for t in ("n01", "n02", "n03", "n04"))
+          and h.index('data-t="n01" hidden') < h.index('data-t="n02" hidden') < h.index('data-t="n03" hidden')
+          < h.index('data-t="n04" hidden'))
     check("㉙c index：四個模組一列一個、日曆四週",
           h.count('<a class="hm-mr"') == 4 and h.count('class="hm-wk-in"') == 4)
     check("㉚ index：摘要沒有殘留 markdown",

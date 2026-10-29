@@ -47,12 +47,12 @@ def ai_tile(a: dict | None) -> tuple[str, str]:
     if not a or not (a.get("events") or (a.get("ipo") or {}).get("active")):
         return "", ""
     evs = a.get("events") or []
-    latest = evs[0]["co"] + "：" + evs[0]["zh"] if evs else "Anthropic IPO 進行中"
-    tile = ('<button type="button" class="duo-card" data-t="ai" aria-haspopup="dialog">'
+    # 2026-10-29 六宮格：摘要固定一行，只寫公司與類型
+    latest = f'{evs[0]["co"]}・{evs[0]["type"]}' if evs else "Anthropic IPO 進行中"
+    tile = ('<button type="button" class="duo-card" data-t="ai" data-title="AI 大事" aria-haspopup="dialog">'
             f'<span class="duo-k">近 {a.get("window_days", 14)} 天 {len(evs)} 則</span><span class="duo-t">AI 大事</span>'
             f'<span class="duo-map">{AI_ART}</span>'
-            f'<span class="duo-sum duo-sum1"><span>最新：{esc(latest)}</span></span>'
-            '<span class="duo-more">看全部 ›</span></button>')
+            f'<span class="duo-sum">最新：{esc(latest)}</span></button>')
     return tile, ai_panel(a)
 
 

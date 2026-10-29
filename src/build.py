@@ -61,7 +61,8 @@ def _kpi_leans(level: float | None, target: float | None,
                cur: float | None, prev: float | None,
                up_is: str = "hawkish", band: float = 0.05,
                level_word: tuple[str, str, str] = ("高於目標", "接近目標",
-                                                   "低於目標")) -> list:
+                                                   "低於目標"),
+               prev_word: str = "") -> list:
     """
     一張 KPI 卡的兩個鷹鴿標籤：**水準**一個、**本期變化**一個。
 
@@ -90,7 +91,11 @@ def _kpi_leans(level: float | None, target: float | None,
             out.append(("本期：持平", "neutral"))
         else:
             kind = up_is if d > 0 else _invert_lean(up_is)
-            out.append((f"本期：{'+' if d > 0 else '-'}{abs(d):.2f}", kind))
+            if prev_word:      # 2026-10-29：「本期 +0.09」看不懂 → 「比上月 +0.1」
+                _n = f"{abs(d):.1f}" if abs(d) >= 0.1 else f"{abs(d):.2f}"
+                out.append((f"本期：比{prev_word} {'+' if d > 0 else '-'}{_n}", kind))
+            else:
+                out.append((f"本期：{'+' if d > 0 else '-'}{abs(d):.2f}", kind))
     return out
 
 
@@ -1543,12 +1548,12 @@ def build_inflation_context(cfg: dict, series: dict, failed: list,
                             "低於目標對應水準"))
                 + ([_pace_chip(_core_mom)] if _pace_chip(_core_mom) else [])),
             "pce": _kpi_leans(summ.pce_core_yoy, PCE_TARGET, summ.pce_core_yoy,
-                              _prev_yoy(series, "PCEPILFE")),
+                              _prev_yoy(series, "PCEPILFE"), prev_word="上月"),
             "exp": _kpi_leans(summ.expect_5y5y, 2.3, summ.expect_5y5y,
                               value_at(series.get("T5YIFR", []), 1),
                               band=0.03,
                               level_word=("高於 2% 目標", "與目標一致",
-                                          "低於 2% 目標")),
+                                          "低於 2% 目標"), prev_word="前一日"),
         },
         "key_metrics_prev": {
             "cpi_yoy": {"value": _prev_yoy_nsa(series, "CPIAUCNS", "CPIAUCSL")},

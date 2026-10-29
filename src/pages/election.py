@@ -309,17 +309,18 @@ def election_tile(e: dict | None) -> tuple[str, str]:
     art = (m.group(0).replace('class="el-svg"', 'class="el-svg duo-svg" aria-hidden="true" focusable="false"', 1)
            .replace('role="img"', '') if m else "")
 
-    def one(name, d):
-        if not d:
-            return ""
-        dem, rep = d["dem"], d["rep"]
-        lead = "民主黨" if dem >= rep else "共和黨"
-        return f'<span>{name} <b class="{"dem" if dem >= rep else "rep"}">{lead} {_pct(max(dem, rep))}</b></span>'
-    tile = ('<button type="button" class="duo-card" data-t="el" aria-haspopup="dialog">'
+    # 2026-10-29 六宮格：摘要固定一行——兩院同一黨領先寫「民主黨　眾 93%・參 68%」，不同黨各自標
+    def lead(d):
+        return ("民主黨" if d["dem"] >= d["rep"] else "共和黨"), f'{int(max(d["dem"], d["rep"]) * 100 + 0.5)}%'   # 四捨五入
+    hs = [(n, lead(e[k])) for n, k in (("眾", "house"), ("參", "senate")) if e.get(k)]
+    if len({p for _, (p, _) in hs}) == 1:
+        summ = f'{hs[0][1][0]}　' + "・".join(f'{n} <b>{v}</b>' for n, (_, v) in hs)
+    else:
+        summ = "・".join(f'{n} {p[:2]} <b>{v}</b>' for n, (p, v) in hs)
+    tile = ('<button type="button" class="duo-card" data-t="el" data-title="美國期中選舉" aria-haspopup="dialog">'
             f'<span class="duo-k">{esc(kick)}</span><span class="duo-t">美國期中選舉</span>'
             f'<span class="duo-map">{art}</span>'
-            f'<span class="duo-sum">{one("眾院", e.get("house"))}{one("參院", e.get("senate"))}</span>'
-            '<span class="duo-more">看全部 ›</span></button>')
+            f'<span class="duo-sum">{summ}</span></button>')
     return tile, full
 
 
