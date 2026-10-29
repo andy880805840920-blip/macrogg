@@ -1840,13 +1840,19 @@ nav.anchors a.on{color:var(--brand-ink);font-weight:700;
 .fs-tag{display:inline-block;margin-right:6px;padding:0 6px;border-radius:5px;
   background:#e6eef8;color:var(--series-1);font-size:11.5px;font-weight:700;
   line-height:1.7;vertical-align:1px;white-space:nowrap}
+/* 今日結論（2026-10-29）：只露標題與判讀膠囊，其餘收合 */
+.hm-tog{appearance:none;border:0;background:none;font:inherit;font-size:13px;font-weight:700;color:var(--series-1);padding:2px 0;cursor:pointer;margin-top:10px;display:block}
+.hm-hero:not(.hm-open) .hm-key,.hm-hero:not(.hm-open) .hm-next,.hm-hero:not(.hm-open) .hm-layer,
+.hm-hero:not(.hm-open)>.learn-more{display:none}
 /* 期中選舉＋AI 大事兩張小卡與視窗（2026-10-29） */
 .duo{margin:18px 0}
-.duo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-1)}
 
 .duo-card{appearance:none;justify-content:space-between;font:inherit;color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;
  border:1px solid var(--border);border-radius:14px;background:var(--surface-1);padding:14px 16px 12px;position:relative}
-.duo-card:hover{border-color:var(--series-1)}
+.duo-grid .duo-card{border:0;border-radius:0;background:none}
+.duo-grid .duo-card+.duo-card{border-left:1px solid var(--grid)}
+.duo-card:hover{background:var(--surface-2)}.duo-card:active{background:#e8eef7}
 .duo-k{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--muted)}
 .duo-t{font-size:18px;font-weight:800}
 .duo-map{display:block;height:96px;margin:4px 0}
@@ -1884,7 +1890,25 @@ body.duo-lock{overflow:hidden}
 .ai-src{font-size:12px;white-space:nowrap}
 .ai-ev{padding:8px 0}
 .ai-all{margin-top:14px;border-top:1px solid var(--grid)}
-.ai-all>summary{cursor:pointer;font-size:14px;font-weight:700;padding:12px 0;color:var(--series-1)}
+.ai-all{position:relative}
+.ai-all>summary{cursor:pointer;font-size:14px;font-weight:700;padding:12px 0;color:var(--series-1);list-style:none;
+ display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ai-all>summary::-webkit-details-marker{display:none}
+.ai-sum-t::after{content:" ▾";font-size:12px}.ai-all[open] .ai-sum-t::after{content:" ▴"}
+.ai-all:not([open]) .ai-sel{display:none}
+/* 依時間看全部：左側時間軸（2026-10-29） */
+.ai-tl{position:relative;padding:4px 0}
+.ai-tl::before{content:"";position:absolute;left:55px;top:14px;bottom:14px;border-left:2px solid var(--grid)}
+.ai-r{display:grid;grid-template-columns:44px 24px 1fr;padding:8px 0;position:relative}
+.ai-r[hidden]{display:none}
+.ai-r.day{margin-top:6px}
+.ai-r::after{content:"";position:absolute;left:51px;top:13px;width:10px;height:10px;border-radius:50%;box-sizing:border-box;background:var(--bg);border:2px solid var(--baseline)}
+.ai-r.day::after{background:var(--series-1);border-color:var(--series-1)}
+.ai-r-d{text-align:right;font-size:12.5px;font-weight:700;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.ai-r-b{grid-column:3;padding-bottom:8px;border-bottom:1px dashed var(--grid);min-width:0}
+.ai-r-m{font-size:12px;color:var(--muted)}
+.ai-r-x{font-size:14.5px;line-height:1.6;margin:2px 0}
+.ai-s{display:block;font-size:12px;color:var(--muted);margin-top:2px}.ai-s a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
  border:0;border-bottom:1px solid var(--grid);background:none;padding:10px 6px;border-radius:0}
 @media(max-width:700px){.ai-tb{font-size:12.5px}.ai-tb th,.ai-tb td{padding:7px 5px}.ai-tb thead th{white-space:normal;font-size:11px}}
 .ai-sel select{font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--border);border-radius:8px;padding:4px 8px;background:var(--bg)}

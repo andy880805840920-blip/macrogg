@@ -25,7 +25,6 @@ AI_ART = (
     '<text x="160" y="104" text-anchor="middle" font-size="26" font-weight="800" fill="#fff" '
     'font-family="Montserrat,system-ui,sans-serif">AI</text></svg>')
 WHY = ("AI 資本支出擴大 → 科技巨頭大量發債（佔投資級公司債的比重上升）→ 公司債與公債搶資金，長端利率承壓。")
-WD = "一二三四五六日"
 
 
 def _md(iso: str) -> str:
@@ -36,9 +35,11 @@ def _md(iso: str) -> str:
         return ""
 
 
-def _src(e: dict) -> str:
-    return "".join(f' <a class="ai-src" href="{esc(l.get("url", ""))}" rel="noopener" target="_blank">'
-                   f'{esc(l.get("source") or "來源")}</a>' for l in (e.get("links") or [])[:2] if l.get("url"))
+def _srcs(e: dict) -> str:
+    """來源獨立一行（2026-10-29）：灰色小字、以「・」分隔，不插在句子裡。"""
+    ls = [f'<a href="{esc(l.get("url", ""))}" rel="noopener" target="_blank">{esc(l.get("source") or "來源")}</a>'
+          for l in (e.get("links") or [])[:3] if l.get("url")]
+    return f'<span class="ai-s">{"・".join(ls)}</span>' if ls else ""
 
 
 def ai_tile(a: dict | None) -> tuple[str, str]:
@@ -84,7 +85,7 @@ def ai_panel(a: dict) -> str:
                      f'aria-pressed="{"true" if on else "false"}"><b>{esc(c)}</b>{sub}</button>')
         mine = [e for e in evs if e["co"] == c]
         lis = "".join(f'<li><span class="ai-p-d">{esc(_md(e["date"]))}</span><span class="ai-p-t">{esc(e["type"])}</span>'
-                      f'<span class="ai-p-x">{esc(e["zh"])}{_src(e)}</span></li>' for e in mine) \
+                      f'<span class="ai-p-x">{esc(e["zh"])}{_srcs(e)}</span></li>' for e in mine) \
             or '<li class="none">近 14 天沒有重大事件</li>'
         imp = (a.get("impact") or {}).get(c, "")
         panes.append(f'<div class="ai-pane" data-co="{esc(c)}"{"" if on else " hidden"}>'
@@ -98,18 +99,19 @@ def ai_panel(a: dict) -> str:
     days: dict = {}
     for e in evs:
         days.setdefault(e["date"], []).append(e)
+    # 2026-10-29：左側時間軸——每天第一則實心點＋日期，其餘空心點；右邊「公司・類型」→ 內文 → 來源
     tl = ""
     for d in sorted(days, reverse=True):
-        dd = dt.date.fromisoformat(d)
-        tl += f'<div class="ai-day"><div class="ai-dh">{dd.month}/{dd.day}（{WD[dd.weekday()]}）</div>'
-        tl += "".join(f'<div class="ai-ev" data-ty="{esc(e["type"])}"><div class="ai-m"><b>{esc(e["co"])}</b>・{esc(e["type"])}</div>'
-                      f'<div class="ai-x">{esc(e["zh"])}{_src(e)}</div></div>' for e in days[d])
-        tl += '</div>'
+        for i, e in enumerate(days[d]):
+            tl += (f'<div class="ai-r{" day" if i == 0 else ""}" data-ty="{esc(e["type"])}">'
+                   f'<span class="ai-r-d">{esc(_md(d)) if i == 0 else ""}</span>'
+                   f'<div class="ai-r-b"><div class="ai-r-m">{esc(e["co"])}・{esc(e["type"])}</div>'
+                   f'<div class="ai-r-x">{esc(e["zh"])}</div>{_srcs(e)}</div></div>')
     if evs:
         types = ["全部類型", "財報", "資本支出", "發債", "融資／IPO", "算力合約"]
-        out.append(f'<details class="ai-all"><summary>依時間看全部（近 {a.get("window_days", 14)} 天 {len(evs)} 則）</summary>'
-                   '<div class="ai-sec-h"><span></span><label class="ai-sel"><select aria-label="事件類型">'
-                   + "".join(f'<option>{t}</option>' for t in types) + f'</select></label></div>'
+        out.append(f'<details class="ai-all"><summary><span class="ai-sum-t">依時間看全部（近 {a.get("window_days", 14)} 天 '
+                   f'{len(evs)} 則）</span><label class="ai-sel"><select aria-label="事件類型">'
+                   + "".join(f'<option>{t}</option>' for t in types) + '</select></label></summary>'
                    f'<div class="ai-tl">{tl}</div></details>')
     out.append(f'<div class="ai-why"><b>跟利率的關係</b><p>{esc(WHY)}<a href="/longend/">看長端與債務 →</a></p></div>'
                '<p class="ai-note">事件由 AI 依新聞標題整理成一句中文，每則附原文連結；只收財報、資本支出、發債、'

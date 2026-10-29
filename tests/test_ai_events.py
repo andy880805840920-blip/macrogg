@@ -103,6 +103,16 @@ check("⑤ 今日主軸：預設只露標題、其餘收進「展開全文」", 
       and h.index("標題") < h.index("fs-more"))
 check("⑤ 沒有標題時不收合", 'class="fs-tog"' not in home._focus_strip(dict(f, headline="")))
 
+# ⑥ 2026-10-29 晚：一張卡中間一條線、時間軸、來源獨立一行、視窗放回頁面主體、今日結論收合
+check("⑥ 依時間看全部：時間軸列（每天第一則標 day＋日期）、類型選單在標題列", 'class="ai-r day"' in panel
+      and '<label class="ai-sel"><select' in panel and panel.index('ai-sel') < panel.index('</summary>', panel.index('ai-all')) and 'class="ai-s"' in panel)
+check("⑥ 公司面板的來源獨立一行", '<span class="ai-s">' in panel.split('class="ai-panes"')[1].split('ai-all')[0])
+check("⑥ 視窗掛在頁面主體內（兩院左右並排的規則才套得到）", "closest('.viz-root')" in home._DUO_JS)
+_css = (ROOT / "src/site.py").read_text(encoding="utf-8")
+check("⑥ 兩張小卡合成一張卡、中間一條線", ".duo-grid .duo-card+.duo-card{border-left:1px solid var(--grid)}" in _css)
+check("⑥ 今日結論只露標題與判讀，其餘收合", 'class="hm-tog"' in (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
+      and ".hm-hero:not(.hm-open) .hm-layer" in _css)
+
 clock.now, clock.today = _n0, _t0
 print()
 print("全部通過" if ok else "有失敗")
