@@ -404,7 +404,79 @@
   "b5858f152697": "2026-10-23",
   "68dacdce0b6b": "2026-10-23",
   "647baf9ccbc7": "2026-10-23",
-  "9354531bdf30": "2026-10-23"
+  "9354531bdf30": "2026-10-23",
+  "ac8912023db7": "2026-10-29",
+  "578aefdc325f": "2026-10-29",
+  "3a7e078648e7": "2026-10-29",
+  "1b88a5323382": "2026-10-29",
+  "b93e4d9c8226": "2026-10-28",
+  "4ae4f2b53737": "2026-10-28",
+  "6e7fdaa04a50": "2026-10-27",
+  "7bdc789983e9": "2026-10-27",
+  "0c7576289cad": "2026-10-29",
+  "2918706528b1": "2026-10-29",
+  "5fcff10d4348": "2026-10-29",
+  "baace6d1905a": "2026-10-29",
+  "2c9fd19e140e": "2026-10-29",
+  "8645832531b7": "2026-10-29",
+  "626e09953857": "2026-10-29",
+  "1984dfa30f6d": "2026-10-28",
+  "e9a0a0dc4f50": "2026-10-29",
+  "4c9fdd4dc1a1": "2026-10-27",
+  "d6a45ae3a3b5": "2026-10-26",
+  "6f14efb5d995": "2026-10-26",
+  "5c6a564451bc": "2026-10-26",
+  "4bac3342a7e9": "2026-10-25",
+  "45605e5526d3": "2026-10-23",
+  "90964b37b3ee": "2026-10-21",
+  "d99b1fe5d911": "2026-10-26",
+  "38f56940019a": "2026-10-26",
+  "5cf352728ddc": "2026-10-23",
+  "d5f857249917": "2026-10-23",
+  "279200019b29": "2026-10-23",
+  "29c8564b47c3": "2026-10-22",
+  "065562fb338b": "2026-10-22",
+  "b5c9cf85e9f8": "2026-10-22",
+  "980909a1f9a2": "2026-10-29",
+  "f7c35defc4ca": "2026-10-29",
+  "0739497a90f0": "2026-10-29",
+  "ea719db7c286": "2026-10-28",
+  "4889e238e781": "2026-10-28",
+  "1c8ea5f4f6cb": "2026-10-28",
+  "e36581ef3f5a": "2026-10-28",
+  "8af8b54630db": "2026-10-28",
+  "fab31880d3e7": "2026-10-21",
+  "0969ce7d969f": "2026-10-21",
+  "9bf4d62e7c00": "2026-10-21",
+  "8988c9ba9503": "2026-10-20",
+  "a1aa9d366c27": "2026-10-20",
+  "3522c25ba012": "2026-10-20",
+  "4b5d73f84438": "2026-10-19",
+  "0f797ea82df8": "2026-10-19",
+  "a187898c3a24": "2026-10-29",
+  "6c05687eb7e6": "2026-10-28",
+  "bc6859d2e80f": "2026-10-28",
+  "74a4d8895870": "2026-10-28",
+  "e86932621671": "2026-10-28",
+  "ce27cbe76d9e": "2026-10-28",
+  "5dc6b7b68f74": "2026-10-28",
+  "3a5de368c30d": "2026-10-28",
+  "0dd15df18cdd": "2026-10-29",
+  "84111b2938e5": "2026-10-29",
+  "6b17951f1183": "2026-10-29",
+  "8756006ec218": "2026-10-28",
+  "c34884f09414": "2026-10-27",
+  "0b6c79c2d947": "2026-10-26",
+  "5dfbd8c8fa45": "2026-10-26",
+  "9da404b32fd4": "2026-10-26",
+  "3841e88337a5": "2026-10-23",
+  "a643e00b7432": "2026-10-22",
+  "bfcc02e71bcb": "2026-10-22",
+  "a8aaf82f5fd6": "2026-10-22",
+  "2307dc0d485d": "2026-10-22",
+  "3e8ce6e47f17": "2026-10-21",
+  "558aefb57c17": "2026-10-21",
+  "5ef5f9578077": "2026-10-21"
  },
  "events": [
   {
@@ -622,6 +694,20 @@
      "title": "Oracle caps external AI funding at $20 billion through 2030",
      "source": "Chosunbiz",
      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9sU3o3MUtIVWtfRGxtM3pPUzBkTWh3bmpZMEZBTzlra1dFU3ZDX1haR0loUVY1WW55R0Z0REVnUUdPM2YtOWNheVJSV1o5NW1OMjF4MEJHRWdCSjNLLVlvYTJfXzh2Tnh5VjdNRmVGYnJhaTBUd0kzdXFB0gGOAUFVX3lxTE5EVXBpUm5UNVhHX3N5cHNQSlh5VFdOaEx1aFIxX3VaSU82MDc5X1UzU2pibnAzYnV2a1d4cFNLVVUxV29pSTBhQ3lGc3ZMWElzX2VuaV9KZ3lRNE9FbTByVkc0U05EYkE4OXFXZXlldm1ncUJwSkxUQ1cwX3h2RDVCX1NUUUY0bmU5U1dqalE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "fa6c721b08ba",
+   "co": "CoreWeave",
+   "type": "發債",
+   "zh": "高盛預估CoreWeave需新增發債200億至380億美元。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Goldman keeps CoreWeave at Buy, sizes new debt need at $20 billion to $38 billion",
+     "source": "Blockspace Media",
+     "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5BX2F4djNBWDN6SC1acnpobWVuazdRNl92MWtvWHhUMlVZZmRxUV9aNHd5VXZza1ZMbVhIN2J6NkNHM05zOVl3dDNFd05BTWFUcWhEdkRVS0hHZGNsRmNCSnhqUFF0dExoN0E1cjVPMWxhVndsYVFkeXVxQVM?oc=5"
     }
    ]
   },
@@ -882,6 +968,20 @@
    ]
   },
   {
+   "id": "1a46101ede5a",
+   "co": "亞馬遜",
+   "type": "資本支出",
+   "zh": "亞馬遜今年在數據中心支出至少200億美元。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "Amazon and Alphabet Are Each Spending At Least $200 Billion on Data Centers This Year. Here's Which Stock Outperforms Through 2028.",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOakZVU0JONkRKcmg3YjBTX0huenZoUWtWaDlJbkhmYnkxaGl0V2VhVTJaOVVudm8yLVpfRkdDLUExXzJoTGJYV256UVotcHJJNmlOcEhNMmUwTE5iMGJ4dkYzanM4QW13Mmd4SGN2bE1ZdnhsSm5yaEFHSVc1MzlpcTBjUVNmXzFJSTBTQ2R3MFdJeDV5TDQzeVp2bw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "041e3cd66454",
    "co": "亞馬遜",
    "type": "算力合約",
@@ -892,6 +992,25 @@
      "title": "Verizon lifts annual forecasts, signs more than $2 billion AI infrastructure deal with AWS",
      "source": "Reuters",
      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNUXJNWmV4Ny1ON2FmYXdrclBkWWdrZXdfX2JHLUdoZ3ZLamJNdHl1NHc3RDk4TWUxZVRZMUN2QTVvMk01Ujk4Wmk2ejZOT3h3UmlWUmp6S0lLVHBSZmVvQ0c0Sm1xYVVMNXN4M2JkNWtKVUpoWEd4YloyWVJBME8tb0htQnhzNzA5V1ZWWlE5cE10a25nNWtxQmc5dDlGdF9MZzRYMllaMHI5eXlINXpCeVJKZmVFRmttRmFQZUtFOTNDNEx2OUlGemNBV1FuLUNDdWdFZQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "8beb90a9516c",
+   "co": "Meta",
+   "type": "融資／IPO",
+   "zh": "Meta尋求籌資最高95億美元股權以支持AI支出。",
+   "date": "2026-10-26",
+   "links": [
+    {
+     "title": "Meta Seeks Up to $95 Billion in Equity to Fund AI Spending",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPZHl6X0k4eXZDNWpjUnRsTnFqV0JpNjZ0UEpqLVhrbDhvVWpXX3oxNnlmRHJXUFRTbkwwZEczb2hVemlLekxxRWZ5dDEtM3Frb2VwdHA4Vll0VGdIUUdSalIzTjAwS3FzRWJCdm9nNHRFcmNTZWtLemFKbnZlb1BtbDBRMmVkZXFXVUdYUUNxZk9zeHUzVnFIMVhIcGNwcmRiQ0RvNmZuZ09DZGRU?oc=5"
+    },
+    {
+     "title": "Scott Galloway Picks Meta as AI’s “Big Winner” as Its $35 Billion Raise Lifts the Stock",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNc2JSNUR0dDFYdEswT2NCTWhPVmktRHBmTG05Zi1oM1RiUURHeU1Tb3BEcks2Q042eFotdy1JMDJPWENKMlluTy1mQVFGY1FiWWJ2RGU5M0xDOVpTdGc3SjIwcWlIMnpqS1MzTVBMakF0TzVhVHByaDVBbjNmVjVNcnlEOXk4b0xNR1JLeWIxb2lveDgyS3NsWg?oc=5"
     }
    ]
   },
@@ -965,6 +1084,25 @@
      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNUWwtdGRhOUxDMlR1QWZ2NFJuV1BlWjhmZjVlUmhtTUxtUlZFX0xMeXNSSzl1ZDQwNEJmcDlqVVJ3cjhYVWVFUi16UG05c1lFbkYyUmJYcVhyVmhTOWdFc0tFTmRyVUdKelV4bVJxZ3BtMzA1QXgwRkNVa0FDeEd2eVFobVl3VS1iNXNhUw?oc=5"
     }
    ]
+  },
+  {
+   "id": "88cde10a7366",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia與德國政府達成AI合作協議，涉及算力基礎設施投資。",
+   "date": "2026-10-20",
+   "links": [
+    {
+     "title": "Investment summit: German government strikes AI deal with Nvidia",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPX0NTc2xja3pTa1RlTXBSY0xneWRmZnNQLTY2M2xDV05uZVhBalVQeFV2SFhYa3pRXzFfemFKZDh6VEsxcXhNRlpEdmJiZTdOM1RUa1NPRk9ZVE54MUpPRjk2OHNHb19zSGRxSnNuTTN5UnRUaXdpQUg2eVdLdDFMVGJnQXhEQUVwRUJlMTkyYnotRWdfOEd4Wmd3LVNhVzB3dDY2N0FRTWQ2V0k?oc=5"
+    },
+    {
+     "title": "Germany's Merz urges AI investment ahead of Nvidia deal",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOT09KR2R3TjktZGltSk9PMGtKcGVMeFBuSmR5eTVkMERSbkVuc0d5bGhnanJ2WloyWUtULU1PTkFVQlNhaklmWmJESHF2cEV0Q01YQ3NBb3RxWklLQlNLelBEMzVBSF9nZ09Uc0FjLUhHUmhOeUF1Z0pObndUclVjT0s2Q3Fka2Z6dWltWC1MQ0g5cmo0V1dUeFY0M3hEOE5aSzV3RjdZZ2JFUTU4TEE?oc=5"
+    }
+   ]
   }
  ],
  "impact": {
@@ -977,16 +1115,16 @@
    "text": "Alphabet營收未達預期引發AI支出過度擔憂，同時宣布增加資本支出，現金流壓力加大。此偏向增加公司債供給需求，若市場對AI投資回報率疑慮加深，則長端利率承壓；股市偏向承受賣壓，AI投資熱度則面臨降溫壓力，因高支出與營收未達預期的落差引發效率質疑。"
   },
   "Meta": {
-   "hash": "178925cb60de",
-   "text": "Meta近期大規模融資與AI算力投資偏向提升公司債供給與AI投資熱度。發行27億美元數據中心債券直接增加債券市場供給；Nvidia、AMD合計70億美元投資則反映市場對Meta AI基礎設施的看好。若長端利率上升，可能抬高Meta後續融資成本；若AI投資熱度持續，則偏向支撐科技股表現。整體而言，這些事件指向AI資本支出競賽加劇。"
+   "hash": "0ab494aaad8b",
+   "text": "Meta近期密集發債與融資以支撐AI基礎設施投資，偏向增加公司債供給、推高長端利率。Nvidia與AMD的大額投資承諾反映市場對Meta AI戰略的信心，偏向提振股市與AI投資熱度。若融資順利完成，Meta資本支出加速，則可能進一步拉升科技股估值預期與長期利率。"
   },
   "甲骨文": {
    "hash": "e0cc98a700d0",
    "text": "甲骨文設定資本支出與融資上限，偏向降低公司債供給壓力，長端利率面臨減輕融資需求的下行因素。同時擴大多元晶片供應協議，強化AI基礎設施競爭力，若能實現預期現金流，則對股市與AI投資熱度偏向正面支撐；但融資規模受限，偏向緩和市場對科技巨頭無限融資的預期。"
   },
   "CoreWeave": {
-   "hash": "a015ab60813a",
-   "text": "CoreWeave發債事件偏向增加公司債供給。若高盛預測成立，未來債務規模擴大，則可能推高長端利率以吸引投資者承接更多債券。同時，該公司作為AI基礎設施供應商，融資用途若聚焦擴產能，則偏向支撐AI投資熱度；但債務快速累積也可能引發市場對償債能力的疑慮，進而對股市形成壓力。"
+   "hash": "1e46b01eda54",
+   "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增200至380億美元債券發行將擴大市場供給，可能對長端利率形成上行壓力。同時，龐大融資需求反映其資本密集型業務擴張，偏向支撐AI基礎設施投資熱度，但債務規模快速攀升若引發信用風險疑慮，則可能對相關股票估值產生負面影響。"
   },
   "Anthropic": {
    "hash": "66c361456287",
@@ -997,17 +1135,17 @@
    "text": "OpenAI近期大幅擴張算力採購與融資，偏向增加公司債供給壓力。多筆晶片合約與三十億美元融資需求，若轉化為債券發行，將增加長端利率上行壓力；同時密集的基礎設施投資承諾強化AI產業景氣預期，偏向提升AI投資熱度。惟融資規模與債務結構仍需觀察，對股市影響取決於市場對其盈利能力評估。"
   },
   "亞馬遜": {
-   "hash": "e0992535cd55",
-   "text": "亞馬遜近期密集簽署AI基礎設施合約與衛星收購，反映其對算力資本支出的持續加碼。若此類大額投資持續，偏向增加公司債供給以融資；同時龐大資本支出可能拉升長端利率預期。AI算力需求旺盛的信號，偏向提振AI投資熱度與科技股表現。"
+   "hash": "a57827bddfe6",
+   "text": "亞馬遜近期大幅擴張數據中心與AI基礎設施投資，包括收購衛星公司、簽署超80億美元算力合約，年度資本支出至少200億美元。此舉偏向增加公司債供給以融資龐大支出，同時強化AI競爭力。若資本密集投資持續，則長端利率面臨融資需求壓力；AI投資熱度則因亞馬遜積極布局而偏向升溫。"
   },
   "Nvidia": {
-   "hash": "82d52790e485",
-   "text": "Nvidia近期大型算力合約與反壟斷調查並行。Meta與Hugging Face合作擴大AI基礎設施投資，偏向提升長期算力需求，對Nvidia債券供給與股市偏向正面；但司法部反壟斷調查若升級，則偏向增加監管風險溢價，壓低長端利率與AI投資熱度。整體而言，需求面與風險面拉扯。"
+   "hash": "1a1753b46c8c",
+   "text": "Nvidia近期大額算力合約與Meta、Hugging Face等夥伴深化，偏向強化AI基礎設施需求，支撐其營收成長預期。若財報數據超預期，則利好科技股與AI投資熱度；反之則承壓。惟反壟斷調查增添不確定性，偏向抑制長端利率下行空間。整體而言，事件對公司債供給壓力偏向中性，市場聚焦盈利能力與監管風險平衡。"
   },
   "xAI": {
    "hash": "52f69c51b0c0",
    "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
   }
  },
- "at": "2026-10-29 21:40（台北）"
+ "at": "2026-10-29 23:16（台北）"
 }

@@ -1828,7 +1828,7 @@ html body .fs-story-btn,html body .fs-story-ring{border:0!important;background:n
 html body .fs-story-ring::before,html body .fs-story-ring::after{display:none!important}
 html body .fs-story-ring span,html body .fs-edit-btn{font-size:13px!important;font-weight:700!important;color:var(--text-secondary)!important;background:none!important;border:0!important;border-bottom:1.5px solid currentColor!important;border-radius:0!important;padding:0 0 1px!important;box-shadow:none!important;min-height:0!important}
 html body .fs-head{gap:14px!important;align-items:baseline!important}
-html body .fs-mode-sel{border:0!important;border-bottom:1.5px solid currentColor!important;border-radius:0!important;background-color:transparent!important;padding:0 16px 1px 0!important;box-shadow:none!important}
+html body .fs-mode-sel{border:0!important;border-bottom:0!important;border-radius:0!important;background-color:transparent!important;padding:0 16px 1px 0!important;box-shadow:none!important}
 /* 品牌與來源說明收進展開全文 */
 html body .fs-more .fs-brand{margin-top:12px;padding-top:0}
 html body .fc-fold .hm-zh{display:block!important}html body .fc-fold .hm-zh>p{text-align:left!important;margin:2px 0 0!important}html body .fc-fold h2{white-space:nowrap}
@@ -4962,14 +4962,134 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
   .viz-root:not(#_) .cw-tabs>label{margin-right:14px;font-size:15px}}
 /* 320–360px 的手機：五顆期間按鈕要擠進約 260px，再收一點左右內距 */
 @media(max-width:360px){.viz-root:not(#_) .cw .cw-ctl .cw-btn,.viz-root:not(#_) .cw-weekly .cw-ctl .cw-btn{padding:6px 6px}}
+/* ===== 2026-10-29 晚：今日市場焦點｜今日總覽合併卡、六宮格、視窗內排版 ===== */
+.fx{border:1.5px solid var(--brand-navy);border-radius:16px;background:var(--surface-1);margin:0 0 26px;position:relative}
+.fx-in{position:absolute;opacity:0;pointer-events:none}
+.fx-tabs{display:grid;grid-template-columns:1fr 1px 1fr;align-items:center;background:var(--brand-navy);border-radius:14px 14px 0 0}
+.fx-solo .fx-tabs{grid-template-columns:1fr}
+.fx-l{position:relative;display:block;text-align:center;padding:12px 6px 14px;font-size:15px;font-weight:800;color:rgba(255,255,255,.55);cursor:pointer;letter-spacing:.02em}
+.fx-sep{display:block;height:16px;background:rgba(255,255,255,.28)}
+#fx-t-f:checked~.fx-tabs .fx-lf,#fx-t-o:checked~.fx-tabs .fx-lo,.fx-solo .fx-l{color:#fff}
+#fx-t-f:checked~.fx-tabs .fx-lf::after,#fx-t-o:checked~.fx-tabs .fx-lo::after,.fx-solo .fx-l::after{content:"";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:22px;height:3px;border-radius:2px;background:var(--brand-orange)}
+.fx-dot{display:none;width:7px;height:7px;border-radius:50%;background:var(--brand-orange);margin-left:4px;vertical-align:8px}
+.fx:has(.fs-story-btn:not([hidden]):not(.seen)) .fx-dot{display:inline-block}
+.fx-p{display:none}
+#fx-t-f:checked~.fx-pf,#fx-t-o:checked~.fx-po,.fx-solo .fx-p{display:block}
+.viz-root:not(#_) .fx .focus-strip{border:0;border-radius:0 0 14px 14px;margin:0;box-shadow:none;background:none}
+.viz-root:not(#_) .fx .fs-head:empty{display:none}
+.viz-root:not(#_) .fx .duo{margin:0}
+/* 六宮格：手機 2×3、電腦 3×2；一張卡、1px 線分隔、六格等大 */
+.viz-root:not(#_) .duo-6 .duo-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:1px;background:var(--grid);border:0;border-radius:0 0 14px 14px;overflow:hidden}
+@media(min-width:760px){.viz-root:not(#_) .duo-6 .duo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.viz-root:not(#_) .duo-6 .duo-grid:has(>.duo-card:nth-child(5):last-child)::after,
+.viz-root:not(#_) .duo-6 .duo-grid:has(>.duo-card:nth-child(3n+2):last-child)::after{content:"";background:var(--surface-1)}
+.viz-root:not(#_) .duo-6 .duo-card{position:relative;border:0;border-radius:0;background:var(--surface-1);padding:13px 14px 13px;gap:0;justify-content:flex-start;min-width:0}
+.viz-root:not(#_) .duo-6 .duo-card+.duo-card{border-left:0}
+.viz-root:not(#_) .duo-6 .duo-card:hover{background:var(--surface-2)}
+.viz-root:not(#_) .duo-6 .duo-card::after{content:"";position:absolute;top:16px;right:15px;width:7px;height:7px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:rotate(45deg)}
+.viz-root:not(#_) .duo-6 .duo-k{font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--muted);padding-right:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viz-root:not(#_) .duo-6 .duo-t{font-size:16px;font-weight:800;line-height:1.35;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-primary)}
+.viz-root:not(#_) .duo-6 .duo-map{height:96px;margin:10px 0;display:flex;align-items:center;justify-content:center}
+.viz-root:not(#_) .duo-6 .duo-sum{display:block;margin-top:auto;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viz-root:not(#_) .duo-6 .duo-sum b{color:var(--text-primary);font-weight:700}
+.viz-root:not(#_) .duo-6 .duo-more{display:none}
+@media(min-width:760px){.viz-root:not(#_) .duo-6 .duo-map{height:110px}}
+/* 01：就業 中性 × 通膨 偏高，同字同色、置中 */
+.ud2{display:flex;align-items:center;justify-content:center;gap:22px;width:100%}
+.ud2>span{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ud2>span>span{font-size:16px;font-weight:800;color:var(--text-primary);letter-spacing:.04em;line-height:1.3}
+.ud2 em{font-style:normal;font-size:15px;font-weight:700;color:var(--muted)}
+/* 02：長條＋圖例 */
+.t-chg{display:flex;flex-direction:column;width:100%;gap:8px}
+.t-bar{display:flex;gap:2px;height:10px;width:100%}.t-bar i{border-radius:3px;background:var(--muted-bar)}
+.t-bar i.dovish{background:var(--series-1)}.t-bar i.hawkish{background:var(--serious)}
+.t-lg{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12px;color:var(--muted)}
+.t-lg span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px;background:var(--muted-bar)}
+.t-lg .dovish::before{background:var(--series-1)}.t-lg .hawkish::before{background:var(--serious)}
+/* 03：小月曆 */
+.mc{display:grid;grid-template-columns:repeat(7,1fr);width:100%;text-align:center;font-size:10px;row-gap:1px;color:var(--text-primary)}
+.mc>span{position:relative;height:14px;line-height:14px}
+.mc .mc-w{font-size:9px;color:var(--muted)}
+.mc .mc-ps{color:var(--muted);opacity:.55}
+.mc .mc-to{background:var(--brand-navy);color:#fff;border-radius:3px;font-weight:700}
+.mc i{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);width:3px;height:3px;border-radius:50%}
+.mc .mc-d{background:var(--brand-orange)}.mc .mc-s{background:var(--series-1)}.mc .mc-p{background:var(--good)}
+/* 04：三行結果 */
+.t-rows{display:flex;flex-direction:column;width:100%;gap:6px;font-size:13px}
+.t-rows>span{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+.t-rows>span>span{color:var(--muted)}
+.t-rows b{font-weight:500;color:var(--muted)}.t-rows b.em{font-weight:700;color:var(--text-primary)}
+/* ===== 視窗內 ===== */
+.duo-body .hm-in-sub{margin:0 0 12px;font-size:var(--fs-small);color:var(--muted)}
+.duo-body .hm-in{border:0!important;padding:0!important;margin:0!important;background:none!important;box-shadow:none!important}
+.viz-root:not(#_) .duo-body .hm-hero{border:0;border-radius:0;overflow:visible}
+.viz-root:not(#_) .duo-body .hm-band{background:none;color:var(--text-primary);padding:0 0 4px;border:0}
+.duo-body .hm-band::after{display:none}
+.duo-body .hm-vrow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.viz-root:not(#_) .duo-body .hm-band h2{color:var(--text-primary);margin:0;font-size:22px}
+.viz-root:not(#_) .duo-body .hm-verdict{margin-top:2px;border:1.5px solid var(--brand-navy);background:none}
+.viz-root:not(#_) .duo-body .hm-verdict b{color:var(--text-primary)}
+.viz-root:not(#_) .duo-body .hm-key{color:var(--text-primary)}
+.viz-root:not(#_) .duo-body .hm-layer{padding:0;border:0;background:none}
+.viz-root:not(#_) .duo-body .hm-next{grid-template-columns:1fr auto}
+.viz-root:not(#_) .duo-body .hm-next span{grid-column:1;grid-row:1}
+.viz-root:not(#_) .duo-body .hm-next em{grid-column:2;grid-row:1}
+.viz-root:not(#_) .duo-body .hm-next b,.viz-root:not(#_) .duo-body .hm-next small{grid-column:1/-1}
+.viz-root:not(#_) .duo-body .learn-more{padding:10px 0 0;margin:0}
+/* 整體情勢：狀態點＋標籤＋一段話，不加框 */
+.viz-root:not(#_) .duo-body .hm-brs{display:flex;flex-direction:column;gap:2px}
+.viz-root:not(#_) .duo-body .hm-br{display:grid;grid-template-columns:78px 1fr;gap:8px;padding:6px 0;border:0;background:none}
+.viz-root:not(#_) .duo-body .hm-br b{font-size:var(--fs-small);display:flex;align-items:center;gap:6px;align-self:start;line-height:1.85}
+.viz-root:not(#_) .duo-body .hm-br p{margin:0;font-size:var(--fs-small);line-height:1.8}
+/* 四大模組：收合時一行文字摘要；展開時四張淺灰小卡 */
+.viz-root:not(#_) .duo-body .hm-ms4 .hm-dot{display:none}
+.viz-root:not(#_) .duo-body .hm-ms4 span{font-size:var(--fs-small);font-weight:500;color:var(--muted)}
+.viz-root:not(#_) .duo-body .hm-ms4{gap:2px 10px}
+.duo-body .hm-modx[open] .hm-ms4{display:none}
+.viz-root:not(#_) .duo-body .hm-mrs{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:0}
+@media(min-width:760px){.viz-root:not(#_) .duo-body .hm-mrs{grid-template-columns:repeat(4,1fr)}}
+.viz-root:not(#_) .duo-body .hm-mr{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:6px;background:var(--surface-2);border:0;border-radius:10px;padding:10px 12px}
+.viz-root:not(#_) .duo-body .hm-mr-l{display:flex;flex-direction:column;gap:2px}
+.viz-root:not(#_) .duo-body .hm-mr-v{display:flex;flex-direction:column;gap:2px}
+.viz-root:not(#_) .duo-body .hm-mr-v>span{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.viz-root:not(#_) .duo-body .hm-mr-v em{font-style:normal;font-size:var(--fs-micro);color:var(--muted)}
+.viz-root:not(#_) .duo-body .hm-mr-v b{font-size:var(--fs-small)}
+.viz-root:not(#_) .duo-body .hm-mr-go{position:absolute;top:8px;right:10px}
+.viz-root:not(#_) .duo-body .hm-mr *{border:0}
+/* 03 視窗：列表｜月曆膠囊 */
+.viz-root:not(#_) .wv-pill{display:inline-flex;border:1.5px solid var(--brand-navy);border-radius:999px;overflow:hidden;margin:0 0 12px;font-size:13px}
+.viz-root:not(#_) .wv-pill label{padding:4px 16px;font-weight:800;color:var(--brand-ink);cursor:pointer}
+.viz-root:not(#_) .hm-zone:has(#hm-view-cal:checked) .wv-pill label[for=hm-view-cal],
+.viz-root:not(#_) .hm-zone:has(#hm-view-list:checked) .wv-pill label[for=hm-view-list]{background:var(--brand-navy);color:#fff}
+.viz-root:not(#_) .hm-zone:has(#hm-view-cal:checked) .wv-pill label[for=hm-view-list],
+.viz-root:not(#_) .hm-zone:has(#hm-view-list:checked) .wv-pill label[for=hm-view-cal]{background:none;color:var(--brand-ink);font-weight:800}
+/* 今日主軸：固定露出四行，第四行淡出 */
+.viz-root:not(#_) .fs-more.fs-clip{max-height:var(--clip,calc(14.5px * 1.85 * 4));overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.viz-root:not(#_) .fs-more.fs-clip .fs-main:first-child{margin-top:0}
+.viz-root:not(#_) .fs-tog[hidden]{display:none}
+.viz-root:not(#_) .fs-more .fs-reflinks{margin-top:10px}
+/* 通膨頁關鍵數字（2026-10-29）：少線——狀態改成數字旁小標籤，只留卡與卡之間的線 */
+.viz-root:not(#_) .kpi-c .k-vrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:4px}
+.viz-root:not(#_) .kpi-c .k-value{margin-top:0}
+.viz-root:not(#_) .kpi-c .k-tags{display:flex;flex-wrap:wrap;gap:4px}
+.k-tag{font-size:11.5px;font-weight:700;border-radius:4px;padding:1px 6px;white-space:nowrap;background:var(--surface-2);color:var(--muted)}
+.k-tag.haw{background:rgba(173,79,39,.12);color:var(--serious)}
+.k-tag.dov{background:rgba(47,109,181,.12);color:var(--series-1)}
+.k-tag.wat{background:rgba(214,158,46,.16);color:var(--text-primary)}
+.viz-root:not(#_) .kpi-c .k-s2,.viz-root:not(#_) .kpi-c .k-s3,.viz-root:not(#_) .kpi-c .k-s4{border:0;padding-top:0;margin-top:0}
+.viz-root:not(#_) .kpi-c .k-s2:empty,.viz-root:not(#_) .kpi-c .k-s3:empty{display:none}
+.viz-root:not(#_) .kpi-c .k-more2{margin-top:6px;border:0}
+.viz-root:not(#_) .kpi-c .k-more2>summary{border:0;padding-top:0;font-size:12.5px;color:var(--muted);font-weight:500}
+.viz-root:not(#_) .kpi-c .k-side{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
 </style>
 <script type="speculationrules">
 {"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}
 </script>
 </head>
 <body>
-<!-- 更新於 2026-10-29 21:41（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>21:41</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>09:41</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>13:41</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-10-29 23:18（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">10/29</span></span><div class="upd-c"><span>台北</span><b>23:18</b><i>10/29</i></div><div class="upd-c"><span>紐約</span><b>11:18</b><i>10/29</i></div><div class="upd-c"><span>倫敦</span><b>15:18</b><i>10/29</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/" class="on" aria-current="page">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>流動性</h1><div class="sub">Liquidity　·　資料截止 2026-10-29</div></div>
