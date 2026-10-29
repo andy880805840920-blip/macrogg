@@ -1622,7 +1622,7 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         fomc_next=((fom.get("next_meeting")) or {}).get("date"),
         fomc_desc="聲明與投票可能改變重心——重心一翻，同一格的結論就不同。",
         trig={"employment": _trig("就業轉"), "cpi": _trig("通膨轉"),
-              "pce": _trig("通膨轉")}, weeks=weeks)
+              "pce": _trig("通膨轉")}, weeks=weeks, keep_today=True)
     # 發債／官員談話也照數據列的格式：week、label、when、name、sub
     mon = today - dt.timedelta(days=today.weekday())
     start = mon + dt.timedelta(days=7 if today.weekday() >= 5 else 0)
@@ -1644,26 +1644,26 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         except (TypeError, ValueError):
             continue
         tpe = wc.taipei_time(d, (13, 0))
-        if tpe <= now or not start <= d <= end:
+        if (tpe <= now and tpe.date() != today) or not start <= d <= end:   # 今天已過的留著、標已結束
             continue
         sub = ("已公告" + (f"・{a['amount']}" if a.get("amount") else "")
                if a.get("src") == "財政部公告" else "財政部暫定時程")
         supply.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                        "when": _hm_when(tpe, d, today), "name": a.get("name", "公債標售"),
-                       "sub": sub, "tag": "標售"})
+                       "sub": sub, "tag": "標售", "done": tpe <= now})
     for b in wx.get("buybacks") or []:
         try:
             d = dt.date.fromisoformat(b["date"])
         except (TypeError, ValueError):
             continue
         tpe = wc.taipei_time(d, tuple(b.get("end") or (14, 0)))
-        if tpe <= now or not start <= d <= end:
+        if (tpe <= now and tpe.date() != today) or not start <= d <= end:
             continue
         supply.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                        "when": _hm_when(tpe, d, today),
                        "name": f"國債回購・{b.get('segment', '')}",
                        "sub": f"{b.get('purpose', '')}・{b.get('max', '')}・財政部暫定時程",
-                       "tag": "回購"})
+                       "tag": "回購", "done": tpe <= now})
     speeches = []
     for x in wx.get("speeches") or []:
         et = x.get("et")
@@ -1674,7 +1674,7 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                 continue
         d = et.date()
         tpe = wc.taipei_time(d, (et.hour, et.minute))
-        if tpe <= now or not start <= d <= end:
+        if (tpe <= now and tpe.date() != today) or not start <= d <= end:
             continue
         # 第十九批（使用者指定）：官員名字寫英文
         who = f"{x.get('role', '')} {x.get('name', '') or x.get('zh', '')}".strip()
@@ -1682,7 +1682,7 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         speeches.append({"week": _wk(tpe.date()), "tpe": tpe, "label": _hm_label(tpe.date()),
                          "when": _hm_when(tpe, d, today) if x.get("time_known", True) else "時間未定",
                          "name": who, "sub": sub, "voter": x.get("voter"),
-                         "src": x.get("src", "")})
+                         "src": x.get("src", ""), "done": tpe <= now})
     # 2026-10-29：靜默期開始列進「官員談話」（美東當天 00:00 起，官員不再公開談貨幣政策）
     _nm = fom.get("next_meeting") or {}
     if _nm.get("blackout_start"):
@@ -1744,8 +1744,11 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         return esc(head) + (f'<span class="hm-hol-tw">{esc(sep + tw)}</span>' if sep else "")
 
     # ---- 2026-10-29：列表與月曆共用同一種事件列（時間・符號・名稱・預估前值），依日期分組 ----
-    def _wv_row(t, mk, name, sub="", tag="", extra=""):
-        return (f'<div class="wv-ev"><span class="wv-t">{esc(t)}</span>{mk}<div class="wv-b">'
+    def _wv_row(t, mk, name, sub="", tag="", extra="", done=""):
+        # done：今天已經過了的（「已公布」「已結束」），整列淡化、留在原位
+        if done:
+            tag = f'<em class="wv-dn">{done}</em>' + tag
+        return (f'<div class="wv-ev{" wv-done" if done else ""}"><span class="wv-t">{esc(t)}</span>{mk}<div class="wv-b">'
                 f'<span class="wv-nm">{esc(name)}{tag}</span>'
                 + (f'<span class="wv-cs">{sub}</span>' if sub else "") + extra + '</div></div>')
 
@@ -1763,13 +1766,13 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         extra = (f'<details class="wv-tr"><summary>近 6 期走勢</summary>{_trend[e["key"]]}</details>'
                  if hi and _trend.get(e["key"]) else "")
         return _wv_row(e["tpe"].strftime("%H:%M"), f'<i class="mk mk-d{"" if hi else " mk-o"}"></i>', e["name"], sub,
-                       '<em class="wv-hi">高影響</em>' if hi else "", extra)
+                       '<em class="wv-hi">高影響</em>' if hi else "", extra, "已公布" if e.get("done") else "")
 
     def _wv_x(e, k):
         t = "未定" if e.get("when") == "時間未定" else e["tpe"].strftime("%H:%M")
         name = e["name"]
         return _wv_row(t, f'<i class="mk mk-{k}"></i>', name, esc(e.get("sub") or ""),
-                       '<em class="wv-vt">票委</em>' if e.get("voter") else "")
+                       '<em class="wv-vt">票委</em>' if e.get("voter") else "", "", "已結束" if e.get("done") else "")
 
     def _wv_hol(e):
         tag, st_ = mh.status_text(e)
@@ -1799,15 +1802,17 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         wk = [e for e in rows if e.get("week") == w]
         # 2026-10-29：不再用大卡區分高影響，同一天的依時間排成同一種列
         body = _wv_days([(e["tpe"].date(), _wv_data(e)) for e in sorted(wk, key=lambda e: e["tpe"])])
+        # 本週剩下的都過了：說清楚、給一個「看下週」
+        _nx = '<label class="wv-nx" for="hm-wk-1">看下週 ›</label>' if w == 0 and weeks > 1 else ""
         if not wk:
-            body = '<p class="home-empty">這一週沒有排定的重要發布。</p>'
+            body = f'<p class="home-empty">{"本週剩下沒有排定的數據發布。" if w == 0 else "這一週沒有排定的重要發布。"}{_nx}</p>'
         sw = [e for e in supply if e["week"] == w]
         pw = [e for e in speeches if e["week"] == w]
         sup_html = (_wv_days([(e["tpe"].date(), _wv_x(e, "s")) for e in sw]) if sw else
-                    '<p class="home-empty">這一週沒有排定的附息公債標售或國債回購。</p>')
+                    f'<p class="home-empty">{"本週剩下" if w == 0 else "這一週"}沒有排定的附息公債標售或國債回購。{_nx}</p>')
         spk_html = (_wv_days([(e["tpe"].date(), _wv_x(e, "p")) for e in pw]) if pw else
                     '<p class="home-empty">' + ("目前只排得到理事會成員的行程；地區聯儲總裁的談話要到該週才公布。"
-                                                if w >= 1 else "這一週沒有排定的官員談話。") + '</p>')
+                                                if w >= 1 else "本週剩下沒有排定的官員談話。") + _nx + '</p>')
         hw = _hgroups([e for e in hols if a_ <= e["date"] <= b_])
         hol_html = (_wv_days([(e["date"], _wv_hol(e)) for e in hw])
                     if hw else '<p class="home-empty">這一週七個市場都正常交易。</p>')
@@ -1908,7 +1913,8 @@ var dds=root.querySelectorAll('.hc-dd'),empty=root.querySelector('.hc-dd-none');
 function pick(d,btn){Array.prototype.forEach.call(root.querySelectorAll('.hc-d.hc-sel'),function(x){x.classList.remove('hc-sel');});
  if(btn)btn.classList.add('hc-sel');var hit=false;
  Array.prototype.forEach.call(dds,function(x){var on=x.getAttribute('data-d')===d;x.hidden=!on;if(on)hit=true;});
- if(empty){empty.hidden=hit;var h=empty.querySelector('b');if(h&&btn)h.textContent=btn.getAttribute('data-l')||'';}}
+ if(empty){empty.hidden=hit;var h=empty.querySelector('b'),s=empty.querySelector('.wv-dh span');if(h&&btn)h.textContent=btn.getAttribute('data-l')||'';
+ if(s&&btn)s.hidden=!btn.classList.contains('hc-today');}}
 root.addEventListener('click',function(e){var b=e.target.closest?e.target.closest('.hc-d[data-d]'):null;if(!b)return;
  pick(b.getAttribute('data-d'),b);});
 var first=root.querySelector('.hc-d.hc-today')||root.querySelector('.hc-d[data-d]');
@@ -2013,7 +2019,7 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
     return ('<div class="hm-cal">' + filt + "".join(radios)
             + f'<div class="hc-ms">{"".join(panels)}</div>'
             + f'<div class="hc-dds">{"".join(dds)}'
-            + '<div class="hc-dd hc-dd-none" hidden><div class="wv-dh"><b></b></div>'
+            + '<div class="hc-dd hc-dd-none" hidden><div class="wv-dh"><b></b><span hidden>今天</span></div>'
               '<p class="home-empty">這一天沒有排定的事項。</p></div></div>'
             + '<p class="wv-cnt">點類別隱藏／顯示・點日期看當天・台灣時間</p></div>')
 
