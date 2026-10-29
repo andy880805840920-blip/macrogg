@@ -465,14 +465,23 @@ class FomcSource:
             log.warning("FOMC 委員名單解析失敗，委員區本次不顯示")
 
         out["speeches"] = fx.parse_speech_feed(self._get(SPEECH_FEED_URL) or "")
+        # 2026-10-29：官員立場要讀演講內容——近 90 天談政策的演講，只留談利率的句子
+        _since = (today - dt.timedelta(days=90)).isoformat()
+        out["speech_texts"] = {}
+        for sp in out["speeches"]:
+            if sp.get("date", "") >= _since and fx.POLICY_TITLE.search(sp.get("title", "")):
+                txt = fx.policy_sentences(self._get(sp["url"]) or "")
+                if txt:
+                    out["speech_texts"][sp["url"]] = txt
         out["events"] = fx.parse_calendar_json(self._get(FED_CALENDAR_JSON) or "")
         return out
 
-    def news(self, officials: list, days: int = 14) -> dict:
+    def news(self, officials: list, days: int = 90, limit: int = 6) -> dict:
         """
         官員的近期新聞標題（Google News RSS）：{姓: [{title, source, date, url}]}。
-        只查投票委員。地方總裁沒有統一的官方演講來源，這是唯一的管道；
+        地方總裁沒有統一的官方演講來源，這是唯一的管道；
         失敗就不顯示，不記進「資料來源失敗」清單（不是官方資料）。
+        2026-10-29：官員立場要看近 90 天的表態——改查 90 天、每人最多 limit 則、候補委員也查。
         """
         from concurrent.futures import ThreadPoolExecutor
         from urllib.parse import quote_plus
@@ -487,12 +496,12 @@ class FomcSource:
                                      headers={"User-Agent": "Mozilla/5.0 (macro-dashboard)"})
                 if r.status_code != 200:
                     return o["surname"], []
-                return o["surname"], fx.parse_news_rss(r.text, o["surname"])
+                return o["surname"], fx.parse_news_rss(r.text, o["surname"], limit)
             except Exception as e:                    # noqa: BLE001
                 log.info("官員新聞抓取失敗（%s）：%s", o["surname"], e)
                 return o["surname"], []
 
-        targets = [o for o in officials if o.get("voter")]
+        targets = list(officials)
         with ThreadPoolExecutor(max_workers=4) as ex:
             return {k: v for k, v in ex.map(one, targets) if v}
 
