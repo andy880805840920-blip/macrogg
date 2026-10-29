@@ -182,7 +182,85 @@
   "c0b42597c9ed": "2026-10-23",
   "fbe40dbb538b": "2026-10-21",
   "76dcfa681862": "2026-10-21",
-  "bf6dbebc5791": "2026-10-20"
+  "bf6dbebc5791": "2026-10-20",
+  "2fd80e2045e3": "2026-10-29",
+  "050fde4869f3": "2026-10-29",
+  "8ffacca5513d": "2026-10-29",
+  "ca1a0866dd05": "2026-10-28",
+  "391672a45826": "2026-10-28",
+  "53d76a61caf1": "2026-10-28",
+  "63b95d27937d": "2026-10-28",
+  "c90a85e7844b": "2026-10-28",
+  "c1bb9f42971c": "2026-10-29",
+  "f4ea92311f63": "2026-10-29",
+  "a880883d38cd": "2026-10-29",
+  "8956aa9ef3cb": "2026-10-29",
+  "007bb92f1d09": "2026-10-29",
+  "3b7aabfc1797": "2026-10-29",
+  "e7716f5874b3": "2026-10-29",
+  "a6e140fd7b0a": "2026-10-29",
+  "1c2465d8be6c": "2026-10-29",
+  "98258fad5310": "2026-10-26",
+  "a4844a865018": "2026-10-26",
+  "a560fc06fc76": "2026-10-26",
+  "cf4366d15f08": "2026-10-26",
+  "2882ed950259": "2026-10-26",
+  "a8e9028f68f8": "2026-10-26",
+  "d38fb947682e": "2026-10-26",
+  "716c1461cc28": "2026-10-28",
+  "9d2d5d7f1fff": "2026-10-27",
+  "971870895b68": "2026-10-27",
+  "d55522efd585": "2026-10-27",
+  "cbbc44cc22b1": "2026-10-26",
+  "59a0b2017f5a": "2026-10-26",
+  "bc022fd5d77b": "2026-10-26",
+  "f09042f25e27": "2026-10-26",
+  "d49593b3f689": "2026-10-22",
+  "13dbf92a9908": "2026-10-19",
+  "00572de79eaa": "2026-10-17",
+  "2a7944af984c": "2026-10-16",
+  "e6191294ac01": "2026-10-29",
+  "db1a82a13b51": "2026-10-29",
+  "ff893ec327b1": "2026-10-29",
+  "b9cffe7907c6": "2026-10-29",
+  "b992df0a8135": "2026-10-28",
+  "45ef12613660": "2026-10-28",
+  "0727fedcfe1b": "2026-10-27",
+  "3f7bc3eeee4d": "2026-10-27",
+  "873f4080ed24": "2026-10-26",
+  "75d3c791e8a8": "2026-10-26",
+  "cab870440daf": "2026-10-26",
+  "bccdcc985371": "2026-10-26",
+  "ad4d2078da98": "2026-10-27",
+  "2d1ee83656b1": "2026-10-25",
+  "9e3ef4b31ae0": "2026-10-23",
+  "ce5d688e9867": "2026-10-22",
+  "a99822b81924": "2026-10-22",
+  "427eb3babcf8": "2026-10-22",
+  "5e98ce8f9493": "2026-10-20",
+  "cc4a6163b6ef": "2026-10-20",
+  "e83fc953fcb7": "2026-10-29",
+  "9fa3b94b3890": "2026-10-29",
+  "c615cb3c8369": "2026-10-29",
+  "dcc3740ddbc0": "2026-10-28",
+  "238d67c9d8eb": "2026-10-28",
+  "1a90e6723d59": "2026-10-28",
+  "f98af73a7ba3": "2026-10-28",
+  "30bade1d4a6d": "2026-10-27",
+  "f3d90b641b22": "2026-10-29",
+  "ee87128aca15": "2026-10-16",
+  "96b6f91e3ef8": "2026-10-29",
+  "d8c55b9111b9": "2026-10-29",
+  "8ae8ae71668d": "2026-10-29",
+  "1e28d84b8976": "2026-10-29",
+  "f872c329b123": "2026-10-29",
+  "3e7c2d819299": "2026-10-29",
+  "37f93de6c7da": "2026-10-23",
+  "b4715d3c47ad": "2026-10-20",
+  "bc2a994ca7e2": "2026-10-20",
+  "e667db9e6bfb": "2026-10-20",
+  "2d17d87fef50": "2026-10-19",
+  "5d136b2c04f2": "2026-10-19"
  },
  "events": [
   {
@@ -319,6 +397,20 @@
    ]
   },
   {
+   "id": "56c948693030",
+   "co": "微軟",
+   "type": "發債",
+   "zh": "微軟啟動自2017年以來首次美元高級債券發行。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Microsoft Kicks Off First US High-Grade Bond Sale Since 2017",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNVW1FNlVmV2VIM1BicUxLa0t2X2xDaDF5X0dScC0tVmlnX1Z3OGJYVWRVcGtJaGx4R3cwR3E3cFA0enExcXhNUE01bWdyYXl5Z1paeVYyV284SDFkVTFFeWdPYTVLODVMZ29UbzVkSzA0Vlhxc1JlNEhwMnVhMVMzQzU4cmVqdGJEY1I5X0tkaGdkZ1VTQm1JREFoYUV4Q183cFVKT1hQS3JhTkdYbHVwbw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "e2a4cd8c3c8f",
    "co": "CoreWeave",
    "type": "發債",
@@ -433,6 +525,20 @@
    ]
   },
   {
+   "id": "5898a3fc98d0",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia與Hugging Face達成129億美元交易，惟遭美國司法部反壟斷調查。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Nvidia faces DOJ antitrust scrutiny over $12.9B Hugging Face deal, Reuters says",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPVm55WFJSMlR2b1A5ZVNVei1rM05xdks5Q1dlMDBjdnRxNThZTmpBbGp3RVZRUjVwX2VWYjNoWHFiQXRQUGF1MDBDQnhxLTRTenhUWmptWjZhUC05YXZTR0dpcGN3ZXJzUzhjUTR0c2pIRWZ1Y2d5bWRHZ1dqajI1T2Q3VWNqMndlTmxxTURraktzWnBJNi1DNVVNRXNEc1Q3?oc=5"
+    }
+   ]
+  },
+  {
    "id": "5a397aaf548e",
    "co": "Meta",
    "type": "發債",
@@ -518,6 +624,20 @@
    ]
   },
   {
+   "id": "041e3cd66454",
+   "co": "亞馬遜",
+   "type": "算力合約",
+   "zh": "Verizon與AWS簽署超20億美元AI基礎設施合作協議。",
+   "date": "2026-10-26",
+   "links": [
+    {
+     "title": "Verizon lifts annual forecasts, signs more than $2 billion AI infrastructure deal with AWS",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNUXJNWmV4Ny1ON2FmYXdrclBkWWdrZXdfX2JHLUdoZ3ZLamJNdHl1NHc3RDk4TWUxZVRZMUN2QTVvMk01Ujk4Wmk2ejZOT3h3UmlWUmp6S0lLVHBSZmVvQ0c0Sm1xYVVMNXN4M2JkNWtKVUpoWEd4YloyWVJBME8tb0htQnhzNzA5V1ZWWlE5cE10a25nNWtxQmc5dDlGdF9MZzRYMllaMHI5eXlINXpCeVJKZmVFRmttRmFQZUtFOTNDNEx2OUlGemNBV1FuLUNDdWdFZQ?oc=5"
+    }
+   ]
+  },
+  {
    "id": "1e260372358f",
    "co": "xAI",
    "type": "算力合約",
@@ -572,8 +692,8 @@
  ],
  "impact": {
   "微軟": {
-   "hash": "8454d3e8dab5",
-   "text": "微軟Q1雲端成長超預期，偏向提升市場對其盈利穩定性的信心，可能緩解對科技公司債務風險的擔憂，利於公司債供給；資本支出低於預期則暗示AI基礎設施投資步伐放緩，若此趨勢持續，可能削弱市場對AI產業景氣的樂觀度，偏向降低AI相關投資熱度。整體而言，盈利強勁偏向支撐股市，但資本支出疲軟偏向對長端利率形成溫和下行壓力。"
+   "hash": "c8e7baf02435",
+   "text": "微軟雲端業績超預期但資本支出低於預期，偏向降低其近期融資需求；然而啟動八年來首次高級債券發行，暗示長期融資需求或利率環境考量。綜合來看，事件對公司債供給偏向增加，對長端利率偏向溫和上升壓力；雲端成長超預期則偏向支撐AI投資熱度。"
   },
   "Alphabet": {
    "hash": "4d46737b3e51",
@@ -600,17 +720,17 @@
    "text": "OpenAI近期密集簽署算力合約並完成融資，偏向提升AI投資熱度。大規模採購晶片與擴展雲端合作，反映其資本支出需求上升，若融資規模持續擴大，則公司債供給偏向增加以支應建置成本。此舉強化市場對AI產業景氣的預期，偏向支撐科技股表現，進而對長端利率形成上升壓力。"
   },
   "亞馬遜": {
-   "hash": "ec065524c260",
-   "text": "亞馬遜收購Globalstar用於衛星通訊基礎設施，屬戰略性資本支出增加。此舉偏向提升公司長期債務融資需求，若後續類似大額併購持續，則公司債供給壓力上升。同時反映科技巨頭在AI與通訊領域的投資熱度，可能吸引市場對科技股的關注，但短期內對長端利率影響有限。"
+   "hash": "c413d5eefa6b",
+   "text": "亞馬遜近期資本支出與AI算力合約擴張，偏向增加公司債供給需求。收購Globalstar與Verizon合作均涉及大額資本投入，若融資需求上升，則公司債發行壓力增加，長端利率面臨上行壓力。同時AI基礎設施投資熱度升溫，偏向支撐科技股表現，強化AI投資熱度。"
   },
   "Nvidia": {
-   "hash": "2ab297fd7a51",
-   "text": "Nvidia與Meta擴展AI基礎設施合作、投資30億美元深化夥伴關係，偏向強化其算力供應鏈穩定性，可能降低公司債融資需求。若大型科技客戶長期鎖定採購，則減少市場對Nvidia融資的預期，偏向壓低長端利率。同時大額合約確認偏向提振AI投資熱度，支撐科技股估值預期。"
+   "hash": "82d52790e485",
+   "text": "Nvidia近期大型算力合約與反壟斷調查並行。Meta與Hugging Face合作擴大AI基礎設施投資，偏向提升長期算力需求，對Nvidia債券供給與股市偏向正面；但司法部反壟斷調查若升級，則偏向增加監管風險溢價，壓低長端利率與AI投資熱度。整體而言，需求面與風險面拉扯。"
   },
   "xAI": {
    "hash": "52f69c51b0c0",
    "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
   }
  },
- "at": "2026-10-29 18:50（台北）"
+ "at": "2026-10-29 20:10（台北）"
 }
