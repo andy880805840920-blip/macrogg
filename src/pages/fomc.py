@@ -268,14 +268,14 @@ def _person_detail(o: dict, pid: str, show: bool) -> str:
         talk.append('<div class="sp-i muted">近期沒有談利率的演講或報導</div>')
     tag_cls = DIR_CLS.get(o["lean"], "neutral")
     _st = o.get("stance") or "neutral"
-    bl += (f'<span class="fx-tag {DIR_CLS.get(_st, "neutral")}">立場：{esc(fx.STANCE_ZH.get(_st, "中立"))}'
-           f'（{esc(o.get("stance_src", ""))}）</span>')
+    bl += f'<span class="fx-tag {DIR_CLS.get(_st, "neutral")}">立場：{esc(fx.STANCE_ZH.get(_st, "中立"))}</span>'
     return (f'<div class="od" id="od-{pid}" data-p="{pid}"{"" if show else " hidden"}>'
             f'<div class="od-head"><span class="ot-av big {tag_cls}">{esc(_initials(o))}</span>'
             f'<div><div class="od-name">{esc(o["name"])}</div>'
             f'<div class="od-title">{esc(o["title"])}</div><div class="od-bs">{bl}'
             f'<span class="fx-tag {tag_cls}">{esc(o["dissent_tag"])}</span></div></div></div>'
             + (f'<div class="fx-pnote">{esc(o["note"])}</div>' if o.get("note") else "")
+            + (f'<div class="fx-pnote">立場依據：{esc(o["stance_src"])}</div>' if o.get("stance_src") else "")
             + _vote_strip(o.get("votes") or [])
             + f'<div class="od-talk"><div class="vs-h">近期發言</div>{"".join(talk)}</div>'
             + '</div>')
@@ -331,9 +331,10 @@ def _people_html(d: dict) -> str:
                    + sbranch("hawkish", "鷹派", [o for o in _ord if o.get("stance") == "hawkish"])
                    + sbranch("neutral", "中立", [o for o in _ord if o.get("stance") not in ("hawkish", "dovish")])
                    + sbranch("dovish", "鴿派", [o for o in _ord if o.get("stance") == "dovish"])
-                   + '<p class="ot-stn">立場怎麼分：近 12 個月投過反對票的，依反對方向（主張升息＝鷹派、主張降息＝鴿派）；'
-                     '其餘依本站整理的手動清單（參考 <a href="https://fattail.ai/fed-bias-board/" target="_blank" rel="noopener">'
-                     'FatTail Fed Bias Board</a>），不是聯準會的官方分類。虛線框＝今年不投票。</p></div>')
+                   + '<p class="ot-stn">立場怎麼分：先看近 3 場會議的反對票；沒有的話，看近 90 天最近一則明確表態的發言'
+                     '（官方演講內容或新聞標題，由 AI 判斷主張再升息、暫停觀望或降息，必須附原文引句）；都沒有＝中立。'
+                     '方向相對於目前的升息循環：主張再升＝鷹派，主張暫停、觀望或降息＝鴿派。本站規則，不是聯準會的官方分類；'
+                     '點人物可看依據。虛線框＝今年不投票。</p></div>')
     tree = (f'<div class="ot" data-ot>'
             '<div class="ot-view" role="group" aria-label="分組方式">'
             '<button type="button" data-v="role" aria-pressed="true">依投票身分</button>'
