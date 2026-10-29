@@ -1897,6 +1897,10 @@ html body .hm-wk-a.off{opacity:.25}
 .wv-nm{font-size:14.5px;font-weight:700;color:var(--brand-ink)}
 .wv-hi{font-style:normal;font-size:10.5px;font-weight:800;color:var(--brand-orange-ink);border:1px solid currentColor;border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
 .wv-vt{font-style:normal;font-size:10.5px;font-weight:700;color:var(--muted);border:1px solid var(--grid);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+/* 2026-10-29 晚：今天已公布／已結束的留在原位、淡化 */
+html body .wv-ev.wv-done .wv-t,html body .wv-ev.wv-done .wv-nm,html body .wv-ev.wv-done .wv-cs,html body .wv-ev.wv-done>.mk{opacity:.5}
+.wv-dn{font-style:normal;font-size:10.5px;font-weight:700;color:var(--muted);background:var(--grid);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+.wv-nx{margin-left:8px;color:var(--brand-ink);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .wv-cs{display:block;font-size:12.5px;color:var(--text-secondary);margin-top:1px}.wv-cs b{color:var(--brand-ink)}
 .wv-tr{margin-top:2px}.wv-tr>summary{list-style:none;cursor:pointer;font-size:12px;color:var(--series-1);font-weight:600}
 .wv-tr>summary::-webkit-details-marker{display:none}.wv-tr>summary::after{content:" ›"}
