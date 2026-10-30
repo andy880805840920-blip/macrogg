@@ -362,7 +362,7 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     _du3 = diff(u3)
     if _du3 is not None:
         _ul.append(("本期：持平", "neutral") if abs(_du3) < 0.05 else
-                   (f"本期：{'+' if _du3 > 0 else '-'}{abs(_du3):.1f}",
+                   (f"本期：比上月 {'+' if _du3 > 0 else '-'}{abs(_du3):.1f}",
                     "dovish" if _du3 > 0 else "hawkish"))
     _al = []
     if ahe_yoy is not None:
@@ -374,13 +374,13 @@ def build_labor_context(cfg: dict, series: dict, vintages: dict,
     if ahe_yoy is not None and _pa is not None:
         _da = ahe_yoy - _pa
         _al.append(("本期：持平", "neutral") if abs(_da) < 0.1 else
-                   (f"本期：{'+' if _da > 0 else '-'}{abs(_da):.1f}",
+                   (f"本期：比上月 {'+' if _da > 0 else '-'}{abs(_da):.1f}",
                     "hawkish" if _da > 0 else "dovish"))
     _dlf = diff(lfpr)
     kpi_lean = {
         "nfp": tuple(_nl), "u3": tuple(_ul), "ahe": tuple(_al),
         "lfpr": ((("本期：持平" if abs(_dlf) < 0.05 else
-                   f"本期：{'+' if _dlf > 0 else '-'}{abs(_dlf):.1f}"),
+                   f"本期：比上月 {'+' if _dlf > 0 else '-'}{abs(_dlf):.1f}"),
                   "neutral"),) if _dlf is not None else (),
     }
 
