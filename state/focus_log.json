@@ -1,74 +1,5 @@
 [
  {
-  "at": "2026-10-26T14:16+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 9.0,
-    "sources": 1,
-    "titles": [
-     "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "titles": [
-     "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "titles": [
-     "Oil prices, Fed policy decision to steer rupee, bonds this week - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "titles": [
-     "Gold gains as oil price slide cools some inflation concerns - Reuters"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "titles": [
-     "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "titles": [
-     "Trump’s Trade General Fights Back as Tariffs Become Toxic - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "titles": [
-     "US futures steady as oil retreats ahead of earnings deluge, Fed decision - Reuters"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "titles": [
-     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
-    ]
-   }
-  ],
-  "main": "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters",
-  "result": "聯準會 10/28 會議在即，市場關注華許政策訊息與 12 月動向"
- },
- {
   "at": "2026-10-26T23:14+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2877,5 +2808,105 @@
    ]
   },
   "result": "9月PCE月增0.5%創七個月最大增幅聯準會對年底升息保持開放"
+ },
+ {
+  "at": "2026-10-30T14:09+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims",
+   "gdp_adv"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "BOJ Inflation Target Signal Supports Yen Gains, Strategists Say - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Yields Too High to Ignore Lure Investors Back to Long-Dated Debt - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Extend Rally With Global Peers on Tech Stock Selloff - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Tokyo core inflation exceeds BOJ target in October - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "COMMENTARY: Warsh's muddled messaging revives Fed credibility doubts - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Deutsche Bank Says ‘AI Dollar’ Is Here, Haven Bias Less Certain - Bloomberg"
+    ]
+   }
+  ],
+  "background": [
+   "物價持穩有底氣！國發會葉俊顯：全年CPI維持約2% 經濟成長率可望再上調",
+   "最大加密盜竊之一波及63億美元　幣安證實遭複雜攻擊現多處漏洞"
+  ],
+  "main": "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg",
+  "main_why": "最高分",
+  "second": "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters",
+  "points": 2,
+  "thin": [
+   "",
+   "重點二"
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "主軸 183 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": []
+  },
+  "result": "日本央行維持利率不變，稱通膨趨勢已達 2% 目標"
  }
 ]

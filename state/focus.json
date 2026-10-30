@@ -1,12 +1,12 @@
 {
  "hash": "",
- "text": "10/29公布的9月PCE物價指數月增0.5%，創3月以來最大增幅，顯示通膨壓力依舊頑強。聯準會本週維持利率不變，但官員對年底前進一步升息保持開放態度。中東地緣局勢持續升溫，加上美國可能在期中選舉後重啟對伊朗的軍事打擊行動，激勵油價上揚並推升能源通膨疑慮。¶川普政府的關稅政策未能縮減美國貿易逆差，根據 IW 報告顯示。這份報告檢視了川普任內實施的關稅措施，發現儘管對進口商品課徵高額關稅，美國的貿易赤字並未如預期縮小。報告指出關稅政策雖然改變了部分貿易流向，但整體貿易失衡問題依然存在，顯示單純透過關稅手段難以解決結構性的貿易逆差問題。\n長期債券殖利率吸引投資人回流，10/30（美國時間）投資人因殖利率過高而重新關注長期債券。\n美債延續漲勢並與全球同類債券一起上漲，10/30（美國時間）科技股拋售帶動美債與全球債券走強。",
+ "text": "日本央行 10/30 宣布維持利率不變，並表示日本通膨趨勢已達到 2% 目標。這是日本央行在經歷多年超寬鬆政策後，首次明確指出通膨目標已經實現。日本央行自 2024 年 3 月結束負利率政策以來，一直在評估通膨是否能持續達標；此次聲明顯示央行對物價穩定性的信心增強。市場關注日本央行的政策轉向，因其長期維持超低利率，與美國聯準會的升息循環形成對比。¶川普政府的關稅政策未能縮減美國貿易逆差，根據 IW 報告顯示。這項研究檢視了川普任內實施的關稅措施對美國貿易平衡的實際影響，發現儘管對進口商品課徵高額關稅，美國的貿易逆差並未如預期縮小。\n長期公債殖利率高企吸引投資人回流，投資人認為當前殖利率水準足以補償長期持有風險，推動長期債券需求增加。\n美國公債延續漲勢，科技股拋售帶動全球債券市場走強，投資人轉向安全資產避險，各國政府債券同步上漲。",
  "links": [
   {
-   "title": "通膨疑慮+科技股拋售效應 黃金價格跌破4000美元大關",
-   "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E7%96%91%E6%85%AE-%E7%A7%91%E6%8A%80%E8%82%A1%E6%8B%8B%E5%94%AE%E6%95%88%E6%87%89-%E9%BB%83%E9%87%91%E5%83%B9%E6%A0%BC%E8%B7%8C%E7%A0%B44000%E7%BE%8E%E5%85%83%E5%A4%A7%E9%97%9C-110007149.html",
-   "source": "Yahoo奇摩股市",
-   "at": "2026-10-30T11:00:07+00:00"
+   "title": "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNcnhYX2pTREQwTVpVRkliZlptQl81YWowMUtRS1VSYU5nN1BsR3ZvWjlxMTkyVXk3Y2VuMktGR2k2M3AxTTQ2dmo2aVRBRlNreHBxb1pFeWtIb2VzbW56UHpsRDEteGVJTXluYmthbWVWWVNWaWpMcmduTDRMMXRTdjZuSkpHX084a2tEblN5NDVLVzMzTmVuRE9SWWV1TUptN1JWOUYyMFU3OEp0WEt6YkhkTHN2Zw?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-10-30T09:11:30+00:00"
   },
   {
    "title": "Trump's tariffs fail to cut US trade deficit, IW report shows",
@@ -273,15 +273,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-30T12:05:34.818476+00:00",
+ "at": "2026-10-30T14:09:18.541460+00:00",
  "layout": "main",
  "topics": {
-  "hash": "b7a87123f173c889",
+  "hash": "b9bff1b796680155",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "Warsh 上任聯準會主席後首度發言引發市場困惑，關於升息路徑的訊息不夠明確，重燃投資人對聯準會可信度的疑慮",
+    "text": "Warsh 聯準會主席的政策立場引發市場質疑。黃金與白銀因聯準會升息預期下跌，黃金觸及四個月低點，白銀跌破每盎司 50 美元，反映市場對升息的擔憂；同時新經濟數據對 Warsh 的「不過熱」觀點提出挑戰",
     "links": [
      {
       "title": "COMMENTARY: Warsh's muddled messaging revives Fed credibility doubts",
@@ -290,17 +290,17 @@
       "at": "2026-10-29T23:30:27+00:00"
      },
      {
-      "title": "Warsh’s AI Optimism May Box Him In at the Fed",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQOXVva3ZTOGhrVDZQeV9OSzZQcTJDS292VVRCRHBDdTNkRWhDQVhOYXBPeGl4TDdqaUxObEtjODhTc2swTk9KWHJpLVJib0V6YVZkNV96M2ZUci1FSl9jRThlbmkwcVZPekRXaEdScE9xYlVjQVFpcXFyRDlNMEQtV2VfUEhnejZzS0xnT2ZHbWJCT3R1NHpsbVhGVEpxNUhPNG5kYnRSN21peGdKcFM3LUNVS3d5dEppQ1RnRVAxRQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-29T09:00:15+00:00"
+      "title": "Gold hits four-month low, silver falls below $50/oz on Fed hike fears",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOMFY2WEZOWHhyVDVPMkM2ZVUxM01TR09lcUZ0RlBWNF96QkJzWXhUZWpIbmlRSUlxN3FiZ0pEYWVXOW1YcVBQcHQ4cjU1NFpCQVlnS3pneWlKeTZIRjJzWkJuek9OeDhNSGxTU1ozV1g0czltbldNNkJORWRWS0ZBU25WdURjNWNpREdpdmZoV1c2ZzBnUmM5cm5HTG16OFpEdVhLWC13RkxHM3IxX1E?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-30T03:24:00+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債收益率下跌，科技股拋售帶動全球債券上漲，長天期美債跟隨反彈。聯準會主席 Warsh 採取「前瞻性沉默」政策，減少對政策方向的前瞻指引，可能加劇債券市場波動",
+    "text": "長天期美債延續漲勢，科技股拋售帶動全球債券上漲。美國財政部本週創紀錄地發行 839 億美元公債，10 年期與 30 年期公債殖利率大幅下跌",
     "links": [
      {
       "title": "Treasuries Extend Rally With Global Peers on Tech Stock Selloff",
@@ -309,68 +309,93 @@
       "at": "2026-10-30T10:17:08+00:00"
      },
      {
-      "title": "Warsh’s ‘Forward Silence’ Risks Bigger Treasury Market Swings",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQZzdFbTR0Tm11V3ZMZkxaYTU0d2NuRW5SYmhHOWFqWjdTOVU2cUhoa3kyLUlTT2tvVXRKaHYwbnVLMkNqa2RUdF9QOEVFeHFEUnJwLXVubUh0VzBIWmZfSnZGbkVaOERxYmRfUzgwT2F6VWFMYk80Rlc4eTF4VEZnMVFuM2ktdm5EQldmVG5Sc3I2WWpaQUpjRnlESUFBdDhlM1F6MU5SU3k3TTVYMWZv?oc=5",
+      "title": "US Treasury Borrows Record $839 Billion in Auctions This Week",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPRzZPekJwZHgtak9lY0hKNEItNHFWa3lpWHBfdFNWTDAtOTVsSHJGaHlSWFdBdFoyN3l5SXRPTXBoUmc0WUZpMGVGYS1aSUtRclY3NDVFczBDWHlFVVo4NHdYR2NldlJqT2Q3MFlvSV9SQVpxWTRFd3o3OE1IcjlVNUtkOUNzb2ZONDJqT2xBcWpQSWJQSDJoQmFITnhZbkJOQUROdnREaWxSME0wTGFBNA?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-29T19:23:34+00:00"
+      "at": "2026-10-30T13:00:41+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "美國可能恢復對伊朗軍事打擊的跡象推升油價，分析師調升油價預測，惟市場同時關注外交談判進展可能緩和局勢",
+    "text": "油價上漲，美國可能恢復對伊朗軍事打擊的跡象推升油價；澳紐銀行上調油價預測，認為市場因伊朗局勢趨緊而供應吃緊",
     "links": [
+     {
+      "title": "Strong Earnings Mask Growing Struggle With Inflation, Oil Prices",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQYzVpQnJqdVJvVjR2bVRFQ1N1dm5oSzIxMFhQQ3NpdkJNSWpMdmNRZE9RMERJdFN5WDNzN1pUSmtidVhvNVJBNXgwRUsycGRjY3NyVHN3WlZpNFFGaVZ5N2pDMnpka0lBQnBXX3lpTURjVlB4VkYxWm5tbXR0b2F4eWNwU1dReGVnanAyMVJ5Vmp0V1h3WG1US2NlMWt5U0c0WmpES2o3eGhVMkZxdFQ5aWtQd18?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-30T10:30:00+00:00"
+     },
      {
       "title": "Oil Climbs on Signs US May Resume Military Strikes Against Iran",
       "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPbV9tbXFMMlg1cjY2NzhHaWxOS1Y0ZFNYcGhWRFg4RTE1YzhrcW96UDVLdXY2QjNTVG5aajd0ODRhQWVZSFM1X3ZCUVZTbzZpVXhna3F4eF9jcm5aT0ptZkZ1bXRnYzA2TkV3RWNGYm5ta01xODdWRzU2Y1lpY2pHQ1ZCX3hkbDAxcktreEtWSWVWRWV2S2ZMS3BhWGs1QQ?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-30T05:18:00+00:00"
+      "at": "2026-10-30T13:34:50+00:00"
+     }
+    ]
+   },
+   {
+    "id": "equity",
+    "label": "美股",
+    "text": "科技股財報不佳引發拋售潮。亞馬遜與英特爾財報公布後股價重挫，英特爾暴跌近 29%，Alphabet 股價創 2004 年上市以來最差單日表現，那斯達克下跌 610 點（跌幅 2.3%），市場擔憂 AI 投資無法帶來預期回報",
+    "links": [
+     {
+      "title": "Wall Street ends lower as Alphabet revenue miss revives AI capex jitters",
+      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxObTRZdktaNHNaUkc2SG45TFV3V3hKRlMwdWdFTEhyUVFSRnBodWFIM0gxSHh5NWZDVkp3WnJOX3RTZGFtUDVIN3ZPQnB6NlNOQ01OOXhTRnNhNjkyajZ2ejhEZkRBS1IxMkxjVWJmY3FYa3lqcHUxajVqRXpWdS1UWjdxZFZYTW8tUjBtN2NZTGlLSWFiRlpjTDNKaVlVbHRiLVRCcA?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-29T23:35:39+00:00"
      },
      {
-      "title": "ANZ Raises Oil Price Forecast as Market Tightens on Iran War",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaVo3eEdoNjYtcFBpS1AwZjJRWUN4N3pXN0tOUHBRcUpSRllDeThuc1ctSk5JTm53Y0l1Qm5yLVFXS1QxWVV1emJLa0RSUzBTS0lBRWFybVRSZlFtcXpKY3pTZDNwdzdKeWo5ZlpLN09LSG92YXBKT0llQXo2ZnpxOUU4cmJINV9raVVYZlkxUjlpc0lmMFd5WUQ2VWJWYzRqNE95aG96Zkk4aTAyejdoNg?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-30T02:18:00+00:00"
+      "title": "Nasdaq set for sharp drop as Amazon, Intel amplify AI spending worries",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPblVtZktXRjdPbHJBWDM4WWJsV2RyMlhnOVFYRTZPc01udjZNZTVjeHdIN1dVY0w1M1NHbHpxNjV6Vm9jQ3FOUjBIaElyZEdSWWxycmNZdnJwNnBfdTJDc1FBMWVJZ19vR0s3Y1h2Uml2LThWc2NzQ2sxN3NnVzFEeGhvNnpPSElHSFRIQnJreHpCR2c3dnRQbEVYTDlJVjhzVVk3b1gxaFczMFhkb2NDSw?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-30T12:42:43+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "英特爾財報預測疲弱衝擊全球半導體股，執行長陳立武指出 PC 市場短期逆風但 AI 資料中心需求強勁（第三季年增 78%），惟以色列工廠意外停工數週影響伺服器出貨，加上 AI 晶片搶購造成記憶體短缺推升組裝成本",
+    "text": "博通因客製化 AI 晶片與高速網路設備需求受惠，2026 會計年度第三季 AI 半導體營收年增 221%；英特爾轉型晶圓代工面臨執行風險，前瞻本益比 51 倍遠高於博通的 18 倍，估值已反映市場高度期待其獲利改善",
     "links": [
      {
-      "title": "英特爾盤前暴跌近25% 拖累半導體族群 輝達盤前挫2.8%",
-      "link": "https://tw.stock.yahoo.com/news/%E8%8B%B1%E7%89%B9%E7%88%BE%E7%9B%A4%E5%89%8D%E6%9A%B4%E8%B7%8C%E8%BF%9125-%E6%8B%96%E7%B4%AF%E5%8D%8A%E5%B0%8E%E9%AB%94%E6%97%8F%E7%BE%A4-%E8%BC%9D%E9%81%94%E7%9B%A4%E5%89%8D%E6%8C%AB2-8-111922342.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-30T11:19:22+00:00"
+      "title": "Foxconn working on a new tie-up with OpenAI, says there is no AI bubble",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxONzVucjcwZFNveGxHdm5KS1M5UEotQXQyVDJNNmNCY211QXpxNTJFc0ZQcXhkbzlXNTAySlZlQWFvRzl2bnBrd2d1UXZ2eXZCU0Q4WW1ZQVdWWXBaWkxvOV9zY0lYdkxaSU1kRWEtMHdEMXFpZ2ZSQ0xDYm5RUEg3cEhfT3NnTllHcU1ZRUtaNFZ5N042elFCYkoxNHk4NXJzVmRBOFloajNWd0Z4RjUzcnpvRQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-30T09:48:16+00:00"
+     },
+     {
+      "title": "【美股盤前】晶片回檔能買嗎？外媒喊買博通　但避開「這檔」",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E6%99%B6%E7%89%87%E5%9B%9E%E6%AA%94%E8%83%BD%E8%B2%B7%E5%97%8E-%E5%A4%96%E5%AA%92%E5%96%8A%E8%B2%B7%E5%8D%9A%E9%80%9A-%E4%BD%86%E9%81%BF%E9%96%8B-%E9%80%99%E6%AA%94-131500783.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-10-30T13:15:00+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股 10/30 日重挫 1156.5 點至 45211 點，失守半年線，外資單日狂賣 1124.67 億元創史上第 7 大賣超紀錄，借券賣出比率 4.31% 已超過金管會過去限空令參考的 3% 門檻",
+    "text": "台股重挫 1,156.5 點失守半年線，收在 45,211.83 點，跌幅 2.49%；台指期夜盤再度跳水失守 45,000 點大關，報 44,987 點，外資單日狂賣 1,124.67 億元創史上第 7 大賣超紀錄",
     "links": [
      {
-      "title": "台指期夜盤震盪大跌！45000點保衛戰開打",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E9%9C%87%E7%9B%AA%E5%A4%A7%E8%B7%8C-45000%E9%BB%9E%E4%BF%9D%E8%A1%9B%E6%88%B0%E9%96%8B%E6%89%93-105225628.html",
+      "title": "美股開盤全面暴跌！費半跌幅逾5%　台指期夜盤失守45000點大關",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E9%96%8B%E7%9B%A4%E5%85%A8%E9%9D%A2%E6%9A%B4%E8%B7%8C-%E8%B2%BB%E5%8D%8A%E8%B7%8C%E5%B9%85%E9%80%BE5-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%A4%B1%E5%AE%8845000%E9%BB%9E%E5%A4%A7%E9%97%9C-135434177.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T10:52:25+08:00"
+      "at": "2026-10-30T13:54:34+08:00"
      },
      {
-      "title": "台股跌逾1100點要救市？ 金管會、國安基金齊發聲",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E8%B7%8C%E9%80%BE1100%E9%BB%9E%E8%A6%81%E6%95%91%E5%B8%82-%E9%87%91%E7%AE%A1%E6%9C%83-%E5%9C%8B%E5%AE%89%E5%9F%BA%E9%87%91%E9%BD%8A%E7%99%BC%E8%81%B2-112302859.html",
+      "title": "快訊／台指期夜盤重挫！失守4萬5千點大關",
+      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB-%E5%A4%B1%E5%AE%884%E8%90%AC5%E5%8D%83%E9%BB%9E%E5%A4%A7%E9%97%9C-121200823.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T11:23:02+08:00"
+      "at": "2026-10-30T12:12:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "期中選舉臨近，華爾街關注選舉結果對財政政策與監管環境的影響，民主黨準備在選後加強對聯邦通訊委員會的監督",
+    "text": "美國期中選舉臨近，市場對 AI 投資前景保持謹慎；美元因升息預期走強，預計將抵禦期中選舉可能帶來的政治不確定性",
     "links": [
      {
       "title": "Wall St Week Ahead Midterm elections, earnings, jobs data loom for AI-wary market",
@@ -387,36 +412,53 @@
     ]
    },
    {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣 10 月重貶 6.26 角至 32.478 元，外資 10 月賣超近 1 兆元，央行多次出手穩匯但力道有限，匯價可能進一步回測 32.8 元",
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金在聯準會升息預期支撐下，在 4,000 美元附近穩定，但通膨憂慮持續壓低金價；10/29 黃金曾跌至四個月低點，白銀更跌破每盎司 50 美元",
     "links": [
      {
-      "title": "外資10月狂砍近兆元！新台幣單月重貶6.26角　月線拉出連二黑",
-      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%8710%E6%9C%88%E7%8B%82%E7%A0%8D%E8%BF%91%E5%85%86%E5%85%83-%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%96%AE%E6%9C%88%E9%87%8D%E8%B2%B66-26%E8%A7%92-%E6%9C%88%E7%B7%9A%E6%8B%89%E5%87%BA%E9%80%A3%E4%BA%8C%E9%BB%91-105858462.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T10:58:58+08:00"
+      "title": "Gold hits four-month low, silver falls below $50/oz on Fed hike fears",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOMFY2WEZOWHhyVDVPMkM2ZVUxM01TR09lcUZ0RlBWNF96QkJzWXhUZWpIbmlRSUlxN3FiZ0pEYWVXOW1YcVBQcHQ4cjU1NFpCQVlnS3pneWlKeTZIRjJzWkJuek9OeDhNSGxTU1ozV1g0czltbldNNkJORWRWS0ZBU25WdURjNWNpREdpdmZoV1c2ZzBnUmM5cm5HTG16OFpEdVhLWC13RkxHM3IxX1E?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-30T03:24:00+00:00"
+     },
+     {
+      "title": "Gold Steadies Near $4,000 as Inflation Keeps Rate-Hike Bets Firm",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPbUN6SVNKYlRQbEVSTHhPbWNJZEltZHRnb2FKUU1ld285b0ZNaHhReVF5NmZPUkNXbEF6ekg2TU96VmJqbXlTVFlSeG9IN0I4bEt6RlljWlhYS05ITEs3dERHMDZia3ZVenRDaHNHc2hyNUhXaWhkNkJPOHNBTGlSNXJIMjhsMkRYODhBSlNLeGVHVTlQRE5mbzhJSEd0bXZFdjJfUDBfbmd1UGEyTlVzdUd6bGU?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-30T11:47:35+00:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "美元指數走弱帶動亞幣普遍升值，新台幣兌美元升值 1.4 分至 32.478 元",
+    "links": [
+     {
+      "title": "國內匯市：美元指數走低、亞幣普遍升值，新台幣震盪走升1.4分，收32.478元",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQWU5mdmxjWlRWTE1mQ2k1NnVrUmxpQlhjWXhMaElWa25YbTQ2S3RJeDBsSGZmd0JIbHZ1emo4bldENzZKeWJ0LWVrTGNxN0MtZXM2UFdvbTMtVGpEZGZsSXZtTW5PTlpjcTE3MFdBS3hCQzJPejVIbnExZEJNc1lXTC1hV2ViN1Y5?oc=5",
+      "source": "富聯網",
+      "at": "2026-10-30T08:18:00+00:00"
+     },
+     {
+      "title": "《國內匯市》收盤 ，新台幣兌美元為32.478元，升值1.4分",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNYkNEMm9JSDlvOVlLZEYyN1NTOU1taVNZNURiamR6cmRmdmpoMWh2MzNJamxDM0hIaGljZWRRMlpSRHpWX0QyUThsNndaQ0QwTjdpWnRoUkl6RU5lUEJCdnllWXQ2eVY0enJad19lbElLRm5DRVczYzNqMUFBYnBWRldoM3k2Tjcy?oc=5",
+      "source": "富聯網",
+      "at": "2026-10-30T08:08:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-30T12:06:18.933807+00:00"
+  "at": "2026-10-30T14:09:55.879182+00:00"
  },
  "main_source_titles": [
-  "通膨疑慮+科技股拋售效應 黃金價格跌破4000美元大關",
+  "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates",
   "Trump's tariffs fail to cut US trade deficit, IW report shows"
  ],
- "headline": "9月PCE月增0.5%創七個月最大增幅聯準會對年底升息保持開放",
- "rate_note": "PCE通膨加速升溫鞏固升息預期，加上油價上漲推升能源通膨疑慮，偏向推升短端利率與升息預期；不過10年期10/29收盤-6bp至4.99%，市場還沒反映。",
+ "headline": "日本央行維持利率不變，稱通膨趨勢已達 2% 目標",
+ "rate_note": "日本央行維持利率不變並確認通膨達標，偏向壓低美債長端利率——若日本持續維持寬鬆政策，全球資金仍會流向美債等高收益資產，支撐美債需求；不過 10 年期 10/30 盤中 -5bp 至 4.94%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "9月PCE月增0.5%創3月來最大增幅，聯準會年底前升息預期升溫",
-   "titles": [
-    "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
-    "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates"
-   ],
-   "at": "2026-10-30T03:33:20.193508+00:00"
-  },
   {
    "headline": "Warsh 拒絕承諾政策路徑但暗示偏鷹，市場對聯準會訊息混亂再起疑慮",
    "titles": [
@@ -433,19 +475,27 @@
     "Trump's tariffs fail to cut US trade deficit, IW report shows"
    ],
    "at": "2026-10-30T12:05:34.818476+00:00"
+  },
+  {
+   "headline": "日本央行維持利率不變，稱通膨趨勢已達 2% 目標",
+   "titles": [
+    "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates",
+    "Trump's tariffs fail to cut US trade deficit, IW report shows"
+   ],
+   "at": "2026-10-30T14:09:18.541460+00:00"
   }
  ],
  "archive": {
   "2026-10-30": {
-   "headline": "9月PCE月增0.5%創七個月最大增幅聯準會對年底升息保持開放",
-   "text": "10/29公布的9月PCE物價指數月增0.5%，創3月以來最大增幅，顯示通膨壓力依舊頑強。聯準會本週維持利率不變，但官員對年底前進一步升息保持開放態度。中東地緣局勢持續升溫，加上美國可能在期中選舉後重啟對伊朗的軍事打擊行動，激勵油價上揚並推升能源通膨疑慮。¶川普政府的關稅政策未能縮減美國貿易逆差，根據 IW 報告顯示。這份報告檢視了川普任內實施的關稅措施，發現儘管對進口商品課徵高額關稅，美國的貿易赤字並未如預期縮小。報告指出關稅政策雖然改變了部分貿易流向，但整體貿易失衡問題依然存在，顯示單純透過關稅手段難以解決結構性的貿易逆差問題。\n長期債券殖利率吸引投資人回流，10/30（美國時間）投資人因殖利率過高而重新關注長期債券。\n美債延續漲勢並與全球同類債券一起上漲，10/30（美國時間）科技股拋售帶動美債與全球債券走強。",
-   "rate_note": "PCE通膨加速升溫鞏固升息預期，加上油價上漲推升能源通膨疑慮，偏向推升短端利率與升息預期；不過10年期10/29收盤-6bp至4.99%，市場還沒反映。",
+   "headline": "日本央行維持利率不變，稱通膨趨勢已達 2% 目標",
+   "text": "日本央行 10/30 宣布維持利率不變，並表示日本通膨趨勢已達到 2% 目標。這是日本央行在經歷多年超寬鬆政策後，首次明確指出通膨目標已經實現。日本央行自 2024 年 3 月結束負利率政策以來，一直在評估通膨是否能持續達標；此次聲明顯示央行對物價穩定性的信心增強。市場關注日本央行的政策轉向，因其長期維持超低利率，與美國聯準會的升息循環形成對比。¶川普政府的關稅政策未能縮減美國貿易逆差，根據 IW 報告顯示。這項研究檢視了川普任內實施的關稅措施對美國貿易平衡的實際影響，發現儘管對進口商品課徵高額關稅，美國的貿易逆差並未如預期縮小。\n長期公債殖利率高企吸引投資人回流，投資人認為當前殖利率水準足以補償長期持有風險，推動長期債券需求增加。\n美國公債延續漲勢，科技股拋售帶動全球債券市場走強，投資人轉向安全資產避險，各國政府債券同步上漲。",
+   "rate_note": "日本央行維持利率不變並確認通膨達標，偏向壓低美債長端利率——若日本持續維持寬鬆政策，全球資金仍會流向美債等高收益資產，支撐美債需求；不過 10 年期 10/30 盤中 -5bp 至 4.94%，市場已在反映。",
    "links": [
     {
-     "title": "通膨疑慮+科技股拋售效應 黃金價格跌破4000美元大關",
-     "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E7%96%91%E6%85%AE-%E7%A7%91%E6%8A%80%E8%82%A1%E6%8B%8B%E5%94%AE%E6%95%88%E6%87%89-%E9%BB%83%E9%87%91%E5%83%B9%E6%A0%BC%E8%B7%8C%E7%A0%B44000%E7%BE%8E%E5%85%83%E5%A4%A7%E9%97%9C-110007149.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-30T11:00:07+00:00"
+     "title": "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates",
+     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNcnhYX2pTREQwTVpVRkliZlptQl81YWowMUtRS1VSYU5nN1BsR3ZvWjlxMTkyVXk3Y2VuMktGR2k2M3AxTTQ2dmo2aVRBRlNreHBxb1pFeWtIb2VzbW56UHpsRDEteGVJTXluYmthbWVWWVNWaWpMcmduTDRMMXRTdjZuSkpHX084a2tEblN5NDVLVzMzTmVuRE9SWWV1TUptN1JWOUYyMFU3OEp0WEt6YkhkTHN2Zw?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-10-30T09:11:30+00:00"
     },
     {
      "title": "Trump's tariffs fail to cut US trade deficit, IW report shows",
@@ -454,7 +504,7 @@
      "at": "2026-10-30T07:07:43+00:00"
     }
    ],
-   "at": "2026-10-30T12:05:34.818476+00:00",
+   "at": "2026-10-30T14:09:18.541460+00:00",
    "weekly": false,
    "points": 2
   },

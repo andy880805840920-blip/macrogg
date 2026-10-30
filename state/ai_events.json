@@ -959,7 +959,95 @@
   "149da1322652": "2026-10-30",
   "afba0511b886": "2026-10-30",
   "248c07875919": "2026-10-30",
-  "103b971064b5": "2026-10-30"
+  "103b971064b5": "2026-10-30",
+  "a8451ab2b773": "2026-10-28",
+  "a4263b60515c": "2026-10-27",
+  "d1484c678338": "2026-10-30",
+  "d75ffeb765c5": "2026-10-29",
+  "eabd53a4fd08": "2026-10-29",
+  "882fda9eb2d8": "2026-10-29",
+  "4727fefa9cd3": "2026-10-28",
+  "ef7afbeecbcb": "2026-10-28",
+  "55257a13e421": "2026-10-30",
+  "04fbadeb4772": "2026-10-30",
+  "bbe8c8c08db9": "2026-10-29",
+  "87dcdb393491": "2026-10-29",
+  "dd268e8b844f": "2026-10-29",
+  "b798eca10223": "2026-10-29",
+  "cec3feb3a60a": "2026-10-29",
+  "d5010702913f": "2026-10-29",
+  "ead4ab1598bd": "2026-10-30",
+  "bd7a626be55d": "2026-10-30",
+  "5f9227b75f08": "2026-10-30",
+  "e534cd64be80": "2026-10-30",
+  "8dffcc39a1d7": "2026-10-30",
+  "85b6895d1cdd": "2026-10-29",
+  "a9d94a0144ba": "2026-10-30",
+  "8798a6fcbfd1": "2026-10-30",
+  "c421d92c9a1c": "2026-10-22",
+  "5487b0ee1341": "2026-10-28",
+  "b5d3705bbbc0": "2026-10-26",
+  "71ab17e02b33": "2026-10-26",
+  "2dd9b151003c": "2026-10-26",
+  "74a6961683b3": "2026-10-26",
+  "3ced64ea2ca0": "2026-10-26",
+  "fe89ff28e5bf": "2026-10-26",
+  "8796fc3f4555": "2026-10-30",
+  "25bcbf942afd": "2026-10-28",
+  "ffc0460396a5": "2026-10-30",
+  "89d6d0d6324c": "2026-10-27",
+  "f05d7364ea54": "2026-10-27",
+  "bc7420e5348d": "2026-10-27",
+  "bfa81921b0ae": "2026-10-27",
+  "6904a00610b8": "2026-10-27",
+  "e80b26da120a": "2026-10-29",
+  "833396050457": "2026-10-23",
+  "b3b808590fe7": "2026-10-21",
+  "5f2df1c3347f": "2026-10-21",
+  "5a38a6d94b7d": "2026-10-20",
+  "086c7712182b": "2026-10-20",
+  "b4e2cea9f249": "2026-10-30",
+  "de6d831447e6": "2026-10-29",
+  "51b85ce46a38": "2026-10-27",
+  "9127bbd9e80c": "2026-10-27",
+  "a21d0a9f4ce8": "2026-10-26",
+  "dd1eb6b40eef": "2026-10-26",
+  "c6c6ececf399": "2026-10-26",
+  "98d04e0d148c": "2026-10-26",
+  "dbc3f1550b88": "2026-10-26",
+  "c28ac610494a": "2026-10-26",
+  "0dbda83b2fc2": "2026-10-30",
+  "10dda0dadd33": "2026-10-30",
+  "c5f0c433ea1a": "2026-10-30",
+  "c1385ad8a66a": "2026-10-29",
+  "ec507277a2a6": "2026-10-29",
+  "f1e63582cf16": "2026-10-28",
+  "03786f96e983": "2026-10-21",
+  "a2ba0e0d7bf1": "2026-10-18",
+  "fb08bb18dcf6": "2026-10-30",
+  "2e01b82d9610": "2026-10-30",
+  "515e2a216f29": "2026-10-30",
+  "38a9d4f293d6": "2026-10-29",
+  "ea674b228873": "2026-10-26",
+  "c5183ec4b638": "2026-10-23",
+  "9bba0b4ecb79": "2026-10-22",
+  "3caa8ecf6866": "2026-10-22",
+  "9868f550291e": "2026-10-30",
+  "e173ae61b298": "2026-10-30",
+  "7d5c40f9baae": "2026-10-30",
+  "86b36de8c811": "2026-10-30",
+  "da355e065297": "2026-10-30",
+  "afedcd3d7803": "2026-10-30",
+  "3f42d6692240": "2026-10-30",
+  "2e0de66a42a8": "2026-10-30",
+  "1d72b7839d30": "2026-10-30",
+  "9fffbc14cdda": "2026-10-30",
+  "ca4e253fe62a": "2026-10-30",
+  "46f536818e48": "2026-10-30",
+  "56249213b05f": "2026-10-30",
+  "c927e5911485": "2026-10-30",
+  "055306b62967": "2026-10-29",
+  "97630cec3fe2": "2026-10-29"
  },
  "events": [
   {
@@ -1009,7 +1097,7 @@
    "id": "74794375a6b5",
    "co": "Oracle",
    "type": "資本支出",
-   "zh": "Oracle資本支出接近950億美元，並改變AI任務計費模式。",
+   "zh": "Oracle 資本支出接近950億美元，並改變AI任務計費模式。",
    "date": "2026-10-30",
    "links": [
     {
@@ -1023,7 +1111,7 @@
    "id": "c8fdb3755ea1",
    "co": "Nvidia",
    "type": "融資／IPO",
-   "zh": "印度AI基礎設施公司Nscale尋求籌資30億美元購買Nvidia晶片。",
+   "zh": "印度AI基礎設施公司Nscale尋求籌資30億美元購買 Nvidia 晶片。",
    "date": "2026-10-30",
    "links": [
     {
@@ -1035,6 +1123,44 @@
      "title": "Market Chatter: Nvidia Chip Buyer AM Intelligence Plans Up to $3 Billion Capital Raise",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPakNfT05JMkZEMTR1c2FKcGNIMnBDeVJoWGlGSGNPbG0xS2RGM0RYaE9PeXhwbUZyYWVaU0dESDNNdkl0WlBIanFORy1SNjlzazJVd0dIYkVfN2ZBdzlGNWVXSUlPWHhRZVBOZHZJSl9NNXg2TWlBaEh2bFNPQU5pZm54OURLN1VVXzJ1dGRqWnpHaGxPdGk4RkZ6dHR0QQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "062440c758e8",
+   "co": "OpenAI",
+   "type": "算力合約",
+   "zh": "OpenAI與Foxconn洽談合作協議，涉及AI數據中心建設。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "Foxconn Says OpenAI Deal in Works, Sees Double-Digit 2027",
+     "source": "FourWeekMBA",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQLVlRYkRTeGhYVVBVeUQwMlh6SzJ2Qk81X2Z0NnVYUkM5SmloNzBCRkllVEFUWnMxdmxpV0tXM1Z4WXA0Z0dMTzJHUngxOXo3UmRmanRFMElVR3FxM1UxOFdMcXdpb1c4QnFnYVRvSEtnaEh0OEdYYTVRMTNURjBscHY1TlRkamJRQWtGQw?oc=5"
+    },
+    {
+     "title": "Foxconn teases new OpenAI deal after Sam Altman meeting, says AI boom is no bubble",
+     "source": "Moneycontrol.com",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPZUM2Q0pqeVFXb1RObkNvUGhGaDVMTlNJam9uMVVOZ3pRX3hrWE1PajFqdDZHX29GSTJNazQtVDItMTdua19ORDB0ZjRlWE83WVd3N25YNVA1T0o5XzBpTEFHM2xvQmtUYUVyaGkzVEU5RGJDdTFRZVF0Yk55NGhjSTNBRnFRbDg3VHRhanhhbXVNZDUzbUJScnRrZy1hdXUycWg2aE1MV09kMHlSam5lUXBpdjA5aHE1S3FLZ0t3MnNGLW5fNVFjZklTd0RheFZiRUs3RNIB2gFBVV95cUxQNFBfOVRMM2JmWHdub1QtVjEzQnJ3LW0tbEUza05rUHZ3Tm9ZSlZ6anh4bmw0eFA5LTY3MUUzVUQ2U3RITGhLZU9LbTZ4Q0hEZEQ5Z3V2cGZ0V3BYcUpfR3FhWnZXbmFlSFltcVYtRm9RQ3lZQnlfcktrOTFVYWdGZGZqN0hRRVd2S0lLZzNablh0TXdDMGdib3ZJUkJPVHZnal9CblNIZTQyem9WbnlEOWRMTHpqOWRkMnpEa0NQa18yWXVmV0lLaXBlMU5kOUd2WWpFR0dFUFNhdw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "c6fd1642eef5",
+   "co": "Apple",
+   "type": "財報",
+   "zh": "Apple發布第四季度財報，假日季指引受關注。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "The Week Ahead: ISM PMI reports, US jobs report, Apple earnings",
+     "source": "CMC Markets",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOZzdUSXdjZW01Wk1EX3Itdk9TV1Q0cTNmM2g0dTByNGlzd1ZtX0d0UGxaM255YmJkcFNHWXUyN2tMRF9CcGZwWkFoOGNObmhwVTNMVzNWUERSVWRBUHR6SmhwS0VfT05MVWZlTHM0ZHNrQmxNTTVlLS1LMXJUZGdHYnkwZjJKbkNySDdabWVhSmx2V3lFbEpTVUF6eFVZbl9VNkpkSjllVGdySi1ya2xYTw?oc=5"
+    },
+    {
+     "title": "Apple’s holiday guidance to be in focus during Q4 results (AAPL:NASDAQ)",
+     "source": "Seeking Alpha",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQRGtXOUozTTlNQVVlSGpMUFcydVlpc3UtanpKeGpfaGwwV0x1VmV5SnJlVlRTbUF4Y3pKbmpMeTFVdzJVWFlMekZqbmNPSmhLbm96SWp2Q3o3YzFqM040WDB3TVlWcUhlSzk0WjFaTUpjNjJyNk1CbnJ4TDhnZTF3RnoyZDRNeDFON2VCSDlpelZ6c1BZdE9iRDN3?oc=5"
     }
    ]
   },
@@ -1698,6 +1824,39 @@
    ]
   },
   {
+   "id": "6691caa3f14c",
+   "co": "Oracle",
+   "type": "算力合約",
+   "zh": "Oracle與Cerebras合作，2027年起在雲端基礎設施提供Cerebras AI推論晶片。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "Oracle is bringing Cerebras AI chips to its cloud starting in 2027",
+     "source": "Quartz",
+     "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1ZVGNPT0dhUG5pRUNxYnJPeTgtWVBtWXFlMXRGTzg4T0JrdF9qdUNlVTlxVTctMFhSTURFWk5WUlBGZm5oeDdPdzZ1am9QUGVCelZrTzlCZXdPbm40VWVnMkxWNFdLc2dC?oc=5"
+    },
+    {
+     "title": "Cerebras and Oracle Team Up to Bring Cerebras AI Inference to Oracle Cloud Infrastructure",
+     "source": "Oracle",
+     "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxPc1p6dURDZFVYS212MHJNUnFjYjBZV2c2YUVuVEEzRGNSWjVPLThLNHBxWXNMd2tKUzBkZFFPUGg0YWFfR0ZkaUNQcTI3UzZCeVpPSERlZV9fQzRtQ3dxMkNEeV9rT0pCcndXTGw4bHYtUXFMVHdydWN3bEJFclNUWjVqcWM4QzF6UmZZbGJ6REFxNEI0T0tqT0FmUF9uRmZmTHRab3NvTDRsems2cndOUWYydEk4c2ZyTDktMUNOdWVOLWRSVW9VUXYtRjhwYlMxS0RoTXEyQjM4bGRRVnZfOEJzMi1vUQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "f0b6a126b304",
+   "co": "CoreWeave",
+   "type": "資本支出",
+   "zh": "CoreWeave擴展丹麥數據中心，規劃全球四大洲網絡擴張。",
+   "date": "2026-10-27",
+   "links": [
+    {
+     "title": "CoreWeave Expands AI Cloud Footprint With Denmark Data Center — Plans Global Network Expansion Across 4 Continents",
+     "source": "Stocktwits",
+     "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxNWU00NlRuMmdIQlNRWlhDS2xrTmVISTBNNWlsZ3hXVUVzV09ld2VFalBKeDYzYmxlSUFmeWo1ZjRjam9rTjhrdlR1UlN1TzRFMjVyMzVwb1p4Z3VWTjZFT2NlbVYtRmRQcEV1bURIRlQxcDFIWnhURms4UzNrOHVLQnN2bzcwVWF0RDhaQUdqZEZzNXN3bVcwaGVNR0QtekZ6QXB4ZFQ5OFRrWFZDaFRwdktya3ZoNVNxR25UaFJIbnNEcUFpVGV2YWU1dVVad3lGc3E1MDQ5aVRRUU1CR2xQeEdUU0xlX2RBNmcydWVjZUp4aFNxRXQ5SDJFcGJPSVRuOHZjSzl4OG4?oc=5"
+    }
+   ]
+  },
+  {
    "id": "041e3cd66454",
    "co": "Amazon",
    "type": "算力合約",
@@ -1760,6 +1919,20 @@
      "title": "Broadcom Arranges $63 Billion Deal to Finance Anthropic’s Chips",
      "source": "Bloomberg.com",
      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVXpndWd4bS1VV1JIRTlnRll6aGd3WDFVSkZBWU0wT1VZQzd0ZTNCc2RZeXZaUV9TdWZxak1BRlB1NURvcU5wb0RTUE5Ec1d4NkVSRXJWc0o3RTcwUEplV1FHRHBRcG5aOEFoWHNGdEJ3V2RtcFVZUllZaE42TU9paGtIOEIyajVNb19mT1lSTGcxSEdhTVdDemVlTGptT3ZfZ3VpTmo0WTlJYzV0Tms1RUlFcw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "84124d6d91ae",
+   "co": "CoreWeave",
+   "type": "財報",
+   "zh": "CoreWeave營收倍增至25.8億美元，但債務達350億美元。",
+   "date": "2026-10-26",
+   "links": [
+    {
+     "title": "CoreWeave doubles revenue to $2.58B but carries $35B in debt",
+     "source": "Dealroom",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQUE1tUUdPWEdLcHhacG9kMnV4NWJkWS1uR3BydW9DREpfaVdoM2pPeWhHbTl5N0ZOR0FOYnRHaHZ1V296dW9TWlFCRXVZbFB2MHFaRG1rMWlFRUVnNGUya2FLVnpULS16V2V5cVVVX2tFeXdCbm9QX1pEaUVMaU9qZjh2aVh6RDYyZERYblh1Y2d3M3lPZkpR?oc=5"
     }
    ]
   },
@@ -1944,6 +2117,20 @@
    ]
   },
   {
+   "id": "c55334247d38",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "ByteDance、Alibaba、Tencent下單超350億美元Nvidia晶片。",
+   "date": "2026-10-20",
+   "links": [
+    {
+     "title": "EXCLUSIVE: ByteDance, Alibaba, Tencent place over $35 billion worth of Nvidia chip orders",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQOXBuUld1bXhxNWlQNktuUmYxOWpVRFlnN0dialpvZlhYM1JLVzE1N0VBSUVNbUlCNmwtN2RVWXRkd1VUV3BRSV9aMGJGMkpxQUk4VWZ1dUt5YjZpdmthQVZ3REFHUzBmV3B0SFJwOFFsMl9fb3l0Y3F0Z1FXbDAxSFhTbV9peVVDQ3FKRnp3NjVDdEpRVHdIOG04SjctLWRRTzN2bDM1a2QxaGdZMHlJV0hGS1FObHFKTVNiS3hvXzZsUzdvMktteFBvSGNEZw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "d4801ae71bfe",
    "co": "Anthropic",
    "type": "算力合約",
@@ -1974,40 +2161,40 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "abe1aff59294",
-   "text": "Microsoft 雲端業務超預期增長偏向提振股市與AI投資熱度；發行250億美元債券偏向增加公司債供給、推高長端利率。若資本支出延遲但土地購置持續，則顯示基礎設施投資節奏調整，偏向短期緩解融資壓力，但長期AI支出預期仍強，對債市與長端利率構成上升壓力。"
+   "hash": "fe1796e42b0e",
+   "text": "Microsoft 雲端業務超預期成長偏向提振股市與 AI 投資熱度；惟資本支出低於預期、發行 250 億美元債券偏向增加公司債供給，可能對長端利率形成溫和上升壓力。若資料中心建設加速推進，則後續資本支出需求上升，偏向進一步增加債券發行規模。"
   },
   "Alphabet": {
    "hash": "518c63a97664",
    "text": "Alphabet營收未達預期但AI變現成長，高額資本支出（510億美元）與2027年預期增加，偏向加大公司債供給壓力。若現金流承壓持續，則長端利率面臨融資需求上升的壓力。AI投資熱度偏向維持，惟營收預期落差可能抑制股市表現。"
   },
   "Meta": {
-   "hash": "58bc4a782a3e",
-   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求。短期內公司債供給增加，偏向推升長端利率；同時巨額資本承諾與強勁財報指引，強化AI投資熱度。若融資順利進行，則公司債市場供給壓力與AI板塊資金流向成為市場焦點，長端利率面臨上行壓力。"
+   "hash": "5df548d10764",
+   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求偏向增加。發行270億美元債券與籌資950億美元股權，偏向拉升長端利率與公司債供給。Nvidia投資參與、營收強勁指引，偏向支撐AI投資熱度。若融資需求持續超現金流，則長端利率與公司債供給壓力偏向加重。"
   },
   "Oracle": {
-   "hash": "20f0d8f2bbe8",
-   "text": "Oracle近期大幅提升AI基礎設施投資，資本支出接近950億美元，同時限制新借款上限200億美元。這偏向增加公司債供給壓力，因高資本支出需求可能促使融資；長端利率偏向上升，反映企業大規模投資融資需求；股市偏向受支撐，因擴大晶片選項、預期2030年營收成長及正向現金流前景提振投資者信心；AI投資熱度偏向升溫，Oracle多元晶片策略強化其雲端算力競爭力。"
+   "hash": "23e9dfd81aed",
+   "text": "Oracle近期大幅擴張AI基礎設施投資，資本支出接近950億美元，同時限制新借款至200億美元，偏向增加公司債供給。若現金流未如預期達成，則長端利率面臨上升壓力。多晶片策略與算力合約擴張顯示AI競爭加劇，偏向提升股市對其雲端業務成長的預期，進一步強化AI投資熱度。"
   },
   "CoreWeave": {
-   "hash": "26daa7e8c5f7",
-   "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增數百億美元債券發行將拉高長端利率，因企業融資需求增加；同時AI基礎設施投資熱度可能受融資成本上升而承壓。股市方面，高債務預期若引發償債風險疑慮，則偏向對該公司股價造成負面影響。"
+   "hash": "7f0922becfae",
+   "text": "CoreWeave大幅擴張資本支出與債務融資，偏向增加公司債供給壓力。高額發債需求（200–380億美元）與債務規模快速膨脹，若市場對其償債能力疑慮升溫，則長端利率偏向上行以反映信用風險溢價。營收倍增支撐AI基礎設施需求景氣，偏向維持AI投資熱度，但債務擴張速度超越營收成長，可能引發市場對槓桿風險的重新定價。"
   },
   "Anthropic": {
    "hash": "efdde5e2abca",
    "text": "Anthropic密集融資與巨額算力合約偏向增加公司債供給。630億美元發債規模龐大，若市場消化能力有限則偏向推升長端利率。4,300億美元算力合約鎖定長期收入，降低營運風險，偏向支撐股價。大規模資本支出與AI基礎設施投資偏向強化AI投資熱度，但融資成本上升若傳導至整體科技融資環境，則偏向對高估值AI公司造成壓力。"
   },
   "OpenAI": {
-   "hash": "40731df0ab17",
-   "text": "OpenAI近期大幅擴張算力與資本支出，籌資300億美元估值達1.25兆美元，偏向增加公司債供給需求。多筆晶片採購與數據中心建設合約顯示資本密集投資加速，若融資主要依賴債券而非股權，則長端利率面臨上升壓力。同時AI基礎設施投資熱度持續升溫，偏向支撐科技股表現與AI投資熱度。"
+   "hash": "1001f1c4459b",
+   "text": "OpenAI近期融資與算力擴張動作頻繁，偏向增加公司債供給壓力。大規模數據中心建設與多廠商晶片採購涉及龐大資本支出，若融資需求持續，公司債發行規模可能擴大，偏向推升長端利率。同時，AI基礎設施投資熱度升溫的訊號強化，偏向支撐科技股與AI相關投資熱度。"
   },
   "Amazon": {
    "hash": "1427b267e896",
    "text": "Amazon 巨額資本支出（逾2,200億美元）偏向增加公司債供給壓力，尤其自由現金流轉負。若融資需求持續，長端利率面臨上行壓力。然而，AI基礎設施合約（Verizon、3M等超80億美元）彰顯算力需求強勁，偏向支撐AI投資熱度。但營收未達預期與現金流惡化，偏向拖累股市表現。"
   },
   "Nvidia": {
-   "hash": "eb29ff086a18",
-   "text": "Nvidia近期事件偏向強化AI投資熱度與公司債供給。多筆大型算力合約（Meta、Anthropic、Hugging Face等）與融資案顯示AI基礎設施需求旺盛，第三季營收超預期年增106%印證晶片市場景氣。若這些合約涉及債務融資，則偏向增加公司債供給；AI投資熱度明顯升溫。惟反壟斷調查可能制約長期成長預期，對長端利率影響偏向中性。"
+   "hash": "d65c23457033",
+   "text": "Nvidia近期事件偏向強化AI投資熱度與公司債供給壓力。財報營收超預期與多筆巨額算力合約簽署，反映AI晶片需求旺盛，利好股市；但若干交易涉及擔保債務與反壟斷調查，偏向增加公司債供給與長端利率上升壓力。大型科技與新興AI企業的融資與採購規模擴大，整體偏向推升AI投資熱度，惟監管風險可能抑制長期債券需求。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -2016,7 +2203,11 @@
   "Intel": {
    "hash": "5210978f8059",
    "text": "Intel 伺服器銷售強勁成長偏向支撐科技股表現，惟第四季展望疲弱反映需求不確定性。若業績動能難以延續，則市場對晶片廠商獲利前景的信心可能減弱，偏向壓低科技股估值。同時，伺服器需求與 AI 基礎設施投資密切相關，展望轉弱若暗示 AI 投資熱度趨緩，則可能影響整體科技投資情緒。"
+  },
+  "Apple": {
+   "hash": "ef38f49294d5",
+   "text": "Apple 第四季度財報公布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；若指引疲弱，則偏向增加市場對經濟成長的擔憂，長端利率可能承壓。同時，Apple 作為 AI 應用領導者，財報表現偏向影響市場對科技股及 AI 投資熱度的評估。"
   }
  },
- "at": "2026-10-30 20:05（台北）"
+ "at": "2026-10-30 22:09（台北）"
 }
