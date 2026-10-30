@@ -1,76 +1,5 @@
 [
  {
-  "at": "2026-10-25T14:11+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {
-   "oil": "油價 +3.8%"
-  },
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 8.5,
-    "sources": 1,
-    "titles": [
-     "UAE Shuts More Beaches as It Deals with Oil Spill in Gulf - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "RBA’s Hunter Says Rate ‘Not Quite Yet’ Done Fighting Inflation - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "French Bond Rout Puts Crisis at Heart of ECB Succession Endgame - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "Trump Defends Tariffs at Rally as He Touts New US Audi Plant - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 6.5,
-    "sources": 1,
-    "titles": [
-     "Watch Fed Looks Set to Pause After September Rate Hike - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 6.0,
-    "sources": 1,
-    "titles": [
-     "How Ukraine's strikes on Russian energy sites deepened the rift with Trump - Reuters"
-    ]
-   },
-   {
-    "score": 6.0,
-    "sources": 1,
-    "titles": [
-     "Trump Prepares for Iran Escalation After US, Israeli Elections - Bloomberg.com"
-    ]
-   }
-  ],
-  "main": "UAE Shuts More Beaches as It Deals with Oil Spill in Gulf - Bloomberg.com",
-  "result": "新興市場債券表現超越美債，富裕國家財政疑慮升溫推動資金轉向"
- },
- {
   "at": "2026-10-25T23:09+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2733,5 +2662,108 @@
    "重點二": []
   },
   "result": "Warsh 減少利率決策次數至每年六次，債市憂政策突襲加劇波動"
+ },
+ {
+  "at": "2026-10-30T01:27+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims",
+   "gdp_adv"
+  ],
+  "locks": [
+   "pce",
+   "gdp_adv"
+  ],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Voters’ Inflation Frustrations Take Shine Off Strong Economic Growth - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Warsh’s ‘Forward Silence’ Risks Bigger Treasury Market Swings - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Fed’s Path to a Repo-Based Framework Faces a Familiar Roadblock - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Hassett Sees Fed Acting If October Inflation Data Come in High - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "US inflation heats up in September; consumer spending rises - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
+   "AI相關成本上升，中際旭創、新易盛第三季營收成長放緩"
+  ],
+  "main": "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg",
+  "main_why": "最高分",
+  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "出現材料裡沒有的數字（28）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "用了相對時間（前一天），請改寫成月/日"
+    ]
+   ]
+  },
+  "result": "Warsh 暗示暫停升息非既定路線，強調金融條件尚未緊縮、為 12 月升息鋪路"
  }
 ]

@@ -621,7 +621,79 @@
   "5e5d742ff2e8": "2026-10-28",
   "e43c7c353857": "2026-10-28",
   "9fae96ff0c55": "2026-10-28",
-  "30adcffb3d5b": "2026-10-19"
+  "30adcffb3d5b": "2026-10-19",
+  "0ee845b26f59": "2026-10-30",
+  "7f4653efb4de": "2026-10-29",
+  "1139a21a5445": "2026-10-29",
+  "152f6c350577": "2026-10-29",
+  "a012dc62b35b": "2026-10-28",
+  "581cc698be1c": "2026-10-28",
+  "53383b10af0c": "2026-10-27",
+  "ee8be1f966ba": "2026-10-23",
+  "86d0dde40e99": "2026-10-29",
+  "9e194810804a": "2026-10-29",
+  "ce707b7c1f24": "2026-10-29",
+  "924e33e0daae": "2026-10-29",
+  "0050624bde97": "2026-10-29",
+  "f95b685f62cf": "2026-10-28",
+  "39eebff0ebc7": "2026-10-28",
+  "a6cbfecafde5": "2026-10-23",
+  "b719887b2021": "2026-10-30",
+  "000b645d52e8": "2026-10-29",
+  "2655a8d6b95f": "2026-10-29",
+  "3bccf3ddec90": "2026-10-29",
+  "f117d065e962": "2026-10-29",
+  "39f52cac31fb": "2026-10-29",
+  "5a0cc0bcf04b": "2026-10-29",
+  "0aa7f671cfa1": "2026-10-29",
+  "ea571690c499": "2026-10-27",
+  "aecb58a64d33": "2026-10-27",
+  "9ec503665223": "2026-10-21",
+  "f503b4c400ba": "2026-10-21",
+  "0a0eeb32ccef": "2026-10-21",
+  "ba3d8aa172e6": "2026-10-20",
+  "b4fb4fc23455": "2026-10-19",
+  "16cada8b8cd4": "2026-10-19",
+  "f922af035bb2": "2026-10-28",
+  "558bf6c85cf5": "2026-10-28",
+  "8c2ea95d1de4": "2026-10-28",
+  "87ea570020c0": "2026-10-27",
+  "b39397b144e1": "2026-10-27",
+  "77273800eea6": "2026-10-27",
+  "d96dd52a58dc": "2026-10-27",
+  "16f98dbecd61": "2026-10-27",
+  "2fb2b0decaff": "2026-10-29",
+  "9fc8269e03af": "2026-10-29",
+  "c2dd28057943": "2026-10-28",
+  "e9cbed652bd5": "2026-10-29",
+  "a8de698c7e72": "2026-10-29",
+  "b06e631eff95": "2026-10-29",
+  "d493d7f3f7df": "2026-10-29",
+  "267f81250977": "2026-10-29",
+  "3b4c34de4b37": "2026-10-27",
+  "0c0df3c5a106": "2026-10-22",
+  "b94e5ac38f18": "2026-10-22",
+  "7b65a2e9e544": "2026-10-22",
+  "b556996bc434": "2026-10-22",
+  "f1f2d6148a9e": "2026-10-21",
+  "5d9893fdccb6": "2026-10-20",
+  "3585224ae468": "2026-10-20",
+  "db69404ddeda": "2026-10-23",
+  "ca594ed5ab91": "2026-10-23",
+  "ad3848e5c19b": "2026-10-21",
+  "12926e2f1282": "2026-10-21",
+  "8ea1bbd227af": "2026-10-20",
+  "13cf2a2b57a8": "2026-10-20",
+  "ebf6094f0032": "2026-10-20",
+  "e45ae99f4d7a": "2026-10-19",
+  "8a93244f2c45": "2026-10-28",
+  "8a3b550a7f6c": "2026-10-28",
+  "618f107f191c": "2026-10-23",
+  "46aa523c4413": "2026-10-23",
+  "0d34be1a4690": "2026-10-22",
+  "d2a863ce9861": "2026-10-28",
+  "0b19ef00e337": "2026-10-28",
+  "ad21ca8b0cb3": "2026-10-27"
  },
  "events": [
   {
@@ -683,20 +755,35 @@
      "title": "Alphabet’s Revenue Miss Reignites Fears Over AI Spending Binge",
      "source": "Bloomberg",
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPNl94WE51TlQ2Q2dVVTBDNlZZbzF5Mk02UjZRaEJwQnhoM1lGX0dWODk3b1RwZDB1SDVHYmYtOUQzaWJyTEc0ZXlTNmpyQU50WVhaQUpJX3dyMkVFbmgyVXJFVy1fb21TQUxEOXFIWmtzdFEyYVk5SkU3ZGF4LTdnN0EyTlo1NklicFg4TzlpSHYwRE9VYzdUUTZ4N0ZLaG9XWUs1Nm5vM3FfSktn?oc=5"
+    },
+    {
+     "title": "Wall Street ends lower as Alphabet revenue miss revives AI capex jitters",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxObTRZdktaNHNaUkc2SG45TFV3V3hKRlMwdWdFTEhyUVFSRnBodWFIM0gxSHh5NWZDVkp3WnJOX3RTZGFtUDVIN3ZPQnB6NlNOQ01OOXhTRnNhNjkyajZ2ejhEZkRBS1IxMkxjVWJmY3FYa3lqcHUxajVqRXpWdS1UWjdxZFZYTW8tUjBtN2NZTGlLSWFiRlpjTDNKaVlVbHRiLVRCcA?oc=5"
     }
    ]
   },
   {
-   "id": "86d2ea44495f",
+   "id": "66a4edbb73d7",
    "co": "Alphabet",
    "type": "資本支出",
-   "zh": "Alphabet宣布增加AI資本支出。",
+   "zh": "Alphabet第三季AI資本支出達510億美元，導致現金流壓力加大。",
    "date": "2026-10-29",
    "links": [
     {
      "title": "Alphabet spells out more AI capex, China+1 doesn’t add up",
      "source": "Financial Times",
      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPaEJLbWUyMWlVWXlsYzVLRmpUYmRyZGE0T3dVanRaeHRwUE14aFZXdV9iUmZDUV9QS1BGUDlZMTFQODJrNzJoR29lT1R4T2lCWWFxLU50d2FiWFFRekhSbndVbXI2TTdNVmtKN1JCYk95czBQYnJON3pwVVdXT2l4ZW9sZmg?oc=5"
+    },
+    {
+     "title": "Google shares tumble 11% after $51bn AI outlay deepens cash burn",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNZFpfdm5ucU1pTmJEQ0l6bDliR09sZTFzV1lKVjZaWldRanU2cUFjVG1iY1hhZHFBcFpQZkh2S1VWaGpxc1M5Y1pvUGhsZnQ3SE4yTkZHT0dyQTNoR1Npb043NW1tRUlST0NEdE5qSVB2T1BiRGFiZFFpVzNXa1RVZXJCbWU?oc=5"
+    },
+    {
+     "title": "GOOGL Stock Slumps 11% After-Hours: Alphabet’s Surge in AI Spending Pressures Third-Quarter Profits And Cash Flows",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQd3h4MlBjNlBvOEhEUDh0REZXRENkMzU2N2RQbmIxLVlhM1BYemszZlF2YXdLN3BGaDRDX0ZuVkNvbHVSRzI1di1IR3p2VmVXSkNLQUFUTWJlcGxxeHU1REtMQ1JZYVhFTWdtMURjQ29NanllOHowSEJxYk40VWVTd1hWRENNRWdGY2RETUljeEtjcmFkeEVN?oc=5"
     }
    ]
   },
@@ -723,7 +810,7 @@
    "id": "688df8cca8a8",
    "co": "Anthropic",
    "type": "發債",
-   "zh": "Anthropic完成63億美元債務融資，由Broadcom CEO協助促成。",
+   "zh": "Anthropic完成630億美元債務融資，由Broadcom CEO協助促成。",
    "date": "2026-10-29",
    "links": [
     {
@@ -734,10 +821,10 @@
    ]
   },
   {
-   "id": "9be48e79a654",
+   "id": "3ec8937b5944",
    "co": "OpenAI",
    "type": "算力合約",
-   "zh": "OpenAI計畫採購Google AI晶片，作為其AI建置計畫的一部分。",
+   "zh": "OpenAI採購Google AI晶片（TPU），作為三廠商晶片策略的一部分。",
    "date": "2026-10-29",
    "links": [
     {
@@ -758,16 +845,26 @@
    ]
   },
   {
-   "id": "56c948693030",
+   "id": "becd634b0ab4",
    "co": "微軟",
    "type": "發債",
-   "zh": "微軟啟動自2017年以來首次美元高級債券發行。",
+   "zh": "微軟發行250億美元債券，用於AI基礎設施建設。",
    "date": "2026-10-29",
    "links": [
     {
      "title": "Microsoft Kicks Off First US High-Grade Bond Sale Since 2017",
      "source": "Bloomberg",
      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNVW1FNlVmV2VIM1BicUxLa0t2X2xDaDF5X0dScC0tVmlnX1Z3OGJYVWRVcGtJaGx4R3cwR3E3cFA0enExcXhNUE01bWdyYXl5Z1paeVYyV284SDFkVTFFeWdPYTVLODVMZ29UbzVkSzA0Vlhxc1JlNEhwMnVhMVMzQzU4cmVqdGJEY1I5X0tkaGdkZ1VTQm1JREFoYUV4Q183cFVKT1hQS3JhTkdYbHVwbw?oc=5"
+    },
+    {
+     "title": "Microsoft Issues $25 Billion in New Bonds, Adding to AI Debt Spree",
+     "source": "Barron's",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBFNTVRWDE3aGl0UzB0UTQ2R1dlZkZqTWR6cW92NnA4RG5iYlAtdG5EMUdfNXNvcTVYQUtNbkgtQXZodWxEVXFIb2dwMGN6dFhxaXgwYzZJQ0FxQnp6YXhGcGFpMTZrcmVoOFdkQVRGY3VpNDJwRzQ0QlFn?oc=5"
+    },
+    {
+     "title": "Microsoft to raise up to $25 billion in bond market as investors get pickier about AI debt binge",
+     "source": "MarketWatch",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQa2Q2Q244R21uVzgzSnE2Zll0RlpQeWpxZWZYYmJXeU45WkczU0k3eHJNOW85Ymt1ZDBlazhkNzhHcGFoRmNLaDBvdDZ6R2hlX3NMRkRhc0lZMHQ5NXNUamJwS1V1OVFEcXBwSmMzSjl0UDBVZkV2eHJPMlRBUnBHdkd0Wm00bDlZTDljM2Y3eUxaOURCRWNWSXhqTmJVYXpPQ1Q2QTFOTzZJRVI2MzVnVWJGcTBjb29zd2R1TW5MSGw1cV9QT2IwNzhBakJrWi0wcVZ0Yw?oc=5"
     }
    ]
   },
@@ -775,7 +872,7 @@
    "id": "1f4a599700c8",
    "co": "甲骨文",
    "type": "資本支出",
-   "zh": "甲骨文限制新借款上限為20億美元，用於AI基礎設施投資。",
+   "zh": "甲骨文限制新借款上限為200億美元，用於AI基礎設施投資。",
    "date": "2026-10-29",
    "links": [
     {
@@ -791,48 +888,10 @@
    ]
   },
   {
-   "id": "3ec8937b5944",
-   "co": "OpenAI",
-   "type": "算力合約",
-   "zh": "OpenAI採購Google AI晶片（TPU），作為三廠商晶片策略的一部分。",
-   "date": "2026-10-29",
-   "links": [
-    {
-     "title": "OpenAI Eyes Google TPUs Amid AI Hardware Diversification",
-     "source": "KuCoin",
-     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOVVQ5eDlBTnU2OTlXd0ZWZzZ5UEhDRGktUjg1ak9jYk9ocldjNzY2UTQ5ZlFJT19XSkZrWXBrZ3NkaEVCNG02dl8zY3dEZUt3RmFRNG1kRTBBMDlIZFBUT3hGek1VMF8weWtGM2ZoMzBOU1R6c0ZqR1BldERxQjNld2NqMVd3RVhRZTJKazZ5a1ppUFhX?oc=5"
-    },
-    {
-     "title": "OpenAI Eyes Google Chip Ownership as Three-Vendor Silicon Strategy Takes Shape",
-     "source": "Tech Times",
-     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQallMdTdrTmJITXYzd21xMU1FbFB0RTBjOURqOEZkNFNxdUhlMllBdFZ5YWRzYmJpVWtGSHZVSkFYWTJMUzFEZFBHcXFmM043WVBHV3kzd2tEVjdxeUZxR3NyQThWN04wc1BsTlM0OXFpMndSbFVNQUw4M2NSbHpZWTVYRHNjZkNMSThvUFZ3VDB5bndzak1qYU5OM3VtZXlOQTB4cGEzV25PQ1R0Nlg0YUZBdm9DcVFwUFduTlRZeHlBU2ZTMmFWWDl3?oc=5"
-    },
-    {
-     "title": "OpenAI Is Buying Google’s AI Chips, a Hit to Nvidia’s Biggest Customer Bond",
-     "source": "24/7 Wall St.",
-     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNOU41VEhZT0hhZFRRQXVmRWhKWml6Q3FSLVRxeXpRYU9xLW5xQ21MT080OTJvNEtmcmQ5ZW05Tl9XRG4zeVZ1VVhNLWphbXB3ODJpcTBaY0hXc2J4RHBtQm1wVFJHUTlBeC02YkJydmF2QUFTS0s4eFU5UVB1bkZhdmZpUlQ4NnJSZHFlTnpoVzVYVmZmbnJ3NkMtbHZfT2N6M1p1VXk1QUNsWjdWVmpUeU9VZ0dCWGs?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "d5e4392070c8",
-   "co": "微軟",
-   "type": "發債",
-   "zh": "微軟計畫發行至少250億美元美元債券。",
-   "date": "2026-10-29",
-   "links": [
-    {
-     "title": "Microsoft Looks to Raise at Least $25 Billion From US Bond Sale",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNVW1FNlVmV2VIM1BicUxLa0t2X2xDaDF5X0dScC0tVmlnX1Z3OGJYVWRVcGtJaGx4R3cwR3E3cFA0enExcXhNUE01bWdyYXl5Z1paeVYyV284SDFkVTFFeWdPYTVLODVMZ29UbzVkSzA0Vlhxc1JlNEhwMnVhMVMzQzU4cmVqdGJEY1I5X0tkaGdkZ1VTQm1JREFoYUV4Q183cFVKT1hQS3JhTkdYbHVwbw?oc=5"
-    }
-   ]
-  },
-  {
    "id": "ca88aa0dbed1",
    "co": "甲骨文",
    "type": "融資／IPO",
-   "zh": "甲骨文限制2030年前外部AI融資上限為20億美元。",
+   "zh": "甲骨文限制2030年前外部AI融資上限為200億美元。",
    "date": "2026-10-29",
    "links": [
     {
@@ -857,34 +916,10 @@
    ]
   },
   {
-   "id": "becd634b0ab4",
-   "co": "微軟",
-   "type": "發債",
-   "zh": "微軟發行25億美元債券，用於AI基礎設施建設。",
-   "date": "2026-10-29",
-   "links": [
-    {
-     "title": "Microsoft Issues $25 Billion in New Bonds, Adding to AI Debt Spree",
-     "source": "Barron's",
-     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBFNTVRWDE3aGl0UzB0UTQ2R1dlZkZqTWR6cW92NnA4RG5iYlAtdG5EMUdfNXNvcTVYQUtNbkgtQXZodWxEVXFIb2dwMGN6dFhxaXgwYzZJQ0FxQnp6YXhGcGFpMTZrcmVoOFdkQVRGY3VpNDJwRzQ0QlFn?oc=5"
-    },
-    {
-     "title": "Microsoft to raise up to $25 billion in bond market as investors get pickier about AI debt binge",
-     "source": "MarketWatch",
-     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQa2Q2Q244R21uVzgzSnE2Zll0RlpQeWpxZWZYYmJXeU45WkczU0k3eHJNOW85Ymt1ZDBlazhkNzhHcGFoRmNLaDBvdDZ6R2hlX3NMRkRhc0lZMHQ5NXNUamJwS1V1OVFEcXBwSmMzSjl0UDBVZkV2eHJPMlRBUnBHdkd0Wm00bDlZTDljM2Y3eUxaOURCRWNWSXhqTmJVYXpPQ1Q2QTFOTzZJRVI2MzVnVWJGcTBjb29zd2R1TW5MSGw1cV9QT2IwNzhBakJrWi0wcVZ0Yw?oc=5"
-    },
-    {
-     "title": "Watch Microsoft Turns to Bond Market as AI Spending Grows",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSFNNTzc4MlhGUFFRU0N4YjhnSzY2UGswaEhzZkozbExTa3pNNkF5ZjAwTUlSenRRdTBMc3F2TVBUanBvbUlzU2JXdFYzSW5pMExleWk4TWpXVEQzWU9YZTA3N3pIc0xIak5GekdGM0dhSldLeEFidnpieVZ5enFIS3hTREdjSXhDeldlU2N5ZVdNc0t0bTIyZ1BHQWtRZ1lJYVEzdV9ISTJIZw?oc=5"
-    }
-   ]
-  },
-  {
    "id": "ba0850362bf3",
    "co": "亞馬遜",
    "type": "財報",
-   "zh": "亞馬遜公布第三季財報，營收未達預期，自由現金流為負42.4億美元。",
+   "zh": "亞馬遜公布第三季財報，營收未達預期，自由現金流為負424億美元。",
    "date": "2026-10-29",
    "links": [
     {
@@ -910,6 +945,20 @@
      "title": "Nvidia Moves to Backstop a Cloud Provider’s $45 Billion Anthropic Project",
      "source": "The Information",
      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOdmhuRzVaOG9xaEQ5U1VOcWNNLVN4YUZ0NUpfVnM3Qy1KakJVMWxDbW1heDFWNkxOR2dJbnR5NnJNb1dSb1RaTnUxTkZlQzU3b0l4SGFuR1RMVXY1dmlhTzJTVzd2VmstYWhyX0pyeGEwUTdKM1FtVGZQenBCdE5fSE9zZm8wOGNxUEQ3WmVrSi1ZSlZyX3A3cWRlTkRhMThMSjVEYnhuTGt6RE5janN1NkFUVjgxV3dVVklCcm1JUWlkRVpf?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "1a1bd7f0a8d2",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia與AMD承諾向Meta AI建設投資40億美元。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Nvidia, AMD Commit $4B to Meta AI Buildout",
+     "source": "Data Center Knowledge",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQWWJDMFY0dTdienA3a19xTU9PdzhSUnNDSkdxWFdXRXF1NUdkdDV1UkFrRHpnTFFuYkFlTmNzUF8yUmx6U3VITWFIWmhTTGRtZk52eUh4Wk9zZi1lQXNvU1FBdWMyeGY2bE4zNkRfcXZXanhKaV9lcElNMnRiQ3RYTTVsS2lvM1RKRk1hUnRNRHpLRl9WVnhGRlBR?oc=5"
     }
    ]
   },
@@ -965,7 +1014,7 @@
    "id": "21a6b3f98676",
    "co": "亞馬遜",
    "type": "資本支出",
-   "zh": "亞馬遜Leo以11.5億美元收購Globalstar，獲美國監管機構批准。",
+   "zh": "亞馬遜Leo以115億美元收購Globalstar，獲美國監管機構批准。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1042,25 +1091,6 @@
    ]
   },
   {
-   "id": "66a4edbb73d7",
-   "co": "Alphabet",
-   "type": "資本支出",
-   "zh": "Alphabet第三季AI資本支出達51億美元，導致現金流壓力加大。",
-   "date": "2026-10-28",
-   "links": [
-    {
-     "title": "Google shares tumble 11% after $51bn AI outlay deepens cash burn",
-     "source": "Financial Times",
-     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNZFpfdm5ucU1pTmJEQ0l6bDliR09sZTFzV1lKVjZaWldRanU2cUFjVG1iY1hhZHFBcFpQZkh2S1VWaGpxc1M5Y1pvUGhsZnQ3SE4yTkZHT0dyQTNoR1Npb043NW1tRUlST0NEdE5qSVB2T1BiRGFiZFFpVzNXa1RVZXJCbWU?oc=5"
-    },
-    {
-     "title": "GOOGL Stock Slumps 11% After-Hours: Alphabet’s Surge in AI Spending Pressures Third-Quarter Profits And Cash Flows",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQd3h4MlBjNlBvOEhEUDh0REZXRENkMzU2N2RQbmIxLVlhM1BYemszZlF2YXdLN3BGaDRDX0ZuVkNvbHVSRzI1di1IR3p2VmVXSkNLQUFUTWJlcGxxeHU1REtMQ1JZYVhFTWdtMURjQ29NanllOHowSEJxYk40VWVTd1hWRENNRWdGY2RETUljeEtjcmFkeEVN?oc=5"
-    }
-   ]
-  },
-  {
    "id": "42896c210e63",
    "co": "甲骨文",
    "type": "算力合約",
@@ -1088,7 +1118,7 @@
    "id": "aab1c6dd2abe",
    "co": "亞馬遜",
    "type": "財報",
-   "zh": "亞馬遜公布財報，資本支出達220億美元。",
+   "zh": "亞馬遜公布財報，資本支出達2,200億美元。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1099,10 +1129,24 @@
    ]
   },
   {
+   "id": "28ee48bc2a22",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Alphabet宣布2026年資本支出維持不變，2027年預期大幅增加。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Alphabet sinks 10% as it holds 2026 capex unchanged, expects significant increase in 2027",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9mMXgyTllzVlZsWFR1UGY5bTVRWWNYRnFoX3pCdDVjNU41Q3VQUTJyb2lTSUs3ZTdBakY3M0RVaERvZUZRMXA2RlhlYTNyeUJnb1MyX0ZjVHJWODNxd0pWbWRHRjNqb0FWVC1xdzdzZ29qQW8wMl9Z0gF8QVVfeXFMTU5rc0Fla1l1QVdxV2I0d3Znd2JCWm1tY1EtdFR6NTNuV0FaYmhWbEVsZUhFYWdNcXZ0ZGlrdWVaZUxnbThKMVR4V290N0hyb3VmSmtRVDFuUC03Yks5b3poak1UNFJoNkE3RHkzWWZMeUFqajFCc0Yzc1BwSw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "5a397aaf548e",
    "co": "Meta",
    "type": "發債",
-   "zh": "Meta發行27億美元數據中心債券。",
+   "zh": "Meta發行270億美元數據中心債券。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1113,16 +1157,26 @@
    ]
   },
   {
-   "id": "8054e915c46b",
+   "id": "7f5d51323d06",
    "co": "Meta",
    "type": "算力合約",
-   "zh": "Nvidia和AMD向Meta投資40億美元，深化AI合作夥伴關係。",
+   "zh": "Nvidia與Meta深化AI合作，Nvidia投資30億美元參與Meta股票發行。",
    "date": "2026-10-27",
    "links": [
     {
      "title": "Nvidia, AMD to invest $4 billion in Meta as tech giants deepen AI partnership",
      "source": "CNBC",
      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9lRlJvNzJPYWpWVDdDUjQwTFZVZC1Ibk54Zk43SEc1LUE0ZXpweFJZcUo2TVYwYTVWcDZrdEVpMFFpeXNIUkU2MTVNa1FXaC1Pdm5yWkhUYlptVVUzbjNuWlZ2NlVVZ9IBa0FVX3lxTFBTQXJKZC1wR0l4eGtlcFlaODVRTGRvWlR0Y3dhZnhMZFFxbzRHSEJ0RjFMNVh3R1h4bnZzaWc0U2JIYWExUlZCRzRNZWlFcF9QcWhiZUFHRWM2VWwzd0lFUGhzSUFVd0lVREtN?oc=5"
+    },
+    {
+     "title": "Nvidia, Meta deepen AI ties with $3 billion investment deal",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPS2Q3RzNwUk5IQWZ1NjIwYmxWV2xCVjZRQVk2OUQ3a1B5MWhKanZMZ3JyMHVRQ2MwSzRzZVZ4VmxNTGNKWDljd084OTRUSWcwNHdFYmduNTJ1RTAtcW0xRHVobW1BcVNQakJrT3paQkdQODl0dVoxZHNwYXhiVFJpclpNaVZrQ2lqRk5oMnBZYzlPOGc2alc3Q2szb2pDOWJhUDJXUA?oc=5"
+    },
+    {
+     "title": "Nvidia to commit $3 bln to Meta share offering as part of bigger AI partnership",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPVDFRaFdjWmM0emZvWHhiTGN0OWFkZGxZTEVGNXVsRGxqUXZ1TnJYNzFlYnhkLVgzaGxOSDZJZ1pMVHRSNHJyV1d3RVg3Z2h3NTF3TFdwRTJGWTBfR3NKSEtjY2JZbFppNnhMU3hPVHJXRkhBaWV1RGJVZGZIbFRpbXZEalhybGdfLXg4dG9LSGkyUQ?oc=5"
     }
    ]
   },
@@ -1137,25 +1191,6 @@
      "title": "Oracle expands OpenAI partnership, stock jumps on deal",
      "source": "CNBC",
      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNSVRPQkhOWF9iLXVxeEVhci01ZV95V0NBb0NGanhIUkVfbEc3cnpiV25QYXlHSnNZWE1nX1RXd0Iyb0hkMFNnaElxVHBQcjZwYmlLbVZQVGx1OEk0Yk1VbzdxTEVVc2l2TmRxZXN5TnF5b3pZOXRfdGVCb0pvTjZ5VU56ZGlINUZ1QlFscWZYUlNuMVhwVkhrTUZ0Z28?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "7f5d51323d06",
-   "co": "Meta",
-   "type": "算力合約",
-   "zh": "Nvidia與Meta深化AI合作，Nvidia投資30億美元參與Meta股票發行。",
-   "date": "2026-10-27",
-   "links": [
-    {
-     "title": "Nvidia, Meta deepen AI ties with $3 billion investment deal",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPS2Q3RzNwUk5IQWZ1NjIwYmxWV2xCVjZRQVk2OUQ3a1B5MWhKanZMZ3JyMHVRQ2MwSzRzZVZ4VmxNTGNKWDljd084OTRUSWcwNHdFYmduNTJ1RTAtcW0xRHVobW1BcVNQakJrT3paQkdQODl0dVoxZHNwYXhiVFJpclpNaVZrQ2lqRk5oMnBZYzlPOGc2alc3Q2szb2pDOWJhUDJXUA?oc=5"
-    },
-    {
-     "title": "Nvidia to commit $3 bln to Meta share offering as part of bigger AI partnership",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPVDFRaFdjWmM0emZvWHhiTGN0OWFkZGxZTEVGNXVsRGxqUXZ1TnJYNzFlYnhkLVgzaGxOSDZJZ1pMVHRSNHJyV1d3RVg3Z2h3NTF3TFdwRTJGWTBfR3NKSEtjY2JZbFppNnhMU3hPVHJXRkhBaWV1RGJVZGZIbFRpbXZEalhybGdfLXg4dG9LSGkyUQ?oc=5"
     }
    ]
   },
@@ -1187,7 +1222,7 @@
    "id": "1a46101ede5a",
    "co": "亞馬遜",
    "type": "資本支出",
-   "zh": "亞馬遜今年在數據中心支出至少200億美元。",
+   "zh": "亞馬遜今年在數據中心支出至少2,000億美元。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1229,7 +1264,7 @@
    "id": "8beb90a9516c",
    "co": "Meta",
    "type": "融資／IPO",
-   "zh": "Meta尋求籌資最高95億美元股權以支持AI支出。",
+   "zh": "Meta尋求籌資最高950億美元股權以支持AI支出。",
    "date": "2026-10-26",
    "links": [
     {
@@ -1241,6 +1276,11 @@
      "title": "Scott Galloway Picks Meta as AI’s “Big Winner” as Its $35 Billion Raise Lifts the Stock",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNc2JSNUR0dDFYdEswT2NCTWhPVmktRHBmTG05Zi1oM1RiUURHeU1Tb3BEcks2Q042eFotdy1JMDJPWENKMlluTy1mQVFGY1FiWWJ2RGU5M0xDOVpTdGc3SjIwcWlIMnpqS1MzTVBMakF0TzVhVHByaDVBbjNmVjVNcnlEOXk4b0xNR1JLeWIxb2lveDgyS3NsWg?oc=5"
+    },
+    {
+     "title": "Meta eyes record $97.5 billion equity raise to fund AI expansion",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPclhjOFJvYkM0S0hLUmxaY0l2X3hCdWI0N1prZlo2QXhXdmt5T0pNQVpFODVpYzgycWdZcHM2NkZ2LTdaMEVUVlpTXzVFUzc2ZEdVdlpTeThUVkZtc3V4cEFTelk5bDd2Z0dfRDFsb0dGQ0MxRXhYMExFZTlXVkNjRXF6TDBLalZ5ZTFBbFMyX24wMVBTQW1GQkJNRjNYWTRiVGJJWWdialBfV1oyQUZNN3I4RQ?oc=5"
     }
    ]
   },
@@ -1248,27 +1288,13 @@
    "id": "c85474bd2dc2",
    "co": "Anthropic",
    "type": "算力合約",
-   "zh": "Anthropic IPO文件披露已鎖定430億美元的AI算力合約。",
+   "zh": "Anthropic IPO文件披露已鎖定4,300億美元的AI算力合約。",
    "date": "2026-10-26",
    "links": [
     {
      "title": "Anthropic's IPO filing reveals $430 billion in locked-in AI computing: Chart of the Day",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxPbE51NDUwd0ppb0ctckJ1TEkzV0Z4aUJXcEQ5Rk9MQlJiZVY0M1RYTTZSOWhUb0dGQzV3NHVwY0pXaDNkWnhzVzdLNTF1elZuUHVXMDNNaW0wUE1FVHJFZG9pVEowaUNpMWpVQS15VDROQ0RzWUFnOFc0VnB1eXJLeFNBeWdLeHprZUJnZjFnMUlVT0gtUDlWam8tMkVSZXZiYWplWUlWaWhxQ2MxWVhYNjVjVzVlY2lKU1cxZ1R0Nm9GM2hJc3ZxR213b0NoQ1BwTjlrV29Ba0c?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "28b41d5f4bee",
-   "co": "Meta",
-   "type": "融資／IPO",
-   "zh": "Meta籌資最高97.5億美元股權以支持AI擴張。",
-   "date": "2026-10-26",
-   "links": [
-    {
-     "title": "Meta eyes record $97.5 billion equity raise to fund AI expansion",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPclhjOFJvYkM0S0hLUmxaY0l2X3hCdWI0N1prZlo2QXhXdmt5T0pNQVpFODVpYzgycWdZcHM2NkZ2LTdaMEVUVlpTXzVFUzc2ZEdVdlpTeThUVkZtc3V4cEFTelk5bDd2Z0dfRDFsb0dGQ0MxRXhYMExFZTlXVkNjRXF6TDBLalZ5ZTFBbFMyX24wMVBTQW1GQkJNRjNYWTRiVGJJWWdialBfV1oyQUZNN3I4RQ?oc=5"
     }
    ]
   },
@@ -1318,7 +1344,7 @@
    "id": "8c9641d89d9e",
    "co": "OpenAI",
    "type": "融資／IPO",
-   "zh": "OpenAI籌資約30億美元，估值125億美元，由阿聯酋投資者領投。",
+   "zh": "OpenAI籌資約300億美元，估值1.25 兆美元，由阿聯酋投資者領投。",
    "date": "2026-10-23",
    "links": [
     {
@@ -1427,49 +1453,73 @@
      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOT09KR2R3TjktZGltSk9PMGtKcGVMeFBuSmR5eTVkMERSbkVuc0d5bGhnanJ2WloyWUtULU1PTkFVQlNhaklmWmJESHF2cEV0Q01YQ3NBb3RxWklLQlNLelBEMzVBSF9nZ09Uc0FjLUhHUmhOeUF1Z0pObndUclVjT0s2Q3Fka2Z6dWltWC1MQ0g5cmo0V1dUeFY0M3hEOE5aSzV3RjdZZ2JFUTU4TEE?oc=5"
     }
    ]
+  },
+  {
+   "id": "c4dbe1e60f60",
+   "co": "Anthropic",
+   "type": "算力合約",
+   "zh": "Anthropic與Nscale洽談450億美元雲端運算合約。",
+   "date": "2026-10-20",
+   "links": [
+    {
+     "title": "Anthropic in talks with neocloud Nscale over second multibillion-dollar deal, source tells CNBC",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBsbk50SFoxenQ3VGJlY3laenJNc0wyTTlPbjB2WEVKTWdJNWlIdmhjSTVuczRtOGNsNmVfaHlqaU5EdVJlOW9Jc2lfblROYk5wY1ptanZDaXR0VV9abVRXWGVuLUhaWTQ5RE95Qm5zaDZQLXZ2cWdIMFZn0gF_QVVfeXFMTUw5c255RzRsWWxUZlpiQ1Q5cUxVMkQxcmRjbzJwWl9SWG5kd29hRUk4QnluRC0ybWRzUHhrLVh5Z05rTFRieWlvMXdkaDE5TVNYUWJBY3Nocno3WWZrbXhmVy1oZDZIRjlsaEVlQk1CYzE3RGYtNHNrb0hkWHhMZw?oc=5"
+    },
+    {
+     "title": "Nscale, Anthropic in Talks for $45 Billion Cloud Computing Deal",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOWElPM1lSczhESmRndWxlZjZIbWhtVS0zZXBjS2Z2Qi12ZVIwcXR0c2lZTWNSYjQxc2lTUnBGaEVBQWZpbUFhNUxQcUhNeVByZVFPQ0hJbm52TVVrX2c0WFFaMDJHSjktNHV3VFVhcDZoY2Ewc1Q4Yks2N0FTek1HR0lYYVoxV0ZYb0Y0c2RmUUtRdVlSbDRNYWJvcm5PeFdqQkVOeFVfQ1RMZTZTeGtzcDFR?oc=5"
+    },
+    {
+     "title": "Nvidia-backed Nscale, Anthropic in talks for new $45 billion AI cloud deal, source says",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPcGMyclR5X0JrXzBKem90Uk1sZnBQNkcyRnlyc3ZnWTM4Q0ZoUWtKUzRrd1Y3aHlqaDRjT1pfaFdmV0pHYUFROFI3TFhTWVhtczJsM01PSF8tSEtXejB4emlhVjZGMmQzeWh0RXJoaS0tNDQ1SDhlZDRJZU5hZG5ibE85N3dxU21DS2ZKYm1NV2pVUUF4ZjF3XzQ1ZncwaHVMdXlWZ2FsWjRtQ1d0eFN2YUVQc2x4cTd6YjNwSTVuVUFQZw?oc=5"
+    }
+   ]
   }
  ],
  "impact": {
   "微軟": {
-   "hash": "1ac88b7b17ee",
-   "text": "微軟雲端業務超預期成長支撐盈利，但資本支出低於預期偏向緩解融資壓力。然而啟動大規模發債（至少250億美元）用於AI基礎設施，偏向增加公司債供給。若市場視此為AI投資持續升溫的信號，則偏向提振AI投資熱度；若投資人擔憂高槓桿融資，則偏向對長端利率形成上升壓力。"
+   "hash": "7652b4545f04",
+   "text": "微軟雲端業務超預期成長支撐財報表現，偏向提升市場對其償債能力的信心。資本支出低於預期則偏向短期降低融資需求，但大規模發債計畫（至少250億美元）反映其對AI基礎設施的長期投資承諾。此舉偏向增加公司債供給、可能對長端利率形成溫和上行壓力；同時超預期盈利與AI投資承諾偏向支撐股市與AI投資熱度。"
   },
   "Alphabet": {
-   "hash": "bd3d351c25c1",
-   "text": "Alphabet營收未達預期引發AI支出過度擔憂，同時宣布增加資本支出，現金流壓力加大。此偏向增加公司債供給需求，若市場對AI投資回報率疑慮加深，則長端利率承壓；股市偏向承受賣壓，AI投資熱度則面臨降溫壓力，因高支出與營收未達預期的落差引發效率質疑。"
+   "hash": "4f05f95faff0",
+   "text": "Alphabet營收未達預期加上AI資本支出持續攀升，偏向增加公司債供給需求。若市場對AI投資回報率疑慮加深，則長端利率面臨下行壓力；但若投資人擔憂其現金流承壓，偏向要求更高風險溢價。AI投資熱度短期偏向降溫，因營收成長未能匹配支出增幅，引發效率質疑。"
   },
   "Meta": {
-   "hash": "b8ea4f05bb95",
-   "text": "Meta近期密集發債與融資以支撐巨額AI資本支出承諾，偏向增加公司債供給、推高長端利率。大規模股權融資與Nvidia等科技巨頭投資參與，強化市場對Meta AI競爭力預期，偏向提振股市與AI投資熱度。若融資成本上升超預期，則可能抑制長期資本支出效率。"
+   "hash": "ef0e51bcac80",
+   "text": "Meta近期密集融資與巨額資本支出承諾，偏向增加公司債供給與股權稀釋。27億美元數據中心債券發行直接擴大債券市場供給，長端利率面臨上升壓力；同時股權融資與股票分割稀釋現有股東權益。Nvidia等科技巨頭的鉅額投資與合作深化，強化AI產業景氣預期，若市場認可Meta的AI戰略，則股市與AI投資熱度偏向上升，但需警惕債務與股本擴張的長期稀釋效應。"
   },
   "甲骨文": {
-   "hash": "c620289500b8",
-   "text": "甲骨文設定AI基礎設施借款與融資上限，同時承諾正向現金流目標，偏向降低公司債供給壓力。擴大多元晶片供應協議與夥伴投資，反映AI運算需求持續，若現金流目標達成則長端利率承壓減輕。資本支出紀律強化偏向穩定市場預期，對AI投資熱度維持支撐但趨向理性配置。"
+   "hash": "47a8c0e5c04f",
+   "text": "甲骨文設定AI基礎設施借款與融資上限，偏向減少公司債供給壓力。同時擴大多元晶片合作、承諾夥伴投資，顯示在資本支出受控下推進AI戰略。若融資需求受限，則長端利率面臨的企業融資需求偏向下降；但多晶片策略強化競爭力，偏向支撐AI投資熱度維持。"
   },
   "CoreWeave": {
-   "hash": "1e46b01eda54",
-   "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增200至380億美元債券發行將擴大市場供給，可能對長端利率形成上行壓力。同時，龐大融資需求反映其資本密集型業務擴張，偏向支撐AI基礎設施投資熱度，但債務規模快速攀升若引發信用風險疑慮，則可能對相關股票估值產生負面影響。"
+   "hash": "26daa7e8c5f7",
+   "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增數百億美元債券發行將拉高長端利率，因企業融資需求增加；同時AI基礎設施投資熱度可能受融資成本上升而承壓。股市方面，高債務預期若引發償債風險疑慮，則偏向對該公司股價造成負面影響。"
   },
   "Anthropic": {
-   "hash": "f671c53fe0c0",
-   "text": "Anthropic近期融資動作頻繁，偏向增加公司債供給。63億美元新債發行加上IPO申請，反映融資需求上升，若市場消化能力有限，則長端利率偏向上行壓力。430億美元算力合約鎖定與630億美元晶片融資安排，展現AI基礎設施投資規模龐大，偏向強化AI投資熱度。整體而言，大額融資與算力承諾偏向支撐長端利率與AI相關股票需求。"
+   "hash": "67dc330ace0c",
+   "text": "Anthropic近期融資與算力合約密集推進，偏向增加公司債供給。大額債務融資與晶片融資安排反映其資本密集特性，若後續IPO順利上市，則股市偏向受惠於AI領域融資活躍；同時430億美元算力合約鎖定長期支出，偏向強化AI投資熱度預期。債務規模擴大可能對長端利率構成溫和上升壓力。"
   },
   "OpenAI": {
-   "hash": "b6be3147fe26",
-   "text": "OpenAI近期大幅擴張算力採購與融資，偏向增加公司債供給壓力。多筆晶片合約與三十億美元融資需求，若轉化為債券發行，將增加長端利率上行壓力；同時密集的基礎設施投資承諾強化AI產業景氣預期，偏向提升AI投資熱度。惟融資規模與債務結構仍需觀察，對股市影響取決於市場對其盈利能力評估。"
+   "hash": "a3ed61c12054",
+   "text": "OpenAI近期大規模融資與多元化算力採購，偏向提升AI投資熱度。融資規模擴大反映市場對生成式AI前景的信心，增加公司債供給壓力；多廠商晶片策略與雲端合作擴張，暗示資本支出持續高位，若融資成本上升則長端利率承壓。這些事件強化AI產業景氣預期，偏向支撐科技股與AI相關投資熱度。"
   },
   "亞馬遜": {
-   "hash": "b60fef1d4aa7",
-   "text": "亞馬遜近期大幅增加數據中心資本支出（超200億美元）並簽署多筆AI基礎設施合約，顯示對算力投資的強烈承諾，偏向提升AI投資熱度。然而第三季營收未達預期且自由現金流轉負，若現金流壓力持續，則公司債供給偏向增加以融資龐大支出；同時高資本支出與營收疲軟的落差，偏向對長端利率形成溫和上升壓力。"
+   "hash": "0e18c850206b",
+   "text": "亞馬遜近期大幅增加數據中心資本支出（超200億美元）並簽署多筆AI基礎設施合約，顯示對算力投資的強勢承諾，偏向提升AI投資熱度。然而第三季營收未達預期、自由現金流轉負，若現金流持續惡化，則公司債供給壓力偏向上升，可能推高長端利率。短期內資本密集的AI布局與財務承壓形成拉扯。"
   },
   "Nvidia": {
-   "hash": "8d2c5c3d5fd9",
-   "text": "Nvidia近期大幅擴展算力合約（Anthropic、Meta、Hugging Face等逾600億美元規模），偏向強化AI基礎設施需求，可能推升長端利率與股市。若這些項目順利推進，企業資本支出增加，則偏向提高公司債供給；惟反壟斷調查風險若升溫，則可能抑制投資熱度。整體而言，大規模算力投資偏向支撐AI投資熱度。"
+   "hash": "6217c2e6633a",
+   "text": "Nvidia近期大幅擴展算力合約，涉及Anthropic、Meta、Hugging Face等重量級客戶的數百億美元投資承諾。這些事件偏向提升AI投資熱度，反映企業對生成式AI基礎設施的強勁需求。若這些合約順利執行，則Nvidia營收與現金流前景向好，偏向降低其公司債供給壓力；同時大規模資本支出需求可能推升長端利率。惟Hugging Face交易遭反壟斷調查，若限制該筆交易，則偏向削弱上述正面預期"
   },
   "xAI": {
-   "hash": "52f69c51b0c0",
-   "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
+   "hash": "f62ac7abe073",
+   "text": "xAI與SpaceX簽署400億美元GPU租賃協議，反映其算力需求龐大且融資能力強。此舉偏向增加公司債供給壓力——若xAI後續透過債券融資支應租賃成本，長端利率面臨上升壓力。同時，大規模算力投資偏向提升AI投資熱度，可能吸引科技股資金流入。短期內公司債供給增加與AI熱度上升的雙重作用，對長端利率形成複雜影響。"
   }
  },
- "at": "2026-10-30 08:04（台北）"
+ "at": "2026-10-30 09:27（台北）"
 }
