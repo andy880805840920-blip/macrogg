@@ -247,6 +247,58 @@ check("⑬ 合併卡改用 mgx- 前綴，不再套到匯率頁 .fx-p 的外框",
 check("⑬ 小卡裡的區塊明確撐滿寬（有些瀏覽器的 button 不會）", ".duo-6 .duo-card>span{display:block;width:100%" in _css13
       and "align-items:stretch;width:100%}" in _css13)
 
+# ⑭ 2026-10-30：主軸字數、跨日不重複、鎖定照台北日期
+_tw14 = clock.TAIPEI
+_ev14 = {"cpi": ["2026-10-14"]}
+check("⑭ 前一晚公布、當晚已寫過：隔天早上不再鎖定",
+      ft._lock_events(_ev14, {}, dt.datetime(2026, 10, 15, 7, 0, tzinfo=_tw14),
+                      covered_at=dt.datetime(2026, 10, 14, 22, 45, tzinfo=_tw14)) == [])
+check("⑭ 前一晚公布後還沒寫過：隔天早上照樣鎖定",
+      ft._lock_events(_ev14, {}, dt.datetime(2026, 10, 15, 7, 0, tzinfo=_tw14),
+                      covered_at=dt.datetime(2026, 10, 14, 19, 0, tzinfo=_tw14)) == ["cpi"])
+check("⑭ FOMC 台北凌晨才公布：隔天早上照樣鎖定",
+      ft._lock_events({}, {"fomc_dates": ["2026-10-28"]}, dt.datetime(2026, 10, 29, 7, 0, tzinfo=_tw14),
+                      covered_at=dt.datetime(2026, 10, 28, 23, 0, tzinfo=_tw14)) == ["fomc"])
+_st14 = {"archive": {"2026-10-29": {"headline": "第三季 GDP 成長加速", "at": "2026-10-29T15:53:00+00:00",
+                                     "text": "美國第三季 GDP 年化成長 3.4%，高於預期的 3.1%，消費成長 3.8%。¶Warsh 表示…",
+                                     "links": [{"title": "Third-quarter U.S. GDP increases 3.4%"}]},
+                     "2026-10-30": {"headline": "今天的", "at": "2026-10-30T00:04:00+00:00", "text": "今天", "links": []}}}
+_now14 = dt.datetime(2026, 10, 30, 8, 0, tzinfo=_tw14)
+_pp = ft._prior_points(_st14, _now14)
+check("⑭ 只拿前幾個台北日期（不含今天）、一段一筆", [p["date"] for p in _pp] == ["2026-10-29", "2026-10-29"]
+      and _pp[0]["para"].startswith("美國第三季 GDP"))
+_g14 = {"lead": {"title": "Third-quarter U.S. GDP increases 3.4%"}, "items": [
+    {"title": "Third-quarter U.S. GDP increases 3.4%", "at": "2026-10-29T13:00:00+00:00"}], "score": 10}
+_g14b = {"lead": {"title": "Oracle sells bonds"}, "items": [{"title": "Oracle sells bonds", "at": "2026-10-29T23:00:00+00:00"}],
+         "score": 9}
+check("⑭ 同一篇報導＝前一天寫過的事", ft.prior_for(_g14, _pp)["date"] == "2026-10-29" and ft.prior_for(_g14b, _pp) is None)
+_old14 = ft.mark_prior_old([_g14, _g14b], _pp)
+check("⑭ 前一天寫過、而且沒有新報導：不當重點；其他事件照常", _g14.get("stale") == "已寫過" and not _g14b.get("stale")
+      and len(_old14) == 1)
+_g14c = dict(_g14, items=_g14["items"] + [{"title": "GDP: net exports drag", "at": "2026-10-30T00:00:00+00:00"}])
+_g14c.pop("stale", None)
+check("⑭ 有新報導（在前一天最後一版之後）就可以再當重點", ft.mark_prior_old([_g14c, _g14b], _pp) == [])
+check("⑭ 給 AI 的提示：寫明前一天寫過什麼、只寫新發展", "10/29 已經寫過" in ft.prior_note(_pp[0])
+      and "只寫 10/29 之後的新發展" in ft.prior_note(_pp[0]) and ft.prior_note(None) == "")
+check("⑭ 重複判斷：共用 2 個關鍵數字算重複，半句帶過一個數字不算",
+      ft._dup_prior("第三季 GDP 年化成長 3.4%，高於預期的 3.1%。", _pp[0]["para"]) != []
+      and ft._dup_prior("GDP 公布 3.4% 之後，淨出口拖累 3.3 個百分點，可能反映資料中心設備進口激增。", _pp[0]["para"]) == [])
+_calls14, _outs14 = [], ["【主軸】\n" + "第三季 GDP 年化成長 3.4%，高於預期的 3.1%，消費成長 3.8%。" * 2 + "\n【來源】\n1",
+                         "【主軸】\nGDP 公布後，淨出口拖累 3.3 個百分點，可能反映資料中心設備進口激增與搶在關稅前進貨，9 月消費支出成長 0.5%、所得成長 0.2%。\n【來源】\n1"]
+_ca14 = ft._call_ai
+ft._call_ai = lambda s, sy, env=None, model=None: (_calls14.append(s) or _outs14[len(_calls14) - 1], "")
+_src14 = ("【報導1｜Reuters｜10/29】第三季 GDP 年化成長 3.4%，高於預期的 3.1%，消費成長 3.8%。淨出口拖累 3.3 個百分點，"
+          "9 月消費支出成長 0.5%、所得成長 0.2%。")
+_r14, _e14 = ft._generate_main(_src14, "sys", {}, caps=[100], mins=[30], part="para", prior=_pp[0]["para"])
+ft._call_ai = _ca14
+check("⑭ 重述前一天的內容 → 帶原因重寫一次；重寫後不重複就採用", len(_calls14) == 2 and "重述了前一天" in _calls14[1]
+      and _r14 and not _r14["dup_prior"] and "淨出口" in _r14["text"], str(_e14))
+_calls14b, _ca14b = [], ft._call_ai
+ft._call_ai = lambda s, sy, env=None, model=None: (_calls14b.append(s) or "【主軸】\n" + "淨出口拖累 3.3 個百分點。" * 30 + "\n【來源】\n1", "")
+ft._generate_main(_src14, "sys", {}, caps=[100], mins=[30], part="para")
+ft._call_ai = _ca14b
+check("⑭ 超過上限 1.5 倍：請它精簡重寫一次", len(_calls14b) == 2 and "太長了" in _calls14b[1])
+
 clock.now, clock.today = _now0, _today0
 print()
 print("全部通過" if ok else "有失敗")
