@@ -548,7 +548,80 @@
   "f60b980fefbb": "2026-10-28",
   "f39fbfce763b": "2026-10-28",
   "564122380cf1": "2026-10-28",
-  "c48477ba045f": "2026-10-28"
+  "c48477ba045f": "2026-10-28",
+  "af462597616e": "2026-10-29",
+  "caa32580fbf5": "2026-10-29",
+  "56fbc02fba0c": "2026-10-29",
+  "f17d53a2d1cf": "2026-10-29",
+  "371dc4e9191a": "2026-10-29",
+  "76f2cba4854c": "2026-10-29",
+  "5b90e2fd496d": "2026-10-29",
+  "7a1e7e3f39d1": "2026-10-29",
+  "265203751f14": "2026-10-29",
+  "1e5334dc0ed1": "2026-10-29",
+  "eadba46b3666": "2026-10-29",
+  "3969179b38da": "2026-10-29",
+  "4ded03e70782": "2026-10-29",
+  "60c6918072a2": "2026-10-29",
+  "f58aa0d54d57": "2026-10-29",
+  "9f3c97b5c9f7": "2026-10-29",
+  "9939d50282e4": "2026-10-29",
+  "c13710e06561": "2026-10-29",
+  "8891bb57c82a": "2026-10-29",
+  "bb730be60636": "2026-10-29",
+  "80ba85fa53ee": "2026-10-29",
+  "3d6bc90cd5e0": "2026-10-29",
+  "18dd4594cd3d": "2026-10-29",
+  "d46ae4b1283d": "2026-10-29",
+  "b0fe66a50dd4": "2026-10-29",
+  "e029cf6d7397": "2026-10-29",
+  "8e838d551312": "2026-10-26",
+  "fef5599b45f7": "2026-10-22",
+  "5534b4bf2b74": "2026-10-22",
+  "b2d795bb1990": "2026-10-22",
+  "60bbef020d7d": "2026-10-21",
+  "d49c40875720": "2026-10-21",
+  "ea9b6e922252": "2026-10-29",
+  "a52823365be6": "2026-10-29",
+  "151808cd9b05": "2026-10-21",
+  "ae881122319c": "2026-10-29",
+  "689a67d459e5": "2026-10-29",
+  "2d58709cc186": "2026-10-29",
+  "7de7aefb57bb": "2026-10-29",
+  "422c7805124e": "2026-10-28",
+  "920dd8f8bc89": "2026-10-29",
+  "4ce66afe6f77": "2026-10-29",
+  "41d906fbcd16": "2026-10-29",
+  "ded390a98c18": "2026-10-29",
+  "541fd7fea85f": "2026-10-29",
+  "c31405de0a9c": "2026-10-28",
+  "61f4d8904cb5": "2026-10-27",
+  "c9377894b9e2": "2026-10-23",
+  "912f236d271b": "2026-10-16",
+  "c06316428750": "2026-10-16",
+  "e1fa1f3d189f": "2026-10-29",
+  "5449d096ad68": "2026-10-29",
+  "09ab378b2712": "2026-10-28",
+  "3ce85d75cfa6": "2026-10-28",
+  "c629fe702c34": "2026-10-27",
+  "0a3f2eb0b630": "2026-10-27",
+  "ba87c3ed868e": "2026-10-29",
+  "896b02232d09": "2026-10-28",
+  "52671560ecf2": "2026-10-26",
+  "3e0e1aa1f6e4": "2026-10-26",
+  "5fbb41c2311d": "2026-10-26",
+  "ab9162c7e4ff": "2026-10-26",
+  "e56e575bb8b4": "2026-10-26",
+  "716641f931ae": "2026-10-24",
+  "2f622768e8ae": "2026-10-29",
+  "a3dba74ea1b7": "2026-10-29",
+  "ba4f1bdcd9fc": "2026-10-29",
+  "7c412184acfd": "2026-10-29",
+  "4da2d13a41cf": "2026-10-28",
+  "5e5d742ff2e8": "2026-10-28",
+  "e43c7c353857": "2026-10-28",
+  "9fae96ff0c55": "2026-10-28",
+  "30adcffb3d5b": "2026-10-19"
  },
  "events": [
   {
@@ -780,6 +853,63 @@
      "title": "Goldman keeps CoreWeave at Buy, sizes new debt need at $20 billion to $38 billion",
      "source": "Blockspace Media",
      "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5BX2F4djNBWDN6SC1acnpobWVuazdRNl92MWtvWHhUMlVZZmRxUV9aNHd5VXZza1ZMbVhIN2J6NkNHM05zOVl3dDNFd05BTWFUcWhEdkRVS0hHZGNsRmNCSnhqUFF0dExoN0E1cjVPMWxhVndsYVFkeXVxQVM?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "becd634b0ab4",
+   "co": "微軟",
+   "type": "發債",
+   "zh": "微軟發行25億美元債券，用於AI基礎設施建設。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Microsoft Issues $25 Billion in New Bonds, Adding to AI Debt Spree",
+     "source": "Barron's",
+     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBFNTVRWDE3aGl0UzB0UTQ2R1dlZkZqTWR6cW92NnA4RG5iYlAtdG5EMUdfNXNvcTVYQUtNbkgtQXZodWxEVXFIb2dwMGN6dFhxaXgwYzZJQ0FxQnp6YXhGcGFpMTZrcmVoOFdkQVRGY3VpNDJwRzQ0QlFn?oc=5"
+    },
+    {
+     "title": "Microsoft to raise up to $25 billion in bond market as investors get pickier about AI debt binge",
+     "source": "MarketWatch",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQa2Q2Q244R21uVzgzSnE2Zll0RlpQeWpxZWZYYmJXeU45WkczU0k3eHJNOW85Ymt1ZDBlazhkNzhHcGFoRmNLaDBvdDZ6R2hlX3NMRkRhc0lZMHQ5NXNUamJwS1V1OVFEcXBwSmMzSjl0UDBVZkV2eHJPMlRBUnBHdkd0Wm00bDlZTDljM2Y3eUxaOURCRWNWSXhqTmJVYXpPQ1Q2QTFOTzZJRVI2MzVnVWJGcTBjb29zd2R1TW5MSGw1cV9QT2IwNzhBakJrWi0wcVZ0Yw?oc=5"
+    },
+    {
+     "title": "Watch Microsoft Turns to Bond Market as AI Spending Grows",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSFNNTzc4MlhGUFFRU0N4YjhnSzY2UGswaEhzZkozbExTa3pNNkF5ZjAwTUlSenRRdTBMc3F2TVBUanBvbUlzU2JXdFYzSW5pMExleWk4TWpXVEQzWU9YZTA3N3pIc0xIak5GekdGM0dhSldLeEFidnpieVZ5enFIS3hTREdjSXhDeldlU2N5ZVdNc0t0bTIyZ1BHQWtRZ1lJYVEzdV9ISTJIZw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "ba0850362bf3",
+   "co": "亞馬遜",
+   "type": "財報",
+   "zh": "亞馬遜公布第三季財報，營收未達預期，自由現金流為負42.4億美元。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Amazon posts negative free cash flow of $42.4 billion, holds 2026 capex unchanged",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE05d010MmVjcktGQS1WWE95VkxiNXJEQkN3czR3Rk1jejlmNHRPaHFUZTVQZ1BoUDRublhBWHlaNUlfZlJKMkFoTFRadXJYYUpNbGNhRTNEWVVEaTFUSzhPTGI1R0R5SHRvVXdBTGRLdVhkYXlrUU4wMmo0Qk3SAYIBQVVfeXFMTU1ac2pLUU1YMy1aNHNUUFdCU3Q3WEVacW9kcEc4RjRuanZfRDdVZlFwNzBXTUwyZi1fSFBSbVBSQVNUZVhyYnNRdWNQODd1NV95SDVyQ3ZEUUl1QmRDbkF2OVlfblF6dTVsX3o1cU5VOHBDRHFQMDgtNE5PWEhaUmpCQQ?oc=5"
+    },
+    {
+     "title": "Amazon misses on Q3 earnings and revenue",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOU0l1X0ZWemJDVi1TRER2bVAxUVBnUDk2dDl0aVFKaFV3ZUtiYnZXbjdabUFITV81MFEyQndXa19rdUw4b0tIWkFyc1BmTzZXMUZtQ2UzLXhUWlYzTTBrQXFwUlg2QmRGeHdtMzNKV3VWVkhPcjViYUtuYm1CTjZnMG1VcW9nM2ZzNGFr?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "21e58ff595c3",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia支持雲端供應商的450億美元Anthropic項目。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Nvidia Moves to Backstop a Cloud Provider’s $45 Billion Anthropic Project",
+     "source": "The Information",
+     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOdmhuRzVaOG9xaEQ5U1VOcWNNLVN4YUZ0NUpfVnM3Qy1KakJVMWxDbW1heDFWNkxOR2dJbnR5NnJNb1dSb1RaTnUxTkZlQzU3b0l4SGFuR1RMVXY1dmlhTzJTVzd2VmstYWhyX0pyeGEwUTdKM1FtVGZQenBCdE5fSE9zZm8wOGNxUEQ3WmVrSi1ZSlZyX3A3cWRlTkRhMThMSjVEYnhuTGt6RE5janN1NkFUVjgxV3dVVklCcm1JUWlkRVpf?oc=5"
     }
    ]
   },
@@ -1129,6 +1259,34 @@
    ]
   },
   {
+   "id": "28b41d5f4bee",
+   "co": "Meta",
+   "type": "融資／IPO",
+   "zh": "Meta籌資最高97.5億美元股權以支持AI擴張。",
+   "date": "2026-10-26",
+   "links": [
+    {
+     "title": "Meta eyes record $97.5 billion equity raise to fund AI expansion",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPclhjOFJvYkM0S0hLUmxaY0l2X3hCdWI0N1prZlo2QXhXdmt5T0pNQVpFODVpYzgycWdZcHM2NkZ2LTdaMEVUVlpTXzVFUzc2ZEdVdlpTeThUVkZtc3V4cEFTelk5bDd2Z0dfRDFsb0dGQ0MxRXhYMExFZTlXVkNjRXF6TDBLalZ5ZTFBbFMyX24wMVBTQW1GQkJNRjNYWTRiVGJJWWdialBfV1oyQUZNN3I4RQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "60692d5932ca",
+   "co": "Anthropic",
+   "type": "算力合約",
+   "zh": "Broadcom安排630億美元晶片融資交易，為Anthropic的芯片採購提供融資。",
+   "date": "2026-10-26",
+   "links": [
+    {
+     "title": "Broadcom Arranges $63 Billion Deal to Finance Anthropic’s Chips",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVXpndWd4bS1VV1JIRTlnRll6aGd3WDFVSkZBWU0wT1VZQzd0ZTNCc2RZeXZaUV9TdWZxak1BRlB1NURvcU5wb0RTUE5Ec1d4NkVSRXJWc0o3RTcwUEplV1FHRHBRcG5aOEFoWHNGdEJ3V2RtcFVZUllZaE42TU9paGtIOEIyajVNb19mT1lSTGcxSEdhTVdDemVlTGptT3ZfZ3VpTmo0WTlJYzV0Tms1RUlFcw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "1e260372358f",
    "co": "xAI",
    "type": "算力合約",
@@ -1273,16 +1431,16 @@
  ],
  "impact": {
   "微軟": {
-   "hash": "67059619c265",
-   "text": "微軟雲端業務超預期成長支撐盈利，但資料中心資本支出延遲，偏向降低近期融資急迫性。然其啟動大規模債券發行（至少250億美元），偏向增加公司債供給，可能對長端利率形成溫和上行壓力。超預期獲利表現偏向支撐股市，但若市場解讀為AI投資步伐放緩，則偏向削弱AI相關投資熱度。"
+   "hash": "1ac88b7b17ee",
+   "text": "微軟雲端業務超預期成長支撐盈利，但資本支出低於預期偏向緩解融資壓力。然而啟動大規模發債（至少250億美元）用於AI基礎設施，偏向增加公司債供給。若市場視此為AI投資持續升溫的信號，則偏向提振AI投資熱度；若投資人擔憂高槓桿融資，則偏向對長端利率形成上升壓力。"
   },
   "Alphabet": {
    "hash": "bd3d351c25c1",
    "text": "Alphabet營收未達預期引發AI支出過度擔憂，同時宣布增加資本支出，現金流壓力加大。此偏向增加公司債供給需求，若市場對AI投資回報率疑慮加深，則長端利率承壓；股市偏向承受賣壓，AI投資熱度則面臨降溫壓力，因高支出與營收未達預期的落差引發效率質疑。"
   },
   "Meta": {
-   "hash": "b300a6da70a1",
-   "text": "Meta近期密集融資與巨額資本支出承諾，偏向增加公司債供給與股權稀釋。27億美元數據中心債券發行直接擴大債券市場供給，若長端利率上升則融資成本上升；同時籌資95億美元股權與股票分割稀釋現有股東。Nvidia等科技巨頭投資參與顯示AI產業融資熱度仍高，但8250億美元支出承諾規模龐大，若市場對其投資報酬率疑慮增加，則偏向打壓科技股與AI投資熱度。"
+   "hash": "b8ea4f05bb95",
+   "text": "Meta近期密集發債與融資以支撐巨額AI資本支出承諾，偏向增加公司債供給、推高長端利率。大規模股權融資與Nvidia等科技巨頭投資參與，強化市場對Meta AI競爭力預期，偏向提振股市與AI投資熱度。若融資成本上升超預期，則可能抑制長期資本支出效率。"
   },
   "甲骨文": {
    "hash": "c620289500b8",
@@ -1293,25 +1451,25 @@
    "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增200至380億美元債券發行將擴大市場供給，可能對長端利率形成上行壓力。同時，龐大融資需求反映其資本密集型業務擴張，偏向支撐AI基礎設施投資熱度，但債務規模快速攀升若引發信用風險疑慮，則可能對相關股票估值產生負面影響。"
   },
   "Anthropic": {
-   "hash": "f011137cd63f",
-   "text": "Anthropic近期融資與上市動作偏向增加公司債供給——63億美元債務融資直接擴大市場債券供應。IPO申請與430億美元算力合約鎖定，反映其商業模式成熟度提升，若市場認可其盈利前景，則偏向支撐長端利率；同時大額算力合約承諾凸顯AI基礎設施需求旺盛，偏向維持AI投資熱度。整體而言，融資規模與商業確定性提升，對債供與股市均構成正面信號。"
+   "hash": "f671c53fe0c0",
+   "text": "Anthropic近期融資動作頻繁，偏向增加公司債供給。63億美元新債發行加上IPO申請，反映融資需求上升，若市場消化能力有限，則長端利率偏向上行壓力。430億美元算力合約鎖定與630億美元晶片融資安排，展現AI基礎設施投資規模龐大，偏向強化AI投資熱度。整體而言，大額融資與算力承諾偏向支撐長端利率與AI相關股票需求。"
   },
   "OpenAI": {
    "hash": "b6be3147fe26",
    "text": "OpenAI近期大幅擴張算力採購與融資，偏向增加公司債供給壓力。多筆晶片合約與三十億美元融資需求，若轉化為債券發行，將增加長端利率上行壓力；同時密集的基礎設施投資承諾強化AI產業景氣預期，偏向提升AI投資熱度。惟融資規模與債務結構仍需觀察，對股市影響取決於市場對其盈利能力評估。"
   },
   "亞馬遜": {
-   "hash": "cd7391508025",
-   "text": "亞馬遜近期密集宣布數據中心與AI基礎設施投資，資本支出規模達220億美元，並簽署超80億美元的算力合作協議。此舉偏向增加公司債供給需求，若融資需求上升則長端利率承壓；同時大規模AI投資支撐AI熱度，但資本密集特性可能拖累短期獲利預期，對股市偏向中性至謹慎。"
+   "hash": "b60fef1d4aa7",
+   "text": "亞馬遜近期大幅增加數據中心資本支出（超200億美元）並簽署多筆AI基礎設施合約，顯示對算力投資的強烈承諾，偏向提升AI投資熱度。然而第三季營收未達預期且自由現金流轉負，若現金流壓力持續，則公司債供給偏向增加以融資龐大支出；同時高資本支出與營收疲軟的落差，偏向對長端利率形成溫和上升壓力。"
   },
   "Nvidia": {
-   "hash": "1a1753b46c8c",
-   "text": "Nvidia近期大額算力合約與Meta、Hugging Face等夥伴深化，偏向強化AI基礎設施需求，支撐其營收成長預期。若財報數據超預期，則利好科技股與AI投資熱度；反之則承壓。惟反壟斷調查增添不確定性，偏向抑制長端利率下行空間。整體而言，事件對公司債供給壓力偏向中性，市場聚焦盈利能力與監管風險平衡。"
+   "hash": "8d2c5c3d5fd9",
+   "text": "Nvidia近期大幅擴展算力合約（Anthropic、Meta、Hugging Face等逾600億美元規模），偏向強化AI基礎設施需求，可能推升長端利率與股市。若這些項目順利推進，企業資本支出增加，則偏向提高公司債供給；惟反壟斷調查風險若升溫，則可能抑制投資熱度。整體而言，大規模算力投資偏向支撐AI投資熱度。"
   },
   "xAI": {
    "hash": "52f69c51b0c0",
    "text": "xAI與SpaceX簽署鉅額GPU租賃協議，偏向強化AI基礎設施投資熱度。該協議反映xAI資本支出需求龐大，若融資主要依賴債券市場，則偏向增加公司債供給壓力；同時大規模算力投入預期將提升長期成長潛力，可能對長端利率形成溫和上升壓力。此舉亦偏向吸引AI投資者關注，強化市場對生成式AI商業化前景的預期。"
   }
  },
- "at": "2026-10-29 23:51（台北）"
+ "at": "2026-10-30 08:04（台北）"
 }
