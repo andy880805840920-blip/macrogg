@@ -53,7 +53,8 @@ EVENT_SYSTEM = (
     "你是財經記者。輸入是一家公司近兩週的新聞標題（JSON：id、日期、媒體、標題），以及這家公司已收錄的事件。"
     "只挑出屬於這五類的重大事件：財報、資本支出、發債、融資／IPO、算力合約（雲端或晶片的大型採購、租用、合作建置）。"
     "產品發表、人事、訴訟、股價漲跌、評論文章都不要。同一件事的多則標題併成一則；已收錄的事件不要重複。"
-    "每則用繁體中文寫一句（40 字以內）：發生了什麼，數字照標題（金額可換算成「億美元」），不加標題以外的事實、不做預測。"
+    "每則用繁體中文寫一句（40 字以內）：發生了什麼，數字照標題（金額換算成「億美元」：1 billion＝10 億，"
+    "例如 $25 billion＝250 億美元、$1.25 trillion＝1.25 兆美元），不加標題以外的事實、不做預測。"
     "只回 JSON：{\"events\": [{\"type\": \"五類之一\", \"zh\": \"一句話\", \"ids\": [\"用到的標題 id\"]}]}；沒有就回 {\"events\": []}。")
 IMPACT_SYSTEM = (
     "你是財經記者，替美國利率與總經儀表板寫「對市場的影響」。輸入是一家公司近兩週的重大事件。"
@@ -95,6 +96,112 @@ def parse_rss(xml: str, match: list[str], since: dt.date) -> list[dict]:
     out.sort(key=lambda x: x["date"], reverse=True)
     out.sort(key=lambda x: not _MAJOR.search(x["source"] or ""))
     return out
+
+
+# ---- 2026-10-30：金額檢查與同一件事合併（微軟 250 億美元發債被收成三則、其中一則寫成 25 億） ----
+_EN_AMT = re.compile(r"\$?\s?(\d+(?:\.\d+)?)\s*(trillion|trn|tn|billion|bln|bn|b|million|mln|mn|m)\b", re.I)
+_ZH_AMT = re.compile(r"(?:至少|約|逾|超過|近)?\s*(\d+(?:,\d{3})*(?:\.\d+)?)\s*億(?:美元)?")
+_UNIT = {"trillion": 10000, "trn": 10000, "tn": 10000, "billion": 10, "bln": 10, "bn": 10, "b": 10,
+         "million": 0.01, "mln": 0.01, "mn": 0.01, "m": 0.01}
+
+
+def _amounts_100m(titles) -> list[float]:
+    """英文標題裡的金額（$25 billion、$500 million）換算成「億美元」。"""
+    out = []
+    for t in titles:
+        for v, u in _EN_AMT.findall(str(t or "")):
+            out.append(round(float(v) * _UNIT[u.lower()], 4))
+    return out
+
+
+def _num_txt(x: float) -> str:
+    return f"{x:,.0f}" if abs(x - round(x)) < 1e-9 else f"{x:,.2f}".rstrip("0").rstrip(".")
+
+
+def fix_amount(zh: str, titles) -> str:
+    """
+    AI 寫的「N 億美元」對照標題的原始金額：剛好差 10 倍或 100 倍（billion 換算錯）就改正；
+    對不上任何標題的金額拿掉（不寫沒有出處的數字）。標題沒有金額時，句子裡的金額一律拿掉。
+    """
+    exp = _amounts_100m(titles)
+
+    def ok(a):
+        return any(abs(a - e) <= max(0.01, e * 0.02) for e in exp)
+
+    def rep(m):
+        a = float(m.group(1).replace(",", ""))
+        if ok(a):
+            return m.group(0)
+        for k in (10, 100, 0.1, 0.01):
+            if ok(a * k):
+                v = a * k
+                pre = m.group(0)[:m.start(1) - m.start(0)]
+                usd = "美元" if m.group(0).endswith("美元") else ""
+                return pre + (f"{_num_txt(v / 10000)} 兆{usd}" if v >= 10000 else f"{_num_txt(v)}億{usd}")
+        return ""
+    out = _ZH_AMT.sub(rep, zh).replace("美元美元", "美元")
+    return re.sub(r"\s{2,}", " ", out).strip()
+
+
+def _amt_set(zh: str) -> set:
+    return {float(x.replace(",", "")) for x in _ZH_AMT.findall(zh or "")}
+
+
+_DEAL = ("發債", "融資／IPO")
+
+
+def _sim(a: str, b: str, co: str) -> float:
+    """兩句話的字元二元組重疊比例（拿掉公司名，以較短那句為分母）。"""
+    def bg(s):
+        s = re.sub(r"[^一-鿿A-Za-z0-9]", "", (s or "").replace(co, ""))
+        return {s[i:i + 2] for i in range(len(s) - 1)}
+    A, B = bg(a), bg(b)
+    return len(A & B) / max(1, min(len(A), len(B)))
+
+
+def _same(k: dict, e: dict, gap: int, days: int) -> bool:
+    """同公司、同類型的兩則是不是同一件事。"""
+    if gap > days:
+        return False
+    if _amt_set(k["zh"]) & _amt_set(e["zh"]):
+        return True                                   # 寫到同一個金額
+    if _sim(k["zh"], e["zh"], k["co"]) >= 0.5:
+        return True                                   # 幾乎同一句話
+    # 發債、融資同一天：同一家公司當天通常就是那一筆（例：「啟動發行」與「發行 250 億美元」）
+    return gap == 0 and k["type"] in _DEAL and not (_amt_set(k["zh"]) and _amt_set(e["zh"]))
+
+
+def merge_events(events: list[dict], days: int = 3) -> list[dict]:
+    """
+    同一件事只留一則（同公司、同類型、days 天內）：寫到同一個金額、幾乎同一句話，
+    或發債／融資同一天其中一則沒寫金額（例：「啟動首次美元債發行」＋「發行 250 億美元債券」）。
+    保留資訊最多的那句（有金額優先、再看來源數與長度），日期取最新，來源連結合併（最多 3 則）。
+    """
+    evs = sorted(events, key=lambda e: e.get("date", ""), reverse=True)
+    out: list[dict] = []
+    for e in evs:
+        hit = None
+        for k in out:
+            if k["co"] != e["co"] or k["type"] != e["type"]:
+                continue
+            try:
+                gap = abs((dt.date.fromisoformat(k["date"][:10]) - dt.date.fromisoformat(e["date"][:10])).days)
+            except ValueError:
+                continue
+            if _same(k, e, gap, days):
+                hit = k
+                break
+        if not hit:
+            out.append(dict(e, links=list(e.get("links") or [])))
+            continue
+        rank = lambda x: (bool(_amt_set(x["zh"])), len(x.get("links") or []), len(x["zh"]))   # noqa: E731
+        links = hit["links"] + [l for l in e.get("links") or []
+                                if l.get("url") not in {x.get("url") for x in hit["links"]}]
+        if rank(e) > rank(hit):
+            hit.update(id=e["id"], zh=e["zh"])
+        hit["links"] = links[:3]
+        hit["date"] = max(hit["date"], e["date"])
+    return sorted(out, key=lambda e: e.get("date", ""), reverse=True)
 
 
 def ipo_stage(filings: list[dict]) -> dict:
@@ -172,8 +279,11 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
                 if ev.get("type") not in TYPES or not ids or not str(ev.get("zh") or "").strip():
                     continue
                 hs = [byid[i] for i in ids]
-                events.append({"id": _key(co["zh"], ev["zh"]), "co": co["zh"], "type": ev["type"],
-                               "zh": str(ev["zh"]).strip()[:80], "date": max(h["date"] for h in hs),
+                zh = fix_amount(str(ev["zh"]).strip(), [h["title"] for h in hs])[:80]
+                if not zh:
+                    continue
+                events.append({"id": _key(co["zh"], zh), "co": co["zh"], "type": ev["type"],
+                               "zh": zh, "date": max(h["date"] for h in hs),
                                "links": [{"title": h["title"], "source": h["source"], "url": h["url"]} for h in hs[:3]]})
                 changed.add(co["zh"])
             for h in new:
@@ -184,7 +294,7 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
             if not evs:
                 impact.pop(co["zh"], None)
                 continue
-            h = _key(*[e["id"] for e in evs])
+            h = _key(*[e["id"] + e["zh"] for e in evs])   # 2026-10-30：內容修正（金額、合併）也會重寫影響
             if (impact.get(co["zh"]) or {}).get("hash") == h:
                 continue
             src = json.dumps({"company": co["zh"], "events": [{"date": e["date"], "type": e["type"], "zh": e["zh"]}
@@ -204,6 +314,10 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
             except Exception as e:                   # noqa: BLE001
                 log.warning("AI 大事：IPO 進度抓取失敗（%s）", e)
     seen = {k: v for k, v in seen.items() if v >= (since - dt.timedelta(days=7)).isoformat()}
+    # 已收錄的也重新檢查一次金額、合併同一件事（舊資料一起清掉）
+    for e in events:
+        e["zh"] = fix_amount(e["zh"], [l.get("title", "") for l in e.get("links") or []]) or e["zh"]
+    events = merge_events(events)
     events.sort(key=lambda e: e["date"], reverse=True)
     state.update({"seen": seen, "events": events, "impact": impact, "at": clock.stamp()})
     try:

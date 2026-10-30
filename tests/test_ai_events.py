@@ -113,6 +113,34 @@ check("⑥ 兩張小卡合成一張卡、中間一條線", ".duo-grid .duo-card+
 check("⑥ 今日結論改成六宮格小卡，點進去直接展開", 'class="home-hero hm-hero hm-open hm-in' in (ROOT / "src/pages/home.py").read_text(encoding="utf-8")
       and ".hm-hero:not(.hm-open) .hm-layer" in _css)
 
+# ⑦ 2026-10-30：金額換算檢查與同一件事合併（微軟 250 億美元發債被收成三則、一則寫成 25 億）
+check("⑦ billion 換算錯 10 倍：自動改正", A.fix_amount("微軟發行25億美元債券", ["Microsoft Issues $25 Billion in New Bonds"])
+      == "微軟發行250億美元債券")
+check("⑦ 寫對的不動；bln、trillion 也認得；兆美元", A.fix_amount("SpaceX與xAI簽署400億美元租賃", ["SpaceX agrees USD 40 bln lease"])
+      == "SpaceX與xAI簽署400億美元租賃"
+      and A.fix_amount("籌資約30億美元，估值125億美元", ["$30 billion round at $1.25 trillion valuation"])
+      == "籌資約300億美元，估值1.25 兆美元")
+check("⑦ 標題沒有的金額拿掉、重複的「美元美元」清掉", A.fix_amount("某公司發行100億美元債券", ["Company sells bonds"]) == "某公司發行債券"
+      and A.fix_amount("計畫發行至少250億美元美元債券", ["At Least $25 Billion"]) == "計畫發行至少250億美元債券")
+_ms = [{"id": "a", "co": "微軟", "type": "發債", "date": "2026-10-29", "zh": "微軟啟動自2017年以來首次美元高級債券發行。",
+        "links": [{"url": "u1", "title": "Microsoft Kicks Off First US High-Grade Bond Sale Since 2017"}]},
+       {"id": "b", "co": "微軟", "type": "發債", "date": "2026-10-29", "zh": "微軟計畫發行至少250億美元債券。",
+        "links": [{"url": "u2", "title": "Microsoft Looks to Raise at Least $25 Billion"}]},
+       {"id": "c", "co": "微軟", "type": "發債", "date": "2026-10-29", "zh": "微軟發行250億美元債券，用於AI基礎設施建設。",
+        "links": [{"url": "u3", "title": "Microsoft Issues $25 Billion"}]},
+       {"id": "d", "co": "Nvidia", "type": "算力合約", "date": "2026-10-28", "zh": "Nvidia與Meta深化AI基礎設施合作，投資30億美元。",
+        "links": [{"url": "u4"}]},
+       {"id": "e", "co": "Nvidia", "type": "算力合約", "date": "2026-10-28", "zh": "Nvidia與Hugging Face達成129億美元交易。",
+        "links": [{"url": "u5"}]}]
+_mm = A.merge_events(_ms)
+_m1 = [e for e in _mm if e["co"] == "微軟"]
+check("⑦ 微軟同一筆發債三則併成一則：留有金額、資訊最多的那句，來源合併",
+      len(_m1) == 1 and "250億美元" in _m1[0]["zh"] and {l["url"] for l in _m1[0]["links"]} == {"u1", "u2", "u3"}, _m1)
+check("⑦ 同一天、同類型但不同的兩件事不合併", len([e for e in _mm if e["co"] == "Nvidia"]) == 2)
+_m2 = A.merge_events([dict(_ms[1], date="2026-10-28"), dict(_ms[2], date="2026-10-30", id="c2")])
+check("⑦ 延續報導（3 天內同一個金額）只更新那一則、日期取最新", len(_m2) == 1 and _m2[0]["date"] == "2026-10-30")
+check("⑦ 提示詞寫明 billion 怎麼換算", "$25 billion＝250 億美元" in A.EVENT_SYSTEM)
+
 clock.now, clock.today = _n0, _t0
 print()
 print("全部通過" if ok else "有失敗")
