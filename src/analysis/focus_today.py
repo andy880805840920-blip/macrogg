@@ -2033,8 +2033,9 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
                    vague_markers=None, rate_ctx=None, name_map=None,
                    release_dates_: dict | None = None,
                    model: str | None = None, part: str = "full",
-                   preview: str = "") -> tuple[dict | None, str]:
+                   preview: str = "", prior: str = "") -> tuple[dict | None, str]:
     """
+    prior：前一個台北日期寫過的同一件事（2026-10-29）——跟它重複就重寫一次。
     主軸的生成＋驗證。回傳 ({text, headline, rate, ids}, "")；失敗回 (None, 原因)。
       part：full＝標題＋主軸＋對利率＋補充（舊版式、週報）；lead＝標題＋主軸＋對利率（重點一）；
             para＝只有一段主軸（重點二）。2026-10-28 起每次呼叫只寫一件事，材料也只給那件事的。
@@ -2070,7 +2071,12 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
                            + "）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述")
             else:
                 log.warning("市場焦點：重寫後仍有材料沒有的數字（%s），照樣採用", "、".join(_miss[:5]))
-        # 2026-10-28：超過字數不退回也不裁（提示詞已有規範，實際不會超過太多）
+        # 2026-10-28：超過字數不裁；2026-10-29：超過上限 1.5 倍請它精簡重寫一次（仍太長就照用）
+        if caps and caps[0] and cjk_len(main) > int(caps[0] * LONG_TOL):
+            why.append(f"主軸 {cjk_len(main)} 字，太長了（約 {caps[0]} 字就好）：只留最重要的事實、數字與一句解讀")
+        if prior and _dup_prior(main, prior):
+            why.append("重述了前一天已經寫過的內容（" + "、".join(_dup_prior(main, prior)[:4]) + "）："
+                       "只寫前一天之後的新發展，前一天寫過的數字最多用半句帶過")
         if mins and mins[0] and cjk_len(main) < int(mins[0] * SHORT_TOL):
             why.append(f"主軸只有 {cjk_len(main)} 字，沒有把事情講完整（要 {mins[0]}–{caps[0]} 字）")
         for i, s in enumerate(r["supp"], 2):
@@ -2114,6 +2120,7 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
                 f"{FACT_NAMES[x['kind']]}寫成「{x['wrong']}」，官方是 {x['right']}" for x in _rd[:3])
                 + "；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）")
         r["main_text"] = main
+        r["dup_prior"] = bool(prior and _dup_prior(main, prior))
         why_log.append(why)
         if attempt == 1 and why:
             best = r
@@ -2154,14 +2161,14 @@ def _generate_main(src_text: str, system: str, env, *, caps, mins, meta_markers=
         if cjk_len(main) < POINT_MIN_THIN:
             return None, "公布前把事件寫成已有結果，刪除後內容不足"
     return {"text": "\n".join([main] + supp), "headline": headline, "rate": rate,
-            "ids": r["ids"], "why": why_log}, ""
+            "ids": r["ids"], "why": why_log, "dup_prior": r.get("dup_prior", False)}, ""
 
 
 # 2026-10-28：重點二單獨一次呼叫，只給重點二的材料
 _FOCUS_PARA_SYSTEM = (
     "你是財經記者，負責一個美國利率與總經儀表板「今日主軸」的第二個重點。輸入是同一件事的幾篇報導，"
     "每篇有代號，例如【報導2｜Reuters｜10/9】；標「只有標題」的只有標題與官方摘要、沒有內文。"
-    "{event}只寫這件事。" + _REWRITE + "寫成一段約 {main} 個中文字（至少 {min} 字）：發生了什麼（誰、做了什麼、數字）、為什麼、"
+    "{event}只寫這件事。{recent}" + _REWRITE + "寫成一段約 {main} 個中文字（至少 {min} 字）：發生了什麼（誰、做了什麼、數字）、為什麼、"
     "官員、分析師或市場怎麼解讀（只寫材料裡有的說法）。只有標題的報導只能轉述字面上的事，不得推測內文。"
     "硬性規則：只能使用材料已有的資訊，不得補充材料以外的事實或數字；不做預測、不下投資結論；繁體中文；"
     "不要評論材料本身，不要出現「材料」「代號」「重點二」這類字眼。" + _NEWS_RULES +
@@ -2175,7 +2182,7 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
                mode: str = "content", facts_block: str = "",
                release_dates_: dict | None = None,
                model: str | None = None, part: str = "full",
-               preview: str = "") -> tuple[dict | None, str]:
+               preview: str = "", prior: str = "") -> tuple[dict | None, str]:
     """主軸的一次呼叫：材料編號 → AI → 驗證 → 來源連結。part 見 _generate_main。"""
     if not arts and not briefs:
         return None, "沒有任何材料"
@@ -2193,7 +2200,8 @@ def write_main(arts: list[dict], briefs: list[dict], keywords: list[str], env=No
     res, err = _generate_main(src_text, system, env, caps=caps, mins=mins,
                               meta_markers=meta_markers, vague_markers=vague_markers,
                               rate_ctx=rate_ctx if part != "para" else None, name_map=name_map,
-                              release_dates_=release_dates_, model=model, part=part, preview=preview)
+                              release_dates_=release_dates_, model=model, part=part, preview=preview,
+                              prior=prior)
     if not res:
         return None, err
     ids = res.pop("ids")
@@ -4023,16 +4031,124 @@ def build_topics(cfg: dict | None, pool: list[dict], main_text: str,
     return res
 
 
-def _lock_events(events: dict | None, cfg: dict | None, now_tw: dt.datetime) -> list[str]:
+LONG_TOL = 1.5          # 超過字數上限幾倍就請它精簡重寫一次（2026-10-29）
+PRIOR_DAYS = 3          # 跨日不重複：往前看幾個台北日期
+
+
+def _prior_points(state: dict | None, now_tw: dt.datetime) -> list[dict]:
+    """
+    前幾個台北日期寫過的重點（2026-10-29 跨日不重複）。每一段一筆：
+    {date, at（那天最後一版的時間）, headline, para（那一段）, titles（那天用過的報導標題）}。
+    """
+    arch = (state or {}).get("archive") or {}
+    if isinstance(arch, list):
+        arch = {x.get("date"): x for x in arch if isinstance(x, dict) and x.get("date")}
+    today = now_tw.date().isoformat()
+    out = []
+    for d in sorted((k for k in arch if k and k < today), reverse=True)[:PRIOR_DAYS]:
+        v = arch.get(d) or {}
+        try:
+            at = dt.datetime.fromisoformat(str(v.get("at") or ""))
+            at = at if at.tzinfo else at.replace(tzinfo=dt.timezone.utc)
+        except ValueError:
+            continue
+        titles = {str(x.get(k) or "").strip() for x in v.get("links") or [] for k in ("title", "orig_title")} - {""}
+        first = (str(v.get("text") or "").split("\n") or [""])[0]
+        for p in (x.strip() for x in first.split(MAIN_PARA)):
+            if p:
+                out.append({"date": d, "at": at, "headline": v.get("headline", ""), "para": p, "titles": titles})
+    return out
+
+
+def prior_for(g: dict | None, prior: list[dict]) -> dict | None:
+    """
+    這個事件是不是前幾天寫過：用過同一篇報導，或標題跟那一段共用 2 個以上的關鍵數字。
+    回傳最近一天寫過的那一段（沒有就 None）。
+    """
+    if not g or not prior:
+        return None
+    titles = {x.get("title", "") for x in g.get("items") or []}
+    nums = set(_SALIENT_NUM.findall(" ".join(titles)))
+    for p in prior:                                   # 新→舊
+        if titles & p["titles"] or len(nums & set(_SALIENT_NUM.findall(p["para"]))) >= 2:
+            return p
+    return None
+
+
+def mark_prior_old(groups: list[dict], prior: list[dict]) -> list[str]:
+    """
+    前幾天寫過、而且這次的報導全部都在那天最後一版之前發布（＝沒有新發展）的事件：
+    不當重點（跟舊文一樣只能當補充）。全部事件都這樣時不動，免得沒東西可寫。
+    """
+    if not prior:
+        return []
+    hits = []
+    for g in groups:
+        if g.get("stale"):
+            continue
+        p = prior_for(g, prior)
+        if not p:
+            continue
+        ats = [_age_at(x) for x in g.get("items") or []]
+        if ats and all(a is not None and a <= p["at"] for a in ats):
+            hits.append(g)
+    fresh = [g for g in groups if not g.get("stale")]
+    if not hits or len(hits) >= len(fresh):
+        return []
+    for g in hits:
+        g["stale"] = "已寫過"
+        log.info("市場焦點：前一天寫過、沒有新報導，不當重點：%s", g["lead"]["title"][:50])
+    return [g["lead"]["title"] for g in hits]
+
+
+def _age_at(h: dict) -> dt.datetime | None:
+    try:
+        t = dt.datetime.fromisoformat(str(h.get("at") or ""))
+        return t if t.tzinfo else t.replace(tzinfo=dt.timezone.utc)
+    except ValueError:
+        return None
+
+
+def prior_note(p: dict | None) -> str:
+    """給 AI 的提示：這件事前一天寫過什麼、這次只寫新發展。"""
+    if not p:
+        return ""
+    md = f"{int(p['date'][5:7])}/{int(p['date'][8:10])}"
+    return (f"這件事 {md} 已經寫過，當時寫的是：「{p['para']}」。這次只寫 {md} 之後的新發展"
+            "（新的說法、市場反應、後續數據、當時沒提到的面向），當時寫過的數字最多用半句帶過當背景，不要重述；"
+            + (f"標題也不要跟當時的「{p['headline']}」相同。" if p.get("headline") else ""))
+
+
+def _dup_prior(text: str, prior: str) -> list[str]:
+    """跟前一天那段重複的證據：共用 2 個以上的關鍵數字，或有一句跟前一天幾乎一樣。回傳證據（空＝不重複）。"""
+    if not text or not prior:
+        return []
+    nums = sorted(set(_SALIENT_NUM.findall(text)) & set(_SALIENT_NUM.findall(prior)))
+    if len(nums) >= 2:
+        return nums
+    pb = re.sub(r"[^一-鿿A-Za-z0-9]", "", prior)
+    P = {pb[i:i + 2] for i in range(len(pb) - 1)}
+    for s in re.split(r"(?<=[。！？；])", text):
+        a = re.sub(r"[^一-鿿A-Za-z0-9]", "", s)
+        if len(a) >= 16:
+            A = {a[i:i + 2] for i in range(len(a) - 1)}
+            if len(A & P) / max(1, len(A)) >= 0.7:
+                return [s.strip()[:20] + "…"]
+    return []
+
+
+def _lock_events(events: dict | None, cfg: dict | None, now_tw: dt.datetime,
+                 covered_at: dt.datetime | None = None) -> list[str]:
     """
     主軸鎖定的事件：當天（台北）有發布，或**前一天有發布且現在是台北中午前**。
     台北早上 05:03 那次對應美國前一天的 CPI／FOMC，要鎖；到了下午 15:03、
     晚上 20:33 就該換寫別的事，不再鎖（排序加分仍照 _todays_events）。
+    2026-10-29：改照台北日期——前一天的事件只有在「台北時間公布後還沒有任何一次主軸寫過」時，
+    隔天早上才鎖（covered_at＝前一個台北日期最後一次主軸的時間）。例：GDP 台北 10/29 20:30 公布、
+    當晚 21:15 已寫過，10/30 早上就不再強制寫；FOMC 台北凌晨 02:00 才公布，早上照樣鎖。
     """
+    from . import watch_calendar as wc
     today = now_tw.date()
-    days = {today.isoformat()}
-    if now_tw.hour < 12:
-        days.add((today - dt.timedelta(days=1)).isoformat())
     out = []
     for kind in LOCK_EVENTS:
         dates = (events or {}).get(kind) or []
@@ -4040,8 +4156,20 @@ def _lock_events(events: dict | None, cfg: dict | None, now_tw: dt.datetime) -> 
             dates = [dates]
         if kind == "fomc":
             dates = list(dates) + list((cfg or {}).get("fomc_dates") or [])
-        if any(str(d)[:10] in days for d in dates):
-            out.append(kind)
+        hm = EVENT_TIMES.get(kind) or (wc.EVENTS.get(kind) or (None, None, (8, 30)))[2]
+        for d in dates:
+            try:
+                de = dt.date.fromisoformat(str(d)[:10])
+            except ValueError:
+                continue
+            if de == today:
+                out.append(kind)
+                break
+            if de == today - dt.timedelta(days=1) and now_tw.hour < 12:
+                rel = wc.taipei_time(de, hm)
+                if rel.date() == today or covered_at is None or covered_at < rel:
+                    out.append(kind)
+                    break
     return out
 
 
@@ -4667,7 +4795,10 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             _ev_d["testimony"] = [clock.today().isoformat()]
         _ev = _todays_events(_ev_d, cfg, clock.today())
         # 鎖定事件：第一個寫重點一、第二個（撞期）寫重點二（v2.5：不再看哪件較常提到殖利率）
-        _lock = [k for k in _lock_events(_ev_d, cfg, now_tw) if k in _ev]
+        _prior = _prior_points(state, now_tw)
+        _cov = max((p["at"] for p in _prior if p["date"] == (now_tw.date() - dt.timedelta(days=1)).isoformat()),
+                   default=None)
+        _lock = [k for k in _lock_events(_ev_d, cfg, now_tw, covered_at=_cov) if k in _ev]
         if _ev:
             log.info("市場焦點：今天的發布事件 %s%s", "、".join(_ev),
                      ("，主軸鎖定 " + "、".join(_lock)) if _lock else "，相關新聞排序加分")
@@ -4694,6 +4825,9 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                                    **({"stale": g["stale"]} if g.get("stale") else {}),
                                    "titles": [x["title"] for x in g["items"][:3]]} for g in groups[:8]]})
         # ---- ③ 選重點 ----
+        _old = mark_prior_old(groups, _prior)
+        if _old:
+            flog["prior_old"] = _old
         p1, p2, _pwhy = choose_points(groups, _lock)
         if p1 is not None:
             others = [g for g in groups if g is not p1 and g is not p2 and not g.get("stale")]
@@ -4781,9 +4915,13 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
             _mode1 = "content" if arts1 else "title"
             log.info("市場焦點：重點一 內文 %d／標題 %d、重點二 內文 %d／標題 %d、其他 內文 %d／標題 %d",
                      len(arts1), len(briefs1), len(arts2), len(briefs2), len(arts_o), len(briefs_o))
+            _pr1, _pr2 = prior_for(p1, _prior), (prior_for(p2, _prior) if p2 is not None else None)
+            if _pr1 or _pr2:
+                flog["prior"] = {"重點一": (_pr1 or {}).get("date", ""), "重點二": (_pr2 or {}).get("date", "")}
             res, err = write_main(arts1, briefs1, keywords, env, mode=_mode1, rate_ctx=rate_ctx,
                                   event_note=_ev_note + (_thin_note if _thin[0] else "")
                                   + _bg_note(_l1),
+                                  recent_note=prior_note(_pr1), prior=(_pr1 or {}).get("para", ""),
                                   part="lead", preview=_preview, caps=[cap1], mins=[min1], **_base)
             if not res and arts1:
                 log.warning("市場焦點：重點一用內文寫失敗（%s），改用標題再寫一次", err)
@@ -4797,8 +4935,14 @@ def build(rates_series: dict | None, offline: bool, cfg: dict | None,
                 _n2 = (_thin_note if _thin[1] else "") + _bg_note(_l2)
                 r2, e2 = write_main(arts2, briefs2, keywords, env, mode="content" if arts2 else "title",
                                     event_note=_n2, part="para",
+                                    recent_note=prior_note(_pr2), prior=(_pr2 or {}).get("para", ""),
                                     caps=[THIN_CAP if _thin[1] else PARA_CAP],
                                     mins=[POINT_MIN_THIN if _thin[1] else PARA_MIN], **_base)
+                if r2 and r2.get("dup_prior"):
+                    # 重寫後仍在重述前一天的內容：重點二不放（只放重點一）
+                    log.warning("市場焦點：重點二重寫後仍重複前一天的內容，只放重點一")
+                    flog["second_fail"] = "重複前一天的內容"
+                    r2 = None
                 if r2 and r2["text"].strip():
                     flog["retry"]["重點二"] = [w for w in r2.get("why", []) if w]
                     res["text"] = MAIN_PARA.join([res["text"], r2["text"].replace("\n", "")])
