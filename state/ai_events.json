@@ -693,14 +693,127 @@
   "0d34be1a4690": "2026-10-22",
   "d2a863ce9861": "2026-10-28",
   "0b19ef00e337": "2026-10-28",
-  "ad21ca8b0cb3": "2026-10-27"
+  "ad21ca8b0cb3": "2026-10-27",
+  "73419746db91": "2026-10-29",
+  "53aeab6f4c0e": "2026-10-21",
+  "91ab530debaa": "2026-10-29",
+  "8cc99b5b2257": "2026-10-29",
+  "1b3954d2e60d": "2026-10-29",
+  "5751da11050d": "2026-10-29",
+  "9a76a05807d1": "2026-10-29",
+  "d72de853fd24": "2026-10-29",
+  "ff69cb8d6fa1": "2026-10-29",
+  "6bd252b0e50e": "2026-10-29",
+  "81168b5ac8e8": "2026-10-29",
+  "778770eb106b": "2026-10-29",
+  "45a4ee34ddff": "2026-10-30",
+  "7443e81bce7a": "2026-10-30",
+  "550b84f2b353": "2026-10-29",
+  "e4836dae3202": "2026-10-29",
+  "6d7634d86d5c": "2026-10-30",
+  "eb60ab45472c": "2026-10-30",
+  "204883fefcb9": "2026-10-29",
+  "4d58a13bd5bd": "2026-10-29",
+  "b9a0fc982304": "2026-10-29",
+  "88a2b818da56": "2026-10-29",
+  "37742310eb7b": "2026-10-30",
+  "2d17d3c70e4a": "2026-10-30",
+  "b4177aaacaec": "2026-10-21",
+  "89616c6fb73e": "2026-10-21",
+  "95aad483fa80": "2026-10-21",
+  "2ac46966af66": "2026-10-21",
+  "649123128807": "2026-10-18",
+  "c30b58acda9f": "2026-10-18",
+  "bf9c2694128f": "2026-10-28",
+  "9cb1dfbe4fd4": "2026-10-28",
+  "69799455fc21": "2026-10-27",
+  "7169d3e3b2ee": "2026-10-27",
+  "9409bf75fa68": "2026-10-27",
+  "478c57e62a19": "2026-10-27",
+  "98c66a2c67f6": "2026-10-27",
+  "fea7230df3b2": "2026-10-27",
+  "739ed6d40aae": "2026-10-27",
+  "2e92997809fe": "2026-10-27",
+  "a90c5d425b75": "2026-10-30",
+  "56865863a39a": "2026-10-30",
+  "81968b853e6d": "2026-10-16",
+  "01be20bee423": "2026-10-30",
+  "a59da1eada0d": "2026-10-29",
+  "a206937180fd": "2026-10-29",
+  "b87b7f0052a5": "2026-10-29",
+  "a12673af6df5": "2026-10-29",
+  "61e03e3de90b": "2026-10-20",
+  "3e5b91331bb9": "2026-10-19",
+  "6035a877fd1f": "2026-10-19",
+  "94ddf40d9ae6": "2026-10-19",
+  "91e2e11243df": "2026-10-19",
+  "ad46f5f4d862": "2026-10-16",
+  "cd694b6f5f3c": "2026-10-16",
+  "379a53553f75": "2026-10-16",
+  "1cfff4d936f6": "2026-10-29",
+  "ec1209efce8b": "2026-10-26",
+  "41e18d5edecc": "2026-10-16",
+  "934617fa100f": "2026-10-16",
+  "4797297c632b": "2026-10-16",
+  "a6e2797f61c0": "2026-10-16",
+  "fb2ebe059e48": "2026-10-29",
+  "11a8b1538d27": "2026-10-28",
+  "8630f7fb9e29": "2026-10-30",
+  "a22b96ac06df": "2026-10-28",
+  "de690523070c": "2026-10-28",
+  "af57ef075d7f": "2026-10-28",
+  "2db6613196c5": "2026-10-28",
+  "2608e255d0b9": "2026-10-28",
+  "b78c0bcf54df": "2026-10-28",
+  "58f374550418": "2026-10-28",
+  "9820fc91f78a": "2026-10-25",
+  "009d012362b5": "2026-10-30",
+  "b9e00e25529e": "2026-10-29",
+  "70b4ef1c65f3": "2026-10-29",
+  "9043d638f0a3": "2026-10-29",
+  "6487f2bb5a31": "2026-10-29",
+  "5a94136fa77f": "2026-10-29",
+  "cf8bf4c0e809": "2026-10-29",
+  "6c82d7cd49a0": "2026-10-29",
+  "4f6ad6796bdc": "2026-10-29",
+  "2ce86093b194": "2026-10-27",
+  "6e9a2a899ee9": "2026-10-27",
+  "344193aaf521": "2026-10-27",
+  "d4a64466109f": "2026-10-22",
+  "5cef9b33001b": "2026-10-30",
+  "07ab1b383064": "2026-10-30",
+  "66eb8ea91f93": "2026-10-29"
  },
  "events": [
   {
+   "id": "243691b4bef2",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia 與Meta深化AI基礎設施合作，投資30億美元擴展Muse夥伴關係。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "Indian AI Firm Seeks $3 Billion Financing for Nvidia Chips Order",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxORUFmRDZKMmVkTFRiWFAwblF2OHhuU0pWeFRWbmlKYlRqUVA5ZjZBbmlXZTVGUnB5WnJKX0Q4R19QaElCMW45VlZaaG1QSWo0Wml0X1BPM21EcDhCd1pKMUlHYmdONFNoN0ZQelh1WjhkTGw2TTJNbFA3S01Ebk53dDBVWDRlaElUMExMeF9qR3oxRUdjbDgwcWVfVVdvZGF2ejVaLVhEaXV3RGVBZjJNRktqLXQ?oc=5"
+    },
+    {
+     "title": "Nvidia to invest $3 billion in Meta, expand partnership on Muse",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPWFVwN1hfQVhaWm9LZkY0bERYY0JtOVBtR2dSSHV4T1c0eU91TjN6WXAwTHNvZmhnQlpkUENkSGhYT21aNWlBWjM0dXNFSHp5andOeTlKRzhDN3NremU5QzhTdDlRMThvMGZFck02ZnUtRWIybmloSTJPVnktWlVSRWdOZ1c3QWY3bk1GVUN1YWx4aExfRnJ4b2VtNlFia0wtVWNQZE5mcl9Ld2JUT3g5X1FRT1lYSUVpVWc?oc=5"
+    },
+    {
+     "title": "NVIDIA (NVDA) Deepens AI Infrastructure Push With New Digital Twin And Agent Deals",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQd1BMNmlvWG5CbGROcHlzaC1UOWs1UHp1aVlyMks0NkpPQ3p1eXRsV2NYVkV1a3NvTTZXYlBvcDdORUdITGJwVDNaRUhJbnRWWm9KYXN6WGd0a0RXQk83c0EybTM4MmIwbEZSRmpLbGFlMlc5UVI5VTN2VDBaLW9RdGo5M0ZrdDdMWW1iMkN5ZElzTUxnSjcyMVMxMDdCTWpmQjBR?oc=5"
+    }
+   ]
+  },
+  {
    "id": "04e2d1a037eb",
-   "co": "微軟",
+   "co": "Microsoft",
    "type": "財報",
-   "zh": "微軟公布Q1財報，雲端成長帶動營收和盈利超預期。",
+   "zh": "Microsoft 公布Q1財報，雲端成長帶動營收和盈利超預期。",
    "date": "2026-10-29",
    "links": [
     {
@@ -722,9 +835,9 @@
   },
   {
    "id": "729343719b38",
-   "co": "微軟",
+   "co": "Microsoft",
    "type": "資本支出",
-   "zh": "微軟因資料中心延遲，資本支出低於預期。",
+   "zh": "Microsoft 因資料中心延遲，資本支出低於預期。",
    "date": "2026-10-29",
    "links": [
     {
@@ -789,9 +902,9 @@
   },
   {
    "id": "70728c1d4661",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "資本支出",
-   "zh": "甲骨文預計2030年營收達2250億美元，並計畫2029財年實現300億美元現金流。",
+   "zh": "Oracle 預計2030年營收達2250億美元，並計畫2029財年實現300億美元現金流。",
    "date": "2026-10-29",
    "links": [
     {
@@ -846,9 +959,9 @@
   },
   {
    "id": "becd634b0ab4",
-   "co": "微軟",
+   "co": "Microsoft",
    "type": "發債",
-   "zh": "微軟發行250億美元債券，用於AI基礎設施建設。",
+   "zh": "Microsoft 發行250億美元債券，用於AI基礎設施建設。",
    "date": "2026-10-29",
    "links": [
     {
@@ -870,9 +983,9 @@
   },
   {
    "id": "1f4a599700c8",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "資本支出",
-   "zh": "甲骨文限制新借款上限為200億美元，用於AI基礎設施投資。",
+   "zh": "Oracle 限制新借款上限為200億美元，用於AI基礎設施投資。",
    "date": "2026-10-29",
    "links": [
     {
@@ -889,9 +1002,9 @@
   },
   {
    "id": "ca88aa0dbed1",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "融資／IPO",
-   "zh": "甲骨文限制2030年前外部AI融資上限為200億美元。",
+   "zh": "Oracle 限制2030年前外部AI融資上限為200億美元。",
    "date": "2026-10-29",
    "links": [
     {
@@ -917,9 +1030,9 @@
   },
   {
    "id": "ba0850362bf3",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "財報",
-   "zh": "亞馬遜公布第三季財報，營收未達預期，自由現金流為負424億美元。",
+   "zh": "Amazon 公布第三季財報，營收未達預期，自由現金流為負424億美元。",
    "date": "2026-10-29",
    "links": [
     {
@@ -938,7 +1051,7 @@
    "id": "21e58ff595c3",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia支持雲端供應商的450億美元Anthropic項目。",
+   "zh": "Nvidia 支持雲端供應商的450億美元Anthropic項目。",
    "date": "2026-10-29",
    "links": [
     {
@@ -952,13 +1065,27 @@
    "id": "1a1bd7f0a8d2",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia與AMD承諾向Meta AI建設投資40億美元。",
+   "zh": "Nvidia 與AMD承諾向Meta AI建設投資40億美元。",
    "date": "2026-10-29",
    "links": [
     {
      "title": "Nvidia, AMD Commit $4B to Meta AI Buildout",
      "source": "Data Center Knowledge",
      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQWWJDMFY0dTdienA3a19xTU9PdzhSUnNDSkdxWFdXRXF1NUdkdDV1UkFrRHpnTFFuYkFlTmNzUF8yUmx6U3VITWFIWmhTTGRtZk52eUh4Wk9zZi1lQXNvU1FBdWMyeGY2bE4zNkRfcXZXanhKaV9lcElNMnRiQ3RYTTVsS2lvM1RKRk1hUnRNRHpLRl9WVnhGRlBR?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "1f7683592c49",
+   "co": "Nvidia",
+   "type": "融資／IPO",
+   "zh": "Nvidia支持的Cohere接近完成50億美元融資輪。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Nvidia-backed Cohere closes in on $5B funding round",
+     "source": "Seeking Alpha",
+     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxONHB1MEN1Wm9fTUxYQlF0S1pSUGgtT0VGMkpvWVFDWWxmR0FveV9QUllCY05DeGJwaUhMS3g0TWctYklCTnUwcl9FVEV3dkF5d21DTTZyeEhLdF9EZlItZFNKSk1xd2RlZ2dFbmp0T29rbTRnR0Rqa0NWd2FUSGR3MjFMX3Z1V2N0UXgxS2FQSldRdw?oc=5"
     }
    ]
   },
@@ -1012,9 +1139,9 @@
   },
   {
    "id": "21a6b3f98676",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "資本支出",
-   "zh": "亞馬遜Leo以115億美元收購Globalstar，獲美國監管機構批准。",
+   "zh": "AmazonLeo以115億美元收購Globalstar，獲美國監管機構批准。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1031,9 +1158,9 @@
   },
   {
    "id": "d8b1e6bed8ad",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "資本支出",
-   "zh": "甲骨文設定資本支出上限，並預計實現正向現金流。",
+   "zh": "Oracle 設定資本支出上限，並預計實現正向現金流。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1044,29 +1171,10 @@
    ]
   },
   {
-   "id": "243691b4bef2",
-   "co": "Nvidia",
-   "type": "算力合約",
-   "zh": "Nvidia與Meta深化AI基礎設施合作，投資30億美元擴展Muse夥伴關係。",
-   "date": "2026-10-28",
-   "links": [
-    {
-     "title": "Nvidia to invest $3 billion in Meta, expand partnership on Muse",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPWFVwN1hfQVhaWm9LZkY0bERYY0JtOVBtR2dSSHV4T1c0eU91TjN6WXAwTHNvZmhnQlpkUENkSGhYT21aNWlBWjM0dXNFSHp5andOeTlKRzhDN3NremU5QzhTdDlRMThvMGZFck02ZnUtRWIybmloSTJPVnktWlVSRWdOZ1c3QWY3bk1GVUN1YWx4aExfRnJ4b2VtNlFia0wtVWNQZE5mcl9Ld2JUT3g5X1FRT1lYSUVpVWc?oc=5"
-    },
-    {
-     "title": "NVIDIA (NVDA) Deepens AI Infrastructure Push With New Digital Twin And Agent Deals",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQd1BMNmlvWG5CbGROcHlzaC1UOWs1UHp1aVlyMks0NkpPQ3p1eXRsV2NYVkV1a3NvTTZXYlBvcDdORUdITGJwVDNaRUhJbnRWWm9KYXN6WGd0a0RXQk83c0EybTM4MmIwbEZSRmpLbGFlMlc5UVI5VTN2VDBaLW9RdGo5M0ZrdDdMWW1iMkN5ZElzTUxnSjcyMVMxMDdCTWpmQjBR?oc=5"
-    }
-   ]
-  },
-  {
    "id": "d8acc1a8e1d4",
    "co": "Nvidia",
    "type": "財報",
-   "zh": "Nvidia召開電話會議公布第三季財務成果。",
+   "zh": "Nvidia 召開電話會議公布第三季財務成果。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1080,7 +1188,7 @@
    "id": "5898a3fc98d0",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia與Hugging Face達成129億美元交易，惟遭美國司法部反壟斷調查。",
+   "zh": "Nvidia 與Hugging Face達成129億美元交易，惟遭美國司法部反壟斷調查。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1092,9 +1200,9 @@
   },
   {
    "id": "42896c210e63",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "算力合約",
-   "zh": "甲骨文雲端服務新增Google TPU及其他晶片選項，擴大AI運算能力。",
+   "zh": "Oracle 雲端服務新增Google TPU及其他晶片選項，擴大AI運算能力。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1116,9 +1224,9 @@
   },
   {
    "id": "aab1c6dd2abe",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "財報",
-   "zh": "亞馬遜公布財報，資本支出達2,200億美元。",
+   "zh": "Amazon 公布財報，資本支出達2,200億美元。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1160,7 +1268,7 @@
    "id": "7f5d51323d06",
    "co": "Meta",
    "type": "算力合約",
-   "zh": "Nvidia與Meta深化AI合作，Nvidia投資30億美元參與Meta股票發行。",
+   "zh": "Nvidia 與Meta深化AI合作，Nvidia 投資30億美元參與Meta股票發行。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1184,7 +1292,7 @@
    "id": "dd48b1c0d1cc",
    "co": "OpenAI",
    "type": "算力合約",
-   "zh": "Oracle擴大與OpenAI的合作夥伴關係。",
+   "zh": "Oracle 擴大與OpenAI的合作夥伴關係。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1196,9 +1304,9 @@
   },
   {
    "id": "2b32bd01aad8",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "算力合約",
-   "zh": "甲骨文擴大與Nvidia晶片供應協議，並新增Google、Cerebras、SambaNova晶片。",
+   "zh": "Oracle 擴大與 Nvidia 晶片供應協議，並新增Google、Cerebras、SambaNova晶片。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1220,9 +1328,9 @@
   },
   {
    "id": "1a46101ede5a",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "資本支出",
-   "zh": "亞馬遜今年在數據中心支出至少2,000億美元。",
+   "zh": "Amazon 今年在數據中心支出至少2,000億美元。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1234,9 +1342,9 @@
   },
   {
    "id": "1c74c0cf0fe2",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "算力合約",
-   "zh": "甲骨文雲端服務新增Nvidia Vera CPU、Intel Diamond Rapids、Cerebras晶片選項。",
+   "zh": "Oracle 雲端服務新增 Nvidia Vera CPU、Intel Diamond Rapids、Cerebras晶片選項。",
    "date": "2026-10-27",
    "links": [
     {
@@ -1248,7 +1356,7 @@
   },
   {
    "id": "041e3cd66454",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "算力合約",
    "zh": "Verizon與AWS簽署超20億美元AI基礎設施合作協議。",
    "date": "2026-10-26",
@@ -1328,9 +1436,9 @@
   },
   {
    "id": "88ec60bac2b9",
-   "co": "甲骨文",
+   "co": "Oracle",
    "type": "資本支出",
-   "zh": "甲骨文承諾投資10億美元用於夥伴AI成長。",
+   "zh": "Oracle 承諾投資10億美元用於夥伴AI成長。",
    "date": "2026-10-24",
    "links": [
     {
@@ -1417,10 +1525,24 @@
    ]
   },
   {
+   "id": "edabae690884",
+   "co": "Meta",
+   "type": "財報",
+   "zh": "Meta第三季營收超預期，第四季指引強勁。",
+   "date": "2026-10-21",
+   "links": [
+    {
+     "title": "Meta beats on Q3 revenue, reports stronger than expected Q4 guidance",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNX25KMEZKUE5TRlZPQ011b1NzeDFLWXVMeFg5SUZVM2ZvV3pab3FWSTI0MWZqWjlPREduaGI5ejBidkVzQmhQLUMyRWNMWXRNV3NSYk5xZWRLUWE1OUVhZnNSR1VaWEJmX3NWRko5aEdBVVEtQkFkb1p6WGpRaktnZmlFSk5GU2ZabmtjcjMwVTBFeHBXSHpJV2g2bDE1R2NKTTJBYjY3TDljeFhHNzZ3?oc=5"
+    }
+   ]
+  },
+  {
    "id": "2ce4a2b2d90e",
-   "co": "亞馬遜",
+   "co": "Amazon",
    "type": "算力合約",
-   "zh": "亞馬遜與3M簽署60億美元數據中心合作協議。",
+   "zh": "Amazon 與3M簽署60億美元數據中心合作協議。",
    "date": "2026-10-20",
    "links": [
     {
@@ -1439,7 +1561,7 @@
    "id": "88cde10a7366",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia與德國政府達成AI合作協議，涉及算力基礎設施投資。",
+   "zh": "Nvidia 與德國政府達成AI合作協議，涉及算力基礎設施投資。",
    "date": "2026-10-20",
    "links": [
     {
@@ -1477,49 +1599,77 @@
      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPcGMyclR5X0JrXzBKem90Uk1sZnBQNkcyRnlyc3ZnWTM4Q0ZoUWtKUzRrd1Y3aHlqaDRjT1pfaFdmV0pHYUFROFI3TFhTWVhtczJsM01PSF8tSEtXejB4emlhVjZGMmQzeWh0RXJoaS0tNDQ1SDhlZDRJZU5hZG5ibE85N3dxU21DS2ZKYm1NV2pVUUF4ZjF3XzQ1ZncwaHVMdXlWZ2FsWjRtQ1d0eFN2YUVQc2x4cTd6YjNwSTVuVUFQZw?oc=5"
     }
    ]
+  },
+  {
+   "id": "d4801ae71bfe",
+   "co": "Anthropic",
+   "type": "算力合約",
+   "zh": "Anthropic簽署加拿大首個數據中心租賃協議。",
+   "date": "2026-10-16",
+   "links": [
+    {
+     "title": "Anthropic signs lease for first Canadian data center",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQNmcyRDdMUmlLNHlsNWhYbVRfTFE1WkJIODRiQmxfOHpzM09lYS1Na0JGNG5YdXlIV09fUVZDWkpRRDFIcUlXb2VYaHhZTjM5Q1AwMnRZZjFkSjRKTTM3RHdUaDhEaEdUWnZTZmVrTUtNaHdTWnM3NVJ3WnFma1VTb09hcURCME10UmFMWXdabmxwNXk1ZUZ6emFoYmRCanEzM3FR?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "bcd1ac647a06",
+   "co": "Anthropic",
+   "type": "資本支出",
+   "zh": "Anthropic向Blackstone提供晶片融資交易，提供雙位數收益率。",
+   "date": "2026-10-16",
+   "links": [
+    {
+     "title": "Anthropic offers Blackstone double-digit yield in chip-financing deal, FT reports",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQWVhYcEpDM002Y1VwaUFBYktyNFdkVG9XbXZaTU44b3k4ZzZRcmdLR294VXZkMDlYLXg1d0dJbUpoMzg3RHBoNi1qcXh1eU14UjJiSmNhTXdUUFNsakJYZFBrZ1BZVV9rdmQ3bHc5b0QycjZRUHBqcENmak5LclBVNmhWYnhTaVZtQzV4bExZamxKSEtDRllrMkNObjlFd3VoU0VIQkZaS2hpQnAzeGh3dzBqdWVHZm9sVllvQ1BEdw?oc=5"
+    }
+   ]
   }
  ],
  "impact": {
-  "微軟": {
-   "hash": "7652b4545f04",
-   "text": "微軟雲端業務超預期成長支撐財報表現，偏向提升市場對其償債能力的信心。資本支出低於預期則偏向短期降低融資需求，但大規模發債計畫（至少250億美元）反映其對AI基礎設施的長期投資承諾。此舉偏向增加公司債供給、可能對長端利率形成溫和上行壓力；同時超預期盈利與AI投資承諾偏向支撐股市與AI投資熱度。"
+  "Microsoft": {
+   "hash": "4c9c5ba8aba3",
+   "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升投資者風險偏好，利好股市與AI投資熱度。然而公司發行250億美元債券擴充AI基礎設施，偏向增加公司債供給壓力。若資本支出持續低於預期，則債券融資需求可能受限；若AI投資競爭加劇，則長端利率偏向承壓。"
   },
   "Alphabet": {
-   "hash": "4f05f95faff0",
-   "text": "Alphabet營收未達預期加上AI資本支出持續攀升，偏向增加公司債供給需求。若市場對AI投資回報率疑慮加深，則長端利率面臨下行壓力；但若投資人擔憂其現金流承壓，偏向要求更高風險溢價。AI投資熱度短期偏向降溫，因營收成長未能匹配支出增幅，引發效率質疑。"
+   "hash": "b60e0911ec06",
+   "text": "Alphabet營收未達預期引發AI支出效率疑慮，偏向增加公司債供給壓力。高達510億美元的季度資本支出與2027年預期大幅增加，若現金流改善未如預期，則公司可能加大舉債融資需求，偏向推升長端利率。同時AI投資回報率疑慮偏向降低市場對科技股的熱度。"
   },
   "Meta": {
-   "hash": "ef0e51bcac80",
-   "text": "Meta近期密集融資與巨額資本支出承諾，偏向增加公司債供給與股權稀釋。27億美元數據中心債券發行直接擴大債券市場供給，長端利率面臨上升壓力；同時股權融資與股票分割稀釋現有股東權益。Nvidia等科技巨頭的鉅額投資與合作深化，強化AI產業景氣預期，若市場認可Meta的AI戰略，則股市與AI投資熱度偏向上升，但需警惕債務與股本擴張的長期稀釋效應。"
+   "hash": "9098aae8c79b",
+   "text": "Meta近期密集融資與大規模資本支出計畫，偏向推升公司債供給與長端利率。270億美元債券發行直接增加債券市場供給；同時籌資950億美元股權與8250億美元支出承諾，反映對AI基礎設施的龐大需求。若市場認為此規模支出風險可控，則強勁財報與Nvidia合作可支撐股市與AI投資熱度；若融資需求持續擴大，則長端利率偏向上行壓力。"
   },
-  "甲骨文": {
-   "hash": "47a8c0e5c04f",
-   "text": "甲骨文設定AI基礎設施借款與融資上限，偏向減少公司債供給壓力。同時擴大多元晶片合作、承諾夥伴投資，顯示在資本支出受控下推進AI戰略。若融資需求受限，則長端利率面臨的企業融資需求偏向下降；但多晶片策略強化競爭力，偏向支撐AI投資熱度維持。"
+  "Oracle": {
+   "hash": "c0f3e630361a",
+   "text": "Oracle近期宣布AI基礎設施投資計畫與融資上限，偏向穩定公司債供給。限制新借款與外部融資各200億美元、設定資本支出上限並預期正向現金流，降低債務擴張壓力，利於長端利率穩定。擴大多元晶片供應協議與雲端服務能力，強化競爭力，若能轉化為營收成長動能，則偏向支撐股市與AI投資熱度。"
   },
   "CoreWeave": {
    "hash": "26daa7e8c5f7",
    "text": "CoreWeave近期大規模發債計畫偏向增加公司債供給壓力。若高盛預估成立，新增數百億美元債券發行將拉高長端利率，因企業融資需求增加；同時AI基礎設施投資熱度可能受融資成本上升而承壓。股市方面，高債務預期若引發償債風險疑慮，則偏向對該公司股價造成負面影響。"
   },
   "Anthropic": {
-   "hash": "67dc330ace0c",
-   "text": "Anthropic近期融資與算力合約密集推進，偏向增加公司債供給。大額債務融資與晶片融資安排反映其資本密集特性，若後續IPO順利上市，則股市偏向受惠於AI領域融資活躍；同時430億美元算力合約鎖定長期支出，偏向強化AI投資熱度預期。債務規模擴大可能對長端利率構成溫和上升壓力。"
+   "hash": "efdde5e2abca",
+   "text": "Anthropic密集融資與巨額算力合約偏向增加公司債供給。630億美元發債規模龐大，若市場消化能力有限則偏向推升長端利率。4,300億美元算力合約鎖定長期收入，降低營運風險，偏向支撐股價。大規模資本支出與AI基礎設施投資偏向強化AI投資熱度，但融資成本上升若傳導至整體科技融資環境，則偏向對高估值AI公司造成壓力。"
   },
   "OpenAI": {
-   "hash": "a3ed61c12054",
-   "text": "OpenAI近期大規模融資與多元化算力採購，偏向提升AI投資熱度。融資規模擴大反映市場對生成式AI前景的信心，增加公司債供給壓力；多廠商晶片策略與雲端合作擴張，暗示資本支出持續高位，若融資成本上升則長端利率承壓。這些事件強化AI產業景氣預期，偏向支撐科技股與AI相關投資熱度。"
+   "hash": "abb07905f343",
+   "text": "OpenAI近期融資規模龐大且多元化算力供應商，偏向提升其債務融資能力與降低單一供應商風險。大額融資可能增加公司債供給，若後續資本支出持續高企，則偏向推升長端利率；同時多廠商晶片策略與雲端擴張強化AI基礎設施競爭力，偏向吸引科技股與AI投資熱度，惟融資稀釋效應可能短期制約股價表現。"
   },
-  "亞馬遜": {
-   "hash": "0e18c850206b",
-   "text": "亞馬遜近期大幅增加數據中心資本支出（超200億美元）並簽署多筆AI基礎設施合約，顯示對算力投資的強勢承諾，偏向提升AI投資熱度。然而第三季營收未達預期、自由現金流轉負，若現金流持續惡化，則公司債供給壓力偏向上升，可能推高長端利率。短期內資本密集的AI布局與財務承壓形成拉扯。"
+  "Amazon": {
+   "hash": "1427b267e896",
+   "text": "Amazon 巨額資本支出（逾2,200億美元）偏向增加公司債供給壓力，尤其自由現金流轉負。若融資需求持續，長端利率面臨上行壓力。然而，AI基礎設施合約（Verizon、3M等超80億美元）彰顯算力需求強勁，偏向支撐AI投資熱度。但營收未達預期與現金流惡化，偏向拖累股市表現。"
   },
   "Nvidia": {
-   "hash": "6217c2e6633a",
-   "text": "Nvidia近期大幅擴展算力合約，涉及Anthropic、Meta、Hugging Face等重量級客戶的數百億美元投資承諾。這些事件偏向提升AI投資熱度，反映企業對生成式AI基礎設施的強勁需求。若這些合約順利執行，則Nvidia營收與現金流前景向好，偏向降低其公司債供給壓力；同時大規模資本支出需求可能推升長端利率。惟Hugging Face交易遭反壟斷調查，若限制該筆交易，則偏向削弱上述正面預期"
+   "hash": "088755341c62",
+   "text": "Nvidia近期密集簽署算力合約與融資支持，涉及逾百億美元規模投資，偏向強化AI產業需求。若這些合約順利執行，則公司債供給偏向增加（融資需求上升），長端利率偏向上行壓力；同時AI投資熱度偏向升溫。惟Hugging Face交易遭反壟斷調查，若監管趨嚴則偏向抑制後續大型交易，進而緩和上述效應。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
    "text": "xAI與SpaceX簽署400億美元GPU租賃協議，反映其算力需求龐大且融資能力強。此舉偏向增加公司債供給壓力——若xAI後續透過債券融資支應租賃成本，長端利率面臨上升壓力。同時，大規模算力投資偏向提升AI投資熱度，可能吸引科技股資金流入。短期內公司債供給增加與AI熱度上升的雙重作用，對長端利率形成複雜影響。"
   }
  },
- "at": "2026-10-30 09:27（台北）"
+ "at": "2026-10-30 11:33（台北）"
 }

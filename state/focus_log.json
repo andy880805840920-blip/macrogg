@@ -1,75 +1,5 @@
 [
  {
-  "at": "2026-10-25T23:09+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 9.0,
-    "sources": 1,
-    "titles": [
-     "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "titles": [
-     "油價衝擊加劇通膨壓力 加拿大央行本週料升息、聯準會十二月行動受矚"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "RBA’s Hunter Says It’s ‘Not Quite Yet’ Done Fighting Inflation - Bloomberg.com",
-     "RBA Official Says Inflation Fight Not Quite Done Yet - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "Emerging Debt Outruns Treasuries as Rich-World Fiscal Fears Grow - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.0,
-    "sources": 1,
-    "titles": [
-     "Chumporn Palm Oil Industry PCL (CPI.BK) | Stock Price & Latest News - Reuters"
-    ]
-   },
-   {
-    "score": 6.5,
-    "sources": 1,
-    "titles": [
-     "The Fed, Inflation, Verizon, Boeing, Alphabet, GE Vernova, Amazon, and Many More Stocks to Watch This Week"
-    ]
-   },
-   {
-    "score": 6.5,
-    "sources": 1,
-    "titles": [
-     "French Bond Rout Puts Crisis at Heart of ECB Succession Endgame - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 6.0,
-    "sources": 1,
-    "titles": [
-     "US Equity Futures Climb as Crude Oil Price Dips: Markets Wrap - Bloomberg.com"
-    ]
-   }
-  ],
-  "main": "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com",
-  "result": "華許要求交易員關注數據本身，市場仍緊盯聯準會動向"
- },
- {
   "at": "2026-10-26T12:10+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2765,5 +2695,104 @@
    ]
   },
   "result": "Warsh 暗示暫停升息非既定路線，強調金融條件尚未緊縮、為 12 月升息鋪路"
+ },
+ {
+  "at": "2026-10-30T03:33+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims",
+   "gdp_adv"
+  ],
+  "locks": [
+   "pce",
+   "gdp_adv"
+  ],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "COMMENTARY: Warsh's muddled messaging revives Fed credibility doubts - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Warsh’s ‘Forward Silence’ Risks Bigger Treasury Market Swings - Bloomberg"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Voters’ Inflation Frustrations Take Shine Off Strong Economic Growth - Bloomberg"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Fed’s Path to a Repo-Based Framework Faces a Familiar Roadblock - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Hassett Sees Fed Acting If October Inflation Data Come in High - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+3（有內文）",
+    "titles": [
+     "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool"
+    ]
+   }
+  ],
+  "main": "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
+  "main_why": "鎖定事件 pce",
+  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "用了相對時間（下週、今日、本週），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "出現材料裡沒有的數字（28）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "用了相對時間（前一天），請改寫成月/日"
+    ]
+   ]
+  },
+  "result": "9月PCE月增0.5%創3月來最大增幅，聯準會年底前升息預期升溫"
  }
 ]

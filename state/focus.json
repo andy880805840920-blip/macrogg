@@ -1,12 +1,12 @@
 {
  "hash": "",
- "text": "聯準會主席 Warsh 在 10/29 記者會上表明，聯準會並未設定既定的政策路線，若對貨幣政策有明確結論會大張旗鼓宣布。他同時釋出偏鷹派訊號，指出雖然整體金融條件已趨緊，但他不願也無法稱之為緊縮，為 12 月可能升息預留空間。這場記者會與 Warsh 上任初期明顯不同——6 月與 7 月 FOMC 在通膨遠高於 2% 目標時仍按兵不動，曾引發市場質疑其可信度；9 月升息後 Warsh 對經濟的鷹派解讀又讓市場大幅轉向，直到兩位高層官員出面降溫。10/29 Warsh 拒絕證實這兩位官員是否受他指示發言，但聯準會內部人士表示副主席通常會與主席協調訊息。Warsh 此次展現出願意讓市場猜測政策方向的態度，同時保留選項並為可能的升息奠定論述基礎。¶美國第三季 GDP 初估年化成長率 3.4%，優於市場預期的 3.1%、高於第二季的 2.2%；9 月 PCE 物價指數月增 0.5%、年增 3.6%，核心 PCE 月增 0.3%、年增 3.1%，月增幅創 3 月以來最大、年增率仍遠高於聯準會 2% 目標。9 月個人支出月增 0.5%、個人所得月增 0.2%，略低於預期。10/28 聯準會決議維持利率在 3.75%-4% 區間，主席 Warsh 表示未來一段時間資訊豐富、全球變化很多，官員們希望觀察數據再決定下一步。\n科技股拋售引發避險買盤，美國公債殖利率全線下跌，其中2年期下跌9.95個基點至4.5979%、10年期下跌8.06個基點至4.9369%，440億美元7年期公債拍賣得標殖利率4.894%與發行前一致。\n美國9月通膨數據升溫、消費支出增加，但選民對物價上漲的不滿情緒抵銷了經濟強勁表現帶來的正面評估。",
+ "text": "美國9月個人消費支出物價指數（PCE）月增0.5%，為3月以來最大單月增幅，強化聯準會年底前升息預期。PCE是聯準會最看重的通膨指標，9月數據顯示通膨壓力持續。聯準會10/28維持利率不變，但主席 Warsh 在會後表態保留進一步緊縮空間，以應對頑固通膨。市場目前定價12/9會議升息一碼機率達76%。同時中東局勢再度緊張，市場預期華府可能在11/3美國期中選舉後恢復對伊朗軍事行動，推升油價並加劇通膨疑慮。10月金價下跌逾3%，因中東衝突維持能源價格高檔、通膨憂慮升溫，加上升息預期使無息資產黃金相對吸引力下降。¶美國第三季 GDP 成長年率 3.4%，優於市場預估的 3.1%，也高於第二季的 2.2%。9 月 PCE 物價指數月增 0.5%、年增 3.6%，月增幅是 3 月以來最大，年增率高於聯準會 2% 目標；核心 PCE 月增 0.3%、年增 3.1%，符合市場預期。9 月個人支出成長 0.5%、個人所得成長 0.2%，略低於預期。這些數據在 10/28 聯準會決議維持利率於 3.75%-4% 區間後公布。主席 Warsh 在 10/28 表示，未來一段時間資訊豐富、世界變化很多，聯準會將密切關注後續數據再決定下一步行動。\nWarsh 在10/29的新聞發布會上表示聯準會未對貨幣政策有既定方針，同時暗示傾向升息，為12月可能升息奠定基礎，但拒絕確認副主席是否奉他之命向市場傳遞降溫訊息。\n42 Macro創辦人暨執行長戴爾在10/29指出，財政部長貝森特最近低調行事，他認為聯準會可能在為2027年潛在的流動性救援做準備。",
  "links": [
   {
-   "title": "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
-   "link": "https://www.cnbc.com/2026/10/29/kevin-warsh-fed-october-rate-decision-december-hike.html",
-   "source": "CNBC",
-   "at": "2026-10-29T17:32:34+00:00"
+   "title": "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
+   "link": "https://finance.yahoo.com/markets/commodities/articles/gold-hovers-near-4-000-014613798.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-10-30T01:46:13+00:00"
   },
   {
    "title": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
@@ -273,73 +273,66 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-10-30T01:27:08.838972+00:00",
+ "at": "2026-10-30T03:33:20.193508+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c7b1e37ebf32380e",
+  "hash": "a1a46bf1c852124d",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "Warsh 宣布改變未來 FOMC 會議的運作方式，同時對 AI 融資表達樂觀看法，但此立場可能限制他未來的政策彈性，因為若 AI 投資未如預期回報，他將面臨政策調整的壓力",
+    "text": "Warsh 在10/28會後保持政策立場模糊，聲稱若已有明確結論會「大張旗鼓」宣布，同時暗示傾向升息，稱金融條件「雖然更緊，但我不願也無法稱其為緊」，為12月升息預留伏筆",
     "links": [
      {
-      "title": "Fed's Warsh announces changes in how future FOMC meetings will go",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOc3k2UHRGbkFLQmRDN3h4WHJyQWoyWnkxOHVkY0JqNHRFSFBER25td3pVVEhJX0pRQnhXdzJiR2FnSG11cGpSYnlQeVRFSnFuTi1mVDNtSTRVOUVwWHVwN2E1SEhiRmVmMFVTcm5oaHl3Q1pLRHY3NUVmeTdEekk0UXVwOTBHREFkZTV1dVhuTG0wa2I1RDFndWFSQ2JEWGNqcjBDcnNLZXM3X280?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-28T23:32:40+00:00"
-     },
-     {
-      "title": "Warsh’s AI Optimism May Box Him In at the Fed",
-      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQOXVva3ZTOGhrVDZQeV9OSzZQcTJDS292VVRCRHBDdTNkRWhDQVhOYXBPeGl4TDdqaUxObEtjODhTc2swTk9KWHJpLVJib0V6YVZkNV96M2ZUci1FSl9jRThlbmkwcVZPekRXaEdScE9xYlVjQVFpcXFyRDlNMEQtV2VfUEhnejZzS0xnT2ZHbWJCT3R1NHpsbVhGVEpxNUhPNG5kYnRSN21peGdKcFM3LUNVS3d5dEppQ1RnRVAxRQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-10-29T09:00:15+00:00"
+      "title": "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
+      "link": "https://www.cnbc.com/2026/10/29/kevin-warsh-fed-october-rate-decision-december-hike.html",
+      "source": "CNBC",
+      "at": "2026-10-29T17:32:34+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "科技股拋售引發避險買盤，美債殖利率全面下滑，10 年期公債殖利率下跌 8.06 個基點至 4.9369%；440 億美元 7 年期公債拍賣得標殖利率 4.894%，間接投標人獲配比例升至 57.8%，創有記錄以來最高水準",
+    "text": "Warsh 的「前瞻沉默」策略引發市場波動加劇，長天期美債因科技股拋售與全球同步反應而上漲",
     "links": [
      {
-      "title": "科技股遭拋售引發避險潮，美國公債價格週四齊揚，7年期債拍賣穩健",
-      "link": "https://tw.stock.yahoo.com/news/%E7%A7%91%E6%8A%80%E8%82%A1%E9%81%AD%E6%8B%8B%E5%94%AE%E5%BC%95%E7%99%BC%E9%81%BF%E9%9A%AA%E6%BD%AE-%E7%BE%8E%E5%9C%8B%E5%85%AC%E5%82%B5%E5%83%B9%E6%A0%BC%E9%80%B1%E5%9B%9B%E9%BD%8A%E6%8F%9A-7%E5%B9%B4%E6%9C%9F%E5%82%B5%E6%8B%8D%E8%B3%A3%E7%A9%A9%E5%81%A5-003431084.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-30T00:34:31+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "聯準會推進以回購協議為基礎的新框架，但面臨熟悉的障礙，這涉及資金市場運作機制的重大改革",
-    "links": [
-     {
-      "title": "Fed’s Path to a Repo-Based Framework Faces a Familiar Roadblock",
-      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOYW1WNXNRWHp3ei1ZcEw3bWRnMlZyUS1JY0lxT2JvMU9qeWZkWC1VdWZYUlkzTXpsZEpWeVVRNEZyYjl5Zk1EWUpISHQxdTFyMnJBR3h2cVY1UGtTUXVRb0RSTnBZRE1LWkh2VXpOWHZCQnYwOURUZVVldHFMM1FoYnNWVkV2S004Q1VfOTUzWm44dGpudjlWbnUxcWd2YTRVcmN4WVM4T0Z4a29fT2trNzVFR2ozdU9ha0xUY0FqME9WUGUxQWduZ05HUQ?oc=5",
+      "title": "Warsh’s ‘Forward Silence’ Risks Bigger Treasury Market Swings",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQZzdFbTR0Tm11V3ZMZkxaYTU0d2NuRW5SYmhHOWFqWjdTOVU2cUhoa3kyLUlTT2tvVXRKaHYwbnVLMkNqa2RUdF9QOEVFeHFEUnJwLXVubUh0VzBIWmZfSnZGbkVaOERxYmRfUzgwT2F6VWFMYk80Rlc4eTF4VEZnMVFuM2ktdm5EQldmVG5Sc3I2WWpaQUpjRnlESUFBdDhlM1F6MU5SU3k3TTVYMWZv?oc=5",
       "source": "Bloomberg",
-      "at": "2026-10-29T15:26:00+00:00"
+      "at": "2026-10-29T19:23:34+00:00"
+     },
+     {
+      "title": "Treasuries Extend Rally With Global Peers on Tech Stock Selloff",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPUDhReUZ6dVIycEJmOW16YmFJeVNJcWhiUENvYU5laVVIdEdZcFJISTFiTTh4cFd0bGlRRkdsV0lWUFRFNzZEWVVVakRUaDlzNjBBRHl4T04xMGFCOHhSWkpwNnBtT3ZCaEVNNkZiM0VhQnpsdE8zT3NIb1dYWnUyY3ZvWF9NSGRLZk5KdWN2WTFxSkRqTVAxdlR5T2w1alZCRzNKZUhmMUlMbnlkTW83MXcybGU?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-30T02:09:00+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "美國完成逾 4,000 萬桶戰略石油儲備出借合約，預計 2027 年初開始收回逾 2.16 億桶，包括約 4,400 萬桶額外原油；美國 SPR 存量已降至 1982 年以來最低，持續動用儲備可能削弱應對下一次供應中斷的緩衝能力",
+    "text": "油價在伊朗局勢前景不明下震盪。市場一度因美國可能恢復軍事行動而看漲，隨後又因外交談判跡象而回落，反映投資人對中東衝突走向的不確定性。中國煉油商中石化第三季獲利躍升57%，受惠於油價高檔與煉油利潤擴大。",
     "links": [
      {
-      "title": "美國完成最後一批SPR出借合約，逾4,000萬桶原油將陸續供應市場",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E5%AE%8C%E6%88%90%E6%9C%80%E5%BE%8C-%E6%89%B9spr%E5%87%BA%E5%80%9F%E5%90%88%E7%B4%84-%E9%80%BE4-000%E8%90%AC%E6%A1%B6%E5%8E%9F%E6%B2%B9%E5%B0%87%E9%99%B8%E7%BA%8C%E4%BE%9B%E6%87%89%E5%B8%82%E5%A0%B4-005211301.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T00:52:11+08:00"
+      "title": "Oil Climbs on Signs US May Resume Military Strikes Against Iran",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPbV9tbXFMMlg1cjY2NzhHaWxOS1Y0ZFNYcGhWRFg4RTE1YzhrcW96UDVLdXY2QjNTVG5aajd0ODRhQWVZSFM1X3ZCUVZTbzZpVXhna3F4eF9jcm5aT0ptZkZ1bXRnYzA2TkV3RWNGYm5ta01xODdWRzU2Y1lpY2pHQ1ZCX3hkbDAxcktreEtWSWVWRWV2S2ZMS3BhWGs1QQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-30T00:22:00+00:00"
+     },
+     {
+      "title": "Oil Declines as Traders Parse Signs of Fresh Diplomacy on Iran",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQcWhmOUJoc0lkWEs5QlBSaDVpMjd4QlRILTVyTmk4dlRNU1FNRE0tS0N2NHdQZFZGQjZxZjlSOFVwSGhaQVhrUmJrb1JySXlhZDctVHdqMUIyU0gtUnFENDdoRkh4QnlxR1pfeGxMMU1UUWJydnhxSFJ1d3djdjZYQ1ZUcUxZMVBEVFFwaWN6VkhKYnNtMTdBWk4ycjJSaEczeXhONWtaN3ZXUjFZNW1aS3NMVQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-29T20:29:28+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股 10/29 下跌，谷歌和 ServiceNow 等科技股大幅下滑，亞馬遜和英特爾也表現不佳，投資人擔憂大型科技公司在 AI 基礎設施上的資本支出過高，未來可能無法收回數千億美元投資",
+    "text": "美股科技巨頭財報接連爆雷，谷歌與英特爾股價分別下跌逾12%與20%，雖然AI業務成長強勁但核心業務表現不佳，引發市場對高額資本支出回報的疑慮，拖累美股重挫",
     "links": [
      {
       "title": "Wall Street ends lower as Alphabet revenue miss revives AI capex jitters",
@@ -348,104 +341,100 @@
       "at": "2026-10-29T23:35:39+00:00"
      },
      {
-      "title": "Wall Street's AI bet: Own the infrastructure, collect the rent",
-      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQa0FMRUdJbXh1dzBNXzZKRG1aUC1scGpiM2RhVi1rUVZSOEhLTzNIV2pGY1lPRjdaT25sYVlEZW9Wa1B0bFpBaDRQRFNLdHFUQmRsVERzbnAxUHZpYUYzS09DZHJxRmdKVF9aTTY3T1U0SFg5Z1c2Y2czaG9MN0VZSTRhMEVOSWxSTm5zSWZPZ2NzUHE2SkJkWktiWVRBWE9FR0RSbl9HOA?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-29T17:05:43+00:00"
+      "title": "Dow Jones Futures Fall, Nasdaq Futures Plunge 2% On Amazon, Intel After Google, ServiceNow, Fortinet Dive",
+      "link": "https://finance.yahoo.com/m/0a5ce393-a6df-312b-af64-1893a264d0df/dow-jones-futures-fall%2C.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-10-30T03:04:55+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "英特爾財測低於預期，表示以色列廠致命爆炸將導致未來兩季營收減少約 6 億美元，PC 市場疲弱可能損及明年上半年銷售，記憶體價格大幅飆升對銷售造成壓力；若英特爾股價未能從盤後跌勢中回升，市值將蒸發逾 800 億美元",
+    "text": "鴻海透過精密模具與自動化技術，將輝達Vera Rubin伺服器運算托盤組裝時間從2小時縮至20分鐘，展現垂直整合的製造能力；同時聯發科指出AI預算增長超預期，去年編列全年預算兩個月內花光",
     "links": [
      {
-      "title": "台積電刷2個月盤中最低價！10月買在高點 帳上1張虧23萬元",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%88%B72%E5%80%8B%E6%9C%88%E7%9B%A4%E4%B8%AD%E6%9C%80%E4%BD%8E%E5%83%B9%EF%BC%8110%E6%9C%88%E8%B2%B7%E5%9C%A8%E9%AB%98%E9%BB%9E-%E5%B8%B3%E4%B8%8A1%E5%BC%B5%E8%99%A723%E8%90%AC%E5%85%83-012339750.html",
+      "title": "鴻海秀精密加工實力，NVIDIA Vera Rubin組裝時間縮至20分鐘",
+      "link": "https://tw.stock.yahoo.com/news/%E9%B4%BB%E6%B5%B7%E7%A7%80%E7%B2%BE%E5%AF%86%E5%8A%A0%E5%B7%A5%E5%AF%A6%E5%8A%9B-nvidia-vera-rubin%E7%B5%84%E8%A3%9D%E6%99%82%E9%96%93%E7%B8%AE%E8%87%B320%E5%88%86%E9%90%98-025115707.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T01:23:39+08:00"
+      "at": "2026-10-30T02:51:15+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股 10/30 開盤狂殺逾 1,500 點至 44,768 點，摜破半年線，台積電下跌 50 元至 2,365 元、聯發科下跌 225 元跌幅 5.56%、台達電跌停亮燈下跌 145 元，電子零組件類股跌幅達 5.76%",
+    "text": "台股30日盤中重挫逾1600點至44726點，失守45000點整數關卡，改寫史上盤中第11大跌點；美股科技股財報爆雷衝擊，市場對AI資本支出效益產生疑慮，科技與相關族群集體遭提款",
     "links": [
      {
-      "title": "台股狂殺1500點「摜破半年線」！台達電跌停亮燈、台積電重摔50元　聯發科法說前挫半根",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%8B%82%E6%AE%BA1500%E9%BB%9E-%E6%91%9C%E7%A0%B4%E5%8D%8A%E5%B9%B4%E7%B7%9A-%E5%8F%B0%E9%81%94%E9%9B%BB%E8%B7%8C%E5%81%9C%E4%BA%AE%E7%87%88-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%87%8D%E6%91%9450%E5%85%83-%E8%81%AF%E7%99%BC%E7%A7%91%E6%B3%95%E8%AA%AA%E5%89%8D%E6%8C%AB%E5%8D%8A%E6%A0%B9-011500593.html",
+      "title": "台股狂瀉逾1600點　失守45K",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E7%8B%82%E7%80%89%E9%80%BE1600%E9%BB%9E-%E5%A4%B1%E5%AE%8845k-031554238.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T01:15:00+08:00"
-     },
-     {
-      "title": "台股開盤／台積電重挫40元！台股血崩逾1500點　電子股殺聲隆隆",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%87%8D%E6%8C%AB40%E5%85%83-%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E9%80%BE1500%E9%BB%9E-%E9%9B%BB%E5%AD%90%E8%82%A1%E6%AE%BA%E8%81%B2%E9%9A%86%E9%9A%86-011400099.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-10-30T01:14:00+08:00"
+      "at": "2026-10-30T03:15:54+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "川普 10/29 取消本週末在堪薩斯州和愛荷華州的造勢活動，改採電話集會方式支持共和黨候選人，預計發言時長將從 90 多分鐘縮短至約 10 分鐘，共和黨全國委員會計畫在近 20 個州舉行電話集會",
+    "text": "美國期中選舉在即，眾議院控制權懸而未決。阿拉斯加州參議院選戰在投票前數日出現變數，競爭態勢生變。川普取消週末造勢行程，改以電話方式參與其他中期選舉活動。",
     "links": [
      {
-      "title": "美期中選舉最後階段 川普取消週末造勢活動改電話集會",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E6%9C%80%E5%BE%8C%E9%9A%8E%E6%AE%B5-%E5%B7%9D%E6%99%AE%E5%8F%96%E6%B6%88%E9%80%B1%E6%9C%AB%E9%80%A0%E5%8B%A2%E6%B4%BB%E5%8B%95%E6%94%B9%E9%9B%BB%E8%A9%B1%E9%9B%86%E6%9C%83-003032357.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-10-30T00:30:32+00:00"
+      "title": "Trump cancels weekend rallies, plans to phone in to other midterm campaign events",
+      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNSVI4eWdBdGFxZlM5TnFMNWcxY2VpS0hjMDlZbXZzaFBrbFZkaGdTMmpkQVNqS3VHbVR5X1dUWHJfOFEwd3kxOExUNVZBcElsd0xMZVhueWJNOWZCQ1hfdVpNWkIxWlpZT1E1QVdVdklaaXlIUENzV3JrTmRWbW11S2pJbkg1OUxDbFltd09SZFl3N2ExRl9TbW1kRkhQMTJlSnNqTlM0SUFxc2U0RXhqcHp3amJBYUU?oc=5",
+      "source": "Reuters",
+      "at": "2026-10-29T23:33:43+00:00"
+     },
+     {
+      "title": "House control hangs in balance ahead of midterm elections",
+      "link": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNdGU5cDlkN2pnb3F2OGRGM1NudnZuSzRySEZHWlU1THdIMnFIbnlhUWdublh2cmdTQzBkTEJYUi1xVS1LUzNPMGJ2eG1TZWM4eHo3c01GYlNrQ1dzRkJ0RjM1Vm55NU9VR2JkVm5ZcVF6SzJDckFCelpaVWpBYjF3Y0pXWU5zQW8yQjV6NkFfbE55aEFBeE5weG1iOG01UFhvSFRTNkNZdXpPMTZXVzFzbXMxTU9Dcl90VVNOODk0YmRjYWV1cDB6LWJIZFdzUm5vbWQ5UHdB?oc=5",
+      "source": "KREM",
+      "at": "2026-10-30T00:55:00+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "倫敦金銀市場協會成員支持黃金代幣化，但要求法律確定性和保障措施，以推進數位黃金交易",
+    "text": "黃金在升息預期與中東衝突推升能源價格的雙重作用下，於4000美元附近震盪，無息資產相對吸引力因升息預期而下降",
     "links": [
      {
-      "title": "LBMA members back tokenised gold but seek legal certainty and safeguards",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOWGsySVpZX2g0a0R0ZndGOUhvdWQyVzRpY1pUMC1YUHRfa3V0aG80MGRId2U1TWN6bDZJdEV2QXpnYWhJX0VVVWZtTzRNaFdWT29UWVN5OEc1eFN6LWtqZkluVU9rd1htQkZGWG14VW1VUlB5RGFhWmIyRnNJUVdOVHBUcXNKdFUxWC1oeTZGcFhrYnpULTI4VXFaUGlOcVY0XzFzVFRvV2ZFYjNDM2c?oc=5",
-      "source": "Reuters",
-      "at": "2026-10-29T16:12:59+00:00"
+      "title": "Gold Steadies Near $4,000 as Inflation Keeps Rate-Hike Bets Firm",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPbUN6SVNKYlRQbEVSTHhPbWNJZEltZHRnb2FKUU1ld285b0ZNaHhReVF5NmZPUkNXbEF6ekg2TU96VmJqbXlTVFlSeG9IN0I4bEt6RlljWlhYS05ITEs3dERHMDZia3ZVenRDaHNHc2hyNUhXaWhkNkJPOHNBTGlSNXJIMjhsMkRYODhBSlNLeGVHVTlQRE5mbzhJSEd0bXZFdjJfUDBfbmd1UGEyTlVzdUd6bGU?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-10-30T00:38:00+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣 10/29 早盤大幅貶值逾 1 角，跌破 32.5 元，台股同步回吐前日漲幅",
+    "text": "新台幣兌美元大幅貶值。10/29開盤時新台幣貶至32.52元，較前日貶值2.8分；盤中一度重貶逾1角至32.666元，反映股匯市場同步承壓。",
     "links": [
      {
-      "title": "台股回吐昨日漲幅！新台幣貶破32.5元、早盤大貶逾1角",
-      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB4LTBBS3VjYXZMc0s1SmhaM3RHeUU3dkFjM0pMN2hWTFBPa1F4M2Jtal9mV3AwSjh4bWNPM0xIVDE1RTNjSFA1eFo4TGhLaldJTUZKMExpVVRWNi04d0NR0gFkQVVfeXFMTlJ4cF9sYWFDNmkzRlNtdHFzVF9LZWtLMnN0YWgxMmJtSHI4TlhqeWhtQmo1YmFuZEFNN2VYSkFYeGlLZmlYTUVZYWRJS0ljaWM4QV9tRmxrU0lUR3BzRGg3ZmJRSw?oc=5",
-      "source": "自由財經",
-      "at": "2026-10-29T04:17:23+00:00"
+      "title": "股匯雙殺！新台幣早盤重貶逾1角見32.666元",
+      "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNQlpleVdzZmlLYi1TbEpHMVNHeU1UNDRnSjZyYWxGWk9GTURpLWVxOGNobmxlek5vaENUZjMxQXp0MDBMVHpOVTFwQkRSZVRCSm1TQW9VQjdycEdzb2o2NDFDWnNXeVBpRVkzM19oOGVzOU9yMElQV2g4VFpwLWphLUctcl9oVkpvUFM4?oc=5",
+      "source": "PChome Online 新聞",
+      "at": "2026-10-30T01:29:21+00:00"
+     },
+     {
+      "title": "新台幣開盤貶2.8分　為32.52元",
+      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5MTW9wTW9uUFFqMjk3VFNkaVpQOE9WUm1wT3hibS1FUnhtWFJJZGhuSldhbjR6RXBTNmFvR1A0Qnd5VVFIUEpWYTVxalUtTmhGenhBWUhBd1pSZ0FUX3hV0gFfQVVfeXFMTkxNb3BNb25QUWoyOTdUU2RpWlA4T1ZSbXBPeGJtLUVSeG1YUklkaG5KV2FuNHpFcFM2YW9HUDRCd3lVUUhQSlZhNXFqVS1OaEZ6eEFZSEF3WlJnQVRfeFU?oc=5",
+      "source": "經濟日報",
+      "at": "2026-10-30T01:12:39+00:00"
      }
     ]
    }
   ],
-  "at": "2026-10-30T01:27:59.118707+00:00"
+  "at": "2026-10-30T03:34:05.218543+00:00"
  },
  "main_source_titles": [
-  "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
+  "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
   "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates"
  ],
- "headline": "Warsh 暗示暫停升息非既定路線，強調金融條件尚未緊縮、為 12 月升息鋪路",
- "rate_note": "Warsh 強調金融條件尚未緊縮、暗示 12 月可能升息，偏向推升短端利率與升息預期；他保留政策彈性但為升息鋪路的論述，也可能透過不確定性推升長端利率。不過 10 年期 10/29 收盤 -6bp 至 4.99%，市場還沒反映。",
+ "headline": "9月PCE月增0.5%創3月來最大增幅，聯準會年底前升息預期升溫",
+ "rate_note": "PCE月增0.5%創3月來最大增幅，偏向推升短端利率——數據強化聯準會年底前升息預期，市場已定價12/9會議升一碼機率76%；不過10年期10/29收盤-6bp至4.99%，市場還沒反映。",
  "recent_mains": [
-  {
-   "headline": "9月PCE年增3.6%高於預期初領失業金降至19.4萬人 Fed12月升息空間擴大",
-   "titles": [
-    "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool.",
-    "Fed更有空間升息？美國上周初領失業金人數意外下降 續領同步減少",
-    "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
-    "美第3季GDP擴張3.4%高於預期　9月核心通膨年增3.1%"
-   ],
-   "at": "2026-10-29T15:51:52.473540+00:00"
-  },
   {
    "headline": "Warsh 減少利率決策次數至每年六次，債市憂政策突襲加劇波動",
    "titles": [
@@ -462,19 +451,27 @@
     "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates"
    ],
    "at": "2026-10-30T01:27:08.838972+00:00"
+  },
+  {
+   "headline": "9月PCE月增0.5%創3月來最大增幅，聯準會年底前升息預期升溫",
+   "titles": [
+    "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
+    "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates"
+   ],
+   "at": "2026-10-30T03:33:20.193508+00:00"
   }
  ],
  "archive": {
   "2026-10-30": {
-   "headline": "Warsh 暗示暫停升息非既定路線，強調金融條件尚未緊縮、為 12 月升息鋪路",
-   "text": "聯準會主席 Warsh 在 10/29 記者會上表明，聯準會並未設定既定的政策路線，若對貨幣政策有明確結論會大張旗鼓宣布。他同時釋出偏鷹派訊號，指出雖然整體金融條件已趨緊，但他不願也無法稱之為緊縮，為 12 月可能升息預留空間。這場記者會與 Warsh 上任初期明顯不同——6 月與 7 月 FOMC 在通膨遠高於 2% 目標時仍按兵不動，曾引發市場質疑其可信度；9 月升息後 Warsh 對經濟的鷹派解讀又讓市場大幅轉向，直到兩位高層官員出面降溫。10/29 Warsh 拒絕證實這兩位官員是否受他指示發言，但聯準會內部人士表示副主席通常會與主席協調訊息。Warsh 此次展現出願意讓市場猜測政策方向的態度，同時保留選項並為可能的升息奠定論述基礎。¶美國第三季 GDP 初估年化成長率 3.4%，優於市場預期的 3.1%、高於第二季的 2.2%；9 月 PCE 物價指數月增 0.5%、年增 3.6%，核心 PCE 月增 0.3%、年增 3.1%，月增幅創 3 月以來最大、年增率仍遠高於聯準會 2% 目標。9 月個人支出月增 0.5%、個人所得月增 0.2%，略低於預期。10/28 聯準會決議維持利率在 3.75%-4% 區間，主席 Warsh 表示未來一段時間資訊豐富、全球變化很多，官員們希望觀察數據再決定下一步。\n科技股拋售引發避險買盤，美國公債殖利率全線下跌，其中2年期下跌9.95個基點至4.5979%、10年期下跌8.06個基點至4.9369%，440億美元7年期公債拍賣得標殖利率4.894%與發行前一致。\n美國9月通膨數據升溫、消費支出增加，但選民對物價上漲的不滿情緒抵銷了經濟強勁表現帶來的正面評估。",
-   "rate_note": "Warsh 強調金融條件尚未緊縮、暗示 12 月可能升息，偏向推升短端利率與升息預期；他保留政策彈性但為升息鋪路的論述，也可能透過不確定性推升長端利率。不過 10 年期 10/29 收盤 -6bp 至 4.99%，市場還沒反映。",
+   "headline": "9月PCE月增0.5%創3月來最大增幅，聯準會年底前升息預期升溫",
+   "text": "美國9月個人消費支出物價指數（PCE）月增0.5%，為3月以來最大單月增幅，強化聯準會年底前升息預期。PCE是聯準會最看重的通膨指標，9月數據顯示通膨壓力持續。聯準會10/28維持利率不變，但主席 Warsh 在會後表態保留進一步緊縮空間，以應對頑固通膨。市場目前定價12/9會議升息一碼機率達76%。同時中東局勢再度緊張，市場預期華府可能在11/3美國期中選舉後恢復對伊朗軍事行動，推升油價並加劇通膨疑慮。10月金價下跌逾3%，因中東衝突維持能源價格高檔、通膨憂慮升溫，加上升息預期使無息資產黃金相對吸引力下降。¶美國第三季 GDP 成長年率 3.4%，優於市場預估的 3.1%，也高於第二季的 2.2%。9 月 PCE 物價指數月增 0.5%、年增 3.6%，月增幅是 3 月以來最大，年增率高於聯準會 2% 目標；核心 PCE 月增 0.3%、年增 3.1%，符合市場預期。9 月個人支出成長 0.5%、個人所得成長 0.2%，略低於預期。這些數據在 10/28 聯準會決議維持利率於 3.75%-4% 區間後公布。主席 Warsh 在 10/28 表示，未來一段時間資訊豐富、世界變化很多，聯準會將密切關注後續數據再決定下一步行動。\nWarsh 在10/29的新聞發布會上表示聯準會未對貨幣政策有既定方針，同時暗示傾向升息，為12月可能升息奠定基礎，但拒絕確認副主席是否奉他之命向市場傳遞降溫訊息。\n42 Macro創辦人暨執行長戴爾在10/29指出，財政部長貝森特最近低調行事，他認為聯準會可能在為2027年潛在的流動性救援做準備。",
+   "rate_note": "PCE月增0.5%創3月來最大增幅，偏向推升短端利率——數據強化聯準會年底前升息預期，市場已定價12/9會議升一碼機率76%；不過10年期10/29收盤-6bp至4.99%，市場還沒反映。",
    "links": [
     {
-     "title": "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
-     "link": "https://www.cnbc.com/2026/10/29/kevin-warsh-fed-october-rate-decision-december-hike.html",
-     "source": "CNBC",
-     "at": "2026-10-29T17:32:34+00:00"
+     "title": "Gold hovers near $4,000 as PCE inflation, oil risks revive Fed hike concerns",
+     "link": "https://finance.yahoo.com/markets/commodities/articles/gold-hovers-near-4-000-014613798.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-10-30T01:46:13+00:00"
     },
     {
      "title": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
@@ -483,7 +480,7 @@
      "at": "2026-10-29T18:06:31+00:00"
     }
    ],
-   "at": "2026-10-30T01:27:08.838972+00:00",
+   "at": "2026-10-30T03:33:20.193508+00:00",
    "weekly": false,
    "points": 2
   },
