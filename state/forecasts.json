@@ -554,6 +554,23 @@
    "auto_seen": {},
    "auto": {},
    "auto_log": []
+  },
+  "cpi|2026-10": {
+   "key": "cpi",
+   "period": "2026-10",
+   "date": "2026-11-10",
+   "clev": {
+    "cpi_mom": 0.24,
+    "core_mom": 0.21,
+    "cpi_yoy": 3.74,
+    "core_yoy": 2.48
+   },
+   "clev_asof": "10/30",
+   "banks": {},
+   "bad": [],
+   "auto_seen": {},
+   "auto": {},
+   "auto_log": []
   }
  }
 }

@@ -1047,7 +1047,95 @@
   "56249213b05f": "2026-10-30",
   "c927e5911485": "2026-10-30",
   "055306b62967": "2026-10-29",
-  "97630cec3fe2": "2026-10-29"
+  "97630cec3fe2": "2026-10-29",
+  "7ba4ac5b43de": "2026-10-28",
+  "8141dfc822f8": "2026-10-27",
+  "23e970bd5c5d": "2026-10-20",
+  "f3c6ecebb33d": "2026-10-19",
+  "2a10dbacf492": "2026-10-18",
+  "cee0e19d9a58": "2026-10-29",
+  "8359ecc51161": "2026-10-29",
+  "432759e494f4": "2026-10-28",
+  "e54397f8941f": "2026-10-30",
+  "eb045eb07a5f": "2026-10-30",
+  "6e2c0597b5ba": "2026-10-29",
+  "8ba348fb06c1": "2026-10-30",
+  "ba356e19d30b": "2026-10-30",
+  "e9d8ad826336": "2026-10-30",
+  "dff87c26e93a": "2026-10-30",
+  "aa18dd8b8add": "2026-10-30",
+  "e0a7b72883da": "2026-10-30",
+  "50f76c308ee8": "2026-10-30",
+  "627087f5e494": "2026-10-30",
+  "43eb9fbaed9f": "2026-10-30",
+  "2d81f4c39931": "2026-10-30",
+  "8d5ff0b75fe6": "2026-10-30",
+  "b0d2159c23f0": "2026-10-30",
+  "cf9ebda6f1c2": "2026-10-30",
+  "2000f27d01a8": "2026-10-30",
+  "b0cd4150662d": "2026-10-30",
+  "bc5f254dd7b4": "2026-10-30",
+  "f06ca839bafd": "2026-10-30",
+  "e248333dd6cb": "2026-10-30",
+  "cb320b5635fb": "2026-10-21",
+  "1e4aa0d2777f": "2026-10-30",
+  "2d6ea7fcd54f": "2026-10-30",
+  "8390144dd62e": "2026-10-27",
+  "62dc14b9e87d": "2026-10-30",
+  "d10b12368bd7": "2026-10-30",
+  "f6014e0c5a0e": "2026-10-30",
+  "b6f83b689283": "2026-10-30",
+  "aa10f49d1b3b": "2026-10-28",
+  "5c931e591e85": "2026-10-26",
+  "897877f2321f": "2026-10-23",
+  "27861a2dfcef": "2026-10-30",
+  "1712e422c5dc": "2026-10-30",
+  "f29f5b1f9c12": "2026-10-30",
+  "311166247a01": "2026-10-30",
+  "49e3bab6c811": "2026-10-30",
+  "517851c664a2": "2026-10-30",
+  "fde7356e7f74": "2026-10-30",
+  "0d0cdeb93fd6": "2026-10-28",
+  "33be6612b0f7": "2026-10-20",
+  "65868b6a5c11": "2026-10-19",
+  "08176c2a0fcd": "2026-10-19",
+  "25cb4bcadbd5": "2026-10-18",
+  "b58b208c8444": "2026-10-30",
+  "6c317ba098a4": "2026-10-30",
+  "6b255442795b": "2026-10-30",
+  "a4b12364e102": "2026-10-30",
+  "6e839ddaaae4": "2026-10-30",
+  "5bc6d334db90": "2026-10-30",
+  "9ea5ef15d480": "2026-10-30",
+  "e9976d5b7b81": "2026-10-30",
+  "0286a005ea1f": "2026-10-27",
+  "095d8b2b25a8": "2026-10-30",
+  "3261d1f10829": "2026-10-30",
+  "57ae46e4eede": "2026-10-30",
+  "1b2631d66824": "2026-10-30",
+  "18cd8ed65da4": "2026-10-30",
+  "0d8433c88848": "2026-10-29",
+  "3e6442672716": "2026-10-28",
+  "87199e01b085": "2026-10-28",
+  "612ce7f22f83": "2026-10-27",
+  "dc38d1e73d1f": "2026-10-27",
+  "6f0f0f58159b": "2026-10-27",
+  "61ac0c314643": "2026-10-30",
+  "05625c9e3616": "2026-10-30",
+  "989c9fed2ca3": "2026-10-30",
+  "178d0fa567d6": "2026-10-30",
+  "8a9d90620c6b": "2026-10-30",
+  "03c681e1781a": "2026-10-30",
+  "0595fdefc17f": "2026-10-30",
+  "a5fb0ade086f": "2026-10-30",
+  "aca97fd1288e": "2026-10-30",
+  "12028b2aefa0": "2026-10-30",
+  "ab5ae80fde09": "2026-10-30",
+  "702d65baf274": "2026-10-30",
+  "eeb71c3deb20": "2026-10-30",
+  "dad197faa5d6": "2026-10-30",
+  "4ffbfd91210c": "2026-10-30",
+  "d2126fd34e0f": "2026-10-30"
  },
  "events": [
   {
@@ -1149,7 +1237,7 @@
    "id": "c6fd1642eef5",
    "co": "Apple",
    "type": "財報",
-   "zh": "Apple發布第四季度財報，假日季指引受關注。",
+   "zh": "Apple 發布第四季度財報，假日季指引受關注。",
    "date": "2026-10-30",
    "links": [
     {
@@ -1161,6 +1249,20 @@
      "title": "Apple’s holiday guidance to be in focus during Q4 results (AAPL:NASDAQ)",
      "source": "Seeking Alpha",
      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQRGtXOUozTTlNQVVlSGpMUFcydVlpc3UtanpKeGpfaGwwV0x1VmV5SnJlVlRTbUF4Y3pKbmpMeTFVdzJVWFlMekZqbmNPSmhLbm96SWp2Q3o3YzFqM040WDB3TVlWcUhlSzk0WjFaTUpjNjJyNk1CbnJ4TDhnZTF3RnoyZDRNeDFON2VCSDlpelZ6c1BZdE9iRDN3?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "bcd00ee0e753",
+   "co": "Oracle",
+   "type": "算力合約",
+   "zh": "Oracle計畫2027年在OCI雲端推出Arm架構AGI CPU。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "Oracle plans Arm AGI CPU for OCI in 2027",
+     "source": "Engineering.com",
+     "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE4yT3h0ckVmOFMwMExsSDQxMHhyYmhuWUN3NWNyWWlHSkIwOFRlaGpPMkhrOUNYV25HMDFJUGM1M2lLVTV6blgxeFRLeVFMMDJTUGlVbElYY3ZweDF0RFRyMmI3NUVMTS04T3JkY2w5OVc2Y1J1aWQ4SQ?oc=5"
     }
    ]
   },
@@ -1512,6 +1614,20 @@
    ]
   },
   {
+   "id": "830cf67aab75",
+   "co": "Microsoft",
+   "type": "資本支出",
+   "zh": "Microsoft資料中心建設資本支出創紀錄高位。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Q3 2026 Earnings Calls: Alphabet, Microsoft Report Record Capex as Data Center Buildout Rolls On",
+     "source": "RBN Energy",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQcGxjTEZERll3NkVWNGRxdmdULVFKakRCUFh1QXBIUC0xX3JEY3RTU1lSSGdGLWtXZXBlS21BUk95OTJ4UXVwU1NKMC1SYXpoaFluRGZVQjlxVHlrU1BPTTYzaW94LVpUWElkTlFnQlhpZnJhbTMzQUhNemZERWNQWnpWMHFkTl9nQnVCYXdHRF9iYi10RmNtYUVsR2dIazVLYkl5d2p2WnFjcWMxZGE3QnJNZk9adVk?oc=5"
+    }
+   ]
+  },
+  {
    "id": "e2a4cd8c3c8f",
    "co": "CoreWeave",
    "type": "發債",
@@ -1827,7 +1943,7 @@
    "id": "6691caa3f14c",
    "co": "Oracle",
    "type": "算力合約",
-   "zh": "Oracle與Cerebras合作，2027年起在雲端基礎設施提供Cerebras AI推論晶片。",
+   "zh": "Oracle 與Cerebras合作，2027年起在雲端基礎設施提供Cerebras AI推論晶片。",
    "date": "2026-10-27",
    "links": [
     {
@@ -2120,7 +2236,7 @@
    "id": "c55334247d38",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "ByteDance、Alibaba、Tencent下單超350億美元Nvidia晶片。",
+   "zh": "ByteDance、Alibaba、Tencent下單超350億美元 Nvidia 晶片。",
    "date": "2026-10-20",
    "links": [
     {
@@ -2129,40 +2245,12 @@
      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQOXBuUld1bXhxNWlQNktuUmYxOWpVRFlnN0dialpvZlhYM1JLVzE1N0VBSUVNbUlCNmwtN2RVWXRkd1VUV3BRSV9aMGJGMkpxQUk4VWZ1dUt5YjZpdmthQVZ3REFHUzBmV3B0SFJwOFFsMl9fb3l0Y3F0Z1FXbDAxSFhTbV9peVVDQ3FKRnp3NjVDdEpRVHdIOG04SjctLWRRTzN2bDM1a2QxaGdZMHlJV0hGS1FObHFKTVNiS3hvXzZsUzdvMktteFBvSGNEZw?oc=5"
     }
    ]
-  },
-  {
-   "id": "d4801ae71bfe",
-   "co": "Anthropic",
-   "type": "算力合約",
-   "zh": "Anthropic簽署加拿大首個數據中心租賃協議。",
-   "date": "2026-10-16",
-   "links": [
-    {
-     "title": "Anthropic signs lease for first Canadian data center",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQNmcyRDdMUmlLNHlsNWhYbVRfTFE1WkJIODRiQmxfOHpzM09lYS1Na0JGNG5YdXlIV09fUVZDWkpRRDFIcUlXb2VYaHhZTjM5Q1AwMnRZZjFkSjRKTTM3RHdUaDhEaEdUWnZTZmVrTUtNaHdTWnM3NVJ3WnFma1VTb09hcURCME10UmFMWXdabmxwNXk1ZUZ6emFoYmRCanEzM3FR?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "bcd1ac647a06",
-   "co": "Anthropic",
-   "type": "資本支出",
-   "zh": "Anthropic向Blackstone提供晶片融資交易，提供雙位數收益率。",
-   "date": "2026-10-16",
-   "links": [
-    {
-     "title": "Anthropic offers Blackstone double-digit yield in chip-financing deal, FT reports",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQWVhYcEpDM002Y1VwaUFBYktyNFdkVG9XbXZaTU44b3k4ZzZRcmdLR294VXZkMDlYLXg1d0dJbUpoMzg3RHBoNi1qcXh1eU14UjJiSmNhTXdUUFNsakJYZFBrZ1BZVV9rdmQ3bHc5b0QycjZRUHBqcENmak5LclBVNmhWYnhTaVZtQzV4bExZamxKSEtDRllrMkNObjlFd3VoU0VIQkZaS2hpQnAzeGh3dzBqdWVHZm9sVllvQ1BEdw?oc=5"
-    }
-   ]
   }
  ],
  "impact": {
   "Microsoft": {
-   "hash": "fe1796e42b0e",
-   "text": "Microsoft 雲端業務超預期成長偏向提振股市與 AI 投資熱度；惟資本支出低於預期、發行 250 億美元債券偏向增加公司債供給，可能對長端利率形成溫和上升壓力。若資料中心建設加速推進，則後續資本支出需求上升，偏向進一步增加債券發行規模。"
+   "hash": "3fc294f36e74",
+   "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升股市信心與 AI 投資熱度。惟公司發行 250 億美元債券且資料中心資本支出創高，偏向增加公司債供給壓力。若市場對雲端成長前景認可度高，則長端利率偏向上升；若投資人擔憂高資本支出可持續性，則公司債利差偏向擴大。"
   },
   "Alphabet": {
    "hash": "518c63a97664",
@@ -2170,19 +2258,19 @@
   },
   "Meta": {
    "hash": "5df548d10764",
-   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求偏向增加。發行270億美元債券與籌資950億美元股權，偏向拉升長端利率與公司債供給。Nvidia投資參與、營收強勁指引，偏向支撐AI投資熱度。若融資需求持續超現金流，則長端利率與公司債供給壓力偏向加重。"
+   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求偏向增加。發行270億美元債券與籌資950億美元股權，偏向拉升長端利率與公司債供給。Nvidia 投資參與、營收強勁指引，偏向支撐AI投資熱度。若融資需求持續超現金流，則長端利率與公司債供給壓力偏向加重。"
   },
   "Oracle": {
-   "hash": "23e9dfd81aed",
-   "text": "Oracle近期大幅擴張AI基礎設施投資，資本支出接近950億美元，同時限制新借款至200億美元，偏向增加公司債供給。若現金流未如預期達成，則長端利率面臨上升壓力。多晶片策略與算力合約擴張顯示AI競爭加劇，偏向提升股市對其雲端業務成長的預期，進一步強化AI投資熱度。"
+   "hash": "98c1de60688b",
+   "text": "Oracle大幅增加AI基礎設施資本支出至950億美元，同時限制新借款至200億美元，偏向減少公司債供給。長端利率若受科技業融資需求下降影響則偏向走低。多元晶片策略與現金流改善預期，偏向支撐股市信心。高額資本投資與算力擴張計畫，偏向強化AI投資熱度，但融資自律可能緩和長端利率上升壓力。"
   },
   "CoreWeave": {
    "hash": "7f0922becfae",
    "text": "CoreWeave大幅擴張資本支出與債務融資，偏向增加公司債供給壓力。高額發債需求（200–380億美元）與債務規模快速膨脹，若市場對其償債能力疑慮升溫，則長端利率偏向上行以反映信用風險溢價。營收倍增支撐AI基礎設施需求景氣，偏向維持AI投資熱度，但債務擴張速度超越營收成長，可能引發市場對槓桿風險的重新定價。"
   },
   "Anthropic": {
-   "hash": "efdde5e2abca",
-   "text": "Anthropic密集融資與巨額算力合約偏向增加公司債供給。630億美元發債規模龐大，若市場消化能力有限則偏向推升長端利率。4,300億美元算力合約鎖定長期收入，降低營運風險，偏向支撐股價。大規模資本支出與AI基礎設施投資偏向強化AI投資熱度，但融資成本上升若傳導至整體科技融資環境，則偏向對高估值AI公司造成壓力。"
+   "hash": "acf5c1072aaa",
+   "text": "Anthropic近期密集融資與算力合約動作偏向提升公司債供給。大額發債融資與長期算力承諾顯示其資本需求龐大，若後續IPO順利推進，市場對AI基礎設施投資熱度偏向升溫；同時龐大債務規模與長期合約承諾可能推高長端利率預期，反映市場對AI產業融資成本上升的定價。"
   },
   "OpenAI": {
    "hash": "1001f1c4459b",
@@ -2193,8 +2281,8 @@
    "text": "Amazon 巨額資本支出（逾2,200億美元）偏向增加公司債供給壓力，尤其自由現金流轉負。若融資需求持續，長端利率面臨上行壓力。然而，AI基礎設施合約（Verizon、3M等超80億美元）彰顯算力需求強勁，偏向支撐AI投資熱度。但營收未達預期與現金流惡化，偏向拖累股市表現。"
   },
   "Nvidia": {
-   "hash": "d65c23457033",
-   "text": "Nvidia近期事件偏向強化AI投資熱度與公司債供給壓力。財報營收超預期與多筆巨額算力合約簽署，反映AI晶片需求旺盛，利好股市；但若干交易涉及擔保債務與反壟斷調查，偏向增加公司債供給與長端利率上升壓力。大型科技與新興AI企業的融資與採購規模擴大，整體偏向推升AI投資熱度，惟監管風險可能抑制長期債券需求。"
+   "hash": "59447bcd3346",
+   "text": "Nvidia近期事件偏向強化AI投資熱度與公司債供給壓力。營收年增106%超預期反映晶片需求旺盛，多筆大額算力合約（Meta、Anthropic、中國科技巨頭等）與融資支持顯示AI基礎設施投資加速。若Nvidia持續承擔大額債務擔保（如450億美元Anthropic交易），則公司債供給偏向增加；反壟斷調查可能制約長期融資便利性。整體而言，強勁業績與融資需求偏向推升AI投資熱度，但債務風險偏向抬升長"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -2205,9 +2293,9 @@
    "text": "Intel 伺服器銷售強勁成長偏向支撐科技股表現，惟第四季展望疲弱反映需求不確定性。若業績動能難以延續，則市場對晶片廠商獲利前景的信心可能減弱，偏向壓低科技股估值。同時，伺服器需求與 AI 基礎設施投資密切相關，展望轉弱若暗示 AI 投資熱度趨緩，則可能影響整體科技投資情緒。"
   },
   "Apple": {
-   "hash": "ef38f49294d5",
-   "text": "Apple 第四季度財報公布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；若指引疲弱，則偏向增加市場對經濟成長的擔憂，長端利率可能承壓。同時，Apple 作為 AI 應用領導者，財報表現偏向影響市場對科技股及 AI 投資熱度的評估。"
+   "hash": "0156b95233f9",
+   "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-10-30 22:09（台北）"
+ "at": "2026-10-31 07:06（台北）"
 }
