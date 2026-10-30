@@ -976,13 +976,15 @@ function rd(ch){var i=ch.querySelector('i');if(!i)return;
  else{var a=Math.abs(d).toFixed(n);x=+a===0?0:d;t=(d<0&&+a!==0?"-":"+")+fx(d,n)+(ch.getAttribute('data-u')||"");}
  i.textContent=t;i.className=x>0?"up":(x<0?"dn":"fl");}
 function am(){Array.prototype.forEach.call(box.querySelectorAll('[data-chip]'),rd);
- var s=box.querySelector('.fs-mode-sel');if(s)s.value=mode;}
+ var s=st.querySelector('.fs-mode-sel');if(s)s.value=mode;}
 window.fsReMode=function(ch){ch.removeAttribute('data-dd');rd(ch);};
 // 表頭「變動」換成原生下拉選單（第十八批：使用者指定 日變動／MTD／YTD）；沒開 JS 時維持文字「變動」
 var hd=box.querySelector('.fs-hd span:nth-child(2)');
 if(hd){hd.innerHTML='<label class="fs-mode"><select class="fs-mode-sel" aria-label="變動區間">'
  +'<option value="d">日變動</option><option value="m">MTD</option><option value="y">YTD</option></select></label>';
- var sl=hd.querySelector('select');sl.addEventListener('change',function(){mode=sl.value;lss(MK,mode);am();});}
+ var sl=hd.querySelector('select');sl.addEventListener('change',function(){mode=sl.value;lss(MK,mode);am();});
+ // 2026-10-30：電腦版儀表板沒有表頭列，切換選單移到「快報」左邊
+ if(window.matchMedia&&matchMedia('(min-width:760px)').matches){var fh=st.querySelector('.fs-head');if(fh)fh.insertBefore(hd.querySelector('.fs-mode'),fh.firstChild);}}
 am();
 })();
 """

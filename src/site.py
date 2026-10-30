@@ -5107,6 +5107,13 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .fs-more.fs-clip .fs-main:first-child{margin-top:0}
 .viz-root:not(#_) .fs-tog[hidden]{display:none}
 .viz-root:not(#_) .fs-more .fs-reflinks{margin-top:10px}
+/* AI 大事：十二家公司，電腦版一列 6 家（兩列剛好） */
+@media(min-width:760px){.viz-root:not(#_) .ai-tiles{grid-template-columns:repeat(6,minmax(0,1fr))}}
+/* 電腦版：日變動／MTD／YTD 切換放在「快報」左邊，跟快報、選擇指標同一種底線樣式（2026-10-30） */
+html body .fs-head .fs-mode{margin-left:auto}
+html body .fs-head .fs-mode~.fs-story-btn,html body .fs-head .fs-mode~.fs-story-btn[hidden]+.fs-edit-btn{margin-left:0!important}
+html body .fs-head .fs-mode-sel{font-size:13px!important;font-weight:700!important;color:var(--text-secondary)!important;
+  border-bottom:1.5px solid currentColor!important;padding:0 16px 1px 0!important;cursor:pointer}
 /* 視窗固定高度（2026-10-29）：點不同日期、切換分頁時外框不再上下跳，內容多就在裡面捲 */
 .viz-root:not(#_) .duo-sheet{height:86vh}
 @media(max-width:700px){.viz-root:not(#_) .duo-sheet{height:90vh}}
@@ -5137,6 +5144,13 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .viz-root:not(#_) .kpi-c .k-more2{margin-top:6px;border:0}
 .viz-root:not(#_) .kpi-c .k-more2>summary{border:0;padding-top:0;font-size:12.5px;color:var(--muted);font-weight:500}
 .viz-root:not(#_) .kpi-c .k-side{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
+.viz-root:not(#_) .kpi-c .k-more2>summary{font-size:12px}
+/* 電腦版（2026-10-30，方案 A）：四張卡並排，判讀標籤放數字下方，各列對齊；「圖表」列上方一條虛線 */
+@media(min-width:760px){
+  .viz-root:not(#_) .kpi-c .k-vrow{flex-direction:column;align-items:flex-start;gap:8px}
+  .viz-root:not(#_) .kpi-c .k-s3:empty{display:block}
+  .viz-root:not(#_) .kpi-c .k-s4{border-top:1px dashed var(--grid);padding-top:8px;margin-top:8px}
+}
 """
 
 JS = """

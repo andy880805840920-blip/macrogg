@@ -83,8 +83,8 @@ check("③ 離線：沿用存檔、不呼叫", A.build({}, tmp, True, _get=fake_
 # ④ 畫面
 tile, panel = P.ai_tile(r)
 check("④ AI 小卡：近 14 天 N 則、最新一則", "AI 大事" in tile and "近 14 天 2 則" in tile and "最新：Alphabet" in tile)
-check("④ 視窗：十家公司小卡、一次只開一家、IPO 進度、依時間看全部",
-      len(re.findall(r'class="ai-tile(?: on)?"', panel)) == 10 and panel.count('class="ai-pane"') == 10 and panel.count('" hidden><div class="ai-pane-h">') == 9
+check("④ 視窗：十二家公司小卡、一次只開一家、IPO 進度、依時間看全部",
+      len(re.findall(r'class="ai-tile(?: on)?"', panel)) == 12 and panel.count('class="ai-pane"') == 12 and panel.count('" hidden><div class="ai-pane-h">') == 11
       and "進行中・Anthropic IPO" in panel and "依時間看全部" in panel)
 check("④ 沒有事件的公司寫「無近期事件」、近 3 天的事件加小圓點", "無近期事件" in panel and 'class="ai-new"' in panel)
 e = {"election_date": "2026-11-03", "days_to": 5, "date": "2026-10-29",
@@ -140,6 +140,19 @@ check("⑦ 同一天、同類型但不同的兩件事不合併", len([e for e in
 _m2 = A.merge_events([dict(_ms[1], date="2026-10-28"), dict(_ms[2], date="2026-10-30", id="c2")])
 check("⑦ 延續報導（3 天內同一個金額）只更新那一則、日期取最新", len(_m2) == 1 and _m2[0]["date"] == "2026-10-30")
 check("⑦ 提示詞寫明 billion 怎麼換算", "$25 billion＝250 億美元" in A.EVENT_SYSTEM)
+# ⑧ 2026-10-30：加 Intel、Apple；微軟、亞馬遜、甲骨文改英文（舊資料一併換名）
+_cz = [c["zh"] for c in A.DEFAULTS["companies"]]
+check("⑧ 十二家、公司名英文", len(_cz) == 12 and {"Microsoft", "Amazon", "Oracle", "Intel", "Apple"} <= set(_cz)
+      and not {"微軟", "亞馬遜", "甲骨文"} & set(_cz) and "公司名一律用英文" in A.EVENT_SYSTEM)
+_tmp8 = pathlib.Path(tempfile.mkdtemp()) / "ai.json"
+_tmp8.write_text(json.dumps({"events": [{"id": "x", "co": "微軟", "type": "發債", "date": "2026-10-29",
+                                         "zh": "微軟發行250億美元債券", "links": [{"url": "u", "title": "Microsoft $25 billion"}]}],
+                             "impact": {"微軟": {"hash": "h", "text": "微軟發債偏向推升長端利率。"}}}, ensure_ascii=False),
+                 encoding="utf-8")
+_r8 = A.build({}, _tmp8, True)
+check("⑧ 舊資料換名：事件的公司欄、句子、對市場的影響", _r8["events"][0]["co"] == "Microsoft"
+      and _r8["events"][0]["zh"].startswith("Microsoft") and "Microsoft" in _r8["impact"]
+      and _r8["impact"]["Microsoft"].startswith("Microsoft"), _r8)
 
 clock.now, clock.today = _n0, _t0
 print()

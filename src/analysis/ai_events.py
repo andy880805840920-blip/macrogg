@@ -1,5 +1,5 @@
 """
-首頁「AI 大事」（2026-10-29）：十家 AI 相關公司近 14 天的重大事件。
+首頁「AI 大事」（2026-10-29）：十二家 AI 相關公司近 14 天的重大事件（2026-10-30 加 Intel、Apple；公司名用英文）。
 
 流程（每次執行）
   ① 每家公司一組 Google News 查詢（近 14 天），只留標題含公司名、主要媒體優先
@@ -36,16 +36,18 @@ DEFAULTS = {
     "enabled": True, "window_days": 14, "new_days": 3, "per_company": 8,
     "ipo": {"name": "Anthropic", "cik": 2130357},
     "companies": [
-        {"zh": "微軟", "q": '"Microsoft"', "match": ["Microsoft", "MSFT", "Azure"]},
+        {"zh": "Microsoft", "q": '"Microsoft"', "match": ["Microsoft", "MSFT", "Azure"]},
         {"zh": "Alphabet", "q": '("Alphabet" OR "Google")', "match": ["Alphabet", "Google", "Gemini"]},
-        {"zh": "亞馬遜", "q": '("Amazon" OR "AWS")', "match": ["Amazon", "AWS"]},
+        {"zh": "Amazon", "q": '("Amazon" OR "AWS")', "match": ["Amazon", "AWS"]},
         {"zh": "Meta", "q": '("Meta Platforms" OR "Meta")', "match": ["Meta"]},
-        {"zh": "甲骨文", "q": '"Oracle"', "match": ["Oracle"]},
+        {"zh": "Oracle", "q": '"Oracle"', "match": ["Oracle"]},
         {"zh": "Nvidia", "q": '"Nvidia"', "match": ["Nvidia", "NVIDIA"]},
         {"zh": "CoreWeave", "q": '"CoreWeave"', "match": ["CoreWeave"]},
         {"zh": "Anthropic", "q": '"Anthropic"', "match": ["Anthropic", "Claude"]},
         {"zh": "OpenAI", "q": '"OpenAI"', "match": ["OpenAI", "ChatGPT"]},
         {"zh": "xAI", "q": '"xAI"', "match": ["xAI"]},
+        {"zh": "Intel", "q": '"Intel"', "match": ["Intel"]},             # 2026-10-30 新增
+        {"zh": "Apple", "q": '"Apple"', "match": ["Apple", "iPhone"]},    # 2026-10-30 新增
     ],
 }
 
@@ -53,12 +55,13 @@ EVENT_SYSTEM = (
     "你是財經記者。輸入是一家公司近兩週的新聞標題（JSON：id、日期、媒體、標題），以及這家公司已收錄的事件。"
     "只挑出屬於這五類的重大事件：財報、資本支出、發債、融資／IPO、算力合約（雲端或晶片的大型採購、租用、合作建置）。"
     "產品發表、人事、訴訟、股價漲跌、評論文章都不要。同一件事的多則標題併成一則；已收錄的事件不要重複。"
+    "公司名一律用英文（Microsoft、Amazon、Oracle、Nvidia、Apple、Intel…）。"
     "每則用繁體中文寫一句（40 字以內）：發生了什麼，數字照標題（金額換算成「億美元」：1 billion＝10 億，"
     "例如 $25 billion＝250 億美元、$1.25 trillion＝1.25 兆美元），不加標題以外的事實、不做預測。"
     "只回 JSON：{\"events\": [{\"type\": \"五類之一\", \"zh\": \"一句話\", \"ids\": [\"用到的標題 id\"]}]}；沒有就回 {\"events\": []}。")
 IMPACT_SYSTEM = (
     "你是財經記者，替美國利率與總經儀表板寫「對市場的影響」。輸入是一家公司近兩週的重大事件。"
-    "用繁體中文寫一段 60–100 字：這些事件對公司債供給、長端利率、股市或 AI 投資熱度偏向什麼方向、為什麼。"
+    "公司名一律用英文。用繁體中文寫一段 60–100 字：這些事件對公司債供給、長端利率、股市或 AI 投資熱度偏向什麼方向、為什麼。"
     "只能根據輸入的事件推論，用「偏向」「若…則…」，不做預測、不寫輸入以外的數字、不給投資建議。只輸出那一段文字。")
 
 
@@ -66,6 +69,19 @@ def _cfg(cfg: dict | None) -> dict:
     out = dict(DEFAULTS)
     out.update({k: v for k, v in (cfg or {}).items() if v is not None})
     return out
+
+
+# 2026-10-30：公司名改英文——舊資料（事件、對市場的影響）裡的中文名一併換掉
+RENAME = {"微軟": "Microsoft", "亞馬遜": "Amazon", "甲骨文": "Oracle", "輝達": "Nvidia", "英特爾": "Intel", "蘋果": "Apple"}
+
+
+def _rename(s: str) -> str:
+    for a, b in RENAME.items():
+        s = s.replace(a, b)
+    # 英文公司名跟中文之間留一個空格（「Microsoft 發行…」）
+    names = "|".join(sorted(set(RENAME.values()), key=len, reverse=True))
+    s = re.sub(rf"(?<=[一-鿿])({names})", r" \1", s)
+    return re.sub(rf"({names})(?=[一-鿿])", r"\1 ", s)
 
 
 def _key(*parts) -> str:
@@ -247,8 +263,10 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
     except Exception:                                # noqa: BLE001
         state = {}
     seen: dict = state.get("seen") or {}
-    events: list = [e for e in state.get("events") or [] if e.get("date", "") >= since.isoformat()]
-    impact: dict = state.get("impact") or {}
+    events: list = [dict(e, co=RENAME.get(e.get("co"), e.get("co")), zh=_rename(e.get("zh", "")))
+                    for e in state.get("events") or [] if e.get("date", "") >= since.isoformat()]
+    impact: dict = {RENAME.get(k, k): (dict(v, text=_rename(v.get("text", ""))) if isinstance(v, dict) else v)
+                    for k, v in (state.get("impact") or {}).items()}
     changed: set = set()
     if not offline:
         for co in c["companies"]:
