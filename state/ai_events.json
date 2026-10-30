@@ -870,7 +870,96 @@
   "8c2b86f5918f": "2026-10-22",
   "0af05883a8eb": "2026-10-30",
   "d9f008df797e": "2026-10-29",
-  "5ed890ae4578": "2026-10-29"
+  "5ed890ae4578": "2026-10-29",
+  "28b57432afef": "2026-10-30",
+  "f3dd1f75cac7": "2026-10-30",
+  "aca19b571cc6": "2026-10-29",
+  "f96bc9084fea": "2026-10-28",
+  "0baff5dc5dca": "2026-10-27",
+  "43c652313760": "2026-10-23",
+  "b93b30a28f94": "2026-10-19",
+  "3f8e4aa32ecf": "2026-10-18",
+  "acfa25186129": "2026-10-29",
+  "6f56901e9f5c": "2026-10-28",
+  "a63c22745b74": "2026-10-28",
+  "a4095c0e92ca": "2026-10-28",
+  "a849ffcc2a79": "2026-10-19",
+  "c58048ed6d27": "2026-10-29",
+  "b961e6a99a3f": "2026-10-29",
+  "401b4c5f48f8": "2026-10-29",
+  "8ca19d0257ae": "2026-10-30",
+  "331eba1517f9": "2026-10-30",
+  "774f3dd3498c": "2026-10-30",
+  "38769a82e21e": "2026-10-30",
+  "46f9e943ad77": "2026-10-30",
+  "90f651633b3b": "2026-10-30",
+  "b6b405b0ae39": "2026-10-30",
+  "5b15013b50a0": "2026-10-29",
+  "81f1c6ea6330": "2026-10-29",
+  "c7d6d92a9eab": "2026-10-22",
+  "b0f795e1cc5c": "2026-10-20",
+  "f86e7544d27b": "2026-10-30",
+  "58cfab73b88f": "2026-10-30",
+  "c14a3a795fd6": "2026-10-29",
+  "c1e2dac5ff1c": "2026-10-29",
+  "c23c8e51d9c4": "2026-10-29",
+  "2abbb36f3ced": "2026-10-30",
+  "410ccda0e19c": "2026-10-30",
+  "351b682fc0e1": "2026-10-29",
+  "84fd68625e9f": "2026-10-30",
+  "9ce8f6eadc13": "2026-10-30",
+  "a2481bef4f6f": "2026-10-30",
+  "86dc5211b083": "2026-10-28",
+  "ad2bda4c802d": "2026-10-28",
+  "a6dd6731266a": "2026-10-30",
+  "de7c6ea9e44f": "2026-10-30",
+  "0339e3714fd5": "2026-10-30",
+  "cb75d3a20816": "2026-10-30",
+  "9c84ec981fbd": "2026-10-30",
+  "e9e557d95e0f": "2026-10-30",
+  "31793a5d1b02": "2026-10-30",
+  "c447f0f0528a": "2026-10-30",
+  "c748a4385a1f": "2026-10-30",
+  "833ba94d8c6f": "2026-10-27",
+  "4ac5626e0566": "2026-10-23",
+  "543fb7d0f563": "2026-10-23",
+  "b642019f1f9a": "2026-10-22",
+  "e0f3fc03660f": "2026-10-20",
+  "7695f290a6fa": "2026-10-30",
+  "e449cdda6964": "2026-10-29",
+  "8627739121d2": "2026-10-30",
+  "78f214161eae": "2026-10-30",
+  "40fc87e8a080": "2026-10-30",
+  "6cd0bcf8da29": "2026-10-30",
+  "5dfe309b4be4": "2026-10-30",
+  "80dc2c7052d0": "2026-10-29",
+  "a534139df033": "2026-10-28",
+  "1cac13249ba5": "2026-10-27",
+  "25eb4a329256": "2026-10-28",
+  "dc7149a1d59b": "2026-10-20",
+  "02f2dd980a1d": "2026-10-30",
+  "9baeb26e99ef": "2026-10-30",
+  "c92b5d2e890b": "2026-10-29",
+  "431b715e8556": "2026-10-28",
+  "c68f8f03a996": "2026-10-28",
+  "2ae2ec5f8eb1": "2026-10-27",
+  "2ec13a3f8df7": "2026-10-20",
+  "430ddba81452": "2026-10-30",
+  "63832ee4931e": "2026-10-30",
+  "feebb7256b55": "2026-10-30",
+  "c49fed354ef6": "2026-10-30",
+  "64a5509a0d37": "2026-10-30",
+  "269c21950e73": "2026-10-30",
+  "1529aef88807": "2026-10-30",
+  "d61467fd51bf": "2026-10-30",
+  "5ff44710702a": "2026-10-30",
+  "68f39ed321a9": "2026-10-30",
+  "61a3ffa2276f": "2026-10-30",
+  "00fe0026837a": "2026-10-30",
+  "149da1322652": "2026-10-30",
+  "afba0511b886": "2026-10-30",
+  "248c07875919": "2026-10-30",
+  "103b971064b5": "2026-10-30"
  },
  "events": [
   {
@@ -908,6 +997,44 @@
      "title": "Meta Capex Up to $145B vs Google’s Search Defense [2026]",
      "source": "shattered.io",
      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOd1pPM0puamt5b29ELVY0eXRaQ1ZrYjBQUjJhNjVEYzBZY1dLU1hVZ2lHbFFFU2lyZUdyZHVVTC00Z0VDYllXRTU0RHNUdEducFdvV09xbU15TFhvZFBpNXpmOG9Fb29keEpudXFqclVFOG9xRUd5NUxLSHd3Rlp4WkNjSjRjcXlX?oc=5"
+    },
+    {
+     "title": "Meta’s $34.91B Capex vs Google Search +12% [2026]",
+     "source": "https://tech-insider.org/",
+     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNemJYeWN4NzFwdlBhOFZ0UTd5bmc1TmtPRDFWMlpYaWQ1QmhTRnVEUzdOa2o0VFNfbUJMMV9Kc290S0RqUjRCaEVtaHEzRUtnWDU5Rm5QTWwtM3lqd0o1bGc5U0l0SHA2cWFtWFhOSmRQMmw5bGlkMGpYZ0NLclI4dGRB?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "74794375a6b5",
+   "co": "Oracle",
+   "type": "資本支出",
+   "zh": "Oracle資本支出接近950億美元，並改變AI任務計費模式。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "Oracle to charge for AI tasks, not seats, as capex nears $95 billion",
+     "source": "ET Datacenters",
+     "url": "https://news.google.com/rss/articles/CBMi6wFBVV95cUxNNWxBZEs0SGZxLTlXckp5dm5TYklpQV9BTExsWi1ZeUt0Qk1ROEhnZG9sMmdzRkRQckh5YlhzMzNRR3E1S0JxWFVBZFg2Z0VxLVlMMzFUUE9UanpxeFdyYkw1NV9adzVrWjBPckdFNVpaMnEwMlVFN2VmRXF3SmxWTmZ5R19XdUVtRHQ2ZUZ6YzFaNE00d2s1eHdSZkdvVFdkTjNfNk5Gb0lmcU9iRjljTmNGV205UnQxVXR1V2R0S2tTTEhESDZCWjVUYV83MFpOb1ByYmV5N3dJQnVoRDUxQjNVTDBHQVA0dzZZ0gHvAUFVX3lxTFB0aGE0aXJpelVSZ0pCYV91NWx2YXMybm1laXoxT0hwTzFDUnkzaWZFVU5QSDIyai1Yb1FRcjdrZEJzVVhuODMtdzFVcTNESDZwVmZDSmdNelFEZmpjdF9nQVAwcGpUTkhBQVVJRFZWQTBaYm54TVNHMHFMYVp4YjV3YzBiNXc2bkZtUkdDcGVNejFhUlRwbXU0a01kVU00c0hjdEFhaXNGM3I0SG5BRTJMLWlYRFp1QWtNRUd4Y2Q0U0ZodGUyOGZ1bjFhd3VnVFJ3YmRTTkZCNEhxZy1CN3EwX2p4WUFLQkN3V21FZThZ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "c8fdb3755ea1",
+   "co": "Nvidia",
+   "type": "融資／IPO",
+   "zh": "印度AI基礎設施公司Nscale尋求籌資30億美元購買Nvidia晶片。",
+   "date": "2026-10-30",
+   "links": [
+    {
+     "title": "Indian AI infrastructure firm reportedly seeks to raise $3 billion of debt to buy Nvidia's next-generation chips",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE92RFVzbUMzWGNqc1U0TkNGNWJkdDhlNjJQZW1MV1hjSzJnU3R5YjB6T092TzVNSXJZNHhUR09uMjZuMGttdUNCWVVjZlBveV9HLVA4NE55RnpJc0NhVTJqY205N0dtaU1DcFRvVEt5UWlneTBQT21N0gF8QVVfeXFMTWI4eXFCREZRU1hNVFk2TDZta3RlUEhTV1hMY0xxbDI5eDVrVzJOWlFTR1VZdVY5ck13SUtEcGp2X0VPMHRaUnFVSlRVZUg3c0J0M2tBY0xjMTJIaV8taEFXWTdpVjJ1VWc4RmhnRm82dEtQcDAwNi12ckZ4RA?oc=5"
+    },
+    {
+     "title": "Market Chatter: Nvidia Chip Buyer AM Intelligence Plans Up to $3 Billion Capital Raise",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPakNfT05JMkZEMTR1c2FKcGNIMnBDeVJoWGlGSGNPbG0xS2RGM0RYaE9PeXhwbUZyYWVaU0dESDNNdkl0WlBIanFORy1SNjlzazJVd0dIYkVfN2ZBdzlGNWVXSUlPWHhRZVBOZHZJSl9NNXg2TWlBaEh2bFNPQU5pZm54OURLN1VVXzJ1dGRqWnpHaGxPdGk4RkZ6dHR0QQ?oc=5"
     }
    ]
   },
@@ -1111,7 +1238,7 @@
    "id": "c275ff451e18",
    "co": "Oracle",
    "type": "融資／IPO",
-   "zh": "Oracle將新融資上限調降至200億美元，用於AI基礎設施投資。",
+   "zh": "Oracle 將新融資上限調降至200億美元，用於AI基礎設施投資。",
    "date": "2026-10-29",
    "links": [
     {
@@ -1163,7 +1290,7 @@
    "id": "2880d4d211fb",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia與Nscale談判擔保450億美元Anthropic運算交易債務。",
+   "zh": "Nvidia 與Nscale談判擔保450億美元Anthropic運算交易債務。",
    "date": "2026-10-29",
    "links": [
     {
@@ -1437,7 +1564,7 @@
    "id": "c34ca4203e64",
    "co": "Nvidia",
    "type": "財報",
-   "zh": "Nvidia第三季營收年增106%，超越預期，AI晶片需求強勁。",
+   "zh": "Nvidia 第三季營收年增106%，超越預期，AI晶片需求強勁。",
    "date": "2026-10-28",
    "links": [
     {
@@ -1847,20 +1974,20 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "fe1796e42b0e",
-   "text": "Microsoft 雲端業務超預期成長偏向提升股市表現，惟資本支出延遲則偏向短期降低資本密集度預期。發行250億美元債券增加公司債供給，若市場認可其AI基礎設施投資前景，則偏向支撐長端利率；俄克拉荷馬州土地購置顯示實質建設推進，偏向強化AI投資熱度，但大規模融資需求若…則可能對債券市場造成供給壓力。"
+   "hash": "abe1aff59294",
+   "text": "Microsoft 雲端業務超預期增長偏向提振股市與AI投資熱度；發行250億美元債券偏向增加公司債供給、推高長端利率。若資本支出延遲但土地購置持續，則顯示基礎設施投資節奏調整，偏向短期緩解融資壓力，但長期AI支出預期仍強，對債市與長端利率構成上升壓力。"
   },
   "Alphabet": {
    "hash": "518c63a97664",
    "text": "Alphabet營收未達預期但AI變現成長，高額資本支出（510億美元）與2027年預期增加，偏向加大公司債供給壓力。若現金流承壓持續，則長端利率面臨融資需求上升的壓力。AI投資熱度偏向維持，惟營收預期落差可能抑制股市表現。"
   },
   "Meta": {
-   "hash": "5df548d10764",
-   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求。短期內公司債供給偏向增加，長端利率面臨上升壓力；同時AI投資熱度偏向升溫，強勁財報指引支撐股市信心。若融資順利進行，則長期償債能力與AI競爭地位獲強化，但高槓桿風險偏向上升。"
+   "hash": "58bc4a782a3e",
+   "text": "Meta龐大AI資本支出超越現金流，驅動發債與股權融資需求。短期內公司債供給增加，偏向推升長端利率；同時巨額資本承諾與強勁財報指引，強化AI投資熱度。若融資順利進行，則公司債市場供給壓力與AI板塊資金流向成為市場焦點，長端利率面臨上行壓力。"
   },
   "Oracle": {
-   "hash": "db1efc8ca28e",
-   "text": "Oracle 宣布限制新借款與外部融資各200億美元，同時承諾2029年實現300億美元現金流，偏向減少公司債供給。擴大晶片選項與算力合約則強化AI競爭力，若現金流目標達成，將降低長端融資需求。資本支出管制配合正向現金流預期，偏向支撐股市信心；但AI基礎設施投資受限，若…則可能緩和市場AI投資熱度過度膨脹的預期。"
+   "hash": "20f0d8f2bbe8",
+   "text": "Oracle近期大幅提升AI基礎設施投資，資本支出接近950億美元，同時限制新借款上限200億美元。這偏向增加公司債供給壓力，因高資本支出需求可能促使融資；長端利率偏向上升，反映企業大規模投資融資需求；股市偏向受支撐，因擴大晶片選項、預期2030年營收成長及正向現金流前景提振投資者信心；AI投資熱度偏向升溫，Oracle多元晶片策略強化其雲端算力競爭力。"
   },
   "CoreWeave": {
    "hash": "26daa7e8c5f7",
@@ -1879,8 +2006,8 @@
    "text": "Amazon 巨額資本支出（逾2,200億美元）偏向增加公司債供給壓力，尤其自由現金流轉負。若融資需求持續，長端利率面臨上行壓力。然而，AI基礎設施合約（Verizon、3M等超80億美元）彰顯算力需求強勁，偏向支撐AI投資熱度。但營收未達預期與現金流惡化，偏向拖累股市表現。"
   },
   "Nvidia": {
-   "hash": "d9214b6fd477",
-   "text": "Nvidia近期多項大型算力合約與融資案密集推進，涉及Meta、Anthropic等主要AI玩家的鉅額投資承諾，偏向強化AI基礎設施需求。若這些合約兌現，則Nvidia長期營收成長預期上升，偏向支撐其債券供給能力，同時AI投資熱度持續升溫；第三季財報營收超預期更強化市場信心，偏向推升科技股與AI相關投資熱度，對長端利率則可能形成溫和上升壓力。"
+   "hash": "eb29ff086a18",
+   "text": "Nvidia近期事件偏向強化AI投資熱度與公司債供給。多筆大型算力合約（Meta、Anthropic、Hugging Face等）與融資案顯示AI基礎設施需求旺盛，第三季營收超預期年增106%印證晶片市場景氣。若這些合約涉及債務融資，則偏向增加公司債供給；AI投資熱度明顯升溫。惟反壟斷調查可能制約長期成長預期，對長端利率影響偏向中性。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -1891,5 +2018,5 @@
    "text": "Intel 伺服器銷售強勁成長偏向支撐科技股表現，惟第四季展望疲弱反映需求不確定性。若業績動能難以延續，則市場對晶片廠商獲利前景的信心可能減弱，偏向壓低科技股估值。同時，伺服器需求與 AI 基礎設施投資密切相關，展望轉弱若暗示 AI 投資熱度趨緩，則可能影響整體科技投資情緒。"
   }
  },
- "at": "2026-10-30 11:40（台北）"
+ "at": "2026-10-30 20:05（台北）"
 }
