@@ -1,82 +1,5 @@
 [
  {
-  "at": "2026-10-27T04:05+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 9.5,
-    "sources": 1,
-    "why": "主題+6、時效+2、來源+1.5",
-    "titles": [
-     "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+4、時效+1.5、來源+3",
-    "titles": [
-     "Asia-focused banks face capital squeeze due to inflation, bond turbulence - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "主題+2、次級+1、時效+2、來源+3",
-    "titles": [
-     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "why": "主題+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Indian shares seen lower as oil stays near six-month high, Fed in focus - Reuters"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "why": "主題+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Gold Steadies Above $4,000 With Fed Rate Decision in Focus - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "why": "主題+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "AI Funding Needs Drive US High-Grade Bond Sales to Annual Record - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "why": "主題+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Colombia to Sell New Dollar Bonds Amid Fiscal Pressures - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 7.5,
-    "sources": 1,
-    "why": "主題+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Gold Steadies After Weekly Drop as Focus Shifts to Fed Meeting - Bloomberg.com"
-    ]
-   }
-  ],
-  "main": "Analysis: Why a $2 trillion deficit and 5% Treasury yields are becoming America's biggest economic challenge",
-  "result": "10 年期殖利率升破 5%，2 兆美元赤字與發債潮推高長端利率"
- },
- {
   "at": "2026-10-27T04:52+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2934,5 +2857,109 @@
   },
   "second_fail": "輸出反覆評論材料本身（後設字眼）",
   "result": "洛根主張至少再升息兩碼聖路易、里奇蒙總裁齊發鷹聲市場押注12月升息機率73%"
+ },
+ {
+  "at": "2026-11-01T04:50+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Inflation, Inequality and Debt: The Charts Scaring Wall Street - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+3（有內文）",
+    "titles": [
+     "AI通膨席捲手機市場　業者：價格壓力恐燒至2028年"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+2（有內文）",
+    "titles": [
+     "高通膨與高殖利率拉鋸！PIMCO解析Fed：12月升息1碼機率高 長期維持高利率"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "Iran’s Khamenei Orders Military to Expand US Retaliation Plans - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+2",
+    "titles": [
+     "Trump calls $50 million contract for ex-lawyer Habba Mildon 'not acceptable' - Reuters"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+2",
+    "titles": [
+     "Trump says Flavio Bolsonaro can stay in US 'as long as he wants' - Reuters"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+2",
+    "titles": [
+     "California governor asks US judges to resist Trump attempts to seize ballots - Reuters"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+2",
+    "titles": [
+     "Judge ends Trump's attempts to sue Wall Street Journal over Epstein reporting - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "AI通膨席捲手機市場　業者：價格壓力恐燒至2028年",
+   "高通膨與高殖利率拉鋸！PIMCO解析Fed：12月升息1碼機率高 長期維持高利率",
+   "伊朗正研究范斯提議！但外長稱暫無會談計劃、軍方：將「高強度且不受地理限制」對抗美以"
+  ],
+  "main": "Inflation, Inequality and Debt: The Charts Scaring Wall Street - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Iran’s Khamenei Orders Military to Expand US Retaliation Plans - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 264 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】120 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 232 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】114 字，超過 90 字，請精簡"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 288 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ],
+    [
+     "主軸 178 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "聯準會10月暫停升息、12月料再升一碼，PIMCO：長天期殖利率上升已收緊金融環境"
  }
 ]

@@ -553,7 +553,13 @@
    "bad": [],
    "auto_seen": {},
    "auto": {},
-   "auto_log": []
+   "auto_log": [],
+   "cons": {
+    "ahe_mom": 0.3,
+    "nfp": 63.0,
+    "u3": 4.2
+   },
+   "cons_at": "2026-11-01T12:51+08:00"
   },
   "cpi|2026-10": {
    "key": "cpi",
