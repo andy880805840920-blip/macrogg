@@ -1,89 +1,5 @@
 [
  {
-  "at": "2026-10-27T04:52+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3",
-    "titles": [
-     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主題+1、次級+1、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 2,
-    "why": "次級+0.5、時效+2、來源+3、多家+1.5、主題熱度+2",
-    "titles": [
-     "Trump administration's firing of prosecutor Maurene Comey was unlawful, judge rules - Reuters",
-     "Trump administration illegally fired Maurene Comey, judge rules"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、次級+0.5、時效+2、主題熱度+2",
-    "titles": [
-     "AI通膨推升3C價格 耐久財購買信心創17年新低"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "Indian shares open lower as oil stays near six-month high, Fed in focus - Reuters"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "AI Funding Needs Drive US High-Grade Bond Sales to Annual Record - Bloomberg.com",
-     "AI Funding Drives US High-Grade Bond Sales to Annual Record - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "次級+1、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "Netanyahu touts Trump endorsement on eve of vote, suggests they may restart war on Iran - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "次級+1、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "Oil Edges Lower From Six-Month High as Traders Assess Iran Risks - Bloomberg.com"
-    ]
-   }
-  ],
-  "second": "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com",
-  "related": [
-   "AI通膨推升3C價格 耐久財購買信心創17年新低"
-  ],
-  "main": "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters",
-  "points": 2,
-  "result": "摩根資產管理：債市現在是買點，銅價因 AI 股下跌而走低"
- },
- {
   "at": "2026-10-27T12:19+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2961,5 +2877,109 @@
    ]
   },
   "result": "聯準會10月暫停升息、12月料再升一碼，PIMCO：長天期殖利率上升已收緊金融環境"
+ },
+ {
+  "at": "2026-11-01T23:09+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Stocks gain as Fed official backs quarter-point hike - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Wall Street Braces for Biggest Treasury Sales Overhaul in Years - Bloomberg"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+2（有內文）",
+    "titles": [
+     "比特幣盤中微幅上漲 市場觀望聯準會利率決策"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "Russian strikes cut power to thousands in Ukraine as drones damage Russian facility - Reuters"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "AI Won't Replace the President. It Might Govern Our Decisions - Bloomberg"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "Gulf States Fear Fiercer Iran Retaliation If US Strikes Again - Bloomberg"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+3",
+    "titles": [
+     "Wall Street Braces for More Wild Days in Stocks After Tech Rout - Bloomberg"
+    ]
+   }
+  ],
+  "background": [
+   "比特幣盤中微幅上漲 市場觀望聯準會利率決策",
+   "These 3 AI Stocks Could Soon Enter the S&P 500. Are They Worth Buying Before the Move?",
+   "伊朗與卡達連續3天談判！擬美伊達成協議後48小時內重開荷姆茲海峽"
+  ],
+  "main": "Stocks gain as Fed official backs quarter-point hike - Reuters",
+  "main_why": "最高分",
+  "second": "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 179 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 152 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】新聞意涵和今日走勢（10 年期 -6bp）方向不同，卻沒有點出落差（要寫出實際變動，並說明市場還沒反映或反向）",
+     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 209 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ],
+    [
+     "主軸 162 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "聯準會官員支持 12 月升息一碼美股科技股財報不佳重挫"
  }
 ]
