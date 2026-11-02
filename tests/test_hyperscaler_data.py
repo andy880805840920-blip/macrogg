@@ -215,6 +215,61 @@ if True:
     check("㊴ 合計比率要標明是加總不是平均", "合計 ÷ 合計" in html)
     check("㊵ 年增要標明是對去年同季", "去年同一季" in html or "對去年同季" in html)
 
+# ㊶ 2026-11：發債對齊資本支出那一季；Alphabet 的發債標記
+from src import clock as _ck41
+_t41 = _ck41.today
+_ck41.today = lambda: __import__("datetime").date(2026, 11, 2)
+
+
+class _FakeSec:
+    failed = []
+    R = {("o", "capex"): [{"end": "2026-05-31", "val": 20e9}, {"end": "2026-08-31", "val": 28.5e9}],
+         ("o", "ocf"): [{"end": "2026-05-31", "val": 9e9}, {"end": "2026-08-31", "val": 23.1e9}],
+         ("o", "debt_issued"): [{"end": "2026-02-28", "val": 26.7e9}, {"end": "2026-05-31", "val": 1.55e9}],
+         ("g", "capex"): [{"end": "2026-06-30", "val": 30e9}, {"end": "2026-09-30", "val": 51.35e9}],
+         ("g", "ocf"): [{"end": "2026-09-30", "val": 42.29e9}],
+         ("g", "debt_issued"): [{"end": "2026-06-30", "val": 24.85e9}, {"end": "2026-09-30", "val": 28.99e9}]}
+
+    def metric(self, cik, m):
+        return [dict(r) for r in self.R.get(({1: "o", 2: "g"}[cik], m), [])]
+
+
+_rows41, _, _ = sec.fetch_hyperscalers({"companies": [{"name": "Oracle", "cik": 1}, {"name": "Alphabet", "cik": 2}]}, client=_FakeSec())
+_by41 = {r["name"]: r for r in _rows41}
+check("㊶ 這一季沒有發債 → 0，不拿上一季的數字（甲骨文 2026/8 季曾顯示 2026/5 季的 15.5 億）",
+      _by41["Oracle"]["debt_issued"] == 0.0, _by41["Oracle"])
+check("㊶ 同一季有發債就照實填（Alphabet 2026Q3 289.9 億）", _by41["Alphabet"]["debt_issued"] == 28.99, _by41["Alphabet"])
+check("㊶ Alphabet 的發債標記（扣除發行成本）有列入", "ProceedsFromDebtNetOfIssuanceCosts" in sec.METRIC_TAGS["debt_issued"])
+_ck41.today = _t41
+
+# ㊷ 2026-11：五家加總依日曆季對齊，不依「最近第 N 季」
+from src import build as _b42                    # noqa: E402
+_h = lambda *ends: [{"end": e, "capex": 10.0, "ocf": 20.0} for e in ends]   # noqa: E731
+_agg = _b42._hs_agg([
+    _h("2026-03-31", "2026-06-30", "2026-09-30"),   # 已公布 9 月季
+    _h("2026-03-31", "2026-06-30"),                 # 還沒公布
+    _h("2026-02-28", "2026-05-31", "2026-08-31"),   # Oracle 式季末
+])
+check("㊷ 只畫三家都到齊的季（9 月季有人還沒公布 → 不畫）",
+      [a["label"] for a in _agg] == ["26/3", "26/6"], str([a["label"] for a in _agg]))
+check("㊷ 同一季三家相加，不混到別季", all(a["capex"] == 300 for a in _agg), str(_agg))
+
+# ㊸ 2026-11：FCF＋發債小圖（長端頁五家加總、每家 8 季、首頁 AI 大事共用）
+from src.pages import hs_fcf as _fc               # noqa: E402
+_rows = [{"label": "26/6", "capex": 1815, "ocf": 1863, "debt": 400},
+         {"label": "26/9", "capex": 2304, "ocf": 1986, "debt": 771}]
+_html = _fc.fcf_chart(_rows, "測試")
+check("㊸ FCF＝營運現金流 − 資本支出", _fc.latest(_rows)["fcf"] == -318)
+check("㊸ 浮窗資料：營運現金流、資本支出、FCF、比例、發債都在",
+      all(k in _html for k in ('data-o="1,986"', 'data-c="2,304"', 'data-f="−318"', 'data-r="116%"', 'data-d="771"')), _html[:200])
+check("㊸ 不到兩季不畫", _fc.fcf_chart(_rows[:1], "x") == "")
+check("㊸ 缺營運現金流的季跳過，不當成 0", len(_fc.fcf_rows([{"label": "a", "capex": 1, "ocf": None}])) == 0)
+from src.pages import ai_events as _ae            # noqa: E402
+_p = _ae.ai_panel({"events": [], "ipo": {"active": True, "name": "Anthropic", "steps": []}}, _rows)
+check("㊹ AI 大事：五家合計放在 IPO 下方", 0 <= _p.find("ai-hl-c") < _p.find("科技巨頭五家合計"))
+check("㊹ AI 大事：IPO 說明收進 ⓘ（details）", "ai-hl-i" in _p and "<details" in _p)
+check("㊹ 連結指向長端頁實際網址", "/longend/" not in _p and "/rates/" in _p)
+
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

@@ -356,6 +356,38 @@ check("㊹ 明細裡不再有「不計入發債」這種佔位字串",
       all(r["amount"] != "不計入發債" for r in blk["rows"]),
       str([r["amount"] for r in blk["rows"]]))
 
+# ---------------------------------------------------------------------------
+# 2026-11：近期發債 vs 最新一季季報
+#   - 交易日 ≤ 該公司最新季末 → 已在季報的「單季發債」裡，不能說「尚未進季報」
+#   - 股票增發的預估版（Meta 10/26 股權募資）不列、不算「尚未定價」
+#   - 分類不出來的預估版有對應定價版就併掉（Amazon 9/9 → 9/11）
+# ---------------------------------------------------------------------------
+class _HSpe:
+    total_issued = 50.0
+    companies = [{"name": "Alphabet", "period_end": "2026-08-05"},
+                 {"name": "Meta", "period_end": "2026-08-05"}]
+
+
+_mix2 = sec.dedupe_deals([
+    flt("Alphabet", 4, "USD", [10e9]),                       # 季末前 → 已進季報
+    flt("Meta", 9, "USD", [5e9]),                            # 季末後
+    flt("Meta", 12, "", [], prelim=True, security="equity"), # 股票預估版
+])
+_b2 = build._offerings_block(_mix2, _HSpe(), {})
+check("㊼ 季末之後的交易才算「尚未進季報」", _b2.get("post_n") == 1, str(_b2.get("post_n")))
+check("㊼ 季末之前的列標「已進季報」",
+      any(r["kind"] == "債券發行・已進季報" and r["name"] == "Alphabet" for r in _b2["rows"]),
+      str([(r["name"], r["kind"]) for r in _b2["rows"]]))
+check("㊽ 股票增發的預估版不算「尚未定價」", _b2.get("prelim_n", 0) == 0, str(_b2.get("prelim_n")))
+check("㊽ 股票增發的預估版不出現在明細",
+      all(r["kind"] != "預估版" for r in _b2["rows"]), str([r["kind"] for r in _b2["rows"]]))
+_r3 = sec.dedupe_deals([
+    flt("Amazon", 9, "", [], prelim=True, security="unknown"),
+    flt("Amazon", 11, "GBP", [4.25e9]),
+])
+check("㊾ 分類不出來的預估版有定價版就併成一筆",
+      len(_r3) == 1 and _r3[0].get("counts"), str([(r["date"], r.get("counts")) for r in _r3]))
+
 # 孤兒預估版：列出但不計數
 rows = sec.dedupe_deals([flt("Microsoft", 8, "USD", [], prelim=True)])
 check("㊲ 孤兒預估版不計數",
