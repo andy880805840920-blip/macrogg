@@ -2103,16 +2103,26 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
     # 只有「已定價的債券發行」才算一筆交易。counts 由 sec.dedupe_deals 決定：
     # 股票／ATM 增發、銀行貸款額度、尚未定價的預估版全部是 False。
     deals = [o for o in offerings if o.get("counts")]
+    # 2026-11：預估版只算可能是債券的（股票增發的預估版，例如 Meta 10/26 的股權募資，不列）
+    _maybe_bond = lambda o: o.get("security", "unknown") in ("bond", "unknown")   # noqa: E731
     prelim_n = sum(1 for o in offerings
-                   if o.get("preliminary") and not o.get("counts"))
+                   if o.get("preliminary") and not o.get("counts") and _maybe_bond(o))
     other_n = sum(1 for o in offerings
-                  if not o.get("counts") and not o.get("preliminary"))
+                  if not o.get("counts") and not (o.get("preliminary") and _maybe_bond(o)))
+    # 2026-11：哪些交易已經在該公司最新一季季報裡（交易日 ≤ 季末）。先前一律寫「尚未進季報」，
+    # 但 Alphabet 8/7、Amazon 7/8 與 9/11 都在 9/30 季內，季報的「單季發債」已經算過
+    _pe = {c.get("name"): c.get("period_end") or "" for c in (getattr(hs, "companies", None) or [])}
+    def _after(o):
+        pe = _pe.get(o.get("name"), "")
+        return not pe or str(o.get("date", "")) > pe
 
     # 合計走美元等值，但只加**換得出來**的。換不出來的仍然列在明細裡
     #（原幣金額照樣看得到），只是不進合計——寧可合計少一筆，
     # 也不要用一個假設的匯率把它補進去。
-    usd_vals, no_fx = [], 0
+    usd_vals, no_fx, post_vals, post_n = [], 0, [], 0
     for o in deals:
+        if _after(o):
+            post_n += 1
         if o.get("principal") is None:
             continue
         # 匯率用**這一筆的定價日**，不是今天。合計因此是「當時實際募到多少
@@ -2123,6 +2133,8 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
             no_fx += 1
         else:
             usd_vals.append(conv["usd"] / 1e9)
+            if _after(o):
+                post_vals.append(conv["usd"] / 1e9)
     known_n = len(usd_vals)
     unknown_n = len(deals) - known_n
     total = sum(usd_vals)
@@ -2174,6 +2186,8 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
 
         kind = ("預估版" if is_prelim else
                 _SEC_LABEL.get(sec_kind) if not counts else "債券發行")
+        if counts and not _after(o):
+            kind += "・已進季報"
         rows.append({"name": o["name"], "date": o["date"], "form": o["form"],
                      "kind": kind, "amount": native, "usd_note": usd_note,
                      "pending": not counts or principal is None,
@@ -2208,7 +2222,7 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
     # 非債券的那幾件仍然在上方的摘要句裡交代筆數與種類。
     # 「我看過但排除了」這件事用一句話講，不用十列。
     bond_rows = [r for r in rows
-                 if r.get("counts") or r.get("preliminary")]
+                 if r.get("counts") or (r.get("preliminary") and r.get("security") in ("bond", "unknown"))]
 
     return {
         "available": True,
@@ -2227,6 +2241,8 @@ def _offerings_block(offerings: list, hs, series: dict | None = None) -> dict:
         "show_amount": bool(total) and not insane,
         "total_display": (f"{total * 10:,.0f} 億美元" if total else "—"),
         "ratio_display": (f"{ratio:.0f}%" if ratio is not None else ""),
+        "post_n": post_n,
+        "post_display": (f"{sum(post_vals) * 10:,.0f} 億美元" if post_vals else ""),
         "latest": offerings[0]["date"],
         "ref_display": f"{ref * 10:,.0f} 億美元" if ref else "—",
     }
@@ -3176,24 +3192,48 @@ def _longend_block(series: dict, tr: dict, cfg: dict, hs, debt, offline: bool = 
                                         short_dates=True),
             "ratio": [{"end": r["end"], "v": (r["capex"] / r["ocf"] * 100) if r.get("ocf") else None,
                        "debt": r.get("debt_issued") or 0} for r in h],
+            # 2026-11：每家近 8 季 FCF＋發債小圖（億美元；標籤用該公司自己的季末月）
+            "rows": [{"label": f'{r["end"][2:4]}/{int(r["end"][5:7])}',
+                      "capex": r["capex"] * 10 if r.get("capex") is not None else None,
+                      "ocf": r["ocf"] * 10 if r.get("ocf") is not None else None,
+                      "debt": (r.get("debt_issued") or 0) * 10} for r in h[-8:] if r.get("end")],
         })
-    # 五家加總（2026-10）：各家會計季末不同，依「最近第 N 季」對齊相加；
-    # 標籤取各家季末的最大值（月/年）。單位億美元。
+    # 五家加總：各家會計季末不同（Oracle 是 2/5/8/11 月底），
+    # 2026-11 改成依「日曆季」對齊——季末月份往上取到 3/6/9/12（Oracle 8/31 歸 9 月季）。
+    # 先前依「最近第 N 季」對齊，財報季中先公布的公司會多一季，加總會把不同季混在一起。
+    # 只畫五家都到齊的季；還有人沒公布的季先不畫。單位億美元。
     _hs = [c.get("hist") if isinstance(c, dict) else getattr(c, "hist", None) for c in hs.companies]
-    _hs = [h for h in _hs if h]
-    agg = []
-    if _hs:
-        n = min(len(h) for h in _hs)
-        for i in range(n, 0, -1):
-            rows = [h[-i] for h in _hs]
-            if any(r.get("capex") is None or not r.get("ocf") for r in rows):
-                continue
-            end = max(r["end"] for r in rows)
-            agg.append({"end": end, "label": f"{end[2:4]}/{int(end[5:7])}",
-                        "capex": sum(r["capex"] for r in rows) * 10,
-                        "ocf": sum(r["ocf"] for r in rows) * 10})
-    out["hs_agg"] = agg
+    out["hs_agg"] = _hs_agg([h for h in _hs if h])
     return out
+
+
+def _hs_agg(hists: list) -> list:
+    """各家每季資本支出／營運現金流依日曆季相加（單位：億美元）。"""
+    if not hists:
+        return []
+
+    def _qkey(end):
+        y, m = int(end[:4]), int(end[5:7])
+        return f"{y:04d}-{((m + 2) // 3) * 3:02d}"
+
+    buckets = []
+    for h in hists:
+        b = {}
+        for r in h:
+            if r.get("end"):
+                b[_qkey(r["end"])] = r      # 同一季重複時取較晚那筆
+        buckets.append(b)
+    agg = []
+    for q in sorted(set.intersection(*(set(b) for b in buckets))):
+        rows = [b[q] for b in buckets]
+        if any(r.get("capex") is None or not r.get("ocf") for r in rows):
+            continue
+        end = max(r["end"] for r in rows)
+        agg.append({"end": end, "label": f"{q[2:4]}/{int(q[5:7])}",
+                    "capex": sum(r["capex"] for r in rows) * 10,
+                    "ocf": sum(r["ocf"] for r in rows) * 10,
+                    "debt": sum(r.get("debt_issued") or 0 for r in rows) * 10})
+    return agg
 
 
 def _shift_iso_year(iso: str, n: int) -> str:

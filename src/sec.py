@@ -142,6 +142,8 @@ METRIC_TAGS = {
         "ProceedsFromIssuanceOfSeniorLongTermDebt",
         "ProceedsFromIssuanceOfUnsecuredDebt",
         "ProceedsFromNotesPayable",
+        # 2026-11：Alphabet 用這個標記（「發債收入、扣除發行成本」）；先前漏掉，2026Q3 的 289 億顯示成 0
+        "ProceedsFromDebtNetOfIssuanceCosts",
     ],
 }
 
@@ -529,6 +531,15 @@ def fetch_hyperscalers(cfg: dict,
             for r_ in rows[-8:]:
                 hist.setdefault(r_["end"], {})[metric] = r_["val"] / 1e9
             latest = rows[-1]
+            if metric != "capex" and got.get("_end"):
+                # 2026-11：其他指標一律對齊資本支出的那一季。先前直接取各自的最新一筆——
+                # 甲骨文 2026/8 季沒有發債，標記的最新一筆停在 2026/5 季（15.5 億），
+                # 被當成「本季發債」顯示。同一季沒有數字：發債＝這一季沒發（0），其他照舊取最新。
+                same = [r_ for r_ in rows if r_["end"] == got["_end"]]
+                if same:
+                    latest = same[-1]
+                elif metric == "debt_issued":
+                    continue
             got[metric] = latest["val"] / 1e9        # → 十億美元
             if metric == "capex":
                 got["_end"] = latest["end"]
@@ -867,6 +878,11 @@ def dedupe_deals(rows: list[dict]) -> list[dict]:
 
     prelim = [r for r in bonds if r.get("preliminary")]
     priced = [r for r in bonds if not r.get("preliminary")]
+    # 2026-11：分類不出來的預估版（封面還沒寫是什麼證券）也當作可能的債券：
+    # 有對應定價版就不列（Amazon 9/9 預估版＋9/11 英鎊債定價），沒有才標「尚未定價」
+    _unk_pre = [r for r in nonbond if r.get("preliminary") and r.get("security") == SEC_UNKNOWN]
+    prelim += _unk_pre
+    nonbond = [r for r in nonbond if r not in _unk_pre]
 
     # ---- ① 定價版：同公司＋同幣別＋時間相近 → 併成一筆 ----
     priced.sort(key=lambda r: r["date"])          # 由舊到新
