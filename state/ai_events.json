@@ -1408,7 +1408,90 @@
   "4de80f801d90": "2026-10-31",
   "bf1c43cadae4": "2026-10-30",
   "2ac2a978354a": "2026-10-30",
-  "a5ff6c11bd9b": "2026-10-30"
+  "a5ff6c11bd9b": "2026-10-30",
+  "0b5ed5f87e08": "2026-10-28",
+  "8ebee9b14a15": "2026-10-28",
+  "87200e87209f": "2026-10-28",
+  "0adf6f9323b4": "2026-10-28",
+  "edcfcdf3d40b": "2026-10-28",
+  "26c089b9baef": "2026-10-28",
+  "d5b02665f810": "2026-10-28",
+  "e4cef69ec45f": "2026-10-27",
+  "4186604dea05": "2026-11-01",
+  "7b5e6a189a68": "2026-10-31",
+  "9e04318f1fd2": "2026-10-31",
+  "a2ec31b8d953": "2026-10-30",
+  "16faaa7ce0b6": "2026-10-30",
+  "8b69c022f55f": "2026-10-30",
+  "c0e8f9bd631d": "2026-10-30",
+  "2029a6f59e92": "2026-10-30",
+  "70fd61640151": "2026-10-30",
+  "69a852ffebde": "2026-10-23",
+  "84669d2c4b37": "2026-11-01",
+  "5324f4f49bae": "2026-10-31",
+  "6a280fb5bd9a": "2026-10-30",
+  "baad12601a27": "2026-10-30",
+  "8631684d98a3": "2026-10-30",
+  "daaf649136cf": "2026-10-30",
+  "18b5b249b0ac": "2026-10-23",
+  "df360780a569": "2026-10-22",
+  "1c24e85d7346": "2026-10-26",
+  "5b6be2a228d2": "2026-10-26",
+  "1cae867ae22c": "2026-10-26",
+  "e30dcd548371": "2026-10-26",
+  "c5d7a8328b13": "2026-10-22",
+  "d6e5fb28b88e": "2026-10-22",
+  "f9a7570921f7": "2026-11-02",
+  "3db117660e58": "2026-11-01",
+  "280559befa81": "2026-10-31",
+  "a2393f3e3fc6": "2026-10-31",
+  "a42927ba7fd4": "2026-10-31",
+  "b066e9ad566b": "2026-10-31",
+  "7c3e6e4a6062": "2026-10-31",
+  "555f8309651f": "2026-10-30",
+  "ff0fe87cf9c0": "2026-10-30",
+  "948e249d57ce": "2026-11-01",
+  "c755f5e49e9f": "2026-10-31",
+  "dfda558467ee": "2026-10-31",
+  "b735125cbc31": "2026-10-31",
+  "0a3da80baf47": "2026-10-31",
+  "42c6ed2d7403": "2026-10-30",
+  "a8e6b256327d": "2026-10-30",
+  "e1742a9d82e0": "2026-10-24",
+  "e05d1ec85efb": "2026-10-23",
+  "17f45be56885": "2026-10-22",
+  "9666aa1b98da": "2026-11-01",
+  "f0479a36dc7b": "2026-11-01",
+  "87a6ed0435d4": "2026-11-01",
+  "2e9705451cc4": "2026-10-31",
+  "4a7582c3f0cb": "2026-10-31",
+  "19fd67463f79": "2026-10-31",
+  "a3594e6a7c71": "2026-10-30",
+  "65b8b90c4a92": "2026-10-30",
+  "d5bde39feb30": "2026-11-02",
+  "2bb2f7d4858f": "2026-11-01",
+  "08645b0390e6": "2026-11-01",
+  "f00652d4ba18": "2026-10-31",
+  "69c3f29687fc": "2026-10-31",
+  "b952eb7af42a": "2026-10-31",
+  "bf123a190595": "2026-10-31",
+  "cbd82af14c1a": "2026-10-31",
+  "6fc23865bfec": "2026-11-02",
+  "614234485072": "2026-10-31",
+  "b50ca93df3bf": "2026-10-30",
+  "472f56eb2802": "2026-10-29",
+  "b1317136f208": "2026-10-29",
+  "0a9e05d1255f": "2026-10-27",
+  "ac04d8ff2494": "2026-10-27",
+  "ad0629785ada": "2026-10-27",
+  "ff167b5e0d56": "2026-11-02",
+  "dcd163312870": "2026-11-02",
+  "e87752a6b052": "2026-11-02",
+  "94ee5ed3b521": "2026-11-02",
+  "12b3681a8b2a": "2026-11-02",
+  "1de1a222a88d": "2026-11-02",
+  "aab6265ac227": "2026-11-02",
+  "53b2ef357ea5": "2026-11-02"
  },
  "events": [
   {
@@ -1457,7 +1540,7 @@
    "id": "c08816b90313",
    "co": "OpenAI",
    "type": "融資／IPO",
-   "zh": "OpenAI新一輪融資目標下調至110億美元，遠低於原定300億美元目標。",
+   "zh": "OpenAI新一輪融資目標下調至，遠低於原定目標。",
    "date": "2026-11-01",
    "links": [
     {
@@ -1540,6 +1623,30 @@
      "title": "Anthropic IPO: 1,300% Growth, $16.3 Billion in Revenue, and an $80.7 Billion Loss. Here Are the Numbers to Watch.",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNeTZOWF9VTXpRQVB4cFdVclZqX1NVaUdrME9hemZRS3laODBSbU5Kbnd0WHpvNlE2elVfS0loVnVMYllRZ2llWExCSHJXRktJM3J6SmdBbk1saFhwYWV1NXRyZmx2YkpJMFFrUlRfNEM3WmtucExrZWJVT0xkYmJMd3pFeUN3NWkzVFlyOWkwc2F4ZnJDaVE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "2e87652cc5f3",
+   "co": "OpenAI",
+   "type": "融資／IPO",
+   "zh": "OpenAI融資目標下調至200億美元，估值維持1.25兆美元。",
+   "date": "2026-10-31",
+   "links": [
+    {
+     "title": "OpenAI Cuts Funding Target As Investors Lose AI Appetite",
+     "source": "Investor's Business Daily",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPeWdSajhqVnN5TFJ2XzB3aEt3TzJ2TFhNamVKQnhJSlVsVVRDMENOcmJZX0ZSSTNINS1vbUplY0ZSWG1XLXoxTW1Zd1hUdWRwQ0NWNlpuRmg2eS1KMXZrR0J3cVBVaFF2VE9KYTF3VE5mX2pEMHNCWGJZZlVHc0xGSGFQa2FSb1RXeE5HV19JaVJxbTNacTNhZFJMWndpWWpXU3RjVktQM0tTMnRiQ04zNjZ0cw?oc=5"
+    },
+    {
+     "title": "OpenAI Slashes Funding Target to $20 Billion, Cuts Valuation to $1.25 Trillion: 7 outlets compared",
+     "source": "NewsCord",
+     "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQcFpJUXBVUmt1UnBUUjlJYnBYeS13NWdsQzZwX2k2b1NoZFlmTU9EN19KQnd0emNrOFdKcGZySWc1bkItTUJoU3AyNDV3cUI1M214S0NIVUxpZTJPb1ZxYnVwaEZoUlVKYlVhXzFHZUtPZ0RydzFBSU9nc2t5N2VVYVlSTmN4YVFOVFN1WXE1NkJLZHJYQm5NUEw2WHM0SDE1bUJCMnpqeVVSVG5GbTVIQkgwam1xalJYOVIyZTNtdGxBN2JDb0JhU1k4cG1YWmE3Szc5cDRMSlpWbXJkQ0hSMERR?oc=5"
+    },
+    {
+     "title": "OpenAI slashes funding goal by $10B amid tech selloff: FT",
+     "source": "Seeking Alpha",
+     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPUVhQdWl2RUNhQ09fcXUtS0pVQVFuakF5dUhCWVI5ZFFTcjZuSjZMNzUwQm5JSmVPUS1fN2R2SFI2LVA0TFE2TWhxdnZEZVFrZ09Qd0VfOTg5VU9ybXpSQ1Z6Xy1rTWpaXzFtaWNOWmhDX0phUFJPVUt5Y192SEE4M2J5ajN2UV93eVVsNTNvdjk?oc=5"
     }
    ]
   },
@@ -1689,7 +1796,7 @@
    "id": "0155c39d9cc0",
    "co": "Amazon",
    "type": "資本支出",
-   "zh": "Amazon單季資本支出超770億美元，持續加大AI基礎設施投資。",
+   "zh": "Amazon 單季資本支出超770億美元，持續加大AI基礎設施投資。",
    "date": "2026-10-30",
    "links": [
     {
@@ -2719,7 +2826,7 @@
   },
   "Meta": {
    "hash": "ba768f60f084",
-   "text": "Meta大規模融資與舉債支撐AI算力投資，偏向增加公司債供給、推高長端利率。股權融資與債券發行並行，反映融資成本上升；若資本支出持續超越現金流，則需進一步融資，可能推升企業債收益率。強勁財報與Nvidia等科技巨頭參與，偏向強化AI投資熱度，但融資規模龐大可能分流市場流動性，對股市形成結構性壓力。"
+   "text": "Meta大規模融資與舉債支撐AI算力投資，偏向增加公司債供給、推高長端利率。股權融資與債券發行並行，反映融資成本上升；若資本支出持續超越現金流，則需進一步融資，可能推升企業債收益率。強勁財報與 Nvidia 等科技巨頭參與，偏向強化AI投資熱度，但融資規模龐大可能分流市場流動性，對股市形成結構性壓力。"
   },
   "Oracle": {
    "hash": "ed36306ccf48",
@@ -2734,16 +2841,16 @@
    "text": "Anthropic巨額虧損與債務規模偏向拉高長端利率。高達9,000億美元未來債務與630億美元融資完成，增加公司債供給壓力；若市場對AI燒錢模式疑慮加深，則長端利率上升幅度擴大。4,300億美元算力合約鎖定顯示AI投資熱度仍高，但虧損幅度（807億美元）相對營收（163.3億美元）的懸殊，偏向削弱投資者對盈利前景信心，對股市形成壓力。"
   },
   "OpenAI": {
-   "hash": "9cc4d0debb5d",
-   "text": "OpenAI融資目標大幅下調，偏向減輕其債務融資壓力，可能降低公司債供給需求。同時多項算力合約與數據中心投資顯示資本支出承諾，若融資規模縮減而支出需求不變，則可能增加其外部融資需求。這些事件綜合來看，偏向對AI投資熱度形成短期冷卻信號，市場對生成式AI商業化前景的預期可能趨於謹慎。"
+   "hash": "58a790cf2e6d",
+   "text": "OpenAI融資目標大幅下調，偏向增加公司債供給壓力；若融資規模縮水，則資本支出計畫可能受限，長端利率面臨下行壓力。同時多項算力合約與數據中心投資持續推進，顯示AI基礎設施需求依舊強勁，偏向維持AI投資熱度。融資困難與資本支出需求並存，偏向對股市形成短期不確定性。"
   },
   "Amazon": {
-   "hash": "50bd08cb3e9e",
-   "text": "Amazon近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度偏向強化，但股市偏向承受獲利疲弱的拖累。"
+   "hash": "c68cbf93ccac",
+   "text": "Amazon近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度仍強，但盈利預期走弱，股市偏向承壓。"
   },
   "Nvidia": {
    "hash": "29605a771f94",
-   "text": "Nvidia近期事件偏向支撐AI投資熱度與長端利率上升。強勁財報與大額晶片訂單反映AI需求旺盛，推升科技股；多筆算力合約與融資擔保涉及龐大債務，偏向增加公司債供給；若Nvidia持續擔保客戶債務並擴大資本承諾，則長端利率面臨上行壓力。惟反壟斷調查若升溫，則偏向抑制AI投資熱度。"
+   "text": "Nvidia 近期事件偏向支撐AI投資熱度與長端利率上升。強勁財報與大額晶片訂單反映AI需求旺盛，推升科技股；多筆算力合約與融資擔保涉及龐大債務，偏向增加公司債供給；若 Nvidia 持續擔保客戶債務並擴大資本承諾，則長端利率面臨上行壓力。惟反壟斷調查若升溫，則偏向抑制AI投資熱度。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -2758,5 +2865,5 @@
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-02 09:58（台北）"
+ "at": "2026-11-02 12:23（台北）"
 }
