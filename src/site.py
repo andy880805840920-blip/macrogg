@@ -4493,7 +4493,7 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .hs4 .src{margin-top:8px}
 
 /* ---- 科技巨頭 v3：資料時效／近期發債的清單（桌機欄位、手機兩行） ---- */
-.hs5{display:grid;max-width:760px}
+.hs5{display:grid}
 .hs5-r{display:grid;align-items:baseline;column-gap:14px;padding:9px 0;border-top:1px solid var(--grid);font-size:var(--fs-small);color:var(--text-primary)}
 .hs5-r:first-child{border-top:0}
 .hs5-hd{font-size:var(--fs-micro);color:var(--muted);padding:2px 0 6px}
@@ -4511,6 +4511,36 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .hs5-a.pend{color:var(--muted)}
 .hs5 a{color:var(--series-1)}
 .hs4-st small{display:inline;margin-left:6px}
+/* 近期發債（2026-11）：桌機六欄；手機左邊固定日期欄、每筆兩行（公司｜金額／類型・原文｜美元） */
+.hs6-r{display:grid;grid-template-columns:56px minmax(110px,1.1fr) minmax(80px,.9fr) minmax(90px,.9fr) minmax(100px,1fr) 64px;
+  column-gap:14px;align-items:baseline;padding:9px 0;border-top:1px solid var(--grid);font-size:var(--fs-small);color:var(--text-primary)}
+.hs6-r:first-child{border-top:0}
+.hs6-hd{font-size:var(--fs-micro);color:var(--muted);padding:2px 0 6px}
+.hs6-d{color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.hs6-n{font-weight:600;min-width:0}.hs6-hd .hs6-n{font-weight:400}
+.hs6-ms{display:none}
+.hs6-a,.hs6-u,.hs6-s{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hs6-a.pend{color:var(--muted)}.hs6-u{font-size:var(--fs-micro);color:var(--muted)}
+.hs6-hd .hs6-u{font-size:inherit}
+.hs6-u:empty::before{content:"—"}
+/* 2026-11 桌機：兩張表不撐滿整張卡——欄寬照內容、固定欄距、靠左，右邊留白 */
+@media(min-width:760px){
+  .hs5.hs5-f,.hs6{display:grid;width:max-content;max-width:100%}
+  .hs5-f .hs5-r{grid-template-columns:120px 64px 140px minmax(150px,1fr);column-gap:32px}
+  .hs6-r{grid-template-columns:44px 100px 72px 96px 104px 56px;column-gap:32px}
+}
+.hs6 a{color:var(--series-1)}
+.viz-root:not(#_) .hs4-lead{font-size:var(--fs-small)}
+@media(max-width:759px){
+  .hs6-hd{display:none}
+  .viz-root:not(#_) .hs6-r{grid-template-columns:44px minmax(0,1fr) auto;row-gap:2px;padding:10px 0}
+  .hs6-d{grid-column:1;grid-row:1;font-size:var(--fs-micro);color:var(--muted)}
+  .hs6-n{grid-column:2;grid-row:1}.hs6-a{grid-column:3;grid-row:1;font-weight:600}
+  .hs6-k{grid-column:2;grid-row:2;font-size:var(--fs-micro);color:var(--muted)}
+  .hs6-u{grid-column:3;grid-row:2}
+  .hs6-ms{display:inline}.hs6-s{display:none}
+  .hs6-u:empty{display:none}
+}
 @media(max-width:759px){
   .hs5-hd{display:none}
   .viz-root:not(#_) .hs5-r{grid-template-columns:minmax(0,1fr) auto;row-gap:2px;padding:10px 0}
