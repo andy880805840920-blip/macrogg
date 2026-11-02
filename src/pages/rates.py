@@ -506,9 +506,13 @@ def _rates_body_full(d: dict) -> str:
         if off.get("insane"):
             _line = f"近 120 天 {off['count']} 筆已定價；金額解析異常，暫不顯示合計"
         else:
+            # 2026-11：分清楚哪些已經在最新季報裡、哪些還沒（先前一律寫「尚未進季報」）
+            _pn = off.get("post_n", off["count"])
             _line = (f"近 120 天 {off['count']} 筆已定價，合計 {esc(off['total_display'])}"
-                     + (f"（季報發債的 {esc(off['ratio_display'])}）" if off.get("ratio_display") else "")
-                     + "，尚未進季報")
+                     + ("，都已在各家最新一季季報內" if not _pn else
+                        f"；其中 {_pn} 筆"
+                        + (f"（{esc(off['post_display'])}）" if off.get("post_display") else "")
+                        + "在最新季報之後，尚未進季報"))
         _extra = "　".join(x for x in (
             f"另 {off['unknown_n']} 筆金額待確認。" if off.get("unknown_n") and not off.get("insane") else "",
             f"另 {off['prelim_n']} 筆已宣布、未定價。" if off.get("prelim_n") else "",
@@ -723,8 +727,8 @@ def _rates_body_full(d: dict) -> str:
     </details>
     <details class="f-more hs4"><summary>方法與資料來源</summary>
       <ul class="hs4-m">
-        <li><b>口徑</b>：取自 10-Q／10-K 現金流量表；年增對去年同季；佔營運現金流＝合計 ÷ 合計。</li>
-        <li><b>季末不同</b>：各家會計年度不同，同一列不是同一季；加總圖依「最近第幾季」對齊。財報新聞稿附日期與原文連結供查閱；表格數字以正式季報為準。</li>
+        <li><b>口徑</b>：取自 10-Q／10-K 現金流量表；年增對去年同季；佔營運現金流＝合計 ÷ 合計；FCF＝營運現金流 − 資本支出（簡化口徑，不扣股息與買回）。資本支出取「購置固定資產」，不含融資租賃；公司自己公布的資本支出與年度計畫多半含租賃（例如微軟），所以會比這裡的數字高。</li>
+        <li><b>季末不同</b>：各家會計年度不同，同一列不是同一季；加總圖依日曆季對齊（Oracle 8 月底那季歸 9 月季），五家都公布了才畫。財報新聞稿附日期與原文連結供查閱；表格數字以正式季報為準。</li>
         <li><b>年度計畫</b>：公司法說會公布的資本支出指引。{('<ul>' + _gn + '</ul>') if _gn else ''}</li>
         <li><b>發債</b>：讀說明書判斷是否為債券；預估版不計；美元以定價日匯率換算；只含 SEC 申報。</li>
       </ul>

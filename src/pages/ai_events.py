@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime as dt
 
 from ..site import esc
+from . import hs_fcf as FC
 
 AI_ART = (
     '<svg class="duo-ai" viewBox="0 0 320 190" aria-hidden="true" focusable="false">'
@@ -42,8 +43,8 @@ def _srcs(e: dict) -> str:
     return f'<span class="ai-s">{"・".join(ls)}</span>' if ls else ""
 
 
-def ai_tile(a: dict | None) -> tuple[str, str]:
-    """回傳 (小卡, 視窗內容)。沒有資料時兩個都是空字串。"""
+def ai_tile(a: dict | None, hs_agg: list | None = None) -> tuple[str, str]:
+    """回傳 (小卡, 視窗內容)。沒有資料時兩個都是空字串。hs_agg：長端頁的五家合計（每季，億美元）。"""
     if not a or not (a.get("events") or (a.get("ipo") or {}).get("active")):
         return "", ""
     evs = a.get("events") or []
@@ -53,18 +54,39 @@ def ai_tile(a: dict | None) -> tuple[str, str]:
             f'<span class="duo-k">近 {a.get("window_days", 14)} 天 {len(evs)} 則</span><span class="duo-t">AI 大事</span>'
             f'<span class="duo-map">{AI_ART}</span>'
             f'<span class="duo-sum">最新：{esc(latest)}</span></button>')
-    return tile, ai_panel(a)
+    return tile, ai_panel(a, hs_agg)
 
 
-def ai_panel(a: dict) -> str:
+def hs_block(agg: list | None) -> str:
+    """2026-11：科技巨頭五家合計（FCF＋發債），放在 IPO 下方；數字與長端頁同一份。"""
+    chart = FC.fcf_chart(agg or [], "科技巨頭五家合計每季自由現金流與發債", height=200)
+    la = FC.latest(agg or [])
+    if not chart or not la:
+        return ""
+    n = lambda bad: ' class="n"' if bad else ""   # noqa: E731
+    return ('<div class="hsx"><div class="hsx-side">'
+            f'<div class="hsx-h"><b>科技巨頭五家合計</b><span>每季・億美元・最新 {esc(la["label"])}</span></div>'
+            f'<dl class="hsx-k"><div><dt>FCF</dt><dd{n(la["fcf"] < 0)}>{FC._n(la["fcf"], True)}</dd></div>'
+            f'<div><dt>單季發債</dt><dd class="d">{FC._n(la["debt"])}</dd></div>'
+            f'<div><dt>資本支出佔現金流</dt><dd{n(la["ratio"] > 100)}>{la["ratio"]:.0f}%</dd></div></dl>'
+            + FC.LEGEND +
+            '<div class="hsx-f"><span>點長條看明細</span><a href="/rates/#hyperscalers">看長端與債務 →</a></div>'
+            f'</div>{chart}</div>')
+
+
+def ai_panel(a: dict, hs_agg: list | None = None) -> str:
     evs = a.get("events") or []
     out = []
     ipo = a.get("ipo") or {}
     if ipo.get("active"):
         steps = "".join(f'<li class="{"done" if s.get("date") else ""}"><b>{esc(s["label"])}</b>'
                         f'<span>{esc(_md(s["date"])) or "—"}</span></li>' for s in ipo.get("steps") or [])
-        out.append(f'<div class="ai-hl-c"><div class="ai-hl-k">進行中・{esc(ipo.get("name", ""))} IPO</div>'
-                   f'<ol class="ai-ipo">{steps}</ol><div class="ai-hl-n">從 SEC 申報自動更新；掛牌後這一格自動消失</div></div>')
+        # 2026-11：縮小；說明改成點標題（ⓘ）才展開
+        out.append(f'<div class="ai-hl-c sm"><details class="ai-hl-i"><summary class="ai-hl-k">'
+                   f'進行中・{esc(ipo.get("name", ""))} IPO<i aria-hidden="true">ⓘ</i></summary>'
+                   '<div class="ai-hl-n">從 SEC 申報自動更新；掛牌後這一格自動消失</div></details>'
+                   f'<ol class="ai-ipo">{steps}</ol></div>')
+    out.append(hs_block(hs_agg))
     # 公司小卡：依最近事件日期排序，沒事件的排最後
     cos = a.get("companies") or []
     last = {}
@@ -113,7 +135,7 @@ def ai_panel(a: dict) -> str:
                    f'{len(evs)} 則）</span><label class="ai-sel"><select aria-label="事件類型">'
                    + "".join(f'<option>{t}</option>' for t in types) + '</select></label></summary>'
                    f'<div class="ai-tl">{tl}</div></details>')
-    out.append(f'<div class="ai-why"><b>跟利率的關係</b><p>{esc(WHY)}<a href="/longend/">看長端與債務 →</a></p></div>'
+    out.append(f'<div class="ai-why"><b>跟利率的關係</b><p>{esc(WHY)}<a href="/rates/">看長端與債務 →</a></p></div>'
                '<p class="ai-note">事件由 AI 依新聞標題整理成一句中文，每則附原文連結；只收財報、資本支出、發債、'
                '融資／IPO、算力合約五類。</p>')
     return '<div class="ai-wrap">' + "".join(out) + '</div>'

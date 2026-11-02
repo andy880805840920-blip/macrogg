@@ -1189,7 +1189,8 @@ def _duo(ctxs: dict, extra: list | None = None) -> str:
     （手機 2×3、電腦 3×2，一張卡、線分隔、六格等大）。
     """
     tiles, panels = [], []
-    pairs = [("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events")))]
+    pairs = [("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events"),
+                                                                                    ((ctxs.get("rates") or {}).get("le") or {}).get("hs_agg")))]
     pairs += [(t, (tile, panel)) for t, tile, panel in (extra or [])]
     for t, (tile, panel) in pairs:
         if tile:

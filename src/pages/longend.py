@@ -15,6 +15,7 @@ from ..analysis import longend as le
 from ..site import esc
 from .. import fmt
 from . import teach
+from . import hs_fcf as FC
 
 CCOL = {"real": "var(--line-1)", "infl": "var(--line-2)", "tp": "#1baf7a"}
 
@@ -1302,47 +1303,35 @@ def lights_grouped(d: dict, card_fn) -> str:
 # 科技巨頭（2026-10 第三版）：三個數字＋一張加總圖＋一家一列的公司表
 # ---------------------------------------------------------------------------
 def hs_agg_chart(d: dict) -> str:
-    """五家加總：每季資本支出（柱）對營運現金流（橫線），同一個軸。"""
+    """五家加總（2026-11）：每季自由現金流（長條，正灰負橘）＋單季發債（折線），同一個軸；點長條看明細。"""
     agg = (d.get("le") or {}).get("hs_agg") or []
-    if len(agg) < 2:
+    chart = FC.fcf_chart(agg, "五家合計每季自由現金流與發債")
+    la = FC.latest(agg)
+    if not chart or not la:
         return ""
-    top = max(max(a["capex"], a["ocf"]) for a in agg) * 1.08
-    cols = []
-    for i, a in enumerate(agg):
-        last = i == len(agg) - 1
-        over = a["capex"] >= a["ocf"]
-        cols.append(
-            f'<div class="hs3-c{" on" if last else ""}" data-tip="{esc(a["label"])}｜資本支出 {a["capex"]:,.0f}｜'
-            f'營運現金流 {a["ocf"]:,.0f}｜{a["capex"] / a["ocf"] * 100:.0f}%">'
-            f'<span class="hs3-b{" over" if over else ""}" style="height:{a["capex"] / top * 100:.1f}%">'
-            + '</span>'
-            f'<span class="hs3-o" style="bottom:{a["ocf"] / top * 100:.1f}%">'
-            + '</span>'
-            f'<span class="hs3-x">{esc(a["label"])}</span></div>')
-    la = agg[-1]
-    latest = (f'<div class="hs3-last">最新一季（{esc(la["label"])}）：資本支出 <b>{la["capex"]:,.0f}</b>'
-              f'　營運現金流 <b>{la["ocf"]:,.0f}</b>　佔 <b class="{"over" if la["capex"] > la["ocf"] else ""}">'
-              f'{la["capex"] / la["ocf"] * 100:.0f}%</b></div>')
+    latest = (f'<div class="hs3-last">最新一季（{esc(la["label"])}）：FCF '
+              f'<b class="{"over" if la["fcf"] < 0 else ""}">{FC._n(la["fcf"], True)}</b>'
+              f'　單季發債 <b>{FC._n(la["debt"])}</b>'
+              f'　資本支出佔現金流 <b class="{"over" if la["ratio"] > 100 else ""}">{la["ratio"]:.0f}%</b></div>')
     return ('<div class="hs3-chart"><div class="hs3-ch">五家加總・每季（億美元）</div>' + latest +
-            f'<div class="hs3-p">{"".join(cols)}</div>'
-            '<div class="cl-leg"><span><i class="hs3-lg-b"></i>資本支出</span>'
-            '<span><i class="hs3-lg-o"></i>營運現金流</span></div>'
-            '<p class="hs3-note">柱子高過橫線＝現金不夠付資本支出，缺口靠發債。</p></div>')
+            FC.LEGEND + chart +
+            '<p class="hs3-note">FCF＝營運現金流 − 資本支出。長條掉到 0 以下＝本業現金不夠付資本支出，缺口靠發債。'
+            '點長條看明細。</p></div>')
 
 
 def hs_table(d: dict) -> str:
-    """一家一列：本季資本支出、年增、佔營運現金流（小橫條）、單季發債、年度指引；點一列看 8 季。"""
+    """一家一列：本季資本支出、佔營運現金流（小橫條）、FCF、單季發債、年度計畫；點一列看 8 季 FCF＋發債。"""
     hs = d.get("hyperscalers")
     comps = getattr(hs, "companies", None) or []
     if not comps:
         return ""
     gd = d.get("guidance") or {}
+    yr = esc(str(gd.get("year", "")))
     guide = {r["name"]: r["value"].replace(" 億美元", "") for r in gd.get("rows") or []}
     hist = {h["name"]: h for h in (d.get("le") or {}).get("hs_hist") or []}
     rows = []
     for c in comps:
         ratio = c.get("capex_to_ocf")
-        yoy = "—" if c.get("capex_yoy") is None else f'{c["capex_yoy"]:+.0f}%'
         pe = c.get("period_end") or ""
         when = esc(pe) if pe else "未取自 SEC"
         bar = ""
@@ -1350,24 +1339,28 @@ def hs_table(d: dict) -> str:
             bar = (f'<span class="hs3-rb"><i class="{"over" if ratio > 100 else ""}" '
                    f'style="width:{min(ratio, 150) / 150 * 100:.1f}%"></i><u></u></span>')
         g = guide.get(c["name"]) or ("未提供" if gd.get("available") else "—")
+        fcf = c.get("fcf")
+        fcf_s = ("—" if fcf is None or not c.get("ocf") else
+                 f'<b class="{"over" if fcf < 0 else ""}">{FC._n(fcf * 10, True)}</b>')
         h = hist.get(c["name"])
-        deb = [x for x in (h or {}).get("ratio", []) if x["debt"]]
-        dtxt = ("、".join(f'{_md(x["end"])} {x["debt"] * 10:,.0f} 億' for x in deb[-4:])
-                if deb else "近 8 季沒有申報長期債務發行")
-        body = ((h["capex"] if h else "") + f'<p class="hs3-deb">發債紀錄：{esc(dtxt)}</p>')
+        # 手機版把年計畫收進明細（列上只留資本支出、FCF、發債）
+        mob = f'<p class="hs3-mob">{yr} 年計畫 {esc(g)}</p>'
+        chart = FC.fcf_chart((h or {}).get("rows") or [], f'{c["name"]} 每季自由現金流與發債', height=190)
+        body = mob + ((FC.LEGEND + chart) if chart else '<p class="hs3-deb">沒有逐季資料</p>')
         rows.append(
             f'<details class="hs3-r"><summary>'
             f'<span class="hs3-n"><b>{esc(c["name"])}</b><small>{when}</small></span>'
-            f'<span class="hs3-v"><em>本季資本支出</em>{c["capex"] * 10:,.0f}</span>'
-            f'<span class="hs3-v"><em>年增</em>{yoy}</span>'
+            f'<span class="hs3-v hs3-cx"><em>資本支出</em>{c["capex"] * 10:,.0f}</span>'
             f'<span class="hs3-v hs3-ratio"><em>佔營運現金流</em>'
             + (f'<b class="{"over" if ratio > 100 else ""}">{ratio:.0f}%</b>' if ratio is not None else "—")
             + f'{bar}</span><i class="hs3-br"></i>'
-            f'<span class="hs3-v"><em>單季發債</em>{c["issued"] * 10:,.0f}</span>'
-            f'<span class="hs3-v"><em>{esc(str(gd.get("year", "")))} 年計畫</em>{esc(g)}</span>'
+            f'<span class="hs3-v hs3-fcf"><em>FCF</em>{fcf_s}</span>'
+            f'<span class="hs3-v hs3-db"><em>單季發債</em>{c["issued"] * 10:,.0f}</span>'
+            f'<span class="hs3-v hs3-dk"><em>{yr} 年計畫</em>{esc(g)}</span>'
             f'</summary><div class="hs3-body">{body}</div></details>')
-    head = ('<div class="hs3-hd"><span>公司</span><span>本季資本支出</span><span>年增</span>'
-            '<span>佔營運現金流</span><span>單季發債</span>'
-            f'<span>{esc(str(gd.get("year", "")))} 年資本支出計畫</span></div>')
+    head = ('<div class="hs3-hd"><span>公司</span><span>本季資本支出</span>'
+            '<span>佔營運現金流</span><span>FCF</span><span>單季發債</span>'
+            f'<span>{yr} 年資本支出計畫</span></div>')
     return (f'<div class="hs3-t">{head}{"".join(rows)}</div>'
-            '<p class="hs3-note">億美元・點一家看近 8 季・超過 100% 標紅</p>')
+            '<p class="hs3-note">億美元・點一家看近 8 季<br>'
+            '%＝資本支出佔營運現金流，直線＝100%，超過標紅</p>')
