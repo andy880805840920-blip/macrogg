@@ -486,23 +486,32 @@ def _rates_body_full(d: dict) -> str:
 
     offerings_html = ""
     if off.get("available") and off.get("rows"):
+        _stale = []
+
         def _off_row(r) -> str:
-            amt = esc(r["amount"]) + (f'<small>{esc(r["usd_note"])}</small>' if r.get("usd_note") else "")
+            # 2026-11：美元等值獨立一欄；匯率取自較早日期的改標＊、下方說明一次
+            usd = r.get("usd_note") or ""
+            if "（匯率取自" in usd:
+                usd = usd.split("（")[0] + "＊"
+                _stale.append(1)
             src = (f'<a href="{esc(r["url"])}" target="_blank" rel="noopener">{esc(r["form"])}</a>'
                    if r.get("url") else esc(r["form"]))
-            # 一筆一列：桌機五欄；手機兩行（公司＋金額／日期・類型・原文）
-            return (f'<div class="hs5-r"><b class="hs5-n">{esc(r["name"])}</b>'
-                    f'<span class="hs5-m"><span>{esc(_md(r["date"]))}</span><span>{esc(r["kind"])}</span>'
-                    f'<span>{src}</span></span>'
-                    f'<span class="hs5-a{" pend" if r.get("pending") else ""}">{amt}</span></div>')
-        _head = ('<div class="hs5-r hs5-hd"><span class="hs5-n">公司</span><span class="hs5-m"><span>日期</span>'
-                 '<span>類型</span><span>原文</span></span><span class="hs5-a">金額（原幣）</span></div>')
+            # 桌機六欄（日期｜公司｜類型｜金額｜美元等值｜原文）；手機左邊固定日期欄、兩行
+            return (f'<div class="hs6-r"><span class="hs6-d">{esc(_md(r["date"]))}</span>'
+                    f'<b class="hs6-n">{esc(r["name"])}</b>'
+                    f'<span class="hs6-k">{esc(r["kind"])}<span class="hs6-ms">・{src}</span></span>'
+                    f'<span class="hs6-a{" pend" if r.get("pending") else ""}">{esc(r["amount"])}</span>'
+                    f'<span class="hs6-u">{esc(usd)}</span>'
+                    f'<span class="hs6-s">{src}</span></div>')
+        _head = ('<div class="hs6-r hs6-hd"><span class="hs6-d">日期</span><span class="hs6-n">公司</span>'
+                 '<span class="hs6-k">類型</span><span class="hs6-a">金額（原幣）</span>'
+                 '<span class="hs6-u">美元等值</span><span class="hs6-s">原文</span></div>')
         rows = off["rows"]
         top = "".join(_off_row(r) for r in rows[:5])
         more = ""
         if rows[5:]:
             more = (f'<details class="f-more"><summary>其餘 {len(rows) - 5} 筆</summary>'
-                    f'<div class="hs5 hs5-o">' + "".join(_off_row(r) for r in rows[5:]) + '</div></details>')
+                    f'<div class="hs6">' + "".join(_off_row(r) for r in rows[5:]) + '</div></details>')
         if off.get("insane"):
             _line = f"近 120 天 {off['count']} 筆已定價；金額解析異常，暫不顯示合計"
         else:
@@ -516,10 +525,11 @@ def _rates_body_full(d: dict) -> str:
         _extra = "　".join(x for x in (
             f"另 {off['unknown_n']} 筆金額待確認。" if off.get("unknown_n") and not off.get("insane") else "",
             f"另 {off['prelim_n']} 筆已宣布、未定價。" if off.get("prelim_n") else "",
-            f"另 {off['other_n']} 件非債券融資不列。" if off.get("other_n") else "") if x)
+            f"另 {off['other_n']} 件非債券融資不列。" if off.get("other_n") else "",
+            "＊匯率取自較早日期。" if _stale else "") if x)
         offerings_html = (f'<div class="hs4-sec"><div class="hs4-h">近期發債</div>'
                           f'<p class="hs4-lead">{_line}。</p>'
-                          f'<div class="hs5 hs5-o">{_head}{top}</div>'
+                          f'<div class="hs6">{_head}{top}</div>'
                           + (f'<p class="hs4-n">{_extra}</p>' if _extra else "") + more + '</div>')
 
     # ---- 財政：一句結論＋缺口併進 stat-row ----

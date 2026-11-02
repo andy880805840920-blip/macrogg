@@ -189,9 +189,10 @@ check("⑮ 預設指標 → 聯準會補充顯示（帶標籤）、長天期美�
       '聯準會補充</li>' in ul
       and 'fs-off" data-topic="oil"' in ul
       and ul.count('data-gen="1">') == 2 and ul.count('fs-off" data-gen') == 1, ul)
-check("⑯ 主題連結：顯示中的主題才露出、來源列含該主題來源",
+# 2026-11：最下方只留品牌一句，「新聞：…」來源列拿掉（來源仍在參考報導各條上）
+check("⑯ 主題連結：顯示中的主題才露出",
       'data-tlink="fed"' in h and 'fs-link fs-off" data-tlink="oil"' in h
-      and "新聞：Reuters、CNBC" in h)
+      and "新聞：Reuters" not in h)
 check("⑰ JS：指標帶主題對應、補充新聞可獨立選擇",
       '\"wti\": \"oil\"' in h and '\"available\": [\"fed\", \"oil\"]' in h
       and "box.appendChild(ch)" in h and "fs-tagsel" in h and "fsNewsTopics" in h

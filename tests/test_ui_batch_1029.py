@@ -101,7 +101,9 @@ f7 = {"yields": [], "links": [{"title": "t", "link": "https://x", "source": "CNB
       "headline": "標題", "rate_note": "", "text": "主軸\n補充", "text_source": "model-content", "topics": [], "chips": []}
 h7 = home._focus_strip(f7)
 _m7 = h7.split('<div class="fs-more fs-clip">', 1)[-1].split('<button type="button" class="fs-tog"', 1)[0]
-check("⑦ 品牌與來源說明收進「展開全文」", 'class="fs-brand"' in _m7 and 'class="fs-note"' in _m7 and h7.count('class="fs-brand"') == 1)
+# 2026-11：最下方只留品牌一句（時間、來源、方法說明拿掉）
+check("⑦ 品牌收進「展開全文」，只留一句", 'class="fs-brand"' in _m7 and 'class="fs-note"' not in h7
+      and "fs-brand-meta" not in h7 and h7.count('class="fs-brand"') == 1)
 check("⑦ 沒有標題（不收合）時品牌照舊放卡片底部", 'class="fs-brand"' in home._focus_strip(dict(f7, headline="")))
 from src.pages import forecasts_ui as _FU
 _h7 = _FU.section({"releases": {"pce|2026-09": {"key": "pce", "period": "2026-09", "date": "2026-10-29"}}}, dt.date(2026, 10, 29))

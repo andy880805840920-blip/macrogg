@@ -1345,8 +1345,9 @@ def hs_table(d: dict) -> str:
         h = hist.get(c["name"])
         # 手機版把年計畫收進明細（列上只留資本支出、FCF、發債）
         mob = f'<p class="hs3-mob">{yr} 年計畫 {esc(g)}</p>'
-        chart = FC.fcf_chart((h or {}).get("rows") or [], f'{c["name"]} 每季自由現金流與發債', height=190)
-        body = mob + ((FC.LEGEND + chart) if chart else '<p class="hs3-deb">沒有逐季資料</p>')
+        # 2026-11：每家只畫 FCF 長條（不畫發債折線）；發債在點長條的浮窗裡
+        chart = FC.fcf_chart((h or {}).get("rows") or [], f'{c["name"]} 每季自由現金流', height=190, debt_line=False)
+        body = mob + ((FC.LEGEND_FCF + chart) if chart else '<p class="hs3-deb">沒有逐季資料</p>')
         rows.append(
             f'<details class="hs3-r"><summary>'
             f'<span class="hs3-n"><b>{esc(c["name"])}</b><small>{when}</small></span>'

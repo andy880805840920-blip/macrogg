@@ -919,30 +919,32 @@ var dn=st.querySelector('.fs-done');if(dn)dn.addEventListener('click',function()
 // iPhone Safari：手指一動就會被判成捲動、pointer 事件被中斷，所以觸控改用
 // touch 事件＋非被動 touchmove：長按成立前移動超過 8px 視為捲動（照常捲），
 // 成立後 preventDefault 擋住捲動。
-(function(){var row=null,act=false,off=0,timer=null,sx=0,sy=0,pend=null,my=0;
+// 2026-11：桌機報價板是一列 3 格的格狀排列——改成二維判定（指標拖到哪一格就插到哪一格），
+// 先前只看上下、左右拖完全沒反應。手機單欄照樣適用。
+(function(){var row=null,act=false,off=0,offx=0,timer=null,sx=0,sy=0,pend=null,my=0,mx=0;
  function vis(){return Array.prototype.filter.call(box.querySelectorAll('[data-chip]'),function(x){return !x.classList.contains('fs-off');});}
  function rowOf(t){while(t&&t!==box){if(t.dataset&&t.dataset.chip)return t.classList.contains('fs-off')?null:t;t=t.parentNode;}return null;}
- function place(y){row.style.transform='';var top=row.getBoundingClientRect().top;row.style.transform='translateY('+(y-off-top)+'px)';}
- function lift(r,y){row=r;act=true;off=y-r.getBoundingClientRect().top;r.classList.add('fs-drag');
+ function place(x,y){row.style.transform='';var b=row.getBoundingClientRect();row.style.transform='translate('+(x-offx-b.left)+'px,'+(y-off-b.top)+'px)';}
+ function lift(r,x,y){row=r;act=true;var b=r.getBoundingClientRect();off=y-b.top;offx=x-b.left;r.classList.add('fs-drag');
   try{if(navigator.vibrate)navigator.vibrate(12);}catch(e){}}
- function move(y){var v=vis(),k=v.indexOf(row),r;
-  if(k>0){r=v[k-1].getBoundingClientRect();if(y<r.top+r.height/2)box.insertBefore(row,v[k-1]);}
-  if(k<v.length-1){r=v[k+1].getBoundingClientRect();if(y>r.top+r.height/2)box.insertBefore(v[k+1],row);}
+ function move(x,y){var v=vis(),k=v.indexOf(row),i,r;
+  for(i=0;i<v.length;i++){if(v[i]===row)continue;r=v[i].getBoundingClientRect();
+   if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){box.insertBefore(row,i<k?v[i]:v[i].nextSibling);break;}}
   if(y<56)window.scrollBy(0,-14);else if(y>window.innerHeight-56)window.scrollBy(0,14);
-  place(y);}
+  place(x,y);}
  function drop(){clearTimeout(timer);timer=null;pend=null;if(!act)return;act=false;row.style.transform='';row.classList.remove('fs-drag');
   var o=vis().map(function(x){return x.dataset.chip;});row=null;
   box._dg=Date.now();if(o.join()!==sel.join()){sel=o;save();ap(sel,true);saveNews();}}
  box.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;var r=rowOf(e.target);if(!r)return;
-  sx=e.touches[0].clientX;sy=e.touches[0].clientY;clearTimeout(timer);timer=setTimeout(function(){timer=null;lift(r,sy);},300);},{passive:true});
+  sx=e.touches[0].clientX;sy=e.touches[0].clientY;clearTimeout(timer);timer=setTimeout(function(){timer=null;lift(r,sx,sy);},300);},{passive:true});
  box.addEventListener('touchmove',function(e){var t=e.touches[0];
-  if(act){if(e.cancelable)e.preventDefault();move(t.clientY);return;}
+  if(act){if(e.cancelable)e.preventDefault();move(t.clientX,t.clientY);return;}
   if(timer&&(Math.abs(t.clientX-sx)>8||Math.abs(t.clientY-sy)>8)){clearTimeout(timer);timer=null;}},{passive:false});
  box.addEventListener('touchend',drop);box.addEventListener('touchcancel',drop);
  box.addEventListener('contextmenu',function(e){if(rowOf(e.target))e.preventDefault();});
- box.addEventListener('mousedown',function(e){if(e.button!==0)return;var r=rowOf(e.target);if(!r)return;pend=r;my=e.clientY;e.preventDefault();});
- document.addEventListener('mousemove',function(e){if(act){move(e.clientY);return;}
-  if(pend&&Math.abs(e.clientY-my)>4){lift(pend,my);pend=null;move(e.clientY);}});
+ box.addEventListener('mousedown',function(e){if(e.button!==0)return;var r=rowOf(e.target);if(!r)return;pend=r;my=e.clientY;mx=e.clientX;e.preventDefault();});
+ document.addEventListener('mousemove',function(e){if(act){move(e.clientX,e.clientY);return;}
+  if(pend&&(Math.abs(e.clientY-my)>4||Math.abs(e.clientX-mx)>4)){lift(pend,mx,my);pend=null;move(e.clientX,e.clientY);}});
  document.addEventListener('mouseup',drop);})();
 var r=st.querySelector('.fs-reset');if(r)r.addEventListener('click',function(){sel=fill(D);lss(K,null);lss(NK,null);ap(sel);});
 Array.prototype.forEach.call(box.querySelectorAll('.fs-chip[title]'),function(c){c.addEventListener('click',function(){if(Date.now()-(box._dg||0)<500)return;if(!st.classList.contains('fs-editing'))c.classList.toggle('tip-on');});});
@@ -1559,7 +1561,10 @@ def _focus_strip(f: dict | None, tabbed: bool = False) -> str:
              + (f'　·　新聞：{esc("、".join(_srcs[:3]))}' if _srcs else "")
              + '</span></span></div>')
     # 2026-10-29：品牌與來源說明收進「展開全文」；沒有收合（沒有標題）時照舊放在卡片最下方
-    _bn = f'{brand}<div class="fs-note">{esc(note)}</div>'
+    # 2026-11：使用者：最下方只留品牌一句（時間、新聞來源、方法說明都拿掉；方法說明在頁尾）
+    brand = ('<div class="fs-brand"><span class="fs-brand-name">'
+             f'<b>{esc(SITE_NAME)}</b>{esc(TAGLINE)}</span></div>')
+    _bn = brand
     if "<!--FS_BRAND-->" in text:
         # 2026-10-29：參考報導也收進「展開全文」（在品牌說明之上）
         _text, _tail = text.replace("<!--FS_BRAND-->", links + _bn, 1), ""

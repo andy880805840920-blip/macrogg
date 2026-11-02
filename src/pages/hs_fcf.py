@@ -36,16 +36,17 @@ def fcf_rows(rows: list) -> list:
     return out
 
 
-def fcf_chart(rows: list, aria: str, height: int = 210) -> str:
+def fcf_chart(rows: list, aria: str, height: int = 210, debt_line: bool = True) -> str:
     """
     HTML 長條＋SVG 折線（preserveAspectRatio=none、線寬不隨縮放），文字都是 HTML——
     手機、桌機、視窗裡字級一致，不會像整張 SVG 一樣跟著寬度放大縮小。
     height 是桌機高度；手機用 CSS 改成 .78 倍。
+    debt_line=False：只畫 FCF 長條（每家近 8 季用；發債仍在浮窗裡）。
     """
     rows = fcf_rows(rows)
     if len(rows) < 2:
         return ""
-    vals = [v for r in rows for v in (r["fcf"], r["debt"])]
+    vals = [v for r in rows for v in ((r["fcf"], r["debt"]) if debt_line else (r["fcf"],))]
     lo, hi = min(0.0, min(vals)), max(0.0, max(vals))
     pad = (hi - lo) * 0.08 or 1
     lo, hi = lo - (pad if lo < 0 else 0), hi + pad
@@ -78,14 +79,17 @@ def fcf_chart(rows: list, aria: str, height: int = 210) -> str:
     line = ('<svg class="fcf-l" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
             '<polyline points="' + " ".join(f"{xs[i]:.2f},{100 - pc(r['debt']):.2f}" for i, r in enumerate(rows))
             + '" vector-effect="non-scaling-stroke"/></svg>')
+    if not debt_line:
+        line, dots = "", []
     xl = "".join(f'<span>{esc(r["label"])}</span>' for r in rows)
     return (f'<div class="fcf" role="group" aria-label="{esc(aria)}" style="--fh:{height}px">'
             f'<div class="fcf-plot">{"".join(grid)}<div class="fcf-cols">{"".join(cols)}</div>{line}{"".join(dots)}</div>'
             f'<div class="fcf-x">{xl}</div><div class="fcf-pop" role="status" aria-live="polite"></div></div>')
 
 
-LEGEND = ('<div class="fcf-lg"><span><i class="fp"></i>FCF 為正</span><span><i class="fn"></i>FCF 為負</span>'
-          '<span><i class="fd"></i>單季發債</span></div>')
+LEGEND_FCF = ('<div class="fcf-lg"><span><i class="fp"></i>FCF 為正</span><span><i class="fn"></i>FCF 為負</span>')
+LEGEND = LEGEND_FCF + '<span><i class="fd"></i>單季發債</span></div>'
+LEGEND_FCF += '</div>'
 
 
 def latest(rows: list) -> dict | None:
