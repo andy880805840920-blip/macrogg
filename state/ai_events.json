@@ -1581,7 +1581,84 @@
   "5d3d642c92c5": "2026-11-02",
   "560e7067396e": "2026-11-02",
   "6267819f1d44": "2026-11-02",
-  "57b7dc3670aa": "2026-11-02"
+  "57b7dc3670aa": "2026-11-02",
+  "15d0aa9b3224": "2026-10-29",
+  "75aa4bd6725a": "2026-10-28",
+  "2bcba1979232": "2026-10-27",
+  "1676906cc8a0": "2026-10-26",
+  "07e2a39953b3": "2026-11-02",
+  "6c197d615b9e": "2026-11-02",
+  "858c775187e1": "2026-11-02",
+  "fa4ee0d0a031": "2026-11-02",
+  "eb1c7daa330c": "2026-11-01",
+  "bb7c0d4167ab": "2026-11-01",
+  "d82f727d70e7": "2026-10-31",
+  "f6f63f8d6129": "2026-11-02",
+  "969f964c68c8": "2026-10-30",
+  "7aca73fd4882": "2026-10-30",
+  "4e2fe3fcafe5": "2026-10-30",
+  "6311f505ea9c": "2026-10-29",
+  "2a1e064d17e5": "2026-10-29",
+  "a54923c87114": "2026-10-29",
+  "f80fe9e2a21f": "2026-10-29",
+  "51e3b31a9a0d": "2026-10-29",
+  "4234eea87ad9": "2026-11-02",
+  "dce43904e7b5": "2026-11-02",
+  "4ed2d534d82b": "2026-10-31",
+  "77d07a36417a": "2026-10-31",
+  "58c90777e9b8": "2026-10-30",
+  "98781e799702": "2026-10-30",
+  "cede73cf24f9": "2026-10-30",
+  "1325bdb1aaa9": "2026-10-30",
+  "ae9d36ca8a2f": "2026-11-02",
+  "6495114bbf7c": "2026-11-02",
+  "171e5a95fa9d": "2026-11-02",
+  "ebab2b85e505": "2026-11-02",
+  "8482eaf26027": "2026-11-02",
+  "8b1d0b7988e7": "2026-11-02",
+  "779e4e7ac831": "2026-11-02",
+  "a625a0b2c01e": "2026-11-02",
+  "029282c2aa22": "2026-11-02",
+  "ac64f2f6a6de": "2026-11-02",
+  "b02175667706": "2026-11-02",
+  "0ec5ddb1eb8d": "2026-11-02",
+  "7d849db92f90": "2026-11-02",
+  "530576251fee": "2026-11-02",
+  "7b18db9c0638": "2026-11-02",
+  "2e653581d88f": "2026-11-02",
+  "1e8ee5afeb9a": "2026-10-27",
+  "dd2cf8464b2a": "2026-10-27",
+  "62d0ab3a42bf": "2026-10-27",
+  "50b65a0add1b": "2026-10-27",
+  "7339ef98228d": "2026-10-27",
+  "0dbb3b11f130": "2026-10-27",
+  "d16b3d971b7e": "2026-10-27",
+  "170f5c805b9a": "2026-10-26",
+  "cf4f0c212b87": "2026-11-02",
+  "29ae6b8bb7c9": "2026-10-31",
+  "831f74c9cf7d": "2026-11-02",
+  "1c8e0636abaf": "2026-11-02",
+  "a5fa0e78a30f": "2026-11-02",
+  "aaafb3d86516": "2026-11-02",
+  "f3a2818a35c9": "2026-11-02",
+  "466f5f6e8cca": "2026-11-02",
+  "b76fe85ddd61": "2026-11-02",
+  "00804df2bc4f": "2026-11-02",
+  "96d73cd477cb": "2026-11-02",
+  "bf91d1fb175a": "2026-10-30",
+  "94a5c75917d7": "2026-10-28",
+  "a94500df49fc": "2026-10-28",
+  "7555c5d11c9c": "2026-10-27",
+  "61b37feecdaa": "2026-10-26",
+  "dd889c0547bc": "2026-10-25",
+  "41810af8ba04": "2026-11-02",
+  "a143bc20a8a7": "2026-11-02",
+  "0434e96fbc07": "2026-11-02",
+  "e8ddee9106d4": "2026-11-02",
+  "4c5bcf8e4423": "2026-11-02",
+  "b7567ebaa1fd": "2026-11-02",
+  "614d73f3f60b": "2026-11-02",
+  "d4488d5e7cd3": "2026-11-02"
  },
  "events": [
   {
@@ -1638,6 +1715,68 @@
      "title": "ADNOC Signs Major AI Deal With OpenAI and G42 to Boost Efficiency",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNaE1GSnZPMmtGaTBXbm9PWVZwWFFrN2U2S3dKOG4wZHFpOFotTzZUdTl2YmtMVUE2cTRzdzZkcGhLWEpnalFVMjZ3TGVfRldUcGhMS2M0RHJrUHZMXy1YX2NveF9xdFBDdEx6UmFiZkllSURfYlVvNTdoZzBHV3g5bFJyMVBtRXdqVkE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "a1a4b0599211",
+   "co": "Oracle",
+   "type": "發債",
+   "zh": "Oracle發行100億美元投資級債券，作為500億美元AI建設計畫的一部分。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Oracle to offer $10 billion in bonds",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9OVGUyeXVqQlVYMEx3TEhEVHY5ekZLX3paamdqNUF1ek80VE9RZVhuSFl2d3dsVkF6T2JyVFdJdF8xR1FuWU5EdU9OWG03SmRoLUloaEFCc3pGLXFxN0FyOUNnVkM3T3prb1NMYXBOanNGT2RMYjNxcTZsdUEwbGs?oc=5"
+    },
+    {
+     "title": "Oracle is selling $10 billion in investment-grade bonds after capping new debt",
+     "source": "Quartz",
+     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9TdGk5UWduQndyZWR4U2g0aWtSVjYxV2NOZFFmRWUxNVQwTGxVRFRqeTFJQUxkeXJobkxrLWFNSWJURy0wcExUUUdnR2ViQ1phTF9TUG1jY0R6b1N5TVV5VkpzM3M1WTg5a1E?oc=5"
+    },
+    {
+     "title": "Oracle launches six-part bond sale, part of its $50B AI buildout plan",
+     "source": "Dealroom",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNVlF3Ymt2Qk5rbVExVDl5LWpzSDhZS0ZCZWFYTEN2aUpCUml6Ml9GVG81WEVvNzR1TjNOWFJDWlF6OHNNU2dPU2NWVk9MM0hCbWxOYzRNbG9QZHNLUExHa1FHS09fRzlaZGc4X3k4LTBsSWF3MUtWejRtb3dpeW1sVlQ0dE1kTHQ2N2Q0MTdpNWVsLTR2Nko3Skx0QWRjdGFNZ1Zj?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "7a91cbe5184b",
+   "co": "Oracle",
+   "type": "融資／IPO",
+   "zh": "Oracle計畫透過債券和股票發行籌資200億美元。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Oracle’s stock falls as the company details plan to raise $20 billion",
+     "source": "MarketWatch",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxORUprZ0RBdW16SFo1cl9BM0xyR3A4X0dBZGpPb0g4WGlqb1NQeXNrN0R1WDEzX2xUMnlySENwWFF4Q2c1VWxGX3htX0JVWnMtSFFVWEZaVFhDUEhCTWRLSXBWTkl5SXB6d3FXazJtRjlubWptYzF0V1FiN2NrSVNjRkltWlE0RDFsOUg2d0FoYmRwbjBuTWNJdmFiN0dmSFQ1TGNqTXhnWV9UTnktOGRz?oc=5"
+    },
+    {
+     "title": "Oracle plans to raise $20 billion through bonds and stock sales",
+     "source": "AOL.com",
+     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFAtakxMT0s3anprWmg1LTgzM1AtWU5ZZEpvRnViMWYtZ0t6QWM3NjBENGlpOFRCc2RNV3padTlFbDNDZDlBRU9ZVC1tZ3pwcmlJeDlCN2JWb3BjU2F3VXFFWWt0MXB5V2VEd1d3QlFpWWZJQnJSTUlIWDhvaXpLdw?oc=5"
+    },
+    {
+     "title": "Oracle launches $10B bond sale alongside $10B share offering",
+     "source": "The Next Web",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5QWFdmc1BjUms1ZUJ6YlB5T1NjRWZMLVZfTTJZMDNVYTBndnV4ZXJiN2V5V0xOeGRoV3JRaEhBSFpzR08wcnVrVHBXbUwtTWE0M1JZd0pFUHdDS0szT01rMTdzemQ5eHZuZjdJMjk3cVY?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "c0e9d617e8a6",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "XMax與Nvidia簽署GPU交易，預期營收超1億美元。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "XMax signs Nvidia GPU deal, sees $100M+ revenue",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQTFB4UXZsZzlLVEo0aWR6cWFQQ2QyRldkbmE2UlFwWDJOQjMwOGpqSWlzdkFPYng0SXJMWmducWFabkhxY3FYTXhTeThLRkY0OHdPTHdLZDd5WnIyRHRCRFY2OVR0dWNaOTl6NF95bDJxb0dzYnN5NTRweG1Xb2NwWWxuRGRVLU03NmoxQ0pfSmkwcWFjY1c3aGk4ZFZnV19HNWFfLUFXQ1NMclk?oc=5"
     }
    ]
   },
@@ -2521,7 +2660,7 @@
    "id": "311381169599",
    "co": "Microsoft",
    "type": "財報",
-   "zh": "Microsoft公布FY27 Q1財報，Azure營收333.2億美元，雲端成長加速。",
+   "zh": "Microsoft 公布FY27 Q1財報，Azure營收333.2億美元，雲端成長加速。",
    "date": "2026-10-28",
    "links": [
     {
@@ -3007,8 +3146,8 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "2eb53ba92144",
-   "text": "Microsoft 雲端業務超預期成長推升盈利，偏向支撐股市；同時發行250億美元債券擴充AI基礎設施，偏向增加公司債供給壓力。若資料中心建設持續加速，大規模資本支出需求偏向推高長端利率；雲端與AI營收動能強勁，則偏向吸引AI投資熱度集中於該公司。"
+   "hash": "3ffa9e56316a",
+   "text": "Microsoft 雲端業績超預期偏向支撐股市，惟資本支出創高且發債250億美元，偏向增加公司債供給、推高長端利率。若資料中心投資持續加速，則AI基礎設施需求強勁的訊號偏向吸引AI投資熱度；但大規模舉債融資偏向提升市場對利率環境的關注。"
   },
   "Alphabet": {
    "hash": "b162138681c1",
@@ -3019,8 +3158,8 @@
    "text": "Meta大規模融資與舉債支撐AI算力投資，偏向增加公司債供給、推高長端利率。股權融資與債券發行並行，反映融資成本上升；若資本支出持續超越現金流，則需進一步融資，可能推升企業債收益率。強勁財報與 Nvidia 等科技巨頭參與，偏向強化AI投資熱度，但融資規模龐大可能分流市場流動性，對股市形成結構性壓力。"
   },
   "Oracle": {
-   "hash": "ed36306ccf48",
-   "text": "Oracle 近期大幅提升AI基礎設施投資，資本支出接近950億美元，同時限制新借款至200億美元，偏向增加公司債供給。多元晶片策略與算力合約擴張，強化雲端競爭力，偏向支撐長端利率。預期2030年營收與現金流目標明確，若順利達成則提升市場信心，偏向利好股市與AI投資熱度。"
+   "hash": "f4c4660e353d",
+   "text": "Oracle大規模AI基礎設施投資偏向推升公司債供給與長端利率。近期發行百億美元債券、融資上限調升至二百億美元，反映其資本支出需求龐大。若現金流承諾兌現，則償債能力穩健，投資級債券需求旺盛；但若AI投資回報低於預期，則長期利率面臨上行壓力。多晶片策略與算力合約擴張偏向強化AI投資熱度，惟資本密集特性可能分流股市資金。"
   },
   "CoreWeave": {
    "hash": "fa10dba818bc",
@@ -3039,8 +3178,8 @@
    "text": "Amazon 近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度仍強，但盈利預期走弱，股市偏向承壓。"
   },
   "Nvidia": {
-   "hash": "29605a771f94",
-   "text": "Nvidia 近期事件偏向支撐AI投資熱度與長端利率上升。強勁財報與大額晶片訂單反映AI需求旺盛，推升科技股；多筆算力合約與融資擔保涉及龐大債務，偏向增加公司債供給；若 Nvidia 持續擔保客戶債務並擴大資本承諾，則長端利率面臨上行壓力。惟反壟斷調查若升溫，則偏向抑制AI投資熱度。"
+   "hash": "443195010433",
+   "text": "Nvidia近期大幅擴展算力合約與融資擔保，涉及Meta、Anthropic等重大客戶，第三季營收年增106%超預期。這些事件偏向提升AI投資熱度，但同時增加公司債務擔保風險。若客戶融資受阻或需求放緩，則Nvidia債供給壓力上升、長端利率偏向上行；反之，強勁需求偏向支撐股市。反壟斷調查則增添政策不確定性。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -3055,5 +3194,5 @@
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-02 20:14（台北）"
+ "at": "2026-11-02 22:08（台北）"
 }
