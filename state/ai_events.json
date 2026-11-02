@@ -1331,14 +1331,14 @@
   "acb423c0a983": "2026-10-29",
   "89c17b89554b": "2026-10-28",
   "b56c2088fbdc": "2026-10-28",
-  "7b5e6a189a68": "2026-10-31",
-  "a2ec31b8d953": "2026-10-30",
-  "16faaa7ce0b6": "2026-10-30",
-  "8b69c022f55f": "2026-10-30",
-  "c0e8f9bd631d": "2026-10-30",
-  "2029a6f59e92": "2026-10-30",
+  "154004d4ecfa": "2026-10-29",
+  "d266c300aa83": "2026-10-29",
+  "00bb66190676": "2026-10-28",
+  "5404e715ff6a": "2026-10-30",
   "6136b1f1d707": "2026-10-29",
-  "cc62c8849a01": "2026-10-29",
+  "c0e6bb0e9443": "2026-10-28",
+  "c7b4543df86e": "2026-10-28",
+  "f73dfc5eb12f": "2026-10-28",
   "338620be9306": "2026-10-30",
   "5d985f9434b0": "2026-10-30",
   "678d2ac23c99": "2026-10-30",
@@ -1347,25 +1347,31 @@
   "5c89e611c065": "2026-11-01",
   "5dee0aa7e8b0": "2026-10-31",
   "b2de76b11484": "2026-10-31",
+  "d60d6c10d892": "2026-11-01",
+  "e76ce93ed5ff": "2026-11-01",
   "c93975e215d1": "2026-10-31",
   "9bc0125cd49d": "2026-10-31",
   "e57a5465ea7b": "2026-10-31",
-  "3ece751ae3a3": "2026-10-31",
-  "2c6fc7a8f37a": "2026-10-31",
   "f9cbe1f85845": "2026-10-31",
+  "3ece751ae3a3": "2026-10-31",
   "875bf8e78ec5": "2026-10-30",
-  "58c90777e9b8": "2026-10-30",
-  "b3a798cb5d37": "2026-10-19",
+  "c5d98c8e33b6": "2026-11-01",
+  "0eb072978e70": "2026-11-01",
+  "8bbf049635c8": "2026-11-01",
+  "0b86edd6c1e9": "2026-11-01",
+  "e4119b489c79": "2026-11-01",
+  "ea005fcf3690": "2026-10-31",
+  "569701991d8f": "2026-10-31",
+  "d871e697934b": "2026-10-31",
+  "33fc36dc5661": "2026-11-02",
   "32ae5bd657af": "2026-11-01",
-  "0cd68aec0fe4": "2026-10-28",
-  "37e114f1b5f5": "2026-10-28",
-  "507446d6ae93": "2026-10-28",
-  "311fbf84e4a7": "2026-10-27",
-  "ec017963f1ea": "2026-10-27",
-  "f9838293bb91": "2026-10-27",
-  "9f1f16531674": "2026-10-27",
+  "3436abf01494": "2026-11-01",
+  "491c8576db14": "2026-11-01",
+  "744e374db45e": "2026-10-31",
+  "bb1a06523f84": "2026-10-31",
+  "c8fbfaa77800": "2026-10-31",
+  "1858ee1d4500": "2026-10-31",
   "a110311604a8": "2026-10-26",
-  "e1742a9d82e0": "2026-10-24",
   "edf6f8505ed2": "2026-10-24",
   "48768830443b": "2026-10-22",
   "02e7d6d62e75": "2026-10-22",
@@ -1387,22 +1393,22 @@
   "8c16a9069149": "2026-10-31",
   "254a0f0ca80f": "2026-10-31",
   "16e0650b7298": "2026-10-31",
+  "b72c46e7984c": "2026-10-30",
   "165abf0405f2": "2026-10-30",
   "72c14c4a9533": "2026-10-30",
   "d27a92548892": "2026-10-30",
+  "6e3b290d22e1": "2026-10-30",
   "bc40b678e319": "2026-10-30",
   "6e22f2a3fe79": "2026-10-30",
-  "b50ca93df3bf": "2026-10-30",
   "a213adf1037e": "2026-10-30",
-  "bf91d1fb175a": "2026-10-30",
   "ea7d5e390af1": "2026-11-02",
   "984210649136": "2026-11-02",
-  "16b0c7a89099": "2026-11-02",
+  "45edb0582a66": "2026-11-01",
   "fb7025c5ca8a": "2026-11-01",
-  "d3cf71593613": "2026-11-01",
-  "43adbc0e198f": "2026-11-01",
-  "733461109d87": "2026-11-01",
-  "0d5ceae1ef36": "2026-11-01"
+  "4de80f801d90": "2026-10-31",
+  "bf1c43cadae4": "2026-10-30",
+  "2ac2a978354a": "2026-10-30",
+  "a5ff6c11bd9b": "2026-10-30"
  },
  "events": [
   {
@@ -1472,6 +1478,34 @@
    ]
   },
   {
+   "id": "2ee26c0dedc4",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Hyperion發行273億美元債券，利率6.581%，為Meta數據中心融資。",
+   "date": "2026-11-01",
+   "links": [
+    {
+     "title": "Hyperion’s $27.3B Bond Pays 6.581%, Above Every Meta Note",
+     "source": "FourWeekMBA",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNMW1PLXlxdkJFZnA1YnRiNVlVZkViT0pLcl9uZTNsYW41bjVGWFlSaGxEUUYyeTZOQUZGanNGNlNBaUp1aDF3dDF1Nm44dlNuNF9oeTJnOXZQV3ZtLU5IUDh5TGdkMWlDWVJPbGRVbnJEQkpxYmhqa2UtRlJ2ZWtuWG5ibDd5MlhE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "2dcee7488eed",
+   "co": "Meta",
+   "type": "算力合約",
+   "zh": "Google與Meta支持數據中心合作夥伴，共投資最高1,330億美元。",
+   "date": "2026-11-01",
+   "links": [
+    {
+     "title": "Google and Meta Back Data Center Partners With Up to $133B",
+     "source": "FourWeekMBA",
+     "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNUzFKOW5rQ3RpTnJheEE5Ny12bHRzcFA3OHlsaEFwNHg0MDJCR1NlLWFoQ0dCUkEtWER0UE43Q3V4QksyMFh6X3k3ZENSNlVjc1FPZXFLR2VxOWhXVzYxOUVIX0lRV3M2Y2MwTGFjX3B2SGtKc1FINFB6REFzSWJUcnB5SS1TTmtBOGJIc25B?oc=5"
+    }
+   ]
+  },
+  {
    "id": "1d36e6888c9c",
    "co": "Nvidia",
    "type": "算力合約",
@@ -1506,25 +1540,6 @@
      "title": "Anthropic IPO: 1,300% Growth, $16.3 Billion in Revenue, and an $80.7 Billion Loss. Here Are the Numbers to Watch.",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNeTZOWF9VTXpRQVB4cFdVclZqX1NVaUdrME9hemZRS3laODBSbU5Kbnd0WHpvNlE2elVfS0loVnVMYllRZ2llWExCSHJXRktJM3J6SmdBbk1saFhwYWV1NXRyZmx2YkpJMFFrUlRfNEM3WmtucExrZWJVT0xkYmJMd3pFeUN3NWkzVFlyOWkwc2F4ZnJDaVE?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "1a23fb8377c7",
-   "co": "Meta",
-   "type": "資本支出",
-   "zh": "Meta 2027年AI資本支出預測超過2,250億美元。",
-   "date": "2026-10-31",
-   "links": [
-    {
-     "title": "Meta faces S&P downgrade as 2027 AI capex forecast tops $225bn",
-     "source": "PPC Land",
-     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOQTQ2LWlXTjRVVWtvclFyblFyY25OU1FNM1FRVThaUTd0QzhKNU54MFZYNmVfdDVvcDRDdkNLdmZmQmsza1RINXM2T0pxTEowV1M1cHdfLWV0SXhOV1JQZVRDT195ejBJcU9EbFFuV3ItTk5XbzZIcWtvd2ZZX2czd1dvZVd5UQ?oc=5"
-    },
-    {
-     "title": "Meta AI Capex Hits $115B+, Outrunning Cash Flow [2026]",
-     "source": "shattered.io",
-     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5ZYnctQXE1Y1ZWS01oV1h0aUh6NjZRZVIzaEkzZFZwSlJEb3FNVTg4QlctbDhfSzc2OG1KUlc3dDBqS1BCN3NWRktvLXZVem5rZkltOGd4RjVVTjhGcW9DZ0VwTTAzZWFSTWgwc0hHX3EteWpncHFxMDZVMA?oc=5"
     }
    ]
   },
@@ -2221,6 +2236,20 @@
    ]
   },
   {
+   "id": "cb1cc4cd25f5",
+   "co": "Meta",
+   "type": "資本支出",
+   "zh": "Meta AI資本支出超1,150億美元，超過現金流。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Meta AI Capex Hits $115B+, Outrunning Cash Flow [2026]",
+     "source": "shattered.io",
+     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5ZYnctQXE1Y1ZWS01oV1h0aUh6NjZRZVIzaEkzZFZwSlJEb3FNVTg4QlctbDhfSzc2OG1KUlc3dDBqS1BCN3NWRktvLXZVem5rZkltOGd4RjVVTjhGcW9DZ0VwTTAzZWFSTWgwc0hHX3EteWpncHFxMDZVMA?oc=5"
+    }
+   ]
+  },
+  {
    "id": "c34ca4203e64",
    "co": "Nvidia",
    "type": "財報",
@@ -2682,15 +2711,15 @@
  "impact": {
   "Microsoft": {
    "hash": "8525387e70b2",
-   "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升股市信心；但公司債供給增加（250億美元新發債）、資本支出創高位（394億美元），若市場擔憂債務負擔加重，則偏向推升長端利率。同時，創紀錄的AI基礎設施投資偏向強化AI投資熱度，但資料中心延遲風險若擴大，則偏向削弱該熱度。"
+   "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升股市信心；惟資本支出創紀錄高位達394億美元，反映AI基礎設施投資持續加碼。250億美元新債發行偏向增加公司債供給；若資本支出高企持續，則長端利率面臨上升壓力，但超預期獲利偏向抵銷此效應。整體偏向強化AI投資熱度。"
   },
   "Alphabet": {
    "hash": "0e2229f1f831",
    "text": "Alphabet高額AI資本支出與營收未達預期形成矛盾。短期偏向增加公司債供給以應對現金流壓力，推升長端利率；但AI變現成長與硬體銷售提升偏向支撐股市。若AI投資最終未能轉化為營收，則市場對科技股估值壓力加大，偏向冷卻AI投資熱度。"
   },
   "Meta": {
-   "hash": "3254ab90b8f3",
-   "text": "Meta近兩週密集融資與舉債支撐龐大AI資本支出，偏向增加公司債供給、推升長端利率。大規模股權融資與270億美元債券發行反映融資需求迫切；若後續科技巨頭跟進類似融資規模，則長端利率承壓上升。同時強勁財報與Nvidia深化合作偏向提振AI投資熱度，但融資稀釋與高資本支出承諾若持續，則可能對股市估值形成壓力。"
+   "hash": "ba768f60f084",
+   "text": "Meta大規模融資與舉債支撐AI算力投資，偏向增加公司債供給、推高長端利率。股權融資與債券發行並行，反映融資成本上升；若資本支出持續超越現金流，則需進一步融資，可能推升企業債收益率。強勁財報與Nvidia等科技巨頭參與，偏向強化AI投資熱度，但融資規模龐大可能分流市場流動性，對股市形成結構性壓力。"
   },
   "Oracle": {
    "hash": "ed36306ccf48",
@@ -2706,15 +2735,15 @@
   },
   "OpenAI": {
    "hash": "9cc4d0debb5d",
-   "text": "OpenAI融資目標大幅下調，偏向減少公司債供給需求；若融資規模縮減，則資本支出計畫可能延後，長端利率面臨下行壓力。同時多項算力合約與數據中心投資持續推進，顯示AI基礎設施需求仍強，偏向維持AI投資熱度。融資縮水可能反映市場對高估值的重新評估，偏向股市短期承壓。"
+   "text": "OpenAI融資目標大幅下調，偏向減輕其債務融資壓力，可能降低公司債供給需求。同時多項算力合約與數據中心投資顯示資本支出承諾，若融資規模縮減而支出需求不變，則可能增加其外部融資需求。這些事件綜合來看，偏向對AI投資熱度形成短期冷卻信號，市場對生成式AI商業化前景的預期可能趨於謹慎。"
   },
   "Amazon": {
    "hash": "50bd08cb3e9e",
-   "text": "Amazon大規模AI基礎設施投資偏向增加公司債供給需求。單季資本支出超770億美元、年度資本支出達2,200億美元，加上自由現金流轉負，若融資缺口擴大則傾向發債補充。同時，巨額資本支出支撐AI算力供應，偏向強化AI投資熱度。惟營收未達預期，若盈利改善遲緩，則對長端利率上升壓力相對有限。"
+   "text": "Amazon近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度偏向強化，但股市偏向承受獲利疲弱的拖累。"
   },
   "Nvidia": {
    "hash": "29605a771f94",
-   "text": "Nvidia近期事件偏向提升AI投資熱度與長端利率。強勁財報與大額晶片訂單（超350億美元）強化市場對AI需求的信心；多筆算力合約與融資擔保則增加公司債供給壓力。若Nvidia持續承擔客戶融資擔保，恐提高其資產負債表風險，推升融資成本；反壟斷調查偏向抑制股市預期。整體而言，AI熱度升溫但風險因素增加。"
+   "text": "Nvidia近期事件偏向支撐AI投資熱度與長端利率上升。強勁財報與大額晶片訂單反映AI需求旺盛，推升科技股；多筆算力合約與融資擔保涉及龐大債務，偏向增加公司債供給；若Nvidia持續擔保客戶債務並擴大資本承諾，則長端利率面臨上行壓力。惟反壟斷調查若升溫，則偏向抑制AI投資熱度。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -2729,5 +2758,5 @@
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-02 09:52（台北）"
+ "at": "2026-11-02 09:58（台北）"
 }

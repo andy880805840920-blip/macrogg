@@ -1931,6 +1931,37 @@ body.duo-lock{overflow:hidden}
 .ai-ipo li:first-child::after{display:none}
 .ai-ipo li.done::before{background:var(--series-1);border-color:var(--series-1)}
 .ai-ipo b{display:block;white-space:nowrap}.ai-ipo span{font-size:11.5px;color:var(--muted)}
+/* 2026-11：IPO 縮小，說明點標題（ⓘ）才展開；下方接科技巨頭五家合計（FCF＋發債） */
+.ai-hl-c.sm{padding:8px 12px;border-radius:10px}
+.ai-hl-i>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.ai-hl-i>summary::-webkit-details-marker{display:none}
+.ai-hl-c.sm .ai-hl-k{font-size:11.5px;margin-bottom:2px}
+.ai-hl-i>summary i{font-style:normal;font-weight:400;color:var(--muted)}
+.ai-hl-i .ai-hl-n{margin:0 0 6px;font-size:12px}
+.ai-hl-c details.ai-hl-i{border:0!important;padding:0!important;margin:0!important;background:none!important;box-shadow:none!important}
+.ai-hl-c details.ai-hl-i>summary{padding:0!important;margin:0 0 2px!important;border:0!important;min-height:0!important;background:none!important}
+.ai-hl-c details.ai-hl-i>summary::before,.ai-hl-c details.ai-hl-i>summary::after{content:none!important;display:none!important}
+.ai-hl-c.sm .ai-ipo li{padding-top:15px;font-size:11px}
+.ai-hl-c.sm .ai-ipo li::before{width:9px;height:9px;margin-left:-4.5px;top:2px}
+.ai-hl-c.sm .ai-ipo li::after{top:6.5px}
+.ai-hl-c.sm .ai-ipo b{font-weight:600}.ai-hl-c.sm .ai-ipo span{font-size:10.5px}
+.hsx{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--bg)}
+.hsx-h b{display:block;font-size:14px;color:var(--text-primary)}.hsx-h span{font-size:11.5px;color:var(--muted)}
+.hsx-k{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0 4px}
+.hsx-k div{display:flex;gap:6px;align-items:baseline}.hsx-k dt{font-size:12px;color:var(--muted)}
+.hsx-k dd{margin:0;font-weight:700;font-size:14px;color:var(--text-primary);font-variant-numeric:tabular-nums}
+.hsx-k dd.n{color:var(--brand-orange)}.hsx-k dd.d{color:var(--line-3)}
+.hsx-f{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-top:6px}.hsx-f a{font-size:12.5px}
+@media(min-width:760px){
+  .hsx{display:grid;grid-template-columns:230px minmax(0,1fr);column-gap:24px;padding:16px 18px;align-items:start}
+  .hsx-side{display:flex;flex-direction:column;align-self:stretch;border-right:1px solid var(--grid);padding-right:20px}
+  .hsx-k{flex-direction:column;gap:0;margin:12px 0}
+  .hsx-k div{justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--grid)}
+  .hsx-k div:last-child{border-bottom:0}
+  .hsx-k dd{font-size:16px}
+  .hsx-f{margin-top:auto;padding-top:12px;flex-direction:column;gap:4px}
+  .hsx .fcf{margin-top:0}
+}
 .ai-sec-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 8px}
 .ai-sec-h h3{font-size:15px;margin:0}.ai-sec-h>span{font-size:12px;color:var(--muted)}
  display:grid;grid-template-columns:1fr;gap:3px;padding:12px 2px}
@@ -4475,6 +4506,51 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 }
 .hs3-br{display:none}
 
+/* 科技巨頭 FCF＋發債小圖（2026-11；src/pages/hs_fcf.py）：長條＝FCF、折線＝發債，點長條跳小浮窗 */
+.fcf{position:relative;margin-top:8px;padding-left:40px}
+.fcf-plot{position:relative;height:var(--fh,210px);margin:6px 0 0}
+.fcf-plot>i{position:absolute;left:0;right:0;height:0;border-top:1px solid var(--grid)}
+.fcf-plot>i.fz{border-top-color:var(--baseline)}
+.fcf-plot>i em{position:absolute;right:calc(100% + 6px);top:-8px;font-style:normal;font-size:var(--fs-micro);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fcf-cols{position:absolute;inset:0;display:flex}
+.fcf-hit,.viz-root:not(#_) .fcf-hit{position:relative;flex:1 1 0;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer;box-shadow:none;font:inherit}
+.fcf-hit.sel,.viz-root:not(#_) .fcf-hit.sel{background:color-mix(in srgb,var(--text-primary) 7%,transparent)}
+.fcf-b{position:absolute;left:50%;width:min(26px,46%);transform:translateX(-50%);border-radius:3px}
+.fcf-b.fp{background:#b7c0cc}.fcf-b.fn{background:var(--brand-orange)}
+.fcf-b em{position:absolute;left:50%;transform:translateX(-50%);font-style:normal;font-size:var(--fs-micro);font-weight:700;white-space:nowrap;color:var(--text-primary)}
+.fcf-b em.n{color:var(--brand-orange)}
+.fcf-l{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.fcf-l polyline{fill:none;stroke:var(--line-3);stroke-width:2}
+.fcf-d{position:absolute;width:9px;height:9px;margin:0 0 -4.5px -4.5px;border-radius:50%;background:var(--line-3);box-shadow:0 0 0 2px var(--surface-1);pointer-events:none}
+.fcf-x{display:flex;margin-top:4px}
+.fcf-x span{flex:1 1 0;min-width:0;text-align:center;font-size:var(--fs-micro);color:var(--muted);white-space:nowrap}
+@media(max-width:759px){.fcf-plot{height:calc(var(--fh,210px)*.78)}.fcf{padding-left:34px}}
+.fcf-pop{position:absolute;top:0;left:0;z-index:6;min-width:186px;padding:8px 11px;border:1px solid var(--border);border-radius:10px;
+  background:var(--surface-2);box-shadow:0 6px 18px rgba(15,23,42,.16);font-size:12px;line-height:1.55;color:var(--text-secondary);
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .1s}
+.fcf-pop.on{opacity:1}
+.fcf-pop strong{display:block;color:var(--text-primary);margin-bottom:2px}
+.fcf-pop div{display:flex;justify-content:space-between;gap:16px}
+.fcf-pop b{color:var(--text-primary);font-variant-numeric:tabular-nums}.fcf-pop b.n{color:var(--brand-orange)}
+.fcf-pop .k{border-top:1px solid var(--grid);margin-top:3px;padding-top:3px}
+.fcf-lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--fs-micro);color:var(--muted);margin:6px 0 10px}
+.fcf-lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.fcf-lg i.fp{background:#b7c0cc}.fcf-lg i.fn{background:var(--brand-orange)}.fcf-lg i.fd{background:var(--line-3);border-radius:50%}
+/* 五家表格：拿掉年增、多一欄 FCF（6 欄）；手機把年計畫收進明細 */
+.hs3-hd,.hs3-r>summary{grid-template-columns:minmax(0,1.2fr) .9fr 1.3fr .7fr .7fr 1fr}
+.hs3-fcf b{font-weight:600}.viz-root:not(#_) .hs3-fcf b.over{color:var(--brand-orange)}
+.viz-root:not(#_) p.hs3-mob,.hs3-mob{display:none}
+@media(max-width:759px){
+  .hs3-r>summary .hs3-dk{display:none!important}
+  /* 2026-11 手機兩列：公司名｜日期靠右；FCF｜佔現金流＋橫條靠右。資本支出、發債看點開後的 8 季圖 */
+  .hs3-r>summary .hs3-cx,.hs3-r>summary .hs3-db,.hs3-r>summary .hs3-br{display:none!important}
+  .hs3-r>summary .hs3-n{flex:1 1 100%!important;order:0}
+  .hs3-r>summary .hs3-n small{margin-left:auto}
+  .hs3-r>summary .hs3-fcf{order:3}
+  .hs3-r>summary .hs3-ratio{order:4;margin-left:auto}
+  .viz-root:not(#_) p.hs3-mob.hs3-mob{display:block;font-size:var(--fs-micro);color:var(--muted);margin:2px 0 4px}
+}
+
 /* 失業原因：手機單列（名稱｜橫條｜數字），人數藏起來 */
 .us2-sm{display:none}
 .viz-root:not(#_) p.us2-lt.us2-lt{font-size:var(--fs-micro);color:var(--muted);margin:6px 0 0}
@@ -5127,8 +5203,8 @@ html body .fs-head .fs-mode-sel{font-size:13px!important;font-weight:700!importa
 </script>
 </head>
 <body>
-<!-- 更新於 2026-11-02 09:53（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">11/02</span></span><div class="upd-c"><span>台北</span><b>09:53</b><i>11/02</i></div><div class="upd-c"><span>紐約</span><b>20:53</b><i>11/01</i></div><div class="upd-c"><span>倫敦</span><b>01:53</b><i>11/02</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-11-02 09:59（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">11/02</span></span><div class="upd-c"><span>台北</span><b>09:59</b><i>11/02</i></div><div class="upd-c"><span>紐約</span><b>20:59</b><i>11/01</i></div><div class="upd-c"><span>倫敦</span><b>01:59</b><i>11/02</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/liquidity/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/" class="on" aria-current="page">流動性</a><a href="/rates/">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>流動性</h1><div class="sub">Liquidity　·　資料截止 2026-10-30</div></div>
@@ -5824,6 +5900,27 @@ html body .fs-head .fs-mode-sel{font-size:13px!important;font-weight:700!importa
     t.style.left=x+'px';t.style.top=y+'px';
   }
   document.addEventListener('pointerout',function(e){if(e.pointerType!=='touch'&&t&&e.target.closest('[data-tip]'))t.style.opacity=0;});
+  // 科技巨頭 FCF 小圖：點長條（桌機滑過）跳浮窗。不走 #tip——#tip 在觸控裝置上隱藏。
+  function fcfShow(h){
+    var w=h.closest('.fcf'),p=w&&w.querySelector('.fcf-pop');if(!p)return;
+    w.querySelectorAll('.fcf-hit.sel').forEach(function(x){x.classList.remove('sel');});h.classList.add('sel');
+    var d=h.dataset;p.replaceChildren();
+    var s=document.createElement('strong');s.textContent=d.q;p.appendChild(s);
+    [['營運現金流',d.o],['資本支出',d.c],['FCF',d.f,d.fn==='1','k'],['資本支出佔現金流',d.r,d.rn==='1'],['單季發債',d.d]].forEach(function(r){
+      var row=document.createElement('div'),a=document.createElement('span'),b=document.createElement('b');
+      a.textContent=r[0];b.textContent=r[1];if(r[2])b.className='n';if(r[3])row.className=r[3];row.appendChild(a);row.appendChild(b);p.appendChild(row);});
+    p.classList.add('on');
+    var hr=h.getBoundingClientRect(),wr=w.getBoundingClientRect(),x=hr.left-wr.left+hr.width/2-p.offsetWidth/2;
+    p.style.left=Math.max(0,Math.min(x,w.clientWidth-p.offsetWidth))+'px';
+  }
+  function fcfHide(w){var p=w.querySelector('.fcf-pop');if(p)p.classList.remove('on');w.querySelectorAll('.fcf-hit.sel').forEach(function(x){x.classList.remove('sel');});}
+  document.addEventListener('click',function(e){
+    var h=e.target.closest('.fcf-hit');
+    document.querySelectorAll('.fcf-pop.on').forEach(function(p){var w=p.closest('.fcf');if(!h||!w.contains(h))fcfHide(w);});
+    if(h){e.preventDefault();fcfShow(h);}
+  });
+  document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse')return;var h=e.target.closest('.fcf-hit');if(h)fcfShow(h);});
+  document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse')return;var w=e.target.closest('.fcf');if(w&&!w.contains(e.relatedTarget))fcfHide(w);});
   window.addEventListener('scroll',function(){if(t)t.style.opacity=0;},{passive:true});
 
 })();
