@@ -1491,9 +1491,156 @@
   "12b3681a8b2a": "2026-11-02",
   "1de1a222a88d": "2026-11-02",
   "aab6265ac227": "2026-11-02",
-  "53b2ef357ea5": "2026-11-02"
+  "53b2ef357ea5": "2026-11-02",
+  "6bf76e6808b3": "2026-11-02",
+  "20f1b146ad35": "2026-10-28",
+  "0c592bbaa97f": "2026-10-28",
+  "f5b90d788970": "2026-10-28",
+  "8d1b8c884711": "2026-10-28",
+  "610460260547": "2026-10-28",
+  "1616faa7cbf3": "2026-10-28",
+  "9c86a3c76ab1": "2026-10-28",
+  "40a8bcf3df21": "2026-11-02",
+  "5ffd7af3ec4f": "2026-11-02",
+  "496e83fb30f6": "2026-10-28",
+  "3c05a5042fb0": "2026-10-28",
+  "8576579214bb": "2026-10-28",
+  "959983207a80": "2026-10-28",
+  "cc282f82febc": "2026-10-28",
+  "4377e03a06cb": "2026-10-28",
+  "77b31632d345": "2026-11-02",
+  "d89c7cf2b98b": "2026-10-30",
+  "6972a7360b4a": "2026-10-29",
+  "7cbf788c62e3": "2026-10-29",
+  "88a58c9a1e5d": "2026-10-25",
+  "faca2f930f34": "2026-10-30",
+  "ff9892017b11": "2026-10-30",
+  "236b0c1b1ae8": "2026-10-30",
+  "f5a10addb5f2": "2026-11-02",
+  "1c9ac462ecb9": "2026-11-01",
+  "e89b8f7c82f9": "2026-11-02",
+  "f8db6215082a": "2026-11-01",
+  "2c6fc7a8f37a": "2026-10-31",
+  "aab031461373": "2026-10-31",
+  "4ae588d08ed7": "2026-10-31",
+  "8a5dcfb780ca": "2026-10-31",
+  "9ed96329d748": "2026-10-28",
+  "9844b14fdebf": "2026-11-01",
+  "10795be697de": "2026-11-01",
+  "40091db41943": "2026-10-29",
+  "3f809bb3e8a6": "2026-10-29",
+  "e68cb7c29d0f": "2026-10-29",
+  "33bcf226ad95": "2026-10-29",
+  "2dbf2b0481b2": "2026-10-28",
+  "83d10b38e6a4": "2026-11-02",
+  "4dcb14e8365f": "2026-11-02",
+  "209b93df35c9": "2026-11-02",
+  "f4ac537da124": "2026-10-30",
+  "29520b9121a5": "2026-10-26",
+  "ec56c7e30352": "2026-10-21",
+  "5d4c628efcb8": "2026-11-02",
+  "7a39d87d35bc": "2026-11-02",
+  "6ea596a77047": "2026-11-02",
+  "5afe63ff0764": "2026-11-02",
+  "e9290c1474b4": "2026-10-28",
+  "c24610cbaf9b": "2026-10-27",
+  "36e3060082bd": "2026-10-26",
+  "d77c1afa1e4b": "2026-10-26",
+  "487d8c0460f4": "2026-11-02",
+  "199bdc66d89b": "2026-10-27",
+  "6f9f76f36358": "2026-10-26",
+  "c21ddf1d6a86": "2026-10-20",
+  "ce79ae98e808": "2026-10-28",
+  "10f6e6ccf34f": "2026-10-27",
+  "6381a43d6838": "2026-10-27",
+  "1b3f892610aa": "2026-10-27",
+  "985a84b63de7": "2026-11-02",
+  "89e138dc7e83": "2026-11-02",
+  "5ce5f91e3f0e": "2026-11-02",
+  "3dcc68f1e9e2": "2026-11-02",
+  "80f388dc19ee": "2026-11-02",
+  "f1361901a9ab": "2026-11-02",
+  "8eeeb371bdb4": "2026-11-02",
+  "9c60e65c776b": "2026-11-02",
+  "63c4ad5438d9": "2026-11-02",
+  "ccd74a1242a3": "2026-11-02",
+  "761ba5d70ce8": "2026-11-02",
+  "85fc256a6c75": "2026-11-01",
+  "cb24f05dda93": "2026-11-02",
+  "22575bd8fdac": "2026-10-31",
+  "124e19cdb9ba": "2026-10-30",
+  "c2f5fe8f0ff4": "2026-10-30",
+  "306cf2dfdcf3": "2026-10-30",
+  "2445b5a9811f": "2026-10-30",
+  "b016e7bc6247": "2026-10-30",
+  "c088323348f4": "2026-10-29",
+  "abdf49dabb38": "2026-11-02",
+  "5bec1a2e477d": "2026-11-02",
+  "9551b96e2a42": "2026-11-02",
+  "24449a8da669": "2026-11-02",
+  "5d3d642c92c5": "2026-11-02",
+  "560e7067396e": "2026-11-02",
+  "6267819f1d44": "2026-11-02",
+  "57b7dc3670aa": "2026-11-02"
  },
  "events": [
+  {
+   "id": "a05e659e2581",
+   "co": "Alphabet",
+   "type": "發債",
+   "zh": "Alphabet發行第二筆歐元債券，測試市場對AI支出的信心。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Alphabet Kicks Off Sale of Its Second Euro Bond This Year",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQTXZEZVR0eFFhajNmbHRXVldFdzBMWXlOWHo5WnhHcTJHR0t3bng5SEZNVERBU09IRW1Va0xMVVo0MlVGX3FxNHo1MTlVUHlDV0RGZ21FZVg5QjAzUGZ0MnA4UVpwWXBSdUsxTldiTHEzbEItRnVwdlVvSzM1LXJtdF9OWU94bXJnaEFMckdlRnZ6WElLeUlmYVpjUGlETzU4UkpXV2NSUFFPYmlC?oc=5"
+    },
+    {
+     "title": "Alphabet’s Euro Debt Market Return Tests Faith in AI",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPcTlwbGFjZ0ZDd1ZBcDBrRUt0TTNxd3NYQVJBTTZnbjZsdE9ac0NORnZZdG5iRlZNUUhCeVNQSU10VU43WEROdmkxMHdBcGNuV0tqblI4OWpuNldhN1VJeEFmaG1zWU9VUEdDZ3B0blBxNXA0ZVRlcGZkY3N1cE9DQi1nWGFVaEREWTlfWjB1MGE0bVRyamMtZ1dPUmxXTTduYWxlclZFUy1VUVU?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "8ae623d37023",
+   "co": "CoreWeave",
+   "type": "財報",
+   "zh": "CoreWeave公布Q3 2026財報。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "CoreWeave Q3 2026 earnings conference call",
+     "source": "Moomoo",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPalhCRTg5RS03VDBZTHJmc2YzUjlfNWFkWUpsbUJYR0puSUp5Sk5scldtNTFSMHBHeUtkOFVqVEtBY1RkbW9uQVlXbnVPcWprQUV2OTBaa19LRFJLUHVaeURPbExMNERBSmVDb1pYa1pYZHdtOU9PeTRRZmcxeGIzVVhHR1lwSExhdlVLUWRoOFdmdXgtaDFIcWs2Um4?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "ad3842693181",
+   "co": "OpenAI",
+   "type": "融資／IPO",
+   "zh": "OpenAI與阿聯酋ADNOC、G42簽署協議，涉及能源、政府和投資合作。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Abu Dhabi's ADNOC, G42 sign deal with OpenAI as Sam Altman travels to UAE",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOTWMxZGNac0g1UDJOemxSbHJnU1g4cllCaWZxdzJEWVBIU2R6aG83R2RlMk9HV19ZTmYxSUMzRjBJU19pbXN6QWV6bHJCQXlJYlFRVEdEVFVQRFl3cTREcWlGUU5aOHc1VDRWQTIxZk0wWHo2a1F0MVZhTWp6VXRPUHQ4TjlONXE2LTc1UEVBY1VYYW56V3IyeFJnNWQwUnppaTNYc1ROTTgzZXN3WTg5SXJscm5BOHZD?oc=5"
+    },
+    {
+     "title": "OpenAI deepens Abu Dhabi foothold as Sam Altman inks deals spanning energy, government and investment",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9wUjRZTkJfQlQyYTZaZXpoY2I1VHF4c2tfbnBYVFZYSFN6OVdnd2ZBbklvbGpQbTBLN0w2cFd3QmpkTTFRdmg5R2V6SW1WaE10cGthc3d3dExXNEZsbEhORDFZUXhMMkdYakhTZWZmRdIBdEFVX3lxTE80dkJmcFRkS2MyMG9iRWlVcXpRQjVqc0pPcmRZQVdyUmFkdXhENERaNEx6T0VWOThSRVZjTkwwZmNnNW95dHljUkdPbmVEQ2FXUll3ZjhVV0pzcWRraHFEb0VaLVlwSlFPWkRFTG9jNnQ4WFFi?oc=5"
+    },
+    {
+     "title": "ADNOC Signs Major AI Deal With OpenAI and G42 to Boost Efficiency",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNaE1GSnZPMmtGaTBXbm9PWVZwWFFrN2U2S3dKOG4wZHFpOFotTzZUdTl2YmtMVUE2cTRzdzZkcGhLWEpnalFVMjZ3TGVfRldUcGhMS2M0RHJrUHZMXy1YX2NveF9xdFBDdEx6UmFiZkllSURfYlVvNTdoZzBHV3g5bFJyMVBtRXdqVkE?oc=5"
+    }
+   ]
+  },
   {
    "id": "554da06b1954",
    "co": "Alphabet",
@@ -2371,6 +2518,49 @@
    ]
   },
   {
+   "id": "311381169599",
+   "co": "Microsoft",
+   "type": "財報",
+   "zh": "Microsoft公布FY27 Q1財報，Azure營收333.2億美元，雲端成長加速。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Microsoft FY27 Q1 Earnings",
+     "source": "Microsoft",
+     "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNcDhPc0FvWUJaeVZoYlJFQmxtNDVrdEp2RElBbGNYUHdybjgzZy1IMmJaRC1UZXRXellnUHRWck9McXEzVkNHcjQ4ZHlsazQ4d01MQUhrUFZTaFlTVW1XR3Q2eW5Ec1pMWFdMZGFKc1I5RjladXBwaFlmS08zeVhPaklidXoyWTI2VUlzbVFLeE94WTA?oc=5"
+    },
+    {
+     "title": "Microsoft just shared Azure’s actual revenue in dollars: $33.2 billion",
+     "source": "TechCrunch",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQcENMNDNucFFVZ2k0Y09Ea0p0SWxPckFpQmsycnE0MWVzTXNZTTY0VUpoa25RUl9POEdfVGdDYks0T2F3cHpVRjdnOXFycGNqd19iVGFzSGZPYjhMZW5HQmZUVWswS19wS1dEUzJNNDhfOUhsWVl6Nm82TlNoZkRhZnl4d0I4bEg2dHZYUEdwc3RwVjBCMHR2UGFqejVwSDZHVUQ3Mg?oc=5"
+    },
+    {
+     "title": "Microsoft’s cloud growth accelerates, and so too does the spending",
+     "source": "Fortune",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNd1NGVDNCdUFrZi1FRWlaOXlPVkpaeVZuRjh1R3kzYWNKbzBCQkl5VFRKWjUyclozQ095dzUtalNwRWMyd05CdzRKVjVRbDZfSkRTSXZ2aUV6NHpWTDEyNzlOOWxFQTgxNUNFcnVaSm5odUtfcDl1UTBSOTBMNVBGS1FXWWpFSVFPUXBpOWVrSmt2dGdFb2lwWHZLSXM?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "6b036e7e9eaa",
+   "co": "Alphabet",
+   "type": "財報",
+   "zh": "Alphabet公布第三季營收1,276億美元，營收成長25%但利潤下滑。",
+   "date": "2026-10-28",
+   "links": [
+    {
+     "title": "Alphabet’s Revenue Rises 25% as Profit Falls",
+     "source": "The New York Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNWE5iQ1RBMElPMEZPMXU2bzJoYWM2V0Nsakp5Y2NQVFBJQ1dRTU5wVmxFTE4wZDk5a1J1akZxRTBQVnJwTEpQRC1ENkF6WFFCbUZIV2lpdVR5NGZhM3ZvVUhHRzI5UTZRcm82dFJvOV85VGhRNG83UEJOa0x2bHhaNDlUYlk?oc=5"
+    },
+    {
+     "title": "Alphabet reports Q3 2026 revenue of $127.6 billion",
+     "source": "9to5Google",
+     "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ubzNXUEtlUXVRQzJPTFVTc1V0U1RnQ2xreVBnUjNocFZsRXlvY0pBd3hyWHNRUWs0cVB3cnV2LTd6anFmM1Y1S2JQamlUWlowRFV6TEFDXzJoY1VGQTBZZFRRSXJOZVlDNG11QQ?oc=5"
+    }
+   ]
+  },
+  {
    "id": "5a397aaf548e",
    "co": "Meta",
    "type": "發債",
@@ -2817,12 +3007,12 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "8525387e70b2",
-   "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升股市信心；惟資本支出創紀錄高位達394億美元，反映AI基礎設施投資持續加碼。250億美元新債發行偏向增加公司債供給；若資本支出高企持續，則長端利率面臨上升壓力，但超預期獲利偏向抵銷此效應。整體偏向強化AI投資熱度。"
+   "hash": "2eb53ba92144",
+   "text": "Microsoft 雲端業務超預期成長推升盈利，偏向支撐股市；同時發行250億美元債券擴充AI基礎設施，偏向增加公司債供給壓力。若資料中心建設持續加速，大規模資本支出需求偏向推高長端利率；雲端與AI營收動能強勁，則偏向吸引AI投資熱度集中於該公司。"
   },
   "Alphabet": {
-   "hash": "0e2229f1f831",
-   "text": "Alphabet高額AI資本支出與營收未達預期形成矛盾。短期偏向增加公司債供給以應對現金流壓力，推升長端利率；但AI變現成長與硬體銷售提升偏向支撐股市。若AI投資最終未能轉化為營收，則市場對科技股估值壓力加大，偏向冷卻AI投資熱度。"
+   "hash": "b162138681c1",
+   "text": "Alphabet近期事件呈現矛盾態勢。營收成長但利潤下滑、AI支出達510億美元引發現金流擔憂，偏向增加公司債供給需求。然而AI變現成長、硬體銷售提升、衛星晶片計畫推進等事件，又顯示AI投資熱度仍存。若市場對AI變現前景信心不足，則長端利率偏向上升；若認可其硬體與軌道數據中心潛力，則股市與AI投資熱度偏向維持。"
   },
   "Meta": {
    "hash": "ba768f60f084",
@@ -2833,20 +3023,20 @@
    "text": "Oracle 近期大幅提升AI基礎設施投資，資本支出接近950億美元，同時限制新借款至200億美元，偏向增加公司債供給。多元晶片策略與算力合約擴張，強化雲端競爭力，偏向支撐長端利率。預期2030年營收與現金流目標明確，若順利達成則提升市場信心，偏向利好股市與AI投資熱度。"
   },
   "CoreWeave": {
-   "hash": "7f0922becfae",
-   "text": "CoreWeave大幅擴張資本支出與債務融資，偏向增加公司債供給壓力。高額發債需求（200–380億美元）與債務規模快速膨脹，若市場對其償債能力疑慮升溫，則長端利率偏向上行以反映信用風險溢價。營收倍增支撐AI基礎設施需求景氣，偏向維持AI投資熱度，但債務擴張速度超越營收成長，可能引發市場對槓桿風險的重新定價。"
+   "hash": "fa10dba818bc",
+   "text": "CoreWeave近期大幅擴張資本支出與債務融資，偏向增加公司債供給壓力。高盛預估其需新增發債200至380億美元，債務軌跡指向2028年破千億，若市場對其償債能力疑慮升溫，則長端利率偏向承壓。儘管Q3營收倍增至25.8億美元顯示成長動能，但債務規模已達350億美元，市場可能重新評估風險溢價，對AI基礎設施投資熱度產生分化效應。"
   },
   "Anthropic": {
    "hash": "22e1f1f4e8ef",
    "text": "Anthropic巨額虧損與債務規模偏向拉高長端利率。高達9,000億美元未來債務與630億美元融資完成，增加公司債供給壓力；若市場對AI燒錢模式疑慮加深，則長端利率上升幅度擴大。4,300億美元算力合約鎖定顯示AI投資熱度仍高，但虧損幅度（807億美元）相對營收（163.3億美元）的懸殊，偏向削弱投資者對盈利前景信心，對股市形成壓力。"
   },
   "OpenAI": {
-   "hash": "58a790cf2e6d",
-   "text": "OpenAI融資目標大幅下調，偏向增加公司債供給壓力；若融資規模縮水，則資本支出計畫可能受限，長端利率面臨下行壓力。同時多項算力合約與數據中心投資持續推進，顯示AI基礎設施需求依舊強勁，偏向維持AI投資熱度。融資困難與資本支出需求並存，偏向對股市形成短期不確定性。"
+   "hash": "076823aa4d11",
+   "text": "OpenAI融資目標下調、估值承壓，偏向增加公司債供給需求；大規模算力採購與數據中心投資持續推進，資本支出龐大。若融資進展受阻，則公司可能轉向債券市場籌資，推升長端利率；AI基礎設施投資規模未減反增，偏向維持AI投資熱度，但融資困難可能引發市場對AI商業化前景的疑慮，股市偏向承壓。"
   },
   "Amazon": {
    "hash": "c68cbf93ccac",
-   "text": "Amazon近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度仍強，但盈利預期走弱，股市偏向承壓。"
+   "text": "Amazon 近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度仍強，但盈利預期走弱，股市偏向承壓。"
   },
   "Nvidia": {
    "hash": "29605a771f94",
@@ -2865,5 +3055,5 @@
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-02 12:23（台北）"
+ "at": "2026-11-02 20:14（台北）"
 }

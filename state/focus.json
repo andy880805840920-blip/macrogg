@@ -1,18 +1,18 @@
 {
  "hash": "",
- "text": "美國AI與晶片股自10/6以來市值蒸發約5兆美元，10月最後一週S&P 500下跌0.6%，但11個類股中有9個上漲1%以上——這是1999年以來指數下跌週中最多類股同步上漲的紀錄，顯示跌勢集中在科技股。蘋果11/2盤後公布財報，iPhone 18銷售受關注；公司市值約5.03兆美元重回全球第一，超越輝達的4.93兆美元，也是「七巨頭」中今年唯一跑贏大盤的股票（漲27% vs. S&P 500漲11%）。期中選舉與油價突破每桶104美元（因伊朗戰爭導致荷莫茲海峽實質關閉）也牽動本週市場。¶美國財政部正準備進行多年來最大規模的公債發行制度改革。彭博11/1報導，華爾街正為此做準備，這項調整將影響美國公債市場的運作方式。目前財政部尚未公布具體改革細節，但市場預期此舉可能涉及發行規模、期限結構或拍賣機制的重大變動，交易商與投資機構正密切關注相關進展。\n新興市場貨幣兌美元走弱，交易員等待伊朗局勢進展與美國經濟數據公布，市場情緒謹慎。\n美國推動恢復俄羅斯天然氣經烏克蘭銷售至歐洲，據《華爾街日報》報導，此舉旨在尋求能源供應替代方案。",
+ "text": "智利債券投資人正轉向通膨連結債券，因油價飆升推升通膨預期。這反映市場擔憂能源成本上升將帶動整體物價壓力，投資人尋求通膨保護工具。¶美元 11/2 跌至一個月低點，因油價大跌削弱避險需求。國際油價因中東緊張局勢緩和而下滑，降低了市場對美元作為避險資產的需求。美元指數當日走軟，反映投資人在油價回落後重新評估風險偏好，資金流向從避險資產轉向其他市場。\n投資人根據國會控制權變化推演未來政府支出與人工智慧前景，11/2（美國時間）市場交易策略隨之調整。\n瑞銀集團策略師傅勒表示市場低估了人工智慧週期的持續時間，11/2（美國時間）認為目前定價未能充分反映長期發展潛力。",
  "links": [
   {
-   "title": "Stock futures jump ahead of a monster week after a $5 trillion AI rout",
-   "link": "https://finance.yahoo.com/markets/article/stock-futures-jump-ahead-of-a-monster-week-after-a-5-trillion-ai-rout-021203996.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-11-01T23:25:00+00:00"
+   "title": "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars",
+   "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOWHJKMzgzMmhMQS1qV0xTZjVVU3hDUEg1MHVPYU9MOUZDalFDMVF1OHJPSTZsanVqcWQzTG5IQm05N20xVkUyeUdmM2RmT1ZJNndlMHMzRUU3QnBQY1AxREU2eVZzcG5VcGJKaGxmTjE3VWY0RGQzN2R1YXlCSE8xRkNrTWJKWGpMVEdvbjRWMUZ6NnFwNWY3XzYxSnZSazRqeVMweG8tdzNLWExRd2lJNkd2ZXdnUQ?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-02T11:00:00+00:00"
   },
   {
-   "title": "Wall Street Braces for Biggest Treasury Sales Overhaul in Years",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQQ3N2ZVdrWVZaekU3UUdvbWgzZE4wTUF5X2tsajg4V042UDRJeEpwa2RqY1RxLWlNNk5sWTl4QUFlQk1mQjhsTzh3STlDR0lVN3ByaVQyUFRFUnlpZG95dGpuZjVtN3lMX3lfQkZRWnUyM3FqSnAyeE9sQ25fSHI1Mmo2M1dPT3d4RkwxM1hjSkRYbFBrdlFtUXpnUlNCc05aRkJvOWNFSFZBQjRqaXFHUVVGZzQ?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-11-01T20:00:01+00:00"
+   "title": "Dollar Sinks to One-Month Low as Oil Slump Eases Haven Demand",
+   "link": "https://finance.yahoo.com/m/c0bf3b05-56d0-38b3-bdbc-1f9b8789728b/dollar-sinks-to-one-month-low.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-11-02T10:27:43+00:00"
   }
  ],
  "fedwatch": {
@@ -272,134 +272,169 @@
    }
   }
  },
- "text_source": "model-content",
- "at": "2026-11-02T04:23:58.991757+00:00",
+ "text_source": "model",
+ "at": "2026-11-02T12:14:49.820593+00:00",
  "layout": "main",
  "topics": {
-  "hash": "b06c8086799c3372",
+  "hash": "746f5201bf2dc6cf",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "Warsh 11/1 宣示聯準會將視通膨持續情況考慮進一步升息，同時美國就業數據回升可能使聯準會維持升息軌道",
+    "links": [
+     {
+      "title": "US Jobs Pickup May Keep Fed on Track to Hike Rates Again",
+      "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPSjA5czFvNHJVY3pfd3I2ZGt0eGlkWDZCa3llcU5VRjUxV3pHc2pOUFI5NGZERThCY0lZNkJQZXFPMUphdmw4OEJOV2V2blZ2NGlDakI4NDRVM3VYR0ViSkhGbS1SR2Q0Sk03TmFRd1FvOW90U1Q4TnJYVFJIbVpUSEhpMTVMUmNrbGxpNldwOUZTbXVjV3hpTVV5d00tRHpPOHVJdmVOaEM1ZWc?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-01T14:41:31+00:00"
+     },
+     {
+      "title": "Warsh Signals Further Fed Rate Hikes as Inflation Persists",
+      "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBJR0lqSlo2UEtBVWg2ejJFTF82U1BtMlh3dy0wQnkwNm5TSjVFWUlRdWc1VGFkYlRoQW9qME9TV3JQTjlrUDQyR3d6eGFqT2w3QTV5WTV5YUszTmhGTTkyTFA2elkzZkpoYVE?oc=5",
+      "source": "Demokratis.co.id",
+      "at": "2026-11-02T04:15:58+00:00"
+     }
+    ]
+   },
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "摩根大通估計，2027 年美國國庫券需求可能跟不上供應，反映出資金市場對未來流動性的擔憂",
+    "text": "中國央行進行隔夜逆回購操作，反映政策錨點轉變；美國證管會批准美債回購交易清算豁免",
     "links": [
      {
-      "title": "法人觀點：摩根大通估，2027年美國國庫券需求或跟不上供應",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPWlVFUEp1T0NoQUJZZTFpcnZneWVYaFQta3hzc25OY1FIdl9FRGVtUXJuSXlDYjdhaEFvQTFrcUtRUzRTZGpxS0JUM18yVlNGUFJzejEtNlZxWmlGZDdRdEJNU05QZC1OTFBJV01XVHZXRGktVk9xQzR3U1RLaFMtU3NmNDNkVjVU?oc=5",
-      "source": "富聯網",
-      "at": "2026-11-02T01:24:00+00:00"
+      "title": "PBOC Conducts Overnight Reverse Repo as Policy Anchor Shifts",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNcmREelF1UkVmdlptVXBLbGdvLVF3XzBDalRFekxfX2RPS0E0U2FWRl9XV3hzMy1xZnV2RmJDLWRjbUJVOEZTbmxrVENVdDd4dlJzdk1hRndKSWFyLVBXWVpyeW9URVpLNUEtaHg4cTBhbS11MmQ1WXhkTkJha1J4SEdEWlVIb0xaZ1FTNm93bHFyLUY2WTBOY2ROaHZXWXpfdEZVakpSZ01CbVoxWVBSWg?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-02T02:29:00+00:00"
+     },
+     {
+      "title": "SEC grants Treasury repo clearing exemptions",
+      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxORHFoVVd6aURJQnJRX0xmZl9kNlpIbi1jMnp5dmpsMUZibFdNWkJMM21ZWFY2eGZxTW5KSFVYTFY5eXBmc3RjVVA2cFBlZExlTEFYWTFZd3dsUzlOaHd6YWNGcDR5d2R0c3g0TjIydXpZb0pFYWlNcEc3UFppTjBWTXp4SGhMUDI4RU9qVzVMWG9RZHhhVjd3TW5n?oc=5",
+      "source": "Securities Finance Times",
+      "at": "2026-11-02T10:38:53+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗外交部長11/1表示伊朗同意為期兩天的談判方案，由美方先履行條件後再開放荷莫茲海峽，受談判進展影響布蘭特原油下跌1.59%至每桶111.62美元",
+    "text": "OPEC+維持12月產量目標不變，油價下滑帶動印度盧比升值",
     "links": [
      {
-      "title": "Oil slips more than 1% as talks continue on ending Iran war",
-      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPeHdxcnVlWmx5T1pjbDZQS19XeXlYTW1xZmNONnJQWHk4YU1EQTRzZFZQVEJxYjd6WEJTN2pfZC10ZGlzXzVURVdHZkg1RjZGY2tjN0ZVRjNRc0p4UmQ1c2F6MUt4eEpHSml6Z3Q4WHpqV094aEo0dTlVbk00OGFBazlmdGhsWGdtckFHQjlBTVU5Q0FRR3hxUnVmcVpPeGZsTHBlWmhTdw?oc=5",
+      "title": "OPEC+ keeps December oil output targets steady ahead of tougher call for 2027",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNMVRNX1Y5b0xXX3dlMU1QX2lRbVkxbkJYSU9SUVdxUFlXQ2hGcjRpRlVIbklCeTlZa1d2VnNOQWFaaVN0NHJVcnJSRVhUSngyVmcxdzlsZVpwSm1wbmduTGpNbXkwWEhKbGZQdURzZ0c0UHl2S28zLUxjbDdSUkdzZTFnMmtubVlvbmFVMHlsX3BvOVpLa2NqcWozZTJUWlhnUWUxYXFn?oc=5",
       "source": "Reuters",
-      "at": "2026-11-01T23:13:00+00:00"
+      "at": "2026-11-01T13:36:05+00:00"
      },
      {
-      "title": "亞股上演大逆轉！韓股急殺近2％又漲逾1.5％　新台幣重貶、油價跳水",
-      "link": "https://tw.stock.yahoo.com/news/%E4%BA%9E%E8%82%A1%E4%B8%8A%E6%BC%94%E5%A4%A7%E9%80%86%E8%BD%89-%E9%9F%93%E8%82%A1%E6%80%A5%E6%AE%BA%E8%BF%912-%E5%8F%88%E6%BC%B2%E9%80%BE1-5-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B6-035200875.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-02T03:52:00+08:00"
+      "title": "Rupee nudges higher as oil prices slide, NDF points outpace onshore premiums",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPeC1WaUFNMi1wWEN5WFRyenJJLUxoa0lkUGdFM1dOU3VkVUYyak9ZdWRVV3N0b1NPX0xFTjZ0NVRlNWpadXdGMVltUmxMcm1zcVdQdjQwMV9ialVNaGliVmhXOS1zTm5kNUp0VXlqTUpaVVRqUUhuX2xaRVpQWlFXbFlMS2EwNTJqYUZ3elRFLXUzcmtpaXhFMHlFTjBVaHJSMFVULUhrQVJlYWpaUnljMTVwSjA?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-02T02:57:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "輝達今年漲幅13%超越標普500的11%，第二季營收成長106%，預計下年度營收成長70%，預期本益比不到23倍相對合理",
+    "text": "美股 11/2 期貨反彈，標普 500 期貨漲 0.5%、那斯達克 100 期貨漲 0.83%，油價下跌與中東外交談判進展緩解避險需求；但 10 月科技股表現慘淡，那斯達克 100 月跌 6.5% 創 2025 年 3 月來最差月度表現",
     "links": [
      {
-      "title": "輝達今年漲幅領先標普500 歷史數據顯示買進良機",
-      "link": "https://tw.stock.yahoo.com/news/%E8%BC%9D%E9%81%94%E4%BB%8A%E5%B9%B4%E6%BC%B2%E5%B9%85%E9%A0%98%E5%85%88%E6%A8%99%E6%99%AE500-%E6%AD%B7%E5%8F%B2%E6%95%B8%E6%93%9A%E9%A1%AF%E7%A4%BA%E8%B2%B7%E9%80%B2%E8%89%AF%E6%A9%9F-031428873.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-02T03:14:28+00:00"
+      "title": "S&P 500, Nasdaq Futures Rise Premarket After Wall Street’s Worst Week In Months: AAPL, PLTR, GOOGL, INTC, TGTX In Focus",
+      "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-futures-rise-premarket-after-wall-street-s-worst-week-in-months-aapl-pltr-googl-intc-tgtx-in-focus/cNG9MJPR92w?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-02T10:18:32+00:00"
+     },
+     {
+      "title": "Stock market today: Dow, S&P 500, Nasdaq futures recover from bruising sell",
+      "link": "https://finance.yahoo.com/markets/live/stock-market-today-monday-november-2-dow-sp-500-nasdaq-091835095.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-02T09:18:35+00:00"
+     }
+    ]
+   },
+   {
+    "id": "semi",
+    "label": "AI 與半導體",
+    "text": "輝達股價遭科技股拋售重創，本益比跌至 12.9 倍，遠低於標普 500 的 18.7 倍；市場擔憂大型科技公司資本支出激增導致自由現金流枯竭，恐延至 2027 年才減少晶片訂單",
+    "links": [
+     {
+      "title": "Nvidia stock valuation gets torched by tech stock rout",
+      "link": "https://finance.yahoo.com/markets/stocks/article/nvidia-stock-valuation-gets-torched-by-tech-stock-rout-110145628.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-02T11:01:45+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股11/2盤中一度狂殺812點失守4萬5千點，隨後買盤湧入強彈逾700點，聯發科、台達電、鴻海等權值股由黑翻紅，顯示市場信心逐步回升",
+    "text": "台股11/2開盤暴跌812點後強勢反彈，終場下跌291.69點收44,920.14點，市場認為這波跌勢是籌碼洗盤而非產業泡沫，AI算力需求持續供不應求支撐後市",
     "links": [
      {
-      "title": "快訊／台股漲回4萬5啦！盤中「急拉逾700點」黑翻紅　聯發科、台達電、鴻海同步上衝",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BF%AB%E8%A8%8A-%E5%8F%B0%E8%82%A1%E6%BC%B2%E5%9B%9E4%E8%90%AC5%E5%95%A6-%E7%9B%A4%E4%B8%AD-%E6%80%A5%E6%8B%89%E9%80%BE700%E9%BB%9E-%E9%BB%91%E7%BF%BB%E7%B4%85-035700445.html",
+      "title": "AI股災虛驚一場？陳龍曝台股4大反攻理由：點名這幾檔強勢標的",
+      "link": "https://tw.news.yahoo.com/ai%E8%82%A1%E7%81%BD%E8%99%9B%E9%A9%9A-%E5%A0%B4-%E9%99%B3%E9%BE%8D%E6%9B%9D%E5%8F%B0%E8%82%A14%E5%A4%A7%E5%8F%8D%E6%94%BB%E7%90%86%E7%94%B1-%E9%BB%9E%E5%90%8D%E9%80%99%E5%B9%BE%E6%AA%94%E5%BC%B7%E5%8B%A2%E6%A8%99%E7%9A%84-114100696.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-02T03:57:00+08:00"
+      "at": "2026-11-02T11:41:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "密西根州民主黨籍眾議員史蒂文斯公開支持共和黨參議員候選人羅傑斯，為川普領導的共和黨在關鍵的密西根州參議院席次爭奪戰中注入強心針，但引發民主黨內部分裂，其幕僚長等多名幕僚集體辭職",
+    "text": "美國 11/3 期中選舉在即，市場預期選舉結果將影響聯邦支出與監管政策；美元指數在選舉前夕於 101.94 附近震盪，投資人等待國會權力平衡明朗化",
     "links": [
      {
-      "title": "美期中選舉添變數！密西根州民主黨眾議員倒戈挺共和黨參議員候選人",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E6%B7%BB%E8%AE%8A%E6%95%B8-%E5%AF%86%E8%A5%BF%E6%A0%B9%E5%B7%9E%E6%B0%91%E4%B8%BB%E9%BB%A8%E7%9C%BE%E8%AD%B0%E5%93%A1%E5%80%92%E6%88%88%E6%8C%BA%E5%85%B1%E5%92%8C%E9%BB%A8%E5%8F%83%E8%AD%B0%E5%93%A1%E5%80%99%E9%81%B8%E4%BA%BA-031901052.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-02T03:19:01+00:00"
+      "title": "Dollar steadies as U.S. midterms loom; euro digests Fitch outlook downgrade",
+      "link": "https://finance.yahoo.com/markets/currencies/articles/asian-currencies-mixed-yuan-holds-040237175.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-02T11:01:54+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "金價11/1反彈0.6%至每盎司3,900美元，在10月創下2008年以來最差月度表現後，低價吸引買盤進場，儘管科技股拋售和地緣政治風險仍構成壓力",
+    "text": "黃金 11/2 反彈至 3,902.81 美元/盎司，漲幅 0.7%，擺脫 10 月 3.7% 跌幅與 2008 年來最差月度表現；美元走弱與地緣政治不確定性支撐金價",
     "links": [
      {
-      "title": "Gold rebounds toward $3,900 as dip buyers emerge, Iran risks persist",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-rebounds-toward-3-900-013553389.html?.tsrc=rss",
+      "title": "Gold rebounds from one-year low as oil slides ahead of US midterms",
+      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNOXFkdElkaE5fVGZ6eUVZUFZnZjNuaUFoM2pPZ1ZJeEY4bmN0Wm9zSTRwLWpHcjNjLWRLRklsOV95a21mWjZWckhUam5qTVZVUzVDdWEwQXVOVWlpaHpCMktPLU41TGNkZjI3MFM1azNvSEtUai1pUGFpNi1mZFhISlB3TXFUSWtseGlhYmRISUpuWXdlVU5mLTJPRQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-02T05:04:00+00:00"
+     },
+     {
+      "title": "Gold Prices Recover Above $3,900 as Investors Return Following October Selloff",
+      "link": "https://investorshub.advfn.com/market-news/article/38998/gold-prices-recover-above-3900-as-investors-return-following-october-selloff?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-11-02T01:35:53+00:00"
+      "at": "2026-11-02T10:26:46+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "外資持續賣超台股並匯出資金，新台幣兌美元 11/1 早盤重貶逾 2 角至 32.71 元，若 32.8 元失守，恐進一步貶向 33 元整數關卡；同時亞洲其他貨幣也面臨貶值壓力，日圓、韓元、離岸人民幣均走貶",
+    "text": "新台幣 11/2 盤中重貶逾 2.3 角至 32.714 元，終場收 32.592 元貶 1.14 角，央行傳出暫時放寬出口商賣匯限制以穩定匯價，外資持續賣股匯出施壓",
     "links": [
      {
-      "title": "外資匯出不停！新台幣早盤重貶逾2角 再失守32.7元",
-      "link": "https://tw.news.yahoo.com/%E5%A4%96%E8%B3%87%E5%8C%AF%E5%87%BA%E4%B8%8D%E5%81%9C-%E6%96%B0%E5%8F%B0%E5%B9%A3%E6%97%A9%E7%9B%A4%E9%87%8D%E8%B2%B6%E9%80%BE2%E8%A7%92-%E5%86%8D%E5%A4%B1%E5%AE%8832-7%E5%85%83-033318436.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-02T03:33:18+08:00"
-     },
-     {
-      "title": "亞股上演大逆轉！韓股急殺近2％又漲逾1.5％　新台幣重貶、油價跳水",
-      "link": "https://tw.stock.yahoo.com/news/%E4%BA%9E%E8%82%A1%E4%B8%8A%E6%BC%94%E5%A4%A7%E9%80%86%E8%BD%89-%E9%9F%93%E8%82%A1%E6%80%A5%E6%AE%BA%E8%BF%912-%E5%8F%88%E6%BC%B2%E9%80%BE1-5-%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%87%8D%E8%B2%B6-035200875.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-02T03:52:00+08:00"
+      "title": "新台幣盤中重貶逾2角　央行、出口商聯手抗外資賣壓",
+      "link": "https://tw.stock.yahoo.com/news/%E6%96%B0%E5%8F%B0%E5%B9%A3%E7%9B%A4%E4%B8%AD%E9%87%8D%E8%B2%B6%E9%80%BE2%E8%A7%92-%E5%A4%AE%E8%A1%8C-%E5%87%BA%E5%8F%A3%E5%95%86%E8%81%AF%E6%89%8B%E6%8A%97%E5%A4%96%E8%B3%87%E8%B3%A3%E5%A3%93-103702841.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-02T10:37:02+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-02T04:24:47.290252+00:00"
+  "at": "2026-11-02T12:15:22.789837+00:00"
  },
  "main_source_titles": [
-  "Stock futures jump ahead of a monster week after a $5 trillion AI rout",
-  "Wall Street Braces for Biggest Treasury Sales Overhaul in Years"
+  "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars",
+  "Dollar Sinks to One-Month Low as Oil Slump Eases Haven Demand"
  ],
- "headline": "AI股10月來蒸發5兆美元市值，蘋果11/2財報與期中選舉成焦點",
- "rate_note": "AI股大跌與期中選舉對利率方向不明確，取決於選後財政與關稅政策走向；油價突破104美元偏向推升通膨預期、進而推高長端利率與升息預期，不過10年期10/30收4.93%、-6bp，市場還沒反映。",
+ "headline": "智利債市投資人轉向通膨連結債券，油價飆升推升通膨預期",
+ "rate_note": "油價上漲推升通膨預期，偏向推升美國長端利率——市場擔憂通膨回升將延長聯準會升息週期或推遲降息時點；不過 10 年期 11/2（美國時間）-6bp 至 4.93%，市場還沒反映。",
  "recent_mains": [
-  {
-   "headline": "聯準會官員支持 12 月升息一碼美股科技股財報不佳重挫",
-   "titles": [
-    "Stocks gain as Fed official backs quarter-point hike",
-    "比特幣盤中微幅上漲 市場觀望聯準會利率決策",
-    "伊朗與卡達連續3天談判！擬美伊達成協議後48小時內重開荷姆茲海峽"
-   ],
-   "at": "2026-11-01T23:09:34.154863+00:00"
-  },
   {
    "headline": "聯準會維持利率不變，市場預期 12 月升息一碼機率達 85%",
    "titles": [
@@ -415,28 +450,36 @@
     "Wall Street Braces for Biggest Treasury Sales Overhaul in Years"
    ],
    "at": "2026-11-02T04:23:58.991757+00:00"
+  },
+  {
+   "headline": "智利債市投資人轉向通膨連結債券，油價飆升推升通膨預期",
+   "titles": [
+    "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars",
+    "Dollar Sinks to One-Month Low as Oil Slump Eases Haven Demand"
+   ],
+   "at": "2026-11-02T12:14:49.820593+00:00"
   }
  ],
  "archive": {
   "2026-11-02": {
-   "headline": "AI股10月來蒸發5兆美元市值，蘋果11/2財報與期中選舉成焦點",
-   "text": "美國AI與晶片股自10/6以來市值蒸發約5兆美元，10月最後一週S&P 500下跌0.6%，但11個類股中有9個上漲1%以上——這是1999年以來指數下跌週中最多類股同步上漲的紀錄，顯示跌勢集中在科技股。蘋果11/2盤後公布財報，iPhone 18銷售受關注；公司市值約5.03兆美元重回全球第一，超越輝達的4.93兆美元，也是「七巨頭」中今年唯一跑贏大盤的股票（漲27% vs. S&P 500漲11%）。期中選舉與油價突破每桶104美元（因伊朗戰爭導致荷莫茲海峽實質關閉）也牽動本週市場。¶美國財政部正準備進行多年來最大規模的公債發行制度改革。彭博11/1報導，華爾街正為此做準備，這項調整將影響美國公債市場的運作方式。目前財政部尚未公布具體改革細節，但市場預期此舉可能涉及發行規模、期限結構或拍賣機制的重大變動，交易商與投資機構正密切關注相關進展。\n新興市場貨幣兌美元走弱，交易員等待伊朗局勢進展與美國經濟數據公布，市場情緒謹慎。\n美國推動恢復俄羅斯天然氣經烏克蘭銷售至歐洲，據《華爾街日報》報導，此舉旨在尋求能源供應替代方案。",
-   "rate_note": "AI股大跌與期中選舉對利率方向不明確，取決於選後財政與關稅政策走向；油價突破104美元偏向推升通膨預期、進而推高長端利率與升息預期，不過10年期10/30收4.93%、-6bp，市場還沒反映。",
+   "headline": "智利債市投資人轉向通膨連結債券，油價飆升推升通膨預期",
+   "text": "智利債券投資人正轉向通膨連結債券，因油價飆升推升通膨預期。這反映市場擔憂能源成本上升將帶動整體物價壓力，投資人尋求通膨保護工具。¶美元 11/2 跌至一個月低點，因油價大跌削弱避險需求。國際油價因中東緊張局勢緩和而下滑，降低了市場對美元作為避險資產的需求。美元指數當日走軟，反映投資人在油價回落後重新評估風險偏好，資金流向從避險資產轉向其他市場。\n投資人根據國會控制權變化推演未來政府支出與人工智慧前景，11/2（美國時間）市場交易策略隨之調整。\n瑞銀集團策略師傅勒表示市場低估了人工智慧週期的持續時間，11/2（美國時間）認為目前定價未能充分反映長期發展潛力。",
+   "rate_note": "油價上漲推升通膨預期，偏向推升美國長端利率——市場擔憂通膨回升將延長聯準會升息週期或推遲降息時點；不過 10 年期 11/2（美國時間）-6bp 至 4.93%，市場還沒反映。",
    "links": [
     {
-     "title": "Stock futures jump ahead of a monster week after a $5 trillion AI rout",
-     "link": "https://finance.yahoo.com/markets/article/stock-futures-jump-ahead-of-a-monster-week-after-a-5-trillion-ai-rout-021203996.html?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-11-01T23:25:00+00:00"
+     "title": "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars",
+     "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOWHJKMzgzMmhMQS1qV0xTZjVVU3hDUEg1MHVPYU9MOUZDalFDMVF1OHJPSTZsanVqcWQzTG5IQm05N20xVkUyeUdmM2RmT1ZJNndlMHMzRUU3QnBQY1AxREU2eVZzcG5VcGJKaGxmTjE3VWY0RGQzN2R1YXlCSE8xRkNrTWJKWGpMVEdvbjRWMUZ6NnFwNWY3XzYxSnZSazRqeVMweG8tdzNLWExRd2lJNkd2ZXdnUQ?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-02T11:00:00+00:00"
     },
     {
-     "title": "Wall Street Braces for Biggest Treasury Sales Overhaul in Years",
-     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQQ3N2ZVdrWVZaekU3UUdvbWgzZE4wTUF5X2tsajg4V042UDRJeEpwa2RqY1RxLWlNNk5sWTl4QUFlQk1mQjhsTzh3STlDR0lVN3ByaVQyUFRFUnlpZG95dGpuZjVtN3lMX3lfQkZRWnUyM3FqSnAyeE9sQ25fSHI1Mmo2M1dPT3d4RkwxM1hjSkRYbFBrdlFtUXpnUlNCc05aRkJvOWNFSFZBQjRqaXFHUVVGZzQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-11-01T20:00:01+00:00"
+     "title": "Dollar Sinks to One-Month Low as Oil Slump Eases Haven Demand",
+     "link": "https://finance.yahoo.com/m/c0bf3b05-56d0-38b3-bdbc-1f9b8789728b/dollar-sinks-to-one-month-low.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-11-02T10:27:43+00:00"
     }
    ],
-   "at": "2026-11-02T04:23:58.991757+00:00",
+   "at": "2026-11-02T12:14:49.820593+00:00",
    "weekly": false,
    "points": 2
   },
