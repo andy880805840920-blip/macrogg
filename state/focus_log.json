@@ -1,85 +1,5 @@
 [
  {
-  "at": "2026-10-27T12:19+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [],
-  "locks": [],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 10.5,
-    "sources": 1,
-    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
-    ]
-   },
-   {
-    "score": 9.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3",
-    "titles": [
-     "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3",
-    "titles": [
-     "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3",
-    "titles": [
-     "Bond market is a buy right now, JP Morgan Asset Management's fixed income head says - Reuters"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+1、次級+0.5、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "US stock futures muted as oil holds near April highs ahead of Fed decision - Reuters"
-    ]
-   },
-   {
-    "score": 8.5,
-    "sources": 1,
-    "why": "主題+1、次級+1、時效+1.5、來源+3、主題熱度+2",
-    "titles": [
-     "Copper Extends Drop as AI Stocks Weigh Ahead of Fed Meeting - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "主題+1、次級+1、時效+2、來源+3、主題熱度+1",
-    "titles": [
-     "Gold retreats on stronger dollar; traders brace for Fed - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "次級+1、時效+2、來源+3、主題熱度+2",
-    "titles": [
-     "Nvidia, Meta deepen AI ties with $3 billion investment deal - Reuters"
-    ]
-   }
-  ],
-  "second": "Japan's trend inflation index hits 3-year high, cements case for BOJ rate hike - Reuters",
-  "headline_only": true,
-  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
-  "points": 2,
-  "result": "CNBC 調查：93% 預期聯準會 10/28 會議維持利率、76% 預期 12 月升息"
- },
- {
   "at": "2026-10-27T13:00+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2981,5 +2901,102 @@
    ]
   },
   "result": "聯準會官員支持 12 月升息一碼美股科技股財報不佳重挫"
+ },
+ {
+  "at": "2026-11-02T01:52+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Stocks gain as Fed official backs quarter-point hike - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Ukraine says public air raid alert app sent false alerts after being hacked - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Russian strikes cut power to thousands in Ukraine as drones damage Russian facility - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "AI Won't Replace the President. It Might Govern Our Decisions - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Gulf States Fear Fiercer Iran Retaliation If US Strikes Again - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Iran, Qatari mediators hold third day of talks to end US-Iran war - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Russia Agrees to Halt Recruitment of Ghanaians for Ukraine War - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Wall Street Has Never Faced This Many Market Forces at Once, NYSE Veteran Says",
+   "Stocks Are Entering Their Historically Strongest Stretch -- But There May Be a Catch This Year",
+   "川普：美國「到了某個時候」仍必須痛擊伊朗"
+  ],
+  "main": "Stocks gain as Fed official backs quarter-point hike - Reuters",
+  "main_why": "最高分",
+  "second": "Ukraine says public air raid alert app sent false alerts after being hacked - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 172 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】102 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 169 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "聯準會維持利率不變，市場預期 12 月升息一碼機率達 85%"
  }
 ]
