@@ -1,98 +1,5 @@
 [
  {
-  "at": "2026-10-27T23:06+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [
-   "fomc"
-  ],
-  "locks": [
-   "fomc"
-  ],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
-    "titles": [
-     "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters"
-    ]
-   },
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+3、主角+2、時效+2、來源+3、鎖定+8、主題熱度+0.5",
-    "titles": [
-     "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 18.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+1",
-    "titles": [
-     "The Fed, Growth-Stock Woes and Downside Gaps: Macro Man Podcast - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 16.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+1.5、鎖定+8、主題熱度+1",
-    "titles": [
-     "Fed rate hikes are coming, but not this week: CNBC survey"
-    ]
-   },
-   {
-    "score": 15.5,
-    "sources": 1,
-    "why": "主題+1、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+1",
-    "titles": [
-     "Gold Steadies Above $4,000 With Fed Rate Decision in Focus - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 15.5,
-    "sources": 1,
-    "why": "主題+1、次級+1、時效+1.5、來源+3、鎖定+8、主題熱度+1",
-    "titles": [
-     "Gold gains on softer oil prices ahead of Fed meeting - Reuters"
-    ]
-   },
-   {
-    "score": 15.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、鎖定+8、主題熱度+1",
-    "titles": [
-     "本周科技巨頭財報牽動Fed 12月升息？華許拒釋前瞻指引 留給市場自己找答案"
-    ]
-   },
-   {
-    "score": 14.5,
-    "sources": 1,
-    "why": "主題+1、次級+0.5、時效+2、來源+3、鎖定+8",
-    "titles": [
-     "Bloomberg Surveillance: Fed and AI - Bloomberg.com"
-    ]
-   }
-  ],
-  "second": "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
-  "related": [
-   "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
-  ],
-  "copy_miss": [
-   "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
-   "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
-   "Hold or sell? High Treasury yields spur US banks to rethink bond portfolios - Reuters"
-  ],
-  "second_dropped": "重點二沒有內文",
-  "headline_only": true,
-  "main": "Bond investors are thinking less about the Fed and more about AI, deficits - Reuters",
-  "points": 1,
-  "result": "債市投資人關注焦點從聯準會轉向 AI 與財政赤字"
- },
- {
   "at": "2026-10-28T13:34+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3047,5 +2954,111 @@
    ]
   },
   "result": "企業財報電話會議通膨討論升溫，呼應 2022 年衝擊"
+ },
+ {
+  "at": "2026-11-03T00:07+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "jolts"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Inflation Talk Returns to Earnings Calls in Echo of 2022 Shock - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Fed may be falling behind on inflation fight, market expert says - Reuters"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Warsh Fed Should Heed New Zealand's Cautionary Tale - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "聖嬰現象添通膨變數，舊金山聯儲研究示警2027年物價上行風險"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasury Yields Extend Past Month’s Slide as Oil Prices Tumble - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasury cuts fourth-quarter borrowing estimate to $618 billion - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
+     "Trump’s Second Term: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasury auction changes loom in 2027; dealers eye long-end cuts - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "聖嬰現象添通膨變數，舊金山聯儲研究示警2027年物價上行風險",
+   "韓國10月核心通膨維持2.8%高於預期，BOK後續升息壓力未消",
+   "市場估Fed 12月升息機率近75%，明年1月累計升息兩碼機率逾兩成"
+  ],
+  "main": "Inflation Talk Returns to Earnings Calls in Echo of 2022 Shock - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Fed may be falling behind on inflation fight, market expert says - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 282 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】94 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日",
+     "數據公布日期錯誤（CPI寫成「11/3」，官方是 10/14；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ],
+    [
+     "主軸 250 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】107 字，超過 90 字，請精簡",
+     "數據公布日期錯誤（CPI寫成「11/3」，官方是 10/14；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 165 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "舊金山聯儲示警聖嬰現象恐推升2027年通膨，韓國核心物價持穩央行升息壓力未消"
  }
 ]
