@@ -1749,7 +1749,91 @@
   "d534e0ec4082": "2026-11-02",
   "950306b7d41d": "2026-11-02",
   "bafe4bfa3fe9": "2026-11-02",
-  "3bab85e7fa02": "2026-11-02"
+  "3bab85e7fa02": "2026-11-02",
+  "8077ee4dfdb0": "2026-11-02",
+  "ba25e1c0d569": "2026-11-02",
+  "da7b0c422d8c": "2026-10-26",
+  "6e05b3862d79": "2026-11-03",
+  "5f070d2e90ef": "2026-11-03",
+  "2170be6f837a": "2026-11-02",
+  "b7d03c717364": "2026-11-01",
+  "b7aa8deb6de1": "2026-10-31",
+  "a9cc5a0384ef": "2026-11-03",
+  "32c7d4174c96": "2026-11-03",
+  "c68dce4fa8c7": "2026-11-03",
+  "2ccc95013798": "2026-11-02",
+  "b1cc43288ec4": "2026-10-30",
+  "b143c5aef5ec": "2026-11-03",
+  "07ebb4906263": "2026-11-02",
+  "70230ba6dbb4": "2026-11-02",
+  "78f5a5f65bdb": "2026-11-02",
+  "e72e33d3225f": "2026-11-02",
+  "36cdd9421652": "2026-11-02",
+  "a776573a75bb": "2026-11-02",
+  "f28382ed3527": "2026-10-28",
+  "a9f51abc469e": "2026-10-26",
+  "36f71e267b02": "2026-10-22",
+  "24f41ed36f2e": "2026-11-03",
+  "e29bad05ecdd": "2026-10-30",
+  "2070c91e461c": "2026-10-23",
+  "48aeb80d28be": "2026-10-22",
+  "4388175afb4f": "2026-11-03",
+  "2edac1f6ad0b": "2026-11-03",
+  "e8bcc9b943b6": "2026-11-03",
+  "6a1afa287bac": "2026-11-03",
+  "d3c82e9c1800": "2026-11-03",
+  "8bfb14a4a3a3": "2026-11-02",
+  "7324ecc115ae": "2026-11-02",
+  "625541140363": "2026-11-02",
+  "bf6d98219a65": "2026-11-03",
+  "131550b0c54b": "2026-11-03",
+  "2e8897361e95": "2026-11-03",
+  "291fdae415ef": "2026-11-03",
+  "5090ea3a221b": "2026-11-03",
+  "3e7e54bb047c": "2026-11-03",
+  "2f5429f85786": "2026-11-03",
+  "8d9a2344419d": "2026-11-03",
+  "d0cb74a7d9e5": "2026-11-02",
+  "88c15fa60501": "2026-10-27",
+  "77721b469a3d": "2026-10-26",
+  "980d9c94ab8c": "2026-11-03",
+  "1986ebd82067": "2026-11-02",
+  "2796367ecd78": "2026-11-02",
+  "fad3eaae50cd": "2026-11-03",
+  "04dab35f3e6a": "2026-11-03",
+  "fe2c2d4af14d": "2026-11-03",
+  "c5bcc84c7676": "2026-11-02",
+  "4058eb4a4e4a": "2026-11-02",
+  "2852c8fdf08f": "2026-11-02",
+  "ed3dcb5f1cf4": "2026-11-02",
+  "06b8705afe45": "2026-11-02",
+  "9f7cbe4107bb": "2026-11-03",
+  "f1eb1a59dadd": "2026-11-03",
+  "15823e4227cd": "2026-11-02",
+  "e3d7fba0f15a": "2026-11-02",
+  "66153b0cbad7": "2026-11-02",
+  "8385ce831cbf": "2026-10-29",
+  "591417d878ec": "2026-10-27",
+  "e961ef200e97": "2026-11-03",
+  "0f0143af81b6": "2026-11-03",
+  "9a8bc9c17a64": "2026-11-03",
+  "7fc7b7ab777b": "2026-11-02",
+  "3d43febaeecb": "2026-11-03",
+  "026ed661830b": "2026-11-03",
+  "9d38cc59c69e": "2026-11-03",
+  "14e3cf451fb2": "2026-10-31",
+  "91738c0d8fe7": "2026-10-30",
+  "4e2fe2732663": "2026-10-29",
+  "0ef1efa2d9b1": "2026-11-02",
+  "ede2805a0f73": "2026-11-02",
+  "952735569255": "2026-11-03",
+  "37c1c5db0dfb": "2026-11-03",
+  "b3e1e70d59d2": "2026-11-03",
+  "f9942e372503": "2026-11-03",
+  "8c45fea8cf44": "2026-11-03",
+  "d9b9c6a097a9": "2026-11-03",
+  "0731e5e83df3": "2026-11-03",
+  "3dd9950185b9": "2026-11-03"
  },
  "events": [
   {
@@ -1757,22 +1841,84 @@
    "co": "Alphabet",
    "type": "發債",
    "zh": "Alphabet發行60億歐元債券，測試市場對科技公司債務的接受度。",
-   "date": "2026-11-02",
+   "date": "2026-11-03",
    "links": [
+    {
+     "title": "Alphabet launches €6 billion bond sale amid AI spending concerns",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOeFFBRzdQY09ua3NQdEhWckE3M3hib1ZvRjgzWlFuZEZiN2V6Vmo0TTJZeUlaUC1idC1ZejJfNW1mUG1FbnJuMnN0T254MGs4UTlOSzFoSEIwc3ZFaE1ISTV4OGNRcmRkWDJxTW14bzlSYVZRQWNjcVlrdXd5bmVjYlhPbW9wRE9CcmhYRWNzOTNmMEgwQjdzeG1lSnM?oc=5"
+    },
+    {
+     "title": "Watch Alphabet Opens Fresh Euro Bond Sales; Trump Weighs Iran Diplomacy; Countdown to Midterms",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNYlJTbXJfV19QcVNaTm1hdmI2VnBRLWFQbkxTbFpacnNIeUxrT0NpTXVfdldfR3JKank1WDVnMDhvSXVjaWROTGxvaTJlYUp5TE9YUTBTRmsyd3REOFNZTlE5MGxFbWpsdGJPdVlsQWNIUnFvRWczQkV2TE96d1pqQ2ZabzVPRzIt?oc=5"
+    },
     {
      "title": "Alphabet Kicks Off Sale of Its Second Euro Bond This Year",
      "source": "Bloomberg",
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQTXZEZVR0eFFhajNmbHRXVldFdzBMWXlOWHo5WnhHcTJHR0t3bng5SEZNVERBU09IRW1Va0xMVVo0MlVGX3FxNHo1MTlVUHlDV0RGZ21FZVg5QjAzUGZ0MnA4UVpwWXBSdUsxTldiTHEzbEItRnVwdlVvSzM1LXJtdF9OWU94bXJnaEFMckdlRnZ6WElLeUlmYVpjUGlETzU4UkpXV2NSUFFPYmlC?oc=5"
-    },
+    }
+   ]
+  },
+  {
+   "id": "a1a4b0599211",
+   "co": "Oracle",
+   "type": "發債",
+   "zh": "Oracle 發行100億美元投資級債券，作為500億美元AI建設計畫的一部分。",
+   "date": "2026-11-03",
+   "links": [
     {
-     "title": "Alphabet’s Euro Debt Market Return Tests Faith in AI",
+     "title": "Oracle Is Offering $10 Billion of High-Grade Dollar Bonds",
      "source": "Bloomberg",
-     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPcTlwbGFjZ0ZDd1ZBcDBrRUt0TTNxd3NYQVJBTTZnbjZsdE9ac0NORnZZdG5iRlZNUUhCeVNQSU10VU43WEROdmkxMHdBcGNuV0tqblI4OWpuNldhN1VJeEFmaG1zWU9VUEdDZ3B0blBxNXA0ZVRlcGZkY3N1cE9DQi1nWGFVaEREWTlfWjB1MGE0bVRyamMtZ1dPUmxXTTduYWxlclZFUy1VUVU?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPMjVKRTIxUnozRUZmdmwyaWM1bWR2c1F2MjM1RE1qUVFMaEpoNndrSUNydGI2SmRpWS0tRGVxWHQ2OUxNYTZiaUttQWZ3RllpOGdwdnc1b3RoLTlSYkxlRVlyQzJrMDFkSUMtOHcwTlMxUEJ5RDAwdHc1MUY1TGQ2ZzYwVUtoZk5NbXZlUFJQMVRRRFdIdzJNQkNZc3JTM2twNXFTbjdTUUVrUFk?oc=5"
     },
     {
-     "title": "Alphabet kicks off €6 billion bond sale, tests appetite for tech debt",
+     "title": "Oracle to offer $10 billion in bonds",
      "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOSm5nTThDOUxTZDlERFZrWjg0WllEVktOcXZOWGdDQWtvX3VIQXhaWGc5amxQMHdacndmRng1R3pnSko1ZnV5OExhbVVRVGh5c2RtYUw0dmNfODU1NklnbXp1dkx3ZHlpSTAtY01WOGY5SkpFTnRGaXo4OEZ0cVUweTl2bk1hTFFqbC1hM1I1MUVraXdhWVRoTWJkZjJGVDlmSmZEaEs4em0tVkhSUjdRMjlMaU5EQ2M?oc=5"
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9OVGUyeXVqQlVYMEx3TEhEVHY5ekZLX3paamdqNUF1ek80VE9RZVhuSFl2d3dsVkF6T2JyVFdJdF8xR1FuWU5EdU9OWG03SmRoLUloaEFCc3pGLXFxN0FyOUNnVkM3T3prb1NMYXBOanNGT2RMYjNxcTZsdUEwbGs?oc=5"
+    },
+    {
+     "title": "Oracle is selling $10 billion in investment-grade bonds after capping new debt",
+     "source": "Quartz",
+     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9TdGk5UWduQndyZWR4U2g0aWtSVjYxV2NOZFFmRWUxNVQwTGxVRFRqeTFJQUxkeXJobkxrLWFNSWJURy0wcExUUUdnR2ViQ1phTF9TUG1jY0R6b1N5TVV5VkpzM3M1WTg5a1E?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "83596e85eec5",
+   "co": "Anthropic",
+   "type": "財報",
+   "zh": "Anthropic Q3營收達170億美元。",
+   "date": "2026-11-03",
+   "links": [
+    {
+     "title": "Anthropic Revenue Nears $17 Billion as IPO Looms",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPUEV6SkM2MWhJMFZ3bm1hRExOUzRTTXlRZExMcHQ4ZjdjU0RFTTJLanNIUWpydlY1MjIxZXpHa0RyTGVDOGtwTVJBRjM1STFTeGFReWlfVzRIb2ZYYlNIaFdGVDJHWFpiX0VOLUtESFFCYkdRb0k1QU9KZTNZbWJYWVY2SDc0LXVYTTByeUM0aGdzYmd4XzZjRFdlVWRPdU5xZ2Q1bDdIRXE1TjB4d2ZZX3htX2lITmtZcTNMUDZ5aXBnZHRTalE?oc=5"
+    },
+    {
+     "title": "Anthropic Updates IPO Filing As Investors Push For Lower Valuation – Discloses $17B In Q3 Revenue, Slowing Growth And Nearly $900B In Commitments",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOQjd4WDdodnNrSTBPS0ZPcFZfdFFQY1NsNzVnTDRiUldoUEpfODI2RnQ2NnladGpPVEdsYlgwVWFaMDAtbklIQ3l5RUU5MExfdHkzVmt6aDdXWU1FMHNSSmVDT0Q5S25LLVkxQjFjQkpDbWNlV0F6b1VMVjQ4cWZLc0NfeE9MZHlmbWR4ektST3l2bTdOdl9Bd2hNajRKSUJ6Tmk2Wg?oc=5"
+    },
+    {
+     "title": "Anthropic Revenue Hits Nearly $17 Billion Before Blockbuster IPO",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNY1J3NXRpRXlFZHZiUUotRlNhandEU19SQVVyM3c1SW0teWRrMGxhUnpzbjJYN0hyTUlOMGd2a3dqSDl3ZG9tMFIyVEhkN1BnVDdTcmNzUF94dExOZEMwN0VUMTBKbE52U2hma3BLOVp3T0VCRVh0ZE1mVWdvU0RiNjFIOWhRTHdfeElXZUJHMkppd0hHbFRuVzNiODBURVJLNzJyLXpRSkx1TTlsaVJvUDJnSUo?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "96f3a926dd85",
+   "co": "Intel",
+   "type": "融資／IPO",
+   "zh": "Intel 參與 7 億美元 AI 新創融資輪。",
+   "date": "2026-11-03",
+   "links": [
+    {
+     "title": "Intel (INTC) Joined A $700 Million AI Startup Funding Round",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUmU5ZDh1Y0Iwd0NTcDN0VVQ4czVMTXNOQlhBVU9DdEQ0M3M2MzdpbFN1NUFISkUxVlBVWTFTSUt3c1NNbXhfQ05XS0JJLVNqM09JX0xTOW5QNkN6Sm9PdEdvQkptRTFQQTVxd0pCR1pPUlBHVTc3U21wcnJ6TU1ZVDZsUzN2Sml5S2xuUTVzR3NuZk5BQXdmdg?oc=5"
     }
    ]
   },
@@ -1791,10 +1937,10 @@
    ]
   },
   {
-   "id": "ad3842693181",
+   "id": "4c7b5d4be506",
    "co": "OpenAI",
    "type": "融資／IPO",
-   "zh": "OpenAI與阿聯酋ADNOC、G42簽署協議，涉及能源、政府和投資合作。",
+   "zh": "OpenAI融資目標下調至200億美元，遠低於原定300億美元目標。",
    "date": "2026-11-02",
    "links": [
     {
@@ -1811,30 +1957,6 @@
      "title": "ADNOC Signs Major AI Deal With OpenAI and G42 to Boost Efficiency",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNaE1GSnZPMmtGaTBXbm9PWVZwWFFrN2U2S3dKOG4wZHFpOFotTzZUdTl2YmtMVUE2cTRzdzZkcGhLWEpnalFVMjZ3TGVfRldUcGhMS2M0RHJrUHZMXy1YX2NveF9xdFBDdEx6UmFiZkllSURfYlVvNTdoZzBHV3g5bFJyMVBtRXdqVkE?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "a1a4b0599211",
-   "co": "Oracle",
-   "type": "發債",
-   "zh": "Oracle 發行100億美元投資級債券，作為500億美元AI建設計畫的一部分。",
-   "date": "2026-11-02",
-   "links": [
-    {
-     "title": "Oracle to offer $10 billion in bonds",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9OVGUyeXVqQlVYMEx3TEhEVHY5ekZLX3paamdqNUF1ek80VE9RZVhuSFl2d3dsVkF6T2JyVFdJdF8xR1FuWU5EdU9OWG03SmRoLUloaEFCc3pGLXFxN0FyOUNnVkM3T3prb1NMYXBOanNGT2RMYjNxcTZsdUEwbGs?oc=5"
-    },
-    {
-     "title": "Oracle is selling $10 billion in investment-grade bonds after capping new debt",
-     "source": "Quartz",
-     "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9TdGk5UWduQndyZWR4U2g0aWtSVjYxV2NOZFFmRWUxNVQwTGxVRFRqeTFJQUxkeXJobkxrLWFNSWJURy0wcExUUUdnR2ViQ1phTF9TUG1jY0R6b1N5TVV5VkpzM3M1WTg5a1E?oc=5"
-    },
-    {
-     "title": "Oracle launches six-part bond sale, part of its $50B AI buildout plan",
-     "source": "Dealroom",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNVlF3Ymt2Qk5rbVExVDl5LWpzSDhZS0ZCZWFYTEN2aUpCUml6Ml9GVG81WEVvNzR1TjNOWFJDWlF6OHNNU2dPU2NWVk9MM0hCbWxOYzRNbG9QZHNLUExHa1FHS09fRzlaZGc4X3k4LTBsSWF3MUtWejRtb3dpeW1sVlQ0dE1kTHQ2N2Q0MTdpNWVsLTR2Nko3Skx0QWRjdGFNZ1Zj?oc=5"
     }
    ]
   },
@@ -1920,25 +2042,6 @@
    ]
   },
   {
-   "id": "83596e85eec5",
-   "co": "Anthropic",
-   "type": "財報",
-   "zh": "Anthropic Q3營收達170億美元。",
-   "date": "2026-11-02",
-   "links": [
-    {
-     "title": "Anthropic Revenue Hits Nearly $17 Billion Before Blockbuster IPO",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNY1J3NXRpRXlFZHZiUUotRlNhandEU19SQVVyM3c1SW0teWRrMGxhUnpzbjJYN0hyTUlOMGd2a3dqSDl3ZG9tMFIyVEhkN1BnVDdTcmNzUF94dExOZEMwN0VUMTBKbE52U2hma3BLOVp3T0VCRVh0ZE1mVWdvU0RiNjFIOWhRTHdfeElXZUJHMkppd0hHbFRuVzNiODBURVJLNzJyLXpRSkx1TTlsaVJvUDJnSUo?oc=5"
-    },
-    {
-     "title": "Anthropic reports $17 billion in Q3 revenue, purchase commitments of $895.4 billion in revised S-1",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE4ydDVnYVkzYzk0NlJUZXdoaWtFMkEtRDRmQk5qTTI2N0JhQzA1M0k0S0FRS2hmdEVqMkd5Qm5RVmcxclN5ZUxNOU0tcVJmUVlBN2hvVDFoZDVBWjZKN1ZrdlJ2WEJ5RDJaNUJhcTV6LTZjWnM4WjZzS2Z0bTRpd9IBgwFBVV95cUxPT2hEMEdnakVCU2tPNkRIeXpiMmFGalFrT25NR0lxWkE0S012bUZyVmVaN0pQUmRudzJWYVJOYjdJbV9zU0VIc1pYVl90RGlLSlRxVXJ6a0ZLeUhpaWh6TmRTSHJYMFczMGZ1dk54bVBVcV9LNE9jTDNsbDUxek1oZS02cw?oc=5"
-    }
-   ]
-  },
-  {
    "id": "231edda5efff",
    "co": "Anthropic",
    "type": "算力合約",
@@ -2005,30 +2108,6 @@
    ]
   },
   {
-   "id": "c08816b90313",
-   "co": "OpenAI",
-   "type": "融資／IPO",
-   "zh": "OpenAI新一輪融資目標下調至，遠低於原定目標。",
-   "date": "2026-11-01",
-   "links": [
-    {
-     "title": "OpenAI Cuts Funding Target by $10 Billion as Investor Jitters Shake AI Markets",
-     "source": "PYMNTS.com",
-     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPZFlfRFRVcWY1U2JQWW1wSEpaSEE0NDVYLVRvb21mdnpGRzdnbkh0eW9HSGkxNXhWNkVwX1J1RURXR1QtVG5rTnYyQTY0aEdzN1ZmeVZ1MEt5ZVFXMldQbTh1VEh2OWJQN3dsUTBleUdROTVQaVU5ZzJ5MUI1V0o1Vy1nR1hsanZXN3U2a1BrbzNFZ3RfbDQ0M1ljYllrNzFrOXpUWVZ0Vi1HYnA0N3hqTC1Qb0x5UjJiRzQzampJV3lReFk1VGtsVktfdERWcWNN?oc=5"
-    },
-    {
-     "title": "OpenAI Slashes Funding Round by a Third as AI Demand Cools",
-     "source": "the deep dive",
-     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNX29xbUxaLUJySE8ybThmWUJyNnozZF9SOHJSNFJTcExiYmZid0tRMlo4bTNJR0FycWhEcWhjeVJYOTZTN0RBa1o5dnhadE5pdVYwa3pITDFNSE95OHNNREdVOV9wam1ZRGNvRWh6YnNTQ0VXa20zMGJNOFN1MnNULXg4NHNXY2MzZlE?oc=5"
-    },
-    {
-     "title": "ChatGPT Maker OpenAI Reportedly Cuts Funding Target to $20B",
-     "source": "Wowtale",
-     "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5pdHY3WWFwVWlCbGVWaklmX0QtZ2ZxamFuejZ4RTh0ZjU1VG1scnlqWExvVUF2OVZMcmt2ZHJZUXNWQXpuYXBHSzc1TFJmTXNlakg4?oc=5"
-    }
-   ]
-  },
-  {
    "id": "2ee26c0dedc4",
    "co": "Meta",
    "type": "發債",
@@ -2091,30 +2170,6 @@
      "title": "Anthropic IPO: 1,300% Growth, $16.3 Billion in Revenue, and an $80.7 Billion Loss. Here Are the Numbers to Watch.",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNeTZOWF9VTXpRQVB4cFdVclZqX1NVaUdrME9hemZRS3laODBSbU5Kbnd0WHpvNlE2elVfS0loVnVMYllRZ2llWExCSHJXRktJM3J6SmdBbk1saFhwYWV1NXRyZmx2YkpJMFFrUlRfNEM3WmtucExrZWJVT0xkYmJMd3pFeUN3NWkzVFlyOWkwc2F4ZnJDaVE?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "2e87652cc5f3",
-   "co": "OpenAI",
-   "type": "融資／IPO",
-   "zh": "OpenAI融資目標下調至200億美元，估值維持1.25兆美元。",
-   "date": "2026-10-31",
-   "links": [
-    {
-     "title": "OpenAI Cuts Funding Target As Investors Lose AI Appetite",
-     "source": "Investor's Business Daily",
-     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPeWdSajhqVnN5TFJ2XzB3aEt3TzJ2TFhNamVKQnhJSlVsVVRDMENOcmJZX0ZSSTNINS1vbUplY0ZSWG1XLXoxTW1Zd1hUdWRwQ0NWNlpuRmg2eS1KMXZrR0J3cVBVaFF2VE9KYTF3VE5mX2pEMHNCWGJZZlVHc0xGSGFQa2FSb1RXeE5HV19JaVJxbTNacTNhZFJMWndpWWpXU3RjVktQM0tTMnRiQ04zNjZ0cw?oc=5"
-    },
-    {
-     "title": "OpenAI Slashes Funding Target to $20 Billion, Cuts Valuation to $1.25 Trillion: 7 outlets compared",
-     "source": "NewsCord",
-     "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQcFpJUXBVUmt1UnBUUjlJYnBYeS13NWdsQzZwX2k2b1NoZFlmTU9EN19KQnd0emNrOFdKcGZySWc1bkItTUJoU3AyNDV3cUI1M214S0NIVUxpZTJPb1ZxYnVwaEZoUlVKYlVhXzFHZUtPZ0RydzFBSU9nc2t5N2VVYVlSTmN4YVFOVFN1WXE1NkJLZHJYQm5NUEw2WHM0SDE1bUJCMnpqeVVSVG5GbTVIQkgwam1xalJYOVIyZTNtdGxBN2JDb0JhU1k4cG1YWmE3Szc5cDRMSlpWbXJkQ0hSMERR?oc=5"
-    },
-    {
-     "title": "OpenAI slashes funding goal by $10B amid tech selloff: FT",
-     "source": "Seeking Alpha",
-     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPUVhQdWl2RUNhQ09fcXUtS0pVQVFuakF5dUhCWVI5ZFFTcjZuSjZMNzUwQm5JSmVPUS1fN2R2SFI2LVA0TFE2TWhxdnZEZVFrZ09Qd0VfOTg5VU9ybXpSQ1Z6Xy1rTWpaXzFtaWNOWmhDX0phUFJPVUt5Y192SEE4M2J5ajN2UV93eVVsNTNvdjk?oc=5"
     }
    ]
   },
@@ -2885,7 +2940,7 @@
    "id": "4e989b782eb9",
    "co": "Microsoft",
    "type": "財報",
-   "zh": "Microsoft公布第一季度財報。",
+   "zh": "Microsoft 公布第一季度財報。",
    "date": "2026-10-28",
    "links": [
     {
@@ -3342,32 +3397,32 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "3c8420c6cd06",
-   "text": "Microsoft雲端業務超預期成長支撐盈利，偏向提振股市與AI投資熱度。惟公司資本支出創高位（394億美元），融資需求增加，發行250億美元債券偏向增加公司債供給。若資料中心投資持續高位，則長端利率面臨來自企業融資需求的上升壓力。"
+   "hash": "715df23557ae",
+   "text": "Microsoft 雲端業務超預期成長推升盈利，偏向支撐股市；同時發行250億美元債券與資本支出創高，偏向增加公司債供給。若市場聚焦盈利強勁，則股市偏向上升、AI投資熱度升溫；若聚焦債務擴張與資本支出風險，則長端利率偏向承壓。整體而言，強勁營收偏向抵銷債務擴張的負面影響。"
   },
   "Alphabet": {
-   "hash": "117f03675010",
-   "text": "Alphabet近期事件對市場的影響偏向：公司債供給增加、長端利率承壓。營收成長但利潤下滑、AI支出達510億美元引發現金流擔憂，促使公司發行60億歐元債券融資。若AI變現未如預期跟上支出增速，則長端利率偏向上升；同時大規模資本支出計畫偏向提升AI投資熱度，但盈利疑慮可能對股市形成壓力。"
+   "hash": "56ff01e063ee",
+   "text": "Alphabet近期密集發債（120億歐元）應對AI支出壓力，偏向增加公司債供給。第三季資本支出達510億美元，2027年預期大幅增加，現金流承壓明顯。營收成長25%但利潤下滑，AI變現與支出失衡引發市場擔憂。若AI投資回報未如預期兌現，偏向拖累科技股表現與AI投資熱度；債務增加偏向推升長端利率。"
   },
   "Meta": {
-   "hash": "64cf9f10331d",
-   "text": "Meta密集發債與融資超千億美元，偏向增加公司債供給、推升長端利率。大規模資本支出承諾（8,250億美元）與AI算力投資超越現金流，驅動融資需求。若市場吸收此債券供給能力有限，則長端利率偏向上行。同時，強勁財報與AI投資規模偏向支撐股市與AI投資熱度，但融資稀釋效應與高債務水位偏向形成對沖。"
+   "hash": "026aaa6b8dec",
+   "text": "Meta近期密集發債與融資超千億美元，主要用於AI數據中心資本支出。此舉偏向增加公司債供給、推高長端利率；同時大規模股權融資稀釋股權但強化資本基礎。若Meta資本支出持續超越現金流，則需進一步依賴債市融資，可能推升企業債利差。強勁財報與AI投資承諾偏向支撐股市與AI投資熱度。"
   },
   "Oracle": {
-   "hash": "1e9b49b84310",
-   "text": "Oracle大規模AI基礎設施投資偏向增加公司債供給與長端利率上升壓力。950億美元資本支出與200億美元融資上限，驅動Oracle發行100億美元債券籌資，供給面擴張明顯。若長期利率上升，則高資本密集的AI擴張成本上升，但Oracle預期2029年達300億美元現金流，偏向支撐股市對其AI戰略的信心，強化AI投資熱度。"
+   "hash": "f7c96e627863",
+   "text": "Oracle 近期大幅增加AI基礎設施投資，偏向提升公司債供給。多筆數十億美元融資與近千億美元資本支出計畫，若持續透過債券籌資，將增加投資級債券供給，偏向推高長端利率。同時，Oracle 擴大晶片合作與雲端運算能力，強化AI競爭力，偏向支撐科技股表現，進一步強化市場AI投資熱度。"
   },
   "CoreWeave": {
    "hash": "057ae24099ba",
    "text": "CoreWeave高速擴張偏向增加公司債供給壓力。大規模資本支出與全球數據中心擴張需求龐大融資，高盛預估新增發債規模達數百億美元，推升長端利率上行預期。惟Q3營收倍增與CrowdStrike合作擴展AI工作負載需求，若能轉化為現金流，則偏向支撐債券市場；但高槓桿結構（債務達350億美元）可能加重投資人風險溢酬要求，對AI基礎設施投資熱度呈雙向影響。"
   },
   "Anthropic": {
-   "hash": "0a790036f119",
-   "text": "Anthropic巨額虧損與龐大債務承諾偏向增加公司債供給壓力。Q3營收170億美元對沖部分風險，但807億美元虧損與近9,000億美元債務承諾凸顯融資需求。若長期虧損持續，則公司債利差偏向擴大、發債成本上升。AI算力合約鎖定4,300億美元反映行業景氣，但高槓桿融資結構偏向提升金融風險，可能對科技股估值與AI投資熱度帶來冷卻壓力。"
+   "hash": "d42cbf4fc765",
+   "text": "Anthropic龐大的算力承諾與債務融資偏向增加公司債供給壓力。Q3營收170億美元相對近9,000億美元的運算支出承諾與債務規模，若營收成長未能相應加速，則償債能力疑慮偏向推升長端利率。巨額資本支出需求與虧損規模偏向強化AI投資熱度，但融資規模龐大偏向對債市造成供給衝擊。"
   },
   "OpenAI": {
-   "hash": "076823aa4d11",
-   "text": "OpenAI融資目標下調、估值承壓，偏向增加公司債供給需求；大規模算力採購與數據中心投資持續推進，資本支出龐大。若融資進展受阻，則公司可能轉向債券市場籌資，推升長端利率；AI基礎設施投資規模未減反增，偏向維持AI投資熱度，但融資困難可能引發市場對AI商業化前景的疑慮，股市偏向承壓。"
+   "hash": "3d1e02ff49b4",
+   "text": "OpenAI融資目標下調至200億美元，反映融資環境承壓；惟與ADNOC、G42簽署協議及多項算力合約落實，顯示實質投資進展。偏向：公司債供給壓力緩解，長端利率偏向溫和；AI投資熱度維持，但市場對高估值融資的樂觀度偏向降溫。"
   },
   "Amazon": {
    "hash": "c68cbf93ccac",
@@ -3375,20 +3430,20 @@
   },
   "Nvidia": {
    "hash": "9477ad6a415d",
-   "text": "Nvidia近期大幅擴展算力合約與融資擔保，涉及Meta、Anthropic等大型客戶數百億美元投資，偏向提升公司債供給壓力。強勁財報與持續訂單確認AI晶片需求旺盛，偏向支撐股市；但反壟斷調查與擔保債務規模擴大，若監管趨嚴則可能抑制投資熱度。整體而言，AI基礎設施投資熱度持續升溫，惟風險因素增加。"
+   "text": "Nvidia 近期大幅擴展算力合約與融資擔保，涉及Meta、Anthropic等大型客戶數百億美元投資，偏向提升公司債供給壓力。強勁財報與持續訂單確認AI晶片需求旺盛，偏向支撐股市；但反壟斷調查與擔保債務規模擴大，若監管趨嚴則可能抑制投資熱度。整體而言，AI基礎設施投資熱度持續升溫，惟風險因素增加。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
    "text": "xAI與SpaceX簽署400億美元GPU租賃協議，反映其算力需求龐大且融資能力強。此舉偏向增加公司債供給壓力——若xAI後續透過債券融資支應租賃成本，長端利率面臨上升壓力。同時，大規模算力投資偏向提升AI投資熱度，可能吸引科技股資金流入。短期內公司債供給增加與AI熱度上升的雙重作用，對長端利率形成複雜影響。"
   },
   "Intel": {
-   "hash": "5210978f8059",
-   "text": "Intel 伺服器銷售強勁成長偏向支撐科技股表現，惟第四季展望疲弱反映需求不確定性。若業績動能難以延續，則市場對晶片廠商獲利前景的信心可能減弱，偏向壓低科技股估值。同時，伺服器需求與 AI 基礎設施投資密切相關，展望轉弱若暗示 AI 投資熱度趨緩，則可能影響整體科技投資情緒。"
+   "hash": "cae550084793",
+   "text": "Intel 近期事件對市場的影響偏向複雜。伺服器銷售強勁成長反映 AI 需求旺盛，偏向支撐長端利率與股市；惟第四季展望疲弱則偏向拖累股價。參與 AI 新創融資輪顯示公司看好 AI 前景，若市場認可其策略轉向，則偏向提升 AI 投資熱度；但財報指引不佳若引發債市擔憂，則偏向增加公司債供給壓力。"
   },
   "Apple": {
    "hash": "0156b95233f9",
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-03 08:07（台北）"
+ "at": "2026-11-03 20:09（台北）"
 }

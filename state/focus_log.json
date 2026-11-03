@@ -1,101 +1,5 @@
 [
  {
-  "at": "2026-10-28T13:34+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [
-   "fomc"
-  ],
-  "locks": [
-   "fomc"
-  ],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 19.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed officials not aligned on weight of financial conditions - Reuters"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed likely to go into wait-and-see mode on rates - Reuters"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "John D Schipfer, Greenville Fed Financial Corp: Profile and Biography - Bloomberg",
-     "Annette M Ryan-Baker, Greenville Fed Financial Corp: Profile and Biography - Bloomberg"
-    ]
-   },
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
-    "titles": [
-     "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+1.5、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
-    ]
-   }
-  ],
-  "second": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com",
-  "related": [
-   "Fed officials not aligned on weight of financial conditions - Reuters",
-   "Fed likely to go into wait-and-see mode on rates - Reuters"
-  ],
-  "copy_miss": [
-   "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
-   "Fed officials not aligned on weight of financial conditions - Reuters",
-   "Fed likely to go into wait-and-see mode on rates - Reuters",
-   "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
-  ],
-  "second_dropped": "重點二沒有內文",
-  "headline_only": true,
-  "main": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
-  "points": 1,
-  "result": "聯準會 10/28 決議維持利率不變，官員對金融環境緊縮程度看法分歧"
- },
- {
   "at": "2026-10-28T14:11+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3060,5 +2964,109 @@
    ]
   },
   "result": "舊金山聯儲示警聖嬰現象恐推升2027年通膨，韓國核心物價持穩央行升息壓力未消"
+ },
+ {
+  "at": "2026-11-03T12:09+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "jolts"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Stocks, Bonds Rise as Oil Tumbles on US-Iran Hopes: Markets Wrap - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+0.5、熱度+4（有內文）",
+    "titles": [
+     "US Treasuries Trade in Narrow Range as Oil Prices Recover Ahead of Midterm Elections: Commerzbank"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "為擋全台通膨中油負債比已破9成   多單位喊話：別讓政策成本拖垮公司"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Treasury Yields Extend Past Month’s Slide as Oil Prices Tumble - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "US Treasury cuts fourth-quarter borrowing estimate to $618 billion - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Trump Fed nominee faces bi-partisan doubters - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、外國-3、熱度+4",
+    "titles": [
+     "Swiss Inflation Accelerates to Highest in Almost Three Years - Bloomberg"
+    ]
+   }
+  ],
+  "background": [
+   "US Treasuries Trade in Narrow Range as Oil Prices Recover Ahead of Midterm Elections: Commerzbank",
+   "Tech Jumps Over Apple Q3 Report on Wall Street Pre-Bell; Asia, Europe Off"
+  ],
+  "main": "Stocks, Bonds Rise as Oil Tumbles on US-Iran Hopes: Markets Wrap - Bloomberg",
+  "main_why": "最高分",
+  "second": "為擋全台通膨中油負債比已破9成   多單位喊話：別讓政策成本拖垮公司",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 160 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "【對利率】新聞意涵和今日走勢（10 年期 -3bp）方向不同，卻沒有點出落差（要寫出實際變動，並說明市場還沒反映或反向）",
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 206 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ],
+    [
+     "主軸 158 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "美債窄幅震盪，油價回升與美元走強牽制債市"
  }
 ]
