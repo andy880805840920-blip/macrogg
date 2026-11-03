@@ -1,101 +1,5 @@
 [
  {
-  "at": "2026-10-28T14:11+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "signals": {},
-  "events": [
-   "fomc"
-  ],
-  "locks": [
-   "fomc"
-  ],
-  "demoted": [],
-  "clusters": [
-   {
-    "score": 19.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、次級+0.5、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed officials not aligned on weight of financial conditions - Reuters"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed likely to go into wait-and-see mode on rates - Reuters"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 19.0,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+2、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "John D Schipfer, Greenville Fed Financial Corp: Profile and Biography - Bloomberg",
-     "Annette M Ryan-Baker, Greenville Fed Financial Corp: Profile and Biography - Bloomberg"
-    ]
-   },
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+3、主角+2、次級+0.5、時效+2、來源+3、鎖定+8",
-    "titles": [
-     "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 18.5,
-    "sources": 1,
-    "why": "主題+2、主角+2、時效+1.5、來源+3、鎖定+8、主題熱度+2",
-    "titles": [
-     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
-    ]
-   }
-  ],
-  "second": "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com",
-  "related": [
-   "Fed officials not aligned on weight of financial conditions - Reuters",
-   "Fed likely to go into wait-and-see mode on rates - Reuters"
-  ],
-  "copy_miss": [
-   "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
-   "Fed officials not aligned on weight of financial conditions - Reuters",
-   "Fed likely to go into wait-and-see mode on rates - Reuters",
-   "UK Budget Tests Bond Markets as Fed, ECB and Oil Risks Loom - Bloomberg.com"
-  ],
-  "second_dropped": "重點二沒有內文",
-  "headline_only": true,
-  "main": "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com",
-  "points": 1,
-  "result": "聯準會 10/28 維持利率不變，官員對金融條件影響分歧"
- },
- {
   "at": "2026-10-28T14:26+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3068,5 +2972,112 @@
    ]
   },
   "result": "美債窄幅震盪，油價回升與美元走強牽制債市"
+ },
+ {
+  "at": "2026-11-03T17:35+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "jolts",
+   "refunding"
+  ],
+  "locks": [
+   "refunding"
+  ],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Treasuries Fall Amid Oil Price Swings, Strong Job Openings Data - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Saudi Budget Deficit More Than Doubles as War Strains Finances - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "Meta為AI建設發債！美元債擬籌150億美元 首批歐元債最快周三登場"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "DePaul erases 11-point deficit, rallies past West Georgia in opener - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "FTSE 100 slips as inflation fears build on oil rise - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Wall Street climbs, uncowed by inflation - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Fed will not raise rates on inflation fears alone - Powell - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、外國-3、熱度+3",
+    "titles": [
+     "Swiss Inflation Accelerates to Highest in Almost Three Years - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Meta seeks at least $20 billion in bond sale as AI debt boom accelerates",
+   "國際原油價格進一步下跌　美股標普500、納指雙雙開高",
+   "Meta為AI建設發債！美元債擬籌150億美元 首批歐元債最快周三登場"
+  ],
+  "main": "Treasuries Fall Amid Oil Price Swings, Strong Job Openings Data - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Saudi Budget Deficit More Than Doubles as War Strains Finances - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（200、150、960）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 220 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（上週、今日），請改寫成月/日"
+    ],
+    [
+     "主軸 160 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（上週、今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 198 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（上週），請改寫成月/日"
+    ]
+   ]
+  },
+  "result": "Meta 發債至少 200 億美元，科技巨頭 AI 舉債潮加速"
  }
 ]

@@ -1,12 +1,12 @@
 {
-  "at": "2026-11-03T20:08:56+08:00",
+  "at": "2026-11-04T01:34:30+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-09",
         "released": "2026-10-02",
         "month": "2026-09",
-        "score": 0.052817582802898985,
+        "score": 0.22135856876839954,
         "tilt": "balanced",
         "flags": [
           "supply_rise",
@@ -508,22 +508,22 @@
     },
     "jolts": {
       "current": {
-        "vintage": "2026-08",
-        "released": "2026-09-30",
+        "vintage": "2026-09",
+        "released": "2026-11-04",
         "flags": [],
         "flag_titles": {},
         "flag_leans": {},
         "metrics": {
           "openings": {
             "label": "職缺數",
-            "value": 707.9,
+            "value": 752.3,
             "unit": "萬個",
             "threshold": 5,
             "up_is": "hawkish"
           },
           "hires": {
             "label": "招聘率",
-            "value": 3.3,
+            "value": 3.4,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -531,7 +531,7 @@
           },
           "quits": {
             "label": "離職率",
-            "value": 1.9,
+            "value": 2.1,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -550,22 +550,22 @@
         "metrics_prev": {}
       },
       "previous": {
-        "vintage": "2026-07",
-        "released": "2026-09-02",
+        "vintage": "2026-08",
+        "released": "2026-09-30",
         "flags": [],
         "flag_titles": {},
         "flag_leans": {},
         "metrics": {
           "openings": {
             "label": "職缺數",
-            "value": 727.1,
+            "value": 707.9,
             "unit": "萬個",
             "threshold": 5,
             "up_is": "hawkish"
           },
           "hires": {
             "label": "招聘率",
-            "value": 3.2,
+            "value": 3.3,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -661,7 +661,7 @@
           },
           "tp": {
             "label": "期限溢酬",
-            "value": 0.6795,
+            "value": 0.7225,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -864,7 +864,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-11-03T20:08:56+08:00",
+      "at": "2026-11-04T01:34:30+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-09|fomc:2026-10-28",
       "name": "傾向緊縮",
       "regime": "inflation",

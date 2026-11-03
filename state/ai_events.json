@@ -1833,7 +1833,93 @@
   "8c45fea8cf44": "2026-11-03",
   "d9b9c6a097a9": "2026-11-03",
   "0731e5e83df3": "2026-11-03",
-  "3dd9950185b9": "2026-11-03"
+  "3dd9950185b9": "2026-11-03",
+  "e6bb7e1f27df": "2026-10-24",
+  "2315c6ec39a7": "2026-11-03",
+  "ff9d8faa5b44": "2026-10-26",
+  "8981071fa77a": "2026-11-03",
+  "798b55f3e47b": "2026-10-28",
+  "e90703dd2d50": "2026-11-03",
+  "eb220b3a3e8f": "2026-11-02",
+  "6bce2e65f1a8": "2026-11-02",
+  "43a8e794b34f": "2026-10-28",
+  "004a3d254c71": "2026-10-27",
+  "72e24ba904f9": "2026-10-26",
+  "b781598eee78": "2026-11-02",
+  "201203e398e0": "2026-11-02",
+  "c3d1b7bcd222": "2026-11-02",
+  "9a1fae143f18": "2026-11-02",
+  "638ca0886f85": "2026-11-02",
+  "7f8e37097faa": "2026-11-01",
+  "7b7c3fac8888": "2026-10-30",
+  "c2c88b334869": "2026-10-30",
+  "dbb78ee8fad6": "2026-11-03",
+  "000d81b4232e": "2026-11-03",
+  "56ef35399293": "2026-11-03",
+  "0e25da245587": "2026-11-03",
+  "a779d6c33a87": "2026-10-31",
+  "f7634dc945f1": "2026-11-03",
+  "23111ce4b42b": "2026-11-03",
+  "82b8d9c47057": "2026-11-03",
+  "0c850e721d17": "2026-11-03",
+  "0153714ab7be": "2026-11-03",
+  "cdd159fe5871": "2026-11-02",
+  "33cf18d21537": "2026-11-02",
+  "dfc1d51771c4": "2026-11-02",
+  "0e986d278339": "2026-11-02",
+  "39b597cde781": "2026-11-02",
+  "60ab059afb92": "2026-11-02",
+  "17ddb65f99fc": "2026-11-03",
+  "fa635870d793": "2026-11-03",
+  "0f6dc5b89714": "2026-11-03",
+  "0780f02b10f2": "2026-10-30",
+  "6eef5d2a2792": "2026-10-29",
+  "30cc2922da59": "2026-11-03",
+  "0121c54bf27b": "2026-11-03",
+  "d8c4de688295": "2026-11-02",
+  "57f39200efda": "2026-11-03",
+  "d2d48a1f0d92": "2026-10-27",
+  "164aeadee66a": "2026-10-21",
+  "07fc71c1c30f": "2026-11-03",
+  "5923f5784895": "2026-11-03",
+  "183964954db2": "2026-11-03",
+  "6bd66a351d8f": "2026-11-02",
+  "b71b9e4e7cd1": "2026-10-27",
+  "fb13af6b9ade": "2026-11-03",
+  "40bfa6454255": "2026-10-26",
+  "42064b7bbe91": "2026-10-26",
+  "d35a3c93b991": "2026-11-02",
+  "217b425a092c": "2026-11-02",
+  "9c6f99575d42": "2026-11-02",
+  "809abac7dccf": "2026-11-02",
+  "b468662d1d87": "2026-10-26",
+  "74d4a7a456e3": "2026-11-03",
+  "04ac777bb604": "2026-11-03",
+  "bbecee4eb9f9": "2026-11-03",
+  "9087004f8654": "2026-11-03",
+  "92d140de7945": "2026-11-03",
+  "7fa40648c13d": "2026-11-03",
+  "431c082914e8": "2026-11-03",
+  "674164e19a5e": "2026-11-03",
+  "0751e81890de": "2026-11-03",
+  "7400ce845fea": "2026-11-03",
+  "fda6f1054ab7": "2026-11-03",
+  "22122f1fa54d": "2026-11-03",
+  "1cb8730d52c5": "2026-11-03",
+  "ac3c68686109": "2026-11-03",
+  "09f6b8be9e2f": "2026-11-03",
+  "355b97d25fd6": "2026-10-27",
+  "2bb4717fb538": "2026-10-26",
+  "e3828472c0d1": "2026-11-03",
+  "ec21c6484893": "2026-11-03",
+  "358df50e65d4": "2026-11-03",
+  "0ff77f158704": "2026-11-03",
+  "6dc85b32dcd7": "2026-11-03",
+  "1afa88914a1f": "2026-11-03",
+  "39a7aa3a689a": "2026-11-03",
+  "941d3993916e": "2026-11-03",
+  "88e6fc453f13": "2026-11-03",
+  "efd1309c7d5e": "2026-11-03"
  },
  "events": [
   {
@@ -1864,7 +1950,7 @@
    "id": "a1a4b0599211",
    "co": "Oracle",
    "type": "發債",
-   "zh": "Oracle 發行100億美元投資級債券，作為500億美元AI建設計畫的一部分。",
+   "zh": "Oracle 發行100億美元投資級債券，作為AI建設計畫的一部分。",
    "date": "2026-11-03",
    "links": [
     {
@@ -1885,10 +1971,10 @@
    ]
   },
   {
-   "id": "83596e85eec5",
+   "id": "93b2a5bbc620",
    "co": "Anthropic",
    "type": "財報",
-   "zh": "Anthropic Q3營收達170億美元。",
+   "zh": "Anthropic Q3營收170億美元，虧損800億美元。",
    "date": "2026-11-03",
    "links": [
     {
@@ -1923,6 +2009,30 @@
    ]
   },
   {
+   "id": "31b1d705b724",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta啟動至少200億美元債券發行，包括首次歐元計價債券，用於AI投資融資。",
+   "date": "2026-11-03",
+   "links": [
+    {
+     "title": "Meta Kicks Off Debt Offering in Push to Fund AI Investments",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNQ0x3bUYydl9CYlNVOHlNaVZrMFgxU29fQVo4Yko3SVZvUUxZVkJZOVZUenRyZkxIREoxdE50MUFoY2FlMHY1Tm1xRmNKOW1FQ1phSkdoc1d5dGV2ZlV1ejVPNUI4b0dWeTMtVWV6WEh4bFZIcnlTNG9SZ3pOSzhxaDJleFdYVnVTV2RSSVRsQ21SUktPd2Z1TmtGLVF0RjNrSTI4Z1BkR2Q0YjFaSkdv?oc=5"
+    },
+    {
+     "title": "Meta Reportedly Plans To Raise $20B From Its Cross-Border Bond Sales, Including Debut Euro Offering",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPa2cwOE1Ob0JqUDZ1bDZwTjJtcUtqZWRPV0hjcHNBQ0RwZWFsNzVsSVVKYUZrTkpsc3lJRnpGZjBkZ2cyemhTdzRqVnRpM3pnVUhCbHFPazVkQ290NWg3VmZWS3UweTVwUXpCaEJGNmlRMUxJanNqeFFad1JPOWpGUTMtcmVuTDUybldiY210VERKLW5BZUlGMUtKOG4?oc=5"
+    },
+    {
+     "title": "Meta seeks at least $20 billion in bond sale as AI debt boom accelerates",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQM29WbVZTdGU2U24wWmNFdEpYVGFQOXoxTVRaVXNHZDhwX3ZCdE1Ra3A3bmxHdGZGcTJUeW1pWnFBYzRQQ2tpQXNqX0ducEphMkY1QlRVQXp6RWU2UmZfTUgyeWpzUmQ1YXV5VWhfeW1HNTRVb25TWk5TdmJfUkRxWFBNVE55T2l1RVYyY2xpWElCVGFnZGc?oc=5"
+    }
+   ]
+  },
+  {
    "id": "8ae623d37023",
    "co": "CoreWeave",
    "type": "財報",
@@ -1940,7 +2050,7 @@
    "id": "4c7b5d4be506",
    "co": "OpenAI",
    "type": "融資／IPO",
-   "zh": "OpenAI融資目標下調至200億美元，遠低於原定300億美元目標。",
+   "zh": "OpenAI融資目標下調至，遠低於原定目標。",
    "date": "2026-11-02",
    "links": [
     {
@@ -1999,30 +2109,6 @@
    ]
   },
   {
-   "id": "49c274bc06c0",
-   "co": "Meta",
-   "type": "發債",
-   "zh": "Meta籌資至少200億美元發行跨境投資債券。",
-   "date": "2026-11-02",
-   "links": [
-    {
-     "title": "Meta Readies Cross-Border Investment Bond Offering",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNZTFxa3QtQl9WdmNZM1VZT2xxSmUxNTFDbkZTNFBJRHJKaWowWDAtQVBVLWJDMWIyQUdpOEY0cjB1VXVSTW9hM2RoNTlwNUJmbWRJVm90NXZvX3J3UjRycUJnaTJ1WERMWG5vZ1JXaVRaUUFRbGhYaV9tVG9YV3plcjZxMTVhYzRPUFZWbTZKbGxTbTVVa1V3UmtsNThka3JxU0g0?oc=5"
-    },
-    {
-     "title": "Meta eyes at least $20 billion from potential bond offerings, Bloomberg News reports",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPZ0YxUHNFS2hBeHVPODkxZXVIMzE3b2xxLVFkOGxHUmJjSHJGUlV4Z01pZ1R0cm03bmpaQzd5TUxLSEk1Q2xydElDS1B6S2VnWkZoTTgzN2k4NFlrOWVOT2xJNmhRUEV6cEd3S09IQURYNHpISjhrWHk4QVU3aXROWUxEUDRGbkdpekdFalZ4X1lQdWsxT1lYTkRzLUtMMDBjYk5nQm8yendHZERTR0xzNFpTTGx3RFhCanRj?oc=5"
-    },
-    {
-     "title": "Meta is eyeing a dollar and euro bond sale of at least $20 billion",
-     "source": "Quartz",
-     "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1JVkdNRFlIem8yQTl0cl84MG1zZUJDcUhjQjloZTlqRUNFNGVPdDNaMjhwV1hhc2ozVU1UZExMeENoMDNmdzVPVlFWZWVBdC1BeF9JTHZNM0lnblF4UnNsUFh6eFgyUmlGcDFqOUNYZVNnUQ?oc=5"
-    }
-   ]
-  },
-  {
    "id": "ab34e47c56cb",
    "co": "CoreWeave",
    "type": "算力合約",
@@ -2062,6 +2148,25 @@
      "title": "Anthropic reveals $900bn AI spending commitments ahead of IPO",
      "source": "Financial Times",
      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNeHIxTTNxemhYRmRhV2dJOXlhc1ZBdW05MVp2MkFWdy02SVhIdzZqaWplcXl4SHQ0eGc4RFlaRlNwVWw2d2NQUjJucnFseEJ6ZUdpOUloSG9HOXczOGxmRGhuRk9XZ2VYTFNVUHJPQXltZ0d4S3pVTnZMOElUS0lXcGxBT3M?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "37a17878edf8",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Amazon在West Richland購地2.64億美元，將建造至多21座數據中心。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Amazon will build up to 21 data centers on West Richland land it paid $264M for",
+     "source": "Tri-City Herald",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE03SHZ4NHNEMmVVYnB2SVJrQVhDNGlCRmZKWVM5MFRLSFhqTXVKU1lGeWxxYWxyQ2NUSnhvcG52Tjg2RUZZY1VzbXNzTm0tVmI5Qm1uOTdJLUVqcXpKUmN2blNRUDZFWGo1SVdzSXJfSEU0ZFNp0gF0QVVfeXFMTk02SEF5R19SU0ZSdElVWGdYMTU4Q0RXbTdING1sNVV3VEs2UVZCbzF5N1ZtM0VOSWVXOF9HdWNUaVQ5RktIOTZRWmJTT3VFOGdNZ3FwMFUydVhuQTNIZ2xBUE1DYnNJRkhBUHJENHlWek0zSXM?oc=5"
+    },
+    {
+     "title": "Amazon has purchased land in West Richland for possible data center, city officials say",
+     "source": "AppleValleyNewsNow.com",
+     "url": "https://news.google.com/rss/articles/CBMihwJBVV95cUxNcjZ5Z0tHX3k3V1piV0FnMGJrdnN0RTJqX0ctN1FFUUtzZ3RYcFdPeU1RX25SWEs0THF1OFVOYjVieG5oejU2ak55UHZXdTlMcndXRTJIalRwQzhDdl9fRzFPQ3JkR0UtTEZCTzkxUkZDNHE3T05OVS1xQXhyVHRidHpoSjVyMmZUWDNaWFhOVEEwRkJ1Q1h0akRKYUplMXl3SEhyX2g2Vm45aml3Y0VxS1BTMlBMLU4zTFZpVl9xYnNIdHppcFNDMXZvY1Z4R1RBcjhIWHVyZ2lNUU5FdENmazJPU3RWczFSR005V1FPZk5xWEVvbUN0ZnhWa3N6aHRqZ2V0dk9sYw?oc=5"
     }
    ]
   },
@@ -2156,20 +2261,6 @@
      "title": "Nvidia weighs playing the cosigner for Nscale’s AI data center in West Virginia",
      "source": "TechCrunch",
      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNZGNhWVNJR0JZTnVKVlM5RUZFeGdQZDdMMk9yODB0ZTlGSXRnYzNZU2hVbXBLdVdWbGstX3RPYkphd190d0R5N0VKN0RabTd3aW5OSUI1cHVsME9vVno4Nm1LY0lTV25qZE5EejNqNm91c1dvbVk5YnctUUowaUJoYTJwSEhCY3BIYV9kbVZ1U1RKNTk5Y3NqVDR3YTlrdXZDOWd5ekVvaDdGSzV0aVA5OUFxcw?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "324a92c7b72d",
-   "co": "Anthropic",
-   "type": "財報",
-   "zh": "Anthropic IPO文件披露2026年營收163.3億美元，虧損807億美元。",
-   "date": "2026-10-31",
-   "links": [
-    {
-     "title": "Anthropic IPO: 1,300% Growth, $16.3 Billion in Revenue, and an $80.7 Billion Loss. Here Are the Numbers to Watch.",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNeTZOWF9VTXpRQVB4cFdVclZqX1NVaUdrME9hemZRS3laODBSbU5Kbnd0WHpvNlE2elVfS0loVnVMYllRZ2llWExCSHJXRktJM3J6SmdBbk1saFhwYWV1NXRyZmx2YkpJMFFrUlRfNEM3WmtucExrZWJVT0xkYmJMd3pFeUN3NWkzVFlyOWkwc2F4ZnJDaVE?oc=5"
     }
    ]
   },
@@ -3317,82 +3408,6 @@
      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQVllMWGh1MWdWeGtyVnQ1NHpTRFVLSlpMS3owVG4zeHVnUmZOdDA4SUs2WDlJeVZFbGJPakFod0tBamRNRXpjQ1ppaENhak02N2xFeDF2VVJvZ25Xdk9NX3RnWHF4MnFxLU9QUVRfcmd5dG5vdFdLbWNrNkNRQXZOQ0p2QlNJamdiZGxJdV9XMWlGSGRmN01MZUFSMVI?oc=5"
     }
    ]
-  },
-  {
-   "id": "2ce4a2b2d90e",
-   "co": "Amazon",
-   "type": "算力合約",
-   "zh": "Amazon 與3M簽署60億美元數據中心合作協議。",
-   "date": "2026-10-20",
-   "links": [
-    {
-     "title": "3M expands Amazon data center partnership, shares gain",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNdFJFY2JqbjhtdTFfVDFUSkNrUHJhbWxWYjMzaG01Z1k5X005ZzFmWkJ5a0tUQjhjU0dkcHFBZjJzdGU0cUVBdEVBUmhXLXJTU1NHMUlmbHJfRkZ0WVFZWHpSN1h3MXpoTVZtaERMUll4NlJ0cHgyS1pWMHFVcldDUzFKQzVrdnVQbnFvOEdqNjE3WGxCdTNKemhjZnVKbW5tb3g3SnR3Qi1UN0gzNlEwZGV5NWE?oc=5"
-    },
-    {
-     "title": "3M stock rises 3% on $6B Amazon data center deal",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNUWwtdGRhOUxDMlR1QWZ2NFJuV1BlWjhmZjVlUmhtTUxtUlZFX0xMeXNSSzl1ZDQwNEJmcDlqVVJ3cjhYVWVFUi16UG05c1lFbkYyUmJYcVhyVmhTOWdFc0tFTmRyVUdKelV4bVJxZ3BtMzA1QXgwRkNVa0FDeEd2eVFobVl3VS1iNXNhUw?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "88cde10a7366",
-   "co": "Nvidia",
-   "type": "算力合約",
-   "zh": "Nvidia 與德國政府達成AI合作協議，涉及算力基礎設施投資。",
-   "date": "2026-10-20",
-   "links": [
-    {
-     "title": "Investment summit: German government strikes AI deal with Nvidia",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPX0NTc2xja3pTa1RlTXBSY0xneWRmZnNQLTY2M2xDV05uZVhBalVQeFV2SFhYa3pRXzFfemFKZDh6VEsxcXhNRlpEdmJiZTdOM1RUa1NPRk9ZVE54MUpPRjk2OHNHb19zSGRxSnNuTTN5UnRUaXdpQUg2eVdLdDFMVGJnQXhEQUVwRUJlMTkyYnotRWdfOEd4Wmd3LVNhVzB3dDY2N0FRTWQ2V0k?oc=5"
-    },
-    {
-     "title": "Germany's Merz urges AI investment ahead of Nvidia deal",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOT09KR2R3TjktZGltSk9PMGtKcGVMeFBuSmR5eTVkMERSbkVuc0d5bGhnanJ2WloyWUtULU1PTkFVQlNhaklmWmJESHF2cEV0Q01YQ3NBb3RxWklLQlNLelBEMzVBSF9nZ09Uc0FjLUhHUmhOeUF1Z0pObndUclVjT0s2Q3Fka2Z6dWltWC1MQ0g5cmo0V1dUeFY0M3hEOE5aSzV3RjdZZ2JFUTU4TEE?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "c4dbe1e60f60",
-   "co": "Anthropic",
-   "type": "算力合約",
-   "zh": "Anthropic與Nscale洽談450億美元雲端運算合約。",
-   "date": "2026-10-20",
-   "links": [
-    {
-     "title": "Anthropic in talks with neocloud Nscale over second multibillion-dollar deal, source tells CNBC",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBsbk50SFoxenQ3VGJlY3laenJNc0wyTTlPbjB2WEVKTWdJNWlIdmhjSTVuczRtOGNsNmVfaHlqaU5EdVJlOW9Jc2lfblROYk5wY1ptanZDaXR0VV9abVRXWGVuLUhaWTQ5RE95Qm5zaDZQLXZ2cWdIMFZn0gF_QVVfeXFMTUw5c255RzRsWWxUZlpiQ1Q5cUxVMkQxcmRjbzJwWl9SWG5kd29hRUk4QnluRC0ybWRzUHhrLVh5Z05rTFRieWlvMXdkaDE5TVNYUWJBY3Nocno3WWZrbXhmVy1oZDZIRjlsaEVlQk1CYzE3RGYtNHNrb0hkWHhMZw?oc=5"
-    },
-    {
-     "title": "Nscale, Anthropic in Talks for $45 Billion Cloud Computing Deal",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOWElPM1lSczhESmRndWxlZjZIbWhtVS0zZXBjS2Z2Qi12ZVIwcXR0c2lZTWNSYjQxc2lTUnBGaEVBQWZpbUFhNUxQcUhNeVByZVFPQ0hJbm52TVVrX2c0WFFaMDJHSjktNHV3VFVhcDZoY2Ewc1Q4Yks2N0FTek1HR0lYYVoxV0ZYb0Y0c2RmUUtRdVlSbDRNYWJvcm5PeFdqQkVOeFVfQ1RMZTZTeGtzcDFR?oc=5"
-    },
-    {
-     "title": "Nvidia-backed Nscale, Anthropic in talks for new $45 billion AI cloud deal, source says",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPcGMyclR5X0JrXzBKem90Uk1sZnBQNkcyRnlyc3ZnWTM4Q0ZoUWtKUzRrd1Y3aHlqaDRjT1pfaFdmV0pHYUFROFI3TFhTWVhtczJsM01PSF8tSEtXejB4emlhVjZGMmQzeWh0RXJoaS0tNDQ1SDhlZDRJZU5hZG5ibE85N3dxU21DS2ZKYm1NV2pVUUF4ZjF3XzQ1ZncwaHVMdXlWZ2FsWjRtQ1d0eFN2YUVQc2x4cTd6YjNwSTVuVUFQZw?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "c55334247d38",
-   "co": "Nvidia",
-   "type": "算力合約",
-   "zh": "ByteDance、Alibaba、Tencent下單超350億美元 Nvidia 晶片。",
-   "date": "2026-10-20",
-   "links": [
-    {
-     "title": "EXCLUSIVE: ByteDance, Alibaba, Tencent place over $35 billion worth of Nvidia chip orders",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQOXBuUld1bXhxNWlQNktuUmYxOWpVRFlnN0dialpvZlhYM1JLVzE1N0VBSUVNbUlCNmwtN2RVWXRkd1VUV3BRSV9aMGJGMkpxQUk4VWZ1dUt5YjZpdmthQVZ3REFHUzBmV3B0SFJwOFFsMl9fb3l0Y3F0Z1FXbDAxSFhTbV9peVVDQ3FKRnp3NjVDdEpRVHdIOG04SjctLWRRTzN2bDM1a2QxaGdZMHlJV0hGS1FObHFKTVNiS3hvXzZsUzdvMktteFBvSGNEZw?oc=5"
-    }
-   ]
   }
  ],
  "impact": {
@@ -3401,36 +3416,36 @@
    "text": "Microsoft 雲端業務超預期成長推升盈利，偏向支撐股市；同時發行250億美元債券與資本支出創高，偏向增加公司債供給。若市場聚焦盈利強勁，則股市偏向上升、AI投資熱度升溫；若聚焦債務擴張與資本支出風險，則長端利率偏向承壓。整體而言，強勁營收偏向抵銷債務擴張的負面影響。"
   },
   "Alphabet": {
-   "hash": "56ff01e063ee",
-   "text": "Alphabet近期密集發債（120億歐元）應對AI支出壓力，偏向增加公司債供給。第三季資本支出達510億美元，2027年預期大幅增加，現金流承壓明顯。營收成長25%但利潤下滑，AI變現與支出失衡引發市場擔憂。若AI投資回報未如預期兌現，偏向拖累科技股表現與AI投資熱度；債務增加偏向推升長端利率。"
+   "hash": "3459a8cb2167",
+   "text": "Alphabet近期事件對市場偏向混合信號。營收成長但利潤下滑、AI支出達510億美元引發現金流擔憂，偏向增加公司債供給壓力；同時成功發行60億歐元債券顯示市場仍接納科技債。若AI變現未如預期加速，則長端利率面臨科技投資效率質疑的下行壓力；但軌道數據中心等創新進展偏向維持AI投資熱度，股市反應取決於市場對支出回報的信心。"
   },
   "Meta": {
-   "hash": "026aaa6b8dec",
-   "text": "Meta近期密集發債與融資超千億美元，主要用於AI數據中心資本支出。此舉偏向增加公司債供給、推高長端利率；同時大規模股權融資稀釋股權但強化資本基礎。若Meta資本支出持續超越現金流，則需進一步依賴債市融資，可能推升企業債利差。強勁財報與AI投資承諾偏向支撐股市與AI投資熱度。"
+   "hash": "51a263765b8f",
+   "text": "Meta近兩週大規模融資與資本支出計畫偏向推升公司債供給與長端利率。數千億美元AI投資承諾驅動Meta發行270–200億美元債券融資，同步進行375–950億美元股權融資，反映融資需求龐大。若長期AI支出超過現金流生成速度，則債券供給增加偏向推高長端利率；同時巨額資本投入與強勁財報指引可能支撐股市與AI投資熱度。"
   },
   "Oracle": {
-   "hash": "f7c96e627863",
-   "text": "Oracle 近期大幅增加AI基礎設施投資，偏向提升公司債供給。多筆數十億美元融資與近千億美元資本支出計畫，若持續透過債券籌資，將增加投資級債券供給，偏向推高長端利率。同時，Oracle 擴大晶片合作與雲端運算能力，強化AI競爭力，偏向支撐科技股表現，進一步強化市場AI投資熱度。"
+   "hash": "25dec1468cc7",
+   "text": "Oracle 大規模發債融資並承諾巨額資本支出用於 AI 基礎設施，偏向增加公司債供給、推高長端利率。若 Oracle 資本支出計畫如期執行，則現金流壓力可能抑制股價；但多晶片策略與算力合約擴張偏向強化 AI 競爭力，可能吸引科技股與 AI 投資熱度。債券融資規模與支出承諾的落差，將決定市場對其財務韌性的評估。"
   },
   "CoreWeave": {
    "hash": "057ae24099ba",
    "text": "CoreWeave高速擴張偏向增加公司債供給壓力。大規模資本支出與全球數據中心擴張需求龐大融資，高盛預估新增發債規模達數百億美元，推升長端利率上行預期。惟Q3營收倍增與CrowdStrike合作擴展AI工作負載需求，若能轉化為現金流，則偏向支撐債券市場；但高槓桿結構（債務達350億美元）可能加重投資人風險溢酬要求，對AI基礎設施投資熱度呈雙向影響。"
   },
   "Anthropic": {
-   "hash": "d42cbf4fc765",
-   "text": "Anthropic龐大的算力承諾與債務融資偏向增加公司債供給壓力。Q3營收170億美元相對近9,000億美元的運算支出承諾與債務規模，若營收成長未能相應加速，則償債能力疑慮偏向推升長端利率。巨額資本支出需求與虧損規模偏向強化AI投資熱度，但融資規模龐大偏向對債市造成供給衝擊。"
+   "hash": "06260daa05cc",
+   "text": "Anthropic巨額虧損與龐大債務承諾偏向增加公司債供給壓力。Q3虧損800億美元、未來債務近9,000億美元，加上8,954億美元算力承諾，若融資需求持續，偏向推升長端利率。同時，超大規模支出與虧損幅度偏向削弱市場對AI商業化的樂觀預期，可能對AI投資熱度造成降溫壓力。"
   },
   "OpenAI": {
-   "hash": "3d1e02ff49b4",
-   "text": "OpenAI融資目標下調至200億美元，反映融資環境承壓；惟與ADNOC、G42簽署協議及多項算力合約落實，顯示實質投資進展。偏向：公司債供給壓力緩解，長端利率偏向溫和；AI投資熱度維持，但市場對高估值融資的樂觀度偏向降溫。"
+   "hash": "f2b21608de25",
+   "text": "OpenAI融資目標下調至200億美元，反映融資環境承壓，偏向增加公司債供給需求。多項算力合約與數據中心投資顯示資本支出持續高企，若融資規模縮水則可能推升企業借貸需求，偏向長端利率上行壓力。融資困難與支出龐大的組合，可能削弱投資人對AI新創獲利前景的信心，偏向AI投資熱度降溫。"
   },
   "Amazon": {
-   "hash": "c68cbf93ccac",
-   "text": "Amazon 近期大幅增加AI基礎設施資本支出，年度支出逾2,000億美元，同時簽署多筆數十億美元算力合約。然而第三季營收未達預期、自由現金流轉負，偏向增加公司債供給需求。若現金流持續承壓，則長端利率面臨融資需求上升的壓力。AI投資熱度仍強，但盈利預期走弱，股市偏向承壓。"
+   "hash": "32f1c16283c8",
+   "text": "Amazon近期密集宣布超2,000億美元數據中心投資與衛星收購，偏向增加公司債供給需求。龐大資本支出搭配自由現金流轉負，若融資需求上升，則長端利率面臨上行壓力。同時AI基礎設施投資規模龐大，偏向強化AI投資熱度；但營收未達預期可能抑制股市表現。"
   },
   "Nvidia": {
-   "hash": "9477ad6a415d",
-   "text": "Nvidia 近期大幅擴展算力合約與融資擔保，涉及Meta、Anthropic等大型客戶數百億美元投資，偏向提升公司債供給壓力。強勁財報與持續訂單確認AI晶片需求旺盛，偏向支撐股市；但反壟斷調查與擔保債務規模擴大，若監管趨嚴則可能抑制投資熱度。整體而言，AI基礎設施投資熱度持續升溫，惟風險因素增加。"
+   "hash": "79f00782f34f",
+   "text": "Nvidia近期簽署多筆巨額算力合約與融資擔保，涉及Meta、Anthropic等大型AI客戶，營收年增逾百分百超預期。這些事件偏向提升AI投資熱度與Nvidia債務風險敞口。若客戶融資需求持續旺盛，則公司債供給偏向增加；若擔保債務規模擴大，則長端利率偏向承壓，股市對科技股估值偏向承受重估壓力。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -3445,5 +3460,5 @@
    "text": "Apple 第四季度財報發布，假日季指引成為市場焦點。若指引強勁，偏向提升投資者對科技龍頭獲利前景的信心，可能支撐股市；反之則可能引發風險資產調整。同時，強勁業績表現偏向降低公司債供給壓力，而市場對科技股前景的預期變化，則可能影響長端利率走勢與 AI 投資熱度的配置方向。"
   }
  },
- "at": "2026-11-03 20:09（台北）"
+ "at": "2026-11-04 01:35（台北）"
 }
