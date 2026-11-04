@@ -249,7 +249,72 @@
   "p:chip_232:30f4bfef9e6f": "2026-11-04",
   "p:chip_232:58b012dbd0f1": "2026-11-04",
   "p:ai_preempt:5fbe28214003": "2026-11-04",
-  "p:us_china_truce:1cb5a8c38030": "2026-10-31"
+  "p:us_china_truce:1cb5a8c38030": "2026-10-31",
+  "a29f6ac475eb": "2026-11-04",
+  "b649d17ea5e6": "2026-11-04",
+  "02ae7ad2bc9a": "2026-11-04",
+  "f43e036adb93": "2026-11-04",
+  "bfd372afd64e": "2026-11-04",
+  "2ac23dd9e651": "2026-11-04",
+  "f621f01772e6": "2026-11-04",
+  "cfa3f2425be4": "2026-11-04",
+  "ec2a812c89de": "2026-11-04",
+  "dba89f658098": "2026-11-04",
+  "915aab6a9351": "2026-11-04",
+  "3edcc329eefa": "2026-11-04",
+  "0fd53f13cdf2": "2026-11-04",
+  "0dee4b6db3e8": "2026-11-04",
+  "b25f7e77a364": "2026-11-04",
+  "5340daceec73": "2026-11-04",
+  "61a29cc27a26": "2026-11-04",
+  "a716378576da": "2026-11-04",
+  "0f8e2e55b162": "2026-11-04",
+  "91c3c745b348": "2026-11-04",
+  "085a53df1466": "2026-11-04",
+  "ced60d6879e4": "2026-11-04",
+  "de6114489cf0": "2026-11-04",
+  "040a83d4849e": "2026-11-04",
+  "7b92e1f1ad75": "2026-11-04",
+  "36b07c04a1d6": "2026-11-04",
+  "2ab329950c46": "2026-11-04",
+  "8c26e7c2d4b8": "2026-11-03",
+  "d33277d4bead": "2026-11-03",
+  "c178cc02634d": "2026-11-03",
+  "p:fiscal_cr:cae048dedf6d": "2026-11-04",
+  "p:fiscal_cr:eeb61b02620b": "2026-11-04",
+  "p:fiscal_cr:d9b3f1d46806": "2026-11-04",
+  "p:fiscal_cr:25044a3b6c67": "2026-11-04",
+  "p:fiscal_cr:a4155119ddca": "2026-11-03",
+  "p:fiscal_cr:3966a8d8a24f": "2026-11-02",
+  "p:fiscal_cr:952621711faa": "2026-11-02",
+  "p:fiscal_cr:0237c79c042c": "2026-11-02",
+  "p:fiscal_cr:34b3791cabc2": "2026-10-30",
+  "p:fiscal_cr:1f86c1d0baca": "2026-10-30",
+  "p:debt_limit:228fbb7e4129": "2026-11-04",
+  "p:debt_limit:4ce07d2ece2a": "2026-11-04",
+  "p:debt_limit:9daa2b6b7268": "2026-11-04",
+  "p:debt_limit:c7f208c5c98a": "2026-11-04",
+  "p:debt_limit:74771409a466": "2026-11-03",
+  "p:debt_limit:f0b7ea2a8418": "2026-11-04",
+  "p:debt_limit:3ff2cc0c11eb": "2026-11-04",
+  "p:debt_limit:2982dcb82dc2": "2026-11-04",
+  "p:debt_limit:68d11c646155": "2026-11-04",
+  "p:debt_limit:8c99dc05c41a": "2026-11-04",
+  "p:fed_cook:834c786e70bb": "2026-10-30",
+  "p:fed_cook:2ab329950c46": "2026-11-04",
+  "p:fed_cook:648ecdd19b4b": "2026-10-30",
+  "p:fed_cook:d45864dd402e": "2026-10-30",
+  "p:fed_cook:be3bcec0325d": "2026-10-30",
+  "p:h200_china:847c8623571a": "2026-11-02",
+  "p:h200_china:09a57900b966": "2026-10-30",
+  "p:h200_china:6abd7a8f5e6d": "2026-10-29",
+  "p:h200_china:0c24103fa65a": "2026-10-29",
+  "p:h200_china:1486b113cc6f": "2026-10-29",
+  "p:chip_232:06fdeb6eaa66": "2026-11-04",
+  "p:chip_232:649a720858cc": "2026-11-04",
+  "p:us_china_truce:d42c4686af73": "2026-11-04",
+  "p:us_china_truce:5bc52670f85e": "2026-11-03",
+  "p:us_china_truce:3882a15f0478": "2026-11-02"
  },
  "items": [
   {
@@ -286,6 +351,25 @@
    ]
   },
   {
+   "id": "ca7407260473",
+   "topic": "聯準會",
+   "channel": "其他",
+   "zh": "川普因中期選舉失利，無法在聯準會董事會安插盟友；白宮延遲聯準會理事聽證會。",
+   "date": "2026-11-04",
+   "links": [
+    {
+     "title": "Trump can't pack the Fed board with allies now",
+     "source": "Axios",
+     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBwV0dBTktfZXpJdWZQaVY1U29HZEx0TWptMFlwdEpvTTRGdWxRTGd5by0yM3JDdVNONC1EVTNLbTJjN2xCc29lOTFkRVRVWDg0aTZJcGZQX0toV2NFZHp4czQ4NjFBQ2hndHN0aE1KS0Q?oc=5"
+    },
+    {
+     "title": "White House Delays Hearing on Fed Governor",
+     "source": "The New York Times",
+     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPMWF3eXBGMGxPd0wtMFE4eHJmSHRNUGk4blVPWHNnOWRWcnBzXzhtNjlRTE15NGs4MUZTcFdCTUxnNWJaMVRnS3o1R2ZYU2FGZHVYMmZQMWJzOUp6TUtHNmhTNFZuVnRjZ1dPQUxaWlFZQjhKbnRrZ3F3MTBpeFdhQ1NYbw?oc=5"
+    }
+   ]
+  },
+  {
    "id": "77f75bb7258e",
    "topic": "關稅",
    "channel": "受訪",
@@ -310,6 +394,20 @@
      "title": "Trump Changes Which Canadian Goods Face 50 Percent Tariffs",
      "source": "Legis1",
      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1KU21UbUNMbWFlNlJwSlBKd0JyNXhwcHpFVnBrUmxDaHE0S1Z4TlZJVndZeE4wQVIzaHZWM2RCR0NxRG1oZmdxUGxoS3dkQkFBSXJWTjc0RFZod3haZ0RNazZyWUx0RzNvaG5vY1NjNWJDZmFuSlBMMnJTQTdDZw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "ccaf5c435186",
+   "topic": "能源",
+   "channel": "行政命令",
+   "zh": "川普簽署行政命令支持美國石油產業啟動《國防生產法》。",
+   "date": "2026-11-03",
+   "links": [
+    {
+     "title": "Trump Opens Defense Production Act Support to U.S. Oil Industry",
+     "source": "Legis1",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1jaVhGejF4R2t4eERsV21qWDJTUWZNcUNub0szbzZpZUlueHBYQV9jNHhJWGJ5WnplUlpwUFQ2NzgxMjlldnp2dF9fQWJUS0c0LVFyd1BiVE9jQW94eDdIOTRlZDVKbmVUTWlDVXYwN09CWG1vcG5j?oc=5"
     }
    ]
   },
@@ -367,21 +465,21 @@
    ]
   },
   "fed_cook": {
-   "date": "2026-11-04",
-   "note": "根據 Investing.com Canada 10月30日報導，白宮延後 Lisa Cook 聽證會至12月，表示下一步的日期已確定為12月。",
+   "date": "2026-11-05",
+   "note": "紐約時報11月4日報導白宮延遲聯邦理事會成員的聽證會，顯示白宮委員會調查結果的日期可能已改期。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiswFBVV95cUxPd2dPVXJlcnVlZlJ1Z2tpV3p1TEVDOVNBWTJtdlc4UkxwMEhVbmV0eWFlVWc1N2hNRGpKU1NibXJGSldoUk9kQlFWV29iN1N0c3dETWVhWEpLREFQd2J3RmtxOWZ0U3Z2STc2ZEh4bGx5Y0dfY3h1Nl9sc0xidU1aQnFvYWxpVmNrS2hkWTRmYlRudmJ3NGR5b21ReHUzTm9fLVVTaW9MRVlJRlpHanZXMUVzcw?oc=5",
-    "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNTFNHanJ3MTBjVnBzMDd2NTFYRTR1azVJNmdJbXpiYm8wd0phUHZfcVNBWE1ySUwtSnJsVldzdGxoMXZTd09FR1pPV1EwV2N2YkROMVcxUENTRTNVd2NfQUdiM3JReWNhTTdDVjNMZ1diU0NxSEN2M1l1THVaNUo3emVBU0pSRHFZWE1JcHY1VkliTU9SRjB2VDdlTUJVSHZod1ZnZW1SeW53MWIyNDNDSWk5WW5IczBETFdjakhzdVNXNVdzNFFQTEtmQzNBek5wWmZjLWRxSmI2N09DZTJn?oc=5",
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxOckNEdkU2UnVHUWk4eVg4SEg3S3RhUVNwNWk1QWtsVVEwNVo1M2ZfeFU1WHZoZ3M1NDFUU2dHME9QU0RJc0ttd0VLRFhqcUo0Nk9hYWRackFoWGI3S2x6Z3k5MkhCNEplQU80WmN2THQ5dEV6Q3MxYVhrZVBvLUFoQXFWOElZcnV1S2FhV3BCODEyZ0sycVVUVGluaw?oc=5"
+    "https://news.google.com/rss/articles/CBMisAFBVV95cUxPbGcwWUQzWE1xTW1SekU1Ty1CcldjeGtwbnRPM2hDQWlhVjlYNjFiWkoxbUNNcm5meE9LQTlNdUNPTUU1MEhLeHpKX0tPMEstdzZNbXZFYjJvZnhOSWowRG9CV2hEdGtVVmcwZHRiS1VNa2RGdUU0X2VPREFlZWhNWGtZTmtfcDExdDRQUW1tWE85eFB0RW5VbktKMjdQU2N2blB1NndPS2JFRVdJOWpueg?oc=5",
+    "https://news.google.com/rss/articles/CBMigwFBVV95cUxPMWF3eXBGMGxPd0wtMFE4eHJmSHRNUGk4blVPWHNnOWRWcnBzXzhtNjlRTE15NGs4MUZTcFdCTUxnNWJaMVRnS3o1R2ZYU2FGZHVYMmZQMWJzOUp6TUtHNmhTNFZuVnRjZ1dPQUxaWlFZQjhKbnRrZ3F3MTBpeFdhQ1NYbw?oc=5",
+    "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOaTltNDJTZ0N3ZTdSWUlla0d2TGM2ZVpTaVJxMTdENDBTQml2WHJ0X0E1bER3NEtJOENvaEI2aENZQlM3TTR3dlJ4azFnbG5FZGJKWHNLTW9DZDNLcXR6YUNfVlFaWkdyTzFzZFk4dTlGMVdEVk5iZ2tZeTlqVDA2Qkswdy1ITnppRTRPOGgwU3UyZGg0R1pGMEtnbXhoT1hLQXdmcGllTEZYOFBOSnh0YmhTWFh5SEJ5UTRlaElnb2hTdkE1VUxXd0NleGYwSVVsYXdFaQ?oc=5"
    ]
   },
   "h200_china": {
    "date": "2026-11-05",
-   "note": "11月4日Nvidia主動停止H200對中出貨並轉移產能，顯示政策可能已進入「國會限制」階段的實質執行，或出口管制已升級。",
+   "note": "11月2日eeNews Europe報導涉及Jensen Huang間諜案突顯Nvidia出口管制問題，可能推動國會加速審議晶片位置驗證和美國買家優先的限制法案。",
    "links": [
-    "https://news.google.com/rss/articles/CBMingFBVV95cUxPNWR6LWpMUldkcDN3Mzh0X20xV0U5X3lHa0FIZzhFd2RUbHRNUVRNR0Z3Q216M1FMZ0RGNUZpN3poNlhLTUVZMUU2RFcyUXlnbmpxXzBsRG5JVU9rWGNrOWtsbDh1bnQzOE9ubWFTbkRVLXZDQ2lIeWxFbGNjNTdJYXVYbGFoMkpMYVNLUDRWNU1MLVRiRDl4MWtMb3NsZw?oc=5",
-    "https://news.google.com/rss/articles/CBMivwFBVV95cUxPVHR0RjlyX0cxOWZYRlhrRk81MzVISmFpZmhkV01wdy1ILW85TW9RVWtnTV93R211dU5VaWRuUGFwRmt4SW82OTVoQnpiSGh1d1dUUjBERnQ2UUNZd0xTMFpzR0lwaS1nNFZIR1ZYamVnUkJjRlJkRF83cE16OE5EU21uYzJpOTVsdUpsYWFuWW56M28wQjN5SlEtaldZT2Uyc2YydzI4NEFyTjhJUHc2aU51M2ZzcXkwVUtzWV9tcw?oc=5",
-    "https://news.google.com/rss/articles/CBMipwFBVV95cUxQc181NnBrZGc0cXg0OHhVTTl1Ump1N3lGN3lNNTVJZzdOaG1Dbk1FOFo0LTNxYTREa1VsVVQxUVNMYlI5cnBEaGRZUnB3TlE4NVNtaUpoTDVaVXVxT3JHUGRXTXhvQ3ViOHpuUWtUR01odHB3cVlBdjA4UjZnWHowdjRjZS0wb3I3RU94c3NjY0FEOGIyd2pEZ1lJaGhlSTQ1SDZMTGlQd9IBrAFBVV95cUxOT185eGcySXBtV01GaEl2d0MyN3hURnJManZYZVM2cTRpRzNCZDhINENveXFCT3FZekxPWDA1RXlCWFpEcEFYM3dqM3ZVWjByXzNIX05PREFOTVh3QXZGNW9NNkVKOS1HcUlaeWk5b0kxWTdqMGgzb054dno2WVZyZFBqZnFJRXQ5bmExbVQwQUdrV2RTMEF3OE1qUS13bmUwbnNOMnNEVnNzWGJL?oc=5"
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE9VZHZhczZuRF8zTV8xMDI4a09qT08tWXkwaVRNV2VJdm42MXBHdzJqVXdjbExNNHZuNDgzdmZyZk5Wbzc0aktTVVViV05aVHdHeXNYUVNOTHRoSlpkcUpHdVJRenlKald6ZGwwczVySlNKZFBCTHc?oc=5",
+    "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNZUJtQ0tJd1BVbEJETnVuOFlZQ0lIWW1yZDA0WXQzaGZpTXBTQWwzZVgzUVNXd3dQODE5N2ZCaTUtaEJlT2dzNFo3SGZCclJmVHk0aURFTVpqLUpyekxWTXg4WlRFalBjd0Z3YmMtOTQzeVhmOXJoOGdiaFlnVlNwanYyQ3dxa2k0RHBDa0M4SE9MY1M4ZnluLTBqeHY1UlZUSVd0SlZ3S3J2eExMelp1NEdOQWtuTUNlV3pR?oc=5",
+    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPOGJWbWlza2g3SGJtbDRSbUQxcmhtYW91QzMxV2Zpa0lEWDVyZnZTZzk4VGhWdF93UUh3aTJQR1pWMUxvY3lmZDZGQlhwaVVLX0FMY0EtWlN6MVl4cUJ2Sy1VeVF0NjNWWVB4Zi1aT3lGTUhxeW5xOTJ5S2tBV0xiTmRZWFBVOWxRMjhjOFo1cnZkLXB4bm00NHJfdXMyQzlIUzVzOEFuSG4zNS1id2NTMHpWRTIzaGhnVlR1ajhuRDM2TXM3amFRMUQyVDZETE5jUnZneWNGTdIB1wFBVV95cUxOaVQ3U1R1WThhZDg2cXdhZm9NbTUwMmQyMHBNaVRaN3RWV19JOVdfVW04UUxQVlB3RDQ5WmlnRXcyUzhxTFV2ODRELVJobng3VklqWlhJalNTcE1mTGkwSGZrT3hwV21BTFpmSmxCc3NYT25Ka3l1d2xyNFBoYnRnaF93NE4zNkV2M1ZXV2tzSlM1WC1XUkZVSllQeldtZ0NVd2NadHVDTkc1VHRxQkh3QXlBaUh0VGdLZEFvajFOMGUyU2M0U2NEa1J1N21QYnd1S0IyV0RIVQ?oc=5"
    ]
   },
   "ai_preempt": {
@@ -412,5 +510,5 @@
    ]
   }
  },
- "at": "2026-11-05 01:25（台北）"
+ "at": "2026-11-05 07:33（台北）"
 }
