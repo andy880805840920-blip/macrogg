@@ -2141,7 +2141,76 @@
   "326fb955b7dd": "2026-11-03",
   "5bf8e6a0770a": "2026-11-03",
   "3dc9060e58f4": "2026-11-03",
-  "bfea04e8eeae": "2026-11-03"
+  "bfea04e8eeae": "2026-11-03",
+  "b519755675bd": "2026-11-04",
+  "8f64ae725dab": "2026-10-29",
+  "d8e83e10d5be": "2026-10-29",
+  "4b31bfa9665f": "2026-11-04",
+  "a6ddd6af724d": "2026-11-03",
+  "2735879e73e6": "2026-10-29",
+  "dad50536a93e": "2026-11-02",
+  "27cbc5a86520": "2026-10-29",
+  "1ade970dbe18": "2026-10-28",
+  "668cb05cdd70": "2026-10-28",
+  "936beb74f021": "2026-10-26",
+  "14e9573ffbe4": "2026-11-03",
+  "b0c27e3c635a": "2026-11-03",
+  "9d75d7ba236d": "2026-11-04",
+  "864aeaeab973": "2026-11-04",
+  "6655fcb62b6e": "2026-11-04",
+  "db51851ac3a8": "2026-11-04",
+  "e36d6e3e2409": "2026-11-04",
+  "e07f02296a4d": "2026-11-04",
+  "855fa8b9d82c": "2026-11-04",
+  "336c3880208a": "2026-11-04",
+  "cab9eb52b90b": "2026-11-03",
+  "9a8f7f2eccf1": "2026-11-02",
+  "66eedf5cfcdf": "2026-10-29",
+  "cd8283f0da57": "2026-11-04",
+  "52d855a1207e": "2026-11-04",
+  "16b8e0840760": "2026-11-03",
+  "879678075a18": "2026-11-03",
+  "4138ea170a86": "2026-10-27",
+  "7830a133f706": "2026-10-24",
+  "bbb65095bc67": "2026-11-04",
+  "f04f7620a2f9": "2026-10-30",
+  "9f10ead3147b": "2026-10-28",
+  "311fbf84e4a7": "2026-10-27",
+  "ec017963f1ea": "2026-10-27",
+  "f9838293bb91": "2026-10-27",
+  "77db7ed481ef": "2026-11-04",
+  "67f832bf77f2": "2026-11-04",
+  "4e6abb8e97df": "2026-10-27",
+  "4fe2adff2736": "2026-10-28",
+  "a3b8571e28ad": "2026-10-27",
+  "4296487d61c5": "2026-10-26",
+  "aac2078eeccd": "2026-11-02",
+  "ccdbcee8864b": "2026-10-27",
+  "706e161668b1": "2026-10-27",
+  "9327363c314a": "2026-10-27",
+  "d5771a3bb631": "2026-10-26",
+  "3173690b140f": "2026-11-02",
+  "91489838bdec": "2026-10-23",
+  "9d6fc199fe08": "2026-10-22",
+  "c244cce57c44": "2026-10-22",
+  "fbcea9e57b50": "2026-10-22",
+  "bb6fe3810a02": "2026-10-22",
+  "accbedc934ce": "2026-11-04",
+  "7932c846bf58": "2026-11-03",
+  "541cc6132541": "2026-11-02",
+  "75046c3473ae": "2026-11-04",
+  "6d81a7d67031": "2026-11-04",
+  "7f4310959912": "2026-11-03",
+  "75b25e3eab5d": "2026-11-03",
+  "721c8d5eec55": "2026-11-03",
+  "5a97fe42a2b0": "2026-11-03",
+  "713e449f6930": "2026-11-02",
+  "fca32c17fa89": "2026-11-02",
+  "a40f0aeafa4c": "2026-11-02",
+  "4349b470f827": "2026-11-02",
+  "ff73f0e880de": "2026-11-02",
+  "c04549b84303": "2026-11-02",
+  "ba8ed58a162d": "2026-11-02"
  },
  "events": [
   {
@@ -2172,7 +2241,7 @@
    "id": "31b1d705b724",
    "co": "Meta",
    "type": "發債",
-   "zh": "Meta啟動至少200億美元債券發行，包括首次歐元計價債券，用於AI投資融資。",
+   "zh": "Meta啟動債券發行，包括首次歐元計價債券，用於AI投資融資。",
    "date": "2026-11-04",
    "links": [
     {
@@ -2196,7 +2265,7 @@
    "id": "c00443c9cecd",
    "co": "Oracle",
    "type": "算力合約",
-   "zh": "Oracle取消與騰訊價值70億美元的AI晶片租賃協議。",
+   "zh": "Oracle 取消與騰訊價值70億美元的AI晶片租賃協議。",
    "date": "2026-11-04",
    "links": [
     {
@@ -2220,13 +2289,46 @@
    "id": "eca5b428b63d",
    "co": "Nvidia",
    "type": "算力合約",
-   "zh": "Nvidia中國客戶獲得700億美元RTX晶片訂單中的1%配額。",
+   "zh": "Nvidia 中國客戶獲得700億美元RTX晶片訂單中的1%配額。",
    "date": "2026-11-04",
    "links": [
     {
      "title": "Nvidia China clients to get 1% of $70 bln RTX chips ordered- Bloomberg",
      "source": "Yahoo Finance Singapore",
      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1Tc0QxUC0tdktLMGdMSk9KZFliWF9aQ1ZQNVJkT05aZXdZazFFT25pcDNpYm9Tb1dUR0daeWFqNTB5bWFRZkFtNk9WZjZja08zX1pGdnVaRDhERkkyYWxzTzRNN0phWEpUVXdUY1NERVBpVGRHN1hMMHhSWjBXVE0?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "c44167626c46",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Google在馬來西亞Negeri Sembilan計畫數據中心，投資1.6億美元開發水處理設施。",
+   "date": "2026-11-04",
+   "links": [
+    {
+     "title": "Google to Spend $15 Billion in Malaysia Data Center Expansion",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPcGlyQlIwa3hBUUNkMmRqcmlyaUxkVTF1ZTdlOFpkNGJ6OTdUR3hkVE11YWFBY1hvRjdIQUtjdjJHcEpmV250c0RYaEFNMkh2S2x6Nk9rQ1FQUkR0S3lzZERqNEJheUV0aVhhbG11MmFORS1jNnBTTzFDTmdfV0FYaVhWNDRCVkVIeW50NmtTbUQyQUJzYi1TcXplUTA1WDhDM0JjaXIzVXhVSWxEcngxcA?oc=5"
+    },
+    {
+     "title": "Google commits $160m to develop water treatment plant for planned data center in Negeri Sembilan, Malaysia",
+     "source": "Data Center Dynamics",
+     "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxPZWFrbnhzMUM3VUVjVjU2eVBaQTNtTHpJUExiTW1FbXlrT0tWV2ZOLWladGVPUTRwWTBfZjRVbGJWbnk5QllBZmhsN1BzRFhPdHEtVXlEV0RBZXhsZENTcmpjSkJONFJUX0M3bUs5RDdIVUdLU3Q0YjV0dkdfaVZzVkU1QVRNQ3JHVk5Ob0o1d2MxajZRMU5MTmh1UUFGQUpiX0haVEMyVnR0Tzd0YXFGbEFhaUUtUVZLRmhIdUhrMm9uX192ZmFCcFdTdHF1UHRnaG1tYVdhX3lyT0E2Q19RVUF3?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "9601418b1aff",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Amazon資本支出達2,200億美元，持續加大AI基礎設施投資。",
+   "date": "2026-11-04",
+   "links": [
+    {
+     "title": "Key facts: AWS Revenue $46B; $220B Capex; Chip Commitments Up 20x",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNOTJmZkZ4UDgtZGFZRUdRWjJyRkpOdFg5a0FPQ18xbE1ZNXJsSWJpWmo0ZlI1QjFxNXhwZUJPbFpQRnhZdG1vSVdXS3RlcW1ad1RNT2ZuRHZrdDVpdzhDSG9fT0pHaGZVQlVJUmpCUzBKOE5sT01HNDhRbnFvRzdYOUdpZW9EeDFZVTNoc19wMkJYZDBXZENycmwxZEhJbWV3bFBwVlZTNWY3d1lORXd2cWV4WFVWVTliblVwWEh3cw?oc=5"
     }
    ]
   },
@@ -2502,20 +2604,6 @@
      "title": "ADNOC signs deal with OpenAI and G42 to deploy Frontier AI agents",
      "source": "The Next Web",
      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFB3M3Q4ckNfeTlrV2FXWkY2NTg2M0FkcUxhdVpuOHkwRklnZnRyN0Q3b0xpRUhOUldYd0p0U2NERFVCY1ppMXNFQ2Fwc1l4NU9FRWNCcFd0Y29JNTVQakhhcUFab1d2bktNZmw0VkFB?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "c44167626c46",
-   "co": "Alphabet",
-   "type": "資本支出",
-   "zh": "Google在馬來西亞Negeri Sembilan計畫數據中心，投資1.6億美元開發水處理設施。",
-   "date": "2026-11-02",
-   "links": [
-    {
-     "title": "Google commits $160m to develop water treatment plant for planned data center in Negeri Sembilan, Malaysia",
-     "source": "Data Center Dynamics",
-     "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxPZWFrbnhzMUM3VUVjVjU2eVBaQTNtTHpJUExiTW1FbXlrT0tWV2ZOLWladGVPUTRwWTBfZjRVbGJWbnk5QllBZmhsN1BzRFhPdHEtVXlEV0RBZXhsZENTcmpjSkJONFJUX0M3bUs5RDdIVUdLU3Q0YjV0dkdfaVZzVkU1QVRNQ3JHVk5Ob0o1d2MxajZRMU5MTmh1UUFGQUpiX0haVEMyVnR0Tzd0YXFGbEFhaUUtUVZLRmhIdUhrMm9uX192ZmFCcFdTdHF1UHRnaG1tYVdhX3lyT0E2Q19RVUF3?oc=5"
     }
    ]
   },
@@ -3854,36 +3942,36 @@
    "text": "Microsoft 雲端業務超預期成長支撐盈利，偏向提升其債券信用評級與降低融資成本。同時，公司創紀錄的資本支出（394億美元）與250億美元新債發行，反映AI基礎設施投資需求旺盛，偏向增加長端公司債供給。強勁財報表現與AI投資持續擴張，偏向支撐科技股與AI投資熱度。"
   },
   "Alphabet": {
-   "hash": "43855780a6be",
-   "text": "Alphabet近期大幅增加AI數據中心資本支出，同時發行歐元債券融資，偏向增加公司債供給。第三季營收成長但利潤下滑，加上2027年資本支出預期大幅增加，反映AI投資強度持續升溫。若融資需求持續擴大，則長端利率面臨上升壓力；AI支出效益兌現延遲，則可能對股市估值造成壓力。"
+   "hash": "87fc6c05ac5b",
+   "text": "Alphabet近期大幅擴張AI基礎設施投資，第三季資本支出達510億美元，2027年預期續增。儘管營收成長25%但利潤下滑，引發支出過度擔憂。公司發行60億歐元債券補充資金，偏向增加公司債供給。若AI變現未如預期加速，則長端利率面臨融資需求壓力；同時龐大資本投入偏向提升AI投資熱度，但盈利疑慮可能制約股市表現。"
   },
   "Meta": {
-   "hash": "4d1f5e290e0f",
-   "text": "Meta密集發債與融資偏向推升公司債供給與長端利率。大規模AI資本支出（超千億美元）驅動融資需求，同步進行股權融資與債券發行，增加市場債券供應壓力。強勁財報與營收指引支撐融資能力，偏向吸引投資者，但若債券供給持續增加，則可能對長端利率形成上行壓力。AI投資熱度偏向升溫，Meta與Nvidia、Google等夥伴深化合作，反映市場對AI算力需求的強烈預期。"
+   "hash": "d3ac92e149a0",
+   "text": "Meta近期密集發債與融資，累計籌資超千億美元用於AI基礎設施，偏向增加公司債供給、推升長端利率。若市場認可其AI投資回報前景，則股市受提振；若融資規模引發債務疑慮，則偏向抑制長端。同時大規模資本支出與融資活動，反映AI投資熱度高漲，偏向強化市場對科技股AI敘事的關注。"
   },
   "Oracle": {
-   "hash": "72aa7ca8aa64",
-   "text": "Oracle大幅擴張AI基礎設施資本支出（近950億美元），通過發債融資200億美元，偏向增加公司債供給。取消騰訊合約反映算力策略調整，但多元晶片合作（Nvidia、Google、Cerebras等）強化競爭力。高資本支出配合預期正向現金流，若能實現營收與現金流目標，則偏向支撐股市；同時大規模AI投資基礎設施，偏向維持AI投資熱度。"
+   "hash": "902c81ec1188",
+   "text": "Oracle 大幅擴張AI基礎設施資本支出（近950億美元），同步發行200億美元融資鞏固財務，偏向增加公司債供給。取消騰訊合約反映算力策略調整，但多元晶片合作（Nvidia、Google、Cerebras等）強化競爭力。高資本支出配合現金流目標，偏向長端利率承壓；AI基礎設施投資規模龐大，偏向提振AI投資熱度，惟債務融資增加可能抑制股市短期表現。"
   },
   "CoreWeave": {
    "hash": "6f9e33692661",
    "text": "CoreWeave高速擴張推升公司債供給壓力。大規模資本支出、債務激增至350億美元，加上高盛預估未來需發債200–380億美元，偏向增加長端利率上行壓力。若市場對其債務可持續性疑慮加深，則公司債利差可能擴大。與CrowdStrike合作擴展AI工作負載服務、營收倍增，偏向支撐AI投資熱度，但高槓桿風險可能抑制股市表現。"
   },
   "Anthropic": {
-   "hash": "42956079bbc1",
-   "text": "Anthropic近期事件偏向增加公司債供給與長端利率上升壓力。完成630億美元債務融資、披露近9,000億美元未來債務承諾，反映大規模資本需求；同時鎖定4,300億美元算力合約與8,950億美元運算支出承諾，顯示長期高額融資需求。若企業債供給增加，則長端利率偏向上升。Q3營收成長放緩與巨額資本支出的不匹配，可能削弱AI投資熱度。"
+   "hash": "2e9bc98a37a6",
+   "text": "Anthropic近期事件偏向增加公司債供給、推升長端利率。IPO前已融資630億美元債務、承諾近9,000億美元運算支出，大幅擴張資本密集度；Q3營收170億美元卻持續虧損，償債能力存疑。若AI基礎設施投資需求持續，偏向支撐AI投資熱度；但高槓桿融資規模偏向推高企業債券供給與長期利率。"
   },
   "OpenAI": {
    "hash": "3d7b268252a6",
    "text": "OpenAI融資目標下調但仍籌資300億美元，同步擴大與Google、Oracle、Foxconn等多方算力合約，並加速數據中心建設。這偏向提升公司債供給壓力——大規模資本支出需求可能推升融資成本；同時多元晶片採購策略偏向緩解供應鏈風險。若融資成本上升，則長端利率面臨上行壓力；AI基礎設施投資持續升溫，偏向維持AI投資熱度。"
   },
   "Amazon": {
-   "hash": "6b3e2342dd39",
-   "text": "Amazon近期資本支出激增至2,200億美元，主要投向AI數據中心與衛星基礎設施，自由現金流轉負。此舉偏向增加公司債供給——若維持高資本支出，Amazon需更多融資；同時偏向推升長端利率——大規模基建投資增加長期資金需求；對股市與AI投資熱度則偏向支撐——市場認可其AI戰略，但營收未達預期可能抑制漲幅。"
+   "hash": "93eabb032bd3",
+   "text": "Amazon近期大幅擴張AI基礎設施資本支出，年度投資逾2,200億美元，同時自由現金流轉負。此舉偏向增加公司債供給——若Amazon維持高資本支出，融資需求上升，長端利率面臨上行壓力。短期股市偏向承壓，但AI投資熱度持續升溫，反映市場對其長期算力競爭力的看好。"
   },
   "Nvidia": {
-   "hash": "b1cea145a17a",
-   "text": "Nvidia近兩週簽署多筆大額算力合約與融資擔保，涉及Meta、Anthropic等主要客戶，第三季營收年增106%超預期。這些事件偏向提升AI投資熱度與Nvidia股價，但同時反映客戶需透過融資與債務擔保購置晶片，若融資成本上升則可能抑制需求；大額合約與擔保增加Nvidia潛在信用風險，偏向推升其公司債供給壓力。"
+   "hash": "022d79451de3",
+   "text": "Nvidia近期大量簽署算力合約與融資擔保，涉及Meta、Anthropic等主要客戶，營收年增106%超預期。這些事件偏向提升AI投資熱度與股市表現，但同時增加公司債供給壓力——若Nvidia持續為客戶融資與擔保債務，則其資產負債表承壓，可能推高長端利率；反之，強勁需求偏向支撐股價與AI生態投資熱度。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -3898,5 +3986,5 @@
    "text": "Apple 領導層交接與假日季指引成為焦點。新執行長上任可能引發市場對策略調整的預期，若新領導強調資本回報或AI投資，偏向提升股市信心；若指引保守，則偏向增加公司債供給以維持現金流。假日季表現攸關科技股後市，強勁指引偏向支撐股市，反之則可能推升長端利率作為風險補償。"
   }
  },
- "at": "2026-11-04 16:53（台北）"
+ "at": "2026-11-04 20:15（台北）"
 }

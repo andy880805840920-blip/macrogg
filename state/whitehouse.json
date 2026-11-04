@@ -102,7 +102,88 @@
   "p:us_china_truce:7c056c1004fc": "2026-11-02",
   "p:us_china_truce:fa45cfb645ec": "2026-11-02",
   "p:us_china_truce:1bafbd92afb0": "2026-11-02",
-  "p:us_china_truce:7789a9474c23": "2026-11-02"
+  "p:us_china_truce:7789a9474c23": "2026-11-02",
+  "b1e3da026609": "2026-11-04",
+  "cea1d4a9d242": "2026-11-03",
+  "c123f2cf2874": "2026-11-04",
+  "3642024d58c6": "2026-11-04",
+  "673c7f21c38b": "2026-11-04",
+  "6fe994f3e20b": "2026-11-03",
+  "749c27e1947a": "2026-11-03",
+  "18bff6a57ed8": "2026-11-03",
+  "9d924d9e257d": "2026-11-03",
+  "06484c164629": "2026-11-03",
+  "a47446b1957a": "2026-11-03",
+  "f7dab593ac75": "2026-11-03",
+  "e57c8d6e4871": "2026-11-03",
+  "fe8ef484573e": "2026-11-03",
+  "973b633fd1f1": "2026-11-03",
+  "a339df9832ef": "2026-11-03",
+  "1c7f34434338": "2026-11-02",
+  "47eb7117f7a4": "2026-11-02",
+  "ea2ceebbb4d4": "2026-11-02",
+  "8042bc113659": "2026-11-02",
+  "6d03c39b6257": "2026-11-02",
+  "494adeebd2d2": "2026-11-02",
+  "7711d2808a15": "2026-11-02",
+  "945708f90252": "2026-11-02",
+  "6013140f705c": "2026-11-02",
+  "24dd4bc776ae": "2026-11-01",
+  "e4eccc6618ac": "2026-11-01",
+  "ac3e2d91151f": "2026-11-01",
+  "c28676bc6d25": "2026-11-01",
+  "ccd73ec23178": "2026-10-31",
+  "p:fiscal_cr:541da80f6845": "2026-11-04",
+  "p:fiscal_cr:76ed02334e0a": "2026-11-04",
+  "p:fiscal_cr:8bf84ac6f7b5": "2026-11-03",
+  "p:fiscal_cr:104ca0280cb8": "2026-11-03",
+  "p:fiscal_cr:8b9926b1a590": "2026-11-03",
+  "p:fiscal_cr:1967741e8d97": "2026-11-03",
+  "p:fiscal_cr:26c1aec4d75e": "2026-11-03",
+  "p:fiscal_cr:40fbdaf74449": "2026-11-02",
+  "p:fiscal_cr:f77bfc27ac7b": "2026-11-02",
+  "p:fiscal_cr:9e838ee02f2d": "2026-11-02",
+  "p:debt_limit:9264f2f22f1c": "2026-11-04",
+  "p:debt_limit:8f7e4b63bfa3": "2026-11-03",
+  "p:debt_limit:9eb7649c98c6": "2026-11-03",
+  "p:debt_limit:6335f4a79259": "2026-11-04",
+  "p:debt_limit:658d894cbab5": "2026-11-04",
+  "p:debt_limit:9afce8bcf47e": "2026-11-04",
+  "p:debt_limit:a07b75590ba0": "2026-11-04",
+  "p:debt_limit:b197c96d76a7": "2026-11-04",
+  "p:debt_limit:711e4344d4f0": "2026-11-03",
+  "p:debt_limit:b20d70d326d5": "2026-11-03",
+  "p:fed_cook:48d42c0bb725": "2026-10-29",
+  "p:fed_cook:169b18aec0f6": "2026-10-29",
+  "p:fed_cook:f19916c2a3c0": "2026-10-28",
+  "p:fed_cook:9f532f6a9c0e": "2026-10-28",
+  "p:fed_cook:7b1523089b77": "2026-10-28",
+  "p:fed_cook:99fbfbbcaf2b": "2026-10-28",
+  "p:fed_cook:259dbcdd0ee7": "2026-10-28",
+  "p:fed_cook:5aa411f3133b": "2026-10-30",
+  "p:fed_cook:253e40beaf5f": "2026-10-30",
+  "p:fed_cook:28527fa59743": "2026-10-30",
+  "p:h200_china:26265a33fcdc": "2026-11-03",
+  "p:h200_china:b88d8b1de66f": "2026-11-03",
+  "p:h200_china:668f9250856f": "2026-11-03",
+  "p:h200_china:7424ace77be7": "2026-11-03",
+  "p:h200_china:e1fc5fe9e836": "2026-11-03",
+  "p:h200_china:1e64cdc0b367": "2026-11-02",
+  "p:h200_china:ac64f2f6a6de": "2026-11-02",
+  "p:h200_china:4b7b19b879ad": "2026-11-02",
+  "p:h200_china:693dceaf5820": "2026-11-02",
+  "p:h200_china:392af65cd4bc": "2026-11-02",
+  "p:chip_232:71dfdde7057b": "2026-11-04",
+  "p:chip_232:718a0b529236": "2026-11-04",
+  "p:chip_232:7c6ab54b78e6": "2026-11-02",
+  "p:dc_grid:7598968afdf5": "2026-11-04",
+  "p:us_china_truce:036c865a7cee": "2026-11-03",
+  "p:us_china_truce:e374d4a5a8ef": "2026-11-01",
+  "p:us_china_truce:3cd4e477f960": "2026-10-31",
+  "p:us_china_truce:0fac0a40376e": "2026-10-31",
+  "p:us_china_truce:e124541524c9": "2026-10-30",
+  "p:us_china_truce:a4e2780d1de1": "2026-10-29",
+  "p:us_china_truce:a4c35aa69b72": "2026-10-28"
  },
  "items": [
   {
@@ -153,6 +234,34 @@
    ]
   },
   {
+   "id": "1d53a735a6c9",
+   "topic": "關稅",
+   "channel": "其他",
+   "zh": "川普調整加拿大商品50%關稅的適用品項。",
+   "date": "2026-11-03",
+   "links": [
+    {
+     "title": "Trump Changes Which Canadian Goods Face 50 Percent Tariffs",
+     "source": "Legis1",
+     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1KU21UbUNMbWFlNlJwSlBKd0JyNXhwcHpFVnBrUmxDaHE0S1Z4TlZJVndZeE4wQVIzaHZWM2RCR0NxRG1oZmdxUGxoS3dkQkFBSXJWTjc0RFZod3haZ0RNazZyWUx0RzNvaG5vY1NjNWJDZmFuSlBMMnJTQTdDZw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "5341071e6e51",
+   "topic": "關稅",
+   "channel": "行政命令",
+   "zh": "川普簽署行政命令對部分製藥藥物加徵100%關稅。",
+   "date": "2026-11-02",
+   "links": [
+    {
+     "title": "Trump slaps 100% tariff on some pharmaceutical drugs via executive order",
+     "source": "ABC News - Breaking News, Latest News and Videos",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOVHNjYmZWRzV1Rno1QnBJdlAxR1Jjd1dGLTdTRHlUQnRUQmpCOUFJSDc0cFdCSy1heGE1SUc5R1k3WWJkZGFKZ01vYUQyaTM0bzgxSWJ5R2RVYjdQNjU2NjhVZ2lUZGtUM1Ffa0RQRjFPb2tvOFFCVXN1M1pPUnN1UTYwZVlWdXZWSkppX014QkJPQ0U4VDAzMzJGYnlKRURCemFWMVd6SVZTVGfSAbABQVVfeXFMT3pWWlhKeVJ4NHJNZ3Y4TWNzT0RTYi1UajFQcnJlVDUxLWpOY0N4bTFNWVlRaDVnRjYxaS1tMVVMNkZUYlhmTFJlT1BvSmpEMWVvelhIRXhIeUQtS0d2V2NlZ3ZLTXFpYXlDT0VPQkRLRjA5eXNKZnlzSGRrajJUeEtUUWRYNnhlRHVXYldaU3NBdG1VTVBqcXRtY3ViMHQ1MjJzVlhIRzNFNHhUeVI3dWI?oc=5"
+    }
+   ]
+  },
+  {
    "id": "a6af50102f0b",
    "topic": "能源",
    "channel": "受訪",
@@ -175,11 +284,11 @@
  "suggestions": {
   "fiscal_cr": {
    "date": "2026-11-04",
-   "note": "10月30日眾議院通過避免政府停擺法案，顯示政策已進入兩院表決階段，暫時撥款可能已獲批准，下一步應為簽署而非等待12月11日到期。",
+   "note": "11月4日ABC News報導川普敦促國會結束休會為國防部籌資，顯示停擺已在進行中，政策可能已進入「協商」階段而非仍在暫時撥款期間。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1RTXdaSXJHWGExRXJxQ0ZhT2FMY1NsanpYeHNYTzlwQkQxR0dwR3RZd0ZkU3VPMFNBUWNabkpOS3E1bFprLVFkX3B4MmJoVG1POVlsaEd3UTBzeHFl?oc=5",
-    "https://news.google.com/rss/articles/CBMivwFBVV95cUxPMUwwSkFtcHRfdGRVdy16cE1kQzBJRnd5N1NQZnFEWTI2TE42MnZOdUxmbVItNEtDVHFuSmdWRzVUdXBEbW1BNG4zSExKeTBodlhkSUVtQm1McWEtOV9qVGthRUZfZWp5R2tqWmc4dkZHRUVSMmtMT3RyaWQtNFotSHZpZWFTNk1Ndmg5aWZ1NDR5bERlWnVySDdYYWhIQVFLOGl4MVVKN2taT2l6QW5kZFNUQ1hDT2ZrU2J3T0JEOA?oc=5",
-    "https://news.google.com/rss/articles/CBMid0FVX3lxTFBmVGN0N2g5WDcwSS1iMU9jejNYSGp2LTcyWkNNd0tKOXRJZDdOMTZmLUtrdzBVZ0JvaEpqS1FoWVBuaTdaTjV5Vk5kSlRCZ2lSeUhGbjRVUEZVVFpqUjNWdEVRLTc2TXNOTU4yQTB2TG1iY3paazdn?oc=5"
+    "https://news.google.com/rss/articles/CBMioAFBVV95cUxNN2V3clB1Q1JGbEp1MUtaSkNveWRRSUhRTnc2ZTFCZXBUZGVlcUNRNWQ2VUFraWFLLXhWNU11RE1ZMkU0TG9NSnN1c0ktVEg4alpScEpvNWJ1NTVYSmJ2aFV5cFRWZllYQ19UWWtSdlRZZ0VlQmI1NEtNYk85WW5fYVNyVWtPLU9xRFBNVE9xN2JsclpaVDF6Umg4UG9uVmRQ0gGmAUFVX3lxTFByWmFBOG01ejRJWHg5VG9iWmJGYVRlRmxsMHBfVHFGLWRVQVByLTFMWGRoODg4OXNlLUJCb2dNQ3hkWnR3S3owMGw4NjhtaUdkR3NMbXVHT2tXTWpIYjZmNmU5eThsYjE2VmN3NTZENnZoUmhIaUtNSzdBcmZqZk1oNGdQYll5NFRoWXlQcWc4cjdtU3BaSUtQT1owaTVfSUlUR3FRMUE?oc=5",
+    "https://news.google.com/rss/articles/CBMimwFBVV95cUxPS0NSZzNDQ1hrazFLMDZld2hHeVliQkJMVWY3WXYyN2tyNW1RRjJYcGVaRjdka3ZKOXNYOG50Q0dTMzlWU1E4TmQ0OEVjOGpzaG1rMzU5Z2JKeTRkbVJHRjFYYWExYWhXSXZIS3pZb1VVVUNZN3pFc1VyXy1lU19JSkRnV3RaUUk5VjRvd09DaURaeTZXWXNqek1aVQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPVFFFZlVuckFwelRMdzg2ZWhSOTdmeHQ0dkNsUU5NQS1hbEdvSWs5OUwwTFBaZG1aWnkwTWNCUW1qVmxUTVlZVzM1RE9wX2VsSWFIcUhtM3pBcTRSZ1RWRjFrV3lVVHh1VlpBdDU5VVNJbmtnaDNtV3pUYnBud2RrSGkxYWJ5ZkdJT0ZVblF6UkRSZjFycDJNT3pINHRGU3g4eG5rVUtRV0w4a0cyVjVKbVJoOGt3YzVqU1puSi0xaG5fcEE?oc=5"
    ]
   },
   "debt_limit": {
@@ -193,11 +302,11 @@
   },
   "fed_cook": {
    "date": "2026-11-04",
-   "note": "Reuters報導白宮對Cook的聽證會延期至12月，顯示下一步「白宮委員會調查結果」的日期可能改為2026年12月。",
+   "note": "根據 Investing.com Canada 10月30日報導，白宮延後 Lisa Cook 聽證會至12月，表示下一步的日期已確定為12月。",
    "links": [
-    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOUWFLMXBRYXVPMHZLZ3NZRWVMYlhWaVBtdGRTU19RakNmYW90OVBUSFI2Q0JfVE16MnBDcV9xSEtpdjJSWlRBb0Vhd3JzaG5abHRLcWdaVm1RWkhvVWdHQ0RiN0pHeVdYbmY1U1IyQXNkWUl4M2I1TGcyUFItTGNQM0ZkZDRFWWlsN3phR1JybXhnTGZLY3R6Rm5EaTJJNTl6bEowUTRIWUZVaFpmRTlWR0V3?oc=5",
-    "https://news.google.com/rss/articles/CBMib0FVX3lxTE0wSnZBWVpLV3lueUc5bmN2VEZPVzZ2WlN1LWxFaFg3LTV6M3pLTHozaVcxRTAxS3lFak82MHB1R0VoYmY4cUk3cnFzbWJuSHllTk9zcFZwQVlKeXRSbFBXQk54M3Q2Wk9abkg0WkdSMA?oc=5",
-    "https://news.google.com/rss/articles/CBMiogFBVV95cUxNR3M1cWh6azZyTHVTWV9qanQ0LXVsVHVNRzdLeUlSbEx3aVYta0xwa3VPODBoc1JvUEZMRVNGQ045ZkZZajVCTmhzZGdPcmFOaHhJelg0OHRIMjQyZnlXemdNbU42cWFhS3dQaExlT3RtLWpiTmxlVUMtYzZ4dHhYNGdFc1FtRlJ4SUtZQlFjWUE3N2JqNUtHdHctdUFtWWZBd1E?oc=5"
+    "https://news.google.com/rss/articles/CBMiswFBVV95cUxPd2dPVXJlcnVlZlJ1Z2tpV3p1TEVDOVNBWTJtdlc4UkxwMEhVbmV0eWFlVWc1N2hNRGpKU1NibXJGSldoUk9kQlFWV29iN1N0c3dETWVhWEpLREFQd2J3RmtxOWZ0U3Z2STc2ZEh4bGx5Y0dfY3h1Nl9sc0xidU1aQnFvYWxpVmNrS2hkWTRmYlRudmJ3NGR5b21ReHUzTm9fLVVTaW9MRVlJRlpHanZXMUVzcw?oc=5",
+    "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNTFNHanJ3MTBjVnBzMDd2NTFYRTR1azVJNmdJbXpiYm8wd0phUHZfcVNBWE1ySUwtSnJsVldzdGxoMXZTd09FR1pPV1EwV2N2YkROMVcxUENTRTNVd2NfQUdiM3JReWNhTTdDVjNMZ1diU0NxSEN2M1l1THVaNUo3emVBU0pSRHFZWE1JcHY1VkliTU9SRjB2VDdlTUJVSHZod1ZnZW1SeW53MWIyNDNDSWk5WW5IczBETFdjakhzdVNXNVdzNFFQTEtmQzNBek5wWmZjLWRxSmI2N09DZTJn?oc=5",
+    "https://news.google.com/rss/articles/CBMimwFBVV95cUxOckNEdkU2UnVHUWk4eVg4SEg3S3RhUVNwNWk1QWtsVVEwNVo1M2ZfeFU1WHZoZ3M1NDFUU2dHME9QU0RJc0ttd0VLRFhqcUo0Nk9hYWRackFoWGI3S2x6Z3k5MkhCNEplQU80WmN2THQ5dEV6Q3MxYVhrZVBvLUFoQXFWOElZcnV1S2FhV3BCODEyZ0sycVVUVGluaw?oc=5"
    ]
   },
   "h200_china": {
@@ -237,5 +346,5 @@
    ]
   }
  },
- "at": "2026-11-04 16:53（台北）"
+ "at": "2026-11-04 20:16（台北）"
 }
