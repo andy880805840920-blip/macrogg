@@ -1,6 +1,6 @@
 {
  "hash": "",
- "text": "美國勞工統計局 11/3 公布，9 月職缺增加 33.3 萬至 752 萬個，高於市場預期的 715 萬；職缺率升至 4.5%，職缺數較失業人數多出 41.4 萬個，每位求職者對應約 1.05 個職缺。製造業職缺增加 5.4 萬、州與地方政府增 10.8 萬、專業與商業服務增 10.6 萬。離職人數激增 32.1 萬至 336 萬人，創 3 月來最高，離職通常反映勞工對找到新工作的信心；雇用人數增 13.1 萬至 540 萬，裁員與解僱減少 12.7 萬至 164 萬、同為 3 月來最低。Navy Federal Credit Union 首席經濟學家 Heather Long 表示，職缺多於失業人數是與一年前的重大轉變，儘管面臨高油價與通膨問題，企業仍在緩步增加雇用。10 月非農就業報告將於 11/6（美國時間）公布，市場預期新增 5.9 萬個職位。¶11/3（美國時間）美國期中選舉開票，民主黨在參議院拿下北卡羅來納州，為翻轉共和黨 53-47 多數邁出關鍵一步；預測市場顯示民主黨拿下眾議院機率 100%、參議院 99%。Pepperstone 的 Chris Weston 警告，民主黨掌控國會將提高立法僵局、財政邊緣政策、債務上限爭議與國會調查的可能性，但總統仍保有相當大的行政權。川普受訪時威脅若民主黨獲勝將成為「否決先生」，封殺任何民主黨立法。\n沙烏地阿拉伯財政赤字在11/3超過前年同期的兩倍，戰爭對該國財政造成壓力，這反映出中東地區衝突對油國經濟的衝擊。\n美國股市期貨在11/3上漲，投資人押注人工智慧產業復甦，同時美國大選投票日進行，市場對科技股前景重燃樂觀情緒。",
+ "text": "美國勞工統計局 11/3 公布 9 月 JOLTS 報告，職缺增加、離職人數攀升至 3 月以來最高、招聘上升且裁員下降。職缺增幅集中在製造業、州與地方政府及專業與商業服務；離職被視為勞工對找到新工作信心的指標。Navy Federal Credit Union 首席經濟師 Heather Long 指出，目前職缺多於失業人口，儘管面臨高油價與通膨問題，企業仍緩步增加招聘，是勞動市場的正面訊號。報告公布於 11/6 非農就業報告之前，市場預期 10 月新增就業人數將低於前月。¶11/4（美國時間）期中選舉，民主黨在眾議院取得大幅勝利，終結川普的立法議程，並讓與他結盟的企業面臨壓力。選舉結果反映選民對通膨的不滿以及對川普的疲乏感。\n沙烏地阿拉伯預算赤字因葉門戰爭與沙美石油公司費用增加而超過一倍，11/4公布的數據顯示赤字規模創新高，反映政府支出壓力加劇。\n美股11/3震盪不安，投資人擔憂美國大選結果與人工智慧估值泡沫風險，導致市場前景黯淡，科技股與金融股表現分歧。",
  "links": [
   {
    "title": "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
@@ -9,10 +9,22 @@
    "at": "2026-11-03T19:15:21+00:00"
   },
   {
-   "title": "Stocks and dollar drop as Democrats enjoy big early wins",
-   "link": "https://finance.yahoo.com/markets/world-indices/articles/stocks-dollar-drop-democrats-enjoy-024022576.html?.tsrc=rss",
+   "title": "Treasury yields fall as investors crowd into bonds for safety amid election stock sell",
+   "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
+   "source": "CNBC",
+   "at": "2026-11-04T07:27:48+00:00"
+  },
+  {
+   "title": "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQY2N2aWV5RE53dWlCU0VyQXJ2NzVJYkg2QTFORGdEZG5HYnNob0JUcGczNnlYQUtxcGtVVUpxbGk3eENXT2RkVlp6N3pxZ0lfV3NYY3hxVTBXM201R3dsN1Vfa2dKSkh3QXYzZUJYb3pYanRLWGxOX1QzSUNZU1I5Z21zVFd6bl9wT3Vfby11cDdqOXlzTE1LMDRRTk5FcTd6WG5nZDJsYnhxTU52WHZRQjNmb1M?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-04T05:58:00+00:00"
+  },
+  {
+   "title": "Democratic Rout Ends Trump's Legislative Agenda and Sets Up Corporate Allies For Pain",
+   "link": "https://finance.yahoo.com/m/c7dac0a6-abf2-3044-a349-1e4889ffc5d4/democratic-rout-ends-trump%27s.html?.tsrc=rss",
    "source": "Yahoo Finance",
-   "at": "2026-11-04T02:40:22+00:00"
+   "at": "2026-11-04T05:15:29+00:00"
   }
  ],
  "fedwatch": {
@@ -273,34 +285,53 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-04T03:02:03.777664+00:00",
+ "at": "2026-11-04T08:53:49.457220+00:00",
  "layout": "main",
  "topics": {
-  "hash": "0f5f7df7d5da8994",
+  "hash": "057ed07a4e89f52d",
   "items": [
+   {
+    "id": "fed",
+    "label": "聯準會",
+    "text": "Warsh 表示聯準會將採取「漸進式」升息，且不會單純因通膨擔憂而升息。這些表述暗示聯準會在升息路徑上採取謹慎態度，需要更多經濟數據支持進一步行動",
+    "links": [
+     {
+      "title": "Fed's Powell nods to \"gradual\" rate hikes",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5fX0hVU1J6YXkzWkJsS0lxRmxyWlVVVUVpR1Q1TGhRd3dRbmtvQVNzYXQ2UlAxbFl4T1k2c0MzVlZZMEx3dW92N0ZobUFBa0RPam94VkpzSm5jMmNY?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-03T08:49:07+00:00"
+     },
+     {
+      "title": "Fed will not raise rates on inflation fears alone - Powell",
+      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE05NHZFS3RDMThNekhkZTNvaHg2b0Fud09rUDRZWkxjcVU0ekt1SDloOUppNF85bVlUZVZURlBsNENmdm9aYVFpc1N4OElxbVE4OU5yUXdqNElnNkFz?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-03T01:27:33+00:00"
+     }
+    ]
+   },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "長天期美債在油價波動與職缺數據強勁的雙重影響下下跌，交易員在美債再融資與就業報告前轉向看空美債",
+    "text": "長天期美債交易員在期中選舉與美債再融資前轉向看多，隨後因油價波動與職缺數據強勁而承壓",
     "links": [
-     {
-      "title": "Treasuries Fall Amid Oil Price Swings, Strong Job Openings Data",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOSXQ1SWFQdnh5NGNQYnhfRW02amk5VzFIVElYUHp6WS1FWXZqUm5GbU82V3NONmhoWHJhemRxWmY4QUV0ZGFHX1RSOVkyb0lzbDV3ZExTY2tZS0NURHdpcnpld0p0Z0tnajlNTVBCVzlKM3JuUGhEY1NrWGtWM0piWDg0d3ZRUUZsVEJPbUNmTVphVEpHbC1DbmtobnJlU1NxclRpZ3RzYUp4c0RudE5Ud19Qbw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-03T16:30:34+00:00"
-     },
      {
       "title": "Traders Turn Less Bearish on Treasuries Before Refunding, Jobs",
       "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPdUk3Sm5rdV92VUpXYUN6TUlKd213ek5sV3dwZUowWVB2TXNtaDh4UElJUWlBT21kNTFDMC1lSElLQnIxYXgtMmE3R0RscVhWQlh0TFVEckY3dmY0NUYwY1JwWFpTemtqZDluMVBDYm8yRWstbGItdDVFMXNsS1p2eUVKVU5OdUlrVW1ka2pkR2dBUTJEYUJZYUpwQlJkOTlfWGxUS0Y3Vk16U2I3OG1MZnZB?oc=5",
       "source": "Bloomberg",
       "at": "2026-11-03T21:30:23+00:00"
+     },
+     {
+      "title": "Treasuries Advance as Traders Eye US Votes, Refinancing Plans",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNZzN0NVZRRWVGTGRucWE0c2lMNmdFU3BGaS1kVlhzMDAyZUNRZjA1SWlORHJIWlotVXdWLVNqN3NMX3h3U2tISkRod0l5YXpDdzZLOWNhYmhPd2hPU3UzUE9wZmdEQ0VBWjRfZi15SmJsclVuS1lwZHcwakdPdk5pbW5ha1NhMm5SdUpBUmdDUzMxT3YxNWg3dlRHeUxjeGFPOV83bjUyNlY0ZktBSFF0Uw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-04T05:30:00+00:00"
      }
     ]
    },
    {
     "id": "funding",
     "label": "資金市場",
-    "text": "中國央行上調外匯存準率至 6%，藉此收緊美元流動性以應對人民幣升勢過快，此舉影響跨境資金配置與新興市場融資成本",
+    "text": "中國央行上調外匯存準率至 6%，出手收緊美元流動性以應對人民幣升勢過快。此舉反映新興市場央行在全球資金流動中的主動調控",
     "links": [
      {
       "title": "人民幣升勢太猛？大陸央行上調外匯存準率至6％ 出手收緊美元流動性",
@@ -313,7 +344,7 @@
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗軟化立場後，石油輸出國組織同意小幅提高石油供應；同時波斯灣原油流量恢復導致現貨油價下跌，美伊和談前景不明朗持續推高油價波動",
+    "text": "油價因波斯灣原油供應恢復而下跌，但伊朗戰爭不確定性與川普期中選舉後可能採取行動的預期相互拉扯",
     "links": [
      {
       "title": "Physical Oil Prices Tumble as Persian Gulf Crude Flows Recover",
@@ -332,26 +363,26 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股科技股 11/3 反彈，輝達漲 2.3%、超微與博通也跳升，半導體 ETF 漲幅 2-2.5%，市場預期期中選舉結果公布後不確定性消退將帶來反彈",
+    "text": "民主黨在期中選舉意外大勝，市場擔憂民主黨控制國會將加強對數據中心的監管，科技股與 AI 股遭拋售，11/3 美股期貨大幅下跌，標普 500 期貨跌 1.13%、那斯達克期貨跌近 2%",
     "links": [
      {
-      "title": "S&P 500, Nasdaq Recover From AI Rout On US Midterm Election Day",
-      "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-nasdaq-recover-from-ai-rout-on-us-midterm-election-day-meta-aapl-amd-skhy-in-focus/cNGXlSbR9dS?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-03T23:29:55+00:00"
+      "title": "Stocks, dollar slide as stunning victories for Democrats jolt AI bets",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTFBWZWFDY2tZeDZfbXdVWnE2QWZwVlNpX3NqVm1OdmR0bDBGTlJjU3dJWG5yWEFpSG4tSHVhY2NEeVBsNnllVFQyb0tWRU1naXZQLWN3Tlk4VE1PV3o2cU1tVHFYX1hDT1ZtRkVWUWtYR3JwWFRyTXZIRldDWQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-04T01:06:00+00:00"
      },
      {
-      "title": "US tech stocks recover after selloff spooks investors over AI spending",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/us-tech-stocks-recover-selloff-221845320.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-03T22:18:45+00:00"
+      "title": "Democrats’ Win Rattles Trump Trades From AI Stocks to Crypto",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPdTRQb3pkNzdfSm5LVl9yeno5dERXdGZNZklXZmpZQUp6SXFNUkZScHpwVElhOHczVkZILWpjWjVMRmVlSlZwa1BjVmxRVzJMSl9neWNxMFNFc0pEMUxoRmd3dmQzcXhEZVliTFlPbElVSHJKTlRiSDhqTkMzcUJuR1l4eE15MEJDMjRfYzlBSWdwZWhDbGVCOEdlNmpJbHBMd0VJTWxJa3BBNUNrUzkw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-04T06:10:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達確定在台北士林科技園區設海外總部，帶動北投房市交易量年增 24.1% 創全市冠軍；超微財測超預期、三星將代工超微與輝達晶片、輝達要求資料中心客戶減少中國業務",
+    "text": "AMD 第三季資料中心營收創紀錄達 85 億美元、年增 97%，執行長蘇姿丰預告第四季成長將進一步加速，並對未來數年維持強勁營收成長有信心",
     "links": [
      {
       "title": "AMD Forecast Exceeds Estimates After AI Chip Demand Soars",
@@ -360,18 +391,37 @@
       "at": "2026-11-03T22:44:51+00:00"
      },
      {
-      "title": "Samsung to make AMD, Nvidia chip parts at second Texas plant, Maeil Business reports",
-      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNdnFHVnpXOTk4UEYwSlJ5WHhOaUNkVEtPN2o4N3hnSDl2MW12ejZscWRBNnAyRUdyUnhSbGlVdS12UGwzUDFnNlNiWmFzY3Bya3E0NjZIMDhBZzN3YWNJWlZMaGF6amFORVJiVXlONHZrOVFEcW5VbGV6bUF3cDdJbV83dnJXSXh0NnF1RUlkWkJkdWhsbEZRWVJkeXo5THhPLUl1LTFZUVgwM3JLZGhnTGsxeHJ0OFVTRktPOEZpVm9Cc2M5QkVUcTlrZw?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-03T10:21:58+00:00"
+      "title": "資料中心業績擴張，蘇姿丰預告，AMD未來數年維持極強勁營收成長",
+      "link": "https://tw.stock.yahoo.com/news/%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%E6%A5%AD%E7%B8%BE%E6%93%B4%E5%BC%B5-%E8%98%87%E5%A7%BF%E4%B8%B0%E9%A0%90%E5%91%8A-amd%E6%9C%AA%E4%BE%86%E6%95%B8%E5%B9%B4%E7%B6%AD%E6%8C%81%E6%A5%B5%E5%BC%B7%E5%8B%81%E7%87%9F%E6%94%B6%E6%88%90%E9%95%B7-083251111.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-04T08:32:51+08:00"
+     }
+    ]
+   },
+   {
+    "id": "twf",
+    "label": "台指期",
+    "text": "台股 11/3 暴跌 1,612.6 點至 43,307 點，跌幅 3.59%，外資單日賣超逾千億元創歷史第 8 大紀錄；惟官股行庫逆勢買超 284.8 億元，其中 0050 獲買超 27.25 億元最多，成為對抗外資賣壓的主要力量",
+    "links": [
+     {
+      "title": "看破愛別人！台股震盪選股困難　第四法人用鈔票投「這4檔」",
+      "link": "https://tw.news.yahoo.com/%E7%9C%8B%E7%A0%B4%E6%84%9B%E5%88%A5%E4%BA%BA-%E5%8F%B0%E8%82%A1%E9%9C%87%E7%9B%AA%E9%81%B8%E8%82%A1%E5%9B%B0%E9%9B%A3-%E7%AC%AC%E5%9B%9B%E6%B3%95%E4%BA%BA%E7%94%A8%E9%88%94%E7%A5%A8%E6%8A%95-%E9%80%994%E6%AA%94-084500105.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-04T08:45:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "歷史數據顯示標普 500 在期中選舉後一年平均漲 13.7%，且在 1982 年至 2022 年的 11 次期中選舉中全數上漲；市場偏好分裂政府勝過單一黨派控制",
+    "text": "民主黨在期中選舉全面勝利，將掌控國會兩院與超過半數州長席位，歷史數據顯示選後一年美股平均上漲 13.7%，但市場短期擔憂民主黨單一政黨控制可能帶來過度支出與監管風險",
     "links": [
+     {
+      "title": "Top takeaways from the US midterm elections",
+      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQR2JZaU9CbWhKTzJFQWhvUW0zVFE2VnhVTWNJV2I5dlVlSlNQMVdtSW12UUhsMER2UnRYSUJzSWhnWFZxMExoTWZ4Ri1udHdrN0lZWkdCVWJ5OEp1cG1oN3dxZUY0REU5cUIzRnRmQ3F3SjJFdU9GQ2cycElXUHdoX1lEQkhJOFNURG5HZThSYklDS2s?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-04T06:53:54+00:00"
+     },
      {
       "title": "Stock market after midterm elections: What S&P 500 history shows",
       "link": "https://www.cnbc.com/2026/11/02/stock-market-after-midterm-elections-sp-500-history.html",
@@ -383,59 +433,47 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金在伊朗談判進展與期中選舉前夕持穩於 3,930 美元附近，油價下跌與非美貨幣升值提供支撐，但 10 月跌幅逾 7% 反映 AI 投資退潮",
+    "text": "黃金漲幅超過 2%，受美元走弱帶動；民主黨期中選舉大勝後美元承壓，提升以美元計價的黃金吸引力",
     "links": [
      {
-      "title": "Gold firms on softer oil prices, US midterm results awaited",
+      "title": "Gold jumps more than 2% on softer dollar after Democratic midterm sweep",
       "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQd0lHOUFsbExIR3lscDNTRy14T012UWd6UlBSLUtySlpjSTdFaEtYLW1hbnpOTHdrSm1fM1RGU2V0WmxNSWJGU3AxeV9PUDVRVm1BRjBBNXQxZVVacElvaE5IbGJFU2FZbnN1Tmg4dlVTZ3prY0U0SEh5X1VzWmxUYnQ3VWhtZGpGOXloc1R6X3BvNlprVmw0UGppaFE2VFcyYkl3SzJ3?oc=5",
       "source": "Reuters",
       "at": "2026-11-04T00:58:00+00:00"
-     },
-     {
-      "title": "Gold Holds Biggest Jump in Two Months on Iran Peace-Deal Hopes",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNMG5nV0pTaXFiRDlQbFhQLWJFcEV5dEoyeTNNcWFJa3ZmamE4ZUxxRnQ3bTdiUERvMUZMZEZMdzUzNGFNZXBha3V6cU9mdHY5Z1QzdnlLOUxRcVB1aVhIZ2RDRTlJWkpJYWg3VjB4WDFwdno5czNrM095N2lqdk1Gcy1tR2FkQkN6OEdtYnYya0JKSTV5ZGM5Wk9ZZXEyTnNPNWZDb21MYU1nbW9yUDVoUmFVMA?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-03T19:18:01+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數因期中選舉開票走弱下跌 0.41% 至 101.452，英鎊連六日升值創七週高點至 1.3467 美元；新台幣貶 1.68 角至 32.76 元，外資調節持股避險",
+    "text": "新台幣 11/3 貶至 32.821 元，外資賣超台股 1,498.99 億元創歷史第 5 大賣超，加重台幣貶值壓力；市場預期若民主黨同時掌控兩院，美元短期可能面臨壓力",
     "links": [
      {
-      "title": "東京匯市早盤美元指數急跌0.41%，英鎊追高連六彈觸七週高點",
-      "link": "https://tw.stock.yahoo.com/news/%E6%9D%B1%E4%BA%AC%E5%8C%AF%E5%B8%82%E6%97%A9%E7%9B%A4%E7%BE%8E%E5%85%83%E6%8C%87%E6%95%B8%E6%80%A5%E8%B7%8C0-41-%E8%8B%B1%E9%8E%8A%E8%BF%BD%E9%AB%98%E9%80%A3%E5%85%AD%E5%BD%88%E8%A7%B8%E4%B8%83%E9%80%B1%E9%AB%98%E9%BB%9E-014837273.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T01:48:37+00:00"
+      "title": "新台幣週三再貶6.1分收32.821元，外資擴大賣超加重匯價壓力",
+      "link": "https://tw.stock.yahoo.com/news/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%80%B1%E4%B8%89%E5%86%8D%E8%B2%B66-1%E5%88%86%E6%94%B632-821%E5%85%83-%E5%A4%96%E8%B3%87%E6%93%B4%E5%A4%A7%E8%B3%A3%E8%B6%85%E5%8A%A0%E9%87%8D%E5%8C%AF%E5%83%B9%E5%A3%93%E5%8A%9B-081321156.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-04T08:13:21+08:00"
      },
      {
-      "title": "國內匯市：台股重挫、外資出走，新台幣兌美元週二走貶1.68角，收32.760元",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQTS1HbmYzVlJXTHVzQ3M0WkhXUTh6WjRRUHIyQTRkTlVya3NUQXFJTlliRkJZUFVnQjZoSHl4THg3RklHQXlWTFZpcFFTaThKUWl5QVVXcjZJS29OMy1rMGs4TVdjVnlyX3J5eksycjhKbjVxc3E4OUVDeFRLU0lkdW5YaXl1QU54?oc=5",
-      "source": "富聯網",
-      "at": "2026-11-03T23:00:00+00:00"
+      "title": "台股跌破4萬3千點 新台幣兌美元持續走貶",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFAwNTBYZnAwYjVHRW82RThvLVNQaWg2WVVEZWc5OEkxenp2cGI1SFc0d1hMbVB3M0NZdjFpYzBFaHo3RTV0aUQ3TVNUYWFnRnc?oc=5",
+      "source": "公視新聞",
+      "at": "2026-11-04T05:33:50+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-04T03:02:55.287001+00:00"
+  "at": "2026-11-04T08:54:35.836099+00:00"
  },
  "main_source_titles": [
   "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
-  "Stocks and dollar drop as Democrats enjoy big early wins"
+  "Treasury yields fall as investors crowd into bonds for safety amid election stock sell",
+  "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats",
+  "Democratic Rout Ends Trump's Legislative Agenda and Sets Up Corporate Allies For Pain"
  ],
- "headline": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農報告前勞動市場轉強",
- "rate_note": "9 月職缺與離職數據雙雙超預期，顯示勞動市場韌性強於預期，偏向推升短端利率與升息預期，並對長端形成上行壓力。10 年期 11/3 收盤 +6bp 至 4.95%，市場已在反映。",
+ "headline": "9 月職缺大增、離職人數創高，11/6 非農報告前勞動市場顯現韌性",
+ "rate_note": "9 月職缺大增、離職與招聘回升顯示勞動市場仍具韌性，偏向支撐聯準會維持升息路徑、推升短端利率與升息預期，不過 10 年期 11/3 收盤 +6bp 至 4.95%，主要反映 11/4 期中選舉民主黨可能橫掃國會、股市期貨下跌帶動避險買盤湧入債市。",
  "recent_mains": [
-  {
-   "headline": "Meta 發債至少 200 億美元，科技巨頭 AI 舉債潮加速",
-   "titles": [
-    "Meta seeks at least $20 billion in bond sale as AI debt boom accelerates",
-    "Meta為AI建設發債！美元債擬籌150億美元 首批歐元債最快周三登場"
-   ],
-   "at": "2026-11-03T17:35:22.539979+00:00"
-  },
   {
    "headline": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農週五公布",
    "titles": [
@@ -451,13 +489,23 @@
     "Stocks and dollar drop as Democrats enjoy big early wins"
    ],
    "at": "2026-11-04T03:02:03.777664+00:00"
+  },
+  {
+   "headline": "9 月職缺大增、離職人數創高，11/6 非農報告前勞動市場顯現韌性",
+   "titles": [
+    "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
+    "Treasury yields fall as investors crowd into bonds for safety amid election stock sell",
+    "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats",
+    "Democratic Rout Ends Trump's Legislative Agenda and Sets Up Corporate Allies For Pain"
+   ],
+   "at": "2026-11-04T08:53:49.457220+00:00"
   }
  ],
  "archive": {
   "2026-11-04": {
-   "headline": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農報告前勞動市場轉強",
-   "text": "美國勞工統計局 11/3 公布，9 月職缺增加 33.3 萬至 752 萬個，高於市場預期的 715 萬；職缺率升至 4.5%，職缺數較失業人數多出 41.4 萬個，每位求職者對應約 1.05 個職缺。製造業職缺增加 5.4 萬、州與地方政府增 10.8 萬、專業與商業服務增 10.6 萬。離職人數激增 32.1 萬至 336 萬人，創 3 月來最高，離職通常反映勞工對找到新工作的信心；雇用人數增 13.1 萬至 540 萬，裁員與解僱減少 12.7 萬至 164 萬、同為 3 月來最低。Navy Federal Credit Union 首席經濟學家 Heather Long 表示，職缺多於失業人數是與一年前的重大轉變，儘管面臨高油價與通膨問題，企業仍在緩步增加雇用。10 月非農就業報告將於 11/6（美國時間）公布，市場預期新增 5.9 萬個職位。¶11/3（美國時間）美國期中選舉開票，民主黨在參議院拿下北卡羅來納州，為翻轉共和黨 53-47 多數邁出關鍵一步；預測市場顯示民主黨拿下眾議院機率 100%、參議院 99%。Pepperstone 的 Chris Weston 警告，民主黨掌控國會將提高立法僵局、財政邊緣政策、債務上限爭議與國會調查的可能性，但總統仍保有相當大的行政權。川普受訪時威脅若民主黨獲勝將成為「否決先生」，封殺任何民主黨立法。\n沙烏地阿拉伯財政赤字在11/3超過前年同期的兩倍，戰爭對該國財政造成壓力，這反映出中東地區衝突對油國經濟的衝擊。\n美國股市期貨在11/3上漲，投資人押注人工智慧產業復甦，同時美國大選投票日進行，市場對科技股前景重燃樂觀情緒。",
-   "rate_note": "9 月職缺與離職數據雙雙超預期，顯示勞動市場韌性強於預期，偏向推升短端利率與升息預期，並對長端形成上行壓力。10 年期 11/3 收盤 +6bp 至 4.95%，市場已在反映。",
+   "headline": "9 月職缺大增、離職人數創高，11/6 非農報告前勞動市場顯現韌性",
+   "text": "美國勞工統計局 11/3 公布 9 月 JOLTS 報告，職缺增加、離職人數攀升至 3 月以來最高、招聘上升且裁員下降。職缺增幅集中在製造業、州與地方政府及專業與商業服務；離職被視為勞工對找到新工作信心的指標。Navy Federal Credit Union 首席經濟師 Heather Long 指出，目前職缺多於失業人口，儘管面臨高油價與通膨問題，企業仍緩步增加招聘，是勞動市場的正面訊號。報告公布於 11/6 非農就業報告之前，市場預期 10 月新增就業人數將低於前月。¶11/4（美國時間）期中選舉，民主黨在眾議院取得大幅勝利，終結川普的立法議程，並讓與他結盟的企業面臨壓力。選舉結果反映選民對通膨的不滿以及對川普的疲乏感。\n沙烏地阿拉伯預算赤字因葉門戰爭與沙美石油公司費用增加而超過一倍，11/4公布的數據顯示赤字規模創新高，反映政府支出壓力加劇。\n美股11/3震盪不安，投資人擔憂美國大選結果與人工智慧估值泡沫風險，導致市場前景黯淡，科技股與金融股表現分歧。",
+   "rate_note": "9 月職缺大增、離職與招聘回升顯示勞動市場仍具韌性，偏向支撐聯準會維持升息路徑、推升短端利率與升息預期，不過 10 年期 11/3 收盤 +6bp 至 4.95%，主要反映 11/4 期中選舉民主黨可能橫掃國會、股市期貨下跌帶動避險買盤湧入債市。",
    "links": [
     {
      "title": "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
@@ -466,13 +514,25 @@
      "at": "2026-11-03T19:15:21+00:00"
     },
     {
-     "title": "Stocks and dollar drop as Democrats enjoy big early wins",
-     "link": "https://finance.yahoo.com/markets/world-indices/articles/stocks-dollar-drop-democrats-enjoy-024022576.html?.tsrc=rss",
+     "title": "Treasury yields fall as investors crowd into bonds for safety amid election stock sell",
+     "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
+     "source": "CNBC",
+     "at": "2026-11-04T07:27:48+00:00"
+    },
+    {
+     "title": "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats",
+     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQY2N2aWV5RE53dWlCU0VyQXJ2NzVJYkg2QTFORGdEZG5HYnNob0JUcGczNnlYQUtxcGtVVUpxbGk3eENXT2RkVlp6N3pxZ0lfV3NYY3hxVTBXM201R3dsN1Vfa2dKSkh3QXYzZUJYb3pYanRLWGxOX1QzSUNZU1I5Z21zVFd6bl9wT3Vfby11cDdqOXlzTE1LMDRRTk5FcTd6WG5nZDJsYnhxTU52WHZRQjNmb1M?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-04T05:58:00+00:00"
+    },
+    {
+     "title": "Democratic Rout Ends Trump's Legislative Agenda and Sets Up Corporate Allies For Pain",
+     "link": "https://finance.yahoo.com/m/c7dac0a6-abf2-3044-a349-1e4889ffc5d4/democratic-rout-ends-trump%27s.html?.tsrc=rss",
      "source": "Yahoo Finance",
-     "at": "2026-11-04T02:40:22+00:00"
+     "at": "2026-11-04T05:15:29+00:00"
     }
    ],
-   "at": "2026-11-04T03:02:03.777664+00:00",
+   "at": "2026-11-04T08:53:49.457220+00:00",
    "weekly": false,
    "points": 2
   },

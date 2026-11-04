@@ -2029,6 +2029,47 @@ body.duo-lock{overflow:hidden}
 .ai-p-imp{margin:0;font-size:14px;line-height:1.75;color:var(--text-secondary);border-left:3px solid var(--series-1);padding-left:10px}
 .ai-tl-tx{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
 .ai-new{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brand-orange-fill);flex:none}
+/* 2026-11 白宮與國會（src/pages/whitehouse.py）：本週重點→篩選→川普說了什麼｜政策進度（桌機左右）→不確定性指數 */
+.wh-wrap{display:flex;flex-direction:column;gap:10px}
+.wh-c{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;background:var(--bg);min-width:0}
+.wh-k{display:flex;align-items:baseline;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.wh-cnt{margin-left:auto;font-weight:400;font-size:11.5px}
+.viz-root:not(#_) .wh-sum{margin:0;font-size:14.5px;line-height:1.65;color:var(--text-primary)}
+.viz-root:not(#_) .wh-ai,.viz-root:not(#_) .wh-note{margin:6px 0 0;font-size:11px;color:var(--faint);line-height:1.5}
+.wh-after{margin-top:9px;padding-top:8px;border-top:1px solid var(--grid);font-size:12.5px;color:var(--text-secondary)}
+.wh-after b{color:var(--brand-ink);margin-right:8px}
+.wh-f{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.wh-f>span{font-size:12px;color:var(--muted);margin-right:2px}
+.wh-f button,.viz-root:not(#_) .wh-f button{appearance:none;font:inherit;font-size:12.5px;line-height:1.4;padding:4px 11px;margin:0;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;box-shadow:none;min-height:0}
+.wh-f button.on,.viz-root:not(#_) .wh-f button.on{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
+.wh-two{display:grid;grid-template-columns:1fr;gap:10px}
+@media(max-width:700px){.wh-f{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -14px;padding:0 14px}.wh-f::-webkit-scrollbar{display:none}.wh-f button,.viz-root:not(#_) .wh-f button{flex:none}.wh-f>span{flex:none}}
+.duo-sum .ai-new{margin-right:5px;align-self:center}
+.duo-wh-img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+@media(min-width:760px){.wh-two{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);align-items:start}}
+.wh-s{padding:7px 0;border-top:1px solid var(--grid)}.wh-k+.wh-s{border-top:0;padding-top:0}
+.wh-sm{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.viz-root:not(#_) .wh-sx{margin:2px 0 0;font-size:13.5px;line-height:1.55;color:var(--text-primary)}
+.wh-p{padding:9px 0;border-top:1px solid var(--grid)}.wh-k+.wh-p{border-top:0;padding-top:2px}
+.wh-ph{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wh-ph b{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--brand-ink)}
+.wh-tag{flex:none;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);white-space:nowrap}
+.wh-tag-d{background:color-mix(in srgb,var(--series-1) 14%,transparent);color:var(--series-1)}
+.wh-st,.wh-sl{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px}
+.wh-st{margin:7px 0 3px}.wh-st i{height:5px;border-radius:3px;background:var(--grid)}.wh-st i.on{background:var(--brand-navy)}
+.wh-sl span{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wh-sl span.cur{color:var(--brand-ink);font-weight:700}
+.wh-sl span:last-child{text-align:right}.wh-sl span:not(:first-child):not(:last-child){text-align:center}
+.viz-root:not(#_) .wh-nx,.viz-root:not(#_) .wh-im{margin:5px 0 0;font-size:12.5px;line-height:1.5;color:var(--text-secondary)}
+.wh-nx em{font-style:normal;color:var(--muted);margin-right:8px}
+.viz-root:not(#_) .wh-im{margin-top:2px;font-size:12px;color:var(--muted)}.wh-im a{margin-left:8px;color:var(--series-1);text-decoration:none}
+.viz-root:not(#_) .wh-empty{margin:4px 0;font-size:12.5px;color:var(--muted)}
+.wh-ixb{display:flex;align-items:center;gap:16px}
+.wh-ixb>div{display:flex;flex-direction:column;flex:none}.wh-ixb>div span{font-size:11.5px;color:var(--muted)}
+.wh-ixv{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.wh-ixv.wh-hi{color:var(--brand-orange)}
+.wh-spark{flex:1;min-width:0;height:34px}.wh-spark polyline{fill:none;stroke:var(--brand-orange);stroke-width:2}
 .ai-tile.on .ai-tl-tx{color:rgba(255,255,255,.8)}
 
 @media(max-width:700px){.duo-card{padding:10px 10px 9px;gap:2px}.duo-map{height:64px;margin:2px 0}.duo-t{font-size:15px}.duo-k{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3784,6 +3825,15 @@ i.lg-fill{display:inline-block;width:14px!important;height:10px!important;
 .mk-d.mk-o{background:transparent}
 .mk-s{background:var(--series-1);border-radius:1px}
 .mk-p{width:9px;height:8px;background:var(--good);clip-path:polygon(50% 0,100% 100%,0 100%)}
+/* 2026-11 政策（白宮與國會的關鍵日期）：菱形 */
+.mk-g{width:8px;height:8px;background:var(--line-3);transform:rotate(45deg) scale(.85)}
+.mc .mc-g{background:var(--line-3)}
+.hc-k-g .hm-mid>b::before{content:"";display:inline-block;margin-right:7px;vertical-align:1px;width:7px;height:7px;background:var(--line-3);transform:rotate(45deg)}
+html body #hm-cat-pol:checked~.hm-cats label[for=hm-cat-pol]{color:var(--brand-ink);box-shadow:inset 0 -2px 0 var(--brand-orange)}
+#hm-cat-pol:checked~.hm-wk .hm-cat-pol{display:block}
+#hm-cat-pol:checked~.hm-wk .hm-cnt-pol{display:inline}
+#hc-f-g:not(:checked)~.hc-lg label[for=hc-f-g]{opacity:.4;text-decoration:line-through}
+#hc-f-g:not(:checked)~.hc-ms .mk-w:has(.mk-g),#hc-f-g:not(:checked)~.hc-dds .hc-k-g{display:none}
 .mk-w{display:inline-flex;align-items:center;gap:1px}
 .mk-w small{font-size:9.5px;font-weight:700;color:var(--text-secondary);line-height:1}
 /* 月份 */
@@ -5233,8 +5283,8 @@ html body .fs-head .fs-mode-sel{font-size:13px!important;font-weight:700!importa
 </script>
 </head>
 <body>
-<!-- 更新於 2026-11-04 11:03（台北） -->
-<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">11/04</span></span><div class="upd-c"><span>台北</span><b>11:03</b><i>11/04</i></div><div class="upd-c"><span>紐約</span><b>22:03</b><i>11/03</i></div><div class="upd-c"><span>倫敦</span><b>03:03</b><i>11/04</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
+<!-- 更新於 2026-11-04 16:55（台北） -->
+<div class="brandwrap"><header class="brandbar"><a class="brand" href="/" aria-label="MACRO GG 首頁"><img class="logo-full" src="/brand/logo-full.svg" width="333" height="62" alt="MACRO GG 明天過後，帶你看總經"><img class="logo-full logo-dk" src="/brand/logo-full-dark.svg" width="333" height="62" alt=""><img class="logo-compact" src="/brand/logo-compact.svg" width="157" height="30" alt="MACRO GG"><img class="logo-compact logo-dk" src="/brand/logo-compact-dark.svg" width="157" height="30" alt=""></a><div class="upd"><span class="upd-k">最後更新<span class="upd-d">11/04</span></span><div class="upd-c"><span>台北</span><b>16:55</b><i>11/04</i></div><div class="upd-c"><span>紐約</span><b>03:55</b><i>11/04</i></div><div class="upd-c"><span>倫敦</span><b>08:55</b><i>11/04</i></div></div><button type="button" class="theme-btn" aria-label="切換深色／淺色模式" title="切換深色／淺色模式"><i aria-hidden="true"></i></button><a class="lang-btn" translate="no" href="https://macrogg-netlify-app.translate.goog/rates/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en" rel="noopener" title="English">EN</a></header></div>
 <nav class="bnav" aria-label="主選單"><div class="bnav-in"><a class="bnav-mark" href="/" aria-label="回首頁" tabindex="-1"><img src="/brand/logo-mark.svg" alt="" width="48" height="24"></a><div class="bnav-tabs"><div class="bnav-track"><a href="/">總覽</a><a href="/ask/">偷懶</a><a href="/labor/">就業</a><a href="/inflation/">通膨</a><a href="/fomc/">聯準會</a><a href="/liquidity/">流動性</a><a href="/rates/" class="on" aria-current="page">長端與債務</a><a href="/scenario/">情境合成</a><a href="/archive/">存檔</a><span class="bnav-glow"></span><span class="bnav-sun"></span></div></div><span class="bnav-fade l"></span><span class="bnav-fade r"></span></div></nav>
 <div class="viz-root">
 <div class="pagehead"><h1>長端與債務</h1><div class="sub">Rates & Debt Supply　·　資料截止 2026-11-03</div></div>
@@ -5662,7 +5712,7 @@ pick(root.dataset.w||'1m');
 </script>
     </div>
     <details class="f-more future-section cw-fold"><summary><span class="cw-fold-number">03</span><span class="cw-fold-title"><b>市場怎麼看未來利率</b><span class="cw-fold-reading">這是期貨隱含的市場定價；可判讀年底方向，無法據此斷定每場會議的動作。</span></span></summary>
-      <section class="future-policy"><h3>年底政策利率定價偏升</h3><dl class="cw-metrics"><div><dt>現行利率中點</dt><dd><b>3.88%</b></dd></div><div><dt>2026 年底期貨隱含</dt><dd><b>4.08%</b></dd></div><div><dt>年底相對現在</dt><dd><b>+19bp</b></dd></div></dl><p>這是期貨隱含的市場定價；可判讀年底方向，無法據此斷定每場會議的動作。</p></section><section class="future-dots"><h3>期貨定價 vs 點陣圖：Lead the Curve（市場領先）</h3><p><span class="st warning">留意</span> 差距 <b>+31bp</b>（2027 年底）——點陣圖預期升息 1.0 碼，期貨定價更多（+56bp）。差距越大，之後不是期貨往點陣圖靠（短端利率跳動），就是 Fed 在下一份點陣圖往市場靠。</p><table class="lq-tbl"><thead><tr><th>年底</th><th>點陣圖中位數</th><th>期貨隱含</th><th>差距</th></tr></thead><tbody><tr><td data-label="年底">2026 年底</td><td data-label="點陣圖">4.12%</td><td data-label="期貨">4.08%</td><td data-label="差距"><b>−5bp</b></td></tr><tr><td data-label="年底">2027 年底（用 2027/12 合約，含 12 月會議前的天數）</td><td data-label="點陣圖">4.12%</td><td data-label="期貨">4.43%</td><td data-label="差距"><b>+31bp</b></td></tr></tbody></table><details class="f-more"><summary>判定標準與歷史量級</summary><div class="f-detail"><p>差距＝期貨隱含利率 − 點陣圖中位數（同一個年底）。|差距| &lt; 12.5bp（半碼）正常：兩者一致；12.5～50bp 留意：差半碼到兩碼；&gt; 50bp 警戒：差兩碼以上，跟 2015 年底、2022 年初、2023 年底幾次顯著分歧的量級相當。Lead the Curve＝期貨定價的動作比點陣圖大（同方向走得更遠）；Behind the Curve＝動作比點陣圖小或方向相反。</p><table class="lq-tbl"><thead><tr><th>時點</th><th>當時</th><th>差距</th><th>結果</th></tr></thead><tbody><tr><td data-label="時點">2015/12</td><td data-label="當時">點陣圖 2016 年底 1.375%（升 4 碼），期貨只定價約 2 碼</td><td data-label="差距">市場落後約 50bp</td><td data-label="結果">2016 年實際只升 1 碼</td></tr><tr><td data-label="時點">2022 年初</td><td data-label="當時">點陣圖 2022 年底 0.9%（升 3 碼），期貨 2 月已定價約 6 碼</td><td data-label="差距">市場領先約 75bp 以上</td><td data-label="結果">2022 年實際升 17 碼（425bp）</td></tr><tr><td data-label="時點">2023/12</td><td data-label="當時">點陣圖 2024 年底 4.6%（降 3 碼），期貨定價降約 6 碼</td><td data-label="差距">市場領先（往降息）約 75bp</td><td data-label="結果">2024 年實際降 4 碼（100bp）</td></tr></tbody></table><p class="cw-panel-note">歷史量級為當時 SEP 與期貨定價的約略值；公開免費資料沒有逐日的期貨 vs 點陣圖序列，這裡只拿幾次顯著分歧當刻度。</p></div></details></section>
+      <section class="future-policy"><h3>年底政策利率定價偏升</h3><dl class="cw-metrics"><div><dt>現行利率中點</dt><dd><b>3.88%</b></dd></div><div><dt>2026 年底期貨隱含</dt><dd><b>4.08%</b></dd></div><div><dt>年底相對現在</dt><dd><b>+19bp</b></dd></div></dl><p>這是期貨隱含的市場定價；可判讀年底方向，無法據此斷定每場會議的動作。</p></section><section class="future-dots"><h3>期貨定價 vs 點陣圖：Lead the Curve（市場領先）</h3><p><span class="st warning">留意</span> 差距 <b>+32bp</b>（2027 年底）——點陣圖預期升息 1.0 碼，期貨定價更多（+57bp）。差距越大，之後不是期貨往點陣圖靠（短端利率跳動），就是 Fed 在下一份點陣圖往市場靠。</p><table class="lq-tbl"><thead><tr><th>年底</th><th>點陣圖中位數</th><th>期貨隱含</th><th>差距</th></tr></thead><tbody><tr><td data-label="年底">2026 年底</td><td data-label="點陣圖">4.12%</td><td data-label="期貨">4.08%</td><td data-label="差距"><b>−5bp</b></td></tr><tr><td data-label="年底">2027 年底（用 2027/12 合約，含 12 月會議前的天數）</td><td data-label="點陣圖">4.12%</td><td data-label="期貨">4.45%</td><td data-label="差距"><b>+32bp</b></td></tr></tbody></table><details class="f-more"><summary>判定標準與歷史量級</summary><div class="f-detail"><p>差距＝期貨隱含利率 − 點陣圖中位數（同一個年底）。|差距| &lt; 12.5bp（半碼）正常：兩者一致；12.5～50bp 留意：差半碼到兩碼；&gt; 50bp 警戒：差兩碼以上，跟 2015 年底、2022 年初、2023 年底幾次顯著分歧的量級相當。Lead the Curve＝期貨定價的動作比點陣圖大（同方向走得更遠）；Behind the Curve＝動作比點陣圖小或方向相反。</p><table class="lq-tbl"><thead><tr><th>時點</th><th>當時</th><th>差距</th><th>結果</th></tr></thead><tbody><tr><td data-label="時點">2015/12</td><td data-label="當時">點陣圖 2016 年底 1.375%（升 4 碼），期貨只定價約 2 碼</td><td data-label="差距">市場落後約 50bp</td><td data-label="結果">2016 年實際只升 1 碼</td></tr><tr><td data-label="時點">2022 年初</td><td data-label="當時">點陣圖 2022 年底 0.9%（升 3 碼），期貨 2 月已定價約 6 碼</td><td data-label="差距">市場領先約 75bp 以上</td><td data-label="結果">2022 年實際升 17 碼（425bp）</td></tr><tr><td data-label="時點">2023/12</td><td data-label="當時">點陣圖 2024 年底 4.6%（降 3 碼），期貨定價降約 6 碼</td><td data-label="差距">市場領先（往降息）約 75bp</td><td data-label="結果">2024 年實際降 4 碼（100bp）</td></tr></tbody></table><p class="cw-panel-note">歷史量級為當時 SEP 與期貨定價的約略值；公開免費資料沒有逐日的期貨 vs 點陣圖序列，這裡只拿幾次顯著分歧當刻度。</p></div></details></section>
       <section class="future-bonds"><h3>公債遠期定價方向</h3>
         <p class="future-headline">已取得的 4 個遠期區間均高於目前同天期利率，公債未來定價偏高。</p><p>有月比較資料的 4 個區間全部下修，近期定價整體往更低利率移動。</p>
         <div class="le3-ft" style="margin-top:6px"><div class="le3-fr"><span>1 年後的 1 年期</span><b>4.82%</b><span class="le3-fg up">比目前 1 年期 +42bp</span><span class="le3-fw">近一月 −38bp</span><small class="fwd-date">官方資料日 2026-11-03；月比較 2026-10-02</small><p class="fwd-reading">遠期定價高於目前同天期利率。</p></div><div class="le3-fr"><span>2 年後的 3 年期</span><b>4.83%</b><span class="le3-fg up">比目前 3 年期 +17bp</span><span class="le3-fw">近一月 −39bp</span><small class="fwd-date">官方資料日 2026-11-03；月比較 2026-10-02</small><p class="fwd-reading">遠期定價高於目前同天期利率。</p></div><div class="le3-fr"><span>5 年後的 5 年期</span><b>5.16%</b><span class="le3-fg up">比目前 5 年期 +42bp</span><span class="le3-fw">近一月 −34bp</span><small class="fwd-date">官方資料日 2026-11-03；月比較 2026-10-02</small><p class="fwd-reading">遠期定價高於目前同天期利率。</p></div><div class="le3-fr"><span>10 年後的 20 年期</span><b>5.51%</b><span class="le3-fg up">比目前 20 年期 +16bp</span><span class="le3-fw">近一月 −30bp</span><small class="fwd-date">官方資料日 2026-11-03；月比較 2026-10-02</small><p class="fwd-reading">遠期定價高於目前同天期利率。</p></div></div>
@@ -5904,7 +5954,7 @@ pick(root.dataset.w||'1m');
 <div class="grid">
   <details class="card sect"><summary><h2 id="lights">關鍵指標檢核與綜合判定</h2><span class="sect-sum">9 項：2 項警戒、2 項留意、5 項正常</span></summary><div class="sect-body">
     <p class="hint">依三個組成份分組；本月驅動 10Y 的那一組排第一。不另設權重——權重由市場這個月的變化決定。</p>
-    <div class="lsum"><p class="lsum-head"><b>9 項指標：2 項警戒、2 項留意、5 項正常</b><span>壓力集中在下面幾項：</span></p><ul class="lsum-list"><li class="critical"><span class="lsum-tag">■ 警戒</span><span class="lsum-txt"><b>實質利率（10 年 TIPS）</b> <span class="lsum-v">2.62%</span><span class="lsum-why">比中性高出 1pp 以上，緊度超過歷次升息尾聲</span></span></li><li class="critical"><span class="lsum-tag">■ 警戒</span><span class="lsum-txt"><b>利息佔稅收比重</b> <span class="lsum-v">21.9%</span><span class="lsum-why">利息吃掉超過兩成稅收</span></span></li><li class="warning"><span class="lsum-tag">▲ 留意</span><span class="lsum-txt"><b>10 年減 2 年</b> <span class="lsum-v">+0.34%</span><span class="lsum-why">曲線偏平，或倒掛後剛轉正</span></span></li><li class="warning"><span class="lsum-tag">▲ 留意</span><span class="lsum-txt"><b>期貨定價與點陣圖差距</b> <span class="lsum-v">+31 bp</span><span class="lsum-why">期貨與點陣圖差半碼到兩碼</span></span></li></ul><p class="lsum-ok"><span class="lsum-tag good">● 正常</span>期限溢酬（NY Fed ACM）、30 年減 10 年、損益兩平通膨率（10 年）、前瞻缺口 r 減 g、投資級利差</p></div>
+    <div class="lsum"><p class="lsum-head"><b>9 項指標：2 項警戒、2 項留意、5 項正常</b><span>壓力集中在下面幾項：</span></p><ul class="lsum-list"><li class="critical"><span class="lsum-tag">■ 警戒</span><span class="lsum-txt"><b>實質利率（10 年 TIPS）</b> <span class="lsum-v">2.62%</span><span class="lsum-why">比中性高出 1pp 以上，緊度超過歷次升息尾聲</span></span></li><li class="critical"><span class="lsum-tag">■ 警戒</span><span class="lsum-txt"><b>利息佔稅收比重</b> <span class="lsum-v">21.9%</span><span class="lsum-why">利息吃掉超過兩成稅收</span></span></li><li class="warning"><span class="lsum-tag">▲ 留意</span><span class="lsum-txt"><b>10 年減 2 年</b> <span class="lsum-v">+0.34%</span><span class="lsum-why">曲線偏平，或倒掛後剛轉正</span></span></li><li class="warning"><span class="lsum-tag">▲ 留意</span><span class="lsum-txt"><b>期貨定價與點陣圖差距</b> <span class="lsum-v">+32 bp</span><span class="lsum-why">期貨與點陣圖差半碼到兩碼</span></span></li></ul><p class="lsum-ok"><span class="lsum-tag good">● 正常</span>期限溢酬（NY Fed ACM）、30 年減 10 年、損益兩平通膨率（10 年）、前瞻缺口 r 減 g、投資級利差</p></div>
     <div class="le-lgs"><div class="le-lg" data-k="1" style="--k:1"><div class="sig-tier">損益兩平：通膨預期<span class="le-badge">本月驅動</span></div><div class="le-lgc"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>損益兩平通膨率（10 年）</div>
   <div class="l-value">2.29% <span style="font-size:13px;color:var(--muted)">↓</span></div>
@@ -5956,11 +6006,11 @@ pick(root.dataset.w||'1m');
     <div class="l-desc lx"><p class="lx-what">10 年期減 2 年期公債殖利率。2 年期反映未來兩年的 Fed 政策預期；10 年期另含長期成長、通膨與期限溢酬。</p><div class="lx-k">為什麼重要</div><p>衡量政策相對長期前景的鬆緊。升息時短端漲得多，曲線走平甚至倒掛；降息開始後短端快速下滑，曲線重新變陡。歷史上衰退多在「倒掛後重新變陡」時開始，而不是倒掛當下。</p><div class="lx-k">門檻</div><ul class="lx-lv"><li class="good"><span class="lx-tag">● 正常</span><span class="lx-rng">&gt; +0.35%</span></li><li class="warning on"><span class="lx-tag">▲ 留意</span><span class="lx-rng">0～+0.35%（升息尾聲／降息起點），或近 24 個月曾倒掛、剛轉正</span><em>目前</em></li><li class="critical"><span class="lx-tag">■ 警戒</span><span class="lx-rng">&lt; 0（倒掛）</span></li></ul><p class="lx-basis">依據：1988 年以來 6 次升息循環：結束時 10−2 都在 +0.35% 以下（中位約 −0.1%），其中 5 次在循環中或結束後一年內倒掛；升息起點的典型水準約 +1.2%。</p><a class="l-link" href="#curve">完整脈絡 →</a></div></details>
 </div><div class="light warning">
   <div class="l-top"><span class="l-icon">▲</span>期貨定價與點陣圖差距</div>
-  <div class="l-value">+31 bp <span style="font-size:13px;color:var(--muted)">→</span></div>
+  <div class="l-value">+32 bp <span style="font-size:13px;color:var(--muted)">→</span></div>
   <div class="l-state">留意</div>
   
   <details class="l-more"><summary>這在量什麼</summary>
-    <div class="l-desc lx"><p class="lx-now"><b>現況</b>2027 年底：期貨 4.43%、點陣圖 4.12%——Lead the Curve（市場領先），點陣圖預期升息 1.0 碼，期貨定價更多（+56bp）。</p><p class="lx-what">期貨隱含的年底政策利率，減 Fed 點陣圖中位數（同一個年底）。</p><div class="lx-k">為什麼重要</div><p>期貨的動作比點陣圖大＝Lead the Curve（市場走在 Fed 前面）；比點陣圖小或方向相反＝Behind the Curve（市場不買單點陣圖）。差距越大，之後一方被迫修正的幅度越大。</p><div class="lx-k">門檻</div><ul class="lx-lv"><li class="good"><span class="lx-tag">● 正常</span><span class="lx-rng">|差距| &lt; 12.5bp（半碼內）</span></li><li class="warning on"><span class="lx-tag">▲ 留意</span><span class="lx-rng">12.5～50bp</span><em>目前</em></li><li class="critical"><span class="lx-tag">■ 警戒</span><span class="lx-rng">&gt; 50bp（兩碼以上）</span></li></ul><p class="lx-basis">依據：歷次顯著分歧的量級：2015 年底約 50bp、2022 年初約 75bp 以上、2023 年底約 75bp。</p><a class="l-link" href="#curve">完整脈絡 →</a></div></details>
+    <div class="l-desc lx"><p class="lx-now"><b>現況</b>2027 年底：期貨 4.45%、點陣圖 4.12%——Lead the Curve（市場領先），點陣圖預期升息 1.0 碼，期貨定價更多（+57bp）。</p><p class="lx-what">期貨隱含的年底政策利率，減 Fed 點陣圖中位數（同一個年底）。</p><div class="lx-k">為什麼重要</div><p>期貨的動作比點陣圖大＝Lead the Curve（市場走在 Fed 前面）；比點陣圖小或方向相反＝Behind the Curve（市場不買單點陣圖）。差距越大，之後一方被迫修正的幅度越大。</p><div class="lx-k">門檻</div><ul class="lx-lv"><li class="good"><span class="lx-tag">● 正常</span><span class="lx-rng">|差距| &lt; 12.5bp（半碼內）</span></li><li class="warning on"><span class="lx-tag">▲ 留意</span><span class="lx-rng">12.5～50bp</span><em>目前</em></li><li class="critical"><span class="lx-tag">■ 警戒</span><span class="lx-rng">&gt; 50bp（兩碼以上）</span></li></ul><p class="lx-basis">依據：歷次顯著分歧的量級：2015 年底約 50bp、2022 年初約 75bp 以上、2023 年底約 75bp。</p><a class="l-link" href="#curve">完整脈絡 →</a></div></details>
 </div></div></div><div class="le-lg" data-k="1" style="--k:1"><div class="sig-tier">需求</div><div class="le-lgc"><div class="light good">
   <div class="l-top"><span class="l-icon">●</span>投資級利差</div>
   <div class="l-value">0.94% <span style="font-size:13px;color:var(--muted)">→</span></div>
