@@ -1,28 +1,240 @@
 {
  "hash": "",
- "text": "財政部將在 11/4（美國時間）公布 10–12 月季度再融資細節，市場關注發債規模與期限結構。財政部 11/3 預告，預計 10–12 月借入 6180 億美元私人持有淨市場債務（假設 12 月底現金餘額 8500 億美元），1–3 月預計借入 8000 億美元。市場同時等待 11/4 公布的 9 月貿易報告。¶歐元區 10 月通膨率跳升至 4%，創三年來新高，與 9 月的 3.8% 相比進一步上升，也是 2023/9 以來首度觸及或超過 4% 門檻。官員表示漲幅主要來自能源成本飆升，能源通膨從 9 月的 18.9% 升至 20.8%；歐洲作為能源淨進口地區，自伊朗戰爭爆發以來價格持續攀升。各國通膨率差異顯著，立陶宛最高達 6.1%、馬爾他最低為 2.3%，但所有成員國均高於歐洲央行 2% 目標。數據公布前市場預期 12 月升息機率為 71.8%，公布後升至逾 72%；歐洲央行上月維持關鍵利率在 2.5%，9 月曾升息 25 個基點。\n沙烏地阿拉伯預算赤字因戰爭與沙烏地阿美公司費用而增加超過一倍，反映政府支出壓力上升。\n美國選舉後人工智能數據中心繁榮面臨劇變，產業前景因政策環境改變而面臨不確定性。",
+ "text": "11/4 民主黨在美國期中選舉取得國會兩院控制權，從共和黨手中翻轉愛荷華、堪薩斯、北卡羅來納、俄亥俄、南卡羅來納、緬因與德州參議院席次，並拿下俄亥俄與德州州長選舉。摩根大通交易員指出，華爾街關注的焦點之一是「減少赤字支出」——民主黨掌控國會將使川普政府更難推動立法，可能透過預算控制權限縮支出，過程中可能經歷政府關門。BondBloxx 投資策略師 JoAnne Bianco 表示，更分裂的政策環境應使赤字成長更困難、可能改善財政前景，美債市場走強反映這點合理；展望未來，焦點將轉回地緣政治與美國經濟健康狀況，目前與伊朗緊張情勢沒有立即升級跡象，應有助於抑制能源價格與通膨壓力。¶美國 10/4 公布的 10 月 ISM 非製造業指數由 9 月的 54.9 降至 54.5，低於預期的 54.8，顯示服務業擴張速度放緩至三個月來最慢；新訂單指數由 59.8 降至 55.9，創四個月新低。投入價格指數雖由 74 降至 73，仍是 2022 年中以來第二高；供應商交貨指數升至 56.7，創 4 月來最高。ISM 服務業調查委員會主席 Steve Miller 指出，關稅與燃料成本仍是企業最常提及的供應鏈問題，許多業者尚未將成本上升全部轉嫁給客戶。\n11/4（美國時間）美國期中選舉民主黨奪得參眾兩院控制權後，美股期貨一度大幅下跌，那斯達克100期貨跌逾2%、標普500期貨跌逾1%，市場擔憂國會改變將牽制川普的減稅與財政政策，隨後隨著選舉結果明朗而V型反轉收復跌幅。\n11/4（美國時間）民主黨掌控國會後，川普政府的關稅政策預期不會因此喊停，經濟學家指出川普開徵關稅有相關法源授權，即使原法源受挑戰也可改用其他法律依據，準眾議長傑佛瑞斯已表態將把限縮總統關稅權列為重要議程。",
  "links": [
   {
-   "title": "Treasury's Refunding Details Are Up Next as Five Large Companies Report Higher Revenue",
-   "link": "https://finance.yahoo.com/markets/stocks/articles/treasurys-refunding-details-next-five-120000883.html?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-11-04T12:00:00+00:00"
+   "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
+   "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
+   "source": "CNBC",
+   "at": "2026-11-04T17:11:00+00:00"
   },
   {
-   "title": "Euro zone inflation hits 4% for first time in three years as interest rate hike looms",
-   "link": "https://www.cnbc.com/2026/11/04/euro-zone-cpi-inflation-october-ecb-rate-hike.html",
-   "source": "CNBC",
-   "at": "2026-11-04T10:47:30+00:00"
+   "title": "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手",
+   "link": "https://tw.stock.yahoo.com/news/%E6%BC%B2%E5%83%B9%E9%82%84%E6%B2%92%E5%AE%8C-%E7%BE%8E%E5%9C%8B10%E6%9C%88%E6%9C%8D%E5%8B%99%E6%A5%AD%E6%88%90%E6%9C%AC%E9%82%84%E6%B2%92%E5%85%A8%E8%BD%89%E5%AB%81-fed%E6%8A%97%E9%80%9A%E8%86%A8%E9%9B%A3%E9%AC%86%E6%89%8B-163004614.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-11-04T16:30:04+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-11-04",
+  "date": "2026-11-05",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-11-04",
+   "date": "2026-11-05",
    "meetings": [
     {
+     "date": "2026-12-09",
+     "start": 3.8825,
+     "end": 4.083295,
+     "move_bp": 20.08,
+     "outcomes": [
+      [
+       25,
+       0.8032
+      ],
+      [
+       0,
+       0.1968
+      ]
+     ],
+     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+    },
+    {
+     "date": "2027-01-27",
+     "start": 4.083295,
+     "end": 4.14,
+     "move_bp": 5.67,
+     "outcomes": [
+      [
+       0,
+       0.7732
+      ],
+      [
+       25,
+       0.2268
+      ]
+     ],
+     "how": "2027-02 合約平均"
+    },
+    {
+     "date": "2027-03-17",
+     "start": 4.14,
+     "end": 4.283929,
+     "move_bp": 14.393,
+     "outcomes": [
+      [
+       25,
+       0.5757
+      ],
+      [
+       0,
+       0.4243
+      ]
+     ],
+     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
+    },
+    {
+     "date": "2027-04-28",
+     "start": 4.283929,
+     "end": 4.34,
+     "move_bp": 5.607,
+     "outcomes": [
+      [
+       0,
+       0.7757
+      ],
+      [
+       25,
+       0.2243
+      ]
+     ],
+     "how": "2027-05 合約平均"
+    },
+    {
+     "date": "2027-06-09",
+     "start": 4.34,
+     "end": 4.418571,
+     "move_bp": 7.857,
+     "outcomes": [
+      [
+       0,
+       0.6857
+      ],
+      [
+       25,
+       0.3143
+      ]
+     ],
+     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
+    },
+    {
+     "date": "2027-07-28",
+     "start": 4.418571,
+     "end": 4.435,
+     "move_bp": 1.643,
+     "outcomes": [
+      [
+       0,
+       0.9343
+      ],
+      [
+       25,
+       0.0657
+      ]
+     ],
+     "how": "2027-08 合約平均"
+    },
+    {
+     "date": "2027-09-15",
+     "start": 4.435,
+     "end": 4.445,
+     "move_bp": 1.0,
+     "outcomes": [
+      [
+       0,
+       0.96
+      ],
+      [
+       25,
+       0.04
+      ]
+     ],
+     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
+    },
+    {
+     "date": "2027-10-27",
+     "start": 4.445,
+     "end": 4.445,
+     "move_bp": 0.0,
+     "outcomes": [
+      [
+       0,
+       1.0
+      ],
+      [
+       25,
+       0.0
+      ]
+     ],
+     "how": "2027-11 合約平均"
+    },
+    {
+     "date": "2027-12-08",
+     "start": 4.445,
+     "end": 4.411304,
+     "move_bp": -3.37,
+     "outcomes": [
+      [
+       0,
+       0.8652
+      ],
+      [
+       -25,
+       0.1348
+      ]
+     ],
+     "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
+    }
+   ],
+   "next": {
+    "date": "2026-12-09",
+    "start": 3.8825,
+    "end": 4.083295,
+    "move_bp": 20.08,
+    "outcomes": [
+     [
+      25,
+      0.8032
+     ],
+     [
+      0,
+      0.1968
+     ]
+    ],
+    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+   },
+   "horizon": {
+    "date": "2026-12-09",
+    "start": 3.8825,
+    "end": 4.083295,
+    "move_bp": 20.08,
+    "outcomes": [
+     [
+      25,
+      0.8032
+     ],
+     [
+      0,
+      0.1968
+     ]
+    ],
+    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+   },
+   "cum_bp": 20.079,
+   "r0": 3.8825,
+   "r0_src": "2026-11 合約（當月沒有會議）",
+   "horizons": [
+    {
+     "date": "2026-12-09",
+     "label": "2026 年底",
+     "cum_bp": 20.079,
+     "prev_cum_bp": 19.375
+    },
+    {
+     "date": "2027-06-09",
+     "label": "2027 年中",
+     "cum_bp": 53.607,
+     "prev_cum_bp": 55.821
+    },
+    {
+     "date": "2027-12-08",
+     "label": "2027 年底",
+     "cum_bp": 52.88,
+     "prev_cum_bp": 57.054
+    }
+   ],
+   "prev": {
+    "next": {
      "date": "2026-12-09",
      "start": 3.8825,
      "end": 4.07625,
@@ -39,338 +251,89 @@
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    {
-     "date": "2027-01-27",
-     "start": 4.07625,
-     "end": 4.145,
-     "move_bp": 6.875,
-     "outcomes": [
-      [
-       0,
-       0.725
-      ],
-      [
-       25,
-       0.275
-      ]
-     ],
-     "how": "2027-02 合約平均"
-    },
-    {
-     "date": "2027-03-17",
-     "start": 4.145,
-     "end": 4.288929,
-     "move_bp": 14.393,
-     "outcomes": [
-      [
-       25,
-       0.5757
-      ],
-      [
-       0,
-       0.4243
-      ]
-     ],
-     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
-    },
-    {
-     "date": "2027-04-28",
-     "start": 4.288929,
-     "end": 4.36,
-     "move_bp": 7.107,
-     "outcomes": [
-      [
-       0,
-       0.7157
-      ],
-      [
-       25,
-       0.2843
-      ]
-     ],
-     "how": "2027-05 合約平均"
-    },
-    {
-     "date": "2027-06-09",
-     "start": 4.36,
-     "end": 4.452857,
-     "move_bp": 9.286,
-     "outcomes": [
-      [
-       0,
-       0.6286
-      ],
-      [
-       25,
-       0.3714
-      ]
-     ],
-     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
-    },
-    {
-     "date": "2027-07-28",
-     "start": 4.452857,
-     "end": 4.47,
-     "move_bp": 1.714,
-     "outcomes": [
-      [
-       0,
-       0.9314
-      ],
-      [
-       25,
-       0.0686
-      ]
-     ],
-     "how": "2027-08 合約平均"
-    },
-    {
-     "date": "2027-09-15",
-     "start": 4.47,
-     "end": 4.5,
-     "move_bp": 3.0,
-     "outcomes": [
-      [
-       0,
-       0.88
-      ],
-      [
-       25,
-       0.12
-      ]
-     ],
-     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
-    },
-    {
-     "date": "2027-10-27",
-     "start": 4.5,
-     "end": 4.49,
-     "move_bp": -1.0,
-     "outcomes": [
-      [
-       0,
-       0.96
-      ],
-      [
-       -25,
-       0.04
-      ]
-     ],
-     "how": "2027-11 合約平均"
-    },
-    {
-     "date": "2027-12-08",
-     "start": 4.49,
-     "end": 4.463043,
-     "move_bp": -2.696,
-     "outcomes": [
-      [
-       0,
-       0.8922
-      ],
-      [
-       -25,
-       0.1078
-      ]
-     ],
-     "how": "2027-12 合約日曆日加權反推（N=8、M=23）"
-    }
-   ],
-   "next": {
-    "date": "2026-12-09",
-    "start": 3.8825,
-    "end": 4.07625,
-    "move_bp": 19.375,
-    "outcomes": [
-     [
-      25,
-      0.775
-     ],
-     [
-      0,
-      0.225
-     ]
-    ],
-    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-   },
-   "horizon": {
-    "date": "2026-12-09",
-    "start": 3.8825,
-    "end": 4.07625,
-    "move_bp": 19.375,
-    "outcomes": [
-     [
-      25,
-      0.775
-     ],
-     [
-      0,
-      0.225
-     ]
-    ],
-    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-   },
-   "cum_bp": 19.375,
-   "r0": 3.8825,
-   "r0_src": "2026-11 合約（當月沒有會議）",
-   "horizons": [
-    {
-     "date": "2026-12-09",
-     "label": "2026 年底",
-     "cum_bp": 19.375,
-     "prev_cum_bp": 18.318
-    },
-    {
-     "date": "2027-06-09",
-     "label": "2027 年中",
-     "cum_bp": 57.036,
-     "prev_cum_bp": 53.357
-    },
-    {
-     "date": "2027-12-08",
-     "label": "2027 年底",
-     "cum_bp": 58.054,
-     "prev_cum_bp": 53.804
-    }
-   ],
-   "prev": {
-    "next": {
-     "date": "2026-12-09",
-     "start": 3.88,
-     "end": 4.063182,
-     "move_bp": 18.318,
-     "outcomes": [
-      [
-       25,
-       0.7327
-      ],
-      [
-       0,
-       0.2673
-      ]
-     ],
-     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-    },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.88,
-     "end": 4.063182,
-     "move_bp": 18.318,
+     "start": 3.8825,
+     "end": 4.07625,
+     "move_bp": 19.375,
      "outcomes": [
       [
        25,
-       0.7327
+       0.775
       ],
       [
        0,
-       0.2673
+       0.225
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 18.318
+    "cum_bp": 19.375
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-11-04T12:16:04.786290+00:00",
+ "at": "2026-11-04T17:25:14.155818+00:00",
  "layout": "main",
  "topics": {
-  "hash": "00bd43358a5629de",
+  "hash": "fc7b11e245d6a497",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會主席 Warsh 提及升息將採「漸進」步調〔2〕，同時表示聯準會不會單純因通膨擔憂而升息〔3〕。民主黨籍鮑爾在內布拉斯加州眾議院選舉中勝出〔1〕。",
+    "text": "10月民間就業增8.6萬人，與9月持平，超越市場預期的6.9萬人；轉職者薪資年增4.8%，創2024年3月以來最快，整體勞工總薪酬增4.7%，反映勞動市場韌性穩定，將使聯準會在評估政策時有較大空間持續關注通膨壓力",
     "links": [
      {
-      "title": "Democrat Powell Wins Nebraska House Race, DDHQ Projects",
-      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNRjg0TkFQSENXUTVSTEUwVHFsbHB6T01aMFhSYjY4aHZBeGtPV0ZfbWpWNFhsdWhFLXNPVnlZUEJNRm4tTnkxLWFiY1pwWEN3ZlVwckE3TDh5M1U3eE1weFRVVzNfbm95NDRXVXd5TTlBZzZrNUVFNFQ2TUd3dm9uUElvb0tpS2ZCb0xvZE9obVNwaHI3MlFxWmhjWWFuUzI2MHdUcDQ3U2o?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-04T02:55:00+00:00"
-     },
-     {
-      "title": "Fed's Powell nods to \"gradual\" rate hikes",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5fX0hVU1J6YXkzWkJsS0lxRmxyWlVVVUVpR1Q1TGhRd3dRbmtvQVNzYXQ2UlAxbFl4T1k2c0MzVlZZMEx3dW92N0ZobUFBa0RPam94VkpzSm5jMmNY?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-03T08:49:07+00:00"
+      "title": "非農前哨戰傳佳音！美國10月民間就業增8.6萬人 Fed抗通膨更有底氣？",
+      "link": "https://tw.stock.yahoo.com/news/%E9%9D%9E%E8%BE%B2%E5%89%8D%E5%93%A8%E6%88%B0%E5%82%B3%E4%BD%B3%E9%9F%B3-%E7%BE%8E%E5%9C%8B10%E6%9C%88%E6%B0%91%E9%96%93%E5%B0%B1%E6%A5%AD%E5%A2%9E8-6%E8%90%AC%E4%BA%BA-fed%E6%8A%97%E9%80%9A%E8%86%A8%E6%9B%B4%E6%9C%89%E5%BA%95%E6%B0%A3-132024479.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-04T13:20:24+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率下跌，10年期公債殖利率下滑3個基點至4.9167%，30年期下滑3個基點至5.29%，投資人因美股期貨下跌而湧入債券避險〔1〕。",
+    "text": "民主黨掌控國會後，市場預期將推動住房可負擔性政策，建商股應聲上漲，建商Lennar與D.R. Horton漲幅均達8%；10年期美債殖利率小幅下滑，反映政治僵局可能限制財政擴張",
     "links": [
      {
-      "title": "Treasuries Advance as Traders Eye US Votes, Refinancing Plans",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNZzN0NVZRRWVGTGRucWE0c2lMNmdFU3BGaS1kVlhzMDAyZUNRZjA1SWlORHJIWlotVXdWLVNqN3NMX3h3U2tISkRod0l5YXpDdzZLOWNhYmhPd2hPU3UzUE9wZmdEQ0VBWjRfZi15SmJsclVuS1lwZHcwakdPdk5pbW5ha1NhMm5SdUpBUmdDUzMxT3YxNWg3dlRHeUxjeGFPOV83bjUyNlY0ZktBSFF0Uw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-04T09:54:51+00:00"
-     },
-     {
-      "title": "Traders Turn Less Bearish on Treasuries Before Refunding, Jobs",
-      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPdUk3Sm5rdV92VUpXYUN6TUlKd213ek5sV3dwZUowWVB2TXNtaDh4UElJUWlBT21kNTFDMC1lSElLQnIxYXgtMmE3R0RscVhWQlh0TFVEckY3dmY0NUYwY1JwWFpTemtqZDluMVBDYm8yRWstbGItdDVFMXNsS1p2eUVKVU5OdUlrVW1ka2pkR2dBUTJEYUJZYUpwQlJkOTlfWGxUS0Y3Vk16U2I3OG1MZnZB?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-03T21:30:23+00:00"
-     }
-    ]
-   },
-   {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "人民幣升勢強勁，中國央行上調外匯存準率至 6%，藉此收緊美元流動性",
-    "links": [
-     {
-      "title": "人民幣升勢太猛？大陸央行上調外匯存準率至6％ 出手收緊美元流動性",
-      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFB4azVMOXpLYnluM3hpZVg3b1gzOFJobzJqUzVIbjBxWkRENW13SVBPTmpEbUtfQXczb2M2TWVxUkdYYTRHMVJoQ2F2Y0VHc2dOeURWX3R6bFE?oc=5",
-      "source": "梅花新聞網",
-      "at": "2026-11-04T01:33:39+00:00"
+      "title": "Housing stocks rally following midterm elections, Treasury yields dip lower",
+      "link": "https://finance.yahoo.com/economy/article/housing-stocks-rally-following-midterm-elections-treasury-yields-dip-lower-171937967.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-04T17:19:37+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價下跌，伊朗戰爭不確定性與美國民主黨期中選舉勝利共同施壓；稍後因美伊談判進展混合訊號而小幅回升",
+    "text": "布蘭特原油跌逾3%至100美元以下，民主黨掌控國會後市場預期政治僵局將限制政策大幅轉向，加上川普表示無立即對伊朗發動攻擊計畫，油價應聲下跌",
     "links": [
      {
-      "title": "Physical Oil Prices Tumble as Persian Gulf Crude Flows Recover",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQZEJ4Y1RyaEVKUDU3c0Y2RzJaSEVuZUZkbVk2V25GZE1Tc0RscHFMLWFwY3dJeW9tMWtoM2JoVFZsMDk1dVBXMjFWbWpuY1Z6MTZENWZuODhFenVBZnk3Qk5FRlU2QXAzYWtSdS1UZWdfa3hIX1hvYTQzdXFjTzBhTVJUX1ZZa3c1Qy1Cei1NeEZ6U1VwN0NFYTFPOWJfd05SYmxDWGd2UTA1alJsSzBiZHdtbnJ0dw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-03T15:46:43+00:00"
-     },
-     {
-      "title": "Oil falls on Iran war uncertainty, US Democrats' midterm sweep",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPQUEyU0pEVG8xTHJtT2xCU0ltcXVTalphM0RNTEZ0UVlCTW5Qbjg4cS1RQnh5QXZnVEZvdnBacmZRM2FhMWJLWXVjU08yNkpvOHZiLTUtSGN0Mk55NGFBNWdxTmR4b3ZBeGNlX3ptUGNaRVFzRzhyNDZodklncGFZaV96cUxHY1Q1ODZWdmpTVWlWRVp4bVdJb0Zrb1pLaXVsUFFySUd4cm40cFphNGZB?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-04T02:10:00+00:00"
+      "title": "Stocks surge, oil tumbles after Trump's election rout",
+      "link": "https://finance.yahoo.com/markets/world-indices/articles/stocks-dollar-drop-democrats-enjoy-024022576.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-04T17:00:15+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股期貨上漲，標普500期貨漲0.2%、那斯達克100期貨漲0.2%、道瓊期貨漲0.5%，民主黨贏得國會兩院控制權後，市場對AI數據中心投資可持續性的擔憂逐漸消退，加上美國經濟數據穩健〔1〕。",
+    "text": "美股全面反彈，道瓊漲逾1,200點或2.3%，那斯達克漲1.6%，但費城半導體指數跌1.4%；市場擔憂民主黨勝選將加強AI監管，資料中心相關股票承壓，特斯拉與SpaceX股價下跌",
     "links": [
      {
-      "title": "US Stock Futures Rise as Democrats Win Congress and AMD Shares Surge on AI Growth Outlook: Dow Jones, S&P, Nasdaq, Wall Street",
-      "link": "https://investorshub.advfn.com/market-news/article/39209/us-stock-futures-rise-as-democrats-win-congress-and-amd-shares-surge-on-ai-growth-outlook-dow-jones-sp-nasdaq-wall-street?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-04T10:52:59+00:00"
-     },
-     {
-      "title": "Democrats’ Win Rattles Trump Trades From AI Stocks to Crypto",
-      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPdTRQb3pkNzdfSm5LVl9yeno5dERXdGZNZklXZmpZQUp6SXFNUkZScHpwVElhOHczVkZILWpjWjVMRmVlSlZwa1BjVmxRVzJMSl9neWNxMFNFc0pEMUxoRmd3dmQzcXhEZVliTFlPbElVSHJKTlRiSDhqTkMzcUJuR1l4eE15MEJDMjRfYzlBSWdwZWhDbGVCOEdlNmpJbHBMd0VJTWxJa3BBNUNrUzkw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-04T10:34:19+00:00"
+      "title": "〈美股早盤〉民主黨大勝華爾街歡呼！道瓊飆逾千點 AI建設股承壓",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%97%A9%E7%9B%A4-%E6%B0%91%E4%B8%BB%E9%BB%A8%E5%A4%A7%E5%8B%9D%E8%8F%AF%E7%88%BE%E8%A1%97%E6%AD%A1%E5%91%BC-%E9%81%93%E7%93%8A%E9%A3%86%E9%80%BE%E5%8D%83%E9%BB%9E-ai%E5%BB%BA%E8%A8%AD%E8%82%A1%E6%89%BF%E5%A3%93-144021424.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-04T14:40:21+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "超微(AMD)預測2027年營收強勁成長，受資料中心處理器需求驅動，盤後股價飆漲逾7%〔1〕；甲骨文在川普政府壓力下放棄價值70億美元的騰訊AI交易〔5〕。",
+    "text": "AMD預測超越預期，AI晶片需求強勁，但民主黨掌控國會後市場擔憂監管風險，資料中心建設可能放緩，輝達盤中下跌1.82%，台積電ADR跌1.82%",
     "links": [
      {
       "title": "AMD's OpenAI, Meta chip deals trigger $1 billion quarterly charge",
@@ -389,59 +352,59 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤強勁反彈，衝破44000點大關，飆漲逾1000點至44254點，漲幅2.43%，台積電期夜盤也上漲50元至2332元，漲幅超過2%〔1,2〕。",
+    "text": "台指期夜盤一度漲破千點至44,274點，受美股科技股買盤回籠激勵；截稿時上漲424點至43,627點，反映市場對美股反彈的樂觀預期",
     "links": [
      {
-      "title": "台股震盪1500點！陳玉珍指外資看多台積電卻賣超 要求金管會查察",
-      "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBpZlRmeWRVM043TEt2ZExmN3FpVTJ3ZUU4OTdYV1hsZkZMZTFmWUVLd1VSVjlLSk5CaEFPWTlqdlJVSUpBV1dveExpX3pUdmVUSFlB?oc=5",
-      "source": "TVBS新聞網",
-      "at": "2026-11-04T11:57:00+00:00"
+      "title": "台股明天有戲？川普共和黨慘敗、美科技股大反攻　台指期夜盤一度漲破千點",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%98%8E%E5%A4%A9%E6%9C%89%E6%88%B2-%E5%B7%9D%E6%99%AE%E5%85%B1%E5%92%8C%E9%BB%A8%E6%85%98%E6%95%97-%E7%BE%8E%E7%A7%91%E6%8A%80%E8%82%A1%E5%A4%A7%E5%8F%8D%E6%94%BB-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4-%E5%BA%A6%E6%BC%B2%E7%A0%B4%E5%8D%83%E9%BB%9E-145000519.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-04T14:50:00+08:00"
      },
      {
-      "title": "台股昨日暴跌1,612點！費半反彈、台指期夜盤漲426點 43,000點保衛戰迎考驗",
-      "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBZRk5paW5BUFZXbWdGZjBLV2toOXlXdWpKaGlqR3Zoc0RiT1Q0Ri1WcVNBUUtLOGZWNXJkeS15WnhVYUI0YnJjdm5lZXRJTV85cGJRdTdYcVpkTUtvZ2ZOZDkxaS1oUVpyZ2lqMWR2MA?oc=5",
-      "source": "理財周刊",
-      "at": "2026-11-04T01:31:23+00:00"
+      "title": "快訊／道瓊猛噴逾1500點！台指期一度飆破千點　台積電ADR走低",
+      "link": "https://tw.news.yahoo.com/%E5%BF%AB%E8%A8%8A-%E9%81%93%E7%93%8A%E7%8C%9B%E5%99%B4%E9%80%BE1500%E9%BB%9E-%E5%8F%B0%E6%8C%87%E6%9C%9F-%E5%BA%A6%E9%A3%86%E7%A0%B4%E5%8D%83%E9%BB%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%B5%B0%E4%BD%8E-170000429.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-04T17:00:00+08:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "民主黨在期中選舉中掌控國會兩院，美元隨之走弱；歷史數據顯示期中選舉後一年內股市平均上漲 13.7%，且在 91% 情況下報酬為正",
+    "text": "民主黨掌控國會後，加州眾議院議員沃特斯可能成為眾議院金融服務委員會主席，計畫聚焦住房議題，包括首付協助與公共住房翻新基金",
     "links": [
      {
-      "title": "Stock market after midterm elections: What S&P 500 history shows",
-      "link": "https://www.cnbc.com/2026/11/02/stock-market-after-midterm-elections-sp-500-history.html",
-      "source": "CNBC",
-      "at": "2026-11-03T18:21:05+00:00"
-     },
-     {
-      "title": "Sterling today: Pound gains as dollar slips on Democratic midterm sweep",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/sterling-today-pound-gains-dollar-105808377.html?.tsrc=rss",
+      "title": "Housing stocks rally following midterm elections, Treasury yields dip lower",
+      "link": "https://finance.yahoo.com/economy/article/housing-stocks-rally-following-midterm-elections-treasury-yields-dip-lower-171937967.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-11-04T10:58:08+00:00"
+      "at": "2026-11-04T17:19:37+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金突破 3,975 美元，美元指數下跌 0.4% 至 101.50 支撐金價，白銀、鉑金等貴金屬同步上漲，投資人並評估伊朗外交進展與期中選舉經濟影響",
+    "text": "現貨黃金漲3%至4,046.74美元/盎司，創數月最大單日漲幅；美元兌主要貨幣跌至一個月低點，白銀漲4.8%至52.13美元，市場對美國財政前景的擔憂支撐貴金屬需求",
     "links": [
      {
-      "title": "Gold Prices Climb Above $3,975 as Weaker Dollar and Iran Diplomacy Support Recovery",
-      "link": "https://investorshub.advfn.com/market-news/article/39213/gold-prices-climb-above-3975-as-weaker-dollar-and-iran-diplomacy-support-recovery?.tsrc=rss",
+      "title": "Investors Are Rushing To Gold As US Dollar Tanks",
+      "link": "https://finance.yahoo.com/markets/commodities/articles/investors-rushing-gold-us-dollar-171949355.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-11-04T10:58:56+00:00"
+      "at": "2026-11-04T17:19:49+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元貶至 32.76 元，儘管美元整體走弱，台幣仍因台股重挫與外資出走而承壓",
+    "text": "11/3新台幣兌美元重貶1.68角至32.76元，匯市成交量達52.755億美元創第四大；11/4美元兌新台幣最低跌至32.781元",
     "links": [
+     {
+      "title": "《新台幣匯率》今日美元兌新台幣最低為32.781元",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPOE5GcUlEd0plcVQ0MXRJYzdyOFoxdEx1VlBkQUZrX1BSby1nTUZGWU1hSzBRb2VuUFd5WmxfMGpzWVhJVThGU1hTWFMxUHJTM1JaSkxjbm1SWld4a19NNnZjeC1qdDBwX2w3dEdhR2s1Sk5SM3d2S3A2dzdPRGUxMGZZZG5LRWp1?oc=5",
+      "source": "富聯網",
+      "at": "2026-11-04T08:04:00+00:00"
+     },
      {
       "title": "國內匯市：台股重挫、外資出走，新台幣兌美元週二走貶1.68角，收32.760元",
       "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQTS1HbmYzVlJXTHVzQ3M0WkhXUTh6WjRRUHIyQTRkTlVya3NUQXFJTlliRkJZUFVnQjZoSHl4THg3RklHQXlWTFZpcFFTaThKUWl5QVVXcjZJS29OMy1rMGs4TVdjVnlyX3J5eksycjhKbjVxc3E4OUVDeFRLU0lkdW5YaXl1QU54?oc=5",
@@ -451,23 +414,15 @@
     ]
    }
   ],
-  "at": "2026-11-04T12:16:48.060266+00:00"
+  "at": "2026-11-04T17:26:18.227542+00:00"
  },
  "main_source_titles": [
-  "Treasury's Refunding Details Are Up Next as Five Large Companies Report Higher Revenue",
-  "Euro zone inflation hits 4% for first time in three years as interest rate hike looms"
+  "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
+  "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手"
  ],
- "headline": "財政部 11/4 公布季度再融資細節，市場關注發債規模與期限結構",
- "rate_note": "財政部公布再融資細節，若發債規模或長天期占比高於預期、顯示財政壓力加大，偏向推升長端利率；10 年期 11/3 收盤 +6bp 至 4.95%，市場已在反映。",
+ "headline": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減",
+ "rate_note": "民主黨掌控國會偏向壓低長端利率，因市場預期財政赤字縮減、政府支出受限，且地緣政治緊張未升級有助抑制通膨壓力；10 年期 11/4 -5bp 至 4.90%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農報告前勞動市場轉強",
-   "titles": [
-    "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
-    "Stocks and dollar drop as Democrats enjoy big early wins"
-   ],
-   "at": "2026-11-04T03:02:03.777664+00:00"
-  },
   {
    "headline": "9 月職缺大增、離職人數創高，11/6 非農報告前勞動市場顯現韌性",
    "titles": [
@@ -485,9 +440,39 @@
     "Euro zone inflation hits 4% for first time in three years as interest rate hike looms"
    ],
    "at": "2026-11-04T12:16:04.786290+00:00"
+  },
+  {
+   "headline": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減",
+   "titles": [
+    "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
+    "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手"
+   ],
+   "at": "2026-11-04T17:25:14.155818+00:00"
   }
  ],
  "archive": {
+  "2026-11-05": {
+   "headline": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減",
+   "text": "11/4 民主黨在美國期中選舉取得國會兩院控制權，從共和黨手中翻轉愛荷華、堪薩斯、北卡羅來納、俄亥俄、南卡羅來納、緬因與德州參議院席次，並拿下俄亥俄與德州州長選舉。摩根大通交易員指出，華爾街關注的焦點之一是「減少赤字支出」——民主黨掌控國會將使川普政府更難推動立法，可能透過預算控制權限縮支出，過程中可能經歷政府關門。BondBloxx 投資策略師 JoAnne Bianco 表示，更分裂的政策環境應使赤字成長更困難、可能改善財政前景，美債市場走強反映這點合理；展望未來，焦點將轉回地緣政治與美國經濟健康狀況，目前與伊朗緊張情勢沒有立即升級跡象，應有助於抑制能源價格與通膨壓力。¶美國 10/4 公布的 10 月 ISM 非製造業指數由 9 月的 54.9 降至 54.5，低於預期的 54.8，顯示服務業擴張速度放緩至三個月來最慢；新訂單指數由 59.8 降至 55.9，創四個月新低。投入價格指數雖由 74 降至 73，仍是 2022 年中以來第二高；供應商交貨指數升至 56.7，創 4 月來最高。ISM 服務業調查委員會主席 Steve Miller 指出，關稅與燃料成本仍是企業最常提及的供應鏈問題，許多業者尚未將成本上升全部轉嫁給客戶。\n11/4（美國時間）美國期中選舉民主黨奪得參眾兩院控制權後，美股期貨一度大幅下跌，那斯達克100期貨跌逾2%、標普500期貨跌逾1%，市場擔憂國會改變將牽制川普的減稅與財政政策，隨後隨著選舉結果明朗而V型反轉收復跌幅。\n11/4（美國時間）民主黨掌控國會後，川普政府的關稅政策預期不會因此喊停，經濟學家指出川普開徵關稅有相關法源授權，即使原法源受挑戰也可改用其他法律依據，準眾議長傑佛瑞斯已表態將把限縮總統關稅權列為重要議程。",
+   "rate_note": "民主黨掌控國會偏向壓低長端利率，因市場預期財政赤字縮減、政府支出受限，且地緣政治緊張未升級有助抑制通膨壓力；10 年期 11/4 -5bp 至 4.90%，市場已在反映。",
+   "links": [
+    {
+     "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
+     "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
+     "source": "CNBC",
+     "at": "2026-11-04T17:11:00+00:00"
+    },
+    {
+     "title": "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手",
+     "link": "https://tw.stock.yahoo.com/news/%E6%BC%B2%E5%83%B9%E9%82%84%E6%B2%92%E5%AE%8C-%E7%BE%8E%E5%9C%8B10%E6%9C%88%E6%9C%8D%E5%8B%99%E6%A5%AD%E6%88%90%E6%9C%AC%E9%82%84%E6%B2%92%E5%85%A8%E8%BD%89%E5%AB%81-fed%E6%8A%97%E9%80%9A%E8%86%A8%E9%9B%A3%E9%AC%86%E6%89%8B-163004614.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-11-04T16:30:04+00:00"
+    }
+   ],
+   "at": "2026-11-04T17:25:14.155818+00:00",
+   "weekly": false,
+   "points": 2
+  },
   "2026-11-04": {
    "headline": "財政部 11/4 公布季度再融資細節，市場關注發債規模與期限結構",
    "text": "財政部將在 11/4（美國時間）公布 10–12 月季度再融資細節，市場關注發債規模與期限結構。財政部 11/3 預告，預計 10–12 月借入 6180 億美元私人持有淨市場債務（假設 12 月底現金餘額 8500 億美元），1–3 月預計借入 8000 億美元。市場同時等待 11/4 公布的 9 月貿易報告。¶歐元區 10 月通膨率跳升至 4%，創三年來新高，與 9 月的 3.8% 相比進一步上升，也是 2023/9 以來首度觸及或超過 4% 門檻。官員表示漲幅主要來自能源成本飆升，能源通膨從 9 月的 18.9% 升至 20.8%；歐洲作為能源淨進口地區，自伊朗戰爭爆發以來價格持續攀升。各國通膨率差異顯著，立陶宛最高達 6.1%、馬爾他最低為 2.3%，但所有成員國均高於歐洲央行 2% 目標。數據公布前市場預期 12 月升息機率為 71.8%，公布後升至逾 72%；歐洲央行上月維持關鍵利率在 2.5%，9 月曾升息 25 個基點。\n沙烏地阿拉伯預算赤字因戰爭與沙烏地阿美公司費用而增加超過一倍，反映政府支出壓力上升。\n美國選舉後人工智能數據中心繁榮面臨劇變，產業前景因政策環境改變而面臨不確定性。",
@@ -669,34 +654,6 @@
     }
    ],
    "at": "2026-10-29T15:51:52.473540+00:00",
-   "weekly": false,
-   "points": 2
-  },
-  "2026-10-28": {
-   "headline": "聯準會 10/28 利率決策市場預期按兵不動，12 月升息機率達七成六",
-   "text": "聯準會 10/28（美國時間）公布利率決策，市場普遍預期維持利率不變。一項調查訪問 30 名基金經理人、策略師及經濟學家，93% 預測 10/28 會議維持利率不變，但 76% 認為 12 月將升息，超過半數預期 2027 年還會繼續升息、平均約 2 次。通膨居高不下、油價走揚及美債殖利率維持高檔，仍是美國經濟與貨幣政策的重要變數。調查顯示，40% 受訪者認為必須讓經濟成長放緩至低於潛在水準才能有效控制通膨，27% 認為不必刻意放慢經濟，另有 23% 主張只需適度降溫；70% 認為通膨問題已超出能源價格上漲的範圍，30% 主張聯準會應在 10/28 會議升息。聯準會官員對金融條件的權重看法並不一致。¶美國緊密盟友大幅減購美債，2026年1月至8月買超金額降至1,743億美元，較前年同期暴跌逾60%，創2021年以來最低。日本前8個月買超僅剩3.89億美元、年減99%，南韓賣超238億美元、創1977年來同期最大賣超，台灣也賣超。州街投資管理策略師Masahiko Loo指出，美債市場失去的是「自動買家」，在美國政策預測性下滑下，投資人難以合理化結構性超配美債。外交關係協會資深研究員Brad Setser分析，亞洲資金轉向股票與存款，反映「去外匯存底化」趨勢，導致美債官方需求減少。德意志銀行策略師Shoki Omori警告，無論殖利率升至何種水準，都無法買回盟友過去提供的耐心且對價格不敏感的資金。\n美國9月商品貿易赤字意外擴大，進口增加幅度超過出口，反映國內需求仍然強勁，可能影響聯準會對經濟成長的評估。\n內華達州面臨人工智慧產業帶來的就業機會與傳統產業失業的兩難局面，該州正努力在新舊經濟之間尋求平衡，以應對科技轉型對勞動力市場的衝擊。",
-   "rate_note": "聯準會 10/28 決策若維持利率不變但 12 月升息預期升溫，偏向推升短端利率；若聲明或 Warsh 談話偏鷹、暗示進一步緊縮，也偏向推升長端利率。10 年期 10/28 盤中 +3bp 至 5.03%，市場已在反映。",
-   "links": [
-    {
-     "title": "Fed officials not aligned on weight of financial conditions",
-     "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZDVJc3BaeUw5dnlFa2JrcmJQcFBnclc2alpNZTdST3BGSThJOFkyYmFUNGdTVFlWc2xheVdoZ0JJTzlISEVUQjdqVVZTQThuYTUxWXU3UGUyOVpjQm9CdTZHdXNNSUVfdlJ0TldocXJWQkdxVUhOX3JxNFV4dGZhM3Jsa0pTeWRvM3owdUgtZ2lJcTYwZjQzOEFQWjdhSlc0Rmt2UFVCRGlvQQ?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-28T12:29:03+00:00"
-    },
-    {
-     "title": "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
-     "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E8%81%AF%E6%BA%96%E6%9C%83%E6%98%8E%E5%8D%87%E6%81%AF-%E5%A4%96%E5%AA%92%E8%AA%BF%E6%9F%A5-%E5%85%88%E6%8C%89%E5%85%B5%E4%B8%8D%E5%8B%95-12%E6%9C%88%E6%A9%9F%E7%8E%87%E9%AB%98-131500926.html",
-     "source": "Yahoo奇摩新聞",
-     "at": "2026-10-28T13:15:00+08:00"
-    },
-    {
-     "title": "盟友轉向？美國緊密夥伴大幅減購美債 亞洲資金轉投股市與日債",
-     "link": "https://tw.stock.yahoo.com/news/%E7%9B%9F%E5%8F%8B%E8%BD%89%E5%90%91-%E7%BE%8E%E5%9C%8B%E7%B7%8A%E5%AF%86%E5%A4%A5%E4%BC%B4%E5%A4%A7%E5%B9%85%E6%B8%9B%E8%B3%BC%E7%BE%8E%E5%82%B5-%E4%BA%9E%E6%B4%B2%E8%B3%87%E9%87%91%E8%BD%89%E6%8A%95%E8%82%A1%E5%B8%82%E8%88%87%E6%97%A5%E5%82%B5-125002651.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-28T12:50:02+00:00"
-    }
-   ],
-   "at": "2026-10-28T15:54:57.996885+00:00",
    "weekly": false,
    "points": 2
   }

@@ -559,7 +559,7 @@
     "nfp": 65.0,
     "u3": 4.2
    },
-   "cons_at": "2026-11-04T20:17+08:00"
+   "cons_at": "2026-11-05T01:26+08:00"
   },
   "cpi|2026-10": {
    "key": "cpi",
@@ -571,12 +571,26 @@
     "cpi_yoy": 3.74,
     "core_yoy": 2.48
    },
-   "clev_asof": "11/03",
+   "clev_asof": "11/04",
    "banks": {},
    "bad": [],
    "auto_seen": {},
    "auto": {},
    "auto_log": []
+  },
+  "pce|2026-10": {
+   "key": "pce",
+   "period": "2026-10",
+   "date": "2026-11-25",
+   "clev": {
+    "pce_mom": 0.27,
+    "core_mom": 0.26,
+    "pce_yoy": 3.77,
+    "core_yoy": 3.2
+   },
+   "clev_asof": "11/04",
+   "banks": {},
+   "bad": []
   }
  }
 }

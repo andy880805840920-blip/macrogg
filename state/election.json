@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -1,
- "date": "2026-11-04",
+ "days_to": -2,
+ "date": "2026-11-05",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -26,10 +26,10 @@
   ]
  },
  "house": {
-  "dem": 0.9995,
+  "dem": 1.0,
   "rep": 0.0,
   "d1": 0.0545,
-  "closed": false,
+  "closed": true,
   "hist": [
    0.925,
    0.925,
@@ -57,11 +57,10 @@
    0.945,
    0.945,
    0.945,
-   0.9815,
-   0.9995
+   0.9815
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-house-in-2026",
-  "vol": 63243037.278159
+  "vol": 63302615.718159
  },
  "senate": {
   "dem": 1.0,
@@ -97,7 +96,7 @@
    0.905
   ],
   "url": "https://polymarket.com/event/which-party-will-win-the-senate-in-2026",
-  "vol": 31462947.53624
+  "vol": 31462947.536240004
  },
  "balance": {
   "rows": [
@@ -105,35 +104,35 @@
     "key": "dem",
     "label": "民主黨兩院全拿",
     "p": 0.9995,
-    "d1": 0.2345
+    "d1": 0.2445
    },
    {
     "key": "mix2",
     "label": "民主黨拿參院、共和黨守眾院",
     "p": 0.0005,
-    "d1": -0.009
+    "d1": -0.0085
    },
    {
     "key": "mix",
     "label": "共和黨守參院、民主黨拿眾院",
     "p": 0.0005,
-    "d1": -0.1845
+    "d1": -0.1945
    },
    {
     "key": "rep",
     "label": "共和黨兩院全拿",
-    "p": 0.0005,
+    "p": 0.0,
     "d1": -0.0545
    },
    {
     "key": "oth",
     "label": "其他",
-    "p": 0.0005,
+    "p": 0.0,
     "d1": null
    }
   ],
   "url": "https://polymarket.com/event/balance-of-power-2026-midterms",
-  "vol": 75241581.858134
+  "vol": 75656863.00813401
  },
  "races": [
   {
@@ -142,15 +141,15 @@
    "lead": {
     "name": "Scott Colom",
     "party": "民",
-    "p": 0.801
+    "p": 0.824
    },
    "other": {
     "name": "Cindy Hyde-Smith",
     "party": "共",
-    "p": 0.1885
+    "p": 0.175
    },
-   "close": 0.30100000000000005,
-   "vol": 3990362.427018,
+   "close": 0.32399999999999995,
+   "vol": 4382204.685169,
    "url": "https://polymarket.com/event/mississippi-senate-election-winner"
   },
   {
@@ -159,15 +158,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.8535
+    "p": 0.91
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.1355
+    "p": 0.0885
    },
-   "close": 0.35350000000000004,
-   "vol": 4707600.067237,
+   "close": 0.41000000000000003,
+   "vol": 5215139.381995,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -182,17 +181,17 @@
      "lead": {
       "name": "Scott Colom",
       "party": "D",
-      "p": 0.801
+      "p": 0.824
      },
      "other": {
       "name": "Cindy Hyde-Smith",
       "party": "R",
-      "p": 0.1885
+      "p": 0.175
      },
      "tier": "likely",
      "tier_zh": "傾向",
-     "gap": 61.3,
-     "vol": 3990362.427018,
+     "gap": 64.9,
+     "vol": 4382204.685169,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Alaska": {
@@ -203,17 +202,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.8535
+      "p": 0.91
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.1355
+      "p": 0.0885
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 71.8,
-     "vol": 4707600.067237,
+     "gap": 82.2,
+     "vol": 5215139.381995,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -288,39 +287,18 @@
      "lead": {
       "name": "Cindy Holscher",
       "party": "D",
-      "p": 0.9805
+      "p": 0.994
      },
      "other": {
       "name": "Ty Masterson",
       "party": "R",
-      "p": 0.019
+      "p": 0.007
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.2,
-     "vol": 805448.643553,
+     "gap": 98.7,
+     "vol": 821029.598515,
      "url": "https://polymarket.com/event/kansas-governor-winner-2026"
-    },
-    "Nevada": {
-     "kind": "governor",
-     "state_en": "Nevada",
-     "state": "內華達",
-     "abbr": "NV",
-     "lead": {
-      "name": "Aaron Ford",
-      "party": "D",
-      "p": 0.9995
-     },
-     "other": {
-      "name": "Joe Lombardo",
-      "party": "R",
-      "p": 0.0005
-     },
-     "tier": "safe",
-     "tier_zh": "穩拿",
-     "gap": 99.9,
-     "vol": 1875344.3517219997,
-     "url": "https://polymarket.com/event/nevada-governor-winner-2026"
     },
     "Alaska": {
      "kind": "governor",
@@ -335,12 +313,12 @@
      "other": {
       "name": "Bernadette Wilson",
       "party": "R",
-      "p": 0.0025
+      "p": 0.004
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.4,
-     "vol": 1904558.565693,
+     "gap": 99.2,
+     "vol": 1910763.8929680001,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -367,13 +345,13 @@
    },
    "tally": {
     "lead": {
-     "D": 4,
+     "D": 3,
      "R": 0,
      "I": 0,
      "?": 0
     },
     "total": {
-     "D": 10,
+     "D": 9,
      "R": 8,
      "I": 0
     },
@@ -399,6 +377,7 @@
      "Michigan",
      "Minnesota",
      "Nebraska",
+     "Nevada",
      "New Hampshire",
      "New Mexico",
      "New York",
@@ -423,23 +402,18 @@
     },
     "n_up": 36
    },
-   "sentence": "照目前領先者全拿，民主黨 10 州 : 共和黨 8 州（改選前共和黨 27:23）；沒有勝負接近的州。"
+   "sentence": "照目前領先者全拿，民主黨 9 州 : 共和黨 8 州（改選前共和黨 27:23）；沒有勝負接近的州。"
   },
   "seats": {
    "senate": {
     "label": "≦47 席",
-    "p": 0.9995,
+    "p": 1.0,
     "url": "https://polymarket.com/event/republican-senate-seats-after-the-2026-midterm-elections-927"
    },
    "house": {
     "label": "190 席以下",
-    "p": 0.9945,
+    "p": 0.999,
     "url": "https://polymarket.com/event/republican-house-seats-after-the-2026-midterm-elections"
-   },
-   "governor": {
-    "label": "<22 州",
-    "p": 0.9665,
-    "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
   "governor_before": {
