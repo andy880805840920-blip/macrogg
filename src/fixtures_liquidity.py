@@ -63,4 +63,7 @@ def build() -> dict[str, list[dict]]:
                          for dd in d]
     s["VIXCLS"] = [{"date": dd, "value": round(17 + abs(random.gauss(0, 2.5)), 2)}
                    for dd in d]
+    # 政策不確定性指數（每日、波動大）
+    s["USEPUINDXD"] = [{"date": dd, "value": round(max(20.0, 180 + random.gauss(0, 60)), 2)}
+                       for dd in d]
     return s
