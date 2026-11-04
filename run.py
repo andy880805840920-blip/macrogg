@@ -1161,6 +1161,17 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("AI 大事產生失敗（%s），該卡片本次不顯示", e)
         ctxs["_ai_events"] = None
+    # 2026-11：白宮與國會（取代期中選舉那一格；設定 config/whitehouse.yaml）
+    try:
+        from src.analysis import whitehouse as _whm
+        ctxs["_whitehouse"] = _whm.build(load_config("whitehouse.yaml"), STATE_FILE.parent / "whitehouse.json",
+                                         args.offline, series=all_series)
+        if ctxs["_whitehouse"]:
+            log.info("白宮與國會：%d 則發言、%d 項政策", len(ctxs["_whitehouse"]["items"]),
+                     len(ctxs["_whitehouse"]["policies"]))
+    except Exception as e:                         # noqa: BLE001
+        log.warning("白宮與國會產生失敗（%s），該卡片本次不顯示", e)
+        ctxs["_whitehouse"] = None
     # 今日主軸的權威數字：官方數據的期別與本站算好的主要數值（期別對得上才附，見 focus_today.release_facts）
     _fv = {}
     try:

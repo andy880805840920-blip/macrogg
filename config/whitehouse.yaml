@@ -1,0 +1,142 @@
+# 首頁「白宮與國會」（2026-11）：取代期中選舉那一格。
+#
+# 三塊內容：
+#   ① 本週重點：AI 依下面兩塊整理 2–3 句，每天最多重寫一次
+#   ② 川普說了什麼：近 7 天跟市場有關的發言與行政命令（新聞報導＋白宮公告，AI 寫一句中文）
+#   ③ 政策進度：下面 policies 這份清單——**人工維護**（A）；AI 只在新聞裡看到可能的
+#      進度變化時寫進執行紀錄提醒（B），不直接改畫面。超過 stale_days 天沒確認也會提醒。
+# 另有政策不確定性指數（FRED USEPUINDXD，序列放在 liquidity.yaml）。
+#
+# 維護方式：進度變了就改 stage／next，並把 changed 改成進度變的那天（近 3 天會亮橘點）；
+#           每次確認過（不管有沒有變）就把 updated 改成確認當天。
+#   stage：目前在第幾段（1 起算；之前的段落算完成）
+#   next.date：有明確日期才填（會倒數、也會進首頁「接下來看什麼」月曆的「政策」）
+enabled: true
+# 期中選舉那一格：隱藏、不刪除（以後有選舉再打開）
+election_tile: false
+window_days: 7
+new_days: 3
+stale_days: 14
+# 選後一行：併在本週重點下方，until 當天（含）之後自動消失
+after_election:
+  text: 民主黨拿下參眾兩院・新國會 1/3 就任
+  until: '2027-01-02'
+topics: [財政, 聯準會, AI 與晶片, 能源, 關稅]
+
+policies:
+  # ---------------- 財政 ----------------
+  - id: fiscal_cr
+    name: 聯邦預算／停擺
+    topics: [財政]
+    stages: [暫時撥款, 協商, 兩院表決, 簽署]
+    stage: 1
+    status: 協商中
+    next: {date: '2026-12-11', text: 暫時撥款到期}
+    impact: 數據延後公布、短債、TGA
+    link: {label: 看長端與債務, href: /rates/}
+    q: '("continuing resolution" OR "government shutdown" OR appropriations) Congress'
+    updated: '2026-11-04'
+    sources:
+      - https://ffis.org/budget-brief/house-approves-senate-cr-averts-shutdown/
+  - id: debt_limit
+    name: 舉債上限
+    topics: [財政]
+    stages: [提高上限, 接近上限, 非常措施, X 日]
+    stage: 1
+    status: 尚未觸及
+    next: {text: 2025 年已提高 5 兆，預估 2027 年才會觸及}
+    impact: 財政部現金（TGA）、短債
+    link: {label: 看流動性, href: /liquidity/}
+    q: '"debt limit" OR "debt ceiling" Treasury'
+    updated: '2026-11-04'
+  # ---------------- 聯準會 ----------------
+  - id: fed_cook
+    name: 理事 Cook 解職案
+    topics: [聯準會]
+    stages: [解職通知, 下級法院, 最高法院, 白宮調查]
+    stage: 4
+    status: 調查中
+    next: {text: 白宮委員會調查結果（日期未定）}
+    impact: 聯準會獨立性、長端期限溢酬
+    link: {label: 看聯準會, href: /fomc/}
+    q: '"Lisa Cook" Fed'
+    updated: '2026-11-04'
+    sources:
+      - https://en.wikipedia.org/wiki/Trump_v._Cook
+      - https://www.cnbc.com/2026/10/09/fed-lisa-cook-trump.html
+  # ---------------- AI 與晶片（全部列） ----------------
+  - id: h200_china
+    name: H200 晶片對中出口
+    topics: [AI 與晶片]
+    stages: [規則公布, 發照, 出貨, 國會限制]
+    stage: 3
+    status: 進行中
+    next: {text: 國會兩項限制法案審議中（晶片位置驗證、美國買家優先）}
+    impact: Nvidia、AMD、半導體股
+    q: '(H200 OR "export controls") Nvidia China'
+    updated: '2026-11-04'
+    sources:
+      - https://www.nextgov.com/emerging-tech/2026/01/lawmakers-worry-over-new-rule-will-allow-sales-nvidias-h200-chips-china/410696/
+  - id: chip_232
+    name: 半導體 232 關稅
+    topics: [AI 與晶片]
+    stages: [調查, 第一階段生效, 第二階段公告, 第二階段生效]
+    stage: 2
+    status: 第一階段生效
+    next: {text: 第二階段擴大到更多晶片與設備，日期未定}
+    impact: 半導體、AI 資本支出成本
+    q: '"Section 232" semiconductor tariff'
+    updated: '2026-11-04'
+    sources:
+      - https://gingercontrol.com/blog/section-232-semiconductor-tariff
+  - id: ai_preempt
+    name: 州 AI 法的聯邦優先
+    topics: [AI 與晶片]
+    stages: [行政命令, 司法部訴訟, 國會立法, 法院判決]
+    stage: 2
+    status: 訴訟中
+    next: {date: '2027-01-01', text: 科羅拉多新版 AI 法生效}
+    impact: AI 公司的法規成本
+    q: '(preemption OR "state AI laws") Trump AI'
+    updated: '2026-11-04'
+    sources:
+      - https://www.ailawsbystate.com/blog/federal-ai-preemption-doj-task-force-state-law-fight-2026
+  # ---------------- 能源 ----------------
+  - id: dc_grid
+    name: 資料中心併網規則
+    topics: [能源, AI 與晶片]
+    stages: [能源部指示, 主管機關徵詢, 規則草案, 最終規則]
+    stage: 2
+    status: 徵詢中
+    next: {date: '2026-11-16', text: PJM 電網大用電戶方案提交}
+    impact: 電力股、電價、AI 資本支出
+    q: 'FERC "large load" data center interconnection'
+    updated: '2026-11-04'
+    sources:
+      - https://secondwatt.com/resources/ferc-rm26-4-data-center-interconnection-standards-2026
+  - id: gulf_lease
+    name: 墨西哥灣油氣標售
+    topics: [能源]
+    stages: [法案規定, 定期標售, 租約開發, 產量增加]
+    stage: 2
+    status: 進行中
+    next: {text: 下一次標售日期待公告（第三次 8/12 已舉行）}
+    impact: 長期原油供給（短期影響小）
+    q: 'BOEM Gulf "lease sale"'
+    updated: '2026-11-04'
+    sources:
+      - https://www.ogj.com/general-interest/government/news/55359052/us-boem-to-hold-third-gulf-of-mexico-lease-sale-in-august
+  # ---------------- 關稅（只留影響最大的一項） ----------------
+  - id: us_china_truce
+    name: 美中貿易休戰
+    topics: [關稅]
+    stages: [達成休戰, 延長, 框架談判, 正式協議或到期]
+    stage: 3
+    status: 談判中
+    next: {date: '2027-01-10', text: 休戰到期}
+    impact: 核心商品通膨、人民幣、農產品
+    link: {label: 看通膨, href: /inflation/}
+    q: '(truce OR tariffs) US China Bessent'
+    updated: '2026-11-04'
+    sources:
+      - https://www.spglobal.com/energy/en/news-research/latest-news/agriculture/092426-us-says-trade-truce-with-china-extended-till-jan-10-2027-ahead-of-trump-xi-meet

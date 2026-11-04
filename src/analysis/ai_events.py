@@ -90,7 +90,8 @@ def _key(*parts) -> str:
 
 def parse_rss(xml: str, match: list[str], since: dt.date) -> list[dict]:
     """Google News RSS → [{id,title,source,date,url}]：標題要含公司名、日期在窗內。"""
-    pat = re.compile(r"\b(?:" + "|".join(re.escape(m) for m in match) + r")\b")
+    # match 為空：不過濾標題（白宮與國會的白宮公告、政策查詢用）
+    pat = re.compile(r"\b(?:" + "|".join(re.escape(m) for m in match) + r")\b") if match else None
     out, seen = [], set()
     for it in re.findall(r"<item>(.*?)</item>", xml or "", re.S):
         def g(tag):
@@ -99,7 +100,7 @@ def parse_rss(xml: str, match: list[str], since: dt.date) -> list[dict]:
         title, src = g("title"), g("source")
         if src and title.endswith(" - " + src):
             title = title[: -len(src) - 3]
-        if not pat.search(title):
+        if pat and not pat.search(title):
             continue
         try:
             d = dt.datetime.strptime(g("pubDate")[:16].strip(), "%a, %d %b %Y").date()
