@@ -57,6 +57,10 @@ series:
   - id: VIXCLS
     label: VIX（FRED 後備）
     enabled: true
+  # 2026-11：首頁「白宮與國會」的政策不確定性指數（Baker-Bloom-Davis，每日）
+  - id: USEPUINDXD
+    label: 美國經濟政策不確定性指數
+    enabled: true
 
   # 台幣即時匯率失敗時使用 FRED 備援，顯示實際資料日與来源。
   - id: DEXTAUS
