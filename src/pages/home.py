@@ -21,6 +21,7 @@ from ..analysis import brief as brief_mod
 from ..analysis import scenario as scenario_mod
 from .election import election_tile as _election_tile
 from .ai_events import ai_tile as _ai_tile
+from .whitehouse import wh_tile as _wh_tile
 
 LEAN_TEXT = {"dovish": "利降息", "hawkish": "利升息",
              "neutral": "中性", "balanced": "多空拉鋸"}
@@ -1176,6 +1177,13 @@ md.addEventListener('click',function(e){
  var t=e.target.closest('.ai-tile');
  if(t){md.querySelectorAll('.ai-tile').forEach(function(x){var on=x===t;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
   md.querySelectorAll('.ai-pane').forEach(function(p){p.hidden=p.getAttribute('data-co')!==t.getAttribute('data-co');});}});
+// 2026-11 白宮與國會：一組主題篩選同時套用到「川普說了什麼」與「政策進度」，兩欄標題顯示筆數
+md.addEventListener('click',function(e){var b=e.target.closest('.wh-f button');if(!b)return;var w=b.closest('.wh-wrap'),f=b.getAttribute('data-f');
+ w.querySelectorAll('.wh-f button').forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
+ [['.wh-say','.wh-s','則'],['.wh-pol','.wh-p','項']].forEach(function(c){var box=w.querySelector(c[0]);if(!box)return;var n=0;
+  box.querySelectorAll(c[1]).forEach(function(r){var ok=!f||r.getAttribute('data-tp').split('|').indexOf(f)>=0;r.hidden=!ok;if(ok)n++;});
+  var k=box.querySelector('.wh-cnt');if(k)k.textContent=f?f+' '+n+' '+c[2]:'';
+  var em=box.querySelector('.wh-empty');if(em){em.hidden=n>0;var t=em.querySelector('.wh-et');if(t)t.textContent=f;}});});
 md.addEventListener('change',function(e){var s=e.target.closest('.ai-sel select');if(!s)return;
  var rs=md.querySelectorAll('.ai-r'),seen={};rs.forEach(function(r){r.hidden=!(s.value==='全部類型'||r.getAttribute('data-ty')===s.value);});
  rs.forEach(function(r){var d=r.querySelector('.ai-r-d');if(!d.dataset.d)d.dataset.d=d.textContent;});
@@ -1191,7 +1199,10 @@ def _duo(ctxs: dict, extra: list | None = None) -> str:
     （手機 2×3、電腦 3×2，一張卡、線分隔、六格等大）。
     """
     tiles, panels = [], []
-    pairs = [("el", _election_tile(ctxs.get("_election"))), ("ai", _ai_tile(ctxs.get("_ai_events"),
+    # 2026-11：白宮與國會取代期中選舉那一格；選舉卡保留，config/whitehouse.yaml 的 election_tile 打開才顯示
+    _wh = ctxs.get("_whitehouse")
+    _el = ("el", _election_tile(ctxs.get("_election"))) if (not _wh or _wh.get("election_tile")) else ("el", ("", ""))
+    pairs = [_el, ("wh", _wh_tile(_wh)), ("ai", _ai_tile(ctxs.get("_ai_events"),
                                                                                     ((ctxs.get("rates") or {}).get("le") or {}).get("hs_agg")))]
     pairs += [(t, (tile, panel)) for t, tile, panel in (extra or [])]
     for t, (tile, panel) in pairs:
@@ -1244,7 +1255,7 @@ def _mini_cal(wt: dict) -> str:
                 out += '<span></span>'
                 continue
             ks = marks.get(d.isoformat()) or set()
-            k = next((x for x in ("d", "s", "p") if x in ks), "")
+            k = next((x for x in ("d", "s", "p", "g") if x in ks), "")
             cls = "mc-to" if d == today else ("mc-ps" if d < today else "")
             out += (f'<span class="{cls}">{d.day}' + (f'<i class="mc-{k}"></i>' if k and d >= today else "")
                     + '</span>')
@@ -1866,6 +1877,16 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
     # 休市（2026-10）：七個市場的休市與提早收盤，分股／債／匯
     from ..analysis import market_holidays as mh
     hols = mh.market_events(start, end)
+    # 2026-11：政策（白宮與國會有明確日期的下一步，例如暫時撥款到期）
+    policy = []
+    for g in (ctxs.get("_whitehouse") or {}).get("calendar") or []:
+        try:
+            gd = dt.date.fromisoformat(g["date"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if start <= gd <= end:
+            policy.append({"week": _wk(gd), "date": gd, "tpe": wc.taipei_time(gd, (0, 0)), "label": _hm_label(gd),
+                           "name": g.get("name", ""), "sub": "・".join(g.get("topics") or [])})
 
     def _hgroups(evs):
         """同一天、全部休市、沒有額外說明的市場併成一列（「中國、香港、日本 元旦」）。"""
@@ -1919,6 +1940,9 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         return _wv_row(t, f'<i class="mk mk-{k}"></i>', name, esc(e.get("sub") or ""),
                        '<em class="wv-vt">票委</em>' if e.get("voter") else "", "", "已結束" if e.get("done") else "")
 
+    def _wv_pol(e):
+        return _wv_row("全天", '<i class="mk mk-g"></i>', e["name"], esc(e.get("sub") or ""))
+
     def _wv_hol(e):
         tag, st_ = mh.status_text(e)
         sub = "・".join(x for x in (esc(e["name"]), _st_html(st_) if st_ else "", esc(e.get("note") or "")) if x)
@@ -1959,6 +1983,9 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                     '<p class="home-empty">' + ("目前只排得到理事會成員的行程；地區聯儲總裁的談話要到該週才公布。"
                                                 if w >= 1 else "本週剩下沒有排定的官員談話。") + _nx + '</p>')
         hw = _hgroups([e for e in hols if a_ <= e["date"] <= b_])
+        gw = [e for e in policy if e["week"] == w]
+        pol_html = (_wv_days([(e["date"], _wv_pol(e)) for e in gw]) if gw else
+                    f'<p class="home-empty">{"本週剩下" if w == 0 else "這一週"}沒有政策的關鍵日期。{_nx}</p>')
         hol_html = (_wv_days([(e["date"], _wv_hol(e)) for e in hw])
                     if hw else '<p class="home-empty">這一週七個市場都正常交易。</p>')
         prev_l = (f'<label class="hm-wk-a" for="hm-wk-{w - 1}" aria-label="上一週">‹</label>'
@@ -1969,7 +1996,8 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
         cnt = (f'<span class="hm-cnt hm-cnt-data">{len(wk)} 場</span>'
                f'<span class="hm-cnt hm-cnt-sup">{len(sw)} 場</span>'
                f'<span class="hm-cnt hm-cnt-spk">{len(pw)} 場</span>'
-               f'<span class="hm-cnt hm-cnt-hol">{len(hw)} 項</span>')
+               f'<span class="hm-cnt hm-cnt-hol">{len(hw)} 項</span>'
+               f'<span class="hm-cnt hm-cnt-pol">{len(gw)} 項</span>')
         radios.append(f'<input type="radio" name="hm-wk" id="hm-wk-{w}" class="hm-wk-in"{" checked" if w == 0 else ""}>')
         panels.append(f'<div class="hm-wk-p"><div class="hm-wk-h">{prev_l}<div class="hm-wk-t"><b>{esc(name)}</b>'
                       f'<span class="hm-wk-dots">{dots}</span></div>{next_l}</div>'
@@ -1977,14 +2005,17 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
                       f'<div class="hm-cat hm-cat-sup">{sup_html}</div>'
                       f'<div class="hm-cat hm-cat-spk">{spk_html}</div>'
                       f'<div class="hm-cat hm-cat-hol">{hol_html}</div>'
+                      f'<div class="hm-cat hm-cat-pol">{pol_html}</div>'
                       f'<p class="wv-cnt">{esc(name)} {a_.month}/{a_.day}–{b_.month}/{b_.day}・{cnt}・台灣時間</p></div>')
     cats = ('<input type="radio" name="hm-cat" id="hm-cat-data" class="hm-cat-in" checked>'
             '<input type="radio" name="hm-cat" id="hm-cat-sup" class="hm-cat-in">'
             '<input type="radio" name="hm-cat" id="hm-cat-spk" class="hm-cat-in">'
             '<input type="radio" name="hm-cat" id="hm-cat-hol" class="hm-cat-in">'
+            '<input type="radio" name="hm-cat" id="hm-cat-pol" class="hm-cat-in">'
             '<div class="hm-cats" role="group" aria-label="篩選">'
             '<label for="hm-cat-data"><i class="mk mk-d"></i>數據</label><label for="hm-cat-sup"><i class="mk mk-s"></i>發債</label>'
-            '<label for="hm-cat-spk"><i class="mk mk-p"></i>官員談話</label><label for="hm-cat-hol"><em class="mk-h">休</em>休市</label></div>')
+            '<label for="hm-cat-spk"><i class="mk mk-p"></i>官員談話</label><label for="hm-cat-hol"><em class="mk-h">休</em>休市</label>'
+            '<label for="hm-cat-pol"><i class="mk mk-g"></i>政策</label></div>')
     listing = (f'<div class="hm-wkx">{cats}<div class="hm-wk">{"".join(radios)}'
                f'<div class="hm-wk-ps">{"".join(panels)}</div></div></div>')
     # 今日快報（限時動態）第五則：存「完整日期與時間」，由瀏覽器依當下台灣時間判斷
@@ -2018,17 +2049,18 @@ def _hm_watch(ctxs: dict, sc, weeks: int = 4) -> str:
     def _cal_day(d, ev):
         items = ([(d, _wv_data(e)) for e in sorted(ev["d"], key=lambda e: e["tpe"])]
                  + [(d, _wv_x(e, "s")) for e in ev["s"]] + [(d, _wv_x(e, "p")) for e in ev["p"]]
-                 + [(d, _wv_hol(e)) for e in _hgroups(ev["h"])])
-        kinds = ["d"] * len(ev["d"]) + ["s"] * len(ev["s"]) + ["p"] * len(ev["p"]) + ["h"] * len(_hgroups(ev["h"]))
+                 + [(d, _wv_hol(e)) for e in _hgroups(ev["h"])] + [(d, _wv_pol(e)) for e in ev.get("g") or []])
+        kinds = (["d"] * len(ev["d"]) + ["s"] * len(ev["s"]) + ["p"] * len(ev["p"]) + ["h"] * len(_hgroups(ev["h"]))
+                 + ["g"] * len(ev.get("g") or []))
         html = _wv_days(items)
         # 每一列標上種類，月曆的開關才隱藏得到
         for k in kinds:
             html = html.replace('<div class="wv-ev">', f'<div class="wv-ev hc-k-{k}">', 1)
         return html
-    cal = _hm_calendar(today, start, end, rows, supply, speeches, hols, _cal_day)
+    cal = _hm_calendar(today, start, end, rows, supply, speeches, hols, _cal_day, policy)
     # 2026-10-29 六宮格小卡：這個月每天有哪些種類＋下一件事（一行）
     _marks: dict = {}
-    for k_, evs_ in (("d", rows), ("s", supply), ("p", speeches)):
+    for k_, evs_ in (("d", rows), ("s", supply), ("p", speeches), ("g", policy)):
         for e in evs_:
             _marks.setdefault(e["tpe"].date().isoformat(), set()).add(k_)
     _nxt = sorted([e for e in rows + supply + speeches if e["tpe"] > now], key=lambda e: e["tpe"])
@@ -2082,7 +2114,7 @@ if(first)pick(first.getAttribute('data-d'),first);})();
 </script>"""
 
 
-def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) -> str:
+def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day, policy=None) -> str:
     """
     月曆（2026-10）：數據 ●（高影響實心、中影響空心）、發債 ■、官員談話 ▲；
     美國或台灣全部休市＝整格淺灰＋「休」，部分休市或提早收盤＝「半」
@@ -2092,7 +2124,9 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
     by: dict = {}
 
     def put(d, k, e):
-        by.setdefault(d, {"d": [], "s": [], "p": [], "h": []})[k].append(e)
+        by.setdefault(d, {"d": [], "s": [], "p": [], "h": [], "g": []})[k].append(e)
+    for e in policy or []:
+        put(e["date"], "g", e)
     for e in rows:
         put(e["tpe"].date(), "d", e)
     for e in supply:
@@ -2131,7 +2165,7 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
                 if d.month != m.month:
                     cells += '<span class="hc-d hc-out"></span>'
                     continue
-                ev = by.get(d) or {"d": [], "s": [], "p": [], "h": []}
+                ev = by.get(d) or {"d": [], "s": [], "p": [], "h": [], "g": []}
                 ust = [x for x in ev["h"] if x["mk"] in ("US", "TW")]
                 full = any(len(x["closed"]) == 3 for x in ust)
                 badge = ("休" if full else "半") if ust else ""
@@ -2144,7 +2178,7 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
                     cls.append("hc-past")
                 if full:
                     cls.append("hc-gray")
-                summ = "、".join(f"{n} {len(ev[k])}" for k, n in (("d", "數據"), ("s", "發債"), ("p", "談話"))
+                summ = "、".join(f"{n} {len(ev[k])}" for k, n in (("d", "數據"), ("s", "發債"), ("p", "談話"), ("g", "政策"))
                                 if ev[k])
                 if ev["h"]:
                     summ += ("、" if summ else "") + "休市 " + "、".join(dict.fromkeys(x["mk_zh"] for x in ev["h"]))
@@ -2154,7 +2188,7 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
                           f'<span class="hc-n">{d.day}</span>'
                           + (f'<em class="hc-h">{badge}</em>' if badge else "")
                           + '<span class="hc-m">' + mark("d", ev["d"]) + mark("s", ev["s"])
-                          + mark("p", ev["p"]) + '</span></button>')
+                          + mark("p", ev["p"]) + mark("g", ev["g"]) + '</span></button>')
         prev_l = (f'<label class="hm-wk-a" for="hc-m-{i - 1}" aria-label="上個月">‹</label>'
                   if i else '<span class="hm-wk-a off">‹</span>')
         next_l = (f'<label class="hm-wk-a" for="hc-m-{i + 1}" aria-label="下個月">›</label>'
@@ -2171,11 +2205,13 @@ def _hm_calendar(today, start, end, rows, supply, speeches, hols, render_day) ->
             '<input type="checkbox" id="hc-f-s" class="hc-f-in" checked>'
             '<input type="checkbox" id="hc-f-p" class="hc-f-in" checked>'
             '<input type="checkbox" id="hc-f-h" class="hc-f-in" checked>'
+            '<input type="checkbox" id="hc-f-g" class="hc-f-in" checked>'
             '<div class="hc-lg" role="group" aria-label="圖例與篩選">'
             '<label for="hc-f-d"><i class="mk mk-d"></i>數據</label>'
             '<label for="hc-f-s"><i class="mk mk-s"></i>發債</label>'
             '<label for="hc-f-p"><i class="mk mk-p"></i>官員</label>'
-            '<label for="hc-f-h"><em class="mk-h">休</em>休市</label></div>')
+            '<label for="hc-f-h"><em class="mk-h">休</em>休市</label>'
+            '<label for="hc-f-g"><i class="mk mk-g"></i>政策</label></div>')
     return ('<div class="hm-cal">' + filt + "".join(radios)
             + f'<div class="hc-ms">{"".join(panels)}</div>'
             + f'<div class="hc-dds">{"".join(dds)}'
