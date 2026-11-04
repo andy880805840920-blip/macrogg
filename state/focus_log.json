@@ -1,92 +1,5 @@
 [
  {
-  "at": "2026-10-28T15:09+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "fomc"
-  ],
-  "locks": [
-   "fomc"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed officials not aligned on weight of financial conditions - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed likely to go into wait-and-see mode on rates - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed Watchers Prep for Next Step in the Kevin Warsh ‘Discovery Process’ - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "The AI Fed Votes to Hold Interest Rates Steady - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Sprake: Fed Now Concerned About High Energy Prices - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Fed Expected to Hold Rates With Nod to December: Decision-Day Guide - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、熱度+4（有內文）",
-    "titles": [
-     "投資人關注Fed決策和企業財報　美股開盤多上漲"
-    ]
-   }
-  ],
-  "background": [
-   "投資人關注Fed決策和企業財報　美股開盤多上漲",
-   "【美股盤前】聯準會明升息？外媒調查：先按兵不動　12月機率高",
-   "美債殖利率衝破5%　貝萊德：黃金長線需求仍在009834布局全球黃金新循環"
-  ],
-  "main": "Fed officials not aligned on weight of financial conditions - Reuters",
-  "main_why": "鎖定事件 fomc",
-  "second": "Bullish Treasury Bets Face Reversal Risk From Hawkish Fed - Bloomberg.com",
-  "points": 2,
-  "result": "聯準會 10/28 利率決策市場預期按兵不動，12 月升息機率達 76%"
- },
- {
   "at": "2026-10-28T15:35+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3089,5 +3002,110 @@
    ]
   },
   "result": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農週五公布"
+ },
+ {
+  "at": "2026-11-04T03:02+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "jolts",
+   "refunding"
+  ],
+  "locks": [
+   "refunding"
+  ],
+  "clusters": [
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Fall Amid Oil Price Swings, Strong Job Openings Data - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Dollar Rises Most in a Month on Higher US Yields, Strong Data - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "Treasuries Advance as Traders Eye US Votes, Refinancing Plans - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "Saudi Budget Deficit More Than Doubles as War Strains Finances - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Stock Futures Rise on AI Recovery as US Votes: Markets Wrap - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Stocks, dollar slide after some early wins for Democrats in US midterm election - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "US has no immediate plan to strike Iran, Trump tells FT - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "Job openings posted big September gain in positive sign for labor market ahead of payrolls report",
+   "Stocks and dollar drop as Democrats enjoy big early wins"
+  ],
+  "main": "Traders Turn Less Bearish on Treasuries Before Refunding, Jobs - Bloomberg.com",
+  "main_why": "鎖定事件 refunding",
+  "second": "Dollar Rises Most in a Month on Higher US Yields, Strong Data - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（33.3、752、715、41.4、32.1）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 219 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日",
+     "數據公布日期錯誤（非農就業報告寫成「10/6」，官方是 10/2；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ],
+    [
+     "主軸 208 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 196 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農報告前勞動市場轉強"
  }
 ]
