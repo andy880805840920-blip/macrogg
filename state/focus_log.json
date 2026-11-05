@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-10-29T10:50+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv",
-   "fomc"
-  ],
-  "locks": [
-   "pce",
-   "gdp_adv"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed Pause May Give India’s Central Bank Breathing Room - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed highlights economic strength but muddies outlook for Treasuries - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gold slides 1% as Fed hike bets linger ahead of US inflation data - Reuters",
-     "Gold drops 1% as markets assess Fed signals, await US inflation data - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed Rates: Lord, Let Me Hike, Just Not Now - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Wall Street ends higher as Fed holds key rate steady, focus turns to earnings - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed's policy committee to weigh balance sheet issues early next year, Warsh says - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
-   "Dollar pulls back as Warsh leaves tightening path murky; Euro tread water"
-  ],
-  "main": "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg",
-  "main_why": "最高分",
-  "second": "US Short-End Yields Fall After Warsh Signals Fewer Fed Meetings - Bloomberg",
-  "points": 2,
-  "thin": [
-   "",
-   "重點二"
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "用了相對時間（今天、今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": []
-  },
-  "result": "聯準會 10/28 維持利率不變、Warsh 不承諾 12 月路徑，市場降低遠期升息預期"
- },
- {
   "at": "2026-10-29T12:10+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3102,5 +2998,109 @@
    ]
   },
   "result": "英國央行升息 1 碼至 4% 警告通膨將升至 5%"
+ },
+ {
+  "at": "2026-11-05T23:08+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "employment",
+   "claims"
+  ],
+  "locks": [
+   "employment"
+  ],
+  "clusters": [
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Fed’s Hammack Says Restrictive Rates Needed to Cool Prices - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Sweden’s Slowing Inflation Weakens Riksbank Rate Hike Case - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Yardeni Sees Inflation Cooling, Says US Yields Attractive at 5% - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Soar as Tech-Stock Selloff Stokes Haven Demand - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Gain as US Vote Fuels Hopes for Curbing Bond Supply - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "The Fed Needs a Better Way to Talk About Interest Rates - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+3（有內文）",
+    "titles": [
+     "CPI累計漲幅達11.91% 遺贈稅減稅紅包來了"
+    ]
+   }
+  ],
+  "background": [
+   "CPI累計漲幅達11.91% 遺贈稅減稅紅包來了"
+  ],
+  "main": "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters",
+  "main_why": "最高分",
+  "second": "Sweden’s Slowing Inflation Weakens Riksbank Rate Hike Case - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "重點一",
+   ""
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "主軸 166 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 194 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "數據公布日期錯誤（CPI寫成「11/5」，官方是 10/14；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ]
+  },
+  "result": "Fed 官員哈瑪克、Barkin 主張漸進升息路徑以壓低通膨"
  }
 ]

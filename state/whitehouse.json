@@ -400,9 +400,72 @@
   "p:h200_china:66f1c0b85a6d": "2026-11-05",
   "p:h200_china:83cf4189c5c9": "2026-11-05",
   "p:us_china_truce:96e7fe8a91ba": "2026-11-05",
-  "p:us_china_truce:4d8a97e46b46": "2026-11-03"
+  "p:us_china_truce:4d8a97e46b46": "2026-11-03",
+  "5a9cb0146b7d": "2026-11-05",
+  "febcea55deb9": "2026-11-05",
+  "4c5821523ffd": "2026-11-05",
+  "0e270fa50da4": "2026-11-05",
+  "ed7470506202": "2026-11-04",
+  "e2b265c481b2": "2026-11-04",
+  "a04626e9c315": "2026-11-05",
+  "6fe288904db7": "2026-11-05",
+  "ead6187ce285": "2026-11-05",
+  "411c333b2252": "2026-11-05",
+  "b4d3e159ad70": "2026-11-05",
+  "0d956bd65146": "2026-11-05",
+  "ac977f5d1710": "2026-11-05",
+  "8c611bfe15d2": "2026-11-05",
+  "0a4c059e463d": "2026-11-05",
+  "1cfd3e7a624e": "2026-11-05",
+  "b4746efb989f": "2026-11-05",
+  "567c47459c4e": "2026-11-05",
+  "4815ec4e280c": "2026-11-05",
+  "183d70adfaf3": "2026-11-05",
+  "eca9567f0e52": "2026-11-04",
+  "dddfb038d926": "2026-11-01",
+  "148431403a0a": "2026-11-05",
+  "p:fiscal_cr:5974756cd2aa": "2026-11-05",
+  "p:fiscal_cr:9ea469a5e544": "2026-11-05",
+  "p:fiscal_cr:8d8bc52d6b37": "2026-11-05",
+  "p:fiscal_cr:e23aaa045398": "2026-11-04",
+  "p:fiscal_cr:dbab1a8d7d9e": "2026-11-02",
+  "p:debt_limit:e3846e680fe5": "2026-11-05",
+  "p:fed_cook:0cd4e678d022": "2026-11-05",
+  "p:fed_cook:7627ce990afa": "2026-11-05",
+  "p:h200_china:8bebb89eadee": "2026-11-05",
+  "p:h200_china:6bf31ec0bf5c": "2026-11-05",
+  "p:h200_china:75a47d515b8d": "2026-11-05",
+  "p:h200_china:76278b870317": "2026-11-05",
+  "p:h200_china:ba87a75dde74": "2026-11-05",
+  "p:h200_china:98ecc060df61": "2026-11-05",
+  "p:h200_china:aac89ac8f12a": "2026-11-05",
+  "p:h200_china:617014e088b8": "2026-11-05",
+  "p:h200_china:1ae67b27c770": "2026-11-05",
+  "p:h200_china:573a2e11b6a0": "2026-11-05",
+  "p:chip_232:9d984fda12a1": "2026-11-05",
+  "p:chip_232:e59b0f1a3ffd": "2026-11-04",
+  "p:chip_232:8cc8f0ac33aa": "2026-11-04",
+  "p:chip_232:97aa0215f156": "2026-10-30",
+  "p:ai_preempt:78c2e79e8198": "2026-11-04",
+  "p:dc_grid:b2c5a769acd5": "2026-11-05",
+  "p:dc_grid:eaff3cba7c4d": "2026-11-05",
+  "p:us_china_truce:b1470a3e92bd": "2026-11-05"
  },
  "items": [
+  {
+   "id": "02747b60b1cd",
+   "topic": "能源",
+   "channel": "行政命令",
+   "zh": "運輸部長批准藍馬林離岸港口執照，支持美國能源主導地位。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Trump’s Transportation Secretary Sean P. Duffy Approves $1 Billion Blue Marlin Offshore Port License to Unleash American Energy Dominance | US Department of Transportation",
+     "source": "Department of Transportation (.gov)",
+     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOQVQ5M2RMRVg0bm1lTmY3a3VVYUQ4QjJUYV9qOXVuWUJWandPRmdtTUNBZWdiWE9VVmFwUFY1YkowdUdXVXBRc2RfcHhyaXFnU0NJUVNJT21QajJhTVNXOGV1RlhaeVAzeUxzSDFNVTd6Rkk3V28tOGlrMEp4NlNxZmczcllyUmR2T0pmODBIMXVzNnI0MGctOXplUHprM2syVDY5WHctM0JqYWtjbUh6UEFhYW5fWTZ3ZjMyZWJCZTA3N1QxM09HVA?oc=5"
+    }
+   ]
+  },
   {
    "id": "e8abee91fdf1",
    "topic": "關稅",
@@ -546,9 +609,9 @@
   }
  ],
  "summary": {
-  "hash": "09de58e3adc0",
-  "date": "2026-11-05",
-  "text": "本週關稅政策波動頻繁：川普對加拿大商品加徵50%關稅並調整適用品項，同時簽署行政命令對部分製藥加徵100%關稅；政府已支付100億美元關稅退款。近期關鍵日期為12月11日聯邦暫時撥款到期，以及2027年1月10日美中貿易休戰框架到期。"
+  "hash": "e76f67be01c0",
+  "date": "2026-11-06",
+  "text": "本週關稅與聯準會成焦點。川普對加拿大加徵50%關稅引發報復威脅，惟稱接近達成貿易協議；同時白宮因中期選舉失利無法安插聯準會盟友，延遲理事庫克聽證至12月14日。近期關鍵日期為12月11日聯邦預算暫時撥款到期，及2027年1月10日美中貿易休戰框架到期。"
  },
  "suggestions": {
   "fiscal_cr": {
@@ -570,21 +633,20 @@
    ]
   },
   "fed_cook": {
-   "date": "2026-11-05",
-   "note": "白宮委員會聽證會已排定於12月14日舉行，下一步日期從未定改為2026年12月14日。",
+   "date": "2026-11-06",
+   "note": "白宮已排定針對 Lisa Cook 的聽證會於 12 月舉行，表明白宮調查進入下一階段（白宮委員會調查）且確定了日期。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiggFBVV95cUxOS2ppN1JvQmVtMlVjaFBCUWlmWnQ4NUNfOTdUTDgySWppZHQwamRoamU4NGtQc21JczdpeFVLUU9QcFhIdVoyYXdqUGN6R0ZQbVczVVZVN2JlWFJaYVFKR1FHRjJZY3JoWllnWDUzUXBRRDNFem9RR2RyYUQ4TmJUUkdR0gGHAUFVX3lxTE00UjVIUndLZUhjN2VfU3BwTDZiNGU0TnBJOVhiQjFpVXpQUHRydUlZOVdXcTI0R01PcnJ5RmhYRDBUdWRCVFlyQ2JDMlRCdWxpcEF1SHd6YXdWaEVSNDhFX0JGUDFYZzZPWWNaaTI0R0poNkRBRzU4Y3BVVXl2TzJPeEdFeElROA?oc=5",
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxPRjlENDJZdTZaWF9nMGlXUW9lVXI0WVZQcEhEVy1ZU2o4QmRPRnQxbEp6OHdQeUVCLU5BaVRYSlFGbDZRbjUtRDlvN1NXYVAxbU5LMktZSHc3YkFIMnVEdy1OYzVnS2YtYnFXN2s0bHBTdVdmZlNsbjFQUVdveUJPSHQySlAtSVJ1U0tJeEdrNDRLQWttUTRaTlFlOHlpTjBwSl9sQ21QV2RCdURW?oc=5",
-    "https://news.google.com/rss/articles/CBMilgFBVV95cUxOVWJhbzlzbzJLZDlZc0xpVTVQTzBFWHdXYWNCaTRWV1lZT3dsVF8tdzJ3TmdySmFmM0trbWpMelJmbE0wOWJzb3FMZ1czTzBhQ3JFUHROcThSRFVyajBQZ0FqZFV1bzRTZy1HYUc5cWpMeUVNdmhVS19Gdm1LQ3Y2U3ZlZG92X0FxUk9HcUY1MzZVemtiRUHSAZsBQVVfeXFMTkZmTE5TRE9GanAwUjJ0Njl1ZWZRdnNyeGVodWl1eDZfc3ZmS3l2aFVxaV9lYldPMW5JRjVXdXh5NGUxVEhFVXRVbnN1YWFWT2FkbVN5dFliejRuNk5PN00yVGhyaFpWbW5QbTRfLThQTUtQcVhPSVR6Slpoa0dUaWJNN1FLUHRKbkdTeDdBSThjZHc1RnlGeU9EWWs?oc=5"
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSUdQNHNEb0dCVy0tNHVDTkN6LWY4d2QxYklXMWs0SEp4ZkxSV0xsd3VFeUR4NFRXaFZCUGN5aEZsTFNyMDdEZGJ5eUcxTHk5UnNSM3NlYUZ4Rk41d2dtVmwxLTY2c2NLVW1mcmNuOFRwY0ZTQ1hIOG82a3Bob3FvSGVCd0lVQURiYVUyVGptMzZxdnZOeWtpRXBqN1dIUG1JU2Z3Snh5aVZHdw?oc=5",
+    "https://news.google.com/rss/articles/CBMivAFBVV95cUxPRjJjbS1XR0lLUWI0eUdnb29BUDlYNDFvYTI4b1pndnlPc3J1bE1sM2xJUnlrcWRjVHNiOElqQXlRYlVsNVZfTURVajY2eWJTMlNvcTBUUVpnQ3NLM0s4UnhnNUJtSlppQlM2YmF5Y1M2RFNNWnpIZ1BKS0FxWjJZMHZiUVFMSWxkbmx4ZXZ3S2Nud3JMSjRxTHJ4bWY0czNDYnBrNllXSXBlOXkyNzBlZWZ5eDVheGg2SXczVw?oc=5"
    ]
   },
   "h200_china": {
-   "date": "2026-11-05",
-   "note": "11月2日eeNews Europe報導涉及Jensen Huang間諜案突顯Nvidia出口管制問題，可能推動國會加速審議晶片位置驗證和美國買家優先的限制法案。",
+   "date": "2026-11-06",
+   "note": "多則新聞報導約60萬片H200晶片堆積在香港，中國延遲進口批准，顯示出貨階段遇到中國端的實質性限制措施。",
    "links": [
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE9VZHZhczZuRF8zTV8xMDI4a09qT08tWXkwaVRNV2VJdm42MXBHdzJqVXdjbExNNHZuNDgzdmZyZk5Wbzc0aktTVVViV05aVHdHeXNYUVNOTHRoSlpkcUpHdVJRenlKald6ZGwwczVySlNKZFBCTHc?oc=5",
-    "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNZUJtQ0tJd1BVbEJETnVuOFlZQ0lIWW1yZDA0WXQzaGZpTXBTQWwzZVgzUVNXd3dQODE5N2ZCaTUtaEJlT2dzNFo3SGZCclJmVHk0aURFTVpqLUpyekxWTXg4WlRFalBjd0Z3YmMtOTQzeVhmOXJoOGdiaFlnVlNwanYyQ3dxa2k0RHBDa0M4SE9MY1M4ZnluLTBqeHY1UlZUSVd0SlZ3S3J2eExMelp1NEdOQWtuTUNlV3pR?oc=5",
-    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPOGJWbWlza2g3SGJtbDRSbUQxcmhtYW91QzMxV2Zpa0lEWDVyZnZTZzk4VGhWdF93UUh3aTJQR1pWMUxvY3lmZDZGQlhwaVVLX0FMY0EtWlN6MVl4cUJ2Sy1VeVF0NjNWWVB4Zi1aT3lGTUhxeW5xOTJ5S2tBV0xiTmRZWFBVOWxRMjhjOFo1cnZkLXB4bm00NHJfdXMyQzlIUzVzOEFuSG4zNS1id2NTMHpWRTIzaGhnVlR1ajhuRDM2TXM3amFRMUQyVDZETE5jUnZneWNGTdIB1wFBVV95cUxOaVQ3U1R1WThhZDg2cXdhZm9NbTUwMmQyMHBNaVRaN3RWV19JOVdfVW04UUxQVlB3RDQ5WmlnRXcyUzhxTFV2ODRELVJobng3VklqWlhJalNTcE1mTGkwSGZrT3hwV21BTFpmSmxCc3NYT25Ka3l1d2xyNFBoYnRnaF93NE4zNkV2M1ZXV2tzSlM1WC1XUkZVSllQeldtZ0NVd2NadHVDTkc1VHRxQkh3QXlBaUh0VGdLZEFvajFOMGUyU2M0U2NEa1J1N21QYnd1S0IyV0RIVQ?oc=5"
+    "https://news.google.com/rss/articles/CBMi2wFBVV95cUxORWlUeFBoT2RUZjY4dUx4SXBCeU5BdE5RcXp6aGJPUDQ4emY2NkhOWXZrLVFfVlRUNkxrN1ctdW94b2NSVE1tWnRsbzZUcW5xa1B6ZmV2cmRobW1tUkVMQzBzc1RtWXU4NVJYNEF5akRrTWhIbHR5bjNzdHZCeHpkcDdkb2dzcVczTTc2U1FhQUFLcTY3bUpIZlpCcW1xZThCb3hfRUViSWZEaHR1SlcxX1dtbFJoUUUzLVBtQjZDMHRpR1Vuci1QaHcwd3htRXRIeGlsSjJ1UW5OMmc?oc=5",
+    "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNZ29mSnlBa2RuczMwaDR1RUViVWpfOUtVRTdaRWQxTmtVam5QemxfZjdTWERQZGJBcE5JNlYyOGg3YTN3eGwyX2xYSDJ3UzFJaFpWTEhQTVhPcGpCazNvaGhlQ2hFNEdTYkVJeGNsZGQ5cVBhVWg4M2lqTDIwOEtlVmg2R3U3ajdRbHk4?oc=5",
+    "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOOEJxbHQ0NEdjTlJWUFg3RjgxcG1wc0NBdjdLd2pzYTlBM29DWF90X3o1NHhlNEdSYktEU2lCakpOVkd4c095YVczMWkwTF9rVDJNWGcyd0VOaVlCaTAwTklXLUR6LXhlaE5vUEhvRnJoNFZxUm1yTVJjaW1MUjZCclpLbjR2MU5MYmJkVUhZT3psTXJjNzNmbTFZY2k1Skp1bHlhS0wwZXN3Q2NlNTlueEFzemZkaGo4TmxjOUN3clBFWDI1UGdiUmtOamNNVXZMS1l6M9IB2gFBVV95cUxPa1VBRmdaclNTVXdkNEpUaHNmSlVGeWdydElRbjJRbWV2WUxOU1EySHREdWtmOHh0d3NhaFJacGZiS1hrYW5yV0gxcVNydDEyZjFaU3A2VXhQUVRLZ3ljT3dsTWdJMVVGNUs5UXluUDVBYmxwZjNSRWtZRGVUcWpiOERwTUhoWmZOeDY4cHpNVVZrY09oOUxUUV85UlYxZm1BN2MzcnI1QTVLdnViZGNEd1BHeFRvWTJHVklDSVUzSXNNWVhNcVhIWEcxOG9reDMtLUxpd0J1blFLdw?oc=5"
    ]
   },
   "ai_preempt": {
@@ -597,12 +659,11 @@
    ]
   },
   "dc_grid": {
-   "date": "2026-11-04",
-   "note": "10月30日PJM向FERC提交修訂版可靠性備用發電採購提案，目標2027年3月舉辦拍賣，顯示下一步日期可能從2026-11-16改為2027-03-xx。",
+   "date": "2026-11-06",
+   "note": "11月5日PA Environment Digest報導PUC更新評論時程，11月17日召開技術會議討論資料中心緊急管理工具，顯示主管機關徵詢階段可能加速或流程有變。",
    "links": [
-    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPS3laUmJuM1IyOEhVNmpZa2VvbGlvMEpoSnl2X1BmZTl4ejVDa2tYYlIzTE04d3lUSTVEaDBPTUFjaDNqWWlDaWpDdWZSUTd0Y1VfMUx3TTVFX1Y4Z3NHWnFqbV91a0FKU1dQTS12MkRiZGhhLWRjWVdVVEtqUF9iNmUwQUlkNEg2WG1CN0RyUjJmUTRw?oc=5",
-    "https://news.google.com/rss/articles/CBMiekFVX3lxTFBzS01UQTJFQkxZLVMxQ3ZTTDJfV0I0eGk4R1JHeGhZNmhxWmUxNWJUbDhSaThTbnA1eE01enhZamFHVDVmNUxqMmRaZVJNTHV6RHcyeUdOdkNDY2J4Q2hNVkYzblpyVVNwRFBSVVdHQkFtUmRkTUZaTE93?oc=5",
-    "https://news.google.com/rss/articles/CBMingFBVV95cUxPSzZlWTcyamhGM3V0RGJZRmk1dkpzRTF5QlJNdjhxOXkzWWpDUngzWmJ4NkxUYlJ3aThPOThFM3lZQWc0WXRtdDlOajBIa0JPTUNaYi1iNUt4NjFiNFhfejV6Z1ZURnc0czZTNU1TRWtJc3BwM0x6R3NjYktudWZUaUtBWnhvQ0xNbWgyZlFQWkFHdFVJd1Byc3Q3Qkhsdw?oc=5"
+    "https://news.google.com/rss/articles/CBMie0FVX3lxTFBTdUFEcGlLUFpFRmxLTXpBYlZzUFNuNmxxajZnNzZxRnY5N2duYXY4MEhidnN1Q1ZxWXBnTnRKQkxQYWo1UjJQTzVTN3YxU3NUTk1nZktrZFB4S0lWRTNFY3J2MEdSN0dxVzBZVElFRmkwaWQtV005WUVRTQ?oc=5",
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxPb3NqczRoMXZkSGdYTlZCTWVyb3ptRWEwUENKLThoU0dqNzBJNWdrdVdlM2dMY0pHZ2NMQ2Mxcy1YejRTbkkzRl9zWHJJWk51MlFRNW50SUlVV0tqSmFqRW5nbXFwdzV4RXR6VGZvMXk4VUlmdnpfSHB0NXlxRjdQV1o0aF9IU0FhRVNwRGhoWDg?oc=5"
    ]
   },
   "us_china_truce": {
@@ -615,5 +676,5 @@
    ]
   }
  },
- "at": "2026-11-05 22:18（台北）"
+ "at": "2026-11-06 07:08（台北）"
 }
