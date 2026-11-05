@@ -2388,9 +2388,135 @@
   "7269b744b38e": "2026-11-03",
   "b3a16f415f99": "2026-11-02",
   "a4fccc0ecc38": "2026-11-04",
-  "d24c190625a9": "2026-11-04"
+  "d24c190625a9": "2026-11-04",
+  "b29ed36fef5c": "2026-11-05",
+  "457efcd95b9b": "2026-11-05",
+  "c6a6f68bdedb": "2026-11-05",
+  "505a0754fa99": "2026-11-05",
+  "1c6008113fdd": "2026-11-05",
+  "21bba09d59f1": "2026-11-04",
+  "926ec175187a": "2026-11-05",
+  "6fbfaee0af0c": "2026-11-05",
+  "6f647e0d7e54": "2026-11-05",
+  "03a2047a19f5": "2026-11-05",
+  "439984d9a701": "2026-11-05",
+  "a759acc8a1a5": "2026-11-05",
+  "9398ddde4336": "2026-11-05",
+  "13cc615a7621": "2026-11-04",
+  "56c158d6b704": "2026-11-04",
+  "6193243864f9": "2026-11-04",
+  "b62706e616ab": "2026-11-05",
+  "9a3a07b22e4c": "2026-11-05",
+  "90f5d18dd492": "2026-11-04",
+  "9296fff308ef": "2026-11-02",
+  "b0d86457cd72": "2026-11-05",
+  "82696b90d0a1": "2026-11-05",
+  "a3c24e624a0c": "2026-11-05",
+  "0e6e137acbb8": "2026-11-05",
+  "c4c32a385437": "2026-11-05",
+  "57cb5db7079d": "2026-11-05",
+  "935a538f4b72": "2026-11-05",
+  "646c9af5ccc6": "2026-11-05",
+  "ee4ab4aacd69": "2026-11-05",
+  "fe312b0ec7d8": "2026-11-05",
+  "4a39b5a01ac3": "2026-11-04",
+  "97532c088c45": "2026-10-27",
+  "ed23bc2eb432": "2026-11-03",
+  "03b2323aa681": "2026-11-05",
+  "5014d45680be": "2026-11-05",
+  "5ee377d6ed57": "2026-11-05",
+  "ad3c3806d4d1": "2026-11-04",
+  "e161b7784798": "2026-11-04",
+  "6a59f3b647b6": "2026-11-03",
+  "807dabe7e328": "2026-11-03",
+  "bd820a725c0a": "2026-11-04",
+  "e8e333eaef4e": "2026-11-04",
+  "8c0de2d7574e": "2026-11-05",
+  "934829ff54ca": "2026-11-04",
+  "4518ecec3a6e": "2026-11-04",
+  "453504192314": "2026-11-04",
+  "c57c76c83218": "2026-11-04",
+  "d3dffb61328d": "2026-11-04",
+  "aa6fbec14026": "2026-11-05",
+  "6c9ce21e9df3": "2026-11-05",
+  "a8ab47f93753": "2026-11-05",
+  "ad82bc5732e6": "2026-11-05",
+  "525792a9dc0f": "2026-11-05",
+  "1e0f6983422a": "2026-11-05",
+  "6704be26bc20": "2026-11-04",
+  "eeb413019e95": "2026-11-04",
+  "608494e0ab2b": "2026-11-05",
+  "c8ab2c0c7346": "2026-11-05",
+  "fb7099773bc8": "2026-11-04",
+  "9fe01d6c10c6": "2026-11-03",
+  "2270eecfe2d7": "2026-11-03",
+  "6c5632d2baf5": "2026-11-03",
+  "439c5a82a88d": "2026-11-05",
+  "4d85aceb279e": "2026-11-05",
+  "f2ca0a5d1615": "2026-11-05",
+  "b9d719937525": "2026-11-05",
+  "2fc7161fa91b": "2026-11-05",
+  "316a7b255397": "2026-11-05",
+  "c854e3e94db1": "2026-11-04",
+  "571d6aabf277": "2026-11-05",
+  "c0ae78f8dcca": "2026-11-05",
+  "238b156f9906": "2026-11-05",
+  "4ae9e1049b75": "2026-11-05",
+  "ab0554351dd1": "2026-11-05",
+  "2cec080f4eb4": "2026-11-05",
+  "c57d6768b508": "2026-11-04",
+  "0bbaeeeddb2c": "2026-11-03",
+  "4fff8e86c32d": "2026-11-03",
+  "9ab05dfb6641": "2026-11-03",
+  "93353437dc78": "2026-10-30",
+  "25d37825a803": "2026-11-05",
+  "e3b8b3ba4617": "2026-11-03",
+  "952c916b46f4": "2026-11-03",
+  "2446d36dc7bf": "2026-11-05",
+  "b1c4f8e4c7bf": "2026-11-04",
+  "8ef57af8bcc0": "2026-11-04",
+  "f71a0f003859": "2026-11-04",
+  "c260823cbb27": "2026-11-03"
  },
  "events": [
+  {
+   "id": "1d2b6c650842",
+   "co": "Alphabet",
+   "type": "融資／IPO",
+   "zh": "Alphabet旗下Isomorphic Labs洽談融資50億美元。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Alphabet's Isomorphic Labs in Talks to Raise $5 Billion",
+     "source": "marketscreener.com",
+     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPQmE5S0J4aEp0NG5GOGhlVmowbk9fTGFCeGl6Q0Y0d0tpbmdyZjQ5WkNmZEl1VENGYy1seWZ4bG1RSFd0Z0gyX1hLYWhlaVZOQjdvVWJKdWpwRkZKdE1HcHJocEJHbU9Fc1Q3bWh2WGRJRmtqaXRuV3c2WDE1NHpvdG1vQmItbHNJX3Y4NklPOWlpUEU2dGh1RWxEbVlpVzdCMmN6VjJFMTRVWnc?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "15bb7719fe33",
+   "co": "Oracle",
+   "type": "融資／IPO",
+   "zh": "Oracle 發行100億美元股票和100億美元債券，共籌資200億美元用於AI擴張。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Oracle's $20 Billion Raise Exposes the Cost of Its AI Expansion",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOUjJneWFRVFNGZHV5aFA5YXVVU3hlLUc0UXVPWDNvSTlzSklkNk56MzdsQmM1SVViRU43ZjZIcGRjb0hFUEozb0doemFwWkRLWmhTMGxxeVExbjhzbTJpQy1tSnljWjFFV3VYSU5LTUZURUFDcVdDX3RncmxDT0c4OG05cFVINkJicnVHMEJHZFl4UUZHWWFLalczc3Q?oc=5"
+    },
+    {
+     "title": "Oracle Stock: More Capital Raised, Continued Questions (NYSE:ORCL)",
+     "source": "Seeking Alpha",
+     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOR196bHVES0RrbDM3MmdkRDBTMkpTTzhzTjhqZVl5SDdOZFU0dlNfb0x6S0JtOFo0S2IydS14QWkzaERidFR3eGpDWkZCZHo5TTJtWnM1QWItNTN5ekNSZUlSSkFucDdDZnlTQ1JtaFFKeHlaSzVSUXRzNkc0ZF9LbWs4b1RoM3Z0cEw5QnZvM1E?oc=5"
+    },
+    {
+     "title": "Key facts: Oracle Plans $20B Raise; Stephens Upgrades; Shares Rise 11%",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPMlBjdVR2ZF9jNEhIMGdYS20tM2F3NDlydDE0RjRja1VyYjNFYzZ4M081WjBPWFJjQXdoUFFkMjBqTGNneVN2UERMV2FfNzNhcnBBSEdtcGJ6WTNVZTRpMjM0UlNsbkhqSnM4cTZMV1JlV0xWMW1WSGlMZFJ6Q0R1cURCSVdKRGQwcVNSX3B2Y0l1SDl1M2k1TTljX1NodFZaNjZTdzRnak01WjJyRFJweVhqeExtVzhXQzVFaGxPcWJWSV80MkE?oc=5"
+    }
+   ]
+  },
   {
    "id": "50dd51c24803",
    "co": "Alphabet",
@@ -2419,7 +2545,7 @@
    "id": "3bbd6f81fbf9",
    "co": "Meta",
    "type": "發債",
-   "zh": "Meta首次發行歐元債券，募資90億美元（€9B）。",
+   "zh": "Meta首次發行歐元債券，募資（€9B）。",
    "date": "2026-11-04",
    "links": [
     {
@@ -2604,7 +2730,7 @@
    "id": "e3a8a2640916",
    "co": "Nvidia",
    "type": "財報",
-   "zh": "Nvidia公布第三季財務成果，營收指引1,080億美元。",
+   "zh": "Nvidia 公布第三季財務成果，營收指引1,080億美元。",
    "date": "2026-11-04",
    "links": [
     {
@@ -2691,30 +2817,6 @@
    ]
   },
   {
-   "id": "15bb7719fe33",
-   "co": "Oracle",
-   "type": "融資／IPO",
-   "zh": "Oracle 發行100億美元股票和100億美元債券，共籌資200億美元用於AI擴張。",
-   "date": "2026-11-03",
-   "links": [
-    {
-     "title": "Oracle Raises Another $20 Billion in Debt and Equity",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNZ2JEd3dVb1RzdTNxME5kTWdJT0tyRkRpZ0xHb1JkdktqNjNOYnFMVnRPZzRPTVNjUzdpRTlidlZFSHZvUlU5aW1ERnV3TXVIWGhGamxZOEJ3SHhSbE1kUXpyV0x5eTRPODJQRVRqeWY0NzVaWm1JaFlkVzlDeXJNS0tBeTgyTlFsX0FSb1JIWlFJMGhUeWhLNmpwMzZRZw?oc=5"
-    },
-    {
-     "title": "Oracle Prices $10 Billion Stock Sale at $116 Amid AI Expansion",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQekRJWGpqOUllc2ZYMjM1YmtsTFBwN3BiaXpvcnFBS3VUdmt2TWYtVkVVekRBSVFZNzlaMlF2Nm5MYUs0eEppR0Fvdkk1b29TVmpvcG84N3B6anRDeUdxWnpabzFSbEVxYXAwT1NJdTJDdGJzTHVwMHc5R2J5WEZVYkp4OXBlODhfdkpMTWtmM05rMm84cmZrTGFoTQ?oc=5"
-    },
-    {
-     "title": "Oracle taps investors for US$20B to finance AI expansion",
-     "source": "BNN Bloomberg",
-     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPdnB3WVg5bzBTdHNCaGtBVkNLRnM0d3R2NWxBYkdjU0FxWk1pNDI5S3RpNnBsUzViUlROV0NLTE16RnkybVpwMXZaSENrUXZ6ZkFWU1k5U0k5UXd6dWNuX0VXRTlTMnlfdFVaS1EtTGlmZnZjX3VGUHVNQmRkYkl4cFZXeW00MFlzMlJSSTRRSS1JSXJDeGxTWktVNVhfY0xXZHo4Szd0aWdqb0QxUWNMZl93bWJBUmJP?oc=5"
-    }
-   ]
-  },
-  {
    "id": "57a794b2b390",
    "co": "Meta",
    "type": "發債",
@@ -2739,6 +2841,11 @@
      "title": "Apple Posts $114.5 Billion Quarter as John Ternus Takes the Helm",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPUmdnc1ZtRml3d1lydk1QS0dibzdxakxEVF95WTRtc016VlRwMjg0Y0ZJVGV1ZjVJTjdDY3ROTGUxcTljeTJlanlPS0tVckR3Y3g3VFZYdk5Vb1RVQUtQMTdpRklMa3JLdmw3RnkzRE1ZSU9vTGNnNHhKYlc0OHgwUU1jbWVJYWJVWnJzLVFmRkY5TjNT?oc=5"
+    },
+    {
+     "title": "Apple Inc (AAPL) (Q4 2026) Earnings Call Highlights: Record $114. ...",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPN0tiMW5NajZ5S1o4emRLbWxJVlNhdlE3ckp1dDhra09Ob20tRHFQX2phRUNKOUhjWFd0VlQ4V3R4VEVhY1VzOFpOS0hYcG9FVnRMOFk1T0xXRjhvQ0lLM1BRazFUeWVGeWloZk1zMlRoYkMtb1ZiQ2FJR0V2RG4yeUpUbXBrZmc4cTRkSm5BdjM?oc=5"
     }
    ]
   },
@@ -4193,19 +4300,19 @@
  "impact": {
   "Microsoft": {
    "hash": "d211f56048d4",
-   "text": "Microsoft近期事件偏向推升公司債供給與長端利率。大規模資本支出（Q1達394億美元）與449億美元Anthropic合約承諾，驅動其發行250億美元債券融資需求；雲端與Azure業績超預期則支撐償債能力。若融資需求持續擴大，偏向增加公司債供給壓力。同時，龐大AI基礎設施投資承諾偏向強化AI投資熱度，但資本密集特性可能對長端利率形成上行壓力。"
+   "text": "Microsoft 近期事件偏向推升公司債供給與長端利率。大規模資本支出（Q1達394億美元）與449億美元Anthropic合約承諾，驅動其發行250億美元債券融資需求；雲端與Azure業績超預期則支撐償債能力。若融資需求持續擴大，偏向增加公司債供給壓力。同時，龐大AI基礎設施投資承諾偏向強化AI投資熱度，但資本密集特性可能對長端利率形成上行壓力。"
   },
   "Alphabet": {
-   "hash": "e82519897c4c",
-   "text": "Alphabet近期大幅擴張AI基礎設施投資，第三季資本支出達510億美元，2027年預期續增。同步發行60億歐元債券補充資金，偏向增加公司債供給。龐大資本支出與營收成長不同步、利潤下滑，若市場對AI變現前景疑慮加深，則長端利率偏向上升。惟AI投資熱度仍強，Alphabet持續擴建數據中心與算力合約，偏向支撐科技股與AI投資熱度。"
+   "hash": "33b6e7afd7fe",
+   "text": "Alphabet近期事件偏向增加公司債供給與長端利率上行壓力。510億美元季度AI資本支出、2027年預期大幅增加支出，加上60億歐元新債發行與Isomorphic Labs融資洽談，反映融資需求上升。然而營收未達預期、利潤下滑引發過度投資擔憂，若市場對科技公司債務接受度轉弱，則長端利率上升空間受限。AI投資熱度偏向持續，衛星晶片、數據中心等新項目顯示技術投資承諾未減。"
   },
   "Meta": {
-   "hash": "d60054c341a2",
-   "text": "Meta近兩週密集發債與融資，偏向增加公司債供給、推高長端利率。大規模AI資本支出承諾（8,250億美元）超過現金流，驅動融資需求；同步發行美元、歐元債券與股權融資，反映對長期資金的迫切需求。若市場吸收此龐大債券供給能力有限，則長端利率偏向上升。AI投資熱度偏向升溫，Meta與Nvidia、Google等夥伴的算力合作凸顯產業資本競賽加劇。"
+   "hash": "b7dd8fe65409",
+   "text": "Meta近兩週密集發債與融資，偏向增加公司債供給、推高長端利率。大規模AI資本支出承諾（超8,000億美元）驅動融資需求，債券發行規模達數百億美元，若市場吸收能力有限，則長端殖利率偏向上升。同時，巨額資本投入AI基礎設施偏向強化AI投資熱度，但融資規模龐大可能分流股市資金，對股市偏向中性至略負面影響。"
   },
   "Oracle": {
-   "hash": "902c81ec1188",
-   "text": "Oracle 大幅擴張AI基礎設施投資，融資規模達200億美元，偏向增加公司債供給。取消騰訊合約反映策略調整，但多元晶片合作與自研Arm架構CPU強化競爭力。高資本支出承諾（近950億美元）若能如期轉化為現金流，偏向支撐長端利率；同時AI運算能力擴張偏向提升AI投資熱度，但融資需求增加可能對股市估值形成壓力。"
+   "hash": "03b54015ac46",
+   "text": "Oracle大規模融資與資本支出計畫偏向增加公司債供給。200億美元融資中債券佔重，加上100億美元投資級債發行，短期內長端利率面臨供給壓力。同時，950億美元資本支出與多元晶片策略布局強化AI競爭力，偏向提振AI投資熱度；但取消騰訊協議暗示策略調整，若現金流目標延後達成，則可能抑制股市預期。"
   },
   "CoreWeave": {
    "hash": "6f9e33692661",
@@ -4224,8 +4331,8 @@
    "text": "Amazon 近期大幅增加資本支出至2,200億美元，主要投向AI基礎設施與數據中心，偏向增加公司債供給需求。若融資需求持續擴大，則長端利率面臨上升壓力。然而第三季營收未達預期且自由現金流轉負，偏向削弱投資者信心，對股市構成下行風險。同時龐大的AI投資規模偏向強化市場對 Amazon AI領導地位的預期，維持AI投資熱度。"
   },
   "Nvidia": {
-   "hash": "c3e67a1f016b",
-   "text": "Nvidia近期事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、指引1,080億美元反映晶片需求旺盛；多筆大型算力合約與融資擔保（涉及450億美元Anthropic債務等）顯示AI基礎設施投資加速，可能推升企業債供給與長期融資需求。惟反壟斷調查偏向增加公司債務風險溢價。整體而言，強勁成長偏向支撐股市與AI投資熱度，但融資規模擴大若…則…長端利率面臨上行壓力。"
+   "hash": "cbc58eed9db4",
+   "text": "Nvidia近期事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、指引1,080億美元反映晶片需求旺盛；多筆大額算力合約（Meta、Naver等）與融資擔保顯示資本密集的AI基礎設施投資加速。若這些高成長持續，則企業債供給增加、長端利率偏向上升以應對融資需求，同時強勁業績支撐股市表現。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -4236,9 +4343,9 @@
    "text": "Intel 近期事件對市場偏向混合信號。伺服器銷售強勁成長支撐長端需求，但第四季展望疲弱偏向壓低股市情緒。大額資本支出（Classiq 收購）與 AI 新創融資參與，反映公司加碼量子與 AI 領域，若成功商轉則偏向提升長期成長預期；但短期融資需求增加，偏向對公司債供給構成壓力。"
   },
   "Apple": {
-   "hash": "0dd20d066a61",
-   "text": "Apple 領導層交接與假日季指引成為焦點。新執行長上任可能引發市場對策略調整的預期，若新領導強調資本回報或AI投資，偏向提升股市信心；若指引保守，則偏向增加公司債供給以維持現金流。假日季表現攸關科技股後市，強勁指引偏向支撐股市，反之則可能推升長端利率作為風險補償。"
+   "hash": "14534ced9c7e",
+   "text": "Apple 第四季度營收表現穩健，新任執行長上任偏向提升市場對公司治理穩定性的信心。若新領導層維持營收動能，則有利於公司債供給穩定、長端利率承壓；假日季指引受關注，若表現超預期，則偏向提升科技股吸引力，可能強化 AI 投資熱度。"
   }
  },
- "at": "2026-11-05 07:33（台北）"
+ "at": "2026-11-05 20:06（台北）"
 }

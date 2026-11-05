@@ -1,18 +1,18 @@
 {
  "hash": "",
- "text": "11/4 美國期中選舉結果出爐，民主黨在參眾兩院取得多數席次，並從共和黨手中奪下愛荷華、堪薩斯、北卡羅來納、俄亥俄、南卡羅來納、緬因與德州等參議院席次，也贏得俄亥俄與德州州長選舉。民主黨勝選使川普政府推動立法更加困難，市場預期政府支出將受到制約。摩根大通交易員指出，華爾街關注的焦點之一是「赤字支出減少」，民主黨可透過預算權力達成此目標，可能需經歷政府關門程序。BondBloxx 投資策略師 JoAnne Bianco 表示，更分裂的政策環境應會使赤字成長更困難，可能改善財政前景。副總統萬斯將共和黨選舉失利歸咎於伊朗戰爭，油價 11/4 下跌。¶11/4，亞馬遜股價收漲 6.12% 至 266.03 美元，成交量達 9,280 萬股、較三個月均量高出約 142%。投資人在期中選舉後重新評估上週財報，關注 AWS 成長與 AI 策略。高盛首席經濟學家 Jan Hatzius 指出，選舉結果不太可能改變聯邦層級對資料中心的展望，但民主黨在州與地方層級勝選可能導致短期資料中心禁令，影響約 45% 的美國資料中心擴張計畫；AWS 第三季銷售成長 39% 至 460 億美元，資料中心成長受限應會為 AWS 帶來更多業務。\n川普新政府時期債務上限與關稅成為可能談判重點，其中關稅政策預期將對貿易與物價產生重大影響。\n9月美國貿易赤字略微縮小，但進口額創歷史新高，顯示儘管出口改善，進口商品仍保持強勁需求，反映國內消費力道未減。",
+ "text": "11/5 美國期中選舉民主黨取得國會兩院控制權，美元與美債殖利率隨即下跌，現貨金價上漲 1.6% 至每盎司 4,125.68 美元。ANZ 分析師指出，民主黨掌控國會可能限縮川普提出的減稅與政府支出計畫，改變財政政策展望，進而影響政府舉債、通膨與利率預期。較低的美債殖利率降低持有黃金的機會成本，而美元走弱則使美元計價的黃金對其他貨幣買家更便宜，兩者共同推升貴金屬價格。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌逾 5 個基點至 5.273%，2 年期跌逾 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。JPMorgan 交易員表示華爾街關注「赤字支出減少」，BondBloxx 的 JoAnne Bianco 認為分裂的政策環境將使赤字成長更困難、可能改善財政前景。\n聯準會主席 Warsh 表示，聯準會需要改進與公眾溝通利率政策的方式，以便更清楚地解釋貨幣政策立場，11/5發表此看法。\n選舉結束後，聯準會面臨政治壓力增加，獨立性風險上升，但聯準會的決策框架仍提供某些保護機制，11/4報導指出。",
  "links": [
+  {
+   "title": "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
+   "link": "https://investorshub.advfn.com/market-news/article/39313/gold-prices-rise-as-weaker-dollar-and-treasury-yields-follow-us-midterm-elections?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-11-05T10:37:14+00:00"
+  },
   {
    "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
    "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
    "source": "CNBC",
    "at": "2026-11-04T21:18:44+00:00"
-  },
-  {
-   "title": "Stock Market Today, Nov. 4: Amazon Jumps 6% From New Perspective on AWS Growth and AI Strategy Following Election Results",
-   "link": "https://www.fool.com/coverage/stock-market-today/2026/11/04/stock-market-today-nov-4-amazon-jumps-6-from-new-perspective-on-aws-growth-and-ai-strategy-following-election-results/?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-11-04T22:13:28+00:00"
   }
  ],
  "fedwatch": {
@@ -273,138 +273,130 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-04T23:33:59.105754+00:00",
+ "at": "2026-11-05T12:06:48.914085+00:00",
  "layout": "main",
  "topics": {
-  "hash": "c0938cdc0faec7fd",
+  "hash": "e028159a66fbbe00",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "歐元區10月通膨升至4%，創三年新高，主要受能源成本飆升推動，能源通膨從9月的18.9%躍升至20.8%；市場預期歐洲央行12月升息機率從71.8%上升至72%以上",
+    "text": "英格蘭銀行因伊朗戰爭推升通膨，11/5 首度升息逾 3 年，將基準利率從 3.75% 調升至 4%；9 月通膨率升至 3.5%，高於 2% 目標，經濟學家認為能源價格高企時間愈長，暫時性衝擊演變成長期通膨風險愈高",
     "links": [
      {
-      "title": "Euro zone inflation hits 4% for first time in three years as interest rate hike looms",
-      "link": "https://www.cnbc.com/2026/11/04/euro-zone-cpi-inflation-october-ecb-rate-hike.html",
-      "source": "CNBC",
-      "at": "2026-11-04T10:47:30+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "民主黨掌控國會後，市場預期可能推動住房可負擔性立法，加州眾議院金融服務委員會主席候選人沃特斯計畫聚焦首購族補助與公共住宅翻新，激勵建商股價上漲逾8%，10年期美債殖利率小幅下滑",
-    "links": [
-     {
-      "title": "Housing stocks rally following midterm elections, Treasury yields dip lower",
-      "link": "https://finance.yahoo.com/economy/article/housing-stocks-rally-following-midterm-elections-treasury-yields-dip-lower-171937967.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-04T17:19:37+00:00"
+      "title": "伊朗戰爭加劇通膨  英國央行逾3年來將首度升息",
+      "link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E6%88%B0%E7%88%AD%E5%8A%A0%E5%8A%87%E9%80%9A%E8%86%A8-%E8%8B%B1%E5%9C%8B%E5%A4%AE%E8%A1%8C%E9%80%BE3%E5%B9%B4%E4%BE%86%E9%A6%96%E5%BA%A6%E5%8D%87%E6%81%AF-112138693.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-05T11:21:38+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "民主黨掌控國會削弱川普政治地位，市場押注美國更有動機透過談判結束伊朗戰爭，11/4布蘭特原油期貨下跌8.98美元（跌幅8.7%）至94.62美元、WTI下跌7.97美元（跌幅8.3%）至88.12美元，雙雙創8月31日以來最低收盤價",
+    "text": "美國期中選舉民主黨勝選後，市場預期美伊戰爭將加快結束，地緣政治風險降低，原油價格 11/4 暴跌逾 8%，激勵航運股華航漲近 6%、長榮航同步上揚，外資合計補貨兩檔 6.4 萬張",
     "links": [
      {
-      "title": "〈能源盤後〉期中選舉重擊川普 市場押注伊朗戰事有望落幕 油價挫逾8%",
-      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E9%87%8D%E6%93%8A%E5%B7%9D%E6%99%AE-%E5%B8%82%E5%A0%B4%E6%8A%BC%E6%B3%A8%E4%BC%8A%E6%9C%97%E6%88%B0%E4%BA%8B%E6%9C%89%E6%9C%9B%E8%90%BD%E5%B9%95-%E6%B2%B9%E5%83%B9%E6%8C%AB%E9%80%BE8-220002987.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T22:00:02+00:00"
+      "title": "Oil Extends Slide After Plunging 8% on Hopes to End US-Iran War",
+      "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPQlB2Q1M3aHY0UjIwVUczU09aRnVsVDhTSDVncElSMGVwRDE0a3lPLUNXbVN0R25iZHZkOXRtMkg5QTZ5VFNTRi1uTDZfd3pfVlZqUFEyaHZ6R0RPSDltbmRRdWMxbC1JcEV4UGxiYmFESjJWb1QtSkhaNW5kWlF1WkJHenZDLXJZdjJDWjYxcGsxd1RXMHI3N0R1a0Q?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-05T08:07:56+00:00"
+     },
+     {
+      "title": "油價重挫點火！「2航運股」股價逆勢衝高、外資狂掃6.4萬張　台塑化、中華電全進補貨名單",
+      "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E9%87%8D%E6%8C%AB%E9%BB%9E%E7%81%AB-2%E8%88%AA%E9%81%8B%E8%82%A1-%E8%82%A1%E5%83%B9%E9%80%86%E5%8B%A2%E8%A1%9D%E9%AB%98-%E5%A4%96%E8%B3%87%E7%8B%82%E6%8E%836-4%E8%90%AC%E5%BC%B5-120000909.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-05T12:00:00+08:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "民主黨奪下參眾兩院控制權消除政治不確定性，11/4道瓊工業指數大漲1569.40點（漲幅3.03%）至53356.12點，創2025年4月以來最大單日漲幅；標普500上漲1.58%、那斯達克上漲1.44%；惟費城半導體指數下跌3.13%，反映市場擔憂選後資料中心監管趨嚴",
+    "text": "AI 股票占標普 500 指數約 45%，高盛研究指出 2026 年標普 500 盈利成長中約半數來自企業 AI 相關投資如資料中心建設，但市場擔憂投資規模過大可能無法回本，投資人面對不確定性最佳策略是持有廣泛分散的股票投資組合至少 5 年以上",
     "links": [
      {
-      "title": "美期中選舉民主黨大勝！美股3大指數收紅　道瓊暴衝1569點、那指漲364點",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E6%B0%91%E4%B8%BB%E9%BB%A8%E5%A4%A7%E5%8B%9D-%E7%BE%8E%E8%82%A13%E5%A4%A7%E6%8C%87%E6%95%B8%E6%94%B6%E7%B4%85-%E9%81%93%E7%93%8A%E6%9A%B4%E8%A1%9D1569%E9%BB%9E-%E9%82%A3%E6%8C%87%E6%BC%B2364%E9%BB%9E-222500438.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-04T22:25:00+08:00"
-     },
-     {
-      "title": "政治不穩性、油價皆下滑　美股道瓊收盤飆了",
-      "link": "https://tw.news.yahoo.com/%E6%94%BF%E6%B2%BB%E4%B8%8D%E7%A9%A9%E6%80%A7-%E6%B2%B9%E5%83%B9%E7%9A%86%E4%B8%8B%E6%BB%91-%E7%BE%8E%E8%82%A1%E9%81%93%E7%93%8A%E6%94%B6%E7%9B%A4%E9%A3%86%E4%BA%86-220601374.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T22:06:01+00:00"
+      "title": "Worried About AI Stocks? Your Best Move Might Be: Do Nothing.",
+      "link": "https://www.fool.com/investing/2026/11/05/worried-about-ai-stocks-your-best-move-might-be-do/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-05T11:10:00+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "德州州長選舉結果引發市場擔憂資料中心建設受阻，美光、SK海力士等記憶體廠股價重挫逾5%；不過台積電、三星等晶圓代工與記憶體廠第三季自由現金流表現亮眼，超越輝達，顯示AI投資浪潮正大量流向晶片製造端，三星半導體部門營業利益首度突",
+    "text": "輝達 10/6 至 11/4 股價下跌 16.3%，遠超標普 500 跌幅 1.6%；輝達最近 12 個月營收成長加速至 105.9%、淨利翻倍至 193 億美元，但下一輪成長成本更高，記憶體價格持續上漲、毛利率預期下滑至 74%",
     "links": [
      {
-      "title": "德州變天震撼AI交易！美光、SK海力士等記憶體類股齊崩 資料中心擴建添變數",
-      "link": "https://tw.stock.yahoo.com/news/%E5%BE%B7%E5%B7%9E%E8%AE%8A%E5%A4%A9%E9%9C%87%E6%92%BCai%E4%BA%A4%E6%98%93-%E7%BE%8E%E5%85%89-sk%E6%B5%B7%E5%8A%9B%E5%A3%AB%E7%AD%89%E8%A8%98%E6%86%B6%E9%AB%94%E9%A1%9E%E8%82%A1%E9%BD%8A%E5%B4%A9-%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%E6%93%B4%E5%BB%BA%E6%B7%BB%E8%AE%8A%E6%95%B8-221003871.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T22:10:03+00:00"
-     },
-     {
-      "title": "不只輝達！三星、台積電與美光第三季自由現金流更勝一籌",
-      "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E5%8F%AA%E8%BC%9D%E9%81%94-%E4%B8%89%E6%98%9F-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%88%87%E7%BE%8E%E5%85%89%E7%AC%AC%E4%B8%89%E5%AD%A3%E8%87%AA%E7%94%B1%E7%8F%BE%E9%87%91%E6%B5%81%E6%9B%B4%E5%8B%9D-%E7%B1%8C-213004174.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T21:30:04+00:00"
+      "title": "Is NVIDIA Stock A Buy Right Now?",
+      "link": "https://www.trefis.com/stock/nvda/articles/622831/is-nvidia-stock-a-buy-right-now/2026-11-05?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-05T10:36:03+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "美股主要指數反彈，道瓊漲幅創去年4月以來新高，但費城半導體指數逆勢重挫3.13%；台股盤中震盪近1,450點，終場下跌358.63點，台指期夜盤收漲201點，市場多空交戰激烈，外資單日賣超1,499億元",
+    "text": "台股11/5跌破42000點，收41574點，單日下跌1374點，外資賣超逾千億元創史上第10大。融資修正幅度落後跌幅，估還需去化5、600億元，可能引發下週一交割斷頭賣壓。專家認為融資去化成反彈關鍵，預估第4季台股在4萬至5萬點區間震盪",
     "links": [
      {
-      "title": "道瓊狂飆、費半重挫逾3%，台指期夜盤上漲201點，台股拚反彈",
-      "link": "https://tw.stock.yahoo.com/news/%E9%81%93%E7%93%8A%E7%8B%82%E9%A3%86-%E8%B2%BB%E5%8D%8A%E9%87%8D%E6%8C%AB%E9%80%BE3-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E4%B8%8A%E6%BC%B2201%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%8B%9A%E5%8F%8D%E5%BD%88-232937575.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T23:29:37+00:00"
+      "title": "台股血崩！00981A重挫逾8%　瑤姐出手砸近50億「加碼8檔」",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9-00981a%E9%87%8D%E6%8C%AB%E9%80%BE8-%E7%91%A4%E5%A7%90%E5%87%BA%E6%89%8B%E7%A0%B8%E8%BF%9150%E5%84%84-%E5%8A%A0%E7%A2%BC8%E6%AA%94-114400869.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-05T11:44:00+08:00"
      },
      {
-      "title": "【盤前】道瓊暴漲費半重挫3%藏警訊！台指夜盤漲201點　台股拚反彈",
-      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%89%8D-%E9%81%93%E7%93%8A%E6%9A%B4%E6%BC%B2%E8%B2%BB%E5%8D%8A%E9%87%8D%E6%8C%AB3-%E8%97%8F%E8%AD%A6%E8%A8%8A-%E5%8F%B0%E6%8C%87%E5%A4%9C%E7%9B%A4%E6%BC%B2201%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%8B%9A%E5%8F%8D%E5%BD%88-222800742.html",
+      "title": "台股恐還有斷頭賣壓　專家估低點下探4萬點",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%81%90%E9%82%84%E6%9C%89%E6%96%B7%E9%A0%AD%E8%B3%A3%E5%A3%93-%E5%B0%88%E5%AE%B6%E4%BC%B0%E4%BD%8E%E9%BB%9E%E4%B8%8B%E6%8E%A24%E8%90%AC%E9%BB%9E-080039195.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-04T22:28:00+08:00"
+      "at": "2026-11-05T11:32:35+08:00"
      }
     ]
    },
    {
-    "id": "gold",
-    "label": "黃金",
-    "text": "全球金融市場消化選舉結果後恐慌情緒降溫，黃金重返每盎司4000美元大關，白銀同步走強",
+    "id": "election",
+    "label": "期中選舉",
+    "text": "民主黨掌控國會後，高層議程包括移除川普關稅以解決國內通膨，可能推動更強硬的中國政策特別是經濟安全與台灣議題，但行政部門權力廣泛且中國籌碼增加，實際影響受限",
     "links": [
      {
-      "title": "【金屬盤後】金價漲　銅價跌",
-      "link": "https://tw.stock.yahoo.com/news/%E9%87%91%E5%B1%AC%E7%9B%A4%E5%BE%8C-%E9%87%91%E5%83%B9%E6%BC%B2-%E9%8A%85%E5%83%B9%E8%B7%8C-222855191.html",
+      "title": "What the Democratic midterms sweep changes for U.S.",
+      "link": "https://www.cnbc.com/2026/11/05/what-the-democrat-midterms-sweep-changes-for-us-china-tech-rivalry.html",
+      "source": "CNBC",
+      "at": "2026-11-05T06:54:52+00:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣 11/5 一度貶至 32.985 元逼近 33 元大關，央行外匯局長蔡烱民向出口商喊話勿過度期待貶值，建議手握美元且有台幣需求者把握時機分散結售，避免年底匯市反轉時「門擠不進去」",
+    "links": [
+     {
+      "title": "傳出口商等台幣貶破33元？央行：別太期待 美元多賣一點",
+      "link": "https://tw.stock.yahoo.com/news/%E5%82%B3%E5%87%BA%E5%8F%A3%E5%95%86%E7%AD%89%E5%8F%B0%E5%B9%A3%E8%B2%B6%E7%A0%B433%E5%85%83%EF%BC%9F%E5%A4%AE%E8%A1%8C%EF%BC%9A%E5%88%A5%E5%A4%AA%E6%9C%9F%E5%BE%85-%E7%BE%8E%E5%85%83%E5%A4%9A%E8%B3%A3%E4%B8%80%E9%BB%9E-104549475.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-05T10:45:49+08:00"
+     },
+     {
+      "title": "新台幣幾見33元 央行喊話出口商「別過度期待」",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%B9%BE%E8%A6%8B33%E5%85%83-%E5%A4%AE%E8%A1%8C%E5%96%8A%E8%A9%B1%E5%87%BA%E5%8F%A3%E5%95%86-%E5%88%A5%E9%81%8E%E5%BA%A6%E6%9C%9F%E5%BE%85-114515243.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-11-04T22:28:55+00:00"
+      "at": "2026-11-05T11:45:15+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-04T23:34:53.495490+00:00"
+  "at": "2026-11-05T12:07:31.664007+00:00"
  },
  "main_source_titles": [
-  "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
-  "Stock Market Today, Nov. 4: Amazon Jumps 6% From New Perspective on AWS Growth and AI Strategy Following Election Results"
+  "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
+  "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop"
  ],
- "headline": "民主黨期中選舉大勝，市場預期財政赤字受控，美債殖利率下滑",
- "rate_note": "民主黨期中選舉大勝使市場預期財政赤字受控，偏向壓低長端利率；油價下跌與伊朗緊張局勢未升級也有助抑制通膨壓力，同樣偏向壓低利率。10 年期 11/4 收盤 -6bp 至 4.89%，市場已在反映。",
+ "headline": "美國期中選舉民主黨勝出，美元與美債殖利率下跌推升金價",
+ "rate_note": "民主黨勝選可能限縮財政擴張，偏向壓低長端利率——減稅與支出受限將降低政府舉債需求與通膨壓力；10 年期今日 -6bp 至 4.89%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "財政部 11/4 公布季度再融資細節，市場關注發債規模與期限結構",
-   "titles": [
-    "Treasury's Refunding Details Are Up Next as Five Large Companies Report Higher Revenue",
-    "Euro zone inflation hits 4% for first time in three years as interest rate hike looms"
-   ],
-   "at": "2026-11-04T12:16:04.786290+00:00"
-  },
   {
    "headline": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減",
    "titles": [
@@ -420,28 +412,36 @@
     "Stock Market Today, Nov. 4: Amazon Jumps 6% From New Perspective on AWS Growth and AI Strategy Following Election Results"
    ],
    "at": "2026-11-04T23:33:59.105754+00:00"
+  },
+  {
+   "headline": "美國期中選舉民主黨勝出，美元與美債殖利率下跌推升金價",
+   "titles": [
+    "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
+    "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop"
+   ],
+   "at": "2026-11-05T12:06:48.914085+00:00"
   }
  ],
  "archive": {
   "2026-11-05": {
-   "headline": "民主黨期中選舉大勝，市場預期財政赤字受控，美債殖利率下滑",
-   "text": "11/4 美國期中選舉結果出爐，民主黨在參眾兩院取得多數席次，並從共和黨手中奪下愛荷華、堪薩斯、北卡羅來納、俄亥俄、南卡羅來納、緬因與德州等參議院席次，也贏得俄亥俄與德州州長選舉。民主黨勝選使川普政府推動立法更加困難，市場預期政府支出將受到制約。摩根大通交易員指出，華爾街關注的焦點之一是「赤字支出減少」，民主黨可透過預算權力達成此目標，可能需經歷政府關門程序。BondBloxx 投資策略師 JoAnne Bianco 表示，更分裂的政策環境應會使赤字成長更困難，可能改善財政前景。副總統萬斯將共和黨選舉失利歸咎於伊朗戰爭，油價 11/4 下跌。¶11/4，亞馬遜股價收漲 6.12% 至 266.03 美元，成交量達 9,280 萬股、較三個月均量高出約 142%。投資人在期中選舉後重新評估上週財報，關注 AWS 成長與 AI 策略。高盛首席經濟學家 Jan Hatzius 指出，選舉結果不太可能改變聯邦層級對資料中心的展望，但民主黨在州與地方層級勝選可能導致短期資料中心禁令，影響約 45% 的美國資料中心擴張計畫；AWS 第三季銷售成長 39% 至 460 億美元，資料中心成長受限應會為 AWS 帶來更多業務。\n川普新政府時期債務上限與關稅成為可能談判重點，其中關稅政策預期將對貿易與物價產生重大影響。\n9月美國貿易赤字略微縮小，但進口額創歷史新高，顯示儘管出口改善，進口商品仍保持強勁需求，反映國內消費力道未減。",
-   "rate_note": "民主黨期中選舉大勝使市場預期財政赤字受控，偏向壓低長端利率；油價下跌與伊朗緊張局勢未升級也有助抑制通膨壓力，同樣偏向壓低利率。10 年期 11/4 收盤 -6bp 至 4.89%，市場已在反映。",
+   "headline": "美國期中選舉民主黨勝出，美元與美債殖利率下跌推升金價",
+   "text": "11/5 美國期中選舉民主黨取得國會兩院控制權，美元與美債殖利率隨即下跌，現貨金價上漲 1.6% 至每盎司 4,125.68 美元。ANZ 分析師指出，民主黨掌控國會可能限縮川普提出的減稅與政府支出計畫，改變財政政策展望，進而影響政府舉債、通膨與利率預期。較低的美債殖利率降低持有黃金的機會成本，而美元走弱則使美元計價的黃金對其他貨幣買家更便宜，兩者共同推升貴金屬價格。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌逾 5 個基點至 5.273%，2 年期跌逾 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。JPMorgan 交易員表示華爾街關注「赤字支出減少」，BondBloxx 的 JoAnne Bianco 認為分裂的政策環境將使赤字成長更困難、可能改善財政前景。\n聯準會主席 Warsh 表示，聯準會需要改進與公眾溝通利率政策的方式，以便更清楚地解釋貨幣政策立場，11/5發表此看法。\n選舉結束後，聯準會面臨政治壓力增加，獨立性風險上升，但聯準會的決策框架仍提供某些保護機制，11/4報導指出。",
+   "rate_note": "民主黨勝選可能限縮財政擴張，偏向壓低長端利率——減稅與支出受限將降低政府舉債需求與通膨壓力；10 年期今日 -6bp 至 4.89%，市場已在反映。",
    "links": [
+    {
+     "title": "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
+     "link": "https://investorshub.advfn.com/market-news/article/39313/gold-prices-rise-as-weaker-dollar-and-treasury-yields-follow-us-midterm-elections?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-11-05T10:37:14+00:00"
+    },
     {
      "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
      "link": "https://www.cnbc.com/2026/11/03/treasury-yields-fall-as-democrats-win-big-in-us-midterm-elections.html",
      "source": "CNBC",
      "at": "2026-11-04T21:18:44+00:00"
-    },
-    {
-     "title": "Stock Market Today, Nov. 4: Amazon Jumps 6% From New Perspective on AWS Growth and AI Strategy Following Election Results",
-     "link": "https://www.fool.com/coverage/stock-market-today/2026/11/04/stock-market-today-nov-4-amazon-jumps-6-from-new-perspective-on-aws-growth-and-ai-strategy-following-election-results/?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-11-04T22:13:28+00:00"
     }
    ],
-   "at": "2026-11-04T23:33:59.105754+00:00",
+   "at": "2026-11-05T12:06:48.914085+00:00",
    "weekly": false,
    "points": 2
   },
