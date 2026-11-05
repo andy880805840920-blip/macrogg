@@ -1,12 +1,12 @@
 {
  "hash": "",
- "text": "11/5 美國期中選舉民主黨取得國會兩院控制權，美元與美債殖利率隨即下跌，現貨金價上漲 1.6% 至每盎司 4,125.68 美元。ANZ 分析師指出，民主黨掌控國會可能限縮川普提出的減稅與政府支出計畫，改變財政政策展望，進而影響政府舉債、通膨與利率預期。較低的美債殖利率降低持有黃金的機會成本，而美元走弱則使美元計價的黃金對其他貨幣買家更便宜，兩者共同推升貴金屬價格。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌逾 5 個基點至 5.273%，2 年期跌逾 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。JPMorgan 交易員表示華爾街關注「赤字支出減少」，BondBloxx 的 JoAnne Bianco 認為分裂的政策環境將使赤字成長更困難、可能改善財政前景。\n聯準會主席 Warsh 表示，聯準會需要改進與公眾溝通利率政策的方式，以便更清楚地解釋貨幣政策立場，11/5發表此看法。\n選舉結束後，聯準會面臨政治壓力增加，獨立性風險上升，但聯準會的決策框架仍提供某些保護機制，11/4報導指出。",
+ "text": "英國央行 11/5 宣布升息 1 碼（25bp）至 4%，這是自 2023/8 以來首次升息，也是美國與以色列對伊朗開戰 8 個月後最後一個啟動緊縮的主要央行。貨幣政策委員會以 8 比 1 通過，唯一反對者主張升息 2 碼至 4.25%。委員會指出中東衝突已進入第 9 個月，全球能源價格持續從高位上漲，預期英國通膨將在 2027 年中升至「約 5%」，之後隨能源價格對年增率的影響消退、以及緊縮政策壓制通膨才會回落。總裁 Bailey 表示，若中東衝突未能取得實質進展，能源價格與通膨風險偏向上行，若沒有緩解通膨壓力的消息，他認為有理由進一步升息。市場定價 12 月再升息機率達 25%。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌超過 5 個基點至 5.273%，2 年期跌超過 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。摩根大通交易員指出，華爾街關注的焦點之一是「赤字支出減少」；BondBloxx 的 JoAnne Bianco 表示，分裂的政策環境應會讓赤字成長更困難，可能改善財政前景。\n聯準會理事漢馬克於11/5表示，為了冷卻通膨，聯準會需要維持限制性利率，暗示近期降息步伐可能放緩。\n聯準會需要改進與公眾溝通利率政策的方式，11/5有評論指出現有表述容易引發市場誤解，影響政策傳導效果。",
  "links": [
   {
-   "title": "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
-   "link": "https://investorshub.advfn.com/market-news/article/39313/gold-prices-rise-as-weaker-dollar-and-treasury-yields-follow-us-midterm-elections?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-11-05T10:37:14+00:00"
+   "title": "Bank of England hikes interest rate for the first time since Iran war, warns inflation will near 5%",
+   "link": "https://www.cnbc.com/2026/11/05/interest-rates-inflation-uk.html",
+   "source": "CNBC",
+   "at": "2026-11-05T12:37:57+00:00"
   },
   {
    "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
@@ -273,138 +273,173 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-05T12:06:48.914085+00:00",
+ "at": "2026-11-05T14:18:56.052314+00:00",
  "layout": "main",
  "topics": {
-  "hash": "e028159a66fbbe00",
+  "hash": "dba3679ee9aa1241",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "英格蘭銀行因伊朗戰爭推升通膨，11/5 首度升息逾 3 年，將基準利率從 3.75% 調升至 4%；9 月通膨率升至 3.5%，高於 2% 目標，經濟學家認為能源價格高企時間愈長，暫時性衝擊演變成長期通膨風險愈高",
+    "text": "Warsh 11/5 表示，川普期中選舉受挫讓他在利率政策上有更多迴旋空間〔2〕；聯準會官員哈瑪克指出，需要維持限制性利率以冷卻通膨〔4〕；聯準會需要更好的方式溝通利率政策〔3〕。",
     "links": [
      {
-      "title": "伊朗戰爭加劇通膨  英國央行逾3年來將首度升息",
-      "link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E6%88%B0%E7%88%AD%E5%8A%A0%E5%8A%87%E9%80%9A%E8%86%A8-%E8%8B%B1%E5%9C%8B%E5%A4%AE%E8%A1%8C%E9%80%BE3%E5%B9%B4%E4%BE%86%E9%A6%96%E5%BA%A6%E5%8D%87%E6%81%AF-112138693.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-05T11:21:38+00:00"
+      "title": "Trump’s Trouncing Gives Warsh More Room for Maneuver on Rates",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPRG92R3k3c1NabjdIMjFyNDZjbEpsSTNJaUhKa2J2VGZkcWFqUzB2VEVCbzEzQnJFbnRHTTJ6U2d2VUNVU2dCS2FHa09icDF1aGx5Rnl6MVdPbmJ2LVFnUXJVLW1pZV9GYVhKT1k4RlVNRGktdXR0dXVVUGZDN3ZjeHFjNGFKcXNzSVVRcnptRl9tcEh6Y0cxcEpfaVFkbVJYNDhUWFNOUjJaNFZvMmJIZEx3?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-05T11:00:00+00:00"
+     },
+     {
+      "title": "The Fed Needs a Better Way to Talk About Interest Rates",
+      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSncyUnJBc25zajNQclpteVFGV3A0bGZtR3JwMEVnYUdOcXZ4eUkyZGNLdG1DcGlZeUJ2dV9ub3lFZDNjTkY3bjZCNkIxTDhtdTBLQTdOcDRQWFprbFp4aVQ3OU1JMWh5bENiMEk1d05DeG0yLWpSTHBSdUI1OW96UzRsekpIU09LVV9GX0tKWS01bWNicV9DYWhPVkZweWhBZWVETUFHbG9BQQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-05T11:00:21+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "美國期中選舉民主黨勝選後，市場預期美伊戰爭將加快結束，地緣政治風險降低，原油價格 11/4 暴跌逾 8%，激勵航運股華航漲近 6%、長榮航同步上揚，外資合計補貨兩檔 6.4 萬張",
+    "text": "美伊戰爭有望結束的希望推動油價下跌，投資人權衡中東局勢不確定性與供應前景",
     "links": [
      {
-      "title": "Oil Extends Slide After Plunging 8% on Hopes to End US-Iran War",
-      "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPQlB2Q1M3aHY0UjIwVUczU09aRnVsVDhTSDVncElSMGVwRDE0a3lPLUNXbVN0R25iZHZkOXRtMkg5QTZ5VFNTRi1uTDZfd3pfVlZqUFEyaHZ6R0RPSDltbmRRdWMxbC1JcEV4UGxiYmFESjJWb1QtSkhaNW5kWlF1WkJHenZDLXJZdjJDWjYxcGsxd1RXMHI3N0R1a0Q?oc=5",
+      "title": "Watch Oil Prices Pushes Lower on Hopes to End US-Iran War",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOejFaNUQ3NnZNdDEyclVwd1BsNHNFZmtTRFlTNWhyNEJlc1BnMXdjUzkxdWlHNUZNQXI5T1ZTSjNDUld1RGZpbEd3WG5pWTdoN0t6U2JELXpOUE5CczEtLVBVbkR3VnZqbkJxVGtBb1cweXBrVVdxeUhwLU54Vjg3R18xNWVpRm9ldHpBZW9Ub1I5Um9EcjkwU2FFQ1BDUmQ2?oc=5",
       "source": "Bloomberg",
-      "at": "2026-11-05T08:07:56+00:00"
+      "at": "2026-11-05T06:33:39+00:00"
      },
      {
-      "title": "油價重挫點火！「2航運股」股價逆勢衝高、外資狂掃6.4萬張　台塑化、中華電全進補貨名單",
-      "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9%E9%87%8D%E6%8C%AB%E9%BB%9E%E7%81%AB-2%E8%88%AA%E9%81%8B%E8%82%A1-%E8%82%A1%E5%83%B9%E9%80%86%E5%8B%A2%E8%A1%9D%E9%AB%98-%E5%A4%96%E8%B3%87%E7%8B%82%E6%8E%836-4%E8%90%AC%E5%BC%B5-120000909.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-05T12:00:00+08:00"
+      "title": "Oil rises as investors weigh uncertainties around Iran war",
+      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdzM2c3YzcktwU285aS1QaVVzTk51WFR0UnpxMXlnaFdEd2RtZWYzMm81TDZQUTJZS0ZlLXFVV3ZhcGFibkdLZm9Remo3YjlhNHJTd1lxSXNMUFNzejhIMkt0TlFRXy1RZl9TdTkxbDhfdjQxUEIzcUhaYlpOMjZJSVViNmVPV0dRV0RmaTJ3dDJ3QUs4TTFleFlnZnNyUHhVYlQ5NldaZVRZRFd5dU5nVnRKVUQ0UFE?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-05T02:20:00+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "AI 股票占標普 500 指數約 45%，高盛研究指出 2026 年標普 500 盈利成長中約半數來自企業 AI 相關投資如資料中心建設，但市場擔憂投資規模過大可能無法回本，投資人面對不確定性最佳策略是持有廣泛分散的股票投資組合至少 5 年以上",
+    "text": "民主黨贏得國會多數後，投資人擔憂資料中心監管趨嚴，晶片股重挫，而已擁有資料中心的超大型科技公司與蘋果則上漲",
     "links": [
      {
-      "title": "Worried About AI Stocks? Your Best Move Might Be: Do Nothing.",
-      "link": "https://www.fool.com/investing/2026/11/05/worried-about-ai-stocks-your-best-move-might-be-do/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-05T11:10:00+00:00"
+      "title": "Trump-Linked Tokens, AI Data Center Stocks Suffer on Blue Wave",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPNVh2bFJ2b21KcTZSQi1EMHBBN3lEYnZfWG1GSzZNdkNOMmQyQnZWVjFLbUZSSmRwYjFHUmtPeUk4RFdwV1Q3YUJRTVNxWDFwc29vaXQ5RHlvQWZKVkE3VWxvV1ppZXZtOXJaMlJ1bWwtTTVUWUVPY0xWZ2xmSTRCRW01V0tXTHkySkQyN2RVQWYzTGNCZzBBZnhjakNyTDFXUkY2LWFrLVVPc0lxMlVfTkZn?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-04T22:34:36+00:00"
+     },
+     {
+      "title": "Wall Street ends higher after Democrats win Congress; data center stocks tumble",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQbWpBY1VHMFd5a2tJXzM1RFFFQTl5Y09aVDgza095UkJKVzNnQ3F4VW1pMzBEazJKMGhlS21zUEdCLXJPOVhWdXRnZmlLRHliMDdqYmt2b2ZWYk5FeW85VnBSalpRd1E5b3BVSUZDU2VLMUNiQm41YWw1SUgxV2dWaUFZUkI2MllhY0Z5ZkZHcWNuQmdCaHBKbVRhck1meTRz?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-04T23:54:37+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達 10/6 至 11/4 股價下跌 16.3%，遠超標普 500 跌幅 1.6%；輝達最近 12 個月營收成長加速至 105.9%、淨利翻倍至 193 億美元，但下一輪成長成本更高，記憶體價格持續上漲、毛利率預期下滑至 74%",
+    "text": "約 60 萬顆輝達 H200 晶片囤積香港待進口，北京未批准大規模進口，導致中國黑市伺服器報價突破 600 萬人民幣，較一年前暴漲三倍",
     "links": [
      {
-      "title": "Is NVIDIA Stock A Buy Right Now?",
-      "link": "https://www.trefis.com/stock/nvda/articles/622831/is-nvidia-stock-a-buy-right-now/2026-11-05?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-05T10:36:03+00:00"
+      "title": "EXCLUSIVE: Nvidia chips pile up in Hong Kong as China withholds import approval",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQZHNUQnlURFBWSTlTSE5wNWUzekR0cDZfcWQzQVRFLVNweXJiSGhtSFZ6cWdvMXF4SHpLRy1YT1Y2QjJZMGxRajNaRGQ1Y25SVGkycEphaU4zTTRJSzV0QjNPTFMxeEl0Mm9CdGFQc0JJTHBNemVoSXdkTnhsR1FNR0t1b2hoUHdfSW0yVnlGMl95Qkd4dDAtMGdhYTFhUzRhc0U1Mm9fdGxLRnhacUNr?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-05T11:54:32+00:00"
+     },
+     {
+      "title": "輝達H200遭北京卡關！60萬顆晶片囤積香港",
+      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94h200%E9%81%AD%E5%8C%97%E4%BA%AC%E5%8D%A1%E9%97%9C-60%E8%90%AC%E9%A1%86%E6%99%B6%E7%89%87%E5%9B%A4%E7%A9%8D%E9%A6%99%E6%B8%AF-135701279.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-05T13:57:01+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股11/5跌破42000點，收41574點，單日下跌1374點，外資賣超逾千億元創史上第10大。融資修正幅度落後跌幅，估還需去化5、600億元，可能引發下週一交割斷頭賣壓。專家認為融資去化成反彈關鍵，預估第4季台股在4萬至5萬點區間震盪",
+    "text": "外資 10 月狂賣台股 9421.8 億元，創 5 年單月最大賣超紀錄，累計今年 1-10 月淨賣超達 2 兆 2947 億元；11/5 台股再跌 1374 點至 41574 點，外資賣超 1024.6 億元為史上第 10 大，融資修正幅度落後股價跌幅，估還有龐大融資斷頭賣壓〔1,2〕。",
     "links": [
      {
-      "title": "台股血崩！00981A重挫逾8%　瑤姐出手砸近50億「加碼8檔」",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9-00981a%E9%87%8D%E6%8C%AB%E9%80%BE8-%E7%91%A4%E5%A7%90%E5%87%BA%E6%89%8B%E7%A0%B8%E8%BF%9150%E5%84%84-%E5%8A%A0%E7%A2%BC8%E6%AA%94-114400869.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-05T11:44:00+08:00"
+      "title": "台股多頭潰敗！千點暴跌摜破市場信心 台指期夜盤急彈",
+      "link": "https://news.google.com/rss/articles/CBMi6gJBVV95cUxQSV9lSm9BY2NFR1lPNDFkSGlwTHhFS3dacUpGd0hhRDFZQUZzVHNUWXM4UzdNUVRScHpFRk13UTBHeTZONXRZT0tJTURBcTBKeTNvbXA3eGwyWm15SU1FR21QS3FLcU1DWmNINnFaZmNSWjE2TFpSMlZsZmU3YUdNbWlnaDBtTVRMLW01VVJYZHVmbkZBUkswelhoOGpGZ1otekwwYWx6WHI1QWxMZF9RaUxLOUdrQW9ad2J4anRvd2hPN3FDLWM0OHdudDVFak9mMF84UEFmVWRKMmdIMExMdUZsYlZwVTYxR3NQMkV5WGlhc1RHVDY0c3ZENm9MMDhCS3VCTHItb2kwRkcwYjVqVURLQXlBdkFTc0xnQlNld2xQd2NpZlZzc0NFelQ4aTNhdFdCSnQ5amdLbkh3TVVfZHdLZ2FnSUVIWlRKQURpeXhjUXV1UW1qMVJCS3V5bkNhUjVCQnVUNTJUQQ?oc=5",
+      "source": "Yahoo新聞",
+      "at": "2026-11-05T12:41:21+00:00"
      },
      {
-      "title": "台股恐還有斷頭賣壓　專家估低點下探4萬點",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%81%90%E9%82%84%E6%9C%89%E6%96%B7%E9%A0%AD%E8%B3%A3%E5%A3%93-%E5%B0%88%E5%AE%B6%E4%BC%B0%E4%BD%8E%E9%BB%9E%E4%B8%8B%E6%8E%A24%E8%90%AC%E9%BB%9E-080039195.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-05T11:32:35+08:00"
+      "title": "TWA00 加權指數- 外資提款千億台股挫逾千點，證交所揭基本面- 股市爆料同學會",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5IWGhqLU5STW1QNHZ5RHFEUExZQ3Q0QlVZbF9ISGh4ejh3cE9FV241VXVibWQwRmxtOExwN0RLNThFRWZNRjFmRkI1TWc3YXJUdEFHRWt3aU8?oc=5",
+      "source": "CMoney",
+      "at": "2026-11-05T10:07:01+00:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "民主黨掌控國會後，高層議程包括移除川普關稅以解決國內通膨，可能推動更強硬的中國政策特別是經濟安全與台灣議題，但行政部門權力廣泛且中國籌碼增加，實際影響受限",
+    "text": "民主黨掌控國會後，可能推動對華更強硬政策，特別是經濟安全與台灣議題，但行政部門權力仍可制約立法部門行動",
     "links": [
+     {
+      "title": "Taiwan sees continued US arms sale support after midterm election",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPVWRHR1I4R0JTNGloMlpZQVpHelBtM0VBWWFQMV9IcVZIdHZYSTlBRFFVUXlLRnk3WU4zYkp4Tjd2SkllRkx2X2FpWXE0a0s1b2lnSjRzS3pIVVFsUVgybGdMRHFVUk93MTktRERWN214VWN2c2dMWVd5MGwySWlVOFpiVWxCa3VXRk10REFlM3FFWi04dHlQb1BGVmFsdk1CZzRUa3FlS0N3LS1UZmN6ZmhYVQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-05T02:29:00+00:00"
+     },
      {
       "title": "What the Democratic midterms sweep changes for U.S.",
       "link": "https://www.cnbc.com/2026/11/05/what-the-democrat-midterms-sweep-changes-for-us-china-tech-rivalry.html",
       "source": "CNBC",
-      "at": "2026-11-05T06:54:52+00:00"
+      "at": "2026-11-05T12:57:10+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "美元與公債殖利率在期中選舉後下跌，黃金突破 4000 美元，創兩週高點",
+    "links": [
+     {
+      "title": "Gold hits 2-week high as dollar, yields, oil fall after US midterms",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPRGw2bTVBSnBUN1BZcDhwQ0dVSmFIUVhDdGZLazVPNnV2NG5iYkVxXzg5QmRyY21IOWZOcFVRVXJBSU5PT1pXQWh3UHVmVWxhSm15bVh2NTVQZzJGVHpPT2dSSHc2NXlaLUYyQmVGX24xdW84cVN2NXpGcUhGZ0xrNDZSODR1NDNtNW9vc2JJSUVRcGZIMkprZHNONm4wN2VxUzdBX3B1NWxxcDBsWjNnZ05tUzdMRHJNaEJja2oxNC1QLWQt?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-05T11:49:30+00:00"
+     },
+     {
+      "title": "Gold Holds Above $4,000 as Dollar, Yields Fall on Midterm Result",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNVVJrRWVPZ19DM1pLb3UzNEtBc0hseHNtMUY4RTRTRDdMb3Fnb19MM200Q05YNG8yN1VFYURtNjdqTE1EQUgxZG41R3ZQa0t3Z2JpQjFYUEY4VVlhLVk2dzR0dmhaaWdlUmdINE9Cb1cwRVdpbHJNTGZsejlmYkluVmdOSEZEVEpudmFZNENkZzFWSnFELUViV2NNTGUzUHBuMU9Wa3dpclhyZ2hPVUJTVGV4cw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-05T12:59:48+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣 11/5 一度貶至 32.985 元逼近 33 元大關，央行外匯局長蔡烱民向出口商喊話勿過度期待貶值，建議手握美元且有台幣需求者把握時機分散結售，避免年底匯市反轉時「門擠不進去」",
+    "text": "新台幣 11/5 收 32.876 元，盤中最低至 32.985 元逼近 33 元整數關卡，外資匯出與台股下跌推升貶值；富邦金首席經濟學家羅瑋表示，地緣政治未解決、AI 資本支出疑慮未化解前，新台幣將維持偏弱走勢〔1〕。",
     "links": [
      {
-      "title": "傳出口商等台幣貶破33元？央行：別太期待 美元多賣一點",
-      "link": "https://tw.stock.yahoo.com/news/%E5%82%B3%E5%87%BA%E5%8F%A3%E5%95%86%E7%AD%89%E5%8F%B0%E5%B9%A3%E8%B2%B6%E7%A0%B433%E5%85%83%EF%BC%9F%E5%A4%AE%E8%A1%8C%EF%BC%9A%E5%88%A5%E5%A4%AA%E6%9C%9F%E5%BE%85-%E7%BE%8E%E5%85%83%E5%A4%9A%E8%B3%A3%E4%B8%80%E9%BB%9E-104549475.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-05T10:45:49+08:00"
+      "title": "新台幣往33元靠攏 富邦金羅瑋：三大因素干擾 估美元明年上半年維持強勢",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1lUzkybjdHNmJEajF2aVh0dG1VeFJkVUsxMXdoeVRmVHM3TmlCQ19Zd0ZiXzh2SW1ORVFBOGhEQURzTGgzUW5JcTNoZVcxVkE?oc=5",
+      "source": "鉅亨網",
+      "at": "2026-11-05T12:18:15+00:00"
      },
      {
-      "title": "新台幣幾見33元 央行喊話出口商「別過度期待」",
-      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E5%B9%BE%E8%A6%8B33%E5%85%83-%E5%A4%AE%E8%A1%8C%E5%96%8A%E8%A9%B1%E5%87%BA%E5%8F%A3%E5%95%86-%E5%88%A5%E9%81%8E%E5%BA%A6%E6%9C%9F%E5%BE%85-114515243.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-05T11:45:15+00:00"
+      "title": "新台幣逼近33元 央行籲出口商勿惜售美元",
+      "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBCOUtiVzhXbE1BdFNpdFp5RXhHZzgzZ3lJaC1uMGsyR2k1VDhpV2pVTzdPVkZYU2lJMW9YTnRVdHAxc3BGbFJ5S3ZCbk9iVUR2OWxtMg?oc=5",
+      "source": "美麗島電子報",
+      "at": "2026-11-05T10:22:11+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-05T12:07:31.664007+00:00"
+  "at": "2026-11-05T14:19:52.692129+00:00"
  },
  "main_source_titles": [
-  "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
+  "Bank of England hikes interest rate for the first time since Iran war, warns inflation will near 5%",
   "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop"
  ],
- "headline": "美國期中選舉民主黨勝出，美元與美債殖利率下跌推升金價",
- "rate_note": "民主黨勝選可能限縮財政擴張，偏向壓低長端利率——減稅與支出受限將降低政府舉債需求與通膨壓力；10 年期今日 -6bp 至 4.89%，市場已在反映。",
+ "headline": "英國央行升息 1 碼至 4% 警告通膨將升至 5%",
+ "rate_note": "英國央行因能源價格與通膨壓力升息，偏向推升美國長端利率——若全球央行因能源與通膨重啟緊縮，聯準會暫停升息的空間縮小，且英國通膨預期升至 5% 顯示通膨壓力仍在。不過 10 年期 11/5 盤中 +1bp 至 4.90%，市場反應有限。",
  "recent_mains": [
-  {
-   "headline": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減",
-   "titles": [
-    "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
-    "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手"
-   ],
-   "at": "2026-11-04T17:25:14.155818+00:00"
-  },
   {
    "headline": "民主黨期中選舉大勝，市場預期財政赤字受控，美債殖利率下滑",
    "titles": [
@@ -420,19 +455,27 @@
     "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop"
    ],
    "at": "2026-11-05T12:06:48.914085+00:00"
+  },
+  {
+   "headline": "英國央行升息 1 碼至 4% 警告通膨將升至 5%",
+   "titles": [
+    "Bank of England hikes interest rate for the first time since Iran war, warns inflation will near 5%",
+    "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop"
+   ],
+   "at": "2026-11-05T14:18:56.052314+00:00"
   }
  ],
  "archive": {
   "2026-11-05": {
-   "headline": "美國期中選舉民主黨勝出，美元與美債殖利率下跌推升金價",
-   "text": "11/5 美國期中選舉民主黨取得國會兩院控制權，美元與美債殖利率隨即下跌，現貨金價上漲 1.6% 至每盎司 4,125.68 美元。ANZ 分析師指出，民主黨掌控國會可能限縮川普提出的減稅與政府支出計畫，改變財政政策展望，進而影響政府舉債、通膨與利率預期。較低的美債殖利率降低持有黃金的機會成本，而美元走弱則使美元計價的黃金對其他貨幣買家更便宜，兩者共同推升貴金屬價格。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌逾 5 個基點至 5.273%，2 年期跌逾 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。JPMorgan 交易員表示華爾街關注「赤字支出減少」，BondBloxx 的 JoAnne Bianco 認為分裂的政策環境將使赤字成長更困難、可能改善財政前景。\n聯準會主席 Warsh 表示，聯準會需要改進與公眾溝通利率政策的方式，以便更清楚地解釋貨幣政策立場，11/5發表此看法。\n選舉結束後，聯準會面臨政治壓力增加，獨立性風險上升，但聯準會的決策框架仍提供某些保護機制，11/4報導指出。",
-   "rate_note": "民主黨勝選可能限縮財政擴張，偏向壓低長端利率——減稅與支出受限將降低政府舉債需求與通膨壓力；10 年期今日 -6bp 至 4.89%，市場已在反映。",
+   "headline": "英國央行升息 1 碼至 4% 警告通膨將升至 5%",
+   "text": "英國央行 11/5 宣布升息 1 碼（25bp）至 4%，這是自 2023/8 以來首次升息，也是美國與以色列對伊朗開戰 8 個月後最後一個啟動緊縮的主要央行。貨幣政策委員會以 8 比 1 通過，唯一反對者主張升息 2 碼至 4.25%。委員會指出中東衝突已進入第 9 個月，全球能源價格持續從高位上漲，預期英國通膨將在 2027 年中升至「約 5%」，之後隨能源價格對年增率的影響消退、以及緊縮政策壓制通膨才會回落。總裁 Bailey 表示，若中東衝突未能取得實質進展，能源價格與通膨風險偏向上行，若沒有緩解通膨壓力的消息，他認為有理由進一步升息。市場定價 12 月再升息機率達 25%。¶11/4，10 年期公債殖利率下跌超過 6 個基點至 4.884%，30 年期跌超過 5 個基點至 5.273%，2 年期跌超過 4 個基點至 4.573%。民主黨在期中選舉大勝，拿下參眾兩院多數，翻轉愛荷華、堪薩斯、北卡等七個參議院席次。摩根大通交易員指出，華爾街關注的焦點之一是「赤字支出減少」；BondBloxx 的 JoAnne Bianco 表示，分裂的政策環境應會讓赤字成長更困難，可能改善財政前景。\n聯準會理事漢馬克於11/5表示，為了冷卻通膨，聯準會需要維持限制性利率，暗示近期降息步伐可能放緩。\n聯準會需要改進與公眾溝通利率政策的方式，11/5有評論指出現有表述容易引發市場誤解，影響政策傳導效果。",
+   "rate_note": "英國央行因能源價格與通膨壓力升息，偏向推升美國長端利率——若全球央行因能源與通膨重啟緊縮，聯準會暫停升息的空間縮小，且英國通膨預期升至 5% 顯示通膨壓力仍在。不過 10 年期 11/5 盤中 +1bp 至 4.90%，市場反應有限。",
    "links": [
     {
-     "title": "Gold Prices Rise as Weaker Dollar and Treasury Yields Follow US Midterm Elections",
-     "link": "https://investorshub.advfn.com/market-news/article/39313/gold-prices-rise-as-weaker-dollar-and-treasury-yields-follow-us-midterm-elections?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-11-05T10:37:14+00:00"
+     "title": "Bank of England hikes interest rate for the first time since Iran war, warns inflation will near 5%",
+     "link": "https://www.cnbc.com/2026/11/05/interest-rates-inflation-uk.html",
+     "source": "CNBC",
+     "at": "2026-11-05T12:37:57+00:00"
     },
     {
      "title": "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
@@ -441,7 +484,7 @@
      "at": "2026-11-04T21:18:44+00:00"
     }
    ],
-   "at": "2026-11-05T12:06:48.914085+00:00",
+   "at": "2026-11-05T14:18:56.052314+00:00",
    "weekly": false,
    "points": 2
   },

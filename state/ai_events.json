@@ -2476,7 +2476,95 @@
   "b1c4f8e4c7bf": "2026-11-04",
   "8ef57af8bcc0": "2026-11-04",
   "f71a0f003859": "2026-11-04",
-  "c260823cbb27": "2026-11-03"
+  "c260823cbb27": "2026-11-03",
+  "3eab09974ec2": "2026-11-05",
+  "0333aa3be15f": "2026-11-05",
+  "580c18a889b7": "2026-11-05",
+  "2a32edf33d56": "2026-11-05",
+  "c2288e3b0324": "2026-11-05",
+  "a6e9d91e4ada": "2026-11-05",
+  "8dd74c9279fa": "2026-11-05",
+  "c71ef48b323f": "2026-11-05",
+  "0c355938ef85": "2026-11-05",
+  "6a50ede8e63c": "2026-11-04",
+  "296365f15d01": "2026-11-04",
+  "529ac0de70eb": "2026-11-03",
+  "b098daf74617": "2026-11-03",
+  "308b2b8e4f62": "2026-11-02",
+  "f2caa2b262bf": "2026-11-02",
+  "77a66e1d0a3f": "2026-11-02",
+  "d86c4ae86031": "2026-11-05",
+  "59201de46682": "2026-11-05",
+  "8786308060cc": "2026-11-05",
+  "1401934206c7": "2026-11-05",
+  "7beaa9aff770": "2026-11-04",
+  "0230f9705bf9": "2026-11-02",
+  "b5cb5f60d1a9": "2026-11-02",
+  "e1ebeca6629c": "2026-11-02",
+  "95c49262dd4f": "2026-11-05",
+  "d8c8778ea7e4": "2026-11-05",
+  "c8f47a0edf17": "2026-11-05",
+  "1a015c81e261": "2026-11-05",
+  "e20db2086160": "2026-11-05",
+  "0bffdb5052b6": "2026-11-05",
+  "40c4708c92ef": "2026-11-05",
+  "0103248d211b": "2026-11-05",
+  "9d59a3f086f4": "2026-11-05",
+  "a2a6081f9efe": "2026-11-05",
+  "8bc7baa623c3": "2026-11-05",
+  "315843dd7785": "2026-11-04",
+  "e720110907e3": "2026-11-03",
+  "c3b63a9392ab": "2026-11-03",
+  "af13e8a95b1e": "2026-11-03",
+  "2fd0ca4328f4": "2026-11-03",
+  "bdff877d9fa5": "2026-11-05",
+  "5cf898349456": "2026-11-05",
+  "ecce2e3ddb8f": "2026-11-05",
+  "21ed2da122fb": "2026-11-05",
+  "a757490b8250": "2026-11-05",
+  "e85bd808d71a": "2026-11-05",
+  "88a2e8ee3e4a": "2026-11-04",
+  "9709a368ceba": "2026-11-04",
+  "3c0e9781d9e1": "2026-11-05",
+  "b42dd06441a6": "2026-11-05",
+  "d896f046cbf7": "2026-11-05",
+  "e03aacd91e0e": "2026-11-05",
+  "d682ff0056ba": "2026-11-05",
+  "1d3e87fb6926": "2026-11-04",
+  "29688cf45fe2": "2026-11-04",
+  "280fe91161f3": "2026-11-04",
+  "886116a070f8": "2026-11-05",
+  "1fb505db7d9d": "2026-11-05",
+  "fa5c6daf8f40": "2026-11-05",
+  "33ca4e71629b": "2026-11-05",
+  "19cd1d43cde4": "2026-11-03",
+  "7c98e62a7680": "2026-11-03",
+  "afb1ca1709a7": "2026-11-02",
+  "fbcb66adc60a": "2026-11-05",
+  "3980644e3455": "2026-11-05",
+  "5017d582bb2c": "2026-11-05",
+  "09f72f665d4a": "2026-11-05",
+  "a8612e2fc81e": "2026-11-05",
+  "35c65e023675": "2026-11-05",
+  "89db38998d74": "2026-11-05",
+  "f4510085be8a": "2026-11-05",
+  "f279fd513a01": "2026-11-05",
+  "cc89972d2bb1": "2026-11-05",
+  "9207951e64e2": "2026-11-05",
+  "ea967de97ac6": "2026-10-30",
+  "d56fdb390a1a": "2026-10-30",
+  "44de64d093c4": "2026-10-30",
+  "948567efa3fd": "2026-10-30",
+  "cbdde8e4ff75": "2026-10-30",
+  "573828fa6c7b": "2026-10-29",
+  "ba2d326326ec": "2026-11-05",
+  "44f03f37fe9b": "2026-11-05",
+  "612a7ad54c10": "2026-11-05",
+  "23462582ace4": "2026-11-05",
+  "e17732cbf2c1": "2026-11-04",
+  "2cde89df6602": "2026-11-04",
+  "84ec50972784": "2026-11-03",
+  "4b383cd28a1b": "2026-11-03"
  },
  "events": [
   {
@@ -2494,10 +2582,10 @@
    ]
   },
   {
-   "id": "15bb7719fe33",
+   "id": "3a32ae7e1f40",
    "co": "Oracle",
    "type": "融資／IPO",
-   "zh": "Oracle 發行100億美元股票和100億美元債券，共籌資200億美元用於AI擴張。",
+   "zh": "Oracle發行200億美元股票和債券組合，用於AI基礎設施投資。",
    "date": "2026-11-05",
    "links": [
     {
@@ -2514,6 +2602,58 @@
      "title": "Key facts: Oracle Plans $20B Raise; Stephens Upgrades; Shares Rise 11%",
      "source": "TradingView",
      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPMlBjdVR2ZF9jNEhIMGdYS20tM2F3NDlydDE0RjRja1VyYjNFYzZ4M081WjBPWFJjQXdoUFFkMjBqTGNneVN2UERMV2FfNzNhcnBBSEdtcGJ6WTNVZTRpMjM0UlNsbkhqSnM4cTZMV1JlV0xWMW1WSGlMZFJ6Q0R1cURCSVdKRGQwcVNSX3B2Y0l1SDl1M2k1TTljX1NodFZaNjZTdzRnak01WjJyRFJweVhqeExtVzhXQzVFaGxPcWJWSV80MkE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "e29c53e95b28",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta首次發行歐元債券，募資金額未明確披露。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Meta Starts Debut Euro Bond Sale After $15 Billion Dollar Deal",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQcXhwQkR0LUFOSWlobVppZHRBRDdqbWd6QmI1NTIwM25yVHhuUmNBUTVBQ3RiZkRTaXNObW4wVUVGUC1KTWNXZ1V6eFl2aEF2Vy1sTXlDc0JYOEhBd2NiNEtsTk5Yd2phbURMWGUyd2dzZzBVYzNBajBON2J5MUEzWmFWaEZtWkNYLXk4b3NmN3NwcXBTYm9pUmRQd0NQTXRlZUc3cm94bWtaUmpYbzdFT3RB?oc=5"
+    },
+    {
+     "title": "Meta Paid 1.4 Times What Alphabet Did to Borrow in Euros",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNYm5RUmlSTWtHNXBOT3pKUEQwdk56NlJPaWsyU2dPTV9FMHI5ZE5LRnBmazhrYVhUVG9nNkhIQ2VsbGt4LTlpdF94ZFRiS0NORmlUcG04LXdoTlJWUEpkeUtCT2lEeV9aUzZFTUlyUldsdzdaRlR0RlNpRkliMGxJTG5GYUxFWlBsWUQ2Qw?oc=5"
+    },
+    {
+     "title": "Meta's Euro Bond Trades Higher on Debut",
+     "source": "marketscreener.com",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQa3JnbzRaRHBPcl9jV3RNb0hGZG1HUWM2aUpaVzU0WlpSWkhzQ3dCUUE5S2MxSGFsUGVrOFF2OWQ3OEpGRmpzdE1uRXc2YWoxakx4OFRxMDEzd1lrR2VObDUxMWN6QWdOZW1tNGRGNnZmYS1XUGhKcXp0MGNBdnlmbE12WnlyaW9jSC1Mc1ZDbndsYVJ0YWJR?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "c1c510360570",
+   "co": "CoreWeave",
+   "type": "資本支出",
+   "zh": "CoreWeave資本支出985百萬美元，Core Scientific計費485MW電力。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Core Scientific Bills 485 of 590 CoreWeave MW; Capex $985M",
+     "source": "FourWeekMBA",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOdV9pUU56YzZlSkViN1ZYZFVJSm9PVTE5dkIwQ2RHRnJsTjgzS3pmREFFTktjb291MnZZaWRPYUc4cVBiRXdFY3VacTJPcEI3X2FmNTI5U0pJeXpueTF5N21PMzZfQWYxOWlvYXRoMnk4U0N4ekU3cHAwZm1GQURqZG9NSW0walV5Q3BJXw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "598ec974a5cd",
+   "co": "Apple",
+   "type": "發債",
+   "zh": "Apple 發行高等級債券，加入發債潮。",
+   "date": "2026-11-05",
+   "links": [
+    {
+     "title": "Apple Kicks Off High-Grade Debt Sale, Joining Issuance Spree",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPX25fSHREY3NhWXh5ZUNNVTRrdWxVMlRDQnRneGh3N2p2dTBXalRnSUJuMkdsZDBPRWZ1WDhINVdSMEdjYUMyY2dDS29ITENRSmYyUGVMWDI1cjhCejBSMDFWRzlqR183SUhvMmhwM0JLMHdLTDdoUHlvTWNKcjJ6ejNMUE1peFlyU0p2YVI3eExrLXA4elRkTllCNUc1RW9acUp3d0RMMTZUOExQMHFR?oc=5"
     }
    ]
   },
@@ -2538,30 +2678,6 @@
      "title": "Alphabet launches €6 billion bond sale amid AI spending concerns",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOeFFBRzdQY09ua3NQdEhWckE3M3hib1ZvRjgzWlFuZEZiN2V6Vmo0TTJZeUlaUC1idC1ZejJfNW1mUG1FbnJuMnN0T254MGs4UTlOSzFoSEIwc3ZFaE1ISTV4OGNRcmRkWDJxTW14bzlSYVZRQWNjcVlrdXd5bmVjYlhPbW9wRE9CcmhYRWNzOTNmMEgwQjdzeG1lSnM?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "3bbd6f81fbf9",
-   "co": "Meta",
-   "type": "發債",
-   "zh": "Meta首次發行歐元債券，募資（€9B）。",
-   "date": "2026-11-04",
-   "links": [
-    {
-     "title": "Meta Starts Debut Euro Bond Sale After $15 Billion US Deal",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQcXhwQkR0LUFOSWlobVppZHRBRDdqbWd6QmI1NTIwM25yVHhuUmNBUTVBQ3RiZkRTaXNObW4wVUVGUC1KTWNXZ1V6eFl2aEF2Vy1sTXlDc0JYOEhBd2NiNEtsTk5Yd2phbURMWGUyd2dzZzBVYzNBajBON2J5MUEzWmFWaEZtWkNYLXk4b3NmN3NwcXBTYm9pUmRQd0NQTXRlZUc3cm94bWtaUmpYbzdFT3RB?oc=5"
-    },
-    {
-     "title": "Market Chatter: Meta Set to Raise $15 Billion From US Dollar Portion of Cross-Border Bond Sale",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNWVBUNUxrbllKZ1hkT0VBay1CaGV1YjRGSEd6TGloNTNaSUhvQ0dSVzRtYlNYRXBTbEtvbnRoUzhZTU5NWjJCS1NBejc4Wlh1YS1uV2VLdzdCbVNaRkJkTDg0SlhGTlIySElIOTZlZ0Jsbmc2YzI2RXh2LUxGdlI2TDRkZFRqNkMzbFV4dnF1NkFmWlJWUXBuQkpR?oc=5"
-    },
-    {
-     "title": "Meta raises $15 billion in five-part US bond sale By Reuters",
-     "source": "Investing.com",
-     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQWGpHZ2lUV3FoSERGZnJBOWhpRUpCMG4tTkEtY1dsaTNZTFhoR25rR2xhSVNQWnB3MDludF95eHZ1THVPN2JGbXlsX3V3UHZocFR6Z0dyTlU5VWV3RlM3cjdMQl9QcXZaZ3Fvd283RFUyZUtiZnBwRExVbU5PbHdSTkhFRmcyWDQ4VW9IaE1xRktSSG1kNGFaNFF6OGx1OThQSlRzSUdB?oc=5"
     }
    ]
   },
@@ -2737,6 +2853,20 @@
      "title": "Nvidia Stocks Decline 1.35% as $108 Billion Guide Sets the Next Revenue Hurdle",
      "source": "Yahoo Finance Singapore",
      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOUGxlQnpRMTNuZTRuXzdxTWJ1am42cG03eDBsZHBfbjNZTVZ2RmJTODkwY2tyQmJ1ZktGaTN6Z1dVOWlPLUZ6aFhieVp1Xy1EOVV4MzV0N08yaWdjMUY3ZWhWYndpQ0kwLUhBNl95MnlrdmZUV1pfLW8tLXVDeEpTRg?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "321c002fd5f4",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "SpaceX預付70億美元購買Nvidia晶片，總交易額473億美元。",
+   "date": "2026-11-04",
+   "links": [
+    {
+     "title": "SpaceX to Prepay $7B in $47.3B Nvidia Chip Deal, Sources Say",
+     "source": "FourWeekMBA",
+     "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPa1RWbGE4WlAyQlR5RTY4MVV3RXVDQ29walJVYUNMZjF3NExjVHZCYl9EQnlvZkRBRGJKclFVY3ltZFV3WG5jYXpsemFmVEduUHNKVlE1RzA2aTlHMGIybFBwOG9iVlotYnFoQ3QyNDdnRnZQRVhkRFFjWUE3bWRYcDNTTTdyWHBrRnRfMDJ3?oc=5"
     }
    ]
   },
@@ -4303,20 +4433,20 @@
    "text": "Microsoft 近期事件偏向推升公司債供給與長端利率。大規模資本支出（Q1達394億美元）與449億美元Anthropic合約承諾，驅動其發行250億美元債券融資需求；雲端與Azure業績超預期則支撐償債能力。若融資需求持續擴大，偏向增加公司債供給壓力。同時，龐大AI基礎設施投資承諾偏向強化AI投資熱度，但資本密集特性可能對長端利率形成上行壓力。"
   },
   "Alphabet": {
-   "hash": "33b6e7afd7fe",
-   "text": "Alphabet近期事件偏向增加公司債供給與長端利率上行壓力。510億美元季度AI資本支出、2027年預期大幅增加支出，加上60億歐元新債發行與Isomorphic Labs融資洽談，反映融資需求上升。然而營收未達預期、利潤下滑引發過度投資擔憂，若市場對科技公司債務接受度轉弱，則長端利率上升空間受限。AI投資熱度偏向持續，衛星晶片、數據中心等新項目顯示技術投資承諾未減。"
+   "hash": "8dc4477f5cc7",
+   "text": "Alphabet近期密集發債、融資與巨額資本支出，偏向增加公司債供給、推升長端利率。510億美元AI資本支出與2027年預期大幅增加的投資計畫，反映對算力需求的長期承諾；同時發行120億歐元債券測試市場接納度。若營收成長未能匹配支出增速，則債務負擔加重，可能推高科技公司融資成本。此舉同時強化AI投資熱度，但市場對AI變現效率的疑慮偏向抑制股市表現。"
   },
   "Meta": {
-   "hash": "b7dd8fe65409",
-   "text": "Meta近兩週密集發債與融資，偏向增加公司債供給、推高長端利率。大規模AI資本支出承諾（超8,000億美元）驅動融資需求，債券發行規模達數百億美元，若市場吸收能力有限，則長端殖利率偏向上升。同時，巨額資本投入AI基礎設施偏向強化AI投資熱度，但融資規模龐大可能分流股市資金，對股市偏向中性至略負面影響。"
+   "hash": "2a4389ef9b85",
+   "text": "Meta近兩週密集發債融資，涉及美元、歐元債券及股權融資共逾千億美元，主要用於AI基礎設施擴張。此舉偏向增加公司債供給，若市場吸收能力有限則可能推高長端利率；同時大規模資本支出承諾偏向強化AI投資熱度，但融資需求龐大若引發市場擔憂償債能力，則可能對股市構成壓力。"
   },
   "Oracle": {
-   "hash": "03b54015ac46",
-   "text": "Oracle大規模融資與資本支出計畫偏向增加公司債供給。200億美元融資中債券佔重，加上100億美元投資級債發行，短期內長端利率面臨供給壓力。同時，950億美元資本支出與多元晶片策略布局強化AI競爭力，偏向提振AI投資熱度；但取消騰訊協議暗示策略調整，若現金流目標延後達成，則可能抑制股市預期。"
+   "hash": "d2f96756e26b",
+   "text": "Oracle大規模融資200億美元並設定借款上限200億美元用於AI基礎設施，偏向增加公司債供給、推升長端利率。同時取消騰訊合約但擴大與Nvidia等多家晶片商合作、預計2030年營收與現金流成長，偏向提振AI投資熱度。若融資用於高資本支出但現金流承諾兌現，則對股市信心偏向正面；若債務擴張超過現金流增速，則長端利率承壓。"
   },
   "CoreWeave": {
-   "hash": "6f9e33692661",
-   "text": "CoreWeave高速擴張推升公司債供給壓力。大規模資本支出、債務激增至350億美元，加上高盛預估未來需發債200–380億美元，偏向增加長端利率上行壓力。若市場對其債務可持續性疑慮加深，則公司債利差可能擴大。與CrowdStrike合作擴展AI工作負載服務、營收倍增，偏向支撐AI投資熱度，但高槓桿風險可能抑制股市表現。"
+   "hash": "5833e28b8cae",
+   "text": "CoreWeave大幅擴張資本支出與電力租賃，驅動債務快速攀升至350億美元，高盛預估需新增發債200至380億美元。若債務持續增長，偏向增加公司債供給壓力；同時AI算力需求強勁、與CrowdStrike擴展合約，偏向提升AI投資熱度。但高槓桿融資需求可能推升長端利率，對股市估值形成壓力。"
   },
   "Anthropic": {
    "hash": "ff8fa013ea93",
@@ -4331,8 +4461,8 @@
    "text": "Amazon 近期大幅增加資本支出至2,200億美元，主要投向AI基礎設施與數據中心，偏向增加公司債供給需求。若融資需求持續擴大，則長端利率面臨上升壓力。然而第三季營收未達預期且自由現金流轉負，偏向削弱投資者信心，對股市構成下行風險。同時龐大的AI投資規模偏向強化市場對 Amazon AI領導地位的預期，維持AI投資熱度。"
   },
   "Nvidia": {
-   "hash": "cbc58eed9db4",
-   "text": "Nvidia近期事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、指引1,080億美元反映晶片需求旺盛；多筆大額算力合約（Meta、Naver等）與融資擔保顯示資本密集的AI基礎設施投資加速。若這些高成長持續，則企業債供給增加、長端利率偏向上升以應對融資需求，同時強勁業績支撐股市表現。"
+   "hash": "1c05cf15c76f",
+   "text": "Nvidia近期事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、指引1,080億美元，加上SpaceX、Meta等大型客戶巨額訂單與融資擔保承諾，反映AI算力需求持續旺盛。若Nvidia持續承擔客戶融資擔保，則公司債供給偏向增加；龐大資本支出需求與融資活動偏向推升長端利率。整體而言，事件強化AI產業景氣預期，支撐股市，但融資規模擴大偏向對長端利率形成上升壓力。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -4343,9 +4473,9 @@
    "text": "Intel 近期事件對市場偏向混合信號。伺服器銷售強勁成長支撐長端需求，但第四季展望疲弱偏向壓低股市情緒。大額資本支出（Classiq 收購）與 AI 新創融資參與，反映公司加碼量子與 AI 領域，若成功商轉則偏向提升長期成長預期；但短期融資需求增加，偏向對公司債供給構成壓力。"
   },
   "Apple": {
-   "hash": "14534ced9c7e",
-   "text": "Apple 第四季度營收表現穩健，新任執行長上任偏向提升市場對公司治理穩定性的信心。若新領導層維持營收動能，則有利於公司債供給穩定、長端利率承壓；假日季指引受關注，若表現超預期，則偏向提升科技股吸引力，可能強化 AI 投資熱度。"
+   "hash": "61e557612ae5",
+   "text": "Apple 近期發債並公布強勁財報（營收1,145億美元），領導層交接至John Ternus。這些事件偏向增加公司債供給、支撐長端利率。若市場對新執行長策略與假日季表現持樂觀態度，則偏向提振科技股表現與AI投資熱度；若投資人擔憂領導層過渡風險，則偏向抑制相關熱度。"
   }
  },
- "at": "2026-11-05 20:06（台北）"
+ "at": "2026-11-05 22:18（台北）"
 }
