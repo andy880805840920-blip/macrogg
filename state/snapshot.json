@@ -1,23 +1,26 @@
 {
-  "at": "2026-11-06T20:17:44+08:00",
+  "at": "2026-11-06T22:11:19+08:00",
   "modules": {
     "labor": {
       "current": {
         "vintage": "2026-09",
         "released": "2026-10-02",
         "month": "2026-09",
-        "score": 0.21210126206133662,
+        "score": 0.2117304487210054,
         "tilt": "balanced",
         "flags": [
           "supply_rise",
+          "cyclical_negative",
           "wage_understated"
         ],
         "flag_titles": {
           "supply_rise": "失業率上升源於勞動力擴張",
+          "cyclical_negative": "剔除非週期性部門後為負成長",
           "wage_understated": "非管理職薪資增速高於總體"
         },
         "flag_leans": {
           "supply_rise": "neutral",
+          "cyclical_negative": "dovish",
           "wage_understated": "hawkish"
         },
         "metrics": {
@@ -75,7 +78,7 @@
           "jl_share": {
             "label": "失業者中失去工作者比重",
             "en": "Job Losers, % of Unemployed",
-            "value": 45.4,
+            "value": 45.2,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.3,
@@ -103,7 +106,7 @@
             "value": 4.766666666666667
           },
           "jl_share": {
-            "value": 46.4
+            "value": 45.4
           }
         }
       },
@@ -861,7 +864,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-11-06T20:17:44+08:00",
+      "at": "2026-11-06T22:11:19+08:00",
       "vintage": "labor:2026-09|inflation:2026-09|2026-09|fomc:2026-10-28",
       "name": "傾向緊縮",
       "regime": "inflation",

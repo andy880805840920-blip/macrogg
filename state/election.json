@@ -137,15 +137,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9775
+    "p": 0.9785
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.023
+    "p": 0.0235
    },
-   "close": 0.47750000000000004,
-   "vol": 7010244.337575001,
+   "close": 0.47850000000000004,
+   "vol": 7018332.144547999,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   },
   {
@@ -154,15 +154,15 @@
    "lead": {
     "name": "Scott Colom",
     "party": "民",
-    "p": 0.981
+    "p": 0.9815
    },
    "other": {
     "name": "Cindy Hyde-Smith",
     "party": "共",
     "p": 0.02
    },
-   "close": 0.481,
-   "vol": 5823038.578810001,
+   "close": 0.48150000000000004,
+   "vol": 5831355.831943,
    "url": "https://polymarket.com/event/mississippi-senate-election-winner"
   }
  ],
@@ -177,7 +177,7 @@
      "lead": {
       "name": "Scott Colom",
       "party": "D",
-      "p": 0.981
+      "p": 0.9815
      },
      "other": {
       "name": "Cindy Hyde-Smith",
@@ -186,8 +186,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.1,
-     "vol": 5823038.578810001,
+     "gap": 96.2,
+     "vol": 5831355.831943,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Alaska": {
@@ -198,17 +198,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9775
+      "p": 0.9785
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.023
+      "p": 0.0235
      },
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 95.5,
-     "vol": 7010244.337575001,
+     "vol": 7018332.144547999,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -314,7 +314,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.5,
-     "vol": 1949459.8453020002,
+     "vol": 1949575.5953020002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -410,6 +410,11 @@
     "label": "190 席以下",
     "p": 1.0,
     "url": "https://polymarket.com/event/republican-house-seats-after-the-2026-midterm-elections"
+   },
+   "governor": {
+    "label": "<22 州",
+    "p": 0.8365,
+    "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
   "governor_before": {

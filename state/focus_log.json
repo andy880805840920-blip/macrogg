@@ -1,106 +1,5 @@
 [
  {
-  "at": "2026-10-29T13:14+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv",
-   "fomc"
-  ],
-  "locks": [
-   "pce",
-   "gdp_adv"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed highlights economic strength but muddies outlook for Treasuries - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Gold slips as Fed hike bets linger ahead of US inflation data - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed Rates: Lord, Let Me Hike, Just Not Now - Bloomberg"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Indian shares rise after Fed holds rates steady; earnings-led gains boost optimism - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Wall Street ends higher as Fed holds key rate steady, focus turns to earnings - Reuters"
-    ]
-   }
-  ],
-  "main": "Q3 GDP Revs Up As PCE Inflation Gets Hotter (Live Coverage)",
-  "main_why": "鎖定事件 pce",
-  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "出現材料裡沒有的數字（3.5、2.7、3.0、2.1、2.8）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
-     "【對利率】118 字，超過 90 字，請精簡",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "出現材料裡沒有的數字（28）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述"
-    ]
-   ]
-  },
-  "result": "第三季 GDP 成長加速、9 月 PCE 通膨升溫，升息預期升高"
- },
- {
   "at": "2026-10-29T13:40+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3102,5 +3001,111 @@
    ]
   },
   "result": "美債交易員在非農報告前押注殖利率下行"
+ },
+ {
+  "at": "2026-11-06T14:12+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "employment",
+   "claims"
+  ],
+  "locks": [
+   "employment"
+  ],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed’s New Schedule for Rate-setting Meetings Turns Back the Clock for ‘Strategy’ Sessions - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Williams Says Fed Should Gather Data to Judge Price Risks - Bloomberg.com",
+     "Fed Should Gather Data to Judge Price Risks, Williams Says - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Fed's Cook lawyer seeks clarity ahead of any White House hearing - Reuters"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters"
+    ]
+   },
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+0.5、熱度+4（有內文）",
+    "titles": [
+     "Big Jobs Report Keeps Fed Rate-Hike Door Wide Open Despite Sell-Off (Live Coverage)"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "非農今晚揭曉美股能否喘口氣？就怕新增就業太強 增添升息壓力"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasuries Stumble as Strong Labor Market Lifts Fed-Hike Bets - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasury Traders Make Bullish Bets Ahead of Jobs Report - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "Big Jobs Report Keeps Fed Rate-Hike Door Wide Open Despite Sell-Off (Live Coverage)",
+  "main_why": "鎖定事件 employment",
+  "second": "US Treasuries Stumble as Strong Labor Market Lifts Fed-Hike Bets - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "",
+   "重點二"
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（27.1、4.1、18.5、62.6、0.4）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 160 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（上週、今日），請改寫成月/日"
+    ],
+    [
+     "用了相對時間（今日），請改寫成月/日",
+     "數據公布日期錯誤（非農就業報告寫成「10/6」，官方是 11/6；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸只有 35 字，沒有把事情講完整（要 50–80 字）"
+    ]
+   ]
+  },
+  "result": "10月非農新增職位遠超預期，失業率持平，聯準會12月升息機率升至66%"
  }
 ]

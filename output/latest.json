@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-06T20:19:43+08:00",
+  "generated_at": "2026-11-06T22:13:12+08:00",
   "labor": {
     "month": "2026-09",
-    "score": 0.21210126206133662,
+    "score": 0.2117304487210054,
     "tilt": {
-      "dovish": 0,
+      "dovish": 2.0,
       "hawkish": 1.0,
-      "net": 1.0,
+      "net": -1.0,
       "tilt": "balanced"
     },
     "flags": [
@@ -18,6 +18,16 @@
         "lean": "neutral",
         "impact": "不必過度解讀",
         "tier": 1,
+        "strength": 1.0
+      },
+      {
+        "key": "cyclical_negative",
+        "severity": "alert",
+        "headline": "剔除非週期性部門後為負成長",
+        "detail": "整體看起來增加 +2.9 萬人，但醫療、社福與各級政府的用人比較不受景氣影響，長期都在增加。把這些扣掉之後，真正跟景氣連動的行業合計 -2.2 萬人。",
+        "lean": "dovish",
+        "impact": "景氣敏感的行業正在收縮",
+        "tier": 2,
         "strength": 1.0
       },
       {
