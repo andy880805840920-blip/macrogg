@@ -2653,9 +2653,182 @@
   "a0428b4c3048": "2026-11-05",
   "57914124d8f3": "2026-11-05",
   "eb8575d165ed": "2026-11-05",
-  "68ba495f582c": "2026-11-05"
+  "68ba495f582c": "2026-11-05",
+  "cafa9851b7fd": "2026-11-05",
+  "e2c62e509966": "2026-11-05",
+  "4fa7560e7d41": "2026-10-29",
+  "dc60814ac87e": "2026-11-06",
+  "71173293e4c5": "2026-11-06",
+  "64f6a0fbd6ab": "2026-11-06",
+  "ba1b097c9da8": "2026-11-06",
+  "078aeac871dc": "2026-11-06",
+  "55b48766d84d": "2026-11-06",
+  "ec5a37aad55b": "2026-11-05",
+  "dcef6f67521d": "2026-11-05",
+  "acf35b0ce469": "2026-11-06",
+  "6440561aab57": "2026-11-06",
+  "5fda32bb142b": "2026-11-06",
+  "e521896113d1": "2026-11-06",
+  "beef232a08ed": "2026-11-06",
+  "4102d46febcf": "2026-11-06",
+  "186219f7dc78": "2026-11-05",
+  "e378376e8648": "2026-11-06",
+  "37139ad0e2d0": "2026-11-05",
+  "308b5af3f7a2": "2026-11-05",
+  "a2f8e09046d4": "2026-11-05",
+  "a9c8cdcd12e7": "2026-11-05",
+  "a93656b8dc80": "2026-11-05",
+  "8aec3d04412a": "2026-11-06",
+  "7f664fd6741d": "2026-11-06",
+  "cd4419cc3207": "2026-11-06",
+  "62e8215b9ed1": "2026-11-06",
+  "cd7e37eb071b": "2026-11-06",
+  "3ebdc46e332f": "2026-11-06",
+  "39837f95cebf": "2026-11-06",
+  "ede306eeb6b7": "2026-11-05",
+  "43c67435c5d6": "2026-11-06",
+  "52737fdaba49": "2026-11-06",
+  "35a2c9f95df6": "2026-11-06",
+  "83d7270dedfa": "2026-11-05",
+  "686b3ae21d23": "2026-11-05",
+  "598b81f3e1cb": "2026-11-05",
+  "050a37eb30fd": "2026-11-05",
+  "a3e8d592a5ad": "2026-11-05",
+  "dad576055ccb": "2026-11-06",
+  "f59eb6a16185": "2026-11-06",
+  "cbd9bbb3adb9": "2026-11-06",
+  "7a80294f641b": "2026-11-06",
+  "a08937938863": "2026-11-06",
+  "bdf5494e4fda": "2026-11-06",
+  "25688faa90e3": "2026-11-06",
+  "c9bdf8ad8ef0": "2026-11-05",
+  "71d9946ccd9b": "2026-11-06",
+  "d3b1f048a3e6": "2026-11-04",
+  "0c4a9a567b9d": "2026-11-06",
+  "33cb40007586": "2026-11-06",
+  "1d54668a89f6": "2026-11-05",
+  "893094b28d4c": "2026-11-05",
+  "be34409b1855": "2026-11-05",
+  "828abf38b34a": "2026-11-04",
+  "3385015f5cc2": "2026-11-06",
+  "7b7a941ad00e": "2026-11-06",
+  "15df7dcd3e82": "2026-11-05",
+  "2507226bfb87": "2026-11-05",
+  "e4ee363c64d4": "2026-11-05",
+  "c86c10a5d665": "2026-11-05",
+  "dfae7aaf9a9d": "2026-11-05",
+  "8ec2c6426224": "2026-11-05",
+  "6d12a58d7c76": "2026-11-06",
+  "f635ad2dec03": "2026-11-06",
+  "7c53e9155c93": "2026-11-06",
+  "822fc9cafffa": "2026-11-06",
+  "135c91716736": "2026-11-06",
+  "a03f625740b1": "2026-11-06",
+  "9e834f2b14f8": "2026-11-06",
+  "56eab1c5484d": "2026-11-06",
+  "31b517551f0a": "2026-11-06",
+  "240e7a7c0c26": "2026-11-06",
+  "eb8daa09fb56": "2026-11-05",
+  "8b52b604f6d9": "2026-11-04",
+  "456d2864975f": "2026-10-30",
+  "2ea19ea8e7af": "2026-10-29",
+  "5a81c3f5b248": "2026-10-29",
+  "5b5afcc5b6e9": "2026-11-05",
+  "4a678b15656c": "2026-11-05",
+  "a086949a4da0": "2026-11-03",
+  "af5dacd764d2": "2026-11-02",
+  "4dbb757e64bc": "2026-11-06",
+  "e20b2c1e3bb6": "2026-11-06",
+  "b2f0dcd47860": "2026-11-06",
+  "819fa2302b72": "2026-11-06"
  },
  "events": [
+  {
+   "id": "6bce3dbf2f34",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Google計畫在懷俄明州Cheyenne投資170億美元開發數據中心園區。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "Alphabet's Google Plans $17 Billion Investment in Wyoming Data Center",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQdmc1M3NXblVvZGc3RjNRb2lpTmJrWlg1Z2ZkZWtRdUNqaXdSV3dlVV8tWXBJaU1rMXZPbUhXSTV3cTlSaVVrSk1vYTEzZjI5LWZXU1hBX0hveFBYbTh3SHZoTTVmbWJmV0lPUGwyVXk2bTJGTzBYMGZQbHpGSFhKVEJ4T2tfdm9wNjI2VEYxMjlEeFZa?oc=5"
+    },
+    {
+     "title": "Google Announces $17B Wyoming Data Center With Carbon Capture",
+     "source": "Carbon Herald",
+     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPOUZZYUZxLWhXVEkwd3J5ZTgxVjlUbV9IY2JyblpVSDVxNm52NkM2SVlCcktxNHI3NDh6Y0lMMVU3WXo4WDVFVVZiVm5MdHo4eGZUck1yQndyQXJITFJCZlBQdDQ4WW81clA0bDNTNUNhdHU1a1Znd1NWanpDdHRRNk5ub0djcmRyRnVRZHZ4dw?oc=5"
+    },
+    {
+     "title": "Google announces $17bn data center campus in Cheyenne, Wyoming",
+     "source": "Data Center Dynamics",
+     "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOTmVlYlJuVDI3NzlQR2JxbFBza3l0NVZRTXFMcm1DeGtDVk9WbVhJWGhFRXlIUDQ3c1VuWDBBRklnQVVjXy1Ea3NaT0FCajQ2R3ZrWWkyRDM0SkdSaUZQbkJsYzJSZkkxVjN3eUtTM3E2dXJpS1lWS1pJVjV1RktVWFFLR0l3aWEtdmtjeEtrMWpGalBRUUNTWnczTGdDWlkyZ3Zidk5pbw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "57a794b2b390",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta發行150億美元五部分美國債券，用於AI擴張融資。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "Key facts: Meta Platforms revenue up 26%; negative FCF; $15B notes",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOLXF4WU9oWFZzSHBKN1k1dHNYX0tLWFI1bmlNUDlPTE5IQk1MMkZYOTk0X3h3eHZ3ejBfQm9vN1ZOd1hnN3lES0J1VTFOd3YyeGFreHFFUXVfUGxMXzhNdTR5UzNKeGJ1UnRHOTNKd0JpdzY2NWFrZHZ6dkUtSlpyYzdWV0E3UW1EMDNCVkpzNFIwZ0E3QjN1eUxSNXVRbkxxVlMtVFJLSG9NRTVUd2VaRDZYYXhuNE5JTWg1dDUwUGc?oc=5"
+    },
+    {
+     "title": "Meta raises $15 billion in five-part US bond sale to fund AI expansion",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZ0dOQjhPM1A5WmJrZFlkRV9MeFZLNHJZakRnUzQwa0ZpY1J2eXVuZmJ6QkQ3TXpZY3Q0VW9tWlJ1S0tQU25YbHZqS3QwUEFnZmlFcjJMZ2t3V19QX2ttXzNMTFNHS3BsWU9qOFFJamd6R2ttQVE3bnM0MGRlNUJpTzY0WXNzMnlMSS1fRDJzWVpoYUhreERlblhKMA?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "6f4021d561b4",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Nvidia 與 Apollo 洽談AI數據中心大型交易，涉及改造舊廠房。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "Nvidia Eyes Surprise AI Data Center Deal With Apollo",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOMW1hQlNZcnlXZnI2YW1taElsZTBaN0NXTnhDRU9pT0huT3BWNU1la0xiazZVQVRVWmpnWTVfUXE5MUtuVUJsZVIxNkJSUVJIV0wwQkFqUWxKZUV4ZGd6Z3ROanZ1N05reXBoTHhtSVgzWlN0YTdoSWdzTG5ielNNQzR6VEhCTURnQW12dkw0M3BwQUxwd0dF?oc=5"
+    },
+    {
+     "title": "Nvidia’s Answer to Data Center Backlash: Retrofitting Apollo’s Old Phone Buildings",
+     "source": "The Information",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNdk42anJHNXZZdl9CY3ZJRGRNODcxR2x5V2tleWNwVkNvSWZaaWN4cW9RUEM3OVo1U0RTWTFoUjV2a3lGZXFHRkpjOGR2OVF2enNVYWpEMTloMVFEMDNLOW00Ul82THNXaTBua3U4c0VKV0lSWEVRZk9IVWVZblRtd3V6TjJUVG1DaUF3WEtfSU9oTE4wODdEN3UtT2dGc3RFMTFyWGpqSTM5UHdTdF84R1R4MmR0NHc?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "34bc2f57ef12",
+   "co": "Apple",
+   "type": "發債",
+   "zh": "Apple 發行 75 億美元投資級債券。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "Apple Raises $7.5 Billion From Investment-Grade Debt Offering",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPX25fSHREY3NhWXh5ZUNNVTRrdWxVMlRDQnRneGh3N2p2dTBXalRnSUJuMkdsZDBPRWZ1WDhINVdSMEdjYUMyY2dDS29ITENRSmYyUGVMWDI1cjhCejBSMDFWRzlqR183SUhvMmhwM0JLMHdLTDdoUHlvTWNKcjJ6ejNMUE1peFlyU0p2YVI3eExrLXA4elRkTllCNUc1RW9acUp3d0RMMTZUOExQMHFR?oc=5"
+    },
+    {
+     "title": "Apple Heads To The Bond Market For $7.5 Billion",
+     "source": "Finimize",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFB3d0dKc2FEUzV6U3VBRF9HWVFfR1hYWEtJdHEwN0hEbDNIREZLQkZXRXFTd3p6NGFCTFVqeGxCUHRXbEhYNlVIVXQwMWUtNC1Wclk2XzlYeFo0cVVJamxGalBkZldvSHI2bFl4NUpIemd6Rk1oT0pNVVZ3MkVUcjQ?oc=5"
+    },
+    {
+     "title": "Apple Raises $7.5 Billion in Bond Sale as Orders Hit 4x Offering, Diverging From AI-Burdened Big Tech",
+     "source": "BigGo Finance",
+     "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9rXzhFb1JVVmJxUXhldHF1X0xmemRxanhkeDUtMUtLRElWaUhyU3Awd3VSeUFZTXZaaDlKci1sUVJfeDFieDM2S3VCZ2VsUkwzcDhzbGc1YlNUdE9jSGpCM3FjcDNSalAwRVNQZmo4czIxUTF4bGc?oc=5"
+    }
+   ]
+  },
   {
    "id": "1d2b6c650842",
    "co": "Alphabet",
@@ -2750,7 +2923,7 @@
    "id": "c44167626c46",
    "co": "Alphabet",
    "type": "資本支出",
-   "zh": "Google在馬來西亞Negeri Sembilan計畫數據中心，投資1.6億美元開發水處理設施。",
+   "zh": "Google在馬來西亞Negeri Sembilan計畫數據中心，投資開發水處理設施。",
    "date": "2026-11-05",
    "links": [
     {
@@ -2774,7 +2947,7 @@
    "id": "6f8a462a1bfd",
    "co": "Amazon",
    "type": "資本支出",
-   "zh": "Amazon購買Chantilly地產近1億美元，用於建造數據中心。",
+   "zh": "Amazon 購買Chantilly地產近1億美元，用於建造數據中心。",
    "date": "2026-11-05",
    "links": [
     {
@@ -2788,7 +2961,7 @@
    "id": "179491f84b48",
    "co": "Amazon",
    "type": "算力合約",
-   "zh": "GNRC與Amazon簽署數據中心協議，增加24億美元收入能見度。",
+   "zh": "GNRC與 Amazon 簽署數據中心協議，增加24億美元收入能見度。",
    "date": "2026-11-05",
    "links": [
     {
@@ -3060,20 +3233,6 @@
      "title": "Google Parent Plans $1.5 Billion Prepaid Energy Deal Via Goldman",
      "source": "Bloomberg.com",
      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOTlZuNUttTjFrcW1yeF9oS04xTjExLTBnZlQ4YnVDVmdTcUlSX20zMlNqRHdEUlRoN3c5S0YwQ1dVMmRfUEpPd3JOaEZfaDJOMXh3TVRERHk5ekdJN0txdXd4RnZyR0otVmttWmN2cUVsbmo4bDVmX05YckRRYndpVGxsaHFodENWU3FNTUVGel9Kd2ZTUDBfVGNiMll4bVB4YUNwWGxzUHd6anlnWDc1SlU5OVY?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "57a794b2b390",
-   "co": "Meta",
-   "type": "發債",
-   "zh": "Meta發行150億美元五部分美國債券，用於AI擴張融資。",
-   "date": "2026-11-03",
-   "links": [
-    {
-     "title": "Meta raises $15 billion in five-part US bond sale to fund AI expansion",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZ0dOQjhPM1A5WmJrZFlkRV9MeFZLNHJZakRnUzQwa0ZpY1J2eXVuZmJ6QkQ3TXpZY3Q0VW9tWlJ1S0tQU25YbHZqS3QwUEFnZmlFcjJMZ2t3V19QX2ttXzNMTFNHS3BsWU9qOFFJamd6R2ttQVE3bnM0MGRlNUJpTzY0WXNzMnlMSS1fRDJzWVpoYUhreERlblhKMA?oc=5"
     }
    ]
   },
@@ -4485,7 +4644,7 @@
    "id": "56f785451822",
    "co": "Amazon",
    "type": "資本支出",
-   "zh": "Amazon取消路德郡數據中心項目，涉資4.27億美元。",
+   "zh": "Amazon 取消路德郡數據中心項目，涉資4.27億美元。",
    "date": "2026-10-24",
    "links": [
     {
@@ -4522,20 +4681,20 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "d211f56048d4",
-   "text": "Microsoft 近期事件偏向推升公司債供給與長端利率。大規模資本支出（Q1達394億美元）與449億美元Anthropic合約承諾，驅動其發行250億美元債券融資需求；雲端與Azure業績超預期則支撐償債能力。若融資需求持續擴大，偏向增加公司債供給壓力。同時，龐大AI基礎設施投資承諾偏向強化AI投資熱度，但資本密集特性可能對長端利率形成上行壓力。"
+   "hash": "d3c27113e2d4",
+   "text": "Microsoft近期大幅增加資本支出與債券融資，偏向推升公司債供給與長端利率。394億美元創紀錄資本支出、449億美元Anthropic合約承諾，加上250億美元債券發行，反映AI基礎設施投資需求強勁。若融資規模持續擴大，則公司債供給增加、長端利率承壓；同時Azure營收加速成長超預期，偏向支撐股市與AI投資熱度。"
   },
   "Alphabet": {
-   "hash": "f67a4edd12b3",
-   "text": "Alphabet密集宣布數據中心與AI基礎設施投資，資本支出規模龐大且持續擴張，偏向增加公司債供給需求。同步發行60億歐元債券測試市場接受度，反映融資壓力上升。若營收成長未能匹配支出增速，則長端利率面臨科技公司債務風險溢價上升壓力。大規模算力投資與硬體銷售成長偏向支撐AI投資熱度，但過度支出擔憂可能抑制股市表現。"
+   "hash": "89c9ec7a5f5e",
+   "text": "Alphabet密集宣布數據中心與AI基礎設施投資，規模達數百億美元，同時發行歐元債券籌資。這偏向增加公司債供給壓力，因龐大資本支出需求推升融資需求；長端利率偏向上升壓力，若市場對科技公司債務承受度有限則更明顯。AI投資熱度偏向維持高檔，但第三季營收未達預期與利潤下滑的擔憂，若持續影響變現能力，則可能削弱後續投資信心。"
   },
   "Meta": {
-   "hash": "802659e8a900",
-   "text": "Meta近兩週密集發債與融資，偏向增加公司債供給、推升長端利率。其1,450億美元資本支出超越現金流，需透過270億美元數據中心債券、150億美元美元債及歐元債補缺口，債券供給增加偏向推高長端殖利率。同時375億美元股權融資與Nvidia投資30億美元參與，反映市場對AI擴張的強勁支持，偏向維持AI投資熱度，但大規模融資需求若持續，則可能對整體債市造成壓力。"
+   "hash": "8802a48aebd7",
+   "text": "Meta近兩週密集發債與融資，累計發行超過百億美元債券並進行巨額股權融資，偏向增加公司債供給、推升長端利率。若市場對AI投資前景樂觀，則Meta龐大資本支出需求反映AI產業景氣，偏向提升AI投資熱度；但融資規模龐大可能增加債券市場供給壓力，對長端利率形成上行壓力。"
   },
   "Oracle": {
    "hash": "dcf3461ccfd9",
-   "text": "Oracle大規模融資與發債偏向增加公司債供給、推升長端利率。950億美元資本支出與200億美元借款上限反映AI基礎設施投資熱度高，但取消騰訊協議暗示策略調整。多晶片供應商合作與自主Arm架構CPU計畫，偏向強化AI投資吸引力；若現金流目標達成，則可能緩解後續融資需求，對長端利率壓力偏向遞減。"
+   "text": "Oracle 大規模融資與發債偏向增加公司債供給、推升長端利率。950億美元資本支出與200億美元借款上限反映AI基礎設施投資熱度高，但取消騰訊協議暗示策略調整。多晶片供應商合作與自主Arm架構CPU計畫，偏向強化AI投資吸引力；若現金流目標達成，則可能緩解後續融資需求，對長端利率壓力偏向遞減。"
   },
   "CoreWeave": {
    "hash": "5833e28b8cae",
@@ -4550,12 +4709,12 @@
    "text": "OpenAI近期密集簽署算力合約與數據中心投資，偏向增加長期資本支出需求，可能推升公司債供給以融資基礎設施建設。融資目標下調但仍籌資逾300億美元，反映融資環境承壓；若融資成本上升，則可能對長端利率形成溫和上行壓力。多元晶片採購策略與國際AI協議擴展，偏向強化AI投資熱度，但融資規模調整可能暗示市場對估值預期的重新定價。"
   },
   "Amazon": {
-   "hash": "bdf68e38106d",
-   "text": "Amazon近期大幅擴張AI基礎設施資本支出，年度投資超2,000億美元，同時簽署多份算力合約鎖定收入。然而第三季財報營收未達預期、自由現金流轉負，偏向增加公司債供給需求。龐大資本支出推升長端利率上行壓力，但算力合約能見度提升偏向支撐股市與AI投資熱度。"
+   "hash": "14d6c03e472a",
+   "text": "Amazon近兩週密集投入數據中心與AI基礎設施，資本支出超2,200億美元，偏向增加公司債供給需求。自由現金流轉負、營收未達預期，若融資需求持續攀升，則長端利率面臨上行壓力。大規模算力合約簽署與基建投資規模，偏向提振AI投資熱度；但短期獲利承壓，股市反應偏向謹慎。"
   },
   "Nvidia": {
-   "hash": "451e32a8cd52",
-   "text": "Nvidia近期事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆數十億美元算力合約簽署，反映AI基礎設施需求旺盛，推升科技股表現。惟Nvidia涉入客戶融資擔保與債務支持，若這類金融槓桿擴大，恐增加公司債供給風險；同時AI投資熱潮可能推高長端利率預期。"
+   "hash": "53174034da3b",
+   "text": "Nvidia近兩週事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆大型算力合約（SpaceX 473億美元、Hugging Face 129億美元等）顯示AI需求旺盛，偏向提升市場風險胃口。然而Nvidia涉及客戶融資擔保與債務支持，若這類隱性信用風險擴大，則偏向增加公司債供給壓力；同時龐大資本支出需求若推升長期融資成本，則偏向推高長端利率。"
   },
   "xAI": {
    "hash": "f62ac7abe073",
@@ -4566,9 +4725,9 @@
    "text": "Intel 近期事件對市場偏向混合信號。伺服器銷售強勁成長支撐長端需求，但第四季展望疲弱偏向壓低股市情緒。大額資本支出（Classiq 收購）與 AI 新創融資參與，反映公司加碼量子與 AI 領域，若成功商轉則偏向提升長期成長預期；但短期融資需求增加，偏向對公司債供給構成壓力。"
   },
   "Apple": {
-   "hash": "61e557612ae5",
-   "text": "Apple 近期發債並公布強勁財報（營收1,145億美元），領導層交接至John Ternus。這些事件偏向增加公司債供給、支撐長端利率。若市場對新執行長策略與假日季表現持樂觀態度，則偏向提振科技股表現與AI投資熱度；若投資人擔憂領導層過渡風險，則偏向抑制相關熱度。"
+   "hash": "dccccbccab6e",
+   "text": "Apple 近期連續發債75億美元，偏向公司債供給增加。強勁營收與領導層交接平穩進行，若市場對新執行長信心足，則可能支撐債券需求；反之，若投資人對過渡期存疑，則可能推高發債成本。整體而言，大規模融資活動偏向拉升長端利率，而財報表現穩健偏向支撐科技股，對AI投資熱度影響中性。"
   }
  },
- "at": "2026-11-06 07:07（台北）"
+ "at": "2026-11-06 20:18（台北）"
 }

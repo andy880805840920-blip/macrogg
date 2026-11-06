@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-10-29T12:10+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv",
-   "fomc"
-  ],
-  "locks": [
-   "pce",
-   "gdp_adv"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gold slides 1% as Fed hike bets linger ahead of US inflation data - Reuters",
-     "Gold drops 1% as markets assess Fed signals, await US inflation data - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed highlights economic strength but muddies outlook for Treasuries - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed Rates: Lord, Let Me Hike, Just Not Now - Bloomberg"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Indian shares rise after Fed holds rates steady; earnings-led gains boost optimism - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Wall Street ends higher as Fed holds key rate steady, focus turns to earnings - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Analysis: Warsh is learning to wield the Fed's power without showing his hand",
-   "聯準會按兵不動致殖利率曲線陡峭化 歐洲央行面臨考驗"
-  ],
-  "main": "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg",
-  "main_why": "最高分",
-  "second": "US Dollar Rises Early Thursday Before Weekly Jobless Claims, GDP, Personal Income, Spending",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "用了相對時間（今天、今日），請改寫成月/日"
-    ],
-    [
-     "正文寫了媒體名稱（CNBC），來源會列在下方，直接寫事實",
-     "用了相對時間（今天），請改寫成月/日"
-    ]
-   ],
-   "重點二": []
-  },
-  "result": "聯準會 10/28 按兵不動、Warsh 拒給前瞻指引，殖利率曲線陡峭化"
- },
- {
   "at": "2026-10-29T13:14+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3102,5 +2998,109 @@
    ]
   },
   "result": "Fed 官員哈瑪克、Barkin 主張漸進升息路徑以壓低通膨"
+ },
+ {
+  "at": "2026-11-06T12:18+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "employment",
+   "claims"
+  ],
+  "locks": [
+   "employment"
+  ],
+  "clusters": [
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Fed’s New Schedule for Rate-setting Meetings Turns Back the Clock for ‘Strategy’ Sessions - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Williams Says Fed Should Gather Information to Judge Price Risks - Bloomberg.com",
+     "Fed Should Gather Data to Judge Price Risks, Williams Says - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasury Traders Make Bullish Bets Ahead of Jobs Report - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Japan Bonds Rally as Global Risk-Off Move Boosts Haven Demand - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Copper Moves Lower as US Election Undermines AI and Tariff Trade - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Fed's Cook lawyer seeks clarity ahead of any White House hearing - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Soar as Tech-Stock Selloff Stokes Haven Demand - Bloomberg.com"
+    ]
+   }
+  ],
+  "main": "US Treasury Traders Make Bullish Bets Ahead of Jobs Report - Bloomberg.com",
+  "main_why": "鎖定事件 employment",
+  "second": "Fed’s New Schedule for Rate-setting Meetings Turns Back the Clock for ‘Strategy’ Sessions - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "重點一",
+   "重點二"
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "主軸 147 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 135 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+    ]
+   ]
+  },
+  "result": "美債交易員在非農報告前押注殖利率下行"
  }
 ]

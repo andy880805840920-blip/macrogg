@@ -449,7 +449,51 @@
   "p:ai_preempt:78c2e79e8198": "2026-11-04",
   "p:dc_grid:b2c5a769acd5": "2026-11-05",
   "p:dc_grid:eaff3cba7c4d": "2026-11-05",
-  "p:us_china_truce:b1470a3e92bd": "2026-11-05"
+  "p:us_china_truce:b1470a3e92bd": "2026-11-05",
+  "675209bc559d": "2026-11-06",
+  "5a3bc828306c": "2026-11-06",
+  "1d3231a79ef1": "2026-11-06",
+  "ff9dd6a8fe6b": "2026-11-06",
+  "76b1438da0e6": "2026-11-06",
+  "3f2c764deb1e": "2026-11-05",
+  "699b08d3656f": "2026-11-06",
+  "ae66c2788b5f": "2026-11-06",
+  "bf95606092df": "2026-11-06",
+  "4efdcf3a6d5f": "2026-11-06",
+  "4947dd2d9852": "2026-11-06",
+  "2558425c9dab": "2026-11-06",
+  "a408e1b7f064": "2026-11-06",
+  "303f4bb869cf": "2026-11-06",
+  "20e67d44f591": "2026-11-06",
+  "60b003ee34ee": "2026-11-06",
+  "1e4e53a56630": "2026-11-06",
+  "873880299a74": "2026-11-06",
+  "a572cc4484a2": "2026-11-05",
+  "b373ca3c4d28": "2026-11-03",
+  "38a4c0242d2e": "2026-11-03",
+  "p:fiscal_cr:cb801e0d4634": "2026-11-06",
+  "p:fiscal_cr:60b003ee34ee": "2026-11-06",
+  "p:fiscal_cr:348e526f6c78": "2026-11-06",
+  "p:fiscal_cr:2346c4a5b2cc": "2026-11-06",
+  "p:fiscal_cr:f2e4ce5e92dd": "2026-11-05",
+  "p:fiscal_cr:972c9b647929": "2026-11-04",
+  "p:debt_limit:159a0d3760fe": "2026-11-06",
+  "p:fed_cook:3f2c764deb1e": "2026-11-05",
+  "p:fed_cook:29adedf07d13": "2026-11-05",
+  "p:h200_china:f5befba9414b": "2026-11-06",
+  "p:h200_china:42287bfea920": "2026-11-06",
+  "p:h200_china:bf1027590355": "2026-11-06",
+  "p:h200_china:cec522c7951e": "2026-11-06",
+  "p:h200_china:d08de6e0ce40": "2026-11-06",
+  "p:h200_china:804e32df6881": "2026-11-06",
+  "p:h200_china:b411f261e1bc": "2026-11-06",
+  "p:h200_china:20497e5c80f9": "2026-11-05",
+  "p:h200_china:9ed59bde16ac": "2026-11-05",
+  "p:h200_china:d4c5dc4ae1ca": "2026-11-04",
+  "p:chip_232:a9447f8f2b1c": "2026-11-04",
+  "p:dc_grid:36fd6b89e7f0": "2026-11-06",
+  "p:us_china_truce:0162572535f3": "2026-11-06",
+  "p:us_china_truce:b7d643701b5e": "2026-11-05"
  },
  "items": [
   {
@@ -615,29 +659,27 @@
  },
  "suggestions": {
   "fiscal_cr": {
-   "date": "2026-11-05",
-   "note": "11月2日新聞提及政府停擺，顯示暫時撥款可能已到期或即將到期，政策已進入或接近協商階段。",
+   "date": "2026-11-06",
+   "note": "ABC News報導聯邦政府因參議院未通過撥款措施而關門，顯示暫時撥款已到期，政策可能已進入停擺階段而非預期的12月11日。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBQUlJNQkZFbVNCc3ZpVm5rVHlsM3pxaFVSdkdKUWh0V3h5enhEOUctNkV2Zi14Ml9fYU9URTRhYnJ4bVEwM2hvREFBOFRrUk5SX19lUGw2Z3Y5U2VrRnZJ?oc=5",
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxNMF9nc0VWR2Z2NXJzZHllaE9fTEp5ODUxTEl3Wk0xdi1aNVpFSTF6OFBYd3FQcjdCMUhZV0tIS2VPejIxNWFBaVdiejBhc2RmZzJXS1NhUXo4dE5MM0JhZ0gyTE5wZWhTVWRNX1ppZTRIdGViM0tLTE9MZFR5RkVZZU5vSlA5X1lURHYwLThqM2FleTlMWHJXZzRia9IBmwFBVV95cUxNMF9nc0VWR2Z2NXJzZHllaE9fTEp5ODUxTEl3Wk0xdi1aNVpFSTF6OFBYd3FQcjdCMUhZV0tIS2VPejIxNWFBaVdiejBhc2RmZzJXS1NhUXo4dE5MM0JhZ0gyTE5wZWhTVWRNX1ppZTRIdGViM0tLTE9MZFR5RkVZZU5vSlA5X1lURHYwLThqM2FleTlMWHJXZzRiaw?oc=5",
-    "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1udTdVTVlORmhZOUJBSnVzbTNrbVEyQ1l5eHo4NEw5V2ZCSUlMTjRTejB3TmVhSXpweDVaOEhoWHQ2VjRQMmhRSkFSRXg1RERTbnRPTk9oX1k?oc=5"
+    "https://news.google.com/rss/articles/CBMiY0FVX3lxTE9vaVowZElqNTVfYlpzcEVOVnpVY3lQWFZ1VkhYaGNBMFB4SnZsNkxuRUtUcllnaU1ZblVhOUNpbmZlWEVaWnplQVYxaTlDWDZYYW51TlZOZDdSX0hIUDJHRTFXTQ?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxOcUplVHdkRmVaZDVmNGJaRDh3MTI1QUU3ckJCN25wVXRxOTM1a2FoejJadkpwUnd6THVzUnlLaGlQR0pUXzUtd3ptQnZucFBFUlhOUUw1SHpJWU9ITWFaOUM2MnRYQmZXSWxhMThmMFFRbU5lQ1NNeFI1WnFlSlRRakxUZ1k1Rm1YaUZvX3pKbDE5UQ?oc=5",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxOLTVJbTVaOWliNGYyY0swTm5TRGtFa1R4aC12T2hicUEtQnUteFhkWF9IZjZveVNlNldXUWtLQUpia0ZqR18xRFE4TFdiaWstSncwOV94a0c5dUZNd1o1QURFV2p0aWpWVU1KWXVNOHpnVDV1Nl9MeTdfT3FRYUpDRHFYcU5mUXJZeHpOZTlBd1JIc2tkYTJTOGVjY3RxcTJ3TWQ2b3k1Vm1CY09x?oc=5"
    ]
   },
   "debt_limit": {
-   "date": "2026-11-05",
-   "note": "民主黨在中期選舉勝利後，2027年舉債上限成為談判焦點，可能提前觸發危機或談判時間表。",
+   "date": "2026-11-06",
+   "note": "民主黨掌控國會後，舉債上限衝突可能提前浮現，預估觸及上限的時間可能早於 2027 年。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNSFJkY2Voejd3d3ZVOXgxOEMtS3U3eXZFUUdDancxUDdiVEEtOW1HMXE2dFhfcTRzR292NTJBNUltNTNhRmVzdTdHLXUtMXoteGdFLTJZNVhlLUs0Zm5CT0lWMVFxM1o0aWxKVUloYnpVNUZZS2VyZmRfZlJRZEs1SWdPUEZ6aGFnbS1XWHRmeXFjS1hMSlFBOTVXWFdFekIwT2tfaU50eTBoVzY0OFk3M3dQQkRrU3B1OHpV?oc=5",
-    "https://news.google.com/rss/articles/CBMinAFBVV95cUxNcUZxM084WENPRUtXYjFON0FzOGN0QUo4UzBEcE1DNEU3MGxWMFJuLXdiTU1SSlZrdVV0ZndkUkRYdF9ZTmpOeHVRRkJLSWJORmhPY0lWdnY4bzlhaEstTUhaUFcwRTgyODNQa2dNYXAwLVBTa0FUTk1FTHpnWE02a2NkRGhyY20waU14M0owWXZCRy1ZamN4czRBM0w?oc=5",
-    "https://news.google.com/rss/articles/CBMiywFBVV95cUxPU2J2SEY4cFgtU0pWREdQcDlSelpjblh2ZGR3cU14a1RiNXlZcjVwUjhyWWFnQ215VktfdW8wV09MZU1ONUFiUm1wTi1LN1VCNlRpYlNScm04N3ctQ2R5R1FXR1pUMTJiVkVxWGlXdHFHWlhwbkMtLVp3UEJRYkRvOVJQVEdCUDc4cW5pUWJMeW9tdFBadHplM3U5R0d0dTdZUnFjWXl3a2dVNnRXVnVON1RyWHpwX1A4U2FLbnlxVnN0NEczT2NBMUFLVQ?oc=5"
+    "https://news.google.com/rss/articles/CBMijAFBVV95cUxOWURjajliaHkwWGJXVWpldjkwWk9hQW9BelQxWEJFbng2VWEyTm5KLWFOZUUzVXJDYUlvaDhESEZaU184QXBDT19IcTRzMlBSbWtHeUdGZ05LeWNRUEdEelpMeDZUY2Q1U0dicmZhZ2FWaWpCLW5xN2RjNDVaX3BWcFlmWHFTMVRxNllCRg?oc=5"
    ]
   },
   "fed_cook": {
    "date": "2026-11-06",
-   "note": "白宮已排定針對 Lisa Cook 的聽證會於 12 月舉行，表明白宮調查進入下一階段（白宮委員會調查）且確定了日期。",
+   "note": "兩則新聞都提及白宮聽證會（White House hearing），顯示白宮調查可能進入正式聽證階段，下一步日期可能已確定或即將確定。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSUdQNHNEb0dCVy0tNHVDTkN6LWY4d2QxYklXMWs0SEp4ZkxSV0xsd3VFeUR4NFRXaFZCUGN5aEZsTFNyMDdEZGJ5eUcxTHk5UnNSM3NlYUZ4Rk41d2dtVmwxLTY2c2NLVW1mcmNuOFRwY0ZTQ1hIOG82a3Bob3FvSGVCd0lVQURiYVUyVGptMzZxdnZOeWtpRXBqN1dIUG1JU2Z3Snh5aVZHdw?oc=5",
-    "https://news.google.com/rss/articles/CBMivAFBVV95cUxPRjJjbS1XR0lLUWI0eUdnb29BUDlYNDFvYTI4b1pndnlPc3J1bE1sM2xJUnlrcWRjVHNiOElqQXlRYlVsNVZfTURVajY2eWJTMlNvcTBUUVpnQ3NLM0s4UnhnNUJtSlppQlM2YmF5Y1M2RFNNWnpIZ1BKS0FxWjJZMHZiUVFMSWxkbmx4ZXZ3S2Nud3JMSjRxTHJ4bWY0czNDYnBrNllXSXBlOXkyNzBlZWZ5eDVheGg2SXczVw?oc=5"
+    "https://news.google.com/rss/articles/CBMi9gFBVV95cUxQYk1wWTFZQ3dTdnVVcnVjZFdsQldIWG1QMG5DVUdiYWVfYnN2djRTR05nRU1YMjZ3UUpvRnVXdUF6UG5SeG9qRVlMMXQyUVNqZ3dhcjdEV09uOWtkaktYRzhuYTl3Q3hCQU1WeDczakpjOUplY2hCemJ1RjVIb1gtcWUtQll6NEpHcm9oT0JBV1N1aEV1aVBEVnN2aTBBb09vVEFtb19CN2toQ0RMMkZGTVNMSlVaSENoanFhOUpQSkt4TTI0QUhZLXZYRXNPRmUzMUhZYUhwZTlMbEY0dWRIclBlX19Kbk9jQUllZDlBMllfUjRFNFE?oc=5",
+    "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9Wa3V2M01HU09sWXdYVUI4OXY5V0lUSVdUQTkybWNKZE9fako0X1lfWWtyTjhweHBfWHpUTlpDRFVNMzQ1d2dWdFF4WkxmNTl4WHB1b1FnOERiU1VETG9zUmN3?oc=5"
    ]
   },
   "h200_china": {
@@ -676,5 +718,5 @@
    ]
   }
  },
- "at": "2026-11-06 07:08（台北）"
+ "at": "2026-11-06 20:18（台北）"
 }
