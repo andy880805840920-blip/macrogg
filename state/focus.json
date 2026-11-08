@@ -1,44 +1,63 @@
 {
  "hash": "",
- "text": "11/6公布的10月非農就業報告顯示新增職位16.5萬人、失業率維持4.1%，大幅超出市場預期，顯示勞動市場依然強勁。強勁就業數據意味薪資壓力可能持續推升通膨，強化聯準會繼續升息理由，市場對12/9會議升息一碼的預期從報告公布前約五成跳升至66%、隨後進一步升至78%。¶英國央行11/5宣布升息1碼至4%，這是自2023/8以來首次升息，也是美以對伊朗開戰8個月後最後一個啟動緊縮的主要央行。委員會預期英國通膨將在2027年中升至約5%，總裁Bailey表示若中東衝突未能取得實質進展，能源價格與通膨風險偏向上行，認為有理由進一步升息。歐元區10月通膨率跳升至4%，創三年來新高，能源通膨從9月18.9%升至20.8%，市場定價12月升息機率升至逾72%。\n11/10 公布10月CPI，市場關注通膨是否因強勁就業與能源價格上漲而升溫，影響12月升息路徑判斷。\n11/10 舉行10年期公債標售，市場觀察投資人對升息預期升溫後的需求強度。\n11/12 公布初領失業金人數，觀察勞動市場強勁態勢是否延續。\n11/13 公布10月PPI，關注生產者物價壓力是否傳導至消費端，進一步推升通膨預期。",
- "links": [],
+ "text": "11/8 美國大選結果出爐後，美債市場出現反彈，10 年期公債殖利率從選前高點回落。選後 AI 相關股票遭遇拋售，投資人轉向美債避險，推升債券需求。這波資金輪動反映市場在消化選舉結果的同時，對科技股高估值的疑慮升溫，促使部分資金從風險性資產撤出，流入相對安全的公債市場。¶美國將於11/10公布10月CPI、11/13公布10月PPI，市場預期整體CPI月增率將從9月的0.6%放緩至0.3%，核心CPI月增率則從0.3%微降至0.2%；PPI月增率預估從1.3%降至0.4%。由於去年同期政府關門因素，勞工統計局本週不會公布CPI年增數據。強勁就業數據使市場預估聯準會在12/9會議維持利率不變的機率升至約80%；若通膨順利放緩將為聯準會提供更多決策彈性，反之若服務業通膨頑強恐推升美債殖利率並支撐美元。\n輝達董事會11/8宣布啟動調查，針對執行長黃仁勳承認與某女性有婚外情的事件，該女性據報與中國間諜活動有關。\n輝達執行長黃仁勳與董事會在11/8發表聲明，確認黃仁勳與一名據稱與中國間諜活動相關的女性存在個人關係，董事會已決定對此事件展開正式調查程序。",
+ "links": [
+  {
+   "title": "Treasury Rally Gets New Boost as Election Hammers the AI Trade",
+   "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelZPY0tQazFGWWxNRjFac00xRWFpVE1vdVpHenVSMDNVS3c0WFpZMXk4Rkk5d2xFYU9wUVdtcGZIYWlvVU41eFZaV1RGdDU4bGE3Z1ppeVlMdTZleU13RVRRbDNVS0pDQzdQbjB5TkFjOWF0NDRxNXA3azY0UGRtM2M5SFU2cDFkUHhZMVVpSVpRM2JjeldzMzU1QnMxZDNCd1ZVcnV1eE5ROWtwZjF2Y1E1UQ?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-08T20:00:00+00:00"
+  },
+  {
+   "title": "US Inflation Set to Simmer Down Some After Recent Pickup",
+   "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNMHB3c0hUZDUwNkFjQmh3VW9PTGE3dmpzRkUwRWI2d25MZWhOcmRPOHhmaVdBNGp0YTF3WU9IaVQ0NVNtVG1nZDZTbXlYRVNWdmdpcUJ3cVdVcE5mMUltMWdwZE10Q3lmcFdHR2RINEtlcW54RW56ZkY1MnNsell5b3VLanVoTnh1Y0FKUVhZampkZ2xWUHJPOWxhSWVxa0VFRWhPbzdITTdjRzA?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-08T17:00:46+00:00"
+  },
+  {
+   "title": "本週操盤筆記：美國CPI、PPI、英國GDP與中國通膨數據",
+   "link": "https://tw.stock.yahoo.com/news/%E6%9C%AC%E9%80%B1%E6%93%8D%E7%9B%A4%E7%AD%86%E8%A8%98-%E7%BE%8E%E5%9C%8Bcpi-ppi-%E8%8B%B1%E5%9C%8Bgdp%E8%88%87%E4%B8%AD%E5%9C%8B%E9%80%9A%E8%86%A8%E6%95%B8%E6%93%9A-135002687.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-11-08T13:50:02+00:00"
+  }
+ ],
  "fedwatch": {
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-11-08",
+   "date": "2026-11-09",
    "meetings": [
     {
      "date": "2026-12-09",
-     "start": 3.8775,
-     "end": 4.07125,
-     "move_bp": 19.375,
+     "start": 3.88,
+     "end": 4.070227,
+     "move_bp": 19.023,
      "outcomes": [
       [
        25,
-       0.775
+       0.7609
       ],
       [
        0,
-       0.225
+       0.2391
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
     {
      "date": "2027-01-27",
-     "start": 4.07125,
+     "start": 4.070227,
      "end": 4.12,
-     "move_bp": 4.875,
+     "move_bp": 4.977,
      "outcomes": [
       [
        0,
-       0.805
+       0.8009
       ],
       [
        25,
-       0.195
+       0.1991
       ]
      ],
      "how": "2027-02 合約平均"
@@ -165,58 +184,58 @@
    ],
    "next": {
     "date": "2026-12-09",
-    "start": 3.8775,
-    "end": 4.07125,
-    "move_bp": 19.375,
+    "start": 3.88,
+    "end": 4.070227,
+    "move_bp": 19.023,
     "outcomes": [
      [
       25,
-      0.775
+      0.7609
      ],
      [
       0,
-      0.225
+      0.2391
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.8775,
-    "end": 4.07125,
-    "move_bp": 19.375,
+    "start": 3.88,
+    "end": 4.070227,
+    "move_bp": 19.023,
     "outcomes": [
      [
       25,
-      0.775
+      0.7609
      ],
      [
       0,
-      0.225
+      0.2391
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 19.375,
-   "r0": 3.8775,
+   "cum_bp": 19.023,
+   "r0": 3.88,
    "r0_src": "2026-11 合約（當月沒有會議）",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 19.375,
-     "prev_cum_bp": 16.557
+     "cum_bp": 19.023,
+     "prev_cum_bp": 19.375
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 44.179,
-     "prev_cum_bp": 40.679
+     "cum_bp": 43.929,
+     "prev_cum_bp": 44.179
     },
     {
      "date": "2027-12-08",
      "label": "2027 年底",
-     "cum_bp": 45.228,
+     "cum_bp": 44.978,
      "prev_cum_bp": 41.228
     }
    ],
@@ -224,16 +243,16 @@
     "next": {
      "date": "2026-12-09",
      "start": 3.8775,
-     "end": 4.043068,
-     "move_bp": 16.557,
+     "end": 4.07125,
+     "move_bp": 19.375,
      "outcomes": [
       [
        25,
-       0.6623
+       0.775
       ],
       [
        0,
-       0.3377
+       0.225
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
@@ -241,122 +260,162 @@
     "horizon": {
      "date": "2026-12-09",
      "start": 3.8775,
-     "end": 4.043068,
-     "move_bp": 16.557,
+     "end": 4.07125,
+     "move_bp": 19.375,
      "outcomes": [
       [
        25,
-       0.6623
+       0.775
       ],
       [
        0,
-       0.3377
+       0.225
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 16.557
+    "cum_bp": 19.375
    }
   }
  },
- "text_source": "model-weekly",
- "at": "2026-11-08T01:33:39.203571+00:00",
+ "text_source": "model-content",
+ "at": "2026-11-08T23:13:00.806566+00:00",
  "layout": "main",
  "topics": {
-  "hash": "d103614990d56c47",
+  "hash": "9e82a77b348492b6",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "10月CPI將於10日公布，市場預估年增率持平3.7%，核心CPI年增率預估2.5%；若數據符合預期，將強化聯準會12月升息預期",
+    "text": "10月非農就業人數達16.5萬人，遠超預期，失業率降至4.1%，市場預估聯準會12月升息機率升至約80%；Warsh 預期將在12/9升息，儘管股市仍低於10月高點5.6%，反映聯準會不會因股市下跌而救市",
     "links": [
      {
-      "title": "美國CPI10日揭曉！10月年增率估持平3.7％ Fed利率政策再迎考驗",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8Bcpi10%E6%97%A5%E6%8F%AD%E6%9B%89-10%E6%9C%88%E5%B9%B4%E5%A2%9E%E7%8E%87%E4%BC%B0%E6%8C%81%E5%B9%B33-7-fed%E5%88%A9%E7%8E%87%E6%94%BF%E7%AD%96%E5%86%8D%E8%BF%8E%E8%80%83%E9%A9%97-234630487.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-07T23:46:30+08:00"
+      "title": "Kevin Warsh’s Expected Rate Hike Is a Warning to Retirees That the Fed Won’t Rescue Stocks",
+      "link": "https://247wallst.com/investing/2026/11/08/kevin-warshs-expected-rate-hike-is-a-warning-to-retirees-that-the-fed-wont-rescue-stocks/?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-08T20:41:00+00:00"
+     },
+     {
+      "title": "美國非農就業報告報喜 美元走揚強化升息預期",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E9%9D%9E%E8%BE%B2%E5%B0%B1%E6%A5%AD%E5%A0%B1%E5%91%8A%E5%A0%B1%E5%96%9C-%E7%BE%8E%E5%85%83%E8%B5%B0%E6%8F%9A%E5%BC%B7%E5%8C%96%E5%8D%87%E6%81%AF%E9%A0%90%E6%9C%9F-225125373.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-08T22:51:25+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "美伊談判出現轉機，國際三大油價本週跌破100美元，紐約西德州原油跌至90.83美元、布蘭特原油98.32美元。中油宣布11/9起汽柴油連8週凍漲，並額外吸收8元成本以維持亞鄰最低價",
+    "text": "國際原油上週大幅下跌，布蘭特原油期貨下跌13.32%至每桶98.32美元，西德州中級原油下跌12.76%至每桶90.83美元，主要受美國期中選舉後中東外交突破預期影響。台灣中油浮動油價機制追蹤的國際原油均價從前週每桶117.01美元跌至99.79美元，惟國內油價連續第八週凍漲",
     "links": [
      {
-      "title": "國際油價跌破100美元　國內油價連8週不變",
-      "link": "https://tw.news.yahoo.com/%E5%9C%8B%E9%9A%9B%E6%B2%B9%E5%83%B9%E8%B7%8C%E7%A0%B4100%E7%BE%8E%E5%85%83-%E5%9C%8B%E5%85%A7%E6%B2%B9%E5%83%B9%E9%80%A38%E9%80%B1%E4%B8%8D%E8%AE%8A-174343546.html",
+      "title": "國際油價跌破百美元 臺灣中油連八週凍漲油價",
+      "link": "https://tw.stock.yahoo.com/news/%E5%9C%8B%E9%9A%9B%E6%B2%B9%E5%83%B9%E8%B7%8C%E7%A0%B4%E7%99%BE%E7%BE%8E%E5%85%83-%E8%87%BA%E7%81%A3%E4%B8%AD%E6%B2%B9%E9%80%A3%E5%85%AB%E9%80%B1%E5%87%8D%E6%BC%B2%E6%B2%B9%E5%83%B9-230652337.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-11-07T17:43:43+00:00"
+      "at": "2026-11-08T23:06:52+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電傳考慮為輝達生產3D DRAM，若投入將採用垂直堆疊設計以提升儲存容量，但從研發到量產需數年時間；經濟部修法允許火力電廠結合碳捕捉封存技術的低碳電可直供台積電等科技業，預計明年送立法院審議",
+    "text": "輝達執行長黃仁勳被爆與涉嫌中共間諜的女商人有婚外情，黃仁勳承認對妻子不忠，輝達董事會8日宣布啟動獨立調查，但強調目前無理由相信國家安全或公司機密受損",
     "links": [
      {
-      "title": "門打開了！  經部修法開放火力CCS低碳電   台塑化、台電可直售台積電",
-      "link": "https://tw.stock.yahoo.com/news/%E9%96%80%E6%89%93%E9%96%8B%E4%BA%86-%E7%B6%93%E9%83%A8%E4%BF%AE%E6%B3%95%E9%96%8B%E6%94%BE%E7%81%AB%E5%8A%9Bccs%E4%BD%8E%E7%A2%B3%E9%9B%BB-%E5%8F%B0%E5%A1%91%E5%8C%96-%E5%8F%B0%E9%9B%BB%E5%8F%AF%E7%9B%B4%E5%94%AE%E5%8F%B0%E7%A9%8D%E9%9B%BB-144343758.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-07T14:43:43+00:00"
+      "title": "Nvidia opens probe after report of CEO Huang's relationship with alleged Chinese spy",
+      "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQOFNRSy1yS0duakdXT1hKbjI2MkFsMVhHeTQ1VVh4QlZYOVdvd0ZKaWVjTzFXT2JCRlR2T2IzSjRKcENSTkNLbVR2VU90Q1VyUHhEZWp0NGZLQUZPRXJ1NlNVNG9OZ0U0T2VwYmJuaURBMWVBYXhHd1hDb00zZU9aUXJGaU10bmFrclgySUZoUE1GX210Q19TQ1pXRjJTVFpoZjN2NG9qblVQMXhHUC1vV3JxaHkxbVJiVkhldEZISHlCdw?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-08T21:09:49+00:00"
      },
      {
-      "title": "台積電進軍3D DRAM? 焦佑鈞：台積電若要做 不會半吊子",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%80%B2%E8%BB%8D3d-dram-%E7%84%A6%E4%BD%91%E9%88%9E-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E8%8B%A5%E8%A6%81%E5%81%9A-%E4%B8%8D%E6%9C%83%E5%8D%8A%E5%90%8A%E5%AD%90-213000109.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-07T21:30:00+08:00"
+      "title": "Read the Statements From Nvidia’s Board and CEO Jensen Huang",
+      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOSWRiUGFlN2dtR1drNzJEbGU1R0JldDl2ZS10dVUyQVJQamFXejVMaEpPOUlxdkt1MlZJb1pQNDVNVzBqd2ptN0RoY1h2SDE2N29qbmRsQUxUMUdTaUdzV0JlMHdBVDJGeE96QXBVN25qcThKT01kUGRDMVJWeUxaYlNFd0ZwWkgtSE0xa1dIVlNmWTBQUjNLMHljOUNjOUNWMUZYMk1WQXVOQQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-08T21:14:46+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股11/6重挫1,873點至39,701點，但美股費半反彈4.21%、台積電ADR漲6.33%激勵下，台指期夜盤11/7上漲646點收40,298點。國安基金宣布第10度進場護盤，金管會祭出限空令，外資連7賣超911.88億元",
+    "text": "台指期11/6夜盤上漲646點，台積電ADR大漲6.33%至375.56美元，帶動反彈。上週台股三大法人合計賣超1139.7億元，外資賣超911.9億元，融資大幅減少423.56億元，外資期貨淨空單達99930口，市場波動風險尚未解除",
     "links": [
      {
-      "title": "台股明天穩了？國安基金進場　台指期夜盤大漲",
-      "link": "https://tw.stock.yahoo.com/news/%E8%B2%BB%E5%8D%8A%E7%8B%82%E5%99%B4%E9%80%BE4-%E5%9C%8B%E5%AE%89%E5%9F%BA%E9%87%91%E9%80%B2%E5%A0%B4-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E5%A4%A7%E6%BC%B2646%E9%BB%9E-225136169.html",
+      "title": "【盤前】融資大減美費半狂飆4.2%！台指夜盤強彈646點　台股崩跌有救了",
+      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%89%8D-%E8%9E%8D%E8%B3%87%E5%A4%A7%E6%B8%9B%E7%BE%8E%E8%B2%BB%E5%8D%8A%E7%8B%82%E9%A3%864-2-%E5%8F%B0%E6%8C%87%E5%A4%9C%E7%9B%A4%E5%BC%B7%E5%BD%88646%E9%BB%9E-%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E6%9C%89%E6%95%91%E4%BA%86-221800885.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-07T22:25:28+08:00"
+      "at": "2026-11-08T22:18:00+08:00"
      },
      {
-      "title": "政府救台股也沒用！大空頭警告後市 反彈即放空絕佳時機",
-      "link": "https://tw.stock.yahoo.com/news/%E6%94%BF%E5%BA%9C%E6%95%91%E5%8F%B0%E8%82%A1%E4%B9%9F%E6%B2%92%E7%94%A8-%E5%A4%A7%E7%A9%BA%E9%A0%AD%E8%AD%A6%E5%91%8A%E5%BE%8C%E5%B8%82-%E5%8F%8D%E5%BD%88%E5%8D%B3%E6%94%BE%E7%A9%BA%E7%B5%95%E4%BD%B3%E6%99%82%E6%A9%9F-223530670.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-07T22:35:30+08:00"
+      "title": "台股週報》擔憂AI緊箍咒　外資逃殺逾5千億",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1%E5%A0%B1-%E6%93%94%E6%86%82ai%E7%B7%8A%E7%AE%8D%E5%92%92-%E5%A4%96%E8%B3%87%E9%80%83%E6%AE%BA%E9%80%BE5%E5%8D%83%E5%84%84-173344807.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-08T17:33:44+00:00"
      }
     ]
    },
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "民主黨掌控國會後將對川普政策形成制衡，專家認為政治不確定性降低；美元短線有支撐但上漲空間有限，若油價回落、通膨緩解，聯準會無需進一步升息，美債殖利率明年有下探空間至4.6%以下",
+    "text": "美國期中選舉後民主黨控制參眾兩院，市場擔憂AI與資料中心面臨更嚴格監管；德州州長當選人表示應先建立保護居民法律再推進資料中心建設，政策不確定性可能持續牽動AI股",
     "links": [
      {
-      "title": "期中選舉後美元、債市怎麼走？專家：政治地雷雖出清　年底兩大變數牽動市場",
-      "link": "https://tw.news.yahoo.com/%E6%9C%9F%E4%B8%AD%E9%81%B8%E8%88%89%E5%BE%8C%E7%BE%8E%E5%85%83-%E5%82%B5%E5%B8%82%E6%80%8E%E9%BA%BC%E8%B5%B0-%E5%B0%88%E5%AE%B6-%E6%94%BF%E6%B2%BB%E5%9C%B0%E9%9B%B7%E9%9B%96%E5%87%BA%E6%B8%85-%E5%B9%B4%E5%BA%95%E5%85%A9%E5%A4%A7%E8%AE%8A%E6%95%B8%E7%89%BD%E5%8B%95%E5%B8%82%E5%A0%B4-230000833.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-07T23:00:00+08:00"
+      "title": "2026年底全球經濟情勢觀察  地緣政治、央行動向、AI投資與美國選舉牽動後市",
+      "link": "https://tw.stock.yahoo.com/news/2026%E5%B9%B4%E5%BA%95%E5%85%A8%E7%90%83%E7%B6%93%E6%BF%9F%E6%83%85%E5%8B%A2%E8%A7%80%E5%AF%9F-%E5%9C%B0%E7%B7%A3%E6%94%BF%E6%B2%BB-%E5%A4%AE%E8%A1%8C%E5%8B%95%E5%90%91-ai%E6%8A%95%E8%B3%87%E8%88%87%E7%BE%8E%E5%9C%8B%E9%81%B8%E8%88%89%E7%89%BD%E5%8B%95%E5%BE%8C%E5%B8%82-130946806.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-08T13:09:46+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "金價單月下跌6%至6.7%，但中國人民銀行連續24個月增加黃金儲備，反映央行對黃金的持續需求",
+    "links": [
+     {
+      "title": "金價1個月跌6% 人行連24月增加黃金儲備",
+      "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE40djJkSkNOYjJnY0lvY3o2ZGZNMEUxLVdHVTdtVGtfVFoxWVIyV1Bsd0F3VG1CN29MOFVmOVRKeThkV09TLWFPcF96VHRRcjJIaDdicUViTWNUQzZQdmxzMHFYTmpVZmPSAWdBVV95cUxONHYyZEpDTmIyZ2NJb2N6NmRmTTBFMS1XR1U3bVRrX1RaMVlSMldQbHdBd1RtQjdvTDhVZjlUSnk4ZFdPUy1hT3BfelR0UXIySGg3YnFFYk1jVEM2UHZsczBxWE5qVWZj?oc=5",
+      "source": "世界新聞網",
+      "at": "2026-11-08T06:02:00+00:00"
+     },
+     {
+      "title": "金價單月跌6.7% 人行黃金儲備24連增",
+      "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBMN1VjdHFQdVJNWWVpTXREel9wNE93Y1RVVDRVVVRmMjdXVmRwRUt2TXN3MGxwRmVBeVFXejNLR3l5N3pOVXhQcTJDN3g2cmdpR1hGc0lBMlNBMDVJdjZ2Tnd5VnJ0am5jMXc1d0c4OWZJeFp3TFBN?oc=5",
+      "source": "VOCO News",
+      "at": "2026-11-08T05:09:47+00:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣上週五強勢翻升1.08角，此前曾險破33元關卡。匯銀示警外資若續撤，不排除新台幣貶破33元，近期貶速過快可能引發監管警戒",
+    "links": [
+     {
+      "title": "國內匯市：台幣貶破33元後上週五強勢翻升1.08角！近期貶速過快或引發監管警戒",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOeHg2YlJzQnd3TzRRclJMVlRKb0NmakZtYTliZTktSmZTYnZibmdTTTZCeTU1ZEVlTXgtZThYcGxERUg5bkJzaDZlZTlEVUExeElXT1VXNloyX18yanNtVE9SRWd4dkl5XzhLQ2lWUVBfUHdPaXlWQWRFUTFtZHJRUVY2X3lEUWdU?oc=5",
+      "source": "富聯網",
+      "at": "2026-11-08T23:00:00+00:00"
+     },
+     {
+      "title": "熱錢出走》台幣險破33元 出口商拋匯收32.876元",
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ZY3hoMU1LWkVHLTVrdVdIOXhoWWN6bksxWV8zLWp0a1ZOdjdQSFdtbFhkRFdYREJxQmxtXzZGLUh6eDBtN0ZOUEd6YkJtYTdnWllYUFdZTzU?oc=5",
+      "source": "自由時報",
+      "at": "2026-11-08T14:10:09+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-08T01:39:14.594672+00:00"
+  "at": "2026-11-08T23:13:44.913429+00:00"
  },
- "main_source_titles": [],
- "headline": "10月非農遠超預期失業率持平，12月升息機率升至78%，英國央行啟動緊縮",
- "rate_note": "近一週（10/30→11/6）10 年期 -8bp、2 年期 -5bp，曲線牛平，長端回落較多，避險或成長擔憂主導。",
+ "main_source_titles": [
+  "Treasury Rally Gets New Boost as Election Hammers the AI Trade",
+  "US Inflation Set to Simmer Down Some After Recent Pickup",
+  "本週操盤筆記：美國CPI、PPI、英國GDP與中國通膨數據"
+ ],
+ "headline": "選後美債反彈，AI 股遭拋售推升避險需求",
+ "rate_note": "選後避險需求推升債券買盤，偏向壓低長端利率；不過 10 年期 11/6 收盤 +2bp 至 4.86%，市場還沒反映這波避險潮。",
  "recent_mains": [
-  {
-   "headline": "美債交易員在非農報告前押注殖利率下行",
-   "titles": [
-    "US Treasury Traders Make Bullish Bets Ahead of Jobs Report",
-    "Fed’s New Schedule for Rate-setting Meetings Turns Back the Clock for ‘Strategy’ Sessions"
-   ],
-   "at": "2026-11-06T12:18:33.724108+00:00"
-  },
   {
    "headline": "10月非農新增職位遠超預期，失業率持平，聯準會12月升息機率升至66%",
    "titles": [
@@ -369,9 +428,46 @@
    "headline": "10月非農遠超預期失業率持平，12月升息機率升至78%，英國央行啟動緊縮",
    "titles": [],
    "at": "2026-11-08T01:33:39.203571+00:00"
+  },
+  {
+   "headline": "選後美債反彈，AI 股遭拋售推升避險需求",
+   "titles": [
+    "Treasury Rally Gets New Boost as Election Hammers the AI Trade",
+    "US Inflation Set to Simmer Down Some After Recent Pickup",
+    "本週操盤筆記：美國CPI、PPI、英國GDP與中國通膨數據"
+   ],
+   "at": "2026-11-08T23:13:00.806566+00:00"
   }
  ],
  "archive": {
+  "2026-11-09": {
+   "headline": "選後美債反彈，AI 股遭拋售推升避險需求",
+   "text": "11/8 美國大選結果出爐後，美債市場出現反彈，10 年期公債殖利率從選前高點回落。選後 AI 相關股票遭遇拋售，投資人轉向美債避險，推升債券需求。這波資金輪動反映市場在消化選舉結果的同時，對科技股高估值的疑慮升溫，促使部分資金從風險性資產撤出，流入相對安全的公債市場。¶美國將於11/10公布10月CPI、11/13公布10月PPI，市場預期整體CPI月增率將從9月的0.6%放緩至0.3%，核心CPI月增率則從0.3%微降至0.2%；PPI月增率預估從1.3%降至0.4%。由於去年同期政府關門因素，勞工統計局本週不會公布CPI年增數據。強勁就業數據使市場預估聯準會在12/9會議維持利率不變的機率升至約80%；若通膨順利放緩將為聯準會提供更多決策彈性，反之若服務業通膨頑強恐推升美債殖利率並支撐美元。\n輝達董事會11/8宣布啟動調查，針對執行長黃仁勳承認與某女性有婚外情的事件，該女性據報與中國間諜活動有關。\n輝達執行長黃仁勳與董事會在11/8發表聲明，確認黃仁勳與一名據稱與中國間諜活動相關的女性存在個人關係，董事會已決定對此事件展開正式調查程序。",
+   "rate_note": "選後避險需求推升債券買盤，偏向壓低長端利率；不過 10 年期 11/6 收盤 +2bp 至 4.86%，市場還沒反映這波避險潮。",
+   "links": [
+    {
+     "title": "Treasury Rally Gets New Boost as Election Hammers the AI Trade",
+     "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelZPY0tQazFGWWxNRjFac00xRWFpVE1vdVpHenVSMDNVS3c0WFpZMXk4Rkk5d2xFYU9wUVdtcGZIYWlvVU41eFZaV1RGdDU4bGE3Z1ppeVlMdTZleU13RVRRbDNVS0pDQzdQbjB5TkFjOWF0NDRxNXA3azY0UGRtM2M5SFU2cDFkUHhZMVVpSVpRM2JjeldzMzU1QnMxZDNCd1ZVcnV1eE5ROWtwZjF2Y1E1UQ?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-08T20:00:00+00:00"
+    },
+    {
+     "title": "US Inflation Set to Simmer Down Some After Recent Pickup",
+     "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNMHB3c0hUZDUwNkFjQmh3VW9PTGE3dmpzRkUwRWI2d25MZWhOcmRPOHhmaVdBNGp0YTF3WU9IaVQ0NVNtVG1nZDZTbXlYRVNWdmdpcUJ3cVdVcE5mMUltMWdwZE10Q3lmcFdHR2RINEtlcW54RW56ZkY1MnNsell5b3VLanVoTnh1Y0FKUVhZampkZ2xWUHJPOWxhSWVxa0VFRWhPbzdITTdjRzA?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-08T17:00:46+00:00"
+    },
+    {
+     "title": "本週操盤筆記：美國CPI、PPI、英國GDP與中國通膨數據",
+     "link": "https://tw.stock.yahoo.com/news/%E6%9C%AC%E9%80%B1%E6%93%8D%E7%9B%A4%E7%AD%86%E8%A8%98-%E7%BE%8E%E5%9C%8Bcpi-ppi-%E8%8B%B1%E5%9C%8Bgdp%E8%88%87%E4%B8%AD%E5%9C%8B%E9%80%9A%E8%86%A8%E6%95%B8%E6%93%9A-135002687.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-11-08T13:50:02+00:00"
+    }
+   ],
+   "at": "2026-11-08T23:13:00.806566+00:00",
+   "weekly": false,
+   "points": 2
+  },
   "2026-11-08": {
    "headline": "10月非農遠超預期失業率持平，12月升息機率升至78%，英國央行啟動緊縮",
    "text": "11/6公布的10月非農就業報告顯示新增職位16.5萬人、失業率維持4.1%，大幅超出市場預期，顯示勞動市場依然強勁。強勁就業數據意味薪資壓力可能持續推升通膨，強化聯準會繼續升息理由，市場對12/9會議升息一碼的預期從報告公布前約五成跳升至66%、隨後進一步升至78%。¶英國央行11/5宣布升息1碼至4%，這是自2023/8以來首次升息，也是美以對伊朗開戰8個月後最後一個啟動緊縮的主要央行。委員會預期英國通膨將在2027年中升至約5%，總裁Bailey表示若中東衝突未能取得實質進展，能源價格與通膨風險偏向上行，認為有理由進一步升息。歐元區10月通膨率跳升至4%，創三年來新高，能源通膨從9月18.9%升至20.8%，市場定價12月升息機率升至逾72%。\n11/10 公布10月CPI，市場關注通膨是否因強勁就業與能源價格上漲而升溫，影響12月升息路徑判斷。\n11/10 舉行10年期公債標售，市場觀察投資人對升息預期升溫後的需求強度。\n11/12 公布初領失業金人數，觀察勞動市場強勁態勢是否延續。\n11/13 公布10月PPI，關注生產者物價壓力是否傳導至消費端，進一步推升通膨預期。",
@@ -530,28 +626,6 @@
    "at": "2026-11-01T04:50:33.730447+00:00",
    "weekly": false,
    "points": 2
-  },
-  "2026-10-31": {
-   "headline": "洛根主張至少再升息兩碼聖路易、里奇蒙總裁齊發鷹聲市場押注12月升息機率73%",
-   "text": "10/30，達拉斯聯準銀行總裁洛根在戴維森學院明確表示，FOMC 至少需要再升息兩次、每次 25 個基點，才能有效壓低通膨，之後再暫停調整、觀察經濟與金融情勢。若以目前 3.75% 至 4.00% 的聯邦基金利率目標區間計算，再升息兩碼將使利率升至 4.25% 至 4.50%。洛根今年具有 FOMC 投票權，10/28 會議支持維持利率不變；她認為暫停一次升息，與最終需要將利率提高至少半個百分點的立場並不矛盾，關鍵在於政策調整的步調。聖路易聯準銀行總裁穆薩列姆同日在紐約表示，通膨仍高於 Fed 的 2% 目標，風險偏向持續超標，因此有必要進一步收緊貨幣政策，而且應儘快行動。里奇蒙聯準銀行總裁巴爾金同日在 SiriusXM 訪談中表示，通膨偏高、需求穩健，失業率也相對偏低，因此利率接下來應朝哪個方向調整，相當明確。芝商所 FedWatch 工具顯示，市場預估 12/9 升息的機率約為 73%。\n美國公債在科技股拋售帶動下延續漲勢，全球同類債券也跟漲，10/30（美國時間）投資人轉向避險資產。\n長期公債殖利率高企吸引投資人回流，10/30（美國時間）長期債券需求增溫，投資人認為當前殖利率水準具有吸引力。",
-   "rate_note": "洛根明確主張至少再升息兩碼、穆薩列姆與巴爾金也支持進一步緊縮，偏向推升短端利率與升息預期；洛根認為目前金融條件仍對經濟成長提供支撐，市場利率走高反而傳達出投資人認為貨幣政策仍有工作尚待完成。不過 10 年期 10/30 -6bp 至 4.93%，市場還沒反映。",
-   "links": [
-    {
-     "title": "Fed officials make case for rate hikes amid ongoing inflation concerns",
-     "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxObTlSSnpPaC0yUGM0aTNCb3h0cUVRejBTRjg0SXVnT0MwSXNMSzBVS1NFSEpUaGxtOUpzSkZmQlRKWjFWQ2UtNEp2RUgzcWwyMEN3clpKaU1acDlRUGFhS21BTEpWQjdSVURWZjRJd19Tc19pbVVHeWYwUEZLdUlka0x6M1p5WDRMVkVjRmlLTWU?oc=5",
-     "source": "Reuters",
-     "at": "2026-10-30T20:03:43+00:00"
-    },
-    {
-     "title": "Fed鷹聲齊發！洛根主張至少再升息兩碼 市場押注12月升息機率達73%",
-     "link": "https://tw.stock.yahoo.com/news/fed%E9%B7%B9%E8%81%B2%E9%BD%8A%E7%99%BC-%E6%B4%9B%E6%A0%B9%E4%B8%BB%E5%BC%B5%E8%87%B3%E5%B0%91%E5%86%8D%E5%8D%87%E6%81%AF%E5%85%A9%E7%A2%BC-%E5%B8%82%E5%A0%B4%E6%8A%BC%E6%B3%A812%E6%9C%88%E5%8D%87%E6%81%AF%E6%A9%9F%E7%8E%87%E9%81%9473-211847347.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-10-30T21:18:47+00:00"
-    }
-   ],
-   "at": "2026-10-30T23:06:32.058356+00:00",
-   "weekly": false,
-   "points": 1
   }
  },
  "fw_hist": {
@@ -572,6 +646,6 @@
    "p": 0.0775
   }
  },
- "weekly": true,
- "points": 1
+ "weekly": false,
+ "points": 2
 }

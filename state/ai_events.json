@@ -311,9 +311,6 @@
   "ce5a023ab9a0": "2026-10-20",
   "3424e6c26db2": "2026-10-19",
   "40cebb6e286f": "2026-10-19",
-  "72ab7a2c72da": "2026-10-18",
-  "268e6269b0d4": "2026-10-18",
-  "49af79c3c931": "2026-10-18",
   "5a4f21457339": "2026-10-29",
   "3482918c105a": "2026-10-27",
   "f3ae2ed16628": "2026-10-27",
@@ -512,7 +509,6 @@
   "e32531eac97a": "2026-10-19",
   "60d040a7edca": "2026-10-19",
   "bc8de98d857d": "2026-10-19",
-  "7745c597c228": "2026-10-18",
   "cc56d29064eb": "2026-10-29",
   "8627157a458b": "2026-10-26",
   "b4973da5235a": "2026-10-25",
@@ -709,8 +705,6 @@
   "89616c6fb73e": "2026-10-21",
   "95aad483fa80": "2026-10-21",
   "2ac46966af66": "2026-10-21",
-  "649123128807": "2026-10-18",
-  "c30b58acda9f": "2026-10-18",
   "bf9c2694128f": "2026-10-28",
   "9cb1dfbe4fd4": "2026-10-28",
   "69799455fc21": "2026-10-27",
@@ -856,7 +850,6 @@
   "0baff5dc5dca": "2026-10-27",
   "43c652313760": "2026-10-23",
   "b93b30a28f94": "2026-10-19",
-  "3f8e4aa32ecf": "2026-10-18",
   "acfa25186129": "2026-10-29",
   "6f56901e9f5c": "2026-10-28",
   "a63c22745b74": "2026-10-28",
@@ -1001,7 +994,6 @@
   "ec507277a2a6": "2026-10-29",
   "f1e63582cf16": "2026-10-28",
   "03786f96e983": "2026-10-21",
-  "a2ba0e0d7bf1": "2026-10-18",
   "fb08bb18dcf6": "2026-10-30",
   "2e01b82d9610": "2026-10-30",
   "515e2a216f29": "2026-10-30",
@@ -1030,7 +1022,6 @@
   "8141dfc822f8": "2026-10-27",
   "23e970bd5c5d": "2026-10-20",
   "f3c6ecebb33d": "2026-10-19",
-  "2a10dbacf492": "2026-10-18",
   "cee0e19d9a58": "2026-10-29",
   "8359ecc51161": "2026-10-29",
   "432759e494f4": "2026-10-28",
@@ -1077,7 +1068,6 @@
   "33be6612b0f7": "2026-10-20",
   "65868b6a5c11": "2026-10-19",
   "08176c2a0fcd": "2026-10-19",
-  "25cb4bcadbd5": "2026-10-18",
   "b58b208c8444": "2026-10-30",
   "6c317ba098a4": "2026-10-30",
   "6b255442795b": "2026-10-30",
@@ -2801,14 +2791,157 @@
   "00e3e30f8986": "2026-11-06",
   "0856d0545af3": "2026-11-06",
   "8cadf71f1875": "2026-11-05",
-  "6d712949bc51": "2026-11-05"
+  "6d712949bc51": "2026-11-05",
+  "682a24c1e8bf": "2026-11-07",
+  "17542cfaa55a": "2026-11-06",
+  "8a1731c7eaef": "2026-11-06",
+  "af4c510ce48a": "2026-11-06",
+  "761b87d2a818": "2026-11-06",
+  "f1a4de30c7c9": "2026-11-06",
+  "390bc8534c88": "2026-11-06",
+  "8131b424d9dd": "2026-11-06",
+  "53199b461830": "2026-11-06",
+  "1f52a8cf8cee": "2026-11-06",
+  "e7887adecc90": "2026-11-06",
+  "3312513433da": "2026-11-06",
+  "c2ba13d64f69": "2026-11-05",
+  "d62d42aba73e": "2026-11-04",
+  "2e7dcb805416": "2026-10-28",
+  "d41180103d43": "2026-11-08",
+  "97a84fd09eb3": "2026-11-08",
+  "665276aac072": "2026-11-08",
+  "1cd340e5b53f": "2026-11-06",
+  "dc7c70a2e147": "2026-11-05",
+  "70cd0d85f4c6": "2026-11-08",
+  "3aa19a67e179": "2026-11-08",
+  "a47637324d4d": "2026-11-08",
+  "44e5fb0e2926": "2026-11-08",
+  "87760b881dff": "2026-11-07",
+  "eda48ef44926": "2026-11-07",
+  "364d3cd3efdd": "2026-11-06",
+  "e91c2acd265a": "2026-11-08",
+  "a68f3bb13c48": "2026-11-08",
+  "484e85577ae1": "2026-11-08",
+  "8363ea7b92f1": "2026-11-07",
+  "12970c1f93f8": "2026-11-07",
+  "68426a3455e0": "2026-11-08",
+  "d17a69c7cf68": "2026-11-07",
+  "75a210cdf9ee": "2026-11-07",
+  "ade284f72718": "2026-11-06",
+  "ad3da4f4bbee": "2026-11-06",
+  "a5b4d0c3051c": "2026-11-06",
+  "6faa5478b935": "2026-11-06",
+  "8af39838f101": "2026-11-08",
+  "ba13855d744d": "2026-11-08",
+  "780399eda9cc": "2026-11-07",
+  "185297a67d25": "2026-11-06",
+  "7200f2f52fb0": "2026-11-06",
+  "dd78373afbea": "2026-10-29",
+  "b77198a828d9": "2026-11-08",
+  "ecebc116f9c9": "2026-11-08",
+  "45f8bf022968": "2026-11-08",
+  "c15a14f65e37": "2026-11-08",
+  "b54a4edee75c": "2026-11-07",
+  "40c5cb60a94e": "2026-11-07",
+  "4b6691530bb7": "2026-11-07",
+  "21c1c69b66d4": "2026-11-07",
+  "25fff75d8207": "2026-11-06",
+  "742afd7fd108": "2026-11-06",
+  "14d9c939255d": "2026-11-08",
+  "051492c092d9": "2026-11-08",
+  "8b255cfca50c": "2026-11-08",
+  "e10adfa7ad71": "2026-11-08",
+  "2c55eb13cab7": "2026-11-08",
+  "1b5b5787e0ed": "2026-11-07",
+  "53f0965ca81a": "2026-11-07",
+  "dcb0c63e1727": "2026-11-07",
+  "3298ec8c922e": "2026-11-07",
+  "c3fc1f3fe2a3": "2026-11-06",
+  "d3ce9ce4ccc4": "2026-11-06",
+  "dc0fa6fcbeec": "2026-11-06",
+  "4e7ec28e22fa": "2026-11-06",
+  "e1d9cb8f93c9": "2026-11-06",
+  "7f17997800df": "2026-11-06",
+  "a5b95cfaa74c": "2026-11-06",
+  "4f8e8e561d3f": "2026-11-06",
+  "72af5d47dd54": "2026-11-08",
+  "1b0bb2cd6b5e": "2026-11-06",
+  "1eec984c3682": "2026-10-30",
+  "a8db93f2eef6": "2026-11-08",
+  "eb01a1d6d0c4": "2026-11-07",
+  "8459bd5503d9": "2026-11-06",
+  "846b3303417d": "2026-11-06",
+  "52ac18ea9baa": "2026-11-08",
+  "d89c7a50148a": "2026-11-08",
+  "afa6bd5042bc": "2026-11-08",
+  "b2110b96009b": "2026-11-08",
+  "89f8512d062d": "2026-11-06",
+  "423559447dcc": "2026-11-06",
+  "dd3da195d8d9": "2026-11-02",
+  "36dd56b3814d": "2026-11-08",
+  "7ca21a9c8689": "2026-11-08",
+  "67368af10e6e": "2026-11-08",
+  "eedbd3e475fa": "2026-11-08",
+  "4eb0128e5180": "2026-11-08"
  },
  "events": [
   {
-   "id": "6bce3dbf2f34",
+   "id": "93646b694af7",
+   "co": "Anthropic",
+   "type": "算力合約",
+   "zh": "Anthropic簽署34億美元協議，為AI數據中心採購燃氣發電設施。",
+   "date": "2026-11-08",
+   "links": [
+    {
+     "title": "Anthropic secures $3.4 billion generator deal for AI data centers, FT reports",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS3dmWWtwZTJMS0pBRzdvYVVabzBjUHNzQnlWVlF0T3B6U1JrZVhZSG9NZDRCaVlkQ1JvS1p1ZDR1bjVrRUdwMkVxX2NIN3MzbGpsZ2NPQ1RYSFJWRTNwM2J5akxsaWd0RXZ3RVpGTlN6TEFFalRERVRhYWE5d3lxOXBlcw?oc=5"
+    },
+    {
+     "title": "Anthropic Buys Power for AI Data Centers in $3.4B Deal, FT Says",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQSi00VTRySXpJSXQwU3ZiRnZUYzk3MDYtTEJLZ3V0cm0zRlBMVDV1czVMalNRbmRldHhCSWNaaFNoMEpfZkI1dU9HVW9pVXN5VGhYQ1VwRV9UOVF4cmVTY0ViMFhwZll3NjNjVE9sTDZFM0xFUzRFZ1VuSE5WNXdweFdJaU1NaURWanYxUG1VRkQ3emo0clAwRFFya3BBUDVLWHVENjQ4SkdrdGU3Q1FYZGdR?oc=5"
+    },
+    {
+     "title": "Anthropic strikes $3.4bn deal to generate gas-fired power for data centres",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQaDhoaHlMZk8tNWhZWlFEczhOc1FpNnZjcnlZTF9MUDJrVG5mb2NvUkdzZlBldmx2YkhEMkQtdVRuaXpWYkhTcDd2N3VLWlFvLW81S0ttcWxKTUlkdXBOMWRNZUIzS0o4ZVM1Y1dpbUIxRG4waXdxRVlncjJiVTM2TGtTZ0g?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "1d1de8d1a681",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta發行債券，具體金額未在標題中披露。",
+   "date": "2026-11-07",
+   "links": [
+    {
+     "title": "Meta’s Bond Sale Shows New Reality for Tech Debt",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNN0h6NGhPQzBpZTdwV29ra0U5UUhycGhPb3FHT3JvUksyYTZFZjVPbVpBdURxeVMxM2dxS0Z1Y21XbVctWVY5Q3ltR09IOG9tNUdSMXZ5eUFHYUpaaWpaVGZoQzFvVnZOdUhEclJKVENTbVpNeFMwbC1pV1ppa3JhWjZMQzEtWkQ4UGlVWXJENXNWRGNEVEotZjBnMnJ6WFJzQWFTcnI1Wi1WZzAwXzRUdy1YMA?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "8a8ea1dd189c",
+   "co": "Oracle",
+   "type": "融資／IPO",
+   "zh": "Oracle 以每股116美元價格出售100億美元股票。",
+   "date": "2026-11-07",
+   "links": [
+    {
+     "title": "Oracle Just Sold $10 Billion of Stock at $116 a Share. Is the Stock a Buy at That Price?",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQNXJSYTJaa21YN3pGUkRWSDk5Q3pteG1oVlcxOG40ZmpJbTRtaXdORUpoaVA3N0s5dV9fVVM1c2x0d0ZvcktpR1BOU2xWdC1BVzZOUTVIanVVbkQ0Y1lIcjB1LUZfVEg4VXQxSEJTeEJGRWZMSV9MaXpJV2NFNERTVnF2U0c5Y2dZckRYQTh1dVREYzhKSWln?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "43cc04ddf057",
    "co": "Alphabet",
    "type": "資本支出",
-   "zh": "Google計畫在懷俄明州Cheyenne投資170億美元開發數據中心園區。",
+   "zh": "Alphabet收購Crusoe在懷俄明州數據中心項目，投資170億美元並承諾支付全部電力成本。",
    "date": "2026-11-06",
    "links": [
     {
@@ -2938,16 +3071,64 @@
    ]
   },
   {
-   "id": "f7a559e72609",
+   "id": "326ded0b3cec",
    "co": "OpenAI",
    "type": "融資／IPO",
-   "zh": "SoftBank洽談投資OpenAI最新融資輪，金額數億美元。",
+   "zh": "OpenAI完成融資輪110億美元融資，估值達1.25兆美元。",
    "date": "2026-11-06",
    "links": [
     {
      "title": "Softbank in discussions to invest hundreds of millions in OpenAI's latest funding round - NYT DealBook",
      "source": "TradingView",
      "url": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxPLWJzX3BrYzFHb3MyWGNiWjM2anZteHdhRDl5MGRrNzBBLXBoUFpXSHFVejdOOVVrX1hPdEZ2M2lkMWVQdThYQlJncVRLSkp3WEd0cHNXeW9WV0x3dmZfcXByb0t6Q3lBVVdSR29OVnVxUnpHT25BNzk1V1hWblRyaG9fUi04dDRGMlNtOGR6LWZ6ejk1V2l5STEtY1F0VGVacnN3MVhIZGxGMGZoUjFvM294eFYtTDEyZFE3RkxQMEN0LWZpMlo5WWtrLTFKMDVwekJXUVVOWUIxa1B2azE1ZWh5TkstTnFYTHZCM1JmUElPQUZoNDdlNGdZTExIZXc?oc=5"
+    },
+    {
+     "title": "OpenAI Completes $11 Billion Portion of Funding at $1.25 Trillion Value",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOZUs1X0RZcHpSM0pJZVlZOHZrWEppOG5oemNaUHFVUGZYV1ZSQ2lVVVhxZENDQWVDTkVPRkN5XzRxT3JGVDExWFVVQ2VWejZ3a21tb2NCNlFrc29DVW11OC1ZRXdJX1lDNWp6Tk90STljUDdBMmltdEgyTVFJQTI5cEJFRkdHMno0Ni1CU2NFQ2M2dXRBdjFMTl8zZ1dZM1p5R2kyT2lGZmF1OGhoQm9zTDNYeWk2NG44SVlnUQ?oc=5"
+    },
+    {
+     "title": "OpenAI gets $11 billion funding at $1.25 trillion valuation, source says",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNdlpNRm5XVy11c3hLY0NRdjh2T3VmOE1LOWQ2LXlvcFhmZlFJYkQya3N3QWxud2UteUZpWVlCTXVHUXZZTjIwRlVQaUhqOGhyM2lDaDJTSGcxMnE5MzhOZ1NHYlJIc1p5bHRxaVZjZDd4MFY2RWMtRkNlYkhSVkdpMlRBWi1PYUNmZGNydXZnOTZFMTFoOHR0azBpUlU1aHpVdFA4dlhCV0dDNm91VE0xSVg0bXZhcF9jaVAzcXYzaldOdw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "18539e618136",
+   "co": "Microsoft",
+   "type": "算力合約",
+   "zh": "Microsoft 終止與 Oracle 的 AI 雲端容量租賃協議。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "Microsoft is winding down Oracle deal to rent AI cloud capacity, Bloomberg News reports",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNN0g4UzRRaV9OckNuUjZYeVcybWl4SnhZUHVRR3pXVTFUdVMtWENOSWRKdjhUQThNTWlRWXd3YVJFTUVaM1hOaFI2UWJ6cDlWZjM4Q3NXTWZDVlJFSTdnS3RqNExHcG93anIxTDhpNXJTRGduSEgxcWNaYnNRYTdOdWF4SzBoZzBLV3o1Wi1ZaEVPWkFXZVJSSWhYZWFSdE9BRFlINGtWWjhhM2FLUEdaYjJQOTBLQ0VCLVIyXw?oc=5"
+    },
+    {
+     "title": "Microsoft Winding Down Oracle Deal to Rent AI Cloud Capacity",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPeXFhaDRlRjBvZktGaFM2eExYdGpJakRNazYxc2Y2UWoyMDJzS1VFb2Z5ZTNkSVhMRHBTbUdtb25kZHJUdkpRVXRQU1hQVGtIbS1maVNoeGhSZ2pHOGF1aDY3R1AwSTU4TmlmSEdEc19RYlowVXAzc0NlSzdVZ2xBZXduc2FzT3ViQ0xDS3RYdklKMzFnVzRtUkZKQnVBWlBDTWtGcGZUU01ZSktQTG5aOE9lbXE?oc=5"
+    },
+    {
+     "title": "Microsoft to reportedly wind down Oracle deal to rent AI cloud capacity",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPNUszVVVJNmVIQ0ZFYWhEVmRQSnlJR2lBNmR0c1BRV0xpQUtJN1d3WWw0VW03bTFmaHBSZjE5amFvckFMTWJ6QTZSQ3lGWXI2V193MDFQa0ZjSGVmSWtxTmZZTWhEZWhUTUZjMkFQYnJfSXA2eHRHbkRFUjB4cjhPQmZNRXZfOTYzanhKVmFRbVJGUm83ZnZBWEEtaXkwZ0lSVThmalhwQXFZZC1rOFItU1g4UWY?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "7a6503bee6f7",
+   "co": "xAI",
+   "type": "融資／IPO",
+   "zh": "SpaceX與xAI合併，涉及450億美元AI交易。",
+   "date": "2026-11-06",
+   "links": [
+    {
+     "title": "SpaceX (SPCX) Lands $45 Billion AI Deal And Moves To Merge xAI",
+     "source": "Simply Wall St",
+     "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNRTROeHk1RkxPX3BrenpYQkRjRnlTbVN4ZGhsMDFkY013ajN5MEprSEtNek50VXZGb0JwcU5mUFJIZ3Z0YUR5a0R1M2pINEFxNGxReUJEVEY1SkRrZFVmaWtXNXhvSzhfRHRybVpIVWJlQ19sem4wY0pVaVNab1NxVHYyaENzc3JKS2I0UEZyLU9oSzlSN2VtaERJTUdtekNvUmV5aG1Id0VzdGZrRm8wZjh6ODF1dnFzd1hsSmlvSUVXY1BNVldCUXd5NFV6R3BvWTUzWm9oV2t1YktvZElOQtIB5gFBVV95cUxPd2E3T2FjcnNqOGhzT1QydEp6Yjc1Y1ZfUU9EZmMxSE9veDctOFllQzRQMXNydE9mZUpqWlZWYk9aMlVUVEo4WGFaUDMtVUhkVFl2bEZKalBhakZkaW9FMjZDRVdGZlVHNkJxamZDVW8tTzE0VldOUXZ5eHBEajhHRkRCN3U1MDllSjZZRWVjUWN6TmpDa0FRR2xJaFIxM0llLVNVNGF3NHJ2ajZKSlVBaUVMRi1ibEJsVXZCV2l1MGpONE9rcjFxOVJmTWJEWll5LTVxdGJYMXdzeVVVM0JCVXVRcGNWUQ?oc=5"
     }
    ]
   },
@@ -4733,62 +4914,48 @@
      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQUE1tUUdPWEdLcHhacG9kMnV4NWJkWS1uR3BydW9DREpfaVdoM2pPeWhHbTl5N0ZOR0FOYnRHaHZ1V296dW9TWlFCRXVZbFB2MHFaRG1rMWlFRUVnNGUya2FLVnpULS16V2V5cVVVX2tFeXdCbm9QX1pEaUVMaU9qZjh2aVh6RDYyZERYblh1Y2d3M3lPZkpR?oc=5"
     }
    ]
-  },
-  {
-   "id": "1e260372358f",
-   "co": "xAI",
-   "type": "算力合約",
-   "zh": "SpaceX與xAI簽署400億美元GPU主租賃協議，用於xAI數據中心。",
-   "date": "2026-10-25",
-   "links": [
-    {
-     "title": "SpaceX agrees USD 40 bln GPU master lease for xAI data centres",
-     "source": "Telecompaper",
-     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNSURreGxnVWNQV24zbVRMb1JjSVdoUnlzQUJua3NQTEZVQzBwUVFVLVgwQ1FKLThRbE1HTEhTY1ByREFSb04tbUc0TnA0MUNObUpPbXBXc0FGTzZZUjdDTUpJYk9qaGVHaVR0SEtiay0xbjFsSEk0TTlOT2tFbmZ3MFA4d3oyemhxb1p4bG5obDVGR20yX2pWMm1tYVlsSFozdVNKZnVLeVc?oc=5"
-    }
-   ]
   }
  ],
  "impact": {
   "Microsoft": {
-   "hash": "c589cf3489db",
-   "text": "Microsoft 近期事件偏向提升公司債供給與長端利率。巨額資本支出（394億美元）與Anthropic合作（449億美元承諾）驅動融資需求，已發行250億美元債券；德州合約告吹雖減輕部分支出，但整體AI基礎設施投資承諾仍高企。雲端業務超預期成長提升償債能力，偏向支撑債券發行。此舉偏向強化AI投資熱度，但大規模融資需求可能推升長端利率。"
+   "hash": "16b2c05a0e65",
+   "text": "Microsoft近期事件偏向提升公司債供給與AI投資熱度。雲端業務超預期成長支撐394億美元創紀錄資本支出，驅動250億美元債券發行；與Anthropic的449億美元AI基礎設施承諾強化AI領導地位。惟部分合約終止與建設延遲偏向緩和短期資本支出預期。整體而言，龐大融資需求與AI戰略承諾偏向推升長端利率與AI投資熱度，但實際支出進度不確定性偏向抑制股市反應。"
   },
   "Alphabet": {
-   "hash": "6b60570cd485",
-   "text": "Alphabet近期密集投資數據中心與AI基礎設施，資本支出達510億美元，偏向增加公司債供給——60億歐元債券發行測試市場接納度。若營收成長未能匹配支出增速，則長端利率面臨融資需求上升壓力。AI投資熱度偏向持續升溫，但市場對變現能力存疑，股市偏向承受盈利下滑與現金流壓力的風險。"
+   "hash": "daf1084d6e84",
+   "text": "Alphabet近期大幅增加AI數據中心資本支出（第三季510億美元，2027年預期續增），同時發行60億歐元債券籌資。這偏向增加公司債供給、推高長端利率。若AI投資未能有效變現，則現金流壓力加大；若變現順利，則支撐股市。整體而言，龐大資本支出計畫偏向強化AI投資熱度，但營收成長與利潤下滑的矛盾，使市場對支出效率存疑。"
   },
   "Meta": {
-   "hash": "2bc93e7c2553",
-   "text": "Meta近兩週密集發債與融資，偏向增加公司債供給、推升長端利率。其1,450億美元資本支出與超千億AI投資超過現金流，驅動多渠道融資需求；270億美元數據中心債券、150億美元五部分債券及歐元債發行，加上375億美元股權融資與Nvidia投資，反映市場對AI擴張融資的支持。若融資規模持續擴大，則長端利率偏向上升；同時大規模資本投入與融資活動偏向強化AI投資熱度。"
+   "hash": "501f2623f099",
+   "text": "Meta近兩週密集發債與融資，偏向推升公司債供給與長端利率。多筆數百億美元債券發行與股權融資，反映其AI擴張資本支出（超1,150億美元）遠超現金流，融資需求龐大。若長期資本支出維持高位，則債券供給增加偏向推高長端利率。同時，Meta巨額AI投資與Nvidia合作深化，偏向提升市場AI投資熱度，但融資規模龐大可能分流其他科技股資金。"
   },
   "Oracle": {
-   "hash": "83d8153e22e8",
-   "text": "Oracle大規模融資與發債偏向增加公司債供給，近950億美元資本支出與200億美元借款上限反映AI基礎設施投資強度。取消騰訊協議但擴大Nvidia等多晶片合作，顯示算力需求持續，若現金流目標達成則長端利率偏向承壓。高資本投入與融資規模偏向強化AI投資熱度，但債券增量可能對長端利率形成壓力。"
+   "hash": "c975c7802064",
+   "text": "Oracle近兩週密集融資與大規模資本支出計畫偏向推升長端利率與公司債供給。連續發行股債組合、100億美元投資級債券，融資規模達300億美元以上，反映AI基礎設施投資需求龐大。若Oracle持續高額舉債融資，則公司債供給增加、長端利率承壓上升。同時取消騰訊合約但擴大多晶片策略，顯示AI投資熱度維持，但競爭加劇可能影響邊際收益率。"
   },
   "CoreWeave": {
    "hash": "5833e28b8cae",
    "text": "CoreWeave大幅擴張資本支出與電力租賃，驅動債務快速攀升至350億美元，高盛預估需新增發債200至380億美元。若債務持續增長，偏向增加公司債供給壓力；同時AI算力需求強勁、與CrowdStrike擴展合約，偏向提升AI投資熱度。但高槓桿融資需求可能推升長端利率，對股市估值形成壓力。"
   },
   "Anthropic": {
-   "hash": "ff8fa013ea93",
-   "text": "Anthropic近期事件偏向增加公司債供給與長端利率上行。IPO前已完成630億美元債務融資，並披露未來近9,000億美元運算支出承諾，大幅提升企業債市供給壓力。然營收成長放緩與龐大資本支出承諾，若融資成本上升則償債壓力加重，偏向推升長期利率。同時巨額算力投資承諾強化AI產業景氣預期，但高槓桿融資結構若…則可能抑制市場風險偏好。"
+   "hash": "1da2af1c9b8b",
+   "text": "Anthropic近期事件偏向增加公司債供給、推升長端利率。巨額運算支出承諾（近9,000億美元）與已簽算力合約驅動大規模融資需求，630億美元債務融資完成後仍需後續發債。然營收成長放緩與龐大資本支出壓力，偏向提高信用風險溢價。若融資需求持續，則公司債供給增加、長端利率承壓上升；同時巨額支出承諾若影響獲利預期，則偏向抑制AI投資熱度。"
   },
   "OpenAI": {
-   "hash": "a64ef5705b24",
-   "text": "OpenAI近期融資目標下調、融資進展受阻，偏向增加公司債供給壓力；同時大幅擴張算力合約與資本支出，長期資金需求龐大。若融資困難持續，公司可能轉向債券市場融資，推升長端利率；算力投資規模龐大則維持AI投資熱度，但融資不確定性可能削弱市場信心，股市偏向承壓。"
+   "hash": "3b9aee62698a",
+   "text": "OpenAI兩週內完成110億美元融資、估值達1.25兆美元，同步簽署多項晶片採購與算力協議，涉及AMD、Google、Foxconn等廠商，資本支出規模擴大。這些事件偏向：提升AI投資熱度，因融資規模與估值創新高反映市場對生成式AI需求強勁；若融資用於大規模數據中心建設，則長端利率偏向上升壓力，因企業資本支出增加推升借貸需求；公司債供給偏向增加，因融資活動活躍可能帶動後續債券發行。"
   },
   "Amazon": {
    "hash": "0f3a8ebf220c",
-   "text": "Amazon近期事件偏向增加公司債供給與長端利率上升壓力。巨額資本支出（年度超2,200億美元）與多筆地產收購需融資，加上自由現金流為負，公司偏向發債籌資。若融資需求持續，則公司債供給增加、長端利率承壓。同時，算力合約簽署與AI基礎設施投資擴張，偏向強化AI投資熱度，但營收未達預期則偏向抵銷部分正面預期。"
+   "text": "Amazon 近期事件偏向增加公司債供給與長端利率上升壓力。巨額資本支出（年度超2,200億美元）與多筆地產收購需融資，加上自由現金流為負，公司偏向發債籌資。若融資需求持續，則公司債供給增加、長端利率承壓。同時，算力合約簽署與AI基礎設施投資擴張，偏向強化AI投資熱度，但營收未達預期則偏向抵銷部分正面預期。"
   },
   "Nvidia": {
    "hash": "53174034da3b",
    "text": "Nvidia 近兩週事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆大型算力合約（SpaceX 473億美元、Hugging Face 129億美元等）顯示AI需求旺盛，偏向提升市場風險胃口。然而 Nvidia 涉及客戶融資擔保與債務支持，若這類隱性信用風險擴大，則偏向增加公司債供給壓力；同時龐大資本支出需求若推升長期融資成本，則偏向推高長端利率。"
   },
   "xAI": {
-   "hash": "f62ac7abe073",
-   "text": "xAI與SpaceX簽署400億美元GPU租賃協議，反映其算力需求龐大且融資能力強。此舉偏向增加公司債供給壓力——若xAI後續透過債券融資支應租賃成本，長端利率面臨上升壓力。同時，大規模算力投資偏向提升AI投資熱度，可能吸引科技股資金流入。短期內公司債供給增加與AI熱度上升的雙重作用，對長端利率形成複雜影響。"
+   "hash": "888f39e88761",
+   "text": "xAI與SpaceX合併涉及巨額資本投入，偏向增加AI領域融資需求。若合併順利推進，xAI債務融資需求可能上升，偏向推高公司債供給；同時大型AI交易宣布，偏向提升市場對AI投資熱度。合併帶來的資本密集特性，若融資成本上升，則可能對長端利率形成溫和上行壓力。"
   },
   "Intel": {
    "hash": "57c65757549f",
@@ -4799,5 +4966,5 @@
    "text": "Apple 近期連續發債75億美元，偏向公司債供給增加。強勁營收與領導層交接平穩進行，若市場對新執行長信心足，則可能支撐債券需求；反之，若投資人對過渡期存疑，則可能推高發債成本。整體而言，大規模融資活動偏向拉升長端利率，而財報表現穩健偏向支撐科技股，對AI投資熱度影響中性。"
   }
  },
- "at": "2026-11-08 09:32（台北）"
+ "at": "2026-11-09 07:12（台北）"
 }

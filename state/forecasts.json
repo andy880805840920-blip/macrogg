@@ -582,7 +582,12 @@
    "bad": [],
    "auto_seen": {},
    "auto": {},
-   "auto_log": []
+   "auto_log": [],
+   "cons": {
+    "core_mom": 0.2,
+    "cpi_mom": 0.3
+   },
+   "cons_at": "2026-11-09T07:14+08:00"
   },
   "pce|2026-10": {
    "key": "pce",
