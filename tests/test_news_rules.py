@@ -209,8 +209,11 @@ def _fetch(feeds, kws, hours=30, exclude=None, raw_out=None, **k):
 
 
 _orig = (ft.fetch_feed_headlines, ft.fetch_article_text, ft._call_ai, ft.build_catalog,
-         ft.fedwatch_path, ft.fetch_atlanta_fedwatch, ft.build_topics)
+         ft.fedwatch_path, ft.fetch_atlanta_fedwatch, ft.build_topics, ft.is_weekly)
 try:
+    # 2026-11：這段測的是平日主軸。星期天台北中午前 build 會改走週報（is_weekly），
+    # 時間窗只抓一次 30 小時、提示詞也不同——測試在星期天早上跑就會失敗，所以固定成平日。
+    ft.is_weekly = lambda *a, **k: False
     ft.fetch_feed_headlines = _fetch
     ft.fetch_article_text = lambda u, **k: ("Yields rose to 5.22% " * 20) if "yahoo" in u else ""
     ft.build_catalog = lambda *a, **k: []
@@ -244,7 +247,7 @@ try:
     check("build v2：提示詞不再要求「前一兩次寫過就換題」", _seen and "前一兩次主軸已經寫過" not in _seen[0][1])
 finally:
     (ft.fetch_feed_headlines, ft.fetch_article_text, ft._call_ai, ft.build_catalog,
-     ft.fedwatch_path, ft.fetch_atlanta_fedwatch, ft.build_topics) = _orig
+     ft.fedwatch_path, ft.fetch_atlanta_fedwatch, ft.build_topics, ft.is_weekly) = _orig
 
 # ---------------------------------------------------------------- ⑦ 補充
 _main = "美國10年期公債殖利率升至5.25%，Pimco認為進一步升至6%確實可能，30年期觸及5.60%。"
