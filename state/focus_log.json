@@ -1,108 +1,5 @@
 [
  {
-  "at": "2026-10-29T15:51+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv",
-   "fomc"
-  ],
-  "locks": [
-   "pce",
-   "gdp_adv"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed’s Path to a Repo-Based Framework Faces a Familiar Roadblock - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed highlights economic strength but muddies outlook for Treasuries - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed Rates: Lord, Let Me Hike, Just Not Now - Bloomberg"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Wall Street ends higher as Fed holds key rate steady, focus turns to earnings - Reuters"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "US inflation heats up in September; consumer spending rises - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool.",
-   "Fed更有空間升息？美國上周初領失業金人數意外下降 續領同步減少"
-  ],
-  "main": "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg",
-  "main_why": "最高分",
-  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "用了相對時間（今天、今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "出現材料裡沒有的數字（19.4）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述"
-    ]
-   ]
-  },
-  "result": "9月PCE年增3.6%高於預期初領失業金降至19.4萬人 Fed12月升息空間擴大"
- },
- {
   "at": "2026-10-30T00:04+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3010,5 +2907,105 @@
    ]
   },
   "result": "選後美債反彈，AI 股遭拋售推升避險需求"
+ },
+ {
+  "at": "2026-11-09T12:10+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "Treasury Rally Gets New Boost as Election Hammers the AI Trade - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "How AI May Be Aiding, Not Hurting, US Employment Growth - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Nvidia Board to Probe Spying Case After CEO Admits Affair - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Jensen Huang Puts $200 Billion Dent in Nvidia’s Stock Price - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Nvidia CEO’s Affair Engulfs AI Giant in Chinese Spying Probe - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fears of an AI Apocalypse Are a Bit Premature - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bloomberg Daybreak: Nvidia CEO Affair - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bankers Prepare for AI ‘in Every Conversation’ at Climate Summit in Turkey - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Nvidia Scandal Hurdled on Pre-Bell Wall Street; Asia, Europe Up"
+  ],
+  "main": "Treasury Rally Gets New Boost as Election Hammers the AI Trade - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "How AI May Be Aiding, Not Hurting, US Employment Growth - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "重點一",
+   ""
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+    ]
+   ]
+  },
+  "supp_dropped": [
+   "股市期貨11/9早盤上漲，標普500期貨…：用了相對時間"
+  ],
+  "result": "選舉結果衝擊 AI 概念股，資金轉進美債推動債市反彈"
  }
 ]
