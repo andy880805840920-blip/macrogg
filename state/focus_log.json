@@ -1,103 +1,5 @@
 [
  {
-  "at": "2026-10-30T00:04+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv"
-  ],
-  "locks": [
-   "pce",
-   "gdp_adv"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Warsh’s ‘Forward Silence’ Risks Bigger Treasury Market Swings - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed’s Path to a Repo-Based Framework Faces a Familiar Roadblock - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Hassett Sees Fed Acting If October Inflation Data Come in High - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Warsh Puts a Spotlight on AI Financing’s Vulnerability to Fed Policy - Bloomberg"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Warsh’s AI Optimism May Box Him In at the Fed - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Voters’ Inflation Frustrations Take Shine Off Strong Economic Growth - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "US inflation heats up in September; consumer spending rises - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Analysis: Kevin Warsh is keeping Wall Street guessing. It may be his most powerful tool",
-   "華許縮減利率決策次數，債市憂政策突襲加劇波動"
-  ],
-  "main": "Gold Edges Lower After Fed Holds Rates With Limited Guidance - Bloomberg.com",
-  "main_why": "最高分",
-  "second": "Third-quarter U.S. GDP increases a better-than-expected 3.4% as September inflation accelerates",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": []
-  },
-  "result": "Warsh 減少利率決策次數至每年六次，債市憂政策突襲加劇波動"
- },
- {
   "at": "2026-10-30T01:27+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3007,5 +2909,107 @@
    "股市期貨11/9早盤上漲，標普500期貨…：用了相對時間"
   ],
   "result": "選舉結果衝擊 AI 概念股，資金轉進美債推動債市反彈"
+ },
+ {
+  "at": "2026-11-09T23:53+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "cpi",
+   "auction_10y"
+  ],
+  "locks": [
+   "cpi"
+  ],
+  "clusters": [
+   {
+    "score": 8.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+1（有內文）",
+    "titles": [
+     "A key report for where inflation stood in October comes out Tuesday. Here's what to expect"
+    ]
+   },
+   {
+    "score": 8.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+2（有內文）",
+    "titles": [
+     "油價回落緩解通膨「美股大爆發」！道瓊狂飆1104點、費半勁揚逾6％"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "時效+2、來源+1.5、熱度+4（有內文）",
+    "titles": [
+     "Jensen Huang exit odds are low on prediction markets after Nvidia probe"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "時效+2、來源+1.5、熱度+4（有內文）",
+    "titles": [
+     "Goldman CEO Solomon says AI financing remains strong despite market jitters"
+    ]
+   },
+   {
+    "score": 7.5,
+    "sources": 1,
+    "why": "時效+2、來源+1.5、熱度+4",
+    "titles": [
+     "Can Jensen Huang survive as Nvidia’s CEO after spy scandal?"
+    ]
+   },
+   {
+    "score": 7.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+1（有內文）",
+    "titles": [
+     "〈貴金屬盤後〉油價重挫緩解通膨疑慮 黃金上漲1%、白銀獲支撐"
+    ]
+   },
+   {
+    "score": 6.5,
+    "sources": 1,
+    "why": "時效+2、來源+0.5、熱度+4（有內文）",
+    "titles": [
+     "Why Nvidia Stock Was Down Today"
+    ]
+   },
+   {
+    "score": 6.5,
+    "sources": 1,
+    "why": "時效+2、來源+0.5、熱度+4（有內文）",
+    "titles": [
+     "Nvidia is about 6% of the S&P 500. If Jensen Huang is ousted, there’s no clear successor — could chaos hit portfolios?"
+    ]
+   }
+  ],
+  "main": "A key report for where inflation stood in October comes out Tuesday. Here's what to expect",
+  "main_why": "鎖定事件 cpi",
+  "second": "Jensen Huang exit odds are low on prediction markets after Nvidia probe",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 194 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "用了相對時間（前一交易日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "出現材料裡沒有的數字（25）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述"
+    ],
+    [
+     "主軸 155 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "10月CPI通膨數據11/10公布，聯準會官員憂通膨壓力擴散"
  }
 ]

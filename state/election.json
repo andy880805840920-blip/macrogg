@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -6,
- "date": "2026-11-09",
+ "days_to": -7,
+ "date": "2026-11-10",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -131,15 +131,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9835
+    "p": 0.9815
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0155
+    "p": 0.0195
    },
-   "close": 0.48350000000000004,
-   "vol": 8016579.8764929995,
+   "close": 0.48150000000000004,
+   "vol": 8082051.2550369995,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   },
   {
@@ -148,15 +148,15 @@
    "lead": {
     "name": "Scott Colom",
     "party": "民",
-    "p": 0.987
+    "p": 0.988
    },
    "other": {
     "name": "Cindy Hyde-Smith",
     "party": "共",
-    "p": 0.0135
+    "p": 0.011
    },
-   "close": 0.487,
-   "vol": 6269024.957289999,
+   "close": 0.488,
+   "vol": 6290077.540782999,
    "url": "https://polymarket.com/event/mississippi-senate-election-winner"
   }
  ],
@@ -171,17 +171,17 @@
      "lead": {
       "name": "Scott Colom",
       "party": "D",
-      "p": 0.987
+      "p": 0.988
      },
      "other": {
       "name": "Cindy Hyde-Smith",
       "party": "R",
-      "p": 0.0135
+      "p": 0.011
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.4,
-     "vol": 6269024.957289999,
+     "gap": 97.7,
+     "vol": 6290077.540782999,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Alaska": {
@@ -192,17 +192,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9835
+      "p": 0.9815
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0155
+      "p": 0.0195
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 96.8,
-     "vol": 8016579.8764929995,
+     "gap": 96.2,
+     "vol": 8082051.2550369995,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -277,17 +277,17 @@
      "lead": {
       "name": "Cindy Holscher",
       "party": "D",
-      "p": 0.992
+      "p": 0.9935
      },
      "other": {
       "name": "Ty Masterson",
       "party": "R",
-      "p": 0.003
+      "p": 0.0025
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 98.9,
-     "vol": 869337.0537800001,
+     "gap": 99.1,
+     "vol": 869374.2437800001,
      "url": "https://polymarket.com/event/kansas-governor-winner-2026"
     },
     "Alaska": {
@@ -308,7 +308,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 98.7,
-     "vol": 1953584.190629,
+     "vol": 1953747.5406290002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -407,7 +407,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.964,
+    "p": 0.965,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },

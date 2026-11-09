@@ -642,7 +642,8 @@
   "p:us_china_truce:4431b6e22b66": "2026-11-06",
   "p:us_china_truce:237d0635c207": "2026-11-06",
   "p:us_china_truce:15f678999937": "2026-11-06",
-  "p:us_china_truce:bc7a76492a0d": "2026-11-06"
+  "p:us_china_truce:bc7a76492a0d": "2026-11-06",
+  "e879f4809680": "2026-11-09"
  },
  "items": [
   {
@@ -799,20 +800,6 @@
      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1jaVhGejF4R2t4eERsV21qWDJTUWZNcUNub0szbzZpZUlueHBYQV9jNHhJWGJ5WnplUlpwUFQ2NzgxMjlldnp2dF9fQWJUS0c0LVFyd1BiVE9jQW94eDdIOTRlZDVKbmVUTWlDVXYwN09CWG1vcG5j?oc=5"
     }
    ]
-  },
-  {
-   "id": "5341071e6e51",
-   "topic": "關稅",
-   "channel": "行政命令",
-   "zh": "川普簽署行政命令對部分製藥藥物加徵100%關稅。",
-   "date": "2026-11-02",
-   "links": [
-    {
-     "title": "Trump slaps 100% tariff on some pharmaceutical drugs via executive order",
-     "source": "ABC News - Breaking News, Latest News and Videos",
-     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOVHNjYmZWRzV1Rno1QnBJdlAxR1Jjd1dGLTdTRHlUQnRUQmpCOUFJSDc0cFdCSy1heGE1SUc5R1k3WWJkZGFKZ01vYUQyaTM0bzgxSWJ5R2RVYjdQNjU2NjhVZ2lUZGtUM1Ffa0RQRjFPb2tvOFFCVXN1M1pPUnN1UTYwZVlWdXZWSkppX014QkJPQ0U4VDAzMzJGYnlKRURCemFWMVd6SVZTVGfSAbABQVVfeXFMT3pWWlhKeVJ4NHJNZ3Y4TWNzT0RTYi1UajFQcnJlVDUxLWpOY0N4bTFNWVlRaDVnRjYxaS1tMVVMNkZUYlhmTFJlT1BvSmpEMWVvelhIRXhIeUQtS0d2V2NlZ3ZLTXFpYXlDT0VPQkRLRjA5eXNKZnlzSGRrajJUeEtUUWRYNnhlRHVXYldaU3NBdG1VTVBqcXRtY3ViMHQ1MjJzVlhIRzNFNHhUeVI3dWI?oc=5"
-    }
-   ]
   }
  ],
  "summary": {
@@ -881,5 +868,5 @@
    ]
   }
  },
- "at": "2026-11-09 20:10（台北）"
+ "at": "2026-11-10 07:53（台北）"
 }
