@@ -1975,6 +1975,51 @@ body.duo-lock{overflow:hidden}
 .ai-hl-c.sm .ai-ipo li::before{width:9px;height:9px;margin-left:-4.5px;top:2px}
 .ai-hl-c.sm .ai-ipo li::after{top:6.5px}
 .ai-hl-c.sm .ai-ipo b{font-weight:600}.ai-hl-c.sm .ai-ipo span{font-size:10.5px}
+/* 2026-11 IPO 細節：關鍵數字、估值預期、歷輪價格、申報時間軸（點上滑鼠／點選跳出重點） */
+.ipo2{padding:12px 14px}
+.ipo-kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 0}
+@media(max-width:760px){.ipo-kp{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ipo-kp div{background:var(--surface-2);border-radius:10px;padding:8px 10px;min-width:0}
+.ipo-kp dt{font-size:11.5px;color:var(--muted);font-weight:600}
+.ipo-kp dd{margin:2px 0 0;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.3}
+.ipo-kp small{display:block;font-size:11px;color:var(--text-secondary);line-height:1.45;margin-top:3px}
+.ipo-vh{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:14px 0 6px}
+.ipo-vh b{font-size:13px}.ipo-vh span{font-size:12px;color:var(--text-secondary)}
+.ipo-vc{display:block;width:100%;height:auto;max-height:150px}
+.ipo-vc .ipo-ax{font-size:11px;fill:var(--muted)}.ipo-vc .ipo-vl{font-size:11px;font-weight:700;fill:var(--text-primary)}
+.ipo-vr{list-style:none;margin:6px 0 0;padding:0;font-size:12px}
+.ipo-vr li{display:grid;grid-template-columns:44px 1fr;gap:6px;padding:3px 0;border-top:1px dashed var(--grid)}
+.ipo-vr a{color:var(--text-secondary)}
+.ipo-fn{font-size:11.5px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+.ipo-rd ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.ipo-rd li{display:grid;grid-template-columns:110px 1fr 86px;gap:8px;align-items:center;font-size:12px}
+.ipo-rd li>span em{display:block;font-style:normal;font-size:10.5px;color:var(--muted)}
+.ipo-rd .trk{position:relative;height:10px;border-radius:3px;background:var(--surface-2)}
+.ipo-rd .trk i{position:absolute;top:0;bottom:0;border-radius:3px;background:var(--series-1)}
+.ipo-rd .ipo-now .trk i.base{background:var(--brand-orange);opacity:.35;border-radius:3px 0 0 3px}
+.ipo-rd .ipo-now .trk i.r{background:var(--brand-orange);border-radius:0 3px 3px 0}
+.ipo-rd li>b{text-align:right;font-variant-numeric:tabular-nums}
+.ipo-tlw{position:relative}
+.ipo-tl{display:flex;list-style:none;margin:0;padding:4px 0 2px;overflow-x:auto;scrollbar-width:thin}
+.ipo-tl>li{flex:1 0 64px;position:relative;text-align:center}
+.ipo-tl>li::before{content:"";position:absolute;top:13px;left:-50%;width:100%;border-top:2px solid var(--grid)}
+.ipo-tl>li:first-child::before{display:none}
+.ipo-tl>li.done::before{border-top-color:var(--series-1)}
+.ipo-tl button{appearance:none;font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0 2px 4px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:44px;width:100%}
+.ipo-tl button::before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid var(--baseline);background:var(--bg);margin:7px 0 4px}
+.ipo-tl li.done button::before{background:var(--series-1);border-color:var(--series-1)}
+.ipo-tl button:not([disabled]):hover::before,.ipo-tl button:focus-visible::before{box-shadow:0 0 0 4px color-mix(in srgb,var(--series-1) 25%,transparent)}
+.ipo-tl button:disabled{cursor:default}
+.ipo-tl b{font-size:11.5px;white-space:nowrap}.ipo-tl span{font-size:10.5px;color:var(--muted)}
+.ipo-pop{display:none}
+.ipo-fly{position:absolute;width:min(320px,calc(100% - 8px));z-index:20;text-align:left;
+  background:var(--surface-1);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:10px 12px;font-size:12px;line-height:1.55}
+.ipo-fly[hidden]{display:none}
+.ipo-pop-h{font-weight:800;font-size:12.5px;margin-bottom:4px}
+.ipo-pop-c{color:var(--brand-orange-ink,#B4532A);font-weight:600;margin-bottom:4px}
+.ipo-fly ul{margin:0 0 6px;padding-left:16px}.ipo-fly li{margin:2px 0}
+.ipo-fly a{font-size:11.5px;color:var(--series-1)}
+.ipo-tl li.sel button::before{box-shadow:0 0 0 4px color-mix(in srgb,var(--series-1) 30%,transparent)}
 .hsx{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--bg)}
 .hsx-h b{display:block;font-size:14px;color:var(--text-primary)}.hsx-h span{font-size:11.5px;color:var(--muted)}
 .hsx-k{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0 4px}
@@ -4791,6 +4836,19 @@ html body #hm-cat-pol:checked~.hm-cats label[for=hm-cat-pol]{color:var(--brand-i
 .cl>.zx{margin-left:38px}
 
 .zx-hidden{display:none!important}
+.zoomed>.cbar{visibility:hidden}
+.zrange{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 10px}
+.zrange>button{font:inherit;font-size:12px;font-weight:600;padding:4px 11px;min-height:32px;border:1px solid var(--border);border-radius:999px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer;font-variant-numeric:tabular-nums}
+.zrange>button[aria-pressed=true]{background:var(--brand-navy);color:#fff;border-color:var(--brand-ink)}
+.zrange>button:disabled{opacity:.35;cursor:not-allowed}
+.zrange>button:focus-visible{outline:2px solid var(--series-1);outline-offset:2px}
+.zr-st{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.zr-cust{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;width:100%;font-size:var(--fs-small);color:var(--text-secondary)}
+.zr-cust[hidden]{display:none}
+.zr-cust input{font:inherit;font-size:var(--fs-small);padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface-1);color:var(--text-primary);margin-left:6px}
+.zr-go{font:inherit;font-size:12px;font-weight:600;padding:5px 14px;min-height:32px;border-radius:999px;border:1px solid var(--brand-ink);background:var(--brand-navy);color:#fff;cursor:pointer}
+.zr-msg{font-size:11.5px;color:var(--brand-orange-ink,#B4532A)}
+.dc2-col[hidden]{display:none}
 .chart-cursor{position:absolute;top:0;bottom:0;border-left:1px solid var(--text-secondary);pointer-events:none;z-index:4}
 .chart-selected-dot{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--surface-1);pointer-events:none;z-index:4}
 .chart-readout{margin-top:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);font-size:var(--fs-small);line-height:1.6;min-height:40px;box-sizing:border-box;color:var(--text-secondary)}
@@ -5692,28 +5750,31 @@ JS = """
   function zclear(el){var plot=el.parentElement;plot.querySelectorAll(':scope > .zsvg, :scope > .zt').forEach(function(x){x.remove();});
     var host=plot.parentElement;if(host){host.querySelectorAll(':scope > .zx, :scope > .zbar').forEach(function(x){x.remove();});host.querySelectorAll(':scope > .zx-hidden').forEach(function(x){x.classList.remove('zx-hidden');});}}
   function zoomOut(el){if(!el._fullPoints)return;var prev=(points(el)[el._index||0]||{}).date,pl=el.parentElement,py1=pl.getBoundingClientRect().top;zclear(el);var dy1=pl.getBoundingClientRect().top-py1;if(dy1<-1)window.scrollBy(0,dy1);el.parentElement.classList.remove('zoomed');
+    var rb0=pl.parentElement&&pl.parentElement.querySelector(':scope > .zrange');if(rb0)zrMark(rb0,'all','');
     el._chartPoints=el._fullPoints;el._fullPoints=null;el.setAttribute('aria-valuemax',el._chartPoints.length-1);
     var j=el._chartPoints.length-1;el._chartPoints.forEach(function(p,i){if(p.date===prev)j=i;});choose(el,j);}
-  function zoomIn(el,clientX){
-    var Z=zinfo(el);if(!Z)return;var full=el._fullPoints||points(el);if(full.length<8)return;
-    var plot=el.parentElement,svg=plot.querySelector(':scope > svg:not(.zsvg)');if(!svg)return;
-    var ts=full.map(function(p){return ztime(p.date);}),gaps=[];for(var i=1;i<ts.length;i++)gaps.push(ts[i]-ts[i-1]);gaps.sort(function(a,b){return a-b;});
-    var daily=gaps[gaps.length>>1]<20*864e5,half=(daily?61:183)*864e5,T0=ts[0],T1=ts[ts.length-1];
-    if(T1-T0<=half*2.3)return;
-    var box=el.getBoundingClientRect(),xp=(clientX-box.left)/box.width*100,cur=points(el),best=0,dist=Infinity;
-    cur.forEach(function(p,i){var d=Math.abs(p.x-xp);if(d<dist){best=i;dist=d;}});
-    var c=ztime(cur[best].date),a=c-half,b=c+half;if(a<T0){b+=T0-a;a=T0;}if(b>T1){a-=b-T1;b=T1;}
-    var sel=[];ts.forEach(function(t,i){if(t>=a&&t<=b)sel.push(i);});if(sel.length<3)return;
-    var lo=Infinity,hi=-Infinity;sel.forEach(function(i){full[i].values.forEach(function(v){if(v.v!==null&&v.v!==undefined){lo=Math.min(lo,v.v);hi=Math.max(hi,v.v);}});});
-    if(!isFinite(lo))return;var pad=((hi-lo)||Math.abs(hi)*.02||1)*.12;lo-=pad;hi+=pad;
-    function X(t){return (t-a)/(b-a)*100;}function Y(v){return (1-(v-lo)/(hi-lo))*100;}
+  function zmeta(full){var ts=full.map(function(p){return ztime(p.date);}),gaps=[];for(var i=1;i<ts.length;i++)gaps.push(ts[i]-ts[i-1]);gaps.sort(function(a,b){return a-b;});
+    return {ts:ts,daily:gaps.length?gaps[gaps.length>>1]<20*864e5:false};}
+  // 在 [a,b] 期間重畫（雙擊放大與期間選擇共用）。Z.bars＝哪幾個 series 是柱狀（自己一套比例尺，例如走廊圖的 SRF 動用量）。
+  function zwin(el,a,b,label,key){
+    var Z=zinfo(el);if(!Z)return false;var full=el._fullPoints||points(el);
+    var plot=el.parentElement,svg=plot.querySelector(':scope > svg:not(.zsvg)');if(!svg)return false;
+    var M=zmeta(full),ts=M.ts,daily=M.daily,B=Z.bars||[];function isB(k){return B.indexOf(k)>=0;}
+    var sel=[];ts.forEach(function(t,i){if(t>=a&&t<=b)sel.push(i);});if(sel.length<2)return false;
+    a=ts[sel[0]];b=ts[sel[sel.length-1]];if(b<=a)return false;
+    var lo=Infinity,hi=-Infinity,bm=0;sel.forEach(function(i){full[i].values.forEach(function(v,k){if(v.v===null||v.v===undefined)return;if(isB(k))bm=Math.max(bm,v.v);else{lo=Math.min(lo,v.v);hi=Math.max(hi,v.v);}});});
+    if(!isFinite(lo))return false;var pad=((hi-lo)||Math.abs(hi)*.02||1)*.12;lo-=pad;hi+=pad;bm=(bm*1.15)||1;
+    function X(t){return (t-a)/(b-a)*100;}function Y(v){return (1-(v-lo)/(hi-lo))*100;}function YB(v){return (1-Math.max(0,v)/bm)*100;}
     var vb=(svg.getAttribute('viewBox')||'0 0 600 150').split(/[ ,]+/),W=+vb[2]||600,H=+vb[3]||150;
-    var zp=sel.map(function(i){var p=full[i];return{date:p.date,x:X(ts[i]),values:p.values.map(function(v){return{label:v.label,text:v.text,color:v.color,v:v.v,y:(v.v===null||v.v===undefined)?null:Y(v.v)};})};});
+    var prev=(points(el)[el._index===undefined?points(el).length-1:el._index]||{}).date;
+    var zp=sel.map(function(i){var p=full[i];return{date:p.date,x:X(ts[i]),values:p.values.map(function(v,k){return{label:v.label,text:v.text,color:v.color,v:v.v,y:(v.v===null||v.v===undefined)?null:(isB(k)?YB(v.v):Y(v.v))};})};});
     zclear(el);if(!el._fullPoints)el._fullPoints=full;
     var st=zstep(hi-lo),nd=Math.max(0,-Math.floor(Math.log(st)/Math.LN10+1e-9)),g='',ticks=[];
     for(var tv=Math.ceil(lo/st)*st;tv<=hi+1e-9;tv+=st){var yy=Y(tv)/100*H;ticks.push(tv);g+='<line x1="0" x2="'+W+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'" stroke="var(--grid)" stroke-width="1" vector-effect="non-scaling-stroke"/>';}
-    var ns=zp[0].values.length;
-    for(var k=0;k<ns;k++){var pts=[];zp.forEach(function(p){var v=p.values[k];if(v.y!==null)pts.push((p.x/100*W).toFixed(1)+','+(v.y/100*H).toFixed(1));});if(pts.length<2)continue;
+    var ns=zp[0].values.length,bw=Math.max(.3,70/zp.length)/100*W;
+    B.forEach(function(k){if(k>=ns)return;zp.forEach(function(p){var v=p.values[k];if(v.y===null||!v.v)return;var y=v.y/100*H;
+      g+='<rect x="'+(p.x/100*W-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(H-y).toFixed(1)+'" fill="'+v.color+'" opacity="0.45"/>';});});
+    for(var k=0;k<ns;k++){if(isB(k))continue;var pts=[];zp.forEach(function(p){var v=p.values[k];if(v.y!==null)pts.push((p.x/100*W).toFixed(1)+','+(v.y/100*H).toFixed(1));});if(pts.length<2)continue;
       var col=zp[0].values[k].color,dash=Z.dash&&Z.dash[k]?' stroke-dasharray="6 4"':'';
       if(Z.area&&ns===1)g+='<polygon points="'+pts[0].split(',')[0]+','+H+' '+pts.join(' ')+' '+pts[pts.length-1].split(',')[0]+','+H+'" fill="'+col+'" opacity="0.09"/>';
       g+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"'+dash+' vector-effect="non-scaling-stroke"/>';}
@@ -5721,18 +5782,82 @@ JS = """
     zs.setAttribute('class','zsvg');zs.setAttribute('aria-hidden','true');zs.innerHTML=g;plot.insertBefore(zs,svg.nextSibling);
     var isCl=plot.classList.contains('cl-plot');
     ticks.forEach(function(tv){var sp=document.createElement('span');sp.className=isCl?'cl-tick zt':'zt ztl';sp.style.top=Y(tv)+'%';sp.textContent=(+tv.toFixed(nd)).toFixed(nd).replace('-','−')+(Z.unit||'');plot.appendChild(sp);});
-    // 「顯示全部」放在圖表上方獨立一列（2026-10：放在圖裡會壓到線）
-    var host=plot.parentElement,xa=host.querySelector(':scope > .cl-xm, :scope > .cl-x, :scope > .lxaxis');
-    var bar=document.createElement('div');bar.className='zbar';
-    var lab=document.createElement('span');lab.textContent=daily?'已放大：前後 2 個月':'已放大：前後 6 個月';bar.appendChild(lab);
-    var chip=document.createElement('button');chip.type='button';chip.className='zchip';chip.textContent='顯示全部';chip.setAttribute('aria-label','取消放大，顯示全部期間');
-    chip.addEventListener('click',function(ev){ev.stopPropagation();zoomOut(el);el.focus({preventScroll:true});});bar.appendChild(chip);
-    var py0=plot.getBoundingClientRect().top;host.insertBefore(bar,plot);
-    var dy0=plot.getBoundingClientRect().top-py0;if(dy0>1)window.scrollBy(0,dy0);   // 圖表留在手指下，不往下跳
+    var host=plot.parentElement,xa=host.querySelector(':scope > .cl-xm, :scope > .cl-x, :scope > .lxaxis'),rb=host.querySelector(':scope > .zrange');
+    if(rb){zrMark(rb,key||'',label);}
+    else{
+      // 「顯示全部」放在圖表上方獨立一列（2026-10：放在圖裡會壓到線）
+      var bar=document.createElement('div');bar.className='zbar';
+      var lab=document.createElement('span');lab.textContent=label;bar.appendChild(lab);
+      var chip=document.createElement('button');chip.type='button';chip.className='zchip';chip.textContent='顯示全部';chip.setAttribute('aria-label','取消放大，顯示全部期間');
+      chip.addEventListener('click',function(ev){ev.stopPropagation();zoomOut(el);el.focus({preventScroll:true});});bar.appendChild(chip);
+      var py0=plot.getBoundingClientRect().top;host.insertBefore(bar,plot);
+      var dy0=plot.getBoundingClientRect().top-py0;if(dy0>1)window.scrollBy(0,dy0);}   // 圖表留在手指下，不往下跳
     var zx=document.createElement('div');zx.className='zx';[a,(a+b)/2,b].forEach(function(t){var sp=document.createElement('span');sp.textContent=zfmt(t,daily);zx.appendChild(sp);});
     if(xa){xa.classList.add('zx-hidden');xa.parentNode.insertBefore(zx,xa);}else plot.parentNode.insertBefore(zx,plot.nextSibling);
     plot.classList.add('zoomed');el._chartPoints=zp;el.setAttribute('aria-valuemax',zp.length-1);
-    var ci=0;zp.forEach(function(p,i){if(p.date===cur[best].date)ci=i;});choose(el,ci);}
+    var ci=zp.length-1;zp.forEach(function(p,i){if(p.date===prev)ci=i;});choose(el,ci);return true;}
+  function zoomIn(el,clientX){
+    var Z=zinfo(el);if(!Z)return;var full=el._fullPoints||points(el);if(full.length<8)return;
+    var M=zmeta(full),ts=M.ts,daily=M.daily,half=(daily?61:183)*864e5,T0=ts[0],T1=ts[ts.length-1];
+    if(T1-T0<=half*2.3)return;
+    var box=el.getBoundingClientRect(),xp=(clientX-box.left)/box.width*100,cur=points(el),best=0,dist=Infinity;
+    cur.forEach(function(p,i){var d=Math.abs(p.x-xp);if(d<dist){best=i;dist=d;}});el._index=best;
+    var c=ztime(cur[best].date),a=c-half,b=c+half;if(a<T0){b+=T0-a;a=T0;}if(b>T1){a-=b-T1;b=T1;}
+    zwin(el,a,b,daily?'已放大：前後 2 個月':'已放大：前後 6 個月','');}
+
+  // 期間選擇（2026-11，流動性與長端頁）：圖表上方一列 全部／1 個月／3 個月／12 個月／MTD／YTD／自訂。
+  // 「全部」＝各圖原本的回溯期間（不變）；其餘在瀏覽器端用同一套放大重畫。
+  // MTD 基期＝上月最後一筆、YTD 基期＝去年最後一筆（與長端頁首卡同一個口徑）。
+  var ZR=[['all','全部'],['1m','1 個月'],['3m','3 個月'],['12m','12 個月'],['mtd','MTD'],['ytd','YTD'],['c','自訂']];
+  function zd(t){var d=new Date(t);return d.getUTCFullYear()+'-'+('0'+(d.getUTCMonth()+1)).slice(-2)+'-'+('0'+d.getUTCDate()).slice(-2);}
+  // flow＝每期流量柱（每根是一個月的量）：期間用日曆月計，3 個月＝最近 3 根、YTD＝今年的各月，不需要基期那一點。
+  function zrWin(k,ts,flow){var T1=ts[ts.length-1],d=new Date(T1),y=d.getUTCFullYear(),m=d.getUTCMonth(),dd=d.getUTCDate(),a=null;
+    if(flow){if(k==='3m')a=Date.UTC(y,m-3,dd)+1;else if(k==='12m')a=Date.UTC(y-1,m,dd)+1;else if(k==='ytd')a=Date.UTC(y,0,1);return a===null?null:[a,T1];}
+    function before(t){var r=null;ts.forEach(function(x){if(x<t)r=x;});return r;}
+    if(k==='1m')a=Date.UTC(y,m-1,dd);else if(k==='3m')a=Date.UTC(y,m-3,dd);else if(k==='12m')a=Date.UTC(y-1,m,dd);
+    else if(k==='mtd')a=before(Date.UTC(y,m,1));else if(k==='ytd')a=before(Date.UTC(y,0,1));
+    return a===null?null:[a,T1];}
+  function zrCount(w,ts){var n=0;ts.forEach(function(t){if(t>=w[0]&&t<=w[1])n++;});return n;}
+  function zrMark(rb,key,txt){rb.querySelectorAll('button[data-k]').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-k')===key?'true':'false');});
+    var s=rb.querySelector('.zr-st');if(s)s.textContent=txt||'';if(key!=='c'){var c=rb.querySelector('.zr-cust');if(c)c.hidden=true;}}
+  function zrBuild(ts,daily,apply,flow){
+    var rb=document.createElement('div');rb.className='zrange';rb.setAttribute('role','group');rb.setAttribute('aria-label','圖表期間');
+    ZR.forEach(function(o){var bt=document.createElement('button');bt.type='button';bt.setAttribute('data-k',o[0]);bt.textContent=o[1];
+      var ok=true;if(o[0]!=='all'&&o[0]!=='c'){var w=zrWin(o[0],ts,flow);ok=!!w&&w[0]>ts[0]&&zrCount(w,ts)>=2&&(daily||(o[0]!=='1m'&&o[0]!=='mtd'));}
+      if(!ok){bt.disabled=true;bt.title='這張圖的資料期間或頻率不適用';}
+      bt.setAttribute('aria-pressed',o[0]==='all'?'true':'false');rb.appendChild(bt);});
+    var st=document.createElement('span');st.className='zr-st';st.setAttribute('aria-live','polite');rb.appendChild(st);
+    var cu=document.createElement('div');cu.className='zr-cust';cu.hidden=true;
+    var lo=zd(ts[0]),hi=zd(ts[ts.length-1]),f0=zd(ts[Math.max(0,ts.length-(daily?63:13))]);
+    cu.innerHTML='<label>從 <input type="date" class="zr-f" min="'+lo+'" max="'+hi+'" value="'+f0+'"></label>'+
+      '<label>到 <input type="date" class="zr-t" min="'+lo+'" max="'+hi+'" value="'+hi+'"></label>'+
+      '<button type="button" class="zr-go">套用</button><span class="zr-msg"></span>';
+    rb.appendChild(cu);
+    rb.addEventListener('click',function(e){var bt=e.target.closest('button');if(!bt||bt.disabled)return;e.stopPropagation();
+      if(bt.classList.contains('zr-go')){var a=Date.parse(cu.querySelector('.zr-f').value+'T00:00:00Z'),b=Date.parse(cu.querySelector('.zr-t').value+'T00:00:00Z'),msg=cu.querySelector('.zr-msg');
+        if(!isFinite(a)||!isFinite(b)||b<=a){msg.textContent='起日要早於迄日';return;}
+        if(zrCount([a,b],ts)<2){msg.textContent='這段期間資料不足兩筆';return;}
+        msg.textContent='';apply([a,b],'c');return;}
+      var k=bt.getAttribute('data-k');if(k==='c'){zrMark(rb,'c','');cu.hidden=false;var f=cu.querySelector('.zr-f');if(f)f.focus();return;}
+      apply(k==='all'?null:zrWin(k,ts,flow),k);});
+    return rb;}
+  function zrLabel(w,daily){return zfmt(w[0],daily)+' – '+zfmt(w[1],daily);}
+  if(['/liquidity/','/rates/'].some(function(p){return location.pathname.indexOf(p)===0;})){
+    document.querySelectorAll('.chart-inspector[data-zoom]').forEach(function(el){
+      var full=points(el);if(full.length<4)return;var M=zmeta(full);if(M.ts.some(function(t){return !isFinite(t);}))return;
+      var plot=el.parentElement,host=plot.parentElement;if(!host||host.querySelector(':scope > .zrange'))return;
+      var rb=zrBuild(M.ts,M.daily,function(w,k){
+        if(!w){zoomOut(el);zrMark(rb,'all','');return;}
+        if(!zwin(el,w[0],w[1],zrLabel(w,M.daily),k))zrMark(rb,k,'資料不足');});
+      host.insertBefore(rb,plot);});
+    document.querySelectorAll('.gc').forEach(function(gc){
+      var cols=[].slice.call(gc.querySelectorAll('.dc2-col[data-date]'));if(cols.length<4||gc.querySelector(':scope > .zrange'))return;
+      var ts=cols.map(function(c){return ztime(c.getAttribute('data-date'));});if(ts.some(function(t){return !isFinite(t);}))return;
+      var M=zmeta(cols.map(function(c){return {date:c.getAttribute('data-date')};}));
+      var rb=zrBuild(ts,M.daily,function(w,k){cols.forEach(function(c,i){c.hidden=!!w&&(ts[i]<w[0]||ts[i]>w[1]);});
+        zrMark(rb,k,w?zrLabel([ts.filter(function(t){return t>=w[0];})[0],w[1]],M.daily):'');},!M.daily);
+      gc.insertBefore(rb,gc.firstChild);});
+  }
   function zoomToggle(el,x){if(!zinfo(el))return false;if(el._fullPoints)zoomOut(el);else zoomIn(el,x);return true;}
   var lastTouchZoom=0,pinch={};
   document.addEventListener('dblclick',function(e){var el=e.target.closest('.chart-inspector');if(!el||Date.now()-lastTouchZoom<700)return;if(zoomToggle(el,e.clientX))e.preventDefault();});

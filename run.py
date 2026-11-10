@@ -1161,6 +1161,18 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("AI 大事產生失敗（%s），該卡片本次不顯示", e)
         ctxs["_ai_events"] = None
+    # 2026-11：AI 資料中心擴張與監管（AI 大事視窗內；Epoch AI 算力＋州長／國會＋各州監管新聞）
+    try:
+        import yaml as _yaml
+        from src.analysis import datacenters as _dcm
+        _dc_cfg = _yaml.safe_load((ROOT / "config" / "datacenters.yaml").read_text(encoding="utf-8")) or {}
+        ctxs["_datacenters"] = _dcm.build(_dc_cfg, STATE_FILE.parent / "datacenters.json", ctxs.get("_election"),
+                                          (_focus_cfg or {}).get("election"), args.offline)
+        if ctxs["_datacenters"]:
+            log.info("AI 資料中心：%d 州", len(ctxs["_datacenters"]["states"]))
+    except Exception as e:                         # noqa: BLE001
+        log.warning("AI 資料中心區塊產生失敗（%s），本次不顯示", e)
+        ctxs["_datacenters"] = None
     # 2026-11：白宮與國會（取代期中選舉那一格；設定 config/whitehouse.yaml）
     try:
         from src.analysis import whitehouse as _whm

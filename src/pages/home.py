@@ -1203,7 +1203,8 @@ def _duo(ctxs: dict, extra: list | None = None) -> str:
     _wh = ctxs.get("_whitehouse")
     _el = ("el", _election_tile(ctxs.get("_election"))) if (not _wh or _wh.get("election_tile")) else ("el", ("", ""))
     pairs = [_el, ("wh", _wh_tile(_wh)), ("ai", _ai_tile(ctxs.get("_ai_events"),
-                                                                                    ((ctxs.get("rates") or {}).get("le") or {}).get("hs_agg")))]
+                                                                                    ((ctxs.get("rates") or {}).get("le") or {}).get("hs_agg"),
+                                                                                    ctxs.get("_datacenters")))]
     pairs += [(t, (tile, panel)) for t, tile, panel in (extra or [])]
     for t, (tile, panel) in pairs:
         if tile:
@@ -2347,7 +2348,7 @@ def home_footer(ctxs: dict) -> str:
          ("期中選舉", "Polymarket 預測市場（下注者看法，不是民調）", "每天 3 次"),
          ("就業、物價、聯準會", f"BLS、BEA、聯準會（就業 {esc(lab.get('data_month', '—'))}・物價 {esc(inf.get('data_month', '—'))}・FOMC {esc(fom.get('latest_date', '—'))}）", "依發布")],
         ["官方日利率變動對前一個有效資料日；盤中報價變動對昨收。1 bp＝0.01 個百分點，1 碼＝25 bp。",
-         "SOFR−IORB 轉正代表準備金趨緊；ON RRP 接近零代表縮表開始直接抽銀行準備金；SRF 非零代表有人向央行借急錢；MOVE＝美債版 VIX。",
+         "SOFR−IORB 轉正代表準備金趨緊；ON RRP 接近零代表 TGA 回補與公債發行開始直接抽銀行準備金；SRF 非零代表有人向央行借急錢；MOVE＝美債版 VIX。",
          "新聞焦點由 AI 整理，附報導來源供查閱；付費內容以公開標題與摘要為依據。",
          "補充新聞依所選指標順序取兩個不同主題；手動更換新聞不會改動指標，下次調整指標時再聯動新聞。",
          "黃金期貨以美元／盎司計；美元指數為 DXY。USD/TWD 是 1 美元兌多少新台幣，上升＝台幣貶值、下降＝升值；FRED 資料為紐約中午買入匯率。",

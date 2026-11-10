@@ -213,13 +213,46 @@ def headline(srf: dict, rrp: dict, verdict_: dict | None = None) -> str:
     return "，".join(parts) if parts else "流動性資料不足"
 
 
-def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None) -> dict:
+def bs_stance(soma: list | None, schedule: list | None) -> dict:
+    """
+    Fed 目前的資產負債表管理政策（2026-11）：由資料判定，不寫死在句子裡。
+        qt       SOMA 近 3 個月總持有減少超過 300 億美元——縮表中
+        rmp      沒有縮表，且紐約聯儲最新一期 RMP 計畫金額 > 0——正在做準備金管理購買
+        paused   沒有縮表，RMP 計畫存在但最新一期金額為 0——RMP 暫停
+        hold     沒有縮表、也沒有 RMP 計畫——持有規模大致不動
+        unknown  兩項資料都抓不到
+    「流動性轉緊時該留意 Fed 什麼」完全取決於這個狀態：縮表中才談放緩或停止縮表；
+    2025 年 12 月停止縮表後，Fed 的工具是 RMP（買國庫券補準備金）與 SRF。
+    """
+    from . import longend as _le
+    pol = _le.fed_policy_from_soma(soma or []) if soma else None
+    sched = [r for r in (schedule or []) if r.get("start", "") >= RMP_PROGRAM_START]
+    last = sched[-1] if sched else None
+    if pol and pol.get("qt"):
+        return {"mode": "qt", "watch": "留意 Fed 是否放緩或停止縮表"}
+    if last is not None and (last.get("rmp") or 0) > 0:
+        return {"mode": "rmp", "rmp": last["rmp"], "period": last.get("start", ""),
+                "watch": "Fed 已停止縮表、正以準備金管理購買（RMP）補準備金，"
+                         "留意紐約聯儲下一期 RMP 計畫金額是否加大，以及 SRF 動用是否持續"}
+    if last is not None:
+        return {"mode": "paused", "period": last.get("start", ""),
+                "watch": "Fed 已停止縮表，但最新一期 RMP 計畫金額為 0，"
+                         "留意紐約聯儲是否恢復或加大 RMP，以及 SRF 動用是否持續"}
+    if pol:
+        return {"mode": "hold", "watch": "Fed 目前沒有縮表，留意是否啟動準備金管理購買（RMP）補準備金，以及 SRF 動用是否持續"}
+    return {"mode": "unknown", "watch": "留意 Fed 的資產負債表操作（RMP 購買國庫券、SRF）是否調整"}
+
+
+def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None,
+            stance: dict | None = None) -> dict:
     """
     三個訊號合成一句結論：
         severe   SOFR 已經衝出 SRF 利率（走廊最上緣）——最嚴重，體系明顯缺準備金
         tight    SRF 連續動用放大，或 SOFR−IORB 轉正且持續擴大
         easing   SRF／利差都平靜，但 ON RRP 明顯回升——緩衝池在補
         normal   三者都在正常區間
+    stance＝bs_stance()：轉緊時「該留意 Fed 什麼」依目前的資產負債表政策而定
+    （先前寫死「留意 Fed 是否放緩或停止縮表」，2025 年 12 月停止縮表後就是錯的）。
     """
     if sofr_over_srf:
         return {"level": "severe", "label": "流動性嚴重轉緊",
@@ -232,7 +265,8 @@ def verdict(srf: dict, si: dict, rrp: dict, sofr_over_srf: bool | None) -> dict:
         hits.append(f'SOFR−IORB 轉正且持續擴大（現 {si["spread"]:+.0f}bp）')
     if hits:
         return {"level": "tight", "label": "流動性轉緊",
-                "text": "；".join(hits) + "——體系準備金可能開始偏緊，留意 Fed 是否放緩或停止縮表。"}
+                "text": "；".join(hits) + "——體系準備金可能開始偏緊。"
+                        + (stance or bs_stance(None, None))["watch"] + "。", "stance": (stance or {}).get("mode", "unknown")}
     if rrp.get("trend") == "up":
         return {"level": "easing", "label": "流動性轉鬆",
                 "text": "ON RRP 餘額明顯回升——機構與貨幣市場基金帳上的多餘現金增加，"
@@ -669,7 +703,7 @@ def liquidity_lights(series: dict, srf: dict, si: dict, rrp: dict, sofr_over_srf
     rst = lambda x: "unknown" if x is None else ("good" if x >= 100 else "warning")
     out.append(Light("rrp", "ON RRP 交易量（近 5 日均）",
                      "貨幣基金等機構停在 Fed 的多餘現金，是準備金被抽走前的緩衝。"
-                     "有量時 TGA 回補或縮表先吃 ON RRP；見底後就直接扣準備金。",
+                     "有量時 TGA 回補、公債發行先吃 ON RRP；見底後就直接扣準備金。",
                      rv, (rrp or {}).get("avg30"), rst(rv),
                      "—" if rv is None else f"{rv * 10:,.0f} 億美元",
                      _dir(rv, (rrp or {}).get("avg30"), 5),
@@ -761,7 +795,7 @@ def liquidity_verdict(lights: list, base: dict) -> dict:
     core_bad = [l.label for l in lights[:3] if l.status == "critical"]
     if lvl == "tight" or core_bad:
         return {"label": "轉緊", "lean": "hawkish",
-                "reason": "、".join(core_bad) or (base or {}).get("text", "")[:40]}
+                "reason": "、".join(core_bad) or (base or {}).get("text", "").split("——")[0]}
     thin = [n for k, n in (("rrp", "ON RRP 緩衝見底"), ("ratio", "準備金占比低於 13%"),
                            ("rde", "RDE 顯著為負"), ("bills", "T-Bills 淨供給偏大"))
             if S.get(k) in ("warning", "critical")]

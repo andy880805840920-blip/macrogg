@@ -1103,7 +1103,7 @@ iorb_spread:
   chain:
   - 利差轉正且擴大
   - 資金市場緊縮
-  - 聯準會可能放慢或停止縮表、甚至買進短券補充準備金。
+  - 聯準會加大準備金管理購買（RMP）買進國庫券補充準備金（縮表期間則是放慢或停止縮表）。
   myth: 「IORB 就是政策利率」。政策利率是聯邦基金利率目標區間，IORB 是引導它的工具。
   practice: SOFR {sofr}% − IORB {iorb}% = {spread} bp；近 20 日平均 {spread20} bp。
   source: Federal Reserve〈Interest on Reserve Balances〉；New York Fed。
@@ -1120,7 +1120,7 @@ onrrp:
   section: 流動性
   one: 貨幣市場基金等機構把錢「放在聯準會」過夜的工具，利率為政策區間下緣。
   origin: 紐約聯準會每天公布使用量。
-  read: ON RRP 餘額是金融體系「多餘現金」的緩衝；當它接近零，之後的縮表或公債發行就會直接抽走銀行準備金。
+  read: ON RRP 餘額是金融體系「多餘現金」的緩衝；當它接近零，之後的 TGA 回補、公債發行（或縮表期間的縮表）就會直接抽走銀行準備金。
   chain:
   - ON RRP 耗盡
   - 準備金開始下降

@@ -3757,7 +3757,8 @@ def build_liquidity_context(cfg: dict, series: dict, failed: list, offline: bool
     si = lq.sofr_iorb_state(series)
     rrp = lq.rrp_state(series)
     sofr_over_srf = lq.sofr_vs_srf_rate(value_at(series.get("SOFR") or []), srf.get("rate"))
-    verdict = lq.verdict(srf, si, rrp, sofr_over_srf)
+    bs_stance = lq.bs_stance((treasury or {}).get("soma"), (treasury or {}).get("rmp_schedule"))
+    verdict = lq.verdict(srf, si, rrp, sofr_over_srf, bs_stance)
     headline = lq.headline(srf, rrp, verdict)
 
     # 「Liquidity Now」主圖：SRF 動用量（柱狀，左軸）疊利率走廊四條線（右軸）。

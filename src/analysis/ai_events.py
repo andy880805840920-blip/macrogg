@@ -1,5 +1,5 @@
 """
-首頁「AI 大事」（2026-10-29）：十二家 AI 相關公司近 14 天的重大事件（2026-10-30 加 Intel、Apple；公司名用英文）。
+首頁「AI 大事」（2026-10-29）：AI 相關公司近 14 天的重大事件（2026-10-30 加 Intel、Apple；2026-11 xAI 改 SpaceX、加 Tesla、TSMC、Micron、Broadcom、Marvell；公司名用英文）。
 
 流程（每次執行）
   ① 每家公司一組 Google News 查詢（近 14 天），只留標題含公司名、主要媒體優先
@@ -45,9 +45,16 @@ DEFAULTS = {
         {"zh": "CoreWeave", "q": '"CoreWeave"', "match": ["CoreWeave"]},
         {"zh": "Anthropic", "q": '"Anthropic"', "match": ["Anthropic", "Claude"]},
         {"zh": "OpenAI", "q": '"OpenAI"', "match": ["OpenAI", "ChatGPT"]},
-        {"zh": "xAI", "q": '"xAI"', "match": ["xAI"]},
+        # 2026-11：xAI 已併入 SpaceX（2026-02-02 完成，xAI 改名 SpaceXAI）——改追 SpaceX，查詢仍涵蓋 xAI／Grok
+        {"zh": "SpaceX", "q": '("SpaceX" OR "xAI" OR "SpaceXAI")', "match": ["SpaceX", "xAI", "SpaceXAI", "Grok"]},
         {"zh": "Intel", "q": '"Intel"', "match": ["Intel"]},             # 2026-10-30 新增
         {"zh": "Apple", "q": '"Apple"', "match": ["Apple", "iPhone"]},    # 2026-10-30 新增
+        # 2026-11 新增：AI 供應鏈（車用 AI、晶圓代工、記憶體、客製晶片與網通）
+        {"zh": "Tesla", "q": '"Tesla"', "match": ["Tesla"]},
+        {"zh": "TSMC", "q": '("TSMC" OR "Taiwan Semiconductor")', "match": ["TSMC", "Taiwan Semiconductor"]},
+        {"zh": "Micron", "q": '"Micron"', "match": ["Micron"]},
+        {"zh": "Broadcom", "q": '"Broadcom"', "match": ["Broadcom"]},
+        {"zh": "Marvell", "q": '"Marvell"', "match": ["Marvell"]},
     ],
 }
 
@@ -73,6 +80,8 @@ def _cfg(cfg: dict | None) -> dict:
 
 # 2026-10-30：公司名改英文——舊資料（事件、對市場的影響）裡的中文名一併換掉
 RENAME = {"微軟": "Microsoft", "亞馬遜": "Amazon", "甲骨文": "Oracle", "輝達": "Nvidia", "英特爾": "Intel", "蘋果": "Apple"}
+# 只換公司欄、不換內文（內文的「xAI」指的是那個事業單位，照寫）
+CO_RENAME = {"xAI": "SpaceX"}
 
 
 def _rename(s: str) -> str:
@@ -264,9 +273,10 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
     except Exception:                                # noqa: BLE001
         state = {}
     seen: dict = state.get("seen") or {}
-    events: list = [dict(e, co=RENAME.get(e.get("co"), e.get("co")), zh=_rename(e.get("zh", "")))
+    events: list = [dict(e, co=CO_RENAME.get(RENAME.get(e.get("co"), e.get("co")), RENAME.get(e.get("co"), e.get("co"))),
+                         zh=_rename(e.get("zh", "")))
                     for e in state.get("events") or [] if e.get("date", "") >= since.isoformat()]
-    impact: dict = {RENAME.get(k, k): (dict(v, text=_rename(v.get("text", ""))) if isinstance(v, dict) else v)
+    impact: dict = {CO_RENAME.get(RENAME.get(k, k), RENAME.get(k, k)): (dict(v, text=_rename(v.get("text", ""))) if isinstance(v, dict) else v)
                     for k, v in (state.get("impact") or {}).items()}
     changed: set = set()
     if not offline:
@@ -332,6 +342,16 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
                     [{"form": f, "date": x} for f, x in zip(r.get("form") or [], r.get("filingDate") or [])])}
             except Exception as e:                   # noqa: BLE001
                 log.warning("AI 大事：IPO 進度抓取失敗（%s）", e)
+    # 2026-11：IPO 細節（每份申報的重點、發行條件、估值、歷輪價格）——進行中才抓
+    ipo_x = None
+    ipo = c.get("ipo") or {}
+    if ipo.get("cik") and (state.get("ipo") or {}).get("active"):
+        try:
+            from . import ipo_docs
+            ipo_x = ipo_docs.build(int(ipo["cik"]), ipo.get("name", ""), Path(state_path).parent / "ipo_docs.json",
+                                   offline, _get, call)
+        except Exception as e:                       # noqa: BLE001
+            log.warning("AI 大事：IPO 申報細節整理失敗（%s）", e)
     seen = {k: v for k, v in seen.items() if v >= (since - dt.timedelta(days=7)).isoformat()}
     # 已收錄的也重新檢查一次金額、合併同一件事（舊資料一起清掉）
     for e in events:
@@ -348,6 +368,6 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
         return None
     new_since = (today - dt.timedelta(days=int(c["new_days"]) - 1)).isoformat()
     return {"companies": [x["zh"] for x in c["companies"]], "events": events,
-            "impact": {k: v["text"] for k, v in impact.items()}, "ipo": state.get("ipo") or {},
+            "impact": {k: v["text"] for k, v in impact.items()}, "ipo": state.get("ipo") or {}, "ipo_x": ipo_x,
             "new_since": new_since, "window_days": int(c["window_days"]),
             "changed": sorted(changed)}

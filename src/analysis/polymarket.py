@@ -273,13 +273,13 @@ def _race(ev: dict, min_vol: float) -> dict | None:
             "url": EVENT_URL.format(slug=ev.get("slug") or "")}
 
 
-def fetch_tag_events(tag: str, _get=None) -> list[dict]:
-    """某個標籤底下所有未結束的事件（分頁抓完）。"""
+def fetch_tag_events(tag: str, _get=None, closed: bool = False) -> list[dict]:
+    """某個標籤底下所有未結束的事件（分頁抓完）。closed=True：改抓已結算的（選後看結果用）。"""
     out = []
     for off in range(0, 500, 100):
         try:
             evs = _get_json(f"{GAMMA}/events",
-                            {"closed": "false", "tag_slug": tag,
+                            {"closed": "true" if closed else "false", "tag_slug": tag,
                              "limit": 100, "offset": off}, _get)
         except Exception as e:                     # noqa: BLE001
             log.warning("Polymarket：選戰清單抓取失敗（%s）", e)

@@ -1048,7 +1048,7 @@ def dual_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
             bars += (f'<span class="dc2-bar" style="{st};left:{8 + i * 44}%;background:{col}" '
                      f'data-tip="{_esc(r["date"][:7])}｜{_esc(lab)} {v:+,.{digits}f}{_esc(unit)}"></span>')
         lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
-        cols.append(f'<div class="dc2-col">{bars}<span class="gc-lab">{_esc(lab)}</span></div>')
+        cols.append(f'<div class="dc2-col" data-date="{_esc(r["date"][:10])}">{bars}<span class="gc-lab">{_esc(lab)}</span></div>')
     leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
                   for _, l, c in keys)
     return (f'<div class="gc"><div class="gc-plot lbl"><span class="gc-zero" style="top:50%"></span>'
@@ -1095,7 +1095,7 @@ def stacked_columns(rows: Sequence[dict], keys: Sequence[tuple], unit: str = "",
                      f'data-tip="{_esc(tip_when)}｜{_esc(lab)} {v:,.{digits}f}{_esc(unit)}"></span>')
             bottom += h
         lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
-        cols.append(f'<div class="dc2-col">{segs}<span class="gc-lab">{_esc(lab)}</span></div>')
+        cols.append(f'<div class="dc2-col" data-date="{_esc(r["date"][:10])}">{segs}<span class="gc-lab">{_esc(lab)}</span></div>')
     leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
                   for _, l, c in keys)
     if future_key:
@@ -1147,7 +1147,7 @@ def diverging_stacked(rows: Sequence[dict], keys: Sequence[tuple], net: tuple,
         segs += (f'<span class="dv-net" style="top:{nt:.2f}%;background:{net[2]}"></span>')
         lab = fmt_date(r["date"]) if fmt_date else f'{int(r["date"][5:7])}月'
         cls = " dv-part" if r.get("partial") else ""
-        cols.append(f'<div class="dc2-col{cls}" data-tip="{_esc("｜".join(tip))}">{segs}'
+        cols.append(f'<div class="dc2-col{cls}" data-date="{_esc(r["date"][:10])}" data-tip="{_esc("｜".join(tip))}">{segs}'
                     f'<span class="gc-lab{_thin(ri, n_rows)}">{_esc(lab)}</span></div>')
     leg = "".join(f'<span><i style="width:10px;height:10px;background:{c}"></i>{_esc(l)}</span>'
                   for _, l, c in keys)
@@ -1209,7 +1209,7 @@ def rate_corridor(bars: Sequence[dict], lines: Sequence[dict], months: int = 6,
 
     bw = max(1.0, 70 / max(1, len(b)))          # 柱寬（plot 寬度的 %）
     bars_html = "".join(
-        f'<span style="position:absolute;left:{X(p["date"]) / W * 100 - bw / 2:.2f}%;'
+        f'<span class="cbar" style="position:absolute;left:{X(p["date"]) / W * 100 - bw / 2:.2f}%;'
         f'width:{bw:.2f}%;bottom:0;height:{max(0.0, p["value"]) / bar_max * 100:.2f}%;'
         f'background:var(--line-2);opacity:.45;border-radius:1px 1px 0 0"></span>'
         for p in b)
@@ -1238,14 +1238,16 @@ def rate_corridor(bars: Sequence[dict], lines: Sequence[dict], months: int = 6,
             v = bar_map.get(date)
             values.append({"label": bar_label,
                            "text": "當日無資料" if v is None else f"{v:,.{bar_digits}f}{bar_unit}",
-                           "y": None if v is None else YBp(v), "color": "var(--line-2)"})
+                           "y": None if v is None else YBp(v), "color": "var(--line-2)", "v": v})
         for s_, m in zip(ser, line_maps):
             v = m.get(date)
             values.append({"label": s_["label"],
                            "text": "當日無資料" if v is None else f"{v:,.{line_digits}f}{line_unit}",
-                           "y": None if v is None else YLp(v), "color": s_["color"]})
+                           "y": None if v is None else YLp(v), "color": s_["color"], "v": v})
         inspect.append({"date": date, "x": X(date) / W * 100, "values": values})
-    over.append(_inspect_layer(inspect))
+    # 放大／期間選擇：柱狀（第 0 個 series）在瀏覽器端用自己的比例尺重畫，線另一套比例尺
+    over.append(_inspect_layer(inspect, zoom={"unit": line_unit, "digits": line_digits,
+                                              **({"bars": [0]} if b else {})}))
 
     first = min(all_dates)
     last = max(all_dates)

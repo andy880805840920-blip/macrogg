@@ -1,8 +1,8 @@
 """
 首頁「AI 大事」小卡與視窗內容（2026-10-29；資料：src/analysis/ai_events.py）。
 
-視窗內：Anthropic IPO 進度（進行中才顯示）→ 十二家公司小卡（日期・類型，近 3 天有新事件加小圓點）
-→ 選中公司的事件整理與對市場的影響（一次一家）→ 依時間看全部（預設收合，可篩類型）→ 跟利率的關係。
+視窗內：Anthropic IPO（進行中才顯示：發行條件、估值、申報時間軸）→ 各公司小卡（日期・類型，近 3 天有新事件加小圓點）
+→ 選中公司的事件整理與對市場的影響（一次一家）→ AI資料中心擴張與監管 → 依時間看全部（預設收合，可篩類型）→ 跟利率的關係。
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def _srcs(e: dict) -> str:
     return f'<span class="ai-s">{"・".join(ls)}</span>' if ls else ""
 
 
-def ai_tile(a: dict | None, hs_agg: list | None = None) -> tuple[str, str]:
+def ai_tile(a: dict | None, hs_agg: list | None = None, dc: dict | None = None) -> tuple[str, str]:
     """回傳 (小卡, 視窗內容)。沒有資料時兩個都是空字串。hs_agg：長端頁的五家合計（每季，億美元）。"""
     if not a or not (a.get("events") or (a.get("ipo") or {}).get("active")):
         return "", ""
@@ -54,7 +54,7 @@ def ai_tile(a: dict | None, hs_agg: list | None = None) -> tuple[str, str]:
             f'<span class="duo-k">近 {a.get("window_days", 14)} 天 {len(evs)} 則</span><span class="duo-t">AI 大事</span>'
             f'<span class="duo-map">{AI_ART}</span>'
             f'<span class="duo-sum">最新：{esc(latest)}</span></button>')
-    return tile, ai_panel(a, hs_agg)
+    return tile, ai_panel(a, hs_agg, dc)
 
 
 def hs_block(agg: list | None) -> str:
@@ -74,18 +74,177 @@ def hs_block(agg: list | None) -> str:
             f'</div>{chart}</div>')
 
 
-def ai_panel(a: dict, hs_agg: list | None = None) -> str:
+def _yi(b: float | None) -> str:
+    """十億美元 → 「846 億美元」或「1.02 兆美元」。"""
+    if b is None:
+        return "—"
+    return f"{b / 1000:.2f} 兆美元" if abs(b) >= 1000 else f"{b * 10:,.0f} 億美元"
+
+
+def _yi_rng(a: float, b: float) -> str:
+    """區間用同一個單位：任一端到兆就都寫兆（避免「9,161 億美元–1.02 兆美元」）。"""
+    if max(abs(a), abs(b)) >= 1000:
+        return f"{a / 1000:.2f}–{b / 1000:.2f} 兆美元"
+    return f"{a * 10:,.0f}–{b * 10:,.0f} 億美元"
+
+
+def _shares(n: float | None) -> str:
+    return "—" if not n else f"{n / 1e8:,.2f} 億股"
+
+
+def _val_chart(vs: list[dict]) -> str:
+    """媒體報導估值：每天一點（中位數），直線連起；點選看當天各家標題。"""
+    if len(vs) < 2:
+        return ""
+    W, H, P = 600, 120, 26
+    vals = [v["lo"] for v in vs] + [v["hi"] for v in vs]
+    lo, hi = min(vals) * 0.92, max(vals) * 1.05
+    t0 = dt.date.fromisoformat(vs[0]["date"]).toordinal()
+    t1 = max(dt.date.fromisoformat(vs[-1]["date"]).toordinal(), t0 + 1)
+    X = lambda d: P + (dt.date.fromisoformat(d).toordinal() - t0) / (t1 - t0) * (W - 2 * P)   # noqa: E731
+    Y = lambda v: 8 + (1 - (v - lo) / (hi - lo)) * (H - 26)                                   # noqa: E731
+    pts = " ".join(f"{X(v['date']):.1f},{Y(v['median']):.1f}" for v in vs)
+    rng = "".join(f'<line x1="{X(v["date"]):.1f}" x2="{X(v["date"]):.1f}" y1="{Y(v["hi"]):.1f}" y2="{Y(v["lo"]):.1f}" '
+                  f'stroke="var(--series-1)" stroke-width="3" opacity=".3" stroke-linecap="round"/>' for v in vs if v["hi"] > v["lo"])
+    dots = "".join(f'<circle cx="{X(v["date"]):.1f}" cy="{Y(v["median"]):.1f}" r="4" fill="var(--series-1)"/>' for v in vs)
+    labs = (f'<text x="{X(vs[0]["date"]):.1f}" y="{H - 3}" class="ipo-ax">{_md(vs[0]["date"])}</text>'
+            f'<text x="{X(vs[-1]["date"]):.1f}" y="{H - 3}" class="ipo-ax" text-anchor="end">{_md(vs[-1]["date"])}</text>')
+    vl = "".join(f'<text x="{X(v["date"]):.1f}" y="{Y(v["median"]) - 8:.1f}" class="ipo-vl" text-anchor="middle">'
+                 f'{v["median"] / 1000:.2f}</text>' for i, v in enumerate(vs) if i in (0, len(vs) - 1) or v["n"] >= 3)
+    return (f'<svg class="ipo-vc" viewBox="0 0 {W} {H}" role="img" aria-label="媒體報導的 IPO 估值預期">'
+            f'<polyline points="{pts}" fill="none" stroke="var(--series-1)" stroke-width="2"/>{rng}{dots}{vl}{labs}</svg>')
+
+
+def _val_rows(vs: list[dict]) -> str:
+    out = ""
+    for v in reversed(vs[-6:]):
+        its = "・".join(f'<a href="{esc(i["url"])}" target="_blank" rel="noopener">{esc(i["source"])} {i["value"] / 1000:.2f} 兆</a>'
+                       for i in v["items"][:4])
+        out += f'<li><b>{esc(_md(v["date"]))}</b><span>{its}</span></li>'
+    return f'<ul class="ipo-vr">{out}</ul>'
+
+
+# 申報時間軸的浮動小窗：時間軸在手機會橫捲（overflow 會裁掉絕對定位的子元素），
+# 所以小窗放在外層、用 JS 依按鈕位置擺放；內容複製自每個點底下隱藏的 .ipo-pop
+IPO_JS = ("<script>(function(){document.querySelectorAll('.ipo-tlw').forEach(function(w){"
+          "var fly=w.querySelector('.ipo-fly'),tl=w.querySelector('.ipo-tl'),hide;"
+          "function show(li){var pop=li.querySelector('.ipo-pop');if(!pop)return;clearTimeout(hide);li._t=Date.now();"
+          "fly.innerHTML=pop.innerHTML;fly.hidden=false;w.querySelectorAll('.ipo-tl>li').forEach(function(x){x.classList.toggle('sel',x===li);});"
+          "var b=li.querySelector('button').getBoundingClientRect(),r=w.getBoundingClientRect(),fw=fly.offsetWidth;"
+          "var x=b.left-r.left+b.width/2-fw/2;x=Math.max(0,Math.min(x,w.clientWidth-fw));"
+          "fly.style.left=x+'px';fly.style.top=(b.bottom-r.top+4)+'px';}"
+          "function off(){hide=setTimeout(function(){fly.hidden=true;w.querySelectorAll('.ipo-tl>li.sel').forEach(function(x){x.classList.remove('sel');});},180);}"
+          "tl.querySelectorAll('li').forEach(function(li){if(!li.querySelector('.ipo-pop'))return;var bt=li.querySelector('button');"
+          "li.addEventListener('mouseenter',function(){show(li);});li.addEventListener('mouseleave',off);"
+          "bt.addEventListener('focus',function(){show(li);});bt.addEventListener('blur',off);"
+          "bt.addEventListener('click',function(e){e.stopPropagation();"
+          "if(!fly.hidden&&li.classList.contains('sel')&&Date.now()-(li._t||0)>400){fly.hidden=true;li.classList.remove('sel');}else show(li);});});"
+          "fly.addEventListener('mouseenter',function(){clearTimeout(hide);});fly.addEventListener('mouseleave',off);"
+          "tl.addEventListener('scroll',function(){fly.hidden=true;});"
+          "document.addEventListener('keydown',function(e){if(e.key==='Escape')fly.hidden=true;});"
+          "document.addEventListener('click',function(e){if(!w.contains(e.target))fly.hidden=true;});});})();</script>")
+
+
+def ipo_block(ipo: dict, x: dict | None) -> str:
+    """
+    2026-11：IPO 區塊——上方關鍵數字（全部來自 SEC 申報原文，或依原文計算並標明）、
+    媒體估值預期的變化、歷輪每股價格（分割調整），最下方申報時間軸（滑鼠移到點／點選看該份文件重點）。
+    """
+    x = x or {}
+    T, Dv = x.get("terms") or {}, x.get("derived") or {}
+    name = ipo.get("name", "")
+    tick = f'（{T.get("exchange", "Nasdaq").split(" ")[0]}：{T["ticker"]}）' if T.get("ticker") else ""
+    kp = []
+
+    def k(label, val, sub=""):
+        kp.append(f'<div><dt>{esc(label)}</dt><dd>{val}</dd>' + (f'<small>{sub}</small>' if sub else "") + '</div>')
+    if T.get("price_lo"):
+        k("價格區間", f'${T["price_lo"]:.0f}–${T["price_hi"]:.0f}', f'中位 ${Dv.get("mid", 0):.0f}・{esc(_md(T.get("price_lo__date", "")))} S-1/A')
+    if T.get("shares_offered"):
+        k("發行股數", esc(_shares(T["shares_offered"])),
+          f'新股 {_shares(T.get("shares_primary"))}・老股 {_shares(T.get("shares_secondary"))}'
+          + (f'・超額配售 {_shares(T["greenshoe"])}' if T.get("greenshoe") else ""))
+    if Dv.get("gross_lo"):
+        k("IPO 募資額", esc(_yi_rng(Dv["gross_lo"], Dv["gross_hi"])), "發行股數 × 價格區間（本站依申報計算）")
+    if T.get("private_placement"):
+        k("同步私募", esc(_yi(T["private_placement"])), "以 IPO 價格認購 Class N 股（AI 晶片、雲端夥伴）")
+    if T.get("net_proceeds"):
+        k("預估淨募資", esc(_yi(T["net_proceeds"])),
+          f'{"含同步私募、" if T.get("net_incl_pp") else ""}以 ${T.get("assumed_price", 0):.0f} 計'
+          + (f'；超額配售全數行使 {_yi(T["net_proceeds_full"])}' if T.get("net_proceeds_full") else ""))
+    if Dv.get("cap_lo"):
+        k("隱含市值", esc(_yi_rng(Dv["cap_lo"], Dv["cap_hi"])),
+          f'發行後 {_shares(T.get("shares_after"))} × 價格區間；媒體常引用的「完全稀釋」口徑（含選擇權等）較高')
+    lr = Dv.get("last_round")
+    if lr and T.get("price_lo"):
+        k(f'最近一輪（Series {lr["series"]}）', f'${lr["adj"]:.2f}／股',
+          f'{esc(lr["from"][:7].replace("-", "/"))} 募 {_yi(lr["amount"])}；IPO 區間高出 {lr["vs_lo"]:+.0%}～{lr["vs_hi"]:+.0%}'
+          + (f'（已依 {T.get("split", 1):.0f} 比 1 分割調整）' if (T.get("split") or 1) > 1 else ""))
+    if T.get("rev_9m"):
+        k("營收（前 9 月）", esc(_yi(T["rev_9m"])), f'年增 {T.get("rev_growth", 0):,.0f}%'
+          + (f'・營業虧損 {_yi(T["op_loss_9m"])}' if T.get("op_loss_9m") else ""))
+    vs = x.get("valuations") or []
+    val = ""
+    if vs:
+        last = vs[-1]
+        ref = next((v for v in vs if (dt.date.fromisoformat(last["date"]) - dt.date.fromisoformat(v["date"])).days <= 30), vs[0])
+        chg = (last["median"] / ref["median"] - 1) if ref is not last else None
+        rng = f'{last["lo"] / 1000:.2f}–{last["hi"] / 1000:.2f} 兆美元' if last["hi"] > last["lo"] else f'{last["median"] / 1000:.2f} 兆美元'
+        val = ('<div class="ipo-val"><div class="ipo-vh"><b>媒體報導的估值預期</b>'
+               f'<span>{esc(_md(last["date"]))}：{rng}（{last["n"]} 則，中位 {last["median"] / 1000:.2f} 兆）'
+               + (f'；較 {esc(_md(ref["date"]))} 的 {ref["median"] / 1000:.2f} 兆 {chg:+.0%}' if chg is not None else "")
+               + '</span></div>' + _val_chart(vs) + _val_rows(vs)
+               + '<p class="ipo-fn">主要媒體標題中的估值數字（Reuters、Bloomberg、WSJ、FT、CNBC、AP、NYT 等），每天取中位數；'
+               '各家口徑不同（完全稀釋或發行後股數），同一天常並存兩個數字。</p></div>')
+    rounds = Dv.get("rounds_adj") or []
+    rnd = ""
+    if rounds and T.get("price_lo"):
+        mx = T["price_hi"]
+        bars = "".join(f'<li><span>Series {esc(r["series"])}<em>{esc(r["from"][:7].replace("-", "/"))}</em></span>'
+                       f'<span class="trk"><i style="left:0;width:{r["adj"] / mx * 100:.1f}%"></i></span>'
+                       f'<b>${r["adj"]:.2f}</b></li>' for r in rounds)
+        bars += (f'<li class="ipo-now"><span>IPO 區間<em>{esc(_md(T.get("price_lo__date", "")))}</em></span>'
+                 f'<span class="trk"><i class="base" style="left:0;width:{T["price_lo"] / mx * 100:.1f}%"></i>'
+                 f'<i class="r" style="left:{T["price_lo"] / mx * 100:.1f}%;width:{(T["price_hi"] - T["price_lo"]) / mx * 100:.1f}%"></i></span>'
+                 f'<b>${T["price_lo"]:.0f}–{T["price_hi"]:.0f}</b></li>')
+        rnd = ('<div class="ipo-rd"><div class="ipo-vh"><b>每股價格的變化</b><span>歷輪優先股（申報原文，依股票分割調整）→ IPO 價格區間</span></div>'
+               f'<ul>{bars}</ul></div>')
+    # 申報時間軸：每份申報一個點（DRS → S-1 → 修正 → 定價 → 掛牌）
+    fl = x.get("filings") or []
+    pts = []
+    n_all = len(fl) + 2
+    for i, f in enumerate(fl):
+        side = "l" if i < 2 else ("r" if i >= n_all - 3 else "")
+        li = "".join(f'<li>{esc(p)}</li>' for p in f.get("points") or [])
+        pts.append(f'<li class="done {side}"><button type="button" aria-label="{esc(f["form_zh"])} {esc(f["date"])} 重點">'
+                   f'<b>{esc(f["form"])}</b><span>{esc(_md(f["date"]))}</span></button>'
+                   f'<div class="ipo-pop" role="tooltip"><div class="ipo-pop-h">{esc(f["form_zh"])}・{esc(f["date"])}</div>'
+                   + (f'<div class="ipo-pop-c">{esc(f["change"])}</div>' if f.get("change") else "")
+                   + f'<ul>{li}</ul><a href="{esc(f.get("url", ""))}" target="_blank" rel="noopener">SEC 原文 →</a></div></li>')
+    steps = {s["label"]: s.get("date") for s in ipo.get("steps") or []}
+    for lab, side in (("定價", "r"), ("掛牌", "r")):
+        d = steps.get(lab)
+        pts.append(f'<li class="{"done" if d else "todo"} {side}"><button type="button" disabled><b>{lab}</b>'
+                   f'<span>{esc(_md(d)) if d else "待定"}</span></button></li>')
+    tl = (f'<div class="ipo-tlw"><div class="ipo-vh"><b>申報時間軸</b><span>滑鼠移到點（手機點選）看該份文件重點</span></div>'
+          f'<ol class="ipo-tl">{"".join(pts)}</ol><div class="ipo-fly" role="tooltip" hidden></div></div>{IPO_JS}') if fl else ""
+    if not fl:   # 細節還沒抓到：退回舊的四步驟
+        steps_html = "".join(f'<li class="{"done" if s.get("date") else ""}"><b>{esc(s["label"])}</b>'
+                             f'<span>{esc(_md(s["date"])) or "—"}</span></li>' for s in ipo.get("steps") or [])
+        tl = f'<ol class="ai-ipo">{steps_html}</ol>'
+    return (f'<div class="ai-hl-c ipo2"><details class="ai-hl-i"><summary class="ai-hl-k">'
+            f'進行中・{esc(name)} IPO{esc(tick)}<i aria-hidden="true">ⓘ</i></summary>'
+            '<div class="ai-hl-n">發行條件、營收與歷輪價格直接取自 SEC 申報原文（標「本站依申報計算」者為依原文數字相乘）；'
+            '每份申報的重點由 AI 依原文節錄整理，數字須在原文找得到；掛牌後這一格自動消失</div></details>'
+            + (f'<dl class="ipo-kp">{"".join(kp)}</dl>' if kp else "") + val + rnd + tl + '</div>')
+
+
+def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str:
     evs = a.get("events") or []
     out = []
     ipo = a.get("ipo") or {}
     if ipo.get("active"):
-        steps = "".join(f'<li class="{"done" if s.get("date") else ""}"><b>{esc(s["label"])}</b>'
-                        f'<span>{esc(_md(s["date"])) or "—"}</span></li>' for s in ipo.get("steps") or [])
-        # 2026-11：縮小；說明改成點標題（ⓘ）才展開
-        out.append(f'<div class="ai-hl-c sm"><details class="ai-hl-i"><summary class="ai-hl-k">'
-                   f'進行中・{esc(ipo.get("name", ""))} IPO<i aria-hidden="true">ⓘ</i></summary>'
-                   '<div class="ai-hl-n">從 SEC 申報自動更新；掛牌後這一格自動消失</div></details>'
-                   f'<ol class="ai-ipo">{steps}</ol></div>')
+        out.append(ipo_block(ipo, a.get("ipo_x")))
     out.append(hs_block(hs_agg))
     # 公司小卡：依最近事件日期排序，沒事件的排最後
     cos = a.get("companies") or []
@@ -117,6 +276,9 @@ def ai_panel(a: dict, hs_agg: list | None = None) -> str:
                         if imp else "") + '</div>')
     out.append('<div class="ai-sec-h"><h3>各公司近況</h3><span><i class="ai-new"></i> 近 3 天有新事件</span></div>'
                f'<div class="ai-tiles">{"".join(tiles)}</div><div class="ai-panes">{"".join(panes)}</div>')
+    # 2026-11：AI資料中心擴張與監管（各公司近況下方）
+    from .dc_map import dc_block
+    out.append(dc_block(dc))
     # 依時間看全部
     days: dict = {}
     for e in evs:

@@ -1,0 +1,26 @@
+# ---- AI 資料中心擴張與監管（首頁 AI 大事視窗，2026-11）----
+# 算力與電力：Epoch AI「Frontier Data Centers」（CC BY 4.0，每週更新；每次執行重抓，抓不到用上次的結果）
+# 州長：改選前的現任黨派（下面 governor_before，歷史事實）＋ Polymarket 已結算的 2026 州長盤（自動）
+# 監管：每州近 30 天新聞標題，AI 整理成一句政策動向與對建設時程的影響（附原文連結）
+enabled: true
+years: [2025, 2026, 2027, 2028]
+reg_states: 14          # 監管新聞：算力（2028 累積）最大的前幾州
+reg_window_days: 30
+
+# Epoch 地址欄沒有可解析州名的站點（名稱 → 州代碼）。log 出現「資料中心：找不到州」就在這裡補
+state_overrides:
+  Google Mesa: AZ
+  Google Kansas City East: MO
+  AWS New Albany: OH
+  Google Storey County: NV
+  Stream Phoenix: AZ
+  Anthropic Barber Lake: TX        # Cipher Mining Barber Lake（Colorado City, TX）
+  OpenAI Stargate Milam: TX
+  OpenAI Stargate Michigan: MI
+  OpenAI Stargate New Mexico: NM
+  OpenAI Stargate Wisconsin: WI
+
+# 2026 期中選舉前的州長黨派（2026-11 時的現任；維吉尼亞 2026-01 起為民主黨 Spanberger）
+governor_before:
+  D: [AZ, CA, CO, CT, DE, HI, IL, KS, KY, ME, MD, MA, MI, MN, NJ, NM, NY, NC, OR, PA, RI, VA, WA, WI]
+  R: [AL, AK, AR, FL, GA, ID, IN, IA, LA, MS, MO, MT, NE, NV, NH, ND, OH, OK, SC, SD, TN, TX, UT, VT, WV, WY]
