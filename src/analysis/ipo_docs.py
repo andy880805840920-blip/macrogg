@@ -293,6 +293,8 @@ def summarize(t: str, prev_terms: dict | None, call=None) -> dict:
     except ValueError:
         j = {}
     pts = [str(p).strip() for p in j.get("points") or [] if str(p).strip() and len(str(p).strip()) <= 90]
+    # 沒有數字的約略金額（「約數億美元」「數十億」）原文不會有，整點拿掉
+    pts = [p for p in pts if not re.search(r"數[十百千]?[萬億兆]", p)]
     good = check_points(pts, ex)
     if len(good) < len(pts):
         log.info("IPO 申報重點：%d 點的數字在原文找不到，已略過", len(pts) - len(good))
