@@ -1,116 +1,5 @@
 [
  {
-  "at": "2026-10-30T12:05+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv"
-  ],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "BOJ Inflation Target Signal Supports Yen Gains, Strategists Say - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Italy’s Inflation Jump Is Dramatic Result of War, Giorgetti Says - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Yields Too High to Ignore Lure Investors Back to Long-Dated Debt - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Treasuries Extend Rally With Global Peers on Tech Stock Selloff - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "Tokyo core inflation exceeds BOJ target in October - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+1",
-    "titles": [
-     "COMMENTARY: Warsh's muddled messaging revives Fed credibility doubts - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "通膨疑慮+科技股拋售效應 黃金價格跌破4000美元大關",
-   "Q3獲利狂飆148%創19季新高！「封測龍頭」先進封測營收目標上調至40億美元　投信連買8日、再豪砸46.4億元"
-  ],
-  "main": "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg.com",
-  "main_why": "最高分",
-  "second": "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters",
-  "points": 2,
-  "thin": [
-   "",
-   "重點二"
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "主軸 266 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】138 字，超過 90 字，請精簡",
-     "用了相對時間（今日、本週），請改寫成月/日"
-    ],
-    [
-     "用了相對時間（本週），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
-    ],
-    [
-     "主軸 128 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "9月PCE月增0.5%創七個月最大增幅聯準會對年底升息保持開放"
- },
- {
   "at": "2026-10-30T14:09+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3015,5 +2904,116 @@
    ]
   },
   "result": "美國10月CPI月增0.4%高於預期，核心CPI月增0.3%，聯準會升息2碼預期升溫"
+ },
+ {
+  "at": "2026-11-10T16:00+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "cpi",
+   "auction_10y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Waller Backs December Rate Hike, Open to Larger Move - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed's Waller plans to support at least a quarter-point rate hike in December - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Stocks, Bonds Fall as CPI Data Fuel Fed-Hike Bets: Markets Wrap - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "US Core CPI Rises by More Than Forecast, Supporting Fed Hike - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed to raise rates once more in December as inflation risks stay high: Reuters poll - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Inflation Data to Test Limits of Treasury Rally After Haven Bid - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
+     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com",
+     "Gold: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   }
+  ],
+  "prior_old": [
+   "美10月CPI高於預期！美股開盤主要指數全跌"
+  ],
+  "background": [
+   "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)",
+   "美股開盤全倒！10月CPI月增0.4％超預期　科技股反彈恐喊卡",
+   "Fed Governor Waller sees December hike likely, opens door to possible half-point increase"
+  ],
+  "main": "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Fed’s Waller Backs December Rate Hike, Open to Larger Move - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "用了相對時間（今日），請改寫成月/日",
+     "數據公布日期錯誤（CPI寫成「10/10」，官方是 11/10；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ],
+    [
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+    ]
+   ],
+   "重點二": [
+    [
+     "出現材料裡沒有的數字（0.5、0.25）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 189 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ],
+    [
+     "主軸 156 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "10月CPI月增0.4%超預期，核心通膨年增2.8%，市場憂升息預期升溫"
  }
 ]

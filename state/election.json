@@ -129,15 +129,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9865
+    "p": 0.986
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0125
+    "p": 0.0115
    },
-   "close": 0.48650000000000004,
-   "vol": 8279858.3261939995,
+   "close": 0.486,
+   "vol": 8282669.997927,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   },
   {
@@ -151,10 +151,10 @@
    "other": {
     "name": "Cindy Hyde-Smith",
     "party": "共",
-    "p": 0.012
+    "p": 0.011
    },
    "close": 0.488,
-   "vol": 6304527.42383,
+   "vol": 6305355.30383,
    "url": "https://polymarket.com/event/mississippi-senate-election-winner"
   }
  ],
@@ -174,12 +174,12 @@
      "other": {
       "name": "Cindy Hyde-Smith",
       "party": "R",
-      "p": 0.012
+      "p": 0.011
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.6,
-     "vol": 6304527.42383,
+     "gap": 97.7,
+     "vol": 6305355.30383,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Alaska": {
@@ -190,17 +190,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9865
+      "p": 0.986
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0125
+      "p": 0.0115
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.4,
-     "vol": 8279858.3261939995,
+     "gap": 97.5,
+     "vol": 8282669.997927,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -285,7 +285,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.0,
-     "vol": 870696.8637799999,
+     "vol": 870696.86378,
      "url": "https://polymarket.com/event/kansas-governor-winner-2026"
     },
     "Alaska": {

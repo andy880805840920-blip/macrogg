@@ -1,5 +1,242 @@
 {
- "docs": {},
+ "docs": {
+  "0001628280-26-072484": {
+   "form": "S-1/A",
+   "date": "2026-11-10",
+   "acc": "0001628280-26-072484",
+   "doc": "anthropicpbc-sx1ax2.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm",
+   "terms": {
+    "price_lo": 70.0,
+    "price_hi": 78.0,
+    "shares_primary": 801351354.0,
+    "shares_secondary": 23648646.0,
+    "shares_offered": 825000000.0,
+    "greenshoe": 123750000.0,
+    "private_placement": 26.0,
+    "shares_after": 13086672593.0,
+    "net_proceeds": 84.6,
+    "net_proceeds_full": 93.7,
+    "assumed_price": 74.0,
+    "net_incl_pp": true,
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "rev_period": "2026-09-30",
+    "rev_9m": 33.2,
+    "rev_growth": 1206.0,
+    "op_loss_9m": 1.3,
+    "split": 10.0,
+    "split_date": "2026-09-17"
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "募資淨額約846億美元（若承銷商完全行使購股權則約937億美元），用於營運資本、資本支出、計算基礎設施投資及人才招聘。",
+    "同步進行260億美元私募，由Google、NVIDIA、AMD、Broadcom、Micron、Microsoft、TSMC等七家科技公司購買N類股。",
+    "採用特殊治理結構：創辦人LLC持有F類股享50.1%投票權；長期利益信託持有T類股可選舉董事會多數成員；員工持有E類股投票權受限。",
+    "公司為德拉瓦州公益法人，以負責任開發先進AI造福人類為公益目標；上市後為Nasdaq受控公司。"
+   ],
+   "change": "首份申報"
+  },
+  "0001628280-26-068676": {
+   "form": "S-1/A",
+   "date": "2026-11-02",
+   "acc": "0001628280-26-068676",
+   "doc": "anthropicpbc-sx1ax1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+   "terms": {
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "rev_period": "2026-09-30",
+    "rev_9m": 33.2,
+    "rev_growth": 1206.0,
+    "op_loss_9m": 1.3,
+    "split": 10.0,
+    "split_date": "2026-09-17"
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "首次公開發行，發行價格區間待定，募資用途為一般公司用途、運算基礎設施投資、人才招聘與留任，以及潛在併購投資。",
+    "採用德拉瓦州公益公司結構，設立長期利益信託管理公司，確保負責任開發先進AI；創辦人持有F類股享50.1%投票權。",
+    "多層級股權結構：A類股每股一票、N類股無投票權、T類股控制董事會多數席位、E類股員工限定投票權、F類股創辦人控制權。",
+    "公司被列為「受控公司」，須遵守納斯達克上市公司治理規定，交易代碼擬定為「ANT」。",
+    "節錄未披露具體營收、獲利、發行股數與價格等財務數據，僅提及截至2026年9月30日的股權結構與轉換安排。"
+   ],
+   "change": "首份申報"
+  },
+  "0001628280-26-067168": {
+   "form": "S-1",
+   "date": "2026-10-26",
+   "acc": "0001628280-26-067168",
+   "doc": "anthropicpbc-sx1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+   "terms": {
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "split": 10.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545696969998,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "發行股數與價格區間未具體披露，申報文件中價格區間與股數均為空白待填。",
+    "募資用途為增加資本與財務靈活性、投資運算基礎設施、聘僱人才，以及可能用於併購或投資，但目前無具體併購承諾。",
+    "申報文件未披露營收與獲利數據，僅提及截至2026年9月30日的股權結構。",
+    "採用特殊治理結構：Class F股（創辦人持有）擁有50.1%投票權但無經濟權益；Class T股（長期利益信託持有）可選舉董事會多數成員；公司為德拉瓦州公益法人。",
+    "公司為Nasdaq「受控公司」，將在Nasdaq掛牌交易，代號「ANT」，主要承銷商包括高盛、摩根士丹利、摩根大通等。"
+   ],
+   "change": "首份申報"
+  },
+  "0002130357-26-000014": {
+   "form": "DRS/A",
+   "date": "2026-10-09",
+   "acc": "0002130357-26-000014",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000213035726000014/filename1.htm",
+   "terms": {
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "split": 10.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545696969998,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "發行股數與價格區間未披露具體數字，僅標示為空白；募資淨額約數億美元（基於中點價格假設），用於營運資本、資本支出、人才招聘及潛在併購投資。",
+    "公司致力於 AI 安全與責任發展，設立長期利益信託作為獨立監督機構，由 AI 安全、國家安全、公共政策專家組成，確保公益目標與股東利益平衡。",
+    "Nasdaq 上市代碼「ANT」，被列為「受控公司」；首次公開發行由高盛與摩根士丹利承銷；不接收賣方股東出售股份的收益。",
+    "節錄未披露營收、獲利或重大合約數據，僅提及 AWS 可轉換債券轉換為 Class N 股，以及員工 RSU 結算相關稅務預留。"
+   ],
+   "change": "首份申報"
+  }
+ },
  "val_items": [
   {
    "date": "2026-10-16",
@@ -107,5 +344,5 @@
    "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQeEgwWWpHRGlhZk1lZjJXX25kQnZIRjZaUGd3czZSdF9SQ3o4V2FHWkdlS3d4UXh4QkJwVkUxdzAyOVQwZ2k4dXNfNFF1Q3dfbjdBS3Zsc29sbmR2U3hnRFF2WlVNSmM2R2xQeXNJbG1yMmVyM2xiUHVoVXZhRngtRk14enk5REZkcEs2Tkt2M2NzaF9SYkJFbDVvcXlZXzZFeWRtbThQM3N4TlVJbHhiemgxb0hEcEdv?oc=5"
   }
  ],
- "at": "2026-11-10 23:50（台北）"
+ "at": "2026-11-10 23:59（台北）"
 }

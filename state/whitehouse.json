@@ -784,7 +784,18 @@
   "p:h200_china:e4bb16d65acf": "2026-11-09",
   "p:dc_grid:613199127fcc": "2026-11-10",
   "p:us_china_truce:d80ca1aab506": "2026-11-07",
-  "p:us_china_truce:c0e469378d09": "2026-11-07"
+  "p:us_china_truce:c0e469378d09": "2026-11-07",
+  "d173ea366c68": "2026-11-10",
+  "p:h200_china:74aa2e1e8845": "2026-11-10",
+  "p:h200_china:659634952b8f": "2026-11-09",
+  "p:h200_china:f5a0a00a6511": "2026-11-09",
+  "p:h200_china:0e949869c864": "2026-11-09",
+  "p:h200_china:05ff411bb0c3": "2026-11-09",
+  "p:h200_china:152e0a759fb1": "2026-11-09",
+  "p:h200_china:73815ef88a8f": "2026-11-09",
+  "p:h200_china:7f4e7447535a": "2026-11-08",
+  "p:h200_china:31845e3ed48e": "2026-11-08",
+  "p:h200_china:615770d14b3c": "2026-11-08"
  },
  "items": [
   {
@@ -913,48 +924,6 @@
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPRjlENDJZdTZaWF9nMGlXUW9lVXI0WVZQcEhEVy1ZU2o4QmRPRnQxbEp6OHdQeUVCLU5BaVRYSlFGbDZRbjUtRDlvN1NXYVAxbU5LMktZSHc3YkFIMnVEdy1OYzVnS2YtYnFXN2s0bHBTdVdmZlNsbjFQUVdveUJPSHQySlAtSVJ1U0tJeEdrNDRLQWttUTRaTlFlOHlpTjBwSl9sQ21QV2RCdURW?oc=5"
     }
    ]
-  },
-  {
-   "id": "77f75bb7258e",
-   "topic": "關稅",
-   "channel": "受訪",
-   "zh": "川普稱美國與加拿大接近達成貿易協議。",
-   "date": "2026-11-03",
-   "links": [
-    {
-     "title": "Trump says US close to trade deal with Canada, Carney says work remains",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPQUpBTWJCc1lBeWhlaWFkSEFyYUtsbjg4THBRS3Z1cGs2ZE5BXzhiUGRpNFZsTnZtb2I0eHItTV9McE5BYm90TU5nZXJfMm9wLVc4TkhWNnBIZTlyYXhDX3ZRdzRGSnZCWS16Y0JpNnBYLWZwR2hrVmk3c3pIQXpxUVJ5ZGF4amN5ckhIUGdPS28yUjZkbHEtekFnVVVwQQ?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "1d53a735a6c9",
-   "topic": "關稅",
-   "channel": "其他",
-   "zh": "川普調整加拿大商品50%關稅的適用品項。",
-   "date": "2026-11-03",
-   "links": [
-    {
-     "title": "Trump Changes Which Canadian Goods Face 50 Percent Tariffs",
-     "source": "Legis1",
-     "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1KU21UbUNMbWFlNlJwSlBKd0JyNXhwcHpFVnBrUmxDaHE0S1Z4TlZJVndZeE4wQVIzaHZWM2RCR0NxRG1oZmdxUGxoS3dkQkFBSXJWTjc0RFZod3haZ0RNazZyWUx0RzNvaG5vY1NjNWJDZmFuSlBMMnJTQTdDZw?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "ccaf5c435186",
-   "topic": "能源",
-   "channel": "行政命令",
-   "zh": "川普簽署行政命令支持美國石油產業啟動《國防生產法》。",
-   "date": "2026-11-03",
-   "links": [
-    {
-     "title": "Trump Opens Defense Production Act Support to U.S. Oil Industry",
-     "source": "Legis1",
-     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1jaVhGejF4R2t4eERsV21qWDJTUWZNcUNub0szbzZpZUlueHBYQV9jNHhJWGJ5WnplUlpwUFQ2NzgxMjlldnp2dF9fQWJUS0c0LVFyd1BiVE9jQW94eDdIOTRlZDVKbmVUTWlDVXYwN09CWG1vcG5j?oc=5"
-    }
-   ]
   }
  ],
  "summary": {
@@ -990,12 +959,12 @@
    ]
   },
   "h200_china": {
-   "date": "2026-11-10",
-   "note": "多則新聞報導Jensen Huang與中國特務醜聞推動美國加強晶片管制，可能加速國會限制法案的審議進程，政策可能進入「國會限制」階段。",
+   "date": "2026-11-11",
+   "note": "多則新聞報導美國商務部核准H200晶片銷售給有軍事背景的可疑中國公司，引發安全審查質疑，可能加速國會限制法案的審議進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxOeDFUWGdLWG1fdTF4MmtGRDVWYV9IYkpPVnV3ekw5bWZYaEcwOEFzNXNDNW1JbGx3VlhrTWR3dndPSVQyajB1M0tuNGtpdm0yc0M2THNmSll1Sl9oa0NKMEl4V0E4Y1ByM0lXNzBkbVN5bVRiaUlsQmxCVlFEMTluWnU2SzNWT2wzZ3FJSTJtUmd4MTg4blZFVzY4YjJjNWxkRTAzWWJwSS14N0NUX3FIMENhQnBObW81Nmhybm5oaFVKcGdaZHZlSXVuQ09ibkxreXNiRWZqbw?oc=5",
-    "https://news.google.com/rss/articles/CBMiigFBVV95cUxNemt1cTdwSkowZkdLMUc3dnZwRjR5MUotbkp0aUdlZ19icUpwQzhuLXBXbEpvOHlIbFRlMXNDN3JwQmVUNHZ0czh6RGtETk5WSHlicmJLN29uMXBUUkRFNFk2WVFwMklOTFdwY05zWVZlNjFBWXhzeFBsbU9TTkFJTDhqYXNUSXo1LVE?oc=5",
-    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQdlc2NmJGdk95NUJNV1ZJbXBXTlVrbzhDQkpQSEdvdmlDajdzRWNXM281TnVoSG5YUGZPR3h0YzRscF9QLVotVEZHbXZCSFNNSTRWU0ExelZHNDVrNHVPQUdHMjJISTRJM1BZTFVZLUg4bDJQNkV0bnZvT0U1ellycGlHTjExSWZjYjZrV21pWTRCVnRZc3FXLUgyWDZLaWI5Y0o0OTVOUUlqZHc4ejZna01MdVJ1N282SDJzTU9yeGc?oc=5"
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOUWMzc2V2NFVMeVpjb3otZkVkT2F4RnRGRUlCZGREZVhkY3JvS0Y0cUc4QnNEY3BUY0RlekdjQTJSS3RHbTJ5SFpDWElLRE9Yci1hMk5fTmY0NnBLZmExQzFtVGJIdTVNT3Y4Rks1T3V2WGNsYTlZLWwxZ2VlOGhncGNjWDk5a25XOWhGcnhoMlYtc1RtNnMtQVN5bDdlZmtfREd1RHFEeWVKV3h6RlJma1VR0gG3AUFVX3lxTE1rOHVOcDlWY1dlYUgtOW1Cdm9KVVlkMWw3VzlFVkxqQkhpNFk0VURMdjU3WHJEZmNvanBlaWJIQTZ4TDBQNm0xd0NEMms3bVBCSjhidGVUREU2aDVBM3FyV1Q2bkhkTHJ3QTNuMm1CMTBBbjlfbE1PakFIRTRCMWNENnhOaXFKOGFCeEdDTDdzUGhORko2UWdPUmEwSDBweUJBeTJSblcza1B6YWNhdldkZVQwQlZlRQ?oc=5",
+    "https://news.google.com/rss/articles/CBMimAFBVV95cUxPRTdsQTdMMVVxX183T0Rqb05oR29DYmRlY2cyZWUwWUtBd2dpcnpVZW1VR3llaEVHNVN3TDdhR2gwX0h4UzZhRFpZejFuZmRER2VRRUM3ZEtUREd0UnpwQzI1bVlWSEN6YkRVUzNTX2ctNWM0ejlNWUozWkRMLTV5RXRlLWpScWZZWUw3blVvREg5VDk0dUwxdtIBngFBVV95cUxOREl0NkROYzl5M1AtelpjVU1kUWt1OWNWNko1dUJvWmJQcDVKYXB1clZNUGJNQ3FNQ2lleUQ0NlB2MnRoUUlYNUVMbW9URnhvdDN1cTNwVW1lSkM1S3o4bUJYVWpPaldRTGNmOXpnWnp3dFY5bWd0eURpTlFwVFVaRWJqcExhM3pfdGR4UW9kUTNoQUEtV1RmMjJqQ0hqZw?oc=5",
+    "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0xdzdlblhheHpRQnV4NDlzUVBrUEFZNnI4SV9XaWw3dmZPRVVhWWFvcDlPRE80VTlSOHpmdzRqVHgySVRHT3dYQUY4VVdCS3BWQWFtZG1fYkM?oc=5"
    ]
   },
   "ai_preempt": {
@@ -1025,5 +994,5 @@
    ]
   }
  },
- "at": "2026-11-10 23:51（台北）"
+ "at": "2026-11-11 00:00（台北）"
 }
