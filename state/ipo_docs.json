@@ -437,6 +437,42 @@
     "公司使用N類股吸引策略合作夥伴投資，該股於公開市場交易時自動轉換為A類股，確保創辦人對公司控制權。"
    ],
    "change": "首份申報"
+  },
+  "0002130357-26-000005": {
+   "form": "DRS",
+   "date": "2026-06-01",
+   "acc": "0002130357-26-000005",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000213035726000005/filename1.htm",
+   "terms": {
+    "shares_after": 1000.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    }
+   ],
+   "points": [
+    "Anthropic 為德拉瓦州公益法人，設立長期利益信託（LTBT）以監督負責任的 AI 開發，透過 Class T 股票賦予信託董事會席次選舉權。",
+    "募資用途為增加資本、財務靈活性、創造公開市場，以及用於營運支出、資本支出、計算基礎設施投資與人才招聘。",
+    "Claude 自 2023 年第一季商業推出以來，達成企業採用速度為歷史最快，年化營收已達特定金額。",
+    "公司承諾至少投資特定金額於計算資源，包括 2026 年、2027 年及 2028 年各有具體支出承諾。",
+    "股權結構包括 Class A 普通股（每股一票）、N-Class 普通股（無投票權）及 Class T 普通股（1,000 股，無經濟權益）。"
+   ],
+   "change": "首份申報"
   }
  },
  "val_items": [
@@ -544,7 +580,28 @@
    "source": "Forbes",
    "title": "Anthropic Targets $1.4 Trillion Valuation In Highly Anticipated IPO",
    "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQeEgwWWpHRGlhZk1lZjJXX25kQnZIRjZaUGd3czZSdF9SQ3o4V2FHWkdlS3d4UXh4QkJwVkUxdzAyOVQwZ2k4dXNfNFF1Q3dfbjdBS3Zsc29sbmR2U3hnRFF2WlVNSmM2R2xQeXNJbG1yMmVyM2xiUHVoVXZhRngtRk14enk5REZkcEs2Tkt2M2NzaF9SYkJFbDVvcXlZXzZFeWRtbThQM3N4TlVJbHhiemgxb0hEcEdv?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Bloomberg.com",
+   "title": "Watch Anthropic Targets $1.4T Valuation in Blockbuster IPO",
+   "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPWV9wYk9oSGNvTk9KcFNCNVJmTEZreGZ4NGd3ZXg1Vnh1VHV4a3cxVjFsMWVfYjRlUDZoTl92VUhfN1pTNnVvZHBuMmEwY2VqYzNwQmxpbEJRSTNPb2pqOUdwNVJ5Q2ZwNkttN29UZXpoWnN6WTcxUThTdG5NSU82UTYtWjRxQjVSZHNZdm9COU14ak91dWYzNzM1c2E0QkVxOWl3MkZXWmpFUQ?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Bloomberg.com",
+   "title": "Watch Anthropic Targets $1.4 Trillion Valuation in Blockbuster IPO",
+   "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOVW9KZE44bUlsMVhXeUdBQ1NZVEFKTDMzUll2Q0dJMXNudUVqN0JuU2l0clI1YmRfNjV5NTZ0ckJRalZ1RDg3OWtvRGRNbC11SEdqZm93RVlZY1JPalMwSTF5TWUwVHFpdFNucXJlRGQ3Mko4dm1HSko0VTZvOTVYOGd4aFNNTm9DRTNSM1p1SVY0SlJRWmt4XzFVMnJhbnBGY3VmRlBvS19KYXNTWlpNZw?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1300.0,
+   "source": "Forbes",
+   "title": "Anthropic IPO Targets $1.3 Trillion Valuation And A $90 Billion Raise",
+   "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxONnhNV2FPakhod1RVSDNLR1RFcjMtSzlVaVJ0NWZrQTl1UWctbmdjcllYWllVc1cxUEplcTdod1ZOTEM5Q0N4NUVyU08yX1QzY01sVEFqLXdEbTlyenU2SG9WNEZwR3pSRGRZQk1fNnZ6dmp5bjJYdzJlWEt0RURuaDFZYVRJenE5SHBhd1FMNmtjN0dCYWo1aUd1ZmFIY0hIS1c4Z0FnWTN0WDdpTlRNSHRJMlUxSW9neFdJXzhPYw?oc=5"
   }
  ],
- "at": "2026-11-11 00:15（台北）"
+ "at": "2026-11-11 07:12（台北）"
 }

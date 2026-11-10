@@ -806,7 +806,44 @@
   "p:h200_china:47231f869b00": "2026-11-07",
   "p:h200_china:e93ec69cab5e": "2026-11-07",
   "p:h200_china:d8cba69122c6": "2026-11-07",
-  "p:h200_china:33a4bde162d2": "2026-11-07"
+  "p:h200_china:33a4bde162d2": "2026-11-07",
+  "3ebad9b1f331": "2026-11-10",
+  "4112b02d07e6": "2026-11-10",
+  "29b6e09e6786": "2026-11-10",
+  "5767a0a20de6": "2026-11-10",
+  "7a4e4f71ed84": "2026-11-10",
+  "5a3b12745e31": "2026-11-10",
+  "c1560aa88f3c": "2026-11-10",
+  "14350270d1b6": "2026-11-10",
+  "380bacdec8e9": "2026-11-10",
+  "db51826e7aa6": "2026-11-10",
+  "11a71bec10da": "2026-11-10",
+  "3b0e1aef3660": "2026-11-10",
+  "2174d99dd2df": "2026-11-10",
+  "ab3cf8e07046": "2026-11-09",
+  "cd6c8e2b7cd3": "2026-11-09",
+  "ecfdef940c2d": "2026-11-10",
+  "168069b78136": "2026-11-10",
+  "1323d5302d81": "2026-11-10",
+  "p:fiscal_cr:b7733844a9e8": "2026-11-10",
+  "p:fiscal_cr:1a60274401b3": "2026-11-10",
+  "p:fiscal_cr:c3cbc805959e": "2026-11-10",
+  "p:fiscal_cr:828b28e47b66": "2026-11-08",
+  "p:debt_limit:b6fb07442b1f": "2026-11-10",
+  "p:debt_limit:55abba94b6ae": "2026-11-10",
+  "p:h200_china:9eb29837dc2c": "2026-11-10",
+  "p:h200_china:8e1c24e8d31f": "2026-11-10",
+  "p:h200_china:e3591627714d": "2026-11-10",
+  "p:h200_china:da8e3da0477e": "2026-11-10",
+  "p:h200_china:5b30157e19f1": "2026-11-10",
+  "p:h200_china:bcd77a9dfe6d": "2026-11-10",
+  "p:h200_china:33f46f10837f": "2026-11-10",
+  "p:h200_china:4b5453e9191f": "2026-11-10",
+  "p:h200_china:414c458b863a": "2026-11-07",
+  "p:h200_china:7e160a0a75bd": "2026-11-07",
+  "p:dc_grid:839045de6916": "2026-11-10",
+  "p:gulf_lease:6f0e577d2517": "2026-11-10",
+  "p:us_china_truce:20c835907465": "2026-11-07"
  },
  "items": [
   {
@@ -820,6 +857,34 @@
      "title": "Trump says he will not approve wind permits as part of permitting bill",
      "source": "Politico",
      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPUGRlVm1fVHA4dWpldDlIbmlzSTgwaTdJZmwwelNPZmpTdnpZVS0xT3Z6V04tczhhLS16QU1tQU81SzF0OFh3bllxSHdRMENmU1FheGRGV0RPVFI1NTZveWJMSmprbHlaalg2QkNTLVFjRkIteGtIVW11dVd6bzBsT0dNZzQ1MFEyVUpkYzJMbXh1Z2pEVEloS2FEcEhUYVFLZmdBd1g5M3FHNG1jVjI3R0hfaFRjLWZ5ZV9zOA?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "5e69d87da0fb",
+   "topic": "能源",
+   "channel": "行政命令",
+   "zh": "川普政府向油氣公司Arena提供4.8億美元貸款，為首筆此類援助。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "Trump administration finalizes $480 million loan to Arena, in first such aid to oil and gas",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQRktLNWo1UVNPc3A4Yy0zWDFESVl1TDVwRnluOXVDY2w0RmF1OGFWb05icUx2ckVJLWViRy1Ra0ZUUXFCdndHNjVjdzNkY3hSTEl1WWtReGs3N3Y0ZUZTNDBkMy1ORFRQaVFWR0lVOHR3VE81bnQ2U3pqaHV3MzNPWmdmd252bTNPV25wdkNfWnhJUEFDSWxJU1JSWWg3YTRZaFY3cGk4dDVSUEU1SWlfYkpTUS14MUtJVHF0OHpVZTFNa0k?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "036627fb2314",
+   "topic": "關稅",
+   "channel": "白宮公告",
+   "zh": "白宮誓言儘管中期選舉挫折與物價上漲反彈，仍推進關稅政策。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "White House vows to press ahead with tariffs despite midterm backlash over rising prices",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNaFdhSXUwZmVuNVZuLXZleE84ak1aVEFJMWVJWnU5OXc1dlpsSTMwckVzVTBGNWdtOGp5SGVLV1BJS21lYlpPV1pFVTNBTnBlbjdqbFpUUDNHZHNNTXBTY3daV2JVS2FPZHpYbmJFSFEtTWhPV1dJaFUwSExnVW9VMDRrM05BQQ?oc=5"
     }
    ]
   },
@@ -938,9 +1003,9 @@
   }
  ],
  "summary": {
-  "hash": "7e3490d4ccd4",
-  "date": "2026-11-10",
-  "text": "本週能源政策成焦點：川普支持能源許可法案，惟明確反對風力發電許可證；運輸部長同步批准藍馬林離岸港口執照。另關稅方面，川普對加拿大商品加徵50%關稅，加拿大誓言報復。近期關鍵日期為12月11日聯邦暫時撥款到期，及12月14日聯準會理事庫克聽證會。"
+  "hash": "9016c83b231f",
+  "date": "2026-11-11",
+  "text": "本週能源政策成為焦點：川普支持能源許可法案並禁止風電許可證，同時向油氣公司提供4.8億美元貸款；白宮儘管中期選舉挫折仍推進關稅政策，已對加拿大商品加徵50%關稅。近期關鍵日期為12月11日聯邦暫時撥款到期，以及1月10日美中貿易休戰框架到期。"
  },
  "suggestions": {
   "fiscal_cr": {
@@ -953,12 +1018,11 @@
    ]
   },
   "debt_limit": {
-   "date": "2026-11-10",
-   "note": "美銀預測美國最快2月觸及舉債上限，遠早於預估的2027年，政策可能已進入「接近上限」階段。",
+   "date": "2026-11-11",
+   "note": "TOKENPOST報導指美國舉債上限可能在2月到達，且8月有X日期風險，顯示政策可能加速進入「接近上限」階段，原預估的2027年觸及時間提前了。",
    "links": [
-    "https://news.google.com/rss/articles/CBMioAFBVV95cUxQbDUyVmk1VjNobkxrUzIzTGp2dHlBaDREeUxhREtfNnl0bGs1YTBFRFJpR0VrX2ZBSnJ0UTROd1d5bVNuTDgzMThWb0k0b3ZyRVhTRDBwOWR1Y3JNaHNoMWlJeDQ4c1psOEVzenJyM0tQbUtHeTBkRnUyZ2ZYbmthYUI2QjVNbEk5dUhwMVR0SVlIWmhJdzA3dTJiNHRhdEg5?oc=5",
-    "https://news.google.com/rss/articles/CBMikwFBVV95cUxQQzJpRjFNTXdtZTc5eGE1N0dGa0xlMHNveVRDZVR5ZVBzWjM2dnQtbkZHSFNQdVRCbmdHY3FNV1dpTTZGNy1xQVRGTVRVN05jc0tQaEJ4TUxnLXNOdDlzZzNzcnE5YnAtZ0E0V2Roc2Rvb2c2S0I1U29PaU54TmpfQlZpOVB2cmhIdnhKMkpoZFpfaGs?oc=5",
-    "https://news.google.com/rss/articles/CBMimgFBVV95cUxQaTYtVUVzR3J2VVpJM0w3TjlPMXVNNGhvWUlEV0VDMlpobWNHdGdkc3U3d1FqVTctNVRVQllleThFWDZYYW1TdmROTUlMUFRkamp4T1VlME50enJkOHdkUmFtcjRJcUx4aGpqR0VKMVBXUjB4Uzctc2pXVWZHbnpiR0Q3am9sX0NpZ3ZMOUtmbWY2UWFWcUROdVV3?oc=5"
+    "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5iOUI3NWItYm5XdXhudFpkNENYdTc5blNXQ3VxbXpKVEl0aTIyRUNCSFd5RllnV0h5RG5HOEJqVVJGaWktZGNXa2prMGQ2Yk83VGVLYlljX3pwaHRrZWpwM0NjUXVlV28?oc=5",
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5lYTRmOFMxQTQxMFU2eGlVWm9tM1FBSW56NGV1MTJPSFZ3dDBuOXhrX2xHeF95Zl9TbGdrMDRIRV9Cekdxc04ycF9nZ0JQV2g0Nnh6SzY0Mi1Samc?oc=5"
    ]
   },
   "fed_cook": {
@@ -971,11 +1035,11 @@
   },
   "h200_china": {
    "date": "2026-11-11",
-   "note": "多則新聞報導Nvidia H200晶片出貨中國遭阻（空殼公司、海關卡關），顯示「出貨」階段遇重大障礙，可能加速推進「國會限制」階段的立法審議。",
+   "note": "多則新聞報導Nvidia晶片非法流入中國醜聞，引發國會關注出口管制，可能加速推進「國會兩項限制法案」的審議進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirwFBVV95cUxOZElTYkZYMTM5VlVGRk5RV2ZUaE1ITFNFZ1Q3SENaMjFOcS1DTlBJWUZyeFlFTzVmdDFsczVhSEtiYk5Sb2JDY2hHSzhyeW1UZmxvMjF4QUNFejRJbFBBMTFGQ2Z3TUhjM2tRdVpHQWx4aGFvU0Z6anpoYTUtazVVM3lldFlIRlRwM1ZmY19xMWFxTmdEZTBzbldXYldVc0lPaUJ3U0NZOVdPcklPR19j?oc=5",
-    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOUWMzc2V2NFVMeVpjb3otZkVkT2F4RnRGRUlCZGREZVhkY3JvS0Y0cUc4QnNEY3BUY0RlekdjQTJSS3RHbTJ5SFpDWElLRE9Yci1hMk5fTmY0NnBLZmExQzFtVGJIdTVNT3Y4Rks1T3V2WGNsYTlZLWwxZ2VlOGhncGNjWDk5a25XOWhGcnhoMlYtc1RtNnMtQVN5bDdlZmtfREd1RHFEeWVKV3h6RlJma1VR0gG3AUFVX3lxTE1rOHVOcDlWY1dlYUgtOW1Cdm9KVVlkMWw3VzlFVkxqQkhpNFk0VURMdjU3WHJEZmNvanBlaWJIQTZ4TDBQNm0xd0NEMms3bVBCSjhidGVUREU2aDVBM3FyV1Q2bkhkTHJ3QTNuMm1CMTBBbjlfbE1PakFIRTRCMWNENnhOaXFKOGFCeEdDTDdzUGhORko2UWdPUmEwSDBweUJBeTJSblcza1B6YWNhdldkZVQwQlZlRQ?oc=5",
-    "https://news.google.com/rss/articles/CBMihgFBVV95cUxPLTZ4MjlOX3BvY0VpUnZMa0Y3anNIRTJRS1p4M3RpenY0YWxfZFVfbE1qN2VtbkQyc3Q2WEhBY0JMOVJOUzFFN1BSNDZGbVc2ZVh2cTNSV1ZRcmZWWXNTMkhiQTRWbFpFNmhCTzIxWDIzVjBWTzNrS2JlTGg2eU8zT3JUazV5QQ?oc=5"
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxNQmh1LVlIZnpuTWthNWxsMV95VnY4c2h2Z3F2UTNfV2ZoendQTkR2UkJoVE4wRFNSTW1fTi1OOEU4cG9aVUpmMGVmV2hxWUhMaDdLR2VLN2FQQk9CalpXSWVESGFHcFQ0czQycE1ZN2RNSUpqUUFwQTQ3OFJucTdYMVFLalFQcW9FejdxVFA0c2VDbnE1bDl4TUJnMXlNUQ?oc=5",
+    "https://news.google.com/rss/articles/CBMipgFBVV95cUxQcS1TU1laTkFpcmZDR3VENGhXMmtCWEJfSFRHWlMza2NubjNkczA3RzZNSDVDQ2MzRF9uc1FUZE5NTkxyOXp4Tm1kc3ltMUdLcHBIVGk5b0NOd1ZfWGhrR3JmdkV4dkhhSXhrWkx2bkJienVNWEN3b1FHc3JJV0JIdW5JdmZ0ajFhbGdVbWdESk80REZ2YU5OY043b3VyNEpGT3FpQnJ30gGrAUFVX3lxTE1ER3ZPQWxTd2FraVdzUTA4VkVXUHZxSldaUzNpQ1N4UjI4NDJrVFRGakJVWFBxd0V3b3pzMkRZdWlGRm1QejBETUVWMnNvRWNqaGVmZktWbE9HRHFTTUVxblZPb0RRUldLbks4QjZfamVYeGJ1TWt3OVBxS1lkMTRyUlF5Nko5RUhpQmxYczFjVWd3OEZOdk9zNnNXaEVMcVRnMU5UelV4OTFYVQ?oc=5",
+    "https://news.google.com/rss/articles/CBMinAFBVV95cUxOSjFQaVdVa1dPdVhsMzZaQkpGY0luNXMxanN4Vkl5R0VGbWY1aF90SFEzdW1sWGZZN2xGRG02YWZaTThfRDZPV3hRTHF0elpCYW12eUR0Y2lzbXM4NnlObkx2RlE0NVR0UkFfZkZlckYyTzlUdUl4dkplZ2tpWTQtMHNFYnV2MDRuUkJ3aGp3VU1KZ09Ubko4bEFOSjHSAZwBQVVfeXFMTzNSODlYUTVJak1nbmJ1WlFWaXMtbnhsYkdORk0xUGRfVi1ZUFlCYUxDbjU5cFV0TDRGdlUxenhjMzVtYVcyalo3MTJDNk01V0EtS1N4NXJPVTRsV2RMeHc1cTVHVHU4LWQteGlmcE9UVldwQWhOOHc5WDM1dXE1bGxESHFlNjhRQ2VSTTRkbVNTcXZ4cWpFQ1ItQ1Zs?oc=5"
    ]
   },
   "ai_preempt": {
@@ -1005,5 +1069,5 @@
    ]
   }
  },
- "at": "2026-11-11 00:16（台北）"
+ "at": "2026-11-11 07:12（台北）"
 }

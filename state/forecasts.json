@@ -682,12 +682,12 @@
    "period": "2026-10",
    "date": "2026-11-25",
    "clev": {
-    "pce_mom": 0.27,
-    "core_mom": 0.26,
-    "pce_yoy": 3.77,
-    "core_yoy": 3.2
+    "pce_mom": 0.31,
+    "core_mom": 0.27,
+    "pce_yoy": 3.81,
+    "core_yoy": 3.21
    },
-   "clev_asof": "11/09",
+   "clev_asof": "CPI Oct",
    "banks": {},
    "bad": [],
    "auto_seen": {},
