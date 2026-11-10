@@ -8,7 +8,7 @@
    },
    {
     "label": "S-1 修正版",
-    "date": "2026-11-02"
+    "date": "2026-11-10"
    },
    {
     "label": "定價",
@@ -2939,9 +2939,125 @@
   "9ad79c057ef5": "2026-11-08",
   "a32f428903af": "2026-11-08",
   "5c833eb5f7c2": "2026-11-07",
-  "8fc03ebcccd0": "2026-11-07"
+  "8fc03ebcccd0": "2026-11-07",
+  "4e96822da19d": "2026-11-10",
+  "5389ee924fe4": "2026-11-09",
+  "0a7195344446": "2026-11-01",
+  "e7b4e5fe749c": "2026-11-10",
+  "0b23748b2968": "2026-11-10",
+  "dca7db2c3353": "2026-11-10",
+  "8fd069834d3e": "2026-11-10",
+  "78b0abe37488": "2026-11-10",
+  "df01bd0d58a6": "2026-11-09",
+  "dff6e579af41": "2026-11-09",
+  "45d1c618d241": "2026-11-10",
+  "ae7102d7f773": "2026-11-10",
+  "454d8c045ccb": "2026-11-10",
+  "32c265302218": "2026-11-10",
+  "586ae2825f02": "2026-11-10",
+  "03ee050fbdf4": "2026-11-10",
+  "c0f22a879014": "2026-11-09",
+  "1e30c63ff890": "2026-11-10",
+  "13e301c664b7": "2026-11-10",
+  "ce3df6099165": "2026-11-10",
+  "0fcecd4d6954": "2026-11-10",
+  "6c873287b727": "2026-11-09",
+  "6a50ee33a8c9": "2026-11-09",
+  "ef6aca897b6f": "2026-11-09",
+  "725c55b9b051": "2026-11-09",
+  "afaf832b7e13": "2026-11-09",
+  "4395d845d45c": "2026-11-09",
+  "37d7cf0f17ee": "2026-11-09",
+  "ee199d8d3073": "2026-11-09",
+  "e17b6c3a526c": "2026-11-09",
+  "570668818805": "2026-11-09",
+  "05b1830983c0": "2026-11-09",
+  "4cf324270171": "2026-11-09",
+  "da0f6a54ed67": "2026-11-10",
+  "69427499e196": "2026-11-09",
+  "f41b7c0136be": "2026-11-09",
+  "7291c1325653": "2026-11-09",
+  "84051b239a61": "2026-11-09",
+  "f1df8db597bb": "2026-11-09",
+  "3aa0ad010840": "2026-11-09",
+  "ed83915d6bba": "2026-11-10",
+  "098e133d8890": "2026-11-10",
+  "2185ed794ef3": "2026-11-10",
+  "bd4040e12a9b": "2026-11-10",
+  "36dc43092f5f": "2026-11-10",
+  "10744c43d3f6": "2026-11-10",
+  "63859a257819": "2026-11-09",
+  "2d11439dbc72": "2026-11-09",
+  "ce8464e68a43": "2026-11-10",
+  "037de1318b51": "2026-11-09",
+  "a356a2126bd4": "2026-11-09",
+  "17b5fe74a00e": "2026-11-09",
+  "677a72034a91": "2026-11-09",
+  "d3640963f8a0": "2026-11-09",
+  "dbffcc87d12d": "2026-11-09",
+  "030455153286": "2026-11-08",
+  "334c3f7427c2": "2026-11-10",
+  "9367dda6f1b8": "2026-11-10",
+  "0468bd7f13aa": "2026-11-10",
+  "7b4adfcb9031": "2026-11-10",
+  "db63330d3b23": "2026-11-10",
+  "3d27495ccc51": "2026-11-10",
+  "e03b1cfcba2f": "2026-11-10",
+  "b517995f6560": "2026-11-10",
+  "d01969bab8f3": "2026-11-10",
+  "dd203c08a3a5": "2026-11-09",
+  "0e5c2a6faf7c": "2026-11-08",
+  "60ed19e91c32": "2026-11-07",
+  "497394f420a6": "2026-11-06",
+  "7583bbb4495b": "2026-11-05",
+  "81d18987a569": "2026-11-10",
+  "922be8f41ae7": "2026-11-10",
+  "3ab9f61c2363": "2026-11-10",
+  "6e99c77e5bf3": "2026-10-29",
+  "e00517a70168": "2026-11-10",
+  "407cb280991b": "2026-11-10",
+  "4a61532ba7ef": "2026-11-10",
+  "c7a6bc9fa9b1": "2026-11-10",
+  "88ed58cd92a5": "2026-11-10",
+  "f810c75e1d38": "2026-11-09",
+  "54f4dea9cda8": "2026-11-09",
+  "ec47e4520a01": "2026-11-10",
+  "88efb7257324": "2026-11-10",
+  "5b6fe5f70a9a": "2026-11-10",
+  "952b9240344e": "2026-11-10",
+  "2a84afc314e3": "2026-11-09",
+  "3954bbc2cd9f": "2026-11-09",
+  "315a924af2ff": "2026-11-09"
  },
  "events": [
+  {
+   "id": "03843e103fd2",
+   "co": "Alphabet",
+   "type": "算力合約",
+   "zh": "Anthropic融資260億美元，Google、Nvidia等參與，IPO定價70-80美元。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "Anthropic lines up $26 billion from Nvidia, Google, others as IPO priced at $70 to $80",
+     "source": "investingLive",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPb1loX2JsUFV6a0t2V2cyaXBHNkZCbGNRS2tVS0ZfaGVZeWpEZ01pTUF0V0dBT01nM2ZGWWRyQW9HM3JUNkZPMW5Tbkh2b0hVTUdxTWo4UkxTRWtQcklvajUtS1l1WHRIQnRhLXdaRTdIbnY2Um1xekJSS1RmN3FqUTFTQ3NQQXVnZ3M4LTNGWGRBV2JMbTBRWFEzX1BGV3J5Ml8wQjIyRTZtQXR5dmMxVkJSWUpaQQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "8f1ec4fef51d",
+   "co": "Nvidia",
+   "type": "算力合約",
+   "zh": "Moonshot在中國租賃Nvidia頂級AI晶片。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "Moonshot Rents Nvidia’s Top AI Chips in China, Documents Show",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNRXFQdXM5NGdadXhNSnRhalRtOE9aSHdPYUNyeWtIam9xZ3JjMEI5cGxyUGpZbXBQamZlY2hxZFdTRC1NbllidG1MdDNpb193bGdmMEpwdGhLMmxLQjVQekZGNEpRY181RkVick94WHlDMTMtblVBaTNWT0tRSkVmNXhlSEZYcFFRTV96WVAzLURWcEo3MGx1RDZFdk1KQ1plTldWdHlxbkdHVlVsX1k0bw?oc=5"
+    }
+   ]
+  },
   {
    "id": "b7204fbe1ca8",
    "co": "Alphabet",
@@ -3015,6 +3131,44 @@
      "title": "OpenAI Just Raised $11 Billion at a $1.25 Trillion Valuation, Below the $1.4 Trillion It First Sought",
      "source": "24/7 Wall St.",
      "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNd0VJbTY4NE9DN3ZJY01VUlMwQXpyZUNYeGZzbnIyWWRtLTBGdE12ZjFYa0xhUGZlcmNDVF9sUlEyT0lPWS1ld1pEUzczNTJFdnhJVlJDQkw0Tl94S0UwbGN5WFMzeVZTYTU5MDZ3THRIZGpiX0d1a0Joc1ZOOWl3bC1EekR4dUNVc0g3QzZ2eTZTTXB2ZkZDUHhacC1aQlJscFRidDNlSXVHSC1GZG9pUWVtckN1VjZBVEsyVUpfMDh0ZXlzRHZ0U3c2TzFvQlV4WGRyeE1tM1k?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "18539e618136",
+   "co": "Microsoft",
+   "type": "算力合約",
+   "zh": "Microsoft 終止與 Oracle 的 AI 雲端容量租賃協議。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Microsoft reportedly winds down Oracle AI infrastructure contract",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNcmp3cGpScUdvOFVKbHhWS2ZQczdJZl9qZnpidHFvT0xMV1BJVG9aTEJjMDZMeUNVa1VZMGE3VkI3SnhheUpnUlpGeXg5bTFTZU54WGNpbnVEZUhPd1d2d29SMUh1U0hwUE9lTk5kUjc3LU9iU0pPeU5lNHMtNGZEUlJ6WnZ6Tm5kVmRjQg?oc=5"
+    },
+    {
+     "title": "Microsoft is winding down Oracle deal to rent AI cloud capacity, Bloomberg News reports",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNN0g4UzRRaV9OckNuUjZYeVcybWl4SnhZUHVRR3pXVTFUdVMtWENOSWRKdjhUQThNTWlRWXd3YVJFTUVaM1hOaFI2UWJ6cDlWZjM4Q3NXTWZDVlJFSTdnS3RqNExHcG93anIxTDhpNXJTRGduSEgxcWNaYnNRYTdOdWF4SzBoZzBLV3o1Wi1ZaEVPWkFXZVJSSWhYZWFSdE9BRFlINGtWWjhhM2FLUEdaYjJQOTBLQ0VCLVIyXw?oc=5"
+    },
+    {
+     "title": "Microsoft Winding Down Oracle Deal to Rent AI Cloud Capacity",
+     "source": "Bloomberg",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPeXFhaDRlRjBvZktGaFM2eExYdGpJakRNazYxc2Y2UWoyMDJzS1VFb2Z5ZTNkSVhMRHBTbUdtb25kZHJUdkpRVXRQU1hQVGtIbS1maVNoeGhSZ2pHOGF1aDY3R1AwSTU4TmlmSEdEc19RYlowVXAzc0NlSzdVZ2xBZXduc2FzT3ViQ0xDS3RYdklKMzFnVzRtUkZKQnVBWlBDTWtGcGZUU01ZSktQTG5aOE9lbXE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "731f6bc79dc4",
+   "co": "Oracle",
+   "type": "發債",
+   "zh": "Oracle 發行200億美元融資，用於AI基礎設施投資。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Weekly Recap: Oracle's $20 billion financing and record CDS spread",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQVERLOVgxanRBM3NBZXVGMzdCYUxWMVBlY2E0Y0FNTzJBamYzUlU4emI4YngzLWxaNFA4Qnc1ajRLU1gxNDFleEgtOHBEMkw1SHJBaXN6aDBYOUw0WXhMOFBPX280RGxwS0Q5alRKemVfaGdoNHdYQ2tYdGZrZjZTTFVDNm9pRTFvVWxjQ1BfbE1BSUFoM0QtLTdmeTlWZFBKRFRMeFlZa21tcnNrMVpsbFBGVmNSb2cwNkR3dTJPcjJ5Y3Zq?oc=5"
     }
    ]
   },
@@ -3200,30 +3354,6 @@
      "title": "Home Office cloud services contract may net AWS £1B",
      "source": "The Register",
      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaXBiNlJSVDZMZEVJR2Y3RVlnZHA2X2NERFBBdFBHRWl0TGcwaHlhZU1VU3JFMVFTMmswcVBrMUV2RWh4TWZVN2F5aUljRzNmZTVldm9UWDFaZHdNdTJnb1JUU0VERERqRFJzbGhTSGVPdno4WjltRWNxNzQxOGJOUTlTMFQwMktRc1pCOHFsa2FLNm1jUTRXTGsyb0wyNjI4QktsbXp2TTNkdEJSOUhpbQ?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "18539e618136",
-   "co": "Microsoft",
-   "type": "算力合約",
-   "zh": "Microsoft 終止與 Oracle 的 AI 雲端容量租賃協議。",
-   "date": "2026-11-06",
-   "links": [
-    {
-     "title": "Microsoft is winding down Oracle deal to rent AI cloud capacity, Bloomberg News reports",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNN0g4UzRRaV9OckNuUjZYeVcybWl4SnhZUHVRR3pXVTFUdVMtWENOSWRKdjhUQThNTWlRWXd3YVJFTUVaM1hOaFI2UWJ6cDlWZjM4Q3NXTWZDVlJFSTdnS3RqNExHcG93anIxTDhpNXJTRGduSEgxcWNaYnNRYTdOdWF4SzBoZzBLV3o1Wi1ZaEVPWkFXZVJSSWhYZWFSdE9BRFlINGtWWjhhM2FLUEdaYjJQOTBLQ0VCLVIyXw?oc=5"
-    },
-    {
-     "title": "Microsoft Winding Down Oracle Deal to Rent AI Cloud Capacity",
-     "source": "Bloomberg",
-     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPeXFhaDRlRjBvZktGaFM2eExYdGpJakRNazYxc2Y2UWoyMDJzS1VFb2Z5ZTNkSVhMRHBTbUdtb25kZHJUdkpRVXRQU1hQVGtIbS1maVNoeGhSZ2pHOGF1aDY3R1AwSTU4TmlmSEdEc19RYlowVXAzc0NlSzdVZ2xBZXduc2FzT3ViQ0xDS3RYdklKMzFnVzRtUkZKQnVBWlBDTWtGcGZUU01ZSktQTG5aOE9lbXE?oc=5"
-    },
-    {
-     "title": "Microsoft to reportedly wind down Oracle deal to rent AI cloud capacity",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPNUszVVVJNmVIQ0ZFYWhEVmRQSnlJR2lBNmR0c1BRV0xpQUtJN1d3WWw0VW03bTFmaHBSZjE5amFvckFMTWJ6QTZSQ3lGWXI2V193MDFQa0ZjSGVmSWtxTmZZTWhEZWhUTUZjMkFQYnJfSXA2eHRHbkRFUjB4cjhPQmZNRXZfOTYzanhKVmFRbVJGUm83ZnZBWEEtaXkwZ0lSVThmalhwQXFZZC1rOFItU1g4UWY?oc=5"
     }
    ]
   },
@@ -4923,20 +5053,20 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "16b2c05a0e65",
-   "text": "Microsoft 近期事件偏向提升公司債供給與AI投資熱度。雲端業務超預期成長支撐394億美元創紀錄資本支出，驅動250億美元債券發行；與Anthropic的449億美元AI基礎設施承諾強化AI領導地位。惟部分合約終止與建設延遲偏向緩和短期資本支出預期。整體而言，龐大融資需求與AI戰略承諾偏向推升長端利率與AI投資熱度，但實際支出進度不確定性偏向抑制股市反應。"
+   "hash": "dff308dec8e8",
+   "text": "Microsoft近期事件呈現矛盾態勢。一方面，雲端業務超預期成長、與Anthropic的449億美元AI基礎設施投資承諾，以及創紀錄的資本支出，偏向提升AI投資熱度；另方面，終止Oracle合約、Nscale計畫告吹、實際資本支出低於預期，偏向降低市場對其算力擴張速度的預期。若後續資本支出持續低於承諾，則可能緩解長端利率上升壓力；若AI投資承諾兌現，則偏向支撐股市科技板塊。公司債供給偏向增加，已"
   },
   "Alphabet": {
-   "hash": "4cf2c617b6d9",
-   "text": "Alphabet近期密集發債與融資，偏向增加公司債供給；同時宣布AI資本支出大幅增長、單季達510億美元，現金流壓力加大，若融資不足則偏向推高長端利率需求。營收成長但利潤下滑引發AI投資效率擔憂，偏向降低市場對科技股的估值預期；惟硬體銷售與AI變現成長，偏向維持AI投資熱度。整體而言，融資需求增加與獲利疑慮相互作用，對債市與股市方向產生拉扯。"
+   "hash": "015f2b663203",
+   "text": "Alphabet近期密集投資AI基礎設施，資本支出與融資規模龐大。偏向增加公司債供給——為應對510億美元季度AI支出與2027年預期大幅增長，已發行60億歐元債券並考慮亞洲融資。若AI變現未如預期加速，則長端利率承壓；同時巨額資本支出與營收成長不同步，偏向短期拖累股市表現，但強化AI投資熱度。"
   },
   "Meta": {
    "hash": "64289229d535",
    "text": "Meta近兩週密集發債與融資，累計發行數百億美元債券與股權，主要用於AI基礎設施。此舉偏向增加公司債供給、推升長端利率；同時大規模資本支出與算力投資偏向提升AI投資熱度。若債券發行規模持續擴大，則可能對長期利率形成上行壓力；若AI支出成效顯著，則偏向吸引科技股與AI相關投資。"
   },
   "Oracle": {
-   "hash": "d75e0c014273",
-   "text": "Oracle近期大規模融資與資本支出計畫偏向增加公司債供給。發行100億美元投資級債券加上200億美元融資上限，將推升長端利率供給壓力。同時，巨額AI基礎設施投資與算力多元化佈局展現競爭力，偏向支撐股市與AI投資熱度。若融資成本上升，則現金流目標達成難度增加。"
+   "hash": "9061d35be423",
+   "text": "Oracle近兩週大幅增加AI基礎設施投資，發行逾300億美元債券與股票融資，資本支出接近950億美元。此舉偏向增加公司債供給、推高長端利率。同時取消騰訊合約但擴大多晶片供應夥伴關係，顯示AI算力競爭加劇。若Oracle成功實現現金流目標，則偏向支撐股市；但龐大資本投入短期偏向稀釋股東價值，AI投資熱度則因其積極佈局而偏向升溫。"
   },
   "CoreWeave": {
    "hash": "6472ad32f37a",
@@ -4952,11 +5082,11 @@
   },
   "Amazon": {
    "hash": "ff38491b4c67",
-   "text": "Amazon近期事件偏向增加公司債供給與長端利率上升壓力。公司資本支出持續高企（單年逾2,200億美元），自由現金流轉負，若融資需求擴大則傾向增加債券發行；同時簽署多筆算力合約確保收入能見度，支撐債信。龐大基礎設施投資偏向強化AI投資熱度，但現金流承壓可能引發市場對融資成本的關注，進而對長端利率形成上升壓力。"
+   "text": "Amazon 近期事件偏向增加公司債供給與長端利率上升壓力。公司資本支出持續高企（單年逾2,200億美元），自由現金流轉負，若融資需求擴大則傾向增加債券發行；同時簽署多筆算力合約確保收入能見度，支撐債信。龐大基礎設施投資偏向強化AI投資熱度，但現金流承壓可能引發市場對融資成本的關注，進而對長端利率形成上升壓力。"
   },
   "Nvidia": {
-   "hash": "53174034da3b",
-   "text": "Nvidia 近兩週事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆大型算力合約（SpaceX 473億美元、Hugging Face 129億美元等）顯示AI需求旺盛，偏向提升市場風險胃口。然而 Nvidia 涉及客戶融資擔保與債務支持，若這類隱性信用風險擴大，則偏向增加公司債供給壓力；同時龐大資本支出需求若推升長期融資成本，則偏向推高長端利率。"
+   "hash": "6f51e6b537fd",
+   "text": "Nvidia近兩週事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆大型算力合約（SpaceX 473億美元、Hugging Face 129億美元等）顯示AI晶片需求旺盛，推升股市預期；若Nvidia持續擔保客戶債務融資，則公司債供給增加；龐大資本支出需求偏向推高長端利率。反壟斷調查為風險因素。"
   },
   "xAI": {
    "hash": "888f39e88761",
@@ -4971,5 +5101,5 @@
    "text": "Apple 近期連續發債75億美元，偏向公司債供給增加。強勁營收與領導層交接平穩進行，若市場對新執行長信心足，則可能支撐債券需求；反之，若投資人對過渡期存疑，則可能推高發債成本。整體而言，大規模融資活動偏向拉升長端利率，而財報表現穩健偏向支撐科技股，對AI投資熱度影響中性。"
   }
  },
- "at": "2026-11-10 07:52（台北）"
+ "at": "2026-11-10 20:10（台北）"
 }

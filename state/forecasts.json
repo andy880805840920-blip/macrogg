@@ -578,16 +578,99 @@
     "core_yoy": 2.48
    },
    "clev_asof": "11/09",
-   "banks": {},
+   "banks": {
+    "BofA": {
+     "cpi_mom": 0.2,
+     "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+     "meta": {
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+       "name": "investingLive",
+       "at": "2026-11-10T20:11+08:00",
+       "q": "Morgan Stanley and Bank of America are both leaning towards an even softer headline reading of 0.2%.",
+       "kind": "text"
+      }
+     }
+    },
+    "MS": {
+     "cpi_mom": 0.2,
+     "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+     "meta": {
+      "cpi_mom": {
+       "via": "auto",
+       "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+       "name": "investingLive",
+       "at": "2026-11-10T20:11+08:00",
+       "q": "Morgan Stanley and Bank of America are both leaning towards an even softer headline reading of 0.2%.",
+       "kind": "text"
+      }
+     }
+    }
+   },
    "bad": [],
-   "auto_seen": {},
-   "auto": {},
-   "auto_log": [],
+   "auto_seen": {
+    "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/": "1f7919241922"
+   },
+   "auto": {
+    "MS": {
+     "cpi_mom": {
+      "v": 0.2,
+      "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+      "name": "investingLive",
+      "at": "2026-11-10T20:11+08:00",
+      "q": "Morgan Stanley and Bank of America are both leaning towards an even softer headline reading of 0.2%.",
+      "kind": "text"
+     }
+    },
+    "BofA": {
+     "cpi_mom": {
+      "v": 0.2,
+      "src": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+      "name": "investingLive",
+      "at": "2026-11-10T20:11+08:00",
+      "q": "Morgan Stanley and Bank of America are both leaning towards an even softer headline reading of 0.2%.",
+      "kind": "text"
+     }
+    }
+   },
+   "auto_log": [
+    {
+     "at": "2026-11-10T20:11+08:00",
+     "src": "investingLive（圖表）",
+     "img": "https://investinglive.com/cms/media/images/US%20INFLATION%20CONSUMER%20PRICES%20CPI.jpg",
+     "link": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+     "result": "不是逐家預測表",
+     "got": {},
+     "notes": []
+    },
+    {
+     "at": "2026-11-10T20:11+08:00",
+     "src": "investingLive",
+     "title": "US CPI preview: Wall Street sees cooler inflation but the Fed may not blink",
+     "link": "https://investinglive.com/news/us-cpi-preview-wall-street-sees-cooler-inflation-but-the-fed-may-not-blink/",
+     "got": {
+      "MS": {
+       "cpi_mom": 0.2
+      },
+      "BofA": {
+       "cpi_mom": 0.2
+      }
+     },
+     "bad": [
+      "MS core_mom=0.19（原文找不到對應句）"
+     ]
+    }
+   ],
    "cons": {
     "core_mom": 0.2,
     "cpi_mom": 0.3
    },
-   "cons_at": "2026-11-10T07:58+08:00"
+   "cons_at": "2026-11-10T20:11+08:00",
+   "img_seen": {
+    "https://investinglive.com/cms/media/images/US%20INFLATION%20CONSUMER%20PRICES%20CPI.jpg": "不是逐家預測表"
+   },
+   "img_pending": {}
   },
   "pce|2026-10": {
    "key": "pce",
