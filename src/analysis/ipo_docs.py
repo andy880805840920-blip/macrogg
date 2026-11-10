@@ -203,7 +203,8 @@ def derived(terms: dict, rounds: list[dict]) -> dict:
 POINTS_SYSTEM = (
     "你是財經記者，替台灣讀者整理美國 IPO 申報文件的重點。輸入是一份 SEC 申報的節錄（封面、發行概要、公司概要），"
     "以及上一份申報已整理的發行條件（可能為空）。用繁體中文寫 4–6 點重點，每點 45 字以內："
-    "發行股數與價格區間、募資用途、營收與獲利、股權與治理結構、重大合約或風險，只寫節錄裡有的。"
+    "發行股數與價格區間、募資用途、營收與獲利、股權與治理結構、重大合約或風險，只寫節錄裡有的；節錄沒有寫數字的就不要寫數字（不要寫「約數億」這類）。"
+    "地名照原文翻譯：Delaware＝德拉瓦州（不是德州 Texas）。每點要是完整的一句話。"
     "數字照原文（美元金額可換算成「億美元」：1 billion＝10 億，例如 $33.2 billion＝332 億美元），不加節錄以外的事實、不做評論。"
     "另寫一句「跟上一份相比改了什麼」（上一份為空就寫「首份申報」）。"
     "只回 JSON：{\"points\": [\"…\"], \"change\": \"…\"}。")
@@ -291,7 +292,7 @@ def summarize(t: str, prev_terms: dict | None, call=None) -> dict:
         j = json.loads(m.group(0)) if m else {}
     except ValueError:
         j = {}
-    pts = [str(p).strip()[:70] for p in j.get("points") or [] if str(p).strip()]
+    pts = [str(p).strip() for p in j.get("points") or [] if str(p).strip() and len(str(p).strip()) <= 90]
     good = check_points(pts, ex)
     if len(good) < len(pts):
         log.info("IPO 申報重點：%d 點的數字在原文找不到，已略過", len(pts) - len(good))
@@ -376,11 +377,12 @@ def build(cik: int, name: str, state_path: Path, offline: bool = False, _get=Non
                   if f in FORMS]
             fl.sort(key=lambda x: (x["date"], x["acc"]))
             done = 0
-            prev_terms: dict = {}
-            for f in fl:
+            # 新的先處理（最新一份有價格區間與股數），舊的分次補齊；「上一份」＝日期在它之前的那一份
+            for idx in range(len(fl) - 1, -1, -1):
+                f = fl[idx]
                 if f["acc"] in docs:
-                    prev_terms = docs[f["acc"]].get("terms") or prev_terms
                     continue
+                prev_terms = next((docs[g["acc"]].get("terms") or {} for g in reversed(fl[:idx]) if g["acc"] in docs), {})
                 if done >= max_new:
                     break
                 acc = f["acc"].replace("-", "")
@@ -400,7 +402,6 @@ def build(cik: int, name: str, state_path: Path, offline: bool = False, _get=Non
                     log.warning("IPO 申報 %s %s：重點摘要失敗，下次再試", f["form"], f["date"])
                     continue                         # 不記錄，下次再試
                 docs[f["acc"]] = {**f, "url": url, "terms": terms, "rounds": rounds, **summ}
-                prev_terms = terms or prev_terms
                 done += 1
         except Exception as e:                       # noqa: BLE001
             log.warning("IPO 申報清單抓取失敗（%s）", e)
