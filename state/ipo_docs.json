@@ -1,0 +1,298 @@
+{
+ "docs": {
+  "0002130357-26-000005": {
+   "form": "DRS",
+   "date": "2026-06-01",
+   "acc": "0002130357-26-000005",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000213035726000005/filename1.htm",
+   "terms": {
+    "shares_after": 1000.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    }
+   ],
+   "points": [
+    "首次公開發行，發行股數未定，價格區間未公開（標記為機密）。預計募資淨額約為某金額（假設中點價格）。",
+    "募資用途：增加資本與財務靈活性、創造公開市場、用於營運支出、資本支出（含運算與基礎設施投資）、人才聘僱與留任，可能用於併購或投資。",
+    "Claude 於 2023 年第一季商業化推出，年化營收已達某金額（具體數字未公開）。公司承諾至 2028 年累計運算支出至少達某金額。",
+    "採特殊治理結構：特拉華州公益公司，設長期利益信託（LTBT）獨立董事會；Class A 股每股一票，N-Class 無投票權，Class T",
+    "公司使命為負責任開發先進 AI；核心優勢包括研究領先、人才文化、前沿與安全研究整合、運算效率、企業策略聚焦。"
+   ],
+   "change": "首份申報"
+  },
+  "0001628279-26-000861": {
+   "form": "DRS/A",
+   "date": "2026-07-13",
+   "acc": "0001628279-26-000861",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162827926000861/filename1.htm",
+   "terms": {
+    "shares_after": 1000.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "IPO 發行股數與價格區間未公開披露，文件標記機密處理。預計募資用於一般企業用途、運算基礎設施投資及人才招聘，暫無重大併購協議。",
+    "2023年一季度商業推出以來，Claude 年化營收已達某金額（具體數字機密），企業採用速度為科技史最快。",
+    "採用特殊治理結構：Class F 股（創辦人持有）掌握 50.1% 投票權；Class T 股（長期利益信託持有）選舉董事會多數席位；Cla",
+    "公司為特拉華州公益公司，使命為負責任開發先進 AI 造福人類。長期利益信託由 AI 安全、國安、政策專家組成獨立董事會。",
+    "已承諾至 2028 年投入至少若干億美元於運算，其中 2026 年、2027 年、2028 年支出逐年增加，預期後續持續增長。"
+   ],
+   "change": "首份申報"
+  },
+  "0001628279-26-000993": {
+   "form": "DRS/A",
+   "date": "2026-08-10",
+   "acc": "0001628279-26-000993",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162827926000993/filename1.htm",
+   "terms": {
+    "shares_after": 1000.0
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545696969998,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "發行股數未定，價格區間待定。公司發行Class A普通股，現有股東也出售股份，公司不獲得後者收益。",
+    "募資用途為增加資本、財務靈活性、創造公開市場、支持員工分配。淨收益用於營運支出、計算基礎設施投資、人才招聘與留任，可能用於併購但目前無具體協",
+    "特殊治理結構：特拉華州公益公司，設長期利益信託(LTBT)確保AI安全責任平衡。Class F股(創辦人)掌握50.1%投票權，Class ",
+    "股權結構複雜：IPO後Class A、N-Class、Class T(1,000股)、Class F(1股)並存。優先股自動轉換為Class",
+    "風險因素詳見第22頁起。公司為公益法人，需平衡股東利益、利害關係人利益與AI安全責任，治理結構獨特。"
+   ],
+   "change": "首份申報"
+  },
+  "0001628279-26-001111": {
+   "form": "DRS/A",
+   "date": "2026-09-04",
+   "acc": "0001628279-26-001111",
+   "doc": "filename1.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162827926001111/filename1.htm",
+   "terms": {
+    "shares_after": 1000.0,
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market"
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545696969998,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "發行股數未定，價格區間未公開。預計募資淨額約數億美元（基於中點價格），用於營運資本、資本支出、人才招聘及可能的併購投資。",
+    "募資用途：資本支出含運算與基礎設施投資、高端人才招聘與留任、稅務預提準備金，暫無重大併購或投資協議。",
+    "獨特治理結構：德州公益公司，設長期利益信託(LTBT)選舉多數董事；創辦人LLC持Class F股享50.1%投票權但無經濟權；員工持Cla",
+    "股權結構複雜：Class A普通股1票1權；Class N無投票權；Class T信託股無投票權；Class F創辦人股50.1%投票權；C",
+    "納斯達克上市代碼「ANT」，被列為「受控公司」。承銷商Goldman Sachs與Morgan Stanley主導。"
+   ],
+   "change": "首份申報"
+  }
+ },
+ "val_items": [
+  {
+   "date": "2026-10-16",
+   "value": 1500.0,
+   "source": "Barron's",
+   "title": "Anthropic Might Only Be Worth $1.5 Trillion. What That Means for AI Stocks.",
+   "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFBqZ1VyWHh2WGc3c2JHWWc4VGJfdHd0TldRal8wSTY2OGd1TGJIcE9vNmZkV0g4QkJhaURKYWZ4b3pMY0s3RlVHNWhZSXF5LVk2RWt1XzRxZjFTU3cxbksxcEpnbU84a3VPMUU3ODhvd21ua0k?oc=5"
+  },
+  {
+   "date": "2026-11-02",
+   "value": 1500.0,
+   "source": "WSJ",
+   "title": "Anthropic Investors Push for Cautious Valuation Closer to $1.5 Trillion",
+   "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPTDhmTmZkVWhzazBUYVdXNUx1OTRkRDFidXNnblM1R0lFNVQ2OS1zRFV2aTFtS2drOEhOVEVSSjZzZDN0Z053X3NrMnJEVTRGQm1EOHh6aDJYWC16bTVPdlpxVk10Vkh0ZkNrdkx1YzFodGc1WVQ4NkpPanN3TnZPZjcxYmcwS0xaSk1DelBQUzM4RFpNNVdubXR5WlRZZXA2b3paamIwdkcwVEpUTWFNSDBuWGQ?oc=5"
+  },
+  {
+   "date": "2026-11-06",
+   "value": 1500.0,
+   "source": "Financial Times",
+   "title": "Anthropic to press ahead with IPO targeting $1.5tn valuation",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPbjV5NWJDbm9FZ2VFTmNEWHdHVUt5ODJwdlZOQjgzZTdJdkFwN0FzQkNsVFdENVJ3MnZybWFvTXltVVFwYVUyWVY4UjRsaFlFajdwMk9QV1gyRmx2UzFpOTlzaWpZdGRrRG1HVTY1c2lMbGJ1eURCQ2E5M1ljSWZNanViUXI?oc=5"
+  },
+  {
+   "date": "2026-11-06",
+   "value": 1500.0,
+   "source": "WSJ",
+   "title": "Exclusive | Major Investors Are Skeptical Anthropic IPO Can Achieve $1.5 Trillion Valuation",
+   "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPNVlmZWpuTHFFVDktVG9OaXlnVl9xSFliZFl4YXFRemVUZDFRRFFaajdEcnQ0b01sQTNJNDVDUkRaQXpLdEY3dGhVUjloVS16UHZIQ0cwUG5wQnpxaDcyX3lvX3A0VFZTb0xjMFBObUJKR3N5cVU2WFhqNzRMcEtjN09HQ3VKcnNIcy15V3VJUTdFRkk1OXhQYlNjMFpELUV0Y2o1MnNNa2dPd3lSN3JJdGM2Z0wzdw?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Reuters",
+   "title": "EXCLUSIVE: Anthropic eyes $1.4 trillion IPO valuation in test of Wall Street's AI fervor",
+   "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaUtnS210c1pKNVpEZXJ1V1JpdUdyZ0h5OGh2SzVCXzJaVGRwaDZnb0NQZUxFS0ZFWmxwbU53ZlJtdlBkOWplZHdaNkloU0xwV3hvdlpjNnh0R1FISXdMOExfc09JckJqTWxjSWlZSjZpN0RWR1kyRUF6YUlXN0dqSm5XQU5TUmFmbWpFbGlzT3FZRllaMGU4cld0cDlsaFVYY0IzV2ZNYmwxYW0yd1FDaw?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Bloomberg.com",
+   "title": "Anthropic Targets $1.4 Trillion Valuation in Blockbuster IPO",
+   "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOUTgtOV9zN3Ywb2UycWxaSlNwOGltSV91cjMtRWdlNnJibWhnTVgtQkZkd0ZYU0NweVB5MEhaMkd6ZVNpUXlra3JiQ2ltcU4xUUUta0pPV2dqb19uWWpLZWVkanNqTnlsVEo2YmdFeGw2M2dNcGtGVHdGb1hBMTN4MFRteXhkbUctZWIxSURUQjcxczZxbmdtbGQ0d3ZLWWJCcjFQQVpwb1pjNHNzWlE?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1300.0,
+   "source": "WSJ",
+   "title": "Anthropic to Seek $1.3 Trillion Valuation in IPO",
+   "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBWWWhzNWttUWJZVjlpX2xCcnhyRVhRVGNBVnlXWGZBWnNVbE55bm1SQVVfR2xuekhqbVJCZkVmRlZFS0xZMmZvdXVkVF9pX0g4V3cwSzZDV1hEMHBVazNRSVlPejM0ZXpWeERaWVpyZ0lDdHF3aGc?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1000.0,
+   "source": "Axios",
+   "title": "Anthropic seeks to be valued at more than $1 trillion",
+   "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBDb2EySW9VUE5CR1kzSlBmbkVQQnF1RDkyUGt6VG5qRDhiektIZGhHdUg5b3loLXJ0Qnl2MVhaWDZxV2pOVm1DSlRNRnJac1dieXNrWFNYUzVpU3BYTEZqam5n?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Financial Times",
+   "title": "Anthropic targets valuation of up to $1.4tn in IPO",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQMDRuVVJGaW5SRDJpZ0lURXRWeGFITHpXWlBtOHF3N3BBM19XVHZBTmZmOFBZaUU2MW01c3I5czhLOWU1anlpdExYcko0SVlnOTlrMjFWUW9VQnZTeVdEM29TWUV2QUpzZDdjUU92V0VBMFRjb0hLNFhFS2o0VUY1X200TmE?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Bloomberg.com",
+   "title": "Watch AI IPO: Anthropic Targets $1.4 Trillion Valuation in IPO",
+   "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOWGJzMG5URTJUUGdtLTM0bDdPZGJ6OTlaTmJBdHR4czgtSnpKR00zLThDNWlIeDlIeWhFWDMyb3JRRGMweHctNzY0NjlIVTJhY0lZSHdQN2xnOWVFUnRmZXl0NXdMdF9wLWJrZzloQUZJWHJfY0dqRkR2RFBwcWtjTzBpN3BMWUp2QlloQTlfUEw2cVluTDNpMjJQaE4xeElDWE5INw?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Barron's",
+   "title": "Anthropic IPO: Claude Developer Chases $1.4T Valuation, What to Know",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNWmE0b0M1U2tYVmtNd2RBd1RnM1ZXZzdvWFlwS2twYXFWWE54cjBRUlZlN1hOSEhqSU5GQUluZkVwdXphdkszOXZQUjZvN1JoMXVjOXIzVG1JR001SHhOamxqZUZ5d1JUU28tR0RJVTZvdi1INzhzaGRVT3prSWItTm1TWHU?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "The New York Times",
+   "title": "Anthropic Targets Valuation of Up to $1.4 Trillion for Blockbuster I.P.O.",
+   "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPaWplYjFtNjRwemt5Y0dEYV9Wem5ET3FLYXpQOFo0MWttT0hPOW5HN3BRM3hYZWU0YUYwdUJIemhKR0Q4aGw4dWxGbWZ6QlZZcHM3Sm5kMkZsaVVaOE1jOVJueHFSMERPS3lPZHptelZseENfMk0zeGlPUGtZODJEaUZuUmVYbXNucG1xVW1HZw?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "CNN",
+   "title": "Anthropic to seek $1.4 trillion valuation in blockbuster IPO",
+   "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPbUxWTnB5dWdxMWVSOS1yclBmU0pteklCakRmX0dKV0ZVZzByMUd4dUlwbFNBbUZkOHotWk9EOTMwTFU0LVFnZHJUWnJBOHpmclRnUngtejBZbklCQWdIQmhMTEkyY3ZLU0NxTEdNZVFIaGVIZHlFNmUzOGFaOFFXLVVNTWRid0F2YTk1Mg?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1300.0,
+   "source": "AP News",
+   "title": "Anthropic seeks valuation of about $1.3 trillion when it becomes a publicly traded company",
+   "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNV0RzZUdwSHJSaUFqcXk5aFQ2QjYyWW0yTWxNbGhZRmo2NVlGOVhPWUdxdm9VS05oN0x6dzR1d2hYakpFRTdjd1ZNaDVhQ3BMQ3IwUXVNODRWck50MkwtWnlmUERNWXctY3FCR1JURC1BYWY2LUFlMTZQTjk0RHhwRTJGaTJ2cHhvbnFGUWQ4Y3hYOVJVQzY0UmtLQ2tRLW9tdlUtcHZHQQ?oc=5"
+  },
+  {
+   "date": "2026-11-10",
+   "value": 1400.0,
+   "source": "Forbes",
+   "title": "Anthropic Targets $1.4 Trillion Valuation In Highly Anticipated IPO",
+   "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQeEgwWWpHRGlhZk1lZjJXX25kQnZIRjZaUGd3czZSdF9SQ3o4V2FHWkdlS3d4UXh4QkJwVkUxdzAyOVQwZ2k4dXNfNFF1Q3dfbjdBS3Zsc29sbmR2U3hnRFF2WlVNSmM2R2xQeXNJbG1yMmVyM2xiUHVoVXZhRngtRk14enk5REZkcEs2Tkt2M2NzaF9SYkJFbDVvcXlZXzZFeWRtbThQM3N4TlVJbHhiemgxb0hEcEdv?oc=5"
+  }
+ ],
+ "at": "2026-11-10 23:50（台北）"
+}

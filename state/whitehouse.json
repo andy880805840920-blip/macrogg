@@ -763,7 +763,28 @@
   "p:h200_china:b348de8a41af": "2026-11-09",
   "p:h200_china:f0d7e3b16760": "2026-11-09",
   "p:h200_china:74faf456a9a0": "2026-11-09",
-  "p:dc_grid:afc88c2a1f6a": "2026-11-09"
+  "p:dc_grid:afc88c2a1f6a": "2026-11-09",
+  "936f96fd966b": "2026-11-10",
+  "816ec869035c": "2026-11-10",
+  "c50940ac7cbc": "2026-11-09",
+  "f438f0adadc5": "2026-11-09",
+  "f660e8b7103c": "2026-11-09",
+  "00e7e50a7746": "2026-11-06",
+  "e612d73b7b42": "2026-11-06",
+  "746d169cdd14": "2026-11-04",
+  "p:h200_china:8c796f37866d": "2026-11-10",
+  "p:h200_china:7cacddfda149": "2026-11-10",
+  "p:h200_china:cb82c4cf575f": "2026-11-10",
+  "p:h200_china:a9448d534eb9": "2026-11-09",
+  "p:h200_china:ba0ebca58921": "2026-11-09",
+  "p:h200_china:693401dace2a": "2026-11-09",
+  "p:h200_china:50d01fd4f0ff": "2026-11-09",
+  "p:h200_china:214d1992586c": "2026-11-09",
+  "p:h200_china:5e37fa3dfffa": "2026-11-09",
+  "p:h200_china:e4bb16d65acf": "2026-11-09",
+  "p:dc_grid:613199127fcc": "2026-11-10",
+  "p:us_china_truce:d80ca1aab506": "2026-11-07",
+  "p:us_china_truce:c0e469378d09": "2026-11-07"
  },
  "items": [
   {
@@ -970,11 +991,11 @@
   },
   "h200_china": {
    "date": "2026-11-10",
-   "note": "多則新聞報導國會推動將晶片出口限制寫入國防法案（11/10 MLQ.ai、파이낸셜뉴스），顯示「國會限制」階段的立法動作加速，可能已進入審議實質階段。",
+   "note": "多則新聞報導Jensen Huang與中國特務醜聞推動美國加強晶片管制，可能加速國會限制法案的審議進程，政策可能進入「國會限制」階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirwFBVV95cUxQZHNUQnlURFBWSTlTSE5wNWUzekR0cDZfcWQzQVRFLVNweXJiSGhtSFZ6cWdvMXF4SHpLRy1YT1Y2QjJZMGxRajNaRGQ1Y25SVGkycEphaU4zTTRJSzV0QjNPTFMxeEl0Mm9CdGFQc0JJTHBNemVoSXdkTnhsR1FNR0t1b2hoUHdfSW0yVnlGMl95Qkd4dDAtMGdhYTFhUzRhc0U1Mm9fdGxLRnhacUNr?oc=5",
-    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOelRPYzFYcFR1aEFmejFtdmRVZHhWY1J5ek1EbkdtY3puXzQwYVIyMm9GUjBOal9lWWR5Z1BOSG1PTzBYOEdwTFVzNDJwRTlBN2xFeGY1N1FOdXB4ZUhCRFlCZEkzdnhURC1hTjVLWmJ4aXZRVGtucHBDWjEtUjkwV3FGR1ljUmxvNGlkcFFZNzd2TS1wQ3ZLVHBONW0wazhkZGdmYjAzTnljNFE3NXRWN1NVYmFEUHhZa0tvb3ZENjZYNkx2cVhyZA?oc=5",
-    "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ienRLT25aN215cHlZR1dEVDRiRkM4M2x2Rnd4dE44YzM0UG90YUtVTzBDdVlhc0lWMHVEdFpNcHZEeFN5RW1VZUdRMEtscHZhc0RZb2d6bFg?oc=5"
+    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxOeDFUWGdLWG1fdTF4MmtGRDVWYV9IYkpPVnV3ekw5bWZYaEcwOEFzNXNDNW1JbGx3VlhrTWR3dndPSVQyajB1M0tuNGtpdm0yc0M2THNmSll1Sl9oa0NKMEl4V0E4Y1ByM0lXNzBkbVN5bVRiaUlsQmxCVlFEMTluWnU2SzNWT2wzZ3FJSTJtUmd4MTg4blZFVzY4YjJjNWxkRTAzWWJwSS14N0NUX3FIMENhQnBObW81Nmhybm5oaFVKcGdaZHZlSXVuQ09ibkxreXNiRWZqbw?oc=5",
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxNemt1cTdwSkowZkdLMUc3dnZwRjR5MUotbkp0aUdlZ19icUpwQzhuLXBXbEpvOHlIbFRlMXNDN3JwQmVUNHZ0czh6RGtETk5WSHlicmJLN29uMXBUUkRFNFk2WVFwMklOTFdwY05zWVZlNjFBWXhzeFBsbU9TTkFJTDhqYXNUSXo1LVE?oc=5",
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQdlc2NmJGdk95NUJNV1ZJbXBXTlVrbzhDQkpQSEdvdmlDajdzRWNXM281TnVoSG5YUGZPR3h0YzRscF9QLVotVEZHbXZCSFNNSTRWU0ExelZHNDVrNHVPQUdHMjJISTRJM1BZTFVZLUg4bDJQNkV0bnZvT0U1ellycGlHTjExSWZjYjZrV21pWTRCVnRZc3FXLUgyWDZLaWI5Y0o0OTVOUUlqZHc4ejZna01MdVJ1N282SDJzTU9yeGc?oc=5"
    ]
   },
   "ai_preempt": {
@@ -1004,5 +1025,5 @@
    ]
   }
  },
- "at": "2026-11-10 22:10（台北）"
+ "at": "2026-11-10 23:51（台北）"
 }
