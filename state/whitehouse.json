@@ -796,7 +796,17 @@
   "p:h200_china:73815ef88a8f": "2026-11-09",
   "p:h200_china:7f4e7447535a": "2026-11-08",
   "p:h200_china:31845e3ed48e": "2026-11-08",
-  "p:h200_china:615770d14b3c": "2026-11-08"
+  "p:h200_china:615770d14b3c": "2026-11-08",
+  "p:h200_china:a801462bd1ad": "2026-11-10",
+  "p:h200_china:74aa2e1e8845": "2026-11-10",
+  "p:h200_china:4090c6934015": "2026-11-07",
+  "p:h200_china:76766018f4e1": "2026-11-07",
+  "p:h200_china:e9b139127958": "2026-11-07",
+  "p:h200_china:f064658dca72": "2026-11-07",
+  "p:h200_china:47231f869b00": "2026-11-07",
+  "p:h200_china:e93ec69cab5e": "2026-11-07",
+  "p:h200_china:d8cba69122c6": "2026-11-07",
+  "p:h200_china:33a4bde162d2": "2026-11-07"
  },
  "items": [
   {
@@ -961,11 +971,11 @@
   },
   "h200_china": {
    "date": "2026-11-11",
-   "note": "多則新聞報導美國商務部核准H200晶片銷售給有軍事背景的可疑中國公司，引發安全審查質疑，可能加速國會兩項限制法案的審議進程。",
+   "note": "多則新聞報導Nvidia H200晶片出貨中國遭阻（空殼公司、海關卡關），顯示「出貨」階段遇重大障礙，可能加速推進「國會限制」階段的立法審議。",
    "links": [
-    "https://news.google.com/rss/articles/CBMingFBVV95cUxNU1RwOE9lSF9Yb0l5UjZBNDZkU1JrZlRwaVFhbnVCbEtVNjVXb0VkbGhGeWc0OUVySmhySjhQQVNCcHkzRmxmLWJ1dmROSklrZHFjdkdwZEtrXzJVVE1OWUhhQWVTTUNYWXd6RjJrc1RiVjU2WUVVQW1lYTBXbTBhRFdUMjd0RWxMMnZodVJYYkRCNmZYczdCODJCOVNUQQ?oc=5",
-    "https://news.google.com/rss/articles/CBMimAFBVV95cUxPRTdsQTdMMVVxX183T0Rqb05oR29DYmRlY2cyZWUwWUtBd2dpcnpVZW1VR3llaEVHNVN3TDdhR2gwX0h4UzZhRFpZejFuZmRER2VRRUM3ZEtUREd0UnpwQzI1bVlWSEN6YkRVUzNTX2ctNWM0ejlNWUozWkRMLTV5RXRlLWpScWZZWUw3blVvREg5VDk0dUwxdtIBngFBVV95cUxOREl0NkROYzl5M1AtelpjVU1kUWt1OWNWNko1dUJvWmJQcDVKYXB1clZNUGJNQ3FNQ2lleUQ0NlB2MnRoUUlYNUVMbW9URnhvdDN1cTNwVW1lSkM1S3o4bUJYVWpPaldRTGNmOXpnWnp3dFY5bWd0eURpTlFwVFVaRWJqcExhM3pfdGR4UW9kUTNoQUEtV1RmMjJqQ0hqZw?oc=5",
-    "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0xdzdlblhheHpRQnV4NDlzUVBrUEFZNnI4SV9XaWw3dmZPRVVhWWFvcDlPRE80VTlSOHpmdzRqVHgySVRHT3dYQUY4VVdCS3BWQWFtZG1fYkM?oc=5"
+    "https://news.google.com/rss/articles/CBMirwFBVV95cUxOZElTYkZYMTM5VlVGRk5RV2ZUaE1ITFNFZ1Q3SENaMjFOcS1DTlBJWUZyeFlFTzVmdDFsczVhSEtiYk5Sb2JDY2hHSzhyeW1UZmxvMjF4QUNFejRJbFBBMTFGQ2Z3TUhjM2tRdVpHQWx4aGFvU0Z6anpoYTUtazVVM3lldFlIRlRwM1ZmY19xMWFxTmdEZTBzbldXYldVc0lPaUJ3U0NZOVdPcklPR19j?oc=5",
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOUWMzc2V2NFVMeVpjb3otZkVkT2F4RnRGRUlCZGREZVhkY3JvS0Y0cUc4QnNEY3BUY0RlekdjQTJSS3RHbTJ5SFpDWElLRE9Yci1hMk5fTmY0NnBLZmExQzFtVGJIdTVNT3Y4Rks1T3V2WGNsYTlZLWwxZ2VlOGhncGNjWDk5a25XOWhGcnhoMlYtc1RtNnMtQVN5bDdlZmtfREd1RHFEeWVKV3h6RlJma1VR0gG3AUFVX3lxTE1rOHVOcDlWY1dlYUgtOW1Cdm9KVVlkMWw3VzlFVkxqQkhpNFk0VURMdjU3WHJEZmNvanBlaWJIQTZ4TDBQNm0xd0NEMms3bVBCSjhidGVUREU2aDVBM3FyV1Q2bkhkTHJ3QTNuMm1CMTBBbjlfbE1PakFIRTRCMWNENnhOaXFKOGFCeEdDTDdzUGhORko2UWdPUmEwSDBweUJBeTJSblcza1B6YWNhdldkZVQwQlZlRQ?oc=5",
+    "https://news.google.com/rss/articles/CBMihgFBVV95cUxPLTZ4MjlOX3BvY0VpUnZMa0Y3anNIRTJRS1p4M3RpenY0YWxfZFVfbE1qN2VtbkQyc3Q2WEhBY0JMOVJOUzFFN1BSNDZGbVc2ZVh2cTNSV1ZRcmZWWXNTMkhiQTRWbFpFNmhCTzIxWDIzVjBWTzNrS2JlTGg2eU8zT3JUazV5QQ?oc=5"
    ]
   },
   "ai_preempt": {
@@ -995,5 +1005,5 @@
    ]
   }
  },
- "at": "2026-11-11 00:08（台北）"
+ "at": "2026-11-11 00:16（台北）"
 }

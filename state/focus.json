@@ -1,10 +1,10 @@
 {
  "hash": "",
- "text": "聯準會理事沃勒 11/10 在倫敦表示傾向 12/9 會議升息一碼，即使 10 月通膨數據低於預期；若數據高於預期，他支持升兩碼。沃勒強調聯準會在 10 月會議前後的溝通已讓市場定價升息，若不兌現將損害信譽、導致利率立即下跌而不當放鬆政策。他指出升息不必連續會議執行，但必須在合理時間內落實，且需要更高利率「宜早不宜遲」。另一位理事 Logan 同日表示支持至少再升息兩次，且步伐可能加快。¶11/10（美國時間）公布的 10 月 CPI 顯示整體月增 0.4%、年增 3.9%，核心月增 0.3%、年增 2.8%，通膨數據高於預期，道瓊指數因此下跌。輝達股價再度下挫。油價與公債殖利率下跌為投資人帶來一些緩解。Anthropic 設定 IPO 價格區間。\n人工智能新創公司Anthropic正在籌備首次公開募股，目標估值達1.4兆美元，這將成為華爾街對AI產業熱情的一次重大考驗。\n新加坡電商平台Sea因AI與雲端成本上升，11/10公布的獲利未達市場預期，顯示科技公司在追求AI投資時面臨的獲利壓力。",
+ "text": "11/10，聯準會理事沃勒在倫敦表示傾向在 12/9 會議升息一碼，即使 10 月通膨數據低於預期；若數據高於預期，他支持升兩碼（50bp）。沃勒稱聯準會在 10 月會議前後的溝通已讓市場定價升息預期，若不跟進將損害信譽、導致利率立即下跌並意外放鬆政策。他強調升息不必連續每次會議都做，但承諾的升息必須在合理時間內兌現，且「更高利率將是必要的，宜早不宜遲」。10 月 CPI 已於 11/10（美國時間）公布，整體年增 3.9%、核心年增 2.8%。另一位理事 Logan 也支持至少再升兩次息、步伐可能加快。¶11/10（美國時間）公布的 10 月 CPI 顯示通膨壓力仍高，整體月增 0.4%、年增 3.9%，核心月增 0.3%、年增 2.8%。數據公布後道瓊指數下跌，輝達股價再度走低。同日油價與公債殖利率下跌，為投資人帶來一些緩解。市場正消化這份高於預期的通膨數據，關注聯準會 12/9 會議可能的利率決策方向。\n人工智能新創公司Anthropic計畫進行首次公開募股，目標估值達1.4兆美元，此舉將測試華爾街對AI產業的熱情程度。\n新加坡電商與數位服務公司Sea因投資人工智能與雲端基礎設施成本增加，導致獲利未達市場預期，11/10公布的財報顯示營運支出壓力持續。",
  "links": [
   {
    "title": "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken",
-   "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOZGUzRmI5dUVhU2xFY2V0aDdNVWFaX29saDhKVHY5ajlmU0hibl9IS2F6a2htQmYtNVIzQk9qMUdSRVM5bHM0aGRIbHQwU2JiZm1TX05vaFJKdXRiT19IbERPZDdqMWgyNkNqd05GSFhLQ2E0S2NlSzRVc1ZVaXl6UWJEWmZlNVVBZDNESnVkQVIxSXNNSlF5QTczQUpKWEFBcDk1ZjROSWxtQjRxNkdTRWlvUnA0MmRRVnZCUTVHM0dfYU41WXFnU19jQTItZw?oc=5",
+   "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ3hmQUhBdy04d2piMlV6b2lfVmt6dklNYzdoQUZBeUxrVTNtQWMyUVNGNVpBdDZ5MnpLY2g0MldVUXp2cFdqU2JOVmJwcmQ2ODI1dkc2TE85ejN5cXFoei0zNUF3NUFGOUJtZnV5OHV3WXJJX1p2TVh5TmI5SmJ4SUh0Z1V2QmxlQ0R5aUtRVnVKWWFaNXlNcFRoTWYxSFQ1ZzdZb0t0b21LQkxuRU52TVp3?oc=5",
    "source": "Bloomberg",
    "at": "2026-11-10T15:50:00+00:00"
   },
@@ -291,22 +291,16 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-10T16:08:10.980703+00:00",
+ "at": "2026-11-10T16:16:04.297181+00:00",
  "layout": "main",
  "topics": {
-  "hash": "8b3308830de9070f",
+  "hash": "dcca9e5474754111",
   "items": [
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "10月CPI高於預期後，美債殖利率全面攀升，2年期美債殖利率大漲逾15個基點至4.698%，10年期升破4.93%，30年期升至5.29%，反映投資人重新評估聯準會加快緊縮的可能性",
+    "text": "10年期美債殖利率升破4.93%，2年期殖利率大漲逾15個基點至4.698%；沃勒談話與高於預期的通膨數據推升長天期債券殖利率，反映投資人重新評估聯準會加快緊縮的可能性",
     "links": [
-     {
-      "title": "Treasuries Slide as Hot US Inflation Cements December Rate Bets",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPakFPZlVwd2pvZDUwU0IzS3I3bHNNTlJOV3JRUXpyTEstS0FRN2JHeDE1R2J6cWxBU3o4SWI2SWhLNTdmdDZzTl9Na3lSLVdqcDd1c0RtSHllU3dSRk04aGNqWmZnbVQxdVVDRmhzcmlJU2tHUnJWQ1JNNzhmNXZITHJmdFpOZWdrWWdvam95YWpvd1ZxWDlROG5Za185MW1fWjFqb05QYmhzRDhpY0NHT3dMeWQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-10T14:00:12+00:00"
-     },
      {
       "title": "通膨又比預期熱！2年期美債殖利率一口氣飆逾15基點",
       "link": "https://tw.stock.yahoo.com/news/%E9%80%9A%E8%86%A8%E5%8F%88%E6%AF%94%E9%A0%90%E6%9C%9F%E7%86%B1-2%E5%B9%B4%E6%9C%9F%E7%BE%8E%E5%82%B5%E6%AE%96%E5%88%A9%E7%8E%87-%E5%8F%A3%E6%B0%A3%E9%A3%86%E9%80%BE15%E5%9F%BA%E9%BB%9E-135145774.html",
@@ -316,22 +310,28 @@
     ]
    },
    {
-    "id": "oil",
-    "label": "油價",
-    "text": "川普表示不太可能再襲擊伊朗，伊朗局勢緩和帶動油價持續走低，延續上週開始的急遽下跌趨勢",
+    "id": "equity",
+    "label": "美股",
+    "text": "美股四大指數開盤走低，道瓊下跌 371.93 點、跌幅 0.71%，輝達下跌 3.92%；高於預期的通膨數據中斷科技股連續兩個交易日的反彈走勢",
     "links": [
      {
-      "title": "Oil Extends Drop as Trump Says Further Iran Strikes Unnecessary",
-      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQaXNXQU9UR20zbU83d0JzZ2cwSGhBbVBoNXZ1ZHFhUVAwRlpxR0FPai1jUWtxaWlBb0tKTkJBMmdKTVdrU3JuZjdXM3dBZ3ZuTk5OdDRSOWpELTIyZkpCMzNSNUlZSTFNb3Qxck5WVTExXzNvbVNmWkFtTWJObWhoUW9BelliQTg5MUFaWUpSYmhpeDRfaUNDc2taZHBRdw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-10T14:05:30+00:00"
+      "title": "Wall Street Futures Decline as Higher-Than-Expected October Inflation Raises Fed Rate Concerns: Dow Jones, S&P, Nasdaq",
+      "link": "https://investorshub.advfn.com/market-news/article/39652/wall-street-futures-decline-as-higher-than-expected-october-inflation-raises-fed-rate-concerns-dow-jones-sp-nasdaq?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-10T14:08:30+00:00"
+     },
+     {
+      "title": "美股4大指數走跌！道瓊跌逾300點 輝達再跌4％",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A14%E5%A4%A7%E6%8C%87%E6%95%B8%E8%B5%B0%E8%B7%8C-%E9%81%93%E7%93%8A%E8%B7%8C%E9%80%BE300%E9%BB%9E-%E8%BC%9D%E9%81%94%E5%86%8D%E8%B7%8C4-144439919.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-10T14:44:39+08:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電董事會通過各以不超過5億美元認購Anthropic與OpenAI股權，合計狂砸超過320億元新台幣深化AI生態系盟友關係；台積電10月合併營收5868.9億元創歷史新高，月增14.7%、年增59.7%",
+    "text": "台積電董事會通過投資 OpenAI 與 Anthropic，兩件合計最多 10 億美元；台積電 10 月合併營收 5868.9 億元創歷史新高，月增 14.7%、年增 59.7%",
     "links": [
      {
       "title": "TSMC’s Revenue Rises 60% in a Sign of Resilient AI Chip Demand",
@@ -350,7 +350,7 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "外資連續9個交易日賣超台股，今日賣超341.16億元，累計賣超逾8298億元；連續23個交易日調節台積電",
+    "text": "台股反彈1050點至42711點，但外資連9個交易日賣超，今日賣超341億元、累計賣超逾8298億元；外資調節台積電8181張，連23個交易日賣超",
     "links": [
      {
       "title": "外資連9賣台股續砍341億元　連23賣台積電",
@@ -363,7 +363,7 @@
    {
     "id": "election",
     "label": "期中選舉",
-    "text": "民主黨在期中選舉中大勝，贏得國會多數席位，市場原擔心此為負面結果，但債市已逐漸適應，10年期美債殖利率從選舉日的4.95%回落至11/9的4.88%，反映投資人對政治不確定性消除感到安心",
+    "text": "民主黨在期中選舉中大勝，贏得國會多數席位；市場在選舉結果確定後風險下降，10 年期美債殖利率從選舉日的 4.95% 跌至 11/9 的 4.88%",
     "links": [
      {
       "title": "Andrew Sheets Says Stocks Rose After 11 Straight Midterms. Will 2026 Make It 12?",
@@ -382,7 +382,7 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金價格維持在4100美元上方，油價下跌緩解通膨擔憂，支撐黃金持穩",
+    "text": "黃金價格維持在4100美元上方，油價下跌緩解通膨憂慮，支撐黃金持穩",
     "links": [
      {
       "title": "Gold Holds Gain Above $4,100 as Lower Oil Eases Inflation Woes",
@@ -391,22 +391,9 @@
       "at": "2026-11-10T14:11:31+00:00"
      }
     ]
-   },
-   {
-    "id": "fx",
-    "label": "匯率",
-    "text": "新台幣兌美元震盪小升1.7分，以32.865元作收，亞幣走強與台股續揚帶動升值",
-    "links": [
-     {
-      "title": "國內匯市：亞幣走強與台股續揚，新台幣兌美元震盪小升1.7分，以32.865元作收",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQeHBQdXEtOHpjUXZLLV93MmFXblZpUVBWbWZVVmQ3NTJZaTBPWkFhcUVZNmp1bUUycGFHTkczdWF5eWh0WXg2NzB3SmRqMGVzOTI0WHdybXd3RHpzSWNwd041X2wtZ0ZySFpMN09xbjBZbzV3eWN0WW9xQ0pvcnVBTEFWUXNiSVJK?oc=5",
-      "source": "富聯網",
-      "at": "2026-11-10T08:12:00+00:00"
-     }
-    ]
    }
   ],
-  "at": "2026-11-10T16:08:56.160934+00:00"
+  "at": "2026-11-10T16:16:48.484721+00:00"
  },
  "main_source_titles": [
   "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken",
@@ -415,19 +402,9 @@
   "Falling Oil Prices and Bond Yields Offer Investors Some Relief",
   "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)"
  ],
- "headline": "沃勒傾向 12 月升息，不排除一次升兩碼以維護聯準會信譽",
- "rate_note": "沃勒與 Logan 的鷹派發言偏向推升短端利率與升息預期，沃勒更明確表態 12 月升息、不排除升兩碼，強化市場對政策緊縮的預期；10 年期 11/10 盤中 +13bp 至 4.99%，市場已在反映。",
+ "headline": "沃勒傾向 12 月升息、不排除升兩碼，稱不跟進將損害聯準會信譽",
+ "rate_note": "沃勒明確傾向 12 月升息、不排除升兩碼，偏向推升短端利率與升息預期；他強調不跟進將損害信譽並意外放鬆政策，暗示聯準會將兌現鷹派立場。10 年期 11/10 +13bp 至 4.99%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "10月CPI月增0.4%超預期，核心通膨0.3%高於市場預估",
-   "titles": [
-    "US Core CPI Rises by More Than Forecast, Supporting Fed Hike",
-    "Consumer prices rose 0.4% in October, more than expected, complicating Fed's inflation fight",
-    "A key report for where inflation stood in October comes out Tuesday. Here's what to expect",
-    "Fed Governor Waller sees December hike likely, opens door to possible half"
-   ],
-   "at": "2026-11-10T14:10:26.461887+00:00"
-  },
   {
    "headline": "美國10月CPI月增0.4%高於預期，核心CPI月增0.3%，聯準會升息2碼預期升溫",
    "titles": [
@@ -447,17 +424,28 @@
     "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)"
    ],
    "at": "2026-11-10T16:08:10.980703+00:00"
+  },
+  {
+   "headline": "沃勒傾向 12 月升息、不排除升兩碼，稱不跟進將損害聯準會信譽",
+   "titles": [
+    "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken",
+    "Fed Governor Waller sees December hike likely, opens door to possible half",
+    "Update: US Equity Futures Lower Pre-Bell as Fed Governor Christopher Waller Leans Towards Rate Hike in December",
+    "Falling Oil Prices and Bond Yields Offer Investors Some Relief",
+    "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)"
+   ],
+   "at": "2026-11-10T16:16:04.297181+00:00"
   }
  ],
  "archive": {
   "2026-11-11": {
-   "headline": "沃勒傾向 12 月升息，不排除一次升兩碼以維護聯準會信譽",
-   "text": "聯準會理事沃勒 11/10 在倫敦表示傾向 12/9 會議升息一碼，即使 10 月通膨數據低於預期；若數據高於預期，他支持升兩碼。沃勒強調聯準會在 10 月會議前後的溝通已讓市場定價升息，若不兌現將損害信譽、導致利率立即下跌而不當放鬆政策。他指出升息不必連續會議執行，但必須在合理時間內落實，且需要更高利率「宜早不宜遲」。另一位理事 Logan 同日表示支持至少再升息兩次，且步伐可能加快。¶11/10（美國時間）公布的 10 月 CPI 顯示整體月增 0.4%、年增 3.9%，核心月增 0.3%、年增 2.8%，通膨數據高於預期，道瓊指數因此下跌。輝達股價再度下挫。油價與公債殖利率下跌為投資人帶來一些緩解。Anthropic 設定 IPO 價格區間。\n人工智能新創公司Anthropic正在籌備首次公開募股，目標估值達1.4兆美元，這將成為華爾街對AI產業熱情的一次重大考驗。\n新加坡電商平台Sea因AI與雲端成本上升，11/10公布的獲利未達市場預期，顯示科技公司在追求AI投資時面臨的獲利壓力。",
-   "rate_note": "沃勒與 Logan 的鷹派發言偏向推升短端利率與升息預期，沃勒更明確表態 12 月升息、不排除升兩碼，強化市場對政策緊縮的預期；10 年期 11/10 盤中 +13bp 至 4.99%，市場已在反映。",
+   "headline": "沃勒傾向 12 月升息、不排除升兩碼，稱不跟進將損害聯準會信譽",
+   "text": "11/10，聯準會理事沃勒在倫敦表示傾向在 12/9 會議升息一碼，即使 10 月通膨數據低於預期；若數據高於預期，他支持升兩碼（50bp）。沃勒稱聯準會在 10 月會議前後的溝通已讓市場定價升息預期，若不跟進將損害信譽、導致利率立即下跌並意外放鬆政策。他強調升息不必連續每次會議都做，但承諾的升息必須在合理時間內兌現，且「更高利率將是必要的，宜早不宜遲」。10 月 CPI 已於 11/10（美國時間）公布，整體年增 3.9%、核心年增 2.8%。另一位理事 Logan 也支持至少再升兩次息、步伐可能加快。¶11/10（美國時間）公布的 10 月 CPI 顯示通膨壓力仍高，整體月增 0.4%、年增 3.9%，核心月增 0.3%、年增 2.8%。數據公布後道瓊指數下跌，輝達股價再度走低。同日油價與公債殖利率下跌，為投資人帶來一些緩解。市場正消化這份高於預期的通膨數據，關注聯準會 12/9 會議可能的利率決策方向。\n人工智能新創公司Anthropic計畫進行首次公開募股，目標估值達1.4兆美元，此舉將測試華爾街對AI產業的熱情程度。\n新加坡電商與數位服務公司Sea因投資人工智能與雲端基礎設施成本增加，導致獲利未達市場預期，11/10公布的財報顯示營運支出壓力持續。",
+   "rate_note": "沃勒明確傾向 12 月升息、不排除升兩碼，偏向推升短端利率與升息預期；他強調不跟進將損害信譽並意外放鬆政策，暗示聯準會將兌現鷹派立場。10 年期 11/10 +13bp 至 4.99%，市場已在反映。",
    "links": [
     {
      "title": "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken",
-     "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOZGUzRmI5dUVhU2xFY2V0aDdNVWFaX29saDhKVHY5ajlmU0hibl9IS2F6a2htQmYtNVIzQk9qMUdSRVM5bHM0aGRIbHQwU2JiZm1TX05vaFJKdXRiT19IbERPZDdqMWgyNkNqd05GSFhLQ2E0S2NlSzRVc1ZVaXl6UWJEWmZlNVVBZDNESnVkQVIxSXNNSlF5QTczQUpKWEFBcDk1ZjROSWxtQjRxNkdTRWlvUnA0MmRRVnZCUTVHM0dfYU41WXFnU19jQTItZw?oc=5",
+     "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPZ3hmQUhBdy04d2piMlV6b2lfVmt6dklNYzdoQUZBeUxrVTNtQWMyUVNGNVpBdDZ5MnpLY2g0MldVUXp2cFdqU2JOVmJwcmQ2ODI1dkc2TE85ejN5cXFoei0zNUF3NUFGOUJtZnV5OHV3WXJJX1p2TVh5TmI5SmJ4SUh0Z1V2QmxlQ0R5aUtRVnVKWWFaNXlNcFRoTWYxSFQ1ZzdZb0t0b21LQkxuRU52TVp3?oc=5",
      "source": "Bloomberg",
      "at": "2026-11-10T15:50:00+00:00"
     },
@@ -486,7 +474,7 @@
      "at": "2026-11-10T15:31:28+00:00"
     }
    ],
-   "at": "2026-11-10T16:08:10.980703+00:00",
+   "at": "2026-11-10T16:16:04.297181+00:00",
    "weekly": false,
    "points": 2
   },

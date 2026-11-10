@@ -1,105 +1,5 @@
 [
  {
-  "at": "2026-10-30T14:09+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "pce",
-   "gdp",
-   "claims",
-   "gdp_adv"
-  ],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "BOJ Inflation Target Signal Supports Yen Gains, Strategists Say - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Yields Too High to Ignore Lure Investors Back to Long-Dated Debt - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Treasuries Extend Rally With Global Peers on Tech Stock Selloff - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "Tokyo core inflation exceeds BOJ target in October - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+1",
-    "titles": [
-     "COMMENTARY: Warsh's muddled messaging revives Fed credibility doubts - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Deutsche Bank Says ‘AI Dollar’ Is Here, Haven Bias Less Certain - Bloomberg"
-    ]
-   }
-  ],
-  "background": [
-   "物價持穩有底氣！國發會葉俊顯：全年CPI維持約2% 經濟成長率可望再上調",
-   "最大加密盜竊之一波及63億美元　幣安證實遭複雜攻擊現多處漏洞"
-  ],
-  "main": "BOJ Says Japan’s Inflation Trend Hits 2% Target as it Holds Rates - Bloomberg",
-  "main_why": "最高分",
-  "second": "Trump's tariffs fail to cut US trade deficit, IW report shows - Reuters",
-  "points": 2,
-  "thin": [
-   "",
-   "重點二"
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "主軸 183 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": []
-  },
-  "result": "日本央行維持利率不變，稱通膨趨勢已達 2% 目標"
- },
- {
   "at": "2026-10-30T23:06+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3002,5 +2902,106 @@
    "重點二": []
   },
   "result": "沃勒傾向 12 月升息，不排除一次升兩碼以維護聯準會信譽"
+ },
+ {
+  "at": "2026-11-10T16:16+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "cpi",
+   "auction_10y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Waller Backs December Rate Hike, Open to Larger Move - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed's Waller plans to support at least a quarter-point rate hike in December - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Stocks, Bonds Fall as CPI Data Fuel Fed-Hike Bets: Markets Wrap - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "US Core CPI Rises by More Than Forecast, Supporting Fed Hike - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed to raise rates once more in December as inflation risks stay high: Reuters poll - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Inflation Data to Test Limits of Treasury Rally After Haven Bid - Bloomberg.com"
+    ]
+   }
+  ],
+  "prior_old": [
+   "美10月CPI高於預期！美股開盤主要指數全跌"
+  ],
+  "background": [
+   "Fed Governor Waller sees December hike likely, opens door to possible half-point increase",
+   "Update: US Equity Futures Lower Pre-Bell as Fed Governor Christopher Waller Leans Towards Rate Hike in December",
+   "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)"
+  ],
+  "main": "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 199 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 174 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": []
+  },
+  "result": "沃勒傾向 12 月升息、不排除升兩碼，稱不跟進將損害聯準會信譽"
  }
 ]

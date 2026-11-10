@@ -196,7 +196,7 @@
    "name": "Jonathan Kreiss-Tomkins",
    "status": "領先",
    "flip": true,
-   "p": 0.9955
+   "p": 0.9965
   },
   "AR": {
    "before": "R",
@@ -4766,10 +4766,10 @@
    "at": "2026-11-10"
   },
   "_fed": {
-   "hash": "beaaac907717",
+   "hash": "908ff193d98c",
    "points": [
     {
-     "zh": "民主黨控制新國會後，數據中心許可成首要議題。國會推出許可法案，但批評者警告此舉為產業「大幅讓步」。新當選議員包括反數據中心平台候選人，顯示國會內部對AI基礎設施",
+     "zh": "民主黨掌控新國會後，數據中心許可成首要議題。國會推出許可法案，但遭批評為產業讓步。民主黨議員呼籲全國暫停，反映黨內對AI基礎設施擴張的疑慮與能源成本憂慮。",
      "links": [
       {
        "source": "Reuters",
@@ -4782,28 +4782,41 @@
      ]
     },
     {
-     "zh": "民主黨議員呼籲實施數據中心暫停令，惟國會現實可行性受限。參議院待決法案涉及數據中心關切，新澤西州已通過禁止相關保密協議法案，偏向州層級優先權趨勢。",
+     "zh": "新國會偏向加強數據中心用電與許可監管。紐約州已阻止AI數據中心許可，紐澤西州禁止相關保密協議，反映州層級主動監管趨勢，新國會可能支持類似州法優先權立場。",
      "links": [
       {
-       "source": "CNBC",
-       "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxONG85QmJuZGVEWUIxSW4ybHJPVmN2RmR2VjBTdnkydmZSOGV6YllsWEUtbVpYclRTSWhQS09EZGxJSllyY0otS1QtQVdVY3BhY0ZqMWxfR25WeWo3Q3d5LUg5dVZrUGRneGh2LTRBQjY3SERxNTdLaXNkaU9VaHVPb0lKQW10WmvSAYwBQVVfeXFMTWdsc2pjdEpUS1NXdWRzcld3SFp2eVBhWkU2NWNOTXRsUS1WbTNRVlg3S0ZRalhiYnR5WTNKQUxiR1JXNkI3b3ItbnBsZkdoZE9lbWJkVFB1eTFwMFluVFNobUtfLU1sTUJPSlRVSU1IUnRhYXFPVzNEc0NRempsZGM3MTFTVFZSUGUzS0Y?oc=5"
+       "source": "Pasquale Pillitteri",
+       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOZkJOVUtyRFNxeHVsTUh4d2NBd0hIbm9QeVA3MWYwQ0hFdWhlYmVScFgtOGdRMTJuUGR2LVpleGF2bVRSRXlmMFQ3S3ZoY0hnRXdwUGktQlhIYkRsLXgxSnNFOU9kLXVhM09oSmZCS25QWmd0Z25fZ2dmR1d0cy1NT0hWLWVfWDhrTE8zSDdUNDdraGxqZEZsU0xQVE5Zd25vbG16MQ?oc=5"
       },
       {
-       "source": "Yahoo Finance",
-       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNZHp2ZUo5S2hQdnRZWncxRjhBdTNGbjVXRHhmeUZkbXJnMm9Ub3d3QUFlVG9Od0ZNU3NuQkxVMlFWYXNhRjdrQmY1a0EwRXVlV0pQWkU5TmVCaGZWSWZlNHpoVmdXN1UxcjR2SmtjTUItZnY1Y1FLUFFsUXJJdE9zUU9Ha0tTMEwydUtnMko2N0JYeEd1ektuVQ?oc=5"
+       "source": "Data Center Dynamics",
+       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSlB1UmV2VEJmTjZVVVMzb3FodTh3aHdBVEpReWlpSVRPdmVqTG81WDl2UlpxcWlQdXU1QTk5YlFIN1ViMnBDOVBodmhOVUNCMWkwSzRaN1VNV1ZpX3lnYVFRQU12TEctX1ZBSzVNNk84NW1VRzRnMGlzanplWWR1bVZyTnFWNF9XdTBqbFV1ZU96Z21CZHk4eXBzUW5qUmJQUXZnX20wSFo3Zw?oc=5"
       }
      ]
     },
     {
-     "zh": "選舉後數據中心股價下跌，市場反映對民主黨監管的擔憂。新國會偏向加強AI建設用電與許可審查，可能推動更嚴格的聯邦能源許可標準與環境評估。",
+     "zh": "民主黨選舉勝利後，市場擔憂AI監管收緊。數據中心股票下跌，反映投資者對新國會監管態度的負面預期。國會許可法案成為平衡產業發展與監管的首個測試。",
      "links": [
       {
        "source": "Reuters",
        "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQbWpBY1VHMFd5a2tJXzM1RFFFQTl5Y09aVDgza095UkJKVzNnQ3F4VW1pMzBEazJKMGhlS21zUEdCLXJPOVhWdXRnZmlLRHliMDdqYmt2b2ZWYk5FeW85VnBSalpRd1E5b3BVSUZDU2VLMUNiQm41YWw1SUgxV2dWaUFZUkI2MllhY0Z5ZkZHcWNuQmdCaHBKbVRhck1meTRz?oc=5"
       },
       {
-       "source": "CNBC",
-       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOR3FsbmNyQjNGN0N3TWRTSE1sUGRMWENfLUl1Z0FNVGZKempCcXZmRmlzNk9DN1cwMUEwVTU5V3dmV2E1SHdKMTc5QkoycF9vOEptSl9WckpsZ1pRbUNfczNpYUItMDFRLUdfckNSZFJjTnNaUzFySHdZck5WTUVPYWMteV9IR0RjTV9NYnFCMEZXN0JFczRIUFBOTW5nRVMyVzRyWUhPbzRTbkhtZmJvb2tWU3V6R1gtSVMwX0VB?oc=5"
+       "source": "Nikkei Asia",
+       "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPZGxROFRmOS1QYjJKUHA2UDlpLUMydFFoSE0xb3F2dzJZRDdvcTNobFFMWElBX3pCY0dHMElLQUJfNXF5bzRGSXQtNklJNm95MUlmOXFOVUV1bVJWaFlHZUpZd0tQekVjdk4zVVl4UU0ycTF5UzI5aG5SVEVjdkFyNjZQb0JTUmtZTGdWWTd0c09NSDF3czFxR2NkWXhmQUtrQ191bGdHOGtlR09lMHBmV3BuVm0?oc=5"
+      }
+     ]
+    },
+    {
+     "zh": "反數據中心平台候選人當選新國會，象徵監管立場轉變。新國會偏向支持更嚴格的能源許可與環境審查，可能推動聯邦層級數據中心建設限制政策。",
+     "links": [
+      {
+       "source": "Democracy Now!",
+       "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQOGhwaW53dEVwelQzWmcxa0d1TGJnd2RISEZaNDA2dmdRcXQyR3g1VFR4RW1YUFItdFd4M2VJbl8yQTBCWEpZdGxhWVZFWldtZ05KWGIyVGRYVVdESG1NbTltTzlDczFCRmRSeVlOVUM1NFpGM1d1Tjh3T1RnOVZ0NTBJUV9GejJ1Tk9heA?oc=5"
+      },
+      {
+       "source": "Yahoo Finance",
+       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNZHp2ZUo5S2hQdnRZWncxRjhBdTNGbjVXRHhmeUZkbXJnMm9Ub3d3QUFlVG9Od0ZNU3NuQkxVMlFWYXNhRjdrQmY1a0EwRXVlV0pQWkU5TmVCaGZWSWZlNHpoVmdXN1UxcjR2SmtjTUItZnY1Y1FLUFFsUXJJdE9zUU9Ha0tTMEwydUtnMko2N0JYeEd1ektuVQ?oc=5"
       }
      ]
     }
@@ -5121,5 +5134,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-11 00:08（台北）"
+ "at": "2026-11-11 00:15（台北）"
 }

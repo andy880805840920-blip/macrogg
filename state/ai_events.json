@@ -3336,7 +3336,133 @@
   "e884293fa8e3": "2026-11-04",
   "f1635b0b1cbb": "2026-11-04",
   "4e576bbd13cf": "2026-11-03",
-  "0ed41ae3412a": "2026-11-03"
+  "0ed41ae3412a": "2026-11-03",
+  "5b14f18a03f2": "2026-11-09",
+  "48811adb57cc": "2026-11-09",
+  "c37ebe43e59e": "2026-11-09",
+  "aaa070227ad1": "2026-11-09",
+  "275f3c884af6": "2026-11-08",
+  "0e6911ddce21": "2026-11-08",
+  "393c534d0586": "2026-11-07",
+  "378cad078514": "2026-11-07",
+  "db34f14dacf7": "2026-11-10",
+  "cc8224a8935a": "2026-11-10",
+  "bb4e25778d47": "2026-11-09",
+  "2c775a2863a2": "2026-11-09",
+  "122c13350192": "2026-11-09",
+  "698a70bc4c5b": "2026-11-09",
+  "261acf9b4f3b": "2026-11-09",
+  "8f796725a670": "2026-11-09",
+  "7989c9dcd50c": "2026-11-08",
+  "c86fad9a3a8d": "2026-11-08",
+  "ba053a6fef49": "2026-11-07",
+  "ddc0fab8c381": "2026-11-07",
+  "438821d200f2": "2026-11-07",
+  "1ed77fed7acb": "2026-11-07",
+  "f8a046042bfa": "2026-11-07",
+  "7ea24433766e": "2026-11-07",
+  "fea2f8a45228": "2026-11-10",
+  "9271a6ac233d": "2026-11-07",
+  "317aee2a70da": "2026-11-07",
+  "3ea0a938eb25": "2026-11-07",
+  "075c38cd650b": "2026-11-06",
+  "016e062fa149": "2026-11-06",
+  "c016b47b1003": "2026-11-06",
+  "8866b4208291": "2026-11-06",
+  "d5692c54801f": "2026-11-09",
+  "cbea46825440": "2026-11-09",
+  "af7eb3b72bd2": "2026-11-09",
+  "9bc46ae5f770": "2026-11-09",
+  "f5a39dd3787f": "2026-11-09",
+  "5a599bc206b4": "2026-11-09",
+  "be3169b2c87b": "2026-11-09",
+  "3aff125a18dc": "2026-11-08",
+  "b5f7d8770701": "2026-11-10",
+  "192fd31ff7f5": "2026-11-09",
+  "8f5f8a2f5cd1": "2026-11-09",
+  "319dba42a4af": "2026-11-09",
+  "56e4523c4934": "2026-11-09",
+  "abed37fc7c1d": "2026-11-09",
+  "a14c8d00dff4": "2026-11-09",
+  "f10ce6d2b41f": "2026-11-09",
+  "6863adc1b83d": "2026-11-09",
+  "c81c7eb01dc4": "2026-11-09",
+  "2d69fd96d685": "2026-11-09",
+  "558afa556e23": "2026-11-09",
+  "96a0cd740b6e": "2026-11-09",
+  "2e10414fc168": "2026-11-09",
+  "54e5b9c69833": "2026-11-09",
+  "21e238df2422": "2026-11-09",
+  "2b545b82a8ec": "2026-11-09",
+  "2ce0e02ffce6": "2026-11-09",
+  "1a1525be8666": "2026-11-09",
+  "e6ff480d744d": "2026-11-09",
+  "8a56ba8044df": "2026-11-09",
+  "60f18cc657a7": "2026-11-07",
+  "9cbd1596dd9b": "2026-11-07",
+  "df66812e3623": "2026-11-07",
+  "f8c9a726b514": "2026-11-09",
+  "916f519925db": "2026-11-08",
+  "3638b58a9f0d": "2026-11-08",
+  "dc2bb0ffb9dd": "2026-11-08",
+  "9cb1e2a5d09b": "2026-11-07",
+  "de3feb715ae3": "2026-11-07",
+  "ec2435d3d99b": "2026-11-07",
+  "49354c88833a": "2026-11-06",
+  "0ba4a409d5dd": "2026-10-30",
+  "3335f035e751": "2026-10-30",
+  "87d553c488eb": "2026-10-30",
+  "8ee7b1e894fe": "2026-10-29",
+  "de896e27e0c0": "2026-10-29",
+  "e88bdd6b2a58": "2026-10-28",
+  "bc163f5de40e": "2026-10-28",
+  "c95a0b9b2db7": "2026-11-02",
+  "615f5c4609c2": "2026-11-02",
+  "4536475087c2": "2026-11-02",
+  "b36bdf56d993": "2026-11-02",
+  "7f5858fca891": "2026-11-02",
+  "a477eb572115": "2026-11-02",
+  "12c4d783f6e7": "2026-11-02",
+  "27c328b9cf41": "2026-11-02",
+  "fac6413cbcdf": "2026-11-09",
+  "ed0a7047a9cf": "2026-11-09",
+  "8ccc019872cd": "2026-11-09",
+  "fd764e756fad": "2026-11-09",
+  "944bd61c36c8": "2026-11-09",
+  "a56a73a64bff": "2026-11-09",
+  "7948d9208de3": "2026-11-09",
+  "729aad13aacf": "2026-11-09",
+  "d2b4df26353f": "2026-11-10",
+  "25be2628b780": "2026-11-10",
+  "64d209763966": "2026-11-10",
+  "b0b3ab818b69": "2026-11-09",
+  "a0724427d165": "2026-11-09",
+  "01164c0a997b": "2026-11-09",
+  "81fc91d00751": "2026-11-09",
+  "1f98f8c2c548": "2026-10-28",
+  "b5689d8f4733": "2026-11-10",
+  "f198e0c9c5bc": "2026-11-10",
+  "70930fe34e2d": "2026-11-10",
+  "6f487d8335ab": "2026-11-10",
+  "4480875f24bb": "2026-11-10",
+  "e03032a34755": "2026-11-10",
+  "ef01d4397bb7": "2026-11-10",
+  "9937faf5acef": "2026-11-09",
+  "211a9c2b5c87": "2026-11-09",
+  "8cf1241310f6": "2026-11-09",
+  "168ec0a43a3e": "2026-11-09",
+  "c4cd09bf675a": "2026-11-09",
+  "40f6f9896890": "2026-11-09",
+  "e6b03c0187f2": "2026-11-09",
+  "d09509372571": "2026-11-09",
+  "e004c7c884c4": "2026-11-02",
+  "02904869996d": "2026-11-02",
+  "0d506f43a471": "2026-11-02",
+  "ef29a866d6dc": "2026-11-02",
+  "d09e5b503e14": "2026-11-02",
+  "012291e0dfd8": "2026-11-02",
+  "1a71b22def9d": "2026-11-02",
+  "e848d17e06b0": "2026-11-02"
  },
  "events": [
   {
@@ -3480,7 +3606,7 @@
    "id": "6a403a5a9896",
    "co": "Oracle",
    "type": "算力合約",
-   "zh": "Intel與Oracle Cloud簽訂合約，為Oracle雲端提供具體的運算能力基準。",
+   "zh": "Intel 與 Oracle Cloud簽訂合約，為 Oracle 雲端提供具體的運算能力基準。",
    "date": "2026-11-10",
    "links": [
     {
@@ -3539,6 +3665,20 @@
      "title": "Broadcom (AVGO) Q3 2026 Earnings Call Transcript",
      "source": "Fortune",
      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBQQzdmdGlLUjdhQkNMcFptWl9COFRNbXhldi02UE9IVVoyOVQtbUwyT25JZkVjY0ZhMXlPUEdKdlI3ekthTl9velFpLXJHTXBWd2g4SVBtLXd1N0dCNU5CSmFIdkM?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "f2b09874574d",
+   "co": "TSMC",
+   "type": "融資／IPO",
+   "zh": "TSMC參與260億美元投資Anthropic，該公司將進行Nasdaq IPO。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "TSMC joins $26 billion investment in Anthropic ahead of Nasdaq IPO",
+     "source": "Crypto Briefing",
+     "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE52MmFpdk1iWGN6ajIwYlctWUhtejRNVDFVOEdiMFJCOU9qSjB0dlFzR05qWVNab2Z6NndhdlRVSUR1Y0piZVdtMEE1R1QwUm9ELWZTMU9vTGxoaUV0N1hURHpUWUVNa3RHVmZKak1wWU1RaDg?oc=5"
     }
    ]
   },
@@ -3702,7 +3842,7 @@
    "id": "d95afac6deac",
    "co": "Amazon",
    "type": "資本支出",
-   "zh": "Amazon在俄亥俄州擬建50億美元數據中心。",
+   "zh": "Amazon 在俄亥俄州擬建50億美元數據中心。",
    "date": "2026-11-09",
    "links": [
     {
@@ -3733,6 +3873,72 @@
      "title": "SPCX Stock Rises As SpaceX Advances $24B Texas Data Center And Gas Plant Plans",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPeW9VNGpZNER5N3U2YjQ1TnNQRm90Tld6aW9ONFRlQ1pWS0JzLWFaWTBwV2lHT01HMExVQWdNZXJqb3cxamRFSUEzWXRwMmlTNTI2eW51cjc0cFdnQ0JTWUFORUlFSnk2YU9ZWFBmYnhEaGZFMmJ6dGZFWEV0TFJ6YndySnNyaW1DbDJmYXlMcEpOSmlHdm5DaGtrUDMxZw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "180ee70fdc6e",
+   "co": "Microsoft",
+   "type": "資本支出",
+   "zh": "Microsoft 6,770億美元訂單積壓反映 AI 野心，資本支出激增。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Microsoft's (NASDAQ: MSFT) $677 Billion Backlog Signals AI Ambition As Capex Surges And Neocloud Ties Fray",
+     "source": "Foreign Policy Journal",
+     "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxNWTczdjduU0VtcFBmc1otSW12Q1pnYzBkQjZrOVlMTC16QXg1MjhsanFLdnFKcWpENWg4Wm9NZ0s4eVJmNlRIdFJld3YzQzZmcnVIOUVqdWdDWUJHaWtsYVhMYXB4TE9CTWgxUjJLNi1fT3hZSkhXUU40Y1FrZkd6M3djLU52bFF3OEYwRUh6RXJSZEl5SzFUNmhFbm9qSlViZERIMkIySU9pTWotbVpMWGhDaE5VWjJyLTdoTHZnMVc5N0dYV0V0WXQyemE1MmJhdHlqOHc2VnJmQXVjcU1EMEtvLWE?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "43cc04ddf057",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Alphabet收購Crusoe在懷俄明州數據中心項目，投資170億美元並承諾支付全部電力成本。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Google’s $17 Billion Investment for Fuel Cells and a Data Center",
+     "source": "Tomorrow's World Today",
+     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNNzFwQ0dUSVVuQWp4UHo2YVBDemlkUmtGWlJkZmwwV2xTUUFGMjNsZGI3WVpjSExqblhJbHVRVW9OV3NQUUxTb1drLTRKeGZBSkZxQ2FVdWVwT0tjWmZXY2ZWVmt5clZrTTFINFdaeE9aZjFyVlR1MFdxUGRSUjRpVFFfSFF6V29BT0R5bWhnNUlTd1F4MWFPT0J0amwtakppMFYxVzBJMldpVFM2LTlB?oc=5"
+    },
+    {
+     "title": "Google plans $17 billion Wyoming data center amid growing US opposition",
+     "source": "Mezha.net",
+     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxObGxhTWhfYjAteU9rRnZsa1gwQm5JQjk1Slo2ZTRmTUtFNlA4dVJITkJGd1FzbE9HOFJZQjZUUHV3b3RVM25HRDZLc3kyMFV1STNucTBaMl9sOVVZcHBqSnIwNlBKMEFxbktPRzZhYV9aVkNCSVFKejdhWWRGalVQbQ?oc=5"
+    },
+    {
+     "title": "Google Commits $17 Billion to Wyoming Data Center With Carbon Capture Power Plan",
+     "source": "CarbonCredits.com",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNS3RtX2wyNWFaYUEwcndSR0xVVVI1a3Z5QkF2Q21iVWVNTWRoNXRwUnNsMEJCak9INDk3QlhoWmhnOVZWNENTMXFuUDNlV0c4MFZDaHlIX05kNExpdEt0NldvWlVvOTNqYTNybjhpb19EZ1lWVEwyRzd3WFd6SjBOVHRHM0tBdw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "34e78b73f85f",
+   "co": "Tesla",
+   "type": "資本支出",
+   "zh": "Tesla 將 2027 年支出計畫縮減至 200億美元，重新規劃德州工廠。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Tesla Trims 2027 Spending Plan to $20 Billion as Musk Redraws the Texas Factory Floor",
+     "source": "ad-hoc-news.de",
+     "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQb01NRmVNN2F5dlAwQlA0S0RBa3dRalRIZ0haTm1pRE9UbzR6VVNEOC1wa0tnR2UyNzBLRXZINHEwX01zbW8tNXJOd0R2N2lrVWhmVDE3MzBoU1NzaVdoRXUzNU9KRlJ1N2dacFRoa2toVGZTd1RNNVROTUNtUEhTSGFtQ19Ma2ZZVXNmeTlEcWVPQ09yNXZzRllMZmZNN3ZGN19QV0FjWDJNakwzSE5zZEJ5aDJQR2lYYm9CYVJoWl9PYzhuZUQxb3ZrTVc5b2N3eklHdVBtcHM1MlhscWlGcExWTTczUy05ZEdCVA?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "abfb94ada574",
+   "co": "TSMC",
+   "type": "資本支出",
+   "zh": "TSMC簽訂25年電力供應合約。",
+   "date": "2026-11-09",
+   "links": [
+    {
+     "title": "Weekly Recap: Q3 earnings beat and 25-year TSMC power deal",
+     "source": "TradingView",
+     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPemdJY2FFbnBRVEV0TFpqaGQ3dE1Qdm1UUndlXzhxWnJqSkNRQXJkZV9yQ05Xa0NxYVFGUTUtZFJiYnNscEFEODhVa0hPODVnWWpqd0VVajdzMUZOTTJhMGN0WEhZQ2c3azhpQWRwYVhaakNHTWh3Z2NmTVVlSjJWcWlrWVlEUnl5cUtMNWRvbDdIN2hZczhqWUFPdGFVdjNMOUdpZERKeVVRaWIwZHRmakhJNHY3UVNZdExJ?oc=5"
     }
    ]
   },
@@ -3785,6 +3991,25 @@
    ]
   },
   {
+   "id": "3b7cc37ce97f",
+   "co": "SpaceX",
+   "type": "算力合約",
+   "zh": "SpaceX簽署450億美元AI算力合約，新計算設施投資回報期不足一年。",
+   "date": "2026-11-08",
+   "links": [
+    {
+     "title": "SpaceX (SPCX) Lands $45 Billion AI Deal As New Contracts Recast Its Growth Story",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPdTQ3MGdxOWVJeWtRSXZzUDNib0JvRWxiVm9haXFBczdHX0lGYk43WXRUVVhMeERWcG00Q0lBTmRMWkZqbGx6VzV6OEM4TTFLcm1IQmtXUFkwUFJRVGhVOEZNaW9RWGMwekhGdWxHVng4WHFLeTJCZjB4VVZJRWwxSkZERkdLNUxYaXRfelMxWVdLdTUxTjRF?oc=5"
+    },
+    {
+     "title": "AI Power Stocks Just Fell 6.3% to 9.3% on Financing Fears. SpaceX Just Said New Compute Pays Back in Under a Year.",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPcWJJNlZLT3B1eFNadk5CVjFRRnRtYWlJU0ItUm1jbHlHUmZIeEExSjFxQndKal9Sc2hKcWtRNDdabkswMGpNT041UTZzUkJjN1BtdkNQMVJhOFdkZmxyamtpbmUtU192OFYtZC1MWXVsaDdseldJdEU1aW94RldVeDBralVxZTVmeEhPRFBUUFE0aVlY?oc=5"
+    }
+   ]
+  },
+  {
    "id": "1d1de8d1a681",
    "co": "Meta",
    "type": "發債",
@@ -3809,30 +4034,6 @@
      "title": "Oracle Just Sold $10 Billion of Stock at $116 a Share. Is the Stock a Buy at That Price?",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQNXJSYTJaa21YN3pGUkRWSDk5Q3pteG1oVlcxOG40ZmpJbTRtaXdORUpoaVA3N0s5dV9fVVM1c2x0d0ZvcktpR1BOU2xWdC1BVzZOUTVIanVVbkQ0Y1lIcjB1LUZfVEg4VXQxSEJTeEJGRWZMSV9MaXpJV2NFNERTVnF2U0c5Y2dZckRYQTh1dVREYzhKSWln?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "43cc04ddf057",
-   "co": "Alphabet",
-   "type": "資本支出",
-   "zh": "Alphabet收購Crusoe在懷俄明州數據中心項目，投資170億美元並承諾支付全部電力成本。",
-   "date": "2026-11-06",
-   "links": [
-    {
-     "title": "Alphabet's Google Plans $17 Billion Investment in Wyoming Data Center",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQdmc1M3NXblVvZGc3RjNRb2lpTmJrWlg1Z2ZkZWtRdUNqaXdSV3dlVV8tWXBJaU1rMXZPbUhXSTV3cTlSaVVrSk1vYTEzZjI5LWZXU1hBX0hveFBYbTh3SHZoTTVmbWJmV0lPUGwyVXk2bTJGTzBYMGZQbHpGSFhKVEJ4T2tfdm9wNjI2VEYxMjlEeFZa?oc=5"
-    },
-    {
-     "title": "Google Announces $17B Wyoming Data Center With Carbon Capture",
-     "source": "Carbon Herald",
-     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPOUZZYUZxLWhXVEkwd3J5ZTgxVjlUbV9IY2JyblpVSDVxNm52NkM2SVlCcktxNHI3NDh6Y0lMMVU3WXo4WDVFVVZiVm5MdHo4eGZUck1yQndyQXJITFJCZlBQdDQ4WW81clA0bDNTNUNhdHU1a1Znd1NWanpDdHRRNk5ub0djcmRyRnVRZHZ4dw?oc=5"
-    },
-    {
-     "title": "Google announces $17bn data center campus in Cheyenne, Wyoming",
-     "source": "Data Center Dynamics",
-     "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOTmVlYlJuVDI3NzlQR2JxbFBza3l0NVZRTXFMcm1DeGtDVk9WbVhJWGhFRXlIUDQ3c1VuWDBBRklnQVVjXy1Ea3NaT0FCajQ2R3ZrWWkyRDM0SkdSaUZQbkJsYzJSZkkxVjN3eUtTM3E2dXJpS1lWS1pJVjV1RktVWFFLR0l3aWEtdmtjeEtrMWpGalBRUUNTWnczTGdDWlkyZ3Zidk5pbw?oc=5"
     }
    ]
   },
@@ -5218,6 +5419,20 @@
    ]
   },
   {
+   "id": "1ef094b6d3b3",
+   "co": "Intel",
+   "type": "財報",
+   "zh": "Intel 公布財報，每股盈餘超預期 0.12 美元，營收也超過預期。",
+   "date": "2026-10-29",
+   "links": [
+    {
+     "title": "Intel earnings beat by $0.12, revenue topped estimates",
+     "source": "Investing.com",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNZDJuanZNWmhLY21abmJCSmRPRDRZc1diQldILTF0QUVvNnlXWXZfMHhWZG5BcW0za3huMlpDMzU5bmQzeEJKUUFDRmlEWlNfMnZkTmNkc0xOTlFwU2cyWW1Bb1dpcGdTSnpzQU9RR3NQM2VnX3h0b3l0aVNTbDY0b2FMWXBSREFCVzhmSDNQZ1VFakR2MmpuZkQyWk5Ydkdl?oc=5"
+    }
+   ]
+  },
+  {
    "id": "e2a4cd8c3c8f",
    "co": "CoreWeave",
    "type": "發債",
@@ -5466,20 +5681,20 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "4fc3a38c7937",
-   "text": "Microsoft 近期事件偏向增加公司債供給與長端利率上行壓力。大規模發債（250億美元）配合創紀錄資本支出（394億美元）用於AI基礎設施，反映融資需求強勁；同時與Anthropic的449億美元合作承諾進一步擴大資本密集計畫。雲端業務超預期成長支撐債券銷售，但部分專案延遲與合約調整暗示執行風險。整體而言，AI投資熱度偏向升溫，若融資成本上升，則可能制約後續資本支出規模。"
+   "hash": "43dea9607605",
+   "text": "Microsoft 近期事件偏向推升公司債供給與長端利率。大規模發債融資（250億美元）與449億美元Anthropic投資承諾，反映其AI基礎設施建設資本支出激增（Q1達394億美元）。若此融資需求持續，偏向增加債券市場供給壓力。同時雲端業務超預期成長支撐償債能力，但龐大資本支出計畫可能延緩現金流，進而對長端利率形成上行壓力。AI投資熱度則因大額投入與Anthropic IPO參與而偏向升溫。"
   },
   "Alphabet": {
-   "hash": "71012e72dead",
-   "text": "Alphabet近期大幅增加AI基礎設施投資，資本支出達510億美元，同時積極發債融資應對現金流壓力。這偏向增加公司債供給、推高長端利率；但若AI變現加速、硬體銷售持續成長，則可能支撐股市。整體而言，巨額資本支出與融資需求偏向拉升債券供給與長期利率，短期內AI投資熱度仍高，但營收成長與利潤下滑的落差引發市場對投資效率的疑慮。"
+   "hash": "c261e6c077e9",
+   "text": "Alphabet近期大幅擴張AI基礎設施投資，資本支出達510億美元，同時發行60億歐元債券並考慮亞洲融資，偏向增加公司債供給。若AI變現未如預期加速，長端利率面臨下行壓力；但大規模資本投資與算力合約簽署偏向支撐AI投資熱度。營收成長25%但利潤下滑，股市反應偏向謹慎，市場對支出效率存疑。"
   },
   "Meta": {
    "hash": "48294caefff4",
    "text": "Meta近期密集發債與融資超千億美元，偏向增加公司債供給、推高長端利率。若市場對其AI基礎設施投資回報預期樂觀，則股市偏向上漲、AI投資熱度升溫；若投資者擔憂資本支出超現金流的可持續性，則長端利率上升幅度可能更大，股市承壓。整體而言，大規模融資行為反映AI競賽激烈，偏向強化AI投資熱度。"
   },
   "Oracle": {
-   "hash": "82c44b42f9d4",
-   "text": "Oracle近期密集發行債券與股票融資逾300億美元，用於AI基礎設施大規模投資，偏向增加公司債供給、推高長端利率。同時與Intel簽訂算力合約、新增Google TPU選項，強化雲端競爭力，但Microsoft終止舊協議、騰訊合約取消，反映市場競爭激烈。若融資規模持續擴張而營收成長未如預期，則長端利率承壓；AI基礎設施投資規模龐大，偏向吸引AI投資熱度。"
+   "hash": "22d6793e7627",
+   "text": "Oracle 近期大舉融資逾300億美元並設定200億美元AI基礎設施投資上限，偏向增加公司債供給、推升長端利率。同時與Intel簽訂算力合約、新增Google TPU選項，但終止Microsoft及騰訊協議，反映算力供應鏈調整。若融資用於實質基礎設施擴張並達成現金流目標，則偏向支撐AI投資熱度；但大規模舉債融資偏向推高企業融資成本，對股市構成壓力。"
   },
   "CoreWeave": {
    "hash": "6c22bcfa75b4",
@@ -5490,32 +5705,32 @@
    "text": "Anthropic近期事件偏向推升公司債供給與長端利率。巨額運算支出承諾（8,950億美元）與債務融資（630億美元）反映資本密集需求，若後續IPO順利上市，公司債發行規模可能擴大，對長端利率形成上行壓力。同時營收成長放緩與高資本支出比例，偏向提高債務風險溢價。AI投資熱度方面，大規模算力投資與能源基礎設施合約（34億美元）顯示產業仍維持高景氣，但融資規模龐大可能反映市場對AI商業化變現的謹慎態度"
   },
   "OpenAI": {
-   "hash": "0fd05be66561",
-   "text": "OpenAI近期融資規模雖達110億美元，但估值低於預期，偏向增加公司債供給壓力。同時與AMD、Google、Foxconn等密集簽署算力合約與晶片採購協議，資本支出需求龐大，若融資不足以覆蓋支出，則公司傾向發債融資，推升長端利率。大規模資本投入與融資活動偏向強化AI基礎設施投資熱度，但融資目標下調可能反映市場對估值的謹慎態度。"
+   "hash": "d250bc5f0b66",
+   "text": "OpenAI融資目標下調、估值未達預期，偏向增加公司債供給壓力；惟大額算力採購協議與國際AI部署擴張，反映資本支出需求強勁，若融資缺口擴大則偏向推升長端利率；多元晶片策略與地緣政治合作則維持AI投資熱度，但融資受挫信號偏向短期股市承壓。"
   },
   "Amazon": {
-   "hash": "24c6c5ea36be",
-   "text": "Amazon近期大幅增加AI基礎設施資本支出（超2,200億美元），同時簽署多筆算力合約確保收入能見度。然而第三季營收未達預期、自由現金流轉負，且營業利潤高度集中單一業務。這偏向增加公司債供給壓力——若資本支出持續高企而現金流未改善，融資需求上升；同時AI投資熱度偏向升溫，但長端利率方向取決於市場對其盈利轉化能力的信心。"
+   "hash": "35134199ecb8",
+   "text": "Amazon近期大幅增加AI基礎設施資本支出（超2,200億美元），同步簽署多項算力合約確保收入，但自由現金流轉負。此舉偏向增加公司債供給壓力——若資本支出持續超過營運現金流，Amazon可能加大舉債融資需求，推升長端利率；同時龐大資本投入與營收未達預期，偏向強化AI投資熱度，但短期獲利承壓可能拖累股市表現。"
   },
   "Nvidia": {
    "hash": "f6c1a2a87b35",
    "text": "Nvidia 近兩週事件偏向強化AI投資熱度與長端利率上升壓力。營收年增106%超預期、多筆數十億美元算力合約簽署，反映AI晶片需求旺盛，吸引資本流向科技股。若 Nvidia 持續擔保客戶融資債務，則公司債供給偏向增加；大額資本支出需求偏向推升長端利率。反壟斷調查可能制約未來合約，但近期事件整體偏向支撐AI投資熱度與股市科技板塊。"
   },
   "SpaceX": {
-   "hash": "b8f1a5085bd7",
-   "text": "SpaceX 鉅額資本支出與 AI 融資併購，偏向增加公司債供給需求。德州基礎設施投資與 xAI 合併涉及龐大資金需求，若融資傾向債券市場，則長端利率面臨上行壓力。同時併購強化 AI 業務布局，偏向提升市場對公司成長性評估，可能吸引 AI 投資熱度。短期債供增加與長端利率上升風險並存。"
+   "hash": "32276261d248",
+   "text": "SpaceX近期AI算力與基礎設施投資規模龐大，偏向增加公司債供給——大額資本支出與融資需求上升。若投資回報期短於預期，則長端利率承壓；若AI算力需求持續強勁，則支撑股市與AI投資熱度。整體而言，事件偏向推升AI投資熱度，但融資規模龐大可能增加市場對企業債供給的預期。"
   },
   "Intel": {
-   "hash": "cae550084793",
-   "text": "Intel 近期事件對市場偏向混合訊號。伺服器銷售強勁成長 78% 偏向支撐長端利率，反映企業資本支出需求；但第四季展望疲弱則偏向壓低股價。參與 AI 新創融資輪顯示 Intel 押注 AI 領域，若此舉強化市場對其長期競爭力的信心，則偏向穩定公司債供給；若投資人聚焦短期業績疲軟，則偏向增加債務成本壓力。整體而言，AI 投資熱度偏向維持對 Intel 的關注。"
+   "hash": "f433b003d2ce",
+   "text": "Intel 近期事件對市場偏向混合訊號。伺服器銷售強勁成長與盈餘超預期支撐 AI 投資熱度，但第四季展望疲弱則偏向拉高公司債供給需求。若 Intel 持續參與 AI 新創融資，則顯示對長期 AI 市場信心，但短期業績指引不佳可能推升長端利率預期。整體而言，AI 相關動能與營運前景不確定性並存。"
   },
   "Apple": {
    "hash": "dccccbccab6e",
    "text": "Apple 近期連續發債75億美元，偏向公司債供給增加。強勁營收與領導層交接平穩進行，若市場對新執行長信心足，則可能支撐債券需求；反之，若投資人對過渡期存疑，則可能推高發債成本。整體而言，大規模融資活動偏向拉升長端利率，而財報表現穩健偏向支撐科技股，對AI投資熱度影響中性。"
   },
   "TSMC": {
-   "hash": "bceafa064b5b",
-   "text": "TSMC大舉投資AI新貴Anthropic與OpenAI，偏向提升市場對其長期成長性認知。此舉反映TSMC對AI產業前景的信心，可能強化投資者對其未來晶片需求的預期，進而偏向支撐股價。同時，該投資規模龐大，若涉及融資需求，則偏向增加公司債供給壓力；但若以現金支應，則對債市影響有限。整體而言，此舉偏向提溫AI投資熱度。"
+   "hash": "8498d07bbbfc",
+   "text": "TSMC近期大舉投資AI公司並簽長期電力合約，偏向增加資本支出與債務需求。若TSMC為融資需求發債，供給增加可能推升長端利率；同時對AI投資熱度形成正面信號，支撐科技股表現。長期電力承諾反映TSMC對產能擴張的堅定承諾，強化其在AI晶片供應鏈的戰略地位。"
   },
   "Micron": {
    "hash": "d06fdc46fa12",
@@ -5528,7 +5743,11 @@
   "Broadcom": {
    "hash": "cfeaa6871957",
    "text": "Broadcom公布Q3 2026財報，市場將關注其營收與獲利表現。若財報超預期，偏向提升投資者對晶片供應鏈的信心，可能增加科技股買盤，帶動AI相關投資熱度；同時公司債供給壓力偏向緩解。反之，若財報不佳，偏向削弱市場對AI硬體需求的預期，可能增加公司融資成本，推升長端利率。"
+  },
+  "Tesla": {
+   "hash": "83c277436e84",
+   "text": "Tesla 資本支出縮減偏向降低其債務融資需求，可能減輕公司債供給壓力。工廠規劃調整反映其投資策略趨於謹慎，若經濟前景不確定性上升，則可能抑制市場對科技股的成長預期，進而對股市與 AI 投資熱度形成向下壓力。同時，資本密集度下降可能改善現金流狀況，對公司信用面有所支撐。"
   }
  },
- "at": "2026-11-11 00:07（台北）"
+ "at": "2026-11-11 00:15（台北）"
 }
