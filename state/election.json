@@ -129,15 +129,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.987
+    "p": 0.9855
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.01
+    "p": 0.0105
    },
-   "close": 0.487,
-   "vol": 8259485.336383999,
+   "close": 0.48550000000000004,
+   "vol": 8277141.062962,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   },
   {
@@ -151,10 +151,10 @@
    "other": {
     "name": "Cindy Hyde-Smith",
     "party": "共",
-    "p": 0.012
+    "p": 0.0115
    },
    "close": 0.48850000000000005,
-   "vol": 6303641.712842,
+   "vol": 6304227.532755,
    "url": "https://polymarket.com/event/mississippi-senate-election-winner"
   }
  ],
@@ -174,12 +174,12 @@
      "other": {
       "name": "Cindy Hyde-Smith",
       "party": "R",
-      "p": 0.012
+      "p": 0.0115
      },
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 97.7,
-     "vol": 6303641.712842,
+     "vol": 6304227.532755,
      "url": "https://polymarket.com/event/mississippi-senate-election-winner"
     },
     "Alaska": {
@@ -190,17 +190,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.987
+      "p": 0.9855
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.01
+      "p": 0.0105
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 97.7,
-     "vol": 8259485.336383999,
+     "gap": 97.5,
+     "vol": 8277141.062962,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -275,17 +275,17 @@
      "lead": {
       "name": "Cindy Holscher",
       "party": "D",
-      "p": 0.993
+      "p": 0.9935
      },
      "other": {
       "name": "Ty Masterson",
       "party": "R",
-      "p": 0.003
+      "p": 0.004
      },
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.0,
-     "vol": 870178.2437799999,
+     "vol": 870696.86378,
      "url": "https://polymarket.com/event/kansas-governor-winner-2026"
     },
     "Alaska": {
@@ -296,17 +296,17 @@
      "lead": {
       "name": "Jonathan Kreiss-Tomkins",
       "party": "D",
-      "p": 0.9935
+      "p": 0.994
      },
      "other": {
       "name": "Bernadette Wilson",
       "party": "R",
-      "p": 0.007
+      "p": 0.0065
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 98.7,
-     "vol": 1955213.8578520003,
+     "gap": 98.8,
+     "vol": 1956113.3128520001,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {

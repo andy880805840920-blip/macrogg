@@ -666,11 +666,16 @@
     "core_mom": 0.2,
     "cpi_mom": 0.3
    },
-   "cons_at": "2026-11-10T20:11+08:00",
+   "cons_at": "2026-11-10T22:11+08:00",
    "img_seen": {
     "https://investinglive.com/cms/media/images/US%20INFLATION%20CONSUMER%20PRICES%20CPI.jpg": "不是逐家預測表"
    },
-   "img_pending": {}
+   "img_pending": {},
+   "actual": {
+    "cpi_mom": 0.4,
+    "core_mom": 0.3
+   },
+   "actual_at": "2026-11-10T22:11+08:00"
   },
   "pce|2026-10": {
    "key": "pce",
