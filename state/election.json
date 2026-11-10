@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -7,
- "date": "2026-11-10",
+ "days_to": -8,
+ "date": "2026-11-11",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -129,14 +129,14 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.986
+    "p": 0.9865
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
     "p": 0.0115
    },
-   "close": 0.486,
+   "close": 0.48650000000000004,
    "vol": 8282669.997927,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   },
@@ -190,7 +190,7 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.986
+      "p": 0.9865
      },
      "other": {
       "name": "Dan Sullivan",

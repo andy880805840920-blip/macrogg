@@ -785,8 +785,9 @@
   "p:dc_grid:613199127fcc": "2026-11-10",
   "p:us_china_truce:d80ca1aab506": "2026-11-07",
   "p:us_china_truce:c0e469378d09": "2026-11-07",
-  "d173ea366c68": "2026-11-10",
-  "p:h200_china:74aa2e1e8845": "2026-11-10",
+  "6c2a3937845f": "2026-11-10",
+  "6e14a9096a20": "2026-11-06",
+  "p:h200_china:bea8f6e88587": "2026-11-10",
   "p:h200_china:659634952b8f": "2026-11-09",
   "p:h200_china:f5a0a00a6511": "2026-11-09",
   "p:h200_china:0e949869c864": "2026-11-09",
@@ -960,9 +961,9 @@
   },
   "h200_china": {
    "date": "2026-11-11",
-   "note": "多則新聞報導美國商務部核准H200晶片銷售給有軍事背景的可疑中國公司，引發安全審查質疑，可能加速國會限制法案的審議進程。",
+   "note": "多則新聞報導美國商務部核准H200晶片銷售給有軍事背景的可疑中國公司，引發安全審查質疑，可能加速國會兩項限制法案的審議進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOUWMzc2V2NFVMeVpjb3otZkVkT2F4RnRGRUlCZGREZVhkY3JvS0Y0cUc4QnNEY3BUY0RlekdjQTJSS3RHbTJ5SFpDWElLRE9Yci1hMk5fTmY0NnBLZmExQzFtVGJIdTVNT3Y4Rks1T3V2WGNsYTlZLWwxZ2VlOGhncGNjWDk5a25XOWhGcnhoMlYtc1RtNnMtQVN5bDdlZmtfREd1RHFEeWVKV3h6RlJma1VR0gG3AUFVX3lxTE1rOHVOcDlWY1dlYUgtOW1Cdm9KVVlkMWw3VzlFVkxqQkhpNFk0VURMdjU3WHJEZmNvanBlaWJIQTZ4TDBQNm0xd0NEMms3bVBCSjhidGVUREU2aDVBM3FyV1Q2bkhkTHJ3QTNuMm1CMTBBbjlfbE1PakFIRTRCMWNENnhOaXFKOGFCeEdDTDdzUGhORko2UWdPUmEwSDBweUJBeTJSblcza1B6YWNhdldkZVQwQlZlRQ?oc=5",
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxNU1RwOE9lSF9Yb0l5UjZBNDZkU1JrZlRwaVFhbnVCbEtVNjVXb0VkbGhGeWc0OUVySmhySjhQQVNCcHkzRmxmLWJ1dmROSklrZHFjdkdwZEtrXzJVVE1OWUhhQWVTTUNYWXd6RjJrc1RiVjU2WUVVQW1lYTBXbTBhRFdUMjd0RWxMMnZodVJYYkRCNmZYczdCODJCOVNUQQ?oc=5",
     "https://news.google.com/rss/articles/CBMimAFBVV95cUxPRTdsQTdMMVVxX183T0Rqb05oR29DYmRlY2cyZWUwWUtBd2dpcnpVZW1VR3llaEVHNVN3TDdhR2gwX0h4UzZhRFpZejFuZmRER2VRRUM3ZEtUREd0UnpwQzI1bVlWSEN6YkRVUzNTX2ctNWM0ejlNWUozWkRMLTV5RXRlLWpScWZZWUw3blVvREg5VDk0dUwxdtIBngFBVV95cUxOREl0NkROYzl5M1AtelpjVU1kUWt1OWNWNko1dUJvWmJQcDVKYXB1clZNUGJNQ3FNQ2lleUQ0NlB2MnRoUUlYNUVMbW9URnhvdDN1cTNwVW1lSkM1S3o4bUJYVWpPaldRTGNmOXpnWnp3dFY5bWd0eURpTlFwVFVaRWJqcExhM3pfdGR4UW9kUTNoQUEtV1RmMjJqQ0hqZw?oc=5",
     "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0xdzdlblhheHpRQnV4NDlzUVBrUEFZNnI4SV9XaWw3dmZPRVVhWWFvcDlPRE80VTlSOHpmdzRqVHgySVRHT3dYQUY4VVdCS3BWQWFtZG1fYkM?oc=5"
    ]
@@ -994,5 +995,5 @@
    ]
   }
  },
- "at": "2026-11-11 00:00（台北）"
+ "at": "2026-11-11 00:08（台北）"
 }

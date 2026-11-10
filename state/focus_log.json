@@ -2906,7 +2906,7 @@
   "result": "美國10月CPI月增0.4%高於預期，核心CPI月增0.3%，聯準會升息2碼預期升溫"
  },
  {
-  "at": "2026-11-10T16:00+00:00",
+  "at": "2026-11-10T16:08+00:00",
   "mode": "daily",
   "window_h": 18,
   "events": [
@@ -2915,6 +2915,14 @@
   ],
   "locks": [],
   "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken - Bloomberg.com"
+    ]
+   },
    {
     "score": 13.0,
     "sources": 1,
@@ -2970,50 +2978,29 @@
     "titles": [
      "Inflation Data to Test Limits of Treasury Rally After Haven Bid - Bloomberg.com"
     ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
-     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com",
-     "Gold: Trending News, Latest Updates, Analysis - Bloomberg.com"
-    ]
    }
   ],
   "prior_old": [
    "美10月CPI高於預期！美股開盤主要指數全跌"
   ],
   "background": [
-   "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)",
-   "美股開盤全倒！10月CPI月增0.4％超預期　科技股反彈恐喊卡",
-   "Fed Governor Waller sees December hike likely, opens door to possible half-point increase"
+   "Fed Governor Waller sees December hike likely, opens door to possible half-point increase",
+   "Update: US Equity Futures Lower Pre-Bell as Fed Governor Christopher Waller Leans Towards Rate Hike in December",
+   "Stock Market Today: Dow Dips On Hot Inflation Data; Nvidia Falls Again, Anthropic Sets IPO Range (Live Coverage)"
   ],
-  "main": "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com",
+  "main": "Fed’s Logan Favors at Least Two Hikes, Says Pace Could Quicken - Bloomberg.com",
   "main_why": "最高分",
-  "second": "Fed’s Waller Backs December Rate Hike, Open to Larger Move - Bloomberg.com",
+  "second": "Falling Oil Prices and Bond Yields Offer Investors Some Relief - Bloomberg.com",
   "points": 2,
   "retry": {
    "重點一": [
     [
-     "用了相對時間（今日），請改寫成月/日",
-     "數據公布日期錯誤（CPI寫成「10/10」，官方是 11/10；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
-    ],
-    [
-     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+     "主軸 217 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
     ]
    ],
-   "重點二": [
-    [
-     "出現材料裡沒有的數字（0.5、0.25）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
-     "主軸 189 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ],
-    [
-     "主軸 156 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
+   "重點二": []
   },
-  "result": "10月CPI月增0.4%超預期，核心通膨年增2.8%，市場憂升息預期升溫"
+  "result": "沃勒傾向 12 月升息，不排除一次升兩碼以維護聯準會信譽"
  }
 ]

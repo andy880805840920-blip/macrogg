@@ -4486,13 +4486,13 @@
    }
   },
   "missing": [],
-  "epoch_at": "2026-11-10"
+  "epoch_at": "2026-11-11"
  },
  "reg": {
   "TX": {
    "hash": "22e3b959e13f",
-   "policy": "新州長承諾制定資料中心新規則，包括州許可證要求、終止稅收優惠，但對馬斯克採取更靈活態度。",
-   "impact": "若新規則延遲審批，偏向推遲多個專案完工時程；若稅收優惠取消，偏向影響專案經濟可行性評估。",
+   "policy": "新州長承諾制定資料中心新規則，終止稅收優惠並要求州許可證。立法者提案限制資料中心免稅政策並加強監管。",
+   "impact": "若新規則延遲許可程序，則可能推遲多個項目完工時程。稅收優惠取消偏向增加營運成本。",
    "risk": "高",
    "links": [
     {
@@ -4514,7 +4514,7 @@
      "date": "2026-11-10"
     }
    ],
-   "at": "2026-11-10"
+   "at": "2026-11-11"
   },
   "WI": {
    "hash": "bb1e07040de0",
@@ -4640,9 +4640,9 @@
    "at": "2026-11-10"
   },
   "MI": {
-   "hash": "9576fec1707a",
-   "policy": "州長當選人Jocelyn Benson提議對資料中心的水資源、能源使用及稅收優惠實施新規範。民主黨掌控州議會後，能源政策成焦點。",
-   "impact": "若新規範涉及水資源或能源限制，可能影響Oracle的Stargate Michigan專案電力供應與建設進度；稅收優惠調整亦可能影響專案經濟可行性。",
+   "hash": "730d81ccda3a",
+   "policy": "州長當選人 Jocelyn Benson 提議對資料中心的水資源、能源使用和稅收優惠實施新規範。民主黨掌控州議會後，能源政策成為焦點。",
+   "impact": "若新規範涉及能源供應或稅收條件，可能影響 Oracle 的 Stargate Michigan 專案成本與時程規劃。",
    "risk": "中",
    "links": [
     {
@@ -4766,10 +4766,10 @@
    "at": "2026-11-10"
   },
   "_fed": {
-   "hash": "37cd568d034b",
+   "hash": "beaaac907717",
    "points": [
     {
-     "zh": "民主黨掌控新國會後，數據中心許可成首要議題。國會推出許可法案，但批評者警告此舉為產業「大幅讓步」。新當選議員包括反數據中心平台倡導者，偏向加強監管而非放寬許可。",
+     "zh": "民主黨控制新國會後，數據中心許可成首要議題。國會推出許可法案，但批評者警告此舉為產業「大幅讓步」。新當選議員包括反數據中心平台候選人，顯示國會內部對AI基礎設施",
      "links": [
       {
        "source": "Reuters",
@@ -4782,24 +4782,28 @@
      ]
     },
     {
-     "zh": "民主黨議員呼籲全國數據中心暫停令，關注用電成本與能源許可。參議院待決法案擬解決數據中心疑慮。新國會偏向優先考慮能源與環境影響，而非加速基礎設施建設。",
+     "zh": "民主黨議員呼籲實施數據中心暫停令，惟國會現實可行性受限。參議院待決法案涉及數據中心關切，新澤西州已通過禁止相關保密協議法案，偏向州層級優先權趨勢。",
      "links": [
       {
        "source": "CNBC",
        "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxONG85QmJuZGVEWUIxSW4ybHJPVmN2RmR2VjBTdnkydmZSOGV6YllsWEUtbVpYclRTSWhQS09EZGxJSllyY0otS1QtQVdVY3BhY0ZqMWxfR25WeWo3Q3d5LUg5dVZrUGRneGh2LTRBQjY3SERxNTdLaXNkaU9VaHVPb0lKQW10WmvSAYwBQVVfeXFMTWdsc2pjdEpUS1NXdWRzcld3SFp2eVBhWkU2NWNOTXRsUS1WbTNRVlg3S0ZRalhiYnR5WTNKQUxiR1JXNkI3b3ItbnBsZkdoZE9lbWJkVFB1eTFwMFluVFNobUtfLU1sTUJPSlRVSU1IUnRhYXFPVzNEc0NRempsZGM3MTFTVFZSUGUzS0Y?oc=5"
       },
       {
-       "source": "Oil & Gas 360",
-       "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPcC01ZUY4WFNzYlBMdmFxV3ZaeDhlX2pKOWxzT0hWU0htV25pY19RYUh2Qm1xYlVKN1hFV0FDT1FqYmdaSWRrVlJtZHNiSnhYVkx4a3prYkQ2V1JFUXVpaHFIY2cwVDIwLS13UElBdWZ0MVRQdHNNb3pMenRxNjZud2o3V2NrNTA0X3JEUzNZT1RqcldBQU1RaWpDeW5WRndxdXY3elNnakFybEc0elBuZTFieVJhY0k1ci1RNDMzM00?oc=5"
+       "source": "Yahoo Finance",
+       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNZHp2ZUo5S2hQdnRZWncxRjhBdTNGbjVXRHhmeUZkbXJnMm9Ub3d3QUFlVG9Od0ZNU3NuQkxVMlFWYXNhRjdrQmY1a0EwRXVlV0pQWkU5TmVCaGZWSWZlNHpoVmdXN1UxcjR2SmtjTUItZnY1Y1FLUFFsUXJJdE9zUU9Ha0tTMEwydUtnMko2N0JYeEd1ektuVQ?oc=5"
       }
      ]
     },
     {
-     "zh": "新澤西州參議院通過禁止數據中心相關保密協議法案，反映州層級監管趨勢。新國會偏向支持州法優先權，限制產業保密做法，增加透明度與社區知情權。",
+     "zh": "選舉後數據中心股價下跌，市場反映對民主黨監管的擔憂。新國會偏向加強AI建設用電與許可審查，可能推動更嚴格的聯邦能源許可標準與環境評估。",
      "links": [
       {
-       "source": "Data Center Dynamics",
-       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSlB1UmV2VEJmTjZVVVMzb3FodTh3aHdBVEpReWlpSVRPdmVqTG81WDl2UlpxcWlQdXU1QTk5YlFIN1ViMnBDOVBodmhOVUNCMWkwSzRaN1VNV1ZpX3lnYVFRQU12TEctX1ZBSzVNNk84NW1VRzRnMGlzanplWWR1bVZyTnFWNF9XdTBqbFV1ZU96Z21CZHk4eXBzUW5qUmJQUXZnX20wSFo3Zw?oc=5"
+       "source": "Reuters",
+       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQbWpBY1VHMFd5a2tJXzM1RFFFQTl5Y09aVDgza095UkJKVzNnQ3F4VW1pMzBEazJKMGhlS21zUEdCLXJPOVhWdXRnZmlLRHliMDdqYmt2b2ZWYk5FeW85VnBSalpRd1E5b3BVSUZDU2VLMUNiQm41YWw1SUgxV2dWaUFZUkI2MllhY0Z5ZkZHcWNuQmdCaHBKbVRhck1meTRz?oc=5"
+      },
+      {
+       "source": "CNBC",
+       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOR3FsbmNyQjNGN0N3TWRTSE1sUGRMWENfLUl1Z0FNVGZKempCcXZmRmlzNk9DN1cwMUEwVTU5V3dmV2E1SHdKMTc5QkoycF9vOEptSl9WckpsZ1pRbUNfczNpYUItMDFRLUdfckNSZFJjTnNaUzFySHdZck5WTUVPYWMteV9IR0RjTV9NYnFCMEZXN0JFczRIUFBOTW5nRVMyVzRyWUhPbzRTbkhtZmJvb2tWU3V6R1gtSVMwX0VB?oc=5"
       }
      ]
     }
@@ -5117,5 +5121,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-11 00:00（台北）"
+ "at": "2026-11-11 00:08（台北）"
 }
