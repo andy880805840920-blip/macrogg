@@ -193,11 +193,17 @@ def _same(k: dict, e: dict, gap: int, days: int) -> bool:
         return True                                   # 寫到同一個金額
     if _sim(k["zh"], e["zh"], k["co"]) >= 0.5:
         return True                                   # 幾乎同一句話
+    # 2026-11：財報一季只有一次——同公司 7 天內的「財報」都是同一份（10/28 公布、10/29 各家報導）
+    if k["type"] == "財報" and gap <= 7:
+        return True
     # 發債、融資同一天：同一家公司當天通常就是那一筆（例：「啟動發行」與「發行 250 億美元」）
     return gap == 0 and k["type"] in _DEAL and not (_amt_set(k["zh"]) and _amt_set(e["zh"]))
 
 
-def merge_events(events: list[dict], days: int = 3) -> list[dict]:
+MERGE_DAYS = 30     # 2026-11：同一筆 250 億美元發債 10/29、11/4、11/10 各報一次——跨週也要併
+
+
+def merge_events(events: list[dict], days: int = MERGE_DAYS) -> list[dict]:
     """
     同一件事只留一則（同公司、同類型、days 天內）：寫到同一個金額、幾乎同一句話，
     或發債／融資同一天其中一則沒寫金額（例：「啟動首次美元債發行」＋「發行 250 億美元債券」）。
@@ -218,7 +224,8 @@ def merge_events(events: list[dict], days: int = 3) -> list[dict]:
                 hit = k
                 break
         if not hit:
-            out.append(dict(e, links=list(e.get("links") or [])))
+            out.append(dict(e, links=list(e.get("links") or []), n=e.get("n") or 1,
+                            first=e.get("first") or e.get("date", "")))
             continue
         rank = lambda x: (bool(_amt_set(x["zh"])), len(x.get("links") or []), len(x["zh"]))   # noqa: E731
         links = hit["links"] + [l for l in e.get("links") or []
@@ -227,6 +234,9 @@ def merge_events(events: list[dict], days: int = 3) -> list[dict]:
             hit.update(id=e["id"], zh=e["zh"])
         hit["links"] = links[:3]
         hit["date"] = max(hit["date"], e["date"])
+        # 合併了幾次報導、最早哪天（畫面標「10/29 起 3 次報導」）
+        hit["n"] = (hit.get("n") or 1) + (e.get("n") or 1)
+        hit["first"] = min(hit.get("first") or hit["date"], e.get("first") or e.get("date", ""))
     return sorted(out, key=lambda e: e.get("date", ""), reverse=True)
 
 
