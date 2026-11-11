@@ -1163,13 +1163,30 @@ var md=document.createElement('div');md.className='duo-modal';md.hidden=true;md.
 md.innerHTML='<div class="duo-sheet"><div class="duo-sheet-h"><b></b><button type="button" class="duo-x" aria-label="關閉">✕</button></div><div class="duo-body"></div></div>';
 (d.closest('.viz-root')||document.body).appendChild(md);
 var body=md.querySelector('.duo-body'),ttl=md.querySelector('.duo-sheet-h b'),cur=null,last=null;
-function shut(){if(md.hidden)return;md.hidden=true;document.body.classList.remove('duo-lock');
+function shut(){if(md.hidden)return;navOut();md.hidden=true;document.body.classList.remove('duo-lock');
  if(cur){while(body.firstChild)cur.appendChild(body.firstChild);}cur=null;if(last)last.focus();}
 d.querySelectorAll('.duo-card').forEach(function(c){c.addEventListener('click',function(){
  var p=d.querySelector('.duo-panel[data-t="'+c.getAttribute('data-t')+'"]');if(!p)return;
  cur=p;last=c;while(p.firstChild)body.appendChild(p.firstChild);
  ttl.textContent=c.getAttribute('data-title')||c.querySelector('.duo-t').textContent;md.hidden=false;document.body.classList.add('duo-lock');
- md.querySelector('.duo-sheet').scrollTop=0;md.querySelector('.duo-x').focus();});});
+ md.querySelector('.duo-sheet').scrollTop=0;navIn();md.querySelector('.duo-x').focus();});});
+// 2026-11 AI 大事：區塊標題列——打開時移到標題下方；點了跳到該區；捲動時橘線跟著目前區塊；
+// 手機（≤700px）往下滑收起、往上滑出現，桌機固定不收
+var nv=null,nvHome=null,nvNext=null,lastY=0,sheet=md.querySelector('.duo-sheet'),hdr=md.querySelector('.duo-sheet-h');
+function navIn(){nv=body.querySelector('.ai-nav');if(!nv)return;nvHome=nv.parentNode;nvNext=nv.nextSibling;hdr.appendChild(nv);
+ sheet.classList.add('has-nav');hdr.classList.remove('nav-off');lastY=0;navMark();}
+function navOut(){if(!nv)return;hdr.classList.remove('nav-off');sheet.classList.remove('has-nav');nvHome.insertBefore(nv,nvNext);nv=null;}
+function navMark(){if(!nv)return;var lim=hdr.getBoundingClientRect().bottom+(nv.offsetHeight||40)+12,cur=null;
+ body.querySelectorAll('[data-sec]').forEach(function(s){if(s.offsetParent!==null&&s.getBoundingClientRect().top<=lim)cur=s.getAttribute('data-sec');});
+ if(!cur){var f=body.querySelector('[data-sec]');cur=f&&f.getAttribute('data-sec');}
+ nv.querySelectorAll('button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-go')===cur);});}
+sheet.addEventListener('scroll',function(){if(!nv)return;var y=sheet.scrollTop;
+ if(window.innerWidth<=700&&Date.now()>(sheet._jump||0)){if(y>lastY+6&&y>80)hdr.classList.add('nav-off');else if(y<lastY-6||y<40)hdr.classList.remove('nav-off');}
+ lastY=y;navMark();},{passive:true});
+md.addEventListener('click',function(e){var b=e.target.closest('.ai-nav button');if(!b)return;
+ var s=body.querySelector('[data-sec="'+b.getAttribute('data-go')+'"]');if(!s)return;
+ var off=hdr.offsetHeight+(nv?nv.offsetHeight:0)+8,top=s.getBoundingClientRect().top-sheet.getBoundingClientRect().top+sheet.scrollTop-off;
+ sheet._jump=Date.now()+900;hdr.classList.remove('nav-off');sheet.scrollTo({top:Math.max(0,top),behavior:'smooth'});});
 md.addEventListener('click',function(e){if(e.target===md||e.target.closest('.duo-x'))shut();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')shut();});
 md.addEventListener('click',function(e){

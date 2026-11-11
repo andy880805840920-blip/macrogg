@@ -64,7 +64,7 @@ def hs_block(agg: list | None) -> str:
     if not chart or not la:
         return ""
     n = lambda bad: ' class="n"' if bad else ""   # noqa: E731
-    return ('<div class="hsx"><div class="hsx-side">'
+    return ('<div class="hsx" data-sec="sum"><div class="hsx-side">'
             f'<div class="hsx-h"><b>科技巨頭五家合計</b><span>每季・億美元・最新 {esc(la["label"])}</span></div>'
             f'<dl class="hsx-k"><div><dt>FCF</dt><dd{n(la["fcf"] < 0)}>{FC._n(la["fcf"], True)}</dd></div>'
             f'<div><dt>單季發債</dt><dd class="d">{FC._n(la["debt"])}</dd></div>'
@@ -97,15 +97,14 @@ def _val_chart(vs: list[dict]) -> str:
     if len(vs) < 2:
         return ""
     W, H, P = 600, 120, 26
-    vals = [v["lo"] for v in vs] + [v["hi"] for v in vs]
-    lo, hi = min(vals) * 0.92, max(vals) * 1.05
+    vals = [v["median"] for v in vs]
+    lo, hi = min(vals) * 0.9, max(vals) * 1.06
     t0 = dt.date.fromisoformat(vs[0]["date"]).toordinal()
     t1 = max(dt.date.fromisoformat(vs[-1]["date"]).toordinal(), t0 + 1)
     X = lambda d: P + (dt.date.fromisoformat(d).toordinal() - t0) / (t1 - t0) * (W - 2 * P)   # noqa: E731
     Y = lambda v: 8 + (1 - (v - lo) / (hi - lo)) * (H - 26)                                   # noqa: E731
     pts = " ".join(f"{X(v['date']):.1f},{Y(v['median']):.1f}" for v in vs)
-    rng = "".join(f'<line x1="{X(v["date"]):.1f}" x2="{X(v["date"]):.1f}" y1="{Y(v["hi"]):.1f}" y2="{Y(v["lo"]):.1f}" '
-                  f'stroke="var(--series-1)" stroke-width="3" opacity=".3" stroke-linecap="round"/>' for v in vs if v["hi"] > v["lo"])
+    rng = ""      # 2026-11：只畫中位數（當天最低～最高的直條拿掉，範圍寫在上方文字）
     dots = "".join(f'<circle cx="{X(v["date"]):.1f}" cy="{Y(v["median"]):.1f}" r="4" fill="var(--series-1)"/>' for v in vs)
     labs = (f'<text x="{X(vs[0]["date"]):.1f}" y="{H - 3}" class="ipo-ax">{_md(vs[0]["date"])}</text>'
             f'<text x="{X(vs[-1]["date"]):.1f}" y="{H - 3}" class="ipo-ax" text-anchor="end">{_md(vs[-1]["date"])}</text>')
@@ -157,7 +156,9 @@ def ipo_block(ipo: dict, x: dict | None) -> str:
     kp = []
 
     def k(label, val, sub=""):
-        kp.append(f'<div><dt>{esc(label)}</dt><dd>{val}</dd>' + (f'<small>{sub}</small>' if sub else "") + '</div>')
+        # 2026-11：三欄（主題｜數字｜補充），一列一個主題
+        kp.append(f'<div class="ipo-kr"><span class="ipo-kt">{esc(label)}</span><b>{val}</b>'
+                  + (f'<small>{sub}</small>' if sub else "<small></small>") + '</div>')
     if T.get("price_lo"):
         k("價格區間", f'${T["price_lo"]:.0f}–${T["price_hi"]:.0f}', f'中位 ${Dv.get("mid", 0):.0f}・{esc(_md(T.get("price_lo__date", "")))} S-1/A')
     if T.get("shares_offered"):
@@ -193,7 +194,9 @@ def ipo_block(ipo: dict, x: dict | None) -> str:
         val = ('<div class="ipo-val"><div class="ipo-vh"><b>媒體報導的估值預期</b>'
                f'<span>{esc(_md(last["date"]))}：{rng}（{last["n"]} 則，中位 {last["median"] / 1000:.2f} 兆）'
                + (f'；較 {esc(_md(ref["date"]))} 的 {ref["median"] / 1000:.2f} 兆 {chg:+.0%}' if chg is not None else "")
-               + '</span></div>' + _val_chart(vs) + _val_rows(vs)
+               + '</span></div>' + _val_chart(vs)
+               + f'<details class="ipo-vd"><summary>報導來源（{min(len(vs), 6)} 天・{sum(min(len(v["items"]), 4) for v in vs[-6:])} 則）</summary>'
+               + _val_rows(vs) + '</details>'
                + '<p class="ipo-fn">主要媒體標題中的估值數字（Reuters、Bloomberg、WSJ、FT、CNBC、AP、NYT 等），每天取中位數；'
                '各家口徑不同（完全稀釋或發行後股數），同一天常並存兩個數字。</p></div>')
     rounds = Dv.get("rounds_adj") or []
@@ -232,11 +235,11 @@ def ipo_block(ipo: dict, x: dict | None) -> str:
         steps_html = "".join(f'<li class="{"done" if s.get("date") else ""}"><b>{esc(s["label"])}</b>'
                              f'<span>{esc(_md(s["date"])) or "—"}</span></li>' for s in ipo.get("steps") or [])
         tl = f'<ol class="ai-ipo">{steps_html}</ol>'
-    return (f'<div class="ai-hl-c ipo2"><details class="ai-hl-i"><summary class="ai-hl-k">'
+    return (f'<div class="ai-hl-c ipo2" data-sec="ipo"><details class="ai-hl-i"><summary class="ai-hl-k">'
             f'進行中・{esc(name)} IPO{esc(tick)}<i aria-hidden="true">ⓘ</i></summary>'
             '<div class="ai-hl-n">發行條件、營收與歷輪價格直接取自 SEC 申報原文（標「本站依申報計算」者為依原文數字相乘）；'
             '每份申報的重點由 AI 依原文節錄整理，數字須在原文找得到；掛牌後這一格自動消失</div></details>'
-            + (f'<dl class="ipo-kp">{"".join(kp)}</dl>' if kp else "") + val + rnd + tl + '</div>')
+            + (f'<div class="ipo-kg">{"".join(kp)}</div>' if kp else "") + val + rnd + tl + '</div>')
 
 
 def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str:
@@ -265,20 +268,30 @@ def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str
         tiles.append(f'<button type="button" class="ai-tile{" on" if on else ""}" data-co="{esc(c)}" '
                      f'aria-pressed="{"true" if on else "false"}"><b>{esc(c)}</b>{sub}</button>')
         mine = [e for e in evs if e["co"] == c]
-        lis = "".join(f'<li><span class="ai-p-d">{esc(_md(e["date"]))}</span><span class="ai-p-t">{esc(e["type"])}</span>'
-                      f'<span class="ai-p-x">{esc(e["zh"])}{_srcs(e)}</span></li>' for e in mine) \
-            or '<li class="none">近 14 天沒有重大事件</li>'
+
+        def _li(e):
+            # 2026-11：同一件事被多次報導（合併後）標「10/29 起 3 次報導」
+            mg = (f'<em class="ai-mg">{esc(_md(e["first"]))} 起 {e["n"]} 次報導</em>'
+                  if (e.get("n") or 1) > 1 and e.get("first") and e["first"] < e["date"] else "")
+            return (f'<li><span class="ai-p-d">{esc(_md(e["date"]))}</span><span class="ai-p-t">{esc(e["type"])}</span>'
+                    f'<span class="ai-p-x">{esc(e["zh"])}{mg}{_srcs(e)}</span></li>')
+        top = "".join(_li(e) for e in mine[:5]) or '<li class="none">近 14 天沒有重大事件</li>'
+        rest = (f'<details class="ai-more"><summary>其餘 {len(mine) - 5} 則</summary>'
+                f'<ul class="ai-p-l">{"".join(_li(e) for e in mine[5:])}</ul></details>') if len(mine) > 5 else ""
         imp = (a.get("impact") or {}).get(c, "")
+        # 2026-11：公司名稱 → 對市場的影響 → 近 5 則（其餘收合）
         panes.append(f'<div class="ai-pane" data-co="{esc(c)}"{"" if on else " hidden"}>'
                      f'<div class="ai-pane-h">{esc(c)}<span>近 {a.get("window_days", 14)} 天 {len(mine)} 則</span></div>'
-                     f'<div class="ai-pane-k">事件整理</div><ul class="ai-p-l">{lis}</ul>'
-                     + (f'<div class="ai-pane-k">對市場的影響<em>AI 依上列事件整理</em></div><p class="ai-p-imp">{esc(imp)}</p>'
-                        if imp else "") + '</div>')
-    out.append('<div class="ai-sec-h"><h3>各公司近況</h3><span><i class="ai-new"></i> 近 3 天有新事件</span></div>'
+                     + (f'<div class="ai-pane-k">對市場的影響<em>AI 依下列事件整理</em></div><p class="ai-p-imp">{esc(imp)}</p>'
+                        if imp else "")
+                     + f'<div class="ai-pane-k">{"近 5 則" if len(mine) > 5 else "事件整理"}</div><ul class="ai-p-l">{top}</ul>{rest}</div>')
+    out.append('<div class="ai-sec-h" data-sec="co"><h3>各公司近況</h3><span><i class="ai-new"></i> 近 3 天有新事件</span></div>'
                f'<div class="ai-tiles">{"".join(tiles)}</div><div class="ai-panes">{"".join(panes)}</div>')
     # 2026-11：AI資料中心擴張與監管（各公司近況下方）
     from .dc_map import dc_block
-    out.append(dc_block(dc))
+    _dc = dc_block(dc)
+    if _dc:
+        out.append('<div data-sec="dc"></div>' + _dc)
     # 依時間看全部
     days: dict = {}
     for e in evs:
@@ -293,11 +306,19 @@ def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str
                    f'<div class="ai-r-x">{esc(e["zh"])}</div>{_srcs(e)}</div></div>')
     if evs:
         types = ["全部類型", "財報", "資本支出", "發債", "融資／IPO", "算力合約"]
-        out.append(f'<details class="ai-all"><summary><span class="ai-sum-t">依時間看全部（近 {a.get("window_days", 14)} 天 '
+        out.append(f'<details class="ai-all" data-sec="all"><summary><span class="ai-sum-t">依時間看全部（近 {a.get("window_days", 14)} 天 '
                    f'{len(evs)} 則）</span><label class="ai-sel"><select aria-label="事件類型">'
                    + "".join(f'<option>{t}</option>' for t in types) + '</select></label></summary>'
                    f'<div class="ai-tl">{tl}</div></details>')
     out.append(f'<div class="ai-why"><b>跟利率的關係</b><p>{esc(WHY)}<a href="/rates/">看長端與債務 →</a></p></div>'
                '<p class="ai-note">事件由 AI 依新聞標題整理成一句中文，每則附原文連結；只收財報、資本支出、發債、'
                '融資／IPO、算力合約五類。</p>')
-    return '<div class="ai-wrap">' + "".join(out) + '</div>'
+    # 2026-11：區塊標題列（視窗打開時移到標題下方；手機往下滑收起、往上滑出現，桌機固定）
+    body = "".join(out)
+    secs = [(k, lab) for k, lab in (("ipo", "IPO"), ("sum", "合計"), ("co", "公司"), ("dc", "資料中心"), ("all", "全部"))
+            if f'data-sec="{k}"' in body]
+    _on = ' class="on"'
+    nav = ('<nav class="ai-nav" aria-label="區塊">' + "".join(
+        f'<button type="button" data-go="{k}"{_on if i == 0 else ""}>{lab}</button>' for i, (k, lab) in enumerate(secs))
+           + '</nav>') if len(secs) >= 2 else ""
+    return '<div class="ai-wrap">' + nav + body + '</div>'

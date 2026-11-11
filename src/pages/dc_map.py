@@ -28,6 +28,7 @@ CSS = r"""
 .adc-sel span{font-size:12px;color:var(--muted);margin-right:2px}
 .adc-sel span+button{margin-left:0}
 .adc-sel .adc-gap{width:10px}
+@media(max-width:700px){.adc-sel .adc-gap{flex-basis:100%;width:auto;height:0}.adc-sel span{width:5.5em;flex:none}}
 .adc-sel button{font:inherit;font-size:12px;font-weight:600;padding:4px 11px;min-height:32px;border:1px solid var(--border);border-radius:999px;background:var(--surface-1);color:var(--text-secondary);cursor:pointer}
 .adc-sel button[aria-pressed=true]{background:var(--brand-navy);color:#fff;border-color:var(--brand-ink)}
 .adc-tot{font-size:12.5px;color:var(--text-secondary);margin:2px 0 8px}
