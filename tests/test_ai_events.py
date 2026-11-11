@@ -83,8 +83,10 @@ check("③ 離線：沿用存檔、不呼叫", A.build({}, tmp, True, _get=fake_
 # ④ 畫面
 tile, panel = P.ai_tile(r)
 check("④ AI 小卡：近 14 天 N 則、最新一則", "AI 大事" in tile and "近 14 天 2 則" in tile and "最新：Alphabet" in tile)
-check("④ 視窗：十二家公司小卡、一次只開一家、IPO 進度、依時間看全部",
-      len(re.findall(r'class="ai-tile(?: on)?"', panel)) == 12 and panel.count('class="ai-pane"') == 12 and panel.count('" hidden><div class="ai-pane-h">') == 11
+_N = len(A.DEFAULTS["companies"])     # 2026-11：17 家（加 Tesla、TSMC、Micron、Broadcom、Marvell；xAI→SpaceX）
+check("④ 視窗：每家公司小卡、一次只開一家、IPO 進度、依時間看全部",
+      len(re.findall(r'class="ai-tile(?: on)?"', panel)) == _N and panel.count('class="ai-pane"') == _N
+      and panel.count('" hidden><div class="ai-pane-h">') == _N - 1
       and "進行中・Anthropic IPO" in panel and "依時間看全部" in panel)
 check("④ 沒有事件的公司寫「無近期事件」、近 3 天的事件加小圓點", "無近期事件" in panel and 'class="ai-new"' in panel)
 e = {"election_date": "2026-11-03", "days_to": 5, "date": "2026-10-29",
@@ -142,7 +144,7 @@ check("⑦ 延續報導（3 天內同一個金額）只更新那一則、日期�
 check("⑦ 提示詞寫明 billion 怎麼換算", "$25 billion＝250 億美元" in A.EVENT_SYSTEM)
 # ⑧ 2026-10-30：加 Intel、Apple；微軟、亞馬遜、甲骨文改英文（舊資料一併換名）
 _cz = [c["zh"] for c in A.DEFAULTS["companies"]]
-check("⑧ 十二家、公司名英文", len(_cz) == 12 and {"Microsoft", "Amazon", "Oracle", "Intel", "Apple"} <= set(_cz)
+check("⑧ 公司名英文（17 家）", len(_cz) == 17 and {"Microsoft", "Amazon", "Oracle", "Intel", "Apple"} <= set(_cz)
       and not {"微軟", "亞馬遜", "甲骨文"} & set(_cz) and "公司名一律用英文" in A.EVENT_SYSTEM)
 _tmp8 = pathlib.Path(tempfile.mkdtemp()) / "ai.json"
 _tmp8.write_text(json.dumps({"events": [{"id": "x", "co": "微軟", "type": "發債", "date": "2026-10-29",
