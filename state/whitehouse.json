@@ -23,7 +23,6 @@
   "c3b301728510": "2026-10-29",
   "6d9ef6e736fc": "2026-10-29",
   "4808a029151e": "2026-10-29",
-  "f18eba06ce4b": "2026-10-28",
   "2a9ef9aa3ffc": "2026-11-04",
   "632c63196bba": "2026-11-04",
   "15c639c25cc7": "2026-11-04",
@@ -52,14 +51,8 @@
   "p:debt_limit:9ebc0087d7ed": "2026-11-02",
   "p:fed_cook:a9bd2ed34d16": "2026-10-30",
   "p:fed_cook:790319269819": "2026-10-29",
-  "p:fed_cook:fa67652d0c10": "2026-10-28",
-  "p:fed_cook:17d9b6f69e1d": "2026-10-28",
   "p:fed_cook:6ca44033d32f": "2026-11-03",
   "p:fed_cook:c35e99e17d01": "2026-10-29",
-  "p:fed_cook:7c9ba3d6bfca": "2026-10-28",
-  "p:fed_cook:55e3b1d4a4cc": "2026-10-28",
-  "p:fed_cook:bb07bb4baedc": "2026-10-28",
-  "p:fed_cook:c87de4293439": "2026-10-28",
   "p:h200_china:459bafe838bb": "2026-11-03",
   "p:h200_china:e38cf95d472f": "2026-11-03",
   "p:h200_china:fe5c56ed7d1a": "2026-10-31",
@@ -78,7 +71,6 @@
   "p:chip_232:7b82e44ef947": "2026-10-29",
   "p:chip_232:4a0f4de47ad2": "2026-10-29",
   "p:chip_232:cbd90b81d551": "2026-10-29",
-  "p:chip_232:752db2dfdb79": "2026-10-28",
   "p:ai_preempt:6d7f9472fe68": "2026-10-31",
   "p:ai_preempt:3e62ee6624e9": "2026-10-30",
   "p:ai_preempt:aea8a5072b95": "2026-10-29",
@@ -92,7 +84,6 @@
   "p:dc_grid:65de4ebda6d4": "2026-10-30",
   "p:dc_grid:7cfbe6e67f88": "2026-10-30",
   "p:dc_grid:8e1863d59926": "2026-10-29",
-  "p:dc_grid:70baf61a551d": "2026-10-28",
   "p:us_china_truce:89c3dac5642b": "2026-10-29",
   "p:us_china_truce:2c701a9a4960": "2026-11-03",
   "p:us_china_truce:982bb21a1206": "2026-11-03",
@@ -155,11 +146,6 @@
   "p:debt_limit:b20d70d326d5": "2026-11-03",
   "p:fed_cook:48d42c0bb725": "2026-10-29",
   "p:fed_cook:169b18aec0f6": "2026-10-29",
-  "p:fed_cook:f19916c2a3c0": "2026-10-28",
-  "p:fed_cook:9f532f6a9c0e": "2026-10-28",
-  "p:fed_cook:7b1523089b77": "2026-10-28",
-  "p:fed_cook:99fbfbbcaf2b": "2026-10-28",
-  "p:fed_cook:259dbcdd0ee7": "2026-10-28",
   "p:fed_cook:5aa411f3133b": "2026-10-30",
   "p:fed_cook:253e40beaf5f": "2026-10-30",
   "p:fed_cook:28527fa59743": "2026-10-30",
@@ -183,7 +169,6 @@
   "p:us_china_truce:0fac0a40376e": "2026-10-31",
   "p:us_china_truce:e124541524c9": "2026-10-30",
   "p:us_china_truce:a4e2780d1de1": "2026-10-29",
-  "p:us_china_truce:a4c35aa69b72": "2026-10-28",
   "97d0cc2efa9d": "2026-11-04",
   "e9fdf96acd74": "2026-11-04",
   "90afae93ea0e": "2026-11-04",
@@ -883,7 +868,53 @@
   "p:us_china_truce:1ef0858a0146": "2026-11-11",
   "p:us_china_truce:c5285642262e": "2026-11-11",
   "p:us_china_truce:3c4f24cb1ab4": "2026-11-09",
-  "p:us_china_truce:d6aa0c12e690": "2026-11-06"
+  "p:us_china_truce:d6aa0c12e690": "2026-11-06",
+  "c6beea15bb28": "2026-11-11",
+  "f1d34b14172a": "2026-11-11",
+  "f5144f1aa8fe": "2026-11-11",
+  "cc46293ddd73": "2026-11-11",
+  "0342dd01d490": "2026-11-11",
+  "fe9d57d2bb59": "2026-11-11",
+  "a78940e711fc": "2026-11-10",
+  "f00d6cae1611": "2026-11-10",
+  "245f1f644f88": "2026-11-11",
+  "bebac1e8092a": "2026-11-11",
+  "4ad417be5764": "2026-11-11",
+  "c96730f91c1c": "2026-11-11",
+  "0baf138d4a00": "2026-11-11",
+  "9071128884cc": "2026-11-11",
+  "61b229386a71": "2026-11-11",
+  "0036669cf732": "2026-11-11",
+  "d8c8c9d20150": "2026-11-10",
+  "981129cfe242": "2026-11-09",
+  "246540a1d1ce": "2026-11-09",
+  "00acecb7b9bc": "2026-11-09",
+  "p:fiscal_cr:539080ba5a07": "2026-11-11",
+  "p:fiscal_cr:b360065f0a39": "2026-11-11",
+  "p:fiscal_cr:5685e19a5f5a": "2026-11-11",
+  "p:fiscal_cr:e7f9e907df81": "2026-11-10",
+  "p:fiscal_cr:5287d60654cf": "2026-11-10",
+  "p:fiscal_cr:c3a187c4a8f2": "2026-11-10",
+  "p:fiscal_cr:877ecb41a048": "2026-11-09",
+  "p:fiscal_cr:61eddbcbfbf7": "2026-11-09",
+  "p:h200_china:8b363fb60ec1": "2026-11-11",
+  "p:h200_china:f82d7cacb56e": "2026-11-11",
+  "p:h200_china:51b298ad4214": "2026-11-11",
+  "p:h200_china:4443c61f9645": "2026-11-11",
+  "p:h200_china:b6cb03796b79": "2026-11-11",
+  "p:h200_china:119af1f33f60": "2026-11-11",
+  "p:h200_china:09b94bbfd373": "2026-11-11",
+  "p:h200_china:dab889768c46": "2026-11-11",
+  "p:h200_china:c2f83ca2ace9": "2026-11-11",
+  "p:h200_china:7369474abfce": "2026-11-11",
+  "p:chip_232:e1ba2c902b9b": "2026-11-11",
+  "p:chip_232:9597d33a127f": "2026-11-11",
+  "p:chip_232:0b4f01de063c": "2026-11-09",
+  "p:dc_grid:5230ff99240f": "2026-11-11",
+  "p:dc_grid:b99c58d482c2": "2026-11-06",
+  "p:us_china_truce:fe400b679082": "2026-11-11",
+  "p:us_china_truce:d4dc00161e14": "2026-11-11",
+  "p:us_china_truce:0b8273cd47d5": "2026-11-10"
  },
  "items": [
   {
@@ -929,6 +960,20 @@
    ]
   },
   {
+   "id": "26f63b86e860",
+   "topic": "關稅",
+   "channel": "其他",
+   "zh": "川普貿易顧問表示將「四倍加碼」關稅政策，儘管共和黨在中期選舉失利。",
+   "date": "2026-11-10",
+   "links": [
+    {
+     "title": "Trump Trade Adviser Says ‘We Are Quadrupling Down On Tariffs’ After The GOP Lost Congress. Here’s What Yale Budget Lab Says Tariffs Cost The Average American Household",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQdUpNb1RpZy1MdmhadmxMMkxoX0xNVm1GdE1JRmF1OS1EUnVoRVU5RTBZX2w3Vl9nMjFiTFhpcFdBS2lUR2lyMWNjRmM0dTROX0EyakgtcUt6RXJkWU1wU0s5UDh3QVdWc3VwREdIbjFRMjV1VVYtaWcyWXBBaHNFSDJ6TGRvbFpiVnFvcHlFV1V6dXA0VWwwdXRFSlA3TThidEFF?oc=5"
+    }
+   ]
+  },
+  {
    "id": "3a54fab7ccd5",
    "topic": "能源",
    "channel": "受訪",
@@ -969,83 +1014,12 @@
      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOQVQ5M2RMRVg0bm1lTmY3a3VVYUQ4QjJUYV9qOXVuWUJWandPRmdtTUNBZWdiWE9VVmFwUFY1YkowdUdXVXBRc2RfcHhyaXFnU0NJUVNJT21QajJhTVNXOGV1RlhaeVAzeUxzSDFNVTd6Rkk3V28tOGlrMEp4NlNxZmczcllyUmR2T0pmODBIMXVzNnI0MGctOXplUHprM2syVDY5WHctM0JqYWtjbUh6UEFhYW5fWTZ3ZjMyZWJCZTA3N1QxM09HVA?oc=5"
     }
    ]
-  },
-  {
-   "id": "e8abee91fdf1",
-   "topic": "關稅",
-   "channel": "其他",
-   "zh": "川普對加拿大商品加徵50%關稅，加拿大財長卡尼誓言報復。",
-   "date": "2026-11-04",
-   "links": [
-    {
-     "title": "Trump slaps additional 50% tariff on certain Canadian goods",
-     "source": "ABC News - Breaking News, Latest News and Videos",
-     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPdDZTVjFHZXBWcUoteUpOakQ0T016RDVlQWxGR19KYnhEeEdfQzV3UmVLNkdEbWVCckxFbHZsNjhpcW9HQktmWGd5RmtobE1fWTJ4TnpqQlRZZDJRTUs2QzU4eW9zNl9ZeEpfRFk0OVRRTzRBVUJYS1F0dTFWRlNqNUFNV0taQU81MnBWbHd1MG5rendjb1g1X290RdIBoAFBVV95cUxPX09ka2RKeVgzdHdOWERZWHFGNWhmeWk0bHE5b0V3T3B0X19JQzZfcVQ0SHFkNXRBLWp3Sk1QMWduVU5sdy1DektIa19VeWtwTGNuNy1lbnU0OW0wazRjN1ZQdWJZdlp1N2kwSjc3RVhBaG40eFZTN0xTbE5xTHMyenZZazdlOXdqSHhrbkZrcTlzOGZiX3BnTy1tSThqTm1G?oc=5"
-    },
-    {
-     "title": "Trump's 50% tariffs on Canada take effect as Carney vows to retaliate",
-     "source": "ABC News - Breaking News, Latest News and Videos",
-     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNeDdPQV9hVEo4eEFTSlhrVkowRE9mVVlJQzJkZTJnOG1TTUl1ZWYtNG1CcWk2MWlmZG51eVd2S0NJT0pWeHphblVQWThQMTc2OVhDd3VQQXZRU0gteVYtQlkxa29fcVpVV3VKSkl6NVdRTWhvT0E5X3VfVVI0UlVVdnhoUERGMFpxWVR1YXFiSENWQ2lTUTFNLTBEcU1ObHlfTW9OZ01VcmLSAa4BQVVfeXFMT0NxQThhZzl5Q29YNEt0Nl9FV3NrYzRMa1JXX0Vmd2pROGhvVHM3TFJ5NGRrOWVnY0FCOS1LM25MdVdINW8tNjZSS2NDSmhZbUZ4cFdOMWU4N1RObVVpNG43YTJRelY2R21VRDVjcm51cVk0b0ZISVdmNWFFcTdVOFJRdEZLamtrZXg0eER4cW9RbEt2R0lONGxjSXpYZ3RZbXRxbk9iaWdmREw0YVZB?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "81fdc391f59b",
-   "topic": "關稅",
-   "channel": "其他",
-   "zh": "川普政府已支付100億美元關稅退款。",
-   "date": "2026-11-04",
-   "links": [
-    {
-     "title": "Trump administration pays out milestone $100 billion in tariff refunds",
-     "source": "ABC News - Breaking News, Latest News and Videos",
-     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPaC1NcXQtTU1pa0V3QTQ3eW9CMThMVUVWXzBVLUpkTlNCekpxQkxiQi1XZzI0X1VzZ2hNdXRjUzF5MVlzcm9zcnJRb3pRanp1TGJ1Mm02T0NDWXU0MXI1R3JmNHNKb3lnOWx2R0dpQjR2Rk9aNGowb0NNcXRpVWdQRmVoN1pndGhaLUxXc3d5d2R6RVlhVHlNbHd6c1RnZUdUNFp5YUl3OGF4VURrTjg00gG0AUFVX3lxTE5IUDFROHpDMGhZM1pRelFZelItOFlhYTk4ZlpZaVpwWjBuYUZoN2l4MFM2bjRFMDBjMEtyNXFsSF93eFBzcU43TW16XzNacEh1b0Vja0xRZkp5LTFMaE4wUUlfd1o4RUNsNkN0aWVtb1hQTHZELUtvR2N0QVROTjN2dF9JZW9QUVl6NzNTRVJFSDRKYy15WHRUMGxDNWNabzFvZGFSNlhHcnBtWlN3TnloUFZlbQ?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "ca7407260473",
-   "topic": "聯準會",
-   "channel": "其他",
-   "zh": "川普因中期選舉失利，無法在聯準會董事會安插盟友；白宮延遲聯準會理事聽證會。",
-   "date": "2026-11-04",
-   "links": [
-    {
-     "title": "Trump can't pack the Fed board with allies now",
-     "source": "Axios",
-     "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBwV0dBTktfZXpJdWZQaVY1U29HZEx0TWptMFlwdEpvTTRGdWxRTGd5by0yM3JDdVNONC1EVTNLbTJjN2xCc29lOTFkRVRVWDg0aTZJcGZQX0toV2NFZHp4czQ4NjFBQ2hndHN0aE1KS0Q?oc=5"
-    },
-    {
-     "title": "White House Delays Hearing on Fed Governor",
-     "source": "The New York Times",
-     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPMWF3eXBGMGxPd0wtMFE4eHJmSHRNUGk4blVPWHNnOWRWcnBzXzhtNjlRTE15NGs4MUZTcFdCTUxnNWJaMVRnS3o1R2ZYU2FGZHVYMmZQMWJzOUp6TUtHNmhTNFZuVnRjZ1dPQUxaWlFZQjhKbnRrZ3F3MTBpeFdhQ1NYbw?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "a84e5b8688f8",
-   "topic": "聯準會",
-   "channel": "白宮公告",
-   "zh": "白宮延遲聯準會理事庫克的聽證會至12月14日。",
-   "date": "2026-11-04",
-   "links": [
-    {
-     "title": "White House panel delays hearing on Fed's Lisa Cook to Dec. 14",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOS2ppN1JvQmVtMlVjaFBCUWlmWnQ4NUNfOTdUTDgySWppZHQwamRoamU4NGtQc21JczdpeFVLUU9QcFhIdVoyYXdqUGN6R0ZQbVczVVZVN2JlWFJaYVFKR1FHRjJZY3JoWllnWDUzUXBRRDNFem9RR2RyYUQ4TmJUUkdR0gGHAUFVX3lxTE00UjVIUndLZUhjN2VfU3BwTDZiNGU0TnBJOVhiQjFpVXpQUHRydUlZOVdXcTI0R01PcnJ5RmhYRDBUdWRCVFlyQ2JDMlRCdWxpcEF1SHd6YXdWaEVSNDhFX0JGUDFYZzZPWWNaaTI0R0poNkRBRzU4Y3BVVXl2TzJPeEdFeElROA?oc=5"
-    },
-    {
-     "title": "White House sets hearing on Fed's Cook for December 14, NYT says",
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPRjlENDJZdTZaWF9nMGlXUW9lVXI0WVZQcEhEVy1ZU2o4QmRPRnQxbEp6OHdQeUVCLU5BaVRYSlFGbDZRbjUtRDlvN1NXYVAxbU5LMktZSHc3YkFIMnVEdy1OYzVnS2YtYnFXN2s0bHBTdVdmZlNsbjFQUVdveUJPSHQySlAtSVJ1U0tJeEdrNDRLQWttUTRaTlFlOHlpTjBwSl9sQ21QV2RCdURW?oc=5"
-    }
-   ]
   }
  ],
  "summary": {
-  "hash": "9016c83b231f",
-  "date": "2026-11-11",
-  "text": "本週能源政策成為焦點：川普支持能源許可法案並禁止風電許可證，同時向油氣公司提供4.8億美元貸款；白宮儘管中期選舉挫折仍推進關稅政策，已對加拿大商品加徵50%關稅。近期關鍵日期為12月11日聯邦暫時撥款到期，以及1月10日美中貿易休戰框架到期。"
+  "hash": "30240630cec8",
+  "date": "2026-11-12",
+  "text": "本週川普政府推進能源政策，禁止風力許可證、向油氣公司提供貸款，同時支持參議院能源許可法案。貿易方面，白宮誓言儘管中期選舉挫折仍推進關稅政策，貿易顧問表示將「四倍加碼」。近期關鍵日期為12月11日暫時撥款到期、11月16日資料中心併網方案提交，以及2027年1月10日美中貿易休戰框架到期。"
  },
  "suggestions": {
   "fiscal_cr": {
@@ -1074,21 +1048,12 @@
    ]
   },
   "h200_china": {
-   "date": "2026-11-11",
-   "note": "多則新聞報導中國軍方關聯大學成功購得H200晶片，顯示現有出貨管制措施存在漏洞，可能促使國會加速推進兩項限制法案（晶片位置驗證、美國買家優先）的審議。",
+   "date": "2026-11-12",
+   "note": "多則新聞報導中國軍方關聯大學繞過美國禁令購得H200晶片，加上Lutnick延緩出口管制、國會議員推動更嚴格防務法案等，顯示政策可能進入「國會限制」階段的實質審議與執行。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQZGFWV2J1LVZpcHZIbWtuMU5qVm1teTBwSTFIaVF0c2hJYzN2WFBlYmdDbHJFeVVJQk5PNzA5WTBmQlNudWpFaHpyZDBGaFJEbGMwd0FlQWNrTWpxZW9kWE5sVGxtbl9sWEljZlBtQmMyMHp1b29wNmVSdnpYOVdGcHcxclo5TjRPNXRVMFNoUUdsWnc4ZUFDM0lZMXZOa3lfQWtlN25rWHFXcFF1RXRGcmI2TmFveEli?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE9MUldsMl9mWlZIdmo2ZUxRd3BPWHZJYzI5S3hHMmN5ZXFCdVhuc3V2ZEpVeHJNV0YzSUVsT1VQaDNXRml4Q0ZYb051SEhxYzZyT0tsanB3b05OUHpWNWtnRzRRQU5XTWttaHBrTnlwZUFheXQ2NVE?oc=5",
-    "https://news.google.com/rss/articles/CBMitAFBVV95cUxNQzNzRzNMbFdRYllVV3d2QUlfMnFRSmtoTXRXR3N3Tl9Ba3ZIZDRWVVFxUjhtZzl0QzNqQ19ZN1R5dDJZbzdWUWxkV3E2cmU3aGo0aDJnN0FYSENCRjgwejJlbjBabjVpbTVraVEwUDR5NTN6N1RsUDNHT3U1TkhMSTVtVGN3MjN2YXQ0RV9rZmdmLVVoQ2JUU3pGYU9yV0NLRVBnZ1htVUI2bjhTd2c2MVo3bTTSAboBQVVfeXFMT0FRdDZJNzZxQ2kyMnhLc1Z5N1hJUEo2RkFvU2FseElhZDk5aWhtVE9JREhCUFdaeHgwaUN2U3laZC1tMjJxTV9MdXV1QUY4U1JoamhQREc3YWo2V0t5NzJaelp6cUs4YXpvUjRKcFh6NXdkVEozOXRuNGlxelhYVFMxSkxsdUZIeUtBZ2tRYUtLWnQwN1VWNGZ5aGpfYmRKU2NoVmxiN0dXV0ZSR0xGZkJXNXlQTkMxcG93?oc=5"
-   ]
-  },
-  "ai_preempt": {
-   "date": "2026-11-04",
-   "note": "10月29日川普政府提議聯邦AI標準，可能表示行政命令階段已有新進展，但尚不足以確認進入司法部訴訟的下一階段。",
-   "links": [
-    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPcDcxUmtBZE5TeE9oSmRvYlBwNzlOa3I2bXJVZ3MxMkJEUU5WeU5XUndGSWtnYWVHVUZKN291aHRlZE1wdUliN0RzWUV5VWpPS0V1bF9uRzRBWmxzUVJnSWVJN1ZGWnFZVF9RNWc2RDI3QTVyUy1Iam43dk5GOE1GS2w1cV91REtNd1NlLUJzZVliV2tpSU9UR0JUNEplcHd4Y1U0SGdjVU1PU3ZYd0QzeHF1OGl1MlZ5S01qdDhKMEVRaTVhem1oVQ?oc=5",
-    "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQT3pVa2N3Q3ZHOHRMZU9SSmMxb2JLRHJCQy10Rkdza25fdms0aWJlUWp4YTk2ZnkxdTd3NWltTWxGODc3YmVjVGd5dWRZQWFZZlFRRnJhNGxpRmRjY2c5aTdtWjVtalY5QXg3ZU5Td2gzd0xxMjhTNEFzekxNeFFmbEtOR0NjSHg0azktMy0zZ3Q4OXZGWVVFVU5pb0xWaXBhYlNpTktuWUlFRkN1RW5ZRldkdW9GY0hPR0pscnJiUHpSNS1DTjlZRzB2LWxybFFzR2NYZg?oc=5",
-    "https://news.google.com/rss/articles/CBMihgFBVV95cUxONm1MMGxVZTZzSUJmTjdXUjQ3eG90U1ZpY0NFVFRiNVZKUkZSV3VsX1ZSLWFVbldnLVIwUnR2bWVkZ2xHY3V3ZUtZV2JncXNWQ0xBckJWTU1tdW5kaGRIUVp6VllxcFNRTjY2VlJrRWJIV25hTFR3S09kNENJVGxUcUZmR1FXQQ?oc=5"
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxPa01VNnZpTE10OFNfTFRXZDZzeUJwSjFkNmlhVjFwUVExM3RmaUlNOG1jWm1aYXJMRHkyb2s1WGdMQU9IQUN6RE5kVi1ub3JkQ0wxVnc2YWFvY2VzTWRiX0FZeVlpdDNsMzBhcWpzOVhqNVh4UUFCa2cySy1ZSlkwTGRxbHVjcEU?oc=5",
+    "https://news.google.com/rss/articles/CBMigAFBVV95cUxQZ2x5a2tTSGYzeTVPREdtZlEtNUNMbWtLdzczRnBzaWs0OHItWGZrNmY4Y0dIM0dkanh5RnRpSk9fQWZzZXpadTBIMXM4VFBkSTZaRE1oM2VTeUFOb2hPZWVoOEMzbHVYZGE5LVRQLWRwcFhjMGh4Z3QwbkhaTU9DOA?oc=5",
+    "https://news.google.com/rss/articles/CBMipgFBVV95cUxOeWk1U2UwUGtkbUNyZmpQY2JCUWVGMFRMTlAxMjBPY3d6aFF2RC03RnJFdS1MSmo0TVlhZVp0QWlzTjlCZ0JTYUtMVkhsOWU3aERibllBTDZkR3BxS2xvWjVRSGVtbmROTjgtWE42dnA4VVB3UmlZSjZRdlJCOGdZMC0tQ0llSXRHWGZzWUtiOTZGd05heUg2QW0wWlQ3MDhZTGM3UjBB?oc=5"
    ]
   },
   "dc_grid": {
@@ -1109,5 +1074,5 @@
    ]
   }
  },
- "at": "2026-11-11 18:23（台北）"
+ "at": "2026-11-12 07:15（台北）"
 }

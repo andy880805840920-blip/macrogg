@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-11-01T23:09+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+3",
-    "titles": [
-     "Stocks gain as Fed official backs quarter-point hike - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+1、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Wall Street Braces for Biggest Treasury Sales Overhaul in Years - Bloomberg"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、熱度+2（有內文）",
-    "titles": [
-     "比特幣盤中微幅上漲 市場觀望聯準會利率決策"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+3",
-    "titles": [
-     "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+3",
-    "titles": [
-     "Russian strikes cut power to thousands in Ukraine as drones damage Russian facility - Reuters"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+3",
-    "titles": [
-     "AI Won't Replace the President. It Might Govern Our Decisions - Bloomberg"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+3",
-    "titles": [
-     "Gulf States Fear Fiercer Iran Retaliation If US Strikes Again - Bloomberg"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+3",
-    "titles": [
-     "Wall Street Braces for More Wild Days in Stocks After Tech Rout - Bloomberg"
-    ]
-   }
-  ],
-  "background": [
-   "比特幣盤中微幅上漲 市場觀望聯準會利率決策",
-   "These 3 AI Stocks Could Soon Enter the S&P 500. Are They Worth Buying Before the Move?",
-   "伊朗與卡達連續3天談判！擬美伊達成協議後48小時內重開荷姆茲海峽"
-  ],
-  "main": "Stocks gain as Fed official backs quarter-point hike - Reuters",
-  "main_why": "最高分",
-  "second": "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 179 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "主軸 152 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】新聞意涵和今日走勢（10 年期 -6bp）方向不同，卻沒有點出落差（要寫出實際變動，並說明市場還沒反映或反向）",
-     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 209 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ],
-    [
-     "主軸 162 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "聯準會官員支持 12 月升息一碼美股科技股財報不佳重挫"
- },
- {
   "at": "2026-11-02T01:58+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3017,5 +2913,113 @@
    ]
   },
   "result": "10月CPI核心月增0.3%超預期，理事沃勒稱若通膨熱應考慮12月升兩碼"
+ },
+ {
+  "at": "2026-11-11T23:15+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "claims",
+   "auction_30y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Marsh Says Fed Should Ease Up on Banks That Insure AI Loans - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+3（有內文）",
+    "titles": [
+     "Fed's Goolsbee calls inflation report 'borderline disturbing' as central bank weighs more hikes"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "US Treasury Futures Retreat as Markets See More Fed Hikes - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Japan advisers urge focus on sustaining growth after inflation hits BOJ goal - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+3（有內文）",
+    "titles": [
+     "美國通膨升溫推升聯準會升息預期 房地產股承壓下跌"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "Bessent Moved to Military Housing Following Iranian Threats - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Japan Government Bond Yields Jump, Tracking Treasury Selloff - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Retirement Rules Spark Exit Date Debate for NY Fed’s Williams - Bloomberg"
+    ]
+   }
+  ],
+  "background": [
+   "Fed's Goolsbee calls inflation report 'borderline disturbing' as central bank weighs more hikes",
+   "美國通膨升溫推升聯準會升息預期 房地產股承壓下跌"
+  ],
+  "main": "Marsh Says Fed Should Ease Up on Banks That Insure AI Loans - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "US Treasury Futures Retreat as Markets See More Fed Hikes - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "",
+   "重點二"
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "主軸 217 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】100 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日",
+     "數據公布日期錯誤（CPI寫成「10/10」，官方是 11/10；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ],
+    [
+     "主軸 165 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "數據公布日期錯誤（CPI寫成「10/10」，官方是 11/10；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ]
+  },
+  "result": "10 月 CPI 連三月超預期，芝加哥聯儲總裁古斯比稱通膨報告「近乎令人不安」"
  }
 ]
