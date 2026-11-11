@@ -2104,6 +2104,36 @@ body.duo-lock{overflow:hidden}
 .ai-p-imp{margin:0;font-size:14px;line-height:1.75;color:var(--text-secondary);border-left:3px solid var(--series-1);padding-left:10px}
 .ai-tl-tx{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
 .ai-new{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brand-orange-fill);flex:none}
+/* 2026-11 AI 大事：IPO 三欄（主題｜數字｜補充）、估值報導收合、公司明細近 5 則、區塊標題列 */
+.ipo-kg{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);column-gap:0;margin:8px 0 0}
+.ipo-kr>.ipo-kt,.ipo-kr>b{padding-right:16px}
+.ipo-kr{display:contents}
+.ipo-kr>*{padding:8px 0;border-top:1px solid var(--grid);min-width:0}
+.ipo-kr:first-child>*{border-top:0}
+.ipo-kt{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.ipo-kr>b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text-primary)}
+.ipo-kr>small{font-size:12px;color:var(--text-secondary);line-height:1.5}
+@media(max-width:700px){.ipo-kg{grid-template-columns:minmax(0,4.6em) max-content minmax(0,1fr)}.ipo-kt{font-size:12px;white-space:normal;line-height:1.4}
+ .ipo-kr>.ipo-kt,.ipo-kr>b{padding-right:10px}.ipo-kr>b{font-size:14px}.ipo-kr>small{font-size:11.5px}}
+.ipo-vd{margin-top:4px;border-top:1px solid var(--grid)}
+.ipo-vd>summary,.ai-more>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:12.5px;font-weight:600;color:var(--series-1)}
+.ipo-vd>summary::after,.ai-more>summary::after{content:"展開 ▾";font-weight:500}
+.ipo-vd[open]>summary::after,.ai-more[open]>summary::after{content:"收合 ▴"}
+.ipo-vd>summary::-webkit-details-marker,.ai-more>summary::-webkit-details-marker{display:none}
+.ai-more{border-top:1px solid var(--grid);margin-top:2px}
+.ai-mg{display:inline-block;font-style:normal;font-size:11px;color:var(--series-1);background:color-mix(in srgb,var(--series-1) 12%,transparent);border-radius:999px;padding:0 7px;margin-left:6px;white-space:nowrap}
+/* 區塊標題列：打開視窗時由 JS 移到標題下方（絕對定位、不佔版面）；手機往下滑收起、往上滑出現 */
+.ai-nav{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none}
+.ai-nav::-webkit-scrollbar{display:none}
+.ai-nav button,.viz-root:not(#_) .ai-nav button{appearance:none;border:0;background:none;margin:0;padding:9px 0 8px;font:inherit;font-size:13.5px;font-weight:700;
+  color:var(--muted);white-space:nowrap;cursor:pointer;box-shadow:none;min-height:0;border-radius:0}
+.ai-nav button.on,.viz-root:not(#_) .ai-nav button.on{color:var(--brand-ink);box-shadow:inset 0 -2px 0 var(--brand-orange)}
+.duo-sheet-h .ai-nav{position:absolute;left:0;right:0;top:100%;padding:0 18px;background:var(--surface-1);border-bottom:1px solid var(--grid);
+  box-shadow:0 4px 10px rgba(15,23,42,.05);transition:transform .2s ease,opacity .2s ease}
+.duo-sheet-h.nav-off .ai-nav{transform:translateY(-100%);opacity:0;pointer-events:none}
+.duo-sheet.has-nav .duo-body{padding-top:42px}
+.ai-wrap>.ai-nav{display:none}
+@media(max-width:700px){.duo-sheet-h .ai-nav{padding:0 14px;gap:16px}}
 /* 2026-11 白宮與國會（src/pages/whitehouse.py）：本週重點→篩選→川普說了什麼｜政策進度（桌機左右）→不確定性指數 */
 .wh-wrap{display:flex;flex-direction:column;gap:10px}
 .wh-c{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;background:var(--bg);min-width:0}
