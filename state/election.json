@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -9,
- "date": "2026-11-12",
+ "days_to": -10,
+ "date": "2026-11-13",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -125,15 +125,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9945
+    "p": 0.9955
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0055
+    "p": 0.003
    },
-   "close": 0.49450000000000005,
-   "vol": 8763325.369066002,
+   "close": 0.49550000000000005,
+   "vol": 9013259.428147,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -148,17 +148,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9945
+      "p": 0.9955
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0055
+      "p": 0.003
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 98.9,
-     "vol": 8763325.369066002,
+     "gap": 99.2,
+     "vol": 9013259.428147,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -234,17 +234,17 @@
      "lead": {
       "name": "Cindy Holscher",
       "party": "D",
-      "p": 0.9965
+      "p": 0.9995
      },
      "other": {
       "name": "Ty Masterson",
       "party": "R",
-      "p": 0.0025
+      "p": 0.0005
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.4,
-     "vol": 878225.7175800002,
+     "gap": 99.9,
+     "vol": 882036.37758,
      "url": "https://polymarket.com/event/kansas-governor-winner-2026"
     },
     "Alaska": {
@@ -255,7 +255,7 @@
      "lead": {
       "name": "Jonathan Kreiss-Tomkins",
       "party": "D",
-      "p": 0.9975
+      "p": 0.9965
      },
      "other": {
       "name": "Bernadette Wilson",
@@ -264,8 +264,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.5,
-     "vol": 1967398.3828520002,
+     "gap": 99.4,
+     "vol": 1967564.3928520002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -364,7 +364,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.9805,
+    "p": 0.9845,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
