@@ -966,9 +966,81 @@
   "p:us_china_truce:0905094557ea": "2026-11-12",
   "p:us_china_truce:574613a31fc3": "2026-11-11",
   "p:us_china_truce:b8ec8253dda6": "2026-11-11",
-  "p:us_china_truce:cc78b575a803": "2026-11-09"
+  "p:us_china_truce:cc78b575a803": "2026-11-09",
+  "7af3c65f409b": "2026-11-12",
+  "32eb8c89e41d": "2026-11-12",
+  "f9f9296e860e": "2026-11-12",
+  "f331524a923e": "2026-11-12",
+  "ccf118ba1f79": "2026-11-12",
+  "f7f5cfeee926": "2026-11-12",
+  "b41595c07303": "2026-11-12",
+  "121108f011ab": "2026-11-12",
+  "f75a9352be3b": "2026-11-12",
+  "e1ea96bc3809": "2026-11-12",
+  "9205a6f73a16": "2026-11-12",
+  "6edf4a9edd8a": "2026-11-11",
+  "12f859700b40": "2026-11-11",
+  "1032b5cc5f0f": "2026-11-10",
+  "d912c37269b4": "2026-11-09",
+  "a9dfcdaabd21": "2026-11-09",
+  "p:fiscal_cr:2ec283bb49a1": "2026-11-12",
+  "p:fed_cook:39e637e75c0b": "2026-11-10",
+  "p:fed_cook:fb8e297af581": "2026-11-06",
+  "p:fed_cook:4f075ad8f58f": "2026-11-06",
+  "p:fed_cook:e3c7a87d7e2d": "2026-11-05",
+  "p:fed_cook:87a7483366a1": "2026-11-05",
+  "p:fed_cook:f5339a332197": "2026-11-05",
+  "p:h200_china:6ac8f0288fc3": "2026-11-12",
+  "p:h200_china:b6351cc2bba3": "2026-11-12",
+  "p:h200_china:dd13be2b1e93": "2026-11-12",
+  "p:h200_china:27a0fd85ba1b": "2026-11-12",
+  "p:h200_china:a5e9d48f405b": "2026-11-12",
+  "p:h200_china:caec8eb0d45d": "2026-11-12",
+  "p:h200_china:a02d2638df4b": "2026-11-12",
+  "p:h200_china:caa165ea6f75": "2026-11-12",
+  "p:h200_china:77fdcea5ca0e": "2026-11-12",
+  "p:h200_china:99ef3fc2ad04": "2026-11-12",
+  "p:us_china_truce:eb2b010edac2": "2026-11-12"
  },
  "items": [
+  {
+   "id": "9f3cc780b9ad",
+   "topic": "關稅",
+   "channel": "其他",
+   "zh": "川普威脅若墨西哥未阻止移民，將對其關稅加倍。",
+   "date": "2026-11-12",
+   "links": [
+    {
+     "title": "Trump threatens to double tariffs on Mexico if it does not halt migrants",
+     "source": "Reuters",
+     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNSzJwLS0tdmxjdGp1T3RFY29PR2JyaXRQVkVUREtlUkYzSWVfZ3ZwYlV0anNiTGc2VDlvQ2Y2UC1WZ1ZiTC1zOHJqYjRRcE9rVG0wSXpEUTZlN1E2Q0F3WmZsX1dDdG82NmtHYVpCNXJTTklFd05kMldLRGg0YktvX200bmZxSjJWZWVlUURielBYU0wtTTBRVjBKNEx4dWhrUjRndEQ2eHB0R2xvTmdZZQ?oc=5"
+    },
+    {
+     "title": "Trump Threatens to Double Tariffs on Mexico Over Migrants",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOMnJ4S0x3TmVXb1NReEMzUU1uNU1NNmdmaXpQN0RKdFY3cUR0TmxEUFRMdk4tenRfY1Y2VDBTN1ZUSWFMandoSU9KcFhrcnF0QnZ2WVktRzZiRlZnTEVMY2xpUUU2d3lab1dILTR0alIzdDZvaThKMlcxMHQ0c3ljTDNhSG9mbTluT1NDUDhheHZnTGlXQzF3S1lBNk4yUThVQm11cE95TnEtZTFwU0VKeXVLTy1iZw?oc=5"
+    },
+    {
+     "title": "Trump threatens to double tariffs on Mexico over alleged migrant caravans",
+     "source": "Anadolu Ajansı",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNT1FYU3NYT1RobjFibGdNU1Zrbm01Q0l3TlljMGlDWkFUTUJhUlFaREptandpOU81clp6ZTVqVlhia01WdGtoTWZxTVduX2hKSkRBeHUyVHd4SkJFYXRZT2luQzJtcFBvbXJSTGVPZ3lmcjR5TUprSmRsY3FXanZOMGVRdzdCSnZuUHd4VDdxRlRMblJvejdLbjdXbjJvZWVxZFJfU0dfeHdWT1I2MmV6bm5JZVM5Zw?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "a194c3c010d3",
+   "topic": "能源",
+   "channel": "其他",
+   "zh": "川普表示美國無需與伊朗達成協議，油價應聲上漲。",
+   "date": "2026-11-12",
+   "links": [
+    {
+     "title": "Oil Jumps After Trump Says US Doesn’t Need Deal With Iran",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPbmpyTWJjZ3NxT0J2V3FvcUxPX2ZjblNzWjJVZUhjXzZmTk1mWmV4ODI4WEFYZlNocG1abkp4Q3BNbTlRNFZCZm1KY19LY2xpSWIxMlE2UWpQclhpYlhVcXhndnk4aC1tTFdVUUNBNHpWNnJua0FkLXdyYjJ5T2czbkFFMlhkelBJTVd6NzFucXdZbHhjSVp2emRnd1l4RklZQ1J3Wm1US1E0eHlq?oc=5"
+    }
+   ]
+  },
   {
    "id": "6528e33f1923",
    "topic": "能源",
@@ -1094,20 +1166,20 @@
   },
   "fed_cook": {
    "date": "2026-11-12",
-   "note": "11月7日新聞顯示白宮已成立「調查委員會」(committee of inquiry)，政策可能已進入「白宮委員會調查」階段；11月5日新聞指出聽證會定於12月14日，提供了下一步的具體日期。",
+   "note": "TOKENPOST 11月6日報導白宮委員會將 Lisa Cook 詢問聽證會延期至12月14日，下一步日期已確定。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQOEN2SVIzQmppcXREV0sxNE0tejFxYkt4VGpxemtVbVV4R0ZPTVFyVWV0azNTLUxCSkxUQWxxN1plZEpfZ1ZCRHUwNGhJV0k3c2owTWVRaEpfb3JMN09jV01jTkNJcmNidl9FTFhid1JsUmw4ZnVXSjVDRXZzWlM0NnRmRnEybjc5MG1Hb09KQXRsM1lFR0FVUThGVUZjdTZLd2lUZDl2WTB0UQ?oc=5",
-    "https://news.google.com/rss/articles/CBMiWkFVX3lxTE45eWNSQlpBMUNudzM4RVd6YVY4TE4wbnc5a2EzVUV3dmN3T0xCbWJvZmV5NWNlTWJNS2h4Nm9EQkd5ZUJYdFZ2MUFoWk9uVFFIY0V3OElXbUdud9IBbEFVX3lxTE9BTW96cHo1Y2ItVldBeFoyVERMam5sV1FwWURVbDE1T2c2VkIxVTRyZXZDV1Z2NUlRLW5oeHZDVnhMcDkzM1BHQndNVWZrOWF2R2hkVnRfXzlqMS00MWRaOW5mRnhNdUpWWkhPMw?oc=5",
-    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPWmFLM3NDX3Qwd3Brakd0dkFmdE5LckI3MW9FWFZrMzJoamF4YUYzNmY3aS1TTDU3WlFFM2hLcC1SUS1VS1NhOHpJTENHMGJrQVpkZ0FGMzhsbktqUmtuUEhRQVBaZ3o2bzNHbU8wQ3dNQzVjVmU0Y0pxNUc4aENYVmpJMklpS0xzdjl5Zk9nSmlROWp2eFlydzRMelVOamhFYzFYa3dXNmJFdw?oc=5"
+    "https://news.google.com/rss/articles/CBMizwFBVV95cUxQMWRZU0pVdkJiU1J1MUdOX3Y5QVF1cHpRdG5zTndjOE4xaWhuVFVWSzFZem9zNHdFVjBhYk5TZFN1VEN2RnZfdF9UV21Za09HM2hZTGpMXzUzTG01ZzZ0QzFrNy1NZENQSEsyQjNCb1plSWtWX2lSQW9xSzZXbk5zelQ4S01mRmVqMU9NTzhHb3ZWbW9yUVdOMkhLemVTSmlUNGg5bFNXTjRiVmFYenVJekRkeXluZVNhVVZNYWdYMTc5MDM4NnV3RldkSW5hS2c?oc=5",
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1GdFQ5LXlNVTZLWnNiU3JrVTg0UjdXekFQcXlmNk9KMjZZUFQza1BrR1JadnZaT1R2MWJaTUFSMElkNHkzUWdrZFFfd3QyZERva0FqUFdMaVg1SWc?oc=5",
+    "https://news.google.com/rss/articles/CBMilwFBVV95cUxQMWJOUEdhWU1NWlpQZFpoUmtwN2F6QkF2X25zWEM0M2tnTUJKRnFJeExRTDVsZHF1RFM1OTFNVk1pNWt0R3hfU19NZDU1RlJObVQ5eF9uOU55eml1RnRHOFRIU1hCaTd6V3Rnbm9IN0JiaGpYVkFUbnRnX0pUQWhBREJackN4MzBuRjJSY0QxSEZvSDBRNjRz?oc=5"
    ]
   },
   "h200_china": {
    "date": "2026-11-12",
-   "note": "多則新聞顯示國會民主黨議員敦促政府保護晶片出口記錄（Reuters），以及中國大學繞過禁令取得晶片（CNN、digitimes），表明國會限制法案審議可能加速推進。",
+   "note": "Lutnick暫停川普第三次Nvidia中國禁令，顯示國會限制法案審議可能延遲或面臨政治阻力。",
    "links": [
-    "https://news.google.com/rss/articles/CBMihwFBVV95cUxPa01VNnZpTE10OFNfTFRXZDZzeUJwSjFkNmlhVjFwUVExM3RmaUlNOG1jWm1aYXJMRHkyb2s1WGdMQU9IQUN6RE5kVi1ub3JkQ0wxVnc2YWFvY2VzTWRiX0FZeVlpdDNsMzBhcWpzOVhqNVh4UUFCa2cySy1ZSlkwTGRxbHVjcEU?oc=5",
-    "https://news.google.com/rss/articles/CBMikAFBVV95cUxQbEZQd1VKRnhGOXdpSDNHeGtxVzBDdEN3a0VnV3hyZG9YZXhscndPSk92N291WE5CTkYwU190dWNSVHFYUnFtWDUyaGtXLTNxWDZzT0oweU9wdTBFS0x1RzJtR0hvbks1TGFCQ0J5QnN3Q01vd0V6bVdtaWZxMGdTY1VoUU9aQm1uRFVVOC1qM0c?oc=5",
-    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPc1EtU18tWjZNZTZtOFBZNzdqZkRFMk1nbm9MTm9VWUQwUHlLc1dTdDNLWmNCcllESHVVYjFnXzlKcFJrSWpHUkY2S1lhcTFtWWdPVG9WdkcyTkFSaEpLanVzeWctM1hCTkdxUEJ6VnBrLXFYVnBsalpKUkJVUGQyUE5DOEJtaTctZlFEaV9VR1loQ1JrVlhyRmRxR25UMkI2MVgtZnBFU1pVaXhBcmw0ZV9jb0RPYlduY1ppbnpCTlc?oc=5"
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxOZG9vZHVRQTlNeDJ0NVJudnhYaEJXUTlQb0ZmZFBDdmNpRnd0UE1Tdkw4c3dwd3BuMkhQOWRJZl9TMkVPeG5wRm1MM1hFMTkxT0tnWXp6QkN4YTVic2tNM1VtVHhyQ2ltS2RtXzZzSnRvOTRGLUItaUU0ZmJkTElyWk9fTmhvZldqMllubklieDU?oc=5",
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxNSy13Z3dtS2tBLWJIZXRIR3RoSlhDYXZuRG90S2hQeGduakpPOFVXdGtfSmlqbklRNWJqa2dtSnB6Wk5ENkRvTGZaZjdOdUsyOTlmTGQxVkYzOUtQYzllbUc1eERtVHJQX0IySjZXeTNDUmxwRy1kdU5OeVFpUHlqUEFLUjl1T2Y4Um5zcWxCamxSUURi?oc=5",
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQT3hFNnYzaUlNZVlnWFBSODhBc0tTQVIybmR1YVJxeFNQUlVPMkJZblVmTkl4WjN4NEZwOVQwSlFQTWdtWXhOdmFJRHg3N3EzMXJyUVlFVkJnN19YR0gtY3ViRmY4NjZQaW1qemhCclBQZDNycUJWOU9fWFNLUFVycTEzLWYyVG5VQnREU3Z1UWpRVUtPT01kY1hzcFEwVnJLbFhESXlTOTNYZw?oc=5"
    ]
   },
   "dc_grid": {
@@ -1136,5 +1208,5 @@
    ]
   }
  },
- "at": "2026-11-12 20:15（台北）"
+ "at": "2026-11-12 22:08（台北）"
 }

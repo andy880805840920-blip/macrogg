@@ -69,7 +69,7 @@
    "name": "Cindy Holscher",
    "status": "領先",
    "flip": false,
-   "p": 0.997
+   "p": 0.9965
   },
   "KY": {
    "before": "D",
@@ -4502,9 +4502,9 @@
  },
  "reg": {
   "TX": {
-   "hash": "501efc26941e",
-   "policy": "新州長傾向限制資料中心擴張。電網運營商尋求權力在停電前削減資料中心用電；議會擬廢除資料中心銷售稅豁免。",
-   "impact": "若州政府實施用電限制或稅收政策調整，可能延緩大型專案如Stargate與Google Goodnight的建設進度與成本結構。",
+   "hash": "915bdc3e2e7a",
+   "policy": "新州長面臨民眾反對資料中心壓力，議會推動廢除資料中心銷售稅豁免，電網運營商要求資料中心在緊急時降低用電。",
+   "impact": "若州政府實施稅收政策調整或用電管制，偏向延長項目審批時程；電網容量限制可能影響擴建進度。",
    "risk": "高",
    "links": [
     {
@@ -4712,11 +4712,17 @@
    "at": "2026-11-12"
   },
   "OK": {
-   "hash": "0d22bd24f139",
-   "policy": "俄克拉荷馬城及中部城市延長暫停資料中心開發，反映地方政府對AI資料中心項目的謹慎態度。",
-   "impact": "若暫停政策擴及州層級，可能影響CoreWeave Muskogee項目2027年12月完工時程；Google Pryor項目已近完成，影響較小。",
+   "hash": "f8fe0b7ca216",
+   "policy": "俄克拉荷馬州多個城市延長資料中心開發暫停令，反映對電力與風險的審慎態度。",
+   "impact": "若暫停令擴及州級或影響電力供應，CoreWeave Muskogee 2027年12月完工目標面臨延遲風險；Google Pryor 已近完成較不受影響。",
    "risk": "中",
    "links": [
+    {
+     "source": "KOSU",
+     "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPODk1V3RBZ0NQQTdJMlVoTGtwNkk4RmE5TG1KMUlDQ0lGdU5iTlhuUnBBUTRuZXR1Zkc3TjlvOHNYeFFTQ05XVHFjZU1KSHJTX1BfMUEya1FUYXE5ZElhZkhYOUUzNXRjbzc5WGJaU3NUVm8xMlRQUVVsdFFiTzlYRTRLOEVYNHc0emZab3AweTUyeC1Rb3FlcVA5ckJlWW1CaGd5TWpkbU5kdTN5YlhySVpwZVlYcTNGWnQzRzRsa0lIVTFsWkJEQUFR?oc=5",
+     "title": "Headlines: Oklahoma aerospace industry, data center moratorium & Thunder back-to-back losses",
+     "date": "2026-11-12"
+    },
     {
      "source": "KGOU",
      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNZjJnQjZEYTllYjRod3hDUGNqcUwzclJkaEpNSkN5cXNaU1AtWlM2cFFENHpBTFRYd0twQTlVNm40T2hwOEZ4b3h4b2ZWMF95bk1PUUlDTDJDRXhfak4yOWQxQ1Vwb2tHWTd4UTNSVVhUYlppeGJ1Ulg2OHlLRmlWSUZDMldVaWF2Q1ljOVMtbmdRLTk4QWE5emtIOEx4ZDhWTTBDXw?oc=5",
@@ -4728,20 +4734,14 @@
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPNkRYTXc3bjRqeWgwdlhrQkctRUpmSE96Y09UNnBNWTZVSHZyRVl2MUxMeWtYdGpRMEpSZVhtRkdsOWUtOTlnanlwSENwOHRxekRjYVk2WWgyOHFfaE91SVpha0dVbnVhWnc5R0hwWjR3NUU0Rm94VWlHeF8ybEYxdTVSdjFsNWRkUkFja0tJNjNXaFZxUUhJbXFfaTBBUWl1eGhRVWUzYTk1T2h4?oc=5",
      "title": "Oklahoma City extends moratorium on data center projects",
      "date": "2026-11-11"
-    },
-    {
-     "source": "The Oklahoman",
-     "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNQ3o3Y05PWUdvb3RxNUc4bkpSUWpGbHFqMGR1Wl9YUnZLTkpXZm5MZlJXZjVJMkI3OFRtNGdjOHlyUVlKRTdrVkJybWl2cmhKNHo0NXJraGE4bngxN3pGc2Y1WXd1aEp4bEItc1ZtS1hzQ3ZTX2xZekVkS3N1Wm5McFVRQldmMUhRY2ZyaG5Qd252ZW1qWTJ0a09TWlJSSVFYNEhJS0tEQ3NSU09UaWNZX0FfOGl1d0pBX1JZeHNQMjRTa1ZNTTZ3UXNWN2w4dUVkMi1BZXZfWQ?oc=5",
-     "title": "Will Oklahoma data centers put downward pressure on rates or raise risks?",
-     "date": "2026-11-09"
     }
    ],
    "at": "2026-11-12"
   },
   "GA": {
-   "hash": "3c00607df4cc",
-   "policy": "民主黨控制的能源監管機構計畫加強對喬治亞電力公司資料中心天然氣擴張的監督",
-   "impact": "若新監管機構對資料中心電力供應施加更嚴格審查，偏向延遲Microsoft、CoreWeave、SpaceXAI等項目的電力接入時程",
+   "hash": "e8de209022d4",
+   "policy": "民主黨控制的公用事業委員會計畫加強對Georgia Power資料中心天然氣擴張的監管，並關注電費與停電問題。",
+   "impact": "若公用事業委員會加強審查，偏向延長Microsoft、CoreWeave、SpaceXAI等項目的許可與電力配置時程。",
    "risk": "中",
    "links": [
     {
@@ -4757,10 +4757,10 @@
      "date": "2026-11-09"
     },
     {
-     "source": "WSB-TV",
-     "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxQNUtIZnJ2NG1mSXNIamVQM2d0aU9ud3Y5RmN5ZHpTcThPalZoajJHM3ZoU2NFOW04NzBmOEtQSVdqRGFWWTlTY19NQjhEQUxPZnkyWVZSd283Zzh6RzVVcDI3MjktajQ4TWZSSU1BcEtEY1laYjBTWkl2bEI0cFpQVF9kS25hYTA4UTF5ZFNVUm5ZOXktTGZ4Rmwtc2FwLWtpc1NTTVVsVFZ1Ykl3T3pOQXBNY2tOWEgtR05FTmdmRTV5VGlVdS1mVFdHTFVYTmZ4TmpyZXNrU0VDdWtXb3A5SzhGeUTSAfgBQVVfeXFMTS1pVGxMTFZqVWE4dk5KWHNBNHQyWkxnemxQa1dBSG1GYjNWMTRzNXVyamFfMGhzT3NJcjU3SXFFLTJqa25PdzdGaHJvbzlHcmpyVW1QSlloRXhVOGVFVVpaUmNSMjJfb0l0eExvU3BSVHp5ak9sdjJJSEVOOVFvRFViTzY5LThFSmhRbkYzS1pIbW41cEZDYzJJT3NfNGtxSFNpWUNBNzRvRTJtd2pXS1d6eHJmWW1vLWxBaVFYZWNCT0VKX2RZaGdPUmlOaDF1bDNHblI4Z3VGLWVRa2NWUmVOcWd5YmktSG0xR0dsWWtUQlh2SW5DUUw?oc=5",
-     "title": "Georgia election results could bring new scrutiny to booming AI data center industry",
-     "date": "2026-11-07"
+     "source": "WALB.com",
+     "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNWGg3UkY1bENhMFNNckYzZG1FSmdRZG1vZ3dPTV9ZaWY0U2ZXQmRoZjRGR2xZNlkxT0JQaVFoV3hkTlNQTkgtWlRoR0pveHozWG9aWEczWWFqdkJZTnVHazZBVS1YZjloRVhXa0pZN0FoXy1iRmVSU0UweW5MaHRucHFHOGJ1LWdTc29uSnBfdmhHTmpYUGpFUkFnc1B5ZVk3SkZRQTF4eHozSlMtZDU2MXFfb2NneTTSAcsBQVVfeXFMTmU1ZzU0elgxdjRTa3RBdHVqMjZDYXlfMEs3aDdGSmpaUmFLd1lDa2VfS0dPVnp4TlVfRklpc3BPSlo5UkZzOGhRN3RTV0VCb1hoVEYtZDdndDlDbHJEcWNWOXQ0OWlYdUpvckdqX2RleExIcEpuUEFGU3JvMGxVVVV3aVVNVzZJR0I3MGduWFNtOEJwWnFiYUo5UkM5ZlRRWlMwZEpwd3IwTkVvbDNCYmRrQzBINGxVTW1SS2ZZVDNMeTNIWHNaNUFfUW8?oc=5",
+     "title": "Georgia’s newly flipped utility commission targets power bills, shutoffs, and data centers",
+     "date": "2026-11-06"
     }
    ],
    "at": "2026-11-12"
@@ -5129,5 +5129,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-12 20:15（台北）"
+ "at": "2026-11-12 22:08（台北）"
 }

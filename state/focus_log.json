@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-11-02T04:23+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Each Selloff Brings AI’s Day of Reckoning Closer - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "HSBC to open Hong Kong AI Institute following Singapore launch - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Foreigners Make Record Withdrawal From Taiwan Stocks on AI Rout - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Macquarie Executive Sees AI Fast-Tracking Junior Analyst Careers - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Singapore’s STTGDC Eyes $2.4 Billion Loan, Adds to AI Debt Binge - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "AI Won't Replace the President. It Might Govern Our Decisions - Bloomberg"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "主角+1、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Wall Street Braces for Biggest Treasury Sales Overhaul in Years - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 8.0,
-    "sources": 1,
-    "why": "時效+1、來源+3、熱度+4",
-    "titles": [
-     "Merryn Talks Money: Where Do You Hide From an AI Bubble? - Bloomberg.com"
-    ]
-   }
-  ],
-  "background": [
-   "Stock futures jump ahead of a monster week after a $5 trillion AI rout",
-   "實體AI引爆生產力變革！ 雲端開發的它　推機器人訂閱模式降建置門檻",
-   "輝達今年漲幅領先標普500 歷史數據顯示買進良機"
-  ],
-  "main": "Each Selloff Brings AI’s Day of Reckoning Closer - Bloomberg",
-  "main_why": "最高分",
-  "second": "Wall Street Braces for Biggest Treasury Sales Overhaul in Years - Bloomberg.com",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 193 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】92 字，超過 90 字，請精簡",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "主軸 157 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（本週），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 172 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ],
-    [
-     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
-    ]
-   ]
-  },
-  "result": "AI股10月來蒸發5兆美元市值，蘋果11/2財報與期中選舉成焦點"
- },
- {
   "at": "2026-11-02T12:14+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3023,5 +2919,108 @@
    "重點二": []
   },
   "result": "輝達財報疑慮引發避險需求，長天期美債上漲"
+ },
+ {
+  "at": "2026-11-12T14:08+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "claims",
+   "auction_30y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 2,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Trump threatens to double tariffs on Mexico if it does not halt migrants - Reuters",
+     "Trump Threatens to Double Tariffs on Mexico Over Migrants - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Japan wholesale inflation accelerates, keeps alive rate hike view - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Long-Dated US Treasuries Rise as Nvidia Woes Revive Haven Demand - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 2,
+    "why": "時效+2、來源+3、熱度+4（有內文）",
+    "titles": [
+     "Alibaba Shares Drop 7% as Nvidia Saga Triggers Chip Access Fears - Bloomberg.com",
+     "輝達盤前跌逾7%！伯恩斯坦目標價砍半 黃仁勳去留未明"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3",
+    "titles": [
+     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、外國-3、熱度+3",
+    "titles": [
+     "India's inflation breaches central bank's 6% limit, bolsters case for rate hikes - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、外國-3、熱度+3",
+    "titles": [
+     "India’s Inflation Rises, Keeping Rate-Hike Pressure on RBI - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+3",
+    "titles": [
+     "What’s Flashing Warning Signs for Fed in Latest US CPI Report - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Stock Market Today: Futures Fall On Trump Oil Remarks; Nvidia Plunges On New CEO Reports (Live Coverage)",
+   "Oil prices jump after Trump says no Iran deal needed: 'We've got their Strait'"
+  ],
+  "main": "Trump threatens to double tariffs on Mexico if it does not halt migrants - Reuters",
+  "main_why": "最高分",
+  "second": "Japan wholesale inflation accelerates, keeps alive rate hike view - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 169 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "【對利率】95 字，超過 90 字，請精簡"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 189 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "川普威脅對墨西哥加倍關稅，若不阻止移民潮將提高至雙倍稅率"
  }
 ]
