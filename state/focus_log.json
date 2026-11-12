@@ -1,103 +1,5 @@
 [
  {
-  "at": "2026-11-02T01:58+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "Stocks gain as Fed official backs quarter-point hike - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Gulf States Fear Fiercer Iran Retaliation If US Strikes Again - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Ukraine says public air raid alert app sent false alerts after being hacked - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Iran's IRGC Navy says two tankers 'exploded' after hitting mines in Hormuz - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Russian strikes cut power to thousands in Ukraine as drones damage Russian facility - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "AI Won't Replace the President. It Might Govern Our Decisions - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Iran, Qatari mediators hold third day of talks to end US-Iran war - Reuters"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Russia Agrees to Halt Recruitment of Ghanaians for Ukraine War - Bloomberg.com"
-    ]
-   }
-  ],
-  "background": [
-   "Wall Street Has Never Faced This Many Market Forces at Once, NYSE Veteran Says",
-   "Stocks Are Entering Their Historically Strongest Stretch -- But There May Be a Catch This Year",
-   "川普：美國「到了某個時候」仍必須痛擊伊朗"
-  ],
-  "main": "Stocks gain as Fed official backs quarter-point hike - Reuters",
-  "main_why": "最高分",
-  "second": "Gulf States Fear Fiercer Iran Retaliation If US Strikes Again - Bloomberg.com",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 156 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】94 字，超過 90 字，請精簡",
-     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 178 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "聯準會維持利率不變，市場預期 12 月升息一碼機率達 85%"
- },
- {
   "at": "2026-11-02T04:23+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3021,5 +2923,105 @@
    ]
   },
   "result": "10 月 CPI 連三月超預期，芝加哥聯儲總裁古斯比稱通膨報告「近乎令人不安」"
+ },
+ {
+  "at": "2026-11-12T12:15+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "claims",
+   "auction_30y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Long-Dated US Treasuries Rise as Nvidia Woes Revive Haven Demand - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+2（有內文）",
+    "titles": [
+     "Wall Street Just Called the Fed’s October Hold a Mistake. Here’s Warren Buffett’s 9-Word Rule From the Last Time the Fed Doubled Rates, and What It Does for $1 Million in an Index Fund"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Japan wholesale inflation accelerates, keeps alive rate hike view - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、外國-3、熱度+3",
+    "titles": [
+     "Vietnam Dollar Bond Sale on Hold as Fuel Cost Fans Inflation - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Nvidia Tumbles as Investors Consider Future Without CEO Huang - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Barclays’ Lafargue Says Nvidia Turmoil Doesn’t Derail AI Trade - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "時效+2、來源+3、熱度+4",
+    "titles": [
+     "Stocks Slide on Nvidia Troubles, Oil Edges Lower: Markets Wrap - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Wall Street Just Called the Fed’s October Hold a Mistake. Here’s Warren Buffett’s 9-Word Rule From the Last Time the Fed Doubled Rates, and What It Does for $1 Million in an Index Fund"
+  ],
+  "main": "Long-Dated US Treasuries Rise as Nvidia Woes Revive Haven Demand - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "重點一",
+   ""
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 132 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀",
+     "數據公布日期錯誤（CPI寫成「10/10」，官方是 11/10；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ],
+   "重點二": []
+  },
+  "result": "輝達財報疑慮引發避險需求，長天期美債上漲"
  }
 ]

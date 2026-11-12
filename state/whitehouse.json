@@ -914,7 +914,59 @@
   "p:dc_grid:b99c58d482c2": "2026-11-06",
   "p:us_china_truce:fe400b679082": "2026-11-11",
   "p:us_china_truce:d4dc00161e14": "2026-11-11",
-  "p:us_china_truce:0b8273cd47d5": "2026-11-10"
+  "p:us_china_truce:0b8273cd47d5": "2026-11-10",
+  "0813b00c85b8": "2026-11-12",
+  "dc6aeaa9d12d": "2026-11-12",
+  "870d1c754272": "2026-11-12",
+  "df209db7a073": "2026-11-12",
+  "b0de5ca01eab": "2026-11-12",
+  "cf618a69e91c": "2026-11-12",
+  "d1acde300fff": "2026-11-12",
+  "28f5a44da03a": "2026-11-12",
+  "37eb30c30868": "2026-11-11",
+  "4b7368307d4a": "2026-11-10",
+  "c921d983ed8d": "2026-11-10",
+  "ca5d367b2c9f": "2026-11-09",
+  "09d3c2721c9d": "2026-11-12",
+  "37220952162b": "2026-11-12",
+  "18863e0866e4": "2026-11-12",
+  "7332d36bea6a": "2026-11-12",
+  "8c5b1a094f14": "2026-11-11",
+  "001783e0ffb7": "2026-11-11",
+  "1c08a280643a": "2026-11-10",
+  "ad1e5dd2e351": "2026-11-10",
+  "4d9f7bab36f0": "2026-11-06",
+  "2b32d5088b14": "2026-11-06",
+  "6c517459b8ce": "2026-11-05",
+  "p:fiscal_cr:ce250dafc730": "2026-11-11",
+  "p:debt_limit:8ed741eee1c6": "2026-11-11",
+  "p:debt_limit:a114443f945b": "2026-11-11",
+  "p:debt_limit:668c2a96a0e3": "2026-11-11",
+  "p:debt_limit:41f3551b7f33": "2026-11-10",
+  "p:debt_limit:bcac09263993": "2026-11-09",
+  "p:debt_limit:1fe12d18f368": "2026-11-06",
+  "p:debt_limit:3faa45ceec66": "2026-11-05",
+  "p:fed_cook:ca5d367b2c9f": "2026-11-09",
+  "p:fed_cook:40294679e2ea": "2026-11-07",
+  "p:fed_cook:9dccbb3c2bd1": "2026-11-05",
+  "p:h200_china:9cb17a6fb5e3": "2026-11-12",
+  "p:h200_china:df209db7a073": "2026-11-12",
+  "p:h200_china:e0802ab4e18e": "2026-11-12",
+  "p:h200_china:7d41e5459aaa": "2026-11-12",
+  "p:h200_china:c8c232be9e9b": "2026-11-12",
+  "p:h200_china:1cc0ab0b3e6a": "2026-11-12",
+  "p:h200_china:131621ea2079": "2026-11-12",
+  "p:h200_china:39dac681080e": "2026-11-12",
+  "p:h200_china:40e4e33972d4": "2026-11-12",
+  "p:h200_china:0905094557ea": "2026-11-12",
+  "p:chip_232:e225f0d06083": "2026-11-12",
+  "p:chip_232:888f71b41216": "2026-11-05",
+  "p:dc_grid:ccdef4b0dd89": "2026-11-11",
+  "p:gulf_lease:cbf6b2abf090": "2026-11-11",
+  "p:us_china_truce:0905094557ea": "2026-11-12",
+  "p:us_china_truce:574613a31fc3": "2026-11-11",
+  "p:us_china_truce:b8ec8253dda6": "2026-11-11",
+  "p:us_china_truce:cc78b575a803": "2026-11-09"
  },
  "items": [
   {
@@ -1032,28 +1084,30 @@
    ]
   },
   "debt_limit": {
-   "date": "2026-11-11",
-   "note": "TOKENPOST報導指美國舉債上限可能在2月到達，且8月有X日期風險，顯示政策可能加速進入「接近上限」階段，原預估的2027年觸及時間提前了。",
+   "date": "2026-11-12",
+   "note": "多則新聞指出 2027 年流動性危機風險升高，Goldman Sachs 警告銀行準備金接近臨界值，與政策預估 2027 年觸及舉債上限的時間點相符，可能加速進入「接近上限」階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5iOUI3NWItYm5XdXhudFpkNENYdTc5blNXQ3VxbXpKVEl0aTIyRUNCSFd5RllnV0h5RG5HOEJqVVJGaWktZGNXa2prMGQ2Yk83VGVLYlljX3pwaHRrZWpwM0NjUXVlV28?oc=5",
-    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5lYTRmOFMxQTQxMFU2eGlVWm9tM1FBSW56NGV1MTJPSFZ3dDBuOXhrX2xHeF95Zl9TbGdrMDRIRV9Cekdxc04ycF9nZ0JQV2g0Nnh6SzY0Mi1Samc?oc=5"
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxPMmNnczNTcVlrVGVObjJhMElOWVBXN25jeFdxeFRiZ0k0TU9pR1g0ZHMwSTRlRXIzcDc3UTBDWm9hSk52OXAxbHJLMFZfYzc5UGtwYThxblNsd2NEMW1TLUxjSUZEd0RJQXVhZjduOHp6M1FVWFRscmR1ZGFldFk1akxZZjlEYU0?oc=5",
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE9Ebk85cUJ3Y2w2QS02bGxnRTRQX05NblVYVk9MdlZHbDBSTjh4Y2xuckZCYWJlNV9iOUdxUVNFbUhzR3JSRXB6cE9EaDZRSHgzNURRaWpSNlJnb2p1QWRwN0hGM0t0VHNWZVZLZzdBbEZoTmdiN0E?oc=5",
+    "https://news.google.com/rss/articles/CBMizAFBVV95cUxNdlA4RksyeTVuY29uTUZUMTF6dEdVOFBTX1k4ZzU0bnE0QlY4dDRrLUJDZmpSQ1VNZTNSVlNIWDI2aUl0VHZZTkRkaXRGN3V0OTRDTW1YT1dyT1RrSk1QR1pCRXV6SVdlTm1udGFZYUhNOXBHbWQ5Y2Q1eDJfYjlXWm1VOGRpR2NJdW1nNXRWallNSGxkcHlVVDk5R2dLdW1kem5TVnhBQTJtM25SV1B2OEdfTlJHNnI5Rlp0LTRrSjZWckpVRXZvTXcyMlA?oc=5"
    ]
   },
   "fed_cook": {
-   "date": "2026-11-10",
-   "note": "11月5日新聞顯示白宮聽證會已進行，下一步可能是白宮委員會調查結果，預計近期公布。",
+   "date": "2026-11-12",
+   "note": "11月7日新聞顯示白宮已成立「調查委員會」(committee of inquiry)，政策可能已進入「白宮委員會調查」階段；11月5日新聞指出聽證會定於12月14日，提供了下一步的具體日期。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxQeDV4U3lXWlRPTHY5M1ljNzBTUEdlZEx2R2c5N1VSQ0NSLXAxbUp5bW1PREhFV2YtX3VaX0JnTWQteGJHazFYWE9vdXp2ZDVrTkdmREhLVWpkVXUtN0tQQUZfdVNFYUFKWmxWdEZ4a3NfelpMS2lNWjc2V3hpcWdoeldIOHFTRkNRU2hmdV9yNmFVd0NBNmt6U0JiZVU0NUJEeHpkLXo4QThUaWlk0gGyAUFVX3lxTE9nUFNSZ0VyeGtKYkluY181dEdkR3lvdlZNck83dWlhbXAyMzA4aTI3Um8tY01RdkVGWkVDLVhuTUg2b2dDXy1jbFpHMjBnLWZBYm0yV3lLeG9ZSWRUOG56U24xd05NTlBEM2JhMktaaFR4a0VacURFckVIOTFqT2dlNGdKa2Z5ZC1MN2FNUFdIdWNvTWxabG9lMVlmY1owNjF6NlM5VGU3NDRMT29zdUJCcXc?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE0xS1owNS1pMndkVmh1T0ZGSnVlOWJmSnA1cXowaWZBb3VnZUhCcFZjcmRCNzhWQU5rN2xZOEQ0ZmxhYWUwQmdqQlB1aDdrSF9ycUZkYlBGYTVmaU5oVmMzU0V4cUtsZFlCa0RBME04cFVRUW9nbFE?oc=5"
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQOEN2SVIzQmppcXREV0sxNE0tejFxYkt4VGpxemtVbVV4R0ZPTVFyVWV0azNTLUxCSkxUQWxxN1plZEpfZ1ZCRHUwNGhJV0k3c2owTWVRaEpfb3JMN09jV01jTkNJcmNidl9FTFhid1JsUmw4ZnVXSjVDRXZzWlM0NnRmRnEybjc5MG1Hb09KQXRsM1lFR0FVUThGVUZjdTZLd2lUZDl2WTB0UQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiWkFVX3lxTE45eWNSQlpBMUNudzM4RVd6YVY4TE4wbnc5a2EzVUV3dmN3T0xCbWJvZmV5NWNlTWJNS2h4Nm9EQkd5ZUJYdFZ2MUFoWk9uVFFIY0V3OElXbUdud9IBbEFVX3lxTE9BTW96cHo1Y2ItVldBeFoyVERMam5sV1FwWURVbDE1T2c2VkIxVTRyZXZDV1Z2NUlRLW5oeHZDVnhMcDkzM1BHQndNVWZrOWF2R2hkVnRfXzlqMS00MWRaOW5mRnhNdUpWWkhPMw?oc=5",
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPWmFLM3NDX3Qwd3Brakd0dkFmdE5LckI3MW9FWFZrMzJoamF4YUYzNmY3aS1TTDU3WlFFM2hLcC1SUS1VS1NhOHpJTENHMGJrQVpkZ0FGMzhsbktqUmtuUEhRQVBaZ3o2bzNHbU8wQ3dNQzVjVmU0Y0pxNUc4aENYVmpJMklpS0xzdjl5Zk9nSmlROWp2eFlydzRMelVOamhFYzFYa3dXNmJFdw?oc=5"
    ]
   },
   "h200_china": {
    "date": "2026-11-12",
-   "note": "多則新聞報導中國軍方關聯大學繞過美國禁令購得H200晶片，加上Lutnick延緩出口管制、國會議員推動更嚴格防務法案等，顯示政策可能進入「國會限制」階段的實質審議與執行。",
+   "note": "多則新聞顯示國會民主黨議員敦促政府保護晶片出口記錄（Reuters），以及中國大學繞過禁令取得晶片（CNN、digitimes），表明國會限制法案審議可能加速推進。",
    "links": [
     "https://news.google.com/rss/articles/CBMihwFBVV95cUxPa01VNnZpTE10OFNfTFRXZDZzeUJwSjFkNmlhVjFwUVExM3RmaUlNOG1jWm1aYXJMRHkyb2s1WGdMQU9IQUN6RE5kVi1ub3JkQ0wxVnc2YWFvY2VzTWRiX0FZeVlpdDNsMzBhcWpzOVhqNVh4UUFCa2cySy1ZSlkwTGRxbHVjcEU?oc=5",
-    "https://news.google.com/rss/articles/CBMigAFBVV95cUxQZ2x5a2tTSGYzeTVPREdtZlEtNUNMbWtLdzczRnBzaWs0OHItWGZrNmY4Y0dIM0dkanh5RnRpSk9fQWZzZXpadTBIMXM4VFBkSTZaRE1oM2VTeUFOb2hPZWVoOEMzbHVYZGE5LVRQLWRwcFhjMGh4Z3QwbkhaTU9DOA?oc=5",
-    "https://news.google.com/rss/articles/CBMipgFBVV95cUxOeWk1U2UwUGtkbUNyZmpQY2JCUWVGMFRMTlAxMjBPY3d6aFF2RC03RnJFdS1MSmo0TVlhZVp0QWlzTjlCZ0JTYUtMVkhsOWU3aERibllBTDZkR3BxS2xvWjVRSGVtbmROTjgtWE42dnA4VVB3UmlZSjZRdlJCOGdZMC0tQ0llSXRHWGZzWUtiOTZGd05heUg2QW0wWlQ3MDhZTGM3UjBB?oc=5"
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxQbEZQd1VKRnhGOXdpSDNHeGtxVzBDdEN3a0VnV3hyZG9YZXhscndPSk92N291WE5CTkYwU190dWNSVHFYUnFtWDUyaGtXLTNxWDZzT0oweU9wdTBFS0x1RzJtR0hvbks1TGFCQ0J5QnN3Q01vd0V6bVdtaWZxMGdTY1VoUU9aQm1uRFVVOC1qM0c?oc=5",
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPc1EtU18tWjZNZTZtOFBZNzdqZkRFMk1nbm9MTm9VWUQwUHlLc1dTdDNLWmNCcllESHVVYjFnXzlKcFJrSWpHUkY2S1lhcTFtWWdPVG9WdkcyTkFSaEpLanVzeWctM1hCTkdxUEJ6VnBrLXFYVnBsalpKUkJVUGQyUE5DOEJtaTctZlFEaV9VR1loQ1JrVlhyRmRxR25UMkI2MVgtZnBFU1pVaXhBcmw0ZV9jb0RPYlduY1ppbnpCTlc?oc=5"
    ]
   },
   "dc_grid": {
@@ -1065,14 +1119,22 @@
    ]
   },
   "us_china_truce": {
-   "date": "2026-11-11",
-   "note": "越南新聞報導美中延長部分貿易休戰措施，美國貿易代表延長第301條關稅豁免至2027年1月9日，顯示休戰可能延長而非到期。",
+   "date": "2026-11-12",
+   "note": "11月9日新聞顯示中國延長暫停美國關稅至1月，可能表示休戰延期，下一步日期可能需要更新。",
    "links": [
-    "https://news.google.com/rss/articles/CBMisgFBVV95cUxQYnlCYTFzWUI2XzJQX09MMVk4Y0lkNEQ0UXRHS3JUTTVOX1NWQ2t3UXlzam9ZMWJtcC1Cbzc1R0ZKQVVibE1qelpxeHFUSG84bkc3TmZOWjJjRU1ONjkwWWt1a2NuWHRGYWQ4Z3ZzaUZFUjdBR0ZPOVozVUd6bFBKOFRxLXFIWnNLakJsQVlZTDVqaDdIOFdLMGNzTjBaZFdFOG1PVU90STNhU1FxWnBaUHpB?oc=5",
-    "https://news.google.com/rss/articles/CBMingJBVV95cUxOVkExTjhFOEZndjUtc0hrak1YcXlQRWE3VFUycjR3NUhkZDZZUHV4ZGl4aWpFRzhoY01mUnViMHhzVGtRdUdILVVxVmRhQlJSYUNYWjFVdENiTlRrUm1TYVdmUk5Cd1U4aWIxcFdhYm1la3FJZXU5WEwtZWxmWXdKazlfdmt1dU5tVlJCam9oTzhlNGlSMVNES3VtTmlRdkc2MTBydE1xTy01LUY0RVdpVjAyV2kxd1c2YWxHX2xnR2Z3Y1dqbG95ZkVBWmFXR0tYa2dTMUhZU0lsbGlRMnBNU2FNeDJMVGZPc0VWVDlOdHpXWXZxOXRtMWhUVEZKM0FfazJOaGVWd3pGOF9YT0NMcHlNMjhQaURydF9RVkZ3?oc=5",
-    "https://news.google.com/rss/articles/CBMiowJBVV95cUxPYlpQeGkzR1dzZmxuWnV6OXpxYjBzODRpOW1qLWVtdWdyVHdrbFZxUTZLSUx2QkZ0NllEajQwUFRQNzhNQjNXZFU4M3ZJWEhxUW5WV196SG1jNEpGZ0E1V0V5ZE1CUk1uR0ttTHlRUDNrS0EwVTN5ZlpoVW5kTmxqeEp4TkFvWFBiR2VRcXNhVjBQS3AzZEllbXlUVTIxengyUGtock1KODNiSGdwNEhaVkpQQlp5N05fZmotd2JQZWFlMF9PLWg1OVI0UG5iNkRQNDhRS2tfbG5jU0o4Tk9XZHotR19oM3FaWnl2MVlQQ2Jna0dSNG84RnVET19aWnlEN3dzMTlEV2psXzJTX3h3OFBJZVNJaWZJd29WbVR1aW8ybXc?oc=5"
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxQVUN4WWtWd2xiaFBZQ3VXWFVYSE11YlN2OG5nZmVERHVwOWtiMXZDSVZxZkpGaGkxUzNzLXFhUUlkYXBRYXRWNjFJUTNpeHYwVWFBcS1sYVlYclhvTm9reGxBUmxZcGkwQU45Rnc3eXRGMk9RS01jS3B3OWZtT2NwWG9IVGRkNEdfRlE?oc=5",
+    "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1HRk1OMUVFdkMwVEhtRndPT2JYcURuMXBzeEpxVTVocXU4NXExR2pCaDl5akRlSHhCbGwySmEwdTJuX1hfaTJlWHIyVkMxam1vWDdIMUNpOUY?oc=5",
+    "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQTG1jVVhXRjNFWGhvR0NYOExyUmt1RHhmUC14WkVZV2N2ai12d3IxczZLSWxXOExlZVA0b2IzLUJiT0RJc3J4Z09OcnROWGRLUDZSSGJpZXYxMHhTZUlLYXBoWDh3bnlGdXh3X0tlci1Zd1FwLUJtbVJwZXNEWG1vUXJNYUZhRXpvNDc2MGxlOVVBMC1nZzZIVmZrcEk5cnVQWFNZWGRCWTFCZW9UXzhiX3Bva1Frc3JaX1QwcGd0V3pBZ9IByAFBVV95cUxNbFRVVVdZcWhZcWxUWlBHZ052VGU0R2dVXzNJQ2xNS3o3Z2VNT0hnMFBvM1doaVFZdDl4SEZ6MHdoeTdQNnl1eE9ORENaanluV1kzUm9qV1lmWkhMaVRHZXlDNEpEM3VLa1VieWFlMC1obmRuSDNtdnYyZ1k4ZmdNa2YwUmw2bWxHVHQxUVZOMkhBTTc1Q2dYV3Izb2JHSXdIUTNlcnBvUFhqWS13MnRDbTd3aExyNFNzb3owZGlMcGFZc2xPcE1jZw?oc=5"
+   ]
+  },
+  "chip_232": {
+   "date": "2026-11-12",
+   "note": "最高法院推翻IEEPA關稅的新聞顯示半導體232關稅可能面臨法律挑戰，影響第二階段的推進時程。",
+   "links": [
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQRHJ5bFNSVGx1UWlrY1BMM1p5WU5lZHBKejNOWjUtSW9pMTh5RWJFN0p4emdEaVphRGd2LUl1OEZ6MkxJZWNreHd3NXFNVDhtYjVTZlpweTh4OVVtR1ZGMXZKc3ZDRVNPOXZmUUQxTU80bnpSUW9uWHFsV3lNUEJWWE80SjFVNERfelR5Q0Y2OU1kb3R6U1FHMnJmTy15QW5yZ1FYWkxMR09Edw?oc=5",
+    "https://news.google.com/rss/articles/CBMimwFBVV95cUxQc1c4TWU1ZFpCaVpuZlAwckZ6T0p0dk0zZTBWR0RfWDVWbFhCdmRGR1RQRG9EeFFGallwcERWUmpLaWUwaENIT1d3T3Zsd2RYRy0zd0FELW5aVHZMUHZpU1pOQUxmMVVUTlN1a1piRjlVQ29ZbFZVMWxxYl9lUk1JVzBfTl9lUFZjYU5HTGlGQjBjUkV3UXFqTE1pNA?oc=5"
    ]
   }
  },
- "at": "2026-11-12 07:15（台北）"
+ "at": "2026-11-12 20:15（台北）"
 }
