@@ -1088,7 +1088,28 @@
   "p:chip_232:30ad175e7932": "2026-11-10",
   "p:us_china_truce:edf2482489b7": "2026-11-12",
   "p:us_china_truce:74e19fc7fe78": "2026-11-11",
-  "p:us_china_truce:30ad175e7932": "2026-11-10"
+  "p:us_china_truce:30ad175e7932": "2026-11-10",
+  "ca08a3bfb3ea": "2026-11-13",
+  "54d2f9ce1a90": "2026-11-13",
+  "91db38fee9e1": "2026-11-13",
+  "fc5314e48178": "2026-11-13",
+  "1a881bc7d0c1": "2026-11-12",
+  "4027a88e3db2": "2026-11-12",
+  "4f599ce2f21e": "2026-11-12",
+  "p:fiscal_cr:301f9a90fafe": "2026-11-13",
+  "p:h200_china:3f82e4984975": "2026-11-13",
+  "p:h200_china:b889056344bb": "2026-11-13",
+  "p:h200_china:bbc421b92d73": "2026-11-13",
+  "p:h200_china:7a5ef5f37785": "2026-11-13",
+  "p:h200_china:a2c9ea9b1b70": "2026-11-13",
+  "p:h200_china:319ab797e30e": "2026-11-13",
+  "p:h200_china:37c3c5e2ff3c": "2026-11-13",
+  "p:h200_china:a9bd177384b3": "2026-11-13",
+  "p:h200_china:aeaa2e586aa9": "2026-11-13",
+  "p:h200_china:4cf2e4cf0b97": "2026-11-13",
+  "p:chip_232:d5ecf5aee49b": "2026-11-10",
+  "p:ai_preempt:f32907e148da": "2026-11-13",
+  "p:us_china_truce:18e851faf8bb": "2026-11-09"
  },
  "items": [
   {
@@ -1126,6 +1147,20 @@
      "title": "Oil Jumps After Trump Says US Doesn’t Need Deal With Iran",
      "source": "Bloomberg.com",
      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPbmpyTWJjZ3NxT0J2V3FvcUxPX2ZjblNzWjJVZUhjXzZmTk1mWmV4ODI4WEFYZlNocG1abkp4Q3BNbTlRNFZCZm1KY19LY2xpSWIxMlE2UWpQclhpYlhVcXhndnk4aC1tTFdVUUNBNHpWNnJua0FkLXdyYjJ5T2czbkFFMlhkelBJTVd6NzFucXdZbHhjSVp2emRnd1l4RklZQ1J3Wm1US1E0eHlq?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "6595437fcec6",
+   "topic": "財政",
+   "channel": "其他",
+   "zh": "川普敦促參議院領導層推進3500億美元和解法案。",
+   "date": "2026-11-12",
+   "links": [
+    {
+     "title": "Trump urges Senate leadership to move $350B reconciliation bill",
+     "source": "The Hill",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOSmJkLUoxXy1Xb2Q0a3lJME44TWtBeFFDLXAxMlBVanpTeldLcFhHME5Pd1JoTmZzeDBQaEVxMlk5YW9WOVdyd3JDbi1weVc2eFNpWERLR2pwWE5NRlc0WmtVaUtabW1Wc0FCWHFBU1FLak0tMElXMjhncmFMNU9tbGp6RU5pX0VDOTZZOE5CZWp3QS00S1hZYnJnUWdydXlMMkHSAacBQVVfeXFMTS1jUmdlTjltYmFYdEVsU19GZzk4bkptMjAxU2tnX1RPaWFTazZ1aWVVcFMxZFhXdzhtRVZvRTliVks0ODVaaENrNDNNWm0tTWZ2bWE0T1FrRGg2aFlYWE04RW8tZEVwdFZpbXlLT1J2cERyLWsxVGtpZmt1YndTMGt6MGtKbmViSVRBcjNvdElEcDdsT3AtQ0ZKNFZZbG9iQU92bHdFSk0?oc=5"
     }
    ]
   },
@@ -1248,11 +1283,11 @@
   },
   "h200_china": {
    "date": "2026-11-13",
-   "note": "Benzinga報導指中國解放軍關聯大學已購得H200晶片，且多家媒體報導現有出口管制形同虛設，顯示出貨階段存在執行漏洞，可能促使國會加速推進兩項限制法案審議。",
+   "note": "Tom's Hardware報導150萬片禁用晶片走私到中國，以及House、Senate民主黨人開啟對Nvidia中國晶片交易的調查，顯示國會限制可能加速推進。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxNLUhwY3JmMDlhMDZaamx2aFNSMmF3dnRvcmpiay05VzBiLTUwbFNLR2ZTazFyTzZVZ0VJLWpOMVRIemlNd3JXS0RlT0ZicFJIVUl6dkNYZ3p3ZndfY1J3dlR2U09pbmNBWTRCVEF3SDFwc0RNbVo0UzR6M0NsS2hrY0VWcHdISWtpZTMwcVoyM0w1RE5aVWxjSmJpaE9DX193WnczVkJPQzQyOUxl?oc=5",
-    "https://news.google.com/rss/articles/CBMivwFBVV95cUxPcndpb1o5MzBqYVRTdWhRV1YwMlVxNjhBVjNudlBhYWlZUkx2SEFpcDdaRTZMOU5rZjZpQVBaVGplUDhNTEdHcUlaVmdkakxtRlVrelVXd2FNOHM0V25qOWRmQkV4LXBKR1lqd3h6OFJfVmtwY1VkcThSYnZMU2RQU29UZ19pU1JsTWJ4TFc1SzNuTkFqT2VmQUVFemhhZHVZTDFXNTFLQl9JaXY2aUZXUXpzMHdVQkhFaFJRUzhMcw?oc=5",
-    "https://news.google.com/rss/articles/CBMikAFBVV95cUxOQ2pMWDA4Sl9yT1B2anJmMndlT3pCSnNTcFdQRGdza2kxOUc1MDVqRURoRDZoVDM1VEN0SmpMNGJFcFRqdHVjOFY5blNPVF8xQVZhOE0zdk84ZnlobGFGSVNsYlEzNkVDbDlNa3hEdk94NXJpbkdjR1hwU1p1bDBxcUxFeFcyWm15b2tSZHMxU1I?oc=5"
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPemplcTk1bnRmRkdFWUg1RUVCaGJ4c0JYbTQyQlR3SFlFUDk3NXVtZklKUUw5NURPX295U0lLZ2lLZnF0WUtaNDZiVUJMX2tlcmRhbVJZVkxMNVJNZkIzRkEyTHB1bk15Q0lqSTh3ZmNES1pDQV84QjZxYVhoUVdhWDliODZ5NEtfMmtseEhFMDFYMXRIR3VNQkZ0VUQ0Yk00MTVWSDRjb0ZBY3JJc2MtVndIUGNTaFZIai16aThQeHQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiowFBVV95cUxNbXpiN1BZRjJOMmpqd0tTVmNtTUQwbjZOZHlUOXgxMkxIWW5BRUpoUTlFX19hdllycG9TWWJlTHJJRlJrTG0zZy1PZkc2NC1HT09Ra09YcktwREJDU2J2d1R2RmhTdmgtdXpxaHktR0R2VXRTVUFTSk9XTmRYN25mdzlRTjdHc045LUVjNW9HT3k0RTd3aERxOUltRFBlcFVMNmlr?oc=5",
+    "https://news.google.com/rss/articles/CBMi7AJBVV95cUxPa05TQWhhVXlHQVIxZHdoazBqQUJSNmlfRkRVc29ROGNyLVAzbmxDb0Q1UnpEZUtBd0RueEVRZ0ZRaXJMemxIeWxtRU9iNld1cHVfOEVhZVg4bEFfamFmZEc2T3liSF9pT2huRDBOVkhMdVRHSmkyY2lsY2h0dkcwNlVmekZhZW5xSVNfd1FfdXc0NG5sNm45TDJxT09mQ1dQdUJveWRCbzB0OE5yYW5aTkYtakJyTFhnelhIcWVWY3lxVDJFc3V5Wl9rMWxST3RORzVMckFhY2dNSkUtS1JCc2ptMzd2Q0ZsVGVwRWxxR3Qwd214Z1JHaDJJMkUwWFpmMVdfYmRGbWt1VXpCTWhjVWdnbXpqYjhjUGJOUU5KQ2hfTDdhRXpIV3BSa1FMVFp5elNQNTNqLThHYzJsQVQ3NV9pZjdBRm5UcFRtVVBXN1JJb0ZvcGRqWVpsN1FSSDFHOVd0S2lUZGVzSVFL?oc=5"
    ]
   },
   "dc_grid": {
@@ -1281,5 +1316,5 @@
    ]
   }
  },
- "at": "2026-11-13 20:11（台北）"
+ "at": "2026-11-13 22:14（台北）"
 }

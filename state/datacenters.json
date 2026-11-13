@@ -195,7 +195,7 @@
    "name": "Jonathan Kreiss-Tomkins",
    "status": "領先",
    "flip": true,
-   "p": 0.997
+   "p": 0.9975
   },
   "AR": {
    "before": "R",
@@ -4750,10 +4750,10 @@
    "at": "2026-11-13"
   },
   "GA": {
-   "hash": "35a59a54b299",
-   "policy": "民主黨新任能源監管機構計劃對Georgia Power的資料中心天然氣擴張計畫進行審查與挑戰。",
-   "impact": "若新監管機構加強審查，偏向延長許可審批時程；居民訴訟可能進一步阻礙項目推進。",
-   "risk": "高",
+   "hash": "114cdaba791b",
+   "policy": "民主黨掌控能源監管機構，計劃對Georgia Power的資料中心天然氣擴張採取行動，社區限制資料中心政策趨嚴。",
+   "impact": "若新監管機構加強審查，偏向延長Microsoft、CoreWeave、SpaceXAI的電力審批時程；社區限制政策可能影響項目許可進度。",
+   "risk": "中",
    "links": [
     {
      "source": "Canary Media",
@@ -4768,9 +4768,9 @@
      "date": "2026-11-09"
     },
     {
-     "source": "Latin Times",
-     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeGZrN1pHMlJBbDV2YmtXakZFSk5PMFFjZ1Z2VDVrUm81VGVWTFNGcnI1MF9oMFEyYWFadlRkd3hBdmROU3B4WlF1TFJtbGJrb1d0cm9Wa09Dc29XMDMtNHJXcmh3U1VxMzVCU1BjZU14LWxDOVIzTGhYYUJ1ZEttcTh4RF9aRm5x?oc=5",
-     "title": "Georgia Residents Turn to RICO Law to Challenge a $20 Billion Data Center Deal Made Without Them",
+     "source": "95.5 WSB",
+     "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQNEVOVERmdkZzU00yU24xQWpkUktLLUp5SnVVZDRydE16cHhFV1VnWVJNZ2pjN2pLTGZOSXdhZHlXd2VVcVFsSnFycWhKZWRMeVVTOEtBRmZQMkc0dTE3WFR0WkxDR3FMUkRNWnY2R1doV2tqeU1YRUVTZS11YjhjaGZsX0dTM3M0LVgyZEpLZEpfWTNWWlFiZk5oT1dpcXJWb29PU01fUS02Q0lyWVhTdEJrZV8yb25oV1JpTDE3b0JFbmgwU25ha1NWbGZiRkZoaEJxRFlHZ9IB6wFBVV95cUxOcG9OU2F6dDRESFl6RERKMFhMM0NlNW5JNjZlbnRielFYcm45TDBMc21NN25qSzM0RDY1b2wtclFRcXN6TjFGMndSYlF2RVlNQ0NaZVVXUjc0TFI4YTNRVXdMaXdIb2RiT0tRbGctZHFOWnEzZDQycXY4MkJhMmZrcFc5RFA2YV80Q2Q0a2tDeDdGM0MtMVluakhGeUNWeFZibUJNUzMwang1VTJBa2haSVh6eGFNdHFTSTI5YWV3ejk2LUhDRW5GTjVtMHY5Ry1QVktjMlJpYUhSVllIaWllMjZDS3dQRHgwTEZj?oc=5",
+     "title": "As Georgia communities restrict data centers, one city considers lifting its ban",
      "date": "2026-11-12"
     }
    ],
@@ -5140,5 +5140,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-13 20:10（台北）"
+ "at": "2026-11-13 22:14（台北）"
 }

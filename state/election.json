@@ -123,15 +123,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9955
+    "p": 0.9965
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0045
+    "p": 0.0035
    },
-   "close": 0.49550000000000005,
-   "vol": 9122387.726642,
+   "close": 0.49650000000000005,
+   "vol": 9152804.471642,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -146,17 +146,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9955
+      "p": 0.9965
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0045
+      "p": 0.0035
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.1,
-     "vol": 9122387.726642,
+     "gap": 99.3,
+     "vol": 9152804.471642,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -232,7 +232,7 @@
      "lead": {
       "name": "Jonathan Kreiss-Tomkins",
       "party": "D",
-      "p": 0.997
+      "p": 0.9975
      },
      "other": {
       "name": "Bernadette Wilson",
@@ -241,7 +241,7 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.6,
+     "gap": 99.7,
      "vol": 1973697.3728520002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
@@ -342,7 +342,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.9825,
+    "p": 0.983,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
