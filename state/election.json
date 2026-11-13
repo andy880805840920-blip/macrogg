@@ -37,7 +37,6 @@
    0.905,
    0.905,
    0.905,
-   0.905,
    0.915,
    0.915,
    0.925,
@@ -60,7 +59,6 @@
   "d1": 0.2345,
   "closed": true,
   "hist": [
-   0.635,
    0.635,
    0.635,
    0.645,
@@ -130,10 +128,10 @@
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.003
+    "p": 0.0045
    },
    "close": 0.49550000000000005,
-   "vol": 9013259.428147,
+   "vol": 9122387.726642,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -153,12 +151,12 @@
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.003
+      "p": 0.0045
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.2,
-     "vol": 9013259.428147,
+     "gap": 99.1,
+     "vol": 9122387.726642,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -226,27 +224,6 @@
   },
   "governor": {
    "races": {
-    "Kansas": {
-     "kind": "governor",
-     "state_en": "Kansas",
-     "state": "堪薩斯",
-     "abbr": "KS",
-     "lead": {
-      "name": "Cindy Holscher",
-      "party": "D",
-      "p": 0.9995
-     },
-     "other": {
-      "name": "Ty Masterson",
-      "party": "R",
-      "p": 0.0005
-     },
-     "tier": "safe",
-     "tier_zh": "穩拿",
-     "gap": 99.9,
-     "vol": 882036.37758,
-     "url": "https://polymarket.com/event/kansas-governor-winner-2026"
-    },
     "Alaska": {
      "kind": "governor",
      "state_en": "Alaska",
@@ -255,17 +232,17 @@
      "lead": {
       "name": "Jonathan Kreiss-Tomkins",
       "party": "D",
-      "p": 0.9965
+      "p": 0.997
      },
      "other": {
       "name": "Bernadette Wilson",
       "party": "R",
-      "p": 0.0025
+      "p": 0.001
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.4,
-     "vol": 1967564.3928520002,
+     "gap": 99.6,
+     "vol": 1973697.3728520002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -292,13 +269,13 @@
    },
    "tally": {
     "lead": {
-     "D": 3,
+     "D": 2,
      "R": 0,
      "I": 0,
      "?": 0
     },
     "total": {
-     "D": 9,
+     "D": 8,
      "R": 8,
      "I": 0
     },
@@ -318,6 +295,7 @@
      "Idaho",
      "Illinois",
      "Iowa",
+     "Kansas",
      "Maine",
      "Maryland",
      "Massachusetts",
@@ -349,7 +327,7 @@
     },
     "n_up": 36
    },
-   "sentence": "照目前領先者全拿，民主黨 9 州 : 共和黨 8 州（改選前共和黨 27:23）；沒有勝負接近的州。"
+   "sentence": "照目前領先者全拿，共和黨 8 州 : 民主黨 8 州（改選前共和黨 27:23）；沒有勝負接近的州。"
   },
   "seats": {
    "senate": {
@@ -364,7 +342,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.9845,
+    "p": 0.9825,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },

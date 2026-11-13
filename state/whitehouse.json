@@ -1028,7 +1028,67 @@
   "p:h200_china:82dff21b74e6": "2026-11-12",
   "p:h200_china:3e44262636ae": "2026-11-12",
   "p:chip_232:3d1b18ccc9a0": "2026-11-12",
-  "p:dc_grid:88421b624ee8": "2026-11-11"
+  "p:dc_grid:88421b624ee8": "2026-11-11",
+  "2da6ec4e1ca2": "2026-11-13",
+  "a225e962cfd9": "2026-11-13",
+  "f10c47bca7a3": "2026-11-13",
+  "ad4533a28074": "2026-11-13",
+  "d79f8ba3c2a3": "2026-11-12",
+  "f9bd9a13c39a": "2026-11-12",
+  "dd17ec035c70": "2026-11-12",
+  "c494f42e502f": "2026-11-13",
+  "db46892d7a1d": "2026-11-13",
+  "b3b8c2f89895": "2026-11-13",
+  "e31dd6cbe50c": "2026-11-13",
+  "86f2231c683f": "2026-11-13",
+  "1786f0eb8398": "2026-11-13",
+  "88b174dbdd37": "2026-11-13",
+  "67ef568bc41a": "2026-11-13",
+  "746eb7ddc7ec": "2026-11-13",
+  "301f9a90fafe": "2026-11-13",
+  "d07d5836b082": "2026-11-13",
+  "1c6f3c7be7cb": "2026-11-13",
+  "1954c9dad3bc": "2026-11-13",
+  "c03c6ce2f124": "2026-11-12",
+  "4bdeb69e1af5": "2026-11-12",
+  "2000556df0db": "2026-11-12",
+  "709781e27555": "2026-11-12",
+  "d8054e8e7b63": "2026-11-12",
+  "3d1b18ccc9a0": "2026-11-12",
+  "e7a9546a3248": "2026-11-12",
+  "c0159cf14693": "2026-11-10",
+  "30ad175e7932": "2026-11-10",
+  "f591ddd608bb": "2026-11-06",
+  "p:fiscal_cr:5f61a2439f30": "2026-11-13",
+  "p:fiscal_cr:3a00077b29f5": "2026-11-12",
+  "p:fiscal_cr:fcbd6e3a14c2": "2026-11-12",
+  "p:debt_limit:0c4378727bad": "2026-11-13",
+  "p:debt_limit:de70c0aa68c1": "2026-11-12",
+  "p:fed_cook:5d37ba13fb61": "2026-11-10",
+  "p:fed_cook:a8221ed4b45b": "2026-11-12",
+  "p:fed_cook:0417a1c08df7": "2026-11-12",
+  "p:fed_cook:c6fbc6030bfa": "2026-11-12",
+  "p:fed_cook:78029d0a5543": "2026-11-10",
+  "p:fed_cook:78c89cfd330d": "2026-11-10",
+  "p:fed_cook:aa126a041d48": "2026-11-10",
+  "p:fed_cook:28828815b659": "2026-11-07",
+  "p:fed_cook:c731b1d83c93": "2026-11-06",
+  "p:h200_china:f77ccccaaec7": "2026-11-13",
+  "p:h200_china:6d98d7de5504": "2026-11-13",
+  "p:h200_china:e5964d49d0d4": "2026-11-13",
+  "p:h200_china:c7149e643bde": "2026-11-13",
+  "p:h200_china:26d36b3952af": "2026-11-13",
+  "p:h200_china:7611c236c2be": "2026-11-13",
+  "p:h200_china:b5d12c7ff8fa": "2026-11-13",
+  "p:h200_china:15217e4a5ee6": "2026-11-13",
+  "p:h200_china:5fbb675a1661": "2026-11-13",
+  "p:h200_china:7d7ae31627ae": "2026-11-13",
+  "p:chip_232:5f59a737792e": "2026-11-13",
+  "p:chip_232:67b83fd0db73": "2026-11-12",
+  "p:chip_232:30ad175e7932": "2026-11-10",
+  "p:us_china_truce:edf2482489b7": "2026-11-12",
+  "p:us_china_truce:74e19fc7fe78": "2026-11-11",
+  "p:us_china_truce:30ad175e7932": "2026-11-10"
  },
  "items": [
   {
@@ -1170,30 +1230,29 @@
    ]
   },
   "debt_limit": {
-   "date": "2026-11-12",
-   "note": "多則新聞指出 2027 年流動性危機風險升高，Goldman Sachs 警告銀行準備金接近臨界值，與政策預估 2027 年觸及舉債上限的時間點相符，可能加速進入「接近上限」階段。",
+   "date": "2026-11-13",
+   "note": "第一則新聞顯示 X 日期可能提前至 2027 年 12 月，比原預估的「2027 年才會觸及」更具體且更早。",
    "links": [
-    "https://news.google.com/rss/articles/CBMihwFBVV95cUxPMmNnczNTcVlrVGVObjJhMElOWVBXN25jeFdxeFRiZ0k0TU9pR1g0ZHMwSTRlRXIzcDc3UTBDWm9hSk52OXAxbHJLMFZfYzc5UGtwYThxblNsd2NEMW1TLUxjSUZEd0RJQXVhZjduOHp6M1FVWFRscmR1ZGFldFk1akxZZjlEYU0?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE9Ebk85cUJ3Y2w2QS02bGxnRTRQX05NblVYVk9MdlZHbDBSTjh4Y2xuckZCYWJlNV9iOUdxUVNFbUhzR3JSRXB6cE9EaDZRSHgzNURRaWpSNlJnb2p1QWRwN0hGM0t0VHNWZVZLZzdBbEZoTmdiN0E?oc=5",
-    "https://news.google.com/rss/articles/CBMizAFBVV95cUxNdlA4RksyeTVuY29uTUZUMTF6dEdVOFBTX1k4ZzU0bnE0QlY4dDRrLUJDZmpSQ1VNZTNSVlNIWDI2aUl0VHZZTkRkaXRGN3V0OTRDTW1YT1dyT1RrSk1QR1pCRXV6SVdlTm1udGFZYUhNOXBHbWQ5Y2Q1eDJfYjlXWm1VOGRpR2NJdW1nNXRWallNSGxkcHlVVDk5R2dLdW1kem5TVnhBQTJtM25SV1B2OEdfTlJHNnI5Rlp0LTRrSjZWckpVRXZvTXcyMlA?oc=5"
+    "https://news.google.com/rss/articles/CBMivAFBVV95cUxQcEZQcUVpM241N2gycnJEamMyd255eWxWM1hLYW5TY21JSW55bUJLOW54OHhpQU5SS3VsRm1Vb09UZ1czNmgzVUMzR056VjBvSG1oXzFjdkpkdlZTN0hJY1QxODFQclJqSGd1V0J5bjJfNXhWSDdEWWJOVVl0MWtlVVNHMGFrWWtWWllVR1czSU9YbnVxNGJvOWFyd3NndFh0ZFZEd3N1MU5qWVFacEdDLVZTZV9QX2t2bE5KWA?oc=5",
+    "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZ254YndibDhlRkZXZ3ZXa3pqOUxNSlZwN0FvbWJFN2dPQUt2LWNEMjkxRmU5ODFWazlBWW5IRkJLcmY3MHIyZDFSczBucjBXWmFhZ3lWejNLSHlNYWtyOEJMMVI5N2Jta2ZIVHdobFRGWUN3WG5rdV9FeXphWVFrT0M5dmo1cGcwYk9TcllXbUREbVItSWEtX3JZZw?oc=5"
    ]
   },
   "fed_cook": {
    "date": "2026-11-13",
-   "note": "11月6日《美國新聞與世界報導》報導指Cook的律師在白宮聽證會前尋求澄清，暗示白宮聽證會即將進行，政策可能進入下一階段。",
+   "note": "Rich Picks Daily報導白宮委員會將Cook聽證會延期至12月14日，下一步日期已確定。",
    "links": [
-    "https://news.google.com/rss/articles/CBMilgFBVV95cUxOVjFLZGFIUDNMVmpHMEFhTUNINWFsQmI5N2d5QnpOZU5mY1VFc3piY1l4SlNhUU9oVkt0VzdYMHJSc2tBcDFDQXBEYnBXYWE4RmNJUlRaWmp0X3Ffck9KT0hMb1J3MjdNWkM4Xzl3Rk9JZVBiUUVOSXdSdzZ3MUJTRXcwZV9nT3A2TXdIbnBKQ2tJMXhmcFE?oc=5",
-    "https://news.google.com/rss/articles/CBMinAJBVV95cUxPdURjVjhzQmc3Wmx4dUtnVmJybEtmT0hrVExxY3hieDBvT21tUWJGVkdydTdHM1Y1M0ZxLTNHZFZPa2ZPVWFmdzlqRnZNa1hLVjBGblYzcjNRTW0tYkk5X29PTVZ1VEdUUEZhU29pRDI3cHBxUkxHVTVoaldZeE0zMnMxLXRERFNJaUJrZzY2MjM2TjRjRE9XMW43TzJHT2hrT0IyNkpadmJVempWOW1HemJ0UnB1N3NablQ4OWE3ajl1aTRYVkVyWVVHREtxU0tveHBZWnBrTkhLOWNpZXlqelRSaVl4WldfQzlEMDJzUUM2WnZKeGJVWnBTVnZGelEzd0JrQ3JaZXNEUkFwNnpQLXFaM3dYUnBFV2xDNg?oc=5",
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxNVlBEaDNOZ3BtWkVfZFFmbk52SmtUaHhTRzRiQ0EwRVIwbmUyVTY3Nk1qMmMtbVdEMmp6RDJRc2xFRXcta2lMc3hKNlhocllXZVNKcmRjX0QxcFFFWXVzWjdGUnhNUEk3T2NsYnVtcEIxRkVSamE4MFItdXZLRnhZal9NN1ROMUpYbnpPak9PMklWTnBLWVR0NzR1MA?oc=5"
+    "https://news.google.com/rss/articles/CBMiigFBVV95cUxNVzhITTE0cHpMYlk2X2F6bEJ4YWttUk5pcnltYVZmUzZlSDRVMUxQdmEzYncyZlA3MTVaLUxaZTlHTmNHcHJqM05IYVB4a3p1U29tMDNFclhQellnS0VRaGRWRkpBdWIzU0ROYXVyQU1sd0hLc2JRVFBQVGNaaEJDMFB4VDRtUEY3UXfSAY8BQVVfeXFMTzhMSzN6aUpVT1FKNzdRUUxral85bFVWT0tsdzJZTlZWbm1nVkxpYWFJYkhMRGhLQzYwTjhWbDJWdWVYUlF3SDNicnpWYUFlWUdxTWVCYVY5N01TN2xjR3JaOVkyc2hCZFB6Z3d4YkNkdk9ITHZ2d28wbTNwbnVQZ0hRS3dxSHJwWHEya1J5ZVk?oc=5",
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxQemlpcnFNdkdraW1XTTNJR0N5M2lNUXdxaHBCZnpjTlRkRGZqaERjWGlKZjBYakhhUHRQQ3cxSHlkWEJrQWtkMTR1ODYtZjd3cy1XVkU3Q3pFNzF0ZXNoZThNc2V1Y0xMSWdJWGJOeDJrUFlGZ3ZoZ2p0ak9peUNHc21HcXZQNkpsOGJaNXJncHZ3d2xWbjJ0LTY5cVgzZXhKaWJCY2hSaF8xVUcwWFlSVG1sNUoydw?oc=5",
+    "https://news.google.com/rss/articles/CBMivwFBVV95cUxQVEdWWGdyWVJaamNlQnoyQ0ptMHI1dG10cWZFbmVGejVnSlBodC1iUmdTMnlnMVAtWDJaZDVQSmhEUnZJSnVLdkIwaUJiNVpUbW9zRC1TNFZzS1NhVk8zTHZQZ1hQSmdjdl8xRjNEQS1zSTdnWVpQTC1lRTJVTGhkSU1Ja0h4dnd2WHpjb0tXZFlldlRuUjV2X1V6UEFpNW1QV0s2Q2ZMZ0QwQXV0WHhDS3ZBMGUwWmRmT2NvbS1KYw?oc=5"
    ]
   },
   "h200_china": {
    "date": "2026-11-13",
-   "note": "Semafor報導國會推動更嚴格出口管制，可能加速「國會限制」階段的進展。",
+   "note": "Benzinga報導指中國解放軍關聯大學已購得H200晶片，且多家媒體報導現有出口管制形同虛設，顯示出貨階段存在執行漏洞，可能促使國會加速推進兩項限制法案審議。",
    "links": [
-    "https://news.google.com/rss/articles/CBMinwFBVV95cUxOTmhPaXl1VjJlNkdqV3VxOEtpcmpuQkxnTkptbXp6WlRJb25jU1dGV2JOdDhfQmprTFg2ekpNSS10XzBPNkR1ek9Lc2dId3FRMjJiRU9NMTR1bGYtbWsyeTU1SkVITDF0RUZqS3JoNEhvQUZxX04wdDBqb2FIOUVuM1lBYW9CaDhaWkMyelFIQWp1c2pzMXNTdTF1empWRlU?oc=5",
-    "https://news.google.com/rss/articles/CBMipgFBVV95cUxPLVQ0cmpERUt4NXh2WnlVM3p0S0R5RGFoQjM1aFFBeDNTVEFOZWs2alhIUlpFckpHNzRqeUpFY3kyaXBEYkViVFVjUVEzYmNBNGNGZ0lvUFo0eHZBUkVfS2NqSm1mRkdhWEx2OHBjdlM2X1NqLUlEN1liQ1pfTEdNQ0t1NE1xZkRyWkE2dHF6NFZqcTc3UzdpQS1BWWpLdjFhWHYtQk9R?oc=5",
-    "https://news.google.com/rss/articles/CBMihAFBVV95cUxNOThwNFI5clliRmFsWWUwVGZIVmt5b1JrMnZvdXVTZWdGRXJVN0ZrUWxrVlpTQ213WFRUaUZxUHI0akJMMFJnWXlOUVRvMHp5dG1vdFhQZWstYUNsc0R3OEQtVTNYcHpDYTZ6d2ZrcXREVlBWemdWM3otZHJqam9KRFBuenM?oc=5"
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxNLUhwY3JmMDlhMDZaamx2aFNSMmF3dnRvcmpiay05VzBiLTUwbFNLR2ZTazFyTzZVZ0VJLWpOMVRIemlNd3JXS0RlT0ZicFJIVUl6dkNYZ3p3ZndfY1J3dlR2U09pbmNBWTRCVEF3SDFwc0RNbVo0UzR6M0NsS2hrY0VWcHdISWtpZTMwcVoyM0w1RE5aVWxjSmJpaE9DX193WnczVkJPQzQyOUxl?oc=5",
+    "https://news.google.com/rss/articles/CBMivwFBVV95cUxPcndpb1o5MzBqYVRTdWhRV1YwMlVxNjhBVjNudlBhYWlZUkx2SEFpcDdaRTZMOU5rZjZpQVBaVGplUDhNTEdHcUlaVmdkakxtRlVrelVXd2FNOHM0V25qOWRmQkV4LXBKR1lqd3h6OFJfVmtwY1VkcThSYnZMU2RQU29UZ19pU1JsTWJ4TFc1SzNuTkFqT2VmQUVFemhhZHVZTDFXNTFLQl9JaXY2aUZXUXpzMHdVQkhFaFJRUzhMcw?oc=5",
+    "https://news.google.com/rss/articles/CBMikAFBVV95cUxOQ2pMWDA4Sl9yT1B2anJmMndlT3pCSnNTcFdQRGdza2kxOUc1MDVqRURoRDZoVDM1VEN0SmpMNGJFcFRqdHVjOFY5blNPVF8xQVZhOE0zdk84ZnlobGFGSVNsYlEzNkVDbDlNa3hEdk94NXJpbkdjR1hwU1p1bDBxcUxFeFcyWm15b2tSZHMxU1I?oc=5"
    ]
   },
   "dc_grid": {
@@ -1222,5 +1281,5 @@
    ]
   }
  },
- "at": "2026-11-13 07:10（台北）"
+ "at": "2026-11-13 20:11（台北）"
 }

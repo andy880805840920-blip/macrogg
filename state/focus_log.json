@@ -1,105 +1,5 @@
 [
  {
-  "at": "2026-11-02T14:08+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Inflation Talk Returns to Earnings Calls in Echo of 2022 Shock - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+1、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Alphabet Is Paying Up for Euro Bonds in Test of AI Appetite - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、外國-3、熱度+4",
-    "titles": [
-     "ECB flags AI valuations, bond stress and fund losses as main risks - Reuters"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+1、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Wall Street Braces for Biggest Treasury Sales Overhaul in Years - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+1",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、外國-3、熱度+3",
-    "titles": [
-     "Indian Bonds Rally as Oil Falls, Higher Yields Attract Buyers - Bloomberg"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 2,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Marvell to buy Lumentum in $115 billion deal in AI data-center bet - Reuters",
-     "Marvell to buy data centre component maker Lumentum in $115bn AI bet"
-    ]
-   }
-  ],
-  "main": "Inflation Talk Returns to Earnings Calls in Echo of 2022 Shock - Bloomberg",
-  "main_why": "最高分",
-  "second": "Chile Bond Investors Turn to Inflation-Linked Notes as Oil Soars - Bloomberg",
-  "points": 2,
-  "thin": [
-   "重點一",
-   "重點二"
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "主軸 157 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀",
-     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "主軸 122 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸只有 20 字，沒有把事情講完整（要 50–80 字）"
-    ]
-   ]
-  },
-  "result": "企業財報電話會議通膨討論升溫，呼應 2022 年衝擊"
- },
- {
   "at": "2026-11-03T00:07+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3028,5 +2928,106 @@
    ]
   },
   "result": "聯準會 2027 年 10 月會議不投票升降息，Warsh 設戰略討論時段"
+ },
+ {
+  "at": "2026-11-13T12:11+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "ppi",
+   "claims",
+   "auction_30y"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
+     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Treasury Yield Surge Shatters Hopes Worst of Bond Rout Is Over - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Japan Bonds Fall as Treasury Rout Extends on Fed-Hike Bets - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed's Williams says central bank has 'work to do' to get inflation back on target - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed’s Williams Says Inflation ‘Far Too High,’ Work to Do - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "US Treasury bought yen in July; Fed made no solo FX interventions in Q3 - Reuters"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Joly Is ‘Fed Up’ But There’s No Clear Solution for Stellantis Problem - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+3",
+    "titles": [
+     "Fed has time to calibrate rate hikes, Daly says - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
+   "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight"
+  ],
+  "main": "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Fed's Williams says central bank has 'work to do' to get inflation back on target - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 187 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】98 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 177 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "輝達執行長黃仁勳離職，股價盤後反彈，美債殖利率續升"
  }
 ]

@@ -1,30 +1,18 @@
 {
  "hash": "",
- "text": "聯準會 11/12 宣布 2027 年 10/26–27 會議將不投票決定利率，改為討論廣泛貨幣政策戰略議題，2027 年投票會議減為 7 次、年末會議改至 11 月。主席 Warsh 在 10 月會後記者會預告此變動，稱正確政策需定期評估近期發展，但同樣重要的是為智識多元的團隊保留時間進行戰略思考、聚焦長期問題。Warsh 批評聯準會過去溝通策略提供過多前瞻指引、限制決策彈性；他上任後已大幅縮短會後聲明。理事 Barr 指出 AI 投資推升 GDP 成長但也帶來通膨壓力，2026 年第三季美國經濟年化成長 3.4%、企業固定投資因 AI 資本支出大增，核心 CPI 仍高於目標；他並警告 AI 收益恐更多流向資本而非勞工、加劇財富不均。¶川普 11/12 在 Truth Social 發文表示「我們不需要與伊朗達成協議」，並稱「我們掌握了他們數千億美元的資金，也掌握了他們的海峽」，油價應聲上漲。11/12 布蘭特原油上漲 1.9% 至每桶 94.48 美元，西德州中級原油上漲 2% 至 88.19 美元。Real Macro 創辦人 Jeffrey Currie 指出，近期油價受中東大量供應壓抑，但高昂的保險與油輪費率使遠期油價維持高檔。\n白宮正在考慮撤換商務部長盧特尼克，原因涉及對輝達晶片出口管制政策的擔憂，知情人士於11/12透露此事。\n思科因人工智慧網路設備需求強勁而上調全年營收預測，該公司於11/12宣布這項決定，反映出企業在建設AI基礎設施上的持續投資。",
+ "text": "輝達 11/12 宣布執行長黃仁勳離職，股價盤中一度重挫，但盤後交易回升。美債殖利率持續走高，10 年期殖利率升至 5.10%。11/13 公布的 10 月 PPI 數據顯示生產者物價壓力仍存，整體與核心 PPI 月增幅均高於預期，反映通膨降溫速度放緩。市場持續關注聯準會升息路徑，目前定價 12/9 會議升息一碼機率達 84%。¶10 月 CPI 月增 0.4%、核心月增 0.3%，均高於預期，市場預期聯準會 12/9 會議將升息，CME FedWatch 顯示近 88% 交易員預期升息 1 碼（25 個基點）、其餘預期升息 2 碼。芝加哥聯邦準備銀行總裁古斯比 11/12 受訪稱通膨數據「近乎令人不安」；理事沃勒同日表示若核心 CPI 在 0.3% 左右，他傾向支持 12 月升息 2 碼。\n財政部長貝森特11/12表示，終止「稅收花招」是縮減美國赤字的一個選項，暗示政府考慮改革現有稅收優惠政策以增加財政收入。\n貝森特11/12將美國對法國冰箱的批評與中國人工智慧模型掛鉤，涉及貿易政策與科技競爭的複雜關係。",
  "links": [
   {
-   "title": "Fed’s Daly Says More Rate Hikes Needed to Cool Inflation",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQVjJpUnJYdWk0dzZkcGp0cG54WTc3Sk84VWtmdmpCNGl1Z1pXZm1rYmowRnU4d2NSWmNXUFgtUFdQZDZ6SWswZDFsanZrODFEb1hfSWM3YTA3OC1qa09ZaTZkQXVGUW8xTmRKRnRURW04dWpPR0xxMXZURUNJVXdXdmRCNi1VeTBTRG0tZmN5cVVsVGZ3Mml2am8weXMxLWthNXVKY2Q2UDZhd2lZaXFlaURuaFU?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-11-12T19:36:07+00:00"
+   "title": "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
+   "link": "https://finance.yahoo.com/m/4a3dff17-3e8e-33ca-823f-8ac12eff6a4a/dow-jones-futures-rise%2C.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-11-13T11:59:13+00:00"
   },
   {
-   "title": "In a policy switch, the Fed says its October 2027 meeting will not see a vote on interest rates",
-   "link": "https://www.cnbc.com/2026/11/12/in-policy-switch-fed-says-its-october-2027-meeting-will-not-see-a-vote-on-interest-rates.html",
+   "title": "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight",
+   "link": "https://www.cnbc.com/2026/11/13/us-inflation-outlook-federal-reserve-rate-hike.html",
    "source": "CNBC",
-   "at": "2026-11-12T19:05:25+00:00"
-  },
-  {
-   "title": "聯準會：AI 投資推升經濟成長 恐加劇美國財富不均",
-   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83-ai-%E6%8A%95%E8%B3%87%E6%8E%A8%E5%8D%87%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7-%E6%81%90%E5%8A%A0%E5%8A%87%E7%BE%8E%E5%9C%8B%E8%B2%A1%E5%AF%8C%E4%B8%8D%E5%9D%87-230007828.html",
-   "source": "Yahoo奇摩股市",
-   "at": "2026-11-12T23:00:07+00:00"
-  },
-  {
-   "title": "Oil prices rise after Trump says no Iran deal needed: 'We've got their Strait'",
-   "link": "https://www.cnbc.com/2026/11/12/oil-prices-jump-after-trump-says-no-iran-deal-needed-weve-got-their-strait.html",
-   "source": "CNBC",
-   "at": "2026-11-12T19:04:21+00:00"
+   "at": "2026-11-13T11:31:10+00:00"
   }
  ],
  "fedwatch": {
@@ -285,73 +273,85 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-12T23:11:00.494991+00:00",
+ "at": "2026-11-13T12:11:06.461728+00:00",
  "layout": "main",
  "topics": {
-  "hash": "a493a8ed9bfecc4b",
+  "hash": "6b0e1349cb352048",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "美元指數飆升至19個月新高，市場押注聯準會12月升息機率高，加上通膨數據超預期，克里夫蘭聯邦準備銀行總裁哈麥克表示貨幣政策需變得更具限制性，並警告能源成本上升正傳導至其他物價",
+    "text": "Warsh 宣布 2027 年 10 月 FOMC 會議取消升息投票，改為討論長期貨幣政策戰略，以減少聯準會對市場的影響足跡；他批評前任過度提供政策指引，導致決策受限",
     "links": [
      {
-      "title": "美元指數飆上19個月新高 聯準會鷹派預期壓抑商品與主要貨幣",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%85%83%E6%8C%87%E6%95%B8%E9%A3%86%E4%B8%8A19%E5%80%8B%E6%9C%88%E6%96%B0%E9%AB%98-%E8%81%AF%E6%BA%96%E6%9C%83%E9%B7%B9%E6%B4%BE%E9%A0%90%E6%9C%9F%E5%A3%93%E6%8A%91%E5%95%86%E5%93%81%E8%88%87%E4%B8%BB%E8%A6%81%E8%B2%A8%E5%B9%A3-225717303.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-12T22:57:17+00:00"
+      "title": "Fed Drops October 2027 FOMC Rate Meeting",
+      "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPM3pjbllRaGZoZ1ZQRUpIamFGd3Qwd1hETmRlNWxNd0s0Sm1GNXBPSzdNV2lqTjk1QjVvcmdTSjd4UFpTRXdpVXJsRDV5Nmc0Ymh5b3lXemxTYzBRMEVLeEQzcFkwS1lnelg2NVFueWE3SU1HVnp1NWZnMlhfNkIyc2xZbWxRVnVwblRVZG51MTB1YXo1c19QQ2FRZURYbHZHRmJYT3FaOWE1SmtQSElUQWs1SGJOdWdQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-12T19:27:38+00:00"
+     },
+     {
+      "title": "In a policy switch, the Fed says its October 2027 meeting will not see a vote on interest rates",
+      "link": "https://www.cnbc.com/2026/11/12/in-policy-switch-fed-says-its-october-2027-meeting-will-not-see-a-vote-on-interest-rates.html",
+      "source": "CNBC",
+      "at": "2026-11-12T19:05:25+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美債殖利率走高，10年期公債殖利率突破5.1%，主要受聯準會鷹派升息預期與通膨數據超預期影響；克里夫蘭聯準銀行總裁哈麥克表示貨幣政策需變得更具限制性，能源成本上升正傳導至其他物價",
+    "text": "美債殖利率持續攀升，10年期與2年期殖利率均突破關鍵水位，美元指數接近19個月高點。市場預期聯準會12/9升息機率高企，推動長天期債券賣壓擴大，投資人對債市最壞情況已過的期待落空",
     "links": [
      {
-      "title": "Weak Demand at 30-Year Treasury Auction Sends 10-Year Yield Above 5.10%",
-      "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5VNk5ORlg0UUxpZFNJallnRFpEaU5ZRF9WZ1poMmlNWWxpSk0wWHJLSXFmVHd3eFdTa05wcVh3VWkwQ19HQVFtd2ZUcFkwMW42ZzYtWlNBZXFXQQ?oc=5",
-      "source": "www.tokenpost",
-      "at": "2026-11-12T21:19:47+00:00"
+      "title": "Treasury Yield Surge Shatters Hopes Worst of Bond Rout Is Over",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQWjhkdkdUYk85b1djY25EQk9aY3VBUmdlZGVpS251di03VTMzaDRvVHIzbEZBcjZSSlNvMDNXdXFNX3A0QTB6TFBXRndSdFFyNXBwMXRtRmZIcVJySzVXaEZDQ25HN0ZDOGZtbkpibUZ3UDZPUWpiVWVLMU1hVzk3X3JwQ2NxVXo3WkVWMnhqandnNUg0UjlnUUNSTkUwYjFLd3ZBeEFBel9yT2h5WVRObU0zYw?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-13T09:26:25+00:00"
+     },
+     {
+      "title": "That Haven Trade in Treasury Bonds Didn’t Last Long",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQOXh3Z2dMMVdNUmZqRkR1ZnA3YWM4LVU4M2RKS2J2OFE5TXRxYTlpT0RMemZzN01XSVJzOVV3TWJJRmNtbUZ0RWQzRURwNzFwODVpcEh1WVFHWFU2dHhRM3o0eGU4WGFFY0JnMVJacG1oQklDelBBZ2xhaUpzX0g2aWFTRE8yaHhULWpzSEotZUFFSEdUeWVPalBlTlVxXzhMVjB0YlFVZmdUR0NNajlnVzJGUHVpWnJRRHhFSV9hRHNOYmhf?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-13T10:55:09+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "中東局勢升溫推升油價，沙烏地阿拉伯能源設施遭胡塞武裝攻擊、荷莫茲海峽航運受阻，布蘭特原油上漲2.63%至95.20美元、西德州中級原油上漲1.92%至88.19美元；儘管川普表示不需與伊朗達成協議曾一度壓低油價，但中東供應風險升高最終推升收盤價",
+    "text": "布蘭特原油收在95.82美元/桶、漲幅3.3%，西德州輕油收88.74美元/桶、漲幅2.6%。川普11/12在社群媒體表示無需與伊朗達成協議，聲稱美國已凍結伊朗資產並控制霍爾木茲海峽，扭轉先前市場對伊朗衝突緩和的預期",
     "links": [
      {
-      "title": "〈能源盤後〉沙國能源設施遇襲、荷莫茲海峽航運受阻 油價反彈逾2美元",
-      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E6%B2%99%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%E9%81%87%E8%A5%B2-%E8%8D%B7%E8%8E%AB%E8%8C%B2%E6%B5%B7%E5%B3%BD%E8%88%AA%E9%81%8B%E5%8F%97%E9%98%BB-%E6%B2%B9%E5%83%B9%E5%8F%8D%E5%BD%88%E9%80%BE2%E7%BE%8E%E5%85%83-204152718.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-12T20:41:52+00:00"
+      "title": "Oil prices rise after Trump says no Iran deal needed: 'We've got their Strait'",
+      "link": "https://www.cnbc.com/2026/11/12/oil-prices-jump-after-trump-says-no-iran-deal-needed-weve-got-their-strait.html",
+      "source": "CNBC",
+      "at": "2026-11-13T00:01:19+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "輝達執行長黃仁勳因婚外情風波宣布辭職，由財務長克瑞斯暫代，輝達股價收跌4.3%，拖累美股三大指數全面下跌，道瓊跌0.36%、標普500跌0.35%、那斯達克跌0.39%",
+    "text": "美股期貨小幅波動，納斯達克100期貨跌0.3%、標普500期貨跌0.1%。輝達執行長黃仁勳離職後股價11/12盤中跌超4%，引發市場對AI產業前景的疑慮，惟股票隨後回升，下週公司將公布季度財報",
     "links": [
      {
-      "title": "Stock market today: Dow, S&P 500, Nasdaq slip as Nvidia stock falls on CEO exit, bond yields rise",
-      "link": "https://finance.yahoo.com/markets/live/stock-market-today-sp-500-nasdaq-fall-as-nvidia-ceo-exit-rising-bond-yields-roil-markets-195710154.html?.tsrc=rss",
+      "title": "US Stock Futures Edge Lower as Nvidia Leadership Changes Offset Cisco and Applied Materials Forecasts: Dow Jones, S&P, Nasdaq, Wall Street",
+      "link": "https://investorshub.advfn.com/market-news/article/39930/us-stock-futures-edge-lower-as-nvidia-leadership-changes-offset-cisco-and-applied-materials-forecasts-dow-jones-sp-nasdaq-wall-street?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-11-12T11:00:27+00:00"
+      "at": "2026-11-13T09:54:55+00:00"
      },
      {
-      "title": "黃仁勳辭職輝達下挫逾4％！美股4大指數收黑　道瓊跌189點",
-      "link": "https://tw.news.yahoo.com/%E9%BB%83%E4%BB%81%E5%8B%B3%E8%BE%AD%E8%81%B7%E8%BC%9D%E9%81%94%E4%B8%8B%E6%8C%AB%E9%80%BE4-%E7%BE%8E%E8%82%A14%E5%A4%A7%E6%8C%87%E6%95%B8%E6%94%B6%E9%BB%91-%E9%81%93%E7%93%8A%E8%B7%8C189%E9%BB%9E-220600148.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-12T22:06:00+08:00"
+      "title": "Stock market today: Dow, S&P 500, Nasdaq futures edge higher as Nvidia tumult deepens",
+      "link": "https://finance.yahoo.com/markets/live/stock-market-today-friday-november-13-dow-sp-500-nasdaq-nvidia-110151154.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-13T11:01:51+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達領導層危機引發市場對AI產業風險的重新評估，聯準會與金融監管機構密切關注輝達作為「AI中央銀行」的角色，若輝達出現重大問題恐對全球金融系統造成廣泛影響；輝達已向數百家企業做出數千億美元的財務承諾支持AI產業發展",
+    "text": "輝達作為「AI 央行」已向其他公司做出數千億美元金融承諾支持產業發展，聯準會與金融機構密切監控 AI 投資以防系統風險；前 FDIC 主席貝爾表示輝達若出問題將是「相當重大事件」，但不至於引發 2008 年金融危機",
     "links": [
      {
       "title": "Analysis: Nvidia’s leadership crisis tests the chipmaker’s role as the ‘central bank of AI’",
@@ -364,55 +364,70 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤受輝達風波衝擊一度暴跌逾700點，但隨美股開盤後快速拉升，終場上漲548點至43,676點、漲幅1.27%；台積電期貨盤後上漲11點，顯示市場對台灣半導體供應鏈的信心仍存",
+    "text": "台股11/13漲583點至43675點，三大法人同步買超439.65億元，外資終結連11日賣超轉為買超288.36億元。群創公布Q3稅後淨利78.58億元創七季新高，基本每股盈餘0.96元",
     "links": [
      {
-      "title": "黃仁勳閃辭掀巨浪！台指期夜盤暴跌700點後V轉　終場上漲548點",
-      "link": "https://tw.stock.yahoo.com/news/%E9%BB%83%E4%BB%81%E5%8B%B3%E9%96%83%E8%BE%AD%E6%8E%80%E5%B7%A8%E6%B5%AA-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C700%E9%BB%9E%E5%BE%8Cv%E8%BD%89-%E7%B5%82%E5%A0%B4%E4%B8%8A%E6%BC%B2548%E9%BB%9E-222921428.html",
+      "title": "台股本週漲幅逾1成　上市公司總市值增近13兆元",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%9C%AC%E9%80%B1%E6%BC%B2%E5%B9%85%E9%80%BE1%E6%88%90-%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E7%B8%BD%E5%B8%82%E5%80%BC%E5%A2%9E%E8%BF%9113%E5%85%86%E5%85%83-111302744.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-12T22:29:21+08:00"
+      "at": "2026-11-13T11:13:02+08:00"
+     },
+     {
+      "title": "台股回神籌碼回補　群創Q3營收看過來",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%9B%9E%E7%A5%9E%E7%B1%8C%E7%A2%BC%E5%9B%9E%E8%A3%9C-%E7%BE%A4%E5%89%B5q3%E7%87%9F%E6%94%B6%E7%9C%8B%E9%81%8E%E4%BE%86-110500533.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-13T11:05:00+08:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金 11/13 反彈至每盎司 3915.31 美元，但週線仍下跌 3.5%；聯準會官員升息言論與美債殖利率上升打壓金價，因黃金不產生利息收益",
+    "links": [
+     {
+      "title": "Gold Holds Drop to Near One-Year Low as Rate-Hike Bets Increase",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOT3F2NGZ0c25jVUdYLU1WVFUydUJtUHQwWm9uTHlQbG10SHFHLUpZUndrUzZNR2ZwRFBqMUdKNDQ4NmlnY0dDS2hjR3hkenpsZlo1Q3Q2Q21pV3c4dDRFNmdSTnJPejNNR191a1RxVFd5dDNIYkhrb20wcWRRREFCTHFlOXJ1cXZGRlFLRC0ybWNyS0sxODJoWTBBVlFCZDM3S0tSdm9BREUzSVZnQzRiOXc5OXY?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-13T08:36:49+00:00"
+     },
+     {
+      "title": "Gold Recovers Above $3,900 After 13-Month Low as Fed Rate Expectations Weigh on Weekly Performance",
+      "link": "https://investorshub.advfn.com/market-news/article/39936/gold-recovers-above-3900-after-13-month-low-as-fed-rate-expectations-weigh-on-weekly-performance?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-13T10:08:22+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數飆升至19個月新高，加幣兌美元跌至19個月低點1.4331，歐元兌美元跌破1.1110支撐位，美元兌日圓試圖站穩160.00–160.50阻力位；美國與加拿大10年期公債殖利率差距擴大至1.32個百分點，吸引資金流向美國資產",
+    "text": "新台幣升值4.4分至32.845元兌美元，創19個月新低。美元指數仍接近19個月高點，但台幣隨著美債殖利率走高與外資態度轉向，出現升值走勢",
     "links": [
      {
-      "title": "美元指數飆上19個月新高 聯準會鷹派預期壓抑商品與主要貨幣",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%85%83%E6%8C%87%E6%95%B8%E9%A3%86%E4%B8%8A19%E5%80%8B%E6%9C%88%E6%96%B0%E9%AB%98-%E8%81%AF%E6%BA%96%E6%9C%83%E9%B7%B9%E6%B4%BE%E9%A0%90%E6%9C%9F%E5%A3%93%E6%8A%91%E5%95%86%E5%93%81%E8%88%87%E4%B8%BB%E8%A6%81%E8%B2%A8%E5%B9%A3-225717303.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-12T22:57:17+00:00"
+      "title": "《新台幣匯率》今日美元兌新台幣最低為32.827元",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOdlhpd2pjb29EU3NTVll0eWZZMVNQS19yUGRCUURsV2xIWDRDWldfV1Joc1VxOWJPeGVjVW5CR3R6bUJyZzh1SlhmWU5TZC0tLWt0NUczaFp3N2tJbUtZd2drcXM2RjZmeEl4WTFOYXA4Mi1SUGJpci03NjdVNW16MEYxSmd4eUlC?oc=5",
+      "source": "富聯網",
+      "at": "2026-11-13T08:09:00+00:00"
      },
      {
-      "title": "美元強彈、新台幣貶勢再起！尾盤收32.889元 創下19個月新低 | 太報",
-      "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBSVC0tOVR0V0k4UHJvS1V3a29laG1WcWtGNll6SVA3MHE0bmhVN1UxRjhWS3pvTDNOb3NnY0JjbElPblg3ZmJjWmdTOWJWR3EyekdZeFlB?oc=5",
-      "source": "LINE TODAY",
-      "at": "2026-11-12T11:54:27+00:00"
+      "title": "《國內匯市》14:15，新台幣兌美元為32.845元，升值4.4分",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPTEhVVzR5c0JUczNSbnlLVnpEeFBlSlA3NkNNWHBkcnE3Y29vY05oRThTNmxRS2hJTzVmMUp0Qjc5cFk0MXVsY3J3TTFXZHh2a28wSEpyNkRkYTgxY1RyVWhoSmZuMUxSRkt6OXZNN0FfUFlJRUpzaTV5dUdVWlBtek5zWWRaVzVL?oc=5",
+      "source": "富聯網",
+      "at": "2026-11-13T06:22:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-12T23:12:02.787969+00:00"
+  "at": "2026-11-13T12:11:53.970592+00:00"
  },
  "main_source_titles": [
-  "Fed’s Daly Says More Rate Hikes Needed to Cool Inflation",
-  "In a policy switch, the Fed says its October 2027 meeting will not see a vote on interest rates",
-  "聯準會：AI 投資推升經濟成長 恐加劇美國財富不均",
-  "Oil prices rise after Trump says no Iran deal needed: 'We've got their Strait'"
+  "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
+  "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight"
  ],
- "headline": "聯準會 2027 年 10 月會議不投票升降息，Warsh 設戰略討論時段",
- "rate_note": "Warsh 減少會議投票次數、批評過度前瞻指引，偏向壓低市場對政策路徑的預期、減少短端利率波動；Barr 指 AI 推升通膨則偏向推升升息預期。10 年期 11/12 收盤 +10bp 至 5.10%，市場已在反映通膨壓力。",
+ "headline": "輝達執行長黃仁勳離職，股價盤後反彈，美債殖利率續升",
+ "rate_note": "PPI 高於預期顯示通膨壓力未消，偏向推升長端利率與升息預期，支撐聯準會繼續升息；10 年期 11/12 收盤 +10bp 至 5.10%，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "輝達財報疑慮引發避險需求，長天期美債上漲",
-   "titles": [
-    "Long-Dated US Treasuries Rise as Nvidia Woes Revive Haven Demand",
-    "Wall Street Just Called the Fed’s October Hold a Mistake. Here’s Warren Buffett’s 9-Word Rule From the Last Time the Fed Doubled Rates, and What It Does for $1 Million in an Index Fund"
-   ],
-   "at": "2026-11-12T12:15:38.210711+00:00"
-  },
   {
    "headline": "川普威脅對墨西哥加倍關稅，若不阻止移民潮將提高至雙倍稅率",
    "titles": [
@@ -431,40 +446,36 @@
     "Oil prices rise after Trump says no Iran deal needed: 'We've got their Strait'"
    ],
    "at": "2026-11-12T23:11:00.494991+00:00"
+  },
+  {
+   "headline": "輝達執行長黃仁勳離職，股價盤後反彈，美債殖利率續升",
+   "titles": [
+    "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
+    "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight"
+   ],
+   "at": "2026-11-13T12:11:06.461728+00:00"
   }
  ],
  "archive": {
   "2026-11-13": {
-   "headline": "聯準會 2027 年 10 月會議不投票升降息，Warsh 設戰略討論時段",
-   "text": "聯準會 11/12 宣布 2027 年 10/26–27 會議將不投票決定利率，改為討論廣泛貨幣政策戰略議題，2027 年投票會議減為 7 次、年末會議改至 11 月。主席 Warsh 在 10 月會後記者會預告此變動，稱正確政策需定期評估近期發展，但同樣重要的是為智識多元的團隊保留時間進行戰略思考、聚焦長期問題。Warsh 批評聯準會過去溝通策略提供過多前瞻指引、限制決策彈性；他上任後已大幅縮短會後聲明。理事 Barr 指出 AI 投資推升 GDP 成長但也帶來通膨壓力，2026 年第三季美國經濟年化成長 3.4%、企業固定投資因 AI 資本支出大增，核心 CPI 仍高於目標；他並警告 AI 收益恐更多流向資本而非勞工、加劇財富不均。¶川普 11/12 在 Truth Social 發文表示「我們不需要與伊朗達成協議」，並稱「我們掌握了他們數千億美元的資金，也掌握了他們的海峽」，油價應聲上漲。11/12 布蘭特原油上漲 1.9% 至每桶 94.48 美元，西德州中級原油上漲 2% 至 88.19 美元。Real Macro 創辦人 Jeffrey Currie 指出，近期油價受中東大量供應壓抑，但高昂的保險與油輪費率使遠期油價維持高檔。\n白宮正在考慮撤換商務部長盧特尼克，原因涉及對輝達晶片出口管制政策的擔憂，知情人士於11/12透露此事。\n思科因人工智慧網路設備需求強勁而上調全年營收預測，該公司於11/12宣布這項決定，反映出企業在建設AI基礎設施上的持續投資。",
-   "rate_note": "Warsh 減少會議投票次數、批評過度前瞻指引，偏向壓低市場對政策路徑的預期、減少短端利率波動；Barr 指 AI 推升通膨則偏向推升升息預期。10 年期 11/12 收盤 +10bp 至 5.10%，市場已在反映通膨壓力。",
+   "headline": "輝達執行長黃仁勳離職，股價盤後反彈，美債殖利率續升",
+   "text": "輝達 11/12 宣布執行長黃仁勳離職，股價盤中一度重挫，但盤後交易回升。美債殖利率持續走高，10 年期殖利率升至 5.10%。11/13 公布的 10 月 PPI 數據顯示生產者物價壓力仍存，整體與核心 PPI 月增幅均高於預期，反映通膨降溫速度放緩。市場持續關注聯準會升息路徑，目前定價 12/9 會議升息一碼機率達 84%。¶10 月 CPI 月增 0.4%、核心月增 0.3%，均高於預期，市場預期聯準會 12/9 會議將升息，CME FedWatch 顯示近 88% 交易員預期升息 1 碼（25 個基點）、其餘預期升息 2 碼。芝加哥聯邦準備銀行總裁古斯比 11/12 受訪稱通膨數據「近乎令人不安」；理事沃勒同日表示若核心 CPI 在 0.3% 左右，他傾向支持 12 月升息 2 碼。\n財政部長貝森特11/12表示，終止「稅收花招」是縮減美國赤字的一個選項，暗示政府考慮改革現有稅收優惠政策以增加財政收入。\n貝森特11/12將美國對法國冰箱的批評與中國人工智慧模型掛鉤，涉及貿易政策與科技競爭的複雜關係。",
+   "rate_note": "PPI 高於預期顯示通膨壓力未消，偏向推升長端利率與升息預期，支撐聯準會繼續升息；10 年期 11/12 收盤 +10bp 至 5.10%，市場已在反映。",
    "links": [
     {
-     "title": "Fed’s Daly Says More Rate Hikes Needed to Cool Inflation",
-     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQVjJpUnJYdWk0dzZkcGp0cG54WTc3Sk84VWtmdmpCNGl1Z1pXZm1rYmowRnU4d2NSWmNXUFgtUFdQZDZ6SWswZDFsanZrODFEb1hfSWM3YTA3OC1qa09ZaTZkQXVGUW8xTmRKRnRURW04dWpPR0xxMXZURUNJVXdXdmRCNi1VeTBTRG0tZmN5cVVsVGZ3Mml2am8weXMxLWthNXVKY2Q2UDZhd2lZaXFlaURuaFU?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-11-12T19:36:07+00:00"
+     "title": "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
+     "link": "https://finance.yahoo.com/m/4a3dff17-3e8e-33ca-823f-8ac12eff6a4a/dow-jones-futures-rise%2C.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-11-13T11:59:13+00:00"
     },
     {
-     "title": "In a policy switch, the Fed says its October 2027 meeting will not see a vote on interest rates",
-     "link": "https://www.cnbc.com/2026/11/12/in-policy-switch-fed-says-its-october-2027-meeting-will-not-see-a-vote-on-interest-rates.html",
+     "title": "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight",
+     "link": "https://www.cnbc.com/2026/11/13/us-inflation-outlook-federal-reserve-rate-hike.html",
      "source": "CNBC",
-     "at": "2026-11-12T19:05:25+00:00"
-    },
-    {
-     "title": "聯準會：AI 投資推升經濟成長 恐加劇美國財富不均",
-     "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83-ai-%E6%8A%95%E8%B3%87%E6%8E%A8%E5%8D%87%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7-%E6%81%90%E5%8A%A0%E5%8A%87%E7%BE%8E%E5%9C%8B%E8%B2%A1%E5%AF%8C%E4%B8%8D%E5%9D%87-230007828.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-11-12T23:00:07+00:00"
-    },
-    {
-     "title": "Oil prices rise after Trump says no Iran deal needed: 'We've got their Strait'",
-     "link": "https://www.cnbc.com/2026/11/12/oil-prices-jump-after-trump-says-no-iran-deal-needed-weve-got-their-strait.html",
-     "source": "CNBC",
-     "at": "2026-11-12T19:04:21+00:00"
+     "at": "2026-11-13T11:31:10+00:00"
     }
    ],
-   "at": "2026-11-12T23:11:00.494991+00:00",
+   "at": "2026-11-13T12:11:06.461728+00:00",
    "weekly": false,
    "points": 2
   },
