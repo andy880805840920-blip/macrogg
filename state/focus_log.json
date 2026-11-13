@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-11-03T12:09+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "jolts"
-  ],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "Stocks, Bonds Rise as Oil Tumbles on US-Iran Hopes: Markets Wrap - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.5,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+0.5、熱度+4（有內文）",
-    "titles": [
-     "US Treasuries Trade in Narrow Range as Oil Prices Recover Ahead of Midterm Elections: Commerzbank"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、熱度+4（有內文）",
-    "titles": [
-     "為擋全台通膨中油負債比已破9成   多單位喊話：別讓政策成本拖垮公司"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "Treasury Yields Extend Past Month’s Slide as Oil Prices Tumble - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "US Treasury cuts fourth-quarter borrowing estimate to $618 billion - Reuters"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "Trump Fed nominee faces bi-partisan doubters - Reuters"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、外國-3、熱度+4",
-    "titles": [
-     "Swiss Inflation Accelerates to Highest in Almost Three Years - Bloomberg"
-    ]
-   }
-  ],
-  "background": [
-   "US Treasuries Trade in Narrow Range as Oil Prices Recover Ahead of Midterm Elections: Commerzbank",
-   "Tech Jumps Over Apple Q3 Report on Wall Street Pre-Bell; Asia, Europe Off"
-  ],
-  "main": "Stocks, Bonds Rise as Oil Tumbles on US-Iran Hopes: Markets Wrap - Bloomberg",
-  "main_why": "最高分",
-  "second": "為擋全台通膨中油負債比已破9成   多單位喊話：別讓政策成本拖垮公司",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 160 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "【對利率】新聞意涵和今日走勢（10 年期 -3bp）方向不同，卻沒有點出落差（要寫出實際變動，並說明市場還沒反映或反向）",
-     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 206 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ],
-    [
-     "主軸 158 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "美債窄幅震盪，油價回升與美元走強牽制債市"
- },
- {
   "at": "2026-11-03T17:35+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -3026,5 +2922,113 @@
    ]
   },
   "result": "10 月 PPI 月增 0.2%、年增 2.4%，核心月增 0.3%、年增 3.1%"
+ },
+ {
+  "at": "2026-11-13T23:15+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "ppi"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed Sees Risks Tied to Elevated Asset Prices Partly Driven by AI - Bloomberg"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed on Track to Raise Interest Rates Next Month And Maybe Again in January - Bloomberg"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Collins Says Higher Rates Are Appropriate ‘Soon’ - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bessent, Fed's Goolsbee divided on role of energy shock in inflation - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Logan Calls For Clearer Separation of Market Operations - Bloomberg"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bessent Says Treasury Favored Megaspeed on Trade Blacklist - Bloomberg"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "US Treasury's Bessent says he is optimistic on trade deals with Canada, Mexico - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Goolsbee Says Fed Must Reestablish Its Inflation Credibility - Bloomberg"
+    ]
+   }
+  ],
+  "background": [
+   "Chicago Fed's Goolsbee says central bank 'has definitely got work to do' on inflation",
+   "通膨升息預期疊加科技股重挫 以太幣跌破2,000美元大關",
+   "Bessent blames Lutnick’s Commerce as he slams Nvidia chip ‘leakage’ to China"
+  ],
+  "main": "Fed Sees Risks Tied to Elevated Asset Prices Partly Driven by AI - Bloomberg",
+  "main_why": "最高分",
+  "second": "Bessent Says Treasury Favored Megaspeed on Trade Blacklist - Bloomberg",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 185 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】96 字，超過 90 字，請精簡",
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實",
+     "用了相對時間（今日、本週），請改寫成月/日"
+    ],
+    [
+     "主軸 161 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 221 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "正文寫了媒體名稱（CNBC），來源會列在下方，直接寫事實",
+     "用了相對時間（上週），請改寫成月/日"
+    ],
+    [
+     "主軸 190 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "芝加哥聯儲總裁古斯比：通膨持續偏離目標，聯準會須採取行動"
  }
 ]

@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -10,
- "date": "2026-11-13",
+ "days_to": -11,
+ "date": "2026-11-14",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -123,15 +123,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9965
+    "p": 0.9945
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
     "p": 0.0035
    },
-   "close": 0.49650000000000005,
-   "vol": 9152804.471642,
+   "close": 0.49450000000000005,
+   "vol": 9182611.020222,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -146,7 +146,7 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9965
+      "p": 0.9945
      },
      "other": {
       "name": "Dan Sullivan",
@@ -155,8 +155,8 @@
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.3,
-     "vol": 9152804.471642,
+     "gap": 99.1,
+     "vol": 9182611.020222,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -242,7 +242,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.7,
-     "vol": 1973697.3728520002,
+     "vol": 1973797.3728520002,
      "url": "https://polymarket.com/event/alaska-governor-election-winner"
     },
     "California": {
@@ -342,7 +342,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.983,
+    "p": 0.996,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
