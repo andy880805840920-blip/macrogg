@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -11,
- "date": "2026-11-14",
+ "days_to": -12,
+ "date": "2026-11-15",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -36,7 +36,6 @@
    0.905,
    0.905,
    0.905,
-   0.905,
    0.915,
    0.915,
    0.925,
@@ -59,7 +58,6 @@
   "d1": 0.2345,
   "closed": true,
   "hist": [
-   0.635,
    0.635,
    0.645,
    0.645,
@@ -123,15 +121,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.9945
+    "p": 0.998
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0035
+    "p": 0.001
    },
-   "close": 0.49450000000000005,
-   "vol": 9182611.020222,
+   "close": 0.498,
+   "vol": 9583803.100377,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -146,17 +144,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.9945
+      "p": 0.998
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0035
+      "p": 0.001
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.1,
-     "vol": 9182611.020222,
+     "gap": 99.7,
+     "vol": 9583803.100377,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
@@ -224,27 +222,6 @@
   },
   "governor": {
    "races": {
-    "Alaska": {
-     "kind": "governor",
-     "state_en": "Alaska",
-     "state": "阿拉斯加",
-     "abbr": "AK",
-     "lead": {
-      "name": "Jonathan Kreiss-Tomkins",
-      "party": "D",
-      "p": 0.9975
-     },
-     "other": {
-      "name": "Bernadette Wilson",
-      "party": "R",
-      "p": 0.001
-     },
-     "tier": "safe",
-     "tier_zh": "穩拿",
-     "gap": 99.7,
-     "vol": 1973797.3728520002,
-     "url": "https://polymarket.com/event/alaska-governor-election-winner"
-    },
     "California": {
      "kind": "governor",
      "state_en": "California",
@@ -269,13 +246,13 @@
    },
    "tally": {
     "lead": {
-     "D": 2,
+     "D": 1,
      "R": 0,
      "I": 0,
      "?": 0
     },
     "total": {
-     "D": 8,
+     "D": 7,
      "R": 8,
      "I": 0
     },
@@ -285,6 +262,7 @@
     },
     "missing": [
      "Alabama",
+     "Alaska",
      "Arizona",
      "Arkansas",
      "Colorado",
@@ -327,7 +305,7 @@
     },
     "n_up": 36
    },
-   "sentence": "照目前領先者全拿，共和黨 8 州 : 民主黨 8 州（改選前共和黨 27:23）；沒有勝負接近的州。"
+   "sentence": "照目前領先者全拿，共和黨 8 州 : 民主黨 7 州（改選前共和黨 27:23）；沒有勝負接近的州。"
   },
   "seats": {
    "senate": {
@@ -342,7 +320,7 @@
    },
    "governor": {
     "label": "<22 州",
-    "p": 0.996,
+    "p": 1.0,
     "url": "https://polymarket.com/event/how-many-republican-governors-after-the-2026-midterm-elections"
    }
   },
