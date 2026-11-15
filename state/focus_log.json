@@ -1,113 +1,5 @@
 [
  {
-  "at": "2026-11-03T23:10+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "jolts",
-   "refunding"
-  ],
-  "locks": [
-   "refunding"
-  ],
-  "clusters": [
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Dollar Rises With US Yields as Focus on Iran Outweighs Election - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Treasuries Fall Amid Oil Price Swings, Strong Job Openings Data - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3",
-    "titles": [
-     "Saudi Budget Deficit More Than Doubles as War Strains Finances - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "AMD Forecast Exceeds Estimates After AI Chip Demand Soars - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Appeals Court Lifts Election Limits on Trump Administration - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Meta Kicks Off Debt Offering in Push to Fund AI Investments - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "時效+2、來源+3、熱度+4",
-    "titles": [
-     "Super Micro forecasts quarterly revenue above estimates on strong AI server demand - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Job openings posted big September gain in positive sign for labor market ahead of payrolls report"
-  ],
-  "main": "Traders Turn Less Bearish on Treasuries Before Refunding, Jobs - Bloomberg.com",
-  "main_why": "鎖定事件 refunding",
-  "second": "Saudi Budget Deficit More Than Doubles as War Strains Finances - Bloomberg.com",
-  "points": 2,
-  "thin": [
-   "",
-   "重點二"
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "出現材料裡沒有的數字（33.3、752、336、715、41.4）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
-     "主軸 217 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "主軸 197 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（週五），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸只有 22 字，沒有把事情講完整（要 50–80 字）"
-    ]
-   ]
-  },
-  "result": "9 月職缺增至 752 萬、離職人數創 3 月來新高，10 月非農週五公布"
- },
- {
   "at": "2026-11-04T03:02+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2928,5 +2820,105 @@
   "at": "2026-11-14T23:17+00:00",
   "mode": "weekly",
   "result": "10月CPI與PPI雙雙超預期，聯準會官員主張12月升息兩碼列入選項"
+ },
+ {
+  "at": "2026-11-15T23:21+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out - Bloomberg.com",
+     "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ After Huang Ouster - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Bessent says Nvidia must 'go outside the company' to find new CEO - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Fed 'has some work to do on inflation,' KC Fed chief says - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "Schmid Says Fed Has More Work To Do to Bring Down Inflation - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 11.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+4",
+    "titles": [
+     "Bessent says Nvidia needs ‘shake-up’ with external CEO"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Roughed-Up Bond Traders Look to Fedspeak, Minutes for Next Move - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41% - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Nvidia CEO Search Heats Up as Bessent Urges Shakeup - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
+   "央行12月不排除預防性升息 緊盯美利率、油電價格等變數"
+  ],
+  "main": "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Fed 'has some work to do on inflation,' KC Fed chief says - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 211 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】91 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 155 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 197 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "貝森特稱輝達需「大幅改組」、黃仁勳應下台"
  }
 ]

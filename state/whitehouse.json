@@ -10,7 +10,6 @@
   "f5f83567ea11": "2026-11-03",
   "7fba4198290b": "2026-11-02",
   "d4e4914434be": "2026-11-02",
-  "bfc1f1f3d423": "2026-11-01",
   "2a9ef9aa3ffc": "2026-11-04",
   "632c63196bba": "2026-11-04",
   "15c639c25cc7": "2026-11-04",
@@ -47,7 +46,6 @@
   "p:chip_232:f001d6b5863e": "2026-11-03",
   "p:dc_grid:cf9469d60980": "2026-11-03",
   "p:dc_grid:ee245c3d34f4": "2026-11-02",
-  "p:dc_grid:a2b0065ae16d": "2026-11-01",
   "p:us_china_truce:2c701a9a4960": "2026-11-03",
   "p:us_china_truce:982bb21a1206": "2026-11-03",
   "p:us_china_truce:3faa01745dd0": "2026-11-03",
@@ -82,10 +80,6 @@
   "7711d2808a15": "2026-11-02",
   "945708f90252": "2026-11-02",
   "6013140f705c": "2026-11-02",
-  "24dd4bc776ae": "2026-11-01",
-  "e4eccc6618ac": "2026-11-01",
-  "ac3e2d91151f": "2026-11-01",
-  "c28676bc6d25": "2026-11-01",
   "p:fiscal_cr:541da80f6845": "2026-11-04",
   "p:fiscal_cr:76ed02334e0a": "2026-11-04",
   "p:fiscal_cr:8bf84ac6f7b5": "2026-11-03",
@@ -121,7 +115,6 @@
   "p:chip_232:7c6ab54b78e6": "2026-11-02",
   "p:dc_grid:7598968afdf5": "2026-11-04",
   "p:us_china_truce:036c865a7cee": "2026-11-03",
-  "p:us_china_truce:e374d4a5a8ef": "2026-11-01",
   "97d0cc2efa9d": "2026-11-04",
   "e9fdf96acd74": "2026-11-04",
   "90afae93ea0e": "2026-11-04",
@@ -329,7 +322,6 @@
   "4815ec4e280c": "2026-11-05",
   "183d70adfaf3": "2026-11-05",
   "eca9567f0e52": "2026-11-04",
-  "dddfb038d926": "2026-11-01",
   "148431403a0a": "2026-11-05",
   "p:fiscal_cr:5974756cd2aa": "2026-11-05",
   "p:fiscal_cr:9ea469a5e544": "2026-11-05",
@@ -1163,9 +1155,74 @@
   "p:h200_china:a26b604cf725": "2026-11-14",
   "p:ai_preempt:01e32d1cfd80": "2026-11-14",
   "p:dc_grid:aaa7fa8a4126": "2026-11-10",
-  "p:us_china_truce:16a4b56bdd21": "2026-11-14"
+  "p:us_china_truce:16a4b56bdd21": "2026-11-14",
+  "a4ea92d23c5a": "2026-11-15",
+  "8ad3176b5a2f": "2026-11-15",
+  "652825e995f4": "2026-11-14",
+  "f36ae1594078": "2026-11-13",
+  "2223466d138e": "2026-11-15",
+  "329155677a67": "2026-11-15",
+  "28201eb1aa78": "2026-11-15",
+  "b2148d65cc06": "2026-11-15",
+  "a765146c2082": "2026-11-15",
+  "3c17e4d975b4": "2026-11-15",
+  "1c183e1be25d": "2026-11-15",
+  "b435f82af9a8": "2026-11-15",
+  "90560cb58fe9": "2026-11-14",
+  "bd3c03dcdcb5": "2026-11-14",
+  "7ec790dd326a": "2026-11-14",
+  "2b7c373e2016": "2026-11-14",
+  "f3de18c4e5ca": "2026-11-14",
+  "59b412418f80": "2026-11-14",
+  "fb8525d8e1d0": "2026-11-14",
+  "2289478da4e8": "2026-11-14",
+  "01001b4e1000": "2026-11-14",
+  "47cc2ea5e843": "2026-11-14",
+  "5a1ee6dc1517": "2026-11-14",
+  "97d5f0ff44a1": "2026-11-14",
+  "aec97a2be3ef": "2026-11-14",
+  "fe2a4862d704": "2026-11-13",
+  "c6f92f236549": "2026-11-13",
+  "p:fiscal_cr:26b0ec92e5ba": "2026-11-13",
+  "p:fiscal_cr:37552249f9c2": "2026-11-13",
+  "p:fiscal_cr:f9a151396d8e": "2026-11-13",
+  "p:fiscal_cr:88f3ec769778": "2026-11-13",
+  "p:fed_cook:5bf4d3872594": "2026-11-15",
+  "p:fed_cook:efd40df69194": "2026-11-15",
+  "p:h200_china:a0b59539ad35": "2026-11-13",
+  "p:h200_china:45a0c3526f02": "2026-11-13",
+  "p:h200_china:e64b5e68b7b5": "2026-11-15",
+  "p:h200_china:f18885612fea": "2026-11-15",
+  "p:h200_china:9eb86f84bc50": "2026-11-15",
+  "p:h200_china:5afffc32ff86": "2026-11-15",
+  "p:h200_china:650be962f4f4": "2026-11-15",
+  "p:h200_china:dfe1600194f7": "2026-11-15",
+  "p:h200_china:f98fe4b49c3a": "2026-11-15",
+  "p:h200_china:0c549beb2fee": "2026-11-15",
+  "p:chip_232:a5f092b3e3c9": "2026-11-11",
+  "p:dc_grid:eaad2de14207": "2026-11-15",
+  "p:dc_grid:4b5232df95a4": "2026-11-15",
+  "p:dc_grid:6c1c7115920d": "2026-11-13",
+  "p:us_china_truce:b0de5ca01eab": "2026-11-12",
+  "p:us_china_truce:4cbbbf1f77dc": "2026-11-15",
+  "p:us_china_truce:a5194a72cd1f": "2026-11-14",
+  "p:us_china_truce:3af2ee9d2947": "2026-11-13"
  },
  "items": [
+  {
+   "id": "956891876f3b",
+   "topic": "能源",
+   "channel": "其他",
+   "zh": "川普計畫推動加州外海油井開發，可能拆除現有鑽油平台。",
+   "date": "2026-11-15",
+   "links": [
+    {
+     "title": "Offshore oil rigs could be ‘toppled’ off California under Trump plan",
+     "source": "Los Angeles Times",
+     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNSTBCLURkUEY1ZnNpOExLTERsNzdvMEx3eEV5Z3RTSGwzLXdZYU9rdVlEQXZhOHpkbms4dW1uOGVTcTRvME5zR1h5aFBGWmZpaE5qNnE0WGlGQ0V4Y2dsc3hGZkYtUE4zUFVZVmxWaHFCZVRwb3FUUXFvSEhrdTlJZWxrZHR4RTdkYkFXZG9oYUZqM3lQLWNLMExqQ3pjT2JfRkFXM0t1S1kwV3luR3JSb0hzRjlDSlBxYklF?oc=5"
+    }
+   ]
+  },
   {
    "id": "1ecfa15b8ef9",
    "topic": "關稅",
@@ -1356,9 +1413,9 @@
   }
  ],
  "summary": {
-  "hash": "0f2892b7f38a",
-  "date": "2026-11-15",
-  "text": "本週能源政策成焦點：川普延長油運輸豁免90天，同時向油氣公司提供4.8億美元貸款，並表示無需與伊朗協議；關稅方面則威脅若墨西哥未阻止移民將加倍關稅。近期關鍵日期為12月11日聯邦暫時撥款到期，以及2027年1月10日美中貿易休戰框架到期。"
+  "hash": "3e4a7cac1258",
+  "date": "2026-11-16",
+  "text": "本週能源政策成為焦點：川普延長油運輸豁免90天至明年2月，同時推動加州外海油井開發，並表示無需與伊朗協議。財政方面，川普敦促參議院推進3500億美元和解法案。近期關鍵日期為12月11日聯邦暫時撥款到期，以及2027年1月10日美中貿易休戰框架屆滿。"
  },
  "suggestions": {
   "fiscal_cr": {
@@ -1388,12 +1445,12 @@
    ]
   },
   "h200_china": {
-   "date": "2026-11-15",
-   "note": "多則新聞顯示H200晶片出口管制失效（678K晶片流向中國、中國大學違規購買），可能推動國會加速審議限制法案，政策可能進入「國會限制」階段。",
+   "date": "2026-11-16",
+   "note": "多則新聞報導禁用晶片走私至中國及國會關注（The Hill報導國會聚焦Nvidia醜聞），顯示國會限制法案審議可能加速推進。",
    "links": [
-    "https://news.google.com/rss/articles/CBMijAFBVV95cUxPdkh5dWF3SmVlNWRWQWlfRlQyTFZaODhITkRPVjZyT3J5ZFNwU2RLV3JRYXN1dXQ0UVhnMjhWT19objlXWlV1b3RiWHBTbVFWeldUSmpoMjdhRkZxTVFfU0FsRFBiZkpRR3I2eHM1MjU4SUY3MW5FRXdEOGNyaDZuYnpidm9mblYySDZNbg?oc=5",
-    "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQZGFWV2J1LVZpcHZIbWtuMU5qVm1teTBwSTFIaVF0c2hJYzN2WFBlYmdDbHJFeVVJQk5PNzA5WTBmQlNudWpFaHpyZDBGaFJEbGMwd0FlQWNrTWpxZW9kWE5sVGxtbl9sWEljZlBtQmMyMHp1b29wNmVSdnpYOVdGcHcxclo5TjRPNXRVMFNoUUdsWnc4ZUFDM0lZMXZOa3lfQWtlN25rWHFXcFF1RXRGcmI2TmFveEli?oc=5",
-    "https://news.google.com/rss/articles/CBMiowFBVV95cUxPRTdIb1dVWXp1MFVRQmJfY3lVelBQN0RDZzJoQnI4V19GQVAyZ0Fkdk9JdU5LenRnY3lYejRzdy1UYVRjVXh4SmVrb09rbjFxLU96d0pGN0NYdmJQT3BwaVNLdjVJSjNBUzFwcUhXVDZYNU9QYWdMWURzQWNfd3dUbnZORGlROFFWaENQTjNOcE9vdmtPanRQWEpzUTdmV1dMSy1j0gGoAUFVX3lxTFBIdGZpRWxLclBvWlBpQkt0OURmdXdSYklEZHp6bVhORWFkMDQ3NDFuUzVoQkRrRks4ZW8ydF83UmhJOFdrTV9GN1d4UWtjYlRmX3owYXRpaW9OZEl5VDZWdUwybUdZLXlHNWpsNWFLMzNwRTgtRG1RUXFLdUYyVHBmcGNkdF95Q3o4Tm1SN1laeFdZQmwwY1BVRncyMjIzblRfaTE3OGgtOQ?oc=5"
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQZGhfekJtSDUzVXhKZHNDNzgtTXc1RXBUVk9sR3JJX0ZtNDdmazBHU2ZvRXJEN25HMWpOTVdxWng1Y1VXa05OSGlwMmFGUllzMDgyRnkzWWxFdk5pLUhZd1BvUUNXS3NYYXg2TzdxSk9MSXowWWpGTG1CdUxka01oODhvVzBnNDN3Sk5uYWtybjVoelhGRVFWNk5MR2g1Ykx3cXVJazNUWE92ZElRbmVQYzEwaUxBc3lHRHdBVDJvVjA?oc=5",
+    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOcGIzcVZhWDU2cVlTWlhGZFZUMGlCcldoTU4wc2Z2UUpqUzJiNWp3Sy1kTVFQTnRKbHVnY2cwWHh0WEx3YkV5ZVMxOUFnMmVIc0kzaHdHc0NEVm9NS3hsVTdfTHR1ZWR4OTc2NUNpXzUteWZvblRYcEFVRDBIVTQyanVZTGdDYVFTaDJLTWFYdWNmSzBtU09Dd1RZVkhLUjB0WkR2Rm0tVTZnXzctWTREMXF3QjhZNTUxMHhDWjJZMHc?oc=5",
+    "https://news.google.com/rss/articles/CBMiugFBVV95cUxPN2hPSWp5RThSSER6RU9KM2xsRkplcUx2eXVFdUlLYURuQ0tkQVFPeDRUa0t6cUJ2TmRMU0pFaGV1YU1GalExUWtqVTc4LS10THUyRFJJeXI3cUt4Sm9uRWhTOElzYzJhekJUWTR4RXRoQXV4aGR2NzRMZmdDTDFQVXVrSkd3Z0N6OFhvTGNFS0U0M1A0bGJKMUVOaTdscEZQakYxR3hoakxMdHpCaHVEVExyZ0o4Q1FLYkE?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1414,5 +1471,5 @@
    ]
   }
  },
- "at": "2026-11-15 07:17（台北）"
+ "at": "2026-11-16 07:21（台北）"
 }

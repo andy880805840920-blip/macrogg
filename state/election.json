@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -12,
- "date": "2026-11-15",
+ "days_to": -13,
+ "date": "2026-11-16",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -35,7 +35,6 @@
    0.905,
    0.905,
    0.905,
-   0.905,
    0.915,
    0.915,
    0.925,
@@ -58,7 +57,6 @@
   "d1": 0.2345,
   "closed": true,
   "hist": [
-   0.635,
    0.645,
    0.645,
    0.645,
@@ -126,10 +124,10 @@
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.001
+    "p": 0.0005
    },
    "close": 0.498,
-   "vol": 9583803.100377,
+   "vol": 9748530.382278,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -149,12 +147,12 @@
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.001
+      "p": 0.0005
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.7,
-     "vol": 9583803.100377,
+     "gap": 99.8,
+     "vol": 9748530.382278,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
