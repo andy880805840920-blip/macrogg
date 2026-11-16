@@ -34,7 +34,6 @@
    0.905,
    0.905,
    0.905,
-   0.905,
    0.915,
    0.915,
    0.925,
@@ -57,7 +56,6 @@
   "d1": 0.2345,
   "closed": true,
   "hist": [
-   0.645,
    0.645,
    0.645,
    0.635,
@@ -119,15 +117,15 @@
    "lead": {
     "name": "Mary Peltola",
     "party": "民",
-    "p": 0.998
+    "p": 0.9985
    },
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0005
+    "p": 0.0015
    },
-   "close": 0.498,
-   "vol": 9748530.382278,
+   "close": 0.49850000000000005,
+   "vol": 9768738.850187,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -142,17 +140,17 @@
      "lead": {
       "name": "Mary Peltola",
       "party": "D",
-      "p": 0.998
+      "p": 0.9985
      },
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0005
+      "p": 0.0015
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.8,
-     "vol": 9748530.382278,
+     "gap": 99.7,
+     "vol": 9768738.850187,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },

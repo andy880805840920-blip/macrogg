@@ -4732,14 +4732,259 @@
   "6874fd4c117f": "2026-11-10",
   "3bd29e9e9317": "2026-11-10",
   "6a45ff27e26c": "2026-11-09",
-  "1a02030c5a81": "2026-11-09"
+  "1a02030c5a81": "2026-11-09",
+  "38412eb50ac1": "2026-11-16",
+  "a33d61e61a4c": "2026-11-16",
+  "b993bba7e3a5": "2026-11-13",
+  "f904e690ea3b": "2026-11-16",
+  "57e618151590": "2026-11-16",
+  "fd34250a0b26": "2026-11-16",
+  "17cc8fc704a0": "2026-11-16",
+  "02b810114c12": "2026-11-16",
+  "25593f63f352": "2026-11-16",
+  "ad649c5077d8": "2026-11-16",
+  "d1cccb451e3e": "2026-11-16",
+  "0f7ad443438d": "2026-11-16",
+  "b14e9ad8fcef": "2026-11-16",
+  "7d1221be1827": "2026-11-13",
+  "56ca891e259a": "2026-11-13",
+  "d7064f1a2594": "2026-11-13",
+  "dd40a4eaedef": "2026-11-16",
+  "f56b8bb865ae": "2026-11-14",
+  "b483c74edc6b": "2026-11-11",
+  "a735a6c33f2d": "2026-11-16",
+  "7f682c419044": "2026-11-16",
+  "f3afb414583c": "2026-11-16",
+  "f9bc84336f72": "2026-11-16",
+  "0f871a1ba87a": "2026-11-16",
+  "99c3ce4568d0": "2026-11-16",
+  "1b471edf3318": "2026-11-15",
+  "e598114b817e": "2026-11-13",
+  "50f4317ba0bf": "2026-11-10",
+  "57a1f18f82ab": "2026-11-09",
+  "c59ed5971d18": "2026-11-09",
+  "94f68e62c958": "2026-11-08",
+  "45adecf6df2a": "2026-11-04",
+  "da7f2157c5f4": "2026-11-16",
+  "f4eb27f7148c": "2026-11-06",
+  "3749d342253c": "2026-11-16",
+  "b2b5eece1de7": "2026-11-16",
+  "b1594a6364da": "2026-11-16",
+  "624759d477ed": "2026-11-16",
+  "5bc76988f97d": "2026-11-16",
+  "07693954bf7a": "2026-11-16",
+  "29832bf46c8d": "2026-11-16",
+  "9eceb9f811c0": "2026-11-16",
+  "e35e04bc7020": "2026-11-13",
+  "4195c40a8f5c": "2026-11-11",
+  "0e1608b4668b": "2026-11-11",
+  "19e2c00e092f": "2026-11-11",
+  "c7d8440690c0": "2026-11-10",
+  "34882592b12a": "2026-11-16",
+  "f4a0a191e336": "2026-11-13",
+  "ffff00d16593": "2026-11-13",
+  "dc771ea3b2e6": "2026-11-16",
+  "e4cfd4099c91": "2026-11-16",
+  "ffc295eb2e28": "2026-11-16",
+  "ca3a3b67e959": "2026-11-16",
+  "c5420bf8427f": "2026-11-16",
+  "79a09f8136c0": "2026-11-16",
+  "1eb7601010a0": "2026-11-16",
+  "75bb21f8fbc9": "2026-11-16",
+  "031491c916d2": "2026-11-12",
+  "5df061d06e22": "2026-11-16",
+  "435e320ec429": "2026-11-16",
+  "f9c92fe9ca9d": "2026-11-16",
+  "9631ad0ff416": "2026-11-16",
+  "13822b9b60aa": "2026-11-16",
+  "a797d4d88ca1": "2026-11-16",
+  "8f4a397c00d3": "2026-11-16",
+  "fac429682d2f": "2026-11-16",
+  "71ec51317032": "2026-11-16",
+  "a196c126598e": "2026-11-15",
+  "fcd2d2528f4f": "2026-11-14",
+  "401b197078b3": "2026-11-13",
+  "ce784a39c402": "2026-11-13",
+  "90386c377dbd": "2026-11-15",
+  "a7740bf244a6": "2026-11-15",
+  "650babb464e4": "2026-11-16",
+  "95966156af53": "2026-11-16",
+  "a63ebb6f42ef": "2026-11-16",
+  "9ad0d2c739f2": "2026-11-16",
+  "bad8f914828a": "2026-11-16",
+  "c832eff8af33": "2026-11-16",
+  "f0ade5c778ac": "2026-11-16",
+  "1594e4c67f8a": "2026-11-16",
+  "94dedd330c3c": "2026-11-16",
+  "a350678b0b3f": "2026-11-16",
+  "c83c79def483": "2026-11-16",
+  "1de386e45341": "2026-11-16",
+  "7f9e5475f8e2": "2026-11-16",
+  "a8a44072433b": "2026-11-13",
+  "ff8aafa630ca": "2026-11-04",
+  "ddeb6045c70f": "2026-11-03",
+  "ea2d43dfbfab": "2026-11-15",
+  "7782bac85fe3": "2026-11-16",
+  "d20344510e37": "2026-11-16",
+  "a26b7395cee2": "2026-11-16",
+  "329dee49a3c7": "2026-11-16",
+  "7acc0da1e466": "2026-11-16",
+  "e0b3d897b07e": "2026-11-16",
+  "890061164a5c": "2026-11-16",
+  "a6ebd05babbd": "2026-11-16",
+  "08a0b6d10f9a": "2026-11-16",
+  "d99e81eb3e53": "2026-11-16",
+  "9e80d0b0352b": "2026-11-16",
+  "0affccca7a01": "2026-11-16",
+  "ed77164e3a15": "2026-11-16",
+  "b9da2f5cd247": "2026-11-16",
+  "b8a9f8a86653": "2026-11-16",
+  "d8733b582fd6": "2026-11-16",
+  "45256564a662": "2026-11-16",
+  "9836e75c4cbd": "2026-11-16",
+  "4053d592ef46": "2026-11-16",
+  "9b680de02c03": "2026-11-16",
+  "aa3f14a9cb38": "2026-11-15",
+  "7419443d594d": "2026-11-15",
+  "2ffc6ace8d03": "2026-11-15",
+  "813704730d4e": "2026-11-16",
+  "f60acc4f163b": "2026-11-16",
+  "22aa337038c6": "2026-11-16",
+  "a526d03288d0": "2026-11-16",
+  "b319d1fe3780": "2026-11-16",
+  "fdb15e9a1913": "2026-11-16",
+  "b9fb5e3c0179": "2026-11-13",
+  "f5c52db40886": "2026-11-13",
+  "02ed3d9edb5d": "2026-11-16",
+  "02d0777d3ef3": "2026-11-16",
+  "1fca92f6fa18": "2026-11-13",
+  "1c2ce8c2376b": "2026-11-10",
+  "7dd1c4b5ee84": "2026-11-08",
+  "4de833550f26": "2026-11-04",
+  "e0e9a70e087f": "2026-11-04",
+  "73b7b3213e9b": "2026-11-03"
  },
  "events": [
+  {
+   "id": "2dcbdadefa19",
+   "co": "Microsoft",
+   "type": "算力合約",
+   "zh": "Microsoft 與Cerebras達成晶片採購協議。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "Microsoft (MSFT) Strikes AI Deal That Broadens Its Chip Supplier Base",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOX3prYWZxNFJ4T3VWLVVoT0NaUHRrbXg2UkFsX0RYQlRqQ1I3SXByUkVtckxqT1hJbi1Kc3lLUDRKX3loMTdaRVFyTzUxUHN6aVlmUDVIOVVvYVZRQmJYWHRXTUdxdC1Tek5jQ3owWHEzN2JxeTZnYXdkU3gxYm1VSXlWeEhvUmNxd3pjSzk3bnI1Nkpwa2MzRXR3?oc=5"
+    },
+    {
+     "title": "Cerebras Stocks Jump 11.70% After Raising Outlook and Confirming Microsoft Cloud Deal",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQM2xtRVdIYU4xZ1JuOXlMeklDaHVXby1TZUVpbzdQNURfb1lhZGJpZTZKVHQ2NU1yRVhpSVpwM0R6UkszUlhSUS1XeXVLR3doNWxVdmJkaDFXRGxQYzZRTjAtYWQzQnNkelIxanVyUm96M01rZWRBR3A0dl9TeldPOU9JZXJkM0F5Y01ZUUJvczlBQjhLdnc?oc=5"
+    },
+    {
+     "title": "Cerebras surges 17% after beating on quarterly revenue and announcing Microsoft deal",
+     "source": "CNBC",
+     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOTDJyVUx6MkpJbEpzUUFYQlRacC1pMmRiYUt0ZTNMQ3k1Y2xXTUowQ3lHaVE2XzlkbVhRa25DSHRYdXlpQXA3NWlWU3lHRS10WVAyU2hkYWx2eWxOM01sM2s1blhQWmNBV2Q3VGZPaTZ3T0FHWURtdS1vM2ExNEJGYUJaX1VoMTkyeUHSAY8BQVVfeXFMT2tTZnh4UXd6a0dCTGVYcGxzODNjZktGT1Y5aUxoV0hnQ2lkZTFKVHBzeE1GNEx6ZHRvU210cUtjekJLS1lIQUdNTmVsclBJT3dBUmlIdk50T24tRHR2OXMwS0VDRFFic0N1dkhWQ0EzN0JlNW41eDRGWGpEd3cwZ2M2YngtVzZnSDNETF9ELWs?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-12"
+  },
+  {
+   "id": "4e71dc71cc86",
+   "co": "Alphabet",
+   "type": "資本支出",
+   "zh": "Google在密西根州開始興建「Project Cannoli」數據中心。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "Google begins construction on 'Project Cannoli' data center in Michigan",
+     "source": "NewsBytes",
+     "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQTDlPMzM3X1RNQllBUDVTMWxXaEZlTmxHVUdQaDZNVUNXVGlOajk4MWwyaUNiREt0ejFydlNuelhUcHlNaGpMOTJQam51VzZ4MDFWWkJRN3liUjdsYVVERWJkeXRoN0lJakhKRm5MVGlyUUxXSGhJNzhiWERsdExkN0xfdnhjaUludnpmVGNuN01VOUR3TWRfMjFuS1NpZnBIUzY3ZEJqZDlqTS1MUTFJXzNUZnA0Vnht?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-16"
+  },
+  {
+   "id": "ce1d62a25804",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Amazon 在印第安納州Wheatfield破土興建70億美元數據中心園區。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "AWS breaks ground on $7bn data center in Indiana",
+     "source": "Data Center Dynamics",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQdkl6eHhwOG1kNmpIWlV6YURITG11eDhvUjdfSFBuY2h5ZmM1TVhmaTNVS3hUZ0J3RjZyVHZLZDVJenRmVl94TTNnenRWejNpcTd4alQyaGV2VGdsUFV1YUhBRUxaS3hLN1FQLXh5RUhhN2hZQkM4NXZ3OWlmeWlucDNJY2dWOEM0VWxJNmpxdENKU3MtbHc?oc=5"
+    },
+    {
+     "title": "Amazon breaks ground on $7 billion data center in Northwest Indiana",
+     "source": "nwitimes.com",
+     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQdHJTaktvemdPNVhnSVE3OG83ZDRkeEVaTzFvbFpPTXRHVTlTMDZ4UUoxcnRzSGJxOWJkQTVRc05lZm1PV3lJR3AxQkhMQVhFV3dPSjRldHY2a195YjVjbE5MNERLU05waGIxdEJwaFNuWWlIaW9wZEdhRldCaEs1U0ZkaG95SjZt?oc=5"
+    },
+    {
+     "title": "Amazon breaks ground on its $7 billion data center campus in Wheatfield",
+     "source": "nwitimes.com",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE8waVRKWTJiQUttOFhPY1ctZ2s1b3dBdjllSVg4TERhQzlzNFEwQjhTaGJERXZHek1sVlBzM2gwQk94QU5kNWhrU1AtUXpVc2hxT3NrVVhLcW1uVTVNa2oxbFZVVHYyZlg2RXZfVDZURjJHUEZEU3Vv?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-13"
+  },
+  {
+   "id": "f6ef868eb4cc",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Blackstone REIT以50億美元收購Amazon數據中心資產。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "Blackstone REIT to Buy Amazon Data Centers in $5 Billion Deal",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOQXZOa1M1ckFJcHlsWXZoNjJweUtmMW1jV3o3QnFYOU1SVXZKU1o4RE1lS1Q5OFZkYXAtSjhSdVRsYVU4WDQydGV4M1hPdExrUGlSdlprRmN3SUJzbEFIZ2NEVEVDV25WdTRPZ1BQczBuc0lWV3NQSXN6TEtuSWlTVExkYnpXZ01VVm1KMGNxem9PNHF2S2RjUHRrc2ZZNXZnNmFZeWJycFNqSnFDVGZTekJpdjdXaGdBSzBERUpjclhVYnJl?oc=5"
+    },
+    {
+     "title": "An Ohio truck driver who lives near a proposed $5 billion Amazon data center has helped advance a townshi",
+     "source": "The Times of India",
+     "url": "https://news.google.com/rss/articles/CBMihwNBVV95cUxObDBBQ21IRlhqTVpQM1BRTHpqQmF3WFN6LWNDUkpadk04MXRmUWhCNzlraXk4cVUwMTRoaUVBVE9FNlNoellKMXI5cFZLbHFnVVl1YXUxbEJYNTZwamNRSDJxaUx1MUp2a2dPeUdMNERiZ3hReG5XQUJZeWRoUktUUmlIcnRvV29lWTRfb183a1RZemVsZFBGVjBjS2wwVFFaN2ZtT080OUxrUDNBb2lLN0RxUU9ZZExndzFJSUtZdF9KcnhQa2lCV2RUX1VaUjdteEtRbkJUbmxyTG4tQWI4TjZ1dDNCb2NvQ0pQZXozejNJVlI2dXI3by1ia1dLR2J4c1ZBT1hEQUxsdTM3X3FHanUtbFRpTkRudnRLQ2p3TkhudFE5S1B0TFd4Z3FBWDloODJXUFVsMTRHZVFHb1I0am5HTkZaV0dtZWVOVlNsdi1ta0JHQWFBNFlBaWVqWmt5cHhKSVZZUFBuQTZxeVFYUkk0bmZTWTUxaFExaWN3aVZLTkFabjlR0gGMA0FVX3lxTE0wUlplZ3k2bUJkV0RBMWIzdWFvbW10TXZlMFY0VGFiVDVTS1AxenJYY3BpOTF0T1VqWmJBZlVPRkZydlV4Ml9ZLU9sZUVGSWtSblVraWlpa2VRUk9xWUVsUmJKY25Pa3JiVGVpN2pKVmlxOHdsR1hLX3VtVDk3b2NubnNidmdPVDJFQ3FFVzczajZzcGxMOUMtVmhkNEp2RWlQdDVZckdCVWtjNFpFSTNUbXRyelVPZlhDZ0xoVjhTblVCaXpOMFlGbTlmY1FnX29XUm5CN2p5SWVvRF9Tay1oaFBYYmVsSmYydm02QmJaVHlYMGpQUmFWc3gwLUxzQXZJUm9VOUZwaUlrcGpaMzJIQlRLMnYwV3V2YVZSVHpyVWt5SEU2NjdmcUhSR0J2SXBIcWlrVWk2RnQ4UUhzQmp3TzZucU1pRXNjc3J6VTAwdzk1NDNSMHhOT1pBYnJScDEyUG1KM01QN3JoV3VjelhuRGVjODlpS2JQVGpJQ3gyLXJESnN0ZVh1ajFGUw?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-09"
+  },
+  {
+   "id": "61bfdc3a11e7",
+   "co": "SpaceX",
+   "type": "資本支出",
+   "zh": "SpaceX計畫在德州和亞利桑那州投資740億美元興建AI超級計算機設施。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "SpaceX Plans More Than $74 Billion in Texas, Arizona Data-Center Investments",
+     "source": "WSJ",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPRHBDbl83ZEF3NVVUcjdrMG9mczZ2UGdtRWNpbWxiOVo3aHNodU03Z0RsRU8wSFZZZlBNQV83V09DOWVlendGdjliM0xvT0twMjhqbkIyZEZva21DZDhLOEtFQ3lha1NLM2J6Q01EWTNET3ZxNFlieWRHX29CRl9HVDByY05qLWNyU2NQcDhPcGxEeFlEUzFWM3hYVEtzRk9LbklfQ3JLaF9lYkZhenB3R3dB?oc=5"
+    },
+    {
+     "title": "SpaceX Plans to Spend $74 Billion on AI Supercomputers",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOcGc5cFd5N0dQZFg3QVpfd1lsSUpKSi1yZjdTeHhkd2tKNUlZdFFhSFhQUzR6cm8wS3ZJSEtFYUxUdEIwZlRscmJDN21IOVFDcUlLT0trckptb01HTldFa1BKelRLakFDSlVPYWhkdkF4M0dwc0g2a3lKVEEyb3lqMWVybVhTTFpYdVgxd2taMzBoNmtIbnhjSw?oc=5"
+    },
+    {
+     "title": "SpaceX Plans $74 Billion Computing Centers in Arizona, Texas",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQYkphbl9aSlh4QjR1eUwzLVIwREZYd1NZbU9qY05vQ3JiZEFjMFJsdXdGRmxkMzB0VW1SOXJYbGJrRGo5V04zNTdONy12eWt6OTdNNnluSlM2TnhyanB3NXBJNXgzZWxiUkFxbHR5NjBCSFZETzhnaFZzV2kwYXBzQzhjR0N2QnROUXFlTlRMQTBkTnVzVTY5ampycVI4SllMVFNLSjRxNm9ISlV2NklzZDNB?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-12"
+  },
   {
    "id": "3fedb0b25708",
    "co": "OpenAI",
    "type": "算力合約",
-   "zh": "OpenAI與Nvidia簽署1,050億美元數據中心保證協議。",
+   "zh": "OpenAI與 Nvidia 簽署1,050億美元數據中心保證協議。",
    "date": "2026-11-15",
    "links": [
     {
@@ -4771,7 +5016,7 @@
    "id": "3cdab2ebc65a",
    "co": "TSMC",
    "type": "融資／IPO",
-   "zh": "TSMC核准5億美元投資基金，支持下一代Nvidia級企業及自家供應商。",
+   "zh": "TSMC核准5億美元投資基金，支持下一代 Nvidia 級企業及自家供應商。",
    "date": "2026-11-15",
    "links": [
     {
@@ -4782,6 +5027,32 @@
    ],
    "n": 1,
    "first": "2026-11-15"
+  },
+  {
+   "id": "f85364313ab0",
+   "co": "Meta",
+   "type": "發債",
+   "zh": "Meta發行460億美元債券，其中150億美元用於AI基礎設施融資。",
+   "date": "2026-11-15",
+   "links": [
+    {
+     "title": "Is Meta Stock Still a Buy After Borrowing About $25 Billion This Month?",
+     "source": "The Motley Fool",
+     "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOX3VnN3lfRkVjaVdFejdqMU5FRTdWalgzeDlRa2FxVVJmVjgwTElnS3lZMVVMWl9vY29KSEpyX3FMQ0l6MXFwLUZRYm5WaGUwSk9kbzlKWEVMU3JwSjA1UDZzai1obVI2YkVMb0hDc2x2T3hvd1pLRFpOX3A5R3cwWE5IcG1ybmo2TmlZUktfRXU2aW5CM1hyRmstWkpTRU12bUd4bzRJRC1EeVZaWWhHTy1MMFZSdw?oc=5"
+    },
+    {
+     "title": "Meta raises $15 billion in five-part US bond sale to fund AI expansion",
+     "source": "The Star",
+     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQcVh6SDFMNVkxN21WZU1zdndIdy04dHdnbG56LXFPd0dSVHIzRGVqcVAtYkEwUDliTG9xZFFLRFBtY2tlVEF5YXlRdmtGUno4cXhRTVlQV3gzRDlnQW9TT0lNdEE2WmEwVEp6LTE2ZC1xYUFncHlMRW5GaGRjVnVhdHQ4NUlLd1NWZXZFZGR0WGNoMmY1V01INmJhV2RWS09BQUdKSnRsQWpjeW1TWTFUX2xFbzl4Uk1GQVVXSEs2Zjd6N0MyWkI4RA?oc=5"
+    },
+    {
+     "title": "Meta Raises $46 Billion in Bonds on Election Day; 2056 Long-Bond Spread Widens 90 Basis Points Versus April",
+     "source": "BigGo Finance",
+     "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5uRTFJcmVEXy04ZTJ5RUhMUU11WVExLWF3VzNSMVNvQ3NndU9uTWVlZkctRjRLV2VOZHFPbGJHMVZRX3k0eXNrc0p6REhKNnFMd1FsZGZVTm83R3p0YUh2Mms5TjZNMzhoY1JTblBOUUVyaWx1clE?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-09"
   },
   {
    "id": "0218e68d2e4a",
@@ -4888,27 +5159,6 @@
    ],
    "n": 2,
    "first": "2026-11-05"
-  },
-  {
-   "id": "ce1d62a25804",
-   "co": "Amazon",
-   "type": "資本支出",
-   "zh": "Amazon 在印第安納州Wheatfield破土興建70億美元數據中心園區。",
-   "date": "2026-11-13",
-   "links": [
-    {
-     "title": "Amazon breaks ground on $7 billion data center in Northwest Indiana",
-     "source": "nwitimes.com",
-     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQdHJTaktvemdPNVhnSVE3OG83ZDRkeEVaTzFvbFpPTXRHVTlTMDZ4UUoxcnRzSGJxOWJkQTVRc05lZm1PV3lJR3AxQkhMQVhFV3dPSjRldHY2a195YjVjbE5MNERLU05waGIxdEJwaFNuWWlIaW9wZEdhRldCaEs1U0ZkaG95SjZt?oc=5"
-    },
-    {
-     "title": "Amazon breaks ground on its $7 billion data center campus in Wheatfield",
-     "source": "nwitimes.com",
-     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE8waVRKWTJiQUttOFhPY1ctZ2s1b3dBdjllSVg4TERhQzlzNFEwQjhTaGJERXZHek1sVlBzM2gwQk94QU5kNWhrU1AtUXpVc2hxT3NrVVhLcW1uVTVNa2oxbFZVVHYyZlg2RXZfVDZURjJHUEZEU3Vv?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-13"
   },
   {
    "id": "d4952637a5aa",
@@ -5106,6 +5356,22 @@
    "first": "2026-11-13"
   },
   {
+   "id": "02e740056dd3",
+   "co": "Marvell",
+   "type": "資本支出",
+   "zh": "Marvell與Google達成客製晶片合作協議，擴展TPU以外的應用。",
+   "date": "2026-11-13",
+   "links": [
+    {
+     "title": "Google-Marvell Deal Expands Custom Silicon Past the TPU",
+     "source": "EE Times",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQMDRvaGRlTFJaYjhQTERRU1RHRnhjeVVaWGlEVGN3V052eGc1endRS1pqS3U4WmRzTzhBaXBrYzEzbUNJRE0zMGFKVDYweTJUX09DVk0xdGNld3M2X1pjb2FFNlQ2REJLd1BXUTVuc0o0NUEydkpCT3Y4OHdac2l4YmxCVVFYNmdGel9vVmR0S3RleFBTYlE?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-13"
+  },
+  {
    "id": "f97a8ac54b67",
    "co": "Microsoft",
    "type": "資本支出",
@@ -5176,32 +5442,6 @@
     }
    ],
    "n": 2,
-   "first": "2026-11-12"
-  },
-  {
-   "id": "2dcbdadefa19",
-   "co": "Microsoft",
-   "type": "算力合約",
-   "zh": "Microsoft 與Cerebras達成晶片採購協議。",
-   "date": "2026-11-12",
-   "links": [
-    {
-     "title": "Cerebras surges 17% after beating on quarterly revenue and announcing Microsoft deal",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOTDJyVUx6MkpJbEpzUUFYQlRacC1pMmRiYUt0ZTNMQ3k1Y2xXTUowQ3lHaVE2XzlkbVhRa25DSHRYdXlpQXA3NWlWU3lHRS10WVAyU2hkYWx2eWxOM01sM2s1blhQWmNBV2Q3VGZPaTZ3T0FHWURtdS1vM2ExNEJGYUJaX1VoMTkyeUHSAY8BQVVfeXFMT2tTZnh4UXd6a0dCTGVYcGxzODNjZktGT1Y5aUxoV0hnQ2lkZTFKVHBzeE1GNEx6ZHRvU210cUtjekJLS1lIQUdNTmVsclBJT3dBUmlIdk50T24tRHR2OXMwS0VDRFFic0N1dkhWQ0EzN0JlNW41eDRGWGpEd3cwZ2M2YngtVzZnSDNETF9ELWs?oc=5"
-    },
-    {
-     "title": "Cerebras Surges 18% on Microsoft Deal and Q3 Beat",
-     "source": "The Tech Buzz",
-     "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQZG94N2ItWnhPNVU2MXdTU2NaRC1HOFZBWUExX2lwOXRaMS00ZVA1NjZ3RkZnV2RlZnVNZWFacENFMU9tWFN3NUdKMjRyMXN2eEdpNV9IeDVGdlFlS3hJY1BnZk04dUlvOXl0TlhScjA4bi1pMTNtdjZUN3RmTU1oT2NpcU5LZVc1?oc=5"
-    },
-    {
-     "title": "Cerebras beats revenue expectations and lands Microsoft deal",
-     "source": "Crypto Briefing",
-     "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9ZZ1NxcGpBdnYySXRzVmJ0RkVwYzFMYVI4QzZ4Ykl5THktWXZkZlFTVy04NUZVTnRBZGp1dTUyQzB5UFBGcVZqbTBBdmhRZ2ZuVFpUQTR1UGlRRURaU1ZLVmlqWVVCZ1lkVldDSFpEa0c4dzA?oc=5"
-    }
-   ],
-   "n": 1,
    "first": "2026-11-12"
   },
   {
@@ -5313,22 +5553,6 @@
    ],
    "n": 4,
    "first": "2026-11-09"
-  },
-  {
-   "id": "fe396bb563b3",
-   "co": "SpaceX",
-   "type": "資本支出",
-   "zh": "SpaceX計畫在亞利桑那州和德州興建計算中心，投資740億美元。",
-   "date": "2026-11-12",
-   "links": [
-    {
-     "title": "SpaceX Plans $74 Billion Computing Centers in Arizona, Texas",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQYkphbl9aSlh4QjR1eUwzLVIwREZYd1NZbU9qY05vQ3JiZEFjMFJsdXdGRmxkMzB0VW1SOXJYbGJrRGo5V04zNTdONy12eWt6OTdNNnluSlM2TnhyanB3NXBJNXgzZWxiUkFxbHR5NjBCSFZETzhnaFZzV2kwYXBzQzhjR0N2QnROUXFlTlRMQTBkTnVzVTY5ampycVI4SllMVFNLSjRxNm9ISlV2NklzZDNB?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-12"
   },
   {
    "id": "5dfa230bd89e",
@@ -5800,32 +6024,6 @@
    "first": "2026-11-09"
   },
   {
-   "id": "f85364313ab0",
-   "co": "Meta",
-   "type": "發債",
-   "zh": "Meta發行460億美元債券，其中150億美元用於AI基礎設施融資。",
-   "date": "2026-11-09",
-   "links": [
-    {
-     "title": "Meta Raises $46 Billion in Bonds on Election Day; 2056 Long-Bond Spread Widens 90 Basis Points Versus April",
-     "source": "BigGo Finance",
-     "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5uRTFJcmVEXy04ZTJ5RUhMUU11WVExLWF3VzNSMVNvQ3NndU9uTWVlZkctRjRLV2VOZHFPbGJHMVZRX3k0eXNrc0p6REhKNnFMd1FsZGZVTm83R3p0YUh2Mms5TjZNMzhoY1JTblBOUUVyaWx1clE?oc=5"
-    },
-    {
-     "title": "Meta’s $15 billion bond sale will fund AI infrastructure",
-     "source": "finway.com.ua",
-     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPMUpaYTkzZTJKcVJIOWQyNmI2ZDFYUlczZFhWZFR1NmFlWHAzVEJpd1RjYlZoLUF0NkVYck5aaUpXblFNQTRvY214MjFfODdNVjJkWHJhZm9CTUc0dEc3ZERtSUVONzRGdEVZaU0tVWE2QUJIQnZIRE9xYlN0UHQ3ckRaZFRtdw?oc=5"
-    },
-    {
-     "title": "Meta closes $15 billion bond sale, lifts expected forward equity proceeds to $28.7 billion",
-     "source": "Blockspace Media",
-     "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9pT3RNZUs2R2hZZDhfNm56QkIyVy0xYlkzMklmaEl4ZlZscFRkdF9QWkxlWGFQX1ZMZm5ibGNWRmtnZWZMYkd0MU5fMWRfbGFyR09oOTIxT0NGd3VPUXc0c1lVVlN3WnU3RU5aT05TQm5rX3M?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-09"
-  },
-  {
    "id": "d11f6370356d",
    "co": "CoreWeave",
    "type": "算力合約",
@@ -5946,22 +6144,6 @@
      "title": "Micron's 26 SCAs: Can Take-or-Pay Deals Boost Earnings Stability?",
      "source": "Yahoo Finance",
      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPbEN1NlZBUmtvT1J3TzByc0lGSG5qQXYwbVV3emNXTWlWcUlBeGpBMmpTUmlQLXdCQ2xER0hYQkZFU2RTODZnNUJXX3dPSnctMVBUMlhVVWF3R3RtTm11dU1tOVFuci1CdENFdl9aemZ1T25ZN3FmSXJCYkREVUd5a1RDX3FTSVJlbTdSZGhRd2ZJNi1o?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-09"
-  },
-  {
-   "id": "d95afac6deac",
-   "co": "Amazon",
-   "type": "資本支出",
-   "zh": "Amazon 在俄亥俄州擬建50億美元數據中心。",
-   "date": "2026-11-09",
-   "links": [
-    {
-     "title": "An Ohio truck driver who lives near a proposed $5 billion Amazon data center has helped advance a townshi",
-     "source": "The Times of India",
-     "url": "https://news.google.com/rss/articles/CBMihwNBVV95cUxObDBBQ21IRlhqTVpQM1BRTHpqQmF3WFN6LWNDUkpadk04MXRmUWhCNzlraXk4cVUwMTRoaUVBVE9FNlNoellKMXI5cFZLbHFnVVl1YXUxbEJYNTZwamNRSDJxaUx1MUp2a2dPeUdMNERiZ3hReG5XQUJZeWRoUktUUmlIcnRvV29lWTRfb183a1RZemVsZFBGVjBjS2wwVFFaN2ZtT080OUxrUDNBb2lLN0RxUU9ZZExndzFJSUtZdF9KcnhQa2lCV2RUX1VaUjdteEtRbkJUbmxyTG4tQWI4TjZ1dDNCb2NvQ0pQZXozejNJVlI2dXI3by1ia1dLR2J4c1ZBT1hEQUxsdTM3X3FHanUtbFRpTkRudnRLQ2p3TkhudFE5S1B0TFd4Z3FBWDloODJXUFVsMTRHZVFHb1I0am5HTkZaV0dtZWVOVlNsdi1ta0JHQWFBNFlBaWVqWmt5cHhKSVZZUFBuQTZxeVFYUkk0bmZTWTUxaFExaWN3aVZLTkFabjlR0gGMA0FVX3lxTE0wUlplZ3k2bUJkV0RBMWIzdWFvbW10TXZlMFY0VGFiVDVTS1AxenJYY3BpOTF0T1VqWmJBZlVPRkZydlV4Ml9ZLU9sZUVGSWtSblVraWlpa2VRUk9xWUVsUmJKY25Pa3JiVGVpN2pKVmlxOHdsR1hLX3VtVDk3b2NubnNidmdPVDJFQ3FFVzczajZzcGxMOUMtVmhkNEp2RWlQdDVZckdCVWtjNFpFSTNUbXRyelVPZlhDZ0xoVjhTblVCaXpOMFlGbTlmY1FnX29XUm5CN2p5SWVvRF9Tay1oaFBYYmVsSmYydm02QmJaVHlYMGpQUmFWc3gwLUxzQXZJUm9VOUZwaUlrcGpaMzJIQlRLMnYwV3V2YVZSVHpyVWt5SEU2NjdmcUhSR0J2SXBIcWlrVWk2RnQ4UUhzQmp3TzZucU1pRXNjc3J6VTAwdzk1NDNSMHhOT1pBYnJScDEyUG1KM01QN3JoV3VjelhuRGVjODlpS2JQVGpJQ3gyLXJESnN0ZVh1ajFGUw?oc=5"
     }
    ],
    "n": 1,
@@ -6293,7 +6475,7 @@
    "id": "b0a62c33c180",
    "co": "Meta",
    "type": "發債",
-   "zh": "Meta尋求透過首次歐元債券發行募資92億美元。",
+   "zh": "Meta尋求透過首次歐元債券發行募資。",
    "date": "2026-11-05",
    "links": [
     {
@@ -6891,16 +7073,16 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "335062bd2e3c",
-   "text": "Microsoft近期AI基礎設施投資力度空前，資本支出與長期電力協議顯示其對算力需求的堅定承諾。大規模發債融資與Anthropic合作協議偏向增加公司債供給、推高長端利率；同時與Cerebras、Chevron等簽署長期合約，鎖定成本結構。若資本支出持續超預期，則對AI投資熱度偏向強化市場信心；但部分計畫延遲或終止，偏向提示執行風險，可能緩和股市對其AI領導地位的樂觀預期。"
+   "hash": "dca65eb9de08",
+   "text": "Microsoft近期事件偏向推升長端利率與AI投資熱度。公司發行250億美元債券、承諾449億美元與Anthropic合作、資本支出452億美元用於AI基礎設施，反映龐大融資需求與投資決心。多項算力合約（Cerebras、Chevron電力協議）與6,770億美元訂單積壓顯示AI需求強勁。若資本支出持續高位，則長端利率偏向上升；AI基礎設施投資熱度明顯升溫。"
   },
   "Alphabet": {
-   "hash": "57ddae37a628",
-   "text": "Alphabet近期密集簽署算力合約、擴大資本支出與發債融資，偏向增加公司債供給、推高長端利率。大規模數據中心投資與能源協議鎖定長期成本，驅動債券融資需求；同時對Anthropic等AI新創的投資承諾，強化AI投資熱度。若融資成本上升，則可能抑制科技股估值，但AI領域資本密集特性仍支撐市場關注度。"
+   "hash": "06285a4f4d41",
+   "text": "Alphabet近兩週大幅加碼AI基礎設施投資，涉及數百億美元資本支出與長期能源合約，偏向增加公司債供給。頻繁發債（歐元、亞洲市場）反映融資需求上升，若市場對科技債務接受度維持，則長端利率偏向溫和上升壓力。同時對Anthropic等AI新創的投資與擔保承諾，強化AI投資熱度，但龐大資本承諾若影響短期獲利，則股市偏向承受估值調整壓力。"
   },
   "Meta": {
-   "hash": "5a6d3fd0f837",
-   "text": "Meta近期密集發債逾550億美元並與AMD簽署晶片合約，偏向增加公司債供給、推高長端利率。大規模融資用於AI基礎設施建設，反映其對算力投資的承諾加強，若市場認可其AI戰略，則偏向提振科技股與AI投資熱度；但密集發債也偏向增加市場流動性壓力，對長端利率構成上行壓力。"
+   "hash": "518c269b7194",
+   "text": "Meta近兩週密集發債逾600億美元，偏向增加公司債供給、推高長端利率。大規模融資用於AI基礎設施與AMD晶片採購，反映其AI投資熱度高企。若債券供給持續增加，則長端利率偏向上升；若市場吸收能力強，則股市與AI投資熱度偏向維持或上升。"
   },
   "Oracle": {
    "hash": "b467d1df6e02",
@@ -6915,20 +7097,20 @@
    "text": "Anthropic IPO前夕披露巨額運算支出承諾（8,954億美元）與燃氣發電協議，偏向增加公司債供給壓力。高資本密集承諾若引發投資人對現金流可持續性疑慮，則長端利率面臨上升壓力；同時Q3營收成長放緩與龐大支出義務，偏向削弱AI投資熱度，對科技股估值形成壓力。"
   },
   "OpenAI": {
-   "hash": "9dbc93f38b3e",
-   "text": "OpenAI近期大幅擴張算力投資與融資，偏向增加公司債供給壓力。1,050億美元Nvidia協議等多筆巨額採購承諾，加上虧損擴大至109億美元，若融資無法持續覆蓋資本支出缺口，則公司傾向發債融資，推升長端利率。同時，融資估值達1.25兆美元與多項算力協議簽署，偏向強化AI投資熱度，但交付延遲風險若擴大，則可能削弱市場信心。"
+   "hash": "40692b02b602",
+   "text": "OpenAI近期大幅擴張算力投資與融資，偏向推升公司債供給與長端利率。巨額數據中心協議（Nvidia 1,050億美元、多晶片採購）與150億美元融資輪反映資本密集需求，若持續融資規模擴大，則企業債發行壓力增加。惟虧損擴大（109億美元）與產能交付延遲風險，偏向抑制短期股市與AI投資熱度，市場或重新評估盈利路徑。"
   },
   "Amazon": {
-   "hash": "14f9a94d18cf",
-   "text": "Amazon近兩週密集宣布數十億美元數據中心投資與算力合約，反映其AI基礎設施支出大幅增加。此舉偏向增加公司債供給需求，若融資需求上升則可能推高長端利率；同時大規模資本支出承諾強化AI投資熱度，但短期利潤承壓可能對股市形成壓力。營收穩健但利潤集中單一業務，增加了資本密集策略的風險溢價。"
+   "hash": "cad92e1a0e54",
+   "text": "Amazon近兩週密集投資數據中心與算力基礎設施，資本支出達2,200億美元。偏向增加公司債供給——大規模資本密集項目通常需要債務融資支撐；長端利率偏向上升壓力，因企業融資需求增加；股市與AI投資熱度偏向提升，反映市場對其算力競爭力與雲端營收前景的樂觀預期。"
   },
   "Nvidia": {
    "hash": "3d8de26ce8d7",
    "text": "Nvidia 近期算力合約與融資動態偏向強化AI投資熱度。SpaceX、Moonshot等大型客戶的晶片訂單與預付款，反映AI基礎設施需求旺盛，支撑營收指引上調至1,080億美元，偏向提升股市信心。Nscale債務融資則偏向增加公司債供給；若訂單持續轉化為現金流，長端利率偏向承壓，因市場對科技成長前景預期改善。"
   },
   "SpaceX": {
-   "hash": "c0fa6e0c577c",
-   "text": "SpaceX近期宣布與xAI合併及簽署巨額算力合約，並規劃逾千億美元資本支出興建數據中心與發電設施。這些事件偏向增加公司債供給需求，若融資需求無法完全由股權或營運現金流滿足，則長端利率面臨上升壓力。同時，龐大算力投資與AI合約簽署偏向提升AI投資熱度，但高資本密集特性若引發市場對回報期的疑慮，則股市反應偏向謹慎。"
+   "hash": "0576fe38e3be",
+   "text": "SpaceX近期大舉投資AI基礎設施，宣布740億美元資本支出用於超級計算園區、數據中心與電力設施，並簽署450億美元算力合約。此舉偏向增加公司債供給需求，因龐大資本支出需融資；長端利率若面臨企業融資需求增加則偏向上升；AI投資熱度明顯升溫，惟股市反應取決於投資回報預期是否可信。"
   },
   "Intel": {
    "hash": "b52c3c364e21",
@@ -6939,16 +7121,16 @@
    "text": "Apple 近期營收表現穩健且領導層順利交接，增強市場對其償債能力的信心，偏向降低公司債供給成本。連續發行高等級債券反映融資需求強勁，若用於資本支出或回購，則偏向支撐股市；若市場對科技股前景樂觀，則AI投資熱度偏向維持。整體而言，Apple 的發債行動與財報表現相互強化，偏向穩定長端利率預期。"
   },
   "TSMC": {
-   "hash": "2762fcaacc90",
-   "text": "TSMC近期資本支出與策略投資大幅增加，偏向提升公司債供給壓力。政府援助與自有資金支持下，先進製程產能擴張、長期電力合約鎖定成本，顯示資本密集投資加速。同時對AI新興企業與供應鏈的投資，偏向強化AI產業生態。若這些支出需透過債券融資，則長端利率面臨供給增加壓力；若產能利用率超滿載，偏向支撐科技股與AI投資熱度。"
+   "hash": "d3a19143bbdf",
+   "text": "TSMC近期資本支出與策略投資密集，偏向提升公司債供給需求。政府援助與投資基金減輕融資壓力，但900億美元資本支出、長期電力合約與AI企業股權投資，暗示未來現金流承諾增加，若融資需求上升則公司債供給偏向增加。同時AI投資熱度明顯提升，Anthropic IPO與Nvidia級企業扶持計畫強化TSMC在AI產業鏈地位，偏向支撐科技股與AI相關投資熱度。"
   },
   "Micron": {
    "hash": "6cb63d4f3ac6",
    "text": "Micron近期動作偏向強化AI供應鏈地位。向Anthropic投資與簽署多份Take-or-Pay合約，顯示其記憶體產品需求穩定性提升，偏向降低公司債供給壓力。若長期客戶承諾兌現，將支撐營收預期，利好股市表現；同時強化其在AI基礎設施的角色，偏向維持AI投資熱度。"
   },
   "Marvell": {
-   "hash": "3f1b60381115",
-   "text": "Marvell以1,150億美元收購Lumentum，聚焦AI光學互連，偏向增加公司債供給——大規模併購通常需融資支撐，可能提高債務發行。若AI光學互連需求持續強勁，則公司長期現金流預期改善，偏向支撐長端利率；同時強化AI基礎設施地位，偏向提升AI投資熱度。但併購整合風險與債務負擔，短期內偏向對股市形成壓力。"
+   "hash": "e15cc7ccc4a9",
+   "text": "Marvell大手筆收購Lumentum並與Google簽訂客製晶片協議，顯示其在AI基礎設施領域的擴張意圖。此舉偏向增加公司債供給需求，若融資成本上升則可能壓低長端利率預期；同時強化AI晶片生態地位，偏向提振AI投資熱度與科技股表現。"
   },
   "Broadcom": {
    "hash": "8cb35d2c3037",
@@ -6959,5 +7141,5 @@
    "text": "Tesla近期資本支出計畫呈現矛盾訊號：先宣布百億美元太陽能廠投資，隨後又縮減整體支出預算。此舉偏向增加公司債供給壓力——若大型基建投資確定進行，融資需求上升；同時支出縮減訊號可能削弱市場對其成長預期，偏向抑制股市表現。長端利率面臨相反拉力，但整體而言，資本密集策略調整傾向支撐企業融資成本上升預期。"
   }
  },
- "at": "2026-11-16 07:20（台北）"
+ "at": "2026-11-16 20:10（台北）"
 }

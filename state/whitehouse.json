@@ -1206,7 +1206,57 @@
   "p:us_china_truce:b0de5ca01eab": "2026-11-12",
   "p:us_china_truce:4cbbbf1f77dc": "2026-11-15",
   "p:us_china_truce:a5194a72cd1f": "2026-11-14",
-  "p:us_china_truce:3af2ee9d2947": "2026-11-13"
+  "p:us_china_truce:3af2ee9d2947": "2026-11-13",
+  "87ad2d4afbf8": "2026-11-16",
+  "67b63c3e21f9": "2026-11-16",
+  "8ea1f3677691": "2026-11-16",
+  "19e2cd885192": "2026-11-16",
+  "6bb280b9dc78": "2026-11-16",
+  "4dd14d4e545b": "2026-11-16",
+  "55657383e04e": "2026-11-16",
+  "129f064ea9ae": "2026-11-16",
+  "861ec7ed718e": "2026-11-16",
+  "ba6e19e22aad": "2026-11-16",
+  "dadb33a29a36": "2026-11-16",
+  "eeef60d4c4a1": "2026-11-16",
+  "26151e4733ac": "2026-11-16",
+  "9037495830b2": "2026-11-16",
+  "220331b3101f": "2026-11-16",
+  "2770b8892596": "2026-11-16",
+  "be1e6051476d": "2026-11-16",
+  "8eb33c9ba02a": "2026-11-16",
+  "4cc60f875bad": "2026-11-16",
+  "510cc9569f36": "2026-11-16",
+  "ad9ded8804cd": "2026-11-16",
+  "5846d31c0f58": "2026-11-16",
+  "c48e0310d317": "2026-11-16",
+  "312ffee59120": "2026-11-16",
+  "402f8d6eb473": "2026-11-16",
+  "9134f7870897": "2026-11-16",
+  "07a14be485c9": "2026-11-16",
+  "e20392b66461": "2026-11-16",
+  "9b80668d04f3": "2026-11-16",
+  "ef456bd188c0": "2026-11-16",
+  "p:fiscal_cr:e8d063b392f0": "2026-11-15",
+  "p:fed_cook:207e973a9520": "2026-11-16",
+  "p:fed_cook:ac02a2951a79": "2026-11-16",
+  "p:fed_cook:c17c0cb8ac8b": "2026-11-16",
+  "p:h200_china:e09ed7a48293": "2026-11-11",
+  "p:h200_china:a1454cb8a47a": "2026-11-16",
+  "p:h200_china:26afb015d13b": "2026-11-16",
+  "p:h200_china:9d7ea61a3471": "2026-11-16",
+  "p:h200_china:b0c641b95438": "2026-11-16",
+  "p:h200_china:e968484e9f64": "2026-11-15",
+  "p:h200_china:6e7d7b8b8466": "2026-11-15",
+  "p:h200_china:4d6ffca86ed8": "2026-11-15",
+  "p:h200_china:31869b76e42d": "2026-11-15",
+  "p:h200_china:9a645e0f1a9f": "2026-11-15",
+  "p:dc_grid:8a0b18e96c1f": "2026-11-16",
+  "p:dc_grid:af913cf69163": "2026-11-16",
+  "p:us_china_truce:3e98a26546f2": "2026-11-11",
+  "p:us_china_truce:84adc616b8c7": "2026-11-16",
+  "p:us_china_truce:862e17f0cf56": "2026-11-13",
+  "p:us_china_truce:2e1a12391b7f": "2026-11-11"
  },
  "items": [
   {
@@ -1446,11 +1496,11 @@
   },
   "h200_china": {
    "date": "2026-11-16",
-   "note": "多則新聞報導禁用晶片走私至中國及國會關注（The Hill報導國會聚焦Nvidia醜聞），顯示國會限制法案審議可能加速推進。",
+   "note": "多則新聞顯示H200晶片違規出貨到中國軍事機構和俄羅斯，美國財政部長已介入調查，可能加速國會限制法案的審議進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQZGhfekJtSDUzVXhKZHNDNzgtTXc1RXBUVk9sR3JJX0ZtNDdmazBHU2ZvRXJEN25HMWpOTVdxWng1Y1VXa05OSGlwMmFGUllzMDgyRnkzWWxFdk5pLUhZd1BvUUNXS3NYYXg2TzdxSk9MSXowWWpGTG1CdUxka01oODhvVzBnNDN3Sk5uYWtybjVoelhGRVFWNk5MR2g1Ykx3cXVJazNUWE92ZElRbmVQYzEwaUxBc3lHRHdBVDJvVjA?oc=5",
-    "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOcGIzcVZhWDU2cVlTWlhGZFZUMGlCcldoTU4wc2Z2UUpqUzJiNWp3Sy1kTVFQTnRKbHVnY2cwWHh0WEx3YkV5ZVMxOUFnMmVIc0kzaHdHc0NEVm9NS3hsVTdfTHR1ZWR4OTc2NUNpXzUteWZvblRYcEFVRDBIVTQyanVZTGdDYVFTaDJLTWFYdWNmSzBtU09Dd1RZVkhLUjB0WkR2Rm0tVTZnXzctWTREMXF3QjhZNTUxMHhDWjJZMHc?oc=5",
-    "https://news.google.com/rss/articles/CBMiugFBVV95cUxPN2hPSWp5RThSSER6RU9KM2xsRkplcUx2eXVFdUlLYURuQ0tkQVFPeDRUa0t6cUJ2TmRMU0pFaGV1YU1GalExUWtqVTc4LS10THUyRFJJeXI3cUt4Sm9uRWhTOElzYzJhekJUWTR4RXRoQXV4aGR2NzRMZmdDTDFQVXVrSkd3Z0N6OFhvTGNFS0U0M1A0bGJKMUVOaTdscEZQakYxR3hoakxMdHpCaHVEVExyZ0o4Q1FLYkE?oc=5"
+    "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSTNwZEpXX3JSdDB0UER3XzBpVVBPZVBEWHJmb1pWdWhCdzBxT1ZTQi1rWnp3V3QtbVRrVS1GT3dQTHY3emE4empXRXV4M3FWbWtVYXJwOVFkUDBzbi1SVWVLQktLTlpwTXJsMU16QW1pZzlSM2NFYWQyYTB5Y3RJdko1aFZpcjVKYWJOeV9n?oc=5",
+    "https://news.google.com/rss/articles/CBMitAFBVV95cUxOYmVsQldBejVYLUZmaVpjMkxEcEhab2lLS05naE5TOTZ4LUN3ZnNhTV9HaklDRVJ6TUUxc3FxSk5vNVJDTXVoTGNKR0stM2tLRm1oUkNlN2xlc1BSQm9nZE9ueHFzSHpidjh4U0k1MFJjR003MXNkMGdqYVFwVVhsT0MycDF6ck1BUURXZXpaV2J0S1NXSVQ5dUwxMW80bkVkbVdVTjRXejRQT0RrTFVSZjVYR1Q?oc=5",
+    "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5WM1R0Y1U3MHNSajVNYy1NbzNMZVcyemE2SDM0VkN6REd1UHZtanFVeW1QSDJKVFo4YmlUU3lJNGJXOGFJR0M5Z04za21La3l5ckRlVUVtMU0ybDRMM1hsUlZZRU1YUm8?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1469,7 +1519,15 @@
     "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQRHJ5bFNSVGx1UWlrY1BMM1p5WU5lZHBKejNOWjUtSW9pMTh5RWJFN0p4emdEaVphRGd2LUl1OEZ6MkxJZWNreHd3NXFNVDhtYjVTZlpweTh4OVVtR1ZGMXZKc3ZDRVNPOXZmUUQxTU80bnpSUW9uWHFsV3lNUEJWWE80SjFVNERfelR5Q0Y2OU1kb3R6U1FHMnJmTy15QW5yZ1FYWkxMR09Edw?oc=5",
     "https://news.google.com/rss/articles/CBMimwFBVV95cUxQc1c4TWU1ZFpCaVpuZlAwckZ6T0p0dk0zZTBWR0RfWDVWbFhCdmRGR1RQRG9EeFFGallwcERWUmpLaWUwaENIT1d3T3Zsd2RYRy0zd0FELW5aVHZMUHZpU1pOQUxmMVVUTlN1a1piRjlVQ29ZbFZVMWxxYl9lUk1JVzBfTl9lUFZjYU5HTGlGQjBjUkV3UXFqTE1pNA?oc=5"
    ]
+  },
+  "dc_grid": {
+   "date": "2026-11-16",
+   "note": "Construction Review 報導電網運營商重新制定電力連接規則，暗示規則草案階段已啟動，可能超越主管機關徵詢階段。",
+   "links": [
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxNTEp0WHNURXlCOWZCQlNrRTZ0eVBJa2dvZk5EYTdyQm9lb2N1ZWZwWEFnbERmX2s2S0tPdkJiaDM0RUxKaFF4NEVKV3E4SU1CSkFSZ2txb0Q3ZDh4WnBGaGY0TWpYNUtSSmt2NFU2ZU44eUJmXzJHRF9nTmw2eW5FU3N1WkxUQnFjdjA5dkNsQXYwMTJTZTlxbXJmMUxVWnRsaDBVSlJXMHdGcVJESFMxbUY0Ymk5dw?oc=5",
+    "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQWDk1Zjg5QzNvNW5sTm9VNGl1UWhETTRTdDJlVUxSaTJaalFkdFJDMUszVlVIVEhiTDdqSDZVbExPMDFYRVMyclcxRGdlTUxzcnJraWpubzJGSTlPMVhzYnJjTTNvdE83ajBzV0Fodi1jYWNXUHVVUkJNTEhaTm5jQ0F5S0w4Q21DSk12V2hjVDVxWFl1UmlCdGNnNlB1VkljaUFwV2wzXzVCOEJ0VnJHcmY3XzY0MTY3cjd2VDRRN19neWZJUUsyUHdaZF9kcloyR2hDNC01TUItc2dUd2czam9n?oc=5"
+   ]
   }
  },
- "at": "2026-11-16 07:21（台北）"
+ "at": "2026-11-16 20:10（台北）"
 }

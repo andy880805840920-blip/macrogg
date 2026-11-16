@@ -1,30 +1,18 @@
 {
  "hash": "",
- "text": "財政部長貝森特 11/15 表示輝達需要「大幅改組」（dramatic shakeup），黃仁勳應離開執行長職位。此前 Axios 11/11 報導，白宮與情報官員施壓時任商務部長 Lutnick 打擊新加坡公司 Megaspeed——該公司涉嫌將輝達先進 AI 晶片輸往中國，但 Lutnick 多次抵制；Axios 11/10 另指 Lutnick 收到機密情報警告黃仁勳與疑似中國間諜有關聯。Lutnick 家族掌控的 Cantor Fitzgerald 在 2025/9 至 2026/3 間減持近 50% 輝達持股，但同期仍為輝達商業夥伴安排數十億美元融資、並在 9 月底主辦黃仁勳投資人會議且維持目標價 350 美元。¶堪薩斯城聯邦準備銀行總裁 11/15 表示，聯準會在通膨問題上「還有一些工作要做」。市場預期聯準會 12 月升息 1 碼的機率約 89%、升息 2 碼約 11%，按兵不動的可能性已幾乎消失。台灣央行理事張建一指出，央行 12 月理監事會不排除預防性升息，但幅度可能有限；貨幣政策將緊盯美國利率走勢、外資資金流向，以及台電、中油是否獲增資撥補進而影響油電價格等變數。\n荷美爾食品11/16達成連續393季配息紀錄，相當於98年不間斷，該公司自1928年上市以來每季都配息，近60年連續增加年度配息，股息殖利率5.27%為標普500平均殖利率的近5倍。\n債券大王甘德拉克11/12在雅虎財經投資大會表示對股票「沒有興趣」，他指標普500的席勒本益比達42，歷史上本益比超過35後的十年實質報酬率約負6%至負8%。",
+ "text": "聯準會負責監管的副主席 Barr 11/16 警告，AI 代理人（AI agents）可能在未來引發銀行擠兌。這類 AI 系統能自主執行金融決策，一旦偵測到銀行出現風險訊號，可能同時觸發大量客戶提款，速度遠超傳統擠兌。Barr 指出，AI 代理人的普及將改變金融穩定風險的本質，監管機構需要重新評估現有的流動性與資本緩衝是否足夠。他強調聯準會正在研究如何因應這類新型態的系統性風險，包括是否需要針對使用 AI 代理人的金融機構設立額外監管要求。¶新興市場債券發行量大幅萎縮，11/16 數據顯示銷售量較去年同期驟降 41%，供給短缺推升債券價格。市場分析師指出，發行人因全球利率環境不確定性而延後融資計畫，加上部分國家財政狀況改善減少發債需求，導致新債供應量創近年新低。投資人在供不應求情況下追價，使新興市場債券殖利率下滑、價格走揚，但交易量清淡反映市場觀望氣氛濃厚。\n巴基斯坦央行預測2027財政年度通膨將緩和至5%至7%目標區間，該央行在11/16做出此預測。\n印度10月批發物價通膨加速至12.29%，主要受燃料價格上漲推動，較前月明顯上升。",
  "links": [
   {
-   "title": "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out",
-   "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNS1ZOWlF3ZUlxWGYyZm9kX3NnZUsyNEpjYXhKaWMxY3hPbnRvSlJYeHc3ak9lejRYcHdmWjB2dk54cmMweklHdXdpVDdmRm9yNE91LWJKV2VoUC16bF9sdzRTM2NhWk5MMnBROXJ2UHA2SU0tSDNpeEZLZkxJZGg4T1laVHUyU1Fid0dtYjQ3c0tHMFRsOVp3TndoeEUzaElUSkxVT3hlOGQyZTVPZDF3emxB?oc=5",
+   "title": "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
+   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOXzBOcnJGTlAwcHNmMkFMa25aM1JKbnQ4SGtsdndxVU5GenJ6eWtQbEg3ajQxOVFpNld0ZExTUFZ1TmtieFJ3SmlmU3gweHJuWGM4am42WFRiQ3RnZGdZRmJlUzV0QTFMMmNyM200RzR5RGt1R2JYZUVHNWhzNlZBNnZHSGhEME5BNGpWLUs3ZG9pYVV1YXBYUHBoY3JtanV1WGgxNmc3NA?oc=5",
    "source": "Bloomberg",
-   "at": "2026-11-15T20:11:47+00:00"
+   "at": "2026-11-16T10:00:00+00:00"
   },
   {
-   "title": "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
-   "link": "https://www.cnbc.com/2026/11/13/howard-lutnick-nvidia-jensen-huang-china-cantor-fitzgerald.html",
-   "source": "CNBC",
-   "at": "2026-11-15T19:58:21+00:00"
-  },
-  {
-   "title": "Fed 'has some work to do on inflation,' KC Fed chief says",
-   "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxORXg3dWdlUEMzckhPaldaYlFrSXlzQnVLeEJLRGtnMFFpeWh5VXI3akUxWEtLQ3JwSk92b2pvWi1FdjNFWVpBZm9Jck56NDUwQkZDUGZpUG01X3RDLS02enpGcWpnXzc3ZWctengxamdOTDY1MzdYMzgxR0V2THk3Zl9xbXZhTEcyWHEzRDU2YWZ2dTZVaFVpNA?oc=5",
-   "source": "Reuters",
-   "at": "2026-11-15T18:43:43+00:00"
-  },
-  {
-   "title": "央行12月不排除預防性升息 緊盯美利率、油電價格等變數",
-   "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C12%E6%9C%88%E4%B8%8D%E6%8E%92%E9%99%A4%E9%A0%90%E9%98%B2%E6%80%A7%E5%8D%87%E6%81%AF-%E7%B7%8A%E7%9B%AF%E7%BE%8E%E5%88%A9%E7%8E%87-%E6%B2%B9%E9%9B%BB%E5%83%B9%E6%A0%BC%E7%AD%89%E8%AE%8A%E6%95%B8-223642749.html",
-   "source": "Yahoo奇摩新聞",
-   "at": "2026-11-15T22:36:42+08:00"
+   "title": "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%",
+   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQbm16MVNnOTJvY2hpMU1mbmlVMDhfLWNoSjI1Q0hPLUdvU2hkSF9QVzBmMkZ2UmNYcTdHS3p5dDE3NWxzVlpsd0tCVlhOTUlQaEFzaC1JWTg0N0R0cFNFVWxPYVBMOUZjWUc1N243WlY5RWlJTVNxWWV2VVhBV2dUczVucXpQbm5BZVl2alptOEVwTVNmRzJqLUQwb01HVlJuXzdEclQ1MkR6QXRYNGZ5enljd0U?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-16T09:14:29+00:00"
   }
  ],
  "fedwatch": {
@@ -285,148 +273,129 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-15T23:21:31.086196+00:00",
+ "at": "2026-11-16T12:10:46.631052+00:00",
  "layout": "main",
  "topics": {
-  "hash": "2d42f4227dc9175a",
+  "hash": "d78216f7ec2d975a",
   "items": [
    {
-    "id": "funding",
-    "label": "資金市場",
-    "text": "中國央行出手阻擊人民幣過度升值。央行預計凍結市場約240億美元流動性，以應對人民幣連續14個交易日上漲的過熱現象，這是近5年來首次採取此類措施",
+    "id": "fed",
+    "label": "聯準會",
+    "text": "聯準會官員認為市場可能低估升息規模。",
     "links": [
      {
-      "title": "【近5年首見！陸央行出手阻擊人民幣連14漲過熱】 預計凍結市場約240億美元流動性。 （#起啵）",
-      "link": "https://news.google.com/rss/articles/CBMi_gNBVV95cUxOSFM1WkNlV21QWmdTNWd6eXF3aDZ5anZOTUJlX3lJemltcVFVRmo4dGpURXNuQlVieEJBcGpjNENkRWFrY2YtUFhzVUJKRGc2bDBwQkkxdVdwZ1NHSS1vUzdvN2FLVnRXc1hPcV9nRXMyTTRFTmVsQTJJUmk2WWtSV0w4TnZNNGI1ZldZMFhUblFQb0RKOTRfY1ByZC1DM0o4ZVExNUNFUklJTy1lQlRlUVR4MVBOcmRvNDl0UWhXbHFNbEpxNmVfRnd1YUZuYW13bUxYa0J5dHhjWGY4aEtvaHBaaXViLW1NbW1FeUlpMkp6THpkQ092Vl9jalRmT0FNdWZFb2o4ejVTbWhLUnQwZkM4RGx4Z1h5SV92c2pTeXplaU81c2dkQTBlOHJEanZfbGMwTUJsX3RRc056RWpSZVpCV05ObjA1RU9iby1fbVFJcHFyNnNlZ0VVSl9CWGFiZmstOWg0VXo4c1ZDcXJhMU8ycUtEQlc1YU9TU0RNa3I1WGpEYW91aXREVkw0MGY4UGVaS1h6TEhiempWeGJJNW5yYkYtS2F4YjhON2daVmJybVZkS2M4T3J1YlFkM19URUhTODVzbEpuc0gxZnFyWVBydThpLXdrdG5uWXctdHVzcVFCVml6Y0ZOUHVxLUsybGlGdUVZVzJhamVtaWc?oc=5",
-      "source": "Facebook",
-      "at": "2026-11-15T19:40:36+00:00"
+      "title": "Deutsche Bank warns markets may be underestimating rate hike risks",
+      "link": "https://finance.yahoo.com/economy/policy/articles/deutsche-bank-warns-markets-may-120353353.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-16T12:03:53+00:00"
+     },
+     {
+      "title": "Sterling today: Pound extends slide as dollar firms on hawkish Fed bets",
+      "link": "https://finance.yahoo.com/markets/currencies/articles/sterling-today-pound-extends-slide-104209550.html?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-16T10:42:09+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗原油產量因戰爭與出口限制大幅下滑，10 月日產量僅 186 萬桶較戰前下降 46%，但伊拉克、沙烏地阿拉伯及阿聯酋產量逐漸恢復，正填補供應缺口；伊朗石化園區遭攻擊、液化石油氣出口量已降至去年同期 14% 以下",
+    "text": "油價因全球供應過剩預期而下跌。市場預期石油供應將出現過剩，推動油價走低，儘管美伊僵局帶來不確定性，但整體供應面仍對油價構成壓力",
     "links": [
      {
-      "title": "《油價》NYMEX原油下跌0.2% 伊朗產油減少",
-      "link": "https://tw.stock.yahoo.com/news/%E6%B2%B9%E5%83%B9-nymex%E5%8E%9F%E6%B2%B9%E4%B8%8B%E8%B7%8C0-2-%E4%BC%8A%E6%9C%97%E7%94%A2%E6%B2%B9%E6%B8%9B%E5%B0%91-221600488.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-15T22:16:00+00:00"
-     }
-    ]
-   },
-   {
-    "id": "equity",
-    "label": "美股",
-    "text": "美國銀行點名五檔防禦型美股，包括麥迪遜廣場花園娛樂公司（今年漲近 48%）、全美銀行（漲 18%）、AT&T（跌逾 6%）、L3 哈里斯技術公司（跌約 7%）、Krispy Kreme（跌約 2.5%），提供投資人在高估值科技板塊外的分散配置",
-    "links": [
+      "title": "Oil prices fall on expectations of coming supply surplus",
+      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNSXlabl9ocWtiOEZLcnc2SGNVSEh2bjltWURkWU1RSDVTejZWMEtNYTR4QW9sT19DQy05SVhHVmphTEtIQXdtVzlUS25Vdk1oS0hjdWZ0MHpUb01NQUp4dzlBcE55anIwR0hKVmhCUDRsT3V3ek9jTURVYkcySDNBM1B0RmJ3emdUaHpPVWpENENfZ2JGRHB3MlJuekVfUWlFa2lfUQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-16T02:00:00+00:00"
+     },
      {
-      "title": "美股波動加劇 美國銀行點名5檔非AI防禦概念股",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%B3%A2%E5%8B%95%E5%8A%A0%E5%8A%87-%E7%BE%8E%E5%9C%8B%E9%8A%80%E8%A1%8C%E9%BB%9E%E5%90%8D5%E6%AA%94%E9%9D%9Eai%E9%98%B2%E7%A6%A6%E6%A6%82%E5%BF%B5%E8%82%A1-223134256.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-15T22:31:34+00:00"
+      "title": "WTI原油走勢：全球石油供應過剩？美伊僵局令油價「上下兩難」！",
+      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBkcHRwM0RLQ29LZC1uSEx2Y0F1Z3VaTTFycG4xU1I1NlpWa0laNG9wOVNhNndfRDVzbTlQYVdCRXJzZzVRbWRCaXFrNmNMUWVfa1JnWHJnNENOVE9JOTlOWE5mNEN2TGRVWDdOOXRJZDI4UllRTjZKVVF3?oc=5",
+      "source": "Mitrade",
+      "at": "2026-11-16T09:16:02+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達領導層變動引發產業觀察。黃仁勳離職後，業界密切關注三重點：AI投資是否放緩、輝達產品技術是否如期推進，以及供應鏈合作關係是否調整。費城半導體指數因輝達前景疑慮下跌3.43%，輝達股價連續第六週收低，創2012年10月以來最長連續週線跌勢",
+    "text": "商務部長盧特尼克領導的投資銀行坎托菲茲傑羅德公司，在 9 月接待輝達執行長黃仁勳後，於 9 月至 3 月間減持輝達股票近 50%。",
     "links": [
      {
-      "title": "輝達進入「後黃仁勳時代」半導體業密切觀察三重點",
-      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94%E9%80%B2%E5%85%A5-%E5%BE%8C%E9%BB%83%E4%BB%81%E5%8B%B3%E6%99%82%E4%BB%A3-%E5%8D%8A%E5%B0%8E%E9%AB%94%E6%A5%AD%E5%AF%86%E5%88%87%E8%A7%80%E5%AF%9F%E4%B8%89%E9%87%8D%E9%BB%9E-224244113.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-15T22:42:44+08:00"
-     },
-     {
-      "title": "《美股》輝達前景疑慮 費城半導體指數跌逾3%",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1-%E8%BC%9D%E9%81%94%E5%89%8D%E6%99%AF%E7%96%91%E6%85%AE-%E8%B2%BB%E5%9F%8E%E5%8D%8A%E5%B0%8E%E9%AB%94%E6%8C%87%E6%95%B8%E8%B7%8C%E9%80%BE3-221600722.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-15T22:16:00+00:00"
+      "title": "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
+      "link": "https://www.cnbc.com/2026/11/13/howard-lutnick-nvidia-jensen-huang-china-cantor-fitzgerald.html",
+      "source": "CNBC",
+      "at": "2026-11-15T19:58:21+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤下跌 133 點、台積電期貨下跌 7 元，融資增加 31.24 億元顯示散戶在反彈過程中持續進場；外資期貨空方淨未平倉逾 10 萬口，市場短線追價風險升高",
+    "text": "台股16日暴跌2,635點創史上第二大跌幅，168家跌停。台股終場收41,040點，權值股台積電大跌5.74%，三大法人合計賣超1,140.55億元，市場因黃仁勳辭職與輝達融資計畫縮減引發恐慌性拋售，分析師指出台股已進入空頭主跌段，國安基金年線護盤難以扭轉跌勢",
     "links": [
      {
-      "title": "【盤前】輝達週崩跌13%費半下殺！台指夜盤跌133點　台股今拚延續反彈",
-      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%89%8D-%E8%BC%9D%E9%81%94%E9%80%B1%E5%B4%A9%E8%B7%8C13-%E8%B2%BB%E5%8D%8A%E4%B8%8B%E6%AE%BA-%E5%8F%B0%E6%8C%87%E5%A4%9C%E7%9B%A4%E8%B7%8C133%E9%BB%9E-%E5%8F%B0%E8%82%A1%E4%BB%8A%E6%8B%9A%E5%BB%B6%E7%BA%8C%E5%8F%8D%E5%BD%88-221900337.html",
+      "title": "別再幻想黃仁勳回歸！台股暴跌2635點　陳嘉偉點名「4族群」恐爆砍單潮",
+      "link": "https://tw.news.yahoo.com/%E5%88%A5%E5%86%8D%E5%B9%BB%E6%83%B3%E9%BB%83%E4%BB%81%E5%8B%B3%E5%9B%9E%E6%AD%B8-%E5%8F%B0%E8%82%A1%E6%9A%B4%E8%B7%8C2635%E9%BB%9E-%E9%99%B3%E5%98%89%E5%81%89%E9%BB%9E%E5%90%8D-4%E6%97%8F%E7%BE%A4-%E6%81%90%E7%88%86%E7%A0%8D%E5%96%AE%E6%BD%AE-114000128.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-15T22:19:00+08:00"
-     }
-    ]
-   },
-   {
-    "id": "election",
-    "label": "期中選舉",
-    "text": "S&P 500 在 11/5 期中選舉後單日跌 4.4% 創 2025 年 4 月以來最大單日跌幅，損失約 2.9 兆美元市值，但歷史數據顯示自 1950 年來股市在期中選舉後一年內全數上漲，平均漲幅約 15%",
-    "links": [
+      "at": "2026-11-16T11:40:00+08:00"
+     },
      {
-      "title": "Stocks Have Risen a Year After Every Midterm Since 1950. Here’s What That Does and Doesn’t Tell You.",
-      "link": "https://www.fool.com/investing/2026/11/15/stocks-have-risen-year-after-every-midterm-since-1950-what-that-does-doesnt-tell-you/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-15T16:32:02+00:00"
+      "title": "投資人別慌！證交所鼓勵上市公司買庫藏股　符合一條件將出手穩台股",
+      "link": "https://tw.stock.yahoo.com/news/%E6%8A%95%E8%B3%87%E4%BA%BA%E5%88%A5%E6%85%8C-%E8%AD%89%E4%BA%A4%E6%89%80%E9%BC%93%E5%8B%B5%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E8%B2%B7%E5%BA%AB%E8%97%8F%E8%82%A1-%E7%AC%A6%E5%90%88-%E6%A2%9D%E4%BB%B6%E5%B0%87%E5%87%BA%E6%89%8B%E7%A9%A9%E5%8F%B0%E8%82%A1-110603004.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-16T11:06:03+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "升息預期升溫導致黃金單週下跌 155.23 美元、跌幅 3.81% 至每盎司 3,915.66 美元；黃金 ETF 投資人在第三季創紀錄流入後本季多轉為觀望，但各國央行與主權基金仍視黃金為長線策略儲備資產，法國興業銀行預計 2027 年 1 月商品指數調整將帶來約 33 億美元黃金淨買盤",
+    "text": "黃金跌破3,900美元，美元走強與升息預期施壓。黃金現貨價格跌至3,868.88美元，創逾一年新低，美元指數升至103.44，美國10月生產者物價創四年最大年增幅，聯準會官員表示通膨仍「過熱」，強化市場對12月升息的預期，美元升值與升息預期雙重打壓貴金屬",
     "links": [
      {
-      "title": "美國通膨升溫推升升息預期 國際金價單週重挫近 4%",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%9C%8B%E9%80%9A%E8%86%A8%E5%8D%87%E6%BA%AB%E6%8E%A8%E5%8D%87%E5%8D%87%E6%81%AF%E9%A0%90%E6%9C%9F-%E5%9C%8B%E9%9A%9B%E9%87%91%E5%83%B9%E5%96%AE%E9%80%B1%E9%87%8D%E6%8C%AB%E8%BF%91-4-223634076.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-15T22:36:34+00:00"
+      "title": "Gold hits over one-year low on resilient dollar as hawkish Fed bets build",
+      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOR0w3QnNOYVBGYjdBMGJDeml5RExhSzMzaGVTUEQ2eEdLNHhHQzRoV2thNUo4TkVGYmNfc3NsSGpVVVF2OWxCZ21CNzBMSGs0S3NuZ2Rla1d4WTR0RGJwcllfYnZ6dlR5ZGZXa3dMakUxZmNDWFExYk9HNTkyLTN6aWF0MlRRbzN4aUJUVnVCMk1fdlpVN1B0bE1QM3dkaENDNEwzaHRORFFjVDYw?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-16T01:25:00+00:00"
+     },
+     {
+      "title": "Gold Falls Below $3,900 as Stronger Dollar and Fed Rate Expectations Pressure Precious Metals",
+      "link": "https://investorshub.advfn.com/market-news/article/40068/gold-falls-below-3900-as-stronger-dollar-and-fed-rate-expectations-pressure-precious-metals?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-16T10:02:52+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "台幣上週五帶量升值。美元指數高檔回落與台股反彈帶動台幣升值5.1分，收在32.838元，但專家預期新台幣恐貶至明年上半年，央行升息決策將成關鍵變數",
+    "text": "新台幣貶值逼近33元，外資賣超台股後匯出。央行表示新台幣貶值主因外資因台股下跌而賣超並將資金匯出，市場觀察到大型AI廠商傾向持有美元而非兌換台幣，加劇新台幣貶壓",
     "links": [
      {
-      "title": "國內匯市：美元指數高檔回落與台股反彈，台幣上週五帶量升值5.1分收32.838元",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNREVqYk1vNVJqR1VKelF2VldYdnhDZTBYTEo0V3hJOGF4S2dpZlR6YTV3ek55eFI1ckJLMXEtT2Zpc2xiZHpiV2tLV1pZMVl3X05kdDhFZkJlQVRHMlJxUlB0dDV4ckxwaFMyNXBWSG05TEdtMENnS1pRMGRqR255T3pQTTBBZnI3?oc=5",
-      "source": "富聯網",
-      "at": "2026-11-15T23:00:00+00:00"
+      "title": "新台幣兌美元走貶 央行：因外資賣超台股再匯出",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBpSHgwWm9aN1NDcjhJRkZsQ0dNNFNlbVFWeE9wT1A3b2ZGWnBQcy0yUWhRTWgtVW11TS11YVRDVVhUVlNfNEswVGl5SGlXeFE?oc=5",
+      "source": "公視新聞",
+      "at": "2026-11-16T05:38:01+00:00"
      },
      {
-      "title": "想換便宜美元再等等！專家喊新台幣恐貶至明年H1 點出央行升息條件- 日報",
-      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFA2N2tqM19Ra3RudHNLU242ZjA4OTM3Ny1qRjFQSnBqNFhLOExMVmc0WjJ2TWo3TjcwZU5vS0J0bnFFVDZBbmNmczh4dkxMRU9zanV4Mkl5bnRWYThrbjJR?oc=5",
-      "source": "工商時報",
-      "at": "2026-11-14T19:00:00+00:00"
+      "title": "股匯雙殺！新台幣逼近33元　彭博揭AI大廠「抱緊美元不換台幣」",
+      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE40ajFtQlhKTUFsTWxMZkxVM0w5NlVnakRkQTl5dXVDb0tWSkRZSmp5c3J5MUtNak1JSHRSYWxmM2NaUlZUb3FGUWdLOWpwcG9JMVHSAVBBVV95cUxPZVdxcy0wSUVYWEhVRjV6ZVk3RDJSdlFqZjhuUUo0NlRraW82TTJKQlVyY01FM3htRlBsTXlsZF9QZVlxMkp3cnhwU2Z4dEF2Sw?oc=5",
+      "source": "ETtoday財經雲",
+      "at": "2026-11-16T05:16:00+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-15T23:22:24.671082+00:00"
+  "at": "2026-11-16T12:11:28.553384+00:00"
  },
  "main_source_titles": [
-  "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out",
-  "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
-  "Fed 'has some work to do on inflation,' KC Fed chief says",
-  "央行12月不排除預防性升息 緊盯美利率、油電價格等變數"
+  "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
+  "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
  ],
- "headline": "貝森特稱輝達需「大幅改組」、黃仁勳應下台",
- "rate_note": "貝森特要求輝達改組，若執行將衝擊 AI 產業信心與企業投資，偏向壓低長端利率與通膨預期；但 10 年期 11/13 收 5.15%、+5bp，市場還沒反映。",
+ "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
+ "rate_note": "Barr 示警 AI 代理人風險偏向推升長端利率，若金融穩定疑慮升溫、監管趨嚴，可能壓抑經濟活動、但同時增加銀行業成本與不確定性，方向取決於市場解讀為通縮壓力還是風險溢價；10 年期 11/13 收盤 5.15%、+5bp，市場尚未明確反映。",
  "recent_mains": [
-  {
-   "headline": "芝加哥聯儲總裁古斯比：通膨持續偏離目標，聯準會須採取行動",
-   "titles": [
-    "Chicago Fed's Goolsbee says central bank 'has definitely got work to do' on inflation",
-    "通膨升息預期疊加科技股重挫 以太幣跌破2,000美元大關",
-    "Bessent blames Lutnick’s Commerce as he slams Nvidia chip ‘leakage’ to China"
-   ],
-   "at": "2026-11-13T23:15:28.497518+00:00"
-  },
   {
    "headline": "10月CPI與PPI雙雙超預期，聯準會官員主張12月升息兩碼列入選項",
    "titles": [
@@ -445,40 +414,36 @@
     "央行12月不排除預防性升息 緊盯美利率、油電價格等變數"
    ],
    "at": "2026-11-15T23:21:31.086196+00:00"
+  },
+  {
+   "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
+   "titles": [
+    "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
+    "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
+   ],
+   "at": "2026-11-16T12:10:46.631052+00:00"
   }
  ],
  "archive": {
   "2026-11-16": {
-   "headline": "貝森特稱輝達需「大幅改組」、黃仁勳應下台",
-   "text": "財政部長貝森特 11/15 表示輝達需要「大幅改組」（dramatic shakeup），黃仁勳應離開執行長職位。此前 Axios 11/11 報導，白宮與情報官員施壓時任商務部長 Lutnick 打擊新加坡公司 Megaspeed——該公司涉嫌將輝達先進 AI 晶片輸往中國，但 Lutnick 多次抵制；Axios 11/10 另指 Lutnick 收到機密情報警告黃仁勳與疑似中國間諜有關聯。Lutnick 家族掌控的 Cantor Fitzgerald 在 2025/9 至 2026/3 間減持近 50% 輝達持股，但同期仍為輝達商業夥伴安排數十億美元融資、並在 9 月底主辦黃仁勳投資人會議且維持目標價 350 美元。¶堪薩斯城聯邦準備銀行總裁 11/15 表示，聯準會在通膨問題上「還有一些工作要做」。市場預期聯準會 12 月升息 1 碼的機率約 89%、升息 2 碼約 11%，按兵不動的可能性已幾乎消失。台灣央行理事張建一指出，央行 12 月理監事會不排除預防性升息，但幅度可能有限；貨幣政策將緊盯美國利率走勢、外資資金流向，以及台電、中油是否獲增資撥補進而影響油電價格等變數。\n荷美爾食品11/16達成連續393季配息紀錄，相當於98年不間斷，該公司自1928年上市以來每季都配息，近60年連續增加年度配息，股息殖利率5.27%為標普500平均殖利率的近5倍。\n債券大王甘德拉克11/12在雅虎財經投資大會表示對股票「沒有興趣」，他指標普500的席勒本益比達42，歷史上本益比超過35後的十年實質報酬率約負6%至負8%。",
-   "rate_note": "貝森特要求輝達改組，若執行將衝擊 AI 產業信心與企業投資，偏向壓低長端利率與通膨預期；但 10 年期 11/13 收 5.15%、+5bp，市場還沒反映。",
+   "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
+   "text": "聯準會負責監管的副主席 Barr 11/16 警告，AI 代理人（AI agents）可能在未來引發銀行擠兌。這類 AI 系統能自主執行金融決策，一旦偵測到銀行出現風險訊號，可能同時觸發大量客戶提款，速度遠超傳統擠兌。Barr 指出，AI 代理人的普及將改變金融穩定風險的本質，監管機構需要重新評估現有的流動性與資本緩衝是否足夠。他強調聯準會正在研究如何因應這類新型態的系統性風險，包括是否需要針對使用 AI 代理人的金融機構設立額外監管要求。¶新興市場債券發行量大幅萎縮，11/16 數據顯示銷售量較去年同期驟降 41%，供給短缺推升債券價格。市場分析師指出，發行人因全球利率環境不確定性而延後融資計畫，加上部分國家財政狀況改善減少發債需求，導致新債供應量創近年新低。投資人在供不應求情況下追價，使新興市場債券殖利率下滑、價格走揚，但交易量清淡反映市場觀望氣氛濃厚。\n巴基斯坦央行預測2027財政年度通膨將緩和至5%至7%目標區間，該央行在11/16做出此預測。\n印度10月批發物價通膨加速至12.29%，主要受燃料價格上漲推動，較前月明顯上升。",
+   "rate_note": "Barr 示警 AI 代理人風險偏向推升長端利率，若金融穩定疑慮升溫、監管趨嚴，可能壓抑經濟活動、但同時增加銀行業成本與不確定性，方向取決於市場解讀為通縮壓力還是風險溢價；10 年期 11/13 收盤 5.15%、+5bp，市場尚未明確反映。",
    "links": [
     {
-     "title": "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out",
-     "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNS1ZOWlF3ZUlxWGYyZm9kX3NnZUsyNEpjYXhKaWMxY3hPbnRvSlJYeHc3ak9lejRYcHdmWjB2dk54cmMweklHdXdpVDdmRm9yNE91LWJKV2VoUC16bF9sdzRTM2NhWk5MMnBROXJ2UHA2SU0tSDNpeEZLZkxJZGg4T1laVHUyU1Fid0dtYjQ3c0tHMFRsOVp3TndoeEUzaElUSkxVT3hlOGQyZTVPZDF3emxB?oc=5",
+     "title": "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
+     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOXzBOcnJGTlAwcHNmMkFMa25aM1JKbnQ4SGtsdndxVU5GenJ6eWtQbEg3ajQxOVFpNld0ZExTUFZ1TmtieFJ3SmlmU3gweHJuWGM4am42WFRiQ3RnZGdZRmJlUzV0QTFMMmNyM200RzR5RGt1R2JYZUVHNWhzNlZBNnZHSGhEME5BNGpWLUs3ZG9pYVV1YXBYUHBoY3JtanV1WGgxNmc3NA?oc=5",
      "source": "Bloomberg",
-     "at": "2026-11-15T20:11:47+00:00"
+     "at": "2026-11-16T10:00:00+00:00"
     },
     {
-     "title": "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
-     "link": "https://www.cnbc.com/2026/11/13/howard-lutnick-nvidia-jensen-huang-china-cantor-fitzgerald.html",
-     "source": "CNBC",
-     "at": "2026-11-15T19:58:21+00:00"
-    },
-    {
-     "title": "Fed 'has some work to do on inflation,' KC Fed chief says",
-     "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxORXg3dWdlUEMzckhPaldaYlFrSXlzQnVLeEJLRGtnMFFpeWh5VXI3akUxWEtLQ3JwSk92b2pvWi1FdjNFWVpBZm9Jck56NDUwQkZDUGZpUG01X3RDLS02enpGcWpnXzc3ZWctengxamdOTDY1MzdYMzgxR0V2THk3Zl9xbXZhTEcyWHEzRDU2YWZ2dTZVaFVpNA?oc=5",
-     "source": "Reuters",
-     "at": "2026-11-15T18:43:43+00:00"
-    },
-    {
-     "title": "央行12月不排除預防性升息 緊盯美利率、油電價格等變數",
-     "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C12%E6%9C%88%E4%B8%8D%E6%8E%92%E9%99%A4%E9%A0%90%E9%98%B2%E6%80%A7%E5%8D%87%E6%81%AF-%E7%B7%8A%E7%9B%AF%E7%BE%8E%E5%88%A9%E7%8E%87-%E6%B2%B9%E9%9B%BB%E5%83%B9%E6%A0%BC%E7%AD%89%E8%AE%8A%E6%95%B8-223642749.html",
-     "source": "Yahoo奇摩新聞",
-     "at": "2026-11-15T22:36:42+08:00"
+     "title": "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%",
+     "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQbm16MVNnOTJvY2hpMU1mbmlVMDhfLWNoSjI1Q0hPLUdvU2hkSF9QVzBmMkZ2UmNYcTdHS3p5dDE3NWxzVlpsd0tCVlhOTUlQaEFzaC1JWTg0N0R0cFNFVWxPYVBMOUZjWUc1N243WlY5RWlJTVNxWWV2VVhBV2dUczVucXpQbm5BZVl2alptOEVwTVNmRzJqLUQwb01HVlJuXzdEclQ1MkR6QXRYNGZ5enljd0U?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-16T09:14:29+00:00"
     }
    ],
-   "at": "2026-11-15T23:21:31.086196+00:00",
+   "at": "2026-11-16T12:10:46.631052+00:00",
    "weekly": false,
    "points": 2
   },
