@@ -1,71 +1,71 @@
 {
  "hash": "",
- "text": "聯準會主管金融監管事務的理事巴爾 11/16 在義大利米蘭演說時警告，人工智慧技術導入金融體系可能對市場交易、資安防禦及消費者保護造成多重威脅。他指出，大型銀行已偵測到 AI 代理程式試圖在未獲授權下操作散戶帳戶；自主 AI 代理程式能即時偵測收益率差異並高速移轉資金，恐使存款擠兌在數分鐘內爆發，壓垮傳統流動性管理與監管介入時程。此外，交易模型過度依賴 AI 可能引發羊群效應擾亂市場，自學演算法甚至可能演變成市場操縱與系統性風險。巴爾的言論呼應聯準會最新《金融穩定報告》，其中 87% 受訪者將 AI 列為金融體系主要風險。¶新興市場債券發行量在 11/16 驟減 41%，供給短缺推升債券價格。市場出現債券荒（Bond Drought）現象，發行活動大幅放緩導致流通量不足，買盤需求相對強勁使得新興市場債券價格走高。這波發行量萎縮反映發行人可能在觀望市場環境，或等待更有利的發行時機，供需失衡成為近期新興市場債市的主要特徵。\n加拿大10月通膨率維持在3.1%，未見進一步回落，顯示該國物價穩定性仍待觀察。",
+ "text": "11/16，Warsh 在舊金山向他召集的生產力與就業特別小組發表演說，強調 AI（他稱為「超級智慧」）將對經濟產生重大影響、對貨幣政策有重要意涵。他指出 AI 可能帶來生產力提升、加速實質經濟成長並維持充分就業；但也可能透過自動化造成失業率上升，或者單純「令人失望」、未能兌現高度期待。Warsh 自接任主席以來一直強調 AI 的重要性，認為它有潛力提升生產力、最終成為經濟的通縮力量。這場會議是他召集的五個特別小組之一，目的是拓寬聯準會思維、為下一階段政策做準備。¶黃金價格11/16跌至一年低點，面臨2015年以來最糟年度表現，主因美國公債殖利率攀升與美元走強。市場對輝達創辦人黃仁勳辭任執行長事件持續消化，加上美國政府收緊中國企業透過海外租用AI算力管道，引發對晶片需求及AI產業前景擔憂，投資人避險情緒升溫，資金流向美元資產，壓抑黃金吸引力。\n輝達執行長人選引發貝森特批評，這位財政部長呼籲該公司進行重大調整以應對市場挑戰，11/16。\nTradeweb推出人工智慧助手供美國公債交易員使用，協助處理交易流程，11/16。",
  "links": [
   {
-   "title": "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
-   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNcEVFaTdEb1RBMjV6RXdpcG5KTVVkZXEtV28zMUVZc0VmdnVtTUl4N1lVakpFcEd5ODNpanp2N09iTWxkM3hpZkY5Qm9XVDBvRGhOUG9tSlpQRzlpQlRzMWJjS0RxSnFvRlZDTXBjNnhkM2hld3A5SDFFZ2lVYkF0Qmdjc19XUTlKd2tfLWxCeGI5RDRxcmhsYmt1U010ZWdxWkpudlVvb3JmSGJ5NmJMRVNTd0JyRklCN1Fn?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-11-16T11:56:57+00:00"
+   "title": "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
+   "link": "https://www.cnbc.com/2026/11/16/fed-ai-task-force-kevin-warsh.html",
+   "source": "CNBC",
+   "at": "2026-11-16T18:46:07+00:00"
   },
   {
-   "title": "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
-   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%AE%98%E5%93%A1%E8%AD%A6%E5%91%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E9%A2%A8%E9%9A%AA-%E6%81%90%E5%8A%A0%E9%80%9F%E5%AD%98%E6%AC%BE%E6%93%A0%E5%85%8C%E4%B8%A6%E5%BC%95%E7%99%BC%E9%87%91%E8%9E%8D%E6%B3%A2%E5%8B%95-121004180.html",
-   "source": "Yahoo奇摩股市",
-   "at": "2026-11-16T12:10:04+00:00"
+   "title": "Warsh, Opening Remarks",
+   "link": "https://www.federalreserve.gov/newsevents/speech/warsh20261116a.htm",
+   "source": "Federal Reserve",
+   "at": "2026-11-16T17:00:00+00:00"
   },
   {
-   "title": "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%",
-   "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQbm16MVNnOTJvY2hpMU1mbmlVMDhfLWNoSjI1Q0hPLUdvU2hkSF9QVzBmMkZ2UmNYcTdHS3p5dDE3NWxzVlpsd0tCVlhOTUlQaEFzaC1JWTg0N0R0cFNFVWxPYVBMOUZjWUc1N243WlY5RWlJTVNxWWV2VVhBV2dUczVucXpQbm5BZVl2alptOEVwTVNmRzJqLUQwb01HVlJuXzdEclQ1MkR6QXRYNGZ5enljd0U?oc=5",
-   "source": "Bloomberg",
-   "at": "2026-11-16T09:14:29+00:00"
+   "title": "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOVkNEMWt0MEpVV2U4c0tCZEQ0N3FJRnBMWEFJRktVNVpBNGZ4RWFjVXA0TnR0VE8yam5OenZaaF9KWVhuc3RCQkZXWGlwb0pPRElEM0JoU0Rsb3BpX2ZTUjBLUG52SUM1V2RkcHRKLVdLR1ZmeXFISlplcTRQU0xJMzZHcFBFbUZPVWtYeGpqbWxKU1gtQjMxZXBMZU5rdldKOTRaWXpNSkZqd3MwajRHUzVvSVI2QTBOb1dJMGc3U3VzdTFP?oc=5",
+   "source": "Reuters",
+   "at": "2026-11-16T18:03:06+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-11-16",
+   "date": "2026-11-17",
    "meetings": [
     {
      "date": "2026-12-09",
-     "start": 3.8775,
-     "end": 4.14875,
-     "move_bp": 27.125,
+     "start": 3.88,
+     "end": 4.140682,
+     "move_bp": 26.068,
      "outcomes": [
       [
        25,
-       0.915
+       0.9573
       ],
       [
        50,
-       0.085
+       0.0427
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
     {
      "date": "2027-01-27",
-     "start": 4.14875,
-     "end": 4.34,
-     "move_bp": 19.125,
+     "start": 4.140682,
+     "end": 4.32,
+     "move_bp": 17.932,
      "outcomes": [
       [
        25,
-       0.765
+       0.7173
       ],
       [
        0,
-       0.235
+       0.2827
       ]
      ],
      "how": "2027-02 合約平均"
     },
     {
      "date": "2027-03-17",
-     "start": 4.34,
-     "end": 4.517143,
+     "start": 4.32,
+     "end": 4.497143,
      "move_bp": 17.714,
      "outcomes": [
       [
@@ -81,102 +81,102 @@
     },
     {
      "date": "2027-04-28",
-     "start": 4.517143,
-     "end": 4.585,
-     "move_bp": 6.786,
+     "start": 4.497143,
+     "end": 4.575,
+     "move_bp": 7.786,
      "outcomes": [
       [
        0,
-       0.7286
+       0.6886
       ],
       [
        25,
-       0.2714
+       0.3114
       ]
      ],
      "how": "2027-05 合約平均"
     },
     {
      "date": "2027-06-09",
-     "start": 4.585,
-     "end": 4.713571,
-     "move_bp": 12.857,
+     "start": 4.575,
+     "end": 4.667857,
+     "move_bp": 9.286,
      "outcomes": [
       [
-       25,
-       0.5143
+       0,
+       0.6286
       ],
       [
-       0,
-       0.4857
+       25,
+       0.3714
       ]
      ],
      "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
     },
     {
      "date": "2027-07-28",
-     "start": 4.713571,
-     "end": 4.745,
-     "move_bp": 3.143,
+     "start": 4.667857,
+     "end": 4.705,
+     "move_bp": 3.714,
      "outcomes": [
       [
        0,
-       0.8743
+       0.8514
       ],
       [
        25,
-       0.1257
+       0.1486
       ]
      ],
      "how": "2027-08 合約平均"
     },
     {
      "date": "2027-09-15",
-     "start": 4.745,
-     "end": 4.775,
-     "move_bp": 3.0,
+     "start": 4.705,
+     "end": 4.725,
+     "move_bp": 2.0,
      "outcomes": [
       [
        0,
-       0.88
+       0.92
       ],
       [
        25,
-       0.12
+       0.08
       ]
      ],
      "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
     },
     {
      "date": "2027-10-27",
-     "start": 4.775,
-     "end": 4.62,
-     "move_bp": -15.5,
+     "start": 4.725,
+     "end": 4.76375,
+     "move_bp": 3.875,
      "outcomes": [
       [
-       -25,
-       0.62
+       0,
+       0.845
       ],
       [
-       0,
-       0.38
+       25,
+       0.155
       ]
      ],
      "how": "2027-10 合約日曆日加權反推（N=27、M=4）"
     },
     {
      "date": "2027-11-17",
-     "start": 4.62,
-     "end": 4.896923,
-     "move_bp": 27.692,
+     "start": 4.76375,
+     "end": 4.65125,
+     "move_bp": -11.25,
      "outcomes": [
       [
-       25,
-       0.8923
+       0,
+       0.55
       ],
       [
-       50,
-       0.1077
+       -25,
+       0.45
       ]
      ],
      "how": "2027-11 合約日曆日加權反推（N=17、M=13）"
@@ -184,187 +184,187 @@
    ],
    "next": {
     "date": "2026-12-09",
-    "start": 3.8775,
-    "end": 4.14875,
-    "move_bp": 27.125,
+    "start": 3.88,
+    "end": 4.140682,
+    "move_bp": 26.068,
     "outcomes": [
      [
       25,
-      0.915
+      0.9573
      ],
      [
       50,
-      0.085
+      0.0427
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
    "horizon": {
     "date": "2026-12-09",
-    "start": 3.8775,
-    "end": 4.14875,
-    "move_bp": 27.125,
+    "start": 3.88,
+    "end": 4.140682,
+    "move_bp": 26.068,
     "outcomes": [
      [
       25,
-      0.915
+      0.9573
      ],
      [
       50,
-      0.085
+      0.0427
      ]
     ],
     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
    },
-   "cum_bp": 27.125,
-   "r0": 3.8775,
+   "cum_bp": 26.068,
+   "r0": 3.88,
    "r0_src": "2026-11 合約（當月沒有會議）",
    "horizons": [
     {
      "date": "2026-12-09",
      "label": "2026 年底",
-     "cum_bp": 27.125,
-     "prev_cum_bp": 27.477
+     "cum_bp": 26.068,
+     "prev_cum_bp": 27.83
     },
     {
      "date": "2027-06-09",
      "label": "2027 年中",
-     "cum_bp": 83.607,
-     "prev_cum_bp": 82.5
+     "cum_bp": 78.786,
+     "prev_cum_bp": 82.75
     },
     {
      "date": "2027-11-17",
      "label": "2027 年底",
-     "cum_bp": 101.942,
-     "prev_cum_bp": 86.538
+     "cum_bp": 77.125,
+     "prev_cum_bp": 91.202
     }
    ],
    "prev": {
     "next": {
      "date": "2026-12-09",
-     "start": 3.88,
-     "end": 4.154773,
-     "move_bp": 27.477,
+     "start": 3.8775,
+     "end": 4.155795,
+     "move_bp": 27.83,
      "outcomes": [
       [
        25,
-       0.9009
+       0.8868
       ],
       [
        50,
-       0.0991
+       0.1132
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.88,
-     "end": 4.154773,
-     "move_bp": 27.477,
+     "start": 3.8775,
+     "end": 4.155795,
+     "move_bp": 27.83,
      "outcomes": [
       [
        25,
-       0.9009
+       0.8868
       ],
       [
        50,
-       0.0991
+       0.1132
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 27.477
+    "cum_bp": 27.83
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-11-16T14:13:01.107505+00:00",
+ "at": "2026-11-16T23:11:51.487469+00:00",
  "layout": "main",
  "topics": {
-  "hash": "967801c62f77d881",
+  "hash": "f758cb60a1bdfc38",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會主管金融監管事務的理事巴爾警告 AI 導入金融體系可能引發多重風險，包括未授權帳戶操作、數分鐘內爆發存款擠兌、交易羊群效應與市場操縱；堪薩斯城聯準銀行總裁施密德表示通膨朝「錯誤方向」發展，9 月年增率達 3.6%，遠高於 2% 目標，市場已完",
+    "text": "台灣央行總裁楊金龍表示，12月升息決定將觀察三大指標：今年及明年通膨變化、其他國家升息情況，以及國內金融市場放款與經濟熱絡程度。他強調油電價格走勢為重要變數，若調幅明顯將產生外溢效應，央行須重新評估通膨。",
     "links": [
      {
-      "title": "Fed官員示警通膨「走錯方向」！市場完全押注12月升息1碼、明年1月也可能升息",
-      "link": "https://tw.stock.yahoo.com/news/fed%E5%AE%98%E5%93%A1%E7%A4%BA%E8%AD%A6%E9%80%9A%E8%86%A8-%E8%B5%B0%E9%8C%AF%E6%96%B9%E5%90%91-%E5%B8%82%E5%A0%B4%E5%AE%8C%E5%85%A8%E6%8A%BC%E6%B3%A812%E6%9C%88%E5%8D%87%E6%81%AF1%E7%A2%BC-%E6%98%8E%E5%B9%B41%E6%9C%88%E4%B9%9F%E5%8F%AF%E8%83%BD%E5%8D%87%E6%81%AF-131005723.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-16T13:10:05+00:00"
+      "title": "12月升息？楊金龍提3大指標、油電價重要變數",
+      "link": "https://tw.news.yahoo.com/12%E6%9C%88%E5%8D%87%E6%81%AF-%E6%A5%8A%E9%87%91%E9%BE%8D%E6%8F%903%E5%A4%A7%E6%8C%87%E6%A8%99-%E6%B2%B9%E9%9B%BB%E5%83%B9%E9%87%8D%E8%A6%81%E8%AE%8A%E6%95%B8-223635442.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-16T22:36:35+08:00"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "中國央行採取行動抑制人民幣升值過熱，凍結市場約240億美元流動性，這是近5年來首次出手阻擊人民幣連續升值",
+    "links": [
+     {
+      "title": "【近5年首見！陸央行出手阻擊人民幣連14漲過熱】 預計凍結市場約240億美元流動性。 （#起啵）",
+      "link": "https://news.google.com/rss/articles/CBMi_gNBVV95cUxOSFM1WkNlV21QWmdTNWd6eXF3aDZ5anZOTUJlX3lJemltcVFVRmo4dGpURXNuQlVieEJBcGpjNENkRWFrY2YtUFhzVUJKRGc2bDBwQkkxdVdwZ1NHSS1vUzdvN2FLVnRXc1hPcV9nRXMyTTRFTmVsQTJJUmk2WWtSV0w4TnZNNGI1ZldZMFhUblFQb0RKOTRfY1ByZC1DM0o4ZVExNUNFUklJTy1lQlRlUVR4MVBOcmRvNDl0UWhXbHFNbEpxNmVfRnd1YUZuYW13bUxYa0J5dHhjWGY4aEtvaHBaaXViLW1NbW1FeUlpMkp6THpkQ092Vl9jalRmT0FNdWZFb2o4ejVTbWhLUnQwZkM4RGx4Z1h5SV92c2pTeXplaU81c2dkQTBlOHJEanZfbGMwTUJsX3RRc056RWpSZVpCV05ObjA1RU9iby1fbVFJcHFyNnNlZ0VVSl9CWGFiZmstOWg0VXo4c1ZDcXJhMU8ycUtEQlc1YU9TU0RNa3I1WGpEYW91aXREVkw0MGY4UGVaS1h6TEhiempWeGJJNW5yYkYtS2F4YjhON2daVmJybVZkS2M4T3J1YlFkM19URUhTODVzbEpuc0gxZnFyWVBydThpLXdrdG5uWXctdHVzcVFCVml6Y0ZOUHVxLUsybGlGdUVZVzJhamVtaWc?oc=5",
+      "source": "Facebook",
+      "at": "2026-11-15T19:40:36+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗代理勢力透過伊拉克走私石油獲利數億美元；油價因預期供給過剩而下跌，伊朗產油減少",
+    "text": "中東原油出口加速恢復，國際能源總署預估第四季全球原油日供應量達1.05億桶、高出需求170萬桶，布蘭特原油跌破93美元、西德州原油滑至87美元。高盛預測布蘭特原油2027年均價將降至88美元、年底前進一步下滑至78美元。",
     "links": [
      {
-      "title": "Iran’s proxy in Iraq rakes in hundreds of millions through oil smuggling",
-      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNeUlTdkFxaWpmd0tNUXA5WXRMbmQydm9xVGtYVXYwbnAxVWx3QnZfOUdJS2YwUkFmRWV3TkRHclFKdEZzcFlKLUlGSXhQQ1VBZUFENE9pSWdzRHBsYzg1QVA5am4weVVXeUJHZzF3OGZuVnZ6dmZlbmxUZExnREs4NEMwUFFFMGRsN2N4VThtbUZFS21hblF2bXEzQk5pR3k4SDJBZVhLTDEtT0V3UHN0dnRpWkZKNEk?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-16T12:59:07+00:00"
+      "title": "U.S. crude oil declines to $85 a barrel on recovering Middle East exports",
+      "link": "https://www.cnbc.com/2026/11/16/us-crude-oil-declines-to-87-a-barrel-on-recovering-middle-east-exports.html",
+      "source": "CNBC",
+      "at": "2026-11-16T22:19:02+00:00"
      },
      {
-      "title": "Oil prices fall on expectations of coming supply surplus",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNSXlabl9ocWtiOEZLcnc2SGNVSEh2bjltWURkWU1RSDVTejZWMEtNYTR4QW9sT19DQy05SVhHVmphTEtIQXdtVzlUS25Vdk1oS0hjdWZ0MHpUb01NQUp4dzlBcE55anIwR0hKVmhCUDRsT3V3ek9jTURVYkcySDNBM1B0RmJ3emdUaHpPVWpENENfZ2JGRHB3MlJuekVfUWlFa2lfUQ?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-16T02:00:00+00:00"
+      "title": "國際油價跌破93美元 美股能源類股全面下挫",
+      "link": "https://tw.stock.yahoo.com/news/%E5%9C%8B%E9%9A%9B%E6%B2%B9%E5%83%B9%E8%B7%8C%E7%A0%B493%E7%BE%8E%E5%85%83-%E7%BE%8E%E8%82%A1%E8%83%BD%E6%BA%90%E9%A1%9E%E8%82%A1%E5%85%A8%E9%9D%A2%E4%B8%8B%E6%8C%AB-225106829.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-16T22:51:06+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "輝達執行長黃仁勳因婚外情醜聞於11/16宣布辭職，股價應聲重挫逾一成。市場聚焦輝達財報與新創公司Anthropic首次公開募股，三大指數本週漲幅創8月以來最佳表現，惟那斯達克週五下跌0.91%",
+    "text": "輝達財報前夕，美國收緊中國企業海外租用先進AI晶片管道，輝達股價下跌4.12%，費城半導體指數重挫5.28%，道瓊下跌739點；台積電ADR重挫6.34%，那斯達克與標普500指數連續第三個交易日收黑",
     "links": [
      {
-      "title": "S&P 500, Nasdaq futures fall ahead of Nvidia earnings, Anthropic IPO",
-      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOZEJobHpHMl90WUdVbnpzSGxLb1l3bi1BczhrN29iVW9rUzBtQWE4aFNuM2ZGS1RIQThLdEZPWmZjeExVaHhRaXBubkdqR3R3TXJYTlRqUmRYcXZxYS1pV1lyRlExUDdEUWJ3cTg4aktJVWcxbkg5UW9oeVRXLXhCZjdRQmFNeFJlLXhpWTRMM1lEUVlodGwxVHNCSE9ONTlnem0yekw1dDNraElYZGc?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-16T12:46:06+00:00"
-     },
-     {
-      "title": "Tech Stocks Slide as Nvidia, Anthropic Tests Await: Markets Wrap",
-      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOU3BQd2lUam5YX1RGekdqV203U1BmRzNUQnlhem10ajRycVpfTUYzRWtOM2h1ZDd5M2tvUnNXeG1VOHRGTEl4VkJsSUhuQk41UlcyNU1EZDJaSTNTd2NvM3lDUDV5NU95SUtxSHZaZEpjSnMxRGgtamUtb0lYWUtHMTFZZDBLblVaeXhVTEhSa2ZPeF9y?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-16T13:36:19+00:00"
-     }
-    ]
-   },
-   {
-    "id": "semi",
-    "label": "AI 與半導體",
-    "text": "AI 基礎設施投資冷卻訊號浮現，研究機構 SemiAnalysis 大幅下修未來數年 AI 加速器資本支出預測，2028 年從 1.054 兆美元降至 7,580 億美元（下修 28%），2030 年更從 1.531 兆美元降至 9,230 億美元（下修 40%）；輝達受創最重，2027 至 2030 年出貨預測分別被下調 22%、39%、56% 與 66%，主因包括 AI 實驗室營收成長放緩、融資環境收緊與資料中心",
-    "links": [
-     {
-      "title": "SemiAnalysis大幅下修AI算力與資本支出預測 輝達首當其衝",
-      "link": "https://tw.stock.yahoo.com/news/semianalysis%E5%A4%A7%E5%B9%85%E4%B8%8B%E4%BF%AEai%E7%AE%97%E5%8A%9B%E8%88%87%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E9%A0%90%E6%B8%AC-%E8%BC%9D%E9%81%94%E9%A6%96%E7%95%B6%E5%85%B6%E8%A1%9D-125006262.html",
+      "title": "〈美股盤後〉輝達財報前AI股掀賣壓 道瓊瀉近740點 費半、台積ADR重挫超5%",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%BE%8C-%E8%BC%9D%E9%81%94%E8%B2%A1%E5%A0%B1%E5%89%8Dai%E8%82%A1%E6%8E%80%E8%B3%A3%E5%A3%93-%E9%81%93%E7%93%8A%E7%80%89%E8%BF%91740%E9%BB%9E-%E8%B2%BB%E5%8D%8A-%E5%8F%B0%E7%A9%8Dadr%E9%87%8D%E6%8C%AB%E8%B6%855-220915431.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-11-16T12:50:06+00:00"
+      "at": "2026-11-16T22:09:15+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股 16 日重挫 2,635 點至 41,040 點，創歷史第二大跌點，跌幅 6.03%，三大法人合計賣超 1,140.55 億元；輝達黃仁勳辭職風波延燒，權王台積電尾盤遭大砍 8,560 張，市值型 ETF 元大台灣 50 也跌破百元",
+    "text": "台股11/16狂瀉2635點、跌幅6.03%，創史上第二大收盤跌點，外資賣超701.9億元、融資大減121億元。台指期夜盤逆勢上漲154點收40935點，反映市場在連續大跌後有資金嘗試承接，但能否抵擋美股衝擊仍待觀察。",
     "links": [
      {
-      "title": "史上第2慘！台股大跌2600多點 金管會說話了",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B2%E4%B8%8A%E7%AC%AC2%E6%85%98-%E5%8F%B0%E8%82%A1%E5%A4%A7%E8%B7%8C2600%E5%A4%9A%E9%BB%9E-%E9%87%91%E7%AE%A1%E6%9C%83%E8%AA%AA%E8%A9%B1%E4%BA%86-124502807.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-16T12:45:02+00:00"
+      "title": "【盤前】美股全倒費半狂瀉5%！台指夜盤漲154點　台股拚止跌面臨考驗",
+      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%89%8D-%E7%BE%8E%E8%82%A1%E5%85%A8%E5%80%92%E8%B2%BB%E5%8D%8A%E7%8B%82%E7%80%895-%E5%8F%B0%E6%8C%87%E5%A4%9C%E7%9B%A4%E6%BC%B2154%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%8B%9A%E6%AD%A2%E8%B7%8C%E9%9D%A2%E8%87%A8%E8%80%83%E9%A9%97-224700511.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-16T22:47:00+08:00"
+     },
+     {
+      "title": "傳美擬擴大AI晶片出口管制！台指期夜盤激戰震盪逾千點　終場收漲154點",
+      "link": "https://tw.stock.yahoo.com/news/%E5%82%B3%E7%BE%8E%E6%93%AC%E6%93%B4%E5%A4%A7ai%E6%99%B6%E7%89%87%E5%87%BA%E5%8F%A3%E7%AE%A1%E5%88%B6-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%BF%80%E6%88%B0%E9%9C%87%E7%9B%AA%E9%80%BE%E5%8D%83%E9%BB%9E-%E7%B5%82%E5%A0%B4%E6%94%B6%E6%BC%B2154%E9%BB%9E-223755439.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-16T22:37:55+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金 12 月期貨開盤價 3,869.70 美元／盎司，創逾一年新低，跌幅 0.4%；強勢美元與 10 年期公債殖利率上升施壓金價，市場預期聯準會 12 月升息機率達 93.4%，不利黃金表現",
+    "text": "黃金期貨11/16開盤跌至一年多來最低點3,869.70美元/盎司，跌幅0.4%，主因美元走強與10年期公債殖利率上升，市場預期聯準會12月升息機率達93.4%",
     "links": [
      {
       "title": "Gold prices today, Monday, November 16, 2026: Gold prices hit lowest levels in over a year. Here's why.",
@@ -377,43 +377,27 @@
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元走貶逼近33元，外資因輝達風波賣超台股並大幅匯出資金。央行數據顯示外資單日匯出逾100億美元，反映國際資金因AI產業不確定性轉向持有美元",
+    "text": "台灣銀行新台幣存放比攀升至九成水準，9月底已有兩家大型公股行庫突破九成，民營銀行多在八成至九成，遠高於業界七成水準。銀行業者指出，在台股吸金、企業海外投資及資金外流等因素影響下，銀行資金來源穩定性值得關注。",
     "links": [
      {
-      "title": "新台幣兌美元走貶 央行：因外資賣超台股再匯出",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBpSHgwWm9aN1NDcjhJRkZsQ0dNNFNlbVFWeE9wT1A3b2ZGWnBQcy0yUWhRTWgtVW11TS11YVRDVVhUVlNfNEswVGl5SGlXeFE?oc=5",
-      "source": "公視新聞",
-      "at": "2026-11-16T05:38:01+00:00"
-     },
-     {
-      "title": "股匯雙殺！新台幣逼近33元　彭博揭AI大廠「抱緊美元不換台幣」",
-      "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE40ajFtQlhKTUFsTWxMZkxVM0w5NlVnakRkQTl5dXVDb0tWSkRZSmp5c3J5MUtNak1JSHRSYWxmM2NaUlZUb3FGUWdLOWpwcG9JMVHSAVBBVV95cUxPZVdxcy0wSUVYWEhVRjV6ZVk3RDJSdlFqZjhuUUo0NlRraW82TTJKQlVyY01FM3htRlBsTXlsZF9QZVlxMkp3cnhwU2Z4dEF2Sw?oc=5",
-      "source": "ETtoday財經雲",
-      "at": "2026-11-16T05:16:00+00:00"
+      "title": "台幣存放比攀高 逼近九成",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E5%B9%A3%E5%AD%98%E6%94%BE%E6%AF%94%E6%94%80%E9%AB%98-%E9%80%BC%E8%BF%91%E4%B9%9D%E6%88%90-224611640.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-16T22:46:11+08:00"
      }
     ]
    }
   ],
-  "at": "2026-11-16T14:13:43.764344+00:00"
+  "at": "2026-11-16T23:12:38.986229+00:00"
  },
  "main_source_titles": [
-  "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
-  "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
-  "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
+  "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
+  "Warsh, Opening Remarks",
+  "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015"
  ],
- "headline": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動",
- "rate_note": "巴爾警告 AI 恐加速存款擠兌並引發金融波動，若金融穩定風險升溫，偏向促使聯準會維持較高利率以保留政策空間，壓低降息預期；不過 10 年期 11/16 盤中 -1bp 至 5.14%，市場還沒反映。",
+ "headline": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望",
+ "rate_note": "Warsh 認為 AI 可能提升生產力並成為通縮力量，偏向壓低長端利率與升息壓力；但他也提出失業或失望兩種負面情境，方向取決於 AI 實際影響。10 年期 11/16 收 5.12%、-3bp，市場已在反映。",
  "recent_mains": [
-  {
-   "headline": "貝森特稱輝達需「大幅改組」、黃仁勳應下台",
-   "titles": [
-    "Bessent Says Nvidia Needs ‘Dramatic Shakeup’ With Huang Out",
-    "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
-    "Fed 'has some work to do on inflation,' KC Fed chief says",
-    "央行12月不排除預防性升息 緊盯美利率、油電價格等變數"
-   ],
-   "at": "2026-11-15T23:21:31.086196+00:00"
-  },
   {
    "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
    "titles": [
@@ -430,9 +414,46 @@
     "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
    ],
    "at": "2026-11-16T14:13:01.107505+00:00"
+  },
+  {
+   "headline": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望",
+   "titles": [
+    "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
+    "Warsh, Opening Remarks",
+    "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015"
+   ],
+   "at": "2026-11-16T23:11:51.487469+00:00"
   }
  ],
  "archive": {
+  "2026-11-17": {
+   "headline": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望",
+   "text": "11/16，Warsh 在舊金山向他召集的生產力與就業特別小組發表演說，強調 AI（他稱為「超級智慧」）將對經濟產生重大影響、對貨幣政策有重要意涵。他指出 AI 可能帶來生產力提升、加速實質經濟成長並維持充分就業；但也可能透過自動化造成失業率上升，或者單純「令人失望」、未能兌現高度期待。Warsh 自接任主席以來一直強調 AI 的重要性，認為它有潛力提升生產力、最終成為經濟的通縮力量。這場會議是他召集的五個特別小組之一，目的是拓寬聯準會思維、為下一階段政策做準備。¶黃金價格11/16跌至一年低點，面臨2015年以來最糟年度表現，主因美國公債殖利率攀升與美元走強。市場對輝達創辦人黃仁勳辭任執行長事件持續消化，加上美國政府收緊中國企業透過海外租用AI算力管道，引發對晶片需求及AI產業前景擔憂，投資人避險情緒升溫，資金流向美元資產，壓抑黃金吸引力。\n輝達執行長人選引發貝森特批評，這位財政部長呼籲該公司進行重大調整以應對市場挑戰，11/16。\nTradeweb推出人工智慧助手供美國公債交易員使用，協助處理交易流程，11/16。",
+   "rate_note": "Warsh 認為 AI 可能提升生產力並成為通縮力量，偏向壓低長端利率與升息壓力；但他也提出失業或失望兩種負面情境，方向取決於 AI 實際影響。10 年期 11/16 收 5.12%、-3bp，市場已在反映。",
+   "links": [
+    {
+     "title": "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
+     "link": "https://www.cnbc.com/2026/11/16/fed-ai-task-force-kevin-warsh.html",
+     "source": "CNBC",
+     "at": "2026-11-16T18:46:07+00:00"
+    },
+    {
+     "title": "Warsh, Opening Remarks",
+     "link": "https://www.federalreserve.gov/newsevents/speech/warsh20261116a.htm",
+     "source": "Federal Reserve",
+     "at": "2026-11-16T17:00:00+00:00"
+    },
+    {
+     "title": "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015",
+     "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOVkNEMWt0MEpVV2U4c0tCZEQ0N3FJRnBMWEFJRktVNVpBNGZ4RWFjVXA0TnR0VE8yam5OenZaaF9KWVhuc3RCQkZXWGlwb0pPRElEM0JoU0Rsb3BpX2ZTUjBLUG52SUM1V2RkcHRKLVdLR1ZmeXFISlplcTRQU0xJMzZHcFBFbUZPVWtYeGpqbWxKU1gtQjMxZXBMZU5rdldKOTRaWXpNSkZqd3MwajRHUzVvSVI2QTBOb1dJMGc3U3VzdTFP?oc=5",
+     "source": "Reuters",
+     "at": "2026-11-16T18:03:06+00:00"
+    }
+   ],
+   "at": "2026-11-16T23:11:51.487469+00:00",
+   "weekly": false,
+   "points": 2
+  },
   "2026-11-16": {
    "headline": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動",
    "text": "聯準會主管金融監管事務的理事巴爾 11/16 在義大利米蘭演說時警告，人工智慧技術導入金融體系可能對市場交易、資安防禦及消費者保護造成多重威脅。他指出，大型銀行已偵測到 AI 代理程式試圖在未獲授權下操作散戶帳戶；自主 AI 代理程式能即時偵測收益率差異並高速移轉資金，恐使存款擠兌在數分鐘內爆發，壓垮傳統流動性管理與監管介入時程。此外，交易模型過度依賴 AI 可能引發羊群效應擾亂市場，自學演算法甚至可能演變成市場操縱與系統性風險。巴爾的言論呼應聯準會最新《金融穩定報告》，其中 87% 受訪者將 AI 列為金融體系主要風險。¶新興市場債券發行量在 11/16 驟減 41%，供給短缺推升債券價格。市場出現債券荒（Bond Drought）現象，發行活動大幅放緩導致流通量不足，買盤需求相對強勁使得新興市場債券價格走高。這波發行量萎縮反映發行人可能在觀望市場環境，或等待更有利的發行時機，供需失衡成為近期新興市場債市的主要特徵。\n加拿大10月通膨率維持在3.1%，未見進一步回落，顯示該國物價穩定性仍待觀察。",
@@ -620,34 +641,6 @@
     }
    ],
    "at": "2026-11-10T15:51:58.441722+00:00",
-   "weekly": false,
-   "points": 2
-  },
-  "2026-11-09": {
-   "headline": "選舉結果衝擊 AI 概念股，資金轉進美債推動債市反彈",
-   "text": "11/9 美國選舉結果出爐後，AI 相關概念股遭遇賣壓，資金轉向美國公債避險，推動債市反彈。市場對選舉後政策走向的不確定性，促使投資人重新配置資產，從高風險的科技股轉向相對安全的固定收益商品。這波資金輪動反映投資人在選後政治環境下的謹慎態度，尋求較穩定的投資標的。¶11/9，美股期貨盤前溫和上漲，原油價格回落。市場焦點轉向 11/10（美國時間）即將公布的 10 月 CPI 數據。分析指出，人工智慧可能正在協助而非傷害美國就業成長，這與先前擔心 AI 將取代工作的看法形成對比。10 月非農就業報告已於 11/6（美國時間）公布，新增就業 16.5 萬人，失業率 4.1%。\n輝達股價11/9早盤跌超5%，執行長黃仁勳承認與一名疑似美國間諜的人士有不當關係，公司董事會已啟動調查。",
-   "rate_note": "選舉結果引發資金從 AI 股轉進美債，偏向壓低長端利率——避險需求推升債券價格、壓低殖利率。不過 10 年期 11/6 收盤 +2bp 至 4.86%，市場還沒反映。",
-   "links": [
-    {
-     "title": "Treasury Rally Gets New Boost as Election Hammers the AI Trade",
-     "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelZPY0tQazFGWWxNRjFac00xRWFpVE1vdVpHenVSMDNVS3c0WFpZMXk4Rkk5d2xFYU9wUVdtcGZIYWlvVU41eFZaV1RGdDU4bGE3Z1ppeVlMdTZleU13RVRRbDNVS0pDQzdQbjB5TkFjOWF0NDRxNXA3azY0UGRtM2M5SFU2cDFkUHhZMVVpSVpRM2JjeldzMzU1QnMxZDNCd1ZVcnV1eE5ROWtwZjF2Y1E1UQ?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-11-09T10:02:11+00:00"
-    },
-    {
-     "title": "How AI May Be Aiding, Not Hurting, US Employment Growth",
-     "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPbkZZeF9UUmkzcE9ZdVZQZGhaeTdXeEdjV0xGSTQ2RF94dDBlSms1dHYwbVNaSDd1TXU3M2RHbGNDNm1mdkVLT0NMNFBHWmNhbkJ1Mm9uN0Fqak81UVc3TFpCMTVVQXVyMFR3c21rdktjbm02anVfRDhLMHJrQWxZZV9vanlxeUhkYVlfSHF4bWpORFpZOHM3amlsLWhrMmRYWUxFbXotZVVlQTU3WmRyYU5MbE1qWG1PTWs3bTg5aEJKaG9MZGlN?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-11-09T12:03:30+00:00"
-    },
-    {
-     "title": "Nvidia Scandal Hurdled on Pre-Bell Wall Street; Asia, Europe Up",
-     "link": "https://finance.yahoo.com/markets/stocks/articles/nvidia-scandal-hurdled-pre-bell-111038422.html?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-11-09T11:10:38+00:00"
-    }
-   ],
-   "at": "2026-11-09T12:10:40.432235+00:00",
    "weekly": false,
    "points": 2
   }

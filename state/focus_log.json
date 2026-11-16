@@ -1,108 +1,5 @@
 [
  {
-  "at": "2026-11-04T12:16+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "jolts",
-   "refunding"
-  ],
-  "locks": [
-   "refunding"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Stocks, Bonds Rally After US Vote as Dollar Falls: Markets Wrap - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Euro-Zone Inflation Accelerates to Double the ECB’s Target - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Oil Loses Its Grip on Bonds as Growth Fears Displace Inflation - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Treasuries Advance as Traders Eye US Votes, Refinancing Plans - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Meta Starts Debut Euro Bond Sale After $15 Billion Dollar Deal - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.5,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+1.5、熱度+2（有內文）",
-    "titles": [
-     "Treasury yields fall as investors crowd into bonds for safety amid election stock sell-off"
-    ]
-   }
-  ],
-  "background": [
-   "Euro zone inflation hits 4% for first time in three years as interest rate hike looms"
-  ],
-  "main": "Treasury's Refunding Details Are Up Next as Five Large Companies Report Higher Revenue",
-  "main_why": "鎖定事件 refunding",
-  "second": "Inflation Backlash, Trump Fatigue Powers Huge Wins for Democrats - Bloomberg.com",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "出現材料裡沒有的數字（6180、8500、8000）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
-     "主軸 158 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "出現材料裡沒有的數字（4.0）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述"
-    ],
-    [
-     "主軸 167 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "財政部 11/4 公布季度再融資細節，市場關注發債規模與期限結構"
- },
- {
   "at": "2026-11-04T17:25+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2919,5 +2816,107 @@
    "輝達執行長黃仁勳於11/14因婚外情報導…：用了相對時間"
   ],
   "result": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動"
+ },
+ {
+  "at": "2026-11-16T23:11+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "retail"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Hammack Says Fed Interventions Should Be Temporary, Targeted - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Hammack Reiterates Preference for Small, Incremental Hikes - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed's Warsh says emerging technologies to have 'significant impact,' but there are risks - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed's Hammack reiterates case for slow, steady rate hikes -Bloomberg TV - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Warsh says AI boom brings opportunity and 'bad actors' - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed's Barr warns on AI risks to financial system - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Warsh Says Staff Are Gaming Out Contingencies on AI Impact - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "NY Fed's Nordstrom flags resilience of foreign exchange markets - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
+   "Warsh, Opening Remarks",
+   "輝達風暴襲台廠1／搭AI快車台廠進入黃金年代　輝達翻車韓國趁虛而入拚翻盤"
+  ],
+  "main": "Hammack Says Fed Interventions Should Be Temporary, Targeted - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015 - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 254 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】112 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 185 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸只有 34 字，沒有把事情講完整（要 60–100 字）"
+    ]
+   ]
+  },
+  "result": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望"
  }
 ]

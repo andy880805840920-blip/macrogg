@@ -1,7 +1,7 @@
 {
  "election_date": "2026-11-03",
- "days_to": -13,
- "date": "2026-11-16",
+ "days_to": -14,
+ "date": "2026-11-17",
  "source": "Polymarket",
  "outlook": {
   "title": "若民主黨同時拿下參眾兩院",
@@ -125,7 +125,7 @@
     "p": 0.0015
    },
    "close": 0.49850000000000005,
-   "vol": 9768788.204285,
+   "vol": 9841665.400088001,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -150,7 +150,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.7,
-     "vol": 9768788.204285,
+     "vol": 9841665.400088001,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },
