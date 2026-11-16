@@ -1,12 +1,18 @@
 {
  "hash": "",
- "text": "聯準會負責監管的副主席 Barr 11/16 警告，AI 代理人（AI agents）可能在未來引發銀行擠兌。這類 AI 系統能自主執行金融決策，一旦偵測到銀行出現風險訊號，可能同時觸發大量客戶提款，速度遠超傳統擠兌。Barr 指出，AI 代理人的普及將改變金融穩定風險的本質，監管機構需要重新評估現有的流動性與資本緩衝是否足夠。他強調聯準會正在研究如何因應這類新型態的系統性風險，包括是否需要針對使用 AI 代理人的金融機構設立額外監管要求。¶新興市場債券發行量大幅萎縮，11/16 數據顯示銷售量較去年同期驟降 41%，供給短缺推升債券價格。市場分析師指出，發行人因全球利率環境不確定性而延後融資計畫，加上部分國家財政狀況改善減少發債需求，導致新債供應量創近年新低。投資人在供不應求情況下追價，使新興市場債券殖利率下滑、價格走揚，但交易量清淡反映市場觀望氣氛濃厚。\n巴基斯坦央行預測2027財政年度通膨將緩和至5%至7%目標區間，該央行在11/16做出此預測。\n印度10月批發物價通膨加速至12.29%，主要受燃料價格上漲推動，較前月明顯上升。",
+ "text": "聯準會主管金融監管事務的理事巴爾 11/16 在義大利米蘭演說時警告，人工智慧技術導入金融體系可能對市場交易、資安防禦及消費者保護造成多重威脅。他指出，大型銀行已偵測到 AI 代理程式試圖在未獲授權下操作散戶帳戶；自主 AI 代理程式能即時偵測收益率差異並高速移轉資金，恐使存款擠兌在數分鐘內爆發，壓垮傳統流動性管理與監管介入時程。此外，交易模型過度依賴 AI 可能引發羊群效應擾亂市場，自學演算法甚至可能演變成市場操縱與系統性風險。巴爾的言論呼應聯準會最新《金融穩定報告》，其中 87% 受訪者將 AI 列為金融體系主要風險。¶新興市場債券發行量在 11/16 驟減 41%，供給短缺推升債券價格。市場出現債券荒（Bond Drought）現象，發行活動大幅放緩導致流通量不足，買盤需求相對強勁使得新興市場債券價格走高。這波發行量萎縮反映發行人可能在觀望市場環境，或等待更有利的發行時機，供需失衡成為近期新興市場債市的主要特徵。\n加拿大10月通膨率維持在3.1%，未見進一步回落，顯示該國物價穩定性仍待觀察。",
  "links": [
   {
-   "title": "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
-   "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOXzBOcnJGTlAwcHNmMkFMa25aM1JKbnQ4SGtsdndxVU5GenJ6eWtQbEg3ajQxOVFpNld0ZExTUFZ1TmtieFJ3SmlmU3gweHJuWGM4am42WFRiQ3RnZGdZRmJlUzV0QTFMMmNyM200RzR5RGt1R2JYZUVHNWhzNlZBNnZHSGhEME5BNGpWLUs3ZG9pYVV1YXBYUHBoY3JtanV1WGgxNmc3NA?oc=5",
+   "title": "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
+   "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNcEVFaTdEb1RBMjV6RXdpcG5KTVVkZXEtV28zMUVZc0VmdnVtTUl4N1lVakpFcEd5ODNpanp2N09iTWxkM3hpZkY5Qm9XVDBvRGhOUG9tSlpQRzlpQlRzMWJjS0RxSnFvRlZDTXBjNnhkM2hld3A5SDFFZ2lVYkF0Qmdjc19XUTlKd2tfLWxCeGI5RDRxcmhsYmt1U010ZWdxWkpudlVvb3JmSGJ5NmJMRVNTd0JyRklCN1Fn?oc=5",
    "source": "Bloomberg",
-   "at": "2026-11-16T10:00:00+00:00"
+   "at": "2026-11-16T11:56:57+00:00"
+  },
+  {
+   "title": "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
+   "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%AE%98%E5%93%A1%E8%AD%A6%E5%91%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E9%A2%A8%E9%9A%AA-%E6%81%90%E5%8A%A0%E9%80%9F%E5%AD%98%E6%AC%BE%E6%93%A0%E5%85%8C%E4%B8%A6%E5%BC%95%E7%99%BC%E9%87%91%E8%9E%8D%E6%B3%A2%E5%8B%95-121004180.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-11-16T12:10:04+00:00"
   },
   {
    "title": "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%",
@@ -273,104 +279,105 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-16T12:10:46.631052+00:00",
+ "at": "2026-11-16T14:13:01.107505+00:00",
  "layout": "main",
  "topics": {
-  "hash": "d78216f7ec2d975a",
+  "hash": "967801c62f77d881",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會官員認為市場可能低估升息規模。",
+    "text": "聯準會主管金融監管事務的理事巴爾警告 AI 導入金融體系可能引發多重風險，包括未授權帳戶操作、數分鐘內爆發存款擠兌、交易羊群效應與市場操縱；堪薩斯城聯準銀行總裁施密德表示通膨朝「錯誤方向」發展，9 月年增率達 3.6%，遠高於 2% 目標，市場已完",
     "links": [
      {
-      "title": "Deutsche Bank warns markets may be underestimating rate hike risks",
-      "link": "https://finance.yahoo.com/economy/policy/articles/deutsche-bank-warns-markets-may-120353353.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-16T12:03:53+00:00"
-     },
-     {
-      "title": "Sterling today: Pound extends slide as dollar firms on hawkish Fed bets",
-      "link": "https://finance.yahoo.com/markets/currencies/articles/sterling-today-pound-extends-slide-104209550.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-16T10:42:09+00:00"
+      "title": "Fed官員示警通膨「走錯方向」！市場完全押注12月升息1碼、明年1月也可能升息",
+      "link": "https://tw.stock.yahoo.com/news/fed%E5%AE%98%E5%93%A1%E7%A4%BA%E8%AD%A6%E9%80%9A%E8%86%A8-%E8%B5%B0%E9%8C%AF%E6%96%B9%E5%90%91-%E5%B8%82%E5%A0%B4%E5%AE%8C%E5%85%A8%E6%8A%BC%E6%B3%A812%E6%9C%88%E5%8D%87%E6%81%AF1%E7%A2%BC-%E6%98%8E%E5%B9%B41%E6%9C%88%E4%B9%9F%E5%8F%AF%E8%83%BD%E5%8D%87%E6%81%AF-131005723.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-16T13:10:05+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價因全球供應過剩預期而下跌。市場預期石油供應將出現過剩，推動油價走低，儘管美伊僵局帶來不確定性，但整體供應面仍對油價構成壓力",
+    "text": "伊朗代理勢力透過伊拉克走私石油獲利數億美元；油價因預期供給過剩而下跌，伊朗產油減少",
     "links": [
+     {
+      "title": "Iran’s proxy in Iraq rakes in hundreds of millions through oil smuggling",
+      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNeUlTdkFxaWpmd0tNUXA5WXRMbmQydm9xVGtYVXYwbnAxVWx3QnZfOUdJS2YwUkFmRWV3TkRHclFKdEZzcFlKLUlGSXhQQ1VBZUFENE9pSWdzRHBsYzg1QVA5am4weVVXeUJHZzF3OGZuVnZ6dmZlbmxUZExnREs4NEMwUFFFMGRsN2N4VThtbUZFS21hblF2bXEzQk5pR3k4SDJBZVhLTDEtT0V3UHN0dnRpWkZKNEk?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-16T12:59:07+00:00"
+     },
      {
       "title": "Oil prices fall on expectations of coming supply surplus",
       "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNSXlabl9ocWtiOEZLcnc2SGNVSEh2bjltWURkWU1RSDVTejZWMEtNYTR4QW9sT19DQy05SVhHVmphTEtIQXdtVzlUS25Vdk1oS0hjdWZ0MHpUb01NQUp4dzlBcE55anIwR0hKVmhCUDRsT3V3ek9jTURVYkcySDNBM1B0RmJ3emdUaHpPVWpENENfZ2JGRHB3MlJuekVfUWlFa2lfUQ?oc=5",
       "source": "Reuters",
       "at": "2026-11-16T02:00:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "equity",
+    "label": "美股",
+    "text": "輝達執行長黃仁勳因婚外情醜聞於11/16宣布辭職，股價應聲重挫逾一成。市場聚焦輝達財報與新創公司Anthropic首次公開募股，三大指數本週漲幅創8月以來最佳表現，惟那斯達克週五下跌0.91%",
+    "links": [
+     {
+      "title": "S&P 500, Nasdaq futures fall ahead of Nvidia earnings, Anthropic IPO",
+      "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOZEJobHpHMl90WUdVbnpzSGxLb1l3bi1BczhrN29iVW9rUzBtQWE4aFNuM2ZGS1RIQThLdEZPWmZjeExVaHhRaXBubkdqR3R3TXJYTlRqUmRYcXZxYS1pV1lyRlExUDdEUWJ3cTg4aktJVWcxbkg5UW9oeVRXLXhCZjdRQmFNeFJlLXhpWTRMM1lEUVlodGwxVHNCSE9ONTlnem0yekw1dDNraElYZGc?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-16T12:46:06+00:00"
      },
      {
-      "title": "WTI原油走勢：全球石油供應過剩？美伊僵局令油價「上下兩難」！",
-      "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBkcHRwM0RLQ29LZC1uSEx2Y0F1Z3VaTTFycG4xU1I1NlpWa0laNG9wOVNhNndfRDVzbTlQYVdCRXJzZzVRbWRCaXFrNmNMUWVfa1JnWHJnNENOVE9JOTlOWE5mNEN2TGRVWDdOOXRJZDI4UllRTjZKVVF3?oc=5",
-      "source": "Mitrade",
-      "at": "2026-11-16T09:16:02+00:00"
+      "title": "Tech Stocks Slide as Nvidia, Anthropic Tests Await: Markets Wrap",
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOU3BQd2lUam5YX1RGekdqV203U1BmRzNUQnlhem10ajRycVpfTUYzRWtOM2h1ZDd5M2tvUnNXeG1VOHRGTEl4VkJsSUhuQk41UlcyNU1EZDJaSTNTd2NvM3lDUDV5NU95SUtxSHZaZEpjSnMxRGgtamUtb0lYWUtHMTFZZDBLblVaeXhVTEhSa2ZPeF9y?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-16T13:36:19+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "商務部長盧特尼克領導的投資銀行坎托菲茲傑羅德公司，在 9 月接待輝達執行長黃仁勳後，於 9 月至 3 月間減持輝達股票近 50%。",
+    "text": "AI 基礎設施投資冷卻訊號浮現，研究機構 SemiAnalysis 大幅下修未來數年 AI 加速器資本支出預測，2028 年從 1.054 兆美元降至 7,580 億美元（下修 28%），2030 年更從 1.531 兆美元降至 9,230 億美元（下修 40%）；輝達受創最重，2027 至 2030 年出貨預測分別被下調 22%、39%、56% 與 66%，主因包括 AI 實驗室營收成長放緩、融資環境收緊與資料中心",
     "links": [
      {
-      "title": "Lutnick faces questions over Nvidia spy scandal. His sons' firm has ties to the chipmaker",
-      "link": "https://www.cnbc.com/2026/11/13/howard-lutnick-nvidia-jensen-huang-china-cantor-fitzgerald.html",
-      "source": "CNBC",
-      "at": "2026-11-15T19:58:21+00:00"
+      "title": "SemiAnalysis大幅下修AI算力與資本支出預測 輝達首當其衝",
+      "link": "https://tw.stock.yahoo.com/news/semianalysis%E5%A4%A7%E5%B9%85%E4%B8%8B%E4%BF%AEai%E7%AE%97%E5%8A%9B%E8%88%87%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E9%A0%90%E6%B8%AC-%E8%BC%9D%E9%81%94%E9%A6%96%E7%95%B6%E5%85%B6%E8%A1%9D-125006262.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-16T12:50:06+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股16日暴跌2,635點創史上第二大跌幅，168家跌停。台股終場收41,040點，權值股台積電大跌5.74%，三大法人合計賣超1,140.55億元，市場因黃仁勳辭職與輝達融資計畫縮減引發恐慌性拋售，分析師指出台股已進入空頭主跌段，國安基金年線護盤難以扭轉跌勢",
+    "text": "台股 16 日重挫 2,635 點至 41,040 點，創歷史第二大跌點，跌幅 6.03%，三大法人合計賣超 1,140.55 億元；輝達黃仁勳辭職風波延燒，權王台積電尾盤遭大砍 8,560 張，市值型 ETF 元大台灣 50 也跌破百元",
     "links": [
      {
-      "title": "別再幻想黃仁勳回歸！台股暴跌2635點　陳嘉偉點名「4族群」恐爆砍單潮",
-      "link": "https://tw.news.yahoo.com/%E5%88%A5%E5%86%8D%E5%B9%BB%E6%83%B3%E9%BB%83%E4%BB%81%E5%8B%B3%E5%9B%9E%E6%AD%B8-%E5%8F%B0%E8%82%A1%E6%9A%B4%E8%B7%8C2635%E9%BB%9E-%E9%99%B3%E5%98%89%E5%81%89%E9%BB%9E%E5%90%8D-4%E6%97%8F%E7%BE%A4-%E6%81%90%E7%88%86%E7%A0%8D%E5%96%AE%E6%BD%AE-114000128.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-16T11:40:00+08:00"
-     },
-     {
-      "title": "投資人別慌！證交所鼓勵上市公司買庫藏股　符合一條件將出手穩台股",
-      "link": "https://tw.stock.yahoo.com/news/%E6%8A%95%E8%B3%87%E4%BA%BA%E5%88%A5%E6%85%8C-%E8%AD%89%E4%BA%A4%E6%89%80%E9%BC%93%E5%8B%B5%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E8%B2%B7%E5%BA%AB%E8%97%8F%E8%82%A1-%E7%AC%A6%E5%90%88-%E6%A2%9D%E4%BB%B6%E5%B0%87%E5%87%BA%E6%89%8B%E7%A9%A9%E5%8F%B0%E8%82%A1-110603004.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-16T11:06:03+08:00"
+      "title": "史上第2慘！台股大跌2600多點 金管會說話了",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B2%E4%B8%8A%E7%AC%AC2%E6%85%98-%E5%8F%B0%E8%82%A1%E5%A4%A7%E8%B7%8C2600%E5%A4%9A%E9%BB%9E-%E9%87%91%E7%AE%A1%E6%9C%83%E8%AA%AA%E8%A9%B1%E4%BA%86-124502807.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-16T12:45:02+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金跌破3,900美元，美元走強與升息預期施壓。黃金現貨價格跌至3,868.88美元，創逾一年新低，美元指數升至103.44，美國10月生產者物價創四年最大年增幅，聯準會官員表示通膨仍「過熱」，強化市場對12月升息的預期，美元升值與升息預期雙重打壓貴金屬",
+    "text": "黃金 12 月期貨開盤價 3,869.70 美元／盎司，創逾一年新低，跌幅 0.4%；強勢美元與 10 年期公債殖利率上升施壓金價，市場預期聯準會 12 月升息機率達 93.4%，不利黃金表現",
     "links": [
      {
-      "title": "Gold hits over one-year low on resilient dollar as hawkish Fed bets build",
-      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOR0w3QnNOYVBGYjdBMGJDeml5RExhSzMzaGVTUEQ2eEdLNHhHQzRoV2thNUo4TkVGYmNfc3NsSGpVVVF2OWxCZ21CNzBMSGs0S3NuZ2Rla1d4WTR0RGJwcllfYnZ6dlR5ZGZXa3dMakUxZmNDWFExYk9HNTkyLTN6aWF0MlRRbzN4aUJUVnVCMk1fdlpVN1B0bE1QM3dkaENDNEwzaHRORFFjVDYw?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-16T01:25:00+00:00"
-     },
-     {
-      "title": "Gold Falls Below $3,900 as Stronger Dollar and Fed Rate Expectations Pressure Precious Metals",
-      "link": "https://investorshub.advfn.com/market-news/article/40068/gold-falls-below-3900-as-stronger-dollar-and-fed-rate-expectations-pressure-precious-metals?.tsrc=rss",
+      "title": "Gold prices today, Monday, November 16, 2026: Gold prices hit lowest levels in over a year. Here's why.",
+      "link": "https://finance.yahoo.com/personal-finance/investing/article/gold-prices-today-monday-november-16-2026-gold-prices-hit-lowest-levels-in-over-a-year-heres-why-123541464.html?.tsrc=rss",
       "source": "Yahoo Finance",
-      "at": "2026-11-16T10:02:52+00:00"
+      "at": "2026-11-16T12:35:41+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣貶值逼近33元，外資賣超台股後匯出。央行表示新台幣貶值主因外資因台股下跌而賣超並將資金匯出，市場觀察到大型AI廠商傾向持有美元而非兌換台幣，加劇新台幣貶壓",
+    "text": "新台幣兌美元走貶逼近33元，外資因輝達風波賣超台股並大幅匯出資金。央行數據顯示外資單日匯出逾100億美元，反映國際資金因AI產業不確定性轉向持有美元",
     "links": [
      {
       "title": "新台幣兌美元走貶 央行：因外資賣超台股再匯出",
@@ -387,24 +394,16 @@
     ]
    }
   ],
-  "at": "2026-11-16T12:11:28.553384+00:00"
+  "at": "2026-11-16T14:13:43.764344+00:00"
  },
  "main_source_titles": [
-  "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
+  "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
+  "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
   "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
  ],
- "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
- "rate_note": "Barr 示警 AI 代理人風險偏向推升長端利率，若金融穩定疑慮升溫、監管趨嚴，可能壓抑經濟活動、但同時增加銀行業成本與不確定性，方向取決於市場解讀為通縮壓力還是風險溢價；10 年期 11/13 收盤 5.15%、+5bp，市場尚未明確反映。",
+ "headline": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動",
+ "rate_note": "巴爾警告 AI 恐加速存款擠兌並引發金融波動，若金融穩定風險升溫，偏向促使聯準會維持較高利率以保留政策空間，壓低降息預期；不過 10 年期 11/16 盤中 -1bp 至 5.14%，市場還沒反映。",
  "recent_mains": [
-  {
-   "headline": "10月CPI與PPI雙雙超預期，聯準會官員主張12月升息兩碼列入選項",
-   "titles": [
-    "特習會在即，美農民關注農產品貿易和關稅問題",
-    "通膨攀升! 美財長喊話Fed：別因能源衝擊升息| 國際",
-    "兩推手美債殖利率再飆- 財經要聞- 工商時報"
-   ],
-   "at": "2026-11-14T23:17:25.258936+00:00"
-  },
   {
    "headline": "貝森特稱輝達需「大幅改組」、黃仁勳應下台",
    "titles": [
@@ -422,19 +421,34 @@
     "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
    ],
    "at": "2026-11-16T12:10:46.631052+00:00"
+  },
+  {
+   "headline": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動",
+   "titles": [
+    "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
+    "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
+    "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%"
+   ],
+   "at": "2026-11-16T14:13:01.107505+00:00"
   }
  ],
  "archive": {
   "2026-11-16": {
-   "headline": "聯準會理事 Barr 示警 AI 代理人可能加速銀行擠兌",
-   "text": "聯準會負責監管的副主席 Barr 11/16 警告，AI 代理人（AI agents）可能在未來引發銀行擠兌。這類 AI 系統能自主執行金融決策，一旦偵測到銀行出現風險訊號，可能同時觸發大量客戶提款，速度遠超傳統擠兌。Barr 指出，AI 代理人的普及將改變金融穩定風險的本質，監管機構需要重新評估現有的流動性與資本緩衝是否足夠。他強調聯準會正在研究如何因應這類新型態的系統性風險，包括是否需要針對使用 AI 代理人的金融機構設立額外監管要求。¶新興市場債券發行量大幅萎縮，11/16 數據顯示銷售量較去年同期驟降 41%，供給短缺推升債券價格。市場分析師指出，發行人因全球利率環境不確定性而延後融資計畫，加上部分國家財政狀況改善減少發債需求，導致新債供應量創近年新低。投資人在供不應求情況下追價，使新興市場債券殖利率下滑、價格走揚，但交易量清淡反映市場觀望氣氛濃厚。\n巴基斯坦央行預測2027財政年度通膨將緩和至5%至7%目標區間，該央行在11/16做出此預測。\n印度10月批發物價通膨加速至12.29%，主要受燃料價格上漲推動，較前月明顯上升。",
-   "rate_note": "Barr 示警 AI 代理人風險偏向推升長端利率，若金融穩定疑慮升溫、監管趨嚴，可能壓抑經濟活動、但同時增加銀行業成本與不確定性，方向取決於市場解讀為通縮壓力還是風險溢價；10 年期 11/13 收盤 5.15%、+5bp，市場尚未明確反映。",
+   "headline": "聯準會理事巴爾警告 AI 恐加速存款擠兌並引發金融波動",
+   "text": "聯準會主管金融監管事務的理事巴爾 11/16 在義大利米蘭演說時警告，人工智慧技術導入金融體系可能對市場交易、資安防禦及消費者保護造成多重威脅。他指出，大型銀行已偵測到 AI 代理程式試圖在未獲授權下操作散戶帳戶；自主 AI 代理程式能即時偵測收益率差異並高速移轉資金，恐使存款擠兌在數分鐘內爆發，壓垮傳統流動性管理與監管介入時程。此外，交易模型過度依賴 AI 可能引發羊群效應擾亂市場，自學演算法甚至可能演變成市場操縱與系統性風險。巴爾的言論呼應聯準會最新《金融穩定報告》，其中 87% 受訪者將 AI 列為金融體系主要風險。¶新興市場債券發行量在 11/16 驟減 41%，供給短缺推升債券價格。市場出現債券荒（Bond Drought）現象，發行活動大幅放緩導致流通量不足，買盤需求相對強勁使得新興市場債券價格走高。這波發行量萎縮反映發行人可能在觀望市場環境，或等待更有利的發行時機，供需失衡成為近期新興市場債市的主要特徵。\n加拿大10月通膨率維持在3.1%，未見進一步回落，顯示該國物價穩定性仍待觀察。",
+   "rate_note": "巴爾警告 AI 恐加速存款擠兌並引發金融波動，若金融穩定風險升溫，偏向促使聯準會維持較高利率以保留政策空間，壓低降息預期；不過 10 年期 11/16 盤中 -1bp 至 5.14%，市場還沒反映。",
    "links": [
     {
-     "title": "Fed’s Barr Says AI Agents Could Fuel Future Bank Runs",
-     "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOXzBOcnJGTlAwcHNmMkFMa25aM1JKbnQ4SGtsdndxVU5GenJ6eWtQbEg3ajQxOVFpNld0ZExTUFZ1TmtieFJ3SmlmU3gweHJuWGM4am42WFRiQ3RnZGdZRmJlUzV0QTFMMmNyM200RzR5RGt1R2JYZUVHNWhzNlZBNnZHSGhEME5BNGpWLUs3ZG9pYVV1YXBYUHBoY3JtanV1WGgxNmc3NA?oc=5",
+     "title": "Fed’s Barr Warns AI Agents May Fuel Future Bank Runs",
+     "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNcEVFaTdEb1RBMjV6RXdpcG5KTVVkZXEtV28zMUVZc0VmdnVtTUl4N1lVakpFcEd5ODNpanp2N09iTWxkM3hpZkY5Qm9XVDBvRGhOUG9tSlpQRzlpQlRzMWJjS0RxSnFvRlZDTXBjNnhkM2hld3A5SDFFZ2lVYkF0Qmdjc19XUTlKd2tfLWxCeGI5RDRxcmhsYmt1U010ZWdxWkpudlVvb3JmSGJ5NmJMRVNTd0JyRklCN1Fn?oc=5",
      "source": "Bloomberg",
-     "at": "2026-11-16T10:00:00+00:00"
+     "at": "2026-11-16T11:56:57+00:00"
+    },
+    {
+     "title": "聯準會官員警告人工智慧風險 恐加速存款擠兌並引發金融波動",
+     "link": "https://tw.stock.yahoo.com/news/%E8%81%AF%E6%BA%96%E6%9C%83%E5%AE%98%E5%93%A1%E8%AD%A6%E5%91%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7%E9%A2%A8%E9%9A%AA-%E6%81%90%E5%8A%A0%E9%80%9F%E5%AD%98%E6%AC%BE%E6%93%A0%E5%85%8C%E4%B8%A6%E5%BC%95%E7%99%BC%E9%87%91%E8%9E%8D%E6%B3%A2%E5%8B%95-121004180.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-11-16T12:10:04+00:00"
     },
     {
      "title": "Bond Drought in Emerging Markets Lifts Prices as Sales Slump 41%",
@@ -443,7 +457,7 @@
      "at": "2026-11-16T09:14:29+00:00"
     }
    ],
-   "at": "2026-11-16T12:10:46.631052+00:00",
+   "at": "2026-11-16T14:13:01.107505+00:00",
    "weekly": false,
    "points": 2
   },

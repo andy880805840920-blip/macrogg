@@ -4500,9 +4500,9 @@
  },
  "reg": {
   "TX": {
-   "hash": "14469178fa1d",
-   "policy": "民主黨州長上台後承諾限制資料中心擴張，考慮暫停令；電網運營商要求資料中心在停電前主動降功率。",
-   "impact": "若實施暫停令，則Oracle、Softbank、Google、Microsoft、CoreWeave在德州的多個項目完工時程面臨延遲風險；電力調度要求可能增加營",
+   "hash": "04ce67707d34",
+   "policy": "民主黨州長當選後承諾限制資料中心擴張，議員提議資料中心相關政策，電網營運商要求資料中心在停電前主動減負。",
+   "impact": "若州政府實施資料中心暫停令或限制政策，則Oracle、Softbank、Google、Microsoft、CoreWeave在德州的建設時程面臨延遲風險；電力成",
    "risk": "高",
    "links": [
     {
@@ -4518,8 +4518,8 @@
      "date": "2026-11-04"
     },
     {
-     "source": "Wichita Eagle",
-     "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFAwSDZQTFFmRTNGWHpQRGZrSHc3Zk1Sa2M0WU53ajJCcGRGLTNPUDZmTGhNVkxRYkgwb3BnS1loZGk4aUtVTkk3UkFtaFFJSmxRY0xhVVJCVm9JNkMzQnRpZWV1YnEwRkFXY29GVFRfT0kzb2xiSEdCWWNlbw?oc=5",
+     "source": "The Oklahoman",
+     "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxNUUVFczY3Tk5FRWd1VURUOHJoV0xETGZhSFgzU0duU1JiUzk4S0ZjUFY4SGNhZXRvZEpJUjh1U3FFeHMxOXhMcHBxZlFMOXFqMExOdF91bEd5LXNxM1UxTzVxNXVxMnFYRDN3X1dSbndjekpqVE5Bd1lJMTN4ZXA5WFl6LUNKd3F4QllINGxnSHZMQ1BCbVktOW0xRVBQYXd1NnkxUFZBbVZPdW1Jb2loODFnZjR3M3VmMHQxN3VMMnZkSTRyS09wdms3LU51cmxSRVFqSzUxdW9hYjk0TUZRRlNVQWc?oc=5",
      "title": "Texas data center moratorium could push AI projects to Oklahoma",
      "date": "2026-11-16"
     }
@@ -4617,9 +4617,9 @@
    "at": "2026-11-15"
   },
   "OH": {
-   "hash": "fc4cc5b1bc34",
-   "policy": "俄亥俄州選民在公投中否決資料中心措施，民主黨州長當選人Amy Acton上台，州議會考慮在跛鴨會期通過資料中心立法，但政策方向仍待明確。",
-   "impact": "若新州長推行更嚴格的資料中心監管或電力成本政策，可能延遲Meta、Google、OpenAI等多個專案的建設進度；若議會通過支持性立法則偏向加速。",
+   "hash": "1f9926850e22",
+   "policy": "俄亥俄州民主黨州長當選人Amy Acton上台，州議會考慮在跛鴨會期通過資料中心立法，但選民已否決相關措施，政策方向仍待釐清。",
+   "impact": "若新州長推行更嚴格的資料中心管制或電力成本政策，偏向延遲Meta、Google、OpenAI等多個專案的建設進度；若維持現狀則影響有限。",
    "risk": "中",
    "links": [
     {
@@ -4635,10 +4635,10 @@
      "date": "2026-11-12"
     },
     {
-     "source": "Ohio Capital Journal",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOQVp5UzJTa0ZFeGZ6ZG9aa3kzRkNuTVBFYk50LWpxUDhYTVVVckF2OGZMQlZyaW9BSlB3UldZRmlHUzVSb3JtVS02dDgxY1ppenJZNXNzV1FTaHJDdGxxTmstOHlsSmFmUUR6bE5MNnVOTFVNYTFRaFMzQnJCd3JKN0JDMnlPN1llOFVOR19KaWVkU3NjckNsQnlMTDhMdGRhNWFz?oc=5",
-     "title": "Data centers go 0-for-21 in ballot initiatives around Ohio",
-     "date": "2026-11-09"
+     "source": "Time Magazine",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOVkMzaHpadG5HUE1aSEIwOVhHMWQwODR1bUhkc08tTHZDM1JNUFREODBxTHozUjFpRzJrSXFHWU16YVdUMjAweGJmMDRvY2hObDJaV2g0aF8yLVFFdXVrOG1HZG1ubXhpakpzS1VHNHZReWN1Q0VSa3pONElHcXI0eEFsZ2w?oc=5",
+     "title": "Ohio’s Data-Center Revolt Is Upending the Midterms",
+     "date": "2026-10-29"
     }
    ],
    "at": "2026-11-16"
@@ -4707,9 +4707,9 @@
    "at": "2026-11-16"
   },
   "VA": {
-   "hash": "4c112dbbd8ff",
-   "policy": "維州議員與環保聯盟推動資料中心暫停令，西南部分地方政府研議分區管制以減緩資料中心開發。",
-   "impact": "若暫停令或分區管制實施，可能延遲Richmond與Chester等地資料中心的建設許可與完工時程。",
+   "hash": "1029a2988107",
+   "policy": "維州部分地方政府與環保團體推動資料中心暫停令與分區管制，以減緩資料中心建設速度。",
+   "impact": "若暫停令或分區限制實施，偏向延遲Richmond與Chester等地資料中心的許可與施工進度。",
    "risk": "中",
    "links": [
     {
@@ -4755,9 +4755,9 @@
    "at": "2026-11-16"
   },
   "GA": {
-   "hash": "c6d45b4860b6",
-   "policy": "新任民主黨州長政府與監管機構計畫對喬治亞電力公司的資料中心天然氣擴張進行審查與挑戰。",
-   "impact": "若新州政府加強監管或限制天然氣基礎設施，偏向延長Microsoft、CoreWeave、SpaceXAI等項目的電力取得與完工時程。",
+   "hash": "beca1b2959b0",
+   "policy": "民主黨新任州政府傾向對喬治亞電力公司的資料中心天然氣擴張計畫進行監管審查，可能調整現有政策方向。",
+   "impact": "若新任民主黨監管機構加強審查，則可能延緩電力基礎設施審批；居民法律挑戰若進展，則可能影響項目許可進度。",
    "risk": "中",
    "links": [
     {
@@ -4771,38 +4771,19 @@
      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPeGZrN1pHMlJBbDV2YmtXakZFSk5PMFFjZ1Z2VDVrUm81VGVWTFNGcnI1MF9oMFEyYWFadlRkd3hBdmROU3B4WlF1TFJtbGJrb1d0cm9Wa09Dc29XMDMtNHJXcmh3U1VxMzVCU1BjZU14LWxDOVIzTGhYYUJ1ZEttcTh4RF9aRm5x?oc=5",
      "title": "Georgia Residents Turn to RICO Law to Challenge a $20 Billion Data Center Deal Made Without Them",
      "date": "2026-11-12"
-    },
-    {
-     "source": "The Atlanta Journal-Constitution",
-     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CRTItMEgxYnNlODJieEViRU83MEZxVkktNWFkS21MdGZvdW5mM0FiOGxUaFNRSkp1OWl1Y1NURVRXTkNMNFVaR3ZBMThEaERaMWZQT2tNclFEV2pQMU5jVVl3b3VYOFVwNVpz?oc=5",
-     "title": "How will Georgia's data center deluge fare after midterm elections?",
-     "date": "2026-11-16"
     }
    ],
    "at": "2026-11-16"
   },
   "_fed": {
-   "hash": "7ea89c9e13a8",
+   "hash": "aad4ff6484a0",
    "points": [
     {
-     "zh": "民主黨掌控國會後，推動數據中心暫停令。眾議院民主黨人呼籲「國家數據中心暫停」，亞利桑那州民主黨也在2027年提出暫停提案。跨黨派議員（包括共和黨參議員霍利）支持",
+     "zh": "民主黨掌控國會後，頂級民主黨人呼籲實施「全國數據中心暫停令」以遏制AI建設。參議院推進能源許可法案，引發批評稱其為AI數據中心產業「大規模讓步」。新國會偏向加強",
      "links": [
       {
        "source": "CNBC",
        "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxONG85QmJuZGVEWUIxSW4ybHJPVmN2RmR2VjBTdnkydmZSOGV6YllsWEUtbVpYclRTSWhQS09EZGxJSllyY0otS1QtQVdVY3BhY0ZqMWxfR25WeWo3Q3d5LUg5dVZrUGRneGh2LTRBQjY3SERxNTdLaXNkaU9VaHVPb0lKQW10WmvSAYwBQVVfeXFMTWdsc2pjdEpUS1NXdWRzcld3SFp2eVBhWkU2NWNOTXRsUS1WbTNRVlg3S0ZRalhiYnR5WTNKQUxiR1JXNkI3b3ItbnBsZkdoZE9lbWJkVFB1eTFwMFluVFNobUtfLU1sTUJPSlRVSU1IUnRhYXFPVzNEc0NRempsZGM3MTFTVFZSUGUzS0Y?oc=5"
-      },
-      {
-       "source": "Arizona Daily Independent",
-       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNcHVUaHd6V0hmZ196X3A0WU5LY2d2SUszX0czbGRKcGdPVkppWnV0dXFuS2RVeVczYzE2cVhzVkZDMFo0MWpuUkZ1UU5IeXY4YzFwN0kwbkdEejNYRTBwem0yWWQ1TkpaVU5CN3BSYkFzR2ZiRUlwNy1wRmFkX1hORWlvbl9JU0hDUmFHWXJYcWpZUzRoa21CRFpqQ3RWbFJVQ3hWZVZFZFg?oc=5"
-      }
-     ]
-    },
-    {
-     "zh": "聯邦許可改革與能源政策存在張力。參議院推進能源許可法案被批評為「對AI數據中心的大規模讓步」，但俄亥俄州倡議者敦促聯邦能源委員會保護用電戶利益。新國會偏向加強數",
-     "links": [
-      {
-       "source": "Dataconomy",
-       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUmMwZXEzNHVuaUV4VGVkN3FPQ0tPc3AtSUFYTktPVjlXcURQWnlDdVUxdG1EX2d3MVM1Q0l1TlpmbTM1TUlaQVpSYU1LRTFZYVRoZjYtbHVONEFqU3lYSjJWRG5QeG45RUtmTHJfOS1sVU1LZV9meHIzUHBlVXBpRThkeXdxN2t4YkNmVzNOc3QzOXdDMlZ4Wg?oc=5"
       },
       {
        "source": "Time Magazine",
@@ -4811,24 +4792,41 @@
      ]
     },
     {
-     "zh": "州層級監管先行，聯邦可能跟進。紐澤西州參議院通過禁止數據中心相關保密協議法案，反映州政府主動監管趨勢。民主黨國會偏向支持州級行動，而非聯邦層級優先權政策。",
+     "zh": "共和黨參議員霍利成為首位支持全國數據中心暫停令的共和黨人，與民主黨形成跨黨派聯盟。新當選的進步派議員（如Sunrise Movement創始人）以反數據中心平台",
+     "links": [
+      {
+       "source": "finance.biggo.com",
+       "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1wSVVRREJlaWFkb2p1R0UyTXpMRUpOekZNay03S2h5TVMydTU1bFNWdEQzbnVFZl94UWpoc2o3X2UwX2l1bkZ1MGJSY0o4ZDNpRDlUbGVBbkZxZmU0TWttRk5lLXpQVXZwR3dtQjFXbzZTSjhfeVE?oc=5"
+      },
+      {
+       "source": "Newsweek",
+       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOX2NEMHVHWjlrTFZ2ZjNmT1ctaHhCaWJobVNCdzVHVTRnelA5Ym5OUUp0dkQ0ckdtRUg1Z1pnbFFodlRRN3NsYnRWcGJXUGt4V0tzSDlobFFYVHROYk5TVlYySWpxQ2pJODBSNkZfNzZ3bmJfOFpWcWFCeV94MHZmczgwQ2VROFMwTlA5TVlHamFJYUt0NnhRaGdqS2ZoTjRwLUpfUHBoeWpXdw?oc=5"
+      }
+     ]
+    },
+    {
+     "zh": "新澤西州參議院通過禁止數據中心相關保密協議法案，俄亥俄州倡導者敦促聯邦能源委員會保護消費者。北卡羅來納州等25州敦促國會進行AI監管。新國會偏向支持州級數據中心",
      "links": [
       {
        "source": "Data Center Dynamics",
        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPSlB1UmV2VEJmTjZVVVMzb3FodTh3aHdBVEpReWlpSVRPdmVqTG81WDl2UlpxcWlQdXU1QTk5YlFIN1ViMnBDOVBodmhOVUNCMWkwSzRaN1VNV1ZpX3lnYVFRQU12TEctX1ZBSzVNNk84NW1VRzRnMGlzanplWWR1bVZyTnFWNF9XdTBqbFV1ZU96Z21CZHk4eXBzUW5qUmJQUXZnX20wSFo3Zw?oc=5"
       },
       {
-       "source": "Brownfield Ag News",
-       "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNUHBHczlpZHB0MmlTa0xpcXZJbzE3clQtYlVRU0h3SDVHYlhocEFEUlFEMGRSaVBMdzNzVnhPS1ZzZHA0SUVIanJEZHlwOXFFMVRrNWRsdDVLa0VoVmZobXkwNFh4Sng4MVRnUnZ3Z3luZlRHNU52d0o2NFhsMkNrWEM0MWdEVkxkUlBxTGRjS09odHRlcmVrRFdLelpXLTA2bDl3d19XZV9yWXhaWkMzd1FfYk5FbVBpWFczUl9QeG9jcDRMVnNkVW9yMnYwZw?oc=5"
+       "source": "RTO Insider",
+       "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcHVWRlhTT0NVUHp3X3pjWkFPcU9JNGU4VnNoa1Y2bk1EZjFrTFBOMUdZMEIxT1c2aFdRNzVYMm13R2ZVN0RiZTVBQjFzdk44ZjFMYlA2b3JHRWluVGtNOThwb0pvYlBUN3N2WDJHWVRaNUFVYlFMSXRJQW5BT2VRcjZBN3ZIaXFJSHBIOTZrZkpjS0ppNVB0X2YwRzMtUQ?oc=5"
       }
      ]
     },
     {
-     "zh": "新當選議員強化反數據中心立場。日出運動共同創辦人勞倫斯以反數據中心平台當選國會，象徵民主黨新國會成員對AI基礎設施擴張持批評態度，偏向優先考慮環境與能源影響。",
+     "zh": "分析師質疑CHIPS法案稅收抵免是否為數據中心「後門補貼」，建議其過期。民主黨掌控下，數據中心股票下滑，市場預期AI建設擴張將放緩。新國會偏向重新評估對AI基礎",
      "links": [
       {
-       "source": "NationofChange",
-       "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQZG01azJsNy1TelBYUGFBNG44cC1fakFkU0JfSlpqYm9EQ0dIaGEzaWI2VXVGa0xyNlRjR0VkTDFlcklnVXF4RVNwSURlaVpQMlljSzVyd1JQa2ZSWU1rTXo0MjB4N0Z6WTVNaEZEcnJPdVZuRzdLWW9nUTNXZkRyVzVuc1Raal8wN3hTWXhjR21VQ1laVE9IUURnSkRtQWduS3NiT1dpN1pTMkNoUVhrS3J6RGUteWtSTlJBQVRpMHJIMGQ4Ri1sdW5sbG5hMWllSE4zLQ?oc=5"
+       "source": "Baltimore Sun",
+       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQalY1eXI1YlhMM0FTcmt0ME42cE12SVBsTW45Um5LeEZCVDFpaGZlRHJFNVhxUDJQaEJuU21Dbkd1M2xvZ1RFejJtbV96dlE3cUZDTGpvSE0wWGtpbnZrampRVEM4RnhWUnBpdGw0aHlRY1hUM0xwY0lEd3FxX1ZsTGhCZVdfNURCUm9sbldsdDNUbzJjZmR2eTlYRnV6M2hyZl85TXh5THBTQTJhN0Q4T2JEUGpVWURja0RF?oc=5"
+      },
+      {
+       "source": "Reuters",
+       "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5uVkRMUG12aE9nMXVaS2ZzanB2dzRBVnpHN3JvZURZRTBhNEZoMTAyUjFZVDBlby04QUVpRENGV1lraGhCVTAxcGxqcWN0WHVQalkzN01zUS1tbkNzdUJ1UEpKY3pwOGM?oc=5"
       }
      ]
     }
@@ -5154,5 +5152,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-16 20:10（台北）"
+ "at": "2026-11-16 22:12（台北）"
 }

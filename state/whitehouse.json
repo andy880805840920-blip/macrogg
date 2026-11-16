@@ -1256,7 +1256,49 @@
   "p:us_china_truce:3e98a26546f2": "2026-11-11",
   "p:us_china_truce:84adc616b8c7": "2026-11-16",
   "p:us_china_truce:862e17f0cf56": "2026-11-13",
-  "p:us_china_truce:2e1a12391b7f": "2026-11-11"
+  "p:us_china_truce:2e1a12391b7f": "2026-11-11",
+  "7bdcfbb2e6dd": "2026-11-16",
+  "98792d07f2ac": "2026-11-16",
+  "714666df5d31": "2026-11-16",
+  "7e36d83a16b9": "2026-11-16",
+  "965341888b32": "2026-11-14",
+  "1e10ca978937": "2026-11-16",
+  "ab2f479c4a89": "2026-11-16",
+  "71b58a957940": "2026-11-16",
+  "535d203a23fe": "2026-11-16",
+  "47b83997fc62": "2026-11-16",
+  "3bf25e5ba570": "2026-11-16",
+  "48f9fdf8056c": "2026-11-16",
+  "80e3af41775a": "2026-11-16",
+  "2b6f64e2da44": "2026-11-16",
+  "b502170cebe7": "2026-11-16",
+  "2082ada1f5e7": "2026-11-16",
+  "dddca180cc92": "2026-11-16",
+  "1c25c2d509be": "2026-11-16",
+  "14bf0cded615": "2026-11-16",
+  "9212536c7841": "2026-11-15",
+  "17e7ec13f5c9": "2026-11-15",
+  "1d442d8e39e7": "2026-11-15",
+  "19183c08e484": "2026-11-15",
+  "0b6f62eac5b7": "2026-11-15",
+  "72f9665ae8f0": "2026-11-15",
+  "14fbefa249e6": "2026-11-14",
+  "5fdf62c0333a": "2026-11-12",
+  "b004f7fedbea": "2026-11-11",
+  "f1040cc63d42": "2026-11-11",
+  "4b0dcf4483d6": "2026-11-11",
+  "p:fiscal_cr:5d702885e8ad": "2026-11-16",
+  "p:fed_cook:46f18696ddce": "2026-11-16",
+  "p:h200_china:5bb6c6d66f8b": "2026-11-15",
+  "p:h200_china:bb578aaefe4b": "2026-11-14",
+  "p:h200_china:ee16d292adb3": "2026-11-14",
+  "p:h200_china:518b40a7f3dc": "2026-11-14",
+  "p:h200_china:1fe5ed198c8f": "2026-11-14",
+  "p:h200_china:e291e2a43a89": "2026-11-13",
+  "p:h200_china:1694c4e08061": "2026-11-13",
+  "p:h200_china:17087b43dd88": "2026-11-13",
+  "p:h200_china:5d5264c86e54": "2026-11-13",
+  "p:h200_china:9d4c7cb5abb8": "2026-11-13"
  },
  "items": [
   {
@@ -1496,11 +1538,11 @@
   },
   "h200_china": {
    "date": "2026-11-16",
-   "note": "多則新聞顯示H200晶片違規出貨到中國軍事機構和俄羅斯，美國財政部長已介入調查，可能加速國會限制法案的審議進程。",
+   "note": "多則新聞顯示H200晶片對中出口引發美國國會和商務部高度關注，國會議員要求加強出口管制，可能加速推進「國會限制」階段的法案審議。",
    "links": [
-    "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSTNwZEpXX3JSdDB0UER3XzBpVVBPZVBEWHJmb1pWdWhCdzBxT1ZTQi1rWnp3V3QtbVRrVS1GT3dQTHY3emE4empXRXV4M3FWbWtVYXJwOVFkUDBzbi1SVWVLQktLTlpwTXJsMU16QW1pZzlSM2NFYWQyYTB5Y3RJdko1aFZpcjVKYWJOeV9n?oc=5",
-    "https://news.google.com/rss/articles/CBMitAFBVV95cUxOYmVsQldBejVYLUZmaVpjMkxEcEhab2lLS05naE5TOTZ4LUN3ZnNhTV9HaklDRVJ6TUUxc3FxSk5vNVJDTXVoTGNKR0stM2tLRm1oUkNlN2xlc1BSQm9nZE9ueHFzSHpidjh4U0k1MFJjR003MXNkMGdqYVFwVVhsT0MycDF6ck1BUURXZXpaV2J0S1NXSVQ5dUwxMW80bkVkbVdVTjRXejRQT0RrTFVSZjVYR1Q?oc=5",
-    "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5WM1R0Y1U3MHNSajVNYy1NbzNMZVcyemE2SDM0VkN6REd1UHZtanFVeW1QSDJKVFo4YmlUU3lJNGJXOGFJR0M5Z04za21La3l5ckRlVUVtMU0ybDRMM1hsUlZZRU1YUm8?oc=5"
+    "https://news.google.com/rss/articles/CBMinwFBVV95cUxNUEV4NGpZbXVUb3BCRDBMdEVjUDZQX3F4dkV5WUNkM2c3RHE5bVU0Z3RfRTYya25iZG1PZW9ndnlFZVZsckNkRVFGSUIzVHpac1UyZkxnZ2J5aER0bjhEZi1Vb3BlQm01NjQ3V0NwM2VwcXRyWjB6VDF6LWFzT3BoUm1FeXlYLWhDSzdzNngxWTJ3RGJiT0xoaXFXUW9zXzQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPcjdnek9mQmRSSGo0bmFxaVRBcmVzbEdEbkwxV3FWNFdGa1A1T1QyN2ZZZ2d1aE9jVm0xTjA4NlowU2xsSVFzUHZFMmZ2WGNRWXdzVHh2dmh1T3Z3a0FKamNMYXRnaDRJUzFlUU5YZFhJbEJmREViR3ZEdDlVTk9TUmdmWGJqQ2xicE9tekdpajIyLVgtb3B6TGFTdE9fQVZxWGdSY3pDQWFzZW1hRy16ME85b0cxT3pCVHdZcFNxUFB6dw?oc=5",
+    "https://news.google.com/rss/articles/CBMitgFBVV95cUxPRTd6bG52bUM3dUtmR3pVY1hUMldfajdYdWxnNkNtSkRXMjFSdnJRbzZNRjE3NXJzUUFQbkNYRFFJMklRZENpQWJwOFdUOG1VVXY0Q3BoVEw2N2NHTS1YUFVHQTE2S0dKUGE3R3d2ZGtQVUdYd0JKQ3o5WF95bWNnbW11OXJWRG83QWp4VTRpZ2hTNkNVOW51Vm8yckxaTUJ4Q0NrWWpubW9ONEdGWm1ObGNCSERYdw?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1529,5 +1571,5 @@
    ]
   }
  },
- "at": "2026-11-16 20:10（台北）"
+ "at": "2026-11-16 22:13（台北）"
 }
