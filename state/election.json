@@ -120,10 +120,10 @@
    "other": {
     "name": "Dan Sullivan",
     "party": "共",
-    "p": 0.0015
+    "p": 0.0005
    },
    "close": 0.49850000000000005,
-   "vol": 9875116.824088,
+   "vol": 9905390.472088002,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -143,12 +143,12 @@
      "other": {
       "name": "Dan Sullivan",
       "party": "R",
-      "p": 0.0015
+      "p": 0.0005
      },
      "tier": "safe",
      "tier_zh": "穩拿",
-     "gap": 99.7,
-     "vol": 9875116.824088,
+     "gap": 99.8,
+     "vol": 9905390.472088002,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },

@@ -1384,7 +1384,47 @@
   "p:us_china_truce:8ecfd6f92e81": "2026-11-17",
   "p:us_china_truce:19fc53c91877": "2026-11-16",
   "p:us_china_truce:a704c1f0d82c": "2026-11-16",
-  "p:us_china_truce:13f46dbf4383": "2026-11-14"
+  "p:us_china_truce:13f46dbf4383": "2026-11-14",
+  "c8fdfb4cd97e": "2026-11-17",
+  "f2ec1b54e087": "2026-11-17",
+  "b6b8558d69ee": "2026-11-17",
+  "99c1f239a6be": "2026-11-17",
+  "db9dc5a1a4ba": "2026-11-17",
+  "02d9dd511327": "2026-11-17",
+  "98ddda6895f0": "2026-11-16",
+  "4eeb3d47b37b": "2026-11-16",
+  "0f5e933c9110": "2026-11-16",
+  "ac3694293be4": "2026-11-16",
+  "c77527c3239c": "2026-11-16",
+  "3e5d7665c5c0": "2026-11-16",
+  "162bedcf6775": "2026-11-16",
+  "0d5e00042f8c": "2026-11-16",
+  "b7df3d9654ae": "2026-11-16",
+  "88317fca0d24": "2026-11-16",
+  "66ce2d5d633e": "2026-11-16",
+  "81c4448cd41f": "2026-11-16",
+  "a90f3f4b4fdb": "2026-11-12",
+  "f0db7e040c2c": "2026-11-16",
+  "p:fed_cook:c8fdfb4cd97e": "2026-11-17",
+  "p:fed_cook:c51ea3279ffe": "2026-11-17",
+  "p:fed_cook:234ada5cd95e": "2026-11-17",
+  "p:fed_cook:1d672ad9efbf": "2026-11-17",
+  "p:fed_cook:6bface388952": "2026-11-17",
+  "p:fed_cook:69b913fcb109": "2026-11-17",
+  "p:h200_china:188f2978608d": "2026-11-17",
+  "p:h200_china:e5f4188b5087": "2026-11-16",
+  "p:h200_china:db09d853c5bd": "2026-11-16",
+  "p:h200_china:59784f334302": "2026-11-16",
+  "p:h200_china:ef953c313be7": "2026-11-16",
+  "p:h200_china:386fd1e68723": "2026-11-16",
+  "p:h200_china:680c0b0b6682": "2026-11-16",
+  "p:h200_china:c754a285ec44": "2026-11-16",
+  "p:h200_china:69ef41e90b21": "2026-11-16",
+  "p:h200_china:1ee6bfba9351": "2026-11-13",
+  "p:chip_232:114abee800e0": "2026-11-17",
+  "p:chip_232:fab427ff27ea": "2026-11-17",
+  "p:chip_232:73c1872ed7d4": "2026-11-13",
+  "p:us_china_truce:84c5b3c43c55": "2026-11-17"
  },
  "items": [
   {
@@ -1587,21 +1627,21 @@
    ]
   },
   "fed_cook": {
-   "date": "2026-11-15",
-   "note": "2026-11-14 WJLA報導川普政府宣布對聯準會理事Cook進行白宮調查，確認白宮調查階段已啟動。",
+   "date": "2026-11-17",
+   "note": "多則新聞報導 Cook 拒絕參加原定 12 月 14 日的白宮聽證會，顯示下一步的日期已確定為 2026 年 12 月 14 日，且程序可能面臨延遲或變更。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxQeDV4U3lXWlRPTHY5M1ljNzBTUEdlZEx2R2c5N1VSQ0NSLXAxbUp5bW1PREhFV2YtX3VaX0JnTWQteGJHazFYWE9vdXp2ZDVrTkdmREhLVWpkVXUtN0tQQUZfdVNFYUFKWmxWdEZ4a3NfelpMS2lNWjc2V3hpcWdoeldIOHFTRkNRU2hmdV9yNmFVd0NBNmt6U0JiZVU0NUJEeHpkLXo4QThUaWlk0gGyAUFVX3lxTE9nUFNSZ0VyeGtKYkluY181dEdkR3lvdlZNck83dWlhbXAyMzA4aTI3Um8tY01RdkVGWkVDLVhuTUg2b2dDXy1jbFpHMjBnLWZBYm0yV3lLeG9ZSWRUOG56U24xd05NTlBEM2JhMktaaFR4a0VacURFckVIOTFqT2dlNGdKa2Z5ZC1MN2FNUFdIdWNvTWxabG9lMVlmY1owNjF6NlM5VGU3NDRMT29zdUJCcXc?oc=5",
-    "https://news.google.com/rss/articles/CBMi4wFBVV95cUxOWmVfS2FhNFo3UUVfamtjNThCTERDNjdvaFBJb29KZ21vYnREd01RU2E5dHZnS3hJZHRrZzQxSXZNMGNUdl9ndGRtMDVUQzZRQy1lMlVFWVlZb0lWSGt5OUVqRTZuMl9jcjEzOVBBQlhnMUhFN29OZWtwY0RodEdDUUhZcDVsSjN1WlhHdlhWR3ZkLVF3bl9WU1lHb0pqNktTX0NOZ0lPbUkxWkV1dllqMkNuRnZPMVZWYmVLRG9Ua0JZeUtzcUQ5bWt6WVBMNGlJNlBmUE5fSXl3MU1DNG45NGMycw?oc=5",
-    "https://news.google.com/rss/articles/CBMipgFBVV95cUxNQ2dHTHFDeTRLNVZiVkpsVGVHYnNNbTA3dEl4bm1PTFdKMEE5WWtfTGt5azBTcjNraDBESU9xa1QwTmwwRjdYNWVueU0tNUh6OV9PY0pJV0hfblJEOVI3N2Raa2RiaC05djh3N2daWWZ6WnlHbkU1d3pkNTZjT1NieUY3VkFDT0pzeElwTzBIdElsb2lPekdIMUNZZlNNQ2dXNEdqTjdn?oc=5"
+    "https://news.google.com/rss/articles/CBMif0FVX3lxTE9LOXpyMHpxd3NLNHlUNnNSUnpya01JUnkzMGpsblp3NFVyMkpoTXVjeFJodHI1ZUNCVUZhaGJna25LMHI5ZGhucFV1azJxR2NQZG9uUldRcFJKQmRXNmxRQ05kYkZoMldOd2x5TGY2amVtNDJTaDBwdWVwQU54QjDSAYQBQVVfeXFMT2U3MDZuS1JzeTNhcXJVcldVRTJzNHhzYndDVDVxV25ORFRaSkV5ekEyMHBvdTJhdlFPZHN4ZzRRYll4ekdvQnRlOEtqdVpZb2hiLW82VFJ5bEFGM093a18wb1BFZDdFazZLdERXQTMwal9TTU95aUQ2MnlnLTVId2MwWlk3?oc=5",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxQVXZnamFaa0QycDl4aEExMmZXcldyNFdpeVhZTDQ5WThrSmxJMDMzZDB5aEpqQnhuU2dJSFJQWHNFRHlxUm8tSEVYTUZOaWx2RWdiUmlyYWtCVmM2R05rNEh6SzRzU0Y2NUlUYTVGb3R5bGFmNEV5QmJza1RFUkVxWUh0ZE45SXdRMy0tc2czUE11NF9tSXpxb2NnZlJoOS1mR2dYTW5ZdXdYMzB1?oc=5",
+    "https://news.google.com/rss/articles/CBMirgFBVV95cUxPdXVmUWZwVEJzR1RYSkxSV1RaeEZQZjRvSk5Ddl8wM0dLTThaSG10RzN5ZUFWYllEOUNicHJfSVpQdjlCY3RPcEdfNmFoU3ZFRHB6YkVvbWtKWEdOYjJ5dm1lQ19ONTByOTZEYVUtaG9pV2RySy1CMGJaaFEtU0piV0JFYUxFMHR5Tk5tSjV0ZmZWR3JSdGMzZV9wUmFoU01NclFEMkZfME1qQVFaRlE?oc=5"
    ]
   },
   "h200_china": {
    "date": "2026-11-17",
-   "note": "Washington Post報導川普政府下令商務部關閉Nvidia晶片漏洞，表明行政部門正採取行動加強出口管制，可能推進國會限制法案的實施進程。",
+   "note": "多則新聞顯示美國政府正積極推進對中AI晶片限制措施，包括Tom's Hardware報導的新規則限制中國企業遠端存取美國AI伺服器，以及Cantwell指控削弱出口管制，表明國會限制法案審議可能已有進展或即將進入更具體的執行階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMihAFBVV95cUxNWDFFUjBWM25ZRTRQcnFFOGRBVW1tM29XM2R6UlhFYnBKQmlvdTQ0TUVvSmF0Ny00anZieG1MeV8zUnA2bE5tUTdTQ2czcXBnYjRXMGhhM2ppUDBrNHA3LUFtZjR0NDhreVJvazJ5YXI3TFpSWTJiQ1ZyYlhVbGU1eWhHcHA?oc=5",
-    "https://news.google.com/rss/articles/CBMirwFBVV95cUxQeFlDQ0VJUFBIZS1nQTJUN281Z2JRbmJ4N3JFSEo2cDJYdlpXOWhIWkw4Mm95ZXZXWkQ1MjJGRnZCVkVKUWlVakVub2ZwU0dhVUJKeGtJclFVa2pMZFVMZjRmYUhTbFBZV1BGdENBdGkzMV9nZGRaUkhFcVJMYUtITkN3M0pwRFlsQmkxUXNIaEpPanZIRll1TVNXRFJpVzlDOTNLUTVaNDY1Ql9TVXdV?oc=5",
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxONGJmTGhQa3FRRDZtX3BqVk9SNlc1aHZ1QXZiUXdHMmlmZmdyUjFKS0hrREM1OFRrVDVjUGpSWnZfVTEtdlozVHVDc0h5Rld1cGVKQTFGYzVZOGJMdDNheWdEcFRhakxCVW1xcnQ3VHBzS2lRdWNPTGdtUkNxNVRnT1JUVzVKNzRXUlNuLUtBOVk2REZnZjMySER5NmhfNTliRjZsZ3B5TElrN0JU?oc=5"
+    "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQNjJmdnNlQVphZ1RSWG10WjZieUlmNGhXZ3lPbWRudkJyckNpaThpME5wRkVHMVJHdEFnc1N1X0ttejJzSlpNVVlGcXFtUTNNRUhTU0F2WEJ0OFpDemVXRkVqQ2t1TkdTa3pvRFVReWdSN3NUN19xbVRMd3RqclcyZ1dXYmRDRFFHbXZEOGYyWWRCRDktTVNyeXJVcDNuU2FwQ1ZYek8zZHo0TFVsZ010dW5tV1M5VWpFb0o2OXBtdEJBUVXSAcoBQVVfeXFMTVo2QTAyWklHYjhyNXhZVWNUQmdtRGFmQUFNYm5vYVRTeGZmRHNPdkJjSjg2YkdKQ1E0MzZzUFhDdW1ETGlQUVRWcU9BaWp6VFhwZ2ljSG5TSFdXdDdMaTVhb2kyTjhndnFZN0V2a3Y4R3lJSjBCdEpKa0tGTHVIRG55bml3V1ZmeXExR1JCYUhveEJ0SGJZUkxnbzhrYzBzYmc0WWhmWHkzOUtxTWJQaGdxclpoMzNpR05QQ2V5c051Ni13dWNPM0RVdw?oc=5",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxONGJmTGhQa3FRRDZtX3BqVk9SNlc1aHZ1QXZiUXdHMmlmZmdyUjFKS0hrREM1OFRrVDVjUGpSWnZfVTEtdlozVHVDc0h5Rld1cGVKQTFGYzVZOGJMdDNheWdEcFRhakxCVW1xcnQ3VHBzS2lRdWNPTGdtUkNxNVRnT1JUVzVKNzRXUlNuLUtBOVk2REZnZjMySER5NmhfNTliRjZsZ3B5TElrN0JU?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE5Qdkk3Q1poWG1Lb3ZEaWRDNXdmOEx4VkdfNE1VMHpyTFdXaTZrREx1WGJyWFpGOUd3VGtQd3ZSWXh1R2h5ZTRXbTJWUHZRbzNpbEk4UnM3Z1AyT1NvQjRVWU04QlFuOTdrR3VmZG04SDFQaE1PZU1xT3FsbF9hZw?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1631,5 +1671,5 @@
    ]
   }
  },
- "at": "2026-11-17 20:14（台北）"
+ "at": "2026-11-17 22:13（台北）"
 }
