@@ -33,7 +33,6 @@
   "hist": [
    0.905,
    0.905,
-   0.905,
    0.915,
    0.915,
    0.925,
@@ -56,7 +55,6 @@
   "d1": 0.2345,
   "closed": true,
   "hist": [
-   0.645,
    0.645,
    0.635,
    0.635,
@@ -125,7 +123,7 @@
     "p": 0.0015
    },
    "close": 0.49850000000000005,
-   "vol": 9841665.400088001,
+   "vol": 9875116.824088,
    "url": "https://polymarket.com/event/alaska-senate-election-winner"
   }
  ],
@@ -150,7 +148,7 @@
      "tier": "safe",
      "tier_zh": "穩拿",
      "gap": 99.7,
-     "vol": 9841665.400088001,
+     "vol": 9875116.824088,
      "url": "https://polymarket.com/event/alaska-senate-election-winner"
     }
    },

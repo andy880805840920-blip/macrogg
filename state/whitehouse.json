@@ -1322,7 +1322,69 @@
   "p:us_china_truce:33209358f9dc": "2026-11-16",
   "p:us_china_truce:7327e0dbb5fc": "2026-11-15",
   "p:us_china_truce:fd0ecf3811c9": "2026-11-15",
-  "p:us_china_truce:d6b6fc2acff1": "2026-11-14"
+  "p:us_china_truce:d6b6fc2acff1": "2026-11-14",
+  "a947e41ac4ea": "2026-11-17",
+  "fc5a2ed5bd7d": "2026-11-17",
+  "5f20da8064c9": "2026-11-17",
+  "2afe2c1153cc": "2026-11-17",
+  "e4392662a3d6": "2026-11-17",
+  "4680df4543ab": "2026-11-17",
+  "77e0a49e9374": "2026-11-16",
+  "f7173ed8efc9": "2026-11-17",
+  "edece8b7d0a4": "2026-11-17",
+  "fe2bb31103dd": "2026-11-17",
+  "a94dc22673b4": "2026-11-17",
+  "b23fc2ca1302": "2026-11-17",
+  "be3624bd2482": "2026-11-17",
+  "a7c8c6f9082d": "2026-11-17",
+  "1f09ca8c2322": "2026-11-17",
+  "c535c81a82bd": "2026-11-17",
+  "6d18dd2ff2cb": "2026-11-17",
+  "21235bea26b6": "2026-11-17",
+  "f5c086ea033f": "2026-11-17",
+  "79de1dde6c9f": "2026-11-17",
+  "512f8e71106d": "2026-11-16",
+  "f906da585653": "2026-11-16",
+  "c28bb1f5a700": "2026-11-16",
+  "43c110e13dd1": "2026-11-16",
+  "536777f80908": "2026-11-16",
+  "cf3de56a5a38": "2026-11-16",
+  "dc00687b4df2": "2026-11-16",
+  "bebd1b13cbdf": "2026-11-16",
+  "7915aef37cb8": "2026-11-16",
+  "f74913d8a23d": "2026-11-16",
+  "p:fiscal_cr:2227aa32cde3": "2026-11-17",
+  "p:fiscal_cr:7e8c6a34bfa3": "2026-11-16",
+  "p:fiscal_cr:58faf1070e63": "2026-11-16",
+  "p:fiscal_cr:388e4fd76731": "2026-11-13",
+  "p:debt_limit:a4905ab5fa6f": "2026-11-11",
+  "p:debt_limit:ff67fc2dc8c5": "2026-11-17",
+  "p:debt_limit:ba523160a9a8": "2026-11-16",
+  "p:debt_limit:b0f1b684fa3f": "2026-11-13",
+  "p:debt_limit:6bce30be87e9": "2026-11-11",
+  "p:fed_cook:b5c254cd0665": "2026-11-17",
+  "p:fed_cook:f08125c42f34": "2026-11-16",
+  "p:h200_china:a6ebdbcc79b6": "2026-11-17",
+  "p:h200_china:f7173ed8efc9": "2026-11-17",
+  "p:h200_china:fe2bb31103dd": "2026-11-17",
+  "p:h200_china:caefca85eaa9": "2026-11-17",
+  "p:h200_china:62fd38ee1851": "2026-11-17",
+  "p:h200_china:60eced98fb12": "2026-11-17",
+  "p:h200_china:39d05b77f12c": "2026-11-17",
+  "p:h200_china:53672f7980cf": "2026-11-17",
+  "p:h200_china:153b86f14d92": "2026-11-17",
+  "p:h200_china:07d49d5fdd61": "2026-11-17",
+  "p:chip_232:74946af3d944": "2026-11-16",
+  "p:ai_preempt:423d5cce4e41": "2026-11-16",
+  "p:dc_grid:781b95f320dc": "2026-11-17",
+  "p:dc_grid:7142e6719afb": "2026-11-17",
+  "p:dc_grid:83c2d72417ac": "2026-11-16",
+  "p:us_china_truce:45e2573f41ad": "2026-11-17",
+  "p:us_china_truce:d590cda5f8a5": "2026-11-17",
+  "p:us_china_truce:8ecfd6f92e81": "2026-11-17",
+  "p:us_china_truce:19fc53c91877": "2026-11-16",
+  "p:us_china_truce:a704c1f0d82c": "2026-11-16",
+  "p:us_china_truce:13f46dbf4383": "2026-11-14"
  },
  "items": [
   {
@@ -1508,19 +1570,20 @@
  "suggestions": {
   "fiscal_cr": {
    "date": "2026-11-17",
-   "note": "白宮表示在12月截止日期前通過完整撥款法案「在考慮中」，顯示可能從暫時撥款進入協商階段。",
+   "note": "11月17日Breaking Defense報導參議院撥款委員會公布1.1兆美元國防支出法案，顯示已進入協商階段而非仍在暫時撥款階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMijgFBVV95cUxOZWk2MDlsZnBtcmNQbDJTRkdERk1JUmlxQzAxMHVDXzAwRS1QeWwxeFBFUDBFU1hLM3o4OW12Qk04dEwyRmU1ZFRDYzJ1QU95ZzVPOGpNOEpkUnotRV8tSDQxX2NEVmJwa1JEWjNqQ2tzRGNnTmFrVnl4aHFObEpMeXhMbk5jRnk0anZ6U1NB?oc=5",
-    "https://news.google.com/rss/articles/CBMikwFBVV95cUxOMHJ2b1JnV1dSdzFQVHRtTEthWkdBVEtPS2MzNXgyTDVTQU4yUUk4eEp6akxVemhPZEhYU2V3ekg5ek9YZ1hlbnhJeF8zVk1SNUplU25fdFFpR1c4R1RSYmdZVUozVjM4U2lFcFpQaWdObXdTNnlBTk55MHlHZHpTV3J6SmRJeXJ6ejFabFJuNzJBMzA?oc=5",
-    "https://news.google.com/rss/articles/CBMie0FVX3lxTE5qWXdPOWhEV3lTMWdrUlFSTERtVXZ4bDNvMjBCVktLbWRDdmMtX2VZbmp3OXdrLVZJSUIxUm9jWmkwNWdNeHFYZ0ZnbFlPMzJwTVo3V1F1NU1rU2Flc1A1bVZDaHc4Vy1PYzEzNUQyS1F0d3VMbTloSW1fQQ?oc=5"
+    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOMExhVVFoSjJRbGs3QzNLS2lWVVRDLVB3YjhsYW8ycUY5Rkd2ZDZ2SGhHMFQxaWsyRjlydUM4MFBwR2Z2Q0ppUThqaVdHWFp1RkpjTS1ubU9aWHJTOV9fRFpsT1ByU3ZrZlZhQWs3cDB4OWdEdUk3ZS1kZU9ua0dWX29oaDE3LXA5bDJJeF9MTkpndFRIQ3cwVHRSd2N1TmtXcUN1Nk5DU2lhSjc3LXRQRWRFZElKaHRrN0FTazhYQTFIdTZxZVg5NQ?oc=5",
+    "https://news.google.com/rss/articles/CBMixgFBVV95cUxNRG9RRTNIelVfSUZJZ0xuaVh0RHdwb3p6RlBwQW1CQTVUbk5ZSmJjWmtVSUVuMDFtX0txcDFsRGMtNWtHTWtISEY4SnlSRDdsLTFncWtPRm8yejhXamZxcEpQTmpVSmRwcmpwQ1BFRm1Ydm9zeThqSVVYSUszSk9IX0tHSmNvU0Q5TUR2Tmcta19tMXhscEotdW9KdDJEcFA2T1hhUTBzZDVQbU9wUFhVdmhUdHcyQzRQbHB1WlhvX3hraEFlWXc?oc=5",
+    "https://news.google.com/rss/articles/CBMieEFVX3lxTE96NW9wNERRVVNzQU1UR0hGYm12ZjN6bUowa2F3MXdzYWNXS3I4Ri1qeGJkTENkdzJqSmswYWhsZ2t3N3VPd2hHZXIyZlFBY0NUNXNjcnVVdXhiZlZXa21IeXVkRGZhWmJLaU1faF9qSFIzSk9GbklmTQ?oc=5"
    ]
   },
   "debt_limit": {
-   "date": "2026-11-13",
-   "note": "第一則新聞顯示 X 日期可能提前至 2027 年 12 月，比原預估的「2027 年才會觸及」更具體且更早。",
+   "date": "2026-11-17",
+   "note": "11月16日新聞指聯邦債務突破40兆美元，加上11月13日創紀錄赤字報導，顯示接近上限的速度可能快於預期的2027年。",
    "links": [
-    "https://news.google.com/rss/articles/CBMivAFBVV95cUxQcEZQcUVpM241N2gycnJEamMyd255eWxWM1hLYW5TY21JSW55bUJLOW54OHhpQU5SS3VsRm1Vb09UZ1czNmgzVUMzR056VjBvSG1oXzFjdkpkdlZTN0hJY1QxODFQclJqSGd1V0J5bjJfNXhWSDdEWWJOVVl0MWtlVVNHMGFrWWtWWllVR1czSU9YbnVxNGJvOWFyd3NndFh0ZFZEd3N1MU5qWVFacEdDLVZTZV9QX2t2bE5KWA?oc=5",
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZ254YndibDhlRkZXZ3ZXa3pqOUxNSlZwN0FvbWJFN2dPQUt2LWNEMjkxRmU5ODFWazlBWW5IRkJLcmY3MHIyZDFSczBucjBXWmFhZ3lWejNLSHlNYWtyOEJMMVI5N2Jta2ZIVHdobFRGWUN3WG5rdV9FeXphWVFrT0M5dmo1cGcwYk9TcllXbUREbVItSWEtX3JZZw?oc=5"
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOa2hXVmxBejZuMktqMDMzbUNTcDA3ajBFdlE0MlpZc3AyU0ZPeHl0ZjJ3b3BhT2REdlRDVmRYWS05aFVhemtkZmVacFBnWFNXQlg5QjlmREo0VEdHRFFyTXNYR1FqV1VKUlhtVlNsT1ppUDRVQ0FVUTdGTW9FTXdVWWRVN0ZZMXpMNFo1dFBtMzJ4SzNRWHJkWnBlaGZId0x6dXJXSmU0ZW5tczhnc2pUM2Rn?oc=5",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxNUXE2VGdBVUhVNXB4a2VKY0QtaUd4OGM2VkpicFpZLXFCRVliazAxY290NTBNS3RmSHA5dUhJb2xMZTRNRHdCZVpBVktiRk9LNGF6ZjN6dVRsMmZYaFR3VUt3Mmpfd3FrUXpyLThSVFMxOHFxNXlQWHhnWjM3NmZYMml3?oc=5",
+    "https://news.google.com/rss/articles/CBMieEFVX3lxTE9DN1dDMGJadlFsOVhCMWhwSlB6amN4WUhWSFAtYlFuNzVZUjFIdVIxRVJmbWVaX0ZfNWJmY2FYaHNGTlZPNGNQR3FWRUV0bWFXRVNpUldGUmpKejRxU0puYVU2QXptR2xXaS0yeTFlUmlVckhNMm5oUg?oc=5"
    ]
   },
   "fed_cook": {
@@ -1534,11 +1597,11 @@
   },
   "h200_china": {
    "date": "2026-11-17",
-   "note": "多則新聞顯示美國商務部正在採取行動關閉晶片出口漏洞，針對新加坡、馬來西亞等轉運地，這表明國會限制法案可能已進入執行階段或即將快速推進。",
+   "note": "Washington Post報導川普政府下令商務部關閉Nvidia晶片漏洞，表明行政部門正採取行動加強出口管制，可能推進國會限制法案的實施進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMidEFVX3lxTE1yWU92TlhWYTJNSmRPc1U1cUhXZEZ0S0VzZnN4elVCdlhGWC1KcVdlaFZueDByekdBRS1sY2VIYng4a3hYS2ZCaFFIcWhxSEpXMGZrc2lnTUJnQ2h0WFlSaDZ2bnhqUmYzTG1BbDhvZmdfSTdm0gF6QVVfeXFMUHFJM25PazZPemswSExvMGFkZDdFSnliWTh3R1VDdElTbkF2d2x2ZlM2UlQ1OU5OOVVvWU91bGREaXNaRW4tamNOLURnTUFIQUJBMVp0TDBkaDdUNENDcnhUOHdZWk9Tdy1MeGlWbjJNZjhHMG5aSndhamc?oc=5",
-    "https://news.google.com/rss/articles/CBMioAFBVV95cUxPbnZNMl9tMHgzREZPWk5GVExiSFR1MkZ1bkx0d2pORzB4ejR0NlZ5ZzFuZFh0bFd5dnVUZjRhRE9zR3JROUhmaUY5VlF1azFYUGN4b2JGZHJ0MEdIWVBDREFyR1dfb2Q5VkFkVmYzMkhldl9kTFVTc2k1NllNWnUwdk5jS1oydkFwSm90RktlNnJUOGZ3bXV1Ui04YkpuTXlu?oc=5",
-    "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQMk1pUmhmX2dnNlhFZjFvM1NYbmpacVJULVNxWlgzcWpKLVNjTk8yWjREOWg5RFNqNEd0RGRfQTRJd3BNblpXNndTZVFlNzk0UnVZYkxUcjdMU0ZDVm1hWXVxR1JNcm5fUUkzN0luc3BmMzg1cU4xOEc1QXpuaDNxdnNaYU0yVzRmcXlzbU9mc1lxQ01Yd1ZkdklSeXI0NTJTTTNuOExSRlVlcU9HVUpQWVJrRk5qQXkwNVlRem04NUMtcHVPOVpwYw?oc=5"
+    "https://news.google.com/rss/articles/CBMihAFBVV95cUxNWDFFUjBWM25ZRTRQcnFFOGRBVW1tM29XM2R6UlhFYnBKQmlvdTQ0TUVvSmF0Ny00anZieG1MeV8zUnA2bE5tUTdTQ2czcXBnYjRXMGhhM2ppUDBrNHA3LUFtZjR0NDhreVJvazJ5YXI3TFpSWTJiQ1ZyYlhVbGU1eWhHcHA?oc=5",
+    "https://news.google.com/rss/articles/CBMirwFBVV95cUxQeFlDQ0VJUFBIZS1nQTJUN281Z2JRbmJ4N3JFSEo2cDJYdlpXOWhIWkw4Mm95ZXZXWkQ1MjJGRnZCVkVKUWlVakVub2ZwU0dhVUJKeGtJclFVa2pMZFVMZjRmYUhTbFBZV1BGdENBdGkzMV9nZGRaUkhFcVJMYUtITkN3M0pwRFlsQmkxUXNIaEpPanZIRll1TVNXRFJpVzlDOTNLUTVaNDY1Ql9TVXdV?oc=5",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxONGJmTGhQa3FRRDZtX3BqVk9SNlc1aHZ1QXZiUXdHMmlmZmdyUjFKS0hrREM1OFRrVDVjUGpSWnZfVTEtdlozVHVDc0h5Rld1cGVKQTFGYzVZOGJMdDNheWdEcFRhakxCVW1xcnQ3VHBzS2lRdWNPTGdtUkNxNVRnT1JUVzVKNzRXUlNuLUtBOVk2REZnZjMySER5NmhfNTliRjZsZ3B5TElrN0JU?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1560,13 +1623,13 @@
   },
   "dc_grid": {
    "date": "2026-11-17",
-   "note": "PJM 於 11/16 向 FERC 提交強制電網穩定規則提案，顯示已進入「規則草案」階段，下一步應為 FERC 審議最終規則。",
+   "note": "PJM 向 FERC 提交方案，尋求將電網併網等待時間從 24 個月縮短至 12 個月，並要求資料中心支付更高費用，顯示政策已進入規則草案階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMikgFBVV95cUxQTDZmaGpDWEhPS0FCVDJFOGh0dGFWT2hWSkZrbFBqUG5YV041ZW80bXd0SVdvcE55MHc4YjRPUks1UU5oVUhxSWl5ZFVBWnZHYk5kYmZEZkZkczZXNmxVUHhQRzRlMjVUVnk1UG1raUxyZ0JWTzhUaVJGZEVPQ29tUVhIZU9FQ0hTWHhDSVJKc255QQ?oc=5",
-    "https://news.google.com/rss/articles/CBMihwFBVV95cUxNUkZXNUJCTGs1Ukx1T1Vycjk4LTJWdFdOOHZDRTFRUXlHX29jQkJlNWdZbkpTNC1GN1dLYzRYcHBfSXoxSjR5My1sSUN4OV9ILWVTSEJfTEs1eWxTbmF3S3pXdW1kcHpuX0J6VEwwT0JYdTY5ZFM2WFI0RUZucXRXWTYxU0F2c1k?oc=5",
-    "https://news.google.com/rss/articles/CBMioAFBVV95cUxOOHE4Q0RNTVhNV2JienAya2s0eVIwWk5oaFprU2F6aVc1eUR5U1RxYjFuRnplLS1qaUpLOVRodVdkUU1uZ0NDOVRCNG95Q0ZOemx4SVpGdXJQdFpSTmFQTlV6aUZ6TkdmMUJUWmgwUGU1Z18yVVlPNUxxZkYtRUx6dThjdGFVRWRWOFA0WGtjcDhGcDNTTnQyNklyQVF1eHZF?oc=5"
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE5CdFZKWlpvNlZER3EtV0pGbERxa3hnN05qTXJ6S0xaNkdheWd3UVBRX21ndUE4dHUwUVl2MHFkMV9pY0Fqb0l6d1BydjdmcjFPeUw4MEdFM2VXX3hpYjZGLUpXODBiMWlTRkRUbHJSQldEaVVuSFE?oc=5",
+    "https://news.google.com/rss/articles/CBMiygFBVV95cUxQS2ZfSC1OcW5oRkdRY2Z6dWc3Q1VteDJSSDB5SngxRHEtM3M3SFFHOXE1ODRMOUFLNmtNcVZJZno1R3cyS0s3d3NRczNQUmV1MXpSbGd6OHQ1X0xoLUlmMFJNUk5pNVRKenVuNHlhZ1VPZ1o4UlhZeFlEbmEtd3d1eXNzRGNPTXFERHpRNVpnQmVGNk82M0tvQnJ4dWtVX2dacEZPczNVY3dLSlduTjFsM2k5UXZDQUFUNXR4WkRZaEtRZmxhY21ROXRR?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxQTDZmaGpDWEhPS0FCVDJFOGh0dGFWT2hWSkZrbFBqUG5YV041ZW80bXd0SVdvcE55MHc4YjRPUks1UU5oVUhxSWl5ZFVBWnZHYk5kYmZEZkZkczZXNmxVUHhQRzRlMjVUVnk1UG1raUxyZ0JWTzhUaVJGZEVPQ29tUVhIZU9FQ0hTWHhDSVJKc255QQ?oc=5"
    ]
   }
  },
- "at": "2026-11-17 07:11（台北）"
+ "at": "2026-11-17 20:14（台北）"
 }

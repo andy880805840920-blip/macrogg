@@ -1,112 +1,5 @@
 [
  {
-  "at": "2026-11-04T17:25+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "claims",
-   "refunding"
-  ],
-  "locks": [
-   "refunding"
-  ],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Stocks and Bonds Rise, Dollar Slides After US Vote: Markets Wrap - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Oil Loses Its Grip on Bonds as Growth Fears Displace Inflation - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Meta Starts Debut Euro Bond Sale After $15 Billion Dollar Deal - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "CoreWeave Bonds Hit New Lows as Texas Data Centers in Crosshairs - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Treasuries Advance as Traders Eye US Votes, Refinancing Plans - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "US Treasury shifts language, opening door to auction size changes - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Ukraine Bonds Jump as Democrat Win Seen Helping Defense Efforts - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Euro-Zone Inflation Accelerates to Double the ECB’s Target - Bloomberg.com"
-    ]
-   }
-  ],
-  "prior_old": [
-   "Euro zone inflation hits 4% for first time in three years as interest rate hike looms"
-  ],
-  "background": [
-   "10-year Treasury yield slides as traders mull over Democrats' midterm victories, oil prices drop",
-   "AI成債市新變數！科技巨頭狂發2710億美元債券 影響力直逼戰爭與選舉",
-   "漲價還沒完？美國10月服務業成本還沒全轉嫁 Fed抗通膨難鬆手"
-  ],
-  "main": "Stocks and Bonds Rise, Dollar Slides After US Vote: Markets Wrap - Bloomberg.com",
-  "main_why": "最高分",
-  "second": "Euro-Zone Inflation Accelerates to Double the ECB’s Target - Bloomberg.com",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 250 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ],
-    [
-     "主軸 236 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 224 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "民主黨期中選舉大勝，美債殖利率回落、市場聚焦財政赤字縮減"
- },
- {
   "at": "2026-11-04T23:33+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2918,5 +2811,112 @@
    ]
   },
   "result": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望"
+ },
+ {
+  "at": "2026-11-17T12:14+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "retail"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "The Fed's 'Immaculate Disinflation' Strategy Will Fail - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Fed’s Hammack Reiterates Preference for Small, Incremental Hikes - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "COMMENTARY: Warsh's honeymoon period is over - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com",
+     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Hammack Says Fed Interventions Should Be Temporary, Targeted - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Fed's Warsh says emerging technologies to have 'significant impact,' but there are risks - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Fed's Hammack reiterates case for slow, steady rate hikes -Bloomberg TV - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "Warsh says AI boom brings opportunity and 'bad actors' - Reuters"
+    ]
+   }
+  ],
+  "background": [
+   "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+   "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’"
+  ],
+  "main": "The Fed's 'Immaculate Disinflation' Strategy Will Fail - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "歐盟上調GDP成長至1.4%　整體通膨估達3.3%",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（18）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 264 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "【對利率】96 字，超過 90 字，請精簡",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 180 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 198 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "數據公布日期錯誤（GDP寫成「11/17」，官方是 10/29；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ],
+    [
+     "數據公布日期錯誤（GDP寫成「11/17」，官方是 10/29；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
+    ]
+   ]
+  },
+  "result": "Warsh 召集 AI 任務小組，警告可能帶來失業或令人失望"
  }
 ]

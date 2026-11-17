@@ -8,7 +8,7 @@
    },
    {
     "label": "S-1 修正版",
-    "date": "2026-11-10"
+    "date": "2026-11-17"
    },
    {
     "label": "定價",
@@ -16,11 +16,11 @@
    },
    {
     "label": "掛牌",
-    "date": ""
+    "date": "2026-11-17"
    }
   ],
-  "listed": false,
-  "active": true
+  "listed": true,
+  "active": false
  },
  "seen": {
   "361cdca004a3": "2026-10-29",
@@ -4937,9 +4937,287 @@
   "2232fd70e403": "2026-11-16",
   "ed8bee1ceddd": "2026-11-16",
   "94bf20d8ad57": "2026-11-16",
-  "3eb7b3da6403": "2026-11-16"
+  "3eb7b3da6403": "2026-11-16",
+  "628dad3423ee": "2026-11-17",
+  "023969c2b744": "2026-11-17",
+  "8c8aa39287fc": "2026-11-17",
+  "00ad60123553": "2026-11-17",
+  "5c44b705c5c3": "2026-11-17",
+  "6ae8936c9b26": "2026-11-16",
+  "e0f5abbecd70": "2026-11-16",
+  "c6681343539a": "2026-11-14",
+  "2afe2c1153cc": "2026-11-17",
+  "5269692d720c": "2026-11-17",
+  "26df1574605f": "2026-11-17",
+  "0a203259fcee": "2026-11-17",
+  "140f563a1583": "2026-11-17",
+  "16d6d38b8463": "2026-11-17",
+  "482ea6d82ac2": "2026-11-17",
+  "f76345a43e85": "2026-11-17",
+  "328e2576428d": "2026-11-17",
+  "b70c66631e50": "2026-11-17",
+  "a75e87f6df1a": "2026-11-17",
+  "6450e69bffbd": "2026-11-16",
+  "3c0924f3b069": "2026-11-16",
+  "f073269c2f2c": "2026-11-16",
+  "ff5d35d2a752": "2026-11-16",
+  "10dc882b5445": "2026-11-17",
+  "fca7611fc4cb": "2026-11-17",
+  "1c20b0544b61": "2026-11-17",
+  "23ee7564c410": "2026-11-17",
+  "6e07bb4e1da0": "2026-11-17",
+  "9a78192f5371": "2026-11-16",
+  "ce7bdebddae5": "2026-11-06",
+  "008ba5f6f5a0": "2026-11-05",
+  "19ab90b5d9b0": "2026-11-17",
+  "278380fdee60": "2026-11-17",
+  "4176400e70d7": "2026-11-17",
+  "2ae174267c5e": "2026-11-17",
+  "17a5b348ae04": "2026-11-17",
+  "b108e20551d4": "2026-11-16",
+  "3bf5a9316693": "2026-11-16",
+  "c3cc85689711": "2026-11-16",
+  "9184668e42e8": "2026-11-17",
+  "435061fb9179": "2026-11-17",
+  "5c03e8e4df1c": "2026-11-17",
+  "776331dbe575": "2026-11-17",
+  "252a3914e0f7": "2026-11-17",
+  "131363d99b4d": "2026-11-17",
+  "99f75f58452f": "2026-11-17",
+  "c3dde7a642db": "2026-11-17",
+  "9675e3e5c68d": "2026-11-17",
+  "e619b2645b2c": "2026-11-17",
+  "d069c0167795": "2026-11-16",
+  "66e310ab7bd9": "2026-11-16",
+  "63909709f5a6": "2026-11-10",
+  "b5aaf0c62927": "2026-11-17",
+  "29b0ea3893c8": "2026-11-17",
+  "60cf2a9dc807": "2026-11-17",
+  "c916814f09bb": "2026-11-17",
+  "fc26ea8ad9c5": "2026-11-17",
+  "10a60a652d95": "2026-11-17",
+  "71487c2e87ec": "2026-11-17",
+  "246b94853d84": "2026-11-17",
+  "e7b08ef3829c": "2026-11-17",
+  "24eb96a9e5a4": "2026-11-17",
+  "d41e2fcec6f6": "2026-11-17",
+  "bbc5a7065f1d": "2026-11-16",
+  "734cbb083b2c": "2026-11-15",
+  "9de9ebb2a46d": "2026-11-17",
+  "7a0cb7782213": "2026-11-17",
+  "1a968ed5b1c4": "2026-11-17",
+  "3f6e427c811e": "2026-11-17",
+  "cac44e7b831b": "2026-11-17",
+  "7d37fb31aef7": "2026-11-17",
+  "c67ad0388633": "2026-11-16",
+  "4f0964064a1b": "2026-11-17",
+  "9fb0b8be289e": "2026-11-17",
+  "67da17a2a689": "2026-11-17",
+  "06fb7bc66b2a": "2026-11-17",
+  "05fd1ffae3a1": "2026-11-17",
+  "021fb44db21b": "2026-11-17",
+  "7a3cb41025df": "2026-11-17",
+  "4adfaadd3bbd": "2026-11-17",
+  "73673ac542a0": "2026-11-17",
+  "0de26b84114b": "2026-11-17",
+  "ae615a20096b": "2026-11-17",
+  "b5b0d2b4f2dd": "2026-11-17",
+  "22bc9c289310": "2026-11-17",
+  "68518536b013": "2026-11-17",
+  "7cfe0c7b32dc": "2026-11-17",
+  "797ade599f0e": "2026-11-17",
+  "4c828f84031c": "2026-11-17",
+  "df999956a040": "2026-11-17",
+  "49302c3bc40b": "2026-11-17",
+  "d4d5dc4b1242": "2026-11-17",
+  "224e33ee1d25": "2026-11-17",
+  "b2e4f5a3bf71": "2026-11-17",
+  "c256aab2fccc": "2026-11-17",
+  "44d10f84277d": "2026-11-16",
+  "37e130e5e121": "2026-11-16",
+  "5cd04b506da7": "2026-11-16",
+  "9021a0197315": "2026-11-13",
+  "fbe3ca883a00": "2026-11-07",
+  "5cb6310189e3": "2026-11-17",
+  "912367f9c043": "2026-11-17",
+  "2430d40ba0f5": "2026-11-17",
+  "f45b21451989": "2026-11-17",
+  "bdc9e9a4c1d1": "2026-11-17",
+  "e440fd1bfb73": "2026-11-15",
+  "ffafee6210f1": "2026-11-17",
+  "6651ee53f850": "2026-11-17",
+  "b95fa21e5557": "2026-11-17",
+  "4fbd7fa701f0": "2026-11-17",
+  "5781da219c17": "2026-11-16",
+  "e0e31fa613d8": "2026-11-17",
+  "73506638de6e": "2026-11-17",
+  "12e49a085e65": "2026-11-17",
+  "4b1b8c6a17a1": "2026-11-16",
+  "7f6c7969fa09": "2026-11-16",
+  "200306e5abc3": "2026-11-16",
+  "4c562ac1033d": "2026-11-16",
+  "d17d829b5efa": "2026-11-16",
+  "a48d684e1245": "2026-11-17",
+  "a7c05ea470ed": "2026-11-17",
+  "65915457b378": "2026-11-16",
+  "759373cdc66b": "2026-11-16",
+  "1a8bc6d78fac": "2026-11-16",
+  "54f9d30f5c2b": "2026-11-16",
+  "852c8e604532": "2026-11-16",
+  "b47955ac6e8a": "2026-11-16",
+  "6aa8f21dca8a": "2026-11-17",
+  "c2e48d5b9a7c": "2026-11-17",
+  "338401ce14ad": "2026-11-17",
+  "830c5d5cee02": "2026-11-17",
+  "d64ba919710e": "2026-11-16",
+  "780fce664cac": "2026-11-16",
+  "e19a724c2505": "2026-11-09",
+  "158eca78b30b": "2026-11-06"
  },
  "events": [
+  {
+   "id": "bda242b15d54",
+   "co": "Microsoft",
+   "type": "資本支出",
+   "zh": "Microsoft在South Rockford規劃120億美元資料中心建設。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Microsoft Makes Prospects on $12 Billion South Rockford Data Center Site on Monarch Property",
+     "source": "Construction Review",
+     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPR0k5VkQzMWxHUzQzTFh5ZmxHM1VOa28zVUR1Y2ltVVpNUlpoX3locXVNY2JKLUNoR2FRck9zeFdSSWVXbnVsOW1XY3pTdngtWktBQjlodVFpdEhiZjVTeVM5UDREdWNLejNMcEt2Q0h2cWRTdmhnUHl3eklGY0hDMTN2RDREUVNqWFJXU19wV1VrLUtoQlE2RlJKYmJCWEZYZ0kxdENfQndaT1o1ZlFkNHkzbmxTTXlJMjMyeWZta0l1bk95X29sdw?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "d5cd9c107aec",
+   "co": "Alphabet",
+   "type": "算力合約",
+   "zh": "Google與Central Oregon簽署商業超熱岩石地熱能購買協議。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Google announces world’s first deal to buy commercial superhot rock geothermal energy from Central Oregon",
+     "source": "OPB",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNMW5DVWhlZkFtdzJxdUpyc3NmWmRVSk1ZNDNmV3NfeTh1bG1yU29DWS1ITHA0QmE4Mkd2TE1JRjFFMExSVDFNcUktM015dlhidjNOdVF5dkhvSnZuNV9BaGYxVUwxOFc4X1RiMHl2R0pxWGQxbk16VVEyRFV5Y08wdXpybEVIcFFpX2RoanVnRzdvZ3JDalB0b2xSbkxIeTBaYXJrSE9EVmI?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "e75d9bb577cc",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Amazon在俄亥俄州投資170億美元建設AI數據中心，但面臨選民反對。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Amazon’s $17bn Ohio AI data centre bet threatened by voter backlash",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPUC1rUzBEcm52N3htNnBpQWFTSWF5cWwxczlnd2ZvVHQtenpfTzZMOTZyWVozdzBMYnpaWmdHN1BUTUVzNks5YkYzZVYySjFJN2t6dmRONkRFX1pVeERJQ3Q0T0xMMmtTMG9uTFFFaEh6dlpnaE8tRzRfcElLWTBPSjgxVUE?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "33379b54e59b",
+   "co": "OpenAI",
+   "type": "算力合約",
+   "zh": "OpenAI與TensorWave達成協議，後者提供超過450MW的AMD驅動AI基礎設施。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "TensorWave Announces Agreement with OpenAI to Deliver More Than 450MW of AMD Powered AI Infrastructure",
+     "source": "HPCwire",
+     "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxQVGdkWnlYdUF5X21fVkJMRzJEa0R0OVJFaG85NjE2Y21tZHJCTjZBc3Byb0hBd0lNQnlpUERfSDViUi11ZDctSXdySDhCQVdsUEV0TGhBdGNvcVNodTA4NkVGRW5acmFDVVV4a0g1MFY2M1VCWWtBSElZVnpzcHhrSmRDZzRXVUk3ZzVpeTNBWmItNjN6R3hJYlBLR0hIY2M5blhTRU03Q3JPMHpTR1JGVVhVRmY2QU1yNlNSaFF3ZlByRllBc0IzVDBLd05OYUxCUnlTOXIyMFhOaWJGN2c?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "4e16755719ac",
+   "co": "SpaceX",
+   "type": "資本支出",
+   "zh": "SpaceX計畫在亞利桑那州科奇斯縣興建500億美元數據中心園區。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "SpaceX plans $50B data center campus in Cochise County",
+     "source": "AZ Family",
+     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQR1RyUGg3aFJXSVpObHRsb2wwbnplQWNmVDRvRy1saDZfT044OWplc2JRMTQtYU1DVkd4SkJia0FidFNhdjZBV29pWVlIMUlENXc1VXJNc2NpRDNpYkZZeGF3c0g2M2RwZEo1dkNMYW9OX0hteWJ5Rkg4VE1SaS1Hd0N4YkYxMUFYWXFvZEV6eGjSAaQBQVVfeXFMTjdtdXJjUDh0VFhFOVdjd1J5ajh0WlpHOUJyX1VCZ0FzZFJIa200MTJ6dzNqMGtwZWVUaTlZZkUzb0pqZU1VbGNrdGhwTGdjTlFxMnVDZ3Q3QTdZZlZuV25LRjMtZ3A1OERUUTh6all2N05jNVZsSzJrd05DZGRlSUZrVnZ0T0pXSG9HbERaaUR4SG95UTFPT1JjeXVWNkJkSHVaWEg?oc=5"
+    },
+    {
+     "title": "Why SpaceX is planning a data center in Arizona",
+     "source": "AZ Family",
+     "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOV1d5T3lpam1sQTdLRmNUdW1hQTZ3ajByUnoxNFA4Sl8yNy1IYzdYWVFPclNiOF9iaG1wc3ZoMTJQcGRIS0hOdGd2eEp1S21LcF9WWEpIMUhya3k2ZlNJc25XQ2gzRERpOEFlUGJGSjg5ZmhBb0N6VUVkR0FHamlPaW45am1JQW1kYW1UVXhB?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "42e37e9826ec",
+   "co": "Intel",
+   "type": "資本支出",
+   "zh": "Intel 以 19 億美元收購量子計算公司 Classiq。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Why Intel Paid $1.9 Billion for Classiq Before Its Spin Qubits Were Ready | by Noah Bean | Nov, 2026",
+     "source": "Medium",
+     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQc3BpXzZINDdPa1JqNlRwZW5ySGJGSndBWWFMRzNFaFYyTktTTVF2Z2VWbVEyWlIwX0lLekNBbUV3WFgxV1pNNU1qVGxJeTZqUmpZYkZLemlUWWhORDdWbG9EQWNRRktVNGhFa1RKRnJiZTVZZzlZQWFHV19GbG5WSmU0UENkLUVVbndiUVlBX1BXWWFuLVVVb2NHZ1lGOEZhV2FfRzdJZnFkeFBqR0hqcUVkdzNKakNvWFE?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "595d40b439bc",
+   "co": "Apple",
+   "type": "算力合約",
+   "zh": "Apple 與 Samsung 接近達成長期 DRAM 供應協議。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Apple Close to Rare Long-Term Memory Deal With Samsung",
+     "source": "MacRumors",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOTm9ILTZhZ2lqMlJYNGJwaWlFQUZrWGFoSjd1ZlNlcDcwNFZ3RmQ4eWFXYmdsVWR1Ym9uNXV2SzZJcW9YOTBNVG03MHdpNnNNcXUwT2tiVlZqcmhpYzRrMEdlS2RneXBsR0JaNFJsaERZM3lFR0s5QjhxT292UEVfb1k0blg?oc=5"
+    },
+    {
+     "title": "Samsung Electronics, Apple Near DRAM Long-Term Supply Deal — Even 'Super Buyer' Apple Bows",
+     "source": "BigGo Finance",
+     "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5GamFOOUdma2V3VTBUWGh6Z0Uxc1l3cUdURksweWFSN1FjNHFZdDdoLW9PMHNsM0RCNWZYUzRZMTBKOGRELWJZam9tZ1ZQTnp4YjJ5Nkx3Xy0wQmZPTXB4X1Jac3BBb2duTmFUYmRrdzhOUUxVRUE?oc=5"
+    },
+    {
+     "title": "Samsung, Apple said to near DRAM chip deal",
+     "source": "Breakingthenews.net",
+     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQVC1YbU41dXV6ZHNfeF9ESFJMX0s0MkJmaXNLTkhXV3M0eEtjRGsxS1VuRWRTM3RncEZXMnBNX2xzSUpaWU51RVBkM1BxT2R0X1RQQU0yeGJPX1RKN05TenlJWE5BN3JtOHNEd093d0V6Rm11MkExbzFTdjFMYVlaRm4wTjdQR2p3Q1UxM0pTbw?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "3280a293015f",
+   "co": "Tesla",
+   "type": "資本支出",
+   "zh": "Tesla規劃德州休士頓附近興建「Project Crystal Sun」太陽能製造廠，投資101億美元。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Elon Musk Plans $10.1 Billion \"Project Crystal Sun\" Tesla Factory Near Houston. Says the Math on Solar Power Is \"Obvious and Trivial\"",
+     "source": "24/7 Wall St.",
+     "url": "https://news.google.com/rss/articles/CBMigAJBVV95cUxQVGNPSnF4UUpSX0Q5c3dVZ1cyUGJTd2t3SW1WMlU1NjJfaDJoZUNsNHBLLWh0Y0hnYUw4QTBpYS1lam8xMmRWVTJWMEt3R19QWmR6MlFDM1VmYjRPRUNBc09Bc21DWk8weVhMTU1Yb3hmWTRVQkJQXy1SSm94Nmt6dnFZaEkzUlNoLXBRNlhqTklxbnRFeDN4Y3czN3RjUDEwZzVaQkFvOTB6VG95Qy1Gc056Z3JTUXlXOGZkd1FZcjduNlp4Z0lEN3cxbzE4VTk4SG12ZkxmMG1IRE9qRFJCX3JiQWJvQTUzSkczVzNEZ0tJeTBkc25jV2NJSUZ5RER6?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
   {
    "id": "2dcbdadefa19",
    "co": "Microsoft",
@@ -7149,12 +7427,12 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "b5f1e060e2b6",
-   "text": "Microsoft近期事件偏向推升長端利率與AI投資熱度。公司債供給偏向增加——250億美元新債發行支撐龐大資本支出需求。資本支出激增（452億美元Q1投入、6,770億美元訂單積壓）與多項算力合約簽署，反映AI基礎設施建設加速，若持續高資本密集投資，則對長期融資需求與市場利率偏向上升壓力；同時密集的AI算力布局與Anthropic投資參與，偏向強化市場對AI產業前景預期，支撐科技股與AI投資熱度"
+   "hash": "4c36fe0a1fb8",
+   "text": "Microsoft近期密集推進AI基礎設施投資，偏向提升公司債供給與長端利率。大規模資本支出（逾千億美元規模）與250億美元新債發行，反映融資需求增加，若長期利率上升則增加融資成本。同時與Anthropic、Chevras等簽署長期合約，鎖定算力與能源供應，強化AI投資熱度。部分計畫延遲或終止則偏向緩和短期支出壓力，但整體而言Microsoft的舉措偏向推高債券供給與長端利率預期。"
   },
   "Alphabet": {
-   "hash": "affb471eb88c",
-   "text": "Alphabet近兩週密集投入AI基礎設施，偏向增加公司債供給。數據中心、晶片採購、能源協議涉及數百億美元資本支出，公司透過亞洲、歐洲多次發債籌資。若長期資本支出維持高位，則公司債供給偏向增加，可能推升長端利率。同時巨額投資強化AI算力地位，偏向提振AI投資熱度與科技股表現。"
+   "hash": "d8810518b353",
+   "text": "Alphabet近期密集簽署算力合約、加速資本支出並頻繁發債，反映AI基礎設施投資規模龐大。若長期資本支出維持高位，偏向增加公司債供給壓力；多筆能源與晶片合約鎖定成本，偏向支撐長端利率。大規模算力投資與Anthropic IPO參與，偏向強化AI投資熱度；但債務融資規模擴大若…則…市場對科技公司槓桿的擔憂可能升溫，偏向對股市形成壓力。"
   },
   "Meta": {
    "hash": "b73b66325678",
@@ -7173,28 +7451,28 @@
    "text": "Anthropic IPO與大額算力投資偏向拉升長端利率與AI投資熱度。IPO融資需求可能增加公司債供給壓力，而34億美元能源基礎設施支出反映AI基建資本密集特性，強化市場對AI產業長期成長的信心。惟Q3營收成長放緩，若持續，則可能制約股市對該公司的估值溢價。"
   },
   "OpenAI": {
-   "hash": "418e91b6014c",
-   "text": "OpenAI近期大幅擴張算力投資與融資，偏向增加公司債供給——1,050億美元Nvidia協議與150億美元融資需龐大資金支撐，可能推升企業融資需求。虧損擴大至109億美元反映高資本支出壓力，若融資成本上升則債務負擔加重。同時，AI基礎設施投資規模龐大偏向提振AI投資熱度，但交付延遲風險與社區反對可能制約市場情緒。"
+   "hash": "5ef0f178d652",
+   "text": "OpenAI密集簽署超千億美元算力合約與完成150億美元融資，顯示其資本支出需求龐大。若公司債市場預期其虧損持續擴大，偏向提高融資成本、增加債供給；同時巨額資本投入偏向支撐長端利率上行預期。多項算力協議與融資規模凸顯AI基礎設施投資熱度，偏向強化AI投資熱度，但交付延遲風險偏向增加市場不確定性。"
   },
   "Amazon": {
-   "hash": "3edb65e986ba",
-   "text": "Amazon近兩週密集投入數據中心與AI基礎設施，資本支出達2,200億美元，同步簽署多份算力合約。這些舉措偏向增加公司債供給需求，若融資需求上升則長端利率承壓；龐大資本投入與營業利潤集中風險並存，偏向強化AI投資熱度，但長期現金流回報仍需驗證，對股市評價存在不確定性。"
+   "hash": "dcee58fa7f08",
+   "text": "Amazon密集投入AI數據中心資本支出（逾240億美元）並簽署多項算力合約，偏向提升AI投資熱度。若資本支出持續高企，則長端利率面臨上升壓力；同時通過資產出售（Blackstone交易）部分融資需求，偏向緩解公司債供給壓力。營運利潤集中單一業務，股市反應取決於AI商業化前景能否兌現。"
   },
   "Nvidia": {
    "hash": "4e49ffa8240f",
-   "text": "Nvidia近期算力合約與營收指引強勁，偏向支撐AI投資熱度。SpaceX與中國客戶的大額晶片訂單、Apollo數據中心交易顯示需求旺盛，若這些合約順利執行，則公司債供給壓力偏向緩解。高營收指引與融資活動偏向推升長端利率預期，反映市場對科技投資前景的樂觀。整體而言，事件組合偏向強化AI產業景氣信號。"
+   "text": "Nvidia 近期算力合約與營收指引強勁，偏向支撐AI投資熱度。SpaceX與中國客戶的大額晶片訂單、Apollo數據中心交易顯示需求旺盛，若這些合約順利執行，則公司債供給壓力偏向緩解。高營收指引與融資活動偏向推升長端利率預期，反映市場對科技投資前景的樂觀。整體而言，事件組合偏向強化AI產業景氣信號。"
   },
   "SpaceX": {
-   "hash": "b24b641217a5",
-   "text": "SpaceX近期大規模擴張AI算力業務，涉及逾千億美元資本支出與合約，偏向推升公司債供給——龐大融資需求可能增加債券發行。長端利率若受此類高資本密集投資驅動的融資潮影響，偏向上行壓力。股市對該公司AI戰略反應積極，但未獲利狀態下的激進支出偏向引發獲利能力疑慮。整體而言，事件強化AI投資熱度，但融資規模龐大可能對債市造成壓力。"
+   "hash": "235011696af5",
+   "text": "SpaceX近期大規模資本支出計畫（逾千億美元）用於AI數據中心與算力設施，偏向增加公司債供給需求。若融資主要依賴債券市場，則對長端利率偏向上升壓力。同時簽署大額算力合約與國防訂單，營收成長動能強勁，偏向提振股市與AI投資熱度；但未獲利狀態下的高資本密集策略，若融資成本上升，則偏向抑制短期獲利率。"
   },
   "Intel": {
-   "hash": "b52c3c364e21",
-   "text": "Intel 近期聚焦 AI 基礎設施投資與技術突破。與 SK Hynix 的記憶體池合作偏向降低成本、提升競爭力，若能轉化為營收成長，則偏向減輕公司債供給壓力；參與新創融資則反映資本配置向 AI 領域傾斜。這些舉措整體偏向強化 AI 投資熱度預期，但需觀察第一季財報是否支撐營運改善信號。"
+   "hash": "a8de1df355f9",
+   "text": "Intel 近期在量子計算與 AI 記憶體領域加大投資，偏向增加資本支出與債務融資需求。若這些前沿技術投資未能快速轉化為營收，則公司債供給壓力上升、長端利率偏向承壓；若成功搶占 AI 算力市場，則偏向提升投資者風險偏好、帶動科技股與 AI 投資熱度。第一季財報表現將成關鍵，決定市場對其技術轉換效率的評估方向。"
   },
   "Apple": {
-   "hash": "0f8a3651369c",
-   "text": "Apple 近期營收表現穩健且領導層順利交接，增強市場對其償債能力的信心，偏向降低公司債供給成本。連續發行高等級債券反映融資需求強勁，若用於資本支出或回購，則偏向支撐股市；若市場對科技股前景樂觀，則AI投資熱度偏向維持。整體而言，Apple 的發債行動與財報表現相互強化，偏向穩定長端利率預期。"
+   "hash": "05c9ec0f2018",
+   "text": "Apple 近期密集發債75億美元，偏向增加公司債供給，可能推高長端利率。與Samsung達成長期DRAM協議、營收創新高，反映AI算力需求強勁，偏向支撐科技股表現。若新任執行長強化AI戰略，則可能吸引AI投資熱度；但大規模融資需求偏向反映資本支出壓力，對長端利率形成上行壓力。"
   },
   "TSMC": {
    "hash": "820add519b22",
@@ -7213,9 +7491,9 @@
    "text": "Broadcom與Anthropic簽署巨額晶片租賃協議並參與其融資，顯示AI基礎設施需求持續強勁。若此類長期算力合約增加，偏向支撐Broadcom現金流穩定性，可能緩解其公司債供給壓力；同時大額AI相關投資協議偏向強化市場對AI產業前景的信心，可能吸引資金流向科技股，對長端利率與股市均有支撐作用。"
   },
   "Tesla": {
-   "hash": "4bb1fe7bf228",
-   "text": "Tesla近期資本支出計畫呈現矛盾訊號：先宣布百億美元太陽能廠投資，隨後又縮減整體支出預算。此舉偏向增加公司債供給壓力——若大型基建投資確定進行，融資需求上升；同時支出縮減訊號可能削弱市場對其成長預期，偏向抑制股市表現。長端利率面臨相反拉力，但整體而言，資本密集策略調整傾向支撐企業融資成本上升預期。"
+   "hash": "4a0a760d3e97",
+   "text": "Tesla近期大幅調整資本支出計畫，先縮減2027年支出至200億美元，隨後宣布百億級太陽能廠投資。這偏向增加公司債供給壓力——若融資需求上升，長端利率面臨上行壓力。同時，大規模綠能製造投資偏向強化AI及能源轉型敘事，可能吸引相關主題投資熱度，但資本密集特性也反映出對長期融資成本的敏感性。"
   }
  },
- "at": "2026-11-17 07:11（台北）"
+ "at": "2026-11-17 20:13（台北）"
 }
