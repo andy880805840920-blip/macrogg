@@ -1,34 +1,252 @@
 {
  "hash": "",
- "text": "11/16 Warsh 在舊金山召開 AI 任務小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與方式尚不明確。Warsh 主持多數場次並挑選講者，前商務部長 Raimondo 在會中稱期中選舉通過多項州級措施阻擋資料中心興建是「非常令人擔憂的跡象」。11/17 聖路易 Fed 總裁穆薩勒姆在阿根廷演講時表示，經濟可能需要在 2027 年春季前升息數次才能及時達成 2% 通膨目標；他估計實質利率需達 2–2.5%、目前約低一個百分點，暗示 Fed 可能需在 12 月、1 月、3 月、4 月各升一次。穆薩勒姆提到若能源價格下跌、運輸成本降低或 AI 支出放緩，則可能不需進一步升息。¶國際貨幣基金組織（IMF）預測 2026 年全球名目 GDP 將突破 128 兆美元。美國以 32.64 兆美元穩居第一，中國以 21.55 兆美元居次，兩國合計占全球逾 42% 產值。台灣受惠 AI 投資熱潮與高科技製造業需求，以 1.01 兆美元排名全球第 22。報導指出，AI 模型訓練帶動伺服器、資料中心等基礎設施需求，推動美國經濟增長；中國 2026 年前三季經濟成長率達 4.6%，高科技製造業產出大增 14.3%。\n英國30年期公債過去不受歡迎，但11/17（英國時間）意外成為零售投資者的搶手貨，吸引大量個人投資者買進這檔長期債券。\n川普與習近平從關稅戰轉向貿易休兵，11/16雙方在談判中達成共識，結束長期的貿易對立局面，為兩國經貿關係帶來轉機。",
+ "text": "11/17 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與方向仍不明朗。Warsh 主持多數場次並挑選講者，暗示白領可能面臨大規模失業，但將推測留給專家小組。AI 實驗室 Anthropic 計劃 11/19 IPO、估值 1.4 兆美元，科技業大舉支出促使 Fed 考慮 12 月升息以壓制物價上漲。Fed 理事巴爾警告，七大 AI 巨頭表內債務年底將破 8000 億美元、表外負債（能源合約、資料中心與算力租賃）潛在上限逾 3 兆美元，資訊不透明恐在市場轉向時放大拋售壓力，讓人聯想到 1990 年代末電信業泡沫。¶輝達 11/17 公布財報優於預期後，道瓊期貨上漲、科技股跳升。執行長黃仁勳在財報中發表了相關說法。另外，Target 與 Anthropic 的 IPO 即將進行。同日，持有加密貨幣的財庫類股票再度下跌，一位前 Citadel Securities 交易員從中獲利。\n安哥拉央行因通膨持續下降而進一步寬鬆政策，11/17宣布降息以支持經濟成長，這是該央行近期連續採取的寬鬆措施。\n川普11/17回應一連串科技中斷事件時表示一切狀況「良好」，此時美國多家主要科技公司與服務遭遇大規模停機，引發市場與監管機構警惕。",
  "links": [
   {
    "title": "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
    "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
    "source": "CNBC",
-   "at": "2026-11-17T00:42:33+00:00"
+   "at": "2026-11-17T15:35:13+00:00"
   },
   {
-   "title": "St. Louis Fed's Musalem says four more rate hikes may be needed in coming months",
-   "link": "https://www.cnbc.com/2026/11/17/alberto-musalem-fed-interest-rates.html",
-   "source": "CNBC",
-   "at": "2026-11-17T13:40:54+00:00"
+   "title": "AI泡沫要破？高盛估2027年AI融資將翻倍至5450億美元　Fed警告：AI巨頭表外負債逾3兆",
+   "link": "https://tw.stock.yahoo.com/news/ai%E6%B3%A1%E6%B2%AB%E8%A6%81%E7%A0%B4-%E9%AB%98%E7%9B%9B%E4%BC%B02027%E5%B9%B4ai%E8%9E%8D%E8%B3%87%E5%B0%87%E7%BF%BB%E5%80%8D%E8%87%B35450%E5%84%84%E7%BE%8E%E5%85%83-fed%E8%AD%A6%E5%91%8A-ai%E5%B7%A8%E9%A0%AD%E8%A1%A8%E5%A4%96%E8%B2%A0%E5%82%B5%E9%80%BE3%E5%85%86-220003554.html",
+   "source": "Yahoo奇摩股市",
+   "at": "2026-11-17T22:00:03+00:00"
   },
   {
-   "title": "2026全球GDP破128兆美元！台灣奪下第22名 中美包辦逾4成產值",
-   "link": "https://tw.news.yahoo.com/2026%E5%85%A8%E7%90%83gdp%E7%A0%B4128%E5%85%86%E7%BE%8E%E5%85%83-%E5%8F%B0%E7%81%A3%E5%A5%AA%E4%B8%8B%E7%AC%AC22%E5%90%8D-%E4%B8%AD%E7%BE%8E%E5%8C%85%E8%BE%A6%E9%80%BE4%E6%88%90%E7%94%A2%E5%80%BC-133500624.html",
-   "source": "Yahoo奇摩新聞",
-   "at": "2026-11-17T13:35:00+08:00"
+   "title": "Crypto Treasury Stocks Fall Anew as Ex-Citadel Securities Trader Nets Gains",
+   "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNdEF0cHcxTXZoRWhBQ1dadm9HdFgyVENGQmNqWUJxSnJCV2lUQmlRblhYOGNPU1UzT2kwSlROSUxoRmE5UXFwN3djc3kwQlFRdW55STBFZlJhX21Day01OFEtSjhzNjhiODg5bkhxTFYtMXI3TFFtMk4zVlVFay1VekNuWWx2QnItSFBZbXFrMGZWOW9Kc1MyZlB3RW5xNjFxU29mM3l0OXNGaXhBYWJvWFlBaHBpNUJyX181RzRSZnYyQTFT?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-17T19:37:25+00:00"
+  },
+  {
+   "title": "Dow Jones Futures Rise, Techs Jump As Nvidia Beats, Says This On Jensen Huang; Target, Anthropic IPO Ahead",
+   "link": "https://finance.yahoo.com/m/3b22ed8c-00c3-32f8-89f5-91bc21ccb366/dow-jones-futures-rise%2C-techs.html?.tsrc=rss",
+   "source": "Yahoo Finance",
+   "at": "2026-11-17T23:01:46+00:00"
   }
  ],
  "fedwatch": {
-  "date": "2026-11-17",
+  "date": "2026-11-18",
   "method": 7,
   "path": {
    "src": "futures",
-   "date": "2026-11-17",
+   "date": "2026-11-18",
    "meetings": [
     {
+     "date": "2026-12-09",
+     "start": 3.8825,
+     "end": 4.146705,
+     "move_bp": 26.42,
+     "outcomes": [
+      [
+       25,
+       0.9432
+      ],
+      [
+       50,
+       0.0568
+      ]
+     ],
+     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+    },
+    {
+     "date": "2027-01-27",
+     "start": 4.146705,
+     "end": 4.315,
+     "move_bp": 16.83,
+     "outcomes": [
+      [
+       25,
+       0.6732
+      ],
+      [
+       0,
+       0.3268
+      ]
+     ],
+     "how": "2027-02 合約平均"
+    },
+    {
+     "date": "2027-03-17",
+     "start": 4.315,
+     "end": 4.492143,
+     "move_bp": 17.714,
+     "outcomes": [
+      [
+       25,
+       0.7086
+      ],
+      [
+       0,
+       0.2914
+      ]
+     ],
+     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
+    },
+    {
+     "date": "2027-04-28",
+     "start": 4.492143,
+     "end": 4.555,
+     "move_bp": 6.286,
+     "outcomes": [
+      [
+       0,
+       0.7486
+      ],
+      [
+       25,
+       0.2514
+      ]
+     ],
+     "how": "2027-05 合約平均"
+    },
+    {
+     "date": "2027-06-09",
+     "start": 4.555,
+     "end": 4.633571,
+     "move_bp": 7.857,
+     "outcomes": [
+      [
+       0,
+       0.6857
+      ],
+      [
+       25,
+       0.3143
+      ]
+     ],
+     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
+    },
+    {
+     "date": "2027-07-28",
+     "start": 4.633571,
+     "end": 4.665,
+     "move_bp": 3.143,
+     "outcomes": [
+      [
+       0,
+       0.8743
+      ],
+      [
+       25,
+       0.1257
+      ]
+     ],
+     "how": "2027-08 合約平均"
+    },
+    {
+     "date": "2027-09-15",
+     "start": 4.665,
+     "end": 4.685,
+     "move_bp": 2.0,
+     "outcomes": [
+      [
+       0,
+       0.92
+      ],
+      [
+       25,
+       0.08
+      ]
+     ],
+     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
+    },
+    {
+     "date": "2027-10-27",
+     "start": 4.685,
+     "end": 4.685,
+     "move_bp": 0.0,
+     "outcomes": [
+      [
+       0,
+       1.0
+      ],
+      [
+       25,
+       0.0
+      ]
+     ],
+     "how": "2027-10 合約日曆日加權反推（N=27、M=4）"
+    },
+    {
+     "date": "2027-11-17",
+     "start": 4.685,
+     "end": 4.650385,
+     "move_bp": -3.462,
+     "outcomes": [
+      [
+       0,
+       0.8615
+      ],
+      [
+       -25,
+       0.1385
+      ]
+     ],
+     "how": "2027-11 合約日曆日加權反推（N=17、M=13）"
+    }
+   ],
+   "next": {
+    "date": "2026-12-09",
+    "start": 3.8825,
+    "end": 4.146705,
+    "move_bp": 26.42,
+    "outcomes": [
+     [
+      25,
+      0.9432
+     ],
+     [
+      50,
+      0.0568
+     ]
+    ],
+    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+   },
+   "horizon": {
+    "date": "2026-12-09",
+    "start": 3.8825,
+    "end": 4.146705,
+    "move_bp": 26.42,
+    "outcomes": [
+     [
+      25,
+      0.9432
+     ],
+     [
+      50,
+      0.0568
+     ]
+    ],
+    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
+   },
+   "cum_bp": 26.421,
+   "r0": 3.8825,
+   "r0_src": "2026-11 合約（當月沒有會議）",
+   "horizons": [
+    {
+     "date": "2026-12-09",
+     "label": "2026 年底",
+     "cum_bp": 26.421,
+     "prev_cum_bp": 26.068
+    },
+    {
+     "date": "2027-06-09",
+     "label": "2027 年中",
+     "cum_bp": 75.107,
+     "prev_cum_bp": 78.786
+    },
+    {
+     "date": "2027-11-17",
+     "label": "2027 年底",
+     "cum_bp": 76.789,
+     "prev_cum_bp": 85.452
+    }
+   ],
+   "prev": {
+    "next": {
      "date": "2026-12-09",
      "start": 3.88,
      "end": 4.140682,
@@ -45,380 +263,154 @@
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    {
-     "date": "2027-01-27",
-     "start": 4.140682,
-     "end": 4.32,
-     "move_bp": 17.932,
-     "outcomes": [
-      [
-       25,
-       0.7173
-      ],
-      [
-       0,
-       0.2827
-      ]
-     ],
-     "how": "2027-02 合約平均"
-    },
-    {
-     "date": "2027-03-17",
-     "start": 4.32,
-     "end": 4.497143,
-     "move_bp": 17.714,
-     "outcomes": [
-      [
-       25,
-       0.7086
-      ],
-      [
-       0,
-       0.2914
-      ]
-     ],
-     "how": "2027-03 合約日曆日加權反推（N=17、M=14）"
-    },
-    {
-     "date": "2027-04-28",
-     "start": 4.497143,
-     "end": 4.575,
-     "move_bp": 7.786,
-     "outcomes": [
-      [
-       0,
-       0.6886
-      ],
-      [
-       25,
-       0.3114
-      ]
-     ],
-     "how": "2027-05 合約平均"
-    },
-    {
-     "date": "2027-06-09",
-     "start": 4.575,
-     "end": 4.667857,
-     "move_bp": 9.286,
-     "outcomes": [
-      [
-       0,
-       0.6286
-      ],
-      [
-       25,
-       0.3714
-      ]
-     ],
-     "how": "2027-06 合約日曆日加權反推（N=9、M=21）"
-    },
-    {
-     "date": "2027-07-28",
-     "start": 4.667857,
-     "end": 4.705,
-     "move_bp": 3.714,
-     "outcomes": [
-      [
-       0,
-       0.8514
-      ],
-      [
-       25,
-       0.1486
-      ]
-     ],
-     "how": "2027-08 合約平均"
-    },
-    {
-     "date": "2027-09-15",
-     "start": 4.705,
-     "end": 4.725,
-     "move_bp": 2.0,
-     "outcomes": [
-      [
-       0,
-       0.92
-      ],
-      [
-       25,
-       0.08
-      ]
-     ],
-     "how": "2027-09 合約日曆日加權反推（N=15、M=15）"
-    },
-    {
-     "date": "2027-10-27",
-     "start": 4.725,
-     "end": 4.76375,
-     "move_bp": 3.875,
-     "outcomes": [
-      [
-       0,
-       0.845
-      ],
-      [
-       25,
-       0.155
-      ]
-     ],
-     "how": "2027-10 合約日曆日加權反推（N=27、M=4）"
-    },
-    {
-     "date": "2027-11-17",
-     "start": 4.76375,
-     "end": 4.65125,
-     "move_bp": -11.25,
-     "outcomes": [
-      [
-       0,
-       0.55
-      ],
-      [
-       -25,
-       0.45
-      ]
-     ],
-     "how": "2027-11 合約日曆日加權反推（N=17、M=13）"
-    }
-   ],
-   "next": {
-    "date": "2026-12-09",
-    "start": 3.88,
-    "end": 4.140682,
-    "move_bp": 26.068,
-    "outcomes": [
-     [
-      25,
-      0.9573
-     ],
-     [
-      50,
-      0.0427
-     ]
-    ],
-    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-   },
-   "horizon": {
-    "date": "2026-12-09",
-    "start": 3.88,
-    "end": 4.140682,
-    "move_bp": 26.068,
-    "outcomes": [
-     [
-      25,
-      0.9573
-     ],
-     [
-      50,
-      0.0427
-     ]
-    ],
-    "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-   },
-   "cum_bp": 26.068,
-   "r0": 3.88,
-   "r0_src": "2026-11 合約（當月沒有會議）",
-   "horizons": [
-    {
-     "date": "2026-12-09",
-     "label": "2026 年底",
-     "cum_bp": 26.068,
-     "prev_cum_bp": 27.83
-    },
-    {
-     "date": "2027-06-09",
-     "label": "2027 年中",
-     "cum_bp": 78.786,
-     "prev_cum_bp": 82.75
-    },
-    {
-     "date": "2027-11-17",
-     "label": "2027 年底",
-     "cum_bp": 77.125,
-     "prev_cum_bp": 91.202
-    }
-   ],
-   "prev": {
-    "next": {
-     "date": "2026-12-09",
-     "start": 3.8775,
-     "end": 4.155795,
-     "move_bp": 27.83,
-     "outcomes": [
-      [
-       25,
-       0.8868
-      ],
-      [
-       50,
-       0.1132
-      ]
-     ],
-     "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
-    },
     "horizon": {
      "date": "2026-12-09",
-     "start": 3.8775,
-     "end": 4.155795,
-     "move_bp": 27.83,
+     "start": 3.88,
+     "end": 4.140682,
+     "move_bp": 26.068,
      "outcomes": [
       [
        25,
-       0.8868
+       0.9573
       ],
       [
        50,
-       0.1132
+       0.0427
       ]
      ],
      "how": "2026-12 合約日曆日加權反推（N=9、M=22）"
     },
-    "cum_bp": 27.83
+    "cum_bp": 26.068
    }
   }
  },
  "text_source": "model-content",
- "at": "2026-11-17T14:13:40.124678+00:00",
+ "at": "2026-11-17T23:07:58.025963+00:00",
  "layout": "main",
  "topics": {
-  "hash": "2d5a37b4fa4d6523",
+  "hash": "6ad5f74c721f9a4a",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "前主席鮑爾與白宮對升息立場產生衝突，鮑爾主張升息以達成通膨目標，而白宮則呼籲降息",
+    "text": "聖路易斯聯邦準備銀行總裁穆薩勒姆表示，聯準會可能需要在明年春季前進行四次升息，以在適當時間內達成2%通膨目標，實質政策利率需達2%-2.5%，目前約低於該區間1個百分點，暗示12月、1月、3月、4月各有升息可能",
     "links": [
      {
-      "title": "Powell’s honeymoon period is over! Pressure from the Federal Reserve to raise interest rates clashes directly with the White House’s calls for rate cuts.",
-      "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNcVZRYm5ZamFqeUJ0djdKU0QtcFVMcjAwVWhhSkJNYUQxSzl1bWNtT3NocXNvQ3NDdk82M2NIX1hpYTN5Q2xxNFFhNFJqd0N3dHBTOFJZaHF0LTl4czVIcU5fQ3ZEeXU0aDZmWUpFN3FYdEd2V0FiOGZvQjQ5eV9oWTZCWEo0T1BZN0ZMVjMzNjJOUkNMWUE4WmJhazRyVHFlX1VnQg?oc=5",
-      "source": "富途牛牛",
-      "at": "2026-11-17T05:27:20+00:00"
+      "title": "Fed's Musalem: US likely needs several rate hikes by spring to control inflation",
+      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNSmh3bk9iaG5YQ2V2dzZUMkQ1aGQ2LWNfdHFCWkVaOUtyWFdHS3lFTzZJTDhsQnItcnN4N2NibjRLNXZIbHVvSllBY0Jyc201azJtbUNnWkRndWlPN05sZUVaWkJBZFlTTGJzYWFFLWRqN2R6X25jRllRT1hHekZ2aFRweE5rbHM3Z3p1SHoxR2UwR1VnMWVnbWZ3ZmRHSTkyR2lhU3p1NzNFZFBjMEtRQ25iZnpwVEhBZTd3bw?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-17T12:33:45+00:00"
+     },
+     {
+      "title": "St. Louis Fed's Musalem says four more rate hikes may be needed in coming months",
+      "link": "https://www.cnbc.com/2026/11/17/alberto-musalem-fed-interest-rates.html",
+      "source": "CNBC",
+      "at": "2026-11-17T13:40:54+00:00"
      }
     ]
    },
    {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "T. Rowe Price 維持看空長期美債的部位，該策略在 2026 年表現亮眼；同時交易平台 Tradeweb 推出 AI 助手協助美債交易員",
+    "id": "oil",
+    "label": "油價",
+    "text": "美伊衝突升溫、荷姆茲海峽油輪遇襲，加上美國原油庫存預期下降支撐油價，但中東出口恢復與第四季供應過剩預期限制漲幅；布蘭特原油漲0.76%至93.14美元、WTI漲0.34%至86.01美元，本月分別下跌約20%及16%",
     "links": [
      {
-      "title": "T. Rowe Sticks to Bearish Treasuries Bet That Fueled Banner 2026",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOU3Y5Yk5VYWVqdUFWVHBZRTJENDd1eF95ZjgwU0tNcHlFQk5mXzVKYmZlZU5DYmxCaV9qd2stVnAzN3F3VDZncVcyaHljNmJSR2VYUnRuUjA0X2xVRm8wVjhjc0ZxVWFZMUVjZE1tZmdGR3FXa3pUNjRMU3ROV0NVVXFUUVYwYzIwTVFXT3pxSVR1MUtyZFZVWlRYU2pfbzJOcWRnNnA5eGVfSXVBcUU4M0xPNnE?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-17T09:22:38+00:00"
-     },
-     {
-      "title": "Tradeweb Is Rolling Out AI Assistant for US Treasury Traders",
-      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNWlRlX3pOelgxdVZHMkRZSVNxeWRkWmVrLW5hOUU1M3JVZ2hJcDRUQ1Bnc2liaC03dmZWNE0wd1JYT2hUNXBibFozbWgwQ2dadC1jVFZKemVoM0R4a2tMdUNadEwzMm11eXNxZFRjV1ZVSFhzQ1ItV3RBb0hJekpCYUNPS09UNVktX0lqeGJFUEN1bXQxeWZuTDBPTlhBMHNqM0x5QW1ORjViSFgwZEExbw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-16T19:45:45+00:00"
+      "title": "〈能源盤後〉油輪遇襲、美國原油庫存料下降 原油上漲 唯供應過剩壓力縮限漲幅",
+      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E6%B2%B9%E8%BC%AA%E9%81%87%E8%A5%B2-%E7%BE%8E%E5%9C%8B%E5%8E%9F%E6%B2%B9%E5%BA%AB%E5%AD%98%E6%96%99%E4%B8%8B%E9%99%8D-%E5%8E%9F%E6%B2%B9%E4%B8%8A%E6%BC%B2-%E5%94%AF%E4%BE%9B%E6%87%89%E9%81%8E%E5%89%A9%E5%A3%93%E5%8A%9B%E7%B8%AE%E9%99%90%E6%BC%B2%E5%B9%85-221058117.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-17T22:10:58+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "半導體研究機構 SemiAnalysis 大幅下修 AI 資本支出預測，2028 年從 1.05 兆美元降至 7580 億美元、降幅 28%，輝達首當其衝，聯發科 TPU 專案也受波及；市場擔憂融資趨緊與美國期中選舉後資料中心建設延宕",
+    "text": "輝達盤後公布第三季營收1158.4億美元優於預期，第四季預估1300億美元年增90%也超預期，盤後股價上漲約3%，但盤中美股因財報前觀望、NSA機密網路故障與蘋果服務異常加劇避險情緒，道瓊跌848點、標普500跌破200日均線至7月底以來最低",
     "links": [
      {
-      "title": "【美股盤前】機構大砍AI支出預測！點名輝達首當其衝　聯發科TPU也中槍",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E6%A9%9F%E6%A7%8B%E5%A4%A7%E7%A0%8Dai%E6%94%AF%E5%87%BA%E9%A0%90%E6%B8%AC-%E9%BB%9E%E5%90%8D%E8%BC%9D%E9%81%94%E9%A6%96%E7%95%B6%E5%85%B6%E8%A1%9D-%E8%81%AF%E7%99%BC%E7%A7%91tpu%E4%B9%9F%E4%B8%AD%E6%A7%8D-131500699.html",
+      "title": "〈美股盤後〉道瓊尾盤一度狂瀉逾1000點 標普創7月底來最低收盤 輝達財報公布",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%BE%8C-%E9%81%93%E7%93%8A%E5%B0%BE%E7%9B%A4-%E5%BA%A6%E7%8B%82%E7%80%89%E9%80%BE1000%E9%BB%9E-%E6%A8%99%E6%99%AE%E5%89%B57%E6%9C%88%E5%BA%95%E4%BE%86%E6%9C%80%E4%BD%8E%E6%94%B6%E7%9B%A4-%E8%BC%9D%E9%81%94%E8%B2%A1%E5%A0%B1%E5%85%AC%E5%B8%83-214808690.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-17T21:48:08+00:00"
+     },
+     {
+      "title": "美股道瓊一度瀉1000點　黃仁勳回鍋難救輝達",
+      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E9%81%93%E7%93%8A-%E5%BA%A6%E7%80%891000%E9%BB%9E-%E9%BB%83%E4%BB%81%E5%8B%B3%E5%9B%9E%E9%8D%8B%E9%9B%A3%E6%95%91%E8%BC%9D%E9%81%94-222311910.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-17T13:15:00+08:00"
+      "at": "2026-11-17T22:23:11+08:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "研究機構 SemiAnalysis 將 2028 年全球 AI 加速器資本支出預估從 1.05 兆美元下調至 7,580 億美元，下修 28%，輝達將承擔大部分砍單衝擊",
+    "text": "OpenAI推出GPT-6.2 Astra模型，在複雜專業工作基準測試中表現超越Anthropic的Fable模型，成本卻僅需對方一小部分，兩家公司正競相開發更強大模型爭取企業客戶",
     "links": [
      {
-      "title": "【美股盤前】機構大砍AI支出預測！點名輝達首當其衝　聯發科TPU也中槍",
-      "link": "https://tw.news.yahoo.com/%E7%BE%8E%E8%82%A1%E7%9B%A4%E5%89%8D-%E6%A9%9F%E6%A7%8B%E5%A4%A7%E7%A0%8Dai%E6%94%AF%E5%87%BA%E9%A0%90%E6%B8%AC-%E9%BB%9E%E5%90%8D%E8%BC%9D%E9%81%94%E9%A6%96%E7%95%B6%E5%85%B6%E8%A1%9D-%E8%81%AF%E7%99%BC%E7%A7%91tpu%E4%B9%9F%E4%B8%AD%E6%A7%8D-131500699.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-17T13:15:00+08:00"
+      "title": "前代喊卡近兩個月！OpenAI推GPT",
+      "link": "https://tw.stock.yahoo.com/news/%E5%89%8D%E4%BB%A3%E5%96%8A%E5%8D%A1%E8%BF%91%E5%85%A9%E5%80%8B%E6%9C%88-openai%E6%8E%A8gpt-6-2-astra-193013589.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-17T19:30:13+00:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股 11/17 下跌 947 點至 40,092 點，台指期夜盤一度跌破 4 萬大關至 39,537 點，外資、自營商與投信連續第二日同步賣超",
+    "text": "台指期夜盤下跌219點至39792點，台積電期貨盤後跌50點，台股前日收40092點距4萬點僅92點，費城半導體指數逆勢收漲0.34%成止跌希望",
     "links": [
      {
-      "title": "台指期夜盤一度失守4萬大關！他哭問跌到2萬5會怎樣 網曝殘酷慘況",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4-%E5%BA%A6%E5%A4%B1%E5%AE%884%E8%90%AC%E5%A4%A7%E9%97%9C-%E4%BB%96%E5%93%AD%E5%95%8F%E8%B7%8C%E5%88%B02%E8%90%AC5%E6%9C%83%E6%80%8E%E6%A8%A3-%E7%B6%B2%E6%9B%9D%E6%AE%98%E9%85%B7%E6%85%98%E6%B3%81-121715175.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-17T12:17:15+00:00"
+      "title": "【盤前】費半翻紅成止跌希望！台指期夜盤跌219點　台股拚4萬點保衛戰",
+      "link": "https://tw.news.yahoo.com/%E7%9B%A4%E5%89%8D-%E8%B2%BB%E5%8D%8A%E7%BF%BB%E7%B4%85%E6%88%90%E6%AD%A2%E8%B7%8C%E5%B8%8C%E6%9C%9B-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E8%B7%8C219%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%8B%9A4%E8%90%AC%E9%BB%9E%E4%BF%9D%E8%A1%9B%E6%88%B0-222300723.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-17T22:23:00+08:00"
      },
      {
-      "title": "台股連續重挫衝擊投資人信心！證交所搬出3大理由信心喊話：基本面仍穩",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%A3%E7%BA%8C%E9%87%8D%E6%8C%AB%E8%A1%9D%E6%93%8A%E6%8A%95%E8%B3%87%E4%BA%BA%E4%BF%A1%E5%BF%83-%E8%AD%89%E4%BA%A4%E6%89%80%E6%90%AC%E5%87%BA3%E5%A4%A7%E7%90%86%E7%94%B1%E4%BF%A1%E5%BF%83%E5%96%8A%E8%A9%B1-%E5%9F%BA%E6%9C%AC%E9%9D%A2%E4%BB%8D%E7%A9%A9-131228547.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-17T13:12:28+08:00"
+      "title": "台股開盤怎麼走？美股漲跌互見　台指期夜盤下跌",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4%E6%80%8E%E9%BA%BC%E8%B5%B0-%E7%BE%8E%E8%82%A1%E6%BC%B2%E8%B7%8C%E4%BA%92%E8%A6%8B-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E4%B8%8B%E8%B7%8C-224952100.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-17T22:49:52+00:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "黃金跌至 14 個月低點附近，因美債殖利率上升與美元走強施壓，通膨壓力仍限制漲幅",
+    "text": "現貨金價上漲 0.3% 至每盎司 3866.21 美元，白銀漲 1.1% 至 47.55 美元，但銅價下跌 30 美元至每噸 13226 美元，顯示避險需求與工業需求分化",
     "links": [
      {
-      "title": "Gold Steadies Near 14-Month Low as Inflation Pressure Persists",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPMDI4MEt3a3M4XzFhaC01R3pmSzdkOXZ2ZWhUWjhPb1lOZWZPbjdXTWFydWVFcmZNS21rZGZLUmZ6S21OcXFDUUkyN0NLc3BiZnlCWUJ1QmMxbHh0aWtZUjEzZFBuQng0bkRiVFZxN0pOUUJBQXRqQ0NGTUFZcEtLRUx6NkVWZklRTjhxOTNJMzdVUldYX21ieEFQcDlnTks2NFAxMDBrY1ktNmtlVzZYR2FxRQ?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-17T12:55:38+00:00"
-     },
-     {
-      "title": "Gold inches up from over one-year low, Fed outlook caps gains",
-      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNVGd6c05RMXpCQzBvWjhLZlZ6cjc4OUZ0cjZaSWxzZk9leV9WbG1EVmhoVlJfTHZZRFkxZml4Rll3TXd6SGc0dmtiSHFsYkVQWThZdkpxb3dGQkhpSkgyVC1HQlV5WkZQaHU4N3B2b2RELWdDaGpZLWtmbHo2cllMNE9tN29pYnJGM1Z4eFJ6bmNQdHJFX0lNTHZtV0x4MlNhT284LThTc1hTY2xlcEEta0wwNjg?oc=5",
-      "source": "Reuters",
-      "at": "2026-11-17T01:47:00+00:00"
+      "title": "【金屬盤後】金價漲　銅價跌",
+      "link": "https://tw.stock.yahoo.com/news/%E9%87%91%E5%B1%AC%E7%9B%A4%E5%BE%8C-%E9%87%91%E5%83%B9%E6%BC%B2-%E9%8A%85%E5%83%B9%E8%B7%8C-223154963.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-17T22:31:54+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣兌美元貶至 32.850 元，接近 33 元大關，央行尾盤強力拉抬使匯率由貶轉升",
+    "text": "央行上午守住33元關卡，午後外資匯入略高於早盤匯出，新台幣終場升值3.6分至32.85元全日最高價，成交金額38億美元",
     "links": [
      {
-      "title": "《新台幣匯率》今日美元兌新台幣最低為32.850元",
-      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQeUEyTjJjOFVPcXNVVDFETDBGTmdtUm8xRVhqUHQ4bU50blo3bzZVck1nLVIxV0J2NmQyUzNUeXZjLXBCa1hQdXhCaDNLVHdyMXlGLXkxV1NOMVdGSnMtTTFWdGl5YzlzbWxjMnJYSHY3ZHl1TmkwZkd2MENQa1dscm1BZ0hkdTdj?oc=5",
-      "source": "富聯網",
-      "at": "2026-11-17T08:13:00+00:00"
-     },
-     {
-      "title": "央行尾盤強力拉抬！新台幣由貶轉升 收32.850元全天最高",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFB2VGxDa3R1VDlHM2VXWjQyXzlDVWlMa0tDanlUTGh2di14VElzbzc5ZzVJUWhfNEpMbFFwelpUY1FKTnQxalY3dEtYVXhZTWM10gFWQVVfeXFMTk1rVV9fNG12dm1EWE12M2QtdUUxMkJKSk5QWGtfakVyS3pvV1JwWVoyLTdadjUzcmp4UnlyWmN2bUxnWlNZcGtFRWhybmcxY1E1eW5jRHc?oc=5",
-      "source": "UDN",
-      "at": "2026-11-17T09:06:00+00:00"
+      "title": "央行力守33關卡！台幣逆勢走高 17日收32.85元全日最高價",
+      "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C%E5%8A%9B%E5%AE%8833%E9%97%9C%E5%8D%A1-%E5%8F%B0%E5%B9%A3%E9%80%86%E5%8B%A2%E8%B5%B0%E9%AB%98-17%E6%97%A5%E6%94%B632-85%E5%85%83%E5%85%A8%E6%97%A5%E6%9C%80%E9%AB%98%E5%83%B9-223704367.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-17T22:37:04+08:00"
      }
     ]
    }
   ],
-  "at": "2026-11-17T14:14:29.131251+00:00"
+  "at": "2026-11-17T23:08:42.727720+00:00"
  },
  "main_source_titles": [
   "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-  "St. Louis Fed's Musalem says four more rate hikes may be needed in coming months",
-  "2026全球GDP破128兆美元！台灣奪下第22名 中美包辦逾4成產值"
+  "AI泡沫要破？高盛估2027年AI融資將翻倍至5450億美元　Fed警告：AI巨頭表外負債逾3兆",
+  "Crypto Treasury Stocks Fall Anew as Ex-Citadel Securities Trader Nets Gains",
+  "Dow Jones Futures Rise, Techs Jump As Nvidia Beats, Says This On Jensen Huang; Target, Anthropic IPO Ahead"
  ],
- "headline": "Warsh 召集 AI 任務小組、聖路易 Fed 總裁稱可能需再升息四次",
- "rate_note": "Warsh 召集 AI 任務小組討論經濟轉折但未給明確方向，穆薩勒姆則明確偏鷹、暗示可能需再升息四次以壓制通膨，偏向推升短端利率與升息預期；10 年期 11/17 +2bp 至 5.14%，市場已在反映。",
+ "headline": "Warsh 召集 AI 專案小組會議，Fed 警告七大 AI 巨頭表外負債逾 3 兆美元",
+ "rate_note": "Warsh 暗示 AI 支出過熱可能推升通膨、促使 12 月升息，偏向推升短端利率；但 AI 對經濟影響的時機與方向不明確，且巴爾警告表外負債恐引發金融不穩，方向取決於 AI 支出對通膨的實際衝擊與金融風險何者主導。10 年期 11/17 收盤 5.10%、-2bp，市場尚未明確反映。",
  "recent_mains": [
-  {
-   "headline": "Warsh 強調 AI 對經濟重要性，但警告可能帶來失業或令人失望",
-   "titles": [
-    "Fed Chairman Kevin Warsh stresses importance of AI to economy, but says it could ‘disappoint’",
-    "Warsh, Opening Remarks",
-    "Gold sinks to 1-year low as Treasury yields and dollar bite, set for worst year since 2015"
-   ],
-   "at": "2026-11-16T23:11:51.487469+00:00"
-  },
   {
    "headline": "Warsh 召集 AI 任務小組，警告可能帶來失業或令人失望",
    "titles": [
@@ -436,9 +428,53 @@
     "2026全球GDP破128兆美元！台灣奪下第22名 中美包辦逾4成產值"
    ],
    "at": "2026-11-17T14:13:40.124678+00:00"
+  },
+  {
+   "headline": "Warsh 召集 AI 專案小組會議，Fed 警告七大 AI 巨頭表外負債逾 3 兆美元",
+   "titles": [
+    "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+    "AI泡沫要破？高盛估2027年AI融資將翻倍至5450億美元　Fed警告：AI巨頭表外負債逾3兆",
+    "Crypto Treasury Stocks Fall Anew as Ex-Citadel Securities Trader Nets Gains",
+    "Dow Jones Futures Rise, Techs Jump As Nvidia Beats, Says This On Jensen Huang; Target, Anthropic IPO Ahead"
+   ],
+   "at": "2026-11-17T23:07:58.025963+00:00"
   }
  ],
  "archive": {
+  "2026-11-18": {
+   "headline": "Warsh 召集 AI 專案小組會議，Fed 警告七大 AI 巨頭表外負債逾 3 兆美元",
+   "text": "11/17 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與方向仍不明朗。Warsh 主持多數場次並挑選講者，暗示白領可能面臨大規模失業，但將推測留給專家小組。AI 實驗室 Anthropic 計劃 11/19 IPO、估值 1.4 兆美元，科技業大舉支出促使 Fed 考慮 12 月升息以壓制物價上漲。Fed 理事巴爾警告，七大 AI 巨頭表內債務年底將破 8000 億美元、表外負債（能源合約、資料中心與算力租賃）潛在上限逾 3 兆美元，資訊不透明恐在市場轉向時放大拋售壓力，讓人聯想到 1990 年代末電信業泡沫。¶輝達 11/17 公布財報優於預期後，道瓊期貨上漲、科技股跳升。執行長黃仁勳在財報中發表了相關說法。另外，Target 與 Anthropic 的 IPO 即將進行。同日，持有加密貨幣的財庫類股票再度下跌，一位前 Citadel Securities 交易員從中獲利。\n安哥拉央行因通膨持續下降而進一步寬鬆政策，11/17宣布降息以支持經濟成長，這是該央行近期連續採取的寬鬆措施。\n川普11/17回應一連串科技中斷事件時表示一切狀況「良好」，此時美國多家主要科技公司與服務遭遇大規模停機，引發市場與監管機構警惕。",
+   "rate_note": "Warsh 暗示 AI 支出過熱可能推升通膨、促使 12 月升息，偏向推升短端利率；但 AI 對經濟影響的時機與方向不明確，且巴爾警告表外負債恐引發金融不穩，方向取決於 AI 支出對通膨的實際衝擊與金融風險何者主導。10 年期 11/17 收盤 5.10%、-2bp，市場尚未明確反映。",
+   "links": [
+    {
+     "title": "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+     "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
+     "source": "CNBC",
+     "at": "2026-11-17T15:35:13+00:00"
+    },
+    {
+     "title": "AI泡沫要破？高盛估2027年AI融資將翻倍至5450億美元　Fed警告：AI巨頭表外負債逾3兆",
+     "link": "https://tw.stock.yahoo.com/news/ai%E6%B3%A1%E6%B2%AB%E8%A6%81%E7%A0%B4-%E9%AB%98%E7%9B%9B%E4%BC%B02027%E5%B9%B4ai%E8%9E%8D%E8%B3%87%E5%B0%87%E7%BF%BB%E5%80%8D%E8%87%B35450%E5%84%84%E7%BE%8E%E5%85%83-fed%E8%AD%A6%E5%91%8A-ai%E5%B7%A8%E9%A0%AD%E8%A1%A8%E5%A4%96%E8%B2%A0%E5%82%B5%E9%80%BE3%E5%85%86-220003554.html",
+     "source": "Yahoo奇摩股市",
+     "at": "2026-11-17T22:00:03+00:00"
+    },
+    {
+     "title": "Crypto Treasury Stocks Fall Anew as Ex-Citadel Securities Trader Nets Gains",
+     "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNdEF0cHcxTXZoRWhBQ1dadm9HdFgyVENGQmNqWUJxSnJCV2lUQmlRblhYOGNPU1UzT2kwSlROSUxoRmE5UXFwN3djc3kwQlFRdW55STBFZlJhX21Day01OFEtSjhzNjhiODg5bkhxTFYtMXI3TFFtMk4zVlVFay1VekNuWWx2QnItSFBZbXFrMGZWOW9Kc1MyZlB3RW5xNjFxU29mM3l0OXNGaXhBYWJvWFlBaHBpNUJyX181RzRSZnYyQTFT?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-17T19:37:25+00:00"
+    },
+    {
+     "title": "Dow Jones Futures Rise, Techs Jump As Nvidia Beats, Says This On Jensen Huang; Target, Anthropic IPO Ahead",
+     "link": "https://finance.yahoo.com/m/3b22ed8c-00c3-32f8-89f5-91bc21ccb366/dow-jones-futures-rise%2C-techs.html?.tsrc=rss",
+     "source": "Yahoo Finance",
+     "at": "2026-11-17T23:01:46+00:00"
+    }
+   ],
+   "at": "2026-11-17T23:07:58.025963+00:00",
+   "weekly": false,
+   "points": 2
+  },
   "2026-11-17": {
    "headline": "Warsh 召集 AI 任務小組、聖路易 Fed 總裁稱可能需再升息四次",
    "text": "11/16 Warsh 在舊金山召開 AI 任務小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與方式尚不明確。Warsh 主持多數場次並挑選講者，前商務部長 Raimondo 在會中稱期中選舉通過多項州級措施阻擋資料中心興建是「非常令人擔憂的跡象」。11/17 聖路易 Fed 總裁穆薩勒姆在阿根廷演講時表示，經濟可能需要在 2027 年春季前升息數次才能及時達成 2% 通膨目標；他估計實質利率需達 2–2.5%、目前約低一個百分點，暗示 Fed 可能需在 12 月、1 月、3 月、4 月各升一次。穆薩勒姆提到若能源價格下跌、運輸成本降低或 AI 支出放緩，則可能不需進一步升息。¶國際貨幣基金組織（IMF）預測 2026 年全球名目 GDP 將突破 128 兆美元。美國以 32.64 兆美元穩居第一，中國以 21.55 兆美元居次，兩國合計占全球逾 42% 產值。台灣受惠 AI 投資熱潮與高科技製造業需求，以 1.01 兆美元排名全球第 22。報導指出，AI 模型訓練帶動伺服器、資料中心等基礎設施需求，推動美國經濟增長；中國 2026 年前三季經濟成長率達 4.6%，高科技製造業產出大增 14.3%。\n英國30年期公債過去不受歡迎，但11/17（英國時間）意外成為零售投資者的搶手貨，吸引大量個人投資者買進這檔長期債券。\n川普與習近平從關稅戰轉向貿易休兵，11/16雙方在談判中達成共識，結束長期的貿易對立局面，為兩國經貿關係帶來轉機。",
@@ -626,34 +662,6 @@
     }
    ],
    "at": "2026-11-11T10:23:41.612973+00:00",
-   "weekly": false,
-   "points": 2
-  },
-  "2026-11-10": {
-   "headline": "美國10月CPI月增0.4%高於預期，核心CPI月增0.3%，聯準會升息2碼預期升溫",
-   "text": "美國10月CPI月增0.4%、高於市場預期的0.3%，核心CPI月增0.3%、也高於預期的0.2%；整體CPI年增3.9%、核心CPI年增2.8%。由於去年10月美國政府停擺，這次沒有公布按年比較的數據。聯準會理事沃勒在11/10 CPI公布前於倫敦演講時表示，若10月核心CPI月增0.3%以上，他將支持聯準會一次升息2碼（50bp）；實際數字正好達標0.3%，使得12月會議升息2碼的可能性升溫。¶聯準會理事沃勒 11/10 在倫敦表示傾向 12 月升息，即使 10 月通膨數據低於預期也應跟進，否則將損害聯準會的可信度；若數據高於預期，他支持升息 2 碼（0.5 個百分點），而非慣常的 1 碼（0.25 個百分點）。沃勒指出，聯準會在 10 月會議前後的溝通已讓市場預期進一步升息，若不兌現承諾，市場利率預期將立即下降，導致貨幣政策意外放鬆。\n新加坡電商平台Sea集團因人工智能與雲端運算成本增加，11/10公布的第三季獲利未達預期，該公司數位金融與電商業務面臨盈利壓力。\n輝達董事會因行為準則與利益衝突問題面臨審視，11/10有報導指出公司治理面臨考驗，涉及董事會成員的獨立性與監督機制。",
-   "rate_note": "CPI與核心CPI雙雙高於預期、且沃勒已表態支持升息2碼，偏向推升短端利率與強化升息預期——聯準會理事明確表態支持加大升息幅度，顯示通膨壓力仍高；10年期11/10盤中+13bp至4.99%，市場已在反映。",
-   "links": [
-    {
-     "title": "Stocks, Bonds Fall as CPI Data Fuel Fed-Hike Bets: Markets Wrap",
-     "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPNXVKNll2bkFUUU5EVDg4eTF6a3YwZ0pIS0d4bGFTdkItMkl3SkFCbGRiZFdzSmlidHZZN3I1YzF1VkVXYlM0dDJrRlRPeDRGYXp6cVBuRGVjbl9vNWxrdlRYLTl4NTRxMnRFcGtuOUROekFvUUsxdTE1R3IwWmRKRVlUVFpFTlY0WXNlWTZTa1hIdmV1?oc=5",
-     "source": "Bloomberg",
-     "at": "2026-11-10T14:33:43+00:00"
-    },
-    {
-     "title": "美10月CPI高於預期！美股開盤主要指數全跌",
-     "link": "https://tw.news.yahoo.com/%E7%BE%8E10%E6%9C%88cpi%E9%AB%98%E6%96%BC%E9%A0%90%E6%9C%9F-%E7%BE%8E%E8%82%A1%E9%96%8B%E7%9B%A4%E4%B8%BB%E8%A6%81%E6%8C%87%E6%95%B8%E5%85%A8%E8%B7%8C-145715824.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-11-10T14:57:15+00:00"
-    },
-    {
-     "title": "Fed Governor Waller sees December hike likely, opens door to possible half",
-     "link": "https://www.cnbc.com/2026/11/10/fed-governor-waller-sees-december-hike-likely.html",
-     "source": "CNBC",
-     "at": "2026-11-10T09:00:01+00:00"
-    }
-   ],
-   "at": "2026-11-10T15:51:58.441722+00:00",
    "weekly": false,
    "points": 2
   }
