@@ -67,7 +67,12 @@ check("① 只留窗內、含公司名的標題；主要媒體在前", [h["sourc
 st = A.ipo_stage([{"form": "S-1", "date": "2026-10-26"}, {"form": "S-1/A", "date": "2026-11-05"}, {"form": "S-1/A", "date": "2026-11-12"}])
 check("② IPO：遞交 S-1、修正版取最近一次、未掛牌＝進行中", st["steps"][0]["date"] == "2026-10-26"
       and st["steps"][1]["date"] == "2026-11-12" and st["active"] and not st["listed"], st)
-check("② 掛牌（8-A12B）後就不算進行中", not A.ipo_stage([{"form": "S-1", "date": "2026-10-26"}, {"form": "8-A12B", "date": "2026-12-01"}])["active"])
+import datetime as _dt2
+check("② 8-A12B（向交易所登記）不算掛牌：仍是進行中",
+      A.ipo_stage([{"form": "S-1", "date": "2026-10-26"}, {"form": "8-A12B", "date": "2026-11-17"}], _dt2.date(2026, 11, 18))["active"])
+check("② 交易所上市證明（CERTNAS）後顯示一週再收起",
+      A.ipo_stage([{"form": "S-1", "date": "2026-10-26"}, {"form": "CERTNAS", "date": "2026-11-19"}], _dt2.date(2026, 11, 22))["active"]
+      and not A.ipo_stage([{"form": "S-1", "date": "2026-10-26"}, {"form": "CERTNAS", "date": "2026-11-19"}], _dt2.date(2026, 12, 1))["active"])
 # ③ 整個流程
 tmp = pathlib.Path(tempfile.mkdtemp()) / "ai.json"
 r = A.build({}, tmp, False, _get=fake_get, call=fake_ai)

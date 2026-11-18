@@ -240,17 +240,30 @@ def merge_events(events: list[dict], days: int = MERGE_DAYS) -> list[dict]:
     return sorted(out, key=lambda e: e.get("date", ""), reverse=True)
 
 
-def ipo_stage(filings: list[dict]) -> dict:
-    """SEC 申報 → IPO 進度。filings：[{form, date}]（新→舊或舊→新都可）。"""
+IPO_KEEP_DAYS = 7     # 掛牌後再顯示一週（看得到定價與掛牌日），之後才收起
+
+
+def ipo_stage(filings: list[dict], today: dt.date | None = None) -> dict:
+    """
+    SEC 申報 → IPO 進度。filings：[{form, date}]（新→舊或舊→新都可）。
+    2026-11：8-A12B 不算掛牌——它是公司向交易所登記股票，通常在定價「之前」就申報
+    （Anthropic 11/17 申報 8-A12B，11/18 才定價、11/19 才上市，IPO 區塊卻提早消失）。
+    掛牌只認交易所的上市證明（CERT／CERTNAS／CERTNYS）。
+    """
     steps = [("遞交 S-1", ("S-1",)), ("S-1 修正版", ("S-1/A",)), ("定價", ("424B4", "424B1")),
-             ("掛牌", ("8-A12B", "CERT", "CERTNAS", "CERTNYS"))]
+             ("掛牌", ("CERT", "CERTNAS", "CERTNYS"))]
     out = []
     for label, forms in steps:
         ds = sorted(f["date"] for f in filings if f.get("form") in forms)
         # 修正版可能有好幾次：顯示最近一次；其餘顯示第一次
         out.append({"label": label, "date": (ds[-1] if label == "S-1 修正版" else ds[0]) if ds else ""})
     listed = bool(out[-1]["date"])
-    return {"steps": out, "listed": listed, "active": bool(out[0]["date"]) and not listed}
+    today = today or clock.today()
+    try:
+        recent = listed and (today - dt.date.fromisoformat(out[-1]["date"])).days <= IPO_KEEP_DAYS
+    except ValueError:
+        recent = False
+    return {"steps": out, "listed": listed, "active": bool(out[0]["date"]) and (not listed or recent)}
 
 
 def _fetch(url: str, headers=None, _get=None) -> str:
