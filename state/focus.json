@@ -1,24 +1,18 @@
 {
  "hash": "",
- "text": "11/16 聯準會主席 Warsh 在舊金山召開 AI 任務小組會議，表示美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與幅度尚不明朗。Warsh 主持多場討論，詢問白領勞工是否將面臨大規模失業等問題，但多數留給專家回答。AI 公司 Anthropic 計劃 11/18 IPO、估值達 1.4 兆美元，龐大的科技支出正推升經濟熱度，促使聯準會考慮 12 月升息以減緩物價上漲速度。前商務部長 Raimondo 在會中警告，11/3 期中選舉多州通過限制資料中心興建的措施，是「非常令人擔憂的跡象」。¶輝達（輝達）11/17（美國時間）盤後公布第三季財報，營收年增 103%、每股盈餘 2.68 美元，雙雙優於分析師預期；儘管執行長黃仁勳近期請辭，董事長 Harvey Jones 在法說會上強調董事會不會讓他復職。臨時執行長 Colette Kress 給出 75% 的成長指引，Yorkville Ives 合夥人 Dan Ives 表示這反映 AI GPU 晶片的需求與訂單信心，對輝達、科技股與大盤都是利多。受此激勵，11/17 美股期貨走高，那斯達克 100 期貨漲 0.51%。\n輝達執行長黃仁勳在11/17（美國時間）表示公司前景樂觀，同時澄清他不會重返執行長職位，駁斥了市場關於他可能復職的猜測。\n輝達臨時執行長在11/17（美國時間）宣布公司已停止向中國出貨人工智慧晶片，此舉反映美國對中國科技出口管制的持續強化，輝達正調整供應鏈以符合政策要求。",
+ "text": "彭博 11/17 報導，聯準會正在模擬人工智慧可能如何重塑勞動市場與經濟。這項研究顯示聯準會開始關注 AI 對就業結構、生產力與通膨的長期影響，可能影響未來貨幣政策框架。目前聯邦基金利率目標區間 3.75–4.00%，市場定價 12/9 會議升息一碼機率 94%；10 月 CPI 整體年增 3.9%、核心年增 2.8%，通膨仍高於聯準會 2% 目標。¶比特幣在 11/18 回吐貝森特獲提名財長後的漲幅，市場槓桿與流動性減弱。此前比特幣因貝森特被視為對加密貨幣友善而大漲，但隨著槓桿部位平倉與交易量下降，漲勢未能持續，反映市場對政策預期的不確定性增加。\n美國公債連續第三日上漲，投資人風險胃口減弱，11/18（美國時間）市場轉向尋求安全資產避險。\n加密貨幣相關股票11/17（美國時間）再度下跌，前花旗集團證券交易員趁勢獲利了結，推升該類股承壓。",
  "links": [
   {
-   "title": "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-   "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
-   "source": "CNBC",
-   "at": "2026-11-17T15:35:13+00:00"
+   "title": "The Fed Games Out How AI Could Reshape Work and the Economy",
+   "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNeDNoQnF4T21NenBRYXNxZ2VMRHprOEZoU3YxWUcyWXRockprWEJiUl9MZ1oyRXFsZ04wMThtZU01VmhDZEtMV0RfS1lqNk1GWGs5RGZxdWJtaE1hanI5MDZTcGoxTV9seDJ5RVlRNC0xYmhyellWRF9oWFhHMlYyY3hKZWlrVjRlTmw3SUlnM3d1bm1jZDFRdmZsZFd1dS1BNHZmVzgzNGZMcEg3Qzk2bE5mbU03bURiOUZOTW16eWNmUUxYNlphaGxvbGhaN1hZYnc?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-17T20:59:53+00:00"
   },
   {
-   "title": "央行12月會升息？三三會林伯豐：恐難避免　通膨壓力應能化解",
-   "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C12%E6%9C%88%E6%9C%83%E5%8D%87%E6%81%AF-%E4%B8%89%E4%B8%89%E6%9C%83%E6%9E%97%E4%BC%AF%E8%B1%90-%E6%81%90%E9%9B%A3%E9%81%BF%E5%85%8D-%E9%80%9A%E8%86%A8%E5%A3%93%E5%8A%9B%E6%87%89%E8%83%BD%E5%8C%96%E8%A7%A3-044000412.html",
-   "source": "Yahoo奇摩新聞",
-   "at": "2026-11-18T04:40:00+08:00"
-  },
-  {
-   "title": "Nasdaq Futures Lead Wall Street Rebound After Nvidia’s Blowout Forecast, Anthropic IPO Looms: SLS, NKE, MU In Focus",
-   "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-futures-lead-wall-street-rebound-after-nvidia-s-blowout-forecast-anthropic-ipo-looms-sls-nke-mu-in-focus/cNbX828R9hF?.tsrc=rss",
-   "source": "Yahoo Finance",
-   "at": "2026-11-18T03:46:27+00:00"
+   "title": "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade",
+   "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxObjVDZnN0eU4wT3hZNUEycDIwbnA1OVNad3dreDZaMmFYZXppSU5WSlhGcGRqRndpaElmbnVwS3pubmV2TWhzUEVEX1ZuY1dpbnl3YnRKckhfUXhhZDNMNzB6X0R4bGh5NWc3THlLbFR6bnF2eTFMRHU0RXc3TFBEMGxRRjR6LXJQaXM1STBod0VfY0s2SXc4VVcyNjR4eVhxM193cDBDdzdmMGdiQWM4?oc=5",
+   "source": "Bloomberg",
+   "at": "2026-11-18T09:45:09+00:00"
   }
  ],
  "fedwatch": {
@@ -279,127 +273,155 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-18T05:28:44.827375+00:00",
+ "at": "2026-11-18T12:09:17.885200+00:00",
  "layout": "main",
  "topics": {
-  "hash": "49a12abd401e3e6d",
+  "hash": "328e9356761cbbb9",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聖路易斯聯準會主席穆薩勒姆表示，美國經濟可能需要在明年春季前進行多次升息，以達成2%通膨目標；他估計實質政策利率需達2%-2.5%，目前約低於該區間1個百分點，暗示12月、1月、3月、4月各需升息一碼",
+    "text": "聯準會主席威廉斯表示，雖然傾向維持緊縮貨幣政策，但現階段不是採取「劇烈行動」的時機，反映聯準會對經濟前景的謹慎態度",
     "links": [
      {
-      "title": "St. Louis Fed's Musalem says four more rate hikes may be needed in coming months",
-      "link": "https://www.cnbc.com/2026/11/17/alberto-musalem-fed-interest-rates.html",
-      "source": "CNBC",
-      "at": "2026-11-17T13:40:54+00:00"
+      "title": "Fed's Williams still favors tighter monetary policy, but says now is not the time for 'dramatic action'",
+      "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxObk9OREc3MG52anFIVXNNUy1VaUhIWnJ3bTZjS2RhQVZaSHgzV1VXZEpqSmVMR2pHdGpVdTFRbXlKWFhPLXBXTWtVX0NvQ2xScUk0dnI5MjA5VVpLQTF0YkIwYi1uMjNyTGZaTlloNjE4c0dlMmhlOTJxWVQ0RVkzMG12WEZPRTFyZnNLU3V2TmFqYmNMUUhYRXJ2SGdySEFKdnN4c1Q2MDdrVW5NTTY0UFBVeTVpb1QzODBOMHFLQlRCaDA?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-17T20:16:59+00:00"
+     }
+    ]
+   },
+   {
+    "id": "long",
+    "label": "長天期美債",
+    "text": "長天期美債在股市下跌時仍發揮避險功能，當標普500指數下跌10%以上的10次歷史修正中，7-10年期美債基金在8次上漲，60/40股債組合在所有情況下都優於單純持股",
+    "links": [
+     {
+      "title": "When SPY Falls 10%, Do Treasury Bonds Still Help?",
+      "link": "https://www.trefis.com/stock/spy/articles/626100/when-spy-falls-10-do-treasury-bonds-still-help/2026-11-18?.tsrc=rss",
+      "source": "Yahoo Finance",
+      "at": "2026-11-18T11:00:46+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "第三季油價平均每桶85.68美元，較去年同期高32%，帶動能源產業盈利年增151.2%；油氣管道營運商ONEOK因德州二疊紀盆地產量創高，正擴大在該地區及墨西哥灣的處理、運輸與出口產能",
+    "text": "美國原油庫存增加抑制油價，伊拉克恢復經土耳其管線的原油出口，但荷姆茲海峽油輪遭連續攻擊導致國際油價止跌反彈",
     "links": [
      {
-      "title": "5 Oil and Gas Stocks That Crushed Third",
-      "link": "https://finance.yahoo.com/energy/articles/5-oil-gas-stocks-crushed-010000263.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-18T01:00:00+00:00"
+      "title": "Oil prices fall as higher US crude stocks temper supply risks",
+      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQbmp3REJQam1xdjkyMkpCN1JlSkotTnJNM0JEWDVFNmJqZ2FHbmNIN2E0V2twa2N3djBLTXlNNVJvcDJmZVNXMlBlQnk2VG1FTThnX0hQbVRqS2dKbVVBdXl6MWR5ZHo0S2VneWt2bUdwVjE4TnNxaHFLN0hHNU9IUVljVnNXLWJTeHdORFFJX3BfQXhPTThEbGFYQXhYaGNneHRHcVRGS2NyOFhxTzVN?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-18T02:16:00+00:00"
+     },
+     {
+      "title": "Iraq resumes crude oil pumping for export purposes via pipeline to Turkey, oil minister says",
+      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNOEZmQVphZVUyV05SUmZOazhJeVRrUGZneGhyX2xTT0g5SkM0eEQwS2ZjVE1YUjQyR1l4WDAxMURzV19QeUk5dFRVU0R3eVF0TjZRZTlJUDk4TGVXMHJmOWVUVEJjX1k3UnF0b0hzemRLZGtQaFRCTXJoNFA3bVZVZjhPZndwYzRxQlpvcDVFRDZ5ZWhRX21FN2FWQzVSckZoYl8xWWJ6anVsd092eFRZVno5ZWJvVmJKRmJ4THJXREt0ZEF6WlFYQjFVTQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-17T10:34:06+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "輝達財報激勵期貨反彈，但美股盤中仍承壓。輝達公布營收與獲利優於預期、給出強勁成長指引後，11/17 盤後那斯達克 100 期貨與半導體 ETF 大漲，投資人視為 AI 晶片需求穩健的信號；惟美股盤中三大指數下跌，標普 500 與那斯達克創近期新低，恐慌指數 VIX 飆升",
+    "text": "輝達第三季財報優於預期，營收突破千億美元，財測強勁提振市場信心，帶動美股科技股反彈，那斯達克期貨跳漲",
     "links": [
      {
-      "title": "Asia stocks mixed as Nvidia optimism offsets Wall Street rout, Fed mins in focus",
-      "link": "https://finance.yahoo.com/markets/stocks/articles/asia-stocks-mixed-nvidia-optimism-050505174.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-18T05:05:05+00:00"
+      "title": "Nasdaq futures jump as Nvidia forecast lifts AI trade ahead of Anthropic pricing",
+      "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNLUw0WGdCZWFQMDBna01NRTEzWEQxbHlSU2RHS2FFX0dIdDc5Si1kQjdzRVFpSTRLeThVQ1V5NG01UG1HSGtJNFZOYjI0OHpIbHRvWjdNOFNjZWhhYzFTWVJJVklORUV4YmJoOWhjd1Nhc1hULXVVYncyUmZUQjJwMFh4RGJsSFhhcjlwc2NpVUhNUEdfQXdsekQ1c3AzZVlZcUdSN3ZlTDJUQ3g4WjRlNHhydEJ2OVJTeHpj?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-18T10:35:51+00:00"
      },
      {
-      "title": "S&P 500, Dow, Nasdaq Futures Power Ahead On Nvidia Outlook Beat",
-      "link": "https://stocktwits.com/news-articles/markets/equity/s-and-p-500-dow-nasdaq-futures-power-ahead-on-nvidia-outlook-beat-nvda-tsla-ant-in-focus/cNbXjOsR9hh?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-18T00:09:06+00:00"
+      "title": "Stocks Bounce as Nvidia Outlook Tempers AI Fears: Markets Wrap",
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOUHhZZG5FcFhON3BCMkRyY201M2FVdVRTaUF2a29ScWc3ZTd4TkI1Zm44SXNOcmZoOE9tN29nalFxMllaQV9ZQVp5SFNKbFlmVWtxVmtjdGl4WVVRRnpFeVZaVjVCVGozeFVWYzF6NnM1dERENnQ5SWpLTlNsejBDS21mS2k2aUhQeHZHNU80V2dvbG9h?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-18T11:50:39+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "台積電執行副總米玉傑指出，AI時代晶片創新需要產業生態系緊密合作，台積電與科林研發在台灣擴大技術研發布局，將加速先進製程、新世代架構與3D系統整合的開發",
+    "text": "科林研發在台灣竹南投資逾30億美元建立技術中心，預計2028年啟用，與台積電合作加速先進AI晶片製造，新設施將支援先進沉積、蝕刻及封裝技術研發",
     "links": [
      {
-      "title": "台積電米玉傑：半導體創新不能單打獨鬥 攜手科林研發加速AI世代技術開發",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%B1%B3%E7%8E%89%E5%82%91-%E5%8D%8A%E5%B0%8E%E9%AB%94%E5%89%B5%E6%96%B0%E4%B8%8D%E8%83%BD%E5%96%AE%E6%89%93%E7%8D%A8%E9%AC%A5-%E6%94%9C%E6%89%8B%E7%A7%91%E6%9E%97%E7%A0%94%E7%99%BC%E5%8A%A0%E9%80%9Fai%E4%B8%96%E4%BB%A3%E6%8A%80%E8%A1%93%E9%96%8B%E7%99%BC-043346469.html",
+      "title": "科林研發竹南中心動土 攜手台積電加速AI晶片製造",
+      "link": "https://tw.stock.yahoo.com/news/%E7%A7%91%E6%9E%97%E7%A0%94%E7%99%BC%E7%AB%B9%E5%8D%97%E4%B8%AD%E5%BF%83%E5%8B%95%E5%9C%9F-%E6%94%9C%E6%89%8B%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%8A%A0%E9%80%9Fai%E6%99%B6%E7%89%87%E8%A3%BD%E9%80%A0-105503170.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-18T04:33:46+08:00"
+      "at": "2026-11-18T10:55:03+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股16日暴跌2,635點、17日再跌948點，融資兩日減少近279億元至5,087.2億元；分析師指出台股已進入盤底洗融資階段，關鍵訊號是多方缺口出現，預估年底前仍有望挑戰5萬點",
+    "text": "外資連3個交易日賣超台股逾1,848億元，調節台積電逾1.5萬張，台指期結算日外資持有近10萬口期貨空單，刻意壓低台積電以平倉獲利",
     "links": [
      {
-      "title": "台股悲傷五階段？摩爾投顧江國中：落底看「4訊號」",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%82%B2%E5%82%B7%E4%BA%94%E9%9A%8E%E6%AE%B5-%E6%91%A9%E7%88%BE%E6%8A%95%E9%A1%A7%E6%B1%9F%E5%9C%8B%E4%B8%AD-%E8%90%BD%E5%BA%95%E7%9C%8B-4%E8%A8%8A%E8%99%9F-050300834.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-18T05:03:00+08:00"
+      "title": "外資賣超台股逾765億元　調節台積電逾1.5萬張",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E8%B3%A3%E8%B6%85%E5%8F%B0%E8%82%A1%E9%80%BE765%E5%84%84%E5%85%83-%E8%AA%BF%E7%AF%80%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%80%BE1-5%E8%90%AC%E5%BC%B5-103232161.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-18T10:32:32+00:00"
      },
      {
-      "title": "台股再殺破4萬點還能抱？哲哲急喊「別砍在阿呆谷」　這幾檔竟悄悄二次打底",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%86%8D%E6%AE%BA%E7%A0%B44%E8%90%AC%E9%BB%9E%E9%82%84%E8%83%BD%E6%8A%B1-%E5%93%B2%E5%93%B2%E6%80%A5%E5%96%8A-%E5%88%A5%E7%A0%8D%E5%9C%A8%E9%98%BF%E5%91%86%E8%B0%B7-%E9%80%99%E5%B9%BE%E6%AA%94%E7%AB%9F%E6%82%84%E6%82%84%E4%BA%8C%E6%AC%A1%E6%89%93%E5%BA%95-044500268.html",
+      "title": "輝達財報報喜！陳龍曝台股第二隻腳打底完成：別在低檔賣掉AI股",
+      "link": "https://tw.news.yahoo.com/%E8%BC%9D%E9%81%94%E8%B2%A1%E5%A0%B1%E5%A0%B1%E5%96%9C-%E9%99%B3%E9%BE%8D%E6%9B%9D%E5%8F%B0%E8%82%A1%E7%AC%AC%E4%BA%8C%E9%9A%BB%E8%85%B3%E6%89%93%E5%BA%95%E5%AE%8C%E6%88%90-%E5%88%A5%E5%9C%A8%E4%BD%8E%E6%AA%94%E8%B3%A3%E6%8E%89ai%E8%82%A1-111500687.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-18T04:45:00+08:00"
+      "at": "2026-11-18T11:15:00+08:00"
      }
     ]
    },
    {
     "id": "gold",
     "label": "黃金",
-    "text": "聯準會官員暗示升息，金價跌至14個月低點3,822美元；高盛下修2027年底金價目標至4,650美元，預期美元走強與升息將壓抑西方黃金ETF需求，各國央行購金成為主要支撐",
+    "text": "黃金跌至一年多來新低，聯準會鷹派訊號推升美元與美債殖利率，抑制黃金需求，年內跌幅接近11%",
     "links": [
      {
-      "title": "Gold falls toward $3,800 as Fed hawks reinforce rate",
-      "link": "https://finance.yahoo.com/markets/commodities/articles/gold-falls-toward-3-800-014150756.html?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-18T01:41:50+00:00"
+      "title": "Gold drops 2% to over one-year low as hawkish Fed signals boost dollar",
+      "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQVlk2MG4xbDV2emVoNk9vRVhTcTlRbkZLMDgwMjBMTEdVeXFDV21zX0NVdmF0YzQzRDZ4TkowaDJQQlZlTDBsbm9BWHFXNXpYZzVVejAtTGRZTTFHRjV4dllJV0ZxVzVvbVJCN1lxdk50NXVaNkRxTGJQbDYyZjhNNElTUElOWVU0eW0ySnBRMndSU1ZrTGE4ZlNMdDk0UXVmUjZLSEVfQlc?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-18T03:10:00+00:00"
      },
      {
-      "title": "現貨金價跌破3800美元創14個月新低，高盛再砍明年底目標至4650美元",
-      "link": "https://tw.stock.yahoo.com/news/%E7%8F%BE%E8%B2%A8%E9%87%91%E5%83%B9%E8%B7%8C%E7%A0%B43800%E7%BE%8E%E5%85%83%E5%89%B514%E5%80%8B%E6%9C%88%E6%96%B0%E4%BD%8E-%E9%AB%98%E7%9B%9B%E5%86%8D%E7%A0%8D%E6%98%8E%E5%B9%B4%E5%BA%95%E7%9B%AE%E6%A8%99%E8%87%B34650%E7%BE%8E%E5%85%83-050248063.html",
+      "title": "Gold Steadies Near 14-Month Low as Rate-Hike Pressure Mounts",
+      "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOMmlWeXc5bFpQUDI1bkQyQVVEMmpSRC1ZUWpkZDczNDU5RUxoNFBzOXpreXZnOTctS0s1NGRBcW5Bb2ZUVGxMSWRiZU5ydWpKYkpaM1EteFZsdHF2Q1JVN1hWOW9aQm13ZlFmVWVuWVI5S0xJVFdUaERVT0hab2tCOUpBSzhvM2ZvczNFd0hNYndoREJ2d3llcVRRdVZ2VUFqZ1VBSGVYY0d5MVREZEp1MA?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-18T11:56:27+00:00"
+     }
+    ]
+   },
+   {
+    "id": "fx",
+    "label": "匯率",
+    "text": "新台幣兌美元貶至32.947元，創近20個月新低，外資持續匯出、美元走強與台股下跌夾擊，央行在收盤前調節才勉強守住32.9字頭",
+    "links": [
+     {
+      "title": "新台幣陷33元保衛戰！央行尾盤急拉32.9字頭　仍創近20月新低",
+      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E9%99%B733%E5%85%83%E4%BF%9D%E8%A1%9B%E6%88%B0-%E5%A4%AE%E8%A1%8C%E5%B0%BE%E7%9B%A4%E6%80%A5%E6%8B%8932-9%E5%AD%97%E9%A0%AD-%E4%BB%8D%E5%89%B5%E8%BF%9120%E6%9C%88%E6%96%B0%E4%BD%8E-104345515.html",
       "source": "Yahoo奇摩新聞",
-      "at": "2026-11-18T05:02:48+08:00"
+      "at": "2026-11-18T10:43:45+08:00"
+     },
+     {
+      "title": "外資續砍台股　新台幣貶值壓力難解創逾19個月新低",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%96%E8%B3%87%E7%BA%8C%E7%A0%8D%E5%8F%B0%E8%82%A1-%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%B2%B6%E5%80%BC%E5%A3%93%E5%8A%9B%E9%9B%A3%E8%A7%A3%E5%89%B5%E9%80%BE19%E5%80%8B%E6%9C%88%E6%96%B0%E4%BD%8E-103851172.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-18T10:38:51+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-18T05:29:38.137770+00:00"
+  "at": "2026-11-18T12:09:55.523544+00:00"
  },
  "main_source_titles": [
-  "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-  "央行12月會升息？三三會林伯豐：恐難避免　通膨壓力應能化解",
-  "Nasdaq Futures Lead Wall Street Rebound After Nvidia’s Blowout Forecast, Anthropic IPO Looms: SLS, NKE, MU In Focus"
+  "The Fed Games Out How AI Could Reshape Work and the Economy",
+  "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade"
  ],
- "headline": "Warsh 召集 AI 任務小組探討經濟衝擊，暗示 12 月可能升息因應科技支出",
- "rate_note": "Warsh 暗示 AI 支出推升經濟熱度可能促使 12 月升息，偏向推升短端利率；不過 10 年期 11/17 收 5.10%、-2bp，市場還沒反映。",
+ "headline": "彭博：聯準會模擬 AI 對就業與經濟的衝擊",
+ "rate_note": "聯準會研究 AI 對經濟的影響，偏向為長期政策調整做準備，短期對升息路徑影響有限——若 AI 提升生產力、壓低成本，則偏向壓低長期利率；若衝擊就業、削弱需求，則偏向加速降息；但方向取決於實際數據。10 年期 11/17 收 5.10%、-2bp，市場走勢與此研究無直接關聯。",
  "recent_mains": [
-  {
-   "headline": "Warsh 召集 AI 任務小組、聖路易 Fed 總裁稱可能需再升息四次",
-   "titles": [
-    "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-    "St. Louis Fed's Musalem says four more rate hikes may be needed in coming months",
-    "2026全球GDP破128兆美元！台灣奪下第22名 中美包辦逾4成產值"
-   ],
-   "at": "2026-11-17T14:13:40.124678+00:00"
-  },
   {
    "headline": "Warsh 召集 AI 專案小組會議，Fed 警告七大 AI 巨頭表外負債逾 3 兆美元",
    "titles": [
@@ -418,34 +440,36 @@
     "Nasdaq Futures Lead Wall Street Rebound After Nvidia’s Blowout Forecast, Anthropic IPO Looms: SLS, NKE, MU In Focus"
    ],
    "at": "2026-11-18T05:28:44.827375+00:00"
+  },
+  {
+   "headline": "彭博：聯準會模擬 AI 對就業與經濟的衝擊",
+   "titles": [
+    "The Fed Games Out How AI Could Reshape Work and the Economy",
+    "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade"
+   ],
+   "at": "2026-11-18T12:09:17.885200+00:00"
   }
  ],
  "archive": {
   "2026-11-18": {
-   "headline": "Warsh 召集 AI 任務小組探討經濟衝擊，暗示 12 月可能升息因應科技支出",
-   "text": "11/16 聯準會主席 Warsh 在舊金山召開 AI 任務小組會議，表示美國經濟正處於「轉折點」，但 AI 對經濟與通膨的影響時機與幅度尚不明朗。Warsh 主持多場討論，詢問白領勞工是否將面臨大規模失業等問題，但多數留給專家回答。AI 公司 Anthropic 計劃 11/18 IPO、估值達 1.4 兆美元，龐大的科技支出正推升經濟熱度，促使聯準會考慮 12 月升息以減緩物價上漲速度。前商務部長 Raimondo 在會中警告，11/3 期中選舉多州通過限制資料中心興建的措施，是「非常令人擔憂的跡象」。¶輝達（輝達）11/17（美國時間）盤後公布第三季財報，營收年增 103%、每股盈餘 2.68 美元，雙雙優於分析師預期；儘管執行長黃仁勳近期請辭，董事長 Harvey Jones 在法說會上強調董事會不會讓他復職。臨時執行長 Colette Kress 給出 75% 的成長指引，Yorkville Ives 合夥人 Dan Ives 表示這反映 AI GPU 晶片的需求與訂單信心，對輝達、科技股與大盤都是利多。受此激勵，11/17 美股期貨走高，那斯達克 100 期貨漲 0.51%。\n輝達執行長黃仁勳在11/17（美國時間）表示公司前景樂觀，同時澄清他不會重返執行長職位，駁斥了市場關於他可能復職的猜測。\n輝達臨時執行長在11/17（美國時間）宣布公司已停止向中國出貨人工智慧晶片，此舉反映美國對中國科技出口管制的持續強化，輝達正調整供應鏈以符合政策要求。",
-   "rate_note": "Warsh 暗示 AI 支出推升經濟熱度可能促使 12 月升息，偏向推升短端利率；不過 10 年期 11/17 收 5.10%、-2bp，市場還沒反映。",
+   "headline": "彭博：聯準會模擬 AI 對就業與經濟的衝擊",
+   "text": "彭博 11/17 報導，聯準會正在模擬人工智慧可能如何重塑勞動市場與經濟。這項研究顯示聯準會開始關注 AI 對就業結構、生產力與通膨的長期影響，可能影響未來貨幣政策框架。目前聯邦基金利率目標區間 3.75–4.00%，市場定價 12/9 會議升息一碼機率 94%；10 月 CPI 整體年增 3.9%、核心年增 2.8%，通膨仍高於聯準會 2% 目標。¶比特幣在 11/18 回吐貝森特獲提名財長後的漲幅，市場槓桿與流動性減弱。此前比特幣因貝森特被視為對加密貨幣友善而大漲，但隨著槓桿部位平倉與交易量下降，漲勢未能持續，反映市場對政策預期的不確定性增加。\n美國公債連續第三日上漲，投資人風險胃口減弱，11/18（美國時間）市場轉向尋求安全資產避險。\n加密貨幣相關股票11/17（美國時間）再度下跌，前花旗集團證券交易員趁勢獲利了結，推升該類股承壓。",
+   "rate_note": "聯準會研究 AI 對經濟的影響，偏向為長期政策調整做準備，短期對升息路徑影響有限——若 AI 提升生產力、壓低成本，則偏向壓低長期利率；若衝擊就業、削弱需求，則偏向加速降息；但方向取決於實際數據。10 年期 11/17 收 5.10%、-2bp，市場走勢與此研究無直接關聯。",
    "links": [
     {
-     "title": "Analysis: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-     "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
-     "source": "CNBC",
-     "at": "2026-11-17T15:35:13+00:00"
+     "title": "The Fed Games Out How AI Could Reshape Work and the Economy",
+     "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNeDNoQnF4T21NenBRYXNxZ2VMRHprOEZoU3YxWUcyWXRockprWEJiUl9MZ1oyRXFsZ04wMThtZU01VmhDZEtMV0RfS1lqNk1GWGs5RGZxdWJtaE1hanI5MDZTcGoxTV9seDJ5RVlRNC0xYmhyellWRF9oWFhHMlYyY3hKZWlrVjRlTmw3SUlnM3d1bm1jZDFRdmZsZFd1dS1BNHZmVzgzNGZMcEg3Qzk2bE5mbU03bURiOUZOTW16eWNmUUxYNlphaGxvbGhaN1hZYnc?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-17T20:59:53+00:00"
     },
     {
-     "title": "央行12月會升息？三三會林伯豐：恐難避免　通膨壓力應能化解",
-     "link": "https://tw.news.yahoo.com/%E5%A4%AE%E8%A1%8C12%E6%9C%88%E6%9C%83%E5%8D%87%E6%81%AF-%E4%B8%89%E4%B8%89%E6%9C%83%E6%9E%97%E4%BC%AF%E8%B1%90-%E6%81%90%E9%9B%A3%E9%81%BF%E5%85%8D-%E9%80%9A%E8%86%A8%E5%A3%93%E5%8A%9B%E6%87%89%E8%83%BD%E5%8C%96%E8%A7%A3-044000412.html",
-     "source": "Yahoo奇摩新聞",
-     "at": "2026-11-18T04:40:00+08:00"
-    },
-    {
-     "title": "Nasdaq Futures Lead Wall Street Rebound After Nvidia’s Blowout Forecast, Anthropic IPO Looms: SLS, NKE, MU In Focus",
-     "link": "https://stocktwits.com/news-articles/markets/equity/nasdaq-futures-lead-wall-street-rebound-after-nvidia-s-blowout-forecast-anthropic-ipo-looms-sls-nke-mu-in-focus/cNbX828R9hF?.tsrc=rss",
-     "source": "Yahoo Finance",
-     "at": "2026-11-18T03:46:27+00:00"
+     "title": "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade",
+     "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxObjVDZnN0eU4wT3hZNUEycDIwbnA1OVNad3dreDZaMmFYZXppSU5WSlhGcGRqRndpaElmbnVwS3pubmV2TWhzUEVEX1ZuY1dpbnl3YnRKckhfUXhhZDNMNzB6X0R4bGh5NWc3THlLbFR6bnF2eTFMRHU0RXc3TFBEMGxRRjR6LXJQaXM1STBod0VfY0s2SXc4VVcyNjR4eVhxM193cDBDdzdmMGdiQWM4?oc=5",
+     "source": "Bloomberg",
+     "at": "2026-11-18T09:45:09+00:00"
     }
    ],
-   "at": "2026-11-18T05:28:44.827375+00:00",
+   "at": "2026-11-18T12:09:17.885200+00:00",
    "weekly": false,
    "points": 2
   },

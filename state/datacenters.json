@@ -4527,9 +4527,9 @@
    "at": "2026-11-18"
   },
   "WI": {
-   "hash": "cdf365818bd9",
-   "policy": "威州將檢視資料中心的環境成本，並就能源規劃展開辯論，地方政府對資料中心許可採取謹慎態度。",
-   "impact": "若環境訴訟和許可審查延長，偏向推遲Microsoft和Oracle的建設時程。",
+   "hash": "1a84d2ef0339",
+   "policy": "威州將透過訴訟和解檢視資料中心的環境成本；地方政府對資料中心許可採取更謹慎態度。",
+   "impact": "若環境審查加嚴，則可能延長許可流程；地方反對增加Microsoft與Oracle項目的建設不確定性。",
    "risk": "中",
    "links": [
     {
@@ -4604,9 +4604,9 @@
    "at": "2026-11-15"
   },
   "OH": {
-   "hash": "190c2f973aa6",
-   "policy": "州議會考慮在跛鴨會期通過資料中心立法，涉及徵收權與低收入電費補助計畫；新州長Amy Acton曾領導反資料中心運動。",
-   "impact": "若立法通過徵收權條款，則可加速土地取得；若新州長政策偏向限制，則可能延緩建設許可與電力配置。",
+   "hash": "821f9d72d7cd",
+   "policy": "州議會考慮在跛鴨會期通過資料中心法案，涉及徵收權與低收入電費補助計畫；地方投票普遍反對資料中心開發。",
+   "impact": "若州議會通過徵收權法案，則可加速土地取得；若地方持續反對，則可能延遲許可審批。",
    "risk": "中",
    "links": [
     {
@@ -4631,9 +4631,9 @@
    "at": "2026-11-18"
   },
   "MI": {
-   "hash": "9f6ee5f30a39",
-   "policy": "密西根州出現資料中心暫停令，同時重新檢視資料中心稅收優惠政策，顯示州政府對大型資料中心建設的態度趨向謹慎。",
-   "impact": "若暫停令擴大至州級，Oracle的Stargate計畫可能面臨建設延遲；稅收優惠政策調整亦可能影響專案經濟可行性。",
+   "hash": "e4ee5e2ccf0b",
+   "policy": "密西根市通過資料中心暫停令；州政府考慮廢除資料中心稅收優惠政策，政策方向不明確。",
+   "impact": "若暫停令擴大至州層級，Oracle Stargate Michigan 建設可能延遲；稅收優惠廢除偏向降低項目經濟吸引力。",
    "risk": "中",
    "links": [
     {
@@ -4667,30 +4667,30 @@
    "at": "2026-11-10"
   },
   "NE": {
-   "hash": "65d67bb928c2",
-   "policy": "州長 Pillen 表示內布拉斯加州基礎設施可應對現有資料中心需求。新法允許公用事業公司將成本轉嫁給用戶。",
-   "impact": "若公用事業成本上升，偏向延緩資料中心擴建計畫的經濟可行性評估。",
-   "risk": "中",
+   "hash": "a17e3a0f2dad",
+   "policy": "州長 Pillen 表示內布拉斯加州基礎設施可應對當前資料中心需求，暗示支持現有擴展計畫。",
+   "impact": "州長肯定基礎設施承載力，若無新限制則利於 Google 與 Meta 按期推進建設。",
+   "risk": "低",
    "links": [
-    {
-     "source": "Rural Radio Network",
-     "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxQVlgydDlULW1UdmhqNUg5MzBTREtyLUpVRVE2Zm5KRGdoSDRlN2tZTTlsS3MtcTB6RjBZMm9OY3pmX3hkeDQ1SnVZRE13dFB4MHVNYWFmcEptRXdQTUNES250blBwSmpYZ21UQzlueEo0X09WN3oyMVRMSjM0blhPT01GMUtOUk5sclBMczFfSjlnZVVDRGdJSlMtUERKeURUZEtFbEdtSlNEbEl5NmFwdHpEbGItNEFwNWgxWTBYRFMzZG9ENEE0VE1udkRlT28?oc=5",
-     "title": "Nebraska Data Center Boom Sparks Fears of Higher Power Bills as New Law Lets Utilities Make Them Pay",
-     "date": "2026-11-13"
-    },
     {
      "source": "WOWT",
      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQQ2NvWDF5VFNNa1J0V0I1bEpnZXN5RzU2UXJqbjMzSzA0eUxwLXp4YjVCR3NwZ0FXZnhrQWFRWDJjeng1SkZEaXp5LTJ5V2RSdkp3b0FDVW1aOWFtTHVSQWY2RmU1NkZldkxvZ0tYY210cTZjXzh0bnhQVWNaMjJsREg1ZzI2U2FqdVZramxuMmhKYUd4QW83UGNlRFIzRjdTN21meDJhamIxenAtVzAtWNIBxAFBVV95cUxPMWE2V05fWlNoTjFON28wTzlFcFZWX3o0azg1LVJ5TTNhNFktby1sYVBVSzM1N08ydjZnRHdxZTNlMzdDRzFlcUNFQkJ4OUk1VXpPdVliai1OdWxfY0dzQ0lIWW1LSUQ4WmdNNmEwMVRpRnZwbm9GQzNjQ243bnI2TmotaVZpRW5lb1dFTlFXdGpFRFZoeFdjVEp5eU50cTVWeVBRZTZKZjNVdi1kcEx5Wnp5ZHZ5VFJGeC14azk4TzNyckVt?oc=5",
      "title": "Gov. Pillen says Nebraska’s infrastructure can handle current data center demand",
+     "date": "2026-10-29"
+    },
+    {
+     "source": "KMTV 3 News Now Omaha",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxORVFMb3p3el81NzZSc2V3M0V3aGJQRmdINFhENkNQYUQyRWcxQW5Qa1lCSEx5dDRsTHhBYTZReHpmaUVnZmYwZ0xJRmZnYzJUUy1hVHlvVkdtSkZ0NzlSY3Z2YzZPWmZSWmhqNXRYaTViak1wc2RIT0lvT2pkcWhDR3lFNVlDSFBCT3VQV1l6dnM2N09CckJrVmlhT1QyeG12Vkdmdg?oc=5",
+     "title": "Nebraska governor candidates weigh in on AI and data centers: 'We are not losing jobs because of AI'",
      "date": "2026-10-29"
     }
    ],
    "at": "2026-11-18"
   },
   "VA": {
-   "hash": "a8c700332233",
-   "policy": "西南維州地方政府考慮透過分區管制減緩資料中心發展；州內出現資料中心暫停令的政治呼聲",
-   "impact": "若地方分區限制或州級暫停令實施，可能延遲西南維州資料中心項目（QTS Richmond系列、CoreWeave Chester）的建設進度",
+   "hash": "ba2bb9a973f7",
+   "policy": "西南維州地方政府考慮透過分區管制減緩資料中心開發；州內出現資料中心暫停令的政治討論。",
+   "impact": "若地方分區限制生效，可能延緩新增資料中心項目；暫停令若推行則影響擴建時程。",
    "risk": "中",
    "links": [
     {
@@ -4701,9 +4701,9 @@
     },
     {
      "source": "WFXRtv",
-     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPVmQ5ZzlZb0Vxa2duR21oMVNVLUJxSm5RM3lfdzlFLWNkNEFKMFZUTUprMXZfeVl6RG1NcF9sZXpJSHZNNC1JRXYyUzVoQy0wNXA0MFlJYmpud3ZIbnFCX09vMk5TQkh1VXI4M1N5UHN6aXhQMFZKQTE3RGxTczN0YkVTbEpZNVdkc0RoZERyalYxM2Fwc1BENnhyYjc4ckxLNmdQWExBOGQ?oc=5",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPX0RrLVAyV3RMSlMzU19qaklCSy11czEzbDctWFVvZHhhM2JjcTliZ1lvdlhnUEszOUFwbXJMLWQ5d0tnV0Z6TS15Ti1EYWJFWmJPWU9uZnN5dWxTczZZd3NrSmctXzZTNEFIOHY2eVFxSmNXYS00UG1LTW5YMHVpbFhnVElFbkM5Sy16cFc1d2c5U2xEcVdvRUhMRlZBbExiLW1uVWJVM2k?oc=5",
      "title": "The politics behind calls for a data center moratorium in Virginia",
-     "date": "2026-11-13"
+     "date": "2026-11-14"
     }
    ],
    "at": "2026-11-18"
@@ -4730,7 +4730,7 @@
    "at": "2026-11-18"
   },
   "GA": {
-   "hash": "5321a0c4cb69",
+   "hash": "0721326cd081",
    "policy": "",
    "impact": "",
    "risk": "資料不足",
@@ -4738,10 +4738,10 @@
    "at": "2026-11-18"
   },
   "_fed": {
-   "hash": "b47cce821a7e",
+   "hash": "0d932f71faf8",
    "points": [
     {
-     "zh": "民主黨控制新國會，議員呼籲全國數據中心建設暫停，關注能源與水資源影響。參議院許可法案推進，但含規則可能增加數據中心十年成本三百五十億美元。",
+     "zh": "民主黨控制新國會後，推動數據中心建設暫停與許可改革。參議院推進加快許可法案，但同時考慮增加開發商費用數十億美元。聯邦能源管制委員會（FERC）與電網運營商研議強",
      "links": [
       {
        "source": "CNBC",
@@ -4754,41 +4754,41 @@
      ]
     },
     {
-     "zh": "白宮推進中國數據中心設備進口禁令，儘管亞馬遜、谷歌、Meta遊說反對。聯邦能源監管委員會駁回多數PJM數據中心規則，保留登記制度。",
+     "zh": "白宮推進中國數據中心設備進口禁令，儘管科技巨頭遊說反對。同時推動國內許可加速與電網容量規劃。新國會偏向支持國家安全導向政策，但在許可效率上與行業存在張力。",
      "links": [
       {
        "source": "Reuters",
        "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPamZVTFBIMlk1aHp5ZUZ3ME56bnZlV3NPODhQY3JKcnI2dUtIT0FqSHFveTRSem1Rby14eXY4dnhCci1WWmNJdEZnTnNnOUJldUROSXFWc1I5SmExVXZ2dWlhMWhQSkpqTFJIN1R2aTJsX2tJQ1l6cnhRY2JWdTNpVjNKZFhuelREd1A1S29BYUhDRHlTNWxncUJ3aHFobUU1NFZNTVlkbkxLUWExUFVjWHpOSHo3aE0?oc=5"
       },
       {
-       "source": "TipRanks",
-       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOMGlyQlFYaUFvUkgyWXM5WklGSHRNVDJOeHdNdnlCYjBGQm93QzZaZWdFRnVpZG5BWW9rRVNIQTB6RTdOT0ZfRnJZZ0IyOTQ3VC0yNTBQbnVWWDhBQXJQLUZscXJ1ZWxOcTNnNG0wczZnMTRIZHRLMlBMMmJyaDJRWV9NaVAyX0tfRU1Lb19BNjA5X1l5NDhjS3IxdFVKYWJYamlvcFhNQUZUSGZRdHdhRkY5eFFvZms?oc=5"
+       "source": "BigGo Finance",
+       "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9uajk0NktTMXhYV0poU2RwV0J5SHp6OTVYWmtpbmRUY2xvLU54M0ttNDdWakZVNzJJT1lobXpFdU5sZld4ZFphd2ltRzV4a3JWeVBHckI4QXdZTzNUclBDQ09lV3REaHpMa3ZtT3o4WXRmUF9GT2c?oc=5"
       }
      ]
     },
     {
-     "zh": "電網運營商向監管機構提議加快數據中心電力許可，縮短等待時間。民主黨議員推動禁止公共土地建設數據中心，偏向環保與能源安全優先。",
+     "zh": "民主黨議員呼籲禁止在公共土地建設數據中心，關注能源與水資源消耗。新國會偏向加強環境與公共利益審查。聯邦機構正制定電網研究與強制規則，以平衡發展與基礎設施負擔。",
      "links": [
-      {
-       "source": "Reuters",
-       "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQczNyUkpaS1IwM25aSkxoV1IxOEl5dnktOEhUazhobVNWOGNJdkdyckg0TG5NVmEyUG11b3Frbzk0YXU2cFdDNmdCc3hUWjdkZXN3aVVxQURTWTgyVjJmX2ZFbHNERm9nSUpmVC13dHpiVkdxaUIwbXRtSzhRdl81ZHRJRWJ1TU5qamFjWDMyR1RUdHIyVUNPVGUwLTRiVUoxb084Vnl4Y3VDTFN3YmpaM0VobFRjdUg5eGxJcVBoLThjWEZFd1NWdEFFREM?oc=5"
-      },
       {
        "source": "ProPublica",
        "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOZ1BmWkxTbjNBVXlMRGQ2d2JLQ3lQUkRfVVB0YXdfWmV3NHFfM1R5QV9GNV82bnhiYlR2WW4zUmdSY1I3U1pZTm1XbU5IakNOVnltSWd0b2pWMEtHaDhqbmdNYTJjTlBkbFZVdTlDRU9Ia2tBREE2S253WWZybHFHQ0VKT2o?oc=5"
+      },
+      {
+       "source": "Legis1",
+       "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE1oV256bmFMemlkR1Q5Rk5TSXQtZ3JxYk1zbE8zUlBwZGhGSGMyTXJfbk9kdkU3b0RhSlVMaVdRM3Y5aHBHV2xackk4OURzd0JMY0ZURUpoUDQycjdVWHNrdVBTbnZ6dnpOdGRwYU1XT2J5V0hMY3lr?oc=5"
       }
      ]
     },
     {
-     "zh": "新國會對AI數據中心監管態度趨嚴，偏向加強聯邦層級管制而非州法優先權。許可程序改革與成本增加並行，反映監管與產業發展的平衡拉扯。",
+     "zh": "參議院許可法案納入數據中心成本條款，引發開發商成本上升預期。民主黨主導國會偏向強化監管與成本內部化。FERC與PJM協調電網接入標準，尋求縮短審批時間但增加技術",
      "links": [
       {
-       "source": "Truthout",
-       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxONl9meC0wSzJQckZvckkyWFhNS25EYzJHbU54cldnYXd1dHNDWHI0RnMxT29YenZXdHZvMHZyX1FLd1BocTFMSXdTa1JTSW81WVJtRkx5RFFuR05TYkQxZHFXVk9MeWlJc2wzWXpTQ2FjMTFzYnpQYjF4SUt3N3R3QVRQeTFtOXNvRUpJcDZVa0FrbVhRRm9JWGtNYVlOSGM4TFBCOVBZXzlIN256?oc=5"
+       "source": "MLQ.ai",
+       "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxQUW82cFZhSjM0Z2RHeHFvZUptNTljakIxMmhwQnM2dkc4RVVMLWVjSUNCR21aWjZjNEVFQ2FNeS1KbG95YUJ0ZEdBYjQ3dUFkY216eVAxV3ZKTjVGZnFFSDdSWFlEQWNMdklReGFlNnpUdmZ2QlpnbjVMUWg4dzVSdkR2SFZRM0U0RjhDelptbFFMZzVMbGFTUDllRFBGQ0lVSDYtS2hWTUlBcTNNREpxdU5lV2NOd2lGSGR6TllZc2ZZaG1INTExTE5YMEZDOGFXck9z?oc=5"
       },
       {
-       "source": "The Real Deal",
-       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeUZEY0gzWWFzRC11eDZfa2dtQVA3NXY5TVVnY3UwY3phM3p5ZlRsVjQxbVRlOTltSko3bXIxRG5GTzdOX0prZkNLSFItNjJyU3c1dktuZENERDF0NkdQZ0k1MDh1Nk9JSnRDTi1iMzVnbFg4WVNsWU5ZbGxhVVFpMnltY3NIeW54ZmRhZTNoRzZTNG50LUN1dk9Odw?oc=5"
+       "source": "Startup Fortune",
+       "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOLXZ1VG1UNXF3Rlk1d0tTckN3aFNTNm50VEhaYkVpeGlZZGVibTlkbU5KOWJBcDF5Tkp0WkNqenIybHhlblhNR2RaLUk5R1M3Y2ZmSFZUQl9qbGt2eW84dV90aEhNelJqeUN1UDdpdEN2dXN4azlZakdsVnB4SkIyOEl3STZOZU9CRDhieVVlV2dxUQ?oc=5"
       }
      ]
     }
@@ -5114,5 +5114,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-18 13:28（台北）"
+ "at": "2026-11-18 20:09（台北）"
 }

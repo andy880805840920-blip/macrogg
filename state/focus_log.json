@@ -1,109 +1,5 @@
 [
  {
-  "at": "2026-11-05T23:08+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "employment",
-   "claims"
-  ],
-  "locks": [
-   "employment"
-  ],
-  "clusters": [
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+2",
-    "titles": [
-     "Fed’s Hammack Says Restrictive Rates Needed to Cool Prices - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+3",
-    "titles": [
-     "Sweden’s Slowing Inflation Weakens Riksbank Rate Hike Case - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+3",
-    "titles": [
-     "Yardeni Sees Inflation Cooling, Says US Yields Attractive at 5% - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Treasuries Soar as Tech-Stock Selloff Stokes Haven Demand - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+1",
-    "titles": [
-     "Treasuries Gain as US Vote Fuels Hopes for Curbing Bond Supply - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 10.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+2",
-    "titles": [
-     "The Fed Needs a Better Way to Talk About Interest Rates - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 9.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、熱度+3（有內文）",
-    "titles": [
-     "CPI累計漲幅達11.91% 遺贈稅減稅紅包來了"
-    ]
-   }
-  ],
-  "background": [
-   "CPI累計漲幅達11.91% 遺贈稅減稅紅包來了"
-  ],
-  "main": "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters",
-  "main_why": "最高分",
-  "second": "Sweden’s Slowing Inflation Weakens Riksbank Rate Hike Case - Bloomberg.com",
-  "points": 2,
-  "thin": [
-   "重點一",
-   ""
-  ],
-  "retry": {
-   "重點一": [
-    [
-     "主軸 166 字，太長了（約 80 字就好）：只留最重要的事實、數字與一句解讀",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 194 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "數據公布日期錯誤（CPI寫成「11/5」，官方是 10/14；報導標頭的日期是報導發布日、不是數據公布日，請以「官方數據發布日」區塊為準）"
-    ]
-   ]
-  },
-  "result": "Fed 官員哈瑪克、Barkin 主張漸進升息路徑以壓低通膨"
- },
- {
   "at": "2026-11-06T12:18+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2917,5 +2813,111 @@
    ]
   },
   "result": "Warsh 召集 AI 任務小組探討經濟衝擊，暗示 12 月可能升息因應科技支出"
+ },
+ {
+  "at": "2026-11-18T12:09+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "retail",
+   "fomc_minutes"
+  ],
+  "locks": [],
+  "clusters": [
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "The Fed Games Out How AI Could Reshape Work and the Economy - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Edge Higher for a Third Day as Risk Appetite Falters - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+2",
+    "titles": [
+     "Crypto Treasury Stocks Fall Anew as Ex-Citadel Securities Trader Nets Gains - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+1、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Sterling slips to one-month low versus dollar after UK core inflation steadies - Reuters"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Treasuries Rise as Risk-Averse Investors Dump Stocks, Buy Bonds - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Treasury Buyback Operation Nets Smallest Amount Since Expansion - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 9.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+1",
+    "titles": [
+     "Fed’s Williams Says No Need for ‘Dramatic’ Rate Move - Bloomberg.com"
+    ]
+   }
+  ],
+  "background": [
+   "Nvidia Q3 Results Underpin Wall Street Pre-Bell; Asia Mixed, Europe Up",
+   "JPMorgan is working on AI agent transactions that don’t involve humans"
+  ],
+  "main": "The Fed Games Out How AI Could Reshape Work and the Economy - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "Bitcoin Erases Bessent Rally as Leverage and Liquidity Fade - Bloomberg.com",
+  "points": 2,
+  "thin": [
+   "",
+   "重點二"
+  ],
+  "retry": {
+   "重點一": [
+    [
+     "主軸 248 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "【對利率】95 字，超過 90 字，請精簡",
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸只有 28 字，沒有把事情講完整（要 50–80 字）"
+    ]
+   ]
+  },
+  "result": "彭博：聯準會模擬 AI 對就業與經濟的衝擊"
  }
 ]
