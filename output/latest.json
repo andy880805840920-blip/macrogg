@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T22:13:58+08:00",
+  "generated_at": "2026-11-19T07:19:33+08:00",
   "labor": {
     "month": "2026-10",
     "score": 0.48269299531556586,
@@ -45,9 +45,9 @@
   "inflation": {
     "month": "2026-10",
     "tilt": {
-      "dovish": 1.5,
+      "dovish": 2.5,
       "hawkish": 8.0,
-      "net": 6.5,
+      "net": 5.5,
       "tilt": "hawkish"
     },
     "flags": [
@@ -92,6 +92,16 @@
         "strength": 1.0
       },
       {
+        "key": "oil_down",
+        "severity": "watch",
+        "headline": "油價下行，未來一至兩月壓低總體 CPI",
+        "detail": "原油近一個月下跌 19%，粗估接下來一兩個月會壓低整體 CPI 約 0.5 個百分點。同樣只影響總體，核心不受影響。",
+        "lean": "dovish",
+        "impact": "總體 CPI 的短期順風",
+        "tier": 3,
+        "strength": 1.0
+      },
+      {
         "key": "above_target",
         "severity": "alert",
         "headline": "核心 PCE 顯著高於目標",
@@ -115,7 +125,7 @@
         "key": "expect_low",
         "severity": "info",
         "headline": "長期通膨預期錨定良好",
-        "detail": "五年後起算五年的通膨預期為 2.16%，錨定良好。代表市場相信聯準會最終能把通膨帶回目標。",
+        "detail": "五年後起算五年的通膨預期為 2.15%，錨定良好。代表市場相信聯準會最終能把通膨帶回目標。",
         "lean": "dovish",
         "impact": "預期錨得住，聯準會有降息的空間",
         "tier": 4,
@@ -125,7 +135,7 @@
         "key": "expect_anchored",
         "severity": "info",
         "headline": "短期預期偏高，但長期仍錨定",
-        "detail": "密大 1 年期預期 4.6% 偏高，但五年後五年只有 2.16%——市場把眼前的物價壓力讀成暫時性，還相信聯準會最終會把通膨帶回目標。",
+        "detail": "密大 1 年期預期 4.6% 偏高，但五年後五年只有 2.15%——市場把眼前的物價壓力讀成暫時性，還相信聯準會最終會把通膨帶回目標。",
         "lean": "neutral",
         "impact": "市場仍給聯準會信任票",
         "tier": 4,
