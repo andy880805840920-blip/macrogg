@@ -473,6 +473,90 @@
     "股權結構包括 Class A 普通股（每股一票）、N-Class 普通股（無投票權）及 Class T 普通股（1,000 股，無經濟權益）。"
    ],
    "change": "首份申報"
+  },
+  "0001628280-26-074342": {
+   "form": "8-A12B",
+   "date": "2026-11-17",
+   "acc": "0001628280-26-074342",
+   "doc": "anthropic-8xa12b.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074342/anthropic-8xa12b.htm",
+   "terms": {},
+   "rounds": [],
+   "points": [
+    "公司為Anthropic PBC，註冊地德拉瓦州，總部位於加州舊金山Market Street 548號。",
+    "首次公開募股相關詳細資訊（包括募資用途、股權結構、風險因素）載於同步提交的S-1登記聲明書（檔號333-299633）。"
+   ],
+   "change": "本份8-A表格為股票交易所登記申請，確認之前S-1申報中的A類普通股已在Nasdaq正式登記生效。"
+  },
+  "0001628280-26-074338": {
+   "form": "S-1/A",
+   "date": "2026-11-17",
+   "acc": "0001628280-26-074338",
+   "doc": "anthropicpbc-sx1ax3.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074338/anthropicpbc-sx1ax3.htm",
+   "terms": {
+    "price_lo": 70.0,
+    "price_hi": 78.0,
+    "shares_primary": 801351354.0,
+    "shares_secondary": 23648646.0,
+    "shares_offered": 825000000.0,
+    "greenshoe": 123750000.0,
+    "private_placement": 26.0,
+    "shares_after": 13086672593.0,
+    "net_proceeds": 84.6,
+    "net_proceeds_full": 93.7,
+    "assumed_price": 74.0,
+    "net_incl_pp": true,
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "rev_period": "2026-09-30",
+    "rev_9m": 33.2,
+    "rev_growth": 1206.0,
+    "op_loss_9m": 1.3,
+    "split": 10.0,
+    "split_date": "2026-09-17"
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "募資淨額約 846 億美元（含私募），用於營運資本、資本支出（含運算與基礎設施投資）、人才聘僱與留任，以及潛在併購投資。",
+    "採用特殊治理結構：長期利益信託（LTBT）控制多數董事席位，創辦人 LLC 持有 F 類股享 50.1% 投票權，員工持有 E 類股，均無經濟權益。",
+    "公司為德拉瓦州公益法人，承諾負責任開發先進 AI，並在股東利益與公眾利益間取得平衡。",
+    "Nasdaq 上市代碼「ANT」，被列為「受控公司」，董事會成員及關聯方表示有意認購最高 3.03 億美元 A 類股。"
+   ],
+   "change": "首份申報"
   }
  },
  "val_items": [
@@ -664,7 +748,14 @@
    "source": "WSJ",
    "title": "Anthropic to Seek $1.3 Trillion Valuation in IPO",
    "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBWWWhzNWttUWJZVjlpX2xCcnhyRVhRVGNBVnlXWGZBWnNVbE55bm1SQVVfR2xuekhqbVJCZkVmRlZFS0xZMmZvdXVkVF9pX0g4V3cwSzZDV1hEMHBVazNRSVlPejM0ZXpWeERaWVpyZ0lDdHF3aGc?oc=5"
+  },
+  {
+   "date": "2026-11-17",
+   "value": 1400.0,
+   "source": "The Information",
+   "title": "Anthropic Expected to Price Above $1.4 Trillion Valuation",
+   "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPMC1ZM2EweTI1M1lMYlUxTWgzTUM0WjN4LXMxcDlGc3RRcTZyYzRZLVN5ZmliWG1YQUYyYmNsVzNaX2N0VTNRYVBEUmlUQzI2d2JRUE05LVJtZ1RsbTl5RUI1NWFoaEhEVU9HdGV5ekhWMG1TTVR2Ql9BQUJndzdoTy1rZTBQUXllVmJjR3lkU01mUQ?oc=5"
   }
  ],
- "at": "2026-11-17 07:11（台北）"
+ "at": "2026-11-18 13:28（台北）"
 }

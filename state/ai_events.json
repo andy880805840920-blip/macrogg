@@ -16,11 +16,11 @@
    },
    {
     "label": "掛牌",
-    "date": "2026-11-17"
+    "date": ""
    }
   ],
-  "listed": true,
-  "active": false
+  "listed": false,
+  "active": true
  },
  "seen": {
   "361cdca004a3": "2026-10-29",
@@ -5143,9 +5143,156 @@
   "eb751ddcd245": "2026-11-17",
   "018c51a03408": "2026-11-17",
   "4e812b11ae86": "2026-11-16",
-  "1e76a57efa62": "2026-11-14"
+  "1e76a57efa62": "2026-11-14",
+  "156a929fcbde": "2026-11-18",
+  "35765d0f10be": "2026-11-18",
+  "ca25a72a1f11": "2026-11-18",
+  "a51052acddf0": "2026-11-17",
+  "5c0f3b07eb00": "2026-11-17",
+  "379b1e68d7f5": "2026-11-17",
+  "025604265b7e": "2026-11-17",
+  "fe1ad6968b53": "2026-11-17",
+  "6dfdd83b4cb5": "2026-11-18",
+  "c642d6048d1c": "2026-11-18",
+  "15eba9962235": "2026-11-18",
+  "821a747e358c": "2026-11-18",
+  "d8a622333bfa": "2026-11-18",
+  "0cf1a1896008": "2026-11-18",
+  "f1850933963c": "2026-11-18",
+  "8b51b577d3af": "2026-11-18",
+  "66a7ee71b76a": "2026-11-16",
+  "b1e036999490": "2026-11-18",
+  "155e822ac134": "2026-11-18",
+  "bb72c1ebd77e": "2026-11-17",
+  "76100d7aa5ff": "2026-11-17",
+  "09cc7f1c2059": "2026-11-17",
+  "686e7e25eb25": "2026-11-17",
+  "b371c8f5f2de": "2026-11-17",
+  "f0be1c60b4fc": "2026-11-18",
+  "8c915bbd74c6": "2026-11-17",
+  "413ac2fc5268": "2026-11-17",
+  "b3eabb58c5a7": "2026-11-16",
+  "79189ff09f7e": "2026-11-17",
+  "19e6a3efebea": "2026-11-17",
+  "d9a1c26c815d": "2026-11-16",
+  "d6ee0fc02e65": "2026-11-16",
+  "60b0484cdb61": "2026-11-18",
+  "d9c6f950f9fa": "2026-11-18",
+  "b0a7fc8684d7": "2026-11-18",
+  "bb2d49b73570": "2026-11-18",
+  "499bbd1e9672": "2026-11-18",
+  "b41e04b0d0d0": "2026-11-18",
+  "aa982c0c85cc": "2026-11-18",
+  "37b1751e94e0": "2026-11-17",
+  "e6e5ec5e7242": "2026-11-18",
+  "385b6d94cce1": "2026-11-17",
+  "2b5f11cc1cbe": "2026-11-17",
+  "5bf85200fb75": "2026-11-16",
+  "90610216b7ee": "2026-11-16",
+  "00cfaa5a6758": "2026-11-15",
+  "a0e5ffba7e1f": "2026-11-15",
+  "2a563847a4c2": "2026-11-15",
+  "e6fb55107c5c": "2026-11-18",
+  "f1d8384159c8": "2026-11-17",
+  "7dafbc92104a": "2026-11-17",
+  "5092dab08419": "2026-11-17",
+  "0778e565c0d5": "2026-11-17",
+  "7b9561330797": "2026-11-17",
+  "9d5aefc71006": "2026-11-17",
+  "b0cc6d4fcc2c": "2026-11-17",
+  "1092d75497e7": "2026-11-18",
+  "aa9f3460e44e": "2026-11-18",
+  "7e8a0276889a": "2026-11-18",
+  "eac9aab4f3a9": "2026-11-18",
+  "390728fa7320": "2026-11-18",
+  "9760d42eeb10": "2026-11-18",
+  "8bcac0f87bd1": "2026-11-17",
+  "4c9e76a6f74a": "2026-11-17",
+  "eb64ed08b2a4": "2026-11-18",
+  "f3a34dde0616": "2026-11-18",
+  "5cadbd08b688": "2026-11-17",
+  "c4158108c322": "2026-11-17",
+  "f52e856b2923": "2026-11-17",
+  "5a5c6e430332": "2026-11-11",
+  "77449e5e676a": "2026-11-18",
+  "f3dd262213b6": "2026-11-17",
+  "7db1c92ee36b": "2026-11-17",
+  "28b2956b9740": "2026-11-18",
+  "26a8c488172d": "2026-11-18",
+  "f3b2c1c37b20": "2026-11-17",
+  "e3dc8f834c83": "2026-11-17",
+  "4ceb62817186": "2026-11-17",
+  "97327f5ba447": "2026-11-17",
+  "5b25869ecefc": "2026-11-17",
+  "0239c4042ded": "2026-11-18",
+  "15a0c69ba55b": "2026-11-18",
+  "6ddccea16336": "2026-11-17",
+  "761aba770e76": "2026-11-17",
+  "d6611b8d5ec5": "2026-11-17",
+  "920b64bab91b": "2026-11-17",
+  "5eda49b5b8d7": "2026-11-17",
+  "b55109d4f650": "2026-11-17",
+  "a516e2e6078d": "2026-11-18",
+  "1bcf04666cd9": "2026-11-18",
+  "3e35f699e7f2": "2026-11-18",
+  "c490dbf6a804": "2026-11-17",
+  "b4714ed9369e": "2026-11-17",
+  "277c8b028b5f": "2026-11-16",
+  "f223b5d34fab": "2026-11-16",
+  "e5544c7f93b1": "2026-11-16",
+  "5a65747857ef": "2026-11-18",
+  "017063fc4161": "2026-11-17",
+  "fb22db9f9ba1": "2026-11-18",
+  "48bc2421ef82": "2026-11-18",
+  "035b4d99e508": "2026-11-18",
+  "48abdc256eba": "2026-11-17",
+  "01f5d14a27d2": "2026-11-18",
+  "2b01714f7578": "2026-11-18",
+  "fb35505643fd": "2026-11-17",
+  "bf70f4134461": "2026-11-17",
+  "548c85b25aa5": "2026-11-17",
+  "161ab9d37346": "2026-11-17",
+  "28c7fc59658b": "2026-11-17",
+  "c90f057b62da": "2026-11-17",
+  "29a42c67dec0": "2026-11-15",
+  "b98630144e85": "2026-11-17",
+  "04c52dd48aff": "2026-11-17",
+  "337d6aa6ec89": "2026-11-17",
+  "6b1fd1d6eea4": "2026-11-17"
  },
  "events": [
+  {
+   "id": "5cadd2883580",
+   "co": "Alphabet",
+   "type": "算力合約",
+   "zh": "Google簽署Newberry Volcano地熱項目購電協議，為數據中心供能。",
+   "date": "2026-11-18",
+   "links": [
+    {
+     "title": "Google signs on as first major customer of Newberry Volcano geothermal project",
+     "source": "Central Oregon Daily",
+     "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxQSnloc1g2enE4NlVhaVJiN3hzbWMwNEhjSlVoZzFJNW5yZk95RXd3Sng5U0R0RzZJaTlkdFU5cG45clRuZE9VY191Qjh6N0djSWRtWWNCWG5FaXhzSVFtYU4xZTVPWW8xSEVkTjlZMV9xQnpfQU44OU0zSUR0Rlo2WHJkOFRjd0cwdXpmTlRrNXJ5MkNlQ2Z1dVVvWGZOQnBvR2VVN0psckQ2UXh2dDYzMGM0aDJuSGZwMlFtVkk5SlV5c295akFSZ0hFd0F6cTNPOFAyZUlpdmkwNmZ2RXdXNmNBSEY?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-18"
+  },
+  {
+   "id": "d5d5b8f95217",
+   "co": "SpaceX",
+   "type": "融資／IPO",
+   "zh": "SpaceX AI晶片債券發行接近完成。",
+   "date": "2026-11-18",
+   "links": [
+    {
+     "title": "SpaceX To Self-Fund Majority Of Compute Expansion, CFO Says, As Bond Sale For AI Chips Reportedly Nears",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPeTFmbmZKc3I5NURDS3hhcWhraUdNU1piOUxpZmhCQ2VCcGUyNjRnTDlXbUFPTGtmZnJHa3hyUnZ4SlVmelQ5bU1CNTdtdU5yVUQxQ0ktTEpxU3dQU01XSkRYTUwxZHp6aVVLeXJjOEE2UFZyVW5yS3N6aTRQcFYybmItRDBkQVJES19Tc0xGSDExamNMYl8tMDNuVjBtdw?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-18"
+  },
   {
    "id": "bda242b15d54",
    "co": "Microsoft",
@@ -5392,7 +5539,7 @@
    "id": "f85364313ab0",
    "co": "Meta",
    "type": "發債",
-   "zh": "Meta發行460億美元債券，其中150億美元用於AI基礎設施融資。",
+   "zh": "Meta發行債券，其中150億美元用於AI基礎設施融資。",
    "date": "2026-11-17",
    "links": [
     {
@@ -5486,7 +5633,7 @@
    "id": "972db9191298",
    "co": "SpaceX",
    "type": "算力合約",
-   "zh": "SpaceX租賃470億美元Nvidia晶片，以融資租賃方式進行。",
+   "zh": "SpaceX租賃470億美元 Nvidia 晶片，以融資租賃方式進行。",
    "date": "2026-11-17",
    "links": [
     {
@@ -5509,6 +5656,48 @@
      "title": "Micron Stock Is Down 41%, but the $35 Billion Buyback Could Change the Game. Here's How.",
      "source": "Barchart.com",
      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNS1huaXhkbmEtaUlvU2dCZl9iWTA2WDVJWEZvdS0yMERkWDhrbEpqSUhCbzFEOFZWa211ZkRPYjd0TkV1YktoSzJJeGFjZ0tHNDFIYkk2dEE1UV9hQlI4c2J2THQtU19KZ1pOb2JOSHVLa2d6bl9YVHRDS3llekpiSy1HTndLYjVQdEEtYmZ3SzI0amdGSS05Z1ptN2FtUVFrekc4ZTJjRlY4dkw4QUR0Qno5eWlPbVA1WTV4WXJWTW9NTnJkdXc?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
+   "id": "f6ef868eb4cc",
+   "co": "Amazon",
+   "type": "資本支出",
+   "zh": "Blackstone REIT以50億美元收購 Amazon 數據中心資產。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Blackstone, AWS announce $5 billion data center joint venture including Madison County facilities",
+     "source": "Madison County Journal",
+     "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPZ09XU0FlWG9uUXpFd2hxcGV3eUQyLXlQN3VnQXBaQjhLanFKWG1qZ1lSX05rVmxEU3FRdWM5M3pSSXhsWGhBbWlPMGFjR2IyTWxJYjFkWndLUndET1FqWkJjdmNBMG5rejBBY3dlX19rU1k1cVNEYjFQX3FZWjBQb0d4a2dueHNVY1laTmdkQWN6Z0xaN1dRY1cyRVN5UVdScnBQbXpnY2NwRW5KWmYycl81UWVKZmx1b2E0dXNneWMtYW40VTBVQWJwQ0lxX19pNl8wYUt3?oc=5"
+    },
+    {
+     "title": "Blackstone REIT to Buy Amazon Data Centers in $5 Billion Deal",
+     "source": "Bloomberg.com",
+     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOQXZOa1M1ckFJcHlsWXZoNjJweUtmMW1jV3o3QnFYOU1SVXZKU1o4RE1lS1Q5OFZkYXAtSjhSdVRsYVU4WDQydGV4M1hPdExrUGlSdlprRmN3SUJzbEFIZ2NEVEVDV25WdTRPZ1BQczBuc0lWV3NQSXN6TEtuSWlTVExkYnpXZ01VVm1KMGNxem9PNHF2S2RjUHRrc2ZZNXZnNmFZeWJycFNqSnFDVGZTekJpdjdXaGdBSzBERUpjclhVYnJl?oc=5"
+    },
+    {
+     "title": "An Ohio truck driver who lives near a proposed $5 billion Amazon data center has helped advance a townshi",
+     "source": "The Times of India",
+     "url": "https://news.google.com/rss/articles/CBMihwNBVV95cUxObDBBQ21IRlhqTVpQM1BRTHpqQmF3WFN6LWNDUkpadk04MXRmUWhCNzlraXk4cVUwMTRoaUVBVE9FNlNoellKMXI5cFZLbHFnVVl1YXUxbEJYNTZwamNRSDJxaUx1MUp2a2dPeUdMNERiZ3hReG5XQUJZeWRoUktUUmlIcnRvV29lWTRfb183a1RZemVsZFBGVjBjS2wwVFFaN2ZtT080OUxrUDNBb2lLN0RxUU9ZZExndzFJSUtZdF9KcnhQa2lCV2RUX1VaUjdteEtRbkJUbmxyTG4tQWI4TjZ1dDNCb2NvQ0pQZXozejNJVlI2dXI3by1ia1dLR2J4c1ZBT1hEQUxsdTM3X3FHanUtbFRpTkRudnRLQ2p3TkhudFE5S1B0TFd4Z3FBWDloODJXUFVsMTRHZVFHb1I0am5HTkZaV0dtZWVOVlNsdi1ta0JHQWFBNFlBaWVqWmt5cHhKSVZZUFBuQTZxeVFYUkk0bmZTWTUxaFExaWN3aVZLTkFabjlR0gGMA0FVX3lxTE0wUlplZ3k2bUJkV0RBMWIzdWFvbW10TXZlMFY0VGFiVDVTS1AxenJYY3BpOTF0T1VqWmJBZlVPRkZydlV4Ml9ZLU9sZUVGSWtSblVraWlpa2VRUk9xWUVsUmJKY25Pa3JiVGVpN2pKVmlxOHdsR1hLX3VtVDk3b2NubnNidmdPVDJFQ3FFVzczajZzcGxMOUMtVmhkNEp2RWlQdDVZckdCVWtjNFpFSTNUbXRyelVPZlhDZ0xoVjhTblVCaXpOMFlGbTlmY1FnX29XUm5CN2p5SWVvRF9Tay1oaFBYYmVsSmYydm02QmJaVHlYMGpQUmFWc3gwLUxzQXZJUm9VOUZwaUlrcGpaMzJIQlRLMnYwV3V2YVZSVHpyVWt5SEU2NjdmcUhSR0J2SXBIcWlrVWk2RnQ4UUhzQmp3TzZucU1pRXNjc3J6VTAwdzk1NDNSMHhOT1pBYnJScDEyUG1KM01QN3JoV3VjelhuRGVjODlpS2JQVGpJQ3gyLXJESnN0ZVh1ajFGUw?oc=5"
+    }
+   ],
+   "n": 3,
+   "first": "2026-11-09"
+  },
+  {
+   "id": "dd609fe6b333",
+   "co": "Broadcom",
+   "type": "發債",
+   "zh": "Broadcom與Anthropic的債務交易高級部分開始進行。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Anthropic-Broadcom debt deal: senior tranche began",
+     "source": "NeoTeo",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNVUxZSi1HbjJWLUF4X1dIUlVYa0RUUzdQeWVrMG1uT0ZfMU81T1kwZzdvdk5zd1BEbWhYa0pzX29fZ3NvX284b3h1X0dfRmMyQzNWTHFqUUp5ZzNoQ0YzS1VRYWtzRDViZVplOXdlcXFoRFdXOGlHTHVtXy02V1hDRkVzOThxclMzOWx1dDZGb1hvbVlybl9sMkdHZlM?oc=5"
     }
    ],
    "n": 1,
@@ -5555,27 +5744,6 @@
    ],
    "n": 1,
    "first": "2026-11-16"
-  },
-  {
-   "id": "f6ef868eb4cc",
-   "co": "Amazon",
-   "type": "資本支出",
-   "zh": "Blackstone REIT以50億美元收購 Amazon 數據中心資產。",
-   "date": "2026-11-16",
-   "links": [
-    {
-     "title": "Blackstone REIT to Buy Amazon Data Centers in $5 Billion Deal",
-     "source": "Bloomberg.com",
-     "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOQXZOa1M1ckFJcHlsWXZoNjJweUtmMW1jV3o3QnFYOU1SVXZKU1o4RE1lS1Q5OFZkYXAtSjhSdVRsYVU4WDQydGV4M1hPdExrUGlSdlprRmN3SUJzbEFIZ2NEVEVDV25WdTRPZ1BQczBuc0lWV3NQSXN6TEtuSWlTVExkYnpXZ01VVm1KMGNxem9PNHF2S2RjUHRrc2ZZNXZnNmFZeWJycFNqSnFDVGZTekJpdjdXaGdBSzBERUpjclhVYnJl?oc=5"
-    },
-    {
-     "title": "An Ohio truck driver who lives near a proposed $5 billion Amazon data center has helped advance a townshi",
-     "source": "The Times of India",
-     "url": "https://news.google.com/rss/articles/CBMihwNBVV95cUxObDBBQ21IRlhqTVpQM1BRTHpqQmF3WFN6LWNDUkpadk04MXRmUWhCNzlraXk4cVUwMTRoaUVBVE9FNlNoellKMXI5cFZLbHFnVVl1YXUxbEJYNTZwamNRSDJxaUx1MUp2a2dPeUdMNERiZ3hReG5XQUJZeWRoUktUUmlIcnRvV29lWTRfb183a1RZemVsZFBGVjBjS2wwVFFaN2ZtT080OUxrUDNBb2lLN0RxUU9ZZExndzFJSUtZdF9KcnhQa2lCV2RUX1VaUjdteEtRbkJUbmxyTG4tQWI4TjZ1dDNCb2NvQ0pQZXozejNJVlI2dXI3by1ia1dLR2J4c1ZBT1hEQUxsdTM3X3FHanUtbFRpTkRudnRLQ2p3TkhudFE5S1B0TFd4Z3FBWDloODJXUFVsMTRHZVFHb1I0am5HTkZaV0dtZWVOVlNsdi1ta0JHQWFBNFlBaWVqWmt5cHhKSVZZUFBuQTZxeVFYUkk0bmZTWTUxaFExaWN3aVZLTkFabjlR0gGMA0FVX3lxTE0wUlplZ3k2bUJkV0RBMWIzdWFvbW10TXZlMFY0VGFiVDVTS1AxenJYY3BpOTF0T1VqWmJBZlVPRkZydlV4Ml9ZLU9sZUVGSWtSblVraWlpa2VRUk9xWUVsUmJKY25Pa3JiVGVpN2pKVmlxOHdsR1hLX3VtVDk3b2NubnNidmdPVDJFQ3FFVzczajZzcGxMOUMtVmhkNEp2RWlQdDVZckdCVWtjNFpFSTNUbXRyelVPZlhDZ0xoVjhTblVCaXpOMFlGbTlmY1FnX29XUm5CN2p5SWVvRF9Tay1oaFBYYmVsSmYydm02QmJaVHlYMGpQUmFWc3gwLUxzQXZJUm9VOUZwaUlrcGpaMzJIQlRLMnYwV3V2YVZSVHpyVWt5SEU2NjdmcUhSR0J2SXBIcWlrVWk2RnQ4UUhzQmp3TzZucU1pRXNjc3J6VTAwdzk1NDNSMHhOT1pBYnJScDEyUG1KM01QN3JoV3VjelhuRGVjODlpS2JQVGpJQ3gyLXJESnN0ZVh1ajFGUw?oc=5"
-    }
-   ],
-   "n": 2,
-   "first": "2026-11-09"
   },
   {
    "id": "61bfdc3a11e7",
@@ -5704,6 +5872,22 @@
      "title": "TSMC Secures 1.88GW Power Deal with Arizona Utility, Boosting TS",
      "source": "GuruFocus",
      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNZlkyUGVFQVZLZXM0UVRsbHdpektOT3VnNkR6NHUwcTJJREVXdU1YT1F0MEVHVXdtQ3lTTEpST2ptM21SdmRwQ1hXajJTYXR1NFhaZHdWZVgyU0NucTBIWW00NzQzd2ZyUGc2amVlUk9RdlNXSnhEYkwtbUFuaHlLNXhHNjFVTWxsNVNsazk5azc0WWg4bGdJUzB4YjdrblRKNmtmZDRnbXRyeEl1eTB1alhPX3JTRXZKSEhCaGtRUQ?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-16"
+  },
+  {
+   "id": "8b9e6b3299e4",
+   "co": "Meta",
+   "type": "資本支出",
+   "zh": "Meta預付款購買Oklo核燃料，供應多達五座反應爐的電力需求。",
+   "date": "2026-11-16",
+   "links": [
+    {
+     "title": "Meta’s Prepayment Is Buying Oklo’s Nuclear Fuel for Up to Five Reactors",
+     "source": "TIKR.com",
+     "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPZVllV2hNSTM1a2hOYkNsSHlRb1Rtc1F1WVNkdlkxT0pQQzE0cXR5UU9SRFphN2paSUdCZWd0RkU4b0t2VWlvdGJpTlVWc3ZyeHl4OEFrN08wRWxndTFzZVk0enk3RjhTQUNHRF80T2V5aXI3VDdiRG8xcnpjcFNxUjlqQnd3SG9DTUhGQjNTbW9tNWxDUnphc1BpZw?oc=5"
     }
    ],
    "n": 1,
@@ -7555,16 +7739,16 @@
    "text": "Microsoft 近期密集推進AI基礎設施投資，偏向拉高公司債供給與長端利率。250億美元新債發行、452億美元季度資本支出，加上449億美元Anthropic合作承諾，反映融資需求激增。若長期資本支出維持高位，則公司債供給增加偏向推升長端利率。同時，大規模算力合約與資料中心建設強化AI投資熱度，但部分計畫延遲與協議終止偏向抵銷部分樂觀預期。"
   },
   "Alphabet": {
-   "hash": "45ea5b5a2473",
-   "text": "Alphabet近兩週密集簽署能源與晶片長期合約、加速數據中心資本支出，同時多次發債融資。這些舉措偏向增加公司債供給——大規模融資與長期能源承諾將推升發債需求；若市場對科技公司債務接受度高，則長端利率偏向上升壓力。同時，巨額算力投資與AI生態布局強化AI投資熱度，但資本支出規模龐大可能拉高融資成本，對股市呈現雙向影響。"
+   "hash": "88d85766de8e",
+   "text": "Alphabet近期密集簽署算力合約、發行債券與大規模資本支出，偏向增加公司債供給。長期能源採購協議鎖定成本，降低利率敏感性，但龐大資本投入若…則可能推升長端利率需求。同時，AI晶片與地熱能源的戰略投資強化競爭優勢，偏向提振AI投資熱度與科技股市場信心。"
   },
   "Meta": {
-   "hash": "26b707d4fa38",
-   "text": "Meta近兩週密集發債與融資，累計發行逾六百億美元債券並進行巨額AI融資。此舉偏向增加公司債供給、推升長端利率；同時反映市場對AI基礎設施投資的強勁需求。若融資用途集中於AI算力擴張，則偏向提升AI投資熱度。大規模融資需求可能暗示長期資本支出預期上升，對債市供給端構成壓力。"
+   "hash": "29f9ef7bae49",
+   "text": "Meta近期密集發債與融資，累計發行數百億美元債券及進行巨額股權融資，主要用於AI基礎設施與核能電力採購。此舉偏向增加公司債供給、推高長端利率；同時大規模資本支出與算力投資偏向強化AI投資熱度。若融資成本上升幅度超預期，則可能抑制邊際投資回報率。"
   },
   "Oracle": {
    "hash": "b28e8c1e39f5",
-   "text": "Oracle近兩週密集發債逾千億美元投資AI基礎設施，偏向增加公司債供給、推升長端利率。大規模資本支出與多筆融資需求，反映AI算力競爭激烈，但Microsoft終止舊協議、騰訊合約取消，暗示Oracle算力競爭力面臨挑戰。若融資成本上升抵消AI投資效益，則偏向股市承壓；若新Intel合約穩定算力供應，則偏向AI投資熱度維持。"
+   "text": "Oracle 近兩週密集發債逾千億美元投資AI基礎設施，偏向增加公司債供給、推升長端利率。大規模資本支出與多筆融資需求，反映AI算力競爭激烈，但 Microsoft 終止舊協議、騰訊合約取消，暗示 Oracle 算力競爭力面臨挑戰。若融資成本上升抵消AI投資效益，則偏向股市承壓；若新 Intel 合約穩定算力供應，則偏向AI投資熱度維持。"
   },
   "CoreWeave": {
    "hash": "744d7806d96d",
@@ -7576,19 +7760,19 @@
   },
   "OpenAI": {
    "hash": "b55e249f37a3",
-   "text": "OpenAI近期大幅擴張算力與融資，偏向增加公司債供給與長端利率上升壓力。超千億美元的Nvidia協議、150億美元融資及數十億美元資本支出，反映其資本密集需求，若融資傾向債券市場則拉升長端利率；同時虧損擴大至109億美元，信用風險上升。這些事件強化AI投資熱度，但融資規模龐大與交付延遲風險，偏向對股市構成估值壓力。"
+   "text": "OpenAI近期大幅擴張算力與融資，偏向增加公司債供給與長端利率上升壓力。超千億美元的 Nvidia 協議、150億美元融資及數十億美元資本支出，反映其資本密集需求，若融資傾向債券市場則拉升長端利率；同時虧損擴大至109億美元，信用風險上升。這些事件強化AI投資熱度，但融資規模龐大與交付延遲風險，偏向對股市構成估值壓力。"
   },
   "Amazon": {
-   "hash": "b1837991ebd7",
-   "text": "Amazon近期密集投資AI數據中心與算力基礎設施，資本支出達2,200億美元。這偏向提升公司債供給壓力——大規模資本密集投資若需融資，將增加債券發行需求；同時強化AI算力競爭力，偏向支撐股市與AI投資熱度。但俄亥俄州項目面臨選民反對，若監管阻力加大，則可能延緩部分投資進度。"
+   "hash": "774454c67907",
+   "text": "Amazon 密集投入數據中心與AI基礎設施，資本支出達2,200億美元，並透過Blackstone合資釋放資產負債表壓力。若此舉降低債務融資需求，則偏向緩解公司債供給壓力；同時大規模算力合約簽署強化營收能見度，偏向支撐股市信心。然而俄亥俄州項目面臨選民反對，若延遲執行則可能削弱AI投資熱度預期。整體而言，資產輕量化策略與算力需求確認偏向穩定長端利率，但地方政治風險偏向增加不確定性。"
   },
   "Nvidia": {
    "hash": "5ed148940be1",
-   "text": "Nvidia近期財報超預期、營收指引上調至1,080億美元，多筆大型算力合約落地（SpaceX、Apollo、Moonshot等），需求強勁。這偏向提升Nvidia債券信用前景、緩解長端利率上升壓力；同時AI晶片需求旺盛，偏向強化AI投資熱度。若這些合約順利執行，則公司債供給壓力減輕，長端利率偏向下行。"
+   "text": "Nvidia 近期財報超預期、營收指引上調至1,080億美元，多筆大型算力合約落地（SpaceX、Apollo、Moonshot等），需求強勁。這偏向提升 Nvidia 債券信用前景、緩解長端利率上升壓力；同時AI晶片需求旺盛，偏向強化AI投資熱度。若這些合約順利執行，則公司債供給壓力減輕，長端利率偏向下行。"
   },
   "SpaceX": {
-   "hash": "91dcf174b3e8",
-   "text": "SpaceX近期大規模擴張AI基礎設施，涉及超千億美元資本支出與融資租賃，偏向增加公司債供給壓力。龐大的設備融資需求與發債計畫，若市場對其未獲利狀態疑慮加重，則可能推升長端利率。同時，AI算力合約與xAI合併強化其AI生態地位，偏向提升AI投資熱度；但高槓桿融資結構若引發信用風險擔憂，則可能對股市造成拖累。"
+   "hash": "7e87857dadd9",
+   "text": "SpaceX近期AI基礎設施投資規模龐大，偏向增加公司債供給。發行40億美元債券、融資租賃470億美元晶片、規劃超千億美元資本支出，反映融資需求上升，若長端利率上升則融資成本增加。同時AI算力合約簽署與xAI合併顯示成長動能，偏向支撐科技股與AI投資熱度，但未獲利狀況下的高槓桿融資結構，若市場風險偏好下降則面臨再融資壓力。"
   },
   "Intel": {
    "hash": "76928fe08248",
@@ -7611,13 +7795,13 @@
    "text": "Marvell連續宣布大型收購與合作，聚焦AI記憶體、推論加速及光學互連，偏向擴張資本支出與債務融資需求。若大型科技客戶（如Google）持續下單，則公司營收成長預期上升，偏向支撐股價；但鉅額併購融資需求偏向增加公司債供給壓力。整體而言，事件偏向強化AI投資熱度，但長端利率面臨融資競爭加劇的潛在壓力。"
   },
   "Broadcom": {
-   "hash": "8cb35d2c3037",
-   "text": "Broadcom與Anthropic簽署巨額晶片租賃協議並參與其融資，顯示AI基礎設施需求持續強勁。若此類長期算力合約增加，偏向支撐Broadcom現金流穩定性，可能緩解其公司債供給壓力；同時大額AI相關投資協議偏向強化市場對AI產業前景的信心，可能吸引資金流向科技股，對長端利率與股市均有支撐作用。"
+   "hash": "7bd02f1eacc7",
+   "text": "Broadcom近期多項事件偏向提升公司債供給與AI投資熱度。與Anthropic簽署1,610億美元晶片租賃協議及參與260億美元融資，反映AI基礎設施需求強勁；隨後啟動債務交易，偏向增加公司債供給。若此類長期算力合約持續增長，則長端利率面臨上升壓力，同時AI投資熱度維持高檔，利好Broadcom等晶片供應商股價。"
   },
   "Tesla": {
    "hash": "4a0a760d3e97",
    "text": "Tesla近期大幅調整資本支出計畫，先縮減2027年支出至200億美元，隨後宣布百億級太陽能廠投資。這偏向增加公司債供給壓力——若融資需求上升，長端利率面臨上行壓力。同時，大規模綠能製造投資偏向強化AI及能源轉型敘事，可能吸引相關主題投資熱度，但資本密集特性也反映出對長期融資成本的敏感性。"
   }
  },
- "at": "2026-11-18 07:07（台北）"
+ "at": "2026-11-18 13:28（台北）"
 }
