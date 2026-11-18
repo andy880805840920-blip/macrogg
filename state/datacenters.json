@@ -4500,9 +4500,9 @@
  },
  "reg": {
   "TX": {
-   "hash": "f10c2d32c021",
-   "policy": "新州長Hinojosa承諾延續資料中心暫停令，並推動進一步立法。德州監管機構恢復環境許可審批。",
-   "impact": "若暫停令持續，則Oracle、Softbank、Google、Microsoft、CoreWeave等項目完工時程面臨延遲風險；已獲許可項目（如SpaceX）可",
+   "hash": "f13c967ea5da",
+   "policy": "新州長Hinojosa承諾繼續資料中心暫停令，並推動進一步立法。德州監管機構恢復環境許可審批。",
+   "impact": "若暫停令持續，則Oracle、Softbank、Google、Microsoft、CoreWeave項目完工時程面臨延遲風險；已獲空氣許可的項目偏向加速推進。",
    "risk": "高",
    "links": [
     {
@@ -4688,35 +4688,35 @@
    "at": "2026-11-18"
   },
   "VA": {
-   "hash": "ba2bb9a973f7",
-   "policy": "西南維州地方政府考慮透過分區管制減緩資料中心開發；州內出現資料中心暫停令的政治討論。",
-   "impact": "若地方分區限制生效，可能延緩新增資料中心項目；暫停令若推行則影響擴建時程。",
+   "hash": "aa71d7c66176",
+   "policy": "Loudoun County正式採行12個月資料中心開發禁令；西南維州地方政府研議透過分區管制減緩資料中心發展。",
+   "impact": "若禁令涵蓋現有專案，偏向延遲Loudoun County相關設施完工；其他地區政策仍在評估階段，影響程度待明。",
    "risk": "中",
    "links": [
+    {
+     "source": "Data Center Dynamics",
+     "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxONW8wWjc0TUpxWW44Ty1oWkRhRmFvY2ZPUHhMYW1hQXU0MW5sMTRjakJneXVDT3p6STNVcEljdzk4LTBTRlozeTZuT2hIT1QtWEF5WGk1R1o1OXV6VTRuaXJlNWtPTUNnYlZnQjkxSXR0akRxYkI2QXpJZ003NDRPVHJhZ05qbzcxMjRETkQ3Y3RDanBvS3EyUF9IS2VTODV4TzAxMnZNNEhuZWYyZTI0NDUyNlhoZ2lPQ3JqUW1fSHRiREJ4blY2Zm5rbXFNdw?oc=5",
+     "title": "Virginia’s Loudoun County officially adopts 12-month moratorium on data center development",
+     "date": "2026-11-18"
+    },
     {
      "source": "Cardinal News",
      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNZmdERWs4VVZYVXJtTDFhV0lzbGdaNmFGRG9HajdmMnVYZk5meTFEUkd4eVJfNWczUkFpMmNQMGdBVE96b1RjSXppbTZEaVRfcFhnY3JOTmhqb3JmWlZjNzN1NzZ1Z1dRWGlpMTJhZWpnU2JXM1EzeFBLa1R2UU13SF90RmotMUc1djdVN01PSUlFb0JIeEluVWdRMElZcU03VUpNN2w4NXVnZlBBSjk5dkNn?oc=5",
      "title": "Some Southwest Virginia localities look to zoning to slow down data centers",
      "date": "2026-11-16"
-    },
-    {
-     "source": "WFXRtv",
-     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPX0RrLVAyV3RMSlMzU19qaklCSy11czEzbDctWFVvZHhhM2JjcTliZ1lvdlhnUEszOUFwbXJMLWQ5d0tnV0Z6TS15Ti1EYWJFWmJPWU9uZnN5dWxTczZZd3NrSmctXzZTNEFIOHY2eVFxSmNXYS00UG1LTW5YMHVpbFhnVElFbkM5Sy16cFc1d2c5U2xEcVdvRUhMRlZBbExiLW1uVWJVM2k?oc=5",
-     "title": "The politics behind calls for a data center moratorium in Virginia",
-     "date": "2026-11-14"
     }
    ],
    "at": "2026-11-18"
   },
   "OK": {
-   "hash": "daf2b2c9b8c3",
-   "policy": "空字串",
-   "impact": "若德州資料中心禁令持續，偏向吸引更多 AI 專案進入奧克拉荷馬州，可能加速 Google 與 CoreWeave 的建設進度。",
-   "risk": "低",
+   "hash": "c813e08241f0",
+   "policy": "俄克拉荷馬城延長資料中心項目禁令；德州資料中心禁令可能推動 AI 項目轉向俄州。",
+   "impact": "若俄克拉荷馬城禁令擴大適用，可能影響 Google 與 CoreWeave 的建設進度；德州禁令偏向利於俄州吸引 AI 投資。",
+   "risk": "中",
    "links": [
     {
-     "source": "The Oklahoman",
-     "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxNUUVFczY3Tk5FRWd1VURUOHJoV0xETGZhSFgzU0duU1JiUzk4S0ZjUFY4SGNhZXRvZEpJUjh1U3FFeHMxOXhMcHBxZlFMOXFqMExOdF91bEd5LXNxM1UxTzVxNXVxMnFYRDN3X1dSbndjekpqVE5Bd1lJMTN4ZXA5WFl6LUNKd3F4QllINGxnSHZMQ1BCbVktOW0xRVBQYXd1NnkxUFZBbVZPdW1Jb2loODFnZjR3M3VmMHQxN3VMMnZkSTRyS09wdms3LU51cmxSRVFqSzUxdW9hYjk0TUZRRlNVQWc?oc=5",
+     "source": "Fort Worth Star-Telegram",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxONnZsbmNITTBaS0dWN2lmLUxIaE5Wc3V3M3g0Ymc2TEtkTHZmRjVoc3pxNjROV0QzV0xmaTV0LU0xU2NBTlpsaFlLay1id2ZUaktlNUJMS1J0QmV3NjlLZTZmUmQ5VFJ0WVpPX18tcFJsby1DMm9VT054YUJNb2hkc0x5eVk?oc=5",
      "title": "Texas data center moratorium could push AI projects to Oklahoma",
      "date": "2026-11-16"
     },
@@ -4725,16 +4725,41 @@
      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQZEo5Y2ZxNTlfZ1hSekRHNGROakJ3U25CekpMQV9NV0FVVk5ybnExTlM0SEE1VlE4SUN1US1hQkM3Vm56WDRQa3RiWDJtOGpheGFyY20xUWsyQUNOc1dSdFlWNFFRaExkWG5pZmMwNnQ4X2Zrcy1tMXJRX0w5UUlIRDZpQmVnMzEycWpRRGtUcEpIZkdJWktzRHlORmZlMmVrUnpJSE5n?oc=5",
      "title": "Who Pays to Wire Google’s Oklahoma Data Centers? That Fight Is Now in Court.",
      "date": "2026-11-16"
+    },
+    {
+     "source": "KOKH",
+     "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPNkRYTXc3bjRqeWgwdlhrQkctRUpmSE96Y09UNnBNWTZVSHZyRVl2MUxMeWtYdGpRMEpSZVhtRkdsOWUtOTlnanlwSENwOHRxekRjYVk2WWgyOHFfaE91SVpha0dVbnVhWnc5R0hwWjR3NUU0Rm94VWlHeF8ybEYxdTVSdjFsNWRkUkFja0tJNjNXaFZxUUhJbXFfaTBBUWl1eGhRVWUzYTk1T2h4?oc=5",
+     "title": "Oklahoma City extends moratorium on data center projects",
+     "date": "2026-11-10"
     }
    ],
    "at": "2026-11-18"
   },
   "GA": {
-   "hash": "0721326cd081",
-   "policy": "",
-   "impact": "",
-   "risk": "資料不足",
-   "links": [],
+   "hash": "7664c7a3c94a",
+   "policy": "喬治亞州政府對AI資料中心採支持態度，已批准OpenAI沿海巨型資料中心選址計畫，資料中心成長成為州政治焦點議題。",
+   "impact": "若新州長Keisha Lance Bottoms延續支持政策，Microsoft、CoreWeave、SpaceXAI三項計畫推進無阻；若政策轉向，可能影響電力",
+   "risk": "中",
+   "links": [
+    {
+     "source": "The Atlanta Journal-Constitution",
+     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9HM3hpcVNzc2c4bVBmRGlVeDlKczZyLVQ1eEJYRVdVQjZMcVNVN3gtelphdHpMeWE5UEx6S1pWZnpyNy1PcGNfNS1kTUJBUFlNMUo2bDRhN1plTnFYc01PVTBDa2I2T1c3REppYldweXVZQjB5?oc=5",
+     "title": "Site plan for giant OpenAI data center approved on Georgia coast",
+     "date": "2026-11-18"
+    },
+    {
+     "source": "The Atlanta Journal-Constitution",
+     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CRTItMEgxYnNlODJieEViRU83MEZxVkktNWFkS21MdGZvdW5mM0FiOGxUaFNRSkp1OWl1Y1NURVRXTkNMNFVaR3ZBMThEaERaMWZQT2tNclFEV2pQMU5jVVl3b3VYOFVwNVpz?oc=5",
+     "title": "How will Georgia's data center deluge fare after midterm elections?",
+     "date": "2026-11-16"
+    },
+    {
+     "source": "Georgia Recorder",
+     "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPVFVYZ1NjbVctbjNMSVdkTGtPNzdVV3A5dFJkLWFON3NScWtOekpDalRTNzVQa3Rqc3JlbklYRm9fRHlZNmtFNlhLc3pHY0dKQWlMbkU5NGtGMkFXNnM3cEtUYzN1NzRncUxiYndzMlQwOWtGbUJ0RHF2Ykk3YzZsWGdZX0dVZi1QQWdVUFg5OENIYU02RXRiUEdRMHkyMmxXTFJfd3laUkFWR244WjJ3dWM2dTQxQUx3ZElQVF8waENGZEF0d0plOGZENzB0X2VJTEg4OQ?oc=5",
+     "title": "Growth of data centers becomes a defining issue of the midterms, entangling some Georgia candidates",
+     "date": "2026-10-19"
+    }
+   ],
    "at": "2026-11-18"
   },
   "_fed": {
@@ -5114,5 +5139,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-18 20:09（台北）"
+ "at": "2026-11-18 22:12（台北）"
 }

@@ -1481,7 +1481,38 @@
   "p:h200_china:a70ffa4e6d8b": "2026-11-18",
   "p:us_china_truce:2883524f8d7e": "2026-11-18",
   "p:us_china_truce:f646c42e7a74": "2026-11-18",
-  "p:us_china_truce:e3e4e5ca72ba": "2026-11-18"
+  "p:us_china_truce:e3e4e5ca72ba": "2026-11-18",
+  "6b8814d085fe": "2026-11-18",
+  "371f367d662b": "2026-11-18",
+  "e48d3b8e15ae": "2026-11-18",
+  "c8dcea20a7f4": "2026-11-18",
+  "bb63c6eb2c27": "2026-11-18",
+  "9d5fe5439e74": "2026-11-18",
+  "9bfd0b506d4e": "2026-11-18",
+  "7bca9292eda5": "2026-11-18",
+  "b81b1dfa0ac1": "2026-11-18",
+  "552345b51a89": "2026-11-17",
+  "1d672ad9efbf": "2026-11-17",
+  "beaccd79316d": "2026-11-17",
+  "4f3639ee3140": "2026-11-17",
+  "p:fiscal_cr:b3a4ce011ca1": "2026-11-18",
+  "p:fiscal_cr:0598860e7dc8": "2026-11-17",
+  "p:debt_limit:ce47c1d58f1d": "2026-11-18",
+  "p:debt_limit:4b92c64caf43": "2026-11-18",
+  "p:fed_cook:a77ddf0e7258": "2026-11-17",
+  "p:fed_cook:a14b8d192da0": "2026-11-17",
+  "p:fed_cook:8cbda8c70b18": "2026-11-17",
+  "p:fed_cook:771af4e73845": "2026-11-17",
+  "p:h200_china:9adcd143a3c7": "2026-11-18",
+  "p:h200_china:3864e81dbc18": "2026-11-18",
+  "p:h200_china:3921b06644a1": "2026-11-18",
+  "p:h200_china:6bdc597b2330": "2026-11-18",
+  "p:h200_china:502013cff623": "2026-11-18",
+  "p:h200_china:43cf59305fac": "2026-11-18",
+  "p:h200_china:25fd1afe5ec5": "2026-11-18",
+  "p:h200_china:45a19c498f51": "2026-11-18",
+  "p:h200_china:a79fc32bf445": "2026-11-18",
+  "p:h200_china:265df92dacef": "2026-11-18"
  },
  "items": [
   {
@@ -1634,18 +1665,19 @@
   },
   "debt_limit": {
    "date": "2026-11-18",
-   "note": "紐約時報報導美國可能在2月觸及舉債上限，顯示進度快於預估的2027年，政策可能已進入「接近上限」階段。",
+   "note": "第二則新聞顯示美國可能在2027年2月或3月觸及41.1兆美元債務上限，比預估的2027年更具體，應進入「接近上限」階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiekFVX3lxTE9OeXJLOF9UUncyU041SXd2blZtaUUwWldvblJhNHBqN0NHUjJYcDBjS2tpbE56Y0YyckNmT3dfWTB0VzBIOWRXdGhIcjkzekZTQXpUX0dDSUJzMU5rTlZ0Wk9URHoya3dmNTBjT2JfYzJGeDFyNWo0ZzJB?oc=5"
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1GZWxMQnZDcFBGVUk1WUlFektoU1lyNXdDc3RmZTVKRDU5R3lpdW9uM2lUNU10c2pRQmpfZHg0VlZlVmRKQ0U0eXpkdXRtTENsMXhYWkRKUldsRlRfVzA3V2V2aEdWZHRpR1JxNURnSHlaaTJCR052ZWN1Wl9YQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE0wQ1hoN1F0ejk2aHJ2RFphNmktNndZSkZSRk1MeE44NjRQZlpmc2JtNnhEWTVrdHZFa2g0YkhRbDRwM2lQUGR1ZFNuYS1ONXVNeXgxclVVQ1hneEU?oc=5"
    ]
   },
   "fed_cook": {
    "date": "2026-11-18",
-   "note": "Lisa Cook 拒絕出席白宮委員會聽證會（原定12月14日），可能導致調查程序延遲或進入新階段。",
+   "note": "多則新聞報導 Cook 拒絕出席白宮聽證會，可能導致白宮委員會調查進程延遲或改變。",
    "links": [
-    "https://news.google.com/rss/articles/CBMixwFBVV95cUxQWnFMSGJVWDllNG5oN1NENTBUazVCSTA4d3h1NHhkejJxekNvYnlJTlV5VlIwS3cyQkJINUpvcFcyM1Q5Z0xOMUJqdTVneDV1UWFRbmQwSWR0dHR0Wkpzd1NsM3R1T2k3YlE4NWVxRjZNQWdZSkJjU01wbVZHY2ZpazVlZ081eUFEVDVjUEk2THlVanVMWEZUN1JBbkxEYnZEREkxcVlZclk4SGxiQnNOb3hxRXZTbWpMejFTcVY0bDRhMlFJcktN?oc=5",
-    "https://news.google.com/rss/articles/CBMirwFBVV95cUxQejcxR05Za3JtSU5JT1pVN3VTRGMzUkgtRk9BSi1UdFNnM3QzRHFKckVxR1JyeDVneXJtZjdQZXp1MVMxMWFCT3gyUkJTNlo3WDhiUWFHMUM0YUNBTENPVWpfa1E0YllxLU9SLVBQeWpnUVRfZVJ3eEYwVngxdEYyaDdNazVKTy1BM0d6UVdKRThibDZfUWp3QXNPVWxBYkhGU1RWNWVSZWRRLTVyWFpZ?oc=5",
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxOak1VUmdURXpzeWdoeS16a1NNS0l2MV9malF3RGNKQWtyRUJHWHRnX1FmbEctU01MWm5NTXRjVUdVbHRDcWFxLTVTNFl4Z2RGTnhlSnRQeExoY05iQ0Z0Z1ljSFhCUFJwRjduU01VYVg3VGRSOUpoYXhmdTViSzRiQTR5dHlrYVJjTWN2OThpb0R2dTduT0FzZGxYWQ?oc=5"
+    "https://news.google.com/rss/articles/CBMivAFBVV95cUxOM1NtWUNMZkwzRTVGdlFDeWRRZTktdEdHeERfa1d3bm9xa0V3OExFbmxPLW5ySklwT3NOWmlnc3h6RXBmQWFPUW5fcVVqVk5Ea21BS3NscWd2b2VRQjlsNGk4QktMcjZ2WmpLdllJLUJGN2RITG9HSklIME5EU2tuQlJzUmFwWEdlZ0M2bHcySWxpMVpNUk5PU3VKaVFmN0JkaHFNckFiZmxkdkJyZWVBeUFkR2RzbmR2T0VhTQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiugFBVV95cUxQcjRiT3RTWFl2b1ZiY3RpRVpYUUNfNUozOHFWakNqSWdacDFGLVpOUU9XblJ4eEtSak0zWmpyc3gzdGNvY2x0Y2dDZ2V6ZUlDTlFkd2dHeHN1VWlRR3ZrT1lpWF9UdnVyM0RCOTZfQVRqbGktX3I2am9TYm42eVBncmRPQWljNjFMTkdPRmMtNjZTbE9UN1VfbWsybjZjdmVhaHgwSl9UOXJraWNNMWM0VnJ3R3gxREhQVFE?oc=5",
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxQcjNPSjA3c1FVdm0yalRuTC1zZUY4dTRDUXluZXBGYzhobEpfd3d1YWw5SFZpMjJrVk1sQ0g3Q0R2TjZlTDFucHpnLTUwVld4amVLMk40cnhicGF2SWZidVNTUm1aWkpWTlc1X1hEMDc5X2RHM2ltUHVXUzZDaFRzbnozME0tTUk?oc=5"
    ]
   },
   "h200_china": {
@@ -1683,5 +1715,5 @@
    ]
   }
  },
- "at": "2026-11-18 20:09（台北）"
+ "at": "2026-11-18 22:12（台北）"
 }
