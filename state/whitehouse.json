@@ -1460,7 +1460,38 @@
   "p:us_china_truce:9134f7870897": "2026-11-16",
   "p:us_china_truce:cec5108d54e1": "2026-11-16",
   "p:us_china_truce:2bbdc6840442": "2026-11-12",
-  "p:us_china_truce:cf82abd6743d": "2026-11-12"
+  "p:us_china_truce:cf82abd6743d": "2026-11-12",
+  "95cf1efc221f": "2026-11-19",
+  "8a514b38b9ad": "2026-11-19",
+  "da67d328ae30": "2026-11-19",
+  "2bfaa921d03a": "2026-11-19",
+  "87f70f143942": "2026-11-19",
+  "4d62a95b1339": "2026-11-19",
+  "2397638301d1": "2026-11-19",
+  "76a3a80741f6": "2026-11-19",
+  "607f446c9936": "2026-11-19",
+  "a0ad5a3bb789": "2026-11-18",
+  "ada3b1b6b751": "2026-11-18",
+  "1b1b4264d227": "2026-11-18",
+  "d9f641c1942b": "2026-11-17",
+  "63741a3823d5": "2026-11-17",
+  "406786aa58c6": "2026-11-17",
+  "28cfe5c24b1a": "2026-11-17",
+  "f8787cc1e7c2": "2026-11-17",
+  "p:fiscal_cr:6a7099eb4d37": "2026-11-17",
+  "p:debt_limit:eac905ca9cca": "2026-11-18",
+  "p:fed_cook:57c1f334cf3a": "2026-11-18",
+  "p:h200_china:41cf2b22d828": "2026-11-19",
+  "p:h200_china:0367441ab699": "2026-11-18",
+  "p:h200_china:d820bf3f8f0b": "2026-11-18",
+  "p:h200_china:43e0f512544c": "2026-11-18",
+  "p:h200_china:4fb9c89b969f": "2026-11-18",
+  "p:h200_china:a6022917997d": "2026-11-18",
+  "p:h200_china:bc9af1d689e9": "2026-11-18",
+  "p:h200_china:c35a645874db": "2026-11-18",
+  "p:h200_china:84a9699ce6e7": "2026-11-18",
+  "p:h200_china:23121901a53c": "2026-11-18",
+  "p:us_china_truce:ebf7dc0a7943": "2026-11-19"
  },
  "items": [
   {
@@ -1627,9 +1658,9 @@
   },
   "debt_limit": {
    "date": "2026-11-19",
-   "note": "Rick Scott 警告美國債務將在 2027 年初觸及上限，顯示政策可能從「提高上限」進入「接近上限」階段，且下一步日期應更新為 2027 年初。",
+   "note": "The Fiscal Times 報導美國將在 2027 年初再次觸及舉債上限，與預估 2027 年才會觸及的時間點相符，確認進入「接近上限」階段的時間表。",
    "links": [
-    "https://news.google.com/rss/articles/CBMingJBVV95cUxPWDY3Ti0ySkhtckxQcHlqMThwQ3Y4OHR6dUpEbWNlbUNsR2xqbGlCVk5IdE9PMlpERHVtdVB1NTRaY1Y1dEYtQzQ1VF9SNEViMkpYT29CdVIwaXhXaUpiWE5FVmtDeFY4dlBCN0ptS3Q0QUs5bWJwaWNnN1VQZU0tcDJ5Wi05aFRfTDFwZHpVVGMtQ05PR3ROVHhweE1kNzVZVm11STJDckhKUGZSS19kVjBTTE1Pa0dBWmxxLVhLYXRYQVVBSzJVbGpHUVk3eXQ0cnV5czRQR2lZYkhXUTBPZ2MyUG5zanMzR0pSODc0ZlB1cmFRLVlTeUltMWJPelRDRFc1NkRkM2l0NWFKckpLS29MVFlpdFp0bWxvVFhn?oc=5"
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPc3d2X2dqb294SGgxQ0U5amFFR1o0RGJUNU5Za3RmRmZWQ094VlA0N2lkU3B4dTBNVFlQRjF3SGxNODl4WnZ5X0NEajVIOE1pZnNNdjd3Y3VQTElUQldQSzk0dXdldTlGZWI2WDNNdmtFeDV6Uzh6cEN5RnBMSkdsTTNfOUJYMmRMMmZ4Zy1sN2JraGpR?oc=5"
    ]
   },
   "fed_cook": {
@@ -1643,11 +1674,11 @@
   },
   "h200_china": {
    "date": "2026-11-19",
-   "note": "多則新聞報導Nvidia主動停止向中國出貨H200晶片，顯示政策可能進入「國會限制」階段的實質影響，儘管正式法案仍在審議中。",
+   "note": "11月18日多則新聞報導Nvidia已停止向中國出貨高效能AI晶片，顯示出貨階段可能已受限或進入國會限制階段的實施。",
    "links": [
-    "https://news.google.com/rss/articles/CBMipAFBVV95cUxNVUNKT3laVlJuU05kLXd3dm5DTVBTQk1udTVyaWlrY1lDZkdDa0Z2ZWpfOHpFQkhKR3dxZ3FaaVZFVzhnNDVJelZFbjAyUmFRajBCQk10Y3pmNFZ1a1lHOVl2M1BaSnhQTmJ4Ymt0WDhRci16MlZ6eWxFSHlSS0otaGxkOTUwcGo5d2JTOXNfNDlVUGpsWDdVYUREZENiSm5UWFAwdA?oc=5",
-    "https://news.google.com/rss/articles/CBMitgFBVV95cUxQVk5ZV2dpR3EyVEtJcVdSZTBCVGl6UE1qZ1gzNWdiaHJ3WGR1S3NUd2VRcWVzUWhjanFicXVzNi1zRWZNel9EdlVOaC1uMUFCckRXMkRGWkRZeHdZUnE4VTdtUkZ2N0dITkRYa040X29HanoxODdGVXV3NzEyOGhnR1VOb2VwcFNIcHFJQlFrNXM3T1hqQlN5WnB0MHJTU0R2cTZOUnBNbV9Ubm81clFKM0x5cHRxdw?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE4weWVrTk9Ga05SYUppNDBNUDBuM2pQQ053VDJiUzcyblVpemUzeVdraEhIYm9iZVlMWjI0bVJObzlBRzdCbnVOR1F3MHJCS25VbmNzR1c5c25uLXpQUXVoLXpBZVdhZzZDRDJFVGpNZTU1LXBQbGfSAXtBVV95cUxQT3MycHpPaDRTWGhfS3VOam1XajZCOWxBMlR2eUhQNW01VnZXeDVRV0hUWVRLUFoyOEFvMmxxa1Y3aTV2bGJRQlV1SWI0NG4wSFU5aUZLM2RjbkRxTm1qQ3hjTFExQmsxbG5wdUNwWFBmRmt4TndkM2ZEdFk?oc=5"
+    "https://news.google.com/rss/articles/CBMinAJBVV95cUxNVFJVYUJqcl9TVjVPQV80Z1lDSHVKZGsxeEFmLVFabXV5T3IzYlZfRzJ3T1hPdms5bjVBa2hiZXRQekhtNFhnRENoTjZ2VXAzUFFidmJLS3d0UGhQMkhGaEpTenYxaEV1RmdGdy1NY2JjNzVaNEl3NXZfYTE0OVIwd2NjUlNHRlByckhkZFZ2YVg4bEZRU2ZWTFdUUHZCVk9OUTlnN0J2czdRYXVJVlNLb0R2MVpZVTE1UnRFVVY1WkdWQTMyMk1JT2ZWVGNGS216cVNWSmEtRUIxa19RajhaQzlxSDVrdDVweG93OWp0Z2E2eEdabXZqeVZldGs1Vjk0d203eklXcXE3SHFvcUFuS1VQZW92bWtueFZmNQ?oc=5",
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE5lNzVJbWIzQlFrMWRYM2kzVnJxYkJJRUtRMndSOUh0RXhBRnVsR0paNTZRNDFiMDhtYUtrZWNPWEtyZ0FjOVZsLWxrZTByMUhSQktCaDZDVXI2MEdVajRIbm9fdDYtX0w5QU9oemR1MUxaellPSnc?oc=5",
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE0zbHhOQUdJcjBPbVZ3TDc4Tlk3SV9xMTdvdmtucWppUkJtMVppNHZMZmFBQ2lTcWdRSTNmOWJiZU01MUJVdVJ4cktwaEJJX0x0aUQ1SjVXbjQ2d1VPRzloUFd3SGlySEduRWkzeG0yUFVEZUc3RWc?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1676,5 +1707,5 @@
    ]
   }
  },
- "at": "2026-11-19 20:10（台北）"
+ "at": "2026-11-19 22:15（台北）"
 }

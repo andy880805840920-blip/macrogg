@@ -4500,10 +4500,10 @@
  },
  "reg": {
   "TX": {
-   "hash": "3bdc380f6b63",
-   "policy": "德州環保部門恢復核發資料中心空氣許可證，結束先前暫停期。新州長上任前環保監管重啟，惟立法機構提出多項資料中心管制法案待審。",
-   "impact": "若環保許可加速核發，則Google Goodnight、Microsoft Crusoe Abilene、Oracle Stargate等專案可望按期推進；惟新",
-   "risk": "中",
+   "hash": "271b3e21c61f",
+   "policy": "德州環保機構恢復暫停的資料中心空氣許可審核，新州長任期內推進審批流程。",
+   "impact": "若許可審核加速，則Oracle、Softbank、Google、Microsoft、CoreWeave等專案完工時程可望提前；惟新州長政策立場仍需觀察。",
+   "risk": "低",
    "links": [
     {
      "source": "Barron's",
@@ -4701,10 +4701,10 @@
    "at": "2026-11-18"
   },
   "VA": {
-   "hash": "db72b11dd803",
-   "policy": "Loudoun County正式採行12個月資料中心開發禁令；西南部分地區透過分區管制減緩資料中心發展。",
-   "impact": "若禁令涵蓋現有專案，偏向延遲STACK Infrastructure NVA02等擴建進度；地方分區限制可能影響新增容量完工時程。",
-   "risk": "中",
+   "hash": "a51568b2c2c7",
+   "policy": "Loudoun County採12個月暫停令；州議員提出暫停案；環保團體推動「暫停保護」政策；州政府收緊備用發電機空污許可標準至Tier 4等級。",
+   "impact": "若暫停令擴及州層級，則QTS Richmond系列與STACK NVA02等項目完工可能延後；空污許可從嚴偏向延長審批時程。",
+   "risk": "高",
    "links": [
     {
      "source": "Data Center Dynamics",
@@ -4713,10 +4713,16 @@
      "date": "2026-11-18"
     },
     {
-     "source": "Cardinal News",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNZmdERWs4VVZYVXJtTDFhV0lzbGdaNmFGRG9HajdmMnVYZk5meTFEUkd4eVJfNWczUkFpMmNQMGdBVE96b1RjSXppbTZEaVRfcFhnY3JOTmhqb3JmWlZjNzN1NzZ1Z1dRWGlpMTJhZWpnU2JXM1EzeFBLa1R2UU13SF90RmotMUc1djdVN01PSUlFb0JIeEluVWdRMElZcU03VUpNN2w4NXVnZlBBSjk5dkNn?oc=5",
-     "title": "Some Southwest Virginia localities look to zoning to slow down data centers",
-     "date": "2026-11-16"
+     "source": "WRIC ABC 8News",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQRHJ4NVYxdmIxeVJ5Sm51bGJRVmxDUmloVUF0bnlqRno1VWQ3LV80WmJISXhST1ZwWWZPVklITWFRNm9SSXJZYVFad0pETVBkZnVtWnFTdUlyd0RVdnlyRDZpVzM1YkkwaWtWZ010MTlfMjd0dGN4ODFfU0s5cENTQ0tDalpadVJFM0xHdkJkVi1aYlIzNlZkZlhINTFMT28?oc=5",
+     "title": "Virginia state senator introduces data center moratorium bill",
+     "date": "2026-11-12"
+    },
+    {
+     "source": "WJLA",
+     "url": "https://news.google.com/rss/articles/CBMiowJBVV95cUxNREIwLVUwanlmUmF5eXh2Uk9ZeXhXaFFKVlJmRi1RbmppU3M3Nmk0a2hIbklMVlVPeUQ3RXFKWWJrOTFkWFVFQWtsb29sV1JfWWNocTdlQUdUeEJBSXF5Qmhna3VYaF82ZmdWM0o5ZUQyanVqaV9BMGVqekp4QTB2cWFfQlBGa1lFQkFiTFZrNnB1ckFOazZFVDBTSUxkc1o5UE82WEQ3SkNnc1p2dkJzNnFPd1RkQnl3ZXNFTnNtVFV3Rk4yWmFGX25vS25MdXNDcVJDVngwZ3RtWmdaT0kwZ244MnZSamtBQXlVOS1kWDVhNk1IRHktRkdGREVJQkJ3U2xpV3BBYWpiVkZ2aUtRd0NVNC1IZjdYWUpTc0czRE5XR1U?oc=5",
+     "title": "Lawmakers eye data center moratorium as Virginia environmental coalition ramps up pressure",
+     "date": "2026-11-12"
     }
    ],
    "at": "2026-11-19"
@@ -5149,5 +5155,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-19 20:10（台北）"
+ "at": "2026-11-19 22:15（台北）"
 }
