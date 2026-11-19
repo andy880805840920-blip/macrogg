@@ -557,6 +557,71 @@
     "Nasdaq 上市代碼「ANT」，被列為「受控公司」，董事會成員及關聯方表示有意認購最高 3.03 億美元 A 類股。"
    ],
    "change": "首份申報"
+  },
+  "0001628280-26-074944": {
+   "form": "424B4",
+   "date": "2026-11-19",
+   "acc": "0001628280-26-074944",
+   "doc": "anthropicpbc-424b4.htm",
+   "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm",
+   "terms": {
+    "price": 83.0,
+    "shares_primary": 956351354.0,
+    "shares_secondary": 23648646.0,
+    "shares_offered": 980000000.0,
+    "greenshoe": 147000000.0,
+    "private_placement": 26.0,
+    "shares_after": 13219642276.0,
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "rev_period": "2026-09-30",
+    "rev_9m": 33.2,
+    "rev_growth": 1206.0,
+    "op_loss_9m": 1.3,
+    "split": 10.0,
+    "split_date": "2026-09-17"
+   },
+   "rounds": [
+    {
+     "series": "E",
+     "from": "2025-01",
+     "to": "2025-03",
+     "price": 56.0865,
+     "amount": 3.56766821,
+     "shares": 63610106.0
+    },
+    {
+     "series": "F",
+     "from": "2025-08",
+     "to": "2025-09",
+     "price": 140.9676,
+     "amount": 12.999992602,
+     "shares": 92219720.0
+    },
+    {
+     "series": "G",
+     "from": "2026-01",
+     "to": "2026-02",
+     "price": 259.1364,
+     "amount": 23.454545698,
+     "shares": 90510425.0
+    },
+    {
+     "series": "H",
+     "from": "2026-05",
+     "to": "2026-06",
+     "price": 589.0095,
+     "amount": 45.729447703,
+     "shares": 77637878.0
+    }
+   ],
+   "points": [
+    "併行私募26億美元C類普通股予Google、NVIDIA、AMD、Broadcom、Micron、Microsoft、TSMC等七家科技公司。",
+    "募資用途為增加資本與財務靈活性、建立公開市場、投資運算基礎設施、僱用人才，以及潛在併購投資。",
+    "採用特殊治理結構：創辦人LLC持有F類股享50.1%投票權；長期利益信託持有T類股控制董事會多數席位。",
+    "德拉瓦州公益公司，以負責任開發先進AI造福人類為公益目標；Nasdaq上市代號「ANT」。"
+   ],
+   "change": "首份申報"
   }
  },
  "val_items": [
@@ -769,7 +834,14 @@
    "source": "Fortune",
    "title": "Anthropic prices IPO at $83 per share, giving it a $1.5 trillion valuation",
    "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPMlIxRG1JaHNfM0poNTlrN29TcHdmUVotbG9NdFdPLXc4eFN3WTNMX2ZjUndWX2xyN1Mwd0p5cU1YUnczUXhUMTlyUkV0bTl4SWlYQTlCLTRtZHA5MjJFcVl5d0k1cUFQUVhYVzcyME9Oc19pVEgyYTlTVHFJejdvbTJkUXg?oc=5"
+  },
+  {
+   "date": "2026-11-19",
+   "value": 1500.0,
+   "source": "AP News",
+   "title": "Anthropic to debut on Wall Street with a $1.5 trillion valuation in the biggest IPO of all time",
+   "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNeVVmSzl3dVBhbDdFbTMtTUl2LWVHU1FRb2hvYzJZNWdFU0ZDTmU3NFBVNDVWQXNXQlk2QmkzblN4MUplLWVGc1NheHNRZVpZTHZ1eG9OME53SUNtOExJQzNFSTJpLUw0cWxnSjR4VWlXLWZhZUZsc0dna1J6bmxZTTNBb0l2LUpq?oc=5"
   }
  ],
- "at": "2026-11-19 07:17（台北）"
+ "at": "2026-11-19 20:10（台北）"
 }
