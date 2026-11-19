@@ -1,6 +1,6 @@
 {
  "hash": "",
- "text": "11/18 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟、利率與通膨的影響時機與方式仍不明確。Warsh 主持多場討論，詢問白領勞工是否將面臨大規模失業等問題，但主要由專家提供建議。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值達 1.4 兆美元；AI 企業的龐大支出正推升經濟熱度，促使聯準會考慮 12 月升息以減緩物價上漲速度。同時美國民眾對 AI 態度轉趨謹慎，11/3 期中選舉多州通過措施限制 AI 資料中心建設。¶美國財政部 11/19（美國時間）宣布制裁三名與東南亞詐騙中心有關的人士。財政部未在摘要中說明這些人的具體身分、所涉詐騙中心的地點，或制裁的詳細理由。此次行動顯示美國持續打擊跨國詐騙網絡。\nAnthropic 11/19 上市首日股價表現未如預期，未能重振華爾街對 AI 產業的熱情，導致當日美股大幅下跌。\n美國政府在過去六個月內批准向中國銷售近 90 萬顆 AI 晶片，根據一個委員會的說法，這些銷售涉及多家美國科技公司的出口許可。",
+ "text": "11/18（美國時間），聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 何時及如何影響經濟、對利率與通膨的意義尚不明確。Warsh 主持會議多數場次並參與選擇講者，公開提出美國人最終期待他回答的問題，暗示對白領勞工可能面臨大規模失業的看法，但主要讓專家小組進行討論。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值可能達 1.4 兆美元；AI 企業的大規模支出促使聯準會考慮在 12/9 升息以減緩科技業推升經濟的物價上漲速度。前商務部長 Raimondo 在會議上表示，11/3 期中選舉多州通過減緩 AI 資料中心建設的措施，是「非常令人擔憂的跡象」。¶美國財政部 11/19 宣布制裁三名與東南亞詐騙中心有關的人士。這是美國政府打擊跨國詐騙犯罪的行動之一，透過金融制裁手段切斷詐騙集團的資金流動管道，阻止其利用美國金融體系進行非法活動。\n聯準會理事古斯比警告，AI熱潮可能對美國產能造成壓力並導致經濟過熱，他認為這種快速擴張帶來的供給側衝擊需要密切監控。\n美國眾議院委員會披露，過去六個月美國政府批准向中國銷售近90萬顆AI晶片，這些出口涉及多家科技公司的商業交易。",
  "links": [
   {
    "title": "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
@@ -273,66 +273,85 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-19T23:15:51.511149+00:00",
+ "at": "2026-11-19T23:46:50.485264+00:00",
  "layout": "main",
  "topics": {
-  "hash": "e68d2bd5cd433e4b",
+  "hash": "0d9f939e5daf57ef",
   "items": [
    {
     "id": "fed",
     "label": "聯準會",
-    "text": "聯準會官員古斯比表示升息所有選項都在考慮中，暗示面對物價上漲壓力，聯準會保持政策靈活性；同時拉美貨幣因市場重新評估聯準會升息預期而下跌，反映全球對美國貨幣政策轉向的敏感反應",
+    "text": "聯準會官員鷹派談話持續強化12月升息預期。理事沃勒表示央行可能需要採取更積極應對，甚至考慮升息50個基點；理事Barr則可能支持進一步收緊政策。芝商所數據顯示交易員預估12月升息25個基點機率達94%",
     "links": [
      {
-      "title": "Fed’s Goolsbee Says All Options on FOMC Table Amid Hot Inflation",
-      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQNXR0LTlxSDlZclBKRURtajdwUHZPcUhwcHhvNC1zYi1NWVhkamc2QURJYmNjWW1UcjlPSmNCVTBqX2ZXRjc0Z3p4NU5nQWJzYk5CZzd6RGFlOFdQTmxrZDlIOEdIdGNBQVV6R1FTcUgta3ZWakpoMFV2QkVOSHJHYkMtRVAyNjAtT0NMVVhuUDhTcTBQc0FtekRWRTRqVWE4aDlvM09mUDJkR3FDRVhCXzBkaV8ydw?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-19T20:56:24+00:00"
-     },
-     {
-      "title": "Latin American Currencies Tumble on Fed-Rate Hike Repricing",
-      "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOX1dDX3doVll4VnB4ZEY1N1BadWpURTZGeDN6YU5rU1Jhc3NjVTlWbEVUMGVHaFlkblgydDRNejJqRkR0a0lITGo2anJrQk5Fam15Y3E1T2xiVzdBd254dVZER2x5bmVZR01JN19ROU9WdVQ4MklYV3JIZ0pEdVJBa04zUHJpYnNsNVNsalVnWHd2MDkyTlBHLWpKTmt3WUFuRk5rQmdpLTN1ZlU1emVWR255VkJwZVpTV3d1a05sLXVoeTBrZFE?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-19T16:11:59+00:00"
+      "title": "〈貴金屬盤後〉14個月低點反彈失敗！美元走強、Fed升息預期升溫 黃金收跌1.5% 失守3700美元",
+      "link": "https://tw.stock.yahoo.com/news/%E8%B2%B4%E9%87%91%E5%B1%AC%E7%9B%A4%E5%BE%8C-14%E5%80%8B%E6%9C%88%E4%BD%8E%E9%BB%9E%E5%8F%8D%E5%BD%88%E5%A4%B1%E6%95%97-%E7%BE%8E%E5%85%83%E8%B5%B0%E5%BC%B7-fed%E5%8D%87%E6%81%AF%E9%A0%90%E6%9C%9F%E5%8D%87%E6%BA%AB-%E9%BB%83%E9%87%91%E6%94%B6%E8%B7%8C1-223524881.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-19T22:35:24+00:00"
      }
     ]
    },
    {
     "id": "long",
     "label": "長天期美債",
-    "text": "美國10年期TIPS公債拍賣實質殖利率達2.903%，創2002年以來最高水準，反映市場對長期實質利率的預期上升",
+    "text": "10年期TIPS（抗通膨公債）拍賣孳息率達2.903%，創2002年以來最高；同時外資美債持有規模創3月以來最大跌幅",
     "links": [
+     {
+      "title": "Foreign Holdings of US Treasuries Decline by Most Since March",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNU2ZjMmZjZ0lhNVo2ZjZaaDFRS3Qzb1FaQVMxRHpEY2VQckNEQTRqVnRNWUM1bWgwVHRNaHk1X2xWUmpoVXIzbzRRbFBucndsVXdOS25nWTZEaHI5ZDQ2bWo4dHJ1NlpwYThjTjZsYTV3Ymh0ZjRoWlk4TU83OThnQmdnSVJvLWxHUnEwYTFXTWdhWDM0M3hPQXhUa1FxSzVtbXdpNWxDeERxMEQ2ZXZmWjFB?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-18T21:41:20+00:00"
+     },
      {
       "title": "Treasury's 10-year TIPS sale draws a 2.903% real yield, the highest since 2002",
       "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOb3NOeTA2dnZtVTBMWWRjNlZNV2NoM0h5d3BtUXJzdldoMW9acXhNSnhXd0Nrem5qYTBROV9XaXFnSU9ueWozd090T3ZOUUVicXo5WmJieVA4bTV6d2RLWXdsU1VkdTh6dTZfRkJNQ3F4Ni1vN2U4SzVNZzNaaEdoSzlOM2htOUFSUWJmXzJJSS1wUExwaTJKWFVSVQ?oc=5",
       "source": "MLQ.ai",
       "at": "2026-11-19T22:53:45+00:00"
+     }
+    ]
+   },
+   {
+    "id": "funding",
+    "label": "資金市場",
+    "text": "HSBC推出以太坊基礎的貨幣市場基金，美國貨幣市場基金資產規模降至7.976兆美元",
+    "links": [
+     {
+      "title": "HSBC Launches Ethereum-Based Money Market Fund",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQNTBfRmNScE1oVlJZN1hyUjkyMldkYlJ5LUtONVJKOTZtRWs5TkZOY1ZoSlNDbS1iQnU3ckxKNG9SbHRoTzBqRzEyUXZLMm9QYVh3bThzZnVmaW85MzlsTmdua0ladkVuLXBvbFVvOElfNEIwQWh1dEFWdWllR3BOUFBtYXB3Z0FMb3RrTV9ZSzV1MGVHRWMycDQtcjN4UWxY?oc=5",
+      "source": "Yahoo Finance",
+      "at": "2026-11-19T14:41:00+00:00"
      },
      {
-      "title": "10-year TIPS auction gets real yield of 2.903%, highest in 24 years – Treasury Inflation-Protected Securities",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQeHdpSXRxR3J0aEZhd1VOdUR0Uk9NQkJLMXRycGRmQ1d1WmgzWTdoQUxMNmlWOVVHdjMxeW1qVWlaOV9PU0wxbFhuSlI3ZHFvamw1SkRsWWtCSjEzYjd6REprM0ZxUEpyc1ROVWlXckFINFpJY3NJbzVGSkdZVlYyTU1lTUJodU9CME90VXJhTTRwN1I5bDBpNXZxcW1ucmR5?oc=5",
-      "source": "https://tipswatch/",
-      "at": "2026-11-19T21:06:36+00:00"
+      "title": "美國投資公司協會（ICI）：美國貨幣市場基金資產規模降至7.976萬億美元。",
+      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQc3N5NlY5dENWRHBSV3hBTFdGdHpWMk4wLU1YN0NJSlpQMjhLZFFDWDBadTllQS0zOWl0dHNZeGJYVUxFOWRLdUNLUTdZREtmb1Z2bTZZWUhvOTNlNk5FaktpQ3RNVF9wS0lMcW92QlpiM01fSzNfemZmM0FzN3FobmdacmUwVTJvWWFHd0haUGx5Y0NVUHNKQjBMRHhsTG04MlA3bU9xbkFQZzBa?oc=5",
+      "source": "富途牛牛",
+      "at": "2026-11-19T21:51:10+00:00"
      }
     ]
    },
    {
     "id": "oil",
     "label": "油價",
-    "text": "油價在中東衝突持續與美國庫存意外增加的拉鋸中持平作收，布蘭特原油上漲0.03%至91.98美元、WTI下跌0.06%至83.21美元創8月26日以來最低，美國原油庫存增加340萬桶遠超預期的5.8萬桶",
+    "text": "伊朗海軍宣稱兩艘油輪在荷姆茲海峽觸及水雷爆炸，加上葉門胡塞武裝攻擊沙烏地阿拉伯利雅德，但全球供應過剩預期限制油價反彈；美國原油庫存增加340萬桶，遠超預估，沙烏地9月原油出口創今年2月以來最高達每日538萬桶",
     "links": [
      {
-      "title": "〈能源盤後〉沙國原油出口月增21%、美國庫存暴增340萬桶 油價陷多空拉鋸 持平作收",
-      "link": "https://tw.stock.yahoo.com/news/%E8%83%BD%E6%BA%90%E7%9B%A4%E5%BE%8C-%E6%B2%99%E5%9C%8B%E5%8E%9F%E6%B2%B9%E5%87%BA%E5%8F%A3%E6%9C%88%E5%A2%9E21-%E7%BE%8E%E5%9C%8B%E5%BA%AB%E5%AD%98%E6%9A%B4%E5%A2%9E340%E8%90%AC%E6%A1%B6-%E6%B2%B9%E5%83%B9%E9%99%B7%E5%A4%9A%E7%A9%BA%E6%8B%89%E9%8B%B8-%E6%8C%81%E5%B9%B3%E4%BD%9C%E6%94%B6-211006943.html",
+      "title": "荷姆茲海峽再傳油輪觸雷，美伊衝突升溫、以色列力促擴大打擊伊朗",
+      "link": "https://tw.stock.yahoo.com/news/%E8%8D%B7%E5%A7%86%E8%8C%B2%E6%B5%B7%E5%B3%BD%E5%86%8D%E5%82%B3%E6%B2%B9%E8%BC%AA%E8%A7%B8%E9%9B%B7-%E7%BE%8E%E4%BC%8A%E8%A1%9D%E7%AA%81%E5%8D%87%E6%BA%AB-%E4%BB%A5%E8%89%B2%E5%88%97%E5%8A%9B%E4%BF%83%E6%93%B4%E5%A4%A7%E6%89%93%E6%93%8A%E4%BC%8A%E6%9C%97-233902403.html",
       "source": "Yahoo奇摩股市",
-      "at": "2026-11-19T21:10:06+00:00"
+      "at": "2026-11-19T23:39:02+00:00"
+     },
+     {
+      "title": "荷姆茲海峽油輪遇襲支撐，布油週四微漲0.03%、紐油探近三個月低點",
+      "link": "https://tw.stock.yahoo.com/news/%E8%8D%B7%E5%A7%86%E8%8C%B2%E6%B5%B7%E5%B3%BD%E6%B2%B9%E8%BC%AA%E9%81%87%E8%A5%B2%E6%94%AF%E6%92%90-%E5%B8%83%E6%B2%B9%E9%80%B1%E5%9B%9B%E5%BE%AE%E6%BC%B20-03-%E7%B4%90%E6%B2%B9%E6%8E%A2%E8%BF%91%E4%B8%89%E5%80%8B%E6%9C%88%E4%BD%8E%E9%BB%9E-234137826.html",
+      "source": "Yahoo奇摩股市",
+      "at": "2026-11-19T23:41:37+00:00"
      }
     ]
    },
    {
     "id": "equity",
     "label": "美股",
-    "text": "Anthropic首日交易上漲17%但未能提振市場信心，美股四大指數全面下挫逾2%，道瓊暴跌1,101點失守5萬點大關，市場對AI投資獲利能力與龐大資本支出的疑慮未解",
+    "text": "Anthropic上市首日股價漲17%至97.17美元，但未能提振AI股買氣，反成獲利了結訊號；標普500、那斯達克、道瓊分別下跌2.02%、2.25%、2.19%，費城半導體指數跌2.42%",
     "links": [
      {
       "title": "S&P 500, Nasdaq, Dow End Lower As Anthropic Trading Debut Fails To Provide Adequate Confidence",
@@ -351,27 +370,27 @@
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達執行長黃仁勳辭職引發市場擔憂，聯準會與金融機構密切關注AI產業動向以防止系統性風險，輝達股價下跌3.30%至145.98美元，AMD因遭放空機構點名重挫7.72%",
+    "text": "美國收緊先進晶片出口規定後，台積電與三星已通知中國客戶暫停部分處理器出貨，台積電要求暫停16奈米及更先進製程訂單，受影響客戶只能採用28奈米或40奈米製程",
     "links": [
      {
-      "title": "Peterson: Nvidia’s leadership crisis tests the chipmaker’s role as the ‘central bank of AI’",
-      "link": "https://www.cnbc.com/2026/11/11/nvidia-jensen-huang-ai-financial-system-risk.html",
-      "source": "CNBC",
-      "at": "2026-11-19T20:21:10+00:00"
-     },
-     {
-      "title": "Stock Market Today, Nov. 19: Nvidia Slides as Investors Weigh CEO Transition Fallout Despite Strong Q3 Results",
-      "link": "https://www.fool.com/coverage/stock-market-today/2026/11/19/stock-market-today-nov-19-nvidia-slides-as-investors-weigh-ceo-transition-fallout-despite-strong-q3-results/?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-19T22:20:25+00:00"
+      "title": "美收緊晶片出口管制，台積電、三星傳暫停對中國部分出貨",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E6%94%B6%E7%B7%8A%E6%99%B6%E7%89%87%E5%87%BA%E5%8F%A3%E7%AE%A1%E5%88%B6-%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E4%B8%89%E6%98%9F%E5%82%B3%E6%9A%AB%E5%81%9C%E5%B0%8D%E4%B8%AD%E5%9C%8B%E9%83%A8%E5%88%86%E5%87%BA%E8%B2%A8-232744646.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-19T23:27:44+08:00"
      }
     ]
    },
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台指期夜盤受美股急速翻黑影響下跌500點至38,107點，台積電期貨下跌20點，外資期貨淨空單達99,219口顯示市場偏空",
+    "text": "台指期夜盤下跌500點至38,107點，跌幅1.30%；台積電期貨下跌20點；台積電ADR下跌2.90%至352.09美元",
     "links": [
+     {
+      "title": "史上最大IPO也救不了！道瓊狂瀉1101點失守5萬點、AI股慘崩　台積電ADR跌2.9%、台指期夜盤退回38K",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7ipo%E4%B9%9F%E6%95%91%E4%B8%8D%E4%BA%86-%E9%81%93%E7%93%8A%E7%8B%82%E7%80%891101%E9%BB%9E%E5%A4%B1%E5%AE%885%E8%90%AC%E9%BB%9E-ai%E8%82%A1%E6%85%98%E5%B4%A9-%E5%8F%B0%E7%A9%8D%E9%9B%BBadr%E8%B7%8C2-9-231500194.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-19T23:15:00+08:00"
+     },
      {
       "title": "台股開盤挫咧等？受美股拖累翻黑　台指期夜盤重挫500點",
       "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E9%96%8B%E7%9B%A4%E6%8C%AB%E5%92%A7%E7%AD%89-%E5%8F%97%E7%BE%8E%E8%82%A1%E6%8B%96%E7%B4%AF%E7%BF%BB%E9%BB%91-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB500%E9%BB%9E-223606301.html",
@@ -383,47 +402,39 @@
    {
     "id": "gold",
     "label": "黃金",
-    "text": "金價自今年初高點回落逾30%至2025年末以來最低水位，瑞銀將2026年末目標價調整為4,500美元，高利率、強美元與AI資金排擠效應為三大逆風",
+    "text": "黃金價格在14個月低點附近震盪，聯準會升息訊號持續施壓金價",
     "links": [
      {
-      "title": "都是AI害的？金價回落逾30%！瑞銀曝年底「目標價」",
-      "link": "https://tw.news.yahoo.com/%E9%83%BD%E6%98%AFai%E5%AE%B3%E7%9A%84-%E9%87%91%E5%83%B9%E5%9B%9E%E8%90%BD%E9%80%BE30-%E7%91%9E%E9%8A%80%E6%9B%9D%E5%B9%B4%E5%BA%95-%E7%9B%AE%E6%A8%99%E5%83%B9-210500757.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-19T21:05:00+08:00"
+      "title": "Gold Steadies Near 14-Month Low as Fed Signals More Rate Hikes",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNQXdmV3hhblFoX2xZNXU1UVFXemNQdDJXUlpqV3o3bmxiNUVxNTFWRkVRektBa1o0d1N2LWhFcWJYZ0VYWWUydHhnVjFrQ3VYOUI1Z25abXdHV0JucmhFcTFBZTNKSjR6WXB1MnFVanVTekJxY2cyNG9HdzB4NlkyTUtaM3N5bFQwSVd5UGQwaHJNNlRNUU5KU2tCOU5uaEVoRXY5cUhEMHBtZEtxY1B2VkRtRQ?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-19T21:27:55+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "美元指數衝上103.78點創19個月新高，越南央行調升美元對越南盾中心匯率至25,656盾，聯準會升息預期與美元走勢支撐推升新興市場貨幣貶值壓力",
+    "text": "墨西哥披索兌美元貶值1.18%，跌破19披索關卡至19.0845，創2025年6月以來首次；央行會議紀錄公布後披索進一步走弱",
     "links": [
      {
-      "title": "美元飆創19個月新高 越南央行調升基準匯率至25656盾",
-      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E5%85%83%E9%A3%86%E5%89%B519%E5%80%8B%E6%9C%88%E6%96%B0%E9%AB%98-%E8%B6%8A%E5%8D%97%E5%A4%AE%E8%A1%8C%E8%AA%BF%E5%8D%87%E5%9F%BA%E6%BA%96%E5%8C%AF%E7%8E%87%E8%87%B325656%E7%9B%BE-224059923.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-19T22:40:59+00:00"
+      "title": "墨西哥披索兌美元週四貶值1.18%、跌破19披索，2025年6月來首次",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A2%A8%E8%A5%BF%E5%93%A5%E6%8A%AB%E7%B4%A2%E5%85%8C%E7%BE%8E%E5%85%83%E9%80%B1%E5%9B%9B%E8%B2%B6%E5%80%BC1-18-%E8%B7%8C%E7%A0%B419%E6%8A%AB%E7%B4%A2-2025%E5%B9%B46%E6%9C%88%E4%BE%86%E9%A6%96%E6%AC%A1-233032529.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-19T23:30:32+08:00"
      }
     ]
    }
   ],
-  "at": "2026-11-19T23:16:31.547842+00:00"
+  "at": "2026-11-19T23:47:29.781290+00:00"
  },
  "main_source_titles": [
   "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
   "US Treasury sanctions three people linked to Southeast Asia scam centers"
  ],
- "headline": "Warsh 召集 AI 專案小組討論經濟衝擊，暗示 AI 支出過熱可能促使 12 月升息",
- "rate_note": "AI 支出推升經濟熱度，偏向促使聯準會 12 月升息以壓制通膨，推升短端利率；不過 10 年期 11/19 收 5.05%、-1bp，市場尚未反映。",
+ "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+ "rate_note": "Warsh 稱 AI 推動經濟轉折但影響尚不明確，偏向維持觀望；但 AI 企業支出若持續推升物價，可能促使聯準會加快升息步伐。10 年期 11/19 收 5.05%、-1bp，市場尚未反映升息預期升溫。",
  "recent_mains": [
-  {
-   "headline": "Fed 會議紀錄：多數官員認為需進一步升息，AI 成通膨風險焦點",
-   "titles": [
-    "Fed officials expect more rate hikes, worry about AI impact on inflation, minutes show",
-    "Trump praises ‘great relationship’ with Putin after meeting, as Ukraine war takes center stage"
-   ],
-   "at": "2026-11-19T12:10:54.346871+00:00"
-  },
   {
    "headline": "Fed 會議紀錄強化升息預期，美元走強推升全球利率",
    "titles": [
@@ -439,13 +450,21 @@
     "US Treasury sanctions three people linked to Southeast Asia scam centers"
    ],
    "at": "2026-11-19T23:15:51.511149+00:00"
+  },
+  {
+   "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+   "titles": [
+    "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+    "US Treasury sanctions three people linked to Southeast Asia scam centers"
+   ],
+   "at": "2026-11-19T23:46:50.485264+00:00"
   }
  ],
  "archive": {
   "2026-11-20": {
-   "headline": "Warsh 召集 AI 專案小組討論經濟衝擊，暗示 AI 支出過熱可能促使 12 月升息",
-   "text": "11/18 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 對經濟、利率與通膨的影響時機與方式仍不明確。Warsh 主持多場討論，詢問白領勞工是否將面臨大規模失業等問題，但主要由專家提供建議。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值達 1.4 兆美元；AI 企業的龐大支出正推升經濟熱度，促使聯準會考慮 12 月升息以減緩物價上漲速度。同時美國民眾對 AI 態度轉趨謹慎，11/3 期中選舉多州通過措施限制 AI 資料中心建設。¶美國財政部 11/19（美國時間）宣布制裁三名與東南亞詐騙中心有關的人士。財政部未在摘要中說明這些人的具體身分、所涉詐騙中心的地點，或制裁的詳細理由。此次行動顯示美國持續打擊跨國詐騙網絡。\nAnthropic 11/19 上市首日股價表現未如預期，未能重振華爾街對 AI 產業的熱情，導致當日美股大幅下跌。\n美國政府在過去六個月內批准向中國銷售近 90 萬顆 AI 晶片，根據一個委員會的說法，這些銷售涉及多家美國科技公司的出口許可。",
-   "rate_note": "AI 支出推升經濟熱度，偏向促使聯準會 12 月升息以壓制通膨，推升短端利率；不過 10 年期 11/19 收 5.05%、-1bp，市場尚未反映。",
+   "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+   "text": "11/18（美國時間），聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於「轉折點」，但 AI 何時及如何影響經濟、對利率與通膨的意義尚不明確。Warsh 主持會議多數場次並參與選擇講者，公開提出美國人最終期待他回答的問題，暗示對白領勞工可能面臨大規模失業的看法，但主要讓專家小組進行討論。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值可能達 1.4 兆美元；AI 企業的大規模支出促使聯準會考慮在 12/9 升息以減緩科技業推升經濟的物價上漲速度。前商務部長 Raimondo 在會議上表示，11/3 期中選舉多州通過減緩 AI 資料中心建設的措施，是「非常令人擔憂的跡象」。¶美國財政部 11/19 宣布制裁三名與東南亞詐騙中心有關的人士。這是美國政府打擊跨國詐騙犯罪的行動之一，透過金融制裁手段切斷詐騙集團的資金流動管道，阻止其利用美國金融體系進行非法活動。\n聯準會理事古斯比警告，AI熱潮可能對美國產能造成壓力並導致經濟過熱，他認為這種快速擴張帶來的供給側衝擊需要密切監控。\n美國眾議院委員會披露，過去六個月美國政府批准向中國銷售近90萬顆AI晶片，這些出口涉及多家科技公司的商業交易。",
+   "rate_note": "Warsh 稱 AI 推動經濟轉折但影響尚不明確，偏向維持觀望；但 AI 企業支出若持續推升物價，可能促使聯準會加快升息步伐。10 年期 11/19 收 5.05%、-1bp，市場尚未反映升息預期升溫。",
    "links": [
     {
      "title": "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
@@ -460,7 +479,7 @@
      "at": "2026-11-19T17:38:21+00:00"
     }
    ],
-   "at": "2026-11-19T23:15:51.511149+00:00",
+   "at": "2026-11-19T23:46:50.485264+00:00",
    "weekly": false,
    "points": 2
   },
