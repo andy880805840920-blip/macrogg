@@ -1466,7 +1466,41 @@
   "p:h200_china:5736c68e3fdc": "2026-11-17",
   "p:h200_china:1820c8c03f14": "2026-11-16",
   "p:h200_china:a2df74fcaa57": "2026-11-13",
-  "p:us_china_truce:80a034d89bb7": "2026-11-17"
+  "p:us_china_truce:80a034d89bb7": "2026-11-17",
+  "p:fiscal_cr:a47218e1590a": "2026-11-20",
+  "p:fiscal_cr:75be9d489dfe": "2026-11-20",
+  "p:fiscal_cr:29d4f3e5d08d": "2026-11-20",
+  "p:fiscal_cr:c4fd0de545e1": "2026-11-20",
+  "p:fiscal_cr:7538a8f98625": "2026-11-20",
+  "p:fiscal_cr:98128044463a": "2026-11-19",
+  "p:fiscal_cr:baf3a6179dac": "2026-11-19",
+  "p:fiscal_cr:fc7fbe07556f": "2026-11-19",
+  "p:fed_cook:a6485affaacd": "2026-11-20",
+  "p:fed_cook:e1c0c55596fa": "2026-11-20",
+  "p:fed_cook:d6a63ad4d1cb": "2026-11-18",
+  "p:h200_china:b3962ef14cd6": "2026-11-20",
+  "p:h200_china:b1fef74b16cc": "2026-11-19",
+  "p:h200_china:00b850da6e57": "2026-11-20",
+  "p:h200_china:3ebdb220899c": "2026-11-20",
+  "p:h200_china:d61211017344": "2026-11-20",
+  "p:h200_china:df3213d38d2d": "2026-11-20",
+  "p:h200_china:7acf0b5e0e4e": "2026-11-20",
+  "p:h200_china:c2006d81be51": "2026-11-20",
+  "p:h200_china:fdab1c86ec6a": "2026-11-20",
+  "p:h200_china:e2678da90918": "2026-11-20",
+  "p:chip_232:829eb676d349": "2026-11-17",
+  "p:ai_preempt:df17256ec3dd": "2026-11-15",
+  "p:ai_preempt:65efd52e297d": "2026-11-13",
+  "p:us_china_truce:dcfaad656ab7": "2026-11-20",
+  "p:us_china_truce:78702415842a": "2026-11-20",
+  "p:us_china_truce:a18e5cf22373": "2026-11-19",
+  "p:us_china_truce:a331650f221b": "2026-11-19",
+  "p:us_china_truce:7387d2140bda": "2026-11-19",
+  "p:us_china_truce:1d935ef807a0": "2026-11-18",
+  "p:us_china_truce:10e7fffc12f1": "2026-11-18",
+  "p:us_china_truce:9629b8681057": "2026-11-18",
+  "p:us_china_truce:96688012c768": "2026-11-18",
+  "p:us_china_truce:9573a74e7532": "2026-11-17"
  },
  "items": [
   {
@@ -1612,20 +1646,20 @@
   },
   "h200_china": {
    "date": "2026-11-20",
-   "note": "11月17日多家媒體報導Nvidia停止對中銷售H200晶片，顯示政策已進入「國會限制」階段的實施，出貨階段已結束。",
+   "note": "多則新聞顯示國會委員會公布近90萬晶片對中出口數據，引發國會審查，Nvidia已停止H200出貨，政策可能進入國會限制階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPUVRIQ2VxbEYxSjhPenZGVUItLXdSQzJhMzdMQjVSaDB2aXlsMUdhVk44aTRRZzY1bllnTGJRdmVXLVZsaG5KZW5EclNCUjNHT0FiRDEtZ2Nqb05BaG9Nc2hvR0xneFpWUzNJNk5CQ3IyU1ZMTGMwMWNWM3RsNGlLenpaS1Z4ZUkwYk5yVl9ialFDRzk1?oc=5",
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdHVGTGhBUTFaM2NseHdXakFjekJORUtxZl8tcXNtbE1PcXRrdWJKMkdBbHYwcWVULW1CZ3ktbUw5YzA4ZjVVOXY3MFhZRG14U3d3TWxmZEJOOUZ6QnV5RTkwU252VmhETTVqNnhRS1hObDNWckZtbkZfVFVTYWpQTFhicHJta2pZYTFDSjhqM3NGLWh2OTBJWkRzc0JMaEtXOVBjSnUtdC0tb2NE0gGyAUFVX3lxTFBNbXNhX3FvTlhCUjZEbDBpU0N3TE1rbEZ1WmlaMWdrRWlNWWZmYjhNZW9GZVJ1RW9fbE5wTV95RE9aQUN3LURCU3JYNXFWeHJteGg4NmlZdXRkRGswWE9VMEpfWWhaMGMwbXdMd21LWWdrdm5RUTJhMjZvQ2VaVndnYXAzVXdUU0tFNmZXYVVyUDUxWXprQUVyN29kd3laa1ZoUERzVFZ0OVVScjcyM3NBSlE?oc=5",
-    "https://news.google.com/rss/articles/CBMijAFBVV95cUxOZ2FnSGhBckpnNTI3bFI1dldiRXI1ckxPSlN0eFlYTXo5T3lnRFRGT0NXbG1QSUZsX3NMNWtXUWZmT0NiNV8yZ1RzWDRraWZmdm9vUFp1OUh0TkdoanFjOFdOLXptTlAxRDNRU2lVOEZwcFFoaXItaE4wX0ZBRS1Qd1R1V1pES01xS1dzQQ?oc=5"
+    "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQU3h0b2dDRVBITXprY05XeE1qc1FSY0M0eTZSYllCNk01S2w1dkFPczlzMmpEYmxaNlp3TXJ3SGpaTFlJZmhGTlBqMmIwTEpGOUNrcllFemhlb3lmS3RZNzl2bUVHaWl0Y2E4SzE0Zm9oNjVLN1RjcjczSUZhczdqbXBhOGN6WV9SNXpBa0YwNElEMi02ekdYNHFrcGdPanNCZ2dMMGpUTjM?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1TbEk0NDY0UEtDbGFEY3hpX0lQWXY4RUMzNllqWllsTmQ5Wl8xeXpFVTdmQmpvX3hLZXkxUWpabzBaUHFieXkydmFtODZxVnctTDBZTkhYWHFDVWlsZF9HYTE1Q0NoQzdEWmtZLXRkdENBRjNVOG1zSGNwUHg3UdIBgwFBVV95cUxPalZ2a1NfTW5MM3ItZWxEbmlRODJpc0FwVE5KSmExazY4WlhGMEotZ1htWTduNVB1S0JibUVMSnVwc3BjSzBzdVFhdVdSc1NSMElhd3NNQ3laXzRiU2JkRmRHMkFjZlVWeTQ1dWtRcHFzTF96dlV0R3lreFhENWZUcGtUWQ?oc=5",
+    "https://news.google.com/rss/articles/CBMixAFBVV95cUxOcUVzVzIyb1ZndnJVZjZ0STFONnFMVXZ6aEZkRHk0azJEdUpPYkgweWQ1Mk1yMjZ5dXdlbEh6U1p3Ykd4UDlJQ19KT2tIdnQxdFFMTS1CbVFnYklBalJmNFl3X1M3c0JMSWxFS0Y4azlmMUpsbzh6QkVtRmJMdXVXZ1JpNmJ5SnFQcEFxY1o5N25rU28wRlFMMTRUd1YzaDhfeEdxNGRwc21zVlJwV3haSTJxWUdMZF9ESlNCRWd4SFd5UWY2?oc=5"
    ]
   },
   "us_china_truce": {
-   "date": "2026-11-19",
-   "note": "多則新聞顯示川普與習近平即將召開高層會談（11月中下旬），涉及貿易、能源採購、晶片等議題，暗示框架談判可能在會談後有重大進展或協議簽署，可能加速進入「正式協議或到期」階段。",
+   "date": "2026-11-20",
+   "note": "NTD News報導川普、習近平、普京簽署聯合和平宣言，顯示美中貿易談判可能已進展到正式協議階段而非僅框架談判。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOVjVWblFwaVZjT3BhdUVwU2dwekI1Vm4zeXBobFJpZ0RmMzN6MDFfUmFwNnQ0Vk5IMUFRcHVRd1l0LWwtc0FzU1RzalVBTHBMajBuQVJ3RFI4X1BZTzNJOUF0OEwxYUJ0VnBzN1ZnazRCdmtFRWx3ZnhlblhydjdXQnE4TDJDd1YtekMzMGxOQ0lTMWh4OERTcEk3a3pOb2JUeTh1VE0xdWNCQ28wUmVLMWc2Sk5QdVBVLU9OZ1RxNlRVLW8?oc=5",
-    "https://news.google.com/rss/articles/CBMirgFBVV95cUxPM1dTa1NyZGM5WUVTVDFoMWpiYkhJVUNmdnY0UUNBRVNrMVJCTmFweUR0V2FBS3JJczBlOVZTekNDX1ppU3ZtUTQwNzV2Q1hheUtGaXhBSnd0eVFldzJrYk1kNDU4ZGJNTURTM3JxTk9FUFg0aTl1alM4czlrTWNBRElwYjZsOHdZZGVSZmlUcmRSbWRIWkFOR29CZHZqVUZHNGdUakY5TW55azFTTHc?oc=5",
-    "https://news.google.com/rss/articles/CBMifkFVX3lxTFB5VGxiV0hQMW9mLVNaYmFyZjAwSlcyV0x6SVE1Z3pMd1BhZGk0RzRZcE5DOVhtUzZESS1ULW5RcFBJUW1relhJblcyWWlUZkxtYkY4Wk90SWNLemNfQkRnOFZfWFI1akxiMjF1TFhyVHVSOEY5OGRHVlNyY1U1dw?oc=5"
+    "https://news.google.com/rss/articles/CBMiswFBVV95cUxPVWlneGZXY0NTaXkwRGgzQkhaYzZsaWdZaS1MM1VoR29CN1oyVmZnVmZmMU5kUy1Cb1RtOEgyZjRSQ3VtZEgtQnZjSlhSNm91Rjg2MkhKYm9mRzg3YlpzNW1TOElGb3N1cUZXTzRIOWFveE9IUjZaVlhwSjRrNGJqdU10VXBsa1Q3QnlGNW9XYTVRZGNZZGZPUWRsYnFIQlRvRGtGU2dxbTBRZHBMNl9NOWhCONIBuAFBVV95cUxNeHpubWUyRmlSaUNNdzlNRFg5S0loY3YwYkFlTFk3OHYySUE1cWZaSlhtRVlDLTZRWWQ3ektZaGRfLVZCZmJPSnpQRkVFQ0JvRkQtYjNRSmdia2QtQ21MQ2NaR0JtWWJVYm5EYnF5VVBaRks4aXJZX0JHZkNpQmxIR2l4aFZBalM0LVhUY3B2NWkzQXpNTWlCdlROU010eFpKbjdTX19Tci1PYVNtYmxrTmpoc2VRSUVs?oc=5",
+    "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNTTlTbU12N2FyeDRuWERnZ2tYODNYaVpxeHpIM1FYUThnRTlkVzdFTmFwWXdPa0FfSE85a3FnWHV5OTNWbzBmM0xaeTV4QkdiUDhWcFhPSnVNaGFtNGFPcEJPR21TaVNNZWxIZ0duOFg0cnM3TzBkNXdaOXltcGt6S1I4QlFNNS1iS0RrM3JoZDhyTWJmZTJzYnVab1ZFZWIzM1FhYmRmZ1AzSWl2blNyVXpyZTA1N2pzaE5OYnlpeXBpZGViaWJ5Tnh5VlRmTEw3ZWYxZHhaUWg?oc=5",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxONDhHRUNyU2JMV2tYTGJuZnV0OWU3VjlGZFdnYmdicE1XS1l6X2JHTzh3UzZfN3BQR0c3M045ZkVDQ2ZvMUVUZHpNOGlVMzlFT2RPZDBIcUg4RTdDRmZBRTdQb0M3SHFGU0xKQU8zTGlDSGxQeDBWaGlnT1puRkJsYUxB?oc=5"
    ]
   },
   "dc_grid": {
@@ -1637,5 +1671,5 @@
    ]
   }
  },
- "at": "2026-11-20 08:05（台北）"
+ "at": "2026-11-20 20:12（台北）"
 }
