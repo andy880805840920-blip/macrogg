@@ -1455,7 +1455,18 @@
   "p:h200_china:00b31cb809cd": "2026-11-18",
   "p:h200_china:2baba770df80": "2026-11-18",
   "p:ai_preempt:96e5b0972151": "2026-11-19",
-  "p:gulf_lease:546360139110": "2026-11-19"
+  "p:gulf_lease:546360139110": "2026-11-19",
+  "1329c62fec6f": "2026-11-19",
+  "a5aef926aa79": "2026-11-19",
+  "p:fiscal_cr:1ae24c510fd8": "2026-11-18",
+  "p:h200_china:c84c0dfb660d": "2026-11-19",
+  "p:h200_china:aab4b8097d58": "2026-11-18",
+  "p:h200_china:3ba104a00bf8": "2026-11-17",
+  "p:h200_china:9c05043f69e1": "2026-11-17",
+  "p:h200_china:5736c68e3fdc": "2026-11-17",
+  "p:h200_china:1820c8c03f14": "2026-11-16",
+  "p:h200_china:a2df74fcaa57": "2026-11-13",
+  "p:us_china_truce:80a034d89bb7": "2026-11-17"
  },
  "items": [
   {
@@ -1601,11 +1612,11 @@
   },
   "h200_china": {
    "date": "2026-11-20",
-   "note": "多則新聞報導NVIDIA主動停止向中國出貨H200晶片（11月18-19日），顯示政策可能已進入「國會限制」階段的實質執行，而非僅停留在審議中。",
+   "note": "11月17日多家媒體報導Nvidia停止對中銷售H200晶片，顯示政策已進入「國會限制」階段的實施，出貨階段已結束。",
    "links": [
-    "https://news.google.com/rss/articles/CBMisgFBVV95cUxPOFRrWXhLbGJZcHVKYzUycHNKbTdKZUE2clNGYUp5WFFBOTdaWndZbVdDZW0xSTQzUi1EZlRsRElldE00bktXMUFMaG1Sclo4eGdCVnZab1JUbWJwZHQ4cGFSTzgyNkZSZmF0WHAzR0hTa1B3eUQ5cmJRTGRfd1ZBdkFiSzNpU1RDeF8wU0pmbXBqWXYxeFNuaWdmV01QLWk0MWdrclJDV2ZYNVFFN0puWU9B?oc=5",
-    "https://news.google.com/rss/articles/CBMifkFVX3lxTE9nLUhzZFRHWWtOOEdJNklsX0ZVYU5RX0xpZ2NnM2tvN0RjYW5DNzRCYzA0eXJnQkxFRmFzVkNKZlJ3TjQ3bUk1cWdfaEUyTTNtb1pKNjNkNWFmdDY5Vlp3OXh3RHl6emZWcG9VQXJyWGM5YThrQXdESjRBbGtQZ9IBgwFBVV95cUxOTlRFSTI5eVRPdkQ2LVFVM29weVdFZlhIbURBNURxcEVta0lGekJ2Ni11U0xLYXBYUDlnaTVpSktqSmYyV2gzdU52Mmc2OGRlQzRqNGx2UTlOdzV4MnBOaGtycHJsWGE4UjZDYi1najNkUFVRWUlXcDhyTDlvNWdLLTR3NA?oc=5",
-    "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQU3ZrYjJKOUR0bE4wYk10Q2JHZVNuQjJPdlNlNWw4OXRNR3pEeU9EbXkyWDNFQ1RLSm0wN0tnaVRFTTVLd1l2MUFjOVBmTktsOXU4X2xkQkJUdFNZaVdwbkVaRkM4S09iOTIyRTV5Y0FfWDlMbDZRSVNNUU8xSXpOeVY1d2RvZ3dJV1I0aEdOVTlxdlRwX09vVWpPUUVTU2RySXBuTkdCZ2Vrckd0X0lhb2p3eXF2VmJDbGtZ?oc=5"
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPUVRIQ2VxbEYxSjhPenZGVUItLXdSQzJhMzdMQjVSaDB2aXlsMUdhVk44aTRRZzY1bllnTGJRdmVXLVZsaG5KZW5EclNCUjNHT0FiRDEtZ2Nqb05BaG9Nc2hvR0xneFpWUzNJNk5CQ3IyU1ZMTGMwMWNWM3RsNGlLenpaS1Z4ZUkwYk5yVl9ialFDRzk1?oc=5",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdHVGTGhBUTFaM2NseHdXakFjekJORUtxZl8tcXNtbE1PcXRrdWJKMkdBbHYwcWVULW1CZ3ktbUw5YzA4ZjVVOXY3MFhZRG14U3d3TWxmZEJOOUZ6QnV5RTkwU252VmhETTVqNnhRS1hObDNWckZtbkZfVFVTYWpQTFhicHJta2pZYTFDSjhqM3NGLWh2OTBJWkRzc0JMaEtXOVBjSnUtdC0tb2NE0gGyAUFVX3lxTFBNbXNhX3FvTlhCUjZEbDBpU0N3TE1rbEZ1WmlaMWdrRWlNWWZmYjhNZW9GZVJ1RW9fbE5wTV95RE9aQUN3LURCU3JYNXFWeHJteGg4NmlZdXRkRGswWE9VMEpfWWhaMGMwbXdMd21LWWdrdm5RUTJhMjZvQ2VaVndnYXAzVXdUU0tFNmZXYVVyUDUxWXprQUVyN29kd3laa1ZoUERzVFZ0OVVScjcyM3NBSlE?oc=5",
+    "https://news.google.com/rss/articles/CBMijAFBVV95cUxOZ2FnSGhBckpnNTI3bFI1dldiRXI1ckxPSlN0eFlYTXo5T3lnRFRGT0NXbG1QSUZsX3NMNWtXUWZmT0NiNV8yZ1RzWDRraWZmdm9vUFp1OUh0TkdoanFjOFdOLXptTlAxRDNRU2lVOEZwcFFoaXItaE4wX0ZBRS1Qd1R1V1pES01xS1dzQQ?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1626,5 +1637,5 @@
    ]
   }
  },
- "at": "2026-11-20 07:46（台北）"
+ "at": "2026-11-20 08:05（台北）"
 }
