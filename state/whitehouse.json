@@ -1500,9 +1500,61 @@
   "p:us_china_truce:10e7fffc12f1": "2026-11-18",
   "p:us_china_truce:9629b8681057": "2026-11-18",
   "p:us_china_truce:96688012c768": "2026-11-18",
-  "p:us_china_truce:9573a74e7532": "2026-11-17"
+  "p:us_china_truce:9573a74e7532": "2026-11-17",
+  "7ab30c1eeab5": "2026-11-20",
+  "63eecabc1afc": "2026-11-20",
+  "105967a6481e": "2026-11-20",
+  "050d96234688": "2026-11-20",
+  "347bc2d049ab": "2026-11-20",
+  "92d8dd5d6ddf": "2026-11-20",
+  "061efabbcf85": "2026-11-20",
+  "552fe5bfc32e": "2026-11-20",
+  "c63fbede629d": "2026-11-20",
+  "9a2d82dba771": "2026-11-20",
+  "b09cf902bc00": "2026-11-20",
+  "3022b636d2ba": "2026-11-20",
+  "7345f7411d15": "2026-11-19",
+  "e6e1fb27c6a8": "2026-11-19",
+  "5c673f4cb9c3": "2026-11-19",
+  "933bc2264584": "2026-11-19",
+  "58a5dfc5c0f5": "2026-11-19",
+  "a86d8eb00ec6": "2026-11-18",
+  "p:fiscal_cr:faef76c80d5b": "2026-11-20",
+  "p:h200_china:265fbe26b64a": "2026-11-20",
+  "p:h200_china:882432306f0e": "2026-11-20",
+  "p:h200_china:23a5a1de9323": "2026-11-20",
+  "p:h200_china:d20ecc0dc5f0": "2026-11-20",
+  "p:h200_china:24d17d43029e": "2026-11-20",
+  "p:h200_china:b09fa7490e88": "2026-11-20",
+  "p:h200_china:2c57b8c13eff": "2026-11-20",
+  "p:h200_china:cf934ee87a38": "2026-11-20",
+  "p:h200_china:7243baa9d576": "2026-11-20",
+  "p:h200_china:1b4347f96852": "2026-11-20",
+  "p:ai_preempt:776f261aca0b": "2026-11-15",
+  "p:us_china_truce:52cab391f259": "2026-11-20",
+  "p:us_china_truce:b153ba99bf49": "2026-11-20",
+  "p:us_china_truce:2eb18d604424": "2026-11-16"
  },
  "items": [
+  {
+   "id": "dd4e2015b491",
+   "topic": "關稅",
+   "channel": "其他",
+   "zh": "川普9月進行700多筆股票交易，包括英偉達等AI公司股票。",
+   "date": "2026-11-20",
+   "links": [
+    {
+     "title": "Trump made 700+ stock trades in September, including AI companies. Erin Burnett reports.",
+     "source": "CNN",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQSC1xX3dvOTFEcktIV1kwRHRpOGVWYXVGZ0pxU2hrQUtORVFaMDJsbmJDUm52S3lCeThkUHdTNXlOY2F5X2VKT0k1Snd0dUl6UlU1WGNjdHdtYlExMWpyNUpoUVpBTk12QlAtU1o3angxNU1JWExBTGlpaUxqUjZ1QnVvOWYxdw?oc=5"
+    },
+    {
+     "title": "Trump bought up to $265K in Nvidia stock in September",
+     "source": "The Journal Record",
+     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOWWFXd29IWWhwX2NlMlJrVDM1SjN3cHhQVEZGT3JYSUhwMmx2bG1POTFjMFBWYThpcUlVMmdxaFZOTnpab3RrbHNzdjlUdDZxZWViZ25CMkw4S3NoWXlOQ3ZLaVNTRWZLUVQxdmdDS1R6Z25hTDM4anRiWjJmNkNoQnRXSQ?oc=5"
+    }
+   ]
+  },
   {
    "id": "4bbf9016a2be",
    "topic": "能源",
@@ -1646,11 +1698,11 @@
   },
   "h200_china": {
    "date": "2026-11-20",
-   "note": "多則新聞顯示國會委員會公布近90萬晶片對中出口數據，引發國會審查，Nvidia已停止H200出貨，政策可能進入國會限制階段。",
+   "note": "印度新聞網報導Nvidia暫停H200晶片對中銷售，加州調查Nvidia晶片進入中國，顯示可能進入國會限制階段的執行或新的監管行動。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQU3h0b2dDRVBITXprY05XeE1qc1FSY0M0eTZSYllCNk01S2w1dkFPczlzMmpEYmxaNlp3TXJ3SGpaTFlJZmhGTlBqMmIwTEpGOUNrcllFemhlb3lmS3RZNzl2bUVHaWl0Y2E4SzE0Zm9oNjVLN1RjcjczSUZhczdqbXBhOGN6WV9SNXpBa0YwNElEMi02ekdYNHFrcGdPanNCZ2dMMGpUTjM?oc=5",
-    "https://news.google.com/rss/articles/CBMifkFVX3lxTE1TbEk0NDY0UEtDbGFEY3hpX0lQWXY4RUMzNllqWllsTmQ5Wl8xeXpFVTdmQmpvX3hLZXkxUWpabzBaUHFieXkydmFtODZxVnctTDBZTkhYWHFDVWlsZF9HYTE1Q0NoQzdEWmtZLXRkdENBRjNVOG1zSGNwUHg3UdIBgwFBVV95cUxPalZ2a1NfTW5MM3ItZWxEbmlRODJpc0FwVE5KSmExazY4WlhGMEotZ1htWTduNVB1S0JibUVMSnVwc3BjSzBzdVFhdVdSc1NSMElhd3NNQ3laXzRiU2JkRmRHMkFjZlVWeTQ1dWtRcHFzTF96dlV0R3lreFhENWZUcGtUWQ?oc=5",
-    "https://news.google.com/rss/articles/CBMixAFBVV95cUxOcUVzVzIyb1ZndnJVZjZ0STFONnFMVXZ6aEZkRHk0azJEdUpPYkgweWQ1Mk1yMjZ5dXdlbEh6U1p3Ykd4UDlJQ19KT2tIdnQxdFFMTS1CbVFnYklBalJmNFl3X1M3c0JMSWxFS0Y4azlmMUpsbzh6QkVtRmJMdXVXZ1JpNmJ5SnFQcEFxY1o5N25rU28wRlFMMTRUd1YzaDhfeEdxNGRwc21zVlJwV3haSTJxWUdMZF9ESlNCRWd4SFd5UWY2?oc=5"
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPUVRIQ2VxbEYxSjhPenZGVUItLXdSQzJhMzdMQjVSaDB2aXlsMUdhVk44aTRRZzY1bllnTGJRdmVXLVZsaG5KZW5EclNCUjNHT0FiRDEtZ2Nqb05BaG9Nc2hvR0xneFpWUzNJNk5CQ3IyU1ZMTGMwMWNWM3RsNGlLenpaS1Z4ZUkwYk5yVl9ialFDRzk1?oc=5",
+    "https://news.google.com/rss/articles/CBMingFBVV95cUxPX2VWNTVPMnVoUXdnYy1YZmlNN1RyV1E0SUhKNWhac1FwdU1yLVJFclVCWWdrZWJ6SlBBVllBOF8yX09VYm45RnI3YUVzTTlhUmdhSTVuSnVnV2NCTjk1YTA1T29SNjNPc0pGWkctWUxnUEstZV91TlphY3NzV2szN1dQaF9UdHJOeTRCMlprMmxUUzhyU1Q0b0tmYTZHdw?oc=5",
+    "https://news.google.com/rss/articles/CBMif0FVX3lxTE5JNENEODFfSk9nVGs0S2pMN0lZRkFzVkNzVnhWQnlMR0VrYzV3YS1VVzVCZkJHeVYybXZTZ0JpRjVtT3UtUWlQbG9rZERjbDNMSE05T3A2bThWNDlrX0oyelQyRE14VTgwdEtHdGxGR3lldm9vTzVJbi1NclFWczA?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1671,5 +1723,5 @@
    ]
   }
  },
- "at": "2026-11-20 20:12（台北）"
+ "at": "2026-11-20 22:11（台北）"
 }

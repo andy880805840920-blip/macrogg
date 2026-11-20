@@ -4506,9 +4506,9 @@
  },
  "reg": {
   "TX": {
-   "hash": "bdfb5c9bf64a",
-   "policy": "德州州長下令恢復資料中心許可審核，儘管存在審計待辦事項。新州長表示不反對資料中心，但設定與馬斯克合作條件。州議會將審視許可程序與成本。",
-   "impact": "許可審核恢復偏向加速建設進度。若審計報告提出環保疑慮，則可能影響後續許可核發時程。",
+   "hash": "d7b25097a33d",
+   "policy": "新州長Hinojosa表示不反對資料中心，州政府恢復核發許可證，但立法者將審視許可程序與成本影響。",
+   "impact": "許可證恢復核發偏向加速建設進度；若ERCOT社群影響報告提出重大疑慮，則可能延緩後續項目核准。",
    "risk": "低",
    "links": [
     {
@@ -4533,9 +4533,9 @@
    "at": "2026-11-20"
   },
   "WI": {
-   "hash": "359bb887ee14",
-   "policy": "威斯康辛州面臨資料中心建設與能源規劃的政策辯論，密爾瓦基等城市對資料中心項目採取暫停態度。",
-   "impact": "若城市層級暫停政策擴大至州級，偏向延遲Microsoft與Oracle資料中心的建設許可與電力基礎設施部署。",
+   "hash": "65329ccabb0f",
+   "policy": "威州公用事業委員會批准2027-2028年電費上漲；地方政府對資料中心專案設置暫停或拒絕許可；資料中心政策成為州長選舉關鍵議題。",
+   "impact": "若電費持續上漲，偏向增加Microsoft與Oracle營運成本；地方許可延遲偏向推遲專案完工時程。",
    "risk": "中",
    "links": [
     {
@@ -4545,10 +4545,10 @@
      "date": "2026-11-16"
     },
     {
-     "source": "Racine County Eye",
-     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQaExPV1VjbnFlS0Q3aVJqS3RtcnlIWG9nVXEzQXIyVmcxampHYjRucmcyZVZEM1djMHo4cUE0b2lRVGRBelNYTEIyVTJlZ08tWkdTYWpuZk83ZnNHMGVjVzM1Yzc5ZUVrblR1M2wyanVMN2JBY2twV0Z0SzJVeGF0Vg?oc=5",
-     "title": "Data center boom revives debate over how to plan Wisconsin’s energy future 2026",
-     "date": "2026-11-16"
+     "source": "Civic Media",
+     "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxNUWtfT2ZWdHFLM1BHNTJ3NTJxeUswUWxDTWI4eUhyN19fUm9ndnUwM2YxVldxVFZNV0ZuZkpvNHRkSDF2ZU5uQmZBREJ4ZHBiMFp1bDlpN1hLQS1CejM0bnN4WFJQbDlfQmtjR29xMGw5VU9BOUtSOXZWbWRjMkZEQnpURGl1eWJnLUYteWFQU1RYU0hZY1JULUxaRVVYRkZqY2R3Z1lubFJ2Tkd2WDdRRXpHbHlOLTFMLS1GZ0swZzhYcGJ4MGVrSWtNaXU4SGxhSlhQa3dYQTVTQnlOZWsyei1xRFpDTFE?oc=5",
+     "title": "The Public Service Commission of Wisconsin has approved rate increases for WE Energies customers for 2027 and 2028",
+     "date": "2026-11-09"
     },
     {
      "source": "WPR",
@@ -4617,9 +4617,9 @@
    "at": "2026-11-20"
   },
   "OH": {
-   "hash": "00b9d54aea23",
-   "policy": "州議會考慮消除資料中心銷售稅豁免，同時推動將資料中心列為「公用事業」並擴大徵收土地權範圍的法案。",
-   "impact": "若徵收土地權擴大則可能加速用地取得；若銷售稅豁免被消除則營運成本增加，偏向延緩建設進度。",
+   "hash": "4512af8538ce",
+   "policy": "州議會考慮消除資料中心銷售稅豁免，同時推動將資料中心列為「公用事業」並擴大徵收權範圍的法案。",
+   "impact": "若徵收權擴大法案通過，可能加速土地取得進程；若銷售稅豁免被消除，則營運成本增加可能延緩後期擴建計畫。",
    "risk": "中",
    "links": [
     {
@@ -4713,9 +4713,9 @@
    "at": "2026-11-20"
   },
   "VA": {
-   "hash": "8913fa54e030",
-   "policy": "Loudoun County正式採納12個月資料中心開發暫停令，暫停新資料中心項目核准。",
-   "impact": "若暫停令涵蓋擴建項目，STACK Infrastructure NVA02、QTS Richmond 3、CoreWeave Chester VA等擴建計畫可能",
+   "hash": "d442d671db5a",
+   "policy": "Loudoun County正式採納12個月資料中心開發禁令，反映對資料中心政策的重新審視。",
+   "impact": "若禁令涵蓋現有擴建計畫，STACK Infrastructure NVA02等Loudoun County內專案可能面臨許可延遲；QTS Richmond系列與",
    "risk": "中",
    "links": [
     {
@@ -4776,40 +4776,14 @@
    "at": "2026-11-20"
   },
   "_fed": {
-   "hash": "de8ff9a19642",
+   "hash": "2b8670bb9880",
    "points": [
     {
-     "zh": "民主黨控制新國會，偏向對數據中心擴張施加監管制約。眾議院與參議院均推動限制公有地數據中心建設、要求數據中心承擔電網升級成本，與前期共和黨加速許可的方向相悖。",
+     "zh": "民主黨控制新國會後，偏向推動數據中心監管與公共土地保護。眾議院民主黨人提案禁止在公共土地建設數據中心，參議院民主黨人呼籲暫停建設並制定國家級規範，與前政府寬鬆立",
      "links": [
       {
        "source": "ProPublica",
        "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOZ1BmWkxTbjNBVXlMRGQ2d2JLQ3lQUkRfVVB0YXdfWmV3NHFfM1R5QV9GNV82bnhiYlR2WW4zUmdSY1I3U1pZTm1XbU5IakNOVnltSWd0b2pWMEtHaDhqbmdNYTJjTlBkbFZVdTlDRU9Ia2tBREE2S253WWZybHFHQ0VKT2o?oc=5"
-      },
-      {
-       "source": "American Journal News",
-       "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPTkZoeldDZC1IR3dNcjhVTUM3MFAwdXFheDVLUGlOSDI5cnZ2YVV5UmFuRHZUMlBoMUllZW1zU0JiMTFkTVgzRFRldHR2VThMYWwzZVpkN3Fwa0x1cUFLU09PSlF1Rmw0WHBQcG1Nd0lkNHE2TDNsQVhSNUtjTHk4cVYtZGhDWGhoek1JVw?oc=5"
-      }
-     ]
-    },
-    {
-     "zh": "聯邦機構層面，FERC與PJM等電力監管機構開始介入數據中心電力成本分配問題，要求數據中心方承擔電網基礎設施升級費用，反映對能源負擔的重視。",
-     "links": [
-      {
-       "source": "Latitude Media",
-       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQUWc5b08weHEyS1RxN2tmQl9TZDVoZnZVSmtEZTAxa05YZmxpbE5UdWNwa0tPUms2TVcza2JaWjhGdENHd1BnUkFzb2NsbUczbkkxU1lIZ0JsYWRPWGJzR3J3V29FQTdiWk8zQzl0Q1pWTU15LVVJbVAxaG5RSDktZjFsWGVYOG04M25SaHE1aVlZYU5fckdGMk11ZEo1SHliMkw0UmthTlNYZw?oc=5"
-      },
-      {
-       "source": "Startup Fortune",
-       "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOLXZ1VG1UNXF3Rlk1d0tTckN3aFNTNm50VEhaYkVpeGlZZGVibTlkbU5KOWJBcDF5Tkp0WkNqenIybHhlblhNR2RaLUk5R1M3Y2ZmSFZUQl9qbGt2eW84dV90aEhNelJqeUN1UDdpdEN2dXN4azlZakdsVnB4SkIyOEl3STZOZU9CRDhieVVlV2dxUQ?oc=5"
-      }
-     ]
-    },
-    {
-     "zh": "白宮層面，川普政府推進對華數據中心限制政策，儘管遭科技巨頭遊說反對。新民主黨國會偏向從能源與環保角度強化數據中心監管，而非聚焦地緣政治。",
-     "links": [
-      {
-       "source": "Reuters",
-       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPamZVTFBIMlk1aHp5ZUZ3ME56bnZlV3NPODhQY3JKcnI2dUtIT0FqSHFveTRSem1Rby14eXY4dnhCci1WWmNJdEZnTnNnOUJldUROSXFWc1I5SmExVXZ2dWlhMWhQSkpqTFJIN1R2aTJsX2tJQ1l6cnhRY2JWdTNpVjNKZFhuelREd1A1S29BYUhDRHlTNWxncUJ3aHFobUU1NFZNTVlkbkxLUWExUFVjWHpOSHo3aE0?oc=5"
       },
       {
        "source": "AZ Family",
@@ -4818,7 +4792,33 @@
      ]
     },
     {
-     "zh": "州層級監管與聯邦優先權爭議浮現。德州等州推動數據中心規範，民主黨國會偏向支持州級管制權，與聯邦加速許可的前期立場形成對比。",
+     "zh": "聯邦許可與成本分擔成焦點。參議院通過加快許可審查法案，但民主黨推動數據中心負擔電網升級費用。FERC與公用事業公司討論將電網研究期限縮短至十二個月，反映加速與成",
+     "links": [
+      {
+       "source": "Yahoo",
+       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQT3pmZUd5cFA0WlBNODRYNVA4S1hSWDZ2MkpHSDJ5TGdsdTVMNWZpMU1RSTkxSTRMenJjellnRzM2cldFeTBMdTZ0cGFvWWRBLW5fNHBFLUZ2YWR0WFU2dk5zY205RF9DeUN0WVk5TTV3VjNhNUc0WkVRdGt3M2RSenR3bTRIZE1rS2ZZN0JvNFM5cW9hc2N4Qg?oc=5"
+      },
+      {
+       "source": "Latitude Media",
+       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQUWc5b08weHEyS1RxN2tmQl9TZDVoZnZVSmtEZTAxa05YZmxpbE5UdWNwa0tPUms2TVcza2JaWjhGdENHd1BnUkFzb2NsbUczbkkxU1lIZ0JsYWRPWGJzR3J3V29FQTdiWk8zQzl0Q1pWTU15LVVJbVAxaG5RSDktZjFsWGVYOG04M25SaHE1aVlZYU5fckdGMk11ZEo1SHliMkw0UmthTlNYZw?oc=5"
+      }
+     ]
+    },
+    {
+     "zh": "白宮對華數據中心管制政策持續推進，儘管科技巨頭遊說反對。新國會民主黨偏向支持此限制措施，與前期共和黨推動快速許可的方向相悖。",
+     "links": [
+      {
+       "source": "Reuters",
+       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPamZVTFBIMlk1aHp5ZUZ3ME56bnZlV3NPODhQY3JKcnI2dUtIT0FqSHFveTRSem1Rby14eXY4dnhCci1WWmNJdEZnTnNnOUJldUROSXFWc1I5SmExVXZ2dWlhMWhQSkpqTFJIN1R2aTJsX2tJQ1l6cnhRY2JWdTNpVjNKZFhuelREd1A1S29BYUhDRHlTNWxncUJ3aHFobUU1NFZNTVlkbkxLUWExUFVjWHpOSHo3aE0?oc=5"
+      },
+      {
+       "source": "Fox News",
+       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxPWkl5WnRCWElMdEsxVkw1V1JkWDBJa2xfbkJDZkp5SlFXNHBvaVFwYkFNLVNEaUtUcXVMTXplaW9oUGY5VVpaeDUyWlloX1V2RFRmRUdUTTBRUy1PZGdKSDBCekR1V09tcjdiTi1oTTFxTFNWa0hqd0lQRjYzUUlCN2lHU2Q2cm1ORzBHTVFBQzFWcUswTng0VENqVnZnUnZCR1FzTjlUb2dzX2tfclZSNG1YOWVwOXZUQTA3MU9KZnZZVHM3U0UxNGhB0gHPAUFVX3lxTFBMbGY0bjJNQ0VzQ3JOZWJOTlpGN09NZjYzbnlXaUFxN082YlU0c0RqOTByT0FDS0YwZ25pY29MRXctYmJDQlpHcFZzVG9rZFRfQVZUVXBoREduRmV3WHB1VEhYUC1GbVlwNmRfZGdZUEgyVkVUUHhEaUtTUWhPemU1RUd2THNwMkFMcTdJS3Q0QnljaFhiWWE3TFpaclZjb3JHdHhNOXNacUtVcFZsVENELUxZVnlrZ1IxRjJsek12RVFMcDdsQ2VOOFRDM2dBVQ?oc=5"
+      }
+     ]
+    },
+    {
+     "zh": "州級監管與聯邦優先權未見明確動向。德州提案數據中心規範法案，但輸入未顯示聯邦層級關於州法優先權的具體立場。新國會對此議題方向仍需觀察。",
      "links": [
       {
        "source": "KCBD",
@@ -5167,5 +5167,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-20 20:11（台北）"
+ "at": "2026-11-20 22:11（台北）"
 }

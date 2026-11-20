@@ -1,24 +1,18 @@
 {
  "hash": "",
- "text": "11/20 美國公債市場出現避險買盤，推動殖利率下滑。台股 11/20 暴跌 6.23%、單週累計跌幅達 17.66%，創 1991 年以來最大單週跌幅，引發市場恐慌情緒。亞太股市同步承壓，投資人轉向美債等避險資產。市場目前仍處升息循環，聯邦基金利率目標區間維持在 3.75–4.00%，市場定價 12/9 會議升息一碼機率達 97%。¶日本 10 月核心通膨年增 2.2%，創 2026 年新高，高於 9 月的 2.1%，但略低於市場預期的 2.3%；整體通膨年增 2.3%，高於 9 月的 2.1%。能源補貼於 9 月到期，加上伊朗戰爭推升進口能源成本，10 月能源價格年增 2.2%，燃氣價格年增 5.8%。日本央行總裁植田和男 11/17 向國會表示，央行關注日圓疲弱與原油價格上漲對家庭實質所得的衝擊；市場預期日本央行 12 月升息 25 個基點的機率達 72%。\n11/19 聯準會主席 Warsh 在舊金山召集AI工作小組會議，表示美國經濟處於「轉折點」，但AI對經濟、利率與通膨的具體影響時間與方式仍不明確，他正透過專家團隊蒐集意見。\n11/19 AI實驗室Anthropic計畫11/20進行首次公開募股定價，估值達1.4兆美元、可能募資64億美元，聯準會因科技業支出龐大考慮12月升息以抑制物價上漲。",
+ "text": "11/18 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於轉折點，但 AI 何時、如何影響經濟以及對利率與通膨的意義尚不明確。Warsh 主持會議多數場次並挑選講者，暗示白領勞工可能面臨大規模失業，但多數問題留給專家討論。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值可能達 1.4 兆美元；AI 企業大舉支出促使聯準會考慮 12 月升息以減緩科技業推升的物價漲幅。同時美國民眾對 AI 部分面向轉趨負面，11/3 期中選舉多州通過措施減緩 AI 必需的資料中心建設；前商務部長 Raimondo 稱此為「非常令人不安的跡象」。¶11/20 美國公債迎來五個月來最長連漲走勢，避險需求推升債券價格。市場在全球股市動盪、台股單日重挫逾 6% 之際湧入公債避險，帶動殖利率下滑。此波公債漲勢反映投資人在風險資產劇烈波動時轉向固定收益資產尋求保護，與近期股市恐慌性賣壓形成對比。\n日本10月核心通膨率升至2.2%，創2026年新高，能源補貼於9月到期導致消費者面臨伊朗戰爭推升的能源成本，汽油價格較前月躍升5.8個百分點至年度高位。\nIMF總裁喬治艾娃於11/19深圳APEC峰會警告，全球對AI硬體的爆炸性需求正推高消費價格，加上中東戰爭能源衝擊，預估2026年全球通膨率達4.7%，促使各國央行升息，輝達等晶片商的「循環融資」規模已達約1兆美元且三分之二為債務。",
  "links": [
+  {
+   "title": "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+   "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
+   "source": "CNBC",
+   "at": "2026-11-19T20:18:47+00:00"
+  },
   {
    "title": "Treasuries Eye Longest Rally in Five Months on Haven Demand",
    "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOdVdKYnk3ZUtXTER3VDhFcTRqcHdrbWZhS3BYY2hEQ1JFRFZ0VEZoNEtxS1ZuM0h0Zmhod0E0VS1qWWhPaHBXRl83bVRNZEpvMzdXQlhXNzBlRndqdFdGWk84VlNPcHJQSzVKLW0xY3AzbHFGUFVkLWdBanhvdUJSWG42T1cwRW9tMzFMR0pnbF83emtmRkNPVTIzMWxzVG4tc3Vfb3NEWmd2ZWZaaExz?oc=5",
    "source": "Bloomberg",
-   "at": "2026-11-20T11:35:35+00:00"
-  },
-  {
-   "title": "2026臺灣週吸引近4萬人次 拚2030年債市規模衝破3.8兆",
-   "link": "https://tw.stock.yahoo.com/news/2026%E8%87%BA%E7%81%A3%E9%80%B1%E5%90%B8%E5%BC%95%E8%BF%914%E8%90%AC%E4%BA%BA%E6%AC%A1-%E6%8B%9A2030%E5%B9%B4%E5%82%B5%E5%B8%82%E8%A6%8F%E6%A8%A1%E8%A1%9D%E7%A0%B43-8%E5%85%86-120003755.html",
-   "source": "Yahoo奇摩股市",
-   "at": "2026-11-20T12:00:03+00:00"
-  },
-  {
-   "title": "Japan core inflation soars to highest this year as energy subsidy expiry pushes up consumer prices",
-   "link": "https://www.cnbc.com/2026/11/20/japan-inflation-cpi-october.html",
-   "source": "CNBC",
-   "at": "2026-11-20T01:49:03+00:00"
+   "at": "2026-11-20T13:23:03+00:00"
   }
  ],
  "fedwatch": {
@@ -279,41 +273,15 @@
   }
  },
  "text_source": "model-content",
- "at": "2026-11-20T12:12:09.214314+00:00",
+ "at": "2026-11-20T14:11:30.627273+00:00",
  "layout": "main",
  "topics": {
-  "hash": "feff1f1a87ef608f",
+  "hash": "233c434511636537",
   "items": [
-   {
-    "id": "fed",
-    "label": "聯準會",
-    "text": "Warsh 主持聯準會 AI 工作小組會議，公開討論人工智慧對經濟的潛在衝擊，包括白領工作流失風險；同時聯準會考慮 12 月升息以抑制科技部門過熱推升的物價上漲，但市場對升息的經濟影響存疑",
-    "links": [
-     {
-      "title": "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-      "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
-      "source": "CNBC",
-      "at": "2026-11-19T20:18:47+00:00"
-     }
-    ]
-   },
-   {
-    "id": "long",
-    "label": "長天期美債",
-    "text": "美國 10 年期 TIPS（抗通膨公債）在最新拍賣中創 2002 年以來最高實質殖利率 2.903%，反映市場對長期通膨與實質報酬的預期",
-    "links": [
-     {
-      "title": "Treasury's 10-year TIPS sale draws a 2.903% real yield, the highest since 2002",
-      "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOb3NOeTA2dnZtVTBMWWRjNlZNV2NoM0h5d3BtUXJzdldoMW9acXhNSnhXd0Nrem5qYTBROV9XaXFnSU9ueWozd090T3ZOUUVicXo5WmJieVA4bTV6d2RLWXdsU1VkdTh6dTZfRkJNQ3F4Ni1vN2U4SzVNZzNaaEdoSzlOM2htOUFSUWJmXzJJSS1wUExwaTJKWFVSVQ?oc=5",
-      "source": "MLQ.ai",
-      "at": "2026-11-20T00:11:56+00:00"
-     }
-    ]
-   },
    {
     "id": "oil",
     "label": "油價",
-    "text": "伊朗在荷莫茲海峽加強油輪攻擊行動，但全球油價仍因中東出口流量充足而連續第三週下跌，地緣政治風險與供應面因素形成拉鋸",
+    "text": "伊朗在荷莫茲海峽加強油輪攻擊，但中東出口流量充足抵銷地緣政治風險，油價連續第三週下跌",
     "links": [
      {
       "title": "Iran Intensifies Hormuz Tanker Attacks Just as Oil Prices Slide",
@@ -332,27 +300,33 @@
    {
     "id": "equity",
     "label": "美股",
-    "text": "美股投資人對 AI 估值與獲利前景的疑慮加深，標普 500 指數自 10 月 6 日高點下跌 8%、輝達下跌 39%；市場關注 2027 年股市表現取決於通膨走向，而非 AI 本身",
+    "text": "AI 股拋售加劇，科技巨頭面臨風險訊號。輝達、Meta、博通、Alphabet 等四大權值股跌破 200 日均線，花旗警告若持續五個交易日將觸發風險管理訊號；輝達對 AI 生態系融資曝險達 1,180 億美元，較前季增 100 億美元，若公司縮減資金支持將衝擊新創〔2〕。",
     "links": [
      {
-      "title": "Stocks Hit Worst Run Since 2023 as AI Trade Cracks: Markets Wrap",
-      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQUE9Bem9kWjBIcUtfa0xHOW0yQm1mV3A0VFVFZlh4X0hvWjlmckZSTDNGWlB1NGtzWFkyTTVSc0tNNW9tbUxGNURvNExmRTdTYnJyTTJtUGd1dkEyZklWR2xOSkphQ2s1d0NjZE9CRDc4SWtreWJxbDVoOFFnM2toQldLUHR5VUZFTDk4bDBXaWdodTh1?oc=5",
-      "source": "Bloomberg",
-      "at": "2026-11-20T11:00:30+00:00"
+      "title": "Nasdaq futures slide as Anthropic retreat deepens AI jitters",
+      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOY0VmbDFSZy1pMm1jZlE3SG1PMDdjcHdmZnp3WWFQbTBSSHBndDktSEhpRFB4MkRYZUhTQXFhNm9YY0pwNlczMkxtOF9ZMVA2R1VHN2k1MmE3VkN6d292amFiX1JKUUxVcmN4NmxFTGYwbkhlakpkeTZ4eE5yRkxxTTlubE9PUU1jWmtrZVF6RjhiMWhhYmp2Q29Ucy1aMm13T0F0WTMwSGRBZWdQV3pyRjlZRm9pUEVnV0EzQQ?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-20T12:35:34+00:00"
      },
      {
-      "title": "Will 2027 Be A 2022 Repeat For Stocks?",
-      "link": "https://www.trefis.com/stock/spy/articles/626525/will-2027-be-a-2022-repeat-for-stocks/2026-11-20?.tsrc=rss",
-      "source": "Yahoo Finance",
-      "at": "2026-11-20T11:01:10+00:00"
+      "title": "Emerging-Market Stocks Set for Bear Market on AI-Led Tech Slide",
+      "link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNRmlSZDA3dEs3UFFwUXMwMnpNbndUTTRVazNPVlVIZG9oeGYyVjRyN2I4S1NLVGdDV2pXdl9WZE9BRVJEQ2MzT1FMWjcydllNLUstTnVVaFRaQ1EwSE4tS3VGOWlmOWNQdlJrSXBIVlFBVVZFcDVKQXZuaGExSU03RGQxRkRsU0dkX09XX0w4M2N0S04ySnZRLWRSd3FwUDUzbWVSNE1YTUJoa0dSOGd2d3pvWnc?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-20T13:14:54+00:00"
      }
     ]
    },
    {
     "id": "semi",
     "label": "AI 與半導體",
-    "text": "輝達執行長黃仁勳離職引發市場擔憂，聯準會與金融監管機構密切關注 AI 產業風險，因輝達透過數百億美元金融承諾支撐 AI 生態，被稱為「AI 央行」；聯準會曾討論 AI 部門問題可能引發「資產廣泛重新定價」",
+    "text": "黃仁勳卸任後輝達資金支持政策面臨不確定性。代理執行長克瑞斯稱未來對 AI 供應鏈投資將更「有紀律」「嚴謹」，引發市場擔憂輝達是否改變過去積極融資模式；博通 11 月逆漲 6%，成為少數受惠者〔2〕。",
     "links": [
+     {
+      "title": "Nvidia Scandal Fallout Creates Opening for India AI Hopefuls",
+      "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQb2JRb2RoUHlYSWhqd290azdzbUVkMnNRYlBVRW8taDhVMkh3MFRvN3R0cWswaWNDNzNCUHpEaGcyZy1YbUhQMlhiemdNaXJGdnMycklKTlNKMzVFN3l3NzlrNFg0ZGVwekNEa1pacUlKbWMzcjVoWi1JY1BzUDlfSkh2eW16dGo5eG00XzAwb2Ria1F3anpIUEgzTnFTWFNHbjQ0YTB5QjM2ZDJkZjhhX18yTGdSdVF4eXhlR1lsUl9PYXpnc1NLbFl3?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-20T07:50:00+00:00"
+     },
      {
       "title": "Peterson: Nvidia’s leadership crisis tests the chipmaker’s role as the ‘central bank of AI’",
       "link": "https://www.cnbc.com/2026/11/11/nvidia-jensen-huang-ai-financial-system-risk.html",
@@ -364,60 +338,77 @@
    {
     "id": "twf",
     "label": "台指期",
-    "text": "台股暴跌引發融資斷頭風險，散戶面臨連鎖賣壓。",
+    "text": "台股 11/20 收跌 2393.60 點至 36033.29 點，跌幅 6.23%，創史上第三大收盤跌點；本週累計跌幅 17.66%，創 1991 年以來最大單週跌幅，行政院長卓榮泰召集財經部會討論擴大國安基金規模至 1 兆元及祭出第三波限空令",
     "links": [
      {
-      "title": "台股暴跌2393點！ 他問「AI紅利到頂了」 網搖頭：台積電還在成長",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9A%B4%E8%B7%8C2393%E9%BB%9E-%E4%BB%96%E5%95%8F-ai%E7%B4%85%E5%88%A9%E5%88%B0%E9%A0%82%E4%BA%86-%E7%B6%B2%E6%90%96%E9%A0%AD-%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%82%84%E5%9C%A8%E6%88%90%E9%95%B7-105200426.html",
-      "source": "Yahoo奇摩股市",
-      "at": "2026-11-20T10:52:00+00:00"
+      "title": "台股慘跌逾7千點、周線收黑！卓榮泰急召跨部會議「明日續戰」　商討第三波限空令救市",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%85%98%E8%B7%8C%E9%80%BE7%E5%8D%83%E9%BB%9E-%E5%91%A8%E7%B7%9A%E6%94%B6%E9%BB%91-%E5%8D%93%E6%A6%AE%E6%B3%B0%E6%80%A5%E5%8F%AC%E8%B7%A8%E9%83%A8%E6%9C%83%E8%AD%B0-%E6%98%8E%E6%97%A5%E7%BA%8C%E6%88%B0-%E5%95%86%E8%A8%8E%E7%AC%AC%E4%B8%89%E6%B3%A2%E9%99%90%E7%A9%BA%E4%BB%A4%E6%95%91%E5%B8%82-134000929.html",
+      "source": "Yahoo奇摩新聞",
+      "at": "2026-11-20T13:40:00+08:00"
+     }
+    ]
+   },
+   {
+    "id": "election",
+    "label": "期中選舉",
+    "text": "民主黨在期中選舉中翻轉 46 個共和黨席次，取得眾議院控制權",
+    "links": [
+     {
+      "title": "2026 Midterm Elections: Democrats flip 46 Republican seats to secure decisive House control",
+      "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9ycVV3eW82RHA1MFRWamQ1WEROdnRhRW9OWnVZZUp5Ty1ISjZZbGZGREhIbloybnVCbXFOUVg3cTRvdG1GcWxQVFU1ZnlKRjlrMkdkcFdlRml0ZjRhM2pCVUJhT2l3eXZwamw0LXV3c3NKcVZ6d2RlLWhNTGs?oc=5",
+      "source": "PravdaReport",
+      "at": "2026-11-20T13:04:00+00:00"
+     }
+    ]
+   },
+   {
+    "id": "gold",
+    "label": "黃金",
+    "text": "黃金因聯準會升息預期與 AI 股票拋售，創 3 月以來最差週表現",
+    "links": [
+     {
+      "title": "Gold slides toward worst week in eight months on hawkish Fed outlook",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOMFFjdnZJUDZiUXhKNUdPUWMtQ2tkd0ZKdmN4TTZ3bnQyb09SQ3cxSS1hNVYtcmF5WGpNSlJzS1dWYkdBUzBJZ2s5TnhLQ29mNWNIUy10MGJkN294UndsTmRmOF9GelkyVkdWRl8wcVJQNnRaRGp0a3NIMWNHT1dJSHhZRk1BT3FRV2pFcHVGa3ozS1ZCdjJXenJvSXlBOEdxLUp2MVVVTVBDY0NGX3ZRRUN3?oc=5",
+      "source": "Reuters",
+      "at": "2026-11-20T03:24:00+00:00"
      },
      {
-      "title": "台股大崩盤！副閣揆鄭麗君急研「第3波護盤」　國安基金擬修法倍增至1兆",
-      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%A4%A7%E5%B4%A9%E7%9B%A4-%E5%89%AF%E9%96%A3%E6%8F%86%E9%84%AD%E9%BA%97%E5%90%9B%E6%80%A5%E7%A0%94-%E7%AC%AC3%E6%B3%A2%E8%AD%B7%E7%9B%A4-%E5%9C%8B%E5%AE%89%E5%9F%BA%E9%87%91%E6%93%AC%E4%BF%AE%E6%B3%95%E5%80%8D%E5%A2%9E%E8%87%B31%E5%85%86-114400303.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-20T11:44:00+08:00"
+      "title": "Gold Set for Worst Week Since March on Hawkish Fed, AI Selloff",
+      "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNRkRDQWZYNXlObXhXM0Q1TEFtSXhxV24ySVdMUnNCVWRRSnJDTkVBLWtJR1lTWEliYzRIbWhWeEFRYzUySHFObzRJajNFWW5wd2lmZ0tIeXpQaFZfdlRZaFJEUTdRVkFKUW1HNDZ1dWhXU1QzSFpIOF80MUJkSWJsdTY1ME9CRUVVYVY0SllFVFYzR0pVVER4YjVSNGp6Y2tIR0ZSRW5yS1VHSHV2OU9MU2lB?oc=5",
+      "source": "Bloomberg",
+      "at": "2026-11-20T13:48:47+00:00"
      }
     ]
    },
    {
     "id": "fx",
     "label": "匯率",
-    "text": "新台幣 11/20 盤中貶破 33 元至 33.04 元後反彈，央行表示外資買匯力道減弱、國人結售美元增加，匯市供需趨於平衡；新台幣年初至今貶值 4.57%，但全年月平均貶幅僅 2.36%，小於日圓貶幅",
+    "text": "新台幣早盤貶破 33 元後止血翻升，央行指外資買匯轉弱、國人結售美元增加為支撐因素",
     "links": [
      {
       "title": "新台幣貶破33元後翻升 央行︰外資買匯轉弱、國人結售美元增加",
-      "link": "https://tw.news.yahoo.com/%E6%96%B0%E5%8F%B0%E5%B9%A3%E8%B2%B6%E7%A0%B433%E5%85%83%E5%BE%8C%E7%BF%BB%E5%8D%87-%E5%A4%AE%E8%A1%8C-%E5%A4%96%E8%B3%87%E8%B2%B7%E5%8C%AF%E8%BD%89%E5%BC%B1-%E5%9C%8B%E4%BA%BA%E7%B5%90%E5%94%AE%E7%BE%8E%E5%85%83%E5%A2%9E%E5%8A%A0-110258097.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-20T11:02:58+08:00"
+      "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5WUjAxTXN0S2FqTmtpTlRhMGI5YlF6ZXIxRkZvMmw2dlNxVk9nRzVHSHZKM1lRYmw4RHJ0ZnJiaXVqZEpBNkFKZHVSdzB4RXJZa0RjVlRyTzI?oc=5",
+      "source": "自由時報",
+      "at": "2026-11-20T11:02:58+00:00"
      },
      {
-      "title": "台幣狂貶！市場疑出口商惜售美元 央行駁斥",
-      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E5%B9%A3%E7%8B%82%E8%B2%B6%EF%BC%81%E5%B8%82%E5%A0%B4%E7%96%91%E5%87%BA%E5%8F%A3%E5%95%86%E6%83%9C%E5%94%AE%E7%BE%8E%E5%85%83-%E5%A4%AE%E8%A1%8C%E9%A7%81%E6%96%A5-115852293.html",
-      "source": "Yahoo奇摩新聞",
-      "at": "2026-11-20T11:58:52+08:00"
+      "title": "台股重挫拖累新台幣！早盤貶破33元後止血　匯銀主管曝關鍵支撐 | 財經 | CTWANT",
+      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFB1ZWJVTUlLaXFRQnUwX2UzcGl0d3BmTk9rUG9ZRVJucUdnU04zc0dqSnYyOEJJampqMTB4OVZncFVmTUhXa3ZVRXlnUE9OMGvSAVRBVV95cUxOV3NGcWV5Vnh4VjkteDlxYmJNVlB4OUJtZUNncWtLTVlDbnpoUHMyRWtaRVlxYzVBTFhKQ0Z6bm9KMGtCMTFyeUh0TlU2YmR4MC1Sc0I?oc=5",
+      "source": "CTWANT",
+      "at": "2026-11-20T09:14:58+00:00"
      }
     ]
    }
   ],
-  "at": "2026-11-20T12:12:52.519184+00:00"
+  "at": "2026-11-20T14:12:19.359068+00:00"
  },
  "main_source_titles": [
-  "Treasuries Eye Longest Rally in Five Months on Haven Demand",
-  "2026臺灣週吸引近4萬人次 拚2030年債市規模衝破3.8兆",
-  "Japan core inflation soars to highest this year as energy subsidy expiry pushes up consumer prices"
+  "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+  "Treasuries Eye Longest Rally in Five Months on Haven Demand"
  ],
- "headline": "美債避險需求推升 10 年期殖利率下滑 1bp 至 5.05%",
- "rate_note": "台股與亞太市場急跌引發避險需求，偏向壓低長端利率——資金流入美債推升債券價格、壓低殖利率。10 年期 11/19 收盤 -1bp 至 5.05%，市場已在反映。",
+ "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+ "rate_note": "Warsh 稱 AI 支出推升經濟促使聯準會考慮 12 月升息，偏向推升短端利率；但 AI 對經濟的影響時點與路徑不明，長端方向取決於通膨與成長預期如何演變。10 年期 11/20 -7bp 至 4.98%，市場還沒反映升息預期升溫。",
  "recent_mains": [
-  {
-   "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
-   "titles": [
-    "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
-    "US Treasury sanctions three people linked to Southeast Asia scam centers"
-   ],
-   "at": "2026-11-19T23:46:50.485264+00:00"
-  },
   {
    "headline": "Fed 縮減 2027 年地方員工調薪幅度，最低下限降至 1%",
    "titles": [
@@ -435,34 +426,36 @@
     "Japan core inflation soars to highest this year as energy subsidy expiry pushes up consumer prices"
    ],
    "at": "2026-11-20T12:12:09.214314+00:00"
+  },
+  {
+   "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+   "titles": [
+    "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+    "Treasuries Eye Longest Rally in Five Months on Haven Demand"
+   ],
+   "at": "2026-11-20T14:11:30.627273+00:00"
   }
  ],
  "archive": {
   "2026-11-20": {
-   "headline": "美債避險需求推升 10 年期殖利率下滑 1bp 至 5.05%",
-   "text": "11/20 美國公債市場出現避險買盤，推動殖利率下滑。台股 11/20 暴跌 6.23%、單週累計跌幅達 17.66%，創 1991 年以來最大單週跌幅，引發市場恐慌情緒。亞太股市同步承壓，投資人轉向美債等避險資產。市場目前仍處升息循環，聯邦基金利率目標區間維持在 3.75–4.00%，市場定價 12/9 會議升息一碼機率達 97%。¶日本 10 月核心通膨年增 2.2%，創 2026 年新高，高於 9 月的 2.1%，但略低於市場預期的 2.3%；整體通膨年增 2.3%，高於 9 月的 2.1%。能源補貼於 9 月到期，加上伊朗戰爭推升進口能源成本，10 月能源價格年增 2.2%，燃氣價格年增 5.8%。日本央行總裁植田和男 11/17 向國會表示，央行關注日圓疲弱與原油價格上漲對家庭實質所得的衝擊；市場預期日本央行 12 月升息 25 個基點的機率達 72%。\n11/19 聯準會主席 Warsh 在舊金山召集AI工作小組會議，表示美國經濟處於「轉折點」，但AI對經濟、利率與通膨的具體影響時間與方式仍不明確，他正透過專家團隊蒐集意見。\n11/19 AI實驗室Anthropic計畫11/20進行首次公開募股定價，估值達1.4兆美元、可能募資64億美元，聯準會因科技業支出龐大考慮12月升息以抑制物價上漲。",
-   "rate_note": "台股與亞太市場急跌引發避險需求，偏向壓低長端利率——資金流入美債推升債券價格、壓低殖利率。10 年期 11/19 收盤 -1bp 至 5.05%，市場已在反映。",
+   "headline": "Warsh 召集 AI 專案小組會議，稱美國經濟處於轉折點",
+   "text": "11/18 聯準會主席 Warsh 在舊金山召開 AI 專案小組會議，稱美國經濟正處於轉折點，但 AI 何時、如何影響經濟以及對利率與通膨的意義尚不明確。Warsh 主持會議多數場次並挑選講者，暗示白領勞工可能面臨大規模失業，但多數問題留給專家討論。AI 實驗室 Anthropic 計劃 11/20 為 IPO 定價，估值可能達 1.4 兆美元；AI 企業大舉支出促使聯準會考慮 12 月升息以減緩科技業推升的物價漲幅。同時美國民眾對 AI 部分面向轉趨負面，11/3 期中選舉多州通過措施減緩 AI 必需的資料中心建設；前商務部長 Raimondo 稱此為「非常令人不安的跡象」。¶11/20 美國公債迎來五個月來最長連漲走勢，避險需求推升債券價格。市場在全球股市動盪、台股單日重挫逾 6% 之際湧入公債避險，帶動殖利率下滑。此波公債漲勢反映投資人在風險資產劇烈波動時轉向固定收益資產尋求保護，與近期股市恐慌性賣壓形成對比。\n日本10月核心通膨率升至2.2%，創2026年新高，能源補貼於9月到期導致消費者面臨伊朗戰爭推升的能源成本，汽油價格較前月躍升5.8個百分點至年度高位。\nIMF總裁喬治艾娃於11/19深圳APEC峰會警告，全球對AI硬體的爆炸性需求正推高消費價格，加上中東戰爭能源衝擊，預估2026年全球通膨率達4.7%，促使各國央行升息，輝達等晶片商的「循環融資」規模已達約1兆美元且三分之二為債務。",
+   "rate_note": "Warsh 稱 AI 支出推升經濟促使聯準會考慮 12 月升息，偏向推升短端利率；但 AI 對經濟的影響時點與路徑不明，長端方向取決於通膨與成長預期如何演變。10 年期 11/20 -7bp 至 4.98%，市場還沒反映升息預期升溫。",
    "links": [
+    {
+     "title": "Peterson: The Fed's chairman sees an AI revolution coming. Now he has to figure out what it means",
+     "link": "https://www.cnbc.com/2026/11/16/kevin-warsh-fed-ai-jobs-productivity-interest-rateshtml.html",
+     "source": "CNBC",
+     "at": "2026-11-19T20:18:47+00:00"
+    },
     {
      "title": "Treasuries Eye Longest Rally in Five Months on Haven Demand",
      "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOdVdKYnk3ZUtXTER3VDhFcTRqcHdrbWZhS3BYY2hEQ1JFRFZ0VEZoNEtxS1ZuM0h0Zmhod0E0VS1qWWhPaHBXRl83bVRNZEpvMzdXQlhXNzBlRndqdFdGWk84VlNPcHJQSzVKLW0xY3AzbHFGUFVkLWdBanhvdUJSWG42T1cwRW9tMzFMR0pnbF83emtmRkNPVTIzMWxzVG4tc3Vfb3NEWmd2ZWZaaExz?oc=5",
      "source": "Bloomberg",
-     "at": "2026-11-20T11:35:35+00:00"
-    },
-    {
-     "title": "2026臺灣週吸引近4萬人次 拚2030年債市規模衝破3.8兆",
-     "link": "https://tw.stock.yahoo.com/news/2026%E8%87%BA%E7%81%A3%E9%80%B1%E5%90%B8%E5%BC%95%E8%BF%914%E8%90%AC%E4%BA%BA%E6%AC%A1-%E6%8B%9A2030%E5%B9%B4%E5%82%B5%E5%B8%82%E8%A6%8F%E6%A8%A1%E8%A1%9D%E7%A0%B43-8%E5%85%86-120003755.html",
-     "source": "Yahoo奇摩股市",
-     "at": "2026-11-20T12:00:03+00:00"
-    },
-    {
-     "title": "Japan core inflation soars to highest this year as energy subsidy expiry pushes up consumer prices",
-     "link": "https://www.cnbc.com/2026/11/20/japan-inflation-cpi-october.html",
-     "source": "CNBC",
-     "at": "2026-11-20T01:49:03+00:00"
+     "at": "2026-11-20T13:23:03+00:00"
     }
    ],
-   "at": "2026-11-20T12:12:09.214314+00:00",
+   "at": "2026-11-20T14:11:30.627273+00:00",
    "weekly": false,
    "points": 2
   },
