@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T22:10:25+08:00",
+  "at": "2026-11-21T09:41:03+08:00",
   "modules": {
     "labor": {
       "current": {
@@ -335,7 +335,7 @@
             "value": 4.530599954563863
           },
           "exp5y5y": {
-            "value": 2.15
+            "value": 2.1
           }
         }
       },
@@ -712,7 +712,7 @@
         "metrics": {
           "dgs10": {
             "label": "10 年期殖利率",
-            "value": 5.04,
+            "value": 4.92,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -720,7 +720,7 @@
           },
           "dgs30": {
             "label": "30 年期殖利率",
-            "value": 5.4,
+            "value": 5.31,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -728,7 +728,7 @@
           },
           "tp": {
             "label": "期限溢酬",
-            "value": 0.6919,
+            "value": 0.6957,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.08,
@@ -736,7 +736,7 @@
           },
           "ig": {
             "label": "投資級利差",
-            "value": 0.93,
+            "value": 0.94,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.05,
@@ -744,7 +744,7 @@
           },
           "exp5y5y": {
             "label": "長期通膨預期",
-            "value": 2.1,
+            "value": 2.12,
             "unit": "%",
             "delta_unit": " 個百分點",
             "threshold": 0.03,
@@ -947,7 +947,7 @@
       "inflation": "高"
     },
     {
-      "at": "2026-11-20T22:10:25+08:00",
+      "at": "2026-11-21T09:41:03+08:00",
       "vintage": "labor:2026-10|inflation:2026-10|2026-09|fomc:2026-10-28",
       "name": "傾向緊縮",
       "regime": "inflation",
