@@ -23,170 +23,14 @@
   "active": true
  },
  "seen": {
-  "41ca09ef44df": "2026-11-01",
-  "4ce3643cd6ec": "2026-10-31",
-  "4682f891a6ab": "2026-11-01",
-  "8ad4c787f8a9": "2026-10-31",
-  "236179fb103b": "2026-10-31",
-  "5459971c7114": "2026-10-31",
-  "3ffcc17d4a6a": "2026-10-31",
-  "e48bf7dc1f72": "2026-10-31",
-  "acd6ff88b271": "2026-10-31",
-  "3f72bf15ebb5": "2026-10-31",
-  "d49bbffa200a": "2026-10-31",
-  "11672eb07871": "2026-10-31",
-  "3eae8c900817": "2026-10-31",
-  "2702a33030ed": "2026-10-31",
-  "a0ca852d755a": "2026-10-31",
-  "434bc2cc14c9": "2026-10-31",
-  "813a736e5b7c": "2026-10-31",
-  "05deb296d3be": "2026-10-31",
-  "2e20c4c3064d": "2026-10-31",
-  "ffb17d587f6f": "2026-10-31",
-  "b83ea794a45c": "2026-10-31",
-  "552854888564": "2026-10-31",
-  "e9b1a88d9de8": "2026-10-31",
-  "16631ac77d33": "2026-10-31",
-  "95f1b11dfb6c": "2026-10-31",
-  "95136eab66e8": "2026-10-31",
-  "dcbf569f81a7": "2026-10-31",
-  "8972178b6a6c": "2026-10-31",
-  "fae2a08bc0ae": "2026-10-31",
-  "ecac1c777d68": "2026-10-31",
-  "4b4c089579ba": "2026-10-31",
-  "2d1185473297": "2026-10-31",
-  "f7cbf78ca8fc": "2026-10-31",
-  "45c4d568540f": "2026-10-31",
-  "723ae3a623fe": "2026-10-31",
-  "2814a70697ad": "2026-10-31",
-  "9455c2974c29": "2026-10-31",
-  "154504bfbe73": "2026-10-31",
-  "ef6ecafd0b6a": "2026-10-31",
-  "0143e7c63e78": "2026-10-31",
-  "d9ee0ac38ceb": "2026-10-31",
-  "2516358dfc99": "2026-10-31",
-  "770f28611a2a": "2026-11-01",
-  "b0979a9aa1a2": "2026-11-01",
-  "d0552e43f904": "2026-10-31",
-  "7031f0c6adaf": "2026-10-31",
-  "ab137ec0050b": "2026-10-31",
-  "53fe6f78b454": "2026-10-31",
-  "bbae22344b77": "2026-10-31",
-  "ed6b0dfb10a3": "2026-11-01",
-  "0976b14c62fa": "2026-11-01",
-  "2b48dabe8430": "2026-10-31",
-  "3fcfb13e364a": "2026-10-31",
-  "b107660a0a83": "2026-10-31",
-  "fe96b9fe2d60": "2026-10-31",
-  "151eecc1c615": "2026-10-31",
-  "251c34a1b14d": "2026-10-31",
-  "a44dcd75846a": "2026-10-31",
-  "ee72809032d1": "2026-10-31",
-  "738ef41d75af": "2026-11-01",
-  "992ded153dc8": "2026-11-01",
-  "b1e12833d2ce": "2026-11-01",
-  "45a3246d57a4": "2026-11-01",
-  "44ea51898159": "2026-10-31",
-  "8aabbf5dee01": "2026-11-01",
-  "bdf0e584b335": "2026-10-31",
-  "aefdde1c4d31": "2026-11-01",
-  "bd2107d883f4": "2026-11-01",
-  "c3a1ae6f766d": "2026-11-01",
-  "8ee2201bbcd6": "2026-11-01",
-  "7470dab1c616": "2026-11-01",
-  "a1644ec96532": "2026-11-01",
-  "fdbe826bf442": "2026-11-01",
-  "b47c0c841f88": "2026-11-01",
-  "4ce378fad45b": "2026-10-31",
-  "f225632588db": "2026-10-31",
-  "16be332c35b6": "2026-10-31",
-  "6c5f858718b5": "2026-10-31",
-  "37825ebf26bc": "2026-10-31",
-  "a0867e37c861": "2026-11-01",
-  "571b20d33fa6": "2026-11-01",
-  "70d9a7fef3a5": "2026-11-01",
-  "aed0336200fd": "2026-11-01",
-  "f2361dadd132": "2026-11-01",
-  "e26afb94ec52": "2026-11-01",
-  "095f47a56b79": "2026-11-01",
-  "2af55fab4508": "2026-11-01",
-  "5c89e611c065": "2026-11-01",
-  "5dee0aa7e8b0": "2026-10-31",
-  "b2de76b11484": "2026-10-31",
-  "d60d6c10d892": "2026-11-01",
-  "e76ce93ed5ff": "2026-11-01",
-  "c93975e215d1": "2026-10-31",
-  "9bc0125cd49d": "2026-10-31",
-  "e57a5465ea7b": "2026-10-31",
-  "f9cbe1f85845": "2026-10-31",
-  "3ece751ae3a3": "2026-10-31",
-  "c5d98c8e33b6": "2026-11-01",
-  "0eb072978e70": "2026-11-01",
-  "8bbf049635c8": "2026-11-01",
-  "0b86edd6c1e9": "2026-11-01",
-  "e4119b489c79": "2026-11-01",
-  "ea005fcf3690": "2026-10-31",
-  "569701991d8f": "2026-10-31",
-  "d871e697934b": "2026-10-31",
   "33fc36dc5661": "2026-11-02",
-  "32ae5bd657af": "2026-11-01",
-  "3436abf01494": "2026-11-01",
-  "491c8576db14": "2026-11-01",
-  "744e374db45e": "2026-10-31",
-  "bb1a06523f84": "2026-10-31",
-  "c8fbfaa77800": "2026-10-31",
-  "1858ee1d4500": "2026-10-31",
-  "8eb401353125": "2026-10-31",
   "5c70499ca1b2": "2026-11-02",
-  "e579c7fdba44": "2026-11-01",
-  "540491754c1d": "2026-11-01",
-  "3cbb96de098d": "2026-11-01",
-  "ca6204d2679d": "2026-11-01",
   "a657ee2413e1": "2026-11-02",
-  "7453dcc43247": "2026-11-01",
-  "120bdc5df873": "2026-11-01",
-  "a6f38ee04504": "2026-11-01",
-  "8c16a9069149": "2026-10-31",
-  "254a0f0ca80f": "2026-10-31",
-  "16e0650b7298": "2026-10-31",
   "ea7d5e390af1": "2026-11-02",
   "984210649136": "2026-11-02",
-  "45edb0582a66": "2026-11-01",
-  "fb7025c5ca8a": "2026-11-01",
-  "4de80f801d90": "2026-10-31",
-  "4186604dea05": "2026-11-01",
-  "7b5e6a189a68": "2026-10-31",
-  "9e04318f1fd2": "2026-10-31",
-  "84669d2c4b37": "2026-11-01",
-  "5324f4f49bae": "2026-10-31",
   "f9a7570921f7": "2026-11-02",
-  "3db117660e58": "2026-11-01",
-  "280559befa81": "2026-10-31",
-  "a2393f3e3fc6": "2026-10-31",
-  "a42927ba7fd4": "2026-10-31",
-  "b066e9ad566b": "2026-10-31",
-  "7c3e6e4a6062": "2026-10-31",
-  "948e249d57ce": "2026-11-01",
-  "c755f5e49e9f": "2026-10-31",
-  "dfda558467ee": "2026-10-31",
-  "b735125cbc31": "2026-10-31",
-  "0a3da80baf47": "2026-10-31",
-  "9666aa1b98da": "2026-11-01",
-  "f0479a36dc7b": "2026-11-01",
-  "87a6ed0435d4": "2026-11-01",
-  "2e9705451cc4": "2026-10-31",
-  "4a7582c3f0cb": "2026-10-31",
-  "19fd67463f79": "2026-10-31",
   "d5bde39feb30": "2026-11-02",
-  "2bb2f7d4858f": "2026-11-01",
-  "08645b0390e6": "2026-11-01",
-  "f00652d4ba18": "2026-10-31",
-  "69c3f29687fc": "2026-10-31",
-  "b952eb7af42a": "2026-10-31",
-  "bf123a190595": "2026-10-31",
-  "cbd82af14c1a": "2026-10-31",
   "6fc23865bfec": "2026-11-02",
-  "614234485072": "2026-10-31",
   "ff167b5e0d56": "2026-11-02",
   "dcd163312870": "2026-11-02",
   "e87752a6b052": "2026-11-02",
@@ -200,15 +44,7 @@
   "5ffd7af3ec4f": "2026-11-02",
   "77b31632d345": "2026-11-02",
   "f5a10addb5f2": "2026-11-02",
-  "1c9ac462ecb9": "2026-11-01",
   "e89b8f7c82f9": "2026-11-02",
-  "f8db6215082a": "2026-11-01",
-  "2c6fc7a8f37a": "2026-10-31",
-  "aab031461373": "2026-10-31",
-  "4ae588d08ed7": "2026-10-31",
-  "8a5dcfb780ca": "2026-10-31",
-  "9844b14fdebf": "2026-11-01",
-  "10795be697de": "2026-11-01",
   "83d10b38e6a4": "2026-11-02",
   "4dcb14e8365f": "2026-11-02",
   "209b93df35c9": "2026-11-02",
@@ -228,9 +64,7 @@
   "63c4ad5438d9": "2026-11-02",
   "ccd74a1242a3": "2026-11-02",
   "761ba5d70ce8": "2026-11-02",
-  "85fc256a6c75": "2026-11-01",
   "cb24f05dda93": "2026-11-02",
-  "22575bd8fdac": "2026-10-31",
   "abdf49dabb38": "2026-11-02",
   "5bec1a2e477d": "2026-11-02",
   "9551b96e2a42": "2026-11-02",
@@ -243,14 +77,9 @@
   "6c197d615b9e": "2026-11-02",
   "858c775187e1": "2026-11-02",
   "fa4ee0d0a031": "2026-11-02",
-  "eb1c7daa330c": "2026-11-01",
-  "bb7c0d4167ab": "2026-11-01",
-  "d82f727d70e7": "2026-10-31",
   "f6f63f8d6129": "2026-11-02",
   "4234eea87ad9": "2026-11-02",
   "dce43904e7b5": "2026-11-02",
-  "4ed2d534d82b": "2026-10-31",
-  "77d07a36417a": "2026-10-31",
   "ae9d36ca8a2f": "2026-11-02",
   "6495114bbf7c": "2026-11-02",
   "171e5a95fa9d": "2026-11-02",
@@ -268,7 +97,6 @@
   "7b18db9c0638": "2026-11-02",
   "2e653581d88f": "2026-11-02",
   "cf4f0c212b87": "2026-11-02",
-  "29ae6b8bb7c9": "2026-10-31",
   "831f74c9cf7d": "2026-11-02",
   "1c8e0636abaf": "2026-11-02",
   "a5fa0e78a30f": "2026-11-02",
@@ -341,7 +169,6 @@
   "dbcadce4af7a": "2026-11-02",
   "66f071a51460": "2026-11-02",
   "2bb59ca7df08": "2026-11-02",
-  "d75c960d6a5d": "2026-10-31",
   "371ea324db65": "2026-11-02",
   "56a5c4253fb2": "2026-11-02",
   "ebe904b34ab6": "2026-11-02",
@@ -358,7 +185,6 @@
   "122ab1fbb3c6": "2026-11-02",
   "1c6598b7ee5d": "2026-11-02",
   "6f2304fa3c84": "2026-11-02",
-  "016ff2493b4b": "2026-11-01",
   "2cd7b2123750": "2026-11-02",
   "e58fc1fb931e": "2026-11-02",
   "77f398698bcf": "2026-11-02",
@@ -372,8 +198,6 @@
   "6e05b3862d79": "2026-11-03",
   "5f070d2e90ef": "2026-11-03",
   "2170be6f837a": "2026-11-02",
-  "b7d03c717364": "2026-11-01",
-  "b7aa8deb6de1": "2026-10-31",
   "a9cc5a0384ef": "2026-11-03",
   "32c7d4174c96": "2026-11-03",
   "c68dce4fa8c7": "2026-11-03",
@@ -426,7 +250,6 @@
   "3d43febaeecb": "2026-11-03",
   "026ed661830b": "2026-11-03",
   "9d38cc59c69e": "2026-11-03",
-  "14e3cf451fb2": "2026-10-31",
   "0ef1efa2d9b1": "2026-11-02",
   "ede2805a0f73": "2026-11-02",
   "952735569255": "2026-11-03",
@@ -447,12 +270,10 @@
   "c3d1b7bcd222": "2026-11-02",
   "9a1fae143f18": "2026-11-02",
   "638ca0886f85": "2026-11-02",
-  "7f8e37097faa": "2026-11-01",
   "dbb78ee8fad6": "2026-11-03",
   "000d81b4232e": "2026-11-03",
   "56ef35399293": "2026-11-03",
   "0e25da245587": "2026-11-03",
-  "a779d6c33a87": "2026-10-31",
   "f7634dc945f1": "2026-11-03",
   "23111ce4b42b": "2026-11-03",
   "82b8d9c47057": "2026-11-03",
@@ -545,7 +366,6 @@
   "33a028736e3d": "2026-11-03",
   "3c70414ea315": "2026-11-02",
   "e28704677398": "2026-11-02",
-  "39338cb8ed25": "2026-11-01",
   "6375f75b79bb": "2026-11-03",
   "7e4def1006c3": "2026-11-03",
   "0a6c8a6fdcca": "2026-11-03",
@@ -565,7 +385,6 @@
   "e4fc4ac237cd": "2026-11-03",
   "77458b16fdd4": "2026-11-03",
   "153bd54847eb": "2026-11-03",
-  "c3b6a1dc787f": "2026-10-31",
   "9660c9e8b346": "2026-11-03",
   "dc242b0b777c": "2026-11-03",
   "64d06badede7": "2026-11-02",
@@ -678,8 +497,6 @@
   "315dbb893000": "2026-11-04",
   "6ebafbb3285c": "2026-11-02",
   "df8fb8ddd7f6": "2026-11-02",
-  "c043f86f0456": "2026-11-01",
-  "89a8a7bf9db7": "2026-10-31",
   "a81fd322d0a2": "2026-11-04",
   "87c51da65513": "2026-11-03",
   "687ee4bfbcd9": "2026-11-03",
@@ -1495,7 +1312,6 @@
   "8fc03ebcccd0": "2026-11-07",
   "4e96822da19d": "2026-11-10",
   "5389ee924fe4": "2026-11-09",
-  "0a7195344446": "2026-11-01",
   "e7b4e5fe749c": "2026-11-10",
   "0b23748b2968": "2026-11-10",
   "dca7db2c3353": "2026-11-10",
@@ -2408,7 +2224,6 @@
   "e0bd3d6b89ca": "2026-11-11",
   "c90405b2028c": "2026-11-10",
   "06a5ba9df977": "2026-11-09",
-  "e97bff5933a8": "2026-11-01",
   "d20c6945f179": "2026-11-11",
   "7829df1ee9f8": "2026-11-11",
   "28cf7e0cf077": "2026-11-11",
@@ -2635,8 +2450,6 @@
   "8e961d659467": "2026-11-12",
   "13a248901f08": "2026-11-12",
   "cb282c7ea311": "2026-11-04",
-  "a4f7a5da01e7": "2026-10-31",
-  "ae2da058da4a": "2026-10-31",
   "5b15102b05c3": "2026-11-12",
   "7c5ae31ee63c": "2026-11-12",
   "1afe3e52a942": "2026-11-12",
@@ -2825,7 +2638,6 @@
   "b0f934c86cd7": "2026-11-06",
   "2a035bb86d4d": "2026-11-04",
   "d9a700e7bb15": "2026-11-02",
-  "406aba080568": "2026-11-01",
   "5890167316ab": "2026-11-12",
   "1d1482d1c52e": "2026-11-12",
   "3ebc03993b84": "2026-11-12",
@@ -5601,9 +5413,182 @@
   "0ad104c3f65a": "2026-11-20",
   "f95a8ff33adc": "2026-11-20",
   "87479b9e601e": "2026-11-20",
-  "b06021305711": "2026-11-20"
+  "b06021305711": "2026-11-20",
+  "67fa37e7770b": "2026-11-22",
+  "35e96f7e17ba": "2026-11-20",
+  "497c5d1657aa": "2026-11-20",
+  "840a2092d285": "2026-11-19",
+  "af1efb886b5d": "2026-11-19",
+  "0f77383d8cf7": "2026-11-22",
+  "14f45ebd4b91": "2026-11-22",
+  "6947111250b2": "2026-11-21",
+  "2a5a9e98f087": "2026-11-22",
+  "814fd05cd9e3": "2026-11-21",
+  "21ec35544a2d": "2026-11-21",
+  "afcf9854fe1b": "2026-11-11",
+  "0670ec1c668f": "2026-11-22",
+  "da6559e34490": "2026-11-22",
+  "e6e5fb47a477": "2026-11-21",
+  "fdb92a5e2cca": "2026-11-21",
+  "d607c0520cfc": "2026-11-22",
+  "50903a168796": "2026-11-21",
+  "03043fe7fb8f": "2026-11-20",
+  "05c0b2521fb2": "2026-11-12",
+  "7945b5982542": "2026-11-22",
+  "1a087ee0c73d": "2026-11-22",
+  "cc123f5c379b": "2026-11-22",
+  "676c508e2390": "2026-11-22",
+  "910e3a567736": "2026-11-21",
+  "4596ffe4ef52": "2026-11-20",
+  "187b56c6dd2a": "2026-11-21",
+  "0abe54768e22": "2026-11-21",
+  "d0d2561b39fa": "2026-11-21",
+  "777d9732583e": "2026-11-20",
+  "1f2f9f360f28": "2026-11-20",
+  "3624ff1f9d33": "2026-11-20",
+  "e5f19ed0cc44": "2026-11-21",
+  "e3b46d75fa75": "2026-11-20",
+  "ad674f5b5bec": "2026-11-22",
+  "3b93d11d8d03": "2026-11-22",
+  "c7726d3b60c8": "2026-11-22",
+  "b9720646c9da": "2026-11-22",
+  "e8dd0f125266": "2026-11-22",
+  "c4395f1db66c": "2026-11-22",
+  "8cb1b5fb578a": "2026-11-22",
+  "77658e67eb1b": "2026-11-22",
+  "50592ec01a8f": "2026-11-22",
+  "a02f3d1464c2": "2026-11-22",
+  "c66d9dc67c0e": "2026-11-22",
+  "26010ee0ea2f": "2026-11-21",
+  "e0f360e594e3": "2026-11-21",
+  "02605e448e7a": "2026-11-21",
+  "9de7fe9fe899": "2026-11-21",
+  "32277752954b": "2026-11-21",
+  "1835ffd895ab": "2026-11-20",
+  "a86555d3ed1f": "2026-11-20",
+  "3b3fae1dccf1": "2026-11-12",
+  "04a603115ba4": "2026-11-12",
+  "ea955c31e266": "2026-11-12",
+  "9213435be920": "2026-11-10",
+  "9d193c4c93d0": "2026-11-22",
+  "b77bca8dcdb0": "2026-11-22",
+  "469e6c2510cb": "2026-11-21",
+  "b2c9aca3aadf": "2026-11-21",
+  "9164b6977ff7": "2026-11-20",
+  "f0eb4e8ba8ff": "2026-11-20",
+  "0967d93a6b28": "2026-11-20",
+  "01af4fb68b40": "2026-11-20",
+  "f41be45920d8": "2026-11-22",
+  "938b8bd33ea7": "2026-11-10",
+  "afa60e12b2ac": "2026-11-22",
+  "1da00b67bcde": "2026-11-22",
+  "b1e2565558da": "2026-11-22",
+  "8e7d8d2b58fa": "2026-11-22",
+  "78ff3f4e52b6": "2026-11-22",
+  "7418bcb5cb94": "2026-11-22",
+  "e14eb6d188e6": "2026-11-22",
+  "c2cbe75c3616": "2026-11-21",
+  "afb6aca5d639": "2026-11-20",
+  "63360635fbd9": "2026-11-20",
+  "14f9f56ed1df": "2026-11-19",
+  "cabf0dcffea9": "2026-11-17",
+  "f699c4ded5e6": "2026-11-15",
+  "01c8fe8a979d": "2026-11-14",
+  "2d3f701c6850": "2026-11-22",
+  "c51fd8ae7810": "2026-11-22",
+  "f69e8f702dde": "2026-11-22",
+  "e3260314f1c8": "2026-11-22",
+  "5df8c822e5b1": "2026-11-22",
+  "9f8ab27ba90a": "2026-11-21",
+  "9ab29ecf1698": "2026-11-21",
+  "b2a9e09f7526": "2026-11-21",
+  "8ab6f0fc0f6e": "2026-11-22",
+  "7bd953e56b80": "2026-11-22",
+  "edbcf9930ba7": "2026-11-22",
+  "1ec00593ee48": "2026-11-22",
+  "d3c2299db091": "2026-11-22",
+  "dffc55abd4df": "2026-11-22",
+  "a7fd3b173d40": "2026-11-22",
+  "8fe5839d5ba7": "2026-11-22",
+  "3c73ddda98fd": "2026-11-22",
+  "d18fa4177228": "2026-11-22",
+  "f65a5b80eb07": "2026-11-21",
+  "499d0053999d": "2026-11-22",
+  "dc2304a38956": "2026-11-22",
+  "61934f81cb8f": "2026-11-22",
+  "fdc303284080": "2026-11-22",
+  "ff74e2336794": "2026-11-22",
+  "39c9c113f9cc": "2026-11-21",
+  "ad8dcd4f8bee": "2026-11-22",
+  "79c3e7e66adc": "2026-11-22",
+  "9302be81eac7": "2026-11-21",
+  "9fff8ad6f653": "2026-11-21",
+  "dbb9cbbf4149": "2026-11-21",
+  "eff35e1a967b": "2026-11-21",
+  "4e10735a85f4": "2026-11-20",
+  "1840b6cd5ad7": "2026-11-21",
+  "cf43c6844cce": "2026-11-21",
+  "2791d36b4452": "2026-11-21",
+  "d0f3fb6af92e": "2026-11-20",
+  "1bdb0531bd91": "2026-11-20",
+  "ab95e20d80f0": "2026-11-19",
+  "2b1b32d1d35b": "2026-11-19",
+  "f48d82def2d1": "2026-11-22",
+  "4b5a48c1ad6b": "2026-11-22",
+  "82f2b9270944": "2026-11-21",
+  "ec9e20436d88": "2026-11-20",
+  "d27347f6b219": "2026-11-22",
+  "188f50061de3": "2026-11-22",
+  "778eb2833c94": "2026-11-22",
+  "e893e02b10ab": "2026-11-22",
+  "2e2d1bcec6a6": "2026-11-22",
+  "daa772a4d1c9": "2026-11-20",
+  "8376f6bf1c3a": "2026-11-17",
+  "d3397a659007": "2026-11-16",
+  "40f399f2a289": "2026-11-22",
+  "0b1de7d4cdff": "2026-11-20",
+  "c5b8a9cfa3cc": "2026-11-20",
+  "01bc97327678": "2026-11-20",
+  "85998eb48885": "2026-11-17"
  },
  "events": [
+  {
+   "id": "6dea71716ebd",
+   "co": "Amazon",
+   "type": "融資／IPO",
+   "zh": "Amazon 以最高75億美元收購AI新創公司Decart。",
+   "date": "2026-11-22",
+   "links": [
+    {
+     "title": "Amazon closes in on $7.5bn deal to buy AI start-up Decart",
+     "source": "Financial Times",
+     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNTEFvVDlwcmNmNEl1WGpwZ3A3TzF3ZkNLSDFrUHA3XzY3REJxa3Jyc3pjUnVLdXdydFp3eTBYR1E1elQzVllDV1JQVzJENFNhV3RjVWl1eFB3dWFZS1BQWlRpTC1WZWZ1OV9CZmdhQnNtdmUxb25DWS16SEVodXVlRnBFUFQ?oc=5"
+    },
+    {
+     "title": "Amazon Decart Acquisition: Up to $7.5B Deal Explained",
+     "source": "shattered.io",
+     "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOYW1pRWNzR3AxOFYyVHRiYnZPU3lNUUdpQWJUU1FpbGg0d3dvNFZ1S0IwU2R4WkFBRHVuQ0dqVllaNUg0S1ZRS2VxMkt6czRuZHBFVkhfcGw1a2ZTcE1UUFBKX01mZmt1TUpvcnBaMkNkYXRRbzFteUlYekRUWFBfSDAxY1lwcm1RN1lxSVZ3?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-22"
+  },
+  {
+   "id": "cb98c492a40a",
+   "co": "Intel",
+   "type": "財報",
+   "zh": "Intel Q2 2026 營收成長 25%，資料中心業務成長 59%。",
+   "date": "2026-11-22",
+   "links": [
+    {
+     "title": "Intel Q2 2026: Revenue Up 25%, Data Center +59%, Stock Surges Then Retreats to $100",
+     "source": "TradingKey",
+     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPSTRQZEVBYzJNekhNS2NEYThtTnBoNEJCcWRZTS1SSFVXYnVfNjdpNndfd2xrWklfM2JvakdWTUdQNjdWaVFDaHl3bEo5WnpwUWZZQWlwdUpfUTZqbUR4R1hHdDhhLVowZU5IYnllc3ZkVTBHcDhGbzg0SERudlh6TVlNc3JPb2FjdkNjNFo1SmkzMFZHcmk0d1A5OERwMlFFeVhrQ1RuSVJVMmd1U3E1Z0toZWN6RWE2c1NkeU9ZejM5cGhJV0pxSg?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-22"
+  },
   {
    "id": "703cc3d531d2",
    "co": "Meta",
@@ -5636,6 +5621,22 @@
      "title": "OpenAI build no longer hinges on extra vendor deals, Oracle says",
      "source": "Cryptopolitan",
      "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBYR3pMM3VHZ2ZTMkZmcU53WlJqSTdETHhfd0Z3MUlpRlFDalNCbkFPTVBJMGxEeDF5N21NaDJIYm1KakRMOEZrMnpnYWJSUG81cnVOUWJDel9XSnVscF8yaHJjLXBpUnZPTktzdlJuTVo3NkxsT3UzNUowQWVKUQ?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-21"
+  },
+  {
+   "id": "7e6e11c9e508",
+   "co": "Alphabet",
+   "type": "算力合約",
+   "zh": "Google與SpaceX簽署300億美元合作協議。",
+   "date": "2026-11-21",
+   "links": [
+    {
+     "title": "Google Is Paying Elon Musk’s SpaceX $30 Billion. Jim Cramer Just Revealed Why",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNWEp2cFJpSnJhdDRCOGRqY3VoRzBpRXptZHdlUk8wLTJBZG82WGJIRWlLNEFMQTY2bU5IVFIxSUM3VzY0ckFlMHlfQkNHamwzLUZFVWxrODJxbGZhNXRHWm95aGl2ZWU1MDFIMEJ3OVpmVE5PeWNLcm1qTTRmTW9LN3owMzdNdTZTMXk5SGxxckNNcVcyNTY5V01n?oc=5"
     }
    ],
    "n": 1,
@@ -5718,7 +5719,7 @@
    "id": "8a3d5945b67c",
    "co": "Microsoft",
    "type": "資本支出",
-   "zh": "Microsoft在Virginia州Mecklenburg County規劃316.7英畝資料中心園區。",
+   "zh": "Microsoft 在Virginia州Mecklenburg County規劃316.7英畝資料中心園區。",
    "date": "2026-11-20",
    "links": [
     {
@@ -5757,6 +5758,27 @@
      "title": "Apollo, Goldman lead $44 billion SpaceX GPU debt financing",
      "source": "Reuters",
      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQaEhScEk2NU5wVFRpcDFmSXdjTko1Szc1YXM2Z0d0S3lvX2NTa0RVVTBGRkxROHA3UjdDOHR0Q3BmX0c4YzZka0Z2NTJrMWFVTU9NODNic1IxUjFxSkFLcGk1d29VZUI5TmJwVV82UV9xSFZEQm1KZTN4QlR6aldKaWZvZG5ITlRDVkM2RDNLVV8tSi1yTnBaT3hOXzFtRF9BdjNDZUVlbXdrMkVkUUk5cDZzaThIZw?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-20"
+  },
+  {
+   "id": "54f2346c0076",
+   "co": "Microsoft",
+   "type": "算力合約",
+   "zh": "Microsoft與Anthropic簽署472億美元Azure最低消費承諾協議。",
+   "date": "2026-11-20",
+   "links": [
+    {
+     "title": "Microsoft Stocks Fall 1.97% as Anthropic Debut Spotlights $47.2 Billion Azure Pact",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPbXpNLWRDMy1uTHF3YWNCakU5MjVJY3BpNWVkVDM4RjdsR2dBdHJNMVN4bHcwRUZCUm9sd0dIcHNZRFdBb2dZOUxQcjl3Q0lWSDM0b1V1NEphakFRTS03eWF6ZnpaNXJhbk55QWFYcmtuSk9xeDhRSEVWRVluRFlJU2R6eFRJd0JkamVXaGlkZTdQVGFZbUE?oc=5"
+    },
+    {
+     "title": "Microsoft Stocks Rise 3.16% as Anthropic Commits $47.2 Billion Minimum to Azure",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQUjYydkdoYU8zUG5ZeE14MGlWTm9abzhDUVRzd3NEZ2JXUzhjaURFT1ZneEJJMThaTy00dWREOUpmdEU5ekJCbFJaUHFSZ2hOOVg3cUVnWjdwdHJXUDZpWERFQk5aMm1vZGJBSGdmOE52b204NWpQbEZGdFo4X0NiWDVVa2ZfVFdyYkpoRVZ1bjBKX2REdVE?oc=5"
     }
    ],
    "n": 1,
@@ -6563,6 +6585,22 @@
    "first": "2026-11-17"
   },
   {
+   "id": "f952b4d8b96c",
+   "co": "Marvell",
+   "type": "算力合約",
+   "zh": "Marvell與Credo結束AI資料中心纜線專利訴訟。",
+   "date": "2026-11-17",
+   "links": [
+    {
+     "title": "Credo and Marvell End Patent Fight Over AI Data Center Cables",
+     "source": "finance.biggo.com",
+     "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAzZWFLTHhFcEFLNWpzU0dBOGFQZXFnNW50c0IyVVBTcl9kb1JON2xKNnNqT2s3WkpkR1JkMFF4TFhPUG1fclI2dC1BMUQ3LThEeFBWOWRKQ0dEOUVEeEFIeTh2TEp2aEszdkJvM25Jb2VWTnEzcHc?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-17"
+  },
+  {
    "id": "1c81e6351d10",
    "co": "Microsoft",
    "type": "算力合約",
@@ -6699,10 +6737,15 @@
      "title": "Alphabet stock: Google parent prices USD 3.8 billion Asia bond sale",
      "source": "ad-hoc-news.de",
      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPamdFbWpUeEtubmVKdHJ5ZVRHeTlLTFlPUjNid1hudGNGVHV3VFVtdUtlbHYwXzA5d1ExZV9lQW8yRU1LWkQ3eWtEbHBUZVpQRjZ1eVdha3pTVmxSYlloZmdHTHBXRlQ1VG9ONkZHbHkzTklncE9UZEZXS2ZZeTcwMk91aDdhRlp1ZlJHSFVTc0Rwc05HTlZGQ2tOZzBxbTFoY3RoandseTR6cHBRTGwzZ3JWVHVCYzhoUXNqTHlsVjdmVWNDVXBWYw?oc=5"
+    },
+    {
+     "title": "Alphabet Kicks Off Asia Bond Sale as AI Firms Face Scrutiny",
+     "source": "Yahoo Finance",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxORnNPVG94d3l2WUlCMEtTQmJ6c2V2RG5MOXRGbFp4ZmtjQU8yMXpPWG5WM05rWWd3dndrLXMteExKVjh0WVpSQklvR0gzMzlGZVR0NEtrNE4tY2M5OW1reGxWTEtTQjJtNmNNQnFiN1AzN3ZKNlJTekh3eEhJSVljUmFQODNMQ2h5em84V0xwcnUwQWt0TnBz?oc=5"
     }
    ],
-   "n": 1,
-   "first": "2026-11-16"
+   "n": 2,
+   "first": "2026-11-11"
   },
   {
    "id": "6e13c12ed38d",
@@ -7582,8 +7625,8 @@
      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxObTNFaGpFQ3ZPcTloYkZjSy1wcWd4M05sR01FWjhEX2w2TjFyN1RaVFY0dzNsSnlYTVo5d01pVlk0dUFfRWhBOVRNNnQ4WWl4SGp4SEtralhDTlFIbmY3dEpFbTJjRmFIZTJFai10XzB2bzhKWHk5UTBJOHk5bVRpbENuZzFwZGJManZKTjZ1X3J0Zw?oc=5"
     }
    ],
-   "n": 2,
-   "first": "2026-11-11"
+   "n": 3,
+   "first": "2026-11-10"
   },
   {
    "id": "03843e103fd2",
@@ -8027,131 +8070,52 @@
    ],
    "n": 1,
    "first": "2026-11-09"
-  },
-  {
-   "id": "93646b694af7",
-   "co": "Anthropic",
-   "type": "算力合約",
-   "zh": "Anthropic簽署34億美元協議，為AI數據中心採購燃氣發電設施。",
-   "date": "2026-11-08",
-   "links": [
-    {
-     "title": "Anthropic secures $3.4 billion generator deal for AI data centers, FT reports",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS3dmWWtwZTJMS0pBRzdvYVVabzBjUHNzQnlWVlF0T3B6U1JrZVhZSG9NZDRCaVlkQ1JvS1p1ZDR1bjVrRUdwMkVxX2NIN3MzbGpsZ2NPQ1RYSFJWRTNwM2J5akxsaWd0RXZ3RVpGTlN6TEFFalRERVRhYWE5d3lxOXBlcw?oc=5"
-    },
-    {
-     "title": "Anthropic Buys Power for AI Data Centers in $3.4B Deal, FT Says",
-     "source": "Bloomberg",
-     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQSi00VTRySXpJSXQwU3ZiRnZUYzk3MDYtTEJLZ3V0cm0zRlBMVDV1czVMalNRbmRldHhCSWNaaFNoMEpfZkI1dU9HVW9pVXN5VGhYQ1VwRV9UOVF4cmVTY0ViMFhwZll3NjNjVE9sTDZFM0xFUzRFZ1VuSE5WNXdweFdJaU1NaURWanYxUG1VRkQ3emo0clAwRFFya3BBUDVLWHVENjQ4SkdrdGU3Q1FYZGdR?oc=5"
-    },
-    {
-     "title": "Anthropic strikes $3.4bn deal to generate gas-fired power for data centres",
-     "source": "Financial Times",
-     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQaDhoaHlMZk8tNWhZWlFEczhOc1FpNnZjcnlZTF9MUDJrVG5mb2NvUkdzZlBldmx2YkhEMkQtdVRuaXpWYkhTcDd2N3VLWlFvLW81S0ttcWxKTUlkdXBOMWRNZUIzS0o4ZVM1Y1dpbUIxRG4waXdxRVlncjJiVTM2TGtTZ0g?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-08"
-  },
-  {
-   "id": "3b7cc37ce97f",
-   "co": "SpaceX",
-   "type": "算力合約",
-   "zh": "SpaceX簽署450億美元AI算力合約，新計算設施投資回報期不足一年。",
-   "date": "2026-11-08",
-   "links": [
-    {
-     "title": "SpaceX (SPCX) Lands $45 Billion AI Deal As New Contracts Recast Its Growth Story",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPdTQ3MGdxOWVJeWtRSXZzUDNib0JvRWxiVm9haXFBczdHX0lGYk43WXRUVVhMeERWcG00Q0lBTmRMWkZqbGx6VzV6OEM4TTFLcm1IQmtXUFkwUFJRVGhVOEZNaW9RWGMwekhGdWxHVng4WHFLeTJCZjB4VVZJRWwxSkZERkdLNUxYaXRfelMxWVdLdTUxTjRF?oc=5"
-    },
-    {
-     "title": "AI Power Stocks Just Fell 6.3% to 9.3% on Financing Fears. SpaceX Just Said New Compute Pays Back in Under a Year.",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPcWJJNlZLT3B1eFNadk5CVjFRRnRtYWlJU0ItUm1jbHlHUmZIeEExSjFxQndKal9Sc2hKcWtRNDdabkswMGpNT041UTZzUkJjN1BtdkNQMVJhOFdkZmxyamtpbmUtU192OFYtZC1MWXVsaDdseldJdEU1aW94RldVeDBralVxZTVmeEhPRFBUUFE0aVlY?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-08"
-  },
-  {
-   "id": "1d1de8d1a681",
-   "co": "Meta",
-   "type": "發債",
-   "zh": "Meta發行債券，具體金額未在標題中披露。",
-   "date": "2026-11-07",
-   "links": [
-    {
-     "title": "Meta’s Bond Sale Shows New Reality for Tech Debt",
-     "source": "Bloomberg",
-     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNN0h6NGhPQzBpZTdwV29ra0U5UUhycGhPb3FHT3JvUksyYTZFZjVPbVpBdURxeVMxM2dxS0Z1Y21XbVctWVY5Q3ltR09IOG9tNUdSMXZ5eUFHYUpaaWpaVGZoQzFvVnZOdUhEclJKVENTbVpNeFMwbC1pV1ppa3JhWjZMQzEtWkQ4UGlVWXJENXNWRGNEVEotZjBnMnJ6WFJzQWFTcnI1Wi1WZzAwXzRUdy1YMA?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-07"
-  },
-  {
-   "id": "8a8ea1dd189c",
-   "co": "Oracle",
-   "type": "融資／IPO",
-   "zh": "Oracle 以每股116美元價格出售100億美元股票。",
-   "date": "2026-11-07",
-   "links": [
-    {
-     "title": "Oracle Just Sold $10 Billion of Stock at $116 a Share. Is the Stock a Buy at That Price?",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQNXJSYTJaa21YN3pGUkRWSDk5Q3pteG1oVlcxOG40ZmpJbTRtaXdORUpoaVA3N0s5dV9fVVM1c2x0d0ZvcktpR1BOU2xWdC1BVzZOUTVIanVVbkQ0Y1lIcjB1LUZfVEg4VXQxSEJTeEJGRWZMSV9MaXpJV2NFNERTVnF2U0c5Y2dZckRYQTh1dVREYzhKSWln?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-07"
   }
  ],
  "impact": {
   "Microsoft": {
-   "hash": "1f0cf022ecd4",
-   "text": "Microsoft近兩週密集擴張AI基礎設施，發行250億美元債券、資本支出激增至452億美元、簽署多項長期算力合約與晶片採購協議。這些舉措偏向增加公司債供給、推升長端利率需求；同時大規模資本投入與訂單積壓反映AI投資熱度持續升溫，若基礎設施建設如期推進，則偏向強化AI市場領導地位，對股市與AI投資熱度構成正面支撐。"
+   "hash": "fb93c2ca6c7a",
+   "text": "Microsoft近期事件偏向推升公司債供給與長端利率。大規模資本支出計畫（逾千億美元級訂單積壓）與多筆數百億美元算力合約承諾，驅動其發債融資需求增加，已發行250億美元債券。若長期高資本投入持續，則企業債供給增加偏向推高長端利率。同時，AI基礎設施競爭激化與算力合約簽署，強化AI投資熱度，但資本支出延遲風險（IREN交付滯後）偏向對股市形成短期壓力。"
   },
   "Alphabet": {
-   "hash": "61235d105264",
-   "text": "Alphabet密集發債（逾150億美元）、簽署超千億美元算力與能源合約、資本支出大幅增加，偏向拉高公司債供給、推升長端利率。若融資成本上升，則可能抑制邊際投資回報；同時巨額AI基礎設施投入與能源鎖定協議，偏向強化市場對其AI競爭力的預期，支撐股市與AI投資熱度。"
+   "hash": "4db4eba11972",
+   "text": "Alphabet近兩週密集簽署算力合約與能源協議，資本支出大幅增加，偏向推升公司債供給。若這些長期能源承諾與數據中心投資無法迅速轉化為營收增長，則可能增加債務負擔，偏向推高公司債利差。同時，巨額AI基礎設施投資偏向強化市場對Alphabet AI競爭力的預期，可能支撐股市與AI投資熱度，但長期資本密集特性若引發盈利能力疑慮，則偏向對長端利率形成壓力。"
   },
   "Meta": {
-   "hash": "eb248cfeca5f",
-   "text": "Meta近期密集發債與融資，累計規模達數百億美元，主要用於AI基礎設施與核能電力投資，偏向增加公司債供給、推高長端利率。若市場將此解讀為AI投資競爭加劇的信號，則偏向強化AI投資熱度；但若融資規模引發債務風險疑慮，則偏向對科技股估值形成壓力。"
+   "hash": "6ad8b53e8225",
+   "text": "Meta近兩週密集融資與資本支出，偏向增加公司債供給、推升長端利率。150億美元債券用於AI基礎設施、950億美元融資規模、90億歐元歐債發行，反映其AI投資熱度高企。同時與AMD晶片交易、預付核燃料款項，顯示實質資本支出承諾。若融資需求持續，則公司債供給增加、長端利率承壓上升；AI投資熱度偏向升溫。"
   },
   "Oracle": {
-   "hash": "8d99b1c85d72",
-   "text": "Oracle近期大規模融資與資本支出計畫偏向推升公司債供給與長端利率。連續發行超1,500億美元債券、政府合約額度擴增至270億美元，反映其AI基礎設施投資需求龐大，市場需消化更多企業債供應。若融資規模持續擴張，則長端利率承壓上升；同時大額資本支出可能短期稀釋獲利，但強化AI競爭力，對科技股與AI投資熱度偏向支撐。"
+   "hash": "fff881b6ab14",
+   "text": "Oracle近兩週密集發債與融資，累計籌資超千億美元用於AI基礎設施，偏向增加公司債供給、推升長端利率。多項算力合約確保營收基礎，但Microsoft終止舊協議暗示競爭加劇。若Oracle債券發行持續，則長端利率承壓；大規模資本支出與融資規模偏向強化AI投資熱度，但債務擴張速度若超過營收成長，則可能引發信用風險關注。"
   },
   "CoreWeave": {
    "hash": "de616e800d95",
    "text": "CoreWeave近期融資與發債規模龐大，偏向增加公司債供給。強勁營收成長與戰略合約簽署提升市場信心，若投資人認可其AI算力需求前景，則有利債券發行；同時融資與業績表現偏向支撐股價，進而強化AI基礎設施投資熱度。長端利率面臨大額新債供給壓力，偏向溫和上升。"
   },
   "Anthropic": {
-   "hash": "3f9345b7f6e9",
-   "text": "Anthropic近期融資與算力擴張偏向提升AI投資熱度。IPO上市釋放流動性，吸引機構資金進場；34億美元長期能源採購協議顯示資本支出承諾，強化市場對其AI基礎設施投資的信心。若融資順利，則公司債供給可能增加以支撐擴張，長端利率面臨溫和上行壓力；同時AI領域融資活躍偏向推升科技股估值。"
+   "hash": "23319531ccc6",
+   "text": "Anthropic IPO定價區間偏向高端，若成功上市則科技股融資活動增加，偏向提升AI投資熱度。高估值反映市場對AI前景樂觀，可能吸引資金流向科技股，偏向支撐股市。同時大型科技IPO通常伴隨公司債發行需求，偏向增加長端利率上行壓力。"
   },
   "OpenAI": {
-   "hash": "0bb5c33f56b8",
-   "text": "OpenAI近期大規模融資與算力合約簽署，偏向增加公司債供給壓力。巨額資本支出（Effingham土地、晶片採購）與 Nvidia 等長期協議承諾，反映高槓桿擴張模式；第三季虧損擴大至109億美元，償債能力受質疑。若融資難度上升，則長端利率偏向上行。同時，OpenAI算力壟斷地位強化、營收達百億美元，偏向支撐AI投資熱度，但虧損擴大可能引發市場對其商業模式的疑慮，股市反應偏向震盪。"
+   "hash": "16e6d425dfae",
+   "text": "OpenAI近期大幅擴張算力投資與融資，偏向增加公司債供給壓力。逾千億美元的晶片採購與數據中心協議、150億美元融資及數億美元土地支出，反映其資本需求龐大；但營收百億美元對虧損擴大形成融資缺口。若融資成本上升，則長端利率承壓；同時巨額資本支出與虧損擴大，偏向強化AI投資熱度，但也凸顯盈利模式風險。"
   },
   "Amazon": {
-   "hash": "71270abcd890",
-   "text": "Amazon近兩週密集投入數據中心與AI基礎設施，涉及數百億美元資本支出，並透過Blackstone、Blue Owl等機構融資分散負擔。此舉偏向增加公司債供給——大規模資本密集項目通常需債務融資；長端利率若受基礎設施投資需求推升則偏向上升；股市對Amazon的AI算力佈局偏向正面，但高資本支出可能壓低短期獲利；AI投資熱度則因其大規模算力承諾而偏向升溫。"
+   "hash": "e0f1925dbd4f",
+   "text": "Amazon近兩週密集投資AI數據中心與收購AI新創，涉及逾200億美元資本支出，偏向增加公司債供給需求。若融資需求上升，則長端利率面臨上行壓力。同時大規模基礎設施投資與AI算力布局，偏向提振AI投資熱度。惟俄亥俄州項目面臨選民反對，若融資受阻則可能抑制債券發行。整體而言，Amazon激進的資本配置策略偏向支撐長端利率與AI板塊熱度。"
   },
   "Nvidia": {
    "hash": "c3c62f90b37a",
-   "text": "Nvidia近期事件對市場偏向混合信號。財報超預期與俄亥俄州資本支出投資顯示成長動能，偏向支撐股市與AI投資熱度；但Moonshot AI取消1.5億美元晶片租賃交易反映算力需求疲軟跡象。若租賃市場持續萎縮，則Nvidia營收成長可能放緩，偏向增加公司債供給壓力；同時Nscale大額融資競爭，偏向拉升長端利率。"
+   "text": "Nvidia 近期事件對市場偏向混合信號。財報超預期與俄亥俄州資本支出投資顯示成長動能，偏向支撐股市與AI投資熱度；但Moonshot AI取消1.5億美元晶片租賃交易反映算力需求疲軟跡象。若租賃市場持續萎縮，則 Nvidia 營收成長可能放緩，偏向增加公司債供給壓力；同時Nscale大額融資競爭，偏向拉升長端利率。"
   },
   "SpaceX": {
-   "hash": "76b9d1e4fd03",
-   "text": "SpaceX近期大規模發債融資逾千億美元，用於AI晶片與數據中心擴張，偏向增加公司債供給、推高長端利率。若市場對其算力合約與國防訂單前景看好，則可能支撐股市；但高殖利率反映融資成本上升與風險溢價擴大。龐大資本支出與融資租賃規模，偏向強化AI投資熱度，惟債務槓桿提升可能引發長期利率上行壓力。"
+   "hash": "0216ad5ae6b1",
+   "text": "SpaceX近期大規模發債融資AI基礎設施，累計發行超760億美元債券，殖利率超8%，偏向推升長端利率。龐大資本支出計畫（740億美元數據中心、融資租賃Nvidia晶片）與Anthropic簽署1,205億美元長期算力合約，反映AI投資熱度高漲。高債務融資需求偏向增加公司債供給壓力；若市場對AI算力需求持續強勁，則股市偏向受惠，但融資成本上升偏向制約獲利。"
   },
   "Intel": {
-   "hash": "e49c82163eae",
-   "text": "Intel 近期簽署多份長期算力合約，涵蓋 Microsoft Azure基礎設施、18A-P製程及EMIB封裝技術，並收購量子計算公司Classiq。這些事件偏向增強 Intel 營收穩定性與長期現金流預期，若訂單確認度提升，則公司債供給壓力趨緩；同時AI晶片與量子運算布局強化，偏向提振AI投資熱度與科技股信心。"
+   "hash": "1026648c1229",
+   "text": "Intel近期營收與資料中心業務強勁成長，多份長期算力合約與Microsoft等大客戶簽署，偏向提升公司現金流與償債能力，對公司債供給偏向寬鬆。資料中心需求旺盛與AI記憶體創新，偏向支撐長端利率；若Intel市場地位鞏固，則AI投資熱度偏向維持高檔。量子計算併購顯示長期技術佈局，偏向強化投資者信心。"
   },
   "Apple": {
    "hash": "5b449a35a6cc",
@@ -8159,15 +8123,15 @@
   },
   "TSMC": {
    "hash": "b07c2aba05d3",
-   "text": "TSMC近期事件偏向提升AI算力供給與長期產能擴張。獲得Microsoft代工合約、簽訂大額interposer訂單反映AI晶片需求強勁，偏向支撐股市；409億美元資本支出、政府補助1,676億新台幣、多年電力協議顯示融資充裕，偏向穩定公司債供給；投資Anthropic與OpenAI則強化AI生態布局。若產能利用率超100%持續，偏向長端利率承壓，AI投資熱度則偏向升溫。"
+   "text": "TSMC近期事件偏向提升AI算力供給與長期產能擴張。獲得 Microsoft 代工合約、簽訂大額interposer訂單反映AI晶片需求強勁，偏向支撐股市；409億美元資本支出、政府補助1,676億新台幣、多年電力協議顯示融資充裕，偏向穩定公司債供給；投資Anthropic與OpenAI則強化AI生態布局。若產能利用率超100%持續，偏向長端利率承壓，AI投資熱度則偏向升溫。"
   },
   "Micron": {
    "hash": "4892ab98bac6",
    "text": "Micron近期資本配置與客戶承諾偏向積極擴張。26份Take-or-Pay合約鎖定長期需求，降低營收不確定性，偏向支撑公司債供給穩定；Anthropic投資強化AI生態布局，若AI需求持續，則長端利率承壓；350億美元回購則偏向提升股東回報，可能吸引資金流向科技股，強化AI投資熱度。整體信號偏向樂觀。"
   },
   "Marvell": {
-   "hash": "f0e7b30b3e95",
-   "text": "Marvell連續宣布大型收購與合作，聚焦AI記憶體、推論加速及光學互連，偏向擴張資本支出與債務融資需求。若大型科技客戶（如Google）持續下單，則公司營收成長預期上升，偏向支撐股價；但鉅額併購融資需求偏向增加公司債供給壓力。整體而言，事件偏向強化AI投資熱度，但長端利率面臨融資競爭加劇的潛在壓力。"
+   "hash": "16c299b1fc2a",
+   "text": "Marvell近期AI算力合約與併購動作頻繁，偏向提升AI投資熱度。完成1,150億美元收購Lumentum、與Google達成客製晶片合作，強化AI光學互連與資料中心地位；與Penguin Solutions合作擴展記憶體加速應用；訴訟和解消除專利風險。這些事件若持續推進，則偏向增加公司債供給需求、支撐科技股表現，反映市場對AI基礎設施投資的持續看好。"
   },
   "Broadcom": {
    "hash": "7bd02f1eacc7",
@@ -8178,5 +8142,5 @@
    "text": "Tesla近期大幅增加資本支出規劃，宣布多項百億美元級投資案。此舉偏向增加公司債供給需求，若融資需求提高則可能推升長端利率；同時大規模產能擴張信號偏向支撐股市對其成長前景的預期。惟頻繁調整支出計畫可能引發投資者對執行風險的疑慮，對AI投資熱度呈現混合影響。"
   }
  },
- "at": "2026-11-21 09:41（台北）"
+ "at": "2026-11-23 07:07（台北）"
 }

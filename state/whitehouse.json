@@ -1,55 +1,5 @@
 {
  "seen": {
-  "d6824bc13750": "2026-11-08",
-  "77ad63c453c2": "2026-11-08",
-  "c5c27c3d1111": "2026-11-08",
-  "df3094a484ee": "2026-11-08",
-  "1458bdb37534": "2026-11-08",
-  "41f53b3b3029": "2026-11-08",
-  "63c92e66d534": "2026-11-08",
-  "89978dcd4173": "2026-11-07",
-  "d4c67e623f61": "2026-11-08",
-  "a77fd0f79b04": "2026-11-08",
-  "cc4a37da88f6": "2026-11-08",
-  "e36d4322ea65": "2026-11-08",
-  "5a996c798aec": "2026-11-08",
-  "ec6070ff0b7c": "2026-11-08",
-  "50387d47fd95": "2026-11-08",
-  "2f5a36d68407": "2026-11-08",
-  "9d1897f58dc9": "2026-11-08",
-  "30f0e48f0b66": "2026-11-08",
-  "001109a25569": "2026-11-08",
-  "61e52184cd63": "2026-11-08",
-  "45334fd3fcda": "2026-11-08",
-  "2459de80f4b1": "2026-11-08",
-  "614fb7e425dd": "2026-11-08",
-  "f735ae785ee1": "2026-11-08",
-  "4c37839c35d6": "2026-11-08",
-  "0adb0bb430b6": "2026-11-08",
-  "8ac5bdfa7492": "2026-11-08",
-  "deec964ab865": "2026-11-08",
-  "2a8cdb604ad0": "2026-11-08",
-  "p:fiscal_cr:1c43445546e5": "2026-11-08",
-  "p:fiscal_cr:a9a18cedf23c": "2026-11-08",
-  "p:fiscal_cr:7ae780a869a7": "2026-11-08",
-  "p:fiscal_cr:1f94ae513beb": "2026-11-07",
-  "p:fed_cook:fd3bbc9ee589": "2026-11-07",
-  "p:h200_china:6120d5454ac4": "2026-11-08",
-  "p:h200_china:bbca1b88f93c": "2026-11-08",
-  "p:h200_china:4fc97e710269": "2026-11-08",
-  "p:h200_china:46c515e17cb0": "2026-11-08",
-  "p:h200_china:1b475bec3802": "2026-11-08",
-  "p:h200_china:56a1bffa8265": "2026-11-08",
-  "p:h200_china:327c4d8d6f0f": "2026-11-08",
-  "p:h200_china:5fd4b3395bd7": "2026-11-08",
-  "p:chip_232:ffa7a9a4295a": "2026-11-08",
-  "p:dc_grid:30781b01317e": "2026-11-07",
-  "p:us_china_truce:6996cc919ded": "2026-11-07",
-  "p:us_china_truce:51592eb55231": "2026-11-07",
-  "p:us_china_truce:bb44f971b666": "2026-11-07",
-  "p:us_china_truce:36564ee1421f": "2026-11-07",
-  "p:us_china_truce:18f090378806": "2026-11-07",
-  "p:us_china_truce:efd923b56a72": "2026-11-07",
   "f0ce618b3823": "2026-11-09",
   "29d58a1db103": "2026-11-09",
   "431f727e8e3c": "2026-11-09",
@@ -59,8 +9,6 @@
   "632c85f8ecea": "2026-11-09",
   "4e14bf932aab": "2026-11-09",
   "8abb32664f46": "2026-11-09",
-  "ed06a2e4d1cd": "2026-11-08",
-  "0130785b2823": "2026-11-08",
   "7bdb602e48d7": "2026-11-09",
   "33b632f8fd90": "2026-11-09",
   "be79cd1e1afc": "2026-11-09",
@@ -86,9 +34,6 @@
   "p:fiscal_cr:cc6b63ed4299": "2026-11-09",
   "p:fiscal_cr:6c01e9691380": "2026-11-09",
   "p:fiscal_cr:f2f5a6127c34": "2026-11-09",
-  "p:fiscal_cr:7df7d9f739e9": "2026-11-07",
-  "p:debt_limit:8141b9e83aa1": "2026-11-08",
-  "p:h200_china:e3c3d425b30c": "2026-11-07",
   "p:h200_china:e653fc63a6a4": "2026-11-09",
   "p:h200_china:eea906382140": "2026-11-09",
   "p:h200_china:666d256e5490": "2026-11-09",
@@ -101,10 +46,8 @@
   "p:ai_preempt:ae84bf0faf51": "2026-11-09",
   "p:ai_preempt:70bdaf414636": "2026-11-09",
   "p:us_china_truce:2664d73921f7": "2026-11-09",
-  "p:us_china_truce:5bcc2c3a017d": "2026-11-07",
   "p:us_china_truce:55a8bd6937c8": "2026-11-09",
   "p:us_china_truce:d1dca904df83": "2026-11-09",
-  "p:us_china_truce:d4a9d256cde6": "2026-11-08",
   "e879f4809680": "2026-11-09",
   "827d341934d1": "2026-11-10",
   "1d5413a14309": "2026-11-10",
@@ -120,7 +63,6 @@
   "f558778ceeda": "2026-11-09",
   "7357b994ebe6": "2026-11-09",
   "7d2f4289bbb9": "2026-11-09",
-  "717989508d4e": "2026-11-08",
   "f996b93352e4": "2026-11-10",
   "a0dc8cf6483b": "2026-11-10",
   "c25590b1fc91": "2026-11-10",
@@ -149,7 +91,6 @@
   "p:debt_limit:813a2ed40f34": "2026-11-09",
   "p:debt_limit:afee0b93427f": "2026-11-09",
   "p:debt_limit:631585a9ae4d": "2026-11-09",
-  "p:debt_limit:18f6ff7370d4": "2026-11-07",
   "p:fed_cook:9a55d4d674cc": "2026-11-09",
   "p:h200_china:d23a692c47e3": "2026-11-10",
   "p:h200_china:5032dd7f7731": "2026-11-10",
@@ -172,8 +113,6 @@
   "p:us_china_truce:bc1a9e858e1f": "2026-11-09",
   "p:us_china_truce:e6208d8b5b3a": "2026-11-09",
   "p:us_china_truce:cc11c2880ba7": "2026-11-09",
-  "p:us_china_truce:936e4df743c1": "2026-11-07",
-  "p:us_china_truce:608f3976792a": "2026-11-07",
   "05de62f3674f": "2026-11-10",
   "47c5713b38eb": "2026-11-10",
   "7116d5726f16": "2026-11-10",
@@ -200,8 +139,6 @@
   "c95841a77a3a": "2026-11-09",
   "b374a227c36d": "2026-11-09",
   "341ac2930bb0": "2026-11-09",
-  "9cf5323d8c82": "2026-11-08",
-  "14110251222f": "2026-11-07",
   "p:fiscal_cr:f29c7ea5a9e2": "2026-11-09",
   "p:fiscal_cr:a41c1aada0ae": "2026-11-09",
   "p:fiscal_cr:7941efb22cc6": "2026-11-09",
@@ -234,8 +171,6 @@
   "p:h200_china:5e37fa3dfffa": "2026-11-09",
   "p:h200_china:e4bb16d65acf": "2026-11-09",
   "p:dc_grid:613199127fcc": "2026-11-10",
-  "p:us_china_truce:d80ca1aab506": "2026-11-07",
-  "p:us_china_truce:c0e469378d09": "2026-11-07",
   "6c2a3937845f": "2026-11-10",
   "p:h200_china:bea8f6e88587": "2026-11-10",
   "p:h200_china:659634952b8f": "2026-11-09",
@@ -244,19 +179,8 @@
   "p:h200_china:05ff411bb0c3": "2026-11-09",
   "p:h200_china:152e0a759fb1": "2026-11-09",
   "p:h200_china:73815ef88a8f": "2026-11-09",
-  "p:h200_china:7f4e7447535a": "2026-11-08",
-  "p:h200_china:31845e3ed48e": "2026-11-08",
-  "p:h200_china:615770d14b3c": "2026-11-08",
   "p:h200_china:a801462bd1ad": "2026-11-10",
   "p:h200_china:74aa2e1e8845": "2026-11-10",
-  "p:h200_china:4090c6934015": "2026-11-07",
-  "p:h200_china:76766018f4e1": "2026-11-07",
-  "p:h200_china:e9b139127958": "2026-11-07",
-  "p:h200_china:f064658dca72": "2026-11-07",
-  "p:h200_china:47231f869b00": "2026-11-07",
-  "p:h200_china:e93ec69cab5e": "2026-11-07",
-  "p:h200_china:d8cba69122c6": "2026-11-07",
-  "p:h200_china:33a4bde162d2": "2026-11-07",
   "3ebad9b1f331": "2026-11-10",
   "4112b02d07e6": "2026-11-10",
   "29b6e09e6786": "2026-11-10",
@@ -278,7 +202,6 @@
   "p:fiscal_cr:b7733844a9e8": "2026-11-10",
   "p:fiscal_cr:1a60274401b3": "2026-11-10",
   "p:fiscal_cr:c3cbc805959e": "2026-11-10",
-  "p:fiscal_cr:828b28e47b66": "2026-11-08",
   "p:debt_limit:b6fb07442b1f": "2026-11-10",
   "p:debt_limit:55abba94b6ae": "2026-11-10",
   "p:h200_china:9eb29837dc2c": "2026-11-10",
@@ -289,11 +212,8 @@
   "p:h200_china:bcd77a9dfe6d": "2026-11-10",
   "p:h200_china:33f46f10837f": "2026-11-10",
   "p:h200_china:4b5453e9191f": "2026-11-10",
-  "p:h200_china:414c458b863a": "2026-11-07",
-  "p:h200_china:7e160a0a75bd": "2026-11-07",
   "p:dc_grid:839045de6916": "2026-11-10",
   "p:gulf_lease:6f0e577d2517": "2026-11-10",
-  "p:us_china_truce:20c835907465": "2026-11-07",
   "9db60330410b": "2026-11-11",
   "70a199bbf204": "2026-11-10",
   "cbd7837965fe": "2026-11-10",
@@ -403,7 +323,6 @@
   "p:debt_limit:41f3551b7f33": "2026-11-10",
   "p:debt_limit:bcac09263993": "2026-11-09",
   "p:fed_cook:ca5d367b2c9f": "2026-11-09",
-  "p:fed_cook:40294679e2ea": "2026-11-07",
   "p:h200_china:9cb17a6fb5e3": "2026-11-12",
   "p:h200_china:df209db7a073": "2026-11-12",
   "p:h200_china:e0802ab4e18e": "2026-11-12",
@@ -541,7 +460,6 @@
   "p:fed_cook:78029d0a5543": "2026-11-10",
   "p:fed_cook:78c89cfd330d": "2026-11-10",
   "p:fed_cook:aa126a041d48": "2026-11-10",
-  "p:fed_cook:28828815b659": "2026-11-07",
   "p:h200_china:f77ccccaaec7": "2026-11-13",
   "p:h200_china:6d98d7de5504": "2026-11-13",
   "p:h200_china:e5964d49d0d4": "2026-11-13",
@@ -584,7 +502,6 @@
   "d0498bf10902": "2026-11-13",
   "0a547a45cad2": "2026-11-13",
   "cccaafd6e94f": "2026-11-13",
-  "adec56836dd0": "2026-11-07",
   "0b60326615e4": "2026-11-13",
   "32c8346e49dc": "2026-11-13",
   "0b4e440216c8": "2026-11-13",
@@ -608,7 +525,6 @@
   "ab75a3a37404": "2026-11-13",
   "eaf7b87a0ea3": "2026-11-13",
   "2762ae653848": "2026-11-12",
-  "ec1a150a9732": "2026-11-07",
   "p:fiscal_cr:b5a38cf873b6": "2026-11-13",
   "p:fiscal_cr:efec6735efe6": "2026-11-13",
   "p:fiscal_cr:9c3d7c1c716c": "2026-11-13",
@@ -1510,9 +1426,106 @@
   "p:us_china_truce:97542bf544fc": "2026-11-20",
   "p:us_china_truce:227edd5f8ae1": "2026-11-20",
   "p:us_china_truce:269e82dba6e9": "2026-11-20",
-  "p:us_china_truce:496d4494c312": "2026-11-20"
+  "p:us_china_truce:496d4494c312": "2026-11-20",
+  "e7967528fe63": "2026-11-22",
+  "02660f4909ac": "2026-11-22",
+  "71ab2dea03b4": "2026-11-22",
+  "5d39cd05ac67": "2026-11-21",
+  "76fa54b777c5": "2026-11-21",
+  "5768a94e13ad": "2026-11-21",
+  "534dd60a8726": "2026-11-20",
+  "866e268780d7": "2026-11-20",
+  "0686168a28dd": "2026-11-22",
+  "2541145de6d7": "2026-11-22",
+  "846d56105f00": "2026-11-22",
+  "16c125dd318e": "2026-11-22",
+  "94950d8be3f5": "2026-11-22",
+  "8cec45fd3744": "2026-11-22",
+  "8bced52f2d2c": "2026-11-22",
+  "77ed8668dca8": "2026-11-22",
+  "a2539a4d5a1d": "2026-11-22",
+  "bdf489ef8523": "2026-11-22",
+  "7deff4674b62": "2026-11-22",
+  "437bc31a0b1b": "2026-11-21",
+  "1f6b453e1532": "2026-11-21",
+  "73022599092b": "2026-11-21",
+  "113251f53e60": "2026-11-21",
+  "8578a4dc0985": "2026-11-21",
+  "39ec4af9e453": "2026-11-21",
+  "0bc96ff5edc1": "2026-11-21",
+  "539e527b49f0": "2026-11-21",
+  "f1f09db89295": "2026-11-21",
+  "4ff1cfd40d9b": "2026-11-21",
+  "87203a34cbb9": "2026-11-21",
+  "p:fiscal_cr:46a131bde4dd": "2026-11-22",
+  "p:fiscal_cr:b4b85807d920": "2026-11-22",
+  "p:fiscal_cr:b9d551d65660": "2026-11-22",
+  "p:fiscal_cr:afa2875070a0": "2026-11-21",
+  "p:fiscal_cr:310ac2dec395": "2026-11-21",
+  "p:fiscal_cr:04b01223cc93": "2026-11-20",
+  "p:fiscal_cr:289402ca7580": "2026-11-20",
+  "p:fiscal_cr:408bdad4bbb4": "2026-11-20",
+  "p:fiscal_cr:fe18a77741be": "2026-11-19",
+  "p:fiscal_cr:9851ed0c1e78": "2026-11-18",
+  "p:debt_limit:18b747568a6b": "2026-11-19",
+  "p:debt_limit:bfbd252844f9": "2026-11-18",
+  "p:fed_cook:11f5321e6e49": "2026-11-21",
+  "p:fed_cook:c57ae20db9df": "2026-11-22",
+  "p:fed_cook:d0669f19f040": "2026-11-21",
+  "p:fed_cook:0fc75726bf8f": "2026-11-21",
+  "p:fed_cook:265031cd37cd": "2026-11-20",
+  "p:fed_cook:b093808fab8e": "2026-11-20",
+  "p:fed_cook:3efe5d2a8417": "2026-11-20",
+  "p:fed_cook:9c2a28b0338e": "2026-11-20",
+  "p:fed_cook:f41ec0710723": "2026-11-19",
+  "p:h200_china:4a28ae4760b2": "2026-11-22",
+  "p:h200_china:23d7146d26e5": "2026-11-22",
+  "p:h200_china:8517e2a19149": "2026-11-22",
+  "p:h200_china:d83f486a4fa0": "2026-11-22",
+  "p:h200_china:b0cbaf4a38d4": "2026-11-22",
+  "p:h200_china:2592b7916688": "2026-11-21",
+  "p:h200_china:5b22c02885e0": "2026-11-21",
+  "p:h200_china:a96a05488522": "2026-11-21",
+  "p:h200_china:8626e9e2fb5a": "2026-11-21",
+  "p:h200_china:8081babd9049": "2026-11-21",
+  "p:chip_232:38942022c2da": "2026-11-22",
+  "p:chip_232:07de99ad7f61": "2026-11-20",
+  "p:ai_preempt:b6ef8e393bae": "2026-11-22",
+  "p:dc_grid:ce97c0328f70": "2026-11-21",
+  "p:dc_grid:34957bb4a177": "2026-11-17",
+  "p:dc_grid:334c894dd55c": "2026-11-17",
+  "p:us_china_truce:40a631f59ce6": "2026-11-22",
+  "p:us_china_truce:b13809a8b294": "2026-11-22",
+  "p:us_china_truce:0e935866ba33": "2026-11-21",
+  "p:us_china_truce:cf9f7c3cadba": "2026-11-21",
+  "p:us_china_truce:561e583557ef": "2026-11-20",
+  "p:us_china_truce:85417d90fe03": "2026-11-20"
  },
  "items": [
+  {
+   "id": "6f3c3cc2d92f",
+   "topic": "財政",
+   "channel": "記者會",
+   "zh": "川普表示將與民主黨合作，將信用卡利率上限設定在10%。",
+   "date": "2026-11-22",
+   "links": [
+    {
+     "title": "Will Congress cap credit card interest rates? Trump seeking bipartisan cooperation on the policy",
+     "source": "WGAL",
+     "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNNWZpSzVLYWtUZGtpWktObFJFRThBNlBzTHpMTVQ2bFM3UUsxbVJBSFhJRUtIMEdobTVxQmt6UzlIT2I5anNBMXdWNDdYd0pEOXJZX0R5SXRiN1dwd3Z0Mk1oTzZjb1FPOWVOWWxHTXVDaHJvQ0VBVlJ0a2taZnc5T2h1TFJWbjREd1NxM3Y0VjZwbGNTWVRrQkN3QTdvb1duUmFTNw?oc=5"
+    },
+    {
+     "title": "Trump Says He'll Work With Democrats To Cap Credit Card Interest Rates At 10%",
+     "source": "CUToday",
+     "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPQTlBbU9lSXM4dktrcDFYYXdJWmFlQV9QWjcwSFNfZm9JLWlCX0ZXM2pFdlpCWHJSX2hTVGVBa0pEMTVzWkM4WDU2Mi1GN0VROFd2RkdKSmxnd1lacUlnZTJEeVF2Rm84QmluVzBIX1A3RnB1Z2o3eXl6c1pFd2cyeFd4dDlQZnZuVjZwSEZIblBTb3VXY3RaZ0s1SjJqdVNrSVZEbGUtYzhsTFA0Z0tVQUs3UQ?oc=5"
+    },
+    {
+     "title": "Trump vows to work with Democrats to cap credit card interest rates",
+     "source": "CBS News",
+     "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBfbzctNUlGb3RpalZ0UDkzMGlQLWtpR01iSGdiMzV0ZmdIaGNOTXZETTVlYjk0Y0s1czVPdXFvbTVDckQtc3ljVHlkYmR2XzJfeGhpRXlsWU1rRjR3Q0JVV0JVaGZHdkhycG43WnJYdUJtbk56Mi05Y0x4X3Y?oc=5"
+    }
+   ]
+  },
   {
    "id": "dd4e2015b491",
    "topic": "關稅",
@@ -1573,73 +1586,21 @@
      "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxOeEV4Vm8xXzdoNjJrWHIyUE8tT1JBOWdoNjVlVjE3SVFZYmNSRUpfempwVHJZWEg4dU5Nbks4UFVIcy15aW1QZ2tkbVNWYnJHRElJLVBiMGhILVpBVGR2VGJIZHNxVDBHcHY1RXNoWUlVS2YwNmhyYjFBNTNiYmdmVldUOWZxbEF4NEgwM1BuaGZOT3VyT1MwNlpjTy1sYWVVWjhNSWV1U1ZqVV9kcnI5Vjl5cDlucXBQNk90c0hCQkhoVG9vcW10NUwwaGxHN2ZsU1pPTzc0MU9nWnp2NmNFenQ0cnZDT1dmcTRQREpqQlNMQQ?oc=5"
     }
    ]
-  },
-  {
-   "id": "956891876f3b",
-   "topic": "能源",
-   "channel": "其他",
-   "zh": "川普計畫推動加州外海油井開發，可能拆除現有鑽油平台。",
-   "date": "2026-11-15",
-   "links": [
-    {
-     "title": "Offshore oil rigs could be ‘toppled’ off California under Trump plan",
-     "source": "Los Angeles Times",
-     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNSTBCLURkUEY1ZnNpOExLTERsNzdvMEx3eEV5Z3RTSGwzLXdZYU9rdVlEQXZhOHpkbms4dW1uOGVTcTRvME5zR1h5aFBGWmZpaE5qNnE0WGlGQ0V4Y2dsc3hGZkYtUE4zUFVZVmxWaHFCZVRwb3FUUXFvSEhrdTlJZWxrZHR4RTdkYkFXZG9oYUZqM3lQLWNLMExqQ3pjT2JfRkFXM0t1S1kwV3luR3JSb0hzRjlDSlBxYklF?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "1ecfa15b8ef9",
-   "topic": "關稅",
-   "channel": "記者會",
-   "zh": "川普說不打算在中國之行中向習近平提出英偉達與晶片監管問題。",
-   "date": "2026-11-14",
-   "links": [
-    {
-     "title": "Trump doesn’t plan to raise Nvidia, spy issue during China trip: U.S. officials",
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFB6UE1LUUhxSWNHM2prcHlVQ0RCR01qVUc1b1VZMHcxZEFUajlaRnBveGY0NGsyV1Nycmw2UllWNHJWV0hmblJzWXpoNFQzaG95VTdnR1dtaXdPbVNCeWo0QXgyc2NiY1NfWFQtWG9n0gFzQVVfeXFMTlJHMHFJMWNWUzFuNGNtUHgxWUpkbDEyLWhUVlh5Z2gxd3JIdlUxTkJmU3V3RFBSM05OQ3NyNHpzQl9rNVdxel9LWW5vSGwwck56LVh3TVVnaUdNd2tKZWllZXpPZXloakJScGRYVFBuS1Y2bw?oc=5"
-    },
-    {
-     "title": "Donald Trump will not raise Nvidia spy issue with Xi Jinping at summit, officials say",
-     "source": "Financial Times",
-     "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPQkI1ZVNvLXc5RXBHWkJ0Z3p2UDNiM2I0Y0dFS2VEajRHaURMYk5lN0ZDQktjZnNqVTFkUHZCMHhGT0E2aGFkTFhOcm9NU2YxODlwNElTRDhXOURZWGFiczhhZEsyazlzYlN0Vi1WQVVKLVpRaXdmakJ6MUpuQUoxQ3NRQV8?oc=5"
-    }
-   ]
-  },
-  {
-   "id": "5b2dc412925d",
-   "topic": "能源",
-   "channel": "其他",
-   "zh": "埃克森美孚考慮重返委內瑞拉，測試川普石油交易承諾的實踐。",
-   "date": "2026-11-14",
-   "links": [
-    {
-     "title": "ExxonMobil eyes Venezuela return as reality tests Trump's oil deal promises",
-     "source": "NPR",
-     "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPaXQ1ajc3RHEyOWZZczBLUFFjTW5JUXBXb3NGdkpuc2JjclBVQWQ3N18xa2JfbHhUOF9IcGw2QS00R1J2QkFKVFBnUEV5bTZ1M0lQaE5ZVEpGcUJLS25NWFVqV0w3NF9XTWxEcmpLemU4S0dKZHAyel9ZUmpBMklzTk9md19VNDFqdXdBY2trSDJpeWo5dU9CV3V0NmI3OVFSdlRtTjdBY0t6RTZnQmJJUUFuNlVHUlk1VkFn?oc=5"
-    },
-    {
-     "title": "Trump’s Oil Grab in Venezuela Is Testing the Country’s National Identity",
-     "source": "The New York Times",
-     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE45T3U1RGpyMzNYbGczZTRycnZXYjBKcDdERms3WEtoT1JHYkN2R09HLTlpa0QyMlNONmNCcTU4U3drX084emNHakZlRXpfa1lESXBBeUZ1Y1BmUDNRYUl1MG10NzAtdGxjRFFfNzV0bUVKdFV1cWN0YTE1b3l1dDQ?oc=5"
-    }
-   ]
   }
  ],
  "summary": {
-  "hash": "ac1e667c0d00",
-  "date": "2026-11-21",
-  "text": "本週川普在亞洲簽署菲律賓、泰國貿易協議，惟細節仍待敲定；同時推動加州外海油井開發並與習、普承諾增產石油。近期關鍵日期為12月11日聯邦預算暫時撥款到期，以及2027年1月10日美中貿易休戰框架屆滿。"
+  "hash": "ae226a4f16de",
+  "date": "2026-11-23",
+  "text": "本週川普宣布與民主黨合作設定信用卡利率上限10%，同時在菲律賓與泰國簽署貿易協議。近期關鍵日期為12月11日聯邦暫時撥款到期，以及2027年1月10日美中貿易休戰框架屆滿。"
  },
  "suggestions": {
   "fiscal_cr": {
-   "date": "2026-11-21",
-   "note": "多則新聞顯示12月11日暫時撥款到期面臨停擺風險，民主黨考慮利用此期限對伊朗戰爭融資施壓，政策已進入協商階段。",
+   "date": "2026-11-23",
+   "note": "11月20日ABC News報導國土安全部已發生部分停擺，顯示政策可能已進入「協商」階段而非仍在「暫時撥款」階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMif0FVX3lxTE9ZbG5pRzBtX2tSRU1PQU9ZejlEeWw5dzZOZ21aSE9hNWVqZnpXN21DNmFGS0RYTk1LZGZNOU5lT3VSSWJ1TVI4M2o1RlhScTR1LTdqZ3AyUHpqOG9sV2J3dVlkQW8zQnk5OGpYTmVWWi1HblpoTHRsQUx2QXBUdVU?oc=5",
-    "https://news.google.com/rss/articles/CBMitAFBVV95cUxNcFhQUHJLaW5QRFp0V0tLR0VSeGRudU5lWVFFbmpMaU9ZZWFMcG9lM3RjNGdGelQ4X0lER0I0ZVFsazVHNUIwU2t2WnZtQlIwd0pGODItSDZXVlNlQ1FPUlowTG83dWFaVzQyTHBQRWZvLWZ4VUg3MUlSMFRmZElhTW9vTGxQUW15MVM5ZnpmVm8tSFNHWmYtRG9nUktNMFJhQl9lZktXbXJoNHBSV2FCSkRGeFc?oc=5",
-    "https://news.google.com/rss/articles/CBMitwFBVV95cUxNd1lHYW5oOWlkY2tZa3diVUhsTXBUbUtuZkQ0ZVNJa0lZMERKX3NOTHpxbXVuYTNZcXJkNjg0dlVKQXRCVzhVakR0aGZ5R0JJdk1BcTVGUHgwUS11d2dSaTZqX0x2aVh2VnNjTjZlVGlMSXgtTTZyR3ZidUdWWG5CVm5QbExrZ0tETGt2Tm11ZXFvcjRXZzJGdzBHN09vZ2xJbDV2QVk3aWFRWTAwY0ZmMG5LR2RHMkU?oc=5"
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxQY2NadzVjRlBLU2tCQjZpY3FRdE45T3dZaHEyQ3JkOWIyckpnZlFaVDRmcFMzSmdqcTJxQThPR0JoVUxjUTFBbzR2SzhyWnZDaEtDSlAxN2s5NkVKU0ZPQ2F5N2ZoMnMtdW8tZ21fdW9RdDBMY08wMTZqSDY3OFZRcWpGd1FqN2s?oc=5",
+    "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQbGl0SXNNYmZFLVRpQ2lCWDAtc0RvRl81UTF0S2FWeURwcTFGdUJmd1ZIX2pvZ2xidkNHNkc3blZyRW1QazJ2dE9pQUJyaWZJYmZ5T0R1ckpkV200NDlXYXdaZUlNbWJMRENWa08tU2lFTS1QRjkxdU1xVERiekllSTdKRjVmZjh6WEtyZVBSZkJZcEN1bmlpY1JtWHJTUTQyZHBFcUxpTnVjSWRkWXI4R0swV0I0NUNaNU5UM2VTcnZWeXlRa0trRmZOWXplNVZnaVZSWGxB?oc=5",
+    "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOUGt0cC0zQWNtaWpwNl9KTUk1NGZ5ckROMWIwMzhsc1RkcVVtSVNYT0NWcnZhUG5ZeFVQQUllRXRLdm80WEZTbG1uX0FUakp4OVlsQlhuRnlzamxxNlJfUHZWc2NqVHlNLUFXVlFKUHRFVWhQT1lGeEpPR1czbmN2STFBc1hzOGVYd3hB?oc=5"
    ]
   },
   "debt_limit": {
@@ -1651,40 +1612,41 @@
    ]
   },
   "fed_cook": {
-   "date": "2026-11-18",
-   "note": "多則新聞報導 Cook 拒絕出席白宮聽證會，可能導致白宮委員會調查進程延遲或改變。",
+   "date": "2026-11-23",
+   "note": "洛杉磯時報11月21日報導白宮聽證會被批評為「袋鼠法庭」，顯示白宮委員會調查已進行中，可能即將有調查結果。",
    "links": [
-    "https://news.google.com/rss/articles/CBMivAFBVV95cUxOM1NtWUNMZkwzRTVGdlFDeWRRZTktdEdHeERfa1d3bm9xa0V3OExFbmxPLW5ySklwT3NOWmlnc3h6RXBmQWFPUW5fcVVqVk5Ea21BS3NscWd2b2VRQjlsNGk4QktMcjZ2WmpLdllJLUJGN2RITG9HSklIME5EU2tuQlJzUmFwWEdlZ0M2bHcySWxpMVpNUk5PU3VKaVFmN0JkaHFNckFiZmxkdkJyZWVBeUFkR2RzbmR2T0VhTQ?oc=5",
-    "https://news.google.com/rss/articles/CBMiugFBVV95cUxQcjRiT3RTWFl2b1ZiY3RpRVpYUUNfNUozOHFWakNqSWdacDFGLVpOUU9XblJ4eEtSak0zWmpyc3gzdGNvY2x0Y2dDZ2V6ZUlDTlFkd2dHeHN1VWlRR3ZrT1lpWF9UdnVyM0RCOTZfQVRqbGktX3I2am9TYm42eVBncmRPQWljNjFMTkdPRmMtNjZTbE9UN1VfbWsybjZjdmVhaHgwSl9UOXJraWNNMWM0VnJ3R3gxREhQVFE?oc=5",
-    "https://news.google.com/rss/articles/CBMihwFBVV95cUxQcjNPSjA3c1FVdm0yalRuTC1zZUY4dTRDUXluZXBGYzhobEpfd3d1YWw5SFZpMjJrVk1sQ0g3Q0R2TjZlTDFucHpnLTUwVld4amVLMk40cnhicGF2SWZidVNTUm1aWkpWTlc1X1hEMDc5X2RHM2ltUHVXUzZDaFRzbnozME0tTUk?oc=5"
+    "https://news.google.com/rss/articles/CBMilgFBVV95cUxNbDFhM3QycTFaUVlMOVNGcG5ZZlBXeEV1aEJQUFU3OU1KS0ZwbGhyS2xGS050SFA1bzlqMHBmcnJubllZLWRqTGpraFl1d21CbXRTUHkyQXRqVWJNXzdoZ1A0eVpGUGlzNjFDVlJvWU5LdmtJdzFULUZaa2dBUkliXzg1RUQyellLZFpuSGF4ZXBVcU1MVHc?oc=5",
+    "https://news.google.com/rss/articles/CBMivgFBVV95cUxQSzJlYmp2cWRRTVJBeU9McWJoLU0tOExJX0Z5RUVmS2dEa0UwN2xOU2lRMWZUUzVZLXVoajR1eHM5OFhGR0k4cE12YUFrUEdSeWpUNEpneFpSOVRGRkF3bzhkRnhnMlVpR19lLWpnTDliR3laZG9nTU9lSDZuV0N6Y2ZVY2tQYkl1SURDUHdoTm16TEplNHp0UVJvanhWNmRsSnJZc2NMZWdaOGpKLWlidW9RRnZGWUhCQTJXT0FR?oc=5",
+    "https://news.google.com/rss/articles/CBMinAFBVV95cUxOcjZ1WGZVamhkd0MxRC1ST1dWeWN1bXpZeUVRWHUtRER0N0FSRjc1eDNoQ0lfZGpzWnlZMWFndjJXNUVObGtoTE55NnJjSk13MmVTaVRZTU9DODlkOXVGMnYzcjJQLXc3UlNKTWJzWjc3d29xcFdGSFM1ZVZuWXVJMkxDbTdtaWYwUjVzMV9HQ0tiVS1rSFRycjNxQ1o?oc=5"
    ]
   },
   "h200_china": {
-   "date": "2026-11-21",
-   "note": "Memeburn報導指Nvidia已停止向中國出貨H200晶片，顯示政策可能已進入「國會限制」階段的實際執行，而非仍在審議中。",
+   "date": "2026-11-23",
+   "note": "11月22日新聞顯示國會議員McCaul挑戰川普政府晶片政策，且Nvidia成立董事會級出口委員會、國會設定12月1日截止期限，表明國會限制法案審議進入關鍵階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiowFBVV95cUxPZ2MxY1g0UC1TeWt1VFlybUp0RkxhQVFDQmhqSkl2b3diT1lSR28wajRfSEhtNUtnQmliRVJqVzBPdGxCSHJMbFhjVkdYQ1NXOTBJRHh6ZFlFVmxTdHNLVjdReUpDbU1KTHc4OXdQOVRfUWxhOGE5TncxdWxlc2ZPNm9MRXl6UUVDeVdnTzB4SlRiMTI0bHNaNzNIVGVzNG5RalNV?oc=5",
-    "https://news.google.com/rss/articles/CBMieEFVX3lxTFBZY0VGNGFCdGNHVmYycjVUbzFUR0FXcEJrMndDTnJLVDR5Z0VmMHVwS2dTbE5WZTdudnJLNzZJbXdXdXpqUUxCSmR6cUVFeHN4SDV2Ykk1MHlhWGRpNnBoeEpsNnRTempqSzhmdGduNmRQRjFRRExuTdIBfkFVX3lxTE56cjI2TnhQdVVjLVdxdXFYN044dU1UNlZjTFN3eEFYaWsxOERGMmF2S0FsRERhQnBhdWJQekd1dl9tYzFSM1lhVFRPLTVPdlBQdmZfRGppT3lfVFRoZUd2Y29selZXVkRUcUt3bEhMZW53dUlSSlJiLTFWY3FQUQ?oc=5",
-    "https://news.google.com/rss/articles/CBMixgFBVV95cUxPR0FpWUJNQWpiZkw4Y21obm5jT09mamIyQjIyVFZSajR0MHFWdk9kTXV2dGVLNWZRYzliOG5BNmpTOXdPaml2QTBQMm5YeGpKYjJ4RDR1Y3RieEhJMklpaGtjWU1Sel9wLUxrSGlPZWU4V25rbVBQbjFxS0JEbkx4bndFVXZsb3FOVlRYdTJDTWhrc0xSUkx3dWJkMDc5dWFGbVNCMjdmY2RlNGU5OExWaGVPTEJNVzRaTHdTY2lXNVNwN0hYUUHSAcYBQVVfeXFMTTRIZWNhODVCNmVJcW5GSGhvWlQtRV8xN0xHQklvbk90cFJmUmVHU2o3RHZMWUpubW9FNGRKbnZZdDJwOEY5YjBJU0RGUHY5UFkwblRPYUZ4X0J2U1hITXl3SDY3dkRYUDI4Y3pDNkk3dDktcnZmS0lmUmMycnphbzBQSHhDM1lRcUpsaFcyMVhYN1FiY0ZYQXNWb3VFaHdqQ19OQXB5YTJ4MXYwU2FmR0dnUlRsSmJCdi05ZWVzcmR0UXR2SDdn?oc=5"
+    "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9uWGctZnF1dEtRdmN2WU9MS1N4Z0lSVWp6VnhZZW1XN1dDcWM0SlJJYlh1YWREcEtyZU0yLVFuNXVBcVRzZ21NUkNGRkRVWkZiUFE?oc=5",
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxPSEpYMndMckJ4Yk45NERxczJvS2JReTE0c1YyZEVtRE5BY0dUUHVsR2UwVi1OQnpUTVNVSDY1VmVGTDdjRHN4RVJuRVVXTV9uc2R1cmRoMlllNHV3OS1abWV3NjFtaTd5UDBpSnMzZjN1VjFBYkU2V0xBNEFrUk5PZ1BKYmszR2hGWm81SHl1eTFhTzBXb0RpbENZdkF4OEdzZVUzRmJabHN5aGl1eDNkQ0pR?oc=5",
+    "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBvVHZDTjl3c1Rfa0xhWkFYRXFwWXpVbTdpY1Vab0FzVHhocHdXRGVyMGVGYjN1MUYxREk5VEtHVHZGYXcyVTdBZjJ2QVc1SmZ0d3c?oc=5"
    ]
   },
   "us_china_truce": {
-   "date": "2026-11-21",
-   "note": "DD News報導中美同意關稅削減300億美元商品，顯示框架談判可能取得進展，但尚未明確指向正式協議或休戰到期日期改變。",
+   "date": "2026-11-23",
+   "note": "11月20-21日新聞顯示川普與習近平會面並達成多項共識（AI軍事合作、中國能源採購），暗示框架談判可能取得進展，休戰協議可能提前達成或延長條件已談妥。",
    "links": [
-    "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQSnJIY2MzcUJjNVY3MzNYaGxKYUIySGw3TzNnVjltNDBIS2JPOHV4Y1BTaDRTRTRxSWp3R0M4Z3VSeU1IWmdoTGl6SU15bHh6UkZobTZ3aWpxUmU5c2dsODBPTjI3V0NQTEhjMWZBWE1fZnNQVHdYcjdONk43LVhleEdaUEs2d0hsV3dqMURGRUcyQzZnTFduVGZuTmJMU0taYzNreTJ4c2ZqeWV6b0l2X1FCQm5SQllFa09PZFRIcGJ5aGs?oc=5",
-    "https://news.google.com/rss/articles/CBMivAFBVV95cUxOamxlU19pODktRktfNmluMUlTazBkS1B6RjlPRVZwUXZrbDVZOHJKUjlsMTlnOWVhbzFDenJqNHZ3dV9ULVBaSXlDSHhIZjdjMHNYaHNNWUhWcnBrbEo2LWxqVzBfYkxIWElKRHdHcndWMDNyWVVJdkQ5a0ZuVUh1dVdsTTNZNzYtQlpONDUtN096VVphamlJZGZ0ckZKal9xUXBuaFlpYnR4RThVYmlxSjluM3hzeVkwSmRtdg?oc=5",
+    "https://news.google.com/rss/articles/CBMigAFBVV95cUxObE1BdTNlUmFOMXRWNFgtaURvU1JmLXlBZlR4WFZkR194cEtjczJoenFfRVRiS1JJY296X0lSVGd3c0tuY0Z5RnV0TFpiV3B0TXlVdGcxbWFfYVJFdE9yS0tkanExdWNOTFFBZWYyb2dVNzRQTnRfQTctLUtGaXo0bQ?oc=5",
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTFBSZ0xCQ2RYT0RkUmphS2lTVmV1Qk5vYlRQcWpHUnVRcmEzMksyZDd2OTlRV19LaGtuNG9wa3BjWS15Skp3SWdJMEQ1ZGQ2Y3ZlNEVneU1sYkFZWi1LQTZJbWMyTDlwMHl3MktlMDVjVDlsckdDRmc?oc=5",
     "https://news.google.com/rss/articles/CBMijwFBVV95cUxNbjRmakxpd1g1a3NNcTFBLVBic1pIVjlVX2RWYzNPUzh3Tk1saFlnSDhIeU1ud3JVR2ltTlZjd2xBNmZWak15T1RJX0o4VktvbWMwcGd5eGQxT0VRVkVGV0pxei12NzFZdlFiUTFzcEstQktRRmY4NGhsdTYtOHFHSlRUUGtaV3V3ZVA4NGlSdw?oc=5"
    ]
   },
   "dc_grid": {
-   "date": "2026-11-20",
-   "note": "POWER Magazine報導五大電網營運商向FERC提交大用電戶整合方案，顯示主管機關徵詢階段已有具體回應，可能推進至規則草案階段。",
+   "date": "2026-11-23",
+   "note": "11月21日新聞顯示美國電網運營商提出新的資料中心併網規則，可能表示已進入規則草案階段；同時11月17日新聞顯示PJM提出加快流程至12個月，下一步日期可能已更新。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirAFBVV95cUxNYV9ET3JQY0tRNG1FMG05OUhXa2EyOVhQYV9NQU1TRVJfejlobVZxOVBTVmNEdV93cWljb2U4QW1POWJsVXlOeHRhN0lYbmxSQW1DWEM4MXVLSzFkTjBYSnpEWjBzYkpIeFBrc2N1QlJ1djZMb0JVeDhRdm1DV21LdzdUSFV5ZFNKRnV1QnZHOEExbmpValNVVTRTY1lOMGhXSXpoc29DYldaOE44?oc=5",
-    "https://news.google.com/rss/articles/CBMilwFBVV95cUxOQWdHY1llOVdVRUF1VDBDRjBVN0k0TEtSUVZMRkttcG5ZWWRIUWxLQk5uSTg3MFZwRkxheUNKLW11eXNIMTlULUc3TDJpNDZLcmFmWm9hcWhzaHJhaFd4dnQxUjlnU0JaWG9uTzlhemcyUi1FU1BwckxCWi1iQUNBNGE3TmREVWljSDdxeU9HdVVNMGVTS3I0?oc=5"
+    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxORGtzazhsbFdSWlRSWEhUZkpIRFp6ZWp0V2l1aVh4dWdZU1NmTnpSN0VzcU9kTnJKeFlxSk56QzZzLUtKZXZ5cVZ5ZjE5a3ZrQXFWbjE2bEhXV01qaGZiUlZfU3RRS2pFRGZZTGdEa2xfUUY0aHE5ZW81dVhkUldNWXd0TWg3WDZqaDJfbm1wcThFWnhoZWN3c1NXejZhUkthZDNxRURqTkNNbmV6UDhQR3RZZ1Q3UjQxajdzd3lBWDFoclYyNEp3QWt6dHNETjZBNG9JYVo5b9IB2wFBVV95cUxNWmJpdmRJRkxBMUxGUDlCam8tT0xxaElHcVJuWDluYS1FWU1pQlA1enBIUTlvZTZfdnlibVFmRGhyLVIzVHhKa0NtZFJwMFVnYi1tMTJaSzFDelQ4d28yVlVYRmtEekhfRUV5TUdwOXZ4M3N4QWNsbF9LU2x0MFhMQ2hCWG0ycFNNLTRDdWxlM0U5YkZmbDZJNzRRalNYU29TdTZvZG41eEpBSWFPcTJ0WUV6WFVGYlBsOTNiMFk1VnpRS1JaeEZOS01fMFVpZmFGT1hjMlVLMU5XbmM?oc=5",
+    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNODk0RTd4S0pqc0NzS3pjVjlRczRHcVhjeU85NmxIZkNMTWFwNkRWa0pJQmFIZnd3eTBEbUhCbURUWEpaejh6LTZQYWNrRjFRWVkwSFQtYU5pbHNrblBRZ3U4WDZWenR2MUdLbllyYmRLZGV4cXZrQUQyR2pBQVRkSE00dzIwNFR0RGxhc2FrVE1GQVo4SE5fYUpiN01nZG5DYnZUdDI0YUllRTY4c05VUS1xUUl5TEgzMVAwNm5xVHhhcUY3TzRyUnVmbXREWVg2ZUVyTVBhQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMikgFBVV95cUxOT1NTQTN3cEVpYTVBSEI4X1N4UUY0ZDZHbjRMYVNsMnFOTllzUUxZZmtfUVNnLWFmekJqcjFzdE9XU3Izay14V2gyVzVVc25JY1ZXdEhhS1M1RUNSOWZtWENYVDZmUE5SaS1QcTVPM0haODRDeERIQlFnSVhYeFhtcXVQU1hIakYxanhpSmNtRjlJdw?oc=5"
    ]
   }
  },
- "at": "2026-11-21 09:42（台北）"
+ "at": "2026-11-23 07:08（台北）"
 }

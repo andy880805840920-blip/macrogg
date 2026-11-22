@@ -692,7 +692,11 @@
    "bad": [],
    "auto_seen": {},
    "auto": {},
-   "auto_log": []
+   "auto_log": [],
+   "cons": {
+    "core_mom": 0.3
+   },
+   "cons_at": "2026-11-23T07:09+08:00"
   }
  }
 }

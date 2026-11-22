@@ -4502,83 +4502,64 @@
    }
   },
   "missing": [],
-  "epoch_at": "2026-11-21"
+  "epoch_at": "2026-11-23"
  },
  "reg": {
   "TX": {
-   "hash": "143b9f80f119",
-   "policy": "新州長上台前，德州加速核准資料中心許可證；新州長表示不反對資料中心但設定條件，議員計畫廢除資料中心稅收豁免並加強監督。",
-   "impact": "若新州長政策轉向限制性監管，偏向延緩後續許可核准；稅收豁免廢除可能增加營運成本，影響建設投資決策。",
-   "risk": "中",
+   "hash": "f39bdca12664",
+   "policy": "德州州長當選人Hinojosa傾向與Musk談判，暗示可能調整資料中心稅收優惠與許可政策；州議會考慮HB 1273暫停兩年新建大型資料中心並納入地方投票。",
+   "impact": "若HB 1273通過則新項目面臨延遲；若Hinojosa與業者達成協議則許可程序可能加速；電力成本分擔談判偏向增加營運成本。",
+   "risk": "高",
    "links": [
     {
-     "source": "Barron's",
-     "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPb0ZmOElxT0pSMW1rWVpydm1DMExJVzNfQ3FkS3M3VXM5dVNsamI2bTh5RTBhNGtiMnB2Y0VxVXpJdkN2NnJYOTlYOVBIZFJYbWpILWdaX1RZM0luX1IyRVNjR25YSlVieG5qZ3VNR2RlTWhNLWJSZUp0OGV5ejlkaXB3QQ?oc=5",
-     "title": "Texas Starts Approving Data Centers Again — Including for SpaceX",
-     "date": "2026-11-18"
+     "source": "The Texas Dispatch",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQclh6SXhfbzZ0WHl4MzZBSEpaakpreFd4RExYWTJSYmFnVmNCbmlyTXVQUTlPVlNvaDV5bVJCNGV0OFc3bkZ4cFNQa3FLb196M0FqQTVreWJvRW5QYTBGS0poamxTTGRlLVc0bEc3LVhvZi1UbW5TVFVQWmw4X25aMW9FRmxaQQ?oc=5",
+     "title": "House Bill 1273 Would Halt New Large Texas Data Centers for Two Years and Put Each One to a Local Vote",
+     "date": "2026-11-22"
     },
     {
-     "source": "Reuters",
-     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNNURMb2podnB3UVNJaXNFVkR1RzhINldCNmF4YlM3WDU0ZVZjZUc2ZGloRkJFU05DMmFrTWJJTWZKcVZhb3NGaVp1b00zVFJuaElEeFpMZDkwOFBSY3dBSk5qcWMyWWo3RlpEN19QX2x0UzNlY2lZRU5Ealp2N2RDRkh6b2J1VGFnanhhUVZUZ0NIZDhNMlg5aFZzRE45VnQ5Y2tPZHE2OUZjdkU?oc=5",
-     "title": "Texas resumes issuing data center air permits, regulator says",
-     "date": "2026-11-18"
+     "source": "Community Impact Newspaper",
+     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNX2RrM0lyb2dFMDNJT1VhUnJjMWNoZFQ5LW40Z1g3WFRDTFBpcWdsVkt4VTJLLUhzVXkzTVVIOWszNDJjVlZEWHpoVUZJRFV0LXh0OG5aTS1Ydy1GYWZHTmJSVmNQLWp0M1RBNDI2dEtsaE8yNmZXbjdmN1QxdkM0QmpnMHR0ZEgzemVJV0NQN2FDemdvTmhBU2wyV0hDWnBpdktFb3g5UnpzSEsyUGVEbWQzcXJyMjgwYXRyXzJCblpCNHhUaGdFeVoyYVREUkVIQnVF?oc=5",
+     "title": "Texas lawmakers signal plans to repeal state tax exemption for data centers",
+     "date": "2026-11-21"
     },
     {
-     "source": "CNBC",
-     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE0tOGxPQzZHWG4xcWROVjJPZTMyc2s0bEpfQU1naUozdGI3LUFrNlFRTGFYZmp6QURRbXhvTGozVTNlcDRHZVljR2JkOXZLUjFiaEh2bE83cmdFdElDU3lBZjh5TTFPYmNKRVNxenRVVFlyVGhSV0ZyangzT3ROTTDSAYQBQVVfeXFMT0FNVUkwanplZ2ZRa1M0V3ZsSDUxOGt0dVdGMElPZUpaV3FycXlVcmZyWXY2TksyOWlRejlZTjVnRzVnV19jdzN4WVM2dXJWY0ZaTWR4dVVsZ3UwWFZuZnhJYnItZ09ZSkstZzRUMVY1dXBpQWIyaU9ORWt5NS11cU5lZWlI?oc=5",
-     "title": "AI data center stocks and Musk's SpaceX decline as Texas governor result raises risks of a slowdown",
-     "date": "2026-11-04"
+     "source": "Fox News",
+     "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOZ2EybjlQYjdDRGFpNmVodnlrZFpMcDJXbGtXaWhxU2E2OWFhX294X05rSWZGS2o1ZmVPRWVuQU5uUjdpd3E3QjNHZU0wd3pBYTd3YXNjT3lmN1Q2bWRTT3VmOEViT2RfcWFwUS1hYWJyQ1JDdGRUM2xiX3I0aDUxcnhOOE9fOVNrMkEyalBOTlpkaG44MXQtcFpEWk5lQVnSAaQBQVVfeXFMTU5CUkFtRlc4VElRLVg2YTNJcGp5S2xrZHVYRXY5MjFaNlZsQUVLYnFod1VUNXRGd3phWVBZYVdPYk5SWVlyYVh2bmZ4VTFuSm9aX2hNUWxwME4zZ2l5d2RRX1IwVVp1ZTFzUURjMVBzR2VhUWZFd1pENHg1YUU0SzZOWXhQTWJONldfWUtoTzlla1dDeFVVTFRhdmsxTzZpVHVXdmY?oc=5",
+     "title": "'Economic populist' Texas Gov-elect Gina Hinojosa eyes talks with Elon Musk",
+     "date": "2026-11-21"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "WI": {
-   "hash": "8db3975b6af6",
-   "policy": "Appleton市實施12個月資料中心暫停令；州層級能源規劃辯論升溫，尚無明確政策方向。",
-   "impact": "若暫停令擴大至州層級或影響電力審批，偏向延遲Microsoft與Oracle專案的建設許可與電力接入時程。",
+   "hash": "5b259c45859a",
+   "policy": "威斯康辛州面臨資料中心建設與能源規劃的政策辯論，Appleton市實施12個月資料中心暫停令。",
+   "impact": "若地方暫停令擴大至州層級，偏向延遲Microsoft與Oracle資料中心的建設進度與電力併網時程。",
    "risk": "中",
    "links": [
+    {
+     "source": "Milwaukee Neighborhood News Service",
+     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOcGRsY2RFMTlzLXc4dGNqb0toZmFON2V3bnMwWlpLQzBRNmNiWHgtdGpfQ0JEU1hiNXZKeG8yblpIYU9wMjFJUVN0ei1Ic2FEa1d1QjY4elk2bUNMM0plbEhDSGtHTnNUZmxFYVE5aDV1Vlh3b2RucFJxSjhiQ3hVS0c2elR1UjkyYmlBWkY4ZVc5SjFWbmV4ZEQ4T0VxZnBLc0RRNXpmRFN5RzE1VUtDVjVqRUp1VXk2aHdyU0tScjg?oc=5",
+     "title": "Data center boom revives debate over how to plan Wisconsin’s energy future",
+     "date": "2026-11-22"
+    },
     {
      "source": "Finance & Commerce",
      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQRlF4dFNQaXI0bHZYYm9WOUdGeG9FSHpzNjZYclE0MlpBT3dpSkhqU0s0dmdfSnZVekJTSUlCMXNQOEZFZ25xTWpKX2tkN21UOHFTUVJnYXdGc2pHUzJRVGtTMTRCMTQ4YS0yNXh5cHJHYVRsVE1zMWNZcS0xZ0VHaGc3TWo4Y3MtRWJqZWIxYmFhS0R3?oc=5",
      "title": "Appleton, Wisconsin, approves 12-month data center moratorium",
      "date": "2026-11-20"
-    },
-    {
-     "source": "Wisconsin Watch",
-     "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNay1WM2luZGd1NEhPNHdDa2NwbTA0YVJNM0FzTkpyazZYM015TzdabUhsSklOTGtvdzJKWEZnWnJOWUdnYnJQamVWRExWcnF2blZZcmtVVW5aU1pudjRPVktEUTRfbHZLTlJHZlJXcHN4UHQxYWhvbU4ycDVPbjZ0bTdjbUlEMlBTUHlLbE02Vjl2S0JyMDh1b3RCaThFUFNpZUVjdzFjbGtlYVlvZk5YUTBoNVJtbUctWmpzdTA3dw?oc=5",
-     "title": "Data center boom revives debate over how to plan Wisconsin’s energy future",
-     "date": "2026-11-16"
-    },
-    {
-     "source": "NPR",
-     "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNU2FPUUZwb0VMVUUwVV9yLTNWSjRtZ3MybXhRR3JkeFNDbk5TY0cxRUJuei1Wdkh5YkE1d3d6OTBfc1l3elcxUTFBdy1TNkhDUjFvYklaelloNUpFSWxvRDI2bHR4dGdyaDJ3NDRPUTBQM1d3bmN5NmZyaHVVVjRjSWQ3QlVPMkdGT2ZrOXllN3J4WFBNZUVxV2tZdC1xbUEzcy1Gc1Y1eTJwWXRlTngzTA?oc=5",
-     "title": "Inside the massive data center tearing a Wisconsin community apart",
-     "date": "2026-10-25"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "NM": {
-   "hash": "f4ad3331bccc",
-   "policy": "州內出現反對資料中心的學生抗議與禁令呼聲，惟州長人選確定前政策方向未明。",
-   "impact": "若州政府回應禁令呼聲，則可能影響兩項資料中心許可與建設進度。",
-   "risk": "中",
-   "links": [
-    {
-     "source": "Broadband Breakfast",
-     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOYWFMN3lqaHlkUVBJWGYzd1NVRTcwZHREV3FxSkhXZmJTWl9XdnJjYW5HbEd0bDhqV0NIWkRhLU45Wld1TFJPc1VHMU1rdjE1Sm9mb2t1Nkc4cjh4S2NMUlJUMmk1b3ltLUFpNWQ1cjZ5MFhISjlnWWFhR2xnLVdIUTMwdWdkWHJGM2d1M2w2Y1dlSG9ub3ZR?oc=5",
-     "title": "New Mexico Students Protest Data Centers and Permitting Bill",
-     "date": "2026-10-29"
-    },
-    {
-     "source": "Source New Mexico",
-     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPWXpTY0Q1OXVvVGpqNzVTeWNZYWV5a3dneDBnXy1pWGNPQk56dk4tRGw2MVhHV01yVGoySmxDbmxQYm5CakZaSm80clFFVVdjejltMFIycGFoTmFJQkw5a2VtMkR4bmM5WngxOHgwUVNWSDk1enpDa2RnYktaWHZ5NmJlN2paeVJlNTBBWnZmdmxobS15NnRSOHc3Zkc0dGFBTWp3T29GQkp3UnUweFJjTnY0VF8wOTBWY0liY244MlA?oc=5",
-     "title": "New Mexico State University students and organizers call for statewide ban on data centers",
-     "date": "2026-10-26"
-    }
-   ],
-   "at": "2026-11-20"
+   "hash": "8bec1272a23b",
+   "policy": "",
+   "impact": "若州內出現反對資料中心的組織動員，可能影響政策環境，但標題未涉及政府政策立場",
+   "risk": "資料不足",
+   "links": [],
+   "at": "2026-11-23"
   },
   "IN": {
    "hash": "860470b5da35",
@@ -4617,11 +4598,17 @@
    "at": "2026-11-20"
   },
   "OH": {
-   "hash": "1a367e3d9e36",
-   "policy": "州議會考慮取消資料中心銷售稅豁免；提議將資料中心列為「公用事業」；擴大徵收權範圍；公用事業委員會提議資料中心補助低收入電費計畫。",
-   "impact": "若銷售稅豁免取消則成本增加；若徵收權擴大則土地取得風險降低但社區反對可能延遲；公用事業分類可能加速許可但稅負政策不確定。",
+   "hash": "d09c05a738c8",
+   "policy": "州議會考慮取消資料中心銷售稅豁免；洩露法案擬允許資料中心公司使用徵收權取得私人土地；AEP Ohio 對預留電力收費政策引發爭議。",
+   "impact": "若銷售稅豁免遭取消，營運成本增加；若徵收權法案通過，土地取得加速；電力費率結構調整可能影響營運成本預算。",
    "risk": "中",
    "links": [
+    {
+     "source": "Cleveland.com",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPUlVIZ3FXaEpzcHJJRWJqdFRMLUFBS3FPeWE5Ri1MT2QtQ3dLMG5mbl9Hc2FRazdQTlkyemhWMk14ZzhtTUMxcW1ybVBVT2pmTTZvZ1YtQmhDY0RudDFFV1FqcFJIUWplSkZjdS13NnB1emMxZVdfRGNmS3RVQk1jWl9fZ2hCMUk0ZDJEa0tlZ3NnYklEVlVraVNoT0FSUGdibmhfMkZhdjlOdnZjQUdtU0FmemdmRS1laFRfNnhZN3JFYWd5TUtqWk12cTA?oc=5",
+     "title": "How AEP Ohio’s data-center tariff charges for reserved power — even when usage falls short",
+     "date": "2026-11-21"
+    },
     {
      "source": "Ohio Capital Journal",
      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOdGFUdjZRSFNXMEpKbGxtcTFPVHoxa3NoLUpNVXcyNElPSDlocjVJQjJqUDlTUERodUhzbFFBbi14em1LVm5fd3dYTl9WUTZCRW1QcTRwcmxSS2EtQjRkZ002SGYyVEVZRVNrbUp0RnJnazF2aXZWUEJHN3EyZVQzNzdUNk9sVkY1RWJ4cmg2OThkcDBRcTg4Rnl4N3JlVGZVQTc4WF9MYzM3ZHRxZ1E?oc=5",
@@ -4629,24 +4616,18 @@
      "date": "2026-11-19"
     },
     {
-     "source": "news.lavx.hu",
-     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNNDY5VXB1U2FnNjhNRC1BaHZPM0tFRDIyVEtqQ3gwSVhZeTFDQWROa016RXhZU282QXJtVmMtdVFVd2VEOVlHYVpKTWphWkZzTHFxWVVJUTNhbXpzdk13c3FVRFhOSFAtQlJUMnhQYV9sOXFOdlZ4S2p4UmtVX0xiOTQ3c0dFdDJtcmVkUjFMZGFuVGZVTE1fTQ?oc=5",
-     "title": "Leaked Ohio bill would expand eminent domain for AI data centers",
-     "date": "2026-11-19"
-    },
-    {
-     "source": "WFMJ",
-     "url": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxQelJYN0x2XzBaOFNuVWZ6dGx5b1Rscl9OOUhfOW5ndDRoaVE2Mk9NY1psa0l5eHlVSktFWDA0WGw4RUNRUTc4N1BCOWNEVlZOR0RVZWtnWWtOeTVQMUQ2cTd3RzVKRXVvbjJDUjdqX1hJMFJ4V2k3N2pOWEVkcUJ4SHB2WFpTTjRNV21qT2FIQ3VQOGVxOTh4OVpSS2t3YllRblUzRkVPLVN2emQzVGhTcUFzaWxMejlUWm5VRnRQcFgyTm1qOFZocWxsZFRNNWo3M09ITk1EeGVaOFpQQ0N2elZGd25wZVhreXRWempjVU8?oc=5",
-     "title": "Proposed Ohio Bill that Would Allow Data Centers to Qualify as \"Public Utilities\"",
-     "date": "2026-11-19"
+     "source": "Tom's Hardware",
+     "url": "https://news.google.com/rss/articles/CBMixwJBVV95cUxPWDhxendxcDVzRVNBaFVyZDZlZVNUSFhhb3F4TDYzM2tRQ05JQkFtVUw4YTNfV25oSWszcnNNVHVESDlyaU95RFc2SFJnaUZvTU5kRXg0MkJkeFZGU01FakRqRGlDYUpfRFhUN3dWYmZNekZMWGd0dkxfYkNZTGg5MjljbXlJa3FJc2E4VC05SnhlbjFBREo4SDhQT3RfMnFJUVM3V0R4UUV2UWFDNEVVS2Z6X3p5S3V4Vm1RZXg2V3JVRno2LUlVV1dIMGRwZS1Ca2MzNy1IbGNpUW8yS1JnU1lfSVVvYTkzMnFoa0M3a0FXME1oMXF4RmtXTEZza0tZZmN3R2pUV1o2amJSd3JKNEVzYUdKNlB4WW1PZmRpdjJTUTJtdnBVb0NTY0lEbGlKeGs5MGhUZ080ejc3d3FWRk82OWdLeDA?oc=5",
+     "title": "Leaked Ohio bill could allow AI data center companies to seize private land for their buildouts using eminent domain law — proposed law would expand list of beneficiaries",
+     "date": "2026-11-18"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "MI": {
-   "hash": "fb046814cc62",
-   "policy": "密西根州議會推動資料中心規範制定；州政府考慮對公用事業與資料中心加強管制；部分城市實施資料中心暫停令。",
-   "impact": "若州層級規範出台，可能影響Oracle Stargate Michigan的建設許可與電力配置時程；暫停令範圍若擴大，偏向延遲完工期限。",
+   "hash": "5076cc6d4693",
+   "policy": "密西根州議員推動資料中心監管規則，州長當選人計畫制定相關政策；大學董事會核准研究運算資料中心，環保人士對能源法案提出異議。",
+   "impact": "若新監管規則涉及環保或電力要求，偏向可能延長Oracle Stargate Michigan的審批時程；環保推力可能影響電力供應協議談判。",
    "risk": "中",
    "links": [
     {
@@ -4656,19 +4637,19 @@
      "date": "2026-11-19"
     },
     {
-     "source": "WSBT",
-     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1EMnRselZDZnRJb0NXNXpnaHdlWmd0NFM5bmxTOVByMDV2R1I0MDVCWFBncGFQWWFrOHRxRVJoQnlqR25MQ3ZQd2t1ckZvdkZ0RkEzbXdWSGIxVUEwSTZPendhanpHUXppcnZUQjN6MWhMdUI3OWdlNE0ycnZ3eXM?oc=5",
-     "title": "Data center moratorium passes in Michigan City",
+     "source": "WWMT",
+     "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNN1Z1X2FoRzk2MlRpcHd4RVZtZ3I5MFdIbGxUbkNWS0p3blc5aU9QaFUxMlVhN3ExSzFLQXpkd3ZXMVhhdldaVmdocWQxR19vZGNGYlJvY04yZExKUkhMMk5ZaFR0SENHcTFWSmhtTEZBNUcyQ1g0OHdIMExQQUNxOTVWbVZkTFNHLUJqOU5jb1FqVEx5TXJmaFFPLVBkTW9XWGp4UVZFdEJfN1VWMk1oY0stMWttZ2UwN3VBZEZnVVVZQQ?oc=5",
+     "title": "What the incoming Michigan governor, legislature plan to do about data centers",
      "date": "2026-11-18"
     },
     {
-     "source": "nwitimes.com",
-     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQUV9wQW9JcGdVUGdmX0xEdUxiN042RXVsZUVWb1AtRUtNdFIxcUVZWTZGNm1LMVp3bmZNMGZMUllMdklZWFRKaWQ3Q0ZuTTEwZ1pZT2FBSTJQRTBrQ1VCVjFmRUM1cjJpQTFqb2duaThCZU1nbFJBd2tWX1lzU2FmT1lGRU5kbTJ1cWJtQ3BOV1VULTBuYThyOU9IMHFuWkRoYlIw?oc=5",
-     "title": "Michigan City implements data center moratorium, but it will not halt Google project",
-     "date": "2026-11-18"
+     "source": "Michigan Public",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNZ2FwWXZkMm1mNlRFYlhDMjVvSjB3eEFpSXBiSGpMOF9PWFlPUDlseXE2djAwN1pTME95ZHpNb01QbFNrUkZVXzJOZERERjhrRUN2MDhZNGxxWjJnTHZaM200cDlvRnNZbkUzOG5DNXN4d0dDVGtFem43cjlZbWJkTGItLWE3LS1BTTd0cFlOQzVpbEdEc1lwSC1PeHQ4R1g3Z0E?oc=5",
+     "title": "Michigan environmentalists push back as US Senate works to advance energy bill",
+     "date": "2026-11-19"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "TN": {
    "hash": "ec12a1371fb4",
@@ -4692,16 +4673,16 @@
    "at": "2026-11-20"
   },
   "NE": {
-   "hash": "59e6bfbcc748",
-   "policy": "州長 Pillen 表示內布拉斯加州基礎設施可應對現有資料中心需求，州資料中心工作小組向州議會提交建議。",
-   "impact": "若州議會採納工作小組建議，偏向支持現有資料中心建設進度；基礎設施評估結果將影響後續擴建計畫。",
+   "hash": "3ca311862032",
+   "policy": "州長Pillen表示內布拉斯加州基礎設施可應對現有資料中心需求；州資料中心工作小組向州議會提交建議。",
+   "impact": "若州議會採納工作小組建議，偏向明確基礎設施政策方向，可能加速或穩定Google與Meta資料中心建設進程。",
    "risk": "低",
    "links": [
     {
-     "source": "Omaha World-Herald",
-     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPRFNIV1lNcGZRdV9xWFVXZmtEWGVOWU03VHZYMEd4dTdYTFp2Z2pua2kyQ3VlWlBvY2t1SzliMzg5anNEU3VQMDVlMmpTMXV5d182TmMyTVpCTVZ0ckUzOU5HQld6QnprakJFRUpTVlZTUDZBVzgwUzRQOVoxekVzYUNnSnZ6cmR0UC0zd2ZqSHdIa3kzLUhldUl6dWQwS2hXc0M1dlJKdnZDMUk?oc=5",
+     "source": "Sioux City Journal",
+     "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPdV96YmJ4aTQ5NUt0TWNXWnhPM2xsbXJmVThnUEQtTnZadXdGQy1QbExxUG52WkZsaWNxaFQ5QnFZd1l4emVJalNlTUFkMkJiMVFES0o0c3RpakFvNEFEV2d4d3EtaGY3dEVWbzhKMlFTQ0RZTXlfeDRYOVRIbmh5ZzJzNUlNMEpFRmJySzZ4Z3d4dGxlMEtwczA5U3liMjZQbk82R3FUQ0wtWklwenhDaVBpb0tvRTdRX0E?oc=5",
      "title": "Nebraska's data center task force sends recommendations to Legislature",
-     "date": "2026-11-20"
+     "date": "2026-11-22"
     },
     {
      "source": "WOWT",
@@ -4710,7 +4691,7 @@
      "date": "2026-10-29"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "VA": {
    "hash": "e1b1db881aa9",
@@ -4728,9 +4709,9 @@
    "at": "2026-11-21"
   },
   "OK": {
-   "hash": "fa11456d7663",
-   "policy": "俄克拉荷馬州議會討論對AI資料中心的暫停政策，以應對電力消耗問題。",
-   "impact": "若俄州實施暫停政策，偏向延遲CoreWeave Muskogee專案完工時程；Google Pryor已近完成可能受影響較小。",
+   "hash": "c65acb1b43da",
+   "policy": "俄克拉荷馬州討論對AI資料中心實施暫停政策，以應對電力消耗問題。",
+   "impact": "若州政府實施暫停政策，CoreWeave Muskogee 2027年底完工時程面臨延遲風險；Google Pryor 已近完工可能受影響較小。",
    "risk": "中",
    "links": [
     {
@@ -4746,13 +4727,13 @@
      "date": "2026-11-16"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "GA": {
-   "hash": "223ff4afea9c",
-   "policy": "新州長承諾暫停資料中心發展，但沿海OpenAI資料中心計畫獲批准，政策方向存在矛盾。",
-   "impact": "若新州長推行暫停政策，偏向延遲Microsoft、CoreWeave、SpaceXAI等項目的許可與建設進度。",
-   "risk": "高",
+   "hash": "5c1a20c07802",
+   "policy": "新州長承諾暫停資料中心擴張；公用事業委員會將資料中心列為電費與停電問題的關注重點。",
+   "impact": "若新州長政策付諸實行，偏向延緩Microsoft、CoreWeave、SpaceXAI等項目的電力審批與建設許可進度。",
+   "risk": "中",
    "links": [
     {
      "source": "Just The News",
@@ -4761,42 +4742,23 @@
      "date": "2026-11-20"
     },
     {
-     "source": "The Atlanta Journal-Constitution",
-     "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9HM3hpcVNzc2c4bVBmRGlVeDlKczZyLVQ1eEJYRVdVQjZMcVNVN3gtelphdHpMeWE5UEx6S1pWZnpyNy1PcGNfNS1kTUJBUFlNMUo2bDRhN1plTnFYc01PVTBDa2I2T1c3REppYldweXVZQjB5?oc=5",
-     "title": "Site plan for giant OpenAI data center approved on Georgia coast",
-     "date": "2026-11-18"
-    },
-    {
-     "source": "The Atlanta Journal-Constitution",
-     "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9CRTItMEgxYnNlODJieEViRU83MEZxVkktNWFkS21MdGZvdW5mM0FiOGxUaFNRSkp1OWl1Y1NURVRXTkNMNFVaR3ZBMThEaERaMWZQT2tNclFEV2pQMU5jVVl3b3VYOFVwNVpz?oc=5",
-     "title": "How will Georgia's data center deluge fare after midterm elections?",
-     "date": "2026-11-16"
+     "source": "Atlanta News First",
+     "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPQzdnUWx4c3dwQlV1S1pLeFRBOWQxQlQ1bW4zcHYxQ2U4NWhqZUh0TGR6STFQTGxIeXVCR0xOQWQ0Qk81YzBTQzhQZFRNN19iZzVkeW40ZHhIamtIREYyMlJZR2h1VUJOMVpseU5xaW5KZHJMVGdRZVI1cVhXbU9mREVLd1RRZ3hQRXM0c1ZYZms0alppOV94djRtN1lrOUZWWHc0U00xNEtHSmFobkxEZUZzdjd1UDhPQ2IwMkJIc3RjNzBuZTI40gHbAUFVX3lxTE5jVW5xVHJ5dHREOXI5V3pDMGFJNEhZaUxHU1dRWnpIRldmQWlHakQ2bVVRaFFwRUxJS3NNYWwtdHRKNVd2d0gxb05XYlVQSVVLQm0takVwaXYwb0FfNzdYdkNDaU1LV1dSOUk2T29idzlYWmxURHBsY3BfZTdVcTBQVUs1aHJiOHY1YTIwUXNmNlc3NE83d0JLRnlQY0lLWHFCeWJxWm9KZERiMThIbFNKRzJYYmdENWI1dXFIS3UxWTlPSS1aSjV6bHIyV2Zta2xWa2MtM0ZPX3lyZw?oc=5",
+     "title": "Georgia’s newly flipped utility commission targets power bills, shutoffs, and data centers",
+     "date": "2026-11-05"
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "_fed": {
-   "hash": "f74af7d772c8",
+   "hash": "7222f2b9915f",
    "points": [
     {
-     "zh": "民主黨控制新國會，NTIA浮議向州提供數據中心指導，偏向聯邦層級協調州監管。參議院通過加速許可審查法案，但環保團體警告恐加速髒能源數據中心建設，反映聯邦與州權力",
+     "zh": "參議院推進許可加速法案，擬豁免數據中心環評程序。民主黨控制新國會，偏向加強環境審查與州地方監督權，可能重新審視該豁免條款，強化聯邦與州的協調機制。",
      "links": [
       {
-       "source": "Broadband Breakfast",
-       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPMTNuSlh0b0haWmgyRERPOHlWY2gyMERTUTl2dzBVb09wZk1OWFJrRUE0TEh2LWVwOGFBVWJvNGZQeTZvSzdvT3k1czUwSGlCUmswMnNLYXU4T3NYX0RPNFRVQ3gtWG41cHVKTlZtWUlfM0tjcm1qeTlFRXJLeGcwZlhfbEI4Zm1za1VPd1lVaDhsVm5IQmtoV1VvTjU0cXJkWG10WTBTX0VMTWkxcEN5TUV0NEl3V0tK?oc=5"
-      },
-      {
-       "source": "Earthjustice",
-       "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOTjlVNUtvMDdNT1hxdU9XODdHSFRNSGstN0tGYnJ1SlJ0THhjZkVlYnVyUEVZcEVIODB3ZktUV1dZZjhHbHlZeWlKV3hYZmNPem9WZjdDRGdLY3FYNDc0cHpEVk1RTmVRei02cHpfcHJkOXoyLUxxNFd3RDhOOGdCai1LcWFIQ09FenZNWQ?oc=5"
-      }
-     ]
-    },
-    {
-     "zh": "白宮推進對華數據中心限制政策，儘管科技巨頭遊說反對。參議院共和黨推動能源與數據中心改革法案，偏向加速許可與降低成本，與環保派要求暫停形成對立。",
-     "links": [
-      {
-       "source": "Reuters",
-       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPamZVTFBIMlk1aHp5ZUZ3ME56bnZlV3NPODhQY3JKcnI2dUtIT0FqSHFveTRSem1Rby14eXY4dnhCci1WWmNJdEZnTnNnOUJldUROSXFWc1I5SmExVXZ2dWlhMWhQSkpqTFJIN1R2aTJsX2tJQ1l6cnhRY2JWdTNpVjNKZFhuelREd1A1S29BYUhDRHlTNWxncUJ3aHFobUU1NFZNTVlkbkxLUWExUFVjWHpOSHo3aE0?oc=5"
+       "source": "Bloomberg Law News",
+       "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNZjhjcExsUmNLTERrNEhEOENHVlE4dHVacXlBSHBoMFNEVmQ0U2loa1BMd19aTFF4bzA1cjNkMC1JUmNSdUlSdXJEQWdmMlVzbXIzdHFTUDdjaUZwbGtRLVJBeDBUNnFOTFd1ZlFPbzdGSVdfRS15UnJ2X0pUZHo0RUM5cldrYXZjZkd3N1QzcHVnOUVucV9V?oc=5"
       },
       {
        "source": "Fox News",
@@ -4805,33 +4767,46 @@
      ]
     },
     {
-     "zh": "聯邦機構GAO要求國會重新檢視聯邦數據中心法律。參議院通過BAAJA法案提高AI數據中心成本，要求其負擔電網升級費用，偏向強化成本分擔機制。",
+     "zh": "白宮推行對華數據中心限制政策，對海外建廠企業施加懲罰。民主黨國會偏向支持國家安全導向政策，但可能要求更透明的審查標準與產業溝通機制。",
      "links": [
       {
-       "source": "MeriTalk",
-       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNYW9wYVZUMGY1bzJHS24xZEFGbE1HTzBWSWF1U3pBd0hiX0tFRzFNOG9PVUEySlFORm8zNHBTR2RHUXV0dm01NTBYQnU1UEVtSEtCZVBYcDlYRmF2VE5hZGw5WEF3N1Q1aDhuRGpHanpwaWo5MVZzZXhWZURNR1pjVWJRWjlPYmlPMFZaZkwzQUg?oc=5"
+       "source": "Reuters",
+       "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPamZVTFBIMlk1aHp5ZUZ3ME56bnZlV3NPODhQY3JKcnI2dUtIT0FqSHFveTRSem1Rby14eXY4dnhCci1WWmNJdEZnTnNnOUJldUROSXFWc1I5SmExVXZ2dWlhMWhQSkpqTFJIN1R2aTJsX2tJQ1l6cnhRY2JWdTNpVjNKZFhuelREd1A1S29BYUhDRHlTNWxncUJ3aHFobUU1NFZNTVlkbkxLUWExUFVjWHpOSHo3aE0?oc=5"
       },
       {
-       "source": "NewsBytes",
-       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOUWtfQmZJUmIySlVWNDkyU0ZjRG1JR0puMUg4ZFRNMFpCNFJDbkh4UEUxcldwbE5NeG1NVWdIbjVTUnlJNXlHTUprUXV3RGcxbnRvaDJyd2VadThyamRlOTFWMndGYmpudGdQOXhLLXB2SENJZXJjTVliYlhscm1YMGUzZGdGUmdPQjJBOW1jYWEtN0tDZGlGdUVjdVd3T1UtQUF3?oc=5"
+       "source": "Alabama Public Radio",
+       "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPMm43M1VCczRaNmN0MkxCc2JQbjZmbzNUVjV5cjRrci1iUUh0bGp4V3VwbGtaZDZlVjVrS1dWUHFkQmtOYTBldG5BdDdBQ0xUWUY0U2laeFVNUmd6NDBiWjRNbUlCUk5nZlpHRk10TGkta2o0VXhMbEJ1b0VQNmtfeUpHVENlMnFJSDFNeXB3aEV6T1dPLW04QWZVYklUYmctUml1V251c3hQOWJMeDBTbEZKQlRucE5WMEJCbGZzeV9La05BUjBqNlRNS0ZTM2xrQWdRMw?oc=5"
       }
      ]
     },
     {
-     "zh": "德州、懷俄明州等州推行數據中心監管框架。新民主黨國會偏向支持州級規範，但聯邦許可加速法案可能削弱州權，形成preemption潛在衝突。",
+     "zh": "聯邦與州層級數據中心監管衝突升溫，德州、懷俄明州推進各自規範。民主黨控制國會偏向尊重州權與地方聲音，可能限制聯邦層級的州法優先權條款。",
      "links": [
+      {
+       "source": "KPBS",
+       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQaFRvRG40YTlIVXpCSTRYRjRWT3FkUE9iWGZmMTNmOEJHOWNGRTRHbXdoS3NoRDdja0NTeXdJcTdtMzJ3RnNhSmRyMU9RZjJRYkd0WGMtYUlNbG9iZjl2TE1WX21pUUpUYUlSMHFMUjVBT2FBUnB1UC1WTWV3T1R6WHlJOWpFeW85b0J6a01fV2dpSEIwSDJfTXNWOFYyVDU3dFpwYVZMQmdVX1JmNFBR?oc=5"
+      },
       {
        "source": "KCBD",
        "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPWmo5UFVqcDdwWko1Qk1ibXNoeVd6NUFQOXlVNkRaMzdtRkQ0Qkl2bXA5VUtGVDRKb1ZZNi10RU1xSkpEdWROamJVdlBYT3hVQlZHTlJwaHAwZkw5U1NLek1UdjZmWG5TVU1IYk92cW9kNFR4dU5ZUDlXcU5JVlRjdHBXYw?oc=5"
+      }
+     ]
+    },
+    {
+     "zh": "數據中心用電成本分擔成為焦點，公用事業要求企業負擔電網升級費用。新國會偏向平衡產業發展與公眾利益，可能推動更公平的成本分配機制立法。",
+     "links": [
+      {
+       "source": "Latitude Media",
+       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQUWc5b08weHEyS1RxN2tmQl9TZDVoZnZVSmtEZTAxa05YZmxpbE5UdWNwa0tPUms2TVcza2JaWjhGdENHd1BnUkFzb2NsbUczbkkxU1lIZ0JsYWRPWGJzR3J3V29FQTdiWk8zQzl0Q1pWTU15LVVJbVAxaG5RSDktZjFsWGVYOG04M25SaHE1aVlZYU5fckdGMk11ZEo1SHliMkw0UmthTlNYZw?oc=5"
       },
       {
-       "source": "Sheridan Media",
-       "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPbjFQYldUZHNUbzkwamg4OUFBRzZWLWR1M0tKYjF1bEZwTVNhV0xVMUpHaHd5SDg0ZFlicTJCTVMwaHJtUG9GUFVVYS02TmtnazdxVFN6TDZ2UmJIRXE4MmlsRVhuNTd2RUVDVWIxSGhxM3U5VlpjZGF3U1lUTnV5TU5ZT1pyVUx6S1RuNWYzZzMxdGNRZzhZamRndk9KZHdiZ285Vm5LNGNNWFB4aVRybzcxWnZYMkg3OFdsNmRKbDdRRVVUR0k5SC10WktEXzNt?oc=5"
+       "source": "AP News",
+       "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQc3dDMDVjOXN5QkQ0VVZpVGtxaUNjN2RDMHJ6UElZTWdEajdXZ2V4Z0hwajh3dXI2azA0Tmxhd25VajEwbWI5Zm5TQjkzRzhoV2lSaklZMlc5NHJ3ZHNHd2tYN1dlVW5XYm9hNmtzWTFZd3ZPeER0Q0RRRkJmSVZVNU8zV1lOSXMybmVvLWg2NjJyWlJFSUxzb3dzRmR0MUtVb2RsNDJ4aU1BZw?oc=5"
       }
      ]
     }
    ],
-   "at": "2026-11-21"
+   "at": "2026-11-23"
   },
   "IA": {
    "hash": "169dc6969c77",
@@ -5167,5 +5142,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-21 09:42（台北）"
+ "at": "2026-11-23 07:08（台北）"
 }
