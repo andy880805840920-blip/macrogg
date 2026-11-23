@@ -1552,9 +1552,55 @@
   "p:us_china_truce:06d28f956e57": "2026-11-22",
   "p:us_china_truce:33e375af9227": "2026-11-22",
   "p:us_china_truce:519ab5b121cb": "2026-11-21",
-  "p:us_china_truce:79d2a94ba57c": "2026-11-20"
+  "p:us_china_truce:79d2a94ba57c": "2026-11-20",
+  "dc3d192bffc9": "2026-11-23",
+  "d39b74777ff9": "2026-11-23",
+  "e8f3f6e928ea": "2026-11-22",
+  "92b6f5a2cf3b": "2026-11-23",
+  "fdffc437bece": "2026-11-23",
+  "8b9763efaa8a": "2026-11-23",
+  "36af0880797b": "2026-11-23",
+  "5abbe3ea6ec7": "2026-11-23",
+  "bc79d02d5869": "2026-11-23",
+  "4287a3fc18d9": "2026-11-21",
+  "9b51c291ce4d": "2026-11-20",
+  "79d2a94ba57c": "2026-11-20",
+  "bb67273c6654": "2026-11-20",
+  "a23998a496ce": "2026-11-20",
+  "5900ddc7f492": "2026-11-20",
+  "516e8461491f": "2026-11-19",
+  "67666c4c4ce3": "2026-11-19",
+  "9c32757d6e69": "2026-11-16",
+  "75e9ac2fcb67": "2026-11-21",
+  "2aa1a614c8b6": "2026-11-21",
+  "p:fiscal_cr:2ed5b878c95a": "2026-11-23",
+  "p:h200_china:87bb53799feb": "2026-11-23",
+  "p:h200_china:ac30de3a753b": "2026-11-23",
+  "p:h200_china:132a07268096": "2026-11-23",
+  "p:h200_china:1fb433dd5954": "2026-11-21",
+  "p:h200_china:245542993453": "2026-11-20",
+  "p:h200_china:bec617aa80d0": "2026-11-20",
+  "p:h200_china:767613a0e1c8": "2026-11-20",
+  "p:h200_china:c58680b8d394": "2026-11-20",
+  "p:h200_china:0c49742f193b": "2026-11-20",
+  "p:h200_china:78c793bde3d2": "2026-11-20",
+  "p:us_china_truce:af8b82a8465c": "2026-11-23"
  },
  "items": [
+  {
+   "id": "6a04c9813731",
+   "topic": "關稅",
+   "channel": "其他",
+   "zh": "川普根據1930年《斯穆特-霍利關稅法》對加拿大商品徵收關稅，該法無到期日期。",
+   "date": "2026-11-23",
+   "links": [
+    {
+     "title": "Trump hit US$20B of Canadian goods with a 96-year-old Smoot-Hawley law that has no expiry date. Can Ottawa undo it?",
+     "source": "Yahoo! Finance Canada",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1uZWN6RUZGU0JJU19qX2xNcWZjc01aVFhXSmVzNGkwSmNacWthNG1JMzZHcVZlRHp1SHFfTXhGc0ZZYU5IVmhmT3FJUEhYZVJFQUhkcnpLaFcxWkdlMENyNUhlUlVlcTBVdDg1bHE3aFV0Zmk2OFhQYjJmWEJTOXM?oc=5"
+    }
+   ]
+  },
   {
    "id": "6f3c3cc2d92f",
    "topic": "財政",
@@ -1675,11 +1721,11 @@
   },
   "h200_china": {
    "date": "2026-11-23",
-   "note": "多則新聞顯示國會施壓升溫（眾議院議員警告、財政部與國會雙重壓力），Trump堅持立場但H200出口陷入不確定狀態，國會限制法案審議可能加速推進。",
+   "note": "11月23日CNBC報導眾議院議員Richard Neal因間諜疑慮反對H200對中出口，加上同日美國情報機構報告中國已獲得先進Nvidia晶片，顯示國會限制法案審議可能加速推進。",
    "links": [
-    "https://news.google.com/rss/articles/CBMilwFBVV95cUxNblAwV3REYWNuNUFQbEk5MkdLUHlwVUh0Zkk0WENlS25yWjZkbnZTUUl5NGFVR1NfSmMxOUZ4UmJodkhyQWR6NS1LU1RqX0wzMGpvMk5XMlBGeTF4N2xSZEhBRFpvMXZ6RzZuencwYk53VzZaNGFyOHVqUzFjS195aF80Ry1UNUIwYksyTGJzOGc4RXdDemNR?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE0tN0YzYnBQSTRCbWd2clh1U3RLd3BpUmZhWWZ4ZXRkNThsV1BKVUVuRkVSYU50anRGajd4di1mOGRadU5PdGdiRTk4NkQwYms1WDFuenZZMklBSEE3dnNjZDk2Z0VvWnFTWThJQ3YwR282cDY5RXc?oc=5",
-    "https://news.google.com/rss/articles/CBMidkFVX3lxTE5nX1hXX2Z3Qk9VXzRqU2dIYjl4djZsaXFDZHlaM3doZGt4andDRHdYV0dLLXFPNnFTV1Q1WkFxS2V6RVNnT2pkM0I3ZTBuOEhwQXdxVDhXaGdscGpWODJyQnpiaWVJYkh1QlhCcFBYVlZ0YVF5SGc?oc=5"
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxORVJ1c01hMmI4dmtsQ1FnTXZzYXNmN3FObS02M1dMaVhBZkFKc25aQ05mNmY2OVpJRXJQeWZvRFlYMkRLeFZ2NDJLU0h2QjcwV2l4ZHJndkFVVGVJM2lJcnNIbWtRMFM3eE9tVDJacUVWWjBZbUdXcTFiSWt1QWNQT3V5aHpEZ1lYUjdfU0pycnJWOUlzeFMySUI5LWZlSmpMSkxqWk9KSXM0UQ?oc=5",
+    "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPUWdwQjhBQlBJNmdZMlhSRXBrbmpEenlRbjJlUVcxakM0eDEyME5Ec043V1hZbDFJX1AyRUtWOWtXSVg5ZndMVmtraVZka2NaZ29FOEV4VHNxLXJqbWZsNzI4SFRSX00tSzM5RzU2UTNMX3pYQ3RIME1BQmhPbVkzNkJoUnB0RjJvZjN0Tk1ldGxfYndMdThPdUlQUVc0UzVNeDNqQ05aZ1NMbGRjZi1kemdqSTVtRGFrdzF3c2x4azZFckNSak1IdFYtOURzb192OEpTOFBkSlhNYUZ3a2c?oc=5",
+    "https://news.google.com/rss/articles/CBMiggFBVV95cUxOTWxiRm5GOFJwN2c5ckJTc0lvWXdESlEzWW50eENqdDdjZFJieEF3bEs3Ni1iVlJEeTNlbVM4X0dEdThENFA3bk1DUk8xektYa2NaYTJFWHo4V3lMOGVBbFNHRXNtdTExc3UxNi1SQmNxZG1Wa0IxS0lDc1BEQXYzMWN3?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1701,5 +1747,5 @@
    ]
   }
  },
- "at": "2026-11-23 20:09（台北）"
+ "at": "2026-11-23 22:12（台北）"
 }
