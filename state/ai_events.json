@@ -20,7 +20,7 @@
    }
   ],
   "listed": true,
-  "active": true
+  "active": false
  },
  "seen": {
   "3b5d99462631": "2026-11-03",
@@ -5727,7 +5727,107 @@
   "e7d44f411b27": "2026-11-23",
   "1f2e3855c69e": "2026-11-23",
   "57b88e8df7db": "2026-11-23",
-  "27e5379fb939": "2026-11-23"
+  "27e5379fb939": "2026-11-23",
+  "81656b9a52d5": "2026-11-24",
+  "092ba6602f6d": "2026-11-23",
+  "0eba97058139": "2026-11-23",
+  "93a66c396b52": "2026-11-23",
+  "04f241ad026c": "2026-11-23",
+  "41964e6325ea": "2026-11-23",
+  "72f0af570cef": "2026-11-21",
+  "c26d6a863f41": "2026-11-21",
+  "dd17e30eb4a4": "2026-11-24",
+  "6a0fd7e9c715": "2026-11-23",
+  "da44ecc783c9": "2026-11-23",
+  "fe8ff88cef93": "2026-11-23",
+  "cf7536b63a00": "2026-11-23",
+  "01a1a1b5d80d": "2026-11-23",
+  "ed4071ce3419": "2026-11-23",
+  "224ca849af24": "2026-11-23",
+  "eb4512545796": "2026-11-11",
+  "d461eb84fe27": "2026-11-23",
+  "f20815521fbd": "2026-11-23",
+  "bc2168fe73c3": "2026-11-23",
+  "41a729645eba": "2026-11-23",
+  "fc059a4f77d3": "2026-11-22",
+  "d70f94b57ef5": "2026-11-21",
+  "290285dbc9f4": "2026-11-21",
+  "fcc00509800b": "2026-11-21",
+  "7c2874235da4": "2026-11-19",
+  "d9ae2e241b11": "2026-11-18",
+  "ce6b902862d4": "2026-11-18",
+  "30ec230f3a5b": "2026-11-18",
+  "c20bf4220398": "2026-11-18",
+  "8601e694ee06": "2026-11-18",
+  "ed4def4628b6": "2026-11-18",
+  "3aeae1d8612d": "2026-11-18",
+  "a5901db7e466": "2026-11-13",
+  "18fd10a7556c": "2026-11-11",
+  "8b1f1ebc1f64": "2026-11-11",
+  "92dd9a970d85": "2026-11-10",
+  "4743c248dade": "2026-11-23",
+  "ce0c2436f48b": "2026-11-23",
+  "c7930ac73569": "2026-11-20",
+  "a3bff9f20460": "2026-11-19",
+  "f8fbcda61cac": "2026-11-18",
+  "f8bc2909577a": "2026-11-17",
+  "610f53de6032": "2026-11-23",
+  "f0013cd99917": "2026-11-23",
+  "519d9d01d35e": "2026-11-23",
+  "d8f4005bc1cd": "2026-11-23",
+  "fc85152f5293": "2026-11-23",
+  "0cf415313762": "2026-11-22",
+  "d84593944891": "2026-11-21",
+  "db912822894a": "2026-11-21",
+  "97fc379436a5": "2026-11-21",
+  "e3867a49976b": "2026-11-21",
+  "7271d64a0c0b": "2026-11-21",
+  "929770a1b4e6": "2026-11-21",
+  "65047c1dbf17": "2026-11-20",
+  "178afd34f5ea": "2026-11-20",
+  "a7fc9f567c78": "2026-11-20",
+  "ce63d41eb362": "2026-11-20",
+  "db332f146ba7": "2026-11-20",
+  "2a1862b1fd32": "2026-11-20",
+  "3873c2c4effd": "2026-11-18",
+  "f33e4c8eaaa8": "2026-11-18",
+  "6ecac476f69a": "2026-11-16",
+  "e9f7c8ff83ce": "2026-11-14",
+  "6aeb709c701c": "2026-11-21",
+  "22405ef832bc": "2026-11-21",
+  "af9fca403c73": "2026-11-20",
+  "c4dcb2c1d5af": "2026-11-20",
+  "30e2f98674c9": "2026-11-24",
+  "69446f56d592": "2026-11-23",
+  "c0ac05991806": "2026-11-23",
+  "0a11cf675aaf": "2026-11-23",
+  "61d9b21c3ac6": "2026-11-23",
+  "39b84c55f90a": "2026-11-23",
+  "528d28969a24": "2026-11-23",
+  "30266c48baec": "2026-11-23",
+  "3a2ed0ecdd12": "2026-11-23",
+  "9dcfed95b2ce": "2026-11-23",
+  "e4a4025567c2": "2026-11-23",
+  "37e17d2a7714": "2026-11-23",
+  "a29dbc992903": "2026-11-22",
+  "93b8cd5128d5": "2026-11-22",
+  "b7ca41d00939": "2026-11-22",
+  "c5cdb5e88c63": "2026-11-22",
+  "1f5a87027544": "2026-11-22",
+  "80a86087e2ab": "2026-11-20",
+  "9bcf2508b0aa": "2026-11-20",
+  "8254fed8f5aa": "2026-11-20",
+  "adb911922170": "2026-11-20",
+  "62ba7a018f5c": "2026-11-20",
+  "f08a4f974907": "2026-11-20",
+  "7a30a2013d86": "2026-11-20",
+  "cbed8ce2dccc": "2026-11-23",
+  "57d8347459b1": "2026-11-23",
+  "df4e06c6c33f": "2026-11-20",
+  "85a187b262dc": "2026-11-16",
+  "0b51e6e4e3c3": "2026-11-16",
+  "b4802a9df5b4": "2026-11-13",
+  "5fb6a061c2c0": "2026-11-10"
  },
  "events": [
   {
@@ -5853,6 +5953,58 @@
    "first": "2026-11-17"
   },
   {
+   "id": "7e6e11c9e508",
+   "co": "Alphabet",
+   "type": "算力合約",
+   "zh": "Google與SpaceX簽署300億美元合作協議。",
+   "date": "2026-11-23",
+   "links": [
+    {
+     "title": "SpaceX’s AI compute leases to Anthropic and Google now drive over half its revenue",
+     "source": "Crypto Briefing",
+     "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE5kMk50Z0ZRYUFZUkVHX0VZeHpGVFA4MWRadThiUTBiQ0RleGpRdXE1TVotS2tfSTQ4MXZXSllTNE00aGx5X19hb1pqNHN3Rks2TXhFUC1ZS0hQWm5fYmp5QmM0X1U1WVRWa0JweExCLWVSYVlWbEpQRg?oc=5"
+    },
+    {
+     "title": "Anthropic and Google pay Musk's SpaceX billions a month for compute as he tells staff it is falling behind in AI",
+     "source": "MLQ.ai",
+     "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQbTQzTzg1ZFR1RlNTTUVKTmdkc3JtMzFmamI1TWFOVHZYNXRjSF81aFFNY3hQdXZtbkhTbW1QM2VKVmdFRllHYVNtV21SelJ6Z0hJVmdPb0IweHJ1X0Z2N3ZaRFctMlFTYzl2OTRxaGdJa29pR05fTWJ5Sml4d0lqWEpYV1BERDdsdXl3bzFGaUppaTJBYTBwd1luMmNrYjc5UU11X0NtUFhuY3oybENULVk5d2ZNajBkaHFMbndvLXlTdmJ6eTcxTlRGd1Y?oc=5"
+    },
+    {
+     "title": "SpaceX Leases Colossus Compute to Anthropic, Google",
+     "source": "Wisevoter",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxONUxRUlFCOUFwWUdBVXA0RTVIanlaZnctX2hnSTJKLXg3TGhGYW9Rc01OY0ppT3Q3YmRmQlhibHJrNTk0Ny1kUkZxMDloTDBlZE5pWUpLTUU4TF9fdy1ubTBEdHRuYWRXdGx3S2twWGdqVVpUUHNOMmlFQjFSYWVHZWlYV3R0Y2ZPNFkw?oc=5"
+    }
+   ],
+   "n": 2,
+   "first": "2026-11-21"
+  },
+  {
+   "id": "2f96384a4f05",
+   "co": "Oracle",
+   "type": "融資／IPO",
+   "zh": "Oracle 為 3,000億美元 OpenAI 基礎設施項目完成 200億美元融資。",
+   "date": "2026-11-23",
+   "links": [
+    {
+     "title": "Oracle says its $300 billion OpenAI buildout is fully funded after a $20 billion raise",
+     "source": "Startup Fortune",
+     "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPenZsWktQUFgwVDVlenRXRURUOTJWdGliaXFFem1tQnVmeWFaYjFNelRzdmV2bWpsankzOFFfV0prZTRtSGsxOHFvMC1RQ2dEVFVucnI4RVFLdXBFU2M5ODNVdzhNUFZWMXpKaW9YZy00Q2ROQ3FWX1Z0X3Z5QjR6NnZZOGY0UGJyWm9UeWw5YWFxc1dDM2RRMXJRcWUwX0ZvM0EtWV9LVHJCZnR2cG95Z25n?oc=5"
+    },
+    {
+     "title": "Oracle (NYSE: ORCL) Moves To Silence Funding Doubts Over $300 Billion OpenAI Computing Deal",
+     "source": "Foreign Policy Journal",
+     "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNdmxGQmlJdndZLW05ZEU2MFk2ZTBwTDZMa0R2ZWVEMUo5S0hFcmFPM0Z1UURaREk0WFFPbmw0b3d2QUJoZnk1WUZ1cVhNN0Rkc1RNemY3aV9jTV9ndGlTbVMxNEdWbEF5ZDR1a0VLYmhHS1lPZS1UR05ibjdTdTF3ak5reTctdXNkVkhrQ3pZNVJwZjhEbHBBSnFzeHk0S2EzcDZadWQ0OW9xbU9fMWhuUWtrVWpzVk9CWXVUTjlGLS1yaER0X1ZVbWIxWlE0dy1UWVE?oc=5"
+    },
+    {
+     "title": "Oracle Secures Funding for AI Expansion, Boosting Stock Performa",
+     "source": "GuruFocus",
+     "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQdnNoNmNZMHNGOWJwSTloMUVSMjFnRUItX3p2RkNCMGNnMm5OS2ZtRjh1czRab1puZkR1V1J1ZnotUXJsOE84Sko5YTBRWVd4NE9OdkxFS1lLR3MxazJEYjhkbU1DSXhOTTJqc1pza1RVbkNjWFU4LUcycE4wVEQtVFJteXQ0eWN4dkIzZHRVR2NQWkFzQ1ZDN1VsekRvY2kyblJ1Vjg2Znc?oc=5"
+    }
+   ],
+   "n": 1,
+   "first": "2026-11-23"
+  },
+  {
    "id": "6dea71716ebd",
    "co": "Amazon",
    "type": "融資／IPO",
@@ -5948,22 +6100,6 @@
    "first": "2026-11-21"
   },
   {
-   "id": "7e6e11c9e508",
-   "co": "Alphabet",
-   "type": "算力合約",
-   "zh": "Google與SpaceX簽署300億美元合作協議。",
-   "date": "2026-11-21",
-   "links": [
-    {
-     "title": "Google Is Paying Elon Musk’s SpaceX $30 Billion. Jim Cramer Just Revealed Why",
-     "source": "Yahoo Finance",
-     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxNWEp2cFJpSnJhdDRCOGRqY3VoRzBpRXptZHdlUk8wLTJBZG82WGJIRWlLNEFMQTY2bU5IVFIxSUM3VzY0ckFlMHlfQkNHamwzLUZFVWxrODJxbGZhNXRHWm95aGl2ZWU1MDFIMEJ3OVpmVE5PeWNLcm1qTTRmTW9LN3owMzdNdTZTMXk5SGxxckNNcVcyNTY5V01n?oc=5"
-    }
-   ],
-   "n": 1,
-   "first": "2026-11-21"
-  },
-  {
    "id": "902314df723e",
    "co": "CoreWeave",
    "type": "融資／IPO",
@@ -6012,7 +6148,7 @@
      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxONHBPTEJlTkxtYklwUzhPZEpqZk9Xc3c3TGZoLUxHZ0pTWHNuc211WFItZW9aYnE1WGxvOGtXb19BMkRqWVpLZm1oS2NCTzJhdFVBN1dyam1SUF94YXZ4a19qSktoRTdJVldWZUV2cmMxbHJJODFGSnlCd1JfMEdsbWw1Umk2MjExVXI5bldjQ1QtZw?oc=5"
     }
    ],
-   "n": 3,
+   "n": 4,
    "first": "2026-11-20"
   },
   {
@@ -8164,20 +8300,20 @@
  ],
  "impact": {
   "Microsoft": {
-   "hash": "48561d13ca62",
-   "text": "Microsoft近期事件偏向強化AI基礎設施投資與長期算力承諾。Azure營收超預期成長43%、資本支出達452億美元、簽署數百億美元長期合約，反映對AI需求的確信。這偏向增加公司債供給（已發行500億美元債券）、支撐長端利率上行壓力，同時強化AI投資熱度。若基礎設施投資持續高位，則長期融資需求可能推升企業債市場。"
+   "hash": "4dcded3dc2d6",
+   "text": "Microsoft近期事件偏向提升AI投資熱度與長端利率。Azure營收超預期成長43%、簽署數百億美元算力合約與資料中心建設計畫，反映AI基礎設施需求強勁。公司發行250億美元債券與資本支出452億美元，偏向增加公司債供給。若這些高資本密集投資持續，則長端利率面臨上升壓力；同時Azure成長超預期偏向支撐股市表現。"
   },
   "Alphabet": {
-   "hash": "9b17f4f44ece",
-   "text": "Alphabet近兩週密集簽署算力合約與能源協議，同步大幅增加資本支出與發債融資。事件偏向：公司債供給上升（多次發債融資），長端利率承壓；資本密集的AI基礎設施投資規模擴大，若持續推高企業融資需求，則長端利率偏向上行；AI投資熱度明顯升溫，Alphabet與Anthropic、Marvell等深度綁定，強化市場對AI算力需求的預期。"
+   "hash": "5e3225a0d9fd",
+   "text": "Alphabet近兩週密集簽署算力合約、能源協議與晶片訂單，同步發行超百億美元債券。此舉偏向增加公司債供給、推升長端利率；龐大資本支出承諾（逾千億美元數據中心投資）反映AI基礎設施競爭加劇，若持續推高企業融資需求，則長端利率承壓；同時對AI投資熱度偏向強化，但債務擴張可能引發市場對償債能力的關注。"
   },
   "Meta": {
    "hash": "a08b14d15819",
    "text": "Meta近期密集進行多渠道融資與巨額資本支出，偏向增加公司債供給、推高長端利率。大規模AI基礎設施投資與核能預付款需求驅動融資需求，推動債券發行；同時950億美元融資規模龐大，若股票稀釋效應顯著，則短期股市偏向承壓。但Meta的AI投資承諾強化市場對其算力領導地位的預期，偏向支撐AI投資熱度。"
   },
   "Oracle": {
-   "hash": "9539bbc5a18c",
-   "text": "Oracle 近兩週密集發債1,919億美元、簽訂算力合約、擴大資本支出，偏向增加公司債供給、推升長端利率。大規模融資用於AI基礎設施投資反映市場對AI算力需求旺盛，若融資成本上升幅度超預期，則可能抑制科技股估值；同時 Oracle 作為超大規模廠商代表，其積極擴張偏向強化AI投資熱度。"
+   "hash": "5e58176ea48b",
+   "text": "Oracle 近期大規模融資與發債偏向推高長端利率。公司為 AI 基礎設施投資密集發行 1,250 億與 669 億美元債券，增加公司債供給；同時確保 OpenAI 合約融資到位、擴大政府與雲端算力合約，資本支出承諾達數百億美元。若市場認為此類大型科技公司債務融資需求持續，則長端利率偏向上升；反之，若融資成功視為 AI 投資熱度確認，則股市與 AI 投資熱度偏向受支撐。"
   },
   "CoreWeave": {
    "hash": "4bc207f2b864",
@@ -8200,8 +8336,8 @@
    "text": "Nvidia 近期事件對市場偏向混合訊號。正面方面，第三季財報超預期與營收調升支撐AI投資熱度；俄亥俄州數據中心投資強化長期成長預期。負面方面，Moonshot AI取消1.5億美元晶片租賃交易暗示需求疲軟；Firmus與Nscale大額發債則偏向增加公司債供給壓力。若AI應用需求持續放緩，則長端利率與股市面臨調整風險。"
   },
   "SpaceX": {
-   "hash": "0216ad5ae6b1",
-   "text": "SpaceX近期大規模發債融資AI基礎設施，累計發行超760億美元債券，殖利率超8%，偏向推升長端利率。龐大資本支出計畫（740億美元數據中心、融資租賃 Nvidia 晶片）與Anthropic簽署1,205億美元長期算力合約，反映AI投資熱度高漲。高債務融資需求偏向增加公司債供給壓力；若市場對AI算力需求持續強勁，則股市偏向受惠，但融資成本上升偏向制約獲利。"
+   "hash": "9f5d55dceec0",
+   "text": "SpaceX近期大規模發債融資AI晶片與數據中心，累計融資逾760億美元，偏向增加公司債供給、推升長端利率。若市場對AI算力需求持續強勁，SpaceX龐大資本支出與Anthropic長期算力合約可支撐債務償付能力，則偏向穩定債券需求；但若經濟放緩導致AI投資熱度降溫，則長端利率面臨下行壓力。整體而言，事件反映AI投資熱度仍高，偏向支撐股市與科技板塊表現。"
   },
   "Intel": {
    "hash": "011573f01d0a",
@@ -8232,7 +8368,7 @@
    "text": "Tesla近期大幅擴張資本支出，規劃在美國與德國投資超百億美元興建太陽能及Cybercab廠房。此舉偏向增加公司債供給需求，若融資需求上升，則可能對長端利率形成上行壓力。同時，大規模綠能與自動駕駛投資偏向強化AI投資熱度，但短期資本密集可能拖累獲利預期，對股市偏向中性至負面影響。"
   }
  },
- "at": "2026-11-24 09:01（台北）",
+ "at": "2026-11-24 09:33（台北）",
  "ipo2": {
   "name": "OpenAI",
   "steps": [],
