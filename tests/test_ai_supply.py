@@ -84,6 +84,21 @@ check("④ Anthropic 還在進行中時不放 OpenAI", 'data-sec="oai"' not in p
 _, panel3 = P.ai_tile(ev, hs, dc, None)
 check("④ 沒有供需資料就不放那一塊", 'data-sec="sd"' not in panel3 and 'data-go="sd"' not in panel3)
 
+# ④-2 Anthropic 標記結束（ended）：不等掛牌滿 7 天，直接收掉、換 OpenAI
+from src.analysis import ai_events as AE            # noqa: E402
+check("④-2 設定：Anthropic 已標記結束", AE.DEFAULTS["ipo"].get("ended") is True)
+with tempfile.TemporaryDirectory() as td:
+    sp = pathlib.Path(td) / "ai_events.json"
+    sp.write_text(json.dumps({"ipo": {"name": "Anthropic", "active": True, "listed": True,
+                                      "steps": [{"label": "遞交 S-1", "date": "2026-10-26"}]},
+                              "events": ev["events"]}, ensure_ascii=False), encoding="utf-8")
+    a = AE.build(None, sp, offline=True)
+    check("④-2 Anthropic 收掉、OpenAI 進行中", a and not a["ipo"].get("active") and a["ipo2"].get("active"),
+          str(a and (a["ipo"], a["ipo2"])))
+    _, pa = P.ai_tile(a, hs, dc, r)
+    check("④-2 畫面：只有 OpenAI IPO（最下方）", 'data-sec="ipo"' not in pa and 'data-sec="oai"' in pa
+          and pa.find('data-sec="oai"') > pa.find('data-sec="co"'))
+
 # ⑤ IPO 細節：沒有 cik 不抓 SEC，只抓媒體估值
 with tempfile.TemporaryDirectory() as td:
     urls = []

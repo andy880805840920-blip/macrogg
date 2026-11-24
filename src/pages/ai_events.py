@@ -46,11 +46,12 @@ def _srcs(e: dict) -> str:
 def ai_tile(a: dict | None, hs_agg: list | None = None, dc: dict | None = None,
             sd: dict | None = None) -> tuple[str, str]:
     """回傳 (小卡, 視窗內容)。沒有資料時兩個都是空字串。hs_agg：長端頁的五家合計（每季，億美元）。"""
-    if not a or not (a.get("events") or (a.get("ipo") or {}).get("active")):
+    if not a or not (a.get("events") or (a.get("ipo") or {}).get("active") or (a.get("ipo2") or {}).get("active")):
         return "", ""
     evs = a.get("events") or []
     # 2026-10-29 六宮格：摘要固定一行，只寫公司與類型
-    latest = f'{evs[0]["co"]}・{evs[0]["type"]}' if evs else "Anthropic IPO 進行中"
+    _ip = next((x for x in (a.get("ipo") or {}, a.get("ipo2") or {}) if x.get("active")), {})
+    latest = f'{evs[0]["co"]}・{evs[0]["type"]}' if evs else f'{_ip.get("name", "")} IPO'.strip()
     tile = ('<button type="button" class="duo-card" data-t="ai" data-title="AI 大事" aria-haspopup="dialog">'
             f'<span class="duo-k">近 {a.get("window_days", 14)} 天 {len(evs)} 則</span><span class="duo-t">AI 大事</span>'
             f'<span class="duo-map">{AI_ART}</span>'

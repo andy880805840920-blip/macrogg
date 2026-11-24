@@ -4,6 +4,9 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src import clock                                    # noqa: E402
 from src.analysis import ai_events as A                 # noqa: E402
+# 2026-11-24：正式設定把 Anthropic IPO 標成 ended；這支測試要驗 SEC 進度流程，先打開
+_PROD_ENDED = A.DEFAULTS["ipo"].get("ended")
+A.DEFAULTS["ipo"] = {**A.DEFAULTS["ipo"], "ended": False}
 from src.pages import ai_events as P, home, election     # noqa: E402
 
 ok = True
@@ -162,6 +165,7 @@ check("⑧ 舊資料換名：事件的公司欄、句子、對市場的影響", 
       and _r8["impact"]["Microsoft"].startswith("Microsoft"), _r8)
 
 clock.now, clock.today = _n0, _t0
+check("正式設定：Anthropic IPO 已標記結束", _PROD_ENDED is True)
 print()
 print("全部通過" if ok else "有失敗")
 sys.exit(0 if ok else 1)

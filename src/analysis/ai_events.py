@@ -34,7 +34,8 @@ TOPIC_Q = ('(earnings OR capex OR "capital expenditure" OR bond OR debt OR notes
            'valuation OR IPO OR "data center" OR compute OR deal OR contract OR raise)')
 DEFAULTS = {
     "enabled": True, "window_days": 14, "new_days": 3, "per_company": 8,
-    "ipo": {"name": "Anthropic", "cik": 2130357},
+    # 2026-11-24：Anthropic IPO 已結束（11/18 掛牌）——ended: True 直接收掉，不等掛牌滿 7 天，下方換 OpenAI
+    "ipo": {"name": "Anthropic", "cik": 2130357, "ended": True},
     # 2026-11：OpenAI IPO（放在 AI 大事最下方）。保密遞件（DRS）在 SEC 看不到；有公開 S-1 後把 cik 填上
     "ipo2": {"name": "OpenAI", "cik": None},
     "companies": [
@@ -358,7 +359,7 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
                 impact[co["zh"]] = {"hash": h, "text": text.splitlines()[0][:200]}
         # IPO 進度
         ipo = c.get("ipo") or {}
-        if ipo.get("cik"):
+        if ipo.get("cik") and not ipo.get("ended"):
             try:
                 from ..sec import USER_AGENT
                 d = json.loads(_fetch(SEC_SUB.format(cik=int(ipo["cik"])), {"User-Agent": USER_AGENT}, _get) or "{}")
@@ -370,6 +371,8 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
     # 2026-11：IPO 細節（每份申報的重點、發行條件、估值、歷輪價格）——進行中才抓
     ipo_x = None
     ipo = c.get("ipo") or {}
+    if ipo.get("ended") and state.get("ipo"):        # 人工標記結束：不再顯示、不再抓
+        state["ipo"] = {**state["ipo"], "active": False}
     if ipo.get("cik") and (state.get("ipo") or {}).get("active"):
         try:
             from . import ipo_docs
