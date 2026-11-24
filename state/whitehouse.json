@@ -1569,7 +1569,42 @@
   "0d7af99033a4": "2026-11-17",
   "a83a9efc1182": "2026-11-23",
   "p:fiscal_cr:d7647cc1bc8b": "2026-11-23",
-  "p:h200_china:f319df8bbfbe": "2026-11-19"
+  "p:h200_china:f319df8bbfbe": "2026-11-19",
+  "4d52c87c0853": "2026-11-24",
+  "cfe65db21871": "2026-11-24",
+  "5b9b9faa8625": "2026-11-23",
+  "82de4a510089": "2026-11-19",
+  "65950cc58765": "2026-11-24",
+  "9919b0f8a7a7": "2026-11-24",
+  "9a9f51f93d1d": "2026-11-24",
+  "c717a286cb55": "2026-11-24",
+  "99d97ea0a903": "2026-11-24",
+  "bfb695c5b060": "2026-11-24",
+  "e4a04b737c84": "2026-11-24",
+  "f0a3f40d40de": "2026-11-23",
+  "9452b8196fbf": "2026-11-23",
+  "be844865bc80": "2026-11-23",
+  "0b031e070940": "2026-11-23",
+  "c2d742bbe5e7": "2026-11-23",
+  "4724fa5392c2": "2026-11-20",
+  "p:fiscal_cr:3a7560296c34": "2026-11-24",
+  "p:fiscal_cr:4900e4532de5": "2026-11-22",
+  "p:debt_limit:7152cb15ffa5": "2026-11-23",
+  "p:debt_limit:b150e65e525b": "2026-11-23",
+  "p:debt_limit:e3bb28792c46": "2026-11-20",
+  "p:fed_cook:96036b9ba313": "2026-11-17",
+  "p:h200_china:dc917620a536": "2026-11-20",
+  "p:h200_china:7559095fc8fb": "2026-11-24",
+  "p:h200_china:cb7c73c4a34f": "2026-11-24",
+  "p:h200_china:202866082b16": "2026-11-24",
+  "p:h200_china:4fd488bf9b62": "2026-11-24",
+  "p:h200_china:767163da2f47": "2026-11-24",
+  "p:h200_china:08d945c16f7f": "2026-11-24",
+  "p:h200_china:5a5a67f94831": "2026-11-24",
+  "p:h200_china:7bc5d8db62c1": "2026-11-23",
+  "p:h200_china:09dd289767cb": "2026-11-23",
+  "p:chip_232:a50062298b20": "2026-11-23",
+  "p:dc_grid:c8eaaefb961e": "2026-11-20"
  },
  "items": [
   {
@@ -1626,6 +1661,20 @@
      "title": "Trump bought up to $265K in Nvidia stock in September",
      "source": "The Journal Record",
      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOWWFXd29IWWhwX2NlMlJrVDM1SjN3cHhQVEZGT3JYSUhwMmx2bG1POTFjMFBWYThpcUlVMmdxaFZOTnpab3RrbHNzdjlUdDZxZWViZ25CMkw4S3NoWXlOQ3ZLaVNTRWZLUVQxdmdDS1R6Z25hTDM4anRiWjJmNkNoQnRXSQ?oc=5"
+    }
+   ]
+  },
+  {
+   "id": "fca492ee3703",
+   "topic": "聯準會",
+   "channel": "其他",
+   "zh": "川普再次敦促聯準會降低利率。",
+   "date": "2026-11-20",
+   "links": [
+    {
+     "title": "Trump again urges Fed to lower interest rates",
+     "source": "The Hill",
+     "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxORHJUSEpNa0JZMndrUTZhcTdiQjkzTUU0bkJqSmF5ZGNJYV8xSGozbjJTQ3FwUEpNUUdvd0JjYWJHMy1vRGI5YlNrUmNlUF9vNVFiYkRyT3YwWmdhRWlFMVl5bGVPcUcyeTNVRDNENzJlTVYwT3hWSHV0UUwybF9wZEFmQjE4LWc4OVBUVUx3SzJEREJmUXNhTU5ETTQ1Rl92dmFtQS1B0gGrAUFVX3lxTE5WbHZmMnMxbl9oRlU5S0JsbFFBVF9RaldTc1RfSmk1dEZRNEw3SEJhZkw0S19HQ1dfNlNiZjZ6T05UWDNYZ1BRMkNQRWhxWGt6U2JnRkZ2emQ0NmFfdWN5ZFdQdHV2NXhncWpJc05qWU1kQnJYSVBOM2NTeGRfWkE2TFduRWpWX1FmQ0pOSU1OOWkyUXpiNFFWWERBVnNJakdHUzM2VjR0VEhYYw?oc=5"
     }
    ]
   },
@@ -1688,11 +1737,12 @@
    ]
   },
   "debt_limit": {
-   "date": "2026-11-20",
-   "note": "Bloomberg 和 BPC 預測美國債務上限將在 2027 年初觸及，X-Date 落在 8 月至 12 月間，比原預估 2027 年提前，政策可能進入「接近上限」階段。",
+   "date": "2026-11-24",
+   "note": "Thune 表示舉債上限增加可能延至 2027 年，與原預估 2027 年觸及上限的時間相符，但暗示增加舉債額度的時間點可能推遲。",
    "links": [
-    "https://news.google.com/rss/articles/CBMirwFBVV95cUxQdlp6OVlkUjJzNWdkZVJGbkFXdFVHQWVEYnM0WmVBOFhUU1ZjLXdzeXE2ZVphT2FpYnBJaXpwMDliRjA5N0hGZXk0WXVUNHJvZ1RHaUJuaW9fUWtfUTdMakFKYzRmc0ZDVGFIN3lId2ctVmtGbXJtRDJDcWhuYkFVX3VTRkdkR1BKSDVoeXNYOGR1SE1HaDVlZkZpa0EwaVBMVW9UYnhEdm1HR1JVNlk4?oc=5",
-    "https://news.google.com/rss/articles/CBMiiAJBVV95cUxQVVhrUXVFbTVWbTh4bGEwNGR1U1hwQm9ILVppVVp2SlJkRU5aTGI3NTkxT2V2T0FjZzF5cTlacEdnV3dvWFZIa0tMR2EwRGg2NGdRenBYQkMwLXZKbHpObkwxTU92SXV1TzJROW1BT2kxTVZqS1liUmpLWk5iOWw2NVZncWstbUw1QXdWSVpHbG55cjMzX3lmNW5MVGlrbE1jQm50QllXeUxyY0w5dGJFYUx1aW1RMFRGX3MxT05vamZpM2JfUkk5UXNUTGdXMGNSY29IR3lsX2FFcHV4S1dKYlk1cnZ2VjdmdDl3NVZxZkowRk43VGppN0QtSTBzUjkzYnJsX0dFMVc?oc=5"
+    "https://news.google.com/rss/articles/CBMidkFVX3lxTE40TDlHb2dGaFY3cHBKNmJSRG0wWW5fS1hhallSWnF3Z005ekFYWEc1eHZQaWVrUXhkdVlCMV9qbm9vbzQzMEZOblk3d3pSMEJEMGVHZkRzYzlkbzRlT2hfX2xjOFFwYmRGUFVpMTNXVGVaSnl2bmc?oc=5",
+    "https://news.google.com/rss/articles/CBMisAFBVV95cUxPSVBkampVa1RRRXFmbzhnUmRDaHY3bGViSW5uZTFFUDFuSjcwek5oMEVWRmhnTDVwMHJxeGIwOXdjbWpoNV8tNmNwTGRUU2xzNVVGeXRzbzBfM1BLRGtQZ3MxV2tyUklwbk1GNkFjRzNVSV82YldTdEFCWkNVTkF6ZEo5OC1TQm1hdDdjM1NoMTgtcHpXX1hnb2gtTFRpX1dXYWI4ZFc1a3dRa0NYUFM4eQ?oc=5",
+    "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1PaEVSQ1VrRW9peXBqa2hiUUpqLWNZVGtSTVNPWUVFb1BVNVlZb2lSSkwzQXdINmlhcnhVczQ0TVV2dlRmR2lHZEFpR3l5c3BHSVNYdkk2RUZGZ0k?oc=5"
    ]
   },
   "fed_cook": {
@@ -1706,11 +1756,11 @@
   },
   "h200_china": {
    "date": "2026-11-24",
-   "note": "11月23日Gadget Review報導稱川普政府批准向中國軍方關聯公司出售58萬顆Nvidia晶片，顯示出貨階段仍在進行中，但11月18日Superpower Daily報導稱Nvidia將停止向中國出售H200晶片，表明政策可能已進入",
+   "note": "多則新聞顯示國會兩黨議員正在推動對中晶片出口的更嚴格限制（11月24日GOP議員呼籲、兩黨聯合反對），且眾議院記錄顯示58萬片晶片已獲准出口中國，可能加速國會限制法案的審議進程。",
    "links": [
-    "https://news.google.com/rss/articles/CBMimwFBVV95cUxNRF9vOVYzd1RIVHIzaXd0MTZrNExjUlJ6VFgzRXdQeUxwSEVicXVLWUR1a2JXX18tLXJNQlVJa0hJY3psREVRcmd5RmVUTjdlNUpKYlFrN24tZEVUbDhyb3liRmk1UnNNVFVOOXFsMm9tV0lZUzdEdWh0WXdlWGlNcUM1Q0IweC1zTmVUYjRyWU9MLTlBTDlMQXdFZ9IBoAFBVV95cUxOMHpMUGM3YUMxQnRjOUZ5XzhicDVKR1VoVWVOT29EbUFoTjg2QldLWFd5TG9zV1BFcFRQSENtM3lmWHlNU0poNFR0WU1DcmxfbmNEcHAxOVNmVFd4U1I5cFpNNmZIcDNsWU9sTjYtOF8xMDZ3SnRfeEJQZTk4YloxbEFEUFBwa09xbDRQTlc3c1gwd1JDU003OEVOaC1SLWtT?oc=5",
-    "https://news.google.com/rss/articles/CBMioAFBVV95cUxQOWd6cl9ZRjctVFJkQjdfemlPVG91b3NORFRCV3hlOUhvTjg3WklhelIzZ1A4djZwbC04YlNiWk5UR19TMFFCT2V0Sll5eEVYRzlqLTlmUEhWLWRNdmt0VkNGanpvRktRX25jU1RtT1ZqcGE3TDN0NVJpNXRqbFNNb1ItU25keXA5Y09aeGhxVlNNUDJTN09NUkhfQmx4WElW?oc=5",
-    "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQdzNIcGREcDBQUzFLMTNRQUJVcGJVZGpDVmI1RGRKZlNMaFczeV9WVWdtQUhoei1wZVdJeDJlLW9GSmo3YjhfTjRhUVFra29vbjlfNFdMT1ROU1hodUJ1TXBQWWFhUGdLUnJOYUVSWXhmRGVRMWZPeEZVLTRDV2I4M2htQ1pTSXF3RDF6T0NoRHJ3YnBBNnRfVnplQk56Z2U5SVhSZ25zSFhSa1RfYVN0c1loMWdLajF3bTBYRWcyVU16R0wzSmVvZnBZa0hVTDlVR1NtNUxoY1lSVHNJZ2Fqbw?oc=5"
+    "https://news.google.com/rss/articles/CBMixAFBVV95cUxNVndkdXFmNFJBNzBqQTRObUJuVWtPRnhiLTlKSERpb2c5X0lHdXZBYkFCbzMtRmdybENXeG5Qc0RhS0ZUbGJFSlo0YTF1UmlrcWFZRE5nRjM3dUNodUdVaXRZTTVJVTQ4T3NVT3IzZ0MwQzJZNDdWOEtIaVRNakdINmVVX0lnMURMOWQ2LUtWR3NrM0FWQmxNaWZ1VE02UU92clE0SmNpWExqbWsydktHRW83TlRkMkdxWXhlY1p6UzlUVTVD?oc=5",
+    "https://news.google.com/rss/articles/CBMilAFBVV95cUxPUVRIQ2VxbEYxSjhPenZGVUItLXdSQzJhMzdMQjVSaDB2aXlsMUdhVk44aTRRZzY1bllnTGJRdmVXLVZsaG5KZW5EclNCUjNHT0FiRDEtZ2Nqb05BaG9Nc2hvR0xneFpWUzNJNk5CQ3IyU1ZMTGMwMWNWM3RsNGlLenpaS1Z4ZUkwYk5yVl9ialFDRzk1?oc=5",
+    "https://news.google.com/rss/articles/CBMirgFBVV95cUxNQUZyczYyVXRXd2ltZnN6V2lqQ2VnajlXUjRDS0hxSkRjU1B1UXNHSE9rV2VjY0NjVlBuVnZvVUdBQjEtN3ZOdFNWRTlCYUFRZXhSM0FBaHlnS1lITW1NQXNGXzBROTRjVjVQZ0J1dDVJZ1VYMnB3bXB2Slprb0ZycEw0NkRoRGFMbUtWODZKYTdGVUFKdlRlN2dNYVlLbXowV3JlcmlVYXYxTDVVLXc?oc=5"
    ]
   },
   "us_china_truce": {
@@ -1723,14 +1773,12 @@
    ]
   },
   "dc_grid": {
-   "date": "2026-11-23",
-   "note": "11月21日新聞顯示美國電網運營商提出新的資料中心併網規則，可能表示已進入規則草案階段；同時11月17日新聞顯示PJM提出加快流程至12個月，下一步日期可能已更新。",
+   "date": "2026-11-24",
+   "note": "PJM 已向 FERC 提交大用電戶強制併網規則提案，顯示可能已進入規則草案階段。",
    "links": [
-    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxORGtzazhsbFdSWlRSWEhUZkpIRFp6ZWp0V2l1aVh4dWdZU1NmTnpSN0VzcU9kTnJKeFlxSk56QzZzLUtKZXZ5cVZ5ZjE5a3ZrQXFWbjE2bEhXV01qaGZiUlZfU3RRS2pFRGZZTGdEa2xfUUY0aHE5ZW81dVhkUldNWXd0TWg3WDZqaDJfbm1wcThFWnhoZWN3c1NXejZhUkthZDNxRURqTkNNbmV6UDhQR3RZZ1Q3UjQxajdzd3lBWDFoclYyNEp3QWt6dHNETjZBNG9JYVo5b9IB2wFBVV95cUxNWmJpdmRJRkxBMUxGUDlCam8tT0xxaElHcVJuWDluYS1FWU1pQlA1enBIUTlvZTZfdnlibVFmRGhyLVIzVHhKa0NtZFJwMFVnYi1tMTJaSzFDelQ4d28yVlVYRmtEekhfRUV5TUdwOXZ4M3N4QWNsbF9LU2x0MFhMQ2hCWG0ycFNNLTRDdWxlM0U5YkZmbDZJNzRRalNYU29TdTZvZG41eEpBSWFPcTJ0WUV6WFVGYlBsOTNiMFk1VnpRS1JaeEZOS01fMFVpZmFGT1hjMlVLMU5XbmM?oc=5",
-    "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNODk0RTd4S0pqc0NzS3pjVjlRczRHcVhjeU85NmxIZkNMTWFwNkRWa0pJQmFIZnd3eTBEbUhCbURUWEpaejh6LTZQYWNrRjFRWVkwSFQtYU5pbHNrblBRZ3U4WDZWenR2MUdLbllyYmRLZGV4cXZrQUQyR2pBQVRkSE00dzIwNFR0RGxhc2FrVE1GQVo4SE5fYUpiN01nZG5DYnZUdDI0YUllRTY4c05VUS1xUUl5TEgzMVAwNm5xVHhhcUY3TzRyUnVmbXREWVg2ZUVyTVBhQQ?oc=5",
-    "https://news.google.com/rss/articles/CBMikgFBVV95cUxOT1NTQTN3cEVpYTVBSEI4X1N4UUY0ZDZHbjRMYVNsMnFOTllzUUxZZmtfUVNnLWFmekJqcjFzdE9XU3Izay14V2gyVzVVc25JY1ZXdEhhS1M1RUNSOWZtWENYVDZmUE5SaS1QcTVPM0haODRDeERIQlFnSVhYeFhtcXVQU1hIakYxanhpSmNtRjlJdw?oc=5"
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxNUkZXNUJCTGs1Ukx1T1Vycjk4LTJWdFdOOHZDRTFRUXlHX29jQkJlNWdZbkpTNC1GN1dLYzRYcHBfSXoxSjR5My1sSUN4OV9ILWVTSEJfTEs1eWxTbmF3S3pXdW1kcHpuX0J6VEwwT0JYdTY5ZFM2WFI0RUZucXRXWTYxU0F2c1k?oc=5"
    ]
   }
  },
- "at": "2026-11-24 09:34（台北）"
+ "at": "2026-11-24 20:13（台北）"
 }
