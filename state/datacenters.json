@@ -4506,9 +4506,9 @@
  },
  "reg": {
   "TX": {
-   "hash": "df9436c13127",
-   "policy": "州長當選人主張立法保護居民免受資料中心影響，前州長暫停資料中心互聯並要求驗證審計，議員提案終止銷售稅豁免並暫停新建兩年。",
-   "impact": "若新州長推行保護性立法與暫停政策，偏向延遲多個專案完工時程；ERCOT批准決定將影響近期負載連接。",
+   "hash": "0c2eb1ff2299",
+   "policy": "州長當選人主張立法保護居民免受資料中心影響，議員提案終止銷售稅豁免並暫停大型資料中心兩年，需地方投票核准。",
+   "impact": "若暫停案通過，Google、Microsoft、Oracle、Softbank、CoreWeave 多個專案面臨延期風險；地方投票制可能拖延核准時程。",
    "risk": "高",
    "links": [
     {
@@ -4518,16 +4518,16 @@
      "date": "2026-11-05"
     },
     {
-     "source": "Legal 500",
-     "url": "https://news.google.com/rss/articles/CBMivAJBVV95cUxQSWRsZm9XNW96YldjT0ZNQzNBd2U2NDdWNlVhYlYtNWQ4WTVSSEo3M3ZrM0VVMEdISGViSU5leV9scmF5d2pncDcwYWpxZFRvSzBmTmt3TlNjYVlsSFRXX3pqcDBpMjFrQXR0N0xQTXdTTVZNVGhORmpKTll3OElGUkVGb09heVlYYm9OQU1YdlpRdURwblItWHFZOEhSdGN6Yi01aEY1UUVTUDU4czk2TExaZ3hqc0FydHk4Y2lBeVEzbjAwV3llOV9yaVpINXplTWQ1b3JkSGZuN0hXLThTQmFCZGFFMmpnTzJKX2V3SklRR0Y1ckh1cWdfRlJkTFhaV2FhZ1Z6THlMNk9MSnZfQmh6bWZhUTY2UkxtTDRPbFpvMF8zc25iZDZvaENlMlFRYWpCd0xqcm1meFlD?oc=5",
-     "title": "Governor Abbott Pauses Texas Data Center Interconnections And Calls For Verification And Audit; What Data Center Developers Need To Know Now",
-     "date": "2026-11-23"
-    },
-    {
      "source": "KLTV.com",
      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQSGtnbUhvY2JHNGRjbi1ZS0FFa3d4TkxfOU41UHBiOVJJajVCTjRRRWQwaDQtLUE3WXNrSS1Ia184cFU0NGl2cHIwWXdwTlVWRE5selE3Z09YN3BRMmk5RnEwOFNPbHJ5bzFpU28teEhRdklhZTlFQll2T09PZjNuSTZQeG9ydHJxOWZMX0ppTUxNRThuX01xbVlvLWFZZV8xZ0hKRThGWmNMX1HSAb8BQVVfeXFMTktYVEEweU9VQU0ydXNyRHZlUFZhbkhJZVU0cm9hTG5zOXdXbDRNZHFNU2F3TTg3eFFIS2dRNS1MLS04aW5taU5tMnc5U0dIOHZuWnFMUnZfaEM0aGxjWWc4RTd3enlYUloxYVNERkxkNHc2YU9EU3RFUkVjWUwwVzZacDQzdmhsNmRCQmZBZ045djZFVWVXdWpfT2lacS11eWRqckphdUpxUncybm90MTNlOU9mLXlUdFpKSFlZZnc?oc=5",
      "title": "East Texas lawmaker co-authors bill ending data center sales tax exemption",
      "date": "2026-11-23"
+    },
+    {
+     "source": "The Texas Dispatch",
+     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQclh6SXhfbzZ0WHl4MzZBSEpaakpreFd4RExYWTJSYmFnVmNCbmlyTXVQUTlPVlNvaDV5bVJCNGV0OFc3bkZ4cFNQa3FLb196M0FqQTVreWJvRW5QYTBGS0poamxTTGRlLVc0bEc3LVhvZi1UbW5TVFVQWmw4X25aMW9FRmxaQQ?oc=5",
+     "title": "House Bill 1273 Would Halt New Large Texas Data Centers for Two Years and Put Each One to a Local Vote",
+     "date": "2026-11-22"
     }
    ],
    "at": "2026-11-24"
@@ -4587,22 +4587,28 @@
    "at": "2026-11-24"
   },
   "IN": {
-   "hash": "860470b5da35",
-   "policy": "公用事業委員會支持資料中心發展，向客戶提供帳單抵免作為補償機制。",
-   "impact": "若帳單抵免政策持續，偏向降低當地電力成本顧慮，有利於資料中心建設推進。",
+   "hash": "6fa4d423d15d",
+   "policy": "印第安納州支持資料中心發展，公用事業公司與資料中心營運商達成協議提供用戶帳單抵免，鄰近州態度轉向保守下仍維持吸引政策。",
+   "impact": "若公用事業持續提供優惠條款，偏向加速Google、Amazon、Meta等資料中心建設進度；帳單抵免機制可能降低監管阻力。",
    "risk": "低",
    "links": [
     {
      "source": "Daily Energy Insider",
      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOWjlDajZoM0pJMGNNSzlwdUdkSWQyLTRMOWI2UzlxWEF4VmMwU1FXTFcyUHZnUjVFdU1DcTJ4akZrTnVmRzZDMS1RVnNCVXppLThZM2FTTWFYclE5MXo5YkU0QUctNC1tUXowTEN3dHhvb1hVQmRpb3JSU1p2ZTQ5U1luNGtSSko4cVFoRE52SkdMdXI4ZHRxMVVfa1hzeEFSamNUY29EVERDY1hHSEo0cDdDLURSVjV1QXZsX0p0MGw4UQ?oc=5",
      "title": "NIPSCO to provide Indiana customers with bill credit from data center development",
-     "date": "2026-11-02"
+     "date": "2026-11-19"
     },
     {
-     "source": "WFYI",
-     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOQW1TdTVqNW1JMDFYU1RaSVhDQUppYlg2ZEV1SXNmdGlZLUtDTnNBQzBKa3N6SXZ5QS10a3dqVmdXWExzbUlTQzJDRWRiMWRDc2hiOWhhOVRxRzVoRlAxNDRNbUI3R1FxZ0EyejYwNGxyOE9HLTMtY2NtaXI5N3N5RTFfTzc3WEdMbVBkY0RRV3YtZV9ZNGNGRlV5cmw2OGZo?oc=5",
-     "title": "Here's where Indiana candidates stand on data centers before Election Day",
-     "date": "2026-10-26"
+     "source": "Indianapolis Business Journal",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOQmxycGlQQ2NHcGt5MTJiVXRhcWVQbUtEb2tiY05UWEltLVRRVDE1UVhKYVBSbG1McHlDVVIxNzlBb3F3NkZ2Z0FoZTBMbHJUY0dfVE10N2lHNXhud29ISG9PUjA3X05Bd0tNVy1XQ29udWgwT29IckhZM3JucVp2czhnTUNqbDNtMWxDMy1Yd2JIcXkwbjJmMA?oc=5",
+     "title": "As neighboring states sour on data centers, will Indiana cash in?",
+     "date": "2026-11-13"
+    },
+    {
+     "source": "Utility Dive",
+     "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPbGtBaFhRSGZTb1ozS1ZEOG5HLXBCeUhIbHZ3dFZwQUlBMjJsQVhQaHRLRTlibS1pSkR6TWxxTXI1VWtTZzU2NFh1SmpjMEo4SThLdkdVNERScjdSbXNwdGIyZEpUTWRfUzBLUVhPdWRPczhGQVZURi1xRXBHdVVPRHNVbW02UXRrWk1oU292UGxpRmhhUHZqenlRekIxMnpvRVlNSElndDRMVVBkMm04bnBCdjY?oc=5",
+     "title": "Are data centers really paying their share? AES Indiana’s Google deal highlights a thorny question",
+     "date": "2026-11-10"
     }
    ],
    "at": "2026-11-24"
@@ -4635,16 +4641,16 @@
    "at": "2026-11-24"
   },
   "OH": {
-   "hash": "a1d51de401a8",
-   "policy": "州長當選人Amy Acton反對資料中心進駐；州議員考慮取消資料中心銷售稅豁免；洛克德州可能擴大徵收土地權範圍予資料中心。",
-   "impact": "若Amy Acton政策落實，偏向延緩新項目核准；銷售稅豁免取消可能增加營運成本；土地徵收權擴大則偏向加速部分項目用地取得。",
-   "risk": "高",
+   "hash": "5271948fd8b9",
+   "policy": "俄亥俄州參議院考慮取消資料中心銷售稅豁免，州眾議院民主黨人敦促州長應對資料中心電力成本問題。",
+   "impact": "若稅收優惠取消，則可能增加營運成本；電力成本爭議偏向延緩項目推進。",
+   "risk": "中",
    "links": [
     {
-     "source": "WHIO TV",
-     "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNbGF3QkFCaHVNRTdCZVpkZHJBNDRIdll2MVJlQWhpTlVSd3hYb3hMSGhVX2llbktkMnhpaW9oemI3Sm1MQmhJcy1jNHlVM1dWNmlnY0RNRkRidVlwSkxLeHhsdUNBS21NZ0w2cWVHMGNKeVJYaXJwRXNkaDJBR0ZMM1M2MEYwdURPWm4wanJjTDg4ZWdVM05RZ2wtdm12Vm5jVkFyZWhaNDMxbDI5RlUxdDNzTmtPT0M3ZGVWV0J2YTJtWHAzUVVUQzYtdFhmS2Vx?oc=5",
-     "title": "Governor-elect Amy Acton opposes bringing data centers to Ohio; residents react",
-     "date": "2026-11-06"
+     "source": "Wisevoter",
+     "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQZkMzallOb1VMUzA0S1Q5TU5aQloxX25lWGZfZG5EMThiOFZEM092MlhOSDFVMk9lUHgwLTBpRlBkY0tCOWVXclBEbG5GdVNyWmtoWUd4Y3JvZl9CMjdmUk82c0Z6VXdDZFNHZGN6UGFGSzRldFNZX3FmRjFJQ254TGZBWjZKamx0SFVOVXlneW9vbkFf?oc=5",
+     "title": "Ohio Senate Weighs Ending Data Center Tax Break",
+     "date": "2026-11-22"
     },
     {
      "source": "Ohio Capital Journal",
@@ -4653,10 +4659,10 @@
      "date": "2026-11-19"
     },
     {
-     "source": "Tom's Hardware",
-     "url": "https://news.google.com/rss/articles/CBMixwJBVV95cUxPWDhxendxcDVzRVNBaFVyZDZlZVNUSFhhb3F4TDYzM2tRQ05JQkFtVUw4YTNfV25oSWszcnNNVHVESDlyaU95RFc2SFJnaUZvTU5kRXg0MkJkeFZGU01FakRqRGlDYUpfRFhUN3dWYmZNekZMWGd0dkxfYkNZTGg5MjljbXlJa3FJc2E4VC05SnhlbjFBREo4SDhQT3RfMnFJUVM3V0R4UUV2UWFDNEVVS2Z6X3p5S3V4Vm1RZXg2V3JVRno2LUlVV1dIMGRwZS1Ca2MzNy1IbGNpUW8yS1JnU1lfSVVvYTkzMnFoa0M3a0FXME1oMXF4RmtXTEZza0tZZmN3R2pUV1o2amJSd3JKNEVzYUdKNlB4WW1PZmRpdjJTUTJtdnBVb0NTY0lEbGlKeGs5MGhUZ080ejc3d3FWRk82OWdLeDA?oc=5",
-     "title": "Leaked Ohio bill could allow AI data center companies to seize private land for their buildouts using eminent domain law — proposed law would expand list of beneficiaries",
-     "date": "2026-11-18"
+     "source": "Ohio House of Representatives (.gov)",
+     "url": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxPR3prWkNWcEhUc01EU0dRWXRlbHMzNVg3ZldGVkxMNENfdTl1RVdRNG1qaVFKUko1T3JMaVNMSUZSZng3NnowaGxpcm5QOG9PMmV2Y3dHN29iT0EzNzRVb3NVWDJuTUNsNXllRzFMN1dwdmpKRXlsbmg4b1A0Mm5GRWFOeVNRUU94TkQtTWFHNDk1SHFTbEFWcHYwbjYySXNEV1I0QTJBemJzM0lKX2ZyZkVmbTU3dnp4TjJ5NHc1Z0FPRWktbWVLNmJEU1NyVTY4MTl4RUwyd2F2N3BMQ3VpTE5CV1NpZ1l6Z3NObHllSTdjcWtvQUVPRld5b2dITGc?oc=5",
+     "title": "Ohio House Democrats Urge Governor DeWine to Act on Data Center Electricity Costs Before Ohio Consumers Face Higher Bills",
+     "date": "2026-10-29"
     }
    ],
    "at": "2026-11-24"
@@ -4779,9 +4785,9 @@
    "at": "2026-11-24"
   },
   "GA": {
-   "hash": "30583a8fe5b5",
-   "policy": "新州長當選人承諾暫停資料中心擴張；公用事業委員會針對資料中心、電費與停電問題設定目標。",
-   "impact": "若州長推行暫停政策，偏向延遲Microsoft、CoreWeave、SpaceXAI等項目的電力審批與並網時程。",
+   "hash": "fa9412823fcd",
+   "policy": "新州長承諾暫停資料中心擴張；公用事業委員會將資料中心列為電費與停電管制目標。",
+   "impact": "若州長推行暫停政策，偏向延遲Microsoft、CoreWeave、SpaceXAI的建設進度；公委會管制電力供應偏向增加營運成本與時程風險。",
    "risk": "高",
    "links": [
     {
@@ -5216,5 +5222,5 @@
    "zh": "Building 1、2屋頂完成超過一半，兩棟冷卻機組已安裝。Building 3、4已開始施工並完成放樣。Apollo Power Gen"
   }
  },
- "at": "2026-11-24 07:42（台北）"
+ "at": "2026-11-24 09:01（台北）"
 }

@@ -1484,7 +1484,67 @@
   "p:h200_china:5ed776eaa509": "2026-11-17",
   "p:chip_232:af2458a85be2": "2026-11-23",
   "p:chip_232:062d0d16069d": "2026-11-20",
-  "p:us_china_truce:441432831dde": "2026-11-23"
+  "p:us_china_truce:441432831dde": "2026-11-23",
+  "f17b87cc393e": "2026-11-23",
+  "d33fd1600cdc": "2026-11-23",
+  "877585daa16e": "2026-11-23",
+  "de2e17f17a73": "2026-11-24",
+  "fad06769cae5": "2026-11-24",
+  "9728e4179977": "2026-11-24",
+  "a1d6ad862a8f": "2026-11-24",
+  "481a4cf13eab": "2026-11-24",
+  "e62cc6d24254": "2026-11-23",
+  "fd1ec479c4b5": "2026-11-23",
+  "1dcc9dba97a5": "2026-11-23",
+  "c7f8d39ffdcb": "2026-11-23",
+  "4dd1cf5f2749": "2026-11-23",
+  "d57363afa8a0": "2026-11-23",
+  "b3faa91ca72f": "2026-11-23",
+  "9cfb3341940a": "2026-11-23",
+  "5cb09580f346": "2026-11-23",
+  "ef575d68047a": "2026-11-23",
+  "52495d557282": "2026-11-23",
+  "39454b264aab": "2026-11-23",
+  "d7b867a4c051": "2026-11-23",
+  "641726253049": "2026-11-23",
+  "02320a6650e9": "2026-11-23",
+  "948742750db0": "2026-11-23",
+  "9b6af3a21f4a": "2026-11-23",
+  "685f125c2b8a": "2026-11-23",
+  "d1f89c862a8a": "2026-11-23",
+  "50b539a9b523": "2026-11-23",
+  "8bf020d96f3d": "2026-11-23",
+  "cafe822128b1": "2026-11-23",
+  "p:fiscal_cr:12cec5a6893c": "2026-11-23",
+  "p:fiscal_cr:69d50c73980a": "2026-11-23",
+  "p:fed_cook:01a09f38256d": "2026-11-20",
+  "p:fed_cook:0ae85ea16acb": "2026-11-19",
+  "p:fed_cook:1461a488eaae": "2026-11-19",
+  "p:fed_cook:38ee8453516d": "2026-11-18",
+  "p:fed_cook:3fcedf97dada": "2026-11-17",
+  "p:fed_cook:72e9669f5f99": "2026-11-17",
+  "p:fed_cook:6d707751c935": "2026-11-17",
+  "p:fed_cook:8290f825b5da": "2026-11-17",
+  "p:h200_china:f1015fee6d7f": "2026-11-17",
+  "p:h200_china:2c1443b9a9ec": "2026-11-23",
+  "p:h200_china:37e45f733899": "2026-11-22",
+  "p:h200_china:88d56528fa3b": "2026-11-22",
+  "p:h200_china:32413a56dda7": "2026-11-22",
+  "p:h200_china:b377e12db9ef": "2026-11-21",
+  "p:h200_china:531aabb93aa1": "2026-11-21",
+  "p:h200_china:0153ba6aa598": "2026-11-21",
+  "p:h200_china:c30584a25c2b": "2026-11-21",
+  "p:h200_china:29c8a4d2efc1": "2026-11-21",
+  "p:us_china_truce:8d836c44c85f": "2026-11-23",
+  "p:us_china_truce:0b8bddc8df03": "2026-11-23",
+  "p:us_china_truce:2b5186abcb08": "2026-11-21",
+  "p:us_china_truce:55f3a0f9a5a5": "2026-11-21",
+  "p:us_china_truce:204bdbd852e1": "2026-11-21",
+  "p:us_china_truce:1ff6bf723d8e": "2026-11-19",
+  "p:us_china_truce:8cdb84b06b76": "2026-11-19",
+  "p:us_china_truce:6519cf1898d9": "2026-11-18",
+  "p:us_china_truce:6756211b44d6": "2026-11-18",
+  "p:us_china_truce:df03a5ba1261": "2026-11-18"
  },
  "items": [
   {
@@ -1611,12 +1671,12 @@
    ]
   },
   "fed_cook": {
-   "date": "2026-11-23",
-   "note": "洛杉磯時報11月21日報導白宮聽證會被批評為「袋鼠法庭」，顯示白宮委員會調查已進行中，可能即將有調查結果。",
+   "date": "2026-11-24",
+   "note": "多則新聞顯示 Cook 理事拒絕參與白宮聽證會（11月17-19日），可能導致白宮調查進程改變或委員會調查結果日期需重新評估。",
    "links": [
-    "https://news.google.com/rss/articles/CBMilgFBVV95cUxNbDFhM3QycTFaUVlMOVNGcG5ZZlBXeEV1aEJQUFU3OU1KS0ZwbGhyS2xGS050SFA1bzlqMHBmcnJubllZLWRqTGpraFl1d21CbXRTUHkyQXRqVWJNXzdoZ1A0eVpGUGlzNjFDVlJvWU5LdmtJdzFULUZaa2dBUkliXzg1RUQyellLZFpuSGF4ZXBVcU1MVHc?oc=5",
-    "https://news.google.com/rss/articles/CBMivgFBVV95cUxQSzJlYmp2cWRRTVJBeU9McWJoLU0tOExJX0Z5RUVmS2dEa0UwN2xOU2lRMWZUUzVZLXVoajR1eHM5OFhGR0k4cE12YUFrUEdSeWpUNEpneFpSOVRGRkF3bzhkRnhnMlVpR19lLWpnTDliR3laZG9nTU9lSDZuV0N6Y2ZVY2tQYkl1SURDUHdoTm16TEplNHp0UVJvanhWNmRsSnJZc2NMZWdaOGpKLWlidW9RRnZGWUhCQTJXT0FR?oc=5",
-    "https://news.google.com/rss/articles/CBMinAFBVV95cUxOcjZ1WGZVamhkd0MxRC1ST1dWeWN1bXpZeUVRWHUtRER0N0FSRjc1eDNoQ0lfZGpzWnlZMWFndjJXNUVObGtoTE55NnJjSk13MmVTaVRZTU9DODlkOXVGMnYzcjJQLXc3UlNKTWJzWjc3d29xcFdGSFM1ZVZuWXVJMkxDbTdtaWYwUjVzMV9HQ0tiVS1rSFRycjNxQ1o?oc=5"
+    "https://news.google.com/rss/articles/CBMickFVX3lxTE1yUUJSbUdoOUY3WkNHbzRJN0paUXVYQm11RUFhazdZajJFVXNtcHRHWnllM2lIWmFuWHNMRnRFa0dJc3JLX2htdHFYMk1GUklVS091WnMxQXMydGZMdGpCT1VLRGtocG94V1NRWi1DT0dUQQ?oc=5",
+    "https://news.google.com/rss/articles/CBMijAFBVV95cUxOX2hMX0FrSHMtS3dFVkpxNnc1VWZ2UXhjbWR6SS1Wc0pyMEZpSHprUF8yMy14YUxNaU5LdGdCR2pyYV9hcGhJazBVV1I1eHJOSW9SMm5PdzdGQS1BcWZiZHdqbVVQbEVTQTJNMU1xUDkwRnFPV1J6cTA0ejh2eF9taFF4TENJZHludk5feg?oc=5",
+    "https://news.google.com/rss/articles/CBMickFVX3lxTE91VmlOVkRCU0p1WjFpYXNvRlBNN2JqZFhaSEZvY2ZxZ1dKekJiZ2xnT3lRVHZnRlJyZEpWRWQyZV9GMGZhZzVWcU01a1RjZ0NkdHJqQ2F2alhtZWd0TGtqRzBlN3hTRk9KTV9RM2xGNXFKUQ?oc=5"
    ]
   },
   "h200_china": {
@@ -1647,5 +1707,5 @@
    ]
   }
  },
- "at": "2026-11-24 07:42（台北）"
+ "at": "2026-11-24 09:01（台北）"
 }
