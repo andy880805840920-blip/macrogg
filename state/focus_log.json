@@ -1,106 +1,5 @@
 [
  {
-  "at": "2026-11-13T12:11+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "ppi",
-   "claims",
-   "auction_30y"
-  ],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
-     "The Fed: Trending News, Latest Updates, Analysis - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Treasury Yield Surge Shatters Hopes Worst of Bond Rout Is Over - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Japan Bonds Fall as Treasury Rout Extends on Fed-Hike Bets - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed's Williams says central bank has 'work to do' to get inflation back on target - Reuters"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+3",
-    "titles": [
-     "Fed’s Williams Says Inflation ‘Far Too High,’ Work to Do - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 12.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+4",
-    "titles": [
-     "US Treasury bought yen in July; Fed made no solo FX interventions in Q3 - Reuters"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+3",
-    "titles": [
-     "Joly Is ‘Fed Up’ But There’s No Clear Solution for Stellantis Problem - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 11.0,
-    "sources": 1,
-    "why": "主角+4、時效+1、來源+3、熱度+3",
-    "titles": [
-     "Fed has time to calibrate rate hikes, Daly says - Reuters"
-    ]
-   }
-  ],
-  "background": [
-   "Dow Jones Futures Rise, Yields Up Again; Nvidia Climbs After Tumbling On CEO Huang's Exit",
-   "The Fed expected rate cuts this year. Now it’s bracing for another inflation fight"
-  ],
-  "main": "US Bonds: Trending News, Latest Updates, Analysis - Bloomberg.com",
-  "main_why": "最高分",
-  "second": "Fed's Williams says central bank has 'work to do' to get inflation back on target - Reuters",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 187 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】98 字，超過 90 字，請精簡",
-     "用了相對時間（今日），請改寫成月/日"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 177 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "輝達執行長黃仁勳離職，股價盤後反彈，美債殖利率續升"
- },
- {
   "at": "2026-11-13T14:14+00:00",
   "mode": "daily",
   "window_h": 18,
@@ -2990,5 +2889,120 @@
    ]
   },
   "result": "紐約聯準會總裁 Williams 稱仍需升息壓制通膨，2027 年才能接近 2% 目標"
+ },
+ {
+  "at": "2026-11-24T23:43+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims"
+  ],
+  "locks": [
+   "pce"
+  ],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Most Fed Regional Boards Wanted to Raise Rates in October - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "New Trump Tariffs Won’t Top Trade Deal Levels, Will Be Targeted - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+1、來源+3、熱度+4",
+    "titles": [
+     "AI boom looms over Warsh's Fed as inflation worries grow - Reuters"
+    ]
+   },
+   {
+    "score": 11.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+4（有內文）",
+    "titles": [
+     "Fed's John Williams indicates higher interest rates likely 'over time' to address inflation"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "US Readies Tariff Hike on China, EU Goods as Soon as Tuesday - Bloomberg.com"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "聯準會升息預期重擊貴金屬 黃金失守3600美元白銀暴跌5%"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "AI熱潮推升通膨隱憂，華許掌舵Fed面臨政策兩難"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "AI短期推升通膨、長期有助壓低物價，威廉斯示警隱性槓桿風險"
+    ]
+   }
+  ],
+  "prior_old": [
+   "Why France is at risk of recession — and what could keep it out of one"
+  ],
+  "background": [
+   "Fed's John Williams indicates higher interest rates likely 'over time' to address inflation",
+   "聯準會升息預期重擊貴金屬 黃金失守3600美元白銀暴跌5%",
+   "川普政府醞釀新一輪關稅，鎖定中國、歐盟等16大貿易夥伴，台灣入列"
+  ],
+  "main": "Most Fed Regional Boards Wanted to Raise Rates in October - Bloomberg.com",
+  "main_why": "最高分",
+  "second": "New Trump Tariffs Won’t Top Trade Deal Levels, Will Be Targeted - Bloomberg.com",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "出現材料裡沒有的數字（2028）：只能用材料裡有的數字，沒有出處的請刪掉或改成文字描述",
+     "主軸 255 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實",
+     "用了相對時間（今日），請改寫成月/日"
+    ],
+    [
+     "主軸 169 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 284 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
+    ],
+    [
+     "主軸 174 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "正文寫了媒體名稱（路透），來源會列在下方，直接寫事實"
+    ]
+   ]
+  },
+  "result": "Williams 稱通膨仍高須持續升息多數地區聯邦準備銀行 10 月主張升息"
  }
 ]

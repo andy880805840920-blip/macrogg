@@ -461,7 +461,7 @@
     "pce_yoy": 3.81,
     "core_yoy": 3.21
    },
-   "clev_asof": "11/23",
+   "clev_asof": "11/24",
    "banks": {},
    "bad": [],
    "auto_seen": {},
@@ -470,7 +470,7 @@
    "cons": {
     "core_mom": 0.3
    },
-   "cons_at": "2026-11-24T20:14+08:00"
+   "cons_at": "2026-11-25T07:44+08:00"
   },
   "employment|2026-11": {
    "key": "employment",
