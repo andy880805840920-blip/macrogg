@@ -1183,7 +1183,7 @@ function navMark(){if(!nv)return;var lim=hdr.getBoundingClientRect().bottom+(nv.
 sheet.addEventListener('scroll',function(){if(!nv)return;var y=sheet.scrollTop;
  if(window.innerWidth<=700&&Date.now()>(sheet._jump||0)){if(y>lastY+6&&y>80)hdr.classList.add('nav-off');else if(y<lastY-6||y<40)hdr.classList.remove('nav-off');}
  lastY=y;navMark();},{passive:true});
-md.addEventListener('click',function(e){var b=e.target.closest('.ai-nav button');if(!b)return;
+md.addEventListener('click',function(e){var b=e.target.closest('.ai-nav button,.sd-rel button');if(!b)return;
  var s=body.querySelector('[data-sec="'+b.getAttribute('data-go')+'"]');if(!s)return;
  var off=hdr.offsetHeight+(nv?nv.offsetHeight:0)+8,top=s.getBoundingClientRect().top-sheet.getBoundingClientRect().top+sheet.scrollTop-off;
  sheet._jump=Date.now()+900;hdr.classList.remove('nav-off');sheet.scrollTo({top:Math.max(0,top),behavior:'smooth'});});
@@ -1194,6 +1194,11 @@ md.addEventListener('click',function(e){
  var t=e.target.closest('.ai-tile');
  if(t){md.querySelectorAll('.ai-tile').forEach(function(x){var on=x===t;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
   md.querySelectorAll('.ai-pane').forEach(function(p){p.hidden=p.getAttribute('data-co')!==t.getAttribute('data-co');});}});
+// 2026-11 本期變化歷史：滑過／點長條，下方那行顯示當天鴿鷹中性
+function chRd(b){var w=b.closest('.ch-h'),r=w&&w.querySelector('.ch-rd');if(!r)return;r.textContent=b.getAttribute('data-tip');
+ w.querySelectorAll('.ch-c').forEach(function(x){x.classList.toggle('on',x===b);});}
+md.addEventListener('click',function(e){var b=e.target.closest('.ch-h .ch-c');if(b)chRd(b);});
+md.addEventListener('mouseover',function(e){var b=e.target.closest('.ch-h .ch-c');if(b)chRd(b);});
 // 2026-11 白宮與國會：一組主題篩選同時套用到「川普說了什麼」與「政策進度」，兩欄標題顯示筆數
 md.addEventListener('click',function(e){var b=e.target.closest('.wh-f button');if(!b)return;var w=b.closest('.wh-wrap'),f=b.getAttribute('data-f');
  w.querySelectorAll('.wh-f button').forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
@@ -1219,9 +1224,11 @@ def _duo(ctxs: dict, extra: list | None = None) -> str:
     # 2026-11：白宮與國會取代期中選舉那一格；選舉卡保留，config/whitehouse.yaml 的 election_tile 打開才顯示
     _wh = ctxs.get("_whitehouse")
     _el = ("el", _election_tile(ctxs.get("_election"))) if (not _wh or _wh.get("election_tile")) else ("el", ("", ""))
-    pairs = [_el, ("wh", _wh_tile(_wh)), ("ai", _ai_tile(ctxs.get("_ai_events"),
+    pairs = [_el, ("wh", _wh_tile(_wh)), ("ai", _ai_tile(ctxs.get("_ai_events"),
+
                                                                                     ((ctxs.get("rates") or {}).get("le") or {}).get("hs_agg"),
-                                                                                    ctxs.get("_datacenters")))]
+                                                                                    ctxs.get("_datacenters"),
+                                                                                    ctxs.get("_ai_supply")))]
     pairs += [(t, (tile, panel)) for t, tile, panel in (extra or [])]
     for t, (tile, panel) in pairs:
         if tile:
@@ -1288,8 +1295,15 @@ def _overview_tiles(ctxs: dict, sc, lean: str, labor_label: str, infl_label: str
                 esc(_next_step(nx, sc)), "今日結論")
     n = chg.get("n") or {}
     if chg.get("total"):
-        bar = "".join(f'<i class="{k}" style="flex:{n[k]}"></i>' for k in ("dovish", "hawkish", "neutral") if n.get(k))
-        g02 = (f'<span class="t-bar">{bar}</span><span class="t-lg"><span class="dovish">鴿 {n.get("dovish", 0)}</span>'
+        # 2026-11：比例條改成近期三色堆疊長條（有變化才多一根）；歷史不足兩點時退回比例條
+        hist = chg.get("hist") or []
+        if len(hist) >= 2:
+            top = "".join(_ch_col(r, tip=False) for r in hist[-14:])
+            bar_html = f'<span class="t-hist" aria-hidden="true">{top}</span>'
+        else:
+            bar = "".join(f'<i class="{k}" style="flex:{n[k]}"></i>' for k in ("dovish", "hawkish", "neutral") if n.get(k))
+            bar_html = f'<span class="t-bar">{bar}</span>'
+        g02 = (f'{bar_html}<span class="t-lg"><span class="dovish">鴿 {n.get("dovish", 0)}</span>'
                f'<span class="hawkish">鷹 {n.get("hawkish", 0)}</span><span class="neutral">中性 {n.get("neutral", 0)}</span></span>')
         t02 = _tile("n02", "02 本期變化", chg.get("tilt", ""), f'<span class="t-chg">{g02}</span>',
                     f'本期 {chg["total"]} 項變動', "本期變化")
@@ -1682,6 +1696,53 @@ def _resolved_text(title: str) -> str:
     return f"不再成立：{head}（上期 {tail}）" if sep and tail else f"不再成立：{title}"
 
 
+def _ch_tot(r: dict) -> int:
+    return r["dv"] + r["hk"] + r["nt"]
+
+
+def _ch_pct(r: dict) -> dict:
+    """鴿／鷹／中性各佔幾 %（四捨五入後補到中性，三者加起來剛好 100）。"""
+    t = _ch_tot(r) or 1
+    dv, hk = round(r["dv"] / t * 100), round(r["hk"] / t * 100)
+    return {"dv": dv, "hk": hk, "nt": max(0, 100 - dv - hk) if r["nt"] else 0}
+
+
+def _ch_tip(r: dict) -> str:
+    d = dt.date.fromisoformat(r["d"])
+    p = _ch_pct(r)
+    return (f'{d.month}/{d.day}：鴿 {p["dv"]}%・鷹 {p["hk"]}%・中性 {p["nt"]}%（共 {_ch_tot(r)} 項）'
+            + (f'・{r["tilt"]}' if r.get("tilt") else ""))
+
+
+def _ch_col(r: dict, tip: bool = True) -> str:
+    """一根 100% 三色堆疊長條（由下往上：鴿、鷹、中性），看的是比例、不是項數。"""
+    seg = "".join(f'<i class="{c}" style="flex:{r[k]}"></i>' for k, c in (("dv", "dovish"), ("hk", "hawkish"), ("nt", "neutral"))
+                  if r[k])
+    if not tip:
+        return f'<span class="t-hc">{seg}</span>'
+    t = _ch_tip(r)
+    return (f'<button type="button" class="ch-c" data-tip="{esc(t)}" aria-label="{esc(t)}">'
+            f'<span class="ch-s">{seg}</span></button>')
+
+
+def _ch_hist_html(hist: list) -> str:
+    """視窗裡的完整長條圖：近 3 個月的鴿鷹中性比例，有變化才多一根；滑過／點選看當天數字。"""
+    if len(hist) < 2:
+        return ""
+    cols = "".join(_ch_col(r) for r in hist)
+    n = len(hist)
+    step = max(1, round(n / 5))
+    xl = "".join(f'<span style="left:{(i + .5) / n * 100:.2f}%">{dt.date.fromisoformat(r["d"]).month}/'
+                 f'{dt.date.fromisoformat(r["d"]).day}</span>'
+                 for i, r in enumerate(hist) if i % step == 0 and i < n - 1 - step // 2 or i == n - 1)
+    grid = "".join(f'<i class="ch-g{" ch-g50" if g == 50 else ""}" style="bottom:{g}%"><em>{g}%</em></i>' for g in (50, 100))
+    return (f'<div class="ch-h"><div class="ch-hh"><b>近期變化</b><span>每根是一天的鴿鷹中性比例；項數有變才多一根</span></div>'
+            f'<div class="ch-p" role="group" aria-label="本期變化歷史（比例）"><div class="ch-cs">{cols}</div>{grid}</div>'
+            f'<div class="ch-x">{xl}</div>'
+            f'<div class="ch-lg"><span><i class="dovish"></i>偏鴿</span><span><i class="hawkish"></i>偏鷹</span>'
+            f'<span><i class="neutral"></i>中性</span><output class="ch-rd">{esc(_ch_tip(hist[-1]))}</output></div></div>')
+
+
 def _hm_changes(cs, regime: str = "", out: dict | None = None) -> str:
     """
     本期變化（2026-10 v2，使用者：太雜）：
@@ -1718,6 +1779,9 @@ def _hm_changes(cs, regime: str = "", out: dict | None = None) -> str:
     _wnote = (f"{'通膨' if _pri == '物價' else '就業'}訊號加權 ×2（聯準會重心）" if _pri else "")
     if out is not None:          # 六宮格小卡用
         out.update(tilt=tilt, n=n, total=total)
+        # 2026-11：歷史（state/changes_hist.json；線上建置才寫檔）
+        from ..analysis import chg_hist as _chh
+        out["hist"] = _chh.update(out.get("hist_path"), _chh.point(clock.today(), n, tilt), bool(out.get("hist_write")))
     # 重點 5 項：重心那一軸優先（最多 3 項），其餘照原排序補滿
     if _pri:
         items.sort(key=lambda x: x[0])
@@ -1731,6 +1795,7 @@ def _hm_changes(cs, regime: str = "", out: dict | None = None) -> str:
             f'<div class="hm-c2-lg"><span><i class="dovish"></i>偏鴿 {n["dovish"]}</span>'
             f'<span><i class="hawkish"></i>偏鷹 {n["hawkish"]}</span>'
             f'<span><i class="neutral"></i>中性 {n["neutral"]}</span></div></div>')
+    head += _ch_hist_html((out or {}).get("hist") or [])
     items.sort(key=lambda x: x[0])
     _zh = {"dovish": "偏鴿", "hawkish": "偏鷹", "neutral": "中性"}
 
@@ -2295,7 +2360,7 @@ def home_body(ctxs: dict) -> str:
         f"利率 {rates.get('as_of', '—')}"])
     # 下一格距離條已移除（2026-10 使用者：橘線沒有意義）
     # ---- 2026-10-29：「今日市場焦點｜今日總覽」合併卡；01–04 收成六宮格，點了跳視窗 ----
-    _chg: dict = {}
+    _chg: dict = {"hist_path": ctxs.get("_chg_hist_path"), "hist_write": ctxs.get("_chg_hist_write")}
     _regime = getattr(sc, "regime", "")
     # 整體情勢三段各加狀態點（跟四大模組同一套顏色）
     for _nm, _tn in (("勞動市場", "dovish" if sc.labor_state == "弱" else "hawkish" if sc.labor_state == "強" else ""),

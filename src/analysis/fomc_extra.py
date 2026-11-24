@@ -415,15 +415,17 @@ def parse_minutes(doc: str) -> dict | None:
     paras = [p for p in paras if len(p) > 40]
     if not paras:
         return None
+    # 2026-11：10 月起段落標題改成「Policymakers' Discussion of Current Conditions…」，兩種都認
     s = next((i for i, p in enumerate(paras)
-              if re.match(r"Participants'?\s*[’']?\s*Views on Current Conditions", p)), None)
+              if re.match(r"(Participants'?\s*[’']?\s*Views on|Policymakers'?\s*[’']?\s*Discussion of) Current Conditions", p)), None)
     e = next((i for i, p in enumerate(paras)
               if i > (s or 0) and p.startswith("Committee Policy Actions")), None)
     if s is None:
         return None
     seg = paras[s:e]
-    seg[0] = re.sub(r"^Participants'?\s*[’']?\s*Views on Current Conditions and the "
-                    r"Economic Outlook\s*", "", seg[0])
+    seg[0] = re.sub(r"^(Participants'?\s*[’']?\s*Views on Current Conditions and the Economic Outlook"
+                    r"|Policymakers'?\s*[’']?\s*Discussion of Current Conditions, the Economic Outlook, "
+                    r"and Monetary Policy Considerations)\s*", "", seg[0])
     rows = []
     for p in seg:
         for sent in _sentences(p):

@@ -355,7 +355,7 @@ def _fetch(url: str, headers=None, _get=None) -> str:
     return r.text if r.status_code == 200 else ""
 
 
-def build(cik: int, name: str, state_path: Path, offline: bool = False, _get=None, call=None,
+def build(cik: int | None, name: str, state_path: Path, offline: bool = False, _get=None, call=None,
           max_new: int = 4) -> dict:
     """
     回傳 {filings:[{form, form_zh, date, acc, url, points, change, terms}], terms, derived, rounds,
@@ -369,6 +369,8 @@ def build(cik: int, name: str, state_path: Path, offline: bool = False, _get=Non
     vals: list = st.get("val_items") or []
     if not offline:
         try:
+            if not cik:                              # 2026-11：保密遞件中（沒有公開 cik）——只追媒體估值
+                raise LookupError("no cik")
             from ..sec import USER_AGENT
             ua = {"User-Agent": USER_AGENT}
             sub = json.loads(_fetch(SEC_SUB.format(cik=int(cik)), ua, _get) or "{}")
@@ -405,6 +407,8 @@ def build(cik: int, name: str, state_path: Path, offline: bool = False, _get=Non
                     continue                         # 不記錄，下次再試
                 docs[f["acc"]] = {**f, "url": url, "terms": terms, "rounds": rounds, **summ}
                 done += 1
+        except LookupError:
+            pass
         except Exception as e:                       # noqa: BLE001
             log.warning("IPO 申報清單抓取失敗（%s）", e)
         # 媒體估值：近 30 天標題，累積在 state（保留 180 天）

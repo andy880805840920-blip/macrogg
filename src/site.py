@@ -2134,6 +2134,60 @@ body.duo-lock{overflow:hidden}
 .duo-sheet.has-nav .duo-body{padding-top:42px}
 .ai-wrap>.ai-nav{display:none}
 @media(max-width:700px){.duo-sheet-h .ai-nav{padding:0 14px;gap:16px}}
+/* 2026-11 AI 供需（src/pages/ai_supply.py）：AI 大事視窗最上面。結論→兩個指標→供給｜需求（手機收合明細）→相關數字→算法 */
+.sd{border:1px solid var(--grid);border-radius:12px;padding:14px 16px;background:var(--bg)}
+.sd-hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sd-hd h3{margin:0;font-size:16px;color:var(--text-primary)}.sd-hd span{font-size:12px;color:var(--faint)}
+.sd-v{margin:10px 0 12px;padding:10px 12px;border-radius:10px;background:var(--surface-2);line-height:1.5}
+.sd-v b{display:block;font-size:14.5px;color:var(--text-primary)}
+.sd-v small{display:block;font-size:12.5px;color:var(--text-secondary);margin-top:2px}
+.sd-v.sd-bad{background:var(--tint-haw)}.sd-v.sd-bad b{color:var(--serious)}
+.sd-v.sd-ok{background:var(--tint-dov)}.sd-v.sd-ok b{color:var(--series-1)}
+.sd-kpis,.sd-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.sd-two{margin-top:10px}
+.sd-k,.sd-col{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;min-width:0}
+.sd-kt{font-size:12.5px;color:var(--muted);font-weight:700}
+.sd-kv{font-size:28px;font-weight:800;color:var(--text-primary);font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+.sd-kv.o{color:var(--serious)}
+.sd-ks{font-size:12px;color:var(--text-secondary);line-height:1.5}
+.sd-ub,.sd-g{position:relative;height:10px;border-radius:5px;background:var(--surface-2);margin:14px 0 20px}
+.sd-ub i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--serious)}
+.sd-g{background:linear-gradient(90deg,var(--tint-haw) 0,var(--tint-haw) var(--nd),var(--tint-dov) var(--nd))}
+.sd-ub .mk,.sd-g .mk{position:absolute;top:-4px;width:2px;height:18px;margin-left:-1px;background:var(--text-primary)}
+.sd-ub .mk em,.sd-g .mk em{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-style:normal;font-size:11px;color:var(--muted);white-space:nowrap}
+.sd-ub .mk em{left:auto;right:-6px;transform:none}
+.sd-g .pt{position:absolute;top:-5px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:var(--serious);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--serious);z-index:1}
+.sd-col h4{margin:0;font-size:13.5px;color:var(--text-primary);display:flex;justify-content:space-between;gap:8px}
+.sd-col h4 b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.sd-sub{font-size:11.5px;color:var(--faint);margin:2px 0 8px}
+.sd-bar{display:flex;gap:2px;height:8px;margin:0 0 6px}
+.sd-bar i{display:block;border-radius:2px;min-width:2px}
+.sd-bar .c0{background:var(--series-1)}.sd-bar .c1{background:color-mix(in srgb,var(--series-1) 65%,var(--bg))}
+.sd-bar .c2{background:color-mix(in srgb,var(--series-1) 42%,var(--bg))}.sd-bar .c3{background:color-mix(in srgb,var(--series-1) 25%,var(--bg))}
+.sd-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 8px;padding:7px 0;border-top:1px solid var(--grid);font-size:13px}
+.sd-r b{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.sd-r small{grid-column:1/-1;font-size:11.5px;color:var(--faint);line-height:1.45}
+.sd-na span,.sd-na b{color:var(--faint);font-weight:500}
+.sd-fl{background:var(--surface-2);border-top:0;border-radius:8px;padding:8px 10px;margin-top:6px}
+details.sd-more,details.sd-how{margin:0;padding:0;border:0;border-top:1px solid var(--grid)}
+.sd-more>summary,.sd-how>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:12.5px;font-weight:600;color:var(--series-1);min-height:0}
+.sd-more>summary::after,.sd-how>summary::after{content:"展開 ▾";font-weight:500}
+.sd-more[open]>summary::after,.sd-how[open]>summary::after{content:"收合 ▴"}
+.sd-more>summary::-webkit-details-marker,.sd-how>summary::-webkit-details-marker{display:none}
+.sd-more{display:none}
+.sd-rel{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.sd-rel button,.viz-root:not(#_) .sd-rel button{appearance:none;margin:0;font:inherit;font-size:12.5px;padding:5px 11px;border:1px solid var(--grid);border-radius:999px;
+ color:var(--series-1);background:var(--bg);cursor:pointer;min-height:32px;display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.sd-rel button i{font-style:normal}
+.sd-rel button:hover{border-color:var(--series-1)}
+.sd-how ol{margin:0 0 6px;padding-left:20px;font-size:12.5px;color:var(--text-secondary);line-height:1.6}
+.sd-how li{margin:2px 0}
+.sd-fn{font-size:11.5px;color:var(--faint);margin:6px 0 0;line-height:1.6}
+@media(max-width:700px){.sd{padding:12px}.sd-kpis,.sd-two{grid-template-columns:minmax(0,1fr)}.sd-kv{font-size:24px}
+ .sd-det{display:none}.sd-more{display:block}}
+/* 2026-11 OpenAI IPO：保密遞件中只放一行狀態 */
+.ipo-cf{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--surface-2);font-size:12.5px}
+.ipo-cf span{color:var(--text-secondary)}
 /* 2026-11 白宮與國會（src/pages/whitehouse.py）：本週重點→篩選→川普說了什麼｜政策進度（桌機左右）→不確定性指數 */
 .wh-wrap{display:flex;flex-direction:column;gap:10px}
 .wh-c{border:1px solid var(--grid);border-radius:12px;padding:12px 14px;background:var(--bg);min-width:0}
@@ -4468,6 +4522,28 @@ html body #hm-cat-pol:checked~.hm-cats label[for=hm-cat-pol]{color:var(--brand-i
 .hm-c2-lg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:var(--fs-small);color:var(--text-secondary)}
 .hm-c2-lg span{display:inline-flex;align-items:center;gap:6px}
 .hm-c2-lg i{width:8px;height:8px;border-radius:2px;display:inline-block}
+/* 2026-11 本期變化：近期歷史長條（視窗裡） */
+.ch-h{margin:14px 0 4px;border:1px solid var(--grid);border-radius:12px;padding:12px 14px;max-width:640px}
+.ch-hh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:10px}.ch-hh b{font-size:13.5px}
+.ch-hh span{font-size:12px;color:var(--faint)}
+.ch-p{position:relative;height:120px;margin-left:22px;border-bottom:1px solid var(--baseline)}
+.ch-g{position:absolute;left:0;right:0;border-top:1px dashed var(--grid);pointer-events:none}
+.ch-g50{border-top-color:color-mix(in srgb,var(--bg) 70%,transparent);z-index:1}
+.ch-g em{position:absolute;right:100%;top:-8px;margin-right:6px;font-style:normal;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.ch-cs{position:absolute;inset:0;display:flex;align-items:flex-end}
+.ch-c,.viz-root:not(#_) .ch-c{appearance:none;flex:1;height:100%;min-width:0;margin:0;padding:0 1px;border:0;background:none;cursor:pointer;display:flex;align-items:flex-end;justify-content:center}
+.ch-s{display:flex;flex-direction:column-reverse;gap:1px;width:100%;max-width:18px;height:100%}
+.ch-s i{display:block;background:var(--muted-bar);min-height:1px}.ch-s i:last-child{border-radius:3px 3px 0 0}
+.ch-s i.dovish{background:var(--series-1)}.ch-s i.hawkish{background:var(--serious)}
+.ch-c:hover .ch-s,.ch-c.on .ch-s{outline:2px solid var(--text-primary);outline-offset:1px}
+.ch-x{position:relative;height:16px;margin-left:22px;font-size:10.5px;color:var(--faint)}
+.ch-x span{position:absolute;top:2px;transform:translateX(-50%);white-space:nowrap}
+.ch-lg{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:8px;font-size:12px;color:var(--text-secondary)}
+.ch-lg span{display:inline-flex;align-items:center;gap:5px}
+.ch-lg i{width:8px;height:8px;border-radius:2px;background:var(--muted-bar)}
+.ch-lg i.dovish{background:var(--series-1)}.ch-lg i.hawkish{background:var(--serious)}
+.ch-rd{margin-left:auto;font-weight:600;color:var(--text-primary);font-variant-numeric:tabular-nums}
+@media(max-width:700px){.ch-p{height:100px}.ch-rd{margin-left:0;flex-basis:100%}}
 .viz-root:not(#_) ul.hm-c2{list-style:none;margin:8px 0 0;padding:0}
 .viz-root:not(#_) .hm-c2 li{display:grid;grid-template-columns:8px 44px minmax(0,1fr);gap:10px;align-items:baseline;
   padding:10px 0;border-top:1px solid var(--grid);font-size:var(--fs-body);line-height:1.6;color:var(--text-primary)}
@@ -5288,6 +5364,11 @@ html body #hm-cat-pol:checked~.hm-cats label[for=hm-cat-pol]{color:var(--brand-i
 .t-lg{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12px;color:var(--muted)}
 .t-lg span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px;background:var(--muted-bar)}
 .t-lg .dovish::before{background:var(--series-1)}.t-lg .hawkish::before{background:var(--serious)}
+/* 02（2026-11）：近期三色堆疊長條（由下往上 鴿・鷹・中性），有變化才多一根 */
+.t-hist{display:flex;align-items:flex-end;justify-content:space-between;gap:3px;height:46px;width:100%;border-bottom:1px solid var(--baseline)}
+.t-hc{flex:1;align-self:stretch;display:flex;flex-direction:column-reverse;gap:1px;min-width:0;max-width:22px}
+.t-hc i{display:block;background:var(--muted-bar);min-height:1px}.t-hc i:last-child{border-radius:2px 2px 0 0}
+.t-hc i.dovish{background:var(--series-1)}.t-hc i.hawkish{background:var(--serious)}
 /* 03：小月曆 */
 .mc{display:grid;grid-template-columns:repeat(7,1fr);width:100%;text-align:center;font-size:11.5px;row-gap:3px;color:var(--text-primary)}
 .mc>span{position:relative;height:17px;line-height:17px}

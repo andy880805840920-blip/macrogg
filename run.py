@@ -1173,6 +1173,19 @@ def main() -> int:
     except Exception as e:                         # noqa: BLE001
         log.warning("AI 資料中心區塊產生失敗（%s），本次不顯示", e)
         ctxs["_datacenters"] = None
+    # 2026-11：首頁「02 本期變化」歷史（有變化才多一根；離線建置不寫檔）
+    ctxs["_chg_hist_path"] = STATE_FILE.parent / "changes_hist.json"
+    ctxs["_chg_hist_write"] = not args.offline
+    # 2026-11：AI 供需（AI 大事視窗最上面；設定 config/ai_supply.yaml，人工維護）
+    try:
+        from src.analysis import ai_supply as _ais
+        ctxs["_ai_supply"] = _ais.build(load_config("ai_supply.yaml"))
+        if ctxs["_ai_supply"]:
+            log.info("AI 供需：隱含利用率 %.0f%%、每月新增 ARR %.0f 億（需要 %.0f 億）", ctxs["_ai_supply"]["util"],
+                     ctxs["_ai_supply"]["net_mo"], ctxs["_ai_supply"]["needed_mo"])
+    except Exception as e:                         # noqa: BLE001
+        log.warning("AI 供需產生失敗（%s），本次不顯示", e)
+        ctxs["_ai_supply"] = None
     # 2026-11：白宮與國會（取代期中選舉那一格；設定 config/whitehouse.yaml）
     try:
         from src.analysis import whitehouse as _whm

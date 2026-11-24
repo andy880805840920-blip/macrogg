@@ -30,7 +30,10 @@ ROOT = Path(__file__).resolve().parents[2]
 STATE_FILE = ROOT / "state" / "forecasts.json"
 YAML_FILE = ROOT / "config" / "bank_forecasts.yaml"
 
-BANKS = ("BofA", "Citi", "JPM", "MS", "GS")
+# 2026-11：投行預估拿掉（多數期別抓不到：PCE、就業一家都沒有，CPI 只偶爾有）。
+# 只留市場共識與克里夫蘭聯儲；擷取流程保留但不執行（BANKS 為空、do_auto 預設 False）。
+BANKS: tuple = ()
+BANKS_OLD = ("BofA", "Citi", "JPM", "MS", "GS")
 CONS, CLEV = "市場共識", "Cleveland Fed"
 RELEASES = {"employment": "就業報告", "cpi": "CPI", "pce": "PCE"}
 GROUP = {"employment": "employment", "cpi": "inflation", "pce": "inflation"}
@@ -897,7 +900,7 @@ def merge_banks(key: str, e: dict, man: dict) -> tuple[dict, list]:
 
 def update(ctxs: dict, offline: bool, state_path: Path | None = None, *,
            manual: dict | None = None, clev: dict | None = None, today: dt.date | None = None,
-           do_auto: bool = True, get_fn=None, ai=None, vision=None) -> dict:
+           do_auto: bool = False, get_fn=None, ai=None, vision=None) -> dict:
     """更新 state/forecasts.json 並回傳 {"releases": {...}, "manual_bad": [...]}（給首頁畫表格）。"""
     sp = state_path or STATE_FILE
     try:

@@ -43,7 +43,8 @@ def _srcs(e: dict) -> str:
     return f'<span class="ai-s">{"・".join(ls)}</span>' if ls else ""
 
 
-def ai_tile(a: dict | None, hs_agg: list | None = None, dc: dict | None = None) -> tuple[str, str]:
+def ai_tile(a: dict | None, hs_agg: list | None = None, dc: dict | None = None,
+            sd: dict | None = None) -> tuple[str, str]:
     """回傳 (小卡, 視窗內容)。沒有資料時兩個都是空字串。hs_agg：長端頁的五家合計（每季，億美元）。"""
     if not a or not (a.get("events") or (a.get("ipo") or {}).get("active")):
         return "", ""
@@ -54,7 +55,7 @@ def ai_tile(a: dict | None, hs_agg: list | None = None, dc: dict | None = None) 
             f'<span class="duo-k">近 {a.get("window_days", 14)} 天 {len(evs)} 則</span><span class="duo-t">AI 大事</span>'
             f'<span class="duo-map">{AI_ART}</span>'
             f'<span class="duo-sum">最新：{esc(latest)}</span></button>')
-    return tile, ai_panel(a, hs_agg, dc)
+    return tile, ai_panel(a, hs_agg, dc, sd)
 
 
 def hs_block(agg: list | None) -> str:
@@ -144,7 +145,7 @@ IPO_JS = ("<script>(function(){document.querySelectorAll('.ipo-tlw').forEach(fun
           "document.addEventListener('click',function(e){if(!w.contains(e.target))fly.hidden=true;});});})();</script>")
 
 
-def ipo_block(ipo: dict, x: dict | None) -> str:
+def ipo_block(ipo: dict, x: dict | None, sec: str = "ipo") -> str:
     """
     2026-11：IPO 區塊——上方關鍵數字（全部來自 SEC 申報原文，或依原文計算並標明）、
     媒體估值預期的變化、歷輪每股價格（分割調整），最下方申報時間軸（滑鼠移到點／點選看該份文件重點）。
@@ -231,20 +232,28 @@ def ipo_block(ipo: dict, x: dict | None) -> str:
                    f'<span>{esc(_md(d)) if d else "待定"}</span></button></li>')
     tl = (f'<div class="ipo-tlw"><div class="ipo-vh"><b>申報時間軸</b><span>滑鼠移到點（手機點選）看該份文件重點</span></div>'
           f'<ol class="ipo-tl">{"".join(pts)}</ol><div class="ipo-fly" role="tooltip" hidden></div></div>{IPO_JS}') if fl else ""
-    if not fl:   # 細節還沒抓到：退回舊的四步驟
+    conf = bool(ipo.get("confidential")) and not fl
+    if conf:     # 2026-11：保密遞件（DRS）在 SEC 看不到——只放一行狀態
+        tl = ('<div class="ipo-cf"><b>保密遞件中</b><span>尚無公開 S-1；公開遞件後這裡會出現申報時間軸與發行條件</span></div>')
+    elif not fl:   # 細節還沒抓到：退回舊的四步驟
         steps_html = "".join(f'<li class="{"done" if s.get("date") else ""}"><b>{esc(s["label"])}</b>'
                              f'<span>{esc(_md(s["date"])) or "—"}</span></li>' for s in ipo.get("steps") or [])
         tl = f'<ol class="ai-ipo">{steps_html}</ol>'
-    return (f'<div class="ai-hl-c ipo2" data-sec="ipo"><details class="ai-hl-i"><summary class="ai-hl-k">'
-            f'進行中・{esc(name)} IPO{esc(tick)}<i aria-hidden="true">ⓘ</i></summary>'
-            '<div class="ai-hl-n">發行條件、營收與歷輪價格直接取自 SEC 申報原文（標「本站依申報計算」者為依原文數字相乘）；'
-            '每份申報的重點由 AI 依原文節錄整理，數字須在原文找得到；掛牌後這一格自動消失</div></details>'
+    note = ('目前只追蹤主要媒體標題中的估值預期；公開遞件 S-1 後，會改從 SEC 申報原文整理發行條件與時間軸' if conf else
+            '發行條件、營收與歷輪價格直接取自 SEC 申報原文（標「本站依申報計算」者為依原文數字相乘）；'
+            '每份申報的重點由 AI 依原文節錄整理，數字須在原文找得到；掛牌後這一格自動消失')
+    return (f'<div class="ai-hl-c ipo2" data-sec="{esc(sec)}"><details class="ai-hl-i"><summary class="ai-hl-k">'
+            f'{"準備中" if conf else "進行中"}・{esc(name)} IPO{esc(tick)}<i aria-hidden="true">ⓘ</i></summary>'
+            f'<div class="ai-hl-n">{note}</div></details>'
             + (f'<div class="ipo-kg">{"".join(kp)}</div>' if kp else "") + val + rnd + tl + '</div>')
 
 
-def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str:
+def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None, sd: dict | None = None) -> str:
     evs = a.get("events") or []
     out = []
+    # 2026-11：AI 供需放最上面
+    from .ai_supply import sd_block
+    out.append(sd_block(sd, hs_agg, dc))
     ipo = a.get("ipo") or {}
     if ipo.get("active"):
         out.append(ipo_block(ipo, a.get("ipo_x")))
@@ -310,12 +319,17 @@ def ai_panel(a: dict, hs_agg: list | None = None, dc: dict | None = None) -> str
                    f'{len(evs)} 則）</span><label class="ai-sel"><select aria-label="事件類型">'
                    + "".join(f'<option>{t}</option>' for t in types) + '</select></label></summary>'
                    f'<div class="ai-tl">{tl}</div></details>')
+    # 2026-11：Anthropic IPO 結束（掛牌滿 7 天）後換 OpenAI IPO，放在最下方（暫時不是近期重點）
+    ipo2 = a.get("ipo2") or {}
+    if ipo2.get("active") and not ipo.get("active"):
+        out.append(ipo_block(ipo2, a.get("ipo2_x"), sec="oai"))
     out.append(f'<div class="ai-why"><b>跟利率的關係</b><p>{esc(WHY)}<a href="/rates/">看長端與債務 →</a></p></div>'
                '<p class="ai-note">事件由 AI 依新聞標題整理成一句中文，每則附原文連結；只收財報、資本支出、發債、'
                '融資／IPO、算力合約五類。</p>')
     # 2026-11：區塊標題列（視窗打開時移到標題下方；手機往下滑收起、往上滑出現，桌機固定）
     body = "".join(out)
-    secs = [(k, lab) for k, lab in (("ipo", "IPO"), ("sum", "合計"), ("co", "公司"), ("dc", "資料中心"), ("all", "全部"))
+    secs = [(k, lab) for k, lab in (("sd", "供需"), ("ipo", "IPO"), ("sum", "合計"), ("co", "公司"), ("dc", "資料中心"),
+                                          ("all", "全部"), ("oai", "OpenAI"))
             if f'data-sec="{k}"' in body]
     _on = ' class="on"'
     nav = ('<nav class="ai-nav" aria-label="區塊">' + "".join(

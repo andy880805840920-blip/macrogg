@@ -35,6 +35,8 @@ TOPIC_Q = ('(earnings OR capex OR "capital expenditure" OR bond OR debt OR notes
 DEFAULTS = {
     "enabled": True, "window_days": 14, "new_days": 3, "per_company": 8,
     "ipo": {"name": "Anthropic", "cik": 2130357},
+    # 2026-11：OpenAI IPO（放在 AI 大事最下方）。保密遞件（DRS）在 SEC 看不到；有公開 S-1 後把 cik 填上
+    "ipo2": {"name": "OpenAI", "cik": None},
     "companies": [
         {"zh": "Microsoft", "q": '"Microsoft"', "match": ["Microsoft", "MSFT", "Azure"]},
         {"zh": "Alphabet", "q": '("Alphabet" OR "Google")', "match": ["Alphabet", "Google", "Gemini"]},
@@ -375,6 +377,30 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
                                    offline, _get, call)
         except Exception as e:                       # noqa: BLE001
             log.warning("AI 大事：IPO 申報細節整理失敗（%s）", e)
+    # 2026-11：OpenAI IPO——有 cik 才看 SEC 進度；沒有就是「保密遞件中」，只追媒體估值
+    ipo2_x = None
+    ipo2 = c.get("ipo2") or {}
+    if ipo2.get("name"):
+        if ipo2.get("cik") and not offline:
+            try:
+                from ..sec import USER_AGENT
+                d = json.loads(_fetch(SEC_SUB.format(cik=int(ipo2["cik"])), {"User-Agent": USER_AGENT}, _get) or "{}")
+                r = (d.get("filings") or {}).get("recent") or {}
+                state["ipo2"] = {"name": ipo2["name"], **ipo_stage(
+                    [{"form": f, "date": x} for f, x in zip(r.get("form") or [], r.get("filingDate") or [])])}
+            except Exception as e:                   # noqa: BLE001
+                log.warning("AI 大事：%s IPO 進度抓取失敗（%s）", ipo2["name"], e)
+        st2 = state.get("ipo2") or {}
+        if not ipo2.get("cik") or not st2.get("steps"):
+            st2 = {"name": ipo2["name"], "steps": [], "listed": False, "active": True, "confidential": True}
+            state["ipo2"] = st2
+        if st2.get("active"):
+            try:
+                from . import ipo_docs
+                ipo2_x = ipo_docs.build(int(ipo2["cik"]) if ipo2.get("cik") else None, ipo2["name"],
+                                        Path(state_path).parent / f'ipo_docs_{ipo2["name"].lower()}.json', offline, _get, call)
+            except Exception as e:                   # noqa: BLE001
+                log.warning("AI 大事：%s IPO 細節整理失敗（%s）", ipo2["name"], e)
     seen = {k: v for k, v in seen.items() if v >= (since - dt.timedelta(days=7)).isoformat()}
     # 已收錄的也重新檢查一次金額、合併同一件事（舊資料一起清掉）
     for e in events:
@@ -392,5 +418,6 @@ def build(cfg: dict | None, state_path: Path, offline: bool = False, _get=None, 
     new_since = (today - dt.timedelta(days=int(c["new_days"]) - 1)).isoformat()
     return {"companies": [x["zh"] for x in c["companies"]], "events": events,
             "impact": {k: v["text"] for k, v in impact.items()}, "ipo": state.get("ipo") or {}, "ipo_x": ipo_x,
+            "ipo2": state.get("ipo2") or {}, "ipo2_x": ipo2_x,
             "new_since": new_since, "window_days": int(c["window_days"]),
             "changed": sorted(changed)}

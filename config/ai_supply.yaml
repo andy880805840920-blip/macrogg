@@ -1,0 +1,96 @@
+# AI 大事「AI 供需」（2026-11）——人工維護，財報季更新。
+#
+# 計算邏輯參考 Threads 上的 AI 供需分析文章（只用它的算法，不用它的數字與假設）：
+#   供給：晶片廠的 AI 營收 ÷ 每 GW 的晶片金額 → 出貨了多少 GW 算力
+#   每 GW 每年需要賺多少：伺服器折舊＋機房折舊＋電費＋資金成本（下方 cost）
+#   隱含利用率＝AI 實驗室年化營收（ARR）÷（已出貨且滿 9 個月、近 6 年內的算力 × 每 GW 每年需賺）
+#   每月新增 ARR 要追上的量＝近 4 季出貨 GW × 每 GW 每年需賺 ÷ 12
+#
+# 單位：億美元。est: true＝依年增率／季增率或年度數字推算，畫面上標「估」。
+# 每家 rev：period_end 是該期結束日；kind: y 是整個會計年度（只算進累計算力），其餘是單季。
+asof: '2026-10-31'
+lag_months: 9            # 出貨後約 9 個月才上線（建機房、上架、驗收）
+life_years: 6            # 只算近 6 年出貨的算力
+
+vendors:
+  - name: Nvidia
+    seg: 資料中心
+    per_gw: 350          # 每 GW 晶片內容約 350 億（公司說每 GW 全部投資 500–600 億）
+    per_gw_src: Nvidia 法說
+    rev:
+      - {end: '2021-01-31', v: 67.0, kind: y, label: FY21}
+      - {end: '2022-01-30', v: 106.1, kind: y, label: FY22}
+      - {end: '2023-01-29', v: 150.1, kind: y, label: FY23}
+      - {end: '2024-01-28', v: 475.3, kind: y, label: FY24}
+      - {end: '2025-01-26', v: 1151.9, kind: y, label: FY25}
+      - {end: '2025-04-27', v: 391.1, label: FY26 Q1}
+      - {end: '2025-07-27', v: 411.0, label: FY26 Q2}
+      - {end: '2025-10-26', v: 512.2, label: FY26 Q3}
+      - {end: '2026-01-25', v: 621, label: FY26 Q4, est: true}
+      - {end: '2026-04-26', v: 752, label: FY27 Q1}
+      - {end: '2026-07-26', v: 889, label: FY27 Q2, est: true}
+      - {end: '2026-10-25', v: 1076, label: FY27 Q3}
+  - name: Broadcom
+    seg: AI 半導體
+    per_gw: 250          # 公司說每 GW 客製晶片內容 200–300 億，取中間
+    per_gw_src: Broadcom 法說
+    rev:
+      - {end: '2023-10-29', v: 38, kind: y, label: FY23, est: true}
+      - {end: '2024-11-03', v: 122, kind: y, label: FY24}
+      - {end: '2025-02-02', v: 41, label: FY25 Q1}
+      - {end: '2025-05-04', v: 44, label: FY25 Q2}
+      - {end: '2025-08-03', v: 52, label: FY25 Q3}
+      - {end: '2025-11-02', v: 65, label: FY25 Q4, est: true}
+      - {end: '2026-02-01', v: 84, label: FY26 Q1}
+      - {end: '2026-05-03', v: 108, label: FY26 Q2}
+      - {end: '2026-08-02', v: 167, label: FY26 Q3}
+  - name: AMD
+    seg: 資料中心
+    star: true           # 沒單拆 AI，含伺服器 CPU
+    per_gw: 350
+    per_gw_src: AMD 法說
+    rev:
+      - {end: '2023-12-30', v: 65.0, kind: y, label: '2023'}
+      - {end: '2024-12-28', v: 126, kind: y, label: '2024'}
+      - {end: '2025-03-29', v: 37, label: 2025 Q1, est: true}
+      - {end: '2025-06-28', v: 32, label: 2025 Q2, est: true}
+      - {end: '2025-09-27', v: 43.41, label: 2025 Q3}
+      - {end: '2025-12-27', v: 54, label: 2025 Q4, est: true}
+      - {end: '2026-03-28', v: 57.75, label: 2026 Q1, est: true}
+      - {end: '2026-06-27', v: 67.18, label: 2026 Q2}
+      - {end: '2026-09-26', v: 85.46, label: 2026 Q3}
+  - name: Marvell
+    seg: 資料中心
+    star: true
+    per_gw: 250
+    per_gw_src: 比照客製晶片
+    rev:
+      - {end: '2025-02-01', v: 42, kind: y, label: FY25, est: true}
+      - {end: '2025-05-03', v: 14, label: FY26 Q1, est: true}
+      - {end: '2025-08-02', v: 15, label: FY26 Q2, est: true}
+      - {end: '2025-11-01', v: 16, label: FY26 Q3, est: true}
+      - {end: '2026-01-31', v: 17, label: FY26 Q4, est: true}
+      - {end: '2026-05-02', v: 18.3, label: FY27 Q1}
+      - {end: '2026-08-01', v: 21.7, label: FY27 Q2}
+
+# 每 GW 每年需要賺多少（億美元）
+cost:
+  build: 550             # 每 GW 全部投資
+  server_share: 0.7      # 其中伺服器（晶片、網路）佔比
+  server_life: 5.6       # 年；四大雲 10-K：微軟 6、Google 6、Meta 5.5、Amazon 5 的平均
+  shell_life: 20         # 機房建物
+  power_cents: 9.64      # 美分／度；EIA 工業電價（2026/8）
+  hours: 8760
+  rate: 0.055            # 投資等級公司債殖利率
+  debt_share: 0.6        # 用借錢的比例
+
+# AI 實驗室年化營收（ARR），每家放最近兩個點（算每月新增）
+arr:
+  - name: Anthropic
+    pts:
+      - {date: '2026-08-17', v: 650, src: Axios}
+      - {date: '2026-10-31', v: 810, src: S-1/A}
+  - name: OpenAI
+    pts:
+      - {date: '2026-03-05', v: 250, src: RTÉ}
+      - {date: '2026-10-08', v: 500, src: Bloomberg}

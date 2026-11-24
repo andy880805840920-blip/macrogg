@@ -9,6 +9,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.analysis import forecasts as F  # noqa: E402
+# 2026-11：正式版不再列投行（BANKS 為空）；這個檔測的是保留下來的擷取邏輯，所以用舊名單跑
+_PROD_BANKS = F.BANKS
+F.BANKS = F.BANKS_OLD
 
 FAIL = []
 
@@ -165,7 +168,7 @@ if HAVE_TF:
     _FF.clock.now = lambda: dt.datetime(2026, 10, 14, 7, 3, tzinfo=_FF.clock.TAIPEI)
     try:
         r = F.update(ctxa, False, tmp2, manual={"cpi|2026-09": {"Citi": {"core_mom": 0.2, "src": "https://m"}}},
-                     clev={}, today=dt.date(2026, 10, 14), get_fn=fake_get, ai=fake_ai)
+                     clev={}, today=dt.date(2026, 10, 14), get_fn=fake_get, ai=fake_ai, do_auto=True)
         e = r["releases"]["cpi|2026-09"]
         b = e["banks"]
         vals = {n: {k: v for k, v in row.items() if k not in ("src", "meta")} for n, row in b.items()}
@@ -183,10 +186,10 @@ if HAVE_TF:
         check("㉒ 出處：網址、來源名、原句", b["GS"]["meta"]["core_mom"]["src"] == LINK and b["GS"]["meta"]["core_mom"]["name"] == "investingLive"
               and "Goldman" in b["GS"]["meta"]["core_mom"]["q"], b["GS"]["meta"])
         n = len(CALLS)
-        F.update(ctxa, False, tmp2, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=fake_get, ai=fake_ai)
+        F.update(ctxa, False, tmp2, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True, get_fn=fake_get, ai=fake_ai)
         check("㉓ 同一篇內容沒變就不再問 AI", len(CALLS) == n, len(CALLS))
         _FF.clock.now = lambda: dt.datetime(2026, 10, 14, 21, 0, tzinfo=_FF.clock.TAIPEI)
-        e2 = F.update(ctxa, False, tmp2, manual={}, clev={}, today=dt.date(2026, 10, 14),
+        e2 = F.update(ctxa, False, tmp2, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True,
                       get_fn=fake_get, ai=lambda t, s: ('{"GS": {"core_mom": 0.16}}', ""))["releases"]["cpi|2026-09"]
         check("㉔ 公布時刻之後不再擷取（GS 仍是 0.24）", e2["banks"]["GS"]["core_mom"] == 0.24, e2["banks"].get("GS"))
         html = forecasts_ui.section({"releases": {"cpi|2026-09": e2}}, dt.date(2026, 10, 14))
@@ -303,7 +306,7 @@ if HAVE_TF:
     try:
         tmp3 = Path(tempfile.mkdtemp()) / "fc.json"
         vr = vis_router(tables["ok"])
-        r = F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2, ai=fake_ai, vision=vr)
+        r = F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True, get_fn=get2, ai=fake_ai, vision=vr)
         e = r["releases"]["cpi|2026-09"]
         b = e["banks"]
         vals = {n: {k: v for k, v in row.items() if k not in ("src", "meta")} for n, row in b.items()}
@@ -315,7 +318,7 @@ if HAVE_TF:
               and e["img_seen"].get(F._norm_img(IMG_SMALL), "").startswith("skip")
               and vr.calls.count(True) == 1, (vals, e["img_seen"], vr.calls))
         n = len(vr.calls)
-        F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2, ai=fake_ai, vision=vr)
+        F.update(ctxa, False, tmp3, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True, get_fn=get2, ai=fake_ai, vision=vr)
         check("㉟ 讀過的圖不再讀（不浪費 token）", len(vr.calls) == n, vr.calls)
         html = forecasts_ui.section({"releases": {"cpi|2026-09": e}}, dt.date(2026, 10, 14))
         check("㊱ 頁面：出處顯示「自動讀圖」與中位數驗算", "自動讀圖・investingLive" in html and "中位數驗算通過" in html)
@@ -324,7 +327,7 @@ if HAVE_TF:
                  ((r[0],) + (WSJ[10][1:] if r[0] == "Goldman Sachs" else WSJ[7][1:])) for r in WSJ]
         tmp4 = Path(tempfile.mkdtemp()) / "fc.json"
         vr2 = vis_router(table_json(shift), tables["ok"])
-        e4 = F.update(ctxa, False, tmp4, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2,
+        e4 = F.update(ctxa, False, tmp4, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True, get_fn=get2,
                       ai=lambda t, s_: ("{}", ""), vision=vr2)["releases"]["cpi|2026-09"]
         g4 = e4["banks"].get("GS") or {}
         check("㊲ 整列錯位（中位數驗算抓不到）→ 複讀比對抓到，GS 整體月增不採用、其他家照收",
@@ -332,7 +335,7 @@ if HAVE_TF:
         # 圖表讀錯、文字有原句：以原文為準
         tmp5 = Path(tempfile.mkdtemp()) / "fc.json"
         wrong = [r if r[0] != "JP Morgan" else (r[0], .55, 3.6, .16, 2.4) for r in WSJ]  # JPM 核心月增讀成 0.16（中位數不變）
-        e5 = F.update(ctxa, False, tmp5, manual={}, clev={}, today=dt.date(2026, 10, 14), get_fn=get2,
+        e5 = F.update(ctxa, False, tmp5, manual={}, clev={}, today=dt.date(2026, 10, 14), do_auto=True, get_fn=get2,
                       ai=fake_ai, vision=vis_router(table_json(wrong)))["releases"]["cpi|2026-09"]
         check("㊳ 圖表跟原文不一致（JPM 0.16 vs 原文 0.18）→ 以原文為準",
               e5["banks"]["JPM"]["core_mom"] == 0.18 and e5["banks"]["JPM"]["meta"]["core_mom"]["kind"] == "text",
@@ -419,6 +422,8 @@ check("㊻ 9 月 CPI 實例：CPI 月增共識命中；核心月增 MS／GS 0.24
       sc7["cpi_mom"]["best"] == ["市場共識"] and sorted(sc7["core_mom"]["best"]) == ["GS", "MS"]
       and sorted(sc7["cpi_yoy"]["best"]) == ["GS", "MS"], {k: v["best"] for k, v in sc7.items()})
 
+assert _PROD_BANKS == (), '正式版不該再有投行'
+print('通過  投行已移除（正式版 BANKS 為空、預設不自動擷取）')
 print()
 print("有失敗" if FAIL else "全部通過")
 sys.exit(1 if FAIL else 0)
