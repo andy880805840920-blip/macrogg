@@ -1617,7 +1617,48 @@
   "p:us_china_truce:f6ddaedac882": "2026-11-25",
   "p:us_china_truce:d8eadac368db": "2026-11-25",
   "p:us_china_truce:e543b12212f7": "2026-11-25",
-  "p:us_china_truce:8831a9599388": "2026-11-25"
+  "p:us_china_truce:8831a9599388": "2026-11-25",
+  "5fa2ba7017cd": "2026-11-25",
+  "5577387f723d": "2026-11-25",
+  "41daf07466e9": "2026-11-25",
+  "74cfef99e72b": "2026-11-24",
+  "8825f5b1c8a5": "2026-11-23",
+  "f6783d9aaec9": "2026-11-25",
+  "617d4afe90d7": "2026-11-25",
+  "92bfd3f4ad36": "2026-11-25",
+  "485f171c0d2f": "2026-11-25",
+  "1e9f7b372324": "2026-11-25",
+  "49dc36d38440": "2026-11-25",
+  "831382c9fc29": "2026-11-25",
+  "a0a2df417308": "2026-11-25",
+  "d2b3791ddeb4": "2026-11-25",
+  "p:fiscal_cr:50b423642fb4": "2026-11-24",
+  "p:debt_limit:73876abf83a0": "2026-11-25",
+  "p:debt_limit:31aaf9589856": "2026-11-25",
+  "p:debt_limit:275b72b4d927": "2026-11-25",
+  "p:debt_limit:29a55495ed91": "2026-11-25",
+  "p:debt_limit:2b8adf9f6b3d": "2026-11-25",
+  "p:h200_china:ea134629ce0b": "2026-11-25",
+  "p:h200_china:298fd2c62022": "2026-11-25",
+  "p:h200_china:d69d0135eb61": "2026-11-25",
+  "p:h200_china:1bf3a20db273": "2026-11-24",
+  "p:h200_china:cc4cdf6cae34": "2026-11-23",
+  "p:h200_china:0b800d93fa5e": "2026-11-22",
+  "p:h200_china:b13da93c4fa1": "2026-11-20",
+  "p:h200_china:2887b3a6a39e": "2026-11-19",
+  "p:chip_232:d2ddd162d24f": "2026-11-25",
+  "p:chip_232:2bbd62748054": "2026-11-25",
+  "p:chip_232:536e347df2c5": "2026-11-25",
+  "p:us_china_truce:2346a5c3e49e": "2026-11-24",
+  "p:us_china_truce:b919244d5f88": "2026-11-25",
+  "p:us_china_truce:9948ccaf8d26": "2026-11-25",
+  "p:us_china_truce:d4e8ac37f947": "2026-11-25",
+  "p:us_china_truce:275b72b4d927": "2026-11-25",
+  "p:us_china_truce:d5f79e77311f": "2026-11-25",
+  "p:us_china_truce:b8a546cbca32": "2026-11-25",
+  "p:us_china_truce:7f14407a2694": "2026-11-24",
+  "p:us_china_truce:4ec96febfaad": "2026-11-24",
+  "p:us_china_truce:0460504b5400": "2026-11-24"
  },
  "items": [
   {
@@ -1761,11 +1802,11 @@
   },
   "debt_limit": {
    "date": "2026-11-25",
-   "note": "Yahoo Finance 和 Inquirer.com 報導顯示美國可能在 2027 年初或 2 月觸及舉債上限，比原預估的 2027 年更具體且迫近，政策應進入「接近上限」階段。",
+   "note": "多則新聞報導美國債務上限即將逼近（41.1兆美元），民主黨與財政部長貝森特就此展開談判，顯示政策可能已從「提高上限」階段進入「接近上限」階段，時間點比預估的2027年提前。",
    "links": [
-    "https://news.google.com/rss/articles/CBMicEFVX3lxTE1zVWg4dzdvbGJIdk9fOVIxTVBCNUdjVkFMSGQwSTBINldJZWdXQXlhRU9qSGRjZnpZdkRhdERmcFpQX2ZHZkxCUk5nOFZjZWlOWkpIaUFHQW5ZcFIyVGdIcU5xd3pJaFNZXzRZMFAtYXg?oc=5",
-    "https://news.google.com/rss/articles/CBMimAFBVV95cUxOUDA4RjdabllIODJWLTNmNERzck5uRUFhOUpFeG9LMVJtY2t1M1ZoSy16VWZxaEhWTXRrZFZVTnozOVRZY18tYXBEN3gxNTJ3dFcxWnlfNHlsMnJnOUE0WEwwZGlseVdzeFdEbVRpSG05aXZxTXhPUHRaWjZBNndxUHdvMFJ3T2E1QU4wNTFPSzJncUxweUJ6eQ?oc=5",
-    "https://news.google.com/rss/articles/CBMinAFBVV95cUxNanNVeGRjUTJCTWFLU2NWZDFmd2hoQWtZZml3UTJLUEY3S2x3LTlCampMZ1pIUEoyYlpIVlN3RS02VEZySWowWUJBRnduWU1ORjlvWUZFVFFYZGxWQ3FQd1NQNjlaNkU2Qzd2bGtycGhyQmNzQUZ6UkhMaEJmVUNTa0hfenIyb2ltc1lfT01YNjc5clFIeVMza3hLR2M?oc=5"
+    "https://news.google.com/rss/articles/CBMinAFBVV95cUxNanNVeGRjUTJCTWFLU2NWZDFmd2hoQWtZZml3UTJLUEY3S2x3LTlCampMZ1pIUEoyYlpIVlN3RS02VEZySWowWUJBRnduWU1ORjlvWUZFVFFYZGxWQ3FQd1NQNjlaNkU2Qzd2bGtycGhyQmNzQUZ6UkhMaEJmVUNTa0hfenIyb2ltc1lfT01YNjc5clFIeVMza3hLR2M?oc=5",
+    "https://news.google.com/rss/articles/CBMibkFVX3lxTE1aYmJyaEROSkFtMmVsakQ5UzBubk44djdkbHFYX1FIMDA4YWJRTkF5Nm1GRzV1VzNQQzZ0NW9DYVZvcFlSR0kxZkVmSWVyV0w5dVRyRGtYMVVnRWFyXzlURUVIeEExNkpfOEJXa3hB?oc=5",
+    "https://news.google.com/rss/articles/CBMia0FVX3lxTE9mdGZ2Y0JSN3R4aE5zVnJXeTR4ZkEzNTdFTGplN2dEREFLUjh4c3NmdzlvM3ktWnVOZFhsUm9OVTVUY214Q18tT2JYdmhvZ3FGS0hjaGgzUHJDUkdYc3NfUXBRbC1PQ1RRem9v?oc=5"
    ]
   },
   "fed_cook": {
@@ -1779,20 +1820,20 @@
   },
   "h200_china": {
    "date": "2026-11-25",
-   "note": "多則新聞顯示國會兩黨議員推動更嚴格的晶片出口管制，且Nvidia執行長黃仁勳將於12月3日在參議院接受質詢，表明國會限制法案審議已進入實質推進階段。",
+   "note": "11月22日TweakTown報導Nvidia停止向中國出貨H200晶片，顯示出貨階段可能已結束，政策進入國會限制階段的實施。",
    "links": [
-    "https://news.google.com/rss/articles/CBMi_wFBVV95cUxQNG54YmVSemFJcE5tWk1NaFhsTkFvZUFDdGQ4ZUpwbEdpQUJEbm05UHZiU2QteWMwS2FFOFlfcXlKRkd5bzUzdkQzVi1hWk5GRndQRmY4emFfY29lQ3pCRVUwTV9EbFJOUUtsbzNBSDQ2NzEtOWZTSmhLOWx2NndpMUVtZTFYVnk5bV9uazdPQ1g5MVkyemxkZ3JNTkVvQVprRnJ4Yjd6SXlNVkFzenlVRlBsWWpYNTBfVXhZakE0NUEwMXdWblBTRFZJdExwWk9VNmNNZHpYR0gzWWhnSXVBWmJhUHJDdllBeG1PcE9YX1RLckpyZFROVDRacEJoTkk?oc=5",
-    "https://news.google.com/rss/articles/CBMijgFBVV95cUxPLU1qclh6d0MzVTgtQUpCYW11SldmTWt2b0JCRnhOYmxlQ0ROSjFpVktxVi1Ta2wtVE1xYUpRa29mc3JRdjNVSXB5NThYQXQzcDNaVUZGajc1SkIwNkhPU2hIa2plTXVGbFNkTGZwREVOaU9LVjR5ZzJBcnA1WTNORzFZSmVCbkI5bnk0d09n?oc=5",
-    "https://news.google.com/rss/articles/CBMipAFBVV95cUxPWU5hX1JQNkttU1FuMGgzNXZKNnp3MXhQWTVRcko3Mi1nT2JSZncyQV9RVGV3cHRGSG1zbm5yNUhmU3kyaVJvZ0FQU1dkMFIxTnB5R1lpNDJ4cnVWalN4bFY0aXVDX1VuV2dGbEZ1WDFXSjdQTGIwd2NjR0NTdmc2RGE1UkdHenZ1Wksta0NwUWc3aGcxdWlCVXlvUDNLVk9SRlF4bw?oc=5"
+    "https://news.google.com/rss/articles/CBMipAFBVV95cUxPWU5hX1JQNkttU1FuMGgzNXZKNnp3MXhQWTVRcko3Mi1nT2JSZncyQV9RVGV3cHRGSG1zbm5yNUhmU3kyaVJvZ0FQU1dkMFIxTnB5R1lpNDJ4cnVWalN4bFY0aXVDX1VuV2dGbEZ1WDFXSjdQTGIwd2NjR0NTdmc2RGE1UkdHenZ1Wksta0NwUWc3aGcxdWlCVXlvUDNLVk9SRlF4bw?oc=5",
+    "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNNjd6cTNFQ3FibGRoeWZ5dUdROV9uRTlPeE4ySGtCTVVzekx6Wi02OHdlXzZHR09NMFRoWGJDMHVaXzNRQnhfNm5zdnltTWhLMDN5d3pLNDBtWjRvMUZrX2FUcHRNNXV2Z3Z5ajdaV1MycmZSaDU1NVdad1lwcjVyU1ZicXcxOTY1?oc=5",
+    "https://news.google.com/rss/articles/CBMifkFVX3lxTE14Uk5VWDNnVDIxMXJiV24zWUxTMDBkZVZTZ1RERFdGaTYyTk9kdFpMS1o3VndOWWRKZzJqRldURjh1bm1FSURPQnV0b3hubWNoZFFyN2J4V1NPak5qenZ3VS1UNUFTa2szUHZfcGlQZWNvM0FsY1NydC02eHdqdw?oc=5"
    ]
   },
   "us_china_truce": {
    "date": "2026-11-25",
-   "note": "11月25日多則新聞報導美國準備對中國等國家加徵關稅，顯示貿易談判可能出現變化，休戰協議面臨風險，下一階段日期可能提前。",
+   "note": "11月25日多則新聞報導美國計劃對中國等國提高關稅，顯示休戰框架談判可能破裂，貿易衝突升級，休戰到期日期可能提前。",
    "links": [
-    "https://news.google.com/rss/articles/CBMinwFBVV95cUxPS2FLS1dmQ0hxa2toSU9rX0lEOGltWjVMOVZDWnBzU24yOEVUY2IxUnRvU1pQMFozc0V2MEVUdVJRbTNMbTVqb2N2N2oxWW9yVFl5SHJoa1YwcVFTb21ZTEpjOHh1VE9jaXh2MGZ4dEN6bEJTdjlGN3Z1M2tWZEhoZnZsa1dsMFp1dVBZb0U5T3NMZlJtd29BalRlSFo3WVE?oc=5",
-    "https://news.google.com/rss/articles/CBMihAFBVV95cUxOSERNWnNEZmRfX1pfRGR6ZEdoclc3YzRNTkxrS0xhUGdqUG9sd1ROYlFDVXhjVk9oY2Fhc2JWdEdtSmxoZXlyX29CR3hiUW9LM2lLOE5vRk9NLWVDazd0Y2hncnJDYWRxYW5kempscjA5QVlkQXZla3FMeVBXVUprdnd0dU4?oc=5",
-    "https://news.google.com/rss/articles/CBMilwFBVV95cUxNOVl6dnlQMk1ZcWo5TzRNdnN0cERlS2hpY3BpWmxrcFZiLWlkV2lUeVkwd0tRUjR2LWpkeGZkRjR2Y0g0dTJ4TS03THZkQ1JYTGRpc2taZ1hQa2pPNVh6SXQwVWZ4bzlfLTJQeXplMjZhd01YS2dBRUdyVmxNdFlWT0dPOElTaUpNQWQ5bWxJNklrekM3Uk04?oc=5"
+    "https://news.google.com/rss/articles/CBMirgFBVV95cUxOYjhDajlFQXE4V0NYWDF1MlUxTHB6YlJyV05zRnk2b0pvZjM3bkJrR2M0eGgzSFhsM1oyWWZrb2gxMW01THd1bmQ0bjBqNF95X0dPQmk4cDBJWkV3emJnVlU0M0FUUkF6cFhRaDVBTm5MSGdqVFdMMkZPalN3S2ZnU00tYjFxNGtoN0JsOVY2TG01ZmM1d0kweHBJWEN2ZngtQ2J4R0Z1eWhYUWVSYXc?oc=5",
+    "https://news.google.com/rss/articles/CBMihwFBVV95cUxOX0VKcl9Kb1Zma3JMRHcwQmdzR3NKcHFUVnQ4UXpRSjQwT0YtcTY2Tmc0dWJqU3IycGdHSUZDMTVabkpRSjdGSkFHbGppdEd0aUFsRndMV19IMmxWUWhoekRKU05LX29lUmtiRDRnU1VLWURSRENabUFDUzVZbS1kU1o5blQxMkk?oc=5",
+    "https://news.google.com/rss/articles/CBMi_AFBVV95cUxObW5kY0Q0ZjRhZFA1WEEtNUdENVF3aXRITDg0YjJnRER5Xy1DdVZEWHZKUm5tOFNTelQ5R3VNREVPWTE4RDZzQzZ4R29IaFJMMDZiUzBQel92akFZX1ZJSk15ajkybURGdlc3RW9LR2FuR1BPdG16T3lQdV8td0ZjUFF0T3lSbTFHODl4cUlMdDhLa0dHdGFoSnJHWjU5SldVbnUwb2VYLXU1bE9ocTRNMmdKMGFIWWRKejd1MFdrVHA0OWdRWWlNWGpSdlRyWHV5WWhwRnNWV19aRWdjRDI4YXR3VEhjanhlTHJncG5qWHdxV0lHRndGd29HYy0?oc=5"
    ]
   },
   "dc_grid": {
@@ -1813,5 +1854,5 @@
    ]
   }
  },
- "at": "2026-11-25 20:08（台北）"
+ "at": "2026-11-25 23:43（台北）"
 }

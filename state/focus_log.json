@@ -1,113 +1,5 @@
 [
  {
-  "at": "2026-11-13T23:15+00:00",
-  "mode": "daily",
-  "window_h": 18,
-  "events": [
-   "ppi"
-  ],
-  "locks": [],
-  "clusters": [
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed Sees Risks Tied to Elevated Asset Prices Partly Driven by AI - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed on Track to Raise Interest Rates Next Month And Maybe Again in January - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed’s Collins Says Higher Rates Are Appropriate ‘Soon’ - Bloomberg.com"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Bessent, Fed's Goolsbee divided on role of energy shock in inflation - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Fed’s Logan Calls For Clearer Separation of Market Operations - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Bessent Says Treasury Favored Megaspeed on Trade Blacklist - Bloomberg"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "US Treasury's Bessent says he is optimistic on trade deals with Canada, Mexico - Reuters"
-    ]
-   },
-   {
-    "score": 13.0,
-    "sources": 1,
-    "why": "主角+4、時效+2、來源+3、熱度+4",
-    "titles": [
-     "Goolsbee Says Fed Must Reestablish Its Inflation Credibility - Bloomberg"
-    ]
-   }
-  ],
-  "background": [
-   "Chicago Fed's Goolsbee says central bank 'has definitely got work to do' on inflation",
-   "通膨升息預期疊加科技股重挫 以太幣跌破2,000美元大關",
-   "Bessent blames Lutnick’s Commerce as he slams Nvidia chip ‘leakage’ to China"
-  ],
-  "main": "Fed Sees Risks Tied to Elevated Asset Prices Partly Driven by AI - Bloomberg",
-  "main_why": "最高分",
-  "second": "Bessent Says Treasury Favored Megaspeed on Trade Blacklist - Bloomberg",
-  "points": 2,
-  "retry": {
-   "重點一": [
-    [
-     "主軸 185 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "【對利率】96 字，超過 90 字，請精簡",
-     "正文寫了媒體名稱（彭博），來源會列在下方，直接寫事實",
-     "用了相對時間（今日、本週），請改寫成月/日"
-    ],
-    [
-     "主軸 161 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ],
-   "重點二": [
-    [
-     "主軸 221 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
-     "正文寫了媒體名稱（CNBC），來源會列在下方，直接寫事實",
-     "用了相對時間（上週），請改寫成月/日"
-    ],
-    [
-     "主軸 190 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
-    ]
-   ]
-  },
-  "result": "芝加哥聯儲總裁古斯比：通膨持續偏離目標，聯準會須採取行動"
- },
- {
   "at": "2026-11-14T23:17+00:00",
   "mode": "weekly",
   "result": "10月CPI與PPI雙雙超預期，聯準會官員主張12月升息兩碼列入選項"
@@ -3001,5 +2893,107 @@
    "重點二": []
   },
   "result": "川普政府擬對中國與歐盟等 16 國加徵關稅，針對工業補貼展開 301 調查"
+ },
+ {
+  "at": "2026-11-25T15:43+00:00",
+  "mode": "daily",
+  "window_h": 18,
+  "events": [
+   "pce",
+   "gdp",
+   "claims"
+  ],
+  "locks": [
+   "pce"
+  ],
+  "clusters": [
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "Trump announces new tariffs, undeterred by midterms defeat - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "US inflation rises further in October - Reuters"
+    ]
+   },
+   {
+    "score": 13.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+4",
+    "titles": [
+     "BOJ’s Faster Inflation Indicator Backs Case for Another Hike - Bloomberg"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "US proposes higher tariffs on Brazil imports, including 10% duty on aircraft - Reuters"
+    ]
+   },
+   {
+    "score": 12.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+3",
+    "titles": [
+     "China Dismisses US Tariff Prospect as ‘Political Maneuvering’ - Bloomberg"
+    ]
+   },
+   {
+    "score": 11.5,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+1.5、熱度+4（有內文）",
+    "titles": [
+     "Fed’s preferred inflation gauge accelerated to 3.8% in October, raising the 2027 stakes for the central bank"
+    ]
+   },
+   {
+    "score": 11.0,
+    "sources": 1,
+    "why": "主角+4、時效+2、來源+3、熱度+2",
+    "titles": [
+     "Fed policymakers at odds over causes of high inflation - Reuters"
+    ]
+   },
+   {
+    "score": 10.0,
+    "sources": 3,
+    "why": "主角+4、時效+2、熱度+4（有內文）",
+    "titles": [
+     "通膨熱加新關稅 那指開盤崩近4%",
+     "〈美股早盤〉AI賣壓、通膨與關稅夾擊！那指跌逾4% 台積電ADR挫逾7%",
+     "Dow Craters Over 1000 Points, Nasdaq Slips 4% As AI Trade Unravels – Investors Digest PCE Inflation, Fresh Tariff Proposal"
+    ]
+   }
+  ],
+  "background": [
+   "通膨熱加新關稅 那指開盤崩近4%"
+  ],
+  "main": "創近3年新高！美國10月核心PCE超預期年增3.3% Fed下月升息箭在弦上",
+  "main_why": "鎖定事件 pce",
+  "second": "Trump announces new tariffs, undeterred by midterms defeat - Reuters",
+  "points": 2,
+  "retry": {
+   "重點一": [
+    [
+     "主軸 229 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀",
+     "用了相對時間（今日），請改寫成月/日"
+    ]
+   ],
+   "重點二": [
+    [
+     "主軸 214 字，太長了（約 100 字就好）：只留最重要的事實、數字與一句解讀"
+    ]
+   ]
+  },
+  "result": "美國10月核心PCE年增3.3%創近3年新高市場押注12月升息"
  }
 ]
